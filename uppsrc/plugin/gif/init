@@ -1,0 +1,5 @@
+#ifndef _plugin_gif_icpp_init_stub
+#define _plugin_gif_icpp_init_stub
+#include "Draw/init"
+#include "gif.icpp"
+#endif

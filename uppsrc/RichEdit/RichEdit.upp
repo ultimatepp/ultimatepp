@@ -1,0 +1,32 @@
+description "Rich text editor";
+
+uses
+	CtrlLib;
+
+file
+	RichEdit.h,
+	Ruler.cpp,
+	UnitEdit.cpp,
+	Editor.cpp,
+	Speller.cpp,
+	Kbd.cpp,
+	Mouse.cpp,
+	Cursor.cpp,
+	Undo.cpp,
+	Modify.cpp,
+	Formating.cpp,
+	ParaFormat.cpp,
+	TableUndo.cpp,
+	Table.cpp,
+	Find.cpp optimize_speed,
+	Tool.cpp,
+	Clip.cpp,
+	RichEdit.t charset "UTF-8",
+	RichEdit.icpp,
+	RichEdit.lay,
+	RichEdit.iml,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+

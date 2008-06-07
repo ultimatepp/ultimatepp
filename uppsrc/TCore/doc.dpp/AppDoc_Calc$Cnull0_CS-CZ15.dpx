@@ -1,0 +1,17 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cnull0", "CS-CZ windows-1250", "\1null\1 [S ®] \1prázdná hodnota\1")
+	HELP_TEXT(
+	"[ [A@0+84 Prázdná hodnota. Pøi výpoètech operací a_volání funkcí \r\n"
+	"se prázdná hodnota ][/A@0+84 propaguje][A@0+84  z_podvýrazu`: \r\n"
+	"pokud libovolný z_operandù nebo libovolný z_parametrù funkce \r\n"
+	"obsahuje prázdnou hodnotu, výsledkem operace nebo funkce je opìt \r\n"
+	"prázdná hodnota. Výjimkou z_tohoto pravidla jsou speciální operátory \r\n"
+	"][*A@0+84 ?`:][A@0+84 , ][*A@0+84 `|`|][A@0+84 , ][*A@0+84 `&`&][A@0+84 , \r\n"
+	"][*A@0+84 `=`=][A@0+84 , ][*A@0+84 `!`=][A@0+84  a_dále funkce \r\n"
+	"][*A@0+84 is_number][A@0+84 , ][*A@0+84 is_text][A@0+84 , ][*A@0+84 is_date][A@0+84  \r\n"
+	"a_][*A@0+84 is_null][A@0+84 , které prázdné hodnoty zpracovávají \r\n"
+	"speciálním zpùsobem.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: 10 `+ null `= null]]\r\n")
+HELP_END

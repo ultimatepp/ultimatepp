@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CpowNN", "EN-US", "\1pow\1 (\1real number\1 [/ base], \1real number\1 [/ exponent]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Real power function. If the exponent is an integer, \r\n"
+	"the base of the power may be negative. Calling ][*A@0+84 pow][A@0+84  \r\n"
+	"with a negative or zero base and a non`-integal exponent aborts \r\n"
+	"the computation with the error message ][*A@0+84 real number \r\n"
+	"computation error][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: pow(3, 4) `= 81]]\r\n")
+HELP_END

@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsecondT", "EN-US", "")
+	HELP_TEXT(
+	"[{2}\r\n"
+	"[s0; [2 Function returns number of seconds of its date`/time argument.]]\r\n"
+	"]")
+HELP_END

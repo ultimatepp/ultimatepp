@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtgN", "CS-CZ windows-1250", "\1tg\1 (\1reálné èíslo\1 [/ [S a]]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Tangens úhlu je podíl délky protilehlé a_pøilehlé odvìsny \r\n"
+	"v_pravoúhlém trojúhelníku s_odvìsnovým úhlem ][S@0+84 a][A@0+84 . \r\n"
+	"Úhel se zadává v_radiánech, takže plný úhel má velikost 2][S@0+84 p][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: tg(pi `/ 4) `= 1]]\r\n")
+HELP_END

@@ -1,0 +1,11 @@
+description "Using MenuBar";
+
+uses
+	CtrlLib;
+
+file
+	menu.cpp;
+
+mainconfig
+	"" = "GUI";
+

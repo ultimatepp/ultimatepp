@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	PlatformRef.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

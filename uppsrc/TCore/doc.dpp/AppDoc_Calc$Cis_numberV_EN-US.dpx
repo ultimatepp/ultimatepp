@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cis_numberV", "EN-US", "\1is_number\1 (\1any data type\1) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function checks whether its argument is a number \r\n"
+	"(integer, real number, or a logical value). If the argument is \r\n"
+	"a number type, the function returns logical value 1 (true).]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: is number(10.5) `= 1, is number(23.5.1997) \r\n"
+	"`= 0, is number(`\"hi`\") `= 0]]\r\n")
+HELP_END

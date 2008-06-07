@@ -1,0 +1,154 @@
+FN(sword,   OCIInitialize, (ub4 mode, dvoid *ctxp, \
+                 dvoid *(*)(dvoid *, size_t), \
+                 dvoid *(*)(dvoid *, dvoid *, size_t), \
+                 void (*)(dvoid *, dvoid *) ))
+
+FN(sword,   OCITerminate, (ub4 mode))
+
+FN(sword,   OCIHandleAlloc, (const dvoid *parenth, dvoid **hndlpp, ub4 type, \
+                             size_t xtramem_sz, dvoid **usrmempp))
+
+FN(sword,   OCIHandleFree, (dvoid *hndlp, ub4 type))
+
+
+FN(sword,   OCIDescriptorAlloc, (const dvoid *parenth, dvoid **descpp, ub4 type, \
+                               size_t xtramem_sz, dvoid **usrmempp))
+
+FN(sword,   OCIDescriptorFree, (dvoid *descp, ub4 type))
+
+FN(sword,   OCIEnvInit, (UPP::OCIEnv **envp, ub4 mode, size_t xtramem_sz, dvoid **usrmempp))
+
+FN0(sword,   OCIEnvCreate, (OCIEnv **envp, ub4 mode, const dvoid *ctxp, \
+	const dvoid *(*malocfp)(dvoid *ctxp, size_t size), \
+	const dvoid *(*ralocfp)(dvoid *ctxp, dvoid *memptr, size_t newsize), \
+	const void (*mfreexp)(dvoid *ctxp, dvoid *memptr), \
+	size_t xtramem_sz, dvoid **usrmempp))
+
+FN(sword,   OCIServerAttach,  (OCIServer *srvhp, OCIError *errhp, \
+                          const OraText *dblink, sb4 dblink_len, ub4 mode))
+
+FN(sword,   OCIServerDetach,  (OCIServer *srvhp, OCIError *errhp, ub4 mode))
+
+FN(sword,   OCISessionBegin,  (OCISvcCtx *svchp, OCIError *errhp, OCISession *usrhp, \
+                          ub4 credt, ub4 mode))
+
+FN(sword,   OCISessionEnd,   (OCISvcCtx *svchp, OCIError *errhp, OCISession *usrhp, ub4 mode))
+
+FN(sword,   OCILogon, (OCIEnv *envhp, OCIError *errhp, OCISvcCtx **svchp, \
+		  const OraText *username, ub4 uname_len, \
+		  const OraText *password, ub4 passwd_len, \
+		  const OraText *dbname, ub4 dbname_len))
+
+FN(sword,   OCILogoff, (OCISvcCtx *svchp, OCIError *errhp))
+
+
+FN(sword,   OCIPasswordChange,   (OCISvcCtx *svchp, OCIError *errhp, \
+                             const OraText *user_name, ub4 usernm_len, \
+                             const OraText *opasswd, ub4 opasswd_len, \
+                             const OraText *npasswd, ub4 npasswd_len, ub4 mode))
+
+FN(sword,   OCIStmtPrepare,   (OCIStmt *stmtp, OCIError *errhp, const OraText *stmt, \
+                          ub4 stmt_len, ub4 language, ub4 mode))
+
+FN(sword,   OCIBindByPos,  (OCIStmt *stmtp, OCIBind **bindp, OCIError *errhp, \
+		       ub4 position, dvoid *valuep, sb4 value_sz, \
+		       ub2 dty, dvoid *indp, ub2 *alenp, ub2 *rcodep, \
+		       ub4 maxarr_len, ub4 *curelep, ub4 mode))
+
+FN(sword,   OCIBindDynamic, (OCIBind *bindp, OCIError *errhp, dvoid *ictxp, \
+			  OCICallbackInBind icbfp, dvoid *octxp, \
+			  OCICallbackOutBind ocbfp))
+
+FN(sword,   OCIStmtGetBindInfo, (OCIStmt *stmtp, OCIError *errhp, ub4 size,
+	ub4 startloc, sb4 *found, OraText *bvnp[], ub1 bvnl[],
+	OraText *invp[], ub1 inpl[], ub1 dupl[], OCIBind *hndl[]))
+
+FN(sword,   OCIStmtExecute,  (OCISvcCtx *svchp, OCIStmt *stmtp, OCIError *errhp, \
+                         ub4 iters, ub4 rowoff, const OCISnapshot *snap_in, \
+                         OCISnapshot *snap_out, ub4 mode))
+
+FN(sword,   OCIDefineByPos,  (OCIStmt *stmtp, OCIDefine **defnp, OCIError *errhp, \
+			 ub4 position, dvoid *valuep, sb4 value_sz, ub2 dty, \
+			 dvoid *indp, ub2 *rlenp, ub2 *rcodep, ub4 mode))
+
+FN(sword,   OCIStmtFetch,   (OCIStmt *stmtp, OCIError *errhp, ub4 nrows, \
+                        ub2 orientation, ub4 mode))
+
+FN(sword,   OCIParamGet, (const dvoid *hndlp, ub4 htype, OCIError *errhp, \
+                     dvoid **parmdpp, ub4 pos))
+
+FN(sword,   OCIParamSet, (dvoid *hdlp, ub4 htyp, OCIError *errhp, const dvoid *dscp,\
+                    ub4 dtyp, ub4 pos))
+
+FN(sword,   OCITransStart,  (OCISvcCtx *svchp, OCIError *errhp, \
+                        uword timeout, ub4 flags ))
+
+FN(sword,   OCITransDetach,  (OCISvcCtx *svchp, OCIError *errhp, ub4 flags))
+
+FN(sword,   OCITransCommit,  (OCISvcCtx *svchp, OCIError *errhp, ub4 flags))
+
+FN(sword,   OCITransRollback,  (OCISvcCtx *svchp, OCIError *errhp, ub4 flags))
+
+FN(sword,   OCITransPrepare, (OCISvcCtx *svchp, OCIError *errhp, ub4 flags))
+
+FN(sword,   OCITransForget, (OCISvcCtx *svchp, OCIError *errhp, ub4 flags))
+
+FN(sword,   OCIErrorGet,   (dvoid *hndlp, ub4 recordno, OraText *sqlstate, \
+                            sb4 *errcodep, OraText *bufp, ub4 bufsiz, ub4 type))
+
+FN(sword,   OCILobAppend,  (OCISvcCtx *svchp, OCIError *errhp, \
+                            OCILobLocator *dst_locp,\
+                            OCILobLocator *src_locp))
+
+FN(sword,   OCILobAssign, (OCIEnv *envhp, OCIError *errhp, \
+                           const OCILobLocator *src_locp, \
+                           OCILobLocator **dst_locpp))
+
+FN(sword,   OCILobCharSetForm, (OCIEnv *envhp, OCIError *errhp, \
+                                const OCILobLocator *locp, ub1 *csfrm))
+
+FN(sword,   OCILobCharSetId, (OCIEnv *envhp, OCIError *errhp, \
+                              const OCILobLocator *locp, ub2 *csid))
+
+FN(sword,   OCILobCopy, (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *dst_locp, \
+                         OCILobLocator *src_locp, ub4 amount, ub4 dst_offset, \
+                         ub4 src_offset))
+
+FN(sword,   OCILobDisableBuffering, (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *locp))
+
+FN(sword,   OCILobEnableBuffering, (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *locp))
+
+FN(sword,   OCILobErase, (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *locp,
+                          ub4 *amount, ub4 offset))
+
+FN(sword,   OCILobFlushBuffer, (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *locp, ub4 flag))
+
+FN(sword,   OCILobGetLength, (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *locp, ub4 *lenp))
+
+FN(sword,   OCILobIsEqual, (OCIEnv *envhp, const OCILobLocator *x, const OCILobLocator *y, \
+                            oci_boolean *is_equal))
+
+FN(sword,   OCILobLocatorIsInit, (OCIEnv *envhp, OCIError *errhp, const OCILobLocator *locp,
+                                  oci_boolean *is_initialized))
+
+FN(sword,   OCILobRead, (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *locp, \
+                     ub4 *amtp, ub4 offset, dvoid *bufp, ub4 bufl, \
+                     dvoid *ctxp, sb4 (*cbfp)(dvoid *ctxp, const dvoid *bufp, ub4 len, ub1 piece), \
+                     ub2 csid, ub1 csfrm))
+
+FN(sword,   OCILobTrim, (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *locp, ub4 newlen))
+
+FN(sword,   OCILobWrite,  (OCISvcCtx *svchp, OCIError *errhp, OCILobLocator *locp, \
+                      ub4 *amtp, ub4 offset, dvoid *bufp, ub4 buflen, \
+                      ub1 piece, dvoid *ctxp, \
+                      sb4 (*cbfp)(dvoid *ctxp, dvoid *bufp, ub4 *len, ub1 *piece), \
+                      ub2 csid, ub1 csfrm))
+
+FN(sword,   OCIBreak, (dvoid *hndlp, OCIError *errhp))
+
+FN(sword,   OCIAttrGet, (const dvoid *trgthndlp, ub4 trghndltyp,
+                         dvoid *attributep, ub4 *sizep, ub4 attrtype,
+                         OCIError *errhp))
+
+FN(sword,   OCIAttrSet, (dvoid *trgthndlp, ub4 trghndltyp, dvoid *attributep,
+                         ub4 size, ub4 attrtype, OCIError *errhp))

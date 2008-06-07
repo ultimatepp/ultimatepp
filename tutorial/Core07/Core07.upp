@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	Core07.cpp;
+
+mainconfig
+	"" = "";

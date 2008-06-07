@@ -1,0 +1,5 @@
+#ifndef _SystemLogTest_icpp_init_stub
+#define _SystemLogTest_icpp_init_stub
+#include "Core/init"
+#include "SystemLog/init"
+#endif

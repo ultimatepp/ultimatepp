@@ -1,0 +1,8 @@
+#include "RichBook.h"
+
+NAMESPACE_UPP
+
+#define TFILE <RichBook/RichBook.t>
+#include <Core/t.h>
+
+END_UPP_NAMESPACE

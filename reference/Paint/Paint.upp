@@ -1,0 +1,11 @@
+description "Paint method and Draw example";
+
+uses
+	CtrlLib;
+
+file
+	Draw.cpp;
+
+mainconfig
+	"" = "GUI";
+

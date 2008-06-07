@@ -1,0 +1,6 @@
+#ifndef _IconDes_icpp_init_stub
+#define _IconDes_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\gif/init"
+#include "plugin\jpg/init"
+#endif

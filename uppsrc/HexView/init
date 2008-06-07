@@ -1,0 +1,4 @@
+#ifndef _HexView_icpp_init_stub
+#define _HexView_icpp_init_stub
+#include "CtrlLib/init"
+#endif

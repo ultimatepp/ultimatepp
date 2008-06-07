@@ -1,0 +1,25 @@
+description "GUI widgets and routines for SQL";
+
+uses
+	Sql,
+	CtrlLib,
+	Report;
+
+file
+	SqlCtrl.h,
+	SqlCtrl.t charset "UTF-8",
+	SqlCtrl_init.icpp,
+	SqlCtrl.cpp,
+	SqlArray.cpp,
+	SqlDetail.cpp,
+	SqlDlg.h,
+	SqlDlg.cpp,
+	SqlConsole.cpp,
+	SqlObjectTree.cpp,
+	SqlCtrl.lay,
+	SqlCtrl.iml,
+	SqlCtrl.usc,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

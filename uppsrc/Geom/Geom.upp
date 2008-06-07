@@ -1,0 +1,19 @@
+uses
+	Core;
+
+file
+	Geom.h,
+	fp3.h,
+	fp3.cpp,
+	geometry.h,
+	geometry.cpp,
+	polyalg.cpp,
+	vecalg.cpp,
+	linsolv.h,
+	linsolv.cpp,
+	delaunay.h,
+	delaunay.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

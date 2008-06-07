@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	QuickTabs.h,
+	QuickTabs.cpp,
+	QuickTabs.iml;
+
+mainconfig
+	"" = "GUI";
+

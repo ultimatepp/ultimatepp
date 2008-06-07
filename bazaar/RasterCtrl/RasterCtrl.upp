@@ -1,0 +1,15 @@
+uses
+	CtrlLib,
+	plugin/tif;
+
+file
+	ImageCache.h,
+	ImageCache.cpp,
+	RasterBaseCtrl.h,
+	RasterBaseCtrl.cpp,
+	RasterThumbsCtrl.h,
+	RasterThumbsCtrl.cpp,
+	RasterViewCtrl.h,
+	RasterViewCtrl.cpp,
+	RasterCtrl.h,
+	RasterCtrl.cpp;

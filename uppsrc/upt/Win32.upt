@@ -1,0 +1,190 @@
+template "Win32 API project (no U++)" main;
+
+option "Main menu" menu;
+option "Program icon" icon;
+option "Hello World" hello;
+
+@@resource.h
+<:?icon:>#define IDI_BIG         100
+#define IDI_SMALL       101
+<:.:>
+<:?menu:>#define IDD_ABOUT       102
+#define IDM_ABOUT       103
+#define IDM_EXIT        104
+#define IDC_WIN32APP    105
+#define IDC_MYICON      -2
+#define IDC_STATIC      -1<:.:>
+@@<:PACKAGE:>.rc
+#include "resource.h"
+#include <windows.h>
+
+<:?icon:>
+// Put your program icon into the package directory
+IDI_SMALL ICON DISCARDABLE "icon.ico"
+IDI_BIG   ICON DISCARDABLE "icon.ico"
+<:.:>
+<:?menu:>
+IDC_WIN32APP MENU DISCARDABLE
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit", IDM_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About...", IDM_ABOUT
+    END
+END
+IDC_WIN32APP ACCELERATORS MOVEABLE PURE
+BEGIN
+    "?", IDM_ABOUT, ASCII, ALT
+    "/", IDM_ABOUT, ASCII, ALT
+END
+IDD_ABOUT DIALOG DISCARDABLE 0, 0, 150, 55
+STYLE DS_MODALFRAME | DS_CENTER | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "Microsoft Sans Serif"
+BEGIN
+    ICON            IDI_BIG,IDC_MYICON,20,9,16,16
+    LTEXT           "Ultimate application v.1.0",IDC_STATIC,49,10,119,8,SS_NOPREFIX
+    LTEXT           "upp.sourceforge.net",IDC_STATIC,49,20,119,8
+    DEFPUSHBUTTON   "OK",IDOK,55,35,40,15,WS_GROUP
+END<:.:>
+@@<:PACKAGE:>.cpp
+#include <windows.h>
+#include "resource.h"
+<:?menu:>
+HINSTANCE hInst;
+
+LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch(message)
+    {
+        case WM_INITDIALOG:
+            return TRUE;
+
+        case WM_COMMAND:
+            if(LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) 
+            {
+                EndDialog(hDlg, LOWORD(wParam));
+                return TRUE;
+            }
+            break;
+    }
+    return FALSE;
+}
+<:.:>
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{<:?menu:>
+    int wmId, wmEvent;<:.:>
+    PAINTSTRUCT ps;
+    HDC hdc;
+    <:?hello:>
+    const TCHAR szHello[] = "Hello World!";<:.:>
+
+    switch (message) 
+    {<:?menu:>
+        case WM_COMMAND:
+        
+            wmId    = LOWORD(wParam); 
+            wmEvent = HIWORD(wParam); 
+
+            switch(wmId)
+            {
+                case IDM_ABOUT:
+                   DialogBox(hInst, (LPCTSTR) IDD_ABOUT, hWnd, (DLGPROC) About);
+                   break;
+                
+                case IDM_EXIT:
+                   DestroyWindow(hWnd);
+                   break;
+                   
+                default:
+                   return DefWindowProc(hWnd, message, wParam, lParam);
+            }
+            break;
+        <:.:>
+        case WM_PAINT:
+            hdc = BeginPaint(hWnd, &ps);
+            
+            /* Put your drawing code here */
+            <:?hello:>
+            RECT rt;
+            GetClientRect(hWnd, &rt);
+            DrawText(hdc, szHello, strlen(szHello), &rt, DT_CENTER | DT_VCENTER | DT_SINGLELINE);<:.:>
+            EndPaint(hWnd, &ps);
+            break;
+            
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            break;
+            
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
+   }
+   return 0;
+}
+
+int APIENTRY WinMain(HINSTANCE hInstance,
+                     HINSTANCE hPrevInstance,
+                     LPSTR     lpCmdLine,
+                     int       nCmdShow)
+{
+    
+    WNDCLASSEX wcex;
+
+    wcex.cbSize = sizeof(WNDCLASSEX); 
+
+    wcex.style          = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc    = (WNDPROC) WndProc;
+    wcex.cbClsExtra     = 0;
+    wcex.cbWndExtra     = 0;
+    wcex.hInstance      = hInstance;<:?icon:>
+    // Put your program icon into the package directory
+    wcex.hIconSm        = LoadIcon(hInstance, (LPCTSTR) IDI_SMALL);
+    wcex.hIcon          = LoadIcon(hInstance, (LPCTSTR) IDI_BIG);<:.:>
+    wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);
+    wcex.hbrBackground  = (HBRUSH) (COLOR_WINDOW + 1);
+    wcex.lpszMenuName   = <:menu ? "(LPCSTR) IDC_WIN32APP;" : "0;":>
+    wcex.lpszClassName  = "UPPW32APP";
+
+    if(RegisterClassEx(&wcex) == 0)
+        return FALSE;
+    <:?menu:>   
+    hInst = hInstance;
+    <:.:>
+    HWND hWnd = CreateWindow(wcex.lpszClassName, "Ultimate application", WS_OVERLAPPEDWINDOW, 
+                             CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, 
+                             NULL, NULL, hInstance, NULL);
+    if(!hWnd)
+        return FALSE;
+    
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+    <:?menu:>
+    HACCEL hAccelTable = LoadAccelerators(hInstance, (LPCTSTR) IDC_WIN32APP);
+    <:.:>
+    MSG msg;
+    while(GetMessage(&msg, NULL, 0, 0))
+    {<:?menu:>
+        if(!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) 
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        <:/:>
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);<:.:>
+    }
+
+    return msg.wParam;
+}
+@@<:PACKAGE:>.upp
+library(WIN32) "kernel32 user32 advapi32 shell32 winmm";
+
+file resource.h, 
+     <:PACKAGE:>.rc,
+     <:PACKAGE:>.cpp;
+
+mainconfig
+    "" = "GUI";

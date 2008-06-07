@@ -1,0 +1,39 @@
+#if LANGUAGE == LNGC_('C', 'S', 'C', 'Z', 15)
+
+// DlgLogin.cpp
+
+txt(DlgLoginSetPassHelpTitle, )
+txt(DlgLoginSetPassMismatch, "Zadaná hesla se liší. Zøejmì došlo k "
+	"pøeklepu.")
+txt(DlgLoginSetPassError, "Zmìnu hesla nelze provést.\n"
+	"[* \1%s\1]")
+txt(DlgLoginHelpTitle, "Pøihlášení do systému")
+txt(DlgLoginConnectError, "Nelze vytvoøit databázové spojení.\n"
+	"[* \1%s\1]\n"
+	"Uživatel: [* \1%s\1]\n"
+	"Databáze: [* \1%s\1]\n"
+	"Server: [* \1%[(výchozí)]~s\1]\n"
+	"Typ spojení: [* \1%[(výchozí)]~s\1]")
+txt(DlgLoginStdSetPasswordTypeError, "Zvolený typ databázového "
+	"spojení nepodporuje zmìnu hesla.")
+
+#elif LANGUAGE == LNGC_('E', 'N', 'U', 'S', 15)
+
+// DlgLogin.cpp
+
+txt(DlgLoginSetPassHelpTitle, "Change password")
+txt(DlgLoginSetPassMismatch, "The entered passwords differ. Please "
+	"check typing errors.")
+txt(DlgLoginSetPassError, "Error changing user password.\n"
+	"[* \1%s\1]")
+txt(DlgLoginHelpTitle, "System login")
+txt(DlgLoginConnectError, "Error creating database connection.\n"
+	"[* \1%s\1]\n"
+	"User name: [* \1%s\1]\n"
+	"Database: [* \1%s\1]\n"
+	"Server: [* \1%[(default)]~s\1]\n"
+	"Connection type: [* \1%[(default)]~s\1]")
+txt(DlgLoginStdSetPasswordTypeError, "Password setting not supported "
+	"by active database connection.")
+
+#endif

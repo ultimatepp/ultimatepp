@@ -1,0 +1,14 @@
+description "Bazaar: MultiList example showing the 3 modes. Author: James Thomas (mrjt)";
+
+uses
+	CtrlLib,
+	MultiList,
+	MultiList;
+
+file
+	main.cpp,
+	MultiListExample.iml;
+
+mainconfig
+	"" = "GUI";
+

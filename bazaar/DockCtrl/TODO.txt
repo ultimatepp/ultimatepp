@@ -1,0 +1,15 @@
+//==============================================================================================
+// DockCtrl: A dockable widget framework for U++
+// Author:	 Ismail YILMAZ
+//==============================================================================================
+
+To Do:
+------------------------------------------
+- add a self-explanatory "Complex Dockable Framework" example to the package.
+- add "stdsize" variable to the PaneFrame class for better size control.
+- add widget grouping support.
+- add drag-n-drop animations.
+- write documentation.
+- fix possible major, and minor bugs.
+- cleaning up the code.
+- bla, bla...

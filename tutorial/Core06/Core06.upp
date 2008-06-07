@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	Core06.cpp;
+
+mainconfig
+	"" = "";

@@ -1,0 +1,11 @@
+description "U++ smart pointer example";
+
+uses
+	Core;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+

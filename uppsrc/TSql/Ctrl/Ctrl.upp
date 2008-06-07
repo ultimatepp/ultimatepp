@@ -1,0 +1,15 @@
+acceptflags
+	NOHELP;
+
+uses
+	TCtrlLib,
+	SqlCtrl,
+	TSql;
+
+file
+	TSqlCtrl.h,
+	TSqlCtrl.icpp,
+	TSqlCtrl.t charset "UTF-8",
+	DlgLogin.h,
+	DlgLogin.cpp,
+	DlgLogin.lay;

@@ -1,0 +1,6 @@
+LAYOUT(DialogLayout, 148, 68)
+	ITEM(Label, dv___0, SetLabel(t_("A number")).LeftPosZ(8, 56).TopPosZ(8, 19))
+	ITEM(EditIntSpin, number, LeftPosZ(64, 76).TopPosZ(8, 19))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(36, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(36, 24))
+END_LAYOUT

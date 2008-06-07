@@ -1,0 +1,10 @@
+description "Full screen TopWindow mode";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

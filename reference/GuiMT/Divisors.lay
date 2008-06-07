@@ -1,0 +1,6 @@
+LAYOUT(DivisorsLayout, 700, 440)
+	ITEM(ArrayCtrl, table, HSizePosZ(12, 12).VSizePosZ(12, 36))
+	ITEM(Button, push, SetLabel(t_("Test")).LeftPosZ(184, 84).BottomPosZ(9, 19))
+	ITEM(EditString, editor, LeftPosZ(12, 164).BottomPosZ(9, 19))
+END_LAYOUT
+

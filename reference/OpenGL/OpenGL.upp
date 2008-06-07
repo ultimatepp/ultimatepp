@@ -1,0 +1,11 @@
+description "GLCtrl widget example";
+
+uses
+	GLCtrl;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,228 @@
+#include "Debuggers.h"
+
+#ifdef COMPILER_MSC
+
+void Pdb::Visual::Cat(const String& text, Color ink)
+{
+	VisualPart& p = part.Add();
+	p.text = text;
+	p.ink = ink;
+	p.mark = false;
+	length += text.GetLength();
+}
+
+void Pdb::Visual::Cat(const char *s, Color ink)
+{
+	Cat(String(s), ink);
+}
+
+String Pdb::Visual::GetString() const
+{
+	String r;
+	for(int i = 0; i < part.GetCount(); i++)
+		r << part[i].text;
+	return r;
+}
+
+String IntFormat(int64 i)
+{
+	String r;
+	if(i < 0)
+		r << '-' << Format64(-i);
+	else
+		r << Format64(i);
+	if(i >= 32 && i < 128)
+		r << " \'" << (char)i << '\'';
+	return r;
+}
+
+bool IsOk(const String& q)
+{
+	const char *s = ~q;
+	const char *e = q.End();
+	while(s < e) {
+		if((byte)*s < 32 && *s != '\t' && *s != '\r' && *s != '\n' && *s != '\f')
+			return false;
+		s++;
+	}
+	return true;
+}
+
+void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int maxlen)
+{
+	if(result.length > maxlen)
+		return;
+	if(val.ref > 0 || val.type < 0)
+		val = GetRVal(val);
+	if(val.ref > 0) {
+		result.Cat(FormatIntHex(val.address, 0), LtMagenta);
+		if(val.type == UINT1 || val.type == SINT1) {
+			if(Byte(val.address) < 0)
+				result.Cat("??", SColorDisabled);
+			else {
+				String x = ReadString(val.address, slen + 1);
+				String dt;
+				if(x.GetLength() > (IsOk(x) ? slen : 10)) {
+					x.Trim(x.GetLength() - 1);
+					dt = "..";
+				}
+				result.Cat(" ");
+				result.Cat(AsCString(x) + dt, Red);
+			}
+			return;
+		}
+		if(expandptr > 0 && (val.type != UNKNOWN || val.ref > 1) && val.address) {
+			result.Cat("->", SColorMark);
+			Visualise(result, DeRef(val), expandptr - 1, slen, maxlen);
+		}
+		return;
+	}
+	if(val.type < 0) {
+		#define RESULTINT(x, type) case x: result.Cat(IntFormat((type)val.ival), Red); break;
+		switch(val.type) {
+		RESULTINT(BOOL1, bool)
+		RESULTINT(UINT1, byte)
+		RESULTINT(SINT1, int8)
+		RESULTINT(UINT2, uint16)
+		RESULTINT(SINT2, int16)
+		RESULTINT(UINT4, uint32)
+		RESULTINT(SINT4, int32)
+		RESULTINT(UINT8, uint64)
+		RESULTINT(SINT8, int64)
+		case DBL:
+		case FLT:
+			result.Cat(FormatDouble(val.fval, 20), Red); break;
+		case PFUNC: {
+			result.Cat(FormatIntHex(val.address), Red);
+			FnInfo fi = GetFnInfo(val.address);
+			if(!IsNull(fi.name)) {
+				result.Cat("->", SColorMark);
+				result.Cat(fi.name, SColorText);
+			}
+			break;
+		}
+		default:
+			result.Cat("<void>", SColorMark);
+		}
+		return;
+	}
+	const Type& t = GetType(val.type);
+	if(t.vtbl_typeindex == -2) {
+		result.Cat(Nvl(GetFnInfo(val.address).name, "??"), SColorText);
+		return;
+	}
+	result.Cat("{ ", SColorMark);
+	bool cm = false;
+	for(int i = 0; i < t.member.GetCount(); i++) {
+		if(cm)
+			result.Cat(", ");
+		cm = true;
+		if(result.length > maxlen) {
+			result.Cat("..");
+			break;
+		}
+		result.Cat(t.member.GetKey(i));
+		result.Cat("=", SColorMark);
+		Val r = t.member[i];
+		r.address += val.address;
+		try {
+			Visualise(result, r, max(expandptr - 1, 0), 20, maxlen);
+		}
+		catch(CParser::Error e) {
+			result.Cat(e, SColorDisabled);
+		}
+	}
+	for(int i = 0; i < t.static_member.GetCount(); i++) {
+		if(cm)
+			result.Cat(", ");
+		cm = true;
+		if(result.length > maxlen) {
+			result.Cat("..");
+			break;
+		}
+		result.Cat(t.static_member.GetKey(i));
+		result.Cat("=", SColorMark);
+		try {
+			Visualise(result, t.static_member[i], max(expandptr - 1, 0), 20, maxlen);
+		}
+		catch(CParser::Error e) {
+			result.Cat(e, SColorDisabled);
+		}
+	}
+	for(int i = 0; i < t.base.GetCount(); i++) {
+		const Val& b = t.base[i];
+		if(b.type >= 0) {
+			adr_t adr = b.address + val.address;
+			const Type& t = GetType(b.type);
+			for(int i = 0; i < t.member.GetCount(); i++) {
+				if(cm)
+					result.Cat(", ");
+				cm = true;
+				if(result.length > maxlen) {
+					result.Cat("..");
+					break;
+				}
+				result.Cat(t.member.GetKey(i));
+				result.Cat("=", SColorMark);
+				Val r = t.member[i];
+				r.address += adr;
+				try {
+					Visualise(result, r, max(expandptr - 1, 0), 32, maxlen);
+				}
+				catch(CParser::Error e) {
+					result.Cat(e, SColorDisabled);
+				}
+			}
+		}
+	}
+	result.Cat(" }", SColorMark);
+}
+
+Pdb::Visual Pdb::Visualise(Val v, int maxlen)
+{
+	Visual r;
+	try {
+		Visualise(r, v, 2, 150, maxlen);
+	}
+	catch(CParser::Error e) {
+		r.Cat(e, SColorDisabled);
+	}
+	return r;
+}
+
+Pdb::Visual Pdb::Visualise(const String& exp, int maxlen)
+{
+	Visual r;
+	try {
+		CParser p(exp);
+		Val v = Exp(p);
+		Visualise(r, v, 2, 150, maxlen);
+	}
+	catch(CParser::Error e) {
+		r.Cat(e, SColorDisabled);
+	}
+	return r;
+}
+
+void Pdb::VisualDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style)
+const
+{
+	int x = r.left;
+	int y = r.top + (r.Height() - Draw::GetStdFontCy()) / 2;
+	bool blue = (style & (Display::CURSOR|Display::FOCUS)) == (Display::CURSOR|Display::FOCUS);
+	if(IsType<Visual>(q)) {
+		const Visual& v = ValueTo<Visual>(q);
+		for(int i = 0; i < v.part.GetCount() && x < r.right; i++) {
+			const VisualPart& p = v.part[i];
+			Size sz = GetTextSize(p.text, StdFont());
+			w.DrawRect(x, y, sz.cx, r.Height(), blue || !p.mark ? paper : SColorLtFace);
+//			if(p.mark)
+//				w.DrawRect(x, r.bottom - 1, sz.cx, 1, SLtRed);
+			w.DrawText(x, y, p.text, StdFont(), blue ? ink : p.ink);
+			x += sz.cx;
+		}
+	}
+	w.DrawRect(x, y, r.right - x, r.Height(), paper);
+}
+
+#endif

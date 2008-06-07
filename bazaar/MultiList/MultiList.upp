@@ -1,0 +1,6 @@
+description "Bazaar: A list ctrl featuring 3 display modes and key/value support. Author: James Thomas (mrjt)";
+
+file
+	MultiList.h,
+	MultiList.cpp;
+

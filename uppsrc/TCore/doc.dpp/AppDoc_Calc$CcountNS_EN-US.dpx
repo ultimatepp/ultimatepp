@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CcountNS", "EN-US", "\1count\1 (\1integer\1, \1string\1) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns text representation of decimal \r\n"
+	"notation of its numeric value together with the attached noun. \r\n"
+	"In the noun string, the forward slash can separate the suffixes \r\n"
+	"of singular and plural used in English to distinguish between \r\n"
+	"a single object and multiple objects.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: count(1, `\"m`/ouse`/ice`\") `= `\"1 \r\n"
+	"mouse`\", count(2, `\"m`/ouse`/ice`\") `= `\"2 mice`\".]]\r\n")
+HELP_END

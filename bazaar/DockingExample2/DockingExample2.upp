@@ -1,0 +1,15 @@
+description "Bazaar: Docking example showing advanced features inc. Serialization. Author: James Thomas(mrjt)";
+
+uses
+	CtrlLib,
+	Docking;
+
+file
+	main.cpp,
+	DockingExample.lay,
+	DefaultLayout.brc,
+	app.tpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,17 @@
+uses
+	Ole,
+	CtrlCore;
+
+file
+	OleCtrl.h,
+	util.cpp,
+	control.cpp,
+	ocx.def;
+
+mainconfig
+	"" = "DLL";
+
+custom() "idl",
+	"midl /newtlb $(!/I) /h \"$(DIR)/$(TITLE)_idl.h\" /iid \"$(DIR)/$(TITLE"
+	")_idl.cpp\" /tlb \"$(DIR)/$(TITLE).tlb\" \"$(PATH)\"\r\n",
+	"$(DIR)/$(TITLE)_idl.h\r\n$(DIR)/$(TITLE).tlb\r\n";

@@ -1,0 +1,21 @@
+uses
+	Geom\Draw,
+	TCtrlLib;
+
+file
+	GeomCtrl.h,
+	GeomCtrl.t charset "UTF-8",
+	GeomCtrl_init.icpp,
+	pathCtrl.h,
+	pathCtrl.cpp,
+	pathedit.iml,
+	pathedit.lay,
+	PlotterCtrl.h,
+	PlotterCtrl.cpp,
+	PlotterCtrl.iml,
+	CoordCtrl.h,
+	CoordCtrl.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

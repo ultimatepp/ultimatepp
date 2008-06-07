@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cdate0", "CS-CZ windows-1250", "")
+	HELP_TEXT(
+	"[3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0} \r\n"
+	"[s0;2 Funkce vrátí aktuální systémové datum v_místním èase.")
+HELP_END

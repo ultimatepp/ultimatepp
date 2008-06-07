@@ -1,0 +1,179 @@
+{
+    <insert a suppression name here>
+        Memcheck:Value8
+        fun:XftFontOpenInfo
+        fun:XftFontOpenPattern
+        fun:XftFontOpen
+}
+{
+    <insert a suppression name here>
+        Memcheck:Cond
+        fun:XftFontInfoEqual
+        fun:XftFontOpenInfo
+        fun:XftFontOpenPattern
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Value8
+        obj:/usr/lib/libXft.so.2.1.2
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Cond
+        fun:XftFontOpenInfo
+        fun:XftFontOpenPattern
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Addr8
+        obj:/lib/ld-2.6.1.so
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Addr8
+        obj:/lib/ld-2.7.so
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Param
+        write(buf)
+        fun:__write_nocancel
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Leak
+        fun:realloc
+        fun:add_codeset
+        fun:initialize
+        fun:_XlcCreateLC
+        fun:_XlcDefaultLoader
+        fun:_XOpenLC
+        fun:_XrmInitParseInfo
+        fun:NewDatabase
+        fun:XrmGetStringDatabase
+        fun:XGetDefault
+        obj:/usr/lib/libXft.so.2.1.2
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Leak
+        fun:malloc
+        obj:/usr/lib/libfontconfig.so.1.2.0
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Leak
+        fun:malloc
+        obj:/usr/lib/libfontconfig.so.1.3.0
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Addr8
+   obj:/lib/ld-2.7.so
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   fun:XftFontInfoEqual
+   fun:XftFontOpenInfo
+   fun:XftFontOpenPattern
+   fun:XftFontOpen
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Value8
+   obj:/usr/lib/libXft.so.2.1.2
+   fun:_ZN3Upp14sCheckComposedEPKc
+   fun:_ZN3Upp4Draw17InitPlatformFontsEv
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Value8
+   obj:/usr/lib/libXft.so.2.1.2
+   fun:_ZN3Upp8FontInfo4DataD1Ev
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   fun:XftFontInfoEqual
+   fun:XftFontOpenInfo
+   fun:XftFontOpenPattern
+   fun:XftFontOpen
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   fun:XftFontOpenInfo
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Value8
+   obj:/usr/lib/libXft.so.2.1.2
+   fun:_ZN3Upp14sCheckComposedEPKc
+   fun:_ZN3Upp4Draw17InitPlatformFontsEv
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Value8
+   obj:/usr/lib/libXft.so.2.1.2
+   fun:_ZN3Upp8FontInfo4DataD1Ev
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Leak
+        fun:calloc
+        fun:g_malloc0
+        obj:/usr/lib/libgobject-2.0.so.0.1400.1
+        obj:/usr/lib/libgobject-2.0.so.0.1400.1
+        fun:g_type_register_fundamental
+        obj:/usr/lib/libgobject-2.0.so.0.1400.1
+        fun:g_type_init_with_debug_flags
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Leak
+        fun:realloc
+        obj:/usr/lib/libfontconfig.so.1.2.0
+        obj:/usr/lib/libfontconfig.so.1.2.0
+        fun:FcFontRenderPrepare
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Leak
+        fun:memalign
+        fun:posix_memalign
+        obj:/usr/lib/libglib-2.0.so.0.1400.1
+        fun:g_slice_alloc
+        fun:g_slice_alloc0
+}
+
+{
+    <insert a suppression name here>
+        Memcheck:Leak
+        fun:malloc
+        fun:g_malloc
+        fun:g_strdup
+        obj:/usr/lib/libgobject-2.0.so.0.1400.1
+        fun:g_object_get_valist
+        fun:g_object_get
+}
+

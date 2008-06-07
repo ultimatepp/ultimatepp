@@ -1,0 +1,27 @@
+#include "Browser.h"
+
+bool IsTopicGroup(const char *path)
+{
+	return ToLower(GetFileExt(path)) == ".tpp";
+}
+
+struct TopicModule : public IdeModule {
+	virtual Image FileIcon(const char *path) {
+		return IsTopicGroup(path) ? TopicImg::Group() : Null;
+	}
+	virtual IdeDesigner *CreateDesigner(const char *path, byte cs) {
+		if(IsTopicGroup(path)) {
+			TopicEditor *d = new TopicEditor;
+			d->Open(path);
+			return d;
+		}
+		return false;
+	}
+	virtual void Serialize(Stream& s) {
+		TopicEditor::SerializeEditPos(s);
+	}
+};
+
+INITBLOCK {
+	RegisterIdeModule(Single<TopicModule>());
+}

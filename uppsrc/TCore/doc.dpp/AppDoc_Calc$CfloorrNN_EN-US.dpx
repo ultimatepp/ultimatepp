@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CfloorrNN", "EN-US", "\1floorr\1(\1real number\1 [/ value], \1integer\1 [/ significant_digits]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[{2}\r\n"
+	"[s0; [2 Rounding down (towards minus infinity) to the stated number \r\n"
+	"of significant digits. The function returns the highest integral \r\n"
+	"multiple of ][*2 10 `*`* ][/2 (ceil(log(value))`-significant`_digits) \r\n"
+	"][2 not greater than the original ][/2 value][2 .]]\r\n"
+	"&\r\n"
+	"[s0;2 ]\r\n"
+	"&\r\n"
+	"[s0; [*2 Example`: floorr(47.32, 3) `= 47.3, floorr(117, 1) `= 100.]]\r\n"
+	"]")
+HELP_END

@@ -1,0 +1,12 @@
+description "Example of dynamic dialog creation (based on XML file)";
+
+uses
+	CtrlLib;
+
+file
+	dialog.xml,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

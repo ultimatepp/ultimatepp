@@ -1,0 +1,12 @@
+description "Simple drawing application";
+
+uses
+	CtrlLib;
+
+file
+	Scribble.cpp,
+	Scribble.lay;
+
+mainconfig
+	"" = "GUI";
+

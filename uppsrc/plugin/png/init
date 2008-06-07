@@ -1,0 +1,5 @@
+#ifndef _plugin_png_icpp_init_stub
+#define _plugin_png_icpp_init_stub
+#include "Core/init"
+#include "pngreg.icpp"
+#endif

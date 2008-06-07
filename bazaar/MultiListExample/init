@@ -1,0 +1,5 @@
+#ifndef _MultiListExample_icpp_init_stub
+#define _MultiListExample_icpp_init_stub
+#include "CtrlLib/init"
+#include "MultiList/init"
+#endif

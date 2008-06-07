@@ -1,0 +1,17 @@
+#ifndef _ide_icpp_init_stub
+#define _ide_icpp_init_stub
+#include "ide\Common/init"
+#include "ide\LayDes/init"
+#include "ide\IconDes/init"
+#include "ide\Builders/init"
+#include "ide\Debuggers/init"
+#include "ide\Browser/init"
+#include "ide\QuickTabs/init"
+#include "CodeEditor/init"
+#include "CtrlLib/init"
+#include "Web/init"
+#include "plugin\bz2/init"
+#include "HexView/init"
+#include "art\BlueBar/init"
+#include "plugin/astyle/init"
+#endif

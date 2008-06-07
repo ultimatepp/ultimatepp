@@ -1,0 +1,11 @@
+description "Basic usage of ArrayCtrl";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	dlg.lay;
+
+mainconfig
+	"" = "GUI";

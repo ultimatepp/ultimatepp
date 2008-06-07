@@ -1,0 +1,17 @@
+HELP_TOPIC("AppDoc", "", "Calc$CnlsrNN", "EN-US", "")
+	HELP_TEXT(
+	"[{2}\r\n"
+	"[s0; [2 Converts its numeric value to text according to current regional \r\n"
+	"settings (delimiters of thousands, delimiter of decimal part) \r\n"
+	"with given number of ][/2 significant digits][2 . If the number \r\n"
+	"of digits is positive, non`-significant zeroes will be deleted \r\n"
+	"from the decimal part of the number. If the number of digits \r\n"
+	"is negative, non`-significant zeroes will be retained in the \r\n"
+	"number. ]]\r\n"
+	"&\r\n"
+	"[s0;2 ]\r\n"
+	"&\r\n"
+	"[s0; [*2 Example`: nlsr(1272.3, `-2) `= `\"1 300`\", nlsr(1.999, `-2) \r\n"
+	"`= `\"2.00`\"]]\r\n"
+	"]")
+HELP_END

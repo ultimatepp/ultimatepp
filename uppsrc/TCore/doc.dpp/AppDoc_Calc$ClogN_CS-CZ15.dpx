@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$ClogN", "CS-CZ windows-1250", "\1log\1 (\1reálné èíslo\1 [/ x]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Dekadický logaritmus. Funkce vypoète logaritmus parametru [/ x] \r\n"
+	"o_základu 10, tedy takové reálné èíslo [/ a], pro které platí: \r\n"
+	"[*/ x][*  = pow(10, ][*/ a][* )].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]log(1000) = 3")
+HELP_END

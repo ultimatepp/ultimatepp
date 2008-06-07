@@ -1,0 +1,82 @@
+description "TheIDE main package";
+
+uses
+	ide\Common,
+	ide\LayDes,
+	ide\IconDes,
+	ide\Builders,
+	ide\Debuggers,
+	ide\Browser,
+	ide\QuickTabs,
+	CodeEditor,
+	CtrlLib,
+	Web,
+	plugin\bz2,
+	HexView,
+	art\BlueBar,
+	plugin/astyle;
+
+link(WIN32 MSC) /MAP;
+
+file
+	IDE readonly separator,
+	ide.h,
+	version.h,
+	UppDlg.h,
+	SelectPkg.cpp,
+	UppWspc.cpp,
+	UppDlg.cpp,
+	Template.cpp,
+	ide.key,
+	FindInFiles.cpp optimize_speed,
+	Console.cpp,
+	ide.cpp,
+	idefile.cpp charset "iso8859-1",
+	QuickTabs.cpp,
+	Bottom.cpp,
+	t.cpp,
+	Assist.cpp,
+	Index.cpp,
+	Virtuals.cpp,
+	Thisbacks.cpp,
+	Goto.cpp,
+	Setup.cpp,
+	Custom.cpp,
+	idetool.cpp,
+	Install.cpp,
+	idebar.cpp,
+	idewin.cpp,
+	Help.cpp,
+	Util.cpp,
+	Macro.cpp,
+	Calc.cpp,
+	FormatCode.cpp,
+	Compile readonly separator,
+	Methods.cpp,
+	AutoSetup.cpp,
+	OutputMode.cpp,
+	Host.cpp,
+	Build.cpp,
+	Debug.cpp,
+	Valgrind.cpp,
+	Resources readonly separator,
+	ide.iml,
+	ide.lay,
+	app.tpp,
+	ide.rc,
+	Makefile,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI .USEMALLOC",
+	"" = ".NOGTK GUI",
+	"" = "GUI HEAPDBG CHECKINIT";
+
+custom() "",
+	"",
+	"$(OUTDIR)/$(FILE).obj";
+

@@ -1,0 +1,16 @@
+HELP_TOPIC("AppDoc", "", "Calc$CdateNNN", "EN-US", "\1date\1 (\1integer\1 [/ day], \1integer\1 [/ month], \1integer\1 [/ year]) [S ®] \1date\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function composes a date value from its arguments. \r\n"
+	"The form without parameters returns current system date. The \r\n"
+	"form with the parameter ][/A@0+84 day][A@0+84   returns given \r\n"
+	"day in the current month. The two parameter`-form, ][/A@0+84 day][A@0+84  \r\n"
+	"and ][/A@0+84 month][A@0+84 , returns given day and month in \r\n"
+	"the current system year. The three argument form composes an \r\n"
+	"arbitrary date as specified by day, month, and year number.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: date `= ][A@0+84 20.06.2003][A@0+84 , \r\n"
+	"date(10) `= ][A@0+84 10.06.2003][A@0+84 , date(15, 7) `= ][A@0+84 15.07.2003][A@0+84 ,\r\n"
+	" date(25, 1, 1974) `= 25.01.1974]]\r\n")
+HELP_END

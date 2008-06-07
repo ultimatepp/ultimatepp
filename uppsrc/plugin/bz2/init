@@ -1,0 +1,4 @@
+#ifndef _plugin_bz2_icpp_init_stub
+#define _plugin_bz2_icpp_init_stub
+#include "Core/init"
+#endif

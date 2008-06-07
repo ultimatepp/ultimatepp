@@ -1,0 +1,11 @@
+description "Embedding non-owned widgets into ArrayCtrl";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

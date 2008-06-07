@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Core08.cpp;
+
+mainconfig
+	"" = "";
+

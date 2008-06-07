@@ -1,0 +1,162 @@
+#!/bin/bash
+# uppsvn2deb
+# Updates svn, batch builds theide and creates .deb package
+#
+
+######################################################################
+#convert a path to absolute one
+rel2abs()
+{
+    # make sure file is specified
+    if [ -z "$1" ]
+    then
+       echo "$0 <path>"
+       return 1
+    fi
+
+    # already absolute case
+    if [ "${1:0:1}" = "/" ] || [ "$PWD" = "/" ]
+    then
+       ABS=""
+    else
+       ABS="$PWD"
+    fi
+
+    # loop thru path
+    IFS="/"
+    for DIR in $1
+    do
+       if [ -n "$DIR" ]
+       then
+          if [ "$DIR" = ".." ]
+          then
+             ABS="${ABS%/*}"
+
+          elif [ "$DIR" != "." ]
+          then
+             ABS="$ABS/$DIR"
+          fi
+       fi
+    done
+    IFS=":"
+
+    echo $ABS
+    return 0
+} 
+
+######################################################################
+echo
+echo "UPP SVN2DEB BUILDER"
+echo "CopyRight(c) 2008 By Massimo Del Fedele"
+echo
+
+# checks for parameters
+if [ x"$1" = x -o x"$2" = x ]
+then
+	echo "uppsvn2deb <upp svn root> <dest folder>"
+	exit 1
+fi
+
+#sets up source and dest folder names
+src=$(rel2abs $1)
+dst=$(rel2abs $2)
+
+#locates 'uppdeb' and 'idebuild' scripts
+uppdeb="`which uppdeb`"
+if [ x$uppdeb = x ]
+then
+	# couldn't find it on path, just try on this script's path
+	LSOF=$(lsof -p $$ 2>/dev/null | grep -E "/"$(basename $0)"$")
+	uppdeb=$(echo $LSOF | sed -r s/'^([^\/]+)\/'/'\/'/1 2>/dev/null)
+	uppdeb=$(dirname $uppdeb)/uppdeb
+fi
+if [ ! -f $uppdeb ]
+then
+	echo "ERROR - Could not find 'uppdeb' script"
+	echo "Please check if it's on current path"
+	exit 1
+fi
+idebuild="`which idebuild`"
+if [ x$idebuild = x ]
+then
+	# couldn't find it on path, just try on this script's path
+	LSOF=$(lsof -p $$ 2>/dev/null | grep -E "/"$(basename $0)"$")
+	idebuild=$(echo $LSOF | sed -r s/'^([^\/]+)\/'/'\/'/1 2>/dev/null)
+	idebuild=$(dirname $idebuild)/idebuild
+fi
+if [ ! -f $idebuild ]
+then
+	echo "ERROR - Could not find 'idebuild' script"
+	echo "Please check if it's on current path"
+	exit 1
+fi
+
+#checks if source folder is an upp svn folder
+if [ -d $src/.svn ]
+then
+	true
+else
+	echo "Source folder is not an SVN one."
+	exit 1
+fi
+for name in uppsrc examples tutorial reference bazaar
+do
+	if [ ! -d $src/$name ]
+	then
+		echo "bad source folder '$src'"
+		echo "missing '$src/$name' subfolder"
+		exit 1
+	fi
+done
+
+#do an svn update in svn folder, just to be sure that's the latest
+cd $src
+
+#gets svn release
+if [ -e ./.svn/entries ]
+then
+    while read release
+    do
+        if [ "$release" = "dir" ]
+        then
+            read release
+            break
+        fi
+    done < ./.svn/entries
+else
+    echo "$0: error: file not found!"
+    exit 1
+fi
+
+echo "building .deb for SVN release $release"
+
+#now patch uppsrc/ide/version.h file to match current svn build
+mv $src/uppsrc/ide/version.h $src/uppsrc/ide/version.h.BACKUP
+echo "#define IDE_VERSION    \"SVN.$release\"" > $src/uppsrc/ide/version.h
+
+#creates a temporary folder for executable file
+outtmp="`mktemp -t -d uppsvn2deb.XXXXXXX`"
+
+#build theide
+echo "building TheIDE......"
+$idebuild $src $outtmp/theide-svn
+if [ $? = 0 ]
+then
+	true
+else
+	echo "Error building TheIDE"
+	echo "Please check executables for errors"
+	exit 1
+fi
+
+#creates the deb package
+echo "Creating package......"
+$uppdeb $src $outtmp/theide-svn $dst SVN.$release
+result=$?
+
+#resets uppsrc/ide/version.h file
+rm $src/uppsrc/ide/version.h
+mv $src/uppsrc/ide/version.h.BACKUP $src/uppsrc/ide/version.h
+
+#remove temporary folder
+rm -rf $outtmp

@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cadd_yearsDN", "EN-US", "\1add_years\1 (\1date\1, \1integer\1 [/ number_of_years]) [S ®] \1date\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function adds given ][/A@0+84 number`_of`_years][A@0+84  \r\n"
+	"to its date argument. If the original date is Feb 29 in a leap \r\n"
+	"year and the target year is not a leap one, the day number is \r\n"
+	"adjusted to 28.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: add`_years(29.2.1992, 3) `= 28.2.1995]]\r\n")
+HELP_END

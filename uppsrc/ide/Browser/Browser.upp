@@ -1,0 +1,38 @@
+description "TheIDE - code browser and Topic++";
+
+uses
+	CppBase,
+	ide\Common,
+	PdfDraw,
+	RichEdit;
+
+file
+	Browser.h,
+	Browser readonly separator,
+	Lay.cpp,
+	Base.cpp optimize_speed,
+	ItemList.cpp,
+	Query.cpp,
+	Browser.cpp,
+	Browser.lay,
+	Browser.iml,
+	Topic readonly separator,
+	TopicBase.cpp,
+	Reference.cpp,
+	File.cpp optimize_speed,
+	Topic.cpp,
+	Stylesheet.cpp,
+	Link.cpp,
+	TopicWin.cpp,
+	IdeTopic.cpp,
+	TopicI.icpp,
+	Topic.lay,
+	Topic.iml;
+
+mainconfig
+	"" = "GUI";
+
+RichEdit 
+
+,
+	PdfDraw;

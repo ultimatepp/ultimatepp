@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CroundNN", "CS-CZ windows-1250", "\1round\1 (\1reálné èíslo\1 [/ hodnota], \1celé èíslo\1 [/ poèet_desetinných_míst]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Zaokrouhlení na zadaný poèet desetinných míst (0, pokud \r\n"
+	"není zadáno). Smìr zaokrouhlení je k_nejbližšímu reálnému èíslu, \r\n"
+	"které je celistvým násobkem hodnoty ][*A@0+84 10_`*`*_][/A@0+84 `-poèet_míst][A@0+84 .\r\n"
+	" Pokud zadané èíslo leží pøesnì v_polovinì vzdálenosti mezi nejbližšími \r\n"
+	"takovými èísly, zaokrouhlí se smìrem nahoru.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: round(`-2.5) `= `-2, round(47.32, \r\n"
+	"1) `= 47.3, round(117, `-1) `= 120.]]\r\n")
+HELP_END

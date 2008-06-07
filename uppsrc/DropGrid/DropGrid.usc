@@ -1,0 +1,32 @@
+ctrl DropGrid {
+	group "Input fields";
+
+	GetMinSize() { sz = GetTextSize("X"); sz.cy += 6; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
+
+	Frame SetFrame = InsetFrame();
+	bool  WantFocus = true;
+	bool  DisplayAll = false;
+	bool  NoHeader = false;
+	bool  Resizeable = true;
+	bool  ColorRows = false;
+	bool  DataAction = false;
+	bool  AlwaysDrop = false;
+	bool  DropEnter = false;
+	bool  Searching = true;
+	bool  NotNull = false;
+	bool  SetEditable = true @2 ? "Editable";
+
+	Text  Tip;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		n = r.bottom - r.top;
+		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
+		w.DrawImage((n - 7) / 2 + r.right - n, (n - 6) / 2 + r.top, "ClassicCtrlsImg::DA");
+		w.DrawText(3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
+			(.SetEditable ? "" : "R/O ") + "DropGrid", Arial(10), :SMagenta);
+	}
+}

@@ -1,0 +1,5 @@
+HELP_TOPIC("AppDoc", "", "Calc$Ce0", "CS-CZ windows-1250", "\1e\1 [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Eulerova konstanta urèuje základ exponenciály a_pøirozeného \r\n"
+	"logaritmu. Je pøibližnì rovna 2.718281828.]]\r\n")
+HELP_END

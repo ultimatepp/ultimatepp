@@ -1,0 +1,49 @@
+To do
+---------------------------------
+
+- modify GSort to use stable sort (faster?)
+- optimize resizeing in absolute mode (more than 10.000 rows)
+- many Hide/Show in proportional mode for the same column cause it's getting smaller and smaller
+- fix selecting proper column index during moiving columns when some columns are hidden
+- optimized version of SyncCtrls (yep, over 1000 rows there are performance problems)
+
+Done
+---------------------------------
+
+- when edits are visible switching off/on indicator make their positions incorrect
+- tab/shift+tab does not store the new cell value -> done
+- focus is not restored after moving column/row -> done
+- port to linux -> almost done
+- when line resizing mode is set and user is resizeing columns and scrollbar suddenly appears
+  line isn't cleared correctly
+- Hide doesn't update scrollbar total size
+- SetRowHeight should not call directly lh.Recalc, it should set lh.ready to false
+- add update of first/last/vis/col/row in SetFixedCols(), SetFixedRows()
+- add scrolling during moving cursor left/right when selectRow is true
+
+Critical
+---------------------------------
+
+
+Polish
+---------------------------------
+
+gdy czesc kolumn jest ukryta problem przy ctrl->up/down (a selekcje??)
+
+SetCursor sie wywala jesli do gridu dodalo sie wiersz ale nie ma dodanej kolumny (w arrayctrl taka
+kombinacja dziala)
+
+jak jest wlaczony droplist i zmieni sie w nim wartosc i nacisnie sortowanie to dokonuje sie ono po
+niezmienionych wartosciach items (a powinno po widocznych w kontrolce).
+Wyjscie: albo zabronic sortowania w takim przypadku, albo na chwile zaakceptowac wartosc z kontrolki
+posortowac o podmienic na stara.
+
+gdy np sa dwie pierwsze wiersze w trybie read-only i nizej jest aktywna kontrolka i nacisnie sie pageup
+to kursor nie zmienia pozycji (bo tam gdzie chce skoczyc jest read-only) a powinien sie ustawic na pierwszej edytowalnej
+komorce
+
+gdy nie ma zadnych kolumn Clear ustawia lastVisRow i firstVisRow na 1 co powoduje crash gdy kliknie sie na ciele kontrolki
+
+
+
+gdy index jest na koncu zle czarne miejsce sie rysuje po prawej

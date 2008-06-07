@@ -1,0 +1,13 @@
+description "Address book application, uses XML to store data (using SAX like U++ classes)";
+
+uses
+	CtrlLib,
+	Report;
+
+file
+	AddressBook.cpp,
+	AddressBook.lay;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CheightR", "CS-CZ windows-1250", "\1height\1 (\1obdélník\1) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Výška obdélníku (ymax `- ymin).]]\r\n")
+HELP_END

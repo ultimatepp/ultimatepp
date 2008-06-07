@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$Clast_day_of_monthD", "EN-US", "\1last_day_of_month\1 (\1date\1 [/ d]) [S ®] \1date\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns last day in month defined by its \r\n"
+	"parameter d.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: last`_day`_of`_month(3.2.1999) `= \r\n"
+	"28.2.1999]]\r\n")
+HELP_END

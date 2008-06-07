@@ -1,0 +1,12 @@
+description "Bazaar: Docking example showing basic usage. Author: James Thomas (mrjt)";
+
+uses
+	CtrlLib,
+	Docking;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,19 @@
+description "The source files edit, derived from CtrlLib's LineEdit";
+
+optimize_speed;
+
+uses
+	CtrlLib;
+
+file
+	CodeEditor.h,
+	hl_color.i,
+	EditorBar.cpp,
+	Syntax.cpp,
+	Highlight.cpp,
+	FindReplace.cpp,
+	Lang.cpp,
+	CodeEditor.cpp,
+	CodeEditor.lay,
+	CodeEditor.iml;
+

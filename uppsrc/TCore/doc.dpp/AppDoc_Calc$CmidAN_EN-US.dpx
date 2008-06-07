@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmidAN", "EN-US", "\1mid\1 (\1pole hodnot\1, \1integer\1) [S ®] \1pole hodnot\1")
+	HELP_TEXT(
+	"\r\n")
+HELP_END

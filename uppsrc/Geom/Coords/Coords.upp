@@ -1,0 +1,15 @@
+uses
+	TCore,
+	Geom;
+
+file
+	GeomCoords.h,
+	util.cpp,
+	ellipsoid.cpp,
+	coords.cpp,
+	method.h,
+	method.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

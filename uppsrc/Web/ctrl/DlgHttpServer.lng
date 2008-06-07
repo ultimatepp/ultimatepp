@@ -1,0 +1,19 @@
+#if LANGUAGE == LNG_CZECH
+
+txt(DlgHttpServerTitle, "Internetový server")
+txt(DlgHttpServerFormatMinSec, "%d min, %d s")
+txt(DlgHttpServerFormatHourMinSec, "%2d:%02d:%02d")
+txt(DlgHttpServerFormatResponse, " ms / dotaz")
+txt(DlgHttpServerFormatLaggingResponse, " ms / dotaz")
+
+#endif
+
+#if LANGUAGE == LNG_ENGLISH
+
+txt(DlgHttpServerTitle, "Web server")
+txt(DlgHttpServerFormatMinSec, "%d min, %d sec")
+txt(DlgHttpServerFormatHourMinSec, "%2d:%02d:%02d")
+txt(DlgHttpServerFormatResponse, " msec / query")
+txt(DlgHttpServerFormatLaggingResponse, " msec / query")
+
+#endif

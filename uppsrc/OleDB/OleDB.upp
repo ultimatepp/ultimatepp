@@ -1,0 +1,16 @@
+description "OLEDB interface";
+
+uses
+	Ole,
+	Sql;
+
+link(MT DEBUG) /nodefaultlib:LIBCMT;
+
+file
+	OleDB.h,
+	OleDBSchema.h,
+	OleDB.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

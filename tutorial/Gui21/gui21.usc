@@ -1,0 +1,12 @@
+ctrl MyCtrl {
+	group "Example";
+
+	GetMinSize() { sz = GetTextSize("X"); sz.cy += 2; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 7; return sz; }
+
+	Paint(w) {
+		r = GetRect();
+		w.DrawRect(r, :White);
+		w.DrawText(2, 2, "0", StdFont(), :Black);
+	}
+};

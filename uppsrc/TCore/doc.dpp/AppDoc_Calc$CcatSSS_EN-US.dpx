@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CcatSSS", "EN-US", "\1cat\1 (\1string\1 [/ text_1], \1string\1 [/ join], \1string\1 [/ text_2]) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function concatenates its arguments ][/A@0+84 text`_1][A@0+84  \r\n"
+	"and ][/A@0+84 text`_2][A@0+84 . If neither string is empty, the \r\n"
+	"string ][/A@0+84 join][A@0+84  is inserted between them.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: cat(`\"hello`\", `\" `\", `\"world`\") \r\n"
+	"`= `\"hello world`\", cat(`\"`\", `\" `\", `\"world`\") `= `\"world`\"]]\r\n")
+HELP_END

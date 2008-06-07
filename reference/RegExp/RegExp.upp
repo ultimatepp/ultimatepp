@@ -1,0 +1,11 @@
+description "PCRE regular expressions";
+
+uses
+	Core,
+	plugin\pcre;
+
+file
+	RegExp.cpp charset "UTF-8";
+
+mainconfig
+	"" = "CONSOLE";

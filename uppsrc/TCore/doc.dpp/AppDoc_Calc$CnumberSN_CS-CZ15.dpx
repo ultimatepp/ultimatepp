@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CnumberSN", "CS-CZ windows-1250", "\1number\1 (\1øetìzec\1 [/ text], \1reálné èíslo\1 [/ jinak]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Funkce pøevede textovou reprezentaci reálného èísla \r\n"
+	"na hodnotu tohoto èísla. Varianta funkce s jedním parametrem \r\n"
+	"v pøípadì chybného zápisu èísla ohlásí pøi vyhodnocení chybu; \r\n"
+	"funkce s dvìma parametry vrátí v pøípadì chyby nebo prázdného \r\n"
+	"øetìzce èíselnou hodnotu ][/A@0+84 jinak][A@0+84 , zadanou jako \r\n"
+	"druhý parametr.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: number(`\"1.2e3`\") `= 1200]]\r\n")
+HELP_END

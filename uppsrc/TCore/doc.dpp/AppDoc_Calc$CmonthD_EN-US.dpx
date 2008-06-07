@@ -1,0 +1,6 @@
+HELP_TOPIC("AppDoc", "", "Calc$CmonthD", "EN-US", "")
+	HELP_TEXT(
+	"The function returns the month number of its argument.\r\n"
+	"&\r\n"
+	"&[* Example[* : mesic(27.5.1984) = 5]]")
+HELP_END

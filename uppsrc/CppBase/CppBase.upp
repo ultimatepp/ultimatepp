@@ -1,0 +1,22 @@
+description "Partly heurestic (imprecise) C++ parser for purposes of Assist++ (intellisense)";
+
+optimize_speed;
+
+uses
+	Core;
+
+file
+	CppBase.h,
+	keyword.i,
+	Pre.cpp,
+	cpplex.cpp,
+	Parser.cpp,
+	Base.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,3 @@
+BINARY(bin_cpp, "bin.cpp" BZ2)
+BINARY(bin_brc, "bin.brc" BZ2)
+BINARY_MASK(bin_all, "bin.*" BZ2)

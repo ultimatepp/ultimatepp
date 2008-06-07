@@ -1,0 +1,11 @@
+description "Creating and parsing XML files";
+
+uses
+	Core;
+
+file
+	XML.cpp;
+
+mainconfig
+	"" = "";
+

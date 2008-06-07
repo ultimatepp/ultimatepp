@@ -1,0 +1,69 @@
+UnitTest++ for Ultimate++ README  (Check README.original for sure!)
+
+*** This version of UnitTest++ is almost identical to original, the changes are:
+
+*1* the src/tests/* (UnitTest++ tests) were moved to different package (UnitTestTest)
+
+ Reason (personal preference):
+
+ I'm using TDD this way for my applications, one independent package is the application
+itself (or it's module), the other "<package>Test" package contains tests and depends on the
+<package> and UnitTest++ package.
+ This allows me to easily remove all tests from project (actually I use two different packages
+for every application, one contains all Tests packages and UnitTest++, the other is without
+tests for release version of application) to make sure the final release build is clean
+without any automated tests (if it is not desired to contain tests).
+
+ With Ultimate++ powerful packages philosophy you can share all packages between those two
+main packages (w/ test, w/o tests), only the application entry point has to differ, the one
+with tests must call "UPP::SetExitCode( UnitTest::RunAllTests() );" (for CONSOLE_APP_MAIN).
+ So you work all the time in the main package with tests, doing the TDD very likely, and
+whenever you feel your application should already do something, switch to the release package,
+hit compile & run, and see the real application to cra^H^H^Hrun instead of tests.
+
+ Also in your projects only UnitTest++ package is included, not the UnitTestTest, so you don't
+run tests over UnitTest++ code itself. (which is good as long as you don't change it's code)
+
+ If you need to change anything in UnitTest++, of course switch to UnitTestTest package, and
+start by adding new test.
+
+*2* TimeHelpers.h and .cpp files renamed to TimeHelpersPosix and TimeHelpersWin32
+
+ Reason ( http://www.ultimatepp.org/forum/index.php?t=msg&goto=11603 ):
+ 
+ The two files with identical name in the same package cause havoc to Ultimate++ build process.
+As there's no way to omit single file from build according to target platform, it was easier
+to rename files and compile both (with appropriate #ifdef which will inhibit content of that
+unwanted one).
+
+*3* Other minor changes described in this topic on forums:
+http://www.ultimatepp.org/forum/index.php?t=msg&th=1156&start=0&#msg_num_9
+
+ Reason (mostly personal preference and the need to make it work under Ultimate++)
+
+*** know issues:
+
+*A* in release mode the tests from different test packages are not linked in final executable.
+The trick to make it work is to include empty "void packagename_cppname(void) {}" in every .cpp
+file with tests in test packages.
+Than in main AllTests package in the CONSOLE_APP_MAIN call all those empty functions, this will
+force build process to link also all tests into final executable.
+ I use macro
+#define RUN_IN_RELEASE(x) extern void x(); x()
+ And in main:
+ RUN_IN_RELEASE( packagename_cppname );
+
+ As my number of cpp files with tests grow slowly, I don't mind too much adding with every new
+file the new RUN_IN_RELEASE line in CONSOLE_APP_MAIN function, and the empty function at the
+start of new cpp file.
+
+ If you work with tests only in debug mode (not recommended), the tests will get linked
+automagically without this hack.
+
+*B* the test "CrashingTestsAreReportedAsFailures" (UnitTestTest\TestTest.cpp line 64) is not
+run at all under MINGW, and in MSC8 debug it does crash the program and TheIDE reports
+exception, instead of failed test and application continuing in test run.
+
+ Author of "ultimatized" flavor of UnitTest++: Peter "Ped" Helcmanovsky
+ Do you want to contact me?
+ Replace one character in this string: "ped.7gods.org" to get my e-mail.

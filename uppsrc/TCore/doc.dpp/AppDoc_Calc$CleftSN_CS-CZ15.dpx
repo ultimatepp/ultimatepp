@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CleftSN", "CS-CZ windows-1250", "\1left\1 (\1øetìzec\1 [/ text], \1celé èíslo\1 [/ poèet_znakù]) [S ®] \1øetìzec\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Funkce vrátí zadaný [/ poèet znakù] ze zaèátku zadaného øetìzce \r\n"
+	"[/ text]. Pokud je poèet znakù menší nebo roven 0, výsledkem funkce \r\n"
+	"je prázdný øetìzec. Pokud je poèet znakù vìtší než délka øetìzce, \r\n"
+	"funkce vrátí zadaný øetìzec beze zmìny.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]left(\"ahoj svìte\", 6) = \"ahoj s\"")
+HELP_END

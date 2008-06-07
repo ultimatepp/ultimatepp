@@ -1,0 +1,12 @@
+#ifndef _AllForI18n_icpp_init_stub
+#define _AllForI18n_icpp_init_stub
+#include "CtrlLib/init"
+#include "Web/init"
+#include "ide/init"
+#include "PostgreSQL/init"
+#include "RichEdit/init"
+#include "MySql/init"
+#include "Ole/init"
+#include "GridCtrl/init"
+#include "Oracle/init"
+#endif

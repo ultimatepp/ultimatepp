@@ -1,0 +1,10 @@
+ctrl SqlArray {
+	group "Complex";
+	>ArrayCtrl;
+}
+
+ctrl SqlOption {
+	group "Push";
+	>Option;
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; sz.cy = max(16, sz.cy); return sz; }
+}

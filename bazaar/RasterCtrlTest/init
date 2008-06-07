@@ -1,0 +1,6 @@
+#ifndef _RasterCtrlTest_icpp_init_stub
+#define _RasterCtrlTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin/tif/init"
+#include "RasterCtrl/init"
+#endif

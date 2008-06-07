@@ -1,0 +1,29 @@
+    Co treba (Font &)x = ? O vyse uvedenem jsem premyslel, ale vzhledem k
+tomuto to asi nestoji za to... si myslim.
+
+-- Tak to ti dekuju, pres typecast to umim taky.
+
+Bylo by docela pekne, kdyby RichText umel Cat(pick_ RichText& text).
+--
+
+Bylo by docela pekne, kdyby RichText mel nejakou jednoduchou variantu Paintu
+bez strankovani a onanii kolem PageDraw a PaintInfo ve stylu stareho Documentu.
+-- vyrizeno
+
+Da se v RichTextView nejak nastavit zoom pro ten text?
+--
+
+Jak v RichTextView udelam skok na hyperlink, kdyz na nej uzivatel klikne?
+-- vyrizeno
+
+Chyba v EncodeQTF - cislo stylu
+-- vyrizeno
+
+//////////////////////////////////////////////////////////////////////
+
+default charset a language pro ParseQTF, pokud neni v QTF
+- [{0}%CS-CZ
+
+bullety (version.hpp)
+
+escapovani parametru funktoru

@@ -1,0 +1,14 @@
+description "XML viewer";
+
+uses
+	CtrlLib;
+
+file
+	XmlView.h,
+	main.cpp,
+	XmlView.iml,
+	XmlView.rc;
+
+mainconfig
+	"" = "GUI";
+

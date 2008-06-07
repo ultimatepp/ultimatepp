@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtextD", "EN-US", "\1text\1 (\1date/time\1) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 Value`-to`-text conversion. If a number is converted \r\n"
+	"into a text, its result is the text representation of the number \r\n"
+	"with 10 significant digits. If the parameter is a text, the text \r\n"
+	"will be left unchanged by the function. In case of date`-to`-text \r\n"
+	"conversion, the date will be saved in the string in the usual \r\n"
+	"form day.month.year.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: text(1 `/ 3) `= `\"0.3333333333`\", \r\n"
+	"text(`\"hello`\") `= `\"hello`\", text(26.7.1971) `= `\"26.07.1971`\"]]\r\n")
+HELP_END

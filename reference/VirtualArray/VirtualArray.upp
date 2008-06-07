@@ -1,0 +1,11 @@
+description "Using ArrayCtrl without storing any real data to it";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

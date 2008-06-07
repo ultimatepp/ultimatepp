@@ -1,0 +1,18 @@
+description "Bazaar: PieChart control test&demo by Andrei-Catalin";
+
+uses
+	CtrlLib,
+	Scatter,
+	Report,
+	PdfDraw;
+
+file
+	PieTest.h,
+	app.tpp,
+	main.cpp,
+	PieTest.lay,
+	PieTest.iml;
+
+mainconfig
+	"" = "GUI";
+

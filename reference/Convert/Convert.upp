@@ -1,0 +1,11 @@
+description "Using Convert to alter EditField for editing binary numbers";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,58 @@
+ctrl Scatter {
+	group "Extra";
+
+	GetMinSize() {sz.cx=150; sz.cy = 100; return sz; }
+	GetStdSize() {sz.cx=300; sz.cy = 200; return sz; }
+	
+	Frame  SetFrame @20;
+	Color  SetColor =:White @1;
+	Text SetTitle @5;
+	Font SetFontTitle @6;
+	Color SetColorTitle =:Black @7;
+	int H_Border =30 @2;
+	int V_Border =30 @3;
+	Color SetPlotAreaColor =:WhiteGray @4;
+	Text SetLabelX @8;
+	Text SetLabelY @9;
+	Font SetFontLabels @10;
+	Color SetColorLabels=:Black @11;
+	Color SetAxisColor =:Black @12;
+	int SetAxisWidth =6 @13;
+	Color SetGridColor=:Color(102,102,102);
+	int SetGridWidth=-4;
+	bool ShowHGrid=true;
+	bool ShowVGrid=true;
+	bool showLegend=true;
+	int SetLegendWeight=80;	
+
+	Paint(w) {          
+		r = GetRect();
+		w.DrawRect(r, .SetColor);
+		DrawCtrlFrame(w, r, .SetFrame);
+		sz = GetSize();
+		textsize = GetTextSize(.SetTitle, .SetFontTitle); 
+		if(.SetTitle=="") textsize.cy=0;
+		HB=0;
+		if(.H_Border>0) HB=.H_Border;		
+		VB=0;
+		if(.V_Border>0) VB=.V_Border;
+		w.DrawRect(HB-1,VB-1+textsize.cy,-2*HB+2+sz.cx,-2*VB+2-textsize.cy+sz.cy,:Gray);
+		aw=6;
+		if(.SetAxisWidth >= 6) aw=.SetAxisWidth;
+		
+		w.DrawRect(HB-int(aw/6),
+					VB+textsize.cy,
+					-2*HB+int(aw/6)+sz.cx,
+					-2*VB+int(aw/6)-textsize.cy+sz.cy,
+					.SetAxisColor);
+		w.DrawRect(HB,VB+textsize.cy,-2*HB+sz.cx,-2*VB-textsize.cy+sz.cy,.SetPlotAreaColor);
+		
+		w.DrawText((sz.cx - textsize.cx) / 2, 4, .SetTitle, .SetFontTitle, .SetColorTitle);
+		lx=GetTextSize(.SetLabelX,.SetFontLabels);
+		ly=GetTextSize(.SetLabelY,.SetFontLabels);
+		
+		w.DrawText(int((sz.cx-lx.cx)/2),sz.cy -(ly.cy+2),.SetLabelX,.SetFontLabels,.SetColorLabels);
+		w.DrawText(2,int((sz.cy+textsize.cy+ly.cx)/2),900,.SetLabelY,.SetFontLabels,.SetColorLabels);	
+       
+	}
+};

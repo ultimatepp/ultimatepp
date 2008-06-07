@@ -1,0 +1,9 @@
+description "BAZAAR : Execution of external commands gathering output - Author : Massimo Del Fedele - EMail : max@veneto.com";
+
+uses
+	Core;
+
+file
+	SysExec.h,
+	SysExec.cpp;
+

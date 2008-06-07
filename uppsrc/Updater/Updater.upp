@@ -1,0 +1,16 @@
+description "Utility for U++ enterprise application update system";
+
+uses
+	CtrlLib;
+
+file
+	Updater.rc,
+	Updater.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "GUI";
+

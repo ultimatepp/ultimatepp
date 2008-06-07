@@ -1,0 +1,14 @@
+description "TheIDE - builders - routines to compile programs";
+
+uses
+	ide\Common,
+	coff\binobj;
+
+file
+	Builders.h,
+	CppBuilder.cpp,
+	GccBuilder.cpp,
+	MscBuilder.cpp,
+	JavaBuilder.cpp,
+	ScriptBuilder.cpp;
+

@@ -1,0 +1,12 @@
+description "BAZAAR: Test application for SystemLog package - Author : Massimo Del Fedele - Email : max@veneto.com";
+
+uses
+	Core,
+	SystemLog;
+
+file
+	SystemLogTest.cpp;
+
+mainconfig
+	"" = "";
+

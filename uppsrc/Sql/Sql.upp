@@ -1,0 +1,31 @@
+description "Fundamental SQL classes - session, cursor, SQL language expressions, DB schemas";
+
+acceptflags
+	NOAPPSQL;
+
+uses
+	Core;
+
+file
+	Sql.h,
+	Sqlexp.h,
+	SqlCase.cpp,
+	SqlVal.cpp,
+	SqlBool.cpp,
+	SqlSet.cpp,
+	SqlStatement.cpp,
+	Sqls.h,
+	Sql.cpp,
+	Schema readonly separator,
+	SqlSchema.h,
+	SqlSchema.cpp,
+	sch_model.h,
+	sch_header.h,
+	sch_source.h,
+	sch_schema.h,
+	util_td.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS,
+	src.tpp;

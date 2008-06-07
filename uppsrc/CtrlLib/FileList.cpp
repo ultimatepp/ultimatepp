@@ -1,0 +1,303 @@
+#include "CtrlLib.h"
+
+NAMESPACE_UPP
+
+int GetTextSize(const FontInfo& fi, const wchar *text, const wchar *end) {
+	int w = 0;
+	while(text < end)
+		w += fi[*text++];
+	return w;
+}
+
+int GetTextSize(const FontInfo& fi, const WString& text) {
+	return GetTextSize(fi, text, text.End());
+}
+
+const wchar *GetTextFitLim(const FontInfo& fi, const wchar *txt, const wchar *end, int& cx) {
+	for(;;) {
+		if(fi[*txt] > cx || txt >= end)
+			return txt;
+		cx -= fi[*txt++];
+	}
+}
+
+int GetTextFitCount(const FontInfo& fi, const WString& s, int& cx) {
+	return (int)(GetTextFitLim(fi, s, s.End(), cx) - s.Begin());
+}
+
+const wchar *strdirsep(const wchar *s) {
+	while(*s) {
+		if(*s == '\\' || *s == '/') return s;
+		s++;
+	}
+	return NULL;
+}
+
+void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, bool isdir, Font font,
+                  Color ink, Color extink, const WString& desc, Font descfont, bool justname)
+{
+	FontInfo fi = font.Info();
+	int extpos = (isdir ? -1 : mname.ReverseFind('.'));
+	int slash = isdir ? -1 : max(mname.ReverseFind('\\'), mname.ReverseFind('/'));
+	if(extpos < slash)
+		extpos = -1;
+	const wchar *ext = extpos >= slash && extpos >= 0 ? mname.Begin() + extpos + 1
+	                                                  : mname.End();
+	const wchar *name = mname;
+	if(justname && slash >= 0)
+		name += slash + 1;
+	int txtcx = GetTextSize(fi, name);
+	if(txtcx <= wcx) {
+		w.DrawText(x, y, name, font, ink, (int)(ext - name));
+		w.DrawText(x + GetTextSize(fi, name, ext), y, ext, font, extink, (int)(mname.End() - ext));
+		if(!IsEmpty(desc))
+			DrawTextEllipsis(w, x + fi.GetHeight(), y, wcx - txtcx,
+			                 desc, "...", descfont, extink);
+	}
+	else {
+		int dot3 = 3 * fi['.'];
+		if(2 * dot3 > wcx)
+			w.DrawText(x, y, name, font, ink, GetTextFitCount(fi, name, wcx));
+		else {
+			const wchar *end = mname.End();
+			int dircx = 2 * fi['.'] + fi[DIR_SEP];
+			const wchar *bk = strdirsep(name);
+			if(bk) {
+				wcx -= dircx;
+				w.DrawText(x, y, ".." DIR_SEPS, font, SColorDisabled, 3);
+				x += dircx;
+				do {
+					txtcx -= GetTextSize(fi, name, bk + 1);
+					name = bk + 1;
+					if(txtcx < wcx) {
+						w.DrawText(x, y, name, font, ink, (int)(ext - name));
+						x += GetTextSize(fi, name, ext);
+						w.DrawText(x, y, ext, font, extink, (int)(end - ext));
+						return;
+					}
+					bk = strdirsep(name);
+				}
+				while(bk);
+			}
+			wcx -= dot3;
+			int extcx = GetTextSize(fi, ext, end);
+			if(2 * extcx > wcx || ext == end) {
+				int n = GetTextFitCount(fi, name, wcx);
+				w.DrawText(x, y, name, font, ink, n);
+				x += GetTextSize(fi, name, name + n);
+				w.DrawText(x, y, "...", font, SColorDisabled, 3);
+			}
+			else {
+				wcx -= extcx;
+				int n = (int)(GetTextFitLim(fi, name, end, wcx) - name);
+				w.DrawText(x, y, name, font, ink, n);
+				x += GetTextSize(fi, name, name + n);
+				w.DrawText(x, y, "...", font, SColorDisabled, 3);
+				w.DrawText(x + dot3, y, ext, font, extink, (int)(end - ext));
+			}
+		}
+	}
+}
+
+void FileList::Paint(Draw& w, const Rect& r, const Value& q,
+		             Color ink, Color paper, dword style) const
+{
+	const File& m = ValueTo<File>(q);
+	bool dark = Grayscale(paper) < 150;
+	w.DrawRect(r, paper);
+	int x = r.left + 2;
+	w.DrawImage(x, r.top + (r.Height() - m.icon.GetSize().cy) / 2, m.icon);
+	x += iconwidth;
+	x += 2;
+	FontInfo fi = m.font.Info();
+	DrawFileName(w, x, r.top + (r.Height() - fi.GetHeight()) / 2,
+	             r.right - x - 2, r.Height(), WString(m.name), m.isdir, m.font,
+	             dark ? SColorHighlightText : m.ink,
+	             dark ? SColorHighlightText : m.extink,
+	             WString(m.desc), m.descfont, justname);
+}
+
+Size FileList::GetStdSize(const Value& q) const
+{
+	const File& m = ValueTo<File>(q);
+	FontInfo fi = m.font.Info();
+	int cx = GetTextSize(fi, WString(m.name)) + 2 + iconwidth + 2 + 3;
+	if(!IsNull(m.desc))
+		cx += GetTextSize(m.descfont.Info(), WString(m.desc)) + fi.GetHeight();
+	return Size(cx, GetItemHeight());
+}
+
+void FileList::StartEdit() {
+	Rect r = GetItemRect(GetCursor());
+	const File& cf = Get(GetCursor());
+	Font f = cf.font;
+	int fcy = f.Info().GetHeight();
+	r.left += iconwidth + 2;
+	r.top += (r.Height() - fcy - 4) / 2;
+	r.bottom = r.top + fcy + 2;
+	edit.SetRect(r);
+	edit.SetFont(cf.font);
+	edit = cf.name.ToWString();
+	edit.Show();
+	edit.SetFocus();
+}
+
+void FileList::EndEdit() {
+	KillTimeCallback(TIMEID_STARTEDIT);
+	int b = edit.HasFocus();
+	edit.Hide();
+	if(b) SetFocus();
+}
+
+void FileList::OkEdit() {
+	EndEdit();
+	int c = GetCursor();
+	if(c >= 0 && c < GetCount())
+		WhenRename(Get(c).name, ~edit);
+}
+
+void FileList::LeftDown(Point p, dword flags) {
+	int c = GetCursor();
+	if(IsEdit()) {
+		OkEdit();
+		c = -1;
+	}
+	ColumnList::LeftDown(p, flags);
+	KillTimeCallback(TIMEID_STARTEDIT);
+	if(c == GetCursor() && c >= 0 && !HasCapture() && renaming && !(flags & (K_SHIFT|K_CTRL)))
+		SetTimeCallback(750, THISBACK(StartEdit), TIMEID_STARTEDIT);
+}
+
+bool FileList::FindChar(int from, int chr) {
+	for(int i = max(0, from); i < GetCount(); i++) {
+		WString x = Get(i).name.ToWString(); // TRC patch 05/09/15; for CXL to check
+		if(ToUpper(ToAscii(x[0])) == chr) {
+			ClearSelection();
+			SetCursor(i);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool FileList::Key(dword key, int count) {
+	if(key == K_ESCAPE && IsEdit()) {
+		EndEdit();
+		return true;
+	}
+	if(key == K_ENTER && IsEdit()) {
+		OkEdit();
+		return true;
+	}
+	if(accelkey) {
+		int c = ToUpper((int)key);
+		if(key < 256 && IsAlNum(c)) {
+			if(!FindChar(GetCursor() + 1, c))
+				FindChar(0, c);
+			return true;
+		}
+	}
+	return ColumnList::Key(key, count);
+}
+
+void FileList::Insert(int ii,
+                      const String& name, const Image& icon, Font font, Color ink,
+				      bool isdir, int64 length, Time time, Color extink,
+				      const String& desc, Font descfont, Value data)
+{
+	Value v;
+	File& m = CreateRawValue<File>(v);
+	m.isdir = isdir;
+	m.icon = icon;
+	m.name = name;
+	m.font = font;
+	m.ink = ink;
+	m.length = length;
+	m.time = time;
+	m.extink = IsNull(extink) ? ink : extink;
+	m.desc = desc;
+	m.descfont = descfont;
+	m.data = data;
+	ColumnList::Insert(ii, v, !m.isdir);
+}
+
+void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
+				   bool isdir, int64 length, Time time, Color extink,
+				   const String& desc, Font descfont, Value data)
+{
+	Value v;
+	File& m = CreateRawValue<File>(v);
+	m.isdir = isdir;
+	m.icon = icon;
+	m.name = name;
+	m.font = font;
+	m.ink = ink;
+	m.length = length;
+	m.time = time;
+	m.extink = IsNull(extink) ? ink : extink;
+	m.desc = desc;
+	m.descfont = descfont;
+	m.data = data;
+	ColumnList::Add(v, !m.isdir);
+}
+
+const FileList::File& FileList::Get(int i) const
+{
+	return ValueTo<File>(ColumnList::Get(i));
+}
+
+String FileList::GetCurrentName() const
+{
+	return GetCount() && GetCursor() >= 0 && GetCursor() < GetCount() ? Get(GetCursor()).name
+	       : Null;
+}
+
+int FileList::Find(const char *s) {
+	for(int i = 0; i < GetCount(); i++)
+		if(strcmp(Get(i).name, s) == 0) return i;
+	return -1;
+}
+
+bool FileList::FindSetCursor(const char *name) {
+	int i = Find(name);
+	if(i < 0) return false;
+	SetCursor(i);
+	return true;
+}
+
+struct FileList::FileOrder : public ValueOrder {
+	const FileList::Order *order;
+
+	virtual bool operator()(const Value& a, const Value& b) const {
+		return (*order)(ValueTo<File>(a), ValueTo<File>(b));
+	}
+};
+
+void FileList::Sort(const Order& order)
+{
+	FileOrder fo;
+	fo.order = &order;
+	int i = GetCursor();
+	String fn;
+	if(i >= 0)
+		fn = Get(i).name;
+	ColumnList::Sort(fo);
+	if(i >= 0)
+		FindSetCursor(fn);
+}
+
+FileList::FileList() {
+	iconwidth = 16;
+	ItemHeight(max(Draw::GetStdFontCy(), 16));
+	Ctrl::Add(edit);
+	edit.Hide();
+	edit.SetFrame(BlackFrame());
+	renaming = false;
+	justname = false;
+	accelkey = false;
+	SetDisplay(*this);
+}
+
+FileList::~FileList() {}
+
+END_UPP_NAMESPACE

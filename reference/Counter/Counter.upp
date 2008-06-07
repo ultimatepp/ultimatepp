@@ -1,0 +1,10 @@
+description "Counter widget used in UscCtrl example";
+
+uses
+	CtrlLib;
+
+file
+	Counter.h,
+	Counter.cpp,
+	Counter.usc font 2;
+

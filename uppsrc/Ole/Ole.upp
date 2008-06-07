@@ -1,0 +1,13 @@
+uses
+	Core;
+
+library(WIN32) ole32;
+
+file
+	Ole.h,
+	util.h,
+	util.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

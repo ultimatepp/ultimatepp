@@ -1,0 +1,11 @@
+description "Timer events";
+
+uses
+	Core;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+

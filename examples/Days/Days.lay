@@ -1,0 +1,8 @@
+LAYOUT(DaysLayout, 320, 64)
+	ITEM(EditDate, date1, LeftPosZ(52, 100).TopPosZ(8, 19))
+	ITEM(Label, dv___1, SetLabel(t_("Date 1")).LeftPosZ(8, 40).TopPosZ(8, 19))
+	ITEM(EditDate, date2, LeftPosZ(212, 100).TopPosZ(8, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Date 2")).LeftPosZ(168, 40).TopPosZ(8, 19))
+	ITEM(Label, result, LeftPosZ(8, 304).TopPosZ(36, 19))
+END_LAYOUT
+

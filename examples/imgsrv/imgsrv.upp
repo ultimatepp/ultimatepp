@@ -1,0 +1,13 @@
+description "Simple http image server";
+
+uses
+	Web,
+	Draw,
+	plugin\png,
+	plugin\gif;
+
+file
+	imgsrv.cpp;
+
+mainconfig
+	"" = "GUI";

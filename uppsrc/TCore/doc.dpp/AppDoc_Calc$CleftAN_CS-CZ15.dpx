@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CleftAN", "CS-CZ windows-1250", "\1left\1 (\1pole hodnot\1, \1celé èíslo\1 [/ poèet]) [S ®] \1pole hodnot\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Funkce vrátí pole obsahující prvních [* poèet] hodnot zadaného \r\n"
+	"pole hodnot. Pokud je hodnota [* poèet] menší nebo rovna nule, \r\n"
+	"funkce vrátí prázdné pole. Pokud je hodnota [* poèet] vìtší než \r\n"
+	"poèet prvkù pole, funkce vrátí pùvodní pole beze zmìny.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]left({1, 2, 3, 5, 8, 13}, 4) = {1, 2, 3, 5}&]\r\n"
+	"[s0;*2 ")
+HELP_END

@@ -1,0 +1,13 @@
+description "BMP image file format";
+
+uses
+	Draw;
+
+file
+	bmp.h,
+	bmphdr.h,
+	Bmp.cpp,
+	BmpWrite.cpp,
+	Icon.cpp,
+	BmpReg.icpp;
+

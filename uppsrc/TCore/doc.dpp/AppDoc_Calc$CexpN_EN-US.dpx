@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$CexpN", "EN-US", "\1exp\1 (\1real number\1) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Natural exponential. The result of this function is \r\n"
+	"the Euler number ][*A@0+84 e][A@0+84  (viz str._93)][A@0+84  \r\n"
+	"raised to the power given by the argument of ][*A@0+84 exp][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: exp(3.5) `= ][A@0+84 33.11545196]]\r\n")
+HELP_END

@@ -1,0 +1,13 @@
+uses
+	CtrlLib;
+
+file
+	imagehlp.dli,
+	Analyze.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,14 @@
+description "Simple image viewer";
+
+uses
+	CtrlLib,
+	plugin\tif,
+	plugin\jpg,
+	plugin\gif;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

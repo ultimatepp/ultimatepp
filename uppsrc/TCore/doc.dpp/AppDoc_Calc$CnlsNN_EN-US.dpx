@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CnlsNN", "EN-US", "\1nls\1 (\1real number\1 [/ value], \1integer\1 [/ decimals]) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 Converts its numeric value to text according to current \r\n"
+	"regional settings (delimiters of thousands, delimiter of decimal \r\n"
+	"part). If number of decimals is omitted, the default value 3 \r\n"
+	"is used. If the number of decimals is positive, non`-significant \r\n"
+	"zeroes will be deleted from the decimal part of the number. If \r\n"
+	"the number of decimal positions is negative, non`-significant \r\n"
+	"zeroes will be retained in the number. ]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: nls(1272.3, `-2) `= `\"1 272,30`\"]]\r\n")
+HELP_END

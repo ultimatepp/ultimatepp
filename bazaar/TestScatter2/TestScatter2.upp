@@ -1,0 +1,18 @@
+description "Bazaar: ScatterChart control test&demo by Andrei-Catalin";
+
+uses
+	CtrlLib,
+	Scatter,
+	Report,
+	PdfDraw,
+	plugin\jpg;
+
+file
+	TestScatter2.h,
+	main.cpp,
+	TestScatter2.lay,
+	TestScatter2.iml;
+
+mainconfig
+	"" = "GUI";
+

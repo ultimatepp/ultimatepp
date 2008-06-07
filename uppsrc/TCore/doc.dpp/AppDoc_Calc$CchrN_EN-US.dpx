@@ -1,0 +1,9 @@
+HELP_TOPIC("AppDoc", "", "Calc$CchrN", "EN-US", "\1chr\1 (\1integer\1 [/ ascii]) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function will return one`-character string containing \r\n"
+	"the character with the ASCII`-code ascii.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: chr(66) `= `\"B`\".]]\r\n")
+HELP_END

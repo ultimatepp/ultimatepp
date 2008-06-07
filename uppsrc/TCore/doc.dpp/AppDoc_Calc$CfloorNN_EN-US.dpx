@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CfloorNN", "EN-US", "\1floor\1 (\1real number\1 [/ value], \1integer\1 [/ decimals]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Rounding down (towards minus infinity) to the stated \r\n"
+	"number of decimal places (0 by default). The function returns \r\n"
+	"the highest integral multiple of ][*A@0+84 10_`*`*_][/A@0+84 `-decimals][A@0+84  \r\n"
+	"not greater than the original ][/A@0+84 value][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: floor(`-2.5) `= `-3, floor(47.32, \r\n"
+	"1) `= 47.3, floor(117, `-1) `= 110.]]\r\n")
+HELP_END

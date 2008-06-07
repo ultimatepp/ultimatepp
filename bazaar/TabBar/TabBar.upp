@@ -1,0 +1,13 @@
+description "Bazaar: Generic tab frame. Authors: Daniel Kos (unodgs), James Thomas (mrtj)";
+
+uses
+	CtrlLib;
+
+file
+	TabBar.h,
+	TabBar.iml,
+	TabBar.cpp;
+
+mainconfig
+	"" = "GUI";
+

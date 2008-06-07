@@ -1,0 +1,73 @@
+FN(int, obindps, (struct cda_def *cursor, ub1 opcode, OraText *sqlvar, \
+					int sqlvl, ub1 *pvctx, int progvl, \
+					int ftype, int scale, \
+					short *indp, word *alen, word *arcode, \
+					int pv_skip, int ind_skip, int alen_skip, int rc_skip, \
+					dword maxsiz, dword *cursiz, \
+					OraText *fmt, int fmtl, int fmtt))
+
+FN(int, obreak, (struct cda_def *lda))
+FN(int, ocan,   (struct cda_def *cursor))
+FN(int, oclose, (struct cda_def *cursor))
+FN(int, ocof,   (struct cda_def *lda))
+FN(int, ocom,   (struct cda_def *lda))
+FN(int, ocon,   (struct cda_def *lda))
+
+
+FN(int, odefinps, (struct cda_def *cursor, ub1 opcode, int pos,ub1 *bufctx, \
+		int bufl, int ftype, int scale, \
+		short *indp, OraText *fmt, int fmtl, int fmtt, \
+		word *rlen, word *rcode, \
+		int pv_skip, int ind_skip, int alen_skip, int rc_skip))
+
+FN(int, odessp, (struct cda_def *cursor, OraText *objnam, size_t onlen, \
+              ub1 *rsv1, size_t rsv1ln, ub1 *rsv2, size_t rsv2ln, \
+              word *ovrld, word *pos, word *level, OraText **argnam, \
+              word *arnlen, word *dtype, ub1 *defsup, ub1* mode, \
+              dword *dtsiz, short *prec, short *scale, ub1 *radix, \
+              dword *spare, dword *arrsiz))
+
+FN(int, odescr, (struct cda_def *cursor, int pos, int *dbsize, \
+                   short *dbtype, sb1 *cbuf, int *cbufl, int *dsize, \
+                   short *prec, short *scale, short *nullok))
+
+FN(int, oerhms, (struct cda_def *lda, short rcode, OraText *buf, int bufsiz))
+FN(int, oermsg, (short rcode, OraText *buf))
+FN(int, oexec, (struct cda_def *cursor))
+FN(int, oexfet,(struct cda_def *cursor, dword nrows, int cancel, int exact))
+FN(int, oexn, (struct cda_def *cursor, int iters, int rowoff))
+FN(int, ofen, (struct cda_def *cursor, int nrows))
+FN(int, ofetch, (struct cda_def *cursor))
+FN(int, oflng, (struct cda_def *cursor, int pos, ub1 *buf, \
+                 int bufl, int dtype, dword *retl, int offset))
+FN(int, ogetpi, (struct cda_def *cursor, ub1 *piecep, dvoid **ctxpp, \
+                 dword *iterp, dword *indexp))
+FN(int, oopt, (struct cda_def *cursor, int rbopt, int waitopt))
+FN(int, opinit, (dword mode))
+FN(int, olog, (struct cda_def *lda, ub1* hda, OraText *uid, int uidl, OraText *pswd, int pswdl, \
+                 OraText *conn, int connl, dword mode))
+FN(int, ologof,  (struct cda_def *lda))
+FN(int, oopen, (struct cda_def *cursor, struct cda_def *lda, OraText *dbn, int dbnl, \
+                  int arsize, OraText *uid, int uidl))
+FN(int, oparse, (struct cda_def *cursor, OraText *sqlstm, int sqllen, int defflg, dword lngflg))
+FN(int, orol,    (struct cda_def *lda))
+FN(int, osetpi,  (struct cda_def *cursor, ub1 piece, dvoid *bufp, dword *lenp))
+
+FN(int, onbset,   (struct cda_def *lda ))
+FN(int, onbtst,   (struct cda_def *lda ))
+FN(int, onbclr,   (struct cda_def *lda ))
+FN(int, ognfd,    (struct cda_def *lda, dvoid *fdp))
+
+FN(int, obndra, (struct cda_def *cursor, OraText *sqlvar, int sqlvl,\
+                   ub1 *progv, int progvl, int ftype, int scale,\
+                   short *indp, word *alen, word *arcode, dword maxsiz,\
+                   dword *cursiz, OraText *fmt, int fmtl, int fmtt))
+FN(int, obndrn, (struct cda_def *cursor, int sqlvn, ub1 *progv,\
+                   int progvl, int ftype, int scale, short *indp,\
+                   OraText *fmt, int fmtl, int fmtt))
+FN(int, obndrv, (struct cda_def *cursor, OraText *sqlvar, int sqlvl,\
+                   ub1 *progv, int progvl, int ftype, int scale,\
+                   short *indp, OraText *fmt, int fmtl, int fmtt))
+FN(int, odefin, (struct cda_def *cursor, int pos, ub1 *buf,\
+	               int bufl, int ftype, int scale, short *indp,\
+	               OraText *fmt, int fmtl, int fmtt, word *rlen, word *rcode))

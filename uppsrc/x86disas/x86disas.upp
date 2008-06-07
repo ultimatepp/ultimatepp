@@ -1,0 +1,19 @@
+uses
+	Core,
+	plugin\ndisasm;
+
+file
+	x86disas.h,
+	mnemonics.i,
+	opcmap.cpp,
+	x86.cpp,
+	syntax.cpp,
+	x86disas.cpp,
+	main.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "";

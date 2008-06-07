@@ -1,0 +1,8 @@
+description "Utility to build U++ projects from the commandline";
+
+file
+	umk.cpp;
+
+mainconfig
+	"" = "CONSOLE";
+

@@ -1,0 +1,6 @@
+#ifndef _ide_Debuggers_icpp_init_stub
+#define _ide_Debuggers_icpp_init_stub
+#include "ide\Common/init"
+#include "plugin\ndisasm/init"
+#include "HexView/init"
+#endif

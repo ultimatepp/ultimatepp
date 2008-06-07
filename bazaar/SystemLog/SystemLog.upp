@@ -1,0 +1,11 @@
+description "Bazaar: Logging package, author Massimo Del Fedele (max@veneto.com)";
+
+uses
+	Core;
+
+file
+	SystemLog.h,
+	src.tpp,
+	SystemLog.cpp,
+	Messages.rc;
+

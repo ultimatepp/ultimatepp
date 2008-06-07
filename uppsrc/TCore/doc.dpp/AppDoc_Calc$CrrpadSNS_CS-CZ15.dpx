@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CrrpadSNS", "CS-CZ windows-1250", "\1rrpad\1(\1øetìzec\1 [/ text], \1celé èíslo\1 [/ délka], \1øetìzec\1 [/ výplò]) [S ®] \1øetìzec\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Funkce doplní øetìzec [* text] zprava na poèet znakù [* délka] \r\n"
+	"opakovaným pøidáváním øetìzce [* výplò]. Pokud je [* délka] menší \r\n"
+	"nebo rovna délce pùvodního øetìzce [* text], funkce vrátí pouze \r\n"
+	"[* délka] prvních znakù øetìzce [* text].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad:] rpad(\"ahoj\", 15, \"svete\") = \"ahojsvetesvetes\"&]\r\n"
+	"[s0;2 ")
+HELP_END

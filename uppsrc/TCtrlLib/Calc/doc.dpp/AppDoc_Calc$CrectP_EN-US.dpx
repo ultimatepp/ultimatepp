@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CrectP", "EN-US", "\1rect\1 (\1bod\1 [/ P]) [S ®] \1obdélník\1")
+	HELP_TEXT(
+	"[ [A@0+84 Vrátí obdélník obsahující zadaný bod.]]\r\n")
+HELP_END

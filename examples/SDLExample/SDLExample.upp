@@ -1,0 +1,19 @@
+description "SDL demo example";
+
+uses
+	Core;
+
+library(MSC) "SDL SDLmain";
+
+library(GCC WIN32) "SDL.dll SDLmain";
+
+library(LINUX) "SDL SDLmain";
+
+library(FREEBSD) "SDL SDLmain X11 Xext Xrandr Xrender vga vgl aa usbhid ncurses";
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,5 @@
+#ifndef _coff_binobj_icpp_init_stub
+#define _coff_binobj_icpp_init_stub
+#include "coff/init"
+#include "plugin\bz2/init"
+#endif

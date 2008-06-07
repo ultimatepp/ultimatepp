@@ -1,0 +1,7 @@
+LAYOUT(CalculatorLayout, 376, 56)
+	ITEM(Label, dv___0, SetLabel(t_("Expression")).LeftPosZ(4, 56).TopPosZ(4, 19))
+	ITEM(EditField, expr, HSizePosZ(64, 4).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Value:")).LeftPosZ(112, 56).TopPosZ(28, 16))
+	ITEM(EditField, value, HSizePosZ(168, 4).TopPosZ(26, 19))
+	ITEM(Button, ok, SetLabel(t_("Evaluate")).LeftPosZ(4, 80).TopPosZ(28, 22))
+END_LAYOUT

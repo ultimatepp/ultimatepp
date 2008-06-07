@@ -1,0 +1,11 @@
+description "Printing in U++";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

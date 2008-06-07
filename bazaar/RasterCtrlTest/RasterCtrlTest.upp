@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	plugin/tif,
+	RasterCtrl;
+
+file
+	RasterCtrlTest.h,
+	RasterCtrlTest.cpp,
+	RasterCtrlTest.lay;
+
+mainconfig
+	"" = "GUI";
+

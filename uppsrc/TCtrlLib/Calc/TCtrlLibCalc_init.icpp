@@ -1,0 +1,8 @@
+#include "TCtrlLibCalc.h"
+
+NAMESPACE_UPP
+
+#define TFILE <TCtrlLib/Calc/TCtrlLibCalc.t>
+#include <Core/t.h>
+
+END_UPP_NAMESPACE

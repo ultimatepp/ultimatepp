@@ -1,0 +1,16 @@
+description "Viewer of DBF files";
+
+uses
+	plugin\dbf,
+	CtrlLib;
+
+file
+	DbfView.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "GUI";
+

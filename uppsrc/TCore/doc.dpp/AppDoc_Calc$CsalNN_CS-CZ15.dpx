@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsalNN", "CS-CZ windows-1250", "operátor \1<<\1  (\1celé èíslo\1, \1celé èíslo\1 [/ poèet_bitù]) [S ®] \1celé èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Aritmetický posuv vlevo. Výsledkem operace je celé èíslo, \r\n"
+	"jehož dvojková reprezentace vznikne posuvem dvojkové reprezentace \r\n"
+	"èísla na levé stranì operátoru vlevo (smìrem k_vyšším bitùm) \r\n"
+	"o_poèet bitù urèený operandem na pravé stranì. Vzhledem k_tomu, \r\n"
+	"že celoèíselné výpoèty probíhají v_doplòkovém kódu, je ][*A@0+84 a_`<`< \r\n"
+	"b_`= a_`* 2 `*`* b][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: 3 `<`< 2 `= 12 (11 `<`< 2 `= 1100).]]\r\n")
+HELP_END

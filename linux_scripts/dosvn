@@ -1,0 +1,52 @@
+#!/bin/bash
+# dosvn
+# quick go to create deb package from local svn repo
+#
+#################################################################
+#		REPLACE VALUES WITH YOUR OWN			#
+# SVN repository full path
+SVN_REPO="/home/massimo/sources/uppsvn"
+#
+# Destination path for generated debian
+DEST_PATH="/home/massimo/sources/uppdeb"
+#
+# Mantainer name and email
+export MAINTAINER="Massimo Del Fedele"
+#
+export EMAIL="max@veneto.com"
+#################################################################
+#
+# checks if svn repo and destination path are ok
+if [ ! -d $SVN_REPO/.svn ]
+then
+	echo "ERROR - SVN repository not found in '$SVN_REPO'"
+	echo "Please modify current script to fit your Upp SVN repository path"
+	exit 1
+fi
+
+if [ ! -d $DEST_PATH ]
+then
+	echo "ERROR - Invalid destinatio path '$DEST_PATH'"
+	echo "Please modify current script to fit your destination path"
+	exit 1
+fi
+
+#locates 'uppsvn2deb' script - first try on path
+uppsvn2deb="`which uppsvn2deb`"
+if [ x$uppsvn2deb = x ]
+then
+	# couldn't find it on path, just try on this script's path
+	LSOF=$(lsof -p $$ 2>/dev/null | grep -E "/"$(basename $0)"$")
+	uppsvn2deb=$(echo $LSOF | sed -r s/'^([^\/]+)\/'/'\/'/1 2>/dev/null)
+	uppsvn2deb=$(dirname $uppsvn2deb)/uppsvn2deb
+fi
+if [ ! -f $uppsvn2deb ]
+then
+	echo "ERROR - Could not find 'uppsvn2deb' script"
+	echo "Please check if it's on current path"
+	exit 1
+fi
+
+#just run uppsvn2deb with my params
+$uppsvn2deb $SVN_REPO $DEST_PATH
+

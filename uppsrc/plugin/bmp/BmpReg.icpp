@@ -1,0 +1,9 @@
+#include "bmp.h"
+
+NAMESPACE_UPP
+
+INITBLOCK {
+	StreamRaster::Register<BMPRaster>();
+}
+
+END_UPP_NAMESPACE

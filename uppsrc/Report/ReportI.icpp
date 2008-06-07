@@ -1,0 +1,8 @@
+#include "Report.h"
+
+NAMESPACE_UPP
+
+#define  TFILE <Report/Report.t>
+#include <Core/t.h>
+
+END_UPP_NAMESPACE

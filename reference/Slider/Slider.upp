@@ -1,0 +1,11 @@
+description "SliderCtrl example";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,8 @@
+file
+	Crypto.h,
+	BscF.cpp,
+	Sha1.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

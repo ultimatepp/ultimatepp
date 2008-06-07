@@ -1,0 +1,10 @@
+description "GIF image file format";
+
+uses
+	Draw;
+
+file
+	gif.h,
+	gifupp.cpp,
+	gif.icpp;
+

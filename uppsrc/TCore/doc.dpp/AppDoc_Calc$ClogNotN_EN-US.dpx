@@ -1,0 +1,16 @@
+HELP_TOPIC("AppDoc", "", "Calc$ClogNotN", "EN-US", "operator \1!\1  (\1real number\1) [S ®] \1logical value\1")
+	HELP_TEXT(
+	"[ [A@0+84 Logical negation. The result is the logical value 1 \r\n"
+	"(][*A@0+84 true][A@0+84 ), if the argument is zero (zero number \r\n"
+	"or the logical value ][*A@0+84 false][A@0+84 ). If the argument \r\n"
+	"is nonzero or if it contains the logical value ][*A@0+84 true][A@0+84 , \r\n"
+	"the result of logical negation is the value 0 (][*A@0+84 false][A@0+84 ). \r\n"
+	"If the operator `! is applied to a string, the result will be \r\n"
+	"1 (][*A@0+84 true][A@0+84 ) when and only when the string is \r\n"
+	"empty.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: `!10 `= 0, `!0 `= 1, `!`\"hello`\" \r\n"
+	"`= 0]]\r\n")
+HELP_END

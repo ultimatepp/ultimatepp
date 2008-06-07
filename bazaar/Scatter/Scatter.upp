@@ -1,0 +1,15 @@
+description "Bazaar: Scatter & Pie ctrls, by Andrei-Catalin";
+
+uses
+	CtrlLib;
+
+file
+	Scatter.h,
+	Scatter.cpp,
+	PopUpText.h,
+	PopUpText.cpp,
+	Chart.usc,
+	Pie.h,
+	Pie.cpp,
+	Chart.iml;
+

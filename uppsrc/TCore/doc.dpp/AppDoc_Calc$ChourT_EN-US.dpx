@@ -1,0 +1,8 @@
+HELP_TOPIC("AppDoc", "", "Calc$ChourT", "EN-US", "")
+	HELP_TEXT(
+	"[{2}\r\n"
+	"[s0; [2 Function returns the number of hours of its date`/time argument.]]\r\n"
+	"&\r\n"
+	"[s0; ]\r\n"
+	"]")
+HELP_END

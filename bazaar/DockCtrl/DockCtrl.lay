@@ -1,0 +1,31 @@
+LAYOUT(ControlPanelLayout, 444, 480)
+	ITEM(StaticText, dv___0, SetText(t_("Select skin:")).SetAlign(ALIGN_CENTER).LeftPosZ(8, 168).TopPosZ(8, 22))
+	ITEM(Button, layoutbutton, SetLabel(t_("Reset")).Tip(t_("Press to reset window layout.")).LeftPosZ(16, 82).BottomPosZ(18, 22))
+	ITEM(Button, layoutadd, SetLabel(t_("Add")).RightPosZ(80, 56).BottomPosZ(18, 22))
+	ITEM(Option, TabOptionIcon, SetLabel(t_("Show Icons")).LeftPosZ(20, 188).TopPosZ(64, 16))
+	ITEM(Option, TabOptionClose, SetLabel(t_("Show Buttons")).LeftPosZ(20, 188).TopPosZ(84, 16))
+	ITEM(Option, AutoOptionClose, SetLabel(t_("Show Buttons")).HSizePosZ(240, 16).TopPosZ(84, 16))
+	ITEM(Option, AutoOptionIcon, SetLabel(t_("Show Icons")).HSizePosZ(240, 16).TopPosZ(64, 16))
+	ITEM(DropList, skinlist, HSizePosZ(192, 8).TopPosZ(8, 22))
+	ITEM(LabelBox, TabOptions, SetLabel(t_("Tab Options")).LeftPosZ(8, 208).TopPosZ(44, 108))
+	ITEM(Option, TabOptionNest, SetLabel(t_("Allow Nested Tabs")).LeftPosZ(20, 188).TopPosZ(124, 16))
+	ITEM(Option, TabOptionAlignment, SetLabel(t_("Auto Align Tabs")).LeftPosZ(20, 188).TopPosZ(104, 16))
+	ITEM(LabelBox, AutoOptions, SetLabel(t_("AutoHide Options")).HSizePosZ(228, 8).TopPosZ(44, 108))
+	ITEM(LabelBox, dv___12, SetLabel(t_("Layout Settings")).HSizePosZ(8, 8).BottomPosZ(8, 52))
+	ITEM(DropList, layoutlist, HSizePosZ(104, 148).BottomPosZ(18, 22))
+	ITEM(Button, layoutdelete, SetLabel(t_("Delete")).RightPosZ(16, 56).BottomPosZ(18, 22))
+	ITEM(TabCtrl, panel, HSizePosZ(8, 8).VSizePosZ(160, 72))
+END_LAYOUT
+
+LAYOUT(WidgetListLayout, 376, 236)
+	ITEM(ArrayCtrl, list, HorzGrid(false).VertGrid(false).AskRemove(false).AutoHideSb(true).SetFrame(FieldFrame()).HSizePosZ(10, 10).VSizePosZ(48, 12))
+	ITEM(Label, dv___1, SetLabel(t_("Below are the available dockable window.\nLeft clicking on the items will popup the action menu for the selected item.")).HSizePosZ(10, 10).TopPosZ(8, 36))
+END_LAYOUT
+
+LAYOUT(WidgetGroupsLayout, 404, 300)
+	ITEM(TreeCtrl, grouptree, HSizePosZ(8, 8).VSizePosZ(44, 4))
+	ITEM(Button, groupdelete, SetLabel(t_("Delete")).RightPosZ(8, 56).TopPosZ(12, 22))
+	ITEM(Button, groupadd, SetLabel(t_("Add")).RightPosZ(76, 56).TopPosZ(12, 22))
+	ITEM(Label, dv___3, SetLabel(t_("You can use Drag/Drop to change Widget groups.\nRight click on groups/items for action menu. ")).HSizePosZ(8, 144).TopPosZ(7, 32))
+END_LAYOUT
+

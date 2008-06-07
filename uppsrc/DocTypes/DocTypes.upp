@@ -1,0 +1,25 @@
+uses
+	Draw,
+	RichText,
+	CtrlLib,
+	PdfDraw;
+
+file
+	DocTypes.h,
+	ParaFormat.cpp,
+	DocTypes.cpp,
+	DocTable.cpp,
+	QtfParser.cpp,
+	QtfEncoder.cpp,
+	RtfDocOut.cpp,
+	Report.h,
+	Report.cpp,
+	ShowReport.cpp,
+	QtfCtrl.h,
+	QtfCtrl.cpp,
+	Report.lay,
+	DocTypes.usc,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

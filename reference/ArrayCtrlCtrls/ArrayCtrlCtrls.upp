@@ -1,0 +1,11 @@
+description "Columns with widget class in ArrayCtrl";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

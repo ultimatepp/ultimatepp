@@ -1,0 +1,115 @@
+//==============================================================================================
+// DockCtrl: A dockable widget framework for U++
+// Author:	 Ismail YILMAZ
+//==============================================================================================
+
+
+[+] - new feature
+[-] - bugfix
+[*] - change
+
+Recent revisions are added to the current versions logs under date/time info.
+
+0.50
+	> First Public Beta - public release name DockCtrl DEV802b.1
+	> Package versioning is synchronised with the main Ultimate++ releases.
+	--------------------------------------------------------------------------------------------
+	+ full featured tabbed dock windows implemented.
+	  optional "Nested tabbing" (a complex, yet very easy to use tabbing mode) introduced.
+	  automatic tab alignment of tabbed windows is made optional.
+	+ autohide feature is implemented.
+	  "tabbed autohiding" introduced.
+	  animated window (Thanks to Mrjtuk).
+	+ introducing "Complex Dockable Framework" concept. namely, numereous and seperate
+	  DockCtrl can be nested in any standard U++ Ctrl derived class.
+	+ unified (mostly...) Chameleon structure "DockCtrlChStyle" added for easy customization.
+	+ internationalization support added. currentyl only Turkish and English languages are supported.
+	+ added settings menu
+	+ added SetLayout() method for easy instatiation of DockCtrl class.
+	+ self-explanatory example code is added to the package.
+	* DockPane helper class renamed to PaneFrame;
+	* removed Splitter ctrl code from DockPane and made into a seperate custom class PaneSplitter.
+	* control panel is heavily improved.
+	  from now on, control panel has full access and control over the docked windows.
+	- Fixed most of the sizing issues by adding size hint methods (see DockableCtrl.cpp).
+	- Many internal bugfix and cleanup.
+	
+0.51
+	> public release name DockCtrl DEV802b.2
+	--------------------------------------------------------------------------------------------
+2/19/2008
+	- fixed a nasty bug in TabWindow Detach() method which led to stack overflow error.
+	  (However, this feature is still in it'a alpha stage. So, it is experimental. There may very well
+	  be bugs... USE IT AT YOUR RISK!)
+	- fixed tab dragging bug which cause to trigger the StartWindowDrag() in tab frame's empty area.
+	- ResetLayout() method fixed and renamed to ResetWidgetLayout(). 
+	- the tabs and tabbed window title showed incorrect info(title, icon) in  "nested tabbing" mode
+	  and in "tabbed autohide" mede. this bug is fixed for both mode by adding 
+	  RefreshTabWindowLabel() method to TabWindow class.
+	- other internal and minor bugfixes.
+	* removed irrelevant packages from the assembly :) (remnants of my early experiments...)
+	* DockCtrlExample is added to the package. now the main package is named DockCtrl Dev802b.2
+	* default and enhanced background skins are polished. now they have more native look.
+
+2/20/2008
+	+ german translation added (Thanks to Masu).
+	- fixed "call by reference errors" under MingW 3.4.2 (Thanks to Masu)
+	- Tab text alignment, close button detection bugs and scrollbar separator line painting are fixed (Thank to Unodgs).
+	- fixed autohide bug which caused the framework fall into an infinite loop when trying to hide a 2+ level nested tabs.
+
+2/21/2008
+	* from now on, default U++ chameleon skins are used for painting the dragbar background (in default and enhanced style)
+	  namely, from now on system colors applies to the Dockctrl dragbar. used skin samples are as following: 
+	  default 	skin = drawed using default TabCtrl style.
+	  enhanced 	skin = drawed using default ToolBar style.
+	  classic	skin = no special draw action (uses current system background).   
+	+ tab repositioning for TabWindow and Autohide (using Ctrl + Left drag or with solely Middle Drag) added;  
+
+2/23/2008
+	+ added partial X11 support (only drag-n-drop at the moment) - thanks to Mrjtuk.
+	* from now on, tab drag-n-drop animation  has transparency effect.
+	- fixed a bug in tab animation which causes to set the active tab to the last tab in the list. now the tabs
+	  correctly set the cursour to the previously active tab if the dnd is cancelled.
+	- fixed a bug in tab animation transparency effect which causes pane's with more than 2 childs to draw the animation
+	  incorrectly.  
+	- Fixed a nasty bug in AlphaHighlight() function to crash the application when compiled under MingW (5.1.3) (Thanks to Masu) 
+	
+2/26/2008
+	+ X11 related dnd issues fixed. DockCtrl now has full X11 docking support (Tested On KUBUNTU).
+	+ Russian translation and more accurate layout file for control panel added to the source (Thanks to Anton).
+
+0.52
+	> public release name DockCtrl DEV803b.1
+	--------------------------------------------------------------------------------------------
+3/21/2008
+	+ added full serialization support.
+	+ added default/custom layout support.
+	* DockableCtrl class reworked (now it is more abstract); 
+	* TabWindow class reworked (no longer uses PaneSplitter() class to control child widgets).
+	* DockCtrl class renamed to DockBase class and added a more generic DockCtrl class.
+	* DockBase class derives from TopWindow. 
+	+ added	InitDockCtrl() method for widget initialization.
+	+ added InitCustomLayouts() method for planned "predefined" layout support.
+	+ added Tabify() method (with 1 overload) to simplify widget tabbing.
+	+ added DockFloat() method to DockableCtrl class.
+	+ added ShowDragBarButtons() method to DockWindow class.
+	+ added ForbidDragAndDrop()/PermitDragAndDrop() methods to DockableCtrl base widget class.
+	  dnd behaviour of each DockableCtrl derived widget can be controlled using this method pair. 
+	+ added layout group to the settings window.
+	+ added HotKey support for Settings window (default is CTRL + HOME).
+	+ added methods to control forbid/permit on window sides.
+	- numerous bugfixes, and improvements.
+
+3/22/2008
+	+ double clicking on a dragbar of a authidden dockwindow will cause it go into docked state.
+	+ added "stdsize" variable to the PaneFrame class.
+	+ added ShowXXXXPane() (X:left/top/right/bottom) public methods to the Dockbase class. 
+
+3/27/2008
+	+ added widget grouping (both predefined/default and user) support. 
+	+ added WidgetGroup() method and defined "%" operator for widget grouping.
+	+ added group manager to the settings window.
+	* tab window creation/managment mechanism changed.
+	
+	 
+	

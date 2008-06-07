@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cfirst_day_of_monthD", "EN-US", "\1first_day_of_month\1 (\1date\1 [/ d]) [S ®] \1date\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns first day in month defined by its \r\n"
+	"parameter d.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: first`_day`_of`_month(18.3.1994) \r\n"
+	"`= 1.3.1994]]\r\n")
+HELP_END

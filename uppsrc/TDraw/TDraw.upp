@@ -1,0 +1,20 @@
+description "Experimental (sometimes obsolete) painting code";
+
+uses
+	Draw,
+	Geom,
+	TCore,
+	PdfDraw;
+
+library(WIN32) comdlg32;
+
+file
+	TDraw.h,
+	util.h,
+	util.cpp,
+	formula.h,
+	formula.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

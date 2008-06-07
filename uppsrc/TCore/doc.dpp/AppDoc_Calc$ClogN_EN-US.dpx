@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$ClogN", "EN-US", "\1log\1 (\1real number\1 [/ x]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Decadic logarithm. The function calculates the logarithm \r\n"
+	"of the parameter ][/A@0+84 x][A@0+84  with 10 as its base, i.e. \r\n"
+	"such ][/A@0+84 a][A@0+84  for which ][*/A@0+84 x][*A@0+84  `= \r\n"
+	"pow(10, ][*/A@0+84 a][*A@0+84 )][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: log(1000) `= 3]]\r\n")
+HELP_END
