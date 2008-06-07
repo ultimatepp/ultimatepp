@@ -25,7 +25,7 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-
+ 
  /*
  	2008-01-26 Patches by Massimo Del Fedele :
  		- modified sources to use Ultimate++ containers instead std:: ones
@@ -501,3 +501,4 @@ namespace Upp
 } // end namespace Upp
 
 #endif // closes ASTYLE_H
+

@@ -855,7 +855,7 @@ template <class T>
 struct StableSortItem {
 	const T& value;
 	int      index;
-	
+
 	StableSortItem(const T& value, int index) : value(value), index(index) {}
 };
 
@@ -863,7 +863,7 @@ template <class II, class T>
 struct StableSortIterator {
 	II          ii;
 	int        *vi;
-	
+
 	typedef StableSortIterator<II, T> Iter;
 
 	Iter&       operator ++ ()               { ++ii; ++vi; return *this; }
@@ -890,7 +890,7 @@ struct StableSortLess_ {
 		if(less(a.value, b.value)) return true;
 		return less(b.value, a.value) ? false : a.index < b.index;
 	}
-	
+
 	StableSortLess_(const Less& less) : less(less) {}
 };
 
@@ -932,7 +932,7 @@ struct StableSortLessCmp_ {
 		int q = SgnCompare(a.value, b.value);
 		return q ? q < 0 : a.index < b.index;
 	}
-	
+
 	StableSortLessCmp_(const Cmp& cmp) : cmp(cmp) {}
 };
 

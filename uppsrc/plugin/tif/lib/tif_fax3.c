@@ -4,23 +4,23 @@
  * Copyright (c) 1990-1997 Sam Leffler
  * Copyright (c) 1991-1997 Silicon Graphics, Inc.
  *
- * Permission to use, copy, modify, distribute, and sell this software and
+ * Permission to use, copy, modify, distribute, and sell this software and 
  * its documentation for any purpose is hereby granted without fee, provided
  * that (i) the above copyright notices and this permission notice appear in
  * all copies of the software and related documentation, and (ii) the names of
  * Sam Leffler and Silicon Graphics may not be used in any advertising or
  * publicity relating to the software without the specific, prior written
  * permission of Sam Leffler and Silicon Graphics.
- *
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- *
+ * 
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+ * 
  * IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
  * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
- * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
  * OF THIS SOFTWARE.
  */
 
@@ -562,7 +562,7 @@ static const int _msbmask[9] =
 	if (bit == 0)						\
 		_FlushBits(tif);				\
 }
-
+	
 /*
  * Write a variable-length bit-value to
  * the output stream.  Values are
@@ -667,7 +667,7 @@ Fax3PutEOL(TIFF* tif)
 			else
 				align = sp->bit - align;
 			code = 0;
-			tparm=align;
+			tparm=align; 
 			_PutBits(tif, 0, tparm);
 		}
 	}
@@ -1069,7 +1069,7 @@ static void
 Fax3Cleanup(TIFF* tif)
 {
 	Fax3CodecState* sp = DecoderState(tif);
-
+	
 	assert(sp != 0);
 
 	tif->tif_tagmethods.vgetfield = sp->b.vgetparent;
@@ -1082,7 +1082,7 @@ Fax3Cleanup(TIFF* tif)
 
 	if (Fax3State(tif)->subaddress)
 		_TIFFfree(Fax3State(tif)->subaddress);
-
+	
 //Patch by cxl, 08-01-29
 	if (Fax3State(tif)->faxdcs)
 		_TIFFfree(Fax3State(tif)->faxdcs);
@@ -1325,7 +1325,7 @@ InitCCITTFax3(TIFF* tif)
 	sp->vsetparent = tif->tif_tagmethods.vsetfield;
 	tif->tif_tagmethods.vsetfield = Fax3VSetField; /* hook for codec tags */
 	tif->tif_tagmethods.printdir = Fax3PrintDir;   /* hook for codec tags */
-	sp->groupoptions = 0;
+	sp->groupoptions = 0;	
 	sp->recvparams = 0;
 	sp->subaddress = NULL;
 	sp->faxdcs = NULL;
@@ -1415,7 +1415,7 @@ Fax4Decode(TIFF* tif, tidata_t buf, tsize_t occ, tsample_t s)
 #ifdef FAX3_DEBUG
                 if( GetBits(13) != 0x1001 )
                     fputs( "Bad RTC\n", stderr );
-#endif
+#endif                
                 ClrBits( 13 );
 		(*sp->fill)(buf, thisrun, pa, lastx);
 		UNCACHE_STATE(tif, sp);

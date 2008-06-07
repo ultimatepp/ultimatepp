@@ -18,7 +18,7 @@ class TTFReader {
 		TTFStream& operator%(uint32& q);
 		TTFStream& operator%(int16& q);
 		TTFStream& operator%(uint16& q);
-		
+
 		virtual ~TTFStream() {}
 	};
 
@@ -34,7 +34,7 @@ class TTFReader {
 		int    Get16();
 		int    Get32();
 		String Get(int n);
-		
+
 		virtual ~TTFStreamIn() {}
 	};
 

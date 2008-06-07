@@ -6,7 +6,6 @@ class SliderCtrl : public Ctrl {
 	int           SliderToClient(int value) const;
 	int           ClientToSlider(int x) const;
 
-	bool          IsVert() const;
 	int           HoVe(int  x, int  y) const;
 	int&          HoVeR(int& x, int& y) const;
 
@@ -35,6 +34,8 @@ public:
 	SliderCtrl&   Range(int max)                  { return MinMax(0, max); }
 	int           GetMin() const                  { return min; }
 	int           GetMax() const                  { return max; }
+
+	bool          IsVert() const;
 
 	SliderCtrl&   Step(int _step, bool _r = true) { step = _step; round_step = _r; return *this; }
 	int           GetStep() const                 { return step; }

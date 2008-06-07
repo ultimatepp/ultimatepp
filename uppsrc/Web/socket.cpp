@@ -698,6 +698,44 @@ String Socket::ReadUntil(char term, int timeout, int maxlen)
 	}
 }
 
+int Find(const String& s, Gate1<int> term, int seek)
+{
+	for(int i = seek; i < s.GetCount(); i++)
+		if(term(s[i]))
+			return i;
+	return -1;
+}
+
+String Socket::ReadUntil(Gate1<int> term, int& termchar, int timeout, int maxlen)
+{
+	SLOG("Socket::RecvUntil(term = " << (int)term << ", maxlen = " << maxlen << ", timeout = " << timeout << ")");
+	ASSERT(IsOpen() && maxlen != 0);
+	int ticks = GetTickCount(), end_ticks = IsNull(timeout) ? int(Null) : ticks + timeout, seek = 0;
+	String out = Read(timeout, maxlen);
+	if(out.IsVoid())
+		return out;
+
+	for(;;) {
+		int f = Find(out, term, seek);
+		if(f >= 0) {
+			termchar = out[f];
+			data->leftover = String(out.Begin() + f + 1, out.GetLength() - f - 1) + data->leftover;
+			return out.Left(f);
+		}
+		seek = out.GetLength();
+		ticks = GetTickCount();
+		if(!IsNull(timeout)) timeout = end_ticks - ticks;
+		if(!IsNull(timeout) && timeout <= 0 || out.GetLength() >= maxlen)
+			return out;
+		String part = Read(timeout, maxlen - out.GetLength());
+		if(part.IsVoid()) {
+			SLOG("term " << (int)term << " not found in: " << out);
+			return out;
+		}
+		out.Cat(part);
+	}
+}
+
 void Socket::UnRead(const void *buffer, int len)
 {
 	ASSERT(len >= 0);

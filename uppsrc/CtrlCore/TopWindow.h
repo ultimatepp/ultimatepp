@@ -106,7 +106,7 @@ private:
 	void        SyncCaption();
 
 	void        SetupRect();
-
+	
 	void        FixIcons();
 
 	enum { MINIMIZED, MAXIMIZED, OVERLAPPED };
@@ -202,7 +202,7 @@ public:
 	TopWindow& Icon(const Image& m);
 	TopWindow& LargeIcon(const Image& m);
 	TopWindow& Icon(const Image& smallicon, const Image& largeicon);
-
+	
 	Image      GetIcon() const                        { return icon; }
 	Image      GetLargeIcon() const                   { return largeicon; }
 

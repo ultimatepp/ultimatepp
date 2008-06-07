@@ -25,7 +25,7 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-
+ 
  /*
  	2008-01-26 Patches by Massimo Del Fedele :
  		- modified sources to use Ultimate++ containers instead std:: ones
@@ -42,7 +42,7 @@ void ASString_Replace(WString &s, int Pos, int Len, WString const &newString)
 		return;
 	s.Remove(Pos, Len);
 	s.Insert(Pos, newString);
-
+	
 } // END ASString_Replace()
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ int ASString_Find_First_Not_Of(WString const &s, WString const &Pattern, int pos
 		return pos;
 	else
 		return -1;
-
+	
 } // END ASString_Find_First_Not_Of()
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -82,5 +82,5 @@ int ASString_ReverseFind(WString const &s, WString const &Pattern)
 	while( (k = s.Find(Pattern, k)) >= 0)
 		pos = k++;
 	return pos;
-
+	
 } // END ASString_ReverseFind()

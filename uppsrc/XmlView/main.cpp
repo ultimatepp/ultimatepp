@@ -168,7 +168,7 @@ XmlView::XmlView()
 	dir = GetCurrentDirectory();
 
 	Icon(XmlImg::Icon());
-
+	
 	xml.WhenLeftDouble = THISBACK(CopyPath);
 }
 

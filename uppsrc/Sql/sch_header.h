@@ -28,7 +28,7 @@ enum { ADD_SCHEMA_PREFIX_CPP2(name,_WIDTH) = width, ADD_SCHEMA_PREFIX_CPP2(name,
 
 #define COLUMN_ARRAY(type, ctype, name, width, prec, items) \
 enum { ADD_SCHEMA_PREFIX_CPP2(name,_WIDTH) = width, ADD_SCHEMA_PREFIX_CPP2(name,_PRECISION) = prec }; ctype ADD_SCHEMA_PREFIX_CPP(name)[items];
-
+ 
 #define END_TYPE                 };
 
 #include SCHEMADIALECT
@@ -39,7 +39,7 @@ enum { ADD_SCHEMA_PREFIX_CPP2(name,_WIDTH) = width, ADD_SCHEMA_PREFIX_CPP2(name,
 
 // SqlId
 
-#define DOID(x) extern SqlId ADD_SCHEMA_PREFIX_CPP(x);
+#define DOID(x) extern SqlId ADD_SCHEMA_PREFIX_CPP(x);            
 //#define DOID(x)                  extern SqlId x;
 
 #include SCHEMADIALECT

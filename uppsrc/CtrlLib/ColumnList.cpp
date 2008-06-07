@@ -90,7 +90,7 @@ void ColumnList::DoClick(Point p, dword flags)
 	WhenLeftClickPos(p);
 }
 
-void ColumnList::LeftDown(Point p, dword flags) {
+void ColumnList::DoLeftDown(Point p, dword flags) {
 	selclick = false;
 	int i = GetDragColumn(p.x);
 	if(i >= 0) {
@@ -108,6 +108,10 @@ void ColumnList::LeftDown(Point p, dword flags) {
 		else
 			DoClick(p, flags);
 	}
+}
+
+void ColumnList::LeftDown(Point p, dword flags) {
+	DoLeftDown(p, flags);
 }
 
 void ColumnList::LeftUp(Point p, dword flags)
@@ -135,7 +139,7 @@ void ColumnList::RightDown(Point p, dword flags) {
 }
 
 void ColumnList::LeftDouble(Point p, dword flags) {
-	LeftDown(p, flags);
+	DoLeftDown(p, flags);
 	WhenLeftDouble();
 }
 

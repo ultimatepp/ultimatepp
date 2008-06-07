@@ -21,7 +21,7 @@ CH_STYLE(ToolButton, Style, StyleDefault)
 
 CH_STYLE(ToolButton, Style, StyleSolid)
 {
-	const Button::Style& bs = Button::StyleNormal(); 
+	const Button::Style& bs = Button::StyleNormal();
 	look[0] = bs.look[0];
 	look[1] = bs.look[1];
 	look[2] = bs.look[2];

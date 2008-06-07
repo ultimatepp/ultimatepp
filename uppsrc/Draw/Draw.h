@@ -220,11 +220,11 @@ class FontInfo : Moveable<FontInfo> {
 		bool operator==(const CharMetrics& b) const
 		     { return width == b.width && lspc == b.lspc && rspc == b.rspc; }
 	};
-	
+
 	struct Kinfo : Moveable<Kinfo> {
 		CharMetrics std;
 		byte       *flags;
-		
+
 		Kinfo() {
 			flags = NULL;
 		}

@@ -177,7 +177,7 @@ void Ide::FormatCode()
 		Formatter.setTabIndentation(editortabsize, true);
 	else
 		Formatter.setSpaceIndentation(indent_amount);
-	
+
 	WString Dest = FormatCodeString(Src, Formatter);
 
 	editor.NextUndo();

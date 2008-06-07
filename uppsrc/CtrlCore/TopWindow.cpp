@@ -531,7 +531,7 @@ void ArrangeOKCancel(Ctrl& ok, Ctrl& cancel)
 	       Ctrl::LogPos h = ok.GetPos();
 	       ok.SetPos(cancel.GetPos());
 	       cancel.SetPos(h);
-	}
+	}   
 }
 
 END_UPP_NAMESPACE

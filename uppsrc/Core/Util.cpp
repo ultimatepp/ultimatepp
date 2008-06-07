@@ -62,7 +62,9 @@ void    Panic(const char *msg)
 #	endif
 #else
 #endif
+#ifdef _DEBUG
 	__BREAK__;
+#endif
 	abort();
 }
 

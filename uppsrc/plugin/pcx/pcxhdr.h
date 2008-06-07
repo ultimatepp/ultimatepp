@@ -6,7 +6,7 @@
 #endif
 
 struct PCXRGB {
-	byte r, g, b;
+	byte r, g, b; 
 }
 #ifdef COMPILER_GCC
 __attribute__((packed))

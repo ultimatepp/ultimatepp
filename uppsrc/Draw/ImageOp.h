@@ -119,10 +119,10 @@ struct ChPartMaker {
 	Image image;
 	Color border;
 	Color bg;
-	
+
 	bool  t, b, l, r;
 	byte  tl, tr, bl, br;
-	
+
 	void ResetShape();
 	Image Make() const;
 

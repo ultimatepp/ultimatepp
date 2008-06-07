@@ -16,14 +16,14 @@ GLCtrl::GLCtrl( int depthsize, int stencilsize, bool doublebuffer,
 {
 	// Sets the current instance number and updates total instances
 	InstanceNum = ++Instances;
-
+	
 	WindowContext = NULL;
 
 	DepthSize        = depthsize;
 	StencilSize      = stencilsize;
 	DoubleBuffering  = doublebuffer;
 	NumberOfSamples  = numberofsamples;
-
+	
 } // END Constructor class GLCtrl
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ GLCtrl::~GLCtrl()
 		glXDestroyContext( (Display *)Xdisplay, WindowContext );
 		WindowContext = NULL;
 	}
-
+	
 } // END Destructor class GLCtrl
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -69,12 +69,12 @@ XVisualInfo *GLCtrl::CreateVisual(void)
 		SetError(true);
 		SetErrorMessage("GLCtrl : Impossible to find a suitable visual.");
 	}
-
+	
 	return visualInfo;
 
 } // END GLCtrl::CreateVisual()
 
-
+	
 /////////////////////////////////////////////////////////////////////////////////////////
 // Overridden method for attribute setting
 void GLCtrl::SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &winAttributes)
@@ -108,7 +108,7 @@ void GLCtrl::AfterInit(bool Error)
 {
 	// Gets the activw XVisualInfo
 	XVisualInfo visualInfo = GetVisualInfo();
-
+	
 	// Create an OpenGL rendering context
 	WindowContext = glXCreateContext
 	(
@@ -123,10 +123,10 @@ void GLCtrl::AfterInit(bool Error)
 		SetErrorMessage("GLCtrl : Error creating GLX context.");
 		SetError(true);
 	}
-
+	
 	// Activate the created glxwindow
 	glXMakeCurrent( (Display*)Xdisplay, GetWindow(), WindowContext );
-
+	
 	// Call user init function
 	GLInit();
 
@@ -143,7 +143,7 @@ void GLCtrl::BeforeTerminate(void)
 {
 	// Calls user terminate function
 	GLDone();
-
+	
 	// Resets context and destroys it
 	glXMakeCurrent( (Display*)Xdisplay, None, NULL );
 	glXDestroyContext( (Display *)Xdisplay, WindowContext );
@@ -158,7 +158,7 @@ void GLCtrl::Resize(int x, int y)
 {
 	// Activates the current context
 	ActivateContext();
-
+	
 	// Calls user resize hook
 	GLResize(x, y);
 
@@ -190,7 +190,7 @@ void GLCtrl::Paint(Draw &draw)
 {
 	// Calls internal OpenGL Paint method
 	doPaint();
-
+	
 } // END GLCtrl::Paint()
 
 
@@ -201,7 +201,7 @@ void GLCtrl::PostResizeGL()
 	// Gets sizes from Control
 	int w = GetSize().cx,
 		h = GetSize().cy;
-
+		
 	// Calls Resize method
 	Resize(w, h);
 

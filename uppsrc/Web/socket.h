@@ -102,6 +102,7 @@ public:
 	int             ReadCount(void *buffer, int count, int timeout_msec = Null);
 	String          ReadCount(int count, int timeout_msec = Null);
 	String          ReadUntil(char term, int timeout_msec = Null, int maxlen = 1000000);
+	String          ReadUntil(Gate1<int> term, int& termchar, int timeout = Null, int maxlen = 1000000);
 	void            UnRead(const void *buffer, int len);
 	void            UnRead(String data)                      { UnRead(data.Begin(), data.GetLength()); }
 

@@ -257,7 +257,7 @@ public:
 	virtual bool            CreateFolder(String path, String& error) const;
 
 	bool                    FolderExists(String path) const;
-	
+
 	virtual ~FileSystemInfo() {}
 };
 

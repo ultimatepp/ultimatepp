@@ -4,23 +4,23 @@
  * Copyright (c) 1988-1997 Sam Leffler
  * Copyright (c) 1991-1997 Silicon Graphics, Inc.
  *
- * Permission to use, copy, modify, distribute, and sell this software and
+ * Permission to use, copy, modify, distribute, and sell this software and 
  * its documentation for any purpose is hereby granted without fee, provided
  * that (i) the above copyright notices and this permission notice appear in
  * all copies of the software and related documentation, and (ii) the names of
  * Sam Leffler and Silicon Graphics may not be used in any advertising or
  * publicity relating to the software without the specific, prior written
  * permission of Sam Leffler and Silicon Graphics.
- *
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
- *
+ * 
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+ * 
  * IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
  * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
- * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
  * OF THIS SOFTWARE.
  */
 
@@ -120,7 +120,7 @@ TIFFWriteScanline(TIFF* tif, tdata_t buf, uint32 row, tsample_t sample)
 				return (-1);
 			tif->tif_flags |= TIFF_CODERSETUP;
 		}
-
+        
 		tif->tif_rawcc = 0;
 		tif->tif_rawcp = tif->tif_rawdata;
 
@@ -221,7 +221,7 @@ TIFFWriteEncodedStrip(TIFF* tif, tstrip_t strip, tdata_t data, tsize_t cc)
 			return ((tsize_t) -1);
 		tif->tif_flags |= TIFF_CODERSETUP;
 	}
-
+        
 	tif->tif_rawcc = 0;
 	tif->tif_rawcp = tif->tif_rawdata;
 
@@ -233,7 +233,7 @@ TIFFWriteEncodedStrip(TIFF* tif, tstrip_t strip, tdata_t data, tsize_t cc)
             /* this forces TIFFAppendToStrip() to do a seek */
             tif->tif_curoff = 0;
         }
-
+        
 	tif->tif_flags &= ~TIFF_POSTENCODE;
 	sample = (tsample_t)(strip / td->td_stripsperimage);
 	if (!(*tif->tif_preencode)(tif, sample))
@@ -369,8 +369,8 @@ TIFFWriteEncodedTile(TIFF* tif, ttile_t tile, tdata_t data, tsize_t cc)
             /* this forces TIFFAppendToStrip() to do a seek */
             tif->tif_curoff = 0;
         }
-
-	/*
+        
+	/* 
 	 * Compute tiles per row & per column to compute
 	 * current row and column
 	 */
@@ -497,7 +497,7 @@ TIFFWriteCheck(TIFF* tif, int tiles, const char* module)
 		    "Can not write scanlines to a tiled image");
 		return (0);
 	}
-
+        
 	/*
 	 * On the first write verify all the required information
 	 * has been setup and initialize any data structures that
@@ -515,7 +515,7 @@ TIFFWriteCheck(TIFF* tif, int tiles, const char* module)
 		return (0);
 	}
 	if (tif->tif_dir.td_samplesperpixel == 1) {
-		/*
+		/* 
 		 * Planarconfiguration is irrelevant in case of single band
 		 * images and need not be included. We will set it anyway,
 		 * because this field is used in other parts of library even
@@ -652,7 +652,7 @@ TIFFAppendToStrip(TIFF* tif, tstrip_t strip, tidata_t data, tsize_t cc)
 			} else {
 				tstrip_t i;
 				for (i = 0; i < td->td_nstrips; i++) {
-					if (td->td_stripoffset[i] >
+					if (td->td_stripoffset[i] > 
 						td->td_stripoffset[strip]
 					    && td->td_stripoffset[i] <
 						td->td_stripoffset[strip] + cc) {

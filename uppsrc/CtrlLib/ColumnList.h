@@ -78,6 +78,7 @@ private:
 	void    SetCursor0(int c, bool sel);
 	void    UpdateSelect();
 	void    RefreshSel();
+	void    DoLeftDown(Point p, dword);
 
 	bool    DnDInsert(int i, int py, PasteClip& d, int q);
 	void    DnD(int _drop, bool _insert);
