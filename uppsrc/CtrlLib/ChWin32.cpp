@@ -306,7 +306,7 @@ void ChHostSkin()
 		ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 		CtrlsImg::Reset();
 		EditFieldIsThin_Write(1);
-		
+
 		bool vista_aero = IsWinVista() && XpThemeInfo(L"ThemeName") == "Aero";
 
 		if(vista_aero) {

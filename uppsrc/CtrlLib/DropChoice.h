@@ -67,7 +67,7 @@ public:
 	void          Remove(int i);
 	void          ClearList();
 	void          Clear();
-
+	
 	DropList&     AddSeparator();
 
 	void          Drop();
@@ -149,7 +149,7 @@ public:
 	void        Clear();
 	void        Add(const Value& data);
 	void        Serialize(Stream& s);
-
+	
 	int         GetCount() const                      { return list.GetCount(); }
 	Value       Get(int i) const                      { return list.Get(i, 0); }
 

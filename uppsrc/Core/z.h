@@ -1,13 +1,13 @@
 class Crc32 {
 	dword crc;
 
-public:
+public:	
 	void Put(const void *ptr, int count);
 	void Put(char c);
 	void Put(byte c);
 
 	operator dword() const { return crc; }
-
+	
 	Crc32();
 };
 

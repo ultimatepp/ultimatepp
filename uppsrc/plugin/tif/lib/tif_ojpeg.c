@@ -51,7 +51,7 @@
       entropy->dc_derived_tbls[i] = entropy->ac_derived_tbls[i] = NULL;
     }
   }
-+
++ 
 + /*
 +  * BEWARE OF KLUDGE:  This subroutine is a hack for decoding illegal JPEG-in-
 +  *                    TIFF encapsulations produced by Microsoft's Wang Imaging
@@ -77,7 +77,7 @@
 + jpeg_reset_huff_decode (register j_decompress_ptr cinfo)
 + { register huff_entropy_ptr entropy = (huff_entropy_ptr)cinfo->entropy;
 +   register int ci = 0;
-+
++ 
 +   /* Discard encoded input bits, up to the next Byte boundary */
 +   entropy->bitstate.bits_left &= ~7;
 +   /* Re-initialize DC predictions to 0 */
@@ -94,7 +94,7 @@
       entropy->dc_derived_tbls[i] = entropy->ac_derived_tbls[i] = NULL;
     }
   }
-+
++ 
 + /*
 +  * BEWARE OF KLUDGE:  This subroutine is a hack for decoding illegal JPEG-in-
 +  *                    TIFF encapsulations produced by Microsoft's Wang Imaging
@@ -121,7 +121,7 @@
 + { register shuff_entropy_ptr entropy = (shuff_entropy_ptr)
 +                                        ((j_lossy_d_ptr)cinfo->codec)->entropy_private;
 +   register int ci = 0;
-+
++ 
 +   /* Discard encoded input bits, up to the next Byte boundary */
 +   entropy->bitstate.bits_left &= ~7;
 +   /* Re-initialize DC predictions to 0 */
@@ -739,7 +739,7 @@ OJPEGSetupEncode(register TIFF *tif)
           if (!TIFFFieldSet(tif,FIELD_REFBLACKWHITE))
             { float refbw[6];
               long top = 1L << td->td_bitspersample;
-
+ 
               refbw[0] = 0;
               refbw[1] = (float)(top-1L);
               refbw[2] = (float)(top>>1);
@@ -874,7 +874,7 @@ OJPEGSetupEncode(register TIFF *tif)
               && CALLVJPEG(sp,jpeg_write_tables(&sp->cinfo.c))
              )
             {
-
+    
            /* Mark the field "present".  We can't use "TIFFSetField()" because
               "BEENWRITING" is already set!
            */
@@ -929,9 +929,9 @@ OJPEGPreEncode(register TIFF *tif,tsample_t s)
             sp->cinfo.c.comp_info[0].ac_tbl_no = 1;
             sp->cinfo.c.comp_info[0].h_samp_factor = sp->h_sampling;
             sp->cinfo.c.comp_info[0].v_samp_factor = sp->v_sampling;
-
+    
          /* Scale expected strip/tile size to match a downsampled component. */
-
+    
             sp->cinfo.c.image_width = TIFFhowmany(segment_width,sp->h_sampling);
             sp->cinfo.c.image_height=TIFFhowmany(segment_height,sp->v_sampling);
           };
@@ -1570,7 +1570,7 @@ OJPEGSetupDecode(register TIFF *tif)
             != JPEG_HEADER_OK
            ) return 0;
         if (   sp->cinfo.d.image_width  != segment_width
-            || sp->cinfo.d.image_height != td->td_imagelength
+            || sp->cinfo.d.image_height != td->td_imagelength 
            )
           {
             TIFFError(module,"Improper JPEG strip/tile size");
@@ -2069,7 +2069,7 @@ OJPEGVSetField(register TIFF *tif,ttag_t tag,va_list ap)
            if (v32)
              {
                sp->cinfo.d.Ss = *va_arg(ap,uint16 *);
-               sp->jpeglosslesspredictors =
+               sp->jpeglosslesspredictors = 
 		    _TIFFmalloc(sp->jpeglosslesspredictors_length
 				* sizeof(uint16));
                if(sp->jpeglosslesspredictors==NULL){return(0);}
@@ -2177,7 +2177,7 @@ OJPEGVSetField(register TIFF *tif,ttag_t tag,va_list ap)
                     if(sp->jpegdctables==NULL){return(0);}
                     tiffoff = TIFFSeekFile(tif, 0, SEEK_CUR);
                     bufoff=0;
-                    code_count=0;
+                    code_count=0;                
                     for(i2=0;i2<sp->jpegdctables_length;i2++){
                         TIFFSeekFile(tif, v[i2], SEEK_SET);
                         TIFFReadFile(tif,
@@ -2201,7 +2201,7 @@ OJPEGVSetField(register TIFF *tif,ttag_t tag,va_list ap)
                     if(sp->jpegactables==NULL){return(0);}
                     tiffoff = TIFFSeekFile(tif, 0, SEEK_CUR);
                     bufoff=0;
-                    code_count=0;
+                    code_count=0;                
                     for(i2=0;i2<sp->jpegactables_length;i2++){
                         TIFFSeekFile(tif, v[i2], SEEK_SET);
                         TIFFReadFile(tif, &(((unsigned char*)(sp->jpegactables))[bufoff]), 16);
@@ -2367,7 +2367,7 @@ OJPEGVGetField(register TIFF *tif,ttag_t tag,va_list ap)
                 *va_arg(ap, void**)=sp->jpegdctables;
                 return(1);
                 break;
-        case TIFFTAG_JPEGACTABLES          :
+        case TIFFTAG_JPEGACTABLES          : 
                 *va_arg(ap, uint32*)=sp->jpegactables_length;
                 *va_arg(ap, void**)=sp->jpegactables;
                 return(1);

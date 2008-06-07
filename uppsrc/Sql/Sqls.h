@@ -308,7 +308,7 @@ public:
 
 	virtual String                Savepoint();
 	virtual void                  RollbackTo(const String& savepoint);
-
+	
 	virtual bool                  IsOpen() const;
 
 	virtual RunScript             GetRunScript() const;

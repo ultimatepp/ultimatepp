@@ -170,7 +170,7 @@ void FileList::LeftDown(Point p, dword flags) {
 
 bool FileList::FindChar(int from, int chr) {
 	for(int i = max(0, from); i < GetCount(); i++) {
-		WString x = Get(i).name.ToWString(); // TRC patch 05/09/15; for CXL to check
+		WString x = Get(i).name.ToWString();
 		if(ToUpper(ToAscii(x[0])) == chr) {
 			ClearSelection();
 			SetCursor(i);

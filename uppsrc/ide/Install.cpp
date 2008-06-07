@@ -261,11 +261,11 @@ String DefaultInstallFolder()
 		DefaultFolder = "upp-svn";
 	else if(ExeTitle.Find("DEV") >= 0)
 		DefaultFolder = "upp-dev";
-	else if(ExeTitle.Find("BETA") >= 0)
+	else if(ExeTitle.Find("BETA") >= 0) 
 		DefaultFolder = "upp-beta";
 	else
 		DefaultFolder = "upp";
-
+	
 	return DefaultFolder;
 
 }
@@ -329,9 +329,9 @@ bool Install()
 	Progress pi;
 	if(dlg.Run() != IDOK) return true;
 	String upp(dlg.path);
-
+	
 	SaveFile(ConfigFile("installpath"), upp);
-
+	
 	String uppsrc;
 	String pp;
 	String out = AppendFileName(upp, "out");

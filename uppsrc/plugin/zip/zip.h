@@ -7,7 +7,7 @@ NAMESPACE_UPP
 
 class UnZip {
 	Stream *zip;
-
+	
 	bool   error;
 	bool   eof;
 	String path;
@@ -19,14 +19,14 @@ class UnZip {
 	dword  usize;
 	dword  done;
 
-	void   Init();
+	void   Init();	
 	void   ReadHeader();
 	void   SetError()           { error = true; }
 
 public:
 	bool   IsEof() const;
 	operator bool() const       { return !IsEof(); }
-
+	
 	bool   IsError() const      { return error; }
 
 	bool   IsFolder() const;
@@ -37,7 +37,7 @@ public:
 	void   SkipFile();
 	bool   ReadFile(Stream& out, Gate2<int, int> progress = false);
 	String ReadFile(Gate2<int, int> progress = false);
-
+	
 	dword  GetPos()             { return done; }
 
 	void   Create(Stream& in);
@@ -51,7 +51,7 @@ class FileUnZip : public UnZip {
 
 public:
 	bool Create(const char *name);
-
+	
 	FileUnZip(const char *name)                 { Create(name); }
 };
 
@@ -97,11 +97,11 @@ public:
 
 	void Create(Stream& out);
 	void Finish();
-
+	
 	bool IsError()                           { return zip && zip->IsError(); }
 
 	dword  GetLength() const                 { return done; }
-
+	
 	Zip();
 	Zip(Stream& out);
 	~Zip();
@@ -113,7 +113,7 @@ class FileZip : public Zip {
 public:
 	bool Create(const char *name);
 	bool Finish();
-
+	
 	FileZip(const char *name)                 { Create(name); }
 	~FileZip()                                { Finish(); }
 };

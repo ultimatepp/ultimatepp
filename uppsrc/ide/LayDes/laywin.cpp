@@ -339,7 +339,7 @@ struct LayDesModule : public IdeModule {
 		s / version;
 		SerializeLayEditPos(s);
 	}
-	
+
 	virtual ~LayDesModule() {}
 };
 

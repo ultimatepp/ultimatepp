@@ -195,3 +195,4 @@ LAYOUT(CellPropertiesLayout, 300, 260)
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(164, 64).TopPosZ(232, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(232, 64).TopPosZ(232, 24))
 END_LAYOUT
+

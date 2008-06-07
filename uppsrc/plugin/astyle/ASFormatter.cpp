@@ -503,7 +503,7 @@ WString ASFormatter::nextLine()
 				{
 					int blockEnd = ASString_ReverseFind(currentLine, AS_CLOSE_BRACKET);
 					assert(blockEnd != -1);
-
+					
 					// move ending comments to this formattedLine
 					if (isBeforeLineEndComment(blockEnd))
 					{
@@ -1202,7 +1202,7 @@ bool ASFormatter::isBeforeLineEndComment(int startPos) const
 			if (endNum >= 0)
 				if(ASString_Find_First_Not_Of(currentLine, " \t", endNum + 2) < 0)
 					foundLineEndComment = true;
-
+					
 		}
 	}
 	return foundLineEndComment;
@@ -1725,9 +1725,9 @@ void ASFormatter::padOperators(const WString *newOperator)
 	                  && newOperator != &AS_RETURN
 	                  && !(newOperator == &AS_MINUS && isInExponent())
 	                  && !(newOperator == &AS_MINUS             // check for negative number
-	                       && (previousNonWSChar == '('
-	                           || previousNonWSChar == '='
-	                           || previousNonWSChar == ','))
+	                       && (previousNonWSChar == '(' 
+	                           || previousNonWSChar == '=' 
+	                           || previousNonWSChar == ',')) 
                       && !(newOperator == &AS_PLUS && isInExponent())
                       && previousOperator != &AS_OPERATOR
                       && !((newOperator == &AS_MULT || newOperator == &AS_BIT_AND)

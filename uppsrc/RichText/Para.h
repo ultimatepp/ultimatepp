@@ -58,7 +58,7 @@ struct RichPara {
 		NUMBER_i,
 		NUMBER_I,
 	};
-	
+
 	enum LINESPACING {
 		LSP10 = 0,
 		LSP15 = -1,
