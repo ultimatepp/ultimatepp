@@ -1,0 +1,11 @@
+description "Demonstration of widget frames";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CrectPP", "CS-CZ windows-1250", "\1rect\1 (\1bod\1 [/ P], \1bod\1 [/ Q]) [S ®] \1obdélník\1")
+	HELP_TEXT(
+	"[ [A@0+84 Vrátí omezující obdélník dvojice bodù.]]\r\n")
+HELP_END

@@ -1,0 +1,6 @@
+LAYOUT(HexGotoLayout, 280, 68)
+	ITEM(Label, dv___0, SetLabel(t_("New position")).LeftPosZ(4, 68).TopPosZ(8, 19))
+	ITEM(WithDropChoice<EditString>, text, LeftPosZ(76, 196).TopPosZ(8, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(140, 64).TopPosZ(36, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(208, 64).TopPosZ(36, 24))
+END_LAYOUT

@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtoprightR", "CS-CZ windows-1250", "\1topright\1 (\1obdélník\1) [S ®] \1bod\1")
+	HELP_TEXT(
+	"[ [A@0+84 Pravý horní roh obdélníku.]]\r\n")
+HELP_END

@@ -1,0 +1,11 @@
+description "Demonstration of logical positions system";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

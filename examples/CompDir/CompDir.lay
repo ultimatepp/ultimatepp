@@ -1,0 +1,15 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(CompareDirLayout, 496, 492)
+	ITEM(Label, dv___0, SetLabel(t_("Folder &A:")).LeftPosZ(4, 52).TopPosZ(4, 19))
+	ITEM(EditField, path_a, HSizePosZ(56, 4).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Folder &B:")).LeftPosZ(4, 52).TopPosZ(26, 19))
+	ITEM(EditField, path_b, HSizePosZ(56, 4).TopPosZ(26, 19))
+	ITEM(Label, dv___4, SetLabel(t_("File &mask:")).LeftPosZ(4, 52).TopPosZ(48, 19))
+	ITEM(EditField, file_mask, HSizePosZ(56, 68).TopPosZ(48, 19))
+	ITEM(Button, refresh, SetLabel(t_("&Refresh")).RightPosZ(4, 60).TopPosZ(48, 18))
+	ITEM(Splitter, splitter, HSizePosZ(4, 4).VSizePosZ(70, 4))
+END_LAYOUT
+
+#endif
+

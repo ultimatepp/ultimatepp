@@ -1,0 +1,8 @@
+#ifndef _ide_LayDes_icpp_init_stub
+#define _ide_LayDes_icpp_init_stub
+#include "ide\Common/init"
+#include "RichEdit/init"
+#include "Esc/init"
+#include "IconDes/init"
+#include "CodeEditor/init"
+#endif

@@ -1,0 +1,49 @@
+#if LANGUAGE == LNGC_('C', 'S', 'C', 'Z', 15)
+
+// DlgHelpEdit.cpp
+
+txt(DlgHelpRenameHelpTitle, "Mapovat zmìnìné identifikátory")
+txt(DlgHelpRenameUnmatchedColumn, "Naètený soubor")
+txt(DlgHelpRenameExistingColumn, "Mapa identifikátorù")
+txt(DlgHelpRenameAliasedOldColumn, "Pùvodní")
+txt(DlgHelpRenameAliasedMapColumn, "Mapováno")
+txt(DlgHelpRenameAliasedModuleColumn, "Modul")
+txt(DlgHelpRenameToolExistingAssign, "Mapovat")
+txt(DlgHelpRenameToolExistingFind, "Hledat")
+txt(DlgHelpRenameToolExistingFindNext, "Hledat další")
+txt(DlgHelpRenameToolExistingFindPrev, "Hledat pøedchozí")
+txt(DlgHelpRenameFindHelpTitle, "Hledat")
+txt(DlgHelpRenameToolAliased, "Zrušit")
+txt(DlgHelpLangHelpTitle, "Jazyky aplikace")
+txt(DlgHelpLangLangColumn, "Kód jazyka")
+txt(DlgHelpLangFileColumn, "Jazykový soubor")
+txt(DlgHelpLangLangFileBrowseFilter, "Jazykové soubory (*.lng)")
+txt(DlgHelpLangLangFileBrowseMask, "*.lng")
+txt(DlgHelpLangLangFileBrowseFileSelTitle, "Jazykový soubor")
+txt(DlgHelpDirtyHelpTitle, "Uložit zmìny...")
+
+#elif LANGUAGE == LNG_('E', 'N', 'U', 'S')
+
+// DlgHelpEdit.cpp
+
+txt(DlgHelpRenameHelpTitle, "Map changed identifiers")
+txt(DlgHelpRenameUnmatchedColumn, "Loaded file")
+txt(DlgHelpRenameExistingColumn, "Identifier map")
+txt(DlgHelpRenameAliasedOldColumn, "Old")
+txt(DlgHelpRenameAliasedMapColumn, "Mapped")
+txt(DlgHelpRenameAliasedModuleColumn, "Module")
+txt(DlgHelpRenameToolExistingAssign, "Map")
+txt(DlgHelpRenameToolExistingFind, "Find")
+txt(DlgHelpRenameToolExistingFindNext, "Find next")
+txt(DlgHelpRenameToolExistingFindPrev, "Find previous")
+txt(DlgHelpRenameFindHelpTitle, "Find")
+txt(DlgHelpRenameToolAliased, "Remove alias")
+txt(DlgHelpLangHelpTitle, "Application languages")
+txt(DlgHelpLangLangColumn, "Language code")
+txt(DlgHelpLangFileColumn, "Language file")
+txt(DlgHelpLangLangFileBrowseFilter, "Language files (*.lng)")
+txt(DlgHelpLangLangFileBrowseMask, "*.lng")
+txt(DlgHelpLangLangFileBrowseFileSelTitle, "Language file")
+txt(DlgHelpDirtyHelpTitle, "Save changes...")
+
+#endif

@@ -1,0 +1,11 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(ConverterPaneLayout, 244, 76)
+	ITEM(LabelBox, title, LeftPosZ(8, 228).TopPosZ(4, 64))
+	ITEM(EditDoubleSpin, value, LeftPosZ(16, 144).TopPosZ(20, 19))
+	ITEM(SliderCtrl, slider, LeftPosZ(16, 144).TopPosZ(40, 20))
+	ITEM(DropList, unit, LeftPosZ(164, 64).TopPosZ(20, 19))
+END_LAYOUT
+
+#endif
+

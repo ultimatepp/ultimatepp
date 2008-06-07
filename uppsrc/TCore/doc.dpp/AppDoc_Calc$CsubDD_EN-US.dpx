@@ -1,0 +1,19 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsubDD", "EN-US", "operator \1-\1  (\1date/time\1 [/ date1], \1date/time\1 [/ date2]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 Unary operator ][*A@0+84 `-][A@0+84  reverses the sign \r\n"
+	"of its numerical argument.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [A@0+84 Binary operator ][*A@0+84 `-][A@0+84  subtracts its \r\n"
+	"operands. For numerical operands, the result is the ordinary \r\n"
+	"difference. When an integer is subtracted from a date, the date \r\n"
+	"is moved backward the specified number of days. When subtracting \r\n"
+	"two dates, the result is the number of days between them. The \r\n"
+	"number is positive if the left date comes after the right date.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: 137 `- 95 `= 42, 27.12.1999 `- 5 \r\n"
+	"`= 22.12.1999, 4.1.2000 `- 28.12.1999 `= 7]]\r\n")
+HELP_END

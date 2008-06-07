@@ -1,0 +1,16 @@
+template "Console application (no U++)" main;
+
+@@<:PACKAGE:>.cpp
+#include "stdio.h"
+
+int main(int argc, const char *argv[])
+{
+	return 0;
+}
+
+@@<:PACKAGE:>.upp
+file
+	<:PACKAGE:>.cpp;
+
+mainconfig
+	"" = "";

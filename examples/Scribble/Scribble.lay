@@ -1,0 +1,13 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(SizeLayout, 132, 88)
+	ITEM(Label, dv___0, SetLabel("Width").LeftPosZ(8, 52).TopPosZ(8, 19))
+	ITEM(EditIntSpin, cx, LeftPosZ(68, 55).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel("Height").LeftPosZ(8, 52).TopPosZ(28, 19))
+	ITEM(EditIntSpin, cy, LeftPosZ(68, 55).TopPosZ(28, 19))
+	ITEM(Button, ok, SetLabel("OK").LeftPosZ(8, 56).TopPosZ(56, 24))
+	ITEM(Button, cancel, SetLabel("Cancel").LeftPosZ(68, 56).TopPosZ(56, 24))
+END_LAYOUT
+
+#endif
+

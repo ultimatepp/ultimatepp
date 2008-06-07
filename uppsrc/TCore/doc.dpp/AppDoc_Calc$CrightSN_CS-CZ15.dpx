@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CrightSN", "CS-CZ windows-1250", "\1right\1 (\1øetìzec\1 [/ text], \1celé èíslo\1 [/ poèet_znakù]) [S ®] \1øetìzec\1")
+	HELP_TEXT(
+	"[ [A@0+84 Funkce vrátí zadaný ][/A@0+84 poèet znakù][A@0+84  z_konce \r\n"
+	"øetìzce ][/A@0+84 text][A@0+84 . Pokud je poèet znakù menší nebo \r\n"
+	"roven 0, výsledkem funkce je prázdný øetìzec. Pokud je poèet \r\n"
+	"znakù vìtší než délka øetìzce, funkce vrátí zadaný øetìzec beze \r\n"
+	"zmìny.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: right(`\"ahoj svìte`\", 7) `= `\"j_svìte`\"]]\r\n")
+HELP_END

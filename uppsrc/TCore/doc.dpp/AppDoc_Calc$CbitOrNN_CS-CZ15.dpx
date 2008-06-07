@@ -1,0 +1,10 @@
+HELP_TOPIC("AppDoc", "", "Calc$CbitOrNN", "CS-CZ windows-1250", "operátor \1|\1  (\1celé èíslo\1, \1celé èíslo\1) [S ®] \1celé èíslo\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 Bitový souèet. Výsledkem operace je celé èíslo, jehož dvojková \r\n"
+	"reprezentace obsahuje jednièky na tìch pozicích, na kterých je \r\n"
+	"ve dvojkové reprezentaci alespoò jednoho z_argumentù jednièka.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]1 | 4 = 5 (001 | 100 = 101).")
+HELP_END

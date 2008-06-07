@@ -1,0 +1,12 @@
+description "Demonstration of image list resources";
+
+uses
+	CtrlLib;
+
+file
+	image.iml,
+	image.cpp;
+
+mainconfig
+	"" = "GUI";
+

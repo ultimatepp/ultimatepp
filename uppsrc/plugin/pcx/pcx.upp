@@ -1,0 +1,5 @@
+file
+	pcx.h,
+	pcxhdr.h,
+	pcx.cpp,
+	pcxreg.icpp;

@@ -1,0 +1,253 @@
+#include "ide.h"
+
+void Ide::ResolveUvsConflict() {
+	String result;
+	editor.NextUndo();
+	bool copy = true;
+	for(int i = 0; i < editor.GetLineCount(); i++) {
+		String ln = editor.GetUtf8Line(i);
+		if(strncmp(ln, "$uvs: ", 6) == 0) {
+			ln = ln.Mid(6);
+			if(ln == "YOUR DELETE")
+				copy = false;
+			else
+			if(ln == "END YOUR DELETE")
+				copy = true;
+			else
+			if(ln == "REPOSITORY DELETE")
+				copy = false;
+			else
+			if(ln == "END REPOSITORY DELETE")
+				copy = true;
+			else
+			if(ln != "REPOSITORY INSERT" &&
+			   ln != "YOUR INSERT" &&
+			   ln != "END YOUR INSERT" &&
+			   ln != "END REPOSITORY INSERT" &&
+			   ln != "PENDING CONFLICT") {
+				Exclamation("Cannot resolve uvs conflict -&conflicting modifications found");
+				editor.SetCursor(editor.GetPos(i));
+				return;
+			}
+		}
+		else
+		if(copy)
+			result << ln << "\r\n";
+	}
+	editor.SelectAll();
+	editor.Paste(result.ToWString());
+}
+
+void Ide::GotoPos(String path, int line)
+{
+	AddHistory();
+	editastext.FindAdd(path);
+	EditFile(path);
+	editor.SetCursor(editor.GetPos(editor.GetLineNo(line - 1)));
+	editor.CenterCursor();
+	editor.SetFocus();
+	AddHistory();
+}
+
+void Ide::GotoCpp(const CppPos& pos)
+{
+	GotoPos(pos.GetFile(), pos.line);
+}
+
+void Ide::RescanCode()
+{
+/*
+	TimeStop tm;
+	for(int i = 0; i < 10; i++)
+		ReQualifyBrowserBase();
+	LOG(tm);
+	PutConsole(AsString(tm));
+//*/
+//*
+	SaveFile();
+	TimeStop t;
+	console.Clear();
+	RescanBrowserBase();
+	SyncRefs();
+	SetBottom(BBROWSER);
+//*/
+}
+
+void Ide::Query()
+{
+	if(browser.DoQuery())
+		SetBottom(BBROWSER);
+}
+
+void  Ide::QueryWord()
+{
+	browser.QueryWord(editor.GetWord());
+	SetBottom(BBROWSER);
+	SetBar();
+}
+
+void Ide::OpenATopic()
+{
+	String t = doc.GetCurrent();
+	if(!t.StartsWith("topic:"))
+		return;
+	TopicLink tl = ParseTopicLink(t);
+	if(tl) {
+		EditFile(AppendFileName(PackageDirectory(tl.package), tl.group + ".tpp"));
+		if(designer) {
+			TopicEditor *te = dynamic_cast<TopicEditor *>(&designer->DesignerCtrl());
+			if(te)
+				te->GoTo(tl.topic, doc.GetCurrentLabel());
+		}
+	}
+}
+
+void Ide::DppIgnoreList()
+{
+	EditFile(CommonPath("dppignore.txt"));
+}
+
+void Ide::InsertColor()
+{
+	TopWindow test;
+	ColorPopUp h;
+	test.Add(h.SizePos());
+	test.Run();
+}
+
+struct FileStat {
+	int  count;
+	int  len;
+	int  lines;
+	int  oldest;
+	int  newest;
+	int  days;
+
+	void Add(const FileStat& a) {
+		count += a.count;
+		len += a.len;
+		lines += a.lines;
+		oldest = max(a.oldest, oldest);
+		newest = min(a.newest, newest);
+		days += a.days;
+	}
+
+	FileStat() { count = 0; len = lines = 0; oldest = 0; newest = INT_MAX; days = 0; }
+};
+
+String StatLen(int len)
+{
+	return Format("%d.%d KB", len >> 10, (len & 1023) / 103);
+}
+
+String StatDate(int d)
+{
+	return String().Cat() << d << " days";
+}
+
+void Put(const String& name, String& qtf, const FileStat& fs)
+{
+	qtf << "::@W " << DeQtf(Nvl(name, ".<none>"))
+	    << ":: [> " << fs.count
+	    << ":: " << fs.lines
+	    << ":: " << (fs.count ? fs.lines / fs.count : 0)
+	    << ":: " << StatLen(fs.len)
+	    << ":: " << StatLen(fs.len ? fs.len / fs.count : 0)
+	    << ":: " << StatDate(fs.oldest)
+	    << ":: " << StatDate(fs.newest)
+	    << ":: " << (fs.count ? fs.days / fs.count : 0) << " days]";
+}
+
+void Put(String& qtf, ArrayMap<String, FileStat>& pfs, ArrayMap<String, FileStat>& all) {
+	FileStat pall;
+	for(int i = 0; i < pfs.GetCount(); i++) {
+		FileStat& fs = pfs[i];
+		Put(pfs.GetKey(i), qtf, fs);
+		pall.Add(fs);
+		all.GetAdd(pfs.GetKey(i)).Add(fs);
+	}
+	Put("All files", qtf, pall);
+	qtf << "}}&&";
+}
+
+
+void Ide::Statistics()
+{
+	Vector< ArrayMap<String, FileStat> > stat;
+	Progress pi;
+	const Workspace& wspc = IdeWorkspace();
+	pi.SetTotal(wspc.GetCount());
+	Date now = GetSysDate();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pk = wspc.GetPackage(i);
+		String n = wspc[i];
+		pi.SetText(n);
+		if(pi.StepCanceled()) return;
+		ArrayMap<String, FileStat>& pfs = stat.Add();
+		for(int i = 0; i < pk.GetCount(); i++)
+			if(!pk[i].separator) {
+				String file = SourcePath(n, pk[i]);
+				if(FileExists(file)) {
+					FileStat& fs = pfs.GetAdd(GetFileExt(file));
+					int d = minmax(now - FileGetTime(file), 0, 9999);
+					fs.oldest = max(d, fs.oldest);
+					fs.newest = min(d, fs.newest);
+					String data = LoadFile(file);
+					for(const char *s = data; *s; s++)
+						if(*s == '\n')
+							fs.lines++;
+					fs.len += data.GetCount();
+					fs.days += d;
+					fs.count++;
+				}
+			}
+	}
+	String qtf = "[1 ";
+	ArrayMap<String, FileStat> all;
+	String tab = "{{45:20:25:20:35:30:30:30:30@L [* ";
+	String hdr = "]:: [= Files:: Lines:: - avg.:: Length:: - avg.:: Oldest:: Newest:: Avg. age]";
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		qtf << tab << DeQtf(wspc[i]) << hdr;
+		Put(qtf, stat[i], all);
+	}
+
+	qtf << tab << "All packages" << hdr;
+	Put(qtf, all, all);
+
+	WithStatLayout<TopWindow> dlg;
+	CtrlLayoutOK(dlg, "Statistics");
+	dlg.stat = qtf;
+	dlg.Sizeable().Zoomable();
+	dlg.Run();
+}
+
+String FormatElapsedTime(double run)
+{
+	String rtime;
+	double hrs = floor(run / 3600);
+	if(hrs > 0)
+		rtime << NFormat("%0n hours, ", hrs);
+	int minsec = fround(run - 3600 * hrs);
+	int min = minsec / 60, sec = minsec % 60;
+	if(min || hrs)
+		rtime << NFormat("%d min, ", min);
+	rtime << NFormat("%d sec", sec);
+	return rtime;
+}
+
+void Ide::Times()
+{
+	WithStatisticsLayout<TopWindow> statdlg;
+	CtrlLayout(statdlg, "Elapsed times");
+	statdlg.SetTimeCallback(-1000, statdlg.Breaker(IDRETRY), 50);
+	do
+	{
+		int session_time = int(GetSysTime() - start_time);
+		int idle_time = int(session_time - editor.GetStatEditTime() - stat_build_time);
+		statdlg.session_time <<= FormatElapsedTime(session_time);
+		statdlg.edit_time    <<= FormatElapsedTime(editor.GetStatEditTime());
+		statdlg.build_time   <<= FormatElapsedTime(stat_build_time);
+		statdlg.idle_time    <<= FormatElapsedTime(idle_time);
+	}
+	while(statdlg.Run() == IDRETRY);
+}

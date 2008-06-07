@@ -1,0 +1,10 @@
+description "Command-line driven HTTP client";
+
+uses
+	Web;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";

@@ -1,0 +1,11 @@
+description "Persistency by binary serialization";
+
+uses
+	Core;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$ChypotNN", "EN-US", "\1hypot\1 (\1real number\1 [/ x], \1real number\1 [/ y]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 The length of the hypotenuse of the right`-angled triangle. \r\n"
+	"The hypotenuse is calculated using the Pythagoras theorem, ][*A@0+84 hypot(][*/A@0+84 x\r\n"
+	"][*A@0+84 , ][*/A@0+84 y][*A@0+84 ) `= sqrt(][*/A@0+84 x][*A@0+84  \r\n"
+	"`* ][*/A@0+84 x][*A@0+84  `+ ][*/A@0+84 y][*A@0+84  `* ][*/A@0+84 y][*A@0+84 )][A@0+84 .\r\n"
+	"]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: hypot(3, 4) `= 5]]\r\n")
+HELP_END

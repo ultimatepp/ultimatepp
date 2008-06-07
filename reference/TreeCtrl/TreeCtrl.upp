@@ -1,0 +1,11 @@
+description "TreeCtrl used to show file hierarchy, editors in TreeCtrl and OptionTree example";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

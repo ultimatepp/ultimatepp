@@ -1,0 +1,11 @@
+description "Splitting window into resizable parts";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

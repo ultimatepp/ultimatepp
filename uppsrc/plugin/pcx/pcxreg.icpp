@@ -1,0 +1,9 @@
+#include "pcx.h"
+
+NAMESPACE_UPP
+
+INITBLOCK {
+	StreamRaster::Register<PCXRaster>();
+}
+
+END_UPP_NAMESPACE

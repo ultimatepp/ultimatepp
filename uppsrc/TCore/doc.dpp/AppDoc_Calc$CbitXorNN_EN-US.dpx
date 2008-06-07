@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CbitXorNN", "EN-US", "operator \1^\1  (\1integer\1, \1integer\1) [S ®] \1integer\1")
+	HELP_TEXT(
+	"[ [A@0+84 Bit symmetric difference (][*A@0+84 xor][A@0+84 ). The \r\n"
+	"result of the operation is an integer whose binary representation \r\n"
+	"consists of 1`'s on those positions on which the digits in binary \r\n"
+	"representation of its arguments differ.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: 9 `^ 15 `= 6 (1001 `^ 1111 `= 0110).]]\r\n")
+HELP_END

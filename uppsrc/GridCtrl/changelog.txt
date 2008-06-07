@@ -1,0 +1,265 @@
+[+] - new feature
+[-] - bugfix
+[*] - change
+
+
+0.95
+	> first public version
+
+0.96
+	* abandomed header/body structure - back to one control layout
+	+ each column can have control binded that is visible in each row
+	+ resizeing of fixed columns/rows is now possible
+	+ Fixed, Min and Max finally works in proportional mode
+	+ Sortable() - determines if column can be sorted
+	+ auto highlighing for fixed columns in any theme
+	+ usc file, now gridctrl is visible in layout editor (Complex->GridCtrl)
+	+ rows, columns as well as individual cell can work in read-only mode
+	+ Tutorial started..
+	+ GetSelectedItemsCount() - returns number of selected items
+	- if there are no fixed rows moving row before firsrt row is now possible
+	- if immediate search is off searching is executing on enter
+	  GetRow().Editable(0/1)
+	  GetColumn().Editable(0/1)
+	  GetCell().Editable(0/1)
+	- some corner cases fixed..
+	- many internal fixes, code clean up
+
+	after 612-dev2
+
+	* iml converted to the newer format
+	- if fixed rows == 0 nothing was displayed
+	- controls were not hidden if cell changed to fixed and part of ctrl interesced its cell rect
+	+ moved column/row use chameleon theme if active
+	- updated gcc compatibility
+	- blue line is properly painted at first/last col/row (before its witdth was 1 instead of 2)
+	+ content of grid can be scrolled left/right in row select mode
+	- fixed controls synchronization
+
+	after 612-dev3
+
+	* line resizing mode now works in linux
+	+ copy/paste
+	- set() crashed if row was greater than total rows count
+	* Block selection can be one only now
+	- RefreshRows refreshed wrong ctrl area
+	- selection was lost if shift/ctrl was realeased before mouse button
+	- fixed positioning cursor after deleting selected rows
+	- fixed deleting selected rows if rows are not in continous block
+	* Append and Insert refresh new rows
+
+	after 701-dev1
+
+	- fixed copy/paste in cell, shift mode
+	- fixed canecling new row
+	- fixed refreshing after appending/inserting/removing operations in proportional row mdoe
+	* in select_row mode first ctrl is always activated after first edits show
+	+ ExtraPaste() enables/disables paste as new rows, paste as appended rows menu
+	+ FixedPaste() disables adding rows during pasting
+	+ paste now calls WhenUpdateCell/WhenInsertRow/WhenUpdateRow callbacks
+	- fixed coping/paste of cursor line (which is not formaly selected)
+	+ pasting text clipboard
+
+	after 2007.1beta
+
+	* row/col coloring always starts from white color no matter how many fixed rows/cols are
+	+ usc: ColorRows, ColorCols options
+	+ usc: added missing new functionality (cliborad)
+	* Add(n, size) removed becouse of conflict with Add(Value v, ...). Added Add() - adds one row
+
+	after 2007.1beta2
+
+	- fixed calling WhenUpdateCell in Ctrls mode (regression)
+	- tab key in select_row mode went into editing mode instead of changing row or setting focus on visible ctrl (regression)
+	+ Value Get() - returns value of cursor cell
+	+ Point GetCursorPos() - returns full cursor position
+	+ Ctrl * GetCtrl(...) - return pointer to cell's control
+	+ Option() - makes given column the option column (AddColumn().Option() = AddColumn().Ctrls(MakeOption))
+	+ Value GetFixed(r, c) - returns value of fixed column c at row r
+	+ Value GetFixed(c) - returns value of fixed column c at first row
+
+	after 2007.1beta3
+
+	* Set() now always store value in cell data structure even if that cell has ctrl
+	* All Set(int c, ...) methods now use rowidx for selecting row instead of curpos.y
+	- Set did not set ctrl value if ctrl was created by Ctrls()
+	+ SetCtrlValue(..) - sets value of cell control
+	- In WhenUpdate/WhenInsert rowidx had wrong value (regression)
+	* control focusig code cleanup
+	- fixed 's' key problem (cursor went up after pressing it)
+	- there was unnecessary WhenUpdateRow/WhenInsertRow call after sorting and then changing row
+
+	after 2007.1rc1
+
+	- moving cols/rows - popuped cell was paint in wrong position if internal toolbar was on top or left side of grid
+	- highlighting of fixed cells was broken if there were no non-fixed rows/cols
+	- edits no longer appear in edit row mode if "factory" ctrl is clicked
+	- edits' values were not properly updated when row was change after clicking "factory" ctrl (regression)
+	- fixed crash after removing a row and then changing cursor position (regression)
+	- Clear() didn't update rowidx
+	- RefreshRow(n) use rowidx if n	< 0 instead of curpos.y
+
+	ok seems to be ready for 2007.2
+
+	after 2007.1rc2
+
+	+ Sort/MultiSort methods
+
+	after 2007.1rc3
+
+	* WhenUpdateCell is always called no metter what edit mode is set
+	- Esc corectly restores values in row edit mode (regression)
+	- Sort(...) now updates cursor positon
+	- rectangular selections were possible only if multiselect mode was set
+	+ rectangular selections can be marked with keyboard (CTRL + arrows)
+	- fixed usc script (wrong initial states for accepting/removing/inserting)
+	- it's now impossible to change cursor position if value in active control is wrong
+	- Remove updates selected_rows/items values (before only DoRemove did that)
+	+ IsModified(..) - returns if value of cell was changed
+
+	after 2007.1rc5/final
+
+	+ introduced joined cells - JoinCells(), JointFixedCells()
+	- cursor is not hidden after clicking below rows (only edits are closed then) (regression)
+	+ AddRow returns ItemRect& now, but Add still returns GridCtrl&
+	+ clicking on edit's child control move focus
+
+	after 704-dev1
+
+	* Esc pass control to parent if there is nothing to cancel
+	- focused ctrl lost focus if its position was changed by cursor keys (regression)
+	- new column move indicator had 0 width if hidden column was pointed
+	- in some cases cursor was hidden after removing row
+	- scrollbars were not updated after reomoving selected rows
+	+ DrawFocus() - shows active cell even in select_row mode
+	- fixed column widths calculation bug related to min max restrictions
+	- after paste selection was not cleared
+	- rectangular selection caused crash in some cases if they were made with keyboard
+	- fixed crash if inserted row was canceled (removed) in insert callback
+	- enter accepted row with wrong values in controls
+	- if last cell had worng value in embeded control and tab was pressed focus of that control was lost
+	- WhenRemoveRow was called if new (not commited) row was canceled (eg. by pressing ESC)
+	- toolbar icons were not properly refreshed
+	+ CancelInsert() - should be called in WhenInsertRow to cancel inserting a new row
+	+ CancelUpdate() - should be called in WhenUpdateRow to restore original values of a row
+	+ CancelRemove() - should be called in WhenRemoveRow to cancel removing a current row
+	* Remove() without aguments remove current row
+
+	after 705-dev1
+
+	- cancel did not work as it should in edit row mode
+	- focus was not set to control which could not be accepted
+	- edit in right menu was disabled in some cases
+	+ CancelAll - in this mode esc restore all previous values in edit cell mode (it is default for edit row mode)
+	- fixed some problems with accepting and rejecting grid
+
+	after 705-dev3
+
+	- fixed issues with removing an edited row and calling WhenRemoveRow - now finally is should work fine
+	- edits where not resized if layout changed (regression)
+	- fixed text wrapping for single line
+	- aligning for header can now be set using HeaderAlign and variations
+	- fixed GetItem and inline attribute problem in GCC
+	- fixed updating cell's value after changing focus from ctrl to ctrl with invalid (not accepted) data
+	- fixed tab key and selecting control focus problem
+
+	after 707-dev1
+
+	* find's options open at fixed position instead of mouse click position
+	- find's edit use GetStdSize() to determine its height (to proper scale at dpi > 96)
+	* in select full row mode ctrl_up/down swaps rows position
+	+ inserting after and duplicating finally implemented
+	- fixed key bindings for inserting/appending
+	- added missing icons in popup menu
+	- fixed cursor entering
+	- fixed SetCursorId()
+	- fixed wrong value returned by SetCursor(n)
+	+ searching without toolbar
+
+	after 708-dev1
+
+	- toolbar is rebuilt when grid is enabled/disabled (Ctrl::Enable should be virtual!)
+	+ GetCurrentRow() - returns "current row" index - mostly cursor position, but sometimes cursor and current row position can be different
+	- more const correctness fixes
+	- if some rows were hidden it was still possible to navigate by those rows using cursor up/down (R)
+	- fixed crash in Append0(n) if n > 1 (R)
+	- fixed crash in Editable called for a row
+	+ EditConvert(Ctrl &ctrl) - synonym for sequence Edit().SetConvert()
+
+	after 708-dev2
+
+	+ CancelAccept() - called in callback When(Insert/Update) cancel inserting/updating operation but do not close edits
+	- fixed crash when dupliacing a row in empty grid
+	+ IsFilled() - opposite to IsEmpty()
+
+	after 709-dev2
+
+	+ IsRowInserted(), IsRowUpdated(), IsRowRemoved - valid in all life-cycle of grid
+	+ RemoveHides() - in this mode grid hide row instead of phisicly remove it
+	- fixed rare crash in PaintFixed()
+	+ searching is now able to highlight letters in multiline text
+	- fixed resize panel - min size was not set properly in some cases
+	- fixed rare scrolling artifacts
+	+ added FindInRow to find value in given row - returns column number
+
+	after 710-dev1
+
+	- in edit row mode null values in not null controls were not respected if grid was "prefilled" with null data
+	- fixed crash when adding column to filled grid
+	+ grid respects read-only mode now (only resizeing/moving/scrolling works in this mode)
+	- fixed bug in GridCtrl::ItemRect::SetFont - it doesn't work and may lead to crash
+	- fixed strage bug connected with focus and bulit-in toolbar
+	- added WhenChangeCol
+	- added GoTo(int r, int c)
+	- fixed SetCursor(Point). Point was not relative.
+	- fixed searching. If search_hide was disabled after matching 0 rows and then peressing esc or backspace grid displayed nothing
+	- fixed selection removing in remove hides mode (mostly crashes, for one row it worked ok).
+	- fixed row inserting (after). Previous cursor position didn't disapear (regression)
+	+ SetImage() works for row now
+
+	after 711-dev1
+
+	- fixed Remove0 - it didn't clear cursor position if cnt > 1
+	- fixed Searching - now the searching flag is respected in immediate searching
+	+ AddSeparator(Color c) - inserts 3 pixel height separator
+	* IsEnd restores rowidx now - it's now more safe to use FOREACH* macros
+	- fixed elipsses in multiline texts
+	- fixed Searching() one more time
+	- some fixes to sorting
+	+ added Skip to ItemRect. If true the given row/col is skipped during Find()
+	+ fixed some regressions with painting header
+	+ added WhenCursor callback and CancelCursor() to cancel changing cursor position from body
+	  of this callback.
+
+	after 711-dev2
+
+	do not remember :)
+
+	after 712-dev1
+
+	* made find string control vista compatabile, removed unecessary members
+	- fixed coping/paste and WhenInsertRow/WhenUpdateRow issues (wrong rowidx, one callback call
+	  for multiple rows)
+	+ added German translation
+	* WhenEditRow removed - added WhenStartEdit
+	* WhenAcceptRow is always called now - no metter if any cell in row changed its value or not,
+	  WhenAcceptedRow is called only if there was chanage in a row
+
+	after 2008.1beta
+
+	- commented out DragAndDrop. It caused crashes
+	* IsNewRowOrder() renamed to IsOrderChanged()
+	+ IsDataChanged() - returns true if data in grid were edited
+	+ Crlc-C creates now 2 clipboards - one internal and one textual
+	+ AskRemove() - if set question is shown before deleting a row
+	+ editing of row was possible (through double click) even if editing flag was not set
+	- Clear refreshes toolbar now
+	+ added Get*Align() to ItemRect
+
+	after 2008.1beta2
+
+	- hiding/showing columns works again in proportional mode (R)
+	- align value from AttrText was inproperly passed to cell style
+	+ added Header(bool) - to turn on/off the header
+	- some fixes to Ready()
+	+ added RowChanging(bool) - false -> changing row is not possible

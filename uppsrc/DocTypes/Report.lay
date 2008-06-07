@@ -1,0 +1,10 @@
+LAYOUT(ReportLayout, 268, 276)
+	UNTYPED(pg, HSizePosZ(6, 108).VSizePosZ(3, 4))
+	ITEM(Label, lbl, SetLabel(t_("1 / 1")).RightPosZ(6, 96).TopPosZ(3, 26))
+	ITEM(LabelBox, dv___2, SetLabel(t_("Sideways")).RightPosZ(8, 88).TopPosZ(42, 94))
+	ITEM(Switch, sw, SetLabel(t_("&1 page\n&2 pages\n&4 pages\n&8 pages")).RightPosZ(12, 76).TopPosZ(60, 72))
+	ITEM(Option, numbers, SetLabel(t_("Page &numbers")).RightPosZ(4, 92).TopPosZ(146, 18))
+	ITEM(Button, pdf, SetLabel(t_("PDF export..")).RightPosZ(12, 80).TopPosZ(172, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(12, 80).BottomPosZ(8, 24))
+END_LAYOUT
+

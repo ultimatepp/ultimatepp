@@ -1,0 +1,17 @@
+description "Widget to display hexadecimal dumps (e.g. memory in debugger)";
+
+uses
+	CtrlLib;
+
+file
+	HexView.h,
+	HexView.cpp,
+	HexView.lay,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "";
+

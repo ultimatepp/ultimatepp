@@ -1,0 +1,25 @@
+description "Esc scripting language interpreter";
+
+optimize_speed;
+
+uses
+	Core;
+
+file
+	Esc.h,
+	EscValue.cpp,
+	EscArray.cpp,
+	EscMap.cpp,
+	Esc.cpp,
+	EscRun.cpp,
+	EscStdLib.cpp,
+	Value.cpp,
+	Info readonly separator,
+	srcdoc.tpp,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "";
+

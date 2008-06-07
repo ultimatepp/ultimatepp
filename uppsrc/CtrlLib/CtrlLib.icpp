@@ -1,0 +1,14 @@
+#include "CtrlLib.h"
+
+NAMESPACE_UPP
+
+#define  TFILE <CtrlLib/CtrlLib.t>
+#include <Core/t.h>
+
+void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
+
+INITBLOCK {
+	CtrlSetDefaultSkin(ChStdSkin, ChHostSkin);
+};
+
+END_UPP_NAMESPACE

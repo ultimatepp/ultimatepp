@@ -1,0 +1,11 @@
+description "Creating raster images in the code";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

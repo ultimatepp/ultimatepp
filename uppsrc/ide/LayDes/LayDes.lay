@@ -1,0 +1,74 @@
+LAYOUT(LayoutsLayout, 260, 288)
+	ITEM(ArrayCtrl, list, LeftPosZ(6, 242).TopPosZ(6, 242))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(118, 64).TopPosZ(254, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(186, 64).TopPosZ(254, 24))
+END_LAYOUT
+
+LAYOUT(FontPropertyDlgLayout, 232, 182)
+	ITEM(Switch, face, SetLabel(t_("StdFont\nScreenSans\nScreenSerif\nScreenFixed\nRoman\nArial\nCourier")).LeftPosZ(14, 88).TopPosZ(20, 114))
+	ITEM(WithDropChoice<EditIntSpin>, height, LeftPosZ(166, 56).TopPosZ(4, 19))
+	ITEM(Option, bold, SetLabel(t_("Bold")).LeftPosZ(122, 68).TopPosZ(44, 18))
+	ITEM(Option, italic, SetLabel(t_("Italic")).LeftPosZ(122, 68).TopPosZ(62, 18))
+	ITEM(Option, underline, SetLabel(t_("Underline")).LeftPosZ(122, 68).TopPosZ(80, 18))
+	ITEM(Option, strikeout, SetLabel(t_("Strikeout")).LeftPosZ(122, 68).TopPosZ(98, 18))
+	ITEM(Option, nonaa, SetLabel(t_("NonAntiAliased")).LeftPosZ(122, 96).TopPosZ(116, 18))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(94, 64).TopPosZ(152, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(162, 64).TopPosZ(152, 24))
+	ITEM(Label, dv___9, SetLabel(t_("Height")).LeftPosZ(120, 39).TopPosZ(8, 13))
+	ITEM(LabelBox, dv___10, SetLabel(t_("Face")).LeftPosZ(6, 100).TopPosZ(2, 140))
+	ITEM(LabelBox, dv___11, SetLabel(t_("Options")).LeftPosZ(114, 112).TopPosZ(30, 112))
+END_LAYOUT
+
+LAYOUT(LangSetupLayout, 176, 236)
+	ITEM(ArrayCtrl, list, LeftPosZ(6, 164).TopPosZ(6, 190))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(36, 64).TopPosZ(204, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(104, 64).TopPosZ(204, 24))
+END_LAYOUT
+
+LAYOUT(MatrixLayout, 206, 88)
+	ITEM(Label, dv___0, SetLabel(t_("&Horizontal")).LeftPosZ(4, 54).TopPosZ(4, 19))
+	ITEM(EditIntSpin, nx, LeftPosZ(60, 42).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("&spacing")).LeftPosZ(108, 50).TopPosZ(4, 19))
+	ITEM(EditIntSpin, dx, LeftPosZ(156, 42).TopPosZ(4, 19))
+	ITEM(Label, dv___4, SetLabel(t_("&Vertical")).LeftPosZ(4, 54).TopPosZ(28, 19))
+	ITEM(EditIntSpin, ny, LeftPosZ(60, 42).TopPosZ(28, 19))
+	ITEM(Label, dv___6, SetLabel(t_("s&pacing")).LeftPosZ(108, 50).TopPosZ(28, 19))
+	ITEM(EditIntSpin, dy, LeftPosZ(156, 42).TopPosZ(28, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(64, 64).TopPosZ(56, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(134, 64).TopPosZ(56, 24))
+END_LAYOUT
+
+LAYOUT(SettingLayout, 162, 130)
+	ITEM(LabelBox, dv___0, SetLabel(t_("Grid")).LeftPosZ(4, 98).TopPosZ(2, 42))
+	ITEM(EditIntSpin, gridx, LeftPosZ(10, 38).TopPosZ(18, 19))
+	ITEM(EditIntSpin, gridy, LeftPosZ(58, 38).TopPosZ(18, 19))
+	ITEM(Label, dv___3, SetLabel(t_("x")).LeftPosZ(50, 6).TopPosZ(20, 13))
+	ITEM(Option, paintgrid, SetLabel(t_("Paint grid")).LeftPosZ(10, 146).TopPosZ(52, 18))
+	ITEM(Option, showicons, SetLabel(t_("Show icons in layout list")).LeftPosZ(10, 146).TopPosZ(70, 18))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(24, 64).TopPosZ(100, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(92, 64).TopPosZ(100, 24))
+END_LAYOUT
+
+LAYOUT(InsertLangLayout, 252, 68)
+	ITEM(LNGCtrl, lang, LeftPosZ(8, 128).TopPosZ(8, 20))
+	ITEM(DropList, charset, LeftPosZ(140, 104).TopPosZ(8, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(112, 64).TopPosZ(36, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(180, 64).TopPosZ(36, 24))
+END_LAYOUT
+
+LAYOUT(VisGenLayout, 724, 488)
+	ITEM(Switch, type, SetLabel(t_("Dialog class\nModal classless dialog\nCtrl list\nCtrl list pairs")).LeftPosZ(8, 156).TopPosZ(8, 76))
+	ITEM(Label, name_lbl, SetLabel(t_("Name")).LeftPosZ(8, 32).TopPosZ(96, 19))
+	ITEM(EditString, name, LeftPosZ(44, 120).TopPosZ(96, 19))
+	ITEM(Option, pars, SetLabel(t_("Parenthesis")).LeftPosZ(8, 152).TopPosZ(124, 15))
+	ITEM(LabelBox, dv___4, SetLabel(t_("First")).LeftPosZ(8, 76).TopPosZ(148, 56))
+	ITEM(Option, toupper1, SetLabel(t_("ToUpper")).LeftPosZ(12, 64).TopPosZ(164, 15))
+	ITEM(Option, name1, SetLabel(t_("name.")).LeftPosZ(12, 64).TopPosZ(180, 15))
+	ITEM(LabelBox, dv___7, SetLabel(t_("Second")).LeftPosZ(88, 76).TopPosZ(148, 56))
+	ITEM(Option, toupper2, SetLabel(t_("ToUpper")).LeftPosZ(92, 64).TopPosZ(164, 15))
+	ITEM(Option, name2, SetLabel(t_("name.")).LeftPosZ(92, 64).TopPosZ(180, 15))
+	ITEM(CodeEditor, view, LeftPosZ(172, 544).TopPosZ(8, 440))
+	ITEM(Button, ok, SetLabel(t_("Copy to clipboard")).LeftPosZ(552, 96).TopPosZ(456, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(652, 64).TopPosZ(456, 24))
+END_LAYOUT
+

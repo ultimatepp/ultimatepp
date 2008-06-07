@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$ClogNotS", "EN-US", "operator \1!\1  (\1string\1) [S ®] \1logical value\1")
+	HELP_TEXT(
+	"\r\n")
+HELP_END

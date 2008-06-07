@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CpointNN", "CS-CZ windows-1250", "\1point\1 (\1reálné èíslo\1 [/ x], \1reálné èíslo\1 [/ y]) [S ®] \1bod\1")
+	HELP_TEXT(
+	"[ [A@0+84 Funkce vrátí bod o zadaných souøadnicích.]]\r\n")
+HELP_END

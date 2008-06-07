@@ -1,0 +1,27 @@
+acceptflags
+	NOHRRPNG;
+
+uses
+	TDraw,
+	plugin\png,
+	plugin\gif,
+	plugin\jpg,
+	Geom\Coords;
+
+file
+	GeomDraw.h,
+	imgtran.h,
+	imgtran.cpp,
+	plotter.h,
+	plotter.cpp,
+	pathDraw.h,
+	pathDraw.cpp,
+	path_aux.cpp,
+	coordutil.h,
+	coordutil.cpp,
+	hrr.h,
+	hrr.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

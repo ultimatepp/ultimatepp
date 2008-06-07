@@ -1,0 +1,11 @@
+description "\"value\" return callback";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

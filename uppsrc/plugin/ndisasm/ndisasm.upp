@@ -1,0 +1,25 @@
+description "Disassembler (GPL license - used in TheIDE)";
+
+uses
+	Core;
+
+file
+	ndisasm.h,
+	ndisupp.cpp,
+	lib/ndisasm readonly separator,
+	lib\disasm.c tabsize 8,
+	lib\disasm.h,
+	lib\insns.h,
+	lib\insnsd.c tabsize 8,
+	lib\insnsi.h,
+	lib\nasm.h,
+	lib\nasmlib.c tabsize 8,
+	lib\nasmlib.h,
+	lib\regs.c tabsize 8,
+	lib\regs.h,
+	lib\sync.c tabsize 8,
+	lib\sync.h,
+	lib\version.h,
+	lib\AUTHORS,
+	lib\COPYING;
+

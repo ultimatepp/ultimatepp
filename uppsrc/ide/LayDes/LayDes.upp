@@ -1,0 +1,28 @@
+description "TheIDE - .lay designer";
+
+uses
+	ide\Common,
+	RichEdit,
+	Esc,
+	IconDes,
+	CodeEditor;
+
+file
+	LayDes.h,
+	laydes.key,
+	sdiff.cpp,
+	laylib.cpp,
+	layusc.cpp,
+	property.cpp,
+	textprop.cpp,
+	fontprop.cpp,
+	propane.cpp,
+	item.cpp,
+	layout.cpp optimize_speed,
+	visgen.cpp,
+	laydes.cpp,
+	layfile.cpp,
+	laywin.cpp,
+	LayDes.lay,
+	LayDes.iml;
+

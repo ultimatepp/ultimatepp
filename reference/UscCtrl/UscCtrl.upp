@@ -1,0 +1,12 @@
+description "Creating .usc script to get custom widget represented in layout editor";
+
+uses
+	Counter;
+
+file
+	main.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

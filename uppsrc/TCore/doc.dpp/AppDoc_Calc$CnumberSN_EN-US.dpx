@@ -1,0 +1,13 @@
+HELP_TOPIC("AppDoc", "", "Calc$CnumberSN", "EN-US", "\1number\1 (\1string\1 [/ text], \1real number\1 [/ default]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function converts text representation of a real \r\n"
+	"numeric constant to the value of this number. If the text doesn`'t \r\n"
+	"contain a valid text representation of a real number, the form \r\n"
+	"with one parameter aborts the computation with the error ][/A@0+84 `'invalid \r\n"
+	"numeric format`'][A@0+84  whereas the form with two arguments \r\n"
+	"merely returns its second argument ][/A@0+84 default][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: number(`\"1.2e3`\") `= 1200]]\r\n")
+HELP_END

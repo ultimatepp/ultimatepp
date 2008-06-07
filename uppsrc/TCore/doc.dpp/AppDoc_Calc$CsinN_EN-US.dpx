@@ -1,0 +1,12 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsinN", "EN-US", "\1sin\1 (\1real number\1 [/ [S a]]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function calculates the sine of the angle ][S@0+84 a][A@0+84 , \r\n"
+	"i.e. the ratio of the length of the opposite leg and the length \r\n"
+	"of the hypotenuse in a right`-angled triangle with the leg angle \r\n"
+	"][S@0+84 a][A@0+84 . The input angle is assumed to be in radians, \r\n"
+	"therefore the perigon equals 2][S@0+84 p][A@0+84 .]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: sin(3 `* pi `/ 2) `= `-1]]\r\n")
+HELP_END

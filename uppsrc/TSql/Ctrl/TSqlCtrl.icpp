@@ -1,0 +1,9 @@
+#include "TSqlCtrl.h"
+#pragma hdrstop
+
+NAMESPACE_UPP
+
+#define TFILE <TSql/Ctrl/TSqlCtrl.t>
+#include <Core/t.h>
+
+END_UPP_NAMESPACE

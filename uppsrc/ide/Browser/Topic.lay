@@ -1,0 +1,54 @@
+LAYOUT(NewTopicLayout, 268, 92)
+	ITEM(Label, dv___0, SetLabel(t_("Topic")).LeftPosZ(8, 56).TopPosZ(8, 19))
+	ITEM(EditString, topic, LeftPosZ(68, 92).TopPosZ(8, 19))
+	ITEM(LNGCtrl, lang, LeftPosZ(164, 96).TopPosZ(8, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Stylesheet")).LeftPosZ(8, 56).TopPosZ(32, 19))
+	ITEM(DropList, stylesheet, LeftPosZ(68, 192).TopPosZ(32, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(128, 64).TopPosZ(60, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(196, 64).TopPosZ(60, 24))
+END_LAYOUT
+
+LAYOUT(RenameTopicLayout, 268, 64)
+	ITEM(Label, dv___0, SetLabel(t_("Topic")).LeftPosZ(8, 56).TopPosZ(8, 19))
+	ITEM(EditString, topic, LeftPosZ(68, 92).TopPosZ(8, 19))
+	ITEM(LNGCtrl, lang, LeftPosZ(164, 96).TopPosZ(8, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(128, 64).TopPosZ(32, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(196, 64).TopPosZ(32, 24))
+END_LAYOUT
+
+LAYOUT(StylesheetLayout, 216, 344)
+	ITEM(ArrayCtrl, style, LeftPosZ(8, 200).TopPosZ(8, 296))
+	ITEM(Button, edit, SetLabel(t_("Edit..")).LeftPosZ(8, 64).TopPosZ(312, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(76, 64).TopPosZ(312, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(144, 64).TopPosZ(312, 24))
+END_LAYOUT
+
+LAYOUT(TopicLinkLayout, 716, 404)
+	ITEM(Label, dv___0, SetLabel(t_("Link")).LeftPosZ(8, 28).TopPosZ(12, 13))
+	ITEM(EditString, link, LeftPosZ(44, 664).TopPosZ(8, 19))
+	ITEM(FileList, package, LeftPosZ(8, 144).TopPosZ(32, 332))
+	ITEM(FileList, group, LeftPosZ(156, 148).TopPosZ(32, 332))
+	ITEM(FileList, topic, LeftPosZ(308, 148).TopPosZ(32, 332))
+	ITEM(FileList, label, LeftPosZ(460, 248).TopPosZ(32, 332))
+	ITEM(Button, insert, SetLabel(t_("Insert")).LeftPosZ(8, 64).TopPosZ(372, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(576, 64).TopPosZ(372, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(644, 64).TopPosZ(372, 24))
+END_LAYOUT
+
+LAYOUT(GroupDlgLayout, 148, 68)
+	ITEM(Label, dv___0, SetLabel(t_("Group")).LeftPosZ(8, 36).TopPosZ(8, 19))
+	ITEM(EditString, group, LeftPosZ(48, 92).TopPosZ(8, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(36, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(36, 24))
+END_LAYOUT
+
+LAYOUT(ReferenceDlgLayout, 644, 392)
+	ITEM(Label, dv___0, SetLabel(t_("Reference")).LeftPosZ(8, 56).TopPosZ(4, 19))
+	ITEM(EditString, reference, HSizePosZ(68, 4).TopPosZ(4, 19))
+	ITEM(Browser, browser, HSizePosZ(8, 8).VSizePosZ(28, 40))
+	ITEM(Button, query, SetLabel(t_("Query")).LeftPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Button, classlist, SetLabel(t_("Class list")).RightPosZ(144, 64).BottomPosZ(8, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+

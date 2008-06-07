@@ -1,0 +1,12 @@
+description "Converts metric units and U.S. units (meters / feets etc..)";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	converter.lay;
+
+mainconfig
+	"" = "GUI";
+

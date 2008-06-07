@@ -1,0 +1,6 @@
+LAYOUT(AppLayout, 416, 132)
+	ITEM(ArrayCtrl, list, LeftPosZ(4, 300).TopPosZ(4, 124))
+	ITEM(EditInt, editor, LeftPosZ(308, 104).TopPosZ(4, 19))
+	ITEM(Option, option, SetLabel(t_("Option")).LeftPosZ(308, 104).TopPosZ(28, 15))
+END_LAYOUT
+

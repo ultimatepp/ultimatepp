@@ -1,0 +1,13 @@
+description "Mine sweeping game";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	bombs.rc,
+	bombs.iml;
+
+mainconfig
+	"" = "GUI";
+

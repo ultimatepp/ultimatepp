@@ -1,0 +1,12 @@
+description "Tabbed dialogs";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	TabDlg.lay;
+
+mainconfig
+	"" = "GUI";
+

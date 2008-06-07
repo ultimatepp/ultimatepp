@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CnvlVV", "EN-US", "\1nvl\1 (\1any data type\1, \1any data type\1) [S ®] \1any data type\1")
+	HELP_TEXT(
+	"[ [A@0+84 This function returns its first parameter if it is not \r\n"
+	"][*A@0+84 null][A@0+84 . If the first parameter is ][*A@0+84 null][A@0+84  \r\n"
+	"the function returns its second parameter.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: nvl(`\"first`\", `\"second`\") `= `\"first`\", \r\n"
+	"nvl(`\"`\", `\"second`\") `= `\"second`\"]]\r\n")
+HELP_END

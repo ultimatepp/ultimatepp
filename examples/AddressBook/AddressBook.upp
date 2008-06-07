@@ -1,0 +1,13 @@
+description "Simple address book application";
+
+uses
+	CtrlLib,
+	Report;
+
+file
+	AddressBook.cpp,
+	AddressBook.lay;
+
+mainconfig
+	"" = "GUI";
+

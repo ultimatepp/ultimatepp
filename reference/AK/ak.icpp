@@ -1,0 +1,4 @@
+#include "AK.h"
+
+#define  TFILE <AK/ak.t>
+#include <Core/t.h>

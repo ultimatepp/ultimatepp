@@ -1,0 +1,10 @@
+description "Window that accepts drag&drop of files";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

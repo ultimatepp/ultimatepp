@@ -1,0 +1,139 @@
+FTP Library Routines Release 3
+Thomas Pfau (pfau@cnj.digex.net)
+December 2, 1997
+
+This package implements a callable interface to FTP.  The FTP protocol is
+specified in RFC 959.  The library has been tested on linux, OpenVMS and
+Windows NT.  It should also work without major modification on other
+POSIX systems.
+
+All programs using the library should include ftplib.h.
+
+The routines look at the global variable ftplib_debug to determine how
+much information they should display.  Level 1 has been left for user
+programs.  Level 2 displays all responses received from the server.
+Level 3 displays all commands sent to the server.
+
+Along with some bug fixes, version 3 also includes support for user
+access to data connections.  FtpAccess() allows a user program to open a
+remote file or directory.  FtpRead() and FtpWrite() can then be used to
+transfer data.  These functions perform the necessary conversions for
+ascii mode transfers if necessary.  FtpClose() is used to close this
+connection.
+
+---
+
+The following routines are implemented:
+
+void FtpInit(void);
+
+This routine should be called prior to any other routines.  On most
+operating systems, it is a no-op but some others don't implement TCP/IP
+as seamlessly as others (Windows NT).
+
+int FtpConnect(const char *host, netbuf **nControl);
+
+Establishes a connection to the named host.  The host name should be
+specified as <host> or <host>:<port> where <host> is a host name or ip
+address and <port> is a service name or port number.  The handle for the
+control connection is returned to 'nControl'.  This handle can then be
+passed to other routines to control the connection and exchange data.
+Returns success/fail.
+
+int FtpLogin(const char *user, const char *pass, netbuf *nControl);
+
+Logs in using the specified username and password.  Returns success/fail.
+
+int FtpSite(const char *cmd, netbuf *nControl);
+
+Issues the specified SITE command.  See RFC 959 for more information.
+
+int FtpMkdir(const char *path, netbuf *nControl);
+
+Sends a create directory request to the server using the specified path.
+Returns success/fail.
+
+int FtpChdir(const char *path, netbuf *nControl);
+
+Sends a change working directory request to the server using the
+specified path.  Returns success/fail.
+
+int FtpRmdir(const char *path, netbuf *nControl);
+
+Sends a remove directory request to the server using the specified path.
+Returns success/fail.
+
+int FtpNlst(const char *outputfile, const char *path, netbuf *nControl);
+
+Sends an NLST command to the server with the specified path.  The
+response to this is a list of file names which will be written to the
+file named in outputfile.  If outputfile is specified as NULL, the list
+will be written to stdout.
+
+int FtpDir(const char *outputfile, const char *path, netbuf *nControl);
+
+Sends a LIST command to the server with the specified path.  The response
+to this is usually a long format directory listing which will be written
+to the file named in outputfile.  If outputfile is specified as NULL, the
+list will be written to stdout.
+
+int FtpGet(const char *outputfile, const char *path, char mode,
+	netbuf *nControl);
+
+Retreives the file specified by path and writes it to the file specified
+in outputfile.  Image or ASCII transfer mode can be specified by setting
+mode to FTPLIB_IMAGE or FTPLIB_ASCII, respectively.
+
+int FtpPut(const char *inputfile, const char *path, char mode,
+	netbuf *nControl);
+
+Sends the file specified by inputfile to the server with the name
+specified in path.  Image or ASCII transfer mode can be specified by
+setting mode to FTPLIB_IMAGE or FTPLIB_ASCII, respectively.
+
+int FtpRename(const char *src, const char *dst, netbuf *nControl);
+
+Renames the remote file specified by src to the name specified in dst.
+
+int FtpDelete(const char *fnm, netbuf *nControl);
+
+Removes the specified file from the server.
+
+void FtpQuit(void, netbuf *nControl);
+
+Disconnects from the remote server.
+
+char *FtpLastResponse(netbuf *nControl);
+
+Returns a pointer to the buffer containing the last response received
+from the server.  Useful for displaying error messages.
+
+int FtpAccess(const char *path, int typ, int mode, netbuf *nControl,
+    netbuf **nHandle);
+
+Opens the file or directory specified by 'path' and returns a handle to
+'nHandle'.  This handle can then be passed to FtpRead() or FtpWrite() to
+exchange data.  To list a directory, set 'typ' to FTPLIB_DIR or
+FTPLIB_DIR_VERBOSE and 'mode' to FTPLIB_ASCII.  To transfer files, set
+'mode' to FTPLIB_ASCII for text files or FTPLIB_IMAGE for binary files and
+set 'typ' to FTPLIB_FILE_READ to retreive a file or FTPLIB_FILE_WRITE to
+send a file.
+
+int FtpRead(void *buf, int max, netbuf *nData);
+
+Reads up to 'max' bytes of data from the data connection specified by
+'nData' and stores it in 'buf'.  If the connection was opened in ascii
+mode, one line of is returned with the terminating new-line character.
+Otherwise, FtpRead() attempts to fill the buffer.
+
+int FtpWrite(void *buf, int len, netbuf *nData);
+
+Writes 'len' bytes of data from 'buf' to the data connection specified by
+'nData'.  If the connection was opened in ascii mode, FtpWrite() performs
+the necessary conversions.  Otherwise, FtpWrite() passes the data
+verbatim.
+
+int FtpClose(netbuf *nData);
+
+Closes the data connection specified by 'nData' and frees associated
+resources.

@@ -1,0 +1,8 @@
+#include "Web.h"
+
+NAMESPACE_UPP
+
+#define TFILE <Web/Web.t>
+#include <Core/t.h>
+
+END_UPP_NAMESPACE

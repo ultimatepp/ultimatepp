@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CrectNNNN", "CS-CZ windows-1250", "\1rect\1 (\1reálné èíslo\1 [/ xmin], \1reálné èíslo\1 [/ ymin], \1reálné èíslo\1 [/ xmax], \1reálné èíslo\1 [/ ymax]) [S ®] \1obdélník\1")
+	HELP_TEXT(
+	"[ [A@0+84 Vrátí obdélník se zadanými souøadnicemi.]]\r\n")
+HELP_END

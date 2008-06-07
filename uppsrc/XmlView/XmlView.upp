@@ -1,0 +1,13 @@
+description "XML viewer - with added \"path\" capability";
+
+uses
+	CtrlLib;
+
+file
+	XmlView.h,
+	main.cpp,
+	XmlView.iml,
+	XmlView.rc;
+
+mainconfig
+	"" = "GUI";

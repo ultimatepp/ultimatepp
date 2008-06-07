@@ -1,0 +1,15 @@
+description "FTP client";
+
+uses
+	Core;
+
+library(WIN32) ws2_32;
+
+file
+	ftp.h,
+	ftp.cpp,
+	lib readonly separator,
+	lib\README.ftplib,
+	lib\ftplib.h,
+	lib\ftplib.cpp tabsize 4;
+

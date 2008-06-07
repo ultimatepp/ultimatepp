@@ -1,0 +1,17 @@
+LAYOUT(SetupLayout, 152, 160)
+	ITEM(LabelBox, dv___0, SetLabel(t_("Dimension:")).LeftPosZ(8, 136).TopPosZ(4, 60))
+	ITEM(Label, dv___1, SetLabel(t_("Height:")).SetAlign(ALIGN_CENTER).LeftPosZ(80, 48).TopPosZ(20, 13))
+	ITEM(EditIntSpin, cx, Min(3).Max(15).NotNull(true).SetFrame(ThinInsetFrame()).LeftPosZ(16, 56).TopPosZ(36, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Width:")).SetAlign(ALIGN_CENTER).LeftPosZ(16, 48).TopPosZ(20, 13))
+	ITEM(EditIntSpin, cy, Min(3).Max(15).NotNull(true).SetFrame(ThinInsetFrame()).LeftPosZ(80, 56).TopPosZ(36, 19))
+	ITEM(LabelBox, dv___5, SetLabel(t_("Language:")).LeftPosZ(8, 136).TopPosZ(72, 52))
+	ITEM(LNGCtrl, lang, LeftPosZ(32, 88).TopPosZ(92, 20))
+	ITEM(Button, ok, SetLabel(t_("OK")).HSizePosZ(80, 8).TopPosZ(132, 20))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).HSizePosZ(8, 80).TopPosZ(132, 20))
+END_LAYOUT
+
+LAYOUT(ScoreLayout, 156, 260)
+	ITEM(ArrayCtrl, score, LeftPosZ(8, 140).TopPosZ(44, 180))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(84, 64).TopPosZ(232, 20))
+	ITEM(Label, dv___2, SetLabel(t_("Best scores")).SetAlign(ALIGN_CENTER).SetFont(Arial(20)).SetInk(Blue).LeftPosZ(8, 140).TopPosZ(8, 32))
+END_LAYOUT

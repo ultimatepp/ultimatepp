@@ -1,0 +1,12 @@
+description "Paints text using different colors";
+
+uses
+	CtrlLib;
+
+file
+	Color.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

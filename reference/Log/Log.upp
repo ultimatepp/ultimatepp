@@ -1,0 +1,11 @@
+description "Using diagnostic logs";
+
+uses
+	Core;
+
+file
+	log.cpp;
+
+mainconfig
+	"" = "";
+

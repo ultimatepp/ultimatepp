@@ -1,0 +1,19 @@
+uses
+	docpp,
+	RichEdit;
+
+file
+	Docedit.h,
+	Docbase.cpp,
+	Docdir.cpp,
+	DocItem.cpp,
+	DocLink.cpp,
+	Docedit.cpp,
+	Docedit.iml,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"Debug" = normal "GUI";

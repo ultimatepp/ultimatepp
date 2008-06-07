@@ -1,0 +1,9 @@
+VECTOR_BEGIN(test1, 610, 600)
+	VECTOR_OBJ(VectorRect, .SetRect(Rect(445, 47, 594, 501)).OutlineWidth(2).FillColor(Color(255, 205, 192)))
+	VECTOR_OBJ(VectorLine, .SetPoint(Vector<Point>() << Point(0, 436) << Point(424, 436) << Point(424, 212) << Point(245, 152) << Point(56, 212) << Point(56, 84) << Point(444, 84)).EndSize(20).EndCap(5).BeginSize(20).BeginCap(5).LineWidth(3))
+VECTOR_END
+
+VECTOR_BEGIN(test2, 200, 200)
+	VECTOR_OBJ(VectorRect, .SetRect(Rect(11, 17, 151, 128)))
+	VECTOR_OBJ(VectorRect, .SetRect(Rect(17, 141, 183, 173)).Text("Hello world!").Style(1))
+VECTOR_END

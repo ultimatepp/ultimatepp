@@ -1,0 +1,5 @@
+#ifndef _plugin_bmp_icpp_init_stub
+#define _plugin_bmp_icpp_init_stub
+#include "Draw/init"
+#include "BmpReg.icpp"
+#endif

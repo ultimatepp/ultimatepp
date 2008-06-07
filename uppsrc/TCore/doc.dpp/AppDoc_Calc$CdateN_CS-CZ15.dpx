@@ -1,0 +1,15 @@
+HELP_TOPIC("AppDoc", "", "Calc$CdateN", "CS-CZ windows-1250", "\1date\1 (\1celé èíslo\1 [/ den]) [S ®] \1datum\1")
+	HELP_TEXT(
+	"[3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0} \r\n"
+	"[s0;2 Funkce vrátí aktuální systémové datum, ve kterém zamìní èíslo \r\n"
+	"dne hodnotou zadaného parametru [* den].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 Viz také:&]\r\n"
+	"[s0;i150;O0;*^dpp`:`/`/AppDoc`/`/`:`:`/`/Calc`$CdateNN^2 [^^ \r\n"
+	"{:LINK:dpp`:`/`/AppDoc`/`/`:`:`/`/Calc`$CdateNN\t\t:}\r\n"
+	"]&]\r\n"
+	"[s0;i150;O0;*^dpp`:`/`/AppDoc`/`/`:`:`/`/Calc`$CdateNNN^2 [^^ \r\n"
+	"{:LINK:dpp`:`/`/AppDoc`/`/`:`:`/`/Calc`$CdateNNN\t\t:}\r\n"
+	"]")
+HELP_END

@@ -1,0 +1,12 @@
+description "U++ containers demonstration - prints the map of words in the file";
+
+optimize_speed;
+
+uses
+	Core;
+
+file
+	idmap.cpp;
+
+mainconfig
+	"" = "";

@@ -1,0 +1,11 @@
+description "Using StatusBar to provide informations at the bottom of the window";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

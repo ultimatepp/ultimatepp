@@ -1,0 +1,7 @@
+HELP_TOPIC("AppDoc", "", "Calc$CgeNN", "CS-CZ windows-1250", "operátor \1>=\1  (\1reálné èíslo\1, \1reálné èíslo\1) [S ®] \1logická hodnota\1")
+	HELP_TEXT(
+	"[ [A@0+84 Operátor porovná dvojici hodnot a_vrátí hodnotu 1, pokud \r\n"
+	"nerovnost platí, respektive 0, pokud nerovnost neplatí. Texty \r\n"
+	"se porovnávají lexikograficky (][/A@0+84 slovníkové][A@0+84  \r\n"
+	"uspoøádání).]]\r\n")
+HELP_END

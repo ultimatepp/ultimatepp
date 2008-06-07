@@ -1,0 +1,19 @@
+description "Converts binary data to COFF object files";
+
+optimize_speed;
+
+uses
+	coff,
+	plugin\bz2;
+
+file
+	binobj.h,
+	binobj.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "";
+

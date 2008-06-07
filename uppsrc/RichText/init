@@ -1,0 +1,6 @@
+#ifndef _RichText_icpp_init_stub
+#define _RichText_icpp_init_stub
+#include "CtrlCore/init"
+#include "plugin\png/init"
+#include "RichImage.icpp"
+#endif

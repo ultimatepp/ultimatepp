@@ -1,0 +1,10 @@
+description "Temporarily overriding the mouse cursor shape";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

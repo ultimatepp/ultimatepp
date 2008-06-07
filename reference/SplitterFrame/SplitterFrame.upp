@@ -1,0 +1,11 @@
+description "Resizable frame Ctrls";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

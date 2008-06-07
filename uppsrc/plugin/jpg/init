@@ -1,0 +1,5 @@
+#ifndef _plugin_jpg_icpp_init_stub
+#define _plugin_jpg_icpp_init_stub
+#include "Draw/init"
+#include "jpgreg.icpp"
+#endif

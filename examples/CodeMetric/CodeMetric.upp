@@ -1,0 +1,16 @@
+description "Investigating C++ cyclometric complexity";
+
+uses
+	CtrlLib,
+	CppBase;
+
+file
+	AnalyseGui.h,
+	Analyse.h,
+	AnalyseGui.iml,
+	Analyse.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cadd_monthsDN", "EN-US", "\1add_months\1 (\1date\1, \1integer\1 [/ number_of_months]) [S ®] \1date\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function adds given ][/A@0+84 number`_of`_months][A@0+84  \r\n"
+	"to the date. If the target month has fewer days than is the day \r\n"
+	"number in the original date, the function returns last day of \r\n"
+	"the target month.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: add`_months(29.2.1996, 12) `= 28.2.1997]]\r\n")
+HELP_END

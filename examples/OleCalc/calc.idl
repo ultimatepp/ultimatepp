@@ -1,0 +1,41 @@
+// calculator.idl: simple OCX expression evaluator.
+
+import "oaidl.idl";
+import "oleidl.idl";
+
+[
+	object,
+	uuid(2CFA5DB2-A740-11d3-981C-000000000000),
+	dual,
+	helpstring("ICalculator Interface")
+]
+interface ICalculator : IDispatch
+{
+	[id(1), propget, helpstring("Returns and sets calculator input field text (expression).")]
+	HRESULT Input([out, retval] BSTR *_value);
+	[propput, helpstring("Put")]
+	HRESULT Input([in] BSTR _value);
+	[id(2), helpstring("Calculate computes the result and places the it in the history list.")]
+	HRESULT Calculate();
+	[id(3), propget, helpstring("Value retrieves the result of the computation.")]
+	HRESULT Output([out, retval] BSTR *value);
+};
+
+[
+	uuid(2CFA5DB0-A740-11d3-981C-000000000000),
+	version(1.0),
+	helpstring("Ultimate Calculator 1.0 Type Library")
+]
+library Calculator_TypeLib
+{
+	importlib("stdole32.tlb");
+
+	[
+		uuid(2CFA5DB1-A740-11d3-981C-000000000000),
+		helpstring("Calculator Control")
+	]
+	coclass Calculator
+	{
+		[default] interface ICalculator;
+	};
+};

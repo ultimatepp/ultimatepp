@@ -1,0 +1,12 @@
+description "Using CtrlRetriever to edit C++ variables in dialog";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	CtrlRetriever.lay;
+
+mainconfig
+	"" = "GUI";
+

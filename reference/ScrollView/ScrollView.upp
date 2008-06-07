@@ -1,0 +1,11 @@
+description "Scrolling the view area";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

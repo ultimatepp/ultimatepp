@@ -1,0 +1,40 @@
+description "MySQL interface";
+
+acceptflags
+	NOMYSQL,
+	MYSQLDLL;
+
+uses
+	Sql,
+	plugin\z;
+
+library(WIN32 !NOMYSQL MSC DEBUG !MYSQLDLL) debug/mysqlclient.lib;
+
+library(WIN32 !NOMYSQL MSC) ws2_32.lib;
+
+library(WIN32 GCC !NOMYSQL) mysql;
+
+library(WIN32 !NOMYSQL MSC !DEBUG !MYSQLDLL) opt/mysqlclient.lib;
+
+library(LINUX) "mysqlclient ssl";
+
+library(FREEBSD) mysqlclient;
+
+library(WIN32 !NOMYSQL MSC DEBUG MYSQLDLL) debug/libmysql.lib;
+
+library(WIN32 !NOMYSQL MSC !DEBUG MYSQLDLL) opt/libmysql.lib;
+
+link(DEBUG SO) /nodefaultlib:LIBCD;
+
+link(SHARED SO) /nodefaultlib:LIBCMT;
+
+link(FREEBSD) -L/usr/local/lib/mysql;
+
+file
+	MySql.h,
+	MySqlSchema.h,
+	MySql.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;

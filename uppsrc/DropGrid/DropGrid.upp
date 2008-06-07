@@ -1,0 +1,14 @@
+description "DropGrid";
+
+uses
+	CtrlLib,
+	GridCtrl;
+
+file
+	DropGrid.h,
+	DropGrid.cpp,
+	DropGrid.usc,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

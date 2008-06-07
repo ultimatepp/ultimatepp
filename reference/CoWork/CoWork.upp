@@ -1,0 +1,10 @@
+description "Using CoWork for loop parallelisation";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";

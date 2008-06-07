@@ -1,0 +1,8 @@
+#include "GeomCtrl.h"
+
+NAMESPACE_UPP
+
+#define TFILE <Geom/Ctrl/GeomCtrl.t>
+#include <Core/t.h>
+
+END_UPP_NAMESPACE

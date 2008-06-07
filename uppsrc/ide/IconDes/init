@@ -1,0 +1,5 @@
+#ifndef _ide_IconDes_icpp_init_stub
+#define _ide_IconDes_icpp_init_stub
+#include "IconDes/init"
+#include "ide\Common/init"
+#endif

@@ -1,0 +1,11 @@
+description "Demonstration of common functions, methods and operators for concrete types";
+
+uses
+	Core;
+
+file
+	Common.cpp;
+
+mainconfig
+	"" = "";
+

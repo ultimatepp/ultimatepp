@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<dialog>
+	<option id="O1" label="Option"/>
+	<option id="O2" label="Another option"/>
+	<edit id="E1" label="Text"/>
+	<edit id="E2" label="Text2"/>
+</dialog>

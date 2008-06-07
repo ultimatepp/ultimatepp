@@ -1,0 +1,4 @@
+#ifndef _plugin_pcx_icpp_init_stub
+#define _plugin_pcx_icpp_init_stub
+#include "pcxreg.icpp"
+#endif

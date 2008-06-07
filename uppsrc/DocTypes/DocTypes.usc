@@ -1,0 +1,22 @@
+ctrl QtfCtrl {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Doc    SetLabel @1 ? "Label of control" ;
+	bool   VCenter = false ? "Vertical center";
+	Color  Background = :SWhite ? "Background color";
+	int    Zoom = 140;
+	Frame  SetFrame @1;
+	Qtf    SetInfo @1 ? "Info of control" ;
+
+	Paint(w) {
+		sz = GetSize();
+		w.DrawRect(0, 0, sz.cx, sz.cy, .Background);
+		y = 0;
+		if(.VCenter)
+			y = (sz.cy - GetQtfHeight(.Zoom, .SetLabel, sz.cx)) / 2;
+		w.DrawQtf(.Zoom, 0, y, .SetLabel, sz.cx, .Background);
+	}
+}

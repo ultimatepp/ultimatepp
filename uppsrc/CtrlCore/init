@@ -1,0 +1,6 @@
+#ifndef _CtrlCore_icpp_init_stub
+#define _CtrlCore_icpp_init_stub
+#include "Draw/init"
+#include "plugin\bmp/init"
+#include "CtrlCore.icpp"
+#endif

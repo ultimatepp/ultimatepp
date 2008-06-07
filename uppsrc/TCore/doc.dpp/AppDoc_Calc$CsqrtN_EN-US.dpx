@@ -1,0 +1,7 @@
+HELP_TOPIC("AppDoc", "", "Calc$CsqrtN", "EN-US", "\1sqrt\1 (\1real number\1 [/ x]) [S ®] \1real number\1")
+	HELP_TEXT(
+	"[ [A@0+84 real number operation error][*_A@3;3 ERROR`: `[ UNMATCHED`: \r\n"
+	".`\n"
+	"`\n"
+	"`[`* Example`]`: sqrt]]\r\n")
+HELP_END

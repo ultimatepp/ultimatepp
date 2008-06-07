@@ -1,0 +1,4 @@
+HELP_TOPIC("AppDoc", "", "Calc$CxP", "CS-CZ windows-1250", "\1x\1 (\1bod\1 [/ p]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 x`-souøadnice bodu ][/A@0+84 p][A@0+84 .]]\r\n")
+HELP_END

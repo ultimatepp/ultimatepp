@@ -1,0 +1,10 @@
+description "Drag&Drop with ColumnList";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

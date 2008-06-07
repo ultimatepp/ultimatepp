@@ -1,0 +1,13 @@
+description "Using Esc scripting language in U++ application";
+
+uses
+	Core,
+	Esc;
+
+file
+	EscApp.cpp,
+	script.esc;
+
+mainconfig
+	"" = "";
+

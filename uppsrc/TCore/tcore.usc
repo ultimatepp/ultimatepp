@@ -1,0 +1,123 @@
+macro "Ctr -> assignments" {
+	begin = .GetSelBegin();
+	end = begin + .GetSelCount();
+	while(end > begin) {
+		d = c = .Get(--end);
+		if(c == ",")
+			d = ";\n";
+		else if(c == ")")
+			d = "";
+		else if(c == "(")
+			d = " = ";
+		if(d != c) {
+			.Remove(end, 1);
+			.Insert(end, d);
+		}
+	}
+}
+
+macro "Kill RegisterHelpTopic" {
+	for(;;) {
+		if(!.Find("RegisterHelpTopicObjectTitle("))
+			return;
+		line = .GetLine(.GetCursor());
+		if(!(.Get(.GetLinePos(line), 2) == "//"))
+			break;
+	}
+	ident = .GetSelBegin() + .GetSelCount();
+	.MoveWordRight();
+	endid = .GetCursor();
+	id = .Get(ident, endid - ident);
+	if(.Get(endid) == ",") {
+		len = .GetLength();
+		while(++endid < len && .Get(endid) == " ")
+			;
+		ist = .Get(endid, 4) == "t_(\"";
+		if(ist || .Get(endid) == "\"") {
+			bstr = endid + (ist ? 3 : 0);
+			estr = bstr + 1;
+			while(estr < len && !(.Get(estr) == "\""))
+				if(.Get(estr++) == "\\" && estr < len)
+					estr++;
+			if(estr < len && .Get(estr) == "\"")
+				estr++;
+			if(ist)
+				nstr = "t_(" + .Get(bstr, estr - bstr) + ")";
+			else
+				nstr = .Get(bstr, estr - bstr);
+			.SetSelection(0, len);
+			cout(id);
+			.Replace(id + "HelpTitle()", nstr);
+			.SetCursor(.GetLinePos(line));
+			.Insert("//");
+		}
+	}
+
+}
+
+macro "Dialog class" Shift+Ctrl+D {
+	ntr = Input("Name", "Title", "Return type");
+	n = ntr[0];
+	t = ntr[1];
+	if(t == "") t = "(dialog title)";
+	r = ntr[2];
+	if(r == "") r = "void";
+	isvoid = (r == "void");
+	dlgn = "Dlg" + n;
+	if(n != "") {
+		.Insert(
+			"#define LAYOUTFILE \"" + dlgn + ".lay\"\n"
+			"#include <CtrlCore/lay.h>\n"
+			"\n"
+			"class " + dlgn + " : public With" + n + "Layout<TopWindow> {\n"
+			"public:\n"
+			"\ttypedef " + dlgn + " CLASSNAME;\n"
+			"\t" + dlgn + "();\n"
+			"\n"
+			"\t" + r + " Run();\n"
+			"\n"
+			"private:\n"
+			"};\n"
+			"\n"
+			+ r + " Run" + dlgn + "() { " + (isvoid ? "" : "return ") + dlgn + "().Run(); }\n"
+			"\n"
+			+ dlgn + "::" + dlgn + "()\n"
+			"{\n"
+			"\t" + (isvoid ? "CtrlLayout" : "CtrlLayoutOKCancel") + "(*this, t_(\"" + t + "\"));\n"
+			"\n"
+			"}\n"
+			"\n"
+			+ r + " " + dlgn + "::Run()\n"
+			"{\n"
+			+ (isvoid
+				? "\tTopWindow::Run();\n"
+				: "\tif(TopWindow::Run() != IDOK)\n"
+				"\t\treturn false;\n"
+				"\treturn true;\n"
+			) +
+			"}\n"
+		);
+	}
+}
+
+macro "Tool + On-menu fn" Shift+Ctrl+T {
+	cn = Input("CLASSNAME", "Name", "Text", "Help");
+	cls = cn[0];
+	name = cn[1];
+	text = cn[2];
+	help = cn[3];
+	if(text == "") text = name;
+	.Insert(
+	"void " + cls + "::Tool" + name + "(Bar& bar)\n"
+	"{\n"
+	"\tbar.Add(t_(\"" + text + "\"), THISBACK(On" + name + "))"
+	+ (help == "" ? "" : "\n\t\t.Help(t_(\"" + help + "\"))") + ";\n"
+	"}\n"
+	"\n"
+	"void " + cls + "::On" + name + "()\n"
+	"{\n"
+	"\t// action\n"
+	"}\n"
+	"\n"
+	);
+}

@@ -1,0 +1,8 @@
+#include "SqlCtrl.h"
+
+NAMESPACE_UPP
+
+#define TFILE <SqlCtrl/SqlCtrl.t>
+#include <Core/t.h>
+
+END_UPP_NAMESPACE

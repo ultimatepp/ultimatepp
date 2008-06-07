@@ -1,0 +1,12 @@
+description "Embedded widgets in ArrayCtrl";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	ArrayCtrlEdits.lay;
+
+mainconfig
+	"" = "GUI";
+

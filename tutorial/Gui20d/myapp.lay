@@ -1,0 +1,5 @@
+LAYOUT(MyAppLayout, 148, 64)
+	ITEM(EditDate, date, LeftPosZ(4, 88).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(4, 64).TopPosZ(32, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(32, 24))
+END_LAYOUT

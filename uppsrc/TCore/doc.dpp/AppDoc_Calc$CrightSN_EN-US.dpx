@@ -1,0 +1,14 @@
+HELP_TOPIC("AppDoc", "", "Calc$CrightSN", "EN-US", "\1right\1 (\1string\1 [/ text], \1integer\1 [/ character_count]) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 The function returns last ][/A@0+84 character`_count][A@0+84  \r\n"
+	"characters of its string argument ][/A@0+84 text][A@0+84 . If \r\n"
+	"the number of characters is less or equal to 0, the function \r\n"
+	"returns an empty string. If the character count is greater than \r\n"
+	"the string length, the function returns its ][/A@0+84 text][A@0+84  \r\n"
+	"argument unchanged.]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Example][A@0+84 `: right(`\"hello world`\", 7) `= `\"o \r\n"
+	"world`\"]]\r\n")
+HELP_END

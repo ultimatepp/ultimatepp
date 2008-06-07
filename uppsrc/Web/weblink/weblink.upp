@@ -1,0 +1,13 @@
+uses
+	Web,
+	plugin\bz2;
+
+file
+	weblink.cpp,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "";

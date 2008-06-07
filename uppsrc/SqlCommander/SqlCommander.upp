@@ -1,0 +1,25 @@
+description "Simple SQL console utility";
+
+uses
+	SqlCtrl,
+	Oracle,
+	OleDB,
+	MySql,
+	plugin\sqlite3;
+
+link(WIN32 DEBUG MSC) /NODEFAULTLIB:libcmt;
+
+link(WIN32 !DEBUG MSC) /NODEFAULTLIB:libcmtd;
+
+file
+	SqlCommander.cpp,
+	login.lay,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = ".NOMYSQL GUI .NOAPPSQL",
+	"" = "GUI MT .NOAPPSQL";
+

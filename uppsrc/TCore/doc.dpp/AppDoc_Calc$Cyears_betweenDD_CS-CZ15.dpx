@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$Cyears_betweenDD", "CS-CZ windows-1250", "\1years_between\1 (\1datum\1 [/ d1], \1datum\1 [/ d2]) [S ®] \1celé èíslo\1")
+	HELP_TEXT(
+	"[ [A@0+84 Funkce urèí poèet let, která leží mezi zadanými dvìma \r\n"
+	"daty (vìk osoby, narozené dne ][/A@0+84 d1][A@0+84 , ke dni ][/A@0+84 d2][A@0+84 )\r\n"
+	".]]\r\n"
+	"&\r\n"
+	"[A+84 ]\r\n"
+	"&\r\n"
+	"[ [*A@0+84 Pøíklad][A@0+84 `: years_between(25.1.1974, 27.12.1999) \r\n"
+	"`= 25]]\r\n")
+HELP_END

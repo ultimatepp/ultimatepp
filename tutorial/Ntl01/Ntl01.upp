@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	Ntl01.cpp;
+
+mainconfig
+	"" = "";

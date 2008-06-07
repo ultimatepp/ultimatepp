@@ -1,0 +1,9 @@
+uses
+	CtrlLib,
+	plugin\jpg;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

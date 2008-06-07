@@ -1,0 +1,6 @@
+LAYOUT(DlgLayout, 424, 304)
+	ITEM(ArrayCtrl, array, LeftPosZ(4, 412).TopPosZ(4, 236))
+	ITEM(Label, dv___1, SetLabel(t_("Attached editor")).LeftPosZ(4, 88).TopPosZ(244, 19))
+	ITEM(EditString, editor, LeftPosZ(96, 320).TopPosZ(244, 19))
+	ITEM(Button, exit, SetLabel(t_("Close")).LeftPosZ(360, 56).TopPosZ(272, 24))
+END_LAYOUT

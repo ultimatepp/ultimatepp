@@ -1,0 +1,11 @@
+HELP_TOPIC("AppDoc", "", "Calc$CceilrNN", "CS-CZ windows-1250", "\1ceilr\1(\1reálné èíslo\1 [/ hodnota], \1celé èíslo\1 [/ platnıch_èíslic]) [S ®] \1reálné èíslo\1")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 [IzaokrouhlovÃ¡nÃ­`; ÄÃ­slo`, zaokrouhlenÃ­; Zaokrouhlení] smìrem \r\n"
+	"nahoru na zadanı poèet platnıch èíslic. Funkce nalezne nejmenší \r\n"
+	"reálné èíslo, které je celistvım násobkem hodnoty [* 10_**_][/ (ceil(log(hodnota))-pl\r\n"
+	"atnıch`_èíslic)] a_není menší ne pùvodní [/ hodnota].&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]ceilr(47.32, 3) = 47.4, ceilr(117, 1) = 200.")
+HELP_END

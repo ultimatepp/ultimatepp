@@ -1,0 +1,37 @@
+LAYOUT(SQLAppLayout, 548, 440)
+	ITEM(SqlArray, book, LeftPosZ(4, 536).TopPosZ(28, 200))
+	ITEM(SqlArray, borrowed, LeftPosZ(4, 536).TopPosZ(232, 204))
+	ITEM(MenuBar, menu, LeftPosZ(4, 304).TopPosZ(4, 20))
+END_LAYOUT
+
+LAYOUT(BookLayout, 340, 88)
+	ITEM(Label, dv___0, SetLabel(t_("Author")).LeftPosZ(4, 40).TopPosZ(4, 19))
+	ITEM(EditString, author, LeftPosZ(48, 284).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Title")).LeftPosZ(4, 40).TopPosZ(28, 19))
+	ITEM(EditString, title, LeftPosZ(48, 284).TopPosZ(28, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(200, 64).TopPosZ(56, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(268, 64).TopPosZ(56, 24))
+END_LAYOUT
+
+LAYOUT(BorrowLayout, 280, 88)
+	ITEM(Label, dv___0, SetLabel(t_("Borrowed")).LeftPosZ(4, 56).TopPosZ(4, 19))
+	ITEM(EditField, borrowed, LeftPosZ(60, 72).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Returned")).LeftPosZ(140, 56).TopPosZ(4, 19))
+	ITEM(EditField, returned, LeftPosZ(196, 76).TopPosZ(4, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Person")).LeftPosZ(4, 56).TopPosZ(28, 19))
+	ITEM(EditString, person, LeftPosZ(60, 212).TopPosZ(28, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(140, 64).TopPosZ(56, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(208, 64).TopPosZ(56, 24))
+END_LAYOUT
+
+LAYOUT(QueryLayout, 292, 112)
+	ITEM(LabelBox, dv___0, SetLabel(t_("Status")).LeftPosZ(8, 276).TopPosZ(8, 36))
+	ITEM(Switch, status, SetLabel(t_("Does not matter\nIn library\nBorrowed")).LeftPosZ(16, 256).TopPosZ(24, 16))
+	ITEM(Label, dv___2, SetLabel(t_("Borrow date between")).LeftPosZ(8, 108).TopPosZ(52, 19))
+	ITEM(EditDate, borrowed_from, LeftPosZ(116, 72).TopPosZ(52, 19))
+	ITEM(Label, dv___4, SetLabel(t_("and")).LeftPosZ(192, 20).TopPosZ(52, 19))
+	ITEM(EditDate, borrowed_to, LeftPosZ(212, 72).TopPosZ(52, 19))
+	ITEM(Button, clear, SetLabel(t_("Clear")).LeftPosZ(8, 64).TopPosZ(80, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(152, 64).TopPosZ(80, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(220, 64).TopPosZ(80, 24))
+END_LAYOUT

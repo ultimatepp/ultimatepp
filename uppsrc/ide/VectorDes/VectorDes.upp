@@ -1,0 +1,11 @@
+uses
+	VectorDes,
+	ide\Common;
+
+file
+	IdeVectorDes.h,
+	IdeVectorDes.cpp,
+	IdeVectorDes.iml;
+
+mainconfig
+	"" = "GUI";

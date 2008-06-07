@@ -1,0 +1,24 @@
+LAYOUT(SqlErrorLayout, 532, 244)
+	ITEM(Label, text, SetLabel(t_("Error")).LeftPosZ(4, 520).TopPosZ(12, 36))
+	ITEM(Label, cursors, SetLabel(t_("SQL error:")).LeftPosZ(4, 300).TopPosZ(60, 13))
+	ITEM(DocEdit, error, LeftPosZ(4, 522).TopPosZ(76, 52))
+	ITEM(Label, dv___3, SetLabel(t_("Error statement:")).LeftPosZ(4, 201).TopPosZ(136, 13))
+	ITEM(DocEdit, statement, LeftPosZ(4, 522).TopPosZ(152, 52))
+	ITEM(Button, retry, SetLabel(t_("Retry")).LeftPosZ(368, 75).TopPosZ(212, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(448, 75).TopPosZ(212, 24))
+END_LAYOUT
+
+LAYOUT(SqlExportLayout, 412, 332)
+	ITEM(ArrayCtrl, columns, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(6, 68))
+	ITEM(Label, dv___1, SetLabel(t_("Format:")).LeftPosZ(6, 48).BottomPosZ(45, 19))
+	ITEM(Switch, format, SetLabel(t_("text\nSQL script")).LeftPosZ(56, 116).BottomPosZ(46, 16))
+	ITEM(Label, dv___3, SetLabel(t_("Delimiters:")).LeftPosZ(184, 50).BottomPosZ(45, 19))
+	ITEM(Switch, delimiters, SetLabel(t_("tab\nsemicolons")).LeftPosZ(238, 170).BottomPosZ(46, 16))
+	ITEM(Option, quote, SetLabel(t_("Quoted string values")).LeftPosZ(6, 186).BottomPosZ(27, 15))
+	ITEM(Option, identity_insert, SetLabel(t_("MS-SQL identity insert")).LeftPosZ(200, 190).BottomPosZ(27, 15))
+	ITEM(Label, dv___7, SetLabel(t_("Object name:")).LeftPosZ(6, 68).BottomPosZ(4, 19))
+	ITEM(EditString, object_name, NotNull(true).LeftPosZ(82, 96).BottomPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(3, 21))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+

@@ -1,0 +1,9 @@
+uses
+	RichText,
+	CtrlLib;
+
+file
+	RichBook.h,
+	RichBook_init.icpp,
+	RichBook.t,
+	RichBook.cpp;

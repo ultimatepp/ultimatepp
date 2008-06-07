@@ -1,0 +1,12 @@
+description "Using TheIDE documentation editor (Topic++) to provide application help";
+
+uses
+	CtrlLib;
+
+file
+	Topic.cpp,
+	app.tpp;
+
+mainconfig
+	"" = "GUI";
+

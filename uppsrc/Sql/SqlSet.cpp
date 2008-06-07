@@ -1,0 +1,95 @@
+#include "Sql.h"
+
+NAMESPACE_UPP
+
+SqlSet operator|(const SqlSet& s1, const SqlSet& s2) {
+	if(s1.IsEmpty()) return s2;
+	if(s2.IsEmpty()) return s1;
+	return SqlSet(s1() + " union " + s2(), SqlSet::SETOP);
+}
+
+SqlSet operator&(const SqlSet& s1, const SqlSet& s2) {
+	if(s1.IsEmpty()) return s2;
+	if(s2.IsEmpty()) return s1;
+	return SqlSet(s1() + " intersect " + s2(), SqlSet::SETOP);
+}
+
+SqlSet operator-(const SqlSet& s1, const SqlSet& s2) {
+	if(s1.IsEmpty() || s2.IsEmpty())
+		return s1;
+	return SqlSet(s1() + " minus " + s2(), SqlSet::SETOP);
+}
+
+String SqlSet::operator~() const {
+	if(IsEmpty()) return "null";
+	return text;
+}
+
+String SqlSet::operator()() const {
+	if(IsEmpty()) return "null";
+	return '(' + text + ')';
+}
+
+String SqlSet::operator()(int at) const {
+	if(IsEmpty()) return "null";
+	return at > priority ? '(' + text + ')' : text;
+}
+
+SqlSet& SqlSet::Cat(const SqlVal& val) {
+	if(!IsEmpty()) text.Cat(", ");
+	text.Cat(~val);
+	priority = SET;
+	return *this;
+}
+
+SqlSet& SqlSet::Cat(const SqlSet& set) {
+	if(set.IsEmpty()) return *this;
+	if(!IsEmpty()) text.Cat(", ");
+	text.Cat(set.text);
+	priority = SET;
+	return *this;
+}
+
+SqlSet::SqlSet(const SqlVal& p0) {
+	Cat(p0);
+	priority = SET;
+}
+
+static inline void sCat(SqlSet& s, SqlVal v) { s.Cat(v); }
+
+#define E__Cat(I)       sCat(*this, p##I)
+
+#define E__SqlSetF(I) \
+SqlSet::SqlSet(const SqlVal& p0, __List##I(E__SqlVal)) { \
+	Cat(p0); \
+	__List##I(E__Cat); \
+	priority = SET; \
+}
+__Expand(E__SqlSetF);
+
+FieldOperator::FieldOperator() {}
+FieldOperator::~FieldOperator() {}
+
+struct FieldSqlSet : FieldOperator {
+	SqlSet *set;
+
+	virtual void Field(const char *name, Ref) {
+		set->Cat(SqlCol(name));
+	}
+};
+
+SqlSet::SqlSet(Fields nfields) {
+	FieldSqlSet fo;
+	fo.set = this;
+	nfields(fo);
+	priority = SET;
+}
+
+void FieldDumper::Field(const char *name, Ref f)
+{
+	if(!s.IsEmpty())
+		s.Cat(", ");
+	s << name << " = " << Value(f);
+}
+
+END_UPP_NAMESPACE

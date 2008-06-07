@@ -1,0 +1,9 @@
+HELP_TOPIC("AppDoc", "", "Calc$CarrayCtr", "CS-CZ windows-1250", "")
+	HELP_TEXT(
+	"[%EN-US3 $$0,0#00000000000000000000000000000000:Default]\r\n"
+	"[{0}%EN-US \r\n"
+	"[s0;2 [Ipole`, konstruktor; Konstruktor pole] vytvoøí pole obsahující \r\n"
+	"zadanou posloupnost prvkù.&]\r\n"
+	"[s0;2 &]\r\n"
+	"[s0;2 [* Pøíklad: ]`[1+2, 1+3, \"a\" + \"b\"`] = `[3, 4, \"ab\"`]")
+HELP_END

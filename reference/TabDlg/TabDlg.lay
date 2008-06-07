@@ -1,0 +1,14 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(Tab1Layout, 168, 72)
+	ITEM(Option, dv___0, SetLabel(t_("Some option")).LeftPosZ(8, 152).TopPosZ(12, 15))
+	ITEM(EditString, dv___1, LeftPosZ(104, 56).TopPosZ(44, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Some input field")).LeftPosZ(12, 88).TopPosZ(44, 19))
+END_LAYOUT
+
+LAYOUT(Tab2Layout, 100, 96)
+	ITEM(Switch, dv___0, SetLabel(t_("Switch 1\nSwitch 2\nSwitch 3\nSwitch 4")).LeftPosZ(12, 84).TopPosZ(12, 80))
+END_LAYOUT
+
+#endif
+

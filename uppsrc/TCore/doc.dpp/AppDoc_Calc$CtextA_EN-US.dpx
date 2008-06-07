@@ -1,0 +1,8 @@
+HELP_TOPIC("AppDoc", "", "Calc$CtextA", "EN-US", "")
+	HELP_TEXT(
+	"Function converts an array to its standard textual representation in the format\r\n"
+	"&\r\n"
+	"&`[[/ first element, second element, third element...]`]\r\n"
+	"&\r\n"
+	"&[* Example:[*   `[0.0, 1.0, 2.5`].text = \"`[0, 1, 2.5`]\"]]")
+HELP_END

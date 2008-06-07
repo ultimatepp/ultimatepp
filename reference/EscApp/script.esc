@@ -1,0 +1,36 @@
+getnumber()
+{
+	for(;;) {
+		h = InputNumber();
+		if(h > 0)
+			return h;
+		Print("Please enter a positive number!\n");
+	}
+}
+
+main() {
+	Print("What is your name?\n");
+	name = Input();
+	Print("Hi " + name + "!\n");
+	Print("How tall are you? (in cm please!)\n");
+	h = getnumber();
+	Print("What is your weight? (in kg please!)\n");
+	w = getnumber();
+	bmi = w / (h * h / 10000);
+	Print("Your body mass index is " + to_string(bmi) + "\n");
+	Print(name + ", ");
+	if(bmi >= 35)
+		Print("you are morbidly fat!!!");
+	else
+	if(bmi >= 30)
+		Print("you are fat!!!");
+	else
+	if(bmi >= 25)
+		Print("you are overweight!");
+	else
+	if(bmi >= 18.5)
+		Print("your weight is OK.");
+	else
+		Print("your are too slim!");
+	Print("\nThanks for a nice chat!\n");
+}

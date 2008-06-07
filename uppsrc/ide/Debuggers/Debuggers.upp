@@ -1,0 +1,27 @@
+description "TheIDE - debuggers";
+
+uses
+	ide\Common,
+	plugin\ndisasm,
+	HexView;
+
+file
+	Debuggers.h,
+	Debuggers.iml,
+	Gdb.lay,
+	Disas.cpp,
+	Dbg.cpp,
+	Gdb.cpp,
+	PDB readonly separator,
+	Pdb.h,
+	cvconst.h,
+	Debug.cpp,
+	Mem.cpp,
+	Sym.cpp,
+	Exp.cpp,
+	Visualise.cpp,
+	Data.cpp,
+	Code.cpp,
+	Pdb.cpp,
+	Pdb.key;
+

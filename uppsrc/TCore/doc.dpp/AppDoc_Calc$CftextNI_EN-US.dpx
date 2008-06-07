@@ -1,0 +1,5 @@
+HELP_TOPIC("AppDoc", "", "Calc$CftextNI", "EN-US", "\1ftext\1 (\1real number\1, \1integer\1) [S ®] \1string\1")
+	HELP_TEXT(
+	"[ [A@0+84 Funkce pøevede èíslo na text se zadaným poètem desetinných \r\n"
+	"míst. Pokud není poèet míst zadán, desetinná místa se ignorují.]]\r\n")
+HELP_END

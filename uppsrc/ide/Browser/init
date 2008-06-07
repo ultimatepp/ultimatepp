@@ -1,0 +1,8 @@
+#ifndef _ide_Browser_icpp_init_stub
+#define _ide_Browser_icpp_init_stub
+#include "CppBase/init"
+#include "ide\Common/init"
+#include "PdfDraw/init"
+#include "RichEdit/init"
+#include "TopicI.icpp"
+#endif
