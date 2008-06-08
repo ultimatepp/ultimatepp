@@ -92,7 +92,7 @@ then
 fi
 
 #checks if source folder is an upp folder
-for name in uppsrc Common examples tutorial reference bazaar
+for name in uppsrc examples tutorial reference bazaar
 do
 	if [ ! -d $src/$name ]
 	then
