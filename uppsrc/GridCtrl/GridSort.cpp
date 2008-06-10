@@ -192,4 +192,39 @@ void GridCtrl::ClearSort()
 	Sort(0, SORT_ID);
 }
 
+Vector<Id> GridCtrl::GetSortOrderId() const
+{
+	Vector<Id> v;
+	for(int i = 0; i < sortOrder.GetCount(); i++)
+		v.Add(aliases.GetKey(sortOrder[i]));
+	return v;
+}
+
+Vector<GridCtrl::SortOrder> GridCtrl::GetSortOrder() const
+{
+	Vector<SortOrder> v;
+	if(sortOrder.GetCount() > 0)
+	{
+		for(int i = 0; i < sortOrder.GetCount(); i++)
+		{
+			int c = sortOrder[i];
+			SortOrder& s = v.Add();
+			s.id = c;
+			s.name = aliases.GetKey(c);
+			s.ascending = hitems[c].IsSortAsc();
+			s.descending = hitems[c].IsSortDsc();
+		}
+	}
+	else if(sortCol >= 0)
+	{
+		int c = sortCol;
+		SortOrder& s = v.Add();
+		s.id = c;
+		s.name = aliases.GetKey(c);
+		s.ascending = hitems[c].IsSortAsc();
+		s.descending = hitems[c].IsSortDsc();
+	}
+	return v;
+}
+
 END_UPP_NAMESPACE

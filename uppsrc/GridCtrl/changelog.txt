@@ -263,3 +263,6 @@
 	+ added Header(bool) - to turn on/off the header
 	- some fixes to Ready()
 	+ added RowChanging(bool) - false -> changing row is not possible
+	+ added GetSortOrderId and GetSortOrder
+	- fixed Clear(false) and highlighting -> now it dosn't clear hcol
+	+ added Copy and CopyAll

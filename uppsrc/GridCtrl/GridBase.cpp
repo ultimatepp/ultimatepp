@@ -168,6 +168,11 @@ String GridCtrl::ItemRect::GetName() const
 	return (*items)[0][id].val;
 }
 
+Id GridCtrl::ItemRect::GetAlias() const
+{
+	return aliases->GetKey(id);
+}
+
 GridCtrl::ItemRect& GridCtrl::ItemRect::SetFormat(const char *fmt)
 {
 	//(*items)[0][id].convert = &c;

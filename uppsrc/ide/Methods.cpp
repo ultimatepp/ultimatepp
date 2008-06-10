@@ -57,7 +57,10 @@ protected:
 	EditString      edit;
 	SelectDirButton edit_dir;
 
+	void Init(const char *name = NULL);
+
 public:
+	DirTable();
 	DirTable(const char *name);
 };
 
@@ -79,7 +82,7 @@ Value  DirTable::GetData() const
 	return s;
 }
 
-DirTable::DirTable(const char *name)
+void DirTable::Init(const char *name)
 {
 	AutoHideSb();
 	AddColumn(name).Edit(edit);
@@ -87,6 +90,17 @@ DirTable::DirTable(const char *name)
 	edit_dir.Attach(edit);
 	edit_dir.AllFilesType();
 	WhenArrayAction = edit <<= callback(this, &DirTable::Modify);
+}
+
+DirTable::DirTable()
+{
+	Init();
+	NoHeader();
+}
+
+DirTable::DirTable(const char *name)
+{
+	Init(name);
 }
 
 class DirMap : public ArrayCtrl {
@@ -175,9 +189,6 @@ int CharFilterFileName(int c)
 }
 
 BuildMethods::BuildMethods()
-:	path("PATH - executable directories"),
-	include("INCLUDE directories"),
-	lib("LIB directories")
 {
 	CtrlLayoutOKCancel(*this, "Build methods");
 	method.AddColumn("Method").Edit(name);
@@ -219,6 +230,10 @@ BuildMethods::BuildMethods()
 	method.Appending().Removing().Duplicating();
 	method.WhenCursor = THISBACK(ChangeMethod);
 	method.WhenBar = THISBACK(MethodMenu);
+
+	paths.Add(path.SizePos(), "PATH - executable directories");
+	paths.Add(include.SizePos(), "INCLUDE directories");
+	paths.Add(lib.SizePos(), "LIB directories");
 
 	debug_info.Add("0", "None");
 	debug_info.Add("1", "Minimal");
