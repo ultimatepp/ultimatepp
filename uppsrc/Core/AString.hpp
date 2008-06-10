@@ -115,7 +115,6 @@ int AString<B>::FindFirstOf(int len, const tchar *s, int from) const
 	const tchar *se = s + (len * sizeof(tchar));
 	if((s[0] & s[1]) != 0) {
 		if(s[2] == 0) {
-			__BREAK__;
 			tchar c1 = s[0];
 			tchar c2 = s[1];
 			for(const tchar *bs = ptr + from; bs < e; bs++) {

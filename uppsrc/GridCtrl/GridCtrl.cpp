@@ -644,7 +644,7 @@ GridClipboard GridCtrl::GetClipboard()
 	return gc;
 }
 
-void GridCtrl::SetClipboard()
+void GridCtrl::SetClipboard(bool all, bool silent)
 {
 	if(!clipboard)
 		return;
@@ -661,7 +661,7 @@ void GridCtrl::SetClipboard()
 	{
 		bool row_selected = select_row && IsSelected(i, false);
 		for(int j = fixed_cols; j < total_cols; j++)
-			if(row_selected || IsSelected(i, j, false))
+			if(all || row_selected || IsSelected(i, j, false))
 			{
 				if(prev_row < 0)
 					prev_row = i;
@@ -694,24 +694,27 @@ void GridCtrl::SetClipboard()
 	WriteClipboardFormat(gc);
 	AppendClipboardText(tc);
 
-	Color c0 = bg_select;
-	Color c1 = White;
-	Color c2 = bg_focus;
-
-	for(int i = 0; i < 256; i += 64)
+	if(!silent)
 	{
-		bg_select = Blend(c0, c1, i);
-		bg_focus = Blend(c2, c1, i);
-		Refresh(); Sync();
-		Sleep(1);
-	}
+		Color c0 = bg_select;
+		Color c1 = White;
+		Color c2 = bg_focus;
 
-	for(int i = 0; i < 256; i += 32)
-	{
-		bg_select = Blend(c1, c0, i);
-		bg_focus = Blend(c1, c2, i);
-		Refresh(); Sync();
-		Sleep(1);
+		for(int i = 0; i < 256; i += 64)
+		{
+			bg_select = Blend(c0, c1, i);
+			bg_focus = Blend(c2, c1, i);
+			Refresh(); Sync();
+			Sleep(1);
+		}
+
+		for(int i = 0; i < 256; i += 32)
+		{
+			bg_select = Blend(c1, c0, i);
+			bg_focus = Blend(c1, c2, i);
+			Refresh(); Sync();
+			Sleep(1);
+		}
 	}
 }
 
@@ -1948,15 +1951,23 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 						cnt--;
 					}
 
-					if(hitems[j].sortmode > 0 && colidx == cnt - 1)
-						GSort();
+					if(WhenSort)
+						WhenSort();
 					else
-						Multisort();
+					{
+						if(hitems[j].sortmode > 0 && colidx == cnt - 1)
+							GSort();
+						else
+							Multisort();
+					}
 				}
 				else
 				{
 					hitems[j].sortcol = cnt;
-					GSort();
+					if(WhenSort)
+						WhenSort();
+					else
+						GSort();
 				}
 			}
 			else
@@ -1977,11 +1988,19 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 					sortCol = newSortCol;
 
 				sortOrder.Clear();
-				GSort(newSortCol, hitems[j].sortmode, fixed_rows);
+
+				if(WhenSort)
+					WhenSort();
+				else
+					GSort(newSortCol, hitems[j].sortmode, fixed_rows);
 			}
 
 			UpdateCursor();
-			Repaint(false, true);
+			if(WhenSort)
+				//RefreshTop();
+				;
+			else
+				Repaint(false, true);
 		}
     }
 
@@ -4705,6 +4724,11 @@ String GridCtrl::GetColumnName(int n) const
 	return hitems[GetIdCol(n + fixed_cols)].GetName();
 }
 
+Id GridCtrl::GetColumnId(int n) const
+{
+	return aliases.GetKey(n + fixed_cols);
+}
+
 void GridCtrl::SwapCols(int n, int m)
 {
 	if(m == n ||
@@ -5044,14 +5068,15 @@ void GridCtrl::Clear(bool columns)
 		firstVisRow = -1;
 		lastVisRow = -1;
 		coluid = 0;
+		hcol = -1;
+		sortCol = -1;
+		ClearMultisort();
 	}
 	else
 	{
 		total_height = fixed_height;
 		firstVisRow = fixed_rows;
 		lastVisRow = fixed_rows;
-//		firstVisRow = /*1*/ 0;
-//		lastVisRow = /*1*/ 0; dlaczego 0..zapomnialem
 	}
 
 	valid_cursor = false;
@@ -5065,7 +5090,6 @@ void GridCtrl::Clear(bool columns)
 	curpos.x = curpos.y = -1;
 	curid.x  = curid.y  = -1;
 
-	hcol = -1;
 	hrow = -1;
 
 	rowidx = -1;
@@ -5073,11 +5097,12 @@ void GridCtrl::Clear(bool columns)
 
 	row_modified = 0;
 
+	UpdateSizes();
+	UpdateSb();
+
 	if(ready)
 	{
-		UpdateSizes();
 		UpdateHolder();
-		UpdateSb();
 
 		oldpos.x = sbx;
 		oldpos.y = sby;

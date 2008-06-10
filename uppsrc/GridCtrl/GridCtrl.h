@@ -478,7 +478,6 @@ class GridCtrl : public Ctrl
 				int id, uid, n;
 				int sl, sr, st, sb, sx, sy;
 
-
 				double tsize;
 				int  join;
 
@@ -596,6 +595,7 @@ class GridCtrl : public Ctrl
 				ItemRect& Index(bool b = true);
 
 				String GetName() const;
+				Id     GetAlias() const;
 
 				ItemRect& AlignTop()                             { balign = GD::TOP     | GD::LEFT;                return *this; }
 				ItemRect& AlignBottom()                          { balign = GD::BOTTOM  | GD::LEFT;                return *this; }
@@ -668,6 +668,10 @@ class GridCtrl : public Ctrl
 
 				bool IsConvertion() const                        { return convertion; }
 				bool IsHidden() const                            { return hidden;     }
+
+				bool IsSortOrg() const                           { return sortmode == 0; }
+				bool IsSortAsc() const                           { return sortmode == 1; }
+				bool IsSortDsc() const                           { return sortmode == 2; }
 
 				void Serialize(Stream &s);
 				void Clear();
@@ -901,15 +905,17 @@ class GridCtrl : public Ctrl
 		GridPopUpHeader pophdr;
 
 		int sortCol;
-
-//		struct SortColumn {
-//			SortColumn(int c, bool f) : col(c), fixed(f) {}
-//			int col;
-//			bool fixed;
-//		};
-//
-//		Vector<SortColumn> sortOrder;
 		Vector<int> sortOrder;
+
+	public:
+
+		struct SortOrder : Moveable<SortOrder>
+		{
+			int id;
+			Id name;
+			bool ascending;
+			bool descending;
+		};
 
 	public:
 
@@ -1322,6 +1328,9 @@ class GridCtrl : public Ctrl
 		bool IsSelected(int n, int m, bool relative = true);
 		bool IsSelected();
 
+		void Copy(bool all = false)  { SetClipboard(all, true);  }
+		void CopyAll()               { Copy(true);               }
+
 		void DoInsert0(bool edit, bool after);
 		void DoInsertBefore0(bool edit);
 		void DoInsertBefore();
@@ -1401,6 +1410,9 @@ class GridCtrl : public Ctrl
 		GridCtrl& MultiSort(Id id, int sort_mode = SORT_UP);
 		void ClearSort();
 
+		Vector<SortOrder> GetSortOrder() const;
+		Vector<Id> GetSortOrderId() const;
+
 		ScrollBar& HorzScroll() { return sbx; }
 		ScrollBar& VertScroll() { return sby; }
 
@@ -1410,6 +1422,7 @@ class GridCtrl : public Ctrl
 		bool Search(dword key);
 		int GetResizePanelHeight() const;
 		String GetColumnName(int n) const;
+		Id GetColumnId(int n) const;
 
 		void SetCtrlFocus(int col);
 		void SetCtrlFocus(Id id);
@@ -1543,7 +1556,7 @@ class GridCtrl : public Ctrl
 		bool IsCtrl(Point &p);
 
 		GridClipboard GetClipboard();
-		void SetClipboard();
+		void SetClipboard(bool all = false, bool silent = false);
 		bool IsClipboardAvailable();
 		void PasteCallbacks(bool new_row);
 		void Paste(int mode = 0);
@@ -1606,6 +1619,8 @@ class GridCtrl : public Ctrl
 		Callback StdRemove;
 		Callback StdDuplicate;
 		Callback StdEdit;
+
+		Callback WhenSort;
 };
 
 class GridText : Ctrl
