@@ -173,7 +173,7 @@ private:
 	void 	PaintTab(Draw &w, const Style &s, const Size &sz, int i, bool enable, bool dragsample = false);
 	
 	int  TabPos(const String &g, bool &first, int i, int j, bool inactive);	
-	void SyncScrollBar(int total);
+	void SyncScrollBar(bool synctotal = true);
 	void Scroll();
 
 	int  FindId(int id) const;

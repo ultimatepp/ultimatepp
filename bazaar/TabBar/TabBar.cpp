@@ -267,7 +267,7 @@ TabBar::TabBar()
 	inactivedisabled = false;
 	autoscrollhide = true;
 	neverempty = 1;
-
+	
 	style[0] = style[1] = style[2] = style[3] = NULL;
 	SetAlign(TOP);
 	SetFrameSize(GetHeight());	
@@ -280,7 +280,7 @@ void TabBar::CloseAll()
 		if(i != active)
 			tabs.Remove(i);
 
-	SyncScrollBar(tabs[0].size.cx);
+	SyncScrollBar();
 	MakeGroups();
 	Repos();
 	SetCursor(0);
@@ -389,7 +389,7 @@ void TabBar::DoGrouping(int n)
 {
 	group = n;
 	Repos();
-	SyncScrollBar(GetWidth());
+	SyncScrollBar();
 	SetCursor(-1);
 }
 
@@ -789,7 +789,7 @@ void TabBar::Repos()
 		for(int i = 0; i < tabs.GetCount(); i++)
 			if (!tabs[i].visible)
 				j = TabPos(g, first, i, j, true);
-	SyncScrollBar(GetWidth());
+	SyncScrollBar();
 }
 
 int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
@@ -816,16 +816,16 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 	return j;	
 }
 
-void TabBar::SyncScrollBar(int total)
+void TabBar::SyncScrollBar(bool synctotal)
 {
-	if (total > 0)
-		sc.SetTotal(total);			
+	if (synctotal)
+		sc.SetTotal(GetWidth());			
 	if (autoscrollhide) {
 		bool v = sc.IsScrollable();
 		if (sc.IsShown() != v) {
 			SetFrameSize((v ? sc.GetFrameSize() : 0) + GetHeight(), false);
 			sc.Show(v);	
-			RefreshParentLayout();
+			PostCallback(THISBACK(RefreshParentLayout));
 		}
 	}
 	else {
@@ -934,7 +934,7 @@ void TabBar::FrameLayout(Rect& r)
 void TabBar::Layout()
 {
 	if (autoscrollhide && tabs.GetCount()) 
-		SyncScrollBar(-1); 
+		SyncScrollBar(false); 
 }
 
 int TabBar::Find(const Value &v) const
