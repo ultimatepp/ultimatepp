@@ -212,7 +212,7 @@ static void WriteHeader(EXTENSION_CONTROL_BLOCK *ecb, const char *response, cons
 
 static void WriteClient(EXTENSION_CONTROL_BLOCK *ecb, const void *data, int count)
 {
-	dword c = (count >= 0 ? count : strlen((const char *)data));
+	dword c = (count >= 0 ? count : (int)strlen((const char *)data));
 //	LOG("client output (" << (int)c << "bytes): " << (const char *)data << "(eocd)");
 //	LOGHEXDUMP(data, count);
 //	LOG("(eocd raw)");
@@ -587,7 +587,7 @@ String WIsapiClient::Connection::RawRun(const HttpQuery& new_query, EXTENSION_CO
 			if(IsDigit(*p))
 				content_length = minmax<int>(stou(p), 0, MAX_DATA_SIZE);
 		}
-		headers.Cat(b, e - b);
+		headers.Cat(b, (int)(e - b));
 		headers.Cat("\r\n");
 	}
 	String body;
@@ -619,6 +619,7 @@ String WIsapiClient::Connection::RawRun(const HttpQuery& new_query, EXTENSION_CO
 
 WIsapiClient::WIsapiClient()
 {
+	RLOGBLOCK("WIsapiClient constructor");
 	cfg_filename = ForceExt(dll_filename, ".cfg");
 	cfg_default_host << "localhost@" << (int)DEFAULT_PORT;
 	hit_count = total_msecs = total_bytes = max_msecs = error_count = 0;
@@ -809,15 +810,25 @@ Htmls WIsapiClient::Config(const HttpQuery& query)
 	return HtmlTitlePage(Title(), Body(eng));
 }
 
+#if defined(CPU_AMD64)
+	#define ARCHITECTURE "x64"
+#elif defined(CPU_IA32)
+	#define ARCHITECTURE "x86"
+#else
+	#define ARCHITECTURE "unknown"
+#endif
+
 Htmls WIsapiClient::Body(String eng)
 {
 	Htmls body;
 	body
+		<< HtmlTag("SMALL") / t_("Architecture: ")
+		<< HtmlTag("TT") / ToHtml(ARCHITECTURE) << "<BR>\n"
 		<< HtmlTag("SMALL") / t_("Library location: ")
 		<< HtmlTag("TT") / ToHtml(dll_filename) << "<BR>\n"
 		<< HtmlTag("SMALL") / (String() << t_("Version: <B>")
 			<< WISAPI_VERSION << t_("</B>, release date: <B>")
-			<< WISAPI_DATE "</B><BR>\n" WISAPI_COPYRIGHT "<P>\n");
+			<< WISAPI_DATE << "</B><BR>\n" WISAPI_COPYRIGHT "<P>\n");
 
 	String s = cfg_query.GetString("CONFIGURE");
 	enum { CONFIG, STAT /*, SERV */ } page = CONFIG;
@@ -1340,7 +1351,7 @@ void WIsapiClient::LoadConfig()
 	LOG("WIsapiClient::LoadConfig: timeout = " << isapi_timeout);
 }
 
-static One<WIsapiClient> client;
+GLOBAL_VAR(One<WIsapiClient>, client)
 
 extern "C" dword WINAPI HttpExtensionProc(EXTENSION_CONTROL_BLOCK *ecb)
 {
@@ -1349,7 +1360,7 @@ extern "C" dword WINAPI HttpExtensionProc(EXTENSION_CONTROL_BLOCK *ecb)
 		static long epid = 0;
 		int cid = InterlockedIncrement(&epid);
 		ISAPILOG("HttpExtensionProc, epid = " << cid << ", thread " << (int)GetCurrentThreadId());
-		return client->Run(cid, ecb);
+		return client()->Run(cid, ecb);
 	}
 	catch(Exc e)
 	{
@@ -1384,12 +1395,12 @@ extern "C" BOOL WINAPI DllMain(HANDLE module, DWORD reason, LPVOID lpReserved)
 		SetVppLogName(lfn);
 		SetVppLogSizeLimit(500000);
 		ISAPILOG("WISAPI DllMain/DLL_PROCESS_ATTACH: creating WIsapiClient object");
-		client = new WIsapiClient;
+		client() = new WIsapiClient;
 		ISAPILOG("WISAPI DllMain/DLL_PROCESS_ATTACH: done");
 	}
 	else if(reason == DLL_PROCESS_DETACH) {
 		ISAPILOG("WISAPI DllMain/DLL_PROCESS_DETACH: destroying WIsapiClient object");
-		client.Clear();
+		client().Clear();
 		ISAPILOG("WISAPI DllMain/DLL_PROCESS_DETACH: done");
 	}
 	else if(reason == DLL_THREAD_ATTACH) {

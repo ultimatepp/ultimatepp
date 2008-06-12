@@ -163,6 +163,7 @@ inline void InitBlockEnd__(const char *, int) {}
 
 struct Callinit {
 	Callinit(void (*fn)(), const char *cpp, int line) { InitBlockBegin__(cpp, line); fn(); InitBlockEnd__(cpp, line); }
+	Callinit(void (*fn)())                            { fn(); }
 };
 
 struct Callexit {
