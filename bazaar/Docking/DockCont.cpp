@@ -25,7 +25,9 @@ LRESULT DockCont::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	else if (message == WM_EXITSIZEMOVE && IsFloating() && base && !GetMouseLeft() && dragging) {
 		dragging = 0;
+		Ptr<TopWindow> _this = this;
 		MoveEnd();
+		if (!_this) return 0;
 	}
 		
 	return TopWindow::WindowProc(message, wParam, lParam);

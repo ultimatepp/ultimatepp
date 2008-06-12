@@ -342,9 +342,8 @@ void DockWindow::Dock0(int align, Ctrl &c, int pos, bool do_animatehl, bool ishi
 	int fsz = IsTB(align) ? sz.cy : sz.cx;
 	if (!dockframe[align].IsShown())
 		dockframe[align].Show();
-	if (fsz > dockframe[align].GetSize()) {
+	if (fsz > dockframe[align].GetSize())
 		do_animatehl ? StartFrameAnimate(align, fsz) : dockframe[align].SetSize(fsz);
-	}
 	dockpane[align].Dock(c, sz, pos, do_animatehl, ishighlight);
 }
 
@@ -764,7 +763,8 @@ void DockWindow::ContainerDragEnd(DockCont &dc)
 	if (align != DOCK_NONE) {
 		Unfloat(dc);
 		dc.StateDocked(*this);
-		dockpane[align].Swap(hl, dc);
+		dockpane[align].Swap(hl, dc);		
+		dc.SetFocus();		
 	}
 	else if (DockCont *target = dynamic_cast<DockCont *>(p)) {
 		StopHighlight(false);
@@ -772,9 +772,6 @@ void DockWindow::ContainerDragEnd(DockCont &dc)
 	}
 	else
 		StopHighlight(false);
-	
-	if (dc.GetParent())
-		dc.SetFocus();
 }
 
 /*
