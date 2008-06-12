@@ -227,7 +227,7 @@ struct CustomStep {
 };
 
 Vector<String> Combine(const Vector<String>& conf, const char *flags);
-String Gather(const Array<OptItem>& set, const Vector<String>& conf);
+String Gather(const Array<OptItem>& set, const Vector<String>& conf, bool nospace = false);
 
 bool   HasFlag(const Vector<String>& conf, const char *flag);
 

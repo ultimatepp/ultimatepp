@@ -1,3 +1,3 @@
-#define WISAPI_VERSION   "5.r13"
-#define WISAPI_DATE      "31.10.2007"
-#define WISAPI_COPYRIGHT "Copyright ©1999-2007 Tomas Rylek"
+#define WISAPI_VERSION   "6.r14"
+#define WISAPI_DATE      Date(2008, 6, 11)
+#define WISAPI_COPYRIGHT "Copyright 1999-2008 Tomas Rylek"

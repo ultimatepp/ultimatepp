@@ -265,8 +265,10 @@ void MenuItem::Paint(Draw& w)
 		li = CachedRescale(li, isz);
 	int iy = (sz.cy - isz.cy) / 2;
 	bool chk = false;
+	int x = (max(isz.cx, leftgap - 2) - isz.cx) / 2;
 	if(!licon.IsEmpty() && type) {
 		chk = type == CHECK1 || type == RADIO1;
+		x = 2;
 		if(GUI_GlobalStyle() >= GUISTYLE_XP) {
 			if(chk && !hl) {
 				DrawXPButton(w, RectC(0, iy - 2, isz.cx + 4, isz.cy + 4), BUTTON_EDGE|BUTTON_CHECKED);
@@ -279,10 +281,10 @@ void MenuItem::Paint(Draw& w)
 		}
 	}
 	if(isenabled)
-		DrawHighlightImage(w, (max(isz.cx, leftgap - 2) - isz.cx) / 2, iy, li, hl || chk, true);
+		DrawHighlightImage(w, x, iy, li, hl || chk, true);
 	else
-		w.DrawImage((max(isz.cx, leftgap - 2) - isz.cx) / 2, iy, DisabledImage(li));
-	int x = max(isz.cx, leftgap) + textgap;
+		w.DrawImage(x, iy, DisabledImage(li));
+	x = max(isz.cx, leftgap) + textgap;
 	isz = GetTextSize(text, StdFont());
 	DrawMenuText(w, x, (sz.cy - isz.cy) / 2, txt, font, isenabled, hl, SColorMenuText,
 	             style->itemtext);

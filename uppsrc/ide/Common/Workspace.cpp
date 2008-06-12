@@ -271,11 +271,11 @@ Vector<String> Combine(const Vector<String>& conf, const char *flags) {
 	return cfg;
 }
 
-String Gather(const Array<OptItem>& set, const Vector<String>& conf) {
+String Gather(const Array<OptItem>& set, const Vector<String>& conf, bool nospace) {
 	String s;
 	for(int i = 0; i < set.GetCount(); i++)
 		if(MatchWhen(set[i].when, conf)) {
-			if(!s.IsEmpty()) s.Cat(' ');
+			if(!nospace && !s.IsEmpty()) s.Cat(' ');
 			s.Cat(set[i].text);
 		}
 	return s;

@@ -53,7 +53,7 @@ Index<String> Ide::PackageConfig(const Workspace& wspc, int package,
 	host.AddFlags(cfg);
 	b.AddFlags(cfg);
 	if(target)
-		*target = Gather(pkg.target, cfg.GetKeys());
+		*target = Gather(pkg.target, cfg.GetKeys(), true);
 	return cfg;
 }
 

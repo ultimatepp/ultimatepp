@@ -24,9 +24,9 @@ public:
 
 		String    text;
 		PaintRect pict;
-		Ctrl     *ctrl;
+		Ptr<Ctrl> ctrl;
 		bool      enabled;
-		Ctrl     *slave;
+		Ptr<Ctrl> slave;
 		dword     key;
 
 		friend class TabCtrl;
