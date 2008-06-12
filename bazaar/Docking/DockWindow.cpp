@@ -241,25 +241,28 @@ void DockWindow::Undock0(Ctrl &c, bool do_animatehl, int fsz, bool ishighlight)
 		if (dockpane[al].GetFirstChild() == dockpane[al].GetLastChild())
 			fsz = 0;
 		dockpane[al].Undock(c, do_animatehl, ishighlight); // TODO: fix nasty hack
-		if (fsz >= 0) {
-			do_animatehl ? StartFrameAnimate(al, fsz) : dockframe[al].SetSize(fsz);
-			if (!do_animatehl && fsz == 0)
-				dockframe[al].Hide();
-		}
-			
+		if (fsz >= 0)
+			DoFrameSize(do_animatehl, al, fsz);
 	}
 }
 
-void DockWindow::StartFrameAnimate(int align, int targetsize)
+void DockWindow::DoFrameSize(bool animate, int align, int targetsize)
 {
-	FrameAnim &a = frameanim[align];
-	if (a.inc)
-		dockframe[align].SetSize(a.target);
-	a.target = max(targetsize, 0);
-	a.inc = (targetsize - dockframe[align].GetSize()) / dockpane[0].GetAnimMaxTicks();
-	if (!a.inc) 
-		a.inc = (targetsize > dockframe[align].GetSize()) ? 1 : -1;
-	KillSetTimeCallback(-dockpane[0].GetAnimInterval(), THISBACK(FrameAnimateTick), TIMEID_ANIMATE);
+	if (!animate || !IsAnimatedFrames()) {
+		dockframe[align].SetSize(targetsize);
+		if (targetsize <= 0)
+			dockframe[align].Hide();
+	}
+	else {
+		FrameAnim &a = frameanim[align];
+		if (a.inc)
+			dockframe[align].SetSize(a.target);
+		a.target = max(targetsize, 0);
+		a.inc = (targetsize - dockframe[align].GetSize()) / dockpane[0].GetAnimMaxTicks();
+		if (!a.inc) 
+			a.inc = (targetsize > dockframe[align].GetSize()) ? 1 : -1;
+		KillSetTimeCallback(-dockpane[0].GetAnimInterval(), THISBACK(FrameAnimateTick), TIMEID_ANIMATE);
+	}			
 }
 
 void DockWindow::FrameAnimateTick()
@@ -343,7 +346,7 @@ void DockWindow::Dock0(int align, Ctrl &c, int pos, bool do_animatehl, bool ishi
 	if (!dockframe[align].IsShown())
 		dockframe[align].Show();
 	if (fsz > dockframe[align].GetSize())
-		do_animatehl ? StartFrameAnimate(align, fsz) : dockframe[align].SetSize(fsz);
+		DoFrameSize(do_animatehl, align, fsz);
 	dockpane[align].Dock(c, sz, pos, do_animatehl, ishighlight);
 }
 
@@ -783,10 +786,11 @@ void DockWindow::SetFrameSize(int align, int size)
 	dockframe[align].SetSize(size);
 }
 
-DockWindow & DockWindow::Animate(bool highlight, bool window, int ticks, int interval)
+DockWindow & DockWindow::Animate(bool highlight, bool frame, bool window, int ticks, int interval)
 {
 	animatehl = highlight;
 	animatewnd = window;
+	animatefrm = frame;
 	ticks = max(ticks, 1);
 	interval = max(interval, 1);
 	for (int i = 0; i < 4; i++) 

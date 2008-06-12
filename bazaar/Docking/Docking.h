@@ -95,6 +95,7 @@ private:
 	bool tabbing;
 	bool autohide;
 	bool animatehl;
+	bool animatefrm;
 	bool animatewnd;
 	bool nestedtabs;
 	bool grouping;
@@ -155,11 +156,12 @@ public:
 	void 			SetFrameSize(int align, int size);
 
 	DockWindow &	AnimateDelay(int ms)				{ animdelay = max(ms, 0); return *this; }
-	DockWindow &	Animate(bool highlight = true, bool window = true, int ticks = 10, int interval = 20);
+	DockWindow &	Animate(bool highlight = true, bool frames = true, bool windows = true, int ticks = 10, int interval = 20);
 	DockWindow &	NoAnimate()							{ return Animate(false, false); }
 	bool			IsAnimated() const					{ return animatehl || animatewnd; }
-	bool			IsAnimatedWindows() const			{ return animatewnd; }
 	bool			IsAnimatedHighlight() const			{ return animatehl; }
+	bool			IsAnimatedFrames() const			{ return animatefrm; }
+	bool			IsAnimatedWindows() const			{ return animatewnd; }
 	
 	DockWindow &	Tabbing(bool _tabbing = true) 		{ tabbing = _tabbing; return *this; }
 	DockWindow &	NoTabbing()							{ return Tabbing(false); }
@@ -234,7 +236,7 @@ private:
 	void 			Dock0(int align, Ctrl &c, int pos, bool do_animatehl = false, bool ishighlight = false);
 	void 			Undock0(Ctrl &c, bool do_animatehl = false, int fsz = -1, bool ishighlight = false);		
 	
-	void			StartFrameAnimate(int align, int targetsize);
+	void			DoFrameSize(bool animate, int align, int targetsize);
 	void			FrameAnimateTick();
 	
 	Size			CtrlBestSize(const Ctrl &c, bool restrict = true) const;
