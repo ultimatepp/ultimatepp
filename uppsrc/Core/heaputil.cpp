@@ -132,17 +132,17 @@ void HeapPanic(const char *text, void *pos, int size)
 
 #ifdef HEAPDBG
 
-void Heap::DbgFreeFill(void *p, int size)
+void Heap::DbgFreeFill(void *p, size_t size)
 {
-	int count = size >> 2;
+	size_t count = size >> 2;
 	dword *ptr = (dword *)p;
 	while(count--)
 		*ptr++ = 0x65657246;
 }
 
-void Heap::DbgFreeCheck(void *p, int size)
+void Heap::DbgFreeCheck(void *p, size_t size)
 {
-	int count = size >> 2;
+	size_t count = size >> 2;
 	dword *ptr = (dword *)p;
 	while(count--)
 		if(*ptr++ != 0x65657246)

@@ -155,7 +155,7 @@ void Switch::Paint(Draw& w) {
 	if(!IsTransparent())
 		w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace);
 	int tcy = GetTextSize("W", font).cy;
-	linecy = max(16, tcy + 2);
+	linecy = max(mincy, max(16, tcy + 2));
 	int y = 0;
 	int x = 0;
 	int ty = (linecy - tcy) / 2;
@@ -307,6 +307,7 @@ void Switch::CancelMode() {
 
 Switch::Switch() {
 	linecy = 16;
+	mincy = 0;
 	Transparent();
 	NoInitFocus();
 }

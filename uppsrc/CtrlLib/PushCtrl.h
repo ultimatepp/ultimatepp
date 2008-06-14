@@ -264,6 +264,7 @@ private:
 	Vector<int>  posx;
 	int          linecy;
 	int          light;
+	int          mincy;
 
 	int   GetIndex() const;
 	int   GetIndex(Point p);
@@ -297,8 +298,9 @@ public:
 	operator int() const                                        { return GetData(); }
 	void operator=(const Value& v)                              { SetData(v); }
 
-	Switch& SetFont(Font f)                                     { font = f; return *this; }
+	Switch& SetFont(Font f)                                     { font = f; Refresh(); return *this; }
 	Font    GetFont() const                                     { return font; }
+	Switch& MinCaseHeight(int cy)                               { mincy = cy; Refresh(); return *this; }
 
 	Switch();
 	virtual ~Switch();

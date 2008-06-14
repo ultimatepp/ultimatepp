@@ -111,42 +111,48 @@ int AString<B>::FindFirstOf(int len, const tchar *s, int from) const
 {
 	ASSERT(from >= 0 && from <= GetLength());
 	const tchar *ptr = B::Begin();
-	const tchar *e = End();
-	const tchar *se = s + (len * sizeof(tchar));
-	if((s[0] & s[1]) != 0) {
-		if(s[2] == 0) {
-			tchar c1 = s[0];
-			tchar c2 = s[1];
-			for(const tchar *bs = ptr + from; bs < e; bs++) {
-				tchar ch = *bs;
-				if(ch == c1 || ch == c2)
-					return (int)(bs - ptr);
-			}
-			return -1;
+	const tchar *e = B::End();
+	const tchar *se = s + len;
+	if(len == 1) {
+		tchar c1 = s[0];
+		for(const tchar *bs = ptr + from; bs < e; bs++) {
+			if(*bs == c1)
+				return (int)(bs - ptr);
 		}
-		if(s[3] == 0) {
-			tchar c1 = s[0];
-			tchar c2 = s[1];
-			tchar c3 = s[2];
-			for(const tchar *bs = ptr + from; bs < e; bs++) {
-				tchar ch = *bs;
-				if(ch == c1 || ch == c2 || ch == c3)
-					return (int)(bs - ptr);
-			}
-			return -1;
+		return -1;
+	}
+	if(len == 2) {
+		tchar c1 = s[0];
+		tchar c2 = s[1];
+		for(const tchar *bs = ptr + from; bs < e; bs++) {
+			tchar ch = *bs;
+			if(ch == c1 || ch == c2)
+				return (int)(bs - ptr);
 		}
-		if(s[4] == 0) {
-			tchar c1 = s[0];
-			tchar c2 = s[1];
-			tchar c3 = s[2];
-			tchar c4 = s[3];
-			for(const tchar *bs = ptr + from; bs < e; bs++) {
-				tchar ch = *bs;
-				if(ch == c1 || ch == c2 || ch == c3 || ch == c4)
-					return (int)(bs - ptr);
-			}
-			return -1;
+		return -1;
+	}
+	if(len == 3) {
+		tchar c1 = s[0];
+		tchar c2 = s[1];
+		tchar c3 = s[2];
+		for(const tchar *bs = ptr + from; bs < e; bs++) {
+			tchar ch = *bs;
+			if(ch == c1 || ch == c2 || ch == c3)
+				return (int)(bs - ptr);
 		}
+		return -1;
+	}
+	if(len == 4) {
+		tchar c1 = s[0];
+		tchar c2 = s[1];
+		tchar c3 = s[2];
+		tchar c4 = s[3];
+		for(const tchar *bs = ptr + from; bs < e; bs++) {
+			tchar ch = *bs;
+			if(ch == c1 || ch == c2 || ch == c3 || ch == c4)
+				return (int)(bs - ptr);
+		}
+		return -1;
 	}
 	for(const tchar *bs = ptr + from; bs < e; bs++)
 		for(const tchar *ss = s; ss < se; ss++)

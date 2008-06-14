@@ -51,7 +51,7 @@ void GotoDlg::SyncList()
 	if(IsDigit(*n))
 		n.Clear();
 	Index<String> nc;
-	for(int ci = 0; ci < 2; ci++)
+	for(int ci = 0; ci < (n.GetCount() ? 2 : 1); ci++)
 		for(int i = 0; i < item.GetCount(); i++) {
 			const CppItemInfo& f = item[i];
 			int q = memcmp(n, f.name, n.GetLength());

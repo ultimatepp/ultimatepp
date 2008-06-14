@@ -100,13 +100,13 @@ struct Heap {
 	static Heap  aux;
 	
 #ifdef HEAPDBG
-	static void  DbgFreeFill(void *ptr, int size);
-	static void  DbgFreeCheck(void *ptr, int size);
+	static void  DbgFreeFill(void *ptr, size_t size);
+	static void  DbgFreeCheck(void *ptr, size_t size);
 	static void  DbgFreeFillK(void *ptr, int k);
 	static void *DbgFreeCheckK(void *p, int k);
 #else
-	static void  DbgFreeFill(void *ptr, int size) {}
-	static void  DbgFreeCheck(void *ptr, int size) {}
+	static void  DbgFreeFill(void *ptr, size_t size) {}
+	static void  DbgFreeCheck(void *ptr, size_t size) {}
 	static void  DbgFreeFillK(void *ptr, int k) {}
 	static void *DbgFreeCheckK(void *p, int k) { return p; }
 #endif
