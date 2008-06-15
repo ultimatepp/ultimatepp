@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	SvnLib;
+
+file
+	SvnTest.h,
+	main.cpp,
+	SvnTest.lay;
+
+mainconfig
+	"" = "GUI";
+

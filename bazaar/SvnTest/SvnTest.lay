@@ -1,0 +1,13 @@
+LAYOUT(SvnTestLayout, 672, 396)
+	ITEM(DocEdit, TextArea, SetFont(CourierZ(10)).WantFocus(false).SetEditable(false).HSizePosZ(4, 4).VSizePosZ(4, 32))
+	ITEM(Button, CheckoutButton, SetLabel(t_("Checkout")).LeftPosZ(16, 56).BottomPosZ(9, 15))
+	ITEM(Button, QuitButton, SetLabel(t_("Quit")).LeftPosZ(604, 56).BottomPosZ(9, 15))
+	ITEM(Button, ModifyButton, SetLabel(t_("Modify files")).LeftPosZ(216, 64).TopPosZ(372, 15))
+	ITEM(Button, DisconnectButton, SetLabel(t_("Disconnect")).HSizePosZ(144, 464).TopPosZ(372, 15))
+	ITEM(Button, StatusButton, SetLabel(t_("Get status")).HSizePosZ(352, 264).TopPosZ(372, 15))
+	ITEM(Button, ListButton, SetLabel(t_("List files")).LeftPosZ(416, 56).TopPosZ(372, 15))
+	ITEM(Button, WipeButton, SetLabel(t_("Wipe test folder")).LeftPosZ(508, 84).TopPosZ(372, 15))
+	ITEM(Button, LogButton, SetLabel(t_("Get log")).LeftPosZ(288, 56).TopPosZ(372, 15))
+	ITEM(Button, ConnectButton, SetLabel(t_("Connect")).HSizePosZ(80, 536).TopPosZ(372, 15))
+END_LAYOUT
+
