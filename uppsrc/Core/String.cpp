@@ -310,7 +310,7 @@ WString String::ToWString() const
 String::String(StringBuffer& b)
 {
 	if(b.begin == b.buffer) {
-		String0::Set(b.begin, b.end - b.begin);
+		String0::Set(b.begin, (int)(uintptr_t)(b.end - b.begin));
 		return;
 	}
 	int l = b.GetLength();

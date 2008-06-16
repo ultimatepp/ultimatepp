@@ -202,51 +202,9 @@ void Get(ArrayCtrl& array, int ii, IdCtrls& m)
 		m[i] <<= array.Get(ii, m(i));
 }
 
-void sLarge(String& text, int *large, int count, const char *txt)
-{
-	int n = min(1024, count);
-	Sort(large, large + n, StdLess<int>());
-	int i = 0;
-	while(i < n) {
-		int q = large[i];
-		int nn = i++;
-		while(i < n && large[i] == q) i++;
-		nn = i - nn;
-		if(q < 10000)
-			text << Format("%4d B, %5d %s (%6d KB)\r\n", q, nn, txt, (nn * q) >> 10);
-		else
-			text << Format("%4d`KB, %5d %s (%6d KB)\r\n", q >> 10, nn, txt, (nn * q) >> 10);
-	}
-}
-
 String sProfile(MemoryProfile& mem)
 {
-	String text;
-	int acount = 0;
-	size_t asize = 0;
-	int fcount = 0;
-	size_t fsize = 0;
-	for(int i = 0; i < 1024; i++)
-		if(mem.allocated[i]) {
-			int sz = 4 * i;
-			text << Format("%4d B, %6d allocated (%5d KB), %6d fragmented (%5d KB)\r\n",
-			              sz, mem.allocated[i], (mem.allocated[i] * sz) >> 10,
-			              mem.fragmented[i], (mem.fragmented[i] * sz) >> 10);
-			acount += mem.allocated[i];
-			asize += mem.allocated[i] * sz;
-			fcount += mem.fragmented[i];
-			fsize += mem.fragmented[i] * sz;
-		}
-	text << Format(" TOTAL, %6d allocated (%5d KB), %6d fragmented (%5d KB)\r\n",
-	              acount, int(asize >> 10), fcount, int(fsize >> 10));
-	text << "Free pages " << mem.freepages << " (" << mem.freepages * 4 << " KB)\r\n";
-	text << "Large block count " << mem.large_count
-	    << ", total size " << (mem.large_total >> 10) << " KB\r\n";
-	sLarge(text, mem.large_size, mem.large_count, "allocated");
-	text << "Large fragments count " << mem.large_free_count
-	    << ", total size " << (mem.large_free_total >> 10) << " KB\r\n";
-	sLarge(text, mem.large_free_size, mem.large_free_count, "fragments");
-	return text;
+	return AsString(mem);
 }
 
 void MemoryProfileInfo() {

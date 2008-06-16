@@ -1,0 +1,5 @@
+#ifndef _ide_Builders_icpp_init_stub
+#define _ide_Builders_icpp_init_stub
+#include "ide\Common/init"
+#include "coff\binobj/init"
+#endif

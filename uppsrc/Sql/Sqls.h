@@ -4,44 +4,6 @@ const String& BoolToSql(bool b);
 
 class SqlSession;
 
-/* TODO: it should be integrated more somehow with SqlSession to not duplicate error fields */
-class ActivityStatus {
-public:
-	enum {
-		NONE,
-		FETCHING,
-		END_FETCHING,
-		EXECUTING,
-		END_EXECUTING,
-		EXECUTING_ERROR
-	};
-private:
-	String error;
-	int    error_code_number;
-	String error_code_string;
-	String statement;
-	int    status;
-	int    time;
-
-public:
-	ActivityStatus& Error(const String& s)       { error = s;             return *this; }
-	ActivityStatus& ErrorCode(const String& s)   { error_code_string = s; return *this; }
-	ActivityStatus& ErrorCode(int n)             { error_code_number = n; return *this; }
-	ActivityStatus& Statement(const String& s)   { statement = s;         return *this; }
-	ActivityStatus& SetStatus(int s)             { status = s;            return *this; } // Status does not work in Linux (a type or macro?)
-	ActivityStatus& Time(int n)                  { time = n;              return *this; }
-
-	String          GetStatement() const         { return statement;         }
-	String          GetError() const             { return error;             }
-	int             GetErrorCode() const         { return error_code_number; }
-	String          GetErrorCodeString() const   { return error_code_string; }
-	int             GetStatus() const            { return status;            }
-	int             GetTime() const              { return time;              }
-
-	bool            operator == (int s) const    { return status == s;       }
-	bool            operator != (int s) const    { return status != s;       }
-};
-
 class SqlExc : public Exc {
 public:
 #ifndef NOAPPSQL
@@ -280,6 +242,19 @@ struct StatementExecutor {
 typedef bool (*RunScript)(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled);
 
 class SqlSession : public SqlSource {
+public:
+	enum {
+		START_FETCHING,
+		END_FETCHING,
+		END_FETCHING_MANY,
+		START_EXECUTING,
+		END_EXECUTING,
+		EXECUTING_ERROR,
+		CONNECTION_ERROR,
+		BEFORE_EXECUTING,
+		AFTER_EXECUTING
+	};
+
 protected:
 	virtual SqlConnection        *CreateConnection();
 
@@ -291,6 +266,9 @@ protected:
 	bool                          usrlog;
 	int                           traceslow;
 	int                           dialect;
+	int                           exectime;
+
+	String                        statement;
 
 	String                        lasterror;
 	String                        errorstatement;
@@ -298,7 +276,7 @@ protected:
 	String                        errorcode_string;
 	Sql::ERRORCLASS               errorclass;
 
-	ActivityStatus                status;
+	int                           status;
 
 public:
 	virtual void                  Begin();
@@ -308,7 +286,7 @@ public:
 
 	virtual String                Savepoint();
 	virtual void                  RollbackTo(const String& savepoint);
-	
+
 	virtual bool                  IsOpen() const;
 
 	virtual RunScript             GetRunScript() const;
@@ -347,6 +325,12 @@ public:
 	Sql::ERRORCLASS               GetErrorClass() const                   { return errorclass; }
 	void                          ClearError();
 
+	String                        GetStatement() const                    { return statement; }
+	void                          SetStatement(const String& s)           { statement = s; }
+
+	void                          SetTime(int t)                          { exectime = t; }
+	int                           GetTime() const                         { return exectime; }
+
 	String                        GetUser()                               { return Sql(*this).GetUser(); }
 
 	operator                      bool() const                            { return IsOpen(); }
@@ -354,10 +338,12 @@ public:
 	SqlSession();
 	virtual ~SqlSession();
 
-	ActivityStatus&               GetStatus()                             { return status; }
-	void                          PassStatus(int s)                       { WhenDatabaseActivity(status.SetStatus(s)); }
+	int                           GetStatus()                             { return status; }
+	void                          SetStatus(int s)                        { status = s; WhenDatabaseActivity(*this); }
+	bool                          operator == (int s) const               { return status == s; }
+	bool                          operator != (int s) const               { return status != s; }
 
-	Callback1<const ActivityStatus&> WhenDatabaseActivity;
+	Callback1<const SqlSession&>  WhenDatabaseActivity;
 };
 
 class OciConnection;

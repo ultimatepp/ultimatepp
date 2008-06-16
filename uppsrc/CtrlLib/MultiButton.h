@@ -53,6 +53,8 @@ public:
 		bool         monoimg;
 		bool         enabled;
 
+		String       label;
+
 		void Refresh();
 
 	public:
@@ -62,6 +64,7 @@ public:
 		SubButton& SetImage(const Image& m);
 		SubButton& SetMonoImage(const Image& m);
 		SubButton& SetStdImage();
+		SubButton& SetLabel(const char *text);
 		SubButton& Left(bool b = true);
 		SubButton& Width(int w);
 		SubButton& Enable(bool b);
@@ -74,7 +77,11 @@ public:
 	};
 
 private:
-	enum { MAIN = -1 };
+	enum {
+		MAIN = -1,
+		LB_IMAGE = 5, // image <-> text space
+		LB_MARGIN = 10
+	};
 
 	virtual bool Frame();
 
@@ -94,6 +101,7 @@ private:
 	int  FindButton(int px);
 	void Margins(int& l, int& r);
 	Rect ContentRect();
+	bool GetPos(SubButton& b,  int& lx, int& rx, int& x, int& cx, int px = -1);
 	void GetPos(int ii, int& x, int& cx);
 	int  ChState(int i);
 	void Lay(Rect& r);

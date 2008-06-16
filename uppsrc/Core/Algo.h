@@ -897,7 +897,7 @@ struct StableSortLess_ {
 template <class I, class Less, class T>
 void StableSort_(I begin, I end, const Less& less, const T *)
 {
-	int count = end - begin;
+	int count = (int)(uintptr_t)(end - begin);
 	Buffer<int> h(count);
 	for(int i = 0; i < count; i++)
 		h[i] = i;

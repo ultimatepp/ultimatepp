@@ -146,7 +146,7 @@ void Heap::DbgFreeCheck(void *p, size_t size)
 	dword *ptr = (dword *)p;
 	while(count--)
 		if(*ptr++ != 0x65657246)
-			HeapPanic("Writes to freed blocks detected", p, size);
+			HeapPanic("Writes to freed blocks detected", p, (int)(uintptr_t)size);
 }
 
 void *Heap::DbgFreeCheckK(void *p, int k)

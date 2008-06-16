@@ -1285,7 +1285,7 @@ void GIFEncoder::Data::FlushDataBlock()
 {
 //	TIMING("GifEncoder::FlushDataBlock");
 
-	int count = data_ptr - data_block;
+	int count = (int)(uintptr_t)(data_ptr - data_block);
 	if(count) {
 		ASSERT(count <= 255);
 		stream.Put(count);

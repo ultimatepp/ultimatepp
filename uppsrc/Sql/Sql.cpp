@@ -101,8 +101,10 @@ void Sql::SetStatement(const String& s) {
 
 bool Sql::Execute() {
 	SqlSession &session = GetSession();
-	if(session.traceslow < INT_MAX)
-		cn->starttime = GetTickCount();
+
+	session.SetStatement(cn->statement);
+	session.SetStatus(SqlSession::BEFORE_EXECUTING);
+	cn->starttime = GetTickCount();
 	if(session.usrlog)
 		UsrLogT(9, cn->statement);
 	Stream *s = session.GetTrace();
@@ -113,23 +115,25 @@ bool Sql::Execute() {
 #endif
 		*s << cn->statement << '\n';
 	}
-	session.GetStatus().Statement(cn->statement);
-	session.PassStatus(ActivityStatus::EXECUTING);
+	if(!session.IsOpen())
+	{
+		session.SetStatus(SqlSession::CONNECTION_ERROR);
+		return false;
+	}
+	session.SetStatus(SqlSession::START_EXECUTING);
 	bool b = cn->Execute();
-	session.GetStatus().Time(GetTickCount() - cn->starttime);
-	session.PassStatus(ActivityStatus::END_EXECUTING);
+	session.SetTime(GetTickCount() - cn->starttime);
+	session.SetStatus(SqlSession::END_EXECUTING);
 	if(!b) {
 		if(s) {
 			*s << "## ERROR: " << session.GetLastError() << '\n';
 		}
-		session.GetStatus()
-			.Error(session.GetLastError())
-			.ErrorCode(session.GetErrorCode())
-			.ErrorCode(session.GetErrorCodeString());
-		session.PassStatus(ActivityStatus::EXECUTING_ERROR);
+		session.SetStatus(SqlSession::EXECUTING_ERROR);
 	}
 	for(int i = 0; i < cn->info.GetCount(); i++)
 		cn->info[i].name = ToUpper(cn->info[i].name);
+
+	session.SetStatus(SqlSession::AFTER_EXECUTING);
 	return b;
 }
 
@@ -182,24 +186,30 @@ __Expand(E__ExecuteFX)
 
 bool Sql::Fetch() {
 	SqlSession& session = GetSession();
-	session.PassStatus(ActivityStatus::FETCHING);
+	session.SetStatus(SqlSession::START_FETCHING);
+
 	int t0 = GetTickCount();
 	bool b = cn->Fetch();
 	int t = GetTickCount();
+
+	int total = t - cn->starttime;
+	int fetch = t - t0;
+
+	session.SetStatus(SqlSession::END_FETCHING);
 	if(!b) {
-		session.GetStatus().Time(t - cn->starttime);
-		session.PassStatus(ActivityStatus::END_FETCHING);
+		session.SetTime(total);
+		session.SetStatus(SqlSession::END_FETCHING_MANY);
 	}
-	if(t - session.traceslow - cn->starttime > 0)
-		BugLog() << t - cn->starttime << " ms: " << cn->statement << '\n';
-	else
-	if(t - t0 - session.traceslow > 0)
-		BugLog() << t - t0 << " ms further fetch: " << cn->statement << '\n';
+	if(total > session.traceslow)
+		BugLog() << total << " ms: " << cn->statement << '\n';
+	else if(fetch > session.traceslow)
+		BugLog() << fetch << " ms further fetch: " << cn->statement << '\n';
+
 	cn->starttime = INT_MAX;
 	return b;
 }
 
-#define E__GetColumn(I)    cn->GetColumn(I - 1, p##I)
+#define E__GetColumn(I) cn->GetColumn(I - 1, p##I)
 
 #define E__FetchF(I) \
 bool Sql::Fetch(__List##I(E__Ref)) { \

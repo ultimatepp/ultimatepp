@@ -257,6 +257,21 @@ void AlphaBlendStraightOpaque(RGBA *t, const RGBA *s, int len)
 	}
 }
 
+void AlphaBlendStraightOpaque(RGBA *t, const RGBA *s, int len, int alpha)
+{
+	const RGBA *e = s + len;
+	alpha *= 0x101;
+	while(s < e) {
+		int a = (s->a * alpha) >> 16;
+		t->r += a * (s->r - t->r) >> 8;
+		t->g += a * (s->g - t->g) >> 8;
+		t->b += a * (s->b - t->b) >> 8;
+		t->a = 255;
+		s++;
+		t++;
+	}
+}
+
 struct sBlends {
 	int16 m;
 	byte  a;

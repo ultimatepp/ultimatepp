@@ -242,20 +242,20 @@ bool LogStream::IsOpen() const
 #endif
 }
 
-static void sLarge(String& text, int *large, int count, const char *txt)
+static void sLarge(String& text, size_t *large, int count, const char *txt)
 {
 	int n = min(1024, count);
-	Sort(large, large + n, StdLess<int>());
+	Sort(large, large + n, StdLess<size_t>());
 	int i = 0;
 	while(i < n) {
-		int q = large[i];
+		size_t q = large[i];
 		int nn = i++;
 		while(i < n && large[i] == q) i++;
 		nn = i - nn;
 		if(q < 10000)
-			text << Format("%4d B, %5d %s (%6d KB)\r\n", q, nn, txt, (nn * q) >> 10);
+			text << Format("%4d B, %5d %s (%6d KB)\r\n", (int)(uintptr_t)q, nn, txt, (int)(uintptr_t)((nn * q) >> 10));
 		else
-			text << Format("%4d`KB, %5d %s (%6d KB)\r\n", q >> 10, nn, txt, (nn * q) >> 10);
+			text << Format("%4d`KB, %5d %s (%6d KB)\r\n", (int)(uintptr_t)(q >> 10), nn, txt, (int)(uintptr_t)((nn * q) >> 10));
 	}
 }
 

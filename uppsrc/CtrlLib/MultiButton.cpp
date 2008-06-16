@@ -70,6 +70,13 @@ MultiButton::SubButton& MultiButton::SubButton::SetStdImage()
 	return *this;
 }
 
+MultiButton::SubButton& MultiButton::SubButton::SetLabel(const char *text)
+{
+	label = text;
+	Refresh();
+	return *this;
+}
+
 MultiButton::SubButton& MultiButton::SubButton::Left(bool b)
 {
 	left = b;
@@ -184,17 +191,9 @@ int MultiButton::FindButton(int px)
 	Metrics(border, lx, rx);
 	for(int i = 0; i < button.GetCount(); i++) {
 		SubButton& b = button[i];
-		int bcx = Nvl(b.cx, style->stdwidth);
-		if(b.left) {
-			lx += bcx;
-			if(px < lx)
-				return b.enabled ? i : Null;
-		}
-		else {
-			rx -= bcx;
-			if(px >= rx)
-				return b.enabled ? i : Null;
-		}
+		int x = 0, cx = 0;
+		if(GetPos(b, lx, rx, x, cx, px))
+			return b.enabled ? i : Null;
 	}
 	if(WhenPush || WhenClick)
 		return MAIN;
@@ -205,21 +204,34 @@ int MultiButton::FindButton(int px)
 	return Null;
 }
 
+bool MultiButton::GetPos(SubButton& b, int& lx, int& rx, int& x, int& cx, int px)
+{
+	Size tsz = GetTextSize(b.label, StdFont());
+	cx = Nvl(b.cx, style->stdwidth + tsz.cx);
+	if(IsNull(b.cx) && tsz.cx > 0 && !IsNull(b.img))
+		cx += LB_IMAGE + LB_MARGIN;
+	if(b.left) {
+		x = lx;
+		lx += cx;
+		if(px >= 0 && px < lx)
+			return true;
+	}
+	else {
+		rx -= cx;
+		x = rx;
+		if(px >= 0 && px >= rx)
+			return true;
+	}
+	return false;
+}
+
 void MultiButton::GetPos(int ii, int& x, int& cx)
 {
 	int border, lx, rx;
 	Metrics(border, lx, rx);
 	for(int i = 0; i <= ii; i++) {
 		SubButton& b = button[i];
-		cx = Nvl(b.cx, style->stdwidth);
-		if(b.left) {
-			x = lx;
-			lx += cx;
-		}
-		else {
-			rx -= cx;
-			x = rx;
-		}
+		GetPos(b, lx, rx, x, cx);
 	}
 }
 
@@ -251,17 +263,9 @@ void MultiButton::Lay(Rect& r)
 	bool left = false;
 	bool right = false;
 	for(int i = 0; i < button.GetCount(); i++) {
-		const SubButton& b = button[i];
-		int cx = Nvl(b.cx, style->stdwidth);
-		int x;
-		if(b.left) {
-			x = lx;
-			lx += cx;
-		}
-		else {
-			rx -= cx;
-			x = rx;
-		}
+		SubButton& b = button[i];
+		int cx = 0; int x = 0;
+		GetPos(b, lx, rx, x, cx);
 		(b.left ? left : right) = true;
 	}
 	if(ComplexFrame()) {
@@ -302,17 +306,9 @@ void MultiButton::Paint(Draw& w)
 	for(int i = 0; i < button.GetCount(); i++) {
 		SubButton& b = button[i];
 		int st = ChState(i);
-		int cx = Nvl(b.cx, style->stdwidth);
-		int x;
-		if(b.left) {
-			x = lx;
-			lx += cx;
-		}
-		else {
-			rx -= cx;
-			x = rx;
-		}
-		bool paintimg = true;
+		int x = 0, cx = 0;
+		GetPos(b, lx, rx, x, cx);
+		bool dopaint = true;
 		Value v = b.left ? left ? style->lmiddle[st] : style->left[st]
 		                 : right ? style->rmiddle[st] : style->right[st];
 		if(ComplexFrame())
@@ -320,9 +316,9 @@ void MultiButton::Paint(Draw& w)
 		else
 		if(frm) {
 			if(IsTrivial() && style->usetrivial)
-				paintimg = false;
+				dopaint = false;
 			ChPaint(w, x, border, cx, sz.cy - 2 * border,
-			        paintimg ? v : style->trivial[st]);
+			        dopaint ? v : style->trivial[st]);
 		}
 		else {
 			w.Clip(x, 0, cx, sz.cy);
@@ -345,11 +341,12 @@ void MultiButton::Paint(Draw& w)
 				ChPaint(w, x, 0, cx, sz.cy, v);
 			w.End();
 		}
-		if(paintimg) {
-			Image m = Nvl(b.img, CtrlsImg::DA());
+		if(dopaint) {
+			Size tsz = GetTextSize(b.label, StdFont());
+			Image m = tsz.cx > 0 ? b.img : (Image)Nvl(b.img, CtrlsImg::DA());
 			Size isz = m.GetSize();
 			Point p = (st == CTRL_PRESSED) * style->pressoffset;
-			p.x += x + (cx - isz.cx) / 2;
+			p.x += x + (cx - isz.cx - tsz.cx - (tsz.cx > 0 && isz.cx > 0 ? LB_IMAGE : 0)) / 2;
 			p.y += (sz.cy - isz.cy) / 2;
 			if(b.left) {
 				if(!left) p.x += style->loff;
@@ -360,6 +357,12 @@ void MultiButton::Paint(Draw& w)
 				w.DrawImage(p.x, p.y, m, style->monocolor[st]);
 			else
 				w.DrawImage(p.x, p.y, m);
+
+			if(tsz.cx > 0) {
+				if(isz.cx > 0)
+					p.x += isz.cx + LB_IMAGE;
+				w.DrawText(p.x, (sz.cy - tsz.cy) / 2, b.label);
+			}
 		}
 		(b.left ? left : right) = true;
 	}

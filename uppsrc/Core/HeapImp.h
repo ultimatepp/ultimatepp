@@ -33,7 +33,7 @@ struct Heap {
 
 		byte *Begin()                      { return (byte *)this + sizeof(Page); }
 		byte *End()                        { return (byte *)this + 4096; }
-		int   Count()                      { return (End() - Begin()) / Ksz(klass); }
+		int   Count()                      { return (int)(uintptr_t)(End() - Begin()) / Ksz(klass); }
 	};
 
 	struct Header;
@@ -82,7 +82,7 @@ struct Heap {
 	Page     *empty[NKLASS];
 	FreeLink *cache[NKLASS];
 	int       cachen[NKLASS];
-	
+
 	bool      initialized;
 
 	static word  BinSz[LBINS];
@@ -98,7 +98,7 @@ struct Heap {
 
 	static DLink big[1];
 	static Heap  aux;
-	
+
 #ifdef HEAPDBG
 	static void  DbgFreeFill(void *ptr, size_t size);
 	static void  DbgFreeCheck(void *ptr, size_t size);
@@ -143,7 +143,7 @@ struct Heap {
 	void   LinkFree(DLink *b, int size);
 	DLink *AddChunk();
 	void  *DivideBlock(DLink *b, int size, int ii);
-	void  *TryLAlloc(int ii, int size);
+	void  *TryLAlloc(int ii, size_t size);
 	void  *LAlloc(size_t& size);
 	void   LFree(void *ptr);
 	void   Make(MemoryProfile& f);

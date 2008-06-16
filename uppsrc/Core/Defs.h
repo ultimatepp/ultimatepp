@@ -365,15 +365,15 @@ inline void  MemoryCheckDebug() {}
 #endif
 
 struct MemoryProfile {
-	int allocated[1024];
-	int fragmented[1024];
-	int freepages;
-	int large_count;
-	int large_size[1024];
-	int large_total;
-	int large_free_count;
-	int large_free_size[1024];
-	int large_free_total;
+	int    allocated[1024];
+	int    fragmented[1024];
+	int    freepages;
+	int    large_count;
+	size_t large_size[1024];
+	size_t large_total;
+	int    large_free_count;
+	size_t large_free_size[1024];
+	int    large_free_total;
 
 	MemoryProfile();
 };
@@ -475,6 +475,8 @@ inline int    SwapEndian32(int v)     { __asm__("bswap %0" : "=r" (v) : "0" (v))
 #endif
 
 #ifdef COMPILER_MSC
+#pragma intrinsic (_byteswap_ushort, _byteswap_ulong, _byteswap_uint64)
+
 inline word   SwapEndian16(word v)    { return _byteswap_ushort(v); }
 inline int16  SwapEndian16(int16 v)   { return _byteswap_ushort(v); }
 inline dword  SwapEndian32(dword v)   { return _byteswap_ulong(v); }
