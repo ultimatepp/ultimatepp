@@ -432,7 +432,7 @@ One<HttpRequest> HttpServer::GetRequest()
 		switch(request_state) {
 		case RS_FIRST:
 			if(first_line.GetLength() < 4) {
-				int left = min<int>(e - p, 4 - first_line.GetLength());
+				int left = min<int>((int)(uintptr_t)(e - p), 4 - first_line.GetLength());
 				first_line.Cat(p, left);
 				p += left;
 				break;
@@ -440,7 +440,7 @@ One<HttpRequest> HttpServer::GetRequest()
 				int four = Peek32le(first_line);
 				if(four == FOURCHAR('S', 'A', 'P', 'I')) {
 					if(first_line.GetLength() < 8) {
-						int left = min<int>(e - p, 8 - first_line.GetLength());
+						int left = min<int>((int)(uintptr_t)(e - p), 8 - first_line.GetLength());
 						first_line.Cat(p, left);
 						p += left;
 						break;
@@ -478,7 +478,7 @@ One<HttpRequest> HttpServer::GetRequest()
 					LogTime("HTTP request length limit reached, request trashed", 1);
 					return NULL;
 				}
-				first_line.Cat(b, p - b);
+				first_line.Cat(b, (int)(uintptr_t)(p - b));
 				if(p >= e)
 					break;
 				p++;
@@ -543,7 +543,7 @@ One<HttpRequest> HttpServer::GetRequest()
 
 		case RS_SAPI:
 			if(sapi_request.GetLength() < sapi_length) {
-				int add = min<int>(e - p, sapi_length - sapi_request.GetLength());
+				int add = min<int>((int)(uintptr_t)(e - p), sapi_length - sapi_request.GetLength());
 				LogTime(NFormat("SAPI request length = %d, collected %d, adding %d",
 					sapi_length, sapi_request.GetLength(), add), 2);
 				sapi_request.Cat(p, add);
@@ -571,7 +571,7 @@ One<HttpRequest> HttpServer::GetRequest()
 				LogTime("Header line too long, request trashed", 1);
 				return NULL;
 			}
-			header_line.Cat(b, p - b);
+			header_line.Cat(b, (int)(uintptr_t)(p - b));
 			LOG("b - b = " << (p - b) << ", header_line = " << header_line);
 			if(p >= e)
 				break;
@@ -613,7 +613,7 @@ One<HttpRequest> HttpServer::GetRequest()
 					String v = request_query.GetString(var);
 					if(!v.IsEmpty())
 						v.Cat(", ");
-					v.Cat(s, r - s);
+					v.Cat(s, (int)(uintptr_t)(r - s));
 					request_query.Set(var, v);
 					headers_length += var.GetLength() + v.GetLength();
 				}
@@ -630,13 +630,13 @@ One<HttpRequest> HttpServer::GetRequest()
 					LogTime("HTTP POST length exceeded, request trashed", 1);
 					return NULL;
 				}
-				post_data.Cat(b, p - b);
+				post_data.Cat(b, (int)(uintptr_t)(p - b));
 				if(p >= e)
 					break;
 				p++;
 			}
 			else if(post_data.GetLength() < post_length) {
-				int add = min<int>(post_length - post_data.GetLength(), e - p);
+				int add = min<int>(post_length - post_data.GetLength(), (int)(uintptr_t)(e - p));
 				post_data.Cat(p, add);
 				p += add;
 				if(post_data.GetLength() < post_length)

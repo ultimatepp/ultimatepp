@@ -48,7 +48,7 @@ static void DbgHeapPanic(const char *text, DbgBlkHeader *p)
 	char b[100];
 	strcpy(h, text);
 	strcat(h, DbgFormat(b, p));
-	HeapPanic(h, p + 1, p->size);
+	HeapPanic(h, p + 1, (int)(uintptr_t)p->size);
 }
 
 static DbgBlkHeader dbg_live = { 0, &dbg_live, &dbg_live, 0 };
@@ -93,7 +93,7 @@ void *MemoryAlloc(size_t size)
 #endif
 	static dword serial_number = 0;
 	DbgBlkHeader *p = (DbgBlkHeader *)MemoryAlloc_(sizeof(DbgBlkHeader) + size + sizeof(dword));
-	p->serial = s_ignoreleaks ? 0 : ~ ++serial_number ^ (uintptr_t) p;
+	p->serial = s_ignoreleaks ? 0 : ~ ++serial_number ^ (dword)(uintptr_t) p;
 	p->size = size;
 	if(s_allocbreakpoint && s_allocbreakpoint == serial_number)
 		__BREAK__;
@@ -182,7 +182,7 @@ void MemoryDumpLeaks()
 			DbgFormat(b, p);
 			BugLog() << '\n' << b;
 			VppLog() << '\n' << b << ": ";
-			HexDump(VppLog(), p + 1, p->size, 64);
+			HexDump(VppLog(), p + 1, (int)(uintptr_t)p->size, 64);
 		}
 		p = p->next;
 	}

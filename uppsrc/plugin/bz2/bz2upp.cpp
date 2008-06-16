@@ -44,7 +44,7 @@ String BZ2Decompress(String s, Gate2<int, int> progress)
 		out.Cat(output, buf_size - z.avail_out);
 		z.next_out = output;
 		z.avail_out = buf_size;
-		if(progress((const char *)z.next_in - ~s, s.GetLength()))
+		if(progress((int)(uintptr_t)((const char *)z.next_in - ~s), s.GetLength()))
 		{
 			BZ2_bzDecompressEnd(&z);
 			return String::GetVoid();
@@ -90,7 +90,7 @@ String BZ2Compress(String s, Gate2<int, int> progress)
 		out.Cat(output, buf_size - z.avail_out);
 		z.next_out = output;
 		z.avail_out = buf_size;
-		if(progress((const char *)z.next_in - ~s, s.GetLength()))
+		if(progress((int)(uintptr_t)((const char *)z.next_in - ~s), s.GetLength()))
 		{
 			BZ2_bzCompressEnd(&z);
 			return String::GetVoid();

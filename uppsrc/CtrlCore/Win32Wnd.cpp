@@ -188,13 +188,13 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 	if(IsWinNT())
 #endif
 	{
-	    WNDCLASSW  wc;
-	    Zero(wc);
+		WNDCLASSW  wc;
+		Zero(wc);
 		wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
 		wc.lpfnWndProc   = (WNDPROC)Ctrl::WndProc;
 		wc.hInstance     = hInstance;
 		wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = NULL; //(HBRUSH)(COLOR_WINDOW+1);
+		wc.hbrBackground = IsWinVista() ? (HBRUSH)(COLOR_WINDOW+1) : (HBRUSH)NULL;
 		wc.lpszClassName = L"UPP-CLASS-W";
 		RegisterClassW(&wc);
 		wc.style         = 0x20000|CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW;
@@ -215,7 +215,7 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 	wc.lpfnWndProc   = (WNDPROC)Ctrl::WndProc;
 	wc.hInstance     = hInstance;
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = NULL; //(HBRUSH)(COLOR_WINDOW+1);
+	wc.hbrBackground = IsWinVista() ? (HBRUSH)(COLOR_WINDOW+1) : (HBRUSH)NULL;
 	wc.lpszClassName = L_("UPP-CLASS-A");
 	RegisterClass(&wc);
 	if(IsWinXP()) {

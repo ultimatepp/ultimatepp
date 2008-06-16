@@ -134,7 +134,7 @@ void Heap::MoveToEmpty(DLink *l, Header *bh)
 }
 
 inline
-void *Heap::TryLAlloc(int ii, int size)
+void *Heap::TryLAlloc(int ii, size_t size)
 {
 	while(ii < LBINS) {
 		if(freebin[ii] != freebin[ii]->next) {

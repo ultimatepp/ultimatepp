@@ -274,19 +274,19 @@ String Stream::GetLine() {
 	byte *q = ptr;
 	while(q < rdlim)
 		if(*q == '\n') {
-			String result((const char *)ptr, q - ptr - (q > ptr && q[-1] == '\r'));
+			String result((const char *)ptr, (int)(uintptr_t)(q - ptr - (q > ptr && q[-1] == '\r')));
 			ptr = q + 1;
 			return result;
 		}
 		else
 			q++;
-	String result((const char *)ptr, q - ptr);
+	String result((const char *)ptr, (int)(uintptr_t)(q - ptr));
 	ptr = q;
 	for(;;) {
 		byte *q = ptr;
 		while(q < rdlim && *q != '\n')
 			q++;
-		result.Cat(ptr, q - ptr);
+		result.Cat(ptr, (int)(uintptr_t)(q - ptr));
 		ptr = q;
 		int c = Get();
 		if(c == '\n')

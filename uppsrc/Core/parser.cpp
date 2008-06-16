@@ -96,7 +96,7 @@ String CParser::ReadId() throw(Error) {
 		p++;
 	term = p;
 	DoSpaces();
-	return String(b, p - b);
+	return String(b, (int)(uintptr_t)(p - b));
 }
 
 String CParser::ReadIdt() throw(Error) {
