@@ -122,11 +122,11 @@ class Svn
 		String		FRepositoryUUID;
 		
 		String		FCheckedRevisionAuthor;
-		ulong		FCheckedRevision;
+		long		FCheckedRevision;
 		String		FCheckedRevisionDate;
 
 		String		FHeadRevisionAuthor;
-		ulong		FHeadRevision;
+		long		FHeadRevision;
 		String		FHeadRevisionDate;
 
 		bool		FConnected;
@@ -191,10 +191,10 @@ class Svn
 		String		GetRepositoryRoot()					{ return FRepositoryRoot; }
 		String		GetRepositoryUUID()					{ return FRepositoryUUID; }
 		String		GetCheckedRevisionAuthor()			{ return FCheckedRevisionAuthor; }
-		ulong		GetCheckedRevision()				{ return FCheckedRevision; }
+		long		GetCheckedRevision()				{ return FCheckedRevision; }
 		String		GetCkeckedRevisionDate()			{ return FCheckedRevisionDate; }
 		String		GetHeadRevisionAuthor()				{ return FHeadRevisionAuthor; }
-		ulong		GetHeadRevision()					{ return FHeadRevision; }
+		long		GetHeadRevision()					{ return FHeadRevision; }
 		String		GetHeadRevisionDate()				{ return FHeadRevisionDate; }
 
 		Errors		GetLastError()						{ return FLastError; }
