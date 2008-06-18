@@ -4,7 +4,6 @@ class Nuller;
 #define FAST_STRING_COMPARE
 #endif
 
-
 int wstrlen(const wchar *s);
 
 #ifdef PLATFORM_POSIX

@@ -201,10 +201,5 @@ inline int String0::Compare(const String0& s) const
 		return 0;
 	}
 #endif
-/*	int l1 = GetLength();
-	int l2 = s.GetLength();
-	int q = memcmp(Begin(), s.Begin(), min(l1, l2));
-	int q = MemCmp_aligned__(Begin(), s.Begin(), min(l1, l2));
-	return q ? q : l1 - l2;*/
 	return LCompare(s);
 }

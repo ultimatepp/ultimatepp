@@ -282,10 +282,10 @@ String AsString(MemoryProfile& mem)
 	text << "Free pages " << mem.freepages << " (" << mem.freepages * 4 << " KB)\n";
 	text << "Large block count " << mem.large_count
 	    << ", total size " << (mem.large_total >> 10) << " KB\n";
-	sLarge(text, mem.large_size, mem.large_count, "allocated");
+//	sLarge(text, mem.large_size, mem.large_count, "allocated");
 	text << "Large fragments count " << mem.large_free_count
 	    << ", total size " << (mem.large_free_total >> 10) << " KB\n";
-	sLarge(text, mem.large_free_size, mem.large_free_count, "fragments");
+//	sLarge(text, mem.large_free_size, mem.large_free_count, "fragments");
 	return text;
 }
 
