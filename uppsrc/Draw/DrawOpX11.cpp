@@ -116,6 +116,7 @@ Rect Draw::GetClipOp() const
 
 bool Draw::IsPaintingOp(const Rect& r) const
 {
+	LTIMING("IsPaintingOp");
 	Rect rr = r + actual_offset;
 	const Vector<Rect>& cl = clip[cloff.Top().clipi];
 	for(int i = 0; i < cl.GetCount(); i++)
