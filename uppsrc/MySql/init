@@ -1,0 +1,5 @@
+#ifndef _MySql_icpp_init_stub
+#define _MySql_icpp_init_stub
+#include "Sql/init"
+#include "plugin\z/init"
+#endif
