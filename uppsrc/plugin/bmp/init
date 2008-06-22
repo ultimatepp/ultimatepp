@@ -1,5 +1,7 @@
 #ifndef _plugin_bmp_icpp_init_stub
 #define _plugin_bmp_icpp_init_stub
 #include "Draw/init"
+#define BLITZ_INDEX__ F5B782B394FF534E3BA5944B56C5A7693
 #include "BmpReg.icpp"
+#undef BLITZ_INDEX__
 #endif

@@ -147,7 +147,7 @@ void    PanicMessageBox(const char *title, const char *text);
 #define MK__s__(x)       s__s##x
 #define MK__s_(x)        MK__s__(x)
 
-#ifdef  flagBLITZ
+#ifdef  BLITZ_INDEX__
 #define MK__s            MK__s_(COMBINE3(BLITZ_INDEX__, _, __LINE__))
 #else
 #define MK__s            MK__s_(__LINE__)
