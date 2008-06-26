@@ -8,7 +8,7 @@ NAMESPACE_UPP
 #define LOGTIMING 0
 
 #ifdef _DEBUG
-#define LOGMESSAGES 0
+#define LOGMESSAGES 1
 #endif
 
 #define ELOG(x)  // RLOG(GetSysTime() << ": " << x)
@@ -566,7 +566,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 				RLOG(m->name << ' ' << UPP::Name(w) <<
 					Sprintf(", wParam = %d (0x%x), lParam = %d (0x%x)",
 					       wParam, wParam, lParam, lParam));
-				VppLog().Begin();
+				VppLog() << LOG_BEGIN;
 				logblk = true;
 				break;
 			}
@@ -605,7 +605,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		l = DefWindowProc(hWnd, message, wParam, lParam);
 #if LOGMESSAGES
 	if(logblk)
-		VppLog().End();
+		VppLog() << LOG_END;
 #endif
 	return l;
 }

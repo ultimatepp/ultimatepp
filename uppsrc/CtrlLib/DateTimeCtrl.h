@@ -15,6 +15,7 @@ public:
 	Color fg, bg, hl;
 	bool left;
 	bool drawedge;
+	bool highlight;
 
 	FlatButton();
 
@@ -29,6 +30,8 @@ public:
 		Pusher::MouseLeave();
 	}
 
+	const Image& GetImage() { return img; }
+
 	FlatButton& SetImage(const Image &_img) {
 		img = _img;
 		Refresh();
@@ -38,6 +41,7 @@ public:
 	FlatButton& SetLeft()           { left = true;  return *this; }
 	FlatButton& SetRight() 			{ left = false;	return *this; }
 	FlatButton& DrawEdge(bool b) 	{ drawedge = b;	return *this; }
+	FlatButton& Highlight(bool b) 	{ highlight = b;return *this; }
 };
 
 class FlatSpin : public Ctrl
@@ -59,7 +63,11 @@ public:
 
 	FlatSpin& Selectable(bool b = true);
 	int GetWidth(const String& s, bool with_buttons = true);
+	int GetHeight();
 	void SetFont(const Font& fnt);
+	void SetLeftImage(const Image &img)		{ left.SetImage(img);                    }
+	void SetRightImage(const Image &img)	{ right.SetImage(img);                   }
+	void SetHighlight(bool b) 				{ left.Highlight(b); right.Highlight(b); }
 
 	virtual void MouseMove(Point p, dword keyflags);
 	virtual void MouseLeave();
@@ -113,7 +121,10 @@ public:
 		Color line;
 		Color dayname;
 		Color week;
-		Font font;
+		Font  font;
+		Image spinleftimg;
+		Image spinrightimg;
+		bool  spinhighlight;
 	};
 
 protected:
@@ -233,6 +244,8 @@ public:
 	Calendar& NoOneButton()                { one_button = false; return *this;   }
 
 	void PopUp(Ctrl *owner, Rect &rt);
+
+	Callback WhenSelect;
 };
 
 struct LineCtrl : Ctrl
@@ -483,6 +496,7 @@ public:
 		cc.calendar   <<= THISBACK(OnCalendarChoice);
 		cc.clock      <<= THISBACK(OnClockChoice);
 		cc.WhenPopDown  = THISBACK(OnClose);
+		cc.calendar.WhenSelect = Proxy(WhenSelect);
 	}
 
 	virtual void GotFocus()  { drop.RefreshFrame(); }
@@ -501,6 +515,8 @@ public:
 	DateTimeCtrl& SwapMonthYear(bool b = true)                     { cc.calendar.SwapMonthYear(b); return *this; }
 	DateTimeCtrl& OneButton(bool b = true)                         { cc.calendar.OneButton(true); return *this; }
 	DateTimeCtrl& NoOneButton()                                    { cc.calendar.OneButton(false); return *this; }
+
+	Callback WhenSelect;
 };
 
 class DropDate : public DateTimeCtrl<EditDate>

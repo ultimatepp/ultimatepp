@@ -135,7 +135,7 @@ bool Socket::Data::Open(bool block)
 	return true;
 }
 
-bool Socket::Data::OpenServer(int port, bool nodelay, int listen_count, bool block)
+bool Socket::Data::OpenServer(int port, bool nodelay, int listen_count, bool block, bool reuse)
 {
 	if(!Open(block))
 		return false;
@@ -146,6 +146,10 @@ bool Socket::Data::OpenServer(int port, bool nodelay, int listen_count, bool blo
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
+	if(reuse) {
+		int optval = 1;
+		setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (const char *)&optval, sizeof(optval));
+	}
 	if(bind(socket, (const sockaddr *)&sin, sizeof(sin))) {
 		SetSockError(NFormat("bind(port=%d)", port));
 		return false;
@@ -403,12 +407,6 @@ void Socket::Data::Block(bool b)
 		SetSockError("fcntl(O_[NON]BLOCK)");
 #endif
 	is_blocking = b;
-}
-
-void Socket::Data::Reuse()
-{
-	int optval = 1;
-	setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, (const char *)&optval, sizeof(optval));
 }
 
 /*
@@ -815,10 +813,10 @@ void Socket::SetSockError(SOCKET socket, const char *context, const char *errord
 	SetErrorText(err);
 }
 
-bool ServerSocket(Socket& socket, int port, bool nodelay, int listen_count, bool blocking)
+bool ServerSocket(Socket& socket, int port, bool nodelay, int listen_count, bool blocking, bool reuse)
 {
 	One<Socket::Data> data = new Socket::Data;
-	if(!data->OpenServer(port, nodelay, listen_count, blocking))
+	if(!data->OpenServer(port, nodelay, listen_count, blocking, reuse))
 		return false;
 	socket.Attach(data);
 	return true;

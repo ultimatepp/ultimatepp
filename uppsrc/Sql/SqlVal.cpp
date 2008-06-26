@@ -47,6 +47,16 @@ SqlS::SqlS(const SqlS& a, const char *o, const SqlS& b, int pr) {
 	priority = pr;
 }
 
+SqlVal SqlVal::As(const char *as) const {
+	SqlVal v;
+	v.SetHigh(text + ~SqlCase(MSSQL | PGSQL, " as ")(" ") + as);
+	return v;
+}
+
+SqlVal SqlVal::As(const SqlId& id) const {
+	return As(~~id);
+}
+
 SqlVal::SqlVal(const String& x) {
 	if(UPP::IsNull(x))
 		SetNull();
@@ -118,6 +128,18 @@ SqlVal::SqlVal(const SqlId& (*id)())
 
 SqlVal::SqlVal(SqlCol id) {
 	SetHigh(id.ToString());
+}
+
+SqlVal::SqlVal(const SqlSelect& x) {
+	SetHigh('(' + ((SqlStatement) x).GetText() + ')');
+}
+
+SqlVal::SqlVal(const SqlBool& x) {
+	SetHigh(~x);
+}
+
+SqlVal::SqlVal(const Case& x) {
+	SetHigh(~x);
 }
 
 SqlVal operator-(const SqlVal& a) {

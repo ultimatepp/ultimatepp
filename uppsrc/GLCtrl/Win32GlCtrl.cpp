@@ -91,6 +91,7 @@ void GLCtrl::StdView()
 
 LRESULT GLCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
+	DDUMP(message);
 	if(message == WM_PAINT && hDC && hRC) {
 		wglMakeCurrent(hDC, hRC);
 		GLPaint();

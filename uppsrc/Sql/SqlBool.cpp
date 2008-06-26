@@ -85,16 +85,22 @@ SqlBool SqlFirstRow() {
 	return SqlCol("ROWNUM") == 1;
 }
 
-SqlBool Like(const SqlVal& a, const SqlVal& b) {
-	return SqlBool(a, SqlCase(MY_SQL, " like binary ")(" like "), b, SqlS::COMP);
+SqlBool Like(const SqlVal& a, const SqlVal& b, bool cs) {
+
+	return SqlBool(a, SqlCase
+			(MY_SQL, " like binary ")
+			(PGSQL, cs ? " like " : " ilike ")
+			(" like "),	b, SqlS::COMP);
 }
 
 SqlBool LikeUpperAscii(const SqlVal& a, const SqlVal& b) {
 	return Like(UpperAscii(a), UpperAscii(b));
 }
 
-SqlBool NotLike(const SqlVal& a, const SqlVal& b) {
-	return SqlBool(a, " not like ", b, SqlS::COMP);
+SqlBool NotLike(const SqlVal& a, const SqlVal& b, bool cs) {
+	return SqlBool(a, SqlCase
+			(PGSQL, cs ? "not like " : " not ilike ")
+			(" not like "), b, SqlS::COMP);
 }
 
 SqlBool Between(const SqlVal& a, const SqlVal& l, const SqlVal& h) {

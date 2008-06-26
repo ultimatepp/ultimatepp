@@ -60,7 +60,7 @@ void DHCtrl::State(int reason)
 		SyncHWND();
 		break;
 	case CLOSE:
-		hwnd = NULL;
+		CloseHWND();
 	}
 }
 
