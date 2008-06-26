@@ -239,10 +239,10 @@ bool MySqlConnection::Execute() {
 			s++;
 		}
 	Cancel();
-	Stream *trace = session.GetTrace();
+/*	Stream *trace = session.GetTrace();
 	dword time;
 	if(session.IsTraceTime())
-		time = GetTickCount();
+		time = GetTickCount();*/
 	if(mysql_query(mysql, query)) {
 		session.SetError(mysql_error(mysql), query);
 		return false;

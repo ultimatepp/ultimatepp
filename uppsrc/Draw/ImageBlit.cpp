@@ -259,8 +259,12 @@ void AlphaBlendStraightOpaque(RGBA *t, const RGBA *s, int len)
 
 void AlphaBlendStraightOpaque(RGBA *t, const RGBA *s, int len, int alpha)
 {
+	if(alpha >= 256) {
+		AlphaBlendStraightOpaque(t, s, len);
+		return;
+	}
 	const RGBA *e = s + len;
-	alpha *= 0x101;
+	alpha *= 0x102;
 	while(s < e) {
 		int a = (s->a * alpha) >> 16;
 		t->r += a * (s->r - t->r) >> 8;

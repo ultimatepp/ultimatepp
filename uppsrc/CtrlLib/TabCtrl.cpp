@@ -302,6 +302,15 @@ void TabCtrl::Set(int i)
 	ScrollInto(sel);
 }
 
+void TabCtrl::Set(Ctrl& slave)
+{
+	for(int i = 0; i < tab.GetCount(); i++)
+		if(tab[i].slave == &slave) {
+			Set(i);
+			return;
+		}
+}
+
 void TabCtrl::SetData(const Value& data)
 {
 	Set(data);

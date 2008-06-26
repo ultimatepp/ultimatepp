@@ -469,7 +469,7 @@ bool FileStream::Open(const char *name, dword mode, mode_t tmode) {
 	int iomode = mode & ~SHAREMASK;
 	handle = open(ToSystemCharset(name), iomode == READ ? O_RDONLY :
 	                    iomode == CREATE ? O_CREAT|O_RDWR|O_TRUNC :
-	                    O_RDWR,
+	                    O_RDWR|O_CREAT,
 	              tmode);
 	if(handle >= 0) {
 		int64 fsz = LSEEK64_(handle, 0, SEEK_END);

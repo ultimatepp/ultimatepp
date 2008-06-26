@@ -276,6 +276,8 @@ void Calendar::LeftDown(Point p, dword keyflags)
 		else
 			RefreshDay(newday);
 	}
+
+	WhenSelect();
 }
 
 void Calendar::MouseMove(Point p, dword keyflags)
@@ -335,7 +337,7 @@ void Calendar::RefreshDay(Point p)
 	col = p.x;
 	row = p.y;
 
-	int y0 = 2 + (int)((p.y + 2) * rowh);
+	int y0 = 2 + (int)((p.y + 1) * rowh + hs);
 	int x0 = bs + 2 + (int)((p.x + 1) * colw);
 
 	Refresh(x0, y0, cw, rh);
@@ -357,7 +359,7 @@ Point Calendar::GetDay(Point p)
 {
 	for(int i = 0; i < rows; i++)
 	{
-		int y0 = 2 + (int)((i + 2) * rowh);
+		int y0 = 2 + (int)((i + 1) * rowh + hs);
 		int y1 = y0 + rh;
 
 		if(p.y >= y0 && p.y < y1)
@@ -380,6 +382,17 @@ Size Calendar::ComputeSize()
 	spin_month.SetFont(fnt);
 	spin_year.SetFont(fnt);
 
+	spin_all.SetLeftImage(st.spinleftimg);
+	spin_all.SetRightImage(st.spinrightimg);
+	spin_month.SetLeftImage(st.spinleftimg);
+	spin_month.SetRightImage(st.spinrightimg);
+	spin_year.SetLeftImage(st.spinleftimg);
+	spin_year.SetRightImage(st.spinrightimg);
+
+	spin_all.SetHighlight(st.spinhighlight);
+	spin_month.SetHighlight(st.spinhighlight);
+	spin_year.SetHighlight(st.spinhighlight);
+
 	Size sz = IsPopUp() ? Size(-1, -1) : GetSize();
 	Size tsz = GetTextSize("WW", fnt.NoBold().NoUnderline());
 	Size rsz;
@@ -388,10 +401,10 @@ Size Calendar::ComputeSize()
 
 	colw = (float)(tsz.cx + 6);
 	rowh = (float)(tsz.cy + 4);
-	hs = tsz.cy + 4;
+	hs = spin_all.GetHeight() + 4;
 
 	rsz.cx = bs * 2 + 2 + (int)(colw * (cols + 1));
-	rsz.cy = 4 + (int)(rowh * (rows + 3));
+	rsz.cy = (int)(rowh * (rows + 2) + hs);
 
 	if(sz.cx > rsz.cx)
 	{
@@ -400,7 +413,7 @@ Size Calendar::ComputeSize()
 	}
 	if(sz.cy > rsz.cy)
 	{
-		rowh = (sz.cy - 4) / (float) (rows + 3);
+		rowh = (sz.cy - hs) / (float) (rows + 2);
 		rsz.cy = sz.cy;
 	}
 
@@ -434,7 +447,7 @@ void Calendar::Paint(Draw &w)
 
 	if(w.IsPainting(0, hs, sz.cx, rh))
 	{
-		int y = (int) (rowh + (rowh - fh) / 2.0);
+		int y = (int) (hs + (rowh - fh) / 2.0);
 		fnt.NoBold().NoUnderline();
 		tsz = GetTextSize(t_("Wk"), fnt);
 		w.DrawText(bs + (cw - tsz.cx) / 2, y, t_("Wk"), fnt, st.week);
@@ -468,7 +481,7 @@ void Calendar::Paint(Draw &w)
 
 	for(int i = 0; i < rows; i++)
 	{
-		int yp = 2 + (int) ((i + 2) * rowh);
+		int yp = 2 + (int) ((i + 1) * rowh + hs);
 		int yc = (rh - fh) / 2;
 
 		str = AsString(WeekOfYear(d, m, y));
@@ -566,7 +579,7 @@ void Calendar::Paint(Draw &w)
 		}
 	}
 
-	w.DrawRect(bs, (int) (rowh * 2) + 1, sz.cx - bs * 2, 1, st.line);
+	w.DrawRect(bs, (int) (hs + rowh) + 1, sz.cx - bs * 2, 1, st.line);
 	w.DrawRect(bs + cw + 1, hs + bs, 1, sz.cy - hs - ts - bs * 1, st.line);
 
 	lastrow = row;
@@ -1321,6 +1334,7 @@ FlatButton::FlatButton()
 	bg = Blend(SColorHighlight, White, 50);
 	fg = SColorPaper;
 	left = true;
+	highlight = true;
 	Transparent();
 }
 
@@ -1339,7 +1353,13 @@ void FlatButton::Paint(Draw &w)
 
 	int dx = IsPush() * (left ? -1 : 1);
 	int dy = IsPush();
-	w.DrawImage((sz.cx - isz.cx) / 2 + dx, (sz.cy - isz.cy) / 2 + dy, img, HasMouse() ? SColorHighlightText() : Black);
+
+	Point p((sz.cx - isz.cx) / 2 + dx, (sz.cy - isz.cy) / 2 + dy);
+
+	if(highlight)
+		w.DrawImage(p.x, p.y, img, HasMouse() ? SColorHighlightText() : Black);
+	else
+		w.DrawImage(p.x, p.y, img);
 }
 
 FlatSpin::FlatSpin()
@@ -1371,7 +1391,20 @@ void FlatSpin::SetFont(const Font& fnt)
 
 int FlatSpin::GetWidth(const String& s, bool with_buttons)
 {
-	return (with_buttons ? (CtrlImg::smallleft().GetSize().cx + 8) * 2 : 0) + GetTextSize(s, font).cx;
+	Size sl = left.GetImage().GetSize();
+	Size sr = right.GetImage().GetSize();
+	int width = GetTextSize(s, font).cx;
+
+	if(with_buttons)
+		width += sl.cx + max(8, sl.cx / 2) + sr.cx + max(8, sr.cx / 2);
+
+	return width;
+}
+
+int FlatSpin::GetHeight()
+{
+	int ih = max(left.GetImage().GetSize().cy + 8, right.GetImage().GetSize().cy + 8);
+	return max(font.GetHeight(), ih);
 }
 
 void FlatSpin::SetText(const String& s)
@@ -1396,9 +1429,8 @@ void FlatSpin::SetCallbacks(const Callback &cbl, const Callback& cbr)
 void FlatSpin::Layout()
 {
 	Size sz = GetSize();
-	Size isz = CtrlImg::smallleft().GetSize();
-	left.LeftPos(0, isz.cx + 8).TopPos(0, sz.cy);
-	right.RightPos(0, isz.cx + 8).TopPos(0, sz.cy);
+	left.LeftPos(0, left.GetImage().GetSize().cx + 8).VSizePos();
+	right.RightPos(0, right.GetImage().GetSize().cx + 8).VSizePos();
 }
 
 void FlatSpin::Paint(Draw& w)
@@ -1473,6 +1505,9 @@ CH_STYLE(Calendar, Style, StyleDefault)
 	dayname       = SColorText;
 	week          = SColorText;
 	font          = StdFont();
+	spinleftimg   = CtrlImg::smallleft();
+	spinrightimg  = CtrlImg::smallright();
+	spinhighlight = true;
 }
 
 END_UPP_NAMESPACE

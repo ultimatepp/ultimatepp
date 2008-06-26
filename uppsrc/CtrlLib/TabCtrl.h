@@ -117,6 +117,7 @@ public:
 	const Item& GetItem(int i) const             { return tab[i]; }
 
 	void Set(int i);
+	void Set(Ctrl& slave);
 	int  Get() const                             { return sel; }
 
 	void GoNext()                                { Go(1); }

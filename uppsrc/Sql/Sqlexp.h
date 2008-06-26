@@ -11,6 +11,8 @@ enum {
 class SqlBool;
 class SqlVal;
 class SqlSet;
+class SqlSelect;
+class Case;
 
 // ----------
 
@@ -157,6 +159,9 @@ public:
 	void SetHigh(const String& s)           { text = s; priority = HIGH; }
 	bool IsNull() const                     { return priority == NULLVAL; }
 
+	SqlVal As(const char *as) const;
+	SqlVal As(const SqlId& id) const;
+
 	SqlVal()                                {}
 	SqlVal(const String& s, int pr)         : SqlS(s, pr) {}
 	SqlVal(const SqlS& a, const char *o, const SqlS& b, int pa, int pb)
@@ -176,6 +181,9 @@ public:
 	SqlVal(SqlId id);
 	SqlVal(const SqlId& (*id)());
 	SqlVal(SqlCol id);
+	SqlVal(const SqlSelect& x);
+	SqlVal(const SqlBool& x);
+	SqlVal(const Case& x);
 };
 
 SqlVal operator-(const SqlVal& a);
@@ -313,8 +321,8 @@ inline SqlBool IsNull(const SqlId& a)  { return SqlIsNull(a); }
 inline SqlBool IsNull(const SqlVal& a) { return SqlIsNull(a); }
 inline SqlBool IsNull(const SqlCol& a) { return SqlIsNull(a); }
 
-SqlBool        Like(const SqlVal& a, const SqlVal& b);
-SqlBool        NotLike(const SqlVal& a, const SqlVal& b);
+SqlBool        Like(const SqlVal& a, const SqlVal& b, bool cs = false);
+SqlBool        NotLike(const SqlVal& a, const SqlVal& b, bool cs = false);
 
 SqlBool        Between(const SqlVal& a, const SqlVal& low, const SqlVal& high);
 SqlBool        NotBetween(const SqlVal&a, const SqlVal& low, const SqlVal& high);
@@ -340,7 +348,23 @@ inline SqlBool operator!=(const SqlVal& a, const SqlSet& b) { return NotIn(a, b)
 
 inline const SqlVal& operator+(const SqlVal& a) { return a; }
 
-//////////////////////////////////////////////////////////////////////
+class Case : public SqlS, Moveable<Case> {
+public:
+	Case(const SqlBool& cond, const SqlVal& val)
+	{
+		text = "case when " + ~cond + " then " + ~val + " end";
+	}
+	Case& operator()(const SqlBool& cond, const SqlVal& val)
+	{
+		text.Insert(text.GetLength() - 4, " when " + ~cond + " then " + ~val);
+		return *this;
+	}
+	Case& operator()(const SqlVal& val)
+	{
+		text.Insert(text.GetLength() - 4, " else " + ~val);
+		return *this;
+	}
+};
 
 class Sql;
 

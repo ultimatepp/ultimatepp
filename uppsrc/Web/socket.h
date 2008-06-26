@@ -14,7 +14,7 @@ public:
 		virtual ~Data() { CloseRaw(0); }
 
 		bool                    Open(bool is_blocking);
-		bool                    OpenServer(int port, bool nodelay, int listen_count, bool is_blocking);
+		bool                    OpenServer(int port, bool nodelay, int listen_count, bool is_blocking, bool reuse = true);
 		bool                    OpenClient(const char *host, int port, bool nodelay, dword *my_addr, int timeout, bool is_blocking);
 		bool                    IsOpen() const     { return socket != INVALID_SOCKET; }
 		bool                    CloseRaw(int timeout_msec);
@@ -148,5 +148,5 @@ public:
 };
 #endif
 
-bool ServerSocket(Socket& socket, int port, bool nodelay = true, int listen_count = 5, bool is_blocking = true);
+bool ServerSocket(Socket& socket, int port, bool nodelay = true, int listen_count = 5, bool is_blocking = true, bool reuse = true);
 bool ClientSocket(Socket& socket, const char *host, int port, bool nodelay = true, dword *my_addr = NULL, int timeout = DEFAULT_CONNECT_TIMEOUT, bool is_blocking = true);
