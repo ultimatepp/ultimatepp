@@ -331,6 +331,7 @@ void DHCtrl::State(int reason)
 				break;
 
 			case OPEN       : // = 16,
+				MapWindow(IsShown());
 				break;
 
 			case CLOSE      : // = 17,

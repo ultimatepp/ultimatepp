@@ -16,7 +16,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 			BTN_RIGHT,
 			BTN_UP,
 			BTN_DOWN,
-			BTN_PLUS
+			BTN_PLUS,
+			BTN_CLEAN
 		};
 	private:
 		class PopUpGrid : public GridCtrl
@@ -48,8 +49,10 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		Vector<int> value_cols;
 		PopUpGrid list;
 		MultiButtonFrame drop;
+		GridButton clear;
 
 	private:
+
 		int rowid;
 		int trowid;
 		Value value;
@@ -70,6 +73,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		bool always_drop:1;
 		bool must_change:1;
 		bool null_action:1;
+		bool clear_button:1;
+		bool nodrop:1;
 
 		GridDisplay *display;
 
@@ -115,6 +120,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		DropGrid& AlwaysDrop(bool b = true);
 		DropGrid& MustChange(bool b = true);
 		DropGrid& NullAction(bool b = true);
+		DropGrid& ClearButton(bool b = true);
+		DropGrid& NoDrop(bool b = true);
 
 		GridCtrl::ItemRect& AddColumn(const char *name, int width = GridCtrl::GD_COL_WIDTH, bool idx = false);
 		GridCtrl::ItemRect& AddColumn(Id id, const char *name, int width = GridCtrl::GD_COL_WIDTH, bool idx = false);
@@ -125,6 +132,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		MultiButton::SubButton& AddSelect(const Callback &cb);
 		MultiButton::SubButton& AddPlus(const Callback &cb);
 		MultiButton::SubButton& AddEdit(const Callback &cb);
+		MultiButton::SubButton& AddClear();
+		MultiButton::SubButton& AddText(const char* label, const Callback& cb);
 
 		MultiButton::SubButton& GetButton(int n);
 
@@ -140,6 +149,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		void Reset();
 		void Clear();
 		void ClearValue();
+		void DoClearValue();
 
 		virtual Value GetData() const;
 		virtual void SetData(const Value& v);
@@ -194,6 +204,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		GridCtrl& GetList() { return list; }
 
 		virtual Value Format(const Value& q) const;
+
+		Callback WhenLeftDown;
 
 		GridCtrl::ItemRect& AddRow(int n = 1, int size = GridCtrl::GD_ROW_HEIGHT);
 		DropGrid& Add() { AddRow(); return *this; }

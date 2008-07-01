@@ -129,7 +129,7 @@ SqlVal::SqlVal(const SqlId& (*id)())
 SqlVal::SqlVal(SqlCol id) {
 	SetHigh(id.ToString());
 }
-
+/*
 SqlVal::SqlVal(const SqlSelect& x) {
 	SetHigh('(' + ((SqlStatement) x).GetText() + ')');
 }
@@ -137,7 +137,7 @@ SqlVal::SqlVal(const SqlSelect& x) {
 SqlVal::SqlVal(const SqlBool& x) {
 	SetHigh(~x);
 }
-
+*/
 SqlVal::SqlVal(const Case& x) {
 	SetHigh(~x);
 }

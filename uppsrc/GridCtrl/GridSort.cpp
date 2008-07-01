@@ -147,6 +147,26 @@ bool GridCtrl::IsSorted()
 	return sortOrder.GetCount() > 0 || sortCol >= 0;
 }
 
+void GridCtrl::MarkSort(int col, int sort_mode, bool refresh)
+{
+	sortCol = col;
+	hitems[col].sortmode = sort_mode;
+	hitems[col].sortcol = sortOrder.GetCount();
+
+	if(refresh)
+		RefreshTop();
+}
+
+void GridCtrl::MarkSort(int col, int sort_mode)
+{
+	MarkSort(fixed_cols + col, sort_mode, true);
+}
+
+void GridCtrl::MarkSort(Id id, int sort_mode)
+{
+	MarkSort(aliases.Get(id), sort_mode, true);
+}
+
 GridCtrl& GridCtrl::Sort(int sort_col, int sort_mode, bool multisort, bool repaint)
 {
 	int col = GetIdCol(sort_col + fixed_cols);
@@ -161,8 +181,7 @@ GridCtrl& GridCtrl::Sort(int sort_col, int sort_mode, bool multisort, bool repai
 
 	sortOrder.Add(col);
 
-	hitems[col].sortmode = sort_mode;
-	hitems[col].sortcol = sortOrder.GetCount();
+	MarkSort(col, sort_mode, false);
 	GSort();
 
 	UpdateCursor();

@@ -82,7 +82,12 @@ DropGrid::DropGrid()
 	null_action = true;
 	display = this;
 	change = false;
+	nodrop = false;
+	clear_button = false;
+
 	EnableDrop(always_drop);
+	clear.SetButton(1);
+	clear <<= THISBACK(DoClearValue);
 }
 
 void DropGrid::Close()
@@ -178,6 +183,15 @@ void DropGrid::Drop()
 void DropGrid::Paint(Draw& w)
 {
 	Size sz = GetSize();
+	Size isz = clear.GetStdSize();
+	if(clear_button && !notnull && IsEnabled() && IsSelected())
+	{
+		clear.Show();
+		clear.RightPos(3, isz.cx).TopPos((sz.cy - isz.cy) / 2, isz.cy);
+	}
+	else
+		clear.Hide();
+
 	w.DrawRect(sz, SColorPaper());
 	GridDisplay &disp = display ? *display : list.GetDisplay();
 	bool hf = HasFocus();
@@ -203,7 +217,11 @@ void DropGrid::Paint(Draw& w)
 
 void DropGrid::LeftDown(Point p, dword keyflags)
 {
-	Drop();
+	WhenLeftDown();
+	if(nodrop)
+		SetFocus();
+	else
+		Drop();
 }
 
 void DropGrid::GotFocus()
@@ -318,6 +336,7 @@ DropGrid& DropGrid::AddValueColumns(int first /* = -1*/, int last /* = -1*/)
 {
 	int s = first < 0 ? 0: first;
 	int e = last < 0 ? list.GetColumnCount() - 1: last;
+
 	for(int i = s; i <= e; i++)
 		 value_cols.Add(i);
 
@@ -418,6 +437,25 @@ DropGrid& DropGrid::MustChange(bool b /* = true*/)
 DropGrid& DropGrid::NullAction(bool b /* = true*/)
 {
 	null_action = b;
+	return *this;
+}
+
+DropGrid& DropGrid::ClearButton(bool b /* = true*/)
+{
+	clear_button = b;
+	if(b)
+		Ctrl::Add(clear);
+	else
+		Ctrl::RemoveChild(&clear);
+
+	return *this;
+}
+
+DropGrid& DropGrid::NoDrop(bool b /* = true*/)
+{
+	nodrop = b;
+	if(nodrop)
+		drop.RemoveButton(0);
 	return *this;
 }
 
@@ -523,6 +561,7 @@ GridCtrl::ItemRect& DropGrid::AddIndex(Id id)
 MultiButton::SubButton& DropGrid::AddButton(int type, const Callback &cb)
 {
 	MultiButton::SubButton& btn = drop.InsertButton(1);
+
 	switch(type)
 	{
 		case BTN_PLUS:
@@ -542,6 +581,9 @@ MultiButton::SubButton& DropGrid::AddButton(int type, const Callback &cb)
 			break;
 		case BTN_DOWN:
 			btn.SetImage(GridImg::SelDn);
+			break;
+		case BTN_CLEAN:
+			btn.SetImage(GridImg::SelCross);
 			break;
 	}
 	btn.WhenPush = cb;
@@ -563,9 +605,28 @@ MultiButton::SubButton& DropGrid::AddEdit(const Callback &cb)
 	return AddButton(BTN_RIGHT, cb);
 }
 
+MultiButton::SubButton& DropGrid::AddClear()
+{
+	return AddButton(BTN_CLEAN, THISBACK(ClearValue));
+}
+
+MultiButton::SubButton& DropGrid::AddText(const char* label, const Callback& cb)
+{
+	MultiButton::SubButton& btn = drop.InsertButton(1);
+	btn.SetLabel(label);
+	btn.WhenPush = cb;
+	return btn;
+}
+
 MultiButton::SubButton& DropGrid::GetButton(int n)
 {
 	return drop.GetButton(n);
+}
+
+void DropGrid::DoClearValue()
+{
+	ClearValue();
+	SetFocus();
 }
 
 void DropGrid::ClearValue()
@@ -578,6 +639,7 @@ void DropGrid::ClearValue()
 		UpdateActionRefresh();
 	else
 		UpdateRefresh();
+	SetFocus();
 }
 
 void DropGrid::Reset()
