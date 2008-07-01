@@ -128,6 +128,7 @@ public:
 
 	SubButton& AddButton();
 	SubButton& InsertButton(int i);
+	void       RemoveButton(int i);
 	int        GetButtonCount() const                { return button.GetCount(); }
 	SubButton& GetButton(int i)                      { return button[i]; }
 	SubButton& MainButton();

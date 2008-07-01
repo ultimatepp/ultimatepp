@@ -15,6 +15,7 @@ ctrl DropGrid {
 	bool  DropEnter = false;
 	bool  Searching = true;
 	bool  NotNull = false;
+	bool  ClearButton = false;
 	bool  SetEditable = true @2 ? "Editable";
 
 	Text  Tip;

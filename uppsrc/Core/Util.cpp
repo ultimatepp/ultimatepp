@@ -114,12 +114,12 @@ void    AssertFailed(const char *file, int line, const char *cond)
 }
 
 #ifdef PLATFORM_POSIX
-int GetTickCount() {
+dword GetTickCount() {
 	struct timeval tv[1];
 	struct timezone tz[1];
 	memset(tz, 0, sizeof(tz));
 	gettimeofday(tv, tz);
-	return tv->tv_sec % 1000000 * 1000 + tv->tv_usec / 1000;
+	return (dword)tv->tv_sec * 1000 + tv->tv_usec / 1000;
 }
 #endif
 

@@ -104,12 +104,14 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Max(int n)
 
 GridCtrl::ItemRect& GridCtrl::ItemRect::Fixed(int n)
 {
+	n = Ctrl::VertLayoutZoom(n);
 	return Min(n).Max(n);
 }
 
 GridCtrl::ItemRect& GridCtrl::ItemRect::FixedAuto()
 {
-	return Fixed(GetTextSize((String)(*items)[0][id].val, StdFont()).cx + 15);
+	int n = GetTextSize((String)(*items)[0][id].val, StdFont()).cx + 15;
+	return Min(n).Max(n);
 }
 
 GridCtrl::ItemRect& GridCtrl::ItemRect::Edit(Ctrl &ctrl)

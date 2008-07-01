@@ -67,7 +67,9 @@ class GridPopUpHeader : public Ctrl
 class GridButton : public Ctrl
 {
 	private:
-		Image img;
+		int img;
+		int n;
+
 	public:
 		typedef GridButton CLASSNAME;
 		GridButton();
@@ -78,7 +80,7 @@ class GridButton : public Ctrl
 		virtual void MouseLeave();
 		virtual void State(int reason);
 		virtual Size GetStdSize() const;
-
+		void SetButton(int n);
 };
 
 class GridResizePanel : public FrameBottom<Ctrl>
@@ -1409,6 +1411,8 @@ class GridCtrl : public Ctrl
 		GridCtrl& MultiSort(int sort_col, int sort_mode = SORT_UP);
 		GridCtrl& MultiSort(Id id, int sort_mode = SORT_UP);
 		void ClearSort();
+		void MarkSort(int col, int sort_mode);
+		void MarkSort(Id id, int sort_mode);
 
 		Vector<SortOrder> GetSortOrder() const;
 		Vector<Id> GetSortOrderId() const;
@@ -1544,6 +1548,7 @@ class GridCtrl : public Ctrl
 		bool ClearMultisort();
 		bool ClearSorted();
 		bool IsSorted();
+		void MarkSort(int col, int sort_mode, bool refresh);
 
 		void DrawHorzDragLine(Draw &w, int pos, int cx, int size, Color c);
 		void DrawVertDragLine(Draw &w, int pos, int size, int dx, Color c);

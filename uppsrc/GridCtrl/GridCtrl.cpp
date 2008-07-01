@@ -6748,8 +6748,9 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 	found_first_matched_row:
 
 	bool change = false;
+
 	int rows = 0;
-	for(int i = first_matched_row; i < total_rows; i++)
+	for(int i = fixed_rows; i < total_rows; i++)
 	{
 		bool match = false;
 		int idv = vitems[i].id;
@@ -7289,49 +7290,60 @@ void GridPopUpHeader::Close()
 /*----------------------------------------------------------------------------------------*/
 GridButton::GridButton()
 {
-	img = GridImg::CloseN;
+	n = 0;
+	img = 0;
 }
 
 void GridButton::Paint(Draw& w)
 {
+	static Image (*vimg[])() = {
+		&GridImg::Btn0N, &GridImg::Btn0H, &GridImg::Btn0P,
+		&GridImg::Btn1N, &GridImg::Btn1H, &GridImg::Btn1P
+	};
+
 	Size sz = GetSize();
-	w.DrawImage(0, 0, sz.cx, sz.cy, img);
+	w.DrawImage(0, 0, sz.cx, sz.cy, vimg[img + n * 3]);
 }
 
 void GridButton::LeftDown(Point p, dword flags)
 {
-	img = GridImg::CloseP;
+	img = 2;
 	Refresh();
 }
 
 void GridButton::LeftUp(Point p, dword flags)
 {
-	img = GridImg::CloseH;
+	img = 1;
 	Refresh();
 	WhenAction();
 }
 
 void GridButton::MouseEnter(Point p, dword flags)
 {
-	img = flags & K_MOUSELEFT ? GridImg::CloseP : GridImg::CloseH;
+	img = flags & K_MOUSELEFT ? 2 : 1;
 	Refresh();
 }
 
 void GridButton::MouseLeave()
 {
-	img = GridImg::CloseN;
+	img = 0;
 	Refresh();
 }
 
 void GridButton::State(int reason)
 {
 	if(reason == CLOSE)
-		img = GridImg::CloseN;
+		img = 0;
 }
 
 Size GridButton::GetStdSize() const
 {
-	return img.GetSize();
+	return n > 0 ? Size(14, 11) : Size(17, 17); //FIXME
+}
+
+void GridButton::SetButton(int b)
+{
+	n = b;
 }
 
 GridResizePanel::GridResizePanel()

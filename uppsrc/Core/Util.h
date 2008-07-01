@@ -6,7 +6,7 @@ static const int _MAX_PATH = MAX_PATH;
 
 #ifdef PLATFORM_POSIX
 static const int _MAX_PATH = PATH_MAX;
-int      GetTickCount();
+dword  GetTickCount();
 #endif
 
 class TimeStop : Moveable<TimeStop> {

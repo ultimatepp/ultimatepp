@@ -181,8 +181,8 @@ public:
 	SqlVal(SqlId id);
 	SqlVal(const SqlId& (*id)());
 	SqlVal(SqlCol id);
-	SqlVal(const SqlSelect& x);
-	SqlVal(const SqlBool& x);
+//	SqlVal(const SqlSelect& x);
+//	SqlVal(const SqlBool& x);
 	SqlVal(const Case& x);
 };
 

@@ -112,6 +112,11 @@ MultiButton::SubButton& MultiButton::InsertButton(int i)
 	return b;
 }
 
+void MultiButton::RemoveButton(int i)
+{
+	button.Remove(i);
+}
+
 MultiButton::SubButton& MultiButton::SubButton::Main(bool b)
 {
 	if(b)

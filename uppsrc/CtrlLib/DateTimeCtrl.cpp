@@ -401,7 +401,7 @@ Size Calendar::ComputeSize()
 
 	colw = (float)(tsz.cx + 6);
 	rowh = (float)(tsz.cy + 4);
-	hs = spin_all.GetHeight() + 4;
+	hs = /*spin_all.GetHeight()*/tsz.cy + 4;
 
 	rsz.cx = bs * 2 + 2 + (int)(colw * (cols + 1));
 	rsz.cy = (int)(rowh * (rows + 2) + hs);
