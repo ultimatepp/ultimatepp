@@ -188,12 +188,12 @@ bool Sql::Fetch() {
 	SqlSession& session = GetSession();
 	session.SetStatus(SqlSession::START_FETCHING);
 
-	int t0 = GetTickCount();
+	dword t0 = GetTickCount();
 	bool b = cn->Fetch();
-	int t = GetTickCount();
+	dword t = GetTickCount();
 
-	int total = t - cn->starttime;
-	int fetch = t - t0;
+	dword total = cn->starttime == INT_MAX ? 0 : t - cn->starttime;
+	dword fetch = t - t0;
 
 	session.SetStatus(SqlSession::END_FETCHING);
 	if(!b) {

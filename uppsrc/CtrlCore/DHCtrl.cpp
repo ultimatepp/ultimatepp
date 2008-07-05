@@ -34,9 +34,9 @@ void DHCtrl::OpenHWND()
 	HWND phwnd = GetTopCtrl()->GetHWND();
 	if(phwnd) {
 		CreateWindowEx(0, "UPP-CLASS-A", "",
-		               WS_CHILD|WS_DISABLED|WS_VISIBLE,
+		               WS_CHILD|WS_DISABLED|WS_VISIBLE|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,
 		               0, 0, 20, 20,
-		               phwnd, (HMENU)this, hInstance, this);
+		               phwnd, NULL, hInstance, this);
 	}
 }
 
