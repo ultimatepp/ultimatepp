@@ -6,7 +6,6 @@ NAMESPACE_UPP
 
 #pragma comment( lib, "opengl32.lib" )	// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )		// Search For GLu32.lib While Linking
-#pragma comment( lib, "glaux.lib" )		// Search For GLaux.lib While Linking
 
 GLCtrl::GLCtrl()
 {
@@ -31,7 +30,7 @@ void GLCtrl::OpenGL()
 	memset(&pfd, 0, sizeof(pfd));
 	pfd.nSize = sizeof(pfd);
 	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER | 0x00008000;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;
 	pfd.cDepthBits = 32;
@@ -91,10 +90,11 @@ void GLCtrl::StdView()
 
 LRESULT GLCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	DDUMP(message);
 	if(message == WM_PAINT && hDC && hRC) {
 		wglMakeCurrent(hDC, hRC);
 		GLPaint();
+		glFlush();
+		glFinish();
 		SwapBuffers(hDC);
 		wglMakeCurrent(NULL, NULL);
 		PAINTSTRUCT ps;
@@ -102,6 +102,8 @@ LRESULT GLCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(GetHWND(), &ps);
 		return 0;
 	}
+	if(message == WM_ERASEBKGND)
+		return 1;
 	return DHCtrl::WindowProc(message, wParam, lParam);
 }
 
