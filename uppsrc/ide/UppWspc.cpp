@@ -132,6 +132,7 @@ void WorkspaceWork::LoadActualPackage()
 	filelist.Clear();
 	fileindex.Clear();
 	bool open = true;
+	Time tm = GetSysTime();
 	for(int i = 0; i < actual.file.GetCount(); i++) {
 		Package::File& f = actual.file[i];
 		if(f.separator) {
@@ -142,10 +143,35 @@ void WorkspaceWork::LoadActualPackage()
 		}
 		else
 		if(open) {
+			Color uln = Null;
+			if(showtime) {
+				FindFile ff(SourcePath(GetActivePackage(), f));
+				if(ff) {
+					int64 t = tm - Time(ff.GetLastWriteTime());
+					if(t < 24 * 3600)
+						uln = SColorMark;
+					else
+					if(t < 32 * 24 * 3600)
+						uln = SColorDisabled;
+				}
+			}
 			filelist.Add(f, IdeFileImage(f, f.optimize_speed), ListFont(), SColorText, false, 0,
-			             Null, SColorMark);
+			             Null, SColorMark, Null, Null, Null, uln);
 			fileindex.Add(i);
 		}
+	}
+}
+
+void WorkspaceWork::TouchFile(const String& path)
+{
+	if(!showtime)
+		return;
+	Time tm = GetSysTime();
+	for(int i = 0; i < filelist.GetCount(); i++) {
+		FileList::File f = filelist[i];
+		if(path == SourcePath(GetActivePackage(), f.name))
+			filelist.Set(i, f.name, f.icon, f.font, f.ink, false, 0,
+			             Null, SColorMark, Null, Null, Null, SColorMark);
 	}
 }
 
@@ -644,6 +670,7 @@ WorkspaceWork::WorkspaceWork()
 	organizer = false;
 	package.BackPaintHint();
 	filelist.BackPaintHint();
+	showtime = false;
 }
 
 void WorkspaceWork::SerializeClosed(Stream& s)

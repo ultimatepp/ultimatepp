@@ -35,7 +35,7 @@ void DrawTextEllipsis(Draw& w, int x, int y, int cx, const wchar *text, const ch
 void DrawTextEllipsis(Draw& w, int x, int y, int cx, const char *text, const char *ellipsis,
 				      Font font, Color ink, int n)
 {
-	DrawTextEllipsis(w, x, y, cx, WString(text), ellipsis, font, ink, n);
+	return DrawTextEllipsis(w, x, y, cx, WString(text), ellipsis, font, ink, n);
 }
 
 Size GetTLTextSize(const wchar *text, Font font)

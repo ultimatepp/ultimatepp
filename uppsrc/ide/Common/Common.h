@@ -404,7 +404,7 @@ struct Builder {
 	virtual void   AddFlags(Index<String>& cfg) {}
 	virtual void   AddMakeFile(MakeFile& mfinfo, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,
-		const Index<String>& common_config) {}
+		const Index<String>& common_config, bool exporting) {}
 	virtual String GetTargetExt() const = 0;
 
 	Builder()          { doall = false; }

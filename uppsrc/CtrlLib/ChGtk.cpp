@@ -612,7 +612,7 @@ void ChHostSkin()
 	bool bold = false;
 	bool italic = false;
 
-	const char *font_name = GtkStyleString("gtk-font-name");
+	String font_name = GtkStyleString("gtk-font-name");
 	int xdpi = Nvl(GtkStyleInt("gtk-xft-dpi"), 72 * 1024);
 
 	gtk_antialias = Nvl(GtkStyleInt("gtk-xft-antialias"), -1);

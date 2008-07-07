@@ -143,6 +143,7 @@ struct WorkspaceWork {
 	ArrayMap<String, Backup> backup;
 
 	bool         organizer;
+	bool         showtime;
 
 	virtual void   PackageCursor();
 	virtual void   FileCursor();
@@ -181,6 +182,7 @@ struct WorkspaceWork {
 	void LoadActualPackage();
 	void SaveLoadPackage();
 	void SaveLoadPackageNS();
+	void TouchFile(const String& path);
 
 	void MoveFile(int d);
 	void Move(Vector<String>& v, FileList& ta, int d);

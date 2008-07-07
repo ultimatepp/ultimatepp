@@ -409,7 +409,7 @@ struct AssistEditor : CodeEditor {
 	String         IdBack(int& qq);
 
 	void           SwapSContext(Parser& p);
-	
+
 	void           CreateIndex();
 
 	void           SyncIndex();
@@ -420,13 +420,16 @@ struct AssistEditor : CodeEditor {
 	bool           IndexKey(dword key);
 	bool           IsIndex();
 	void           ShowIndex(bool b);
-	
+
 	void           SerializeIndex(Stream& s);
 
 	typedef AssistEditor CLASSNAME;
 
 	AssistEditor();
 };
+
+void DirSel(EditField& f, FrameRight<Button>& b);
+bool CopyFolder(const char *dst, const char *src, Progress *pi);
 
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext {
 public:
@@ -702,6 +705,10 @@ public:
 
 	int             state_icon;
 
+	String        export_name;
+	String        export_outdir;
+	bool          export_usedonly;
+
 // ------------------------------------
 
 	void      BeepMuteExclamation() { if(!mute_sounds) BeepExclamation(); }
@@ -845,7 +852,7 @@ public:
 		void  PackageClean();
 		void  RebuildAll();
 		void  CreateMakefile();
-		void  SaveMakeFile(const String& file);
+		void  SaveMakeFile(const String& file, bool exporting = false);
 		void  CleanUppOut();
 		void  SwitchHeader();
 		void  FileCompile();

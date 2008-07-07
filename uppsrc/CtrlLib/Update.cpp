@@ -1,6 +1,5 @@
 #include "CtrlLib.h"
 
-
 NAMESPACE_UPP
 
 #ifdef PLATFORM_WIN32

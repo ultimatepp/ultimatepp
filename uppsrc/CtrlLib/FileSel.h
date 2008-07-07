@@ -1,7 +1,8 @@
 Image GetDriveImage(char drive_style);
 
 void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, bool isdir, Font font,
-                  Color ink, Color extink, const WString& desc, Font descfont, bool justname);
+                  Color ink, Color extink, const WString& desc = Null, Font descfont = Null,
+                  bool justname = false, Color underline = Null);
 
 class FileList : public ColumnList, private Display {
 public:
@@ -25,6 +26,7 @@ public:
 		String desc;
 		Font   descfont;
 		Value  data;
+		Color  underline;
 
 		operator const String&() const { return name; }
 	};
@@ -69,12 +71,19 @@ public:
 	                const String& name, const Image& icon = Null,
 		            Font font = StdFont(), Color ink = SColorText(),
 	                bool isdir = false, int64 length = 0, Time time = Null, Color extink = Null,
-	                const String& desc = Null, Font descfont = Null, Value data = Null);
+	                const String& desc = Null, Font descfont = Null, Value data = Null,
+	                Color underline = Null);
+	void        Set(int ii,
+	                const String& name, const Image& icon = Null,
+		            Font font = StdFont(), Color ink = SColorText(),
+	                bool isdir = false, int64 length = 0, Time time = Null, Color extink = Null,
+	                const String& desc = Null, Font descfont = Null, Value data = Null,
+	                Color underline = Null);
 	void        Add(const String& name, const Image& icon = Null,
 		            Font font = StdFont(), Color ink = SColorText(),
 	                bool isdir = false, int64 length = 0, Time time = Null, Color extink = Null,
-	                const String& desc = Null, Font descfont = Null, Value data = Null);
-
+	                const String& desc = Null, Font descfont = Null, Value data = Null,
+	                Color underline = Null);
 	String      GetCurrentName() const;
 
 	int         Find(const char *name);

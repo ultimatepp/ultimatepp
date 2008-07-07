@@ -221,26 +221,32 @@ bool Install()
 
 #else
 
-bool CopyFolder(Progress& pi, const char *dst, const char *src)
+bool CopyFolder(const char *dst, const char *src, Progress *pi)
 {
 	if(strcmp(src, dst) == 0)
 		return true;
 	RealizeDirectory(dst);
-	pi.SetText(dst);
+	if(pi)
+		pi->SetText(dst);
 	FindFile ff(AppendFileName(src, "*"));
 	while(ff) {
-		if(pi.StepCanceled())
+		if(pi && pi->StepCanceled())
 			return false;
 		String s = AppendFileName(src, ff.GetName());
 		String d = AppendFileName(dst, ff.GetName());
 		if(ff.IsFolder())
-			if(!CopyFolder(pi, d, s))
+			if(!CopyFolder(d, s, pi))
 				return false;
 		if(ff.IsFile())
 			SaveFile(d, LoadFile(s));
 		ff.Next();
 	}
 	return true;
+}
+
+bool CopyFolder(Progress& pi, const char *dst, const char *src)
+{
+	CopyFolder(dst, src, &pi);
 }
 
 void ChkSupp(const char *s, String& dir)
@@ -261,11 +267,11 @@ String DefaultInstallFolder()
 		DefaultFolder = "upp-svn";
 	else if(ExeTitle.Find("DEV") >= 0)
 		DefaultFolder = "upp-dev";
-	else if(ExeTitle.Find("BETA") >= 0) 
+	else if(ExeTitle.Find("BETA") >= 0)
 		DefaultFolder = "upp-beta";
 	else
 		DefaultFolder = "upp";
-	
+
 	return DefaultFolder;
 
 }
@@ -329,9 +335,9 @@ bool Install()
 	Progress pi;
 	if(dlg.Run() != IDOK) return true;
 	String upp(dlg.path);
-	
+
 	SaveFile(ConfigFile("installpath"), upp);
-	
+
 	String uppsrc;
 	String pp;
 	String out = AppendFileName(upp, "out");

@@ -370,14 +370,19 @@ static String MakeIdent(const char *name)
 	return out;
 }
 
-static String MakeSourcePath(const Vector<String>& dirs, String fn, bool raw)
+static String MakeSourcePath(const Vector<String>& dirs, String fn, bool raw, bool exporting)
 {
 	fn = UnixPath(fn);
 	for(int i = 0; i < dirs.GetCount(); i++)
 	{
 		int dl = dirs[i].GetLength();
-		if(fn.GetLength() >= dl + 2 && !memcmp(fn, dirs[i], dl) && fn[dl] == '/')
-			return String().Cat() << "$(UPPDIR" << (i + 1) << ")" << AdjustMakePath(fn.GetIter(dl + 1));
+		if(fn.GetLength() >= dl + 2 && !memcmp(fn, dirs[i], dl) && fn[dl] == '/') {
+			String s;
+			if(!exporting)
+				s << "$(UPPDIR" << (i + 1) << ")";
+			s << AdjustMakePath(fn.GetIter(dl + 1));
+			return s;
+		}
 	}
 	return raw ? String() : AdjustMakePath(fn);
 }
@@ -389,7 +394,7 @@ String CppBuilder::GetMakePath(String fn) const
 
 void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 	const Vector<String>& all_uses, const Vector<String>& all_libraries,
-	const Index<String>& common_config)
+	const Index<String>& common_config, bool exporting)
 {
 	String packagepath = PackagePath(package);
 	Package pkg;
@@ -512,12 +517,12 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 			if(isc || isrc || iscpp || isicpp) {
 				String outfile;
 				outfile << makefile.outdir << AdjustMakePath(GetFileTitle(fn)) << (isrc ? "_rc" : "") << objext;
-				String srcfile = GetMakePath(MakeSourcePath(src, fn, false));
+				String srcfile = GetMakePath(MakeSourcePath(src, fn, false, exporting));
 				makefile.rules << outfile << ": " << srcfile;
 				Vector<String> dep = HdependGetDependencies(fn);
 				Sort(dep, GetLanguageInfo());
 				for(int d = 0; d < dep.GetCount(); d++) {
-					String dfn = MakeSourcePath(src, dep[d], true);
+					String dfn = MakeSourcePath(src, dep[d], true, exporting);
 					if(!IsNull(dfn))
 						makefile.rules << " \\\n\t" << GetMakePath(dfn);
 				}

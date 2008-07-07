@@ -347,6 +347,7 @@ void Ide::SetupFormat() {
 		(edt.mark_lines, mark_lines)
 		(edt.bordercolumn, bordercolumn)
 		(edt.bordercolor, bordercolor)
+		(edt.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)
 		(ide.toolbar_in_row, toolbar_in_row)
 		(ide.splash_screen, splash_screen)

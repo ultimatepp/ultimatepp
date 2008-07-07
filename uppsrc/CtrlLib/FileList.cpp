@@ -34,7 +34,7 @@ const wchar *strdirsep(const wchar *s) {
 }
 
 void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, bool isdir, Font font,
-                  Color ink, Color extink, const WString& desc, Font descfont, bool justname)
+                  Color ink, Color extink, const WString& desc, Font descfont, bool justname, Color uln)
 {
 	FontInfo fi = font.Info();
 	int extpos = (isdir ? -1 : mname.ReverseFind('.'));
@@ -47,17 +47,22 @@ void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, 
 	if(justname && slash >= 0)
 		name += slash + 1;
 	int txtcx = GetTextSize(fi, name);
+	int x0 = x;
 	if(txtcx <= wcx) {
 		w.DrawText(x, y, name, font, ink, (int)(ext - name));
 		w.DrawText(x + GetTextSize(fi, name, ext), y, ext, font, extink, (int)(mname.End() - ext));
 		if(!IsEmpty(desc))
 			DrawTextEllipsis(w, x + fi.GetHeight(), y, wcx - txtcx,
 			                 desc, "...", descfont, extink);
+		x += txtcx;
 	}
 	else {
 		int dot3 = 3 * fi['.'];
-		if(2 * dot3 > wcx)
-			w.DrawText(x, y, name, font, ink, GetTextFitCount(fi, name, wcx));
+		if(2 * dot3 > wcx) {
+			int n = GetTextFitCount(fi, name, wcx);
+			w.DrawText(x, y, name, font, ink, n);
+			x += GetTextSize(fi, name, name + n);
+		}
 		else {
 			const wchar *end = mname.End();
 			int dircx = 2 * fi['.'] + fi[DIR_SEP];
@@ -73,7 +78,8 @@ void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, 
 						w.DrawText(x, y, name, font, ink, (int)(ext - name));
 						x += GetTextSize(fi, name, ext);
 						w.DrawText(x, y, ext, font, extink, (int)(end - ext));
-						return;
+						x += GetTextSize(fi, ext, end);
+						goto end;
 					}
 					bk = strdirsep(name);
 				}
@@ -86,6 +92,7 @@ void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, 
 				w.DrawText(x, y, name, font, ink, n);
 				x += GetTextSize(fi, name, name + n);
 				w.DrawText(x, y, "...", font, SColorDisabled, 3);
+				x += dot3;
 			}
 			else {
 				wcx -= extcx;
@@ -94,9 +101,14 @@ void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, 
 				x += GetTextSize(fi, name, name + n);
 				w.DrawText(x, y, "...", font, SColorDisabled, 3);
 				w.DrawText(x + dot3, y, ext, font, extink, (int)(end - ext));
+				x += dot3 + extcx;
 			}
 		}
 	}
+end:
+	if(IsNull(uln))
+		return;
+	w.DrawRect(x0, y + fi.GetAscent() + 1, x - x0, 1, uln);
 }
 
 void FileList::Paint(Draw& w, const Rect& r, const Value& q,
@@ -114,7 +126,7 @@ void FileList::Paint(Draw& w, const Rect& r, const Value& q,
 	             r.right - x - 2, r.Height(), WString(m.name), m.isdir, m.font,
 	             dark ? SColorHighlightText : m.ink,
 	             dark ? SColorHighlightText : m.extink,
-	             WString(m.desc), m.descfont, justname);
+	             WString(m.desc), m.descfont, justname, m.underline);
 }
 
 Size FileList::GetStdSize(const Value& q) const
@@ -203,7 +215,7 @@ bool FileList::Key(dword key, int count) {
 void FileList::Insert(int ii,
                       const String& name, const Image& icon, Font font, Color ink,
 				      bool isdir, int64 length, Time time, Color extink,
-				      const String& desc, Font descfont, Value data)
+				      const String& desc, Font descfont, Value data, Color uln)
 {
 	Value v;
 	File& m = CreateRawValue<File>(v);
@@ -218,12 +230,35 @@ void FileList::Insert(int ii,
 	m.desc = desc;
 	m.descfont = descfont;
 	m.data = data;
+	m.underline = uln;
 	ColumnList::Insert(ii, v, !m.isdir);
+}
+
+void FileList::Set(int ii,
+                   const String& name, const Image& icon, Font font, Color ink,
+				   bool isdir, int64 length, Time time, Color extink,
+				   const String& desc, Font descfont, Value data, Color uln)
+{
+	Value v;
+	File& m = CreateRawValue<File>(v);
+	m.isdir = isdir;
+	m.icon = icon;
+	m.name = name;
+	m.font = font;
+	m.ink = ink;
+	m.length = length;
+	m.time = time;
+	m.extink = IsNull(extink) ? ink : extink;
+	m.desc = desc;
+	m.descfont = descfont;
+	m.data = data;
+	m.underline = uln;
+	ColumnList::Set(ii, v, !m.isdir);
 }
 
 void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
 				   bool isdir, int64 length, Time time, Color extink,
-				   const String& desc, Font descfont, Value data)
+				   const String& desc, Font descfont, Value data, Color uln)
 {
 	Value v;
 	File& m = CreateRawValue<File>(v);
@@ -238,6 +273,7 @@ void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
 	m.desc = desc;
 	m.descfont = descfont;
 	m.data = data;
+	m.underline = uln;
 	ColumnList::Add(v, !m.isdir);
 }
 
