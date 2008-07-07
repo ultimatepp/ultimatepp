@@ -631,6 +631,7 @@ void Ide::AddHistory()
 	Bookmark& b = history.Top();
 	b.file = editfile;
 	b.pos = editor.GetEditPos();
+	TouchFile(editfile);
 }
 
 void Ide::HistoryBk()
@@ -657,67 +658,9 @@ void Ide::Display() {
 	display.SetLabel(Format("Ln %d, Col %d", p.y + 1, p.x + 1));
 }
 
-void Ide::ExportProject() {
-	FlushFile();
-	FileSel fsel;
-	if(!fsel.ExecuteSelectDir("Export folder"))
-		return;
-	String outpath = ~fsel;
-	::Workspace wspc;
-	wspc.Scan(main);
-	console.Clear();
-	int p;
-	int total = wspc.GetCount();
-	for(p = 0; p < wspc.GetCount(); p++)
-		total += wspc.GetPackage(p).file.GetCount();
-	Progress progress("Exporting file %d", total);
-	for(p = 0; p < wspc.GetCount(); p++)
-	{
-		if(progress.StepCanceled())
-		{
-			console << "(canceled)\n";
-			break;
-		}
-		String packname = NativePath(wspc[p]);
-		String packupp = AppendFileName(packname, AppendExt(GetFileNamePos(packname), ".upp"));
-		const Package& pkg = wspc.GetPackage(p);
-		String packout = AppendFileName(outpath, packupp);
-		console << NFormat("%s, %d file(s)\n", packname, pkg.file.GetCount());
-		RealizePath(packout);
-		if(!pkg.Save(packout))
-		{
-			console << NFormat("Error saving UPP file '%s' into '%s'\n", packname, packout);
-			return;
-		}
-		for(int f = 0; f < pkg.file.GetCount(); f++)
-		{
-			if(progress.StepCanceled())
-			{
-				console << "(canceled)\n";
-				return;
-			}
-			if(!pkg.file[f].separator)
-			{
-				String pkgfile = AppendFileName(packname, pkg.file[f]);
-				String srcfile = SourcePath(packname, pkg.file[f]);
-				String dstfile = AppendFileName(outpath, pkgfile);
-				RealizePath(dstfile);
-				if(!FileExists(srcfile))
-					console << NFormat("%s: file not found\n", srcfile);
-				else if(!FileCopy(srcfile, dstfile))
-				{
-					console << NFormat("%s: error saving '%s'\n", srcfile, dstfile);
-					return;
-				}
-			}
-		}
-	}
-	console << "Done\n";
-}
-
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
-	int version = 7;
+	int version = 8;
 	s / version;
 	s.Magic(0x12345);
 	if(s.IsStoring()) {
@@ -776,6 +719,10 @@ void Ide::SerializeWorkspace(Stream& s) {
 			s % n;
 			s / v;
 		}
+	}
+	if(version >= 8) {
+		s % export_usedonly;
+		s % export_name;
 	}
 	SerializeFindInFiles(s);
 	String om;

@@ -304,11 +304,12 @@ void Draw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color co
 	XChangeGC(Xdisplay, GetGC(), GCForeground, &gcv);
 	Point centre = rc.CenterPoint();
 	int angle1 = fround(360 * 64 / (2 * M_PI) *
-	                    atan2(start.x - centre.x, centre.y - start.y));
+	                    atan2(centre.y - start.y, start.x - centre.x));
 	int angle2 = fround(360 * 64 / (2 * M_PI) *
-	                    atan2(end.x - centre.x, centre.y - end.y));
+	                    atan2(centre.y - end.y, end.x - centre.x));
 	if(angle2 <= angle1)
 		angle2 += 360 * 64;
+	angle2 -= angle1;
 	XDrawArc(Xdisplay, GetDrawable(), GetGC(), rc.left + offset.x, rc.top + offset.y,
 		rc.Width(), rc.Height(), angle1, angle2);
 	XChangeGC(Xdisplay, GetGC(), GCForeground, &gcv_old);

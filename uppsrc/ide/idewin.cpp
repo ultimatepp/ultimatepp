@@ -80,7 +80,7 @@ void Ide::ConsolePaste()
 }
 
 void Ide::Serialize(Stream& s) {
-	int version = 9;
+	int version = 11;
 	s.Magic(0x12346);
 	s / version;
 	s % main;
@@ -179,6 +179,10 @@ void Ide::Serialize(Stream& s) {
 		s % LinuxHostConsole;
 	if(version >= 9)
 		editor.SerializeIndex(s);
+	if(version >= 10)
+		s % showtime;
+	if(version >= 11)
+		s % export_outdir;
 	s.Magic();
 }
 
@@ -604,6 +608,11 @@ Ide::Ide()
 	histi = 0;
 
 	doc_serial = -1;
+
+	showtime = true;
+
+	export_outdir = GetHomeDirFile("export++");
+	export_usedonly = true;
 }
 
 Ide::~Ide()

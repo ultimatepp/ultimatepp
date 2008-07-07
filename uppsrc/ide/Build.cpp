@@ -748,7 +748,7 @@ void Ide::CreateMakefile()
 	SaveMakeFile(~mfout);
 }
 
-void Ide::SaveMakeFile(const String& fn)
+void Ide::SaveMakeFile(const String& fn, bool exporting)
 {
 	const Workspace& wspc = IdeWorkspace();
 
@@ -762,7 +762,7 @@ void Ide::SaveMakeFile(const String& fn)
 	String makefile;
 
 	Vector<String> uppdirs = GetUppDirs();
-	String uppout = host->GetHostPath(GetVar("OUTPUT"));
+	String uppout = exporting ? host->GetHostPath(GetVar("OUTPUT")) : "_out/";
 	String inclist;
 
 	Index<String> allconfig = PackageConfig(wspc, 0, bm, mainconfigparam, *host, *b);
@@ -775,17 +775,20 @@ void Ide::SaveMakeFile(const String& fn)
 				allconfig.Remove(a);
 	}
 
-	for(int i = 0; i < uppdirs.GetCount(); i++) {
-		String srcdir = GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppdirs[i], ""))), win32);
-		makefile << "UPPDIR" << (i + 1) << " = " << srcdir << "\n";
-		inclist << " -I$(UPPDIR" << (i + 1) << ")";
-	}
+	if(!exporting)
+		for(int i = 0; i < uppdirs.GetCount(); i++) {
+			String srcdir = GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppdirs[i], ""))), win32);
+			makefile << "UPPDIR" << (i + 1) << " = " << srcdir << "\n";
+			inclist << " -I$(UPPDIR" << (i + 1) << ")";
+		}
+	else
+		inclist << "-I./";
 	Vector<String> includes = SplitDirs(bm.Get("INCLUDE",""));
 	for(int i = 0; i < includes.GetCount(); i++)
 		inclist << " -I" << includes[i];
 
 	makefile << "\n"
-		"UPPOUT = " << GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32) << "\n"
+		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
 		"CINC = " << inclist << "\n"
 		"Macro = ";
 
@@ -800,7 +803,9 @@ void Ide::SaveMakeFile(const String& fn)
 		b->version = tm.version;
 		b->method = method;
 		MakeFile mf;
-		b->AddMakeFile(mf, wspc[i], GetAllUses(wspc, i), GetAllLibraries(wspc, i, bm, mainconfigparam, *host, *b), allconfig);
+		b->AddMakeFile(mf, wspc[i], GetAllUses(wspc, i),
+		               GetAllLibraries(wspc, i, bm, mainconfigparam, *host, *b), allconfig,
+		               exporting);
 		if(!i) {
 			String tdir = mf.outdir;
 			String trg;
@@ -812,6 +817,8 @@ void Ide::SaveMakeFile(const String& fn)
 					trg.Insert(0, "$(OutDir)");
 			}
 			output = Nvl(trg, mf.output);
+			if(exporting)
+				output = "_out/" + GetFileName(mf.output);
 			install << "\n"
 				"OutDir = " << tdir << "\n"
 				"OutFile = " << output << "\n"
@@ -837,10 +844,12 @@ void Ide::SaveMakeFile(const String& fn)
 		"$(OutFile): " << linkdep << "\n\t" << linkfiles << linkfileend << "\n"
 		<< rules;
 
-	if(::SaveFile(fn, makefile))
-		PutConsole(NFormat("%s(1): makefile generation complete", fn));
-	else
-		PutConsole(NFormat("%s: error writing makefile", fn));
+	bool sv = ::SaveFile(fn, makefile);
+	if(!exporting)
+		if(sv)
+			PutConsole(NFormat("%s(1): makefile generation complete", fn));
+		else
+			PutConsole(NFormat("%s: error writing makefile", fn));
 
 	EndBuilding(true);
 }

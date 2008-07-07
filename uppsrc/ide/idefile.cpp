@@ -232,7 +232,10 @@ void Ide::SaveFile(bool always)
 {
 	if(designer) {
 		String fn = designer->GetFileName();
+		Time tm = FileGetTime(fn);
 		designer->Save();
+		if(tm != FileGetTime(fn))
+			TouchFile(fn);
 		if(IsProjectFile(fn) && ToUpper(GetFileExt(fn)) == ".LAY")
 			BrowserBaseScanLay(fn);
 		return;
@@ -250,6 +253,7 @@ void Ide::SaveFile(bool always)
 	if(!editor.IsDirty() && !always)
 		return;
 
+	TouchFile(editfile);
 	String tmpfile = editfile + ".$tmp", outfile = editfile;
 	{
 		FileOut out(tmpfile);

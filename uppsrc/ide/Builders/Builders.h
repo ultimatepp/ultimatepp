@@ -57,7 +57,7 @@ struct CppBuilder : Builder {
 
 	virtual void           AddMakeFile(MakeFile& makefile, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,
-		const Index<String>& common_config);
+		const Index<String>& common_config, bool exporting);
 
 	CppBuilder() : wspc(GetIdeWorkspace()) {}
 };
