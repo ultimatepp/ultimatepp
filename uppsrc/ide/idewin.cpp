@@ -610,7 +610,7 @@ Ide::Ide()
 	doc_serial = -1;
 
 	showtime = true;
-
+	
 	export_outdir = GetHomeDirFile("export++");
 	export_usedonly = true;
 }

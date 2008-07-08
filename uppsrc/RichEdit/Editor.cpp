@@ -309,7 +309,7 @@ int RichEdit::GetX(int x)
 
 int RichEdit::GetSnapX(int x)
 {
-	return (GetX(x) + GetTextRect().left) / 32 * 32;
+	return GetX(x) / 32 * 32;
 }
 
 void RichEdit::GetPagePoint(Point p, PageY& py, int& x)
