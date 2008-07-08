@@ -409,7 +409,7 @@ struct AssistEditor : CodeEditor {
 	String         IdBack(int& qq);
 
 	void           SwapSContext(Parser& p);
-
+	
 	void           CreateIndex();
 
 	void           SyncIndex();
@@ -420,7 +420,7 @@ struct AssistEditor : CodeEditor {
 	bool           IndexKey(dword key);
 	bool           IsIndex();
 	void           ShowIndex(bool b);
-
+	
 	void           SerializeIndex(Stream& s);
 
 	typedef AssistEditor CLASSNAME;
@@ -704,7 +704,7 @@ public:
 	TopicCtrl     doc;
 
 	int             state_icon;
-
+	
 	String        export_name;
 	String        export_outdir;
 	bool          export_usedonly;

@@ -111,7 +111,7 @@ int Premultiply(RGBA *t, const RGBA *s, int len)
 		if(s->a != 255) {
 			while(s < e) {
 				byte a = s->a;
-				if(s->a != 0 || s->a != 255) {
+				if(s->a != 0 && s->a != 255) {
 					while(s < e) {
 						int alpha = s->a + (s->a >> 7);
 						t->r = alpha * (s->r) >> 8;
@@ -155,7 +155,7 @@ int Unmultiply(RGBA *t, const RGBA *s, int len)
 		if(s->a != 255) {
 			while(s < e) {
 				byte a = s->a;
-				if(s->a != 0 || s->a != 255) {
+				if(s->a != 0 && s->a != 255) {
 					while(s < e) {
 						int alpha = um_table__[s->a];
 						t->r = (alpha * s->r) >> 8;

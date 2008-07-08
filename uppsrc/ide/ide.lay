@@ -542,3 +542,4 @@ LAYOUT(ExportLayout, 400, 116)
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(260, 64).TopPosZ(84, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(328, 64).TopPosZ(84, 24))
 END_LAYOUT
+

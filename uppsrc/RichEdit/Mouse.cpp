@@ -44,7 +44,7 @@ void RichEdit::SetObjectYDelta(int pt)
 void RichEdit::SetObjectPos(int pos)
 {
 	Rect r = GetObjectRect(cursor);
-	Rect rr = r.Offseted(16, -sb);
+	Rect rr = r.Offseted(GetTextRect().left, -sb);
 	objectrect = GetObjectRect(pos);
 	objectpos = cursor;
 	PageRect pr = text.GetCaret(cursor, pagesz);
@@ -95,7 +95,7 @@ void RichEdit::LeftDown(Point p, dword flags)
 		Size sz = obj.GetSize();
 		sz.cx = int(zoom * sz.cx + 0.5);
 		sz.cy = int(zoom * sz.cy + 0.5);
-		sz = tracker.Track(Rect(objectrect.Offseted(16, -sb).TopLeft(), sz), tx, ty).Size();
+		sz = tracker.Track(Rect(objectrect.Offseted(GetTextRect().left, -sb).TopLeft(), sz), tx, ty).Size();
 		sz.cx = int(sz.cx / zoom + 0.5);
 		sz.cy = int(sz.cy / zoom + 0.5);
 		obj.SetSize(sz);
@@ -111,7 +111,7 @@ void RichEdit::LeftDown(Point p, dword flags)
 			Move(c, flags & K_SHIFT);
 			mpos = c;
 			SetCapture();
-			if(cursorp.object && GetObjectRect(cursor).Offseted(16, -sb).Contains(p))
+			if(cursorp.object && GetObjectRect(cursor).Offseted(GetTextRect().left, -sb).Contains(p))
 				SetObjectPos(cursor);
 		}
 	}
@@ -173,7 +173,7 @@ void RichEdit::MouseMove(Point p, dword flags)
 			if(py > text.GetHeight(pagesz))
 				c = GetLength() + 1;
 			else
-				c = GetNearestPos((p.x - 16) / GetZoom(), py);
+				c = GetNearestPos(GetX(p.x), py);
 			if(c != mpos) {
 				mpos = -1;
 				Move(c, true);
