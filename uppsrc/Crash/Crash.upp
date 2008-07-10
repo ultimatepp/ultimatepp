@@ -9,9 +9,9 @@ file
 	crash.iml,
 	crash.rc,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
 
 mainconfig
 	"" = "GUI";

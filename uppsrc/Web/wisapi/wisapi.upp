@@ -12,9 +12,9 @@ file
 	wisapi.cpp,
 	wisapi.def,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
 
 mainconfig
 	"" = "DLL MT";

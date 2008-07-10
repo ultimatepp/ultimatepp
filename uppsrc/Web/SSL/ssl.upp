@@ -1,0 +1,37 @@
+uses
+	Web;
+
+acceptflags
+	NOSSL;
+
+library(WIN32 !NOSSL !SHARED) "out32\\ssleay32 out32\\libeay32";
+
+library(WIN32) "gdi32";
+
+library(LINUX !NOSSL) "crypto ssl";
+
+library(WIN32 !NOSSL SHARED) "out32dll\\ssleay32.lib out32dll\\libeay32.lib ";
+
+link(WIN32 DEBUG MSC SO) "/nodefaultlib:libc";
+
+link(WIN32 MT MSC SO) "/nodefaultlib:libc";
+
+link(WIN32 DEBUG MSC71 SO) "/nodefaultlib:libc";
+
+link(WIN32 MT MSC71 SO) "/nodefaultib:libc";
+
+link(WIN32 DEBUG MSC) "/nodefaultlib:libc";
+
+link(WIN32 MT MSC) "/nodefaultlib:libc";
+
+link(WIN32 DEBUG MSC71) "/nodefaultlib:libc";
+
+link(WIN32 MT MSC71) "/nodefaultlib:libc";
+
+file
+	WebSSL.h,
+	util.cpp,
+	Info readonly separator,
+	Copying,
+	Copying-plain,
+	Authors;

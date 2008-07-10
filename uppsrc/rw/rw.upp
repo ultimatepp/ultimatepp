@@ -20,9 +20,9 @@ file
 	rw.iml,
 	rw.rc,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
 
 mainconfig
 	"" = "";

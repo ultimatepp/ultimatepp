@@ -22,6 +22,6 @@ file
 	hrr.h,
 	hrr.cpp,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;

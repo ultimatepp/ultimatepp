@@ -818,7 +818,7 @@ void Ide::SaveMakeFile(const String& fn, bool exporting)
 			}
 			output = Nvl(trg, mf.output);
 			if(exporting)
-				output = "_out/" + GetFileName(mf.output);
+				output = wspc[i] + ".out";
 			install << "\n"
 				"OutDir = " << tdir << "\n"
 				"OutFile = " << output << "\n"

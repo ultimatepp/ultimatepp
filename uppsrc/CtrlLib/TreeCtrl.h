@@ -297,6 +297,7 @@ int Copy(TreeCtrl& dst, int dstid, int i, const TreeCtrl& src, int srcid);
 class OptionTree : public TreeCtrl {
 	Vector<Option *> option;
 	Array<Option>    aux;
+	bool             manualmode;
 
 	void SetOption(int i);
 	void SetChildren(int id, bool b);
@@ -322,6 +323,8 @@ public:
 	void Clear();
 
 	typedef OptionTree CLASSNAME;
+
+	OptionTree& ManualMode() 						{ manualmode = true; return *this; }
 
 	OptionTree();
 	~OptionTree();

@@ -20,11 +20,12 @@ file
 	Oci8.dli,
 	contest.cpp,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
 
 mainconfig
 	"Console Test" = "",
 	"Console Test (remote)" = "",
 	"Console Test Remote Shared" = "SHARED";
+

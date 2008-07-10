@@ -25,7 +25,8 @@ file
 	sch_schema.h,
 	util_td.cpp,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS,
+	Copying,
+	Copying-plain,
+	Authors,
 	src.tpp;
+

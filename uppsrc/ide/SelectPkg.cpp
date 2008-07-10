@@ -437,11 +437,23 @@ void FixName(const String& dir, const String& name, String& case_fixed)
 	if(IsFullPath(name))
 		return;
 	String rp = AppendFileName(dir, name);
-	FindFile ff(rp);
-	if(!ff || ff.GetName() == GetFileName(name))
-		return;
-	MoveFile(rp, rp);
-	case_fixed << '&' << DeQtf(rp);
+	static Vector<String> fn;
+	static String fndir;
+	if(fndir != dir) {
+		fn.Clear();
+		FindFile ff(AppendFileName(dir, "*.*"));
+		while(ff) {
+			fn.Add(ff.GetName());
+			ff.Next();
+		}
+	}
+	String h = ToUpper(name);
+	for(int i = 0; i < fn.GetCount(); i++)
+		if(ToUpper(fn[i]) == ToUpper(name) && fn[i] != name) {
+			MoveFile(AppendFileName(dir, fn[i]), rp + ".$$$");
+			MoveFile(rp + ".$$$", rp);
+			case_fixed << '&' << DeQtf(rp);
+		}
 }
 
 int DirSep(int c)
