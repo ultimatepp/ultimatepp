@@ -81,9 +81,9 @@ file
 	Info readonly separator,
 	src.tpp,
 	srcdoc.tpp,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
 
 mainconfig
 	"Debug" = "MSC GUI DEBUG WIN32";

@@ -35,7 +35,7 @@ void ChHostSkin()
 
 #define DLLFILENAME "uxtheme.dll"
 #define DLIMODULE   XpTheme
-#define DLIHEADER   <CtrlLib/XpTheme.dli>
+#define DLIHEADER   <CtrlLib/XPTheme.dli>
 #define DLLCALL     STDAPICALLTYPE
 #define WIDGET(x)
 #include <Core/dli.h>

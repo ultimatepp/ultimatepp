@@ -4,6 +4,10 @@ void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool al
 {
 	String dst = NativePath(_dst);
 	String src = NativePath(_src);
+	DUMP(_dst);
+	DUMP(dst);
+	DUMP(src);
+	DUMP(_src);
 	if(dst == src)
 		return;
 	FindFile ff(AppendFileName(src, "*"));
@@ -11,6 +15,8 @@ void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool al
 	while(ff) {
 		String s = AppendFileName(src, ff.GetName());
 		String d = AppendFileName(dst, ff.GetName());
+		DUMP(s);
+		DUMP(d);
 		if(ff.IsFolder())
 			CopyFolder(d, s, used, all);
 		else
@@ -19,6 +25,7 @@ void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool al
 				RealizeDirectory(dst);
 				realize = false;
 			}
+			DUMP(d);
 			SaveFile(d, LoadFile(s));
 			SetFileTime(d, ff.GetLastWriteTime());
 		}
@@ -73,7 +80,7 @@ void Ide::ExportProject() {
 			return;
 		DeleteFolderDeep(ep);
 	}
-
+	
 	Progress pi("Exporting project");
 	pi.SetTotal(wspc.GetCount());
 	for(int i = 0; i < wspc.GetCount(); i++) {

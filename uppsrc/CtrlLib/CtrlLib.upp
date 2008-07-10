@@ -118,6 +118,7 @@ file
 	src.tpp,
 	srcdoc.tpp,
 	appdoc.tpp,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
+

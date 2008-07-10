@@ -2,6 +2,6 @@ file
 	PaintGL.h,
 	PaintGL.cpp,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;

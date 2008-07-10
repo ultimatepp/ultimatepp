@@ -136,9 +136,9 @@ file
 	src.tpp,
 	srcdoc.tpp,
 	srcimp.tpp,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
 
 mainconfig
 	"Normal" = "",

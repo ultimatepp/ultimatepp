@@ -11,9 +11,9 @@ file
 	x86disas.cpp,
 	main.cpp,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
 
 mainconfig
 	"" = "";

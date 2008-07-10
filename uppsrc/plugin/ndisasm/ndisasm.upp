@@ -20,6 +20,6 @@ file
 	lib\sync.c tabsize 8,
 	lib\sync.h,
 	lib\version.h,
-	lib\AUTHORS,
-	lib\COPYING;
+	lib\Authors,
+	lib\Copying;
 

@@ -1572,6 +1572,10 @@ void OptionTree::SetOption(int id)
 {
 	Option *opt = option[id];
 	ASSERT(opt);
+	if(manualmode) {
+		WhenOption();
+		return;
+	}
 	SetChildren(id, opt->Get());
 	for(;;) {
 		id = GetParent(id);
@@ -1606,7 +1610,7 @@ void OptionTree::SetOption(int id)
 	WhenOption();
 }
 
-OptionTree::OptionTree() { aux.Add(); }
+OptionTree::OptionTree() { manualmode = false; aux.Add(); }
 OptionTree::~OptionTree() {}
 
 int Copy(TreeCtrl& dst, int did, int i, const TreeCtrl& src, int id)

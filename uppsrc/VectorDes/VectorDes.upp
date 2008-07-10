@@ -14,9 +14,9 @@ file
 	VectorDes.iml,
 	test.vec highlight cpp,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
 
 mainconfig
 	"" = "GUI";

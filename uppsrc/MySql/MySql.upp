@@ -35,6 +35,7 @@ file
 	MySqlSchema.h,
 	MySql.cpp,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
+

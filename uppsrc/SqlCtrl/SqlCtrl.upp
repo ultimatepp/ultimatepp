@@ -20,6 +20,6 @@ file
 	SqlCtrl.iml,
 	SqlCtrl.usc,
 	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	Copying,
+	Copying-plain,
+	Authors;
