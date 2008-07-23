@@ -91,8 +91,8 @@ public:
 
 	T&       AddHead()                     { T *q = new T; bv.AddHead(q); return *q; }
 	T&       AddTail()                     { T *q = new T; bv.AddTail(q); return *q; }
-	void     AddHead(const T& x)           { bv.AddHead(new T(x)); }
-	void     AddTail(const T& x)           { bv.AddTail(new T(x)); }
+	void     AddHead(const T& x)           { bv.AddHead(DeepCopyNew(x)); }
+	void     AddTail(const T& x)           { bv.AddTail(DeepCopyNew(x)); }
 	void     AddHeadPick(pick_ T& x)       { bv.AddHead(new T(x)); }
 	void     AddTailPick(pick_ T& x)       { bv.AddTail(new T(x)); }
 	T&       AddHead(T *newt)              { bv.AddHead(newt); return *newt; }

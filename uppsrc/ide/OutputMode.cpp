@@ -16,7 +16,7 @@ void TargetMode::Serialize(Stream& s)
 	 	s % dummy;
 	}
 	if(ver < 1) {
-		String dummy; //!! holy shit
+		String dummy;
 		s % dummy;
 	}
 	else
@@ -197,7 +197,7 @@ void OutMode::Preset()
 		debug.linkmode = atoi(map.Get("DEBUG_LINKMODE", "0"));
 		debug.debug = atoi(map.Get("DEBUG_INFO", "0"));
 		debug.blitz = MapFlag(map, "DEBUG_BLITZ");
-		release.linkmode = MapFlag(map, "RELEASE_LINKMODE");
+		release.linkmode = atoi(map.Get("RELEASE_LINKMODE", "0"));
 		release.debug <<= 0;
 		release.blitz = MapFlag(map, "RELEASE_BLITZ");
 	}
@@ -302,7 +302,7 @@ void Ide::SetupDefaultMethod()
 		debug.linkmode = atoi(map.Get("DEBUG_LINKMODE", "0"));
 		debug.def.debug = atoi(map.Get("DEBUG_INFO", "0"));
 		debug.def.blitz = MapFlag(map, "DEBUG_BLITZ");
-		release.linkmode = atoi(map.Get("RELEASE_SO", "0"));
+		release.linkmode = atoi(map.Get("RELEASE_LINKMODE", "0"));
 		release.def.debug <<= 0;
 		release.def.blitz = MapFlag(map, "RELEASE_BLITZ");
 	}

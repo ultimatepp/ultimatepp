@@ -1557,6 +1557,15 @@ int OptionTree::Insert(int parentid, int i, const char *text)
 	return Insert(parentid, i, aux.Add().NoNotNull(), text);
 }
 
+void OptionTree::SetLabel(int id, const char *text)
+{
+	Node n = GetNode(id);
+	Option *o = dynamic_cast<Option *>(~n.ctrl);
+	if(o)
+		o->SetLabel(text);
+	SetNode(id, n);
+}
+
 void OptionTree::SetChildren(int id, bool b)
 {
 	for(int i = 0; i < GetChildCount(id); i++) {

@@ -147,12 +147,15 @@ void WorkspaceWork::LoadActualPackage()
 			if(showtime) {
 				FindFile ff(SourcePath(GetActivePackage(), f));
 				if(ff) {
-					int64 t = tm - Time(ff.GetLastWriteTime());
-					if(t < 24 * 3600)
-						uln = SColorMark;
-					else
-					if(t < 32 * 24 * 3600)
-						uln = SColorDisabled;
+					Time ftm = Time(ff.GetLastWriteTime());
+					if(ftm > InstallTime) {
+						int64 t = tm - ftm;
+						if(t < 24 * 3600)
+							uln = SColorMark;
+						else
+						if(t < 32 * 24 * 3600)
+							uln = SColorDisabled;
+					}
 				}
 			}
 			filelist.Add(f, IdeFileImage(f, f.optimize_speed), ListFont(), SColorText, false, 0,
@@ -671,6 +674,7 @@ WorkspaceWork::WorkspaceWork()
 	package.BackPaintHint();
 	filelist.BackPaintHint();
 	showtime = false;
+	InstallTime = FileGetTime(ConfigFile("version"));
 }
 
 void WorkspaceWork::SerializeClosed(Stream& s)

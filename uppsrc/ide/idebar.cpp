@@ -303,7 +303,7 @@ void Ide::Project(Bar& menu) {
 	if(OldLang())
 		menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
 	FilePropertiesMenu(menu);
-	menu.Separator();
+	menu.MenuSeparator();
 	menu.Add("Export project..", THISBACK(ExportProject));
 }
 
