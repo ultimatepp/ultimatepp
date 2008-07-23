@@ -327,7 +327,7 @@ void MultiButton::Paint(Draw& w)
 		}
 		else {
 			w.Clip(x, 0, cx, sz.cy);
-			ChPaint(w, sz, style->look[Frame() ? mst : st/* == CTRL_DISABLED ? CTRL_NORMAL : st*/]);
+			ChPaint(w, sz, style->look[Frame() ? mst : st]);
 			if(IsNull(v) || !Frame()) {
 				if((!IsTrivial() || style->trivialsep) && IsEnabled()) {
 					if(b.left) {

@@ -318,6 +318,8 @@ public:
 	int  Add(int parent, const Image& img, const char *text);
 	int  Add(int parent, const char *text);
 
+	void SetLabel(int id, const char *text);
+
 	int  Get(int id) const                          { return option[id]->Get(); }
 
 	void Clear();

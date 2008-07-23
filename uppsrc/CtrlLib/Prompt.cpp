@@ -97,8 +97,8 @@ int Prompt(Callback1<const String&> WhenLink,
 	bx = (cx - bx) / 2;
 	if(SwapOKCancel()) {
 		sAdd(dlg, fcy, bcy, bx, bcx, gap, b2, button2, im2);
-		sAdd(dlg, fcy, bcy, bx, bcx, gap, b3, button3, im1);
-		sAdd(dlg, fcy, bcy, bx, bcx, gap, b1, button1, im3);
+		sAdd(dlg, fcy, bcy, bx, bcx, gap, b3, button3, im3);
+		sAdd(dlg, fcy, bcy, bx, bcx, gap, b1, button1, im1);
 	}
 	else {
 		sAdd(dlg, fcy, bcy, bx, bcx, gap, b1, button1, im1);

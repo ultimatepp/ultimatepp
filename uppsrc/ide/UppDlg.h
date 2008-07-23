@@ -112,6 +112,8 @@ struct DependsDlg : public WithUppOptPushDlg<TopWindow> {
 struct WorkspaceWork {
 	static    Font ListFont();
 
+	Time      InstallTime;
+
 	FileList    package;
 	FileList    filelist;
 	Vector<int> fileindex;

@@ -729,16 +729,13 @@ String GetLastErrorMessage() {
 
 #ifdef PLATFORM_POSIX
 
-String GetErrorMessage(int errorno) {
-	enum { MAX_ERROR_LEN = 1000000 };
-	int len = 1024;
-	Buffer<char> buffer(len);
-	while(strerror_r(errorno, buffer, len))
-		if(errno == ERANGE && len < MAX_ERROR_LEN)
-			buffer.Alloc(len <<= 1);
-		else
-			return NFormat("strerror_r(%d, %d) -> errno = %d", errorno, len, errno);
-	return FromSystemCharset(~buffer);
+String GetErrorMessage(int errorno)
+{
+	// Linux strerror_r declaration might be different than posix
+	// hence we are using strerror with mutex... (cxl 2008-07-17)
+	static StaticMutex m;
+	Mutex::Lock __(m);
+	return FromSystemCharset(strerror(errorno));
 }
 
 String GetLastErrorMessage() {

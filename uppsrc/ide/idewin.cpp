@@ -610,7 +610,7 @@ Ide::Ide()
 	doc_serial = -1;
 
 	showtime = true;
-	
+
 	export_outdir = GetHomeDirFile("export++");
 	export_usedonly = true;
 }
@@ -705,9 +705,11 @@ void AppMain___()
 	if(!CheckLicense())
 		return;
 	firstinstall = !IsNull(LoadFile(GetExeDirFile("install.upp")));
-	if(firstinstall)
+	if(firstinstall) {
 		if(!Install())
 			return;
+		SaveFile(ConfigFile("version"), IDE_VERSION);
+	}
 #endif
 
 	for(int i = 0; i < arg.GetCount(); i++) {
