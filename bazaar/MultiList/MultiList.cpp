@@ -499,10 +499,25 @@ void MultiList::SetSb()
 		int rcnt = GetCount()/ncl;
 		rcnt += (GetCount() % ncl) ? 1 : 0;
 		sb.SetTotal(rcnt*cy);
-		sb.SetPage((GetSize().cy-cy/2)/cy*cy + cy/4);	
-		sb.SetLine(cy/4);	
+		sb.SetPage((GetSize().cy/cy)*cy);	
+		sb.SetLine(cy);	
 		break;
 		}
+	}
+}
+
+void MultiList::ScrollInto(int pos)
+{
+	switch (mode) {
+	case MODE_ROWS:
+		sb.ScrollInto((pos / ncl) * cy, max(0, sb.GetLine() - (GetSize().cy - sb.GetPage())));
+		return;
+	case MODE_COLUMNS:
+		sb.ScrollInto(pos / max(1, GetColumnItems()));
+		return;
+	case MODE_LIST:
+		sb.ScrollInto(pos);
+		return;
 	}
 }
 
@@ -595,21 +610,6 @@ void MultiList::SetSbPos(int y)
 {
 	SetSb();
 	sb = minmax(y, 0, GetCount() - GetPageItems());
-}
-
-void MultiList::ScrollInto(int pos)
-{
-	switch (mode) {
-	case MODE_ROWS:
-		sb.ScrollInto(pos / ncl * cy + sb.GetLine());
-		return;
-	case MODE_COLUMNS:
-		sb.ScrollInto(pos / max(1, GetColumnItems()));
-		return;
-	case MODE_LIST:
-		sb.ScrollInto(pos);
-		return;
-	}
 }
 
 void MultiList::KillCursor()
@@ -1010,8 +1010,21 @@ void MultiList::InsertDrop(int ii, PasteClip& d)
 
 void MultiList::Serialize(Stream& s) {
 	int version = 0;
-	s / version;
-	s / ncl;
+	int cnt;
+	s.Magic();
+	s / version / ncl / cnt;
+	if (s.IsLoading())
+		item.SetCount(cnt);
+	for (int i = 0; i < item.GetCount(); i++) {
+		Item &q = item[i];
+		s % q.key % q.value % q.canselect;
+		if (s.IsLoading()) {
+			q.display = NULL;
+			q.sel = false;
+		}
+	}
+	s.Magic();
+	
 	Refresh();
 	SyncInfo();
 }
