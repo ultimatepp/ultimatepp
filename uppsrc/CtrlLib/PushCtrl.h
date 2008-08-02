@@ -39,10 +39,13 @@ protected:
 public:
 	Pusher&  SetFont(Font fnt);
 	Pusher&  SetLabel(const char *text);
+	
+	Font     GetFont() const                                { return font; }
+	String   GetLabel() const                               { return label; }
 
 	void     PseudoPush();
 
-	int GetVisualState() const;
+	int      GetVisualState() const;
 
 	Callback WhenPush;
 	Callback WhenRepeat;

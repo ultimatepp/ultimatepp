@@ -977,7 +977,7 @@ void Ctrl::SyncNativeWindows(void)
 			Rect r = xw.ctrl->GetRectInParentWindow();
 			if( (x != r.left || y != r.top) && ((int)width == r.Width() && (int)height == r.Height()))
 				XMoveWindow(Xdisplay, w, r.left, r.top);
-			else if( (x == r.left || y == r.top) && ((int)width != r.Width() || (int)height != r.Height()))
+			else if( (x == r.left && y == r.top) && ((int)width != r.Width() || (int)height != r.Height()))
 				XResizeWindow(Xdisplay, w, r.Width(), r.Height());
 			else if( x != r.left || y != r.top || (int)width != r.Width() || (int)height != r.Height())
 				XMoveResizeWindow(Xdisplay, w, r.left, r.top, r.Width(), r.Height());

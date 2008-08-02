@@ -23,10 +23,10 @@
 #define DATE_(x)                   COLUMN_("date", Date, x, 0, 0)
 #define DATE_ARRAY_(x, items)      COLUMN_ARRAY_("date", Date, x, 0, 0, items)
 
-#define TIME(x)                    COLUMN("date", Time, x, 0, 0)
-#define TIME_ARRAY(x, items)       COLUMN_ARRAY("date", Time, x, 0, 0, items)
-#define TIME_(x)                   COLUMN_("date", Time, x, 0, 0)
-#define TIME_ARRAY_(x, items)      COLUMN_ARRAY_("date", Time, x, 0, 0, items)
+#define TIME(x)                    COLUMN("datetime", Time, x, 0, 0)
+#define TIME_ARRAY(x, items)       COLUMN_ARRAY("datetime", Time, x, 0, 0, items)
+#define TIME_(x)                   COLUMN_("datetime", Time, x, 0, 0)
+#define TIME_ARRAY_(x, items)      COLUMN_ARRAY_("datetime", Time, x, 0, 0, items)
 
 #define BOOL(x)                    COLUMN("text", bool, x, 0, 0)
 #define BOOL_ARRAY(x, items)       COLUMN_ARRAY("text", bool, x, 0, 0, items)

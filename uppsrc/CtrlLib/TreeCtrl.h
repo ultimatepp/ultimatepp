@@ -317,8 +317,9 @@ public:
 	int  Add(int parent, Option& option, const char *text = NULL);
 	int  Add(int parent, const Image& img, const char *text);
 	int  Add(int parent, const char *text);
-
-	void SetLabel(int id, const char *text);
+	
+	void   SetLabel(int id, const char *text);
+	String GetLabel(int id) const                   { return option[id]->GetLabel(); }
 
 	int  Get(int id) const                          { return option[id]->Get(); }
 

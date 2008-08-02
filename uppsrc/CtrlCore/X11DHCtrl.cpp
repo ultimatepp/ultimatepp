@@ -294,9 +294,9 @@ void DHCtrl::Terminate(void)
 // State handler
 void DHCtrl::State(int reason)
 {
-	Window dummy;
-	int x, y;
-	unsigned int width, height, border, depth;
+//	Window dummy;
+//	int x, y;
+//	unsigned int width, height, border, depth;
 	Rect r;
 
 	// No handling if in error state

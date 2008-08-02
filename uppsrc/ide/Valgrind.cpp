@@ -31,11 +31,9 @@ void Ide::Valgrind()
 	String cmdline;
 	String fn = GetTempFileName();
 	cmdline << "valgrind --xml=yes --num-callers=40 " << ValgrindLogFile << fn << ' ';
-	// 2008/06/01 -- add valgrind suppression file
 	String ValgSupp = ConfigFile("valgrind.supp");
 	if(!IsNull(LoadFile(ValgSupp)))
 		cmdline << "--suppressions=" << ValgSupp << ' ';
-	// 2008/06/01 -- END
 	cmdline << '\"' << h->GetHostPath(target) << "\" ";
 	cmdline << runarg;
 	ConsoleClear();

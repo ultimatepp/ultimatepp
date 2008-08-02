@@ -216,8 +216,6 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 		    << "echo \"<--- Finished, press any key to close the window --->\"\nread\n";
 		cmdline = LinuxHostConsole + " bash " + script;
 	}
-	DUMP(LoadFile(script));
-	SaveFile(GetHomeDirFile("test"), LoadFile(script));
 	Buffer<char> cmd_buf(strlen(cmdline) + 1);
 	char *cmd_out = cmd_buf;
 	Vector<char *> args;

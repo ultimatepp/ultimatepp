@@ -1,0 +1,17 @@
+uses
+	CtrlLib;
+
+file
+	usvn.h,
+	SlaveProcess.h,
+	SlaveProcess.cpp,
+	Console.cpp,
+	SvnWorks.cpp,
+	SvnSync.cpp,
+	main.cpp,
+	notes.txt,
+	usvn.lay;
+
+mainconfig
+	"" = "GUI";
+
