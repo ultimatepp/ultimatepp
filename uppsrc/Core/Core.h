@@ -58,6 +58,7 @@
 #ifdef flagSOLARIS
 	#define PLATFORM_SOLARIS
 	#define PLATFORM_POSIX
+	#define __NOASSEMBLY__
 	#ifdef flagGUI
 		#define PLATFORM_X11
 	#endif

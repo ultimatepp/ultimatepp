@@ -491,6 +491,16 @@ bool TopSubMenuItem::Key(dword key, int) {
 	return false;
 }
 
+void TopSubMenuItem::GotFocus()
+{
+	Refresh();
+}
+
+void TopSubMenuItem::LostFocus()
+{
+	Refresh();
+}
+
 bool TopSubMenuItem::HotKey(dword key)
 {
 	if(BarCtrl::Scan(proc, key))

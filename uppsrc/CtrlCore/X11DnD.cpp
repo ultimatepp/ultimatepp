@@ -136,14 +136,13 @@ void DnDLoop::Sync()
 		XSendEvent(Xdisplay, target, XFalse, 0, &e);
 		XFlush(Xdisplay);
 		Xdnd_waiting_status = true;
-		int timeout = GetTickCount() + 200;
+		dword timeout = GetTickCount();
 		LLOG("Waiting for XdndStatus");
-		TimeStop tm;
-		while(Xdnd_waiting_status && GetTickCount() < timeout) {
+		while(Xdnd_waiting_status && GetTickCount() - timeout < 200) {
 			GuiSleep(0);
 			ProcessEvents();
 		}
-		LLOG("Waiting status " << tm << "ms");
+		LLOG("Waiting status " << GetTickCount() - timeout << "ms");
 		if(Xdnd_waiting_status) {
 			LLOG("XdndStatus timeout");
 			Xdnd_status = DND_NONE;
@@ -193,14 +192,13 @@ void DnDLoop::LeftUp(Point, dword)
 		XSendEvent(Xdisplay, target, XFalse, 0, &e);
 		XFlush(Xdisplay);
 		Xdnd_waiting_finished = true;
-		int timeout = GetTickCount() + 200;
+		int timeout = GetTickCount();
 		LLOG("Waiting for XdndFinished");
-		TimeStop tm;
-		while(Xdnd_waiting_finished && GetTickCount() < timeout) {
+		while(Xdnd_waiting_finished && GetTickCount() - timeout < 200) {
 			GuiSleep(0);
 			ProcessEvents();
 		}
-		LLOG("Waiting finished " << tm << "ms");
+		LLOG("Waiting finished " << GetTickCount() - timeout << "ms");
 		if(Xdnd_waiting_status) {
 			LLOG("XdndFinished timeout");
 			Xdnd_status = DND_NONE;

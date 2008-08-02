@@ -140,6 +140,8 @@ public:
 	virtual void Paint(Draw& w);
 	virtual void MouseEnter(Point, dword);
 	virtual void MouseLeave();
+	virtual void GotFocus();
+	virtual void LostFocus();
 	virtual void LeftDown(Point, dword);
 	virtual void SyncState();
 	virtual Size GetMinSize() const;

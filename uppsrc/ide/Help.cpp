@@ -348,6 +348,90 @@ void TopicCtrl::OpenTopic()
 	WhenTopic();
 }
 
+struct SlideShow : TopWindow {
+	virtual bool Key(dword key, int count);
+
+	RichTextView   text;
+	Vector<String> path;
+	int            page;
+	int            rp;
+
+	void SetPage();
+
+	SlideShow();
+};
+
+bool SlideShow::Key(dword key, int count)
+{
+	switch(key) {
+	case K_ESCAPE:
+		Break();
+		break;
+	case K_LEFT:
+	case K_UP:
+	case K_PAGEUP:
+		page--;
+		SetPage();
+		break;
+	case K_RIGHT:
+	case K_DOWN:
+	case K_PAGEDOWN:
+		page++;
+		SetPage();
+		break;
+	}
+	return true;
+}
+
+void SlideShow::SetPage()
+{
+	page = minmax(page, 0, path.GetCount() - 1);
+	if(page != rp) {
+		rp = page;
+		text <<= ReadTopic(LoadFile(path[page])).text;
+	}
+}
+
+SlideShow::SlideShow()
+{
+	FullScreen();
+	Add(text.SizePos());
+	text.NoHyperlinkDecoration();
+	text.NoSb();
+	text.VCenter();
+	text.SetZoom(Zoom(1, 5));
+	text.Margins(8);
+	rp = -1;
+}
+
+void TopicCtrl::SShow()
+{
+	SlideShow ss;
+	TopicLink tl = ParseTopicLink(GetCurrent());
+	if(IsNull(tl.package))
+		return;
+	String folder = AppendFileName(PackageDirectory(tl.package), tl.group + ".tpp");
+	FindFile ff(AppendFileName(folder, "*.tpp"));
+	Array<String> l;
+	while(ff) {
+		if(ff.IsFile())
+			l.Add(GetFileTitle(ff.GetName()));
+		ff.Next();
+	}
+	if(l.GetCount() == 0)
+		return;
+	Sort(l);
+	for(int i = 0; i < l.GetCount(); i++) {
+		if(tl.topic == l[i])
+			ss.page = i;
+		ss.path.Add(AppendFileName(folder, l[i] + ".tpp"));
+	}
+	ss.SetPage();
+	ss.Run();
+	tl.topic = l[ss.page];
+	GoTo(TopicLinkString(tl));
+}
+
 void TopicCtrl::Search()
 {
 	if(issearch) {
@@ -411,6 +495,8 @@ void  TopicCtrl::BarEx(Bar& bar)
 	   .Check(issearch);
 	bar.Add("Highlight search keywords in topic", IdeImg::ShowWords(), THISBACK(ShowWords))
 	   .Check(showwords);
+	bar.Add(!internal && GetCurrent().StartsWith("topic:"),
+	        IdeImg::show(), THISBACK(SShow));
 	bar.GapRight();
 	bar.Separator();
 	bar.Add(!internal && GetCurrent().StartsWith("topic:"),

@@ -1,8 +1,6 @@
 #include "SqlCtrl.h"
 #include <Report/Report.h>
 
-#pragma hdrstop
-
 NAMESPACE_UPP
 
 #define IMAGEFILE <SqlCtrl/SqlCtrl.iml>
@@ -120,7 +118,6 @@ bool MacroSet::Define(const char *s) {
 }
 
 String MacroSet::Expand(const char *s, Index<int>& used) const {
-	bool again = false;
 	String text;
 	while(*s)
 		if(IsId(*s)) {

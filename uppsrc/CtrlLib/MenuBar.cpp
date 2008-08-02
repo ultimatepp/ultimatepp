@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    // LOG(x)
+#define LLOG(x)     LOG(x)
 #define LTIMING(x) // RTIMING(x)
 
 static ColorF xpmenuborder[] = {
@@ -199,7 +199,7 @@ void MenuBar::SetupRestoreFocus()
 		q = q->submenu;
 	}
 	restorefocus = GetFocusCtrl();
-	LLOG("SetupRestoreFocus -> " << ::Name(restorefocus));
+	LLOG("SetupRestoreFocus -> " << UPP::Name(restorefocus));
 }
 
 void MenuBar::PostDeactivate()
@@ -287,10 +287,11 @@ INITBLOCK
 
 bool MenuBar::Key(dword key, int count)
 {
+	LLOG("KEY " << GetKeyDesc(key));
 	bool horz = IsChild();
 	if((horz ? key == K_RIGHT : key == K_DOWN)) {
 		Ctrl *ctrl = GetFocusChildDeep();
-		LLOG("MenuBar::Key(" << key << ") -> IterateFocusForward for " << ::Name(ctrl) << ", pane " << ::Name(&pane));
+		LLOG("MenuBar::Key(" << key << ") -> IterateFocusForward for " << UPP::Name(ctrl) << ", pane " << UPP::Name(&pane));
 		if(HasMouseDeep())
 			GetMouseCtrl()->Refresh();
 		if(ctrl && IterateFocusForward(ctrl, &pane, false, false, true))
@@ -306,7 +307,7 @@ bool MenuBar::Key(dword key, int count)
 	else
 	if((horz ? key == K_LEFT : key == K_UP)) {
 		Ctrl *ctrl = GetFocusChildDeep();
-		LLOG("MenuBar::Key(" << key << ") -> IterateFocusBackward for " << ::Name(ctrl) << ", pane " << ::Name(&pane));
+		LLOG("MenuBar::Key(" << key << ") -> IterateFocusBackward for " << UPP::Name(ctrl) << ", pane " << UPP::Name(&pane));
 		if(HasMouseDeep())
 			GetMouseCtrl()->Refresh();
 		if(ctrl && IterateFocusBackward(ctrl, &pane, false, true))
@@ -342,6 +343,7 @@ bool MenuBar::Key(dword key, int count)
 	   parentmenu->pane.GetFirstChild() && parentmenu->submenuitem) {
 		Ctrl *smi = parentmenu->submenuitem;
 		Ctrl *q = smi;
+		q->Refresh();
 		if(key == K_RIGHT)
 			for(;;) {
 				q = q->GetNext();
@@ -350,6 +352,7 @@ bool MenuBar::Key(dword key, int count)
 				if(q == smi)
 					break;
 				if(PullMenu(q)) {
+					q->Refresh();
 					SyncState();
 					return true;
 				}
@@ -362,6 +365,7 @@ bool MenuBar::Key(dword key, int count)
 				if(q == smi)
 					break;
 				if(PullMenu(q)) {
+					q->Refresh();
 					SyncState();
 					return true;
 				}
@@ -485,7 +489,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 	}
 	Rect r = GetWorkArea();
 	restorefocus = GetFocusCtrl();
-	LLOG("PopUp " << ::Name(this) << " set restorefocus:" << ::Name(restorefocus));
+	LLOG("PopUp " << UPP::Name(this) << " set restorefocus:" << UPP::Name(restorefocus));
 	DistributeAccessKeys();
 	frame.Set(style->popupframe);
 	if(GUI_GlobalStyle() >= GUISTYLE_XP)
@@ -563,7 +567,7 @@ MenuBar::~MenuBar()
 {
 	lock++;
 	LLOG("~MenuBar " << Name());
-	LLOG("Parent menu " << ::Name(parentmenu));
+	LLOG("Parent menu " << UPP::Name(parentmenu));
 	if(parentmenu)
 		parentmenu->SetActiveSubmenu(NULL, NULL);
 	LLOG("~MenuBar 1");

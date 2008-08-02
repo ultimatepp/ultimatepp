@@ -178,6 +178,9 @@ static void sPanicMessageBox(const char *title, const char *text)
 			XFreeFont(display, font_info);
 			XFreeGC(display, gc);
 			XCloseDisplay(display);
+		#ifdef _DEBUG
+			__BREAK__;
+		#endif
 			return;
 		case Expose:
 			int y = 20;

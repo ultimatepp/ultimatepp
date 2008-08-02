@@ -81,7 +81,7 @@ int CPU_Cores()
 			n += !!(sa & (1 << i));
 #endif
 #elif defined(PLATFORM_POSIX)
-#ifdef PLATFORM_FREEBSD
+#if defined(PLATFORM_FREEBSD) || defined(PLATFORM_SOLARIS)
 		n = minmax((int)sysconf(_SC_NPROCESSORS_ONLN), 1, 256);
 #else
 		n = minmax(get_nprocs(), 1, 256);

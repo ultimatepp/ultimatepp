@@ -305,7 +305,7 @@ void Heap::Free48(void *ptr)
 }
 
 Heap::Page    dummy;
-#define DI    { 0, 0, 0, 0, &dummy, &dummy }
+#define DI    { { 0, 0, 0, 0, &dummy, &dummy } }
 
 thread__ Heap heap = {
 	{ DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI }

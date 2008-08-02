@@ -153,6 +153,8 @@ String System(const char *cmd, const String& in)
 		c << " <" << ifn;
 	system(c);
 	String q = LoadFile(ofn);
+	FileDelete(ofn);
+	FileDelete(ifn);
 	return q;
 }
 

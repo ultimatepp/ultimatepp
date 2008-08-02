@@ -46,7 +46,7 @@ TreeCtrl::Node::Node(const Image& img, Ctrl& ctrl, int cx, int cy)
 	Init();
 	SetCtrl(ctrl);
 	image = img;
-	size = ctrl.GetMinSize();
+	size = Null;
 	if(cx > 0)
 		size.cx = cx;
 	if(cy > 0)
@@ -127,34 +127,6 @@ Size   TreeCtrl::Item::GetSize() const
 	sz.cy = max(sz.cy, csz.cy);
 	return sz;
 }
-
-/*
-Size   TreeCtrl::Item::GetValueSize() const
-{
-	if(IsNull(size))
-		if(ctrl)
-			return ctrl->GetMinSize();
-		else
-			return display ? display->GetStdSize(value) : StdDisplay().GetStdSize(value);
-	else
-		return size;
-}
-
-Size   TreeCtrl::Item::GetCtrlSize() const
-{
-	return size;
-}
-
-Size   TreeCtrl::Item::GetSize() const
-{
-	Size sz = GetValueSize();
-	sz += Size(2 * margin, 2 * margin);
-	Size isz = image.GetSize();
-	sz.cx += isz.cx;
-	sz.cy = max(sz.cy, isz.cy);
-	return sz;
-}
-*/
 
 void   TreeCtrl::SetRoot(const TreeCtrl::Node& n)
 {
