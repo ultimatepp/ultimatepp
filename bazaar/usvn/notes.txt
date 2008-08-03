@@ -1,0 +1,48 @@
+* /home/cxl/uppout/GCC.Debug.Debug_full.Gui.Shared/usvn 31.07.2008 15:53:12, user: cxl
+
+Sys("ls") = 
+Sys("svn status /home/cxl/centrum/SocNet") = M      /home/cxl/centrum/SocNet/BACKEND/UPP/pb/pb.cpp
+M      /home/cxl/centrum/SocNet/BACKEND/UPP/asv/asv.txt
+M      /home/cxl/centrum/SocNet/BACKEND/UPP/asw/asw.h
+M      /home/cxl/centrum/SocNet/BACKEND/UPP/asw/Worker.cpp
+M      /home/cxl/centrum/SocNet/BACKEND/UPP/asw/Request.cpp
+
+Sys("svn update /home/cxl/centrum/SocNet") = U    /home/cxl/centrum/SocNet/frontend/trunk/ajax/views.py
+U    /home/cxl/centrum/SocNet/frontend/trunk/views.py
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/search-field.gif
+A    /home/cxl/centrum/SocNet/frontend/trunk/static/gallery-r-bg.png
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/js/jquery/jquery.iMenu.0.1.js
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/js/wall.js
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/js/boxes.js
+A    /home/cxl/centrum/SocNet/frontend/trunk/static/img/user-empty.png
+D    /home/cxl/centrum/SocNet/frontend/trunk/static/img/friend-empty.png
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/select-l.gif
+A    /home/cxl/centrum/SocNet/frontend/trunk/static/badge-select.gif
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/css/blueprint/screen.css
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/css/layout.css
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/css/profile.css
+U    /home/cxl/centrum/SocNet/frontend/trunk/static/search-btn.gif
+A    /home/cxl/centrum/SocNet/frontend/trunk/static/arrow-bull.gif
+A    /home/cxl/centrum/SocNet/frontend/trunk/static/login-icon.gif
+A    /home/cxl/centrum/SocNet/frontend/trunk/static/imenu-bg.gif
+A    /home/cxl/centrum/SocNet/frontend/trunk/static/gallery-l-bg.png
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/groups/index.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/profile/panel.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/profile/index.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/profile/friends.html
+A    /home/cxl/centrum/SocNet/frontend/trunk/templates/registr.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/activate.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/events/index.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/search.html
+A    /home/cxl/centrum/SocNet/frontend/trunk/templates/maintainance.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/login.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/logout.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/templates/base.html
+U    /home/cxl/centrum/SocNet/frontend/trunk/locale/cs/LC_MESSAGES/django.po
+U    /home/cxl/centrum/SocNet/frontend/trunk/profile/admin.py
+U    /home/cxl/centrum/SocNet/frontend/trunk/profile/views.py
+U    /home/cxl/centrum/SocNet/frontend/trunk/profile/models.py
+U    /home/cxl/centrum/SocNet/frontend/trunk/urls.py
+U    /home/cxl/centrum/SocNet/frontend/trunk/forms.py
+U    /home/cxl/centrum/SocNet/redmine/report/assets/stylesheets/default.css
+Updated to revision 631.

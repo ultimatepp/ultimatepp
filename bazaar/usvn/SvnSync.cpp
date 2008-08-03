@@ -1,0 +1,162 @@
+#include "usvn.h"
+
+SvnSync::SvnSync()
+{
+	CtrlLayoutOKCancel(*this, "SvnSynchronize SVN repositories");
+	list.AddIndex();
+	list.AddIndex();
+	list.AddColumn("Action");
+	list.AddColumn("Path");
+	list.ColumnWidths("153 619");
+	list.NoCursor().EvenRowColor();
+	Sizeable().Zoomable();
+	setup <<= THISBACK(Setup);
+}
+
+void SvnSync::Setup()
+{
+	works.Execute();
+	SyncList();
+}
+
+void SvnSync::SyncList()
+{
+	list.Clear();
+	for(int i = 0; i < works.GetCount(); i++) {
+		SvnWork w = works[i];
+		String path = GetFullPath(w.working);
+		list.Add(REPOSITORY, path,
+		         AttrText("Working directory").SetFont(StdFont().Bold()).Ink(White).Paper(Blue),
+		         AttrText(path).SetFont(Arial(20).Bold()).Paper(Blue).Ink(White));
+		list.SetLineCy(list.GetCount() - 1, 26);
+		Vector<String> ln = Split(Sys("svn status " + path), '\n');
+		bool actions = false;
+		for(int i = 0; i < ln.GetCount(); i++) {
+			String h = ln[i];
+			if(h.GetCount() > 7) {
+				String file = h.Mid(7);
+				if(IsFullPath(file)) {
+					actions = true;
+					h.Trim(7);
+					bool simple = h.Mid(1, 6) == "      ";
+					int action = simple ? String("MC?!").Find(h[0]) : -1;
+					String an;
+					Color  color;
+					if(action < 0) {
+						color = Black;
+						if(simple && h[0] == 'A')
+							an = "add";
+						else
+						if(simple && h[0] == 'D')
+							an = "delete";
+						else {
+							an = h.Mid(0, 7);
+							color = Gray;
+						}
+					}
+					else {
+						static const char *as[] = { "Modify", "Conflict resolved", "Add", "Remove" };
+						static Color c[] = { LtBlue, Magenta, Green, LtRed };
+						an = as[action];
+						color = c[action];
+					}
+					int ii = list.GetCount();
+					list.Add(action, file,
+					         action <= 0 ? Value(AttrText(an).Ink(color)) : Value(true),
+					         AttrText("  " + file.Mid(path.GetCount() + 1)).Ink(color));
+					if(action > 0)
+						list.SetCtrl(ii, 0, confirm.Add().SetLabel(an).NoWantFocus());
+				}
+			}
+		}
+		if(actions) {
+			list.Add(MESSAGE, Null, AttrText("Commit message:").SetFont(StdFont().Bold()));
+			list.SetLineCy(list.GetCount() - 1, EditField::GetStdHeight() + 4);
+			list.SetCtrl(list.GetCount() - 1, 1, message.Add());
+		}
+		else
+			list.Add(-1, Null, "", AttrText("Nothing to do").SetFont(StdFont().Italic()));
+	}
+}
+
+void SvnDel(const char *path)
+{
+	FindFile ff(AppendFileName(path, "*.*"));
+	while(ff) {
+		if(ff.IsFolder()) {
+			String dir = AppendFileName(path, ff.GetName());
+			if(ff.GetName() == ".svn")
+				DeleteFolderDeep(dir);
+			else
+				SvnDel(dir);
+		}
+		ff.Next();
+	}
+}
+
+void SvnSync::Perform()
+{
+	int c;
+	const Vector<String>& cl = CommandLine();
+	if(cl.GetCount()) {
+		for(int i = 0; i < cl.GetCount(); i++) {
+			String d = GetFullPath(cl[i]);
+			if(!DirectoryExists(cl[i])) {
+				Cerr() << cl[i] << " not a directory\n";
+				SetExitCode(1);
+				return;
+			}
+			works.Add(d, Null, Null);
+		}
+		SyncList();
+		setup.Hide();
+		c = Execute();
+	}
+	else {
+		works.Load(LoadFile(ConfigFile("svnworks")));
+		SyncList();
+		c = Execute();
+		SaveFile(ConfigFile("svnworks"), works.Save());
+	}
+	if(c != IDOK || list.GetCount() == 0)
+		return;
+	SysConsole sys;
+	int repoi = 0;
+	int i = 0;
+	while(i < list.GetCount()) {
+		SvnWork w = works[repoi++];
+		i++;
+		String message;
+		while(i < list.GetCount()) {
+			int action = list.Get(i, 0);
+			String path = list.Get(i, 1);
+			if(action == MESSAGE) {
+				sys.System(SvnCmd("commit", w).Cat() << w.working << " -m \"" << list.Get(i, 3) << "\"");
+				i++;
+				break;
+			}
+			if(action == REPOSITORY)
+				break;
+			switch(action) {
+			case ADD:
+				SvnDel(path);
+				sys.System("svn add " + path);
+				break;
+			case REMOVE:
+				sys.System("svn delete " + path);
+				break;
+			case CONFLICT:
+				sys.System("svn resolved " + path);
+				break;
+			}
+			i++;
+		}
+		sys.System(SvnCmd("update", w).Cat() << w.working);
+	}
+	sys.Execute();
+}
+
+GUI_APP_MAIN
+{
+	SvnSync().Perform();
+}

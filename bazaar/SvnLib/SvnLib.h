@@ -142,7 +142,7 @@ class Svn
 		// parses output of 'svn info' command and gathers its output
 		Errors ParseInfo(String const &str, EntryInfo &info);
 		
-		// parses xml output of 'svn log' command
+		//  parses xml output of 'svn log' command
 		Errors ParseLog(String const &str, Array<LogInfo> &info);
 		
 		// parses xml output of 'svn status' command
