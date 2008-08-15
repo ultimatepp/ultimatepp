@@ -1,0 +1,10 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	Any.cpp;
+
+mainconfig
+	"" = "MT";

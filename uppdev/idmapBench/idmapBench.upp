@@ -1,0 +1,16 @@
+description "C++ standard library vs. U++ Core benchmark";
+
+optimize_speed;
+
+uses
+	Core;
+
+file
+	main.cpp,
+	bench.txt;
+
+mainconfig
+	"" = "",
+	"" = "USEMALLOC",
+	"" = "MT",
+	"" = "USEMALLOC MT";

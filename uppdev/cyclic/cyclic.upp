@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	cyclic.h,
+	main.cpp,
+	cyclic.lay;
+
+mainconfig
+	"" = "GUI";
+

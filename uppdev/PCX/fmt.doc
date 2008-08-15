@@ -1,0 +1,939 @@
+Ian Ashdown
+byHeart Software
+620 Ballantree Road
+West Vancouver, B.C.
+Canada V7S 1W3
+
+Issue 1: 91/02/12
+Issue 2: 91/03/27
+Issue 3: 91/08/08
+Issue 4: 91/08/11
+
+
+
+
+
+
+
+
+
+
+
+                               PCX Graphics
+
+                                    by 
+
+                               Ian Ashdown
+                             byHeart Software
+
+Looking to add monochrome or full-color bit-mapped graphics to your 
+application programs?  If so, you might consider the PCX graphics file 
+format.  Originally developed in 1982 by ZSoft Corporation for their PC 
+Paintbrush (R) products, it has become a de facto industry standard for 
+storing and transferring bit-mapped images on MS-DOS machines.  It can 
+support displays of any resolution using palettes of up to 256 
+simultaneous colors, and is very simple to implement.  Furthermore, it's 
+not limited to MS-DOS and OS/2-based machines; the PCX format is 
+applicable to any environment supporting bit-mapped graphics. 
+
+Today, more commercial programs support ZSoft's PCX format than any 
+other, including Aldus-Microsoft's Tag Image File Format (TIFF).  
+However, unlike TIFF with its publicly-available technical 
+specifications, the PCX file format has never been completely documented.  
+When ZSoft first created PC Paintbrush, the only video displays they had 
+to contend with were two monochrome adapters (Hercules and Tecmar) and 
+the IBM Color Graphics Adapter (CGA).  They have since quietly modified 
+and extended their format on several occasions to support EGA, VGA and 
+SuperVGA displays.  Documentation is scarce, incomplete and sometimes 
+contradictory.  There's a small booklet available from ZSoft that 
+describes the current version (with several omissions), a sample Pascal 
+program from their CompuServe forum (GO WINAPB), a few magazine articles, 
+and chapters in a few books (see the references at the end of this 
+article). 
+
+Personally, I think it's about time to remedy this situation.  The 
+following is a complete set of technical specifications for the current 
+version of PCX.  All of the information has been derived from printed 
+information provided by ZSoft and conversations with their Technical 
+Services department.  This is it, folks!  We now have formal (if not 
+exactly official) specifications to work with when including the PCX 
+graphics file format in our application programs. 
+
+My original plan was to include sample C source code for reading and 
+writing PCX image files.  However, both this article and the source code 
+grew to the extent that one had to go.  If you don't want to develop your 
+own PCX file handling routines from scratch, PCX_LIB is available through 
+the CUG Library as CUG Volume #???.  It includes fully commented C source 
+code for reading and writing PCX image files, complete with software 
+drivers for Hercules, CGA, EGA, and VGA display adapters.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    p. 1
+
+PCX Specifications 
+
+The PCX graphics file format (Version 5) is designed to store monochrome 
+and color bit-mapped images of any resolution with palettes of up to 256 
+simultaneous colors.  It was originally designed for MS-DOS 
+microcomputers, but is adaptable to other bit-mapped graphic 
+environments.  A simple but effective byte-oriented, run-length encoding 
+scheme is used to compress the image data.
+
+There are two or three sections to a PCX graphics file - a 128-byte 
+header, the encoded image data (which can be of any length) and an 
+optional 256-color palette (see Figure 1).  This palette is appended to 
+the file only if the image contains more than 16 colors. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    p. 2
+
+1.  PCX File Header
+
+The file header describes the graphical environment in which the image is 
+to be displayed.  The information contained in the header is somewhat 
+device-dependent in that the PCX file format implicitly assumes the 
+presence of a standard IBM PC-compatible display adapter.  Furthermore, 
+the specific type and video mode of the adapter needed to display the 
+image correctly cannot be uniquely determined from the file header 
+information.  It is in general the user's responsibility to ensure that 
+the correct video mode has been selected before displaying a PCX image. 
+
+The file header structure is shown in Figure 2.  A complete description 
+of each structure member is as follows: 
+
+1.1   PCX Flag
+
+A constant value (0x0a) that signifies a PCX image file. 
+
+1.2   Version
+
+Indicates the PCX file format version. It can be one of five values: 
+
+    0 - Version 2.5 of PC Paintbrush.
+    2 - Version 2.8 (with palette information).
+    3 - Version 2.8 (without palette information).
+    4 - PC Paintbrush for Windows (not 3.0).
+    5 - Version 3.0 and greater of PC Paintbrush and Paintbrush Plus, 
+        including Publisher's Paintbrush. 
+
+Most commercial programs supporting the PCX file format conform to 
+Version 5.  See Section 3, "Color Palettes", for further information. 
+
+1.3   Encoding (1)
+
+A constant value (0x01) that indicates run-length encoding was used to 
+encode and compress the image data. 
+
+1.4   Bits per Pixel
+
+The number of bits per pixel per color plane (typically 1, 2, 4 or 8). 
+
+1.5   Window
+
+A structure with the following members: 
+
+    Name    Bytes    Description
+
+    xul       2      Upper left corner horizontal position
+    yul       2      Upper left corner vertical position
+    xlr       2      Lower right corner horizontal position
+    ylr       2      Lower right corner vertical position
+
+These members describe the position and size of the image within the 
+display, and are measured in pixels (starting with zero). 
+
+
+
+
+
+                                                                    p. 3
+
+1.6   HDPI (2)
+
+"Horizontal dots per inch".  The value represents the horizontal 
+resolution of the device used to create the image. 
+
+1.7   VDPI (2)
+
+"Vertical dots per inch".  The value represents the vertical resolution 
+of the device used to create the image. 
+
+1.8   Color Map
+
+The color palette to be used when displaying an image with 16 or fewer 
+colors.  See Section 3, "Color Palettes", for further information. 
+
+1.9   Reserved
+
+This member was used to indicate the appropriate MS-DOS video mode in 
+previous PCX file format versions.  It is ignored in Version 5, but
+should be set to zero.
+
+1.10  NPlanes
+
+The number of color planes used to display the image (typically 1 or 4).  
+See Section 3, "Color Palettes", for further information. 
+
+1.11  Bytes per Line
+
+The number of bytes required for a buffer when decoding one color plane 
+scan line.  This value should be an even number (for compatibility with 
+some existing commercial programs).  See Section 2, "Image Encoding and 
+Decoding", for further information. 
+
+1.12  Palette Info (3)
+
+A bit-mapped variable indicating how to interpret the color palette.  
+Only the lowest two bits are  significant; the others are ignored.  It 
+can have one of two possible values: 
+
+    0x01 - color or black & white
+    0x02 - grayscale
+
+If the variable is set to 0x02 (grayscale), the color palette must be set 
+to shades of gray. 
+
+1.13  HScreen Size (4)
+
+Horizontal screen size in pixels.
+
+1.14  VScreen Size (4)
+
+Vertical screen size in pixels.
+
+1.15  Filler
+
+Blank space to fill out 128-byte header.  All bytes within this member  
+should be set to zero. 
+
+
+                                                                    p. 4
+
+Notes
+
+1. ZSoft has reserved the right to change the encoding scheme for better 
+   image compression performance in future versions. 
+
+2. Horizontal and vertical resolution for video display adapters is 
+   defined as the total number of displayed pixels for the current video 
+   mode.  For scanners, it is defined in terms of dots per inch.  (These 
+   values are provided for information only.  They are not required for 
+   encoding or decoding PCX image files.) 
+
+3. The "palette info" member of the file header was used in previous 
+   versions of the PCX file format to indicate whether the palette 
+   represented a color or grayscale palette.  If it was set to 0x02 (as a 
+   bitmap - the upper 6 bits could be set at random), the file decoding 
+   functions could assume a default grayscale palette if necessary.  
+   However, the palette already had a true (and possibly nonlinear) 
+   grayscale, so the "palette info" member was never really used by 
+   ZSoft.  The current PC Paintbrush IV and IV Plus products simply 
+   ignore it. 
+
+4. The "HScreen Size" and "VScreen Size" members were added to Version 5 
+   of the PCX format to support PC Paintbrush IV Version 1.02 and IV Plus 
+   Version 1.0.  Since earlier Version 5 PCX files may contain 
+   uninitialized data in place of these members, ZSoft specifically 
+   recommends that they not be used to determine the appropriate video 
+   mode for displaying the files.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    p. 5
+
+2.  Image Encoding and Decoding 
+
+The PCX graphics file format considers an image to be a contiguous 
+sequence (block) of eight-bit bytes representing a bit-mapped raster 
+display.  A simple byte-oriented, run-length encoding (RLE) scheme is
+used to compress the display data.  When the display is represented by
+more than one color plane (such as color images on EGA displays), each
+scan line is stored sequentially by color plane. 
+
+The run-length encoding scheme uses a byte pair consisting of a "count" 
+byte and a following "data" byte to represent sequences of display bytes 
+with the same value.  A count byte is uniquely identified by having its 
+two most significant bits set; its six least significant bits are used to 
+represent the count value (1 to 63).  The following data byte is the 
+value that is repeated in the display data the number of times indicated 
+by the count value. 
+
+Any display data byte which is not part of a sequence of bytes of the 
+same value and which does not have its two most significant bits set is 
+stored as itself in the encoded image data.  Single display data bytes 
+with a value of 0xc0 or greater are encoded with a count value of one. 
+
+2.1.  Decoding
+
+Decoding display data from encoded image data is done on a line-by-line 
+basis.  The pixel dimensions of the displayed image are calculated as: 
+
+    horz_size = Window.xlr - Window.xul + 1
+
+and
+
+    vert_size = Window.ylr - Window.yul + 1
+
+The number of bytes required to buffer one complete scan line for all 
+color planes in sequence is: 
+
+    buffer_size = NPlanes * Bytes per Line
+
+Since there are always an integral number of bytes in the buffer, there 
+may be unused data at the end of each color plane scan line if the number 
+of bits per pixel is other than eight.  This unused data should be masked 
+off when transferring the line buffer contents to the video display 
+adapter memory. 
+
+In theory, each color plane scan line may contain an even or odd number 
+of bytes.  However, some application programs expect an even number of 
+bytes.  ZSoft ensures that their products create PCX files with an even 
+number of bytes per color plane scan line, and recommends that other 
+programs do the same for compatibility.  Of course, decoding functions 
+should be able to read files with either an even or odd number of bytes 
+per color plane scan line. 
+
+Decoding begins with the first scan line and proceeds by examining each 
+byte of the encoded image data.  If the two most significant bits of the 
+byte are set, the lower six bits indicate how many times the next byte is 
+
+
+
+
+                                                                    p. 6
+
+Decoding begins with the first scan line and proceeds by examining each 
+byte of the encoded image data.  If the two most significant bits of the 
+byte are set, the lower six bits indicate how many times the next byte is 
+to be duplicated in the line buffer.  If these two bits are not set, the 
+byte itself is copied (once) to the line buffer.  A count is kept of the 
+number of bytes in the line buffer.  The current scan line is complete 
+when its value equals "buffer_size". 
+
+If the display contains more than one color plane, each plane is decoded 
+in sequence.  The order in which they are decoded is device-dependent.  
+For instance, the Enhanced Graphics Adapter has four color planes ordered 
+as blue, green, red and intensity.  The beginning of each color plane 
+scan line within the line buffer is given by: 
+
+    offset = plane_number * Bytes per Line
+
+where "plane_number" is a number between 0 and NPlanes - 1. 
+
+A decoding break occurs at the end of each scan line.  That is, an 
+encoding byte pair can only represent a contiguous sequence of bytes 
+within the current scan line.  However, this is not necessarily true for 
+color planes.  An encoding byte pair may represent a contiguous sequence 
+of identical bytes that extends across two color planes for one display 
+image scan line. 
+
+Decoding continues until all scan lines (as indicated by "vert_size") 
+have been decoded.  Some older versions of PC Paintbrush padded the image 
+with extra (uninitialized) scan lines so that all blocks of scan lines (8 
+or 16 lines) read from the file were the same size.  The image data was 
+read until end-of-file was returned.  ZSoft no longer uses this 
+technique, since it conflicts with the appended color palette (see 
+Subsection 3.3, "VGA 256-Color Palettes").  The extra data read could 
+also overrun the user's image buffer. 
+
+A sample C function to decode a complete image scan line (all color planes)
+from a PCX file is shown in Figure 3. 
+
+2.2.  Encoding
+
+Encoding display image data is also done on a line-by-line basis, 
+following the order of scan lines stored in the display adapter's memory 
+buffer.  The current scan line is encoded for each color plane on a per-
+byte basis.  As noted above, ZSoft recommends that all color plane scan 
+lines be padded if necessary to ensure they contain an even number of 
+bytes. 
+
+ZSoft also recommends that the data used to pad the last one or two bytes 
+of a scan line represent white data.  Apparently, some application 
+programs display this data when printing or faxing the files.
+
+A sample C function to encode a single monochrome or color image scan 
+line for a PCX file is shown in Figure 4.
+
+
+
+
+
+
+
+                                                                    p. 7
+
+3.  Color Palettes 
+
+The PCX file format supports color palettes of up to 16 colors in the 
+file header.  Larger palettes (up to a maximum of 256 colors) are stored 
+in an optional color palette that is appended to the encoded image data 
+portion of the file. 
+
+The file header color palette has two different formats, both designed 
+for IBM PC-compatible machines.  A device-specific palette is used for 
+Color Graphics Adapters (CGA),  and a standard R-G-B palette is used for 
+Enhanced Graphics Adapters (EGA), Multicolor Graphics Adapters (MCGA), 
+Video Graphics Adapters (VGA) and extended Video Graphics Adapters 
+(SuperVGA). 
+
+ZSoft's PC Paintbrush products no longer support the CGA color palette.  
+The following information is provided only for compatibility with older 
+PCX files. 
+
+3.1.  CGA Color Palettes
+
+The PCX format supports eight possible CGA color palettes for video modes 
+4 (320x200 4-color graphics) and 5 (320x200 monochrome graphics, color 
+burst off).  Each palette consists of a background color and three 
+foreground colors (or shades of grey).  The background can be one of 16 
+colors, the value for which is stored in the first byte of the PCX file 
+header Color Map member.  Only the upper four bits are significant; the 
+value must be right-shifted by four bits (or divided by 16) to determine 
+the appropriate CGA hardware palette register value. 
+
+The foreground color palette is specified by the fourth byte of the Color 
+Map, which has the following structure: 
+
+    Name                Bit    Description
+
+    Color Burst Enable   7     0 - color
+                               1 - monochrome
+    Palette              6     0 - yellow
+                               1 - white
+    Intensity            5     0 - dim
+                               1 - bright
+
+The lower five bits are ignored. 
+
+Most published descriptions of the ROM BIOS call "Set CGA Palette" 
+(Interrupt 16, Function 11) document only two palettes, obtainable by 
+setting register BL to 0x00 or 0x01.  This is equivalent to the "Palette" 
+bit above.  However, the palette intensity (equivalent to the "Intensity" 
+bit above) can be selected using bit 4 of the BL register (0 = dim, 1 = 
+bright). 
+
+The original CGA display adapter was designed for use with NTSC composite 
+video monitors and color televisions.  The "color burst" is a periodic 
+burst of a 3.58 MHz signal superimposed on the composite video signal to 
+synchronize the phase of the monitor's internal 3.58 MHz oscillator.  
+(Without synchronization, the picture has drifting color bars.)  The 
+presence or absence of the burst determines whether the image is 
+displayed in color or monochrome. 
+
+
+                                                                    p. 8
+
+The "Color Burst Enable" bit above actually indicates whether the MS-DOS 
+video mode is to be 4 (color) or 5 (monochrome).  However, the color 
+burst signal has no meaning for RGB monitors.  Video mode 5 will produce 
+only two distinct color palettes on CGA displays adapters with RGB 
+monitors, and three distinct palettes on EGA, VGA and SuperVGA display 
+adapters emulating a CGA display. 
+
+Under video mode 6 (640 x 200 2-color graphics), the first byte of the
+CGA color palette specifies the foreground color (i.e. - the color of
+the displayed pixels).
+
+3.2.  EGA/VGA 16-Color Palettes
+
+The 16-color palette for EGA, MCGA, VGA and SuperVGA displays is an array 
+of 16 elements, each a structure with the following members: 
+
+    Name    Bytes    Description
+
+    Red       1      Red intensity
+    Green     1      Green intensity
+    Blue      1      Blue intensity
+
+All color map entries are stored as unsigned bytes with values ranging 
+between 0 and 255.  Where display adapters support fewer intensity 
+levels, the value of each color map entry is interpreted by dividing its 
+value by 256/n, where n is the number of allowable intensity levels 
+(typically 2, 4 or 16). 
+
+3.3.  VGA 256-Color Palettes
+
+The 256-color palette for MCGA, VGA and SuperVGA displays is an array of 
+256 elements, each a structure with the same members as the EGA/VGA 16-
+color palette, which is appended to the encoded image data portion of the 
+file (see Figure 1).  It is always preceded by a constant byte flag with
+the value 0x0c (12 decimal). 
+
+Only Version 5 PCX-format files support 256-color palettes, and then only 
+when the image has more than 16 colors.  ZSoft recommends the following 
+technique to determine if a 256-color palette is present: first verify 
+that the file version number is 5, then count back 769 bytes from the end 
+of the file.  If the value of this byte is not 0x0c, the optional 256-
+color palette is not present and the EGA/VGA 16-color file header palette 
+should be used. 
+
+It is possible that a Version 5 PCX-format file with a valid file header 
+palette can have the value 0x0c in the 769th byte from the end of the 
+encoded image data.  The above technique would then falsely indicate the
+presence of an appended 256-color palette.  To avoid this problem, it is 
+necessary to first decode the image and note the file position where the 
+encoded image data section ends before counting back 769 bytes from the 
+end of the file.  If the supposed 256-color palette flag is located in 
+the image data section, then the file header palette should be used 
+instead.
+
+
+
+
+
+
+                                                                    p. 9
+
+3.4.  24-Bit Color 
+
+Future versions of ZSoft's Publisher's Paintbrush will support up to 16.7 
+million simultaneous colors.  The PCX file format will be based on three 
+color planes (red, green and blue), with 8 bits per pixel per plane.  
+There will be no color palette, since the color of each pixel will be 
+fully specified by the encoded image data. 
+
+3.5.  Disabling the Palette 
+
+It is occasionally necessary to disable the color palette of a PCX file 
+in order to correctly display the image.  In other words, the current 
+(default) setting of the display adapter's palette registers are used.  
+This can be done by changing the PCX file version number from '5' to '3' 
+(i.e. - PC Paintbrush Version 2.8 without palette information).  The file 
+decoding functions must then check the file version number and ignore the 
+color palette if it is set to '3'.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    p. 10
+
+4.  Other Environments 
+
+While the PCX file format was designed for MS-DOS machines, it is 
+nevertheless possible to display PCX images on other machines.  It will 
+generally be necessary to map the image representation (i.e. - window 
+dimensions, number of color planes, bits per pixel per plane, and the 
+color palette) to the capabilities of the display hardware. 
+
+It is also necessary to remember that all information in a PCX-format 
+file is stored as either 8-bit bytes or 16-bit words.  Words are stored 
+in the big-endian format characteristic of 80x86-based machines.  That 
+is, the eight least significant bits (lower byte) are stored first, 
+followed by the eight most significant bits (upper byte).  If PCX-format 
+files are transferred to little-endian machines (such as those based on 
+680x0 and Z8000 processors), the order of bytes within each word will 
+have to be reversed before they can be interpreted.  (This applies to the 
+file header only, since the encoded image data and optional 256-color 
+palette are stored as bytes.)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    p. 11
+
+References 
+
+Azer, S. [1988].  "Working With PCX Files", Microcornucopia, No. 42 
+(July-August), p. 42.
+
+Lindley, C.A. [1990].  Practical Image Processing in C, John Wiley & Sons 
+Inc., New York, N.Y.
+
+Luze, M. [1991].  "Printing PCX Files", C Gazette, Vol. 5:2 (Winter 1990 -
+1991), pp. 11-22.
+
+Phoenix Technologies Ltd. [1989].  System BIOS for IBM PC/XT/AT Computers 
+and Compatibles, Addison-Wesley, Reading, MA.
+
+Quirk, K. [1989].  "Translating PCX Files", Dr. Dobb's Journal, Vol. 14:8 
+(August), pp. 30-36, 105-108.
+
+Rimmer, S. [1990].  Bit-Mapped Graphics, Windcrest Books, Blue Ridge 
+Summit, PA.
+
+ZSoft Corporation [1988].  PCX Technical Reference Manual Revision 4,
+ZSoft Corporation, Marietta, GA.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    p. 12
+
+Figures
+
++--------------------------------------------+
+|    File Header (128 bytes)                 |
++--------------------------------------------+
+|    Encoded Image Data (variable length)    |
++--------------------------------------------+
+|    Optional Color Palette (769 bytes)      |
++--------------------------------------------+
+
+Figure 1 - Basic PCX File Format
+
+
+Name           Bytes  Description 
+
+PCX Flag         1    Constant flag
+Version          1    PCX version number
+Encoding         1    Run-length encoding flag
+Bits per Pixel   1    Number of bits per pixel per plane
+Window           8    Window dimensions
+HDPI             2    Horizontal image resolution
+VDPI             2    Vertical image resolution
+Color Map       48    Hardware R-G-B color palette
+Reserved         1    (Used to contain video mode)
+NPlanes          1    Number of color planes
+Bytes per Line   2    Number of bytes per scan line
+Palette Info     2    Palette interpretation
+HScreen Size     2    Horizontal screen size
+VScreen Size     2    Vertical screen size
+Filler          54    Initialized filler bytes
+
+Figure 2 - PCX File Header Structure
+
+
+/* Read an encoded scan line (all color planes) from a          */
+/* PCX-format image file and write the decoded data to a scan   */
+/* line buffer                                                  */
+
+void pcx_read_line
+(
+  unsigned char *linep, /* PCX scan line buffer pointer         */
+  FILE *fp,             /* PCX image file pointer               */
+  int bpline            /* # bytes per line (all color planes)  */
+)
+{
+  int data;         /* Image data byte                          */
+  int count;        /* Image data byte repeat count             */
+  int offset = 0;   /* Scan line buffer offset                  */
+
+  while (offset < bpline)   /* Decode current scan line         */
+  {
+    data = getc(fp);        /* Get next byte                    */
+
+    /* If top two bits of byte are set, lower six bits show how */
+    /* many times to duplicate next byte                        */
+
+
+
+
+                                                                    p. 13
+
+    if ((data & 0xc0) == 0xc0)
+    {
+      count = data & 0x3f;          /* Mask off repeat count    */
+      data = getc(fp);              /* Get next byte            */
+      memset(linep, data, count);   /* Duplicate byte           */
+      linep += count;
+      offset += count;
+    }
+    else
+    {
+      *linep++ = (unsigned char) data;  /* Copy byte            */
+      offset++;
+    }
+  }
+}
+
+Figure 3 - Decode PCX Image File Scan Line Function
+
+
+/* Encode a scan line and write it to a PCX file (the line is   */
+/* assumed to contain the color plane scan lines in sequence,   */
+/* with padding for an even number of bytes and trailing white  */
+/* data for each line as appropriate)                           */
+
+void pcx_write_line
+(
+  unsigned char *linep, /* Scan line buffer pointer             */
+  int length,           /* Scan line buffer length (in bytes)   */
+  FILE *fp              /* PCX file pointer                     */
+)
+{
+  int curr_data;        /* Current data byte                    */
+  int prev_data;        /* Previous data byte                   */
+  int data_count;       /* Data repeat count                    */
+  int line_count;       /* Scan line byte count                 */
+
+  prev_data = *linep++; /* Initialize the previous data byte    */
+  data_count = 1;
+  line_count = 1;
+
+  while (line_count < length)   /* Encode scan line             */
+  {
+    curr_data = *linep++;       /* Get the current data byte    */
+    line_count++;               /* Increment line byte count    */
+
+    if (curr_data == prev_data) /* Repeating data bytes ?       */
+    {
+      data_count++;             /* Increment data repeat count  */
+
+      if (data_count == 0x3f)   /* Max allowable repeat count ? */
+      {
+        pcx_encode(prev_data, data_count, fp);  /* Encode data  */
+        data_count = 0;
+      }
+    }
+
+
+
+
+                                                                    p. 14
+
+    else    /* End of repeating data bytes                      */
+    {
+      if (data_count > 0)
+        pcx_encode(prev_data, data_count, fp);  /* Encode data  */
+
+      prev_data = curr_data;    /* Current data byte now prev   */
+      data_count = 1;
+    }
+  }
+
+  if (data_count > 0)           /* Any remaining data ?         */
+  {
+    pcx_encode(prev_data, data_count, fp);      /* Encode data  */
+  }
+}
+
+
+/* Write an encoded byte pair (or single byte) to a file        */
+
+void pcx_encode
+(
+  int data,     /* Data byte                                    */
+  int count,    /* Data byte repeat count                       */
+  FILE *fp      /* PCX file pointer                             */
+)
+{
+  if (((data & 0xc0) == 0xc0) || count > 1)
+  {
+    putc(0xc0 | count, fp);     /* Write count byte             */
+  }
+
+  putc(data, fp);       /* Write data byte                      */
+}
+
+Figure 4 - Encode Image Scan Line Functions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    p. 15
+

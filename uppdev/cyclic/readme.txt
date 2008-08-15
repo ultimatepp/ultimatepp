@@ -1,0 +1,1 @@
+To simplify the situation I have commented out calling the color change (cyclic object job). Instead in cyclic_space::LeftDown function there is the step function. And so one can see the code is able to work by mouse clicks. But if in cyclic_space::reset function 39 - 42 rows are added then there is nothing painted. 

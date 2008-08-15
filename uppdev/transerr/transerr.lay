@@ -1,0 +1,11 @@
+LAYOUT(Tab1Layout, 400, 200)
+	ITEM(EditField, dv___0, LeftPosZ(4, 48).TopPosZ(4, 19))
+END_LAYOUT
+
+LAYOUT(Tab2Layout, 400, 200)
+	ITEM(ArrayCtrl, dv___0, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(TransTestLayout, 428, 262)
+	ITEM(TabCtrl, tab, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT

@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	plugin\sqlite3;
+
+file
+	AtlantisStat.h,
+	main.cpp,
+	AtlantisStat.lay;
+
+mainconfig
+	"" = "GUI";

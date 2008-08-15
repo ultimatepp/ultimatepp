@@ -1,0 +1,2 @@
+BINARY(rodina_macro, "macro.txt")
+BINARY(rodina_typ, "zapis.typ")

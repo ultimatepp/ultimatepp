@@ -1,0 +1,74 @@
+/***************************************************************************
+                          ezcommon  -  description
+                             -------------------
+    begin                : Aug. 2, 2007
+    copyright            : (C) 2007 by Allen
+    email                : bon_ami_@hotmail.com
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   Explicit Distribution Limitation                                      *
+ *   This rule overrides others below.                                     *
+ *   This program may not be modified or used by, or, if possible,         *
+ *   redistributed to people described as below,                           *
+ *   1.Japanese who hold hostility against Chinese.                        *
+ *   2.or, those who discriminate against people based solely on race,     *
+ *     gender or sexual orientation.                                       *
+ *                                                                         *
+ ***************************************************************************/
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+/*
+ *	header of EZ Project common functionalities
+ */
+
+#include "ezcomm.h"
+
+using namespace ezproject;
+
+//##ModelId=46A07D0E0128
+Boolean ezComm::setLocal(ezcommSocket *local)
+{
+}
+
+//##ModelId=46A07EED0251
+Boolean ezComm::setRemote(ezcommSocket *remote)
+{
+}
+
+//##ModelId=46B04D9803DC
+Boolean ezComm::setSocket(void *socket, ezcommSocket *local, ezcommSocket *remote)
+{
+}
+
+//##ModelId=46A08411038A
+Boolean ezComm::connect()
+{
+}
+
+//##ModelId=46A0843D0290
+Boolean ezComm::listen()
+{
+}
+
+//##ModelId=46A084620186
+void ezComm::disconnect()
+{
+}
+
+//##ModelId=46A084900290
+void ezComm::neglect()
+{
+}
+
+//##ModelId=46A0849D00DA
+ezRet ezComm::send()
+{
+}

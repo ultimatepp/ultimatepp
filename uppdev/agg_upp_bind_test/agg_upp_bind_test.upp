@@ -1,0 +1,10 @@
+uses
+	agg_upp_bind;
+
+file
+	agg_upp_bind_test.h,
+	agg_upp_bind_test.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	IconTest.h,
+	main.cpp,
+	IconTest.lay;
+
+mainconfig
+	"" = "GUI";
+

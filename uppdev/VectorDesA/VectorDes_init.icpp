@@ -1,0 +1,6 @@
+#include "VectorDes.h"
+
+INITBLOCK {
+	RegisterStdVectorObjects();
+	RichObject::Register(RichObjectTypeVectorImage());
+}

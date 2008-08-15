@@ -1,0 +1,10 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(TestLayout, 208, 80)
+	ITEM(Label, dv___0, SetLabel(t_("TestLayout_edit_1_SetLabel\vTest")).LeftPosZ(8, 26).TopPosZ(8, 19))
+	ITEM(EditDouble, edit, LeftPosZ(36, 56).TopPosZ(20, 19))
+	ITEM(Label, dv___2, SetLabel(t_("TestLayout_edit_A_SetLabel\aKè")).LeftPosZ(96, 26).TopPosZ(8, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Another label")).LeftPosZ(28, 68).TopPosZ(56, 19))
+END_LAYOUT
+
+#endif

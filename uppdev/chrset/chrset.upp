@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	chrset.h,
+	main.cpp charset "UTF-8",
+	chrset.lay;
+
+mainconfig
+	"" = "GUI";

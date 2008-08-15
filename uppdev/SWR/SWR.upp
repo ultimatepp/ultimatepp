@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	SWR.h,
+	main.cpp,
+	SWR.lay;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	sstrm.h,
+	sstrm.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "CONSOLE ST";

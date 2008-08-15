@@ -1,0 +1,9 @@
+uses
+	Core,
+	AddOn;
+
+file
+	AddOnDll.cpp;
+
+mainconfig
+	"" = "DLL ADDON";

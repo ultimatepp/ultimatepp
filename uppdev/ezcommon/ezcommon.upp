@@ -1,0 +1,15 @@
+description "EZ Common";
+
+target(WIN32) ezcommon.dll;
+
+library(WIN32) "kernel32 user32 advapi32 shell32 winmm";
+
+file
+	ezcommonupp.h,
+	ezcommon.cpp,
+	ezcommon.h,
+	ezcommonupp.cpp;
+
+mainconfig
+	"" = "DLL ";
+

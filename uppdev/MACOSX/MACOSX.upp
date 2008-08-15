@@ -1,0 +1,17 @@
+uses
+	Core;
+
+link
+	" -framework carbon";
+
+file
+	MACOSX.cpp;
+
+mainconfig
+	"" = "";
+
+custom() "post-link",
+	"mkdir -p /Users/cxl/$(OUTTITLE).App/Contents/MacOS\ncp $(OUTPATH) /Use"
+	"rs/cxl/$(OUTTITLE).App/Contents/MacOS\n",
+	"";
+

@@ -1,0 +1,3 @@
+LAYOUT(editintLayout, 200, 100)
+	ITEM(EditInt, dv___0, LeftPosZ(36, 48).TopPosZ(28, 19))
+END_LAYOUT

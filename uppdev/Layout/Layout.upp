@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	Layout.h,
+	Layout.lay charset "windows-1250",
+	main.cpp charset "UTF-8";
+
+mainconfig
+	"" = "GUI ST";

@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	Vera.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

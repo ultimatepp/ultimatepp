@@ -1,0 +1,76 @@
+TITLE("ArrayMap class template")
+REF("void Add(const K& k, const T& x)")
+REF("T& Add(const K& k)")
+REF("void Add(const K& k, T *ptr)")
+REF("void Set(int i, T *ptr)")
+REF("ArrayMap(pick_ Index<K>& ndx, pick_ Array<T>& val)")
+REF("ArrayMap(pick_ Vector<K>& ndx, pick_ Array<T>& val)")
+REF("ArrayMap()")
+TOPIC_TEXT(
+"[ $$0,0#00000000000000000000000000000000:Default][l288;i704;a17;O9;~~~.992; $$1,"
+"0#10431211400427159095818037425705:param][a83;*R6 $$2,5#3131016247420302412518841"
+"7583966:caption][b83;* $$3,5#07864147445237544204411237157677:title][b167;a42;C $"
+"$4,6#40027414424643823182269349404212:item][b42;a42; $$5,5#4541300047534217475409"
+"1244180557:text][l288;a17; $$6,6#27521748481378242620020725143825:desc][l321;t246"
+";C@5;1 $$7,7#20902679421464641399138805415013:code][b2503; $$8,0#6514237545610002"
+"3862071332075487:separator][*@(0.0.255) $$9,0#83433469410354161042741608181528:ba"
+"se][t4167;C+117 $$10,0#37138531426314131251341829483380:class][l288;a17;*1 $$11,1"
+"1#70004532496200323422659154056402:requirement][i416;b42;a42;O9;~~~.416; $$12,12#"
+"10566046415157235020018451313112:tparam][b167;C $$13,13#9243045944346046191110808"
+"0531343:item1][a42;C $$14,14#77422149456609303542238260500223:item2][*@2$(0.128.1"
+"28) $$15,15#34511555403152284025741354420178:NewsDate][l321;*C$7 $$16,16#03451589"
+"433145915344929335295360:result][l321;b83;a83;*C$7 $$17,17#0753155046352950537122"
+"8428965313:result`-line][l160;t4167;*C+117 $$18,5#8860394944220582595880005322242"
+"5:package`-title][{_}%EN-US [s10; template <class [*@4 K], class [*@4 T], class ["
+"*@4 HashFn] = StdHash<[*@4 K]> > &][s10;* [* class ]ArrayMap&][s5; &][s12; [*C@4 "
+"K]-|Type of keys. K must have deep copy constructor, be [*/^dpp`:`/`/SourceDoc`/C"
+"ontainers`/Moveable^ moveable] and must have [*C operator==] defined.&][s12; [*C@"
+"4 T]-|Type or base class of values stored in ArrayMap. There is no common require"
+"ment for T.&][s12; [*C@4 HashFn]-|Hashing class. Must have defined [*C unsigned o"
+"perator()(const K`& x)] method returning hash value for elements.&][s3;~~~.416; B"
+"ase classes&][s9;^topic`:`/`/Core`/src`/AMap`:EN`-US^ AMap< K, T, Array<T>, HashF"
+"n >&][s0; &][s5;~~~.416; Array flavor of map. Inherits most of its functionality "
+"from [^dpp`:`/`/`:`:`/AMap`<class K`, class T`, class V`, class HashFn`>`/templat"
+"e `<class K`, class T`, class V`, class HashFn`> class AM")
+TOPIC_TEXT(
+"ap^ AMap] and adds only members specific for its flavor.&][s5;~~~.416; Like any "
+"other NTL container, ArrayMap is [*/^dpp`:`/`/SourceDoc`/Containers`/Moveable^ mo"
+"veable][*/  ]type with [*/^dpp`:`/`/SourceDoc`/Containers`/pick`_^ pick and optio"
+"nal deep copy] transfer semantics. Calling methods of picked VectorMap is logic e"
+"rror with exception of&][s0;/+75 [/C void ][*/C operator=][/C (pick`_ ArrayMap`& "
+"][*/C@3 v][/C ) ](defined by composition)&][s0;/+75 [/C void ][*/C operator<<=][/"
+"C (const AMap`& ][*/C@3 v][/C )][/  ](defined in AMap)&][s0;C+75 void [* Clear]()"
+"&][s0;C+75 bool [* IsPicked]() const&][s5; Optional deep copy operator is inherit"
+"ed from AMap class. Pick operator is implicitly defined by composition.&][s3; Mem"
+"bers&][s4;:void Add`(const K`& k`, const T`& x`): void [* Add](const K`& [*@3 k],"
+" const T`& [*@3 x])&][s6; Adds a key and value pair to the ArrayMap. This method "
+"has to be reimplemented in ArrayMap (using simple forwarding) due to overloading "
+"of [* Add] in other forms.&][s11; T must have deep copy constructor.&][s11; Inval"
+"idates iterators to ArrayMap.&][s11; Invalidates references to keys.&][s1; [*C@3 "
+"k]-|Key.&][s1; [*C@3 x]-|Value.&][s4;:T`& Add`(const K`& k`): T`& [* Add](const K"
+"`& [*@3 k])&][s6; Adds a key to the ArrayMap and returns the reference to the cor"
+"responding default constructed value. This method has to be reimplemented in Arra"
+"yMap (using simple forwarding) due to overloading of [* Add] in other forms.&][s1"
+"1; T must have default constructor.&][s11; Invalidates iterators to AMap.&][s11; "
+"Invalidates references to keys.&][s1; [*C@3 k]-|Key.&][s1; [*/ Return value]-|Ref"
+"erence to value.&][s4;:void Add`(const K`& k`, T `*ptr`): void [* Add](const K`& "
+"[*@3 k], T *[*@3 ptr])&][s6; Adds a key and value pair to the ArrayMap. Value is "
+"specified by pointer to object. ArrayMap takes over ownership of this this object"
+". This variant allows use of ArrayMap as polymorphic container, because type of a"
+"dded element can be also derived from T as well. No const")
+TOPIC_TEXT(
+"ructor is applied.&][s1; [*C@3 k]-|Key.&][s1; [*C@3 ptr]-|Value.&][s4;:void Set`"
+"(int i`, T `*ptr`): [* ArrayMap](const ArrayMap`& [*@3 s], int)&][s6; Optional de"
+"ep copy constructor.&][s6;*1 Requires T to have deep copy constructor or optional"
+" deep copy constructor if Array stores only objects of type T.&][s11; Requires po"
+"lymorphic deep copy if Array stores also objects of type derived from T.&][s1; [*"
+"C@3 s]-|Source ArrayMap.&][s4;:ArrayMap`(pick`_ Index`<K`>`& ndx`, pick`_ Array`<"
+"T`>`& val`): [* ArrayMap](pick`_ Index<K>`& [*@3 ndx], pick`_ Array<T>`& [*@3 val"
+"])&][s6; Pick-constructs ArrayMap from Index of keys and Array of values. Both so"
+"urce containers should have the same number of elements.&][s1; [*C@3 ndx]-|Source"
+" Index.&][s1; [*C@3 val]-|Source Array.&][s4;:ArrayMap`(pick`_ Vector`<K`>`& ndx`"
+", pick`_ Array`<T`>`& val`): [* ArrayMap](pick`_ Vector<K>`& [*@3 ndx], pick`_ Ar"
+"ray<T>`& [*@3 val])&][s6; Pick-constructs ArrayMap from Vector of keys and Array "
+"of values. Both source containers should have the same number of elements.&][s1; "
+"[*C@3 ndx]-|Source Index.&][s1; [*C@3 val]-|Source Array.&][s4;:ArrayMap`(`): [* "
+"ArrayMap]()&][s6; Default constructor. Creates empty ArrayMap.")

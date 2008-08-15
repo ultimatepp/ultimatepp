@@ -1,0 +1,4 @@
+#ifndef _RefCount_icpp_init_stub
+#define _RefCount_icpp_init_stub
+#include "Core/init"
+#endif

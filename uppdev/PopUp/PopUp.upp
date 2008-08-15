@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"PopUp.h"
+	, main.cpp
+	, "PopUp.lay"
+
+;
+
+mainconfig
+	"" = "GUI ST";

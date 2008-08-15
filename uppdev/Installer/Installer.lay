@@ -1,0 +1,21 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(InstallLayout, 324, 132)
+	ITEM(Label, dv___0, SetLabel("Install path").LeftPosZ(8, 56).TopPosZ(8, 19))
+	ITEM(EditString, path, LeftPosZ(96, 220).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel("MyApps directory").LeftPosZ(8, 84).TopPosZ(36, 19))
+	ITEM(EditString, myapps, LeftPosZ(96, 220).TopPosZ(36, 19))
+	ITEM(Option, icon, SetLabel("Create desktop icon").LeftPosZ(8, 172).TopPosZ(72, 15))
+	ITEM(Button, ok, SetLabel("Install !").LeftPosZ(8, 64).TopPosZ(100, 24))
+	ITEM(Button, cancel, SetLabel("Cancel").LeftPosZ(248, 64).TopPosZ(100, 24))
+END_LAYOUT
+
+LAYOUT(LicenseLayout, 544, 504)
+	ITEM(Label, dv___0, SetLabel("Please read the following license agreement").LeftPosZ(8, 516).TopPosZ(8, 19))
+	ITEM(RichTextView, license, LeftPosZ(8, 528).TopPosZ(31, 405))
+	ITEM(Label, dv___2, SetLabel("Do you accept all the terms of the preceding license agreement ?").LeftPosZ(8, 528).TopPosZ(440, 28))
+	ITEM(Button, cancel, SetLabel("No").LeftPosZ(8, 64).TopPosZ(472, 24))
+	ITEM(Button, ok, SetLabel("Yes").LeftPosZ(472, 64).TopPosZ(472, 24))
+END_LAYOUT
+
+#endif

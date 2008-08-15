@@ -1,0 +1,13 @@
+description "ShellIcons";
+
+uses
+	CtrlLib;
+
+file
+	bbb.h,
+	main.cpp,
+	bbb.lay;
+
+mainconfig
+	"" = "GUI";
+

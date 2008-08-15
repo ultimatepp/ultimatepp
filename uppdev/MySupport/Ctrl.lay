@@ -1,0 +1,14 @@
+LAYOUT(DropSelectPanel, 316, 64)
+	ITEM(Label, lbl, LeftPosZ(4, 84).TopPosZ(4, 19))
+	ITEM(DropList, list, HSizePosZ(92, 4).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("O&k")).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("&Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(promptPanel, 400, 200)
+	ITEM(DocEdit, text, SetEditable(false).HSizePosZ(8, 8).VSizePosZ(28, 40))
+	ITEM(Label, tag, HSizePosZ(8, 8).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("O&k")).RightPosZ(80, 64).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("&Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+

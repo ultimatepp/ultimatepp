@@ -1,0 +1,5 @@
+LAYOUT(fasdf, 400, 200)
+	ITEM(DocEdit, dv___0, LeftPosZ(0, 48).TopPosZ(52, 19))
+	ITEM(Label, dv___1, LeftPosZ(108, 25).TopPosZ(80, 19))
+END_LAYOUT
+

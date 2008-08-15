@@ -1,0 +1,9 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(DoubleClickLayout, 392, 360)
+	ITEM(ArrayCtrl, array, MultiSelect(true).LeftPosZ(4, 384).TopPosZ(4, 200))
+	ITEM(LineEdit, edit, LeftPosZ(4, 380).TopPosZ(272, 84))
+	ITEM(Button, show, SetLabel(t_("Show selected")).LeftPosZ(144, 108).TopPosZ(228, 24))
+END_LAYOUT
+
+#endif

@@ -1,0 +1,45 @@
+To do
+---------------------------------
+
+- add update of first/last/vis/col/row in SetFixedCols(), SetFixedRows()
+- add scrolling during moving cursor left/right when selectRow is true
+- modify GSort to use stable sort (faster?)
+- optimize resizeing in absolute mode (more than 10.000 rows)
+- Hide doesn't update scrollbar total size
+- many Hide/Show in proportional mode for the same column cause it's getting smaller and smaller
+- fix selecting proper column index during moiving columns when some columns are hidden
+- SetRowHeight should not call directly lh.Recalc, it should set lh.ready to false
+- when line resizing mode is set and user is resizeing columns and scrollbar suddenly appears
+  line isn't cleared correctly
+
+Done
+---------------------------------
+
+- when edits are visible switching off/on indicator make their positions incorrect
+- tab/shift+tab does not store the new cell value -> done
+- focus is not restored after moving column/row -> done
+- port to linux -> almost done
+
+Remarks
+---------------------------------
+Indicator() - must be called before AddIndex, AddColumn if resizeMode > 0
+              (the size of frame must be known before calling Paint())
+
+
+
+Polish
+---------------------------------
+
+gdy czesc kolumn jest ukryta problem przy ctrl->up/down (a selekcje??)
+
+SetCursor sie wywala jesli do gridu dodalo sie wiersz ale nie ma dodanej kolumny (w arrayctrl taka
+kombinacja dziala)
+
+czy remove(n) powinno ustawiac kursor na komorce wyzej?? (arrayctrl tak robi)
+
+jak jest wlaczony droplist i zmieni sie w nim wartosc i nacisnie sortowanie to dokonuje sie ono po
+niezmienionych wartosciach items (a powinno po widocznych w kontrolce).
+Wyjscie: albo zabronic sortowania w takim przypadku, albo na chwile zaakceptowac wartosc z kontrolki
+posortowac o podmienic na stara.
+
+w editmode 0 przy zmianie wiersza nie wola sie whenupdaterow... - fixed

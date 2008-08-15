@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	EditTime.h,
+	main.cpp,
+	EditTime.lay;
+
+mainconfig
+	"" = "GUI";

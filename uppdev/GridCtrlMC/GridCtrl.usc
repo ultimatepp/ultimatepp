@@ -1,0 +1,311 @@
+fn PaintVertSb(w, r)
+{
+	wd = r.right - r.left;
+	up = r;
+	r.top = (up.bottom = up.top + wd);
+	down = r;
+	r.bottom = (down.top = down.bottom - wd);
+	DrawButtonFrame(w, up);
+	PaintRcCenterImage(w, up, "ClassicCtrlsImg::UA");
+	DrawButtonFrame(w, down);
+	PaintRcCenterImage(w, down, "ClassicCtrlsImg::DA");
+	w.DrawRect(r, :SWhiteGray);
+}
+
+fn PaintHorzSb(w, r)
+{
+	hg = r.bottom - r.top;
+	left = r;
+	r.left = (left.right = left.left + hg);
+	right = r;
+	r.right = (right.left = right.right - hg);
+	w.DrawRect(left, :SLtGray);
+	DrawButtonFrame(w, left);
+	PaintRcCenterImage(w, left, "ClassicCtrlsImg::LA");
+	DrawButtonFrame(w, right);
+	PaintRcCenterImage(w, right, "ClassicCtrlsImg::RA");
+	w.DrawRect(r, :SWhiteGray);
+}
+
+fn PaintHeader(w, r, text, sorting = 0)
+{
+	ty = (r.top + r.bottom - GetTextSize(text).cy) >> 1;
+	DrawButtonFrame(w, r);
+	r.left += 2;
+
+	if(sorting)
+	{
+		if(sorting == 2)
+		{
+			w.DrawText(r.left, ty, "1", StdFont());
+			r.left += 6;
+		}
+		w.DrawImage(r.left, r.top + 2, "GridCtrl:GridDisplay.iml:ImgSortAsc");
+		r.left += 10;
+	}
+	w.DrawText(r.left, ty, text, StdFont());
+}
+
+fn PaintImageCenter(w, r, img)
+{
+	isz = GetImageSize(img);
+	w.DrawImage((r.left + r.right) / 2 - isz.cx / 2, (r.top + r.bottom) / 2 - isz.cy / 2, img);
+}
+
+enum_property ColoringModes
+{
+	"0" : "None",
+	"1" : "Row",
+	"2" : "Column"
+}
+
+enum_property ResizeModes
+{
+	"0" : "Absolute",
+	"1" : "Proportional"
+}
+
+enum_property ResizePaintModes
+{
+	"0" : "Line",
+	"1" : "Fixed + Line",
+	"2" : "Fixed + NonFixed"
+}
+
+enum_property EditModes
+{
+	"0" : "Row",
+	"1" : "Cell"
+}
+
+ctrl GridCtrl {
+	group "Complex";
+
+	ViewRect(w)
+	{
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		return r;
+	}
+	ViewSize(w)
+	{
+		r = ViewRect(w);
+		return Size(r.right - r.left, r.bottom - r.top);
+	}
+
+
+	GetStdSize() { return Size(150, 100); }
+	Frame SetFrame = InsetFrame();
+
+	bool Indicator = false;
+	bool SelectRow = true;
+	bool AutoHideHorzSb = true;
+	bool AutoHideVertSb = true;
+	bool HorzGrid = true;
+	bool VertGrid = true;
+	Color GridColor = :SLtGray;
+	bool MultiSelect = true;
+	bool ResizingCols = true;
+	bool FullColResizing = true;
+	bool ResizingRows = false;
+	bool FullRowResizing = false;
+	bool MovingCols = false;
+	bool MovingRows = false
+	bool Dragging = false;
+	ResizePaintModes ResizePaintMode = 2;
+	ResizeModes ResizeColMode = 1;
+	ResizeModes ResizeRowMode = 0;
+	bool LiveCursor = false;
+	bool Sorting = true;
+	bool MultiSorting = true;
+	EditModes EditMode = 0;
+	bool OneClickEdit = false;
+
+	//Color LiveColor;
+	//Color FocusColor(Color fg = SColorHighlightText, Color bg = SColorHighlight);
+	//Color OddColor(Color fg = SColorText, Color bg = SColorInfo);
+	//Color EvenColor(Color fg = SColorText, Color bg = Blend(SColorHighlight, SColorPaper, 220));
+	bool ColorRows = false;
+	ColoringModes ColoringMode;
+
+	bool Inserting = true;
+	bool Appending = true;
+	bool Duplicating = false
+	bool Moving = false;
+	bool Removing = true;
+	bool Accepting = true;
+	bool Canceling = true;
+	bool Navigating = false;
+	bool Searching = false;
+	bool Closing = false;
+	bool Editing = false;
+	bool Hiding = false;
+	bool Clipboard = false;
+	bool FixedPaste = false;
+	bool ExtraPaste = true;
+
+	bool RejectNullRow = true;
+	bool KeepLastRow = false;
+	bool TabChangesRow = true;
+	bool TabAddsRow = true;
+	bool EnterLikeTab = false;
+	bool Chameleon = false;
+
+	Paint(w)
+	{
+		PaintGrid(w, GetRect());
+
+//		sz = ViewSize(w);
+//		w.DrawRect(0, 0, sz.cx, sz.cy, :Gray);
+		//w.DrawText(px, (sz.cy - textsize.cy) / 2, .SetText, .SetFont, .SetInkOff);
+	}
+
+	PaintGrid(w, r) {
+		fontcy = GetTextSize("X").cy;
+		cols = 3;
+		ind_width = fontcy;
+
+		focus_bg = Color(0, 102, 204);
+		live_bg = Color(187, 214, 241);
+		multi_bg = Color(217, 198, 251);
+
+		DrawCtrlFrame(w, r, .SetFrame);
+
+
+		if(!.AutoHideVertSb)
+		{
+			vsb = r;
+			r.right = vsb.left = vsb.right - fontcy - 4;
+			PaintVertSb(w, vsb);
+		}
+
+		if(!.AutoHideHorzSb)
+		{
+			hsb = r;
+			r.bottom = hsb.top = hsb.bottom - fontcy - 4;
+		}
+
+		if(.Indicator)
+			r.left = r.left + ind_width;
+
+		wd = r.right - r.left;
+
+		col_width = wd / cols;
+		row_height = fontcy + 4;
+		header_height = fontcy + 6;
+
+		body = r;
+		body.top = r.top + header_height;
+
+		for(i = 0; i < cols; i++)
+		{
+			rt = r;
+			rt.left = r.left + i * col_width;
+			rt.right = rt.left + col_width;
+			rt.bottom = body.top;
+			sorting = 0;
+			if(i == 0 && .Sorting)
+			{
+				sorting = 1;
+				if(.MultiSorting)
+					sorting = 2;
+			}
+			PaintHeader(w, rt, "Column " + to_string(i + 1), sorting);
+		}
+
+		if(.Indicator)
+		{
+			rt.right = r.left;
+			rt.left = r.left - ind_width;
+			PaintHeader(w, rt, "", 0);
+		}
+
+		hg = body.bottom - body.top;
+		rows = hg / row_height;
+
+		w.DrawRect(body.left, body.top, wd, hg, :SWhite);
+		if(.SelectRow)
+			w.DrawRect(body.left, body.top, wd, row_height, focus_bg);
+		else
+			w.DrawRect(body.left, body.top, col_width - 1, row_height, focus_bg);
+
+		if(.LiveCursor)
+		{
+			if(.SelectRow)
+				w.DrawRect(body.left, body.top + row_height, wd, row_height, live_bg);
+			else
+				w.DrawRect(body.left, body.top + row_height, col_width - 1, row_height, live_bg);
+		}
+
+		for(i = 0; i <= rows; i++)
+		{
+			row = body;
+			row.top = body.top + i * row_height;
+			row.bottom = row.top + row_height;
+
+			if(i > 0 && .HorzGrid)
+				w.DrawRect(row.left, row.top, row.right - row.left, 1, .GridColor);
+
+			if(.Indicator)
+			{
+				rt = row;
+				rt.right = rt.left;
+				rt.left = rt.left - ind_width;
+				PaintHeader(w, rt, "");
+				if(i == 0)
+				{
+					PaintImageCenter(w, rt, "GridCtrl:GridDisplay.iml:ImgFocused");
+				}
+			}
+			if(.MultiSelect && (i == 3 || i == 6 || i == 7))
+			{
+				w.DrawRect(row.left, row.top + 1, wd, row_height - .HorzGrid, multi_bg);
+				if(.Indicator)
+					PaintImageCenter(w, rt, "GridCtrl:GridDisplay.iml:ImgSelected");
+			}
+
+		}
+
+		if(.VertGrid)
+			for(i = 1; i <= cols; i++)
+				w.DrawRect(body.left + i * col_width - 1, body.top, 1, hg, .GridColor);
+
+		if(.MovingCols)
+		{
+			rt = body;
+			rt.left += col_width + col_width / 3;
+			rt.top += 10;
+			rt.right = rt.left + col_width;
+			rt.bottom = rt.top + header_height;
+			w.DrawRect(rt, :SLtGray);
+			PaintHeader(w, rt, "Moving columns");
+		}
+
+		if(.MovingRows)
+		{
+			rt = body;
+			rt.left += 5;
+			rt.top += 55;
+			rt.right = rt.left + col_width;
+			rt.bottom = rt.top + header_height;
+			w.DrawRect(rt, :SLtGray);
+			PaintHeader(w, rt, "Moving rows");
+		}
+
+		if(.ResizingCols)
+			w.DrawImage(body.left + col_width - 10, 8 + (body.top + 4 * row_height) * .FullColResizing, "GridCtrl:GridCtrl.iml:HorzPos");
+
+		if(.ResizingRows)
+			w.DrawImage((body.left + col_width / 2) * .FullRowResizing, body.top + row_height * 5 + 7, "GridCtrl:GridCtrl.iml:VertPos");
+
+		if(!.AutoHideHorzSb)
+			PaintHorzSb(w, hsb);
+
+	}
+
+	Sample()
+	{
+		.SetText = "Text";
+		.SetFont = Arial(10).Bold().Italic();
+	}
+};

@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"GeomTest.h"
+	, main.cpp
+
+
+;
+
+mainconfig
+	"" = "GUI ST";

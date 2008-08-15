@@ -1,0 +1,10 @@
+charset "UTF-8";
+
+uses
+	Core;
+
+file
+	LngCompare.cpp;
+
+mainconfig
+	"" = "";

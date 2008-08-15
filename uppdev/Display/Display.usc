@@ -1,0 +1,20 @@
+ctrl DisplayCtrl {
+	group "Graph";
+
+	GetMinSize() { sz = GetTextSize("X"); sz.cy += 2; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 7; return sz; }
+
+	Frame  SetFrame = BlackFrame() @2;
+	Font   SetFont = StdFont();
+	Color  Ink = :SBlack;
+	Color  Paper = :SWhite;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, .Paper);
+		textsize = GetTextSize("88.8", .SetFont);
+		//w.DrawText((r.right + r.left - textsize.cx) / 2, (r.bottom + r.top - textsize.cy) / 2, "0", .SetFont, .Ink);
+		w.DrawText(r.right - textsize.cx - 5, (r.bottom + r.top - textsize.cy) / 2, "88.8", .SetFont, .Ink);
+	}
+};

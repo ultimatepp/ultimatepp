@@ -1,0 +1,12 @@
+uses
+	Core;
+
+file
+	ASStringTools.hpp,
+	ASStringTools.cpp,
+	astyle.h,
+	ASBeautifier.cpp,
+	ASEnhancer.cpp,
+	ASFormatter.cpp,
+	ASResource.cpp;
+

@@ -1,0 +1,8 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(betaLayout, 200, 100)
+	ITEM(Button, ok, SetLabel("OK").RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel("Cancel").RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+#endif

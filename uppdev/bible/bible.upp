@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	bible.cpp optimize_speed,
+	times.txt;
+
+mainconfig
+	"" = "USEMALLOC",
+	"" = "";

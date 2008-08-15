@@ -1,0 +1,3 @@
+LAYOUT(ScrollBugLayout, 548, 504)
+	ITEM(TabCtrl, tab, HSizePosZ(4, 4).VSizePosZ(28, 32))
+END_LAYOUT

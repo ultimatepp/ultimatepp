@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	I18nFormat.cpp;
+
+mainconfig
+	"" = "";

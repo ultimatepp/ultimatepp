@@ -1,0 +1,13 @@
+uses
+	CtrlLib;
+
+options "-G7";
+
+file
+	MDraw.h,
+	PixelBlock.cpp,
+	Win32.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";

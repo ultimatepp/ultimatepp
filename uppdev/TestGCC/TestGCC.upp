@@ -1,0 +1,12 @@
+uses
+	Core;
+
+file
+	blab,
+	main.cpp
+		depends blab;
+
+mainconfig
+	"Mingw" = "CONSOLE ST STATIC",
+	"MSC" = "MSC CONSOLE WIN32 ST STATIC",
+	"Intel" = "INTEL CONSOLE WIN32 ST STATIC";

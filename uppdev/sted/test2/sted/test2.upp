@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"sted/test2.h"
+	, main.cpp
+	, "sted/test2.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

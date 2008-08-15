@@ -1,0 +1,12 @@
+uses
+	Core;
+
+file
+	Sic.h,
+	sval.cpp,
+	Sic.cpp,
+	StdLib.cpp,
+	main.cpp;
+
+mainconfig
+	"Normal" = normal "CONSOLE WIN32 ST STATIC";

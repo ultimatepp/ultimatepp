@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	Web;
+
+file
+	main.h,
+	main.cpp,
+	displays.h,
+	threads.h;
+
+mainconfig
+	"" = "GUI MT";
+

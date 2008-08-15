@@ -1,0 +1,9 @@
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	testColumn.lay;
+
+mainconfig
+	"" = "GUI";

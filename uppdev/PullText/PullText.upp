@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	RichText,
+	RichEdit;
+
+file
+	PullText.h,
+	main.cpp,
+	PullText.lay;
+
+mainconfig
+	"" = "GUI";
+

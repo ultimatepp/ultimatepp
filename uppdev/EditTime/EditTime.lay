@@ -1,0 +1,5 @@
+LAYOUT(EditTimeLayout, 380, 188)
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(244, 64).TopPosZ(140, 28))
+	ITEM(EditTime, a, LeftPosZ(8, 192).TopPosZ(4, 19))
+	ITEM(EditTime, b, LeftPosZ(8, 192).TopPosZ(28, 19))
+END_LAYOUT

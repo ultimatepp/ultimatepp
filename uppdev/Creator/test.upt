@@ -1,0 +1,28 @@
+template "Another application" main;
+
+id     "Name of main file"  filename = PACKAGE + "Main";
+id     "Name of main class" classname = PACKAGE + "App";
+option "Multithreaded" mt;
+select("one", "two", "Three") "Choose" select = "one";
+
+@@<:filename:>.cpp
+#include <CtrlLib/CtrlLib.h>
+
+class <:classname:> : public With<:classname:>Layout {
+public:
+};
+
+void AppMain()
+{
+	<:classname + "Alfa":>().Run();
+}
+
+@@<:filename:>.lay
+??mt
+
+LAYOUT(<:classname:>Layout, 236, 62)
+	ITEM(Label, lbl, SetLabel(txtEditStringLayout_lbl_SetLabel).LeftPosZ(4, 68).TopPosZ(4, 19))
+	ITEM(EditString, text, HSizePosZ(68, 4).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(txtEditStringLayout_ok_SetLabel).RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(txtEditStringLayout_cancel_SetLabel).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT

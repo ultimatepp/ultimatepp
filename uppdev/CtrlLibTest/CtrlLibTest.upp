@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	ExpandFrame;
+
+file
+	CtrlLibTest.h,
+	CtrlLibTest.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

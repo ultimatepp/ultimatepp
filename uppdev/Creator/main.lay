@@ -1,0 +1,14 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(TemplateLayout, 728, 572)
+	ITEM(Label, dv___0, SetLabel("Package name").LeftPosZ(8, 80).TopPosZ(4, 19))
+	ITEM(EditString, package, LeftPosZ(92, 124).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel("Create in").LeftPosZ(8, 80).TopPosZ(28, 19))
+	ITEM(DropList, nest, LeftPosZ(92, 124).TopPosZ(28, 19))
+	ITEM(ArrayCtrl, templist, LeftPosZ(8, 208).TopPosZ(52, 272))
+	ITEM(Button, cancel, SetLabel("Cancel").LeftPosZ(148, 64).TopPosZ(544, 24))
+	ITEM(Button, ok, SetLabel("Create").LeftPosZ(80, 64).TopPosZ(544, 24))
+	UNTYPED(preview, LeftPosZ(220, 500).TopPosZ(4, 564))
+END_LAYOUT
+
+#endif

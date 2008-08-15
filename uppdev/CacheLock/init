@@ -1,0 +1,4 @@
+#ifndef _CacheLock_icpp_init_stub
+#define _CacheLock_icpp_init_stub
+#include "Core/init"
+#endif

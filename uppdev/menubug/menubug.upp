@@ -1,0 +1,9 @@
+uses
+	CtrlLib;
+
+file
+	menubug.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

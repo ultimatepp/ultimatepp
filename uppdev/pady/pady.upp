@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	main.cpp charset "windows-1250";
+
+mainconfig
+	"" = "GUI ST";

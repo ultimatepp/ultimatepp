@@ -1,0 +1,8 @@
+LAYOUT(stdappLayoutMain, 488, 348)
+    ITEM(MenuBar, menu, HSizePosZ(0, 0).TopPosZ(0, 24))
+    ITEM(StatusBar, status, HSizePosZ(0, 0).BottomPosZ(0, 24))
+    ITEM(ToolBar, tools, HSizePosZ(0, 0).TopPosZ(24, 24))
+END_LAYOUT
+
+LAYOUT(stdappLayoutView, 400, 200)
+END_LAYOUT

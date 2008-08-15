@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	Report;
+
+file
+	AddressBook.cpp,
+	AddressBookXMLDOM.lay;
+
+mainconfig
+	"" = "GUI";

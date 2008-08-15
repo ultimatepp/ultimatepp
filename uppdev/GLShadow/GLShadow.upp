@@ -1,0 +1,10 @@
+file
+	load3ds.c,
+	load3ds.h,
+	main.c,
+	mathlib.c,
+	mathlib.h,
+	mesh.c,
+	mesh.h,
+	sv_mesh.c,
+	sv_mesh.h;

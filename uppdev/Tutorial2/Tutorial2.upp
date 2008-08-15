@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"Tutorial2.h"
+	, main.cpp
+	, "Tutorial2.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

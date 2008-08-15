@@ -1,0 +1,183 @@
+int
+
+size (times)         std::vector      Vector        Flex
+     10 (100000x)        0.078 s     0.016 s     0.031 s
+     20 (50000x)         0.078 s     0.032 s     0.047 s
+     40 (25000x)         0.062 s     0.047 s     0.047 s
+     80 (12500x)         0.078 s     0.047 s     0.062 s
+    160 (6250x)          0.094 s     0.047 s     0.078 s
+    320 (3125x)          0.109 s     0.063 s     0.094 s
+    640 (1562x)          0.140 s     0.110 s     0.125 s
+   1280 (781x)           0.203 s     0.156 s     0.172 s
+   2560 (390x)           0.312 s     0.282 s     0.203 s
+   5120 (195x)           0.562 s     0.516 s     0.234 s
+  10240 (97x)            1.078 s     1.032 s     0.250 s
+  20480 (48x)            2.547 s     2.500 s     0.312 s
+  40960 (24x)            5.625 s     5.594 s     0.437 s
+  81920 (12x)           11.672 s    11.625 s     0.578 s
+ 163840 (6x)            23.703 s    23.657 s     0.703 s
+ 327680 (3x)            47.688 s    47.656 s     0.953 s
+
+
+String
+size (times)         std::vector      Vector        Flex
+     10 (100000x)        0.125 s     0.063 s     0.094 s
+     20 (50000x)         0.140 s     0.078 s     0.078 s
+     40 (25000x)         0.141 s     0.063 s     0.078 s
+     80 (12500x)         0.157 s     0.093 s     0.110 s
+    160 (6250x)          0.218 s     0.125 s     0.125 s
+    320 (3125x)          0.329 s     0.187 s     0.188 s
+    640 (1562x)          0.562 s     0.313 s     0.265 s
+   1280 (781x)           1.063 s     0.593 s     0.297 s
+   2560 (390x)           2.047 s     1.203 s     0.344 s
+   5120 (195x)           3.938 s     2.796 s     0.422 s
+  10240 (97x)            7.797 s     6.235 s     0.500 s
+  20480 (48x)           15.140 s    12.641 s     0.656 s
+  40960 (24x)           30.234 s    25.688 s     0.969 s
+  81920 (12x)           60.703 s    51.765 s     1.313 s
+ 163840 (6x)           149.062 s   135.922 s     2.078 s
+ 327680 (3x)           433.078 s   411.735 s     3.734 s
+
+
+========= int
+------ 10 elements
+Order FindAdd: 344ms, info: NBLK:256, blocks:0
+Order Find: 250ms, matches: 10
+Index FindAdd: 1000
+Index Find: 234ms, matches: 10
+tree  insert: 766ms
+tree  find: 172ms, matches: 10
+------ 40 elements
+Order FindAdd: 578ms, info: NBLK:256, blocks:0
+Order Find: 422ms, matches: 40
+Index FindAdd: 1203
+Index Find: 203ms, matches: 40
+tree  insert: 953ms
+tree  find: 344ms, matches: 40
+------ 160 elements
+Order FindAdd: 1047ms, info: NBLK:256, blocks:0
+Order Find: 515ms, matches: 160
+Index FindAdd: 1031
+Index Find: 203ms, matches: 160
+tree  insert: 1282ms
+tree  find: 547ms, matches: 160
+------ 640 elements
+Order FindAdd: 1890ms, info: NBLK:256, blocks:2
+Order Find: 719ms, matches: 640
+Index FindAdd: 937
+Index Find: 204ms, matches: 640
+tree  insert: 1468ms
+tree  find: 672ms, matches: 640
+------ 2560 elements
+Order FindAdd: 2766ms, info: NBLK:256, blocks:9
+Order Find: 844ms, matches: 2560
+Index FindAdd: 921
+Index Find: 204ms, matches: 2560
+tree  insert: 1843ms
+tree  find: 953ms, matches: 2560
+------ 10240 elements
+Order FindAdd: 3563ms, info: NBLK:256, blocks:39
+Order Find: 1015ms, matches: 10240
+Index FindAdd: 1141
+Index Find: 219ms, matches: 10240
+tree  insert: 2171ms
+tree  find: 1234ms, matches: 10240
+------ 40960 elements
+Order FindAdd: 5532ms, info: NBLK:1024, blocks:39
+Order Find: 1219ms, matches: 40960
+Index FindAdd: 1265
+Index Find: 203ms, matches: 40960
+tree  insert: 2578ms
+tree  find: 1609ms, matches: 40960
+------ 163840 elements
+Order FindAdd: 8578ms, info: NBLK:1024, blocks:159
+Order Find: 1469ms, matches: 163840
+Index FindAdd: 1703
+Index Find: 500ms, matches: 163840
+tree  insert: 5375ms
+tree  find: 4234ms, matches: 163840
+------ 655360 elements
+Order FindAdd: 16312ms, info: NBLK:2048, blocks:319
+Order Find: 2500ms, matches: 655360
+Index FindAdd: 3016
+Index Find: 891ms, matches: 655360
+tree  insert: 9031ms
+tree  find: 7235ms, matches: 655360
+------ 2621440 elements
+Order FindAdd: 40735ms, info: NBLK:8192, blocks:319
+Order Find: 3922ms, matches: 2621440
+Index FindAdd: 3000
+Index Find: 812ms, matches: 2621440
+tree  insert: 10125ms
+tree  find: 8453ms, matches: 2621440
+========= String
+------ 10 elements
+Order FindAdd: 844ms, info: NBLK:128, blocks:0
+Order Find: 672ms, matches: 10
+Index FindAdd: 1375
+Index Find: 297ms, matches: 10
+tree  insert: 1172ms
+tree  find: 844ms, matches: 10
+------ 40 elements
+Order FindAdd: 1468ms, info: NBLK:128, blocks:0
+Order Find: 1141ms, matches: 40
+Index FindAdd: 1625
+Index Find: 375ms, matches: 40
+tree  insert: 1781ms
+tree  find: 1328ms, matches: 40
+------ 160 elements
+Order FindAdd: 2469ms, info: NBLK:128, blocks:1
+Order Find: 1750ms, matches: 160
+Index FindAdd: 1422
+Index Find: 328ms, matches: 160
+tree  insert: 2343ms
+tree  find: 1719ms, matches: 160
+------ 640 elements
+Order FindAdd: 4203ms, info: NBLK:128, blocks:4
+Order Find: 2078ms, matches: 640
+Index FindAdd: 1282
+Index Find: 375ms, matches: 640
+tree  insert: 2797ms
+tree  find: 2140ms, matches: 640
+------ 2560 elements
+Order FindAdd: 5578ms, info: NBLK:128, blocks:19
+Order Find: 2625ms, matches: 2560
+Index FindAdd: 1250
+Index Find: 391ms, matches: 2560
+tree  insert: 3406ms
+tree  find: 2719ms, matches: 2560
+------ 10240 elements
+Order FindAdd: 7703ms, info: NBLK:128, blocks:79
+Order Find: 3172ms, matches: 10240
+Index FindAdd: 1688
+Index Find: 422ms, matches: 10240
+tree  insert: 4000ms
+tree  find: 3265ms, matches: 10240
+------ 40960 elements
+Order FindAdd: 13000ms, info: NBLK:512, blocks:79
+Order Find: 3750ms, matches: 40960
+Index FindAdd: 2063
+Index Find: 469ms, matches: 40960
+tree  insert: 5312ms
+tree  find: 4547ms, matches: 40960
+------ 163840 elements
+Order FindAdd: 25593ms, info: NBLK:512, blocks:319
+Order Find: 5375ms, matches: 163840
+Index FindAdd: 2828
+Index Find: 1125ms, matches: 163840
+tree  insert: 9547ms
+tree  find: 8265ms, matches: 163840
+------ 655360 elements
+Order FindAdd: 69531ms, info: NBLK:1024, blocks:639
+Order Find: 8125ms, matches: 655360
+Index FindAdd: 4094
+Index Find: 1594ms, matches: 655360
+tree  insert: 13734ms
+tree  find: 11812ms, matches: 655360
+------ 2621440 elements
+Order FindAdd: 145734ms, info: NBLK:4096, blocks:639
+Order Find: 8828ms, matches: 2621440
+Index FindAdd: 3969
+Index Find: 1453ms, matches: 2621440
+tree  insert: 14344ms
+tree  find: 12579ms, matches: 2621440

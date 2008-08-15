@@ -1,0 +1,8 @@
+LAYOUT(Base, 400, 200)
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(328, 64).TopPosZ(164, 28))
+END_LAYOUT
+
+LAYOUT(Derived, 400, 200)
+	ITEM(Label, dv___0, SetLabel(t_("This is in derived class")).SetFont(StdFont(21)).LeftPosZ(72, 292).TopPosZ(12, 124))
+END_LAYOUT
+

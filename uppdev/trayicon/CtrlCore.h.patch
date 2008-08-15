@@ -1,0 +1,23 @@
+*** CtrlCore.h.old	2006-10-10 01:44:20.000000000 +0800
+--- CtrlCore.h	2006-10-10 01:37:31.000000000 +0800
+***************
+*** 283,285 ****
+  	};
+!
+  	struct Top {
+--- 283,285 ----
+  	};
+! protected:
+  	struct Top {
+***************
+*** 530,533 ****
+  	};
+! private:
+  	static ArrayMap<Window, XWindow>& Xwindow();
+  	static Ptr<Ctrl> WndCaretCtrl;
+--- 530,534 ----
+  	};
+! protected:
+  	static ArrayMap<Window, XWindow>& Xwindow();
++ private:
+  	static Ptr<Ctrl> WndCaretCtrl;

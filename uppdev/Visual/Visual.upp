@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+library(WIN32) uxtheme.lib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

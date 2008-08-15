@@ -1,0 +1,15 @@
+description "Wordprocessor application";
+
+uses
+	CtrlLib,
+	RichEdit,
+	PdfDraw,
+	art/BlueBar;
+
+file
+	UWord.cpp,
+	UWord.iml;
+
+mainconfig
+	"" = "GUI";
+

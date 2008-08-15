@@ -1,0 +1,9 @@
+uses
+	CtrlLib,
+	Report;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

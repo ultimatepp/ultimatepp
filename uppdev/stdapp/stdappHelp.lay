@@ -1,0 +1,8 @@
+LAYOUT(stdappLayoutAbout, 500, 123)
+    ITEM(ImageCtrl, logo_ctrl, LeftPosZ(0, 155).TopPosZ(0, 123))
+    ITEM(StaticText, text_1, SetAlign(ALIGN_CENTER).SetFont(StdFont(16).Bold()).RightPosZ(8, 328).TopPosZ(8, 20))
+    ITEM(StaticText, text_2, SetAlign(ALIGN_CENTER).SetFont(StdFont(12).Bold()).RightPosZ(8, 328).TopPosZ(28, 20))
+    ITEM(StaticText, text_3, SetAlign(ALIGN_CENTER).SetFont(StdFont(12).Italic()).RightPosZ(8, 328).TopPosZ(48, 20))
+    ITEM(StaticText, text_4, SetAlign(ALIGN_CENTER).SetFont(StdFont(10)).RightPosZ(8, 328).TopPosZ(68, 20))
+    ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(132, 80).VSizePosZ(96, 7))
+END_LAYOUT

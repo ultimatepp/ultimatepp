@@ -1,0 +1,11 @@
+uses
+	RichEdit;
+
+file
+	Udoc.h,
+	main.cpp,
+	Udoc.lay,
+	Udoc.iml;
+
+mainconfig
+	"" = "GUI ST";

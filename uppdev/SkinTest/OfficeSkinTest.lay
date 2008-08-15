@@ -1,0 +1,4 @@
+LAYOUT(OfficeSkinTestLayout, 532, 60)
+	ITEM(Button, btn2, SetLabel(t_("1*32 v. gradient with border")).LeftPosZ(268, 260).VSizePosZ(4, 4))
+	ITEM(Button, btn1, SetLabel(t_("1*32 v. gradient no border")).LeftPosZ(4, 260).VSizePosZ(4, 4))
+END_LAYOUT

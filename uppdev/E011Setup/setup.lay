@@ -1,0 +1,18 @@
+LAYOUT(MySelectFolderLay, 400, 216)
+	ITEM(EditString, path, HSizePosZ(4, 76).TopPosZ(156, 19))
+	ITEM(Button, browse, SetLabel(t_("&Browse")).LeftPosZ(332, 64).TopPosZ(152, 24))
+	ITEM(Label, dv___2, SetLabel(t_("Folder:")).LeftPosZ(4, 62).TopPosZ(136, 19))
+	ITEM(Button, cancel, SetLabel(t_("&Cancel")).LeftPosZ(332, 64).TopPosZ(188, 24))
+	ITEM(Button, ok, SetLabel(t_("O&k")).LeftPosZ(260, 64).TopPosZ(188, 24))
+	ITEM(RichTextView, info, Background(Null).AutoHideSb(true).HMargins(4).VMargins(4).SetFrame(NullFrame()).LeftPosZ(4, 392).TopPosZ(4, 128))
+END_LAYOUT
+
+LAYOUT(MyInfoOptionLay, 356, 324)
+	ITEM(RichTextView, prgfolderinfo, Background(Null).AutoHideSb(true).HMargins(4).VMargins(4).SetFrame(NullFrame()).LeftPosZ(4, 348).TopPosZ(4, 36))
+	ITEM(EditString, prgfolder, LeftPosZ(4, 348).TopPosZ(48, 19))
+	ITEM(ArrayCtrl, prgfolderlist, HorzGrid(false).VertGrid(false).Header(false).AutoHideSb(true).LeftPosZ(4, 348).TopPosZ(76, 128))
+	ITEM(RichTextView, desktopiconinfo, Background(Null).AutoHideSb(true).HMargins(4).VMargins(4).SetFrame(NullFrame()).LeftPosZ(4, 348).TopPosZ(248, 24))
+	ITEM(Option, option, LeftPosZ(4, 348).TopPosZ(276, 15))
+	ITEM(Button, ok, SetLabel(t_("&Next >")).LeftPosZ(288, 64).TopPosZ(296, 24))
+END_LAYOUT
+

@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	plugin\sqlite3,
+	SqlCtrl;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,7 @@
+uses Core;
+
+file
+	"MergeSort.cpp";
+
+mainconfig
+	"" = "CONSOLE ST";

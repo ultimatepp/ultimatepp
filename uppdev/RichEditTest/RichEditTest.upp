@@ -1,0 +1,11 @@
+uses
+	RichEdit;
+
+file
+	main.cpp,
+	todo.txt;
+
+mainconfig
+	"" = "GUI MT",
+	"" = "GUI NOGTK";
+

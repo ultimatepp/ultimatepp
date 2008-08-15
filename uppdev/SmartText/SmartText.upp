@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"SmartText.h"
+	, main.cpp
+	, "SmartText.lay"
+
+;
+
+mainconfig
+	"" = "GUI ST";

@@ -1,0 +1,16 @@
+uses
+	CtrlLib,
+	AddOn,
+	AddOnDll,
+	AddOnHost,
+	SystemLog,
+	Web\SSL,
+	Crypto,
+	Geom\Draw;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	Geom;
+
+file
+	radial.h,
+	radial.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

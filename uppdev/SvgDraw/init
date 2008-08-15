@@ -1,0 +1,6 @@
+#ifndef _SvgDraw_icpp_init_stub
+#define _SvgDraw_icpp_init_stub
+#include "Draw/init"
+#include "CtrlLib/init"
+#include "Web/init"
+#endif

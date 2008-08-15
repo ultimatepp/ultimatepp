@@ -1,0 +1,5 @@
+LAYOUT(GLCtrlBugLayout, 200, 100)
+	ITEM(Button, _button, SetLabel(t_("Test")).LeftPosZ(72, 56).TopPosZ(76, 15))
+	ITEM(GLCtrl, _glCtrl, LeftPosZ(24, 152).TopPosZ(8, 56))
+END_LAYOUT
+

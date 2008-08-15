@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	testcrash.h,
+	main.cpp,
+	testcrash.lay;
+
+mainconfig
+	"" = "GUI MT";
+

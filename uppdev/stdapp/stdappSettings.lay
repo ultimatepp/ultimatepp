@@ -1,0 +1,18 @@
+LAYOUT(stdappLayoutTab, 296, 208)
+    ITEM(TabCtrl, tab, HCenterPosZ(256, 0).TopPosZ(20, 128))
+    ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(20, 80).BottomPosZ(20, 20))
+    ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(20, 80).BottomPosZ(20, 20))
+END_LAYOUT
+
+LAYOUT(stdappLayoutLang, 256, 128)
+    ITEM(LNGCtrl, current_language, RightPosZ(144, 92).VCenterPosZ(24, -16))
+    ITEM(Label, language_label, SetLabel(t_("Select language")).LeftPosZ(112, 100).VCenterPosZ(20, -18))
+END_LAYOUT
+
+LAYOUT(stdappLayoutCfg, 256, 128)
+    ITEM(Option, restore_cfg, SetLabel(t_("Restore configuration")).LeftPosZ(20, 216).VCenterPosZ(20, -18))
+END_LAYOUT
+
+LAYOUT(stdappLayoutSplash, 256, 128)
+    ITEM(Option, show_splash, SetLabel(t_("Show splash screen")).HCenterPosZ(216, 0).VCenterPosZ(20, -18))
+END_LAYOUT

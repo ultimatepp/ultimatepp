@@ -1,0 +1,11 @@
+description "click the titlebar";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

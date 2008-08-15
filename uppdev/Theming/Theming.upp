@@ -1,0 +1,14 @@
+uses
+	CtrlLib;
+
+file
+	Theming.h,
+	sample.txt,
+	ThProps.cpp,
+	Theme.cpp,
+	main.cpp,
+	Theming.lay;
+
+mainconfig
+	"" = "GUI";
+

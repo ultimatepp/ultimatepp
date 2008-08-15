@@ -1,0 +1,6 @@
+LAYOUT(j2Layout, 624, 436)
+	ITEM(LineEdit, a, LeftPosZ(4, 564).TopPosZ(412, 20))
+	ITEM(RichTextView, e, LeftPosZ(0, 624).TopPosZ(0, 408))
+	ITEM(Button, mbu, SetLabel(t_("TEST")).Tip(t_("thistip")).HCenterPosZ(40, 284).TopPosZ(412, 19))
+END_LAYOUT
+

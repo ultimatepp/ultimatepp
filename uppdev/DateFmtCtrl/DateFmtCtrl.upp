@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	DateFmtCtrl.h,
+	main.cpp charset "utf8",
+	DateFmtCtrl.lay;
+
+mainconfig
+	"" = "GUI ST";

@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	Core;
+
+file
+	MyEcho.h,
+	ShellCmd.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+

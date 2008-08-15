@@ -1,0 +1,21 @@
+description "j2";
+
+uses
+	CtrlLib;
+
+file
+	j2.h,
+	IniReader.cpp,
+	IniReader.h,
+	chatterlistclass.h,
+	chatterlistclass.cpp,
+	chatbot.cpp,
+	chatbot.h,
+	main.cpp,
+	mstring.cpp,
+	mstring.h,
+	j2.lay;
+
+mainconfig
+	"" = "CONSOLE";
+

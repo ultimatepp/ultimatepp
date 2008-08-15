@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"VisualTest.h"
+	, main.cpp
+	, "VisualTest.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

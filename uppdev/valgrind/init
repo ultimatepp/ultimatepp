@@ -1,0 +1,4 @@
+#ifndef _valgrind_icpp_init_stub
+#define _valgrind_icpp_init_stub
+#include "Core/init"
+#endif

@@ -1,0 +1,4 @@
+#ifndef _DropListBug_icpp_init_stub
+#define _DropListBug_icpp_init_stub
+#include "CtrlLib/init"
+#endif

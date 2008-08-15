@@ -1,0 +1,31 @@
+uses
+	CtrlLib;
+
+file
+	stdappDef.hpp charset "UTF-8",
+	UPP_Logo_033.iml charset "UTF-8",
+	stdappCfg.hpp charset "UTF-8",
+	stdappCfg.cpp charset "UTF-8",
+	stdappSplash.hpp charset "UTF-8",
+	stdappSplash.cpp charset "UTF-8",
+	stdapp.hpp charset "UTF-8",
+	stdapp.cpp charset "UTF-8",
+	stdapp.lay charset "UTF-8",
+	stdapp.iml charset "UTF-8",
+	stdapp.rc charset "UTF-8",
+	stdapp.t charset "UTF-8",
+	stdappFile.hpp charset "UTF-8",
+	stdappFile.cpp charset "UTF-8",
+	stdappEdit.hpp charset "UTF-8",
+	stdappEdit.cpp charset "UTF-8",
+	stdappSettings.hpp charset "UTF-8",
+	stdappSettings.cpp charset "UTF-8",
+	stdappSettings.lay charset "UTF-8",
+	stdappHelp.hpp charset "UTF-8",
+	stdappHelp.cpp charset "UTF-8",
+	stdappHelp.lay charset "UTF-8",
+	EnhParentCtrl.hpp charset "UTF-8",
+	EnhParentCtrl.cpp charset "UTF-8";
+
+mainconfig
+	"" = "GUI";

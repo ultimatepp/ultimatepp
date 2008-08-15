@@ -1,0 +1,5 @@
+file
+	vtbl.cpp;
+
+mainconfig
+	"Normal" = normal "CONSOLE ST";

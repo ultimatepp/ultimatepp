@@ -1,0 +1,6 @@
+LAYOUT(DropListBugLayout, 204, 28)
+	ITEM(DropList, dropList, LeftPosZ(4, 64).TopPosZ(4, 19))
+	ITEM(Button, removeButton, SetLabel(t_("Remove")).LeftPosZ(144, 56).TopPosZ(4, 20))
+	ITEM(Button, addButton, SetLabel(t_("Add")).LeftPosZ(80, 56).TopPosZ(4, 20))
+END_LAYOUT
+

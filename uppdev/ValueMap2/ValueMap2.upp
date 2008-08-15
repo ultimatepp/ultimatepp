@@ -1,0 +1,12 @@
+uses
+	Core,
+	Sql;
+
+file
+	ValueMap.h,
+	ValueMap.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,13 @@
+uses
+	CtrlLib;
+
+file
+	menu.cpp,
+	test.lay;
+
+mainconfig
+	"" = "GUI";
+
+menu
+
+.cpp charset "UTF-8";

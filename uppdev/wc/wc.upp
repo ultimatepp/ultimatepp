@@ -1,0 +1,14 @@
+description "Word-count utility";
+
+optimize_speed;
+
+uses
+	Core;
+
+file
+	wc.cpp;
+
+mainconfig
+	"" = "",
+	"" = "USEMALLOC",
+	"" = "MT";

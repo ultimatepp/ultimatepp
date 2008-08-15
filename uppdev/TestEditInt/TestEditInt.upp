@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	TestEditInt.h,
+	main.cpp,
+	TestEditInt.lay;
+
+mainconfig
+	"" = "GUI";
