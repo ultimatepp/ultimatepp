@@ -2,53 +2,123 @@
 
 SvnSel::SvnSel()
 {
-	CtrlLayoutOKCancel(*this, "Select SVN folder");
+	CtrlLayoutOKCancel(*this, "Select SVN url");
 	list.WhenLeftDouble = THISBACK(Go);
+	list.WhenSel = THISBACK(SyncResult);
+	list.Columns(3);
+	dirup.SetImage(CtrlImg::DirUp());
+	dirup <<= THISBACK(DirUp);
+	result.SetReadOnly();
+	Sizeable().Zoomable();
+	gourl <<= THISBACK(Url);
 }
 
-void SvnSel::Load()
+void SvnSel::SyncResult()
 {
+	String p = url;
+	if(list.IsCursor()) {
+		const FileList::File& f = list.Get(list.GetCursor());
+		if(f.isdir)
+			p << '/' << f.name;
+	}
+	result <<= p;
+}
+
+bool SvnSel::Load(const String& path)
+{
+	String h;
+	if(Sys(SvnCmd("list", usr, pwd) + ' ' + path, h))
+		return false;
 	list.Clear();
-	String path = url;
-	if(folder.GetCount()) {
-		list.Add("..", CtrlImg::DirUp(), StdFont().Bold(), SColorText(), true);
-		path << '/' << folder;
-	}
-	Vector<String> l = Split(Sys(SvnCmd("list", usr, pwd) + ' ' + path), CharFilterCrLf);
-	for(int i = 0; i < l.GetCount(); i++) {
-		String fn = l[i];
-		if(fn.GetLength()) {
-			bool isdir = false;
-			if(*fn.Last() == '/' || *fn.Last() == '\\') {
-				fn.Trim(fn.GetLength() - 1);
-				list.Add(fn, CtrlImg::Dir(), StdFont().Bold(), SColorText(), true);
+	Vector<String> l = Split(h, CharFilterCrLf);
+	for(int pass = 0; pass < 2; pass++)
+		for(int i = 0; i < l.GetCount(); i++) {
+			String fn = l[i];
+			if(fn.GetLength()) {
+				bool isdir = false;
+				if(*fn.Last() == '/' || *fn.Last() == '\\') {
+					fn.Trim(fn.GetLength() - 1);
+					if(pass == 0)
+						list.Add(fn, CtrlImg::Dir(), StdFont().Bold(), SColorText(), true);
+				}
+				else
+					if(pass == 1)
+						list.Add(fn, CtrlImg::File());
 			}
-			else
-				list.Add(fn, CtrlImg::File());
-		}
 	}
+	url = path;
+	list.KillCursor();
+	SyncResult();
+	return true;
+}
+
+void SvnSel::DirUp()
+{
+	int q = url.ReverseFind('/');
+	if(q > 0 && url[q - 1] != '/')
+		Load(url.Mid(0, q));
 }
 
 void SvnSel::Go()
 {
 	if(list.IsCursor()) {
 		const FileList::File& f = list.Get(list.GetCursor());
-		if(f.isdir) {
-			if(f.name == "..")
-				folder.Trim(max(0, folder.Find(f.name)));
-			else
-				folder << '/' << f.name;
-			Load();
-		}
+		if(f.isdir)
+			Load(url + '/' + f.name);
 	}
 }
 
-String SvnSel::Select(const char *_url, const char *_usr, const char *_pwd)
+bool SvnSel::NewUrl()
 {
-	url = _url;
+	WithNewUrlLayout<TopWindow> dlg;
+	CtrlRetriever r;
+	r(dlg.url, url)(dlg.usr, usr)(dlg.pwd, pwd);
+	CtrlLayoutOKCancel(dlg, "SVN URL");
+	if(dlg.Execute() != IDOK)
+		return false;
+	String busr = usr;
+	String bpwd = pwd;
+	r.Retrieve();
+	if(!TryLoad((String)~dlg.url)) {
+		usr = busr;
+		pwd = bpwd;
+		return false;
+	}
+	return true;
+}
+
+void SvnSel::Url()
+{
+	NewUrl();
+}
+
+bool SvnSel::TryLoad(const char *url)
+{
+	if(!Load(url)) {
+		Exclamation("Invalid URL!");
+		return false;
+	}
+	return true;
+}
+
+bool SvnSel::Select0()
+{
+	if(url.GetLength() == 0) {
+		if(!NewUrl())
+			return false;
+	}
+	return Execute();
+}
+
+bool SvnSel::Select()
+{
+	url.Clear();
+	return Select0();
+}
+
+bool SvnSel::Select(const char *_url, const char *_usr, const char *_pwd)
+{
 	usr = _usr;
 	pwd = _pwd;
-	Load();
-	Execute();
-	return url + '/' + folder;
+	return TryLoad(url) && Select0();
 }
