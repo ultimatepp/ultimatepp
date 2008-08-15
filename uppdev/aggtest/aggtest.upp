@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	aggtest.h,
+	main.cpp,
+	aggtest.lay;
+
+mainconfig
+	"" = "GUI";
+
