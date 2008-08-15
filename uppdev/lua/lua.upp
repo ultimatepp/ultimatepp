@@ -58,5 +58,4 @@ file
  src/luac.c,
  src/lundump.c,
  src/lundump.h,
- src/print.c
- End readonly separator;
+ src/print.c;
