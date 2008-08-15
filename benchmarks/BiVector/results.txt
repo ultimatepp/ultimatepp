@@ -1,0 +1,9 @@
+* c:\out\MSC71cdb\BiVector.exe 04.05.2008 12:11:12, user: Luzr
+
+deqeue add 3.859
+deqeue index read 0.594
+deqeue iterator read 0.437
+BiVector add 2.110
+BiVector read 1.156
+
+=============================

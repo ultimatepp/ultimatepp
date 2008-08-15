@@ -1,0 +1,14 @@
+All that U++ contributors should know....
+
+Hints:
+
+- subscribe changelog mailing list to be aware of changes
+- after syncing uvs2, use "rebuild all"
+
+Developers:
+
+Mirek Fidler (cxl, luzr), email: cxl@ntllib.org, icq: 129-896-207
+Daniel Kos (uno, unodgs), email: dgs@pac.pl, icq: 320-083-516
+Sandor Hojtsy (hojtsy, hs_cover), email: sandor.hojtsy@gmail.com, icq: 217-383-956
+
+----------------------

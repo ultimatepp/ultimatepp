@@ -1,0 +1,14 @@
+description "Examples of SqlExp expressions";
+
+uses
+	Core,
+	Sql,
+	RichText;
+
+file
+	SqlExp.cpp;
+
+mainconfig
+	"" = "",
+	"" = "QTF";
+

@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	main.cpp
+		depends() test.h;
+
+mainconfig
+	"" = "CONSOLE MT";
+

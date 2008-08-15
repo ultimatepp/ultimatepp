@@ -1,0 +1,15 @@
+description "Demonstration of \"blue\" ToolBar and MenuBar skin";
+
+uses
+	CtrlLib,
+	RichEdit,
+	PdfDraw,
+	art\BlueBar;
+
+file
+	UWord.cpp,
+	UWord.iml;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI .NOGTK";

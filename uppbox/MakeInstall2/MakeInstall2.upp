@@ -1,0 +1,12 @@
+uses
+	plugin\bz2,
+	Core,
+	plugin\ftp,
+	CtrlLib;
+
+file
+	install.lay,
+	Main.cpp;
+
+mainconfig
+	"" = "GUI";

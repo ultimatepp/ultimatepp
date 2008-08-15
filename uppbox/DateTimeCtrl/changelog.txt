@@ -1,0 +1,39 @@
+DateTimeCtrl Changelog
+
+[+] new
+[-] fixed
+[*] changed
+
+---------------------------------
+
+v 1.00 (initial version)
+v 1.01
+
+    - when gray day was selected 255 was returned as a day after left click
+    + more compatability with XP style;
+    + method SelectAll(bool b) - if b is true you can select days form one month
+      before or one month after the current month
+
+v.1.02
+
+    + escape key closes the calendar
+    + tooltips for buttons for changing month and year
+
+v.1.03
+
+    + WhenSelect replaced by default WhenAction
+
+v.1.04
+
+    + fixed main.cpp to be able to compile
+    + added ignoring mouse click when calendar is close
+      (it prevents opening any other popup control)
+
+
+ToDo:
+
+    - usc file
+    - time in return value
+    - popup month list
+    - automatic font size changing (according to window size)
+    - gripper

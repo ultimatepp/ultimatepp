@@ -1,0 +1,20 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	CppBase.h,
+	keyword.i,
+	Pre.cpp,
+	cpplex.cpp,
+	Parser.cpp,
+	Base.cpp,
+	perf.txt,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "";

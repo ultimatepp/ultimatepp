@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Sort.cpp optimize_speed;
+
+mainconfig
+	"" = "";
+

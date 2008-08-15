@@ -1,0 +1,9 @@
+Qualify:
+
+base performance 2.25 s
+better bases 2.05 s
+
+-------------
+Optimized:
+MSC71cdb 1.05s
+MSC80cbd 1.32s (-O1, speeed optimization in file)

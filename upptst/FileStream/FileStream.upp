@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	FileStream.cpp;
+
+mainconfig
+	"" = "";

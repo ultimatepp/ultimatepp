@@ -1,0 +1,5 @@
+#ifndef _DbfView_icpp_init_stub
+#define _DbfView_icpp_init_stub
+#include "plugin\dbf/init"
+#include "CtrlLib/init"
+#endif

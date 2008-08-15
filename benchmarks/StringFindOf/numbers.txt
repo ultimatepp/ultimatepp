@@ -1,0 +1,17 @@
+* e:\out\MSC71cdb\StringFindOf.exe 07.06.2008 15:49:10, user: cxl
+
+q = 800000000
+TIMING Find 5         :  1.42 s  -  1.42 s  ( 1.42 s  / 1 ), min:  1.42 s , max:  1.42 s , nesting: 1 - 1
+TIMING Find 4         :  1.06 s  -  1.06 s  ( 1.06 s  / 1 ), min:  1.06 s , max:  1.06 s , nesting: 1 - 1
+TIMING Find 3         : 891.00 ms - 891.00 ms (891.00 ms / 1 ), min: 891.00 ms, max: 891.00 ms, nesting: 1 - 1
+TIMING Find 2         :  1.24 s  -  1.24 s  ( 1.24 s  / 1 ), min:  1.24 s , max:  1.24 s , nesting: 1 - 1
+
+*************************
+
+* e:\out\MSC71cdb\StringFindOf.exe 07.06.2008 15:50:27, user: cxl
+
+q = 800000000
+TIMING Find 5         :  1.23 s  -  1.23 s  ( 1.23 s  / 1 ), min:  1.23 s , max:  1.23 s , nesting: 1 - 1
+TIMING Find 4         : 485.00 ms - 485.00 ms (485.00 ms / 1 ), min: 485.00 ms, max: 485.00 ms, nesting: 1 - 1
+TIMING Find 3         : 621.00 ms - 621.00 ms (621.00 ms / 1 ), min: 621.00 ms, max: 621.00 ms, nesting: 1 - 1
+TIMING Find 2         : 263.00 ms - 263.00 ms (263.00 ms / 1 ), min: 263.00 ms, max: 263.00 ms, nesting: 1 - 1

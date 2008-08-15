@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	RWMutex.cpp;
+
+mainconfig
+	"" = "MT";

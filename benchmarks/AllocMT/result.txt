@@ -1,0 +1,50 @@
+* c:\out\MSC71cdb.Mt.Usemalloc\AllocMT.exe 27.04.2008 20:50:24, user: Luzr
+
+Single thread: 6015
+Two threads: 6641
+CoWork (1000 runs): 3359
+
+* c:\out\MSC71cdb.Mt\AllocMT.exe 27.04.2008 20:51:34, user: Luzr
+
+Single thread: 5110
+Two threads: 5343
+CoWork (1000 runs): 2657
+
+* c:\out\MSC71cdb\AllocMT.exe 27.04.2008 20:53:44, user: Luzr
+
+Single thread: 4875
+
+* c:\out\MSC71cdb.Usemalloc\AllocMT.exe 27.04.2008 20:54:32, user: Luzr
+
+Single thread: 6297
+
+* c:\out\MSC71cdb.Chris.Mt.Usemalloc\AllocMT.exe 28.04.2008 10:24:51, user: Luzr
+
+Single thread: 5688
+Two threads: 6219
+CoWork (1000 runs): 3000
+
+// ----------
+
+* c:\out\MSC71cdb.Mt\AllocMT.exe 28.04.2008 11:55:03, user: Luzr
+
+1 thread(s) 250 ms
+2 thread(s) 265 ms
+4 thread(s) 532 ms
+8 thread(s) 1031 ms
+16 thread(s) 2062 ms
+32 thread(s) 4141 ms
+64 thread(s) 8312 ms
+CoWork (1000 runs): 2594 ms
+
+* c:\out\MSC71cdb.Chris.Mt.Usemalloc\AllocMT.exe 28.04.2008 12:04:59, user: Luzr
+
+1 thread(s) 282 ms
+2 thread(s) 296 ms
+4 thread(s) 641 ms
+8 thread(s) 1188 ms
+16 thread(s) 2343 ms
+32 thread(s) 4688 ms
+64 thread(s) 9312 ms
+CoWork (1000 runs): 2953 ms
+

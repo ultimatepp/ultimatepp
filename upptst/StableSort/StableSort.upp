@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	StableSort.cpp;
+
+mainconfig
+	"" = "";

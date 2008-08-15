@@ -1,0 +1,7 @@
+#include "Uvs2.h"
+#pragma hdrstop
+
+#define TFILE <Uvs2/Uvs2.t>
+#include <Core/t.h>
+
+INITBLOCK { RegisterGlobalConfig("DlgFiles"); }

@@ -1,0 +1,6 @@
+#ifndef _OleCalc_icpp_init_stub
+#define _OleCalc_icpp_init_stub
+#include "Ole\Ctrl/init"
+#include "CtrlLib/init"
+#include "Esc/init"
+#endif

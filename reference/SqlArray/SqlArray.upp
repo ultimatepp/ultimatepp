@@ -1,0 +1,15 @@
+description "Example of editing SQL table using SqlArray";
+
+uses
+	CtrlLib,
+	plugin/sqlite3,
+	SqlCtrl;
+
+file
+	app.lay,
+	db.sch,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

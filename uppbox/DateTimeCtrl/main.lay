@@ -1,0 +1,11 @@
+LAYOUT(AppLayout, 360, 200)
+	ITEM(DateTimeCtrl, datesmall, LeftPosZ(12, 100).TopPosZ(24, 19))
+	ITEM(DateTimeCtrl, datebig, LeftPosZ(180, 108).TopPosZ(24, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Standard calendar")).LeftPosZ(12, 96).TopPosZ(8, 13))
+	ITEM(Label, dv___3, SetLabel(t_("Big calendar")).LeftPosZ(180, 76).TopPosZ(8, 13))
+	ITEM(DropList, lang, LeftPosZ(96, 124).TopPosZ(84, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Language")).LeftPosZ(96, 88).TopPosZ(70, 13))
+	ITEM(Option, repaint, SetLabel(t_("Show repaint")).LeftPosZ(4, 84).BottomPosZ(5, 15))
+	ITEM(Option, selall, SetLabel(t_("Select All")).LeftPosZ(104, 68).BottomPosZ(5, 15))
+	ITEM(Button, exit, SetLabel(t_("Exit")).RightPosZ(4, 68).BottomPosZ(4, 24))
+END_LAYOUT
