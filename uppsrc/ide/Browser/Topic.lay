@@ -16,11 +16,14 @@ LAYOUT(RenameTopicLayout, 268, 64)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(196, 64).TopPosZ(32, 24))
 END_LAYOUT
 
-LAYOUT(StylesheetLayout, 216, 344)
-	ITEM(ArrayCtrl, style, LeftPosZ(8, 200).TopPosZ(8, 296))
-	ITEM(Button, edit, SetLabel(t_("Edit..")).LeftPosZ(8, 64).TopPosZ(312, 24))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(76, 64).TopPosZ(312, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(144, 64).TopPosZ(312, 24))
+LAYOUT(StylesheetLayout, 348, 344)
+	ITEM(ArrayCtrl, style, LeftPosZ(8, 260).TopPosZ(8, 328))
+	ITEM(Button, edit, SetLabel(t_("Edit..")).LeftPosZ(276, 64).TopPosZ(8, 24))
+//	ITEM(Button, edit, SetLabel(t_("New..")).LeftPosZ(276, 64).TopPosZ(36, 24))
+//	ITEM(Button, edit, SetLabel(t_("Rename..")).LeftPosZ(276, 64).TopPosZ(64, 24))
+//	ITEM(Button, edit, SetLabel(t_("Remove..")).LeftPosZ(276, 64).TopPosZ(92, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(276, 64).TopPosZ(284, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(276, 64).TopPosZ(312, 24))
 END_LAYOUT
 
 LAYOUT(TopicLinkLayout, 716, 404)

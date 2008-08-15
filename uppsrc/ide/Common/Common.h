@@ -252,7 +252,6 @@ public:
 		byte           charset;
 		int            font;
 		String         highlight;
-		String         unknown;
 		int            optimize_speed;
 
 		void operator=(const String& s)   { String::operator=(s); readonly = separator = false; }
@@ -280,7 +279,6 @@ public:
 	Array<File>              file;
 	Array<Config>            config;
 	Array<CustomStep>        custom;
-	String                   unknown;
 	Time                     time;
 
 	int   GetCount() const                { return file.GetCount(); }

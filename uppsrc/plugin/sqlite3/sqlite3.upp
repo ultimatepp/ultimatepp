@@ -98,7 +98,3 @@ file
 	lib\vdbemem.c,
 	lib\vtab.c,
 	lib\where.c;
-
-Core
-
-;

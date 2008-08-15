@@ -178,7 +178,6 @@ void Package::Load(const char *path) {
 		file.Clear();
 		config.Clear();
 		custom.Clear();
-		unknown.Clear();
 		description.Clear();
 		String f = LoadFile(path);
 		time = FileGetTime(path);
@@ -241,16 +240,8 @@ void Package::Load(const char *path) {
 							else
 							if(p.Id("highlight"))
 								file.Top().highlight = p.ReadId();
-							else {
-								const char *q = p.GetPtr();
-								if(p.Char('('))
-									while(!p.Char(')'))
-										p.SkipTerm();
-								else
-									p.SkipTerm();
-								file.Top().unknown.Cat(' ');
-								file.Top().unknown.Cat(q, int(p.GetPtr() - q));
-							}
+							else
+								p.ThrowError("invalid keyword");
 						}
 					}
 					while(p.Char(','));
@@ -274,14 +265,8 @@ void Package::Load(const char *path) {
 				else
 				if(p.Id("custom"))
 					custom.Add().Load(p);
-				else {
-					unknown << p.ReadId() << " ";
-					const char *q = p.GetPtr();
-					while(!p.Char(';') && !p.IsEof())
-						p.SkipTerm();
-					unknown.Cat("\r\n\r\n");
-					unknown.Cat(q, p.GetPtr());
-				}
+				else
+					p.ThrowError("invalid keyword");
 				p.Char(';');
 			}
 			return;
@@ -398,7 +383,6 @@ bool Package::Save(const char *path) const {
 				out << " highlight " << f.highlight;
 			putfopt(out, "options", f.option);
 			putfopt(out, "depends", f.depends);
-			out << f.unknown;
 		}
 		out << ";\n\n";
 	}
@@ -413,6 +397,5 @@ bool Package::Save(const char *path) const {
 	}
 	for(int i = 0; i < custom.GetCount(); i++)
 		out << custom[i].AsString();
-	out << unknown;
 	return SaveChangedFile(path, out.GetResult());
 }
