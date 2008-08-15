@@ -124,7 +124,7 @@ file
 	agg_pattern_filters_rgba.h,
 	agg_gamma_lut.h,
 	agg_gamma_functions.h,
-	Texts readonly separator and                              Fonts ,
+	Texts readonly separator,
 	agg_renderer_raster_text.h,
 	agg_embedded_raster_fonts.h,
 	agg_embedded_raster_fonts.cpp,
