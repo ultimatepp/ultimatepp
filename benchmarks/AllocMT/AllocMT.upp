@@ -1,0 +1,23 @@
+optimize_speed;
+
+uses
+	Core,
+	CppBase;
+
+library(asdf) "pthreadVCE2.lib pthreadVCE2.lib";
+
+file
+	Chris.cpp,
+	Chris2.cpp,
+	AllocMT.cpp,
+	result.txt;
+
+mainconfig
+	"" = "MT",
+	"" = "",
+	"" = "USEMALLOC MT",
+	"" = "USEMALLOC",
+	"" = "USEMALLOC CHRIS MT",
+	"" = "USEMALLOC CHRIS",
+	"" = "MT PROFILEMT";
+

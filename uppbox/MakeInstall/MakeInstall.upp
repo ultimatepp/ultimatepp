@@ -1,0 +1,9 @@
+uses
+	plugin\bz2,
+	Core;
+
+file
+	Main.cpp;
+
+mainconfig
+	"" = "";

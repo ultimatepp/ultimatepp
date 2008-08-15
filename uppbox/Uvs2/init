@@ -1,0 +1,9 @@
+#ifndef _Uvs2_icpp_init_stub
+#define _Uvs2_icpp_init_stub
+#include "Web/init"
+#include "plugin\bz2/init"
+#include "plugin\z/init"
+#include "plugin\ftp/init"
+#include "CtrlLib/init"
+#include "Uvs2_init.icpp"
+#endif

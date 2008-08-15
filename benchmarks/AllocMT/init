@@ -1,0 +1,5 @@
+#ifndef _AllocMT_icpp_init_stub
+#define _AllocMT_icpp_init_stub
+#include "Core/init"
+#include "CppBase/init"
+#endif

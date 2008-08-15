@@ -1,0 +1,32 @@
+options
+	"-DSUPPORT_UTF8 -DSUPPORT_UCP";
+
+file
+	Pcre.h,
+	RegExp.h,
+	RegExp.cpp,
+	PCRE readonly separator,
+	lib/config.h,
+	lib/pcre.h,
+	lib/pcre_chartables.c,
+	lib/pcre_compile.c,
+	lib/pcre_config.c,
+	lib/pcre_dfa_exec.c,
+	lib/pcre_exec.c,
+	lib/pcre_fullinfo.c,
+	lib/pcre_get.c,
+	lib/pcre_globals.c,
+	lib/pcre_info.c,
+	lib/pcre_internal.h,
+	lib/pcre_maketables.c,
+	lib/pcre_ord2utf8.c,
+	lib/pcre_refcount.c,
+	lib/pcre_study.c,
+	lib/pcre_tables.c,
+	lib/pcre_try_flipped.c,
+	lib/pcre_ucp_searchfuncs.c,
+	lib/pcre_valid_utf8.c,
+	lib/pcre_version.c,
+	lib/pcre_xclass.c,
+	lib/ucp.h,
+	lib/ucpinternal.h;

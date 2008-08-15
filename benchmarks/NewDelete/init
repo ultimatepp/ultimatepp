@@ -1,0 +1,4 @@
+#ifndef _NewDelete_icpp_init_stub
+#define _NewDelete_icpp_init_stub
+#include "Core/init"
+#endif

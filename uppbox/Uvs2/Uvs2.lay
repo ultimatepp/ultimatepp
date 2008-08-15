@@ -1,0 +1,28 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(ProjectSetupLayout, 368, 148)
+	ITEM(Label, dv___0, LeftPosZ(4, 94).TopPosZ(4, 19).SetLabel("&Source path:"))
+	ITEM(EditField, source_path, HSizePosZ(100, 4).TopPosZ(4, 19))
+	ITEM(Label, dv___2, LeftPosZ(4, 94).TopPosZ(26, 19).SetLabel("&Local repository:"))
+	ITEM(EditField, local_repository, HSizePosZ(100, 4).TopPosZ(26, 19))
+	ITEM(Label, dv___4, LeftPosZ(4, 94).TopPosZ(48, 19).SetLabel("&FTP server:"))
+	ITEM(EditField, ftp_server, HSizePosZ(100, 4).TopPosZ(48, 19))
+	ITEM(Label, dv___6, LeftPosZ(4, 94).TopPosZ(70, 19).SetLabel("&User name:"))
+	ITEM(EditField, ftp_user, LeftPosZ(100, 80).TopPosZ(70, 19))
+	ITEM(Label, dv___8, LeftPosZ(188, 94).TopPosZ(70, 19).SetLabel("&Password:"))
+	ITEM(EditField, ftp_password, LeftPosZ(284, 80).TopPosZ(70, 19))
+	ITEM(Label, dv___10, LeftPosZ(4, 94).TopPosZ(92, 19).SetLabel("FTP pr&oject path:"))
+	ITEM(EditField, ftp_project_path, HSizePosZ(100, 4).TopPosZ(92, 19))
+	ITEM(Button, ok, RightPosZ(88, 80).BottomPosZ(4, 22).SetLabel("OK"))
+	ITEM(Button, cancel, RightPosZ(4, 80).BottomPosZ(4, 22).SetLabel("Cancel"))
+END_LAYOUT
+
+LAYOUT(ExtensionsLayout, 400, 226)
+	ITEM(ArrayPair, pair, HSizePosZ(4, 4).TopPosZ(4, 160))
+	ITEM(Label, dv___1, LeftPosZ(4, 70).TopPosZ(170, 19).SetLabel("&Exclude also:"))
+	ITEM(EditField, exclude_also, HSizePosZ(78, 4).TopPosZ(170, 19))
+	ITEM(Button, ok, RightPosZ(88, 80).BottomPosZ(4, 22).SetLabel("OK"))
+	ITEM(Button, cancel, RightPosZ(4, 80).BottomPosZ(4, 22).SetLabel("Cancel"))
+END_LAYOUT
+
+#endif

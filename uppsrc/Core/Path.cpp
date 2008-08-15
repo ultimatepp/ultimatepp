@@ -907,7 +907,7 @@ void RealizePath(String file)
 bool DeleteFolderDeep(const char *dir)
 {
 	{
-		FindFile ff(String(dir) + "/*.*");
+		FindFile ff(AppendFileName(dir, "*.*"));
 		while(ff) {
 			String name = ff.GetName();
 			String p = AppendFileName(dir, name);

@@ -1,0 +1,196 @@
+    * new Core with better threading support. More here  http://www.ultimatepp.org/forum/index.php?t=msg&th=2189& amp; amp;start=0&
+    * init_ and GLOBAL_ changes. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2202& amp; amp;start=0&
+    * RichEdit now support overwrite mode (Insert key...)
+    * new methods Ctrl *GetOwnerCtrl() and const Ctrl GetOwnerCtrl() const
+    * first iteration of Drag and Drop in Ctrl (currently only for win32) More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2222& amp; amp;start=0&
+    * added Ctrl::OverrideCursor(const Image& m) - Overrides the image of mouse cursor.
+    * Ctrl now detects and delivers some new mouse events. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2228& amp; amp;start=0&
+    * modal loop handling changes. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2230& amp; amp;start=0&
+    * added Ctrl::ChildFrameMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags) for conroling child's frame mouse events
+    * GridCtrl now supports merged cells (see JoinCells and JoinFixedCells methods). Fixed some bugs.
+    * PostgreSQL support! (thanks to ZSolt) 
+    
+    * many Drag & Drop improvements. All edit controls as well as TreeCtrl and ArrayCtrl now support it.
+    * ArrayCtrlDnd reference was added
+    * fixed MaxLen restriction in edits.
+    * PostgreSQL now supports EnumView, EnumSequences and EnumTables. GetColumns should also work.
+    * InnerJoin, LeftJoin, RightJoin, FullJoin and On methods were added to SqlExp interface to allow do joins in sql-92 way. Old way (which work only in Oracle (and probably in Firebird)) are naturally still available.
+    * as MinGW does not support TLS variables, it now compiles as "USEMALLOC" in MT mode
+    * IconDes: Insert from file operation was added 
+    
+    * TheIDE now accepts file drops
+    * ColumnList supports drag & drop
+    * fixed rotated text problem (DrawText with angle) in X11
+    * fixed problem with Ctrl+1 - Ctrl+0 keys in X11
+    * ArrayCtrl and TreeCtrl support showing small popup if cell's width is not enough to display the text. It can by switched off by NoPopUpEx()
+    * U++ is now able to produce Win64 code (ise MSC8_64 builder) (Artur Bác)
+    * Code editor highlights Sql functions, boolean expression, U++ macros and text in upper case. Default color is black. Change it see the effect
+    * Code editor marks edited lines as well as lines with warnings and errors (Ralf - Zardos)
+    * inital support for drag & drop in X11. Small stability fixes to win32 drag & drop. 
+    
+    * Markers of changes in code editor! (by Ralf) + highlighting error/warnings/found in files lines.
+    * New QuickTabs
+    * Windows installer should work properly now (theide.exe is not hanging on process list)
+    * Postgres and As() fixes (by ZSolt)
+    * Fixed some problems with TreeCtrl (by Mrjt) More here: http://www.ultimatepp.org/forum/index.php?t=msg&goto=959 2&#msg_9592
+    * HomeBudget crashed when sql exception was thrown. Fixed.
+    * Some GridCtrl fixes (see internal changelog) 
+    
+    *  Drag and Drop interface slightly refactored
+    * Delayed clipboard rendering support
+    * Topic++ integrated into main Ide window
+    * Reduced code size produced by png plugin
+    * GridCtrl - fixed text wrapping, added HeaderAlign* methods
+    * MYSQLDLL - This new MySql package flag forces linking with .dll version of MySql client library.
+    * IconDes import file is now able to import multiple files
+    * Maximum number of "varargs" extended to 40
+    * Added EditField::AlignRight
+    * Extended DateTimeCtrl customization abilities
+    * Fixed crashing Run() in PostgreSQL
+    * Added ArrayCtrl::SetCtrl()
+    * New Image cache ops. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2468& amp; amp;start=0&
+    * Small ToolBar improvements (Wrap(), NoWrap(), SetButtonMinSize(Size)
+    * Some macro enhancements for TheIde. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2513& amp; amp;start=0&
+    * GetHomeDirectory, GetHomeDirFile now working in Win32
+    * Grouping in QuickTabs (not fully finished) 
+    
+    * SqlExp operator | now produces correct output for PostgreSQL
+    * fixed compiling SQL_PostgreSql reference (Bas)
+    * optimized painting when there is a lot of out of screen widgets
+    * TabCtrl now supports Insert and Remove of tabs
+    * FileSel is now using icons from windows
+    * multidisplay support (in Windows)
+    * LOG improvementes More here: http://www.ultimatepp.org/forum/index.php?t=msg&th=2670& amp;start=0&
+    * fixed ScrollBar::MinThumb(int sz) - there was not return value
+    * many DropGrid improovements (but still no documentation)
+    * fixed couple of bugs of GridCtrl (see changelog.txt) 
+    
+    *  PostgreSQL: Dialect now renamed to PGSQL, PgSequence now represents PGSQL SEQUENCE object.
+    * PostgreSQL: DUAL_PRIMARY_KEY was not working, added support for binary columns
+    * SqlExp Select statement now has "Get" variant to be used instead of "From" to get "table-less" select, like "select nextval('seq')". In Oracle, Select(NextVal(SEQ)).Get gets translated to "select seq.nextval from DUAL", in PGSQL to "select nextval('SEQ')".
+    * -M theide commandline option generates Makefile
+    * Help Window is no longer a Window, but is now integrated into theide main frame.
+    * "Close all tabs" and "Close non-project tabs" feature of tabs is now implemented
+    * DropList dropfocus mode is now default, added NotNull, fixed refreshing right button after closing popuped list
+    * Fixed memory allocator connected with limit on a total number of virtual memory blocks
+    * Fixed QuickTabs crash related to group change, reduced space between icon and tab name
+    * GridCtrl now supports inserting after/before and duplicating rows
+    * Change in Image interface http://www.ultimatepp.org/forum/index.php?t=msg&th=2579& amp;start=0&
+    * Added simple static widget DisplayCtrl
+    * Added FileSel preview
+    * Added SqlArray::ReQuery()
+    * Added CPU_Cores() - returns the number of CPU cores in system.
+    * New widget DropGrid http://www.ultimatepp.org/forum/index.php?t=msg&th=2610& amp;start=0&
+    * Improved build performance 
+    
+    * MingGW updated from 3.4.2 to 4.2.1
+    * SDL updated from 1.2.7 to 1.2.12
+    * Sqlite updated from 3.3.0 to 3.4.2
+    * PCRE updated from 7.0 to 7.3
+    * added close group to quick tabs popuped menu
+    * "Insert any file" in TheIDE hotkey changed to Ctrl+Shift+O(because of conflict with Italic in T++ editor)
+    * those pesky icon.ico files wrong exports are no more generated from .iml
+    * fixed a problem with unnamed image in .iml causing iml loss
+    * added -gstabs flag for mingw - this is supposed to solve the problem with mingw 4.2 debugging
+    * fixed potential crash in ArrayCtrl::AddColumn
+    * FileSel types change if there is an empty "DefaultExt", extension is now taken from the "file type" droplist, from the first mask.
+    * fixed clipping in Ctrl::GetTopRect
+    * fixed painting LabelBox image at incorrect y-coord (mrjt)
+    * fixed ArrayCtrl::NoBackground (mrjt)
+    * fixed segmentation fault on Ubuntu Feisty (mdelfede) 
+    
+    * fixed problems with GUI and the new sqlite3 (thanks to dmcgeoch)
+    * Sql::Begin and SqlSession::Begin now perform ClearErrors
+    * added void Sql::Get(Fields fo) More here: http://www.ultimatepp.org/forum/index.php?t=msg&th=2719& amp; amp; amp;start=0&
+    * added String SqlSession::GetErrorCodeString(). Some databases like Postgres return "stringed" error codes.
+    * added SqlSession::WhenDatabaseActivity(ActivityStatus status) callback. Status can be (for now) EXECUTING, END_EXECUTING, FETCHING, END_FETCHING. It can be used to react on database activity (for example mouse cursor can change then, progress bar can be displayed and so on)
+    * fixed QuickTabs highlighting problems
+    * added popuped menu with Close item to QuickTabs
+    * added network browsing class NetNode (for now, in Win32)
+    * EditField::NullText now has variant with Font parameter
+    * added EditField::SetInactiveConvert(Convert &c) - allow to set convert class used when focus is out of edit field
+    * added Image Win32DllIcon(const char *dll, int ii, bool large) to retrieve icon as image from given dll file.
+    * fixed Splitter SetMin which wrongly used the 10000 ratio instead of pixels. This new method should use directly pixels....
+    * almost all calls to Win32 API in Core are now implemented to use unicode variant (like CreateFileW)
+    * painting Image for low-level machines was optimized
+    * fixed 2 regression bugs of DateTimeCtrl. More here: http://www.ultimatepp.org/forum/index.php?t=msg&th=2773& amp; amp; amp;start=0&
+    * TheIDE Ctrl+F1 now searches help for the current word
+    * added value parameter to ArrayCtrl::SetCtrl. More here: http://www.ultimatepp.org/forum/index.php?t=msg&th=2779& amp; amp; amp;start=0&
+    * added IdCtrls - a new very small utility class, modeled after SqlCtrls. More here: http://www.ultimatepp.org/forum/index.php?t=msg&th=2780& amp; amp; amp;start=0&
+    * fixed a problem in CtrlCore which prevented closing the window with long operations and many timer events
+    * many DropGrid fixes (resizing problems, null value caused selecting first item on list) and GridCtrl fixes (multiline highlighing is now supported, item editable state is now respected when ctrls are shown) 
+    
+    * Going into Help (pressing F1 or icon/menu) now does not change the tree or topic.
+    * F1 in help now has the same effect as pressing Ctrl+Tab
+    * Win64 support (library only)
+    * Automatic setup in TheIDE now supports (auto-installs) MSC8 - x64 compiler
+    * Drawing now supports Null
+    * Fixed GetMinSize in .usc
+    * Layout Font property height now zoomed
+    * "init" files in packages. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2834& amp;start=0&
+    * Fixed "Writes to freed blocks" bug in ide
+    * Added ProgessIndicator::SetColor
+    * Added ASSERT_ macro - ASSERT with "message" parameter. U++ will now tell you what is wrong with your Value conversions
+    * New widget MultiButton
+    * added void Ctrl::LayoutId(const char *s) to put the name of layout variable into the Ctrl
+    * There is now much improved chameleon support for DropList, DropChoice, DropGrid, DropDate, DropTime and EditField for Windows Vista
+    * StaticRect enhanced to support Ch Values
+    * Added chameleon utility functions to add and remove margins from rectangle
+    * Chameleon can set now style for individual componenets of composite widgets
+    * IconDes / .iml changed to premultiplied format
+    * Added BackPaintHint. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2867& amp;start=0&
+    * Fixed Upp to work in Linux again
+    * DateTimeCtrl replaced by DropDate and DropTime
+    * Improvements to painting system
+    * Many fixes to GridCtrl and DropGrid 
+    
+    * Going into Help (pressing F1 or icon/menu) now does not change the tree or topic.
+    * F1 in help now has the same effect as pressing Ctrl+Tab
+    * Win64 support (library only)
+    * Automatic setup in TheIDE now supports (auto-installs) MSC8 - x64 compiler
+    * Drawing now supports Null
+    * Fixed GetMinSize in .usc
+    * Layout Font property height now zoomed
+    * "init" files in packages. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2834& amp;start=0&
+    * Fixed "Writes to freed blocks" bug in ide
+    * Added ProgessIndicator::SetColor
+    * Added ASSERT_ macro - ASSERT with "message" parameter. U++ will now tell you what is wrong with your Value conversions
+    * New widget MultiButton
+    * added void Ctrl::LayoutId(const char *s) to put the name of layout variable into the Ctrl
+    * There is now much improved chameleon support for DropList, DropChoice, DropGrid, DropDate, DropTime and EditField for Windows Vista
+    * StaticRect enhanced to support Ch Values
+    * Added chameleon utility functions to add and remove margins from rectangle
+    * Chameleon can set now style for individual componenets of composite widgets
+    * IconDes / .iml changed to premultiplied format
+    * Added BackPaintHint. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2867& amp;start=0&
+    * Fixed Upp to work in Linux again
+    * DateTimeCtrl replaced by DropDate and DropTime
+    * Improvements to painting system
+    * Many fixes to GridCtrl and DropGrid 
+    
+    * QuickTabs refactored to use system theme to paint tabs
+    * Implemetation of DateTimeCtrl moved to header
+    * Added Build/Clean package to packages popup menu of TheIDE
+    * U++ translated to Finish (Tom1)
+    * Chameleon styles now have "Standard" method which returns the "default" initial value of the style
+    * BackPaintHint replaced with GlobalBackPaintHint. More here: http://www.ultimatepp.org/forum/index.php?t=msg&th=2890& amp; amp;start=0&
+    * HeaderCtrl can now move (reorganize) tabs
+    * ArrayCtrl sorting. More here: http://www.ultimatepp.org/forum/index.php?t=msg&th=2896& amp; amp;start=0&
+    * TheIDE i18n export refactored. More here: http://www.ultimatepp.org/forum/index.php?t=msg&th=2905& amp; amp;start=0&
+    * TheIDE exe size fixed
+    * Fixed Ctrl::Accept to work properly with TabCtrl sheets.
+    * Some DropGrid/GridCtrl fixes/additions. 
+    
+    * Chameleon styles now have "Standard" method which returns the "default" initial value of the style
+    * HeaderCtrl can now move (reorganize) tabs
+    * ArrayCtrl sorting
+    * simplify translating in TheIDE. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2905& amp; amp;start=0&
+    * ConvertInt64, EditInt64
+    * Toolbar buttons now can have labels
+    * some Hydra fixes
+    * Visual Studion 9.0 (2008) compiler supported
+    * fixed Debugger going to wrong file at startup
+    * EditField, WithDropChoice, Bar, MenuBar, ToolBar, StatusBar, MenuBar visual improvements (Vista, GTK)
+    * BLITZ heurestics altered. More here http://www.ultimatepp.org/forum/index.php?t=msg&th=2986& amp; amp;start=0&
+    * added BlueBar skin
+    * Bazaar is now part of release (it contains experimental docking system for now) 

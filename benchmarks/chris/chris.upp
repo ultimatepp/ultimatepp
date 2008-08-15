@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	chris.cpp;
+
+mainconfig
+	"" = "MT",
+	"" = "MT USEMALLOC";
+

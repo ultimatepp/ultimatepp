@@ -1,0 +1,63 @@
+LAYOUT(DecompressLayout, 512, 472)
+	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 34))
+	ITEM(Button, save, SetLabel(t_("&Save file")).LeftPosZ(4, 80).BottomPosZ(5, 21))
+	ITEM(Button, ok, SetLabel(t_("Unpack all")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(SyncBatchLayout, 400, 200)
+	ITEM(ArrayCtrl, list, VertGrid(false).Header(false).AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 32))
+	ITEM(Option, do_sync, SetLabel(t_("&Synchronize")).LeftPosZ(4, 100).TopPosZ(175, 19))
+	ITEM(Option, confirm, SetLabel(t_("&Manual confirm")).LeftPosZ(110, 102).BottomPosZ(6, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(SyncCheckLayout, 572, 472)
+	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 32))
+	ITEM(Label, dv___1, SetLabel(t_("&Action:")).LeftPosZ(4, 50).BottomPosZ(5, 19))
+	ITEM(DropList, operation, LeftPosZ(54, 200).BottomPosZ(5, 19))
+	ITEM(Option, archive, SetLabel(t_("&Check archive")).LeftPosZ(274, 116).BottomPosZ(5, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(AboutLayout, 376, 144)
+	ITEM(Label, dv___0, SetLabel(t_("\001[5/= [* U]ltimate [* V]ersioning [* S]ystem")).HSizePosZ(4, 4).TopPosZ(4, 32))
+	ITEM(Label, dv___1, SetLabel(t_("Version:")).LeftPosZ(4, 80).TopPosZ(40, 19))
+	ITEM(Label, version, HSizePosZ(86, 4).TopPosZ(40, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Released:")).LeftPosZ(4, 80).TopPosZ(62, 19))
+	ITEM(Label, date, HSizePosZ(86, 4).TopPosZ(62, 19))
+	ITEM(Label, copyright, HSizePosZ(4, 4).TopPosZ(84, 19))
+	ITEM(Label, dv___6, SetLabel(t_("\001[G2 Application uses the following third-party components: [/ zlib 1.0.4] library, copyright ©1995-1996 Jean-loup Gailly and Mark Adler.")).HSizePosZ(4, 4).VSizePosZ(108, 4))
+END_LAYOUT
+
+LAYOUT(CheckRepairLayout, 346, 148)
+	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).VSizePosZ(4, 32))
+	ITEM(Button, all, SetLabel(t_("&Fix all")).RightPosZ(262, 80).BottomPosZ(4, 22))
+	ITEM(Button, ok, SetLabel(t_("Fi&x")).RightPosZ(176, 80).BottomPosZ(4, 22))
+	ITEM(Button, skip, SetLabel(t_("&Skip")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(FindLayout, 324, 106)
+	ITEM(Label, dv___0, SetLabel(t_("&Find text:")).LeftPosZ(6, 48).TopPosZ(4, 19))
+	ITEM(EditField, find_text, HSizePosZ(56, 4).TopPosZ(4, 19))
+	ITEM(Option, whole_word, SetLabel(t_("&Whole word")).LeftPosZ(56, 90).TopPosZ(26, 15))
+	ITEM(Option, ignore_case, SetLabel(t_("&Ignore case")).LeftPosZ(150, 86).TopPosZ(26, 15))
+	ITEM(Option, wildcards, SetLabel(t_("Wild&cards")).LeftPosZ(240, 80).TopPosZ(26, 15))
+	ITEM(Option, archive, SetLabel(t_("&Search archive")).LeftPosZ(56, 108).TopPosZ(44, 15))
+	ITEM(Label, dv___6, SetLabel(t_("&From date:")).LeftPosZ(180, 60).TopPosZ(44, 19))
+	ITEM(EditDate, archive_date, LeftPosZ(240, 80).TopPosZ(44, 19))
+	ITEM(Option, subtree, SetLabel(t_("W&hole subtree")).LeftPosZ(56, 106).TopPosZ(62, 15))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(FindChangeLayout, 246, 80)
+	ITEM(Label, dv___0, SetLabel(t_("Modified from:")).LeftPosZ(4, 76).TopPosZ(4, 19))
+	ITEM(EditDate, changed_since, NotNull(true).LeftPosZ(82, 80).TopPosZ(4, 19))
+	ITEM(Option, find_filter, SetLabel(t_("Display only matching files")).LeftPosZ(4, 168).TopPosZ(28, 14))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT

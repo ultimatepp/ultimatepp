@@ -1,0 +1,23 @@
+
+// 1112 RCDATA  MOVEABLE PURE   "d:/uppmingw.b2a"
+1112 RCDATA  MOVEABLE PURE   "d:/upp.b2a"
+
+5555 ICON DISCARDABLE        "ide.ico"
+
+#define IDOK                1
+#define IDCANCEL            2
+#define WS_TABSTOP          0x00010000L
+#define BS_AUTOCHECKBOX     0x00000003L
+#define ES_AUTOHSCROLL      0x0080L
+
+99 DIALOG DISCARDABLE  0, 0, 231, 55
+STYLE 0
+EXSTYLE 0
+CAPTION "Ultimate++"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Install path",100,7,16,41,8
+    EDITTEXT        101,51,14,173,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Install !",IDOK,7,35,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,174,35,50,14
+END

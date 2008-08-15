@@ -1,0 +1,14 @@
+uses
+	CtrlLib;
+
+file
+	DateTimeCtrl.t charset "UTF-8",
+	DateTimeCtrl.cpp,
+	DateTimeCtrl.h,
+	DateTimeCtrl.iml,
+	main.lay,
+	main.cpp,
+	changelog.txt;
+
+mainconfig
+	"" = "GUI";

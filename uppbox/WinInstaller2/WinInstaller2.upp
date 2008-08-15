@@ -1,0 +1,44 @@
+uses
+	Core;
+
+library
+	"advapi32 comdlg32 comctl32 user32 gdi32";
+
+file
+	Install.h,
+	Progress.cpp,
+	7zMain.cpp,
+	Install.cpp,
+	data.rc,
+	install.rc,
+	LZMA readonly separator,
+	LzmaDecode.c,
+	LzmaDecode.h,
+	LzmaTest.c,
+	7zAlloc.c,
+	7zAlloc.h,
+	7zBuffer.c,
+	7zBuffer.h,
+	7zCrc.c,
+	7zCrc.h,
+	7zDecode.c,
+	7zDecode.h,
+	7zExtract.c,
+	7zExtract.h,
+	7zHeader.c,
+	7zHeader.h,
+	7zIn.c,
+	7zIn.h,
+	7zItem.c,
+	7zItem.h,
+	7zMethodID.c,
+	7zMethodID.h,
+	7zTypes.h,
+	7zC.txt,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "GUI";

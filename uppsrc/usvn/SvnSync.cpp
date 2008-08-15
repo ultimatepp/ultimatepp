@@ -176,9 +176,10 @@ void SvnSync::DoSync()
 #ifdef flagMAIN
 GUI_APP_MAIN
 {
-	SvnSel svn;
+/*	SvnSel svn;
 	svn.Select("svn://10.0.0.19/upp", "", "");
 	return;
+*/
 	SvnSync().Perform();
 }
 #endif

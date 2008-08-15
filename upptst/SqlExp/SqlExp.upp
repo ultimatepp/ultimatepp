@@ -1,0 +1,10 @@
+uses
+	Core,
+	Sql;
+
+file
+	SqlExp.cpp;
+
+mainconfig
+	"" = "";
+

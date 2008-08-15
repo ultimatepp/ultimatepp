@@ -1,0 +1,12 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	BiVector.cpp,
+	results.txt;
+
+mainconfig
+	"" = "";
+

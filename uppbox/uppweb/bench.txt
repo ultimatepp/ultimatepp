@@ -1,0 +1,32 @@
+MTC:
+
+1st run
+TIMING GatherRefLinks : 814.0 ms - 814.0 ms (814.0 ms / 1 ), min: 814.0 ms, max: 814.0 ms, nesting: 1 - 1
+TIMING TIME           :  55.5 s  -  55.5 s  ( 55.5 s  / 1 ), min:  55.5 s , max:  55.5 s , nesting: 1 - 1
+
+2nd run
+TIMING GatherRefLinks : 675.0 ms - 675.0 ms (675.0 ms / 1 ), min: 675.0 ms, max: 675.0 ms, nesting: 1 - 1
+TIMING TIME           :  49.9 s  -  49.9 s  ( 49.9 s  / 1 ), min:  49.9 s , max:  49.9 s , nesting: 1 - 1
+
+
+MT !MTC:
+
+TIMING GatherRefLinks : 682.0 ms - 682.0 ms (682.0 ms / 1 ), min: 682.0 ms, max: 682.0 ms, nesting: 1 - 1
+TIMING TIME           :  48.7 s  -  48.7 s  ( 48.7 s  / 1 ), min:  48.7 s , max:  48.7 s , nesting: 1 - 1
+
+ST:
+
+TIMING GatherRefLinks : 655.0 ms - 655.0 ms (655.0 ms / 1 ), min: 655.0 ms, max: 655.0 ms, nesting: 1 - 1
+TIMING TIME           :  47.0 s  -  47.0 s  ( 47.0 s  / 1 ), min:  47.0 s , max:  47.0 s , nesting: 1 - 1
+
+============================
+TIMING DrawText       :  44.0 ms -  22.0 ms ( 44.0 ms / 2 ), min:   0.0 us, max:  44.0 ms, nesting: 1 - 2
+TIMING GatherRefLinks : 232.0 ms - 232.0 ms (232.0 ms / 1 ), min: 232.0 ms, max: 232.0 ms, nesting: 1 - 1
+TIMING TIME           :  18.5 s  -  18.5 s  ( 18.5 s  / 1 ), min:  18.5 s , max:  18.5 s , nesting: 1 - 1
+TIMING XftTextExtents16:   3.5 s  -  88.8 us (  3.5 s  / 38912 ), min:   0.0 us, max:  71.0 ms, nesting: 1 - 38912
+TIMING GetMetrics     :   3.5 s  -  23.1 ms (  3.5 s  / 152 ), min:   4.0 ms, max: 138.0 ms, nesting: 1 - 152
+TIMING CreateXftFont  : 329.9 ms -   2.2 ms (330.0 ms / 147 ), min:   1.0 ms, max:  25.0 ms, nesting: 1 - 147
+TIMING Acquire New    :   4.0 s  -  27.3 ms (  4.0 s  / 147 ), min:   6.0 ms, max: 148.0 ms, nesting: 1 - 147
+TIMING Acquire        :   4.0 s  -  16.8 us (  4.2 s  / 238464 ), min:   0.0 us, max: 148.0 ms, nesting: 1 - 238464
+TIMING GetFontInfo    :   4.4 s  -  18.4 us (  4.6 s  / 238462 ), min:   0.0 us, max: 148.0 ms, nesting: 1 - 238462
+

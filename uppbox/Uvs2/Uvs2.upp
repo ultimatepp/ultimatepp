@@ -1,0 +1,35 @@
+uses
+	Web,
+	plugin\bz2,
+	plugin\z,
+	plugin\ftp,
+	CtrlLib;
+
+file
+	notes.txt,
+	solved.txt,
+	version.h,
+	Uvs2.rc,
+	Uvs2.h,
+	Uvs2.t charset "UTF-8",
+	Uvs2_init.icpp,
+	Uvs2.iml,
+	Uvs2Img.h,
+	Uvs2Img.cpp,
+	util.h,
+	util.cpp,
+	textdiff.h,
+	textdiff.cpp,
+	DlgFilesSetup.cpp,
+	DlgFilesSetup.lay,
+	DlgFiles.cpp,
+	DlgFiles.lay,
+	Info readonly separator,
+	COPYING,
+	COPYING-PLAIN,
+	AUTHORS;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI .NOGTK";
+

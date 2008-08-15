@@ -1,0 +1,12 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	StringFindOf.cpp,
+	numbers.txt;
+
+mainconfig
+	"" = "";
+

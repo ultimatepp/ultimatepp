@@ -1,0 +1,50 @@
+LAYOUT(FilesSetupMiscLayout, 472, 116)
+	ITEM(Label, dv___0, SetLabel(t_("&Source files")).LeftPosZ(4, 82).TopPosZ(4, 19))
+	ITEM(EditString, dir, LeftPosZ(90, 144).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("&Local repository:")).LeftPosZ(242, 80).TopPosZ(4, 19))
+	ITEM(EditString, localrepository, LeftPosZ(324, 144).TopPosZ(4, 19))
+	ITEM(Label, dv___4, SetLabel(t_("&Author:")).LeftPosZ(4, 82).TopPosZ(26, 19))
+	ITEM(EditString, author, LeftPosZ(90, 144).TopPosZ(26, 19))
+	ITEM(Label, dv___6, SetLabel(t_("&FTP server:")).LeftPosZ(242, 60).TopPosZ(26, 19))
+	ITEM(EditString, host, LeftPosZ(324, 144).TopPosZ(26, 19))
+	ITEM(Label, dv___8, SetLabel(t_("&FTP username:")).LeftPosZ(4, 82).TopPosZ(48, 19))
+	ITEM(EditString, user, LeftPosZ(90, 144).TopPosZ(48, 19))
+	ITEM(Label, dv___10, SetLabel(t_("&Password:")).LeftPosZ(242, 60).TopPosZ(48, 19))
+	ITEM(EditString, password, LeftPosZ(324, 144).TopPosZ(48, 19))
+	ITEM(Label, dv___12, SetLabel(t_("&FTP archive dir:")).LeftPosZ(4, 82).TopPosZ(70, 19))
+	ITEM(EditString, hostrepository, LeftPosZ(90, 144).TopPosZ(70, 19))
+	ITEM(Option, passive, SetLabel(t_("Use passive transfer mode")).LeftPosZ(278, 170).TopPosZ(74, 15))
+	ITEM(Option, anonymous, SetLabel(t_("Anonymous access (read only)")).LeftPosZ(4, 168).TopPosZ(93, 15))
+	ITEM(Option, usecr, SetLabel(t_("&Use CR")).LeftPosZ(192, 72).TopPosZ(92, 18))
+	ITEM(Option, fullblock, SetLabel(t_("Always save &full block")).LeftPosZ(278, 144).TopPosZ(92, 18))
+END_LAYOUT
+
+LAYOUT(FilesSetupExcludeDirsLayout, 408, 216)
+	ITEM(DocEdit, excludedirs, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(FilesSetupBinaryLayout, 400, 200)
+	ITEM(DocEdit, binaryfiles, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(FilesSetupExcludeFilesLayout, 400, 200)
+	ITEM(DocEdit, excludefiles, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(FilesSetupBackupLayout, 400, 200)
+	ITEM(Label, dv___0, SetLabel(t_("&Source files:")).LeftPosZ(4, 94).TopPosZ(4, 19))
+	ITEM(EditField, tree_backup, HSizePosZ(98, 4).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("&Local archive:")).LeftPosZ(4, 94).TopPosZ(26, 19))
+	ITEM(EditField, local_backup, HSizePosZ(98, 4).TopPosZ(26, 19))
+END_LAYOUT
+
+LAYOUT(FilesSetupLayout, 486, 178)
+	ITEM(TabCtrl, tab, HSizePosZ(4, 4).VSizePosZ(4, 34))
+	ITEM(WithFilesSetupMiscLayout<StaticRect>, misc, HSizePosZ(6, 6).VSizePosZ(30, 36))
+	ITEM(WithFilesSetupBackupLayout<StaticRect>, back, HSizePosZ(6, 6).VSizePosZ(30, 36))
+	ITEM(WithFilesSetupExcludeFilesLayout<StaticRect>, excf, HSizePosZ(6, 6).VSizePosZ(30, 36))
+	ITEM(WithFilesSetupExcludeDirsLayout<StaticRect>, excd, HSizePosZ(6, 6).VSizePosZ(30, 36))
+	ITEM(WithFilesSetupBinaryLayout<StaticRect>, bin, HSizePosZ(6, 6).VSizePosZ(30, 36))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT

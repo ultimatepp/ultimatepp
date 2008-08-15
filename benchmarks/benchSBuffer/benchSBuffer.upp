@@ -1,0 +1,11 @@
+uses
+	Core;
+
+file
+	bsb.h,
+	bsb.cpp,
+	benchSBuffer.cpp;
+
+mainconfig
+	"" = "";
+

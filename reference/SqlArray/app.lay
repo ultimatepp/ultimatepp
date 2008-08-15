@@ -1,0 +1,9 @@
+LAYOUT(AppLayout, 652, 200)
+	ITEM(SqlArray, master, LeftPosZ(4, 308).TopPosZ(4, 188))
+	ITEM(SqlArray, detail, LeftPosZ(316, 128).TopPosZ(4, 188))
+	ITEM(Label, dv___2, SetLabel(t_("Borrowed")).LeftPosZ(452, 56).TopPosZ(4, 20))
+	ITEM(EditString, borrowed, LeftPosZ(512, 108).TopPosZ(4, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Returned")).LeftPosZ(452, 56).TopPosZ(28, 20))
+	ITEM(EditString, returned, LeftPosZ(512, 108).TopPosZ(28, 19))
+END_LAYOUT
+
