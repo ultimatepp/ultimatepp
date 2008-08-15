@@ -9,7 +9,7 @@ NAMESPACE_UPP
 #include <sys/wait.h>
 #endif
 
-#define LLOG(x)  LOG(x)
+#define LLOG(x) // LOG(x)
 
 void LocalProcess::Init() {
 #ifdef PLATFORM_WIN32
@@ -108,6 +108,7 @@ bool LocalProcess::Start(const char *command, const char *envptr)
 		return false;
 //		throw Exc(NFormat("Error running process: %s\nCommand: %s", GetErrorMessage(GetLastError()), command));
 	}
+	return true;
 #endif
 #ifdef PLATFORM_POSIX
 	// parse command line for execve
@@ -204,6 +205,7 @@ bool LocalProcess::Start(const char *command, const char *envptr)
 	LLOG("execve failed, errno = " << errno);
 //	printf("Error running '%s', error code %d\n", command, errno);
 	exit(-errno);
+	return true;
 #endif
 }
 
@@ -336,7 +338,6 @@ bool LocalProcess::Read(String& res) {
 #endif
 #ifdef PLATFORM_POSIX
 //??!
-	DDUMP(wpipe[0]);
 	if(wpipe[0] < 0) return false;
 	bool was_running = IsRunning();
 	LLOG("output_read = " << (output_read ? "yes" : "no"));
@@ -360,7 +361,6 @@ bool LocalProcess::Read(String& res) {
 		if(done > 0)
 			res.Cat(buffer, done);
 	}
-	DDUMP(res);
 	if(sv < 0) {
 		LLOG("select -> " << sv);
 	}
