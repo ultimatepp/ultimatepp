@@ -1,0 +1,11 @@
+uses
+	Core,
+	Web/SSL,
+	XmlRpc;
+
+file
+	smallserver.h,
+	smallserver.cpp;
+
+mainconfig
+	"" = "";

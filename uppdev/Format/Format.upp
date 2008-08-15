@@ -1,0 +1,7 @@
+uses Core;
+
+file
+	"Format.cpp";
+
+mainconfig
+	"" = "";

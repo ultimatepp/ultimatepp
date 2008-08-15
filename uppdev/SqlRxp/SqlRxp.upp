@@ -1,0 +1,12 @@
+uses
+	Core;
+
+file
+	SqlExp.h,
+	SqlExpCore.cpp,
+	SqlExp.cpp,
+	SqlField.cpp,
+	SqlRxp.cpp;
+
+mainconfig
+	"" = "CONSOLE ST";

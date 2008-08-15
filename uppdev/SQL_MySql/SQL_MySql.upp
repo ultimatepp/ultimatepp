@@ -1,0 +1,10 @@
+description "Logging to MySql";
+
+uses
+	MySql;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "MT";

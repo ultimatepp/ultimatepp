@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	DateTimeCtrl.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

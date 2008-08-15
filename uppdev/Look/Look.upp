@@ -1,0 +1,9 @@
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	look.iml;
+
+mainconfig
+	"" = "GUI ST";

@@ -1,0 +1,34 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	Malloc.h,
+	Util.cpp,
+	Lheap.cpp,
+	Malloc1.h,
+	Small1.cpp,
+	Malloc2.h,
+	Small2.cpp,
+	Malloc3.h,
+	Small3.cpp,
+	Malloc4.h,
+	Malloc4.cpp,
+	Malloc5.h,
+	Malloc5.cpp,
+	Malloc6.h,
+	Malloc6.cpp,
+	Malloc7.h,
+	Malloc7.cpp,
+	idmap.cpp,
+	HeapTest.cpp,
+	Malloc.cpp,
+	bench.txt;
+
+mainconfig
+	"" = "MT",
+	"" = "MT USEMALLOC",
+	"" = "",
+	"" = "USEMALLOC";
+

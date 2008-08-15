@@ -1,0 +1,12 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(popupLayout, 200, 100)
+	ITEM(Button, button, SetLabel(t_("PopUp")).LeftPosZ(68, 64).TopPosZ(40, 24))
+END_LAYOUT
+
+LAYOUT(DlgPopUp, 312, 108)
+	ITEM(DocEdit, dv___0, LeftPosZ(88, 212).TopPosZ(4, 96))
+	ITEM(Button, button, SetLabel(t_("OK")).LeftPosZ(4, 80).TopPosZ(4, 96))
+END_LAYOUT
+
+#endif

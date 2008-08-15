@@ -1,0 +1,9 @@
+uses
+	CtrlLib,
+	ide\Common;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,8 @@
+LAYOUT(DlgLayout, 136, 96)
+	ITEM(DropList, x, LeftPosZ(80, 48).TopPosZ(4, 19))
+	ITEM(DropList, y, LeftPosZ(80, 48).TopPosZ(32, 19))
+	ITEM(Label, LabelY, SetLabel(t_("\ahoogte (y)")).LeftPosZ(8, 64).TopPosZ(32, 16))
+	ITEM(Label, LabelX, SetLabel(t_("\abreedte (x)")).LeftPosZ(8, 64).TopPosZ(4, 16))
+	ITEM(Button, Bannuleren, SetLabel(t_("annuleren")).LeftPosZ(8, 56).TopPosZ(64, 20))
+	ITEM(Button, BOK, SetLabel(t_("OK")).LeftPosZ(76, 50).TopPosZ(64, 20))
+END_LAYOUT

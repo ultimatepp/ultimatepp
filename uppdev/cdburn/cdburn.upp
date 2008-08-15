@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	Ole;
+
+library "comsupp.lib";
+
+library "wininet.lib";
+
+file
+	burn.cpp;
+
+mainconfig
+	"" = "GUI ST";

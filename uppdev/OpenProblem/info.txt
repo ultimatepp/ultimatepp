@@ -1,0 +1,24 @@
+Hi Mirek!
+
+To show you the problem of real GridCtrl and initialization in State() when reason == OPEN
+I ve created this test case. In this test there is a class named... GridCtrl which paints 5 columns.
+This control behave like the real GridCtrl. It computes sizes of columns in State function (original Grid
+needs to do it there because it have to position transparent child control properly (that control
+hold rest of child controls (edits) ).
+
+Pleas run the application. There are two tabs.
+First tab is completely created in contructor of the main App and it contains one splitter with
+grid and editstring. Here everything is fine. There are 5 column visible on the left side of splitter.
+
+Next tab has the same layout but this layout is created after pressing space key.
+When you press the space the grid ctrl is passed to the splitter. As you can see there are only
+2 and 1/3 of 5 columns vivible. It is happend because GetSize() in ComputeSizes() returns wrong width - width
+before "splitting".
+
+(Note that after second space grid is painted correctly!)
+
+That case for example affects my ultimate player now where I dynamicaly create new grid control
+(when user adds new playlist) and then refresh the splitter calling Vert/Horz again.
+
+
+Thank you in advance for checking it and eventually fixing it!

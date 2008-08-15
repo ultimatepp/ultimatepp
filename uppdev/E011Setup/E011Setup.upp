@@ -1,0 +1,23 @@
+uses
+	CtrlLib,
+	plugin\bz2;
+
+file
+	App readonly separator,
+	App.h,
+	version.h,
+	App.cpp,
+	setup.brc,
+	WinUtils readonly separator,
+	WinUtils.h,
+	WinUtils.cpp,
+	Resource readonly separator,
+	setup.lay,
+	setup.t,
+	setup.iml,
+	setup.icpp,
+	setup.rc;
+
+mainconfig
+	"" = "GUI";
+

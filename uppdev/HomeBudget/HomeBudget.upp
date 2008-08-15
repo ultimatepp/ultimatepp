@@ -1,0 +1,19 @@
+charset "UTF-8";
+
+uses
+	CtrlLib,
+	DateTimeCtrl,
+	GridCtrl,
+	plugin\sqlite3;
+
+file
+	HomeBudget.t,
+	HomeBudget.sch,
+	HomeBudget.h,
+	HomeBudget.cpp,
+	HomeBudget.rc,
+	HomeBudget.iml,
+	HomeBudget.lay;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,5 @@
+#ifndef _Astyle_icpp_init_stub
+#define _Astyle_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\astyle/init"
+#endif

@@ -1,0 +1,4 @@
+#include "support.h"
+
+#define TFILE <src/support/common.t>
+#include <Core/t.h>

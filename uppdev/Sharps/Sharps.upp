@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Sharps.cpp charset "UTF-8";
+
+mainconfig
+	"" = "";
+

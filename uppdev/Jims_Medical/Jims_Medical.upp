@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	Jims_Medical.h,
+	Jims_Medical.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

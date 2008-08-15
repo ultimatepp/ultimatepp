@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"ColumnListDisplay.h"
+	, main.cpp
+	, "ColumnListDisplay.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

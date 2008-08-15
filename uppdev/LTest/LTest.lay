@@ -1,0 +1,4 @@
+LAYOUT(LTestLayout, 200, 100)
+	ITEM(StaticText, dv___0, SetText(t_("TEST")).SetInk(Color(170, 42, 0)).LeftPosZ(16, 128).TopPosZ(16, 19))
+END_LAYOUT
+

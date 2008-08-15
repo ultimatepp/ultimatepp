@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+library
+	"user32 gdi32";
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";

@@ -1,0 +1,57 @@
+LAYOUT(CfgLayout, 276, 328)
+	ITEM(DocEdit, edBlackList, SetFrame(BlackFrame()).LeftPosZ(4, 268).BottomPosZ(28, 184))
+	ITEM(Button, btOK, SetLabel(t_("OK")).LeftPosZ(200, 70).BottomPosZ(5, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Black List (don't send to mails in this list) (one per line)")).SetFont(StdFont(10)).LeftPosZ(4, 268).BottomPosZ(215, 17))
+	ITEM(LabelBox, dv___3, SetLabel(t_(" smtp server config ")).LeftPosZ(4, 268).TopPosZ(0, 92))
+	ITEM(Label, dv___4, SetLabel(t_("smtp server:")).LeftPosZ(8, 68).TopPosZ(14, 16))
+	ITEM(EditString, edServer, SetFrame(BlackFrame()).LeftPosZ(80, 188).TopPosZ(12, 20))
+	ITEM(Label, dv___6, SetLabel(t_("user:")).LeftPosZ(8, 68).TopPosZ(40, 16))
+	ITEM(EditString, edUser, SetFrame(BlackFrame()).LeftPosZ(80, 188).TopPosZ(38, 20))
+	ITEM(Label, dv___8, SetLabel(t_("password:")).LeftPosZ(8, 68).TopPosZ(64, 16))
+	ITEM(EditString, edPass, SetFrame(BlackFrame()).LeftPosZ(80, 188).TopPosZ(62, 20))
+END_LAYOUT
+
+LAYOUT(ListDataLayout, 540, 260)
+	ITEM(Button, btEditFields, SetLabel(t_("Edit Fields")).RightPosZ(78, 70).TopPosZ(4, 19))
+	ITEM(Button, btCSV, SetLabel(t_("\aImport CSV")).RightPosZ(150, 66).TopPosZ(4, 19))
+	ITEM(Button, btSaveData, SetLabel(t_("Save")).RightPosZ(10, 66).TopPosZ(4, 19))
+	ITEM(GridCtrl, theGrid, HSizePosZ(4, 8).VSizePosZ(28, 5))
+	ITEM(EditString, edListName, SetFrame(FieldFrame()).HSizePosZ(72, 292).TopPosZ(4, 17))
+	ITEM(Label, dv___5, SetLabel(t_("List name:")).LeftPosZ(4, 64).TopPosZ(4, 17))
+	ITEM(Option, opErr, SetLabel(t_("View Errors")).RightPosZ(218, 70).TopPosZ(4, 19))
+END_LAYOUT
+
+LAYOUT(MessageLayout, 452, 248)
+	ITEM(Label, dv___0, SetLabel(t_("From:")).LeftPosZ(4, 34).TopPosZ(4, 17))
+	ITEM(Label, dv___1, SetLabel(t_("Subject:")).LeftPosZ(140, 44).TopPosZ(4, 17))
+	ITEM(ToolBar, toolbar, HSizePosZ(0, 0).TopPosZ(28, 28))
+	ITEM(EditString, edFrom, SetFrame(FieldFrame()).LeftPosZ(40, 96).TopPosZ(4, 17))
+	ITEM(EditString, edSubject, SetFrame(FieldFrame()).HSizePosZ(188, 76).TopPosZ(4, 17))
+	ITEM(RichEdit, editor, HSizePosZ(0, 0).VSizePosZ(56, 0))
+	ITEM(Button, btSave, SetLabel(t_("Save")).RightPosZ(2, 70).TopPosZ(4, 19))
+END_LAYOUT
+
+LAYOUT(DataListDefinition, 288, 220)
+	ITEM(EditString, edListName, SetFrame(BottomSeparatorFrame()).LeftPosZ(108, 176).TopPosZ(12, 17))
+	ITEM(Label, dv___1, SetLabel(t_("List name:")).LeftPosZ(8, 96).TopPosZ(12, 17))
+	ITEM(GridCtrl, grid, LeftPosZ(8, 164).TopPosZ(32, 180))
+	ITEM(Button, btSave, SetLabel(t_("Save")).RightPosZ(14, 70).BottomPosZ(5, 19))
+	ITEM(Button, btCancel, SetLabel(t_("Cancel")).RightPosZ(14, 70).BottomPosZ(29, 19))
+	ITEM(RichTextCtrl, labelInfo, LeftPosZ(176, 108).TopPosZ(32, 132))
+END_LAYOUT
+
+LAYOUT(SendLayout, 380, 100)
+	ITEM(ProgressIndicator, prog, HSizePosZ(12, 12).BottomPosZ(37, 15))
+	ITEM(StaticText, labelInfo, SetAlign(ALIGN_CENTER).LeftPosZ(12, 352).TopPosZ(24, 16))
+	ITEM(Button, btOk, SetLabel(t_("OK")).HCenterPosZ(70, -35).TopPosZ(72, 19))
+	ITEM(Button, btCancel, SetLabel(t_("Cancel")).HCenterPosZ(70, 37).TopPosZ(72, 19))
+END_LAYOUT
+
+LAYOUT(csvToDefLayout, 236, 72)
+	ITEM(Label, dv___0, SetLabel(t_("Field name:")).HSizePosZ(8, 140).TopPosZ(4, 16))
+	ITEM(DropList, dropName, LeftPosZ(96, 136).TopPosZ(4, 16))
+	ITEM(Label, dv___2, SetLabel(t_("Field email:")).HSizePosZ(8, 140).TopPosZ(24, 16))
+	ITEM(DropList, dropEmail, LeftPosZ(96, 136).TopPosZ(24, 16))
+	ITEM(Button, btCancel, SetLabel(t_("Cancel")).LeftPosZ(88, 70).TopPosZ(48, 19))
+	ITEM(Button, btOk, SetLabel(t_("Ok")).LeftPosZ(160, 70).TopPosZ(48, 19))
+END_LAYOUT

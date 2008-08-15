@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	GUISample1.h,
+	Icons.iml,
+	main.cpp,
+	GUISample1.lay;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,15 @@
+uses
+	Core,
+	Web,
+	ValueMap,
+	Web/SSL;
+
+file
+	ValueXmlConvert.cpp,
+	XmlRpc.h,
+	XmlRpcCall.cpp,
+	XmlRpcClient.cpp,
+	XmlRpcParser.cpp,
+	XmlRpcSysMethods.cpp,
+	XmlRpcSysMethods.h,
+	XmlRpcServer.cpp;

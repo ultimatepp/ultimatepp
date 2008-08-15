@@ -1,0 +1,14 @@
+uses
+	Core,
+	Draw,
+	CtrlLib;
+
+link(MSC8ARM) "/subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE /NODEFAULTLIB:\"oldnames.lib\"";
+
+file
+	resource.h,
+	wince.cpp,
+	wince.cpph;
+
+mainconfig
+	"" = "GUI";

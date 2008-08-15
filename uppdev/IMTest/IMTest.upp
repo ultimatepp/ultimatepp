@@ -1,0 +1,12 @@
+uses
+	Core;
+
+library
+	X11;
+
+file
+	test.iml,
+	IMTest.cpp;
+
+mainconfig
+	"" = "";

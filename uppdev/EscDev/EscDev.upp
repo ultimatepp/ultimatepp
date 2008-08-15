@@ -1,0 +1,9 @@
+uses
+	Esc;
+
+file
+	EscDev.cpp,
+	test.esc;
+
+mainconfig
+	"" = "CONSOLE ST";

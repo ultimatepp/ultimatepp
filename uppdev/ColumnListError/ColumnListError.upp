@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	ColumnListError.h,
+	ColumnListError.iml,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	GLCtrl;
+
+file
+	myProblem.h,
+	main.cpp,
+	myProblem.lay;
+
+mainconfig
+	"" = "GUI";
+

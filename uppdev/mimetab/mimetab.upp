@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	mime.txt,
+	mimetab.cpp;
+
+mainconfig
+	"" = "";
+

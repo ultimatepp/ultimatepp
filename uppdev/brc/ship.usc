@@ -1,0 +1,13 @@
+macro "Ship" Ctrl+Shift+W {
+	ClearConsole();
+	cout("Building BRC...");
+	if(!Build(""))
+		cout("Error building BRC.");
+	else {
+		cout("Shipping BRC...");
+		if(!BuildProject("BRC/ship", ""))
+			cout("Error shipping BRC.");
+		else
+			cout("Build finished successfully.");
+	}
+}

@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	plugin\sqlite3,
+	SqlCtrl;
+
+file
+	EzellApp4.sch,
+	main.cpp,
+	EzellApp4.lay;
+
+mainconfig
+	"" = "GUI";

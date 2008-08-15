@@ -1,0 +1,387 @@
+byHeart Software
+620 Ballantree Road
+West Vancouver, B.C.
+Canada V7S 1W3
+
+Tel. (604) 922-6148
+Fax. (604) 987-7621
+
+
+
+
+
+
+
+
+
+
+
+
+                          PCX_LIB Documentation
+                          ---------------------
+                              Version 1.00B
+
+
+                          by Ian Ashdown, P.Eng.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 Released into the Public Domain 91/04/01
+
+1.  Introduction
+
+    PCX_LIB is a library of functions for displaying and storing ZSoft's 
+    Paintbrush (R) PCX-format image files.  It was developed expressly 
+    for release into the Public Domain.  Fully commented ANSI C source 
+    code is provided for all functions, along with complete technical 
+    specifications for ZSoft's PCX image file format.
+
+    Version 1.00B supports the display and storage of images on MS-DOS 
+    systems equipped with the following display adapters:
+
+      Hercules  - monochrome
+      CGA       - Color Graphics Adapter
+      EGA       - Enhanced Graphics Adapter
+      MCGA      - MultiColor Graphics Adapter
+      VGA       - Video Graphics Adapter
+
+    All valid MS-DOS graphic modes are supported.
+
+    SuperVGA and XGA display adapters are not supported in this release.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     p. 1
+
+2.  DISCLAIMER:
+
+    IN NO EVENT SHALL BYHEART SOFTWARE BE LIABLE FOR ANY DAMAGES 
+    WHATSOEVER INCLUDING, WITHOUT LIMITATION, PERSONAL DAMAGES, DAMAGES 
+    FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS 
+    INFORMATION, OR OTHER PECUNIARY LOSS, ARISING OUT OF THE USE OR 
+    INABILITY TO USE THIS PRODUCT, EVEN IF BYHEART SOFTWARE HAS BEEN 
+    ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     p. 2
+
+3.  Disk Contents
+
+    The disk includes the following files:
+
+
+3.1.  Documentation
+
+    PCX_LIB.DOC         - PCX_LIB documentation (this file)
+    PCX_FMT.DOC         - PCX image file format specifications
+
+
+3.2.  ANSI C Source Code
+
+    PCX_COMM.C          - PCX image file common functions
+    PCX_DISP.C          - PCX image file display functions
+    PCX_EXAM.C          - PCX image file header examination utility
+    PCX_FILE.C          - PCX image capture functions
+    RD_DEMO.C           - PCX image file display demonstration program
+    WR_DEMO.C           - PCX image file capture demonstration program
+
+    PCX_EXT.H           - PCX_LIB external definitions include file
+    PCX_INT.H           - PCX_LIB internal definitions include file
+
+
+3.3.  MS-DOS Executables
+
+    PCX_EXAM.EXE        - PCX image file header examination utility
+    RD_DEMO.EXE         - PCX image file display demonstration program
+    WR_DEMO.EXE         - PCX image file capture demonstration program
+
+
+3.4.  Sample PCX Image Files
+
+    TEST_04.PCX         - 320 x 200 4-color CGA test image (mode 4)
+    TEST_06.PCX         - 640 x 200 2-color CGA test image (mode 6)
+    TEST_16.PCX         - 640 x 350 16-color EGA test image (mode 16)
+    TEST_19.PCX         - 320 x 200 256-color VGA test image (mode 19)
+
+
+3.5.  Miscellaneous
+
+    PCX_LIB.BAT         - Microsoft C V6.0 program build batch file
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     p. 3
+
+4.  Trying It Out
+
+    Four test images are included on the disk, one each for MS-DOS video 
+    modes 4, 6, 16 and 19. 
+
+
+4.1.  PCX_EXAM
+
+      PCX_EXAM reads a PCX-format image file and displays a summary of 
+      the information contained in the file header.  A full explanation
+      of this information is presented in PCX_FMT.DOC.
+
+      To run PCX_EXAM with a file (e.g. - "MY_PICT.PCX"), enter:
+
+        PCX_EXAM my_pict.pcx
+
+
+4.2.  RD_DEMO
+
+      To display any of these images, enter:
+
+        RD_DEMO test_xx.pcx xx
+
+      where "xx" is the video mode (e.g. - "RD_DEMO test_06.pcx 6").  
+      Your display adapter must be capable of emulating the specified 
+      video mode in order to display the image.
+
+      Once the image is displayed, press any key to clear the screen and 
+      return to DOS.
+
+      RD_DEMO will also display a PCX-format image if your display 
+      adapter supports its appropriate video mode.  For example, to 
+      display a PCX-format image file "MY_PICT.PCX" that was created for 
+      display on 320 x 200 256-color VGA displays, enter: 
+
+        RD_DEMO my_pict.pcx 19
+
+
+4.3.  WR_DEMO
+
+      The demonstration program WR_DEMO will first display a PCX-format 
+      image file, then capture the image directly from the display 
+      adapter's memory and create a PCX-format image file called 
+      "PCX_DEMO.PCX".
+
+      To run WR_DEMO, enter:
+
+        WR_DEMO test_xx.pcx xx
+  
+      where "xx" is the video mode (e.g. - "WR_DEMO test_06.pcx 6").  
+      Your display adapter must be capable of emulating the specified 
+      video mode in order to display and capture the image.
+
+
+                                                                     p. 4
+
+      Once the image is displayed, WR_DEMO will automatically capture 
+      it and create the file "PCX_DEMO.PCX" before clearing the screen 
+      and returning to DOS.
+
+      WR_DEMO will also display and capture a PCX-format image if your
+      display adapter supports its appropriate video mode.  For example, 
+      to capture a PCX-format image file "MY_PICT.PCX" that was created 
+      for display on 320 x 200 256-color VGA displays, enter: 
+
+        WR_DEMO my_pict.pcx 19
+
+      WR_DEMO captures the entire screen and all color planes, so the
+      size of the resultant PCX_DEMO.PCX file may be different than the
+      file it displayed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     p. 5
+
+5.  Using The Library
+
+    The public functions in PCX_LIB (i.e. - those meant to be called by 
+    application programs) are:
+
+      pcx_read          - display a PCX-format image file
+      pcx_write         - capture a displayed image to a PCX-format file
+
+      pcx_isvga         - determine whether a display adapter supports
+                          VGA BIOS calls
+
+      pcx_init_dsa      - set up BIOS to capture EGA color palette
+                          register updates
+      pcx_free_dsa      - reset BIOS to state before call to 
+                          "pcx_inst_dsa"
+
+    All functions are fully and exhaustively documented in the source 
+    code files.  Example calls to the public functions may be found in 
+    the source code files RD_DEMO.C and WR_DEMO.C.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                     p. 6
+

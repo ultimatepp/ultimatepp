@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	RichEdit;
+
+file
+	WRichEdit.h,
+	main.cpp,
+	WRichEdit.lay;
+
+mainconfig
+	"" = "GUI ST";

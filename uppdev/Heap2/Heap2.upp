@@ -1,0 +1,14 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	hh.cpp,
+	asm.txt,
+	main.cpp;
+
+mainconfig
+	"" = "MT",
+	"" = "USEMALLOC",
+	"" = "";

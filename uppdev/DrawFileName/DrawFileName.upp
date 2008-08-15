@@ -1,0 +1,9 @@
+uses
+	Core,
+	CtrlLib;
+
+file
+	test.cpp charset "utf8";
+
+mainconfig
+	"" = "GUI";

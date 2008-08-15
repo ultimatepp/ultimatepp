@@ -1,0 +1,6 @@
+LAYOUT(cyclicLayout, 204, 340)
+	ITEM(Button, okb, SetLabel(t_("Rendben")).LeftPosZ(76, 49).TopPosZ(300, 17))
+	ITEM(EditIntSpin, colnum, Min(1).Max(16).NotNull(true).LeftPosZ(128, 56).TopPosZ(268, 21))
+	ITEM(Label, lb1, SetLabel(t_("Használt szín")).LeftPosZ(12, 100).TopPosZ(268, 21))
+END_LAYOUT
+

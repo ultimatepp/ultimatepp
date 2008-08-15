@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	test.cpp;
+
+mainconfig
+	"" = "";

@@ -1,0 +1,3 @@
+LAYOUT(TestEditIntLayout, 448, 412)
+	ITEM(EditInt, edt3, LeftPosZ(68, 48).TopPosZ(52, 19))
+END_LAYOUT

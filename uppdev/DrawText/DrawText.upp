@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	DrawText.h,
+	main.cpp font 2 charset "UTF-8",
+	DrawText.lay,
+	src.tpp;
+
+mainconfig
+	"" = "GUI";
+

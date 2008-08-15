@@ -1,0 +1,6 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(CirclesLayout, 200, 100)
+END_LAYOUT
+
+#endif

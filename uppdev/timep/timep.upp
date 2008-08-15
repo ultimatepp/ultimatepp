@@ -1,0 +1,9 @@
+library(WIN32) "kernel32 user32 advapi32 shell32 winmm psapi";
+
+file
+	resource.h,
+	timep.rc,
+	timep.cpp;
+
+mainconfig
+	"" = "";

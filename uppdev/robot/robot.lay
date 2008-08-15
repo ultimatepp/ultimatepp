@@ -1,0 +1,20 @@
+LAYOUT(robotLayout, 648, 440)
+	ITEM(TabCtrl, tab, HSizePosZ(10, 11).TopPosZ(4, 106))
+END_LAYOUT
+
+LAYOUT(terenLayout, 636, 84)
+	ITEM(EditIntSpin, Eszerokosc, Min(5).Max(99).NotNull(true).LeftPosZ(128, 48).TopPosZ(4, 19))
+	ITEM(EditIntSpin, Edlugosc, Min(5).Max(99).NotNull(true).LeftPosZ(128, 48).TopPosZ(20, 19))
+	ITEM(Button, Bteren, SetLabel(t_("reset")).LeftPosZ(68, 68).TopPosZ(60, 20))
+	ITEM(ArrayCtrl, lista, HSizePosZ(180, 12).VSizePosZ(4, 4))
+	ITEM(Label, l1, SetLabel(t_("szeroko pomieszczenia:")).LeftPosZ(8, 120).TopPosZ(4, 19))
+	ITEM(Label, dv___5, SetLabel(t_("dugo pomieszczenia:")).LeftPosZ(20, 112).TopPosZ(20, 19))
+	ITEM(EditIntSpin, ilP, Min(1).Max(99).NotNull(true).LeftPosZ(128, 48).TopPosZ(36, 19))
+	ITEM(Label, dv___7, SetLabel(t_("ilo przeszkód:")).LeftPosZ(44, 76).TopPosZ(36, 19))
+END_LAYOUT
+
+LAYOUT(zadanieLayout, 400, 200)
+END_LAYOUT
+
+LAYOUT(probotaLayout, 400, 200)
+END_LAYOUT

@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	plugin\jpg;
+
+file
+	PictureBugTest.h,
+	main.cpp,
+	PictureBugTest.lay;
+
+mainconfig
+	"" = "GUI";
+

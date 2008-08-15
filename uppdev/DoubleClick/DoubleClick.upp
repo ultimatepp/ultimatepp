@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"DoubleClick.h"
+	, main.cpp
+	, "DoubleClick.lay"
+
+;
+
+mainconfig
+	"" = "GUI ST";

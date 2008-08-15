@@ -1,0 +1,27 @@
+bin(x)
+{
+	r = "";
+	q = 0x8000000;
+	while(q) {
+		r[] = (x & q) ? '1' : '0';
+		q = q >> 1;
+	}
+	return r;
+}
+
+test()
+{
+	x.a = 10 * ["ahoj"];
+	x.b = x;
+	x.c = x;
+	return x;
+}
+
+test1()
+{
+	x = [10 * "ahoj"];
+	x[] = 22;
+	x[1] = x;
+	x[1][1] = x;
+	return x;
+}

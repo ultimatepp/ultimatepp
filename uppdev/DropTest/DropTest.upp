@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	DropTest.h,
+	main.cpp,
+	DropTest.lay;
+
+mainconfig
+	"" = "GUI";

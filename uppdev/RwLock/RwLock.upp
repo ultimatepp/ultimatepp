@@ -1,0 +1,12 @@
+uses
+	Core;
+
+file
+	RwLock1.hpp,
+	RwLock2.hpp,
+	RwLock3.hpp,
+	RwLock2.cpp optimize_speed;
+
+mainconfig
+	"" = "MT";
+

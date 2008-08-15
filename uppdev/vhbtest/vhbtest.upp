@@ -1,0 +1,14 @@
+charset "windows-1250";
+
+uses
+	CtrlLib;
+
+target(DEBUG) vhbeditor_dbg.exe;
+
+target(!DEBUG) vhbeditor.exe;
+
+file
+	AppWindow.cpp;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,24 @@
+LAYOUT(Tab1, 400, 200)
+	ITEM(Label, dv___0, SetLabel(t_("Number")).LeftPosZ(12, 76).TopPosZ(20, 19))
+	ITEM(EditInt, number, LeftPosZ(92, 56).TopPosZ(20, 19))
+	ITEM(Switch, dv___2, SetLabel(t_("a\nb\nc\nfasdfasdfasdfasdf")).LeftPosZ(140, 116).TopPosZ(28, 84))
+	ITEM(LabelBox, dv___3, SetLabel(t_("TEST")).LeftPosZ(12, 148).TopPosZ(56, 112))
+	ITEM(Option, op22, SetLabel(t_("Option")).LeftPosZ(28, 104).TopPosZ(76, 15))
+	ITEM(DocEdit, ded, LeftPosZ(24, 128).TopPosZ(96, 64))
+END_LAYOUT
+
+LAYOUT(Tab2, 380, 108)
+	ITEM(Option, option, SetLabel(t_("Option")).LeftPosZ(44, 64).TopPosZ(36, 15))
+	ITEM(DocEdit, dv___1, LeftPosZ(244, 96).TopPosZ(72, 20))
+END_LAYOUT
+
+LAYOUT(TabCtrlLayout, 564, 300)
+	ITEM(TabCtrl, tab, HSizePosZ(8, 8).VSizePosZ(4, 44))
+	ITEM(WithTab1<ParentCtrl>, tab1, HSizePosZ(20, 16).VSizePosZ(44, 48))
+	ITEM(WithTab1<ParentCtrl>, tab2, HSizePosZ(20, 16).VSizePosZ(44, 48))
+	ITEM(WithTab2<ParentCtrl>, tab3, HSizePosZ(20, 16).VSizePosZ(44, 48))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Button, ok2, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Button, test, LeftPosZ(12, 42).TopPosZ(272, 15))
+END_LAYOUT
+

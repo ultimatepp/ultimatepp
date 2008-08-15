@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	data.txt,
+	GetDataFile.cpp;
+
+mainconfig
+	"" = "CONSOLE ST";

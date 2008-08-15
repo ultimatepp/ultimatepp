@@ -1,0 +1,11 @@
+uses
+	src\support,
+	Topic;
+
+file
+	help.h,
+	help.cpp,
+	help.iml,
+	help.key,
+	help.t,
+	help.icpp;

@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	test.lay,
+	main.cpp
+		depends() test.lay;
+
+mainconfig
+	"" = "GUI MT";
+

@@ -1,0 +1,4 @@
+#ifndef _BeatPickerTest_icpp_init_stub
+#define _BeatPickerTest_icpp_init_stub
+#include "Core/init"
+#endif

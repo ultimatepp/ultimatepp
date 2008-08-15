@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+library "notes.lib";
+
+options "-DNT";
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";

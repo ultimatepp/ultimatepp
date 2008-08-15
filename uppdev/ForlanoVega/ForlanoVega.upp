@@ -1,0 +1,22 @@
+uses
+	CtrlLib;
+
+file
+	VegaMain.h,
+	main.cpp,
+	Vega.lay,
+	Vega.iml,
+	VegaStandard readonly separator,
+	VegaMenus.cpp,
+	VegaTabs readonly separator,
+	VegaTab1.cpp,
+	VegaTab2.cpp,
+	VegaTab3.cpp,
+	VegaTab4.cpp,
+	ReadyExtras readonly separator,
+	OptionImage.h,
+	OptionImage.cpp,
+	Docs readonly separator;
+
+mainconfig
+	"" = "GUI";

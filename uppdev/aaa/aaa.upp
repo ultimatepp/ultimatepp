@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	aaa.h,
+	src.tpp,
+	main.cpp,
+	aaa.lay;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	AccessKey.h,
+	test.key,
+	main.cpp,
+	AccessKey.lay;
+
+mainconfig
+	"" = "GUI ST";

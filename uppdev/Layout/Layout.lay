@@ -1,0 +1,8 @@
+LAYOUT(LayoutLayout, 200, 404)
+	ITEM(ProgressIndicator, dv___0, LeftPosZ(32, 84).TopPosZ(120, 24))
+	ITEM(EditDate, dv___1, LeftPosZ(60, 96).TopPosZ(60, 19))
+	ITEM(Label, dv___2, SetLabel(t_("èwsk")).SetFont(StdFontZ(17)).LeftPosZ(24, 128).TopPosZ(168, 21))
+	ITEM(Label, dv___3, SetLabel(t_("èwsk")).SetFont(StdFontZ(17)).LeftPosZ(24, 128).TopPosZ(192, 21))
+	ITEM(Label, dv___4, SetLabel(t_("èwskèwsk")).LeftPosZ(28, 112).TopPosZ(264, 19))
+	ITEM(Label, dv___5, SetLabel(t_("èwskèwsk")).LeftPosZ(48, 112).TopPosZ(284, 19))
+END_LAYOUT

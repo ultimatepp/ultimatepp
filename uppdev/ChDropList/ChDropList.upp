@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"ChDropList.h"
+	, main.cpp
+
+
+;
+
+mainconfig
+	"" = "GUI";

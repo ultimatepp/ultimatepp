@@ -1,0 +1,14 @@
+uses
+	Web,
+	ide;
+
+options(GCC) "-DNOWSTRING";
+
+file
+	ntl_license.txt,
+	RichHtml.cpp,
+	www.h,
+	www.cpp;
+
+mainconfig
+	"Debug" = "GUI ST .NOAPPMAIN";

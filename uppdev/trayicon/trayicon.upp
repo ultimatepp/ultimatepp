@@ -1,0 +1,17 @@
+uses
+	CtrlLib;
+
+library(LINUX) "jpeg Xext png";
+
+file
+	mbpixbuf.c,
+	mbpixbuf.h,
+	mbtray.c,
+	mbtray.h,
+	mbutil.c,
+	mbutil.h,
+	main.cpp,
+	tray.iml;
+
+mainconfig
+	"" = "GUI";

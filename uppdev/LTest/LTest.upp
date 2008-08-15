@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	LTest.h,
+	main.cpp,
+	LTest.lay;
+
+mainconfig
+	"" = "GUI";
+

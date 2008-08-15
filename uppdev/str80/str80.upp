@@ -1,0 +1,9 @@
+uses
+	Core,
+	Web/ssl;
+
+file
+	TEST.cpp;
+
+mainconfig
+	"" = "";

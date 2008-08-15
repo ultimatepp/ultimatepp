@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	Centrum.cpp;
+
+mainconfig
+	"" = "";

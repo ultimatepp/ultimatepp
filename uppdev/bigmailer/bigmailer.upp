@@ -1,0 +1,26 @@
+uses
+	CtrlLib,
+	GridCtrl,
+	RichEdit,
+	Web,
+	sTools;
+
+file
+	cfgDlg.cpp,
+	cfg.h,
+	cfg.cpp,
+	bigmailer.h,
+	bigmailer.cpp,
+	bigmailer.lay,
+	listDefinition.cpp,
+	messages.h,
+	messages.cpp,
+	smtpEx.cpp,
+	smtpEx.h,
+	send.cpp,
+	csvImport.h,
+	csvImport.cpp,
+	csvImport.lay;
+
+mainconfig
+	"" = "GUI MT";

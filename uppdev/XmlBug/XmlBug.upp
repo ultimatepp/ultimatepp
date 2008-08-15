@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	XmlBug.xml,
+	XmlBug.cpp;
+
+mainconfig
+	"" = "";
+

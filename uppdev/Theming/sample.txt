@@ -1,0 +1,27 @@
+alpha 12
+beta 22
+label "Id222!"
+;
+
+ButtonC hsize 203, 204 bottom 124, 134
+	alpha 101
+	beta 202
+	Color #123456
+	label "Something"
+	Font "Arial" 20 bold
+;
+
+.alpha(12)
+.beta(22)
+.SetFont(Font("Arial", 22).Bold())
+.SetColor(Color(123, 122, 123))
+
+ButtonC
+	.LeftPos(123, 12).TopPos(12, 233)
+	.alpha(123)
+
+
+
+<property name="alpha" value="12"/>
+<property name="beta" value="22"/>
+

@@ -1,0 +1,362 @@
+Sort()
+{
+	x = "ahoj kamarade to je ale hlina";
+	LOG(sort(x));
+	LOG(order(x));
+	LOG(reverse(x));
+}
+
+Subscript(x)
+{
+	LOG(@(x) { return 2 * x; } (x));
+}
+
+Counter(x = 0)
+{
+	.i = x;
+
+	#.Get() {
+		return .i;
+	}
+
+	#.Next() {
+		.i++;
+	}
+}
+
+Val(x)
+{
+	return 3 * x;
+}
+
+Defaults(x = Val(0), y = Val(1))
+{
+	LOG("params " + to_string(x) + ", " + to_string(y));
+}
+
+Defs()
+{
+	Defaults();
+	Defaults("p1");
+	Defaults("p2", "p3");
+}
+
+Object()
+{
+	Counter()! x;
+	LOG(x.Get());
+	x.Next();
+	LOG(x.Get());
+	x.Next();
+	LOG(x.Get());
+}
+
+ForIn()
+{
+	x.alfa = "ahoj";
+	x.beta = "kamarade";
+
+	for(j = 2; j--;) {
+		for(i in x) {
+			LOG(i);
+			LOG([ x[i] ]);
+		}
+		x = "Hello world";
+	}
+}
+
+sum(...)
+{
+	sum = 0;
+	for(i in argv)
+		sum += argv[i];
+	return sum;
+}
+
+main1()
+{
+	Object();
+}
+
+as_string(n)
+{
+	r = [];
+	while(n) {
+		r = [ n % 10 + '0' ] + r;
+		n = int(n / 10);
+	}
+	return r;
+}
+
+sieve()
+{
+	N = 100000;
+	sieve = N * [1];
+	for(i = 2; i < N; i++) {
+		if(sieve[i]) {
+			print(as_string(i) + "\n");
+			for(j = i; j < N; j += i)
+				sieve[j] = 0;
+		}
+	}
+}
+
+bench()
+{
+	N = 10;
+	M = 6144;
+	m = [];
+	m[M] = 0;
+	for(j = 0; j < N; j++)
+		for(i = 0; i < M; i++)
+			m[i] = i;
+}
+
+fn1(x)
+{
+	LOG("fn1: " + to_string(x));
+	return x;
+}
+
+fn2(x)
+{
+	LOG("fn2: " + to_string(x));
+	return x;
+}
+
+skipexp()
+{
+	b = 1;
+	LOG(b ? fn1("foo") : fn2("bar"));
+	LOG(fn1(1) || fn2(1) || fn1(2) ? "TRUE" : "FALSE");
+	LOG(fn1(1) && fn2(0) && fn1(2) ? "TRUE" : "FALSE");
+	LOG((b ? fn1(1) : fn1(20)) + 10);
+}
+
+main()
+{
+	skipexp();
+}
+
+Test() {
+	LOG(@(x) { return 2 * x; } (20));
+
+	:Counter = @(x) {
+		.i = x;
+		.Get = @() { return .i; };
+		.Next = @() { .i++; };
+	};
+
+	a.init = :Counter;
+	a.init(10);
+
+	LOG(a.Get());
+	a.Next();
+	LOG(a.Get());
+
+	Counter(10)! q;
+
+	LOG(q.Get());
+	q.Next();
+	LOG(q.Get());
+
+
+	LOG(5 * "ahoj");
+	LOG(50 * "ahoj");
+	LOG(0 * "ahoj");
+	LOG(-1 * "ahoj");
+	LOG(7 * "ahoj");
+
+	text = "0123456789";
+	for(i in text)
+		LOG(i);
+	x = {};
+
+	x.alfa = void;
+
+	for(i in x)
+		LOG(i);
+
+	for(i = 0; i < 10; i++)
+		LOG(i);
+
+	return;
+
+
+	o.x = 1;
+	o.get = @() { return .x; };
+	o.next = @() { .x++; };
+
+	w = o;
+
+	LOG(w.get());
+	w.next();
+	LOG(w.get());
+
+
+	text = "0123456789";
+	text.text = text;
+	text[] = text;
+	LOG(text);
+
+	return;
+
+	x = {};
+	x.x;
+
+	:test = @() {
+		return @() { return 500; };
+	};
+
+	LOG(:test);
+	LOG(test());
+	LOG(test()());
+
+	x.x;
+
+	alfa = @(x) { return 3 * x; };
+
+	LOG(alfa(123));
+
+
+	fn Counter(x) {
+		.i = 0;
+		.next = @() {
+			i++;
+		};
+		.get = @() {
+			return i;
+		};
+		deffn .get() {
+			return i;
+		}
+	}
+
+	Counter:: x(10);
+
+	fn Counter() {
+		x.i = 0;
+		x.next = @() {
+			.i++;
+		};
+		x.get = @() {
+			return i;
+		};
+		return x;
+	}
+
+	text[] = 'a';
+	text << "qwert";
+
+	LOG(text);
+
+	LOG(text[3,]);
+
+	LOG(text[:3]);
+
+	LOG(text[1, 3]);
+	LOG(text[1:3]);
+	LOG(text[,3]);
+	LOG(text[3:]);
+
+	text[-2] = 'x';
+	LOG(text);
+
+	text = "Hello world";
+	LOG([ text[-1] ]);
+	LOG([ text[-2] ]);
+	LOG([ text[-3] ]);
+
+	s.a = 123;
+	LOG(s.a);
+
+	x = [1, 2, 3];
+	x[1] = "ahoj";
+	LOG(x);
+	x[1][1] = 'x';
+	LOG(x);
+
+	b.alfa = x;
+	LOG(b);
+
+	b.beta.gama = b;
+	LOG(b);
+
+	x = "super";
+	x[] = 'x';
+	LOG(x);
+	x[] = "xxx";
+	LOG(x);
+
+	for(i = 0; i < 10; i++)
+		x = x + x;
+
+	:fact = @(x) { if(x > 1) return x * fact(x - 1); return 1; };
+
+	for(i = 0; i < 30; i++)
+		LOG(fact(i));
+
+	LOG(x);
+
+	LOG("Test!");
+	x = "beta";
+	LOG(x);
+	x = 123;
+	LOG(x);
+	x++;
+	LOG(x);
+	x *= 3.1242345;
+	LOG(x);
+	x = [1, 2, 3, 4, 5];
+	LOG(x);
+	x = x + x;
+	LOG(x);
+	LOG(x[3]);
+	LOG(x[5]);
+	x = { "a":1, "b":2 };
+	LOG(x);
+	LOG(x["b"]);
+	LOG(x["bb"]);
+	return;
+
+	x = "beta";
+	x << "alfa";
+
+	x = "hello";
+
+	x += [ x ];
+	x += x;
+
+	x << x;
+
+	x = x;
+
+	print(x);
+
+	:result = x;
+
+	x = [ 123 ];
+
+	x << [ x ];
+
+	x = x;
+
+	x.alfa.beta = x;
+
+	return;
+
+	x[1:7] = []
+	x[1,7] = []
+
+	//y.alfa = y;
+
+	x[4] = x;
+
+	//x.alfa.beta = x;
+
+	fn Point(x, y) {
+		return { 'x':x, 'y':y, };
+	}
+
+	x["alfa"] = 12;
+}

@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	plugin\tif;
+
+file
+	ImageMT.h,
+	main.cpp,
+	ImageMT.lay;
+
+mainconfig
+	"" = "GUI MT";

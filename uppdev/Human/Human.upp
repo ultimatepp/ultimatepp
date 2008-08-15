@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	RichEdit;
+
+file
+	Human.cpp,
+	Human.iml;
+
+mainconfig
+	"" = "GUI";

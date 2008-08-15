@@ -1,0 +1,8 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(AppLayout, 588, 492)
+	ITEM(LabelBox, dv___0, SetLabel("Hello!").HSizePosZ(8, 4).VSizePosZ(4, 4))
+	ITEM(ArrayCtrl, list, HSizePosZ(20, 12).VSizePosZ(24, 12))
+END_LAYOUT
+
+#endif

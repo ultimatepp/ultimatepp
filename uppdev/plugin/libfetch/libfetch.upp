@@ -1,0 +1,11 @@
+uses
+	Web;
+
+file
+	lib\common.c,
+	lib\common.h,
+	lib\fetch.c,
+	lib\fetch.h,
+	lib\file.c,
+	lib\ftp.c,
+	lib\http.c;

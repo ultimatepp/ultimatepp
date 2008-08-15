@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	PdfDraw;
+
+file
+	PDF.h,
+	main.cpp,
+	PDF.lay,
+	iml.iml;
+
+mainconfig
+	"" = "GUI";

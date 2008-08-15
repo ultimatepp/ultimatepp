@@ -1,0 +1,4 @@
+LAYOUT(TestUppLayout, 200, 100)
+	ITEM(DocEditEx, editTest, LeftPosZ(16, 168).TopPosZ(12, 72))
+END_LAYOUT
+

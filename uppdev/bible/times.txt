@@ -1,0 +1,23 @@
+* c:\out\MSC71cdb\bible.exe 04.04.2008 18:29:28, user: Luzr
+
+TIMING OutUpp         :  27.0 ms -  27.0 ms ( 27.0 ms / 1 ), min:  27.0 ms, max:  27.0 ms, nesting: 1 - 1
+TIMING SortUpp        :  24.0 ms -  24.0 ms ( 24.0 ms / 1 ), min:  24.0 ms, max:  24.0 ms, nesting: 1 - 1
+TIMING InUpp          :  18.0 ms -  18.0 ms ( 18.0 ms / 1 ), min:  18.0 ms, max:  18.0 ms, nesting: 1 - 1
+TIMING upp            :  71.0 ms -  71.0 ms ( 71.0 ms / 1 ), min:  71.0 ms, max:  71.0 ms, nesting: 1 - 1
+TIMING std multiset   : 329.0 ms - 329.0 ms (329.0 ms / 1 ), min: 329.0 ms, max: 329.0 ms, nesting: 1 - 1
+TIMING OutStd         :  87.0 ms -  87.0 ms ( 87.0 ms / 1 ), min:  87.0 ms, max:  87.0 ms, nesting: 1 - 1
+TIMING SortStd        :  72.0 ms -  72.0 ms ( 72.0 ms / 1 ), min:  72.0 ms, max:  72.0 ms, nesting: 1 - 1
+TIMING InStd          : 199.0 ms - 199.0 ms (199.0 ms / 1 ), min: 199.0 ms, max: 199.0 ms, nesting: 1 - 1
+TIMING std            : 361.0 ms - 361.0 ms (361.0 ms / 1 ), min: 361.0 ms, max: 361.0 ms, nesting: 1 - 1
+
+* /home/cxl/upp/out/GCC.Debug_full.Release/bible 05.04.2008 05:25:50, user: cxl
+
+TIMING OutUpp         :  17.0 ms -  17.0 ms ( 17.0 ms / 1 ), min:  17.0 ms, max:  17.0 ms, nesting: 1 - 1
+TIMING SortUpp        :  31.0 ms -  31.0 ms ( 31.0 ms / 1 ), min:  31.0 ms, max:  31.0 ms, nesting: 1 - 1
+TIMING InUpp          :  16.0 ms -  16.0 ms ( 16.0 ms / 1 ), min:  16.0 ms, max:  16.0 ms, nesting: 1 - 1
+TIMING upp            :  66.0 ms -  66.0 ms ( 66.0 ms / 1 ), min:  66.0 ms, max:  66.0 ms, nesting: 1 - 1
+TIMING std multiset   :  80.0 ms -  80.0 ms ( 80.0 ms / 1 ), min:  80.0 ms, max:  80.0 ms, nesting: 1 - 1
+TIMING OutStd         :  20.0 ms -  20.0 ms ( 20.0 ms / 1 ), min:  20.0 ms, max:  20.0 ms, nesting: 1 - 1
+TIMING SortStd        :  47.0 ms -  47.0 ms ( 47.0 ms / 1 ), min:  47.0 ms, max:  47.0 ms, nesting: 1 - 1
+TIMING InStd          :  19.0 ms -  19.0 ms ( 19.0 ms / 1 ), min:  19.0 ms, max:  19.0 ms, nesting: 1 - 1
+TIMING std            :  91.0 ms -  91.0 ms ( 91.0 ms / 1 ), min:  91.0 ms, max:  91.0 ms, nesting: 1 - 1

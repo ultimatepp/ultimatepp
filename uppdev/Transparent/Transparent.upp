@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"Transparent.h"
+	, main.cpp
+	, "Transparent.lay"
+
+;
+
+mainconfig
+	"" = "GUI ST";

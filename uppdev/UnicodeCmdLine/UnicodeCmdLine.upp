@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	UnicodeCmdLine.cpp;
+
+mainconfig
+	"" = "";

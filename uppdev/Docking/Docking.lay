@@ -1,0 +1,47 @@
+$uvs: PENDING CONFLICT
+$uvs: REPOSITORY INSERT
+LAYOUT(DockConfigLayout, 436, 380)
+$uvs: END REPOSITORY INSERT
+$uvs: REPOSITORY DELETE
+LAYOUT(DockConfigLayout, 440, 380)
+$uvs: END REPOSITORY DELETE
+	ITEM(TreeCtrl, tree, HSizePosZ(8, 196).VSizePosZ(44, 68))
+	ITEM(Button, deletegroup, SetLabel(t_("Delete Group")).LeftPosZ(76, 80).TopPosZ(20, 20))
+	ITEM(Button, newgroup, SetLabel(t_("New Group")).LeftPosZ(8, 64).TopPosZ(20, 20))
+	ITEM(LabelBox, dv___3, SetLabel(t_("Layouts")).RightPosZ(4, 184).VSizePosZ(208, 28))
+	ITEM(LabelBox, dv___4, SetLabel(t_("Windows/Groups")).HSizePosZ(4, 192).VSizePosZ(4, 28))
+	ITEM(Label, dv___5, SetLabel(t_("Right-click for options")).HSizePosZ(8, 196).BottomPosZ(48, 16))
+	ITEM(Label, dv___6, SetLabel(t_("Drag/Drop to change groups")).HSizePosZ(8, 196).BottomPosZ(33, 15))
+$uvs: REPOSITORY INSERT
+	ITEM(LabelBox, dv___7, SetLabel(t_("Window Buttons")).RightPosZ(4, 184).TopPosZ(128, 76))
+	ITEM(ColumnList, list, RightPosZ(8, 176).VSizePosZ(248, 32))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(276, 76).VCenterPosZ(20, 176))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 76).BottomPosZ(4, 20))
+$uvs: END REPOSITORY INSERT
+$uvs: REPOSITORY DELETE
+	ITEM(LabelBox, dv___7, SetLabel(t_("Window Buttons")).HSizePosZ(252, 4).TopPosZ(128, 76))
+	ITEM(ColumnList, list, RightPosZ(8, 176).VSizePosZ(248, 32))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(4, 60).BottomPosZ(4, 20))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 60).BottomPosZ(4, 20))
+$uvs: END REPOSITORY DELETE
+	ITEM(Button, deletelayout, SetLabel(t_("Delete")).RightPosZ(8, 56).TopPosZ(224, 20))
+	ITEM(Button, loadlayout, SetLabel(t_("Load")).RightPosZ(68, 56).TopPosZ(224, 20))
+	ITEM(Button, savelayout, SetLabel(t_("Save")).RightPosZ(128, 56).TopPosZ(224, 20))
+	ITEM(Option, tabbing, SetLabel(t_("Tabbing")).RightPosZ(64, 116).TopPosZ(40, 16))
+	ITEM(Option, tabnesting, SetLabel(t_("Default Nested Tabs")).RightPosZ(64, 116).TopPosZ(60, 16))
+	ITEM(Option, grouping, SetLabel(t_("Grouping")).RightPosZ(64, 116).TopPosZ(100, 16))
+	ITEM(Option, autohide, SetLabel(t_("Auto-Hide")).RightPosZ(64, 116).TopPosZ(80, 16))
+	ITEM(Option, closebtn, SetLabel(t_("Close")).RightPosZ(64, 116).TopPosZ(144, 16))
+$uvs: REPOSITORY INSERT
+	ITEM(Option, menubtn, SetLabel(t_("Window Menu")).RightPosZ(64, 116).TopPosZ(164, 16))
+	ITEM(Option, autohidebtn, SetLabel(t_("Auto-Hide")).RightPosZ(64, 116).TopPosZ(184, 16))
+	ITEM(LabelBox, dv___21, SetLabel(t_("Misc. Settings")).RightPosZ(4, 184).TopPosZ(4, 120))
+$uvs: END REPOSITORY INSERT
+$uvs: REPOSITORY DELETE
+	ITEM(Option, menubtn, SetLabel(t_("Menu")).RightPosZ(64, 116).TopPosZ(164, 16))
+	ITEM(Option, autohidebtn, SetLabel(t_("Auto-Hide")).RightPosZ(64, 116).TopPosZ(184, 16))
+	ITEM(LabelBox, dv___21, SetLabel(t_("Misc. Settings")).HSizePosZ(252, 4).TopPosZ(4, 120))
+$uvs: END REPOSITORY DELETE
+	ITEM(Option, animate, SetLabel(t_("Animation")).RightPosZ(64, 116).TopPosZ(20, 16))
+END_LAYOUT
+

@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	Crypto;
+
+file
+	ArrayCtrl.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

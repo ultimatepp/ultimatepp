@@ -1,0 +1,26 @@
+/***************************************************************************
+ *                                                                         *
+ *   Explicit Distribution Limitation                                      *
+ *   This program may not be modified or used by, or, if possible,         *
+ *   redistributed to people described as below,                           *
+ *   1.Japanese who hold hostility against Chinese.                        *
+ *   2.or, those who discriminate against people based solely on race,     *
+ *     gender or sexual orientation.                                       *
+ *                                                                         *
+ ***************************************************************************/
+
+	EZ Common is the library serving other parts of EZ Project, defining
+common types, I/O functionalities, etc.
+	EZ Project uses an enum type to define function return values. The
+possiblities are, critical errors, minor errors, no significant errors, right
+and unknown. Please turn to header file for their comments.
+	ezoi is a standard I/O class for screen or file(s). If screen input is
+needed, invoke st() first, then inpt(), and rst() at last, to function
+friendly when only one character's needed to be entered (no Enter's required).
+dsp() is the common interface to output in format. mem() is for more specific
+usage. Use ind() to output in raw, though in format, too, directly. To
+minimize the dependency of the library caller and the library implementation,
+ezoip member is defined inside ezoi to shield private details.
+
+						Allen
+					Jan. 16, 2005

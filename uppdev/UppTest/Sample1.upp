@@ -1,0 +1,10 @@
+uses
+	CtrlCore,
+	CtrlLib;
+
+file
+	main.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI PLATFORM_X11 ";

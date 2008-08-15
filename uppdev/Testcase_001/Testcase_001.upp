@@ -1,0 +1,10 @@
+description "Error in ArrayCtrl with DataPusher not poping up";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

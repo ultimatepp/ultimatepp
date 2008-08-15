@@ -1,0 +1,4 @@
+#ifndef _XmlBug_icpp_init_stub
+#define _XmlBug_icpp_init_stub
+#include "Core/init"
+#endif

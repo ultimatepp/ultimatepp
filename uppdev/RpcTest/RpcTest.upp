@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	XmlRpc;
+
+file
+	RpcTest.h,
+	main.cpp,
+	RpcTest.lay;
+
+mainconfig
+	"" = "GUI";
