@@ -251,7 +251,8 @@ struct TargetMode {
 bool CheckLicense();
 bool Install();
 
-#define HELPNAME "Help Topics"
+#define HELPNAME    "Help Topics"
+#define METAPACKAGE "<meta>"
 
 class TopicCtrl : public HelpWindow {
 public:

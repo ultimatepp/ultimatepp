@@ -206,6 +206,8 @@ struct WorkspaceWork {
 	void RemovePackageMenu(Bar& bar);
 	void RemovePackage(String from_package);
 
+	bool IsAux();
+
 	void PackageMenu(Bar& bar);
 	void FileMenu(Bar& bar);
 

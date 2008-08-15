@@ -464,19 +464,11 @@ void Ide::EditFile(const String& p)
 	if(p == HELPNAME) {
 		if(designer && designer->GetFileName() == p)
 			return;
-		package.SetCursor(package.GetCount() - 2);
-		for(int i = 0; i < actual.file.GetCount(); i++)
-			if(actual.file[i] == p) {
-				ShowFile(i);
-				filelist.SetCursor(i);
-				return;
-			}
-		actual.file.Insert(0, p);
-		SaveLoadPackage();
-		ShowFile(0);
-		filelist.SetCursor(0);
+		package.FindSetCursor(METAPACKAGE);
+		filelist.FindSetCursor(HELPNAME);
 		return;
 	}
+
 	String path = NormalizePath(p);
 	if(designer ? path == designer->GetFileName() : path == editfile)
 		return;

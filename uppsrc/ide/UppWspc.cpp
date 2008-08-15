@@ -29,6 +29,8 @@ String WorkspaceWork::PackagePathA(const String& pn) {
 		          getpid()
 #endif
 		       ));
+	if(pn == METAPACKAGE)
+		return Null;
 	return PackagePath(pn);
 }
 
@@ -47,13 +49,14 @@ void WorkspaceWork::ScanWorkspace() {
 		package.Add(prjaux, IdeImg::PrjAux(), ListFont(), Magenta);
 		package.Add(ideaux, IdeImg::IdeAux(), ListFont(), Magenta);
 		package.Add(tempaux, IdeImg::TempAux(), ListFont(), Magenta);
+		package.Add(METAPACKAGE, IdeImg::Meta(), ListFont(), Red);
 	}
 	package.SetCursor(0);
 }
 
 void WorkspaceWork::SavePackage()
 {
-	if(IsNull(actualpackage))
+	if(IsNull(actualpackage) || actualpackage == "<METAPACKAGE>")
 		return;
 	String pp = PackagePathA(actualpackage);
 	RealizePath(pp);
@@ -180,13 +183,25 @@ void WorkspaceWork::TouchFile(const String& path)
 
 void WorkspaceWork::PackageCursor()
 {
+	filelist.WhenBar.Clear();
 	actualpackage = GetActivePackage();
 	if(actualpackage.IsEmpty()) return;
-	String pp = PackagePathA(actualpackage);
-	RealizePath(pp);
-	actual.Load(pp);
+	if(actualpackage == METAPACKAGE) {
+		actual.file.Clear();
+		actual.file.Add(String(HELPNAME));
+		Vector<String> d = GetUppDirs();
+		for(int i = 0; i < d.GetCount(); i++)
+			actual.file.Add(AppendFileName(d[i], "templates.tpp"));
+	}
+	else {
+		String pp = PackagePathA(actualpackage);
+		RealizePath(pp);
+		actual.Load(pp);
+	}
 	LoadActualPackage();
 	filelist.Enable();
+	if(actualpackage != METAPACKAGE)
+		filelist.WhenBar = THISBACK(FileMenu);
 }
 
 void WorkspaceWork::FileCursor()
@@ -503,10 +518,15 @@ void  WorkspaceWork::ShowFile(int pi)
 	}
 }
 
+bool WorkspaceWork::IsAux()
+{
+	return actualpackage == tempaux || actualpackage == prjaux || actualpackage == ideaux || actualpackage == METAPACKAGE;
+}
+
 void WorkspaceWork::FileMenu(Bar& menu)
 {
 	bool sel = filelist.IsCursor() && filelist[filelist.GetCursor()].isdir;
-	bool isaux = (actualpackage == tempaux || actualpackage == prjaux || actualpackage == ideaux);
+	bool isaux = IsAux();
 	menu.Add(!isaux, "Insert package directory file(s)", THISBACK1(AddFile, PACKAGE_FILE))
 		.Help("Insert file relative to current package");
 	menu.Add(!isaux, "Insert topic++ group", THISBACK(AddTopicGroup));
@@ -644,12 +664,13 @@ void WorkspaceWork::TogglePackageSpeed()
 void WorkspaceWork::PackageMenu(Bar& menu)
 {
 	if(!menu.IsScanKeys()) {
+		bool cando = !IsAux() && package.IsCursor();
 		String act = UnixPath(GetActivePackage());
-		menu.Add(~NFormat("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
+		menu.Add(cando, ~NFormat("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
 		RemovePackageMenu(menu);
 		if(menu.IsMenuBar()) {
 			menu.Separator();
-			menu.Add(package.IsCursor(), "Optimize for speed", THISBACK(TogglePackageSpeed))
+			menu.Add(cando, "Optimize for speed", THISBACK(TogglePackageSpeed))
 			    .Check(actual.optimize_speed);
 			menu.Separator();
 			BuildPackageMenu(menu);
@@ -666,7 +687,6 @@ WorkspaceWork::WorkspaceWork()
 	filelist <<= THISBACK(FileCursor);
 	filelist.WhenLeftClickPos = THISBACK(GroupOrFile);
 	filelist.WhenLeftDouble = THISBACK(Group);
-	filelist.WhenBar = THISBACK(FileMenu);
 	filelist.Columns(2);
 	filelist.NoRoundSize();
 	actualfileindex = -1;

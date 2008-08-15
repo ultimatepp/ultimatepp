@@ -61,8 +61,8 @@ file
 	Debug.cpp,
 	Valgrind.cpp,
 	Export.cpp,
-	Resources readonly separator,
 	ide.iml,
+	Resources readonly separator,
 	ide.lay,
 	app.tpp,
 	ide.rc

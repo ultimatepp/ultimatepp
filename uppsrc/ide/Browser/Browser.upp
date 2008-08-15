@@ -21,7 +21,7 @@ file
 	Reference.cpp,
 	File.cpp optimize_speed,
 	Topic.cpp,
-	Stylesheet.cpp,
+	Template.cpp,
 	Link.cpp,
 	TopicWin.cpp,
 	IdeTopic.cpp,
@@ -31,8 +31,3 @@ file
 
 mainconfig
 	"" = "GUI";
-
-RichEdit 
-
-,
-	PdfDraw;
