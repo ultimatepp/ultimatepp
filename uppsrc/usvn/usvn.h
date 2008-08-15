@@ -27,13 +27,24 @@ class SvnSel : public WithSvnSelLayout<TopWindow> {
 	String url, usr, pwd;
 	String folder;
 	
-	void Load();
+	bool Load(const String& path);
+	void SyncResult();
 	void Go();
-	
+	void DirUp();
+	bool NewUrl();
+	void Url();
+	bool TryLoad(const char *url);
+	bool Select0();
+
 	typedef SvnSel CLASSNAME;
 
 public:
-	String Select(const char *url, const char *user, const char *pwd);
+	bool Select();
+	bool Select(const char *url, const char *user, const char *pwd);
+
+	String GetUsername() const         { return usr; }
+	String GetPassword() const         { return pwd; }
+	String GetUrl() const              { return ~result; }
 	
 	SvnSel();
 };
