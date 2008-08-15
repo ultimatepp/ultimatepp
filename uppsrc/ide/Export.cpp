@@ -1,13 +1,16 @@
 #include "ide.h"
 
+bool IsDoc(String s)
+{
+	s = ToLower(s);
+	return s.Find("readme") >= 0 || s.Find("copying") >= 0 || s.Find("license") >= 0 ||
+	       s.Find("authors") >= 0;
+}
+
 void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool all)
 {
 	String dst = NativePath(_dst);
 	String src = NativePath(_src);
-	DUMP(_dst);
-	DUMP(dst);
-	DUMP(src);
-	DUMP(_src);
 	if(dst == src)
 		return;
 	FindFile ff(AppendFileName(src, "*"));
@@ -15,17 +18,14 @@ void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool al
 	while(ff) {
 		String s = AppendFileName(src, ff.GetName());
 		String d = AppendFileName(dst, ff.GetName());
-		DUMP(s);
-		DUMP(d);
 		if(ff.IsFolder())
 			CopyFolder(d, s, used, all);
 		else
-		if(ff.IsFile() && (all || used.Find(s) >= 0)) {
+		if(ff.IsFile() && (all || IsDoc(s) || used.Find(s) >= 0)) {
 			if(realize) {
 				RealizeDirectory(dst);
 				realize = false;
 			}
-			DUMP(d);
 			SaveFile(d, LoadFile(s));
 			SetFileTime(d, ff.GetLastWriteTime());
 		}

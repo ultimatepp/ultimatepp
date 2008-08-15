@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)     LOG(x)
+#define LLOG(x)    // LOG(x)
 #define LTIMING(x) // RTIMING(x)
 
 static ColorF xpmenuborder[] = {

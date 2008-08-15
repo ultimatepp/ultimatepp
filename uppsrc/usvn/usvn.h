@@ -10,6 +10,34 @@ using namespace Upp;
 #define LAYOUTFILE <usvn/usvn.lay>
 #include <CtrlCore/lay.h>
 
+class SysConsole : public WithConsoleLayout<TopWindow> {
+	typedef SysConsole CLASSNAME;
+	
+	Font font;
+	void AddResult(const String& out);
+
+public:
+	int  System(const char *s);
+	void Perform()	                            { exit.Show(); Execute(); }
+
+	SysConsole();
+};
+
+class SvnSel : public WithSvnSelLayout<TopWindow> {
+	String url, usr, pwd;
+	String folder;
+	
+	void Load();
+	void Go();
+	
+	typedef SvnSel CLASSNAME;
+
+public:
+	String Select(const char *url, const char *user, const char *pwd);
+	
+	SvnSel();
+};
+
 struct Repo {
 	String repo;
 	String work;
@@ -50,6 +78,9 @@ public:
 	SvnWorks();
 };
 
+String SvnCmd(const char *cmd, const String& user, const String& pwd);
+String SvnCmd(const char *cmd, const SvnWork& w);
+
 struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	enum {
 		MODIFY,
@@ -64,26 +95,19 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	Array<Option>     confirm;
 	Array<EditString> message;
 	
-	void Add(const char *working);
+	SvnWorks works;
 	
-	SvnSync();
-};
+	void SyncList();
+	void Setup();
 
-class SysConsole : public WithConsoleLayout<TopWindow> {
-	typedef SysConsole CLASSNAME;
-	
-	Font font;
-	bool canceled;
-	void AddResult(const String& out);
+	typedef SvnSync CLASSNAME;
 
 public:
-	int System(const char *s);
+	void Dir(const char *dir);
+	void Perform();
+	void DoSync();
 	
-	void Cancel();
-	void IsCanceled();
-	void ClearCanceled();
-	
-	SysConsole();
+	SvnSync();
 };
 
 #endif

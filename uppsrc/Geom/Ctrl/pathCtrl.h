@@ -267,7 +267,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 bool RunDlgPathEditor(PathStyle& style, const String& title = Null);
-String RunDlgPathStyleMap(PathStyleMap& map, const String& dflt = Null, bool editor = false, bool read_only = false);
+bool RunDlgPathStyleMap(PathStyleMap& map, String& style, bool editor = false, bool read_only = false);
 
 //////////////////////////////////////////////////////////////////////
 

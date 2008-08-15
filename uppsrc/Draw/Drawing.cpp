@@ -617,7 +617,7 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 	pos.trgini = GetOffset();
 	VectorMap<int, Draw::Drawer>& map = sDrawerMap();
 	StringStream s(w.data);
-	LOGBEGIN();
+//	LOGBEGIN();
 	while(!s.IsEof()) {
 		int code;
 		s / code;
@@ -626,7 +626,7 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 			break;
 		(*map[i])(*this, s, pos);
 	}
-	LOGEND();
+//	LOGEND();
 	End();
 #ifdef _DEBUG
 	ASSERT(GetCloffLevel() == cl);

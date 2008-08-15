@@ -113,7 +113,7 @@ void LogStream::Create(const char *path, bool append)
 	if(append)
 		filesize = (int)SetFilePointer(hfile, 0, NULL, FILE_END);
 #else
-	hfile = open(filename, append ? O_CREAT|O_RDWR : O_CREAT|O_RDWR|O_TRUNC, 0644);
+	hfile = open(filename, append ? O_CREAT|O_RDWR|O_APPEND : O_CREAT|O_RDWR|O_TRUNC, 0644);
 	if(append)
 		filesize = (int)lseek(hfile, 0, SEEK_END);
 #endif

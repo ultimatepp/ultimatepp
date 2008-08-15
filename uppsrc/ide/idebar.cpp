@@ -305,6 +305,8 @@ void Ide::Project(Bar& menu) {
 	FilePropertiesMenu(menu);
 	menu.MenuSeparator();
 	menu.Add("Export project..", THISBACK(ExportProject));
+	if(SvnDirs().GetCount())
+		menu.Add("SVN Synchronize..", THISBACK(SyncSvn));
 }
 
 void Ide::FilePropertiesMenu(Bar& menu)

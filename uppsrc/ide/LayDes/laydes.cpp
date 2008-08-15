@@ -718,6 +718,12 @@ void LayDes::CreateCtrl(const String& _type)
 	LayoutItem& m = l.item.Insert(c);
 	m.Create(_type);
 	Point p = dragbase;
+	Size sza, szb;
+	GetZoomRatio(sza, szb);
+	if(sza.cx)
+		p.x = szb.cx * p.x / sza.cx;
+	if(sza.cy)
+		p.y = szb.cy * p.y / sza.cy;
 	if(usegrid) {
 		p.x = p.x / (int)~setting.gridx * (int)~setting.gridx;
 		p.y = p.y / (int)~setting.gridy * (int)~setting.gridy;

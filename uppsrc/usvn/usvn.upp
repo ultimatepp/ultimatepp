@@ -1,3 +1,5 @@
+description "Simple svn GUI frontend, also a module that can be used in other applications";
+
 uses
 	CtrlLib;
 
@@ -6,9 +8,9 @@ file
 	SlaveProcess.h,
 	SlaveProcess.cpp,
 	Console.cpp,
+	SvnFs.cpp,
 	SvnWorks.cpp,
 	SvnSync.cpp,
-	main.cpp,
 	notes.txt,
 	usvn.lay;
 

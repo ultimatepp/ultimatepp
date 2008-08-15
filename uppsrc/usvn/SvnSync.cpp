@@ -9,6 +9,8 @@ SvnSync::SvnSync()
 	list.AddColumn("Path");
 	list.ColumnWidths("153 619");
 	list.NoCursor().EvenRowColor();
+	usr.NullText("use cached");
+	pwd.NullText("use cached");
 	Sizeable().Zoomable();
 	setup <<= THISBACK(Setup);
 }
@@ -29,45 +31,48 @@ void SvnSync::SyncList()
 		         AttrText("Working directory").SetFont(StdFont().Bold()).Ink(White).Paper(Blue),
 		         AttrText(path).SetFont(Arial(20).Bold()).Paper(Blue).Ink(White));
 		list.SetLineCy(list.GetCount() - 1, 26);
-		Vector<String> ln = Split(Sys("svn status " + path), '\n');
+		Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
 		bool actions = false;
-		for(int i = 0; i < ln.GetCount(); i++) {
-			String h = ln[i];
-			if(h.GetCount() > 7) {
-				String file = h.Mid(7);
-				if(IsFullPath(file)) {
-					actions = true;
-					h.Trim(7);
-					bool simple = h.Mid(1, 6) == "      ";
-					int action = simple ? String("MC?!").Find(h[0]) : -1;
-					String an;
-					Color  color;
-					if(action < 0) {
-						color = Black;
-						if(simple && h[0] == 'A')
-							an = "add";
-						else
-						if(simple && h[0] == 'D')
-							an = "delete";
+		for(int pass = 0; pass < 2; pass++)
+			for(int i = 0; i < ln.GetCount(); i++) {
+				String h = ln[i];
+				if(h.GetCount() > 7) {
+					String file = h.Mid(7);
+					if(IsFullPath(file)) {
+						actions = true;
+						h.Trim(7);
+						bool simple = h.Mid(1, 6) == "      ";
+						int action = simple ? String("MC?!").Find(h[0]) : -1;
+						String an;
+						Color  color;
+						if(action < 0) {
+							color = Black;
+							if(simple && h[0] == 'A')
+								an = "svn add";
+							else
+							if(simple && h[0] == 'D')
+								an = "svn delete";
+							else {
+								an = h.Mid(0, 7);
+								color = Gray;
+							}
+						}
 						else {
-							an = h.Mid(0, 7);
-							color = Gray;
+							static const char *as[] = { "Modify", "Conflict resolved", "Add", "Remove" };
+							static Color c[] = { LtBlue, Magenta, Green, LtRed };
+							an = as[action];
+							color = c[action];
+						}
+						if(pass == action < 0) {
+							int ii = list.GetCount();
+							list.Add(action, file,
+							         action <= 0 ? Value(AttrText(an).Ink(color)) : Value(true),
+							         AttrText("  " + file.Mid(path.GetCount() + 1)).Ink(color));
+							if(action > 0)
+								list.SetCtrl(ii, 0, confirm.Add().SetLabel(an).NoWantFocus());
 						}
 					}
-					else {
-						static const char *as[] = { "Modify", "Conflict resolved", "Add", "Remove" };
-						static Color c[] = { LtBlue, Magenta, Green, LtRed };
-						an = as[action];
-						color = c[action];
-					}
-					int ii = list.GetCount();
-					list.Add(action, file,
-					         action <= 0 ? Value(AttrText(an).Ink(color)) : Value(true),
-					         AttrText("  " + file.Mid(path.GetCount() + 1)).Ink(color));
-					if(action > 0)
-						list.SetCtrl(ii, 0, confirm.Add().SetLabel(an).NoWantFocus());
 				}
-			}
 		}
 		if(actions) {
 			list.Add(MESSAGE, Null, AttrText("Commit message:").SetFont(StdFont().Bold()));
@@ -111,12 +116,16 @@ void SvnSync::Perform()
 				SetExitCode(1);
 				return;
 			}
-			works.Add(d, Null, Null);
+			works.Add(d, ~usr, ~pwd);
 		}
 		setup.Hide();
 		DoSync();
 	}
 	else {
+		usr_lbl.Hide();
+		usr.Hide();
+		pwd_lbl.Hide();
+		pwd.Hide();
 		works.Load(LoadFile(ConfigFile("svnworks")));
 		DoSync();
 		SaveFile(ConfigFile("svnworks"), works.Save());
@@ -167,9 +176,9 @@ void SvnSync::DoSync()
 #ifdef flagMAIN
 GUI_APP_MAIN
 {
-//	SvnSel svn;
-//	svn.Select("https://upp.svn.sourceforge.net/svnroot/upp", "", "");
-//	return;
+	SvnSel svn;
+	svn.Select("svn://10.0.0.19/upp", "", "");
+	return;
 	SvnSync().Perform();
 }
 #endif

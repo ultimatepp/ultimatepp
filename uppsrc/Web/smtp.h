@@ -18,6 +18,7 @@ public:
 	SmtpMail&      Transcript(bool t = true)      { transcript = t; return *this; }
 	SmtpMail&      AttachFile(const char *filename, const char *mime = 0);
 	SmtpMail&      Attach(const char *name, String data, const char *mime = 0);
+	SmtpMail&      Auth(String user, String pwd)  { auth_user = user; auth_pwd = pwd; return *this; }
 
 	bool           Send();
 
@@ -35,6 +36,8 @@ private:
 
 	String         host;
 	int            port; // default = 25
+	String         auth_user;
+	String         auth_pwd;
 	String         from;
 	Vector<String> to;
 	Vector<char>   as;

@@ -1,6 +1,6 @@
 #include "usvn.h"
 
-FileSel& sSD() {
+static FileSel& ssSD() {
 	static FileSel fs;
 	ONCELOCK {
 		fs.AllFilesType();
@@ -8,15 +8,11 @@ FileSel& sSD() {
 	return fs;
 }
 
-String NormalizePathNN(const String& path)
-{
-	return IsNull(path) ? path : NormalizePath(path);
-}
-
 static void sSetFolder(EditField *f)
 {
-	if(!sSD().ExecuteSelectDir()) return;
-	*f <<= NormalizePathNN(~sSD());
+	if(!ssSD().ExecuteSelectDir()) return;
+	String path = ~ssSD();
+	*f <<= IsNull(path) ? path : NormalizePath(path);
 }
 
 void SvnWorks::DirSel(EditField& f)
@@ -61,6 +57,24 @@ void SvnWorks::Edit()
 	Sync();
 }
 
+String SvnCmd(const char *cmd, const String& user, const String& pwd)
+{
+	String r = "svn ";
+	r << cmd;
+	r << " --non-interactive";
+	if(!IsNull(user))
+		r << " --username \"" << user << "\"";
+	if(!IsNull(pwd))
+		r << " --password \"" << pwd << "\"";
+	r << ' ';
+	return r;
+}
+
+String SvnCmd(const char *cmd, const SvnWork& w)
+{
+	return SvnCmd(cmd, w.user, w.password);
+}
+
 void SvnWorks::Checkout()
 {
 	WithSvnCheckoutLayout<TopWindow> dlg;
@@ -76,15 +90,8 @@ void SvnWorks::Checkout()
 	}
 	RealizeDirectory(working);
 	Add(~dlg.working, ~dlg.user, ~dlg.password);
-	String cmd;
-	cmd << "svn checkout --non-interactive";
-	if(!IsNull(dlg.user))
-		cmd << " --user \"" << ~dlg.user << "\"";
-	if(!IsNull(dlg.password))
-		cmd << " --user \"" << ~dlg.password << "\"";
-	cmd << ' ' << ~dlg.repository << ' ' << ~dlg.working;
 	SysConsole con;
-	con.System(cmd);
+	con.System(SvnCmd("checkout", ~dlg.user, ~dlg.password).Cat() << ~dlg.repository << ' ' << ~dlg.working);
 	con.Execute();
 }
 
@@ -124,7 +131,7 @@ void SvnWorks::Clear()
 void SvnWorks::Load(const String& text)
 {
 	list.Clear();
-	Vector<String> ln = Split(text, '\n');
+	Vector<String> ln = Split(text, CharFilterCrLf);
 	for(int i = 0; i < ln.GetCount(); i++) {
 		Vector<String> q = Split(ln[i], ';');
 		if(q.GetCount() >= 1)
@@ -149,9 +156,11 @@ SvnWorks::SvnWorks()
 	list.AddColumn("Password");
 	list.Moving();
 	list.ColumnWidths("364 100 100");
+	list.WhenCursor = THISBACK(Sync);
 	add <<= THISBACK(New);
 	remove <<= THISBACK(Remove);
 	checkout <<= THISBACK(Checkout);
 	edit <<= THISBACK(Edit);
 	Sync();
 }
+

@@ -960,10 +960,17 @@ Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count)
 			f.filename = drive;
 			char name[256], system[256];
 			DWORD d;
-			if(c != 'A' && c != 'B' && n != DRIVE_REMOTE && n != DRIVE_UNKNOWN &&
-			   GetVolumeInformation(drive, name, 256, &d, &d, &d, system, 256)) {
-			   	if(*name) f.root_desc << " " << FromSystemCharset(name);
-			   	if(*system) f.root_desc << " [ " << FromSystemCharset(system) << " ]";
+			if(c != 'A' && c != 'B' && n != DRIVE_REMOTE && n != DRIVE_UNKNOWN) {
+				bool b = GetVolumeInformation(drive, name, 256, &d, &d, &d, system, 256);
+				if(b) {
+				   	if(*name) f.root_desc << " " << FromSystemCharset(name);
+				   	if(*system) f.root_desc << " [ " << FromSystemCharset(system) << " ]";
+				}
+				else
+				if(n == DRIVE_REMOVABLE) {
+					fi.Drop();
+					continue;
+				}
 			}
 			switch(n)
 			{

@@ -485,9 +485,9 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	DWORD result = 0;
 	Image m = Ctrl::OverrideCursor(CtrlCoreImg::DndMove());
 	if(actions & DND_COPY)
-		dsrc->copy = MakeDragImage(CtrlCoreImg::DndCopy(), CtrlCoreImg::DndCopy98(), sample);
+		dsrc->copy = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndCopy(), CtrlCoreImg::DndCopy98(), sample);
 	if(actions & DND_MOVE)
-		dsrc->move = MakeDragImage(CtrlCoreImg::DndMove(), CtrlCoreImg::DndMove98(), sample);
+		dsrc->move = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndMove(), CtrlCoreImg::DndMove98(), sample);
 	sDnDSource = this;
 	HRESULT r = DoDragDrop(obj, dsrc,
 	                       (actions & DND_COPY ? DROPEFFECT_COPY : 0) |

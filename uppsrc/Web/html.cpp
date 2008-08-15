@@ -292,7 +292,7 @@ HtmlTag HtmlSelect(String name) {
 	return HtmlTag("SELECT").Name(name);
 }
 
-Htmls HtmlOption(const Value& val, const char *text, bool selected)
+Htmls HtmlOption(Value val, const char *text, bool selected)
 {
 	HtmlTag option("OPTION");
 	option.Data(val);

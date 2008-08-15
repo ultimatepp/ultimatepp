@@ -199,8 +199,7 @@ String  GetTempFileName(const char *prefix = NULL);
 template <class T>
 class Array;
 
-class FileSystemInfo
-{
+class FileSystemInfo {
 public:
 	enum
 	{

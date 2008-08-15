@@ -19,6 +19,7 @@ srSP("")
 trTR("Eğer otomatik olarak yönlendirlmediyseniz lütfen %s bağlantısını "
      "kullanın.")
 zhCN("如果没有自动重定向,请使用%s.")
+zhTW("")
 
 T_("this link")
 csCZ("tento odkaz")
@@ -34,6 +35,7 @@ ruRU("эту ссылку")
 srSP("")
 trTR("bu bağlantı")
 zhCN("本链接")
+zhTW("")
 
 T_("Redirection to another web address")
 csCZ("Přesměrování na jinou adresu")
@@ -49,6 +51,7 @@ ruRU("Перенаправление на другой веб адрес")
 srSP("")
 trTR("başka bir ağ adresine yönlendiriliyor")
 zhCN("重定向到其他web地址")
+zhTW("")
 
 T_("... (total length: %d bytes)")
 csCZ("... (celková délka: %d bytů)")
@@ -64,6 +67,7 @@ ruRU("... (полный размер: %d байт)")
 srSP("")
 trTR("... (toplam boyut: %d byte)")
 zhCN("... (总长: %d 字节)")
+zhTW("")
 
 T_("The web server is unable to satisfy your request:\n<p>\n")
 csCZ("Internetový server nebyl schopen vyřídit požadavek:\n<p>\n")
@@ -81,6 +85,7 @@ ruRU("Этот веб сервер не может удовлетворить "
 srSP("")
 trTR("Ağ sunucusu isteğinizi yerine getiremiyor:\n<p>\n")
 zhCN("web服务器不支持您的请求:\n<p>\n")
+zhTW("")
 
 T_("Reason:")
 csCZ("Důvod chyby: ")
@@ -96,6 +101,7 @@ ruRU("Причина:")
 srSP("")
 trTR("Sebep:")
 zhCN("原因:")
+zhTW("")
 
 T_("Detailed query data:")
 csCZ("Detailní informace o dotazu:")
@@ -111,6 +117,7 @@ ruRU("Детали запроса:")
 srSP("")
 trTR("Detaylı sorgulama verileri:")
 zhCN("详细查询数据")
+zhTW("")
 
 T_("Web server error")
 csCZ("Chyba internetového serveru")
@@ -126,6 +133,7 @@ ruRU("Ошибка веб сервера")
 srSP("")
 trTR("Sunucu hatası")
 zhCN("Web服务器错误")
+zhTW("")
 
 
 // httpcli.cpp
@@ -145,6 +153,7 @@ ruRU("%s:%d превишен интервал ожидания при получ
 srSP("")
 trTR("%s:%d: Üstbilgi alışverişi zaman aşımına uğradı.")
 zhCN("%s:%d 接收头超时")
+zhTW("")
 
 T_("%s:%d: connecting to host timed out")
 csCZ("%s:%d: vypršel časový limit pro připojení k hostiteli")
@@ -161,6 +170,7 @@ ruRU("%s:%d превишен интервал ожидания при подкл
 srSP("")
 trTR("%s:%d: Sunucu bağlantısı zaman aşımına uğradı")
 zhCN("%s:%d: 连接到主机超时")
+zhTW("")
 
 T_("%s:%d: timed out sending request to server")
 csCZ("%s:%d: vypršel časový limit při odesílání požadavku")
@@ -176,6 +186,7 @@ ruRU("%s:%d: таймаут отправки запроса на сервер")
 srSP("")
 trTR("%s:%d: İstek zaman aşımına uğradı")
 zhCN("%s:%d: 发送请求到服务器超时")
+zhTW("")
 
 T_("%s:%d: invalid server response: %s")
 csCZ("%s:%d: neplatná odezva ze serveru: %s")
@@ -191,6 +202,7 @@ ruRU("%s:%d: неправильный ответ сервера: %s")
 srSP("")
 trTR("%s:%d: Sunucudan gelen yanıt geçersiz")
 zhCN("%s:%d: 无效服务器反应: %s")
+zhTW("")
 
 T_("%s:%d: maximum data length exceeded (%d B)")
 csCZ("%s:%d: byla překročena maximální délka dat (%d B)")
@@ -207,6 +219,7 @@ ruRU("%s:%d: превышен максимальный размер данных
 srSP("")
 trTR("%s:%d: maksimum veri boyutu aşıldı (%d B)")
 zhCN("%s:%d: 超出了最大数据长度(%d B)")
+zhTW("")
 
 T_("%s:%d: maximum header length exceeded (%d B)")
 csCZ("%s:%d: byla překročena maximální délka hlaviček (%d B)")
@@ -223,6 +236,7 @@ ruRU("%s:%d: превышен максимальный размер заголо
 srSP("")
 trTR("%s:%d:Maksimum üstbilgi boyutu aşıldı (%d B)")
 zhCN("%s:%d: 超出了最大头长度(%d B)")
+zhTW("")
 
 T_("%s:%d: timed out when receiving server response")
 csCZ("%s:%d: vypršel časový limit při načítání odpovědi")
@@ -238,6 +252,7 @@ ruRU("%s:%d: таймаут при приёме ответа от сервера
 srSP("")
 trTR("%s:%d: Sunucudan  yanıt beklenirken zaman aşımı meydana geldi")
 zhCN("%s:%d: 接收服务器反应时超时")
+zhTW("")
 
 T_("Maximum content size exceeded: %d")
 csCZ("Překročena maximální povolená délka datového obsahu: %d")
@@ -254,6 +269,7 @@ ruRU("Превышен максимальный размер содержимо�
 srSP("")
 trTR("Maksimum içerik boyutu aşıldı: %d")
 zhCN("最大内容长度超出:%d")
+zhTW("")
 
 T_("Partial input: %d out of %d")
 csCZ("Přijata neúplná data: %d z %d")
@@ -269,6 +285,7 @@ ruRU("Частичный ввод: %d из %d")
 srSP("")
 trTR("Kısmi girdi: %d/%d")
 zhCN("部分输入: %d out of %d")
+zhTW("")
 
 
 // smtp.cpp
@@ -287,6 +304,7 @@ ruRU("Ошибка связи. Таймаут.")
 srSP("")
 trTR("Bağlantı başarısız: Zaman aşımı.")
 zhCN("")
+zhTW("")
 
 T_("Error writing data to socket: communication port closed.")
 csCZ("Chyba při zápisu dat do socketu: komunikační kanál byl uzavřen.")
@@ -303,6 +321,7 @@ ruRU("Ошибка посылки данных в сокет: порт связ�
 srSP("")
 trTR("Sokete yazma hatası: bağlantı kesildi.")
 zhCN("")
+zhTW("")
 
 T_("Error writing data to socket, error code: ")
 csCZ("Chyba při zápisu dat do socketu, kód chyby: ")
@@ -318,6 +337,7 @@ ruRU("Ошибка посылки данных в сокет: код оибки:
 srSP("")
 trTR("Sokete yazma hatası meydana geldi. Hata kodu: ")
 zhCN("")
+zhTW("")
 
 T_("Error reading data from socket: commuication port closed.")
 csCZ("Chyba při čtení dat ze socketu: komunikační kanál byl uzavřen.")
@@ -334,6 +354,7 @@ ruRU("Ошибка чтения данных из сокета: порт свя�
 srSP("")
 trTR("Soket okuma hatası: bağlantı kesildi.")
 zhCN("")
+zhTW("")
 
 T_("Host not set.")
 csCZ("Hostitel není zadán.")
@@ -349,6 +370,7 @@ ruRU("Сервер не определен")
 srSP("")
 trTR("Host hazır değil.")
 zhCN("")
+zhTW("")
 
 T_("Recipient not set.")
 csCZ("Není zadán příjemce.")
@@ -364,6 +386,7 @@ ruRU("Получатель не определен")
 srSP("")
 trTR("Alıcı hazır değil.")
 zhCN("")
+zhTW("")
 
 
 // sproc.cpp
@@ -382,6 +405,7 @@ ruRU("ошибка pipe(); код ошибки = %d")
 srSP("")
 trTR("pipe() hatası; hata kodu = %d")
 zhCN("pipe() error; error code = %d")
+zhTW("")
 
 T_("fork() error; error code = %d")
 csCZ("chyba fork(); kód chyby = %d")
@@ -397,6 +421,7 @@ ruRU("ошибка fork(); код ошибки = %d")
 srSP("")
 trTR("fork() hatası; hata kodu = %d")
 zhCN("fork() error; error code = %d")
+zhTW("")
 
 T_("Opening host '%s' / port %d failed, error = %s")
 csCZ("Připojování k hostiteli '%s' / port %d selhalo, chyba = %s")
@@ -414,6 +439,7 @@ srSP("")
 trTR("'%s' hostuna '%d' portundan bağlanma girişi başarısız oldu. Hata "
      "= %s")
 zhCN("Opening host '%s' / port %d failed, error = %s")
+zhTW("")
 
 T_("Error running process: %s\nCommand: %s")
 csCZ("Chyba při spouštění procesu: %s\nPříkaz: %s")
@@ -431,6 +457,7 @@ srSP("")
 trTR("'%s' işleminin çalıştırılması sırasında hata oluştu\nKomut: "
      "%s")
 zhCN("运行进城错误:%s\n命令: %s")
+zhTW("")
 
 T_("Communication error; process = %s")
 csCZ("Chyba spojení; proces = %s")
@@ -446,6 +473,7 @@ ruRU("Ошибка коммуникации; процесс = %s")
 srSP("")
 trTR("İletişim hatası; işlem = %s")
 zhCN("通信错误; 进城 = %s")
+zhTW("")
 
 T_("Missing command line (host = %s).")
 csCZ("Chybí příkazová řádka (hostitel = %s).")
@@ -461,6 +489,7 @@ ruRU("Не указана командная строка (хост = %s)")
 srSP("")
 trTR("Eksik komut satırı (Host = %s).")
 zhCN("缺少命令行(主机 = %s).")
+zhTW("")
 
 
 // Obsolete
@@ -479,3 +508,4 @@ ruRU("Не могу открыть сокет %s:%d: %s")
 srSP("")
 trTR("Hata: Soket açılamadı. %s:%d: %s")
 zhCN("")
+zhTW("")
