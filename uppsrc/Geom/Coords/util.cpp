@@ -1110,6 +1110,164 @@ Pointf WorldTransform::Global3(const Pointf& pt) const
 }
 */
 
+void Gis2DPolynome::Calculate(const GisTransform& transform, const Rectf& src)
+{
+	int xinter = 10, yinter = 10;
+	LinearSolver xsolv(COEF_COUNT), ysolv(COEF_COUNT);
+	double bases[COEF_COUNT];
+	for(int ix = 0; ix <= xinter; ix++)
+		for(int iy = 0; iy <= yinter; iy++) {
+			double x = ix / (double)xinter, y = iy / (double)yinter;
+			double x2 = x * x, y2 = y * y;
+			Pointf dest = transform.Target(src.TopLeft() + src.Size() * Sizef(x, y));
+			bases[COEF_1] = 1;
+			bases[COEF_X] = x;
+			bases[COEF_Y] = y;
+			bases[COEF_X2] = x2;
+			bases[COEF_XY] = x * y;
+			bases[COEF_Y2] = y2;
+			bases[COEF_X3] = x2 * x;
+			bases[COEF_X2Y] = x2 * y;
+			bases[COEF_XY2] = x * y2;
+			bases[COEF_Y3] = y2 * y;
+			xsolv.AddLSI(bases, dest.x);
+			ysolv.AddLSI(bases, dest.y);
+		}
+	Vector<double> xcoef = xsolv.Solve();
+	Vector<double> ycoef = ysolv.Solve();
+	for(int i = 0; i < COEF_COUNT; i++)
+		coef[i] = Sizef(xcoef[i], ycoef[i]);
+}
+
+Pointf Gis2DPolynome::Transform(double x, double y) const
+{
+	double x2 = x * x, y2 = y * y;
+	return coef[COEF_1]
+		+ coef[COEF_X] * x
+		+ coef[COEF_Y] * y
+		+ coef[COEF_XY] * (x * y)
+		+ coef[COEF_X2] * x2
+		+ coef[COEF_Y2] * y2
+		+ coef[COEF_X3] * (x2 * x)
+		+ coef[COEF_X2Y] * (x2 * y)
+		+ coef[COEF_XY2] * (x * y2)
+		+ coef[COEF_Y3] * (y2 * y)
+	;
+}
+
+Gis2DGrid::Gis2DGrid(const Sizef& block_size_, const Rect& block_limit_)
+: block_size(block_size_)
+, block_limit(block_limit_)
+{
+	block_span = Rectf(0, 0, 0, 0);
+}
+
+Point Gis2DGrid::GetBlockIndex(const Pointf& point) const
+{
+	return Point(ffloor(point.x / block_size.cx), ffloor(point.y / block_size.cy));
+}
+
+Rect Gis2DGrid::GetBlockSpan(const Rectf& rc) const
+{
+	return Rect(ffloor(rc.left / block_size.cx), ffloor(rc.top / block_size.cy),
+		ffloor(rc.right / block_size.cx) + 1, ffloor(rc.bottom / block_size.cy) + 1);
+}
+
+Pointf Gis2DGrid::Transform(const Pointf& pt) const
+{
+	Point block = GetBlockIndex(pt);
+	if(const Gis2DPolynome *poly = GetBlock(block))
+		return poly->Transform(pt.x / block_size.cx - block.x, pt.y / block_size.cy - block.y);
+	return Null;
+}
+
+const Gis2DPolynome *Gis2DGrid::GetBlock(int x, int y) const
+{
+	return (x >= block_span.left && x < block_span.right && y >= block_span.top && y < block_span.bottom
+		? &block_rows[y - block_span.top][x - block_span.left]
+		: NULL);
+}
+
+int Gis2DGrid::SizeOf() const
+{
+	return block_span.Width() * block_span.Height() * (sizeof(Gis2DPolynome) + 32) + sizeof(*this);
+}
+
+void Gis2DGrid::Grow(const GisTransform& transform, const Rectf& extent)
+{
+	Rect target_span = GetBlockSpan(extent) & block_limit;
+	if(block_span.Contains(target_span))
+		return;
+	if(block_span.IsEmpty())
+		block_span = Rect(target_span.left, target_span.top, target_span.left, target_span.top);
+	target_span |= block_span;
+	int add_left = block_span.left - target_span.left;
+	int add_right = target_span.right - block_span.right;
+	ASSERT(add_left >= 0 && add_right >= 0);
+	Rectf blk_extent(block_size.cx * block_span.left, block_size.cy * block_span.top,
+		block_size.cx * block_span.right, block_size.cy * block_span.bottom);
+	if(add_left || add_right) {
+		Rectf row_extent = blk_extent;
+		row_extent.bottom = row_extent.top + block_size.cy;
+		for(int i = 0; i < block_rows.GetCount(); i++) {
+			BiArray<Gis2DPolynome>& row = block_rows[i];
+			if(add_left) {
+				Rectf cell = row_extent;
+				for(int n = 0; n < add_left; n++) {
+					cell.right = cell.left;
+					cell.left -= block_size.cx;
+					row.AddHead().Calculate(transform, cell);
+				}
+			}
+			if(add_right) {
+				Rectf cell = row_extent;
+				for(int n = 0; n < add_right; n++) {
+					cell.left = cell.right;
+					cell.right += block_size.cx;
+					row.AddTail().Calculate(transform, cell);
+				}
+			}
+			row_extent.OffsetVert(block_size.cy);
+		}
+		block_span.Inflate(add_left, 0, add_right, 0);
+		blk_extent.Inflate(-block_size.cx * add_left, 0, block_size.cx * add_right, 0);
+	}
+	int add_top = block_span.top - target_span.top;
+	if(add_top) {
+		Rectf cell = blk_extent;
+		for(int i = 0; i < add_top; i++) {
+			cell.bottom = cell.top;
+			cell.top -= block_size.cy;
+			BiArray<Gis2DPolynome>& top = block_rows.AddHead();
+			cell.right = blk_extent.left;
+			for(int j = block_span.left; j < block_span.right; j++) {
+				cell.left = cell.right;
+				cell.right += block_size.cx;
+				top.AddTail().Calculate(transform, cell);
+			}
+		}
+		block_span.top -= add_top;
+		blk_extent.top -= add_top * block_size.cy;
+	}
+	int add_bottom = target_span.bottom - block_span.bottom;
+	if(add_bottom) {
+		Rectf cell = blk_extent;
+		for(int i = 0; i < add_bottom; i++) {
+			cell.top = cell.bottom;
+			cell.bottom += block_size.cy;
+			BiArray<Gis2DPolynome>& bottom = block_rows.AddTail();
+			cell.right = blk_extent.left;
+			for(int j = block_span.left; j < block_span.right; j++) {
+				cell.left = cell.right;
+				cell.right += block_size.cx;
+				bottom.AddTail().Calculate(transform, cell);
+			}
+		}
+		block_span.bottom += add_bottom;
+		blk_extent.bottom += add_bottom * block_size.cy;
+	}
+}
+
 static One<LinearSegmentTree::Node> CreateLinearSplit(Point s1, Point s2, Point t1, Point t2, const SegmentTreeInfo& info, int depth)
 {
 	double m = info.src_trg.SourceDeviation(Pointf(s1) * info.img_src, Pointf(s2) * info.img_src);

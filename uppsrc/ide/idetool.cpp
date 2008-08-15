@@ -251,3 +251,23 @@ void Ide::Times()
 	}
 	while(statdlg.Run() == IDRETRY);
 }
+
+Vector<String> Ide::SvnDirs()
+{
+	Vector<String> d = GetUppDirs();
+	Vector<String> r;
+	for(int i = 0; i < d.GetCount(); i++)
+		if(DirectoryExists(AppendFileName(d[i], ".svn")))
+			r.Add(d[i]);
+	DUMPC(r);
+	return r;
+}
+
+void Ide::SyncSvn()
+{
+	SvnSync svn;
+	Vector<String> r = SvnDirs();
+	for(int i = 0; i < r.GetCount(); i++)
+		svn.Dir(r[i]);
+	svn.DoSync();
+}

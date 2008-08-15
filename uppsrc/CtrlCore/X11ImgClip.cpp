@@ -11,7 +11,7 @@ const char *ClipFmtsImage()
 {
 	static const char *q;
 	ONCELOCK {
-		static String s(ClipFmt<Image>() + ";image/bmp;image/png");
+		static String s(ClipFmt<Image>() + ";image/png");
 		q = s;
 	}
 	return q;
@@ -19,7 +19,7 @@ const char *ClipFmtsImage()
 
 bool AcceptImage(PasteClip& clip)
 {
-	return clip.Accept(ClipFmt<Image>()) || clip.Accept("image/bmp") || clip.Accept("image/png");
+	return clip.Accept(ClipFmt<Image>()) || clip.Accept("image/png");
 }
 
 Image GetImage(PasteClip& clip)
@@ -30,7 +30,7 @@ Image GetImage(PasteClip& clip)
 		if(!m.IsEmpty())
 			return m;
 	}
-	if(clip.Accept("image/bmp;image/png"))
+	if(clip.Accept("image/png"))
 		return StreamRaster::LoadStringAny(~clip);
 	return Null;
 }

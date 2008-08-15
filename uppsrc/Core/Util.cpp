@@ -35,6 +35,12 @@ void PanicMessageBox(const char *title, const char *text)
 
 void    Panic(const char *msg)
 {
+#ifdef PLATFORM_POSIX
+	signal(SIGILL, SIG_DFL);
+	signal(SIGSEGV, SIG_DFL);
+	signal(SIGBUS, SIG_DFL);
+	signal(SIGFPE, SIG_DFL);
+#endif
 	if(PanicMode)
 		return;
 	PanicMode = true;

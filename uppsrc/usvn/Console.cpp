@@ -6,12 +6,12 @@ SysConsole::SysConsole()
 	list.NoHeader().NoGrid().NoCursor().AddColumn();
 	font = Courier(Ctrl::VertLayoutZoom(12));
 	list.SetLineCy(font.Info().GetHeight());
+	exit.Hide();
 }
 
 void SysConsole::AddResult(const String& out)
 {
-	DUMP(out);
-	Vector<String> h = Split(out, '\n');
+	Vector<String> h = Split(out, CharFilterCrLf);
 	for(int i = 0; i < h.GetCount(); i++) {
 		String s = "    " + h[i];
 		list.Add(AttrText(s).SetFont(font), s);
@@ -21,8 +21,6 @@ void SysConsole::AddResult(const String& out)
 
 int SysConsole::System(const char *cmd)
 {
-	DLOG("=== System =======================================");
-	DDUMP(cmd);
 	if(!IsOpen())
 		Open();
 	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(LtBlue));
@@ -32,17 +30,16 @@ int SysConsole::System(const char *cmd)
 		return -1;
 	String out;
 	while(p.IsRunning()) {
-		DLOG("Get1");
-		out.Cat(p.Get());
+		String h = p.Get();
+		out.Cat(h);
 		int lf = out.ReverseFind('\n');
 		if(lf >= 0) {
 			AddResult(out.Mid(0, lf + 1));
 			out = out.Mid(lf + 1);
 		}
 		ProcessEvents();
-		Sleep(1); // p.Wait would be much better here!
+		Sleep(h.GetCount() == 0); // p.Wait would be much better here!
 	}
-	DLOG("Get2");
 	out.Cat(p.Get());
 	AddResult(out);
 	ProcessEvents();

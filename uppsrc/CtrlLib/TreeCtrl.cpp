@@ -112,7 +112,9 @@ Size   TreeCtrl::Item::GetValueSize() const
 
 Size   TreeCtrl::Item::GetCtrlSize() const
 {
-	return IsNull(size) ? (ctrl ? ctrl->GetStdSize() : Size(0, 0)) : size;
+	if(!ctrl) return Size(0, 0);
+	Size csz = ctrl->GetStdSize();
+	return Size(Nvl(size.cx, csz.cx), Nvl(size.cy, csz.cy));
 }
 
 Size   TreeCtrl::Item::GetSize() const

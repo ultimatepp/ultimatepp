@@ -1,13 +1,13 @@
-#ifndef _usvn_SlaveProcess_h_
-#define _usvn_SlaveProcess_h_
+#ifndef _usvn_CProcess_h_
+#define _usvn_CProcess_h_
 
 #include <Core/Core.h>
 
 NAMESPACE_UPP
 
-class SlaveProcess {
-	SlaveProcess(const SlaveProcess& sp);
-	void         operator = (const SlaveProcess& sp);
+class CProcess {
+	CProcess(const CProcess& sp);
+	void         operator = (const CProcess& sp);
 
 public:
 	virtual void Kill() = 0;
@@ -19,11 +19,11 @@ public:
 	
 	String  Get()                  { String x; if(Read(x)) return x; return String::GetVoid(); }
 
-	SlaveProcess() {}
-	virtual ~SlaveProcess() {}
+	CProcess() {}
+	virtual ~CProcess() {}
 };
 
-class LocalProcess : public SlaveProcess {
+class LocalProcess : public CProcess {
 public:
 	virtual void Kill();
 	virtual bool IsRunning();

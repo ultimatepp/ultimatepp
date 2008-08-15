@@ -14,7 +14,8 @@ uses
 	plugin\bz2,
 	HexView,
 	art\BlueBar,
-	plugin/astyle;
+	plugin/astyle,
+	usvn;
 
 link(WIN32 MSC) /MAP;
 

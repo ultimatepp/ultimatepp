@@ -390,11 +390,12 @@ public:
 	static One<Marker> Star(int size = 10, Color color = LtRed, Color outline = Black, int outline_width = 0);
 	static One<Marker> Square45(int size = 10, Color color = LtRed, Color outline = Black, int outline_width = 0);
 	static One<Marker> Nabla(int size = 10, Color color = LtRed, Color outline = Black, int outline_width = 0);
+	static One<Marker> ThickCross(int size = 10, Color color = LtRed, Color outline = Black, int outline_width = 0);
 	static One<Marker> Letter(char ascii, int angle = 0, Font font = StdFont(), Color color = LtRed, Color outline = Black);
 	static One<Marker> Picture(Image pic, int size = 0, Color color = LtRed, bool antialias = false, bool ignore_hotspot = false);
 	// angle in degrees, 360 = full circle
 
-	enum { CIRCLE, SQUARE, TRIANGLE, CROSS, DIAMOND, HEXAGON, STAR, SQUARE45, NABLA, STD_MARK_COUNT }; // standard markers
+	enum { CIRCLE, SQUARE, TRIANGLE, CROSS, DIAMOND, HEXAGON, STAR, SQUARE45, NABLA, THICK_CROSS, STD_MARK_COUNT }; // standard markers
 	static One<Marker> StandardMarker(int type, int size = 10, Color color = LtRed, Color outline = Black, int outline_width = 0);
 
 	MarkTool();

@@ -203,6 +203,60 @@ private:
 //	One<Tree> tree;
 };
 
+class GisCoords;
+class GisTransform;
+
+class Gis2DPolynome {
+public:
+	Gis2DPolynome() {}
+
+	void   Calculate(const GisTransform& transform, const Rectf& src_extent);
+
+	Pointf Transform(double x, double y) const;
+	Pointf Transform(const Pointf& pt) const { return Transform(pt.x, pt.y); }
+
+	enum COEF {
+		COEF_1,
+		COEF_X,
+		COEF_Y,
+		COEF_X2,
+		COEF_XY,
+		COEF_Y2,
+		COEF_X3,
+		COEF_X2Y,
+		COEF_XY2,
+		COEF_Y3,
+		COEF_COUNT
+	};
+	Sizef coef[COEF_COUNT];
+};
+
+inline Pointf operator * (const Pointf& xy, const Gis2DPolynome& poly) { return poly.Transform(xy); }
+
+class Gis2DGrid : public Pte<Gis2DGrid> {
+public:
+	Gis2DGrid(const Sizef& block_size = Sizef(1, 1), const Rect& block_limit = Rect(-180, -90, +180, +90));
+
+	void   Grow(const GisTransform& transform, const Rectf& extent);
+
+	Point  GetBlockIndex(const Pointf& point) const;
+	Rect   GetBlockSpan(const Rectf& rc) const;
+	Pointf Transform(const Pointf& pt) const;
+
+	const Gis2DPolynome *GetBlock(int x, int y) const;
+	const Gis2DPolynome *GetBlock(Point pt) const { return GetBlock(pt.x, pt.y); }
+
+	int    SizeOf() const;
+
+public:
+	BiVector< BiArray<Gis2DPolynome> > block_rows;
+	Sizef block_size;
+	Rect  block_span;
+	Rect  block_limit;
+};
+
+inline Pointf operator * (const Pointf& pt, const Gis2DGrid& poly) { return poly.Transform(pt); }
+
 String GisInterpolatorDelta(double xmin, double xmax, const GisFunction& fn, int buckets, int sections, int samples, int check);
 String GisInterpolatorTiming(double xmin, double xmax, const GisFunction& fn, int buckets, int sections, int samples, int check);
 
@@ -482,6 +536,7 @@ public:
 	public:
 		GisCoords            source;
 		GisCoords            target;
+		Ptr<Gis2DGrid>       grid;
 	};
 
 public:
@@ -514,6 +569,7 @@ public:
 	GisCoords    Source() const                                  { return data->source; }
 	GisCoords    Target() const                                  { return data->target; }
 	GisTransform Reverse() const                                 { return GisTransform(Target(), Source()); }
+	Gis2DGrid   *Grid() const                                    { return data->grid; }
 
 	Data        *operator ~ () const                             { return ~data; }
 

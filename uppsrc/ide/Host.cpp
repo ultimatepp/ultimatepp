@@ -208,7 +208,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 		PutConsole("Unable to launch " + String(_cmdline));
 #endif
 #ifdef PLATFORM_POSIX
-	String script = ConfigFile("console-script-" + AsString(getpid()));
+	String script = ConfigFile("console-script-" + AsString(getpid()) + ".tmp");
 	if(console) {
 		FileStream out(script, FileStream::CREATE, 0777);
 		out << "#!/bin/sh\n"

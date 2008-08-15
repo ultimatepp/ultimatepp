@@ -80,6 +80,7 @@
 #define ltLT(text)  { LNGC_('L','T','L','T', CHARSET_UTF8), text },
 #define ukUA(text)  { LNGC_('U','K','U','A', CHARSET_UTF8), text },
 #define zhCN(text)  { LNGC_('Z','H','C','N', CHARSET_UTF8), text },
+#define zhTW(text)  { LNGC_('Z','H','T','W', CHARSET_UTF8), text },
 #define koKR(text)  { LNGC_('K','O','K','R', CHARSET_UTF8), text },
 #define jaJP(text)  { LNGC_('J','A','J','P', CHARSET_UTF8), text },
 
@@ -289,6 +290,10 @@ INITBLOCK_(COMBINE3(LNG_MODULE, LNG_VERB, LNG_VERA))
 #undef lvLV
 #undef ltLT
 #undef ukUA
+#undef zhCN
+#undef zhTW
+#undef koKR
+#undef jaJP
 
 #undef T_
 

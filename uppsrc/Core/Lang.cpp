@@ -321,6 +321,7 @@ const int *GetAllLanguages() {
 		LNG_('L', 'T', 'L', 'T'),
 		LNG_('U', 'K', 'U', 'A'),
 		LNG_('Z', 'H', 'C', 'N'),
+		LNG_('Z', 'H', 'T', 'W'),
 		LNG_('K', 'O', 'K', 'R'),
 		LNG_('J', 'A', 'J', 'P'),
 		0

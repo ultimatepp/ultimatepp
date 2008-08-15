@@ -775,6 +775,7 @@ int CharFilterAlphaToLower(int c);
 int CharFilterInt(int c);
 int CharFilterDouble(int c);
 int CharFilterDefaultToUpperAscii(int c);
+int CharFilterCrLf(int c);
 
 String Filter(const char *s, int (*filter)(int));
 String FilterWhile(const char *s, int (*filter)(int));

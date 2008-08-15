@@ -182,6 +182,8 @@ enum {
 	DND_MOVE = 2,
 
 	DND_ALL  = 3,
+	
+	DND_EXACTIMAGE = 0x80000000,
 };
 
 struct UDropTarget;

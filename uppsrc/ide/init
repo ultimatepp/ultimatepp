@@ -14,4 +14,5 @@
 #include "HexView/init"
 #include "art\BlueBar/init"
 #include "plugin/astyle/init"
+#include "usvn/init"
 #endif

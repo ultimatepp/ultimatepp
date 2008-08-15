@@ -303,9 +303,11 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 {
 	InitDndAtoms();
 	DnDLoop d;
-	d.reject = MakeDragImage(CtrlCoreImg::DndNone(), sample);
-	if(actions & DND_COPY) d.copy = MakeDragImage(CtrlCoreImg::DndCopy(), sample);
-	if(actions & DND_MOVE) d.move = MakeDragImage(CtrlCoreImg::DndMove(), sample);
+	d.reject = actions & DND_EXACTIMAGE ? CtrlCoreImg::DndNone() : MakeDragImage(CtrlCoreImg::DndNone(), sample);
+	if(actions & DND_COPY)
+		d.copy = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndCopy(), sample);
+	if(actions & DND_MOVE)
+		d.move = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndMove(), sample);
 	d.SetMaster(*this);
 	d.data = &data;
 	d.source = this;

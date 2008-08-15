@@ -2109,6 +2109,51 @@ One<MarkTool::Marker> MarkTool::Star(int size, Color color, Color outline, int o
 	return new StarMarker(size, color, outline, outline_width);
 }
 
+class ThickCrossMarker : public AreaMarker
+{
+public:
+	ThickCrossMarker(int size, Color color, Color outline, int outline_width);
+
+	virtual void Paint(Draw& draw, const Vector<Point>& pt);
+
+private:
+	int s2, s6;
+};
+
+ThickCrossMarker::ThickCrossMarker(int size, Color color, Color outline, int outline_width)
+: AreaMarker(size, color, outline, outline_width)
+{
+	s2 = size >> 1;
+	s6 = size / 6;
+}
+
+void ThickCrossMarker::Paint(Draw& draw, const Vector<Point>& pt)
+{
+	Vector<Point> out;
+	out.SetCount(pt.GetCount() * 12);
+	Point *op = out.Begin();
+	for(const Point *ip = pt.Begin(), *ie = pt.End(); ip < ie; ip++, op += 12) {
+		int x = ip->x, y = ip->y;
+		op[0].x = op[11].x = x + s2;
+		op[1].x = op[2].x = op[9].x = op[10].x = x + s6;
+		op[3].x = op[4].x = op[7].x = op[8].x = x - s6;
+		op[5].x = op[6].x = x - s2;
+
+		op[2].y = op[3].y = y + s2;
+		op[0].y = op[1].y = op[4].y = op[5].y = y + s6;
+		op[6].y = op[7].y = op[10].y = op[11].y = y - s6;
+		op[8].y = op[9].y = y - s2;
+	}
+	Vector<int> seg;
+	seg.SetCount(pt.GetCount(), 12);
+	DrawPolygons(draw, out, seg, color, outline_width, outline);
+}
+
+One<MarkTool::Marker> MarkTool::ThickCross(int size, Color color, Color outline, int outline_width)
+{
+	return new ThickCrossMarker(size, color, outline, outline_width);
+}
+
 class LetterMarker : public MarkTool::Marker
 {
 public:

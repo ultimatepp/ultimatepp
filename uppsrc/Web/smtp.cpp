@@ -111,11 +111,9 @@ static String SendRecv(Socket& socket, const String& s, String *transcript = 0, 
 				}
 		}
 		else if(amount == 0)
-			throw Exc(t_("Error reading data from socket: commuication port closed."));
-		else if((err = Socket::GetErrorCode()) != SOCKERR(EWOULDBLOCK)) {
-			String str;
-			throw Exc(str << "Chyba pøi ètení dat ze socketu, kód chyby: " << err);
-		}
+			throw Exc(t_("Error reading data from socket: communication port closed."));
+		else if((err = Socket::GetErrorCode()) != SOCKERR(EWOULDBLOCK))
+			throw Exc(NFormat(t_("Error reading socket, error code: %s"), err));
 		else
 			Sleep(100);
 	}
@@ -205,6 +203,21 @@ bool SmtpMail::Send()
 			org << ipaddr;
 
 		SendRecvOK(socket, "HELO " + org + "\r\n", trans_ptr);
+		if(!IsNull(auth_user)) {
+			String ans = SendRecv(socket, "AUTH LOGIN\r\n", trans_ptr);
+			while(ans[0] != '2')
+				if(ans[0] == '3' && ans[1] == '3' && ans[2] == '4' && ans[3] == ' ') {
+					String param = Base64Decode(ans.GetIter(4), ans.End());
+					if(param == "Username:")
+						ans = SendRecv(socket, Base64Encode(auth_user) + "\r\n", trans_ptr);
+					else if(param == "Password:")
+						ans = SendRecv(socket, Base64Encode(auth_pwd) + "\r\n", trans_ptr);
+					else
+						throw Exc(ans);
+				}
+				else
+					throw Exc(ans);
+		}
 		SendRecvOK(socket, "MAIL FROM:<" + from + ">\r\n", trans_ptr);
 		for(int i = 0; i < to.GetCount(); i++)
 			SendRecv(socket, "RCPT TO:<" + to[i] + ">\r\n", trans_ptr);

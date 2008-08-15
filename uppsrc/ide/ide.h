@@ -22,6 +22,7 @@
 #include <ide/Browser/Browser.h>
 #include <ide/QuickTabs/QuickTabs.h>
 #include <CodeEditor/CodeEditor.h>
+#include <usvn/usvn.h>
 
 #include "UppDlg.h"
 
@@ -774,13 +775,14 @@ public:
 	void      GotoPos(String path, int line);
 	void      GotoCpp(const CppPos& pos);
 
+	Vector<String> SvnDirs();
+
 	void      File(Bar& menu);
 		void   EditWorkspace();
 		void   EditAnyFile();
 		bool   IsProjectFile(const String& f) const;
 		void   SaveFile(bool always = false);
 		void   DoSaveFile()    { SaveFile(); }
-		void   ExportProject();
 		void   FileBookmark	(Bar& menu);
 		void   SwapPackagesFiles();
 		void   Times();
@@ -821,6 +823,8 @@ public:
 	void      Project(Bar& menu);
 		void  SyncT(int kind);
 		void  ConvertST();
+		void  ExportProject();
+		void  SyncSvn();
 
 	void      BuildMenu(Bar& menu);
 		void BuildPackageMenu(Bar& menu);

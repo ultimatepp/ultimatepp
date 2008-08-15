@@ -2219,7 +2219,7 @@ public:
 	typedef DlgPathStyleMap CLASSNAME;
 	DlgPathStyleMap();
 
-	String               Run(PathStyleMap& map, String dflt = Null, bool editor = false, bool read_only = false);
+	bool                 Run(PathStyleMap& map, String& style, bool editor = false, bool read_only = false);
 
 private:
 //	void                 UpdateMaps();
@@ -2232,8 +2232,8 @@ private:
 //	Vector<int> map_index;
 };
 
-String RunDlgPathStyleMap(PathStyleMap& map, const String& dflt, bool editor, bool read_only)
-{ return DlgPathStyleMap().Run(map, dflt, editor, read_only); }
+bool RunDlgPathStyleMap(PathStyleMap& map, String& style, bool editor, bool read_only)
+{ return DlgPathStyleMap().Run(map, style, editor, read_only); }
 
 RegisterHelpTopicObjectTitle(DlgPathStyleMap, "Mapa stylù")
 
@@ -2249,49 +2249,11 @@ DlgPathStyleMap::DlgPathStyleMap()
 //	dialog.tab <<= THISBACK(OnTab);
 }
 
-/*
-MEMBER_HELP(DlgPathStyleMap, "Styly èar",
-"èára, mapa stylù\n"
-"mapa stylù èar\n"
-"styly èar, mapa\n"
-)
-
-void DlgPathStyleMap::PutHelp()
+bool DlgPathStyleMap::Run(PathStyleMap& m, String& style, bool editor, bool read_only)
 {
-	HelpBody() <<
-		"Dialog slouží k výbìru stylu èáry nebo editaci stylù èar. "
-		"V dialogu se zobrazují všechny styly èar, které jsou právì "
-		"v systému k dispozici. Každý styl èáry je oznaèen textovým "
-		"názvem, který se používá jako odkaz na styl èáry. Kromì "
-		"názvu se pøi vykreslování èáry zadává ještì šíøka èáry "
-		"a implicitní barva (nìkteré segmenty èar mohou být vykresleny "
-		"touto implicitní barvou, jiné pevnì zadanou barvou).";
-
-	DlgPathStyleMap d;
-	d.dialog.browser.Set(d.map = &PathStyleMap::App());
-	HelpCenterImage(d.dialog) <<
-		"Tabulka v horní èásti dialogu slouží k výbìru stylu èáry. "
-		"V obdélníkovém poli jsou uspoøádány náhledy všech dostupných "
-		"stylù èar. Dvojitým kliknutím na náhled èáry vyberete styl "
-		"èáry pro další použití v místì, odkud byl dialog vyvolán "
-		"(odpovídá funkci tlaèítka " << HelpButton("OK", 600) << "). "
-		"Pravým tlaèítkem mùžete zobrazit lokální nabídku funkcí pro práci "
-		"se styly èar:\n\n";
-
-	MenuBar menu;
-	d.dialog.browser.ToolLocal(menu);
-
-//	HelpBody()
-//		<< HelpImage(menu);
-}
-*/
-
-String DlgPathStyleMap::Run(PathStyleMap& m, String dflt, bool editor, bool read_only)
-{
-	if(editor)
-	{
+	if(editor) {
 		dialog.ok.Hide();
-		dialog.cancel.SetLabel("Zavøít");
+		dialog.cancel.SetLabel(t_("Close"));
 	}
 
 	map = &m;
@@ -2299,15 +2261,19 @@ String DlgPathStyleMap::Run(PathStyleMap& m, String dflt, bool editor, bool read
 //	UpdateMaps();
 
 	dialog.browser.Set(map);
-	while(dialog.Run() == IDOK)
-	{
+	dialog.browser.SetCursor(Nvl(style, ".solid"));
+	while(dialog.Run() == IDOK) {
 		int c = dialog.browser.GetCursor();
-		if(c >= 0)
-			return map->GetSortName(c);
+		if(c >= 0) {
+			style = map->GetSortName(c);
+			if(style == ".solid") style = Null;
+			return true;
+		}
 		BeepExclamation();
 	}
-	return Null;
+	return false;
 }
+
 
 /*
 void DlgPathStyleMap::UpdateMaps()
@@ -2345,8 +2311,8 @@ PathStyleCtrl::PathStyleCtrl()
 
 void PathStyleCtrl::DoAction()
 {
-	String s = RunDlgPathStyleMap(*path_map, GetData(), false, false);
-	if(!IsNull(s))
+	String s = GetData();
+	if(RunDlgPathStyleMap(*path_map, s, false, false))
 		SetDataAction(s);
 }
 

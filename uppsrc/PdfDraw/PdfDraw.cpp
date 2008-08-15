@@ -3,6 +3,7 @@
 NAMESPACE_UPP
 
 #define LDUMP(x) // DUMP(x)
+#define LLOG(x) // LOG(x)
 
 #define PDF_COMPRESS
 #define USE_TTF
@@ -288,8 +289,6 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 		String data = LoadFile(fn);
 		TTFReader ttf;
 		if(ttf.Open(data, false, true)) {
-			LOG("TTF!");
-			DUMP(ttf.post.italicAngle);
 			of.ttf = true;
 			of.sitalic = ttf.post.italicAngle == 0 && fnt.IsItalic();
 		}
@@ -745,7 +744,7 @@ String PdfDraw::Finish()
 
 			int size = GetFontData(sd.GetHandle(), 0, 0, NULL, 0);
 			if(size == GDI_ERROR) {
-				RLOG("PdfDraw::Finish: GDI_ERROR on font " << pdffont.GetKey(i));
+				LLOG("PdfDraw::Finish: GDI_ERROR on font " << pdffont.GetKey(i));
 				return Null;
 			}
 			StringBuffer fontbuffer(size);

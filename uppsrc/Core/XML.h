@@ -65,6 +65,7 @@ public:
 	void   SkipWhites();
 
 	bool   IsEof();
+	const char *GetPtr() const                                { return term; }
 
 	bool   IsTag();
 	String ReadTag();
