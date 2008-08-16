@@ -102,9 +102,11 @@ void Ide::EditSpecial(Bar& menu)
 
 void Ide::Edit(Bar& menu) {
 	if(designer) {
-		menu.Add(AK_EDITASTEXT, THISBACK(EditAsText))
-		    .Help("Edit as text file (do not use a designer)");
-		menu.MenuSeparator();
+		if(FileExists(designer->GetFileName())) {
+			menu.Add(AK_EDITASTEXT, THISBACK(EditAsText))
+			    .Help("Edit as text file (do not use a designer)");
+			menu.MenuSeparator();
+		}
 		if(menu.IsMenuBar())
 			designer->EditMenu(menu);
 	}
