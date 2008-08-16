@@ -9,12 +9,15 @@ uses
 	DropGrid;
 
 file
-	HomeBudget.t,
-	HomeBudget.sch,
 	HomeBudget.h,
 	HomeBudget.cpp,
+	HomeBudget.sch,
+	HomeBudget.t,
 	HomeBudget.iml,
-	HomeBudget.lay;
+	HomeBudget.lay,
+	src.tpp,
+	help.tpp;
 
 mainconfig
 	"" = "GUI";
+
