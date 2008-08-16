@@ -132,6 +132,7 @@ void WorkspaceWork::SaveLoadPackage()
 
 void WorkspaceWork::LoadActualPackage()
 {
+	Time utime = FileGetTime(ConfigFile("version"));
 	filelist.Clear();
 	fileindex.Clear();
 	bool open = true;
@@ -151,7 +152,7 @@ void WorkspaceWork::LoadActualPackage()
 				FindFile ff(SourcePath(GetActivePackage(), f));
 				if(ff) {
 					Time ftm = Time(ff.GetLastWriteTime());
-					if(ftm > InstallTime) {
+					if(ftm > utime) {
 						int64 t = tm - ftm;
 						if(t < 24 * 3600)
 							uln = SColorMark;
@@ -191,7 +192,7 @@ void WorkspaceWork::PackageCursor()
 		actual.file.Add(String(HELPNAME));
 		Vector<String> d = GetUppDirs();
 		for(int i = 0; i < d.GetCount(); i++)
-			actual.file.Add(AppendFileName(d[i], "templates.tpp"));
+			actual.file.Add(AppendFileName(d[i], "$.tpp"));
 	}
 	else {
 		String pp = PackagePathA(actualpackage);
@@ -244,7 +245,6 @@ void WorkspaceWork::AddFile(ADDFILE af)
 	if(active.IsEmpty()) return;
 	FileSel fss;
 	FileSel *fs = &OutputFs();
-	RealizeDirectory(GetCommonDir());
 	RealizeDirectory(GetLocalDir());
 	switch(af)
 	{
@@ -254,7 +254,6 @@ void WorkspaceWork::AddFile(ADDFILE af)
 #ifdef PLATFORM_POSIX
 	case HOME_FILE:    fs->ActiveDir(GetHomeDirectory()); break;
 #endif
-	case COMMON_FILE:  fs->ActiveDir(GetCommonDir()); break;
 	case LOCAL_FILE:   fs->ActiveDir(GetLocalDir()); break;
 	}
 	if(!fs->ExecuteOpen("Add files to package..")) return;
@@ -538,8 +537,6 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		.Help("Insert files from anywhere on disk (discouraged in portable packages)");
 	menu.Add(isaux && GetOutputDir().GetCount(), "Insert output directory file(s)", THISBACK1(AddFile, OUTPUT_FILE))
 		.Help("Open file selector in output / intermediate directory for current package");
-	menu.Add(isaux, "Insert Common directory file(s)", THISBACK1(AddFile, COMMON_FILE))
-		.Help("Open file selector in Common directory for current package");
 	menu.Add(isaux, "Insert Local directory file(s)", THISBACK1(AddFile, LOCAL_FILE))
 		.Help("Open file selector in Local directory for current package");
 #ifdef PLATFORM_POSIX
@@ -694,7 +691,6 @@ WorkspaceWork::WorkspaceWork()
 	package.BackPaintHint();
 	filelist.BackPaintHint();
 	showtime = false;
-	InstallTime = FileGetTime(ConfigFile("version"));
 }
 
 void WorkspaceWork::SerializeClosed(Stream& s)

@@ -104,7 +104,7 @@ void Ide::OpenATopic()
 
 void Ide::DppIgnoreList()
 {
-	EditFile(CommonPath("dppignore.txt"));
+	EditFile(IgnoreFile());
 }
 
 void Ide::InsertColor()
@@ -259,7 +259,6 @@ Vector<String> Ide::SvnDirs()
 	for(int i = 0; i < d.GetCount(); i++)
 		if(DirectoryExists(AppendFileName(d[i], ".svn")))
 			r.Add(d[i]);
-	DUMPC(r);
 	return r;
 }
 

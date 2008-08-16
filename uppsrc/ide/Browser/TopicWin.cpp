@@ -88,7 +88,7 @@ void TopicEditor::SerializeEditPos(Stream& s)
 		}
 	s % grouptopic;
 	s % lastlang;
-	s % laststylesheet;
+	s % lasttemplate;
 }
 
 void TopicEditor::ExportPdf()
@@ -142,6 +142,11 @@ void TopicEditor::TopicMenu(Bar& bar)
 	bar.Add(topic.IsCursor(), "Rename topic..", THISBACK(RenameTopic));
 	bar.Add(topic.IsCursor(), "Remove topic", THISBACK(RemoveTopic))
 	   .Key(K_ALT_DELETE);
+	bar.Separator();
+	bar.Add(topic.IsCursor() && GetFileTitle(topicpath) != "$.tpp",
+	        "Save as template..", THISBACK(SaveAsTemplate));
+	bar.Add(topic.IsCursor(), "Apply template stylesheet..", THISBACK(ApplyStylesheet));
+	bar.Add("Apply template stylesheet to group..", THISBACK(ApplyStylesheetGroup));
 }
 
 void TopicEditor::FileBar(Bar& bar)
@@ -181,7 +186,6 @@ void TopicEditor::EditMenu(Bar& bar)
 	bar.Separator();
 	bar.Add("Table", THISBACK(TableMenu));
 	bar.Add("Format", THISBACK(FormatMenu));
-	bar.Add("Stylesheet", THISBACK(StyleSheetMenu));
 }
 
 void TopicEditor::FormatMenu(Bar& bar)
@@ -208,14 +212,6 @@ void TopicEditor::TableMenu(Bar& bar)
 	editor.TableTools(bar);
 }
 
-void TopicEditor::StyleSheetMenu(Bar& bar)
-{
-	bar.Add("Stylesheets..", THISBACK(EditStylesheets));
-	bar.Add(!IsNull(topicpath), "Store stylesheet..", THISBACK(StoreStylesheet));
-	bar.Add(!IsNull(topicpath), "Apply stylesheet..", THISBACK(ApplyStylesheet));
-	bar.Add("Apply stylesheet to group..", THISBACK(ApplyStylesheetGroup));
-}
-
 void CreateTopic(const char *fn, int lang, const String& ss)
 {
 	SaveFile(fn,  WriteTopic("", ParseQTF(ss + "[{_}%" + LNGAsText(lang) + " ")));
@@ -240,24 +236,15 @@ void TopicEditor::NewTopic()
 	TopicDlg<WithNewTopicLayout<TopWindow> > d("New topic");
 	d.lang <<= lastlang;
 
-	Vector<String> name;
-	Vector<String> style;
-	name.Add("<none>");
-	style.Add("");
-	FindFile ff(AppendFileName(GetCommonDir(), "*.style"));
-	while(ff) {
-		name.Add(GetFileTitle(ff.GetName()));
-		style.Add(LoadFile(AppendFileName(GetCommonDir(), ff.GetName())));
-		ff.Next();
-	}
-	IndexSort(name, style);
-	for(int i = 0; i < name.GetCount(); i++)
-		d.stylesheet.Add(name[i]);
+	Vector<String> path, name;
+	ListTemplates(path, name);
+	for(int i = 0; i < path.GetCount(); i++)
+		d.tmpl.Add(path[i], name[i]);
 
-	if(d.stylesheet.HasKey(laststylesheet))
-		d.stylesheet <<= laststylesheet;
+	if(d.tmpl.HasKey(lasttemplate))
+		d.tmpl <<= lasttemplate;
 	else
-		d.stylesheet.SetIndex(0);
+		d.tmpl.GoBegin();
 
 	d.ActiveFocus(d.topic);
 	String fn;
@@ -267,13 +254,12 @@ void TopicEditor::NewTopic()
 		fn = AppendFileName(grouppath, d.GetName());
 		if(!FileExists(fn))
 			break;
-		if(PromptYesNo("Topic already exists.&Do you want to clear it?"))
+		if(PromptYesNo("Topic already exists.&Do you want to rewrite it?"))
 			break;
 	}
-	laststylesheet = ~d.stylesheet;
+	lasttemplate = ~d.tmpl;
 	lastlang = ~d.lang;
-	int q = d.stylesheet.GetIndex();
-	CreateTopic(fn, ~d.lang, q >= 0 ? style[q] : Null);
+	CreateTopic(fn, ~d.lang, ~d.tmpl);
 	Flush();
 	Open(grouppath);
 	Load(fn);
@@ -323,6 +309,24 @@ void TopicEditor::RemoveTopic()
 	topic.SetCursor(q);
 	if(q >= 0)
 		editor.SetFocus();
+}
+
+void TopicEditor::SaveAsTemplate()
+{
+	TopicDlg<WithSaveTemplateLayout<TopWindow> > d("Save as template");
+	d.lang <<= lastlang;
+	Vector<String> ud = GetUppDirs();
+	String p = GetCurrentTopicPath();
+	for(int i = 0; i < ud.GetCount(); i++) {
+		d.nest.Add(ud[i]);
+		if(p.StartsWith(ud[i]))
+			d.nest.SetIndex(i);
+	}
+	if(d.nest.GetIndex() < 0)
+		d.nest.GoBegin();
+	if(d.Execute() != IDOK || IsNull(~d.nest))
+		return;
+	SaveFile(AppendFileName(AppendFileName(~d.nest, "$.tpp"), d.GetName()), editor.GetQTF());
 }
 
 void TopicEditor::SetBar()

@@ -183,11 +183,10 @@ String SourcePath(const String& package, const String& name);
 inline
 String PackageDirectory(const String& name) { return GetFileDirectory(PackagePath(name)); }
 
-String GetCommonDir();
-String CommonPath(const String& filename);
-
 String GetLocalDir();
 String LocalPath(const String& filename);
+
+String IgnoreFile();
 
 bool   IsFullDirectory(const String& d);
 

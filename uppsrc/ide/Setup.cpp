@@ -396,6 +396,8 @@ void Ide::SetupFormat() {
 	edt.tabsize <<= rtvr <<=
 		hlt.hlstyle.WhenCtrlsAction = ed.WhenAction = tf.WhenAction =
 		con.WhenAction = f1.WhenAction = f2.WhenAction = dlg.Breaker(222);
+	edt.showtimeafter <<= (Date)FileGetTime(ConfigFile("version"));
+	edt.today <<= dlg.Breaker(444);
 	hlt.hl_restore <<= dlg.Breaker(333);
 	ide.chstyle.Add(0, "Host platform");
 	ide.chstyle.Add(1, "Standard");
@@ -433,11 +435,15 @@ void Ide::SetupFormat() {
 			editor.DefaultHlStyles();
 			ReadHlStyles(hlt.hlstyle);
 		}
+		if(c == 444)
+			edt.showtimeafter = GetSysDate();
 	}
 	if(filelist.IsCursor()) {
 		FlushFile();
 		FileCursor();
 	}
+	FileSetTime(ConfigFile("version"), ToTime(~edt.showtimeafter));
+	SaveLoadPackage();
 	if(editor.auto_assist)
 		StartBrowserBase();
 	SyncCh();

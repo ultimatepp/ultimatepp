@@ -274,7 +274,6 @@ void Ide::SyncUsc()
 				UscFile(file);
 		}
 	}
-	UscProcessDir(GetCommonDir());
 	UscProcessDir(GetLocalDir());
 	UscProcessDir(GetFileFolder(ConfigFile("x")));
 }

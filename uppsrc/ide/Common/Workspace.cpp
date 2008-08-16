@@ -1,18 +1,5 @@
 #include "Common.h"
 
-String GetCommonDir()
-{
-	return GetVar("COMMON");
-}
-
-String CommonPath(const String& filename)
-{
-	String s = GetCommonDir();
-	if(s.IsEmpty())
-		return ConfigFile(filename);
-	return AppendFileName(s, filename);
-}
-
 String GetLocalDir()
 {
 	return ConfigFile("UppLocal");
@@ -21,6 +8,11 @@ String GetLocalDir()
 String LocalPath(const String& filename)
 {
 	return AppendFileName(GetLocalDir(), filename);
+}
+
+String IgnoreFile()
+{
+	return AppendFileName(GetUppDirs()[0], "cpp_parser_ignore.txt");
 }
 
 String FollowCygwinSymlink(const String& file) {

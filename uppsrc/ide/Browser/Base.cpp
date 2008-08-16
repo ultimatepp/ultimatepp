@@ -156,7 +156,7 @@ void LoadBrowserBase(Progress& pi)
 Vector<String> IgnoreList()
 {
 	Vector<String> ignore;
-	FileIn in(CommonPath("dppignore.txt"));
+	FileIn in(IgnoreFile());
 	while(!in.IsEof()) {
 		String s = in.GetLine();
 		if(!s.IsEmpty())

@@ -15,7 +15,6 @@ private:
 private:
 	FrameRight<Button> browse_upp;
 	SelectDirButton    browse_out;
-	SelectDirButton    browse_common;
 	bool               new_base;
 };
 
@@ -23,7 +22,6 @@ bool BaseSetup(String& vars) { return BaseSetupDlg().Run(vars); }
 
 BaseSetupDlg::BaseSetupDlg()
 : browse_out("Output & intermediate files")
-, browse_common("Common files")
 {
 	CtrlLayoutOKCancel(*this, "Assembly setup");
 	browse_upp.SetImage(CtrlImg::right_arrow());
@@ -31,14 +29,12 @@ BaseSetupDlg::BaseSetupDlg()
 	upp.AddFrame(browse_upp);
 	upp <<= THISBACK(OnUpp);
 	browse_out.Attach(output);
-	browse_common.Attach(common);
 }
 
 bool BaseSetupDlg::Run(String& vars)
 {
 	upp <<= GetVar("UPP");
 	output <<= GetVar("OUTPUT");
-	common <<= GetVar("COMMON");
 	base <<= vars;
 	new_base = IsNull(vars);
 	while(TopWindow::Run() == IDOK)
@@ -57,7 +53,6 @@ bool BaseSetupDlg::Run(String& vars)
 		}
 		SetVar("UPP", ~upp);
 		SetVar("OUTPUT", ~output);
-		SetVar("COMMON", ~common);
 		Vector<String> paths = SplitDirs(upp.GetText().ToString());
 		for(int i = 0; i < paths.GetCount(); i++)
 			RealizeDirectory(paths[i]);

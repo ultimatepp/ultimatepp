@@ -491,7 +491,7 @@ void Ide::EditFile(const String& p)
 	}
 	filelist.KillCursor();
 	package.KillCursor();
-	package.SetCursor(package.GetCount() - 1);
+	package.SetCursor(package.GetCount() - 2);
 	actual.file.Add(path);
 	SaveLoadPackage();
 	ShowFile(package.GetCount() - 1);
