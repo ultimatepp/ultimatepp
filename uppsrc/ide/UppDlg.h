@@ -174,6 +174,7 @@ struct WorkspaceWork {
 
 	String         GetActivePackage() const                   { return package.GetCurrentName(); }
 	String         GetActiveFileName() const;
+	String         GetActiveFilePath() const;
 	bool           IsActiveFile() const;
 	Package::File& ActiveFile();
 	String         FileName(int i) const;
@@ -196,6 +197,7 @@ struct WorkspaceWork {
 	void DelFile();
 	void RenameFile();
 	void ToggleFileSpeed();
+	void ToggleIncludeable();
 
 	void AddNormalUses();
 	void AddAnyUses();

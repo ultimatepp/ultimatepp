@@ -69,8 +69,7 @@ bool Ide::CanToggleReadOnly()
 {
 	FindFile ff(editfile);
 	if(ff && ff.IsReadOnly()) return false;
-	return NormalizePath(SourcePath(GetActivePackage(), GetActiveFileName())) ==
-		   NormalizePath(editfile);
+	return NormalizePath(GetActiveFilePath()) == NormalizePath(editfile);
 }
 
 void Ide::ToggleReadOnly()

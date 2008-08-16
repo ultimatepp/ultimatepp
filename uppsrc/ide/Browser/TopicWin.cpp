@@ -259,7 +259,7 @@ void TopicEditor::NewTopic()
 	}
 	lasttemplate = ~d.tmpl;
 	lastlang = ~d.lang;
-	CreateTopic(fn, ~d.lang, ~d.tmpl);
+	CreateTopic(fn, ~d.lang, ReadTopic((String)~d.tmpl).text);
 	Flush();
 	Open(grouppath);
 	Load(fn);
@@ -326,7 +326,8 @@ void TopicEditor::SaveAsTemplate()
 		d.nest.GoBegin();
 	if(d.Execute() != IDOK || IsNull(~d.nest))
 		return;
-	SaveFile(AppendFileName(AppendFileName(~d.nest, "$.tpp"), d.GetName()), editor.GetQTF());
+	SaveFile(AppendFileName(AppendFileName(~d.nest, "$.tpp"), d.GetName()),
+	         WriteTopic((String)~title, editor.Get()));
 }
 
 void TopicEditor::SetBar()

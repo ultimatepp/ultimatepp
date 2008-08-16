@@ -19,7 +19,7 @@ void LoadTopics(FileList& topic, const String& grouppath)
 	topic.Clear();
 	FindFile ff(AppendFileName(grouppath, "*.tpp"));
 	while(ff) {
-		if(ff.IsFile())
+		if(ff.IsFile() && GetFileExt(ff.GetName()) == ".tpp")
 			topic.Add(GetFileTitle(ff.GetName()), TopicImg::Topic());
 		ff.Next();
 	}
@@ -143,6 +143,8 @@ void TopicEditor::SaveTopic()
 	if(LoadFile(topicpath) != r) {
 		sSerial++;
 		SaveFile(topicpath, r);
+		if(FileExists(AppendFileName(grouppath, "all.i")))
+			SaveFile(ForceExt(topicpath, ".tppi"), WriteTopicI((String)~title, editor.Get()));
 		TopicLink tl = ParseTopicFilePath(topicpath);
 		if(tl)
 			SyncTopicFile(editor.Get(), TopicLinkString(tl), topicpath, ~title);
@@ -163,30 +165,7 @@ void TopicEditor::Flush()
 
 void TopicEditor::SaveInc()
 {
-	String packagedir = GetFileFolder(grouppath);
-	String group = GetFileTitle(grouppath);
-
-	if(IsNull(packagedir) || IsNull(group))
-		return;
-
-	String gh;
-	FindFile ff(AppendFileName(AppendFileName(packagedir, group + ".tpp"), "*.tpp"));
-
-	while(ff) {
-		if(ff.IsFile()) {
-			gh << "TOPIC(" << AsCString(GetFileTitle(ff.GetName())) << ")\r\n";
-			gh << "#include \"" << ff.GetName() << "\"\r\n";
-			gh << "END_TOPIC\r\n\r\n";
-		}
-		ff.Next();
-	}
-
-	String fn = AppendFileName(AppendFileName(packagedir, group + ".tpp"), "all.i");
-	if(LoadFile(fn) != gh)
-		if(IsNull(gh))
-			DeleteFile(fn);
-		else
-			SaveFile(fn, gh);
+	SaveGroupInc(grouppath);
 }
 
 TopicLink ParseTopicFilePath(const String& path)

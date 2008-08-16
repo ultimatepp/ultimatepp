@@ -465,7 +465,7 @@ String ExportTr(const Vector<TFile>& tfile, int& cs)
 void Ide::SyncT(int kind)
 {
 	console.Clear();
-	String filepath = SourcePath(GetActivePackage(), GetActiveFileName());
+	String filepath = GetActiveFilePath();
 	SaveFile();
 
 	TFile repository;

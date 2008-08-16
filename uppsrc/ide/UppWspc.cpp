@@ -148,8 +148,9 @@ void WorkspaceWork::LoadActualPackage()
 		else
 		if(open) {
 			Color uln = Null;
+			String p = SourcePath(GetActivePackage(), f);
 			if(showtime) {
-				FindFile ff(SourcePath(GetActivePackage(), f));
+				FindFile ff(p);
 				if(ff) {
 					Time ftm = Time(ff.GetLastWriteTime());
 					if(ftm > utime) {
@@ -162,7 +163,13 @@ void WorkspaceWork::LoadActualPackage()
 					}
 				}
 			}
-			filelist.Add(f, IdeFileImage(f, f.optimize_speed), ListFont(), SColorText, false, 0,
+			Image m = IdeFileImage(f, f.optimize_speed);
+			if(GetFileExt(p) == ".tpp" && IsFolder(p))
+				if(FileExists(AppendFileName(p, "all.i")))
+					m = TopicImg::IGroup();
+				else
+					m = TopicImg::Group();
+			filelist.Add(f, m, ListFont(), SColorText, false, 0,
 			             Null, SColorMark, Null, Null, Null, uln);
 			fileindex.Add(i);
 		}
@@ -226,6 +233,11 @@ bool WorkspaceWork::IsSeparator(int i) const
 String WorkspaceWork::GetActiveFileName() const
 {
 	return FileName(filelist.GetCursor());
+}
+
+String WorkspaceWork::GetActiveFilePath() const
+{
+	return SourcePath(GetActivePackage(), GetActiveFileName());
 }
 
 bool   WorkspaceWork::IsActiveFile() const
@@ -359,6 +371,11 @@ void WorkspaceWork::AddTopicGroup()
 	dlg.Load(PackageDirectory(package));
 	if(dlg.Run() != IDOK) return;
 	String g = dlg.GetName();
+	if(g == "app.tpp") {
+		String h = SourcePath(package, g);
+		RealizeDirectory(h);
+		SaveFile(AppendFileName(h, "all.i"), "");
+	}
 	if(g.GetCount())
 		AddItem(g, false, false);
 }
@@ -386,7 +403,7 @@ void WorkspaceWork::RemoveFile()
 void WorkspaceWork::DelFile()
 {
 	if(!filelist.IsCursor() || filelist[filelist.GetCursor()].isdir) return;
-	String file = SourcePath(GetActivePackage(), GetActiveFileName());
+	String file = GetActiveFilePath();
 	if(IsFolder(file)) {
 		if(!PromptYesNo("Remove the topic group and discard ALL topics?")) return;
 		RemoveFile();
@@ -404,7 +421,7 @@ void WorkspaceWork::RenameFile()
 	if(!filelist.IsCursor()) return;
 	String n = GetActiveFileName();
 	if(!EditText(n, "Rename file", "New name")) return;
-	String spath = SourcePath(GetActivePackage(), GetActiveFileName());
+	String spath = GetActiveFilePath();
 	String dpath = SourcePath(GetActivePackage(), n);
 	if(!filelist[filelist.GetCursor()].isdir && GetFileLength(spath) >= 0) {
 		if(!::MoveFile(spath, dpath)) {
@@ -569,9 +586,16 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	         THISBACK1(MoveFile, 1))
 		.Key(organizer ? K_CTRL_DOWN : K_SHIFT_CTRL_DOWN)
 		.Help("Move current file one position towards package end");
-	menu.Separator();
-	menu.Add(IsActiveFile(), "Optimize for speed", THISBACK(ToggleFileSpeed))
-	    .Check(IsActiveFile() && ActiveFile().optimize_speed);
+	if(IsActiveFile()) {
+		menu.Separator();
+		String p = GetActiveFilePath();
+		if(GetFileExt(p) == ".tpp" && IsFolder(p))
+			menu.Add("Includeable", THISBACK(ToggleIncludeable))
+			    .Check(FileExists(AppendFileName(p, "all.i")));
+		else
+			menu.Add("Optimize for speed", THISBACK(ToggleFileSpeed))
+			    .Check(ActiveFile().optimize_speed);
+	}
 	FilePropertiesMenu(menu);
 }
 
@@ -579,6 +603,15 @@ void WorkspaceWork::ToggleFileSpeed()
 {
 	if(IsActiveFile()) {
 		ActiveFile().optimize_speed = !ActiveFile().optimize_speed;
+		SaveLoadPackageNS();
+	}
+}
+
+void WorkspaceWork::ToggleIncludeable()
+{
+	if(IsActiveFile()) {
+		String p = GetActiveFilePath();
+		SetTopicGroupIncludeable(p, !FileExists(AppendFileName(p, "all.i")));
 		SaveLoadPackageNS();
 	}
 }

@@ -254,11 +254,16 @@ bool ParseTopicFileName(const String& fn, String& topic, int& lang);
 Topic  ReadTopic(const char *text);
 Vector<String> GatherLabels(const RichText& text);
 String WriteTopic(const char *title, const RichText& text);
+String WriteTopicI(const char *title, const RichText& text);
 
 void LoadTopics(FileList& topic, const String& dir);
 
 TopicLink ParseTopicFilePath(const String& path);
 String    TopicFilePath(const TopicLink& tl);
+
+void SaveGroupInc(const String& grouppath);
+
+void SetTopicGroupIncludeable(const char *path, bool set);
 
 struct StyleDlg;
 
