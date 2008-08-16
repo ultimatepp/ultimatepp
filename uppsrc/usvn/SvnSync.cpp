@@ -21,6 +21,11 @@ void SvnSync::Setup()
 	SyncList();
 }
 
+int CharFilterSvnMsg(int c)
+{
+	return c >= 32 && c < 128 && c != '\"' ? c : 0;
+}
+
 void SvnSync::SyncList()
 {
 	list.Clear();
@@ -77,7 +82,7 @@ void SvnSync::SyncList()
 		if(actions) {
 			list.Add(MESSAGE, Null, AttrText("Commit message:").SetFont(StdFont().Bold()));
 			list.SetLineCy(list.GetCount() - 1, EditField::GetStdHeight() + 4);
-			list.SetCtrl(list.GetCount() - 1, 1, message.Add());
+			list.SetCtrl(list.GetCount() - 1, 1, message.Add().SetFilter(CharFilterSvnMsg));
 		}
 		else
 			list.Add(-1, Null, "", AttrText("Nothing to do").SetFont(StdFont().Italic()));
