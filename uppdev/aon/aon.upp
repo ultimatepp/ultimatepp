@@ -9,6 +9,8 @@ uses
 	Geom\Draw;
 
 file
+	app.tpp,
+	src.tpp,
 	main.cpp;
 
 mainconfig
