@@ -8,7 +8,8 @@ file
 	EyeCare.cpp,
 	icon.rc,
 	EyeCare.lay,
-	EyeCare.iml;
+	EyeCare.iml,
+	app.tpp;
 
 mainconfig
 	"" = "GUI";
