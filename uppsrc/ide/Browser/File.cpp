@@ -21,6 +21,12 @@ Topic ReadTopic(const char *text)
 	Topic topic;
 	CParser p(text);
 	try {
+		if(p.Id("topic")) {
+			topic.title = p.ReadString();
+			p.Char(';');
+			topic.text = p.GetPtr();
+			return topic;
+		}
 		while(!p.IsEof()) {
 			if(p.Id("TITLE")) {
 				p.PassChar('(');
@@ -75,6 +81,14 @@ Vector<String> GatherLabels(const RichText& text)
 String WriteTopic(const char *title, const RichText& text)
 {
 	StringBuffer r;
+	r << "topic " << AsCString(title) << ';';
+	r << AsQTF(text, CHARSET_UTF8, QTF_BODY|QTF_ALL_STYLES|QTF_CRLF);
+	return r;
+}
+
+String WriteTopicI(const char *title, const RichText& text)
+{
+	StringBuffer r;
 	r << "TITLE(" << AsCString(title) << ")\r\n";
 	String cpsd = ZCompress(AsQTF(text, CHARSET_UTF8, QTF_BODY|QTF_ALL_STYLES));
 	r << "COMPRESSED\r\n";
@@ -94,4 +108,53 @@ String WriteTopic(const char *title, const RichText& text)
 	}
 	r << "\r\n\r\n";
 	return r;
+}
+
+void SaveGroupInc(const String& grouppath)
+{
+	String packagedir = GetFileFolder(grouppath);
+	String group = GetFileTitle(grouppath);
+	if(IsNull(packagedir) || IsNull(group))
+		return;
+	String gh;
+	FindFile ff(AppendFileName(grouppath, "*.tppi"));
+	while(ff) {
+		if(ff.IsFile()) {
+			gh << "TOPIC(" << AsCString(GetFileTitle(ff.GetName())) << ")\r\n";
+			gh << "#include \"" << ff.GetName() << "\"\r\n";
+			gh << "END_TOPIC\r\n\r\n";
+		}
+		ff.Next();
+	}
+	String fn = AppendFileName(AppendFileName(packagedir, group + ".tpp"), "all.i");
+	if(LoadFile(fn) != gh)
+		if(IsNull(gh))
+			DeleteFile(fn);
+		else
+			SaveFile(fn, gh);
+}
+
+void SetTopicGroupIncludeable(const char *path, bool set)
+{
+	FindFile ff(AppendFileName(path, "*.tpp"));
+	while(ff) {
+		if(GetFileExt(ff.GetName()) == ".tpp") {
+			String s = AppendFileName(path, ff.GetName());
+			String t = AppendFileName(path, ForceExt(ff.GetName(), ".tppi"));
+			if(set) {
+				Topic p = ReadTopic(LoadFile(s));
+				SaveFile(t, WriteTopicI(p.title, ParseQTF(p.text)));
+			}
+			else {
+//				Topic p = ReadTopic(LoadFile(s)); _DBG_ // only to convert
+//				SaveFile(s, WriteTopic(p.title, ParseQTF(p.text)));
+				FileDelete(t);
+			}
+		}
+		ff.Next();
+	}
+	if(set)
+		SaveGroupInc(path);
+	else
+		FileDelete(AppendFileName(path, "all.i"));
 }
