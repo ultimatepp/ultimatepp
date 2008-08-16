@@ -9,4 +9,5 @@
 #include "Ole/init"
 #include "GridCtrl/init"
 #include "Oracle/init"
+#include "usvn/init"
 #endif
