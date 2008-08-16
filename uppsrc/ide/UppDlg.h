@@ -112,8 +112,6 @@ struct DependsDlg : public WithUppOptPushDlg<TopWindow> {
 struct WorkspaceWork {
 	static    Font ListFont();
 
-	Time      InstallTime;
-
 	FileList    package;
 	FileList    filelist;
 	Vector<int> fileindex;
@@ -189,7 +187,7 @@ struct WorkspaceWork {
 	void MoveFile(int d);
 	void Move(Vector<String>& v, FileList& ta, int d);
 
-	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, COMMON_FILE, LOCAL_FILE, ANY_FILE };
+	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, LOCAL_FILE, ANY_FILE };
 	void AddFile(ADDFILE type);
 	void AddItem(const String& name, bool separator, bool readonly);
 	void AddTopicGroup();

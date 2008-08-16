@@ -286,7 +286,7 @@ protected:
 	String            grouppath;
 	String            topicpath;
 
-	static String     laststylesheet;
+	static String     lasttemplate;
 	static int        lastlang;
 	static bool       allfonts;
 
@@ -306,7 +306,6 @@ protected:
 	void   TopicMenu(Bar& bar);
 	void   MainTool(Bar& bar);
 	void   FileBar(Bar& bar);
-	void   StyleSheetMenu(Bar& bar);
 	void   Exit();
 	void   SetBar();
 
@@ -324,9 +323,10 @@ protected:
 
 	void   TopicCursor();
 
-	int    Execute(StyleDlg& d);
-	void   EditStylesheets();
-	void   StoreStylesheet();
+	void   ListTemplates(Vector<String>& path, Vector<String>& name);
+	String ChooseTemplate(const char *title);
+
+	void   SaveAsTemplate();
 	void   ApplyStylesheet();
 	void   ApplyStylesheetGroup();
 
@@ -351,6 +351,8 @@ protected:
 	void   CompressGroup();
 
 public:
+	Callback1<Bar&> WhenTemplatesMenu;
+
 	enum {
 		TIMEID_AUTOSAVE = Ctrl::TIMEID_COUNT,
 	    TIMEID_COUNT

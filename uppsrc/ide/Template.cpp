@@ -359,7 +359,6 @@ void TemplateDlg::Load(const Vector<String>& p, bool main)
 		LoadNest(p[i], main);
 		nest.Add(p[i]);
 	}
-	LoadNest(GetCommonDir(), main);
 	LoadNest(GetLocalDir(), main);
 	LoadNest(GetFileFolder(ConfigFile("x")), main, false);
 	Sort(pt, FieldRelation(&PackageTemplate::name, StdLess<String>()));

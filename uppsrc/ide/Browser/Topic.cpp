@@ -3,7 +3,7 @@
 ArrayMap<String, TopicEditor::FileInfo> TopicEditor::editstate;
 VectorMap<String, String>               TopicEditor::grouptopic;
 
-String     TopicEditor::laststylesheet;
+String     TopicEditor::lasttemplate;
 int        TopicEditor::lastlang;
 bool       TopicEditor::allfonts;
 

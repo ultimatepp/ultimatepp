@@ -230,7 +230,7 @@ Pdb::Pdb()
 
 	tree.WhenOpen = THISBACK(TreeExpand);
 
-	FileIn in(CommonPath("TreeTypes.txt"));
+	FileIn in(ConfigFile("TreeTypes.txt"));
 	while(!in.IsEof()) {
 		String type = in.GetLine();
 		String desc = in.GetLine();
@@ -266,7 +266,7 @@ void Pdb::CopyDisas()
 Pdb::~Pdb()
 {
 	SaveTree();
-	String fn = CommonPath("TreeTypes.txt");
+	String fn = ConfigFile("TreeTypes.txt");
 	FileOut out(fn);
 	for(int i = 0; i < treetype.GetCount(); i++)
 		out << treetype.GetKey(i) << "\r\n" << treetype[i] << "\r\n";
