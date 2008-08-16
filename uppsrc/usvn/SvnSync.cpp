@@ -89,6 +89,33 @@ void SvnSync::SyncList()
 	}
 }
 
+#ifdef PLATFORM_WIN32
+void sDeleteFolderDeep(const char *dir)
+{
+	{
+		FindFile ff(AppendFileName(dir, "*.*"));
+		while(ff) {
+			String name = ff.GetName();
+			String p = AppendFileName(dir, name);
+			if(ff.IsFile()) {
+				SetFileAttributes(p, GetFileAttributes(p) & ~FILE_ATTRIBUTE_READONLY);
+				FileDelete(p);
+			}
+			else
+			if(ff.IsFolder())
+				sDeleteFolderDeep(p);
+			ff.Next();
+		}
+	}
+	DirectoryDelete(dir);
+}
+#else
+void sDeleteFolderDeep(const char *path)
+{
+	DeleteFolderDeep(path);
+}
+#endif
+
 void SvnDel(const char *path)
 {
 	FindFile ff(AppendFileName(path, "*.*"));
@@ -96,7 +123,7 @@ void SvnDel(const char *path)
 		if(ff.IsFolder()) {
 			String dir = AppendFileName(path, ff.GetName());
 			if(ff.GetName() == ".svn")
-				DeleteFolderDeep(dir);
+				sDeleteFolderDeep(dir);
 			else
 				SvnDel(dir);
 		}
