@@ -5,6 +5,8 @@ uses
 
 file
 	Any.cpp,
+	app.tpp\test$cs-cz.tppi,
+	app.tpp\test$en-us.tppi,
 	app.tpp;
 
 mainconfig
