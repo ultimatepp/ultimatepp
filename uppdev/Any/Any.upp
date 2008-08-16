@@ -4,7 +4,9 @@ uses
 	Core;
 
 file
-	Any.cpp;
+	Any.cpp,
+	app.tpp;
 
 mainconfig
 	"" = "MT";
+
