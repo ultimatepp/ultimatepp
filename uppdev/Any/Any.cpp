@@ -11,7 +11,6 @@ CONSOLE_APP_MAIN
 	Any alpha;
 	alpha.Create<int>();
 
-	__BREAK__;
 	if(alpha.Is<int>())
 		RLOG("int");
 	if(alpha.Is<int>())
