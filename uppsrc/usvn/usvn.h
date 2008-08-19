@@ -98,6 +98,7 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 		CONFLICT,
 		ADD,
 		REMOVE,
+		REPLACE,
 		
 		REPOSITORY,
 		MESSAGE,
