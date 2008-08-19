@@ -15,7 +15,7 @@ Group:          Development/C++
 URL:            http://www.ultimatepp.org
 Source0:        %{name}-src-%{version}.tar.gz
 
-Buildrequires: gcc-c++ freetype2-devel gtk2-devel pango-devel atk-devel cairo-devel X11-devel xft2-devel
+Buildrequires: gcc-c++ freetype2-devel gtk2-devel pango-devel atk-devel cairo-devel X11-devel xft2-devel expat-devel
 Requires: valgrind
 
 #-----------
