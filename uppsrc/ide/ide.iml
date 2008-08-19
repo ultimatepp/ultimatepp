@@ -1,5 +1,6 @@
 PREMULTIPLIED
-IMAGE_ID(Package)
+IMAGE_ID(Package) IMAGE_META("exp", "")
+
 IMAGE_ID(IconBuilding)
 IMAGE_ID(IconRunning)
 IMAGE_ID(IconDebugging)
