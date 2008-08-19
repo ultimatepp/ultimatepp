@@ -140,28 +140,30 @@ void SvnSync::Dir(const char *dir)
 void SvnSync::Perform()
 {
 	const Vector<String>& cl = CommandLine();
-	if(cl.GetCount()) {
+	if(cl.GetCount())
 		for(int i = 0; i < cl.GetCount(); i++) {
+			if(cl[i] == "-") {
+				usr_lbl.Hide();
+				usr.Hide();
+				pwd_lbl.Hide();
+				pwd.Hide();
+				works.Load(LoadFile(ConfigFile("svnworks")));
+				DoSync();
+				SaveFile(ConfigFile("svnworks"), works.Save());
+				return;
+			}
 			String d = GetFullPath(cl[i]);
 			if(!DirectoryExists(cl[i])) {
 				Cerr() << cl[i] << " not a directory\n";
 				SetExitCode(1);
 				return;
 			}
-			works.Add(d, ~usr, ~pwd);
+			works.Add(d, "", "");
 		}
-		setup.Hide();
-		DoSync();
-	}
-	else {
-		usr_lbl.Hide();
-		usr.Hide();
-		pwd_lbl.Hide();
-		pwd.Hide();
-		works.Load(LoadFile(ConfigFile("svnworks")));
-		DoSync();
-		SaveFile(ConfigFile("svnworks"), works.Save());
-	}
+	else
+		works.Add(GetCurrentDirectory(), "", "");
+	setup.Hide();
+	DoSync();
 }
 
 void MoveSvn(const String& path, const String& tp)
@@ -214,6 +216,7 @@ void SvnSync::DoSync()
 				sys.System("svn resolved " + path);
 				break;
 			case REPLACE: {
+					SvnDel(path);
 					String tp = AppendFileName(GetFileFolder(path), Format(Uuid::Create()));
 					FileMove(path, tp);
 					sys.System(SvnCmd("update", w).Cat() << ' ' << path);
