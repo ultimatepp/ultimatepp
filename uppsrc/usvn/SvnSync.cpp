@@ -47,7 +47,7 @@ void SvnSync::SyncList()
 						actions = true;
 						h.Trim(7);
 						bool simple = h.Mid(1, 6) == "      ";
-						int action = simple ? String("MC?!").Find(h[0]) : -1;
+						int action = simple ? String("MC?!~").Find(h[0]) : -1;
 						String an;
 						Color  color;
 						if(action < 0) {
@@ -63,8 +63,8 @@ void SvnSync::SyncList()
 							}
 						}
 						else {
-							static const char *as[] = { "Modify", "Conflict resolved", "Add", "Remove" };
-							static Color c[] = { LtBlue, Magenta, Green, LtRed };
+							static const char *as[] = { "Modify", "Conflict resolved", "Add", "Remove", "Replace" };
+							static Color c[] = { LtBlue, Magenta, Green, LtRed, LtMagenta };
 							an = as[action];
 							color = c[action];
 						}
@@ -164,6 +164,22 @@ void SvnSync::Perform()
 	}
 }
 
+void MoveSvn(const String& path, const String& tp)
+{
+	FindFile ff(AppendFileName(path, "*.*"));
+	while(ff) {
+		String nm = ff.GetName();
+		String s = AppendFileName(path, nm);
+		String t = AppendFileName(tp, nm);
+		if(ff.IsFolder())
+			if(nm == ".svn")
+				FileMove(s, t);
+			else
+				MoveSvn(s, t);
+		ff.Next();
+	}
+}
+
 void SvnSync::DoSync()
 {
 	SyncList();
@@ -189,13 +205,36 @@ void SvnSync::DoSync()
 			switch(action) {
 			case ADD:
 				SvnDel(path);
-				sys.System("svn add " + path);
+				sys.System("svn add --force " + path);
 				break;
 			case REMOVE:
 				sys.System("svn delete " + path);
 				break;
 			case CONFLICT:
 				sys.System("svn resolved " + path);
+				break;
+			case REPLACE: {
+					String tp = AppendFileName(GetFileFolder(path), Format(Uuid::Create()));
+					FileMove(path, tp);
+					sys.System(SvnCmd("update", w).Cat() << ' ' << path);
+					MoveSvn(path, tp);
+					sDeleteFolderDeep(path);
+					FileMove(tp, path);
+					Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
+					for(int i = 0; i < ln.GetCount(); i++) {
+						String h = ln[i];
+						if(h.GetCount() > 7) {
+							String file = h.Mid(7);
+							if(IsFullPath(file)) {
+								h.Trim(7);
+								if(h == "?      ")
+									sys.System("svn add --force " + file);
+								if(h == "!      ")
+									sys.System("svn delete " + file);
+							}
+						}
+					}
+				}
 				break;
 			}
 			i++;
