@@ -293,7 +293,7 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 		for(int i = 0; i < iml.GetCount(); i++) {
 			const ImlImage& c = iml[i];
 			if(c.exp)
-				out.PutLine("IMAGE_META(\"exp\", \"\")");
+				out << "IMAGE_META(\"exp\", \"\")\r\n";
 			String name = c.name;
 			Image buffer = c.image;
 			if(IsNull(name))
@@ -334,7 +334,7 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 			const ImlImage& c = iml[i];
 			out << "IMAGE_ID(" << c.name << ")";
 			if(c.exp)
-				out.PutLine(" IMAGE_META(\"exp\", \"\")");
+				out << " IMAGE_META(\"exp\", \"\")\r\n";
 			out << "\r\n";
 		}
 		int ii = 0;

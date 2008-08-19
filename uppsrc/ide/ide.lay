@@ -7,7 +7,7 @@ LAYOUT(ListLayout, 604, 432)
 	ITEM(Button, newu, SetLabel(t_("&New package")).RightPosZ(140, 90).BottomPosZ(8, 22))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(8, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(8, 22))
-	ITEM(DataPusher, description, HSizePosZ(4, 6).BottomPosZ(37, 19))
+	ITEM(DataPusher, description, HSizePosZ(4, 6).BottomPosZ(36, 20))
 END_LAYOUT
 
 LAYOUT(ConfigLayout, 724, 214)
