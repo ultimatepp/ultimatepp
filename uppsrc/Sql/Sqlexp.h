@@ -109,13 +109,14 @@ public:
 	SqlId         operator [] (int i) const;
 	SqlId         operator&(const SqlId& s) const;
 
-	SqlId()                                  {}
-	SqlId(const char *s) : id(s)             {}
-	SqlId(const String& s) : id(s)           {}
-	SqlId(Id id) : id(id)                    {}
+	SqlId()                                      {}
+	SqlId(const char *s) : id(s)                 {}
+	SqlId(const String& s) : id(s)               {}
+	SqlId(Id id) : id(id)                        {}
 };
 
-#define SQLID(x)    const UPP::SqlId x(#x);
+#define SQLID(x)     const UPP::SqlId x(#x);
+#define SQL_ID(n, x) const UPP::SqlId n(#x);
 
 class SqlS : Moveable<SqlS> {
 protected:
