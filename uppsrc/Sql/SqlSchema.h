@@ -107,3 +107,6 @@ inline void SqlSchemaClear(T *a, int n) {
 	while(n--)
 		SqlSchemaClear(*a++);
 }
+
+String ExportSch(SqlSession& session, const String& database);
+String ExportSch(const String& database);
