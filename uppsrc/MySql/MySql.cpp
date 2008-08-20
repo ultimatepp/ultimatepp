@@ -26,9 +26,11 @@ private:
 	unsigned long *len;
 	int            rows;
 	int            lastid;
+	Buffer<bool>   convert;
 
 	String         MakeQuery() const;
 	void           FreeResult();
+	String         EscapeString(const String& v);
 
 public:
 	MySqlConnection(MySqlSession& session, MYSQL *mysql);
@@ -49,6 +51,8 @@ bool MySqlSession::Connect(const char *user, const char *password, const char *d
 								   sEmpNull(socket), 0)) {
 		Sql sql(*this);
 		username = sql.Select("substring_index(USER(),'@',1)");
+		sql.Execute("SET NAMES 'utf8'");
+		sql.Execute("SET CHARACTER SET utf8");
 		return true;
 	}
 	Close();
@@ -182,23 +186,29 @@ MySqlConnection::MySqlConnection(MySqlSession& session, MYSQL *mysql)
 	lastid = 0;
 }
 
+String MySqlConnection::EscapeString(const String& v)
+{
+	StringBuffer b(v.GetLength() * 2 + 3);
+	char *q = b;
+	*q = '\"';
+	int n = mysql_real_escape_string(mysql, q + 1, v, v.GetLength());
+	q[1 + n] = '\"';
+	b.SetCount(2 + n); //TODO - check this fix
+	return b;
+}
+
 void MySqlConnection::SetParam(int i, const Value& r) {
 	String p;
 	if(IsNull(r))
 		p = "NULL";
 	else
 		switch(r.GetType()) {
+		case 34:
+			p = EscapeString(SqlRaw(r));
+			break;
 		case WSTRING_V:
-		case STRING_V: {
-				String v = r;
-				StringBuffer b(v.GetLength() * 2 + 3);
-				char *q = b;
-				*q = '\"';
-				int n = mysql_real_escape_string(mysql, q + 1, v, v.GetLength());
-				q[1 + n] = '\"';
-				b.SetCount(2 + n); //TODO - check this fix
-				p = b;
-			}
+		case STRING_V:
+			p = EscapeString(ToCharset(CHARSET_UTF8, r));
 			break;
 		case BOOL_V:
 		case INT_V:
@@ -257,6 +267,7 @@ bool MySqlConnection::Execute() {
 		rows = (int)mysql_affected_rows(mysql);
 		int fields = mysql_num_fields(result);
 		info.SetCount(fields);
+		convert.Alloc(fields, false);
 		for(int i = 0; i < fields; i++) {
 			MYSQL_FIELD *field = mysql_fetch_field_direct(result, i);
 			SqlColumnInfo& f = info[i];
@@ -280,8 +291,12 @@ bool MySqlConnection::Execute() {
 			case FIELD_TYPE_DATETIME:
 				f.type = TIME_V;
 				break;
+			case FIELD_TYPE_VAR_STRING:
+			case FIELD_TYPE_STRING:
+				convert[i] = true;
 			default:
 				f.type = STRING_V;
+				break;
 			}
 			f.width = field->length;
 			f.scale = f.precision = 0;
@@ -361,7 +376,10 @@ void MySqlConnection::GetColumn(int i, Ref f) const {
 			}
 			break;
 		default:
-			f = Value(String(s, len[i]));
+			if(convert[i])
+				f = Value(ToCharset(CHARSET_DEFAULT, String(s, len[i]), CHARSET_UTF8));
+			else
+				f = Value(String(s, len[i]));
 			break;
 		}
 	}

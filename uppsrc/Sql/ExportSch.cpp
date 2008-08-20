@@ -47,7 +47,7 @@ String ExportSch(SqlSession& session, const String& database)
 				break;
 			}
 			r << '\t' << sPutId(type, id, c[i].name, 8);
-			if(width > 0 && width < 4000)
+			if(width > 0 && width < 40000)
 				r << ", " << width;
 			r << ")\r\n";
 		}
@@ -59,6 +59,37 @@ String ExportSch(SqlSession& session, const String& database)
 String ExportSch(const String& database)
 {
 	return ExportSch(SQL.GetSession(), database);
+}
+
+static void sId(String& r, const String& id, Index<String>& done)
+{
+	String u = ToUpper(id);
+	if(done.Find(u) >= 0)
+		return;
+	done.Add(u);
+	if(u == id)
+		r << "SQLID(" << id << ")\r\n";
+	else
+		r << "SQL_ID(" << u << ", " << id << ")\r\n";
+}
+
+String ExportIds(SqlSession& session, const String& database)
+{
+	String r;
+	Vector<String> tab = session.EnumTables(database);
+	Index<String> done;
+	for(int i = 0; i < tab.GetCount(); i++) {
+		sId(r, tab[i], done);
+		Vector<SqlColumnInfo> c = session.EnumColumns(database, tab[i]);
+		for(int i = 0; i < c.GetCount(); i++)
+			sId(r, c[i].name, done);
+	}
+	return r;
+}
+
+String ExportIds(const String& database)
+{
+	return ExportIds(SQL.GetSession(), database);
 }
 
 END_UPP_NAMESPACE
