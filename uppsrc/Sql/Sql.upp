@@ -1,5 +1,7 @@
 description "Fundamental SQL classes - session, cursor, SQL language expressions, DB schemas";
 
+charset "UTF-8";
+
 acceptflags
 	NOAPPSQL;
 
