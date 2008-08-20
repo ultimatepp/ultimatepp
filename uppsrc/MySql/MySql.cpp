@@ -47,10 +47,11 @@ bool MySqlSession::Connect(const char *user, const char *password, const char *d
                            const char *host, int port, const char *socket) {
 	mysql = mysql_init((MYSQL*) 0);
 	if(mysql && mysql_real_connect(mysql, sEmpNull(host), sEmpNull(user),
-		                           sEmpNull(password), sEmpNull(database), port,
-								   sEmpNull(socket), 0)) {
+	                               sEmpNull(password), sEmpNull(database), port,
+	                               sEmpNull(socket), 0)) {
 		Sql sql(*this);
 		username = sql.Select("substring_index(USER(),'@',1)");
+		mysql_set_character_set(mysql, "utf8");
 		sql.Execute("SET NAMES 'utf8'");
 		sql.Execute("SET CHARACTER SET utf8");
 		return true;
