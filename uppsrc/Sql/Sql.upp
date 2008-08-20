@@ -24,6 +24,7 @@ file
 	sch_source.h,
 	sch_schema.h,
 	util_td.cpp,
+	ExportSch.cpp,
 	Info readonly separator,
 	Copying,
 	Copying-plain,

@@ -1,0 +1,64 @@
+#include "Sql.h"
+
+NAMESPACE_UPP
+
+static String sPutId(const char *type, Index<String>& id, String n, int w = 0)
+{
+	String r = type;
+	if(id.Find(n) < 0) {
+		id.Add(n);
+		r << '_';
+	}
+	r << String(' ', max(0, w - r.GetLength())) << '(' << n;
+	return r;
+}
+
+String ExportSch(SqlSession& session, const String& database)
+{
+	String r;
+	Vector<String> tab = session.EnumTables(database);
+	Index<String> id;
+	for(int i = 0; i < tab.GetCount(); i++) {
+		r << sPutId("TABLE", id, tab[i]) << ")\r\n";
+		Vector<SqlColumnInfo> c = session.EnumColumns(database, tab[i]);
+		for(int i = 0; i < c.GetCount(); i++) {
+			String type;
+			int    width = Null;
+			switch(c[i].type) {
+			case INT_V:
+				type = "INT";
+				break;
+			case DOUBLE_V:
+				type = "DOUBLE";
+				break;
+			case DATE_V:
+				type = "DATE";
+				break;
+			case TIME_V:
+				type = "TIME";
+				break;
+			case STRING_V:
+				type = "STRING";
+				width = c[i].width;
+				break;
+			default:
+				type = "STRING";
+				width = 200;
+				break;
+			}
+			r << '\t' << sPutId(type, id, c[i].name, 8);
+			if(width > 0 && width < 4000)
+				r << ", " << width;
+			r << ")\r\n";
+		}
+		r << "END_TABLE\r\n\r\n";
+	}
+	return r;
+}
+
+String ExportSch(const String& database)
+{
+	return ExportSch(SQL.GetSession(), database);
+}
+
+END_UPP_NAMESPACE
