@@ -31,5 +31,7 @@ file
 	Copying,
 	Copying-plain,
 	Authors,
-	src.tpp;
+	src.tpp,
+	srcimp.tpp,
+	srcdoc.tpp;
 
