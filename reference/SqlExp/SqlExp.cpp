@@ -115,6 +115,8 @@ CONSOLE_APP_MAIN
 	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == (Select(COLUMN1).From(TABLE1) & Select(COLUMN2).From(TABLE2))));
 	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == (Select(COLUMN1).From(TABLE1) - Select(COLUMN2).From(TABLE2))));
 	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == 0).GroupBy(COLUMN).Having(COLUMN == 0).OrderBy(Descending(COLUMN)));
+	EXP(Select(COLUMN, Count(Select(SqlAll()).From(TABLE))).From(TABLE).Where(COLUMN == 0).GroupBy(COLUMN)
+	    .Having(COLUMN == 0).OrderBy(Descending(COLUMN)));
 	EXP(Select(COLUMN).From(TABLE).Limit(100));
 	EXP(Select(COLUMN).From(TABLE).Limit(100, 10));
 	EXP(Select(COLUMN).From(TABLE).Offset(20));
