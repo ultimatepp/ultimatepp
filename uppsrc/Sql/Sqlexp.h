@@ -215,6 +215,7 @@ SqlVal All(const SqlVal& exp);
 SqlSet All(const SqlSet& columns);
 SqlVal SqlAll();
 SqlVal Count(const SqlVal& exp);
+SqlVal Count(const SqlSet& exp);
 SqlVal SqlCountRows();
 SqlVal Descending(const SqlVal& exp);
 

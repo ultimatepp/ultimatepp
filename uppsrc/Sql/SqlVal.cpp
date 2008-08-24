@@ -218,7 +218,13 @@ SqlSet All(const SqlSet& columns) {
 	return SqlSet("all " + ~columns, SqlSet::SET);
 }
 
-SqlVal Count(const SqlVal& exp) {
+SqlVal Count(const SqlVal& exp)
+{
+	return SqlFunc("count", exp);
+}
+
+SqlVal Count(const SqlSet& exp)
+{
 	return SqlFunc("count", exp);
 }
 
