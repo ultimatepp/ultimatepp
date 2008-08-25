@@ -1,0 +1,4 @@
+#ifndef _Web_SSL_icpp_init_stub
+#define _Web_SSL_icpp_init_stub
+#include "Web/init"
+#endif
