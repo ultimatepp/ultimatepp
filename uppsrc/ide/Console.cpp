@@ -36,10 +36,17 @@ static int sAppf(int c) {
 	return c >= ' ' || c == '\n' ? c : c == '\t' ? ' ' : 0;
 }
 
+static int sCharFilterNoCr(int c) {
+	return c == '\r' ? 0 : c;
+}
+
 void Console::Append(const String& s) {
 	if(s.IsEmpty()) return;
 	if(console) {
-		Puts(s);
+		String t = Filter(s, sCharFilterNoCr);
+		if(*t.Last() == '\n')
+			t.Trim(t.GetCount() - 1);
+		Puts(t);
 		return;
 	}
 	int l, h;

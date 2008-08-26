@@ -1,21 +1,533 @@
-TITLE("AIndex")
-COMPRESSED
-120,156,237,93,89,115,219,70,18,254,43,83,149,163,68,133,162,64,144,20,41,201,73,197,231,174,43,137,157,178,21,229,65,69,137,16,56,20,39,2,1,46,6,144,204,108,54,191,125,187,231,0,6,23,111,41,148,203,126,176,37,96,208,51,211,253,245,57,135,47,108,242,245,215,86,221,250,202,90,240,231,228,21,29,57,177,23,245,47,88,187,221,59,117,236,206,233,237,79,239,143,79,247,127,220,59,106,215,144,74,19,168,180,186,205,86,175,211,106,182,237,35,248,171,217,106,218,29,187,213,110,246,236,227,118,175,213,234,89,39,174,231,112,222,191,240,236,94,239,20,63,178,225,35,187,219,177,155,221,118,175,221,107,182,186,61,27,190,181,45,203,182,186,118,167,217,110,245,236,206,201,144,114,183,127,225,244,90,167,251,31,142,224,163,22,246,4,196,173,230,145,221,238,182,109,171,101,217,109,232,170,217,235,181,155,221,78,175,117,124,116,116,226,58,211,136,5,190,234,139,53,155,118,243,244,186,217,61,133,49,255,253,247,223,141,102,219,146,35,104,3,177,166,213,134,161,
-54,225,153,213,182,187,205,206,177,117,220,233,53,123,86,11,136,119,186,86,231,100,234,132,206,164,122,234,157,133,83,239,90,39,44,162,64,98,255,187,102,179,11,159,28,213,143,190,106,182,187,48,209,94,171,221,233,117,45,232,220,182,237,86,203,110,182,236,227,99,187,115,212,233,158,140,169,51,164,161,154,130,3,131,223,111,194,167,221,122,247,43,248,208,106,119,90,118,251,24,153,213,130,158,108,251,168,115,220,236,180,173,206,17,80,58,9,233,127,98,22,210,9,245,65,100,255,189,250,223,55,175,223,29,252,246,145,92,240,206,233,79,63,90,228,226,27,203,58,176,44,49,3,2,3,155,122,78,68,175,158,245,147,231,86,195,106,216,157,78,141,40,137,153,237,175,146,95,219,228,44,251,170,78,86,39,113,190,57,137,127,59,124,252,198,207,190,255,225,234,106,69,66,228,249,91,127,72,63,245,191,237,127,97,211,146,108,178,78,35,251,216,62,221,39,23,251,242,27,210,151,111,229,75,162,254,185,216,127,41,152,112,240,215,217,108,74,73,48,34,212,19,216,228,36,10,
-8,143,130,144,54,200,25,153,196,60,34,220,137,24,31,205,136,129,96,78,70,65,72,220,192,143,28,230,211,144,140,60,231,14,30,176,33,188,99,35,70,135,228,122,70,132,142,210,8,94,159,19,199,31,74,98,99,231,142,98,239,36,152,210,208,129,126,6,223,15,190,239,147,33,29,1,161,97,35,51,188,115,24,222,11,135,51,151,132,240,125,48,33,142,235,82,152,81,210,111,182,185,98,230,193,95,248,3,243,111,228,252,27,228,151,164,95,213,139,232,63,246,57,187,193,95,244,64,246,106,123,64,24,154,158,13,190,37,159,106,125,2,99,31,7,67,152,118,20,135,62,210,27,3,93,114,231,120,49,21,211,215,28,211,163,56,27,51,158,96,82,49,223,25,14,225,47,206,3,151,1,23,97,8,96,5,157,107,230,177,136,81,193,234,235,121,243,227,117,236,104,130,125,75,14,115,148,148,16,103,131,188,141,8,244,23,115,152,130,195,145,142,238,83,137,198,133,129,83,194,176,177,254,186,142,168,144,88,17,18,129,223,158,135,161,51,147,143,244,60,128,176,227,121,193,189,
-24,61,246,157,64,195,137,72,52,166,132,194,167,48,14,14,120,160,190,139,125,16,193,57,199,135,47,39,65,24,177,63,97,80,17,155,80,226,177,91,154,157,99,42,60,242,28,200,163,75,128,222,102,117,194,176,91,30,232,190,71,14,136,2,166,16,50,10,44,199,254,28,50,13,184,248,0,127,19,3,145,3,35,247,44,26,19,62,165,174,196,158,16,81,131,104,24,104,46,33,95,34,148,145,148,56,208,105,40,205,145,128,231,66,192,131,3,241,57,55,117,162,78,96,92,12,65,196,137,15,234,65,125,96,54,8,207,117,92,24,5,140,100,66,232,39,0,186,152,137,102,227,139,152,121,130,125,64,136,249,242,173,132,208,196,153,10,242,170,115,24,145,227,221,59,51,142,248,164,97,40,120,231,121,208,141,19,186,99,115,180,2,97,116,52,162,46,98,201,155,17,144,42,3,128,197,190,79,233,144,34,86,129,246,84,76,122,68,60,39,188,161,196,143,39,215,160,130,166,134,51,33,217,84,219,62,208,73,112,151,17,244,40,68,52,250,122,132,174,3,12,228,248,64,76,132,
-242,8,91,79,195,224,26,62,104,144,223,199,204,163,200,31,32,12,34,226,12,30,11,51,194,64,23,208,110,0,121,74,246,208,64,0,227,194,168,134,148,180,236,0,83,142,33,59,45,98,96,121,108,78,94,240,30,104,10,82,14,241,130,40,51,37,68,179,64,15,119,161,61,72,133,151,240,28,25,24,115,57,158,204,116,5,42,64,2,56,1,14,232,171,19,42,70,132,226,36,247,99,138,248,158,92,11,211,33,161,38,36,3,36,82,213,167,0,17,47,22,35,77,112,166,24,132,84,47,246,15,65,74,30,243,111,225,171,190,57,244,6,249,77,60,7,218,233,108,66,144,91,16,41,206,13,165,56,132,38,215,201,117,44,148,112,38,26,33,89,176,98,0,222,97,255,226,144,144,62,152,221,60,108,146,30,148,46,56,82,46,180,158,42,45,170,106,93,106,156,129,182,55,113,8,29,133,245,18,201,130,137,3,189,207,74,17,21,114,196,66,160,225,220,57,204,115,176,105,172,167,150,104,238,30,80,7,162,208,26,190,6,74,37,246,164,6,234,138,99,197,87,96,161,126,141,
-35,109,139,235,192,17,249,174,72,24,140,16,31,131,237,201,206,202,20,80,224,131,52,181,76,160,191,216,228,10,140,39,194,137,94,135,212,185,229,162,111,30,12,14,92,128,128,112,24,224,189,188,136,13,14,110,129,243,65,8,65,32,202,177,161,109,126,56,129,17,58,190,38,35,172,19,136,7,69,4,246,144,166,146,21,240,17,196,193,53,42,95,2,35,199,39,210,82,35,144,19,241,66,132,10,236,66,123,48,14,131,248,102,108,48,230,13,52,127,7,70,39,225,12,60,100,97,194,14,78,246,110,0,64,142,156,9,104,44,140,30,231,140,159,137,62,120,124,45,249,29,229,73,241,154,236,219,135,175,93,16,141,48,97,56,227,134,224,162,1,106,205,51,248,17,16,101,192,67,224,75,224,2,129,146,119,33,5,217,241,84,120,194,105,220,11,123,50,133,81,211,240,78,78,24,173,182,226,122,131,188,151,12,11,4,144,0,71,48,251,152,59,96,235,112,188,78,200,2,233,3,5,67,193,16,0,229,123,57,86,180,146,226,85,42,250,140,5,41,145,177,180,206,147,0,97,
-173,140,52,227,127,196,190,27,129,130,8,69,23,236,141,180,75,114,193,15,115,173,50,234,11,147,53,216,22,17,145,208,7,141,85,64,255,64,153,116,205,138,44,60,250,120,79,233,84,163,95,99,249,103,244,169,142,63,83,12,120,119,246,115,234,84,235,134,83,1,227,112,25,5,83,230,14,78,6,135,131,195,151,208,237,224,144,135,238,48,112,7,135,191,128,97,65,21,29,124,77,253,193,65,204,47,133,101,197,39,125,52,42,164,31,97,92,40,224,186,34,29,104,120,43,184,25,76,165,115,7,183,70,167,48,196,233,172,79,34,136,2,56,56,57,80,246,9,232,40,115,129,87,142,7,179,67,116,195,116,192,175,142,168,3,1,23,229,169,246,32,184,66,161,210,128,19,100,27,218,196,242,8,71,243,232,23,138,94,143,203,223,90,68,37,16,164,24,87,163,3,77,226,232,52,240,182,48,56,73,158,239,149,5,228,104,102,74,190,52,82,11,50,248,54,125,222,34,159,146,231,165,169,130,14,72,75,104,182,200,224,10,189,88,242,170,38,98,125,251,20,71,137,22,221,167,
-247,217,96,200,65,245,1,167,53,141,209,124,164,129,107,67,170,112,217,43,25,159,95,211,212,60,41,235,97,52,17,90,116,31,196,222,80,55,76,77,139,12,191,165,145,184,166,62,132,218,74,41,0,138,119,160,149,66,126,202,104,240,0,32,13,170,206,201,44,136,65,103,132,131,197,1,153,33,152,238,31,242,8,65,9,90,73,196,131,9,194,56,185,46,163,203,17,141,132,47,134,32,14,21,42,13,94,152,15,20,241,41,117,38,2,23,93,12,117,68,14,195,33,183,1,101,84,73,129,66,167,20,105,24,187,160,160,186,253,91,31,134,194,134,96,132,185,178,198,24,132,195,167,82,205,202,154,133,24,196,161,31,19,237,210,102,109,153,167,32,14,14,254,122,173,132,5,45,32,20,203,190,87,178,62,248,235,215,114,17,238,40,168,231,97,178,192,176,29,150,131,193,90,131,51,122,150,204,143,170,210,121,75,120,210,236,219,132,201,89,214,46,172,71,84,48,57,95,105,40,24,141,60,225,188,229,144,239,107,87,185,97,41,201,125,144,233,22,85,122,151,203,182,100,112,151,
-49,51,194,84,100,243,46,180,209,82,40,117,21,174,84,218,34,178,77,99,84,52,68,111,71,85,14,29,99,235,235,48,184,133,192,94,184,125,116,50,34,32,13,124,90,50,193,52,84,163,159,24,143,184,57,69,108,0,25,3,70,0,105,40,202,117,226,10,57,22,14,163,140,77,195,128,202,129,8,154,38,73,84,157,27,89,45,80,201,155,36,24,135,88,33,169,72,23,84,22,48,23,225,35,128,231,234,166,70,52,62,68,108,192,0,228,115,252,160,34,21,135,216,37,25,189,194,195,72,255,32,231,155,204,244,137,104,219,227,40,203,35,193,245,105,66,117,87,209,135,89,83,21,2,231,124,220,34,108,27,16,243,49,103,155,39,126,101,50,141,28,189,88,103,217,22,238,128,248,42,38,242,6,130,178,72,151,1,210,81,33,97,19,146,162,240,150,166,137,26,89,152,52,25,9,44,38,233,194,201,39,153,108,85,2,251,59,214,114,210,220,220,15,170,210,115,85,235,86,26,176,77,160,179,106,248,174,0,248,162,236,83,185,111,3,217,63,59,121,243,249,57,69,50,158,147,
-183,205,59,18,196,148,103,84,143,22,200,72,173,124,122,254,225,225,67,25,61,250,135,244,38,143,164,115,15,174,50,187,5,88,77,244,11,72,183,2,82,24,248,221,63,23,242,128,157,189,99,65,204,87,12,123,178,70,235,145,67,159,34,70,49,24,90,24,250,144,61,30,72,226,105,252,131,37,253,37,67,31,220,162,99,198,62,181,37,131,159,124,224,179,91,97,79,185,252,171,67,159,146,218,152,1,210,2,184,183,95,30,3,92,61,64,213,55,85,18,83,65,74,82,206,13,194,154,114,11,149,132,52,58,156,121,146,245,152,197,62,65,173,223,224,42,121,90,101,20,131,203,154,36,28,60,189,199,149,120,209,84,19,94,87,75,16,46,5,23,130,54,126,173,34,241,114,58,53,10,226,164,143,116,144,59,173,73,91,84,132,93,169,187,60,113,72,110,25,101,151,131,147,193,137,156,225,165,222,221,86,6,11,43,217,189,245,236,217,42,120,59,91,184,136,241,94,209,5,166,137,205,14,50,216,26,225,162,44,174,174,224,34,71,118,187,88,131,188,152,25,123,197,146,213,7,
-67,86,44,191,177,74,224,110,234,25,62,24,139,22,4,45,51,62,252,132,75,224,92,108,134,137,112,227,10,109,220,52,36,5,177,40,30,164,11,37,240,17,110,60,11,66,39,156,17,5,12,110,46,156,165,180,228,162,217,155,32,216,219,19,13,159,129,26,255,176,87,35,207,158,145,38,254,101,215,106,187,180,72,3,80,142,178,248,3,223,146,238,94,42,7,223,135,34,243,55,89,53,147,218,50,23,95,229,182,208,136,122,83,100,73,106,75,199,168,88,94,72,118,76,224,150,101,194,35,220,84,144,88,6,177,35,8,183,96,72,237,197,0,17,55,7,136,157,30,233,110,158,185,193,152,32,11,172,146,253,108,96,250,113,175,206,67,173,47,110,47,124,122,107,238,207,65,94,197,5,115,104,216,93,52,246,210,136,77,164,17,21,246,64,214,32,243,91,14,51,148,253,160,72,184,94,220,183,88,186,44,0,38,98,58,133,248,93,218,122,99,147,148,146,185,140,222,112,255,38,56,218,138,26,20,31,235,88,204,172,61,149,47,216,23,18,45,57,199,50,231,81,162,197,37,254,
-115,151,108,72,46,45,199,93,1,0,224,12,201,109,198,85,247,2,1,25,57,163,49,22,28,221,81,221,250,220,85,227,41,161,123,101,216,46,66,162,49,205,141,65,40,74,64,91,7,226,67,103,201,79,111,55,67,229,66,192,114,245,119,108,149,205,27,20,228,35,177,143,61,81,17,16,165,25,197,214,211,83,17,146,169,181,70,191,84,129,146,104,126,161,38,225,209,174,227,99,251,73,249,139,202,148,7,228,250,224,89,120,150,163,59,173,170,15,164,105,9,206,171,115,226,53,241,189,57,156,191,192,248,161,96,92,153,125,125,164,243,49,188,56,245,42,63,153,183,19,169,200,7,25,50,45,153,13,234,189,189,133,237,190,37,250,84,237,175,212,246,218,6,249,56,197,253,240,186,104,148,30,181,25,82,140,175,224,137,84,180,40,136,28,175,236,28,209,156,197,151,204,186,198,46,41,197,82,235,16,58,250,58,151,158,25,79,124,173,161,49,159,15,222,31,1,174,203,161,113,69,36,166,125,124,198,152,156,191,160,91,182,113,224,172,188,132,58,184,24,244,31,120,105,23,92,
-199,178,133,175,45,172,30,190,212,39,193,50,197,216,10,151,180,234,98,248,191,104,244,18,156,93,126,199,198,162,201,151,29,199,244,23,167,116,207,221,40,46,133,254,18,211,184,14,2,175,122,30,111,249,235,201,52,154,45,57,141,51,138,11,27,144,87,138,131,24,233,89,35,138,52,64,135,85,110,163,153,179,87,35,120,190,155,88,115,166,6,10,38,182,105,230,136,225,121,68,143,171,83,94,247,140,111,100,83,95,122,212,9,83,171,106,216,51,60,245,132,7,181,188,220,225,215,205,171,198,162,207,236,210,133,217,177,58,114,92,21,67,174,23,243,203,218,242,79,70,140,190,165,168,127,131,208,167,36,234,209,37,240,12,219,75,215,233,100,12,83,25,193,20,215,177,176,56,158,171,141,27,75,91,229,197,113,254,16,171,221,217,80,60,49,220,185,155,22,140,138,123,210,120,173,64,252,93,209,174,232,10,219,78,227,105,117,76,148,73,29,207,189,51,63,155,25,46,43,251,245,4,181,137,0,214,176,209,122,202,15,233,159,179,182,125,185,8,143,229,102,89,234,177,151,48,
-254,70,198,189,2,108,171,99,104,113,110,118,190,189,47,86,182,77,195,79,94,6,120,136,249,19,139,102,58,224,168,76,144,230,249,244,186,40,92,20,26,22,58,111,144,231,120,125,65,184,153,95,168,100,200,91,113,241,194,110,228,21,91,118,38,114,106,220,188,141,160,178,198,84,9,228,93,168,238,138,187,4,228,5,13,94,112,159,194,109,209,109,20,104,212,138,151,62,236,88,126,35,165,84,17,222,223,102,235,84,242,150,144,149,156,226,103,165,22,219,133,246,23,96,149,1,107,77,192,72,7,178,33,96,10,238,104,233,173,32,15,32,199,71,46,104,200,59,48,112,218,15,44,134,42,5,172,16,212,96,223,16,21,15,66,176,49,131,43,143,25,36,74,213,188,74,216,174,89,26,40,10,188,184,241,43,19,123,156,225,45,40,192,183,52,226,16,119,215,112,143,221,140,35,248,161,50,254,208,23,6,165,81,197,147,193,76,134,231,8,31,113,127,147,56,152,143,87,148,225,236,210,141,240,9,136,234,101,199,252,50,116,165,36,74,227,243,127,24,138,98,147,227,57,69,35,
-121,73,228,191,73,163,100,55,227,37,176,225,50,3,179,31,178,110,163,20,171,171,2,78,215,109,100,243,61,147,102,61,211,67,35,173,236,212,30,17,13,31,197,175,138,73,21,80,216,32,205,149,211,222,249,178,73,105,181,170,50,32,88,184,252,243,20,35,218,242,68,221,240,47,121,64,108,39,128,252,231,128,179,158,240,119,130,245,107,26,212,179,144,77,214,10,176,252,50,166,13,99,189,92,53,47,75,215,59,201,82,54,202,214,13,17,230,66,78,158,60,73,84,195,195,155,58,229,105,128,144,64,35,199,19,190,170,170,78,95,86,229,23,251,155,197,118,229,92,31,115,234,251,171,112,242,85,24,76,55,228,228,213,224,123,243,69,179,200,98,236,36,191,230,91,50,125,225,110,140,205,122,70,157,110,79,91,24,148,252,158,185,116,112,64,124,229,102,50,252,42,186,242,237,44,132,157,165,236,90,114,53,199,201,46,45,21,14,202,102,10,146,75,109,88,23,172,9,23,81,89,59,86,193,27,245,214,75,95,74,181,75,144,227,226,82,91,151,225,2,144,218,185,19,38,136,
-214,175,208,22,101,46,125,112,227,48,148,39,24,101,131,122,166,41,195,203,221,28,158,238,241,76,41,230,42,225,69,37,74,70,179,73,1,113,28,102,182,252,39,115,254,133,249,108,194,254,84,54,101,2,214,46,148,233,110,60,153,234,116,71,215,159,49,80,23,211,208,151,54,38,51,84,147,90,107,57,111,209,170,228,115,207,11,220,21,113,44,6,151,19,72,58,147,121,75,172,229,141,215,222,250,16,130,99,2,238,22,17,42,130,229,143,226,46,183,75,34,255,173,240,157,188,8,212,132,174,188,91,89,29,229,73,76,255,161,48,78,146,104,131,252,30,132,183,92,38,92,108,36,110,87,52,174,89,214,71,106,126,251,245,215,57,133,16,174,250,83,185,155,62,74,100,94,114,157,70,186,120,7,55,222,212,27,29,242,32,14,193,4,24,55,214,149,240,145,156,103,54,133,51,23,151,103,184,129,212,43,188,128,113,112,85,52,85,115,175,154,206,94,73,251,10,52,41,12,102,220,128,50,82,213,69,232,114,44,204,189,170,123,142,47,92,221,110,159,103,237,54,128,222,228,193,
-210,182,219,45,221,31,176,60,155,86,221,121,176,138,8,42,164,191,250,193,184,193,247,41,54,36,50,204,0,244,124,121,37,122,206,49,91,225,11,230,144,166,125,224,206,229,93,159,250,54,93,1,238,180,101,249,133,189,242,130,227,161,198,31,139,74,177,167,21,231,99,142,232,54,207,19,154,140,91,41,168,95,131,167,200,160,37,249,90,47,187,30,87,239,121,82,129,85,158,215,171,214,108,49,164,45,222,222,186,34,251,173,211,147,148,235,198,79,10,133,4,148,120,80,59,17,7,53,164,64,140,23,240,84,116,81,83,124,66,51,55,56,72,70,152,216,37,121,213,231,124,214,61,38,16,231,15,100,41,238,200,237,202,200,156,58,120,250,28,135,146,151,154,65,88,255,138,52,151,94,129,164,144,75,166,48,179,172,90,60,190,141,81,82,168,253,151,241,169,194,250,231,255,127,143,217,148,130,207,188,58,75,45,185,200,59,241,191,172,72,22,173,101,27,68,254,153,188,218,153,203,27,181,213,255,195,128,215,194,223,4,33,164,182,147,98,112,85,209,31,254,235,67,78,146,86,
-234,206,81,66,194,168,191,85,5,174,75,249,9,188,200,62,175,8,205,72,182,145,26,124,226,38,116,217,76,12,97,177,83,188,204,66,167,108,96,203,12,10,230,255,130,222,48,127,125,199,153,142,59,40,217,234,191,204,198,54,61,196,199,156,244,235,194,189,145,27,76,57,217,10,241,135,44,12,204,2,121,131,123,33,133,219,73,86,64,232,132,141,114,236,72,152,49,119,91,9,204,60,251,114,3,46,46,184,163,80,215,167,193,20,10,196,98,113,224,59,194,250,229,183,77,171,255,184,69,95,54,13,31,225,80,197,105,14,199,191,1,211,63,166,174,56,77,141,59,57,174,227,27,50,9,134,185,140,18,63,144,57,165,184,12,167,184,186,184,156,244,42,173,124,206,174,215,76,131,160,108,103,250,139,92,0,198,77,145,101,134,115,190,39,49,30,204,241,40,233,131,10,215,242,126,177,157,127,40,207,81,233,55,72,255,255,106,226,218,163,
-
+topic "AIndex";[2 $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483380:class]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[a83;*R6 $$3,0#31310162474203024125188417583966:caption]
+[l288;i1121;b17;O9;~~~.1408;2 $$4,0#10431211400427159095818037425705:param]
+[i448;a25;kKO9;*@(64)2 $$5,0#37138531426314131252341829483370:item]
+[*+117 $$6,6#14700283458701402223321329925657:header]
+[l288;a17;*1 $$7,7#70004532496200323422659154056402:requirement]
+[{_}%EN-US 
+[s5;K@0 [%00-00@(64) template_<][%00-00@(0.0.255) class][%00-00@(64) _][%00-00@4 T][%00-00@(64) ,
+ ][%00-00@(0.0.255) class][%00-00@(64) _][%00-00@4 V][%00-00@(64) , ][%00-00@(0.0.255) clas
+s][%00-00@(64) _][%00-00@4 HashFn][%00-00@(64) >__][%00-00@(0.0.255) class][%00-00@(64) _][%00-00 A
+Index]&]
+[s5;K@0 [%00-00@(64) template_<][%00-00@(0.0.255) class][%00-00@(64) _][%00-00@4 T][%00-00@(64) ,
+ ][%00-00@(0.0.255) class][%00-00@(64) _][%00-00@4 V][%00-00@(64) , ][%00-00@(0.0.255) clas
+s][%00-00@(64) _][%00-00@4 HashFn][%00-00@(64) >__][%00-00@(0.0.255) class][%00-00@(64) _][%00-00 A
+Index]&]
+[s0;t292;* [* class ]AIndex&]
+[s0; &]
+[s0; [*C@4 T]-|Type of elements to store. T must satisfy requirements 
+for container flavor identified by parameter V and must have 
+[*C operator`=`=] defined.&]
+[s0; [*C@4 V]-|Basic random access container.&]
+[s0; [*C@4 HashFn]-|Hashing class. Must have defined [*C unsigned operator()(const 
+T`& x)] method returning hash value for elements.&]
+[s0; This template class adds associative capabilities to basic random 
+access containers, forming flavors of Index. It is used as base 
+class for concrete index flavors, [* Index] and [* ArrayIndex].&]
+[s0; It allows adding elements at the end of sequence in constant 
+amortized time like basic random container. Additionally, it 
+also allows fast retrieval of a position of the element with 
+specified value. Hashing is used for this operation. AIndex stores 
+hash`-values of elements, so it has no sense to cache them externally.&]
+[s0; Building of internal hash maps of AIndex is always deferred 
+till search operation. This effectively avoids unneeded remapping 
+if large number of elements is added.&]
+[s0; Removing elements from an AIndex causes an interesting problem. 
+While it is possible to simply remove (or insert) an element 
+at a specified position, such operation has to move a lot of 
+elements and also scratches internal hash maps. Thus removing 
+elements this way is slow, especially when combined with searching.&]
+[s0; The solution for this problem is [*/ unlinking] of elements. Unlinked 
+elements are not removed from index, but they are [*/ ignored][/  
+]by search operations. Unlinking is a simple, constant time, 
+fast operation. Further, it is possible to place an element at 
+the first available unlinked position (rather than to the end 
+of sequence) using the [* Put] method, reusing unlinked position 
+in short constant time.&]
+[s0; The only problem of unlinking is that it breaks the so`-called 
+[* multi`-key ordering]. This term means that if there are more 
+elements with the same value in the index and they are iterated 
+through using the FindNext method, their positions (got as the 
+result of Find and subsequent FindNext methods) are in ascending 
+order. The problem is that it is impossible to implement placing 
+elements at unlinked positions in short time while preserving 
+this ordering. On the other hand, usage scenarios for indexes 
+show that need for unlinking elements and multi`-key ordering 
+is almost always disjunct. For the rest of the cases, it is always 
+possible to restore ordering by the [* Reindex] or the [* Sweep] 
+method.&]
+[s0; Like any other NTL container, AIndex is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
+oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ pick 
+and optional deep copy] transfer semantics, although these features 
+are more important in derived concrete index flavors.&]
+[s0; Members&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Add][%00-00 (][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T
+][%00-00 `&_][%00-00@3 x][%00-00 , ][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 `_hash][%00-00 )
+]&]
+[s2; Adds a new element with a precomputed hash value.The precomputed 
+hash value must be the same as the hash value that would be the 
+result of HashFn. The benefit of this variant is that sometimes 
+you can compute hash`-value as the part of an other process, 
+like fetching strings from an input stream.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 x]-|Element to add.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Add][%00-00 (][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T
+][%00-00 `&_][%00-00@3 x][%00-00 )]&]
+[s2; Adds a new element to AIndex.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 x]-|Element to add.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 Find][%00-00@(64) (][%00-00 const][%00-00@(64) _
+][%00-00@4 T][%00-00@(64) `&_][%00-00@3 x][%00-00@(64) , ][%00-00 unsigned][%00-00@(64) _][%00-00@3 `_
+hash][%00-00@(64) )_][%00-00 const]&]
+[s2; Retrieves the position of the first element with the specified 
+value in AIndex, using a precomputed hash value. The precomputed 
+hash value must be the same as the hash value that would be result 
+of HashFn. If multi`-key ordering is not broken and more than 
+one element with the same value exists in AIndex, the lowest 
+position is retrieved. If the specified value does not exist 
+in AIndex, a negative number is returned. Unlinked elements are 
+ignored.&]
+[s4; [*C@3 x]-|Element to find.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s4; [*/ Return value]-|Position of the element or negative value if 
+value is not in AIndex.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 Find][%00-00@(64) (][%00-00 const][%00-00@(64) _
+][%00-00@4 T][%00-00@(64) `&_][%00-00@3 x][%00-00@(64) )_][%00-00 const]&]
+[s2; Retrieves the position of the first element with the specified 
+value in AIndex. If multi`-key ordering is not broken and more 
+than one element with the same value exists in AIndex, lowest 
+position is retrieved. If the specified value does not exist 
+in AIndex, a negative number is returned. Unlinked elements are 
+ignored.&]
+[s4; [*C@3 x]-|Element to find.&]
+[s4; [*/ Return value]-|Position of the element or negative value if 
+value is not in AIndex.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 FindNext][%00-00@(64) (][%00-00 int][%00-00@(64) _
+][%00-00@3 i][%00-00@(64) )_][%00-00 const]&]
+[s2; Retrieves the position of the next element with the same value 
+as the element at specified position. If multi`-key ordering 
+is not broken and more than one element with that value exists 
+in AIndex, the lowest position greater than specified one is 
+retrieved, so positions returned by subsequent calls to FindNext 
+are in ascending order. When there are no more elements with 
+the required value, a negative number is returned. Unlinked elements 
+are ignored.&]
+[s4; [*C@3 i]-|Position of the element.&]
+[s4; [*/ Return value]-|Position of the next element with same value.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 FindLast][%00-00@(64) (][%00-00 const][%00-00@(64) _
+][%00-00@4 T][%00-00@(64) `&_][%00-00@3 x][%00-00@(64) , ][%00-00 unsigned][%00-00@(64) _][%00-00@3 `_
+hash][%00-00@(64) )_][%00-00 const]&]
+[s2; Retrieves the position of the last element with specified value 
+in AIndex, using a precomputed hash value. The precomputed hash 
+value must be the same as the hash value that would be the result 
+of HashFn. If multi`-key ordering is not broken and more than 
+one element with the same value exists in AIndex, the greatest 
+position is retrieved. If the specified value does not exist 
+in AIndex, a negative number is returned. Unlinked elements are 
+ignored.&]
+[s4; [*C@3 x]-|Element to find.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s4; [*/ Return value]-|Position of the element or negative number if 
+value is not in AIndex.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 FindLast][%00-00@(64) (][%00-00 const][%00-00@(64) _
+][%00-00@4 T][%00-00@(64) `&_][%00-00@3 x][%00-00@(64) )_][%00-00 const]&]
+[s2; Retrieves the position of the last element with specified value 
+in AIndex. If multi`-key ordering is not broken and more than 
+one element with the same value exists in AIndex, the greatest 
+position is retrieved. If element does not exist in AIndex, a 
+negative number is returned. Unlinked elements are ignored.&]
+[s4; [*C@3 x]-|Element to find.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s4; [*/ Return value]-|Position of the element or negative number if 
+value is not in AIndex.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 FindPrev][%00-00@(64) (][%00-00 int][%00-00@(64) _
+][%00-00@3 i][%00-00@(64) )_][%00-00 const]&]
+[s2; Retrieves the position of the previous element with the same 
+value as the element at the specified position. If multi`-key 
+ordering is not broken and more than one element with that value 
+exists in AIndex, the greatest position lower than specified 
+one is retrieved (so that positions got by subsequent calls to 
+FindNext are in descending order). When there are no more elements 
+with required value, negative number is returned. Unlinked elements 
+are ignored.&]
+[s4; [*C@3 i]-|Position of the element.&]
+[s4; [*/ Return value]-|Position of the previous element with same value.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 FindAdd][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@4 T][%00-00 `&_][%00-00@3 key][%00-00 , ][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 `_
+hash][%00-00 )]&]
+[s2; Retrieves position of first element with specified value in 
+AIndex, using a precomputed hash value. Precomputed hash value 
+must be same as hash value that would be result of HashFn. If 
+multi`-key ordering is not broken and more than one element with 
+the same value exists in AIndex, the lowest position is retrieved. 
+If element does not exist in AIndex, it is added to AIndex and 
+position of this newly added element is returned. Unlinked elements 
+are ignored.&]
+[s4; [*C@3 key]-|Element to find or add.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s4; [*/ Return value]-|Position of the found or added element.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 FindAdd][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@4 T][%00-00 `&_][%00-00@3 key][%00-00 )]&]
+[s2; Retrieves position of first element with specified value in 
+AIndex. If multi`-key ordering is not broken and more than one 
+element with the same value exists in AIndex, lowest position 
+is retrieved. If element does not exist in AIndex, it is added 
+to AIndex and position of this newly added element is returned. 
+Unlinked elements are ignored.&]
+[s4; [*C@3 key]-|Element to find or add.&]
+[s4; [*/ Return value]-|Position of the found or added element.&]
+[s0;3 &]
+[s5;K [%00-00^`:`:AIndex^ AIndex][%00-00 `&_][%00-00@0 operator<<][%00-00 (][%00-00@(0.0.255) c
+onst][%00-00 _T`&_][%00-00@3 x][%00-00 )]&]
+[s2; Operator replacement of [* void Add(const T`& x)]. By returning 
+reference to AIndex it allows adding multiple elements in a single 
+expression, thus e.g. allowing to construct a temporary Index 
+as part of an expression like Foo((Index<int>() << 1 << 2)).&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 newt]-|Element to be added.&]
+[s4; [*/ Return value]-|Reference to AIndex.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Unlink][%00-00 (][%00-00@(0.0.255) int][%00-00 _
+][%00-00@3 i][%00-00 )]&]
+[s2; Unlinks the element at the specified position. The unlinked 
+item stays in AIndex but is ignored by any Find operation.&]
+[s4; [*C@3 i]-|Position of item to unlink.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 Put][%00-00 (][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T
+][%00-00 `&_][%00-00@3 x][%00-00 , ][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 `_hash][%00-00 )
+]&]
+[s2; If there are any unlinked elements in AIndex, one of them is 
+replaced by specified value. If there are no unlinked elements, 
+the element with the specified value is appended to the end of 
+AIndex using [* Add]. The precomputed hash should be same as the 
+result of HashFn. The position of the placed element is returned.&]
+[s7; Invalidates multi`-key ordering.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 x]-|Element to put into AIndex.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s4; [*/ Return value]-|Position where the element was placed.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 Put][%00-00 (][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T
+][%00-00 `&_][%00-00@3 x][%00-00 )]&]
+[s2; If there are any unlinked elements in AIndex, one of them is 
+replaced by specified value. If there are no unlinked elements, 
+the element with the specified value is appended to the end of 
+AIndex using [* Add]. The position of the placed element is returned.&]
+[s7; Invalidates multi`-key ordering.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s4; [*C@3 x]-|Element to put into AIndex.&]
+[s4; [*/ Return value]-|Position where element is placed.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 FindPut][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@4 T][%00-00 `&_][%00-00@3 key][%00-00 , ][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 `_
+hash][%00-00 )]&]
+[s2; Retrieves the position of the first element with the specified 
+value in AIndex, using a precomputed hash value. The precomputed 
+hash value must be the same as the hash value that would be the 
+result of HashFn. If the specified value does not exist in the 
+AIndex, it is placed to it using [* Put(const T`& x, unsigned `_hash).] 
+The position of the found or placed element is returned.&]
+[s7;~~~.992; Invalidates multi`-key ordering.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 key]-|Element to find or put.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s4; [*/ Return value]-|Position of the found or placed element.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 FindPut][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@4 T][%00-00 `&_][%00-00@3 key][%00-00 )]&]
+[s2; Retrieves the position of the first element with the specified 
+value in AIndex. If the element does not exist in the AIndex, 
+it is placed to it using [* Put(const T`& x).] The position of 
+the found or placed element is returned.&]
+[s7; Invalidates multi`-key ordering.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 key]-|Element to find or put.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s4; [*/ Return value]-|Position of the found or placed element.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Set][%00-00 (][%00-00@(0.0.255) int][%00-00 _][%00-00@3 i
+][%00-00 , ][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T][%00-00 `&_][%00-00@3 x][%00-00 , 
+][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 `_hash][%00-00 )]&]
+[s2; Replaces the element at the specified position with a new element 
+with the specified value, using a precomputed hash`-value. Speed 
+of this operation depends on the total number of elements with 
+the same value as the specified one.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 i]-|Position of the element.&]
+[s4; [*C@3 x]-|Value to set.&]
+[s4; [*C@3 `_hash]-|Precomputed hash value.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Set][%00-00 (][%00-00@(0.0.255) int][%00-00 _][%00-00@3 i
+][%00-00 , ][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T][%00-00 `&_][%00-00@3 x][%00-00 )]&]
+[s2; Replaces the element at the specified position with a new element 
+with the specified value. Speed of this operation depends on 
+total number of elements with the same value as specified the 
+specified one.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 i]-|Position of the element.&]
+[s4; [*C@3 x]-|Value to set.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 const][%00-00@(64) _T`&_][%00-00@0 operator`[`]][%00-00@(64) (][%00-00 i
+nt][%00-00@(64) _][%00-00@3 i][%00-00@(64) )_][%00-00 const]&]
+[s2; Returns the element at the specified position.&]
+[s4; [*C@3 i]-|Position of the element.&]
+[s4; [*/ Return value]-|Constant reference to element.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 GetCount][%00-00@(64) ()_][%00-00 const]&]
+[s2; Returns number of elements in AIndex.&]
+[s4; [*/ Return value]-|Actual number of elements.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 bool][%00-00@(64) _][%00-00@0 IsEmpty][%00-00@(64) ()_][%00-00 const]&]
+[s2; Tests whether AIndex is empty. Same as GetCount() `=`= 0.&]
+[s4; [*/ Return value]-|true if AIndex is empty, false otherwise.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Clear][%00-00 ()]&]
+[s2; Removes all elements from AIndex.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 ClearIndex][%00-00 ()]&]
+[s2; Restores multi`-key ordering.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 UnlinkKey][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@4 T][%00-00 `&_][%00-00@3 k][%00-00 , ][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 h
+][%00-00 )]&]
+[s2; Unlinks all elements with specified value using precomputed 
+hash`-value. Unlinked elements stay in AIndex but are ignored 
+by any Find operations. Precomputed hash value must be same as 
+hash value that would be result of HashFn. &]
+[s4; [*C@3 k]-|Value of elements to unlink.&]
+[s4; [*C@3 h]-|Precomputed hash value.&]
+[s4; [*/ Return value]-|Number of elements unlinked.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 UnlinkKey][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@4 T][%00-00 `&_][%00-00@3 k][%00-00 )]&]
+[s2; Unlinks all elements with specified value. Unlinked elements 
+remain in the AIndex but are ignored by any Find operations.&]
+[s4; [*C@3 k]-|Value of elements to unlink.&]
+[s4; [*/ Return value]-|Number of elements unlinked.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 bool][%00-00@(64) _][%00-00@0 IsUnlinked][%00-00@(64) (][%00-00 int][%00-00@(64) _
+][%00-00@3 i][%00-00@(64) )_][%00-00 const]&]
+[s2; Tests whether the element at the specified position is unlinked.&]
+[s4; [*C@3 i]-|Position.&]
+[s4; [*/ Return value]-|true if element is unlinked.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Sweep][%00-00 ()]&]
+[s2; Removes all unlinked elements from AIndex. Complexity of the 
+operation depends on the number of elements in AIndex, not on 
+the number of unlinked elements. Also restores multi`-key ordering.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Insert][%00-00 (][%00-00@(0.0.255) int][%00-00 _
+][%00-00@3 i][%00-00 , ][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T][%00-00 `&_][%00-00@3 k][%00-00 ,
+ ][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 h][%00-00 )]&]
+[s2; Inserts an element with the specified value at the specified 
+position, using a precomputed hash value. The precomputed hash 
+value must be the same as the hash value that would be the result 
+of HashFn. This is a slow operation, especially when combined 
+with any search operations.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 i]-|Insert position.&]
+[s4; [*C@3 k]-|Element to insert.&]
+[s4; [*C@3 h]-|Precomputed hash value.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Insert][%00-00 (][%00-00@(0.0.255) int][%00-00 _
+][%00-00@3 i][%00-00 , ][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T][%00-00 `&_][%00-00@3 k][%00-00 )
+]&]
+[s2; Inserts an element with the specified value at the specified 
+position. This is a slow operation, especially when combined 
+with any search operations.&]
+[s7; Requires T to have deep copy constructor.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 i]-|Insert position.&]
+[s4; [*C@3 k]-|Element to insert.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Remove][%00-00 (][%00-00@(0.0.255) int][%00-00 _
+][%00-00@3 i][%00-00 )]&]
+[s2; Removes the element at the specified position. This is a slow 
+operation, especially when combined with any search operations.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 i]-|Position of the element to remove.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Remove][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@(0.0.255) int][%00-00 _`*][%00-00@3 sorted`_list][%00-00 , ][%00-00@(0.0.255) int][%00-00 _
+][%00-00@3 count][%00-00 )]&]
+[s2; Removes multiple elements from AIndex. Time of operation only 
+slightly depends on the number of removed elements. This is a 
+slow operation, especially when combined with any search operations.&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 sorted`_list]-|Pointer to array of positions to remove, in 
+ascending order.&]
+[s4; [*C@3 count]-|Number of elements to remove.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Remove][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00^`:`:Vector^ Vector][%00-00 <][%00-00^int^ int][%00-00 >`&_][%00-00@3 sorted`_list][%00-00 )
+]&]
+[s2; Removes multiple elements from AIndex. Same as Remove(sorted`_list, 
+sorted`_list.GetCount()).&]
+[s7; Invalidates iterators to AIndex.&]
+[s7; Invalidates references to Index.&]
+[s4; [*C@3 sorted`_list]-|Sorted Vector of positions to remove.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 RemoveKey][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@4 T][%00-00 `&_][%00-00@3 k][%00-00 , ][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 h
+][%00-00 )]&]
+[s2; Removes all elements with the specified value using a precomputed 
+hash`-value. The precomputed hash value must be the same as the 
+hash value that would be the result of HashFn. This is a slow 
+operation, especially when combined with any search operations.&]
+[s4; [*C@3 k]-|Value of the elements to remove.&]
+[s4; [*C@3 h]-|Precomputed hash value.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) int][%00-00 _][%00-00@0 RemoveKey][%00-00 (][%00-00@(0.0.255) const][%00-00 _
+][%00-00@4 T][%00-00 `&_][%00-00@3 k][%00-00 )]&]
+[s2; Removes all elements with the specified value. This is a slow 
+operation, especially when combined with any search operations.&]
+[s4; [*C@3 k]-|Value of the elements to remove.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Trim][%00-00 (][%00-00@(0.0.255) int][%00-00 _][%00-00@3 n
+][%00-00 )]&]
+[s2; Reduces the number of elements in AIndex to the specified number. 
+Requested number must be less than or equal to actual number 
+of elements in AIndex.&]
+[s4; [*C@3 n]-|Requested number of elements.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Drop][%00-00 (][%00-00@(0.0.255) int][%00-00 _][%00-00@3 n
+][%00-00 _`=_][%00-00@3 1][%00-00 )]&]
+[s2; Drops the specified number of elements from the end of the AIndex 
+(same as Trim(GetCount() `- n)).&]
+[s4; [*C@3 n]-|Number of elements.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 const][%00-00@(64) _T`&_][%00-00@0 Top][%00-00@(64) ()_][%00-00 const]&]
+[s2; Returns a reference to the last element in the AIndex.&]
+[s4; [*/ Return value]-|Reference of thr last element in the AIndex.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Reserve][%00-00 (][%00-00@(0.0.255) int][%00-00 _
+][%00-00@3 n][%00-00 )]&]
+[s2; Reserves capacity. If the requested capacity is greater than 
+current capacity, capacity is increased to the requested value.&]
+[s4; [*C@3 n]-|Requested capacity.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Shrink][%00-00 ()]&]
+[s2; Minimizes the memory consumption of AIndex by decreasing the 
+capacity to the number of elements.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 GetAlloc][%00-00@(64) ()_][%00-00 const]&]
+[s2; Returns the current capacity of AIndex.&]
+[s4; [*/ Return value]-|Capacity of AIndex.&]
+[s0;3 &]
+[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Serialize][%00-00 (][%00-00^`:`:Stream^ Stream
+][%00-00 `&_][%00-00@3 s][%00-00 )]&]
+[s2; Serializes content of AIndex to/from Stream. Works only if NTL 
+is used as part of UPP.&]
+[s7; Requires T to have serialization operator defined.&]
+[s4; [*C@3 s]-|Target/source stream.&]
+[s0;3 &]
+[s5;K [%00-00 V_][%00-00@0 PickKeys][%00-00 ()_pick`_]&]
+[s2; Returns a basic random access container of elements. Destroys 
+AIndex by picking.&]
+[s4; [*/ Return value]-|Basic random access container of elements in 
+AIndex.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00 const][%00-00@(64) _V`&_][%00-00@0 GetKeys][%00-00@(64) ()_][%00-00 con
+st]&]
+[s2; Returns a constant reference to basic random access container 
+of elements.&]
+[s4; [*/ Return value]-|Constant reference to a basic random access 
+container of elements.&]
+[s0;3 &]
+[s5;K [%00-00^`:`:AIndex^ AIndex][%00-00 `&_][%00-00@0 operator`=][%00-00 (pick`__][%00-00@4 V][%00-00 `&
+_][%00-00@3 s][%00-00 )]&]
+[s2; Assigns basic random access container to AIndex. Transfers the 
+source container in short constant time, but destroys it by picking.&]
+[s4; [*C@3 s]-|Source container.&]
+[s0;3 &]
+[s5;K [%00-00^`:`:AIndex^ AIndex][%00-00 `&_][%00-00@0 operator<<`=][%00-00 (][%00-00@(0.0.255) c
+onst][%00-00 _][%00-00@4 V][%00-00 `&_][%00-00@3 s][%00-00 )]&]
+[s2; Assigns the basic random access container to AIndex, while preserving 
+the value of the source container.&]
+[s7; Requires T to have deep copy constructor or optional deep copy.&]
+[s4; [*C@3 s]-|Source container.&]
+[s0;3 &]
+[s0;:`:`:AIndex`:`:AIndex`(pick`_ V`&`): [* AIndex](pick`_ V`& [*@3 s])&]
+[s2; Pick`-constructs AIndex from a basic random access container. 
+Transfers the source container in short constant time, but destroys 
+it by picking.&]
+[s4; [*C@3 s]-|Source basic random access container.&]
+[s0;3 &]
+[s0;:`:`:AIndex`:`:AIndex`(const V`&`,int`): [* AIndex](const V`& [*@3 s], 
+int)&]
+[s2; Deep`-copy constructs AIndex from basic random access container.&]
+[s7; Requires T to have deep copy constructor or optional deep copy 
+constructor.&]
+[s4; [*C@3 s]-|Source AIndex.&]
+[s0;3 &]
+[s5;K@0 [%00-00@(64) typedef_T_][%00-00 ValueType]&]
+[s2; Typedef of T for use in templated algorithms.&]
+[s0;3 &]
+[s5;K@0 [%00-00@(64) typedef_typename_][%00-00^V`:`:ConstIterator^@(64) V`::ConstIterator][%00-00@(64) _
+][%00-00 ConstIterator]&]
+[s2; Constant iterator type.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00^`:`:AIndex`:`:ConstIterator^@(64) ConstIterator][%00-00@(64) _][%00-00@0 B
+egin][%00-00@(64) ()_][%00-00 const]&]
+[s2; Returns a constant iterator to the first element in AIndex.&]
+[s4; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00^`:`:AIndex`:`:ConstIterator^@(64) ConstIterator][%00-00@(64) _][%00-00@0 E
+nd][%00-00@(64) ()_][%00-00 const]&]
+[s2; Returns a constant iterator to the position just beyond the 
+last element in AIndex.&]
+[s4; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s5;K@(0.0.255) [%00-00^`:`:AIndex`:`:ConstIterator^@(64) ConstIterator][%00-00@(64) _][%00-00@0 G
+etIter][%00-00@(64) (][%00-00 int][%00-00@(64) _][%00-00@3 pos][%00-00@(64) )_][%00-00 const]&]
+[s2; Returns a constant iterator to the element at specified position. 
+Same as [* Begin() `+ i]. The benefit of this method is that [* pos] 
+is range checked in debug mode.&]
+[s4; [*C@3 pos]-|Required position.&]
+[s4; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s0;:`:`:AIndex`:`:AIndex`(`): [* AIndex]()&]
+[s2; Constructor. Constructs an empty AIndex.&]
+[s0;3 &]
+[s0;:`:`:AIndex`:`:AIndex`(const`:`:AIndex`&`,int`): [* AIndex](const 
+[* AIndex]`& [*@3 s], int)&]
+[s2; Optional deep copy constructor.&]
+[s7; Requires T to have deep copy constructor or optional deep copy 
+constructor.&]
+[s4; [*C s]-|Source AIndex.&]
+[s0; ]
