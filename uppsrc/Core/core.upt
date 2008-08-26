@@ -17,6 +17,8 @@ using namespace Upp;
 @@<:PACKAGE:>.cpp
 #include <:?header:>"<:PACKAGE:>.h"<:/:><Core/Core.h><:.:>
 
+<:?!header:>using namespace Upp;<:.:>
+
 CONSOLE_APP_MAIN
 {
 	<:?cmdline:>const Vector<String>& cmdline = CommandLine();
