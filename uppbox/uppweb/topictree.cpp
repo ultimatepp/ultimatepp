@@ -1,5 +1,7 @@
 #include "www.h"
 
+#define LLOG(x) LOG(x)
+
 StaticCriticalSection     reflink_lock;
 VectorMap<String, String> reflink;
 
@@ -9,6 +11,7 @@ struct ScanTopicIterator : RichText::Iterator {
 	virtual bool operator()(int pos, const RichPara& para)
 	{
 		if(!IsNull(para.format.label)) {
+			LLOG("label: " << para.format.label);
 			INTERLOCKED_(reflink_lock)
 				reflink.Add(para.format.label, link);
 		}
@@ -29,13 +32,11 @@ void GatherRefLinks(const char *upp)
 #ifdef MTC
 	CoWork work;
 #endif
-	Progress pi;
-	pi.AlignText(ALIGN_LEFT);
 	for(FindFile pff(AppendFileName(upp, "*.*")); pff; pff.Next()) {
 		if(pff.IsFolder()) {
-			pi.Step();
 			String package = pff.GetName();
 			String pdir = AppendFileName(upp, package);
+			RLOG("GatherRefLinks " << pdir);
 			TopicLink tl;
 			tl.package = package;
 			for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next()) {
@@ -48,12 +49,13 @@ void GatherRefLinks(const char *upp)
 							String path = AppendFileName(dir, ft.GetName());
 							tl.topic = GetFileTitle(ft.GetName());
 							String link = TopicLinkString(tl);
-							pi.SetText("Indexing topic " + tl.topic);
+							RLOG("Indexing topic " << tl.topic);
 #ifdef MTC
 							work & callback2(sDoFile, path, link);
 #else
 							ScanTopicIterator sti;
 							sti.link = link;
+							LLOG("Indexing topic " << path << " link: " << link);
 							ParseQTF(ReadTopic(LoadFile(path))).Iterate(sti);
 #endif
 						}
@@ -73,6 +75,7 @@ struct GatherLinkIterator : RichText::Iterator {
 		for(int i = 0; i < para.GetCount(); i++) {
 			String l = para[i].format.link;
 			if(!IsNull(l)) {
+				LLOG("GatherLink " << l);
 				if(l[0] == ':') {
 					int q = reflink.Find(l);
 					int w = q;
@@ -124,10 +127,7 @@ String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& ti
 	INTERLOCKED_(mapl)
 		q = map.Find(topic);
 	if(q < 0) {
-		INTERLOCKED {
-			DUMP(topic);
-			DUMP(TopicFileName(topic));
-		};
+		LLOG("GatherTopics " << topic);
 		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
 		title = p.title;
 		String t = p;
