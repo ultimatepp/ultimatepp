@@ -3,7 +3,7 @@
 
 #include <Web/Web.h>
 #include <RichText/RichText.h>
-#include <plugin/Gif/Gif.h>
+#include <plugin/gif/gif.h>
 #include <CtrlLib/CtrlLib.h>
 #include <ide/Browser/Browser.h>
 

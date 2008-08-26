@@ -4,6 +4,8 @@
 #include <Draw/iml.h>
 #include <plugin/ftp/ftp.h>
 
+#define LLOG(x)  // LOG(x)
+
 #ifdef PLATFORM_WIN32
 //String rootdir = "e:\\src\\";
 String rootdir = "u:\\";
@@ -14,13 +16,13 @@ String examples =  rootdir + "examples";
 String targetdir = rootdir + "uppwww";
 String diffdir   = rootdir + "wwwupp";
 #else
-String rootdir = "/media/sda5";
-String uppbox =    rootdir + "/uppbox";
-String uppsrc =    rootdir + "/uppsrc";
-String reference = rootdir + "/reference";
-String examples =  rootdir + "/examples";
-String targetdir = rootdir + "/uppwww";
-String diffdir   = rootdir + "/wwwupp";
+String rootdir;
+String uppbox;
+String uppsrc;
+String reference;
+String examples;
+String targetdir;
+String diffdir;
 #endif
 
 bool ContainsAt(const String &source, const String &pattern, int pos)
@@ -49,7 +51,7 @@ typedef Image (*ImageFn)();
 
 namespace Upp {
 template<>
-unsigned GetHashValue(const ::ImageFn& fn) { return (unsigned) fn; }
+unsigned GetHashValue(const ::ImageFn& fn) { return (unsigned)(uintptr_t) fn; }
 };
 
 String GetImageSrc(ImageFn img)
@@ -317,6 +319,7 @@ void ExportPage(int i)
 {
 		Index<String> css;
 		String path = links.GetKey(i);
+		RLOG("Exporting " << path);
 		Htmls html;
 		String text = GetText(path);
 		int h;
@@ -427,11 +430,22 @@ void ExportPage(int i)
 
 GUI_APP_MAIN
 {
-	RTIMING("TIME");
+	StdLogSetup(LOG_COUT);
+
+	RLOG("--- uppweb started at " << GetSysTime());
+
+	rootdir = GetHomeDirFile("upp.src");
+	uppbox =    AppendFileName(rootdir, "uppbox");
+	uppsrc =    AppendFileName(rootdir, "uppsrc");
+	reference = AppendFileName(rootdir, "reference");
+	examples =  AppendFileName(rootdir, "examples");
+	targetdir = GetHomeDirFile("uppwww");
+	diffdir   = GetHomeDirFile("wwwupp");
 
 	DeleteFolderDeep(targetdir);
 	DirectoryCreate(targetdir);
 
+	DUMP(uppsrc);
 	GatherRefLinks(uppsrc);
 
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetDataFile("sdj.gif")));
@@ -453,7 +467,7 @@ GUI_APP_MAIN
 			);
 
 	GatherTopics(tt, "topic://uppweb/www/index$en-us");
-
+	
 	Htmls bi, bex, bdoc, bcom, bcon, bsearch;
 
 //	bi << BarLink("index.html", "Home", false);
@@ -520,6 +534,8 @@ GUI_APP_MAIN
 		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
 	}
 
+	DUMPC(reflink.GetKeys());
+
 	for(int i = 0; i < reflink.GetCount(); i++) {
 		String l = reflink.GetKey(i);
 		String lbl = Filter(l, CharFilterLbl);
@@ -541,18 +557,8 @@ GUI_APP_MAIN
 
 //	Vector<String> amazon = Split(LoadFile(GetDataFile("amazon.txt")), '\n');//440
 
-#ifdef MTC
-	{
-		CoWork work;
-		for(int i = 0; i < tt.GetCount(); i++)
-			work & callback1(ExportPage, i);
-	}
-#else
-	{
-		for(int i = 0; i < tt.GetCount(); i++)
-			ExportPage(i);
-	}
-#endif
+	for(int i = 0; i < tt.GetCount(); i++)
+		ExportPage(i);
 
 //	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
 	SaveFile(AppendFileName(targetdir, "stats.html"),
@@ -576,8 +582,6 @@ GUI_APP_MAIN
 	);
 	BeepInformation();
 
-//	return;
-
 	Vector<String> upload;
 	{
 		FindFile ff(AppendFileName(targetdir, "*.*"));
@@ -594,26 +598,24 @@ GUI_APP_MAIN
 	}
 	DirectoryCreate(diffdir);
 	if(upload.GetCount()) {
-		Progress pi;
-		pi.SetTotal(upload.GetCount());
 		FtpClient ftp;
-		pi.Create();
-		pi.SetText("connecting...");
-		if(!ftp.Connect(GetIniKey("UppFtp"), GetIniKey("UppFtpUsr"), GetIniKey("UppFtpPwd"), true)) {
-			Exclamation("Unable to connect!" + ftp.GetError());
+		RLOG("Connecting ftp...");
+		if(!ftp.Connect(getenv("UPPFTP"), getenv("UPPFTPUSR"), getenv("UPPFTPPWD"), true)) {
+			RLOG("Unable to connect!" + ftp.GetError());
+			SetExitCode(1);
 			return;
 		}
 		if(!ftp.Cd("www")) {
-			Exclamation("Unable to 'cd www'");
+			RLOG("Unable to 'cd www'");
+			SetExitCode(1);
 			return;
 		}
 		for(int i = 0; i < upload.GetCount(); i++) {
-			pi.SetText(upload[i]);
-			if(pi.StepCanceled())
-				break;
+			RLOG("Uploading " << upload[i]);
 			String s = LoadFile(AppendFileName(targetdir, upload[i]));
 			if(!ftp.Save(upload[i], s)) {
-				Exclamation("FTP error (file upload): " + ftp.GetError());
+				RLOG("FTP error (file upload): " + ftp.GetError());
+				SetExitCode(1);
 				return;
 			}
 			SaveFile(AppendFileName(diffdir, upload[i]), s);
