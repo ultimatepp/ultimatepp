@@ -25,6 +25,14 @@ String targetdir;
 String diffdir;
 #endif
 
+String GetRcFile(const char *s)
+{
+	String f = GetDataFile(s);
+	if(FileExists(f))
+		return f;
+	return GetHomeDirFile("upp.src/uppbox/uppweb/" + AsString(s));
+}
+
 bool ContainsAt(const String &source, const String &pattern, int pos)
 {
 	return    pos >= 0
@@ -327,7 +335,7 @@ void ExportPage(int i)
 		String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
 		Color paper = SWhite;
 		if(path == "topic://uppweb/www/download$en-us")
-			page << LoadFile(GetDataFile("adsense3.txt"));
+			page << LoadFile(GetRcFile("adsense3.txt"));
 /*		if(path == "topic://uppweb/www/index$en-us") {
 			for(int q = 0; q < news.GetCount(); q++) {
 				String n = GetText("uppweb/www_news/" + news[q]);
@@ -356,15 +364,15 @@ void ExportPage(int i)
 						bar +
 						"<br>" +
 //						"<p align=\"center\">" +
-						LoadFile(GetDataFile("adsense2.txt")) +
+						LoadFile(GetRcFile("adsense2.txt")) +
 						"<br><br>" +
-						LoadFile(GetDataFile("adlinks.txt")) +
-						(h > 25000 ? "<br><br>" + LoadFile(GetDataFile("adsense2.txt"))
+						LoadFile(GetRcFile("adlinks.txt")) +
+						(h > 25000 ? "<br><br>" + LoadFile(GetRcFile("adsense2.txt"))
 						                                : "") +
 				       	"<br><br><br>" +
-//						LoadFile(GetDataFile("referral.txt")) +
-//						LoadFile(GetDataFile("referral2.txt")) +
-//						LoadFile(GetDataFile("donations.txt")) +
+//						LoadFile(GetRcFile("referral.txt")) +
+//						LoadFile(GetRcFile("referral2.txt")) +
+//						LoadFile(GetRcFile("donations.txt")) +
 //						"<br><br>" +
 //						amazon[i % amazon.GetCount()] +
 				       	"<br><br><br>" +
@@ -448,9 +456,9 @@ GUI_APP_MAIN
 	DUMP(uppsrc);
 	GatherRefLinks(uppsrc);
 
-	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetDataFile("sdj.gif")));
+	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 
-	escape.Add("PAYPAL", LoadFile(GetDataFile("donations.txt")));
+	escape.Add("PAYPAL", LoadFile(GetRcFile("donations.txt")));
 
 	header = HtmlPackedTable()
 	       .Width(-100)
@@ -463,7 +471,7 @@ GUI_APP_MAIN
 			    HtmlCell().Right().Bottom()
 			              .Style("padding-bottom: 5px; "
 			                     "background-image: url('" + GetImageSrc(WWW::HB) + "')")
-			    / HtmlArial(14) / (LoadFile(GetDataFile("adsense.txt")) + "&nbsp;&nbsp;"/* + "<br>..harnessing the real power of C++&nbsp;&nbsp;"*/)
+			    / HtmlArial(14) / (LoadFile(GetRcFile("adsense.txt")) + "&nbsp;&nbsp;"/* + "<br>..harnessing the real power of C++&nbsp;&nbsp;"*/)
 			);
 
 	GatherTopics(tt, "topic://uppweb/www/index$en-us");
@@ -555,7 +563,7 @@ GUI_APP_MAIN
 	lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
 	                   (String().Cat() << "Last update " << GetSysDate());
 
-//	Vector<String> amazon = Split(LoadFile(GetDataFile("amazon.txt")), '\n');//440
+//	Vector<String> amazon = Split(LoadFile(GetRcFile("amazon.txt")), '\n');//440
 
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
