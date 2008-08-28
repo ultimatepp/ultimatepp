@@ -257,6 +257,7 @@ public:
 	void Trim(int pos);
 
 	const char *Begin() const   { return IsSmall() ? chr : ptr; }
+	const char *End() const     { return Begin() + GetLength(); }
 
 	int operator[](int i) const { ASSERT(i >= 0 && i <= GetCount()); return Begin()[i]; }
 
@@ -603,6 +604,7 @@ protected:
 
 public:
 	const wchar *Begin() const           { return ptr; }
+	const wchar *End() const             { return Begin() + GetLength(); }
 	int   operator[](int i) const        { return ptr[i]; }
 
 	operator const wchar *() const       { return Begin(); }
