@@ -133,7 +133,7 @@ inline void Dbl_Self(T *x)
 #define ZeroArray(x)       memset((x), 0, sizeof(x))
 
 dword Random();
-dword Random(int n);
+dword Random(dword n);
 
 // Math utils
 

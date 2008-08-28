@@ -11,6 +11,9 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 	Uuid()                        {}
 
 	unsigned GetHashValue() const { return CombineHash(a, b, c, d); }
+	String   ToString() const;
+	
+	void     New()                { *this = Create(); }
 
 	static Uuid Create();
 };
