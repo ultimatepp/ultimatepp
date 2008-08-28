@@ -19,35 +19,22 @@ void Uuid::Serialize(Stream& s) {
 	s / version % a % b %c % d;
 }
 
-#ifdef PLATFORM_WIN32
-
 Uuid Uuid::Create() {
-	Uuid uuid;
-	CoCreateGuid((GUID *)&uuid);
-	return uuid;
+	Uuid ud;
+	ud.a = Random();
+	ud.b = Random();
+	ud.c = Random();
+	ud.d = Random();
+	return ud;
 }
-#endif
-
-#if defined(PLATFORM_POSIX)
-
-static StaticCriticalSection sUuidLock;
-
-Uuid Uuid::Create() {
-	CriticalSection::Lock _(sUuidLock);
-	static int fd;
-	ONCELOCK {
-		fd = open("/dev/urandom", O_RDONLY);
-		ASSERT(fd > 0);
-	}
-	static byte uuid[sizeof(Uuid)];
-	read(fd, uuid, sizeof(Uuid));
-	return *(Uuid *)uuid;
-}
-
-#endif
 
 String Format(const Uuid& id) {
 	return Sprintf("%08X%08X%08X%08X", id.a, id.b, id.c, id.d);
+}
+
+String Uuid::ToString() const
+{
+	return Format(*this);
 }
 
 String Dump(const Uuid& id) {

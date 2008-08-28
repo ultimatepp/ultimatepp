@@ -183,7 +183,7 @@ dword Random()
 	return sRng->genrand();
 }
 
-dword Random(int n)
+dword Random(dword n)
 {
 	dword mask = n;
 	mask |= mask >> 1;
