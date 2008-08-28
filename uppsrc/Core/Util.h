@@ -132,6 +132,9 @@ inline void Dbl_Self(T *x)
 
 #define ZeroArray(x)       memset((x), 0, sizeof(x))
 
+dword Random();
+dword Random(int n);
+
 // Math utils
 
 inline double  sqr          (double a)                      { return a * a; }
