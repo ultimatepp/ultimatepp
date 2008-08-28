@@ -1,15 +1,5 @@
 #include "Core.h"
 
-#ifdef PLATFORM_WIN32
-
-#define Ptr Ptr_
-#include <objbase.h>
-#undef Ptr
-
-#pragma comment(lib, "ole32.lib")
-
-#endif
-
 NAMESPACE_UPP
 
 //#BLITZ_APPROVE
