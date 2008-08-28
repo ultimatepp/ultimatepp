@@ -2,8 +2,8 @@ uses
 	Core;
 
 file
-	Random.cpp;
+	pid.cpp;
 
 mainconfig
-	"" = "MT";
+	"" = "";
 

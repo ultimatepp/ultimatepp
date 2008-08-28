@@ -1,0 +1,4 @@
+#ifndef _Random_icpp_init_stub
+#define _Random_icpp_init_stub
+#include "Core/init"
+#endif
