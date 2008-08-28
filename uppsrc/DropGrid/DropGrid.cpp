@@ -73,19 +73,19 @@ DropGrid::DropGrid()
 	rowid = -1;
 	trowid = -2;
 	notnull = false;
-	format_columns = true;
+	display_columns = true;
 	drop_enter = false;
 	data_action = false;
 	Searching(true);
-	always_drop = true;
 	must_change = false;
 	null_action = true;
 	display = this;
 	change = false;
 	nodrop = false;
 	clear_button = false;
+	
+	must_change_str = t_("Select a value.");
 
-	EnableDrop(always_drop);
 	clear.SetButton(1);
 	clear <<= THISBACK(DoClearValue);
 }
@@ -191,7 +191,7 @@ void DropGrid::Paint(Draw& w)
 	}
 	else
 		clear.Hide();
-
+	
 	w.DrawRect(sz, SColorPaper());
 	GridDisplay &disp = display ? *display : list.GetDisplay();
 	bool hf = HasFocus();
@@ -221,7 +221,7 @@ void DropGrid::LeftDown(Point p, dword keyflags)
 	if(nodrop)
 		SetFocus();
 	else
-		Drop();
+		Drop();	
 }
 
 void DropGrid::GotFocus()
@@ -247,7 +247,7 @@ bool DropGrid::Accept()
 		return false;
 	if(must_change && !change)
 	{
-		Exclamation(t_("Select a value."));
+		Exclamation(must_change_str);
 		SetWantFocus();
 		return false;
 	}
@@ -257,6 +257,17 @@ bool DropGrid::Accept()
 Size DropGrid::GetMinSize() const
 {
 	return drop.GetMinSize();
+}
+
+void DropGrid::State(int reason)
+{
+	if(reason == ENABLE)
+	{
+		bool b = IsEnabled();
+		for(int i = 0; i < drop.GetButtonCount(); i++)
+			drop.GetButton(i).Enable(b);
+	}
+	Ctrl::State(reason);
 }
 
 void DropGrid::Paint0(Draw &w, int lm, int rm, int x, int y, int cx, int cy, const Value &val, dword style, Color &fg, Color &bg, Font &fnt, bool found, int fs, int fe)
@@ -278,7 +289,10 @@ void DropGrid::Paint0(Draw &w, int lm, int rm, int x, int y, int cx, int cy, con
 		Size isz = GridImg::Dots2().GetSize();
 		for(int i = 0; i < cnt; i++)
 		{
-			fnt.Bold((i + 1) & 1);
+			bool iscol = (i + 1) & 1;
+			if(!display_columns && iscol)
+				continue;
+			fnt.Bold(iscol);
 			Size tsz = GetTextSize(v[i], fnt);
 			DrawText(w, nx, x + lm + tcx,
 			         ny, tcx + tsz.cx > ncx - isz.cx ? ncx - tcx: tsz.cx + isz.cx, cy,
@@ -298,13 +312,13 @@ void DropGrid::Paint(Draw &w, int x, int y, int cx, int cy, const Value &val, dw
 
 DropGrid& DropGrid::Width(int w)
 {
-	list_width = w;
+	list_width = Ctrl::VertLayoutZoom(w);
 	return *this;
 }
 
 DropGrid& DropGrid::Height(int h)
 {
-	list_height = h;
+	list_height = Ctrl::VertLayoutZoom(h);
 	return *this;
 }
 
@@ -396,9 +410,9 @@ DropGrid& DropGrid::SetDisplay(GridDisplay &d)
 	return *this;
 }
 
-DropGrid& DropGrid::FormatColumns(bool b /* = true*/)
+DropGrid& DropGrid::DisplayColumns(bool b /* = true*/)
 {
-	format_columns = b;
+	display_columns = b;
 	return *this;
 }
 
@@ -421,16 +435,11 @@ DropGrid& DropGrid::Searching(bool b /* = true*/)
 	return *this;
 }
 
-DropGrid& DropGrid::AlwaysDrop(bool b /* = true*/)
-{
-	always_drop = b;
-	EnableDrop();
-	return *this;
-}
-
-DropGrid& DropGrid::MustChange(bool b /* = true*/)
+DropGrid& DropGrid::MustChange(bool b /* = true*/, const char* s /* = NULL*/)
 {
 	must_change = b;
+	if(s)
+		must_change_str = s;
 	return *this;
 }
 
@@ -447,7 +456,7 @@ DropGrid& DropGrid::ClearButton(bool b /* = true*/)
 		Ctrl::Add(clear);
 	else
 		Ctrl::RemoveChild(&clear);
-
+	
 	return *this;
 }
 
@@ -498,6 +507,14 @@ Vector<String> DropGrid::FindVector(const Value& v) const
 	return MakeVector(r);
 }
 
+bool DropGrid::FindMove(const Value& v)
+{
+	int r = list.Find(v, key_col);
+	if(r >= 0)
+		list.Move(r);
+	return r >= 0;
+}
+
 Value DropGrid::GetKey() const
 {
 	return rowid >= 0 ? list.Get(key_col) : Null;
@@ -533,8 +550,9 @@ void DropGrid::DoAction(int row, bool action, bool chg)
 		change = chg;
 		rowid = rid;
 		trowid = -2;
+		Update();
 		if(action)
-			UpdateAction();
+			Action();
 	}
 }
 
@@ -561,31 +579,34 @@ GridCtrl::ItemRect& DropGrid::AddIndex(Id id)
 MultiButton::SubButton& DropGrid::AddButton(int type, const Callback &cb)
 {
 	MultiButton::SubButton& btn = drop.InsertButton(1);
-
+	
+	Image img;
 	switch(type)
 	{
 		case BTN_PLUS:
-			btn.SetImage(GridImg::SelPlus);
+			img = GridImg::SelPlus;
 			break;
 		case BTN_SELECT:
-			btn.SetImage(GridImg::SelDots);
+			img = GridImg::SelDots;
 			break;
 		case BTN_LEFT:
-			btn.SetImage(GridImg::SelLeft);
+			img = GridImg::SelLeft;
 			break;
 		case BTN_RIGHT:
-			btn.SetImage(GridImg::SelRight);
+			img = GridImg::SelRight;
 			break;
 		case BTN_UP:
-			btn.SetImage(GridImg::SelUp);
+			img = GridImg::SelUp;
 			break;
 		case BTN_DOWN:
-			btn.SetImage(GridImg::SelDn);
+			img = GridImg::SelDn;
 			break;
 		case BTN_CLEAN:
-			btn.SetImage(GridImg::SelCross);
+			img = GridImg::SelCross;
 			break;
 	}
+	btn.SetImage(img);
+	btn.SetMonoImage(Grayscale(img));
 	btn.WhenPush = cb;
 	return btn;
 }
@@ -647,14 +668,17 @@ void DropGrid::Reset()
 	list.Reset();
 	ClearValue();
 	value_cols.Clear();
-	EnableDrop(always_drop);
 }
 
 void DropGrid::Clear()
 {
 	list.Clear();
 	ClearValue();
-	EnableDrop(always_drop);
+}
+
+void DropGrid::Ready(bool b /* = true*/)
+{
+	list.Ready(b);
 }
 
 Value DropGrid::Get(int c) const
@@ -702,11 +726,14 @@ void DropGrid::Set(int r, const Vector<Value> &v, int data_offset, int column_of
 	list.Set(r, v, data_offset, column_offset);
 }
 
-void DropGrid::Add(const Vector<Value> &v, int data_offset, int column_offset)
+void DropGrid::Add(const Vector<Value> &v, int offset, int count, bool hidden)
 {
-	list.AddRow();
-	list.Set(v, data_offset, column_offset);
-	EnableDrop(always_drop);
+	list.Add(v, offset, count, hidden);
+}
+
+String DropGrid::GetString(Id id)
+{
+	return list.GetString(id);
 }
 
 Value& DropGrid::operator() (int r, int c)
@@ -778,7 +805,7 @@ void DropGrid::Change(int dir)
 	else
 		c = list.GetCursor() + dir;
 
-	if(list.IsValidCursor(c))
+	if(list.IsValidCursor(c) && list.IsRowClickable(c))
 	{
 		list.SetCursor(c);
 		UpdateValue();
@@ -904,6 +931,11 @@ bool DropGrid::IsInit()
 	return !change;
 }
 
+void DropGrid::ClearChange()
+{
+	change = false;
+}
+
 Vector<String> DropGrid::MakeVector(int r) const
 {
 	Vector<String> v;
@@ -972,16 +1004,8 @@ Value DropGrid::Format(const Value& q) const
 	return Format0(q, -1);
 }
 
-void DropGrid::EnableDrop(bool b)
-{
-	if(IsEnabled() == b)
-		return;
-	Enable(b);
-}
-
 GridCtrl::ItemRect& DropGrid::AddRow(int n, int size)
 {
-	EnableDrop(always_drop);
 	return list.AddRow(n, size);
 }
 
@@ -994,7 +1018,6 @@ DropGrid& DropGrid::AddSeparator(Color c)
 #define E__Addv0(I)    list.Set(q, I - 1, p##I)
 #define E__AddF0(I) \
 DropGrid& DropGrid::Add(__List##I(E__Value)) { \
-	EnableDrop(true); \
 	int q = AddColumns(I); \
 	__List##I(E__Addv0); \
 	return *this; \
@@ -1004,7 +1027,6 @@ __Expand(E__AddF0)
 #define E__Addv1(I)    list.Set(q, I - 1, p##I)
 #define E__AddF1(I) \
 GridCtrl::ItemRect& DropGrid::AddRow(__List##I(E__Value)) { \
-	EnableDrop(true); \
 	int q = AddColumns(I); \
 	GridCtrl::ItemRect& ir = list.AddRow(); \
 	__List##I(E__Addv1); \

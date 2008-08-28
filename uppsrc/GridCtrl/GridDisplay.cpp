@@ -73,18 +73,18 @@ void GridDisplay::Paint(Draw &w, int x, int y, int cx, int cy, const Value &val,
 		if(!leftImg.IsEmpty())
 		{
 			Size isz = leftImg.GetSize();
-			w.DrawImage(nx, ny + (cy - isz.cy) / 2, leftImg);
+			w.DrawImage(nx, ny + (cy - isz.cy) / 2, style & GD::READONLY ? Grayscale(leftImg) : leftImg);
 			nx += isz.cx + 3;
 		}
 		if(!rightImg.IsEmpty())
 		{
 			Size isz = rightImg.GetSize();
-			w.DrawImage(nx + ncx - isz.cx, y + (cy - isz.cy) / 2, rightImg);
+			w.DrawImage(nx + ncx - isz.cx, y + (cy - isz.cy) / 2, style & GD::READONLY ? Grayscale(rightImg) : rightImg);
 		}
 		if(!centerImg.IsEmpty())
 		{
 			Size isz = centerImg.GetSize();
-			w.DrawImage(x + (cx - isz.cx) / 2, y + (cy - isz.cy) / 2, centerImg);
+			w.DrawImage(x + (cx - isz.cx) / 2, y + (cy - isz.cy) / 2, style & GD::READONLY ? Grayscale(centerImg) : centerImg);
 		}
 
 		if(!(style & GD::NOTEXT))
@@ -297,8 +297,12 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 		p = s;
 	}
 
+
 	Size isz = GridImg::Dots2().GetSize();
 	int gcx = cx - (wrap ? 0 : isz.cx);
+
+	real_size.cx = 0;	
+	real_size.cy = lines > 1 ? lines * tcy : 0;
 
 	while(true)
 	{
@@ -359,6 +363,8 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 			bool dots = !wrap && tsz.cx > gcx;
 			if(dots)
 			{
+				real_size.cx = max(real_size.cx, tsz.cx);
+				
 				w.Clip(x, y, cx, cy);
 				w.DrawImage(x + cx - isz.cx, ty + font.Info().GetAscent() - isz.cy, GridImg::Dots2, tfg);
 				w.End();

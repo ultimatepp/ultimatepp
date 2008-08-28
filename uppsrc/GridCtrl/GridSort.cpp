@@ -152,7 +152,7 @@ void GridCtrl::MarkSort(int col, int sort_mode, bool refresh)
 	sortCol = col;
 	hitems[col].sortmode = sort_mode;
 	hitems[col].sortcol = sortOrder.GetCount();
-
+	
 	if(refresh)
 		RefreshTop();
 }
@@ -178,7 +178,7 @@ GridCtrl& GridCtrl::Sort(int sort_col, int sort_mode, bool multisort, bool repai
 		sortOrder.Clear();
 		ClearSorted();
 	}
-
+	
 	sortOrder.Add(col);
 
 	MarkSort(col, sort_mode, false);

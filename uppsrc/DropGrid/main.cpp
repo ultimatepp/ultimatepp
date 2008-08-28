@@ -13,7 +13,7 @@ struct App : public TopWindow
 		Sizeable().Zoomable();
 		SetRect(Size(600, 100));
 		Title("DropGrid");
-
+		
 		drop.ClearButton();
 		drop.AddPlus(THISBACK(Action));
 
@@ -22,11 +22,11 @@ struct App : public TopWindow
 		drop.AddColumn("ID");
 		drop.AddColumn("Value");
 		drop.AddColumn("Description");
-
+		
 		drop.AddText("Add person", THISBACK(Action));
 		drop.AddText("Add client", THISBACK(Action)).Left().SetImage(GridImg::Append());
 		drop.AddSelect(THISBACK(Action)).Left();
-
+		
 		for(int i = 0; i < 20; i++)
 			drop.Add(i, Format("Hello %d", i), Format("How are you mr Hello %d", i));
 
@@ -41,7 +41,7 @@ struct App : public TopWindow
 	void Action()
 	{
 	}
-
+	
 	typedef App CLASSNAME;
 };
 

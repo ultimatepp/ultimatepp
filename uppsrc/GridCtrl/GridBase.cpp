@@ -124,10 +124,17 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Edit(Ctrl &ctrl)
 	return *this;
 }
 
-//GridCtrl::ItemRect& GridCtrl::ItemRect::EditConvert(Ctrl &ctrl)
-//{
-//	return Edit(ctrl).SetConvert(ctrl);
-//}
+GridCtrl::ItemRect& GridCtrl::ItemRect::EditInsert(bool b /* = true*/)
+{
+	edit_insert = b;
+	return *this;
+}
+
+GridCtrl::ItemRect& GridCtrl::ItemRect::EditUpdate(bool b /* = true*/)
+{
+	edit_update = b;
+	return *this;
+}
 
 void GridCtrl::ItemRect::ChangeSortMode(bool idsort)
 {

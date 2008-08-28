@@ -52,7 +52,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		GridButton clear;
 
 	private:
-
+	
 		int rowid;
 		int trowid;
 		Value value;
@@ -66,17 +66,18 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		bool header:1;
 		bool valuekey:1;
 		bool notnull:1;
-		bool format_columns:1;
+		bool display_columns:1;
 		bool drop_enter:1;
 		bool data_action:1;
 		bool searching:1;
-		bool always_drop:1;
 		bool must_change:1;
 		bool null_action:1;
 		bool clear_button:1;
 		bool nodrop:1;
 
 		GridDisplay *display;
+		
+		String must_change_str;
 
 		void Change(int dir);
 		void SearchCursor();
@@ -85,7 +86,6 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		Value MakeValue(int r = -1, bool columns = true) const;
 		void UpdateValue();
 		Value Format0(const Value& q, int rowid) const;
-		void EnableDrop(bool b = true);
 
 	public:
 
@@ -113,12 +113,11 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		DropGrid& NotNull(bool b = true);
 		DropGrid& ValueAsKey(bool b = true);
 		DropGrid& SetDisplay(GridDisplay &d);
-		DropGrid& FormatColumns(bool b = true);
+		DropGrid& DisplayColumns(bool b = true);
 		DropGrid& DropEnter(bool b = true);
 		DropGrid& DataAction(bool b = true);
 		DropGrid& Searching(bool b = true);
-		DropGrid& AlwaysDrop(bool b = true);
-		DropGrid& MustChange(bool b = true);
+		DropGrid& MustChange(bool b = true, const char* s = NULL);
 		DropGrid& NullAction(bool b = true);
 		DropGrid& ClearButton(bool b = true);
 		DropGrid& NoDrop(bool b = true);
@@ -134,9 +133,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		MultiButton::SubButton& AddEdit(const Callback &cb);
 		MultiButton::SubButton& AddClear();
 		MultiButton::SubButton& AddText(const char* label, const Callback& cb);
-
 		MultiButton::SubButton& GetButton(int n);
-
+		
 		int AddColumns(int cnt);
 
 		void GoTop();
@@ -148,6 +146,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 
 		void Reset();
 		void Clear();
+		void Ready(bool b = true);
 		void ClearValue();
 		void DoClearValue();
 
@@ -158,6 +157,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		Value GetValue(int r) const;
 		Value FindValue(const Value& v) const;
 		Vector<String> FindVector(const Value& v) const;
+		bool FindMove(const Value& v);
 		Value GetKey() const;
 
 		virtual bool Key(dword k, int);
@@ -168,6 +168,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		virtual void Serialize(Stream& s);
 		virtual bool Accept();
 		virtual Size GetMinSize() const;
+		virtual void State(int reason);
 
 		void Paint0(Draw &w, int lm, int rm, int x, int y, int cx, int cy, const Value &val, dword style, Color &fg, Color &bg, Font &fnt, bool found = false, int fs = 0, int fe = 0);
 		virtual void Paint(Draw &w, int x, int y, int cx, int cy, const Value &val, dword style, Color &fg, Color &bg, Font &fnt, bool found = false, int fs = 0, int fe = 0);
@@ -181,7 +182,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		void  Set(int r, int c, const Value& v);
 		void  Set(int r, Id id, const Value& v);
 		void  Set(int r, const Vector<Value> &v, int data_offset = 0, int column_offset = 0);
-		void  Add(const Vector<Value> &v, int data_offset = 0, int column_offset = 0);
+		void  Add(const Vector<Value> &v, int offset = 0, int count = -1, bool hidden = false);
+		String GetString(Id id);
 
 		Value& operator() (int r, int c);
 		Value& operator() (int c);
@@ -194,6 +196,8 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		bool IsEmpty();
 		bool IsChange();
 		bool IsInit();
+		
+		void ClearChange();
 
 		int Find(const Value& v, int col = 0, int opt = 0);
 		int Find(const Value& v, Id id, int opt = 0);
@@ -204,7 +208,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		GridCtrl& GetList() { return list; }
 
 		virtual Value Format(const Value& q) const;
-
+		
 		Callback WhenLeftDown;
 
 		GridCtrl::ItemRect& AddRow(int n = 1, int size = GridCtrl::GD_ROW_HEIGHT);
