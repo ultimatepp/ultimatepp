@@ -771,6 +771,7 @@ int CharFilterAscii128(int c);
 int CharFilterUnicode(int c);
 int CharFilterDigit(int c);
 int CharFilterWhitespace(int c);
+int CharFilterNotWhitespace(int c);
 int CharFilterAlpha(int c);
 int CharFilterAlphaToUpper(int c);
 int CharFilterAlphaToLower(int c);

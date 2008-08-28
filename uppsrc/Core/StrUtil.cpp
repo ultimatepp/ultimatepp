@@ -58,6 +58,11 @@ int CharFilterWhitespace(int c)
 	return IsSpace(c) ? c : 0;
 }
 
+int CharFilterNotWhitespace(int c)
+{
+	return IsSpace(c) ? 0 : c;
+}
+
 int CharFilterAlpha(int c)
 {
 	return IsAlpha(c) ? c : 0;
