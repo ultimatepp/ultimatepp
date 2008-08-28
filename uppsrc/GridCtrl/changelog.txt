@@ -257,7 +257,7 @@
 	+ added Get*Align() to ItemRect
 
 	after 2008.1beta2
-
+	
 	- hiding/showing columns works again in proportional mode (R)
 	- align value from AttrText was inproperly passed to cell style
 	+ added Header(bool) - to turn on/off the header
@@ -266,3 +266,17 @@
 	+ added GetSortOrderId and GetSortOrder
 	- fixed Clear(false) and highlighting -> now it dosn't clear hcol
 	+ added Copy and CopyAll
+	
+	after 2008.1rc1/rc2
+	
+	* first click with ctrl selects previous row too now
+	+ added WhenSort callback which is called every time sort action takes place
+	+ MarkSort()
+	+ Resort();
+	
+	after 2008.1final
+	
+	+ summary row
+	- toolbar wasn't rebuilded after right mouse click on row
+	
+	

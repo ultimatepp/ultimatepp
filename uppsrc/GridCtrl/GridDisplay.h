@@ -19,6 +19,7 @@ namespace GD
 		FOCUS     = BIT(3),
 		READONLY  = BIT(4),
 		FOUND     = BIT(5),
+		MARKED    = CURSOR | SELECT | LIVE | READONLY | FOUND,
 		HIGHLIGHT = BIT(6),
 		EVEN      = BIT(7),
 		ODD       = BIT(8),
@@ -61,6 +62,8 @@ class GridDisplay
 		{
 			SetDefault();
 		}
+		
+		Size real_size;
 
 		void SetDefault();
 

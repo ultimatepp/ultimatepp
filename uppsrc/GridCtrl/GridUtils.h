@@ -40,11 +40,11 @@ inline int32 Round(double a)
 }
 
 #ifdef flagDEBUG
-#define LG //LogCon
+#define LG LogGui
 #else
 #define LG
 #endif
-#define LGR //LogCon
+#define LGR LogGui
 
 extern LineEdit *dlog;
 extern DropList *dlev;
