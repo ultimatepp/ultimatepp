@@ -67,6 +67,7 @@ file
 	Util.h,
 	Util.cpp optimize_speed,
 	mathutil.cpp optimize_speed,
+	Random.cpp,
 	Containers readonly separator,
 	Algo.h,
 	Topt.h,
