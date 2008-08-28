@@ -5,8 +5,8 @@ LAYOUT(PieTestLayout, 436, 440)
 	ITEM(Button, b4, Tip(t_("Print Preview")).LeftPosZ(224, 54).TopPosZ(12, 48))
 	ITEM(Button, b5, Tip(t_("Export as PNG")).LeftPosZ(292, 54).TopPosZ(12, 48))
 	ITEM(Button, b6, Tip(t_("Export as EMF")).LeftPosZ(360, 54).TopPosZ(12, 48))
-	ITEM(PieChart, pie1, SetTitleGap(10).SetRadius(100).SetPercentBack(WhiteGray).SetLegendFont(Arial(11)).SetLegendTextColor(Color(198, 42, 0)).SetLegendBackColor(WhiteGray).SetLegend_cx(75).SetLegend_cy(50).SetTitle(t_("PIE CHART DEMO")).SetTitleFont(Roman(16)).SetFrame(ThinInsetFrame()).HSizePosZ(20, 20).VSizePosZ(100, 44))
-	ITEM(Button, help, SetLabel(t_("?")).SetFont(StdFont(12).Bold()).Tip(t_("Help")).RightPosZ(22, 26).BottomPosZ(12, 20))
+	ITEM(PieChart, pie1, SetTitleGap(10).SetRadius(100).SetPercentBack(WhiteGray).SetLegendFont(ArialZ(11)).SetLegendTextColor(Color(198, 42, 0)).SetLegendBackColor(WhiteGray).SetLegend_cx(75).SetLegend_cy(50).SetTitle(t_("PIE CHART DEMO")).SetTitleFont(RomanZ(16)).SetFrame(ThinInsetFrame()).HSizePosZ(20, 20).VSizePosZ(100, 44))
+	ITEM(Button, help, SetLabel(t_("?")).SetFont(StdFontZ(12).Bold()).Tip(t_("Help")).RightPosZ(22, 26).BottomPosZ(12, 20))
 END_LAYOUT
 
 LAYOUT(SetData, 292, 224)

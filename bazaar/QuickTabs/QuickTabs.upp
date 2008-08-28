@@ -6,6 +6,3 @@ file
 	QuickTabs.cpp,
 	QuickTabs.iml;
 
-mainconfig
-	"" = "GUI";
-

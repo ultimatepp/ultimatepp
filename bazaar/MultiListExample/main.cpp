@@ -43,7 +43,7 @@ TestWindow::TestWindow()
 	for (int i = 0; i < 500; i++) {
 		String s = Format("Item %d", i+1);
 		for (int j = 0; j < 3; j++)
-			list[j].Add(i, s);
+			list[j].Add(i, s, true);
 	}
 
 	label[0].SetLabel("Column Mode (Default):");

@@ -916,7 +916,7 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 			w.DrawText(-dx-scale*6,h-scale*6-int(i*h/(yRange/yMajorUnit)),gridLabelY,Standard6,axisColor);
 		}	
 
-	if(antialiasing && !w.IsDrawing() && !w.IsMetaFile())
+	if(antialiasing && !w.IsDrawing())
 	{
 		ImageDraw imdraw(3*l,3*h);	
 		Plot (imdraw,3,3*l,3*h);

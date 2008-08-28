@@ -36,6 +36,8 @@ RasterCtrl::~RasterCtrl()
 	// removes associated controls
 	delete thumbs;
 	delete view;
+	thumbs = NULL;
+	view = NULL;
 	
 	// closes the image stream
 	Close();
@@ -96,8 +98,10 @@ void RasterCtrl::Close()
 	pages.Clear();
 	
 	// signal page changed to thumbs and view
-	thumbs->Layout();
-	view->Layout();
+	if(thumbs)
+		thumbs->Layout();
+	if(view)
+		view->Layout();
 	
 } // END RasterCtrl::Close()
 

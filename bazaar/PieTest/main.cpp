@@ -112,7 +112,11 @@ PieTest::PieTest()
 	b3<<=THISBACK(RemoveCategory);
 	b4<<=THISBACK(PrintPreview);
 	b5<<=THISBACK(ExportPNG);
-	b6<<=THISBACK(ExportEMF);	
+#ifdef PLATFORM_WIN32
+	b6<<=THISBACK(ExportEMF);
+#else
+	b6.Hide();
+#endif
 	help <<= THISBACK(Help);	
 
 	pie1.AddCategory("CatA",17,Color(90,150,255));

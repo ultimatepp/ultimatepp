@@ -1092,7 +1092,7 @@ private:
 	Vector<TabWindow*>					tabwindows;
 	Array<ImageCtrl*> 					panelicons;
 	ArrayMap<String, String>			layouts;
-	ArrayMap<String, Vector<int>>		groups;
+	ArrayMap<String, Vector<int> >		groups;
 	Vector<CtrlRecord*> 				ctrls;
 		
 	friend class 		DockableCtrl;

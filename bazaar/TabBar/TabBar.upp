@@ -8,6 +8,3 @@ file
 	TabBar.iml,
 	TabBar.cpp;
 
-mainconfig
-	"" = "GUI";
-
