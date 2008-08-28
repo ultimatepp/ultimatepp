@@ -23,6 +23,7 @@ void ATest()
 	ASSERT(x.FindFirstOf("46") == 4);
 	ASSERT(x.FindFirstOf("32", 10) == 12);
 	ASSERT(x.FindFirstOf("23", 10) == 12);
+	ASSERT(x.FindFirstOf(x) == 0);
 	ASSERT(x.Mid(3, 4) == Str("3456"));
 	ASSERT(x.Mid(3) == Str("3456789012345"));
 	ASSERT(x.Left(2) == Str("01"));
