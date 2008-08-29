@@ -59,6 +59,8 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Name(const char * s)
 GridCtrl::ItemRect& GridCtrl::ItemRect::Size(int n)
 {
 	hidden = n == 0;
+	
+	n = Ctrl::VertLayoutZoom(n);
 
 	if(!hidden)
 	{
