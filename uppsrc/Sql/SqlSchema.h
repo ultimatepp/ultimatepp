@@ -109,6 +109,9 @@ inline void SqlSchemaClear(T *a, int n) {
 }
 
 String ExportSch(SqlSession& session, const String& database);
-String ExportSch(const String& database);
 String ExportIds(SqlSession& session, const String& database);
+
+#ifndef NOAPPSQL
+String ExportSch(const String& database);
 String ExportIds(const String& database);
+#endif

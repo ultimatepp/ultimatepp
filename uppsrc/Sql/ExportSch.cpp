@@ -56,10 +56,12 @@ String ExportSch(SqlSession& session, const String& database)
 	return r;
 }
 
+#ifndef NOAPPSQL
 String ExportSch(const String& database)
 {
 	return ExportSch(SQL.GetSession(), database);
 }
+#endif
 
 static void sId(String& r, const String& id, Index<String>& done)
 {
@@ -87,9 +89,11 @@ String ExportIds(SqlSession& session, const String& database)
 	return r;
 }
 
+#ifndef NOAPPSQL
 String ExportIds(const String& database)
 {
 	return ExportIds(SQL.GetSession(), database);
 }
+#endif
 
 END_UPP_NAMESPACE
