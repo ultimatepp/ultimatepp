@@ -1368,6 +1368,7 @@ class GridCtrl : public Ctrl
 
 		int  GetCount() const;
 		int  GetRowCount() const { return GetCount(); }
+		int  GetVisibleCount() const;
 		int  GetFixedCount() const;
 		int  GetTotalCount() const;
 

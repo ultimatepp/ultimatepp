@@ -813,10 +813,9 @@ void GridCtrl::Paste(int mode)
 						if(fixed_paste && new_row)
 							break;
 						
-						String& s = cells[j];
-//						WhenPasteCell(i, j, s);
-						
-						Set0(lr, lc, s, true);
+						Value v(cells[j]);
+						WhenPasteCell(i, j, v);						
+						Set0(lr, lc, v, true);
 					}
 
 					if(i == lines.GetCount() - 1 && j == cells.GetCount() - 1)
@@ -4945,7 +4944,7 @@ bool GridCtrl::Key(dword key, int)
 			}
 			return false;
 		case K_CTRL_W:
-			//WriteClipboardText(GetColumnWidths());
+			WriteClipboardText(GetColumnWidths());
 			return true;
 		default:
 			if(searching && !ctrls && Search(key))
@@ -5908,6 +5907,15 @@ void GridCtrl::GoTo(int r, int c, bool setcursor, bool scroll)
 int GridCtrl::GetCount() const      { return total_rows - fixed_rows; }
 int GridCtrl::GetFixedCount() const { return fixed_rows;              }
 int GridCtrl::GetTotalCount() const { return total_rows;              }
+
+int GridCtrl::GetVisibleCount() const
+{
+	int cnt = 0;
+	for(int i = fixed_rows; i < total_rows; i++)
+		if(!vitems[i].hidden)
+			++cnt;
+	return cnt;
+}
 
 GridCtrl& GridCtrl::SetColsMin(int size)
 {
