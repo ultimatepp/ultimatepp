@@ -98,6 +98,7 @@ public:
 	Vector<K>        PickKeys() pick_              { return key.PickKeys(); }
 
 	const V&         GetValues() const             { return value; }
+	V&               GetValues()                   { return value; }
 	V                PickValues() pick_            { return value; }
 
 	AMap()                                         {}
