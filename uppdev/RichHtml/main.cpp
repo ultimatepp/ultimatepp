@@ -2,6 +2,8 @@
 #include <RichText/RichText.h>
 #include <Web/Web.h>
 
+using namespace Upp;
+
 #define TOPICFILE <RichHtml/tst.tpp/all.i>
 #include <Core/topic_group.h>
 
@@ -15,5 +17,5 @@ GUI_APP_MAIN
 		HtmlHeader("Ultimate++", AsCss(css))
 	    .BgColor(White)
 	    /  html;
-	SaveFile("e:\\xxx\\test.html", content);
+	SaveFile(GetHomeDirFile("html.html"), content);
 }
