@@ -253,15 +253,37 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 						else
 							lnk = links[q];
 					}
-					if(!lnk.IsEmpty() && lnk[0] != ':')
+					String endtag;
+					if(!lnk.IsEmpty() && lnk[0] != ':') {
 						html << "<A HREF=\"" << lnk << "\">";
+						endtag = "</A>";
+					}
 					String cs;
 					if(part.text[0] != 9)
 						cs = HtmlCharStyle(part.format, p.format);
-					if(!cs.IsEmpty())
+					if(!cs.IsEmpty()) {
 						html << "<SPAN" << FormatClass(css, cs) << ">";
+						endtag = "</SPAN>" + endtag;
+					}
+					if(part.format.sscript == 1) {
+						html << "<SUP>";
+						endtag = "</SUP>" + endtag;
+					}
+					if(part.format.sscript == 2) {
+						html << "<SUB>";
+						endtag = "</SUB>" + endtag;
+					}
+					if(part.format.IsStrikeout()) {
+						html << "<STRIKE>";
+						endtag = "</STRIKE>" + endtag;
+					}
+					if(part.format.capitals) {
+						html << "<SPAN STYLE=\"font-variant: small-caps;\">";
+						endtag << "</SPAN>";
+					}
 					bool spc = false;
-					for(const wchar *s = part.text.Begin(); s != part.text.End(); s++) {
+					const wchar *end = part.text.End();
+					for(const wchar *s = part.text.Begin(); s != end; s++) {
 						if(*s == ' ') {
 							html.Cat(spc ? "&nbsp;" : " ");
 							spc = true;
@@ -298,10 +320,7 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 								html.Cat(ToUtf8(*s));
 						}
 					}
-					if(!cs.IsEmpty())
-						html << "</SPAN>";
-					if(!lnk.IsEmpty())
-						html << "</A>";
+					html << endtag;
 				}
 			}
 			if(p.part.GetCount() == 0)
