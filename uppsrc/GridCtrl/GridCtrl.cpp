@@ -814,7 +814,7 @@ void GridCtrl::Paste(int mode)
 							break;
 						
 						Value v(cells[j]);
-						WhenPasteCell(i, j, v);						
+						WhenPasteCell(lr - fixed_rows, lc - fixed_cols, v);
 						Set0(lr, lc, v, true);
 					}
 
