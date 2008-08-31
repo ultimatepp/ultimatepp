@@ -326,9 +326,13 @@ void Ide::BuildFileMenu(Bar& menu)
 	menu.Add(b, "Compile " + GetFileName(editfile), IdeImg::Source(), THISBACK(FileCompile))
 		.Key(AK_COMPILEFILE)
 		.Help("Compile current file");
-	menu.Add(b, "Preprocess " + GetFileName(editfile), IdeImg::Header(), THISBACK(Preprocess))
+	menu.Add(b, "Preprocess " + GetFileName(editfile), IdeImg::Header(), THISBACK1(Preprocess, false))
 		.Key(AK_PREPROCESSFILE)
 		.Help("Preprocess current file into temporary file & open in editor");
+	if(GetMethodVars(method).Get("BUILDER", "") == "GCC")
+		menu.Add(b, "Show assembler code for " + GetFileName(editfile), THISBACK1(Preprocess, true))
+			.Key(AK_ASSEMBLERCODE)
+			.Help("Compile the file into assembler code");
 }
 
 void Ide::BuildPackageMenu(Bar& menu)

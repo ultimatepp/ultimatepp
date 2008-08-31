@@ -396,7 +396,7 @@ struct Builder {
 	{ return false; }
 	virtual bool Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
 	{ return false; }
-	virtual bool Preprocess(const String& package, const String& file, const String& result)
+	virtual bool Preprocess(const String& package, const String& file, const String& result, bool asmout)
 	{ return false; }
 	virtual void   AddFlags(Index<String>& cfg) {}
 	virtual void   AddMakeFile(MakeFile& mfinfo, String package,

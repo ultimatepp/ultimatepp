@@ -526,7 +526,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	return true;
 }
 
-bool MscBuilder::Preprocess(const String& package, const String& file, const String& target)
+bool MscBuilder::Preprocess(const String& package, const String& file, const String& target, bool)
 {
 	FileOut out(target);
 	return Execute(CmdLine() + " -E " + file, out);

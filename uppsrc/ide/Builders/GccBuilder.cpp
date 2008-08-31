@@ -446,7 +446,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	return true;
 }
 
-bool GccBuilder::Preprocess(const String& package, const String& file, const String& target)
+bool GccBuilder::Preprocess(const String& package, const String& file, const String& target, bool asmout)
 {
 	Package pkg;
 	String packagepath = PackagePath(package);
@@ -455,11 +455,11 @@ bool GccBuilder::Preprocess(const String& package, const String& file, const Str
 	ChDir(packagedir);
 	PutVerbose("cd " + packagedir);
 
-	FileOut out(target);
 	String cmd = CmdLine();
 	cmd << " " << Gather(pkg.option, config.GetKeys());
-	cmd << " -E " << GetHostPathQ(file);
-	return Execute(cmd, out);
+	cmd << " -o " << target;
+	cmd << (asmout ? " -S " : " -E ") << GetHostPathQ(file);
+	return Execute(cmd);
 }
 
 Builder *CreateGccBuilder()
