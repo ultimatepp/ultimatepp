@@ -67,7 +67,7 @@ struct GccBuilder : CppBuilder {
 	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
-	virtual bool   Preprocess(const String& package, const String& file, const String& target);
+	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
 	String CompilerName() const;
 	String CmdLine();
@@ -81,7 +81,7 @@ struct MscBuilder : CppBuilder {
 	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
-	virtual bool   Preprocess(const String& package, const String& file, const String& target);
+	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
 	String CmdLine();
 	String MachineName() const;
@@ -99,7 +99,7 @@ struct JavaBuilder : CppBuilder {
 	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
-	virtual bool   Preprocess(const String& package, const String& file, const String& target);
+	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
 	bool           PreprocessJava(String file, String target, String options);
 	Time           AddClassDeep(String& link, String dir, String reldir);
@@ -116,7 +116,7 @@ public:
 	virtual bool   BuildPackage(const String& package, Vector<String>& linkfile, String& linkoptions,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
-	virtual bool   Preprocess(const String& package, const String& file, const String& target);
+	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
 	String         CmdLine();
 

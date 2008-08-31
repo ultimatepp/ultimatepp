@@ -862,7 +862,7 @@ public:
 		void  CleanUppOut();
 		void  SwitchHeader();
 		void  FileCompile();
-		void  Preprocess();
+		void  Preprocess(bool asmout);
 		void  ToggleStopOnErrors();
 		One<Host> CreateHostRunDir();
 		void  OpenOutputFolder();

@@ -173,9 +173,9 @@ bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, 
 	return !error;
 }
 
-bool JavaBuilder::Preprocess(const String& package, const String& file, const String& target)
+bool JavaBuilder::Preprocess(const String& package, const String& file, const String& target, bool)
 {
-	return Preprocess(file, target, Null);
+	return Preprocess(file, target, Null, false);
 }
 
 bool JavaBuilder::PreprocessJava(String file, String target, String options)

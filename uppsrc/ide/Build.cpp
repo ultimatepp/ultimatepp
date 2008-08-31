@@ -706,7 +706,7 @@ void Ide::FileCompile()
 	SetErrorEditor();
 }
 
-void Ide::Preprocess() {
+void Ide::Preprocess(bool asmout) {
 	if(editfile.IsEmpty())
 		return;
 	int pi = package.GetCursor();
@@ -723,8 +723,8 @@ void Ide::Preprocess() {
 	String linkopt;
 	b->config = PackageConfig(wspc, pi, GetMethodVars(method), mainconfigparam, *host, *b);
 	console.Clear();
-	PutConsole("Preprocessing " + editfile);
-	b->Preprocess(wspc[pi], editfile, pfn);
+	PutConsole((asmout ? "Compiling " : "Preprocessing ") + editfile);
+	b->Preprocess(wspc[pi], editfile, pfn, asmout);
 	HideBottom();
 	if(FileExists(pfn)) {
 		EditFile(pfn);

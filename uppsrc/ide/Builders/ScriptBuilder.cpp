@@ -270,7 +270,7 @@ bool ScriptBuilder::Link(const Vector<String>& linkfile, const String& linkoptio
 	return true;
 }
 
-bool ScriptBuilder::Preprocess(const String& package, const String& file, const String& target)
+bool ScriptBuilder::Preprocess(const String& package, const String& file, const String& target, bool)
 {
 	return ExecuteIf("preprocess", file, target).GetNumber();
 }
