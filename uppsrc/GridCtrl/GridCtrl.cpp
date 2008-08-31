@@ -1636,7 +1636,6 @@ void GridCtrl::SetColCount(int n, int size)
 
 void GridCtrl::MouseMove(Point p, dword keyflags)
 {
-	LG("MouseMove");
 	mouse_move = true;
 
 	if(resizing)
@@ -1864,8 +1863,12 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 			oldSplitCol = c;
 			new_cell = true;
 		}
+		
+		bool newpos = c >= 0 && r >= 0;
+		
+		Ctrl* ctrl = newpos ? GetCtrl(r, c, true, false, false) : NULL;
 
-		if(c >= 0 && r >= 0)
+		if(newpos && !ctrl)
 		{
 			Item& it = GetItem(r, c);
 			if(it.rcx > 0 || it.rcy > 0)
@@ -2242,6 +2245,9 @@ void GridCtrl::Layout()
 
 void GridCtrl::ChildAction(Ctrl *child, int event)
 {
+	if(child != &holder && child->IsShown())
+		popup.Close();
+	
 	if(child != focused_ctrl)
 	{
 		if(event == LEFTDOWN || event == RIGHTDOWN)
@@ -2250,7 +2256,7 @@ void GridCtrl::ChildAction(Ctrl *child, int event)
 			Point cp = GetCtrlPos(child);
 			if(cp.x < 0 || cp.y < 0)
 				return;
-
+			
 			SetCursor0(cp, false);
 			UpdateCtrls(UC_SHOW | UC_FOCUS | UC_CTRLS_OFF);
 			WhenCtrlAction();
@@ -4096,36 +4102,39 @@ bool GridCtrl::GetCtrlsData(bool samerow, bool doall, bool updates)
 			return false;
 
 		Value v = focused_ctrl->GetData();
-
-		bool was_modified = it.modified;
-
-		it.modified = edit_mode == GE_CELL ? it.val != v : rowbkp[focused_ctrl_id] != v;
-
-		if(it.modified)
+		
+		if(!v.IsError())
 		{
-			if(!was_modified)
-				row_modified++;
-
-			it.val = v;
-
-			if(updates)
+			bool was_modified = it.modified;
+	
+			it.modified = edit_mode == GE_CELL ? it.val != v : rowbkp[focused_ctrl_id] != v;
+	
+			if(it.modified)
 			{
-				#ifdef LOG_CALLBACKS
-				LGR(2, "WhenUpdateCell()");
-				LGR(2, Format("[row: %d, colid: %d]", curid.y, focused_ctrl_id));
-				LGR(2, Format("[oldval : %s]", AsString(rowbkp[focused_ctrl_id])));
-				LGR(2, Format("[newval : %s]", AsString(v)));
-				#endif
-				WhenUpdateCell();
-
-				if(cancel_update_cell)
+				if(!was_modified)
+					row_modified++;
+	
+				it.val = v;
+	
+				if(updates)
 				{
-					it.val = rowbkp[focused_ctrl_id];
-					it.modified = false;
-					if(edit_mode == GE_CELL)
-						rowbkp[focused_ctrl_id] = it.val;
-					cancel_update_cell = false;
-					row_modified--;
+					#ifdef LOG_CALLBACKS
+					LGR(2, "WhenUpdateCell()");
+					LGR(2, Format("[row: %d, colid: %d]", curid.y, focused_ctrl_id));
+					LGR(2, Format("[oldval : %s]", AsString(rowbkp[focused_ctrl_id])));
+					LGR(2, Format("[newval : %s]", AsString(v)));
+					#endif
+					WhenUpdateCell();
+	
+					if(cancel_update_cell)
+					{
+						it.val = rowbkp[focused_ctrl_id];
+						it.modified = false;
+						if(edit_mode == GE_CELL)
+							rowbkp[focused_ctrl_id] = it.val;
+						cancel_update_cell = false;
+						row_modified--;
+					}
 				}
 			}
 		}
@@ -4386,6 +4395,9 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 
 	if(!(opt & UC_SCROLL))
 		RebuildToolBar();
+	
+	if(ctrls)
+		popup.Close();
 }
 
 void GridCtrl::SyncCtrls(int row)
@@ -4944,7 +4956,7 @@ bool GridCtrl::Key(dword key, int)
 			}
 			return false;
 		case K_CTRL_W:
-			WriteClipboardText(GetColumnWidths());
+			//WriteClipboardText(GetColumnWidths());
 			return true;
 		default:
 			if(searching && !ctrls && Search(key))
@@ -5839,17 +5851,17 @@ bool GridCtrl::GoRight(bool scroll, bool ctrlmode) { return Go0(GO_RIGHT, scroll
 bool GridCtrl::GoPageUp(bool scroll)               { return Go0(GO_PAGEUP, scroll);                 }
 bool GridCtrl::GoPageDn(bool scroll)               { return Go0(GO_PAGEDN, scroll);                 }
 
-Ctrl * GridCtrl::GetCtrl(const Point &p, bool check_visibility, bool relative)
+Ctrl * GridCtrl::GetCtrl(const Point &p, bool check_visibility, bool relative, bool check_edits)
 {
-	return GetCtrl(p.y, p.x, check_visibility, relative);
+	return GetCtrl(p.y, p.x, check_visibility, relative, check_edits);
 }
 
-Ctrl * GridCtrl::GetCtrl(int r, int c, bool check_visibility, bool relative)
+Ctrl * GridCtrl::GetCtrl(int r, int c, bool check_visibility, bool relative, bool check_edits)
 {
 	int idx = relative ? fixed_cols + c : hitems[c].id;
 	int idy = vitems[r].id;
 	Ctrl * ctrl = items[idy][idx].ctrl;
-	if(!ctrl)
+	if(check_edits && !ctrl)
 		ctrl = edits[idx].ctrl;
 	if(check_visibility && ctrl && !ctrl->IsShown())
 		ctrl = NULL;
@@ -5946,6 +5958,7 @@ void GridCtrl::LostFocus()
 	LG("LostFocus");
 	if(valid_cursor)
 		RefreshRow(curpos.y, 0, 0);
+	popup.Close();
 }
 
 void GridCtrl::ChildGotFocus()
@@ -7426,8 +7439,70 @@ void GridPopUp::Paint(Draw &w)
 	w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, text);
 }
 
+Point GridPopUp::Offset(Point p)
+{
+	return p + GetScreenView().TopLeft() - ctrl->GetScreenView().TopLeft();
+}
+
+void GridPopUp::LeftDown(Point p, dword flags)
+{
+	ctrl->LeftDown(Offset(p), flags);
+}
+
+void GridPopUp::LeftDrag(Point p, dword flags)
+{
+	Close();
+	ctrl->LeftDrag(Offset(p), flags);
+}
+
+void GridPopUp::LeftDouble(Point p, dword flags)
+{
+	ctrl->LeftDouble(Offset(p), flags);
+}
+
+void GridPopUp::RightDown(Point p, dword flags)
+{
+	ctrl->RightDown(Offset(p), flags);
+}
+
+void GridPopUp::LeftUp(Point p, dword flags)
+{
+	ctrl->LeftUp(Offset(p), flags);
+}
+
+void GridPopUp::MouseWheel(Point p, int zdelta, dword flags)
+{
+	ctrl->MouseWheel(Offset(p), zdelta, flags);
+}
+
+void GridPopUp::MouseLeave()
+{
+	ctrl->MouseLeave();
+}
+
+void GridPopUp::MouseEnter(Point p, dword flags)
+{
+	ctrl->MouseEnter(Offset(p), flags);
+}
+
+void GridPopUp::MouseMove(Point p, dword flags)
+{
+	ctrl->MouseMove(Offset(p), flags);
+}
+
+Image GridPopUp::CursorImage(Point p, dword flags)
+{
+	return ctrl->CursorImage(Offset(p), flags);
+}
+
+void GridPopUp::LostFocus()
+{
+	Close();
+}
+
 void GridPopUp::PopUp(Ctrl *owner, int x, int y, int width, int height)
 {
+	ctrl = owner;
 	SetRect(Rect(x, y, x + width, y + height));
 	if(open)
 		return;

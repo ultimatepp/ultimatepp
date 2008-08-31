@@ -46,7 +46,6 @@ class GridPopUpHeader : public Ctrl
 {
 	private:
 		bool open;
-
 	public:
 
 		GridDisplay *display;
@@ -110,9 +109,23 @@ class GridPopUp : public Ctrl
 
 		bool open;
 		String text;
+		Ctrl* ctrl;
 
 		GridPopUp() : open(false) {}
-		virtual void Paint(Draw &w);
+		Point Offset(Point p);
+
+		virtual void  Paint(Draw &w);
+		virtual void  LeftDown(Point p, dword flags);
+		virtual void  LeftDrag(Point p, dword flags);
+		virtual void  LeftDouble(Point p, dword flags);
+		virtual void  RightDown(Point p, dword flags);
+		virtual void  LeftUp(Point p, dword flags);
+		virtual void  MouseWheel(Point p, int zdelta, dword flags);
+		virtual void  MouseLeave();
+		virtual void  MouseEnter(Point p, dword flags);
+		virtual void  MouseMove(Point p, dword flags);
+	    virtual Image CursorImage(Point p, dword flags);
+	    virtual void  LostFocus();
 		void PopUp(Ctrl *owner, int x, int y, int width, int height);
 		void Close();
 };
@@ -1617,8 +1630,8 @@ class GridCtrl : public Ctrl
 		void Nothing();
 		void Init();
 
-		Ctrl * GetCtrl(int x, int y, bool check_visibility, bool relative = false);
-		Ctrl * GetCtrl(const Point &p, bool check_visibility, bool relative = false);
+		Ctrl * GetCtrl(int x, int y, bool check_visibility, bool relative = false, bool check_edits = true);
+		Ctrl * GetCtrl(const Point &p, bool check_visibility, bool relative = false, bool check_edits = true);
 		bool IsCtrl(Point &p);
 
 		GridClipboard GetClipboard();
