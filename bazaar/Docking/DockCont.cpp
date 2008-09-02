@@ -11,25 +11,30 @@ LRESULT DockCont::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		WindowMenu();
 		return 1L;
 	}
-	if (message == WM_NCLBUTTONDOWN && IsFloating() && base)
-		dragging = 1;
-	if (message == WM_NCLBUTTONUP)
-		dragging = 0;
-	if (message == WM_MOVE && IsFloating() && base && GetMouseLeft() && dragging) {
-		if (dragging == 1)	{
-			MoveBegin();
-			dragging++;
+	if (IsFloating() && base) {
+		switch (message) {
+			case WM_NCLBUTTONUP:
+			case WM_SIZE:					
+				dragging = 0;
+				break;
+			case WM_ENTERSIZEMOVE:
+				dragging = 1;
+				break;
+			case WM_MOVE:
+				if (GetMouseLeft() && dragging > 1)
+					(dragging > 2) ? Moving() : MoveBegin();
+				dragging++;
+				break;
+			case WM_EXITSIZEMOVE:
+				if (!GetMouseLeft() && dragging) {
+					dragging = 0;
+					Ptr<TopWindow> _this = this;
+					MoveEnd();
+					if (!_this) return 0;
+				}
+				break;
 		}
-		Moving();
-		dragging = 2;
 	}
-	else if (message == WM_EXITSIZEMOVE && IsFloating() && base && !GetMouseLeft() && dragging) {
-		dragging = 0;
-		Ptr<TopWindow> _this = this;
-		MoveEnd();
-		if (!_this) return 0;
-	}
-		
 	return TopWindow::WindowProc(message, wParam, lParam);
 }
 
@@ -111,13 +116,13 @@ int DockCont::Handle::GetHandleSize(const DockableCtrl::Style &s) const
 	return 	(s.title_font.IsNull() ? 12 : s.title_font.GetHeight()+4)
 			 + (s.handle_vert ? s.handle_margins.GetWidth() : s.handle_margins.GetHeight()); 
 }
-
+/*
 void DockCont::Handle::RefreshFocus(bool _focus)
 {
 	if (focus != _focus) 	
 		{ focus = _focus; Refresh(); }
 }
-
+*/
 void DockCont::Handle::FrameLayout(Rect& r)
 {
 	if (!dc || !IsShown()) return;
@@ -150,21 +155,22 @@ void DockCont::Handle::Paint(Draw& w)
 			p = Point(r.left-1 + m.left, r.bottom - m.bottom);
 		else
 			p = Point(r.left + m.left, r.top + m.top);
-		ChPaint(w, r, s.handle[focus]);
+		ChPaint(w, r, s.handle[0]);
 		
 		Image img = dc->GetIcon();
 		if (!img.IsEmpty()) {
 			if (s.handle_vert) {
 				int isz = r.GetWidth();
 				p.y -= isz;
-				isz -= (m.left + m.right);
-				ChPaint(w, max(p.x+m.left, r.left), p.y, isz, isz, img);
+				isz -= 2;
+				img = CachedRescale(img, Size(isz, isz));
+				w.DrawImage(1, max(p.y, r.top), img);
 				p.y -= 2;
 			}
 			else {
-				int isz = r.GetHeight();
-				isz -= (m.top + m.bottom);
-				ChPaint(w, p.x, max(p.y, r.top), isz, isz, img);
+				int isz = r.GetHeight() - 2;
+				img = CachedRescale(img, Size(isz, isz));
+				w.DrawImage(p.x, 1, img);
 				p.x += isz + 2;
 			}
 		}
@@ -236,16 +242,18 @@ void DockCont::ChildAdded(Ctrl *child)
 	if (GetCount() >= 2) RefreshLayout();
 }
 
-void 	DockCont::MoveBegin()		{ base->ContainerDragStart(*this); }
-void 	DockCont::Moving()			{ base->ContainerDragMove(*this); }
-void 	DockCont::MoveEnd()			{ base->ContainerDragEnd(*this); }	
+void 	DockCont::MoveBegin()		{ if (!base->IsLocked()) base->ContainerDragStart(*this); }
+void 	DockCont::Moving()			{ if (!base->IsLocked()) base->ContainerDragMove(*this); }
+void 	DockCont::MoveEnd()			{ if (!base->IsLocked()) base->ContainerDragEnd(*this); }	
 
 void DockCont::WindowMenu()
 {
-	MenuBar bar;
-	DockContMenu menu(base);
-	menu.ContainerMenu(bar, this, true);
-	bar.Execute();
+	if (!base->IsLocked()) {
+		MenuBar bar;
+		DockContMenu menu(base);
+		menu.ContainerMenu(bar, this, true);
+		bar.Execute();
+	}
 }
 
 void DockCont::Animate(Rect target, int ticks, int interval)
@@ -277,15 +285,16 @@ void DockCont::TabSelected()
 	if (ix >= 0) {
 		DockableCtrl *dc = Get0(ix);
 		if (!dc) return;
-		Ctrl *ctrl = GetCtrl(ix);
-		Ctrl *first = &handle;
 		
-		for (Ctrl *c = first->GetNext(); c; c = c->GetNext())
-			if (c != ctrl) c->Hide();
+		Ctrl *ctrl = GetCtrl(ix);
+		for (Ctrl *c = FindFirstChild(); c; c = c->GetNext())
+			if (c != ctrl && !c->InFrame()) 
+				c->Hide();
 		ctrl->Show();
-		Icon(dc->GetIcon()).Title(dc->GetTitle());
 
 		handle.dc = dc;
+		Icon(dc->GetIcon()).Title(dc->GetTitle());
+
 		SyncButtons(*dc);
 
 		if (IsTabbed()) {
@@ -295,12 +304,15 @@ void DockCont::TabSelected()
 			c->RefreshFrame();
 		}
 		else
+			handle.Refresh();
 			RefreshLayout();
 	}
 }
 
 void DockCont::TabDragged(int ix) 
 {
+	if (base->IsLocked())
+		return;
 	if (ix >= 0) {
 		// Special code needed
 		Value v = tabbar.Get(ix);
@@ -321,7 +333,7 @@ void DockCont::TabDragged(int ix)
 
 void DockCont::TabContext(int ix)
 {
-	MenuBar bar;
+	MenuBar 		bar;
 	DockContMenu 	menu(base);
 	DockMenu 		tabmenu(base);
 	Value v = tabbar.Get(ix);
@@ -389,7 +401,7 @@ void DockCont::StateDocked(DockWindow &dock)
 {
 	base = &dock;
 	dockstate = STATE_DOCKED;	
-	handle.Show();
+	handle.Show(!dock.IsLocked());
 	Show(); 
 }
 
@@ -430,6 +442,27 @@ void DockCont::SyncButtons(DockableCtrl &dc)
 		autohide.Hide();
 		windowpos.Hide();
 	}
+}
+
+void DockCont::SyncTabs(int align, bool text)
+{
+	tabbar.ShowText(text);
+	if (align != tabbar.GetAlign())
+		tabbar.SetAlign(align);
+}
+
+Ctrl * DockCont::FindFirstChild() const
+{
+	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext())
+		if (!c->InFrame()) return c;
+	return NULL;
+}
+
+void DockCont::SetCursor(Ctrl &c)
+{
+	for (int i = 0; i < GetCount(); i++) 
+		if (GetCtrl(i) == &c)
+			return SetCursor(i);
 }
 
 void DockCont::GroupRefresh()
@@ -492,7 +525,10 @@ Image DockCont::GetHighlightImage()
 	if (!ctrl) return Image();
 	Size sz = ctrl->GetRect().GetSize();
 	if (tabbar.IsAutoHide())
-		sz.cy -= tabbar.GetFrameSize();
+		if (tabbar.IsVert())
+			sz.cx -= tabbar.GetFrameSize();
+		else
+			sz.cy -= tabbar.GetFrameSize();
 	ImageDraw img(sz);
 	ctrl->DrawCtrlWithParent(img);
 	return img;
@@ -607,7 +643,7 @@ void DockCont::Serialize(Stream& s)
 			else if (type == ctrl) {
 				int ix;
 				s / ix;
-				if (ix >= 0 && ix <= dcs.GetCount())
+				if (ix >= 0 && ix < dcs.GetCount())
 					Add(*dcs[ix]);
 			}
 			else
@@ -664,6 +700,22 @@ void DockCont::DockContMenu::MenuClose(DockableCtrl *dc)
 	cont->CloseAll();
 }
 
+void DockCont::Lock(bool lock)
+{
+	tabbar.Crosses(!lock);
+	tabbar.WhenDrag 		= lock ? Callback1<int>() : THISBACK(TabDragged);
+	tabbar.WhenContext 		= lock ? Callback1<int>() : THISBACK(TabContext);	
+
+	bool frames = !lock && (IsDocked() || IsAutoHide());
+	ClearFrames();	
+	handle.Show(frames);
+	if (frames)
+		InsertFrame(0, FieldFrame());
+	AddFrame(tabbar);
+	AddFrame(handle);	
+	RefreshLayout();
+}
+
 DockCont::DockCont()
 {
 	dragging = false;
@@ -678,23 +730,21 @@ DockCont::DockCont()
 #endif
 	NoCenter().Sizeable(true).MaximizeBox(false).MinimizeBox(false);
 
-	AddFrame(FieldFrame());	
-	AddFrame(tabbar);
-	AddFrame(handle);
 	tabbar.AutoHideMin(1);
 	tabbar.WhenCursor 		= THISBACK(TabSelected);
-	tabbar.WhenDrag 		= THISBACK(TabDragged);
-	tabbar.WhenContext 		= THISBACK(TabContext);
 	tabbar.WhenClose 		= THISBACK(TabClosed);
 	tabbar.WhenCloseAll		= THISBACK(RefreshLayout);
 	tabbar.SetBottom();	
 
+	WhenClose 				= THISBACK(CloseAll);
+	
 	handle << close << autohide << windowpos;
 	handle.WhenContext = THISBACK(WindowMenu);
 	handle.WhenLeftDrag = THISBACK(MoveBegin);
 	close.Tip(t_("Close")) 				<<= THISBACK(CloseAll);
 	autohide.Tip(t_("Auto-Hide")) 		<<= THISBACK(AutoHide);
 	windowpos.Tip(t_("Window Menu")) 	<<= THISBACK(WindowMenu);		
-	WhenClose 							= THISBACK(CloseAll);
+	
+	Lock(false);	
 }
 

@@ -574,6 +574,7 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 		break;
 	case LEFT: 
 		p.x += tsz.cx;
+		break;
 	}
 	tsz.cx -= isz.cx;		
 	Fix(p);

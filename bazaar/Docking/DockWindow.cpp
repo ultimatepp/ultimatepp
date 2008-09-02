@@ -63,10 +63,10 @@ void DockWindow::AutoHide(int align, DockableCtrl &dc)
 	hideframe[align].AddCtrl(*c, dc.GetGroup());	
 }
 
-int DockWindow::FindDocker(DockableCtrl *dc)
+int DockWindow::FindDocker(Ctrl *dc)
 {
 	for (int i = 0; i < dockers.GetCount(); i++)
-		if (dc == dockers[i])
+		if (dc == (Ctrl *) dockers[i])
 			return i;
 	return -1;
 }
@@ -98,6 +98,40 @@ void DockWindow::Close(DockableCtrl &dc)
 		c = NULL;
 	}
 	if (c) CloseContainer(*c);
+}
+
+void DockWindow::ActivateDockable(Ctrl &c)
+{
+	int ix = FindDocker(&c);
+	if (ix >= 0)
+		Activate(*dockers[ix]);
+}
+
+void DockWindow::ActivateDockableChild(Ctrl &c)
+{
+	Ctrl *p = c.GetParent();
+	int ix = -1;
+	while (p && (ix = FindDocker(p)) < 0)
+		p = p->GetParent();
+	if (ix >= 0)
+		Activate(*dockers[ix]);
+}
+
+void DockWindow::Activate(DockableCtrl &dc)
+{
+	if (dc.IsVisible() && dc.IsOpen()) return;
+	DockCont *c = GetContainer(dc);
+	if (!c)
+		c = CreateContainer(dc);
+	if (c->IsHidden())
+		FloatContainer(*c);
+	else if (c->IsAutoHide()) {
+		for (int i = 0; i < DOCK_BOTTOM; i++)
+			if (hideframe[i].HasCtrl(*c))
+				hideframe[i].ShowAnimate(c);
+	}
+	else
+		c->SetCursor(dc);
 }
 
 void DockWindow::DockGroup(int align, String group, int pos)
@@ -215,6 +249,21 @@ void DockWindow::SyncContainer(DockCont &c)
 	c.Grouping(grouping);
 	c.WindowButtons(menubtn, hidebtn, closebtn);
 	c.SyncButtons();
+	c.Lock(IsLocked());
+	if (!tabalign)
+		c.SyncTabs(TabBar::BOTTOM, tabtext);
+	else {
+		int align;
+		if ((align = GetDockAlign(c)) == DOCK_NONE && c.IsAutoHide())
+			for (int i = 0; i < DOCK_BOTTOM; i++)
+				if (hideframe[i].HasCtrl(c)) {
+					align = i;
+					break; 	
+				}
+		align = IsTB(align) ? TabBar::RIGHT : TabBar::BOTTOM;
+		c.SyncTabs(align, tabtext);
+	}
+	
 }
 
 void DockWindow::SyncAll()
@@ -780,6 +829,26 @@ void DockWindow::ContainerDragEnd(DockCont &dc)
 /*
  * Misc
 */ 
+void DockWindow::LockLayout(bool lock)
+{
+	locked = lock;
+	SyncAll();
+}
+
+DockWindow &DockWindow::TabAutoAlign(bool al)
+{
+	tabalign = al;
+	SyncAll(); 
+	return *this;		
+}
+
+DockWindow &DockWindow::TabShowText(bool text)
+{
+	tabtext = text; 
+	SyncAll(); 
+	return *this;	
+}
+
 void DockWindow::SetFrameSize(int align, int size)
 {
 	ALIGN_ASSERT(align);
@@ -842,22 +911,24 @@ DockWindow & DockWindow::WindowButtons(bool menu, bool hide, bool close)
  	return *this;	
 }
 
-void DockWindow::DockLayout()
+void DockWindow::DockLayout(bool tb_precedence)
 {
 	if (hideframe[0].GetParent())
 		for (int i = 0; i < 4; i++) {
 			RemoveFrame(hideframe[i]);
 			RemoveFrame(dockframe[i]);
 		}
+	int i = tb_precedence ? 0 : 1;
 	// Top, Bottom, Left, Right
-	AddFrame(hideframe[1]);
-	AddFrame(hideframe[3]);
-	AddFrame(hideframe[0]);
-	AddFrame(hideframe[2]);		
-	AddFrame(dockframe[1]);
-	AddFrame(dockframe[3]);
-	AddFrame(dockframe[0]);
-	AddFrame(dockframe[2]);
+	AddFrame(hideframe[1-i]);
+	AddFrame(hideframe[3-i]);
+	AddFrame(hideframe[0+i]);
+	AddFrame(hideframe[2+i]);
+			
+	AddFrame(dockframe[1-i]);
+	AddFrame(dockframe[3-i]);
+	AddFrame(dockframe[0+i]);
+	AddFrame(dockframe[2+i]);
 }
 
 DockableCtrl & DockWindow::Dockable(Ctrl &ctrl, WString title)
@@ -890,18 +961,20 @@ void DockWindow::DockWindowMenu(Bar &bar)
 
 void DockWindow::SerializeWindow(Stream &s)
 {
-	int version = 3;
+	int version = 4;
 	int v = version;
 	s / v;
-	ASSERT(v == version);
 	
 	SerializeLayout(s, true);
 	
 	s % tabbing % autohide % animatehl % nestedtabs 
 	  % grouping % menubtn % closebtn % hidebtn % nesttoggle;
-	  
-	if (s.IsLoading())
+	if (version >= 4)
+		s % locked;
+	if (s.IsLoading()) {
 		SyncAll();
+		init = true;
+	}
 }
 
 void DockWindow::ClearLayout()
@@ -1040,7 +1113,6 @@ void DockWindow::SerializeLayout(Stream &s, bool withsavedlayouts)
 	s % haslay;
 	if (withsavedlayouts && (s.IsStoring() || haslay))
 		s % layouts;
-	
 	s.Magic();
 }
 
@@ -1052,6 +1124,13 @@ int DockWindow::SaveLayout(String name)
 	int ix = layouts.FindAdd(name, String());
 	layouts[ix] = (String)s;
 	return ix;
+}
+
+void DockWindow::LoadLayout(String name)
+{
+	int ix = layouts.Find(name); 
+	if (ix >= 0) 
+		LoadLayout(ix);	
 }
 
 void DockWindow::LoadLayout(int ix)
@@ -1075,8 +1154,11 @@ DockWindow::DockWindow()
 	init = false;
 	tabbing = grouping = true;
 	nestedtabs = false;
+	locked = false;
 	nesttoggle = K_CTRL | K_SHIFT;
 	menubtn = closebtn = hidebtn = true;
+	tabtext = true;
+	tabalign = false;
 	
 	for (int i = 0; i < 4; i++) {
 		dockframe[i].Set(dockpane[i], 0, i);

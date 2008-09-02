@@ -11,6 +11,11 @@ DockCont * DockableCtrl::GetContainer() const
 	return dynamic_cast<DockCont *>(GetParent());
 }
 
+DockableCtrl & DockableCtrl::Set(const Image &_icon, const char *_title, String _group)
+{
+	return SetGroup(_group).Title(_title).Icon(_icon);
+}
+
 DockableCtrl & DockableCtrl::SizeHint(const Size &min, const Size &max, const Size &std)
 {
 	minsize = min; maxsize = max; stdsize = std; 
@@ -79,8 +84,6 @@ DockableCtrl::DockableCtrl()
 	Transparent(false);
 	BackPaint();
 }
-
-
 
 void DockableCtrlImgsLook(Value* look, int i, int n)
 {

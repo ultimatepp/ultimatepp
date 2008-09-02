@@ -24,11 +24,13 @@ public:
 	DockTabBar &	Icons(bool b = true)			{ icons = b; }
 
 	void			SyncRepos()						{ Repos(); }
+	void			ShowText(bool show)				{ showtext = show; }
 
 	DockTabBar();
 protected:
 	int autohide;
 	bool icons:1;
+	bool showtext:1;
 //	PasteClip *clip;
 	
 	virtual void PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, const Font &font, 
@@ -60,6 +62,8 @@ public:
 	void	RemoveCtrl(DockCont &c, int ix);
 	bool 	HasCtrl(DockCont &c) const				{ return (FindCtrl(c) >= 0); }
 	
+	void	ShowAnimate(Ctrl *c);	
+	
 	static void SetTimeout(int delay_ms)	  		{ ASSERT(delay_ms > 0); autohide_timeout = delay_ms; }
 	
 	AutoHideBar();
@@ -84,7 +88,6 @@ private:
 	void 	TabDrag(int ix);
 	void 	TabHighlight();	
 	void	TabClose(Value v);				
-	void	ShowAnimate(Ctrl *c);
 	void	HideAnimate(Ctrl *c);
 	void 	AdjustSize(Rect &r, const Size &sz);
 };

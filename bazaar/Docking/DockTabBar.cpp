@@ -45,7 +45,7 @@ void DockTabBar::PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, 
 		Point ip = p;
 		Size isz = icon.GetSize();
 		if (al == RIGHT)
-			ip.x -= font.GetHeight();
+			ip.x -= isz.cx-1;
 		else if (al == LEFT)
 			ip.y -= isz.cy;
 		if (IsVert()) {
@@ -57,7 +57,8 @@ void DockTabBar::PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, 
 			p.x += isz.cx + TB_SPACEICON;
 		}	
 	}
-	w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
+	if (showtext)
+		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
 }
 
 Size DockTabBar::GetStdSize(Value &q)
@@ -74,9 +75,8 @@ Size DockTabBar::GetStdSize(Value &q)
 		d = ValueTo<DockableCtrl *>(q);
 		v = d->GetTitle();
 	}
-	Size sz = TabBar::GetStdSize(v);
-	sz.cx += (IsVert() ? d->GetIcon().GetHeight() : d->GetIcon().GetWidth()) + TB_SPACEICON;
-	return sz;
+	int isz = (IsVert() ? d->GetIcon().GetHeight() : d->GetIcon().GetWidth());
+	return showtext ? TabBar::GetStdSize(v) + Size(isz + TB_SPACEICON, 0) : Size(isz, isz);
 }
 
 void DockTabBar::RightDown(Point p, dword keyflags)

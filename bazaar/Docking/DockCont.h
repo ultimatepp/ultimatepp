@@ -35,10 +35,10 @@ public:
 	virtual void Layout();
 	virtual void ChildRemoved(Ctrl *child);
 	virtual void ChildAdded(Ctrl *child);
-	virtual void ChildGotFocus() 						{ handle.RefreshFocus(true); TopWindow::ChildGotFocus(); }
+/*	virtual void ChildGotFocus() 						{ handle.RefreshFocus(true); TopWindow::ChildGotFocus(); }
 	virtual void ChildLostFocus() 						{ handle.RefreshFocus(HasFocusDeep()); TopWindow::ChildLostFocus(); }
 	virtual void GotFocus() 							{ handle.RefreshFocus(true); }
-	virtual void LostFocus() 							{ handle.RefreshFocus(HasFocusDeep()); }
+	virtual void LostFocus() 							{ handle.RefreshFocus(HasFocusDeep()); }*/
 #if defined(PLATFORM_WIN32)
 public:
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
@@ -81,10 +81,10 @@ private:
 		virtual void FrameAddSize(Size& sz);
 		
 		virtual void Paint(Draw &w);
-		virtual void LeftDrag(Point p, dword keyflags)	{ RefreshFocus(true); WhenLeftDrag(); }
-		virtual void RightDown(Point p, dword keyflags) { RefreshFocus(true); WhenContext(); }
+		virtual void LeftDrag(Point p, dword keyflags)	{ /*RefreshFocus(true);*/ WhenLeftDrag(); }
+		virtual void RightDown(Point p, dword keyflags) { /*RefreshFocus(true);*/ WhenContext(); }
 		
-		void	RefreshFocus(bool _focus);
+		//void	RefreshFocus(bool _focus);
 		int		GetHandleSize(const DockableCtrl::Style &s) const;
 	};
 		
@@ -119,6 +119,7 @@ private:
 	void 	AddRemoveButton(Ctrl &c, bool state);
 	bool 	IsDockAllowed0(int align, const Value &v) const;
 	void	SyncButtons(DockableCtrl &dc);
+	Ctrl *  FindFirstChild() const;
 
 	Ctrl *			CtrlCast(const Value &v) const		{ return IsDockCont(v) ? (Ctrl *)ContCast(v) : (Ctrl *)DockCast(v); }
 	DockCont *		ContCast(const Value &v) const 		{ return ValueTo<DockCont *>(v); } 
@@ -129,6 +130,7 @@ private:
 	Value 			ValueCast(DockCont *dc) const 		{ return RawToValue<DockCont *>(dc); }
 public:
 	void 			SetCursor(int ix)					{ tabbar.SetCursor(ix); TabSelected(); }	
+	void 			SetCursor(Ctrl &c);
 	int 			GetCursor()	const					{ return tabbar.GetCursor(); }
 	DockableCtrl &	Get(int ix) const					{ return *Get0(ix); }
 	DockableCtrl &	GetCurrent() const					{ return Get(tabbar.GetCursor()); }
@@ -156,11 +158,13 @@ public:
 	void 			StateFloating(DockWindow &dock);	
 	void			StateAutoHide(DockWindow &dock)				{ StateDocked(dock); Hide(); dockstate = STATE_AUTOHIDE; }
 	void			StateTabbed(DockWindow &dock)				{ StateFloating(dock); Hide(); dockstate = STATE_TABBED; }
-	
+		
 	void			StartMouseDrag();
 	
 	DockWindow *	GetDockWindow() const			{ return base; }
 	void			SyncButtons()					{ if (GetCount()) SyncButtons(GetCurrent()); }
+	void			SyncTabs(int align, bool text);				
+	void 			Lock(bool lock);
 	
 	void 			Grouping(bool grouping)			{ tabbar.Grouping(grouping); GroupRefresh(); }
 	void			GroupRefresh();	

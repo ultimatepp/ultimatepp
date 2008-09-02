@@ -53,7 +53,6 @@ protected:
 	void 			StartHighlight(DockCont *dcptr);		
 	void 			Highlight(int align, DockCont &cont, DockCont *target);
 	void 			StopHighlight(bool do_animatehl);
-	// Animation
 	// Called by containers to signal drag-drop events
 	virtual void 	ContainerDragStart(DockCont &dc);
 	virtual void 	ContainerDragMove(DockCont &dc);
@@ -74,7 +73,7 @@ protected:
 	// For finding drag-drop targets and computing boundary rect
 	DockCont *		GetMouseDockTarget();
 	DockCont *		FindDockTarget(DockCont &dc, int &al);
-	int 			FindDocker(DockableCtrl *dc);
+	int 			FindDocker(Ctrl *dc);
 	Rect 			GetAlignBounds(int al, Rect r, bool center, bool allow_lr = true, bool allow_tb = true);
 	int 			GetPointAlign(const Point p, Rect r, bool center, bool allow_lr = true, bool allow_tb = true);
 	int 			GetQuad(Point p, Rect r);
@@ -103,6 +102,9 @@ private:
 	bool closebtn;
 	bool hidebtn;
 	bool dockable[4];
+	bool locked;
+	bool tabtext;
+	bool tabalign;
 	dword nesttoggle;
 
 	Array<DockCont> 			conts;
@@ -123,17 +125,17 @@ private:
 	FrameAnim 					frameanim[4];
 	int 						animdelay;	
 public:	
-	void 		DockLayout();
+	void 		DockLayout(bool tb_precedence = true);
 
 	virtual void DockInit() { }
 
 	DockableCtrl &	Dockable(Ctrl &ctrl, WString title);
 	DockableCtrl &	Dockable(Ctrl &ctrl, const char *title = 0)			{ return Dockable(ctrl, (WString)title); }
-	
-	void 			DockLeft(DockableCtrl &dc, int pos = -1)				{ Dock(DOCK_LEFT, dc, pos); }
-	void 			DockTop(DockableCtrl &dc, int pos = -1)					{ Dock(DOCK_TOP, dc, pos); }
-	void 			DockRight(DockableCtrl &dc, int pos = -1)				{ Dock(DOCK_RIGHT, dc, pos); }
-	void 			DockBottom(DockableCtrl &dc, int pos = -1)				{ Dock(DOCK_BOTTOM, dc, pos); }
+		
+	void 			DockLeft(DockableCtrl &dc, int pos = -1)			{ Dock(DOCK_LEFT, dc, pos); }
+	void 			DockTop(DockableCtrl &dc, int pos = -1)				{ Dock(DOCK_TOP, dc, pos); }
+	void 			DockRight(DockableCtrl &dc, int pos = -1)			{ Dock(DOCK_RIGHT, dc, pos); }
+	void 			DockBottom(DockableCtrl &dc, int pos = -1)			{ Dock(DOCK_BOTTOM, dc, pos); }
 	void 			Dock(int align, DockableCtrl &dc, int pos = -1);
 	void 			Tabify(DockableCtrl &target, DockableCtrl &dc);
 		
@@ -145,6 +147,9 @@ public:
 	
 	void 			Close(DockableCtrl &dc);
 
+	void			ActivateDockable(Ctrl &c);
+	void			ActivateDockableChild(Ctrl &c);
+
 	void 			DockGroup(int align, String group, int pos = -1);
 	void 			FloatGroup(String group);
 	void 			AutoHideGroup(int align, String group);
@@ -152,9 +157,9 @@ public:
 	void 			TabFloatGroup(String group);	
 	void			CloseGroup(String group);
 			
-	bool 			IsDockVisible(int align) const	{ ASSERT(align >= 0 && align <= 4); return dockpane[align].IsVisible(); }
+	bool 			IsDockVisible(int align) const		{ ASSERT(align >= 0 && align <= 4); return dockpane[align].IsVisible(); }
 	void 			SetFrameSize(int align, int size);
-
+		
 	DockWindow &	AnimateDelay(int ms)				{ animdelay = max(ms, 0); return *this; }
 	DockWindow &	Animate(bool highlight = true, bool frames = true, bool windows = true, int ticks = 10, int interval = 20);
 	DockWindow &	NoAnimate()							{ return Animate(false, false); }
@@ -162,6 +167,13 @@ public:
 	bool			IsAnimatedHighlight() const			{ return animatehl; }
 	bool			IsAnimatedFrames() const			{ return animatefrm; }
 	bool			IsAnimatedWindows() const			{ return animatewnd; }
+	
+	void			LockLayout(bool lock = true);
+	void			UnlockLayout()						{ LockLayout(true); }
+	bool			IsLocked() const					{ return locked; }
+
+	DockWindow &	TabAutoAlign(bool al = true);
+	DockWindow &	TabShowText(bool text = true);
 	
 	DockWindow &	Tabbing(bool _tabbing = true) 		{ tabbing = _tabbing; return *this; }
 	DockWindow &	NoTabbing()							{ return Tabbing(false); }
@@ -208,7 +220,7 @@ public:
 	
 	int 			SaveLayout(String name);
 	void 			LoadLayout(int ix);
-	void 			LoadLayout(String name)			{ LoadLayout(layouts.Find(name)); }
+	void 			LoadLayout(String name);
 	void			DeleteLayout(String name)		{ layouts.RemoveKey(name); }
 	String 			GetLayoutName(int ix) const 	{ return layouts.GetKey(ix); }
 	int  			LayoutCount() const				{ return layouts.GetCount(); }
@@ -235,6 +247,7 @@ private:
 	// Helpers		
 	void 			Dock0(int align, Ctrl &c, int pos, bool do_animatehl = false, bool ishighlight = false);
 	void 			Undock0(Ctrl &c, bool do_animatehl = false, int fsz = -1, bool ishighlight = false);		
+	void			Activate(DockableCtrl &dc);
 	
 	void			DoFrameSize(bool animate, int align, int targetsize);
 	void			FrameAnimateTick();
@@ -317,6 +330,7 @@ private:
 	void OnDeleteGroup();
 	void OnOK();
 	void OnCancel(); 
+	void OnLock();
 	
 	void OnTreeDrag();
 	void OnTreeDrop(int parent, int ii, PasteClip& d);

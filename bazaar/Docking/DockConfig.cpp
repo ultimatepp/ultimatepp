@@ -42,7 +42,9 @@ DockConfigDlg::DockConfigDlg(DockWindow &dockwindow)
 	ok 			<<= THISBACK(OnOK);
 	cancel		<<= THISBACK(OnCancel);	
 	WhenClose 	=   THISBACK(OnCancel);
+	locked		<<= THISBACK(OnLock);
 	
+	locked		<<= dock.IsLocked();
 	animate 	<<= dock.IsAnimated();
 	tabbing 	<<= dock.IsTabbing();
 	tabnesting 	<<= dock.IsNestedTabs();
@@ -229,6 +231,11 @@ void DockConfigDlg::OnCancel()
 	StringStream s(backup);
 	dock.SerializeLayout(s, true);	
 	Close();
+}
+
+void DockConfigDlg::OnLock()
+{
+	dock.LockLayout(locked);
 }
 
 void DockConfigDlg::OnTreeDrag()

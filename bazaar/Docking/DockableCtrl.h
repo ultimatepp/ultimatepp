@@ -54,6 +54,8 @@ public:
 	DockableCtrl &	Title(const WString& _title)	{ title = _title; if (GetParent()) GetParent()->Refresh(); return *this; }
 	const WString & GetTitle()						{ return title; }
 
+	DockableCtrl &	Set(const Image &icon, const char *_title, String group = Null);
+
 	DockableCtrl &	SizeHint(const Size &min, const Size &max = Null, const Size &std = Null);
 	void       		SetMinSize(Size sz) 			{ minsize = sz; }
 	void       		SetMaxSize(Size sz) 			{ maxsize = sz; }	
@@ -87,6 +89,11 @@ public:
 	void			Highlight();
 	
 	DockableCtrl();
+};
+
+struct DockableParent : public DockableCtrl
+{
+	virtual void Paint(Draw &w) { w.DrawRect(GetSize(), SColorFace); }
 };
 
 #endif
