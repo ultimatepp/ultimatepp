@@ -1,0 +1,5 @@
+file
+	ExpandFrame.h,
+	ExpanderCtrl.cpp,
+	ExpandFrame.cpp;
+
