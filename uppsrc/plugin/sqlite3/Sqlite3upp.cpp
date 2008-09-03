@@ -95,8 +95,8 @@ void Sqlite3Connection::BindParam(int i, const Value& r) {
 			break;
 		case TIME_V: {
 				Time t = r;
-				String p = Format("%02d-%02d-%04d %02d:%02d:%02d",
-						   t.month, t.day, t.year, t.hour, t.minute, t.second);
+				String p = Format("%04d-%02d-%02d %02d:%02d:%02d",
+						          t.year, t.month, t.day, t.hour, t.minute, t.second);
 				sqlite3_bind_text(current_stmt,i,p,p.GetLength(),SQLITE_TRANSIENT);
 			}
 			break;
@@ -161,6 +161,9 @@ bool Sqlite3Connection::Execute() {
 					if(coltype == "date")
 						field.type = DATE_V;
 					else
+					if(coltype == "datetime")
+						field.type = TIME_V;
+					else
 						field.type = WSTRING_V;
 					break;
 				case SQLITE_NULL:
@@ -215,7 +218,6 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 
 	ASSERT(got_row_data);
 	String coltype = sqlite3_column_decltype(current_stmt,i);
-	String sdate;
 	switch (sqlite3_column_type(current_stmt,i)) {
 		case SQLITE_INTEGER:
 			f = sqlite3_column_int64(current_stmt,i);
@@ -224,10 +226,20 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 			f = sqlite3_column_double(current_stmt,i);
 			break;
 		case SQLITE_TEXT:
-			if (coltype == "date"){
-				sdate = (const char *)sqlite3_column_text(current_stmt, i);
-				f = Value(Date(atoi(sdate.Mid(0, 4)), atoi(sdate.Mid(5, 2)),
-				               atoi(sdate.Mid(8, 2))));
+			if(coltype == "date"){
+				const char *s = (const char *)sqlite3_column_text(current_stmt, i);
+				if(strlen(s) >= 10)
+					f = Value(Date(atoi(s), atoi(s + 5), atoi(s + 8)));
+				else
+					f = Null;
+			}
+			else
+			if(coltype == "datetime") {
+				const char *s = (const char *)sqlite3_column_text(current_stmt, i);
+				if(strlen(s) >= 19)
+					f = Value(Time(atoi(s), atoi(s + 5), atoi(s + 8), atoi(s + 11), atoi(s + 14), atoi(s + 17)));
+				else
+					f = Null;
 			}
 			else
 				f = Value(WString((const wchar*)sqlite3_column_text16(current_stmt,i)));
@@ -354,7 +366,10 @@ Vector<SqlColumnInfo> Sqlite3Session::EnumColumns(String database, String table)
 			info.type = DOUBLE_V;
 		else
 		if (ColType =="date")
-			info.type = DATE_V; // is text
+			info.type = DATE_V;
+		else
+		if (ColType == "datetime")
+			info.type = TIME_V;
 		else
 			info.type = STRING_V;
 		out.Add(info);
