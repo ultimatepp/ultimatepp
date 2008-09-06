@@ -854,9 +854,14 @@ void Ide::SaveMakeFile(const String& fn, bool exporting)
 	EndBuilding(true);
 }
 
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_LINUX)
 void Ide::OpenOutputFolder()
 {
-	LaunchWebBrowser(GetFileFolder(target));
+	#if defined(PLATFORM_WIN32)
+		LaunchWebBrowser(GetFileFolder(target));
+	#else
+		system("xdg-open " + GetFileFolder(target) + " &");
+	#endif
 }
 #endif
+

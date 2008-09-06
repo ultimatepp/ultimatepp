@@ -391,8 +391,7 @@ void Ide::BuildMenu(Bar& menu) {
 		.Help("Find next error line according to error output in the console window");
 	menu.Add(console.GetLineCount(), AK_FINDPREVERROR, THISBACK(FindPrevError))
 		.Help("Find previous error line according to error output in the console window");
-
-#ifdef PLATFORM_WIN32
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_LINUX)
 	menu.Separator();
 	menu.Add(!IsNull(target), "Open output directory", THISBACK(OpenOutputFolder));
 #endif
