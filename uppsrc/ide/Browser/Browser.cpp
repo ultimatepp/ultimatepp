@@ -78,6 +78,19 @@ bool MatchNest(const char *nest, const CppNest& m, const BrowserQuery& q)
 	return false;
 }
 
+void Browser::WithSearch(EditString& search_nest, EditString& search_item)
+{
+	item.WantFocus();
+	search_nest.NullText("Search nest", StdFont().Italic(), SColorDisabled());
+	search_nest.SetFilter(CharFilterAlphaToUpper);
+	s_nest = &search_nest;
+	search_nest <<= THISBACK(Reload);
+	search_item.NullText("Search item", StdFont().Italic(), SColorDisabled());
+	search_item.SetFilter(CharFilterAlphaToUpper);
+	s_item = &search_item;
+	search_item <<= THISBACK(EnterNesting);
+}
+
 bool Browser::FindSet(const String& knesting, const String& kitem, int nestingsc, int itemsc)
 {
 	if(!IsNull(knesting) && nesting.FindSetCursor(knesting)) {
@@ -109,13 +122,18 @@ void Browser::Reload()
 	}
 	nesting.Clear();
 	item.Clear();
-	for(int i = 0; i < base.GetCount(); i++)
-		if(MatchNest(base.GetKey(i), base[i], query)) {
+	String srch;
+	if(s_nest)
+		srch = ~*s_nest;
+	for(int i = 0; i < base.GetCount(); i++) {
+		String k = base.GetKey(i);
+		if(MatchNest(k, base[i], query) && (srch.GetCount() == 0 || ToUpper(k).Find(srch) >= 0)) {
 			CppNestingInfo f;
 			f.namespacel = base[i].namespacel;
-			f.nesting = base.GetKey(i);
+			f.nesting = k;
 			nesting.Add(f.nesting, i, RawToValue<CppNestingInfo>(f));
 		}
+	}
 	nesting.Sort();
 	if(!IsNull(knesting) && nesting.FindSetCursor(knesting)) {
 		nesting.ScCursor(nestingsc);
@@ -149,8 +167,12 @@ void Browser::LoadNest(const String& nest, ArrayMap<String, CppItemInfo>& item, 
 	CppNest& m = BrowserBase()[q];
 	bool all = !IsNull(query.name) && MatchNestName(nest, query.name) || inherited;
 	String base;
+	String srch;
+	if(s_item)
+		srch = ~*s_item;
 	for(int i = 0; i < m.GetCount(); i++) {
-		if(MatchItem(nest, m[i], m.key[i], m.name[i], query, all)) {
+		if(MatchItem(nest, m[i], m.key[i], m.name[i], query, all) &&
+		   (srch.GetCount() == 0 || ToUpper(m.name[i]).Find(srch) >= 0)) {
 			const CppItem& im = m[i];
 			String k = m.key[i];
 			int q = item.Find(k);
@@ -440,6 +462,7 @@ void CppNestingInfoDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 
 Browser::Browser()
 {
+	s_nest = s_item = NULL;
 	nesting.NoHeader().NoGrid();
 	nesting.AddKey();
 	nesting.AddIndex();

@@ -122,14 +122,33 @@ void RichEdit::SpellCheckTool(Bar& bar)
 	   .Check(spellcheck);
 }
 
-void RichEdit::IndexEntryTool(Bar& bar, int width)
+String PlusKeyDesc(const char *text, dword key)
 {
-	bar.Add(!IsReadOnly(), indexentry, width);
+	String r = text;
+	if(key)
+		r << ' ' << GetKeyDesc(key);
+	return r;
 }
 
-void RichEdit::HyperlinkTool(Bar& bar, int width)
+void RichEdit::IndexEntryTool(Bar& bar, int width, dword key, const char *tip)
+{
+	bar.Add(!IsReadOnly(), indexentry, width);
+	indexentry.Tip(PlusKeyDesc(tip ? tip : t_("Index entry"), key));
+	bar.AddKey(key, THISBACK(IndexEntry));
+}
+
+void RichEdit::HyperlinkTool(Bar& bar, int width, dword key, const char *tip)
 {
 	bar.Add(!IsReadOnly(), hyperlink, width);
+	hyperlink.Tip(PlusKeyDesc(tip ? tip : t_("Hyperlink"), key));
+	bar.AddKey(key, THISBACK(Hyperlink));
+}
+
+void RichEdit::LabelTool(Bar& bar, int width, dword key, const char *tip)
+{
+	bar.Add(!IsReadOnly(), label, width);
+	label.Tip(PlusKeyDesc(tip ? tip : t_("Paragraph label"), key));
+	bar.AddKey(key, THISBACK(Label));
 }
 
 void RichEdit::LeftTool(Bar& bar, dword key)
@@ -137,7 +156,7 @@ void RichEdit::LeftTool(Bar& bar, dword key)
 	int a = formatinfo.paravalid & RichText::ALIGN ? formatinfo.align : Null;
 	bar.Add(!IsReadOnly(), t_("Left"), RichEditImg::Left(), THISBACK(AlignLeft))
 	   .Check(a == ALIGN_LEFT)
-	   .Key(K_CTRL_L);
+	   .Key(key);
 }
 
 void RichEdit::RightTool(Bar& bar, dword key)
@@ -213,11 +232,6 @@ void RichEdit::ParaFormatTool(Bar& bar, dword key)
 {
 	bar.Add(!IsReadOnly(), t_("Paragraph format.."), RichEditImg::ParaFormat(), THISBACK(ParaFormat))
 	   .Key(key);
-}
-
-void RichEdit::LabelTool(Bar& bar, int width)
-{
-	bar.Add(!IsReadOnly(), label, width);
 }
 
 void RichEdit::ToParaTool(Bar& bar, dword key)

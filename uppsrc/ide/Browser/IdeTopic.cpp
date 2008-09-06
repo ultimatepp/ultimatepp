@@ -128,7 +128,7 @@ void TopicEditor::MainTool(Bar& bar)
 	   .Key(K_CTRL_P);
 	bar.GapRight();
 	bar.Break();
-	editor.LabelTool(bar, 500);
+	editor.LabelTool(bar, 500, K_CTRL_M, "Code reference");
 	bar.Gap();
 	Tools(bar);
 	bar.Gap();

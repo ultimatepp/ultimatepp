@@ -47,7 +47,7 @@ private:
 	int           tabpos;
 	int           tabsize;
 	int           newtabalign;
-
+	
 public:
 	Callback      WhenLeftDouble;
 	Callback      WhenLeftDown;
@@ -565,9 +565,9 @@ public:
 	void   InkTool(Bar& bar);
 	void   PaperTool(Bar& bar);
 	void   LanguageTool(Bar& bar, int width = HZoom(60));
-	void   HyperlinkTool(Bar& bar, int width = 180);
+	void   HyperlinkTool(Bar& bar, int width = 180, dword key = 0, const char *tip = NULL);
 	void   SpellCheckTool(Bar& bar);
-	void   IndexEntryTool(Bar& bar, int width = 80);
+	void   IndexEntryTool(Bar& bar, int width = 80, dword key = 0, const char *tip = NULL);
 
 	void   LeftTool(Bar& bar, dword key = K_CTRL_L);
 	void   RightTool(Bar& bar, dword key = K_CTRL_R);
@@ -579,7 +579,7 @@ public:
 	void   BoxWhiteBulletTool(Bar& bar, dword key = 0);
 	void   TextBulletTool(Bar& bar, dword key = 0);
 	void   ParaFormatTool(Bar& bar, dword key = 0);
-	void   LabelTool(Bar& bar, int width = 80);
+	void   LabelTool(Bar& bar, int width = 80, dword key = 0, const char *tip = NULL);
 	void   ToParaTool(Bar& bar, dword key = K_CTRL_K);
 
 	void   UndoTool(Bar& bar, dword key = K_CTRL_Z);
