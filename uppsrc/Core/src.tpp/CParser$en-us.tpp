@@ -7,7 +7,7 @@ topic "CParser";[2 $$0,0#00000000000000000000000000000000:Default]
 [*+117 $$6,6#14700283458701402223321329925657:header]
 [l288;a17;*1 $$7,7#70004532496200323422659154056402:requirement]
 [{_}%EN-US 
-[s5;K@0 [%00-00@(0.0.255) class][%00-00@(64) _][%00-00 CParser]&]
+[s5;K:`:`:CParser`:`:class:@0 [%00-00@(0.0.255) class][%00-00@(64) _][%00-00 CParser]&]
 [s0; &]
 [s2; CParser is simple yet very useful lexical analyzer suitable 
 for building descent parsers of languages with C`-like syntax.&]
@@ -22,14 +22,13 @@ via ThrowError method) to indicate errors as well.&]
 [s2; CParser objects cannot be transfered (copied).&]
 [s2; &]
 [s0;3 &]
-[s5;K^`:`:Exc^ [%00-00^^@(0.0.255) struct][%00-00^^ _][%00-00^^@0 Error][%00-00^^ _:_][%00-00^^@(0.0.255) p
-ublic][%00-00^^ _][%00-00 Exc]&]
+[s5;K:`:`:CParser`:`:Error`:`:struct:^`:`:Exc^ [%00-00^^@(0.0.255) struct][%00-00^^ _][%00-00^^@0 E
+rror][%00-00^^ _:_][%00-00^^@(0.0.255) public][%00-00^^ _][%00-00 Exc]&]
 [s0;* &]
 [s2; Type used as CParser exception. Contains single String with 
 error description.&]
 [s2; &]
-[s0;l288;^topic`:`/`/Core`/src`/util`$en`-us`#`:`:Exc`:`:class Exc^ [/^^ Derived 
-from][^^  ][%00-00 Exc]&]
+[s0;l288;^`:`:Exc^ [/^^ Derived from][^^  ][%00-00 Exc]&]
 [s0;3 &]
 [s0;l288;:`:`:CParser`:`:Error`:`:Error`(const char`*`): [%00-00* Error][%00-00 (const_ch
 ar_`*][%00-00*@3 s][%00-00 )]&]
@@ -37,7 +36,7 @@ ar_`*][%00-00*@3 s][%00-00 )]&]
 [s4;l448; [%00-00*C@3 s]-|Error message.&]
 [s2; &]
 [s0;3 &]
-[s5;K@0 [%00-00@(0.0.255) struct][%00-00@(64) _][%00-00 Pos]&]
+[s5;K:`:`:CParser`:`:Pos`:`:struct:@0 [%00-00@(0.0.255) struct][%00-00@(64) _][%00-00 Pos]&]
 [s2; &]
 [s2; Position in parsed text.&]
 [s0;3 &]
@@ -50,14 +49,15 @@ const_char_`*][%00-00*@3 ptr][%00-00 _`=_NULL, int_][%00-00*@3 line][%00-00 _`=_
 [s4;l480; [%00-00*C@3 line]-|Line number.&]
 [s4;l480; [%00-00*C@3 fn]-|Filename.&]
 [s0;3 &]
-[s5;l288;K@0 [%00-00@(0.0.255) const][%00-00@(64) _][%00-00@(0.0.255) char][%00-00@(64) _`*][%00-00 p
-tr]&]
+[s5;l288;K:`:`:CParser`:`:Pos`:`:ptr:@0 [%00-00@(0.0.255) const][%00-00@(64) _][%00-00@(0.0.255) c
+har][%00-00@(64) _`*][%00-00 ptr]&]
 [s2;l480; Pointer to the position in the input text &]
 [s0;3 &]
-[s5;l288;K@0 [%00-00@(0.0.255) int][%00-00@(64) _][%00-00 line]&]
+[s5;l288;K:`:`:CParser`:`:Pos`:`:line:@0 [%00-00@(0.0.255) int][%00-00@(64) _][%00-00 line]&]
 [s2;l480; Line number.&]
 [s0;3 &]
-[s5;l288;K@0 [%00-00^`:`:String^@(64) String][%00-00@(64) _][%00-00 fn]&]
+[s5;l288;K:`:`:CParser`:`:Pos`:`:fn:@0 [%00-00^`:`:String^@(64) String][%00-00@(64) _][%00-00 f
+n]&]
 [s2;l480; Filename.&]
 [s2; &]
 [s0;3 &]

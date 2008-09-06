@@ -145,18 +145,19 @@ public:
 	void Serialize(Stream& s);
 	void SerializeWspc(Stream& s);
 
-	ArrayCtrl              nesting;
-	ItemList               item;
-	Splitter               split;
-	BrowserQuery           query;
-	QueryDlg               querydlg;
-	Callback2<String, int> WhenPos;
-	int                    pos;
-	Callback               WhenItem;
-	Callback               WhenItemDblClk;
-	Callback1<String>      WhenShowTopic;
-	bool                   clickpos;
-	bool                   show_inherited;
+	ArrayCtrl               nesting;
+	ItemList                item;
+	Splitter                split;
+	BrowserQuery            query;
+	QueryDlg                querydlg;
+	Callback2<String, int>  WhenPos;
+	int                     pos;
+	Callback                WhenItem;
+	Callback                WhenItemDblClk;
+	Callback1<String>       WhenShowTopic;
+	bool                    clickpos;
+	bool                    show_inherited;
+	EditString             *s_item, *s_nest;
 
 	void     LoadNest(const String& nest, ArrayMap<String, CppItemInfo>& item, int inherited);
 	bool     IsCurrentItem();
@@ -186,6 +187,8 @@ public:
 
 	void     ShowTopic(String w);
 	void     ShowHelp();
+	
+	void     WithSearch(EditString& search_nest, EditString& search_item);
 
 	typedef Browser CLASSNAME;
 	Browser();

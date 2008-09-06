@@ -617,12 +617,9 @@ RichEdit::RichEdit()
 	height.Tip(t_("Font height"));
 
 	hyperlink <<= THISBACK(Hyperlink);
-	hyperlink.Tip(t_("Hyperlink"));
 	hyperlink.NoWantFocus();
 	label <<= THISBACK(Label);
-	label.Tip(t_("Paragraph label"));
 	indexentry << THISBACK(IndexEntry);
-	indexentry.Tip(t_("Index entry"));
 	indexentry.NoWantFocus();
 
 	gotolabel.SetMonoImage(RichEditImg::GoTo());

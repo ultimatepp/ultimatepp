@@ -30,8 +30,11 @@ ReferenceDlg::ReferenceDlg()
 	browser.WhenItem = THISBACK(EnterItem);
 	browser.WhenItemDblClk = THISBACK(EnterItemOk);
 	browser.show_inherited = false;
+	browser.WithSearch(search_nest, search_item);
 	query <<= callback(&browser, &Browser::DoDoQuery);
 	Sizeable().Zoomable();
 	Icon(TopicImg::Topic());
 	Breaker(classlist, IDYES);
+	StartBrowserBase();
+	browser.Reload();
 }
