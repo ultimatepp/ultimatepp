@@ -22,8 +22,8 @@ GUI_APP_MAIN
 
 	DUMP(ScrollBarSize());
 
-//	e.Pick(ParseQTF(LoadFile(FileName())));
-	e.Pick(ParseQTF(AsQTF(CreateImageObject(CtrlImg::exclamation)) + " hahahaha"));
+	e.Pick(ParseQTF(LoadFile(FileName())));
+//	e.Pick(ParseQTF(AsQTF(CreateImageObject(CtrlImg::exclamation)) + " hahahaha"));
 	TopWindow w;
 	w.SetRect(0, 0, 700, 500);
 	w.Sizeable().Zoomable();
