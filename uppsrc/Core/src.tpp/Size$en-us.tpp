@@ -188,8 +188,8 @@ nt]_[@3 sh])&]
 [s2; Decrements both dimensions.&]
 [s4; -|&]
 [s0; &]
-[s3;K:`:`:Size`_`:`:operator`:`:Value`(`)const:@(0.0.255) [@(64) operator_Value()_]cons
-t&]
+[s3;K:`:`:Size`_`:`:operator`:`:Value`(`)const:@(0.0.255) [@(64) operator_][^`:`:Value^@(64) V
+alue][@(64) ()_]const&]
 [s2; Returns a conversion of the size to [* Value].&]
 [s4; -|&]
 [s0; &]

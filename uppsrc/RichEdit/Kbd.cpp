@@ -28,13 +28,14 @@ bool RichEdit::Key(dword key, int count)
 		if(RemoveSelection()) return true;
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
-		ReadFormat();
-		Remove(cursor - 1, 1);
+	//	ReadFormat(); // commented out to support OO.org style concat
+	//	Remove(cursor - 1, 1);
+	//	cursor--;
+	//	anchor = cursor;
+	//	objectpos = -1;
+	//	FinishNF();
+	//	return true;
 		cursor--;
-		anchor = cursor;
-		objectpos = -1;
-		FinishNF();
-		return true;
 	case K_DELETE:
 		if(RemoveSelection(true)) return true;
 		if(cursor < text.GetLength() && !RemoveSpecial(cursor, cursor + 1, false))
