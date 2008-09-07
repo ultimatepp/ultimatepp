@@ -11,11 +11,11 @@ topic "AIndex";[2 $$0,0#00000000000000000000000000000000:Default]
  ][%00-00@(0.0.255) class][%00-00@(64) _][%00-00@4 V][%00-00@(64) , ][%00-00@(0.0.255) clas
 s][%00-00@(64) _][%00-00@4 HashFn][%00-00@(64) >__][%00-00@(0.0.255) class][%00-00@(64) _][%00-00 A
 Index]&]
-[s0;t292;* [* class ]AIndex&]
+[s0;:`:`:AbortExc`:`:`:`:AbortExc`(`):t292;* [* class ]AIndex&]
 [s0; &]
-[s0; [*C@4 T]-|Type of elements to store. T must satisfy requirements 
-for container flavor identified by parameter V and must have 
-[*C operator`=`=] defined.&]
+[s0; [*C@4 T]-|Type of [^topic`:`/`/CoreTopics`/src`/AIndex`$en`-us^ elements] 
+to store. T must satisfy requirements for container flavor identified 
+by parameter V and must have [*C operator`=`=] defined.&]
 [s0; [*C@4 V]-|Basic random access container.&]
 [s0; [*C@4 HashFn]-|Hashing class. Must have defined [*C unsigned operator()(const 
 T`& x)] method returning hash value for elements.&]
@@ -60,9 +60,9 @@ and optional deep copy] transfer semantics, although these features
 are more important in derived concrete index flavors.&]
 [s0; Members&]
 [s0;3 &]
-[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Add][%00-00 (][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T
-][%00-00 `&_][%00-00@3 x][%00-00 , ][%00-00@(0.0.255) unsigned][%00-00 _][%00-00@3 `_hash][%00-00 )
-]&]
+[s5;K:`:`:AbortExc`:`:class: [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Add][%00-00 (][%00-00@(0.0.255) c
+onst][%00-00 _][%00-00@4 T][%00-00 `&_][%00-00@3 x][%00-00 , ][%00-00@(0.0.255) unsigned][%00-00 _
+][%00-00@3 `_hash][%00-00 )]&]
 [s2; Adds a new element with a precomputed hash value.The precomputed 
 hash value must be the same as the hash value that would be the 
 result of HashFn. The benefit of this variant is that sometimes 
@@ -74,17 +74,17 @@ like fetching strings from an input stream.&]
 [s4; [*C@3 x]-|Element to add.&]
 [s4; [*C@3 `_hash]-|Precomputed hash value.&]
 [s0;3 &]
-[s5;K [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Add][%00-00 (][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T
-][%00-00 `&_][%00-00@3 x][%00-00 )]&]
+[s5;K:`:`:AbortExc`:`:`:`:AbortExc`(`): [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Add][%00-00 (
+][%00-00@(0.0.255) const][%00-00 _][%00-00@4 T][%00-00 `&_][%00-00@3 x][%00-00 )]&]
 [s2; Adds a new element to AIndex.&]
 [s7; Requires T to have deep copy constructor.&]
 [s7; Invalidates iterators to AIndex.&]
 [s7; Invalidates references to Index.&]
 [s4; [*C@3 x]-|Element to add.&]
 [s0;3 &]
-[s5;K@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 Find][%00-00@(64) (][%00-00 const][%00-00@(64) _
-][%00-00@4 T][%00-00@(64) `&_][%00-00@3 x][%00-00@(64) , ][%00-00 unsigned][%00-00@(64) _][%00-00@3 `_
-hash][%00-00@(64) )_][%00-00 const]&]
+[s5;K:`:`:AbortExc`:`:class:@(0.0.255) [%00-00 int][%00-00@(64) _][%00-00@0 Find][%00-00@(64) (
+][%00-00 const][%00-00@(64) _][%00-00@4 T][%00-00@(64) `&_][%00-00@3 x][%00-00@(64) , 
+][%00-00 unsigned][%00-00@(64) _][%00-00@3 `_hash][%00-00@(64) )_][%00-00 const]&]
 [s2; Retrieves the position of the first element with the specified 
 value in AIndex, using a precomputed hash value. The precomputed 
 hash value must be the same as the hash value that would be result 

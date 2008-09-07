@@ -3,6 +3,7 @@ uses
 
 file
 	aggtest.h,
+	src.tpp,
 	main.cpp,
 	aggtest.lay;
 
