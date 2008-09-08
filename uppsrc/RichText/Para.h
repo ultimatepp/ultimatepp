@@ -37,7 +37,15 @@ struct RichPara {
 		DASHED1     = 28,
 		DASHEDS     = 29,
 
+		EXT         = 30,
+
 		OBJECT      = 31
+	};
+	
+	enum ExtCode {
+		NONAA0      = 1,
+		NONAA1      = 2,
+		NONAAS      = 3,
 	};
 
 	enum BULLET_STYLE {
