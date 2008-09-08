@@ -158,6 +158,11 @@ void RichPara::Charformat(Stream& out, const RichPara::CharFormat& o,
 	if(o.IsStrikeout() != n.IsStrikeout())
 		out.Put(n.IsStrikeout() == s.IsStrikeout() ? STRIKEOUTS
 		                                           : STRIKEOUT0 + n.IsStrikeout());
+	if(o.IsNonAntiAliased() != n.IsNonAntiAliased()) {
+		out.Put(EXT);
+		out.Put(n.IsNonAntiAliased() == s.IsNonAntiAliased() ? NONAAS
+		                                                     : NONAA0 + n.IsNonAntiAliased());
+	}
 	if(o.capitals != n.capitals)
 		out.Put(n.capitals == s.capitals ? CAPITALSS
 		                                 : CAPITALS0 + n.capitals);
@@ -352,7 +357,7 @@ void RichPara::UnpackParts(Stream& in, const RichPara::CharFormat& chrstyle,
 	part.Top().format = format;
 	int c;
 	while((c = in.Term()) >= 0)
-		if(c < 30 && c != 9 && c != FIELD) {
+		if(c < 31 && c != 9 && c != FIELD) {
 			do
 				switch(in.Get()) {
 				case BOLD0:
@@ -437,8 +442,20 @@ void RichPara::UnpackParts(Stream& in, const RichPara::CharFormat& chrstyle,
 				case LANGUAGE:
 					format.language = in.Get32();
 					break;
+				case EXT:
+					switch(in.Get()) {
+					case NONAA0:
+						format.NonAntiAliased(false);
+						break;
+					case NONAA1:
+						format.NonAntiAliased(true);
+						break;
+					case NONAAS:
+						format.NonAntiAliased(chrstyle.IsNonAntiAliased());
+						break;
+					}
 				}
-			while((c = in.Term()) < 30 && c != 9 && c != FIELD && c >= 0);
+			while((c = in.Term()) < 31 && c != 9 && c != FIELD && c >= 0);
 			if(part.Top().text.GetLength())
 				part.Add();
 			part.Top().format = format;
