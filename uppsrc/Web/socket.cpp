@@ -161,6 +161,12 @@ bool Socket::Data::OpenServer(int port, bool nodelay, int listen_count, bool blo
 	return true;
 }
 
+Mutex& GetHostByNameMutex()
+{
+	static StaticCriticalSection m;
+	return m;
+}
+
 bool Socket::Data::OpenClient(const char *host, int port, bool nodelay, dword *my_addr, int timeout, bool block)
 {
 	SLOG("Socket::Data::OpenClient(" << host << ':' << port << ", timeout " << timeout << ", block " << block << ')');
@@ -171,7 +177,7 @@ bool Socket::Data::OpenClient(const char *host, int port, bool nodelay, dword *m
 	sockaddr_in addr;
 
 	{
-		CriticalSection::Lock __(host_lock);
+		CriticalSection::Lock __(GetHostByNameMutex());
 		Socket::Init();
 		hostent *he = gethostbyname(host);
 		if(!he) {
