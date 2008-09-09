@@ -4,38 +4,38 @@ topic "Size";[ $$0,0#00000000000000000000000000000000:Default]
 [i448;H4;b50;a25;kKO9;*@(64)2 $$3,0#37138531426314131252341829483370:item]
 [~~~=_8333; $$4,4#05600065144404261032431302351956:break]
 [l288;a25;kK~~~.1408;@3;2 $$5,0#61217621437177404841962893300719:param]
-[i448;a25;kO9;*@(64)2 $$6,6#46142A79FADFFD11679EC28E167BF415:item`_next]
+[i448;a25;kO9;*@(64)2 $$6,6#46142079503553116794228416715415:item`_next]
 [{_}%EN-US 
 [s0; Upp&]
 [s0; Size`_&]
 [s0;*@(154.0.0)+109 &]
-[s1;K:`:`:Size`_`:`:struct: template_<[@(0.0.255) class]_[@4 T]>&]
+[s1;K:`:`:Size`_`:`:struct: [@(0.0.255) template]_<[@(0.0.255) class]_[@4 T]>&]
 [s1;K:`:`:Size`_`:`:struct: [@(0.0.255) struct]_[@0 Size`_]_:_[@(0.0.255) public]_[^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ M
 oveable]<_[@0 Size`_]<[@4 T]>_>_&]
 [s2; &]
 [s0; [* Size`_] is a generic structure that describes a two dimensional 
 size object. The horizontal dimension is represented by [*@(154.0.0) cx][@(154.0.0)  
 ]and the vertical one by [*@(154.0.0) cy]. Both dimension are of 
-type [@4 T]. To get a specialized version of [* Size`_], use one 
+type [*@4 T]. To get a specialized version of [* Size`_], use one 
 of the following:&]
 [s0; &]
-[s3; Size&]
-[s6; [@(64) typedef_][^`:`:Size`_^@(64) Size`_][@(64) <][@(0.0.255) int][@(64) >_]Size&]
+[s3; [@3 Size]&]
+[s6; [@(0.0.255) typedef]_[^`:`:Size`_^ Size`_]<[@(0.0.255) int]>_Size&]
 [s2; Size`_ with with [* int] dimensions.&]
 [s0;*@(154.0.0)2 &]
-[s3; Size16&]
-[s6;:`:`:Size16`:`:typedef: [@(64) typedef_][^`:`:Size`_^@(64) Size`_][@(64) <][@(0.0.255) in
-t16][@(64) >_]Size16&]
+[s3; [@3 Size16]&]
+[s6;:`:`:Size16`:`:typedef: [@(0.0.255) typedef]_[^`:`:Size`_^ Size`_]<[@(0.0.255) int16]>_
+Size16&]
 [s2; Size`_ with with [* int16][@(0.0.255)  ]dimensions.&]
 [s0;*@(154.0.0)2 &]
-[s3; Size64&]
-[s6;:`:`:Size64`:`:typedef: [@(64) typedef_][^`:`:Size`_^@(64) Size`_][@(64) <][@(0.0.255) in
-t64][@(64) >_]Size64&]
+[s3; [@3 Size64]&]
+[s6;:`:`:Size64`:`:typedef: [@(0.0.255) typedef]_[^`:`:Size`_^ Size`_]<[@(0.0.255) int64]>_
+Size64&]
 [s2; Size`_ with with [* int64][@(0.0.255)  ]dimensions.&]
 [s0;*@(154.0.0)2 &]
-[s3; Sizef&]
-[s6;:`:`:Sizef`:`:typedef: [@(64) typedef_][^`:`:Size`_^@(64) Size`_][@(64) <][@(0.0.255) dou
-ble][@(64) >_]Sizef&]
+[s3; [@3 Sizef]&]
+[s6;:`:`:Sizef`:`:typedef: [@(0.0.255) typedef]_[^`:`:Size`_^ Size`_]<[@(0.0.255) double]>_
+Sizef&]
 [s2; Size`_ with with [* double][@(0.0.255)  ]dimensions.&]
 [s0; &]
 [s0; &]
@@ -50,7 +50,7 @@ alue]`&_[@3 src])&]
 [s4; &]
 [s3;K:`:`:Size`_`:`:`:`:Size`_`(T`,T`): [@0 Size`_]([@4 T]_[@3 cx], [@4 T]_[@3 cy])&]
 [s5; Creates a [* Size`_] object an initializes it`'s horizontal dimension 
-with [%-@3;3 cx][%-  and it`'s vertical dimension with ][*@3 cy].&]
+with [%-3 cx][%-  and it`'s vertical dimension with ][* cy].&]
 [s4; &]
 [s3;K:`:`:Size`_`:`:`:`:Size`_`(const`:`:Size`_`<int`>`&`): [@0 Size`_]([@(0.0.255) const
 ]_[@0 Size`_]<[@(0.0.255) int]>`&_[@3 sz])&]
@@ -82,10 +82,10 @@ uller]`&)&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; Public Field Detail]}}&]
 [s0; &]
-[s3;K:`:`:Size`_`:`:cx:%- [@4 T][@(64) _]cx&]
+[s3;K:`:`:Size`_`:`:cx:%- [@4 T]_[@0 cx]&]
 [s2; the horizontal dimension&]
 [s0; &]
-[s3;K:`:`:Size`_`:`:cy:%- [@4 T][@(64) _]cy&]
+[s3;K:`:`:Size`_`:`:cy:%- [@4 T]_[@0 cy]&]
 [s2; the vertical dimension&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; Method Detail]}}&]
@@ -93,22 +93,22 @@ uller]`&)&]
 [s3;K:`:`:Size`_`:`:Clear`(`): [@(0.0.255) void]_[@0 Clear]()&]
 [s2; Sets both dimension to 0.&]
 [s4; &]
-[s3;K:`:`:Size`_`:`:IsEmpty`(`)const: bool[@(64) _][@0 IsEmpty][@(64) ()_]const&]
+[s3;K:`:`:Size`_`:`:IsEmpty`(`)const: [@(0.0.255) bool]_[@0 IsEmpty]()_[@(0.0.255) const]&]
 [s2; Returns [* true] if at least one dimension is 0, [* false] otherwise.&]
 [s4; &]
 [s3;K:`:`:Size`_`:`:SetNull`(`): [@(0.0.255) void]_[@0 SetNull]()&]
 [s2; Reinitializes the object to [* Null].&]
 [s4; &]
-[s3;K:`:`:Size`_`:`:IsNullInstance`(`)const: bool[@(64) _][@0 IsNullInstance][@(64) ()_]con
-st&]
+[s3;K:`:`:Size`_`:`:IsNullInstance`(`)const: [@(0.0.255) bool]_[@0 IsNullInstance]()_[@(0.0.255) c
+onst]&]
 [s2; Verifies if size is [* Null].&]
 [s4; &]
-[s3;K:`:`:Size`_`:`:GetHashValue`(`)const: unsigned[@(64) _][@0 GetHashValue][@(64) ()_]con
-st&]
+[s3;K:`:`:Size`_`:`:GetHashValue`(`)const: [@(0.0.255) unsigned]_[@0 GetHashValue]()_[@(0.0.255) c
+onst]&]
 [s2; Returns the hash value of the size.&]
 [s4; &]
-[s3;K:`:`:Size`_`:`:ToString`(`)const: [^topic`:`/`/Core`/src`/String`$en`-us^@(64) Str
-ing][@(64) _][@0 ToString][@(64) ()_]const&]
+[s3;K:`:`:Size`_`:`:ToString`(`)const: [^topic`:`/`/Core`/src`/String`$en`-us^ String]_
+[@0 ToString]()_[@(0.0.255) const]&]
 [s2; Returns the [* String] representation of the size.&]
 [s4; &]
 [s3;K:`:`:Size`_`:`:operator`+`=`(`:`:Size`_`): [^`:`:Size`_^ Size`_]`&_[@0 operator`+`=](
@@ -124,7 +124,8 @@ ing][@(64) _][@0 ToString][@(64) ()_]const&]
 [s2; Decreases cx with [*@3 p]`'s horizontal dimension and cy with 
 [*@3 p]`'s vertical dimension.&]
 [s4; &]
-[s3;K:`:`:Size`_`:`:operator`-`=`(T`): [^`:`:Size`_^ Size`_]`&_[@0 operator`-`=](T_[@3 t])&]
+[s3;K:`:`:Size`_`:`:operator`-`=`(T`): [^`:`:Size`_^ Size`_]`&_[@0 operator`-`=]([@4 T]_[@3 t
+])&]
 [s2; Decreases both dimension with the same value [*@3 t].&]
 [s4; &]
 [s3;K:`:`:Size`_`:`:operator`*`=`(`:`:Size`_`): [^`:`:Size`_^ Size`_]`&_[@0 operator`*`=](
@@ -157,8 +158,8 @@ nt]_[@3 sh])&]
 [s3;K:`:`:Size`_`:`:operator`-`-`(`): [^`:`:Size`_^ Size`_]`&_[@0 operator`-`-]()&]
 [s2; Decrements both dimensions.&]
 [s4; &]
-[s3;K:`:`:Size`_`:`:operator`:`:Value`(`)const: operator[@(64) _][@0 Value][@(64) ()_]const
-&]
+[s3;K:`:`:Size`_`:`:operator`:`:Value`(`)const: [@(0.0.255) operator]_[@0 Value]()_[@(0.0.255) c
+onst]&]
 [s2; Returns a conversion of the size to [* Value].&]
 [s4; &]
 [s3;K:`:`:Size`_`:`:Serialize`(`:`:Stream`&`): [@(0.0.255) void]_[@0 Serialize]([^`:`:Stream^ S
@@ -230,13 +231,13 @@ ool]_[@0 operator!`=]([^`:`:Size`_^ Size`_]_[@3 a], [^`:`:Size`_^ Size`_]_[@3 b]
 [s4; &]
 [s3;K:`:`:Size`_`:`:min`(`:`:Size`_`,`:`:Size`_`):%- [@(0.0.255) friend]_[^`:`:Size`_^ Si
 ze`_]_[@0 min]([^`:`:Size`_^ Size`_]_[@3 a], [^`:`:Size`_^ Size`_]_[@3 b])&]
-[s2;%- [%%* Returns a ][%% Size`_ ][%%* with it`'s dimension equaling the 
-minimum of the respective dimension between ][@3 a ][* and][%%*  ][@3 b].&]
+[s2;%- [%% Returns a ][%%* Size`_][%%  with it`'s dimension equaling the 
+minimum of the respective dimension between ][*@3 a][@3  ]and[%%  ][*@3 b].&]
 [s0;%- &]
 [s3;K:`:`:Size`_`:`:max`(`:`:Size`_`,`:`:Size`_`):%- [@(0.0.255) friend]_[^`:`:Size`_^ Si
 ze`_]_[@0 max]([^`:`:Size`_^ Size`_]_[@3 a], [^`:`:Size`_^ Size`_]_[@3 b])&]
-[s2;%- [%%* Returns a ][%% Size`_ ][%%* with it`'s dimension equaling the 
-maximum of the respective dimension between ][@3 a ][* and][%%*  ][@3 b].&]
+[s2;%- [%% Returns a ][%%* Size`_][%%  with it`'s dimension equaling the 
+maximum of the respective dimension between ][*@3 a][@3  ]and[%%  ][*@3 b].&]
 [s4; &]
 [s3;K:`:`:Size`_`:`:Nvl`(`:`:Size`_`,`:`:Size`_`):%- [@(0.0.255) friend]_[^`:`:Size`_^ Si
 ze`_]_[@0 Nvl]([^`:`:Size`_^ Size`_]_[@3 a], [^`:`:Size`_^ Size`_]_[@3 b])&]

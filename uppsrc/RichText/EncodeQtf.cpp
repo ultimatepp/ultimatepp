@@ -198,7 +198,7 @@ void QTFEncodePara(String& qtf, const RichPara& p, const RichPara::Format& style
 		const RichPara::Part& part = p.part[i];
 		String cf;
 		LngFmt(cf, part.format.language, lang);
-		CharFmt(cf, p.format, part.format);
+		CharFmt(cf, style, part.format);
 		if(!cf.IsEmpty()) {
 			qtf << '[' << cf << ' ';
 			d += cf.GetLength();
