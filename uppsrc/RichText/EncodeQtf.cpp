@@ -91,6 +91,9 @@ void QTFEncodeParaFormat(String& qtf, const RichPara::Format& format, const Rich
 	FmtNumber(qtf, 'l', style.lm, format.lm);
 	FmtNumber(qtf, 'r', style.rm, format.rm);
 	FmtNumber(qtf, 'i', style.indent, format.indent);
+	FmtNumber(qtf, 'H', style.ruler, format.ruler);
+	if(style.rulerink != format.rulerink)
+		qtf << "h" << FmtColor(format.rulerink);
 	FmtNumber(qtf, 'b', style.before, format.before);
 	FmtNumber(qtf, 'a', style.after, format.after);
 	if(style.newpage != format.newpage)

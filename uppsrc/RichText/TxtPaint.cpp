@@ -26,6 +26,7 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 	pp.cx = cx;
 	RichPara p = Get(parti, rc.styles);
 	RichPara::Lines pl = p.FormatLines(cx);
+	pp.ruler = p.format.ruler;
 	pp.before = p.format.before;
 	pp.linecy.Clear();
 	pp.linecy.SetCount(pl.GetCount());
@@ -60,7 +61,7 @@ PageY RichTxt::GetNextPageY(int parti, const RichContext& rc) const
 	else {
 		Sync(parti, rc);
 		const Para& pp = part[parti].Get<Para>();
-		int cy = pp.before;
+		int cy = pp.before + pp.ruler;
 		if(pp.keep || pp.keepnext)
 			cy += pp.cy;
 		else
@@ -72,7 +73,7 @@ PageY RichTxt::GetNextPageY(int parti, const RichContext& rc) const
 			if(pp.keepnext && parti + 1 < part.GetCount() && part[parti + 1].Is<Para>()) {
 				Sync(parti + 1, rc);
 				const Para& p = part[parti + 1].Get<Para>();
-				nbefore = p.before;
+				nbefore = p.before + p.ruler;
 				nline   = p.linecy[0];
 			}
 			if(pp.newpage || py.y + cy + nbefore + nline > rc.page.bottom && cy < rc.page.Height()) {

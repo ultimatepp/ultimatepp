@@ -228,9 +228,9 @@ void RichQtfParser::SetFormat()
 }
 
 void RichQtfParser::Flush() {
+	SetFormat();
 	if(text.GetLength()) {
 		ASSERT(!istable);
-		paragraph.format = format;
 		paragraph.Cat(text, format);
 		text.Clear();
 	}
@@ -639,6 +639,8 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 					case 'P': format.newpage = !format.newpage; break;
 					case 'k': format.keep = !format.keep; break;
 					case 'K': format.keepnext = !format.keepnext; break;
+					case 'H': format.ruler = GetNumber(); break;
+					case 'h': format.rulerink = GetColor(); break;
 					case 'Q': format.orphan = !format.orphan; break;
 					case 'n': format.before_number = GetText(';'); break;
 					case 'm': format.after_number = GetText(';'); break;
