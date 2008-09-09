@@ -615,9 +615,20 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 					}
 				case '%': {
 						String h;
-						while(*term && h.GetLength() < 5)
-							h.Cat(*term++);
-						format.language = LNGFromText(h);
+						if(*term == '-') {
+							format.language = 0;
+							term++;
+						}
+						else
+						if(*term == '%') {
+							format.language = LNG_ENGLISH;
+							term++;
+						}
+						else {
+							while(*term && h.GetLength() < 5)
+								h.Cat(*term++);
+							format.language = LNGFromText(h);
+						}
 						break;
 					}
 				default:

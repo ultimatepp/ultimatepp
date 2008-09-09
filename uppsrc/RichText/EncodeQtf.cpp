@@ -22,18 +22,19 @@ String FmtColor(Color c)
 	return Sprintf("(%d.%d.%d)", c.GetR(), c.GetG(), c.GetB());
 }
 
-String LngFmt(const RichPara::CharFormat& a, const RichPara::CharFormat& b, dword lang)
+void LngFmt(String& fmt, dword l, dword lang)
 {
-	String fmt;
-	if(lang != (dword)b.language)
-		if(b.language)
-			fmt << "%" << LNGAsText(b.language);
+	if(lang != (dword)l)
+		if(l == 0)
+			fmt << "%-";
 		else
-			fmt << "%" << "00-00";
-	return fmt;
+		if(l == LNG_ENGLISH)
+			fmt << "%%";
+		else
+			fmt << "%" << LNGAsText(l);
 }
 
-void CharFmt(String& fmt, const RichPara::CharFormat& a, const RichPara::CharFormat& b, dword lang)
+void CharFmt(String& fmt, const RichPara::CharFormat& a, const RichPara::CharFormat& b)
 {
 	if(a.IsBold() != b.IsBold()) fmt.Cat('*');
 	if(a.IsItalic() != b.IsItalic()) fmt.Cat('/');
@@ -182,13 +183,22 @@ void QTFEncodePara(String& qtf, const RichPara& p, const RichPara::Format& style
 {
 	int d = qtf.GetLength();
 	QTFEncodeParaFormat(qtf, p.format, style);
-	CharFmt(qtf, style, p.format, lang);
+	if(p.part.GetCount()) {
+		dword l = p.part.Top().format.language;
+		LngFmt(qtf, l, lang);
+		lang = l;
+	}
+	else {
+		CharFmt(qtf, style, p.format);
+		LngFmt(qtf, p.format.language, lang);
+	}
 	qtf.Cat(' ');
 	d = qtf.GetLength() - d;
 	for(int i = 0; i < p.part.GetCount(); i++) {
 		const RichPara::Part& part = p.part[i];
-		String cf = LngFmt(p.format, part.format, lang);
-		CharFmt(cf, p.format, part.format, lang);
+		String cf;
+		LngFmt(cf, part.format.language, lang);
+		CharFmt(cf, p.format, part.format);
 		if(!cf.IsEmpty()) {
 			qtf << '[' << cf << ' ';
 			d += cf.GetLength();
@@ -456,7 +466,7 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 			const RichStyle& s = text.GetStyle(id);
 			qtf << '[';
 			QTFEncodeParaFormat(qtf, s.format, dpf);
-			CharFmt(qtf, dpf, s.format, s.format.language);
+			CharFmt(qtf, dpf, s.format);
 			qtf << ' ';
 			qtf << "$$" << i << ',' << max(sm.Find(s.next), 0)
 			    << '#' << Format(id)
