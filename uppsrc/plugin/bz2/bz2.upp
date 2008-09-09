@@ -9,6 +9,7 @@ file
 	Wrapper readonly separator,
 	bz2.h,
 	bz2upp.cpp,
+	src.tpp,
 	"BZ2 files" readonly separator,
 	lib/bzlib.h,
 	lib/blocksort.c,
