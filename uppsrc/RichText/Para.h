@@ -108,7 +108,8 @@ struct RichPara {
 
 	struct Format : NumberFormat, CharFormat {
 		int         align;
-		int         before, lm, indent, rm, after;
+		int         ruler, before, lm, indent, rm, after;
+		Color       rulerink;
 		int         tabsize;
 		int         bullet;
 		int         linespacing;

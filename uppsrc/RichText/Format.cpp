@@ -32,6 +32,10 @@ void RichTxt::FormatInfo::Combine(const RichPara::CharFormat& fmt)
 		charvalid &= ~STRIKEOUT;
 		NoStrikeout();
 	}
+	if(IsNonAntiAliased() != fmt.IsNonAntiAliased()) {
+		charvalid &= ~NOAA;
+		NoNonAntiAliased();
+	}
 	if(capitals != fmt.capitals) {
 		charvalid &= ~CAPITALS;
 		capitals = false;
@@ -114,9 +118,12 @@ void RichTxt::FormatInfo::Combine(const RichPara::Format& fmt)
 			}
 	if(styleid != fmt.styleid)
 		paravalid &= ~STYLE;
-	if(linespacing != fmt.linespacing) {
+	if(linespacing != fmt.linespacing)
 		paravalid &= ~SPACING;
-	}
+	if(ruler != fmt.ruler)
+		paravalid &= ~RULER;
+	if(rulerink != fmt.rulerink)
+		paravalid &= ~RULERINK;
 }
 
 void RichTxt::FormatInfo::ApplyTo(RichPara::CharFormat& fmt) const
@@ -129,6 +136,8 @@ void RichTxt::FormatInfo::ApplyTo(RichPara::CharFormat& fmt) const
 		fmt.Underline(IsUnderline());
 	if(charvalid & STRIKEOUT)
 		fmt.Strikeout(IsStrikeout());
+	if(charvalid & NOAA)
+		fmt.NonAntiAliased(IsNonAntiAliased());
 	if(charvalid & CAPITALS)
 		fmt.capitals = capitals;
 	if(charvalid & DASHED)
@@ -158,6 +167,8 @@ void RichTxt::FormatInfo::ApplyTo(RichPara::Format& fmt) const
 	ApplyTo((RichPara::CharFormat &)fmt);
 	if(paravalid & ALIGN)
 		fmt.align = align;
+	if(paravalid & RULER)
+		fmt.ruler = ruler;
 	if(paravalid & BEFORE)
 		fmt.before = before;
 	if(paravalid & LM)
@@ -194,6 +205,8 @@ void RichTxt::FormatInfo::ApplyTo(RichPara::Format& fmt) const
 		fmt.styleid = styleid;
 	if(paravalid & SPACING)
 		fmt.linespacing = linespacing;
+	if(paravalid & RULERINK)
+		fmt.rulerink = rulerink;
 }
 
 END_UPP_NAMESPACE

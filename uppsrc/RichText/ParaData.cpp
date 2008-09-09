@@ -133,7 +133,8 @@ RichPara::CharFormat::CharFormat()
 RichPara::Format::Format()
 {
 	align = ALIGN_LEFT;
-	before = lm = rm = indent = after = 0;
+	ruler = before = lm = rm = indent = after = 0;
+	rulerink = Black;
 	bullet = 0;
 	keep = newpage = keepnext = orphan = false;
 	tabsize = 296;
@@ -283,7 +284,7 @@ void RichPara::PackParts(Stream& out, const RichPara::CharFormat& chrstyle,
 String RichPara::Pack(const RichPara::Format& style, Array<RichObject>& obj) const
 {
 	StringStream out;
-	word pattr = 0;
+	dword pattr = 0;
 	if(format.align != style.align)             pattr |= 1;
 	if(format.before != style.before)           pattr |= 2;
 	if(format.lm != style.lm)                   pattr |= 4;
@@ -300,7 +301,9 @@ String RichPara::Pack(const RichPara::Format& style, Array<RichObject>& obj) con
 	if(NumberingDiffers(format, style))         pattr |= 0x2000;
 	if(format.linespacing != style.linespacing) pattr |= 0x4000;
 	if(format.tab != style.tab)                 pattr |= 0x8000;
-	out.Put16(pattr);
+	if(format.ruler != style.ruler)             pattr |= 0x10000;
+	if(format.rulerink != style.rulerink)       pattr |= 0x20000;
+	out.Put32(pattr);
 	if(pattr & 1)      out.Put16(format.align);
 	if(pattr & 2)      out.Put16(format.before);
 	if(pattr & 4)      out.Put16(format.lm);
@@ -338,6 +341,12 @@ String RichPara::Pack(const RichPara::Format& style, Array<RichObject>& obj) con
 				out.Put(w.fillchar);
 			}
 		}
+	}
+	if(pattr & 0x10000)
+		out.Put16(format.ruler);
+	if(pattr & 0x20000) {
+		Color c = format.rulerink;
+		c.Serialize(out);
 	}
 	obj.Clear();
 	CharFormat cf = style;
@@ -504,7 +513,7 @@ void RichPara::Unpack(const String& data, const Array<RichObject>& obj,
 
 	format = style;
 
-	word pattr = in.Get16();
+	dword pattr = in.Get32();
 
 	if(pattr & 1)      format.align = in.Get16();
 	if(pattr & 2)      format.before = in.Get16();
@@ -539,6 +548,10 @@ void RichPara::Unpack(const String& data, const Array<RichObject>& obj,
 			w.fillchar = in.Get();
 		}
 	}
+	if(pattr & 0x10000)
+		format.ruler = in.Get16();
+	if(pattr & 0x20000)
+		format.rulerink.Serialize(in);
 	part.Clear();
 	int oi = 0;
 	UnpackParts(in, style, part, obj, oi);
@@ -643,6 +656,7 @@ void RichPara::Mid(int pos)
 void RichPara::Dump()
 {
 	LOG("RichPara dump" << LOG_BEGIN);
+	LOG("RULER: " << format.ruler << " " << format.rulerink);
 	LOG("BEFORE: " << format.before);
 	LOG("INDENT: " << format.indent);
 	LOG("LM: " << format.lm);

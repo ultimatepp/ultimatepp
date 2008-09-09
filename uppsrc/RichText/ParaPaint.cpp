@@ -9,7 +9,7 @@ NAMESPACE_UPP
 RichPara::Lines RichPara::Begin(const Rect& page, PageY& py, int nbefore, int nline) const
 {
 	Lines pl = FormatLines(page.Width());
-	int cy = format.before;
+	int cy = format.ruler + format.before;
 	if(format.keep || format.keepnext)
 		cy += pl.BodyHeight();
 	else
@@ -23,7 +23,7 @@ RichPara::Lines RichPara::Begin(const Rect& page, PageY& py, int nbefore, int nl
 		py.page++;
 		py.y = page.top;
 	}
-	py.y += format.before;
+	py.y += format.before + format.ruler;
 	pl.Justify(format);
 	return pl;
 }
@@ -153,6 +153,8 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 	PageY opy = py;
 	Lines pl = Begin(page, py, nbefore, nline);
 	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len;
+	int hy = py.y - format.before - format.ruler;
+	int phy = py.page;
 	if(pi.sell < 0 && pi.selh > 0)
 		for(int p = opy.page; p <= py.page; p++) {
 			int top = z * (p == opy.page ? opy.y : page.top);
@@ -359,6 +361,10 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 		pw.Page(py.page).DrawRect(z * page.left, top, z * page.right - z * page.left,
 		                          z * min(py.y + format.after, page.bottom) - top, InvertColor);
 	}
+	if(format.ruler && hy >= 0 && hy + format.ruler < page.bottom)
+		pw.Page(phy).DrawRect(z * page.left + z * format.lm, z * hy,
+		                      z * page.right - z * page.left - z * format.rm - z * format.lm,
+			                  max(1, z * format.ruler), format.rulerink);
 }
 
 void RichPara::GetRichPos(RichPos& rp, int pos) const
@@ -552,6 +558,11 @@ void operator*=(RichPara::Format& format, Zoom z)
 {
 	FontHeightRound(format, z);
 	format.before *= z;
+	if(format.ruler) {
+		format.ruler *= z;
+		if(format.ruler == 0)
+			format.ruler = 1;
+	}
 	int ll = format.lm + format.indent;
 	format.lm *= z;
 	format.indent = z * ll - format.lm;

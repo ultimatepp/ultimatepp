@@ -94,6 +94,7 @@ void ParaFormating::SetupIndent()
 void ParaFormating::Set(int unit, const RichText::FormatInfo& formatinfo)
 {
 	font = formatinfo;
+	ruler.Set(unit, RichText::RULER & formatinfo.paravalid ? formatinfo.ruler : Null);
 	before.Set(unit, RichText::BEFORE & formatinfo.paravalid ? formatinfo.before : Null);
 	lm.Set(unit, RichText::LM & formatinfo.paravalid ? formatinfo.lm : Null);
 	indent.Set(unit, RichText::INDENT & formatinfo.paravalid ? formatinfo.indent : Null);
@@ -128,6 +129,10 @@ void ParaFormating::Set(int unit, const RichText::FormatInfo& formatinfo)
 		orphan = Null;
 		orphan.ThreeState();
 	}
+	if(RichText::RULERINK & formatinfo.paravalid)
+		rulerink <<= formatinfo.rulerink;
+	else
+		rulerink <<= Null;
 	tabpos.SetUnit(unit);
 	if(RichText::BULLET & formatinfo.paravalid)
 		bullet <<= formatinfo.bullet;
@@ -234,6 +239,14 @@ dword ParaFormating::Get(RichText::FormatInfo& formatinfo)
 		formatinfo.tabsize = ~tabsize;
 		v |= RichText::TABSIZE;
 	}
+	if(!IsNull(ruler)) {
+		formatinfo.ruler = ~ruler;
+		v |= RichText::RULER;
+	}
+	if(!IsNull(rulerink)) {
+		formatinfo.rulerink = ~rulerink;
+		v |= RichText::RULERINK;
+	}
 	return v;
 }
 
@@ -281,6 +294,7 @@ ParaFormating::ParaFormating()
 	reset_number <<=
 	bullet <<= THISBACK(SetupIndent);
 	EnableNumbering();
+	rulerink.NullText("---");
 }
 
 struct ParaFormatDlg : public WithParaFormatLayout<TopWindow> {

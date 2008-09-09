@@ -16,6 +16,7 @@ public:
 		LANG       = 0x00001000,
 		INDEXENTRY = 0x00002000,
 		DASHED     = 0x00004000,
+		NOAA       = 0x00008000,
 	};
 
 	enum {
@@ -36,6 +37,8 @@ public:
 		ORPHAN    = 0x00020000,
 		NUMBERING = 0x00010000,
 		SPACING   = 0x00008000,
+		RULER     = 0x00004000,
+		RULERINK  = 0x00002000,
 	};
 
 	struct FormatInfo : RichPara::Format {
@@ -66,6 +69,7 @@ protected:
 		Array<RichObject>     object;
 		mutable int           cx;
 		mutable int           cy;
+		mutable int           ruler;
 		mutable int           before;
 		mutable Vector<int>   linecy;
 		mutable int           after;

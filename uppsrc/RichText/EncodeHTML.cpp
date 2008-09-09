@@ -184,6 +184,8 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 		else
 		if(text.IsPara(i)) {
 			RichPara p = text.Get(i, styles);
+			if(p.format.ruler)
+				html << "<HR>";
 			String lbl;
 			if(!IsNull(p.format.label)) {
 				lbl = labels.Get(p.format.label, Null);
@@ -208,7 +210,7 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 					html << Format("<TD WIDTH=%d></TD>", q);
 				html << Format("<TD VALIGN=\"top\" WIDTH=%d BGCOLOR=\"#F0F0F0\">\r\n",
 				               max(z * p.format.indent, 0));
-				p.format.after = p.format.before = p.format.indent = p.format.lm = 0;
+				p.format.ruler = p.format.after = p.format.before = p.format.indent = p.format.lm = 0;
 			}
 			String par = "<P" + FormatClass(css, HtmlParaStyle(p.format, z)) + ">";
 			html << par;
