@@ -8,7 +8,14 @@ GUI_APP_MAIN
 
 	String qtf;
 	qtf << " && [*= " << DeQtf(r_title)
-	    << "&& [_= Analysis [t Report]]&";
+	    << "&"
+	    << "[l500 ahoj&ahoj&]&"
+	    << "[P &]&"
+	    << "[H10hBl200r200 &]"
+	    << "[_= Analysis [t Report]]&"
+	    << "[_= Analysis [t Report]]&"
+	    << "[_= Analysis [t Report]]&"
+	;
 	
 	Report r;
 	r.Header("[A2> Page $$P");
