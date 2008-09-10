@@ -665,6 +665,13 @@ Value ButtonOption::GetData() const
 
 // --------------------
 
+DataPusher::DataPusher()
+{
+	convert = &NoConvert();
+	display = &StdDisplay();
+	SetFrame(EditFieldFrame());
+}
+
 DataPusher::DataPusher(const Convert& convert, const Display& display)
 : convert(&convert), display(&display)
 {
@@ -676,8 +683,6 @@ DataPusher::DataPusher(const Display& display)
 {
 	SetFrame(EditFieldFrame());
 }
-
-DataPusher::~DataPusher() {}
 
 void DataPusher::PerformAction()
 {
@@ -703,22 +708,43 @@ void DataPusher::SetData(const Value& value)
 	}
 }
 
-void DataPusher::Paint(Draw& draw)
+DataPusher& DataPusher::NullText(const char *text, Font fnt, Color ink)
+{
+	WString txt = text;
+	if(nulltext != txt || nullink != ink || nullfont != fnt) {
+		nulltext = txt;
+		nullink = ink;
+		nullfont = fnt;
+		Refresh();
+	}
+	return *this;
+}
+
+DataPusher& DataPusher::NullText(const char *text, Color ink)
+{
+	return NullText(text, StdFont(), ink);
+}
+
+void DataPusher::Paint(Draw& w)
 {
 	Rect rc = GetSize();
 	Color paper = (IsPush() ? Blend(SColorHighlight, SColorFace, 235)
 	                        : IsShowEnabled() && !IsReadOnly() ? SColorPaper : SColorFace);
-	draw.DrawRect(rc, paper);
+	w.DrawRect(rc, paper);
 	rc.Deflate(2, 1);
 	if(IsPush() && GUI_GlobalStyle() < GUISTYLE_XP)
 		rc += Size(1, 1);
-	draw.Clip(rc);
-	display -> Paint(draw, rc, convert -> Format(data),
+	w.Clip(rc);
+	display -> Paint(w, rc, convert -> Format(data),
 		(IsEnabled() ? SColorText : SColorDisabled), Color(paper),
 		(HasFocus() ? Display::FOCUS : 0) | (IsReadOnly() ? Display::READONLY : 0));
-	draw.End();
+	w.End();
 	if(HasFocus())
-		DrawFocus(draw, GetSize());
+		DrawFocus(w, GetSize());
+	if(IsNull(data) && !IsNull(nulltext)) {
+		int cy = nullfont.Info().GetHeight();
+		w.DrawText(rc.left, rc.top + (rc.GetHeight() - cy) / 2, nulltext, nullfont, nullink);
+	}
 }
 
 void DataPusher::SetDataAction(const Value& value)

@@ -1625,9 +1625,9 @@ ColorCtrl::~ColorCtrl() {}
 void ColorCtrl::DoAction()
 {
 	bool ok;
-	Color new_color = RunDlgSelectColor(convert->Format(GetData()), IsNotNull(), 0, &ok);
+	Color new_color = RunDlgSelectColor(GetConvert().Format(GetData()), IsNotNull(), 0, &ok);
 	if(ok)
-		SetDataAction(convert->Scan(new_color));
+		SetDataAction(GetConvert().Scan(new_color));
 }
 
 END_UPP_NAMESPACE

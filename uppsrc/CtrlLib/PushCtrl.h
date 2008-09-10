@@ -314,11 +314,15 @@ class DataPusher : public Pusher
 public:
 	virtual void   Paint(Draw& draw);
 
-protected:
+private:
 	const Convert *convert;
 	const Display *display;
 	Value          data;
 
+	WString        nulltext;
+	Color          nullink;
+	Font           nullfont;
+	
 protected:
 	virtual void   PerformAction();
 	virtual void   DoAction();
@@ -326,9 +330,6 @@ protected:
 public:
 	Callback       WhenPreAction;
 
-	DataPusher(const Convert& convert = NoConvert(), const Display& display = StdDisplay());
-	DataPusher(const Display& display);
-	virtual ~DataPusher();
 
 	DataPusher&    SetConvert(const Convert& _convert) { convert = &_convert; Refresh(); return *this; }
 	const Convert& GetConvert() const                  { return *convert; }
@@ -340,4 +341,11 @@ public:
 	virtual void   SetData(const Value& value);
 
 	void           SetDataAction(const Value& value);
+
+	DataPusher&    NullText(const char *text = t_("(default)"), Color ink = Brown);
+	DataPusher&    NullText(const char *text, Font fnt, Color ink);
+
+	DataPusher();
+	DataPusher(const Convert& convert, const Display& display = StdDisplay()); // deprecated
+	DataPusher(const Display& display); // deprecated
 };

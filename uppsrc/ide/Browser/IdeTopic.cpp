@@ -118,7 +118,7 @@ void TopicEditor::MainTool(Bar& bar)
 	bar.Gap();
 	editor.IndexEntryTool(bar);
 	bar.Break();
-	editor.HyperlinkTool(bar, 300);
+	editor.HyperlinkTool(bar, 300, K_CTRL_M);
 	bar.Gap();
 	editor.ParaTools(bar);
 	bar.Gap();
