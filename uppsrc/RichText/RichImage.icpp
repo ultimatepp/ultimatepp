@@ -73,6 +73,14 @@ INITBLOCK {
 	RichObject::Register("image", &Single<RichImage>());
 };
 
+RichObject CreateImageObject(const Image& img, int cx, int cy)
+{
+	RichObject o = RichObject("image", StoreImageAsString(img));
+	if(cx || cy)
+		o.SetSize(GetRatioSize(o.GetPixelSize(), cx, cy));
+	return o;
+}
+
 struct RichPNG : public RichObjectType {
 	virtual String GetTypeName(const Value& v) const;
 	virtual Value  Read(const String& s) const;
@@ -146,11 +154,81 @@ INITBLOCK {
 	RichObject::Register("PNG", &Single<RichPNG>());
 };
 
-RichObject CreateImageObject(const Image& img, int cx, int cy)
+struct RichRawImage : public RichObjectType {
+	virtual String GetTypeName(const Value& v) const;
+	virtual Value  Read(const String& s) const;
+	virtual String Write(const Value& v) const;
+	virtual Size   GetPhysicalSize(const Value& data) const;
+	virtual Size   GetPixelSize(const Value& data) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
+	virtual Image  ToImage(const Value& data, Size sz) const;
+};
+
+String RichRawImage::GetTypeName(const Value& v) const
 {
-	RichObject o = RichObject("image", StoreImageAsString(img));
-	if(cx || cy)
-		o.SetSize(GetRatioSize(o.GetPixelSize(), cx, cy));
+	return "rawimage";
+}
+
+Value RichRawImage::Read(const String& s) const
+{
+	return s;
+}
+
+String RichRawImage::Write(const Value& v) const
+{
+	return v;
+}
+
+Size RichRawImage::GetPhysicalSize(const Value& data) const
+{
+	String s = data;
+	StringStream ss(s);
+	One<StreamRaster> r = StreamRaster::OpenAny(ss);
+	if(r)
+		return r->GetInfo().dots;
+	return Size(0, 0);
+}
+
+Size RichRawImage::GetPixelSize(const Value& data) const
+{
+	String s = data;
+	StringStream ss(s);
+	One<StreamRaster> r = StreamRaster::OpenAny(ss);
+	if(r)
+		return r->GetSize();
+	return Size(0, 0);
+}
+
+void RichRawImage::Paint(const Value& data, Draw& w, Size sz) const
+{
+	String s = data;
+	StringStream ss(s);
+	One<StreamRaster> r = StreamRaster::OpenAny(ss);
+	if(r) {
+		ImageEncoder m;
+		Rescale(m, sz, *r, r->GetSize());
+		w.DrawImage(0, 0, sz.cx, sz.cy, m);
+	}
+}
+
+Image RichRawImage::ToImage(const Value& data, Size sz) const
+{
+	String s = data;
+	StringStream ss(s);
+	One<StreamRaster> r = StreamRaster::OpenAny(ss);
+	if(r)
+		return r->GetImage();
+	return Null;
+}
+
+INITBLOCK {
+	RichObject::Register("rawimage", &Single<RichRawImage>());
+};
+
+RichObject CreateRawImageObject(const String& s, int cx, int cy)
+{
+	RichObject o = RichObject("rawimage", s);
+	o.InitSize(cx, cy);
 	return o;
 }
 

@@ -73,6 +73,20 @@ String RichObjectType::GetLink(const Value& data, Point pt, Size sz) const
 	return Null;
 }
 
+void RichObject::InitSize(int cx, int cy)
+{
+	Size sz;
+	Size phsz = GetPixelSize();
+	if(cx || cy)
+		sz = GetRatioSize(phsz, cx, cy);
+	else
+		sz = phsz;
+	if(sz.cx > 2000 || sz.cy > 2000)
+		sz = sz.cx > sz.cy ? GetRatioSize(phsz, 2000, 0)
+		                   : GetRatioSize(phsz, 0, 2000);
+	SetSize(sz);
+}
+
 typedef VectorMap<String, RichObjectType *> RichObjectHT;
 
 GLOBAL_VAR(RichObjectHT, RichObject::Map);

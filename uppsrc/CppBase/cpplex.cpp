@@ -79,8 +79,8 @@ void LexSymbolStat::Merge(const LexSymbolStat & other)
 }
 
 
-Lex::Lex() :
-  statsCollected(false)
+Lex::Lex()
+:	statsCollected(false)
 {
 	const char **cppk = CppKeyword();
 	for(int i = 0; cppk[i]; i++)
