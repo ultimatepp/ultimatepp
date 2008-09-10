@@ -130,24 +130,31 @@ String PlusKeyDesc(const char *text, dword key)
 	return r;
 }
 
+void Setup(DataPusher& b, const char *tip, const char *dtip, dword key)
+{
+	const char *s = tip ? tip : dtip;
+	b.Tip(PlusKeyDesc(s, key));
+	b.NullText(s, StdFont().Italic(), SColorDisabled());
+}
+
 void RichEdit::IndexEntryTool(Bar& bar, int width, dword key, const char *tip)
 {
 	bar.Add(!IsReadOnly(), indexentry, width);
-	indexentry.Tip(PlusKeyDesc(tip ? tip : t_("Index entry"), key));
+	Setup(indexentry, tip, t_("Index entry"), key);
 	bar.AddKey(key, THISBACK(IndexEntry));
 }
 
 void RichEdit::HyperlinkTool(Bar& bar, int width, dword key, const char *tip)
 {
 	bar.Add(!IsReadOnly(), hyperlink, width);
-	hyperlink.Tip(PlusKeyDesc(tip ? tip : t_("Hyperlink"), key));
+	Setup(hyperlink, tip, t_("Hyperlink"), key);
 	bar.AddKey(key, THISBACK(Hyperlink));
 }
 
 void RichEdit::LabelTool(Bar& bar, int width, dword key, const char *tip)
 {
 	bar.Add(!IsReadOnly(), label, width);
-	label.Tip(PlusKeyDesc(tip ? tip : t_("Paragraph label"), key));
+	Setup(label, tip, t_("Paragraph label"), key);
 	bar.AddKey(key, THISBACK(Label));
 }
 

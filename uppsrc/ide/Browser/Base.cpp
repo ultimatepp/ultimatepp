@@ -1,7 +1,7 @@
 #include "Browser.h"
 
 #define LTIMING(x) // RTIMING(x)
-#define QLOG(x)
+#define LLOG(x)
 
 static const char s_dbver[] = "Assist++ 1.1";
 
@@ -213,7 +213,7 @@ CppWordsHash Difference(const Vector<String>& a)
 		h.AddWords(a[ai++]);
 	while(bi < b.GetCount())
 		h.AddWords(b[bi++]);
-	QLOG("Difference " << tm);
+	LLOG("Difference " << tm);
 	return h;
 }
 
@@ -286,18 +286,18 @@ void BrowserBaseScan(Stream& s, const String& fn)
 	LTIMING("BrowserBaseScan");
 	TimeStop tm;
 	Vector<String> before = SortedNests();
-	QLOG("Scan1 " << tm);
+	LLOG("Scan1 " << tm);
 	CppBase& base = BrowserBase();
-	QLOG("Scan2 " << tm);
+	LLOG("Scan2 " << tm);
 	Vector<String> remove;
 	remove.Add(fn);
 	Remove(base, remove);
-	QLOG("Scan3 " << tm);
+	LLOG("Scan3 " << tm);
 	Parse(s, IgnoreList(), base, fn, CNULL);
-	QLOG("Scan4 " << tm);
+	LLOG("Scan4 " << tm);
 	FinishBase(Difference(before));
-	QLOG("Scan total " << tm);
-	QLOG("---------");
+	LLOG("Scan total " << tm);
+	LLOG("---------");
 }
 
 void BrowserBaseScanLay(const String& fn)
