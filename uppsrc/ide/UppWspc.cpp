@@ -308,6 +308,16 @@ void WorkspaceWork::AddSeparator()
 	AddItem(~name, true, true);
 }
 
+String TppName(const String& s)
+{
+	if(s == "src")
+		return "Reference - src";
+	if(s == "srcdoc")
+		return "Documents - srcdoc";
+	if(s == "srcimp")
+		return "Implementation - srcimp";
+	return s;
+}
 
 class Tpp : public WithTppLayout<TopWindow> {
 public:
@@ -325,7 +335,7 @@ public:
 		while(ff) {
 			if(ff.IsFolder()) {
 				String s = GetFileTitle(ff.GetName());
-				group.Add(s, AttrText(s).SetFont(StdFont().Bold()));
+				group.Add(s, AttrText(TppName(s)).SetFont(StdFont().Bold()));
 				exist.Add(s);
 			}
 			ff.Next();
@@ -334,7 +344,7 @@ public:
 		for(int i = 0; i < __countof(h); i++) {
 			String s = GetFileTitle(h[i]);
 			if(exist.Find(s) < 0)
-				group.Add(s, s + " (new)");
+				group.Add(s, TppName(s) + " (new)");
 		}
 		group.Add(Null, "<other new>");
 		group.GoBegin();

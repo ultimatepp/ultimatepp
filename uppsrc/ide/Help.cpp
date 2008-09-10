@@ -204,7 +204,14 @@ void TopicCtrl::SyncDocTree()
 		for(int i = 0; i < package.GetCount(); i++) {
 			tl.group = package.GetKey(i);
 			if(all || tl.group == "src" || tl.group == "srcdoc" || tl.group == "srcimp") {
-				int gid = AddTree(pid, Null, "\1" + tl.group, tl.group);
+				String n = tl.group;
+				if(n == "src")
+					n = "Reference";
+				if(n == "srcdoc")
+					n = "Documents";
+				if(n == "srcimp")
+					n = "Implementation";
+				int gid = AddTree(pid, Null, "\1" + tl.group, n);
 				Vector<String> group = package[i];
 				for(int i = 0; i < group.GetCount(); i++) {
 					tl.topic = group[i];

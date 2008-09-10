@@ -524,13 +524,13 @@ LAYOUT(DescriptionLayout, 400, 64)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(332, 64).TopPosZ(32, 24))
 END_LAYOUT
 
-LAYOUT(TppLayout, 148, 284)
-	ITEM(ArrayCtrl, group, LeftPosZ(8, 132).TopPosZ(4, 212))
+LAYOUT(TppLayout, 200, 284)
+	ITEM(ArrayCtrl, group, LeftPosZ(8, 184).TopPosZ(4, 212))
 	ITEM(Label, name_lbl, SetLabel(t_("Other:")).LeftPosZ(8, 36).TopPosZ(224, 19))
-	ITEM(EditString, name, LeftPosZ(44, 68).TopPosZ(224, 19))
-	ITEM(Label, name_tpp, SetLabel(t_(".tpp")).LeftPosZ(116, 25).TopPosZ(224, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(252, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(252, 24))
+	ITEM(EditString, name, LeftPosZ(44, 120).TopPosZ(224, 19))
+	ITEM(Label, name_tpp, SetLabel(t_(".tpp")).LeftPosZ(168, 25).TopPosZ(224, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(60, 64).TopPosZ(252, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(128, 64).TopPosZ(252, 24))
 END_LAYOUT
 
 LAYOUT(ExportLayout, 400, 116)
