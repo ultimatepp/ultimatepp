@@ -202,7 +202,7 @@ RichText::FormatInfo RichText::GetFormatInfo(int pos, int count) const
 		int i2 = pa.FindPart(pos2);
 		while(i < i2)
 			fi.Combine(pa[i++].format);
-		if(pos2)
+		if(pos2 && i2 < pa.GetCount())
 			fi.Combine(pa[i2].format);
 	}
 	else {
@@ -216,7 +216,7 @@ RichText::FormatInfo RichText::GetFormatInfo(int pos, int count) const
 		int i2 = pa.FindPart(pos2);
 		for(i = 0; i < i2; i++)
 			fi.Combine(pa[i].format);
-		if(pos2)
+		if(pos2 && i2 < pa.GetCount())
 			fi.Combine(pa[i2].format);
 	}
 	return fi;

@@ -175,6 +175,7 @@ void TopicEditor::EditMenu(Bar& bar)
 	editor.CutTool(bar);
 	editor.CopyTool(bar);
 	editor.PasteTool(bar);
+	editor.InsertImageTool(bar);
 	bar.Separator();
 	editor.UndoTool(bar);
 	editor.RedoTool(bar);

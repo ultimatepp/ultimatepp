@@ -452,7 +452,7 @@ void RichEdit::SpellCheck()
 
 void RichEdit::SerializeSettings(Stream& s)
 {
-	int version = 1;
+	int version = 2;
 	s / version;
 	s % unit;
 	s % showcodes;
@@ -466,6 +466,7 @@ void RichEdit::SerializeSettings(Stream& s)
 	s % findreplace.wholeword;
 	s % findreplace.ignorecase;
 	RefreshBar();
+	imagefs.Serialize(s);
 }
 
 void RichEdit::Reset()
@@ -670,6 +671,8 @@ RichEdit::RichEdit()
 	useraction = modified = false;
 	ClearModify();
 	Finish();
+	
+	imagefs.Type("Images (*.png *.gif *.jpg *.bmp)", "*.png *.gif *.jpg *.bmp");
 }
 
 RichEdit::~RichEdit() {}

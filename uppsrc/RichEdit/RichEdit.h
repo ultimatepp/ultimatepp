@@ -330,6 +330,8 @@ private:
 
 	BiArray<UndoRec> undo;
 	Array<UndoRec>   redo;
+	
+	FileSel          imagefs;
 
 	Rect       GetTextRect() const;
 	Size       GetZoomedPage() const;
@@ -487,6 +489,8 @@ private:
 	void     ClipPaste(RichText& clip);
 	bool     InSelection(int& c) const;
 	void     RefreshDropCaret();
+	
+	void     InsertImage();
 
 	static bool   SpellWord(const wchar *wrd, int len, int lang);
 	static void   SpellerAdd(const WString& w, int lang);
@@ -605,6 +609,8 @@ public:
 	void   ParaTools(Bar& bar);
 	void   EditTools(Bar& bar);
 	void   TableTools(Bar& bar);
+
+	void   InsertImageTool(Bar& bar);
 
 	void   DefaultBar(Bar& bar, bool extended = true);
 

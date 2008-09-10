@@ -4,6 +4,28 @@ NAMESPACE_UPP
 
 #define RTFS "Rich Text Format;text/rtf;application/rtf"
 
+void RichEdit::InsertImage()
+{
+	if(!imagefs.ExecuteOpen())
+		return;
+	String fn = ~imagefs;
+	if(GetFileLength(fn) >= 10 * 1024 * 1024) {
+		Exclamation("Image is too large!");
+		return;
+	}
+	String data = LoadFile(~imagefs);
+	StringStream ss(data);
+	if(!StreamRaster::OpenAny(ss)) {
+		Exclamation("Invalid file format!");
+		return;
+	}
+	RichText clip;
+	RichPara p;
+	p.Cat(CreateRawImageObject(data), formatinfo);
+	clip.Cat(p);
+	ClipPaste(clip);
+}
+
 bool RichEdit::Accept(PasteClip& d, RichText& clip)
 {
 	if(IsReadOnly())

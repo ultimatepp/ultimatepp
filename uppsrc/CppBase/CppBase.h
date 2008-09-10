@@ -120,6 +120,7 @@ class Lex {
 	void Next();
 	bool Prepare(int pos);
 	int  GetCharacter();
+
 public:
 	int         Code(int pos = 0);
 	bool        IsId(int pos = 0);

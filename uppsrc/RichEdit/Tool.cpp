@@ -412,6 +412,11 @@ void RichEdit::TableTools(Bar& bar)
 	CellPropertiesTool(bar);
 }
 
+void RichEdit::InsertImageTool(Bar& bar)
+{
+	bar.Add("Insert image from file..", THISBACK(InsertImage));
+}
+
 void RichEdit::DefaultBar(Bar& bar, bool extended)
 {
 	EditTools(bar);
