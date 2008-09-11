@@ -64,7 +64,6 @@ struct FindBrokenRefIterator : RichText::Iterator {
 
 void TopicEditor::FindBrokenRef()
 {
-	StartBrowserBase();
 	Progress pi;
 	pi.SetTotal(topic.GetCount());
 	for(;;) {
@@ -344,7 +343,6 @@ void TopicEditor::SetFocus()
 #ifdef _DEBUG
 void TopicEditor::Repair()
 {
-	StartBrowserBase();
 	RichText text = editor.CopyText(0, editor.GetLength());
 	RichPara def;
 	for(int i = 0; i < text.GetPartCount(); i++)

@@ -175,7 +175,6 @@ void Ide::SyncBottom()
 	calc.SetFont(editorfont);
 	SetBar();
 	if(q == BBROWSER) {
-		StartBrowserBase();
 		if(!browser.nesting.IsCursor())
 			browser.nesting.GoBegin();
 	}

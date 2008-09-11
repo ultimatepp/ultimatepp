@@ -195,7 +195,6 @@ void Ide::Goto()
 void Ide::GotoGlobal()
 {
 	SaveFile();
-	StartBrowserBase();
 	GotoDlg dlg(Null);
 	LoadFromGlobal(dlg, "IdeGotoGlobal");
 	int c = dlg.Run();

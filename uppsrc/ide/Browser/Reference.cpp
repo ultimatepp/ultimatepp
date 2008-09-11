@@ -35,6 +35,5 @@ ReferenceDlg::ReferenceDlg()
 	Sizeable().Zoomable();
 	Icon(TopicImg::Topic());
 	Breaker(classlist, IDYES);
-	StartBrowserBase();
 	browser.Reload();
 }

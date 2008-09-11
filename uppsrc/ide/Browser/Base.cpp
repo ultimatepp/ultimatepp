@@ -63,8 +63,6 @@ void SaveBrowserBase()
 		for(int k = 0; k < nest.GetCount(); k++) {
 			CppItem& m = nest.item[k];
 			for(int p = 0; p < m.pos.GetCount(); p++) {
-				DDUMP(m.pos[p].GetFile());
-				DDUMP(m.pos[p].line);
 				StringStream& o = out.GetAdd(m.pos[p].GetFile());
 				s = base.GetKey(j);
 				o % s;
@@ -320,6 +318,9 @@ void ClearBrowserBase()
 
 void StartBrowserBase()
 {
+	static int start;
+	if(start) return;
+	start++;
 	if(BrowserBase().GetCount() == 0) {
 		Progress pi;
 		pi.Title("Assist++");
@@ -327,6 +328,7 @@ void StartBrowserBase()
 		UpdateBrowserBase(pi);
 		FinishBase(AllCppWords());
 	}
+	start--;
 }
 
 void SyncBrowserBase()

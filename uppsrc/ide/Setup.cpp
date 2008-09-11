@@ -444,8 +444,6 @@ void Ide::SetupFormat() {
 	}
 	FileSetTime(ConfigFile("version"), ToTime(~edt.showtimeafter));
 	SaveLoadPackage();
-	if(editor.auto_assist)
-		StartBrowserBase();
 	SyncCh();
 }
 
