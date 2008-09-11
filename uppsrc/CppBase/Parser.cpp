@@ -869,6 +869,7 @@ void Parser::Statement()
 bool Parser::EatBody()
 {
 	if(lex != '{') return false;
+	lex.BeginBody();
 	maxScopeDepth = currentScopeDepth = dobody ? 0 : 1;
 	if(dobody) {
 		inbody = true;
@@ -888,6 +889,7 @@ bool Parser::EatBody()
 			maxScopeDepth = max(level, maxScopeDepth);
 		}
 	}
+	lex.EndBody();
 	return true;
 }
 
@@ -1398,9 +1400,20 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 		try {
 			Do();
 		}
+		catch(Lex::Grounding) {
+			lex.ClearBracesLevel();
+			lex.ClearBody();
+		}
 		catch(Error) {
-			Resume(lex.GetBracesLevel());
-			Key(';');
+			if(lex.IsBody()) {
+				Resume(lex.GetBracesLevel());
+				Key(';');
+			}
+			else {
+				++lex;
+				lex.SkipToGrounding();
+				lex.ClearBracesLevel();
+			}
 		}
 }
 

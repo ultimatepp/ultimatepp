@@ -86,7 +86,7 @@ Lex::Lex()
 	for(int i = 0; cppk[i]; i++)
 		id.Add(cppk[i]);
 	endkey = id.GetCount();
-	braceslevel = ignore_low = ignore_high = 0;
+	braceslevel = ignore_low = ignore_high = body = 0;
 }
 
 void Lex::Init(const char *s, const Vector<String>& ig)
@@ -104,12 +104,11 @@ void Lex::StartStatCollection()
 	statsCollected = true;
 }
 
-const LexSymbolStat & Lex::FinishStatCollection()
+const LexSymbolStat& Lex::FinishStatCollection()
 {
 	statsCollected = false;
 	return symbolStat;
 }
-
 
 int Lex::GetCharacter()
 {
@@ -151,7 +150,10 @@ int Lex::GetCharacter()
 
 void Lex::Next()
 {
+	grounding = false;
 	while((byte)*ptr <= ' ') {
+		if(*ptr == '\1')
+			grounding = true;
 		if(*ptr == '\0') return;
 		ptr++;
 	}
@@ -369,6 +371,8 @@ void Lex::Get(int n)
 {
 	while(n--) {
 		if(term.GetCount()) {
+			if(body && term.Head().grounding)
+				throw Grounding();
 			int chr = term.Head().code;
 			if(statsCollected)
 				symbolStat.IncStat(chr);
@@ -381,6 +385,29 @@ void Lex::Get(int n)
 		}
 		if(term.GetCount() == 0)
 			Next();
+		if(term.GetCount() == 0)
+			break;
+	}
+}
+
+void Lex::SkipToGrounding()
+{
+	for(;;) {
+		if(term.GetCount() == 0)
+			Next();
+		if(term.GetCount() == 0)
+			break;
+		int chr = term.Head().code;
+		if(chr == t_eof)
+			return;
+		if(term.Head().grounding)
+			return;
+		if(chr == '{')
+			braceslevel++;
+		else
+		if(chr == '}')
+			braceslevel--;
+		term.DropHead();
 	}
 }
 
