@@ -137,6 +137,7 @@ void Ide::SetMain(const String& package)
 	if(IsNull(e))
 		e = GetFirstFile();
 	SyncRefs();
+	StartBrowserBase();
 	EditFile(e);
 }
 
@@ -168,8 +169,6 @@ bool Ide::OpenMainPackage()
 	if(!IsOpen())
 		Open();
 	SetMain(p);
-	if(editor.auto_assist)
-		StartBrowserBase();
 	return true;
 }
 

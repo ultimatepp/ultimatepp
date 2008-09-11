@@ -385,7 +385,6 @@ void Browser::QueryNest()
 
 void Browser::QueryWord(const String& w)
 {
-	StartBrowserBase();
 	query.package.Clear();
 	query.file.Clear();
 	query.name = w;
@@ -397,7 +396,6 @@ void Browser::QueryWord(const String& w)
 
 void Browser::SetId(const String& id, const Vector<String>& nest)
 {
-	StartBrowserBase();
 	query.package.Clear();
 	query.file.Clear();
 	query.name = id;

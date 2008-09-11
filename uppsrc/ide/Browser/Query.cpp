@@ -100,8 +100,6 @@ bool Browser::DoQuery()
 {
 	if(querydlg.Perform(query) != IDOK)
 		return false;
-	if(BrowserBase().GetCount() == 0)
-		StartBrowserBase();
 	Reload();
 	nesting.GoBegin();
 	return true;
