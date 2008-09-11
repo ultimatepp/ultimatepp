@@ -73,6 +73,8 @@ SrcFile PreProcess(Stream& in)
 			SLPos(res);
 		}
 		const char *rm = ln;
+		if(IsAlNum(*rm))
+			res.text << '\1';
 		while(*rm == ' ' || *rm == '\t') rm++;
 		if(*rm == '\0')
 			res.blankLinesRemoved++;

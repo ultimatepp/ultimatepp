@@ -107,21 +107,25 @@ class Lex {
 		int    code;
 		String text;
 		double number;
+		bool   grounding;
 	};
 
 	bool statsCollected;
 	LexSymbolStat symbolStat;
 	BiVector<Term> term;
-
+	int            body;
+	bool           grounding;
 
 	bool Char(int c)                 { if(*ptr == c) { ptr++; return true; } else return false; }
-	void AddCode(int code)           { Term& tm = term.AddTail(); tm.code = code; tm.ptr = pos; }
+	void AddCode(int code)           { Term& tm = term.AddTail(); tm.code = code; tm.ptr = pos; tm.grounding = grounding; }
 	void AssOp(int noass, int ass)   { AddCode(Char('=') ? ass : noass); }
 	void Next();
 	bool Prepare(int pos);
 	int  GetCharacter();
 
 public:
+	struct Grounding {};
+
 	int         Code(int pos = 0);
 	bool        IsId(int pos = 0);
 	String      Id(int pos = 0);
@@ -141,6 +145,13 @@ public:
 	int         Id(const String& s)         { return id.FindAdd(s) + 256; }
 
 	int         GetBracesLevel() const      { return braceslevel; }
+	void        ClearBracesLevel()          { braceslevel = 0; }
+	
+	void        BeginBody()                 { body++; }
+	void        EndBody()                   { body--; }
+	void        ClearBody()                 { body = 0; }
+	bool        IsBody() const              { return body; }
+	void        SkipToGrounding();
 
 	const char *Pos(int pos = 0);
 	int         operator[](int pos)         { return Code(pos); }

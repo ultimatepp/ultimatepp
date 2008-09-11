@@ -3,7 +3,7 @@
 #include "CtrlCore/init"
 #include "RichText/init"
 #include "PdfDraw/init"
-#define BLITZ_INDEX__ FF3059E544238824EE029458E30F1FEC9
+#define BLITZ_INDEX__ F9FBD74A341BB7E4C8A3BC288CE65AF08
 #include "CtrlLib.icpp"
 #undef BLITZ_INDEX__
 #endif
