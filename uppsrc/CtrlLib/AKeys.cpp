@@ -44,7 +44,7 @@ void SetDefaultKeys() {
 
 struct KeyDisplay : Display {
 	virtual void Paint(Draw& w, const Rect& r, const Value& q,
-		               Color ink, Color paper, dword) const {
+	                   Color ink, Color paper, dword flags) const {
 		w.DrawRect(r, paper);
 		String txt = GetKeyDesc(int(q));
 		int tcy = GetTextSize(txt, StdFont()).cy;
@@ -82,6 +82,7 @@ struct KeyCtrl : Ctrl {
 	}
 
 	KeyCtrl() {
+		Transparent();
 		SetFrame(EditFieldFrame());
 		key = 0;
 	}
@@ -90,11 +91,8 @@ struct KeyCtrl : Ctrl {
 struct KeysDlg : WithKeysLayout<TopWindow> {
 	virtual bool  Key(dword key, int);
 
-	KeyCtrl key[3];
-
 	void EnterGroup();
-	void EnterKey();
-	void SetKey();
+	void KeyEdit();
 	void Defaults();
 	void CopyKeys();
 
@@ -106,18 +104,21 @@ struct KeysDlg : WithKeysLayout<TopWindow> {
 		CtrlLayoutOKCancel(*this, t_("Configure keyboard shortcuts"));
 		group.AddColumn(t_("Group"));
 		group.WhenEnterRow = THISBACK(EnterGroup);
-		keys.AddColumn(t_("Action"), 2);
-		keys.AddColumn(t_("Primary")).SetDisplay(Single<KeyDisplay>());
-		keys.AddColumn(t_("Secondary")).SetDisplay(Single<KeyDisplay>());
-		keys.WhenEnterRow = THISBACK(EnterKey);
-		key[0] <<= key[1] <<= THISBACK(SetKey);
+		group.NoGrid();
+		keys.AddColumn(t_("Action"));
+		keys.AddColumn(t_("Primary")).Ctrls<KeyCtrl>();
+		keys.AddColumn(t_("Secondary")).Ctrls<KeyCtrl>();
+		keys.SetLineCy(EditField::GetStdHeight() + 2);
+		keys.NoHorzGrid().NoCursor().EvenRowColor();
+		keys.ColumnWidths("182 132 133");
+		keys.WhenCtrlsAction = THISBACK(KeyEdit);
 		defaults <<= THISBACK(Defaults);
 	}
 };
 
 bool KeysDlg::Key(dword key, int count)
 {
-	if(key == K_F3) {
+	if(key == K_F3) { // 'hidden trick' to retrieve the document
 		String qtf;
 		for(int i = 0; i < sKeys().GetCount(); i++) {
 			qtf << "&&&" << DeQtf(sKeys().GetKey(i)) << "&&{{1:1 ";
@@ -163,25 +164,17 @@ void KeysDlg::EnterGroup()
 	keys.GoBegin();
 }
 
-void KeysDlg::EnterKey()
+void KeysDlg::KeyEdit()
 {
-	if(!keys.IsCursor())
-		return;
-	key[0] <<= keys.Get(1);
-	key[1] <<= keys.Get(2);
-}
-
-void KeysDlg::SetKey()
-{
-	if(!keys.IsCursor())
-		return;
-	keys.Set(1, ~key[0]);
-	keys.Set(2, ~key[1]);
 	String g = group.GetKey();
 	int q = sKeys().Find(g);
-	KeyInfo& a = *(sKeys()[q][keys.GetCursor()].key);
-	a.key[0] = (dword)(int)~key[0];
-	a.key[1] = (dword)(int)~key[1];
+	if(q < 0)
+		return;
+	for(int i = 0; i < keys.GetCount(); i++) {
+		KeyInfo& a = *(sKeys()[q][i].key);
+		a.key[0] = (dword)(int)keys.Get(i, 1);
+		a.key[1] = (dword)(int)keys.Get(i, 2);
+	}
 }
 
 void KeysDlg::Defaults()
