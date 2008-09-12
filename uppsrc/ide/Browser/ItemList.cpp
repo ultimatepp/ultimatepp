@@ -53,7 +53,6 @@ Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m, const char *s)
 {
 	Vector<ItemTextPart> part;
 	bool param = false;
-	LOGHEXDUMP(m.natural, m.natural.GetLength()); _DBG_
 	while(*s) {
 		while(*s == '\2') s++;
 		ItemTextPart& p = part.Add();
