@@ -54,7 +54,7 @@ void AssistEditor::CreateIndex()
 							id = p.ReadId();
 							if(id == sop) {
 								static char oc[] = "<>!^&*+=-%";
-								while(strchr(oc, *p.GetPtr())) {
+								while(!p.IsEof() && strchr(oc, *p.GetPtr())) {
 									id.Cat(*p.GetPtr());
 									p.SkipTerm();
 								}
