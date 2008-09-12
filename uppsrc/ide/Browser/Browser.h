@@ -353,9 +353,6 @@ protected:
 
 	void   FindBrokenRef();
 
-	void   Repair();
-	void   CompressGroup();
-
 public:
 	Callback1<Bar&> WhenTemplatesMenu;
 

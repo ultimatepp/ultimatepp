@@ -135,7 +135,7 @@ void TopicEditor::TopicMenu(Bar& bar)
 	bar.Add("New topic..", THISBACK(NewTopic))
 	   .Key(K_CTRL_N).Key(K_ALT_INSERT);
 	bar.Add(topic.IsCursor(), "Rename topic..", THISBACK(RenameTopic));
-	bar.Add(topic.IsCursor(), "Remove topic", THISBACK(RemoveTopic))
+	bar.Add(topic.IsCursor(), "Delete topic", THISBACK(RemoveTopic))
 	   .Key(K_ALT_DELETE);
 	bar.Separator();
 	bar.Add(topic.IsCursor() && GetFileTitle(topicpath) != "$.tpp",
@@ -223,6 +223,7 @@ void TopicEditor::NewTopic()
 
 	Vector<String> path, name;
 	ListTemplates(path, name);
+	d.tmpl.Add(Null, "<none>");
 	for(int i = 0; i < path.GetCount(); i++)
 		d.tmpl.Add(path[i], name[i]);
 
@@ -244,7 +245,7 @@ void TopicEditor::NewTopic()
 	}
 	lasttemplate = ~d.tmpl;
 	lastlang = ~d.lang;
-	CreateTopic(fn, ~d.lang, ReadTopic(LoadFile((String)~d.tmpl)).text);
+	CreateTopic(fn, ~d.lang, IsNull(~d.tmpl) ? String() : ReadTopic(LoadFile((String)~d.tmpl)).text);
 	Flush();
 	Open(grouppath);
 	Load(fn);

@@ -1398,22 +1398,24 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 
 	while(lex != t_eof)
 		try {
-			Do();
+			try {
+				Do();
+			}
+			catch(Error) {
+				if(lex.IsBody()) {
+					Resume(lex.GetBracesLevel());
+					Key(';');
+				}
+				else {
+					++lex;
+					lex.SkipToGrounding();
+					lex.ClearBracesLevel();
+				}
+			}
 		}
 		catch(Lex::Grounding) {
 			lex.ClearBracesLevel();
 			lex.ClearBody();
-		}
-		catch(Error) {
-			if(lex.IsBody()) {
-				Resume(lex.GetBracesLevel());
-				Key(';');
-			}
-			else {
-				++lex;
-				lex.SkipToGrounding();
-				lex.ClearBracesLevel();
-			}
 		}
 }
 

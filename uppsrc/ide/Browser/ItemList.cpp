@@ -53,7 +53,9 @@ Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m, const char *s)
 {
 	Vector<ItemTextPart> part;
 	bool param = false;
+	LOGHEXDUMP(m.natural, m.natural.GetLength()); _DBG_
 	while(*s) {
+		while(*s == '\2') s++;
 		ItemTextPart& p = part.Add();
 		p.pos = (int)(s - ~m.natural);
 		p.type = ITEM_TEXT;
@@ -100,7 +102,7 @@ Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m, const char *s)
 		}
 		else {
 			p.type = ITEM_SIGN;
-			while(s[n] && !iscid(s[n]))
+			while(s[n] && !iscid(s[n]) && s[n] != '\2')
 				n++;
 		}
 		p.len = n;

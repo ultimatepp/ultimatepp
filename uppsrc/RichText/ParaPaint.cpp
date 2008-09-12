@@ -64,7 +64,7 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 				              pi.coloroverride ? SColorText() : f.ink);
 		}
 		Color ink = pi.coloroverride ? SColorText() : f.ink;
-		if(!IsNull(f.link) && !IsNull(pi.hyperlink)) {
+		if(!IsNull(f.link) && !IsNull(pi.hyperlink) && !(fnt.IsUnderline() || f.dashed)) {
 			fnt.Underline();
 			if(!pi.coloroverride)
 				ink = pi.hyperlink;

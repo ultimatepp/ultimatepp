@@ -55,7 +55,6 @@ void RichEdit::StrikeoutTool(Bar& bar, dword key)
 	   .Key(key);
 }
 
-
 void RichEdit::CapitalsTool(Bar& bar, dword key)
 {
 	bar.Add(!IsReadOnly(), t_("Capitals"),

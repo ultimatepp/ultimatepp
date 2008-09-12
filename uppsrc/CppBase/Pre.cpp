@@ -74,7 +74,7 @@ SrcFile PreProcess(Stream& in)
 		}
 		const char *rm = ln;
 		if(IsAlNum(*rm))
-			res.text << '\1';
+			res.text << '\2';
 		while(*rm == ' ' || *rm == '\t') rm++;
 		if(*rm == '\0')
 			res.blankLinesRemoved++;
