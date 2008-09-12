@@ -895,7 +895,6 @@ public:
 	void      BrowseMenu(Bar& menu);
 		void  Query();
 		void  QueryWord();
-		void  DppIgnoreList();
 		void  RescanCode();
 		void  QueryId();
 		void  About();

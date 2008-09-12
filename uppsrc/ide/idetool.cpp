@@ -102,11 +102,6 @@ void Ide::OpenATopic()
 	}
 }
 
-void Ide::DppIgnoreList()
-{
-	EditFile(IgnoreFile());
-}
-
 void Ide::InsertColor()
 {
 	TopWindow test;

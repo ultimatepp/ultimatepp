@@ -184,6 +184,7 @@ String DecoratedItem(const CppItemInfo& m, const char *natural)
 			qtf << "@k";
 			break;
 		case ITEM_CPP_TYPE:
+		case ITEM_CPP:
 			qtf << "@B";
 			break;
 		default:
@@ -204,20 +205,20 @@ String DecoratedItem(const CppItemInfo& m, const char *natural)
 
 static const char styles[] =
 	"[ $$0,0#00000000000000000000000000000000:Default]"
-	"[i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483370:item]"
-	"[i448;a25;kKO9;*@(64)3 $$2,0#37138531426314131252341829483380:class]"
+	"[a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483370:item]"
+	"[a25;kKO9;*@(64)3 $$2,0#37138531426314131252341829483380:class]"
 	"[l288;2 $$3,0#27521748481378242620020725143825:desc]"
+	"[H6;0 $$4,0#05600065144404261032431302351956:begin]"
+	"[l288;a25;kK~~~.1408;@3;2 $$5,0#61217621437177404841962893300719:param]"
+	"[0 $$7,0#96390100711032703541132217272105:end]"
 ;
-
 
 void TopicEditor::CreateQtf(const String& item, const CppItemInfo& m, String& p1, String& p2)
 {
 	String qtf = styles;
 	bool str = m.kind == STRUCT || m.kind == STRUCTTEMPLATE;
-/*
-	qtf << "Type: " << DeQtf(m.type) << " - " << DeQtf(m.qtype) << '&';
-	qtf << "PType: " << DeQtf(m.ptype) << " - " << DeQtf(m.qptype) << '&';
-//*/
+	if(!str)
+		qtf << "[s4 &]";
 	qtf << (str ? "[s2;:" : "[s1;:") << DeQtf(item) << ": ";
 	if(m.IsTemplate()) {
 		int q = 0;
@@ -253,21 +254,22 @@ void TopicEditor::CreateQtf(const String& item, const CppItemInfo& m, String& p1
 	for(int i = 0; i < t.GetCount(); i++) {
 		if(i)
 			d << ' ';
-		d << "[%00-00*@g " << DeQtf(t[i]) << "]";
+		d << "[%-*@g " << DeQtf(t[i]) << "]";
 	}
 	d.Clear();
-	d = "[%EN-US ";
+	d = "[%% ";
 	Vector<String> p = Split(m.pname, ';');
+	bool was = false;
 	if(!str)
 		for(int i = 0; i < p.GetCount(); i++) {
 			if(!IsNull(d))
 				d << ' ';
-			d << "[%00-00*@r " << DeQtf(p[i]) << "]";
+			d << "[%-*@r " << DeQtf(p[i]) << "]";
 		}
-	if(!IsNull(d))
+	if(!str && p.GetCount())
 		qtf << ' ' << d << ' ';
 	qtf << "&]";
-	qtf << "[s0 &]";
+	qtf << "[s7 &]";
 	p2 = qtf;
 	return;
 }

@@ -186,7 +186,7 @@ String PackageDirectory(const String& name) { return GetFileDirectory(PackagePat
 String GetLocalDir();
 String LocalPath(const String& filename);
 
-String IgnoreFile();
+Vector<String> IgnoreList();
 
 bool   IsFullDirectory(const String& d);
 

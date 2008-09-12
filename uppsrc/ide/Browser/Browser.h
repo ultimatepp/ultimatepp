@@ -195,7 +195,6 @@ public:
 	~Browser();
 };
 
-Vector<String> IgnoreList();
 CppBase&       BrowserBase();
 void           StartBrowserBase();
 void           BrowserBaseScan(Stream& s, const String& fn);
@@ -314,7 +313,6 @@ protected:
 	void   TopicMenu(Bar& bar);
 	void   MainTool(Bar& bar);
 	void   FileBar(Bar& bar);
-	void   Exit();
 	void   SetBar();
 
 	String GetCurrentTopicPath();

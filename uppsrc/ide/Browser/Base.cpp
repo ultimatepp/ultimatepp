@@ -153,18 +153,6 @@ void LoadBrowserBase(Progress& pi)
 	}
 }
 
-Vector<String> IgnoreList()
-{
-	Vector<String> ignore;
-	FileIn in(IgnoreFile());
-	while(!in.IsEof()) {
-		String s = in.GetLine();
-		if(!s.IsEmpty())
-			ignore.Add(s);
-	}
-	return ignore;
-}
-
 void FinishBase(const CppWordsHash& w)
 {
 	TimeStop tm;
