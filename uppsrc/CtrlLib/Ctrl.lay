@@ -78,14 +78,12 @@ LAYOUT(PalCtrlSizeLayout, 206, 60)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
 END_LAYOUT
 
-LAYOUT(KeysLayout, 540, 388)
-	ITEM(ArrayCtrl, group, LeftPosZ(8, 116).TopPosZ(8, 308))
-	ITEM(ArrayCtrl, keys, LeftPosZ(132, 400).TopPosZ(8, 308))
-	UNTYPED(key[0], LeftPosZ(132, 196).TopPosZ(324, 20))
-	UNTYPED(key[1], LeftPosZ(332, 196).TopPosZ(324, 20))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(400, 64).TopPosZ(356, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(468, 64).TopPosZ(356, 24))
-	ITEM(Button, defaults, SetLabel(t_("Default")).LeftPosZ(8, 64).TopPosZ(324, 24))
+LAYOUT(KeysLayout, 604, 500)
+	ITEM(ArrayCtrl, group, LeftPosZ(8, 116).TopPosZ(8, 452))
+	ITEM(ArrayCtrl, keys, LeftPosZ(132, 464).TopPosZ(8, 452))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(464, 64).TopPosZ(468, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(532, 64).TopPosZ(468, 24))
+	ITEM(Button, defaults, SetLabel(t_("Defaults")).LeftPosZ(8, 64).TopPosZ(468, 24))
 END_LAYOUT
 
 LAYOUT(PrinterLayout, 372, 264)
