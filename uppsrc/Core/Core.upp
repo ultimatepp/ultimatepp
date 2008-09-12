@@ -133,6 +133,7 @@ file
 	Meta readonly separator,
 	sub.upt,
 	core.upt,
+	ignorelist,
 	Info readonly separator,
 	src.tpp,
 	srcdoc.tpp,

@@ -14,13 +14,13 @@ TopicEditor::TopicEditor()
 	int dcy = EditField::GetStdHeight(tf);
 	title.SetFont(tf);
 	right.Add(title.HSizePos(2, 2).TopPos(0, dcy));
+	title.Tip("Topic title");
+	title.NullText("Topic title", tf().Italic(), SColorDisabled());
 	right.Add(editor.VSizePos(dcy + 4, 0).HSizePos());
 	Add(left_right.Horz(topic, right));
 	left_right.SetPos(1200);
 
 	topic.NoRoundSize().Columns(1);
-
-	title.Tip("Topic title");
 
 	topic.WhenSel = THISBACK(TopicCursor);
 	topic.WhenBar = THISBACK(TopicMenu);
@@ -110,11 +110,6 @@ void TopicEditor::Print()
 	UPP::Print(editor.Get(), Size(3968, 6074), 0);
 }
 
-void TopicEditor::Exit()
-{
-	Close();
-}
-
 void TopicEditor::SyncFonts()
 {
 	Vector<int> ff;
@@ -153,24 +148,14 @@ void TopicEditor::FileBar(Bar& bar)
 {
 	TopicMenu(bar);
 	bar.Separator();
-	bar.Add(!IsNull(topicpath), "Save", THISBACK(Save))
-	   .Key(K_CTRL_S);
-	bar.Separator();
 	bar.Add("Print", CtrlImg::print(), THISBACK(Print))
 	   .Key(K_CTRL_P);
 	bar.Add("Export to PDF..", THISBACK(ExportPdf));
-	bar.Separator();
-	bar.Add("Exit", THISBACK(Exit));
-#ifdef _DEBUG
-	bar.Separator();
-	bar.Add("Compress group", THISBACK(CompressGroup));
-	bar.Add("Repair", THISBACK(Repair)).Key(K_ALT_R);
-#endif
 }
 
 void TopicEditor::EditMenu(Bar& bar)
 {
-	bar.Add("Topic", THISBACK(FileBar));
+	FileBar(bar);
 	bar.Separator();
 	editor.CutTool(bar);
 	editor.CopyTool(bar);
@@ -186,7 +171,6 @@ void TopicEditor::EditMenu(Bar& bar)
 	   .Check(allfonts);
 	bar.Separator();
 	bar.Add("Table", THISBACK(TableMenu));
-	bar.Add("Format", THISBACK(FormatMenu));
 }
 
 void TopicEditor::FormatMenu(Bar& bar)
@@ -260,7 +244,7 @@ void TopicEditor::NewTopic()
 	}
 	lasttemplate = ~d.tmpl;
 	lastlang = ~d.lang;
-	CreateTopic(fn, ~d.lang, ReadTopic((String)~d.tmpl).text);
+	CreateTopic(fn, ~d.lang, ReadTopic(LoadFile((String)~d.tmpl)).text);
 	Flush();
 	Open(grouppath);
 	Load(fn);

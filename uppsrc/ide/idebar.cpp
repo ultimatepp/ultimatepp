@@ -460,7 +460,6 @@ void Ide::BrowseMenu(Bar& menu) {
 //	menu.Add(AK_INSERTCOLOR, THISBACK(InsertColor));
 	menu.Separator();
 	menu.Add("Rescan code", THISBACK(RescanCode));
-	menu.Add("Edit ignore list", THISBACK(DppIgnoreList));
 	menu.MenuSeparator();
 	menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
 	     .Check(IsBottomShown() && btabs.GetCursor() == BCALC);
