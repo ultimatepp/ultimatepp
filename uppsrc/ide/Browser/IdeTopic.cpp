@@ -214,7 +214,7 @@ void TopicEditor::CreateQtf(const String& item, const CppItemInfo& m, String& p1
 		}
 		qtf << DecoratedItem(m, m.natural.Mid(0, q));
 		if(q < m.natural.GetLength()) {
-			while(m.natural[q] == ' ')
+			while((byte)m.natural[q] <= 32)
 				q++;
 			qtf << '&' << DecoratedItem(m, m.natural.Mid(q));
 		}
