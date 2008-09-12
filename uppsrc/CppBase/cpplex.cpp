@@ -152,7 +152,7 @@ void Lex::Next()
 {
 	grounding = false;
 	while((byte)*ptr <= ' ') {
-		if(*ptr == '\1')
+		if(*ptr == '\2')
 			grounding = true;
 		if(*ptr == '\0') return;
 		ptr++;

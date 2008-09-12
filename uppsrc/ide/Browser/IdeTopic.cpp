@@ -18,30 +18,6 @@ void TopicEditor::Label(String& label)
 	label = ref.Get();
 }
 
-#ifdef _DEBUG
-void TopicEditor::CompressGroup()
-{
-	Progress pi;
-	pi.SetTotal(topic.GetCount());
-	for(;;) {
-		if(IsNull(topicpath))
-			return;
-		pi.SetText(GetFileTitle(topicpath));
-		pi.SetPos(topic.GetCursor());
-		editor.SetModify();
-		Save();
-		if(!topic.IsCursor())
-			break;
-		int c = topic.GetCursor() + 1;
-		if(c >= topic.GetCount()) {
-			PromptOK("Group finished.");
-			break;
-		}
-		topic.SetCursor(c);
-	}
-}
-#endif
-
 struct FindBrokenRefIterator : RichText::Iterator {
 	int cursor;
 
@@ -164,9 +140,9 @@ String DecoratedItem(const CppItemInfo& m, const char *natural)
 	String qtf = "[%00-00K ";
 	Vector<ItemTextPart> n = ParseItemNatural(m, natural);
 	if(m.virt)
-		qtf << "virtual ";
+		qtf << "[@B virtual] ";
 	if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
-		qtf << "static ";
+		qtf << "[@B static] ";
 	Vector<String> qt = Split(m.qptype, sSplitT, false);
 	Vector<String> tt = Split(m.qtype, sSplitT, false);
 	for(int i = 0; i < n.GetCount(); i++) {
@@ -174,14 +150,15 @@ String DecoratedItem(const CppItemInfo& m, const char *natural)
 		qtf << "[";
 		switch(p.type) {
 		case ITEM_PNAME:
+			qtf << "*";
 		case ITEM_NUMBER:
 			qtf << "@r";
 			break;
 		case ITEM_TNAME:
-			qtf << "@g";
+			qtf << "*@g";
 			break;
 		case ITEM_NAME:
-			qtf << "@k";
+			qtf << "*";
 			break;
 		case ITEM_CPP_TYPE:
 		case ITEM_CPP:
@@ -189,11 +166,11 @@ String DecoratedItem(const CppItemInfo& m, const char *natural)
 			break;
 		default:
 			int q = p.type - ITEM_PTYPE;
-			if(q >= 0 && q < qt.GetCount())
-				qtf << '^' << qt[q] << '^';
+			if(q >= 0 && q < qt.GetCount() && *qt[q] == ':')
+				qtf << "_^" << qt[q] << '^';
 			q = p.type - ITEM_TYPE;
-			if(q >= 0 && q < tt.GetCount())
-				qtf << '^' << tt[q] << '^';
+			if(q >= 0 && q < tt.GetCount() && *tt[q] == ':')
+				qtf << "_^" << tt[q] << '^';
 			break;
 		}
 		qtf << ' ';
@@ -205,8 +182,8 @@ String DecoratedItem(const CppItemInfo& m, const char *natural)
 
 static const char styles[] =
 	"[ $$0,0#00000000000000000000000000000000:Default]"
-	"[a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483370:item]"
-	"[a25;kKO9;*@(64)3 $$2,0#37138531426314131252341829483380:class]"
+	"[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483370:item]"
+	"[i448;a25;kKO9;3 $$2,0#37138531426314131252341829483380:class]"
 	"[l288;2 $$3,0#27521748481378242620020725143825:desc]"
 	"[H6;0 $$4,0#05600065144404261032431302351956:begin]"
 	"[l288;a25;kK~~~.1408;@3;2 $$5,0#61217621437177404841962893300719:param]"
@@ -215,7 +192,7 @@ static const char styles[] =
 
 void TopicEditor::CreateQtf(const String& item, const CppItemInfo& m, String& p1, String& p2)
 {
-	String qtf = styles;
+	String qtf;
 	bool str = m.kind == STRUCT || m.kind == STRUCTTEMPLATE;
 	if(!str)
 		qtf << "[s4 &]";
@@ -247,8 +224,8 @@ void TopicEditor::CreateQtf(const String& item, const CppItemInfo& m, String& p1
 
 	qtf << "&]";
 	p1 = qtf;
-	qtf = styles;
-	qtf << "[s3%EN-US ";
+	qtf.Clear();
+	qtf << "[s3%% ";
 	String d;
 	Vector<String> t = Split(m.tname, ';');
 	for(int i = 0; i < t.GetCount(); i++) {
@@ -261,13 +238,10 @@ void TopicEditor::CreateQtf(const String& item, const CppItemInfo& m, String& p1
 	Vector<String> p = Split(m.pname, ';');
 	bool was = false;
 	if(!str)
-		for(int i = 0; i < p.GetCount(); i++) {
-			if(!IsNull(d))
-				d << ' ';
-			d << "[%-*@r " << DeQtf(p[i]) << "]";
-		}
+		for(int i = 0; i < p.GetCount(); i++)
+			d << " [%-*@r " << DeQtf(p[i]) << "]";
 	if(!str && p.GetCount())
-		qtf << ' ' << d << ' ';
+		qtf << d << '.';
 	qtf << "&]";
 	qtf << "[s7 &]";
 	p2 = qtf;
@@ -316,9 +290,11 @@ void TopicEditor::InsertItem()
 		return;
 	editor.BeginOp();
 	int a = editor.GetCursor();
-	editor.PasteText(ParseQTF(p1));
+	DUMP(p1);
+	DUMP(p2);
+	editor.PasteText(ParseQTF(styles + p1));
 	c = editor.GetCursor();
-	editor.PasteText(ParseQTF(p2));
+	editor.PasteText(ParseQTF(styles + p2));
 	editor.Move(a);
 	editor.Move(c);
 }
@@ -341,42 +317,3 @@ void TopicEditor::SetFocus()
 	else
 		Ctrl::SetFocus();
 }
-
-#ifdef _DEBUG
-void TopicEditor::Repair()
-{
-	RichText text = editor.CopyText(0, editor.GetLength());
-	RichPara def;
-	for(int i = 0; i < text.GetPartCount(); i++)
-		if(text.IsPara(i)) {
-			RichPara para = text.Get(i);
-			String l = para.format.label;
-			if(l[0] == ':') {
-				String nest, key;
-				if(SplitNestKey(l, nest, key)) {
-					CppBase& base = BrowserBase();
-					int q = base.Find(nest);
-					if(q >= 0) {
-						int w = base[q].key.Find(key);
-						if(w >= 0) {
-							CppItemInfo m;
-							(CppSimpleItem&)m = base[q].item[w];
-							m.name = base[q].name[w];
-							m.key = key;
-							String qtf;
-							if(m.kind != ENUM) {
-								qtf << styles << "[s1 " << DecoratedItem(m, m.natural);
-								RichText txt = ParseQTF(qtf);
-								text.OverrideStyles(txt.GetStyles());
-								text.Set(i, txt.Get(0), txt.GetStyles());
-							}
-						}
-					}
-				}
-			}
-		}
-	editor.Move(0);
-	editor.RemoveText(editor.GetLength());
-	editor.PasteText(text);
-}
-#endif
