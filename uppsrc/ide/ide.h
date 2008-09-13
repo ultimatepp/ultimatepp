@@ -268,12 +268,16 @@ private:
 	void All();
 	void Lang();
 	void SShow();
+	void ScanDirForTpp(const char *dir, Index<String>& li, Vector<int>& sdx, const String& lng,
+	                   VectorMap<String, VectorMap<String, Vector<String> > >& map,
+	                   const String& rel);
 
 	Label    search_label;
 	WithDropChoice<EditString> search;
 	DropList lang;
 	bool     internal;
 	bool     showwords, issearch, all;
+	static  Index<String> idelink;
 
 
 public:

@@ -152,38 +152,42 @@ void SyncTopicFile(const String& link, const String& path)
 	SyncTopicFile(ParseQTF(tp.text), link, path, tp.title);
 }
 
+void SyncRefsDir(const char *dir, const String& rel, Progress& pi)
+{
+	for(FindFile pff(AppendFileName(dir, "*.*")); pff; pff.Next()) {
+		if(pff.IsFolder() && *pff.GetName() != '.') {
+			pi.Step();
+			TopicLink tl;
+			tl.package = rel + pff.GetName();
+			String pdir = AppendFileName(dir, pff.GetName());
+			for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next()) {
+				if(ff.IsFolder()) {
+					String group = GetFileTitle(ff.GetName());
+					tl.group = group;
+					String dir = AppendFileName(pdir, ff.GetName());
+					for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next()) {
+						if(ft.IsFile()) {
+							String path = AppendFileName(dir, ft.GetName());
+							tl.topic = GetFileTitle(ft.GetName());
+							String link = TopicLinkString(tl);
+							pi.SetText("Indexing topic " + tl.topic);
+							SyncTopicFile(link, path);
+						}
+					}
+				}
+			}
+			SyncRefsDir(pdir, tl.package + '/', pi);
+		}
+	}
+}
+
 void SyncRefs()
 {
 	Progress pi;
 	pi.AlignText(ALIGN_LEFT);
 	Vector<String> upp = GetUppDirs();
-	for(int i = 0; i < upp.GetCount(); i++) {
-		for(FindFile pff(AppendFileName(upp[i], "*.*")); pff; pff.Next()) {
-			if(pff.IsFolder()) {
-				pi.Step();
-				String package = pff.GetName();
-				String pdir = PackageDirectory(package);
-				TopicLink tl;
-				tl.package = package;
-				for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next()) {
-					if(ff.IsFolder()) {
-						String group = GetFileTitle(ff.GetName());
-						tl.group = group;
-						String dir = AppendFileName(pdir, ff.GetName());
-						for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next()) {
-							if(ft.IsFile()) {
-								String path = AppendFileName(dir, ft.GetName());
-								tl.topic = GetFileTitle(ft.GetName());
-								String link = TopicLinkString(tl);
-								pi.SetText("Indexing topic " + tl.topic);
-								SyncTopicFile(link, path);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	for(int i = 0; i < upp.GetCount(); i++)
+		SyncRefsDir(upp[i], String(), pi);
 }
 
 Vector<String> GetRefLinks(const String& ref)

@@ -128,6 +128,43 @@ void GatherLinks(Index<String>& link, const char *topic)
 	}
 }
 
+Index<String> TopicCtrl::idelink;
+
+void TopicCtrl::ScanDirForTpp(const char *dir, Index<String>& li, Vector<int>& sdx,
+                              const String& lng,
+                              VectorMap<String, VectorMap<String, Vector<String> > >& map,
+                              const String& rel)
+{
+	TopicLink tl;
+	for(FindFile pff(AppendFileName(dir, "*.*")); pff; pff.Next()) {
+		if(pff.IsFolder() && *pff.GetName() != '.') {
+			String pdir = AppendFileName(dir, pff.GetName());
+			tl.package = rel + pff.GetName();
+			for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next())
+				if(ff.IsFolder()) {
+					tl.group = GetFileTitle(ff.GetName());
+					String dir = AppendFileName(pdir, ff.GetName());
+					for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next())
+						if(ft.IsFile()) {
+							tl.topic = GetFileTitle(ft.GetName());
+							int q = tl.topic.ReverseFind('$');
+							String l;
+							if(q >= 0) {
+								l = ToUpper(tl.topic.Mid(q + 1));
+								li.FindAdd(l);
+							}
+							String link = TopicLinkString(tl);
+							if(idelink.Find(link) < 0 && MatchTopicLink(link, sdx) &&
+							   (lng == "All" || lng == l)) {
+								map.GetAdd(tl.package).GetAdd(tl.group).Add(tl.topic);
+							}
+						}
+				}
+			ScanDirForTpp(pdir, li, sdx, lng, map, tl.package + '/');
+		}
+	}
+}
+
 void TopicCtrl::SyncDocTree()
 {
 	Vector<String> ss = Split((String)~search, ' ');
@@ -137,7 +174,6 @@ void TopicCtrl::SyncDocTree()
 
 	ClearTree();
 
-	static Index<String> idelink;
 	String hdx = "topic://ide/app/index$en-us";
 	if(idelink.GetCount() == 0)
 		GatherLinks(idelink, hdx);
@@ -157,34 +193,8 @@ void TopicCtrl::SyncDocTree()
 	lang.Clear();
 	lang.Add("All");
 	Index<String> li;
-	for(int i = 0; i < upp.GetCount(); i++) {
-		TopicLink tl;
-		for(FindFile pff(AppendFileName(upp[i], "*.*")); pff; pff.Next()) {
-			if(pff.IsFolder()) {
-				String pdir = AppendFileName(upp[i], pff.GetName());
-				tl.package = pff.GetName();
-				for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next())
-					if(ff.IsFolder()) {
-						tl.group = GetFileTitle(ff.GetName());
-						String dir = AppendFileName(pdir, ff.GetName());
-						for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next())
-							if(ft.IsFile()) {
-								tl.topic = GetFileTitle(ft.GetName());
-								int q = tl.topic.ReverseFind('$');
-								String l;
-								if(q >= 0) {
-									l = ToUpper(tl.topic.Mid(q + 1));
-									li.FindAdd(l);
-								}
-								String link = TopicLinkString(tl);
-								if(idelink.Find(link) < 0 && MatchTopicLink(link, sdx) &&
-								   (lng == "All" || lng == l))
-									map.GetAdd(tl.package).GetAdd(tl.group).Add(tl.topic);
-							}
-					}
-			}
-		}
-	}
+	for(int i = 0; i < upp.GetCount(); i++)
+		ScanDirForTpp(upp[i], li, sdx, lng, map, String());
 	Vector<String> sli = li.PickKeys();
 	Sort(sli);
 	for(int i = 0; i < sli.GetCount(); i++)
@@ -199,7 +209,7 @@ void TopicCtrl::SyncDocTree()
 		TopicLink tl;
 		tl.package = map.GetKey(i);
 		int pid = AddTree(used.Find(tl.package) >= 0 ? usid : otid,
-		                      TopicImg::Package(), Null, tl.package);
+		                  TopicImg::Package(), Null, tl.package);
 		VectorMap<String, Vector<String> >& package = map[i];
 		for(int i = 0; i < package.GetCount(); i++) {
 			tl.group = package.GetKey(i);
