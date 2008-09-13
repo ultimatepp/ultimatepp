@@ -6,5 +6,7 @@ uses
 file
 	gif.h,
 	gifupp.cpp,
-	gif.icpp;
+	gif.icpp,
+	Info readonly separator,
+	Copying;
 

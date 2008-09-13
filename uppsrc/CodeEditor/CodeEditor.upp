@@ -15,5 +15,7 @@ file
 	Lang.cpp,
 	CodeEditor.cpp,
 	CodeEditor.lay,
-	CodeEditor.iml;
+	CodeEditor.iml,
+	Info readonly separator,
+	Copying;
 

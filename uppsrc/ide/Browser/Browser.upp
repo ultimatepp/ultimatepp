@@ -23,11 +23,15 @@ file
 	Topic.cpp,
 	Template.cpp,
 	Link.cpp,
+	Accels.cpp,
 	TopicWin.cpp,
 	IdeTopic.cpp,
 	TopicI.icpp,
 	Topic.lay,
-	Topic.iml;
+	Topic.iml,
+	Info readonly separator,
+	Copying;
 
 mainconfig
 	"" = "GUI";
+

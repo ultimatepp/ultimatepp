@@ -20,5 +20,7 @@ file
 	EditPos.cpp,
 	ImlFile.cpp,
 	IconDes.lay,
-	IconDes.iml;
+	IconDes.iml,
+	Info readonly separator,
+	Copying;
 

@@ -12,7 +12,9 @@ file
 	SvnWorks.cpp,
 	SvnSync.cpp,
 	notes.txt,
-	usvn.lay;
+	usvn.lay,
+	Info readonly separator,
+	Copying;
 
 mainconfig
 	"" = "GUI";

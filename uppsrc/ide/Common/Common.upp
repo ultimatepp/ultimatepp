@@ -12,5 +12,7 @@ file
 	Workspace.cpp,
 	usc.cpp,
 	ComDlg.cpp,
-	common.iml;
+	common.iml,
+	Info readonly separator,
+	Copying;
 

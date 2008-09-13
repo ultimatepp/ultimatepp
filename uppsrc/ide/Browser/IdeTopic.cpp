@@ -290,8 +290,6 @@ void TopicEditor::InsertItem()
 		return;
 	editor.BeginOp();
 	int a = editor.GetCursor();
-	DUMP(p1);
-	DUMP(p2);
 	editor.PasteText(ParseQTF(styles + p1));
 	c = editor.GetCursor();
 	editor.PasteText(ParseQTF(styles + p2));

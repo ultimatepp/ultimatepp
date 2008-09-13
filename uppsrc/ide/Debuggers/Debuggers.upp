@@ -23,5 +23,7 @@ file
 	Data.cpp,
 	Code.cpp,
 	Pdb.cpp,
-	Pdb.key;
+	Pdb.key,
+	Info readonly separator,
+	Copying;
 

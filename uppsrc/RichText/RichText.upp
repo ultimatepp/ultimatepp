@@ -36,7 +36,5 @@ file
 	RichText.iml,
 	Info readonly separator,
 	srcdoc.tpp,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 

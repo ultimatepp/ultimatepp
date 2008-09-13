@@ -33,5 +33,6 @@ file
 	lib/zconf.h,
 	lib/zlib.h,
 	lib/zutil.c,
-	lib/zutil.h;
+	lib/zutil.h,
+	lib\README;
 

@@ -10,5 +10,7 @@ file
 	GccBuilder.cpp,
 	MscBuilder.cpp,
 	JavaBuilder.cpp,
-	ScriptBuilder.cpp;
+	ScriptBuilder.cpp,
+	Info readonly separator,
+	Copying;
 

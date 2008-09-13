@@ -8,9 +8,7 @@ file
 	HexView.cpp,
 	HexView.lay,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
 	"" = "";

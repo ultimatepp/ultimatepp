@@ -10,5 +10,7 @@ library(LINUX !NOPOSTGRESQL) pq;
 file
 	PostgreSQL.h,
 	PostgreSQLSchema.h,
-	PostgreSQL.cpp;
+	PostgreSQL.cpp,
+	Info readonly separator,
+	Copying;
 

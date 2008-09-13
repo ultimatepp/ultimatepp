@@ -28,10 +28,8 @@ file
 	util_td.cpp,
 	ExportSch.cpp,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors,
 	src.tpp,
 	srcimp.tpp,
-	srcdoc.tpp;
+	srcdoc.tpp,
+	Copying;
 
