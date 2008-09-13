@@ -109,11 +109,16 @@ struct DependsDlg : public WithUppOptPushDlg<TopWindow> {
 	DependsDlg();
 };
 
+struct UppList : FileList {
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper,
+	                   dword style) const;
+};
+
 struct WorkspaceWork {
 	static    Font ListFont();
 
 	FileList    package;
-	FileList    filelist;
+	UppList     filelist;
 	Vector<int> fileindex;
 
 	String    main;

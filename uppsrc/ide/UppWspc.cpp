@@ -754,3 +754,11 @@ void WorkspaceWork::SerializeClosed(Stream& s)
 	s % list;
 	closed = list;
 }
+
+void UppList::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	FileList::File file = ValueTo<FileList::File>(q);
+	if(GetFileName(file.name) == "$.tpp" && IsFolder(file.name))
+		file.name = GetFileName(GetFileFolder(file.name)) + " templates";
+	FileList::Paint(w, r, RawToValue(file), ink, paper, style);
+}
