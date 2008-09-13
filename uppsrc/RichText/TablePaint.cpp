@@ -354,12 +354,17 @@ void RichTable::ApplyZoom(Zoom z, const RichStyles& ostyle, const RichStyles& zs
 	int ny = cell.GetCount();
 	format.frame = LineZoom(z, format.frame);
 	format.grid = LineZoom(z, format.grid);
+	format.before *= z;
+	format.lm *= z;
+	format.rm *= z;
+	format.after *= z;
 	for(int i = 0; i < ny; i++)
 		for(int j = 0; j < nx; j++)
 			if(ci[i][j].valid) {
 				RichCell& c = cell[i][j];
 				c.format.border *= z;
 				c.format.margin *= z;
+				c.format.minheight *= z;
 				c.text.ApplyZoom(z, ostyle, zstyle);
 			}
 }
