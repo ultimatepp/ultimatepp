@@ -25,6 +25,8 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img, bool fast = fals
 		img = fast ? IdeCommonImg::FastSource() : IdeCommonImg::Source();
 	if(ext == ".sch")
 		img = IdeCommonImg::Sch();
+	if(filename == "Copying")
+		img = IdeCommonImg::License();
 }
 
 Image IdeFileImage(const String& filename, bool fast)
