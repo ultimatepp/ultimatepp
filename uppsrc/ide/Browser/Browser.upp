@@ -29,8 +29,7 @@ file
 	TopicI.icpp,
 	Topic.lay,
 	Topic.iml,
-	Info readonly separator,
-	Copying;
+	Info readonly separator;
 
 mainconfig
 	"" = "GUI";
