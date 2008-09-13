@@ -81,7 +81,7 @@ Vector<String> GatherLabels(const RichText& text)
 String WriteTopic(const char *title, const RichText& text)
 {
 	StringBuffer r;
-	r << "topic " << AsCString(title) << ";\n";
+	r << "topic " << AsCString(title) << ";\r\n";
 	r << AsQTF(text, CHARSET_UTF8, QTF_BODY|QTF_ALL_STYLES|QTF_CRLF);
 	return r;
 }
