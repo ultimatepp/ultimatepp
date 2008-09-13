@@ -5,11 +5,7 @@ uses
 	CtrlLib;
 
 file
-	DbfView.cpp,
-	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	DbfView.cpp;
 
 mainconfig
 	"" = "GUI";
