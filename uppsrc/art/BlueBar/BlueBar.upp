@@ -3,5 +3,7 @@ description "Visual style for ToolBar and MenuBar";
 file
 	BlueBar.h,
 	BlueSkin.iml,
-	BlueSkin.cpp;
+	BlueSkin.cpp,
+	Info readonly separator,
+	Copying;
 

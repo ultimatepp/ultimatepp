@@ -70,9 +70,7 @@ file
 		depends() ide.ico,
 	Makefile,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
 	"" = "GUI",

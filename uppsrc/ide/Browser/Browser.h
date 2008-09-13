@@ -352,6 +352,8 @@ protected:
 	void   InsertItem();
 
 	void   FindBrokenRef();
+	
+	void   Accels();
 
 public:
 	Callback1<Bar&> WhenTemplatesMenu;

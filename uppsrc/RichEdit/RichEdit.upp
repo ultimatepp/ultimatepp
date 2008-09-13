@@ -26,7 +26,5 @@ file
 	RichEdit.lay,
 	RichEdit.iml,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 

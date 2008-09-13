@@ -9,5 +9,7 @@ file
 	Bmp.cpp,
 	BmpWrite.cpp,
 	Icon.cpp,
-	BmpReg.icpp;
+	BmpReg.icpp,
+	Info readonly separator,
+	Copying;
 

@@ -4,7 +4,9 @@ uses
 file
 	QuickTabs.h,
 	QuickTabs.cpp,
-	QuickTabs.iml;
+	QuickTabs.iml,
+	Info readonly separator,
+	Copying;
 
 mainconfig
 	"" = "GUI";

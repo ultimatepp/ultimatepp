@@ -12,9 +12,7 @@ file
 	PdfDraw.cpp,
 	PdfReport.icpp,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
 	"" = "GUI";

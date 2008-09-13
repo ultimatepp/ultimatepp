@@ -16,9 +16,7 @@ file
 	Value.cpp,
 	Info readonly separator,
 	srcdoc.tpp,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
 	"" = "";
