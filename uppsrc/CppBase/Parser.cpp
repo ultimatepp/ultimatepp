@@ -484,9 +484,9 @@ int Parser::RPtr()
 
 void Parser::EatInitializers()
 {
-	if(Key(':')) {
-		while(lex != '{' && lex != t_eof) ++lex;
-	}
+	if(Key(':'))
+		while(lex != '{' && lex != t_eof)
+			++lex;
 }
 
 void Parser::Declarator(Decl& d, const char *p)
@@ -556,15 +556,15 @@ void Parser::Declarator(Decl& d, const char *p)
 		}
 	}
 	if(Key('=') || (inbody && lex == '(')) {
-		int lvl = 0;
+		int level = 0;
 		for(;;) {
-			if(lex == t_eof || lvl == 0 && (lex == ',' || lex == ')' || lex == ';'))
+			if(lex == t_eof || level == 0 && (lex == ',' || lex == ')' || lex == ';'))
 				break;
-			if(Key('('))
-				lvl++;
+			if(Key('(') || Key('{'))
+				level++;
 			else
-			if(Key(')'))
-				lvl--;
+			if(Key(')') || Key('}'))
+				level--;
 			else
 				++lex;
 		}
