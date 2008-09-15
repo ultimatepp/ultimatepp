@@ -2,6 +2,7 @@ uses
 	CtrlLib;
 
 file
+	a.h,
 	aaa.h,
 	src.tpp,
 	main.cpp,

@@ -1,4 +1,5 @@
-topic "class Thread";[2 $$0,0#00000000000000000000000000000000:Default]
+topic "class Thread";
+[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [a83;*R6 $$3,0#31310162474203024125188417583966:caption]
@@ -8,58 +9,55 @@ topic "class Thread";[2 $$0,0#00000000000000000000000000000000:Default]
 [l416;2 $$7,7#55548704457842300043401641954952:nested`-desc]
 [l288;i448;a25;kO9;*2 $$8,8#64691275497409617375831514634295:nested`-class]
 [{_}%EN-US 
-[s1;K:`:`:Thread`:`:class:@0 [%00-00@(0.0.255) class][%00-00@(64) _][%00-00 Thread]&]
+[s1;K:`:`:Thread`:`:class:%- [@(0.0.255) class]_[@0 Thread]&]
 [s2; Encapsulation of thread.  &]
 [s0; &]
-[s5;K:`:`:Thread`:`:Run`(`:`:Callback`): [%00-00@(0.0.255) bool][%00-00 _][%00-00@0 Run][%00-00 (
-][%00-00^`:`:Callback^ Callback][%00-00 _][%00-00@3 cb][%00-00 )]&]
+[s5;K:`:`:Thread`:`:Run`(`:`:Callback`):%- [@(0.0.255) bool]_[@0 Run]([^`:`:Callback^ Callb
+ack]_[@3 cb])&]
 [s2; Starts a new thread.&]
 [s0; &]
-[s5;K:`:`:Thread`:`:Wait`(`): [%00-00@(0.0.255) int][%00-00 _][%00-00@0 Wait][%00-00 ()]&]
+[s5;K:`:`:Thread`:`:Wait`(`):%- [@(0.0.255) int]_[@0 Wait]()&]
 [s2; Waits for started thread to finish. (`"join`").&]
 [s0; &]
-[s5;K:`:`:Thread`:`:IsOpen`(`)const:@(0.0.255) [%00-00 bool][%00-00@(64) _][%00-00@0 IsOpen
-][%00-00@(64) ()_][%00-00 const]&]
+[s5;K:`:`:Thread`:`:IsOpen`(`)const:%- [@(0.0.255) bool]_[@0 IsOpen]()_[@(0.0.255) const]&]
 [s2; Thread represents a running thread.&]
 [s0; &]
-[s5;K:`:`:Thread`:`:Start`(`:`:Callback`): [%00-00 static ][%00-00@(0.0.255) void][%00-00 _
-][%00-00@0 Start][%00-00 (][%00-00^`:`:Callback^ Callback][%00-00 _][%00-00@3 cb][%00-00 )]&]
+[s5;K:`:`:Thread`:`:Start`(`:`:Callback`):%- static [@(0.0.255) void]_[@0 Start]([^`:`:Callback^ C
+allback]_[@3 cb])&]
 [s2; Starts a thread and returns immediately (you cannot Wait for 
 the thread to finish in this case).&]
 [s0; &]
-[s5;K:`:`:Thread`:`:Sleep`(int`): [%00-00 static ][%00-00@(0.0.255) void][%00-00 _][%00-00@0 S
-leep][%00-00 (][%00-00@(0.0.255) int][%00-00 _][%00-00@3 ms][%00-00 )]&]
+[s5;K:`:`:Thread`:`:Sleep`(int`):%- static [@(0.0.255) void]_[@0 Sleep]([@(0.0.255) int]_[@3 m
+s])&]
 [s2; Sleep for a given number of milliseconds.&]
 [s0; &]
-[s5;K:`:`:Thread`:`:IsST`(`): [%00-00 static ][%00-00@(0.0.255) bool][%00-00 _][%00-00@0 IsST
-][%00-00 ()]&]
+[s5;K:`:`:Thread`:`:IsST`(`):%- static [@(0.0.255) bool]_[@0 IsST]()&]
 [s2; True is no thread was started yet.&]
 [s0; &]
-[s5;K:`:`:Thread`:`:GetCount`(`): [%00-00 static ][%00-00@(0.0.255) int][%00-00 _][%00-00@0 G
-etCount][%00-00 ()]&]
+[s5;K:`:`:Thread`:`:GetCount`(`):%- static [@(0.0.255) int]_[@0 GetCount]()&]
 [s2; Number of running threads.&]
 [s0; &]
-[s5;K:`:`:Thread`:`:ShutdownThreads`(`): [%00-00 static ][%00-00@(0.0.255) void][%00-00 _][%00-00@0 S
-hutdownThreads][%00-00 ()]&]
+[s5;K:`:`:Thread`:`:ShutdownThreads`(`):%- static [@(0.0.255) void]_[@0 ShutdownThreads](
+)&]
 [s2; Sets the `"Shutdown`" flag on.&]
 [s0; &]
-[s5;K:`:`:Thread`:`:IsShutdownThreads`(`): [%00-00 static ][%00-00@(0.0.255) bool][%00-00 _
-][%00-00@0 IsShutdownThreads][%00-00 ()]&]
+[s5;K:`:`:Thread`:`:IsShutdownThreads`(`):%- static [@(0.0.255) bool]_[@0 IsShutdownThrea
+ds]()&]
 [s2; True if ShutdownThreads was called.&]
 [s0; &]
-[s5;K:`:`:Thread`:`:`~`:`:Thread`(`): [%00-00 `~][%00-00@0 Thread][%00-00 ()]&]
+[s5;K:`:`:Thread`:`:`~`:`:Thread`(`):%- `~[@0 Thread]()&]
 [s2; Destructor. Thread continues running (and it is impossible to 
 Wait for finish).&]
 [s0; &]
 [s0; &]
 [s0; &]
-[s1;K:`:`:Mutex`:`:class:@0 [%00-00@(0.0.255) class][%00-00@(64) _][%00-00 Mutex]&]
+[s1;K:`:`:Mutex`:`:class:%- [@(0.0.255) class]_[@0 Mutex]&]
 [s2;   &]
 [s0; &]
-[s5;K:`:`:Mutex`:`:Enter`(`): [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Enter][%00-00 ()]&]
+[s5;K:`:`:Mutex`:`:Enter`(`):%- [@(0.0.255) void]_[@0 Enter]()&]
 [s2;   &]
 [s0; &]
-[s5;K:`:`:Mutex`:`:Leave`(`): [%00-00@(0.0.255) void][%00-00 _][%00-00@0 Leave][%00-00 ()]&]
+[s5;K:`:`:Mutex`:`:Leave`(`):%- [@(0.0.255) void]_[@0 Leave]()&]
 [s2;   &]
 [s0; &]
 [s0; ]

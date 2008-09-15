@@ -3,8 +3,6 @@ description "Non-GUI code. Streams, NTL containers, concrete types, Value, XML, 
 acceptflags
 	USEMALLOC;
 
-uses(WIN32) plugin\z;
-
 library(MSC !MSC8ARM) "kernel32 user32";
 
 library(WIN32 !GUI !GNU !GCC) "ole32 oleaut32 oldnames";
@@ -132,6 +130,7 @@ file
 	Meta readonly separator,
 	sub.upt,
 	core.upt,
+	ignorelist,
 	Info readonly separator,
 	test.tpp,
 	app.tpp,

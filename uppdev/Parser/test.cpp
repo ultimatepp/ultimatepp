@@ -1,20 +1,20 @@
-template <class T, class U>
-class X {
-public:
-	T alfa();
-	T beta;
-	U u;
-	String s;
-};
-
-struct Test : X<String, Color>
-{
-	Test();
-};
-
-void Alfa()
-{
-	Test x;
-	x.beta;
-	x.u. <<<!!!!
+struct X {
+	int x, y;
 }
+point[] = { {1, 2}, {3, 4} };
+
+String test[] = { "ahoj", "kamarade" };
+
+struct String {
+	void Test();
+};
+
+StatusBar::StatusBar()
+{
+	String x;
+	Height(5 + max(16, Draw::GetStdFontCy()));
+	frame.style = frame.style = &StyleDefault();
+	SetFrame(frame);
+	AddFrame(grip);
+}
+

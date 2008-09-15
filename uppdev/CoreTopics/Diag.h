@@ -229,3 +229,6 @@ void DumpContainer3(Stream& s, const C& c) {
 }
 
 String AsString(MemoryProfile& mem);
+
+
+Vector<String> Split(const char *s, const TextTest& delim, bool ignoreempty = true);
