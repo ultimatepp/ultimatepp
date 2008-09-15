@@ -332,6 +332,17 @@ private:
 	Array<UndoRec>   redo;
 	
 	FileSel          imagefs;
+	
+	struct StyleKey {
+		Uuid   styleid;
+		String stylename;
+		String face;
+		int    height;
+		Color  ink;
+		Color  paper;
+	};
+	
+	StyleKey   stylekey[20];
 
 	Rect       GetTextRect() const;
 	Size       GetZoomedPage() const;
@@ -491,9 +502,14 @@ private:
 	void     RefreshDropCaret();
 	
 	void     InsertImage();
+	
+	void     StyleKeys();
+	void     ApplyStyleKey(int i);
 
 	static bool   SpellWord(const wchar *wrd, int len, int lang);
 	static void   SpellerAdd(const WString& w, int lang);
+
+	friend class StyleKeysDlg;
 
 protected:
 	enum {
@@ -611,6 +627,7 @@ public:
 	void   TableTools(Bar& bar);
 
 	void   InsertImageTool(Bar& bar);
+	void   StyleKeysTool(Bar& bar);
 
 	void   DefaultBar(Bar& bar, bool extended = true);
 

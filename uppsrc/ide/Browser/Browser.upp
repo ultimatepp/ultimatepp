@@ -23,7 +23,6 @@ file
 	Topic.cpp,
 	Template.cpp,
 	Link.cpp,
-	Accels.cpp,
 	TopicWin.cpp,
 	IdeTopic.cpp,
 	TopicI.icpp,

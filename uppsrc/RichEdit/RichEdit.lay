@@ -47,15 +47,16 @@ LAYOUT(ParaLayout, 488, 352)
 	UNTYPED(n[7], LeftPosZ(408, 54).TopPosZ(320, 19))
 END_LAYOUT
 
-LAYOUT(UnitLayout, 244, 144)
+LAYOUT(UnitLayout, 244, 140)
 	ITEM(LabelBox, dv___0, SetLabel(t_("Units")).LeftPosZ(8, 228).TopPosZ(4, 40))
 	ITEM(Switch, unit, SetLabel(t_("dot\npoint\ninch\nmm\ncm")).LeftPosZ(16, 216).TopPosZ(20, 16))
-	ITEM(Label, dv___2, SetLabel(t_("Reveal codes")).LeftPosZ(12, 76).TopPosZ(55, 13))
+	ITEM(Label, dv___2, SetLabel(t_("Reveal codes")).LeftPosZ(8, 76).TopPosZ(52, 20))
 	ITEM(ColorPusher, showcodes, LeftPosZ(92, 144).TopPosZ(52, 19))
-	ITEM(Label, dv___4, SetLabel(t_("Zoom")).LeftPosZ(12, 76).TopPosZ(80, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Zoom")).LeftPosZ(8, 76).TopPosZ(80, 19))
 	ITEM(DropList, zoom, LeftPosZ(92, 144).TopPosZ(80, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(104, 64).TopPosZ(112, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(172, 64).TopPosZ(112, 24))
+	ITEM(Button, accels, SetLabel(t_("Style keys")).LeftPosZ(8, 76).TopPosZ(108, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(104, 64).TopPosZ(108, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(172, 64).TopPosZ(108, 24))
 END_LAYOUT
 
 LAYOUT(SetStyleLayout, 216, 280)
@@ -199,5 +200,11 @@ LAYOUT(CellPropertiesLayout, 300, 260)
 	ITEM(Option, keep, SetLabel(t_("Keep with next line")).LeftPosZ(12, 284).TopPosZ(212, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(164, 64).TopPosZ(232, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(232, 64).TopPosZ(232, 24))
+END_LAYOUT
+
+LAYOUT(StyleKeysLayout, 736, 556)
+	ITEM(ArrayCtrl, list, LeftPosZ(8, 720).TopPosZ(8, 508))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(596, 64).TopPosZ(524, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(664, 64).TopPosZ(524, 24))
 END_LAYOUT
 

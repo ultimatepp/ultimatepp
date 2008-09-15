@@ -21,6 +21,7 @@ file
 	Find.cpp optimize_speed,
 	Tool.cpp,
 	Clip.cpp,
+	StyleKeys.cpp,
 	RichEdit.t charset "UTF-8",
 	RichEdit.icpp,
 	RichEdit.lay,

@@ -278,6 +278,7 @@ void RichEdit::SetupUnits()
 {
 	WithUnitLayout<TopWindow> d;
 	CtrlLayoutOKCancel(d, t_("Units"));
+	d.accels <<= THISBACK(StyleKeys);
 	for(int i = 1; i <= 10; i++)
 		d.zoom.Add(10 * i, Format(t_("%d%% of width"), 10 * i));
 	CtrlRetriever r;
@@ -452,7 +453,7 @@ void RichEdit::SpellCheck()
 
 void RichEdit::SerializeSettings(Stream& s)
 {
-	int version = 2;
+	int version = 3;
 	s / version;
 	s % unit;
 	s % showcodes;
@@ -467,6 +468,11 @@ void RichEdit::SerializeSettings(Stream& s)
 	s % findreplace.ignorecase;
 	RefreshBar();
 	imagefs.Serialize(s);
+	if(version >= 3)
+		for(int i = 0; i < 20; i++) {
+			StyleKey& k = stylekey[i];
+			s % k.styleid % k.stylename % k.face % k.height % k.ink % k.paper;
+		}
 }
 
 void RichEdit::Reset()

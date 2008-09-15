@@ -142,7 +142,7 @@ void TopicEditor::TopicMenu(Bar& bar)
 	        "Save as template..", THISBACK(SaveAsTemplate));
 	bar.Add(topic.IsCursor(), "Apply template stylesheet..", THISBACK(ApplyStylesheet));
 	bar.Add("Apply template stylesheet to group..", THISBACK(ApplyStylesheetGroup));
-	bar.Add("Styling keys..", THISBACK(Accels));
+	editor.StyleKeysTool(bar);
 }
 
 void TopicEditor::FileBar(Bar& bar)
