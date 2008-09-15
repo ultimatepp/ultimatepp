@@ -1,8 +1,7 @@
-uses
-	Core;
-
 file
-	test.cpp;
+	test.cpp,
+	ignorelist;
 
 mainconfig
 	"" = "";
+
