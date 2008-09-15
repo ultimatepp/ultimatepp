@@ -135,6 +135,14 @@ bool RichEdit::Key(dword key, int count)
 			break;
 		}
 	default:
+		if(key >= K_ALT_0 && key <= K_ALT_9) {
+			ApplyStyleKey(key - K_ALT_0);
+			return true;
+		}
+		if(key >= (K_SHIFT|K_ALT_0) && key <= (K_SHIFT|K_ALT_9)) {
+			ApplyStyleKey(key - K_SHIFT|K_ALT_0 + 10);
+			return true;
+		}
 		if(key == K_SHIFT_SPACE)
 			key = ' ';
 		if(key == 9 || key >= 32 && key < 65536) {

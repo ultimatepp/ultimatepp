@@ -413,7 +413,12 @@ void RichEdit::TableTools(Bar& bar)
 
 void RichEdit::InsertImageTool(Bar& bar)
 {
-	bar.Add("Insert image from file..", THISBACK(InsertImage));
+	bar.Add(t_("Insert image from file.."), THISBACK(InsertImage));
+}
+
+void RichEdit::StyleKeysTool(Bar& bar)
+{
+	bar.Add(t_("Style keys.."), THISBACK(StyleKeys));
 }
 
 void RichEdit::DefaultBar(Bar& bar, bool extended)
