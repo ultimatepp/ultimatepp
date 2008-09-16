@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	mtbug.cpp;
+
+mainconfig
+	"" = "MT";
+
