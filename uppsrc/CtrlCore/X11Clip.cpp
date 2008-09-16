@@ -77,7 +77,7 @@ void Ctrl::Xclipboard::Request(XSelectionRequestEvent *se)
 			LLOG("Request PRIMARY data " << XAtomName(se->target));
 			String fmt = XAtomName(se->target);
 			int i = sel_formats.Find(fmt);
-			if(i >= 0) {
+			if(i >= 0 && sel_ctrl) {
 				String d = sel_ctrl->GetSelectionData(fmt);
 				XChangeProperty(Xdisplay, se->requestor, se->property, se->target, 8, PropModeReplace,
 				                d, d.GetLength());

@@ -62,8 +62,10 @@ class  FindFile {
 	WIN32_FIND_DATA  *a;
 	WIN32_FIND_DATAW *w;
 	HANDLE            handle;
+	String            pattern;
 
-	void              Init();
+	void        Init();
+	bool        Next0();
 
 public:
 	bool        Search(const char *name);

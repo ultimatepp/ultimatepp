@@ -397,6 +397,7 @@ FindFile::FindFile(const char *name) {
 }
 
 bool FindFile::Search(const char *name) {
+	pattern = GetFileName(name);
 	Close();
 	if(w)
 		handle = UnicodeWin32().FindFirstFileW(ToSystemCharsetW(name), w);
@@ -410,7 +411,7 @@ void FindFile::Close() {
 	handle = INVALID_HANDLE_VALUE;
 }
 
-bool FindFile::Next() {
+bool FindFile::Next0() {
 	if(w) {
 		if(!UnicodeWin32().FindNextFileW(handle, w)) {
 			Close();
@@ -424,6 +425,16 @@ bool FindFile::Next() {
 		}
 	}
 	return true;
+}
+
+bool FindFile::Next()
+{
+	for(;;) {
+		if(!Next0())
+			return false;
+		if(PatternMatch(pattern, GetName()))
+			return true;
+	}
 }
 
 dword FindFile::GetAttributes() const

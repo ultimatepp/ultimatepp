@@ -135,6 +135,7 @@ void TopicCtrl::ScanDirForTpp(const char *dir, Index<String>& li, Vector<int>& s
                               VectorMap<String, VectorMap<String, Vector<String> > >& map,
                               const String& rel)
 {
+	DLOG("a");
 	TopicLink tl;
 	for(FindFile pff(AppendFileName(dir, "*.*")); pff; pff.Next()) {
 		if(pff.IsFolder() && *pff.GetName() != '.') {
@@ -144,6 +145,7 @@ void TopicCtrl::ScanDirForTpp(const char *dir, Index<String>& li, Vector<int>& s
 				if(ff.IsFolder()) {
 					tl.group = GetFileTitle(ff.GetName());
 					String dir = AppendFileName(pdir, ff.GetName());
+					DDUMP(dir);
 					for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next())
 						if(ft.IsFile()) {
 							tl.topic = GetFileTitle(ft.GetName());
@@ -154,15 +156,18 @@ void TopicCtrl::ScanDirForTpp(const char *dir, Index<String>& li, Vector<int>& s
 								li.FindAdd(l);
 							}
 							String link = TopicLinkString(tl);
+							DDUMP(ft.GetName());
+							DDUMP(link);
 							if(idelink.Find(link) < 0 && MatchTopicLink(link, sdx) &&
 							   (lng == "All" || lng == l)) {
-								map.GetAdd(tl.package).GetAdd(tl.group).Add(tl.topic);
+								map.GetAdd(tl.package).GetAdd(tl.group).GetAdd(tl.topic);
 							}
 						}
 				}
 			ScanDirForTpp(pdir, li, sdx, lng, map, tl.package + '/');
 		}
 	}
+	DLOG("b");
 }
 
 void TopicCtrl::SyncDocTree()
@@ -226,6 +231,8 @@ void TopicCtrl::SyncDocTree()
 				for(int i = 0; i < group.GetCount(); i++) {
 					tl.topic = group[i];
 					String p = TopicLinkString(tl);
+					DUMP(tl.package);
+					DUMP(p);
 					String t = GetTopicTitle(p);
 					AddTree(gid, TopicImg::Topic(), p, t);
 				}
