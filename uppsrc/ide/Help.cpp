@@ -1,103 +1,5 @@
 #include "ide.h"
 
-#ifdef PLATFORM_WIN32
-#include "shellapi.h"
-#endif
-
-#define TOPICFILE <ide/app.tpp/all.i>
-#include <Core/topic_group.h>
-
-Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
-{
-	Image logo = IdeImg::logo();
-	Size  isz = logo.GetSize();
-	ImageCtrl& l = ctrl.Create<ImageCtrl>();
-	Label& v = ctrl.Create<Label>();
-	Label& v1 = ctrl.Create<Label>();
-	l.SetImage(logo);
-	Size sz = Size(isz.cx, isz.cy + 80);
-	v = IDE_VERSION;
-	v.LeftPos(300, 100).TopPos(90, 40);
-	if(sizeof(void *) == 8) {
-		v = IDE_VERSION " (64 bit)";
-		v.RightPos(3, Ctrl::MINSIZE).TopPos(90, 40);
-	}
-	l.Add(v);
-	v.SetFont(Arial(20));
-	v.SetInk(Blend(Gray, Blue));
-	v1 = Format("%d`KB", MemoryUsedKb());
-	v1.LeftPos(300, 100).BottomPos(20, 12);
-	v1.SetFont(Arial(10));
-	l.Add(v1);
-	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
-	parent.Add(l.TopPos(0, isz.cy).LeftPos(0, isz.cx));
-	parent.Add(ctrl.Create<StaticRect>().Color(Blue).LeftPos(2, isz.cx - 4).TopPos(isz.cy, 1));
-	RichTextView& w = ctrl.Create<RichTextView>();
-	w.SetQTF(GetTopic("ide/app/Sponsor$en-us"));
-	w.PageWidth(2900);
-	w.NoSb();
-	w.SetFrame(NullFrame());
-	parent.Add(w.TopPos(isz.cy + 3, 99).LeftPos(0, isz.cx));
-	return sz;
-}
-
-struct Splash : Ctrl {
-	Array<Ctrl> ctrl;
-
-	Splash() {
-		SetRect(GetWorkArea().CenterRect(MakeLogo(*this, ctrl) + 2));
-		SetFrame(BlackFrame());
-	}
-};
-
-void HideSplash()
-{
-	if(Single<Splash>().IsOpen())
-		Single<Splash>().Close();
-}
-
-void ShowSplash()
-{
-	Single<Splash>().PopUp(NULL, false, false);
-	SetTimeCallback(750, callback(HideSplash));
-}
-
-bool IsSplashOpen()
-{
-	return Single<Splash>().IsOpen();
-}
-
-struct AboutDlg : TopWindow {
-	Array<Ctrl>  ctrl;
-	RichTextView about;
-
-	typedef AboutDlg CLASSNAME;
-
-	virtual bool Key(dword key, int) {
-		if(key == K_ALT_M)
-			MemoryProfileInfo();
-		return false;
-	}
-
-	AboutDlg() {
-		Size isz = MakeLogo(*this, ctrl);
-		SetRect(0, 0, 1000, isz.cy);
-		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(130, 1024));
-		about.SetZoom(Zoom(1, 1));
-		about.RightPos(0, 1000 - isz.cx).VSizePos();
-		about.HMargins(4);
-		about.SetFrame(NullFrame());
-		Background(PaintRect(ColorDisplay(), SColorPaper()));
-		Add(about);
-		Title("About TheIDE");
-	}
-};
-
-void Ide::About()
-{
-	AboutDlg().Execute();
-}
-
 struct GatherLinksIterator : RichText::Iterator {
 	Index<String> link;
 
@@ -130,89 +32,119 @@ void GatherLinks(Index<String>& link, const char *topic)
 
 Index<String> TopicCtrl::idelink;
 
-void TopicCtrl::ScanDirForTpp(const char *dir, Index<String>& li, Vector<int>& sdx,
-                              const String& lng,
-                              VectorMap<String, VectorMap<String, Vector<String> > >& map,
-                              const String& rel)
+void TopicCtrl::ScanDirForTpp(const char *dir, const String& rel,
+                              Index<String>& donepackage, Index<String>& lang_list)
 {
 	TopicLink tl;
 	for(FindFile pff(AppendFileName(dir, "*.*")); pff; pff.Next()) {
 		if(pff.IsFolder() && *pff.GetName() != '.') {
 			String pdir = AppendFileName(dir, pff.GetName());
 			tl.package = rel + pff.GetName();
-			for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next())
-				if(ff.IsFolder()) {
-					tl.group = GetFileTitle(ff.GetName());
-					String dir = AppendFileName(pdir, ff.GetName());
-					for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next())
-						if(ft.IsFile()) {
-							tl.topic = GetFileTitle(ft.GetName());
-							int q = tl.topic.ReverseFind('$');
-							String l;
-							if(q >= 0) {
-								l = ToUpper(tl.topic.Mid(q + 1));
-								li.FindAdd(l);
+			if(donepackage.Find(tl.package) < 0) {
+				donepackage.Add(tl.package);
+				for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next())
+					if(ff.IsFolder()) {
+						tl.group = GetFileTitle(ff.GetName());
+						String dir = AppendFileName(pdir, ff.GetName());
+						for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next())
+							if(ft.IsFile()) {
+								tl.topic = GetFileTitle(ft.GetName());
+								int q = tl.topic.ReverseFind('$');
+								String l;
+								if(q >= 0) {
+									l = ToUpper(tl.topic.Mid(q + 1));
+									lang_list.FindAdd(l);
+								}
+								map.GetAdd(tl.package).GetAdd(tl.group).FindAdd(tl.topic);
 							}
-							String link = TopicLinkString(tl);
-							if(idelink.Find(link) < 0 && MatchTopicLink(link, sdx) &&
-							   (lng == "All" || lng == l)) {
-								map.GetAdd(tl.package).GetAdd(tl.group).Add(tl.topic);
-							}
-						}
-				}
-			ScanDirForTpp(pdir, li, sdx, lng, map, tl.package + '/');
+					}
+			}
+			ScanDirForTpp(pdir, tl.package + '/', donepackage, lang_list);
 		}
 	}
 }
 
+int map_serial, topic_serial;
+
+void TopicCtrl::LoadMap()
+{
+	map.Clear();
+	lang_list.Clear();
+	Vector<String> upp = GetUppDirs();
+	Index<String> donepackage, lang_list;
+	for(int i = 0; i < upp.GetCount(); i++)
+		ScanDirForTpp(upp[i], String(), donepackage, lang_list);
+	Vector<String> l = lang_list.PickKeys();
+	Sort(l);
+	String lng = ~lang;
+	lang.Clear();
+	lang.Add("All");
+	for(int i = 0; i < l.GetCount(); i++)
+		lang.Add(l[i]);
+	if(lng.GetCount() && lang.Find(lng))
+		lang <<= lng;
+	else
+	if(lang.Find("EN-US"))
+		lang <<= "EN-US";
+	else
+	if(lang.GetCount())
+		lang.SetIndex(0);
+}
+
+const char *sTopicHome = "\3topic://ide/app/index$en-us";
+
 void TopicCtrl::SyncDocTree()
 {
+	if(map_serial != topic_serial) {
+		LoadMap();
+		map_serial = topic_serial;
+	}
+	
 	Vector<String> ss = Split((String)~search, ' ');
-	Vector<int> sdx;
+	Vector<String> sdx;
 	for(int i = 0; i < ss.GetCount(); i++)
-		sdx.Add(TopicWordIndex(ToUtf8(ToLower(FromUtf8(ss[i])))));
+		sdx.Add(ToUtf8(ToLower(FromUtf8(ss[i]))));
 
 	ClearTree();
 
-	String hdx = "topic://ide/app/index$en-us";
+	String hdx = sTopicHome + 1;
 	if(idelink.GetCount() == 0)
 		GatherLinks(idelink, hdx);
-	int ide = AddTree(0, IdeImg::Package(), "\3" + hdx, "TheIDE help");
-	for(int i = 0; i < idelink.GetCount(); i++)
-		if(idelink[i] != hdx && MatchTopicLink(idelink[i], sdx))
+	int ide;
+	bool idefirst = true;
+	if(MatchTopicLink(hdx, sdx)) {
+		ide = AddTree(0, IdeImg::Package(), "\3" + hdx, "TheIDE help");
+		idefirst = false;
+	}
+	for(int i = 0; i < idelink.GetCount(); i++) {
+		if(idelink[i] != hdx && MatchTopicLink(idelink[i], sdx)) {
+			if(idefirst) {
+				ide = AddTree(0, IdeImg::Package(), "\3" + hdx, "TheIDE help");
+				idefirst = false;
+			}
 			AddTree(ide, TopicImg::Topic(), "\3" + idelink[i], GetTopic(idelink[i]).title);
+		}
+	}
 
 	Index<String> used;
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++)
 		used.Add(wspc[i]);
 
-	VectorMap<String, VectorMap<String, Vector<String> > > map;
-	Vector<String> upp = GetUppDirs();
+	int usid;
+	bool usedfirst = true;
+	int otid;
+	bool otherfirst = true;
+
 	String lng = ~lang;
-	lang.Clear();
-	lang.Add("All");
-	Index<String> li;
-	for(int i = 0; i < upp.GetCount(); i++)
-		ScanDirForTpp(upp[i], li, sdx, lng, map, String());
-	Vector<String> sli = li.PickKeys();
-	Sort(sli);
-	for(int i = 0; i < sli.GetCount(); i++)
-		lang.Add(sli[i]);
-	if(lang.Find(lng))
-		lang <<= lng;
-
-	int usid = AddTree(0, IdeImg::Package(), Null, "Used packages");
-	int otid = AddTree(0, IdeImg::Package(), Null, "Other packages");
-
 	for(int i = 0; i < map.GetCount(); i++) {
 		TopicLink tl;
 		tl.package = map.GetKey(i);
-		int pid = AddTree(used.Find(tl.package) >= 0 ? usid : otid,
-		                  TopicImg::Package(), Null, tl.package);
-		VectorMap<String, Vector<String> >& package = map[i];
-		for(int i = 0; i < package.GetCount(); i++) {
-			tl.group = package.GetKey(i);
+		bool packagefirst = true;
+		int pid;
+		VectorMap<String, Index<String> >& group = map[i];
+		for(int i = 0; i < group.GetCount(); i++) {
+			tl.group = group.GetKey(i);
 			if(all || tl.group == "src" || tl.group == "srcdoc" || tl.group == "srcimp") {
 				String n = tl.group;
 				if(n == "src")
@@ -221,23 +153,59 @@ void TopicCtrl::SyncDocTree()
 					n = "Documents";
 				if(n == "srcimp")
 					n = "Implementation";
-				int gid = AddTree(pid, Null, "\1" + tl.group, n);
-				Vector<String> group = package[i];
-				for(int i = 0; i < group.GetCount(); i++) {
-					tl.topic = group[i];
-					String p = TopicLinkString(tl);
-					String t = GetTopicTitle(p);
-					AddTree(gid, TopicImg::Topic(), p, t);
+				int gid;
+				bool groupfirst = true;
+				const Index<String>& topic = group[i];
+				for(int i = 0; i < topic.GetCount(); i++) {
+					tl.topic = topic[i];
+					int q = tl.topic.ReverseFind('$');
+					String l;
+					if(q >= 0)
+						l = ToUpper(tl.topic.Mid(q + 1));
+					String link = TopicLinkString(tl);
+					if(idelink.Find(link) < 0 && MatchTopicLink(link, sdx) && (lng == "All" || lng == l)) {
+						int pd;
+						if(used.Find(tl.package) >= 0) {
+							if(usedfirst) {
+								usid = AddTree(0, IdeImg::Package(), Null, "Used packages");
+								usedfirst = false;
+							}
+							pd = usid;
+						}
+						else {
+							if(otherfirst) {
+								otid = AddTree(0, IdeImg::Package(), Null, "Other packages");
+								otherfirst = false;
+							}
+							pd = otid;
+						}
+						if(packagefirst) {
+							pid = AddTree(pd, TopicImg::Package(), Null, tl.package);
+							packagefirst = false;
+						}
+						if(groupfirst) {
+							gid = AddTree(pid, Null, Null, n);
+							groupfirst = false;
+						}
+						String p = TopicLinkString(tl);
+						String t = GetTopicTitle(p);
+						AddTree(gid, TopicImg::Topic(), p, t);
+					}
 				}
 			}
 		}
 	}
-	SortTree(ide);
-	SortTree(usid);
-	SortTree(otid);
+	if(!idefirst)
+		SortTree(ide);
+	if(!usedfirst)
+		SortTree(usid);
+	if(!otherfirst)
+		SortTree(otid);
 	FinishTree();
-	if(sdx.GetCount())
+	if(sdx.GetCount()) {
 		OpenDeep();
+		CurrentOrHome();
+	}
 }
 
 Vector<String> GetTypeRefLinks(const String& t, String &label)
@@ -262,22 +230,19 @@ Topic TopicCtrl::AcquireTopic(const String& t)
 	internal = (byte)*topic < 32;
 	if(*topic == '\3')
 		return GetTopic(topic.Mid(1));
-	if(*topic == '\1') {
+/*	if(*topic == '\1') {
 		Topic t;
 		t.title = "Summary";
 		String group = topic.Mid(1);
-		const Workspace& wspc = GetIdeWorkspace();
-		for(int i = 0; i < wspc.GetCount(); i++) {
-			String package = wspc[i];
-			String path = AppendFileName(AppendFileName(PackageDirectory(wspc[i]), group + ".tpp"), "index$en-us.tpp");
-			if(FileExists(path)) {
-				t.text << "[R5* " << wspc[i] << "]&" << ReadTopic(LoadFile(path)).text << "&&&";
-			}
-		}
-		return t;
-	}
-	if(*topic == '\2')
-		topic = topic.Mid(1);
+		int q = group.Find('\2');
+		String package = group.Mid(q + 1);
+		group.Trim(q);
+		String path = AppendFileName(AppendFileName(PackageDirectory(package), group + ".tpp"),
+		                             "index$en-us.tpp");
+		if(FileExists(path))
+			return ReadTopic(LoadFile(path));
+		return Topic();
+	}*/
 	if(topic[0] == ':' && topic[1] == ':') {
 		String lbl;
 		Vector<String> link = GetTypeRefLinks(topic, lbl);
@@ -451,21 +416,16 @@ void TopicCtrl::SShow()
 
 void TopicCtrl::Search()
 {
-	if(issearch) {
-		search <<= Null;
-		issearch = false;
-	}
-	else {
-		search.AddHistory(20);
-		issearch = true;
-	}
+	int l, h;
+	search.GetSelection(l, h);
 	SyncDocTree();
 	SetBar();
+	search.SetFocus();
+	search.SetSelection(l, h);
 }
 
 void TopicCtrl::SearchWord(const String& s)
 {
-	issearch = false;
 	search <<= s;
 	Search();
 }
@@ -499,6 +459,11 @@ bool TopicCtrl::Key(dword key, int count)
 	return HelpWindow::Key(key, count);
 }
 
+void TopicCtrl::FocusSearch()
+{
+	search.SetFocus();
+}
+
 void  TopicCtrl::BarEx(Bar& bar)
 {
 	bar.Gap();
@@ -506,12 +471,10 @@ void  TopicCtrl::BarEx(Bar& bar)
 	bar.Add("All topics", IdeImg::HelpAll(), THISBACK(All))
 	   .Check(all);
 	bar.Gap(HorzLayoutZoom(30));
-	bar.Add(search_label, HorzLayoutZoom(50));
 	bar.Add(search, HorzLayoutZoom(300));
-	bar.Add("Full text search", IdeImg::HelpSearch(), THISBACK(Search))
-	   .Check(issearch);
-	bar.Add("Highlight search keywords in topic", IdeImg::ShowWords(), THISBACK(ShowWords))
-	   .Check(showwords);
+	bar.AddKey(K_CTRL_F, THISBACK(FocusSearch));
+/*	bar.Add("Highlight search keywords in topic", IdeImg::ShowWords(), THISBACK(ShowWords))
+	   .Check(showwords);*/
 	bar.Add(!internal && GetCurrent().StartsWith("topic:"),
 	        IdeImg::show(), THISBACK(SShow));
 	bar.GapRight();
@@ -522,9 +485,12 @@ void  TopicCtrl::BarEx(Bar& bar)
 
 void TopicCtrl::Serialize(Stream& s)
 {
-	int version = 2;
+	int version = 3;
 	s / version;
-	search.SerializeList(s);
+	if(version < 3) {
+		WithDropChoice<EditString> dummy;
+		dummy.SerializeList(s);
+	}
 	if(version >= 1)
 		s % showwords;
 	if(version >= 2)
@@ -552,10 +518,11 @@ struct HelpModule : public IdeModule {
 	}
 	virtual IdeDesigner *CreateDesigner(Ide *ide, const char *path, byte cs) {
 		if(IsHelpName(path)) {
+			topic_serial++;
 			GetRefLinks("");
 			if(ide->doc.GetCurrent().IsEmpty()) {
 				ide->doc.SyncDocTree();
-				ide->doc.GoTo(Nvl(recent_topic, "\3topic://ide/app/index$en-us"));
+				ide->doc.GoTo(Nvl(recent_topic, sTopicHome));
 			}
 			HelpDes *d = new HelpDes;
 			d->topic = &ide->doc;
@@ -572,17 +539,24 @@ INITBLOCK {
 	RegisterIdeModule(Single<HelpModule>());
 }
 
+int CharFilterTopicSearch(int c)
+{
+	if(c == ' ') return c;
+	c = CharFilterDefaultToUpperAscii(c);
+	return IsAlNum(c) ? c : 0;
+}
+
 TopicCtrl::TopicCtrl()
 {
 	Icon(IdeImg::doc());
-	search_label = "Search: ";
-	showwords = issearch = all = false;
-	lang.Add("All");
-	lang.Add("EN-US");
-	lang <<= "EN-US";
+	showwords = true;
+	all = false;
 	lang <<= THISBACK(Lang);
 	lang.Tip("Language"),
+	search.NullText("Search", StdFont().Italic(), SColorDisabled());
 	search.Tip("Full text search");
+	search <<= THISBACK(Search);
+	search.SetFilter(CharFilterTopicSearch);
 	internal = true;
 }
 
@@ -596,7 +570,7 @@ void Ide::ShowTopics()
 	if(doc_serial != TopicEditor::GetSerial()) {
 		GetRefLinks("");
 		doc.SyncDocTree();
-		doc.GoTo("\3topic://ide/app/index$en-us");
+		doc.GoTo(sTopicHome);
 		doc_serial = TopicEditor::GetSerial();
 	}
 	EditFile(HELPNAME);
@@ -607,7 +581,7 @@ void Ide::SearchTopics()
 	String s = editor.GetWord();
 	GetRefLinks("");
 	doc.SyncDocTree();
-	doc.GoTo("\3topic://ide/app/index$en-us");
+	doc.GoTo(sTopicHome);
 	EditFile(HELPNAME);
 	if(s.GetLength())
 		doc.SearchWord(s);

@@ -15,7 +15,7 @@ void HelpWindow::FinishText(RichText& text)
 
 bool HelpWindow::GoTo0(const String& link)
 {
-	if(IsNull(link))
+	if(IsNull(link) || current_link == link)
 		return false;
 	Topic t = AcquireTopic(link);
 	SetBar();
@@ -28,6 +28,7 @@ bool HelpWindow::GoTo0(const String& link)
 		view.Pick(txt, zoom);
 		view.GotoLabel(label, true);
 		tree.FindSetCursor(topic);
+		current_link = link;
 		return true;
 	}
 	return false;
@@ -139,7 +140,6 @@ bool HelpWindow::Key(dword key, int count)
 
 void HelpWindow::ClearTree()
 {
-	tree_view.Zoom(1);
 	tree.Clear();
 }
 
@@ -178,6 +178,19 @@ void HelpWindow::TreeCursor()
 		GoTo(~tree);
 }
 
+void HelpWindow::CurrentOrHome()
+{
+	if(~tree != current_link) {
+		if(tree.FindSetCursor(current_link))
+			return;
+		for(int i = 0; i < tree.GetLineCount(); i++) {
+			Value k = tree.Get(tree.GetItemAtLine(i));
+			if(!IsNull(k) && tree.FindSetCursor(k))
+				break;
+		}
+	}
+}
+
 HelpWindow::HelpWindow()
 {
 	tree_view.Horz(tree, view);
@@ -194,10 +207,11 @@ HelpWindow::HelpWindow()
 	SetZoom();
 	view.Margins(Rect(12, 12, 2, 2));
 	SetRect(Ctrl::GetWorkArea().Deflated(80));
-	tree <<= THISBACK(TreeCursor);
+	tree.WhenSel = THISBACK(TreeCursor);
 	tree.NoRoot();
 	Icon(CtrlImg::help());
 	SetBar();
+	tree.BackPaint();
 }
 
 END_UPP_NAMESPACE

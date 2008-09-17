@@ -276,10 +276,10 @@ void RichTextView::GotoLabel(const String& lbl, bool dohighlight)
 			sb = f[i].py.y;
 			if(dohighlight)
 				highlight = f[i].pos;
+			Refresh();
 			break;
 		}
 	}
-	Refresh();
 }
 
 void  RichTextView::Clear()

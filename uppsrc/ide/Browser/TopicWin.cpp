@@ -253,6 +253,7 @@ void TopicEditor::NewTopic()
 	SaveInc();
 	topic.FindSetCursor(GetFileTitle(fn));
 	editor.SetFocus();
+	serial++;
 }
 
 void TopicEditor::RenameTopic()
@@ -275,11 +276,14 @@ void TopicEditor::RenameTopic()
 	}
 	Flush();
 	FileMove(p, np);
+	InvalidateTopicInfoPath(p);
+	InvalidateTopicInfoPath(np);
 	Open(grouppath);
 	Load(np);
 	SaveInc();
 	topic.FindSetCursor(GetFileTitle(np));
 	editor.SetFocus();
+	serial++;
 }
 
 void TopicEditor::RemoveTopic()
@@ -296,6 +300,7 @@ void TopicEditor::RemoveTopic()
 	topic.SetCursor(q);
 	if(q >= 0)
 		editor.SetFocus();
+	InvalidateTopicInfoPath(p);
 }
 
 void TopicEditor::SaveAsTemplate()

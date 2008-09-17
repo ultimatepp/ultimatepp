@@ -217,17 +217,21 @@ struct TopicInfo : Moveable<TopicInfo> {
 	Vector<int>    words;
 };
 
+String          GetTopicPath(const TopicLink& link);
+String          GetTopicPath(const String& link);
+
 void            SyncRefs();
 void            SyncTopicFile(const RichText& text, const String& link, const String& path,
                               const String& title);
-void            SyncTopicFile(const String& link, const String& path);
+void            SyncTopicFile(const String& link);
 String          GetTopicTitle(const String& link);
+void            InvalidateTopicInfoPath(const String& path);
 
 Vector<String>  GetRefLinks(const String& ref);
 
 int             TopicWordIndex(const String& w);
-
-bool            MatchTopicLink(const String& link, const Vector<int>& query);
+int             MatchWord(const Vector<int>& w, const String& pattern);
+bool            MatchTopicLink(const String& link, const Vector<String>& query);
 
 #define LAYOUTFILE <ide/Browser/Topic.lay>
 #include <CtrlCore/lay.h>
@@ -296,6 +300,7 @@ protected:
 	static String     lasttemplate;
 	static int        lastlang;
 	static bool       allfonts;
+	static int        serial;
 
 	struct FileInfo {
 		Time               time;

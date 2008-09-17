@@ -47,6 +47,7 @@ file
 	Install.cpp,
 	idebar.cpp,
 	idewin.cpp,
+	About.cpp,
 	Help.cpp,
 	Util.cpp,
 	Macro.cpp,
