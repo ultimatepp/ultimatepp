@@ -1,5 +1,7 @@
 #include "Browser.h"
 
+#define LLOG(x) // DLOG(x)
+
 Index<String>& ref_link()
 {
 	static Index<String> x;
@@ -58,25 +60,24 @@ struct ScanTopicIterator : RichText::Iterator {
 	Index<int>     words;
 	Index<String>  ref;
 
-	virtual bool operator()(int pos, const RichPara& para)
+	virtual bool operator()(int pos, const RichPara& para)// A++ bug here....
 	{
 		if(!IsNull(para.format.label)) {
 			AddLinkRef(link, para.format.label);
 			ref.FindAdd(para.format.label);
 		}
-		
 		for(int i = 0; i < para.part.GetCount(); i++)
 			if(para.part[i].IsText()) {
 				const wchar *s = para.part[i].text;
 				for(;;) {
-					while(!IsLetter(*s) && *s)
+					while(!IsLetter(*s) && !IsDigit(*s) && *s)
 						s++;
 					if(*s == '\0')
 						break;
-					WStringBuffer wb;
-					while(IsLetter(*s))
-						wb.Cat(ToLower(*s++));
-					words.FindAdd(TopicWordIndex(FromUnicode(wb)));
+					StringBuffer sb;
+					while(IsLetter(*s) || IsDigit(*s))
+						sb.Cat(ToAscii(ToLower(*s++)));
+					words.FindAdd(TopicWordIndex(sb));
 				}
 			}
 		return false;
@@ -95,6 +96,8 @@ String TopicCacheName(const char *path)
 	return AppendFileName(cfg, ForceExt(Filter(path, NoSlashDot), ".tdx"));
 }
 
+const char *tdx_version = "tdx version 2.0";
+
 void SyncTopicFile(const RichText& text, const String& link, const String& path, const String& title)
 {
 	ClearLinkRef(link);
@@ -103,25 +106,28 @@ void SyncTopicFile(const RichText& text, const String& link, const String& path,
 	sti.link = link;
 	text.Iterate(sti);
 	
-	TopicInfo& ti = topic_info().GetAdd(link);
+	TopicInfo& ti = topic_info().GetPut(link);
 	ti.title = title;
 	ti.path = path;
 	ti.time = FileGetTime(path);
 	ti.words = sti.words.PickKeys();
-	Sort(ti.words);
 	
 	FileOut out(TopicCacheName(path));
+	out << tdx_version << "\n";
 	out << title << '\n';
 	for(int i = 0; i < sti.ref.GetCount(); i++)
 		out << sti.ref[i] << '\n';
 	out << '\n';
+	const Index<String>& ws = TopicWords();
 	for(int i = 0; i < ti.words.GetCount(); i++)
-		out << TopicIndexWord(ti.words[i]) << '\n';
+		out << ws[ti.words[i]] << '\n';
 }
 
-void SyncTopicFile(const String& link, const String& path)
+void SyncTopicFile(const String& link)
 {
-	TopicInfo& ti = topic_info().GetAdd(link);
+	String path = GetTopicPath(link);
+	LLOG("SyncTopicFile " << link << " path: " << path);
+	TopicInfo& ti = topic_info().GetPut(link);
 	Time tm = FileGetTime(path);
 	if(ti.path == ":ide:" || ti.path == path && ti.time == tm)
 		return;
@@ -129,27 +135,40 @@ void SyncTopicFile(const String& link, const String& path)
 	if(FileGetTime(fn) > tm) {
 		ClearLinkRef(link);
 		FileIn in(fn);
-		ti.title = in.GetLine();
-		ti.words.Clear();
-		ti.path = path;
-		ti.time = tm;
-		while(!in.IsEof()) {
-			String x = in.GetLine();
-			if(IsNull(x))
-				break;
-			AddLinkRef(link, x);
+		if(in) {
+			String s = in.GetLine();
+			if(s == tdx_version) {
+				ti.title = in.GetLine();
+				ti.words.Clear();
+				ti.path = path;
+				ti.time = tm;
+				while(!in.IsEof()) {
+					String x = in.GetLine();
+					if(IsNull(x))
+						break;
+					AddLinkRef(link, x);
+				}
+				while(!in.IsEof()) {
+					String x = in.GetLine();
+					if(IsNull(x))
+						break;
+					ti.words.Add(TopicWordIndex(x));
+				}
+				Sort(ti.words);
+				return;
+			}
 		}
-		while(!in.IsEof()) {
-			String x = in.GetLine();
-			if(IsNull(x))
-				break;
-			ti.words.Add(TopicWordIndex(x));
-		}
-		Sort(ti.words);
-		return;
 	}
 	Topic tp = ReadTopic(LoadFile(path));
 	SyncTopicFile(ParseQTF(tp.text), link, path, tp.title);
+}
+
+void InvalidateTopicInfoPath(const String& path)
+{
+	VectorMap<String, TopicInfo>& t = topic_info();
+	for(int i = 0; i < t.GetCount(); i++)
+		if(t[i].path == path)
+			t.Unlink(i);
 }
 
 void SyncRefsDir(const char *dir, const String& rel, Progress& pi)
@@ -171,7 +190,7 @@ void SyncRefsDir(const char *dir, const String& rel, Progress& pi)
 							tl.topic = GetFileTitle(ft.GetName());
 							String link = TopicLinkString(tl);
 							pi.SetText("Indexing topic " + tl.topic);
-							SyncTopicFile(link, path);
+							SyncTopicFile(link);
 						}
 					}
 				}
@@ -203,18 +222,32 @@ Vector<String> GetRefLinks(const String& ref)
 
 String GetTopicTitle(const String& link)
 {
+	SyncTopicFile(link);
 	int q = topic_info().Find(link);
 	return q >= 0 ? topic_info()[q].title : Null;
 }
 
-bool MatchTopicLink(const String& link, const Vector<int>& query)
+int MatchWord(const Vector<int>& w, const String& pattern)
 {
+	const Index<String>& ws = TopicWords();
+	for(int i = 0; i < w.GetCount(); i++) {
+		String wrd = ws[w[i]];
+		if(wrd.GetCount() >= pattern.GetCount() && memcmp(wrd, pattern, pattern.GetCount()) == 0)
+			return i;
+	}
+	return -1;
+}
+
+bool MatchTopicLink(const String& link, const Vector<String>& query)
+{
+//	TIMING("MatchTopicLink"); _DBG_
+	SyncTopicFile(link);
 	int q = topic_info().Find(link);
 	if(q < 0)
 		return false;
 	TopicInfo& f = topic_info()[q];
 	for(int i = 0; i < query.GetCount(); i++)
-		if(FindIndex(f.words, query[i]) < 0)
+		if(MatchWord(f.words, query[i]) < 0)
 			return false;
 	return true;
 }

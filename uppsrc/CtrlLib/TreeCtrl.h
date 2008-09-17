@@ -147,6 +147,7 @@ private:
 	void   GatherSel(int id, Vector<int>& sel) const;
 	void   DoClick(Point p, dword flags, bool down);
 	void   SyncInfo();
+	void   SyncAfterSync(Ptr<Ctrl> restorefocus);
 
 protected:
 	virtual void SetOption(int id);

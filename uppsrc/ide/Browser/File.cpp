@@ -16,6 +16,20 @@ bool ParseTopicFileName(const String& fn, String& topic, int& lang)
 	return lang;
 }
 
+String GetTopicPath(const TopicLink& tl)
+{
+	if(IsNull(tl.package))
+		return Null;
+	return AppendFileName(
+	           AppendFileName(PackageDirectory(tl.package), tl.group + ".tpp"),
+	                          tl.topic + ".tpp");
+}
+
+String GetTopicPath(const String& link)
+{
+	return GetTopicPath(ParseTopicLink(link));
+}
+
 Topic ReadTopic(const char *text)
 {
 	Topic topic;

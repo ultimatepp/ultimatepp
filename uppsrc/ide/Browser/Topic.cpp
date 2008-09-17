@@ -109,11 +109,11 @@ void TopicEditor::Load(const String& fn)
 	title.ClearModify();
 }
 
-int sSerial = 0;
+int TopicEditor::serial;
 
 int TopicEditor::GetSerial()
 {
-	return sSerial;
+	return serial;
 }
 
 void TopicEditor::SaveTopic()
@@ -141,7 +141,7 @@ void TopicEditor::SaveTopic()
 		return;
 	String r = WriteTopic((String)~title, editor.Get());
 	if(LoadFile(topicpath) != r) {
-		sSerial++;
+		serial++;
 		SaveFile(topicpath, r);
 		if(FileExists(AppendFileName(grouppath, "all.i")))
 			SaveFile(ForceExt(topicpath, ".tppi"), WriteTopicI((String)~title, editor.Get()));

@@ -367,6 +367,16 @@ void TreeCtrl::ReLine(int itemi, int level, Size& sz)
 			RemoveCtrls(m.child[i]);
 }
 
+void TreeCtrl::SyncAfterSync(Ptr<Ctrl> restorefocus)
+{
+	if(treesize != sb.GetTotal()) {
+		sb.SetTotal(treesize);
+		Refresh();
+	}
+	SyncCtrls(true, restorefocus);
+	SyncInfo();
+}
+
 void TreeCtrl::SyncTree()
 {
 	if(!dirty)
@@ -389,16 +399,11 @@ void TreeCtrl::SyncTree()
 		ReLine(0, 0, treesize);
 	treesize.cy = max(0, treesize.cy);
 	treesize.cx += levelcx;
-	if(treesize != sb.GetTotal()) {
-		sb.SetTotal(treesize);
-		Refresh();
-	}
 	cursor = -1;
 	dirty = false;
 	if(cursorid >= 0)
 		SetCursor(cursorid, false, false, false);
-	SyncCtrls(true, restorefocus);
-	PostCallback(PTEBACK(SyncInfo));
+	PostCallback(PTEBACK1(SyncAfterSync, restorefocus));
 }
 
 void TreeCtrl::SyncCtrls(bool add, Ctrl *restorefocus)
@@ -591,7 +596,7 @@ void TreeCtrl::SetCursorLine(int i, bool sc, bool sel, bool cb)
 			return;
 		if(cb) {
 			WhenCursor();
-			if (!multiselect) WhenSel();
+			if(!multiselect) WhenSel();
 		}
 	}
 }

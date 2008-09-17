@@ -163,6 +163,7 @@ private:
 	Index<String>  tree_ndx;
 	String         topic;
 	String         label;
+	String         current_link;
 
 	bool GoTo0(const String& link);
 	void Back();
@@ -189,9 +190,11 @@ public:
 	void SortTree(int id = 0);
 	void FinishTree();
 	void OpenDeep(int id = 0);
+	void CurrentOrHome();
 
 	String GetCurrent() const                     { return topic; }
 	String GetCurrentLabel() const                { return label; }
+	String GetCurrentLink() const                 { return current_link; }
 
 	typedef HelpWindow CLASSNAME;
 

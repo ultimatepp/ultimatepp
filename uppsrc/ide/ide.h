@@ -262,23 +262,26 @@ public:
 	virtual void  FinishText(RichText& text);
 
 private:
+	EditString search;
+	DropList   lang;
+	bool       internal;
+	bool       showwords, all;
+	
+	VectorMap<String, VectorMap<String, Index<String> > > map;
+	Index<String>                                         lang_list;
+	
+	static  Index<String> idelink;
+
 	void OpenTopic();
 	void Search();
 	void ShowWords();
 	void All();
 	void Lang();
 	void SShow();
-	void ScanDirForTpp(const char *dir, Index<String>& li, Vector<int>& sdx, const String& lng,
-	                   VectorMap<String, VectorMap<String, Vector<String> > >& map,
-	                   const String& rel);
-
-	Label    search_label;
-	WithDropChoice<EditString> search;
-	DropList lang;
-	bool     internal;
-	bool     showwords, issearch, all;
-	static  Index<String> idelink;
-
+	void ScanDirForTpp(const char *dir, const String& rel, Index<String>& donepackage,
+	                   Index<String>& lang_list);
+	void LoadMap();
+	void FocusSearch();
 
 public:
 	Callback WhenTopic;
