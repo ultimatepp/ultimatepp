@@ -959,12 +959,13 @@ void Ide::JumpS()
 	if(q < 0)
 		return;
 
+/*
 	if(nest.GetCount() > 1 || n.name.FindNext(q) >= 0) {
 		browser.SetId(id, nest);
 		SetBottom(BBROWSER);
 		SetBar();
 	}
-
+*/
 	const CppItem& m = n[q];
 	if(m.pos.GetCount() == 0)
 		return;
@@ -976,7 +977,7 @@ void Ide::JumpS()
 			return;
 		}
 		String ext = ToLower(GetFileExt(fp.GetFile()));
-		if(ext == ".CPP" || ext == ".C" || ext == ".CC")
+		if(ext == ".cpp" || ext == ".c" || ext == ".cc")
 			ai = i;
 	}
 	GotoCpp(m.pos[ai]);

@@ -1,5 +1,7 @@
 #include "ide.h"
 
+#define LLOG(x) DLOG(x)
+
 struct GotoDlg : public WithGotoLayout<TopWindow> {
 	bool               global;
 	Array<CppItemInfo> item;
@@ -234,19 +236,22 @@ void Ide::SwapS()
 	Parser p;
 	editor.SwapSContext(p);
 	int q = BrowserBase().Find(p.current_nest);
+	LLOG("SwapS nest: " << p.current_nest);
 	if(q < 0)
 		return;
 	const CppNest& n = BrowserBase()[q];
 	q = n.key.Find(QualifyKey(BrowserBase(), p.current_nest, p.current_key));
 	if(q < 0)
 		return;
-	int    line = -1;
+	int line = -1;
 	if(p.current.pos.GetCount())
 		line = p.current.pos.Top().line;
+	LLOG("SwapS line: " << line);
 	const CppItem& m = n[q];
 	int i;
 	for(i = 0; i < m.pos.GetCount(); i++) {
 		const CppPos& fp = m.pos[i];
+		LLOG("file: " << fp.GetFile() << ", line: " << fp.line);
 		if(fp.GetFile() == editfile && fp.line == line) {
 			i++;
 			break;
