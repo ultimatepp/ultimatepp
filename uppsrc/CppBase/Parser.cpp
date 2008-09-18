@@ -1382,13 +1382,6 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 	file = PreProcess(in);
 	lex.Init(~file.text, ignore);
 	err = _err;
-	current_nest = "::";
-	context.access = PUBLIC;
-	context.noclass = true;
-	context.typenames.Clear();
-	for(int i = 0; i < typenames.GetCount(); i++)
-		context.typenames.Add(lex.Id(typenames[i]));
-	context.namespacel = 0;
 	inbody = false;
 	filei = GetCppFileIndex(fn);
 	lpos = 0;
@@ -1399,6 +1392,14 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 	while(lex != t_eof)
 		try {
 			try {
+				current_nest = "::";
+				context.access = PUBLIC;
+				context.noclass = true;
+				context.typenames.Clear();
+				context.tparam.Clear();
+				for(int i = 0; i < typenames.GetCount(); i++)
+					context.typenames.Add(lex.Id(typenames[i]));
+				context.namespacel = 0;
 				Do();
 			}
 			catch(Error) {
