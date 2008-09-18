@@ -1,0 +1,14 @@
+description "Bazaar: Simple Rss File Parser. Author: İsmail YILMAZ (Oblivion)";
+
+uses
+	CtrlLib,
+	Rss;
+
+file
+	RssView.h,
+	main.cpp,
+	RssView.iml;
+
+mainconfig
+	"" = "GUI";
+
