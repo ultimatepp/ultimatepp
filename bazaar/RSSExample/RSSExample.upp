@@ -1,0 +1,15 @@
+description "Bazaar: Rss 2.0 multi-channel feed creation example using Rss class. Author: İsmail YILMAZ (Oblivion)";
+
+uses
+	CtrlLib,
+	Rss;
+
+file
+	RSSExample.h,
+	main.cpp,
+	RSSExample.lay,
+	rss.xml;
+
+mainconfig
+	"" = "GUI";
+

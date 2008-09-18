@@ -1,0 +1,8 @@
+LAYOUT(RSSExampleLayout, 604, 444)
+	ITEM(TreeCtrl, tree, LeftPosZ(136, 112).TopPosZ(60, 112))
+	ITEM(Splitter, splitter, HSizePosZ(4, 4).VSizePosZ(56, 4))
+	ITEM(DocEdit, edit, SetFont(CourierZ(12)).LeftPosZ(16, 104).TopPosZ(60, 112))
+	ITEM(LabelBox, dv___3, SetLabel(t_("Information")).HSizePosZ(4, 4).TopPosZ(0, 48))
+	ITEM(StaticText, dv___4, SetText(t_("This example demonstrates multi-channel Rss feed creation and parsing through 'Rss' class. ")).SetAlign(ALIGN_CENTER).HSizePosZ(12, 12).TopPosZ(16, 24))
+END_LAYOUT
+
