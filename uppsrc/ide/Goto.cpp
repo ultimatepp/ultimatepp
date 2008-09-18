@@ -1,6 +1,6 @@
 #include "ide.h"
 
-#define LLOG(x) DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 struct GotoDlg : public WithGotoLayout<TopWindow> {
 	bool               global;
