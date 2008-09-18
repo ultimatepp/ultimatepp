@@ -73,8 +73,12 @@ SrcFile PreProcess(Stream& in)
 			SLPos(res);
 		}
 		const char *rm = ln;
-		if(IsAlNum(*rm))
-			res.text << '\2';
+		if(IsAlNum(*rm)) {
+			const char *s = ln.Last();
+			while(s > rm && *s == ' ') s--;
+			if(*s != ':')
+				res.text << '\2';
+		}
 		while(*rm == ' ' || *rm == '\t') rm++;
 		if(*rm == '\0')
 			res.blankLinesRemoved++;
