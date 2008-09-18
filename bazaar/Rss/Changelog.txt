@@ -1,0 +1,35 @@
+//**********************************************************************************************
+//* Rss Class
+//* ---------
+//* RSS 2.0 Web content syndication format encapsulation for Ultimate++
+//*	Author: İsmail YILMAZ (Oblivion)
+//* -------------------------------------------------------------------
+//* For more information on RSS format, see: 
+//*
+//*		http://www.rss-specifications.com/
+//*		http://www.rssboard.org/rss-specification		
+//*
+
+
+
+[+] - new feature
+[-] - bugfix
+[*] - change
+
+
+Recent revisions are added to the current versions logs under date/time info.
+
+
+18/09/2008
+	> Second Public Beta - public release name DockCtrl DEV809b.2.
+	> Second Iteration of the Rss class.
+	> Package versioning is synchronised with the main Ultimate++ releases.
+	--------------------------------------------------------------------------------------------
+	* Rss class completely redesigned.
+	* Removed Rss:: nested helper strucures and added dynamic hepler classes: 
+	  RssTag, RssNode, RssChannel.
+	+ Added hepler functions for easy Rss feed creation.
+	+ Added multi-channel feed support.
+	
+	
+
