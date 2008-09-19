@@ -39,6 +39,7 @@ public:
 
 	Time                  FileTime(const String& path);
 	bool                  BlitzApproved(const String& path);
+	String                FindIncludeFile(const char *s, const String& filedir);
 	const Vector<String>& GetDefines(const String& path);
 	Vector<String>        GetDependencies(const String& path);
 	const Vector<String>& GetAllFiles()                           { return map.GetKeys(); }
@@ -61,42 +62,49 @@ const char *RestOfLine(const char *term, String& val) {
 	return term;
 }
 
-void Hdepend::Include(const char *trm, Hdepend::Info& info, const String& filedir, bool bydefine) {
-	int type = *trm;
+String Hdepend::FindIncludeFile(const char *s, const String& filedir)
+{
+	s = SkipSpc(s);
+	int type = *s;
 	if(type == '<' || type == '\"' || type == '?') {
-		trm++;
+		s++;
 		String name;
 		if(type == '<') type = '>';
-		while(*trm != '\r' && *trm != '\n') {
-			if(*trm == type) {
+		while(*s != '\r' && *s != '\n') {
+			if(*s == type) {
 				if(type == '\"') {
 					String fn = NormalizePath(name, filedir);
+					if(FileExists(fn))
+						return fn;
 					FindFile ff(fn);
-					if(ff && ff.IsFile()) {
-						info.depend.Add(File(fn));
-						info.bydefine.Add(bydefine);
-						break;
-					}
 				}
 				for(int i = 0; i < incdir.GetCount(); i++) {
 					String fn = CatAnyPath(incdir[i], name);
-					FindFile ff(fn);
-					if(ff && ff.IsFile()) {
-						info.depend.Add(File(fn));
-						info.bydefine.Add(bydefine);
-						break;
-					}
+					if(FileExists(fn))
+						return fn;
 				}
 				break;
 			}
-			name.Cat(*trm++);
+			name.Cat(*s++);
 		}
 	}
-	else if(IsAlpha(type) || type == '_') {
-		const char *macid = trm;
-		while(IsAlNum(*++trm) || *trm == '_')
+	return String();
+}
+
+void Hdepend::Include(const char *s, Hdepend::Info& info, const String& filedir, bool bydefine) {
+	s = SkipSpc(s);
+	if(IsAlpha(*s) || *s == '_') {
+		const char *macid = s;
+		while(IsAlNum(*++s) || *s == '_')
 			;
-		info.macroinclude.FindAdd(String(macid, trm));
+		info.macroinclude.FindAdd(String(macid, s));
+	}
+	else {
+		String fn = FindIncludeFile(s, filedir);
+		if(!IsNull(fn)) {
+			info.depend.Add(File(fn));
+			info.bydefine.Add(bydefine);
+		}
 	}
 }
 
@@ -443,6 +451,11 @@ Time HdependFileTime(const String& path)
 		return Single<Hdepend>().FileTime(path);
 	else
 		return of == path ? GetSysTime() : Time::Low();
+}
+
+String FindIncludeFile(const char *s, const String& filedir)
+{
+	return Single<Hdepend>().FindIncludeFile(s, filedir);
 }
 
 bool HdependBlitzApproved(const String& path)

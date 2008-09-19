@@ -907,9 +907,19 @@ String GetIdNest(const String& nest, const String& id, Index<String>& done)
 
 void Ide::JumpS()
 {
-	if(designer || !editor.assist_active)
+	if(designer)
 		return;
-	int q = editor.GetCursor();
+	String l = editor.GetUtf8Line(editor.GetCursorLine());
+	int q = l.Find("#include");
+	if(q >= 0) {
+		String path = FindIncludeFile(~l + q + 8, GetFileFolder(editfile));
+		if(!IsNull(path))
+			EditFile(path);
+		return;
+	}
+	if(!editor.assist_active)
+		return;
+	q = editor.GetCursor();
 	while(iscid(editor.Ch(q - 1)))
 		q--;
 	String tp;
