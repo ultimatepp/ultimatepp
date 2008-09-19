@@ -117,6 +117,41 @@ void IconDes::InsertPaste()
 	EditImage();
 }
 
+struct FileImage : ImageMaker {
+	String filename;
+	Size   size;
+	
+	virtual String Key() const { return filename + '/' + AsString(size); }
+	virtual Image Make() const {
+		if(GetFileLength(filename) > 1024 * 1024 * 20)
+			return Null;
+		Image m = StreamRaster::LoadFileAny(filename);
+		Size sz = m.GetSize();
+		if(sz.cx > size.cx || sz.cy > size.cy) {
+			if(sz.cx * size.cy > sz.cy * size.cx)
+				sz = GetRatioSize(sz, size.cx, 0);
+			else
+				sz = GetRatioSize(sz, 0, size.cy);
+			return Rescale(m, sz);
+		}
+		return m;
+	}
+};
+
+struct ImgPreview : Display {
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const {
+		if(!IsNull(q)) {
+			FileImage im;
+			im.size = r.GetSize();
+			im.filename = q;
+			w.DrawRect(r, SColorPaper);
+			Image m = MakeImage(im);
+			Point p = r.CenterPos(m.GetSize());
+			w.DrawImage(p.x, p.y, m);
+		}
+	}
+};
+
 FileSel& IconDes::ImgFile()
 {
 	static FileSel sel;
@@ -124,6 +159,7 @@ FileSel& IconDes::ImgFile()
 		sel.Type("Image files", "*.png *.bmp *.jpg *.jpeg *.gif");
 		sel.AllFilesType();
 		sel.Multi();
+		sel.Preview(Single<ImgPreview>());
 	}
 	return sel;
 }

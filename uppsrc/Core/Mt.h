@@ -41,7 +41,7 @@ struct MtInspector {
 
 class Callback;
 
-class Thread {
+class Thread : NoCopy {
 #ifdef PLATFORM_WIN32
 	HANDLE     handle;
 #endif
@@ -141,7 +141,7 @@ inline void BarrierWrite(volatile U& ptr, V data)
 	ptr = data;
 }
 
-class Semaphore {
+class Semaphore : NoCopy {
 #ifdef PLATFORM_WIN32
 	HANDLE     handle;
 #else
@@ -156,7 +156,7 @@ public:
 	~Semaphore();
 };
 
-class StaticSemaphore {
+class StaticSemaphore : NoCopy {
 	volatile Semaphore *semaphore;
 	byte                buffer[sizeof(Semaphore)];
 
@@ -179,7 +179,7 @@ inline int  AtomicInc(volatile Atomic& t)             { return InterlockedIncrem
 inline int  AtomicDec(volatile Atomic& t)             { return InterlockedDecrement((Atomic *)&t); }
 inline int  AtomicXAdd(volatile Atomic& t, int incr)  { return InterlockedExchangeAdd((Atomic *)&t, incr); }
 
-class Mutex {
+class Mutex : NoCopy {
 protected:
 	CRITICAL_SECTION section;
 	MtInspector        *mti;
@@ -208,7 +208,7 @@ public:
 
 /* Win32 RWMutex implementation by Chris Thomasson, cristom@comcast.net */
 
-class RWMutex {
+class RWMutex : NoCopy {
     LONG   m_count, m_rdwake;
     HANDLE m_wrwset, m_rdwset;
     CRITICAL_SECTION m_wrlock;
@@ -238,7 +238,7 @@ inline int  AtomicXAdd(volatile Atomic& t, int incr)  { using namespace __gnu_cx
 inline int  AtomicInc(volatile Atomic& t)             { return AtomicXAdd(t, +1) + 1; }
 inline int  AtomicDec(volatile Atomic& t)             { return AtomicXAdd(t, -1) - 1; }
 
-class Mutex {
+class Mutex : NoCopy {
 protected:
 	pthread_mutex_t  mutex[1];
 	MtInspector     *mti;
@@ -260,7 +260,7 @@ public:
 	~Mutex()           { pthread_mutex_destroy(mutex); }
 };
 
-class RWMutex {
+class RWMutex : NoCopy {
 	pthread_rwlock_t rwlock[1];
 
 public:
@@ -281,25 +281,25 @@ public:
 inline int  AtomicRead(const volatile Atomic& t)      { return ReadWithBarrier(t); }
 inline void AtomicWrite(volatile Atomic& t, int val)  { BarrierWrite(t, val); }
 
-struct Mutex::Lock {
+struct Mutex::Lock : NoCopy {
 	Mutex& s;
 	Lock(Mutex& s) : s(s) { s.Enter(); }
 	~Lock()               { s.Leave(); }
 };
 
-struct RWMutex::ReadLock {
+struct RWMutex::ReadLock : NoCopy {
 	RWMutex& s;
 	ReadLock(RWMutex& s) : s(s) { s.EnterRead(); }
 	~ReadLock()                 { s.LeaveRead(); }
 };
 
-struct RWMutex::WriteLock {
+struct RWMutex::WriteLock : NoCopy {
 	RWMutex& s;
 	WriteLock(RWMutex& s) : s(s) { s.EnterWrite(); }
 	~WriteLock()                 { s.LeaveWrite(); }
 };
 
-class StaticMutex {
+class StaticMutex : NoCopy {
 	volatile Mutex *section;
 	byte            buffer[sizeof(Mutex)];
 
@@ -316,7 +316,7 @@ public:
 #endif
 };
 
-class StaticRWMutex {
+class StaticRWMutex : NoCopy {
 	volatile RWMutex *rw;
 	byte              buffer[sizeof(RWMutex)];
 
@@ -380,7 +380,7 @@ inline int  AtomicInc(volatile Atomic& t)             { ++t; return t; }
 inline int  AtomicDec(volatile Atomic& t)             { --t; return t; }
 inline int  AtomicXAdd(volatile Atomic& t, int incr)  { Atomic x = t; t += incr; return x; }
 
-struct Mutex {
+struct Mutex : NoCopy {
 	bool  TryEnter()             { return true; }
 	void  Enter()                {}
 	void  Leave()                {}
@@ -390,12 +390,12 @@ struct Mutex {
 
 typedef Mutex StaticMutex;
 
-struct Mutex::Lock {
+struct Mutex::Lock : NoCopy {
 	Lock(Mutex&) {}
 	~Lock()                {}
 };
 
-struct RWMutex {
+struct RWMutex : NoCopy {
 	void EnterWrite() {}
 	void LeaveWrite() {}
 
@@ -406,12 +406,12 @@ struct RWMutex {
 	struct WriteLock;
 };
 
-struct RWMutex::ReadLock {
+struct RWMutex::ReadLock : NoCopy {
 	ReadLock(RWMutex&) {}
 	~ReadLock()        {}
 };
 
-struct RWMutex::WriteLock {
+struct RWMutex::WriteLock : NoCopy {
 	WriteLock(RWMutex&) {}
 	~WriteLock()        {}
 };

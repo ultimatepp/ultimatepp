@@ -1,11 +1,3 @@
-class NoCopy {
-private:
-	NoCopy(const NoCopy&);
-	void operator=(const NoCopy&);
-public:
-	NoCopy() {}
-};
-
 template <class I>
 inline void IterSwap(I a, I b) { if(a != b) Swap(*a, *b); }
 

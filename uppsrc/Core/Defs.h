@@ -313,6 +313,14 @@ inline int StaticTypeNo() {
 	return typeno;
 }
 
+class NoCopy {
+private:
+	NoCopy(const NoCopy&);
+	void operator=(const NoCopy&);
+public:
+	NoCopy() {}
+};
+
 #if defined(flagMT)
 	#if defined(PLATFORM_WIN32) && defined(COMPILER_GCC)
 		#define flagUSEMALLOC //MINGW does not support
