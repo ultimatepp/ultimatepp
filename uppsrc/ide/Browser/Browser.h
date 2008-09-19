@@ -357,6 +357,7 @@ protected:
 	void   InsertItem();
 
 	void   FindBrokenRef();
+	void   JumpToDefinition();
 
 public:
 	Callback1<Bar&> WhenTemplatesMenu;

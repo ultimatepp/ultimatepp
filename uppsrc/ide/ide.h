@@ -493,6 +493,7 @@ public:
 	virtual   bool      IdeIsDebugLock() const;
 
 	virtual   void      IdeSetBar();
+	virtual   void      IdeGotoLink(String link);
 
 	enum {
 		EDITING, BUILDING, RUNNING, DEBUGGING,
@@ -998,6 +999,7 @@ public:
 	bool      OpenMainPackage();
 	void      NewMainPackage();
 
+	void      JumpToDefinition(const CppItem& m);
 	void      SearchTopics();
 	void      ShowTopics();
 	void      ShowTopic(String topic);

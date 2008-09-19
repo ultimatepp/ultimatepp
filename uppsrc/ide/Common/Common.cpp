@@ -167,6 +167,11 @@ bool IdeConsoleWait()
 	return the_ide && the_ide->IdeConsoleWait();
 }
 
+void IdeGotoLink(String s)
+{
+	if(the_ide) the_ide->IdeGotoLink(s);
+}
+
 void IdeSetBottom(Ctrl& ctrl)
 {
 	if(the_ide) the_ide->IdeSetBottom(ctrl);

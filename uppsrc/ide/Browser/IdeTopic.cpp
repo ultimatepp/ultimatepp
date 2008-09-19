@@ -1,8 +1,9 @@
 #include "Browser.h"
 
-#ifdef _DEBUG
-//#define REPAIR
-#endif
+void TopicEditor::JumpToDefinition()
+{
+	PostCallback(callback1(IdeGotoLink, editor.GetFormatInfo().label));
+}
 
 void TopicEditor::Label(String& label)
 {
@@ -69,7 +70,11 @@ void TopicEditor::FindBrokenRef()
 void TopicEditor::Tools(Bar& bar)
 {
 	bar.Add("Insert code item..", IdeCommonImg::InsertItem(), THISBACK(InsertItem))
-	   .Key(K_INSERT);
+	   .Key(K_CTRL_INSERT);
+	String l = editor.GetFormatInfo().label;
+	bool b = l.GetCount() > 2 && l[0] == ':' && l[1] == ':';
+	bar.Add(b, "See referenced code", IdeCommonImg::Source(), THISBACK(JumpToDefinition))
+	   .Key(K_ALT_J);
 	bar.Add("Find broken references..", IdeCommonImg::FindBrokenRef(), THISBACK(FindBrokenRef))
 	   .Key(K_CTRL_F3);
 #ifdef REPAIR

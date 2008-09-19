@@ -2,7 +2,7 @@
 
 #define LDUMP(x)    //DUMP(x)
 #define LDUMPC(x)   //DUMPC(x)
-#define LLOG(x)     //LOG(x)
+#define LLOG(x)     //DLOG(x)
 
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
@@ -955,18 +955,12 @@ void Ide::JumpS()
 		return;
 	const CppNest& n = BrowserBase()[q];
 	q = n.name.Find(id);
+	if(q >= 0)
+		JumpToDefinition(n[q]);
+}
 
-	if(q < 0)
-		return;
-
-/*
-	if(nest.GetCount() > 1 || n.name.FindNext(q) >= 0) {
-		browser.SetId(id, nest);
-		SetBottom(BBROWSER);
-		SetBar();
-	}
-*/
-	const CppItem& m = n[q];
+void Ide::JumpToDefinition(const CppItem& m)
+{
 	if(m.pos.GetCount() == 0)
 		return;
 	int ai = 0;
@@ -981,4 +975,19 @@ void Ide::JumpS()
 			ai = i;
 	}
 	GotoCpp(m.pos[ai]);
+}
+
+void Ide::IdeGotoLink(String link)
+{
+	LLOG("IdeGotoLink " << link);
+	String nest, key;
+	if(!SplitNestKey(link, nest, key))
+		return;
+	int q = BrowserBase().Find(nest);
+	if(q < 0)
+		return;
+	const CppNest& n = BrowserBase()[q];
+	q = n.key.Find(key);
+	if(q >= 0)
+		JumpToDefinition(n[q]);
 }
