@@ -450,12 +450,12 @@ void Ide::BrowseMenu(Bar& menu) {
 	menu.Add(AK_QUERYWORD, THISBACK(QueryWord));
 	menu.Add(btabs.GetCursor() == BBROWSER && browser.item.IsCursor(), AK_HELPITEM,
 	         callback(&browser, &Browser::ShowHelp));
-	menu.Add(AK_JUMPS, THISBACK(JumpS));
-	menu.Add(AK_SWAPS, THISBACK(SwapS));
+	menu.Add(!designer, AK_JUMPS, THISBACK(JumpS));
+	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
 	menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));
-	menu.Add(AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
-	menu.Add(AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
-	menu.Add(AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
+	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));
+	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
+	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
 	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
 //	menu.Add(AK_INSERTCOLOR, THISBACK(InsertColor));
 	menu.Separator();
