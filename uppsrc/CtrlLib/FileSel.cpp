@@ -807,7 +807,7 @@ void FileSel::Update() {
 	filetime = String();
 	if(preview)
 		*preview <<= Null;
-	if(list.IsCursor() && !list.IsSelection()) {
+	if(list.IsCursor()) {
 		fn = list[list.GetCursor()].name;
 		if(fn[1] == ':' && fn.GetLength() <= 3)
 			filename = t_("  Drive");
