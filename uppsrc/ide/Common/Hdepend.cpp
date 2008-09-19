@@ -121,6 +121,8 @@ void Hdepend::ScanFile(const String& path, int map_index) {
 	const char *term = src;
 	info.depend.Clear();
 	info.bydefine.Clear();
+	info.macroinclude.Clear();;
+	info.define.Clear();;
 	info.guarded = false;
 	info.blitzprohibit = false;
 	String filedir = GetFileDirectory(path);

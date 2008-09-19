@@ -1,5 +1,7 @@
 #include "ide.h"
 
+#define LLOG(x) // DLOG(x)
+
 void Ide::ResolveUvsConflict() {
 	String result;
 	editor.NextUndo();
@@ -40,6 +42,7 @@ void Ide::ResolveUvsConflict() {
 
 void Ide::GotoPos(String path, int line)
 {
+	LLOG("GotoPos " << path << ':' << line);
 	AddHistory();
 	editastext.FindAdd(path);
 	EditFile(path);
