@@ -108,6 +108,8 @@ class Lex {
 		String text;
 		double number;
 		bool   grounding;
+		
+		Term() { grounding = false; }
 	};
 
 	bool statsCollected;
