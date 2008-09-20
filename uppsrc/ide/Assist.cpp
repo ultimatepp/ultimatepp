@@ -125,7 +125,9 @@ bool AssistEditor::NestId(const CppNest& n, const String& id, Vector<String>& ty
 
 void AssistScanError(int line, const String& text)
 {
+#ifdef _DEBUG
 	PutVerbose(String().Cat() << "(" << line << "): " << text);
+#endif
 }
 
 void AssistEditor::Context(Parser& parser, int pos)
@@ -137,6 +139,10 @@ void AssistEditor::Context(Parser& parser, int pos)
 	parser.Do(ss, IgnoreList(), BrowserBase(), Null, callback(AssistScanError));
 	QualifyTypes(BrowserBase(), parser.current_nest, parser.current);
 	inbody = parser.IsInBody();
+#ifdef _DEBUG
+	PutVerbose("body: " + AsString(inbody));
+	PutVerbose("nest: " + AsString(parser.current_nest));
+#endif
 }
 
 void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)

@@ -8,7 +8,7 @@ NAMESPACE_UPP
 #endif
 
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // TIMING(x)
 
 inline const char *bew(const char *s, const char *t)
@@ -216,7 +216,13 @@ void Parser::Line()
 void Parser::ThrowError(const String& e)
 {
 	err(GetLine(lex.Pos()), e);
-	LLOG(e);
+#ifdef _DEBUG
+	int i = 0;
+	while(i < 40 && lex[i] != t_eof)
+		i++;
+	LLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", nest: " << current_nest <<
+	     "  " << AsCString(String(lex.Pos(), lex.Pos(i))));
+#endif
 	throw Error();
 }
 
@@ -1177,12 +1183,14 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind)
 		im.virt = d.s_virtual;
 		im.type = d.type;
 		im.decla = true;
+		LLOG("FnItem: " << nesting << "::" << item << ", natural: " << im.natural);
 	}
 	return im;
 }
 
 void Parser::Do()
 {
+	LLOG("Do, nest: " << current_nest);
 	Line();
 	if(Key(tk_using)) {
 		while(!Key(';') && lex != t_eof)
@@ -1378,11 +1386,11 @@ void Parser::Do()
 void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const String& fn,
                 Callback2<int, const String&> _err, const Vector<String>& typenames)
 {
+	LLOG("= C++ Parser ==================================== " << fn);
 	base = &_base;
 	file = PreProcess(in);
 	lex.Init(~file.text, ignore);
 	err = _err;
-	inbody = false;
 	filei = GetCppFileIndex(fn);
 	lpos = 0;
 	line = 0;
@@ -1397,6 +1405,7 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 				context.noclass = true;
 				context.typenames.Clear();
 				context.tparam.Clear();
+				inbody = false;
 				for(int i = 0; i < typenames.GetCount(); i++)
 					context.typenames.Add(lex.Id(typenames[i]));
 				context.namespacel = 0;
@@ -1404,10 +1413,12 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 			}
 			catch(Error) {
 				if(lex.IsBody()) {
+					LLOG("---- Recovery to next ';'");
 					Resume(lex.GetBracesLevel());
 					Key(';');
 				}
 				else {
+					LLOG("---- Recovery to file level");
 					++lex;
 					lex.SkipToGrounding();
 					lex.ClearBracesLevel();
@@ -1415,6 +1426,7 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 			}
 		}
 		catch(Lex::Grounding) {
+			LLOG("---- Grounding to file level");
 			lex.ClearBracesLevel();
 			lex.ClearBody();
 		}
