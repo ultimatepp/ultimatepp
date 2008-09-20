@@ -7,5 +7,7 @@ AssistTest::AssistTest()
 
 GUI_APP_MAIN
 {
+	LineEdit l;
+	l.GetPos
 	AssistTest().Run();
 }
