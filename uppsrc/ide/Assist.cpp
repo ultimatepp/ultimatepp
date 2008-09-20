@@ -330,10 +330,10 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 	in_types.Drop();
 }
 
-struct CppItemInfoOrder {
-	bool operator()(const CppItemInfo& a, const CppItemInfo& b) const {
-		return CombineCompare(a.name, b.name)(a.natural, b.natural) < 0;
-	}
+int CppItemInfoOrder(const Value& va, const Value& vb) {
+	const CppItemInfo& a = ValueTo<CppItemInfo>(va);
+	const CppItemInfo& b = ValueTo<CppItemInfo>(vb);
+	return CombineCompare(a.name, b.name)(a.natural, b.natural);
 };
 
 void AssistEditor::CloseAssist()
@@ -490,8 +490,8 @@ void AssistEditor::SyncAssist()
 	name = ReadIdBack(GetCursor());
 	assist.Clear();
 	int typei = type.GetCursor() - 1;
-	VectorMap<String, int> over;
-	for(int p = 0; p < 2; p++)
+	for(int p = 0; p < 2; p++) {
+		VectorMap<String, int> over;
 		for(int i = 0; i < assist_item.GetCount(); i++) {
 			const CppItemInfo& m = assist_item[i];
 			if((typei < 0 || m.typei == typei) &&
@@ -506,6 +506,8 @@ void AssistEditor::SyncAssist()
 				}
 			}
 		}
+	}
+	assist.Sort(0, CppItemInfoOrder);
 }
 
 void AssistEditor::Assist()
@@ -536,7 +538,6 @@ void AssistEditor::Assist()
 	}
 	if(assist_item.GetCount() == 0)
 		return;
-	Sort(assist_item, CppItemInfoOrder());
 	PopUpAssist();
 }
 
