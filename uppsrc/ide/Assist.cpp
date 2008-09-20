@@ -1,6 +1,6 @@
 #include "ide.h"
 
-#define LDUMP(x)    //DUMP(x)
+#define LDUMP(x)    //DDUMP(x)
 #define LDUMPC(x)   //DUMPC(x)
 #define LLOG(x)     //DLOG(x)
 
@@ -189,7 +189,7 @@ void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)
 	String dummy;
 	if(q >= 0 && NestId(BrowserBase()[q], id, r, code, dummy))
 		return;
-	q = BrowserBase().Find("::"); // Better namespace support needed !!!
+	q = BrowserBase().Find("::");
 	if(q >= 0)
 		NestId(BrowserBase()[q], id, r, code, dummy);
 }

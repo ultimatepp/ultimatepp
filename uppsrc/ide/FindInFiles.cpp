@@ -39,7 +39,7 @@ void Ide::SerializeFindInFiles(Stream& s) {
 void SearchForFiles(Vector<String>& files, String dir, String mask, Progress& pi) {
 	FindFile ff(AppendFileName(dir, "*.*"));
 	while(ff) {
-		if(ff.IsFolder())
+		if(ff.IsFolder() && *ff.GetName() != '.')
 			SearchForFiles(files, AppendFileName(dir, ff.GetName()), mask, pi);
 		else
 		if(ff.IsFile() && PatternMatchMulti(mask, ff.GetName())) {
