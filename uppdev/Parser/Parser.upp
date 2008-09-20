@@ -1,4 +1,5 @@
 file
+	test.h,
 	test.cpp,
 	ignorelist;
 
