@@ -911,16 +911,66 @@ String GetIdNest(const String& nest, const String& id, Index<String>& done)
 	return Null;
 }
 
+bool IsPif(const String& l)
+{
+	return l.Find("#if") >= 0;
+}
+
+bool IsPelse(const String& l)
+{
+	return l.Find("#el") >= 0;
+}
+
+bool IsPendif(const String& l)
+{
+	return l.Find("#endif") >= 0;
+}
+
 void Ide::JumpS()
 {
 	if(designer)
 		return;
-	String l = editor.GetUtf8Line(editor.GetCursorLine());
+	int li = editor.GetCursorLine();
+	String l = editor.GetUtf8Line(li);
+	if(IsPif(l) || IsPelse(l)) {
+		int lvl = 0;
+		while(li + 1 < editor.GetLineCount()) {
+			l = editor.GetUtf8Line(++li);
+			if(IsPif(l))
+				lvl++;
+			if(IsPelse(l) && lvl == 0)
+				break;
+			if(IsPendif(l)) {
+				if(lvl == 0) break;
+				lvl--;
+			}
+		}
+		AddHistory();
+		editor.SetCursor(editor.GetPos(li));
+		return;
+	}
+	if(IsPendif(l)) {
+		int lvl = 0;
+		while(li - 1 >= 0) {
+			l = editor.GetUtf8Line(--li);
+			if(IsPif(l)) {
+				if(lvl == 0) break;
+				lvl--;
+			}
+			if(IsPendif(l))
+				lvl++;
+		}
+		AddHistory();
+		editor.SetCursor(editor.GetPos(li));
+		return;
+	}
 	int q = l.Find("#include");
 	if(q >= 0) {
 		String path = FindIncludeFile(~l + q + 8, GetFileFolder(editfile));
-		if(!IsNull(path))
+		if(!IsNull(path)) {
+			AddHistory();
 			EditFile(path);
+		}
 		return;
 	}
 	if(!editor.assist_active)
