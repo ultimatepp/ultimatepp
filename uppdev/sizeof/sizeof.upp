@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	sizeof.cpp;
+
+mainconfig
+	"" = "MT";
+
