@@ -1,13 +1,13 @@
 LAYOUT(ListLayout, 604, 432)
 	ITEM(Splitter, splitter, HSizePosZ(4, 4).VSizePosZ(4, 60))
+	ITEM(DataPusher, description, HSizePosZ(4, 6).BottomPosZ(36, 20))
+	ITEM(ProgressIndicator, progress, HSizePosZ(4, 4).BottomPosZ(39, 15))
 	ITEM(Option, all, SetLabel(t_("&All packages")).LeftPosZ(4, 80).BottomPosZ(9, 19))
 	ITEM(EditString, search, LeftPosZ(152, 124).BottomPosZ(9, 19))
 	ITEM(Option, brief, SetLabel(t_("Brief list")).HSizePosZ(296, 240).BottomPosZ(8, 20))
-	ITEM(ProgressIndicator, progress, HSizePosZ(4, 254).BottomPosZ(12, 15))
 	ITEM(Button, newu, SetLabel(t_("&New package")).RightPosZ(140, 90).BottomPosZ(8, 22))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(8, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(8, 22))
-	ITEM(DataPusher, description, HSizePosZ(4, 6).BottomPosZ(36, 20))
 END_LAYOUT
 
 LAYOUT(ConfigLayout, 724, 214)
