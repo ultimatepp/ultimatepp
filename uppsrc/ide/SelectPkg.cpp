@@ -166,6 +166,10 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 
 bool SelectPackageDlg::Key(dword key, int count)
 {
+	if(key == K_ALT_ENTER) {
+		ChangeDescription();
+		return true;
+	}
 	if((clist.HasFocus() || alist.HasFocus()) && search.Key(key, count))
 		return true;
 	return TopWindow::Key(key, count);
@@ -267,6 +271,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	search <<= THISBACK(SyncList);
 	search.SetFilter(CharFilterDefaultToUpperAscii);
 	SyncBrief();
+	description.NullText("Package description (Alt+Enter)", StdFont().Italic(), SColorDisabled());
 	description <<= THISBACK(ChangeDescription);
 	ActiveFocus(brief ? (Ctrl&)clist : (Ctrl&)alist);
 	clist.BackPaintHint();
@@ -399,9 +404,7 @@ void SelectPackageDlg::Load()
 	}
 	Vector<String> upp = GetUppDirs();
 	packages.Clear();
-	all.Hide();
-	search.Hide();
-	brief.Hide();
+	description.Hide();
 	progress.Show();
 	loading = true;
 	String case_fixed;
@@ -417,11 +420,8 @@ void SelectPackageDlg::Load()
 		ProcessEvents();
 	if(!IsOpen())
 		Open();
-	all.Show();
-	search.Show();
-	brief.Show();
-	if(loading)
-	{
+	description.Show();
+	if(loading) {
 		loading = false;
 		SyncList();
 	}
