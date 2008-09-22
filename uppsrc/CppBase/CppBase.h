@@ -440,6 +440,7 @@ public:
 	String                    current_nest;
 	int                       current_namespacel;
 	String                    current_key;
+	String                    current_name;
 	CppItem                   current;
 	int                       currentScopeDepth;
 	int                       maxScopeDepth;

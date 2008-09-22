@@ -954,6 +954,7 @@ CppItem& Parser::Item(const String& nesting, const String& item, const String& n
 	if(dobody)
 		current = CppItem();
 	current_key = item;
+	current_name = name;
 	CppNest& n = base->GetAdd(current_nest);
 	n.namespacel = current_namespacel = context.namespacel;
 	CppItem& im = dobody ? current : n.GetAdd(item, name);

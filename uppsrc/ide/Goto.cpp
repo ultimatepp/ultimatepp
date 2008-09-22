@@ -241,8 +241,11 @@ void Ide::SwapS()
 		return;
 	const CppNest& n = BrowserBase()[q];
 	q = n.key.Find(QualifyKey(BrowserBase(), p.current_nest, p.current_key));
-	if(q < 0)
-		return;
+	if(q < 0 || n[q].pos.GetCount() == 1) {
+		q = n.name.Find(p.current_name);
+		if(q < 0)
+			return;
+	}
 	int line = -1;
 	if(p.current.pos.GetCount())
 		line = p.current.pos.Top().line;

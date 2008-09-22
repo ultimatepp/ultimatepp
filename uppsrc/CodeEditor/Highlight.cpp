@@ -79,6 +79,7 @@ struct CodeEditor::HlSt {
 	int                          pos;
 
 	void Set(int pos, int count, const HlStyle& ink);
+	void SetFont(int pos, int count, const HlStyle& f);
 	void SetPaper(int pos, int count, Color paper);
 	void SetInk(int pos, int count, Color ink);
 	void Put(int count, const HlStyle& ink)                  { Set(pos, count, ink); pos += count; }
@@ -112,6 +113,21 @@ void CodeEditor::HlSt::Set(int pos, int count, const HlStyle& ink)
 		if(ink.italic)
 			x.font.Italic();
 		if(ink.underline)
+			x.font.Underline();
+	}
+}
+
+void CodeEditor::HlSt::SetFont(int pos, int count, const HlStyle& f)
+{
+	if(pos + count > v.GetCount())
+		v.At(pos + count - 1, def);
+	while(count-- > 0) {
+		LineEdit::Highlight& x = v[pos++];
+		if(f.bold)
+			x.font.Bold();
+		if(f.italic)
+			x.font.Italic();
+		if(f.underline)
 			x.font.Underline();
 	}
 }
@@ -202,9 +218,11 @@ Color CodeEditor::BlockColor(int level)
 void CodeEditor::Bracket(int pos, HlSt& hls)
 {
 	if(pos == highlight_bracket_pos0 && hilite_bracket
-	   || pos == highlight_bracket_pos && (hilite_bracket == 1 || hilite_bracket == 2 && bracket_flash))
-			hls.SetPaper(hls.pos, 1,
-			             hl_style[pos == highlight_bracket_pos0 ? PAPER_BRACKET0 : PAPER_BRACKET].color);
+	   || pos == highlight_bracket_pos && (hilite_bracket == 1 || hilite_bracket == 2 && bracket_flash)) {
+			HlStyle& h = hl_style[pos == highlight_bracket_pos0 ? PAPER_BRACKET0 : PAPER_BRACKET];
+			hls.SetPaper(hls.pos, 1, h.color);
+			hls.SetFont(hls.pos, 1, h);
+	}
 }
 
 Index<String> CodeEditor::keyword[HIGHLIGHT_COUNT];
