@@ -6,8 +6,8 @@
 
 using namespace Upp;
 
-#define APP_VERSION "1.0.r1"
-#define APP_DATE    Date(2005, 2, 22)
+#define APP_VERSION "1.0.r2"
+#define APP_DATE    Date(2008, 9, 22)
 
 bool service_stopped = false;
 
