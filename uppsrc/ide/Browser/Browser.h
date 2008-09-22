@@ -51,7 +51,7 @@ enum {
 	ITEM_TNAME,
 	ITEM_NUMBER,
 	ITEM_SIGN,
-	ITEM_RET,
+	ITEM_UPP,
 	ITEM_TYPE,
 	ITEM_PTYPE = ITEM_TYPE + 10000,
 };
@@ -63,7 +63,8 @@ struct ItemTextPart : Moveable<ItemTextPart> {
 	int ii;
 };
 
-Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m, const char *natural);
+Vector<ItemTextPart> ParseItemNatural(const String& name, const CppSimpleItem& m, const char *natural);
+Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
 Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
 
 bool SplitNestKey(const String& s, String& nest, String& key);
@@ -353,11 +354,13 @@ protected:
 
 	void   Tools(Bar& bar);
 	void   Label(String&);
-	void   CreateQtf(const String& item, const CppItemInfo& m, String& p1, String& p2);
+	void   CreateQtf(const String& item, const String& name, const CppSimpleItem& m, String& p1, String& p2);
 	void   InsertItem();
 
 	void   FindBrokenRef();
 	void   JumpToDefinition();
+
+	void   FixTopic();
 
 public:
 	Callback1<Bar&> WhenTemplatesMenu;

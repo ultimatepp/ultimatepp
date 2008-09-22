@@ -174,6 +174,10 @@ void TopicCtrl::SyncDocTree()
 						}
 						else {
 							if(otherfirst) {
+								if(usedfirst) {
+									usid = AddTree(0, IdeImg::Package(), Null, "Used packages");
+									usedfirst = false;
+								}
 								otid = AddTree(0, IdeImg::Package(), Null, "Other packages");
 								otherfirst = false;
 							}
@@ -520,10 +524,8 @@ struct HelpModule : public IdeModule {
 		if(IsHelpName(path)) {
 			topic_serial++;
 			GetRefLinks("");
-			if(ide->doc.GetCurrent().IsEmpty()) {
-				ide->doc.SyncDocTree();
-				ide->doc.GoTo(Nvl(recent_topic, sTopicHome));
-			}
+			ide->doc.SyncDocTree();
+			ide->doc.GoTo(Nvl(recent_topic, sTopicHome));
 			HelpDes *d = new HelpDes;
 			d->topic = &ide->doc;
 			return d;

@@ -10,6 +10,29 @@ NAMESPACE_UPP
 #define LLOG(x)
 #define LTIMING(x)  // RTIMING(x)
 
+class Nestfo {
+	bool           bvalid, nvalid;
+	Vector<String> baselist;
+	Vector<String> nests;
+	int            nesti;
+	void           Bases(int i, Vector<int>& g);
+	void           Init();
+
+public:
+	const CppBase&            base;
+	VectorMap<String, String> cache;
+
+	const Vector<String>& GetBases();
+	const Vector<String>& GetNests();
+	int                   GetNest() const               { return nesti; }
+	void                  NoBases()                     { baselist.Clear(); bvalid = true; }
+
+	Nestfo(const CppBase& base, int nesti = -1);
+	Nestfo(int nesti, const CppBase& base);
+	Nestfo(const CppBase& base, const String& nest);
+	Nestfo(const Nestfo& f);
+};
+
 void CppWordsHash::AddWord(const String& s)
 {
 	int i = GetHashValue(s) & 127;
@@ -160,6 +183,8 @@ const Vector<String>& Nestfo::GetNests()
 	return nests;
 }
 
+String Qualify(Nestfo& nf, const String& type);
+
 String Qualify0(Nestfo& nf, const String& type)
 {
 	if(IsNull(type) || type == "const" ||
@@ -228,7 +253,7 @@ String Qualify(Nestfo& nf, const String& type)
 	return x;
 }
 
-String QualifyIds(Nestfo& nf, const String& k, CppWordsHash& w)
+String QualifyIds(Nestfo& nf, const String& k, CppWordsHash& w, bool all)
 {
 	String r;
 	CParser p(k);
@@ -245,7 +270,8 @@ String QualifyIds(Nestfo& nf, const String& k, CppWordsHash& w)
 				}
 			}
 			Nestfo nnf(nf.GetNest(), nf.base);
-			t = Qualify(nnf, t);
+			if(all)
+				t = Qualify(nnf, t);
 			if(iscid(*r.Last()) && iscid(*t))
 				r << ' ';
 			r << t;
@@ -262,13 +288,16 @@ String QualifyIds(Nestfo& nf, const String& k, CppWordsHash& w)
 					t << id;
 				}
 			}
-			t = Qualify(nf, t);
+			if(all)
+				t = Qualify(nf, t);
 			if(iscid(*r.Last()) && iscid(*t))
 				r << ' ';
 			r << t;
 		}
 		else {
 			int c = p.GetChar();
+			if(c == '(')
+				all = true;
 			r.Cat(c);
 			p.Spaces();
 		}
@@ -280,20 +309,20 @@ String Qualify(const CppBase& base, const String& nest, const String& type)
 {
 	CppWordsHash dummy;
 	Nestfo nf(base, nest);
-	return QualifyIds(nf, type, dummy);
+	return QualifyIds(nf, type, dummy, true);
 }
 
 String QualifyKey(const CppBase& base, const String& nest, const String& type)
 {
 	CppWordsHash dummy;
 	Nestfo nf(base, nest);
-	return QualifyIds(nf, type, dummy);
+	return QualifyIds(nf, type, dummy, false);
 }
 
 void QualifyTypes(Nestfo& nf, CppItem& m)
 {
-	m.qtype = QualifyIds(nf, m.type, m.words);
-	m.qptype = QualifyIds(nf, m.ptype, m.words);
+	m.qtype = QualifyIds(nf, m.type, m.words, true);
+	m.qptype = QualifyIds(nf, m.ptype, m.words, true);
 }
 
 void QualifyTypes(CppBase& base, const String& nest, CppItem& m)
@@ -332,7 +361,7 @@ void QualifyPass2(CppBase& base, const CppWordsHash& words)
 				QualifyTypes(nf, m);
 				if(m.IsCode()) {
 					String k = n.key[i];
-					String r = QualifyIds(nf, m.key, m.words);
+					String r = QualifyIds(nf, m.key, m.words, false);
 					if(k != r) {
 						int q = n.key.Find(r);
 						if(q >= 0 && q != i)
@@ -395,7 +424,7 @@ void Remove(CppBase& base, const Vector<String>& pf)
 void CppItem::Serialize(Stream& s)
 {
 	s % kind % access;
-	s % natural % at % tparam % param % pname % tname % type % ptype % virt % key;
+	s % natural % at % tparam % param % pname % tname % ctname % type % ptype % virt % key;
 }
 
 END_UPP_NAMESPACE

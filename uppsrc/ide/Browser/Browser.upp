@@ -11,6 +11,7 @@ file
 	Browser readonly separator,
 	Lay.cpp,
 	Base.cpp optimize_speed,
+	Item.cpp,
 	ItemList.cpp,
 	Query.cpp,
 	Browser.cpp,

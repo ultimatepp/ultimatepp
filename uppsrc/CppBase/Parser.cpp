@@ -19,14 +19,34 @@ inline const char *bew(const char *s, const char *t)
 	return t;
 }
 
+static String s_operator("operator");
+static String s_virtual("virtual");
+static String s_inline("inline");
+static String s_static("static");
+
+static inline bool sSpaces(String& res, const char *& s)
+{
+	if((byte)*s <= ' ') {
+		char c = *s++;
+		if(c != '\2') {
+			res.Cat(' ');
+			while((byte)*s <= ' ' && *s)
+				s++;
+		}
+		return true;
+	}
+	return false;
+}
+
 String FnItem(const char *s, const char *pname, const char *qname, const String& name) {
 	String res;
+	while(*s && (byte)*s <= ' ') s++;
 	while(*s) {
 		while(*s && !iscid(*s) && *s != '~')
 			s++;
 		while(iscid(*s) || *s == '~')
 			res.Cat(*s++);
-		if(res == "operator") {
+		if(res == s_operator) {
 			while(*s && *s != '(') {
 				if((byte)*s >= ' ')
 					res.Cat(*s);
@@ -42,6 +62,7 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 	}
 	while(*s) {
 		const char *w = bew(qname, s);
+		byte c = *s;
 		if(w && !iscid(*w)) {
 			if(iscid(*res.Last()))
 				res.Cat(' ');
@@ -49,11 +70,11 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 			s = w;
 		}
 		else
-		if(iscid(*s)) {
-			String q;
-			while(iscid(*s))
-				q.Cat(*s++);
-			if(q != "virtual" && q != "inline" && q != "static" && !InScList(q, pname)) {
+		if(iscid(c)) {
+			const char *b = s++;
+			while(iscid(*s)) s++;
+			String q(b, s);
+			if(q != s_virtual && q != s_inline && q != s_static && !InScList(q, pname)) {
 				if(iscid(*res.Last()))
 					res.Cat(' ');
 				res.Cat(q);
@@ -62,7 +83,7 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 				while((byte)*s <= ' ' && *s) s++;
 		}
 		else
-		if(*s == '=') {
+		if(c == '=') {
 			s++;
 			int l = 0;
 			while(*s && !(l == 0 && (*s == ',' || *s == ')'))) {
@@ -80,14 +101,17 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 			while((byte)*s <= ' ' && *s)
 				s++;
 		}
-		else
-			res.Cat(*s++);
+		else {
+			res.Cat(c);
+			s++;
+		}
 	}
 	return res;
 }
 
 String Purify(const char *s, const char *qname, const String& name) {
 	String res;
+	while(*s && (byte)*s <= ' ') s++;
 	while(*s) {
 		const char *w = bew(qname, s);
 		if(w) {
@@ -96,22 +120,16 @@ String Purify(const char *s, const char *qname, const String& name) {
 		}
 		else
 		if(iscid(*s)) {
-			String q(*s++, 1); //!!! speed up!
-			while(iscid(*s))
-				q.Cat(*s++);
-			if(q != "virtual" && q != "inline" && q != "static")
+			const char *b = s++;
+			while(iscid(*s)) s++;
+			String q(b, s);
+			if(q != s_virtual && q != s_inline && q != s_static)
 				res.Cat(q);
 			else
 				while((byte)*s <= ' ' && *s) s++;
 		}
 		else
-		if((byte)*s <= ' ') {
-			s++;
-			res.Cat(' ');
-			while((byte)*s <= ' ' && *s)
-				s++;
-		}
-		else
+		if(!sSpaces(res, s))
 			res.Cat(*s++);
 	}
 	return TrimRight(res);
@@ -119,27 +137,31 @@ String Purify(const char *s, const char *qname, const String& name) {
 
 String Purify(const char *s) {
 	String res;
+	while(*s && (byte)*s <= ' ') s++;
 	while(*s) {
 		if(iscid(*s)) {
-			String q(*s++, 1); //!!! speed up!
-			while(iscid(*s))
-				q.Cat(*s++);
-			if(q != "virtual" && q != "inline")
+			const char *b = s++;
+			while(iscid(*s)) s++;
+			String q(b, s);
+			if(q != s_virtual && q != s_inline)
 				res.Cat(q);
 			else
 				while((byte)*s <= ' ' && *s) s++;
 		}
 		else
-		if((byte)*s <= ' ') {
-			s++;
-			res.Cat(' ');
-			while((byte)*s <= ' ' && *s)
-				s++;
-		}
-		else
+		if(!sSpaces(res, s))
 			res.Cat(*s++);
 	}
 	return TrimRight(res);
+}
+
+String Gpurify(const char *s)
+{
+	String res;
+	while(*s)
+		if(!sSpaces(res, s))
+			res.Cat(*s++);
+	return res;
 }
 
 void ScAdd(String& s, const String& a)
@@ -172,6 +194,7 @@ void Parser::Context::operator<<=(const Context& t)
 	access = t.access;
 	noclass = t.noclass;
 	namespacel = t.namespacel;
+	ctname = t.ctname;
 }
 
 Parser::Decla::Decla()
@@ -935,10 +958,12 @@ CppItem& Parser::Item(const String& nesting, const String& item, const String& n
 	n.namespacel = current_namespacel = context.namespacel;
 	CppItem& im = dobody ? current : n.GetAdd(item, name);
 	im.key = item;
+	im.ctname = context.ctname;
 	CppPos& p = im.pos.Add();
 	p.file = filei;
 	p.line = line + 1;
 	p.impl = impl;
+	LLOG("New item " << GetCppFile(filei) << ' ' << line + 1 << "    " << nesting << "::" << item);
 	return im;
 }
 
@@ -1059,6 +1084,11 @@ bool Parser::Nest(const String& tp, const String& tn) {
 		while(Key(t_dblcolon));
 		context.access = t == tk_class ? PRIVATE : PUBLIC;
 		context.noclass = false;
+		if(tn.GetCount()) {
+			if(context.ctname.GetCount())
+				context.ctname << ';';
+			context.ctname << tn;
+		}
 		String nn;
 		if(!tp.IsEmpty())
 			nn = "template " + tp + " ";
@@ -1105,12 +1135,12 @@ bool Parser::Nest(const String& tp, const String& tn) {
 		}
 		if(Key('{')) {
 			NestBody();
-			im.natural = nn;
+			im.natural = Gpurify(nn);
 			im.decla = true;
 		}
 		else
 			if(IsNull(im.natural))
-				im.natural = nn;
+				im.natural = Gpurify(nn);
 		context = cc;
 		CheckKey(';');
 		SetNestCurrent();
@@ -1125,7 +1155,8 @@ String DeTemp(const char *s)
 	return r;
 }
 
-CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind)
+CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
+                    const String& tname, const String& tparam)
 {
 	String param;
 	String pname;
@@ -1171,7 +1202,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind)
 	if(!body || IsNull(im.natural)) {
 		im.natural.Clear();
 		if(!IsNull(templ)) {
-			im.natural = templ;
+			im.natural = TrimRight(Gpurify(templ)) + ' ';
 			im.at = im.natural.GetLength();
 		}
 		im.natural << Purify(d.natural, d.name, nm);
@@ -1183,6 +1214,9 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind)
 		im.virt = d.s_virtual;
 		im.type = d.type;
 		im.decla = true;
+		im.tname = tname;
+		im.tparam = tparam;
+		im.ctname = context.ctname;
 		LLOG("FnItem: " << nesting << "::" << item << ", natural: " << im.natural);
 	}
 	return im;
@@ -1241,9 +1275,8 @@ void Parser::Do()
 						CppItem& m = Fn(d, "template " + tparam + ' ', body,
 						                context.noclass ? FUNCTIONTEMPLATE :
 								        d.s_static ? CLASSFUNCTIONTEMPLATE :
-								                     INSTANCEFUNCTIONTEMPLATE);
-						m.tname = tnames;
-						m.tparam = CleanTp(tparam);
+								                     INSTANCEFUNCTIONTEMPLATE,
+								        tnames, tparam);
 						functionItem = &m;
 					}
 				}
@@ -1346,7 +1379,8 @@ void Parser::Do()
 						  Fn(d, Null, body, d.istructor ? (d.isdestructor ? DESTRUCTOR : CONSTRUCTOR) :
 						                    d.isfriend ? INLINEFRIEND :
 						                    context.noclass ? FUNCTION :
-						                    d.s_static ? CLASSFUNCTION : INSTANCEFUNCTION);
+						                    d.s_static ? CLASSFUNCTION : INSTANCEFUNCTION,
+						                    String(), String());
 						functionItem = &im;
 					}
 					else {

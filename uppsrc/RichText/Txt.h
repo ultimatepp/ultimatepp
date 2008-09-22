@@ -124,9 +124,6 @@ protected:
 
 	void       Put(int i, const RichPara& p, const RichStyle& s);
 	void       Put(int i, const RichPara& p, const RichStyles& s);
-	int        GetPartLength(int pi) const;
-	int        FindPart(int& pos) const;
-	int        GetPartPos(int pi) const;
 
 	void        Sync0(const Para& pp, int parti, const RichContext& rc) const;
 	inline void Sync(int parti, const RichContext& rc) const {
@@ -188,15 +185,19 @@ protected:
 public:
 	enum ValPosType { LABELS, INDEXENTRIES };
 
+	int                   GetPartCount() const                 { return part.GetCount(); }
+	bool                  IsPara(int i) const                  { return part[i].Is<Para>(); }
+	bool                  IsTable(int i) const;
+	int                   GetPartLength(int pi) const;
+	int                   FindPart(int& pos) const;
+	int                   GetPartPos(int pi) const;
+
 	RichPara              Get(int i, const RichStyles& s) const;
 	RichPara              Get(int i, const Uuid& styleid, const RichStyles& s) const;
 	RichPara              Get(int i, const RichStyle& style) const;
 	Uuid                  GetParaStyle(int i) const            { return part[i].Get<Para>().styleid; }
 	void                  SetParaStyle(int i, const Uuid& si);
 
-	int                   GetPartCount() const                 { return part.GetCount(); }
-	bool                  IsPara(int i) const                  { return part[i].Is<Para>(); }
-	bool                  IsTable(int i) const;
 	const RichTable&      GetTable(int i) const;
 
 	int                   GetLength() const;
@@ -215,6 +216,8 @@ public:
 	void                  Set(int parai, const RichPara& p, const RichStyles& s);
 	void                  Insert(int parai, const RichPara& p, const RichStyles& s);
 	void                  Cat(const RichPara& p, const RichStyles& s) { Set(GetPartCount(), p, s); }
+
+	void                  RemovePart(int parti);
 
 	void                  Normalize();
 

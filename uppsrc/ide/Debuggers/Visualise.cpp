@@ -62,7 +62,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 			else {
 				String x = ReadString(val.address, slen + 1);
 				String dt;
-				if(x.GetLength() > (IsOk(x) ? slen : 10)) {
+				if(x.GetLength() > (IsOk(x) ? slen : 20)) {
 					x.Trim(x.GetLength() - 1);
 					dt = "..";
 				}
@@ -126,7 +126,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 		Val r = t.member[i];
 		r.address += val.address;
 		try {
-			Visualise(result, r, max(expandptr - 1, 0), 20, maxlen);
+			Visualise(result, r, max(expandptr - 1, 0), 32, maxlen);
 		}
 		catch(CParser::Error e) {
 			result.Cat(e, SColorDisabled);
@@ -143,7 +143,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 		result.Cat(t.static_member.GetKey(i));
 		result.Cat("=", SColorMark);
 		try {
-			Visualise(result, t.static_member[i], max(expandptr - 1, 0), 20, maxlen);
+			Visualise(result, t.static_member[i], max(expandptr - 1, 0), 32, maxlen);
 		}
 		catch(CParser::Error e) {
 			result.Cat(e, SColorDisabled);

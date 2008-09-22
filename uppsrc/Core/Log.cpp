@@ -198,10 +198,10 @@ void LogStream::Flush()
 void LogStream::Put0(int w)
 {
 	if(w == LOG_BEGIN)
-		depth++;
+		depth = min(depth + 1, 20);
 	else
 	if(w == LOG_END)
-		depth--;
+		depth = max(depth - 1, 0);
 	else {
 		if(bol) {
 			bol = false;
