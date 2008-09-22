@@ -1,12 +1,55 @@
 #include <Web/Web.h>
 
+#ifdef PLATFORM_WIN32
+#include <wincon.h>
+#endif
+
 using namespace Upp;
 
 #define APP_VERSION "1.0.r1"
 #define APP_DATE    Date(2005, 2, 22)
 
+bool service_stopped = false;
+
+#ifdef PLATFORM_WIN32
+static BOOL WINAPI EventHandler(DWORD CtrlType)
+{
+	RLOG("EventHandler (CtrlType = " << (int)CtrlType << ")");
+	if(CtrlType == CTRL_LOGOFF_EVENT)
+		RLOG("LOGOFF_EVENT (ignored)");
+	else {
+		RLOG("exiting");
+		service_stopped = true;
+	}
+	return true;
+}
+
+void InstallSignalHandler()
+{
+	SetConsoleCtrlHandler(&EventHandler, true);
+}
+#endif
+
+#ifdef PLATFORM_POSIX
+static void QuitSignal(int signal)
+{
+	RLOG("Received signal " << signal << ", quitting...");
+	service_stopped = true;
+}
+
+void InstallSignalHandler()
+{
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGINT, &QuitSignal);
+	signal(SIGTERM, &QuitSignal);
+	signal(SIGKILL, &QuitSignal);
+}
+#endif
+
 CONSOLE_APP_MAIN
 {
+	InstallSignalHandler();
+	
 	HttpServer server;
 	int next_id = 0;
 	server.Logging();
@@ -22,7 +65,8 @@ CONSOLE_APP_MAIN
 		return;
 	}
 
-	for(;;) {
+	while(!service_stopped) {
+		server.DelayedWrite();
 		server.Wait(1000);
 		if(server.IsError()) {
 			puts("Server error: " + Socket::GetErrorText());
