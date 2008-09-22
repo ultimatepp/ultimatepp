@@ -143,6 +143,12 @@ void RichTxt::Insert(int i, const RichPara& p, const RichStyles& s)
 	Set(i, p, s);
 }
 
+void RichTxt::RemovePart(int parti)
+{
+	part.Remove(parti);
+	Invalidate();
+}
+
 void RichTxt::SetPick(int i, pick_ RichTable& p)
 {
 	const_cast<RichTable&>(p).Normalize();

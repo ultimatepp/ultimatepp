@@ -237,6 +237,7 @@ struct CppPos : Moveable<CppPos> {
 
 struct CppSimpleItem {
 	String         natural;
+	
 	String         type;
 	String         qtype;
 	String         tparam;
@@ -245,6 +246,7 @@ struct CppSimpleItem {
 	String         ptype;
 	String         qptype;
 	String         tname;
+	String         ctname;
 	byte           access;
 	byte           kind;
 	int16          at;
@@ -301,6 +303,7 @@ class Parser {
 	struct Context {
 		int         namespacel;
 		String      nesting;
+		String      ctname;
 		Vector<int> tparam;
 		Index<int>  typenames;
 		int         access;
@@ -403,7 +406,7 @@ class Parser {
 	CppItem& Item(const String& nesting, const String& item, const String& name, bool impl);
 	CppItem& Item(const String& nesting, const String& item, const String& name);
 
-	CppItem& Fn(const Decl& d, const String& templ, bool body, int kind);
+	CppItem& Fn(const Decl& d, const String& templ, bool body, int kind, const String& tname, const String& tparam);
 
 	struct Error {};
 
@@ -454,30 +457,6 @@ public:
 
 String NoTemplatePars(const String& type);
 
-class Nestfo {
-	bool           bvalid, nvalid;
-	Vector<String> baselist;
-	Vector<String> nests;
-	int            nesti;
-	void           Bases(int i, Vector<int>& g);
-	void           Init();
-
-public:
-	const CppBase&            base;
-	VectorMap<String, String> cache;
-
-	const Vector<String>& GetBases();
-	const Vector<String>& GetNests();
-	int                   GetNest() const               { return nesti; }
-	void                  NoBases()                     { baselist.Clear(); bvalid = true; }
-
-	Nestfo(const CppBase& base, int nesti = -1);
-	Nestfo(int nesti, const CppBase& base);
-	Nestfo(const CppBase& base, const String& nest);
-	Nestfo(const Nestfo& f);
-};
-
-String Qualify(Nestfo& nf, const String& type);
 String Qualify(const CppBase& base, const String& nest, const String& type);
 void   QualifyTypes(CppBase& base, const String& nest, CppItem& m);
 String QualifyKey(const CppBase& base, const String& nest, const String& type);

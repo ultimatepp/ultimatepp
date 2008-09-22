@@ -1,5 +1,18 @@
 #include "Browser.h"
 
+#define CODEITEM  "37138531426314131252341829483370"
+#define STRUCTITEM "37138531426314131252341829483380"
+
+static const char styles[] =
+	"[ $$0,0#00000000000000000000000000000000:Default]"
+	"[i448;a25;kKO9;2 $$1,0#" CODEITEM ":codeitem]"
+	"[i448;a25;kKO9;3 $$2,0#" STRUCTITEM ":structitem]"
+	"[l288;2 $$3,0#27521748481378242620020725143825:desc]"
+	"[H6;0 $$4,0#05600065144404261032431302351956:begin]"
+	"[l288;a25;kK~~~.1408;@3;2 $$5,0#61217621437177404841962893300719:param]"
+	"[0 $$7,0#96390100711032703541132217272105:end]"
+;
+
 void TopicEditor::JumpToDefinition()
 {
 	PostCallback(callback1(IdeGotoLink, editor.GetFormatInfo().label));
@@ -19,46 +32,42 @@ void TopicEditor::Label(String& label)
 	label = ref.Get();
 }
 
-struct FindBrokenRefIterator : RichText::Iterator {
-	int cursor;
-
-	virtual bool operator()(int pos, const RichPara& para)
-	{
-		if(pos >= cursor && para.format.label[0] == ':' && para.format.label[1] == ':') {
-			String nest;
-			String key;
-			if(para.GetLength() && SplitNestKey(para.format.label, nest, key)) {
-				int q = BrowserBase().Find(nest);
-				if(q >= 0 && BrowserBase()[q].key.Find(key) >= 0)
-					return false;
-			}
-			cursor = pos;
-			return true;
-		}
-		return false;
-	}
-};
-
 void TopicEditor::FindBrokenRef()
 {
-	Progress pi;
-	pi.SetTotal(topic.GetCount());
+	Uuid codeitem = ScanUuid(CODEITEM);
+	Uuid stritem = ScanUuid(STRUCTITEM);
 	for(;;) {
 		if(IsNull(topicpath))
 			return;
-		pi.SetText(GetFileTitle(topicpath));
-		pi.SetPos(topic.GetCursor());
-		FindBrokenRefIterator fi;
-		fi.cursor = editor.GetCursor();
-		if(editor.Get().Iterate(fi)) {
-			editor.Move(fi.cursor);
-			break;
+		const RichText& txt = editor.Get();
+		int c = editor.GetCursor();
+		int i = txt.FindPart(c);
+		while(++i < txt.GetPartCount()) {
+			if(txt.IsPara(i)) {
+				Uuid style = txt.GetParaStyle(i);
+				if(style == codeitem || style == stritem) {
+					RichPara para = txt.Get(i);
+					if(para.format.label == "noref")
+						continue;
+					if(!IsNull(para.format.label)) {
+						String nest;
+						String key;
+						if(SplitNestKey(para.format.label, nest, key)) {
+							int q = BrowserBase().Find(nest);
+							if(q >= 0 || BrowserBase()[q].key.Find(key) >= 0)
+								continue;
+						}
+					}
+					editor.Move(txt.GetPartPos(i));
+					return;
+				}
+			}
 		}
 		if(!topic.IsCursor())
 			break;
-		int c = topic.GetCursor() + 1;
+		c = topic.GetCursor() + 1;
 		if(c >= topic.GetCount()) {
-			PromptOK("No more broken references.");
+			PromptOK("No more invalid references.");
 			break;
 		}
 		topic.SetCursor(c);
@@ -140,10 +149,10 @@ static int sSplitT(int c) {
 	return c == ';' || c == '<' || c == '>' || c == ',';
 }
 
-String DecoratedItem(const CppItemInfo& m, const char *natural)
+String DecoratedItem(const String& name, const CppSimpleItem& m, const char *natural)
 {
 	String qtf = "[%00-00K ";
-	Vector<ItemTextPart> n = ParseItemNatural(m, natural);
+	Vector<ItemTextPart> n = ParseItemNatural(name, m, natural);
 	if(m.virt)
 		qtf << "[@B virtual] ";
 	if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
@@ -165,6 +174,9 @@ String DecoratedItem(const CppItemInfo& m, const char *natural)
 		case ITEM_NAME:
 			qtf << "*";
 			break;
+		case ITEM_UPP:
+			qtf << "@c";
+			break;
 		case ITEM_CPP_TYPE:
 		case ITEM_CPP:
 			qtf << "@B";
@@ -185,24 +197,16 @@ String DecoratedItem(const CppItemInfo& m, const char *natural)
 	return qtf + "]";
 }
 
-static const char styles[] =
-	"[ $$0,0#00000000000000000000000000000000:Default]"
-	"[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483370:item]"
-	"[i448;a25;kKO9;3 $$2,0#37138531426314131252341829483380:class]"
-	"[l288;2 $$3,0#27521748481378242620020725143825:desc]"
-	"[H6;0 $$4,0#05600065144404261032431302351956:begin]"
-	"[l288;a25;kK~~~.1408;@3;2 $$5,0#61217621437177404841962893300719:param]"
-	"[0 $$7,0#96390100711032703541132217272105:end]"
-;
-
-void TopicEditor::CreateQtf(const String& item, const CppItemInfo& m, String& p1, String& p2)
+void TopicEditor::CreateQtf(const String& item, const String& name, const CppSimpleItem& m,
+                            String& p1, String& p2)
 {
 	String qtf;
 	bool str = m.kind == STRUCT || m.kind == STRUCTTEMPLATE;
 	if(!str)
 		qtf << "[s4 &]";
-	qtf << (str ? "[s2;:" : "[s1;:") << DeQtf(item) << ": ";
-	if(m.IsTemplate()) {
+	String st = str ? "[s2;" : "[s1;";
+	String k = st + ':' + DeQtf(item) + ": ";
+	if(m.IsTemplate() && str) {
 		int q = 0;
 		int w = 0;
 		while(q < m.natural.GetLength()) {
@@ -217,15 +221,15 @@ void TopicEditor::CreateQtf(const String& item, const CppItemInfo& m, String& p1
 			}
 			q++;
 		}
-		qtf << DecoratedItem(m, m.natural.Mid(0, q));
+		qtf << "[s2:noref: " << DecoratedItem(name, m, m.natural.Mid(0, q)) << "&][s2 " << k;
 		if(q < m.natural.GetLength()) {
 			while((byte)m.natural[q] <= 32)
 				q++;
-			qtf << '&' << DecoratedItem(m, m.natural.Mid(q));
+			qtf << DecoratedItem(name, m, m.natural.Mid(q));
 		}
 	}
 	else
-		qtf << DecoratedItem(m, m.natural);
+		qtf << k << DecoratedItem(name, m, m.natural);
 
 	qtf << "&]";
 	p1 = qtf;
@@ -283,14 +287,17 @@ void TopicEditor::InsertItem()
 		for(int i = 0; i < ref.browser.item.GetCount(); i++)
 			if(ref.browser.item.IsSelected(i)) {
 				String a1, a2;
-				CreateQtf(ref.browser.GetItem(i), ref.browser.GetItemInfo(i), a1, a2);
+				const CppItemInfo& m = ref.browser.GetItemInfo(i);
+				CreateQtf(ref.browser.GetItem(i), m.name, m, a1, a2);
 				p1 << p2 << a1;
 				p2 = a2;
 			}
 	}
 	else
-	if(ref.browser.item.IsCursor())
-		CreateQtf(ref.browser.GetItem(), ref.browser.GetItemInfo(), p1, p2);
+	if(ref.browser.item.IsCursor()) {
+		const CppItemInfo& m = ref.browser.GetItemInfo();
+		CreateQtf(ref.browser.GetItem(), m.name, m, p1, p2);
+	}
 	else
 		return;
 	editor.BeginOp();
@@ -300,6 +307,66 @@ void TopicEditor::InsertItem()
 	editor.PasteText(ParseQTF(styles + p2));
 	editor.Move(a);
 	editor.Move(c);
+}
+
+void   TopicEditor::FixTopic()
+{
+	String nest;
+	if(!EditText(nest, "Fix topic", "Nest"))
+		return;
+	if(nest[0] != ':')
+		nest = "::" + nest;
+	CppBase& base = BrowserBase();
+	int q = base.Find(nest);
+	if(q < 0) {
+		Exclamation("Nest not found");
+		return;
+	}
+	CppNest& n = base[q];
+	Index<String> natural;
+	Vector<String> link;
+	for(int i = 0; i < n.GetCount(); i++) {
+		const CppItem& m = n[i];
+		natural.Add(m.natural);
+		link.Add(nest + "::" + n.key[i]);
+	}
+	RichText result;
+	const RichText& txt = editor.Get();
+	bool started = false;
+	for(int i = 0; i < txt.GetPartCount(); i++)
+		if(txt.IsPara(i)) {
+			RichPara p = txt.Get(i);
+			WString h = p.GetText();
+			String nat;
+			for(const wchar *s = h; *s; s++)
+				if((byte )*s < 128 || *s == 160)
+					nat.Cat(*s == 160 ? ' ' : *s);
+			int q = natural.Find(nat);
+			if(q >= 0) {
+				started = true;
+				const CppSimpleItem& m = n[q];
+				String p1, p2;
+				CreateQtf(link[q], n.name[q], m, p1, p2);
+				p1 = "[s7; &]" + p1;
+				RichText h = ParseQTF(styles + p1);
+				if(h.GetPartCount())
+					h.RemovePart(h.GetPartCount() - 1);
+				result.CatPick(h);
+			}
+			else
+			if(!started || p.GetLength())
+				result.Cat(p);
+		}
+		else {
+			RichTable b;
+			b <<= txt.GetTable(i);
+			result.CatPick(b);
+		}
+	RichPara empty;
+	result.Cat(empty);
+	editor.BeginOp();
+	editor.SetSelection(0, txt.GetLength());
+	editor.PasteText(result);
 }
 
 String TopicEditor::GetFileName() const

@@ -329,18 +329,6 @@ void RichQtfParser::Error(const char *s) {
 	throw Exc();
 }
 
-dword scanX(const char *s)
-{
-	dword r = 0;
-	for(int i = 0; i < 8; i++) {
-		r = (r << 4) | (*s >= '0' && *s <= '9' ? *s - '0' :
-		                *s >= 'A' && *s <= 'F' ? *s - 'A' :
-		                *s >= 'a' && *s <= 'f' ? *s - 'a' : 0);
-		s++;
-	}
-	return r;
-}
-
 void RichQtfParser::FlushStyles()
 {
 	for(int i = 0; i < styleid.GetCount(); i++)
@@ -852,10 +840,7 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 					xu.Cat(*term++);
 				if(xu.GetLength() != 32)
 					Error("Invalid UUID !");
-				id.a = scanX(~xu);
-				id.b = scanX(~xu + 8);
-				id.c = scanX(~xu + 16);
-				id.d = scanX(~xu + 24);
+				id = ScanUuid(xu);
 			}
 			else
 				if(i)

@@ -19,6 +19,7 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 };
 
 String Format(const Uuid& id);
+Uuid   ScanUuid(const char *s);
 
 inline bool  operator==(const Uuid& u, const Uuid& w) {
 	return ((u.a ^ w.a) | (u.b ^ w.b) | (u.c ^ w.c) | (u.d ^ w.d)) == 0;

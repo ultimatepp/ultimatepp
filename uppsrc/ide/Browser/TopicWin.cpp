@@ -330,6 +330,9 @@ void TopicEditor::SetBar()
 bool TopicEditor::Key(dword key, int cnt)
 {
 	switch(key) {
+	case K_ALT_F10:
+		FixTopic();
+		return true;
 	case K_ALT_UP:
 		return topic.Key(K_UP, 0);
 	case K_ALT_DOWN:
