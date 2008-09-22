@@ -333,28 +333,48 @@ void   TopicEditor::FixTopic()
 	RichText result;
 	const RichText& txt = editor.Get();
 	bool started = false;
+
+	int l, h;
+	if(editor.GetSelection(l, h)) {
+		l = txt.FindPart(l);
+		h = txt.FindPart(h);
+	}
+	else {
+		l = 0;
+		h = txt.GetPartCount();
+	}
+
 	for(int i = 0; i < txt.GetPartCount(); i++)
 		if(txt.IsPara(i)) {
 			RichPara p = txt.Get(i);
-			WString h = p.GetText();
-			String nat;
-			for(const wchar *s = h; *s; s++)
-				if((byte )*s < 128 || *s == 160)
-					nat.Cat(*s == 160 ? ' ' : *s);
-			int q = natural.Find(nat);
-			if(q >= 0) {
-				started = true;
-				const CppSimpleItem& m = n[q];
-				String p1, p2;
-				CreateQtf(link[q], n.name[q], m, p1, p2);
-				p1 = "[s7; &]" + p1;
-				RichText h = ParseQTF(styles + p1);
-				if(h.GetPartCount())
-					h.RemovePart(h.GetPartCount() - 1);
-				result.CatPick(h);
+			if(i >= l && i < h) {
+				WString h = p.GetText();
+				String nat;
+				const wchar *s = h;
+				while(*s)
+					if(*s == 160 || *s == ' ') {
+						nat.Cat(' ');
+						while(*s == 160 || *s == ' ') s++;
+					}
+					else
+						nat.Cat(*s++);
+				int q = natural.Find(nat);
+				if(q >= 0) {
+					started = true;
+					const CppSimpleItem& m = n[q];
+					String p1, p2;
+					CreateQtf(link[q], n.name[q], m, p1, p2);
+					p1 = "[s7; &]" + p1;
+					RichText h = ParseQTF(styles + p1);
+					if(h.GetPartCount())
+						h.RemovePart(h.GetPartCount() - 1);
+					result.CatPick(h);
+				}
+				else
+				if(!started || p.GetLength())
+					result.Cat(p);
 			}
 			else
-			if(!started || p.GetLength())
 				result.Cat(p);
 		}
 		else {
