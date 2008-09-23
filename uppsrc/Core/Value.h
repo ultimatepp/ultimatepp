@@ -230,7 +230,6 @@ struct StdValueOrder : ValueOrder {
 	virtual bool operator()(const Value& a, const Value& b) const;
 
 	StdValueOrder(int l = -1);
-	virtual ~StdValueOrder();
 };
 
 struct FnValueOrder : ValueOrder {
@@ -238,8 +237,28 @@ struct FnValueOrder : ValueOrder {
 
 	virtual bool operator()(const Value& a, const Value& b) const;
 
-	FnValueOrder(int (*fn)(const Value& a, const Value& b));
-	virtual ~FnValueOrder();
+	FnValueOrder(int (*fn)(const Value& a, const Value& b)) : fn(fn) {}
+};
+
+struct ValuePairOrder {
+	virtual bool operator()(const Value& keya, const Value& valuea, const Value& keyb, const Value& valueb) const = 0;
+	virtual ~ValuePairOrder() {}
+};
+
+struct StdValuePairOrder : ValuePairOrder {
+	int language;
+
+	virtual bool operator()(const Value& keya, const Value& valuea, const Value& keyb, const Value& valueb) const;
+
+	StdValuePairOrder(int l = -1);
+};
+
+struct FnValuePairOrder : ValuePairOrder {
+	int (*fn)(const Value& k1, const Value& v1, const Value& k2, const Value& v2);
+
+	virtual bool operator()(const Value& keya, const Value& valuea, const Value& keyb, const Value& valueb) const;
+
+	FnValuePairOrder(int (*fn)(const Value& k1, const Value& v1, const Value& k2, const Value& v2)) : fn(fn) {}
 };
 
 template <class T>

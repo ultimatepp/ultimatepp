@@ -91,7 +91,39 @@ void TopicCtrl::LoadMap()
 		lang.SetIndex(0);
 }
 
-const char *sTopicHome = "\3topic://ide/app/index$en-us";
+static String sTopicHome = "\3topic://ide/app/index$en-us";
+static String s_idehelp = "TheIDE help";
+static String s_usedpackages = "Used packages";
+static String s_otherpackages = "Other packages";
+static String s_documents = "Documents";
+static String s_reference = "Reference";
+static String s_implementation = "Implementation";
+
+inline int sFindN(const String& s)
+{
+	if(s == s_idehelp) return 0;
+	if(s == s_usedpackages) return 1;
+	if(s == s_otherpackages) return 2;
+	if(s == s_documents) return 3;
+	if(s == s_reference) return 4;
+	if(s == s_implementation) return 5;
+	return 6;
+}
+
+int TopicSortOrder(const Value& k1, const Value& v1, const Value& k2, const Value& v2)
+{
+	String s1 = v1;
+	String s2 = v2;
+	bool bk1 = IsNull(k1);
+	bool bk2 = IsNull(k2);
+	int q = (int)bk1 - (int)bk2;
+	if(q) return q;
+	if(bk1) {
+		int q = sFindN(s1) - sFindN(s2);
+		if(q) return q;
+	}
+	return StdValueCompare(v1, v2);
+}
 
 void TopicCtrl::SyncDocTree()
 {
@@ -107,19 +139,19 @@ void TopicCtrl::SyncDocTree()
 
 	ClearTree();
 
-	String hdx = sTopicHome + 1;
+	String hdx = sTopicHome.Mid(1);
 	if(idelink.GetCount() == 0)
 		GatherLinks(idelink, hdx);
 	int ide;
 	bool idefirst = true;
 	if(MatchTopicLink(hdx, sdx)) {
-		ide = AddTree(0, IdeImg::Package(), "\3" + hdx, "TheIDE help");
+		ide = AddTree(0, IdeImg::Package(), "\3" + hdx, s_idehelp);
 		idefirst = false;
 	}
 	for(int i = 0; i < idelink.GetCount(); i++) {
 		if(idelink[i] != hdx && MatchTopicLink(idelink[i], sdx)) {
 			if(idefirst) {
-				ide = AddTree(0, IdeImg::Package(), "\3" + hdx, "TheIDE help");
+				ide = AddTree(0, IdeImg::Package(), "\3" + hdx, s_idehelp);
 				idefirst = false;
 			}
 			AddTree(ide, TopicImg::Topic(), "\3" + idelink[i], GetTopic(idelink[i]).title);
@@ -148,11 +180,11 @@ void TopicCtrl::SyncDocTree()
 			if(all || tl.group == "src" || tl.group == "srcdoc" || tl.group == "srcimp") {
 				String n = tl.group;
 				if(n == "src")
-					n = "Reference";
+					n = s_reference;
 				if(n == "srcdoc")
-					n = "Documents";
+					n = s_documents;
 				if(n == "srcimp")
-					n = "Implementation";
+					n = s_implementation;
 				int gid;
 				bool groupfirst = true;
 				const Index<String>& topic = group[i];
@@ -167,18 +199,14 @@ void TopicCtrl::SyncDocTree()
 						int pd;
 						if(used.Find(tl.package) >= 0) {
 							if(usedfirst) {
-								usid = AddTree(0, IdeImg::Package(), Null, "Used packages");
+								usid = AddTree(0, IdeImg::Package(), Null, s_usedpackages);
 								usedfirst = false;
 							}
 							pd = usid;
 						}
 						else {
 							if(otherfirst) {
-								if(usedfirst) {
-									usid = AddTree(0, IdeImg::Package(), Null, "Used packages");
-									usedfirst = false;
-								}
-								otid = AddTree(0, IdeImg::Package(), Null, "Other packages");
+								otid = AddTree(0, IdeImg::Package(), Null, s_otherpackages);
 								otherfirst = false;
 							}
 							pd = otid;
@@ -199,12 +227,7 @@ void TopicCtrl::SyncDocTree()
 			}
 		}
 	}
-	if(!idefirst)
-		SortTree(ide);
-	if(!usedfirst)
-		SortTree(usid);
-	if(!otherfirst)
-		SortTree(otid);
+	SortTree(0, TopicSortOrder);
 	FinishTree();
 	if(sdx.GetCount()) {
 		OpenDeep();
