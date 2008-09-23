@@ -1156,15 +1156,18 @@ void TreeCtrl::ChildRemoved(Ctrl *)
 }
 
 struct TreeCtrl::SortOrder {
-	TreeCtrl         *tree;
-	const ValueOrder *order;
-	bool              byvalue;
+	TreeCtrl              *tree;
+	const ValueOrder      *order;
+	const ValuePairOrder  *pairorder;
+	bool                   byvalue;
 
 	bool operator()(int a, int b) const {
-		return byvalue ? (*order)(tree->GetValue(a), tree->GetValue(b))
-		               : (*order)(tree->Get(a), tree->Get(b));
+		return pairorder ? (*pairorder)(tree->Get(a), tree->GetValue(a), tree->Get(b), tree->GetValue(b))
+		                 : byvalue ? (*order)(tree->GetValue(a), tree->GetValue(b))
+		                           : (*order)(tree->Get(a), tree->Get(b));
 	}
 
+	SortOrder() { pairorder = NULL; }
 };
 
 void TreeCtrl::Sort0(int id, const ValueOrder& order, bool byvalue)
@@ -1226,6 +1229,48 @@ void TreeCtrl::SortByValue(int id, int (*compare)(const Value& v1, const Value& 
 void TreeCtrl::SortDeepByValue(int id, int (*compare)(const Value& v1, const Value& v2))
 {
 	SortDeep(id, compare, true);
+}
+
+void TreeCtrl::Sort0(int id, const ValuePairOrder& order)
+{
+	SortOrder so;
+	so.tree = this;
+	so.pairorder = &order;
+	UPP::Sort(item[id].child, so);
+}
+
+void TreeCtrl::Sort(int id, const ValuePairOrder& order)
+{
+	SyncTree();
+	Sort0(id, order);
+	Dirty(id);
+}
+
+void TreeCtrl::SortDeep0(int id, const ValuePairOrder& order)
+{
+	Sort0(id, order);
+	Item& m = item[id];
+	for(int i = 0; i < m.child.GetCount(); i++)
+		SortDeep0(m.child[i], order);
+}
+
+void TreeCtrl::SortDeep(int id, const ValuePairOrder& order)
+{
+	SyncTree();
+	SortDeep0(id, order);
+	Dirty(id);
+}
+
+void TreeCtrl::Sort(int id, int (*compare)(const Value& k1, const Value& v1,
+                                           const Value& k2, const Value& v2))
+{
+	SortDeep(id, FnValuePairOrder(compare));
+}
+
+void TreeCtrl::SortDeep(int id, int (*compare)(const Value& k1, const Value& v1,
+                                               const Value& k2, const Value& v2))
+{
+	SortDeep(id, FnValuePairOrder(compare));
 }
 
 void  TreeCtrl::SetData(const Value& data)

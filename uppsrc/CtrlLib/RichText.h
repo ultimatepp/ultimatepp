@@ -187,7 +187,10 @@ public:
 
 	void ClearTree();
 	int  AddTree(int parent, const Image& img, const String& topic, const String& title);
-	void SortTree(int id = 0);
+	void SortTree(int id, int (*cmp)(const Value& k1, const Value& v1,
+	                                 const Value& k2, const Value& v2));
+	void SortTree(int id, int (*cmp)(const Value& v1, const Value& v2));
+	void SortTree(int id);
 	void FinishTree();
 	void OpenDeep(int id = 0);
 	void CurrentOrHome();

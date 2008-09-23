@@ -871,7 +871,7 @@ void CodeEditor::DefaultHlStyles()
 	SetHlStyle(INK_IFDEF, Color(170, 170, 170));
 
 	SetHlStyle(PAPER_BRACKET0, LtYellow);
-	SetHlStyle(PAPER_BRACKET, Yellow);
+	SetHlStyle(PAPER_BRACKET, Yellow, true);
 
 	SetHlStyle(INK_NORMAL, SColorText);
 	SetHlStyle(INK_DISABLED, SColorDisabled);

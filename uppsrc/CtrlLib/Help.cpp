@@ -154,6 +154,17 @@ void HelpWindow::SortTree(int id)
 	tree.SortDeep(id);
 }
 
+void HelpWindow::SortTree(int id, int (*cmp)(const Value& v1, const Value& v2))
+{
+	tree.SortDeep(id, cmp);
+}
+
+void HelpWindow::SortTree(int id, int (*cmp)(const Value& k1, const Value& v1,
+                                             const Value& k2, const Value& v2))
+{
+	tree.SortDeep(id, cmp);
+}
+
 void HelpWindow::FinishTree()
 {
 	tree.FindSetCursor(topic);

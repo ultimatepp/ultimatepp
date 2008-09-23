@@ -633,19 +633,27 @@ int StdValueCompareDesc(const Value& a, const Value& b)
 }
 
 StdValueOrder::StdValueOrder(int l) : language(l) {}
-StdValueOrder::~StdValueOrder() {}
 
 bool StdValueOrder::operator()(const Value& a, const Value& b) const
 {
 	return StdValueCompare(a, b, language) < 0;
 }
 
-FnValueOrder::FnValueOrder(int (*fn)(const Value& a, const Value& b)) : fn(fn) {}
-FnValueOrder::~FnValueOrder() {}
-
 bool FnValueOrder::operator()(const Value& a, const Value& b) const
 {
 	return (*fn)(a, b) < 0;
+}
+
+bool StdValuePairOrder::operator()(const Value& k1, const Value& v1, const Value& k2, const Value& v2) const
+{
+	int q = StdValueCompare(k1, k2, language);
+	if(q) return q < 0;
+	return StdValueCompare(v1, v2, language);
+}
+
+bool FnValuePairOrder::operator()(const Value& keya, const Value& valuea, const Value& keyb, const Value& valueb) const
+{
+	return (*fn)(keya, valuea, keyb, valueb) < 0;
 }
 
 END_UPP_NAMESPACE

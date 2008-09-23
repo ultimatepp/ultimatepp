@@ -135,6 +135,8 @@ private:
 	bool   Tab(int d);
 	void   Sort0(int id, const ValueOrder& order, bool byvalue);
 	void   SortDeep0(int id, const ValueOrder& order, bool byvalue);
+	void   Sort0(int id, const ValuePairOrder& order);
+	void   SortDeep0(int id, const ValuePairOrder& order);
 	void   GatherOpened(int id, Vector<int>& o);
 	void   SelClear(int id);
 	void   UpdateSelect();
@@ -245,6 +247,11 @@ public:
 
 	void   SortByValue(int id, int (*compare)(const Value& v1, const Value& v2) = StdValueCompare);
 	void   SortDeepByValue(int id, int (*compare)(const Value& v1, const Value& v2) = StdValueCompare);
+
+	void   Sort(int id, const ValuePairOrder& order);
+	void   SortDeep(int id, const ValuePairOrder& order);
+	void   Sort(int id, int (*compare)(const Value& k1, const Value& v1, const Value& k2, const Value& v2));
+	void   SortDeep(int id, int (*compare)(const Value& k1, const Value& v1, const Value& k2, const Value& v2));
 
 	void   Clear();
 
