@@ -205,6 +205,7 @@ protected:
 		bool        linecomment;
 		bool        string;
 		bool        linecont;
+		bool        was_namespace;
 		char        macro;
 		enum        { MACRO_OFF, MACRO_CONT, MACRO_END };
 
@@ -224,8 +225,10 @@ protected:
 
 		void  DropItem(int type);
 		bool  Drop(int type);
+		void  ClearBraces();
 		void  Clear();
 		bool  MatchHilite(const SyntaxState& st) const;
+		void  Grounding(const wchar *ln, const wchar *e);
 		void  ScanSyntax(const wchar *ln, const wchar *e);
 
 		static Color IfColor(char ifstate);

@@ -387,6 +387,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	InitKeywords();
 	WString text = GetWLine(line);
 	SyntaxState ss = ScanSyntax(line);
+	ss.Grounding(text.Begin(), text.End());
 	SyntaxState sm = ScanSyntax(line + 1);
 	HlSt hls(hl);
 	const wchar *p = text;
@@ -505,7 +506,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			Bracket(int(p - text) + pos, hls);
 			int& l = *p == ')' ? ss.pl : *p == '}' ? ss.cl : ss.bl;
 			if(ss.brk.IsEmpty() || ss.brk.Pop() != *p || l <= 0) {
-				hls.Put(hl_style[INK_ERROR]);
+				hls.Put(p == ~text ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
 				ss.brk.Clear();
 				ss.cl = ss.bl = ss.pl = 0;
 			}

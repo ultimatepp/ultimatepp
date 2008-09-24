@@ -25,18 +25,24 @@ inline const wchar *strnext(const wchar *p, const wchar *end, int ch) {
 	return NULL;
 }
 
-void CodeEditor::SyntaxState::Clear() {
+void CodeEditor::SyntaxState::ClearBraces() {
+	cl = bl = pl = 0;
 	spar = 0;
-	line = cl = bl = pl = 0;
-	linecont = linecomment = comment = string = false;
-	macro = MACRO_OFF;
 	brk.Clear();
 	blk.Clear();
 	bid.Clear();
 	bid.Add(0);
 	par.Clear();
+}
+
+void CodeEditor::SyntaxState::Clear() {
+	ClearBraces();
+	line = 0;
+	linecont = linecomment = comment = string = false;
+	macro = MACRO_OFF;
 	stmtline = endstmtline = seline = -1;
 	uvscolor = Null;
+	was_namespace = false;
 	ifstack.Clear();
 }
 
@@ -92,8 +98,27 @@ static WString sReadLn(const wchar *p)
 	return wbuf;
 }
 
+int LastC(const wchar *b, const wchar *e)
+{
+	if(e == b)
+		return 0;
+	return *e;
+}
+
+void CodeEditor::SyntaxState::Grounding(const wchar *b, const wchar *e)
+{
+	if(b >= e || comment || !iscib(*b))
+		return;
+	e--;
+	while(e > b && (*e == '\t' || *e == ' ' ))
+		e--;
+	if(*e != ':')
+		ClearBraces();
+}
+
 void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 {
+	Grounding(ln, e);
 	string = false;
 	if(!linecont)
 		linecomment = false;
@@ -206,6 +231,13 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 					pc = 0;
 					p = pp;
 				}
+				else
+				if(!iscid(pc) && p[0] == 'n' && p[1] == 'a' && p[2] == 'm' && p[3] == 'e' &&
+				   p[4] == 's' && p[5] == 'p' && p[6] == 'a' && p[7] == 'c' && p[8] == 'e' &&
+				   !iscid(p[9])) {
+					was_namespace = true;
+					p += 9;
+				}
 				else {
 					int c = *p++;
 					if(c == '/') break;
@@ -221,15 +253,20 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 						seline = stmtline;
 						endstmtline = line;
 						stmtline = -1;
+						was_namespace = false;
 					}
 					else
 					if(c == '{') {
-						cl++;
-						brk.Add('}');
-						blk.Add() = line;
-						bid.Add(lindent + 1);
-						stmtline = -1;
-						par.Clear();
+						if(was_namespace)
+							was_namespace = false;
+						else {
+							cl++;
+							brk.Add('}');
+							blk.Add() = line;
+							bid.Add(lindent + 1);
+							stmtline = -1;
+							par.Clear();
+						}
 					}
 					else
 					if(c == '}') {
