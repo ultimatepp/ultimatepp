@@ -703,7 +703,8 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 						}
 						break;
 					case 't':
-						format.tabsize = ReadNumber();
+						if(IsDigit(*term)) //temporary fix... :(
+							format.tabsize = ReadNumber();
 						break;
 					case '~': {
 							if(Key('~'))
