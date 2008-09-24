@@ -368,7 +368,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 }
 
 
-bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool)
+bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
 {
 	if(!Wait())
 		return false;
@@ -393,6 +393,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 					lnk << " -mconsole";
 			}
 			lnk << " -o " << GetHostPathQ(target);
+			if(createmap)
+				lnk << " -Wl,-Map," << GetHostPathQ(GetFileDirectory(target) + GetFileTitle(target) + ".map");
 			if(HasFlag("DEBUG") || HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL"))
 				lnk << " -ggdb";
 			else
