@@ -532,6 +532,8 @@ struct HelpDes : public IdeDesigner {
 	virtual void   EditMenu(Bar& menu)              {}
 	virtual Ctrl&  DesignerCtrl()                   { return *topic; }
 	virtual void   SetFocus()                       { topic->SetFocus(); }
+	
+	~HelpDes()                                      { topic->Remove(); }
 };
 
 bool IsHelpName(const char *path)

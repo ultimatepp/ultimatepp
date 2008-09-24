@@ -853,7 +853,23 @@ void AssistEditor::DCopy()
 	if(!GetSelection(l, h)) {
 		int i = GetLine(GetCursor());
 		l = GetPos(i);
-		h = l + line[i].GetLength() + 1;
+		h = l;
+		while(h < GetLength() && h - l < 1000) {
+			int c = GetChar(h);
+			if(c == ';' || c == '{')
+				break;
+			h++;
+			if(c == '\"') {
+				while(h < GetLength()) {
+					int c = GetChar(h);
+					if(c == '\"' || c == '\n')
+						break;
+					h++;
+					if(c == '\\' && h < GetLength())
+						h++;
+				}
+			}
+		}
 	}
 	Parser ctx;
 	Context(ctx, l);
@@ -874,7 +890,7 @@ void AssistEditor::DCopy()
 					r << MakeDefinition(cls, m.natural) << "\n{\n}\n\n";
 				else {
 					if(cpp.IsType(i))
-					   r << '\t';
+					   r << String('\t', Split(cpp.GetKey(i), ':').GetCount());
 					r << m.natural << ";\n";
 				}
 			if(m.IsData())
