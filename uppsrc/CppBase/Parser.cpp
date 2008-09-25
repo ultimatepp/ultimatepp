@@ -959,7 +959,6 @@ CppItem& Parser::Item(const String& nesting, const String& item, const String& n
 	n.namespacel = current_namespacel = context.namespacel;
 	CppItem& im = dobody ? current : n.GetAdd(item, name);
 	im.key = item;
-	im.ctname = context.ctname;
 	CppPos& p = im.pos.Add();
 	p.file = filei;
 	p.line = line + 1;
@@ -1105,6 +1104,7 @@ bool Parser::Nest(const String& tp, const String& tn) {
 		im.type = name;
 		im.access = cc.access;
 		im.tname = tn;
+		im.ctname = context.ctname;
 		im.tparam = CleanTp(tp);
 		im.ptype.Clear();
 		im.pname.Clear();
@@ -1218,7 +1218,8 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
 		im.tname = tname;
 		im.tparam = tparam;
 		im.ctname = context.ctname;
-		LLOG("FnItem: " << nesting << "::" << item << ", natural: " << im.natural);
+		LLOG("FnItem: " << nesting << "::" << item << ", natural: " << im.natural
+		                << ", ctname: " << im.ctname);
 	}
 	return im;
 }

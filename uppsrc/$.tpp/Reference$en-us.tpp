@@ -1,24 +1,25 @@
-topic "template <class T, class V, class HashFn>  class AIndex";
+topic "AIndex";
 [2 $$0,0#00000000000000000000000000000000:Default]
-[i448;a25;kKO9; $$1,0#37138531426314131252341829483380:class]
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
 [H6;0 $$4,0#05600065144404261032431302351956:begin]
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
 [l288;a17;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [{_}%EN-US 
-[s5;%- [*@(64) template_<][*@(0.0.255) class][*@(64) _][*@4 T][*@(64) , ][*@(0.0.255) class][*@(64) _
-][*@4 V][*@(64) , ][*@(0.0.255) class][*@(64) _][*@4 HashFn][*@(64) >__][*@(0.0.255) class][*@(64) _
-][* AIndex]&]
-[s0;:`:`:AbortExc`:`:`:`:AbortExc`(`): [t class ][*t AIndex]&]
-[s0; &]
-[s0; [*C@4 T]-|Type of [^topic`:`/`/CoreTopics`/src`/AIndex`$en`-us^ elements] 
-to store. T must satisfy requirements for container flavor identified 
-by parameter V and must have [*C operator`=`=] defined.&]
-[s0; [*C@4 V]-|Basic random access container.&]
-[s0; [*C@4 HashFn]-|Hashing class. Must have defined [*C unsigned operator()(const 
+[s1;%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 V], 
+[@(0.0.255) class]_[*@4 HashFn]>&]
+[s1;:`:`:AIndex`:`:class:%- [@(0.0.255) class]_[* AIndex]&]
+[s0;t292; &]
+[s0;i150;O9; [*C@4 T]-|Type of elements to store. T must satisfy requirements 
+for container flavor identified by parameter V and must have 
+[*C operator`=`=] defined.&]
+[s0;i150;O9; [*C@4 V]-|Basic random access container.&]
+[s8; [*C@4 HashFn]-|Hashing class. Must have defined [*C unsigned operator()(const 
 T`& x)] method returning hash value for elements.&]
+[s0;i448;b42;O9; &]
 [s0; This template class adds associative capabilities to basic random 
 access containers, forming flavors of Index. It is used as base 
 class for concrete index flavors, [* Index] and [* ArrayIndex].&]
@@ -59,11 +60,10 @@ oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ pick
 and optional deep copy] transfer semantics, although these features 
 are more important in derived concrete index flavors.&]
 [s0; Members&]
-[s0; &]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:Add`(const T`&`,unsigned`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) cons
-t]_[*@4 T]`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+t]_T`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Adds a new element with a precomputed hash value.The precomputed 
 hash value must be the same as the hash value that would be the 
 result of HashFn. The benefit of this variant is that sometimes 
@@ -76,8 +76,8 @@ like fetching strings from an input stream.&]
 [s7; [*C@3 `_hash]-|Precomputed hash value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AIndex`:`:Add`(const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 T]`&
-_[*@3 x])&]
+[s5;:`:`:AIndex`:`:Add`(const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_T`&_[*@3 x
+])&]
 [s2; Adds a new element to AIndex.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
@@ -86,7 +86,7 @@ _[*@3 x])&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:Find`(const T`&`,unsigned`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) c
-onst]_[*@4 T]`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])_[@(0.0.255) const]&]
+onst]_T`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])_[@(0.0.255) const]&]
 [s2; Retrieves the position of the first element with the specified 
 value in AIndex, using a precomputed hash value. The precomputed 
 hash value must be the same as the hash value that would be result 
@@ -101,8 +101,8 @@ ignored.&]
 value is not in AIndex.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AIndex`:`:Find`(const T`&`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) const]_[*@4 T
-]`&_[*@3 x])_[@(0.0.255) const]&]
+[s5;:`:`:AIndex`:`:Find`(const T`&`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) const]_T
+`&_[*@3 x])_[@(0.0.255) const]&]
 [s2; Retrieves the position of the first element with the specified 
 value in AIndex. If multi`-key ordering is not broken and more 
 than one element with the same value exists in AIndex, lowest 
@@ -129,7 +129,7 @@ are ignored.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:FindLast`(const T`&`,unsigned`)const:%- [@(0.0.255) int]_[* FindLast](
-[@(0.0.255) const]_[*@4 T]`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])_[@(0.0.255) const]&]
+[@(0.0.255) const]_T`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])_[@(0.0.255) const]&]
 [s2; Retrieves the position of the last element with specified value 
 in AIndex, using a precomputed hash value. The precomputed hash 
 value must be the same as the hash value that would be the result 
@@ -145,7 +145,7 @@ value is not in AIndex.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:FindLast`(const T`&`)const:%- [@(0.0.255) int]_[* FindLast]([@(0.0.255) c
-onst]_[*@4 T]`&_[*@3 x])_[@(0.0.255) const]&]
+onst]_T`&_[*@3 x])_[@(0.0.255) const]&]
 [s2; Retrieves the position of the last element with specified value 
 in AIndex. If multi`-key ordering is not broken and more than 
 one element with the same value exists in AIndex, the greatest 
@@ -172,7 +172,7 @@ are ignored.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:FindAdd`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) c
-onst]_[*@4 T]`&_[*@3 key], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+onst]_T`&_[*@3 key], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Retrieves position of first element with specified value in 
 AIndex, using a precomputed hash value. Precomputed hash value 
 must be same as hash value that would be result of HashFn. If 
@@ -187,7 +187,7 @@ are ignored.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:FindAdd`(const T`&`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) const]_
-[*@4 T]`&_[*@3 key])&]
+T`&_[*@3 key])&]
 [s2; Retrieves position of first element with specified value in 
 AIndex. If multi`-key ordering is not broken and more than one 
 element with the same value exists in AIndex, lowest position 
@@ -218,7 +218,7 @@ item stays in AIndex but is ignored by any Find operation.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:Put`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* Put]([@(0.0.255) const
-]_[*@4 T]`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+]_T`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; If there are any unlinked elements in AIndex, one of them is 
 replaced by specified value. If there are no unlinked elements, 
 the element with the specified value is appended to the end of 
@@ -233,8 +233,8 @@ result of HashFn. The position of the placed element is returned.&]
 [s7; [*/ Return value]-|Position where the element was placed.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AIndex`:`:Put`(const T`&`):%- [@(0.0.255) int]_[* Put]([@(0.0.255) const]_[*@4 T]`&_
-[*@3 x])&]
+[s5;:`:`:AIndex`:`:Put`(const T`&`):%- [@(0.0.255) int]_[* Put]([@(0.0.255) const]_T`&_[*@3 x
+])&]
 [s2; If there are any unlinked elements in AIndex, one of them is 
 replaced by specified value. If there are no unlinked elements, 
 the element with the specified value is appended to the end of 
@@ -247,7 +247,7 @@ AIndex using [* Add]. The position of the placed element is returned.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:FindPut`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* FindPut]([@(0.0.255) c
-onst]_[*@4 T]`&_[*@3 key], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+onst]_T`&_[*@3 key], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Retrieves the position of the first element with the specified 
 value in AIndex, using a precomputed hash value. The precomputed 
 hash value must be the same as the hash value that would be the 
@@ -264,7 +264,7 @@ The position of the found or placed element is returned.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:FindPut`(const T`&`):%- [@(0.0.255) int]_[* FindPut]([@(0.0.255) const]_
-[*@4 T]`&_[*@3 key])&]
+T`&_[*@3 key])&]
 [s2; Retrieves the position of the first element with the specified 
 value in AIndex. If the element does not exist in the AIndex, 
 it is placed to it using [* Put(const T`& x).] The position of 
@@ -279,7 +279,7 @@ the found or placed element is returned.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:Set`(int`,const T`&`,unsigned`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) i
-nt]_[*@3 i], [@(0.0.255) const]_[*@4 T]`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+nt]_[*@3 i], [@(0.0.255) const]_T`&_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Replaces the element at the specified position with a new element 
 with the specified value, using a precomputed hash`-value. Speed 
 of this operation depends on the total number of elements with 
@@ -293,7 +293,7 @@ the same value as the specified one.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:Set`(int`,const T`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i
-], [@(0.0.255) const]_[*@4 T]`&_[*@3 x])&]
+], [@(0.0.255) const]_T`&_[*@3 x])&]
 [s2; Replaces the element at the specified position with a new element 
 with the specified value. Speed of this operation depends on 
 total number of elements with the same value as specified the 
@@ -331,7 +331,7 @@ specified one.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:UnlinkKey`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) c
-onst]_[*@4 T]`&_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
+onst]_T`&_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
 [s2; Unlinks all elements with specified value using precomputed 
 hash`-value. Unlinked elements stay in AIndex but are ignored 
 by any Find operations. Precomputed hash value must be same as 
@@ -342,7 +342,7 @@ hash value that would be result of HashFn. &]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:UnlinkKey`(const T`&`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) con
-st]_[*@4 T]`&_[*@3 k])&]
+st]_T`&_[*@3 k])&]
 [s2; Unlinks all elements with specified value. Unlinked elements 
 remain in the AIndex but are ignored by any Find operations.&]
 [s7; [*C@3 k]-|Value of elements to unlink.&]
@@ -363,7 +363,7 @@ the number of unlinked elements. Also restores multi`-key ordering.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:Insert`(int`,const T`&`,unsigned`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
-nt]_[*@3 i], [@(0.0.255) const]_[*@4 T]`&_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
+nt]_[*@3 i], [@(0.0.255) const]_T`&_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
 [s2; Inserts an element with the specified value at the specified 
 position, using a precomputed hash value. The precomputed hash 
 value must be the same as the hash value that would be the result 
@@ -378,7 +378,7 @@ with any search operations.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:Insert`(int`,const T`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int
-]_[*@3 i], [@(0.0.255) const]_[*@4 T]`&_[*@3 k])&]
+]_[*@3 i], [@(0.0.255) const]_T`&_[*@3 k])&]
 [s2; Inserts an element with the specified value at the specified 
 position. This is a slow operation, especially when combined 
 with any search operations.&]
@@ -410,7 +410,7 @@ ascending order.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:Remove`(const`:`:Vector`<int`>`&`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) c
-onst]_[_^`:`:Vector^ Vector]<int>`&_[*@3 sorted`_list])&]
+onst]_[_^`:`:Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 sorted`_list])&]
 [s2; Removes multiple elements from AIndex. Same as Remove(sorted`_list, 
 sorted`_list.GetCount()).&]
 [s6; Invalidates iterators to AIndex.&]
@@ -419,7 +419,7 @@ sorted`_list.GetCount()).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:RemoveKey`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) c
-onst]_[*@4 T]`&_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
+onst]_T`&_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
 [s2; Removes all elements with the specified value using a precomputed 
 hash`-value. The precomputed hash value must be the same as the 
 hash value that would be the result of HashFn. This is a slow 
@@ -429,7 +429,7 @@ operation, especially when combined with any search operations.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:RemoveKey`(const T`&`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) con
-st]_[*@4 T]`&_[*@3 k])&]
+st]_T`&_[*@3 k])&]
 [s2; Removes all elements with the specified value. This is a slow 
 operation, especially when combined with any search operations.&]
 [s7; [*C@3 k]-|Value of the elements to remove.&]
@@ -478,7 +478,7 @@ is used as part of UPP.&]
 [s7; [*C@3 s]-|Target/source stream.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AIndex`:`:PickKeys`(`)pick`_:%- [*@4 V]_[* PickKeys]()_pick`_&]
+[s5;:`:`:AIndex`:`:PickKeys`(`)pick`_:%- [*@4 V]_[* PickKeys]()_[@(0.128.128) pick`_]&]
 [s2; Returns a basic random access container of elements. Destroys 
 AIndex by picking.&]
 [s7; [*/ Return value]-|Basic random access container of elements in 
@@ -493,30 +493,30 @@ of elements.&]
 container of elements.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AIndex`:`:operator`=`(pick`_ V`&`):%- [_^`:`:AIndex^ AIndex]`&_[* operator`=](pi
-ck`__[*@4 V]`&_[*@3 s])&]
+[s5;:`:`:AIndex`:`:operator`=`(pick`_ V`&`):%- [_^`:`:AIndex^ AIndex]`&_[* operator`=]([@(0.128.128) p
+ick`_]_V`&_[*@3 s])&]
 [s2; Assigns basic random access container to AIndex. Transfers the 
 source container in short constant time, but destroys it by picking.&]
 [s7; [*C@3 s]-|Source container.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:`:`:AIndex`:`:operator`<`<`=`(const V`&`):%- [_^`:`:AIndex^ AIndex]`&_[* operator<<`=
-]([@(0.0.255) const]_[*@4 V]`&_[*@3 s])&]
+]([@(0.0.255) const]_V`&_[*@3 s])&]
 [s2; Assigns the basic random access container to AIndex, while preserving 
 the value of the source container.&]
 [s6; Requires T to have deep copy constructor or optional deep copy.&]
 [s7; [*C@3 s]-|Source container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AIndex`:`:AIndex`(pick`_ V`&`):%- [* AIndex](pick`__[*@4 V]`&_[*@3 s])&]
+[s5;:`:`:AIndex`:`:AIndex`(pick`_ V`&`):%- [* AIndex]([@(0.128.128) pick`_]_V`&_[*@3 s])&]
 [s2; Pick`-constructs AIndex from a basic random access container. 
 Transfers the source container in short constant time, but destroys 
 it by picking.&]
 [s7; [*C@3 s]-|Source basic random access container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AIndex`:`:AIndex`(const V`&`,int`):%- [* AIndex]([@(0.0.255) const]_[*@4 V]`&_[*@3 s
-], [@(0.0.255) int])&]
+[s5;:`:`:AIndex`:`:AIndex`(const V`&`,int`):%- [* AIndex]([@(0.0.255) const]_V`&_[*@3 s], 
+[@(0.0.255) int])&]
 [s2; Deep`-copy constructs AIndex from basic random access container.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
 constructor.&]

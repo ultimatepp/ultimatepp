@@ -8,16 +8,20 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
 	if(IsNull(q)) return 0;
 	int x = r.left;
+	int ry = (r.top + r.bottom) / 2;
+	Image img;
 	if(m.access == PROTECTED)
-		w.DrawImage(x, r.top + 1, BrowserImg::mprotected());
+		img = BrowserImg::mprotected();
 	else
 	if(m.access == PRIVATE)
-		w.DrawImage(x, r.top + 1, BrowserImg::mprivate());
+		img = BrowserImg::mprivate();
 	else
 	if(m.access == WITHBODY)
-		w.DrawImage(x, r.top + 1, BrowserImg::impl());
-	x += 6;
-	Image img = BrowserImg::unknown();
+		img = BrowserImg::impl();
+	if(!IsNull(img))
+		w.DrawImage(x, ry - img.GetHeight() / 2, img);
+	x += 4;
+	img = BrowserImg::unknown();
 	Image bk;
 	switch(m.kind) {
 	case FUNCTIONTEMPLATE:
@@ -69,7 +73,6 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 		break;
 	}
 
-	int ry = (r.top + r.bottom) / 2;
 	int by = ry - bk.GetSize().cy / 2;
 	int iy = ry - img.GetSize().cy / 2;
 
@@ -87,7 +90,7 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 			w.DrawRect(x + 10, r.top + 7 + 2 * i, 7, 1, SColorText);
 	}
 	x += 20;
-	int y = r.top;
+	int y = ry - Draw::GetStdFontCy() / 2;
 	int x0 = x;
 	Vector<ItemTextPart> n = ParseItemNatural(m);
 	for(int i = 0; i < n.GetCount(); i++) {

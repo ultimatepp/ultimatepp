@@ -11,7 +11,6 @@ file
 	Pre.cpp,
 	cpplex.cpp,
 	Parser.cpp,
-	Parser2.cpp,
 	Base.cpp,
 	Info readonly separator,
 	Copying;
