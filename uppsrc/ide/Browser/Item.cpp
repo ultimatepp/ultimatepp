@@ -53,6 +53,18 @@ int InScListIndext(const char *s, const char *list)
 
 static String s_pick_("pick_");
 
+static bool sOperatorTab[256];
+
+INITBLOCK {
+	for(const char *s = "!+-*^/%~&|=[]:?<>."; *s; s++)
+		sOperatorTab[*s] = true;
+}
+
+inline bool sOperator(byte c)
+{
+	return sOperatorTab[c];
+}
+
 Vector<ItemTextPart> ParseItemNatural(const String& name, const CppSimpleItem& m, const char *s)
 {
 	LLOG("ParseItemNatural " << m.natural << ", pname: " << m.pname
@@ -109,6 +121,12 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppSimpleItem& m
 				}
 				LLOG("id: " << id << ", type: " << p.type);
 			}
+		}
+		else
+		if(sOperator(*s)) {
+			while(sOperator(s[n]))
+				n++;
+			p.type = ITEM_CPP;
 		}
 		else {
 			p.type = ITEM_SIGN;
