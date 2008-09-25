@@ -1,169 +1,251 @@
-TITLE("BiVector")
-COMPRESSED
-120,156,221,90,123,115,218,72,18,255,42,83,149,108,10,28,
-140,245,4,12,142,43,9,201,238,186,118,179,73,37,222,189,
-63,92,178,25,196,96,230,44,36,78,35,236,56,123,151,207,
-126,221,51,122,35,97,140,137,239,146,164,10,151,52,51,61,
-221,191,126,76,119,143,206,12,242,244,169,214,210,158,104,119,
-252,235,191,97,83,186,244,34,231,140,91,86,111,64,13,123,
-112,245,219,251,195,193,222,203,70,199,106,2,17,29,136,152,
-93,221,236,217,166,110,25,29,248,209,77,221,176,13,211,210,
-123,198,161,213,51,205,158,214,119,61,42,132,115,230,25,189,
-222,0,119,54,96,145,209,181,13,189,107,245,172,158,110,118,
-123,6,172,53,52,205,208,186,134,173,91,102,207,176,251,19,
-38,92,231,140,246,204,193,222,199,14,44,50,113,39,32,174,
-233,29,195,234,90,134,102,106,134,5,91,233,189,158,165,119,
-237,158,121,216,233,244,93,186,136,120,224,199,123,113,93,55,
-244,193,88,239,14,128,229,175,95,191,182,117,75,83,28,88,
-64,76,215,44,96,85,135,119,154,101,116,117,251,80,59,180,
-123,122,79,51,129,184,221,213,236,254,130,134,116,94,45,57,
-210,176,239,20,189,171,245,121,196,128,196,222,115,93,239,194,
-146,78,171,243,68,183,186,32,104,207,180,236,94,87,131,205,
-13,195,48,77,67,55,141,195,67,195,238,216,221,254,140,209,
-9,11,99,17,40,48,191,167,195,210,110,171,251,4,22,106,
-150,109,26,214,33,130,101,194,78,134,209,177,15,117,219,210,
-236,14,80,234,135,236,95,75,30,178,57,243,65,99,127,95,
-252,231,167,183,127,236,255,249,137,156,9,19,197,239,88,3,
-242,154,255,197,220,40,8,159,57,103,66,75,94,2,143,11,
-143,70,140,28,73,77,145,179,189,151,22,57,117,142,243,147,
-246,224,45,81,195,78,145,8,193,63,214,192,147,51,219,93,
-13,8,158,237,13,37,133,253,127,159,222,46,24,9,166,132,
-121,146,43,65,4,172,99,19,194,125,18,205,88,202,78,155,
-156,18,46,72,204,255,132,68,1,25,51,32,115,112,30,5,
-11,238,142,250,163,131,209,193,16,86,142,14,68,232,78,2,
-119,116,240,46,184,102,116,236,177,209,83,230,143,246,151,226,
-156,204,227,55,128,247,1,33,14,245,39,100,190,20,17,153,
-209,107,70,24,135,253,66,36,73,38,140,45,136,27,44,110,
-225,199,23,81,184,68,14,156,150,28,131,205,174,10,175,73,
-144,44,146,142,80,24,107,199,0,40,25,200,212,163,215,240,
-7,164,29,243,9,136,225,162,41,82,15,151,68,148,251,12,
-164,124,229,121,193,141,32,116,50,225,254,101,6,10,141,200,
-56,136,102,68,112,176,122,36,32,0,8,230,187,12,113,146,
-59,82,63,34,116,30,132,17,255,130,240,240,57,75,54,255,
-157,95,49,66,253,91,18,72,1,255,56,253,61,219,176,149,
-2,140,232,210,237,1,69,60,35,84,229,13,192,184,158,12,
-34,56,186,200,136,72,68,81,23,193,34,198,35,197,223,33,
-81,72,125,49,5,182,5,155,131,136,220,21,109,50,164,158,
-135,232,204,89,52,11,38,18,14,164,1,98,211,130,56,94,
-112,201,93,194,194,16,30,37,91,104,80,236,179,203,228,62,
-184,78,33,52,124,222,181,201,117,192,39,104,193,193,130,133,
-20,8,140,94,56,13,197,105,172,189,209,51,52,123,147,92,
-59,77,181,236,0,151,157,29,12,213,82,180,169,97,186,250,
-232,8,214,227,88,67,42,39,35,33,167,73,42,56,218,84,
-192,53,192,118,64,27,19,178,20,40,215,27,16,127,8,210,
-191,151,124,158,198,190,215,172,96,118,232,49,26,58,141,252,
-208,56,8,60,28,58,17,31,36,38,48,170,12,36,182,134,
-247,43,32,35,84,28,246,144,166,134,182,51,11,131,229,229,
-172,134,13,50,167,110,24,36,182,245,142,205,199,44,20,234,
-201,148,142,110,15,126,35,103,63,105,218,190,166,145,211,209,
-179,11,39,126,120,169,145,87,147,201,175,16,187,146,55,164,
-209,116,112,133,49,192,17,52,63,159,221,172,250,17,176,20,
-251,1,186,1,234,16,3,32,106,189,20,32,224,9,9,36,
-147,111,184,231,97,144,128,69,139,64,112,20,130,104,146,241,
-238,128,124,84,129,68,64,88,129,80,34,3,64,133,3,39,
-179,79,252,107,234,241,9,136,15,80,69,74,197,66,218,108,
-200,192,56,209,17,5,210,41,48,164,162,158,140,13,31,89,
-180,12,125,2,68,150,12,98,222,199,100,81,178,6,216,246,
-110,209,233,65,214,53,242,183,55,199,249,148,114,239,193,56,
-67,140,240,182,195,249,23,22,13,131,165,31,129,241,141,246,
-137,254,67,162,254,178,161,181,181,182,97,219,77,233,143,41,
-218,107,45,222,89,93,44,183,204,86,23,116,105,146,207,233,
-72,149,18,51,29,196,225,77,44,152,203,167,28,184,151,98,
-127,107,143,169,56,39,119,163,189,161,20,29,210,3,24,85,
-146,68,51,96,11,66,21,236,199,85,2,144,233,208,13,25,
-221,157,198,138,190,243,63,210,216,227,248,222,15,169,63,244,
-56,60,252,50,29,170,131,124,59,69,173,241,32,137,6,210,
-22,177,140,241,184,172,11,88,196,118,224,98,229,116,115,183,
-218,249,20,44,67,153,67,98,254,232,74,254,79,83,69,169,
-20,91,101,86,59,240,168,157,107,164,202,67,118,164,145,205,
-93,232,255,92,63,229,204,160,38,253,82,39,37,226,28,150,
-15,201,234,147,227,19,160,73,168,200,178,229,179,145,211,208,
-154,247,57,125,43,9,111,40,70,77,118,179,70,140,234,112,
-90,41,70,73,249,247,18,170,114,155,146,80,57,159,73,68,
-40,28,40,170,115,114,177,70,115,106,70,163,153,142,199,4,
-30,79,155,195,164,228,220,108,135,157,32,144,87,250,246,8,
-124,27,67,168,199,99,19,139,184,79,52,125,19,6,139,90,
-47,198,122,92,168,50,119,131,138,233,161,161,234,1,18,212,
-58,112,173,4,181,56,238,88,130,114,168,201,91,196,218,164,
-144,251,81,133,184,38,225,171,103,218,26,243,44,73,157,37,
-135,201,217,84,60,36,56,216,222,135,228,212,138,209,201,39,
-81,27,134,173,154,188,107,59,63,173,66,44,246,215,20,138,
-28,88,49,145,42,196,212,208,22,78,254,40,40,214,251,252,
-230,112,174,193,65,75,179,144,123,6,61,153,86,47,177,47,
-83,232,171,150,27,170,245,130,189,114,163,37,245,42,104,108,
-32,16,182,159,234,37,58,17,111,231,139,232,118,67,129,78,
-153,0,190,111,102,76,246,45,11,105,30,164,63,12,41,101,
-145,59,31,172,95,140,94,196,73,117,181,128,144,171,65,82,
-53,37,37,98,45,50,165,158,96,170,79,122,195,5,123,72,
-148,83,173,185,250,16,71,33,235,76,117,51,13,131,249,206,
-226,235,167,89,200,253,171,138,173,223,113,159,207,249,23,216,
-124,14,76,132,170,234,91,206,23,121,179,79,17,30,223,146,
-185,154,143,45,73,151,46,168,203,1,239,7,240,245,145,9,
-22,94,179,173,130,168,95,21,68,37,57,145,241,70,78,166,
-217,5,65,242,22,181,123,41,203,75,52,33,170,156,192,93,
-134,33,198,135,100,82,171,48,157,251,88,143,138,172,72,77,
-137,74,3,42,198,14,95,198,211,210,166,59,240,124,188,8,
-112,239,233,249,101,177,42,207,203,154,96,182,110,73,124,133,
-163,13,250,211,144,51,56,86,147,209,209,179,44,218,31,193,
-255,70,110,96,60,106,41,46,241,68,37,159,71,205,62,89,
-93,157,107,184,59,71,71,141,194,8,128,59,118,242,52,228,
-171,207,170,253,110,96,39,91,45,4,245,44,60,234,170,136,
-15,236,3,77,217,31,143,235,206,70,74,224,115,211,105,147,
-215,183,48,31,69,71,179,174,56,58,178,16,19,161,143,230,
-46,99,192,101,88,33,156,82,130,237,122,15,239,20,22,80,
-21,10,112,163,22,208,88,66,56,105,95,182,213,106,92,8,
-148,211,10,17,22,225,101,90,16,82,240,191,172,106,21,88,
-161,74,238,193,66,51,114,196,195,187,155,159,131,32,69,230,
-8,236,230,24,98,220,209,17,209,241,199,192,31,171,249,189,
-54,121,54,204,79,82,160,26,201,6,163,189,104,198,69,115,
-115,243,60,134,255,141,188,61,182,72,193,88,239,52,207,227,
-227,198,138,41,182,200,170,197,222,195,60,49,143,255,49,204,
-83,39,199,199,164,97,224,111,201,82,155,63,178,109,222,101,
-151,219,157,223,44,228,32,248,151,138,147,242,124,212,31,245,
-63,69,192,236,252,156,168,191,233,164,98,39,77,172,30,152,
-41,93,33,239,127,99,115,44,24,85,20,28,164,169,136,34,
-223,38,255,8,194,43,40,140,125,64,9,82,38,188,61,6,
-49,151,120,58,230,204,226,207,15,31,214,168,89,196,59,83,
-149,105,36,142,17,223,122,22,117,38,80,103,52,188,100,209,
-129,80,221,47,161,24,185,27,209,124,238,89,74,59,227,187,
-208,213,156,232,77,197,245,19,25,38,15,66,218,59,230,134,
-213,153,25,132,28,212,72,26,4,240,233,107,250,212,192,160,
-50,250,10,14,159,188,138,175,106,229,190,217,118,96,232,193,
-85,92,245,78,210,247,50,241,190,102,224,135,73,53,83,149,
-193,175,225,36,227,35,190,113,207,191,123,134,188,21,56,139,
-47,187,203,1,77,132,110,26,210,62,148,155,157,228,52,190,
-158,23,36,86,86,22,159,32,58,4,55,217,183,9,248,69,
-66,139,140,151,145,18,49,184,69,167,198,44,19,247,133,48,
-84,178,2,216,53,109,127,238,34,41,206,93,235,151,123,208,
-5,231,74,246,58,207,144,169,113,176,208,93,117,49,9,80,
-178,213,183,67,231,122,43,108,182,113,143,36,179,4,75,193,
-162,201,193,16,144,47,194,64,142,248,211,11,144,35,98,107,
-226,230,134,20,240,35,27,85,134,57,53,117,216,90,75,151,
-128,150,12,189,5,7,209,138,181,171,83,183,202,216,91,152,
-154,103,135,248,202,215,18,21,39,213,166,39,27,126,42,180,
-250,145,203,10,197,251,232,25,212,87,168,17,240,27,28,136,
-171,23,167,89,169,240,23,106,0,63,179,74,235,106,53,71,
-221,38,76,129,39,136,230,50,184,196,159,120,64,100,247,46,
-131,144,71,179,249,106,201,95,179,95,193,137,78,78,226,227,
-250,92,77,74,159,139,245,204,81,181,231,169,193,178,251,169,
-183,199,153,88,41,205,88,170,228,89,178,180,21,219,50,236,
-151,121,47,190,220,165,0,138,114,73,138,180,169,196,215,138,
-179,82,79,158,151,125,162,64,189,32,75,165,40,249,120,240,
-154,93,114,191,56,188,65,167,221,93,229,92,101,88,83,30,
-130,171,173,59,196,170,35,70,194,232,227,10,255,214,191,255,
-53,75,173,232,233,133,226,63,241,51,195,49,187,13,252,137,
-28,240,232,119,4,201,47,76,78,218,170,151,11,8,220,183,
-155,91,139,230,221,93,221,180,27,136,177,30,173,24,187,129,
-207,9,119,212,181,239,152,249,144,114,198,105,47,23,241,7,
-132,242,46,21,211,119,88,132,236,202,239,76,169,127,201,136,
-59,99,242,100,2,5,77,216,120,137,53,214,164,212,254,225,
-249,246,207,106,119,121,99,13,214,234,45,85,25,41,43,170,
-222,103,43,175,68,253,192,31,237,63,154,147,62,84,158,156,
-27,86,72,179,94,150,199,242,186,135,202,88,242,171,123,53,
-68,115,126,85,117,175,180,30,160,173,29,9,119,253,110,92,
-41,238,231,92,84,160,90,95,123,223,208,69,77,217,189,113,
-101,64,211,247,45,178,29,133,113,69,241,142,58,202,213,208,
-170,112,191,4,45,132,220,69,184,37,231,50,155,75,136,139,
-182,124,41,178,23,149,101,71,92,175,172,92,138,81,128,248,
-103,25,21,114,237,1,34,128,98,113,222,24,147,84,230,6,
-185,206,89,97,34,106,198,249,47,18,157,241,21,
+topic "BiVector";
+[2 $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
+[l288;a17;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
+[l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[{_}%EN-US 
+[s0;~~~64; BiVector&]
+[s0;~~~64; template <class [*@4 T]>&]
+[s0;~~~64; class [* BiVector]&]
+[s0; &]
+[s7;l0;~~~.704; [*C@4 T]-|Type of elements stored in the BiVector. T 
+is required to be [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
+]and must have either [*/ deep copy constructor], [*/ pick constructor] 
+or [*/ default constructor].&]
+[s0; Vector flavor of bidirectional container. Allows adding elements 
+at both sides of sequence in constant amortized time.&]
+[s0; Like any other NTL container, BiVector is a [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
+oveable][/  ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick 
+and optional deep copy] transfer semantics. Calling methods of 
+picked a BiVector is logic error with the exceptions of&]
+[s0; [C+75 void ][*C+75 operator`=][C+75 (pick`_ Vector`& ][*C@3+75 v][C+75 )]&]
+[s0; [C+75 void ][*C+75 operator<<`=][C+75 (const Vector`& ][*C@3+75 v][C+75 )][+75  
+][/+75 (defined using DeepCopyOptionTemplate)]&]
+[s0; [C+75 void ][*C+75 Clear][C+75 ()]&]
+[s0; [C+75 bool ][*C+75 IsPicked][C+75 () const]&]
+[s0; Optional deep copy is implemented through DeepCopyOptionTemplate 
+macro.&]
+[s0; Members&]
+[s0;3 &]
+[s5;K%- T`&_AddHead[@(64) ()]&]
+[s2; Adds a new default constructed element at the head of the BiVector. 
+The new element will be at position 0.&]
+[s6; Requires T to have default constructor.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s7; [*/ Return value]-|Reference to the newly added default constructed 
+element.&]
+[s0;3 &]
+[s5;K%- T`&_AddTail[@(64) ()]&]
+[s2; Adds a new default constructed element at the tail of the BiVector. 
+The new element will be at position GetCount() `- 1.&]
+[s6; Requires T to have default constructor.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s7; [*/ Return value]-|Reference to the newly added default constructed 
+element.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]AddHead[@(64) (][@(0.0.255) const][@(64) _T`&_][@3 x][@(64) )]&]
+[s2; Adds a new element with the specified value at the head of the 
+BiVector. The new element will be at position 0.&]
+[s6; Requires T to have deep copy constructor.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s7; [*C@3 x]-|The value that is copied to the newly created element.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]AddTail[@(64) (][@(0.0.255) const][@(64) _T`&_][@3 x][@(64) )]&]
+[s2; Adds a new element with the specified value at the tail of the 
+BiVector. The new element will be at position GetCount() `- 1.&]
+[s6; Requires T to have deep copy constructor.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s7; [*C@3 x]-|The value that is copied to the newly created element.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]AddHeadPick[@(64) (pick`__T`&_][@3 x][@(64) )]&]
+[s2; Adds a new element at the head of the BiVector and picks value 
+of the parameter. The new element will be at position 0.&]
+[s6; Requires T to have pick constructor.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s7; [*C@3 x]-|Source instance of T that is to be picked.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]AddTailPick[@(64) (pick`__T`&_][@3 x][@(64) )]&]
+[s2; Adds a new element at the tail of the BiVector and picks value 
+of the parameter. The new element will be at position GetCount() 
+`- 1.&]
+[s6; Requires T to have pick constructor.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s7; [*C@3 x]-|Source instance of T that is to be picked.&]
+[s0;3 &]
+[s5;K%- T`&_Head[@(64) ()]&]
+[s2; Returns a reference to the head of the BiVector. Same as operator`[`](0).&]
+[s7; [*/ Return value]-|Reference to the head of the BiVector.&]
+[s0;3 &]
+[s5;K%- T`&_Tail[@(64) ()]&]
+[s2; Returns a reference to the tail of the BiVector. Same as operator`[`](GetCount()
+ `- 1).&]
+[s7; [*/ Return value]-|Reference to the tail of the BiVector.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) const][@(64) _T`&_]Head[@(64) ()_][@(0.0.255) const]&]
+[s2; Returns a reference to the head of the BiVector. Same as operator`[`](0).&]
+[s7; [*/ Return value]-|Constant reference to the head of the BiVector.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) const][@(64) _T`&_]Tail[@(64) ()_][@(0.0.255) const]&]
+[s2; Returns a reference to the tail of the BiVector. Same as operator`[`](GetCount()
+ `- 1).&]
+[s7; [*/ Return value]-|Constant reference to the tail of the BiVector.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]DropHead[@(64) ()]&]
+[s2; Removes the element at the head of the BiVector.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]DropTail[@(64) ()]&]
+[s2; Removes the element at the tail of the BiVector.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s0;3 &]
+[s5;K%- T`&_operator`[`][@(64) (][@(0.0.255) int][@(64) _][@3 i][@(64) )]&]
+[s2; Returns a reference to the element at the specified position.&]
+[s7; [*C@3 i]-|Position of the element.&]
+[s7; [*/ Return value]-|Reference to the element.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) const][@(64) _T`&_]operator`[`][@(64) (][@(0.0.255) int][@(64) _][@3 i][@(64) )
+_][@(0.0.255) const]&]
+[s2; Returns a reference to the element at the specified position.&]
+[s7; [*C@3 i]-|Position of the element.&]
+[s7; [*/ Return value]-|Constant reference to the element.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) int][@(64) _]GetCount[@(64) ()_][@(0.0.255) const]&]
+[s2; Returns the number of elements in the BiVector.&]
+[s7; [*/ Return value]-|Actual number of elements.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) bool][@(64) _]IsEmpty[@(64) ()_][@(0.0.255) const]&]
+[s2; Tests whether the BiVector is empty. Same as GetCount() `=`= 
+0.&]
+[s7; [*/ Return value]-|true if Vector is empty, false otherwise.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]Clear[@(64) ()]&]
+[s2; Removes all elements from the BiVector.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]Shrink[@(64) ()]&]
+[s2; Minimizes memory consumption of the BiVector by minimizing capacity.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]Reserve[@(64) (][@(0.0.255) int][@(64) _][@3 n][@(64) )]&]
+[s2; Reserves capacity. If required capacity is greater than the 
+current capacity, capacity is increased to the required value.&]
+[s7; [*C@3 n]-|Required capacity.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) int][@(64) _]GetAlloc[@(64) ()_][@(0.0.255) const]&]
+[s2; Returns current capacity of the BiVector.&]
+[s7; [*/ Return value]-|Capacity of the BiVector.&]
+[s0; &]
+[s0;:friend BiVector`& operator`<`<`(BiVector`& b`, const T`& x`): friend 
+BiVector`& [* operator]<<(BiVector`& [*@3 b], const T`& [*@3 x])&]
+[s2; Operator replacement of [* void AddTail(const T`&x)]. By returning 
+a reference to the BiVector it allows adding more elements in 
+a single expression, thus e.g. allowing to construct a temporary 
+BiVector as part of an expression like Foo(BiVector<int>() << 
+1 << 2 << 4).&]
+[s6; Requires T to have deep copy constructor.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s7; [*C@3 x]-|The value that is copied to the newly created element.&]
+[s7; [*/ Return value]-|Reference to the BiVector (that is `*this).&]
+[s0; &]
+[s0;:friend BiVector`& operator`>`>`(const T`& x`, BiVector`& b`): friend 
+BiVector`& [* operator]>>(const T`& [*@3 x], BiVector`& [*@3 b])&]
+[s2; Operator replacement of [* void AddHead(const T`&x)]. By returning 
+a reference to the BiVector it allows adding more elements in 
+a single expression, thus e.g. allowing to construct a temporary 
+BiVector as part of an expression like Foo(1 >> (2 >> BiVector<int>())).&]
+[s6; Requires T to have deep copy constructor.&]
+[s6; Invalidates iterators and references to the BiVector.&]
+[s7; [*C@3 x]-|The value that is copied to the newly created element.&]
+[s7; [*/ Return value]-|Reference to BiVector (that is `*this).&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]Serialize[@(64) (][^`:`:Stream^@(64) Stream][@(64) `&_][@3 s][@(64) )
+]&]
+[s2; Serializes content of the BiVector to/from the Stream. Works 
+only if NTL is used as part of UPP.&]
+[s6; Requires T to have serialization operator defined.&]
+[s7; [*C@3 s]-|Target/source stream.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) bool][@(64) _]IsPicked[@(64) ()]&]
+[s2; Default constructor. Constructs an empty BiVector.&]
+[s0;3 &]
+[s0;:`:`:BiVector`:`:`~BiVector`(`): `~[* BiVector]()&]
+[s2; Destructor. Invokes the destructor of every element in the BiVector.&]
+[s0;3 &]
+[s0;:`:`:BiVector`:`:BiVector`(pick`_`:`:BiVector`&`): [* BiVector](pick`_ 
+BiVector`& [*@3 src])&]
+[s2; Pick constructor. Transfers source BiVector in low constant 
+time, but destroys it by picking.&]
+[s7; [*C@3 src]-|Source BiVector.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) void][@(64) _]operator`=[@(64) (pick`__][^`:`:BiVector^@(64) BiVector][@(64) `&
+_][@3 src][@(64) )]&]
+[s2; Pick operator. Transfers source BiVector in low constant time, 
+but destroys it by picking.&]
+[s7; [*C@3 v]-|Source BiVector.&]
+[s0;3 &]
+[s5;K%- [@(0.0.255) bool][@(64) _]IsPicked[@(64) ()]&]
+[s2; Returns [* true] if BiVector is in picked state.&]
+[s7; [*/ Return value]-|[* true] if BiVector is in picked state, [* false] 
+otherwise.&]
+[s0;3 &]
+[s0;:`:`:BiVector`:`:BiVector`(const`:`:BiVector`&`,int`): [* BiVector](const 
+BiVector`& [*@3 src], int)&]
+[s2; Optional deep copy constructor.&]
+[s6; Requires T to have deep copy constructor or optional deep copy 
+constructor.&]
+[s7; [*C@3 v]-|Source BiVector.&]
+[s0;3 &]
+[s5;K%- typedef_T_ValueType&]
+[s2; Typedef of T for use in templated algorithms.&]
+[s0;3 &]
+[s5;K%- typedef_[^`:`:IIterator^ IIterator]<[^`:`:BiVector^ BiVector]>_Iterator&]
+[s2; Iterator type.&]
+[s0;3 &]
+[s5;K%- typedef_[^`:`:ConstIIterator^ ConstIIterator]<[^`:`:BiVector^ BiVector]>_ConstIte
+rator&]
+[s2; Constant iterator type.&]
+[s0;3 &]
+[s5;K%- [^`:`:BiVector`:`:ConstIterator^ ConstIterator]_Begin[@(64) ()_][@(0.0.255) const]&]
+[s2; Returns a constant iterator to the first element in the BiVector.&]
+[s7; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s5;K%- [^`:`:BiVector`:`:ConstIterator^ ConstIterator]_End[@(64) ()_][@(0.0.255) const]&]
+[s2; Returns a constant iterator to the position just beyond the 
+last element in the BiVector.&]
+[s7; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s5;K%- [^`:`:BiVector`:`:ConstIterator^ ConstIterator]_GetIter[@(64) (][@(0.0.255) int][@(64) _
+][@3 pos][@(64) )_][@(0.0.255) const]&]
+[s2; Returns a constant iterator to the element at the specified 
+position. Same as [* Begin() `+ i]. The benefit of this method 
+is that [* pos] is range checked in debug mode.&]
+[s7; [*C@3 i]-|Required position.&]
+[s7; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s5;K%- [^`:`:BiVector`:`:Iterator^ Iterator]_Begin[@(64) ()]&]
+[s2; Returns a non`-constant iterator to the first element in the 
+BiVector.&]
+[s7; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s5;K%- [^`:`:BiVector`:`:Iterator^ Iterator]_End[@(64) ()]&]
+[s2; Returns non`-constant iterator to the position just beyond the 
+last element in the BiVector.&]
+[s7; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s5;K%- [^`:`:BiVector`:`:Iterator^ Iterator]_GetIter[@(64) (][@(0.0.255) int][@(64) _][@3 pos][@(64) )
+]&]
+[s2; Returns a non`-constant iterator to the element at the specified 
+position. Same as [* Begin() `+ pos]. The benefit of this method 
+is that [* pos] is range checked in debug mode.&]
+[s7; [*C@3 i]-|Required position.&]
+[s7; [*/ Return value]-|Iterator.&]
+[s0;3 &]
+[s5;K%- friend_[@(0.0.255) void][@(64) _]Swap[@(64) (][^`:`:BiVector^@(64) BiVector][@(64) `&_][@3 a
+][@(64) , ][^`:`:BiVector^@(64) BiVector][@(64) `&_][@3 b][@(64) )]&]
+[s2; Specialization of the generic [* Swap] for BiVectors. Swaps BiVectors 
+in low constant time operation.&]
+[s7; [*C@3 a]-|First BiVector to swap.&]
+[s7; [*C@3 b]-|Second BiVector to swap.&]
+[s0; ]

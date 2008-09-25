@@ -1,5 +1,7 @@
 #include "Browser.h"
 
+#define LLOG(x) // DLOG(x)
+
 bool IsCppKeyword(const String& id)
 {
 	static Index<String> kw;
@@ -53,6 +55,8 @@ static String s_pick_("pick_");
 
 Vector<ItemTextPart> ParseItemNatural(const String& name, const CppSimpleItem& m, const char *s)
 {
+	LLOG("ParseItemNatural " << m.natural << ", pname: " << m.pname
+	                         << ", tname: " << m.tname << ", m.ctname: " << m.ctname);
 	Vector<ItemTextPart> part;
 	bool param = false;
 	while(*s) {
@@ -103,6 +107,7 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppSimpleItem& m
 					if(ii >= 0)
 						p.type = ITEM_TYPE + ii;
 				}
+				LLOG("id: " << id << ", type: " << p.type);
 			}
 		}
 		else {
