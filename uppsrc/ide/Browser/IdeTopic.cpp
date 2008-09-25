@@ -327,7 +327,13 @@ void   TopicEditor::FixTopic()
 	Vector<String> link;
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
-		natural.Add(m.natural);
+		String nat;
+		if(m.virt)
+			nat << "virtual ";
+		if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
+			nat << "static ";
+		nat << m.natural;
+		natural.Add(nat);
 		link.Add(nest + "::" + n.key[i]);
 	}
 	RichText result;
