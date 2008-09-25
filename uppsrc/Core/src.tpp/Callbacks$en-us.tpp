@@ -10,15 +10,18 @@ topic "Callbacks";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; Callbacks&]
+[s0; [4 Callbacks]&]
+[s0; &]
 [s0; Callbacks can be described as a very generalized form of function 
 pointers. Each Callback represents some kind of action (usually 
 calling a certain function or a certain object method) that can 
 be invoked at any time.&]
+[s0; &]
 [s0; There are several basic callback types, depending on number 
 of parameters passed and return value. In order to keep description 
 of callbacks short, all these types are described in a single 
 `"parametrized`" description, with parameters [*/@(128.0.255) highlighted].&]
+[s0; &]
 [s0; Callback types&]
 [s2; &]
 [ {{1514:5185:1933:1368h1;t/17b/17@(204) [s0;%- [*/@(128.0.255)1 CallbackType]]
