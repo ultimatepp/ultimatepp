@@ -9,45 +9,57 @@ topic "class Thread";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
-[{_}%EN-US 
-[s1;K:`:`:Thread`:`:class:%- Thread&]
-[s2; Encapsulation of thread.&]
-[s0; &]
-[s5;K:`:`:Thread`:`:Run`(`:`:Callback`):%- [@(0.0.255) bool][@(64) _]Run[@(64) (][^`:`:Callback^@(64) C
-allback][@(64) _][@3 cb][@(64) )]&]
-[s2; Starts a new thread.&]
-[s0; &]
-[s5;K:`:`:Thread`:`:Wait`(`):%- [@(0.0.255) int][@(64) _]Wait[@(64) ()]&]
-[s2; Waits for started thread to finish. (`"join`").&]
-[s0; &]
-[s5;K:`:`:Thread`:`:IsOpen`(`)const:%- [@(0.0.255) bool][@(64) _]IsOpen[@(64) ()_][@(0.0.255) c
-onst]&]
-[s2; Thread represents a running thread.&]
-[s0; &]
-[s5;K:`:`:Thread`:`:Start`(`:`:Callback`):%- static [@(0.0.255) void][@(64) _]Start[@(64) (
-][^`:`:Callback^@(64) Callback][@(64) _][@3 cb][@(64) )]&]
-[s2; Starts a thread and returns immediately (you cannot Wait for 
+[{_} 
+[s1;:`:`:Thread`:`:class: [@(0.0.255)3 class][3 _][*3 Thread][3 _:_][@(0.0.255)3 private][3 _][*@3;3 N
+oCopy]&]
+[s2;%% &]
+[s2;%% Encapsulation of thread.&]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
+[s4; &]
+[s5;:`:`:Thread`:`:Run`(`:`:Callback`): [@(0.0.255) bool]_[* Run]([_^`:`:Callback^ Callback
+]_[*@3 cb])&]
+[s2;%% Starts a new thread.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:Wait`(`): [@(0.0.255) int]_[* Wait]()&]
+[s2;%% Waits for started thread to finish. (`"join`").&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:IsOpen`(`)const: [@(0.0.255) bool]_[* IsOpen]()_[@(0.0.255) const]&]
+[s2;%% Thread represents a running thread.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:Start`(`:`:Callback`): [@(0.0.255) static] [@(0.0.255) void]_[* Start]([_^`:`:Callback^ C
+allback]_[*@3 cb])&]
+[s2;%% Starts a thread and returns immediately (you cannot Wait for 
 the thread to finish in this case).&]
-[s0; &]
-[s5;K:`:`:Thread`:`:Sleep`(int`):%- static [@(0.0.255) void][@(64) _]Sleep[@(64) (][@(0.0.255) i
-nt][@(64) _][@3 ms][@(64) )]&]
-[s2; Sleep for a given number of milliseconds.&]
-[s0; &]
-[s5;K:`:`:Thread`:`:IsST`(`):%- static [@(0.0.255) bool][@(64) _]IsST[@(64) ()]&]
-[s2; True is no thread was started yet.&]
-[s0; &]
-[s5;K:`:`:Thread`:`:GetCount`(`):%- static [@(0.0.255) int][@(64) _]GetCount[@(64) ()]&]
-[s2; Number of running threads.&]
-[s0; &]
-[s5;K:`:`:Thread`:`:ShutdownThreads`(`):%- static [@(0.0.255) void][@(64) _]ShutdownThrea
-ds[@(64) ()]&]
-[s2; Sets the `"Shutdown`" flag on.&]
-[s0; &]
-[s5;K:`:`:Thread`:`:IsShutdownThreads`(`):%- static [@(0.0.255) bool][@(64) _]IsShutdownT
-hreads[@(64) ()]&]
-[s2; True if ShutdownThreads was called.&]
-[s0; &]
-[s5;K:`:`:Thread`:`:`~`:`:Thread`(`):%- `~Thread[@(64) ()]&]
-[s2; Destructor. Thread continues running (and it is impossible to 
-Wait for finish).&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:Sleep`(int`): [@(0.0.255) static] [@(0.0.255) void]_[* Sleep]([@(0.0.255) i
+nt]_[*@3 ms])&]
+[s2;%% Sleep for a given number of milliseconds.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:IsST`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsST]()&]
+[s2;%% True is no thread was started yet.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:GetCount`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetCount]()&]
+[s2;%% Number of running threads.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:ShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownTh
+reads]()&]
+[s2;%% Sets the `"Shutdown`" flag on.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:IsShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdo
+wnThreads]()&]
+[s2;%% True if ShutdownThreads was called.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Thread`:`:`~Thread`(`): [@(0.0.255) `~][* Thread]()&]
+[s2;%% Destructor. Thread continues running (and it is impossible 
+to Wait for finish).&]
 [s0; ]

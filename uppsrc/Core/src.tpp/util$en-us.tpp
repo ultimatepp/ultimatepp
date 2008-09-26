@@ -9,23 +9,21 @@ topic "Miscellaneous";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
-[{_}%EN-US 
-[s0; Miscellaneous&]
-[s0; &]
-[s0;%- class_[* Exc]&]
-[s2; &]
-[s2; This is the preferred root class of U`+`+ exception. It is basically 
-a String. The idea is that all kinds of exception can be either 
-managed by specific handlers, or simple Exc handler can be used, 
-displaying textual information to the user.&]
-[s2; &]
-[s0;%- [%%/ Derived from][%%  ]String&]
-[s0;3 &]
-[s0;:`:`:Exc`:`:Exc`(`):%- [* Exc]()&]
-[s2; Default constructor.&]
-[s0;3 &]
-[s0;:`:`:Exc`:`:Exc`(const`:`:String`&`):%- [* Exc](const_String`&_[*@3 desc])&]
-[s2; Constructor from String.&]
-[s7; [%-*C@3 desc]-|Description of error.&]
-[s0; &]
-[s0; ]
+[{_} 
+[s1;:`:`:Exc`:`:class: [@(0.0.255)3 class][3 _][*3 Exc][3 _:_][@(0.0.255)3 public][3 _][*@3;3 String
+]&]
+[s2;%% &]
+[s2;%% This is the preferred root class of U`+`+ exception. It is 
+basically a String. The idea is that all kinds of exception can 
+be either managed by specific handlers, or simple Exc handler 
+can be used, displaying textual information to the user.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Exc`:`:Exc`(`): [* Exc]()&]
+[s2;%% Default constructor.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:Exc`:`:Exc`(const`:`:String`&`): [* Exc]([@(0.0.255) const]_[_^`:`:String^ String][@(0.0.255) `&
+]_[*@3 desc])&]
+[s2;%% Constructor, error described as [%-*C@3 desc].&]
+[s0;%% ]
