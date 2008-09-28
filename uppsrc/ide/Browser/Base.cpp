@@ -153,15 +153,15 @@ void LoadBrowserBase(Progress& pi)
 	}
 }
 
-void FinishBase(const CppWordsHash& w)
+void FinishBase()
 {
 	TimeStop tm;
-	Qualify(BrowserBase(), w);
+	Qualify(BrowserBase());
 }
 
 void ReQualifyBrowserBase()
 {
-	Qualify(BrowserBase(), AllCppWords());
+	Qualify(BrowserBase());
 }
 
 Vector<String> SortedNests()
@@ -174,33 +174,6 @@ Vector<String> SortedNests()
 			n.Add(base.GetKey(i));
 	Sort(n);
 	return n;
-}
-
-CppWordsHash Difference(const Vector<String>& a)
-{
-	TimeStop tm;
-	Vector<String> b = SortedNests();
-	CppWordsHash h;
-	int ai = 0;
-	int bi = 0;
-	while(ai < a.GetCount() && bi < b.GetCount()) {
-		int q = SgnCompare(a[ai], b[bi]);
-		if(q < 0)
-			h.AddWords(a[ai++]);
-		else
-		if(q > 0)
-			h.AddWords(b[bi++]);
-		else {
-			ai++;
-			bi++;
-		}
-	}
-	while(ai < a.GetCount())
-		h.AddWords(a[ai++]);
-	while(bi < b.GetCount())
-		h.AddWords(b[bi++]);
-	LLOG("Difference " << tm);
-	return h;
 }
 
 void UpdateBrowserBase(Progress& pi)
@@ -271,8 +244,6 @@ void BrowserBaseScan(Stream& s, const String& fn)
 {
 	LTIMING("BrowserBaseScan");
 	TimeStop tm;
-	Vector<String> before = SortedNests();
-	LLOG("Scan1 " << tm);
 	CppBase& base = BrowserBase();
 	LLOG("Scan2 " << tm);
 	Vector<String> remove;
@@ -281,7 +252,7 @@ void BrowserBaseScan(Stream& s, const String& fn)
 	LLOG("Scan3 " << tm);
 	Parse(s, IgnoreList(), base, fn, CNULL);
 	LLOG("Scan4 " << tm);
-	FinishBase(Difference(before));
+	FinishBase();
 	LLOG("Scan total " << tm);
 	LLOG("---------");
 }
@@ -295,7 +266,7 @@ void BrowserBaseScanLay(const String& fn)
 	remove.Add(fn);
 	Remove(base, remove);
 	ScanLayFile(fn);
-	FinishBase(Difference(before));
+	FinishBase();
 }
 
 void ClearBrowserBase()
@@ -314,7 +285,7 @@ void StartBrowserBase()
 		pi.Title("Assist++");
 		LoadBrowserBase(pi);
 		UpdateBrowserBase(pi);
-		FinishBase(AllCppWords());
+		FinishBase();
 	}
 	start--;
 }
@@ -325,7 +296,7 @@ void SyncBrowserBase()
 		Progress pi;
 		pi.Title("Assist++");
 		UpdateBrowserBase(pi);
-		FinishBase(AllCppWords());
+		FinishBase();
 	}
 }
 
@@ -336,7 +307,7 @@ void RescanBrowserBase()
 	Progress pi;
 	pi.Title("Assist++");
 	UpdateBrowserBase(pi);
-	FinishBase(AllCppWords());
+	FinishBase();
 	s_console = false;
 }
 

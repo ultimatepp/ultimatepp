@@ -1,15 +1,17 @@
-class Crc32 {
+class Crc32Stream : public OutStream {
 	dword crc;
 
-public:	
-	void Put(const void *ptr, int count);
-	void Put(char c);
-	void Put(byte c);
+	virtual  void  Out(const void *data, dword size);
 
-	operator dword() const { return crc; }
+public:
+	dword  Finish()            { Flush(); return crc; }
+	operator dword()           { return Finish(); }
 	
-	Crc32();
+	Crc32Stream();
 };
+
+dword CRC32(const void *ptr, dword count);
+dword CRC32(const String& s);
 
 int    ZCompress(Stream& out, Stream& in, int size, Gate2<int, int> progress = false, bool nohdr = false, dword *crc = NULL);
 int    ZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> progress = false, bool nohdr = false, dword *crc = NULL);

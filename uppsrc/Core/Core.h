@@ -398,55 +398,56 @@ inline void operator  delete[](void *ptr, const std::nothrow_t&) throw() { UPP::
 
 NAMESPACE_UPP
 
-#include <Core/Mt.h>
-#include <Core/Global.h>
-#include <Core/Topt.h>
-#include <Core/Profile.h>
-#include <Core/String.h>
+#include "Mt.h"
+#include "Global.h"
+#include "Topt.h"
+#include "Profile.h"
+#include "String.h"
 
-#include <Core/CharSet.h>
-#include <Core/TimeDate.h>
-#include <Core/Path.h>
-#include <Core/Stream.h>
-#include <Core/Diag.h>
+#include "CharSet.h"
+#include "TimeDate.h"
+#include "Path.h"
+#include "Stream.h"
+#include "Diag.h"
 
-#include <Core/Vcont.h>
-#include <Core/BiCont.h>
-#include <Core/Index.h>
-#include <Core/Map.h>
-#include <Core/Other.h>
-#include <Core/Algo.h>
-#include <Core/Vcont.hpp>
-#include <Core/Index.hpp>
+#include "Vcont.h"
+#include "BiCont.h"
+#include "Index.h"
+#include "Map.h"
+#include "Other.h"
+#include "Algo.h"
+#include "Vcont.hpp"
+#include "Index.hpp"
 
-#include <Core/Value.h>
-#include <Core/Gtypes.h>
-#include <Core/Color.h>
+#include "Value.h"
+#include "Gtypes.h"
+#include "Color.h"
 
-#include <Core/Uuid.h>
-#include <Core/Ptr.h>
+#include "Uuid.h"
+#include "Ptr.h"
 
-#include <Core/Callback.h>
-#include <Core/Util.h>
+#include "Callback.h"
+#include "Util.h"
 
-#include <Core/Format.h>
-#include <Core/Convert.h>
+#include "Format.h"
+#include "Convert.h"
 
-#include <Core/z.h>
+#include "z.h"
+#include "hash.h"
 
-#include <Core/Parser.h>
-#include <Core/XML.h>
-#include <Core/Lang.h>
-#include <Core/i18n.h>
-#include <Core/Topic.h>
+#include "Parser.h"
+#include "XML.h"
+#include "Lang.h"
+#include "i18n.h"
+#include "Topic.h"
 
-#include <Core/App.h>
+#include "App.h"
 
-#include <Core/Xmlize.h>
+#include "Xmlize.h"
 
-#include <Core/CoWork.h>
+#include "CoWork.h"
 
-#include <Core/Win32Util.h>
+#include "Win32Util.h"
 
 #if (defined(HEAPDBG) || defined(TESTLEAKS)) && defined(PLATFORM_POSIX)
 extern int sMemDiagInitCount;

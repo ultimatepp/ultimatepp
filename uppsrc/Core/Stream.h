@@ -496,6 +496,35 @@ public:
 	CompareStream(Stream& aStream);
 };
 
+class OutStream : public Stream {
+	byte     h[128];
+protected:
+	virtual  void  _Put(int w);
+	virtual  void  _Put(const void *data, dword size);
+	virtual  bool  IsOpen() const;
+	
+	virtual  void  Out(const void *data, dword size) = 0;
+	
+	void     Flush();
+	
+	OutStream();
+};
+
+class TeeStream : public OutStream {
+protected:
+	virtual  void  Out(const void *data, dword size);
+
+private:
+	Stream& a;
+	Stream& b;
+
+public:
+	void    Close()                              { Flush(); }
+
+	TeeStream(Stream& a, Stream& b) : a(a), b(b) {}
+	~TeeStream()                                 { Close(); }
+};
+
 class FileMapping
 {
 public:

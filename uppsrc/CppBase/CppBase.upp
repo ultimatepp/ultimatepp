@@ -12,6 +12,7 @@ file
 	cpplex.cpp,
 	Parser.cpp,
 	Base.cpp,
+	Qualify.cpp,
 	Info readonly separator,
 	Copying;
 

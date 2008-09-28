@@ -15,26 +15,6 @@ enum {
 #undef  CPPID
 };
 
-class CppWordsHash {
-	dword w[4];
-
-public:
-	void Clear()  { w[0] = w[1] = w[2] = w[3] = 0; }
-	void SetAll() { w[0] = w[1] = w[2] = w[3] = ~0; }
-	void AddWord(const String& s);
-	void AddWords(const char *s);
-
-	bool operator&(const CppWordsHash& b) const {
-		return (w[0] & b.w[0]) | (w[1] & b.w[1]) | (w[2] & b.w[2]) | (w[3] & b.w[3]);
-	}
-
-	bool IsAll() const { return (w[0] & w[1] & w[2] & w[3]) == (dword)~0; }
-
-	CppWordsHash() { Clear(); }
-};
-
-CppWordsHash AllCppWords();
-
 enum {
 	t_eof,
 	t_string = -200,
@@ -265,11 +245,12 @@ struct CppSimpleItem {
 struct CppItem : CppSimpleItem {
 	Vector<CppPos> pos;
 	String         key;
-	CppWordsHash   words;
+	byte           qualify_type, qualify_param;
+	int            serial;
 
 	void Serialize(Stream& s);
 
-	CppItem()      { words.SetAll(); }
+	CppItem()      { qualify_type = qualify_param = true; serial = 0; }
 };
 
 struct CppNest {
@@ -288,6 +269,8 @@ struct CppNest {
 
 struct CppBase {
 	ArrayMap<String, CppNest> nest;
+	int                       serial;
+	String                    serial_md5;
 
 	CppNest&       operator[](int i)                             { return nest[i]; }
 	int            GetCount() const                              { return nest.GetCount(); }
@@ -297,6 +280,8 @@ struct CppBase {
 	CppNest&       GetAdd(const String& s)                       { return nest.GetAdd(s); }
 
 	bool           IsType(int i) const;
+	
+	CppBase() { serial = 0; }
 };
 
 class Parser {
@@ -458,11 +443,34 @@ public:
 
 String NoTemplatePars(const String& type);
 
+class Nestfo {
+	bool           bvalid, nvalid;
+	Vector<String> baselist;
+	Vector<String> nests;
+	int            nesti;
+	void           Bases(int i, Vector<int>& g);
+	void           Init();
+
+public:
+	const CppBase&            base;
+	VectorMap<String, String> cache;
+
+	const Vector<String>& GetBases();
+	const Vector<String>& GetNests();
+	int                   GetNest() const               { return nesti; }
+	void                  NoBases()                     { baselist.Clear(); bvalid = true; }
+
+	Nestfo(const CppBase& base, int nesti = -1);
+	Nestfo(int nesti, const CppBase& base);
+	Nestfo(const CppBase& base, const String& nest);
+	Nestfo(const Nestfo& f);
+};
+
 String Qualify(const CppBase& base, const String& nest, const String& type);
 void   QualifyTypes(CppBase& base, const String& nest, CppItem& m);
 String QualifyKey(const CppBase& base, const String& nest, const String& type);
 
-void   Qualify(CppBase& base, const CppWordsHash& words);
+void   Qualify(CppBase& base);
 
 void Parse(Stream& s, const Vector<String>& ignore, CppBase& base, const String& fn,
            Callback2<int, const String&> err);

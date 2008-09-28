@@ -75,11 +75,15 @@ void EditorBar::Paint(Draw& w) {
 		String b;
 		int err = 0;
 		int edit = 0;
+		String ann;
+		Image  icon;
 		if(i < li.GetCount()) {
 			const LnInfo& l = li[i];
 			b = l.breakpoint;
 			err = l.error;
 			edit = l.edited;
+			icon = l.icon;
+			ann = l.annotation;
 		}
 		if(line_numbers && i < editor->GetLineCount()) {
 			String n = AsString(i + 1);
@@ -139,6 +143,10 @@ void EditorBar::Paint(Draw& w) {
 		for(int q = 0; q < 2; q++)
 			if(ptri[q] == i)
 				sPaintImage(w, y, fy, ptrimg[q]);
+
+		if(annotations && !IsNull(icon))
+			w.DrawImage(sz.cx - 12, y + (fy - icon.GetSize().cy) / 2, icon);
+
 		y += fy;
 		i++;
 	}
@@ -306,6 +314,19 @@ String EditorBar::GetBreakpoint(int ln)
 	return ln < li.GetCount() ? li[ln].breakpoint : Null;
 }
 
+void EditorBar::SetAnnotation(int line, const Image& img, const String& ann)
+{
+	if(line >= 0 && line < li.GetCount()) {
+		li[line].icon = img;
+		li[line].annotation = ann;
+	}
+}
+
+String EditorBar::GetAnnotation(int line) const
+{
+	return line >= 0 && line < li.GetCount() ? li[line].annotation : String();
+}
+
 void EditorBar::SetBreakpoint(int ln, const String& s)
 {
 	li.At(ln).breakpoint = s;
@@ -405,11 +426,22 @@ void EditorBar::HidePtr()
 	Refresh();
 }
 
+void EditorBar::SyncWidth()
+{
+	Width((line_numbers ? 27 : 12) + annotations * 12);
+	Refresh();
+}
+
 void EditorBar::LineNumbers(bool b)
 {
 	line_numbers = b;
-	Width(b ? 27 : 12);
-	Refresh();
+	SyncWidth();
+}
+
+void EditorBar::Annotations(bool b)
+{
+	annotations = b;
+	SyncWidth();
 }
 
 EditorBar::EditorBar() {
@@ -417,7 +449,7 @@ EditorBar::EditorBar() {
 	editor = NULL;
 	bingenabled = true;
 	hilite_if_endif = true;
-	line_numbers = false;
+	line_numbers = annotations = false;
 	ignored_next_edit = false;
 	next_age = 0;
 }

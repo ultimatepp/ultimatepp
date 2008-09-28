@@ -34,6 +34,9 @@ String Garble(const String& s);
 String Encode64(const String& s);
 String Decode64(const String& s);
 
+String HexString(const byte *s, int count, int sep = INT_MAX);
+String HexString(const String& s, int sep = INT_MAX);
+
 #ifdef PLATFORM_WINCE
 WString ToSystemCharset(const String& src);
 String  FromSystemCharset(const WString& src);

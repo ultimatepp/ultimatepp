@@ -43,24 +43,26 @@ enum
 	RESERVED     = 0xE0, /* bits 5..7: reserved */
 };
 
-void Crc32::Put(const void *ptr, int count)
+void Crc32Stream::Out(const void *ptr, dword count)
 {
 	crc = crc32(crc, (byte *)ptr, count);
 }
 
-void Crc32::Put(char c)
-{
-	crc = crc32(crc, (byte *)&c, 1);
-}
-
-void Crc32::Put(byte c)
-{
-	crc = crc32(crc, (byte *)&c, 1);
-}
-
-Crc32::Crc32()
+Crc32Stream::Crc32Stream()
 {
 	crc = crc32(0, NULL, 0);
+}
+
+dword CRC32(const void *ptr, dword count)
+{
+	Crc32Stream c;
+	c.Put(ptr, count);
+	return c;
+}
+
+dword CRC32(const String& s)
+{
+	return CRC32(~s, s.GetLength());
 }
 
 static int sZpress(Stream& out, Stream& in, int size, Gate2<int, int> progress, bool nohdr, dword *crc,

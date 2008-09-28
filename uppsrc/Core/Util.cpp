@@ -501,6 +501,31 @@ String Decode64(const String& s)
 	}
 }
 
+String HexString(const byte *s, int count, int sep)
+{
+	StringBuffer b(2 * count + (count - 1) / sep);
+	static const char itoc[] = "0123456789abcdef";
+	int i = 0;
+	char *t = b;
+	for(;;) {
+		for(int q = 0; q < sep; q++) {
+			if(i >= count)
+				return b;
+			*t++ = itoc[(s[i] & 0xf0) >> 4];
+			*t++ = itoc[s[i] & 0x0f];
+			i++;
+		}
+		if(i >= count)
+			return b;
+		*t++ = ' ';
+	}
+}
+
+String HexString(const String& s, int sep)
+{
+	return HexString(s, s.GetCount(), sep);
+}
+
 String NormalizeSpaces(const char *s)
 {
 	StringBuffer r;

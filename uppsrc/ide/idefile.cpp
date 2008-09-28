@@ -434,7 +434,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	SetBar();
 	editor.assist_active = IsProjectFile(editfile) && (IsCSourceFile(editfile) || IsCHeaderFile(editfile));
 	editor.CheckEdited(true);
-	editor.CreateIndex();
+	editor.CreateIndex(editfile);
 }
 
 void Ide::EditAsText()
