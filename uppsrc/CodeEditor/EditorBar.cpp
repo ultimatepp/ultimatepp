@@ -145,7 +145,7 @@ void EditorBar::Paint(Draw& w) {
 				sPaintImage(w, y, fy, ptrimg[q]);
 
 		if(annotations && !IsNull(icon))
-			w.DrawImage(sz.cx - 12, y + (fy - icon.GetSize().cy) / 2, icon);
+			w.DrawImage(sz.cx - annotations, y + (fy - icon.GetSize().cy) / 2, icon);
 
 		y += fy;
 		i++;
@@ -153,8 +153,23 @@ void EditorBar::Paint(Draw& w) {
 }
 
 void EditorBar::MouseMove(Point p, dword flags) {
+	int pa = active_annotation;
+	if(p.x > GetSize().cx - annotations)
+		active_annotation = p.y / editor->GetFont().Info().GetHeight() + editor->GetScrollPos().y;
+		if(active_annotation >= editor->GetLineCount())
+			active_annotation = -1;
+	if(pa != active_annotation)
+		WhenAnnotationMove();
 	if(editor)
 		editor->MouseMove(Point(0, p.y), flags);
+}
+
+void EditorBar::MouseLeave()
+{
+	int pa = active_annotation;
+	active_annotation = -1;
+	if(pa != active_annotation)
+		WhenAnnotationMove();
 }
 
 void EditorBar::LeftDown(Point p, dword flags) {
@@ -428,7 +443,7 @@ void EditorBar::HidePtr()
 
 void EditorBar::SyncWidth()
 {
-	Width((line_numbers ? 27 : 12) + annotations * 12);
+	Width((line_numbers ? 27 : 12) + annotations);
 	Refresh();
 }
 
@@ -438,9 +453,9 @@ void EditorBar::LineNumbers(bool b)
 	SyncWidth();
 }
 
-void EditorBar::Annotations(bool b)
+void EditorBar::Annotations(int width)
 {
-	annotations = b;
+	annotations = width;
 	SyncWidth();
 }
 
@@ -449,7 +464,8 @@ EditorBar::EditorBar() {
 	editor = NULL;
 	bingenabled = true;
 	hilite_if_endif = true;
-	line_numbers = annotations = false;
+	line_numbers = false;
+	annotations = 0;
 	ignored_next_edit = false;
 	next_age = 0;
 }

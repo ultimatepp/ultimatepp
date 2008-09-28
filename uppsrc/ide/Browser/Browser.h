@@ -272,6 +272,9 @@ void SaveGroupInc(const String& grouppath);
 
 void SetTopicGroupIncludeable(const char *path, bool set);
 
+Uuid CodeItemUuid();
+Uuid StructItemUuid();
+
 struct StyleDlg;
 
 class TopicEditor : public IdeDesigner, public Ctrl {

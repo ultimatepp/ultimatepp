@@ -41,7 +41,9 @@ AssistEditor::AssistEditor()
 	searchindex.SetFilter(CharFilterAlphaToUpper);
 	searchindex <<= THISBACK(SearchIndex);
 	showindex = true;
-	Annotations(true);
+
+	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
+	Annotations(12);
 }
 
 Vector<String> TemplatePars(const String& type)
@@ -341,6 +343,8 @@ void AssistEditor::CloseAssist()
 {
 	if(popup.IsOpen())
 		popup.Close();
+	if(annotation_popup.IsOpen())
+		annotation_popup.Close();
 	assist_item.Clear();
 }
 

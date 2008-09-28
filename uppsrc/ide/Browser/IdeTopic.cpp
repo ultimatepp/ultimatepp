@@ -32,10 +32,20 @@ void TopicEditor::Label(String& label)
 	label = ref.Get();
 }
 
+Uuid CodeItemUuid()
+{
+	return ScanUuid(CODEITEM);
+}
+
+Uuid StructItemUuid()
+{
+	return ScanUuid(STRUCTITEM);
+}
+
 void TopicEditor::FindBrokenRef()
 {
-	Uuid codeitem = ScanUuid(CODEITEM);
-	Uuid stritem = ScanUuid(STRUCTITEM);
+	Uuid codeitem = CodeItemUuid();
+	Uuid stritem = StructItemUuid();;
 	for(;;) {
 		if(IsNull(topicpath))
 			return;
