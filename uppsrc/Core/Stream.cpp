@@ -1182,6 +1182,52 @@ void CompareStream::_Put(int w) {
 	_Put(&b, 1);
 }
 
+OutStream::OutStream()
+{
+	buffer = ptr = h;
+	wrlim = h + sizeof(h);
+}
+
+void OutStream::_Put(int w)
+{
+	Flush();
+	*ptr++ = w;
+}
+
+void OutStream::_Put(const void *data, dword size)
+{
+	if(ptr == buffer)
+		Out(data, size);
+	else
+	if(ptr + size < wrlim) {
+		memcpy(ptr, data, size);
+		ptr += size;
+	}
+	else {
+		Flush();
+		Out(data, size);
+	}
+}
+
+void OutStream::Flush()
+{
+	if(ptr != buffer) {
+		Out(buffer, ptr - buffer);
+		ptr = h;
+	}
+}
+
+bool OutStream::IsOpen() const
+{
+	return true;
+}
+
+void TeeStream::Out(const void *data, dword size)
+{
+	a.Put(data, size);
+	b.Put(data, size);
+}
+
 struct NilStreamClass : public Stream {
 	virtual void    _Put(int w)    {}
 	virtual bool    IsOpen() const { return true; }

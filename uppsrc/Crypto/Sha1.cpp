@@ -126,8 +126,8 @@ String SHA1(const void *data, dword length) {
 	SHA1Transform(state, buffer);
 	String r = SHA1Result(state);
 	size = 0;
-	memset(buffer, 0, 64);
-	memset(state, 0, 5);
+	memset(buffer, 0, sizeof(buffer));
+	memset(state, 0, sizeof(state));
 	return r;
 }
 
@@ -169,8 +169,8 @@ Sha1::Sha1() {
 }
 
 Sha1::~Sha1() {
-	memset(buffer, 0, 64);
-	memset(state, 0, 5);
+	memset(buffer, 0, sizeof(buffer));
+	memset(state, 0, sizeof(state));
 }
 
 END_UPP_NAMESPACE

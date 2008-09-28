@@ -5,7 +5,7 @@
 bool IsCppKeyword(const String& id)
 {
 	static Index<String> kw;
-	if(kw.GetCount() == 0) {
+	ONCELOCK {
 		const char **cppk = CppKeyword();
 		for(int i = 0; cppk[i]; i++)
 			kw.Add(cppk[i]);
@@ -20,7 +20,7 @@ bool IsCppType(const String& id)
 	    "const", "mutable", "struct", "class", "union"
 	};
 	static Index<String> kt;
-	if(kt.GetCount() == 0) {
+	ONCELOCK {
 		for(int i = 0; i < __countof(t); i++)
 			kt.Add(t[i]);
 	}

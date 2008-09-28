@@ -420,7 +420,7 @@ struct AssistEditor : CodeEditor {
 
 	void           SwapSContext(Parser& p);
 
-	void           CreateIndex();
+	void           CreateIndex(const String& filename);
 
 	void           SyncIndex();
 	void           IndexSync();

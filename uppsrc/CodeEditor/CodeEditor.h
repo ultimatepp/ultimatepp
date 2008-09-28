@@ -36,6 +36,7 @@ struct LineInfoRemRecord : Moveable<LineInfoRemRecord> {
 	int    firstedited;
 	int    edited;
 };
+
 typedef Vector<LineInfoRemRecord> LineInfoRem;
 
 void Renumber(LineInfo& lf);
@@ -59,9 +60,12 @@ private:
 		int    error;
 		int    firstedited;
 		int    edited;
+		Image  icon;
+		String annotation;
 
 		LnInfo() { lineno = -1; error = 0; firstedited = 0; edited = 0; }
 	};
+	
 	Vector<LnInfo>   li;
 	LineInfoRem      li_removed;
 
@@ -72,11 +76,13 @@ private:
 	bool             bingenabled;
 	bool             hilite_if_endif;
 	bool             line_numbers;
+	bool             annotations;
 	bool             ignored_next_edit;
 	int              next_age;
 
 	String& PointBreak(int& y);
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
+	void    SyncWidth();
 
 public:
 	Callback1<int> WhenBreakpoint;
@@ -104,6 +110,9 @@ public:
 	void     SetLineInfo(const LineInfo& li, int total);
 	LineInfoRem & GetLineInfoRem()                   { return li_removed; }
 	void     SetLineInfoRem(pick_ LineInfoRem& li)   { li_removed = li; }
+	
+	void     SetAnnotation(int line, const Image& img, const String& ann);
+	String   GetAnnotation(int line) const;
 
 	int      GetLineNo(int lineno) const;
 	int      GetNoLine(int line) const;
@@ -114,6 +123,7 @@ public:
 	void     EnableBreakpointing(bool b)   { bingenabled = b; }
 	void     HiliteIfEndif(bool b)         { hilite_if_endif = b; Refresh(); }
 	void     LineNumbers(bool b);
+	void     Annotations(bool b);
 
 	bool     IsHiliteIfEndif() const       { return hilite_if_endif; }
 
@@ -452,6 +462,10 @@ public:
 	void     MarkLines(bool b)                        { mark_lines = b; }
 	bool     GetMarkLines()                           { return mark_lines; }
 	void     AutoEnclose(bool b)                      { auto_enclose = b; }
+	
+	void     Annotations(bool b)                      { bar.Annotations(b); }
+	void     SetAnnotation(int i, const Image& icon, const String& a) { bar.SetAnnotation(i, icon, a); }
+	void     GetAnnotation(int i) const               { bar.GetAnnotation(i); }
 
 	void     HideBar()                                { bar.Hide(); }
 

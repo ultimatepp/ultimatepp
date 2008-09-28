@@ -41,6 +41,7 @@ AssistEditor::AssistEditor()
 	searchindex.SetFilter(CharFilterAlphaToUpper);
 	searchindex <<= THISBACK(SearchIndex);
 	showindex = true;
+	Annotations(true);
 }
 
 Vector<String> TemplatePars(const String& type)

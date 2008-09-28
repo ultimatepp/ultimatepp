@@ -1,7 +1,19 @@
 #include "ide.h"
 
-void AssistEditor::CreateIndex()
+void AssistEditor::CreateIndex(const String& filename)
 {
+	int fi = GetCppFileIndex(filename);
+	CppBase& base = BrowserBase();
+	for(int j = 0; j < base.GetCount(); j++) {
+		CppNest& nest = base[j];
+		for(int k = 0; k < nest.GetCount(); k++) {
+			CppItem& m = nest.item[k];
+			for(int p = 0; p < m.pos.GetCount(); p++) {
+				if(m.pos[p].file == fi)
+					SetAnnotation(m.pos[p].line - 1, BrowserImg::Ref(), "");
+			}
+		}
+	}
 	searchindex.Clear();
 	Renumber2();
 	indexitem.Clear();
@@ -225,7 +237,7 @@ void AssistEditor::ShowIndex(bool b)
 	indexframe.Show(showindex);
 	if(showindex) {
 		SetFocus();
-		CreateIndex();
+//		CreateIndex();
 		SyncIndex();
 		SyncIndexCursor();
 	}
