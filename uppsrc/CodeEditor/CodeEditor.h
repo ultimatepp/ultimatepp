@@ -49,6 +49,7 @@ class EditorBar : public FrameLeft<Ctrl> {
 public:
 	virtual void Paint(Draw& w);
 	virtual void MouseMove(Point p, dword flags);
+	virtual void MouseLeave();
 	virtual void LeftDown(Point p, dword flags);
 	virtual void LeftDouble(Point p, dword flags);
 	virtual void RightDown(Point p, dword flags);
@@ -76,9 +77,10 @@ private:
 	bool             bingenabled;
 	bool             hilite_if_endif;
 	bool             line_numbers;
-	bool             annotations;
+	int              annotations;
 	bool             ignored_next_edit;
 	int              next_age;
+	int              active_annotation;
 
 	String& PointBreak(int& y);
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
@@ -86,6 +88,7 @@ private:
 
 public:
 	Callback1<int> WhenBreakpoint;
+	Callback       WhenAnnotationMove;
 
 	void InsertLines(int i, int count);
 	void RemoveLines(int i, int count);
@@ -120,12 +123,14 @@ public:
 	void     SetPtr(int line, const Image& img, int i);
 	void     HidePtr();
 
-	void     EnableBreakpointing(bool b)   { bingenabled = b; }
-	void     HiliteIfEndif(bool b)         { hilite_if_endif = b; Refresh(); }
+	void     EnableBreakpointing(bool b)     { bingenabled = b; }
+	void     HiliteIfEndif(bool b)           { hilite_if_endif = b; Refresh(); }
 	void     LineNumbers(bool b);
-	void     Annotations(bool b);
-
-	bool     IsHiliteIfEndif() const       { return hilite_if_endif; }
+	void     Annotations(int width);
+	
+	bool     IsHiliteIfEndif() const         { return hilite_if_endif; }
+	
+	int      GetActiveAnnotationLine() const { return active_annotation; }
 
 	EditorBar();
 	virtual ~EditorBar();
@@ -365,6 +370,7 @@ public:
 	Callback WhenSelection;
 	Callback1<const String&> WhenDbgView;
 	Callback WhenLeftDown;
+	Callback WhenAnnotationMove;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
@@ -463,9 +469,10 @@ public:
 	bool     GetMarkLines()                           { return mark_lines; }
 	void     AutoEnclose(bool b)                      { auto_enclose = b; }
 	
-	void     Annotations(bool b)                      { bar.Annotations(b); }
+	void     Annotations(int width)                   { bar.Annotations(width); }
 	void     SetAnnotation(int i, const Image& icon, const String& a) { bar.SetAnnotation(i, icon, a); }
-	void     GetAnnotation(int i) const               { bar.GetAnnotation(i); }
+	String   GetAnnotation(int i) const               { return bar.GetAnnotation(i); }
+	int      GetActiveAnnotationLine() const          { return bar.GetActiveAnnotationLine(); }
 
 	void     HideBar()                                { bar.Hide(); }
 

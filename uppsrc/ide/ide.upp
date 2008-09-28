@@ -38,6 +38,7 @@ file
 	t.cpp,
 	Assist.cpp,
 	Index.cpp,
+	Annotations.cpp,
 	Virtuals.cpp,
 	Thisbacks.cpp,
 	Goto.cpp,

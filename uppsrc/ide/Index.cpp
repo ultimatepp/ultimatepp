@@ -9,8 +9,13 @@ void AssistEditor::CreateIndex(const String& filename)
 		for(int k = 0; k < nest.GetCount(); k++) {
 			CppItem& m = nest.item[k];
 			for(int p = 0; p < m.pos.GetCount(); p++) {
-				if(m.pos[p].file == fi)
-					SetAnnotation(m.pos[p].line - 1, BrowserImg::Ref(), "");
+				if(m.pos[p].file == fi) {
+					String coderef = base.GetKey(j) + "::" + nest.key[k];
+					SetAnnotation(m.pos[p].line - 1,
+					              GetRefLinks(coderef).GetCount() ? IdeImg::tpp_doc()
+					                                              : IdeImg::tpp_pen,
+					              coderef);
+				}
 			}
 		}
 	}
