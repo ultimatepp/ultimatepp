@@ -44,6 +44,9 @@ AssistEditor::AssistEditor()
 
 	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
 	Annotations(12);
+	annotation_popup.Background(White);
+	annotation_popup.SetFrame(BlackFrame());
+	annotation_popup.Margins(6);
 }
 
 Vector<String> TemplatePars(const String& type)

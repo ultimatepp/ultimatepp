@@ -208,8 +208,10 @@ inline void Qualify(String& r, Nestfo& nf, const char *b, const char *s, byte& q
 	if(type.GetCount() == 0 || type == s_const ||
 	   type == s_int || type == s_double || type == s_char ||
 	   type == s_long || type == s_unsigned || type == s_struct || type == s_class ||
-	   type == s_float)
+	   type == s_float) {
+		r << type;
 		return;
+	}
 	r << DoQualify(nf, type);
 }
 
