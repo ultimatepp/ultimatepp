@@ -382,7 +382,7 @@ struct AssistEditor : CodeEditor {
 	ArrayCtrl      type;
 	Index<String>                 assist_type;
 	ArrayMap<String, CppItemInfo> assist_item;
-	RichTextView   annotation_popup;
+	RichTextCtrl   annotation_popup;
 	
 	int            assist_cursor;
 	bool           auto_assist;
@@ -422,7 +422,7 @@ struct AssistEditor : CodeEditor {
 
 	void           SwapSContext(Parser& p);
 
-	void           CreateIndex(const String& filename);
+	void           CreateIndex();
 
 	void           SyncIndex();
 	void           IndexSync();
@@ -434,6 +434,7 @@ struct AssistEditor : CodeEditor {
 	void           ShowIndex(bool b);
 	
 	void           SyncAnnotationPopup();
+	void           Annotate(const String& filename);
 
 	void           SerializeIndex(Stream& s);
 

@@ -1,24 +1,7 @@
 #include "ide.h"
 
-void AssistEditor::CreateIndex(const String& filename)
+void AssistEditor::CreateIndex()
 {
-	int fi = GetCppFileIndex(filename);
-	CppBase& base = BrowserBase();
-	for(int j = 0; j < base.GetCount(); j++) {
-		CppNest& nest = base[j];
-		for(int k = 0; k < nest.GetCount(); k++) {
-			CppItem& m = nest.item[k];
-			for(int p = 0; p < m.pos.GetCount(); p++) {
-				if(m.pos[p].file == fi) {
-					String coderef = base.GetKey(j) + "::" + nest.key[k];
-					SetAnnotation(m.pos[p].line - 1,
-					              GetRefLinks(coderef).GetCount() ? IdeImg::tpp_doc()
-					                                              : IdeImg::tpp_pen,
-					              coderef);
-				}
-			}
-		}
-	}
 	searchindex.Clear();
 	Renumber2();
 	indexitem.Clear();
@@ -242,7 +225,7 @@ void AssistEditor::ShowIndex(bool b)
 	indexframe.Show(showindex);
 	if(showindex) {
 		SetFocus();
-//		CreateIndex();
+		CreateIndex();
 		SyncIndex();
 		SyncIndexCursor();
 	}

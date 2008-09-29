@@ -274,6 +274,8 @@ void SetTopicGroupIncludeable(const char *path, bool set);
 
 Uuid CodeItemUuid();
 Uuid StructItemUuid();
+Uuid BeginUuid();
+Uuid EndUuid();
 
 struct StyleDlg;
 

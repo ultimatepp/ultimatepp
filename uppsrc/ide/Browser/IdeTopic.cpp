@@ -1,16 +1,18 @@
 #include "Browser.h"
 
-#define CODEITEM  "37138531426314131252341829483370"
+#define CODEITEM   "37138531426314131252341829483370"
 #define STRUCTITEM "37138531426314131252341829483380"
+#define BEGINSTYLE "05600065144404261032431302351956" 
+#define ENDSTYLE   "96390100711032703541132217272105"
 
 static const char styles[] =
 	"[ $$0,0#00000000000000000000000000000000:Default]"
 	"[i448;a25;kKO9;2 $$1,0#" CODEITEM ":codeitem]"
 	"[i448;a25;kKO9;3 $$2,0#" STRUCTITEM ":structitem]"
 	"[l288;2 $$3,0#27521748481378242620020725143825:desc]"
-	"[H6;0 $$4,0#05600065144404261032431302351956:begin]"
+	"[H6;0 $$4,0#" BEGINSTYLE ":begin]"
 	"[l288;a25;kK~~~.1408;@3;2 $$5,0#61217621437177404841962893300719:param]"
-	"[0 $$7,0#96390100711032703541132217272105:end]"
+	"[0 $$7,0#" ENDSTYLE ":end]"
 ;
 
 void TopicEditor::JumpToDefinition()
@@ -40,6 +42,16 @@ Uuid CodeItemUuid()
 Uuid StructItemUuid()
 {
 	return ScanUuid(STRUCTITEM);
+}
+
+Uuid BeginUuid()
+{
+	return ScanUuid(BEGINSTYLE);
+}
+
+Uuid EndUuid()
+{
+	return ScanUuid(ENDSTYLE);
 }
 
 void TopicEditor::FindBrokenRef()
