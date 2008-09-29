@@ -723,10 +723,15 @@ keys and basic random access container of values. Both containers
 must have same number of elements.&]
 [s7; [*C@3 ndx]-|Keys.&]
 [s7; [*C@3 val]-|Values.&]
-[s5;K%- typedef_K_KeyType&]
+[s3;%- &]
+[s4;%- &]
+[s5;:`:`:AMap`:`:KeyType`:`:typedef:%- [@(0.0.255) typedef]_K_[* KeyType]&]
 [s2; Typedef of K for use in templated algorithms.&]
-[s5;K%- typedef_typename_[^`:`:Index^ Index]<[^K^ K], [^HashFn^ HashFn]>`::ConstIterator_Key
-ConstIterator&]
+[s3;%- &]
+[s4;%- &]
+[s5;:`:`:AMap`:`:KeyConstIterator`:`:typedef:%- [@(0.0.255) typedef]_[@(0.0.255) typename
+]_[_^`:`:Index^ Index][@(0.0.255) <]K, HashFn[@(0.0.255) >`::]ConstIterator_[* KeyConstIte
+rator]&]
 [s2; Key iterator type.&]
 [s3;%- &]
 [s4;%- &]
@@ -792,4 +797,6 @@ Same as [* Begin() `+ i]. Benefit of this methods is that in debug
 mode [* pos] is range checked.&]
 [s7; [*C@3 i]-|Required position.&]
 [s7; [*/ Return value]-|Constant value iterator.&]
+[s0; &]
+[s0; &]
 [s0; ]

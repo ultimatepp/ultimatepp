@@ -9,117 +9,112 @@ topic "Application & environment utility";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
-[{_}%EN-US 
-[s0; [@3;4 Application `& environment utility]&]
-[s0; A number of utility functions to obtain information about your 
-application and system environment.&]
-[s0;+80 &]
-[s0; [* Implemented in:]&]
-[s0;%- [%% -|]Core`\App.[@(0.0.255) h]&]
-[s0;%- -|Core`\App.[@(0.0.255) cpp]&]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0; [*@2 Function List]]}}&]
-[s0; &]
-[s5;K:`:`:GetExeFilePath`(`):%- [^topic`:`/`/Core`/src`/String`$en`-us^ String]_GetExeF
-ilePath[@(64) ()]&]
-[s2;# Returns the absolute path towards the application`'s binary.&]
+[{_} 
+[s0;%% [@3;4 Application `& environment utility]&]
+[s0;%% A number of utility functions to obtain information about 
+your application and system environment.&]
+[s0;+80%% &]
+[s0;%% [* Implemented in:]&]
+[s0; [%% -|]Core`\App.[@(0.0.255) h]&]
+[s0; -|Core`\App.[@(0.0.255) cpp]&]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [*@2 Function List]]}}&]
+[s4;H0; &]
+[s5;:`:`:`:`:GetExeFilePath`(`): [_^`:`:String^ String]_[* GetExeFilePath]()&]
+[s2;#%% Returns the absolute path towards the application`'s binary.&]
 [s3; &]
 [s4; &]
-[s5;K:`:`:GetExeDirFile`(const char`*`):%- [^topic`:`/`/Core`/src`/String`$en`-us^ Stri
-ng]_GetExeDirFile[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 fp][@(64) )
-]&]
-[s2;# Returns the absolute path of a file that is found in the folder 
-where you application`'s binary resides.&]
-[s2; [@(129.0.0) fp..................................................]the 
+[s5;:`:`:`:`:GetExeDirFile`(const char`*`): [_^`:`:String^ String]_[* GetExeDirFile]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 fp])&]
+[s2;#%% Returns the absolute path of a file that is found in the 
+folder where you application`'s binary resides.&]
+[s2;%% [@(129.0.0) fp..................................................]the 
 name of the file&]
 [s3; &]
 [s4; &]
-[s5;%- [^topic`:`/`/Core`/src`/String`$en`-us^ String]_GetHomeDirectory[@(64) ()]&]
-[s2; Returns the absolute path of current user`'s home folder.&]
+[s5;:`:`:`:`:GetHomeDirectory`(`): [_^`:`:String^ String]_[* GetHomeDirectory]()&]
+[s2;%% Returns the absolute path of current user`'s home folder.&]
 [s3; &]
 [s4; &]
-[s5;%- [^topic`:`/`/Core`/src`/String`$en`-us^ String]_GetHomeDirFile[@(64) (][@(0.0.255) c
-onst][@(64) _][@(0.0.255) char][@(64) _`*][@3 fp][@(64) )]&]
-[s2;# Returns the absolute path of a file that is found in the current 
-user`'s home folder.&]
-[s2; [@(129.0.0) fp..................................................]the 
+[s5;:`:`:`:`:GetHomeDirFile`(const char`*`): [_^`:`:String^ String]_[* GetHomeDirFile]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 fp])&]
+[s2;#%% Returns the absolute path of a file that is found in the 
+current user`'s home folder.&]
+[s2;%% [@(129.0.0) fp..................................................]the 
 name of the file&]
 [s3; &]
 [s4; &]
-[s5;%- [^topic`:`/`/Core`/src`/String`$en`-us^ String]_GetExeTitle[@(64) ()]&]
-[s2; Returns the title of the application.&]
+[s5;:`:`:`:`:GetExeTitle`(`): [_^`:`:String^ String]_[* GetExeTitle]()&]
+[s2;%% Returns the title of the application.&]
 [s3; &]
 [s4; &]
-[s5;%- [@(0.0.255) void][@(64) _]UseHomeDirectoryConfig[@(64) (][@(0.0.255) bool][@(64) _][@3 b][@(64) _
-`=_][@(0.0.255) true][@(64) )]&]
-[s2;# Sets the search path for configuration to either the current 
+[s5;:`:`:`:`:UseHomeDirectoryConfig`(bool`): [@(0.0.255) void]_[* UseHomeDirectoryConfig](
+[@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;#%% Sets the search path for configuration to either the current 
 users`' home folder or to the folder where the application`'s 
 binary resides.&]
-[s2; [*@(129.0.0) b]...................................................use 
+[s2;%% [*@(129.0.0) b]...................................................use 
 home folder (true) or application folder (false)&]
 [s3; &]
 [s4; &]
-[s5;%- [^topic`:`/`/Core`/src`/String`$en`-us^ String]_ConfigFile[@(64) (][@(0.0.255) const
-][@(64) _][@(0.0.255) char][@(64) _`*][@3 file][@(64) )]&]
-[s2;# Returns the absolute path of a configuration file found in 
+[s5;:`:`:`:`:ConfigFile`(const char`*`): [_^`:`:String^ String]_[* ConfigFile]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 file])&]
+[s2;#%% Returns the absolute path of a configuration file found in 
 the configuration files search path.&]
-[s2; [@(129.0.0) file ]...............................................the 
+[s2;%% [@(129.0.0) file ]...............................................the 
 name of the file&]
 [s3; &]
 [s4; &]
-[s5;%- [^topic`:`/`/Core`/src`/String`$en`-us^ String]_ConfigFile[@(64) ()]&]
-[s2;# Returns the default configuration file from the configuration 
+[s5;:`:`:`:`:ConfigFile`(`): [_^`:`:String^ String]_[* ConfigFile]()&]
+[s2;#%% Returns the default configuration file from the configuration 
 files search path. The default configuration file is called [*/ `[application 
 title`]][* .cfg].&]
-[s3;# &]
-[s4; &]
-[s5;%- [@(0.0.255) const][@(64) _][^topic`:`/`/Core`/src`/Vector`$en`-us^@(64) Vector][@(64) <
-][^`:`:String^@(64) Stri][^topic`:`/`/Core`/src`/String`$en`-us^@(64) n][^`:`:String^@(64) g
-][@(64) >`&_]CommandLine[@(64) ()]&]
-[s2; Return a vector of strings containing the command line parameters.&]
 [s3; &]
 [s4; &]
-[s5;%- [@(0.0.255) const][@(64) _][^topic`:`/`/Core`/src`/VectorMap`$en`-us^@(64) VectorMap
-][@(64) <][^topic`:`/`/Core`/src`/String`$en`-us^@(64) String][@(64) , 
-][^topic`:`/`/Core`/src`/String`$en`-us^@(64) String][@(64) >`&_]Environment[@(64) ()]&]
-[s2; Returns a vector of strings with system environment variables.&]
+[s5;:`:`:`:`:CommandLine`(`): [@(0.0.255) const]_[_^`:`:Vector^ Vector][@(0.0.255) <][_^`:`:String^ S
+tring][@(0.0.255) >`&]_[* CommandLine]()&]
+[s2;%% Return a vector of strings containing the command line parameters.&]
 [s3; &]
 [s4; &]
-[s5;%- [@(0.0.255) void][@(64) _]SetExitCode[@(64) (][@(0.0.255) int][@(64) _][@3 code][@(64) )]&]
-[s2; Sets the exit code that will be returned on application exit.&]
-[s2; [*@(129.0.0) code].............................................the 
+[s5;:`:`:`:`:Environment`(`): [@(0.0.255) const]_[_^`:`:VectorMap^ VectorMap][@(0.0.255) <][_^`:`:String^ S
+tring], [_^`:`:String^ String][@(0.0.255) >`&]_[* Environment]()&]
+[s2;%% Returns a vector of strings with system environment variables.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:`:`:SetExitCode`(int`): [@(0.0.255) void]_[* SetExitCode]([@(0.0.255) int]_[*@3 code
+])&]
+[s2;%% Sets the exit code that will be returned on application exit.&]
+[s2;%% [*@(129.0.0) code].............................................the 
 exit code&]
 [s3; &]
 [s4; &]
-[s5;%- [@(0.0.255) int][@(64) _]GetExitCode[@(64) ()]&]
-[s2;# Gets the exit code that will be returned on application exit.&]
-[s3;# &]
+[s5;:`:`:`:`:GetExitCode`(`): [@(0.0.255) int]_[* GetExitCode]()&]
+[s2;#%% Gets the exit code that will be returned on application exit.&]
+[s3; &]
 [s4; &]
-[s5;%- [@(0.0.255) bool][@(64) _]IsMainRunning[@(64) ()]&]
-[s2;# Return true if the applications execution has reached and not 
-yet exited the main function.&]
-[s3;# &]
-[s4;# &]
-[s5;%- [^topic`:`/`/Core`/src`/String`$en`-us^ String]_GetDataFile[@(64) (][@(0.0.255) cons
-t][@(64) _][@(0.0.255) char][@(64) _`*][@3 filename][@(64) )]&]
-[s2; [*_@(85.127.0) TODO]&]
-[s2; [*@(129.0.0) filename].......................................the 
+[s5;:`:`:`:`:IsMainRunning`(`): [@(0.0.255) bool]_[* IsMainRunning]()&]
+[s2;#%% Return true if the applications execution has reached and 
+not yet exited the main function.&]
+[s3; &]
+[s4; &]
+[s5;:`:`:`:`:GetDataFile`(const char`*`): [_^`:`:String^ String]_[* GetDataFile]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 filename])&]
+[s2;%% [*_@(85.127.0) TODO]&]
+[s2;%% [*@(129.0.0) filename].......................................the 
 name of the file&]
 [s3; &]
 [s4; &]
-[s5;%- [@(0.0.255) void][@(64) _]LaunchWebBrowser[@(64) (][@(0.0.255) const][@(64) _][^topic`:`/`/Core`/src`/String`$en`-us^@(64) S
-tring][@(64) `&_][@3 url][@(64) )]&]
-[s2; Opens an URL in the default Web Browser.&]
-[s2; [*@(129.0.0) url................................................]the 
+[s5;:`:`:`:`:LaunchWebBrowser`(const `:`:String`&`): [@(0.0.255) void]_[* LaunchWebBrowse
+r]([@(0.0.255) const]_[_^`:`:String^ String][@(0.0.255) `&]_[*@3 url])&]
+[s2;%% Opens an URL in the default Web Browser.&]
+[s2;%% [*@(129.0.0) url................................................]the 
 URL that will be opened in the browser&]
-[s0; &]
-[s0; &]
-[ {{10000F(128)G(128)@(226.85.0) [s0; [*@2 Function List (POSIX)]]}}&]
-[s0; &]
-[s5;K:`:`:SetHomeDirectory`(const char`*`):%- [@(0.0.255) void][@(64) _]SetHomeDirectory[@(64) (
-][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 dir][@(64) )]&]
-[s2;# Sets the current user`'s home folder.&]
-[s2; [*@(129.0.0) dir][@(129.0.0) ................................................]the 
+[ {{10000F(128)G(128)@(226.85.0) [s0;%% [*@2 Function List (POSIX)]]}}&]
+[s3; &]
+[s4; &]
+[s5;:`:`:`:`:SetHomeDirectory`(const char`*`): [@(0.0.255) void]_[* SetHomeDirectory]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 dir])&]
+[s2;#%% Sets the current user`'s home folder.&]
+[s2;%% [*@(129.0.0) dir][@(129.0.0) ................................................]the 
 URL that will be opened in the browser&]
-[s0; &]
-[s0; ]
+[s0;%% ]

@@ -13,7 +13,7 @@ topic "Algorithms";
 [s0; [*5 Algorithms]&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Global Functions]]}}&]
-[s4;%- &]
+[s4;H0;%- &]
 [s5;:`:`:`:`:Swap`(T`&`,T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >
 ]_[@(0.0.255) void]_[* Swap]([*@4 T][@(0.0.255) `&]_[*@3 a], [*@4 T][@(0.0.255) `&]_[*@3 b])&]
 [s2; Swaps values. Specific types might specialize [* Swap] with more 
