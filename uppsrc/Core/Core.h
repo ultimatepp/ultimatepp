@@ -433,7 +433,7 @@ NAMESPACE_UPP
 #include "Convert.h"
 
 #include "z.h"
-#include "hash.h"
+#include "Hash.h"
 
 #include "Parser.h"
 #include "XML.h"
