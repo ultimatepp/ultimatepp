@@ -37,7 +37,7 @@
 #define BLOB_(x)                   COLUMN_("blob", String, x, 0, 0)
 
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
-#define AUTO_INCREMENT             INLINE_ATTRIBUTE("autoincrement")
+#define AUTO_INCREMENT
 #define NOT_NULL                   INLINE_ATTRIBUTE("not null")
 
 #define INDEX                      ATTRIBUTE("create index IDX_@x on @t(@c);", \
