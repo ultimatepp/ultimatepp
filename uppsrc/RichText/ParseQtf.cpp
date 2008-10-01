@@ -809,6 +809,7 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 				Cat(c);
 			if(*term == ';')
 				term++;
+			SetFormat();
 		}
 		else
 		if(Key2('{', ':')) {
@@ -821,8 +822,10 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 			Key('}');
 		}
 		else
-		if(Key('&'))
+		if(Key('&')) {
+			SetFormat();
 			EndPart();
+		}
 		else
 		if(Key2('$')) {
 			Flush();
@@ -866,12 +869,15 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 		}
 		else
 		if(*term == '_') {
+			SetFormat();
 			text.Cat(160);
 			term++;
 		}
 		else
-		if(Key2('-', '|'))
+		if(Key2('-', '|')) {
+			SetFormat();
 			text.Cat(9);
+		}
 		else
 		if(*term == '\1') {
 			if(istable)
