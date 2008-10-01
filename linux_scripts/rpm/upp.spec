@@ -10,7 +10,7 @@ Summary:        %longtitle
 Name:           %name
 Version:        %version
 Release:        %release
-License:        BSD-like
+License:        BSD
 Group:          Development/C++
 URL:            http://www.ultimatepp.org
 Source0:        %{name}-src-%{version}.tar.gz
