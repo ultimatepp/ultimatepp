@@ -228,7 +228,6 @@ void RichQtfParser::SetFormat()
 }
 
 void RichQtfParser::Flush() {
-	SetFormat();
 	if(text.GetLength()) {
 		ASSERT(!istable);
 		paragraph.Cat(text, format);
@@ -877,6 +876,7 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 		if(*term == '\1') {
 			if(istable)
 				EndPart();
+			SetFormat();
 			const char *b = ++term;
 			for(; *term && *term != '\1'; term++)
 				if(*term == '\n') {
@@ -891,6 +891,7 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 		else {
 			if(!Key('`')) Key('\\');
 			if((byte)*term >= ' ') {
+				SetFormat();
 				do {
 					if(istable)
 						EndPart();
