@@ -151,7 +151,8 @@ protected:
 	RichTxt&         GetTableUpdateText(int table, const RichStyles& style, int& pi);
 
 	void        CombineFormat(FormatInfo& f, int pi, int pi2, bool& first, const RichStyles& style) const;
-	static void Apply(const FormatInfo& fi, RichPara& pa);
+	static void ApplyStyle(const FormatInfo& fi, RichPara& pa, const RichStyles& style);
+	static void Apply(const FormatInfo& fi, RichPara& pa, const RichStyles& style);
 	void        ApplyFormat(const FormatInfo& f, int pi, int pi2, const RichStyles& style);
 	void        SaveFormat(Formating& f, int p1, int p2, const RichStyles& style) const;
 	void        RestoreFormat(int pi, const Formating& info, int& ii, const RichStyles& style);

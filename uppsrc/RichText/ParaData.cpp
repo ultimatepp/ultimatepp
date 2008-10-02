@@ -652,6 +652,45 @@ void RichPara::Mid(int pos)
 	}
 }
 
+void ApplyCharStyle(RichPara::CharFormat& format, const RichPara::CharFormat& f0,
+                    const RichPara::CharFormat& newstyle) { 
+	if(format.IsBold() == f0.IsBold())
+		format.Bold(newstyle.IsBold());
+	if(format.IsUnderline() == f0.IsUnderline())
+		format.Underline(newstyle.IsUnderline());
+	if(format.IsItalic() == f0.IsItalic())
+		format.Italic(newstyle.IsItalic());
+	if(format.IsStrikeout() == f0.IsStrikeout())
+		format.Strikeout(newstyle.IsStrikeout());
+	if(format.IsNonAntiAliased() == f0.IsNonAntiAliased())
+		format.NonAntiAliased(newstyle.IsNonAntiAliased());
+	if(format.capitals == f0.capitals)
+		format.capitals = newstyle.capitals;
+	if(format.dashed == f0.dashed)
+		format.dashed = newstyle.dashed;
+	if(format.sscript == f0.sscript)
+		format.sscript = newstyle.sscript;
+	if(format.GetFace() == f0.GetFace())
+		format.Face(newstyle.GetFace());
+	if(format.GetHeight() == f0.GetHeight())
+		format.Height(newstyle.GetHeight());
+	if(format.ink == f0.ink)
+		format.ink = newstyle.ink;
+	if(format.paper == f0.paper)
+		format.paper = newstyle.paper;
+}
+
+void RichPara::ApplyStyle(const Format& newstyle)
+{
+	CharFormat f0 = part.GetCount() ? part[0].format : format;
+	for(int i = 0; i < part.GetCount(); i++)
+		ApplyCharStyle(part[i].format, f0, newstyle);
+	CharFormat h = format;
+	ApplyCharStyle(h, f0, newstyle);
+	format = newstyle;
+	(CharFormat&)format = h;
+}
+
 #ifdef _DEBUG
 void RichPara::Dump()
 {

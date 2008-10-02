@@ -220,8 +220,9 @@ struct RichPara {
 	int         GetCount() const                          { return part.GetCount(); }
 	bool        IsEmpty() const;
 	String      Pack(const Format& style, Array<RichObject>& obj) const;
-	void        Unpack(const String& s, const Array<RichObject>& obj,
-	                   const Format& style);
+	void        Unpack(const String& s, const Array<RichObject>& obj, const Format& style);
+	
+	void        ApplyStyle(const Format& newstyle);
 
 	Part&       operator[](int i)                         { return part[i]; }
 	const Part& operator[](int i) const                   { return part[i]; }
