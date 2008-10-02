@@ -84,6 +84,8 @@ void TopWindow::SyncCaption()
 	style &= ~(WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SYSMENU|WS_POPUP|WS_DLGFRAME);
 	exstyle &= ~(WS_EX_TOOLWINDOW|WS_EX_DLGMODALFRAME);
 	style |= WS_CAPTION;
+	if(hasdhctrl)
+		style |= WS_CLIPSIBLINGS|WS_CLIPCHILDREN;
 	if(minimizebox)
 		style |= WS_MINIMIZEBOX;
 	if(maximizebox)

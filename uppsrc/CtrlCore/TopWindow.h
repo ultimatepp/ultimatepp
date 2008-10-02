@@ -38,7 +38,6 @@ public:
 	virtual LRESULT  WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-
 	dword       style;
 	dword       exstyle;
 	HICON       ico, lico;
