@@ -1,0 +1,8 @@
+#ifndef _Geom_Draw_icpp_init_stub
+#define _Geom_Draw_icpp_init_stub
+#include "TDraw/init"
+#include "plugin\png/init"
+#include "plugin\gif/init"
+#include "plugin\jpg/init"
+#include "Geom\Coords/init"
+#endif

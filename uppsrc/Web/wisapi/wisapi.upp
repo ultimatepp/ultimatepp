@@ -12,9 +12,7 @@ file
 	wisapi.cpp,
 	wisapi.def,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
 	"" = "DLL MT";
@@ -22,3 +20,4 @@ mainconfig
 custom() "pre-link",
 	"restserv w3svc",
 	"";
+

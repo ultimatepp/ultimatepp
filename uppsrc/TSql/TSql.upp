@@ -15,6 +15,5 @@ file
 	dict.h,
 	dict.cpp,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
+

@@ -1,0 +1,5 @@
+#ifndef _Docedit_icpp_init_stub
+#define _Docedit_icpp_init_stub
+#include "docpp/init"
+#include "RichEdit/init"
+#endif

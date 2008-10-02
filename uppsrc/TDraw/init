@@ -1,0 +1,7 @@
+#ifndef _TDraw_icpp_init_stub
+#define _TDraw_icpp_init_stub
+#include "Draw/init"
+#include "Geom/init"
+#include "TCore/init"
+#include "PdfDraw/init"
+#endif

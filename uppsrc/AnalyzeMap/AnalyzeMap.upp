@@ -5,9 +5,8 @@ file
 	imagehlp.dli,
 	Analyze.cpp,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
 	"" = "GUI";
+

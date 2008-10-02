@@ -43,7 +43,5 @@ file
 	dd_h.h,
 	dd_cpp.h,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 

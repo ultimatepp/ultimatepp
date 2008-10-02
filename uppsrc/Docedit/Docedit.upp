@@ -11,9 +11,8 @@ file
 	Docedit.cpp,
 	Docedit.iml,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
-	"Debug" = normal "GUI";
+	"Debug" = "GUI";
+

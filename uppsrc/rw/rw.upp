@@ -1,8 +1,8 @@
-uses
-	CtrlLib;
-
 acceptflags
 	IDERW;
+
+uses
+	CtrlLib;
 
 file
 	Designer.h,
@@ -20,9 +20,8 @@ file
 	rw.iml,
 	rw.rc,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
 	"" = "";
+

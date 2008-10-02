@@ -15,9 +15,7 @@ file
 	SqlCommander.cpp,
 	login.lay,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 
 mainconfig
 	"" = ".NOMYSQL GUI .NOAPPSQL",

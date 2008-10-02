@@ -1,0 +1,7 @@
+#ifndef _DocTypes_icpp_init_stub
+#define _DocTypes_icpp_init_stub
+#include "Draw/init"
+#include "RichText/init"
+#include "CtrlLib/init"
+#include "PdfDraw/init"
+#endif

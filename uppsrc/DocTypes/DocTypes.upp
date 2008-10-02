@@ -20,7 +20,5 @@ file
 	Report.lay,
 	DocTypes.usc,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 

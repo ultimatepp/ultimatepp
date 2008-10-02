@@ -56,7 +56,5 @@ file
 	Help\DlgHelpView.lay,
 	Help\DlgHelpView.iml,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 

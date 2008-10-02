@@ -1,0 +1,4 @@
+#ifndef _Crypto_icpp_init_stub
+#define _Crypto_icpp_init_stub
+#include "Core/init"
+#endif
