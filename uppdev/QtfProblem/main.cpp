@@ -4,9 +4,9 @@ using namespace Upp;
 
 GUI_APP_MAIN
 {
-	Label x;
 	TopWindow y;
-	y.Add(x.LeftPos(10, 100).TopPos(10, 100));
-	x = "\1This is a very very very very very very very very very very long line";
+	RichTextView view;
+	view.SetQTF(LoadFile(GetDataFile("text.txt")));
+	y.Add(view.SizePos());
 	y.Run();
 }

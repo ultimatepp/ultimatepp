@@ -121,6 +121,19 @@ public:
 	STL_VECTOR_COMPATIBILITY(Vector<T>)
 };
 
+ConstIterator& Array::ConstIterator::operator+=(int i)
+{
+}
+
+		ConstIterator& operator+=(int i);
+
+void Array::Free()
+{
+}
+
+	void Free();
+
+
 template <class T>
 class Array : public MoveableAndDeepCopyOption< Array<T> > {
 protected:
@@ -145,7 +158,8 @@ public:
 	bool     IsEmpty() const            { return vector.IsEmpty(); }
 	void     Trim(int n);
 	void     SetCount(int n);
-	void     SetCount(int n, const T& init);
+	void     SetCount(int n,
+	const T& init);
 	void     SetCountR(int n);
 	void     SetCountR(int n, const T& init);
 	void     Clear()                    { Free(); vector.Clear(); }
@@ -225,6 +239,12 @@ public:
 		ConstIterator& operator--()             { ptr--; return *this; }
 		ConstIterator  operator++(int)          { ConstIterator t = *this; ++*this; return t; }
 		ConstIterator  operator--(int)          { ConstIterator t = *this; --*this; return t; }
+
+ConstIterator& Array::ConstIterator::operator+=(int i)
+{
+}
+
+
 
 		ConstIterator& operator+=(int i)        { ptr += i; return *this; }
 		ConstIterator& operator-=(int i)        { ptr -= i; return *this; }

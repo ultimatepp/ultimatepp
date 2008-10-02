@@ -1,5 +1,0 @@
-#ifndef _TTFChars_icpp_init_stub
-#define _TTFChars_icpp_init_stub
-#include "Draw/init"
-#include "CtrlLib/init"
-#endif

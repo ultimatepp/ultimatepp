@@ -1,5 +1,27 @@
 #include "Core.h"
 
+
+namespace X
+{
+	
+void TestA {
+}
+
+
+void TestB {
+
+
+void TestB {
+
+	sdfasdf
+alfa:
+	while(x -== 2) {
+		
+	}
+}
+	
+};
+
 NAMESPACE_UPP
 
 #define TFILE <Core/Core.t>

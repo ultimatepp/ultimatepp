@@ -1,1 +1,0 @@
-aris: in agg_path_storage.h added class vertex_upp_storage. Now you can use upp Vector to store agg paths. (check and test)

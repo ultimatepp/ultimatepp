@@ -1,5 +1,7 @@
+uses
+	RichEdit;
+
 file
-	test.h,
 	test.cpp,
 	ignorelist;
 
