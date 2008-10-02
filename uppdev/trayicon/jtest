@@ -1,9 +1,0 @@
-#! /bin/sh
-if [ -f  ~/upp/uppsrc/CtrlCore/CtrlCore.h ]
-then
-	echo "find CtrlCore.h"
-	cp CtrlCore.h ~/upp/uppsrc/CtrlCore/CtrlCore.h -f
-else
-	echo "Cannot find CtrlCore.h!!!!"
-	exit
-fi

@@ -1,16 +1,17 @@
 topic "VectorMap";
 [2 $$0,0#00000000000000000000000000000000:Default]
-[i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483380:class]
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
-[a83;*R6 $$3,0#31310162474203024125188417583966:caption]
-[l288;i1121;b17;O9;~~~.1408;2 $$4,0#10431211400427159095818037425705:param]
-[i448;a25;kKO9;*@(64)2 $$5,0#37138531426314131252341829483370:item]
-[*+117 $$6,6#14700283458701402223321329925657:header]
-[l288;a17;*1 $$7,7#70004532496200323422659154056402:requirement]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
+[l288;a17;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
+[l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [{_}%EN-US 
-[s3;%- VectorMap&]
-[s5;K%- template_<[@(0.0.255) class]_[@4 K], [@(0.0.255) class]_[@4 T], [@(0.0.255) class]_[@4 Ha
-shFn]_`=_StdHash<[@4 K]>_>__[@(0.0.255) class]_[@0 VectorMap ]&]
+[s0;%- VectorMap&]
+[s5;K%- template_<[@(0.0.255) class][@(64) _][@4 K][@(64) , ][@(0.0.255) class][@(64) _][@4 T][@(64) ,
+ ][@(0.0.255) class][@(64) _][@4 HashFn][@(64) _`=_StdHash<][@4 K][@(64) >_>__][@(0.0.255) clas
+s][@(64) _]VectorMap &]
 [s0; &]
 [s0; [*C@4 K]-|Type of keys. K must have deep copy constructor, be [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
 oveable] and must have [*C operator`=`=] defined.&]
@@ -40,33 +41,33 @@ picked VectorMap is logic error with exception of&]
 [s0; Optional deep copy operator is inherited from AMap class. Pick 
 operator is implicitly defined by composition.&]
 [s0; Members&]
-[s0;3 &]
-[s5;K%- T_[@0 Pop]()&]
+[s0; &]
+[s5;K%- T_Pop[@(64) ()]&]
 [s2; Drops last element of VectorMap and returns its value.&]
-[s4; [*/ Return value]-|Value of dropped element.&]
-[s0;3 &]
+[s7; [*/ Return value]-|Value of dropped element.&]
+[s0; &]
 [s0;:`:`:VectorMap`:`:VectorMap`(const`:`:VectorMap`&`,int`): [* VectorMap](const 
 VectorMap`& [*@3 s], int)&]
 [s2; Optional deep copy constructor.&]
 [s2; [*1 Requires T to have deep copy constructor or optional deep 
 copy constructor.]&]
-[s4; [*C@3 s]-|Source VectorMap.&]
-[s0;3 &]
+[s7; [*C@3 s]-|Source VectorMap.&]
+[s0; &]
 [s0;:`:`:VectorMap`:`:VectorMap`(pick`_`:`:Index`<K`,HashFn`>`&`,pick`_`:`:Vector`<T`>`&`): [* V
 ectorMap](pick`_ Index<K>`& [*@3 ndx], pick`_ Vector<T>`& [*@3 val])&]
 [s2; Pick`-constructs VectorMap from Index of keys and Vector of 
 values. Both source containers should have the same number of 
 elements.&]
-[s4; [*C@3 ndx]-|Source Index.&]
-[s4; [*C@3 val]-|Source Vector.&]
-[s0;3 &]
+[s7; [*C@3 ndx]-|Source Index.&]
+[s7; [*C@3 val]-|Source Vector.&]
+[s0; &]
 [s0;:`:`:VectorMap`:`:VectorMap`(pick`_`:`:Vector`<K`>`&`,pick`_`:`:Vector`<T`>`&`): [* V
 ectorMap](pick`_ Vector<K>`& [*@3 ndx], pick`_ Vector<T>`& [*@3 val])&]
 [s2; Pick`-constructs VectorMap from Vector of keys and Vector of 
 values. Both source containers should have the same number of 
 elements.&]
-[s4; [*C@3 ndx]-|Source Vector of keys.&]
-[s4; [*C@3 val]-|Source Vector of values.&]
-[s0;3 &]
+[s7; [*C@3 ndx]-|Source Vector of keys.&]
+[s7; [*C@3 val]-|Source Vector of values.&]
+[s0; &]
 [s0;:`:`:VectorMap`:`:VectorMap`(`): [* VectorMap]()&]
 [s0; Default constructor. Constructs empty VectorMap.]

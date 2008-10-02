@@ -150,3 +150,11 @@ TOPIC("Test2$en-us")
 #include "Test2$en-us.tppi"
 END_TOPIC
 
+TOPIC("AIndex2$en-us")
+#include "AIndex2$en-us.tppi"
+END_TOPIC
+
+TOPIC("Atest$en-us")
+#include "Atest$en-us.tppi"
+END_TOPIC
+

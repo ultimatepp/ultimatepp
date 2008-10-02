@@ -1,12 +1,123 @@
-TITLE("Heap implementation")
-COMPRESSED
-120,156,149,88,253,143,219,54,18,253,87,8,92,155,122,81,237,214,249,68,46,109,3,36,119,13,90,20,201,1,151,22,253,33,8,206,180,68,219,236,74,164,74,82,235,117,138,254,239,247,102,248,33,202,183,73,112,69,129,141,44,114,56,243,230,205,204,163,222,137,47,190,88,55,235,191,173,63,243,223,179,127,170,157,156,250,240,254,221,159,255,249,235,203,31,222,92,254,250,86,188,243,235,111,197,143,74,142,66,15,99,175,6,101,130,12,218,154,123,239,249,205,175,155,175,55,95,139,3,191,247,162,211,55,186,83,157,208,38,88,241,80,180,50,168,189,117,90,121,177,149,30,191,91,35,194,65,137,109,111,219,107,225,245,7,37,54,151,194,15,178,239,27,49,168,78,79,131,144,166,19,91,189,191,74,246,211,159,183,180,38,238,243,233,167,151,252,32,190,219,124,47,30,60,126,34,182,167,160,252,149,120,59,181,135,180,78,72,167,196,253,244,70,56,59,25,184,214,8,111,201,7,188,130,191,120,59,90,239,245,182,87,236,142,143,175,174,196,139,182,181,174,211,102,47,16,
-136,157,156,112,202,43,233,218,67,147,141,231,115,157,26,233,157,9,28,217,32,127,71,188,225,36,236,46,47,156,60,3,34,254,65,72,125,19,241,146,227,216,235,150,113,244,98,245,252,239,79,191,164,13,115,136,23,159,8,159,195,194,163,37,116,217,242,163,159,95,138,81,238,41,252,100,190,63,202,147,23,234,118,84,109,240,20,194,94,5,32,123,2,200,131,117,39,177,115,118,96,127,253,201,7,53,176,5,217,235,189,129,193,85,56,0,25,252,63,58,27,179,185,61,137,177,151,97,103,221,32,60,76,234,157,110,197,219,147,127,65,78,252,91,30,57,103,120,126,229,148,162,199,221,100,90,14,237,60,140,31,36,146,83,188,101,194,32,233,49,14,56,233,129,119,95,179,227,74,252,66,233,192,193,106,206,153,177,194,168,180,33,208,27,138,107,84,110,115,25,55,106,67,142,50,182,223,226,1,241,201,174,254,17,0,110,237,20,211,117,60,216,114,32,76,179,61,134,148,94,62,124,144,168,3,118,119,202,9,25,247,108,213,94,27,67,212,64,202,114,48,228,169,46,43,217,
-14,0,180,168,3,60,6,102,156,232,181,15,180,103,7,152,114,46,211,81,100,162,17,157,157,64,196,205,101,175,205,117,222,236,5,28,175,139,134,108,193,19,29,80,93,6,206,84,78,39,82,88,114,192,77,109,152,224,68,131,211,131,236,133,153,134,45,92,153,105,153,78,206,1,112,14,231,69,103,62,150,48,151,249,124,81,14,188,86,106,244,139,40,139,97,237,163,199,68,219,214,82,15,9,170,63,197,178,88,33,153,213,81,23,116,22,106,82,197,62,35,86,214,168,242,128,20,87,212,184,16,254,213,132,154,144,206,73,174,54,58,23,209,78,68,162,5,146,56,38,99,121,37,126,10,37,57,210,5,13,196,146,39,137,145,70,248,223,172,187,174,156,240,245,17,193,7,6,106,50,103,155,136,250,236,194,71,17,146,61,82,135,93,62,114,53,28,28,241,178,69,69,40,178,237,171,10,135,155,148,28,0,199,175,17,212,72,28,34,62,198,140,16,37,20,213,18,54,82,131,43,168,112,77,241,38,96,27,131,191,16,71,29,14,68,248,173,34,104,112,44,5,221,169,185,133,
-172,202,3,202,3,11,254,152,52,33,212,90,31,176,210,43,7,156,244,135,248,54,226,219,162,199,161,110,123,188,228,74,191,128,203,187,69,137,70,159,228,141,212,189,164,238,154,232,22,227,221,49,30,249,196,166,196,112,222,219,8,234,17,158,243,56,153,183,131,76,214,180,74,172,6,37,77,98,215,210,75,248,96,77,78,45,175,37,246,224,152,249,212,82,1,71,235,60,21,147,87,49,138,210,13,106,136,200,147,18,158,236,41,119,167,42,33,117,116,117,56,165,207,38,199,177,191,182,74,153,33,246,196,190,183,12,65,221,112,5,252,255,33,214,201,188,51,200,37,67,223,216,99,244,48,167,116,57,230,97,46,32,135,116,220,193,30,27,177,215,240,43,246,172,101,119,203,205,151,31,168,28,26,254,87,234,136,117,67,136,88,34,32,12,169,56,132,72,8,216,5,242,45,13,158,43,241,154,250,123,30,57,196,219,134,188,224,86,61,215,11,185,168,220,160,13,77,247,173,106,37,32,17,122,39,142,74,92,27,172,198,223,131,188,81,245,150,134,126,164,254,217,91,123,157,27,
-187,15,104,9,231,77,29,131,199,233,232,21,251,220,75,183,167,160,15,216,92,100,71,102,59,147,151,71,47,230,101,75,180,137,150,101,215,161,160,146,5,101,58,207,153,23,79,9,174,131,186,21,43,88,127,154,76,229,49,76,40,21,241,50,104,159,126,191,128,235,7,221,47,162,241,245,201,101,79,218,64,65,224,212,65,94,147,186,81,96,129,231,12,147,242,74,187,49,5,253,236,228,230,30,57,70,69,108,62,40,103,217,246,115,132,218,16,166,155,123,252,142,95,220,129,43,123,125,142,235,157,3,51,139,146,129,50,76,211,249,140,150,63,237,170,90,253,102,217,160,38,240,154,26,26,204,165,138,163,99,168,177,17,207,175,225,21,107,30,204,198,14,3,228,217,210,240,111,7,85,38,37,249,180,96,197,78,83,153,196,17,192,131,140,218,233,65,181,52,68,22,115,152,59,5,218,92,105,112,77,53,3,234,93,41,204,121,200,49,140,42,22,145,228,165,106,24,3,136,109,212,113,174,0,187,69,213,17,13,206,149,218,42,54,224,74,125,161,107,189,177,65,165,33,123,199,
-68,254,232,84,159,235,19,225,220,85,245,207,82,207,35,10,132,163,77,90,89,99,14,146,164,167,74,172,45,38,61,226,20,73,231,89,70,197,152,242,57,175,8,225,166,234,165,169,251,149,89,125,135,74,130,170,135,77,131,234,166,28,164,211,138,166,208,70,167,65,206,91,86,123,27,34,106,49,33,164,134,24,58,84,206,104,29,71,119,55,20,181,98,233,213,46,100,142,237,74,94,137,221,131,52,88,195,162,120,243,21,189,218,124,69,170,154,16,70,69,5,158,230,59,175,120,103,47,137,77,116,35,153,143,163,211,98,115,225,137,73,185,142,235,241,175,231,15,31,52,139,165,21,17,98,222,33,251,86,126,218,6,39,91,102,239,242,54,117,145,100,168,78,183,142,64,4,181,186,139,52,72,162,153,213,37,113,254,35,58,20,237,0,228,4,105,249,0,98,37,47,188,67,254,113,41,209,75,44,108,62,47,30,201,45,109,90,199,52,163,198,4,0,116,136,173,230,40,238,55,244,16,199,93,162,76,41,227,193,222,228,82,136,170,143,180,63,21,105,182,65,6,32,91,160,177,
-56,140,143,75,222,40,180,139,71,100,152,15,97,174,156,133,151,254,188,142,247,210,100,99,121,249,164,190,200,172,248,78,60,121,252,120,253,40,223,66,95,140,184,60,221,106,92,56,168,253,249,176,185,220,233,186,56,115,130,82,79,241,51,211,95,199,11,26,101,222,237,165,65,82,185,144,158,144,203,237,97,50,56,116,117,198,137,101,47,224,59,214,44,49,102,40,211,36,230,201,3,33,27,167,110,210,53,101,4,227,46,123,163,237,148,82,240,25,185,143,122,95,202,239,243,228,147,65,146,217,237,132,177,25,5,42,106,153,142,234,176,220,233,237,148,165,204,16,181,38,110,172,232,216,134,234,185,92,180,123,123,44,3,119,253,232,41,215,124,186,204,87,194,152,112,167,233,31,142,74,229,133,136,45,94,245,30,62,94,175,215,77,220,69,136,85,199,224,208,189,179,71,159,76,149,141,129,184,13,69,128,137,202,99,12,62,222,200,126,82,9,96,46,106,6,141,160,37,56,53,28,186,205,117,84,96,169,187,216,39,231,80,147,13,20,245,179,252,100,82,178,21,77,147,2,226,
-239,17,88,193,186,133,194,226,212,198,169,194,182,232,211,5,83,37,90,160,65,71,243,191,106,48,171,66,206,11,192,160,100,200,72,167,75,64,151,174,225,47,245,126,175,92,173,54,210,151,158,79,118,132,153,239,131,114,251,248,113,133,223,102,90,178,195,133,114,88,103,212,237,194,63,140,74,220,238,255,71,177,230,105,55,160,191,194,173,89,99,114,153,100,47,9,44,244,10,11,93,156,47,254,172,191,125,20,88,249,38,13,209,51,245,140,95,185,114,211,186,55,255,250,37,107,169,249,211,136,87,108,0,90,121,204,131,164,214,97,231,218,58,55,11,189,95,126,186,122,53,143,177,109,68,150,65,175,90,72,13,30,235,181,83,188,59,214,95,93,144,222,14,57,106,169,112,82,158,111,180,11,232,130,233,51,79,125,221,173,62,128,84,223,63,22,162,253,19,159,57,146,114,225,59,44,41,73,250,57,238,189,255,100,115,25,245,230,100,50,76,121,152,56,219,66,80,94,241,109,32,22,148,83,97,114,72,196,210,79,48,29,150,210,61,34,14,235,12,228,251,255,2,116,211,55,
-226,
-
+topic "Heap implementation";
+[ $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483370:item]
+[{_}%EN-US 
+[s0;2%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s0; &]
+[s1;K:`:`:Size`_`:`:`:`:Size`_`(`):%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Field Detail]]}}&]
+[s0; &]
+[s1;K:`:`:Size`_`:`:cx:* &]
+[ {{10000F(128)G(128)@1 [s0; [* Method Detail]]}}&]
+[s0; &]
+[s0; Heap implementation&]
+[s0; U`+`+ heap is divided into 3 categories based on the block size 
+`- small, medium and big.&]
+[s0; &]
+[s0; Small blocks&]
+[s0; Blocks <`= 256 bytes. Such blocks are 16 bytes rounded, so there 
+is 16 possible sizes there. According to our research, blocks 
+<`= 256 represent the majority of blocks used in C`+`+/U`+`+ 
+applications (>98% of all blocks).&]
+[s0; &]
+[s0; Small blocks are allocated in 4KB pages. U`+`+ always expects 
+to get any memory from the system 4KB aligned (this is provided 
+by platform specific SysAllocRaw and SysFreeRaw functions).&]
+[s0; &]
+[s0; Each 4KB pages is dedicated to single block size. Therefore 
+there is no need to store any per`-block information; instead 
+informations about the whole block is stored in the 32 bytes 
+header at the beginning of 4KB page. This header stores pointer 
+to the list of free blocks in the page, double`-link pointers 
+for the block so that it can be stored in allocator structures, 
+total number of blocks in the 4KB page and number of free blocks 
+in 4KB page.&]
+[s0; &]
+[s0; Allocator keeps the list of 4KB page is that are completely 
+used (no free blocks) in 16 element (one element per block size) 
+sFull array of lists, using double`-linked pointers. It stores 
+partially used pages in sWork 16 elements array of litst and 
+unused pages in sFree list.&]
+[s0; &]
+[s0; Allocator also uses per`-thread cache of small blocks. In this 
+cache, up to 32 blocks for each of 16 block sizes is cached (linked) 
+without being really deallocated (deallocation requires costly 
+serialization using critical section). If there is no block available 
+in the cache for allocation, 16 blocks are allocated and put 
+into the cache at once (means that serialization is only used 
+once per 16 allocations in the worst case). If block is deallocated 
+and there is already 32 blocks in the cache, 16 blocks from the 
+cache are deallocated within single serialization event (means 
+that serialization is only used once per 16 deallocations in 
+the worst case).&]
+[s0; &]
+[s0; Now the critical implementation detail is how, given the pointer 
+to the block in the Free, the header of 4KB page and that way 
+the size of block is decided. More specifically, how is small 
+block determined, because if we know we have small block, we 
+can look at the start of 4KB page. The trick is that larger than 
+256 bytes block are always placed at the address that ends with 
+8 in hex (is 8 bytes aligned and 16 bytes misaligned), while 
+small blocks are always 16 bytes aligned. That makes test simple 
+`- blocks whose address `& 8 is nonzero are >256, if `&8 is zero 
+we have small block and can look at the beginning of 4KB page 
+to get more info.&]
+[s0; &]
+[s0; If allocation/deallocation runs out of cache, the real work 
+has to be done:&]
+[s0; &]
+[s0; When allocating small block, first sWork list is checked for 
+the block. If no available, sFree list is checked to get free 
+block, if even that is empty, new block is obtained from the 
+system (using SysAllocRaw). Note that allocator keeps the number 
+of free blocks in the header. Implementation detail: there are 
+two possibilities how free blocks can be recorded in the block 
+header. First, there is a single`-linked list of free blocks. 
+Second, for blocks that are initially free (got from sFree or 
+system), portion of free blocks in the 4KB page is left out of 
+free list and managed by `'free`' member `- the offset of last 
+such free block in page. If this offset is >32, free block is 
+obtained using it (subtracting the block size). This is used 
+to avoid the need to link all free blocks in the page when getting 
+new free page.&]
+[s0; &]
+[s0; When freeing, number of free blocks in 4KB page is incremented. 
+If it is now 1, it means block has to be moved from sFull to 
+sWork. If it now equals the total number of blocks in page, 4KB 
+page moves to sFree.&]
+[s0; &]
+[s0; &]
+[s0; Medium blocks &]
+[s0; Blocks >256 and < 65504 bytes. Approximate best`-fit allocator 
+is used for these blocks. Memory is organized in 64KB chunks 
+(obtained using SysAllocRaw). Each allocated block has header 
+with its size and the size of previous block.&]
+[s0; &]
+[s0; Allocator keeps an array of lists of free blocks of particular 
+sizes. Size distribution is mostly exponential, blocks lower 
+than 2048 are rounded up to 32 bytes, between 2048 and about 
+35000, rounding exponentially grows up to 2048 and then stays 
+at this value. Each such size has its index in the array of free 
+blocks.&]
+[s0; &]
+[s0; When allocating, index is decided based on the size and array 
+is searched starting with that index to obtain the smallest free 
+block (best`-fit) greater than required size. Bigger blocks are 
+divided.&]
+[s0; &]
+[s0; When freeing, allocator merges the freed block with previous 
+or next free block if any.&]
+[s0; &]
+[s0; Note that master header of 64KB blocks and all operations are 
+designed so that resulting pointers are NOT 16 byte aligned (see 
+description of small blocks).&]
+[s0; &]
+[s0; &]
+[s0; Big blocks&]
+[s0; For blocks bigger than 65504 bytes, allocator simply uses SysAllocRaw 
+to directly obtain virtual memory. It stores information about 
+the block in the header at the beginning of block, also makeing 
+block 16`-bytes unaligned in the process. Free then returns virtual 
+memory back to the system.&]
+[s0; ]
