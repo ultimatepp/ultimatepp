@@ -558,9 +558,10 @@ Ctrl::Ctrl() {
 	frame.Add().frame = &NullFrame();
 	enabled = visible = wantfocus = initfocus = true;
 	editable = true;
-	GLX = false;
+//	GLX = false;
 #ifdef PLATFORM_WIN32
 	activex = false;
+	isdhctrl = false;
 #endif
 	backpaint = TRANSPARENTBACKPAINT;
 	inframe = false;

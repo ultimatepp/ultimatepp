@@ -11,11 +11,13 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	LTIMING("RefreshFrame");
 	LLOG("RefreshRect " << Name() << ' ' << r);
-// 01/12/2007 - mdelfede
-// added support for windowed controls
-//	if(parent) {
+#ifdef PLATFORM_WIN32
+	if(isdhctrl) {
+		InvalidateRect(((DHCtrl *)this)->GetHWND(), r, false);
+		return;
+	}
+#endif
 	if(!top) {
-// 01/12/2007 - END
 		if(InFrame())
 			parent->RefreshFrame(r + GetRect().TopLeft());
 		else
@@ -41,7 +43,8 @@ void Ctrl::Refresh() {
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
 	Refresh(Rect(GetSize()).Inflated(OverPaint()));
-	fullrefresh = true;
+	if(!isdhctrl)
+		fullrefresh = true;
 }
 
 void Ctrl::Refresh(int x, int y, int cx, int cy) {

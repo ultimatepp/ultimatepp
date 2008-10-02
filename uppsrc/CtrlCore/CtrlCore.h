@@ -444,8 +444,10 @@ private:
 	bool         popup:1;
 	bool         popupgrab:1;
 	byte         backpaint:2;//2
-	bool         GLX:1;
 	bool         hasdhctrl:1;
+#ifdef PLATFORM_WIN32
+	bool         isdhctrl:1;
+#endif
 
 	bool         akv:1;
 	bool         destroying:1;
@@ -1764,6 +1766,7 @@ private:
 
 public:
 	HWND    GetHWND()                              { return hwnd; }
+//	void    Refresh()                              { InvalidateRect(GetHWND(), NULL, false); }
 
 	DHCtrl();
 	~DHCtrl();
