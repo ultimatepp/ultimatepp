@@ -234,17 +234,15 @@ void RichText::ApplyFormatInfo(int pos, const RichText::FormatInfo& fi, int coun
 
 	if(pi == pi2) {
 		RichPara pa, pa1, pa2;
-		if(fi.paravalid & RichText::STYLE)
-			pa = txt.Get(pi, fi.styleid, style);
-		else
-			pa = txt.Get(pi, style);
+		pa = txt.Get(pi, style);
+		ApplyStyle(fi, pa, style);
 		pa1 <<= pa;
 		pa2 <<= pa;
 		pa.Trim(pos);
 		pa2.Mid(pos2);
 		pa1.Trim(pos2);
 		pa1.Mid(pos);
-		Apply(fi, pa1);
+		Apply(fi, pa1, style);
 		pa.Append(pa1);
 		pa.Append(pa2);
 		fi.ApplyTo(pa.format);
@@ -252,27 +250,29 @@ void RichText::ApplyFormatInfo(int pos, const RichText::FormatInfo& fi, int coun
 	}
 	else {
 		RichPara pa, pa1;
-		if(fi.paravalid & RichText::STYLE)
-			pa = txt.Get(pi, fi.styleid, style);
-		else
+//		if(fi.paravalid & RichText::STYLE)
+//			pa = txt.Get(pi, fi.styleid, style);
+//		else
 			pa = txt.Get(pi, style);
+		ApplyStyle(fi, pa, style);
 		pa1 <<= pa;
 		pa.Trim(pos);
 		pa1.Mid(pos);
-		Apply(fi, pa1);
+		Apply(fi, pa1, style);
 		fi.ApplyTo(pa.format);
 		pa.Append(pa1);
 		txt.Put(pi, pa, style);
 		pi++;
 		txt.ApplyFormat(fi, pi, pi2, style);
-		if(fi.paravalid & RichText::STYLE)
-			pa = txt.Get(pi2, fi.styleid, style);
-		else
+//		if(fi.paravalid & RichText::STYLE)
+//			pa = txt.Get(pi2, fi.styleid, style);
+//		else
 			pa = txt.Get(pi2, style);
+		ApplyStyle(fi, pa, style);
 		pa1 <<= pa;
 		pa.Trim(pos2);
 		pa1.Mid(pos2);
-		Apply(fi, pa);
+		Apply(fi, pa, style);
 		pa.Append(pa1);
 		txt.Put(pi2, pa, style);
 	}

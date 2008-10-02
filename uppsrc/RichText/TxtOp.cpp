@@ -147,8 +147,20 @@ void RichTxt::CombineFormat(FormatInfo& fi, int pi, int pi2, bool& first, const 
 	}
 }
 
-void RichTxt::Apply(const RichText::FormatInfo& fi, RichPara& pa)
+void RichTxt::ApplyStyle(const RichText::FormatInfo& fi, RichPara& pa, const RichStyles& style)
 {
+	if(fi.paravalid & STYLE) {
+		int q = style.Find(fi.styleid);
+		if(q >= 0) {
+			pa.ApplyStyle(style[q].format);
+			pa.format.styleid = fi.styleid;
+		}
+	}
+}
+
+void RichTxt::Apply(const RichText::FormatInfo& fi, RichPara& pa, const RichStyles& style)
+{
+	ApplyStyle(fi, pa, style);
 	for(int i = 0; i < pa.GetCount(); i++)
 		fi.ApplyTo(pa[i].format);
 	fi.ApplyTo(pa.format);
@@ -173,7 +185,7 @@ void RichTxt::ApplyFormat(const FormatInfo& fi, int pi, int pi2, const RichStyle
 				pa = RichTxt::Get(pi, fi.styleid, style);
 			else
 				pa = Get(pi, style);
-			Apply(fi, pa);
+			Apply(fi, pa, style);
 			Put(pi, pa, style);
 		}
 		pi++;
