@@ -23,11 +23,7 @@ file
 	DlgFilesSetup.cpp,
 	DlgFilesSetup.lay,
 	DlgFiles.cpp,
-	DlgFiles.lay,
-	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	DlgFiles.lay;
 
 mainconfig
 	"" = "GUI",

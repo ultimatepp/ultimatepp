@@ -40,11 +40,7 @@ file
 	forum_f.txt,
 	forum_h.txt,
 	bench.txt,
-	2008.txt,
-	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	2008.txt;
 
 mainconfig
 	"" = "GUI MT",

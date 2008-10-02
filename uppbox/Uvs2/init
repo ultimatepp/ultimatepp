@@ -5,5 +5,7 @@
 #include "plugin\z/init"
 #include "plugin\ftp/init"
 #include "CtrlLib/init"
+#define BLITZ_INDEX__ FBCE16A4E47C9D5FD092354066DF5ED0C
 #include "Uvs2_init.icpp"
+#undef BLITZ_INDEX__
 #endif
