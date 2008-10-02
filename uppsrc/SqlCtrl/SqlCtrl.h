@@ -89,6 +89,7 @@ private:
 	void      Inserting();
 
 public:
+	Callback  WhenPreQuery;
 	Callback  WhenPostQuery;
 
 	void      StdBar(Bar& menu);

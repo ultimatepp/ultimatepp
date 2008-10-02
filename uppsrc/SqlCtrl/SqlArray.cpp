@@ -166,6 +166,7 @@ void SqlArray::StdBar(Bar& menu) {
 void SqlArray::AppendQuery(SqlBool where)
 {
 	lateinsert = false;
+	WhenPreQuery();
 	if(fk.IsNull() || !IsNull(fkv)) {
 		SqlSet cols;
 		for(int i = 0; i < GetIndexCount(); i++)
