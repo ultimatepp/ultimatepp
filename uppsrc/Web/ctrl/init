@@ -1,0 +1,6 @@
+#ifndef _Web_ctrl_icpp_init_stub
+#define _Web_ctrl_icpp_init_stub
+#include "Web/init"
+#include "TCtrlLib/init"
+#include "TDraw/init"
+#endif

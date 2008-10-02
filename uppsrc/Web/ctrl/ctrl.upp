@@ -12,6 +12,5 @@ file
 	web.iml,
 	WebImg.h,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
+

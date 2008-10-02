@@ -35,7 +35,5 @@ file
 	srcimp.tpp,
 	srcdoc.tpp,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 

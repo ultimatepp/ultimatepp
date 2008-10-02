@@ -1,0 +1,9 @@
+#ifndef _TCore_icpp_init_stub
+#define _TCore_icpp_init_stub
+#include "Core/init"
+#include "Web/init"
+#include "plugin\dbf/init"
+#define BLITZ_INDEX__ FD099C670A4F9F921B7251BA8CFD143CC
+#include "TCore_init.icpp"
+#undef BLITZ_INDEX__
+#endif

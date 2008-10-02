@@ -1,0 +1,8 @@
+#ifndef _Geom_Ctrl_icpp_init_stub
+#define _Geom_Ctrl_icpp_init_stub
+#include "Geom\Draw/init"
+#include "TCtrlLib/init"
+#define BLITZ_INDEX__ F1B1C947DDF9AE825683C36D7A839B905
+#include "GeomCtrl_init.icpp"
+#undef BLITZ_INDEX__
+#endif

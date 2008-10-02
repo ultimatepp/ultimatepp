@@ -1,0 +1,5 @@
+#ifndef _Web_wisapi_icpp_init_stub
+#define _Web_wisapi_icpp_init_stub
+#include "Web/init"
+#include "TCore/init"
+#endif

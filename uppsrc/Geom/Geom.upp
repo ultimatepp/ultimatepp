@@ -14,7 +14,5 @@ file
 	delaunay.h,
 	delaunay.cpp,
 	Info readonly separator,
-	Copying,
-	Copying-plain,
-	Authors;
+	Copying;
 

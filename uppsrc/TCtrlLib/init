@@ -1,0 +1,12 @@
+#ifndef _TCtrlLib_icpp_init_stub
+#define _TCtrlLib_icpp_init_stub
+#include "TDraw/init"
+#include "CtrlLib/init"
+#include "RichEdit/init"
+#include "plugin\gif/init"
+#include "PdfDraw/init"
+#include "DocTypes/init"
+#define BLITZ_INDEX__ F93CC30092DE132AD1876E89F7DE8ED06
+#include "TCtrlLib_init.icpp"
+#undef BLITZ_INDEX__
+#endif
