@@ -2,17 +2,15 @@ uses
 	Core,
 	plugin\bz2;
 
-library "advapi32 comdlg32 comctl32 user32 gdi32";
+library
+	"advapi32 comdlg32 comctl32 user32 gdi32";
 
 file
 	Install.h,
 	Progress.cpp,
 	Install.cpp,
-	install.rc,
-	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	install.rc;
 
 mainconfig
 	"" = "GUI";
+

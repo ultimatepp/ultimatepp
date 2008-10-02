@@ -34,11 +34,8 @@ file
 	7zMethodID.c,
 	7zMethodID.h,
 	7zTypes.h,
-	7zC.txt,
-	Info readonly separator,
-	COPYING,
-	COPYING-PLAIN,
-	AUTHORS;
+	7zC.txt;
 
 mainconfig
 	"" = "GUI";
+
