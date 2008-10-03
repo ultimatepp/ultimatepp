@@ -10,10 +10,13 @@ void AssistEditor::Annotate(const String& filename)
 			CppItem& m = nest.item[k];
 			for(int p = 0; p < m.pos.GetCount(); p++) {
 				if(m.pos[p].file == fi) {
-					String coderef = base.GetKey(j) + "::" + nest.key[k];
+					String coderef = base.GetKey(j);
+					if(coderef.GetCount())
+						coderef << "::";
+					coderef << nest.key[k];
 					SetAnnotation(m.pos[p].line - 1,
 					              GetRefLinks(coderef).GetCount() ? IdeImg::tpp_doc()
-					                                              : IdeImg::tpp_pen,
+					                                              : IdeImg::tpp_pen(),
 					              coderef);
 				}
 			}
@@ -76,7 +79,7 @@ void AssistEditor::SyncAnnotationPopup()
 		annotation_popup.Pick(result, GetRichTextStdScreenZoom());
 	}
 	else
-		annotation_popup.SetQTF("Not documented yet.&Click to document");
+		annotation_popup.SetQTF("[A1 [@b* " + DeQtf(coderef) + "]&Not documented yet - click to document");
 	Rect r = GetLineScreenRect(q);
 	int h = annotation_popup.GetHeight(580);
 	h = min(h, 550);

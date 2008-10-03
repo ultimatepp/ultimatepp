@@ -331,13 +331,18 @@ void TopicEditor::InsertItem()
 	editor.Move(c);
 }
 
+String MakeCodeRef(const String& nest, const String& item)
+{
+	if(nest.GetCount())
+		return nest + "::" + item;
+	return item;
+}
+
 void   TopicEditor::FixTopic()
 {
 	String nest;
 	if(!EditText(nest, "Fix topic", "Nest"))
 		return;
-	if(nest[0] != ':')
-		nest = "::" + nest;
 	CppBase& base = BrowserBase();
 	int q = base.Find(nest);
 	if(q < 0) {
@@ -356,7 +361,7 @@ void   TopicEditor::FixTopic()
 			nat << "static ";
 		nat << m.natural;
 		natural.Add(nat);
-		link.Add(nest + "::" + n.key[i]);
+		link.Add(MakeCodeRef(nest, n.key[i]));
 	}
 	RichText result;
 	const RichText& txt = editor.Get();

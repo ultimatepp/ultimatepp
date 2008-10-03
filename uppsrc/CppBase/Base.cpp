@@ -18,7 +18,8 @@ CppItem& CppNest::GetAdd(const String& _key, const String& _name)
 
 bool CppBase::IsType(int i) const
 {
-	return GetKey(i) != "::";
+//	return GetKey(i) != "::";
+	return GetKey(i).GetCount();
 }
 
 void Remove(CppBase& base, const Vector<String>& pf)

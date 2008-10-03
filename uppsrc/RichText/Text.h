@@ -67,7 +67,7 @@ public:
 	RichText              Copy(int pos, int count) const;
 
 	FormatInfo            GetFormatInfo(int pos, int count) const;
-	void                  ApplyFormatInfo(int pos, const RichText::FormatInfo& fi, int count);
+	void                  ApplyFormatInfo(int pos, const FormatInfo& fi, int count);
 
 	void                  ReStyle(int pos, const Uuid& id);
 

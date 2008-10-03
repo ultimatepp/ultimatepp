@@ -222,7 +222,7 @@ RichText::FormatInfo RichText::GetFormatInfo(int pos, int count) const
 	return fi;
 }
 
-void RichText::ApplyFormatInfo(int pos, const RichText::FormatInfo& fi, int count)
+void RichText::ApplyFormatInfo(int pos, const FormatInfo& fi, int count)
 {
 	RichTxt& txt = GetUpdateText(pos);
 
