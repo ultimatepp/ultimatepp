@@ -204,7 +204,7 @@ void EditorBar::RightDown(Point p, dword flags) {
 }
 
 void EditorBar::InsertLines(int i, int count) {
-	li.InsertN(minmax(i, 0, li.GetCount()), max(count, 0));
+	li.InsertN(minmax(i + 1, 0, li.GetCount()), max(count, 0));
 	if(editor->GetCheckEdited()) {
 		if(editor->IsUndoOp() && li_removed.GetCount() >= count) {
 			for(int t = 0; t < count; t++) {
