@@ -206,6 +206,7 @@ const wchar *CodeEditor::HlString(HlSt& hls, const wchar *p)
 
 Color CodeEditor::BlockColor(int level)
 {
+	DDUMP(level);
 	if(hilite_scope == 1)
 		return  GetHlStyle(level & 1 ? PAPER_BLOCK1 : PAPER_NORMAL).color;
 	if(hilite_scope == 2) {
@@ -501,7 +502,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 		}
 		else
 		if(*p == ')' || *p == '}' || *p == ']') {
-			if(*p == '}' && hilite_scope)
+			if(*p == '}' && hilite_scope && block_level > 0)
 				hls.SetPaper(hls.pos, text.GetLength() + 1 - hls.pos, BlockColor(--block_level));
 			Bracket(int(p - text) + pos, hls);
 			int& l = *p == ')' ? ss.pl : *p == '}' ? ss.cl : ss.bl;
