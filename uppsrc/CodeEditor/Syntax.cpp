@@ -276,7 +276,7 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 						}
 						if(blk.GetCount())
 							blk.Drop();
-						if(bid.GetCount())
+						if(bid.GetCount() > 1)
 							bid.Drop();
 						stmtline = -1;
 						par.Clear();
