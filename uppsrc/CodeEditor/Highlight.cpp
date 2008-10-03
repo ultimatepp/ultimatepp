@@ -206,7 +206,6 @@ const wchar *CodeEditor::HlString(HlSt& hls, const wchar *p)
 
 Color CodeEditor::BlockColor(int level)
 {
-	DDUMP(level);
 	if(hilite_scope == 1)
 		return  GetHlStyle(level & 1 ? PAPER_BLOCK1 : PAPER_NORMAL).color;
 	if(hilite_scope == 2) {
