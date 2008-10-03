@@ -14,8 +14,8 @@ topic "Algorithms";
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Global Functions]]}}&]
 [s4;H0;%- &]
-[s5;:`:`:`:`:Swap`(T`&`,T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >
-]_[@(0.0.255) void]_[* Swap]([*@4 T][@(0.0.255) `&]_[*@3 a], [*@4 T][@(0.0.255) `&]_[*@3 b])&]
+[s5;:Swap`(T`&`,T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) v
+oid]_[* Swap]([*@4 T][@(0.0.255) `&]_[*@3 a], [*@4 T][@(0.0.255) `&]_[*@3 b])&]
 [s2; Swaps values. Specific types might specialize [* Swap] with more 
 effective variants.&]
 [s6; T must have either deep copy operator or pick operator.&]
@@ -24,8 +24,8 @@ effective variants.&]
 [s7; [*C@3 b]-|Second value to swap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:IterSwap`(I`,I`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 I][@(0.0.255) >
-]_[@(0.0.255) void]_[* IterSwap]([*@4 I]_[*@3 a], [*@4 I]_[*@3 b])&]
+[s5;:IterSwap`(I`,I`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 I][@(0.0.255) >]_[@(0.0.255) v
+oid]_[* IterSwap]([*@4 I]_[*@3 a], [*@4 I]_[*@3 b])&]
 [s2; Swaps values pointed to by iterators. Specific types might specialize 
 [* IterSwap] with more effective variants.&]
 [s6; Swap must be defined for type pointed to by I.&]
@@ -34,8 +34,8 @@ effective variants.&]
 [s7; [*C@3 b]-|Iterator pointing to second value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindLowerBound`(const C`&`,int`,int`,const T`&`,const L`&`):%- [@(0.0.255) t
-emplate]_<[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
+[s5;:FindLowerBound`(const C`&`,int`,int`,const T`&`,const L`&`):%- [@(0.0.255) templat
+e]_<[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
 ]_[@(0.0.255) int]_[* FindLowerBound]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
 [@(0.0.255) int]_[*@3 pos], [@(0.0.255) int]_[*@3 count], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 val], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
@@ -51,9 +51,9 @@ predicate where [* val] can be inserted without breaking the ordering.&]
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindLowerBound`(const C`&`,const T`&`,const L`&`):%- [@(0.0.255) template]_
-<[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
-]_[@(0.0.255) int]_[* FindLowerBound]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
+[s5;:FindLowerBound`(const C`&`,const T`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[@(0.0.255) i
+nt]_[* FindLowerBound]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
 [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_
 [*@3 less])&]
 [s2; Finds first position in sorted by [* less] predicate where [* val] 
@@ -66,8 +66,8 @@ can be inserted without breaking the ordering.&]
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindLowerBound`(const C`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 C], [@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) int]_[* FindLowerBound]([@(0.0.255) c
+[s5;:FindLowerBound`(const C`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 C], [@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) int]_[* FindLowerBound]([@(0.0.255) c
 onst]_[*@4 C][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val])&]
 [s2; Finds first position in sorted by [*/ operator<] predicate where 
 [* val] can be inserted without breaking the ordering.&]
@@ -78,8 +78,8 @@ onst]_[*@4 C][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindUpperBound`(const C`&`,int`,int`,const T`&`,const L`&`):%- [@(0.0.255) t
-emplate]_<[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
+[s5;:FindUpperBound`(const C`&`,int`,int`,const T`&`,const L`&`):%- [@(0.0.255) templat
+e]_<[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
 ]_[@(0.0.255) int]_[* FindUpperBound]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
 [@(0.0.255) int]_[*@3 pos], [@(0.0.255) int]_[*@3 count], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 val], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
@@ -95,9 +95,9 @@ where [* val] can be inserted without breaking the ordering.&]
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindUpperBound`(const C`&`,const T`&`,const L`&`):%- [@(0.0.255) template]_
-<[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
-]_[@(0.0.255) int]_[* FindUpperBound]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
+[s5;:FindUpperBound`(const C`&`,const T`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[@(0.0.255) i
+nt]_[* FindUpperBound]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
 [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_
 [*@3 less])&]
 [s2; Finds last position in sorted by [* less] predicate where [* val] 
@@ -110,8 +110,8 @@ can be inserted without breaking the ordering.&]
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindUpperBound`(const C`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 C], [@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) int]_[* FindUpperBound]([@(0.0.255) c
+[s5;:FindUpperBound`(const C`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 C], [@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) int]_[* FindUpperBound]([@(0.0.255) c
 onst]_[*@4 C][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val])&]
 [s2; Finds last position in sorted by [*/ operator<] predicate where 
 [* val] can be inserted without breaking the ordering.&]
@@ -122,8 +122,8 @@ onst]_[*@4 C][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindBinary`(const C`&`,const T`&`,int`,int`,const L`&`):%- [@(0.0.255) tem
-plate]_<[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
+[s5;:FindBinary`(const C`&`,const T`&`,int`,int`,const L`&`):%- [@(0.0.255) template]_<
+[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
 ]_[@(0.0.255) int]_[* FindBinary]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
 [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val], [@(0.0.255) int]_[*@3 pos], 
 [@(0.0.255) int]_[*@3 count], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
@@ -140,7 +140,7 @@ a negative value is returned.&]
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindBinary`(const C`&`,const T`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+[s5;:FindBinary`(const C`&`,const T`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[@(0.0.255) i
 nt]_[* FindBinary]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[*@4 T
 ][@(0.0.255) `&]_[*@3 val], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
@@ -155,9 +155,9 @@ value is returned.&]
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FindBinary`(const C`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) cla
-ss]_[*@4 C], [@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) int]_[* FindBinary]([@(0.0.255) c
-onst]_[*@4 C][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val])&]
+[s5;:FindBinary`(const C`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C
+], [@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) int]_[* FindBinary]([@(0.0.255) const
+]_[*@4 C][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val])&]
 [s2; Finds position of element with specified value in the container 
 sorted by [*/ operator<] predicate. If no such element exists, 
 a negative value is returned.&]
@@ -168,9 +168,9 @@ a negative value is returned.&]
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:AppendSorted`(C`&`,const C`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 C], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* AppendSorted](
-[*@4 C][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 src], 
+[s5;:AppendSorted`(C`&`,const C`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) clas
+s]_[*@4 C], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* AppendSorted]([*@4 C
+][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 src], 
 [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
 [s2; Merges source NTL container to destination NTL container. Both 
 containers must be sorted in ascending order. After the operation, 
@@ -184,8 +184,8 @@ Ordering predicate is determined by [* less].&]
 [s7; [*/ Return value]-|Destination container.[C template<class ][*C@4 C][C >]&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:AppendSorted`(C`&`,const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 C][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* AppendSorted]([*@4 C][@(0.0.255) `&]_[*@3 dest], 
+[s5;:AppendSorted`(C`&`,const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C][@(0.0.255) >
+]_[*@4 C][@(0.0.255) `&]_[* AppendSorted]([*@4 C][@(0.0.255) `&]_[*@3 dest], 
 [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 src])&]
 [s2;~~~.992; Merges source NTL container to destination NTL container. 
 Both containers must be sorted in ascending order. After the 
@@ -198,9 +198,9 @@ preserved. Ordering is determined by [*/ operator<].&]
 [s7; [*/ Return value]-|Destination container.[C template<class ][*C@4 C][C >]&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:UnionSorted`(C`&`,const C`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 C], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* UnionSorted](
-[*@4 C][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 src], 
+[s5;:UnionSorted`(C`&`,const C`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) class
+]_[*@4 C], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* UnionSorted]([*@4 C
+][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 src], 
 [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
 [s2; Merges source NTL container to destination NTL container. Both 
 containers must be sorted in ascending order and values must 
@@ -214,8 +214,8 @@ Ordering is determined by [* less].&]
 [s7; [*/ Return value]-|Destination container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:UnionSorted`(C`&`,const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C
-][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* UnionSorted]([*@4 C][@(0.0.255) `&]_[*@3 dest], 
+[s5;:UnionSorted`(C`&`,const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C][@(0.0.255) >
+]_[*@4 C][@(0.0.255) `&]_[* UnionSorted]([*@4 C][@(0.0.255) `&]_[*@3 dest], 
 [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 src])&]
 [s2; Merges the source NTL container to the destination NTL container. 
 Both containers must be sorted in ascending order and values 
@@ -228,9 +228,9 @@ containers. Ordering is determined by [*/ operator<].&]
 [s7; [*/ Return value]-|Destination container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:RemoveSorted`(C`&`,const C`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 C], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* RemoveSorted](
-[*@4 C][@(0.0.255) `&]_[*@3 from], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 what], 
+[s5;:RemoveSorted`(C`&`,const C`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) clas
+s]_[*@4 C], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* RemoveSorted]([*@4 C
+][@(0.0.255) `&]_[*@3 from], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 what], 
 [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
 [s2; Removes elements of source container from destination container. 
 Both containers must be sorted in ascending order and values 
@@ -242,8 +242,8 @@ must be unique. Ordering is determined by [* less].&]
 [s7; [*/ Return value]-|Destination container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:RemoveSorted`(C`&`,const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 C][@(0.0.255) >]_[*@4 C][@(0.0.255) `&]_[* RemoveSorted]([*@4 C][@(0.0.255) `&]_[*@3 from], 
+[s5;:RemoveSorted`(C`&`,const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C][@(0.0.255) >
+]_[*@4 C][@(0.0.255) `&]_[* RemoveSorted]([*@4 C][@(0.0.255) `&]_[*@3 from], 
 [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 what])&]
 [s2; Removes elements of source container from destination container. 
 Both containers must be sorted in ascending order and values 
@@ -254,7 +254,7 @@ must be unique. Ordering is determined by [*/ operator<].&]
 [s7; [*/ Return value]-|Destination container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:IntersectSorted`(D`&`,const S`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+[s5;:IntersectSorted`(D`&`,const S`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 D], [@(0.0.255) class]_[*@4 S], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[*@4 D][@(0.0.255) `&
 ]_[* IntersectSorted]([*@4 D][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[*@4 S][@(0.0.255) `&
 ]_[*@3 src], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
@@ -268,9 +268,9 @@ order and values must be unique. Ordering is determined by [* less].&]
 [s7; [*C@3 less]-|Destination container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:IntersectSorted`(D`&`,const S`&`):%- [@(0.0.255) template]_<[@(0.0.255) clas
-s]_[*@4 D], [@(0.0.255) class]_[*@4 S][@(0.0.255) >]_[*@4 D][@(0.0.255) `&]_[* IntersectSorted](
-[*@4 D][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[*@4 S][@(0.0.255) `&]_[*@3 src])&]
+[s5;:IntersectSorted`(D`&`,const S`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 D],
+ [@(0.0.255) class]_[*@4 S][@(0.0.255) >]_[*@4 D][@(0.0.255) `&]_[* IntersectSorted]([*@4 D][@(0.0.255) `&
+]_[*@3 dest], [@(0.0.255) const]_[*@4 S][@(0.0.255) `&]_[*@3 src])&]
 [s2; Removes elements from destination container that are not contained 
 in source container. Both containers must be sorted in ascending 
 order and values must be unique. Ordering is determined by [*/ operator<].&]
@@ -281,9 +281,9 @@ order and values must be unique. Ordering is determined by [*/ operator<].&]
 [s7; [*/ Return value]-|Destination container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:Sort`(T`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T],
- [@(0.0.255) class]_[*@4 Less][@(0.0.255) >]_[@(0.0.255) void]_[* Sort]([*@4 T][@(0.0.255) `&]_
-[*@3 c], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s5;:Sort`(T`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
+[@(0.0.255) class]_[*@4 Less][@(0.0.255) >]_[@(0.0.255) void]_[* Sort]([*@4 T][@(0.0.255) `&]_[*@3 c
+], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
 [s2; Sorts container. Ordering is determined by [* less].&]
 [s6; IterSwap must be defined for T`::Iterator.&]
 [s7; [*C@4 T]-|Type of container.&]
@@ -291,7 +291,7 @@ order and values must be unique. Ordering is determined by [*/ operator<].&]
 [s7; [*C@3 less]-|Ordering predicate.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:Sort`(T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) v
+[s5;:Sort`(T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) v
 oid]_[* Sort]([*@4 T][@(0.0.255) `&]_[*@3 c])&]
 [s2; Sorts container. Ordering is determined by [*/ operator<].&]
 [s2; [*1 IterSwap must be defined for T`::Iterator.]&]
@@ -299,9 +299,9 @@ oid]_[* Sort]([*@4 T][@(0.0.255) `&]_[*@3 c])&]
 [s7; [*C@3 c]-|Container.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:IndexSort`(KC`&`,VC`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 KC], [@(0.0.255) class]_[*@4 VC], [@(0.0.255) class]_[*@4 Less][@(0.0.255) >]_[@(0.0.255) v
-oid]_[* IndexSort]([*@4 KC][@(0.0.255) `&]_[*@3 keys], [*@4 VC][@(0.0.255) `&]_[*@3 values], 
+[s5;:IndexSort`(KC`&`,VC`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 K
+C], [@(0.0.255) class]_[*@4 VC], [@(0.0.255) class]_[*@4 Less][@(0.0.255) >]_[@(0.0.255) void
+]_[* IndexSort]([*@4 KC][@(0.0.255) `&]_[*@3 keys], [*@4 VC][@(0.0.255) `&]_[*@3 values], 
 [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
 [s2; Sorts pair of containers. Both containers must have same number 
 of items. Resulting order is determined by the [* keys] container. 
@@ -313,8 +313,8 @@ Ordering is determined by [* less].&]
 [s7; [*C@3 less]-|Ordering predicate.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:IndexSort`(KC`&`,VC`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 KC],
- [@(0.0.255) class]_[*@4 VC][@(0.0.255) >]_[@(0.0.255) void]_[* IndexSort]([*@4 KC][@(0.0.255) `&
+[s5;:IndexSort`(KC`&`,VC`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 KC], 
+[@(0.0.255) class]_[*@4 VC][@(0.0.255) >]_[@(0.0.255) void]_[* IndexSort]([*@4 KC][@(0.0.255) `&
 ]_[*@3 keys], [*@4 VC][@(0.0.255) `&]_[*@3 values])&]
 [s2; Sorts pair of containers. Both containers must have same number 
 of items. Resulting order is determined by the [* keys] container. 
@@ -325,10 +325,10 @@ Ordering is determined by [*/ operator<].&]
 [s7; [*C@3 values]-|Container of values.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:GetSortOrder`(const C`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 C], [@(0.0.255) class]_[*@4 Less][@(0.0.255) >]_[_^`:`:Vector^ Vector][@(0.0.255) <
-int>]_[* GetSortOrder]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 container], 
-[@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s5;:GetSortOrder`(const C`&`,const Less`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 C], [@(0.0.255) class]_[*@4 Less][@(0.0.255) >]_Vector[@(0.0.255) <int>]_[* GetSortOrder
+]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 container], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&
+]_[*@3 less])&]
 [s2; Creates ascending order of values in container. Ordering is 
 determined by [* less].&]
 [s7; [*C@4 C]-|Type of container.&]
@@ -338,9 +338,9 @@ determined by [* less].&]
 order.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:GetSortOrder`(const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C][@(0.0.255) >
-]_[_^`:`:Vector^ Vector][@(0.0.255) <int>]_[* GetSortOrder]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&
-]_[*@3 container])&]
+[s5;:GetSortOrder`(const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C][@(0.0.255) >
+]_Vector[@(0.0.255) <int>]_[* GetSortOrder]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 co
+ntainer])&]
 [s2; Creates ascending order of values in container. Ordering is 
 determined by [*/ operator<].&]
 [s7; [*C@4 C]-|Type of container.&]
@@ -349,10 +349,10 @@ determined by [*/ operator<].&]
 order.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:FieldRelation`(O`(T`:`:`*`)`,const R`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 O], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >]_[_^`:`:FieldRelationCls^ F
-ieldRelationCls][@(0.0.255) <][*@4 O], [*@4 T], [*@4 R][@(0.0.255) >]_[* FieldRelation]([*@4 O]_
-(T`::[@(0.0.255) `*][*@3 member]), [@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 relation])&]
+[s5;:FieldRelation`(O`(`*`)`,const R`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 O
+], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >]_FieldRelationCls[@(0.0.255) <
+][*@4 O], [*@4 T], [*@4 R][@(0.0.255) >]_[* FieldRelation]([*@4 O]_(T`::[@(0.0.255) `*][*@3 member
+]), [@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 relation])&]
 [s2; Creates ordering predicate for [* T] based on the value of member 
 variable of[*  T].&]
 [s7; [*C@4 T]-|Type of element.&]
@@ -361,11 +361,11 @@ variable of[*  T].&]
 [s7; [*/ Return value]-|Ordering predicate.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:MethodRelation`(O`(T`:`:`*`)`(`)`,const R`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 O], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >]_[_^`:`:MethodRelationCls^ M
-ethodRelationCls][@(0.0.255) <][*@4 O]_(T`::[@(0.0.255) `*])(), [*@4 T], 
-[*@4 R][@(0.0.255) >]_[* MethodRelation]([*@4 O]_(T`::[@(0.0.255) `*][*@3 method])(), 
-[@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 relation])&]
+[s5;:MethodRelation`(O`(`*`)`(`)`,const R`&`):%- [@(0.0.255) template]_<[@(0.0.255) class
+]_[*@4 O], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >]_MethodRelatio
+nCls[@(0.0.255) <][*@4 O]_(T`::[@(0.0.255) `*])(), [*@4 T], [*@4 R][@(0.0.255) >]_[* MethodRelat
+ion]([*@4 O]_(T`::[@(0.0.255) `*][*@3 method])(), [@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 r
+elation])&]
 [s2; Creates ordering predicate for [* T] based on the value returned 
 by non`-const method of [* T].&]
 [s7; [*C@4 T]-|Type of element.&]
@@ -374,12 +374,11 @@ by non`-const method of [* T].&]
 [s7; [*/ Return value]-|Ordering predicate.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:`:`:MethodRelation`(O`(T`:`:`*`)`(`)const`,const R`&`):%- [@(0.0.255) template
-]_<[@(0.0.255) class]_[*@4 O], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >
-]_[_^`:`:MethodRelationCls^ MethodRelationCls][@(0.0.255) <][*@4 O]_(T`::[@(0.0.255) `*])(
-)_[@(0.0.255) const], [*@4 T], [*@4 R][@(0.0.255) >]_[* MethodRelation]([*@4 O]_(T`::[@(0.0.255) `*
-][*@3 method])()_[@(0.0.255) const], [@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 relation])
-&]
+[s5;:MethodRelation`(O`(`*`)`(`)const`,const R`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 O], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >]_MethodRel
+ationCls[@(0.0.255) <][*@4 O]_(T`::[@(0.0.255) `*])()_[@(0.0.255) const], 
+[*@4 T], [*@4 R][@(0.0.255) >]_[* MethodRelation]([*@4 O]_(T`::[@(0.0.255) `*][*@3 method])()_[@(0.0.255) c
+onst], [@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 relation])&]
 [s2; Creates ordering predicate for [* T] based on the value returned 
 by const method of [* T].&]
 [s7; [*C@4 T]-|Type of element.&]

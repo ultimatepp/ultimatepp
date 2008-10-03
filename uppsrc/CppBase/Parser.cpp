@@ -186,6 +186,15 @@ Parser::FunctionStat::FunctionStat(const String & nesting,
 {
 }
 
+static String s_dblcln("::");
+
+inline void NestCat(String& nest, const String& s)
+{
+	if(nest.GetCount())
+		nest << s_dblcln;
+	nest << s;
+}
+
 void Parser::Context::operator<<=(const Context& t)
 {
 	nesting = t.nesting;
@@ -945,12 +954,14 @@ String CleanTp(const String& tp)
 
 void Parser::SetNestCurrent()
 {
-	current_nest = Nvl(context.nesting, "::");
+//	current_nest = Nvl(context.nesting, "::");
+	current_nest = context.nesting;
 }
 
 CppItem& Parser::Item(const String& nesting, const String& item, const String& name, bool impl)
 {
-	current_nest = Nvl(nesting, "::");
+//	current_nest = Nvl(nesting, "::");
+	current_nest = nesting;
 	if(dobody)
 		current = CppItem();
 	current_key = item;
@@ -1044,8 +1055,8 @@ bool Parser::Nest(const String& tp, const String& tn) {
 		if(Key('{')) {
 			Context cc;
 			cc <<= context;
-			context.nesting << "::" << name;
-			context.namespacel = context.nesting.GetLength();
+//			context.nesting << "::" << name;
+//			context.namespacel = context.nesting.GetLength();
 			NestBody();
 			context <<= cc;
 		}
@@ -1079,7 +1090,7 @@ bool Parser::Nest(const String& tp, const String& tn) {
 			Check(lex.IsId(), "Missing identifier");
 			context.typenames.FindAdd(lex);
 			name = lex.GetId();
-			context.nesting << "::" << name;
+			NestCat(context.nesting, name);
 		}
 		while(Key(t_dblcolon));
 		context.access = t == tk_class ? PRIVATE : PUBLIC;
@@ -1194,11 +1205,10 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
 			nn.Cat(*s);
 		s++;
 	}
-	if(*nn == ':')
-		nesting = nn;
-	else
-	if(!IsNull(nn))
-		nesting << "::" << nn;
+	s = nn;
+	while(*s == ':') s++;
+	if(*s)
+		NestCat(nesting, s);
 	CppItem& im = Item(nesting, item, nm, body);
 	if(!body || IsNull(im.natural)) {
 		im.natural.Clear();
@@ -1392,7 +1402,7 @@ void Parser::Do()
 							h = TrimRight(h.Mid(0, q));
 						String nest = context.nesting;
 						if(d.type_def)
-							nest << "::" << d.name;
+							NestCat(nest, d.name);
 						CppItem& im = Item(nest, d.type_def ? "typedef" : d.name, d.name);
 						im.natural = Purify(h);
 						im.type = im.ptype = d.type;
@@ -1436,11 +1446,13 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 	while(lex != t_eof)
 		try {
 			try {
-				current_nest = "::";
+//				current_nest = "::";
+				current_nest.Clear();
 				context.access = PUBLIC;
 				context.noclass = true;
 				context.typenames.Clear();
 				context.tparam.Clear();
+				context.nesting.Clear();
 				inbody = false;
 				for(int i = 0; i < typenames.GetCount(); i++)
 					context.typenames.Add(lex.Id(typenames[i]));

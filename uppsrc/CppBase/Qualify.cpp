@@ -5,190 +5,81 @@ NAMESPACE_UPP
 #define LLOG(x)
 #define LTIMING(x)  // RTIMING(x)
 
-Nestfo::Nestfo(const CppBase& base, int nesti)
-	: nesti(nesti), base(base)
-{
-	LTIMING("Nestfo(const CppBase& base, int nesti)");
-	Init();
-}
+bool DoQualify(Nestfo& nf, const String& type, String& qt);
 
-Nestfo::Nestfo(int nesti, const CppBase& base)
-	: nesti(nesti), base(base)
-{
-	LTIMING("Nestfo(int nesti, const CppBase& base)");
-	Init();
-}
-
-Nestfo::Nestfo(const CppBase& base, const String& nest)
-	: nesti(base.Find(nest)), base(base)
-{
-	LTIMING("Nestfo(const CppBase& base, const String& nest)");
-	Init();
-}
-
-Nestfo::Nestfo(const Nestfo& f)
-	: base(f.base)
-{
-	LTIMING("Nestfo copy contructor");
-	nests <<= f.nests;
-	bvalid = nvalid = false;
-	nesti = f.nesti;
-}
-
-void Nestfo::Init()
-{
-	bvalid = nvalid = false;
-}
-
-void Nestfo::Bases(int i, Vector<int>& g)
-{
-	if(base.IsType(i)) {
-		const CppNest& n = base.nest[i];
-		for(int i = 0; i < n.GetCount(); i++) {
-			const CppItem& im = n[i];
-			if(im.IsType()) {
-				const char *q = im.qptype;
-				const char *b = q;
-				for(;;) {
-					if(*q == ';' || *q == '\0') {
-						if(b < q) {
-							int nq = base.Find(String(b, q));
-							if(nq >= 0)
-								g.Add(nq);
-						}
-						if(*q == '\0')
-							return;
-						q++;
-						b = q;
-					}
-					else
-						q++;
-				}
-			}
-		}
-	}
-}
-
-const Vector<String>& Nestfo::GetBases()
-{
-	LTIMING("GetBases");
-	if(!bvalid) {
-		bvalid = true;
-		baselist.Clear();
-		if(nesti < 0)
-			return baselist;
-		Vector<int> b;
-		Index<int> bi;
-		Bases(nesti, b);
-		while(b.GetCount()) {
-			Vector<int> bb;
-			for(int i = 0; i < b.GetCount(); i++) {
-				int q = b[i];
-				if(bi.Find(q) < 0) {
-					bi.Add(q);
-					Bases(b[i], bb);
-				}
-			}
-			b = bb;
-		}
-		for(int i = 0; i < bi.GetCount(); i++)
-			baselist.Add(base.GetKey(bi[i]) + "::");
-	}
-	return baselist;
-}
-
-const Vector<String>& Nestfo::GetNests()
-{
-	LTIMING("GetNests");
-	if(!nvalid) {
-		nvalid = true;
-		nests.Clear();
-		if(nesti < 0)
-			return nests;
-		String nn = base.GetKey(nesti);
-		while(nn.GetCount()) {
-			if(nn[0] == ':' && nn.GetCount() == 2) {
-				nests.Add(nn);
-				return nests;
-			}
-			nests.Add(nn + "::");
-			int q = nn.ReverseFind(':');
-			nn.Trim(max(0, q - 1));
-		}
-		nests.Add("::");
-	}
-	return nests;
-}
-
-String DoQualify(Nestfo& nf, const String& type);
-
-String Qualify0(Nestfo& nf, const String& type)
+bool Qualify0(Nestfo& nf, const String& type, String& qt)
 {
 	const Vector<String>& nd = nf.GetNests();
-	if(type[0] == ':') {
-		LTIMING(":: test");
-		if(nf.base.Find(type) >= 0)
-			return type;
-	}
-	else
 	if(nd.GetCount()) {
 		LTIMING("First test");
-		String qt = nd[0] + type;
+		qt = nd[0] + type;
 		if(nf.base.Find(qt) >= 0)
-			return qt;
+			return true;
 	}
 	if(nf.GetNest() >= 0) {
 		int q = type.ReverseFind(':');
-		if(q >= 0) {
+		if(q > 0) {
 			LTIMING("Qualifying qualification");
 			Nestfo hnf(nf);
 			hnf.NoBases();
-			String qn = DoQualify(hnf, type.Mid(0, max(q - 1, 0)));
-			if(qn[0] != ':')
-				return type;
-			int nesti = nf.base.Find(qn);
-			if(nesti < 0)
-				return type;
-			String tp = type.Mid(q + 1);
-			Nestfo nnf(nf.base, nesti);
-			const Vector<String>& bs = nnf.GetBases();
-			for(int i = 0; i < bs.GetCount(); i++) {
-				String qt = bs[i] + tp;
-				if(nf.base.Find(qt) >= 0)
-					return qt;
+			String qn;
+			if(DoQualify(hnf, type.Mid(0, q - 1), qn)) {
+				int nesti = nf.base.Find(qn);
+				if(nesti >= 0) {
+					String tp = type.Mid(q + 1);
+					Nestfo nnf(nf.base, nesti);
+					const Vector<String>& bs = nnf.GetBases();
+					for(int i = 0; i < bs.GetCount(); i++) {
+						qt = bs[i] + tp;
+						if(nf.base.Find(qt) >= 0)
+							return true;
+					}
+				}
 			}
 		}
 		else {
 			LTIMING("Bases");
 			const Vector<String>& bs = nf.GetBases();
 			for(int i = 0; i < bs.GetCount(); i++) {
-				String qt = bs[i] + type;
+				qt = bs[i] + type;
 				if(nf.base.Find(qt) >= 0)
-					return qt;
+					return true;
 			}
 		}
 	}
 	if(type[0] != ':') {
 		LTIMING("Testing nests");
 		for(int i = 1; i < nd.GetCount(); i++) {
-			String qt = nd[i] + type;
+			qt = nd[i] + type;
 			if(nf.base.Find(qt) >= 0)
-				return qt;
+				return true;
 		}
 	}
-	return type;
+	int q = type.Find(':');
+	if(q < 0)
+		return false;
+	return Qualify0(nf, type.Mid(q + 1), qt);
+}
+
+bool DoQualify(Nestfo& nf, const String& type, String& qt)
+{
+	LTIMING("Qualify");
+	int q = nf.cache.Find(type);
+	if(q >= 0) {
+		qt = nf.cache[q];
+		return true;
+	}
+	LTIMING("Qualify0");
+	if(!Qualify0(nf, type, qt))
+		return false;
+	nf.cache.Add(type, qt);
+	return true;
 }
 
 String DoQualify(Nestfo& nf, const String& type)
 {
-	LTIMING("Qualify");
-	int q = nf.cache.Find(type);
-	if(q >= 0)
-		return nf.cache[q];
-	LTIMING("Qualify0");
-	String x = Qualify0(nf, type);
-	nf.cache.Add(type, x);
-	return x;
+	String qt;
+	return DoQualify(nf, type, qt) ? qt : type;
 }
 
 static String s_int("int");
