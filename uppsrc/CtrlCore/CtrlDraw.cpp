@@ -43,7 +43,9 @@ void Ctrl::Refresh() {
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
 	Refresh(Rect(GetSize()).Inflated(OverPaint()));
+#ifdef PLATFORM_WIN32
 	if(!isdhctrl)
+#endif
 		fullrefresh = true;
 }
 

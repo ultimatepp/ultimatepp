@@ -68,7 +68,7 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 					caret = true;
 					break;
 				}
-		if(GLX) return;
+//		if(GLX) return;
 		GC gc = XCreateGC(Xdisplay, (Drawable)top->window, 0, 0);
 		XftDraw *xftdraw = XftDrawCreate(Xdisplay, (Drawable) top->window,
 		                                 DefaultVisual(Xdisplay, Xscreenno), Xcolormap);
