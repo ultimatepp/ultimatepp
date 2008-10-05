@@ -4,13 +4,13 @@ bool IsCb(String t) {
 	int q = t.Find('<');
 	if(q >= 0)
 		t.Trim(q);
-	return  t == "::Callback" || t == "::Callback1" || t == "::Callback2" ||
-	        t == "::Callback3" || t == "::Gate" || t == "::Gate1" || t == "::Gate2";
+	return  t == "Callback" || t == "Callback1" || t == "Callback2" || t == "Callback3" ||
+	        t == "Gate" || t == "Gate1" || t == "Gate2";
 }
 
 struct ThisbacksDlg : WithThisbacksLayout<TopWindow> {
 	struct CbInfo {
-		String nest;
+		String scope;
 		String type;
 		String name;
 	};
@@ -18,13 +18,13 @@ struct ThisbacksDlg : WithThisbacksLayout<TopWindow> {
 	Index<String> nname;
 	Array<CbInfo> cb;
 
-	void GatherCallbacks(const String& pfx, Index<String>& done, const String& nest, int access);
+	void GatherCallbacks(const String& pfx, Index<String>& done, const String& scope, int access);
 	void CbEdit(One<Ctrl>& ctrl);
-	void Generate(String& ins, String& clip, const String& nest);
+	void Generate(String& ins, String& clip, const String& scope);
 
 	typedef ThisbacksDlg CLASSNAME;
 
-	ThisbacksDlg(const String& nest);
+	ThisbacksDlg(const String& scope);
 };
 
 int FilterId(int c)
@@ -37,7 +37,7 @@ void ThisbacksDlg::CbEdit(One<Ctrl>& ctrl)
 	ctrl.Create<EditString>().SetFilter(FilterId);
 }
 
-ThisbacksDlg::ThisbacksDlg(const String& nest)
+ThisbacksDlg::ThisbacksDlg(const String& scope)
 {
 	CtrlLayoutOKCancel(*this, "THISBACKs");
 	list.AddColumn("Defined in");
@@ -50,31 +50,31 @@ ThisbacksDlg::ThisbacksDlg(const String& nest)
 	list.EvenRowColor();
 	list.NoCursor();
 	Sizeable().Zoomable();
-	int q = BrowserBase().Find(nest);
+	int q = BrowserBase().Find(scope);
 	if(q < 0)
 		return;
-	CppNest& m = BrowserBase()[q];
-	for(int i = 0; i < m.GetCount(); i++)
-		nname.Add(m.name[i]);
+	const Array<CppItem>& n = BrowserBase()[q];
+	for(int i = 0; i < n.GetCount(); i++)
+		nname.Add(n[i].name);
 	Index<String> done;
-	GatherCallbacks("", done, nest, PRIVATE);
+	GatherCallbacks("", done, scope, PRIVATE);
 }
 
 void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
-                                   const String& nest, int access)
+                                   const String& scope, int access)
 {
-	String h = pfx + nest;
+	String h = pfx + scope;
 	if(done.Find(h) >= 0)
 		return;
 	done.Add(h);
-	int q = BrowserBase().Find(NoTemplatePars(nest));
+	int q = BrowserBase().Find(NoTemplatePars(scope));
 	if(q < 0)
 		return;
-	CppNest& m = BrowserBase()[q];
-	for(int i = 0; i < m.GetCount(); i++) {
-		const CppItem& im = m[i];
-		if(im.IsData() && IsCb(im.qtype) && im.access <= access) {
-			String n = m.name[i];
+	const Array<CppItem>& n = BrowserBase()[q];
+	for(int i = 0; i < n.GetCount(); i++) {
+		const CppItem& m = n[i];
+		if(m.IsData() && IsCb(m.qtype) && m.access <= access) {
+			String n = m.name;
 			String name = pfx + '.' + n;
 			if(*name == '.')
 				name = name.Mid(1);
@@ -97,29 +97,29 @@ void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
 				while(nname.Find(n) >= 0)
 					n = "On" + n;
 			}
-			list.Add(nest, im.type, name, 0, n, m.name[i]);
+			list.Add(scope, m.type, name, 0, n, m.name);
 		}
 	}
-	for(int i = 0; i < m.GetCount(); i++) {
-		const CppItem& im = m[i];
-		if(im.IsType() && im.access <= access) {
-			Vector<String> b = Split(im.qptype, ';');
-			SubstituteTpars(b, nest);
+	for(int i = 0; i < n.GetCount(); i++) {
+		const CppItem& m = n[i];
+		if(m.IsType() && m.access <= access) {
+			Vector<String> b = Split(m.qptype, ';');
+			SubstituteTpars(b, scope);
 			for(int i = 0; i < b.GetCount(); i++)
 				GatherCallbacks(pfx, done, b[i], min(access, (int)PROTECTED));
 		}
 	}
-	for(int i = 0; i < m.GetCount(); i++) {
-		const CppItem& im = m[i];
-		if(im.IsData() && im.type.GetCount() && !IsCb(im.qtype)
-		   && im.natural.Find('&') < 0 && im.natural.Find('*') < 0
-		   && im.access <= access
-		   && memcmp(m.name[i], "dv___", 5))
-			GatherCallbacks(pfx + "." + m.name[i], done, im.qtype, min(access, (int)PUBLIC));
+	for(int i = 0; i < n.GetCount(); i++) {
+		const CppItem& m = n[i];
+		if(m.IsData() && m.type.GetCount() && !IsCb(m.qtype)
+		   && m.natural.Find('&') < 0 && m.natural.Find('*') < 0
+		   && m.access <= access
+		   && memcmp(m.name, "dv___", 5))
+			GatherCallbacks(pfx + "." + m.name, done, m.qtype, min(access, (int)PUBLIC));
 	}
 }
 
-void ThisbacksDlg::Generate(String& ins, String& clip, const String& nest)
+void ThisbacksDlg::Generate(String& ins, String& clip, const String& scope)
 {
 	String ac;
 	for(int i = 0; i < list.GetCount(); i++) {
@@ -143,7 +143,7 @@ void ThisbacksDlg::Generate(String& ins, String& clip, const String& nest)
 						type.Trim(q);
 					}
 				}
-				String n = nest;
+				String n = scope;
 				if(n[0] == ':' && n[1] == ':')
 					n = n.Mid(2);
 				String t = (memcmp(type, "Gate", 4) == 0 ? "bool " : "void ");
@@ -164,16 +164,16 @@ void AssistEditor::Thisbacks()
 {
 	Parser ctx;
 	Context(ctx, GetCursor());
-	if(IsNull(ctx.current_nest) || ctx.current_nest == "::" || !ctx.IsInBody())
+	if(IsNull(ctx.current_scope) || ctx.current_scope == "::" || !ctx.IsInBody())
 		return;
-	ThisbacksDlg dlg(ctx.current_nest);
+	ThisbacksDlg dlg(ctx.current_scope);
 	LoadFromGlobal(dlg, "ThisbacksDlg");
 	int c = dlg.Run();
 	StoreToGlobal(dlg, "ThisbacksDlg");
 	if(c != IDOK)
 		return;
 	String a, b;
-	dlg.Generate(a, b, ctx.current_nest);
+	dlg.Generate(a, b, ctx.current_scope);
 	Paste(a.ToWString());
 	WriteClipboardText(b);
 }

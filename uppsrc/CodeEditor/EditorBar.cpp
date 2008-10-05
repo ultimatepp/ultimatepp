@@ -2,7 +2,8 @@
 
 NAMESPACE_UPP
 
-void Renumber(LineInfo& lf) {
+void Renumber(LineInfo& lf)
+{
 	LineInfo tf;
 	int l = 0;
 	if(lf.GetCount()) {
@@ -34,12 +35,14 @@ void Renumber(LineInfo& lf) {
 	lf = tf;
 }
 
-void ClearBreakpoints(LineInfo& lf) {
+void ClearBreakpoints(LineInfo& lf)
+{
 	for(int i = 0; i < lf.GetCount(); i++)
 		lf[i].breakpoint.Clear();
 }
 
-void ValidateBreakpoints(LineInfo& lf) {
+void ValidateBreakpoints(LineInfo& lf)
+{
 	for(int i = 0; i < lf.GetCount(); i++)
 		if(lf[i].breakpoint[0] == 0xe)
 			lf[i].breakpoint = "1";
@@ -50,7 +53,8 @@ void EditorBar::sPaintImage(Draw& w, int y, int fy, const Image& img)
 	w.DrawImage(0, y + (fy - img.GetSize().cy) / 2, img);
 }
 
-void EditorBar::Paint(Draw& w) {
+void EditorBar::Paint(Draw& w)
+{
 	static Image (*numeri[])() = {
 		CodeEditorImg::N0, CodeEditorImg::N1, CodeEditorImg::N2, CodeEditorImg::N3, CodeEditorImg::N4,
 		CodeEditorImg::N5, CodeEditorImg::N6, CodeEditorImg::N7, CodeEditorImg::N8, CodeEditorImg::N9,
@@ -152,7 +156,8 @@ void EditorBar::Paint(Draw& w) {
 	}
 }
 
-void EditorBar::MouseMove(Point p, dword flags) {
+void EditorBar::MouseMove(Point p, dword flags)
+{
 	int pa = active_annotation;
 	if(p.x > GetSize().cx - annotations)
 		active_annotation = p.y / editor->GetFont().Info().GetHeight() + editor->GetScrollPos().y;
@@ -172,18 +177,21 @@ void EditorBar::MouseLeave()
 		WhenAnnotationMove();
 }
 
-void EditorBar::LeftDown(Point p, dword flags) {
+void EditorBar::LeftDown(Point p, dword flags)
+{
 	if(editor)
 		editor->LeftDown(Point(0, p.y), flags);
 }
 
-String& EditorBar::PointBreak(int& y) {
+String& EditorBar::PointBreak(int& y)
+{
 	y = minmax(y / editor->GetFont().Info().GetHeight()
 		+ editor->GetScrollPos().y, 0, editor->GetLineCount());
 	return li.At(y).breakpoint;
 }
 
-void EditorBar::LeftDouble(Point p, dword flags) {
+void EditorBar::LeftDouble(Point p, dword flags)
+{
 	if(!editor || !bingenabled) return;
 	String& b = PointBreak(p.y);
 	if(b.IsEmpty())
@@ -194,7 +202,8 @@ void EditorBar::LeftDouble(Point p, dword flags) {
 	Refresh();
 }
 
-void EditorBar::RightDown(Point p, dword flags) {
+void EditorBar::RightDown(Point p, dword flags)
+{
 	return;
 	if(!editor || !bingenabled) return;
 	String& b = PointBreak(p.y);
@@ -203,7 +212,8 @@ void EditorBar::RightDown(Point p, dword flags) {
 	Refresh();
 }
 
-void EditorBar::InsertLines(int i, int count) {
+void EditorBar::InsertLines(int i, int count)
+{
 	li.InsertN(minmax(i + 1, 0, li.GetCount()), max(count, 0));
 	if(editor->GetCheckEdited()) {
 		if(editor->IsUndoOp() && li_removed.GetCount() >= count) {
@@ -226,7 +236,8 @@ void EditorBar::InsertLines(int i, int count) {
 	Refresh();
 }
 
-void EditorBar::RemoveLines(int i, int count) {
+void EditorBar::RemoveLines(int i, int count)
+{
 	if(editor->GetCheckEdited() && !editor->IsUndoOp()) {
 		for(int t = i - 1; t < i + count - 1; t++) {
 			LineInfoRemRecord& rm = li_removed.Add();
@@ -243,7 +254,8 @@ void EditorBar::RemoveLines(int i, int count) {
 	Refresh();
 }
 
-void EditorBar::ClearLines() {
+void EditorBar::ClearLines()
+{
 	li.Clear();
 	li.Shrink();
 	li_removed.Clear();
@@ -251,7 +263,8 @@ void EditorBar::ClearLines() {
 	Refresh();
 }
 
-LineInfo EditorBar::GetLineInfo() const {
+LineInfo EditorBar::GetLineInfo() const
+{
 	LineInfo lf;
 	int l = -2;
 	for(int i = 0; i < li.GetCount(); i++) {
@@ -279,7 +292,8 @@ LineInfo EditorBar::GetLineInfo() const {
 	return lf;
 }
 
-void EditorBar::SetLineInfo(const LineInfo& lf, int total) {
+void EditorBar::SetLineInfo(const LineInfo& lf, int total)
+{
 	li.Clear();
 	if(lf.GetCount() == 0) {
 		for(int i = 0; i < total; i++)
@@ -304,13 +318,15 @@ void EditorBar::SetLineInfo(const LineInfo& lf, int total) {
 	}
 }
 
-void EditorBar::Renumber(int linecount) {
+void EditorBar::Renumber(int linecount)
+{
 	li.SetCount(linecount);
 	for(int i = 0; i < linecount; i++)
 		li[i].lineno = i;
 }
 
-void EditorBar::ClearBreakpoints() {
+void EditorBar::ClearBreakpoints()
+{
 	for(int i = 0; i < li.GetCount(); i++)
 		li[i].breakpoint.Clear();
 	Refresh();
@@ -459,7 +475,8 @@ void EditorBar::Annotations(int width)
 	SyncWidth();
 }
 
-EditorBar::EditorBar() {
+EditorBar::EditorBar()
+{
 	LineNumbers(false);
 	editor = NULL;
 	bingenabled = true;

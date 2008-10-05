@@ -205,19 +205,19 @@ enum {
 	PRIVATE,
 };
 
-struct CppPos : Moveable<CppPos> {
-	bool   impl;
-	int    line;
-	int    file;
-
-	String GetFile() const                       { return GetCppFile(file); }
-
-	CppPos()                                     { line = 0; impl = false; }
+enum {
+	FILE_H,
+	FILE_HPP,
+	FILE_CPP,
+	FILE_C,
+	FILE_OTHER,
 };
 
-struct CppSimpleItem {
+struct CppItem {
+	String         qitem;
+	String         item;
+	String         name;
 	String         natural;
-	
 	String         type;
 	String         qtype;
 	String         tparam;
@@ -232,52 +232,34 @@ struct CppSimpleItem {
 	int16          at;
 	bool           virt;
 	bool           decla;
+	
+	byte           filetype;
+	bool           impl;
+	int            file;
+	int            line;
+
+	byte           qualify_type, qualify_param;
+	int            serial;
 
 	bool           IsType() const      { return IsCppType(kind); }
 	bool           IsCode() const      { return IsCppCode(kind); }
 	bool           IsData() const      { return IsCppData(kind); }
 	bool           IsMacro() const     { return IsCppMacro(kind); }
 	bool           IsTemplate() const  { return IsCppTemplate(kind); }
+	
+	void           Serialize(Stream& s);
 
-	CppSimpleItem() { decla = false; virt = false; at = 0; }
+	CppItem()      { decla = false; virt = false; at = 0; }
 };
 
-struct CppItem : CppSimpleItem {
-	Vector<CppPos> pos;
-	String         key;
-	byte           qualify_type, qualify_param;
+int FindItem(const Array<CppItem>& x, const String& qitem);
+int GetCount(const Array<CppItem>& x, int i);
+int FindNext(const Array<CppItem>& x, int i);
+int FindName(const Array<CppItem>& x, const String& name, int i = 0);
+
+struct CppBase : ArrayMap<String, Array<CppItem> > {
 	int            serial;
-
-	void Serialize(Stream& s);
-
-	CppItem()      { qualify_type = qualify_param = true; serial = 0; }
-};
-
-struct CppNest {
-	int            namespacel;
-	Index<String>  key;
-	Index<String>  name;
-	Array<CppItem> item;
-
-	void           Remove(const Vector<int>& rm)                 { key.Remove(rm); name.Remove(rm); item.Remove(rm); }
-	int            GetCount() const                              { return item.GetCount(); }
-	const CppItem& operator[](int i) const                       { return item[i]; }
-	CppItem&       GetAdd(const String& key, const String& name);
-
-	CppNest()                                                    { namespacel = 0; }
-};
-
-struct CppBase {
-	ArrayMap<String, CppNest> nest;
-	int                       serial;
-	String                    serial_md5;
-
-	CppNest&       operator[](int i)                             { return nest[i]; }
-	int            GetCount() const                              { return nest.GetCount(); }
-	const String&  GetKey(int i) const                           { return nest.GetKey(i); }
-	void           Clear()                                       { nest.Clear(); }
-	int            Find(const String& s) const                   { return nest.Find(s); }
-	CppNest&       GetAdd(const String& s)                       { return nest.GetAdd(s); }
+	String         serial_md5;
 
 	bool           IsType(int i) const;
 	
@@ -286,8 +268,7 @@ struct CppBase {
 
 class Parser {
 	struct Context {
-		int         namespacel;
-		String      nesting;
+		String      scopeing;
 		String      ctname;
 		Vector<int> tparam;
 		Index<int>  typenames;
@@ -344,6 +325,7 @@ class Parser {
 	SrcFile     file;
 	Lex         lex;
 	int         filei;
+	byte        filetype;
 	bool        inbody;
 
 	Callback2<int, const String&> err;
@@ -369,7 +351,7 @@ class Parser {
 	bool   IsParamList(int q);
 	void   Elipsis(Decl& d);
 	Decl&  Finish(Decl& d, const char *p);
-	bool   Nest(const String& tp, const String& tn);
+	bool   Scope(const String& tp, const String& tn);
 
 	String TemplateParams(String& pnames);
 	String TemplateParams();
@@ -384,12 +366,12 @@ class Parser {
 	void   Check(bool b, const char *err);
 	void   CheckKey(int c);
 
-	void   SetNestCurrent();
-	void   NestBody();
+	void   SetScopeCurrent();
+	void   ScopeBody();
 	void   Do();
 
-	CppItem& Item(const String& nesting, const String& item, const String& name, bool impl);
-	CppItem& Item(const String& nesting, const String& item, const String& name);
+	CppItem& Item(const String& scopeing, const String& item, const String& name, bool impl);
+	CppItem& Item(const String& scopeing, const String& item, const String& name);
 
 	CppItem& Fn(const Decl& d, const String& templ, bool body, int kind, const String& tname, const String& tparam);
 
@@ -407,11 +389,11 @@ class Parser {
 public:
 	struct FunctionStat
 	{
-		FunctionStat(const String & nesting,
+		FunctionStat(const String & scopeing,
 		             const CppItem & cppItem,
 		             const LexSymbolStat &symbolStat,
 		             int maxScopeDepth);
-		String nesting;
+		String scopeing;
 		const CppItem & cppItem;
 		const LexSymbolStat &symbolStat;
 		int maxScopeDepth;
@@ -422,7 +404,7 @@ public:
 	typedef Callback1<const FunctionStat &> FnEndCallback;
 
 	bool                      dobody;
-	String                    current_nest;
+	String                    current_scope;
 	int                       current_namespacel;
 	String                    current_key;
 	String                    current_name;
@@ -443,11 +425,11 @@ public:
 
 String NoTemplatePars(const String& type);
 
-class Nestfo {
+class Scopefo {
 	bool           bvalid, nvalid;
 	Vector<String> baselist;
-	Vector<String> nests;
-	int            nesti;
+	Vector<String> scopes;
+	int            scopei;
 	void           Bases(int i, Vector<int>& g);
 	void           Init();
 
@@ -456,19 +438,19 @@ public:
 	VectorMap<String, String> cache;
 
 	const Vector<String>& GetBases();
-	const Vector<String>& GetNests();
-	int                   GetNest() const               { return nesti; }
+	const Vector<String>& GetScopes();
+	int                   GetScope() const               { return scopei; }
 	void                  NoBases()                     { baselist.Clear(); bvalid = true; }
 
-	Nestfo(const CppBase& base, int nesti = -1);
-	Nestfo(int nesti, const CppBase& base);
-	Nestfo(const CppBase& base, const String& nest);
-	Nestfo(const Nestfo& f);
+	Scopefo(const CppBase& base, int scopei = -1);
+	Scopefo(int scopei, const CppBase& base);
+	Scopefo(const CppBase& base, const String& scope);
+	Scopefo(const Scopefo& f);
 };
 
-String Qualify(const CppBase& base, const String& nest, const String& type);
-void   QualifyTypes(CppBase& base, const String& nest, CppItem& m);
-String QualifyKey(const CppBase& base, const String& nest, const String& type);
+String Qualify(const CppBase& base, const String& scope, const String& type);
+void   QualifyTypes(CppBase& base, const String& scope, CppItem& m);
+String QualifyKey(const CppBase& base, const String& scope, const String& type);
 
 void   Qualify(CppBase& base);
 

@@ -5,15 +5,51 @@ NAMESPACE_UPP
 #define LLOG(x)
 #define LTIMING(x)  // RTIMING(x)
 
-CppItem& CppNest::GetAdd(const String& _key, const String& _name)
+void CppItem::Serialize(Stream& s)
 {
-	int i = key.Find(_key);
-	if(i < 0) {
-		key.Add(_key);
-		name.Add(_name);
-		return item.Add();
+	s % kind % access;
+	s % item % name % natural % at % tparam % param % pname
+	  % tname % ctname % type % ptype % virt % line;
+}
+
+struct CmpItem {
+	bool operator()(const CppItem& a, const String& b) const
+	{
+		return a.qitem < b;
 	}
-	return item[i];
+};
+
+int FindItem(const Array<CppItem>& x, const String& qitem)
+{
+	int q = FindLowerBound(x, qitem, CmpItem());
+	if(q < x.GetCount() && x[q].qitem == qitem)
+		return q;
+	return -1;
+}
+
+int FindNext(const Array<CppItem>& x, int i)
+{
+	if(i >= x.GetCount())
+		return i;
+	String q = x[i].qitem;
+	while(i < x.GetCount() && x[i].qitem == q)
+		i++;
+	return i;
+}
+
+int GetCount(const Array<CppItem>& x, int i)
+{
+	return FindNext(x, i) - i;
+}
+
+int FindName(const Array<CppItem>& x, const String& name, int i)
+{
+	while(i < x.GetCount()) {
+		if(x[i].name == name)
+			return i;
+		i++;
+	}
+	return -1;
 }
 
 bool CppBase::IsType(int i) const
@@ -25,35 +61,22 @@ bool CppBase::IsType(int i) const
 void Remove(CppBase& base, const Vector<String>& pf)
 {
 	int ni = 0;
-	Vector<int> file;
+	Index<int> file;
 	for(int i = 0; i < pf.GetCount(); i++)
 		file.Add(GetCppFileIndex(pf[i]));
 	while(ni < base.GetCount()) {
-		CppNest& n = base[ni];
+		Array<CppItem>& n = base[ni];
 		Vector<int> nr;
-		for(int mi = 0; mi < n.GetCount(); mi++) {
-			CppItem& m = n.item[mi];
-			int i = 0;
-			while(i < m.pos.GetCount())
-				if(FindIndex(file, m.pos[i].file) >= 0)
-					m.pos.Remove(i);
-				else
-					i++;
-			if(m.pos.GetCount() == 0)
-				nr.Add(mi);
-		}
-		n.Remove(nr);
-		if(n.GetCount() == 0)
-			base.nest.Remove(ni);
-		else
+		for(int i = 0; i < n.GetCount(); i++)
+			if(file.Find(n[i].file) >= 0)
+				nr.Add(i);
+		if(nr.GetCount() == n.GetCount())
+			base.Remove(ni);
+		else {
+			n.Remove(nr);
 			ni++;
+		}
 	}
-}
-
-void CppItem::Serialize(Stream& s)
-{
-	s % kind % access;
-	s % natural % at % tparam % param % pname % tname % ctname % type % ptype % virt % key;
 }
 
 END_UPP_NAMESPACE

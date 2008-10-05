@@ -5,29 +5,29 @@ NAMESPACE_UPP
 #define LLOG(x)
 #define LTIMING(x)  // RTIMING(x)
 
-bool DoQualify(Nestfo& nf, const String& type, String& qt);
+bool DoQualify(Scopefo& nf, const String& type, String& qt);
 
-bool Qualify0(Nestfo& nf, const String& type, String& qt)
+bool Qualify0(Scopefo& nf, const String& type, String& qt)
 {
-	const Vector<String>& nd = nf.GetNests();
+	const Vector<String>& nd = nf.GetScopes();
 	if(nd.GetCount()) {
 		LTIMING("First test");
 		qt = nd[0] + type;
 		if(nf.base.Find(qt) >= 0)
 			return true;
 	}
-	if(nf.GetNest() >= 0) {
+	if(nf.GetScope() >= 0) {
 		int q = type.ReverseFind(':');
 		if(q > 0) {
 			LTIMING("Qualifying qualification");
-			Nestfo hnf(nf);
+			Scopefo hnf(nf);
 			hnf.NoBases();
 			String qn;
 			if(DoQualify(hnf, type.Mid(0, q - 1), qn)) {
-				int nesti = nf.base.Find(qn);
-				if(nesti >= 0) {
+				int scopei = nf.base.Find(qn);
+				if(scopei >= 0) {
 					String tp = type.Mid(q + 1);
-					Nestfo nnf(nf.base, nesti);
+					Scopefo nnf(nf.base, scopei);
 					const Vector<String>& bs = nnf.GetBases();
 					for(int i = 0; i < bs.GetCount(); i++) {
 						qt = bs[i] + tp;
@@ -48,7 +48,7 @@ bool Qualify0(Nestfo& nf, const String& type, String& qt)
 		}
 	}
 	if(type[0] != ':') {
-		LTIMING("Testing nests");
+		LTIMING("Testing scopes");
 		for(int i = 1; i < nd.GetCount(); i++) {
 			qt = nd[i] + type;
 			if(nf.base.Find(qt) >= 0)
@@ -61,7 +61,7 @@ bool Qualify0(Nestfo& nf, const String& type, String& qt)
 	return Qualify0(nf, type.Mid(q + 1), qt);
 }
 
-bool DoQualify(Nestfo& nf, const String& type, String& qt)
+bool DoQualify(Scopefo& nf, const String& type, String& qt)
 {
 	LTIMING("Qualify");
 	int q = nf.cache.Find(type);
@@ -76,7 +76,7 @@ bool DoQualify(Nestfo& nf, const String& type, String& qt)
 	return true;
 }
 
-String DoQualify(Nestfo& nf, const String& type)
+String DoQualify(Scopefo& nf, const String& type)
 {
 	String qt;
 	return DoQualify(nf, type, qt) ? qt : type;
@@ -93,7 +93,7 @@ static String s_struct("struct");
 static String s_class("class");
 static String s_unsigned("unsigned");
 
-inline void Qualify(String& r, Nestfo& nf, const char *b, const char *s, byte& qual)
+inline void Qualify(String& r, Scopefo& nf, const char *b, const char *s, byte& qual)
 {
 	String type(b, s);
 	if(type.GetCount() == 0 || type == s_const ||
@@ -106,7 +106,7 @@ inline void Qualify(String& r, Nestfo& nf, const char *b, const char *s, byte& q
 	r << DoQualify(nf, type);
 }
 
-String QualifyIds(Nestfo& nf, const String& k, bool all, byte& qual)
+String QualifyIds(Scopefo& nf, const String& k, bool all, byte& qual)
 {
 	LTIMING("QualifyIds");
 	String r;
@@ -118,7 +118,7 @@ String QualifyIds(Nestfo& nf, const String& k, bool all, byte& qual)
 			const char *b = s++;
 			while(*s == ':' || iscid(*s)) s++;
 			if(all) {
-				Nestfo nnf(nf.GetNest(), nf.base);
+				Scopefo nnf(nf.GetScope(), nf.base);
 				Qualify(r, nnf, b, s, qual);
 			}
 			else
@@ -146,23 +146,23 @@ String QualifyIds(Nestfo& nf, const String& k, bool all, byte& qual)
 	return r;
 }
 
-String Qualify(const CppBase& base, const String& nest, const String& type)
+String Qualify(const CppBase& base, const String& scope, const String& type)
 {
-	Nestfo nf(base, nest);
+	Scopefo nf(base, scope);
 	byte dummy = 2;
 	return QualifyIds(nf, type, true, dummy);
 }
 
-String QualifyKey(const CppBase& base, const String& nest, const String& type)
+String QualifyKey(const CppBase& base, const String& scope, const String& type)
 {
-	Nestfo nf(base, nest);
+	Scopefo nf(base, scope);
 	byte dummy = 2;
 	return QualifyIds(nf, type, false, dummy);
 }
 
-void QualifyTypes(CppBase& base, const String& nest, CppItem& m)
+void QualifyTypes(CppBase& base, const String& scope, CppItem& m)
 {
-	Nestfo nf(base, nest);
+	Scopefo nf(base, scope);
 	m.qtype = QualifyIds(nf, m.type, true, m.qualify_type);
 	m.qptype = QualifyIds(nf, m.ptype, true, m.qualify_param);
 }
@@ -171,10 +171,10 @@ void QualifyPass1(CppBase& base)
 {
 	LTIMING("QualifyPass1");
 	for(int ni = 0; ni < base.GetCount(); ni++) {
-		CppNest& n = base[ni];
-		Nestfo nf(base, ni);
+		Array<CppItem>& n = base[ni];
+		Scopefo nf(base, ni);
 		for(int i = 0; i < n.GetCount(); i++) {
-			CppItem& m = n.item[i];
+			CppItem& m = n[i];
 			if(m.serial != base.serial && m.IsType()) {
 				m.serial = base.serial;
 				if(m.qualify_type) {
@@ -185,78 +185,65 @@ void QualifyPass1(CppBase& base)
 					m.qualify_param = false;
 					m.qptype = QualifyIds(nf, m.ptype, true, m.qualify_param);
 				}
+				m.qitem = m.item;
 			}
 		}
 	}
 }
 
+struct CmpCppItem {
+	bool operator()(const CppItem& a, const CppItem& b) const
+	{
+		int q = SgnCompare(a.qitem, b.qitem);
+		if(q) return q < 0;
+		q = SgnCompare(a.kind, b.kind);
+		if(q) return q < 0;
+		q = SgnCompare(a.impl, b.impl);
+		if(q) return a.IsType() ? q > 0 : q < 0;
+		q = SgnCompare(GetCppFile(a.file), GetCppFile(b.file));
+		if(q) return q < 0;
+		return a.line < b.line;
+	}
+};
+
 void QualifyPass2(CppBase& base)
 {
 	LTIMING("QualifyPass2");
 	for(int ni = 0; ni < base.GetCount(); ni++) {
-		CppNest& n = base[ni];
-		Nestfo nf(base, ni);
+		Array<CppItem>& n = base[ni];
+		Scopefo nf(base, ni);
 		Index<int> rem;
-		String prev_type, prev_qtype;
-		byte   prev_qualify = 0;
+		bool sort = false;
 		for(int i = 0; i < n.GetCount(); i++) {
-			CppItem& m = n.item[i];
+			CppItem& m = n[i];
 			if(m.serial != base.serial && !m.IsType()) {
+				sort = true;
 				m.serial = base.serial;
 				if(m.qualify_type) {
-					if(m.type == prev_type) {
-						m.qtype = prev_qtype;
-						m.qualify_type = prev_qualify;
-					}
-					else {
-						m.qualify_type = false;
-						m.qtype = QualifyIds(nf, m.type, true, m.qualify_type);
-						prev_type = m.type;
-						prev_qtype = m.qtype;
-						prev_qualify = m.qualify_type;
-					}
+					m.qualify_type = false;
+					m.qtype = QualifyIds(nf, m.type, true, m.qualify_type);
 				}
 				if(m.qualify_param) {
 					m.qualify_param = false;
 					m.qptype = QualifyIds(nf, m.ptype, true, m.qualify_param);
-					if(m.IsCode()) {
-						String k = n.key[i];
-						String r = QualifyIds(nf, m.key, false, m.qualify_param);
-						if(k != r) {
-							LTIMING("Key adjustment");
-							int q = n.key.Find(r);
-							if(q >= 0 && q != i)
-								if(m.decla) {
-									m.pos.Append(n.item[q].pos);
-									rem.FindAdd(q);
-									n.key.Set(i, r);
-								}
-								else {
-									n.item[q].pos.Append(m.pos);
-									rem.FindAdd(i);
-								}
-							else
-								n.key.Set(i, r);
-						}
-					}
+					m.qitem = m.IsCode() ? QualifyIds(nf, m.item, false, m.qualify_param)
+					                     : m.item;
 				}
 			}
 		}
-		LTIMING("Key removal");
-		Vector<int> rm = rem.PickKeys();
-		Sort(rm);
-		n.Remove(rm);
+		if(sort)
+			Sort(n, CmpCppItem());
 	}
 }
 
 void   Qualify(CppBase& base)
 {
 	Md5Stream md5;
-	Vector<int> no = GetSortOrder(base.nest.GetKeys());
+	Vector<int> no = GetSortOrder(base.GetKeys());
 	for(int q = 0; q < base.GetCount(); q++) {
 		int ni = no[q];
 		md5 << base.GetKey(ni);
-		const CppNest& n = base.nest[ni];
+		const Array<CppItem>& n = base[ni];
 		for(int i = 0; i < n.GetCount(); i++) {
 			const CppItem& m = n[i];
 			if(m.IsType())

@@ -1,26 +1,26 @@
 #include "ide.h"
 
-struct AssistItemInfo : CppSimpleItem {
+struct AssistItemInfo : CppItem {
 	String defined;
 	String overed;
 	String name;
 };
 
-void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& nest,
+void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
                     Index<String>& done)
 {
-	if(done.Find(nest) >= 0)
+	if(done.Find(scope) >= 0)
 		return;
-	done.Add(nest);
-	int q = BrowserBase().Find(NoTemplatePars(nest));
+	done.Add(scope);
+	int q = BrowserBase().Find(NoTemplatePars(scope));
 	if(q < 0)
 		return;
-	CppNest& m = BrowserBase()[q];
+	const Array<CppItem>& m = BrowserBase()[q];
 	for(int i = 0; i < m.GetCount(); i++) {
 		const CppItem& im = m[i];
 		if(im.IsType()) {
 			Vector<String> b = Split(im.qptype, ';');
-			SubstituteTpars(b, nest);
+			SubstituteTpars(b, scope);
 			for(int i = 0; i < b.GetCount(); i++)
 				GatherVirtuals(item, b[i], done);
 		}
@@ -28,17 +28,17 @@ void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& nest,
 	for(int i = 0; i < m.GetCount(); i++) {
 		const CppItem& im = m[i];
 		if(im.IsCode()) {
-			String k = m.key[i];
+			String k = im.qitem;
 			if(im.IsCode()) {
 				int q = item.Find(k);
 				if(q >= 0)
-					item[q].overed = nest;
+					item[q].overed = scope;
 				else
 				if(im.virt) {
 					AssistItemInfo& f = item.Add(k);
-					f.defined = f.overed = nest;
-					f.name = m.name[i];
-					(CppSimpleItem&)f = im;
+					f.defined = f.overed = scope;
+					f.name = im.name;
+					(CppItem&)f = im;
 				}
 			}
 		}
@@ -59,7 +59,7 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 		list.Clear();
 		for(int i = 0; i < item.GetCount(); i++) {
 			CppItemInfo f;
-			(CppSimpleItem&)f = item[i];
+			(CppItem&)f = item[i];
 			f.virt = false;
 			f.name = item[i].name;
 			if(memcmp_i(name, f.name, name.GetCount()) == 0)
@@ -85,9 +85,9 @@ struct VirtualsDlg : public WithVirtualsLayout<TopWindow> {
 
 	typedef VirtualsDlg CLASSNAME;
 
-	VirtualsDlg(const String& nest) {
+	VirtualsDlg(const String& scope) {
 		Index<String> done;
-		GatherVirtuals(item, nest, done);
+		GatherVirtuals(item, scope, done);
 		CtrlLayoutOKCancel(*this, "Virtual methods");
 		list.AddIndex();
 		list.AddIndex();
@@ -114,15 +114,15 @@ void AssistEditor::Virtuals()
 {
 	Parser ctx;
 	Context(ctx, GetCursor());
-	if(IsNull(ctx.current_nest) || ctx.current_nest == "::" || ctx.IsInBody())
+	if(IsNull(ctx.current_scope) || ctx.current_scope == "::" || ctx.IsInBody())
 		return;
-	VirtualsDlg dlg(ctx.current_nest);
+	VirtualsDlg dlg(ctx.current_scope);
 	LoadFromGlobal(dlg, "VirtualsDlg");
 	int c = dlg.Run();
 	StoreToGlobal(dlg, "VirtualsDlg");
 	if(c != IDOK)
 		return;
-	String cls = ctx.current_nest.Mid(ctx.current_namespacel);
+	String cls = ctx.current_scope.Mid(ctx.current_namespacel);
 	if(cls[0] == ':' && cls[1] == ':')
 		cls = cls.Mid(2);
 	String text;

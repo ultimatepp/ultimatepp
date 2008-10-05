@@ -52,9 +52,10 @@ void Ide::GotoPos(String path, int line)
 	AddHistory();
 }
 
-void Ide::GotoCpp(const CppPos& pos)
+void Ide::GotoCpp(const CppItem& pos)
 {
-	GotoPos(pos.GetFile(), pos.line);
+	
+	GotoPos(GetCppFile(pos.file), pos.line);
 }
 
 void Ide::RescanCode()

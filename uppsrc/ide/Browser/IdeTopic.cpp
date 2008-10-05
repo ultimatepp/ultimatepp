@@ -71,15 +71,8 @@ void TopicEditor::FindBrokenRef()
 					RichPara para = txt.Get(i);
 					if(para.format.label == "noref")
 						continue;
-					if(!IsNull(para.format.label)) {
-						String nest;
-						String key;
-						if(SplitNestKey(para.format.label, nest, key)) {
-							int q = BrowserBase().Find(nest);
-							if(q >= 0 || BrowserBase()[q].key.Find(key) >= 0)
-								continue;
-						}
-					}
+					if(!IsNull(para.format.label) && GetCodeRefItem(para.format.label))
+						continue;
 					editor.Move(txt.GetPartPos(i));
 					return;
 				}
@@ -171,7 +164,7 @@ static int sSplitT(int c) {
 	return c == ';' || c == '<' || c == '>' || c == ',';
 }
 
-String DecoratedItem(const String& name, const CppSimpleItem& m, const char *natural)
+String DecoratedItem(const String& name, const CppItem& m, const char *natural)
 {
 	String qtf = "[%00-00K ";
 	Vector<ItemTextPart> n = ParseItemNatural(name, m, natural);
@@ -219,7 +212,7 @@ String DecoratedItem(const String& name, const CppSimpleItem& m, const char *nat
 	return qtf + "]";
 }
 
-void TopicEditor::CreateQtf(const String& item, const String& name, const CppSimpleItem& m,
+void TopicEditor::CreateQtf(const String& item, const String& name, const CppItem& m,
                             String& p1, String& p2)
 {
 	String qtf;
@@ -294,11 +287,10 @@ void TopicEditor::InsertItem()
 		return;
 	if(c == IDYES) {
 		String qtf = "&{{1 ";
-		for(int i = 0; i < ref.browser.nesting.GetCount(); i++) {
-			const CppNestingInfo& f = ValueTo<CppNestingInfo>(ref.browser.nesting.Get(i, 2));
+		for(int i = 0; i < ref.browser.scopeing.GetCount(); i++) {
 			if(i)
 				qtf << ":: ";
-			qtf << DeQtf(f.nesting);
+			qtf << DeQtf((String)ref.browser.scopeing.Get(i, 2));
 		}
 		qtf << "}}&";
 		editor.PasteText(ParseQTF(qtf));
@@ -331,13 +323,6 @@ void TopicEditor::InsertItem()
 	editor.Move(c);
 }
 
-String MakeCodeRef(const String& nest, const String& item)
-{
-	if(nest.GetCount())
-		return nest + "::" + item;
-	return item;
-}
-
 void   TopicEditor::FixTopic()
 {
 	String nest;
@@ -349,7 +334,7 @@ void   TopicEditor::FixTopic()
 		Exclamation("Nest not found");
 		return;
 	}
-	CppNest& n = base[q];
+	Array<CppItem>& n = base[q];
 	Index<String> natural;
 	Vector<String> link;
 	for(int i = 0; i < n.GetCount(); i++) {
@@ -361,7 +346,7 @@ void   TopicEditor::FixTopic()
 			nat << "static ";
 		nat << m.natural;
 		natural.Add(nat);
-		link.Add(MakeCodeRef(nest, n.key[i]));
+		link.Add(MakeCodeRef(nest, n[i].qitem));
 	}
 	RichText result;
 	const RichText& txt = editor.Get();
@@ -394,9 +379,9 @@ void   TopicEditor::FixTopic()
 				int q = natural.Find(nat);
 				if(q >= 0) {
 					started = true;
-					const CppSimpleItem& m = n[q];
+					const CppItem& m = n[q];
 					String p1, p2;
-					CreateQtf(link[q], n.name[q], m, p1, p2);
+					CreateQtf(link[q], n[q].name, m, p1, p2);
 					p1 = "[s7; &]" + p1;
 					RichText h = ParseQTF(styles + p1);
 					if(h.GetPartCount())

@@ -88,29 +88,28 @@ void SubstituteTpars(Vector<String>& type, const String& tname)
 		}
 }
 
-bool AssistEditor::NestId(const CppNest& n, const String& id, Vector<String>& type, bool& code,
-                          String& t)
+bool AssistEditor::ScopeId(const Array<CppItem>& n, const String& id, Vector<String>& type, bool& code,
+                           String& t)
 {
-	int q = n.name.Find(NoTemplatePars(id));
-	if(q >= 0) {
-		do {
-			const CppItem& m = n[q];
+	String ntp = NoTemplatePars(id);
+	for(int i = 0; i < n.GetCount(); i++) {
+		const CppItem& m = n[i];
+		if(n[i].name == ntp) {
 			const String& qt = m.qtype;
 			if(!IsNull(qt) && FindIndex(type, qt) < 0 && (m.IsCode() || m.IsData())) {
 				type.Add(qt);
 				if(m.IsCode())
 					code = true;
 			}
-			q = n.name.FindNext(q);
 		}
-		while(q >= 0);
-		return true;
 	}
-	q = n.key.Find("class");
+	if(type.GetCount())
+		return true;
+	int q = FindItem(n, "class");
 	if(q < 0)
-		q = n.key.Find("struct");
+		q = FindItem(n, "struct");
 	if(q < 0)
-		q = n.key.Find("typedef");
+		q = FindItem(n, "typedef");
 	LDUMP(q);
 	if(q >= 0) {
 		Vector<String> base = Split(n[q].qptype, ';');
@@ -120,7 +119,7 @@ bool AssistEditor::NestId(const CppNest& n, const String& id, Vector<String>& ty
 		for(int i = 0; i < base.GetCount(); i++) {
 			q = BrowserBase().Find(NoTemplatePars(base[i]));
 			String h = base[i];
-			if(q >= 0 && NestId(BrowserBase()[q], id, type, code, h)) {
+			if(q >= 0 && ScopeId(BrowserBase()[q], id, type, code, h)) {
 				t = h;
 				return true;
 			}
@@ -143,11 +142,11 @@ void AssistEditor::Context(Parser& parser, int pos)
 	StringStream ss(s);
 	parser.dobody = true;
 	parser.Do(ss, IgnoreList(), BrowserBase(), Null, callback(AssistScanError));
-	QualifyTypes(BrowserBase(), parser.current_nest, parser.current);
+	QualifyTypes(BrowserBase(), parser.current_scope, parser.current);
 	inbody = parser.IsInBody();
 #ifdef _DEBUG
 	PutVerbose("body: " + AsString(inbody));
-	PutVerbose("nest: " + AsString(parser.current_nest));
+	PutVerbose("scope: " + AsString(parser.current_scope));
 #endif
 }
 
@@ -157,12 +156,12 @@ void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)
 	Context(parser, GetCursor());
 	code = false;
 	if(id == "this") {
-		r.Add(parser.current_nest);
+		r.Add(parser.current_scope);
 		return;
 	}
 	if(IsNull(id)) {
-		r.Add(parser.current_nest);
-		if(parser.current_nest != "::")
+		r.Add(parser.current_scope);
+		if(parser.current_scope != "::")
 			r.Add("::");
 		return;
 	}
@@ -179,7 +178,7 @@ void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)
 			r.Add(p[q]);
 		return;
 	}
-	String n = parser.current_nest;
+	String n = parser.current_scope;
 	for(;;) {
 		String type = n + "::" + id;
 		if(BrowserBase().Find(type)) {
@@ -191,13 +190,13 @@ void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)
 			break;
 		n.Trim(q - 1);
 	}
-	q = BrowserBase().Find(parser.current_nest);
+	q = BrowserBase().Find(parser.current_scope);
 	String dummy;
-	if(q >= 0 && NestId(BrowserBase()[q], id, r, code, dummy))
+	if(q >= 0 && ScopeId(BrowserBase()[q], id, r, code, dummy))
 		return;
 	q = BrowserBase().Find("::");
 	if(q >= 0)
-		NestId(BrowserBase()[q], id, r, code, dummy);
+		ScopeId(BrowserBase()[q], id, r, code, dummy);
 }
 
 Vector<String> AssistEditor::Operator(const char *oper, const Vector<String>& type)
@@ -207,7 +206,7 @@ Vector<String> AssistEditor::Operator(const char *oper, const Vector<String>& ty
 	for(int i = 0; i < type.GetCount(); i++) {
 		String t = type[i];
 		int q = BrowserBase().Find(NoTemplatePars(t));
-		if(q < 0 || !NestId(BrowserBase()[q], oper, nt, d, t))
+		if(q < 0 || !ScopeId(BrowserBase()[q], oper, nt, d, t))
 			nt.Add(type[i]);
 		SubstituteTpars(nt, t);
 	}
@@ -221,7 +220,7 @@ Vector<String> AssistEditor::TypeOf(const Vector<String>& xp, const String& tp)
 	if(!IsNull(tp)) {
 		Parser parser;
 		Context(parser, GetCursor());
-		type.Add(Qualify(BrowserBase(), parser.current_nest, tp));
+		type.Add(Qualify(BrowserBase(), parser.current_scope, tp));
 	}
 	else {
 		if(xp.GetCount() == 0 || !iscid(xp[0][0]))
@@ -243,7 +242,7 @@ Vector<String> AssistEditor::TypeOf(const Vector<String>& xp, const String& tp)
 				String t = type[i];
 				int j = BrowserBase().Find(NoTemplatePars(t));
 				if(j >= 0)
-					NestId(BrowserBase()[j], xp[q], nt, code, t);
+					ScopeId(BrowserBase()[j], xp[q], nt, code, t);
 				LDUMPC(nt);
 				SubstituteTpars(nt, t);
 			}
@@ -289,44 +288,40 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 			String n = BrowserBase().GetKey(i);
 			if(n.GetLength() > ntp.GetLength() && memcmp(~ntp, ~n, ntp.GetLength()) == 0) {
 				LDUMP(n);
-				CppNest& m = BrowserBase()[i];
+				Array<CppItem>& m = BrowserBase()[i];
 				for(int i = 0; i < m.GetCount(); i++) {
 					const CppItem& im = m[i];
-					String name = m.name[i];
 					if(im.IsType()) {
-						CppItemInfo& f = assist_item.Add(name);
-						f.name = name;
+						CppItemInfo& f = assist_item.Add(im.name);
 						f.typei = typei;
-						(CppSimpleItem&)f = im;
+						(CppItem&)f = im;
 						break;
 					}
 				}
 			}
 		}
 	}
-	const CppNest& m = BrowserBase()[q];
+	const Array<CppItem>& m = BrowserBase()[q];
 	String base;
 	int typei = assist_type.FindAdd(ntp);
 	for(int i = 0; i < m.GetCount(); i++) {
 		const CppItem& im = m[i];
-		String name = m.name[i];
 		if(im.IsType())
 			base = im.qptype;
-		LDUMP(name);
+		LDUMP(im.name);
 		if((im.IsCode() || im.IsData() || im.IsMacro() && type == "::")
 		   && (nom || im.access == PUBLIC)) {
 			if(im.IsCode()) {
-				int q = assist_item.Find(name);
+				int q = assist_item.Find(im.name);
 				while(q >= 0) {
 					if(assist_item[q].typei != typei)
 						assist_item[q].over = true;
 					q = assist_item.FindNext(q);
 				}
 			}
-			CppItemInfo& f = assist_item.Add(name);
-			f.name = name;
+			CppItemInfo& f = assist_item.Add(im.name);
 			f.typei = typei;
-			(CppSimpleItem&)f = im;
+			(CppItem&)f = im;
 		}
 	}
 	Vector<String> b = Split(base, ';');
@@ -883,16 +878,16 @@ void AssistEditor::DCopy()
 	Context(ctx, l);
 	String txt = Get(l, h - l);
 	StringStream ss(txt);
-	String cls = ctx.current_nest.Mid(ctx.current_namespacel);
+	String cls = ctx.current_scope.Mid(ctx.current_namespacel);
 	if(cls[0] == ':' && cls[1] == ':')
 		cls = cls.Mid(2);
 	CppBase cpp;
 	Parser parser;
 	parser.Do(ss, IgnoreList(), cpp, Null, CNULL, Split(cls, ':'));
 	for(int i = 0; i < cpp.GetCount(); i++) {
-		const CppNest& nest = cpp[i];
-		for(int j = 0; j < nest.GetCount(); j++) {
-			const CppItem& m = nest[j];
+		const Array<CppItem>& scope = cpp[i];
+		for(int j = 0; j < scope.GetCount(); j++) {
+			const CppItem& m = scope[j];
 			if(m.IsCode())
 				if(cls.GetCount())
 					r << MakeDefinition(cls, m.natural) << "\n{\n}\n\n";
@@ -908,32 +903,39 @@ void AssistEditor::DCopy()
 	WriteClipboardText(r);
 }
 
-String GetIdNest(const String& nest, const String& id, Index<String>& done)
+bool GetIdScope(String& os, const String& scope, const String& id, Index<String>& done)
 {
-	if(done.Find(nest) >= 0)
+	if(done.Find(scope) >= 0)
 		return Null;
-	done.Add(nest);
-	String n = NoTemplatePars(nest);
+	done.Add(scope);
+	String n = NoTemplatePars(scope);
 	int q = BrowserBase().Find(n);
 	if(q < 0)
 		return Null;
-	CppNest& m = BrowserBase()[q];
+	const Array<CppItem>& m = BrowserBase()[q];
 	Vector<String> r;
-	if(m.name.Find(id) >= 0)
-		return n;
+	if(FindName(m, id) >= 0) {
+		os = n;
+		return true;
+	}
 	for(int i = 0; i < m.GetCount(); i++) {
 		const CppItem& im = m[i];
 		if(im.IsType()) {
 			Vector<String> b = Split(im.qptype, ';');
-			SubstituteTpars(b, nest);
+			SubstituteTpars(b, scope);
 			for(int i = 0; i < b.GetCount(); i++) {
-				String r = GetIdNest(b[i], id, done);
-				if(!IsNull(r))
-					return r;
+				if(GetIdScope(os, b[i], id, done))
+					return true;
 			}
 		}
 	}
-	return Null;
+	return false;
+}
+
+bool GetIdScope(String& os, const String& scope, const String& id)
+{
+	Index<String> done;
+	return GetIdScope(os, scope, id, done);
 }
 
 bool IsPif(const String& l)
@@ -954,6 +956,8 @@ bool IsPendif(const String& l)
 void Ide::JumpS()
 {
 	if(designer)
+		return;
+	if(!editor.assist_active)
 		return;
 	int li = editor.GetCursorLine();
 	String l = editor.GetUtf8Line(li);
@@ -998,8 +1002,6 @@ void Ide::JumpS()
 		}
 		return;
 	}
-	if(!editor.assist_active)
-		return;
 	q = editor.GetCursor();
 	while(iscid(editor.Ch(q - 1)))
 		q--;
@@ -1008,77 +1010,76 @@ void Ide::JumpS()
 	Vector<String> type;
 	Parser parser;
 	editor.Context(parser, editor.GetCursor());
-	if(h.GetCount() == 0 && IsNull(tp)) {
-		type.Add(parser.current_nest);
-	}
+	if(h.GetCount() == 0 && IsNull(tp))
+		type.Add(parser.current_scope);
 	else {
 		type = editor.TypeOf(h, tp);
 		if(type.GetCount() == 0)
 			return;
 	}
 	String id = editor.GetWord();
-	Vector<String> nest;
+	if(id.GetCount() == 0)
+		return;
+	Vector<String> scope;
 	for(int i = 0; i < type.GetCount(); i++) {
 		Index<String> done;
-		String r = GetIdNest(type[i], id, done);
-		if(!IsNull(r))
-			nest.Add(r);
+		String r;
+		if(GetIdScope(r, type[i], id, done))
+			scope.Add(r);
 	}
 
-	if(nest.GetCount() == 0) {
+	if(scope.GetCount() == 0) {
 		Index<String> done;
-		String r = GetIdNest("::", id, done);
-		if(IsNull(r)) {
-			String t = Qualify(BrowserBase(), parser.current_nest, id);
+		String r;
+		if(GetIdScope(r, "", id, done))
+			scope.Add(r);
+		else {
+			String t = Qualify(BrowserBase(), parser.current_scope, id);
 			if(BrowserBase().Find(t) < 0)
 				return;
-			nest.Add(t);
+			scope.Add(t);
 		}
-		else
-			nest.Add(r);
 	}
 
-	if(nest.GetCount() == 0)
+	if(scope.GetCount() == 0)
 		return;
 
-	q = BrowserBase().Find(nest[0]);
+	q = BrowserBase().Find(scope[0]);
 	if(q < 0)
 		return;
-	const CppNest& n = BrowserBase()[q];
-	q = n.name.Find(id);
+	const Array<CppItem>& n = BrowserBase()[q];
+	q = FindName(n, id);
 	if(q >= 0)
-		JumpToDefinition(n[q]);
+		JumpToDefinition(n, q);
 }
 
-void Ide::JumpToDefinition(const CppItem& m)
+void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
 {
-	if(m.pos.GetCount() == 0)
-		return;
-	int ai = 0;
-	for(int i = 0; i < m.pos.GetCount(); i++) {
-		const CppPos& fp = m.pos[i];
-		if(fp.impl) {
-			GotoCpp(fp);
+	String qitem = n[q].qitem;
+	int i = q;
+	while(i < n.GetCount() && n[i].qitem == qitem) {
+		const CppItem& m = n[i];
+		if(m.impl) {
+			GotoCpp(m);
 			return;
 		}
-		String ext = ToLower(GetFileExt(fp.GetFile()));
-		if(ext == ".cpp" || ext == ".c" || ext == ".cc")
-			ai = i;
+		if(m.filetype == FILE_CPP || m.filetype == FILE_C)
+			q = i;
+		i++;
 	}
-	GotoCpp(m.pos[ai]);
+	GotoCpp(n[q]);
 }
 
 void Ide::IdeGotoLink(String link)
 {
 	LLOG("IdeGotoLink " << link);
-	String nest, key;
-	if(!SplitNestKey(link, nest, key))
-		return;
-	int q = BrowserBase().Find(nest);
+	String scope, item;
+	SplitCodeRef(link, scope, item);
+	int q = BrowserBase().Find(scope);
 	if(q < 0)
 		return;
-	const CppNest& n = BrowserBase()[q];
-	q = n.key.Find(key);
+	const Array<CppItem>& n = BrowserBase()[q];
+	q = FindItem(n, item);
 	if(q >= 0)
-		JumpToDefinition(n[q]);
+		JumpToDefinition(n, q);
 }
