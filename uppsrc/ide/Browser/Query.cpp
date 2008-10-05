@@ -101,6 +101,6 @@ bool Browser::DoQuery()
 	if(querydlg.Perform(query) != IDOK)
 		return false;
 	Reload();
-	nesting.GoBegin();
+	scopeing.GoBegin();
 	return true;
 }

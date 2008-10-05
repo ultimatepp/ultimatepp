@@ -174,35 +174,34 @@ void ScAdd(String& s, const String& a)
 
 String Parser::Context::Dump() const
 {
-	return "Nesting: " + nesting;
+	return "Scopeing: " + scopeing;
 }
 
-Parser::FunctionStat::FunctionStat(const String & nesting,
+Parser::FunctionStat::FunctionStat(const String & scopeing,
                                    const CppItem & cppItem,
 		                           const LexSymbolStat &symbolStat,
 		                           int maxScopeDepth) :
-	nesting(nesting), cppItem(cppItem),
+	scopeing(scopeing), cppItem(cppItem),
 	symbolStat(symbolStat), maxScopeDepth(maxScopeDepth)
 {
 }
 
 static String s_dblcln("::");
 
-inline void NestCat(String& nest, const String& s)
+inline void ScopeCat(String& scope, const String& s)
 {
-	if(nest.GetCount())
-		nest << s_dblcln;
-	nest << s;
+	if(scope.GetCount())
+		scope << s_dblcln;
+	scope << s;
 }
 
 void Parser::Context::operator<<=(const Context& t)
 {
-	nesting = t.nesting;
+	scopeing = t.scopeing;
 	typenames <<= t.typenames;
 	tparam <<= t.tparam;
 	access = t.access;
 	noclass = t.noclass;
-	namespacel = t.namespacel;
 	ctname = t.ctname;
 }
 
@@ -252,7 +251,7 @@ void Parser::ThrowError(const String& e)
 	int i = 0;
 	while(i < 40 && lex[i] != t_eof)
 		i++;
-	LLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", nest: " << current_nest <<
+	LLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", scope: " << current_scope <<
 	     "  " << AsCString(String(lex.Pos(), lex.Pos(i))));
 #endif
 	throw Error();
@@ -421,6 +420,7 @@ String Parser::SimpleType(Decla& d)
 		return Null;
 	}
 	if(Key(tk_short)) {
+		Key(tk_unsigned);
 		Key(tk_int);
 		return Null;
 	}
@@ -792,7 +792,7 @@ bool Parser::TryDecl()
 		q++;
 	if(!lex.IsId(q))
 		return false;
-	type = Qualify(*base, current_nest, type);
+	type = Qualify(*base, current_scope, type);
 	if(base->Find(NoTemplatePars(type)) >= 0) {
 		Locals(type);
 		return true;
@@ -952,36 +952,34 @@ String CleanTp(const String& tp)
 	return r;
 }
 
-void Parser::SetNestCurrent()
+void Parser::SetScopeCurrent()
 {
-//	current_nest = Nvl(context.nesting, "::");
-	current_nest = context.nesting;
+	current_scope = context.scopeing;
 }
 
-CppItem& Parser::Item(const String& nesting, const String& item, const String& name, bool impl)
+CppItem& Parser::Item(const String& scopeing, const String& item, const String& name, bool impl)
 {
-//	current_nest = Nvl(nesting, "::");
-	current_nest = nesting;
+	current_scope = scopeing;
 	if(dobody)
 		current = CppItem();
 	current_key = item;
 	current_name = name;
-	CppNest& n = base->GetAdd(current_nest);
-	n.namespacel = current_namespacel = context.namespacel;
-	CppItem& im = dobody ? current : n.GetAdd(item, name);
-	im.key = item;
-	CppPos& p = im.pos.Add();
-	p.file = filei;
-	p.line = line + 1;
-	p.impl = impl;
-	LLOG("New item " << GetCppFile(filei) << ' ' << line + 1 << "    " << nesting << "::" << item);
+	Array<CppItem>& n = base->GetAdd(current_scope);
+	CppItem& im = dobody ? current : n.Add();
+	im.item = item;
+	im.name = name;
+	im.file = filei;
+	im.line = line + 1;
+	im.impl = impl;
+	im.filetype = filetype;
+	LOG("New item " << GetCppFile(filei) << ' ' << line + 1 << "    " << scopeing << "::" << item);
 	return im;
 }
 
-CppItem& Parser::Item(const String& nesting, const String& item, const String& name)
+CppItem& Parser::Item(const String& scopeing, const String& item, const String& name)
 {
 	String h = Purify(item);
-	CppItem& im = Item(nesting, h, name, false);
+	CppItem& im = Item(scopeing, h, name, false);
 	im.natural = h;
 	return im;
 }
@@ -995,7 +993,7 @@ void Parser::Resume(int bl)
 	}
 }
 
-void Parser::NestBody()
+void Parser::ScopeBody()
 {
 	int bl = lex.GetBracesLevel();
 	while(!Key('}')) {
@@ -1048,20 +1046,18 @@ String Subst(const String& s, const Vector<String>& tpar)
 	return r;
 }
 
-bool Parser::Nest(const String& tp, const String& tn) {
+bool Parser::Scope(const String& tp, const String& tn) {
 	if(Key(tk_namespace)) {
 		Check(lex.IsId(), "Expected name of namespace");
 		String name = lex.GetId();
 		if(Key('{')) {
 			Context cc;
 			cc <<= context;
-//			context.nesting << "::" << name;
-//			context.namespacel = context.nesting.GetLength();
-			NestBody();
+			ScopeBody();
 			context <<= cc;
 		}
 		Key(';');
-		SetNestCurrent();
+		SetScopeCurrent();
 		return true;
 	}
 	if((lex == tk_class || lex == tk_struct || lex == tk_union) && lex[1] != '{') {
@@ -1084,13 +1080,13 @@ bool Parser::Nest(const String& tp, const String& tn) {
 			}
 		}
 		if(Key(t_dblcolon))
-			context.nesting = Null;
+			context.scopeing = Null;
 		String name;
 		do {
 			Check(lex.IsId(), "Missing identifier");
 			context.typenames.FindAdd(lex);
 			name = lex.GetId();
-			NestCat(context.nesting, name);
+			ScopeCat(context.scopeing, name);
 		}
 		while(Key(t_dblcolon));
 		context.access = t == tk_class ? PRIVATE : PUBLIC;
@@ -1105,10 +1101,10 @@ bool Parser::Nest(const String& tp, const String& tn) {
 			nn = "template " + tp + " ";
 		String key = (t == tk_class ? "class" : t == tk_union ? "union" : "struct");
 		nn << key << ' ' << name;
-		CppItem& im = Item(context.nesting, key, name, lex != ';');
+		CppItem& im = Item(context.scopeing, key, name, lex != ';');
 		if(Key(';')) {
 			context = cc;
-			SetNestCurrent();
+			SetScopeCurrent();
 			return true;
 		}
 		im.kind = tp.IsEmpty() ? STRUCT : STRUCTTEMPLATE;
@@ -1146,7 +1142,7 @@ bool Parser::Nest(const String& tp, const String& tn) {
 			while(Key(','));
 		}
 		if(Key('{')) {
-			NestBody();
+			ScopeBody();
 			im.natural = Gpurify(nn);
 			im.decla = true;
 		}
@@ -1155,7 +1151,7 @@ bool Parser::Nest(const String& tp, const String& tn) {
 				im.natural = Gpurify(nn);
 		context = cc;
 		CheckKey(';');
-		SetNestCurrent();
+		SetScopeCurrent();
 		return true;
 	}
 	return false;
@@ -1190,7 +1186,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
 			nn0 = d.name.Mid(0, q - 1);
 	}
 	String item = FnItem(d.natural, pname, d.name, nm);
-	String nesting = context.nesting;
+	String scopeing = context.scopeing;
 	String nn;
 	const char *s = nn0;
 	int l = 0;
@@ -1208,8 +1204,8 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
 	s = nn;
 	while(*s == ':') s++;
 	if(*s)
-		NestCat(nesting, s);
-	CppItem& im = Item(nesting, item, nm, body);
+		ScopeCat(scopeing, s);
+	CppItem& im = Item(scopeing, item, nm, body);
 	if(!body || IsNull(im.natural)) {
 		im.natural.Clear();
 		if(!IsNull(templ)) {
@@ -1228,7 +1224,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
 		im.tname = tname;
 		im.tparam = tparam;
 		im.ctname = context.ctname;
-		LLOG("FnItem: " << nesting << "::" << item << ", natural: " << im.natural
+		LLOG("FnItem: " << scopeing << "::" << item << ", natural: " << im.natural
 		                << ", ctname: " << im.ctname);
 	}
 	return im;
@@ -1236,7 +1232,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
 
 void Parser::Do()
 {
-	LLOG("Do, nest: " << current_nest);
+	LLOG("Do, scope: " << current_scope);
 	Line();
 	if(Key(tk_using)) {
 		while(!Key(';') && lex != t_eof)
@@ -1277,7 +1273,7 @@ void Parser::Do()
 		else {
 			String tnames;
 			String tparam = TemplateParams(tnames);
-			if(!Nest(tparam, tnames)) {
+			if(!Scope(tparam, tnames)) {
 				Array<Decl> r = Declaration(true, true);
 				CppItem *functionItem = 0;
 				bool body = lex == '{';
@@ -1298,7 +1294,7 @@ void Parser::Do()
 				}
 				EatBody();
 				if(body && functionItem && whenFnEnd) {
-					whenFnEnd(FunctionStat(current_nest, *functionItem,
+					whenFnEnd(FunctionStat(current_scope, *functionItem,
 					                       lex.FinishStatCollection(), maxScopeDepth));
 					lex.StartStatCollection(); // start collection of orphan symbols
 				}
@@ -1319,7 +1315,7 @@ void Parser::Do()
 				String val;
 				Check(lex.IsId(), "Expected identifier");
 				String id = lex.GetId();
-				CppItem& im = Item(context.nesting, id, id);
+				CppItem& im = Item(context.scopeing, id, id);
 				im.natural = "enum ";
 				if(!IsNull(name))
 					im.natural << name << ' ';
@@ -1333,7 +1329,7 @@ void Parser::Do()
 			}
 		}
 		Key(';');
-		SetNestCurrent();
+		SetScopeCurrent();
 	}
 	else
 	if(Key('#')) {
@@ -1343,7 +1339,7 @@ void Parser::Do()
 			const char *s = n;
 			while(*s && iscid(*s))
 				name.Cat(*s++);
-			CppItem& im = Item(context.nesting, n, name);
+			CppItem& im = Item(context.scopeing, n, name);
 			im.kind = MACRO;
 			s = strchr(n, '(');
 			if(s) {
@@ -1364,7 +1360,7 @@ void Parser::Do()
 		}
 	}
 	else
-	if(!Nest(String(), String())) {
+	if(!Scope(String(), String())) {
 		if(Key(tk_public)) {
 			context.access = PUBLIC;
 			Key(':');
@@ -1400,10 +1396,10 @@ void Parser::Do()
 						int q = h.Find('=');
 						if(q >= 0)
 							h = TrimRight(h.Mid(0, q));
-						String nest = context.nesting;
+						String scope = context.scopeing;
 						if(d.type_def)
-							NestCat(nest, d.name);
-						CppItem& im = Item(nest, d.type_def ? "typedef" : d.name, d.name);
+							ScopeCat(scope, d.name);
+						CppItem& im = Item(scope, d.type_def ? "typedef" : d.name, d.name);
 						im.natural = Purify(h);
 						im.type = im.ptype = d.type;
 						im.access = context.access;
@@ -1419,11 +1415,11 @@ void Parser::Do()
 			}
 			EatBody();
 			if(body && functionItem && whenFnEnd) {
-				whenFnEnd(FunctionStat(current_nest, *functionItem,
+				whenFnEnd(FunctionStat(current_scope, *functionItem,
 				                       lex.FinishStatCollection(), maxScopeDepth));
 				lex.StartStatCollection(); // start collection of orphan symbols
 			}
-			SetNestCurrent();
+			SetScopeCurrent();
 			Key(';');
 		}
 	}
@@ -1438,6 +1434,20 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 	lex.Init(~file.text, ignore);
 	err = _err;
 	filei = GetCppFileIndex(fn);
+	String ext = ToLower(GetFileExt(fn));
+	if(ext == ".h")
+		filetype = FILE_H;
+	else
+	if(ext == ".hpp")
+		filetype = FILE_HPP;
+	else
+	if(ext == ".cpp")
+		filetype = FILE_CPP;
+	else
+	if(ext == ".c")
+		filetype = FILE_C;
+	else
+		filetype = FILE_OTHER;
 	lpos = 0;
 	line = 0;
 	if(whenFnEnd)
@@ -1446,17 +1456,15 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 	while(lex != t_eof)
 		try {
 			try {
-//				current_nest = "::";
-				current_nest.Clear();
+				current_scope.Clear();
 				context.access = PUBLIC;
 				context.noclass = true;
 				context.typenames.Clear();
 				context.tparam.Clear();
-				context.nesting.Clear();
+				context.scopeing.Clear();
 				inbody = false;
 				for(int i = 0; i < typenames.GetCount(); i++)
 					context.typenames.Add(lex.Id(typenames[i]));
-				context.namespacel = 0;
 				Do();
 			}
 			catch(Error) {

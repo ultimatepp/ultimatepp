@@ -5,45 +5,45 @@ NAMESPACE_UPP
 #define LLOG(x)
 #define LTIMING(x)  // RTIMING(x)
 
-Nestfo::Nestfo(const CppBase& base, int nesti)
-	: nesti(nesti), base(base)
+Scopefo::Scopefo(const CppBase& base, int scopei)
+	: scopei(scopei), base(base)
 {
-	LTIMING("Nestfo(const CppBase& base, int nesti)");
+	LTIMING("Scopefo(const CppBase& base, int scopei)");
 	Init();
 }
 
-Nestfo::Nestfo(int nesti, const CppBase& base)
-	: nesti(nesti), base(base)
+Scopefo::Scopefo(int scopei, const CppBase& base)
+	: scopei(scopei), base(base)
 {
-	LTIMING("Nestfo(int nesti, const CppBase& base)");
+	LTIMING("Scopefo(int scopei, const CppBase& base)");
 	Init();
 }
 
-Nestfo::Nestfo(const CppBase& base, const String& nest)
-	: nesti(base.Find(nest)), base(base)
+Scopefo::Scopefo(const CppBase& base, const String& scope)
+	: scopei(base.Find(scope)), base(base)
 {
-	LTIMING("Nestfo(const CppBase& base, const String& nest)");
+	LTIMING("Scopefo(const CppBase& base, const String& scope)");
 	Init();
 }
 
-Nestfo::Nestfo(const Nestfo& f)
+Scopefo::Scopefo(const Scopefo& f)
 	: base(f.base)
 {
-	LTIMING("Nestfo copy contructor");
-	nests <<= f.nests;
+	LTIMING("Scopefo copy contructor");
+	scopes <<= f.scopes;
 	bvalid = nvalid = false;
-	nesti = f.nesti;
+	scopei = f.scopei;
 }
 
-void Nestfo::Init()
+void Scopefo::Init()
 {
 	bvalid = nvalid = false;
 }
 
-void Nestfo::Bases(int i, Vector<int>& g)
+void Scopefo::Bases(int i, Vector<int>& g)
 {
 	if(base.IsType(i)) {
-		const CppNest& n = base.nest[i];
+		const Array<CppItem>& n = base[i];
 		for(int i = 0; i < n.GetCount(); i++) {
 			const CppItem& im = n[i];
 			if(im.IsType()) {
@@ -69,17 +69,17 @@ void Nestfo::Bases(int i, Vector<int>& g)
 	}
 }
 
-const Vector<String>& Nestfo::GetBases()
+const Vector<String>& Scopefo::GetBases()
 {
 	LTIMING("GetBases");
 	if(!bvalid) {
 		bvalid = true;
 		baselist.Clear();
-		if(nesti < 0)
+		if(scopei < 0)
 			return baselist;
 		Vector<int> b;
 		Index<int> bi;
-		Bases(nesti, b);
+		Bases(scopei, b);
 		while(b.GetCount()) {
 			Vector<int> bb;
 			for(int i = 0; i < b.GetCount(); i++) {
@@ -97,27 +97,27 @@ const Vector<String>& Nestfo::GetBases()
 	return baselist;
 }
 
-const Vector<String>& Nestfo::GetNests()
+const Vector<String>& Scopefo::GetScopes()
 {
-	LTIMING("GetNests");
+	LTIMING("GetScopes");
 	if(!nvalid) {
 		nvalid = true;
-		nests.Clear();
-		if(nesti < 0)
-			return nests;
-		String nn = base.GetKey(nesti);
+		scopes.Clear();
+		if(scopei < 0)
+			return scopes;
+		String nn = base.GetKey(scopei);
 		while(nn.GetCount()) {
 			if(nn[0] == ':' && nn.GetCount() == 2) {
-				nests.Add(nn);
-				return nests;
+				scopes.Add(nn);
+				return scopes;
 			}
-			nests.Add(nn + "::");
+			scopes.Add(nn + "::");
 			int q = nn.ReverseFind(':');
 			nn.Trim(max(0, q - 1));
 		}
-		nests.Add("");
+		scopes.Add("");
 	}
-	return nests;
+	return scopes;
 }
 
 END_UPP_NAMESPACE

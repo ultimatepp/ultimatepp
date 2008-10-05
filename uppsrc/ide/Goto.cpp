@@ -1,6 +1,6 @@
 #include "ide.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 struct GotoDlg : public WithGotoLayout<TopWindow> {
 	bool               global;
@@ -25,7 +25,7 @@ void GotoDlg::SyncList()
 	list.Clear();
 	String n = ~target;
 	int typei = Null;
-	int nesti = Null;
+	String scope = Null;
 	Vector<String> h = Split(n, ':');
 	if(n[0] == ':') {
 		if(h.GetCount() > 1 && *n.Last() != ':') {
@@ -34,9 +34,7 @@ void GotoDlg::SyncList()
 		}
 		else
 			n.Clear();
-		nesti = gbase->Find("::" + Join(h, "::"));
-		if(nesti < 0)
-			nesti = -1;
+		scope = Join(h, "::");
 	}
 	else
 	if(h.GetCount() > 1 || h.GetCount() == 1 && *n.Last() == ':') {
@@ -60,12 +58,12 @@ void GotoDlg::SyncList()
 			if((n.GetLength() == 0 ||
 			    (ci ? q && memcmp_i(n, f.name, n.GetLength()) == 0 : q == 0)) &&
 			   (IsNull(typei) || typei == f.typei) &&
-			   (IsNull(nesti) || nesti == f.nesti)) {
-				list.Add(RawToValue(CppNestingInfo(f)), RawToValue(f), f.key, f.line, f.fn, f.nesting);
-				nc.FindAdd(f.nesting);
+			   (IsNull(scope) || scope == f.scope)) {
+				list.Add(f.scope, RawToValue(f), f.item, f.line, GetCppFile(f.file), f.scope);
+				nc.FindAdd(f.scope);
 			}
 		}
-	list.HeaderTab(0).SetText(Format("Nesting (%d)", nc.GetCount()));
+	list.HeaderTab(0).SetText(Format("Scope (%d)", nc.GetCount()));
 	list.HeaderTab(1).SetText(Format("Symbol (%d)", list.GetCount()));
 	SyncOk();
 }
@@ -108,7 +106,9 @@ struct CppItemInfoSortLine {
 
 struct CppItemInfoSortGlobal {
 	bool operator()(const CppItemInfo& a, const CppItemInfo& b) const {
-		return CombineCompare(a.nesting, b.nesting)(a.fn, b.fn)(a.line, b.line) < 0;
+		return CombineCompare(a.scope, b.scope)
+		                     (GetCppFile(a.file), GetCppFile(b.file))
+		                     (a.line, b.line) < 0;
 	}
 };
 
@@ -124,29 +124,18 @@ GotoDlg::GotoDlg(const String& s)
 	CppBase& base = IsNull(s) ? BrowserBase() : lbase;
 	gbase = &base;
 	for(int i = 0; i < base.GetCount(); i++) {
-		CppNest& n = base[i];
+		Array<CppItem>& n = base[i];
 		for(int j = 0; j < n.GetCount(); j++) {
 			const CppItem& m = n[j];
-			for(int l = 0; l < m.pos.GetCount(); l++) {
-				CppItemInfo mf;
-				(CppSimpleItem&)mf = n[j];
-				mf.nesting = base.GetKey(i);
-				mf.namespacel = n.namespacel;
-				const CppPos& p = m.pos[l];
-				mf.name = n.name[j];
-				mf.line = p.line;
-				mf.fn = p.GetFile();
-				mf.virt = false;
-				mf.access = m.pos[l].impl ? (int)WITHBODY : (int)PUBLIC;
-				mf.key = global ? String().Cat() << GetFileName(mf.fn) << " (" << p.line << ')' : AsString(p.line);
-				int nl = mf.namespacel + 2;
-				String tp;
-				if(nl < mf.nesting.GetLength())
-					tp = mf.nesting.Mid(nl);
-				mf.typei = type.FindAdd(tp);
-				mf.nesti = i;
-				item.Add(mf);
-			}
+			CppItemInfo mf;
+			(CppItem&)mf = n[j];
+			mf.scope = base.GetKey(i);
+			mf.virt = false;
+			mf.access = m.impl ? (int)WITHBODY : (int)PUBLIC;
+			mf.item = global ? String().Cat() << GetFileName(GetCppFile(m.file)) << " (" << m.line << ')'
+			                 : AsString(m.line);
+			mf.typei = 0;
+			item.Add(mf);
 		}
 	}
 	if(global)
@@ -155,7 +144,7 @@ GotoDlg::GotoDlg(const String& s)
 		Sort(item, CppItemInfoSortLine());
 	target.SetFilter(GotoFilter);
 	target <<= THISBACK(SyncList);
-	list.AddColumn("Nesting").SetDisplay(Single<CppNestingInfoDisplay>());
+	list.AddColumn("Nesting");
 	list.AddColumn().SetDisplay(Single<CppItemInfoDisplay>());
 	list.AddColumn(global ? "Position" : "Line");
 	if(global)
@@ -235,30 +224,32 @@ void Ide::SwapS()
 		return;
 	Parser p;
 	editor.SwapSContext(p);
-	int q = BrowserBase().Find(p.current_nest);
-	LLOG("SwapS nest: " << p.current_nest);
+	int q = BrowserBase().Find(p.current_scope);
+	LLOG("SwapS scope: " << p.current_scope);
 	if(q < 0)
 		return;
-	const CppNest& n = BrowserBase()[q];
-	q = n.key.Find(QualifyKey(BrowserBase(), p.current_nest, p.current_key));
-	if(q < 0 || n[q].pos.GetCount() == 1) {
-		q = n.name.Find(p.current_name);
+	const Array<CppItem>& n = BrowserBase()[q];
+	q = FindItem(n, QualifyKey(BrowserBase(), p.current_scope, p.current_key));
+	if(q < 0) return;
+	int count = GetCount(n, q);
+	if(q < 0 || count == 1) {
+		q = FindName(n, p.current_name);
 		if(q < 0)
 			return;
+		count = GetCount(n, q);
+		if(count == 1)
+			return;
 	}
-	int line = -1;
-	if(p.current.pos.GetCount())
-		line = p.current.pos.Top().line;
+	int file = GetCppFileIndex(editfile);
+	int line = p.current.line;
 	LLOG("SwapS line: " << line);
-	const CppItem& m = n[q];
 	int i;
-	for(i = 0; i < m.pos.GetCount(); i++) {
-		const CppPos& fp = m.pos[i];
-		LLOG("file: " << fp.GetFile() << ", line: " << fp.line);
-		if(fp.GetFile() == editfile && fp.line == line) {
+	for(i = 0; i < count; i++) {
+		LLOG("file: " << GetCppFile(n[q + i].file) << ", line: " << n[q + i].line);
+		if(n[q + i].file == file && n[q + i].line == line) {
 			i++;
 			break;
 		}
 	}
-	GotoCpp(m.pos[i % m.pos.GetCount()]);
+	GotoCpp(n[q + i % count]);
 }

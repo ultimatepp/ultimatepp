@@ -402,7 +402,7 @@ struct AssistEditor : CodeEditor {
 	void           Complete();
 
 	void           Context(Parser& parser, int pos);
-	bool           NestId(const CppNest& n, const String& id, Vector<String>& type, bool& code, String& t);
+	bool           ScopeId(const Array<CppItem>& n, const String& id, Vector<String>& type, bool& code, String& t);
 	void           TypeOf(const String& id, Vector<String>& r, bool& code);
 	Vector<String> Operator(const char *oper, const Vector<String>& type);
 	Vector<String> TypeOf(const Vector<String>& xp, const String& tp);
@@ -787,7 +787,7 @@ public:
 	void      SerializeOutputMode(Stream& s);
 
 	void      GotoPos(String path, int line);
-	void      GotoCpp(const CppPos& pos);
+	void      GotoCpp(const CppItem& pos);
 
 	Vector<String> SvnDirs();
 
@@ -1004,7 +1004,7 @@ public:
 	bool      OpenMainPackage();
 	void      NewMainPackage();
 
-	void      JumpToDefinition(const CppItem& m);
+	void      JumpToDefinition(const Array<CppItem>& scope, int q);
 	void      SearchTopics();
 	void      ShowTopics();
 	void      ShowTopic(String topic);

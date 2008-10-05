@@ -130,10 +130,7 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	if(m.inherited && m.IsType())
 		w.DrawRect(r.left, r.top, r.Width(), 1, SColorDisabled);
 
-	String k = m.nesting;
-	if(k != "::")
-		k << "::";
-	k << m.key;
+	String k = MakeCodeRef(m.scope, m.qitem);
 	int cnt = GetRefLinks(k).GetCount();
 	if(cnt) {
 		Size sz = BrowserImg::Ref().GetSize();
@@ -171,11 +168,7 @@ Size CppItemInfoDisplay::GetStdSize(const Value& q) const
 String ItemList::Item(int i)
 {
 	const CppItemInfo& m = ValueTo<CppItemInfo>(Get(i));
-	String k = m.nesting;
-	if(k != "::")
-		k << "::";
-	k << m.key;
-	return k;
+	return MakeCodeRef(m.scope, m.qitem);
 }
 
 int ItemList::GetTopic(Point p, String& key)

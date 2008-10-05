@@ -3,7 +3,24 @@
 #define LTIMING(x) // RTIMING(x)
 #define LLOG(x)
 
-static const char s_dbver[] = "Assist++ 2.2";
+static const char s_dbver[] = "Assist++ 2.123";
+
+void GC_Cache()
+{
+	String cfg = ConfigFile("cfg");
+	FindFile ff(AppendFileName(cfg, "*.cache"));
+	Time tm0 = ToTime(GetSysDate() - 20);
+	while(ff) {
+		if(ff.IsFile() && Time(ff.GetLastWriteTime()) > tm0)
+			FileDelete(AppendFileName(cfg, ff.GetName()));
+		ff.Next();
+	}
+}
+
+String CacheFile(const String& res)
+{
+	return AppendFileName(ConfigFile("cfg"), MD5String(res) + ".cache");
+}
 
 CppBase& BrowserBase()
 {
@@ -45,13 +62,11 @@ void BrowserScanError(int line, const String& text)
 		PutConsole(String().Cat() << s_file << " (" << line << "): " << text);
 }
 
-int NoSlash(int c)
-{
-	return c == '/' || c == '\\' || c == ':' ? '$' : c;
-}
-
 void SaveBrowserBase()
 {
+	LTIMING("SaveBrowserBase");
+	RealizeDirectory(ConfigFile("cfg"));
+	GC_Cache();
 	CppBase& base = BrowserBase();
 	if(base.GetCount() == 0)
 		return;
@@ -59,30 +74,20 @@ void SaveBrowserBase()
 	ArrayMap<String, StringStream> out;
 	String s;
 	for(int j = 0; j < base.GetCount(); j++) {
-		CppNest& nest = base[j];
-		for(int k = 0; k < nest.GetCount(); k++) {
-			CppItem& m = nest.item[k];
-			for(int p = 0; p < m.pos.GetCount(); p++) {
-				StringStream& o = out.GetAdd(m.pos[p].GetFile());
-				s = base.GetKey(j);
-				o % s;
-				s = nest.key[k];
-				o % s;
-				s = nest.name[k];
-				o % s;
-				o % nest.namespacel;
-				o % m;
-				o % m.pos[p].line;
-			}
+		Array<CppItem>& n = base[j];
+		for(int k = 0; k < n.GetCount(); k++) {
+			CppItem& m = n[k];
+			StringStream& o = out.GetAdd(GetCppFile(m.file));
+			s = base.GetKey(j);
+			o % s;
+			o % m;
 		}
 	}
 
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		String package = wspc[i];
-		String cfg = ConfigFile("cfg");
-		RealizeDirectory(cfg);
-		FileOut fo(AppendFileName(cfg, ForceExt(Filter(Nvl(package, "&"), NoSlash) + '@' + GetVarsName(), ".cdb")));
+		FileOut fo(CacheFile(package));
 		s = s_dbver;
 		fo % s;
 		for(int i = 0; i < fileset.GetCount(); i++)
@@ -100,6 +105,7 @@ void SaveBrowserBase()
 
 void LoadBrowserBase(Progress& pi)
 {
+	LTIMING("LoadBrowserBase");
 	CppBase& base = BrowserBase();
 	ArrayMap<String, BrowserFileInfo>& fileset = FileSet();
 	String s;
@@ -110,8 +116,7 @@ void LoadBrowserBase(Progress& pi)
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		pi.Step();
 		String package = wspc[i];
-		String cfg = ConfigFile("cfg");
-		FileIn in(AppendFileName(cfg, ForceExt(Filter(package, NoSlash) + '@' + GetVarsName(), ".cdb")));
+		FileIn in(CacheFile(package));
 		in.LoadThrowing();
 		if(in) {
 			try {
@@ -130,17 +135,11 @@ void LoadBrowserBase(Progress& pi)
 					StringStream ss(q);
 					ss.LoadThrowing();
 					while(!ss.IsEof()) {
-						String nest, key, name;
-						ss % nest;
-						ss % key;
-						ss % name;
-						CppNest& n = base.GetAdd(nest);
-						ss % n.namespacel;
-						CppItem& m = n.GetAdd(key, name);
+						String s;
+						ss % s;
+						CppItem& m = base.GetAdd(s).Add();
 						ss % m;
-						CppPos& p = m.pos.Add();
-						p.file = GetCppFileIndex(fn);
-						ss % p.line;
+						m.file = GetCppFileIndex(fn);
 					}
 				}
 			}
@@ -170,7 +169,7 @@ Vector<String> SortedNests()
 	CppBase& base = BrowserBase();
 	Vector<String> n;
 	for(int i = 0; i < base.GetCount(); i++)
-		if(!base.nest.IsUnlinked(i))
+		if(!base.IsUnlinked(i))
 			n.Add(base.GetKey(i));
 	Sort(n);
 	return n;
@@ -313,10 +312,5 @@ void RescanBrowserBase()
 
 bool ExistsBrowserItem(const String& item)
 {
-	String nest, key;
-	if(!SplitNestKey(item, nest, key))
-		return false;
-	CppBase& base = BrowserBase();
-	int q = base.Find(nest);
-	return q >= 0 ? base[q].key.Find(key) >= 0 : false;
+	return GetCodeRefItem(item);
 }

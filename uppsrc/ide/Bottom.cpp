@@ -175,8 +175,8 @@ void Ide::SyncBottom()
 	calc.SetFont(editorfont);
 	SetBar();
 	if(q == BBROWSER) {
-		if(!browser.nesting.IsCursor())
-			browser.nesting.GoBegin();
+		if(!browser.scopeing.IsCursor())
+			browser.scopeing.GoBegin();
 	}
 	if(q == BCALC)
 		ActiveFocus(calc);

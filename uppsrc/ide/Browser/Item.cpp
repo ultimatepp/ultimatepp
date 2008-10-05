@@ -65,7 +65,7 @@ inline bool sOperator(byte c)
 	return sOperatorTab[c];
 }
 
-Vector<ItemTextPart> ParseItemNatural(const String& name, const CppSimpleItem& m, const char *s)
+Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, const char *s)
 {
 	LLOG("ParseItemNatural " << m.natural << ", pname: " << m.pname
 	                         << ", tname: " << m.tname << ", m.ctname: " << m.ctname);

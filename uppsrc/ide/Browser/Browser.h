@@ -14,6 +14,30 @@
 #define IMAGEFILE <ide/Browser/Browser.iml>
 #include <Draw/iml_header.h>
 
+class Browser;
+
+void           GC_Cache();
+
+CppBase&       BrowserBase();
+void           StartBrowserBase();
+void           BrowserBaseScan(Stream& s, const String& fn);
+void           ClearBrowserBase();
+void           RescanBrowserBase();
+void           SyncBrowserBase();
+void           SaveBrowserBase();
+void           Register(Browser *b); //!!!
+void           UnRegister(Browser *b); //!!!
+bool           ExistsBrowserItem(const String& item);
+void           ReQualifyBrowserBase();
+
+void           BrowserBaseScanLay(const String& fn);
+void           ScanLayFile(const char *fn);
+
+String         MakeCodeRef(const String& scope, const String& item);
+void           SplitCodeRef(const String& ref, String& scope, String& item);
+
+const CppItem *GetCodeRefItem(const String& ref);
+
 enum { WITHBODY = 33 };
 
 inline Font BrowserFont()
@@ -23,23 +47,14 @@ inline Font BrowserFont()
 { return Arial(Ctrl::VertLayoutZoom(9)); }
 #endif
 
-struct CppNestingInfo {
-	String nesting;
-	int    namespacel;
-};
-
-struct CppItemInfo : CppSimpleItem, CppNestingInfo {
-	String key;
-	String name;
+struct CppItemInfo : CppItem {
+	String scope;
 	bool   over;
 	bool   overed;
 	int    inherited;
-	String fn;
-	int    line;
 	int    typei;
-	int    nesti;
 
-	CppItemInfo() { over = overed = virt = false; inherited = line = namespacel = 0; }
+	CppItemInfo() { over = overed = virt = false; inherited = line = 0; }
 };
 
 enum {
@@ -63,11 +78,9 @@ struct ItemTextPart : Moveable<ItemTextPart> {
 	int ii;
 };
 
-Vector<ItemTextPart> ParseItemNatural(const String& name, const CppSimpleItem& m, const char *natural);
+Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, const char *natural);
 Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
 Vector<ItemTextPart> ParseItemNatural(const CppItemInfo& m);
-
-bool SplitNestKey(const String& s, String& nest, String& key);
 
 struct BrowserFileInfo {
 	Time     time;
@@ -79,7 +92,7 @@ struct BrowserFileInfo {
 
 ArrayMap<String, BrowserFileInfo>& FileSet();
 
-int GetItemHeight(const CppSimpleItem& m, int cx);
+int GetItemHeight(const CppItem& m, int cx);
 
 struct BrowserQuery {
 	String name;
@@ -119,12 +132,6 @@ struct CppItemInfoDisplay : public Display
 	virtual Size GetStdSize(const Value& q) const;
 };
 
-struct CppNestingInfoDisplay : public Display
-{
-	virtual void Paint(Draw& w, const Rect& r, const Value& q,
-		               Color _ink, Color paper, dword style) const;
-};
-
 class ItemList : public ColumnList {
 	CppItemInfoDisplay display;
 
@@ -146,7 +153,7 @@ public:
 	void Serialize(Stream& s);
 	void SerializeWspc(Stream& s);
 
-	ArrayCtrl               nesting;
+	ArrayCtrl               scopeing;
 	ItemList                item;
 	Splitter                split;
 	BrowserQuery            query;
@@ -158,9 +165,9 @@ public:
 	Callback1<String>       WhenShowTopic;
 	bool                    clickpos;
 	bool                    show_inherited;
-	EditString             *s_item, *s_nest;
+	EditString             *s_item, *s_scope;
 
-	void     LoadNest(const String& nest, ArrayMap<String, CppItemInfo>& item, int inherited);
+	void     LoadNest(const String& nest, ArrayMap<String, CppItemInfo>& item, int inherited, Index<String>& rl);
 	bool     IsCurrentItem();
 	CppItem& CurrentItem();
 	void     Reload();
@@ -195,21 +202,6 @@ public:
 	Browser();
 	~Browser();
 };
-
-CppBase&       BrowserBase();
-void           StartBrowserBase();
-void           BrowserBaseScan(Stream& s, const String& fn);
-void           ClearBrowserBase();
-void           RescanBrowserBase();
-void           SyncBrowserBase();
-void           SaveBrowserBase();
-void           Register(Browser *b);
-void           UnRegister(Browser *b);
-bool           ExistsBrowserItem(const String& item);
-void           ReQualifyBrowserBase();
-
-void           BrowserBaseScanLay(const String& fn);
-void           ScanLayFile(const char *fn);
 
 struct TopicInfo : Moveable<TopicInfo> {
 	Time           time;
@@ -359,7 +351,7 @@ protected:
 
 	void   Tools(Bar& bar);
 	void   Label(String&);
-	void   CreateQtf(const String& item, const String& name, const CppSimpleItem& m, String& p1, String& p2);
+	void   CreateQtf(const String& item, const String& name, const CppItem& m, String& p1, String& p2);
 	void   InsertItem();
 
 	void   FindBrokenRef();

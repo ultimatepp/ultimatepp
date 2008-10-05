@@ -8,33 +8,31 @@ bool MatchItemFile(const CppItem& m, const BrowserQuery& q)
 {
 	if(IsNull(q.package) && IsNull(q.file))
 		return true;
-	for(int i = 0; i < m.pos.GetCount(); i++) {
-		int w = FileSet().Find(m.pos[i].GetFile());
-		if(w >= 0) {
-			const BrowserFileInfo& f = FileSet()[w];
-			if((IsNull(q.package) || q.package == f.package) && (IsNull(q.file) || q.file == f.file))
-				return true;
-		}
+	int w = FileSet().Find(GetCppFile(m.file));
+	if(w >= 0) {
+		const BrowserFileInfo& f = FileSet()[w];
+		if((IsNull(q.package) || q.package == f.package) && (IsNull(q.file) || q.file == f.file))
+			return true;
 	}
 	return false;
 }
 
-String JoinNestKey(const String& nest, const String& key)
+String JoinNestKey(const String& scope, const String& key)
 {
-	String s = nest;
+	String s = scope;
 	if(s != "::")
 		s << "::";
 	s << key;
 	return s;
 }
 
-bool MatchDocumented(const String& nest, const String& key, const String& name, const BrowserQuery& q)
+bool MatchDocumented(const String& scope, const String& key, const String& name, const BrowserQuery& q)
 {
-	int n = GetRefLinks(JoinNestKey(nest, key)).GetCount();
+	int n = GetRefLinks(JoinNestKey(scope, key)).GetCount();
 	return q.notdocumented && q.documented || q.notdocumented && n == 0 || q.documented && n;
 }
 
-bool MatchItem(const String& nest, const CppItem& m, const String& key, const String& name, const BrowserQuery& q, bool all)
+bool MatchItem(const String& scope, const CppItem& m, const String& key, const String& name, const BrowserQuery& q, bool all)
 {
 	if(q.a_private && m.access == PRIVATE ||
 	   q.a_protected && m.access == PROTECTED ||
@@ -43,61 +41,61 @@ bool MatchItem(const String& nest, const CppItem& m, const String& key, const St
 		   q.code && m.IsCode() ||
 		   q.data && m.IsData() ||
 		   q.macro && m.IsMacro())
-			if(all || IsNull(q.name) || name == q.name || nest + "::" + name == q.name)
-				return MatchItemFile(m, q) && MatchDocumented(nest, key, name, q);
+			if(all || IsNull(q.name) || name == q.name || scope + "::" + name == q.name)
+				return MatchItemFile(m, q) && MatchDocumented(scope, key, name, q);
 	return false;
 }
 
-bool MatchNestName(const char *nest, const String& name)
+bool MatchNestName(const char *scope, const String& name)
 {
 	for(;;) {
-		if(strncmp(nest, name, name.GetLength()) == 0) {
-			int c = nest[name.GetLength()];
+		if(strncmp(scope, name, name.GetLength()) == 0) {
+			int c = scope[name.GetLength()];
 			if(c == '\0' || c == ':')
 				return true;
 		}
-		while(*nest != ':') {
-			if(*nest == '\0')
+		while(*scope != ':') {
+			if(*scope == '\0')
 				return false;
-			nest++;
+			scope++;
 		}
-		while(*nest == ':')
-			nest++;
+		while(*scope == ':')
+			scope++;
 	}
 }
 
-bool MatchNest(const char *nest, const CppNest& m, const BrowserQuery& q)
+bool MatchNest(const char *scope, const Array<CppItem>& m, const BrowserQuery& q)
 {
-	if(MatchNestName(nest, q.name))
+	if(MatchNestName(scope, q.name))
 		for(int i = 0; i < m.GetCount(); i++)
-			if(MatchItem(nest, m[i], m.key[i], m.name[i], q, true))
+			if(MatchItem(scope, m[i], m[i].qitem, m[i].name, q, true))
 				return true;
 	for(int i = 0; i < m.GetCount(); i++)
-		if(MatchItem(nest, m[i], m.key[i], m.name[i], q, false))
+		if(MatchItem(scope, m[i], m[i].qitem, m[i].name, q, false))
 			return true;
 	return false;
 }
 
-void Browser::WithSearch(EditString& search_nest, EditString& search_item)
+void Browser::WithSearch(EditString& search_scope, EditString& search_item)
 {
 	item.WantFocus();
-	search_nest.NullText("Search nest", StdFont().Italic(), SColorDisabled());
-	search_nest.SetFilter(CharFilterAlphaToUpper);
-	s_nest = &search_nest;
-	search_nest <<= THISBACK(Reload);
+	search_scope.NullText("Search scope", StdFont().Italic(), SColorDisabled());
+	search_scope.SetFilter(CharFilterAlphaToUpper);
+	s_scope = &search_scope;
+	search_scope <<= THISBACK(Reload);
 	search_item.NullText("Search item", StdFont().Italic(), SColorDisabled());
 	search_item.SetFilter(CharFilterAlphaToUpper);
 	s_item = &search_item;
 	search_item <<= THISBACK(EnterNesting);
 }
 
-bool Browser::FindSet(const String& knesting, const String& kitem, int nestingsc, int itemsc)
+bool Browser::FindSet(const String& kscopeing, const String& kitem, int scopeingsc, int itemsc)
 {
-	if(!IsNull(knesting) && nesting.FindSetCursor(knesting)) {
-		nesting.ScCursor(nestingsc);
+	if(!IsNull(kscopeing) && scopeing.FindSetCursor(kscopeing)) {
+		scopeing.ScCursor(scopeingsc);
 		if(!IsNull(kitem))
 			for(int i = 0; i < item.GetCount(); i++)
-				if(ValueTo<CppItemInfo>(item.Get(i)).key == kitem) {
+				if(ValueTo<CppItemInfo>(item.Get(i)).qitem == kitem) {
 					item.SetCursor(i);
 					item.SetSbPos(itemsc);
 					return true;
@@ -110,35 +108,32 @@ void Browser::Reload()
 {
 	item.active_topics = WhenShowTopic;
 	CppBase& base = BrowserBase();
-	String knesting, kitem;
-	int nestingsc, itemsc;
-	if(nesting.IsCursor()) {
-		knesting = nesting.GetKey();
-		nestingsc = nesting.GetCursorSc();
+	String kscopeing, kitem;
+	int scopeingsc, itemsc;
+	if(scopeing.IsCursor()) {
+		kscopeing = scopeing.GetKey();
+		scopeingsc = scopeing.GetCursorSc();
 		if(item.IsCursor()) {
-			kitem = ValueTo<CppItemInfo>(item.Get(item.GetCursor())).key;
+			kitem = ValueTo<CppItemInfo>(item.Get(item.GetCursor())).qitem;
 			itemsc = item.GetSbPos();
 		}
 	}
-	nesting.Clear();
+	scopeing.Clear();
 	item.Clear();
 	String srch;
-	if(s_nest)
-		srch = ~*s_nest;
+	if(s_scope)
+		srch = ~*s_scope;
 	for(int i = 0; i < base.GetCount(); i++) {
 		String k = base.GetKey(i);
 		if(MatchNest(k, base[i], query) && (srch.GetCount() == 0 || ToUpper(k).Find(srch) >= 0)) {
-			CppNestingInfo f;
-			f.namespacel = base[i].namespacel;
-			f.nesting = k;
-			nesting.Add(f.nesting, i, RawToValue<CppNestingInfo>(f));
+			scopeing.Add(k, i, k);
 		}
 	}
-	nesting.Sort();
-	if(!IsNull(knesting) && nesting.FindSetCursor(knesting)) {
-		nesting.ScCursor(nestingsc);
+	scopeing.Sort();
+	if(!IsNull(kscopeing) && scopeing.FindSetCursor(kscopeing)) {
+		scopeing.ScCursor(scopeingsc);
 		for(int i = 0; i < item.GetCount(); i++)
-			if(ValueTo<CppItemInfo>(item.Get(i)).key == kitem) {
+			if(ValueTo<CppItemInfo>(item.Get(i)).qitem == kitem) {
 				item.SetSbPos(itemsc);
 				break;
 			}
@@ -149,32 +144,31 @@ int ItemCompare(const Value& v1, const Value& v2)
 {
 	const CppItemInfo& a = ValueTo<CppItemInfo>(v1);
 	const CppItemInfo& b = ValueTo<CppItemInfo>(v2);
-/*	int ak = a.kind >= FUNCTION && a.kind <= CLASSFUNCTIONTEMPLATE ? FUNCTION : a.kind;
-	int bk = b.kind >= FUNCTION && b.kind <= CLASSFUNCTIONTEMPLATE ? FUNCTION : b.kind;
-	if(ak != bk)
-	return ak - bk;*/
 	int q = a.inherited - b.inherited;
 	if(q) return q;
-	q = a.fn.Compare(b.fn);
+	q = SgnCompare(GetCppFile(a.file), GetCppFile(b.file));
 	return q ? q : a.line - b.line;
 }
 
-void Browser::LoadNest(const String& nest, ArrayMap<String, CppItemInfo>& item, int inherited)
+void Browser::LoadNest(const String& scope, ArrayMap<String, CppItemInfo>& item, int inherited, Index<String>& rl)
 {
-	int q = BrowserBase().Find(nest);
+	if(rl.Find(scope) < 0)
+		return;
+	rl.Add(scope);
+	int q = BrowserBase().Find(scope);
 	if(q < 0)
 		return;
-	CppNest& m = BrowserBase()[q];
-	bool all = !IsNull(query.name) && MatchNestName(nest, query.name) || inherited;
+	Array<CppItem>& m = BrowserBase()[q];
+	bool all = !IsNull(query.name) && MatchNestName(scope, query.name) || inherited;
 	String base;
 	String srch;
 	if(s_item)
 		srch = ~*s_item;
 	for(int i = 0; i < m.GetCount(); i++) {
-		if(MatchItem(nest, m[i], m.key[i], m.name[i], query, all) &&
-		   (srch.GetCount() == 0 || ToUpper(m.name[i]).Find(srch) >= 0)) {
+		if(MatchItem(scope, m[i], m[i].qitem, m[i].name, query, all) &&
+		   (srch.GetCount() == 0 || ToUpper(m[i].name).Find(srch) >= 0)) {
 			const CppItem& im = m[i];
-			String k = m.key[i];
+			String k = m[i].qitem;
 			int q = item.Find(k);
 			if(q >= 0 && im.IsCode())
 				item[q].over = true;
@@ -182,38 +176,8 @@ void Browser::LoadNest(const String& nest, ArrayMap<String, CppItemInfo>& item, 
 			if(im.IsType())
 				base = im.qptype;
 			f.inherited = inherited;
-			(CppSimpleItem&)f = im;
-			f.name = m.name[i];
-			f.key = k;
-			f.nesting = nest;
-			int cline = 0;
-			String cfn;
-			int hline = 0;
-			String hfn;
-			for(int i = 0; i < im.pos.GetCount(); i++) {
-				const CppPos& p = im.pos[i];
-				String fn = p.GetFile();
-				if(ToUpper(GetFileExt(p.GetFile())) == ".H") {
-					if(p.line > hline) {
-						hline = p.line;
-						hfn = fn;
-					}
-				}
-				else
-					if(p.line > cline) {
-						cline = p.line;
-						cfn = fn;
-					}
-			}
-			if(!IsNull(hfn)) {
-				f.fn = hfn;
-				f.line = hline;
-			}
-			else
-			if(IsNull(f.fn)) {
-				f.fn = cfn;
-				f.line = cline;
-			}
+			(CppItem&)f = im;
+			f.scope = scope;
 			if(q >= 0)
 				for(;;) {
 					q = item.FindNext(q);
@@ -227,16 +191,17 @@ void Browser::LoadNest(const String& nest, ArrayMap<String, CppItemInfo>& item, 
 	if(show_inherited) {
 		Vector<String> b = Split(base, ';');
 		for(int i = 0; i < b.GetCount(); i++)
-			LoadNest(b[i], item, ++inherited);
+			LoadNest(b[i], item, ++inherited, rl);
 	}
 }
 
 void Browser::EnterNesting()
 {
 	item.Clear();
-	if(nesting.IsCursor()) {
+	if(scopeing.IsCursor()) {
 		ArrayMap<String, CppItemInfo> m;
-		LoadNest(nesting.GetKey(), m, false);
+		Index<String> rl;
+		LoadNest(scopeing.GetKey(), m, false, rl);
 		for(int i = 0; i < m.GetCount(); i++)
 			item.Add(RawToValue(m[i]));
 		item.Sort(FnValueOrder(ItemCompare));
@@ -271,20 +236,19 @@ bool Browser::IsCurrentItem()
 	if(!item.IsCursor())
 		return false;
 	const CppItemInfo& m = ValueTo<CppItemInfo>(item.Get(item.GetCursor()));
-	int q = BrowserBase().Find(m.nesting);
+	int q = BrowserBase().Find(m.scope);
 	if(q < 0)
 		return false;
-	CppNest& n = BrowserBase()[q];
-	q = n.key.Find(m.key);
-	return q >= 0 && q < n.item.GetCount();
+	Array<CppItem>& n = BrowserBase()[q];
+	return FindItem(n, m.qitem) >= 0;
 }
 
 CppItem& Browser::CurrentItem()
 {
-	ASSERT(nesting.IsCursor() && item.IsCursor());
+	ASSERT(scopeing.IsCursor() && item.IsCursor());
 	const CppItemInfo& m = ValueTo<CppItemInfo>(item.Get(item.GetCursor()));
-	CppNest& n = BrowserBase().GetAdd(m.nesting);
-	return n.item[n.key.Find(m.key)];
+	Array<CppItem>& n = BrowserBase().GetAdd(m.scope);
+	return n[FindItem(n, m.qitem)];
 }
 
 void Browser::GotoPos(int pos)
@@ -292,18 +256,17 @@ void Browser::GotoPos(int pos)
 	if(!IsCurrentItem())
 		return;
 	CppItem& m = CurrentItem();
-	CppPos& p = m.pos[pos % m.pos.GetCount()];
-	WhenPos(p.GetFile(), p.line);
+	WhenPos(GetCppFile(m.file), m.line);
 }
 
 String Browser::GetItem(int i)
 {
 	if(i < 0 || i >= item.GetCount())
 		return Null;
-	String s = (String)nesting.GetKey();
+	String s = (String)scopeing.GetKey();
 	if(s != "::")
 		s << "::";
-	s << ValueTo<CppItemInfo>(item.Get(i)).key;
+	s << ValueTo<CppItemInfo>(item.Get(i)).qitem;
 	return s;
 }
 
@@ -314,37 +277,12 @@ CppItemInfo Browser::GetItemInfo(int i)
 	return ValueTo<CppItemInfo>(item.Get(i));
 }
 
-bool SplitNestKey(const String& s, String& nest, String& key)
-{
-	CParser p(s);
-	if(!p.Char2(':', ':'))
-		return false;
-	const char *q = s;
-	for(;;) {
-		q = p.GetPtr();
-		if(p.Char('~') || p.Id("operator"))
-			break;
-		if(p.IsId()) {
-			String h = p.ReadId();
-			if(!p.Char2(':', ':'))
-				break;
-			nest << "::" << h;
-		}
-		else
-			break;
-	}
-	key = q;
-	nest = Nvl(nest, "::");
-	return true;
-}
-
 bool Browser::FindSet(const String& s)
 {
-	String n;
-	String m;
-	if(!SplitNestKey(s, n, m))
-		return false;
-	return FindSet(n, m);
+	String scope;
+	String item;
+	SplitCodeRef(s, scope, item);
+	return FindSet(scope, item);
 }
 
 void Browser::ItemMenu(Bar& bar)
@@ -352,14 +290,11 @@ void Browser::ItemMenu(Bar& bar)
 	if(IsCurrentItem()) {
 		if(WhenPos) {
 			CppItem& m = CurrentItem();
-			for(int i = 0; i < m.pos.GetCount(); i++) {
-		    	CppPos& p = m.pos[i];
-		    	bar.Add(String().Cat() << GetFileName(p.GetFile()) << " (" << p.line << ')',
-		    	        IdeFileImage(p.GetFile()),
-		    	        THISBACK1(GotoPos, i));
-			}
-			if(!m.pos.IsEmpty())
-				bar.Separator();
+			String fn = GetCppFile(m.file);
+	    	bar.Add(String().Cat() << GetFileName(fn) << " (" << m.line << ')',
+	    	        IdeFileImage(fn),
+	    	        THISBACK1(GotoPos, 0));
+			bar.Separator();
 		}
 		if(WhenShowTopic) {
 			Vector<String> link = GetRefLinks(GetItem());
@@ -371,15 +306,15 @@ void Browser::ItemMenu(Bar& bar)
 	}
 	bar.Add("Query..", BrowserImg::Query(), THISBACK(DoDoQuery));
 	bar.Separator();
-	bar.Add(false, AsString(nesting.GetCount()) + " nests, " + AsString(item.GetCount()) + " items", Callback());
+	bar.Add(false, AsString(scopeing.GetCount()) + " scopes, " + AsString(item.GetCount()) + " items", Callback());
 }
 
 void Browser::QueryNest()
 {
-	query.name = nesting.GetKey();
+	query.name = scopeing.GetKey();
 	querydlg.name <<= query.name;
 	Reload();
-	nesting.GoBegin();
+	scopeing.GoBegin();
 	item.SetCursor(0);
 }
 
@@ -391,10 +326,10 @@ void Browser::QueryWord(const String& w)
 	querydlg.Clear();
 	querydlg.name <<= w;
 	Reload();
-	nesting.GoBegin();
+	scopeing.GoBegin();
 }
 
-void Browser::SetId(const String& id, const Vector<String>& nest)
+void Browser::SetId(const String& id, const Vector<String>& scope)
 {
 	query.package.Clear();
 	query.file.Clear();
@@ -402,17 +337,13 @@ void Browser::SetId(const String& id, const Vector<String>& nest)
 	querydlg.Clear();
 	querydlg.name <<= id;
 	CppBase& base = BrowserBase();
-	nesting.Clear();
-	for(int i = 0; i < nest.GetCount(); i++) {
-		int q = base.Find(nest[i]);
-		if(q >= 0) {
-			CppNestingInfo f;
-			f.namespacel = base[q].namespacel;
-			f.nesting = nest[i];
-			nesting.Add(f.nesting, i, RawToValue<CppNestingInfo>(f));
-		}
+	scopeing.Clear();
+	for(int i = 0; i < scope.GetCount(); i++) {
+		int q = base.Find(scope[i]);
+		if(q >= 0)
+			scopeing.Add(scope[i], i, scope[i]);
 	}
-	nesting.GoBegin();
+	scopeing.GoBegin();
 }
 
 void Browser::ShowTopic(String w)
@@ -447,27 +378,16 @@ void Browser::Serialize(Stream& s)
 		s % split;
 }
 
-void CppNestingInfoDisplay::Paint(Draw& w, const Rect& r, const Value& q,
-                                  Color _ink, Color paper, dword style) const {
-	w.DrawRect(r, paper);
-	const CppNestingInfo& f = ValueTo<CppNestingInfo>(q);
-	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
-	int t = r.top + (r.Height() - Draw::GetStdFontCy()) / 2;
-	w.DrawText(r.left, t, f.nesting, StdFont(), focuscursor ? _ink : Magenta(), f.namespacel);
-	w.DrawText(r.left + GetTextSize(f.nesting, StdFont(), f.namespacel).cx, t, ~f.nesting + f.namespacel,
-	           StdFont(), _ink);
-}
-
 Browser::Browser()
 {
-	s_nest = s_item = NULL;
-	nesting.NoHeader().NoGrid();
-	nesting.AddKey();
-	nesting.AddIndex();
-	nesting.AddColumn("").SetDisplay(Single<CppNestingInfoDisplay>());
-	nesting.WhenEnterRow = THISBACK(EnterNesting);
-	nesting.WhenLeftDouble = THISBACK(QueryNest);
-	nesting.NoWantFocus();
+	s_scope = s_item = NULL;
+	scopeing.NoHeader().NoGrid();
+	scopeing.AddKey();
+	scopeing.AddIndex();
+	scopeing.AddColumn("");
+	scopeing.WhenEnterRow = THISBACK(EnterNesting);
+	scopeing.WhenLeftDouble = THISBACK(QueryNest);
+	scopeing.NoWantFocus();
 	item.WhenEnterItem = THISBACK(EnterItem);
 	item.WhenLeftClick = THISBACK(ItemClick);
 	item.WhenLeftDouble = THISBACK(ItemDblClk);
@@ -475,7 +395,7 @@ Browser::Browser()
 	item.active_topics = false;
 	item.Columns(2);
 	split.SetPos(2000);
-	Add(split.Horz(nesting, item).SizePos());
+	Add(split.Horz(scopeing, item).SizePos());
 	Register(this);
 	Reload();
 	BackPaint();
