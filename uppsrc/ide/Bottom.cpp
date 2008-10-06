@@ -167,17 +167,12 @@ void Ide::SyncBottom()
 	if(editor_bottom.GetZoom() >= 0)
 		editor_bottom.NoZoom();
 	console.Show(q == BCONSOLE);
-	browser.Show(q == BBROWSER);
 	calc.Show(q == BCALC);
 	if(bottomctrl)
 		bottomctrl->Show(q == BDEBUG);
 	calc.LoadHlStyles(editor.StoreHlStyles());
 	calc.SetFont(editorfont);
 	SetBar();
-	if(q == BBROWSER) {
-		if(!browser.scopeing.IsCursor())
-			browser.scopeing.GoBegin();
-	}
 	if(q == BCALC)
 		ActiveFocus(calc);
 }

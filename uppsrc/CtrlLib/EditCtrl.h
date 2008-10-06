@@ -202,7 +202,7 @@ public:
 	EditField& SetFont(Font _font);
 	EditField& ClickSelect(bool b = true)    { clickselect = b; return *this; }
 	EditField& InitCaps(bool b = true)       { initcaps = b; return *this; }
-	EditField& NullText(const char *text = t_("(default)"), Color ink = Brown);
+	EditField& NullText(const char *text = t_("(default)"), Color ink = SColorDisabled);
 	EditField& NullText(const char *text, Font fnt, Color ink);
 	EditField& MaxChars(int mc)              { maxlen = mc; return *this; }
 	EditField& AutoSize(int maxcx = INT_MAX) { autosize = maxcx; Finish(); return *this; }

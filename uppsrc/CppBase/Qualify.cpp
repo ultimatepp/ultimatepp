@@ -196,7 +196,7 @@ struct CmpCppItem {
 	{
 		int q = SgnCompare(a.qitem, b.qitem);
 		if(q) return q < 0;
-		q = SgnCompare(a.kind, b.kind);
+		q = SgnCompare(a.IsType(), b.IsType());
 		if(q) return q < 0;
 		q = SgnCompare(a.impl, b.impl);
 		if(q) return a.IsType() ? q > 0 : q < 0;
@@ -216,6 +216,8 @@ void QualifyPass2(CppBase& base)
 		bool sort = false;
 		for(int i = 0; i < n.GetCount(); i++) {
 			CppItem& m = n[i];
+			LLOG(base.GetKey(ni) << "::" << m.item << " " << GetCppFile(m.file)
+			    << " impl:" << m.impl << " kind:" << (int)m.kind << " IsType:" << m.IsType());
 			if(m.serial != base.serial && !m.IsType()) {
 				sort = true;
 				m.serial = base.serial;

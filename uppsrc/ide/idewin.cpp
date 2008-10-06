@@ -178,7 +178,7 @@ void Ide::Serialize(Stream& s) {
 	if(version >= 8)
 		s % LinuxHostConsole;
 	if(version >= 9)
-		editor.SerializeIndex(s);
+		editor.SerializeNavigator(s);
 	if(version >= 10)
 		s % showtime;
 	if(version >= 11)

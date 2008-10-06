@@ -1880,7 +1880,7 @@ void ArrayCtrl::GotFocus() {
 
 void ArrayCtrl::DoEdit() {
 	if(IsReadOnly()) return;
-	if(!editmode)
+	if(!editmode && IsCursor())
 		StartEdit();
 }
 
@@ -2026,7 +2026,7 @@ bool ArrayCtrl::FindSetCursor(const Value& val, int ii, int i) {
 	i = Find(val, ii, i);
 	if(i < 0) return false;
 	if(!SetCursor(i)) return false;
-	CenterCursor();
+//	CenterCursor(); //cxl: 2008-10-06: not what is expected...
 	return true;
 }
 

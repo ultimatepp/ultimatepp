@@ -14,6 +14,7 @@ file
 	Util.cpp,
 	Item.cpp,
 	ItemList.cpp,
+	CodeBrowser.cpp,
 	Query.cpp,
 	Browser.cpp,
 	Browser.lay,

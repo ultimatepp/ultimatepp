@@ -140,15 +140,7 @@ void Browser::Reload()
 	}
 }
 
-int ItemCompare(const Value& v1, const Value& v2)
-{
-	const CppItemInfo& a = ValueTo<CppItemInfo>(v1);
-	const CppItemInfo& b = ValueTo<CppItemInfo>(v2);
-	int q = a.inherited - b.inherited;
-	if(q) return q;
-	q = SgnCompare(GetCppFile(a.file), GetCppFile(b.file));
-	return q ? q : a.line - b.line;
-}
+int ItemCompare(const Value& v1, const Value& v2);
 
 void Browser::LoadNest(const String& scope, ArrayMap<String, CppItemInfo>& item, int inherited, Index<String>& rl)
 {

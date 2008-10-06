@@ -249,7 +249,7 @@ struct CppItem {
 	
 	void           Serialize(Stream& s);
 
-	CppItem()      { decla = false; virt = false; at = 0; }
+	CppItem()      { at = decla = virt = false; qualify_type = qualify_param = true; serial = -1; }
 };
 
 int FindItem(const Array<CppItem>& x, const String& qitem);
@@ -268,12 +268,11 @@ struct CppBase : ArrayMap<String, Array<CppItem> > {
 
 class Parser {
 	struct Context {
-		String      scopeing;
+		String      scope;
 		String      ctname;
 		Vector<int> tparam;
 		Index<int>  typenames;
 		int         access;
-		bool        noclass;
 
 		void operator<<=(const Context& t);
 
@@ -370,10 +369,11 @@ class Parser {
 	void   ScopeBody();
 	void   Do();
 
-	CppItem& Item(const String& scopeing, const String& item, const String& name, bool impl);
-	CppItem& Item(const String& scopeing, const String& item, const String& name);
+	CppItem& Item(const String& scope, const String& item, const String& name, bool impl);
+	CppItem& Item(const String& scope, const String& item, const String& name);
 
-	CppItem& Fn(const Decl& d, const String& templ, bool body, int kind, const String& tname, const String& tparam);
+	CppItem& Fn(const Decl& d, const String& templ, bool body,
+	            const String& tname, const String& tparam);
 
 	struct Error {};
 
@@ -389,11 +389,11 @@ class Parser {
 public:
 	struct FunctionStat
 	{
-		FunctionStat(const String & scopeing,
+		FunctionStat(const String & scope,
 		             const CppItem & cppItem,
 		             const LexSymbolStat &symbolStat,
 		             int maxScopeDepth);
-		String scopeing;
+		String scope;
 		const CppItem & cppItem;
 		const LexSymbolStat &symbolStat;
 		int maxScopeDepth;

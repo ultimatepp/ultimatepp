@@ -174,14 +174,14 @@ void ScAdd(String& s, const String& a)
 
 String Parser::Context::Dump() const
 {
-	return "Scopeing: " + scopeing;
+	return "Scopeing: " + scope;
 }
 
-Parser::FunctionStat::FunctionStat(const String & scopeing,
+Parser::FunctionStat::FunctionStat(const String & scope,
                                    const CppItem & cppItem,
 		                           const LexSymbolStat &symbolStat,
 		                           int maxScopeDepth) :
-	scopeing(scopeing), cppItem(cppItem),
+	scope(scope), cppItem(cppItem),
 	symbolStat(symbolStat), maxScopeDepth(maxScopeDepth)
 {
 }
@@ -197,11 +197,10 @@ inline void ScopeCat(String& scope, const String& s)
 
 void Parser::Context::operator<<=(const Context& t)
 {
-	scopeing = t.scopeing;
+	scope = t.scope;
 	typenames <<= t.typenames;
 	tparam <<= t.tparam;
 	access = t.access;
-	noclass = t.noclass;
 	ctname = t.ctname;
 }
 
@@ -954,12 +953,12 @@ String CleanTp(const String& tp)
 
 void Parser::SetScopeCurrent()
 {
-	current_scope = context.scopeing;
+	current_scope = context.scope;
 }
 
-CppItem& Parser::Item(const String& scopeing, const String& item, const String& name, bool impl)
+CppItem& Parser::Item(const String& scope, const String& item, const String& name, bool impl)
 {
-	current_scope = scopeing;
+	current_scope = scope;
 	if(dobody)
 		current = CppItem();
 	current_key = item;
@@ -972,14 +971,14 @@ CppItem& Parser::Item(const String& scopeing, const String& item, const String& 
 	im.line = line + 1;
 	im.impl = impl;
 	im.filetype = filetype;
-	LOG("New item " << GetCppFile(filei) << ' ' << line + 1 << "    " << scopeing << "::" << item);
+	LLOG("New item " << GetCppFile(filei) << ' ' << line + 1 << "    " << scope << "::" << item);
 	return im;
 }
 
-CppItem& Parser::Item(const String& scopeing, const String& item, const String& name)
+CppItem& Parser::Item(const String& scope, const String& item, const String& name)
 {
 	String h = Purify(item);
-	CppItem& im = Item(scopeing, h, name, false);
+	CppItem& im = Item(scope, h, name, false);
 	im.natural = h;
 	return im;
 }
@@ -1080,17 +1079,16 @@ bool Parser::Scope(const String& tp, const String& tn) {
 			}
 		}
 		if(Key(t_dblcolon))
-			context.scopeing = Null;
+			context.scope = Null;
 		String name;
 		do {
 			Check(lex.IsId(), "Missing identifier");
 			context.typenames.FindAdd(lex);
 			name = lex.GetId();
-			ScopeCat(context.scopeing, name);
+			ScopeCat(context.scope, name);
 		}
 		while(Key(t_dblcolon));
 		context.access = t == tk_class ? PRIVATE : PUBLIC;
-		context.noclass = false;
 		if(tn.GetCount()) {
 			if(context.ctname.GetCount())
 				context.ctname << ';';
@@ -1101,7 +1099,7 @@ bool Parser::Scope(const String& tp, const String& tn) {
 			nn = "template " + tp + " ";
 		String key = (t == tk_class ? "class" : t == tk_union ? "union" : "struct");
 		nn << key << ' ' << name;
-		CppItem& im = Item(context.scopeing, key, name, lex != ';');
+		CppItem& im = Item(context.scope, key, name, lex != ';');
 		if(Key(';')) {
 			context = cc;
 			SetScopeCurrent();
@@ -1163,7 +1161,7 @@ String DeTemp(const char *s)
 	return r;
 }
 
-CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
+CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
                     const String& tname, const String& tparam)
 {
 	String param;
@@ -1186,7 +1184,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
 			nn0 = d.name.Mid(0, q - 1);
 	}
 	String item = FnItem(d.natural, pname, d.name, nm);
-	String scopeing = context.scopeing;
+	String scope = context.scope;
 	String nn;
 	const char *s = nn0;
 	int l = 0;
@@ -1204,29 +1202,34 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body, int kind,
 	s = nn;
 	while(*s == ':') s++;
 	if(*s)
-		ScopeCat(scopeing, s);
-	CppItem& im = Item(scopeing, item, nm, body);
-	if(!body || IsNull(im.natural)) {
-		im.natural.Clear();
-		if(!IsNull(templ)) {
-			im.natural = TrimRight(Gpurify(templ)) + ' ';
-			im.at = im.natural.GetLength();
-		}
-		im.natural << Purify(d.natural, d.name, nm);
-		im.kind = kind;
-		im.param = param;
-		im.pname = pname;
-		im.ptype = ptype;
-		im.access = context.access;
-		im.virt = d.s_virtual;
-		im.type = d.type;
-		im.decla = true;
-		im.tname = tname;
-		im.tparam = tparam;
-		im.ctname = context.ctname;
-		LLOG("FnItem: " << scopeing << "::" << item << ", natural: " << im.natural
-		                << ", ctname: " << im.ctname);
+		ScopeCat(scope, s);
+	CppItem& im = Item(scope, item, nm, body);
+	im.natural.Clear();
+	if(!IsNull(templ)) {
+		im.natural = TrimRight(Gpurify(templ)) + ' ';
+		im.at = im.natural.GetLength();
 	}
+	im.natural << Purify(d.natural, d.name, nm);
+	im.kind = templ.GetCount() ? IsNull(scope) ? FUNCTIONTEMPLATE
+	                                           : d.s_static ? CLASSFUNCTIONTEMPLATE
+	                                                        : INSTANCEFUNCTIONTEMPLATE
+	                           : d.istructor ? (d.isdestructor ? DESTRUCTOR : CONSTRUCTOR)
+	                                         : d.isfriend ? INLINEFRIEND
+	                                                      : IsNull(scope) ? FUNCTION
+	                                                                      : d.s_static ? CLASSFUNCTION
+	                                                                                   : INSTANCEFUNCTION;
+	im.param = param;
+	im.pname = pname;
+	im.ptype = ptype;
+	im.access = context.access;
+	im.virt = d.s_virtual;
+	im.type = d.type;
+	im.decla = true;
+	im.tname = tname;
+	im.tparam = tparam;
+	im.ctname = context.ctname;
+	LLOG("FnItem: " << scope << "::" << item << ", natural: " << im.natural
+	                << ", ctname: " << im.ctname);
 	return im;
 }
 
@@ -1280,11 +1283,7 @@ void Parser::Do()
 				for(int i = 0; i < r.GetCount(); i++) {
 					Decl& d = r[i];
 					if(!d.isfriend && d.function) {
-						CppItem& m = Fn(d, "template " + tparam + ' ', body,
-						                context.noclass ? FUNCTIONTEMPLATE :
-								        d.s_static ? CLASSFUNCTIONTEMPLATE :
-								                     INSTANCEFUNCTIONTEMPLATE,
-								        tnames, tparam);
+						CppItem& m = Fn(d, "template " + tparam + ' ', body, tnames, tparam);
 						functionItem = &m;
 					}
 				}
@@ -1315,7 +1314,7 @@ void Parser::Do()
 				String val;
 				Check(lex.IsId(), "Expected identifier");
 				String id = lex.GetId();
-				CppItem& im = Item(context.scopeing, id, id);
+				CppItem& im = Item(context.scope, id, id);
 				im.natural = "enum ";
 				if(!IsNull(name))
 					im.natural << name << ' ';
@@ -1339,7 +1338,7 @@ void Parser::Do()
 			const char *s = n;
 			while(*s && iscid(*s))
 				name.Cat(*s++);
-			CppItem& im = Item(context.scopeing, n, name);
+			CppItem& im = Item(context.scope, n, name);
 			im.kind = MACRO;
 			s = strchr(n, '(');
 			if(s) {
@@ -1383,12 +1382,7 @@ void Parser::Do()
 				Decl& d = r[i];
 				if(!d.isfriend || body) {
 					if(d.function) {
-						CppItem &im =
-						  Fn(d, Null, body, d.istructor ? (d.isdestructor ? DESTRUCTOR : CONSTRUCTOR) :
-						                    d.isfriend ? INLINEFRIEND :
-						                    context.noclass ? FUNCTION :
-						                    d.s_static ? CLASSFUNCTION : INSTANCEFUNCTION,
-						                    String(), String());
+						CppItem &im = Fn(d, Null, body, String(), String());
 						functionItem = &im;
 					}
 					else {
@@ -1396,7 +1390,7 @@ void Parser::Do()
 						int q = h.Find('=');
 						if(q >= 0)
 							h = TrimRight(h.Mid(0, q));
-						String scope = context.scopeing;
+						String scope = context.scope;
 						if(d.type_def)
 							ScopeCat(scope, d.name);
 						CppItem& im = Item(scope, d.type_def ? "typedef" : d.name, d.name);
@@ -1404,7 +1398,7 @@ void Parser::Do()
 						im.type = im.ptype = d.type;
 						im.access = context.access;
 						im.kind = d.type_def ? TYPEDEF :
-						          context.noclass ? VARIABLE :
+						          IsNull(scope) ? VARIABLE :
 						          d.s_static ? CLASSVARIABLE : INSTANCEVARIABLE;
 					}
 				}
@@ -1458,10 +1452,9 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 			try {
 				current_scope.Clear();
 				context.access = PUBLIC;
-				context.noclass = true;
 				context.typenames.Clear();
 				context.tparam.Clear();
-				context.scopeing.Clear();
+				context.scope.Clear();
 				inbody = false;
 				for(int i = 0; i < typenames.GetCount(); i++)
 					context.typenames.Add(lex.Id(typenames[i]));

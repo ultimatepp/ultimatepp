@@ -167,9 +167,9 @@ bool IdeConsoleWait()
 	return the_ide && the_ide->IdeConsoleWait();
 }
 
-void IdeGotoLink(String s)
+void IdeGotoCodeRef(String s)
 {
-	if(the_ide) the_ide->IdeGotoLink(s);
+	if(the_ide) the_ide->IdeGotoCodeRef(s);
 }
 
 void IdeSetBottom(Ctrl& ctrl)

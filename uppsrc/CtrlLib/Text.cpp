@@ -529,6 +529,7 @@ void TextCtrl::Redo() {
 void  TextCtrl::ClearSelection() {
 	anchor = -1;
 	Refresh();
+	WhenSel();
 }
 
 void   TextCtrl::SetSelection(int l, int h) {

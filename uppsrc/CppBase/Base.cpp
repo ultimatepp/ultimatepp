@@ -7,9 +7,9 @@ NAMESPACE_UPP
 
 void CppItem::Serialize(Stream& s)
 {
-	s % kind % access;
-	s % item % name % natural % at % tparam % param % pname
-	  % tname % ctname % type % ptype % virt % line;
+	s % kind % access
+	  % item % name % natural % at % tparam % param % pname
+	  % tname % ctname % type % ptype % virt % line % impl;
 }
 
 struct CmpItem {

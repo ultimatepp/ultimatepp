@@ -97,6 +97,7 @@ public:
 
 	Callback1<Bar&> WhenBar;
 	Callback        WhenState;
+	Callback        WhenSel;
 
 	void   CachePos(int pos);
 
@@ -281,7 +282,7 @@ public:
 
 	Rect   GetLineScreenRect(int line) const;
 
-	void   TopCursor();
+	void   TopCursor(int lines = 0);
 	void   CenterCursor();
 
 	void   MoveUpDown(int n, bool sel = false);
