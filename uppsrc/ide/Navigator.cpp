@@ -1,14 +1,10 @@
 #include "ide.h"
 
-void AssistEditor::CreateIndex()
+void AssistEditor::MakeIndex()
 {
 	searchindex.Clear();
 	Renumber2();
 	indexitem.Clear();
-	if(!assist_active) {
-		indexframe.Show(false);
-		return;
-	}
 	const Index<String>& cppkeywords = CppKeywords();
 	String sop = "operator";
 	String klass;
@@ -128,22 +124,28 @@ void AssistEditor::CreateIndex()
 		}
 	}
 	SyncIndex();
-	SyncIndexCursor();
+	SyncCursor();
+}
+
+void AssistEditor::SyncNavigator()
+{
+	if(navigator == NAV_INDEX)
+		MakeIndex();
+	if(navigator == NAV_BROWSER)
+		browser.Load();
+	navigatorframe.Show(navigator);
 }
 
 void AssistEditor::SyncIndex()
 {
-	searchindex.NullText(String("Search (") + GetKeyDesc(IdeKeys::AK_SEARCHINDEX().key[0]) + ") ",
-	                     StdFont().Italic(), SColorDisabled());
-	bool b = indexitem.GetCount() && showindex && assist_active;
-	indexframe.Show(b);
 	index.Clear();
-	if(!b) return;
-	String s = ~searchindex;
-	for(int i = 0; i < indexitem.GetCount(); i++) {
-		const IndexItem& m = indexitem[i];
-		if(s.GetCount() == 0 || ToUpper(m.text).Find(s) >= 0)
-			index.Add(AttrText(m.text).Ink(m.ink), m.line);
+	if(indexitem.GetCount() && navigator == NAV_INDEX && assist_active) {
+		String s = ~searchindex;
+		for(int i = 0; i < indexitem.GetCount(); i++) {
+			const IndexItem& m = indexitem[i];
+			if(s.GetCount() == 0 || ToUpper(m.text).Find(s) >= 0)
+				index.Add(AttrText(m.text).Ink(m.ink), m.line);
+		}
 	}
 }
 
@@ -164,28 +166,37 @@ void AssistEditor::IndexClick()
 {
 	IndexSync();
 	SetFocus();
-	SyncIndexCursor();
+	SyncCursor();
 }
 
-void AssistEditor::SyncIndexCursor()
+void AssistEditor::SyncCursor()
 {
-	CodeEditor::SelectionChanged();
-	if(!index.IsCursor())
-		index.SetCursor(0);
-	if(!index.GetCount() || searchindex.HasFocus())
-		return;
-	int ln = GetLine2(GetCursorLine());
-	int ii = index.GetCursor();
-	while(ii > 0 && (int)index.Get(ii, 1) > ln)
-		ii--;
-	while(ii < index.GetCount() - 1 && (int)index.Get(ii + 1, 1) <= ln)
-		ii++;
-	index.SetCursor(ii);
+	if(navigator == NAV_INDEX) {
+		if(!index.IsCursor())
+			index.SetCursor(0);
+		if(!index.GetCount() || searchindex.HasFocus())
+			return;
+		int ln = GetLine2(GetCursorLine());
+		int ii = index.GetCursor();
+		while(ii > 0 && (int)index.Get(ii, 1) > ln)
+			ii--;
+		while(ii < index.GetCount() - 1 && (int)index.Get(ii + 1, 1) <= ln)
+			ii++;
+		index.SetCursor(ii);
+	}
+	if(navigator == NAV_BROWSER) {
+		int ii = GetCursorLine();
+		String coderef;
+		while(ii >= 0 && IsNull(coderef))
+			coderef = GetAnnotation(ii--);
+		browser.Goto(coderef);
+	}
 }
 
 void AssistEditor::SelectionChanged()
 {
-	SyncIndexCursor();
+	CodeEditor::SelectionChanged();
+	SyncCursor();
 }
 
 void AssistEditor::SearchIndex()
@@ -195,62 +206,75 @@ void AssistEditor::SearchIndex()
 	IndexSync();
 }
 
-bool AssistEditor::IndexKey(dword key)
+void AssistEditor::BrowserGoto()
 {
-	switch(key) {
-	case K_ENTER:
-	case K_ESCAPE:
-		searchindex.Clear();
-		SetFocus();
-		SyncIndex();
-		SyncIndexCursor();
-		return true;
-	case K_UP:
-	case K_DOWN:
-		index.Key(key, 1);
-		IndexSync();
-		return true;
-	}
+	IdeGotoCodeRef(browser.GetCodeRef());
+	SetFocus();
+}
+
+bool AssistEditor::NavigatorKey(dword key)
+{
+	if(navigator == NAV_INDEX)
+		switch(key) {
+		case K_ENTER:
+		case K_ESCAPE:
+			searchindex.Clear();
+			SetFocus();
+			SyncIndex();
+			SyncCursor();
+			return true;
+		case K_UP:
+		case K_DOWN:
+			index.Key(key, 1);
+			IndexSync();
+			return true;
+		}
 	return false;
 }
 
-bool AssistEditor::IsIndex()
+void AssistEditor::Navigator(int nav)
 {
-	return showindex;
-}
-
-void AssistEditor::ShowIndex(bool b)
-{
-	showindex = b;
-	indexframe.Show(showindex);
-	if(showindex) {
-		SetFocus();
-		CreateIndex();
-		SyncIndex();
-		SyncIndexCursor();
+	navigator = nav;
+	navigatorframe.Show(navigator);
+	switch(navigator) {
+	case NAV_INDEX:
+		scope_item.Hide();
+		indexpane.Show();
+		break;
+	case NAV_BROWSER:
+		indexpane.Hide();
+		scope_item.Show();
+		break;
 	}
+	if(navigator)
+		SetFocus();
+	SyncNavigator();
+	if(navigator == NAV_INDEX)
+		SyncIndex();
+	SyncCursor();
 }
 
-void AssistEditor::SerializeIndex(Stream& s)
+void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 0;
+	int version = 1;
 	s / version;
-	s % indexframe;
-	s % showindex;
+	s % navigatorframe;
+	s % navigator;
+	if(version >= 1)
+		s % scope_item;
 	if(searchindex.HasFocus())
 		SetFocus();
-	SyncIndex();
-	SyncIndexCursor();
+	Navigator(navigator);
 }
 
-void Ide::ToggleIndex()
+void Ide::ToggleNavigator(int nav)
 {
-	editor.ShowIndex(!editor.IsIndex());
+	editor.Navigator(editor.GetNavigator() == nav ? 0 : nav);
 }
 
 void Ide::SearchIndex()
 {
-	editor.ShowIndex(true);
+	editor.Navigator(AssistEditor::NAV_INDEX);
 	if(editor.index.IsVisible())
 		editor.searchindex.SetFocus();
 }

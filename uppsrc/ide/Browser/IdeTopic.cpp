@@ -17,7 +17,7 @@ static const char styles[] =
 
 void TopicEditor::JumpToDefinition()
 {
-	PostCallback(callback1(IdeGotoLink, editor.GetFormatInfo().label));
+	PostCallback(callback1(IdeGotoCodeRef, editor.GetFormatInfo().label));
 }
 
 void TopicEditor::Label(String& label)

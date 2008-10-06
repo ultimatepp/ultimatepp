@@ -228,6 +228,7 @@ void DocEdit::PlaceCaret(bool scroll) {
 		else
 			sb.ScrollInto(cr.y, fy + 2);
 	SetCaret(cr.x + 1, cr.y - sb, 1, fy);
+	WhenSel();
 }
 
 void DocEdit::PlaceCaret(int newpos, bool select) {
@@ -247,9 +248,9 @@ void DocEdit::PlaceCaret(int newpos, bool select) {
 		}
 	cursor = newpos;
 	PlaceCaret(true);
+	SelectionChanged();
 	if(IsSelection())
 		SetSelectionSource(ClipFmtsText());
-	SelectionChanged();
 }
 
 int DocEdit::GetMousePos(Point p)

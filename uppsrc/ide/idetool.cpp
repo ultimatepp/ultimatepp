@@ -47,14 +47,13 @@ void Ide::GotoPos(String path, int line)
 	editastext.FindAdd(path);
 	EditFile(path);
 	editor.SetCursor(editor.GetPos(editor.GetLineNo(line - 1)));
-	editor.CenterCursor();
+	editor.TopCursor(4);
 	editor.SetFocus();
 	AddHistory();
 }
 
 void Ide::GotoCpp(const CppItem& pos)
 {
-	
 	GotoPos(GetCppFile(pos.file), pos.line);
 }
 
@@ -73,21 +72,8 @@ void Ide::RescanCode()
 	console.Clear();
 	RescanBrowserBase();
 	SyncRefs();
-	SetBottom(BBROWSER);
+	editor.SyncNavigator();
 //*/
-}
-
-void Ide::Query()
-{
-	if(browser.DoQuery())
-		SetBottom(BBROWSER);
-}
-
-void  Ide::QueryWord()
-{
-	browser.QueryWord(editor.GetWord());
-	SetBottom(BBROWSER);
-	SetBar();
 }
 
 void Ide::OpenATopic()

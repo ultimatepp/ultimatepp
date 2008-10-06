@@ -94,6 +94,56 @@ ArrayMap<String, BrowserFileInfo>& FileSet();
 
 int GetItemHeight(const CppItem& m, int cx);
 
+struct CppItemInfoDisplay : public Display
+{
+	String hkey;
+	int    htopic;
+	bool   namestart;
+
+	int DoPaint(Draw& w, const Rect& r, const Value& q,
+		        Color _ink, Color paper, dword style) const;
+	virtual void Paint(Draw& w, const Rect& r, const Value& q,
+		               Color _ink, Color paper, dword style) const;
+	virtual Size GetStdSize(const Value& q) const;
+	
+	CppItemInfoDisplay() { namestart = false; }
+};
+
+class ItemList : public ColumnList {
+	CppItemInfoDisplay display;
+
+	friend struct ItemDisplay;
+
+	int    GetTopic(Point p, String& key);
+	String Item(int i);
+
+public:
+	bool active_topics;
+
+	void Clear();
+
+	ItemList();
+};
+
+class CodeBrowser {
+	typedef CodeBrowser CLASSNAME;
+	CppItemInfoDisplay display;
+
+public:
+	ArrayCtrl              scope;
+	ArrayCtrl              item;
+	EditString             search_scope;
+	EditString             search_item;
+	
+	void   Load();
+	void   LoadScope();
+	String GetCodeRef();
+	void   Goto(const String& coderef);
+	void   NameStart()     { display.namestart = true; }
+	
+	CodeBrowser();
+};
+
 struct BrowserQuery {
 	String name;
 	String package;
@@ -118,34 +168,6 @@ struct QueryDlg : public WithQueryLayout<TopWindow> {
 	int Perform(BrowserQuery& q);
 
 	QueryDlg();
-};
-
-struct CppItemInfoDisplay : public Display
-{
-	String hkey;
-	int    htopic;
-
-	int DoPaint(Draw& w, const Rect& r, const Value& q,
-		        Color _ink, Color paper, dword style) const;
-	virtual void Paint(Draw& w, const Rect& r, const Value& q,
-		               Color _ink, Color paper, dword style) const;
-	virtual Size GetStdSize(const Value& q) const;
-};
-
-class ItemList : public ColumnList {
-	CppItemInfoDisplay display;
-
-	friend struct ItemDisplay;
-
-	int    GetTopic(Point p, String& key);
-	String Item(int i);
-
-public:
-	bool active_topics;
-
-	void Clear();
-
-	ItemList();
 };
 
 class Browser : public StaticRect {

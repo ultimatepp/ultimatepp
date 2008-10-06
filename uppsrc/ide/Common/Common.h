@@ -65,7 +65,7 @@ public:
 	virtual bool      IdeDebugUnLock() = 0;
 	virtual bool      IdeIsDebugLock() const = 0;
 	virtual void      IdeSetBar() = 0;
-	virtual void      IdeGotoLink(String link) = 0;
+	virtual void      IdeGotoCodeRef(String link) = 0;
 
 	virtual ~IdeContext() {}
 };
@@ -89,7 +89,7 @@ void             IdeConsoleFlush();
 void             IdeConsoleBeginGroup(String group);
 void             IdeConsoleEndGroup();
 bool             IdeConsoleWait();
-void             IdeGotoLink(String s);
+void             IdeGotoCodeRef(String s);
 
 bool      IdeIsDebug();
 void      IdeEndDebug();

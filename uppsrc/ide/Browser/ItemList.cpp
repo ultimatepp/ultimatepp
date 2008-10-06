@@ -1,5 +1,42 @@
 #include "Browser.h"
 
+void PaintText(Draw& w, int& x, int y, const CppItemInfo& m, const Vector<ItemTextPart>& n,
+           int starti, int count, bool focuscursor, Color _ink)
+{
+	for(int i = starti; i < count; i++) {
+		const ItemTextPart& p = n[i];
+		Font f = BrowserFont();
+		Color ink = SColorText;
+		switch(p.type) {
+		case ITEM_PNAME:
+			f.Bold();
+		case ITEM_NUMBER:
+			ink = Red;
+			break;
+		case ITEM_TNAME:
+			ink = Green;
+		case ITEM_NAME:
+			f.Bold();
+			break;
+		case ITEM_UPP:
+			ink = Cyan;
+			break;
+		case ITEM_CPP_TYPE:
+		case ITEM_CPP:
+			ink = LtBlue;
+			break;
+		case ITEM_SIGN:
+			ink = Magenta;
+			break;
+		}
+		if(m.overed)
+			f.Italic();
+		Size fsz = GetTextSize(~m.natural + p.pos, f, p.len);
+		w.DrawText(x, y, ~m.natural + p.pos, f, focuscursor ? _ink : ink, p.len);
+		x += fsz.cx;
+	}
+}
+
 int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	                            Color _ink, Color paper, dword style) const
 {
@@ -93,38 +130,20 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	int y = ry - Draw::GetStdFontCy() / 2;
 	int x0 = x;
 	Vector<ItemTextPart> n = ParseItemNatural(m);
-	for(int i = 0; i < n.GetCount(); i++) {
-		ItemTextPart& p = n[i];
-		Font f = BrowserFont();
-		Color ink = SColorText;
-		switch(p.type) {
-		case ITEM_PNAME:
-			f.Bold();
-		case ITEM_NUMBER:
-			ink = Red;
-			break;
-		case ITEM_TNAME:
-			ink = Green;
-		case ITEM_NAME:
-			f.Bold();
-			break;
-		case ITEM_UPP:
-			ink = Cyan;
-			break;
-		case ITEM_CPP_TYPE:
-		case ITEM_CPP:
-			ink = LtBlue;
-			break;
-		case ITEM_SIGN:
-			ink = Magenta;
-			break;
-		}
-		if(m.overed)
-			f.Italic();
-		Size fsz = GetTextSize(~m.natural + p.pos, f, p.len);
-		w.DrawText(x, y, ~m.natural + p.pos, f, focuscursor ? _ink : ink, p.len);
-		x += fsz.cx;
+	int starti = 0;
+	if(namestart)
+		for(int i = 0; i < n.GetCount(); i++)
+			if(n[i].type == ITEM_NAME) {
+				starti = i;
+				break;
+			}
+	PaintText(w, x, y, m, n, starti, n.GetCount(), focuscursor, _ink);
+	if(starti) {
+		const char *h = " : ";
+		w.DrawText(x, y, h, BrowserFont(), SColorText);
+		x += GetTextSize(h, BrowserFont()).cx;
 	}
+	PaintText(w, x, y, m, n, 0, starti, focuscursor, _ink);
 	if(m.virt || m.over)
 		w.DrawRect(x0, r.bottom - 2, x - x0, 1, m.over ? m.virt ? LtRed : LtBlue : SColorText);
 	if(m.inherited && m.IsType())

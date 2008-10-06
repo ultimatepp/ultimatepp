@@ -1,7 +1,7 @@
 #include "ide.h"
 
 #define LDUMP(x)    //DDUMP(x)
-#define LDUMPC(x)   //DUMPC(x)
+#define LDUMPC(x)   //DDUMPC(x)
 #define LLOG(x)     //DLOG(x)
 
 class IndexSeparatorFrameCls : public CtrlFrame {
@@ -28,19 +28,35 @@ AssistEditor::AssistEditor()
 	auto_assist = true;
 	commentdp = false;
 
-	InsertFrame(1, indexframe);
-	indexframe.Left(indexpane, HorzLayoutZoom(140));
-	int q = indexpane.GetStdSize().cy;
-	indexpane.Add(searchindex.HSizePos().TopPos(0, q));
-	indexpane.Add(index.HSizePos().VSizePos(q, 0));
-	index.AddColumn("").Margin(2);
+	InsertFrame(1, navigatorframe);
+	navigatorframe.Left(navigatorpane, HorzLayoutZoom(140));
+
+	int cy = searchindex.GetStdSize().cy;
+
+	indexpane.Add(searchindex.HSizePos().TopPos(0, cy));
+	indexpane.Add(index.HSizePos().VSizePos(cy + 2, 0));
+	index.AddColumn("");
 	index.AddIndex();
 	index.NoHeader().AutoHideSb().NoGrid();
-	index.SetFrame(Single<IndexSeparatorFrameCls>());
 	index.WhenLeftClick = index.WhenLeftDouble = THISBACK(IndexClick);
+	searchindex.NullText(String("Search (") + GetKeyDesc(IdeKeys::AK_SEARCHINDEX().key[0]) + ") ");
 	searchindex.SetFilter(CharFilterAlphaToUpper);
 	searchindex <<= THISBACK(SearchIndex);
-	showindex = true;
+	navigatorpane.Add(indexpane.SizePos());
+	
+	scopepane.Add(browser.search_scope.HSizePos().TopPos(0, cy));
+	scopepane.Add(browser.scope.HSizePos().VSizePos(cy + 2, 0));
+	itempane.Add(browser.search_item.HSizePos().TopPos(0, cy));
+	itempane.Add(browser.item.HSizePos().VSizePos(cy + 2, 0));
+	scope_item.Vert(scopepane, itempane);
+	scope_item.SetPos(3000);
+	navigatorpane.Add(scope_item);
+	browser.scope.NoWantFocus();
+	browser.item.NoWantFocus();
+	browser.item.WhenLeftClick = browser.item.WhenLeftDouble = THISBACK(BrowserGoto);
+	browser.NameStart();
+
+	navigator = NAV_BROWSER;
 
 	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
 	Annotations(12);
@@ -161,8 +177,8 @@ void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)
 	}
 	if(IsNull(id)) {
 		r.Add(parser.current_scope);
-		if(parser.current_scope != "::")
-			r.Add("::");
+		if(parser.current_scope.GetCount())
+			r.Add(Null);
 		return;
 	}
 	int q = parser.local.FindLast(id);
@@ -194,7 +210,7 @@ void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)
 	String dummy;
 	if(q >= 0 && ScopeId(BrowserBase()[q], id, r, code, dummy))
 		return;
-	q = BrowserBase().Find("::");
+	q = BrowserBase().Find("");
 	if(q >= 0)
 		ScopeId(BrowserBase()[q], id, r, code, dummy);
 }
@@ -281,7 +297,7 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 	if(q < 0)
 		return;
 	if(tp) {
-		if(ntp != "::")
+		if(ntp != "")
 			ntp << "::";
 		int typei = assist_type.FindAdd("<types>");
 		for(int i = 0; i < BrowserBase().GetCount(); i++) {
@@ -309,7 +325,7 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 		if(im.IsType())
 			base = im.qptype;
 		LDUMP(im.name);
-		if((im.IsCode() || im.IsData() || im.IsMacro() && type == "::")
+		if((im.IsCode() || im.IsData() || im.IsMacro() && type == "")
 		   && (nom || im.access == PUBLIC)) {
 			if(im.IsCode()) {
 				int q = assist_item.Find(im.name);
@@ -670,7 +686,8 @@ bool AssistEditor::InCode()
 bool AssistEditor::Key(dword key, int count)
 {
 	if(searchindex.HasFocus())
-		return IndexKey(key);
+		return NavigatorKey(key);
+	
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
 		ArrayCtrl& kt = key & K_CTRL ? type : assist;
@@ -878,9 +895,7 @@ void AssistEditor::DCopy()
 	Context(ctx, l);
 	String txt = Get(l, h - l);
 	StringStream ss(txt);
-	String cls = ctx.current_scope.Mid(ctx.current_namespacel);
-	if(cls[0] == ':' && cls[1] == ':')
-		cls = cls.Mid(2);
+	String cls = ctx.current_scope;
 	CppBase cpp;
 	Parser parser;
 	parser.Do(ss, IgnoreList(), cpp, Null, CNULL, Split(cls, ':'));
@@ -1070,11 +1085,12 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
 	GotoCpp(n[q]);
 }
 
-void Ide::IdeGotoLink(String link)
+void Ide::IdeGotoCodeRef(String coderef)
 {
-	LLOG("IdeGotoLink " << link);
+	LLOG("IdeGotoLink " << coderef);
+	if(IsNull(coderef)) return;
 	String scope, item;
-	SplitCodeRef(link, scope, item);
+	SplitCodeRef(coderef, scope, item);
 	int q = BrowserBase().Find(scope);
 	if(q < 0)
 		return;

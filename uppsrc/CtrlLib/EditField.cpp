@@ -973,7 +973,7 @@ EditField& EditField::NullText(const char *text, Font fnt, Color ink)
 
 EditField& EditField::NullText(const char *text, Color ink)
 {
-	return NullText(text, GetFont(), ink);
+	return NullText(text, GetFont().Italic(), ink);
 }
 
 EditField::EditField()

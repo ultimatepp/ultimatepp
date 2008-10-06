@@ -365,17 +365,24 @@ struct AssistEditor : CodeEditor {
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void SelectionChanged();
 
-	SplitterFrame  indexframe;
-	EditString     searchindex;
-	ArrayCtrl      index;
-	StaticRect     indexpane;
-	bool           showindex;
 	struct IndexItem : Moveable<IndexItem> {
 		String text;
 		Color  ink;
 		int    line;
 	};
+	byte              navigator;
+	SplitterFrame     navigatorframe;
+	StaticRect        navigatorpane;
+
+	EditString        searchindex;
+	ArrayCtrl         index;
 	Vector<IndexItem> indexitem;
+	ParentCtrl        indexpane;
+
+	CodeBrowser       browser;
+	ParentCtrl        scopepane;
+	ParentCtrl        itempane;
+	Splitter          scope_item;
 
 	Splitter       popup;
 	ArrayCtrl      assist;
@@ -390,7 +397,7 @@ struct AssistEditor : CodeEditor {
 	bool           commentdp;
 	bool           inbody;
 	Ide           *theide;
-
+	
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
 	void           Assist();
@@ -421,22 +428,29 @@ struct AssistEditor : CodeEditor {
 	String         IdBack(int& qq);
 
 	void           SwapSContext(Parser& p);
-
-	void           CreateIndex();
-
+	
+	void           MakeIndex();
 	void           SyncIndex();
 	void           IndexSync();
 	void           SearchIndex();
 	void           IndexClick();
-	void           SyncIndexCursor();
-	bool           IndexKey(dword key);
-	bool           IsIndex();
-	void           ShowIndex(bool b);
-	
+	void           SyncCursor();
+
+	bool           NavigatorKey(dword key);
+	void           SyncNavigator();
+	void           BrowserGoto();
+
+	enum { NAV_NONE = 0, NAV_INDEX = 1, NAV_BROWSER = 2 };
+
+	int            GetNavigator() const                          { return navigator; }
+	bool           IsIndex() const                               { return navigator == NAV_INDEX; }
+	bool           IsBrowser() const                             { return navigator == NAV_BROWSER; }
+	void           Navigator(int navigator);
+
 	void           SyncAnnotationPopup();
 	void           Annotate(const String& filename);
 
-	void           SerializeIndex(Stream& s);
+	void           SerializeNavigator(Stream& s);
 
 	typedef AssistEditor CLASSNAME;
 
@@ -498,7 +512,7 @@ public:
 	virtual   bool      IdeIsDebugLock() const;
 
 	virtual   void      IdeSetBar();
-	virtual   void      IdeGotoLink(String link);
+	virtual   void      IdeGotoCodeRef(String coderef);
 
 	enum {
 		EDITING, BUILDING, RUNNING, DEBUGGING,
@@ -531,7 +545,7 @@ public:
 	Browser     browser;
 	Ptr<Ctrl>   bottomctrl;
 
-	enum Bottoms { BCLOSE, BCONSOLE, BBROWSER, BCALC, BDEBUG };
+	enum Bottoms { BCLOSE, BCONSOLE, BCALC, BDEBUG };
 
 	FileOut    stdout_fout;
 
@@ -906,13 +920,11 @@ public:
 		void  AutoSetup();
 
 	void      BrowseMenu(Bar& menu);
-		void  Query();
-		void  QueryWord();
 		void  RescanCode();
 		void  QueryId();
 		void  About();
 		void  OpenATopic();
-		void  ToggleIndex();
+		void  ToggleNavigator(int nav);
 		void  SearchIndex();
 		void  Goto();
 		void  GotoGlobal();

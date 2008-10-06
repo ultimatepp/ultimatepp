@@ -439,17 +439,14 @@ void Ide::DebugMenu(Bar& menu)
 }
 
 void Ide::BrowseMenu(Bar& menu) {
-	menu.AddMenu(AK_TOGGLEBROWSER, IdeImg::browser(), THISBACK1(ToggleBottom, BBROWSER))
-	     .Check(IsBottomShown() && btabs.GetCursor() == BBROWSER);
-	menu.AddMenu(AK_TOGGLEINDEX, IdeImg::index(), THISBACK(ToggleIndex))
+	menu.AddMenu(AK_TOGGLEINDEX, IdeImg::index(), THISBACK1(ToggleNavigator, AssistEditor::NAV_INDEX))
 	     .Check(editor.IsIndex());
-	menu.Add(AK_SEARCHINDEX, THISBACK(SearchIndex));
+	menu.AddMenu(AK_TOGGLEBROWSER, IdeImg::Navigator(), THISBACK1(ToggleNavigator, AssistEditor::NAV_BROWSER))
+	     .Check(editor.IsBrowser());
+	if(editor.IsIndex())
+		menu.Add(AK_SEARCHINDEX, THISBACK(SearchIndex));
 	menu.Add(!designer, AK_GOTO, THISBACK(Goto));
 	menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
-	menu.Add(AK_QUERY, BrowserImg::Query(), THISBACK(Query));
-	menu.Add(AK_QUERYWORD, THISBACK(QueryWord));
-	menu.Add(btabs.GetCursor() == BBROWSER && browser.item.IsCursor(), AK_HELPITEM,
-	         callback(&browser, &Browser::ShowHelp));
 	menu.Add(!designer, AK_JUMPS, THISBACK(JumpS));
 	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
 	menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));

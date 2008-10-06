@@ -352,6 +352,7 @@ int LineEdit::PlaceCaretNoG(int newcursor, bool sel) {
 	ScrollIntoCursor();
 	PlaceCaret0(p);
 	SelectionChanged();
+	WhenSel();
 	if(IsSelection())
 		SetSelectionSource(ClipFmtsText());
 	return p.x;
@@ -361,8 +362,9 @@ void LineEdit::PlaceCaret(int newcursor, bool sel) {
 	gcolumn = PlaceCaretNoG(newcursor, sel);
 }
 
-void LineEdit::TopCursor() {
-	sb.SetY(GetLine(cursor));
+void LineEdit::TopCursor(int lines)
+{
+	sb.SetY(max(0, GetLine(cursor) - lines));
 }
 
 void LineEdit::CenterCursor() {

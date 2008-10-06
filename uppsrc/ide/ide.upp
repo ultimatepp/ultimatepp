@@ -37,7 +37,7 @@ file
 	Bottom.cpp,
 	t.cpp,
 	Assist.cpp,
-	Index.cpp,
+	Navigator.cpp,
 	Annotations.cpp,
 	Virtuals.cpp,
 	Thisbacks.cpp,
