@@ -616,12 +616,6 @@ void Ide::SearchTopics()
 
 void Ide::RefreshBrowser()
 {
-	browser.Refresh();
+	editor.SyncNavigator();
 	doc.SyncDocTree();
-}
-
-void Ide::ShowTopic(String link)
-{
-	ShowTopics();
-	doc.GoTo(link + '#' + browser.GetItem());
 }

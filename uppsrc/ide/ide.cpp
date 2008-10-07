@@ -732,7 +732,6 @@ void Ide::SerializeWorkspace(Stream& s) {
 	SerializeWorkspaceConfigs(s);
 	SerializeOutputMode(s);
 	SerializeClosed(s);
-	browser.SerializeWspc(s);
 }
 
 void Ide::SetIdeState(int newstate) {

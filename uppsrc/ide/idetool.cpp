@@ -46,7 +46,7 @@ void Ide::GotoPos(String path, int line)
 	AddHistory();
 	editastext.FindAdd(path);
 	EditFile(path);
-	editor.SetCursor(editor.GetPos(editor.GetLineNo(line - 1)));
+	editor.SetCursor(editor.GetPos(line - 1));
 	editor.TopCursor(4);
 	editor.SetFocus();
 	AddHistory();
