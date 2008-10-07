@@ -131,8 +131,10 @@ void AssistEditor::SyncNavigator()
 {
 	if(navigator == NAV_INDEX)
 		MakeIndex();
-	if(navigator == NAV_BROWSER)
+	if(navigator == NAV_BROWSER) {
 		browser.Load();
+		SyncCursor();
+	}
 	navigatorframe.Show(navigator);
 }
 
@@ -208,7 +210,10 @@ void AssistEditor::SearchIndex()
 
 void AssistEditor::BrowserGoto()
 {
-	IdeGotoCodeRef(browser.GetCodeRef());
+	String cref = browser.GetCodeRef();
+	if(!assist_active || theide && theide->SwapSIf(cref))
+		return;
+	IdeGotoCodeRef(cref);
 	SetFocus();
 }
 

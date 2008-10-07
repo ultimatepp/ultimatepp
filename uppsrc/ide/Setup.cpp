@@ -353,8 +353,6 @@ void Ide::SetupFormat() {
 		(ide.splash_screen, splash_screen)
 		(ide.mute_sounds, mute_sounds)
 		(ide.wrap_console_text, wrap_console_text)
-		(ide.browser_clickpos, browser.clickpos)
-		(ide.browser_closeesc, browser_closeesc)
 		(ide.assist, editor.auto_assist)
 		(ide.commentdp, editor.commentdp)
 		(ide.hydra1_threads, hydra1_threads)

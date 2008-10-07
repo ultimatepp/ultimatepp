@@ -542,7 +542,6 @@ public:
 	Splitter    editor_bottom;
 	Console     console;
 	IdeCalc     calc;
-	Browser     browser;
 	Ptr<Ctrl>   bottomctrl;
 
 	enum Bottoms { BCLOSE, BCONSOLE, BCALC, BDEBUG };
@@ -929,6 +928,7 @@ public:
 		void  Goto();
 		void  GotoGlobal();
 		void  ScanFile();
+		bool  SwapSIf(const char *cref);
 		void  SwapS();
 		void  JumpS();
 		void  InsertColor();
@@ -1019,7 +1019,6 @@ public:
 	void      JumpToDefinition(const Array<CppItem>& scope, int q);
 	void      SearchTopics();
 	void      ShowTopics();
-	void      ShowTopic(String topic);
 
 	void      TopicBack();
 

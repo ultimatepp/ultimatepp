@@ -1,8 +1,8 @@
 #include "ide.h"
 
-#define LDUMP(x)    //DDUMP(x)
-#define LDUMPC(x)   //DDUMPC(x)
-#define LLOG(x)     //DLOG(x)
+#define LDUMP(x)   // DDUMP(x)
+#define LDUMPC(x)  // DDUMPC(x)
+#define LLOG(x)    // DLOG(x)
 
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
@@ -131,6 +131,7 @@ bool AssistEditor::ScopeId(const Array<CppItem>& n, const String& id, Vector<Str
 		Vector<String> base = Split(n[q].qptype, ';');
 		LDUMP(id);
 		LDUMPC(base);
+		LDUMPC(n[q].qptype);
 		SubstituteTpars(base, t);
 		for(int i = 0; i < base.GetCount(); i++) {
 			q = BrowserBase().Find(NoTemplatePars(base[i]));
@@ -196,7 +197,7 @@ void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)
 	}
 	String n = parser.current_scope;
 	for(;;) {
-		String type = n + "::" + id;
+		String type = n.GetCount() ? n + "::" + id : id;
 		if(BrowserBase().Find(type)) {
 			code = true;
 			r.Add(type);
@@ -325,6 +326,9 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 		if(im.IsType())
 			base = im.qptype;
 		LDUMP(im.name);
+		LDUMP(im.natural);
+		LDUMP(im.qitem);
+		LDUMP(base);
 		if((im.IsCode() || im.IsData() || im.IsMacro() && type == "")
 		   && (nom || im.access == PUBLIC)) {
 			if(im.IsCode()) {
@@ -340,8 +344,11 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 			(CppItem&)f = im;
 		}
 	}
+	LDUMP(base);
 	Vector<String> b = Split(base, ';');
+	LDUMPC(b);
 	SubstituteTpars(b, type);
+	LDUMPC(b);
 	for(int i = 0; i < b.GetCount(); i++)
 		GatherItems(b[i], nom, in_types, tp);
 	in_types.Drop();
@@ -442,7 +449,6 @@ Vector<String> AssistEditor::ReadBack(int q, String& type)
 				SkipSpcBack(q);
 				if(Ch(q - 1) != ':' || Ch(q - 2) != ':')
 					break;
-				type = "::" + type;
 			}
 			break;
 		}
@@ -870,13 +876,18 @@ void AssistEditor::DCopy()
 {
 	String r;
 	int l, h;
+	bool decla = false;
 	if(!GetSelection(l, h)) {
 		int i = GetLine(GetCursor());
 		l = GetPos(i);
 		h = l;
 		while(h < GetLength() && h - l < 1000) {
 			int c = GetChar(h);
-			if(c == ';' || c == '{')
+			if(c == ';') {
+				decla = true;
+				break;
+			}
+			if(c == '{')
 				break;
 			h++;
 			if(c == '\"') {
@@ -900,19 +911,39 @@ void AssistEditor::DCopy()
 	Parser parser;
 	parser.Do(ss, IgnoreList(), cpp, Null, CNULL, Split(cls, ':'));
 	for(int i = 0; i < cpp.GetCount(); i++) {
-		const Array<CppItem>& scope = cpp[i];
-		for(int j = 0; j < scope.GetCount(); j++) {
-			const CppItem& m = scope[j];
+		const Array<CppItem>& n = cpp[i];
+		for(int j = 0; j < n.GetCount(); j++) {
+			const CppItem& m = n[j];
 			if(m.IsCode())
-				if(cls.GetCount())
+				if(decla)
 					r << MakeDefinition(cls, m.natural) << "\n{\n}\n\n";
 				else {
 					if(cpp.IsType(i))
 					   r << String('\t', Split(cpp.GetKey(i), ':').GetCount());
 					r << m.natural << ";\n";
 				}
-			if(m.IsData())
-				r << "extern " << m.natural << ";\n";
+			if(m.IsData()) {
+				if(cls.GetCount()) {
+					const char *s = m.natural;
+					while(*s) {
+						if(iscib(*s)) {
+							const char *b = s;
+							while(iscid(*s)) s++;
+							String id(b, s);
+							if(m.name == id) {
+								r << cls << "::" << m.name << s;
+								break;
+							}
+							r << id;
+						}
+						else
+							r << *s++;
+					}
+				}
+				else
+					r << "extern " << m.natural;
+				r << ";\n";
+			}
 		}
 	}
 	WriteClipboardText(r);

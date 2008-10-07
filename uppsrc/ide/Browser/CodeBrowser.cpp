@@ -159,7 +159,7 @@ CodeBrowser::CodeBrowser()
 	search_scope.SetFilter(SearchScopeFilter);
 	search_scope.NullText("Search type or header ");
 	item.AddKey();
-	item.AddColumn("Item").SetDisplay(display);
+	item.AddColumn("Item").SetDisplay(display).Margin(2);
 	item.NoHeader();
 	item.SetLineCy(BrowserFont().Info().GetHeight() + 3);
 	search_item.SetFilter(SearchItemFilter);

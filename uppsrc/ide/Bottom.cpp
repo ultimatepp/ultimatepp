@@ -151,7 +151,6 @@ void Ide::BTabs()
 	btabs.Clear();
 	btabs.Add(IdeImg::close, "Close");
 	btabs.Add(IdeImg::console, "Console");
-	btabs.Add(IdeImg::browser, "Browser");
 	btabs.Add(IdeImg::calc, "Calc");
 	if(bottomctrl)
 		btabs.Add(IdeImg::debug, "Debug");

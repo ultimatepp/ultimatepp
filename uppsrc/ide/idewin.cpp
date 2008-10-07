@@ -81,7 +81,7 @@ void Ide::ConsolePaste()
 
 void Ide::Serialize(Stream& s) {
 	int version = 11;
-	s.Magic(0x12346);
+	s.Magic(0x1234);
 	s / version;
 	s % main;
 	SerializePlacement(s);
@@ -90,7 +90,6 @@ void Ide::Serialize(Stream& s) {
 	s % AnyPackageFs();
 	s % pfsplit;
 	s % wesplit;
-	s % browser;
 	s % package;
 	s % filelist;
 	s % editorfont;
@@ -115,8 +114,6 @@ void Ide::Serialize(Stream& s) {
 	s % wrap_console_text;
 	s % mute_sounds;
 	s % line_numbers;
-	s % browser.clickpos;
-	s % browser_closeesc;
 	s % bookmark_pos;
 	s % use_target;
 	s % default_charset;
@@ -457,11 +454,9 @@ Ide::Ide()
 	editor_bottom.SetPos(8000);
 	bottom.SetFrame(btabs);
 	bottom.Add(console.SizePos().SetFrame(NullFrame()));
-	bottom.Add(browser.SizePos());
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);
 	BTabs();
-	browser.WhenPos = THISBACK(GotoPos);
 
 	pfsplit.SetPos(2000);
 	pfsplit.Vert(package, filelist);
@@ -593,7 +588,6 @@ Ide::Ide()
 
 	targetmode = 0;
 
-	browser.WhenShowTopic = THISBACK(ShowTopic);
 	doc.WhenTopic = THISBACK(OpenATopic);
 
 	editor.NoCutLine();

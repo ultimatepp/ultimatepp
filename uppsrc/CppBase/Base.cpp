@@ -54,7 +54,6 @@ int FindName(const Array<CppItem>& x, const String& name, int i)
 
 bool CppBase::IsType(int i) const
 {
-//	return GetKey(i) != "::";
 	return GetKey(i).GetCount();
 }
 

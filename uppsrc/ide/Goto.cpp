@@ -147,6 +147,7 @@ GotoDlg::GotoDlg(const String& s)
 	list.AddColumn("Nesting");
 	list.AddColumn().SetDisplay(Single<CppItemInfoDisplay>());
 	list.AddColumn(global ? "Position" : "Line");
+	list.SetLineCy(BrowserFont().Info().GetHeight() + 3);
 	if(global)
 		list.ColumnWidths("181 466 112");
 	else
@@ -218,27 +219,29 @@ void AssistEditor::SwapSContext(Parser& p)
 	Context(p, i);
 }
 
-void Ide::SwapS()
+bool Ide::SwapSIf(const char *cref)
 {
 	if(designer || !editor.assist_active)
-		return;
+		return false;
 	Parser p;
 	editor.SwapSContext(p);
 	int q = BrowserBase().Find(p.current_scope);
 	LLOG("SwapS scope: " << p.current_scope);
 	if(q < 0)
-		return;
+		return false;
 	const Array<CppItem>& n = BrowserBase()[q];
-	q = FindItem(n, QualifyKey(BrowserBase(), p.current_scope, p.current_key));
-	if(q < 0) return;
+	String qitem = QualifyKey(BrowserBase(), p.current_scope, p.current_key);
+	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref)
+		return false;
+	q = FindItem(n, qitem);
 	int count = GetCount(n, q);
 	if(q < 0 || count == 1) {
 		q = FindName(n, p.current_name);
 		if(q < 0)
-			return;
+			return false;
 		count = GetCount(n, q);
 		if(count == 1)
-			return;
+			return false;
 	}
 	int file = GetCppFileIndex(editfile);
 	int line = p.current.line;
@@ -252,4 +255,10 @@ void Ide::SwapS()
 		}
 	}
 	GotoCpp(n[q + i % count]);
+	return true;
+}
+
+void Ide::SwapS()
+{
+	SwapSIf(NULL);
 }
