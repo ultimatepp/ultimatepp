@@ -16,10 +16,11 @@ struct FileIconMaker : ImageMaker {
 		Color c = White();
 		Image m[2];
 		for(int i = 0; i < 2; i++) {
-			SHFILEINFO info;
-			SHGetFileInfo(file, dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
-			              &info, sizeof(info),
-			              SHGFI_ICON|SHGFI_SMALLICON|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
+			SHFILEINFOW info;
+			WString wfile = file.ToWString();
+			SHGetFileInfoW(~wfile, dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
+			               &info, sizeof(info),
+			               SHGFI_ICON|SHGFI_SMALLICON|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
 			HICON icon = info.hIcon;
 			ICONINFO iconinfo;
 			if(!icon || !GetIconInfo(icon, &iconinfo))

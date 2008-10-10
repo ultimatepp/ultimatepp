@@ -19,11 +19,19 @@ bool Qualify0(Scopefo& nf, const String& type, String& qt)
 	if(nf.GetScope() >= 0) {
 		int q = type.ReverseFind(':');
 		if(q > 0) {
+//			DDUMP(type);
 			LTIMING("Qualifying qualification");
 			Scopefo hnf(nf);
 			hnf.NoBases();
 			String qn;
-			if(DoQualify(hnf, type.Mid(0, q - 1), qn)) {
+			String qs = type.Mid(0, q - 1);
+			if(IsDigit(*qs)) {
+				qt = type;
+				return true;
+			}
+//			DDUMP(qs);
+			if(DoQualify(hnf, qs, qn)) {
+//				DDUMP(qn);
 				int scopei = nf.base.Find(qn);
 				if(scopei >= 0) {
 					String tp = type.Mid(q + 1);
@@ -36,6 +44,8 @@ bool Qualify0(Scopefo& nf, const String& type, String& qt)
 					}
 				}
 			}
+			qt = type.Mid(q + 1);
+			return true;
 		}
 		else {
 			LTIMING("Bases");
@@ -138,9 +148,9 @@ String QualifyIds(Scopefo& nf, const String& k, bool all, byte& qual)
 		else {
 			if(c == '(')
 				all = true;
-			r.Cat(c);
+			if(c != ' ')
+				r.Cat(c);
 			s++;
-			while(*s == ' ') s++;
 		}
 	}
 	return r;
@@ -216,8 +226,6 @@ void QualifyPass2(CppBase& base)
 		bool sort = false;
 		for(int i = 0; i < n.GetCount(); i++) {
 			CppItem& m = n[i];
-			LLOG(base.GetKey(ni) << "::" << m.item << " " << GetCppFile(m.file)
-			    << " impl:" << m.impl << " kind:" << (int)m.kind << " IsType:" << m.IsType());
 			if(m.serial != base.serial && !m.IsType()) {
 				sort = true;
 				m.serial = base.serial;
@@ -232,6 +240,9 @@ void QualifyPass2(CppBase& base)
 					                     : m.item;
 				}
 			}
+			LLOG(base.GetKey(ni) << "." << m.item << " " << GetCppFile(m.file)
+			     << " impl:" << m.impl << " kind:" << (int)m.kind << " IsType:" << m.IsType()
+			     << " qtype:" << m.qtype << " tparam:" << m.tparam);
 		}
 		if(sort)
 			Sort(n, CmpCppItem());

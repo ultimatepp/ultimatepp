@@ -3,7 +3,7 @@
 #define LTIMING(x) // RTIMING(x)
 #define LLOG(x)
 
-static const char s_dbver[] = "Assist++ 2.32";
+static const char s_dbver[] = "CPP-BASE 2.34";
 
 void GC_Cache()
 {

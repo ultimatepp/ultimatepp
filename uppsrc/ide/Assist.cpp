@@ -1,8 +1,8 @@
 #include "ide.h"
 
-#define LDUMP(x)   // DDUMP(x)
-#define LDUMPC(x)  // DDUMPC(x)
-#define LLOG(x)    // DLOG(x)
+#define LDUMP(x)    //DDUMP(x)
+#define LDUMPC(x)   //DDUMPC(x)
+#define LLOG(x)     //DLOG(x)
 
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
@@ -55,7 +55,7 @@ AssistEditor::AssistEditor()
 	browser.item.NoWantFocus();
 	browser.item.WhenLeftClick = browser.item.WhenLeftDouble = THISBACK(BrowserGoto);
 	browser.NameStart();
-
+		
 	navigator = NAV_BROWSER;
 
 	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
@@ -63,295 +63,6 @@ AssistEditor::AssistEditor()
 	annotation_popup.Background(White);
 	annotation_popup.SetFrame(BlackFrame());
 	annotation_popup.Margins(6);
-}
-
-Vector<String> TemplatePars(const String& type)
-{
-	Vector<String> r;
-	int q = type.Find('<');
-	if(q >= 0) {
-		const char *s = ~type + q + 1;
-		int lvl = 0;
-		String t;
-		while(*s && (lvl || *s != '>')) {
-			if(*s == '<')
-				lvl++;
-			if(*s == '>')
-				lvl--;
-			if(*s == ',') {
-				r.Add(t);
-				t.Clear();
-				s++;
-			}
-			else
-				t.Cat(*s++);
-		}
-		r.Add(t);
-	}
-	return r;
-}
-
-void SubstituteTpars(Vector<String>& type, const String& tname)
-{
-	Vector<String> tp = TemplatePars(tname);
-	for(int i = 0; i < type.GetCount(); i++)
-		if(IsDigit(type[i][0])) {
-			int q = atoi(type[i]);
-			if(q >= 0 && q < tp.GetCount()) {
-				LLOG(type[i] << " -> " << tp[q]);
-				type[i] = tp[q];
-			}
-		}
-}
-
-bool AssistEditor::ScopeId(const Array<CppItem>& n, const String& id, Vector<String>& type, bool& code,
-                           String& t)
-{
-	String ntp = NoTemplatePars(id);
-	for(int i = 0; i < n.GetCount(); i++) {
-		const CppItem& m = n[i];
-		if(n[i].name == ntp) {
-			const String& qt = m.qtype;
-			if(!IsNull(qt) && FindIndex(type, qt) < 0 && (m.IsCode() || m.IsData())) {
-				type.Add(qt);
-				if(m.IsCode())
-					code = true;
-			}
-		}
-	}
-	if(type.GetCount())
-		return true;
-	int q = FindItem(n, "class");
-	if(q < 0)
-		q = FindItem(n, "struct");
-	if(q < 0)
-		q = FindItem(n, "typedef");
-	LDUMP(q);
-	if(q >= 0) {
-		Vector<String> base = Split(n[q].qptype, ';');
-		LDUMP(id);
-		LDUMPC(base);
-		LDUMPC(n[q].qptype);
-		SubstituteTpars(base, t);
-		for(int i = 0; i < base.GetCount(); i++) {
-			q = BrowserBase().Find(NoTemplatePars(base[i]));
-			String h = base[i];
-			if(q >= 0 && ScopeId(BrowserBase()[q], id, type, code, h)) {
-				t = h;
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-void AssistScanError(int line, const String& text)
-{
-#ifdef _DEBUG
-	PutVerbose(String().Cat() << "(" << line << "): " << text);
-#endif
-}
-
-void AssistEditor::Context(Parser& parser, int pos)
-{
-	theide->ScanFile();
-	String s = Get(0, pos);
-	StringStream ss(s);
-	parser.dobody = true;
-	parser.Do(ss, IgnoreList(), BrowserBase(), Null, callback(AssistScanError));
-	QualifyTypes(BrowserBase(), parser.current_scope, parser.current);
-	inbody = parser.IsInBody();
-#ifdef _DEBUG
-	PutVerbose("body: " + AsString(inbody));
-	PutVerbose("scope: " + AsString(parser.current_scope));
-#endif
-}
-
-void AssistEditor::TypeOf(const String& id, Vector<String>& r, bool& code)
-{
-	Parser parser;
-	Context(parser, GetCursor());
-	code = false;
-	if(id == "this") {
-		r.Add(parser.current_scope);
-		return;
-	}
-	if(IsNull(id)) {
-		r.Add(parser.current_scope);
-		if(parser.current_scope.GetCount())
-			r.Add(Null);
-		return;
-	}
-	int q = parser.local.FindLast(id);
-	if(q >= 0) {
-		r.Add(parser.local[q]);
-		return;
-	}
-	Vector<String> p = Split(parser.current.pname, ';', false);
-	q = FindIndex(p, id);
-	if(q >= 0) {
-		p = Split(parser.current.qptype, ';');
-		if(q < p.GetCount())
-			r.Add(p[q]);
-		return;
-	}
-	String n = parser.current_scope;
-	for(;;) {
-		String type = n.GetCount() ? n + "::" + id : id;
-		if(BrowserBase().Find(type)) {
-			code = true;
-			r.Add(type);
-		}
-		int q = n.ReverseFind(':');
-		if(q < 1 || n[q - 1] != ':')
-			break;
-		n.Trim(q - 1);
-	}
-	q = BrowserBase().Find(parser.current_scope);
-	String dummy;
-	if(q >= 0 && ScopeId(BrowserBase()[q], id, r, code, dummy))
-		return;
-	q = BrowserBase().Find("");
-	if(q >= 0)
-		ScopeId(BrowserBase()[q], id, r, code, dummy);
-}
-
-Vector<String> AssistEditor::Operator(const char *oper, const Vector<String>& type)
-{
-	Vector<String> nt;
-	bool d;
-	for(int i = 0; i < type.GetCount(); i++) {
-		String t = type[i];
-		int q = BrowserBase().Find(NoTemplatePars(t));
-		if(q < 0 || !ScopeId(BrowserBase()[q], oper, nt, d, t))
-			nt.Add(type[i]);
-		SubstituteTpars(nt, t);
-	}
-	return nt;
-}
-
-Vector<String> AssistEditor::TypeOf(const Vector<String>& xp, const String& tp)
-{
-	Vector<String> type;
-	bool code;
-	if(!IsNull(tp)) {
-		Parser parser;
-		Context(parser, GetCursor());
-		type.Add(Qualify(BrowserBase(), parser.current_scope, tp));
-	}
-	else {
-		if(xp.GetCount() == 0 || !iscid(xp[0][0]))
-			return type;
-		TypeOf(xp[0], type, code);
-	}
-	LDUMPC(xp);
-	LDUMPC(type);
-	int q = 1;
-	if(code && xp.GetCount() > 1 && xp[1][0] == '(')
-		q++;
-	while(q < xp.GetCount() && type.GetCount()) {
-		int c = xp[q][0];
-		LDUMP(xp[q]);
-		if(iscid(c)) {
-			Vector<String> nt;
-			bool code = false;
-			for(int i = 0; i < type.GetCount(); i++) {
-				String t = type[i];
-				int j = BrowserBase().Find(NoTemplatePars(t));
-				if(j >= 0)
-					ScopeId(BrowserBase()[j], xp[q], nt, code, t);
-				LDUMPC(nt);
-				SubstituteTpars(nt, t);
-			}
-			if(code && q + 1 < xp.GetCount() && xp[q + 1][0] == '(')
-				q++;
-			type = nt;
-		}
-		if(c == '(')
-			type = Operator("operator()", type);
-		if(c == '[')
-			type = Operator("operator[]", type);
-		if(c == '-')
-			type = Operator("operator->", type);
-		q++;
-	}
-	LDUMPC(type);
-	return type;
-}
-
-int CharFilterT(int c)
-{
-	return c >= '0' && c <= '9' ? "TUVWXYZMNO"[c - '0'] : c;
-}
-
-void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_types, bool tp)
-{
-	LLOG("GatherItems " << type);
-	if(in_types.Find(type) >= 0) {
-		LLOG("-> recursion, exiting");
-		return;
-	}
-	in_types.Add(type);
-	String ntp = NoTemplatePars(type);
-	int q = BrowserBase().Find(ntp);
-	LDUMP(q);
-	if(q < 0)
-		return;
-	if(tp) {
-		if(ntp != "")
-			ntp << "::";
-		int typei = assist_type.FindAdd("<types>");
-		for(int i = 0; i < BrowserBase().GetCount(); i++) {
-			String n = BrowserBase().GetKey(i);
-			if(n.GetLength() > ntp.GetLength() && memcmp(~ntp, ~n, ntp.GetLength()) == 0) {
-				LDUMP(n);
-				Array<CppItem>& m = BrowserBase()[i];
-				for(int i = 0; i < m.GetCount(); i++) {
-					const CppItem& im = m[i];
-					if(im.IsType()) {
-						CppItemInfo& f = assist_item.Add(im.name);
-						f.typei = typei;
-						(CppItem&)f = im;
-						break;
-					}
-				}
-			}
-		}
-	}
-	const Array<CppItem>& m = BrowserBase()[q];
-	String base;
-	int typei = assist_type.FindAdd(ntp);
-	for(int i = 0; i < m.GetCount(); i++) {
-		const CppItem& im = m[i];
-		if(im.IsType())
-			base = im.qptype;
-		LDUMP(im.name);
-		LDUMP(im.natural);
-		LDUMP(im.qitem);
-		LDUMP(base);
-		if((im.IsCode() || im.IsData() || im.IsMacro() && type == "")
-		   && (nom || im.access == PUBLIC)) {
-			if(im.IsCode()) {
-				int q = assist_item.Find(im.name);
-				while(q >= 0) {
-					if(assist_item[q].typei != typei)
-						assist_item[q].over = true;
-					q = assist_item.FindNext(q);
-				}
-			}
-			CppItemInfo& f = assist_item.Add(im.name);
-			f.typei = typei;
-			(CppItem&)f = im;
-		}
-	}
-	LDUMP(base);
-	Vector<String> b = Split(base, ';');
-	LDUMPC(b);
-	SubstituteTpars(b, type);
-	LDUMPC(b);
-	for(int i = 0; i < b.GetCount(); i++)
-		GatherItems(b[i], nom, in_types, tp);
-	in_types.Drop();
 }
 
 int CppItemInfoOrder(const Value& va, const Value& vb) {
@@ -415,16 +126,47 @@ String AssistEditor::IdBack(int& qq)
 	int q = qq;
 	while(iscid(Ch(q - 1)))
 		q--;
-	if(!iscib(Ch(q)))
-		return Null;
 	String r;
-	qq = q;
-	while(q < GetLength() && iscid(Ch(q)))
-		r.Cat(Ch(q++));
+	if(iscib(Ch(q))) {
+		qq = q;
+		while(q < GetLength() && iscid(Ch(q)))
+			r.Cat(Ch(q++));
+	}
 	return r;
 }
 
-Vector<String> AssistEditor::ReadBack(int q, String& type)
+String AssistEditor::CompleteIdBack(int& q)
+{
+	String id;
+	for(;;) {
+		SkipSpcBack(q);
+		if(Ch(q - 1) == '>') {
+			q--;
+			id = '>' + id;
+		}
+		else
+		if(Ch(q - 1) == '<') {
+			q--;
+			id = '<' + id;
+		}
+		else
+		if(Ch(q - 1) == ':') {
+			while(Ch(q - 1) == ':')
+				q--;
+			id = "::" + id;
+		}
+		else {
+			String nid = IdBack(q);
+			if(IsNull(nid))
+				break;
+			id = nid + id;
+		}
+	}
+	return id;
+}
+
+
+Vector<String> AssistEditor::ReadBack(int q)
 {
 	Vector<String> r;
 	type.Clear();
@@ -437,27 +179,27 @@ Vector<String> AssistEditor::ReadBack(int q, String& type)
 		}
 		SkipSpcBack(q);
 		int c = Ch(q - 1);
-		int c1 = Ch(q - 2);
-		if(c == ':' && c1 == ':') {
-			for(;;) {
-				q -= 2;
-				SkipSpcBack(q);
-				String id = IdBack(q);
-				if(IsNull(id))
-					break;
-				type = id + type;
-				SkipSpcBack(q);
-				if(Ch(q - 1) != ':' || Ch(q - 2) != ':')
-					break;
-			}
-			break;
+		if(c == '>' && !wasid) {
+			String id = ">";
+			q--;
+			r.Add() = id + CompleteIdBack(q);
+			wasid = true;
+			continue;
 		}
 		if(iscid(c)) {
 			if(wasid)
 				break;
-			String id = IdBack(q);
-			if(IsNull(id))
-				break;
+			String id;
+			for(;;) {
+				id = IdBack(q) + id;
+				SkipSpcBack(q);
+				if(Ch(q - 1) != ':')
+					break;
+				while(Ch(q - 1) == ':')
+					q--;
+				id = "::" + id;
+				SkipSpcBack(q);
+			}
 			r.Add() = id;
 			wasid = true;
 			continue;
@@ -540,26 +282,36 @@ void AssistEditor::Assist()
 	if(!assist_active)
 		return;
 	CloseAssist();
+	Parser parser;
+	Context(parser, GetCursor());
 	int q = GetCursor();
 	assist_cursor = q;
 	while(iscid(Ch(q - 1)))
 		q--;
-	String tp;
-	Vector<String> h = ReadBack(q, tp);
-	Vector<String> type;
-	bool d;
-	if(h.GetCount() == 0 && IsNull(tp))
-		TypeOf(Null, type, d);
-	else {
-		type = TypeOf(h, tp);
-		if(type.GetCount() == 0)
-			return;
-	}
 	assist_type.Clear();
 	assist_item.Clear();
-	for(int i = 0; i < type.GetCount(); i++) {
-		Index<String> in_types;
-		GatherItems(type[i], h.GetCount() == 0, in_types, !IsNull(tp) || h.GetCount() == 0);
+	Index<String> in_types;
+	if(Ch(q - 1) == ':') {
+		while(Ch(q - 1) == ':')
+			q--;
+		Vector<String> tparam;
+		GatherItems(ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q)), tparam),
+		            true, in_types, true);
+	}
+	else {
+		String tp;
+		Vector<String> xp = ReadBack(q);
+		if(xp.GetCount()) {
+			Index<String> typeset = ExpressionType(parser, xp);
+			for(int i = 0; i < typeset.GetCount(); i++)
+				if(typeset[i].GetCount())
+					GatherItems(typeset[i], xp.GetCount() == 0, in_types, xp.GetCount() == 0);
+		}
+		else {
+			GatherItems(parser.current_scope, true, in_types, true);
+			Index<String> in_types2;
+			GatherItems("", true, in_types2, true);
+		}
 	}
 	if(assist_item.GetCount() == 0)
 		return;
@@ -721,17 +473,6 @@ bool AssistEditor::Key(dword key, int count)
 			return true;
 		}
 	}
-#ifdef _DEBUG
-	if(key == K_ALT_F12) {
-		PutConsole("Type is");
-		String tp;
-		Vector<String> h = ReadBack(GetCursor(), tp);
-		Vector<String> r = TypeOf(h, tp);
-		PutConsole(tp);
-		for(int i = 0; i < r.GetCount(); i++)
-			PutConsole(r[i]);
-	}
-#endif
 	int c = GetCursor();
 	int cc = GetChar(c);
 	int bcc = c > 0 ? GetChar(c - 1) : 0;
@@ -912,7 +653,7 @@ void AssistEditor::DCopy()
 	parser.Do(ss, IgnoreList(), cpp, Null, CNULL, Split(cls, ':'));
 	for(int i = 0; i < cpp.GetCount(); i++) {
 		const Array<CppItem>& n = cpp[i];
-		for(int j = 0; j < n.GetCount(); j++) {
+		for(int j = 0; j < n.GetCount(); j = FindNext(n, j)) {
 			const CppItem& m = n[j];
 			if(m.IsCode())
 				if(decla)
@@ -954,7 +695,8 @@ bool GetIdScope(String& os, const String& scope, const String& id, Index<String>
 	if(done.Find(scope) >= 0)
 		return Null;
 	done.Add(scope);
-	String n = NoTemplatePars(scope);
+	Vector<String> tparam;
+	String n = ParseTemplatedType(scope, tparam);
 	int q = BrowserBase().Find(n);
 	if(q < 0)
 		return Null;
@@ -964,11 +706,11 @@ bool GetIdScope(String& os, const String& scope, const String& id, Index<String>
 		os = n;
 		return true;
 	}
-	for(int i = 0; i < m.GetCount(); i++) {
+	for(int i = 0; i < m.GetCount(); i = FindNext(m, i)) {
 		const CppItem& im = m[i];
 		if(im.IsType()) {
 			Vector<String> b = Split(im.qptype, ';');
-			SubstituteTpars(b, scope);
+				ResolveTParam(b, tparam);
 			for(int i = 0; i < b.GetCount(); i++) {
 				if(GetIdScope(os, b[i], id, done))
 					return true;
@@ -1052,14 +794,14 @@ void Ide::JumpS()
 	while(iscid(editor.Ch(q - 1)))
 		q--;
 	String tp;
-	Vector<String> h = editor.ReadBack(q, tp);
-	Vector<String> type;
+	Vector<String> xp = editor.ReadBack(q);
+	Index<String> type;
 	Parser parser;
 	editor.Context(parser, editor.GetCursor());
-	if(h.GetCount() == 0 && IsNull(tp))
+	if(xp.GetCount() == 0 && IsNull(tp))
 		type.Add(parser.current_scope);
 	else {
-		type = editor.TypeOf(h, tp);
+		type = editor.ExpressionType(parser, xp);
 		if(type.GetCount() == 0)
 			return;
 	}

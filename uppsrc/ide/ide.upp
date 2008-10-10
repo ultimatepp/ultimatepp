@@ -36,6 +36,7 @@ file
 	QuickTabs.cpp,
 	Bottom.cpp,
 	t.cpp,
+	Cpp.cpp,
 	Assist.cpp,
 	Navigator.cpp,
 	Annotations.cpp,
