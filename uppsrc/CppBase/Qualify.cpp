@@ -19,7 +19,6 @@ bool Qualify0(Scopefo& nf, const String& type, String& qt)
 	if(nf.GetScope() >= 0) {
 		int q = type.ReverseFind(':');
 		if(q > 0) {
-//			DDUMP(type);
 			LTIMING("Qualifying qualification");
 			Scopefo hnf(nf);
 			hnf.NoBases();
@@ -29,9 +28,7 @@ bool Qualify0(Scopefo& nf, const String& type, String& qt)
 				qt = type;
 				return true;
 			}
-//			DDUMP(qs);
 			if(DoQualify(hnf, qs, qn)) {
-//				DDUMP(qn);
 				int scopei = nf.base.Find(qn);
 				if(scopei >= 0) {
 					String tp = type.Mid(q + 1);
@@ -128,6 +125,8 @@ String QualifyIds(Scopefo& nf, const String& k, bool all, byte& qual)
 			const char *b = s++;
 			while(*s == ':' || iscid(*s)) s++;
 			if(all) {
+				if(iscid(*r.Last()))
+					r << ' ';
 				Scopefo nnf(nf.GetScope(), nf.base);
 				Qualify(r, nnf, b, s, qual);
 			}
@@ -135,15 +134,31 @@ String QualifyIds(Scopefo& nf, const String& k, bool all, byte& qual)
 				r.Cat(b, s);
 		}
 		else
-		if(iscid(c)) {
-			const char *b = s++;
-			while(*s == ':' || iscid(*s)) s++;
+		if(iscib(c)) {
 			if(iscid(*r.Last()))
 				r << ' ';
-			if(all)
-				Qualify(r, nf, b, s, qual);
+			if(s[0] == 'c' && s[1] == 'o' && s[2] == 'n' && s[3] == 's' && s[4] == 't' && !iscid(s[5])) {
+				r << s_const;
+				s += 5;
+			}
 			else
-				r.Cat(b, s);
+			if(s[0] == 'm' && s[1] == 'u' && s[2] == 't' && s[3] == 'a' && s[4] == 'b' && s[5] == 'l' && s[6] == 'e' && !iscid(s[7])) {
+				r << "mutable";
+				s += 7;
+			}
+			else
+			if(s[0] == 'v' && s[1] == 'o' && s[2] == 'l' && s[3] == 'a' && s[4] == 't' && s[5] == 'i' && s[6] == 'l' && s[7] == 'e' && !iscid(s[8])) {
+				r << "volatile";
+				s += 8;
+			}
+			else {
+				const char *b = s++;
+				while(*s == ':' || iscid(*s)) s++;
+				if(all)
+					Qualify(r, nf, b, s, qual);
+				else
+					r.Cat(b, s);
+			}
 		}
 		else {
 			if(c == '(')

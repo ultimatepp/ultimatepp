@@ -123,14 +123,16 @@ void AssistEditor::SkipSpcBack(int& q)
 
 String AssistEditor::IdBack(int& qq)
 {
-	int q = qq;
-	while(iscid(Ch(q - 1)))
-		q--;
 	String r;
-	if(iscib(Ch(q))) {
-		qq = q;
-		while(q < GetLength() && iscid(Ch(q)))
-			r.Cat(Ch(q++));
+	if(iscid(Ch(qq - 1))) {
+		int q = qq;
+		while(iscid(Ch(q - 1)))
+			q--;
+		if(iscib(Ch(q))) {
+			qq = q;
+			while(q < GetLength() && iscid(Ch(q)))
+				r.Cat(Ch(q++));
+		}
 	}
 	return r;
 }
