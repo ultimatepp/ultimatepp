@@ -425,7 +425,8 @@ struct AssistEditor : CodeEditor {
 	void           DCopy();
 	void           Virtuals();
 	void           Thisbacks();
-	void           GatherItems(const String& type, bool nom, Index<String>& in_types, bool tp);
+	void           GatherItems(const String& type, bool only_public, Index<String>& in_types,
+	                           bool types, bool thisback);
 
 	void           SelParam();
 	int            Ch(int q);
