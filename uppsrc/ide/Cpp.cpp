@@ -229,7 +229,8 @@ int CharFilterT(int c)
 	return c >= '0' && c <= '9' ? "TUVWXYZMNO"[c - '0'] : c;
 }
 
-void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_types, bool tp)
+void AssistEditor::GatherItems(const String& type, bool only_public, Index<String>& in_types, bool types,
+                               bool thisback)
 {
 	LLOG("GatherItems " << type);
 	if(in_types.Find(type) >= 0) {
@@ -241,7 +242,7 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 	String ntp = ParseTemplatedType(type, tparam);
 	int q = BrowserBase().Find(ntp);
 	if(q >= 0) {
-		if(tp) {
+		if(types) {
 			if(ntp.GetCount())
 				ntp << "::";
 			int typei = assist_type.FindAdd("<types>");
@@ -268,8 +269,8 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 			const CppItem& im = n[i];
 			if(im.IsType())
 				base = im.qptype;
-			if((im.IsCode() || im.IsData() || im.IsMacro() && type == "")
-			   && (nom || im.access == PUBLIC)) {
+			if((im.IsCode() || !thisback && (im.IsData() || im.IsMacro() && type == ""))
+			   && (!only_public || im.access == PUBLIC)) {
 				int q = assist_item.Find(im.name);
 				while(q >= 0) {
 					if(assist_item[q].typei != typei)
@@ -281,11 +282,13 @@ void AssistEditor::GatherItems(const String& type, bool nom, Index<String>& in_t
 				(CppItem&)f = im;
 			}
 		}
-		Vector<String> b = Split(base, ';');
-		ResolveTParam(b, tparam);
-		for(int i = 0; i < b.GetCount(); i++)
-			if(b[i].GetCount())
-				GatherItems(b[i], nom, in_types, tp);
+		if(!thisback) {
+			Vector<String> b = Split(base, ';');
+			ResolveTParam(b, tparam);
+			for(int i = 0; i < b.GetCount(); i++)
+				if(b[i].GetCount())
+					GatherItems(b[i], only_public, in_types, types, thisback);
+		}
 	}
 	in_types.Drop();
 }

@@ -234,14 +234,17 @@ bool Ide::SwapSIf(const char *cref)
 	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref)
 		return false;
 	q = FindItem(n, qitem);
-	int count = GetCount(n, q);
-	if(q < 0 || count == 1) {
-		q = FindName(n, p.current_name);
-		if(q < 0)
-			return false;
-		count = GetCount(n, q);
-		if(count == 1)
-			return false;
+	int count = q >= 0 ? GetCount(n, q) : 0;
+	if(!cref && count < 2) {
+		for(int i = 0; i < n.GetCount(); i++) {
+			if(i >= n.GetCount())
+				return false;
+			if(n[i].name == p.current_name) {
+				GotoCpp(n[i]);
+				return true;
+			}
+		}
+		return false;
 	}
 	int file = GetCppFileIndex(editfile);
 	int line = p.current.line;

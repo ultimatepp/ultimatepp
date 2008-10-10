@@ -286,17 +286,25 @@ void AssistEditor::Assist()
 	Context(parser, GetCursor());
 	int q = GetCursor();
 	assist_cursor = q;
-	while(iscid(Ch(q - 1)))
-		q--;
 	assist_type.Clear();
 	assist_item.Clear();
 	Index<String> in_types;
+	while(iscid(Ch(q - 1)))
+		q--;
+	SkipSpcBack(q);
+	if(Ch(q - 1) == '(') {
+		--q;
+		String id = IdBack(q);
+		if(id == "THISBACK")
+			GatherItems(parser.current_scope, false, in_types, false, true);
+	}
+	else
 	if(Ch(q - 1) == ':') {
 		while(Ch(q - 1) == ':')
 			q--;
 		Vector<String> tparam;
-		GatherItems(ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q)), tparam),
-		            true, in_types, true);
+		String scope = ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q)), tparam);
+		GatherItems(scope, false, in_types, true, false);
 	}
 	else {
 		String tp;
@@ -305,12 +313,12 @@ void AssistEditor::Assist()
 			Index<String> typeset = ExpressionType(parser, xp);
 			for(int i = 0; i < typeset.GetCount(); i++)
 				if(typeset[i].GetCount())
-					GatherItems(typeset[i], xp.GetCount() == 0, in_types, xp.GetCount() == 0);
+					GatherItems(typeset[i], xp.GetCount(), in_types, xp.GetCount() == 0, false);
 		}
 		else {
-			GatherItems(parser.current_scope, true, in_types, true);
+			GatherItems(parser.current_scope, true, in_types, true, false);
 			Index<String> in_types2;
-			GatherItems("", true, in_types2, true);
+			GatherItems("", false, in_types2, true, false);
 		}
 	}
 	if(assist_item.GetCount() == 0)
@@ -381,6 +389,7 @@ void AssistEditor::Complete()
 		f.access = 0;
 		f.kind = 100;
 	}
+	assist_type.Clear();
 	PopUpAssist(true);
 }
 
@@ -490,13 +499,13 @@ bool AssistEditor::Key(dword key, int count)
 		else
 			SyncAssist();
 	}
-	else {
-		if(auto_assist &&
-		   (key == '.' || key == '>' && Ch(GetCursor() - 2) == '-' ||
-		    key == ':' && Ch(GetCursor() - 2) == ':') &&
-		    InCode())
-				Assist();
-
+	else
+	if(auto_assist && InCode()) {
+		if(key == '.' || key == '>' && Ch(GetCursor() - 2) == '-' ||
+		   key == ':' && Ch(GetCursor() - 2) == ':')
+			Assist();
+		if(key == '(')
+			Assist();
 	}
 	if(key == ',') {
 		if(Ch(GetCursor()) == 184) {
