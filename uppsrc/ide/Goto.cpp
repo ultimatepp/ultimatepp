@@ -239,7 +239,7 @@ bool Ide::SwapSIf(const char *cref)
 		for(int i = 0; i < n.GetCount(); i++) {
 			if(i >= n.GetCount())
 				return false;
-			if(n[i].name == p.current_name) {
+			if(i != q && n[i].name == p.current_name) {
 				GotoCpp(n[i]);
 				return true;
 			}
