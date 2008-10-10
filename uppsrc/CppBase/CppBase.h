@@ -339,6 +339,7 @@ class Parser {
 	bool   EatBody();
 
 	void   Cv();
+	String TType();
 	String SimpleType(Decla& d);
 	void   Qualifier();
 	void   ParamList(Decl& d);
@@ -346,6 +347,7 @@ class Parser {
 	void   EatInitializers();
 	Decl   Type();
 	void   Vars(Array<Decl>& r, const char *p, bool type_def, bool more);
+	Array<Decl> Declaration0(bool l0 = false, bool more = false);
 	Array<Decl> Declaration(bool l0 = false, bool more = false);
 	bool   IsParamList(int q);
 	void   Elipsis(Decl& d);

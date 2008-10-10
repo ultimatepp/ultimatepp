@@ -403,13 +403,16 @@ String Parser::Constant()
 	return String(p, p1);
 }
 
+String Parser::TType()
+{
+	int q = FindIndex(context.tparam, lex[0]);
+	if(q >= 0) return AsString(q);
+	return lex.Id();
+}
+
 String Parser::SimpleType(Decla& d)
 {
-	if(Key(tk_struct) || Key(tk_class) || Key(tk_union) || Key(tk_enum) || Key(tk_typename)) {
-		if(lex.IsId() || lex == t_dblcolon) d.type = Name();
-		if(lex == '{') EatBody();
-		return Null;
-	}
+	Key(tk_typename) || Key(tk_struct) || Key(tk_class) || Key(tk_union) || Key(tk_enum);
 	if(Key(tk_bool) || Key(tk_float) || Key(tk_double) || Key(tk_void))
 		return Null;
 	bool sgn = Key(tk_signed) || Key(tk_unsigned);
@@ -433,29 +436,21 @@ String Parser::SimpleType(Decla& d)
 		d.type << "::";
 	Check(lex.IsId(), "Name expected");
 	while(lex.IsId()) {
-		int q = FindIndex(context.tparam, lex[0]);
-		if(q >= 0) {
-			d.type << AsString(q);
-			++lex;
-			break;
-		}
-		else {
-			d.type << lex.Id();
-			if(cix.Find(lex) >= 0)
+		d.type << TType();
+		if(cix.Find(lex) >= 0)
+			cs = true;
+		else
+			cix.Add(lex);
+		++lex;
+		if(lex == '<')
+			d.type << TemplateParams();
+		if(Key(t_dblcolon)) {
+			d.type << "::";
+			if(Key('~'))
 				cs = true;
-			else
-				cix.Add(lex);
-			++lex;
-			if(lex == '<')
-				d.type << TemplateParams();
-			if(Key(t_dblcolon)) {
-				d.type << "::";
-				if(Key('~'))
-					cs = true;
-			}
-			else
-				break;
 		}
+		else
+			break;
 	}
 	return cs ? String(p, lex.Pos()) : String();
 }
@@ -628,19 +623,11 @@ bool Parser::IsParamList(int q)
 	return true;
 }
 
-Array<Parser::Decl> Parser::Declaration(bool l0, bool more)
+Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 {
 	Array<Decl> r;
 	Decla d;
 	const char *p = lex.Pos();
-	if(Key(tk_typedef)) {
-		r = Declaration(false, true);
-		for(int i = 0; i < r.GetCount(); i++) {
-			r[i].type_def = true;
-			r[i].natural = "typedef " + r[i].natural;
-		}
-		return r;
-	}
 	if(Key(tk_friend))
 		d.isfriend = true;
 	for(;;) {
@@ -719,6 +706,19 @@ Array<Parser::Decl> Parser::Declaration(bool l0, bool more)
 	}
 	while(more && Key(','));
 	return r;
+}
+
+Array<Parser::Decl> Parser::Declaration(bool l0, bool more)
+{
+	if(Key(tk_typedef)) {
+		Array<Decl> r = Declaration(false, true);
+		for(int i = 0; i < r.GetCount(); i++) {
+			r[i].type_def = true;
+			r[i].natural = "typedef " + r[i].natural;
+		}
+		return r;
+	}
+	return Declaration0(l0, more);
 }
 
 void Parser::Locals(const String& type)
@@ -905,7 +905,10 @@ void Parser::Statement()
 
 bool Parser::EatBody()
 {
-	if(lex != '{') return false;
+	if(lex != '{') {
+		local.Clear();
+		return false;
+	}
 	lex.BeginBody();
 	maxScopeDepth = currentScopeDepth = dobody ? 0 : 1;
 	if(dobody) {
@@ -1100,11 +1103,6 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		String key = (t == tk_class ? "class" : t == tk_union ? "union" : "struct");
 		nn << key << ' ' << name;
 		CppItem& im = Item(context.scope, key, name, lex != ';');
-		if(Key(';')) {
-			context = cc;
-			SetScopeCurrent();
-			return true;
-		}
 		im.kind = tp.IsEmpty() ? STRUCT : STRUCTTEMPLATE;
 		im.type = name;
 		im.access = cc.access;
@@ -1114,6 +1112,11 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		im.ptype.Clear();
 		im.pname.Clear();
 		im.param.Clear();
+		if(Key(';')) {
+			context = cc;
+			SetScopeCurrent();
+			return true;
+		}
 		if(Key(':')) {
 			nn << " : ";
 			bool c = false;
@@ -1169,6 +1172,8 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	String ptype;
 	for(int i = 0; i < d.param.GetCount(); i++) {
 		const Decla& p = d.param[i];
+		if(dobody)
+			local.Add(p.name, p.type);
 		ScAdd(param, p.natural);
 		if(i)
 			ptype << ';';
@@ -1395,7 +1400,7 @@ void Parser::Do()
 							ScopeCat(scope, d.name);
 						CppItem& im = Item(scope, d.type_def ? "typedef" : d.name, d.name);
 						im.natural = Purify(h);
-						im.type = im.ptype = d.type;
+						im.type = d.type;
 						im.access = context.access;
 						im.kind = d.type_def ? TYPEDEF :
 						          IsNull(scope) ? VARIABLE :

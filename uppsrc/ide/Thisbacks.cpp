@@ -54,7 +54,7 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 	if(q < 0)
 		return;
 	const Array<CppItem>& n = BrowserBase()[q];
-	for(int i = 0; i < n.GetCount(); i++)
+	for(int i = 0; i < n.GetCount(); i = FindNext(n, i))
 		nname.Add(n[i].name);
 	Index<String> done;
 	GatherCallbacks("", done, scope, PRIVATE);
@@ -67,7 +67,8 @@ void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
 	if(done.Find(h) >= 0)
 		return;
 	done.Add(h);
-	int q = BrowserBase().Find(NoTemplatePars(scope));
+	Vector<String> tparam;
+	int q = BrowserBase().Find(ParseTemplatedType(scope, tparam));
 	if(q < 0)
 		return;
 	const Array<CppItem>& n = BrowserBase()[q];
@@ -104,7 +105,7 @@ void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
 		const CppItem& m = n[i];
 		if(m.IsType() && m.access <= access) {
 			Vector<String> b = Split(m.qptype, ';');
-			SubstituteTpars(b, scope);
+			ResolveTParam(b, tparam);
 			for(int i = 0; i < b.GetCount(); i++)
 				GatherCallbacks(pfx, done, b[i], min(access, (int)PROTECTED));
 		}

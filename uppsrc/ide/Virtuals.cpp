@@ -12,15 +12,16 @@ void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
 	if(done.Find(scope) >= 0)
 		return;
 	done.Add(scope);
-	int q = BrowserBase().Find(NoTemplatePars(scope));
+	Vector<String> tparam;
+	int q = BrowserBase().Find(ParseTemplatedType(scope, tparam));
 	if(q < 0)
 		return;
 	const Array<CppItem>& m = BrowserBase()[q];
-	for(int i = 0; i < m.GetCount(); i++) {
+	for(int i = 0; i < m.GetCount(); i = FindNext(m, i)) {
 		const CppItem& im = m[i];
 		if(im.IsType()) {
 			Vector<String> b = Split(im.qptype, ';');
-			SubstituteTpars(b, scope);
+			ResolveTParam(b, tparam);
 			for(int i = 0; i < b.GetCount(); i++)
 				GatherVirtuals(item, b[i], done);
 		}

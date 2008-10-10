@@ -354,9 +354,12 @@ public:
 	RightTabs();
 };
 
-int  memcmp_i(const char *s, const char *t, int n);
-void SubstituteTpars(Vector<String>& type, const String& tname);
-int  CharFilterMacro(int c);
+int    memcmp_i(const char *s, const char *t, int n);
+String ParseTemplatedType(const String& type, Vector<String>& tparam);
+String ResolveTParam(const String& type, const Vector<String>& tparam);
+void   ResolveTParam(Vector<String>& type, const Vector<String>& tparam);
+String Qualify(const String& scope, const String& type);
+int    CharFilterMacro(int c);
 
 struct AssistEditor : CodeEditor {
 	virtual bool Key(dword key, int count);
@@ -409,10 +412,14 @@ struct AssistEditor : CodeEditor {
 	void           Complete();
 
 	void           Context(Parser& parser, int pos);
-	bool           ScopeId(const Array<CppItem>& n, const String& id, Vector<String>& type, bool& code, String& t);
-	void           TypeOf(const String& id, Vector<String>& r, bool& code);
-	Vector<String> Operator(const char *oper, const Vector<String>& type);
-	Vector<String> TypeOf(const Vector<String>& xp, const String& tp);
+	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
+	                              Index<String>& typeset, const Vector<String>& tparam,
+	                              bool can_shortcut_operator, Index<String>& visited_bases);
+	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,Index<String>& typeset, const Vector<String>& tparam);
+	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
+	                              Index<String>& typeset);
+	Index<String>  ExpressionType(const Parser& parser, const Vector<String>& xp);
+
 	String         RemoveDefPar(const char *s);
 	String         MakeDefinition(const String& cls, const String& _n);
 	void           DCopy();
@@ -423,9 +430,10 @@ struct AssistEditor : CodeEditor {
 	void           SelParam();
 	int            Ch(int q);
 	int            ParsBack(int q);
-	Vector<String> ReadBack(int q, String& type);
+	Vector<String> ReadBack(int q);
 	void           SkipSpcBack(int& q);
 	String         IdBack(int& qq);
+	String         CompleteIdBack(int& q);
 
 	void           SwapSContext(Parser& p);
 	
