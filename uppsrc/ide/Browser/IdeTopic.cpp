@@ -23,9 +23,9 @@ void TopicEditor::JumpToDefinition()
 void TopicEditor::Label(String& label)
 {
 	Save();
-	if(ref.browser.item.IsMulti())
-		ref.browser.item.ClearSelection();
-	ref.browser.item.Multi(false);
+	if(ref.item.IsMultiSelect())
+		ref.item.ClearSelection();
+	ref.item.MultiSelect(false);
 	ref.Title("Reference");
 	ref.Set(label);
 	ref.classlist.Hide();
@@ -278,39 +278,44 @@ void TopicEditor::InsertItem()
 		return;
 	Save();
 	ref.Title("Insert");
-	if(ref.browser.item.IsCursor())
-		ref.browser.item.SetFocus();
-	ref.browser.item.Multi();
+	if(ref.item.IsCursor())
+		ref.item.SetFocus();
+	ref.item.MultiSelect();
 	ref.classlist.Show();
 	int c = ref.Execute();
 	if(c == IDCANCEL)
 		return;
 	if(c == IDYES) {
 		String qtf = "&{{1 ";
-		for(int i = 0; i < ref.browser.scopeing.GetCount(); i++) {
-			if(i)
-				qtf << ":: ";
-			qtf << DeQtf((String)ref.browser.scopeing.Get(i, 2));
+		bool next = false;
+		for(int i = 0; i < ref.scope.GetCount(); i++) {
+			String s = ref.scope.Get(i, 1);
+			if(*s != '<') {
+				if(next)
+					qtf << ":: ";
+				qtf << DeQtf(s);
+				next = true;
+			}
 		}
 		qtf << "}}&";
 		editor.PasteText(ParseQTF(qtf));
 		return;
 	}
 	String p1, p2;
-	if(ref.browser.item.IsSelection()) {
-		for(int i = 0; i < ref.browser.item.GetCount(); i++)
-			if(ref.browser.item.IsSelected(i)) {
+	if(ref.item.IsSelection()) {
+		for(int i = 0; i < ref.item.GetCount(); i++)
+			if(ref.item.IsSelected(i)) {
 				String a1, a2;
-				const CppItemInfo& m = ref.browser.GetItemInfo(i);
-				CreateQtf(ref.browser.GetItem(i), m.name, m, a1, a2);
+				const CppItemInfo& m = ref.GetItemInfo(i);
+				CreateQtf(ref.GetCodeRef(i), m.name, m, a1, a2);
 				p1 << p2 << a1;
 				p2 = a2;
 			}
 	}
 	else
-	if(ref.browser.item.IsCursor()) {
-		const CppItemInfo& m = ref.browser.GetItemInfo();
-		CreateQtf(ref.browser.GetItem(), m.name, m, p1, p2);
+	if(ref.item.IsCursor()) {
+		const CppItemInfo& m = ref.GetItemInfo();
+		CreateQtf(ref.GetCodeRef(), m.name, m, p1, p2);
 	}
 	else
 		return;

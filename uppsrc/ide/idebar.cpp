@@ -441,13 +441,13 @@ void Ide::DebugMenu(Bar& menu)
 void Ide::BrowseMenu(Bar& menu) {
 	menu.AddMenu(AK_TOGGLEINDEX, IdeImg::index(), THISBACK1(ToggleNavigator, AssistEditor::NAV_INDEX))
 	     .Check(editor.IsIndex());
-	menu.AddMenu(AK_TOGGLEBROWSER, IdeImg::Navigator(), THISBACK1(ToggleNavigator, AssistEditor::NAV_BROWSER))
+	menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK1(ToggleNavigator, AssistEditor::NAV_BROWSER))
 	     .Check(editor.IsBrowser());
 	if(editor.IsIndex())
 		menu.Add(AK_SEARCHINDEX, THISBACK(SearchIndex));
 	menu.Add(!designer, AK_GOTO, THISBACK(Goto));
 	menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
-	menu.Add(!designer, AK_JUMPS, THISBACK(JumpS));
+	menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
 	menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
 	menu.Add(!designer, AK_ASSIST, callback(&editor, &AssistEditor::Assist));
 	menu.Add(!designer, AK_DCOPY, callback(&editor, &AssistEditor::DCopy));

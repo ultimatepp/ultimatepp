@@ -939,7 +939,7 @@ public:
 		void  ScanFile();
 		bool  SwapSIf(const char *cref);
 		void  SwapS();
-		void  JumpS();
+		void  ContextGoto();
 		void  InsertColor();
 
 
