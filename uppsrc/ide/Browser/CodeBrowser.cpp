@@ -137,11 +137,26 @@ void CodeBrowser::LoadScope()
 		item.ScCursor(sc);
 }
 
-String CodeBrowser::GetCodeRef()
+String CodeBrowser::GetCodeRef(int i) const
 {
-	if(scope.IsCursor() && item.IsCursor())
+	if(scope.IsCursor())
 		return MakeCodeRef(scope.GetKey(), item.GetKey());
 	return Null;
+}
+
+String CodeBrowser::GetCodeRef() const
+{
+	return item.IsCursor() ? GetCodeRef(item.GetCursor()) : String();
+}
+
+const CppItemInfo& CodeBrowser::GetItemInfo(int i) const
+{
+	return ValueTo<CppItemInfo>(item.Get(i, 1));
+}
+
+const CppItemInfo& CodeBrowser::GetItemInfo() const
+{
+	return GetItemInfo(item.GetCursor());
 }
 
 int SearchScopeFilter(int c)

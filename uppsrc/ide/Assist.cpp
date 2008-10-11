@@ -753,7 +753,7 @@ bool IsPendif(const String& l)
 	return l.Find("#endif") >= 0;
 }
 
-void Ide::JumpS()
+void Ide::ContextGoto()
 {
 	if(designer)
 		return;

@@ -109,22 +109,6 @@ struct CppItemInfoDisplay : public Display
 	CppItemInfoDisplay() { namestart = false; }
 };
 
-class ItemList : public ColumnList {
-	CppItemInfoDisplay display;
-
-	friend struct ItemDisplay;
-
-	int    GetTopic(Point p, String& key);
-	String Item(int i);
-
-public:
-	bool active_topics;
-
-	void Clear();
-
-	ItemList();
-};
-
 class CodeBrowser {
 	typedef CodeBrowser CLASSNAME;
 	CppItemInfoDisplay display;
@@ -136,11 +120,14 @@ public:
 	EditString             search_item;
 	EditString             search;
 	
-	void   Load();
-	void   LoadScope();
-	String GetCodeRef();
-	void   Goto(const String& coderef);
-	void   NameStart()     { display.namestart = true; }
+	void               Load();
+	void               LoadScope();
+	void               Goto(const String& coderef);
+	void               NameStart()               { display.namestart = true; }
+	String             GetCodeRef(int i) const;
+	String             GetCodeRef() const;
+	const CppItemInfo& GetItemInfo(int i) const;
+	const CppItemInfo& GetItemInfo() const;
 	
 	CodeBrowser();
 };
@@ -157,73 +144,6 @@ struct BrowserQuery {
 	void Serialize(Stream& s);
 
 	BrowserQuery() { Clear(); }
-};
-
-struct QueryDlg : public WithQueryLayout<TopWindow> {
-	typedef QueryDlg CLASSNAME;
-
-	void Serialize(Stream& s);
-	void EnterPackage();
-	void Clear();
-
-	int Perform(BrowserQuery& q);
-
-	QueryDlg();
-};
-
-class Browser : public StaticRect {
-public:
-	void Serialize(Stream& s);
-	void SerializeWspc(Stream& s);
-
-	ArrayCtrl               scopeing;
-	ItemList                item;
-	Splitter                split;
-	BrowserQuery            query;
-	QueryDlg                querydlg;
-	Callback2<String, int>  WhenPos;
-	int                     pos;
-	Callback                WhenItem;
-	Callback                WhenItemDblClk;
-	Callback1<String>       WhenShowTopic;
-	bool                    clickpos;
-	bool                    show_inherited;
-	EditString             *s_item, *s_scope;
-
-	void     LoadNest(const String& nest, ArrayMap<String, CppItemInfo>& item, int inherited, Index<String>& rl);
-	bool     IsCurrentItem();
-	CppItem& CurrentItem();
-	void     Reload();
-	void     EnterNesting();
-	void     EnterItem();
-	void     ItemClick();
-	void     ItemDblClk();
-	void     GotoItem();
-	void     GotoPos(int n);
-	void     ItemMenu(Bar& bar);
-	void     QueryNest();
-	bool     FindSet(const String& knesting, const String& kitem, int nestingsc = 0, int itemsc = 0);
-	bool     FindSet(const String& item);
-
-	String      GetItem(int i);
-	CppItemInfo GetItemInfo(int i);
-
-	String      GetItem()               { return GetItem(item.GetCursor()); }
-	CppItemInfo GetItemInfo()           { return GetItemInfo(item.GetCursor()); }
-
-	bool     DoQuery();
-	void     DoDoQuery()                { DoQuery(); }
-	void     QueryWord(const String& w);
-	void     SetId(const String& id, const Vector<String>& nest);
-
-	void     ShowTopic(String w);
-	void     ShowHelp();
-	
-	void     WithSearch(EditString& search_nest, EditString& search_item);
-
-	typedef Browser CLASSNAME;
-	Browser();
-	~Browser();
 };
 
 struct TopicInfo : Moveable<TopicInfo> {
@@ -252,13 +172,13 @@ bool            MatchTopicLink(const String& link, const Vector<String>& query);
 #define LAYOUTFILE <ide/Browser/Topic.lay>
 #include <CtrlCore/lay.h>
 
-struct ReferenceDlg : WithReferenceDlgLayout<TopWindow> {
+struct ReferenceDlg : WithReferenceDlgLayout<TopWindow>, CodeBrowser {
 	void   EnterItem();
 	void   EnterItemOk();
 	void   Set(const String& s);
 	String Get() const            { return ~reference; }
 
-	void   Serialize(Stream& s)   { browser.SerializeWspc(s); SerializePlacement(s); }
+	void   Serialize(Stream& s)   { SerializePlacement(s); }
 
 	typedef ReferenceDlg CLASSNAME;
 
