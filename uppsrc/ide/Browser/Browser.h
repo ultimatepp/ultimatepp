@@ -134,6 +134,7 @@ public:
 	ArrayCtrl              item;
 	EditString             search_scope;
 	EditString             search_item;
+	EditString             search;
 	
 	void   Load();
 	void   LoadScope();

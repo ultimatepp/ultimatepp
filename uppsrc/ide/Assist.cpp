@@ -47,7 +47,8 @@ AssistEditor::AssistEditor()
 	scopepane.Add(browser.search_scope.HSizePos().TopPos(0, cy));
 	scopepane.Add(browser.scope.HSizePos().VSizePos(cy + 2, 0));
 	itempane.Add(browser.search_item.HSizePos().TopPos(0, cy));
-	itempane.Add(browser.item.HSizePos().VSizePos(cy + 2, 0));
+	itempane.Add(browser.item.HSizePos().VSizePos(cy + 2, cy + 2));
+	itempane.Add(browser.search.HSizePos().BottomPos(0, cy));
 	scope_item.Vert(scopepane, itempane);
 	scope_item.SetPos(3000);
 	navigatorpane.Add(scope_item);

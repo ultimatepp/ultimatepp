@@ -241,6 +241,8 @@ void QualifyPass2(CppBase& base)
 		bool sort = false;
 		for(int i = 0; i < n.GetCount(); i++) {
 			CppItem& m = n[i];
+			if(m.uname.GetCount() == 0 && m.name.GetCount())
+				m.uname = ToUpper(m.name);
 			if(m.serial != base.serial && !m.IsType()) {
 				sort = true;
 				m.serial = base.serial;
