@@ -1,8 +1,8 @@
 #include "ide.h"
 
-#define LDUMP(x)     //DDUMP(x)
-#define LDUMPC(x)    //DDUMPC(x)
-#define LLOG(x)      //DLOG(x)
+#define LDUMP(x)     // DDUMP(x)
+#define LDUMPC(x)    // DDUMPC(x)
+#define LLOG(x)      // DLOG(x)
 
 static Array<CppItem> sEmpty;
 
@@ -33,26 +33,26 @@ String ParseTemplatedType(const String& type, Vector<String>& tparam)
 	while(*s) {
 		if(*s == '<') {
 			s++;
-			int lvl = 0;
+			int lvl = 1;
 			String t;
 			while(*s) {
 				int c = *s++;
 				if(c == ',') {
-					if(lvl == 0 && t.GetCount()) {
+					if(lvl == 0) {
 						tparam.Add(t);
 						t.Clear();
 					}
 				}
 				else {
-					if(c == '>' && --lvl)
+					if(c == '>' && --lvl == 0)
 						break;
 					if(c == '<')
 						lvl++;
 					t.Cat(c);
 				}
 			}
-			if(t.GetCount())
-				tparam.Add(t);		
+			tparam.Add(t);
+			break;
 		}
 		else
 			r.Cat(*s++);
