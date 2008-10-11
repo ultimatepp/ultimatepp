@@ -1,8 +1,8 @@
 #include "ide.h"
 
-#define LDUMP(x)    //DDUMP(x)
-#define LDUMPC(x)   //DDUMPC(x)
-#define LLOG(x)     //DLOG(x)
+#define LDUMP(x)    // DDUMP(x)
+#define LDUMPC(x)   // DDUMPC(x)
+#define LLOG(x)     // DLOG(x)
 
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
