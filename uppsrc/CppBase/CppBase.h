@@ -217,6 +217,7 @@ struct CppItem {
 	String         qitem;
 	String         item;
 	String         name;
+	String         uname;
 	String         natural;
 	String         type;
 	String         qtype;
