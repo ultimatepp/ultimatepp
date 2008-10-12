@@ -109,6 +109,10 @@ public:
 	bool                    IsAspectLock() const             { return aspect_lock; }
 	bool                    IsAspectLocked() const           { return IsAspectRatio() || IsAspectLock(); }
 
+	void                    EnableLock(bool e = true);
+	void                    DisableLock()                    { EnableLock(false); }
+	bool                    IsLockEnabled() const            { return enable_lock; }\
+
 	void                    SetScale(Sizef scale);
 	void                    SetDelta(Pointf delta);
 	void                    SetZoom(Sizef scale, Pointf delta);
@@ -192,7 +196,7 @@ protected:
 	void                    AdjustPos(Point scpos, int xymask); // 1 = x, 2 = y
 
 protected:
-	bool                    rev_x, rev_y, aspect_lock;
+	bool                    rev_x, rev_y, aspect_lock, enable_lock;
 	Rect                    gap;
 	Alignment               halign, valign;
 	Color                   background;
