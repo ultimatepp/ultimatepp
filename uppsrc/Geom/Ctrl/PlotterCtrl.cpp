@@ -40,6 +40,7 @@ PlotterCtrl::PlotterCtrl()
 , push_delta(0, 0)
 , max_scale(Null, Null)
 , aspect(1)
+, enable_lock(true)
 , gap(10, 10, 10, 10)
 , rev_x(false)
 , rev_y(false)
@@ -195,6 +196,12 @@ void PlotterCtrl::SetAspectRatio(double a)
 {
 	aspect = a;
 	ZoomFull();
+	WhenRescan();
+}
+
+void PlotterCtrl::EnableLock(bool e)
+{
+	enable_lock = e;
 	WhenRescan();
 }
 
@@ -807,7 +814,7 @@ void PlotterCtrl::ToolView(Bar& bar)
 		ToolViewZoomOut(bar);
 		ToolViewZoomFull(bar);
 	}
-	if(!aspect)
+	if(!aspect && enable_lock)
 		ToolViewAspectLock(bar);
 	ToolViewPan(bar);
 }
