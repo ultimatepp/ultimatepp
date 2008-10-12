@@ -4,6 +4,7 @@ struct MoveTopicDlg : public WithMoveTopicLayout<TopWindow> {
 	typedef MoveTopicDlg CLASSNAME;
 
 public:
+
 	void Package();
 
 	MoveTopicDlg();

@@ -1,8 +1,8 @@
 #include "ide.h"
 
-#define LDUMP(x)      //DDUMP(x)
-#define LDUMPC(x)     //DDUMPC(x)
-#define LLOG(x)       //DLOG(x)
+#define LDUMP(x)     // DDUMP(x)
+#define LDUMPC(x)    // DDUMPC(x)
+#define LLOG(x)      // DLOG(x)
 
 static Array<CppItem> sEmpty;
 
@@ -126,7 +126,7 @@ String Qualify(const String& scope, const String& type)
 }
 
 void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp, int ii,
-                                  Index<String>& typeset, const Vector<String>& tparam_,
+                                  Index<String>& typeset, bool variable,
                                   bool can_shortcut_operator, Index<String>& visited_bases)
 {
 	if(ii >= xp.GetCount()) {
@@ -134,6 +134,7 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 		typeset.FindAdd(ttype);
 		return;
 	}
+	LDUMP(xp[ii]);
 	Vector<String> tparam;
 	String type = ParseTemplatedType(ttype, tparam);
 	int c0 = typeset.GetCount();
@@ -146,8 +147,8 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 		return;
 	}
 	LLOG("ExpressionType " << type << " ii: " << ii << " id:" << id);
-	if(*id == '.') {
-		ExpressionType(ttype, xp, ii + 1, typeset, tparam);
+	if(*id == '.' || (!variable && !iscid(*id))) {
+		ExpressionType(ttype, xp, ii + 1, typeset, false);
 		return;
 	}
 	bool shortcut_oper = false;
@@ -157,8 +158,10 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 	}
 	for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
 		const CppItem& m = n[i];
-		if(m.name == id)
+		if(m.name == id) {
+			LLOG("Member " << m.name << ": " << m.qtype);
 			ExpressionType(ResolveTParam(m.qtype, tparam), xp, ii + 1, typeset);
+		}
 	}
 	if(typeset.GetCount() != c0 || IsNull(type))
 		return;
@@ -172,20 +175,20 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 				return;
 		}
 	if(shortcut_oper)
-		ExpressionType(ttype, xp, ii + 1, typeset, tparam);
+		ExpressionType(ttype, xp, ii + 1, typeset, false);
 }
 
 void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, int ii,
-                                  Index<String>& typeset, const Vector<String>& tparam)
+                                  Index<String>& typeset, bool variable)
 {
 	Index<String> visited_bases;
-	ExpressionType(type, xp, ii, typeset, tparam, true, visited_bases);
+	ExpressionType(type, xp, ii, typeset, variable, true, visited_bases);
 }
 
 void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, int ii,
                                   Index<String>& typeset)
 {
-	ExpressionType(type, xp, ii, typeset, Vector<String>());
+	ExpressionType(type, xp, ii, typeset, false);
 }
 
 Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<String>& xp)
@@ -203,10 +206,10 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 	if(q >= 0) {
 		String type = Qualify(parser.current_scope, parser.local[q]);
 		LLOG("Found type local: " << type);
-		ExpressionType(type, xp, 1, typeset);
+		ExpressionType(type, xp, 1, typeset, true);
 		return typeset;
 	}
-	ExpressionType(parser.current_scope, xp, 0, typeset);
+	ExpressionType(parser.current_scope, xp, 0, typeset, false);
 	if(typeset.GetCount())
 		return typeset;
 	if(xp.GetCount() >= 2 && xp[1] == "()") {
@@ -214,11 +217,11 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 		Vector<String> tparam;
 		if(CodeBase().Find(ParseTemplatedType(qtype, tparam)) >= 0) {
 			LLOG("Is constructor " << qtype);
-			ExpressionType(qtype, xp, 2, typeset);
+			ExpressionType(qtype, xp, 2, typeset, false);
 			return typeset;
 		}
 	}
-	ExpressionType("", xp, 0, typeset);
+	ExpressionType("", xp, 0, typeset, false);
 	return typeset;
 }
 
