@@ -709,10 +709,10 @@ bool GetIdScope(String& os, const String& scope, const String& id, Index<String>
 	done.Add(scope);
 	Vector<String> tparam;
 	String n = ParseTemplatedType(scope, tparam);
-	int q = BrowserBase().Find(n);
+	int q = CodeBase().Find(n);
 	if(q < 0)
 		return Null;
-	const Array<CppItem>& m = BrowserBase()[q];
+	const Array<CppItem>& m = CodeBase()[q];
 	Vector<String> r;
 	if(FindName(m, id) >= 0) {
 		os = n;
@@ -834,8 +834,8 @@ void Ide::ContextGoto()
 		if(GetIdScope(r, "", id, done))
 			scope.Add(r);
 		else {
-			String t = Qualify(BrowserBase(), parser.current_scope, id);
-			if(BrowserBase().Find(t) < 0)
+			String t = Qualify(CodeBase(), parser.current_scope, id);
+			if(CodeBase().Find(t) < 0)
 				return;
 			scope.Add(t);
 		}
@@ -844,10 +844,10 @@ void Ide::ContextGoto()
 	if(scope.GetCount() == 0)
 		return;
 
-	q = BrowserBase().Find(scope[0]);
+	q = CodeBase().Find(scope[0]);
 	if(q < 0)
 		return;
-	const Array<CppItem>& n = BrowserBase()[q];
+	const Array<CppItem>& n = CodeBase()[q];
 	q = FindName(n, id);
 	if(q >= 0)
 		JumpToDefinition(n, q);
@@ -876,10 +876,10 @@ void Ide::IdeGotoCodeRef(String coderef)
 	if(IsNull(coderef)) return;
 	String scope, item;
 	SplitCodeRef(coderef, scope, item);
-	int q = BrowserBase().Find(scope);
+	int q = CodeBase().Find(scope);
 	if(q < 0)
 		return;
-	const Array<CppItem>& n = BrowserBase()[q];
+	const Array<CppItem>& n = CodeBase()[q];
 	q = FindItem(n, item);
 	if(q >= 0)
 		JumpToDefinition(n, q);

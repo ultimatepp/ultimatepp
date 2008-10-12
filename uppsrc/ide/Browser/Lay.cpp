@@ -64,6 +64,6 @@ void ScanLayFile(const char *fn)
 	catch(CParser::Error) {}
 	LDUMP(r);
 	StringStream ss(r);
-	CppBase& base = BrowserBase();
+	CppBase& base = CodeBase();
 	Parse(ss, IgnoreList(), base, fn, CNULL);
 }

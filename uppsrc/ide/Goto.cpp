@@ -121,7 +121,7 @@ GotoDlg::GotoDlg(const String& s)
 		parser.Do(ss, IgnoreList(), lbase, Null, CNULL);
 	}
 	CtrlLayoutOKCancel(*this, IsNull(s) ? "Go to global" : "Go to line or symbol");
-	CppBase& base = IsNull(s) ? BrowserBase() : lbase;
+	CppBase& base = IsNull(s) ? CodeBase() : lbase;
 	gbase = &base;
 	for(int i = 0; i < base.GetCount(); i++) {
 		Array<CppItem>& n = base[i];
@@ -225,12 +225,12 @@ bool Ide::SwapSIf(const char *cref)
 		return false;
 	Parser p;
 	editor.SwapSContext(p);
-	int q = BrowserBase().Find(p.current_scope);
+	int q = CodeBase().Find(p.current_scope);
 	LLOG("SwapS scope: " << p.current_scope);
 	if(q < 0)
 		return false;
-	const Array<CppItem>& n = BrowserBase()[q];
-	String qitem = QualifyKey(BrowserBase(), p.current_scope, p.current_key);
+	const Array<CppItem>& n = CodeBase()[q];
+	String qitem = QualifyKey(CodeBase(), p.current_scope, p.current_key);
 	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref)
 		return false;
 	q = FindItem(n, qitem);

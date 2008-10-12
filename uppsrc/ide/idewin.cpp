@@ -938,7 +938,7 @@ void AppMain___()
 			ide.Run();
 		}
 		StoreToFile(ide);
-		SaveBrowserBase();
+		SaveCodeBase();
 		SaveFile(ConfigFile("ide.key"), StoreKeys());
 		SaveFile(ConfigFile("ide.colors"), ide.editor.StoreHlStyles());
 		DelTemps();

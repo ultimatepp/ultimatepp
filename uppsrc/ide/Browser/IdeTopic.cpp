@@ -333,7 +333,7 @@ void   TopicEditor::FixTopic()
 	String nest;
 	if(!EditText(nest, "Fix topic", "Nest"))
 		return;
-	CppBase& base = BrowserBase();
+	CppBase& base = CodeBase();
 	int q = base.Find(nest);
 	if(q < 0) {
 		Exclamation("Nest not found");

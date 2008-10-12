@@ -8,12 +8,17 @@ LAYOUT(NewTopicLayout, 268, 92)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(196, 64).TopPosZ(60, 24))
 END_LAYOUT
 
-LAYOUT(RenameTopicLayout, 268, 68)
-	ITEM(Label, dv___0, SetLabel(t_("Topic")).LeftPosZ(8, 48).TopPosZ(8, 19))
-	ITEM(EditString, topic, LeftPosZ(56, 108).TopPosZ(8, 19))
-	ITEM(LNGCtrl, lang, LeftPosZ(164, 96).TopPosZ(8, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(128, 64).TopPosZ(36, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(196, 64).TopPosZ(36, 24))
+LAYOUT(MoveTopicLayout, 184, 136)
+	ITEM(Label, dv___0, SetLabel(t_("Package")).LeftPosZ(8, 48).TopPosZ(4, 19))
+	ITEM(DropList, package, LeftPosZ(68, 108).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Group")).LeftPosZ(8, 48).TopPosZ(28, 19))
+	ITEM(DropList, group, LeftPosZ(68, 108).TopPosZ(28, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Name")).LeftPosZ(8, 60).TopPosZ(52, 19))
+	ITEM(EditString, topic, LeftPosZ(68, 108).TopPosZ(52, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Language")).LeftPosZ(8, 60).TopPosZ(76, 19))
+	ITEM(LNGCtrl, lang, LeftPosZ(68, 108).TopPosZ(76, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(44, 64).TopPosZ(104, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(112, 64).TopPosZ(104, 24))
 END_LAYOUT
 
 LAYOUT(TemplateListLayout, 236, 376)

@@ -62,7 +62,7 @@ void Ide::RescanCode()
 /*
 	TimeStop tm;
 	for(int i = 0; i < 10; i++)
-		ReQualifyBrowserBase();
+		ReQualifyCodeBase();
 	LOG(tm);
 	PutConsole(AsString(tm));
 //*/
@@ -70,18 +70,15 @@ void Ide::RescanCode()
 	SaveFile();
 	TimeStop t;
 	console.Clear();
-	RescanBrowserBase();
+	RescanCodeBase();
 	SyncRefs();
 	editor.SyncNavigator();
 //*/
 }
 
-void Ide::OpenATopic()
+void Ide::OpenTopic(const char *topic)
 {
-	String t = doc.GetCurrent();
-	if(!t.StartsWith("topic:"))
-		return;
-	TopicLink tl = ParseTopicLink(t);
+	TopicLink tl = ParseTopicLink(topic);
 	if(tl) {
 		EditFile(AppendFileName(PackageDirectory(tl.package), tl.group + ".tpp"));
 		if(designer) {
@@ -90,6 +87,23 @@ void Ide::OpenATopic()
 				te->GoTo(tl.topic, doc.GetCurrentLabel());
 		}
 	}
+}
+
+void Ide::OpenATopic()
+{
+	String t = doc.GetCurrent();
+	if(!t.StartsWith("topic:"))
+		return;
+	OpenTopic(t);
+}
+
+void Ide::IdeMoveTopic(const String& from, const String& to)
+{
+	if(to != from) {
+		Upp::SaveFile(to, LoadFile(from));
+		FileDelete(from);
+	}
+	OpenTopic(to);
 }
 
 void Ide::InsertColor()
