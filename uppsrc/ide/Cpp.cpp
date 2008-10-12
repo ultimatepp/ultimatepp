@@ -83,7 +83,7 @@ String ResolveTParam(const String& type, const Vector<String>& tparam)
 	LLOG("Resolved " << type << " -> " << r);
 	const Array<CppItem>& x = GetTypeItems(r);
 	if(x.GetCount() && x[0].kind == TYPEDEF) {
-		LLOG("Is typedef " << x[0].qtype);
+		LLOG("Is typedef " << x[0].qtype << ';' << x[0].type << ';' << x[0].natural);
 		String h = x[0].qtype;
 		if(h != type && h != r)
 			return ResolveTParam(h, tparam);
@@ -125,29 +125,29 @@ String Qualify(const String& scope, const String& type)
 	return Qualify(CodeBase(), scope, type);
 }
 
-void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, int ii,
-                                  Index<String>& typeset, const Vector<String>& tparam,
+void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp, int ii,
+                                  Index<String>& typeset, const Vector<String>& tparam_,
                                   bool can_shortcut_operator, Index<String>& visited_bases)
 {
 	if(ii >= xp.GetCount()) {
-		LLOG("Final type: " << type);
-		typeset.FindAdd(type);
+		LLOG("Final type: " << ttype);
+		typeset.FindAdd(ttype);
 		return;
 	}
+	Vector<String> tparam;
+	String type = ParseTemplatedType(ttype, tparam);
 	int c0 = typeset.GetCount();
 	const Array<CppItem>& n = GetTypeItems(type);
 	String id = xp[ii];
 	int q = id.ReverseFind(':');
 	if(q > 0 && id[q - 1] == ':') {
-		Vector<String> tparam;
-		String qtype = ParseTemplatedType(Qualify("", id.Mid(0, q - 1)), tparam);
 		id = id.Mid(q + 1);
-		ExpressionType(ResolveTParam(qtype, tparam), xp, ii + 1, typeset);
+		ExpressionType(ResolveTParam(Qualify("", id.Mid(0, q - 1)), tparam), xp, ii + 1, typeset);
 		return;
 	}
 	LLOG("ExpressionType " << type << " ii: " << ii << " id:" << id);
 	if(*id == '.') {
-		ExpressionType(type, xp, ii + 1, typeset, tparam);
+		ExpressionType(ttype, xp, ii + 1, typeset, tparam);
 		return;
 	}
 	bool shortcut_oper = false;
@@ -167,14 +167,12 @@ void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, 
 	for(int i = 0; i < base.GetCount(); i++)
 		if(visited_bases.Find(base[i]) < 0) {
 			visited_bases.Add(base[i]);
-			Vector<String> tparam;
-			ExpressionType(ParseTemplatedType(base[i], tparam), xp, ii, typeset,
-			               tparam, false, visited_bases);
+			ExpressionType(base[i], xp, ii, typeset, tparam, false, visited_bases);
 			if(typeset.GetCount() != c0)
 				return;
 		}
 	if(shortcut_oper)
-		ExpressionType(type, xp, ii + 1, typeset, tparam);
+		ExpressionType(ttype, xp, ii + 1, typeset, tparam);
 }
 
 void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, int ii,
@@ -187,8 +185,7 @@ void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, 
 void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, int ii,
                                   Index<String>& typeset)
 {
-	Vector<String> tparam;
-	ExpressionType(ParseTemplatedType(type, tparam), xp, ii, typeset, tparam);
+	ExpressionType(type, xp, ii, typeset, Vector<String>());
 }
 
 Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<String>& xp)
@@ -213,11 +210,11 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 	if(typeset.GetCount())
 		return typeset;
 	if(xp.GetCount() >= 2 && xp[1] == "()") {
+		String qtype = Qualify(parser.current_scope, xp[0]);
 		Vector<String> tparam;
-		String qtype = ParseTemplatedType(Qualify(parser.current_scope, xp[0]), tparam);
-		if(CodeBase().Find(qtype) >= 0) {
+		if(CodeBase().Find(ParseTemplatedType(qtype, tparam)) >= 0) {
 			LLOG("Is constructor " << qtype);
-			ExpressionType(ResolveTParam(qtype, tparam), xp, 2, typeset);
+			ExpressionType(qtype, xp, 2, typeset);
 			return typeset;
 		}
 	}

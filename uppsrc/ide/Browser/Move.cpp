@@ -1,16 +1,31 @@
 #include "Browser.h"
 
-class MoveTopicDlg : public WithMoveTopicLayout<TopWindow> {
+struct MoveTopicDlg : public WithMoveTopicLayout<TopWindow> {
 	typedef MoveTopicDlg CLASSNAME;
 
 public:
+	void Package();
+
 	MoveTopicDlg();
 };
+
+void MoveTopicDlg::Package()
+{
+	
+}
 
 MoveTopicDlg::MoveTopicDlg()
 {
 	CtrlLayoutOKCancel(*this, "");
-	
+
+	topic.NotNull();
+	topic.MaxLen(30);
+	topic.SetFilter(CharFilterID);
+
+	package <<= THISBACK(Package);
+	const Workspace& w = GetIdeWorkspace();
+	for(int i = 0; i < w.GetCount(); i++)
+		package.Add(w[i]);
 }
 
 void TopicEditor::MoveTopic()

@@ -183,9 +183,8 @@ Vector<String> AssistEditor::ReadBack(int q)
 		SkipSpcBack(q);
 		int c = Ch(q - 1);
 		if(c == '>' && !wasid) {
-			String id = ">";
 			q--;
-			r.Add() = id + CompleteIdBack(q);
+			r.Add() = CompleteIdBack(q) + ">";
 			wasid = true;
 			continue;
 		}

@@ -206,6 +206,7 @@ void CreateTopic(const char *fn, int lang, const String& ss)
 void TopicEditor::NewTopic()
 {
 	TopicDlg<WithNewTopicLayout<TopWindow> > d("New topic");
+	
 	d.lang <<= lastlang;
 
 	Vector<String> path, name;
