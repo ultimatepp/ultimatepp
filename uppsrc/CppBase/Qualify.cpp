@@ -134,7 +134,7 @@ String QualifyIds(Scopefo& nf, const String& k, bool all, byte& qual)
 				r.Cat(b, s);
 		}
 		else
-		if(iscib(c)) {
+		if(iscid(c)) {
 			if(iscid(*r.Last()))
 				r << ' ';
 			if(s[0] == 'c' && s[1] == 'o' && s[2] == 'n' && s[3] == 's' && s[4] == 't' && !iscid(s[5])) {
@@ -212,6 +212,9 @@ void QualifyPass1(CppBase& base)
 				}
 				m.qitem = m.item;
 			}
+			LLOG(base.GetKey(ni) << "." << m.item << " " << GetCppFile(m.file)
+			     << " impl:" << m.impl << " kind:" << (int)m.kind << " IsType:" << m.IsType()
+			     << " type: " << m.type << " qtype:" << m.qtype << " tparam:" << m.tparam);
 		}
 	}
 }
