@@ -50,10 +50,10 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 	list.EvenRowColor();
 	list.NoCursor();
 	Sizeable().Zoomable();
-	int q = BrowserBase().Find(scope);
+	int q = CodeBase().Find(scope);
 	if(q < 0)
 		return;
-	const Array<CppItem>& n = BrowserBase()[q];
+	const Array<CppItem>& n = CodeBase()[q];
 	for(int i = 0; i < n.GetCount(); i = FindNext(n, i))
 		nname.Add(n[i].name);
 	Index<String> done;
@@ -63,15 +63,17 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
                                    const String& scope, int access)
 {
+	if(IsNull(scope))
+		return;
 	String h = pfx + scope;
 	if(done.Find(h) >= 0)
 		return;
 	done.Add(h);
 	Vector<String> tparam;
-	int q = BrowserBase().Find(ParseTemplatedType(scope, tparam));
+	int q = CodeBase().Find(ParseTemplatedType(scope, tparam));
 	if(q < 0)
 		return;
-	const Array<CppItem>& n = BrowserBase()[q];
+	const Array<CppItem>& n = CodeBase()[q];
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
 		if(m.IsData() && IsCb(m.qtype) && m.access <= access) {
@@ -112,10 +114,10 @@ void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
 	}
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
-		if(m.IsData() && m.type.GetCount() && !IsCb(m.qtype)
+		if(m.IsData() && !IsCb(m.qtype)
 		   && m.natural.Find('&') < 0 && m.natural.Find('*') < 0
 		   && m.access <= access
-		   && memcmp(m.name, "dv___", 5))
+		   && !m.name.StartsWith("dv___"))
 			GatherCallbacks(pfx + "." + m.name, done, m.qtype, min(access, (int)PUBLIC));
 	}
 }
@@ -165,7 +167,7 @@ void AssistEditor::Thisbacks()
 {
 	Parser ctx;
 	Context(ctx, GetCursor());
-	if(IsNull(ctx.current_scope) || ctx.current_scope == "::" || !ctx.IsInBody())
+	if(IsNull(ctx.current_scope) || !ctx.IsInBody())
 		return;
 	ThisbacksDlg dlg(ctx.current_scope);
 	LoadFromGlobal(dlg, "ThisbacksDlg");

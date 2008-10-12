@@ -3,7 +3,7 @@
 void AssistEditor::Annotate(const String& filename)
 {
 	int fi = GetCppFileIndex(filename);
-	CppBase& base = BrowserBase();
+	CppBase& base = CodeBase();
 	for(int j = 0; j < base.GetCount(); j++) {
 		const Array<CppItem>& n = base[j];
 		for(int k = 0; k < n.GetCount(); k++) {

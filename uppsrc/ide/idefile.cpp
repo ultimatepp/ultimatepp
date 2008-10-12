@@ -225,7 +225,7 @@ void Ide::ScanFile()
 		return;
 	String s = ~editor;
 	StringStream ss(s);
-	BrowserBaseScan(ss, editfile);
+	CodeBaseScan(ss, editfile);
 }
 
 void Ide::SaveFile(bool always)
@@ -237,7 +237,7 @@ void Ide::SaveFile(bool always)
 		if(tm != FileGetTime(fn))
 			TouchFile(fn);
 		if(IsProjectFile(fn) && ToUpper(GetFileExt(fn)) == ".LAY")
-			BrowserBaseScanLay(fn);
+			CodeBaseScanLay(fn);
 		return;
 	}
 

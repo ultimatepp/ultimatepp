@@ -1,17 +1,17 @@
 #include "ide.h"
 
-#define LDUMP(x)     // DDUMP(x)
-#define LDUMPC(x)    // DDUMPC(x)
-#define LLOG(x)      // DLOG(x)
+#define LDUMP(x)      //DDUMP(x)
+#define LDUMPC(x)     //DDUMPC(x)
+#define LLOG(x)       //DLOG(x)
 
 static Array<CppItem> sEmpty;
 
 const Array<CppItem>& GetTypeItems(const String& type)
 {
-	int q = BrowserBase().Find(type);
+	int q = CodeBase().Find(type);
 	if(q < 0)
 		return sEmpty;
-	return BrowserBase()[q];
+	return CodeBase()[q];
 }
 
 Vector<String> GetTypeBases(const String& type)
@@ -33,19 +33,20 @@ String ParseTemplatedType(const String& type, Vector<String>& tparam)
 	while(*s) {
 		if(*s == '<') {
 			s++;
-			int lvl = 1;
+			int lvl = 0;
 			String t;
 			while(*s) {
 				int c = *s++;
-				if(c == ',') {
-					if(lvl == 0) {
-						tparam.Add(t);
-						t.Clear();
-					}
+				if(c == ',' && lvl == 0) {
+					tparam.Add(t);
+					t.Clear();
 				}
 				else {
-					if(c == '>' && --lvl == 0)
-						break;
+					if(c == '>') {
+						if(lvl == 0)
+							break;
+						lvl--;
+					}
 					if(c == '<')
 						lvl++;
 					t.Cat(c);
@@ -110,8 +111,8 @@ void AssistEditor::Context(Parser& parser, int pos)
 	String s = Get(0, pos);
 	StringStream ss(s);
 	parser.dobody = true;
-	parser.Do(ss, IgnoreList(), BrowserBase(), Null, callback(AssistScanError));
-	QualifyTypes(BrowserBase(), parser.current_scope, parser.current);
+	parser.Do(ss, IgnoreList(), CodeBase(), Null, callback(AssistScanError));
+	QualifyTypes(CodeBase(), parser.current_scope, parser.current);
 	inbody = parser.IsInBody();
 #ifdef _DEBUG
 	PutVerbose("body: " + AsString(inbody));
@@ -121,7 +122,7 @@ void AssistEditor::Context(Parser& parser, int pos)
 
 String Qualify(const String& scope, const String& type)
 {
-	return Qualify(BrowserBase(), scope, type);
+	return Qualify(CodeBase(), scope, type);
 }
 
 void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, int ii,
@@ -214,7 +215,7 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 	if(xp.GetCount() >= 2 && xp[1] == "()") {
 		Vector<String> tparam;
 		String qtype = ParseTemplatedType(Qualify(parser.current_scope, xp[0]), tparam);
-		if(BrowserBase().Find(qtype) >= 0) {
+		if(CodeBase().Find(qtype) >= 0) {
 			LLOG("Is constructor " << qtype);
 			ExpressionType(ResolveTParam(qtype, tparam), xp, 2, typeset);
 			return typeset;
@@ -240,16 +241,16 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 	in_types.Add(type);
 	Vector<String> tparam;
 	String ntp = ParseTemplatedType(type, tparam);
-	int q = BrowserBase().Find(ntp);
+	int q = CodeBase().Find(ntp);
 	if(q >= 0) {
 		if(types) {
 			if(ntp.GetCount())
 				ntp << "::";
 			int typei = assist_type.FindAdd("<types>");
-			for(int i = 0; i < BrowserBase().GetCount(); i++) {
-				String n = BrowserBase().GetKey(i);
+			for(int i = 0; i < CodeBase().GetCount(); i++) {
+				String n = CodeBase().GetKey(i);
 				if(n.GetLength() > ntp.GetLength() && memcmp(~ntp, ~n, ntp.GetLength()) == 0) {
-					Array<CppItem>& n = BrowserBase()[i];
+					Array<CppItem>& n = CodeBase()[i];
 					for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
 						const CppItem& m = n[i];
 						if(m.IsType()) {
@@ -262,7 +263,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 				}
 			}
 		}
-		const Array<CppItem>& n = BrowserBase()[q];
+		const Array<CppItem>& n = CodeBase()[q];
 		String base;
 		int typei = assist_type.FindAdd(ntp);
 		for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {

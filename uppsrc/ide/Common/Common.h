@@ -66,6 +66,7 @@ public:
 	virtual bool      IdeIsDebugLock() const = 0;
 	virtual void      IdeSetBar() = 0;
 	virtual void      IdeGotoCodeRef(String link) = 0;
+	virtual void      IdeMoveTopic(const String& from, const String& to) = 0;
 
 	virtual ~IdeContext() {}
 };

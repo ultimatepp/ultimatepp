@@ -522,6 +522,7 @@ public:
 
 	virtual   void      IdeSetBar();
 	virtual   void      IdeGotoCodeRef(String coderef);
+	virtual   void      IdeMoveTopic(const String& from, const String& to);
 
 	enum {
 		EDITING, BUILDING, RUNNING, DEBUGGING,
@@ -931,6 +932,7 @@ public:
 		void  RescanCode();
 		void  QueryId();
 		void  About();
+		void  OpenTopic(const char *topic);
 		void  OpenATopic();
 		void  ToggleNavigator(int nav);
 		void  SearchIndex();

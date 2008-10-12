@@ -25,6 +25,7 @@ file
 	Template.cpp,
 	Link.cpp,
 	TopicWin.cpp,
+	Move.cpp,
 	IdeTopic.cpp,
 	TopicI.icpp,
 	Topic.lay,

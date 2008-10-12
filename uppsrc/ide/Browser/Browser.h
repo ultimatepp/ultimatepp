@@ -18,19 +18,17 @@ class Browser;
 
 void           GC_Cache();
 
-CppBase&       BrowserBase();
-void           StartBrowserBase();
-void           BrowserBaseScan(Stream& s, const String& fn);
-void           ClearBrowserBase();
-void           RescanBrowserBase();
-void           SyncBrowserBase();
-void           SaveBrowserBase();
-void           Register(Browser *b); //!!!
-void           UnRegister(Browser *b); //!!!
+CppBase&       CodeBase();
+void           StartCodeBase();
+void           CodeBaseScan(Stream& s, const String& fn);
+void           ClearCodeBase();
+void           RescanCodeBase();
+void           SyncCodeBase();
+void           SaveCodeBase();
 bool           ExistsBrowserItem(const String& item);
-void           ReQualifyBrowserBase();
+void           ReQualifyCodeBase();
 
-void           BrowserBaseScanLay(const String& fn);
+void           CodeBaseScanLay(const String& fn);
 void           ScanLayFile(const char *fn);
 
 String         MakeCodeRef(const String& scope, const String& item);
@@ -214,6 +212,20 @@ Uuid EndUuid();
 
 struct StyleDlg;
 
+template <class T>
+struct TopicDlg : T {
+	String GetName() const {
+		return (String)~T::topic + "$" + ToLower(LNGAsText(~T::lang)) + ".tpp";
+	}
+
+	TopicDlg(const char *title) {
+		CtrlLayoutOKCancel(*this, title);
+		T::topic.NotNull();
+		T::topic.MaxLen(30);
+		T::topic.SetFilter(CharFilterID);
+	}
+};
+
 class TopicEditor : public IdeDesigner, public Ctrl {
 public:
 	virtual String GetFileName() const;
@@ -264,7 +276,7 @@ protected:
 	String GetCurrentTopicPath();
 
 	void   NewTopic();
-	void   RenameTopic();
+	void   MoveTopic();
 	void   RemoveTopic();
 
 	bool         autosave;

@@ -137,7 +137,7 @@ void Ide::SetMain(const String& package)
 	if(IsNull(e))
 		e = GetFirstFile();
 	SyncRefs();
-	StartBrowserBase();
+	StartCodeBase();
 	EditFile(e);
 }
 
@@ -174,7 +174,7 @@ bool Ide::OpenMainPackage()
 
 void Ide::NewMainPackage()
 {
-	SaveBrowserBase();
+	SaveCodeBase();
 	OpenMainPackage();
 }
 
@@ -279,7 +279,7 @@ void Ide::SyncUsc()
 void Ide::SyncWorkspace()
 {
 	SyncUsc();
-	SyncBrowserBase();
+	SyncCodeBase();
 }
 
 bool IsTextFile(const String& file) {

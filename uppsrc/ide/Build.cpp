@@ -574,7 +574,7 @@ bool Ide::Build(const Workspace& wspc, String mainparam, String outfile, bool cl
 				mainparam, outfile, linkfile, linkopt, ok) && ok;
 	}
 	EndBuilding(ok);
-	ReQualifyBrowserBase();
+	ReQualifyCodeBase();
 	SetErrorEditor();
 	return ok;
 }

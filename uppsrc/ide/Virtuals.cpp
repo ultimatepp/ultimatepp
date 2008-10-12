@@ -9,14 +9,16 @@ struct AssistItemInfo : CppItem {
 void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
                     Index<String>& done)
 {
+	if(IsNull(scope))
+		return;
 	if(done.Find(scope) >= 0)
 		return;
 	done.Add(scope);
 	Vector<String> tparam;
-	int q = BrowserBase().Find(ParseTemplatedType(scope, tparam));
+	int q = CodeBase().Find(ParseTemplatedType(scope, tparam));
 	if(q < 0)
 		return;
-	const Array<CppItem>& m = BrowserBase()[q];
+	const Array<CppItem>& m = CodeBase()[q];
 	for(int i = 0; i < m.GetCount(); i = FindNext(m, i)) {
 		const CppItem& im = m[i];
 		if(im.IsType()) {

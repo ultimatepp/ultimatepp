@@ -26,10 +26,10 @@ const CppItem *GetCodeRefItem(const String& ref)
 	String scope;
 	String item;
 	SplitCodeRef(ref, scope, item);
-	int q = BrowserBase().Find(scope);
+	int q = CodeBase().Find(scope);
 	if(q < 0)
 		return NULL;
-	const Array<CppItem>& n = BrowserBase()[q];
+	const Array<CppItem>& n = CodeBase()[q];
 	q = FindItem(n, item);
 	if(q < 0)
 		return NULL;

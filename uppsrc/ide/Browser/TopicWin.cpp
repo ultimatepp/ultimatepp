@@ -134,7 +134,7 @@ void TopicEditor::TopicMenu(Bar& bar)
 {
 	bar.Add("New topic..", THISBACK(NewTopic))
 	   .Key(K_CTRL_N).Key(K_ALT_INSERT);
-	bar.Add(topic.IsCursor(), "Rename topic..", THISBACK(RenameTopic));
+	bar.Add(topic.IsCursor(), "Move topic..", THISBACK(MoveTopic));
 	bar.Add(topic.IsCursor(), "Delete topic", THISBACK(RemoveTopic))
 	   .Key(K_ALT_DELETE);
 	bar.Separator();
@@ -203,20 +203,6 @@ void CreateTopic(const char *fn, int lang, const String& ss)
 	SaveFile(fn,  WriteTopic("", ParseQTF(ss + "[{_}%" + LNGAsText(lang) + " ")));
 }
 
-template <class T>
-struct TopicDlg : T {
-	String GetName() const {
-		return (String)~T::topic + "$" + ToLower(LNGAsText(~T::lang)) + ".tpp";
-	}
-
-	TopicDlg(const char *title) {
-		CtrlLayoutOKCancel(*this, title);
-		T::topic.NotNull();
-		T::topic.MaxLen(30);
-		T::topic.SetFilter(CharFilterID);
-	}
-};
-
 void TopicEditor::NewTopic()
 {
 	TopicDlg<WithNewTopicLayout<TopWindow> > d("New topic");
@@ -252,36 +238,6 @@ void TopicEditor::NewTopic()
 	Load(fn);
 	SaveInc();
 	topic.FindSetCursor(GetFileTitle(fn));
-	editor.SetFocus();
-	serial++;
-}
-
-void TopicEditor::RenameTopic()
-{
-	if(!topic.IsCursor())
-		return;
-	TopicDlg<WithRenameTopicLayout<TopWindow> > d("Rename topic");
-	String p = GetCurrentTopicPath();
-	String tn;
-	int    lng;
-	ParseTopicFileName(p, tn, lng);
-	d.topic <<= tn;
-	d.lang <<= lng;
-	if(d.Run() != IDOK)
-		return;
-	String np = AppendFileName(grouppath, d.GetName());
-	if(FindFile(np)) {
-		Exclamation("Target file aready exists!");
-		return;
-	}
-	Flush();
-	FileMove(p, np);
-	InvalidateTopicInfoPath(p);
-	InvalidateTopicInfoPath(np);
-	Open(grouppath);
-	Load(np);
-	SaveInc();
-	topic.FindSetCursor(GetFileTitle(np));
 	editor.SetFocus();
 	serial++;
 }

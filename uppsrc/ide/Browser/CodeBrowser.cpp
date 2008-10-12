@@ -20,10 +20,10 @@ bool HasItem(int file, const String& m)
 {
 	if(IsNull(m))
 		return true;
-	int q = BrowserBase().Find("");
+	int q = CodeBase().Find("");
 	if(q < 0)
 		return false;
-	const Array<CppItem>& n = BrowserBase()[q];
+	const Array<CppItem>& n = CodeBase()[q];
 	for(int i = 0; i < n.GetCount(); i++)
 		if(n[i].file == file && n[i].uname.StartsWith(m))
 			return true;
@@ -37,9 +37,9 @@ void CodeBrowser::Load()
 	Vector<String> txt;
 	Vector<Value>  ndx;
 	Index<int>     fi;
-	for(int i = 0; i < BrowserBase().GetCount(); i++) {
-		String s = BrowserBase().GetKey(i);
-		const Array<CppItem>& n = BrowserBase()[i];
+	for(int i = 0; i < CodeBase().GetCount(); i++) {
+		String s = CodeBase().GetKey(i);
+		const Array<CppItem>& n = CodeBase()[i];
 		if(s.GetCount()) {
 			if(MatchCib(s, match) && HasItem(n, find)) {
 				txt.Add(s);
@@ -84,9 +84,9 @@ int ItemCompare(const Value& v1, const Value& v2)
 
 void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool g)
 {
-	int q = BrowserBase().Find(type);
+	int q = CodeBase().Find(type);
 	if(q < 0) return;
-	const Array<CppItem>& n = BrowserBase()[q];
+	const Array<CppItem>& n = CodeBase()[q];
 	for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
 		const CppItem& m = n[i];
 		if(m.IsType()) {
@@ -113,9 +113,9 @@ void CodeBrowser::LoadScope()
 	Value x = scope.Get(2);
 	int file = IsNumber(x) ? (int)x : -1;
 	String scope = file < 0 ? String(x) : String();
-	int q = BrowserBase().Find(scope);
+	int q = CodeBase().Find(scope);
 	if(q >= 0) {
-		const Array<CppItem>& n = BrowserBase()[q];
+		const Array<CppItem>& n = CodeBase()[q];
 		VectorMap<String, bool> inherited;
 		if(file < 0)
 			GatherMethods(scope, inherited, false);

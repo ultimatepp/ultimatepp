@@ -22,7 +22,7 @@ String CacheFile(const String& res)
 	return AppendFileName(ConfigFile("cfg"), MD5String(res) + ".cache");
 }
 
-CppBase& BrowserBase()
+CppBase& CodeBase()
 {
 	static CppBase b;
 	return b;
@@ -40,19 +40,6 @@ Vector<Browser *>& RBrowser()
 	return bp;
 }
 
-void     Register(Browser *b)
-{
-	RBrowser().Add(b);
-}
-
-void     UnRegister(Browser *b)
-{
-	Vector<Browser *>& rb = RBrowser();
-	int q = FindIndex(rb, b);
-	if(q >= 0)
-		rb.Remove(q);
-}
-
 static bool   s_console;
 static String s_file;
 
@@ -62,12 +49,12 @@ void BrowserScanError(int line, const String& text)
 		PutConsole(String().Cat() << s_file << " (" << line << "): " << text);
 }
 
-void SaveBrowserBase()
+void SaveCodeBase()
 {
-	LTIMING("SaveBrowserBase");
+	LTIMING("SaveCodeBase");
 	RealizeDirectory(ConfigFile("cfg"));
 	GC_Cache();
-	CppBase& base = BrowserBase();
+	CppBase& base = CodeBase();
 	if(base.GetCount() == 0)
 		return;
 	ArrayMap<String, BrowserFileInfo>& fileset = FileSet();
@@ -103,10 +90,10 @@ void SaveBrowserBase()
 	}
 }
 
-void LoadBrowserBase(Progress& pi)
+void LoadCodeBase(Progress& pi)
 {
-	LTIMING("LoadBrowserBase");
-	CppBase& base = BrowserBase();
+	LTIMING("LoadCodeBase");
+	CppBase& base = CodeBase();
 	ArrayMap<String, BrowserFileInfo>& fileset = FileSet();
 	String s;
 	const Workspace& wspc = GetIdeWorkspace();
@@ -144,7 +131,7 @@ void LoadBrowserBase(Progress& pi)
 				}
 			}
 			catch(LoadingError) {
-				BrowserBase().Clear();
+				CodeBase().Clear();
 				fileset.Clear();
 				return;
 			}
@@ -155,18 +142,18 @@ void LoadBrowserBase(Progress& pi)
 void FinishBase()
 {
 	TimeStop tm;
-	Qualify(BrowserBase());
+	Qualify(CodeBase());
 }
 
-void ReQualifyBrowserBase()
+void ReQualifyCodeBase()
 {
-	Qualify(BrowserBase());
+	Qualify(CodeBase());
 }
 
 Vector<String> SortedNests()
 {
 	LTIMING("SortedNests()");
-	CppBase& base = BrowserBase();
+	CppBase& base = CodeBase();
 	Vector<String> n;
 	for(int i = 0; i < base.GetCount(); i++)
 		if(!base.IsUnlinked(i))
@@ -175,13 +162,13 @@ Vector<String> SortedNests()
 	return n;
 }
 
-void UpdateBrowserBase(Progress& pi)
+void UpdateCodeBase(Progress& pi)
 {
 	Index<String> fp;
 	Vector<String> scan;
 	ArrayMap<String, BrowserFileInfo>& set = FileSet();
 	const Workspace& wspc = GetIdeWorkspace();
-	CppBase& base = BrowserBase();
+	CppBase& base = CodeBase();
 	pi.SetText("Assist++ checking packages");
 	pi.SetTotal(wspc.GetCount());
 	pi.SetPos(0);
@@ -239,11 +226,11 @@ void UpdateBrowserBase(Progress& pi)
 	}
 }
 
-void BrowserBaseScan(Stream& s, const String& fn)
+void CodeBaseScan(Stream& s, const String& fn)
 {
-	LTIMING("BrowserBaseScan");
+	LTIMING("CodeBaseScan");
 	TimeStop tm;
-	CppBase& base = BrowserBase();
+	CppBase& base = CodeBase();
 	LLOG("Scan2 " << tm);
 	Vector<String> remove;
 	remove.Add(fn);
@@ -256,11 +243,11 @@ void BrowserBaseScan(Stream& s, const String& fn)
 	LLOG("---------");
 }
 
-void BrowserBaseScanLay(const String& fn)
+void CodeBaseScanLay(const String& fn)
 {
-	LTIMING("BrowserBaseScanLay");
+	LTIMING("CodeBaseScanLay");
 	Vector<String> before = SortedNests();
-	CppBase& base = BrowserBase();
+	CppBase& base = CodeBase();
 	Vector<String> remove;
 	remove.Add(fn);
 	Remove(base, remove);
@@ -268,44 +255,44 @@ void BrowserBaseScanLay(const String& fn)
 	FinishBase();
 }
 
-void ClearBrowserBase()
+void ClearCodeBase()
 {
-	BrowserBase().Clear();
+	CodeBase().Clear();
 	FileSet().Clear();
 }
 
-void StartBrowserBase()
+void StartCodeBase()
 {
 	static int start;
 	if(start) return;
 	start++;
-	if(BrowserBase().GetCount() == 0) {
+	if(CodeBase().GetCount() == 0) {
 		Progress pi;
 		pi.Title("Assist++");
-		LoadBrowserBase(pi);
-		UpdateBrowserBase(pi);
+		LoadCodeBase(pi);
+		UpdateCodeBase(pi);
 		FinishBase();
 	}
 	start--;
 }
 
-void SyncBrowserBase()
+void SyncCodeBase()
 {
-	if(BrowserBase().GetCount()) {
+	if(CodeBase().GetCount()) {
 		Progress pi;
 		pi.Title("Assist++");
-		UpdateBrowserBase(pi);
+		UpdateCodeBase(pi);
 		FinishBase();
 	}
 }
 
-void RescanBrowserBase()
+void RescanCodeBase()
 {
-	ClearBrowserBase();
+	ClearCodeBase();
 	s_console = true;
 	Progress pi;
 	pi.Title("Assist++");
-	UpdateBrowserBase(pi);
+	UpdateCodeBase(pi);
 	FinishBase();
 	s_console = false;
 }

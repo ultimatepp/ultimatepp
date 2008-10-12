@@ -453,7 +453,7 @@ void TopicCtrl::Search()
 
 void TopicCtrl::SearchWord(const String& s)
 {
-	search <<= s;
+	search <<= ToUpper(s);
 	Search();
 }
 
