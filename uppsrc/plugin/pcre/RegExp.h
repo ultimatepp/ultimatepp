@@ -10,6 +10,7 @@ public:
 		PARTIAL   = PCRE_PARTIAL,
 		/* compile options */
 		UNICODE   = PCRE_UTF8,
+		UTF8      = PCRE_UTF8,
 		CASELESS  = PCRE_CASELESS,
 		MULTILINE = PCRE_MULTILINE,
 		UNGREEDY  = PCRE_UNGREEDY
@@ -29,9 +30,9 @@ private:
 	int execute_options;
 
 public:
-	RegExp(int options = UNICODE);
-	RegExp(const char * p, int options = UNICODE);
-	RegExp(const String &p, int options = UNICODE);
+	RegExp(int options = UTF8);
+	RegExp(const char * p, int options = UTF8);
+	RegExp(const String &p, int options = UTF8);
 	~RegExp();
 
 	void Clear(bool freemem = false);

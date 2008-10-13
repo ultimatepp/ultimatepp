@@ -820,36 +820,51 @@ void Ide::ContextGoto()
 	if(id.GetCount() == 0)
 		return;
 	Vector<String> scope;
-	for(int i = 0; i < type.GetCount(); i++) {
-		Index<String> done;
-		String r;
-		if(GetIdScope(r, type[i], id, done))
-			scope.Add(r);
+	bool istype = false;
+	if(xp.GetCount() == 0) { // 'String'
+		String t = Qualify(CodeBase(), parser.current_scope, id);
+		if(CodeBase().Find(t) >= 0) {
+			scope.Add(t);
+			istype = true;
+		}
 	}
-
+	if(xp.GetCount() == 1 && iscib(*xp[0])) { // 'Vector<String>::Iterator'
+		String t = Qualify(CodeBase(), parser.current_scope, xp[0] + "::" + id);
+		if(CodeBase().Find(t) >= 0) {
+			scope.Add(t);
+			istype = true;
+		}
+	}
+	
+	if(scope.GetCount() == 0)
+		for(int i = 0; i < type.GetCount(); i++) { // 'x.attr'
+			Index<String> done;
+			String r;
+			if(GetIdScope(r, type[i], id, done))
+				scope.Add(r);
+		}
 	if(scope.GetCount() == 0) {
 		Index<String> done;
 		String r;
-		if(GetIdScope(r, "", id, done))
+		if(GetIdScope(r, "", id, done)) // global
 			scope.Add(r);
-		else {
-			String t = Qualify(CodeBase(), parser.current_scope, id);
-			if(CodeBase().Find(t) < 0)
-				return;
-			scope.Add(t);
-		}
 	}
 
 	if(scope.GetCount() == 0)
 		return;
 
-	q = CodeBase().Find(scope[0]);
-	if(q < 0)
-		return;
-	const Array<CppItem>& n = CodeBase()[q];
-	q = FindName(n, id);
-	if(q >= 0)
-		JumpToDefinition(n, q);
+	for(int j = 0; j < scope.GetCount(); j++) {
+		q = CodeBase().Find(scope[j]);
+		if(q >= 0) {
+			const Array<CppItem>& n = CodeBase()[q];
+			for(int i = 0; i < n.GetCount(); i++) {
+				if(n[i].IsType() == istype && n[i].name == id) {
+					JumpToDefinition(n, i);
+					return;
+				}
+			}
+		}
+	}
 }
 
 void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
