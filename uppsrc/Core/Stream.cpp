@@ -1524,7 +1524,9 @@ String ReadStdIn()
 	String r;
 	for(;;) {
 		int c = getchar();
-		if(c < 0 || c == '\n')
+		if(c < 0)
+			return r.GetCount() ? r : String::GetVoid();
+		if(c == '\n')
 			return r;
 		r.Cat(c);
 	}
