@@ -612,6 +612,8 @@ String AssistEditor::MakeDefinition(const String& cls, const String& _n)
 			String id = p.ReadId();
 			if(p.Char('(')) {
 				String rp = RemoveDefPar(p.GetPtr());
+				if(cls.GetCount() == 0)
+					return NormalizeSpaces(String(beg, b) + ' ' + id + '(' + rp);
 				if(dest)
 					return NormalizeSpaces(String(beg, b) + cls + "::~" + id + '(' + rp);
 				else
@@ -683,7 +685,10 @@ void AssistEditor::DCopy()
 							while(iscid(*s)) s++;
 							String id(b, s);
 							if(m.name == id) {
-								r << cls << "::" << m.name << s;
+								if(cls.GetCount())
+									r << cls << "::" << m.name << s;
+								else
+									r << m.name << s;
 								break;
 							}
 							r << id;

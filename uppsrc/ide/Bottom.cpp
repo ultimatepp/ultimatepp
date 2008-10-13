@@ -227,7 +227,7 @@ void Ide::IdeSetBottom(Ctrl& ctrl)
 	bottom.Add(ctrl.SizePos());
 	bottomctrl = &ctrl;
 	BTabs();
-	SetBottom(4);
+	SetBottom(BDEBUG);
 }
 
 void Ide::IdeRemoveBottom(Ctrl& ctrl)
