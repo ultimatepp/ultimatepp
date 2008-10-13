@@ -33,6 +33,7 @@ void TopicEditor::MoveTopic()
 {
 	if(!topic.IsCursor())
 		return;
+
 	TopicDlg<WithMoveTopicLayout<TopWindow> > d("Move topic");
 	String p = GetCurrentTopicPath();
 	String tn;
