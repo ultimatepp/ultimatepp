@@ -87,7 +87,6 @@ void RichEdit::Remove(int pos, int len, bool joinnext)
 	if(!joinnext)
 		fmt.Set(text.GetRichPos(pos).format);
 	fmt.newpage = f.newpage;
-	ModifyFormat(pos, fmt, 0);
 	SetModify();
 	modified = true;
 }
