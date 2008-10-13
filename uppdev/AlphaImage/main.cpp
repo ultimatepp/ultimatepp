@@ -39,6 +39,7 @@ struct App : public TopWindow {
 
 		w.DrawImage(20, 500, a);
 	}
+	
 };
 
 GUI_APP_MAIN

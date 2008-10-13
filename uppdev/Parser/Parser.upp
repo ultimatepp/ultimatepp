@@ -1,8 +1,11 @@
 uses
-	RichEdit;
+	Core,
+	CtrlLib,
+	CodeEditor;
 
 file
 	test.cpp,
+	test2.cpp,
 	ignorelist;
 
 mainconfig

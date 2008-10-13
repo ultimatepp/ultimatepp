@@ -1,0 +1,237 @@
+#include "RichText.h"
+
+NAMESPACE_UPP
+
+#ifdef NEWIMAGE
+
+struct RichImage : public RichObjectType {
+	virtual String GetTypeName(const Value& v) const;
+	virtual Size   GetPhysicalSize(const Value& data) const;
+	virtual Size   GetPixelSize(const Value& data) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
+	virtual Image  ToImage(const Value& data, Size sz) const;
+
+	virtual bool   Accept(PasteClip& clip);
+	virtual Value  Read(PasteClip& clip);
+	virtual String GetClipFmts() const;
+	virtual String GetClip(const Value& data, const String& fmt) const;
+
+	typedef RichImage CLASSNAME;
+};
+
+String RichImage::GetTypeName(const Value& v) const
+{
+	return "image";
+}
+
+bool RichImage::Accept(PasteClip& clip)
+{
+	return AcceptImage(clip);
+}
+
+Value RichImage::Read(PasteClip& clip)
+{
+	return StoreImageAsString(GetImage(clip));
+}
+
+String RichImage::GetClipFmts() const
+{
+	return ClipFmtsImage();
+}
+
+String RichImage::GetClip(const Value& data, const String& fmt) const
+{
+	return GetImageClip(LoadImageFromString(data), fmt);
+}
+
+Size   RichImage::GetPixelSize(const Value& data) const
+{
+	return GetImageStringSize(data);
+}
+
+Size   RichImage::GetPhysicalSize(const Value& data) const
+{
+	Size sz = GetImageStringDots(data);
+	if(sz.cx == 0 || sz.cy == 0)
+		sz = 600 * GetPixelSize(data) / 96;
+	return sz;
+}
+
+void   RichImage::Paint(const Value& data, Draw& w, Size sz) const
+{
+	Image x = LoadImageFromString(data);
+//	Size outsz(min(sz.cx, 4 * x.GetWidth()), min(sz.cy, 4 * x.GetHeight()));
+	w.DrawImage(0, 0, sz.cx, sz.cy, x);
+}
+
+Image  RichImage::ToImage(const Value& data, Size sz) const
+{
+	return Rescale(LoadImageFromString(data), sz);
+}
+
+INITBLOCK {
+	RichObject::Register("image", &Single<RichImage>());
+};
+
+RichObject CreateImageObject(const Image& img, int cx, int cy)
+{
+	RichObject o = RichObject("image", StoreImageAsString(img));
+	if(cx || cy)
+		o.SetSize(GetRatioSize(o.GetPixelSize(), cx, cy));
+	return o;
+}
+
+struct RichPNG : public RichObjectType {
+	virtual String GetTypeName(const Value& v) const;
+	virtual Value  Read(const String& s) const;
+	virtual String Write(const Value& v) const;
+	virtual Size   GetPhysicalSize(const Value& data) const;
+	virtual Size   GetPixelSize(const Value& data) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
+	virtual Image  ToImage(const Value& data, Size sz) const;
+};
+
+String RichPNG::GetTypeName(const Value& v) const
+{
+	return IsString(v) ? "PNG" : "image";
+}
+
+Value RichPNG::Read(const String& s) const
+{
+	Image img = StreamRaster::LoadStringAny(s);
+	if(img)
+		return img;
+	return s;
+}
+
+String RichPNG::Write(const Value& v) const
+{
+	if(IsString(v))
+		return v;
+	return StoreImageAsString(v);
+}
+
+Size RichPNG::GetPhysicalSize(const Value& data) const
+{
+	if(IsString(data))
+		return Size(0, 0);
+	return Image(data).GetDots();
+}
+
+Size RichPNG::GetPixelSize(const Value& data) const
+{
+	if(IsString(data))
+		return Size(0, 0);
+	return Image(data).GetDots();
+}
+
+void RichPNG::Paint(const Value& data, Draw& w, Size sz) const
+{
+	if(IsString(data)) {
+		w.DrawRect(sz, SColorFace());
+		DrawFrame(w, sz, SColorText());
+		w.DrawText(2, 2, "plugin/png missing!");
+		return;
+	}
+	Image x = Image(data);
+	Size outsz(min(sz.cx, 4 * x.GetWidth()), min(sz.cy, 4 * x.GetHeight()));
+	w.DrawImage(0, 0, outsz.cx, outsz.cy, x);
+}
+
+Image RichPNG::ToImage(const Value& data, Size sz) const
+{
+	if(IsString(data)) {
+		ImageDraw iw(sz);
+		Paint(data, iw, sz);
+		return iw;	
+	}
+	Image x = Image(data);
+	Size outsz(min(sz.cx, 4 * x.GetWidth()), min(sz.cy, 4 * x.GetHeight()));
+	return Rescale(x, outsz);
+}
+
+INITBLOCK {
+	RichObject::Register("PNG", &Single<RichPNG>());
+};
+
+struct RichRawImage : public RichObjectType {
+	virtual String GetTypeName(const Value& v) const;
+	virtual Value  Read(const String& s) const;
+	virtual String Write(const Value& v) const;
+	virtual Size   GetPhysicalSize(const Value& data) const;
+	virtual Size   GetPixelSize(const Value& data) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
+	virtual Image  ToImage(const Value& data, Size sz) const;
+};
+
+String RichRawImage::GetTypeName(const Value& v) const
+{
+	return "rawimage";
+}
+
+Value RichRawImage::Read(const String& s) const
+{
+	return s;
+}
+
+String RichRawImage::Write(const Value& v) const
+{
+	return v;
+}
+
+Size RichRawImage::GetPhysicalSize(const Value& data) const
+{
+	String s = data;
+	StringStream ss(s);
+	One<StreamRaster> r = StreamRaster::OpenAny(ss);
+	if(r)
+		return r->GetInfo().dots;
+	return Size(0, 0);
+}
+
+Size RichRawImage::GetPixelSize(const Value& data) const
+{
+	String s = data;
+	StringStream ss(s);
+	One<StreamRaster> r = StreamRaster::OpenAny(ss);
+	if(r)
+		return r->GetSize();
+	return Size(0, 0);
+}
+
+void RichRawImage::Paint(const Value& data, Draw& w, Size sz) const
+{
+	String s = data;
+	StringStream ss(s);
+	One<StreamRaster> r = StreamRaster::OpenAny(ss);
+	if(r) {
+		ImageEncoder m;
+		Rescale(m, sz, *r, r->GetSize());
+		w.DrawImage(0, 0, sz.cx, sz.cy, m);
+	}
+}
+
+Image RichRawImage::ToImage(const Value& data, Size sz) const
+{
+	String s = data;
+	StringStream ss(s);
+	One<StreamRaster> r = StreamRaster::OpenAny(ss);
+	if(r)
+		return r->GetImage();
+	return Null;
+}
+
+INITBLOCK {
+	RichObject::Register("rawimage", &Single<RichRawImage>());
+};
+
+RichObject CreateRawImageObject(const String& s, int cx, int cy)
+{
+	RichObject o = RichObject("rawimage", s);
+	o.InitSize(cx, cy);
+	return o;
+}
+
+#endif
+
+END_UPP_NAMESPACE
