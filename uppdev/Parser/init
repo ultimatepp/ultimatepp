@@ -1,4 +1,6 @@
 #ifndef _Parser_icpp_init_stub
 #define _Parser_icpp_init_stub
-#include "RichEdit/init"
+#include "Core/init"
+#include "CtrlLib/init"
+#include "CodeEditor/init"
 #endif

@@ -1,11 +1,124 @@
 #include <RichEdit/RichEdit.h>
 
+struct alpha {
+	int beta;
+};
+
+struct oper2 {
+	int oper2m;
+};
+
+struct oper3 {
+	int oper3m;
+};
+
+struct X {
+	alpha a;
+	
+	alpha operator[](int i);
+};
+
+struct Y : X{
+	X b;
+	int a;
+	
+	struct H {
+		int x;
+	};
+	
+	H x;
+};
+
+template <class T>
+struct Tm {
+	template <class V>
+	struct H {
+		T Test();
+		V Test2();
+	};
+	
+	T x;
+};
+
+
+void Test(int a, long b)
+{
+	X().;
+	Y x;
+	x.;
+	x.a. ; // should not work...
+	x.X::a. ;
+	x.b.a. ;
+	x[]. ;
+	x(). ;
+	x. ;
+	x-> ;
+	y. ;
+	Tm<X> tm;
+	Tm<  X > :: H <alpha > tt;
+	tt. ;
+	tt.Test(). ;
+	tt.Test2(). ;
+	X:: ;
+	;
+	
+}
+
+// ------------------------------------------------------------------------------------------
+
+void Foo()
+{
+	
+}
+
+CppItemInfoDisplay ItemList::display;
+
+class ItemList : public ColumnList {
+	CppItemInfoDisplay display;
+
+	friend struct ItemDisplay;
+
+	int    GetTopic(Point p, String& key);
+	String Item(int i);
+
+public:
+	bool active_topics;
+
+	void Clear();
+
+	ItemList();
+};
+
+void ItemList::Clear()
+{
+}
+
+void ItemList::Clear(int)
+{
+}
+
+	void Clear();
+
+typedef short unsigned     word;
+
+typedef unsigned char      byte;
+typedef signed char        int8;
+typedef unsigned char      uint8;
+
+typedef short int          int16;
+typedef short unsigned     uint16;
+
 struct FindBrokenRefIterator : RichTxt::Iterator {
 	int cursor;
 	Uuid itemstyle;
+	
+	void Test();
 
 	virtual bool operator()(int pos, const RichPara& para)
 	{
+		
+		this-> ;
+		THISBACK( ;
 		if(pos >= cursor) {
 			if(para.format.label != "noref") {
 				if(IsNull(para.format.label))
@@ -25,5 +138,46 @@ struct FindBrokenRefIterator : RichTxt::Iterator {
 
 	FindBrokenRefIterator() {
 	}
+};
+
+void FindBrokenRefIterator::Test()
+{
+}
+
+void Foo()
+{
+	String x;
+	x.Right(). ;
+	String(xxx). ;
+	String x;
+	x.;
+	x->;
+	AttrText("Hello!"). ;
+	Vector<String> vx;
+	vx. ;
+	vx[0]. ;
+	vx.Add(). ;
+	vx[654].Right(). ;
+	vx[654]->Right(). ;
+	Vector<String>(). ;
+	x > x.;
+	EditorBar bar;
+	bar. ;
+	EditString es;
+	es. ;
+	es.NullText(). ;
+	THISBACK(
+}
+
+struct Dlg : WithEditStringLayout<TopWindow> {
+	Dlg() {
+		Ctrl:: ;
+		Dlg x;
+		x. ;
+		this. ;
+		this-> ;
+		a
+	}
+	Vector<String>::
 };
 

@@ -56,6 +56,7 @@ AddressBook::AddressBook()
 	SetupSearch();
 	fs.AllFilesType();
 	menu.Set(THISBACK(MainMenu));
+	
 }
 
 void AddressBook::FileMenu(Bar& bar)
