@@ -102,7 +102,7 @@ void AutoSetup()
 
 	dlg.mysql <<= NormalizePathNN(GetWinRegString("Location", "SOFTWARE\\MySQL AB\\MySQL Server 4.1"));
 
-	String sdl = NormalizePathNN(ConfigFile("SDL-1.2.9"));
+	String sdl = NormalizePathNN(ConfigFile("sdl"));
 	if(DirectoryExists(sdl))
 		dlg.sdl <<= sdl;
 
