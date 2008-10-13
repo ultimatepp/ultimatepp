@@ -580,7 +580,6 @@ void  Stream::Pack(bool& a, bool& b) {
 	bool h = false; Pack(a, b, h, h, h, h, h, h);
 }
 
-#if 1
 Stream& Stream::operator%(bool& d)
 {
 	SerializeRaw((byte *)&d, 1);
@@ -631,13 +630,19 @@ Stream& Stream::operator%(unsigned int& d)
 
 Stream& Stream::operator%(long& d)
 {
-	SerializeRaw((dword *)&d, 1);
+	uint32 x = (uint32)d;
+	SerializeRaw(&x, 1);
+	if(IsLoading())
+		d = (long)x;
 	return *this;
 }
 
 Stream& Stream::operator%(unsigned long& d)
 {
-	SerializeRaw((dword *)&d, 1);
+	uint32 x = (uint32)d;
+	SerializeRaw(&x, 1);
+	if(IsLoading())
+		d = (unsigned long)x;
 	return *this;
 }
 
@@ -664,93 +669,6 @@ Stream& Stream::operator%(uint64& d)
 	SerializeRaw((uint64 *)&d, 1);
 	return *this;
 }
-
-#else
-
-Stream& Stream::operator%(bool& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(char& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(signed char& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(unsigned char& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(short& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(unsigned short& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(int& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(unsigned int& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(long& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(unsigned long& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(float& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(double& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(int64& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-
-Stream& Stream::operator%(uint64& d)
-{
-	SerializeRaw((byte *)&d, sizeof(d));
-	return *this;
-}
-#endif
 
 
 Stream& Stream::operator%(String& s) {

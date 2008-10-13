@@ -439,9 +439,9 @@ void Ide::DebugMenu(Bar& menu)
 }
 
 void Ide::BrowseMenu(Bar& menu) {
-	menu.AddMenu(AK_TOGGLEINDEX, IdeImg::index(), THISBACK1(ToggleNavigator, AssistEditor::NAV_INDEX))
+	menu.AddMenu(AK_TOGGLEINDEX, IdeImg::index(), THISBACK1(ToggleNavigator, (int)AssistEditor::NAV_INDEX))
 	     .Check(editor.IsIndex());
-	menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK1(ToggleNavigator, AssistEditor::NAV_BROWSER))
+	menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK1(ToggleNavigator, (int)AssistEditor::NAV_BROWSER))
 	     .Check(editor.IsBrowser());
 	if(editor.IsIndex())
 		menu.Add(AK_SEARCHINDEX, THISBACK(SearchIndex));

@@ -88,6 +88,11 @@ int CharFilterCrLf(int c)
 	return c == '\r' || c == '\n' ? c : 0;
 }
 
+int CharFilterNoCrLf(int c)
+{
+	return c != '\r' && c != '\n' ? c : 0;
+}
+
 String Filter(const char *s, int (*filter)(int))
 {
 	String result;

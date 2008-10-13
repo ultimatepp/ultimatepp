@@ -26,8 +26,8 @@ template<> inline String AsString(const short& a)           { return FormatInteg
 template<> inline String AsString(const unsigned short& a)  { return FormatUnsigned(a); }
 template<> inline String AsString(const int& a)             { return FormatInteger(a); }
 template<> inline String AsString(const unsigned int& a)    { return FormatUnsigned(a); }
-template<> inline String AsString(const long& a)            { return FormatInteger(a); }
-template<> inline String AsString(const unsigned long& a)   { return FormatUnsigned(a); }
+template<> inline String AsString(const long& a)            { return FormatInt64(a); }
+template<> inline String AsString(const unsigned long& a)   { return Format64(a); }
 template<> inline String AsString(const double& a)          { return FormatDouble(a); }
 template<> inline String AsString(const float& a)           { return FormatDouble(a); }
 //template<> inline String AsString(const bool& a)            { return FormatBool(a); } // TRC: moved to String.h by CXL
