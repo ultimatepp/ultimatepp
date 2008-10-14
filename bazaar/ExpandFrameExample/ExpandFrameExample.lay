@@ -1,0 +1,25 @@
+LAYOUT(Pane1Layout, 248, 176)
+	ITEM(EditString, dv___0, HSizePosZ(108, 4).TopPosZ(60, 19))
+	ITEM(EditString, dv___1, HSizePosZ(108, 4).TopPosZ(84, 19))
+	ITEM(EditString, dv___2, HSizePosZ(108, 4).TopPosZ(108, 19))
+	ITEM(EditString, dv___3, HSizePosZ(108, 4).TopPosZ(132, 19))
+	ITEM(EditString, dv___4, HSizePosZ(108, 4).TopPosZ(152, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Field 2:")).LeftPosZ(4, 100).TopPosZ(60, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Field 3:")).LeftPosZ(4, 100).TopPosZ(84, 19))
+	ITEM(Label, dv___7, SetLabel(t_("Field 4:")).LeftPosZ(4, 100).TopPosZ(108, 19))
+	ITEM(Label, dv___8, SetLabel(t_("Field 5:")).LeftPosZ(4, 100).TopPosZ(132, 19))
+	ITEM(Label, dv___9, SetLabel(t_("Field 6:")).LeftPosZ(4, 100).TopPosZ(152, 19))
+	ITEM(Label, dv___10, SetLabel(t_("Field 1:")).LeftPosZ(4, 100).TopPosZ(36, 19))
+	ITEM(EditString, dv___11, HSizePosZ(108, 4).TopPosZ(36, 19))
+	ITEM(Option, horz, SetLabel(t_("Horizontal alignment")).HCenterPosZ(164, 2).TopPosZ(8, 16))
+END_LAYOUT
+
+LAYOUT(Pane2Layout, 240, 64)
+	ITEM(SliderCtrl, dv___0, HSizePosZ(80, 4).TopPosZ(24, 16))
+	ITEM(Label, dv___1, SetLabel(t_("Slider 2:")).LeftPosZ(4, 72).TopPosZ(24, 16))
+	ITEM(SliderCtrl, dv___2, HSizePosZ(80, 4).TopPosZ(44, 16))
+	ITEM(Label, dv___3, SetLabel(t_("Slider 3:")).LeftPosZ(4, 72).TopPosZ(44, 16))
+	ITEM(SliderCtrl, dv___4, HSizePosZ(80, 4).TopPosZ(4, 16))
+	ITEM(Label, dv___5, SetLabel(t_("Slider 1:")).LeftPosZ(4, 72).TopPosZ(4, 16))
+END_LAYOUT
+

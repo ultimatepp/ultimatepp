@@ -1,0 +1,13 @@
+description "Bazaar: ExpandFrame/ExpanderCtrl example. Author: James Thomas(mrjt)";
+
+uses
+	CtrlLib,
+	ExpandFrame;
+
+file
+	main.cpp,
+	ExpandFrameExample.lay;
+
+mainconfig
+	"" = "GUI";
+
