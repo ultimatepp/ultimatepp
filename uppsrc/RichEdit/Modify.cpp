@@ -79,14 +79,14 @@ void RichEdit::Remove(int pos, int len, bool joinnext)
 	if(InvalidRange(pos, pos + len))
 		return;
 	AddUndo(new UndoRemove(text, pos, len));
-	RichText::FormatInfo fmt;
-	RichPara::Format f = text.GetRichPos(pos).format;
-	if(joinnext)
-		fmt.Set(f);
+//	RichText::FormatInfo fmt;
+//	RichPara::Format f = text.GetRichPos(pos).format;
+//	if(joinnext)
+//		fmt.Set(f);
 	text.Remove(pos, len);
-	if(!joinnext)
-		fmt.Set(text.GetRichPos(pos).format);
-	fmt.newpage = f.newpage;
+//	if(!joinnext)
+//		fmt.Set(text.GetRichPos(pos).format);
+//	fmt.newpage = f.newpage;
 	SetModify();
 	modified = true;
 }
