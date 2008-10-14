@@ -1,3 +1,5 @@
+description "Bazaar: Expandable/Collapsabe frame and a container ctrl. Author: James Thomas (mrjt)";
+
 file
 	ExpandFrame.h,
 	ExpanderCtrl.cpp,
