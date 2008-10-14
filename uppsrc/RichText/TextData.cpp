@@ -86,13 +86,13 @@ void RichText::Remove(int pos, int count)
 		txt.Put(pi, pa, style);
 	}
 	else {
-		RichPara pa2 = txt.Get(pi2, style);
-		RichPara pa = txt.Get(pi, pa2.format.styleid, style);
+		RichPara pa = txt.Get(pi, style);
+		RichPara pa2 = txt.Get(pi2, pa.format.styleid, style);
 		txt.part.Remove(pi, pi2 - pi);
 		pa.Trim(pos);
 		pa2.Mid(pos2);
 		pa.Append(pa2);
-		pa.format = pa2.format;
+		pa2.format = pa.format;
 		txt.Put(pi, pa, style);
 		txt.SetRefreshFrom(pi);
 	}
