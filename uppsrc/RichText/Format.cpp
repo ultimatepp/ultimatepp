@@ -199,8 +199,8 @@ void RichTxt::FormatInfo::ApplyTo(RichPara::Format& fmt) const
 		fmt.reset_number = reset_number;
 		memcpy(fmt.number, number, sizeof(number));
 	}
-//	if(paravalid & TABS)
-//		fmt.tab = tab;
+	if(paravalid & TABS)
+		fmt.tab = tab;
 	if(paravalid & STYLE)
 		fmt.styleid = styleid;
 	if(paravalid & SPACING)
