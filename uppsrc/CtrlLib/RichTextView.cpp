@@ -297,7 +297,7 @@ void  RichTextView::Pick(pick_ RichText& rt)
 	anchor = cursor = sell = selh = 0;
 	text = rt;
 	SetSb();
-	Refresh();
+	UpdateRefresh();
 	highlight = -1;
 }
 
