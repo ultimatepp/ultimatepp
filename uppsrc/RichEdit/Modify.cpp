@@ -335,10 +335,13 @@ void RichEdit::InsertLine()
 	anchor = cursor = cursor + 1;
 	formatinfo.newpage = false;
 	if(st) {
-		formatinfo.label.Clear();
-		formatinfo.styleid = text.GetStyle(b.styleid).next;
-		ApplyFormat(0, RichText::STYLE|RichText::NEWPAGE|RichText::LABEL);
-		return;
+		Uuid next = text.GetStyle(b.styleid).next;
+		if(next != formatinfo.styleid) {
+			formatinfo.label.Clear();
+			formatinfo.styleid = next;
+			ApplyFormat(0, RichText::STYLE|RichText::NEWPAGE|RichText::LABEL);
+			return;
+		}
 	}
 	ApplyFormat(0, RichText::NEWPAGE|RichText::LABEL);
 	objectpos = -1;
