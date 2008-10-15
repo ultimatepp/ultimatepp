@@ -320,7 +320,7 @@ void RichEdit::CancelSelection()
 	}
 }
 
-bool RichEdit::RemoveSelection(bool joinnext)
+bool RichEdit::RemoveSelection(bool back)
 {
 	if(IsSelection()) {
 		if(tablesel) {
@@ -331,7 +331,7 @@ bool RichEdit::RemoveSelection(bool joinnext)
 		}
 		else {
 			int c = min(cursor, anchor);
-			Remove(c, abs(cursor - anchor), joinnext);
+			Remove(c, abs(cursor - anchor), back);
 			found = notfoundfw = false;
 			CloseFindReplace();
 			Move(c);

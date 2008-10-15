@@ -12,41 +12,36 @@ bool RichEdit::Key(dword key, int count)
 		return false;
 	switch(key) {
 	case K_CTRL_BACKSPACE:
-		if(RemoveSelection()) return true;
+		if(RemoveSelection(true)) return true;
 		if(cursor > 0 && IsW(text[cursor - 1])) {
 			int c = cursor;
 			ReadFormat();
 			MoveWordLeft(false);
 			if(InvalidRange(cursor, c))
 				return true;
-			Remove(cursor, c - cursor);
+			Remove(cursor, c - cursor, true);
 			objectpos = -1;
 			FinishNF();
 			return true;
 		}
 	case K_BACKSPACE:
-		if(RemoveSelection()) return true;
+		if(RemoveSelection(true)) return true;
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
-	//	ReadFormat(); // commented out to support OO.org style concat
-	//	Remove(cursor - 1, 1);
-	//	cursor--;
-	//	anchor = cursor;
-	//	objectpos = -1;
-	//	FinishNF();
-	//	return true;
-		cursor--;
+		anchor = --cursor;
+		Remove(cursor, 1, true);
+		break;
 	case K_DELETE:
-		if(RemoveSelection(true)) return true;
+		if(RemoveSelection()) return true;
 		if(cursor < text.GetLength() && !RemoveSpecial(cursor, cursor + 1, false))
-			Remove(cursor, 1, true);
+			Remove(cursor, 1);
 		break;
 	case K_INSERT:
 		overwrite = !overwrite;
 		PlaceCaret();
 		break;
 	case K_CTRL_DELETE:
-		if(RemoveSelection(true)) return true;
+		if(RemoveSelection()) return true;
 		if(cursor < text.GetLength()) {
 			int c = cursor;
 			if(IsW(text[c]))
@@ -55,7 +50,7 @@ bool RichEdit::Key(dword key, int count)
 				cursor++;
 			if(InvalidRange(cursor, c))
 				return true;
-			Remove(c, cursor - c, true);
+			Remove(c, cursor - c);
 			cursor = anchor = c;
 			break;
 		}
