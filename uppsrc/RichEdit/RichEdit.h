@@ -420,7 +420,7 @@ private:
 	static void   SetupFaceList(DropList& face);
 
 	void Insert(int pos, const RichText& text, bool typing = false);
-	void Remove(int pos, int len, bool joinnext = false);
+	void Remove(int pos, int len, bool back = false);
 	void SaveFormat(int pos, int count);
 	void SaveFormat();
 	void ModifyFormat(int pos, const RichText::FormatInfo& fi, int count);
@@ -541,7 +541,7 @@ public:
 	bool     GetSelection(int& l, int& h) const;
 	RichText GetSelection(int maxlen = INT_MAX) const;
 	void     SetSelection(int l, int h)            { Select(l, h - l); }
-	bool     RemoveSelection(bool joinnext = false);
+	bool     RemoveSelection(bool back = false);
 	void     CancelSelection();
 
 	void   BeginOp()                               { NextUndo(); }

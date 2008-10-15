@@ -71,22 +71,17 @@ void RichEdit::ModifyFormat(int pos, const RichText::FormatInfo& fi, int count)
 	text.ApplyFormatInfo(pos, fi, count);
 }
 
-void RichEdit::Remove(int pos, int len, bool joinnext)
+void RichEdit::Remove(int pos, int len, bool back)
 {
 	if(IsReadOnly())
 		return;
 	Limit(pos, len);
 	if(InvalidRange(pos, pos + len))
 		return;
+	if(back)
+		ModifyFormat(pos, text.GetFormatInfo(pos + len, 0), 0);
 	AddUndo(new UndoRemove(text, pos, len));
-//	RichText::FormatInfo fmt;
-//	RichPara::Format f = text.GetRichPos(pos).format;
-//	if(joinnext)
-//		fmt.Set(f);
 	text.Remove(pos, len);
-//	if(!joinnext)
-//		fmt.Set(text.GetRichPos(pos).format);
-//	fmt.newpage = f.newpage;
 	SetModify();
 	modified = true;
 }
