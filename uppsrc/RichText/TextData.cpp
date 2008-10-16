@@ -278,6 +278,13 @@ void RichText::ApplyFormatInfo(int pos, const FormatInfo& fi, int count)
 	}
 }
 
+void RichText::ReplaceStyle(int pos, const Uuid& id)
+{
+	int p = FindPart(pos);
+	RichPara pa = RichTxt::Get(p, id, style);
+	Put(p, pa, style);
+}
+
 void RichText::ReStyle(int pos, const Uuid& id)
 {
 	int p = FindPart(pos);

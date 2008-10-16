@@ -68,6 +68,7 @@ public:
 
 	FormatInfo            GetFormatInfo(int pos, int count) const;
 	void                  ApplyFormatInfo(int pos, const FormatInfo& fi, int count);
+	void                  ReplaceStyle(int pos, const Uuid& id);
 
 	void                  ReStyle(int pos, const Uuid& id);
 
