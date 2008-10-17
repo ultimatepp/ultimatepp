@@ -422,6 +422,8 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 	XChangeProperty(Xdisplay, w, XAtom("XdndAware"), XA_ATOM, 32,
 					0, (byte *)&version, 1);
 	CancelMode();
+	if(r.Contains(GetMousePos()))
+		DispatchMouse(MOUSEMOVE, GetMousePos() - r.TopLeft());
 }
 
 void Ctrl::WndDestroy()

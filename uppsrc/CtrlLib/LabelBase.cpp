@@ -468,6 +468,7 @@ void DisplayPopup::MouseWheel(Point p, int zdelta, dword flags)
 
 void DisplayPopup::MouseLeave()
 {
+	DLOG("DisplayPopup::MouseLeave");
 	Cancel();
 }
 
@@ -513,6 +514,7 @@ void DisplayPopup::Sync()
 			SetRect(r);
 			if(!IsOpen())
 				Ctrl::PopUp(ctrl, true, false, false);
+			DLOG("Open!");
 			return;
 		}
 	}
