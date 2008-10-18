@@ -133,7 +133,7 @@ void LogStream::Create(const char *path, bool append)
 	GetModuleFileName(AppGetHandle(), exe, 512);
 #ifndef PLATFORM_WINCE
 	dword w = 2048;
-	GetUserName(user, &w);
+	::GetUserNameA(user, &w);
 #endif
 #else //#
 	const char *procexepath_();

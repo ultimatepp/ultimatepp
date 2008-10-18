@@ -4,6 +4,9 @@ void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, 
                   Color ink, Color extink, const WString& desc = Null, Font descfont = Null,
                   bool justname = false, Color underline = Null);
 
+Image NativePathIcon(const char *path, bool folder);
+Image NativePathIcon(const char *path);
+
 class FileList : public ColumnList, private Display {
 public:
 	virtual void  LeftDown(Point p, dword);

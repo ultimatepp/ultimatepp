@@ -1,8 +1,8 @@
 #include "ide.h"
 
-#define LDUMP(x)    // DDUMP(x)
-#define LDUMPC(x)   // DDUMPC(x)
-#define LLOG(x)     // DLOG(x)
+#define LDUMP(x)   //  DDUMP(x)
+#define LDUMPC(x)  //  DDUMPC(x)
+#define LLOG(x)    //  DLOG(x)
 
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
@@ -602,7 +602,8 @@ String AssistEditor::MakeDefinition(const String& cls, const String& _n)
 	while(!p.IsEof()) {
 		const char *b = p.GetPtr();
 		if(p.Id("operator"))
-			return NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + b);
+			return cls.GetCount() ? NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + b)
+			                      : NormalizeSpaces(String(beg, b) + ' ' + b);
 		if(p.Char('~')) {
 			beg = p.GetPtr();
 			dest = true;
@@ -656,6 +657,8 @@ void AssistEditor::DCopy()
 			}
 		}
 	}
+	else
+		decla = true;
 	Parser ctx;
 	Context(ctx, l);
 	String txt = Get(l, h - l);
@@ -666,10 +669,14 @@ void AssistEditor::DCopy()
 	parser.Do(ss, IgnoreList(), cpp, Null, CNULL, Split(cls, ':'));
 	for(int i = 0; i < cpp.GetCount(); i++) {
 		const Array<CppItem>& n = cpp[i];
-		for(int j = 0; j < n.GetCount(); j = FindNext(n, j)) {
+		bool decl = decla;
+		for(int j = 0; j < n.GetCount(); j++)
+			if(n[j].impl)
+				decl = false;
+		for(int j = 0; j < n.GetCount(); j++) {
 			const CppItem& m = n[j];
 			if(m.IsCode())
-				if(decla)
+				if(decl)
 					r << MakeDefinition(cls, m.natural) << "\n{\n}\n\n";
 				else {
 					if(cpp.IsType(i))

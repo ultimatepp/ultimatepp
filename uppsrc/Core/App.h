@@ -1,3 +1,5 @@
+String  GetEnv(const char *id);
+
 String  GetExeFilePath();
 String  GetExeDirFile(const char *fp);
 
@@ -73,3 +75,7 @@ void ConsoleMainFn_()
 String  GetDataFile(const char *filename);
 
 void    LaunchWebBrowser(const String& url);
+
+String GetComputerName();
+String GetUserName();
+String GetDesktopManager();
