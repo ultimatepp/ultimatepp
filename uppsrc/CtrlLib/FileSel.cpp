@@ -213,6 +213,27 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 #endif
 #endif
 
+Image NativePathIcon(const char *path, bool folder)
+{
+#if defined(PLATFORM_WIN32)
+	if (folder)
+		return GetFileIcon(path, true, true);
+	else
+		return GetFileIcon(path, false);
+#endif
+#ifdef PLATFORM_POSIX
+	bool isdrive = folder && ((path == "/media") || (path == "/mnt"));
+	return isdrive ? PosixGetDriveImage(GetFileName(path))
+				   : GetFileIcon(path, GetFileName(path), folder, ff.GetMode() & 0111);
+#endif
+}
+
+Image NativePathIcon(const char *path)
+{
+	FindFile ff(path);
+	return NativePathIcon(path, ff.IsFolder());
+}
+
 bool MatchSearch(const String& filename, const String& search)
 {
 	return search.GetCount() ? Filter(filename, CharFilterDefaultToUpperAscii).Find(search) >= 0 : true;
@@ -620,6 +641,8 @@ void FileSel::Open() {
 
 String DirectoryUp(String& dir, bool basedir)
 {
+	while(*dir.Last() == '\\' || *dir.Last() == '/')
+		dir.Trim(dir.GetCount() - 1);
 	String s = dir;
 	String name;
 #ifdef PLATFORM_WIN32

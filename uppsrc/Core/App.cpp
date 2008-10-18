@@ -6,6 +6,11 @@
 
 NAMESPACE_UPP
 
+String GetEnv(const char *id)
+{
+	return FromSystemCharset(getenv(id));
+}
+
 #ifdef PLATFORM_WIN32
 
 String GetExeFilePath()
@@ -14,8 +19,7 @@ String GetExeFilePath()
 }
 
 String  GetHomeDirectory() {
-	return FromSystemCharset(getenv("HOMEDRIVE")) +
-	       FromSystemCharset(getenv("HOMEPATH"));
+	return GetEnv("HOMEDRIVE") + GetEnv("HOMEPATH");
 }
 
 #endif
@@ -102,8 +106,7 @@ String  GetHomeDirectory() {
 	INTERLOCKED_(sHlock) {
 		String& s = sHomeDir();
 		if(s.IsEmpty()) {
-			const char *home = getenv("HOME");
-			s = FromSystemCharset(home ? home : "/root");
+			s = Nvl(GetEnv("HOME"), "/root");
 		}
 		r = s;
 	}
@@ -361,6 +364,46 @@ String GetDataFile(const char *filename)
 	);
 
 	return AppendFileName(s, filename);
+}
+
+String GetComputerName()
+{
+	char temp[256];
+	*temp = 0;
+#if defined(PLATFORM_WIN32)
+	dword w = 255;
+	::GetComputerNameA(temp, &w);
+#else
+	gethostname(temp, sizeof(temp));
+#endif
+	return FromSystemCharset(temp);
+}
+
+String GetUserName()
+{
+	char temp[256];
+	*temp = 0;
+#if defined(PLATFORM_WIN32)
+	dword w = 255;
+	::GetUserNameA(temp, &w);
+	return FromSystemCharset(temp);
+#else
+	return Nvl(GetEnv("USER"), "boot");
+#endif
+}
+
+String GetDesktopManager()
+{
+#if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
+	return "windows";
+#endif
+#ifdef PLATFORM_POSIX
+    if(GetEnv("GNOME_DESKTOP_SESSION_ID").GetCount())
+		return "gnome";
+	if(GetEnv("KDE_FULL_SESSION").GetCount() || GetEnv("KDEDIR").GetCount())
+        return "kde"; 
+	return GetEnv("DESKTOP_SESSION");
+#endif	
 }
 
 END_UPP_NAMESPACE
