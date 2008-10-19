@@ -9,6 +9,8 @@ library(FREEBSD) "GL GLU";
 
 file
 	GLCtrl.h,
-	Win32GlCtrl.cpp,
-	X11GLCtrl.cpp;
+	GLPicking.cpp,
+	Win32GLCtrl.cpp,
+	X11GLCtrl.cpp,
+	GLCtrl.cpp;
 

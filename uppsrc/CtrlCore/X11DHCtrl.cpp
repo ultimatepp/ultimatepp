@@ -321,7 +321,7 @@ void DHCtrl::State(int reason)
 				break;
 
 			case SHOW       : // = 13,
-				MapWindow(IsShown());
+				MapWindow(IsVisible());
 				break;
 
 			case ENABLE     : // = 14,
