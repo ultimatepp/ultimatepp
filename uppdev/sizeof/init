@@ -1,4 +1,0 @@
-#ifndef _sizeof_icpp_init_stub
-#define _sizeof_icpp_init_stub
-#include "Core/init"
-#endif
