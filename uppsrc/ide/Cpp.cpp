@@ -205,7 +205,7 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 	int q = parser.local.FindLast(xp[0]);
 	if(q >= 0) {
 		String type = Qualify(parser.current_scope, parser.local[q]);
-		LLOG("Found type local: " << type);
+		LLOG("Found type local: " << type << " in scope: " << parser.current_scope);
 		ExpressionType(type, xp, 1, typeset, true);
 		return typeset;
 	}
@@ -240,7 +240,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 	}
 	in_types.Add(type);
 	Vector<String> tparam;
-	String ntp = ParseTemplatedType(type, tparam);
+	String ntp = ParseTemplatedType(ResolveTParam(type, tparam), tparam);
 	int q = CodeBase().Find(ntp);
 	if(q >= 0) {
 		if(types) {
