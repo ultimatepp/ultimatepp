@@ -8,17 +8,36 @@
 
 NAMESPACE_UPP
 
+class GLPicking
+{
+private:
+	static int const _bufferSize = 512;
+	bool _isPicking;
+	Point _pickPoint;
+
+	Vector<int> ParseHits(GLuint *buffer, int hits);
+	
+public:
+	void InitPickMatrix();
+	Vector<int> Pick(int x, int y, Callback resizeCallback, Callback paintCallback);
+
+	GLPicking();
+};
+
 #ifdef PLATFORM_X11
 
 #include <GL/glx.h>
 
-class GLCtrl : public DHCtrl
-{
-	private:
+class GLCtrl : public ParentCtrl {
+	class GLPane : public DHCtrl {
+		friend class GLCtrl;
+	
+		GLCtrl    *ctrl;
+		GLPicking _picking;
 	
 		// OpenGL Context
 		GLXContext WindowContext;
-
+	
 		// Number of instances
 		static int Instances;
 		
@@ -34,7 +53,7 @@ class GLCtrl : public DHCtrl
 		
 		// Currently activated context number
 		static int ContextActivated;
-
+	
 		// Activates current OpenGL context
 		void ActivateContext();
 		
@@ -50,81 +69,112 @@ class GLCtrl : public DHCtrl
 		
 		// Overridden method to resize GL windows
 		virtual void Resize(int w, int h);
-
+	
 		// Internal OpenGL Paint method
 		void doPaint(void);
-
+	
 		// Paint method - with graphic context
-		// Called from DHCtrl - Graphic context is *not* uses
+		// Called from DHCtrl - Graphic context is *not* used
 		virtual void Paint(Draw &/*draw*/);
 		
-	protected:
-	
-		// Overridable methods for derived controls
-		
-		// Called after succesful OpenGL initialization
-		virtual void GLInit() {};
-		
-		// Called just before OpenGL termination
-		virtual void GLDone() {};	
-		
-		// Called on resize events
-		virtual void GLResize( int w, int h ) {};
-		
-		// Called on paint events
-		virtual void GLPaint() {};
-
 	public:
 	
 		typedef GLCtrl CLASSNAME;
-
+	
 		// Constructor class GLCtrl
-		GLCtrl(	int		depthsize            = 24, 
+		GLPane(	int		depthsize            = 24, 
 	    		int		stencilsize          = 0, 
 	    		bool	doublebuffer         = true, 
 				bool	multisamplebuffering = false, 
 				int		numberofsamples      = 0 );
 	
 		// Destructor class GLCtrl
-		~GLCtrl();
+		~GLPane();
 		
-		// Initializes OpenGL context to a standard view
-		void StdView();
-		
-		// Forces control repaint
-		void PostPaintGL(); // same as Refresh()
-		
-		// Forces control resize
-		void PostResizeGL();
+		void InitPickMatrix() { _picking.InitPickMatrix(); }
+		Vector<int> Pick(int x, int y);
+	}; // END Class GLCtrl
+
+	GLPane pane;
 	
-}; // END Class GLCtrl
+protected:
+
+	// Overridable methods for derived controls
+	
+	// Called after succesful OpenGL initialization
+	virtual void GLInit() {}
+	
+	// Called just before OpenGL termination
+	virtual void GLDone() {}
+	
+	// Called on resize events
+	virtual void GLResize( int w, int h ) {}
+	
+	// Called on paint events
+	virtual void GLPaint() {}
+	virtual void GLPickingPaint() {}
+
+	void StdView();
+
+	void InitPickMatrix()          { pane.InitPickMatrix(); }
+	Vector<int> Pick(int x, int y) { return pane.Pick(x, y); }
+	
+	GLCtrl(int  depthsize = 24, int  stencilsize = 0, bool doublebuffer = true,
+	       bool multisamplebuffering = false, int  numberofsamples = 0);
+};
 
 #else
 
-class GLCtrl : public DHCtrl {
-public:
-	virtual void    State(int reason);
-	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+class GLCtrl : public ParentCtrl {
+	typedef GLCtrl CLASSNAME;
+	
+	struct GLPane : DHCtrl {
+		GLCtrl *ctrl;
+		
+		virtual void    State(int reason);
+		virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+	};
+	
+	friend class GLCtrl;
 
 private:
-	HDC   hDC;
-	HGLRC hRC;
+	HDC    hDC;
+	HGLRC  hRC;
+	GLPicking _picking;
+	GLPane glpane;
 
 	void OpenGL();
 	void CloseGL();
 
-public:
-	virtual void GLPaint();
+protected:
+	// Overridable methods for derived controls
 
+	// Called after succesful OpenGL initialization
+	virtual void GLInit() {}
+
+	// Called just before OpenGL termination
+	virtual void GLDone() {}
+
+	// Called on resize events
+	virtual void GLResize(int w, int h) {}
+
+	// Called on paint events
+	virtual void GLPaint();
+	virtual void GLPickingPaint() {}
+
+public:
 	Callback WhenGLPaint;
+	
+	GLCtrl();
+	~GLCtrl();
 
 	void    StdView();
 
 	HDC     GetDC() const            { return hDC; }
 	HGLRC   GetHGLRC() const         { return hRC; }
-
-	GLCtrl();
-	~GLCtrl();
+	
+	void InitPickMatrix() { _picking.InitPickMatrix(); }
+	Vector<int> Pick(int x, int y);
 };
 #endif
 
