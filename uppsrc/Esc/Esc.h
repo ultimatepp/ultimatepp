@@ -289,6 +289,8 @@ void Scan(ArrayMap<String, EscValue>& global, const char *code, const char *file
 
 void StdLib(ArrayMap<String, EscValue>& global);
 
+void     LambdaArgs(CParser& p, EscLambda& l);
+
 EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
                  const EscValue& lambda, Vector<EscValue>& arg, int oplimit = 50000);
 EscValue Execute(ArrayMap<String, EscValue>& global, EscValue *self,
