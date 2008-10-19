@@ -45,7 +45,7 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	bool focuscursor = (style & (FOCUS|CURSOR)) == (FOCUS|CURSOR) || (style & SELECT);
 	if(IsNull(q)) return 0;
 	int x = r.left;
-	int ry = (r.top + r.bottom) / 2;
+	int ry = r.top + r.GetHeight() / 2;
 	Image img;
 	if(m.access == PROTECTED)
 		img = BrowserImg::mprotected();

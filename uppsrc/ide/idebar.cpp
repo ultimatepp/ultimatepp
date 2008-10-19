@@ -445,6 +445,7 @@ void Ide::BrowseMenu(Bar& menu) {
 	     .Check(editor.IsBrowser());
 	if(editor.IsIndex())
 		menu.Add(AK_SEARCHINDEX, THISBACK(SearchIndex));
+	menu.Add(AK_SEARCHCODE, THISBACK(SearchCode));
 	menu.Add(!designer, AK_GOTO, THISBACK(Goto));
 	menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
 	menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));

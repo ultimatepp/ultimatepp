@@ -208,12 +208,30 @@ void AssistEditor::SearchIndex()
 	IndexSync();
 }
 
+void AssistEditor::BrowserGotoNF()
+{
+	Value scope = browser.scope.GetKey(); // do not scroll browser.item erratically
+	int scopesc = browser.scope.GetScroll();
+	String item = browser.item.GetKey();
+	int itemsc = browser.item.GetScroll();
+
+	String cref = browser.GetCodeRef();
+	if(assist_active && !(theide && theide->SwapSIf(cref)))
+		IdeGotoCodeRef(cref);
+
+	if(scope == browser.scope.GetKey()) {
+		browser.scope.ScrollTo(scopesc);
+		browser.scope.ScrollIntoCursor();
+		if(item == browser.item.GetKey()) {
+			browser.item.ScrollTo(itemsc);
+			browser.item.ScrollIntoCursor();
+		}
+	}
+}
+
 void AssistEditor::BrowserGoto()
 {
-	String cref = browser.GetCodeRef();
-	if(!assist_active || theide && theide->SwapSIf(cref))
-		return;
-	IdeGotoCodeRef(cref);
+	BrowserGotoNF();
 	SetFocus();
 }
 
@@ -282,4 +300,11 @@ void Ide::SearchIndex()
 	editor.Navigator(AssistEditor::NAV_INDEX);
 	if(editor.index.IsVisible())
 		editor.searchindex.SetFocus();
+}
+
+void Ide::SearchCode()
+{
+	if(editor.navigator != AssistEditor::NAV_BROWSER)
+		editor.Navigator(AssistEditor::NAV_BROWSER);
+	editor.browser.search.SetFocus();
 }

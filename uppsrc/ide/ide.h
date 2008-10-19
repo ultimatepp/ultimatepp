@@ -449,6 +449,7 @@ struct AssistEditor : CodeEditor {
 	bool           NavigatorKey(dword key);
 	void           SyncNavigator();
 	void           BrowserGoto();
+	void           BrowserGotoNF();
 
 	enum { NAV_NONE = 0, NAV_INDEX = 1, NAV_BROWSER = 2 };
 
@@ -936,6 +937,7 @@ public:
 		void  OpenTopic(const char *topic);
 		void  OpenATopic();
 		void  ToggleNavigator(int nav);
+		void  SearchCode();
 		void  SearchIndex();
 		void  Goto();
 		void  GotoGlobal();

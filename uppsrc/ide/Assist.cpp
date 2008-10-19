@@ -55,6 +55,7 @@ AssistEditor::AssistEditor()
 	browser.scope.NoWantFocus();
 	browser.item.NoWantFocus();
 	browser.item.WhenLeftClick = browser.item.WhenLeftDouble = THISBACK(BrowserGoto);
+	browser.WhenKeyItem = THISBACK(BrowserGotoNF);
 	browser.NameStart();
 		
 	navigator = NAV_BROWSER;
@@ -454,6 +455,14 @@ bool AssistEditor::InCode()
 
 bool AssistEditor::Key(dword key, int count)
 {
+	if(browser.Key(key, count))
+		return true;
+	if((key == K_ESCAPE || key == K_ENTER) && (browser.search.HasFocus() ||
+	   browser.search_item.HasFocus() || browser.search_scope.HasFocus())) {
+		SetFocus();
+		SyncCursor();
+		return true;
+	}
 	if(searchindex.HasFocus())
 		return NavigatorKey(key);
 	
