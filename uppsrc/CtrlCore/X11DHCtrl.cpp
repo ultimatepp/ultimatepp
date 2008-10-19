@@ -257,6 +257,8 @@ bool DHCtrl::Init()
 // Terminates the view
 void DHCtrl::Terminate(void)
 {
+	BeforeTerminate();
+
 	if(!isInitialized)
 		return;
 
