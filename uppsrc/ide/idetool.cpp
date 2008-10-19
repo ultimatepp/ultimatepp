@@ -84,7 +84,7 @@ void Ide::OpenTopic(const char *topic)
 		if(designer) {
 			TopicEditor *te = dynamic_cast<TopicEditor *>(&designer->DesignerCtrl());
 			if(te)
-				te->GoTo(tl.topic, doc.GetCurrentLabel());
+				te->GoTo(tl.topic, tl.label);
 		}
 	}
 }
@@ -97,13 +97,14 @@ void Ide::OpenATopic()
 	OpenTopic(t);
 }
 
-void Ide::IdeMoveTopic(const String& from, const String& to)
+void Ide::IdeOpenTopicFile(const String& file)
 {
-	if(to != from) {
-		Upp::SaveFile(to, LoadFile(from));
-		FileDelete(from);
+	EditFile(GetFileFolder(file));
+	if(designer) {
+		TopicEditor *te = dynamic_cast<TopicEditor *>(&designer->DesignerCtrl());
+		if(te)
+			te->GoTo(GetFileName(file), "");
 	}
-	OpenTopic(to);
 }
 
 void Ide::InsertColor()

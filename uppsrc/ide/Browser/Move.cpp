@@ -12,12 +12,29 @@ public:
 
 void MoveTopicDlg::Package()
 {
-	
+	String g = ~group;
+	group.Clear();
+	group.Add("src", "Reference (src)");
+	group.Add("srcdoc", "Documents (srcdoc)");
+	group.Add("srcimp", "Implementation (srcimp)");
+	FindFile ff(SourcePath(~package, "*.tpp"));
+	while(ff) {
+		if(ff.IsFolder()) {
+			String h = GetFileTitle(ff.GetName());
+			if(h != "src" && h != "srcdoc" && h != "srcimp")
+				group.Add(h);
+		}
+		ff.Next();
+	}
+	if(group.HasKey(g))
+		group <<= g;
+	else
+		group.GoBegin();
 }
 
 MoveTopicDlg::MoveTopicDlg()
 {
-	CtrlLayoutOKCancel(*this, "");
+	CtrlLayoutOKCancel(*this, "Move topic");
 
 	topic.NotNull();
 	topic.MaxLen(30);
@@ -27,35 +44,41 @@ MoveTopicDlg::MoveTopicDlg()
 	const Workspace& w = GetIdeWorkspace();
 	for(int i = 0; i < w.GetCount(); i++)
 		package.Add(w[i]);
+	package.GoBegin();
+	Package();
 }
 
 void TopicEditor::MoveTopic()
 {
-	if(!topic.IsCursor())
-		return;
-
-	TopicDlg<WithMoveTopicLayout<TopWindow> > d("Move topic");
+	MoveTopicDlg dlg;
 	String p = GetCurrentTopicPath();
+	TopicLink tl = ParseTopicFilePath(p);
+	dlg.package <<= tl.package;
+	dlg.Package();
+	dlg.group <<= tl.group;
 	String tn;
 	int    lng;
 	ParseTopicFileName(p, tn, lng);
-	d.topic <<= tn;
-	d.lang <<= lng;
-	if(d.Run() != IDOK)
+	dlg.topic <<= tn;
+	dlg.lang <<= lng;
+	if(dlg.Run() != IDOK)
 		return;
-	String np = AppendFileName(grouppath, d.GetName());
+	String np = AppendFileName(SourcePath(~dlg.package, (String)~dlg.group + ".tpp"),
+	                           (String)~dlg.topic + "$" + ToLower(LNGAsText(~dlg.lang)) + ".tpp");
 	if(FindFile(np)) {
-		Exclamation("Target file aready exists!");
-		return;
+		if(!PromptYesNo("Target file aready exists!&Do you want to overwrite it?"))
+			return;
+		FileDelete(np);
 	}
 	Flush();
-	FileMove(p, np);
+	RealizeDirectory(GetFileFolder(np));
+	if(!SaveFile(np, LoadFile(p))) {
+		Exclamation("Operation failed!");
+		return;
+	}
+	serial++;
+	FileDelete(p);
 	InvalidateTopicInfoPath(p);
 	InvalidateTopicInfoPath(np);
-	Open(grouppath);
-	Load(np);
-	SaveInc();
-	topic.FindSetCursor(GetFileTitle(np));
-	editor.SetFocus();
-	serial++;
+	TheIde()->IdeOpenTopicFile(np);
 }
