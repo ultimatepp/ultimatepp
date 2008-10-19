@@ -113,6 +113,7 @@ struct FindBrokenRefIterator : RichTxt::Iterator {
 	Uuid itemstyle;
 	
 	void Test();
+	void Dnes();
 
 	virtual bool operator()(int pos, const RichPara& para)
 	{
@@ -166,8 +167,15 @@ void Foo()
 	EditString es;
 	es. ;
 	es.NullText(). ;
-	THISBACK(
+	
+	String x[5];
+	x[1]. ;
+	Rect r;
+	r.
+	
 }
+
+struct FwTest;
 
 struct Dlg : WithEditStringLayout<TopWindow> {
 	Dlg() {
@@ -176,8 +184,11 @@ struct Dlg : WithEditStringLayout<TopWindow> {
 		x. ;
 		this. ;
 		this-> ;
-		a
+		text. ;
 	}
 	Vector<String>::
 };
 
+struct FwTest {
+	void Test();
+};
