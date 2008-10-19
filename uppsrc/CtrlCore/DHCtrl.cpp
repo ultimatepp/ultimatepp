@@ -48,6 +48,7 @@ void DHCtrl::SyncHWND()
 		Rect pr = GetScreenClient(phwnd);
 		SetWindowPos(hwnd, NULL, r.left - pr.left, r.top - pr.top, r.Width(), r.Height(),
 		             SWP_NOACTIVATE|SWP_NOZORDER);
+		ShowWindow(hwnd, IsVisible() ? SW_SHOW : SW_HIDE);
 	}
 }
 
