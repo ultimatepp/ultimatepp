@@ -524,7 +524,7 @@ public:
 
 	virtual   void      IdeSetBar();
 	virtual   void      IdeGotoCodeRef(String coderef);
-	virtual   void      IdeMoveTopic(const String& from, const String& to);
+	virtual   void      IdeOpenTopicFile(const String& file);
 
 	enum {
 		EDITING, BUILDING, RUNNING, DEBUGGING,
