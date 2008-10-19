@@ -1048,24 +1048,35 @@ long PathTool::ticks = 0;
 
 PathTool::PathTool()
 : use_last(false)
+, dummy(true)
 {
 	ClearExtent();
 }
 
 PathTool::~PathTool() {}
 
-void PathTool::Set(const Plotter& _info, const String& pattern, Color color, int width, double dash)
+void PathTool::Reset()
 {
+	dummy = true;
+	ClearExtent();
+}
+
+bool PathTool::Set(const Plotter& _info, const String& pattern, Color color, int width, double dash)
+{
+	if(dummy = IsNull(color)) {
+		Reset();
+		return false;
+	}
 	Clear();
 	plotter = _info;
 	pathdraw.Set(*plotter.draw, plotter.GetPath(pattern), color, width, dash, false);
 	use_last = false;
+	return true;
 }
 
 bool PathTool::SetExtent(const Rectf& rc)
 {
-	if(rc && plotter.logclip)
-	{
+	if(!dummy && rc.Intersects(plotter.logclip)) {
 		Rectf rcc = plotter.LtoP(rc);
 		simple = rcc.left  >= plotter.clip.left  && rcc.top    >= plotter.clip.top
 			&&   rcc.right <= plotter.clip.right && rcc.bottom <= plotter.clip.bottom;
@@ -1078,26 +1089,31 @@ bool PathTool::SetExtent(const Rectf& rc)
 		LineToRaw = (simple ? THISBACK(LineToRawSimple) : THISBACK(LineToRawClip));
 		return within;
 	}
-	else
+	else {
+		MoveToRaw = THISBACK(MoveToRawDummy);
+		LineToRaw = THISBACK(LineToRawDummy);
 		return false;
+	}
 }
 
 void PathTool::ClearExtent()
 {
-	MoveToRaw = THISBACK(MoveToRawClip);
-	LineToRaw = THISBACK(LineToRawClip);
-	simple = false;
-	pathdraw.ClearExtent();
+	if(dummy) {
+		MoveToRaw = THISBACK(MoveToRawDummy);
+		LineToRaw = THISBACK(LineToRawDummy);
+	}
+	else {
+		MoveToRaw = THISBACK(MoveToRawClip);
+		LineToRaw = THISBACK(LineToRawClip);
+		simple = false;
+		pathdraw.ClearExtent();
+	}
 }
 
 void PathTool::Paint()
 {
-	if(plotter.draw)
-	{
-//		if(is_closed)
-//			LineTo(last_point);
+	if(!dummy && plotter.draw)
 		pathdraw.Paint();
-	}
 	ClearExtent();
 }
 
@@ -1106,6 +1122,9 @@ void PathTool::Clear()
 	pathdraw.Clear();
 	ClearExtent();
 }
+
+void PathTool::MoveToRawDummy(Pointf pt) {}
+void PathTool::LineToRawDummy(Pointf pt) {}
 
 void PathTool::MoveToRawSimple(Pointf pt)
 {
@@ -1196,6 +1215,7 @@ AreaTool::AreaTool()
 	prev_ghost = false;
 	clip_arcs = false;
 	fill_color = Black;
+	dummy = true;
 	Clear();
 }
 
@@ -1203,8 +1223,7 @@ AreaTool::~AreaTool() {}
 
 bool AreaTool::SetExtent(const Rectf& rc)
 {
-	if(rc && plotter.logclip)
-	{
+	if(!dummy && rc.Intersects(plotter.logclip)) {
 		Rectf rcc = plotter.LtoP(rc);
 		simple = rcc.left  >= plotter.clip.left  && rcc.top    >= plotter.clip.top
 			&&   rcc.right <= plotter.clip.right && rcc.bottom <= plotter.clip.bottom;
@@ -1212,14 +1231,23 @@ bool AreaTool::SetExtent(const Rectf& rc)
 		LineToRaw = (simple ? THISBACK(LineToRawSimple) : THISBACK(LineToRawClip));
 		return true;
 	}
-	else
+	else {
+		MoveToRaw = THISBACK(MoveToRawDummy);
+		LineToRaw = THISBACK(LineToRawDummy);
 		return false;
+	}
 }
 
 void AreaTool::ClearExtent()
 {
-	MoveToRaw = THISBACK(MoveToRawClip);
-	LineToRaw = THISBACK(LineToRawClip);
+	if(dummy) {
+		MoveToRaw = THISBACK(MoveToRawDummy);
+		LineToRaw = THISBACK(LineToRawDummy);
+	}
+	else {
+		MoveToRaw = THISBACK(MoveToRawClip);
+		LineToRaw = THISBACK(LineToRawClip);
+	}
 	simple = false;
 }
 
@@ -1234,6 +1262,9 @@ void AreaTool::Clear()
 	disjunct_counts.Clear();
 	ClearExtent();
 }
+
+void AreaTool::MoveToRawDummy(Pointf pt) {}
+void AreaTool::LineToRawDummy(Pointf pt) {}
 
 void AreaTool::MoveToRawSimple(Pointf pt)
 {
@@ -1284,14 +1315,12 @@ void AreaTool::LineToRawClip(Pointf pt)
 		&&          next_phys.y >= plotter.clip.top  && next_phys.y <= plotter.clip.bottom);
 #if DEBUG_AREA
 	int vc = vertices.GetCount();
-	if(show)
-	{
+	if(show) {
 		LOG("[" << vc << "/" << begin_index << "] AreaTool::LineToRawClip " << pt << ", next_phys " << next_phys
 			<< ", top = " << vertices.Top() << ", last_in " << last_in << ", next_in " << next_in);
 	}
 #endif
-	if(next_in && last_in)
-	{
+	if(next_in && last_in) {
 		Point ppt = PointfToPoint(next_phys);
 		if(ppt != vertices.Top())
 		{
@@ -1302,16 +1331,14 @@ void AreaTool::LineToRawClip(Pointf pt)
 		last_phys = next_phys;
 		last_in = next_in;
 	}
-	else
-	{
+	else {
 		Pointf A = last_phys, B = next_phys;
 		bool clipped = ClipLine(A, B, plotter.clip);
 		Point cb = ClipBind(clipped ? B : next_phys);
 		Point ca = clipped ? ClipBind(A) : cb;
 		if(vertices.GetCount() > begin_index || clipped)
 			SkipTo(ca, (next_phys - last_phys) % (clip_center - last_phys) >= 0);
-		if(clipped && cb != vertices.Top())
-		{
+		if(clipped && cb != vertices.Top()) {
 			if(prev_ghost)
 				ghost_lines.Add(vertices.GetCount());
 			vertices.Add(cb);
@@ -1351,8 +1378,7 @@ void AreaTool::SkipTo(Point pt, bool clockwise)
 		return;
 
 //	Size diff(pt.x + la.x - plotter.clip.left - plotter.clip.right, pt.y + la.y - plotter.clip.top - plotter.clip.bottom);
-	if(la.y <= plotter.clip.top)
-	{
+	if(la.y <= plotter.clip.top) {
 		if(pt.y <= plotter.clip.top)
 			Horz(pt.x);
 		else if(pt.y >= plotter.clip.bottom)
@@ -1364,8 +1390,7 @@ void AreaTool::SkipTo(Point pt, bool clockwise)
 		else
 			NEVER();
 	}
-	else if(la.y >= plotter.clip.bottom)
-	{
+	else if(la.y >= plotter.clip.bottom) {
 		if(pt.y <= plotter.clip.top)
 			Horz(clockwise ? plotter.clip.left : plotter.clip.right).Vert(plotter.clip.top).Horz(pt.x);
 		else if(pt.y >= plotter.clip.bottom)
@@ -1377,8 +1402,7 @@ void AreaTool::SkipTo(Point pt, bool clockwise)
 		else
 			NEVER();
 	}
-	else if(la.x <= plotter.clip.left)
-	{
+	else if(la.x <= plotter.clip.left) {
 		if(pt.y <= plotter.clip.top)
 			Vert(plotter.clip.top).Horz(pt.x);
 		else if(pt.y >= plotter.clip.bottom)
@@ -1390,8 +1414,7 @@ void AreaTool::SkipTo(Point pt, bool clockwise)
 		else
 			NEVER();
 	}
-	else if(la.x >= plotter.clip.right)
-	{
+	else if(la.x >= plotter.clip.right) {
 		if(pt.y <= plotter.clip.top)
 			Vert(plotter.clip.top).Horz(pt.x);
 		else if(pt.y >= plotter.clip.bottom)
@@ -1409,28 +1432,24 @@ void AreaTool::SkipTo(Point pt, bool clockwise)
 
 void AreaTool::Flush()
 {
-	if((vertices.GetCount() - begin_index >= 3) && !simple)
-	{
+	if((vertices.GetCount() - begin_index >= 3) && !simple) {
 		ASSERT(!IsNull(last_start));
 		LineTo(last_start);
 	}
 	int add = vertices.GetCount() - begin_index;
 	ASSERT(add >= 0);
-	if(add >= 2 && vertices.Top() == vertices[begin_index])
-	{
+	if(add >= 2 && vertices.Top() == vertices[begin_index]) {
 		vertices.Drop(); // remove superfluous end point
 		if(!ghost_lines.IsEmpty() && ghost_lines.Top() == vertices.GetCount())
 			ghost_lines.Drop();
 		add--;
 	}
-	if(add <= 2)
-	{
+	if(add <= 2) {
 		vertices.SetCountR(begin_index);
 		while(!ghost_lines.IsEmpty() && ghost_lines.Top() >= begin_index)
 			ghost_lines.Drop();
 	}
-	else
-	{
+	else {
 		counts.Add(add);
 		begin_index = vertices.GetCount();
 	}
@@ -1442,10 +1461,8 @@ AreaTool& AreaTool::Horz(int x)
 	ASSERT(count > 0);
 	Point *p = vertices.End();
 	int y = p[-1].y;
-	if(count >= 2 && y == p[-2].y)
-	{
-		while(count > 2 && y == p[-3].y)
-		{
+	if(count >= 2 && y == p[-2].y) {
+		while(count > 2 && y == p[-3].y) {
 			count--;
 			p--;
 		}
@@ -1455,8 +1472,7 @@ AreaTool& AreaTool::Horz(int x)
 		while(!ghost_lines.IsEmpty() && ghost_lines.Top() >= end)
 			ghost_lines.Drop();
 	}
-	else
-	{
+	else {
 		if(prev_ghost)
 			ghost_lines.Add(vertices.GetCount());
 		vertices.Add(Point(x, y));
@@ -1470,10 +1486,8 @@ AreaTool& AreaTool::Vert(int y)
 	ASSERT(count > 0);
 	Point *p = vertices.End();
 	int x = p[-1].x;
-	if(count >= 2 && x == p[-2].x)
-	{
-		while(count > 2 && x == p[-3].x)
-		{
+	if(count >= 2 && x == p[-2].x) {
+		while(count > 2 && x == p[-3].x) {
 			count--;
 			p--;
 		}
@@ -1483,8 +1497,7 @@ AreaTool& AreaTool::Vert(int y)
 		while(!ghost_lines.IsEmpty() && ghost_lines.Top() >= end)
 			ghost_lines.Drop();
 	}
-	else
-	{
+	else {
 		if(prev_ghost)
 			ghost_lines.Add(vertices.GetCount());
 		vertices.Add(Point(x, y));
@@ -1492,9 +1505,20 @@ AreaTool& AreaTool::Vert(int y)
 	return *this;
 }
 
-void AreaTool::Set(const Plotter& _info, Color _fill_color, uint64 _fill_pattern,
+void AreaTool::Reset()
+{
+	dummy = true;
+	Clear();
+}
+
+bool AreaTool::Set(const Plotter& _info, Color _fill_color, uint64 _fill_pattern,
 	const String& outline_pattern, Color outline_color, int outline_width, double outline_dash)
 {
+	dummy = IsNull(_fill_color) && IsNull(outline_color);
+	if(dummy) {
+		Reset();
+		return false;
+	}
 	if(outline_width < 0)
 		outline_width = DotsToPixels(*_info.draw, -outline_width);
 	const PathStyle& path = _info.GetPath(outline_pattern);
@@ -1510,9 +1534,7 @@ void AreaTool::Set(const Plotter& _info, Color _fill_color, uint64 _fill_pattern
 	is_line = !path.IsEmpty();
 	std_pen = !is_line || IsNull(outline_color)
 	|| (ghost_lines.IsEmpty() && is_solid && pw < (_info.draw->Dots() ? 20 : 2.5) /*&& !IsNull(fill_color)*/ && !fill_pattern);
-	if(std_pen)
-//		|| *outline_pattern == 0 && !fill_pattern && outline_width <= 1)
-	{
+	if(std_pen) {
 		fill_outline_color = is_solid ? Nvl(pc, outline_color) : Color(Null);
 		fill_outline_style = is_solid ? fround(pw) : 0;
 		if(_info.draw->Pixels() && outline_width > 1)
@@ -1522,8 +1544,7 @@ void AreaTool::Set(const Plotter& _info, Color _fill_color, uint64 _fill_pattern
 			fill_outline_style = 0;
 		}
 	}
-	else
-	{
+	else {
 		raw_outline.Set(*plotter.draw, path, outline_color, outline_width, outline_dash, true);
 		fill_outline_color = thick_outline_color = Null;
 		fill_outline_style = 0;
@@ -1535,6 +1556,7 @@ void AreaTool::Set(const Plotter& _info, Color _fill_color, uint64 _fill_pattern
 	LOG("AreaTool::Set, phys clip = " << plotter.clip << ", log clip = " << plotter.logclip
 		<< ", a = " << plotter.physical.a);
 #endif
+	return true;
 }
 
 void AreaTool::FlushFill()
@@ -2321,17 +2343,28 @@ MarkTool::MarkTool()
 
 MarkTool::~MarkTool() {}
 
-void MarkTool::Set(const Plotter& info, One<Marker> _marker)
+void MarkTool::Reset()
 {
+	marker.Clear();
+	Clear();
+}
+
+bool MarkTool::Set(const Plotter& info, One<Marker> _marker)
+{
+	if(!_marker) {
+		Reset();
+		return false;
+	}
 	marker = _marker;
 	size = marker->GetSize();
 	plotter.Set(info, size);
 	Clear();
+	return true;
 }
 
 bool MarkTool::SetExtent(const Rectf& rc)
 {
-	if(plotter.IntersectsLClip(rc)) {
+	if(marker && plotter.IntersectsLClip(rc)) {
 		Rectf crc = plotter.LtoP(rc);
 		if(plotter.InPClip(crc))
 			PutRaw = &MarkTool::PutSimple;
@@ -2339,13 +2372,18 @@ bool MarkTool::SetExtent(const Rectf& rc)
 			PutRaw = &MarkTool::PutClip;
 		return true;
 	}
-	else
+	else {
+		PutRaw = &MarkTool::PutDummy;
 		return false;
+	}
 }
 
 void MarkTool::ClearExtent()
 {
-	PutRaw = &MarkTool::PutClip;
+	if(marker)
+		PutRaw = &MarkTool::PutClip;
+	else
+		PutRaw = &MarkTool::PutDummy;
 }
 
 void MarkTool::Put(const Array<Pointf>& pt)

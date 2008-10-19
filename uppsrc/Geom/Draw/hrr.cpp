@@ -352,10 +352,10 @@ static String EncodeMask(const ImageBuffer& mask, bool write_size)
 		int start = out.GetLength();
 		while(p < e) {
 			bool init0 = false;
-			if(p->a >= 128)
+			if(p->a < 128)
 			{ // full part
 				const RGBA *b = p;
-				while(++p < e && p->a >= 128)
+				while(++p < e && p->a < 128)
 					;
 				int n = p - b;
 				while(n > 253) {
@@ -370,7 +370,7 @@ static String EncodeMask(const ImageBuffer& mask, bool write_size)
 				init0 = true;
 			if(p < e) {
 				const RGBA *b = p;
-				while(++p < e && p->a < 128)
+				while(++p < e && p->a >= 128)
 					;
 				if(p < e) {
 					if(init0)
@@ -1472,7 +1472,7 @@ bool HRR::Write(Writeback drawback, bool downscale, int level, int px, int py,
 //					TIMING("HRR::Write / save (direct)");
 					if(info.mono || IsNull(info.background)) {
 						int kind = GetMaskInfo(~part, part.GetLength());
-						if(kind != 1 && !info.mono) {
+						if(kind && !info.mono) {
 							int pixoff = CeilPack64(stream.GetPos());
 							pixel_directory[level + count][lin] = pixoff;
 							int64 pixpos = Unpack64(pixoff);
@@ -1550,7 +1550,7 @@ bool HRR::Write(Writeback drawback, bool downscale, int level, int px, int py,
 //		TIMING("HRR::Write / save (indirect)");
 		if(info.mono || IsNull(info.background)) {
 			int kind = GetMaskInfo(block.block, block.block.GetLength());
-			if(kind != 1 && !info.mono) {
+			if(kind && !info.mono) {
 				int pixoff = CeilPack64(stream.GetPos());
 				pixel_directory[level][lin] = pixoff;
 				int64 pixpos = Unpack64(pixoff);

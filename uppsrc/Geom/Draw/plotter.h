@@ -264,7 +264,8 @@ public:
 	virtual void   Paint(); // flush & clear paint buffer
 	virtual void   Clear(); // clear paint buffer
 
-	void           Set(const Plotter& info, const String& style = Null,
+	void           Reset();
+	bool           Set(const Plotter& info, const String& style = Null,
 		Color color = Black, int width = -10, double dash = Null);
 
 	bool           SetExtent(const Rectf& rc);
@@ -280,8 +281,10 @@ public:
 protected:
 	virtual bool   ArcToRaw(Pointf pt, double bulge);
 
+	void           MoveToRawDummy(Pointf pt);
 	void           MoveToRawSimple(Pointf pt);
 	void           MoveToRawClip(Pointf pt);
+	void           LineToRawDummy(Pointf pt);
 	void           LineToRawSimple(Pointf pt);
 	void           LineToRawClip(Pointf pt);
 
@@ -289,6 +292,7 @@ protected:
 	bool           use_last;
 	Pointf         last_phys;
 	PathDraw       pathdraw;
+	bool           dummy;
 	bool           simple;
 };
 
@@ -304,7 +308,8 @@ public:
 	virtual void   Paint(); // flush & clear paint buffer
 	virtual void   Clear(); // clear paint buffer
 
-	void           Set(const Plotter& info, Color fill_color = Black, uint64 fill_pattern = 0,
+	void           Reset();
+	bool           Set(const Plotter& info, Color fill_color = Black, uint64 fill_pattern = 0,
 		const String& outline_pattern = Null, Color outline_color = Black,
 		int outline_width = -10, double outline_dash = Null);
 
@@ -324,8 +329,10 @@ public:
 	void           LineToGhost(Pointf pt) { prev_ghost = true; LineTo(pt); prev_ghost = false; }
 
 protected:
+	void           MoveToRawDummy(Pointf pt);
 	void           MoveToRawSimple(Pointf pt);
 	void           MoveToRawClip(Pointf pt);
+	void           LineToRawDummy(Pointf pt);
 	void           LineToRawSimple(Pointf pt);
 	void           LineToRawClip(Pointf pt);
 
@@ -357,6 +364,7 @@ private:
 	bool           std_pen;
 	bool           simple;
 	bool           is_line;
+	bool           dummy;
 
 	int            point_pixels;
 	Color          point_color;
@@ -401,7 +409,8 @@ public:
 	MarkTool();
 	virtual ~MarkTool();
 
-	void             Set(const Plotter& info, One<Marker> marker);
+	void             Reset();
+	bool             Set(const Plotter& info, One<Marker> marker);
 	bool             SetExtent(const Rectf& rc);
 	void             ClearExtent();
 
