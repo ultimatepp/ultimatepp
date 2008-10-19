@@ -158,7 +158,7 @@ void  ColorDisplayNull::Paint(Draw& w, const Rect& r, const Value& q,
 							 Color ink, Color paper, dword style) const
 {
 	if(IsNull(q))
-		PaintBackground(w, r, q, ink, paper, style);
+		StdDisplay().Paint(w, r, nulltext, ink, paper, style);
 	else
 		w.DrawRect(r, Color(q));
 }

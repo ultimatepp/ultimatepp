@@ -164,7 +164,7 @@ public:
 	virtual Info               GetInfo()         { return info; }
 	virtual Line               GetLine(int line);
 	virtual int                GetPaletteCount() { return palette.GetCount(); }
-	virtual RGBA               *GetPalette()     { return palette.Begin(); }
+	virtual const RGBA         *GetPalette()     { return palette.Begin(); }
 	virtual const RasterFormat *GetFormat()      { return &format; }
 
 	void                       Load(Raster& raster);
