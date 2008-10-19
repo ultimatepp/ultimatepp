@@ -30,6 +30,14 @@ bool HasItem(int file, const String& m)
 	return false;
 }
 
+struct ScopeLess {
+	bool operator()(const String& a, const String& b) const {
+		if((*a == '<') != (*b == '<'))
+			return *a > *b;
+		return a < b; 
+	}
+};
+
 void CodeBrowser::Load()
 {
 	String find = ToUpper((String)~search);
@@ -41,7 +49,7 @@ void CodeBrowser::Load()
 		String s = CodeBase().GetKey(i);
 		const Array<CppItem>& n = CodeBase()[i];
 		if(s.GetCount()) {
-			if(MatchCib(s, match) && HasItem(n, find)) {
+			if(MatchCib(s, match) && (MatchCib(s, find) || HasItem(n, find))) {
 				txt.Add(s);
 				ndx.Add(s);
 			}
@@ -62,7 +70,7 @@ void CodeBrowser::Load()
 			ndx.Add(fi[i]);
 		}
 	}
-	IndexSort(txt, ndx);
+	IndexSort(txt, ndx, ScopeLess());
 	Value key = scope.GetKey();
 	int sc = scope.GetCursorSc();
 	scope.Clear();
@@ -114,6 +122,7 @@ void CodeBrowser::LoadScope()
 	int file = IsNumber(x) ? (int)x : -1;
 	String scope = file < 0 ? String(x) : String();
 	int q = CodeBase().Find(scope);
+	bool all = scope.GetCount() && MatchCib(scope, find);
 	if(q >= 0) {
 		const Array<CppItem>& n = CodeBase()[q];
 		VectorMap<String, bool> inherited;
@@ -122,7 +131,7 @@ void CodeBrowser::LoadScope()
 		for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
 			CppItemInfo m;
 			(CppItem&) m = n[i];
-			if((file < 0 || m.file == file) && m.uname.StartsWith(match) && m.uname.StartsWith(find)) {
+			if((file < 0 || m.file == file) && m.uname.StartsWith(match) && (all || m.uname.StartsWith(find))) {
 				int q = inherited.Find(m.qitem);
 				if(q >= 0) {
 					m.over = true;
@@ -173,6 +182,7 @@ int SearchItemFilter(int c)
 
 void CodeBrowser::Goto(const String& coderef)
 {
+	search.Clear();
 	if(IsNull(coderef))
 		item.KillCursor();
 	else
@@ -196,6 +206,43 @@ void CodeBrowser::Goto(const String& coderef)
 	}
 }
 
+void CodeBrowser::Search()
+{
+	Load();
+	if(!scope.IsCursor())
+		scope.SetCursor(0);
+}
+
+bool CodeBrowser::Key(dword key, int count)
+{
+	if(key == K_UP || key == K_DOWN) {
+		if(search.HasFocus() || search_item.HasFocus()) {
+			EditString& es = search.HasFocus() ? search : search_item;
+			int l, h;
+			es.GetSelection(l, h);
+			Value v = ~es;
+			if(item.IsCursor())
+				item.Key(key, count);
+			else
+			if(key == K_UP)
+				item.GoEnd();
+			else
+				item.GoBegin();
+			WhenKeyItem();
+			es <<= v;
+			es.SetFocus();
+			es.SetSelection(l, h);
+			return true;
+		}
+		if(search_scope.HasFocus()) {
+			scope.Key(key, count);
+			return true;
+		}
+	}
+	return false;
+}
+
+
 CodeBrowser::CodeBrowser()
 {
 	scope.AddKey();
@@ -214,5 +261,5 @@ CodeBrowser::CodeBrowser()
 	search_item <<= THISBACK(LoadScope);
 	search.NullText("Find ");
 	search.SetFilter(SearchItemFilter);
-	search <<= THISBACK(Load);
+	search <<= THISBACK(Search);
 }

@@ -117,15 +117,18 @@ public:
 	EditString             search_scope;
 	EditString             search_item;
 	EditString             search;
+	Callback               WhenKeyItem;
 	
 	void               Load();
 	void               LoadScope();
 	void               Goto(const String& coderef);
+	void               Search();
 	void               NameStart()               { display.namestart = true; }
 	String             GetCodeRef(int i) const;
 	String             GetCodeRef() const;
 	const CppItemInfo& GetItemInfo(int i) const;
 	const CppItemInfo& GetItemInfo() const;
+	bool               Key(dword key, int count);
 	
 	CodeBrowser();
 };
