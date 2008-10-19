@@ -29,6 +29,10 @@ bool Qualify0(Scopefo& nf, const String& type, String& qt)
 				return true;
 			}
 			if(DoQualify(hnf, qs, qn)) {
+				if(nf.base.Find(type) >= 0) {
+					qt = type;
+					return true;
+				}
 				int scopei = nf.base.Find(qn);
 				if(scopei >= 0) {
 					String tp = type.Mid(q + 1);

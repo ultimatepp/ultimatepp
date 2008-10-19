@@ -164,7 +164,6 @@ Rect Ctrl::GetRectInParentWindow(void) const
 	if(q)
 		r += q->GetView().TopLeft();
 	return r;
-
 }
 // 01/12/2007 - END
 
