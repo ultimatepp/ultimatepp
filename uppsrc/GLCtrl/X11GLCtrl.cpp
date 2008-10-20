@@ -190,6 +190,12 @@ Vector<int> GLCtrl::GLPane::Pick(int x, int y)
 	return result;
 }
 
+Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
+{
+	p = p - GetScreenView().TopLeft() + ctrl->GetScreenView().TopLeft();
+	return ctrl->MouseEvent(event, p, zdelta, keyflags);
+}
+
 GLCtrl::GLCtrl(int depthsize, int stencilsize, bool doublebuffer, bool multisamplebuffering, int numberofsamples)
 :	pane(depthsize, stencilsize, doublebuffer, multisamplebuffering, numberofsamples)
 {
