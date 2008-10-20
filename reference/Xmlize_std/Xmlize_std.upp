@@ -1,0 +1,11 @@
+description "Xmlize with existing type, in this case std::vector<int>";
+
+uses
+	Core;
+
+file
+	Xmlize.cpp;
+
+mainconfig
+	"" = "";
+
