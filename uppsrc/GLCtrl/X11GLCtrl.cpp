@@ -201,6 +201,7 @@ GLCtrl::GLCtrl(int depthsize, int stencilsize, bool doublebuffer, bool multisamp
 {
 	pane.ctrl = this;
 	Add(pane.SizePos());
+	NoWantFocus();
 }
 
 #endif
