@@ -33,7 +33,7 @@ public:
 
 		void Layout(int x, int y, int cy);
 		void Paint(Draw& w, int state);
-		int  Right() { return x + cx; }
+		int  Right() const { return x + cx; }
 
 	public:
 		Item&          Text(const String& _text);
@@ -85,7 +85,6 @@ private:
 
 	static Image Fade(int i);
 
-	int        GetTab(Point p);
 	void       PaintTabs(Draw& w);
 	void       ScrollInto(int i);
 	void       Left();
@@ -111,6 +110,8 @@ public:
 	TabCtrl::Item& Insert(int i, Ctrl& slave, const Image& m, const char *text);
 
 	void  Remove(int i);
+
+	int   GetTab(Point p) const;
 
 	int   GetCount() const                       { return tab.GetCount(); }
 	Item& GetItem(int i)                         { return tab[i]; }

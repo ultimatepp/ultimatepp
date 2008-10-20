@@ -202,7 +202,7 @@ void TabCtrl::Paint(Draw& w)
 	ChPaint(w, 0, th, sz.cx, sz.cy - th, style->body);
 }
 
-int  TabCtrl::GetTab(Point p)
+int  TabCtrl::GetTab(Point p) const
 {
 	if(p.y >= 0 && p.y < style->tabheight)
 		for(int i = 0; i < tab.GetCount(); i++)

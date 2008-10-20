@@ -103,7 +103,7 @@ void IconDes::SettingBar(Bar& bar)
 	        paste_opaque ? IconDesImg::PasteOpaque()
 	                     : IconDesImg::PasteTransparent(),
 	        THISBACK(TogglePaste))
-	   .Key(K_CTRL_T);
+	   .Key(K_ALT_T);
 }
 
 void IconDes::SelectBar(Bar& bar)
