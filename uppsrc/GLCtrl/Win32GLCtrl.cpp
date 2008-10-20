@@ -13,11 +13,18 @@ GLCtrl::GLCtrl()
 	hRC = NULL;
 	glpane.ctrl = this;
 	Add(glpane.SizePos());
+	NoWantFocus();
 }
 
 GLCtrl::~GLCtrl()
 {
 	CloseGL();
+}
+
+Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
+{
+	p = p - GetScreenView().TopLeft() + ctrl->GetScreenView().TopLeft();
+	return ctrl->MouseEvent(event, p, zdelta, keyflags);
 }
 
 void GLCtrl::OpenGL()

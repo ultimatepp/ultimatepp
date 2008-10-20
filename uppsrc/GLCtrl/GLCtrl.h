@@ -79,6 +79,8 @@ class GLCtrl : public ParentCtrl {
 		
 	public:
 	
+		Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
+
 		typedef GLCtrl CLASSNAME;
 	
 		// Constructor class GLCtrl
@@ -133,6 +135,7 @@ class GLCtrl : public ParentCtrl {
 		
 		virtual void    State(int reason);
 		virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+		virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
 	};
 	
 	friend class GLCtrl;
