@@ -13,7 +13,6 @@ GLCtrl::GLCtrl()
 	hRC = NULL;
 	glpane.ctrl = this;
 	Add(glpane.SizePos());
-	NoWantFocus();
 }
 
 GLCtrl::~GLCtrl()

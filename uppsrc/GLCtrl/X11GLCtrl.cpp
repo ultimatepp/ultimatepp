@@ -23,6 +23,7 @@ GLCtrl::GLPane::GLPane(int depthsize, int stencilsize, bool doublebuffer,
 	StencilSize      = stencilsize;
 	DoubleBuffering  = doublebuffer;
 	NumberOfSamples  = numberofsamples;
+	NoWantFocus();
 } // END Constructor class GLCtrl::GLPane
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -201,7 +202,6 @@ GLCtrl::GLCtrl(int depthsize, int stencilsize, bool doublebuffer, bool multisamp
 {
 	pane.ctrl = this;
 	Add(pane.SizePos());
-	NoWantFocus();
 }
 
 #endif

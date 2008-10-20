@@ -136,6 +136,8 @@ class GLCtrl : public ParentCtrl {
 		virtual void    State(int reason);
 		virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 		virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
+		
+		GLPane() { NoWantFocus(); }
 	};
 	
 	friend class GLCtrl;
