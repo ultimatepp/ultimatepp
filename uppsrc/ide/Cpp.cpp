@@ -1,8 +1,14 @@
 #include "ide.h"
 
-#define LDUMP(x)     // DDUMP(x)
-#define LDUMPC(x)    // DDUMPC(x)
-#define LLOG(x)      // DLOG(x)
+#if 0
+#define LDUMP(x)     DDUMP(x)
+#define LDUMPC(x)    DDUMPC(x)
+#define LLOG(x)      DLOG(x)
+#else
+#define LDUMP(x)
+#define LDUMPC(x)
+#define LLOG(x)
+#endif
 
 static Array<CppItem> sEmpty;
 
@@ -141,8 +147,7 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 	const Array<CppItem>& n = GetTypeItems(type);
 	String id = xp[ii];
 	int q = id.ReverseFind(':');
-	if(q > 0 && id[q - 1] == ':') {
-		id = id.Mid(q + 1);
+	if(q > 0 && id[q - 1] == ':') { // problem here!!!
 		ExpressionType(ResolveTParam(Qualify("", id.Mid(0, q - 1)), tparam), xp, ii + 1, typeset);
 		return;
 	}

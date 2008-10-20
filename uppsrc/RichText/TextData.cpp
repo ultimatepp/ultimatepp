@@ -280,17 +280,19 @@ void RichText::ApplyFormatInfo(int pos, const FormatInfo& fi, int count)
 
 void RichText::ReplaceStyle(int pos, const Uuid& id)
 {
-	int p = FindPart(pos);
-	RichPara pa = RichTxt::Get(p, id, style);
-	Put(p, pa, style);
+	RichTxt& txt = GetUpdateText(pos);
+	int p = txt.FindPart(pos);
+	RichPara pa = txt.Get(p, id, style);
+	txt.Set(p, pa, style);
 }
 
 void RichText::ReStyle(int pos, const Uuid& id)
 {
-	int p = FindPart(pos);
-	RichPara pa = Get(p);
+	RichTxt& txt = GetUpdateText(pos);
+	int p = txt.FindPart(pos);
+	RichPara pa = txt.Get(p, style);
 	pa.format.styleid = id;
-	Put(p, pa, style);
+	txt.Set(p, pa, style);
 }
 
 RichText::Formating RichText::SaveFormat(int pos, int count) const

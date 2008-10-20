@@ -173,6 +173,7 @@ void AssistEditor::IndexClick()
 
 void AssistEditor::SyncCursor()
 {
+	browser.search.NullText(String("Find (") + GetKeyDesc(IdeKeys::AK_SEARCHCODE().key[0]) + ") ");
 	if(navigator == NAV_INDEX) {
 		if(!index.IsCursor())
 			index.SetCursor(0);

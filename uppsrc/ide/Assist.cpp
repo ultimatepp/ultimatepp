@@ -1,8 +1,14 @@
 #include "ide.h"
 
-#define LDUMP(x)    // DDUMP(x)
-#define LDUMPC(x)   // DDUMPC(x)
-#define LLOG(x)     // DLOG(x)
+#if 0
+#define LDUMP(x)     DDUMP(x)
+#define LDUMPC(x)    DDUMPC(x)
+#define LLOG(x)      DLOG(x)
+#else
+#define LDUMP(x)
+#define LDUMPC(x)
+#define LLOG(x)
+#endif
 
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
@@ -160,6 +166,8 @@ String AssistEditor::CompleteIdBack(int& q)
 			id = "::" + id;
 		}
 		else {
+			if(iscib(*id))
+				break;
 			String nid = IdBack(q);
 			if(IsNull(nid))
 				break;
@@ -298,10 +306,11 @@ void AssistEditor::Assist()
 	if(Ch(q - 1) == '(') {
 		--q;
 		String id = IdBack(q);
-		if(id == "THISBACK")
+		if(id == "THISBACK") {
 			GatherItems(parser.current_scope, false, in_types, false, true);
+			PopUpAssist();
+		}
 	}
-	else
 	if(Ch(q - 1) == ':') {
 		while(Ch(q - 1) == ':')
 			q--;
@@ -324,13 +333,13 @@ void AssistEditor::Assist()
 			GatherItems("", false, in_types2, true, false);
 		}
 	}
-	if(assist_item.GetCount() == 0)
-		return;
 	PopUpAssist();
 }
 
 void AssistEditor::PopUpAssist(bool auto_insert)
 {
+	if(assist_item.GetCount() == 0)
+		return;
 	int lcy = max(16, BrowserFont().Info().GetHeight());
 	type.Clear();
 	type.Add(AttrText("<all>").Ink(SColorHighlight()));
@@ -513,9 +522,7 @@ bool AssistEditor::Key(dword key, int count)
 	else
 	if(auto_assist && InCode()) {
 		if(key == '.' || key == '>' && Ch(GetCursor() - 2) == '-' ||
-		   key == ':' && Ch(GetCursor() - 2) == ':')
-			Assist();
-		if(key == '(')
+		   key == ':' && Ch(GetCursor() - 2) == ':' || key == '(')
 			Assist();
 	}
 	if(key == ',') {
