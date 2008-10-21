@@ -67,6 +67,7 @@ AssistEditor::AssistEditor()
 	navigator = NAV_BROWSER;
 
 	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
+	WhenAnnotationClick = THISBACK(EditAnnotation);
 	Annotations(12);
 	annotation_popup.Background(White);
 	annotation_popup.SetFrame(BlackFrame());

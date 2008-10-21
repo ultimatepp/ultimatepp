@@ -459,8 +459,11 @@ struct AssistEditor : CodeEditor {
 	bool           IsBrowser() const                             { return navigator == NAV_BROWSER; }
 	void           Navigator(int navigator);
 
+	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef);
 	void           SyncAnnotationPopup();
+	void           EditAnnotation();
 	void           Annotate(const String& filename);
+	void           OpenTopic(String topic);
 
 	void           SerializeNavigator(Stream& s);
 

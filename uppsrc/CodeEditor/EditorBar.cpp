@@ -161,8 +161,10 @@ void EditorBar::MouseMove(Point p, dword flags)
 	int pa = active_annotation;
 	if(p.x > GetSize().cx - annotations)
 		active_annotation = p.y / editor->GetFont().Info().GetHeight() + editor->GetScrollPos().y;
-		if(active_annotation >= editor->GetLineCount())
-			active_annotation = -1;
+	else
+		active_annotation = -1;
+	if(active_annotation >= editor->GetLineCount())
+		active_annotation = -1;
 	if(pa != active_annotation)
 		WhenAnnotationMove();
 	if(editor)
@@ -179,6 +181,9 @@ void EditorBar::MouseLeave()
 
 void EditorBar::LeftDown(Point p, dword flags)
 {
+	if(p.x > GetSize().cx - annotations)
+		WhenAnnotationClick();
+	else
 	if(editor)
 		editor->LeftDown(Point(0, p.y), flags);
 }

@@ -10,4 +10,8 @@ topic "Point";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s0; [*_@3 ERROR: Expected number: `@3;2 `$`$6,6#622449434]]
+[s0;*_@3 &]
+[s5;:Any`:`:Any`(pick`_ Any`&`): [* Any]([@(0.128.128) pick`_]_[* Any][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Pick constructor. Transfers content of source Any while destroying 
+its content by picking.&]
+[s7; [*C@3 s][%% -|Source Any.][*_@3 ERROR: Expected number: `@3;2 `$`$6,6#622449434]]

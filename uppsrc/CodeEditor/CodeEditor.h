@@ -89,6 +89,7 @@ private:
 public:
 	Callback1<int> WhenBreakpoint;
 	Callback       WhenAnnotationMove;
+	Callback       WhenAnnotationClick;
 
 	void InsertLines(int i, int count);
 	void RemoveLines(int i, int count);
@@ -371,6 +372,7 @@ public:
 	Callback1<const String&> WhenDbgView;
 	Callback WhenLeftDown;
 	Callback WhenAnnotationMove;
+	Callback WhenAnnotationClick;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
