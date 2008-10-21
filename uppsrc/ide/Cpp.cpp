@@ -136,7 +136,7 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
                                   bool can_shortcut_operator, Index<String>& visited_bases)
 {
 	if(ii >= xp.GetCount()) {
-		LLOG("Final type: " << ttype);
+		LLOG("--- Final type: " << ttype);
 		typeset.FindAdd(ttype);
 		return;
 	}
@@ -147,11 +147,11 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 	const Array<CppItem>& n = GetTypeItems(type);
 	String id = xp[ii];
 	int q = id.ReverseFind(':');
-	if(q > 0 && id[q - 1] == ':') { // problem here!!!
-		ExpressionType(ResolveTParam(Qualify("", id.Mid(0, q - 1)), tparam), xp, ii + 1, typeset);
-		return;
+	if(q > 0 && id[q - 1] == ':') {
+		type = ResolveTParam(Qualify(ttype, id.Mid(0, q - 1)), tparam);
+		id = id.Mid(q + 1);
 	}
-	LLOG("ExpressionType " << type << " ii: " << ii << " id:" << id);
+	LLOG("ExpressionType " << type << " ii: " << ii << " id:" << id << " variable:" << variable);
 	if(*id == '.' || (!variable && !iscid(*id))) {
 		ExpressionType(ttype, xp, ii + 1, typeset, false);
 		return;
@@ -160,12 +160,13 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 	if(!iscid(*id)) {
 		shortcut_oper = can_shortcut_operator;
 		id = "operator" + id;
+		LLOG("id as: " << id);
 	}
 	for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
 		const CppItem& m = n[i];
 		if(m.name == id) {
-			LLOG("Member " << m.name << ": " << m.qtype);
-			ExpressionType(ResolveTParam(m.qtype, tparam), xp, ii + 1, typeset);
+			LLOG("Member " << m.qtype << "'" << m.name << "'");
+			ExpressionType(ResolveTParam(m.qtype, tparam), xp, ii + 1, typeset, m.IsData());
 		}
 	}
 	if(typeset.GetCount() != c0 || IsNull(type))
@@ -175,7 +176,7 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 	for(int i = 0; i < base.GetCount(); i++)
 		if(visited_bases.Find(base[i]) < 0) {
 			visited_bases.Add(base[i]);
-			ExpressionType(base[i], xp, ii, typeset, tparam, false, visited_bases);
+			ExpressionType(base[i], xp, ii, typeset, variable, false, visited_bases);
 			if(typeset.GetCount() != c0)
 				return;
 		}
@@ -189,13 +190,13 @@ void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, 
 	Index<String> visited_bases;
 	ExpressionType(type, xp, ii, typeset, variable, true, visited_bases);
 }
-
+/*
 void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, int ii,
                                   Index<String>& typeset)
 {
 	ExpressionType(type, xp, ii, typeset, false);
 }
-
+*/
 Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<String>& xp)
 {
 	String type;
@@ -204,14 +205,14 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 		return typeset;
 	if(xp[0] == "this") {
 		LLOG("this: " << type);
-		ExpressionType(parser.current_scope, xp, 1, typeset);
+		ExpressionType(parser.current_scope, xp, 1, typeset, false);
 		return typeset;
 	}
 	int q = parser.local.FindLast(xp[0]);
 	if(q >= 0) {
-		String type = Qualify(parser.current_scope, parser.local[q]);
+		String type = Qualify(parser.current_scope, parser.local[q].type);
 		LLOG("Found type local: " << type << " in scope: " << parser.current_scope);
-		ExpressionType(type, xp, 1, typeset, true);
+		ExpressionType(type, xp, 1, typeset, !parser.local[q].isptr);
 		return typeset;
 	}
 	ExpressionType(parser.current_scope, xp, 0, typeset, false);
@@ -235,8 +236,7 @@ int CharFilterT(int c)
 	return c >= '0' && c <= '9' ? "TUVWXYZMNO"[c - '0'] : c;
 }
 
-void AssistEditor::GatherItems(const String& type, bool only_public, Index<String>& in_types, bool types,
-                               bool thisback)
+void AssistEditor::GatherItems(const String& type, bool only_public, Index<String>& in_types, bool types)
 {
 	LLOG("GatherItems " << type);
 	if(in_types.Find(type) >= 0) {
@@ -271,12 +271,16 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 		const Array<CppItem>& n = CodeBase()[q];
 		String base;
 		int typei = assist_type.FindAdd(ntp);
+		bool op = only_public;
+		for(int i = 0; i < n.GetCount(); i = FindNext(n, i))
+			if(n[i].kind == FRIENDCLASS)
+				op = false;
 		for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
 			const CppItem& im = n[i];
-			if(im.IsType())
+			if(im.kind == STRUCT || im.kind == STRUCTTEMPLATE)
 				base = im.qptype;
 			if((im.IsCode() || !thisback && (im.IsData() || im.IsMacro() && type == ""))
-			   && (!only_public || im.access == PUBLIC)) {
+			   && (!op || im.access == PUBLIC)) {
 				int q = assist_item.Find(im.name);
 				while(q >= 0) {
 					if(assist_item[q].typei != typei)
@@ -293,7 +297,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 			ResolveTParam(b, tparam);
 			for(int i = 0; i < b.GetCount(); i++)
 				if(b[i].GetCount())
-					GatherItems(b[i], only_public, in_types, types, thisback);
+					GatherItems(b[i], only_public, in_types, types);
 		}
 	}
 	in_types.Drop();

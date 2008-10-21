@@ -108,6 +108,9 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	case MACRO:
 		img = BrowserImg::macro();
 		break;
+	case FRIENDCLASS:
+		img = BrowserImg::friend_class();
+		break;
 	}
 
 	int by = ry - bk.GetSize().cy / 2;

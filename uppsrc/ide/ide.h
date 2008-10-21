@@ -399,6 +399,7 @@ struct AssistEditor : CodeEditor {
 	bool           assist_active;
 	bool           commentdp;
 	bool           inbody;
+	bool           thisback;
 	Ide           *theide;
 	
 	void           PopUpAssist(bool auto_insert = false);
@@ -417,8 +418,8 @@ struct AssistEditor : CodeEditor {
 	                              bool can_shortcut_operator, Index<String>& visited_bases);
 	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
 	                              Index<String>& typeset, bool variable);
-	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
-	                              Index<String>& typeset);
+//	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
+//	                              Index<String>& typeset);
 	Index<String>  ExpressionType(const Parser& parser, const Vector<String>& xp);
 
 	String         RemoveDefPar(const char *s);
@@ -427,7 +428,7 @@ struct AssistEditor : CodeEditor {
 	void           Virtuals();
 	void           Thisbacks();
 	void           GatherItems(const String& type, bool only_public, Index<String>& in_types,
-	                           bool types, bool thisback);
+	                           bool types);
 
 	void           SelParam();
 	int            Ch(int q);
