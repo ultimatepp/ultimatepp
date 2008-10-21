@@ -578,6 +578,7 @@ void Parser::Declarator(Decl& d, const char *p)
 	}
 	EatInitializers();
 	while(Key('[')) {
+		d.isptr = true;
 		int level = 1;
 		while(level && lex != t_eof) {
 			if(Key('[')) level++;
@@ -724,8 +725,11 @@ Array<Parser::Decl> Parser::Declaration(bool l0, bool more)
 void Parser::Locals(const String& type)
 {
 	Array<Parser::Decl> d = Declaration(true, true);
-	for(int i = 0; i < d.GetCount(); i++)
-		local.Add(d[i].name, type);
+	for(int i = 0; i < d.GetCount(); i++) {
+		Local& l = local.Add(d[i].name);
+		l.type = type;
+		l.isptr = d[i].isptr;
+	}
 }
 
 String Parser::Tparam(int& q)
@@ -1172,8 +1176,11 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	String ptype;
 	for(int i = 0; i < d.param.GetCount(); i++) {
 		const Decla& p = d.param[i];
-		if(dobody)
-			local.Add(p.name, p.type);
+		if(dobody) {
+			Local& l = local.Add(p.name);
+			l.type = p.type;
+			l.isptr = p.isptr;
+		}
 		ScAdd(param, p.natural);
 		if(i)
 			ptype << ';';
@@ -1385,27 +1392,32 @@ void Parser::Do()
 			bool body = lex == '{';
 			for(int i = 0; i < r.GetCount(); i++) {
 				Decl& d = r[i];
-				if(!d.isfriend || body) {
-					if(d.function) {
+				if(d.function) {
+					if(!d.isfriend) {
 						CppItem &im = Fn(d, Null, body, String(), String());
 						functionItem = &im;
 					}
-					else {
-						String h = d.natural;
-						int q = h.Find('=');
-						if(q >= 0)
-							h = TrimRight(h.Mid(0, q));
-						String scope = context.scope;
-						if(d.type_def)
-							ScopeCat(scope, d.name);
-						CppItem& im = Item(scope, d.type_def ? "typedef" : d.name, d.name);
-						im.natural = Purify(h);
-						im.type = d.type;
-						im.access = context.access;
-						im.kind = d.type_def ? TYPEDEF :
-						          IsNull(scope) ? VARIABLE :
-						          d.s_static ? CLASSVARIABLE : INSTANCEVARIABLE;
-					}
+				}
+				else {
+					String h = d.natural;
+					int q = h.Find('=');
+					if(q >= 0)
+						h = TrimRight(h.Mid(0, q));
+					String scope = context.scope;
+					if(d.type_def)
+						ScopeCat(scope, d.name);
+					CppItem& im = Item(scope, d.isfriend ? "friend class"
+					                          : d.type_def ? "typedef"
+					                          : d.name, d.name);
+					im.natural = Purify(h);
+					im.type = d.type;
+					im.access = context.access;
+					im.kind = d.isfriend ? FRIENDCLASS :
+					          d.type_def ? TYPEDEF :
+					          IsNull(scope) ? VARIABLE :
+					          d.s_static ? CLASSVARIABLE : INSTANCEVARIABLE;
+					if(im.IsData())
+						im.isptr = d.isptr;
 				}
 			}
 			if(body && functionItem && whenFnEnd) {

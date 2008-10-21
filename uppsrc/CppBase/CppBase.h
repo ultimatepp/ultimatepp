@@ -176,11 +176,12 @@ enum Kind {
 	CLASSVARIABLE,
 	ENUM,
 	MACRO,
+	FRIENDCLASS,
 };
 
 inline bool IsCppType(int i)
 {
-	return i >= STRUCT && i <= TYPEDEF;
+	return i >= STRUCT && i <= TYPEDEF || i == FRIENDCLASS;
 }
 
 inline bool IsCppCode(int i) {
@@ -233,6 +234,8 @@ struct CppItem {
 	int16          at;
 	bool           virt;
 	bool           decla;
+	bool           lvalue;
+	bool           isptr;
 	
 	byte           filetype;
 	bool           impl;
@@ -250,7 +253,7 @@ struct CppItem {
 	
 	void           Serialize(Stream& s);
 
-	CppItem()      { at = decla = virt = false; qualify_type = qualify_param = true; serial = -1; }
+	CppItem()      { at = decla = virt = false; qualify_type = qualify_param = true; serial = -1; isptr = false; }
 };
 
 int FindItem(const Array<CppItem>& x, const String& qitem);
@@ -281,22 +284,22 @@ class Parser {
 	};
 
 	struct Decla {
-		bool    s_static:1;
-		bool    s_extern:1;
-		bool    s_register:1;
-		bool    s_auto:1;
-		bool    s_mutable:1;
-		bool    s_explicit:1;
-		bool    s_virtual:1;
+		bool    s_static;
+		bool    s_extern;
+		bool    s_register;
+		bool    s_auto;
+		bool    s_mutable;
+		bool    s_explicit;
+		bool    s_virtual;
 		String  name;
-		bool    function:1;
-		bool    type_def:1;
-		bool    isfriend:1;
-		bool    istemplate:1;
-		bool    istructor:1;
-		bool    isdestructor:1;
-		bool    isptr:1;
-		bool    nofn:1;
+		bool    function;
+		bool    type_def;
+		bool    isfriend;
+		bool    istemplate;
+		bool    istructor;
+		bool    isdestructor;
+		bool    isptr;
+		bool    nofn;
 
 		String  tnames;
 		String  type;
@@ -414,7 +417,13 @@ public:
 	CppItem                   current;
 	int                       currentScopeDepth;
 	int                       maxScopeDepth;
-	VectorMap<String, String> local;
+
+	struct Local : Moveable<Local> {
+		String type;
+		bool   isptr;
+	};
+
+	VectorMap<String, Local>  local;
 	FnEndCallback             whenFnEnd;
 	LexSymbolStat             symbolsOutsideFunctions;
 

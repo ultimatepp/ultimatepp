@@ -71,6 +71,8 @@ AssistEditor::AssistEditor()
 	annotation_popup.Background(White);
 	annotation_popup.SetFrame(BlackFrame());
 	annotation_popup.Margins(6);
+	
+	thisback = false;
 }
 
 int CppItemInfoOrder(const Value& va, const Value& vb) {
@@ -303,12 +305,15 @@ void AssistEditor::Assist()
 	while(iscid(Ch(q - 1)))
 		q--;
 	SkipSpcBack(q);
+	thisback = false;
 	if(Ch(q - 1) == '(') {
 		--q;
 		String id = IdBack(q);
 		if(id == "THISBACK") {
-			GatherItems(parser.current_scope, false, in_types, false, true);
+			thisback = true;
+			GatherItems(parser.current_scope, false, in_types, false);
 			PopUpAssist();
+			return;
 		}
 	}
 	if(Ch(q - 1) == ':') {
@@ -316,7 +321,7 @@ void AssistEditor::Assist()
 			q--;
 		Vector<String> tparam;
 		String scope = ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q)), tparam);
-		GatherItems(scope, false, in_types, true, false);
+		GatherItems(scope, false, in_types, true);
 	}
 	else {
 		String tp;
@@ -325,12 +330,12 @@ void AssistEditor::Assist()
 			Index<String> typeset = ExpressionType(parser, xp);
 			for(int i = 0; i < typeset.GetCount(); i++)
 				if(typeset[i].GetCount())
-					GatherItems(typeset[i], xp.GetCount(), in_types, xp.GetCount() == 0, false);
+					GatherItems(typeset[i], xp.GetCount(), in_types, xp.GetCount() == 0);
 		}
 		else {
-			GatherItems(parser.current_scope, true, in_types, true, false);
+			GatherItems(parser.current_scope, true, in_types, true);
 			Index<String> in_types2;
-			GatherItems("", false, in_types2, true, false);
+			GatherItems("", false, in_types2, true);
 		}
 	}
 	PopUpAssist();
@@ -412,24 +417,26 @@ void AssistEditor::AssistInsert()
 		String txt = f.name;
 		int l = txt.GetCount();
 		int pl = txt.GetCount();
-		if(f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
-			txt << '(';
-			pl = l = txt.GetCount();
-			if(IsNull(f.param))
-				l++;
-			else {
-				Vector<String> p = Split(f.param, ';', false);
-				for(int i = 0; i < p.GetCount(); i++) {
-					if(i) {
-						txt << (inbody ? (char)184 : ',');
-						txt << ' ';
+		if(!thisback) {
+			if(f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
+				txt << '(';
+				pl = l = txt.GetCount();
+				if(IsNull(f.param))
+					l++;
+				else {
+					Vector<String> p = Split(f.param, ';', false);
+					for(int i = 0; i < p.GetCount(); i++) {
+						if(i) {
+							txt << (inbody ? (char)184 : ',');
+							txt << ' ';
+						}
+						txt << p[i];
+						if(i == 0)
+							pl = txt.GetCount();
 					}
-					txt << p[i];
-					if(i == 0)
-						pl = txt.GetCount();
 				}
+				txt << ')';
 			}
-			txt << ')';
 		}
 		int cl = GetCursor();
 		int ch = cl;
@@ -439,6 +446,11 @@ void AssistEditor::AssistInsert()
 			ch++;
 		Remove(cl, ch - cl);
 		SetCursor(cl);
+		if(thisback) {
+			while(Ch(ch) == ' ') ch++;
+			if(Ch(ch) != ')')
+				txt << ')';
+		}
 		int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
 		if(!inbody)
 			SetCursor(cl + n);
