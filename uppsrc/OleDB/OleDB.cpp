@@ -1,5 +1,7 @@
 #include "OleDB.h"
 
+#define LLOG(x)
+
 #if defined(PLATFORM_WIN32) && defined(COMPILER_MSC)
 
 NAMESPACE_UPP
@@ -381,6 +383,7 @@ public:
 	virtual SqlSession&     GetSession() const { ASSERT(session); return *session; }
 	virtual String          GetUser() const    { ASSERT(session); return session->user; }
 	virtual String          ToString() const;
+	virtual Value           GetInsertedId() const;
 
 	void                    Execute(IRef<IRowset> rowset);
 
@@ -444,6 +447,12 @@ OleDBConnection::~OleDBConnection()
 {
 	if(session)
 		Unlink();
+}
+
+Value OleDBConnection::GetInsertedId() const
+{
+	Sql sql(GetSession());
+	return sql % Select(SqlId("@@IDENTITY")).Get();
 }
 
 void OleDBConnection::Clear()
@@ -557,7 +566,7 @@ bool OleDBConnection::TryExecute()
 		*t << statement << "\n";
 	int args = 0;
 	if(!session) {
-		RLOG("OleDB Execute: invalid cursor (zombie state)");
+		LLOG("OleDB Execute: invalid cursor (zombie state)");
 		return false; // zombie state or closed session
 	}
 	if(!session->dbsession)
@@ -957,7 +966,7 @@ Array<OleDBSession::Provider> OleDBSession::EnumProviders()
 		}
 	}
 	catch(Exc e) {
-		RLOG("OleDB::GetProviders->" << e);
+		LLOG("OleDB::GetProviders->" << e);
 	}
 	return out;
 }
@@ -1038,7 +1047,7 @@ bool OleDBSession::OpenProp(String propset)
 void OleDBSession::Close()
 {
 	if(!!dbsession && level > 0) {
-		RLOG("OleDBSession::Close->transaction level = " << level);
+		LLOG("OleDBSession::Close->transaction level = " << level);
 	}
 	while(!clink.IsEmpty()) {
 		clink.GetNext()->Clear();
@@ -1048,7 +1057,7 @@ void OleDBSession::Close()
 	transaction.Clear();
 	dbsession.Clear();
 	if(!!dbinit && FAILED(dbinit->Uninitialize())) {
-		RLOG("OleDBSession::Close error, watch out for leaks!");
+		LLOG("OleDBSession::Close error, watch out for leaks!");
 	}
 	dbinit.Clear();
 	level = -1;

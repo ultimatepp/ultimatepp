@@ -32,6 +32,7 @@
 #define KEY                        INLINE_ATTRIBUTE("key")
 #define NOT_NULL                   INLINE_ATTRIBUTE("not null")
 #define IDENTITY                   INLINE_ATTRIBUTE("identity")
+#define AUTO_INCREMENT             INLINE_ATTRIBUTE("identity")
 
 #define INDEX                      ATTRIBUTE("create index IDX_@x on @t(@c);", \
                                              "drop index IDX_@x;")
