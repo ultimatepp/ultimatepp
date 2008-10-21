@@ -41,21 +41,30 @@ bool IsBeginEnd(RichText& txt, int i)
 	return false;
 }
 
-void AssistEditor::SyncAnnotationPopup()
+bool AssistEditor::GetAnnotationRefs(Vector<String>& tl, String& coderef)
 {
 	if(annotation_popup.IsOpen())
 		annotation_popup.Close();
 	int q = GetActiveAnnotationLine();
 	if(q < 0)
-		return;
-	String coderef = GetAnnotation(q);
+		return false;
+	coderef = GetAnnotation(q);
 	if(IsNull(coderef))
+		return false;
+	tl = GetRefLinks(coderef);
+	return true;
+}
+
+void AssistEditor::SyncAnnotationPopup()
+{
+	String coderef;
+	Vector<String> tl;
+	if(!GetAnnotationRefs(tl, coderef))
 		return;
-	Vector<String> l = GetRefLinks(coderef);
-	if(l.GetCount()) {
+	if(tl.GetCount()) {
 		static String   last_path;
 		static RichText topic_text;
-		String path = GetTopicPath(l[0]);
+		String path = GetTopicPath(tl[0]);
 		if(path != last_path)
 			topic_text = ParseQTF(ReadTopic(LoadFile(path)).text);
 		
@@ -75,7 +84,7 @@ void AssistEditor::SyncAnnotationPopup()
 	}
 	else
 		annotation_popup.SetQTF("[A1 [@b* " + DeQtf(coderef) + "]&Not documented yet - click to document");
-	Rect r = GetLineScreenRect(q);
+	Rect r = GetLineScreenRect(GetActiveAnnotationLine());
 	int h = annotation_popup.GetHeight(580);
 	h = min(h, 550);
 	int y = r.top - h - 16;
@@ -83,4 +92,30 @@ void AssistEditor::SyncAnnotationPopup()
 		y = r.bottom;
 	annotation_popup.SetRect(r.left, y, 600, h + 16);
 	annotation_popup.Ctrl::PopUp(this, false, false, true);
+}
+
+void AssistEditor::OpenTopic(String topic)
+{
+	if(theide)
+		theide->OpenTopic(topic);
+}
+
+void AssistEditor::EditAnnotation()
+{
+	String coderef;
+	Vector<String> tl;
+	if(!GetAnnotationRefs(tl, coderef))
+		return;
+	SetCursor(GetPos(GetActiveAnnotationLine()));
+	if(tl.GetCount() > 1) {
+		MenuBar bar;
+		for(int i = 0; i < tl.GetCount(); i++)
+			bar.Add(tl[i], THISBACK1(OpenTopic, tl[i] + '#' + coderef));
+		bar.Execute();
+		return;
+	}
+	if(tl.GetCount()) {
+		OpenTopic(tl[0] + '#' + coderef);
+		return;
+	}
 }

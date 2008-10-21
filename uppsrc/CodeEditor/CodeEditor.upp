@@ -8,8 +8,8 @@ uses
 file
 	CodeEditor.h,
 	hl_color.i,
-	EditorBar.cpp,
 	Syntax.cpp,
+	EditorBar.cpp,
 	Highlight.cpp,
 	FindReplace.cpp,
 	Lang.cpp,

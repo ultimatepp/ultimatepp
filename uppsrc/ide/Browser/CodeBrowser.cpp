@@ -62,14 +62,19 @@ void CodeBrowser::Load()
 			}
 		}
 	}
-	for(int i = 0; i < fi.GetCount(); i++) {
-		String s = GetCppFile(fi[i]);
-		s = '<' + GetFileName(GetFileFolder(s)) + '/' + GetFileName(s) + '>';
-		if(MatchCib(s, match) && HasItem(fi[i], find)) {
-			txt.Add(s);
-			ndx.Add(fi[i]);
-		}
+	if(find.GetCount()) {
+		txt.Add("<globals>");
+		ndx.Add(Null);
 	}
+	else
+		for(int i = 0; i < fi.GetCount(); i++) {
+			String s = GetCppFile(fi[i]);
+			s = '<' + GetFileName(GetFileFolder(s)) + '/' + GetFileName(s) + '>';
+			if(MatchCib(s, match)) {
+				txt.Add(s);
+				ndx.Add(fi[i]);
+			}
+		}
 	IndexSort(txt, ndx, ScopeLess());
 	Value key = scope.GetKey();
 	int sc = scope.GetCursorSc();
