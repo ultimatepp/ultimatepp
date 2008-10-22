@@ -2,6 +2,7 @@
 
 bool MatchCib(const String& s, const String& match)
 {
+	if(IsNull(match)) return true;
 	int q = ToUpper(s).Find(match);
 	return q > 0 && !iscid(s[q - 1]) || q == 0;	
 }
@@ -149,6 +150,7 @@ void CodeBrowser::LoadScope()
 	item.Sort(1, ItemCompare);
 	if(item.FindSetCursor(key))
 		item.ScCursor(sc);
+	clear.Enable(IsSearch());
 }
 
 String CodeBrowser::GetCodeRef(int i) const
@@ -187,14 +189,11 @@ int SearchItemFilter(int c)
 
 void CodeBrowser::Goto(const String& coderef)
 {
-	search.Clear();
 	if(IsNull(coderef))
 		item.KillCursor();
 	else
 	if(coderef != GetCodeRef()) {
 		if(!IsNull(search_item) || !IsNull(search_scope)) {
-			search_scope <<= Null;
-			search_item <<= Null;
 			Load();
 			LoadScope();
 		}
@@ -247,6 +246,19 @@ bool CodeBrowser::Key(dword key, int count)
 	return false;
 }
 
+bool CodeBrowser::IsSearch() const
+{
+	return !IsNull(search) || !IsNull(search_item) || !IsNull(search);
+}
+
+void CodeBrowser::ClearSearch()
+{
+	if(!IsSearch())
+		return;
+	search_scope <<= search_item <<= search <<= Null;
+	Load();
+	WhenClear();
+}
 
 CodeBrowser::CodeBrowser()
 {
@@ -267,4 +279,8 @@ CodeBrowser::CodeBrowser()
 	search.NullText("Find ");
 	search.SetFilter(SearchItemFilter);
 	search <<= THISBACK(Search);
+	search.AddFrame(clear);
+	clear.SetImage(BrowserImg::Clear());
+	clear.NoWantFocus();
+	clear <<= THISBACK(ClearSearch);
 }

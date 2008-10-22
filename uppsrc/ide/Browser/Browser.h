@@ -117,7 +117,9 @@ public:
 	EditString             search_scope;
 	EditString             search_item;
 	EditString             search;
+	FrameRight<Button>     clear;
 	Callback               WhenKeyItem;
+	Callback               WhenClear;
 	
 	void               Load();
 	void               LoadScope();
@@ -129,6 +131,8 @@ public:
 	const CppItemInfo& GetItemInfo(int i) const;
 	const CppItemInfo& GetItemInfo() const;
 	bool               Key(dword key, int count);
+	bool               IsSearch() const;
+	void               ClearSearch();
 	
 	CodeBrowser();
 };
