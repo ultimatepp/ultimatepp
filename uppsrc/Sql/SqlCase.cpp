@@ -134,9 +134,14 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			}
 			r->Cat('\'');
 			for(const char *q = x; *q; q++) {
-				if(*q == '\'')
-					r->Cat(dialect == MY_SQL ? "\\\'" : "\'\'");
-				else {
+				if(*q == '\'') {
+					if(dialect == MY_SQL)
+						r->Cat("\\\'");
+					else if(dialect == PGSQL)
+						r->Cat("\\'");
+					else
+					 	r->Cat("\'\'");
+				} else {
 					if((*q == '\"' || *q == '\\') && dialect == MY_SQL)
 						r->Cat('\\');
 					r->Cat(*q);
