@@ -201,7 +201,7 @@ public:
 	Value  Get(int id) const;
 	Value  GetValue(int id) const;
 	Value  operator[](int id) const                            { return Get(id); }
-	void   Set(int id, Value value);
+	void   Set(int id, Value v);
 	void   Set(int id, Value key, Value value);
 	
 	void   SetDisplay(int id, const Display& display);
@@ -237,6 +237,8 @@ public:
 
 	Value  Get() const;
 	Value  GetValue() const;
+	
+	void   SetValue(const Value& v);
 
 	int    Find(Value key);
 	bool   FindSetCursor(Value key);
