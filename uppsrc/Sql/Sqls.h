@@ -223,15 +223,20 @@ public:
 };
 
 #ifndef NOAPPSQL
+
 struct AppSql : Sql {
 	void   operator=(SqlSource& s) { Assign(s); }
 	void   Detach()                { Sql::Detach(); }
 	AppSql() : Sql(NULLSQL) {}
 };
+
 AppSql& AppCursor();
+//$-
 #define SQL AppCursor()
-// Assist++ cheat:
-//$ Sql& SQL;
+//$+
+//  Assist++ cheat:
+//$ AppSql SQL;
+
 #endif
 
 struct StatementExecutor {
