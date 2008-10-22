@@ -62,6 +62,7 @@ AssistEditor::AssistEditor()
 	browser.item.NoWantFocus();
 	browser.item.WhenLeftClick = browser.item.WhenLeftDouble = THISBACK(BrowserGoto);
 	browser.WhenKeyItem = THISBACK(BrowserGotoNF);
+	browser.WhenClear = THISBACK(SyncCursor);
 	browser.NameStart();
 		
 	navigator = NAV_BROWSER;
@@ -535,8 +536,15 @@ bool AssistEditor::Key(dword key, int count)
 	else
 	if(auto_assist && InCode()) {
 		if(key == '.' || key == '>' && Ch(GetCursor() - 2) == '-' ||
-		   key == ':' && Ch(GetCursor() - 2) == ':' || key == '(')
+		   key == ':' && Ch(GetCursor() - 2) == ':')
 			Assist();
+		else
+		if(key == '(') {
+			int q = GetCursor() - 1;
+			String id = IdBack(q);
+			if(id == "THISBACK")
+				Assist();
+		}
 	}
 	if(key == ',') {
 		if(Ch(GetCursor()) == 184) {

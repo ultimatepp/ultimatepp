@@ -173,7 +173,9 @@ void AssistEditor::IndexClick()
 
 void AssistEditor::SyncCursor()
 {
-	browser.search.NullText(String("Find (") + GetKeyDesc(IdeKeys::AK_SEARCHCODE().key[0]) + ") ");
+	String k = GetKeyDesc(IdeKeys::AK_SEARCHCODE().key[0]) + ") ";
+	browser.search.NullText(String("Find (") + k);
+	browser.clear.Tip(String("Clear (") + k);
 	if(navigator == NAV_INDEX) {
 		if(!index.IsCursor())
 			index.SetCursor(0);
@@ -268,6 +270,7 @@ void AssistEditor::Navigator(int nav)
 	case NAV_BROWSER:
 		indexpane.Hide();
 		scope_item.Show();
+		browser.ClearSearch();
 		break;
 	}
 	if(navigator)
@@ -307,5 +310,8 @@ void Ide::SearchCode()
 {
 	if(editor.navigator != AssistEditor::NAV_BROWSER)
 		editor.Navigator(AssistEditor::NAV_BROWSER);
-	editor.browser.search.SetFocus();
+	if(editor.browser.IsSearch())
+		editor.browser.ClearSearch();
+	else
+		editor.browser.search.SetFocus();
 }
