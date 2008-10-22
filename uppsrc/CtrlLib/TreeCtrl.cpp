@@ -257,6 +257,12 @@ void  TreeCtrl::Set(int id, Value k, Value v)
 	SetOption(id);
 }
 
+void TreeCtrl::SetValue(const Value& v)
+{
+	int id = GetCursor();
+	Set(id, Get(id), v);
+}
+
 void TreeCtrl::SetDisplay(int id, const Display& display)
 {
 	item[id].SetDisplay(display);

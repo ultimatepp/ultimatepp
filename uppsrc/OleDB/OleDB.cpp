@@ -561,9 +561,8 @@ bool OleDBConnection::Execute()
 bool OleDBConnection::TryExecute()
 {
 //	session->PreExec();
-	Stream *t = session->GetTrace();
-	if(t)
-		*t << statement << "\n";
+//	if(t)
+//		*t << statement << "\n";
 	int args = 0;
 	if(!session) {
 		LLOG("OleDB Execute: invalid cursor (zombie state)");
@@ -605,6 +604,7 @@ bool OleDBConnection::TryExecute()
 	}
 	IRef<IRowset> frowset;
 	OleDBVerify(cmd->Execute(NULL, frowset.GetIID(), &params, &fetch_rowcount, frowset.SetUnk()));
+	Stream *t = session->GetTrace();
 	if(t && session->IsTraceTime())
 		*t << NFormat("----- %s exec %d ms:\n", ToString(), msecs(time));
 
