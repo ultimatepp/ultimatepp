@@ -403,6 +403,8 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		editor.SetLineInfoRem(fd.lineinforem);
 		if(ff.IsReadOnly())
 			editor.SetReadOnly();
+		fd.undodata.Clear();
+		PosSync();
 	}
 	else {
 		RealizePath(editfile);
@@ -422,15 +424,9 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 			editor.SetCursor(editor.GetPos(1));
 		}
 		editor.SetCharset(charset);
-		MakeTitle();
-		SetBar();
-		editor.CheckEdited(true);
-		return;
 	}
-	fd.undodata.Clear();
-	MakeTitle();
 	editor.SetFocus();
-	PosSync();
+	MakeTitle();
 	SetBar();
 	editor.assist_active = IsProjectFile(editfile) && (IsCSourceFile(editfile) || IsCHeaderFile(editfile));
 	editor.CheckEdited(true);

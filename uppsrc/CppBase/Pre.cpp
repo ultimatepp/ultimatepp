@@ -98,7 +98,8 @@ SrcFile PreProcess(Stream& in)
 					macro << ')';
 				}
 //				res.text << '#' << AsCString(SSpaces(macro));
-				res.text << '#' << AsCString(macro);
+				if(include)
+					res.text << '#' << AsCString(macro);
 			}
 			res.preprocessorLinesRemoved++;
 		}
