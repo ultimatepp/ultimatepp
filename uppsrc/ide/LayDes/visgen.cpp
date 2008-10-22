@@ -28,7 +28,7 @@ String VisGenDlg::GetName()
 	int l = n.GetCount() - 6;
 	if(l > 0 && n.Mid(l) == "Layout")
 		n = n.Mid(0, l);
-	return n;
+	return n + "Dlg";
 }
 
 void VisGenDlg::Refresh()
@@ -52,9 +52,8 @@ void VisGenDlg::Refresh()
 		oce << "Exit";
 	if(q == 0) {
 		String n = ~name;
-		if(IsNull(n)) {
+		if(IsNull(n))
 			n = GetName();
-		}
 		s << "class " << n << " : public With" << layout.name << "<TopWindow> {\n"
 		  << "\ttypedef " << n << " CLASSNAME;\n"
 		  << "\n"
@@ -114,7 +113,7 @@ void VisGenDlg::Type()
 	String n = GetName();
 	switch((int)~type) {
 	case 0:
-		name <<= GetName() + "Dlg";
+		name <<= GetName();
 		break;
 	case 1:
 		name <<= "dlg";
