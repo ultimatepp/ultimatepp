@@ -978,6 +978,7 @@ EditField& EditField::NullText(const char *text, Color ink)
 
 EditField::EditField()
 {
+	dropcaret = Rect(0, 0, 0, 0);
 	Unicode();
 	Reset();
 }

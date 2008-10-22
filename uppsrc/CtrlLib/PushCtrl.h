@@ -18,6 +18,7 @@ public:
 private:
 	bool    push:1;
 	bool    keypush:1;
+	bool    clickfocus:1;
 
 	void    EndPush();
 
@@ -39,6 +40,8 @@ protected:
 public:
 	Pusher&  SetFont(Font fnt);
 	Pusher&  SetLabel(const char *text);
+	Pusher&  ClickFocus(bool cf = true);
+	Pusher&  NoClickFocus()                                 { return ClickFocus(false); }
 	
 	Font     GetFont() const                                { return font; }
 	String   GetLabel() const                               { return label; }

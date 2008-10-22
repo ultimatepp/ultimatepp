@@ -1153,6 +1153,21 @@ String GetFileOnSystemPath(const char *file)
 #endif
 }
 
+String QuoteCmdArg(const char *arg)
+{
+	if(!strchr(arg, ' ') && !strchr(arg, '\"'))
+		return arg;
+	StringBuffer out;
+	out.Cat('\"');
+	for(; *arg; arg++) {
+		out.Cat(*arg);
+		if(*arg == '\"')
+			out.Cat('\"');
+	}
+	out.Cat('\"');
+	return out;
+}
+
 const char *FetchCmdArg(const char *arg, int& i)
 {
 	if(!*arg) {

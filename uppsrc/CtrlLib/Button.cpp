@@ -26,7 +26,7 @@ void Pusher::LostFocus() {
 }
 
 void Pusher::LeftDown(Point, dword) {
-	if(Ctrl::ClickFocus()) SetWantFocus();
+	if(Ctrl::ClickFocus() || clickfocus) SetWantFocus();
 	if(IsReadOnly()) return;
 	push = true;
 	RefreshPush();
@@ -138,6 +138,12 @@ Pusher&  Pusher::SetFont(Font fnt) {
 	return *this;
 }
 
+Pusher& Pusher::ClickFocus(bool cf)
+{
+	clickfocus = cf;
+	return *this;
+}
+
 String Pusher::GetDesc()
 {
 	return label;
@@ -162,7 +168,7 @@ int Pusher::GetVisualState() const
 }
 
 Pusher::Pusher() {
-	keypush = push = false;
+	keypush = push = clickfocus = false;
 	accesskey = 0;
 	font = Null;
 	NoInitFocus();
