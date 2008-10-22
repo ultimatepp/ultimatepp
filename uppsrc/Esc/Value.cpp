@@ -11,6 +11,7 @@ EscValue EscFromStdValue(const Value& v)
 		switch(v.GetType()) {
 		case BOOL_V:
 		case INT_V:
+		case INT64_V:
 		case DOUBLE_V:
 			r = (double)v;
 			break;

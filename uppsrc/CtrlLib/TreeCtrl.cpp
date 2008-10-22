@@ -257,6 +257,12 @@ void  TreeCtrl::Set(int id, Value k, Value v)
 	SetOption(id);
 }
 
+void TreeCtrl::SetDisplay(int id, const Display& display)
+{
+	item[id].SetDisplay(display);
+	Dirty(id);
+}
+
 void   TreeCtrl::SetNode(int id, const TreeCtrl::Node& n)
 {
 	(TreeCtrl::Node&)item[id] = n;
@@ -746,11 +752,15 @@ void TreeCtrl::LeftDrag(Point p, dword keyflags)
 void TreeCtrl::DoClick(Point p, dword flags, bool down)
 {
 	Point org = sb;
+	itemclickpos = Null;
 	if(p.y + org.y > sb.GetTotal().cy)
 		return;
 	int i = FindLine(p.y + org.y);
 	const Line& l = line[i];
-	int x = levelcx + l.level * levelcx - org.x - (levelcx >> 1);
+	int itemx = levelcx + l.level * levelcx - org.x;
+	int x = itemx - (levelcx >> 1);
+	itemclickpos.x = p.x - itemx;
+	itemclickpos.y = p.y + org.y - l.y;
 	if(p.x > x - 6 && p.x < x + 6) {
 		if(down)
 			Open(l.itemi, !IsOpen(l.itemi));
@@ -758,6 +768,8 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 	else {
 		if(down && IsSel(l.itemi)) {
 			selclick = true;
+			if(down)
+				WhenLeftClick();
 			return;
 		}
 		SetWantFocus();
@@ -780,6 +792,8 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 		}
 		if(cursor != q)
 			WhenAction();
+		if(down)
+			WhenLeftClick();
 	}
 }
 

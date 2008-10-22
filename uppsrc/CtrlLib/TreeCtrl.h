@@ -105,6 +105,7 @@ private:
 	Point        repoint;
 	int          retime;
 	Size         treesize;
+	Point        itemclickpos;
 
 	ScrollBars   sb;
 	Scroller     scroller;
@@ -125,7 +126,7 @@ private:
 	void   Scroll();
 	int    FindLine(int y) const;
 	void   RefreshLine(int i, int ex = 0);
-	void   RefreshItem(int id, int ex = 0);
+	void   RefreshItem(int id, int ex);
 	void   SetCursorLineSync(int i);
 	void   MoveCursorLine(int c, int incr);
 	void   SetCursorLine(int i, bool sc, bool sel, bool cb);
@@ -158,6 +159,7 @@ protected:
 public:
 	Callback1<int>  WhenOpen;
 	Callback1<int>  WhenClose;
+	Callback        WhenLeftClick;
 	Callback        WhenLeftDouble;
 	Callback1<Bar&> WhenBar;
 	Callback        WhenSel;
@@ -201,6 +203,9 @@ public:
 	Value  operator[](int id) const                            { return Get(id); }
 	void   Set(int id, Value value);
 	void   Set(int id, Value key, Value value);
+	
+	void   SetDisplay(int id, const Display& display);
+	void   RefreshItem(int id)                                 { RefreshItem(id, 0); }
 
 	int    GetLineCount();
 	int    GetItemAtLine(int i);
@@ -224,6 +229,8 @@ public:
 	void   SetCursor(int id);
 	int    GetCursor() const;
 	bool   IsCursor() const                                    { return GetCursor() >= 0; }
+
+	Point  GetItemClickPos() const                             { return itemclickpos; }
 
 	Point  GetScroll() const;
 	void   ScrollTo(Point sc);

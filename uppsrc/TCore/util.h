@@ -161,6 +161,7 @@ VectorMap<String, String> LoadKeyMap(const char *p);
 VectorMap<String, String> LoadKeyMapFile(const char *filename);
 
 const char               *FetchCmdArg(const char *arg, int& i);
+String                    QuoteCmdArg(const char *arg);
 
 inline void GetIL(int *ip, int count, const byte *data)
 {
