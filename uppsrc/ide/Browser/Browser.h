@@ -337,7 +337,7 @@ public:
 	typedef TopicEditor CLASSNAME;
 
 	void Open(const String& grouppath);
-	void GoTo(const String& topic, const String& link);
+	void GoTo(const String& topic, const String& link, const String& create);
 	
 	static int  GetSerial();
 

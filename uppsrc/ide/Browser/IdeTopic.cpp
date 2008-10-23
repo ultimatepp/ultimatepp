@@ -328,6 +328,28 @@ void TopicEditor::InsertItem()
 	editor.Move(c);
 }
 
+void TopicEditor::GoTo(const String& _topic, const String& link, const String& create)
+{
+	if(topic.FindSetCursor(_topic) && !IsNull(link)) {
+		editor.Select(editor.GetLength(), 0);
+		editor.GotoLabel(link);
+		if(!IsNull(create)) {
+			String p1, p2;
+			const CppItem *m = GetCodeRefItem(create);
+			if(!m)
+				return;
+			CreateQtf(link, m->name, *m, p1, p2);
+			editor.BeginOp();
+			int a = editor.GetCursor();
+			editor.PasteText(ParseQTF(styles + p1));
+			int c = editor.GetCursor();
+			editor.PasteText(ParseQTF(styles + p2));
+			editor.Move(a);
+			editor.Move(c);			
+		}
+	}
+}
+
 void   TopicEditor::FixTopic()
 {
 	String nest;
