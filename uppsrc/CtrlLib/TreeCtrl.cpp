@@ -55,6 +55,7 @@ TreeCtrl::Node::Node(const Image& img, Ctrl& ctrl, int cx, int cy)
 
 TreeCtrl::TreeCtrl()
 {
+	display = &StdDisplay();
 	levelcx = 16;
 	nocursor = false;
 	noroot = false;
@@ -101,13 +102,13 @@ void   TreeCtrl::Layout()
 	if(total.cy > full.cy) full.cx = red.cx;
 	if(total.cx > full.cx) full.cy = red.cy;
 	sb.SetPage(full);
-	sb.SetLine(item[0].GetSize().cy);
+	sb.SetLine(item[0].GetSize(display).cy);
 }
 
 // 2008-04-08 mrjt
-Size   TreeCtrl::Item::GetValueSize() const
+Size   TreeCtrl::Item::GetValueSize(const Display *treedisplay) const
 {
-	return display ? display->GetStdSize(value) : StdDisplay().GetStdSize(value);
+	return display ? display->GetStdSize(value) : treedisplay->GetStdSize(value);
 }
 
 Size   TreeCtrl::Item::GetCtrlSize() const
@@ -117,9 +118,9 @@ Size   TreeCtrl::Item::GetCtrlSize() const
 	return Size(Nvl(size.cx, csz.cx), Nvl(size.cy, csz.cy));
 }
 
-Size   TreeCtrl::Item::GetSize() const
+Size   TreeCtrl::Item::GetSize(const Display *treedisplay) const
 {
-	Size sz = GetValueSize();
+	Size sz = GetValueSize(treedisplay);
 	Size csz = GetCtrlSize();
 	sz += Size(2 * margin, 2 * margin);
 	Size isz = image.GetSize();
@@ -173,6 +174,13 @@ int    TreeCtrl::Insert(int parentid, int i, const TreeCtrl::Node& n)
 	dirty = true;
 	Dirty(parentid);
 	return id;
+}
+
+TreeCtrl& TreeCtrl::SetDisplay(const Display& d)
+{
+	display = &d;
+	Dirty();
+	return *this;
 }
 
 int    TreeCtrl::Add(int parentid, const TreeCtrl::Node& n)
@@ -366,7 +374,7 @@ void TreeCtrl::ReLine(int itemi, int level, Size& sz)
 		chldlck = false;
 	}
 	m.linei = ii;
-	Size msz = m.GetSize();
+	Size msz = m.GetSize(display);
 	sz.cy += msz.cy;
 	sz.cx = max(sz.cx, level * levelcx + msz.cx);
 	level++;
@@ -404,7 +412,7 @@ void TreeCtrl::SyncTree()
 	treesize = Size(0, 0);
 	if(noroot) {
 		if(GetChildCount(0))
-			treesize.cy = -item[0].GetSize().cy;
+			treesize.cy = -item[0].GetSize(display).cy;
 		ReLine(0, -1, treesize);
 	}
 	else
@@ -432,7 +440,7 @@ void TreeCtrl::SyncCtrls(bool add, Ctrl *restorefocus)
 				AddChildBefore(m.ctrl, GetLastChild());
 			if(m.ctrl == restorefocus || m.ctrl->HasChildDeep(restorefocus))
 				restorefocus->SetFocus();
-			Size msz = m.GetSize();
+			Size msz = m.GetSize(display);
 			Size isz = m.image.GetSize();
 			Size csz = m.GetCtrlSize();
 			m.ctrl->SetRect(levelcx + l.level * levelcx + isz.cx + m.margin - org.x,
@@ -514,7 +522,7 @@ void TreeCtrl::RefreshLine(int i, int ex)
 	if(i >= 0) {
 		Size sz = GetSize();
 		int y = line[i].y - sb.GetY();
-		Refresh(0, y - ex, sz.cx, item[line[i].itemi].GetSize().cy + 2 * ex);
+		Refresh(0, y - ex, sz.cx, item[line[i].itemi].GetSize(display).cy + 2 * ex);
 		SyncInfo();
 	}
 }
@@ -546,13 +554,13 @@ int  TreeCtrl::GetLineCount()
 
 void TreeCtrl::ScrollIntoLine(int i)
 {
-	sb.ScrollIntoY(line[i].y, item[line[i].itemi].GetSize().cy);
+	sb.ScrollIntoY(line[i].y, item[line[i].itemi].GetSize(display).cy);
 }
 
 void TreeCtrl::CenterLine(int i)
 {
 	int top = line[i].y;
-	int bottom = top + item[line[i].itemi].GetSize().cy;
+	int bottom = top + item[line[i].itemi].GetSize(display).cy;
 	sb.SetY(top + ((bottom - GetSize().cy) >> 1));
 }
 
@@ -600,7 +608,7 @@ void TreeCtrl::SetCursorLine(int i, bool sc, bool sel, bool cb)
 		Item& m = item[line[i].itemi];
 		if (!multiselect && !m.canselect) return;
 		if(sc)
-			sb.ScrollIntoY(line[i].y, m.GetSize().cy);
+			sb.ScrollIntoY(line[i].y, m.GetSize(display).cy);
 		RefreshLine(cursor);
 		cursor = i;
 		RefreshLine(cursor);
@@ -632,7 +640,7 @@ void TreeCtrl::SetCursorLineSync(int i)
 		Item& m = item[line[cursor].itemi];
 		if(cursor >= 0) {
 			Sync();
-			sb.ScrollIntoY(line[cursor].y, m.GetSize().cy);
+			sb.ScrollIntoY(line[cursor].y, m.GetSize(display).cy);
 		}
 		if(!(m.ctrl && m.ctrl->SetWantFocus()))
 			SetWantFocus();
@@ -817,7 +825,7 @@ void TreeCtrl::SyncInfo()
 		const Line& l = line[i];
 		const Item& m = item[l.itemi];
 		int x = levelcx + l.level * levelcx - org.x + m.image.GetSize().cx;
-		Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetSize().cy);
+		Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetSize(display).cy);
 		if(r.Contains(p)) {
 			Color fg, bg;
 			dword st;
@@ -912,7 +920,7 @@ const Display *TreeCtrl::GetStyle(int i, Color& fg, Color& bg, dword& st)
 	}
 	if(m.display)
 		return m.display;
-	return &StdDisplay();
+	return display;
 }
 
 void TreeCtrl::Paint(Draw& w)
@@ -927,8 +935,8 @@ void TreeCtrl::Paint(Draw& w)
 	for(int i = 0; i < line.GetCount(); i++) {
 		Line& l = line[i];
 		if(l.ll >= 0) {
-			int yl = line[i].y + item[l.itemi].GetSize().cy - org.y;
-			int yh = line[l.ll].y + item[line[l.ll].itemi].GetSize().cy / 2 - org.y;
+			int yl = line[i].y + item[l.itemi].GetSize(display).cy - org.y;
+			int yh = line[l.ll].y + item[line[l.ll].itemi].GetSize(display).cy / 2 - org.y;
 			if(yh >= 0 && yl < sz.cy) {
 				int x = levelcx + levelcx * l.level + levelcx2 - org.x;
 				w.DrawRect(x, yl, 1, yh - yl, SColorShadow);
@@ -939,9 +947,9 @@ void TreeCtrl::Paint(Draw& w)
 	for(int i = FindLine(org.y); i < line.GetCount(); i++) {
 		Line& l = line[i];
 		const Item& m = item[l.itemi];
-		Size msz = m.GetSize();
+		Size msz = m.GetSize(display);
 		Size isz = m.image.GetSize();
-		Size vsz = m.GetValueSize();
+		Size vsz = m.GetValueSize(display);
 		int y = l.y - org.y;
 		if(y > sz.cy)
 			break;
@@ -996,10 +1004,10 @@ Image TreeCtrl::GetDragSample()
 		Line& l = line[i];
 		const Item& m = item[l.itemi];
 		const Display *d = m.display;
-		if(!d) d = &StdDisplay();
-		Size msz = m.GetSize();
+		if(!d) d = display;
+		Size msz = m.GetSize(display);
 		Size isz = m.image.GetSize();
-		Size vsz = m.GetValueSize();
+		Size vsz = m.GetValueSize(display);
 		Rect r = RectC(0, y, vsz.cx + 2 * m.margin, msz.cy);
 		int x = 0;
 		if(IsSel(l.itemi)) {
@@ -1416,7 +1424,7 @@ void TreeCtrl::DragAndDrop(Point p, PasteClip& d)
 		const Line& l = line[ii];
 		if(l.itemi && WhenDropInsert) {
 			int y = l.y;
-			int cy = item[l.itemi].GetSize().cy;
+			int cy = item[l.itemi].GetSize(display).cy;
 			if(py < y + cy / 4 && DnDInserti(ii, d, false))
 				return;
 			if(py >= y + 3 * cy / 4 && DnDInserti(ii, d, true))
@@ -1448,7 +1456,7 @@ void TreeCtrl::DragRepeat(Point p)
 			int ii = FindLine(p.y);
 			const Line& l = line[ii];
 			int y = l.y;
-			int cy = item[l.itemi].GetSize().cy;
+			int cy = item[l.itemi].GetSize(display).cy;
 			if(p.y >= y + cy / 4 && p.y < y + 3 * cy / 4 &&
 			   !IsOpen(l.itemi) && GetChildCount(l.itemi)) {
 				Open(l.itemi, true);

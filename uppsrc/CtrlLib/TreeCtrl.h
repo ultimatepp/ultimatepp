@@ -69,9 +69,9 @@ private:
 		Vector<int>    child;
 		int            linei;
 
-		Size GetValueSize() const;
+		Size GetValueSize(const Display *treedisplay) const;
 		Size GetCtrlSize() const;
-		Size GetSize() const;
+		Size GetSize(const Display *treedisplay) const;
 
 		Item() { isopen = false; linei = -1; parent = -1; canselect = true; sel = false; free = false; }
 	};
@@ -109,9 +109,10 @@ private:
 
 	ScrollBars   sb;
 	Scroller     scroller;
-	Display     *display;
 
 	DisplayPopup info;
+
+	const Display *display;
 
 	struct LineLess {
 		bool   operator()(int y, const Line& l) const            { return y < l.y; }
@@ -300,6 +301,8 @@ public:
 	TreeCtrl& NoPopUpEx()                    { return PopUpEx(false); }
 	TreeCtrl& MouseMoveCursor(bool m = true) { mousemove = m; return *this; }
 	TreeCtrl& Accel(bool a = true)           { accel = a; return *this; }
+	TreeCtrl& SetDisplay(const Display& d);
+	
 
 	TreeCtrl& SetScrollBarStyle(const ScrollBar::Style& s) { sb.SetStyle(s); return *this; }
 
