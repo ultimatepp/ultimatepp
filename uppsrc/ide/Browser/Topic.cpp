@@ -41,14 +41,6 @@ void TopicEditor::Open(const String& _grouppath)
 		topic.SetCursor(0);
 }
 
-void TopicEditor::GoTo(const String& _topic, const String& link)
-{
-	if(topic.FindSetCursor(_topic) && !IsNull(link)) {
-		editor.Select(editor.GetLength(), 0);
-		editor.GotoLabel(link);
-	}
-}
-
 String TopicEditor::GetCurrentTopicPath()
 {
 	if(topic.IsCursor())
