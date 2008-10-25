@@ -634,6 +634,9 @@ public:
 	void            EvaluateFields()               { WhenStartEvaluating(); text.EvaluateFields(vars); }
 
 	void            GotoLabel(const String& lbl);
+	void            BeginPara();
+	void            NextPara();
+	void            PrevPara();
 
 	void            Clear();
 	void            Pick(pick_ RichText& t);

@@ -418,4 +418,23 @@ void RichEdit::GotoLabel(const String& lbl)
 		}
 }
 
+void RichEdit::BeginPara()
+{
+	RichPos pos = text.GetRichPos(anchor);
+	Move(cursor - pos.posinpara);
+}
+
+void RichEdit::NextPara()
+{
+	RichPos pos = text.GetRichPos(anchor);
+	Move(cursor - pos.posinpara + pos.paralen + 1);
+}
+
+void RichEdit::PrevPara()
+{
+	RichPos pos = text.GetRichPos(anchor);
+	Move(cursor - pos.posinpara - 1);
+	BeginPara();
+}
+
 END_UPP_NAMESPACE
