@@ -31,9 +31,19 @@ oid]_[* IterSwap]([*@4 I]_[*@3 a], [*@4 I]_[*@3 b])&]
 [s6; Swap must be defined for type pointed to by I.&]
 [s7; [*C@4 I]-|Iterator type.&]
 [s7; [*C@3 a]-|Iterator pointing to first value.&]
-[s7; [*C@3 b]-|Iterator pointing to second value.&]
-[s3;%- &]
+[s7; [*C@3 b]-|Iterator pointing to second value. xx&]
+[s3;%- yy&]
 [s4;%- &]
+[s5;:IterSwap`(I`,I`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 I][@(0.0.255) >]_[@(0.0.255) v
+oid]_[* IterSwap]([*@4 I]_[*@3 a], [*@4 I]_[*@3 b])&]
+[s2; Swaps values pointed to by iterators. Specific types might specialize 
+[* IterSwap] with more effective variants.&]
+[s6; Swap must be defined for type pointed to by I.&]
+[s7; [*C@4 I]-|Iterator type.&]
+[s7; [*C@3 a]-|Iterator pointing to first value.&]
+[s7; [*C@3 b]-|Iterator pointing to second value. xx&]
+[s3;%- yy&]
+[s0; &]
 [s5;:FindLowerBound`(const C`&`,int`,int`,const T`&`,const L`&`):%- [@(0.0.255) templat
 e]_<[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
 ]_[@(0.0.255) int]_[* FindLowerBound]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 

@@ -1040,6 +1040,9 @@ public:
 	void        RefreshLayout()                          { SyncLayout(1); }
 	void        RefreshLayoutDeep()                      { SyncLayout(2); }
 	void        RefreshParentLayout()                    { if(parent) parent->RefreshLayout(); }
+	
+	void        UpdateLayout()                           { SyncLayout(); }
+	void        UpdateParentLayout()                     { if(parent) parent->UpdateLayout(); }
 
 	Ctrl&       LeftPos(int a, int size = STDSIZE);
 	Ctrl&       RightPos(int a, int size = STDSIZE);

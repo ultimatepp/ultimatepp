@@ -71,22 +71,24 @@ void RichEdit::ModifyFormat(int pos, const RichText::FormatInfo& fi, int count)
 	text.ApplyFormatInfo(pos, fi, count);
 }
 
-void RichEdit::Remove(int pos, int len, bool back)
+void RichEdit::Remove(int pos, int len, bool forward)
 {
 	if(IsReadOnly())
 		return;
 	Limit(pos, len);
 	if(InvalidRange(pos, pos + len))
 		return;
-	if(back) {
+	RichTxt::FormatInfo fi;
+	if(forward)
+		fi = text.GetFormatInfo(pos, 0);
+	AddUndo(new UndoRemove(text, pos, len));
+	text.Remove(pos, len);
+	if(forward) {
 		SaveFormat(pos, 0);
-		RichTxt::FormatInfo fi = text.GetFormatInfo(pos + len, 0);
 		text.ReplaceStyle(pos, fi.styleid);
 		fi.paravalid &= ~RichText::STYLE;
 		text.ApplyFormatInfo(pos, fi, 0);
 	}
-	AddUndo(new UndoRemove(text, pos, len));
-	text.Remove(pos, len);
 	SetModify();
 	modified = true;
 }

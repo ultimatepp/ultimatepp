@@ -90,8 +90,8 @@ void TopicEditor::Load(const String& fn)
 		if(fi.time == FileGetTime(fn)) {
 			editor.SetPickUndoInfo(fi.undo);
 			fi.time = Time(1, 1, 1);
+			editor.SetPosInfo(fi.pos);
 		}
-		editor.SetPosInfo(fi.pos);
 	}
 
 	grouptopic.GetAdd(grouppath) = GetFileTitle(fn);
@@ -147,6 +147,8 @@ void TopicEditor::SaveTopic()
 
 void TopicEditor::Flush()
 {
+	if(IsNull(topicpath))
+		return;
 	SaveTopic();
 	FileInfo& fi = editstate.GetAdd(topicpath);
 	fi.time = FileGetTime(topicpath);

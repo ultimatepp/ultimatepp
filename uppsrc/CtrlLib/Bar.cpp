@@ -604,7 +604,7 @@ BarCtrl& BarCtrl::Align(int al) {
 void BarCtrl::SyncBar()
 {
 	if(IsChild() && InFrame())
-		RefreshParentLayout();
+		UpdateParentLayout();
 	else
 		Layout();
 }

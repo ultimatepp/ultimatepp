@@ -86,14 +86,13 @@ void RichText::Remove(int pos, int count)
 		txt.Put(pi, pa, style);
 	}
 	else {
-		RichPara pa, pa2;
-		pa = txt.Get(pi, style);
-		pa2 = txt.Get(pi2, pa.format.styleid, style);
+		RichPara pa2 = txt.Get(pi2, style);
+		RichPara pa = txt.Get(pi, pa2.format.styleid, style);
 		txt.part.Remove(pi, pi2 - pi);
 		pa.Trim(pos);
 		pa2.Mid(pos2);
 		pa.Append(pa2);
-		pa2.format = pa.format;
+		pa.format = pa2.format;
 		txt.Put(pi, pa, style);
 		txt.SetRefreshFrom(pi);
 	}
@@ -111,16 +110,17 @@ void RichText::Insert(int pos, const RichText& p)
 	if(n) {
 		txt.part.Insert(pi + 1, p.part, 1, n);
 		RichPara pa1, pa2;
-		pa2 = txt.Get(pi + n, style);
-		pa1 = txt.Get(pi, pa2.format.styleid, style);
+		pa1 = txt.Get(pi, style);
+		pa2 = txt.Get(pi + n, pa1.format.styleid, style);
 		pa1.Mid(pos);
 		pa2.Append(pa1);
+		pa2.format = pa1.format;
 		txt.Put(pi + n, pa2, style);
-		pa1 = txt.Get(pi, style);
-		pa2 = p.RichTxt::Get(0, GetStyle(pa1.format.styleid));
+		pa2 = p.RichTxt::Get(0, p.GetStyle(p.GetParaStyle(0)));
+		pa1 = txt.Get(pi, pa2.format.styleid, style);
 		pa1.Trim(pos);
 		pa1.Append(pa2);
-		pa2.format = pa1.format;
+		pa1.format = pa2.format;
 		txt.Put(pi, pa1, style);
 		txt.SetRefreshFrom(pi);
 	}

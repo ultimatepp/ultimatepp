@@ -313,7 +313,7 @@ protected:
 
 	void   Tools(Bar& bar);
 	void   Label(String&);
-	void   CreateQtf(const String& item, const String& name, const CppItem& m, String& p1, String& p2);
+	String CreateQtf(const String& item, const String& name, const CppItem& m, bool onlyhdr = false);
 	void   InsertItem();
 
 	void   FindBrokenRef();
