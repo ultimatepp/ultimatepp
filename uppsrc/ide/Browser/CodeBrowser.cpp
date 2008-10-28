@@ -156,7 +156,7 @@ void CodeBrowser::LoadScope()
 String CodeBrowser::GetCodeRef(int i) const
 {
 	if(scope.IsCursor())
-		return MakeCodeRef(scope.GetKey(), item.GetKey());
+		return MakeCodeRef(scope.GetKey(), item.Get(i, 0));
 	return Null;
 }
 

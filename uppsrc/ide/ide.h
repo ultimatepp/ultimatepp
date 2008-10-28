@@ -465,6 +465,7 @@ struct AssistEditor : CodeEditor {
 	void           EditAnnotation();
 	void           Annotate(const String& filename);
 	void           OpenTopic(String topic, String create);
+	void           NewTopic(String group, String coderef);
 
 	void           SerializeNavigator(Stream& s);
 

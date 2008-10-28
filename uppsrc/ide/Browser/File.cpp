@@ -159,11 +159,8 @@ void SetTopicGroupIncludeable(const char *path, bool set)
 				Topic p = ReadTopic(LoadFile(s));
 				SaveFile(t, WriteTopicI(p.title, ParseQTF(p.text)));
 			}
-			else {
-//				Topic p = ReadTopic(LoadFile(s)); _DBG_ // only to convert
-//				SaveFile(s, WriteTopic(p.title, ParseQTF(p.text)));
+			else
 				FileDelete(t);
-			}
 		}
 		ff.Next();
 	}
