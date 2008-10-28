@@ -321,6 +321,17 @@ void TopicEditor::InsertItem()
 	editor.PrevPara();
 }
 
+void TopicEditor::InsertNew(const String& coderef)
+{
+	const CppItem *m = GetCodeRefItem(coderef);
+	if(!m)
+		return;
+	editor.BeginOp();
+	editor.PasteText(ParseQTF(styles + CreateQtf(coderef, m->name, *m)));
+	editor.PrevPara();
+	editor.PrevPara();
+}
+
 void TopicEditor::GoTo(const String& _topic, const String& link, const String& create)
 {
 	if(topic.FindSetCursor(_topic) && !IsNull(link)) {
@@ -331,19 +342,13 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 				for(;;) {
 					int c = editor.GetCursor();
 					RichText::FormatInfo f = editor.GetFormatInfo();
-					if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") == firstpass)
+					if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") && !firstpass)
 						break;
 					editor.NextPara();
 					if(editor.GetCursor() == c)
 						break;
 				}
-			String p1, p2;
-			const CppItem *m = GetCodeRefItem(create);
-			if(!m)
-				return;
-			editor.BeginOp();
-			editor.PasteText(ParseQTF(styles + CreateQtf(link, m->name, *m)));
-			editor.PrevPara();
+			InsertNew(create);
 		}
 	}
 }

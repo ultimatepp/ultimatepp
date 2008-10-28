@@ -540,11 +540,9 @@ RichEdit::PosInfo RichEdit::GetPosInfo() const
 
 void RichEdit::SetPosInfo(const PosInfo& f)
 {
-	DDUMP(f.cursor);
 	int l = text.GetLength();
 	cursor = min(l, f.cursor);
 	anchor = min(l, f.anchor);
-	DDUMP(cursor);
 	Finish();
 	zsc = f.zsc;
 	Layout();

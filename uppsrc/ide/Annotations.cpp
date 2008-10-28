@@ -130,6 +130,24 @@ void AssistEditor::OpenTopic(String topic, String create)
 		theide->OpenTopic(topic, create);
 }
 
+void AssistEditor::NewTopic(String group, String coderef)
+{
+	if(!theide)
+		return;
+	String ef = theide->editfile;
+	String n = GetFileTitle(ef);
+	theide->EditFile(AppendFileName(PackageDirectory(theide->GetActivePackage()), group + ".tpp"));
+	if(!theide->designer)
+		return;
+	TopicEditor *te = dynamic_cast<TopicEditor *>(&theide->designer->DesignerCtrl());
+	if(!te)
+		return;
+	String scope, item;
+	SplitCodeRef(coderef, scope, item);
+	if(!te->NewTopicEx(IsNull(scope) ? n : Join(Split(scope, ':'), "_"), coderef))
+		theide->EditFile(ef);
+}
+
 void AssistEditor::EditAnnotation()
 {
 	String coderef;
@@ -148,14 +166,36 @@ void AssistEditor::EditAnnotation()
 		OpenTopic(tl[0] + '#' + coderef, String());
 		return;
 	}
-	for(int i = GetCursorLine() - 1; i >= 0; i--) {
-		String coderef2;
-		if(GetAnnotationRefs(tl, coderef2, i) && tl.GetCount()) {
-			MenuBar bar;
-			for(int i = 0; i < tl.GetCount(); i++)
-				bar.Add(tl[i], THISBACK2(OpenTopic, tl[i] + '#' + coderef2, coderef));
-			bar.Execute();
-			return;
+	String scope, item;
+	SplitCodeRef(coderef, scope, item);
+	const CppItem *m = GetCodeRefItem(coderef);
+	int access = m ? m->access : 0;
+	VectorMap<String, String> tpp;
+	for(int pass = 0; pass < 2; pass++)
+		for(int i = GetCursorLine(); pass ? i < GetLineCount() : i >= 0; pass ? i++ : i--) {
+			String coderef2;
+			if(GetAnnotationRefs(tl, coderef2, i) && tl.GetCount()) {
+				String scope2, item2;
+				SplitCodeRef(coderef2, scope2, item2);
+				m = GetCodeRefItem(coderef2);
+				if(scope2 == scope && m && m->access == access && tl.GetCount() == 1) {
+					OpenTopic(tl[0] + '#' + coderef2, coderef);
+					return;
+				}
+				for(int j = 0; j < tl.GetCount(); j++)
+					if(tpp.Find(tl[j]) < 0)
+						tpp.Add(tl[j], coderef2);
+			}
 		}
+	MenuBar bar;
+	if(tpp.GetCount()) {
+		for(int i = 0; i < tpp.GetCount(); i++) {
+			String l = tpp.GetKey(i);
+			bar.Add(l, THISBACK2(OpenTopic, l + '#' + tpp[i], coderef));
+		}
+		bar.Separator();
 	}
+	bar.Add("New reference topic..", THISBACK2(NewTopic, "src", coderef));
+	bar.Add("New implementation topic..", THISBACK2(NewTopic, "srcimp", coderef));
+	bar.Execute();
 }

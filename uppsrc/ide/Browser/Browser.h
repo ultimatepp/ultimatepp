@@ -282,6 +282,7 @@ protected:
 
 	String GetCurrentTopicPath();
 
+	void   InsertNew(const String& coderef);
 	void   NewTopic();
 	void   MoveTopic();
 	void   RemoveTopic();
@@ -336,6 +337,8 @@ public:
 
 	typedef TopicEditor CLASSNAME;
 
+	void ShowEditor(bool b)                          { editor.Show(b); }
+	bool NewTopicEx(const String& name, const String& create);
 	void Open(const String& grouppath);
 	void GoTo(const String& topic, const String& link, const String& create);
 	

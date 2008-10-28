@@ -240,7 +240,6 @@ int MatchWord(const Vector<int>& w, const String& pattern)
 
 bool MatchTopicLink(const String& link, const Vector<String>& query)
 {
-//	TIMING("MatchTopicLink"); _DBG_
 	SyncTopicFile(link);
 	int q = topic_info().Find(link);
 	if(q < 0)

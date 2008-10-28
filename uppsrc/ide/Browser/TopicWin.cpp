@@ -203,10 +203,21 @@ void CreateTopic(const char *fn, int lang, const String& ss)
 	SaveFile(fn,  WriteTopic("", ParseQTF(ss + "[{_}%" + LNGAsText(lang) + " ")));
 }
 
-void TopicEditor::NewTopic()
+bool TopicEditor::NewTopicEx(const String& iname, const String& create)
 {
 	TopicDlg<WithNewTopicLayout<TopWindow> > d("New topic");
 	d.lang <<= lastlang;
+	if(iname.GetCount()) {
+		int i = 0;
+		do {
+			String n = iname;
+			if(i)
+				n << i;
+			d.topic <<= n;
+			i++;
+		}
+		while(FileExists(AppendFileName(grouppath, d.GetName())));
+	}
 
 	Vector<String> path, name;
 	ListTemplates(path, name);
@@ -223,7 +234,7 @@ void TopicEditor::NewTopic()
 	String fn;
 	for(;;) {
 		if(d.Run() != IDOK)
-			return;
+			return false;
 		fn = AppendFileName(grouppath, d.GetName());
 		if(!FileExists(fn))
 			break;
@@ -240,6 +251,14 @@ void TopicEditor::NewTopic()
 	topic.FindSetCursor(GetFileTitle(fn));
 	editor.SetFocus();
 	serial++;
+	if(create.GetCount())
+		InsertNew(create);
+	return true;
+}
+
+void TopicEditor::NewTopic()
+{
+	NewTopicEx(Null, Null);
 }
 
 void TopicEditor::RemoveTopic()
