@@ -19,7 +19,7 @@ bool RichEdit::Key(dword key, int count)
 			MoveWordLeft(false);
 			if(InvalidRange(cursor, c))
 				return true;
-			Remove(cursor, c - cursor, true);
+			Remove(cursor, c - cursor);
 			objectpos = -1;
 			FinishNF();
 			return true;
@@ -29,12 +29,12 @@ bool RichEdit::Key(dword key, int count)
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
 		anchor = --cursor;
-		Remove(cursor, 1, true);
+		Remove(cursor, 1);
 		break;
 	case K_DELETE:
 		if(RemoveSelection()) return true;
 		if(cursor < text.GetLength() && !RemoveSpecial(cursor, cursor + 1, false))
-			Remove(cursor, 1);
+			Remove(cursor, 1, true);
 		break;
 	case K_INSERT:
 		overwrite = !overwrite;

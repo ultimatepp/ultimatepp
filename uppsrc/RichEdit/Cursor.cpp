@@ -48,6 +48,7 @@ void RichEdit::FinishNF()
 		sb = 0;
 	else
 		sb.ScrollInto(r.top, r.Height());
+	SetZsc();
 	PageY top, bottom;
 	int sell = min(cursor, anchor);
 	int selh = max(cursor, anchor);

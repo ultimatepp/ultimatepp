@@ -170,6 +170,11 @@ int RichEdit::GetHotSpot(Point p) const
 	return -1;
 }
 
+void RichEdit::SetZsc()
+{
+	zsc = (int)sb / GetZoom();
+}
+
 void RichEdit::SetSb()
 {
 	sb.SetTotal(GetPosY(text.GetHeight(pagesz)) + 10);
@@ -206,6 +211,7 @@ void RichEdit::Layout()
 	sb.SetPage(sz.cy > 10 ? sz.cy - 4 : sz.cy);
 	SetupRuler();
 	SetSb();
+	sb = zsc * GetZoom();
 	PlaceCaret();
 	if(GetSize() != p_size) {
 		sizetracking = true;
@@ -378,6 +384,7 @@ void RichEdit::Clear()
 	ReadStyles();
 	SetModify();
 	modified = true;
+	zsc = 0;
 }
 
 void RichEdit::SetupLanguage(pick_ Vector<int>& _lng)
@@ -513,22 +520,34 @@ void RichEdit::SetPickUndoInfo(pick_ UndoInfo& f)
 	Finish();
 }
 
+void RichEdit::PosInfo::Serialize(Stream& s)
+{
+	int version = 1;
+	s / version;
+	s % cursor % anchor % zsc;
+	if(version == 0)
+		zsc = 0;
+}
+
 RichEdit::PosInfo RichEdit::GetPosInfo() const
 {
 	PosInfo f;
 	f.cursor = cursor;
 	f.anchor = anchor;
-	f.sbpos = sb;
+	f.zsc = zsc;
 	return f;
 }
 
 void RichEdit::SetPosInfo(const PosInfo& f)
 {
+	DDUMP(f.cursor);
 	int l = text.GetLength();
 	cursor = min(l, f.cursor);
 	anchor = min(l, f.anchor);
-	sb = f.sbpos;
+	DDUMP(cursor);
 	Finish();
+	zsc = f.zsc;
+	Layout();
 }
 
 void RichEdit::DoRefreshBar()

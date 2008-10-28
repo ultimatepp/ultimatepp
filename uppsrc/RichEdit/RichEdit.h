@@ -163,6 +163,7 @@ private:
 	int                      gx;
 	int                      oselh, osell;
 	int                      objectpos;
+	int                      zsc;
 	Rect                     objectrect;
 	RichHotPos               tabmove;
 	int                      mpos;
@@ -354,6 +355,7 @@ private:
 	int        GetNearestPos(int x, PageY py);
 	void       SetSb();
 	void       Scroll();
+	void       SetZsc();
 	Rect       PlaceCaret();
 	void       FinishNF();
 	void       Finish();
@@ -420,7 +422,7 @@ private:
 	static void   SetupFaceList(DropList& face);
 
 	void Insert(int pos, const RichText& text, bool typing = false);
-	void Remove(int pos, int len, bool back = false);
+	void Remove(int pos, int len, bool forward = false);
 	void SaveFormat(int pos, int count);
 	void SaveFormat();
 	void ModifyFormat(int pos, const RichText::FormatInfo& fi, int count);
@@ -664,9 +666,9 @@ public:
 	struct PosInfo {
 		int cursor;
 		int anchor;
-		int sbpos;
+		int zsc;
 
-		void Serialize(Stream& s)  { int version = 0; s / version % cursor % anchor % sbpos; }
+		void Serialize(Stream& s);
 	};
 
 	UndoInfo PickUndoInfo();

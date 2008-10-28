@@ -51,7 +51,8 @@ Uuid BeginUuid()
 
 Uuid EndUuid()
 {
-	return ScanUuid(ENDSTYLE);
+	static Uuid u = ScanUuid(ENDSTYLE);
+	return u;
 }
 
 void TopicEditor::FindBrokenRef()
@@ -212,8 +213,7 @@ String DecoratedItem(const String& name, const CppItem& m, const char *natural)
 	return qtf + "]";
 }
 
-void TopicEditor::CreateQtf(const String& item, const String& name, const CppItem& m,
-                            String& p1, String& p2)
+String TopicEditor::CreateQtf(const String& item, const String& name, const CppItem& m, bool onlyhdr)
 {
 	String qtf;
 	bool str = m.kind == STRUCT || m.kind == STRUCTTEMPLATE;
@@ -247,8 +247,8 @@ void TopicEditor::CreateQtf(const String& item, const String& name, const CppIte
 		qtf << k << DecoratedItem(name, m, m.natural);
 
 	qtf << "&]";
-	p1 = qtf;
-	qtf.Clear();
+	if(onlyhdr)
+		return qtf;
 	qtf << "[s3%% ";
 	String d;
 	Vector<String> t = Split(m.tname, ';');
@@ -268,8 +268,7 @@ void TopicEditor::CreateQtf(const String& item, const String& name, const CppIte
 		qtf << d << '.';
 	qtf << "&]";
 	qtf << "[s7 &]";
-	p2 = qtf;
-	return;
+	return qtf;
 }
 
 void TopicEditor::InsertItem()
@@ -301,31 +300,25 @@ void TopicEditor::InsertItem()
 		editor.PasteText(ParseQTF(qtf));
 		return;
 	}
-	String p1, p2;
+	String qtf;
 	if(ref.item.IsSelection()) {
 		for(int i = 0; i < ref.item.GetCount(); i++)
 			if(ref.item.IsSelected(i)) {
-				String a1, a2;
 				const CppItemInfo& m = ref.GetItemInfo(i);
-				CreateQtf(ref.GetCodeRef(i), m.name, m, a1, a2);
-				p1 << p2 << a1;
-				p2 = a2;
+				qtf << CreateQtf(ref.GetCodeRef(i), m.name, m);
 			}
 	}
 	else
 	if(ref.item.IsCursor()) {
 		const CppItemInfo& m = ref.GetItemInfo();
-		CreateQtf(ref.GetCodeRef(), m.name, m, p1, p2);
+		qtf << CreateQtf(ref.GetCodeRef(), m.name, m);
 	}
 	else
 		return;
 	editor.BeginOp();
-	int a = editor.GetCursor();
-	editor.PasteText(ParseQTF(styles + p1));
-	c = editor.GetCursor();
-	editor.PasteText(ParseQTF(styles + p2));
-	editor.Move(a);
-	editor.Move(c);
+	editor.PasteText(ParseQTF(styles + qtf));
+	editor.PrevPara();
+	editor.PrevPara();
 }
 
 void TopicEditor::GoTo(const String& _topic, const String& link, const String& create)
@@ -334,18 +327,23 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 		editor.Select(editor.GetLength(), 0);
 		editor.GotoLabel(link);
 		if(!IsNull(create)) {
+			for(bool firstpass = true; firstpass; firstpass = false)
+				for(;;) {
+					int c = editor.GetCursor();
+					RichText::FormatInfo f = editor.GetFormatInfo();
+					if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") == firstpass)
+						break;
+					editor.NextPara();
+					if(editor.GetCursor() == c)
+						break;
+				}
 			String p1, p2;
 			const CppItem *m = GetCodeRefItem(create);
 			if(!m)
 				return;
-			CreateQtf(link, m->name, *m, p1, p2);
 			editor.BeginOp();
-			int a = editor.GetCursor();
-			editor.PasteText(ParseQTF(styles + p1));
-			int c = editor.GetCursor();
-			editor.PasteText(ParseQTF(styles + p2));
-			editor.Move(a);
-			editor.Move(c);			
+			editor.PasteText(ParseQTF(styles + CreateQtf(link, m->name, *m)));
+			editor.PrevPara();
 		}
 	}
 }
@@ -407,10 +405,7 @@ void   TopicEditor::FixTopic()
 				if(q >= 0) {
 					started = true;
 					const CppItem& m = n[q];
-					String p1, p2;
-					CreateQtf(link[q], n[q].name, m, p1, p2);
-					p1 = "[s7; &]" + p1;
-					RichText h = ParseQTF(styles + p1);
+					RichText h = ParseQTF(styles + ("&[s7; &]" + CreateQtf(link[q], n[q].name, m, true)));
 					if(h.GetPartCount())
 						h.RemovePart(h.GetPartCount() - 1);
 					result.CatPick(h);
