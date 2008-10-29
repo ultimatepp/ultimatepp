@@ -410,7 +410,7 @@ void   TopicEditor::FixTopic()
 				if(q >= 0) {
 					started = true;
 					const CppItem& m = n[q];
-					RichText h = ParseQTF(styles + ("&[s7; &]" + CreateQtf(link[q], n[q].name, m, true)));
+					RichText h = ParseQTF(styles + ("[s7; &]" + CreateQtf(link[q], n[q].name, m, true)));
 					if(h.GetPartCount())
 						h.RemovePart(h.GetPartCount() - 1);
 					result.CatPick(h);

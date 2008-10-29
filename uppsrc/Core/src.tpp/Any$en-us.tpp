@@ -18,6 +18,7 @@ or single element of [/ any] type. It also provides methods for
 querying the type stored and retrieving the content of specific 
 type.&]
 [s0;%% Any has pick semantics.&]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Any`:`:Any`(pick`_ Any`&`): [* Any]([@(0.128.128) pick`_]_[* Any][@(0.0.255) `&]_[*@3 s])&]

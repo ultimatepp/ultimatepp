@@ -14,14 +14,14 @@ topic "AMap";
 [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 HashFn][@(0.0.255) >]&]
 [s1;:`:`:AMap`:`:class:%- [@(0.0.255) class]_[* AMap]&]
 [s0;*%- &]
-[s0;~~~64; [*C@4 K]-|Type of keys. K must have deep copy constructor, 
-be [*/^dpp`:`/`/SourceDoc`/Containers`/Moveable^ moveable] and 
-must have [*C operator`=`=] defined.&]
-[s0; [*C@4 T]-|Type of values. T must satisfy requirements for container 
+[s8; [*@4 K]-|Type of keys. K must have deep copy constructor, be [/^dpp`:`/`/SourceDoc`/Containers`/Moveable^ m
+oveable] and must have operator`=`= defined.&]
+[s8; [*@4 T]-|Type of values. T must satisfy requirements for container 
 flavor identified by parameter V.&]
-[s0; [*C@4 V]-|Type of basic random access container.&]
-[s0; [*C@4 HashFn]-|Hashing class. Must have defined [*C unsigned operator()(const 
-K`& x)] method returning hash value for elements.&]
+[s8; [*@4 V]-|Type of basic random access container.&]
+[s8; [*@4 HashFn]-|Hashing class. Must have defined unsigned operator()(const 
+K`& x) method returning hash value for elements.&]
+[s0; &]
 [s0;~~~.416; AMap is a class that combines Index of keys with basic 
 random access container of values, forming map flavors. It is 
 used as base class for concrete map flavors, [* VectorMap], [* ArrayMap] 
@@ -30,11 +30,11 @@ and [* SegtorMap].&]
 oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick 
 and optional deep copy] transfer semantics, although these features 
 are more important in derived concrete index flavors.&]
-[s0; Members&]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
-[s4;%- &]
-[s5;:`:`:AMap`:`:Add`(const K`&`,const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const
-]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:AMap`:`:Add`(const K`&`,const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 K
+][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Adds a key and value pair to the AMap.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; T must have deep copy constructor.&]
@@ -45,7 +45,7 @@ are more important in derived concrete index flavors.&]
 [s7; [*C@3 x]-|Value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:AddPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) void]_[* AddPick]([@(0.0.255) c
+[s5;:AMap`:`:AddPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) void]_[* AddPick]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Adds a key and value pair to the AMap. Value is transfered by 
 pick constructor in low constant time, but the source value is 
@@ -58,7 +58,7 @@ destroyed.&]
 [s7; [*C@3 x]-|-|Value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Add`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+[s5;:AMap`:`:Add`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
 ]_[*@3 k])&]
 [s2; Adds a key to the AMap and returns a reference to the corresponding 
 default constructed value.&]
@@ -70,8 +70,8 @@ default constructed value.&]
 [s7; [*/ Return value]-|Reference to value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindAdd`(const K`&`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) const]_[*@4 K
-][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:FindAdd`(const K`&`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+]_[*@3 k])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap, using a precomputed hash value. The precomputed hash 
 value must be the same as the hash value that would be the result 
@@ -85,8 +85,8 @@ number is returned. Unlinked elements are ignored.&]
 is not in AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Find`(const K`&`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) const]_[*@4 K
-][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
+[s5;:AMap`:`:Find`(const K`&`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+]_[*@3 k])_[@(0.0.255) const]&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. If multi`-key ordering is not broken and more than one 
 element with the same value exists in AMap, the lowest position 
@@ -97,8 +97,8 @@ number is returned. Unlinked elements are ignored.&]
 is not in AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Find`(const K`&`,unsigned`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])_[@(0.0.255) const]&]
+[s5;:AMap`:`:Find`(const K`&`,unsigned`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) cons
+t]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])_[@(0.0.255) const]&]
 [s2; Retrieves the position of next element with the same key as 
 element at the specified position. If multi`-key ordering is 
 not broken and more than one element with that value exists in 
@@ -110,7 +110,7 @@ key, negative number is returned. Unlinked elements are ignored.&]
 [s7; [*/ Return value]-|Position of next element with same value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindLast`(const K`&`,unsigned`)const:%- [@(0.0.255) int]_[* FindLast]([@(0.0.255) c
+[s5;:AMap`:`:FindLast`(const K`&`,unsigned`)const:%- [@(0.0.255) int]_[* FindLast]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])_[@(0.0.255) const]&]
 [s2; Retrieves position of last element with the specified key in 
 AMap, using a precomputed hash value. The precomputed hash value 
@@ -125,8 +125,8 @@ is returned. Unlinked elements are ignored.&]
 is not in AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindLast`(const K`&`)const:%- [@(0.0.255) int]_[* FindLast]([@(0.0.255) co
-nst]_[*@4 K][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
+[s5;:AMap`:`:FindLast`(const K`&`)const:%- [@(0.0.255) int]_[* FindLast]([@(0.0.255) const]_
+[*@4 K][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
 [s2; Retrieves the position of last element with the specified key 
 in AMap. If multi`-key ordering is not broken and more than one 
 element with the same value exists in AIndex, the greatest position 
@@ -137,8 +137,8 @@ is returned. Unlinked elements are ignored.&]
 is not in AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindPrev`(int`)const:%- [@(0.0.255) int]_[* FindPrev]([@(0.0.255) int]_[*@3 i
-])_[@(0.0.255) const]&]
+[s5;:AMap`:`:FindPrev`(int`)const:%- [@(0.0.255) int]_[* FindPrev]([@(0.0.255) int]_[*@3 i])_
+[@(0.0.255) const]&]
 [s2; Retrieves the position of previous element with the same key 
 as element at the specified position. If multi`-key ordering 
 is not broken and more than one element with that value exists 
@@ -150,8 +150,8 @@ key, a negative number is returned. Unlinked elements are ignored.&]
 [s7; [*/ Return value]-|Position of previous element with same value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindAdd`(const K`&`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) const]_[*@4 K
-][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:FindAdd`(const K`&`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+]_[*@3 k])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. If multi`-key ordering is not broken and more than one 
 element with the same value exists in AMap, lowest position is 
@@ -166,8 +166,8 @@ Unlinked elements are ignored.&]
 [s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindAdd`(const K`&`,const T`&`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
+[s5;:AMap`:`:FindAdd`(const K`&`,const T`&`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) co
+nst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. If multi`-key ordering is not broken and more than one 
 element with the same value exists in AMap, the lowest position 
@@ -183,9 +183,8 @@ not exist in AMap, adds new element, deep copy constructed from
 [s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindPutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* FindPutPick](
-[@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_
-[*@3 init])&]
+[s5;:AMap`:`:FindPutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* FindPutPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. If multi`-key ordering is not broken and more than one 
 element with the same value exists in AMap, the lowest position 
@@ -201,14 +200,14 @@ at the end of AMap and returns its position.&]
 [s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Unlink`(int`):%- [@(0.0.255) void]_[* Unlink]([@(0.0.255) int]_[*@3 i])&]
+[s5;:AMap`:`:Unlink`(int`):%- [@(0.0.255) void]_[* Unlink]([@(0.0.255) int]_[*@3 i])&]
 [s2; Unlinks element at the specified position. Unlinked item stays 
 in AMap but is ignored by any Find operation.&]
 [s7; [*C@3 i]-|Position of element to unlink.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Put`(const K`&`,const T`&`):%- [@(0.0.255) int]_[* Put]([@(0.0.255) const]_
-[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:AMap`:`:Put`(const K`&`,const T`&`):%- [@(0.0.255) int]_[* Put]([@(0.0.255) const]_[*@4 K
+][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; If there are any unlinked elements in AMap, one of them is replaced 
 by the specified key/value pair. If there is are unlinked elements, 
 the key/value pair is added to the end of AIndex using [* Add]. 
@@ -222,7 +221,7 @@ Value is transfered using deep copy constructor.&]
 [s7; [*C@3 x]-|Value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:PutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* PutPick]([@(0.0.255) c
+[s5;:AMap`:`:PutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* PutPick]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; If there are any unlinked elements in AMap, one of them is replaced 
 by the specified key/value pair. If there is none unlinked element, 
@@ -237,7 +236,7 @@ Value is transfered using pick constructor.&]
 [s7; [*C@3 x]-|Value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Put`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Put]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+[s5;:AMap`:`:Put`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Put]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
 ]_[*@3 k])&]
 [s2; If there is any unlinked element in AMap, it is replaced by 
 the specified key and reference to the value is returned. If 
@@ -253,8 +252,8 @@ Value is returned.&]
 [s7; [*/ Return value]-|Reference to the corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindPut`(const K`&`):%- [@(0.0.255) int]_[* FindPut]([@(0.0.255) const]_[*@4 K
-][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:FindPut`(const K`&`):%- [@(0.0.255) int]_[* FindPut]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+]_[*@3 k])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. Unlinked elements are ignored. If the element does not 
 exist in AMap, puts new default constructed element into AMap 
@@ -267,8 +266,8 @@ using [* Put] and returns its position. &]
 [s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindPut`(const K`&`,const T`&`):%- [@(0.0.255) int]_[* FindPut]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
+[s5;:AMap`:`:FindPut`(const K`&`,const T`&`):%- [@(0.0.255) int]_[* FindPut]([@(0.0.255) co
+nst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. Unlinked elements are ignored. If the element does not 
 exist in AMap, puts new element, deep copy constructed from [* init], 
@@ -282,9 +281,8 @@ using [* Put] and returns its position. &]
 [s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindPutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* FindPutPick](
-[@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_
-[*@3 init])&]
+[s5;:AMap`:`:FindPutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* FindPutPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. Unlinked elements are ignored. If the element does not 
 exist in AMap, puts new element, pick constructed from [* init], 
@@ -298,7 +296,7 @@ using [* Put] and returns its position. &]
 [s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Get`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+[s5;:AMap`:`:Get`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
 ]_[*@3 k])&]
 [s2; Retrieves a reference to the first element with the specified 
 key. If multi`-key ordering is not broken and more than one element 
@@ -309,7 +307,7 @@ be in AMap, otherwise it is logic error (asserted in debug mode).&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Get`(const K`&`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) c
+[s5;:AMap`:`:Get`(const K`&`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
 [s2; Retrieves a constant reference the the first element with the 
 specified key. If multi`-key ordering is not broken and more 
@@ -321,8 +319,8 @@ in debug mode).&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Get`(const K`&`,const T`&`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[* Get]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+[s5;:AMap`:`:Get`(const K`&`,const T`&`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_
+[* Get]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 d])_[@(0.0.255) const]&]
 [s2; Retrieves a constant reference value of the first element with 
 the specified key. If multi`-key ordering is not broken and more 
@@ -335,8 +333,8 @@ the specified value is returned instead.&]
 [s7; [*/ Return value]-|Reference to found element or supplied value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetAdd`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* GetAdd]([@(0.0.255) const]_
-[*@4 K][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:GetAdd`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* GetAdd]([@(0.0.255) const]_[*@4 K
+][@(0.0.255) `&]_[*@3 k])&]
 [s2; Retrieves a constant reference value of the first element with 
 the specified key. If multi`-key ordering is not broken and more 
 than one element with the same value exists in AMap, the lowest 
@@ -351,7 +349,7 @@ element at the end of AMap and returns a reference to it.&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetAdd`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetAdd]([@(0.0.255) c
+[s5;:AMap`:`:GetAdd`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetAdd]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Retrieves a constant reference to the first element with the 
 specified key. If multi`-key ordering is not broken and more 
@@ -369,9 +367,8 @@ to it.&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetAddPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetAddPic
-k]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&
-]_[*@3 x])&]
+[s5;:AMap`:`:GetAddPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetAddPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Retrieves a constant reference to the first element with the 
 specified key. If multi`-key ordering is not broken and more 
 than one element with the same value exists in AMap, the lowest 
@@ -387,8 +384,8 @@ from [* x],[*  ]at the end of AMap and returns a reference to it.&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetPut`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPut]([@(0.0.255) const]_
-[*@4 K][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:GetPut`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPut]([@(0.0.255) const]_[*@4 K
+][@(0.0.255) `&]_[*@3 k])&]
 [s2; Retrieves a constant reference value of the first element with 
 the specified key. If multi`-key ordering is not broken and more 
 than one element with the same value exists in AMap, the lowest 
@@ -404,7 +401,7 @@ it.&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetPut`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPut]([@(0.0.255) c
+[s5;:AMap`:`:GetPut`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPut]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Retrieves a constant reference value of the first element with 
 the specified key. If multi`-key ordering is not broken and more 
@@ -422,9 +419,8 @@ to it.&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetPutPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPutPic
-k]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&
-]_[*@3 x])&]
+[s5;:AMap`:`:GetPutPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPutPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Retrieves a constant reference value of the first element with 
 the specified key. If multi`-key ordering is not broken and more 
 than one element with the same value exists in AMap, lowest position 
@@ -440,14 +436,14 @@ key is not in the AMap, puts new element, pick constructed from
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:SetKey`(int`,const K`&`):%- [@(0.0.255) void]_[* SetKey]([@(0.0.255) int]_
-[*@3 i], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:SetKey`(int`,const K`&`):%- [@(0.0.255) void]_[* SetKey]([@(0.0.255) int]_[*@3 i
+], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
 [s2; Replaces key of element at the specified position.&]
 [s7; [*C@3 i]-|Position of element.&]
 [s7; [*C@3 k]-|New key value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindPtr`(const K`&`):%- [*@4 T]_`*[* FindPtr]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+[s5;:AMap`:`:FindPtr`(const K`&`):%- [*@4 T]_`*[* FindPtr]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
 ]_[*@3 k])&]
 [s2; Retrieves a pointer to value of first element with the specified 
 key in AMap. If multi`-key ordering is not broken and more than 
@@ -459,7 +455,7 @@ is returned. Unlinked elements are ignored.&]
 is not in AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:FindPtr`(const K`&`)const:%- [@(0.0.255) const]_[*@4 T]_`*[* FindPtr]([@(0.0.255) c
+[s5;:AMap`:`:FindPtr`(const K`&`)const:%- [@(0.0.255) const]_[*@4 T]_`*[* FindPtr]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
 [s2; Retrieves a constant pointer to value of first element with 
 the specified key in AMap. If multi`-key ordering is not broken 
@@ -471,7 +467,7 @@ in AMap, NULL pointer is returned. Unlinked elements are ignored.&]
 is not in AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:UnlinkKey`(const K`&`,unsigned`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) c
+[s5;:AMap`:`:UnlinkKey`(const K`&`,unsigned`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
 [s2; Unlinks all elements with the specified key using precomputed 
 hash`-value. Unlinked elements stay in AIndex but are ignored 
@@ -482,23 +478,23 @@ same as the hash value that would be the result of HashFn. &]
 [s7; [*/ Return value]-|Number of elements unlinked.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:UnlinkKey`(const K`&`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) const
-]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:UnlinkKey`(const K`&`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) const]_[*@4 K
+][@(0.0.255) `&]_[*@3 k])&]
 [s2; Unlinks all elements with the specified key. Unlinked elements 
 stay in AIndex but are ignored by any Find operations.&]
 [s7; [*C@3 k]-|Key to unlink.&]
 [s7; [*/ Return value]-|Number of elements unlinked.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:IsUnlinked`(int`)const:%- [@(0.0.255) bool]_[* IsUnlinked]([@(0.0.255) int
-]_[*@3 i])_[@(0.0.255) const]&]
+[s5;:AMap`:`:IsUnlinked`(int`)const:%- [@(0.0.255) bool]_[* IsUnlinked]([@(0.0.255) int]_[*@3 i
+])_[@(0.0.255) const]&]
 [s2; Tests whether element at the specified position is unlinked.&]
 [s7; [*C@3 i]-|Position.&]
 [s7; [*/ Return value]-|true if element is unlinked.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Insert`(int`,const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) in
-t]_[*@3 i], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:Insert`(int`,const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) int]_[*@3 i
+], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
 [s2; Inserts an element with the specified key and default constructed 
 value at the specified position. This is a slow operation, especially 
 when combined with any search operations.&]
@@ -510,7 +506,7 @@ when combined with any search operations.&]
 [s7; [*C@3 k]-|Key to insert.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Insert`(int`,const K`&`,const T`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
+[s5;:AMap`:`:Insert`(int`,const K`&`,const T`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x])&]
 [s2; Inserts an element with the specified key and value copy constructed 
@@ -525,7 +521,7 @@ especially when combined with any search operations.&]
 [s7; [*C@3 x]-|Value to insert.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Remove`(int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i])&]
+[s5;:AMap`:`:Remove`(int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i])&]
 [s2; Removes the element at the specified position. This is a slow 
 operation, especially when combined with any search operations.&]
 [s6; Invalidates iterators to AMap.&]
@@ -534,8 +530,8 @@ operation, especially when combined with any search operations.&]
 [s7; [*C@3 i]-|Position of element to remove.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Remove`(const int`*`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) con
-st]_[@(0.0.255) int]_`*[*@3 sl], [@(0.0.255) int]_[*@3 n])&]
+[s5;:AMap`:`:Remove`(const int`*`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) const]_
+[@(0.0.255) int]_`*[*@3 sl], [@(0.0.255) int]_[*@3 n])&]
 [s2; Removes number of elements from AMap. Time of operation only 
 slightly depends on the number of removed elements. This is a 
 slow operation, especially when combined with any search operations.&]
@@ -548,8 +544,8 @@ order.&]
 [s7; [*C@3 n]-|Number of elements to remove. &]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Remove`(const`:`:Vector`<int`>`&`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) c
-onst]_[_^`:`:Vector^ Vector][@(0.0.255) <int>`&]_[*@3 sl])&]
+[s5;:AMap`:`:Remove`(const Vector`<int`>`&`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) co
+nst]_Vector[@(0.0.255) <int>`&]_[*@3 sl])&]
 [s2; Removes number of elements from AMap. Same as Remove(sorted`_list, 
 sorted`_list.GetCount()).&]
 [s6; Invalidates iterators to AMap.&]
@@ -558,15 +554,15 @@ sorted`_list.GetCount()).&]
 [s7; [*C@3 sl]-|Sorted Vector of positions to remove.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:RemoveKey`(const K`&`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) const
-]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AMap`:`:RemoveKey`(const K`&`):%- [@(0.0.255) int]_[* RemoveKey]([@(0.0.255) const]_[*@4 K
+][@(0.0.255) `&]_[*@3 k])&]
 [s2; Removes all elements with the specified value. This is a slow 
 operation, especially when combined with any search operations.&]
 [s7; [*C@3 k]-|Key to remove.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:operator`[`]`(int`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* ope
-rator`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s5;:AMap`:`:operator`[`]`(int`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* operato
+r`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Returns a constant reference to the element at the specified 
 position.&]
 [s7; [*C@3 i]-|Position.&]
@@ -574,75 +570,74 @@ position.&]
 position.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:operator`[`]`(int`):%- [*@4 T][@(0.0.255) `&]_[* operator`[`]]([@(0.0.255) i
-nt]_[*@3 i])&]
+[s5;:AMap`:`:operator`[`]`(int`):%- [*@4 T][@(0.0.255) `&]_[* operator`[`]]([@(0.0.255) int]_
+[*@3 i])&]
 [s2; Returns a reference to the element at the specified position.&]
 [s7; [*C@3 i]-|Position.&]
 [s7; [*/ Return value]-|Constant reference to the element at the specified 
 position.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetCount`(`)const:%- [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:GetCount`(`)const:%- [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
 [s2; Returns the number of elements in AMap.&]
 [s7; [*/ Return value]-|Actual number of elements.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:IsEmpty`(`)const:%- [@(0.0.255) bool]_[* IsEmpty]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:IsEmpty`(`)const:%- [@(0.0.255) bool]_[* IsEmpty]()_[@(0.0.255) const]&]
 [s2; Tests whether AMap is empty. Same as GetCount() `=`= 0.&]
 [s7; [*/ Return value]-|true if AMap is empty, false otherwise.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Clear`(`):%- [@(0.0.255) void]_[* Clear]()&]
+[s5;:AMap`:`:Clear`(`):%- [@(0.0.255) void]_[* Clear]()&]
 [s2; Removes all elements from AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Shrink`(`):%- [@(0.0.255) void]_[* Shrink]()&]
+[s5;:AMap`:`:Shrink`(`):%- [@(0.0.255) void]_[* Shrink]()&]
 [s2; Minimizes memory consumption of AMap by decreasing the capacity 
 to the number of elements.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Reserve`(int`):%- [@(0.0.255) void]_[* Reserve]([@(0.0.255) int]_[*@3 xtra])
-&]
+[s5;:AMap`:`:Reserve`(int`):%- [@(0.0.255) void]_[* Reserve]([@(0.0.255) int]_[*@3 xtra])&]
 [s2; Reserves capacity. If the required capacity is greater than 
 current capacity, capacity is increased to the required value.&]
 [s7; [*C@3 n]-|Required capacity.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetAlloc`(`)const:%- [@(0.0.255) int]_[* GetAlloc]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:GetAlloc`(`)const:%- [@(0.0.255) int]_[* GetAlloc]()_[@(0.0.255) const]&]
 [s2; Returns the current capacity of Array.&]
 [s7; [*/ Return value]-|Capacity of Array.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Drop`(int`):%- [@(0.0.255) void]_[* Drop]([@(0.0.255) int]_[*@3 n]_`=_[@3 1])&]
+[s5;:AMap`:`:Drop`(int`):%- [@(0.0.255) void]_[* Drop]([@(0.0.255) int]_[*@3 n]_`=_[@3 1])&]
 [s2; Drops the specified number of elements at the end of the AMap.&]
 [s7; [*C@3 n]-|Number of elements.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Top`(`):%- [*@4 T][@(0.0.255) `&]_[* Top]()&]
+[s5;:AMap`:`:Top`(`):%- [*@4 T][@(0.0.255) `&]_[* Top]()&]
 [s2; Returns a reference to the value of the last element of AMap.&]
 [s7; [*/ Return value]-|Reference to the value of the last element.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Top`(`):%- [*@4 T][@(0.0.255) `&]_[* Top]()&]
+[s5;:AMap`:`:Top`(`):%- [*@4 T][@(0.0.255) `&]_[* Top]()&]
 [s2; Returns a constant reference to the value of the last element 
 of AMap.&]
 [s7; [*/ Return value]-|Reference to the value of the last element.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:TopKey`(`)const:%- [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[* TopKey]()_[@(0.0.255) c
+[s5;:AMap`:`:TopKey`(`)const:%- [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[* TopKey]()_[@(0.0.255) c
 onst]&]
 [s2; Returns a constant reference to the key of the last element 
 of AMap.&]
 [s7; [*/ Return value]-|Reference to the key of the last element.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:PopKey`(`):%- [*@4 K]_[* PopKey]()&]
+[s5;:AMap`:`:PopKey`(`):%- [*@4 K]_[* PopKey]()&]
 [s2; Drops the last element of AMap and returns the key of the dropped 
 element.&]
 [s7; [*/ Return value]-|Key of the element dropped at the end of AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetKey`(int`)const:%- [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[* GetKey]([@(0.0.255) i
+[s5;:AMap`:`:GetKey`(int`)const:%- [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[* GetKey]([@(0.0.255) i
 nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Returns a constant reference to the key of element at the specified 
 position.&]
@@ -650,74 +645,74 @@ position.&]
 [s7; [*/ Return value]-|Constant reference to the key.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Serialize`(`:`:Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^`:`:Stream^ S
-tream][@(0.0.255) `&]_[*@3 s])&]
+[s5;:AMap`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize](Stream[@(0.0.255) `&]_
+[*@3 s])&]
 [s2; Serializes the content of AMap to/from Stream. Works only if 
 NTL is used as part of UPP.&]
 [s0; Requires T to have serialization operator defined.&]
 [s7; [*C@3 s]-|Target/source stream.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetIndex`(`)const:%- [@(0.0.255) const]_[_^`:`:Index^ Index][@(0.0.255) <][*@4 K
-], [*@4 HashFn][@(0.0.255) >`&]_[* GetIndex]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:GetIndex`(`)const:%- [@(0.0.255) const]_Index[@(0.0.255) <][*@4 K], 
+[*@4 HashFn][@(0.0.255) >`&]_[* GetIndex]()_[@(0.0.255) const]&]
 [s2; Returns a constant reference to the internal Index of keys.&]
 [s7; [*/ Return value]-|Constant reference to the Index of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:PickIndex`(`)pick`_:%- [_^`:`:Index^ Index][@(0.0.255) <][*@4 K], 
-[*@4 HashFn][@(0.0.255) >]_[* PickIndex]()_[@(0.128.128) pick`_]&]
+[s5;:AMap`:`:PickIndex`(`)pick`_:%- Index[@(0.0.255) <][*@4 K], [*@4 HashFn][@(0.0.255) >]_[* P
+ickIndex]()_[@(0.128.128) pick`_]&]
 [s2; Returns Index of keys. Destroys AMap by picking.&]
 [s7; [*/ Return value]-|Index of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetKeys`(`)const:%- [@(0.0.255) const]_[_^`:`:Vector^ Vector][@(0.0.255) <
-][*@4 K][@(0.0.255) >`&]_[* GetKeys]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:GetKeys`(`)const:%- [@(0.0.255) const]_Vector[@(0.0.255) <][*@4 K][@(0.0.255) >`&
+]_[* GetKeys]()_[@(0.0.255) const]&]
 [s2; Returns a constant reference to the Vector of keys.&]
 [s7; [*/ Return value]-|Constant reference to the Vector of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:PickKeys`(`)pick`_:%- [_^`:`:Vector^ Vector][@(0.0.255) <][*@4 K][@(0.0.255) >
-]_[* PickKeys]()_[@(0.128.128) pick`_]&]
+[s5;:AMap`:`:PickKeys`(`)pick`_:%- Vector[@(0.0.255) <][*@4 K][@(0.0.255) >]_[* PickKeys]()_[@(0.128.128) p
+ick`_]&]
 [s2; Returns Vector of keys. Destroys AMap by picking.&]
 [s7; [*/ Return value]-|Vector of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetValues`(`)const:%- [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[* GetValues
-]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:GetValues`(`)const:%- [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[* GetValues]()_
+[@(0.0.255) const]&]
 [s2; Returns a constant reference to the basic random access container 
 of values. Destroys AIndex by picking.&]
 [s7; [*/ Return value]-|Constant reference to the basic random access 
 container of values.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:PickValues`(`)pick`_:%- [*@4 V]_[* PickValues]()_[@(0.128.128) pick`_]&]
+[s5;:AMap`:`:PickValues`(`)pick`_:%- [*@4 V]_[* PickValues]()_[@(0.128.128) pick`_]&]
 [s2; Returns basic random access container of values. Destroys AIndex 
 by picking.&]
 [s7; [*/ Return value]-|Basic random access container of values.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:AMap`(`):%- [* AMap]()&]
+[s5;:AMap`:`:AMap`(`):%- [* AMap]()&]
 [s2; Constructor. Constructs an empty AMap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:AMap`(const`:`:AMap`&`,int`):%- [* AMap]([@(0.0.255) const]_[* AMap][@(0.0.255) `&
-]_[*@3 s], [@(0.0.255) int])&]
+[s5;:AMap`:`:AMap`(const AMap`&`,int`):%- [* AMap]([@(0.0.255) const]_[* AMap][@(0.0.255) `&]_
+[*@3 s], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
 constructor.&]
 [s7; [*C s]-|Source AMap.&]
-[s0;:`:`:AMap`:`:AMap`(pick`_`:`:Index`<K`,HashFn`>`&`,pick`_ V`&`): [* AMap](pick`_ 
-Index<K>`& [*@3 ndx], pick`_ V`& [*@3 val])&]
+[s4; &]
+[s5;:AMap`:`:AMap`(pick`_ Index`<K`,HashFn`>`&`,pick`_ V`&`):%- [* AMap]([@(0.128.128) pi
+ck`_]_Index[@(0.0.255) <][*@4 K], [*@4 HashFn][@(0.0.255) >`&]_[*@3 ndx], 
+[@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&]_[*@3 val])&]
 [s2; This form of constructors creates AMap by picking Index of keys 
-and basic random access container of values. Both containers 
-must have same number of elements.&]
-[s7; [*C@3 ndx]-|Keys.&]
-[s7; [*C@3 val]-|Values.&]
+[%-*@3 ndx] and basic random access container of values. Both containers 
+must have same number of elements [%-*@3 val].&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:AMap`(pick`_`:`:Vector`<K`>`&`,pick`_ V`&`):%- [* AMap]([@(0.128.128) pi
-ck`_]_[_^`:`:Vector^ Vector][@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[*@3 ndx], 
-[@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&]_[*@3 val])&]
+[s5;:AMap`:`:AMap`(pick`_ Vector`<K`>`&`,pick`_ V`&`):%- [* AMap]([@(0.128.128) pick`_]_V
+ector[@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[*@3 ndx], [@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&
+]_[*@3 val])&]
 [s2; This form of constructors creates AMap by picking Vector of 
 keys and basic random access container of values. Both containers 
 must have same number of elements.&]
@@ -725,31 +720,28 @@ must have same number of elements.&]
 [s7; [*C@3 val]-|Values.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:KeyType`:`:typedef:%- [@(0.0.255) typedef]_K_[* KeyType]&]
+[s5;:AMap`:`:KeyType`:`:typedef:%- [@(0.0.255) typedef]_K_[* KeyType]&]
 [s2; Typedef of K for use in templated algorithms.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:KeyConstIterator`:`:typedef:%- [@(0.0.255) typedef]_[@(0.0.255) typename
-]_[_^`:`:Index^ Index][@(0.0.255) <]K, HashFn[@(0.0.255) >`::]ConstIterator_[* KeyConstIte
-rator]&]
+[s5;:AMap`:`:KeyConstIterator`:`:typedef:%- [@(0.0.255) typedef]_[@(0.0.255) typename]_In
+dex[@(0.0.255) <]K, HashFn[@(0.0.255) >`::]ConstIterator_[* KeyConstIterator]&]
 [s2; Key iterator type.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:KeyBegin`(`)const:%- [_^`:`:AMap`:`:KeyConstIterator^ KeyConstIterator
-]_[* KeyBegin]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:KeyBegin`(`)const:%- KeyConstIterator_[* KeyBegin]()_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the first key in AMap.&]
 [s7; [*/ Return value]-|Constant key iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:KeyEnd`(`)const:%- [_^`:`:AMap`:`:KeyConstIterator^ KeyConstIterator]_
-[* KeyEnd]()_[@(0.0.255) const]&]
+[s5;:AMap`:`:KeyEnd`(`)const:%- KeyConstIterator_[* KeyEnd]()_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the key just beyond the last 
 key in AMap.&]
 [s7; [*/ Return value]-|Constant key iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:KeyGetIter`(int`)const:%- [_^`:`:AMap`:`:KeyConstIterator^ KeyConstIte
-rator]_[* KeyGetIter]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:AMap`:`:KeyGetIter`(int`)const:%- KeyConstIterator_[* KeyGetIter]([@(0.0.255) int]_[*@3 p
+os])_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the key at the specified position. 
 Same as [* KeyBegin() `+ i]. The benefit of this method is that 
 [* pos] is range checked in debug mode. &]
@@ -757,19 +749,18 @@ Same as [* KeyBegin() `+ i]. The benefit of this method is that
 [s7; [*/ Return value]-|Constant key iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Begin`(`):%- [_^`:`:AMap`:`:Iterator^ Iterator]_[* Begin]()&]
+[s5;:AMap`:`:Begin`(`):%- Iterator_[* Begin]()&]
 [s2; Returns an iterator to the first value in AMap.&]
 [s7; [*/ Return value]-|Value iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:End`(`):%- [_^`:`:AMap`:`:Iterator^ Iterator]_[* End]()&]
+[s5;:AMap`:`:End`(`):%- Iterator_[* End]()&]
 [s2; Returns a constant iterator to the value just beyond the last 
 key in AMap.&]
 [s7; [*/ Return value]-|Value iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetIter`(int`):%- [_^`:`:AMap`:`:Iterator^ Iterator]_[* GetIter]([@(0.0.255) i
-nt]_[*@3 pos])&]
+[s5;:AMap`:`:GetIter`(int`):%- Iterator_[* GetIter]([@(0.0.255) int]_[*@3 pos])&]
 [s2; Returns an iterator to the value at the specified position. 
 Same as [* Begin() `+ i]. The benefit of this method is that [* pos] 
 is range checked in debug mode.&]
@@ -777,26 +768,22 @@ is range checked in debug mode.&]
 [s7; [*/ Return value]-|Value iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:Begin`(`)const:%- [_^`:`:AMap`:`:ConstIterator^ ConstIterator]_[* Begin](
-)_[@(0.0.255) const]&]
+[s5;:AMap`:`:Begin`(`)const:%- ConstIterator_[* Begin]()_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the first value in AMap.&]
 [s7; [*/ Return value]-|Constant value iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:End`(`)const:%- [_^`:`:AMap`:`:ConstIterator^ ConstIterator]_[* End]()_[@(0.0.255) c
-onst]&]
+[s5;:AMap`:`:End`(`)const:%- ConstIterator_[* End]()_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the value just beyond the last 
 value in AMap.&]
 [s7; [*/ Return value]-|Constant value iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:`:`:AMap`:`:GetIter`(int`)const:%- [_^`:`:AMap`:`:ConstIterator^ ConstIterator]_[* G
-etIter]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:AMap`:`:GetIter`(int`)const:%- ConstIterator_[* GetIter]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) c
+onst]&]
 [s2; Returns a constant iterator to the value at the specified position. 
 Same as [* Begin() `+ i]. Benefit of this methods is that in debug 
 mode [* pos] is range checked.&]
 [s7; [*C@3 i]-|Required position.&]
 [s7; [*/ Return value]-|Constant value iterator.&]
-[s0; &]
-[s0; &]
 [s0; ]
