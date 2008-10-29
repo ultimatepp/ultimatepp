@@ -742,6 +742,10 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 					Color fg, bg;
 					Value q;
 					const Display& d = GetCellInfo(i, jj, hasfocus0, q, fg, bg, st);
+					if(i == 0) { _DBG_
+						DDUMP(r);
+						DDUMP(w.IsPainting(r));
+					}
 					if(sample || w.IsPainting(r))
 						if(cw < 2 * cm || editmode && i == cursor && column[jj].edit)
 							d.PaintBackground(w, r, q, fg, bg, st);
