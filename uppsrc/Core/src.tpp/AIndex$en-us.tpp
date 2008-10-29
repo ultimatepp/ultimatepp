@@ -57,9 +57,7 @@ and optional deep copy] transfer semantics, although these features
 are more important in derived concrete index flavors.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s4;%- &]
-[s3;%- &]
-[s4;%- &]
+[s4;H0;%- &]
 [s5;:AIndex`:`:Add`(const T`&`,unsigned`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 T
 ][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Adds a new element [%-*@3 x] with a precomputed hash value [%-*@3 `_hash]. 
