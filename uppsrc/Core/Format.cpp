@@ -635,6 +635,18 @@ String StringFormatter(const Formatting& f)
 	Buffer<char> h(max(f.maxn, s.GetLength()) + 16);
 	int n = sprintf(h, '%' + f.format + f.id, ~s);
 	return String(h, n);
+/*
+	const String& s = f.arg;
+	String fmt = '%' + f.format + f.id;
+	char h[256];
+	int n = _snprintf(h, 256, fmt, ~s);
+	if(n > 256) {
+		Buffer<char> h(n + 1);
+		n = _snprintf(h, n + 1, fmt, ~s);
+		return String(h, n);
+	}
+	return String(h, n);
+*/
 }
 
 String DateFormatter(const Formatting& f)
