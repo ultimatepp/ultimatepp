@@ -1,0 +1,12 @@
+description "Placing icon into platform tray area";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp charset "UTF-8",
+	tray.iml;
+
+mainconfig
+	"" = "GUI";
+
