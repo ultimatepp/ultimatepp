@@ -1303,7 +1303,7 @@ bool FileMapping::Create(const char *file, int64 filesize_, bool delete_share)
 	}
 #endif
 #ifdef PLATFORM_POSIX
-	hfile = open(ToSystemCharset(file), O_RDWR | O_CREAT);
+	hfile = open(ToSystemCharset(file), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if(hfile == -1)
 		return false;
 #endif
