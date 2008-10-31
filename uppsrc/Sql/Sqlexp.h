@@ -106,8 +106,9 @@ public:
 	SqlCol        Of(SqlId id) const;
 	SqlId         As(const char *as) const;
 	SqlId         As(SqlId id) const         { return As(~~id); }
-	SqlId         operator [] (int i) const;
+	SqlId         operator[](int i) const;
 	SqlId         operator&(const SqlId& s) const;
+	SqlId         operator[](const SqlId& id) const;
 
 	SqlId()                                      {}
 	SqlId(const char *s) : id(s)                 {}
