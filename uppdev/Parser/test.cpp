@@ -119,7 +119,7 @@ struct FindBrokenRefIterator : RichTxt::Iterator {
 	{
 		
 		this-> ;
-		THISBACK( ;
+		THISBACK(;
 		if(pos >= cursor) {
 			if(para.format.label != "noref") {
 				if(IsNull(para.format.label))
@@ -152,7 +152,7 @@ void Foo()
 	String(xxx). ;
 	String x;
 	x.;
-	x->;
+	x->; // <<
 	AttrText("Hello!"). ;
 	Vector<String> vx;
 	vx. ;
@@ -169,10 +169,29 @@ void Foo()
 	es.NullText(). ;
 	
 	String x[5];
-	x[1]. ;
+	x[1]. ; // << here!
+	String y;
+	y[0]. ; // << here!
 	Rect r;
-	r.
-	
+	r. ;
+	Vector<String>:: ;
+	Array<String> ax;
+	ax.At(1). ;
+	Array<String> tst;
+	tst[1]. ;
+	Ctrl::Dsize;
+	Ctrl::LogPos::x;
+}
+
+int  TabCtrl::GetTab(Point p) const
+{
+	if(p.y >= 0 && p.y < style->tabheight)
+		for(int i = 0; i < tab.GetCount(); i++)
+			if(p.x < tab[i].Right()) // << Here!
+				return i;
+	tab[i]. ; // <<
+	return -1;
+	TabCtrl::
 }
 
 struct FwTest;
@@ -186,7 +205,8 @@ struct Dlg : WithEditStringLayout<TopWindow> {
 		this-> ;
 		text. ;
 	}
-	Vector<String>::
+	Pusher::GetRect(). ;
+	
 };
 
 struct FwTest {

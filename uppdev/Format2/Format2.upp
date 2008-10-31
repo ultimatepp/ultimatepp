@@ -1,6 +1,8 @@
+uses
+	Core;
+
 file
-	new.cpp,
-	test.cpp;
+	Format2.cpp;
 
 mainconfig
 	"" = "";

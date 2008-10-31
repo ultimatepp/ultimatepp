@@ -23,6 +23,9 @@ GUI_APP_MAIN
 	DUMP(ScrollBarSize());
 
 	e.Pick(ParseQTF(LoadFile(FileName())));
+	RichEdit::PosInfo f;
+	LoadFromFile(f, ConfigFile("pos"));
+	e.SetPosInfo(f);
 //	e.Pick(ParseQTF(AsQTF(CreateImageObject(CtrlImg::exclamation)) + " hahahaha"));
 	TopWindow w;
 	w.SetRect(0, 0, 700, 500);
@@ -36,5 +39,7 @@ GUI_APP_MAIN
 */
 	String x = e.GetQTF();
 	SaveFile(FileName(), x);
+	f = e.GetPosInfo();
+	StoreToFile(f, ConfigFile("pos"));
 	LOG("Exit");
 }

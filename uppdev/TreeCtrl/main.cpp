@@ -34,6 +34,7 @@ struct App : TopWindow {
 		Vector<int> parent, parent2;
 		parent.Add(0);
 		tree.SetRoot(Image(), "The Tree");
+		Array<Option> option;
 		for(int i = 1; i < 10000; i++) {
 			parent.Add(tree.Add(parent[rand() % parent.GetCount()],
 			            i & 1 ? CtrlImg::open() : Image(),
@@ -51,6 +52,8 @@ struct App : TopWindow {
 		Sizeable();
 	}
 };
+
+One<EscAppFieldObject> CreateFieldObject(EscAppDialogObject& dialog, EscAppField& field);
 
 GUI_APP_MAIN
 {
