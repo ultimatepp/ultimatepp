@@ -162,3 +162,7 @@ TOPIC("TestTest$en-us")
 #include "TestTest$en-us.tppi"
 END_TOPIC
 
+TOPIC("CharSet$en-us")
+#include "CharSet$en-us.tppi"
+END_TOPIC
+
