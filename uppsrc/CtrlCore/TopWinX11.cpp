@@ -276,7 +276,6 @@ void TopWindow::Maximize(bool effect)
 void TopWindow::Overlap(bool effect)
 {
 	state = OVERLAPPED;
-
 }
 
 TopWindow& TopWindow::TopMost(bool b, bool)

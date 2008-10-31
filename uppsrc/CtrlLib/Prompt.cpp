@@ -107,6 +107,14 @@ int Prompt(Callback1<const String&> WhenLink,
 	}
 	dlg.WhenClose = dlg.Breaker(button3 ? -1 : 0);
 	dlg.Open();
+	Vector<Ctrl *> wins = Ctrl::GetTopWindows();
+	for(int i = 0; i < wins.GetCount(); i++) {
+		TopWindow *w = dynamic_cast<TopWindow *>(wins[i]);
+		if(w->GetScreenRect().Intersects(dlg.GetScreenRect()) && w->IsTopMost()) {
+			dlg.TopMost();
+			break;
+		}
+	}
 	dlg.Title(title);
 	return dlg.RunAppModal();
 }
