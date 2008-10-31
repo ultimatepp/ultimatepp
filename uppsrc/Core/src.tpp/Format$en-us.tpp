@@ -10,22 +10,22 @@ topic "Text formatting";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; Text formatting&]
-[s5;K:`:`:Format`(const char`*`,const`:`:Vector`<`:`:Value`>`&`):%- [^`:`:String^ Strin
-g]_Format[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 format][@(64) , 
+[s0; [*+117 Format `- text formatting]&]
+[s0;*+117 &]
+[s5;:`:`:Format`(const char`*`,const`:`:Vector`<`:`:Value`>`&`):%- [^`:`:String^ String
+]_[* Format][@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][*@3 format][@(64) , 
 ][@(0.0.255) const][@(64) _][^`:`:Vector^@(64) Vector][@(64) <][^`:`:Value^@(64) Value][@(64) >
-`&_][@3 args][@(64) )]&]
-[s5;%- [^`:`:String^ String]_Format[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*
-][@3 format][@(64) , ][^`:`:Value^@(64) Value][@(64) _][@3 arg][,@3 1][@3  
-][@4 `[], [^`:`:Value^@(64) Value][@(64) _][@3 arg][,@3 n][@4 `]...] [@(64) )]&]
-[s5;K:`:`:Format`(int`,const char`*`,const`:`:Vector`<`:`:Value`>`&`):%- [^`:`:String^ S
-tring]_Format[@(64) (][@(0.0.255) int][@(64) _][@3 language][@(64) , ][@(0.0.255) const][@(64) _
-][@(0.0.255) char][@(64) _`*][@3 s][@(64) , ][@(0.0.255) const][@(64) _][^`:`:Vector^@(64) Vect
-or][@(64) <][^`:`:Value^@(64) Value][@(64) >`&_][@3 v][@(64) )]&]
-[s5;%- [^`:`:String^ String]_Format[@(64) (][@(0.0.255) int][@(64) _][@3 language][@(64) , 
-][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 format][@(64) , 
-][^`:`:Value^@(64) Value][@(64) _][@3 arg][,@3 1][@3  ][@4 `[], [^`:`:Value^@(64) Value][@(64) _][@3 a
-rg][,@3 n][@4 `]...] [@(64) )]&]
+`&_][*@3 args][@(64) )]&]
+[s5;%- [^`:`:String^ String]_[* Format][@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _
+`*][*@3 format][@(64) , ][^`:`:Value^@(64) Value][@(64) _][*@3 arg][*,@3 1][*@3  
+][@4 `[], [^`:`:Value^@(64) Value][@(64) _][*@3 arg][*,@3 n][@4 `]...] [@(64) )]&]
+[s5;:Format`(int`,const char`*`,const Vector`<Value`>`&`):%- [^String^ String]_[* Format](
+[@(0.0.255) int]_[*@3 language], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s], 
+[@(0.0.255) const]_Vector[@(0.0.255) <]Value[@(0.0.255) >`&]_[*@3 v])&]
+[s5;%- [^`:`:String^ String]_[* Format][@(64) (][@(0.0.255) int][@(64) _][*@3 language][@(64) , 
+][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][*@3 format][@(64) , 
+][^`:`:Value^@(64) Value][@(64) _][*@3 arg][*,@3 1][*@3  ][@4 `[], [^`:`:Value^@(64) Value][@(64) _
+][*@3 arg][*,@3 n][@4 `]...] [@(64) )]&]
 [s2; &]
 [s0; Format forms output text based on [*@3 format], inserting actual 
 arguments to placeholders. Argument values are converted to text 
@@ -98,7 +98,7 @@ placeholder, e.g. %dpt `- this has to be written as %d``pt (``
 delimits the formatter`-id).&]
 [s0; &]
 [s0; &]
-[s0; [*/3 Standard formatters]&]
+[s0; [*/ Standard formatters]&]
 [s0; &]
 [s0; [* default formatter]&]
 [s0; &]
@@ -208,7 +208,7 @@ width&]
 [s0; &]
 [s0; &]
 [s0; &]
-[s0;%- [*/3 Examples of standard formatters]&]
+[s0;%- [*/ Examples of standard formatters]&]
 [s0; &]
 [ {{5311:4689 [s0;%- Format(`"[* %d], [* %s]`", 123, `"TEXT`")]
 :: [s0;%- [C 123, TEXT]]
@@ -337,56 +337,66 @@ width&]
 :: [s0;%- Format(`"[* %``]`", GetSysDate())]
 :: [s0;%- [C 25.08.2006]]}}&]
 [s0; &]
-[s0;%- Registering custom formatters&]
 [s0; &]
-[s5;K:`:`:Formatter`:`:typedef:%- typedef_[^`:`:String^ String]_(`*Formatter)([@(0.0.255) c
-onst][@(64) _][^`:`:Formatting^@(64) Formatting][@(64) `&_fmt)]&]
-[s2; Formatter has to have form of function with single [^`:`:Formatting^ Formatting] 
+[s0; &]
+[s0;%- [*+117 Registering custom formatters]&]
+[s0; &]
+[s5;:Formatter`:`:typedef:%- typedef_[^String^ String]_(`*Formatter)([@(0.0.255) const][@(64) _
+][^Formatting^@(64) Formatting][@(64) `&_fmt)]&]
+[s2; Formatter has to have form of function with single [^Formatting^ Formatting] 
 argument.&]
 [s0; &]
-[s1;K:`:`:Formatting`:`:struct:%- [@(0.0.255) struct][@(64) _]Formatting&]
+[ {{10000F(128)G(128)@1 [s0; [* Formatting]]}}&]
+[s0;%- &]
+[s1;:Formatting`:`:struct:%- [@(0.0.255) struct]_[* Formatting]&]
 [s2; This structure passes all informations to format Value argument 
 to the formatter.&]
-[s0; &]
-[s5;K:`:`:Formatting`:`:language:%- [@(0.0.255) int][@(64) _]language&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Formatting`:`:language:%- [@(0.0.255) int]_[* language]&]
 [s2; Language of resulting text.&]
-[s0; &]
-[s5;K:`:`:Formatting`:`:arg:%- [^`:`:Value^ Value]_arg&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Formatting`:`:arg:%- Value_[* arg]&]
 [s2; Actual argument.&]
-[s0; &]
-[s5;K:`:`:Formatting`:`:format:%- [^`:`:String^ String]_format&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Formatting`:`:format:%- String_[* format]&]
 [s2; Formatting [*@(0.0.255) options].&]
-[s0; &]
-[s5;K:`:`:Formatting`:`:id:%- [^`:`:String^ String]_id&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Formatting`:`:id:%- String_[* id]&]
 [s2; Formatter`-id.&]
 [s0; &]
-[s0; &]
-[s5;K:`:`:RegisterFormatter`(int`,const char`*`,`:`:Formatter`):%- [@(0.0.255) void][@(64) _
-]RegisterFormatter[@(64) (][@(0.0.255) int][@(64) _][@3 type][@(64) , ][@(0.0.255) const][@(64) _
-][@(0.0.255) char][@(64) _`*][@3 id][@(64) , ][^`:`:Formatter^@(64) Formatter][@(64) _][@3 f][@(64) )
-]&]
+[ {{10000F(128)G(128)@1 [s0; [* Format registration functions]]}}&]
+[s3;%- &]
+[s5;:RegisterFormatter`(int`,const char`*`,Formatter`):%- [@(0.0.255) void]_[* RegisterFo
+rmatter]([@(0.0.255) int]_[*@3 type], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
+Formatter_[*@3 f])&]
 [s2; Registers formatter for specific Value [%-*@3 type]. If [%-*@3 type] 
 is VALUE`_V, formatter is applied to all Value types if no formatter 
 for specific type is specified.&]
-[s0; &]
-[s5;K:`:`:RegisterNumberFormatter`(const char`*`,`:`:Formatter`):%- [@(0.0.255) void][@(64) _
-]RegisterNumberFormatter[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 i
-d][@(64) , ][^`:`:Formatter^@(64) Formatter][@(64) _][@3 f][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:RegisterNumberFormatter`(const char`*`,Formatter`):%- [@(0.0.255) void]_[* RegisterN
+umberFormatter]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], Formatter_[*@3 f])&]
 [s2; Registers formatter for int, double and int64 types.&]
-[s0; &]
-[s5;K:`:`:RegisterStringFormatter`(const char`*`,`:`:Formatter`):%- [@(0.0.255) void][@(64) _
-]RegisterStringFormatter[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 i
-d][@(64) , ][^`:`:Formatter^@(64) Formatter][@(64) _][@3 f][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:RegisterStringFormatter`(const char`*`,Formatter`):%- [@(0.0.255) void]_[* RegisterS
+tringFormatter]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], Formatter_[*@3 f])&]
 [s2; Registers formatter for String and WString types.&]
-[s0; &]
-[s5;K:`:`:RegisterDateTimeFormatter`(const char`*`,`:`:Formatter`):%- [@(0.0.255) void][@(64) _
-]RegisterDateTimeFormatter[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 i
-d][@(64) , ][^`:`:Formatter^@(64) Formatter][@(64) _][@3 f][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:RegisterDateTimeFormatter`(const char`*`,Formatter`):%- [@(0.0.255) void]_[* Registe
+rDateTimeFormatter]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
+Formatter_[*@3 f])&]
 [s2; Registers formatter for Date and Time types.&]
-[s0; &]
-[s5;K:`:`:RegisterValueFormatter`(const char`*`,`:`:Formatter`):%- [@(0.0.255) void][@(64) _
-]RegisterValueFormatter[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 id
-][@(64) , ][^`:`:Formatter^@(64) Formatter][@(64) _][@3 f][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:RegisterValueFormatter`(const char`*`,Formatter`):%- [@(0.0.255) void]_[* RegisterVa
+lueFormatter]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], Formatter_[*@3 f])&]
 [s2; Registers formatter to be applied when no formatter for specific 
 type is specified.&]
+[s0; &]
 [s0; ]
