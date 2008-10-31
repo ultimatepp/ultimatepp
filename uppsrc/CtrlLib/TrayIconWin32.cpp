@@ -54,8 +54,9 @@ void TrayIcon::Notify(dword msg)
 		if(nid.icon)
 			DestroyIcon(nid.icon);
 		nid.icon = IconWin32(icon);
-		int len = min(tip.GetLength(), 60);
-		memcpy(nid.tip, tip, len);
+		String stip = ToSystemCharset(tip);
+		int len = min(stip.GetLength(), 60);
+		memcpy(nid.tip, stip, len);
 		nid.tip[len] = 0;
 		VERIFY(Shell_NotifyIcon(msg, (NOTIFYICONDATA *)&nid));
     }
@@ -68,11 +69,13 @@ void TrayIcon::Message(int type, const char *title, const char *text, int timeou
 	nid.flags = 0x10;
 	*nid.info = *nid.title = 0;
 	if(text) {
-		memcpy(nid.info, text, min((int)strlen(text), 255) + 1);
+		String h = ToSystemCharset(text);
+		memcpy(nid.info, h, min(h.GetLength(), 255) + 1);
 		nid.info[255] = 0;
 	}
 	if(title) {
-		memcpy(nid.title, title, min((int)strlen(title), 63) + 1);
+		String h = ToSystemCharset(title);
+		memcpy(nid.title, h, min(h.GetLength(), 63) + 1);
 		nid.title[63] = 0;
 	}
 	nid.infoflags = type;
