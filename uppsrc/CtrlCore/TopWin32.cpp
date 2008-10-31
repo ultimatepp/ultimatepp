@@ -246,9 +246,8 @@ TopWindow& TopWindow::TopMost(bool b, bool stay_top)
 {
 	HWND hwnd;
 	if(hwnd = GetHWND())
-	{
-		SetWindowPos(hwnd, b ? HWND_TOPMOST : (stay_top ? HWND_NOTOPMOST : HWND_BOTTOM),0,0,0,0,SWP_NOMOVE|SWP_NOSIZE );
-	}
+		SetWindowPos(hwnd, b ? HWND_TOPMOST : (stay_top ? HWND_NOTOPMOST : HWND_BOTTOM),
+		             0,0,0,0,SWP_NOMOVE|SWP_NOSIZE );
 	return ExStyle(b ? GetExStyle() | WS_EX_TOPMOST : GetExStyle() & ~WS_EX_TOPMOST);
 }
 
