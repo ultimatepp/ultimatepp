@@ -3,4 +3,5 @@
 #include "Core/init"
 #include "CtrlLib/init"
 #include "CodeEditor/init"
+#include "Sql/init"
 #endif

@@ -4,7 +4,10 @@ uses
 	CtrlLib;
 
 file
-	main.cpp;
+	main.cpp,
+	src.tpp,
+	srcimp.tpp;
 
 mainconfig
 	"" = "GUI";
+

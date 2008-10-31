@@ -1,0 +1,4 @@
+#ifndef _ArrayCtrlPaint_icpp_init_stub
+#define _ArrayCtrlPaint_icpp_init_stub
+#include "CtrlLib/init"
+#endif

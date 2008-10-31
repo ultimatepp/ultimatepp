@@ -1,7 +1,8 @@
 uses
 	Core,
 	CtrlLib,
-	CodeEditor;
+	CodeEditor,
+	Sql;
 
 file
 	test.cpp,

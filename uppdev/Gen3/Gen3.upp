@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	gen.h,
+	Gen3.cpp;
+
+mainconfig
+	"" = "";
+
