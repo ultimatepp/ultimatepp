@@ -631,22 +631,25 @@ String RealFormatter(const Formatting& f)
 
 String StringFormatter(const Formatting& f)
 {
-	String s = f.arg;
-	Buffer<char> h(max(f.maxn, s.GetLength()) + 16);
-	int n = sprintf(h, '%' + f.format + f.id, ~s);
-	return String(h, n);
-/*
 	const String& s = f.arg;
 	String fmt = '%' + f.format + f.id;
 	char h[256];
+#ifdef COMPILER_MSC
 	int n = _snprintf(h, 256, fmt, ~s);
-	if(n > 256) {
-		Buffer<char> h(n + 1);
-		n = _snprintf(h, n + 1, fmt, ~s);
-		return String(h, n);
+	if(n < 0)
+#else
+	int n = snprintf(h, 255, fmt, ~s);
+	if(n >= 254)
+#endif
+	{
+#ifdef COMPILER_MSC
+		n = _scprintf(fmt, ~s);
+#endif
+		Buffer<char> ah(n + 1);
+		sprintf(ah, fmt, ~s);
+		return String(ah, n);
 	}
 	return String(h, n);
-*/
 }
 
 String DateFormatter(const Formatting& f)
@@ -913,9 +916,14 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 			}
 			else
 			if(*s == '*') {
-				f.format.Cat(b, (int)(s - b));
-				f.format.Cat(FormatInt(*v[pos++]));
 				b = ++s;
+				int i = *v[pos++];
+				if(*s == ':' || *s == '$' || *s == '<' || *s == '>' || *s == '=')
+					n = i;
+				else {
+					f.format.Cat(b, (int)(s - b));
+					f.format.Cat(FormatInt(i));
+				}
 			}
 			else
 			if(*s == '<') {

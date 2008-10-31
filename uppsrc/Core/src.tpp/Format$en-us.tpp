@@ -380,7 +380,7 @@ for specific type is specified.&]
 [s4;%- &]
 [s5;:RegisterNumberFormatter`(const char`*`,Formatter`):%- [@(0.0.255) void]_[* RegisterN
 umberFormatter]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], Formatter_[*@3 f])&]
-[s2; Registers formatter for int, double and int64 types.&]
+[s2; Registers formatter for bool, int, double and int64 types.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:RegisterStringFormatter`(const char`*`,Formatter`):%- [@(0.0.255) void]_[* RegisterS
@@ -399,4 +399,10 @@ lueFormatter]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], Formatter_[*@3 f]
 [s2; Registers formatter to be applied when no formatter for specific 
 type is specified.&]
 [s0; &]
+[s4;%- &]
+[s5;:RegisterNullFormatter`(const char`*`,Formatter`):%- [@(0.0.255) void]_[* RegisterNul
+lFormatter]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], Formatter_[*@3 f])&]
+[s2; Registers formatter [%-*@3 id] to be applied when the Value argument 
+is Void (Value()) or ErrorValue.&]
+[s3; &]
 [s0; ]
