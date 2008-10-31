@@ -4,6 +4,8 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	DDUMP(Format("|%*=s|\n", 20, "test")); 
+	DDUMP(Format("|%*s|", 20, "test")); 
+	DDUMP(Format("|%*s|", 400, "test")); 
+	DDUMP(Format("|%*=s|", 20, "test")); 
+	DDUMP(Format("|%*=s|", 400, "test")); 
 }
-
