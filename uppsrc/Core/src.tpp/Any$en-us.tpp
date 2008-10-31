@@ -10,9 +10,8 @@ topic "Any";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s3; &]
 [s1;:Any`:`:class: [@(0.0.255) class]_[* Any]_:_[@(0.0.255) private]_[*@3 Moveable][@(0.0.255) <
-][* Any][@(0.0.255) >]_&]
+][* Any][@(0.0.255) >]&]
 [s0;%% Any is a special type of container capable of containing none 
 or single element of [/ any] type. It also provides methods for 
 querying the type stored and retrieving the content of specific 

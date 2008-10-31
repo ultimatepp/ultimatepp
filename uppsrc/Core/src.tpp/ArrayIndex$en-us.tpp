@@ -10,49 +10,31 @@ topic "ArrayIndex";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s5;K%- template_<[@(0.0.255) class][@(64) _][@4 T][@(64) , ][@(0.0.255) class][@(64) _][@4 HashFn][@(64) _
-`=_StdHash<][@4 T][@(64) >_>__][@(0.0.255) class][@(64) _]ArrayIndex[@(64) _:_][@(0.0.255) pri
-vate][@(64) _][^`:`:MoveableAndDeepCopyOption^@(64) MoveableAndDeepCopyOption][@(64) <_
-]ArrayIndex[@(64) <][@4 T][@(64) , ][@4 HashFn][@(64) _>_>, ][@(0.0.255) public][@(64) _][^`:`:AIndex^@(64) A
-Index][@(64) <][@4 T][@(64) , ][^`:`:Array^@(64) Array][@(64) <][@4 T][@(64) >, 
-][@4 HashFn][@(64) >_]&]
-[s0;~~~64; template <class [*@4 T], class [*@4 HashFn] `= StdHash<[*@4 T]> 
->&]
-[s0;3 &]
-[s5;K%- template_<[@(0.0.255) class][@(64) _][@4 T][@(64) , ][@(0.0.255) class][@(64) _][@4 HashFn][@(64) _
-`=_StdHash<][@4 T][@(64) >_>__][@(0.0.255) class][@(64) _]ArrayIndex[@(64) _:_][@(0.0.255) pri
-vate][@(64) _][^`:`:MoveableAndDeepCopyOption^@(64) MoveableAndDeepCopyOption][@(64) <_
-]ArrayIndex[@(64) <][@4 T][@(64) , ][@4 HashFn][@(64) _>_>, ][@(0.0.255) public][@(64) _][^`:`:AIndex^@(64) A
-Index][@(64) <][@4 T][@(64) , ][^`:`:Array^@(64) Array][@(64) <][@4 T][@(64) >, 
-][@4 HashFn][@(64) >_]&]
-[s0; &]
-[s0;i480;~~~.480; [*C@4 T]-|Type or base class of elements stored in 
-Array. There is no common requirement for T.&]
-[s0;i480;~~~.480; [*C@4 HashFn]-|Hashing class. Must have defined [*C unsigned 
-operator()(const T`& x)] method returning hash value for elements. 
-Defaults to[*  ][*C StdHash<T>] which requires [*C unsigned GetHashValue(const 
-T`&)][C  ]function returning hash value of elements to be defined.&]
-[s0; Base class&]
-[s0; [^topic`:`/`/Core`/src`/AIndex`$en`-us^ AIndex<T, Array<T>, HashFn>]&]
-[s0; &]
-[s0; Array flavor of index. Inherits most of its functionality from 
+[s1;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 HashFn
+]_`=_StdHash[@(0.0.255) <][*@4 T][@(0.0.255) >]_>&]
+[s1;:ArrayIndex`:`:class:%- [@(0.0.255) class]_[* ArrayIndex]_:_[@(0.0.255) private]_[*@3 Move
+ableAndDeepCopyOption][@(0.0.255) <]_[* ArrayIndex][@(0.0.255) <][*@4 T], 
+[*@4 HashFn]_>_>, [@(0.0.255) public]_[*@3 AIndex][@(0.0.255) <][*@4 T], 
+[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >], [*@4 HashFn][@(0.0.255) >]_&]
+[s8; [*@4 T]-|Type or base class of elements stored in Array. There 
+is no common requirement for T.&]
+[s8; [*@4 HashFn]-|Hashing class. Must have defined unsigned operator()(const 
+T`& x) method returning hash value for elements. Defaults to 
+StdHash<T> which requires unsigned GetHashValue(const T`&) function 
+returning hash value of elements to be defined.&]
+[s9; Array flavor of index. Inherits most of its functionality from 
 [^topic`:`/`/Core`/src`/AIndex`$en`-us^ AIndex] and adds only members 
 specific for its flavor.&]
-[s0; Like any other NTL container, ArrayIndex is a [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
+[s9; Like any other NTL container, ArrayIndex is a [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
 oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick 
-and optional deep copy] transfer semantics. Calling methods of 
-a picked ArrayIndex is logic error with the exceptions of&]
-[s0; [C+75 void ][*C+75 operator`=][C+75 (pick`_ ArrayIndex`& ][*C@3+75 v][C+75 ) 
-][/+75 (defined by composition)]&]
-[s0; [C+75 void ][*C+75 operator<<`=][C+75 (const AIndex`& ][*C@3+75 v][C+75 )][+75  
-][/+75 (defined in AIndex)]&]
-[s0; [C+75 void ][*C+75 Clear][C+75 ()]&]
-[s0; [C+75 bool ][*C+75 IsPicked][C+75 () const]&]
-[s0; Optional deep copy operator is inherited from AIndex class. 
-Pick operator is implicitly defined by composition.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Add[@(64) (][@(0.0.255) const][@(64) _T`&_][@3 x][@(64) , 
-][@(0.0.255) unsigned][@(64) _][@3 `_hash][@(64) )]&]
+and optional deep copy] transfer semantics. Optional deep copy 
+operator is inherited from AIndex class. Pick operator is implicitly 
+defined by composition.&]
+[s3;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s4;H0;%- &]
+[s5;:ArrayIndex`:`:Add`(const T`&`,unsigned`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) cons
+t]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Adds a new element with a precomputed hash value. The precomputed 
 hash value must be the same as the hash value that would be the 
 result of HashFn. The benefit of using a precomputed hash value 
@@ -64,18 +46,21 @@ forwarding) due to overloading of [* Add] in other forms.&]
 [s6; Invalidates iterators to the ArrayIndex.&]
 [s7; [*C@3 x]-|Element to add.&]
 [s7; [*C@3 `_hash]-|Precomputed hash value.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Add[@(64) (][@(0.0.255) const][@(64) _T`&_][@3 x][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:Add`(const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 x])&]
 [s2; Adds a new element to Index. This method has to be reimplemented 
 in ArrayIndex (using simple forwarding) due to overloading of 
 [* Add] in other forms.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to the ArrayIndex.&]
 [s7; [*C@3 x]-|Element to add.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Set[@(64) (][@(0.0.255) int][@(64) _][@3 i][@(64) , 
-][@(0.0.255) const][@(64) _T`&_][@3 x][@(64) , ][@(0.0.255) unsigned][@(64) _][@3 `_hash][@(64) )
-]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:Set`(int`,const T`&`,unsigned`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) i
+nt]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_ha
+sh])&]
 [s2; Replaces the element at the specified position with a new element 
 with the specified value, using a precomputed hash`-value. Speed 
 of this operation depends on the total number of elements with 
@@ -87,9 +72,10 @@ due to overloading of [* Set] in other forms.&]
 [s7; [*C@3 i]-|Position of element.&]
 [s7; [*C@3 x]-|Value to set.&]
 [s7; [*C@3 `_hash]-|Precomputed hash value.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Set[@(64) (][@(0.0.255) int][@(64) _][@3 i][@(64) , 
-][@(0.0.255) const][@(64) _T`&_][@3 x][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:Set`(int`,const T`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i
+], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Replaces element at specified position with new element with 
 specified value. Speed of this operation depends on the total 
 number of elements with the same value as the specified one in 
@@ -100,9 +86,10 @@ forms.&]
 [s6; Invalidates iterators to the ArrayIndex.&]
 [s7; [*C@3 i]-|Position of element.&]
 [s7; [*C@3 x]-|Value to set.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Add[@(64) (][@4 T][@(64) _`*][@3 newt][@(64) , 
-][@(0.0.255) unsigned][@(64) _][@3 `_hash][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:Add`(T`*`,unsigned`):%- [@(0.0.255) void]_[* Add]([*@4 T]_`*[*@3 newt], 
+[@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Adds a new element created on the heap to the ArrayIndex using 
 a precomputed hash value. The element is specified by a pointer 
 to the object. ArrayIndex takes over ownership of the pointed 
@@ -110,8 +97,9 @@ element. This variant allows the use of an ArrayIndex as a polymorphic
 container, because the type of the added element can be either 
 T or a type derived from T. No constructor is applied. &]
 [s7; [*C@3 newt]-|Element created on the heap.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Add[@(64) (][@4 T][@(64) _`*][@3 newt][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:Add`(T`*`):%- [@(0.0.255) void]_[* Add]([*@4 T]_`*[*@3 newt])&]
 [s2; Adds a new element to the ArrayIndex. The element is specified 
 by a pointer to the object. ArrayIndex takes over ownership of 
 the pointed element. This variant allows the use of an ArrayIndex 
@@ -119,55 +107,63 @@ as a polymorphic container, because the type of the added element
 can be either T or a type derived from T. No constructor is applied. 
 &]
 [s7; [*C@3 newt]-|Object to be added.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Set[@(64) (][@(0.0.255) int][@(64) _][@3 i][@(64) , 
-][@4 T][@(64) _`*][@3 newt][@(64) , ][@(0.0.255) unsigned][@(64) _][@3 `_hash][@(64) )]&]
-[s2; &]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:Set`(int`,T`*`,unsigned`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_
+[*@3 i], [*@4 T]_`*[*@3 newt], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s7; [*C@3 i]-|Position.&]
 [s7; [*C@3 newt]-|New element created on heap.&]
 [s7; [*C@3 `_hash]-|Hash value&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Set[@(64) (][@(0.0.255) int][@(64) _][@3 i][@(64) , 
-][@4 T][@(64) _`*][@3 newt][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:Set`(int`,T`*`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i], 
+[*@4 T]_`*[*@3 newt])&]
 [s2; Replaces the element at the specified position by an element 
 previously created on the heap. ArrayIndex takes over ownership 
 of the element.&]
-[s0; &]
 [s7; [*C@3 i]-|Position.&]
 [s7; [*C@3 newt]-|New element created on heap.&]
 [s7; [*/ Return value]-|&]
-[s0;3 &]
-[s0;:`:`:ArrayIndex`:`:ArrayIndex`(`): [* ArrayIndex]()&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:ArrayIndex`(`):%- [* ArrayIndex]()&]
 [s2; Constructor. Constructs an empty ArrayIndex.&]
-[s0;3 &]
-[s0;:`:`:ArrayIndex`:`:ArrayIndex`(pick`_`:`:ArrayIndex`&`): [* ArrayIndex](pick`_ 
-[* ArrayIndex]`& [*@3 s])&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:ArrayIndex`(pick`_ ArrayIndex`&`):%- [* ArrayIndex]([@(0.128.128) pick
+`_]_[* ArrayIndex][@(0.0.255) `&]_[*@3 s])&]
 [s2; Pick constructor. Transfers source Index in low constant time, 
 but destroys it by picking.&]
 [s7; [*C@3 s]-|Source ArrayIndex.&]
-[s0;3 &]
-[s0;:`:`:ArrayIndex`:`:ArrayIndex`(const`:`:ArrayIndex`&`,int`): [* ArrayIndex](const 
-[* ArrayIndex]`& [*@3 s], int)&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:ArrayIndex`(const ArrayIndex`&`,int`):%- [* ArrayIndex]([@(0.0.255) co
+nst]_[* ArrayIndex][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
 constructor.&]
 [s7; [*C@3 s]-|Source ArrayIndex.&]
-[s0;3 &]
-[s0;:`:`:ArrayIndex`:`:ArrayIndex`(pick`_`:`:Array`<T`>`&`): [* ArrayIndex](pick`_ 
-[* Array]<T>`& [*@3 s])&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:ArrayIndex`(pick`_ Array`<T`>`&`):%- [* ArrayIndex]([@(0.128.128) pick
+`_]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s])&]
 [s2; Pick`-constructs ArrayIndex from an Array. Transfers source 
 container in low constant time, but destroys it by picking.&]
 [s7; [*C@3 s]-|Source Array.&]
-[s0;3 &]
-[s0;:`:`:ArrayIndex`:`:ArrayIndex`(const`:`:Array`<T`>`&`,int`): [* ArrayIndex](const 
-[* Array]<T>`& [*@3 s], int)&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:ArrayIndex`(const Array`<T`>`&`,int`):%- [* ArrayIndex]([@(0.0.255) co
+nst]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Deep`-copy constructs ArrayIndex from Array.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
 constructor.&]
 [s7; [*C@3 s]-|Source Vector.&]
-[s0;3 &]
-[s5;K%- [^`:`:ArrayIndex^ ArrayIndex]`&_operator`=[@(64) (pick`__][^`:`:Array^@(64) Array][@(64) <
-][^T^@(64) T][@(64) >`&_][@3 x][@(64) )]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayIndex`:`:operator`=`(pick`_ Array`<T`>`&`):%- [_^ArrayIndex^ ArrayIndex][@(0.0.255) `&
+]_[* operator`=]([@(0.128.128) pick`_]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_
+[*@3 x])&]
 [s2; Pick operator. Transfers source Array to the ArrayIndex, but 
 destroys it by picking.&]
-[s0; [*C@3 x]-|Source Array.]
+[s7; [*C@3 x]-|Source Array.&]
+[s0; ]
