@@ -6,13 +6,13 @@ NAMESPACE_UPP
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Static members initialization
-int GLCtrl::Instances = 0;
-int GLCtrl::ContextActivated = 0;
+int GLCtrl::GLPane::Instances = 0;
+int GLCtrl::GLPane::ContextActivated = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Constructor
-GLCtrl::GLCtrl( int depthsize, int stencilsize, bool doublebuffer,
-				bool multisamplebuffering, int numberofsamples )
+GLCtrl::GLPane::GLPane(int depthsize, int stencilsize, bool doublebuffer,
+                       bool multisamplebuffering, int numberofsamples )
 {
 	// Sets the current instance number and updates total instances
 	InstanceNum = ++Instances;
@@ -23,11 +23,11 @@ GLCtrl::GLCtrl( int depthsize, int stencilsize, bool doublebuffer,
 	StencilSize      = stencilsize;
 	DoubleBuffering  = doublebuffer;
 	NumberOfSamples  = numberofsamples;
-} // END Constructor class GLCtrl
+} // END Constructor class GLCtrl::GLPane
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Destructor
-GLCtrl::~GLCtrl()
+GLCtrl::GLPane::~GLPane()
 {
 	// If glx context is still there, destroy it
 	// That can happen on unclean exit
@@ -36,11 +36,11 @@ GLCtrl::~GLCtrl()
 		glXDestroyContext( (Display *)Xdisplay, WindowContext );
 		WindowContext = NULL;
 	}
-} // END Destructor class GLCtrl
+} // END Destructor class GLCtrl::GLPane
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Ovverridden method to choose the correct visual
-XVisualInfo *GLCtrl::CreateVisual(void)
+XVisualInfo *GLCtrl::GLPane::CreateVisual(void)
 {
 	Vector<int> visual;
 	visual << GLX_RGBA << GLX_DEPTH_SIZE << DepthSize;
@@ -65,15 +65,15 @@ XVisualInfo *GLCtrl::CreateVisual(void)
 	if( visualInfo == NULL )
 	{
 		SetError(true);
-		SetErrorMessage("GLCtrl : Impossible to find a suitable visual.");
+		SetErrorMessage("GLCtrl::GLPane : Impossible to find a suitable visual.");
 	}
 	
 	return visualInfo;
-} // END GLCtrl::CreateVisual()
+} // END GLCtrl::GLPane::CreateVisual()
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Overridden method for attribute setting
-void GLCtrl::SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &winAttributes)
+void GLCtrl::GLPane::SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &winAttributes)
 {
 	ValueMask |=
 		CWBorderPixel
@@ -83,12 +83,12 @@ void GLCtrl::SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &winAt
 	winAttributes.border_pixel = 0;
 	winAttributes.event_mask   = ExposureMask;
 	winAttributes.save_under   = XFalse;
-} // END GLCtrl::SetAttributes()
+} // END GLCtrl::GLPane::SetAttributes()
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Activates current OpenGL context
-void GLCtrl::ActivateContext()
+void GLCtrl::GLPane::ActivateContext()
 {
 	if( Instances > 0 && ContextActivated != InstanceNum )
 	{
@@ -99,7 +99,7 @@ void GLCtrl::ActivateContext()
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Overridden method to create OpenGL context
-void GLCtrl::AfterInit(bool Error)
+void GLCtrl::GLPane::AfterInit(bool Error)
 {
 	// Gets the activw XVisualInfo
 	XVisualInfo visualInfo = GetVisualInfo();
@@ -115,7 +115,7 @@ void GLCtrl::AfterInit(bool Error)
 
 	if( WindowContext == NULL )
 	{
-		SetErrorMessage("GLCtrl : Error creating GLX context.");
+		SetErrorMessage("GLCtrl::GLPane : Error creating GLX context.");
 		SetError(true);
 	}
 	
@@ -123,69 +123,78 @@ void GLCtrl::AfterInit(bool Error)
 	glXMakeCurrent( (Display*)Xdisplay, GetWindow(), WindowContext );
 	
 	// Call user init function
-	GLInit();
+	ctrl->GLInit();
 
 	// Calls resize and paint functions
-	GLResize( GetSize().cx, GetSize().cy );
-	GLPaint();
-} // END GLCtrl::AfterInit()
+	ctrl->GLResize( GetSize().cx, GetSize().cy );
+	ctrl->GLPaint();
+} // END GLCtrl::GLPane::AfterInit()
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Overridden method to destroy OpenGL context
-void GLCtrl::BeforeTerminate(void)
+void GLCtrl::GLPane::BeforeTerminate(void)
 {
 	// Calls user terminate function
-	GLDone();
+	ctrl->GLDone();
 	
 	// Resets context and destroys it
 	glXMakeCurrent( (Display*)Xdisplay, None, NULL );
 	glXDestroyContext( (Display *)Xdisplay, WindowContext );
 	WindowContext = NULL;
-} // END GLCtrl::BeforeTerminate()
+} // END GLCtrl::GLPane::BeforeTerminate()
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Overridden method to resize GL windows
-void GLCtrl::Resize(int x, int y)
+void GLCtrl::GLPane::Resize(int x, int y)
 {
 	// Activates the current context
 	ActivateContext();
 	
 	// Calls user resize hook
-	GLResize(x, y);
-} // END GLCtrl::Resize()
+	ctrl->GLResize(x, y);
+} // END GLCtrl::GLPane::Resize()
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Internal OpenGL Paint method
-void GLCtrl::doPaint(void)
+void GLCtrl::GLPane::doPaint(void)
 {
 	// Activates the current context
 	ActivateContext();
 
 	// Calls user paint hook
-	GLPaint();
+	ctrl->GLPaint();
 
 	// Swap buffers or flush as needed
 	if( DoubleBuffering )
 		glXSwapBuffers( (Display*)Xdisplay, GetWindow() ); // Buffer swap does implicit glFlush
 	else
 		glFlush();
-} // END GLCtrl::doPaint()
+} // END GLCtrl::GLPane::doPaint()
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Paint method - with graphic context
-void GLCtrl::Paint(Draw &draw)
+void GLCtrl::GLPane::Paint(Draw &draw)
 {
 	// Calls internal OpenGL Paint method
 	doPaint();
-} // END GLCtrl::Paint()
+} // END GLCtrl::GLPane::Paint()
 
-Vector<int> GLCtrl::Pick(int x, int y)
+Vector<int> GLCtrl::GLPane::Pick(int x, int y)
 {
 	ActivateContext();
 	
-	Vector<int> result = _picking.Pick(x, y, THISBACK2(GLResize, GetSize().cx, GetSize().cy), THISBACK(GLPickingPaint));
+	Vector<int> result = _picking.Pick(x, y,
+	                                  callback2(ctrl, &GLCtrl::GLResize, GetSize().cx, GetSize().cy), 
+	                                  callback(ctrl, &GLCtrl::GLPickingPaint));
 	
 	return result;
+}
+
+GLCtrl::GLCtrl(int depthsize, int stencilsize, bool doublebuffer, bool multisamplebuffering, int numberofsamples)
+:	pane(depthsize, stencilsize, doublebuffer, multisamplebuffering, numberofsamples)
+{
+	pane.ctrl = this;
+	Add(pane.SizePos());
 }
 
 #endif

@@ -13,52 +13,74 @@ NAMESPACE_UPP
 
 #include <GL/glx.h>
 
-class GLCtrl : public DHCtrl
-{
-private:
-	GlPicking _picking;
+class GLCtrl : public ParentCtrl {
+	class GLPane : public DHCtrl {
+		friend class GLCtrl;
+	
+		GLCtrl    *ctrl;
+		GlPicking _picking;
+	
+		// OpenGL Context
+		GLXContext WindowContext;
+	
+		// Number of instances
+		static int Instances;
+		
+		// Current instance number
+		int InstanceNum;
+		
+		// OpenGL parameters
+		int DepthSize;
+		int StencilSize;
+		int NumberOfSamples;
+		bool DoubleBuffering;
+		bool MultiSampleBuffering;
+		
+		// Currently activated context number
+		static int ContextActivated;
+	
+		// Activates current OpenGL context
+		void ActivateContext();
+		
+		// Ovverridden method to choose the correct visual
+		virtual XVisualInfo *CreateVisual(void);
+		
+		// Overridden method for attribute setting
+		virtual void SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &attr);
+		
+		// Overridden method to create and destroy OpenGL context
+		virtual void AfterInit(bool Error);
+		virtual void BeforeTerminate(void);
+		
+		// Overridden method to resize GL windows
+		virtual void Resize(int w, int h);
+	
+		// Internal OpenGL Paint method
+		void doPaint(void);
+	
+		// Paint method - with graphic context
+		// Called from DHCtrl - Graphic context is *not* used
+		virtual void Paint(Draw &/*draw*/);
+		
+	public:
+	
+		typedef GLCtrl CLASSNAME;
+	
+		// Constructor class GLCtrl
+		GLPane(	int		depthsize            = 24, 
+	    		int		stencilsize          = 0, 
+	    		bool	doublebuffer         = true, 
+				bool	multisamplebuffering = false, 
+				int		numberofsamples      = 0 );
+	
+		// Destructor class GLCtrl
+		~GLPane();
+		
+		void InitPickMatrix() { _picking.InitPickMatrix(); }
+		Vector<int> Pick(int x, int y);
+	}; // END Class GLCtrl
 
-	// OpenGL Context
-	GLXContext WindowContext;
-
-	// Number of instances
-	static int Instances;
-	
-	// Current instance number
-	int InstanceNum;
-	
-	// OpenGL parameters
-	int DepthSize;
-	int StencilSize;
-	int NumberOfSamples;
-	bool DoubleBuffering;
-	bool MultiSampleBuffering;
-	
-	// Currently activated context number
-	static int ContextActivated;
-
-	// Activates current OpenGL context
-	void ActivateContext();
-	
-	// Ovverridden method to choose the correct visual
-	virtual XVisualInfo *CreateVisual(void);
-	
-	// Overridden method for attribute setting
-	virtual void SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &attr);
-	
-	// Overridden method to create and destroy OpenGL context
-	virtual void AfterInit(bool Error);
-	virtual void BeforeTerminate(void);
-	
-	// Overridden method to resize GL windows
-	virtual void Resize(int w, int h);
-
-	// Internal OpenGL Paint method
-	void doPaint(void);
-
-	// Paint method - with graphic context
-	// Called from DHCtrl - Graphic context is *not* used
-	virtual void Paint(Draw &/*draw*/);
+	GLPane pane;
 	
 protected:
 
@@ -77,26 +99,14 @@ protected:
 	virtual void GLPaint() {}
 	virtual void GLPickingPaint() {}
 
-public:
-
-	typedef GLCtrl CLASSNAME;
-
-	// Constructor class GLCtrl
-	GLCtrl(	int		depthsize            = 24, 
-    		int		stencilsize          = 0, 
-    		bool	doublebuffer         = true, 
-			bool	multisamplebuffering = false, 
-			int		numberofsamples      = 0 );
-
-	// Destructor class GLCtrl
-	~GLCtrl();
-	
-	// Initializes OpenGL context to a standard view
 	void StdView();
 
-	void InitPickMatrix() { _picking.InitPickMatrix(); }
-	Vector<int> Pick(int x, int y);
-}; // END Class GLCtrl
+	void InitPickMatrix()          { pane.InitPickMatrix(); }
+	Vector<int> Pick(int x, int y) { return pane.Pick(x, y); }
+	
+	GLCtrl(int  depthsize = 24, int  stencilsize = 0, bool doublebuffer = true,
+	       bool multisamplebuffering = false, int  numberofsamples = 0);
+};
 
 #else
 
