@@ -30,7 +30,7 @@ and [* SegtorMap].&]
 oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick 
 and optional deep copy] transfer semantics, although these features 
 are more important in derived concrete index flavors.&]
-[s0; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
 [s5;:AMap`:`:Add`(const K`&`,const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 K

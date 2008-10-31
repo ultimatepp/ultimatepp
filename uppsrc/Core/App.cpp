@@ -354,16 +354,8 @@ void    LaunchWebBrowser(const String& url)
 
 String GetDataFile(const char *filename)
 {
-	String s = Environment().Get("UPP_MAIN__",
-#ifdef PLATFORM_WIN32
-	                             GetFileFolder(GetExeFilePath())
-#endif
-#ifdef PLATFORM_POSIX
-	                             GetHomeDirectory()
-#endif
-	);
-
-	return AppendFileName(s, filename);
+	String s = GetEnv("UPP_MAIN__");
+	return s.GetCount() ? AppendFileName(s, filename) : GetExeDirFile(filename);
 }
 
 String GetComputerName()

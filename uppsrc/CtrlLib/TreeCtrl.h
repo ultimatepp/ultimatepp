@@ -176,7 +176,7 @@ public:
 
 	void   SetRoot(const Node& n);
 	void   SetRoot(const Image& img, Value v);
-	void   SetRoot(const Image& img, Value v, Value t);
+	void   SetRoot(const Image& img, Value key, Value text);
 	void   SetRoot(const Image& img, Ctrl& ctrl, int cx = 0, int cy = 0);
 	int    Insert(int parentid, int i, const Node& n);
 	int    Insert(int parentid, int i);
@@ -196,7 +196,7 @@ public:
 
 	int    GetChildCount(int id) const                         { return item[id].child.GetCount(); }
 	int    GetChild(int id, int i) const                       { return item[id].child[i]; }
-	int    GetChildIndex(int id, int childid) const;
+	int    GetChildIndex(int parentid, int childid) const;
 	int    GetParent(int id) const                             { return item[id].parent; }
 
 	Value  Get(int id) const;

@@ -196,7 +196,6 @@ inline void AssertMoveable0(T *t) { AssertMoveablePtr(&**t, *t); }
 template <class T, class B = EmptyClass>
 struct Moveable : public B {
 	friend void AssertMoveable0(T *) {}
-//	void operator=(const Moveable& b) { B::operator = (b); } // MSC 6.0 empty base class bug fix
 };
 
 template <class T>
@@ -240,21 +239,16 @@ public:
 	{ ::new (dest) T(src, 0); }
 	friend T *DeepCopyNew(const T& src)
 	{ return ::new T(src, 0); }
-//	void operator=(const DeepCopyOption& b) { B::operator = (b); } // MSC 6.0 empty base class bug fix
 };
 
 template <class T, class B = EmptyClass>
-class MoveableAndDeepCopyOption : public Moveable< T, DeepCopyOption<T, B> > {
-public:
-//	void operator=(const MoveableAndDeepCopyOption& b) { B::operator = (b); } // MSC 6.0 empty base class bug fix
-};
+class MoveableAndDeepCopyOption : public Moveable< T, DeepCopyOption<T, B> > {};
 
 template <class T, class B = EmptyClass>
 class PolyDeepCopyNew : public B
 {
 public:
 	friend T *DeepCopyNew(const T& t)              { return t.Copy(); }
-//	void operator=(const PolyDeepCopyNew& b)       { B::operator = (b); } // MSC 6.0 empty base class bug fix
 };
 
 template <class T>
