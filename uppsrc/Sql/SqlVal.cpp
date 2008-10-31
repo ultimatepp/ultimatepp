@@ -12,6 +12,11 @@ SqlCol SqlId::Of(SqlId id) const
 	return id.IsNull() ? ToString() : id.ToString() + '.' + ToString();
 }
 
+SqlId SqlId::operator[](const SqlId& id) const
+{
+	return id.IsNull() ? ToString() : ToString() + '.' + id.ToString();
+}
+
 SqlId SqlId::As(const char *as) const
 {
 	return id.IsNull() ? ToString() : ToString() + SqlCase(MSSQL | PGSQL, " as ")(" ") + as;
