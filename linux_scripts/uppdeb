@@ -174,28 +174,6 @@ mkdir $tmp/usr/share/doc/$packagename
 mkdir $tmp/usr/share/pixmaps
 mkdir $tmp/usr/share/$packagename
 
-#creates GCC.bm file
-cat > $tmp/usr/share/$packagename/GCC.bm << EOF
-BUILDER = "GCC";
-COMPILER = "g++-4.1";
-DEBUG_INFO = "2";
-DEBUG_BLITZ = "1";
-DEBUG_LINKMODE = "1";
-DEBUG_OPTIONS = "-O0";
-RELEASE_BLITZ = "0";
-RELEASE_LINKMODE = "1";
-RELEASE_OPTIONS = "-O3 -ffunction-sections";
-RELEASE_SIZE_OPTIONS = "-Os -finline-limit=20";
-DEBUGGER = "gdb";
-PATH = "";
-INCLUDE = "/usr/include/freetype2;/usr/include/gtk-2.0;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/lib/gtk-2.0/include;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/atk-1.0";
-LIB = "/usr/X11R6/lib";
-REMOTE_HOST = "";
-REMOTE_OS = "";
-REMOTE_TRANSFER = "";
-REMOTE_MAP = "";
-EOF
-
 #creates theide.png file (actually, $base.png)
 shopt -s xpg_echo
 echo "\
@@ -402,7 +380,7 @@ Priority: optional
 EOF
 echo "Architecture: $architecture" >> $tmp/DEBIAN/control
 cat >> $tmp/DEBIAN/control << EOF
-Depends: gcc-4.1, g++-4.1, libc6-dev (>= 2.3.6), libstdc++6-4.1-dev (>= 3.4.6), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), zlib1g-dev (>= 1.2.3), libpng12-dev (>= 1.2.8), libfontconfig1-dev (>= 2.3.2), libxrender-dev (>= 0.9.0), libfreetype6-dev (>= 2.1.10), libexpat1-dev (>= 1.95.8), libxau-dev (>= 1.0.0), libxdmcp-dev (>= 1.0.0), libgtk2.0-dev (>= 2.8.17), libglib2.0-dev (>= 2.10.2)
+Depends: gcc-4.1 | gcc (>= 4.3), g++-4.1 | g++ (>= 4.3), libc6-dev (>= 2.3.6), libstdc++6-4.1-dev (>= 3.4.6) | libstdc++6-4.3-dev , libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), zlib1g-dev (>= 1.2.3), libpng12-dev (>= 1.2.8), libfontconfig1-dev (>= 2.3.2), libxrender-dev (>= 0.9.0), libfreetype6-dev (>= 2.1.10), libexpat1-dev (>= 1.95.8), libxau-dev (>= 1.0.0), libxdmcp-dev (>= 1.0.0), libgtk2.0-dev (>= 2.8.17), libglib2.0-dev (>= 2.10.2)
 EOF
 echo "Installed-Size: $size" >> $tmp/DEBIAN/control 
 echo "Maintainer: $MAINTAINER <$EMAIL>" >> $tmp/DEBIAN/control 
@@ -414,6 +392,58 @@ Description: C++ library for cross-platform development with IDE
  U++ libraries enable genuine productivity gains with shorter development
  times and greatly reduced application source code size.
 EOF
+
+cat > $tmp/DEBIAN/postinst << _EOF_
+#!/bin/bash
+
+cver=
+sver=9
+	until [ \$sver -lt 0 ]; do
+    	if [ \$(which g++-4.\$sver) ]; then
+    		if [ \$sver = 2 ]; then # buggy compiler
+    			sver=\$((sver - 1))
+    			continue
+    		fi
+    		cver="4.\$sver"
+    		#creates GCC.bm file
+			cat > /usr/share/$packagename/GCC.bm <<- EOF
+				BUILDER = "GCC";
+				COMPILER = "g++-\$cver";
+				DEBUG_INFO = "2";
+				DEBUG_BLITZ = "1";
+				DEBUG_LINKMODE = "1";
+				DEBUG_OPTIONS = "-O0";
+				RELEASE_BLITZ = "0";
+				RELEASE_LINKMODE = "1";
+				RELEASE_OPTIONS = "-O3 -ffunction-sections";
+				RELEASE_SIZE_OPTIONS = "-Os -finline-limit=20";
+				DEBUGGER = "gdb";
+				PATH = "";
+				INCLUDE = "/usr/include/freetype2;/usr/include/gtk-2.0;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/lib/gtk-2.0/include;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/atk-1.0";
+				LIB = "/usr/X11R6/lib";
+				REMOTE_HOST = "";
+				REMOTE_OS = "";
+				REMOTE_TRANSFER = "";
+				REMOTE_MAP = "";
+			EOF
+			chown \$USER:\$(id -g \$USER) /usr/share/$packagename/GCC.bm
+			chmod 644 /usr/share/$packagename/GCC.bm
+			break
+    	fi
+    	sver=\$((sver - 1))
+	done
+
+_EOF_
+
+chmod 0775 $tmp/DEBIAN/postinst
+
+cat > $tmp/DEBIAN/prerm << _EOF_
+#!/bin/bash
+# remove GCC*.bm files
+rm /usr/share/$packagename/GCC*.bm
+_EOF_
+
+chmod 0775 $tmp/DEBIAN/prerm
 
 #creates final .deb package
 dpkg-deb -b $tmp $dst
