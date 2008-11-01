@@ -39,6 +39,20 @@ TestSignals::TestSignals()
 
 GUI_APP_MAIN
 {
+	// first checks if another app instance is running
+	if(Signals().IsOtherInstanceRunning())
+	{
+		// sends to other instance a SIGHUP signal
+		Signals().Send(SIGHUP);
+		
+		// prompt and exit
+		PromptOK("Another app instance is already running!!!");
+		return;
+	}
+	
+	// ok, no other instance, signals this one
+	Signals().StoreInstance();
+	
+	// runs the application
 	TestSignals().Run();
 }
-
