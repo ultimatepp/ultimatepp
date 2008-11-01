@@ -1,0 +1,5 @@
+LAYOUT(TestSignalsLayout, 432, 256)
+	ITEM(DocEdit, InfoEdit, WantFocus(false).SetEditable(false).LeftPosZ(8, 416).TopPosZ(56, 188))
+	ITEM(Label, UsageLabel, LeftPosZ(8, 412).TopPosZ(16, 23))
+END_LAYOUT
+

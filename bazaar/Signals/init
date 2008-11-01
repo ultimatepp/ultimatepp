@@ -1,0 +1,4 @@
+#ifndef _Signals_icpp_init_stub
+#define _Signals_icpp_init_stub
+#include "CtrlCore/init"
+#endif
