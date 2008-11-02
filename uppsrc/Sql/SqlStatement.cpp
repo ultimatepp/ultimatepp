@@ -190,11 +190,16 @@ void SqlInsert::Column(SqlId column, SqlVal val) {
 }
 
 SqlInsert::operator SqlStatement() const {
-	String s = "insert into " + ~table + set1();
-	if(from.IsEmpty())
-		s << " values " << set2();
-	else
-		s << ' ' + SqlStatement(Select(set2).From(from).Where(where)).GetText();
+	String s = "insert into " + ~table;
+	if(!set1.IsEmpty()) {
+		s << set1();
+		if(from.IsEmpty()) {
+			if(!set2.IsEmpty())
+				s << " values " << set2();
+		}
+		else
+			s << ' ' + SqlStatement(Select(set2).From(from).Where(where)).GetText();
+	}
 	return SqlStatement(s);
 }
 
