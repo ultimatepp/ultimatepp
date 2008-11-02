@@ -1,0 +1,25 @@
+description "Pdf printer frontend";
+
+uses
+	CtrlLib,
+	SysExec,
+	Signals;
+
+library
+	cups;
+
+file
+	maxpdf_frontend.lay,
+	maxpdf_frontend.iml,
+	PdfPaths.h,
+	PdfPaths.cpp,
+	maxpdf_frontend.h,
+	maxpdf_frontend.cpp,
+	Others readonly separator,
+	INSTALL,
+	maxpdf,
+	maxpdf.ppd;
+
+mainconfig
+	"" = "GUI";
+

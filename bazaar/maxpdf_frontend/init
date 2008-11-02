@@ -1,0 +1,6 @@
+#ifndef _maxpdf_frontend_icpp_init_stub
+#define _maxpdf_frontend_icpp_init_stub
+#include "CtrlLib/init"
+#include "SysExec/init"
+#include "Signals/init"
+#endif

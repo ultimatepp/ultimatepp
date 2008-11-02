@@ -1,0 +1,116 @@
+#!/bin/bash
+#
+# Copyright (C) 2008 Massimo Del Fedele <max@veneto.com>
+#
+#   This program is free software; you can redistribute it and/or modify it
+#   under the terms of the GNU General Public License as published by the Free
+#   Software Foundation; either version 2 of the License, or (at your option)
+#   any later version.
+#
+#   This program is distributed in the hope that it will be useful, but
+#   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+#   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#   for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# Based on previous works of following authors :
+#
+# Copyright (C) 2001-2002 Sebastiano Vigna <vigna@acm.org>
+# Modified by Michael Goffioul <goffioul@imec.be>
+# Modified by Arnold Moene <a.f.moene@eduphys.xs4all.nl>
+# Additional fixes by Kevin Ivory <Ivory@SerNet.de>
+# Derived from fax4CUPS 1.22, a fax backend for CUPS, to use X app to 
+# pick up fax info by Glenn Burkhardt <gbburkhardt@verizon.net>
+
+export PATH=$PATH:/usr/local/bin
+prefix=/usr
+exec_prefix=${prefix}
+bindir=${exec_prefix}/bin
+PDFGUI=$bindir/maxpdf_frontend
+
+# Called with no arguments, we list the provided maxpdf backend 
+# (serial devices are irrelevant here).
+if [ $# -eq 0 ]; then
+    for i in faxstat $PDFGUI $MESSAGEBOX ; do 
+        which $i >& /dev/null
+	if [ $? != 0 ]; then
+	    echo "ERROR: can't find MaxPdf program $i" 1>&2
+	    exit 1; 
+	fi
+    done
+    echo "direct maxpdf:/local \"Unknown\" \"MaxPdf printer\""
+    exit 0
+fi
+
+# Check that 'sudo' can be executed by whatever account CUPS uses to run
+SM=`sudo -l`
+if [ $? != 0 ]; then
+    UIDMSG=`id`
+    echo "ERROR: CUPS runs under '$UIDMSG'; can't run 'sudo': $SM" 1>&2
+    exit 1
+fi
+
+# Get the user that owns the job
+USER=$2
+
+echo 1>&2 # Apparently the first character emitted is somehow "eaten" by the reader
+
+# Check for correct display variable to use.  Most systems use :0.0; 
+unset XAUTHORITY
+disp=`sudo -H -u $USER xauth list :0`
+if [ "$disp" = "" ] ; then
+    disp=`sudo -H -u $USER xauth list | awk 'match($0, /(unix)(:[0-9][0-9]*)/, dn) { print dn[2]; exit }'`
+    # check result
+    export DISPLAY=$disp
+else
+    export DISPLAY=:0
+fi
+
+# If we find six arguments, the last one is the pdf name; otherwise,
+# we're reading the fax data from stdin.
+# we copy the file in tmp directory, so everybody can access it
+PDFNAME=$(mktemp </dev/null /tmp/pdf.XXXXXX) || (echo "ERROR: Failed to create temporary file" 1>&2; exit 1)
+if [ $# -eq 6 ]; then
+	# copy over file from spool directory
+	cp $6 $PDFNAME
+else
+	# copy from stdin
+	cat > $PDFNAME
+fi
+
+# changes owner of temporary file so we can remove it from gui app
+# this is needed because this shell can terminate before gui app
+# finishes processing the file, so we can't remove it from here
+# This is the only sudo root access to the system, it can be safely
+# removed, but then spool files will stay in tmp directory until reboot
+chmod ugo+rw $PDFNAME
+sudo chown $USER:$USER $PDFNAME
+
+# Checks for the gui part of driver
+which $PDFGUI >& /dev/null
+if [ $? != 0 ]; then
+ 	echo "ERROR: can't find '$PDFGUI' program; check execution search path" 1>&2
+	exit 1
+fi
+
+# Use sudo to make sure that job is owned by the user that wants to "print",
+# not root. This is needed so that the owner of the job can remove it if 
+# needed.
+# Some systems have /etc/sudoers configured with "Default env_reset", which
+# causes the DISPLAY environment variable to be thrown away.  So we tell
+# 'sudo' to invoke a shell, and make sure the DISPLAY variable is set.
+# We use -b sudo option to run the command in background and detached from
+# this shell, so it can stay opened for more print cycles.
+# Doing so, we can't check the gui return value, so we assume it's ok
+# We add the PRINTER parameted to allow gui part of application to control
+# the print job, and to remove when it's completed; I didn't find any other
+# reliable way to empty printer queue AND leave gui part opened
+#                                      CUPS ARGUMENTS :  job user  title copies  options  faxfile  printer
+sudo -b -H -u $USER /bin/sh -c "DISPLAY=$DISPLAY $PDFGUI  $1  $2   \"$3\"   $4    \"$5\" $PDFNAME $PRINTER"
+
+# exit signaling all ok to cups subsystem
+exit 0
+

@@ -1,0 +1,7 @@
+LAYOUT(MainWindowLayout, 376, 252)
+	ITEM(ColumnList, DocumentList, HSizePosZ(8, 8).VSizePosZ(36, 36))
+	ITEM(Button, CreateButton, SetLabel(t_("Crea PDF")).LeftPosZ(8, 80).BottomPosZ(6, 22))
+	ITEM(Button, CancelButton, SetLabel(t_("Annulla")).RightPosZ(8, 80).BottomPosZ(6, 22))
+	ITEM(Label, dv___3, SetLabel(t_("Documenti da unire :")).LeftPosZ(8, 108).TopPosZ(8, 23))
+END_LAYOUT
+
