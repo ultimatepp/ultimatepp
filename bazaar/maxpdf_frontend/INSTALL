@@ -4,14 +4,25 @@ SETUP INSTRUCTIONS FOR maxpdf CUPS DRIVER
 
 2) Copy the executable 'maxpdf_frontend' in your bin folder /usr/bin
 	Check that it has executable permission for all
+	
+	go in UPP output folder and issue :
+		sudo copy maxpdf_frontend /usr/bin
+		sudo chmod +x /usr/bin/maxpdf_frontend
 
 3) Copy the shell script 'maxpdf' to cups backend folder
 	(usually /usr/lib/cups/backend); make it executable for all
 	If your bin path is NOT /usr/bin you should edit it accordingly;
 	the paths are in first lines after copyright notice.
 	
+	go in to project folder (MyApps/maxpdf_frontend) and issue :
+		sudo cp maxpdf /usr/lib/cups/backend/
+		sudo chmod +x /usr/lib/cups/backend/maxpdf
+	
 4) Copy the prinder description file 'maxpdf.ppd' inside cups driver
 	folder; it should be '/usr/share/ppd/'.
+
+	go in to project folder (MyApps/maxpdf_frontend) and issue :
+		sudo cp maxpdf.ppd /usr/share/ppd/
 	
 5) Now the tricky part; you MUST tell sudo that cups can execute it
 	without password. Usually cups subsystem works on behalf of 'lp'
@@ -40,9 +51,15 @@ SETUP INSTRUCTIONS FOR maxpdf CUPS DRIVER
 		
 	It will allow X11 displays for ALL local users.
 	
-7) Open cups printer manager and select 'add printer'. If it's all ok,
+7) Restart CUPS. Simply do 'sudo /etc/init.d/cupsys restart' for Ubuntu,
+	or similar for other distros. Some people reported to be
+	/etc/init.d/cups restart.
+	
+8) Open cups printer manager and select 'add printer'. If it's all ok,
 	a new 'maxpdf' local printer should appear. Select it and as driver
 	choose 'maxpdf' as manufacturer and printer driver.
+	On Ubuntu you can do with standar printer manager tool on
+	system-administration-print menu.
 	
 	
 ENJOY !
