@@ -125,7 +125,7 @@ void CodeEditor::CheckBracket(int li, int pos, int ppos, int pos0, WString ln, i
 				ppos += d;
 			}
 			c = ln[pos];
-			if((c == '\"' || c == '\'') && (NotEscape(pos, ln) && ln[pos - 1] != '\'')) {
+			if((c == '\"' || c == '\'') && (pos > 0 && NotEscape(pos, ln) && ln[pos - 1] != '\'')) {
 				pos += d;
 				ppos += d;
 				int lc = c;

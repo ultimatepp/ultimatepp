@@ -327,6 +327,9 @@ bool DbfStream::Open(const char *file, bool write, byte _charset, bool _delete_s
 	if(dbt.Open(ForceExt(file, ".dbt"),
 		FileStream::READ | (_delete_share ? DeleteShareFlag() : 0))) // writing MEMO's is not supported yet
 		dbt.SetLoading();
+	if(fpt.Open(ForceExt(file, ".fpt"),
+		FileStream::READ | (_delete_share ? DeleteShareFlag() : 0)))
+		fpt.SetLoading();
 	dbf.SetLoading();
 	if(DoOpen(_charset))
 		return true;
@@ -446,15 +449,23 @@ bool DbfStream::StreamHeader(bool full)
 	memset(record.Begin(), ' ', record.GetCount());
 	if(dbf.IsError())
 		return false;
-	if(has_memo && dbt.IsOpen() && dbt.IsLoading()) { // read DBT header
-		dbt.Seek(16);
-		int b = dbt.Get();
-		dbt_block_size = 512;
-		if(b != 3) {
-			dbt.Seek(20);
-			dbt_block_size = (short)dbt.Get16le();
-			if(dbt_block_size <= 0)
-				has_memo = false;
+	if(has_memo) {
+		if(dbt.IsOpen() && dbt.IsLoading()) { // read DBT header
+			dbt.Seek(16);
+			int b = dbt.Get();
+			dbt_block_size = 512;
+			if(b != 3) {
+				dbt.Seek(20);
+				dbt_block_size = (short)dbt.Get16le();
+				if(dbt_block_size <= 0)
+					dbt.Close(); // has_memo = false;
+			}
+		}
+		if(fpt.IsOpen() && fpt.IsLoading()) { // read FPT header
+			int nextfree = fpt.Get32be();
+			fpt_block_size = fpt.Get32be();
+			if(fpt_block_size <= 0 || fpt_block_size >= 1 << 24)
+				fpt.Close(); // has_memo = false;
 		}
 	}
 	return true;
@@ -893,44 +904,60 @@ Value DbfStream::GetItemMemo(int i, bool binary) const
 	while(p < e && *p == ' ')
 		p++;
 	int block = scan_int((const char *)p, (const char *)e);
-	if(dbt.IsOpen() && !IsNull(block) && block > 0) {
-		unsigned pos = block * dbt_block_size;
-		if(pos >= dbt.GetSize())
-			return Value();
-		dbt.Seek(pos);
+	if(!IsNull(block) && block > 0) {
 		String out;
-		if(dbt.GetIL() == 0x8FFFF) { // dBASE IV memo with explicit length
-			unsigned len = dbt.GetIL();
-			if(len <= 0 || len > dbt.GetLeft())
+		if(dbt.IsOpen()) {
+			unsigned pos = block * dbt_block_size;
+			if(pos >= dbt.GetSize())
 				return Value();
-			Buffer<byte> buffer(len);
-			if(!dbt.GetAll(buffer, len))
-				return Value();
-			if(!binary) {
-				byte *p;
-				if(p = (byte *)memchr(buffer, '\0', len)) len = p - buffer;
-				if(p = (byte *)memchr(buffer, '\x1A', len)) len = p - buffer;
-			}
-			out = String(buffer, len);
-		}
-		else { // dBASE III memo with 1A1A separator
-			Buffer<byte> buffer(dbt_block_size + 1);
-			bool eof = false;
-			for(int b; !eof && (b = dbt.Get(buffer, dbt_block_size + 1)) > 0;) {
-				byte *p = buffer, *e = p + b;
-				while((p = (byte *)memchr(p, '\x1A', e - p)) != 0)
-					if(++p < e && *p++ == '\x1A') { // double EOF found
-						e = p - 2;
-						eof = true;
-						break;
-					}
-				int l = e - buffer;
-				if(!eof && l > dbt_block_size) {
-					dbt.SeekCur(dbt_block_size - l);
-					e = buffer + l;
+			dbt.Seek(pos);
+			if(dbt.GetIL() == 0x8FFFF) { // dBASE IV memo with explicit length
+				unsigned len = dbt.GetIL();
+				if(len <= 0 || len > dbt.GetLeft())
+					return Value();
+				Buffer<byte> buffer(len);
+				if(!dbt.GetAll(buffer, len))
+					return Value();
+				if(!binary) {
+					byte *p;
+					if(p = (byte *)memchr(buffer, '\0', len)) len = p - buffer;
+					if(p = (byte *)memchr(buffer, '\x1A', len)) len = p - buffer;
 				}
-				if(l > 0)
-					out.Cat(buffer, l);
+				out = String(buffer, len);
+			}
+			else { // dBASE III memo with 1A1A separator
+				Buffer<byte> buffer(dbt_block_size + 1);
+				bool eof = false;
+				for(int b; !eof && (b = dbt.Get(buffer, dbt_block_size + 1)) > 0;) {
+					byte *p = buffer, *e = p + b;
+					while((p = (byte *)memchr(p, '\x1A', e - p)) != 0)
+						if(++p < e && *p++ == '\x1A') { // double EOF found
+							e = p - 2;
+							eof = true;
+							break;
+						}
+					int l = e - buffer;
+					if(!eof && l > dbt_block_size) {
+						dbt.SeekCur(dbt_block_size - l);
+						e = buffer + l;
+					}
+					if(l > 0)
+						out.Cat(buffer, l);
+				}
+			}
+		}
+		else if(fpt.IsOpen()) {
+			unsigned pos = block * fpt_block_size;
+			if(pos >= fpt.GetSize())
+				return Value();
+			fpt.Seek(pos);
+			int fieldtype = fpt.Get32be();
+			int len = fpt.Get32be();
+			if(len > 0) {
+				StringBuffer outbuf(len);
+				if(!fpt.GetAll(outbuf, len))
+					return Value();
+				out = outbuf;
 			}
 		}
 		if(binary || charset == GetDefaultCharset())

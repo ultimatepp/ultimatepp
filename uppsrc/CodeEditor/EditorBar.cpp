@@ -490,6 +490,7 @@ EditorBar::EditorBar()
 	annotations = 0;
 	ignored_next_edit = false;
 	next_age = 0;
+	SyncWidth();
 }
 
 EditorBar::~EditorBar()
