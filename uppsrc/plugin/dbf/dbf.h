@@ -118,6 +118,7 @@ protected:
 
 	FileStream      dbf;
 	mutable FileStream dbt;
+	mutable FileStream fpt;
 	ArrayMap<String, Field> fields;
 	struct FieldProc : Moveable<FieldProc>
 	{
@@ -133,6 +134,7 @@ protected:
 	int             row_index; // current row
 	int             next_row_index; // row to fetch next
 	int             dbt_block_size; // memo block size
+	int             fpt_block_size;
 	byte            charset;
 //	word            codepage_uni[256];
 //	char            codepage_map[256];
