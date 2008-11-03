@@ -15,6 +15,8 @@ struct Date : RelOps< Date, Moveable<Date> > {
 
 	static Date Low()                    { return Date(-4000, 1, 1); }
 	static Date High()                   { return Date(4000, 1, 1); }
+	
+	int      Compare(Date b) const;
 
 	Date()                               { year = -32768; day = month = 0; }
 	Date(const Nuller&)                  { year = -32768; day = month = 0; }
