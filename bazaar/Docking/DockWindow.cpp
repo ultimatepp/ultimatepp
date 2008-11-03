@@ -77,6 +77,7 @@ DockableCtrl &DockWindow::Register(DockableCtrl &dc)
 	if (ix < 0) {
 		ix = dockers.GetCount();
 		dockers.Add(&dc);
+		dockerpos.Add();;
 	}
 	return *dockers[ix];
 }
@@ -85,14 +86,17 @@ void DockWindow::Deregister(DockableCtrl &dc)
 {
 	int ix = FindDocker(&dc); 
 	Close(dc);
-	if (ix >= 0)
+	if (ix >= 0) {
 		dockers.Remove(ix);
+		dockerpos.Remove(ix);
+	}
 }
 
 void DockWindow::Close(DockableCtrl &dc)
 {
 	DockCont *c = GetContainer(dc);
 	if (c && c->GetCount() > 1) {
+		SaveDockerPos(dc);
 		dc.Remove();
 		c->Layout();
 		c = NULL;
@@ -124,7 +128,7 @@ void DockWindow::Activate(DockableCtrl &dc)
 	if (!c)
 		c = CreateContainer(dc);
 	if (c->IsHidden())
-		FloatContainer(*c);
+		RestoreDockerPos(dc);
 	else if (c->IsAutoHide()) {
 		for (int i = 0; i < DOCK_BOTTOM; i++)
 			if (hideframe[i].HasCtrl(*c))
@@ -132,6 +136,123 @@ void DockWindow::Activate(DockableCtrl &dc)
 	}
 	else
 		c->SetCursor(dc);
+}
+
+void DockWindow::SaveDockerPos(DockableCtrl &dc, PosInfo &pi)
+{
+	// Get the container
+	DockCont *cont = GetContainer(dc);
+	if (!cont) {
+		// Ctrl must be hidden
+		pi = PosInfo();
+		return;	
+	}
+	// Are we tabbed?
+	pi.tabcont = (cont->GetCount() > 1) ? cont : NULL;
+	// Find top DockCont in case of nesting
+	DockCont *parent = GetContainer(*cont);
+	while (parent) {
+		cont = parent;
+		parent = GetContainer(*cont);
+	}
+	// Save state
+	pi.state = cont->GetDockState();
+	// determine context info
+	StringStream s;
+	switch (pi.state) {
+		case DockCont::STATE_DOCKED: {
+			int align = GetDockAlign(*cont);
+			ALIGN_ASSERT(align);
+			int ps = dockpane[align].FindIndex(*cont);
+			ASSERT(ps >= 0);
+			Size sz = cont->GetSize();
+			s % align % ps % sz;
+			break;
+		}
+		case DockCont::STATE_FLOATING:
+			cont->SerializePlacement(s);
+			break;
+		case DockCont::STATE_AUTOHIDE:
+			for (int i = 0; i < 4; i++) {
+				int ix = hideframe[i].FindCtrl(*cont);
+				if (ix >= 0) {
+					s.Put(ix);		
+					break;
+				}
+				ASSERT(i != 3); // No alignment found!
+			}
+			break;
+		default:
+			return;
+	}
+	pi.data = s;	
+}
+
+void DockWindow::SetDockerPosInfo(DockableCtrl &dc, const PosInfo &pi)
+{
+	// Find PosInfo record for the ctrl
+	int ix = FindDocker(&dc);
+	if (ix < 0) return;
+	dockerpos[ix] = pi;
+}
+
+void DockWindow::SaveDockerPos(DockableCtrl &dc)
+{
+	// Find PosInfo record for the ctrl
+	int ix = FindDocker(&dc);
+	if (ix < 0) return;
+	SaveDockerPos(dc, dockerpos[ix]);
+}
+
+void DockWindow::RestoreDockerPos(DockableCtrl &dc, bool savefirst)
+{
+	// Find PosInfo record for the ctrl
+	int ix = FindDocker(&dc);
+	if (ix < 0) return;
+	PosInfo pi = dockerpos[ix];
+	if (savefirst)
+		SaveDockerPos(dc);
+	if (pi.state == DockCont::STATE_NONE) {
+		if (dc.IsVisible())
+			Float(dc, dc.GetScreenRect().TopLeft());
+		else
+			Float(dc);
+		return;
+	}	
+	
+	// Read position based on state
+	StringStream s(pi.data);
+	switch (pi.state) {
+		case DockCont::STATE_DOCKED: {
+			int align, ps;
+			Size sz;
+			s % align % ps % sz;
+			ALIGN_ASSERT(align);
+			if (pi.tabcont && pi.tabcont->GetDockAlign() == align)
+				DockAsTab(*~pi.tabcont, dc);
+			else {
+				DockCont *cont = GetReleasedContainer(dc);
+				cont->StateDocked(*this);
+				Dock0(align, *cont, ps, sz);
+			}
+			break;
+		}
+		case DockCont::STATE_FLOATING: {
+			DockCont *cont = GetReleasedContainer(dc);
+			cont->SerializePlacement(s);
+			if (pi.tabcont && pi.tabcont->IsFloating())
+				DockAsTab(*~pi.tabcont, dc);			
+			else
+				FloatContainer(*cont, Null, false);
+			break;
+		}
+		case DockCont::STATE_AUTOHIDE: {
+			AutoHide(s.Get(), dc);
+			break;
+		}
+		default:
+			NEVER();
+	}
 }
 
 void DockWindow::DockGroup(int align, String group, int pos)
@@ -233,6 +354,7 @@ DockCont *DockWindow::GetReleasedContainer(DockableCtrl &dc)
 {
 	DockCont *c = GetContainer(dc);
 	if (c && c->GetCount() > 1) {
+		SaveDockerPos(dc);
 		dc.Remove();
 		c->RefreshLayout();
 		c = NULL;
@@ -390,7 +512,11 @@ void DockWindow::DockAsTab(DockCont &target, DockableCtrl &dc)
 
 void DockWindow::Dock0(int align, Ctrl &c, int pos, bool do_animatehl, bool ishighlight)
 {
-	Size sz = CtrlBestSize(c);
+	Dock0(align, c, pos, CtrlBestSize(c), do_animatehl, ishighlight);
+}
+
+void DockWindow::Dock0(int align, Ctrl &c, int pos, Size sz, bool do_animatehl, bool ishighlight)
+{
 	int fsz = IsTB(align) ? sz.cy : sz.cx;
 	if (!dockframe[align].IsShown())
 		dockframe[align].Show();
@@ -422,16 +548,18 @@ void DockWindow::DockContainerAsTab(DockCont &target, DockCont &c, bool do_neste
 	}
 }
 
-void DockWindow::FloatContainer(DockCont &c, Point p)
+void DockWindow::FloatContainer(DockCont &c, Point p, bool move)
 {
 	ASSERT(IsOpen());
 	if (c.IsFloating()) return;
 	Detach(c);	
 	c.StateFloating(*this);
-	Size best = CtrlBestSize(c, false);
-	if (p.IsNullInstance()) 
-		p = GetScreenRect().CenterPoint() - best/2;
-	c.SetRect(Rect(p, best));
+	if (move) {
+		Size best = CtrlBestSize(c, false);
+		if (p.IsNullInstance()) 
+			p = GetScreenRect().CenterPoint() - best/2;
+		c.SetRect(Rect(p, best));
+	}
 	c.Open(this);
 }
 
@@ -811,11 +939,11 @@ void DockWindow::ContainerDragEnd(DockCont &dc)
 
 	if (animatewnd && (p || align != DOCK_NONE))
 		dc.Animate(GetFinalAnimRect(align, hl), dockpane[0].GetAnimMaxTicks(), 5);
-
+		
 	if (align != DOCK_NONE) {
 		Unfloat(dc);
 		dc.StateDocked(*this);
-		dockpane[align].Swap(hl, dc);		
+		dockpane[align].Swap(hl, dc);
 		dc.SetFocus();		
 	}
 	else if (DockCont *target = dynamic_cast<DockCont *>(p)) {

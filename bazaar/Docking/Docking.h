@@ -47,6 +47,12 @@ protected:
 		const Value *highlight;
 	};
 	
+	struct PosInfo : public Moveable<PosInfo> {
+		PosInfo() : state(DockCont::STATE_NONE) {} 
+		DockCont::DockState state; 	// State info
+		Ptr<DockCont> 		tabcont;// Only valid when ctrl was tabbed
+		String data;				// Serialized context info dependent on state
+	};	
 protected:
 	// Highlight control
 	virtual HighlightCtrl &	GetHighlightCtrl()							{ return hlc; }	
@@ -61,7 +67,7 @@ protected:
 	void 			DockContainer(int align, DockCont &c, int pos = -1);
 	void 			DockAsTab(DockCont &target, DockableCtrl &dc);
 	void 			DockContainerAsTab(DockCont &target, DockCont &c, bool do_nested);	
-	void 			FloatContainer(DockCont &c, Point p = Null);
+	void 			FloatContainer(DockCont &c, Point p = Null, bool move = true);
 	void 			FloatFromTab(DockCont &c, DockableCtrl &tab)		{ FloatFromTab(c, *CreateContainer(tab)); }
 	void 			FloatFromTab(DockCont &c, DockCont &tab);	
 	void 			AutoHideContainer(int align, DockCont &c);
@@ -87,8 +93,10 @@ protected:
 	bool			IsPaneAnimating(int align) const		{ return dockpane[align].IsAnimating(); }
 	bool			CheckNesting() const					{ return (GetMouseFlags() & nesttoggle) ? !nestedtabs : nestedtabs; }
 
-	friend class DockCont;
+	void			SaveDockerPos(DockableCtrl &dc, PosInfo &pi);
+	void			SetDockerPosInfo(DockableCtrl &dc, const PosInfo &pi);
 
+	friend class 	DockCont;
 private:
 	bool init;
 	bool tabbing;
@@ -117,7 +125,8 @@ private:
 	SplitterFrame				dockframe[4];
 	AutoHideBar					hideframe[4];
 	DockMenu					menu;
-
+	Vector<PosInfo>				dockerpos;
+	
 	struct FrameAnim {
 		int target;
 		int inc;			
@@ -131,7 +140,7 @@ public:
 
 	DockableCtrl &	Dockable(Ctrl &ctrl, WString title);
 	DockableCtrl &	Dockable(Ctrl &ctrl, const char *title = 0)			{ return Dockable(ctrl, (WString)title); }
-		
+	
 	void 			DockLeft(DockableCtrl &dc, int pos = -1)			{ Dock(DOCK_LEFT, dc, pos); }
 	void 			DockTop(DockableCtrl &dc, int pos = -1)				{ Dock(DOCK_TOP, dc, pos); }
 	void 			DockRight(DockableCtrl &dc, int pos = -1)			{ Dock(DOCK_RIGHT, dc, pos); }
@@ -150,6 +159,9 @@ public:
 	void			ActivateDockable(Ctrl &c);
 	void			ActivateDockableChild(Ctrl &c);
 
+	void			SaveDockerPos(DockableCtrl &dc);
+	void			RestoreDockerPos(DockableCtrl &dc, bool savefirst = false);
+
 	void 			DockGroup(int align, String group, int pos = -1);
 	void 			FloatGroup(String group);
 	void 			AutoHideGroup(int align, String group);
@@ -159,7 +171,7 @@ public:
 			
 	bool 			IsDockVisible(int align) const		{ ASSERT(align >= 0 && align <= 4); return dockpane[align].IsVisible(); }
 	void 			SetFrameSize(int align, int size);
-		
+				
 	DockWindow &	AnimateDelay(int ms)				{ animdelay = max(ms, 0); return *this; }
 	DockWindow &	Animate(bool highlight = true, bool frames = true, bool windows = true, int ticks = 10, int interval = 20);
 	DockWindow &	NoAnimate()							{ return Animate(false, false); }
@@ -235,7 +247,7 @@ public:
 
 private:
 	// Container management
-	DockCont *		GetContainer(DockableCtrl &dc)		{ return dynamic_cast<DockCont *>(dc.GetParent()); }
+	DockCont *		GetContainer(Ctrl &dc)		{ return dynamic_cast<DockCont *>(dc.GetParent()); }
 	DockCont *  	CreateContainer();
 	DockCont *		CreateContainer(DockableCtrl &dc);
 	void			DestroyContainer(DockCont &c);
@@ -246,6 +258,7 @@ private:
 
 	// Helpers		
 	void 			Dock0(int align, Ctrl &c, int pos, bool do_animatehl = false, bool ishighlight = false);
+	void 			Dock0(int align, Ctrl &c, int pos, Size sz, bool do_animatehl = false, bool ishighlight = false);
 	void 			Undock0(Ctrl &c, bool do_animatehl = false, int fsz = -1, bool ishighlight = false);		
 	void			Activate(DockableCtrl &dc);
 	

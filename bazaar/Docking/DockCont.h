@@ -39,13 +39,13 @@ public:
 	virtual void ChildLostFocus() 						{ handle.RefreshFocus(HasFocusDeep()); TopWindow::ChildLostFocus(); }
 	virtual void GotFocus() 							{ handle.RefreshFocus(true); }
 	virtual void LostFocus() 							{ handle.RefreshFocus(HasFocusDeep()); }*/
-#if defined(PLATFORM_WIN32)
 public:
+#if defined(PLATFORM_WIN32)
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 #elif defined(PLATFORM_X11)
 	virtual void EventProc(XWindow& w, XEvent *event);
 #endif
-private:
+
 	enum DockState {
 		STATE_NONE = -1,
 		STATE_FLOATING,
@@ -53,7 +53,7 @@ private:
 		STATE_AUTOHIDE,
 		STATE_TABBED
 	};
-	
+private:
 	class DockContMenu : public DockMenu {
 	public:
 		typedef DockContMenu CLASSNAME;
@@ -74,6 +74,7 @@ private:
 	{
 		Callback WhenContext;
 		Callback WhenLeftDrag;
+		Callback WhenLeftDouble;
 		Handle() 										{ dc = NULL; focus = false; }
 		DockableCtrl *dc;
 		bool focus;
@@ -82,6 +83,7 @@ private:
 		
 		virtual void Paint(Draw &w);
 		virtual void LeftDrag(Point p, dword keyflags)	{ /*RefreshFocus(true);*/ WhenLeftDrag(); }
+		virtual void LeftDouble(Point p, dword keyflags) { /*RefreshFocus(true);*/ WhenLeftDouble(); }
 		virtual void RightDown(Point p, dword keyflags) { /*RefreshFocus(true);*/ WhenContext(); }
 		
 		//void	RefreshFocus(bool _focus);
@@ -110,6 +112,7 @@ private:
 	void 	Dock(int align);
 	void 	AutoHide()											{ AutoHideAlign(GetDockAlign()); }
 	void 	AutoHideAlign(int align);
+	void	RestoreCurrent();
 
 	void 	CloseAll();
 
@@ -152,14 +155,16 @@ public:
 	bool			IsTabbed() const			{ return dockstate == STATE_TABBED; }
 	bool 			IsDockedAny() const 		{ return dockstate != STATE_FLOATING && dockstate != STATE_NONE; }
 	bool			IsHidden() const			{ return dockstate == STATE_NONE; }	
+	DockState		GetDockState() const		{ return dockstate; }
 	
 	void			StateNotDocked(DockWindow *dock = NULL) 	{ if (dock) base = dock; dockstate = STATE_NONE; }
 	void			StateDocked(DockWindow &dock);	
 	void 			StateFloating(DockWindow &dock);	
 	void			StateAutoHide(DockWindow &dock)				{ StateDocked(dock); Hide(); dockstate = STATE_AUTOHIDE; }
-	void			StateTabbed(DockWindow &dock)				{ StateFloating(dock); Hide(); dockstate = STATE_TABBED; }
-		
+	void			StateTabbed(DockWindow &dock)				{ StateFloating(dock); Hide(); dockstate = STATE_TABBED; }	
 	void			StartMouseDrag();
+	
+	void			SetAllDockerPos();
 	
 	DockWindow *	GetDockWindow() const			{ return base; }
 	void			SyncButtons()					{ if (GetCount()) SyncButtons(GetCurrent()); }
@@ -187,7 +192,7 @@ public:
 	bool			IsDockAllowed(int align, int dc_ix = -1) const;
 		
 	virtual void 	Serialize(Stream& s);
-		
+	
 	DockCont();		
 };
 

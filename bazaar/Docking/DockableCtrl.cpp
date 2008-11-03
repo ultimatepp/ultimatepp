@@ -81,7 +81,7 @@ DockableCtrl::DockableCtrl()
 	stdsize = Null;
 	minsize = Size(0, 0);
 	AllowDockAll();
-	Transparent(false);
+	Transparent(true);
 	BackPaint();
 }
 

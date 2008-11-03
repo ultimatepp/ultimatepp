@@ -13,6 +13,9 @@ LRESULT DockCont::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	if (IsFloating() && base) {
 		switch (message) {
+			case WM_NCLBUTTONDBLCLK:
+				RestoreCurrent();
+				return 0;
 			case WM_NCLBUTTONUP:
 			case WM_SIZE:					
 				dragging = 0;
@@ -21,7 +24,7 @@ LRESULT DockCont::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 				dragging = 1;
 				break;
 			case WM_MOVE:
-				if (GetMouseLeft() && dragging > 1)
+				if (GetMouseLeft() && dragging >= 1)
 					(dragging > 2) ? Moving() : MoveBegin();
 				dragging++;
 				break;
@@ -242,9 +245,29 @@ void DockCont::ChildAdded(Ctrl *child)
 	if (GetCount() >= 2) RefreshLayout();
 }
 
-void 	DockCont::MoveBegin()		{ if (!base->IsLocked()) base->ContainerDragStart(*this); }
-void 	DockCont::Moving()			{ if (!base->IsLocked()) base->ContainerDragMove(*this); }
-void 	DockCont::MoveEnd()			{ if (!base->IsLocked()) base->ContainerDragEnd(*this); }	
+// The use of Single<> here is bad form, but I am unable to declare it a 
+//  member in the header (dependencies) and I can't think of a better way
+void DockCont::MoveBegin() 
+{ 
+	static bool in_move = false;
+	if (!in_move && !base->IsLocked()) { 
+		in_move = true;	
+		base->SaveDockerPos(GetCurrent(), Single<DockWindow::PosInfo>()); 
+		base->ContainerDragStart(*this); 
+		in_move = false;
+	} 
+}
+
+void DockCont::Moving() { 
+	if (!base->IsLocked()) base->ContainerDragMove(*this); 
+}
+
+void DockCont::MoveEnd() { 
+	if (!base->IsLocked()) { 
+		SetAllDockerPos(); 
+		base->ContainerDragEnd(*this); 
+	}	
+}
 
 void DockCont::WindowMenu()
 {
@@ -323,6 +346,7 @@ void DockCont::TabDragged(int ix)
 		}
 		else {
 			DockableCtrl *c = DockCast(v);
+			base->SaveDockerPos(*c); // TODO: Elliminate by calling base->Close(*c)
 			c->Remove();
 			base->FloatFromTab(*this, *c);
 		}
@@ -348,8 +372,13 @@ void DockCont::TabContext(int ix)
 
 void DockCont::TabClosed(Value v)
 {
-	CtrlCast(v)->Remove();
-	if (IsDockCont(v)) base->CloseContainer(*ContCast(v)); 
+	if (IsDockCont(v)) {
+		DockCont *c = ContCast(v);
+		c->Remove();
+		base->CloseContainer(*c);
+	}
+	else
+		base->Close(*DockCast(v));
 	waitsync = true;
 	Layout();
 	if (tabbar.GetCount() == 1) 
@@ -374,6 +403,11 @@ void DockCont::Dock(int align)
 void DockCont::AutoHideAlign(int align)
 {
 	base->AutoHideContainer((align == DockWindow::DOCK_NONE) ? DockWindow::DOCK_TOP : align, *this);
+}
+
+void DockCont::RestoreCurrent()
+{
+	base->RestoreDockerPos(GetCurrent(), true);
 }
 
 void DockCont::AddFrom(DockCont &cont, int except)
@@ -493,6 +527,18 @@ void DockCont::GetGroups(Vector<String> &groups)
 					groups.Add(g);
 			}				
 		}
+	}
+}
+
+void DockCont::SetAllDockerPos()
+{
+	DockWindow::PosInfo &pi = Single<DockWindow::PosInfo>();
+	for (int i = 0; i < GetCount(); i++) {
+		Value v = tabbar.Get(i);
+		if (IsDockCont(v))
+			ContCast(v)->SetAllDockerPos();
+		else
+			base->SetDockerPosInfo(*DockCast(v), pi);
 	}
 }
 
@@ -656,7 +702,6 @@ void DockCont::Serialize(Stream& s)
 		TabSelected();
 	}	
 }
-
 void DockCont::DockContMenu::ContainerMenu(Bar &bar, DockCont *c, bool withgroups)
 {
 	DockableCtrl *dc = &c->GetCurrent();
@@ -718,7 +763,7 @@ void DockCont::Lock(bool lock)
 
 DockCont::DockCont()
 {
-	dragging = false;
+	dragging = 0;
 	dockstate = STATE_NONE;
 	base = NULL;
 	waitsync = false;	
@@ -741,6 +786,7 @@ DockCont::DockCont()
 	handle << close << autohide << windowpos;
 	handle.WhenContext = THISBACK(WindowMenu);
 	handle.WhenLeftDrag = THISBACK(MoveBegin);
+	handle.WhenLeftDouble = THISBACK(RestoreCurrent);
 	close.Tip(t_("Close")) 				<<= THISBACK(CloseAll);
 	autohide.Tip(t_("Auto-Hide")) 		<<= THISBACK(AutoHide);
 	windowpos.Tip(t_("Window Menu")) 	<<= THISBACK(WindowMenu);		
