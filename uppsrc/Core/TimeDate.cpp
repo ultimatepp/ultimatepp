@@ -230,12 +230,16 @@ void Date::Set(int d) {
 	day = d + 1;
 }
 
+int Date::Compare(Date b) const
+{
+	int q = SgnCompare(year, b.year);
+	if(q) return q;
+	q = SgnCompare(month, b.month);
+	return q ? q : SgnCompare(day, b.day);
+}
+
 bool operator<(Date a, Date b) {
-	if(a.year < b.year) return true;
-	if(a.year > b.year) return false;
-	if(a.month < b.month) return true;
-	if(a.month > b.month) return false;
-	return a.day < b.day;
+	return a.Compare(b) < 0;
 }
 
 int   operator-(Date a, Date b)    { return a.Get() - b.Get(); }
