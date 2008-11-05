@@ -1118,6 +1118,7 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		im.param.Clear();
 		if(Key(';')) {
 			context = cc;
+			im.natural = Gpurify(nn);
 			SetScopeCurrent();
 			return true;
 		}

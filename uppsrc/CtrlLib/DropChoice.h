@@ -161,9 +161,6 @@ public:
 	void        AddTo(Ctrl& _owner)                   { MultiButtonFrame::AddTo(_owner); owner = &_owner; }
 	bool        IsActive() const                      { return IsOpen(); }
 
-//	void        Show(bool b = true)                   { drop.Show(b); }
-//	void        Hide()                                { Show(false); }
-
 	Value       Get() const;
 	int         GetIndex() const;
 
