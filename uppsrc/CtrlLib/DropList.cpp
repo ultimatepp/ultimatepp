@@ -66,7 +66,7 @@ void DropList::Drop() {
 		SetFocus();
 	WhenDrop();
 	list.SetCursor(key.Find(value));
-	list.PopUp(this);
+	list.PopUp(this, dropwidth);
 }
 
 void DropList::Select() {
@@ -248,6 +248,7 @@ DropList::DropList()
 	list.Normal();
 	list.WhenSelect = THISBACK(Select);
 	list.WhenCancel = THISBACK(Cancel);
+	dropwidth = 0;
 }
 
 DropList::~DropList() {}

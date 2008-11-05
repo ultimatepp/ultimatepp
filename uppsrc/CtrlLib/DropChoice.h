@@ -42,6 +42,7 @@ private:
 	PopUpTable         list;
 	Index<Value>       key;
 	Value              value;
+	int                dropwidth;
 	const Convert     *valueconvert;
 	const Display     *valuedisplay;
 	bool               displayall;
@@ -114,6 +115,8 @@ public:
 	DropList&     AlwaysDrop(bool e = true);
 	DropList&     SetStyle(const Style& s)              { MultiButton::SetStyle(s); return *this; }
 	DropList&     NotNull(bool b = true)                { notnull = b; return *this; }
+	DropList&     DropWidth(int w)                      { dropwidth = w; return *this; }
+	DropList&     DropWidthZ(int w)                     { dropwidth = HorzLayoutZoom(w); return *this; }
 
 	DropList&     SetScrollBarStyle(const ScrollBar::Style& s) { list.SetScrollBarStyle(s); return *this; }
 
