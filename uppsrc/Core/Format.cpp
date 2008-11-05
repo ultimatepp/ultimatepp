@@ -897,7 +897,6 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 		}
 		f.format.Clear();
 		f.id.Clear();
-		f.maxn = 0;
 		b = s;
 		int pad = -1;
 		int padn;
@@ -970,11 +969,8 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 				ASSERT(*s);
 				if(IsDigit(*s))
 					n = 10 * n + *s - '0';
-				else {
-					if(n > f.maxn)
-						f.maxn = n;
+				else
 					n = 0;
-				}
 				s++;
 			}
 		}
@@ -993,8 +989,6 @@ String NFormat0(int language, const char *s, const Value **v, int count)
 		}
 #endif
 		f.arg = *v[pos++];
-		if(n > f.maxn)
-			f.maxn = n;
 		String r;
 		if(!nvl_value.IsVoid() && IsNull(f.arg))
 			r = nvl_value;

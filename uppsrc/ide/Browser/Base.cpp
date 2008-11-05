@@ -3,7 +3,7 @@
 #define LTIMING(x) // RTIMING(x)
 #define LLOG(x)
 
-static const char s_dbver[] = "CPP-BASE 2.35";
+static const char s_dbver[] = "CPP-BASE 2.36";
 
 void GC_Cache()
 {

@@ -449,6 +449,7 @@ struct AssistEditor : CodeEditor {
 
 	bool           NavigatorKey(dword key);
 	void           SyncNavigator();
+	void           GotoBrowserScope();
 	void           BrowserGoto();
 	void           BrowserGotoNF();
 

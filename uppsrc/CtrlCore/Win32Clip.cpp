@@ -30,6 +30,8 @@ int  GetClipboardFormatCode(const char *format_id)
 		return CF_DIB;
 	if(fmt == "files")
 		return CF_HDROP;
+	static StaticMutex m;
+	Mutex::Lock __(m);
 	static VectorMap<String, int> format_map;
 	int f = format_map.Find(format_id);
 	if(f < 0) {

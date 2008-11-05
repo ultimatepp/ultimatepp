@@ -300,6 +300,7 @@ class Parser {
 		bool    isdestructor;
 		bool    isptr;
 		bool    nofn;
+		bool    castoper;
 
 		String  tnames;
 		String  type;
@@ -361,10 +362,10 @@ class Parser {
 	String TemplateParams(String& pnames);
 	String TemplateParams();
 	String TemplatePnames();
-	String Name(String& h);
-	String Name();
+	String Name(String& h, bool& castoper);
+	String Name(bool& castoper);
 	String Constant();
-	String ReadOper();
+	String ReadOper(bool& castoper);
 
 	int    GetLine(const char *pos);
 	void   Line();

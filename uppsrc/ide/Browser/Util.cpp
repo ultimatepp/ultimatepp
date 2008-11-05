@@ -2,7 +2,7 @@
 
 void SplitCodeRef(const String& s, String& scope, String& item)
 {
-	int q = s.Find('(');
+	int q = s.FindFirstOf("( ");
 	q = q >= 0 ? s.ReverseFind(':', q) : s.ReverseFind(':');
 	if(q < 0) {
 		scope.Clear();

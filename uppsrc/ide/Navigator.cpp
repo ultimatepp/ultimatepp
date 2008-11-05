@@ -219,7 +219,7 @@ void AssistEditor::BrowserGotoNF()
 	int itemsc = browser.item.GetScroll();
 
 	String cref = browser.GetCodeRef();
-	if(assist_active && !(theide && theide->SwapSIf(cref)))
+ 	if(assist_active && !(theide && theide->SwapSIf(cref)))
 		IdeGotoCodeRef(cref);
 
 	if(scope == browser.scope.GetKey()) {
@@ -236,6 +236,12 @@ void AssistEditor::BrowserGoto()
 {
 	BrowserGotoNF();
 	SetFocus();
+}
+
+void AssistEditor::GotoBrowserScope()
+{
+	browser.item.GoBegin();
+	BrowserGoto();
 }
 
 bool AssistEditor::NavigatorKey(dword key)

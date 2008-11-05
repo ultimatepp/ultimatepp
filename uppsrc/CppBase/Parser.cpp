@@ -209,6 +209,7 @@ Parser::Decla::Decla()
 	function = type_def = false;
 	s_static = s_auto = s_register = s_extern = s_mutable = s_explicit = s_virtual = false;
 	isfriend = istemplate = istructor = isptr = nofn = false;
+	castoper = false;
 }
 
 
@@ -320,7 +321,7 @@ String Parser::TemplatePnames()
 	return pnames;
 }
 
-String Parser::ReadOper() {
+String Parser::ReadOper(bool& castoper) {
 	const char *p = lex.Pos();
 	Key(tk_operator);
 	int level = 0;
@@ -335,19 +336,28 @@ String Parser::ReadOper() {
 			++lex;
 	}
 	StringBuffer r;
+	bool spc = false;
 	while(p < lex.Pos()) {
-		if((byte)*p > ' ')
+		if((byte)*p > ' ') {
+			if(spc && iscid(*p)) {
+				castoper = true;
+				r.Cat(' ');
+			}
 			r.Cat(*p);
+			spc = false;
+		}
+		else
+			spc = true;
 		p++;
 	}
 	return r;
 }
 
-String Parser::Name(String& name)
+String Parser::Name(String& name, bool& castoper)
 {
 	String s;
 	if(Key(t_dblcolon)) {
-		s << "::";
+		s = "::";
 		name = s;
 	}
 	Check(lex.IsId() || lex == tk_operator, "Name expected");
@@ -357,7 +367,7 @@ String Parser::Name(String& name)
 			s << lex.GetId();
 		}
 		else {
-			String h = ReadOper();
+			String h = ReadOper(castoper);
 			name << h;
 			s << h;
 			break;
@@ -378,10 +388,10 @@ String Parser::Name(String& name)
 	return s;
 }
 
-String Parser::Name()
+String Parser::Name(bool& castoper)
 {
 	String h;
-	return Name(h);
+	return Name(h, castoper);
 }
 
 String Parser::Constant()
@@ -548,10 +558,11 @@ void Parser::Declarator(Decl& d, const char *p)
 //		d.name = ReadOper();
 //	else
 	if(lex.IsId() || lex == t_dblcolon || lex == tk_operator) {
-		d.name = Name();
+		d.name = Name(d.castoper);
+		bool dummy;
 		if(Key(':'))
 			if(!Key(t_integer))
-				Name();
+				Name(dummy);
 	}
 	if(Key('(')) {
 		if(inbody || (lex < 256 || lex == tk_true || lex == tk_false)
@@ -674,7 +685,7 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 	if(lex == tk_operator) {
 		Decl& a = r.Add();
 		(Decla&)a = d;
-		a.name = ReadOper();
+		a.name = ReadOper(a.castoper);
 		Key('(');
 		ParamList(a);
 		Qualifier();
@@ -702,6 +713,8 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 		Decl& a = r.Add();
 		(Decla&)a = d;
 		Declarator(a, p);
+		if(a.castoper)
+			a.name = Filter(natural1, CharFilterNotWhitespace) + a.name;
 		a.natural = natural1 + String(p1, lex.Pos());
 		p = lex.Pos();
 	}
@@ -1134,7 +1147,8 @@ bool Parser::Scope(const String& tp, const String& tn) {
 				if(Key(tk_private)) access = "private";
 				if(Key(tk_virtual)) access << " virtual";
 				String h;
-				String n = Name(h);
+				bool dummy;
+				String n = Name(h, dummy);
 				ScAdd(im.pname, h);
 				if(c)
 					im.ptype << ';';
@@ -1190,7 +1204,13 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	}
 	String nn0;
 	String nm = d.name;
-	int q = d.name.ReverseFind(':');
+	int q;
+	if(d.castoper) {
+		q = d.name.ReverseFind(' ');
+		q = q > 0 ? d.name.ReverseFind(':', q) : q = d.name.ReverseFind(':');
+	}
+	else
+		q = d.name.ReverseFind(':');
 	if(q >= 0) {
 		nm = d.name.Mid(q + 1);
 		if(q > 0)
