@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)     DLOG(x)
+#define LLOG(x)     // DLOG(x)
 #define LTIMING(x)  // RTIMING(x)
 
 bool DoQualify(Scopefo& nf, const String& type, String& qt);

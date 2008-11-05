@@ -10,56 +10,66 @@ topic "class Thread";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s1;:`:`:Thread`:`:class: [@(0.0.255)3 class][3 _][*3 Thread][3 _:_][@(0.0.255)3 private][3 _][*@3;3 N
-oCopy]&]
-[s2;%% &]
+[s3; &]
+[s1;:Thread`:`:class: [@(0.0.255) class]_[* Thread]_:_[@(0.0.255) private]_[*@3 NoCopy]&]
 [s2;%% Encapsulation of thread.&]
-[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4; &]
-[s5;:`:`:Thread`:`:Run`(`:`:Callback`): [@(0.0.255) bool]_[* Run]([_^`:`:Callback^ Callback
-]_[*@3 cb])&]
+[s4;H0; &]
+[s5;:Thread`:`:Run`(Callback`): [@(0.0.255) bool]_[* Run]([_^Callback^ Callback]_[*@3 cb])&]
 [s2;%% Starts a new thread.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:Wait`(`): [@(0.0.255) int]_[* Wait]()&]
+[s5;:Thread`:`:Detach`(`): [@(0.0.255) void]_[* Detach]()&]
+[s2;%% Detaches running thread from the Thread object. It means that 
+thread continues running but is no longer controlled by Thread 
+instance.&]
+[s3; &]
+[s4; &]
+[s5;:Thread`:`:Wait`(`): [@(0.0.255) int]_[* Wait]()&]
 [s2;%% Waits for started thread to finish. (`"join`").&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:IsOpen`(`)const: [@(0.0.255) bool]_[* IsOpen]()_[@(0.0.255) const]&]
+[s5;:Thread`:`:IsOpen`(`)const: [@(0.0.255) bool]_[* IsOpen]()_[@(0.0.255) const]&]
 [s2;%% Thread represents a running thread.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:Start`(`:`:Callback`): [@(0.0.255) static] [@(0.0.255) void]_[* Start]([_^`:`:Callback^ C
+[s5;:Thread`:`:GetHandle`(`)const: HANDLE_[* GetHandle]()_[@(0.0.255) const 
+][*C `[WIN32`]]&]
+[s5;:Thread`:`:GetHandle`(`)const: pthread`_t_[* GetHandle]()_[@(0.0.255) const 
+][*C `[POSIX`]]&]
+[s2;%% Returns platform specific handle of thread.&]
+[s3; &]
+[s4; &]
+[s5;:Thread`:`:Start`(Callback`): [@(0.0.255) static] [@(0.0.255) void]_[* Start]([_^Callback^ C
 allback]_[*@3 cb])&]
 [s2;%% Starts a thread and returns immediately (you cannot Wait for 
 the thread to finish in this case).&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:Sleep`(int`): [@(0.0.255) static] [@(0.0.255) void]_[* Sleep]([@(0.0.255) i
-nt]_[*@3 ms])&]
+[s5;:Thread`:`:Sleep`(int`): [@(0.0.255) static] [@(0.0.255) void]_[* Sleep]([@(0.0.255) int]_
+[*@3 ms])&]
 [s2;%% Sleep for a given number of milliseconds.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:IsST`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsST]()&]
-[s2;%% True is no thread was started yet.&]
+[s5;:Thread`:`:IsST`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsST]()&]
+[s2;%% No additional thread was started yet (only the main thread 
+is running so far).&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:GetCount`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetCount]()&]
+[s5;:Thread`:`:GetCount`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetCount]()&]
 [s2;%% Number of running threads.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:ShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownTh
-reads]()&]
+[s5;:Thread`:`:ShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownThread
+s]()&]
 [s2;%% Sets the `"Shutdown`" flag on.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:IsShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdo
-wnThreads]()&]
+[s5;:Thread`:`:IsShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdownTh
+reads]()&]
 [s2;%% True if ShutdownThreads was called.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:Thread`:`:`~Thread`(`): [@(0.0.255) `~][* Thread]()&]
-[s2;%% Destructor. Thread continues running (and it is impossible 
-to Wait for finish).&]
+[s5;:Thread`:`:`~Thread`(`): [@(0.0.255) `~][* Thread]()&]
+[s2;%% Destructor. Performs Detach `- thread continues running.&]
 [s0; ]
