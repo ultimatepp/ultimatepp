@@ -2,11 +2,7 @@
 
 NAMESPACE_UPP
 
-GLPicking::GLPicking()
-	: _isPicking(false)
-{}
-
-void GLPicking::InitPickMatrix()
+void GLCtrl::GLPicking::InitPickMatrix()
 {
 	if (_isPicking)
 	{
@@ -16,7 +12,7 @@ void GLPicking::InitPickMatrix()
 	}
 }
 
-Vector<int> GLPicking::Pick(int x, int y, Callback resizeCallback, Callback paintCallback) 
+Vector<int> GLCtrl::GLPicking::Pick(int x, int y, Callback resizeCallback, Callback paintCallback) 
 {
 	GLuint buffer[_bufferSize];
 	
@@ -43,7 +39,7 @@ Vector<int> GLPicking::Pick(int x, int y, Callback resizeCallback, Callback pain
 		return ParseHits(buffer, hits);
 }
 
-Vector<int> GLPicking::ParseHits(GLuint *buffer, int hits)
+Vector<int> GLCtrl::GLPicking::ParseHits(GLuint *buffer, int hits)
 {
 	GLuint *minPtr = buffer;
 	

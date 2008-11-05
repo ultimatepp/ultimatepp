@@ -5,28 +5,6 @@ NAMESPACE_UPP
 #ifdef PLATFORM_X11
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// Static members initialization
-int GLCtrl::GLPane::Instances = 0;
-int GLCtrl::GLPane::ContextActivated = 0;
-
-/////////////////////////////////////////////////////////////////////////////////////////
-// Constructor
-GLCtrl::GLPane::GLPane(int depthsize, int stencilsize, bool doublebuffer,
-                       bool multisamplebuffering, int numberofsamples )
-{
-	// Sets the current instance number and updates total instances
-	InstanceNum = ++Instances;
-	
-	WindowContext = NULL;
-
-	DepthSize        = depthsize;
-	StencilSize      = stencilsize;
-	DoubleBuffering  = doublebuffer;
-	NumberOfSamples  = numberofsamples;
-	NoWantFocus();
-} // END Constructor class GLCtrl::GLPane
-
-/////////////////////////////////////////////////////////////////////////////////////////
 // Destructor
 GLCtrl::GLPane::~GLPane()
 {
@@ -44,17 +22,17 @@ GLCtrl::GLPane::~GLPane()
 XVisualInfo *GLCtrl::GLPane::CreateVisual(void)
 {
 	Vector<int> visual;
-	visual << GLX_RGBA << GLX_DEPTH_SIZE << DepthSize;
+	visual << GLX_RGBA << GLX_DEPTH_SIZE << ctrl->depthSize;
 
-	if( StencilSize > 0 )
-		visual << GLX_STENCIL_SIZE << StencilSize;
+	if( ctrl->stencilSize > 0 )
+		visual << GLX_STENCIL_SIZE << ctrl->stencilSize;
 
-	if( DoubleBuffering )
+	if( ctrl->doubleBuffering )
 		visual << GLX_DOUBLEBUFFER;
 
-	if( MultiSampleBuffering && NumberOfSamples > 1 )
+	if( ctrl->multiSampleBuffering && ctrl->numberOfSamples > 1 )
 	{
-		visual << GLX_SAMPLE_BUFFERS_ARB << 1 << GLX_SAMPLES_ARB << NumberOfSamples;
+		visual << GLX_SAMPLE_BUFFERS_ARB << 1 << GLX_SAMPLES_ARB << ctrl->numberOfSamples;
 	}
 
 	visual << None;
@@ -91,11 +69,8 @@ void GLCtrl::GLPane::SetAttributes(unsigned long &ValueMask, XSetWindowAttribute
 // Activates current OpenGL context
 void GLCtrl::GLPane::ActivateContext()
 {
-	if( Instances > 0 && ContextActivated != InstanceNum )
-	{
+	if (WindowContext != NULL && glXGetCurrentContext() != WindowContext)
 		glXMakeCurrent( (Display*)Xdisplay, GetWindow(), WindowContext );
-		ContextActivated = InstanceNum;
-	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -146,18 +121,21 @@ void GLCtrl::GLPane::BeforeTerminate(void)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Overridden method to resize GL windows
-void GLCtrl::GLPane::Resize(int x, int y)
+void GLCtrl::GLPane::Layout()
 {
 	// Activates the current context
 	ActivateContext();
 	
+	if (glXGetCurrentContext() == NULL)
+		return;
+	
 	// Calls user resize hook
-	ctrl->GLResize(x, y);
+	ctrl->GLResize(GetSize().cx, GetSize().cy);
 } // END GLCtrl::GLPane::Resize()
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// Internal OpenGL Paint method
-void GLCtrl::GLPane::doPaint(void)
+// Paint method - with graphic context
+void GLCtrl::GLPane::Paint(Draw &draw)
 {
 	// Activates the current context
 	ActivateContext();
@@ -166,43 +144,11 @@ void GLCtrl::GLPane::doPaint(void)
 	ctrl->GLPaint();
 
 	// Swap buffers or flush as needed
-	if( DoubleBuffering )
+	if( ctrl->doubleBuffering )
 		glXSwapBuffers( (Display*)Xdisplay, GetWindow() ); // Buffer swap does implicit glFlush
 	else
 		glFlush();
-} // END GLCtrl::GLPane::doPaint()
-
-/////////////////////////////////////////////////////////////////////////////////////////
-// Paint method - with graphic context
-void GLCtrl::GLPane::Paint(Draw &draw)
-{
-	// Calls internal OpenGL Paint method
-	doPaint();
 } // END GLCtrl::GLPane::Paint()
-
-Vector<int> GLCtrl::GLPane::Pick(int x, int y)
-{
-	ActivateContext();
-	
-	Vector<int> result = _picking.Pick(x, y,
-	                                  callback2(ctrl, &GLCtrl::GLResize, GetSize().cx, GetSize().cy), 
-	                                  callback(ctrl, &GLCtrl::GLPickingPaint));
-	
-	return result;
-}
-
-Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
-{
-	p = p - GetScreenView().TopLeft() + ctrl->GetScreenView().TopLeft();
-	return ctrl->MouseEvent(event, p, zdelta, keyflags);
-}
-
-GLCtrl::GLCtrl(int depthsize, int stencilsize, bool doublebuffer, bool multisamplebuffering, int numberofsamples)
-:	pane(depthsize, stencilsize, doublebuffer, multisamplebuffering, numberofsamples)
-{
-	pane.ctrl = this;
-	Add(pane.SizePos());
-}
 
 #endif
 

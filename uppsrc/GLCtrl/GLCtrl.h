@@ -8,54 +8,38 @@
 
 NAMESPACE_UPP
 
-class GLPicking
-{
-private:
-	static int const _bufferSize = 512;
-	bool _isPicking;
-	Point _pickPoint;
-
-	Vector<int> ParseHits(GLuint *buffer, int hits);
-	
-public:
-	void InitPickMatrix();
-	Vector<int> Pick(int x, int y, Callback resizeCallback, Callback paintCallback);
-
-	GLPicking();
-};
-
 #ifdef PLATFORM_X11
-
-#include <GL/glx.h>
+	#include <GL/glx.h>
+#endif
 
 class GLCtrl : public ParentCtrl {
+	typedef GLCtrl CLASSNAME;
+	
+private:
+	class GLPicking
+	{
+	private:
+		static int const _bufferSize = 512;
+		bool _isPicking;
+		Point _pickPoint;
+		
+		Vector<int> ParseHits(GLuint *buffer, int hits);
+		
+	public:
+		void InitPickMatrix();
+		Vector<int> Pick(int x, int y, Callback resizeCallback, Callback paintCallback);
+		
+		GLPicking() : _isPicking(false) {}
+	};
+	
+#ifdef PLATFORM_X11
 	class GLPane : public DHCtrl {
 		friend class GLCtrl;
-	
-		GLCtrl    *ctrl;
-		GLPicking _picking;
-	
+		
+		GLCtrl *ctrl;
+		
 		// OpenGL Context
 		GLXContext WindowContext;
-	
-		// Number of instances
-		static int Instances;
-		
-		// Current instance number
-		int InstanceNum;
-		
-		// OpenGL parameters
-		int DepthSize;
-		int StencilSize;
-		int NumberOfSamples;
-		bool DoubleBuffering;
-		bool MultiSampleBuffering;
-		
-		// Currently activated context number
-		static int ContextActivated;
-	
-		// Activates current OpenGL context
-		void ActivateContext();
 		
 		// Ovverridden method to choose the correct visual
 		virtual XVisualInfo *CreateVisual(void);
@@ -68,88 +52,51 @@ class GLCtrl : public ParentCtrl {
 		virtual void BeforeTerminate(void);
 		
 		// Overridden method to resize GL windows
-		virtual void Resize(int w, int h);
-	
-		// Internal OpenGL Paint method
-		void doPaint(void);
-	
+		virtual void Layout();
+		
 		// Paint method - with graphic context
 		// Called from DHCtrl - Graphic context is *not* used
 		virtual void Paint(Draw &/*draw*/);
 		
 	public:
-	
-		Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
-
-		typedef GLCtrl CLASSNAME;
-	
-		// Constructor class GLCtrl
-		GLPane(	int		depthsize            = 24, 
-	    		int		stencilsize          = 0, 
-	    		bool	doublebuffer         = true, 
-				bool	multisamplebuffering = false, 
-				int		numberofsamples      = 0 );
-	
-		// Destructor class GLCtrl
+		GLPane() : WindowContext(NULL) { NoWantFocus(); }
 		~GLPane();
 		
-		void InitPickMatrix() { _picking.InitPickMatrix(); }
-		Vector<int> Pick(int x, int y);
-	}; // END Class GLCtrl
-
-	GLPane pane;
-	
-protected:
-
-	// Overridable methods for derived controls
-	
-	// Called after succesful OpenGL initialization
-	virtual void GLInit() {}
-	
-	// Called just before OpenGL termination
-	virtual void GLDone() {}
-	
-	// Called on resize events
-	virtual void GLResize( int w, int h ) {}
-	
-	// Called on paint events
-	virtual void GLPaint() {}
-	virtual void GLPickingPaint() {}
-
-	void StdView();
-
-	void InitPickMatrix()          { pane.InitPickMatrix(); }
-	Vector<int> Pick(int x, int y) { return pane.Pick(x, y); }
-	
-	GLCtrl(int  depthsize = 24, int  stencilsize = 0, bool doublebuffer = true,
-	       bool multisamplebuffering = false, int  numberofsamples = 0);
-};
-
+		virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
+		
+		// Activates current OpenGL context
+		void ActivateContext();
+	};
 #else
-
-class GLCtrl : public ParentCtrl {
-	typedef GLCtrl CLASSNAME;
-	
 	struct GLPane : DHCtrl {
+		friend class GLCtrl;
+		
+		HDC    hDC;
+		HGLRC  hRC;
 		GLCtrl *ctrl;
+		
+	public:
+		GLPane() : hDC(NULL), hRC(NULL) { NoWantFocus(); }
+		~GLPane() { Destroy(); }
 		
 		virtual void    State(int reason);
 		virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 		virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
 		
-		GLPane() { NoWantFocus(); }
+		void Init();
+		void Destroy();
+		
+		void ActivateContext();
 	};
+#endif
 	
-	friend class GLCtrl;
-
-private:
-	HDC    hDC;
-	HGLRC  hRC;
-	GLPicking _picking;
-	GLPane glpane;
-
-	void OpenGL();
-	void CloseGL();
+	GLPicking picking;
+	GLPane pane;
+	int depthSize;
+	int stencilSize;
+	bool doubleBuffering;
+	bool multiSampleBuffering;
+	int numberOfSamples;
 
 protected:
 	// Overridable methods for derived controls
@@ -164,24 +111,29 @@ protected:
 	virtual void GLResize(int w, int h) {}
 
 	// Called on paint events
-	virtual void GLPaint();
+	virtual void GLPaint() { WhenGLPaint(); }
 	virtual void GLPickingPaint() {}
 
 public:
 	Callback WhenGLPaint;
-	
-	GLCtrl();
-	~GLCtrl();
 
-	void    StdView();
+	GLCtrl(int  depthsize = 24, int  stencilsize = 0, bool doublebuffer = true,
+	       bool multisamplebuffering = false, int  numberofsamples = 0)
+		: depthSize(depthsize),
+		  stencilSize(stencilsize), 
+		  doubleBuffering(doublebuffer), 
+		  multiSampleBuffering(multisamplebuffering), 
+		  numberOfSamples(numberofsamples)
+	{
+		pane.ctrl = this;
+		Add(pane.SizePos());
+	}
 
-	HDC     GetDC() const            { return hDC; }
-	HGLRC   GetHGLRC() const         { return hRC; }
+	void StdView();
 	
-	void InitPickMatrix() { _picking.InitPickMatrix(); }
+	void InitPickMatrix() { picking.InitPickMatrix(); }
 	Vector<int> Pick(int x, int y);
 };
-#endif
 
 END_UPP_NAMESPACE
 

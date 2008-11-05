@@ -7,28 +7,9 @@ NAMESPACE_UPP
 #pragma comment( lib, "opengl32.lib" )	// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )		// Search For GLu32.lib While Linking
 
-GLCtrl::GLCtrl()
+void GLCtrl::GLPane::Init()
 {
-	hDC = NULL;
-	hRC = NULL;
-	glpane.ctrl = this;
-	Add(glpane.SizePos());
-}
-
-GLCtrl::~GLCtrl()
-{
-	CloseGL();
-}
-
-Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
-{
-	p = p - GetScreenView().TopLeft() + ctrl->GetScreenView().TopLeft();
-	return ctrl->MouseEvent(event, p, zdelta, keyflags);
-}
-
-void GLCtrl::OpenGL()
-{
-	HWND hwnd = glpane.GetHWND();
+	HWND hwnd = GetHWND();
 	if(!hwnd)
 		return;
 	hDC = ::GetDC(hwnd);
@@ -38,18 +19,20 @@ void GLCtrl::OpenGL()
 	memset(&pfd, 0, sizeof(pfd));
 	pfd.nSize = sizeof(pfd);
 	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER | 0x00008000;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | 0x00008000;
+	if (ctrl->doubleBuffering) pfd.dwFlags |= PFD_DOUBLEBUFFER;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;
-	pfd.cDepthBits = 32;
+	pfd.cDepthBits = ctrl->depthSize;
+	pfd.cStencilBits = ctrl->stencilSize;
 	pfd.iLayerType = PFD_MAIN_PLANE;
 	int pf = ChoosePixelFormat(hDC, &pfd);
 	if(!pf) {
-		CloseGL();
+		Destroy();
 		return;
 	}
 	if(!SetPixelFormat(hDC, pf, &pfd)) {
-		CloseGL();
+		Destroy();
 		return;
 	}
 	DescribePixelFormat(hDC, pf, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
@@ -58,61 +41,60 @@ void GLCtrl::OpenGL()
 	if (!hRC)
 		return;
 	
-	wglMakeCurrent(hDC, hRC);
-	GLInit();
-	GLResize(GetSize().cx, GetSize().cy);
+	ActivateContext();
+	ctrl->GLInit();
+	ctrl->GLResize(GetSize().cx, GetSize().cy);
 }
 
-void GLCtrl::CloseGL()
+void GLCtrl::GLPane::Destroy()
 {
 	if (hDC != NULL && hRC != NULL)
 	{
-		wglMakeCurrent(hDC, hRC);
-		GLDone();
+		ActivateContext();
+		ctrl->GLDone();
 		wglMakeCurrent(NULL, NULL);
 	}
 	
 	if(hRC)
 	    wglDeleteContext(hRC);
 	if(hDC)
-	    ReleaseDC(glpane.GetHWND(), hDC);
+	    ReleaseDC(GetHWND(), hDC);
 }
 
-void GLCtrl::GLPaint()
+void GLCtrl::GLPane::ActivateContext()
 {
-	WhenGLPaint();
+	if (hRC != NULL && wglGetCurrentContext() != hRC)
+		wglMakeCurrent(hDC, hRC);
 }
 
 void GLCtrl::GLPane::State(int reason)
 {
 	if (reason == CLOSE)
-		ctrl->CloseGL();
+		Destroy();
 	
-	if (reason == LAYOUTPOS && ctrl->hDC != NULL && ctrl->hRC != NULL)
+	if (reason == LAYOUTPOS && hDC != NULL && hRC != NULL)
 	{
-		wglMakeCurrent(ctrl->hDC, ctrl->hRC);
+		ActivateContext();
 		ctrl->GLResize(GetSize().cx, GetSize().cy);
-		wglMakeCurrent(NULL, NULL);
 	}
 	
 	DHCtrl::State(reason);
 	
 	if (reason == OPEN)
-		ctrl->OpenGL();
+		Init();
 }
 
 LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if(message == WM_PAINT && ctrl->hDC && ctrl->hRC) 
+	if(message == WM_PAINT && hDC && hRC) 
 	{
 		PAINTSTRUCT ps;
 		BeginPaint(GetHWND(), &ps);
-		wglMakeCurrent(ctrl->hDC, ctrl->hRC);
+		ActivateContext();
 		ctrl->GLPaint();
 		glFlush();
 		glFinish();
-		SwapBuffers(ctrl->hDC);
-		wglMakeCurrent(NULL, NULL);
+		if (ctrl->doubleBuffering) SwapBuffers(hDC);
 		EndPaint(GetHWND(), &ps);
 		return 0;
 	}
@@ -120,15 +102,6 @@ LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		return 1;
 	
 	return DHCtrl::WindowProc(message, wParam, lParam);
-}
-
-Vector<int> GLCtrl::Pick(int x, int y)
-{
-	wglMakeCurrent(hDC, hRC);
-	Vector<int> result = _picking.Pick(x, y, THISBACK2(GLResize, GetSize().cx, GetSize().cy), THISBACK(GLPickingPaint));
-	wglMakeCurrent(NULL, NULL);
-	
-	return result;
 }
 
 #endif
