@@ -90,6 +90,7 @@ public:
 	Callback1<int> WhenBreakpoint;
 	Callback       WhenAnnotationMove;
 	Callback       WhenAnnotationClick;
+	Callback       WhenAnnotationRightClick;
 
 	void InsertLines(int i, int count);
 	void RemoveLines(int i, int count);
@@ -373,6 +374,7 @@ public:
 	Callback WhenLeftDown;
 	Callback WhenAnnotationMove;
 	Callback WhenAnnotationClick;
+	Callback WhenAnnotationRightClick;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;

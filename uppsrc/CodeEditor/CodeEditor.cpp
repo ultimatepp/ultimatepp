@@ -1012,6 +1012,7 @@ CodeEditor::CodeEditor() {
 	bar.WhenBreakpoint = THISBACK(ForwardWhenBreakpoint);
 	bar.WhenAnnotationMove = Proxy(WhenAnnotationMove);
 	bar.WhenAnnotationClick = Proxy(WhenAnnotationClick);
+	bar.WhenAnnotationRightClick = Proxy(WhenAnnotationRightClick);
 	highlight = HIGHLIGHT_NONE;
 	hilite_scope = 0;
 	hilite_bracket = 2;
