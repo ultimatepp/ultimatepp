@@ -531,6 +531,7 @@ public:
 	virtual   void      IdeSetBar();
 	virtual   void      IdeGotoCodeRef(String coderef);
 	virtual   void      IdeOpenTopicFile(const String& file);
+	virtual   void      IdeFlushFile();
 
 	enum {
 		EDITING, BUILDING, RUNNING, DEBUGGING,

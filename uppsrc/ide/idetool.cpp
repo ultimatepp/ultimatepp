@@ -102,13 +102,18 @@ void Ide::OpenATopic()
 	OpenTopic(t);
 }
 
+void Ide::IdeFlushFile()
+{
+	FlushFile();
+}
+
 void Ide::IdeOpenTopicFile(const String& file)
 {
 	EditFile(GetFileFolder(file));
 	if(designer) {
 		TopicEditor *te = dynamic_cast<TopicEditor *>(&designer->DesignerCtrl());
 		if(te)
-			te->GoTo(GetFileName(file), "", "");
+			te->GoTo(GetFileTitle(file), "", "");
 	}
 }
 

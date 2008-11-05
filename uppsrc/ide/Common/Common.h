@@ -67,6 +67,7 @@ public:
 	virtual void      IdeSetBar() = 0;
 	virtual void      IdeGotoCodeRef(String link) = 0;
 	virtual void      IdeOpenTopicFile(const String& file) = 0;
+	virtual void      IdeFlushFile() = 0;
 
 	virtual ~IdeContext() {}
 };
