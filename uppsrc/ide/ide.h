@@ -463,7 +463,7 @@ struct AssistEditor : CodeEditor {
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
 	void           SyncAnnotationPopup();
-	void           EditAnnotation();
+	void           EditAnnotation(bool fastedit);
 	void           Annotate(const String& filename);
 	void           OpenTopic(String topic, String create);
 	void           NewTopic(String group, String coderef);

@@ -209,12 +209,8 @@ void EditorBar::LeftDouble(Point p, dword flags)
 
 void EditorBar::RightDown(Point p, dword flags)
 {
-	return;
-	if(!editor || !bingenabled) return;
-	String& b = PointBreak(p.y);
-	EditText(b, "Conditional breakpoint", "Condition");
-	WhenBreakpoint(p.y);
-	Refresh();
+	if(p.x > GetSize().cx - annotations)
+		WhenAnnotationRightClick();
 }
 
 void EditorBar::InsertLines(int i, int count)

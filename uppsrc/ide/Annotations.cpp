@@ -153,7 +153,7 @@ void AssistEditor::NewTopic(String group, String coderef)
 		theide->EditFile(ef);
 }
 
-void AssistEditor::EditAnnotation()
+void AssistEditor::EditAnnotation(bool fastedit)
 {
 	String coderef;
 	Vector<String> tl;
@@ -183,7 +183,7 @@ void AssistEditor::EditAnnotation()
 				String scope2, item2;
 				SplitCodeRef(coderef2, scope2, item2);
 				m = GetCodeRefItem(coderef2);
-				if(scope2 == scope && m && m->access == access && tl.GetCount() == 1) {
+				if(scope2 == scope && m && m->access == access && tl.GetCount() == 1 && fastedit) {
 					OpenTopic(tl[0] + '#' + coderef2, coderef);
 					return;
 				}
