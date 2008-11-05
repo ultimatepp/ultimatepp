@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x) // DLOG(x)
 
 ToolTip::ToolTip()
 {
@@ -49,8 +49,10 @@ ToolTip& AppToolTip()
 void CloseToolTip()
 {
 	ToolTip& q = AppToolTip();
-	if(q.IsOpen())
+	if(q.IsOpen()) {
+		LLOG("CLOSE: CloseToolTip");
 		q.Close();
+	}
 }
 
 void EndShowMode()
@@ -70,7 +72,12 @@ void ShowToolTip()
 			LLOG("-> foreground");
 			ToolTip& q = AppToolTip();
 			q.Set(text);
-			q.PopUp(top, GetMousePos() + Size(0, 22), !showmode);
+			Size sz = q.GetMinSize();
+			Rect r = top->GetWorkArea();
+			Point p = GetMousePos() + Size(0, sz.cy);
+			if(p.y + sz.cy > r.bottom)
+				p = GetMousePos() - Size(0, 22);
+			q.PopUp(top, p, !showmode);
 			showmode = true;
 			KillTimeCallback((void *)EndShowMode);
 			return;
@@ -99,7 +106,7 @@ bool ToolTipHook(Ctrl *ctrl, bool inframe, int event, Point p, int zdelta, dword
 		}
 	}
 	if(event == Ctrl::MOUSELEAVE) {
-		LLOG("ToolTipHook MOUSELEAVE");
+		LLOG("ToolTipHook MOUSELEAVE " << UPP::Name(ctrl));
 		CloseToolTip();
 		SetTimeCallback(1000, callback(EndShowMode), (void *)EndShowMode);
 	}
@@ -113,8 +120,9 @@ bool ToolTipHook(Ctrl *ctrl, bool inframe, int event, Point p, int zdelta, dword
 
 bool ToolTipStateHook(Ctrl *ctrl, int reason)
 {
-	if((reason == Ctrl::CLOSE || reason == Ctrl::ENABLE) && ctrl != &AppToolTip()) {
-		LLOG("ToolTipStateHook -> close");
+	if((reason == Ctrl::CLOSE || reason == Ctrl::ENABLE) && ctrl != &AppToolTip() &&
+	   AppToolTip().IsOpen()) {
+		LLOG("ToolTipStateHook -> close, reason: " << reason);
 		CloseToolTip();
 		EndShowMode();
 	}
