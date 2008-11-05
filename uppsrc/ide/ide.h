@@ -399,7 +399,7 @@ struct AssistEditor : CodeEditor {
 	bool           assist_active;
 	bool           commentdp;
 	bool           inbody;
-	bool           thisback;
+	bool           thisback, thisbackn;
 	Ide           *theide;
 	
 	void           PopUpAssist(bool auto_insert = false);

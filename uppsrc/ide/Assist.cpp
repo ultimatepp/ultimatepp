@@ -313,6 +313,14 @@ void AssistEditor::Assist()
 		String id = IdBack(q);
 		if(id == "THISBACK") {
 			thisback = true;
+			thisbackn = false;
+			GatherItems(parser.current_scope, false, in_types, false);
+			PopUpAssist();
+			return;
+		}
+		if(id == "THISBACK1" || id == "THISBACK2" || id == "THISBACK3" || id == "THISBACK4") {
+			thisback = true;
+			thisbackn = true;
 			GatherItems(parser.current_scope, false, in_types, false);
 			PopUpAssist();
 			return;
@@ -448,14 +456,26 @@ void AssistEditor::AssistInsert()
 			ch++;
 		Remove(cl, ch - cl);
 		SetCursor(cl);
-		if(thisback) {
-			while(Ch(ch) == ' ') ch++;
-			if(Ch(ch) != ')')
-				txt << ')';
-		}
+		if(thisback)
+			for(;;) {
+				int c = Ch(cl++);
+				if(!c || Ch(cl) == ',' || Ch(cl) == ')')
+					break;
+				if(c != ' ') {
+					if(thisbackn)
+						txt << ", ";
+					txt << ')';
+					break;
+				}
+			}
 		int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
+		if(thisback) {
+			if(thisbackn)
+				SetCursor(GetCursor() - 1);
+		}
+		else
 		if(!inbody)
-			SetCursor(cl + n);
+			SetCursor(cl + n - thisbackn);
 		else
 		if(pl > l)
 			SetSelection(cl + l, cl + pl);
@@ -542,7 +562,7 @@ bool AssistEditor::Key(dword key, int count)
 		if(key == '(') {
 			int q = GetCursor() - 1;
 			String id = IdBack(q);
-			if(id == "THISBACK")
+			if(id == "THISBACK" || id == "THISBACK1" || id == "THISBACK2" || id == "THISBACK3" || id == "THISBACK4")
 				Assist();
 		}
 	}
