@@ -103,8 +103,9 @@ void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 void PopUpTable::PopUp(Ctrl *owner, int width)
 {
 	Rect r = owner->GetScreenRect();
-	r.right = r.left + width;
-	PopUp(owner, r.left, r.top, r.bottom, width ? width : r.Width());
+	if(width)
+		r.right = r.left + width;
+	PopUp(owner, r.left, r.top, r.bottom, r.Width());
 }
 
 void PopUpTable::PopUp(Ctrl *owner)

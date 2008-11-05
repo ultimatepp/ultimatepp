@@ -72,13 +72,18 @@ void TopicEditor::MoveTopic()
 	}
 	Flush();
 	RealizeDirectory(GetFileFolder(np));
+	String pi = ForceExt(p, ".tppi");
 	if(!SaveFile(np, LoadFile(p))) {
 		Exclamation("Operation failed!");
+		TopicCursor();
 		return;
 	}
+	SaveFile(ForceExt(np, ".tppi"), LoadFile(pi));
 	serial++;
 	FileDelete(p);
+	FileDelete(pi);
 	InvalidateTopicInfoPath(p);
 	InvalidateTopicInfoPath(np);
+	TheIde()->IdeFlushFile();
 	TheIde()->IdeOpenTopicFile(np);
 }

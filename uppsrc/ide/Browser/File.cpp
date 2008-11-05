@@ -150,17 +150,20 @@ void SaveGroupInc(const String& grouppath)
 
 void SetTopicGroupIncludeable(const char *path, bool set)
 {
-	FindFile ff(AppendFileName(path, "*.tpp"));
+	FindFile ff(AppendFileName(path, "*.*"));
 	while(ff) {
-		if(GetFileExt(ff.GetName()) == ".tpp") {
-			String s = AppendFileName(path, ff.GetName());
-			String t = AppendFileName(path, ForceExt(ff.GetName(), ".tppi"));
-			if(set) {
-				Topic p = ReadTopic(LoadFile(s));
-				SaveFile(t, WriteTopicI(p.title, ParseQTF(p.text)));
+		if(ff.IsFile()) {
+			String fn = ff.GetName();
+			String t = AppendFileName(path, ForceExt(fn, ".tppi"));
+			if(GetFileExt(fn) == ".tpp") {
+				String s = AppendFileName(path, fn);
+				if(set) {
+					Topic p = ReadTopic(LoadFile(s));
+					SaveFile(t, WriteTopicI(p.title, ParseQTF(p.text)));
+				}
 			}
-			else
-				FileDelete(t);
+			if(GetFileExt(fn) == ".tppi" && !set)
+				DeleteFile(t);
 		}
 		ff.Next();
 	}
