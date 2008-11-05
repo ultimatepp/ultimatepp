@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)
+#define LLOG(x)     DLOG(x)
 #define LTIMING(x)  // RTIMING(x)
 
 bool DoQualify(Scopefo& nf, const String& type, String& qt);
@@ -216,7 +216,8 @@ void QualifyPass1(CppBase& base)
 				}
 				m.qitem = m.item;
 			}
-			LLOG(base.GetKey(ni) << "." << m.item << " " << GetCppFile(m.file)
+			LLOG(base.GetKey(ni) << "." << m.item << " " << GetCppFile(m.file) << '(' << m.line << ") "
+			     << AsCString(m.natural)
 			     << " impl:" << m.impl << " kind:" << (int)m.kind << " IsType:" << m.IsType()
 			     << " type: " << m.type << " qtype:" << m.qtype << " tparam:" << m.tparam);
 		}
@@ -264,7 +265,8 @@ void QualifyPass2(CppBase& base)
 					                     : m.item;
 				}
 			}
-			LLOG(base.GetKey(ni) << "." << m.item << " " << GetCppFile(m.file)
+			LLOG(base.GetKey(ni) << "." << m.item << " " << GetCppFile(m.file) << '(' << m.line << ") "
+			     << AsCString(m.natural)
 			     << " impl:" << m.impl << " kind:" << (int)m.kind << " IsType:" << m.IsType()
 			     << " qtype:" << m.qtype << " tparam:" << m.tparam);
 		}
