@@ -1,11 +1,11 @@
 uses
-	CtrlLib,
-	ExpandFrame;
+	CtrlLib;
 
 file
 	CtrlLibTest.h,
-	CtrlLibTest.lay,
-	main.cpp;
+	main.cpp,
+	CtrlLibTest.lay;
 
 mainconfig
 	"" = "GUI";
+

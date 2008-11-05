@@ -1,25 +1,31 @@
-$uvs: PENDING CONFLICT
 #include "CtrlLibTest.h"
 
-$uvs: REPOSITORY INSERT
-// Run
-$uvs: END REPOSITORY INSERT
-$uvs: REPOSITORY DELETE
-#define IMAGECLASS Img
-#define IMAGEFILE <CtrlLibTest/img.iml>
-#include <Draw/iml_source.h>
+ChildWnd::ChildWnd()
+{
+	CtrlLayout(*this, "Child Window");
+	btn1.Hide();
+	btn2.Hide();		
+}
 
 CtrlLibTest::CtrlLibTest()
 {
-	Sizeable();
-	CtrlLayout(*this);
-	drop.SetFrame(InsetFrame());
-	drop.Add("DropList");
+	CtrlLayout(*this, "Main Window");
+	btn1 <<= THISBACK(OnPush1);
+	btn2 <<= THISBACK(OnPush2);
 }
 
-$uvs: END REPOSITORY DELETE
+void CtrlLibTest::OnPush1()
+{
+	wnd.Open(this);
+	wnd.TopMost();
+}
+
+void CtrlLibTest::OnPush2()
+{
+	PromptOK("I'm invisible!");
+}
+
 GUI_APP_MAIN
 {
 	CtrlLibTest().Run();
 }
-
