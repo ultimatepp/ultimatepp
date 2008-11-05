@@ -1,20 +1,7 @@
-$uvs: PENDING CONFLICT
-$uvs: REPOSITORY INSERT
-LAYOUT(CtrlLibTestLayout, 404, 208)
-	UNTYPED(paneframe, LeftPosZ(4, 392).VSizePosZ(4, 44))
-	ITEM(Label, dv___1, SetLabel(t_("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")).LeftPosZ(4, 392).BottomPosZ(9, 19))
+LAYOUT(CtrlLibTestLayout, 452, 420)
+	ITEM(Button, btn2, SetLabel(t_("Click second")).LeftPosZ(4, 92).TopPosZ(384, 28))
+	ITEM(Button, btn1, SetLabel(t_("Click first")).LeftPosZ(100, 92).TopPosZ(384, 28))
+	ITEM(DropList, edit, LeftPosZ(28, 196).TopPosZ(44, 19))
+	ITEM(ArrayCtrl, arr, LeftPosZ(4, 436).TopPosZ(72, 308))
 END_LAYOUT
 
-LAYOUT(TestLayout, 332, 136)
-	ITEM(Button, dv___0, RightPosZ(4, 68).BottomPosZ(4, 20))
-	ITEM(Button, dv___1, LeftPosZ(4, 68).BottomPosZ(4, 20))
-	ITEM(ArrayCtrl, dv___2, LeftPosZ(4, 324).TopPosZ(4, 104))
-END_LAYOUT
-
-$uvs: END REPOSITORY INSERT
-$uvs: REPOSITORY DELETE
-LAYOUT(CtrlLibTestLayout, 336, 156)
-	ITEM(DropList, drop, LeftPosZ(4, 300).TopPosZ(4, 36))
-END_LAYOUT
-
-$uvs: END REPOSITORY DELETE

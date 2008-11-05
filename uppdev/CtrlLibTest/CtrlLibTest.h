@@ -1,99 +1,82 @@
-$uvs: PENDING CONFLICT
 #ifndef _CtrlLibTest_CtrlLibTest_h
 #define _CtrlLibTest_CtrlLibTest_h
 
 #include <CtrlLib/CtrlLib.h>
-$uvs: REPOSITORY INSERT
-using namespace Upp;
-
-template<class T>
-class WithMinSize : public T
-{
-	Size minsize;
-public:
-	virtual Size GetMinSize() const 	{ return minsize; }
-	void 		 SetMinSize(Size sz)	{ minsize = sz; }
-};
-
-#include <ExpandFrame/ExpandFrame.h>
-$uvs: END REPOSITORY INSERT
-$uvs: REPOSITORY DELETE
 
 using namespace Upp;
-$uvs: END REPOSITORY DELETE
 
 #define LAYOUTFILE <CtrlLibTest/CtrlLibTest.lay>
 #include <CtrlCore/lay.h>
-
-$uvs: REPOSITORY INSERT
-#define CNT 10
-$uvs: END REPOSITORY INSERT
-$uvs: REPOSITORY DELETE
-#define IMAGECLASS Img
-#define IMAGEFILE <CtrlLibTest/img.iml>
-#include <Draw/iml_header.h>
-
-class Tools : public TopWindow
+/*
+class MagickRaster : public Raster
 {
 public:
-	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
-		if (message == WM_MOVE && GetOwner()) {
-			Rect or = GetOwner()->GetScreenRect();
-			Rect r = GetScreenRect();
-
-			if (!or.Contains(r)) {
-				Point tl = r.TopLeft();
-				Point br = r.BottomRight();
-				if (tl.x < or.left)
-					r.OffsetHorz(or.left - tl.x);
-				if (tl.y < or.top)
-					r.OffsetVert(or.top - tl.y);
-				if (br.x > or.bottom)
-					r.OffsetHorz(br.x - or.bottom);
-				if (br.y > or.right)
-					r.OffsetVert(br.y - or.right);
-				SetRect(r);
-			}
-		}
-		return TopWindow::WindowProc(message, wParam, lParam);
-	}
+	virtual Size    GetSize()			{ return sz; }
+	virtual Line    GetLine(int line);
+	virtual Info    GetInfo();
+	
+	MagickRaster(Magick::Image img);
+	MagickRaster(Magick::Image img, int x, int y, int w, int h);
+private:	
+	Magick::PixelPacket *	pixels;
+	Size 					sz;
+	
+	void SetImage(Magick::Image, int x, int y, int w, int h);
 };
 
-$uvs: END REPOSITORY DELETE
+MagickRaster::MagickRaster(Magick::Image)
+{
+	SetImage(img, 0, 0, img.columns(), img.rows()); 
+}
+
+MagickRaster::MagickRaster(Magick::Image, int x, int y, int w, int h)
+{
+	SetImage(img, x, y, w, h);
+}
+
+void MagickRaster::SetImage(Magick::Image, int x, int y, int w, int h)
+{
+	pixels = Magick::getPixels(x, y, w, h);
+	sz = Size(w, h);
+}
+
+Line MagickRaster::GetLine(int line)
+{
+	if (Magick::QuantumDepth == 8)
+		return Line((const RGBA *)~lines[line], false);
+	else
+		return Line(~lines[line], this, false)
+}
+
+Info MagickRaster::GetInfo()
+{
+	Info f;
+	f.bpp = Magick::QuantumDepth;
+	f.colors = (1 << f.bpp)*3;
+	f.dots = Size(0, 0);
+	f.hotspot = Point(0, 0);
+	f.kind = IMAGE_ALPHA;
+	return f;	
+}
+*/
+
+class ChildWnd : public WithCtrlLibTestLayout<TopWindow> {
+public:
+	typedef ChildWnd CLASSNAME;
+	ChildWnd();
+};
+
 class CtrlLibTest : public WithCtrlLibTestLayout<TopWindow> {
 public:
+	ChildWnd wnd;
+
 	typedef CtrlLibTest CLASSNAME;
-$uvs: REPOSITORY INSERT
-
-	ParentCtrl paneframe;
-	WithTestLayout< WithMinSize<ParentCtrl> > pane[CNT];
-	ExpandFrame	frame[CNT];
-
-	CtrlLibTest() {
-		CtrlLayout(*this, "CtrlLib Test App");
-		Sizeable();
-		for (int i = 0; i < CNT; i++) {
-			CtrlLayout(pane[i]);
-			WString s = Format("Pane %d", i);
-			paneframe.AddFrame(frame[i].Top(pane[i]).SetTitle(s).Expand(true).SetStyle(ExpandFrame::StyleWide()));
-		}
-	}
-
-	void OnButton1()
-	{
-		//Duration t = (Duration)~duration;
-		int i = 1;
-		i++;
-	}
-$uvs: END REPOSITORY INSERT
-$uvs: REPOSITORY DELETE
-	ImageBuffer ib;
-	Image img;
-
-
 	CtrlLibTest();
-$uvs: END REPOSITORY DELETE
+	
+	void OnPush1();
+	void OnPush2();
 };
+
 
 #endif
 
