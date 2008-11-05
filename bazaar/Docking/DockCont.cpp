@@ -755,7 +755,7 @@ void DockCont::Lock(bool lock)
 	ClearFrames();	
 	handle.Show(frames);
 	if (frames)
-		InsertFrame(0, FieldFrame());
+		InsertFrame(0, Single<DockCont::DockContFrame>());
 	AddFrame(tabbar);
 	AddFrame(handle);	
 	RefreshLayout();

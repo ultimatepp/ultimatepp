@@ -70,6 +70,15 @@ private:
 	};	
 	friend class DockContMenu;
 		
+	class DockContFrame : public CtrlFrame {
+		virtual void FrameLayout(Rect& r)                   { r.Deflate(2); }
+		virtual void FramePaint(Draw& w, const Rect& r) {
+			DrawFrame(w, r, SColorShadow());
+			DrawFrame(w, r.Deflated(1), SColorPaper);
+		}
+		virtual void FrameAddSize(Size& sz) { sz += 4; }
+	};		
+		
 	struct Handle : public FrameCtrl<Ctrl>
 	{
 		Callback WhenContext;

@@ -16,7 +16,6 @@ public:
 	typedef DockableCtrl CLASSNAME;
 	
 	struct Style : ChStyle<Style> {
-		CtrlFrame *frame;
 		Value handle[2];
 		Rect handle_margins;
 		bool handle_vert;

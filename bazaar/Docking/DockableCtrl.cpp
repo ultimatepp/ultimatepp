@@ -136,8 +136,6 @@ CH_STYLE(DockableCtrl, Style, StyleDefault)
 {
 	const TabCtrl::Style* style = &TabCtrl::StyleDefault();
 	
-	frame = NULL;
-	
 	handle[0] = ChCrop(style->normal[0], Size(20, 20), Rect(2, 2, 12, 19)); // No focus
 	handle[1] = Colorize(handle[0], SColorHighlight(), 160); // Focus
 	handle_margins = Rect(2, 2, 2, 4);
