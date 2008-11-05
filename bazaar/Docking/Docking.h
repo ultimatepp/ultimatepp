@@ -59,6 +59,8 @@ protected:
 	void 			StartHighlight(DockCont *dcptr);		
 	void 			Highlight(int align, DockCont &cont, DockCont *target);
 	void 			StopHighlight(bool do_animatehl);
+	virtual bool	NeedFrameReorder(int align);
+	bool			IsReorderingFrames()								{ return prehighlightframepos >= 0; }
 	// Called by containers to signal drag-drop events
 	virtual void 	ContainerDragStart(DockCont &dc);
 	virtual void 	ContainerDragMove(DockCont &dc);
@@ -113,8 +115,12 @@ private:
 	bool locked;
 	bool tabtext;
 	bool tabalign;
+	bool frameorder;
 	dword nesttoggle;
-
+	String layoutbackup;
+	int  dockframepos;
+	int	 prehighlightframepos;
+	
 	Array<DockCont> 			conts;
 	Vector<DockableCtrl *> 		dockers;
 	ArrayMap<String, String> 	layouts;
@@ -165,6 +171,7 @@ public:
 	void 			DockGroup(int align, String group, int pos = -1);
 	void 			FloatGroup(String group);
 	void 			AutoHideGroup(int align, String group);
+	void 			AutoHideGroup(String group);
 	void 			TabDockGroup(int align, String group, int pos = -1);
 	void 			TabFloatGroup(String group);	
 	void			CloseGroup(String group);
@@ -199,6 +206,11 @@ public:
 	DockWindow &	NoGrouping()						{ return Grouping(false); }
 	bool			IsGrouping() const					{ return grouping; }	
 	
+	DockWindow &	FrameReordering(bool reorder = true){ frameorder = reorder; return *this;}
+	DockWindow &	NoFrameReordering()					{ return FrameReordering(false); }
+	bool			IsFrameReordering() const			{ return frameorder; }		
+	DockWindow &	SetFrameOrder(int first, int second = DOCK_NONE, int third = DOCK_NONE, int fourth = DOCK_NONE);						
+	
 	DockWindow &	AllowDockAll();					
 	DockWindow &	AllowDockNone();				
 	DockWindow &	AllowDockLeft(bool v = true)	{ dockable[DOCK_LEFT] = v; return *this; }
@@ -229,6 +241,9 @@ public:
 	
 	void			SerializeWindow(Stream &s);
 	void 			SerializeLayout(Stream &s, bool withsavedlayouts = true);
+	
+	void			BackupLayout();
+	void			RestoreLayout();
 	
 	int 			SaveLayout(String name);
 	void 			LoadLayout(int ix);
@@ -264,6 +279,8 @@ private:
 	
 	void			DoFrameSize(bool animate, int align, int targetsize);
 	void			FrameAnimateTick();
+	void			DoFrameReorder(int align);
+	void			UndoFrameReorder();
 	
 	Size			CtrlBestSize(const Ctrl &c, bool restrict = true) const;
 	

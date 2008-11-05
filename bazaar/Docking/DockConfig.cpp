@@ -154,7 +154,7 @@ void DockConfigDlg::OnDeleteLayout()
 void DockConfigDlg::OnTreeCursor()
 {
 	int id = tree.GetCursor();
-	if (id < 0) { deletegroup.Disable(); return; }
+	if (id <= 0) { deletegroup.Disable(); return; }
 	int p = tree.GetParent(id);
 	if (p == 0)
 		deletegroup.Enable();

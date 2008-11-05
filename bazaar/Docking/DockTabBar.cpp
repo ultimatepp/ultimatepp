@@ -99,6 +99,7 @@ DockTabBar::DockTabBar()
 {
 	autohide = -1; 
 	icons = true;
+	showtext = true;
 	AutoScrollHide().InactiveDisabled();
 }
 

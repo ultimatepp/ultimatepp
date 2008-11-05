@@ -120,7 +120,6 @@ void DockingExample::DockInit()
 	if (badfile) {
 		MemStream in(default_layout_bin, default_layout_bin_length);
 		SerializeWindow(in);
-		badfile = in.IsError();		
 	}
 }
 
