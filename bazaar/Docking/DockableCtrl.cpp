@@ -91,20 +91,15 @@ void DockableCtrlImgsLook(Value* look, int i, int n)
 		*look++ = DockingImg::Get(i++);
 }
 
-Image ChCrop(const Value &element, Size canvas, Rect crop)
+Image ChCrop(const Value &element, Size canvas, Rect crop, Color baseline)
 {
 	ImageDraw draw(canvas);
 	ChPaint(draw, canvas, element);	
+	if (!IsNull(baseline)) {
+		draw.DrawLine(0, canvas.cy-1, canvas.cx+1, canvas.cy, 1, baseline);
+	}
 	return Crop(draw, crop);
 }
-
-Image ChRender(const Value &element, Size canvas, Color c)
-{
-	ImageDraw draw(canvas);
-	ChPaint(draw, canvas, element);	
-	return IsNull(c) ? draw : Colorize(draw, c, 160);
-}
-
 
 Image StandardHighlight(Color inside, Color border)
 {
@@ -136,9 +131,9 @@ CH_STYLE(DockableCtrl, Style, StyleDefault)
 {
 	const TabCtrl::Style* style = &TabCtrl::StyleDefault();
 	
-	handle[0] = ChCrop(style->normal[0], Size(20, 20), Rect(2, 2, 12, 19)); // No focus
+	handle[0] = ChCrop(style->normal[0], Size(20, 20), Rect(2, 2, 11, 20), SColorShadow); // No focus
 	handle[1] = Colorize(handle[0], SColorHighlight(), 160); // Focus
-	handle_margins = Rect(2, 2, 2, 4);
+	handle_margins = Rect(2, 0, 0, 0);
 	handle_vert = false;
 	
 	title_font = StdFont();
@@ -160,7 +155,7 @@ CH_STYLE(DockableCtrl, Style, StyleDefaultVert)
 	
 	handle[0] = RotateAntiClockwise(handle[0]); // No focus
 	handle[1] = RotateAntiClockwise(handle[1]); // Focus
-	handle_margins = Rect(0, 2, 2, 2);
+	handle_margins = Rect(0, 2, 2, 1);
 	handle_vert = true;
 }
 

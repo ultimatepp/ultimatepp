@@ -179,6 +179,8 @@ public:
 	void			SyncButtons()					{ if (GetCount()) SyncButtons(GetCurrent()); }
 	void			SyncTabs(int align, bool text);				
 	void 			Lock(bool lock);
+	void 			SyncFrames();
+	void 			SyncFrames(bool lock);
 	
 	void 			Grouping(bool grouping)			{ tabbar.Grouping(grouping); GroupRefresh(); }
 	void			GroupRefresh();	

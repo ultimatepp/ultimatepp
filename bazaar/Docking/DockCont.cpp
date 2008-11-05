@@ -435,7 +435,7 @@ void DockCont::StateDocked(DockWindow &dock)
 {
 	base = &dock;
 	dockstate = STATE_DOCKED;	
-	handle.Show(!dock.IsLocked());
+	SyncFrames();
 	Show(); 
 }
 
@@ -443,7 +443,7 @@ void DockCont::StateFloating(DockWindow &dock)
 {
 	base = &dock; 
 	dockstate = STATE_FLOATING;
-	handle.Hide();
+	SyncFrames();
 	Show(); 
 }
 
@@ -750,15 +750,20 @@ void DockCont::Lock(bool lock)
 	tabbar.Crosses(!lock);
 	tabbar.WhenDrag 		= lock ? Callback1<int>() : THISBACK(TabDragged);
 	tabbar.WhenContext 		= lock ? Callback1<int>() : THISBACK(TabContext);	
-
-	bool frames = !lock && (IsDocked() || IsAutoHide());
-	ClearFrames();	
-	handle.Show(frames);
-	if (frames)
-		InsertFrame(0, Single<DockCont::DockContFrame>());
-	AddFrame(tabbar);
-	AddFrame(handle);	
+	SyncFrames(lock);
 	RefreshLayout();
+}
+
+void DockCont::SyncFrames()
+{
+	SyncFrames(base->IsLocked());
+}
+
+void DockCont::SyncFrames(bool lock)
+{
+	bool frames = !lock && (IsDocked() || IsAutoHide());
+	handle.Show(frames);
+	SetFrame(0, frames ? Single<DockCont::DockContFrame>() : NullFrame());
 }
 
 DockCont::DockCont()
@@ -791,6 +796,9 @@ DockCont::DockCont()
 	autohide.Tip(t_("Auto-Hide")) 		<<= THISBACK(AutoHide);
 	windowpos.Tip(t_("Window Menu")) 	<<= THISBACK(WindowMenu);		
 	
+	AddFrame(NullFrame());
+	AddFrame(tabbar);
+	AddFrame(handle);	
 	Lock(false);	
 }
 
