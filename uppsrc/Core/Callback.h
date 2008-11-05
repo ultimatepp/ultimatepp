@@ -100,6 +100,23 @@ Callback1<P1> callback1(const Object *object, void (M::*method)(P1, P) const, T 
 	                         (object, method, arg));
 }
 
+template <class OBJECT_, class METHOD_, class P1, class T>
+struct GateMethodActionArg1 : public Gate1Action<P1> {
+	OBJECT_  *object;
+	METHOD_   method;
+	T         arg;
+	bool      Execute(P1 p1) { return (object->*method)(p1, arg); }
+
+	GateMethodActionArg1(OBJECT_ *object, METHOD_ method, T arg)
+	: object(object), method(method), arg(arg) {}
+};
+
+template <class Object, class M, class P1, class P, class T>
+Gate1<P1> callback1(Object *object, bool (M::*method)(P1, P), T arg) {
+	return Gate1<P1>(new GateMethodActionArg1<Object, bool (M::*)(P1, P), P1, T>
+	                         (object, method, arg));
+}
+
 template <class F, class P1, class T, class HC = F>
 struct CallbackActionCallArg1 : Callback1Action<P1> {
 	F         fn;
