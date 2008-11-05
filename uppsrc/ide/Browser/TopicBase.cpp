@@ -167,7 +167,7 @@ void InvalidateTopicInfoPath(const String& path)
 {
 	VectorMap<String, TopicInfo>& t = topic_info();
 	for(int i = 0; i < t.GetCount(); i++)
-		if(t[i].path == path)
+		if(!t.IsUnlinked(i) && t[i].path == path)
 			t.Unlink(i);
 }
 

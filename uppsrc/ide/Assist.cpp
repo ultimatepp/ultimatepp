@@ -59,6 +59,7 @@ AssistEditor::AssistEditor()
 	scope_item.SetPos(3000);
 	navigatorpane.Add(scope_item);
 	browser.scope.NoWantFocus();
+	browser.scope.WhenLeftDouble = THISBACK(GotoBrowserScope);
 	browser.item.NoWantFocus();
 	browser.item.WhenLeftClick = browser.item.WhenLeftDouble = THISBACK(BrowserGoto);
 	browser.WhenKeyItem = THISBACK(BrowserGotoNF);

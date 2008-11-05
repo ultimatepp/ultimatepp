@@ -84,6 +84,7 @@ void CodeBrowser::Load()
 		scope.Add(IsString(ndx[i]) ? ndx[i] : Null, txt[i], ndx[i]);
 	if(scope.FindSetCursor(key))
 		scope.ScCursor(sc);
+	clear.Enable(IsSearch());
 }
 
 int ItemCompare(const Value& v1, const Value& v2)
@@ -219,6 +220,7 @@ void CodeBrowser::Search()
 
 bool CodeBrowser::Key(dword key, int count)
 {
+	clear.Enable(IsSearch());
 	if(key == K_UP || key == K_DOWN) {
 		if(search.HasFocus() || search_item.HasFocus()) {
 			EditString& es = search.HasFocus() ? search : search_item;

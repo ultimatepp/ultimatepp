@@ -99,7 +99,7 @@ void TopicEditor::Tools(Bar& bar)
 	String l = editor.GetFormatInfo().label;
 	bool b = l.GetCount() > 2 && l != "noref";
 	bar.Add(b, "See referenced code", IdeCommonImg::Source(), THISBACK(JumpToDefinition))
-	   .Key(K_ALT_J);
+	   .Key(K_ALT_J).Key(K_ALT_I);
 	bar.Add("Find broken references..", IdeCommonImg::FindBrokenRef(), THISBACK(FindBrokenRef))
 	   .Key(K_CTRL_F3);
 #ifdef REPAIR

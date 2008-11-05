@@ -21,6 +21,7 @@ void LoadTopics(FileList& topic, const String& grouppath)
 	while(ff) {
 		if(ff.IsFile() && GetFileExt(ff.GetName()) == ".tpp")
 			topic.Add(GetFileTitle(ff.GetName()), TopicImg::Topic());
+		ff.Next();
 	}
 	topic.Sort(ListOrder());
 	topic.Enable();

@@ -22,7 +22,7 @@ void AssistEditor::Annotate(const String& filename)
 bool IsCodeItem(RichText& txt, int i)
 {
 	static Uuid codeitem = CodeItemUuid();
-	static Uuid stritem = StructItemUuid();;
+	static Uuid stritem = StructItemUuid();
 	if(i < txt.GetPartCount() && txt.IsPara(i)) {
 		Uuid style = txt.GetParaStyle(i);
 		return style == codeitem || style == stritem;
@@ -105,9 +105,14 @@ void AssistEditor::SyncAnnotationPopup()
 				if(!IsCodeItem(topic_text, i)) i++;
 				while(IsCodeItem(topic_text, i))
 					result.Cat(topic_text.Get(i++));
-				while(i < topic_text.GetPartCount() && topic_text.IsPara(i) && !IsCodeItem(topic_text, i)
+				while(i < topic_text.GetPartCount() && !IsCodeItem(topic_text, i)
 				      && !IsBeginEnd(topic_text, i))
-					result.Cat(topic_text.Get(i++));
+					if(topic_text.IsPara(i))
+						result.Cat(topic_text.Get(i++));
+					else {
+						RichTable table(topic_text.GetTable(i++), 1);
+						result.CatPick(table);
+					}
 				break;
 			}
 		annotation_popup.Pick(result, GetRichTextStdScreenZoom());

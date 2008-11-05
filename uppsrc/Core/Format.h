@@ -64,7 +64,6 @@ Time        ScanTime(const char *text, const char **endptr, const char *format, 
 struct Formatting
 {
 	int    language;
-	int    maxn;
 	Value  arg;
 	String format;
 	String id;
