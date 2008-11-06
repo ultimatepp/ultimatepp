@@ -465,7 +465,7 @@ struct AssistEditor : CodeEditor {
 	void           SyncAnnotationPopup();
 	void           EditAnnotation(bool fastedit);
 	void           Annotate(const String& filename);
-	void           OpenTopic(String topic, String create);
+	void           OpenTopic(String topic, String create, bool before);
 	void           NewTopic(String group, String coderef);
 
 	void           SerializeNavigator(Stream& s);
@@ -945,7 +945,7 @@ public:
 		void  RescanCode();
 		void  QueryId();
 		void  About();
-		void  OpenTopic(const String& topic, const String& createafter);
+		void  OpenTopic(const String& topic, const String& createafter, bool before);
 		void  OpenTopic(const String& topic);
 		void  OpenATopic();
 		void  ToggleNavigator(int nav);

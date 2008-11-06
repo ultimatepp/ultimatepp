@@ -10,3 +10,11 @@ TOPIC("String1$en-us")
 #include "String1$en-us.tppi"
 END_TOPIC
 
+TOPIC("Size$en-us")
+#include "Size$en-us.tppi"
+END_TOPIC
+
+TOPIC("algo$en-us")
+#include "algo$en-us.tppi"
+END_TOPIC
+

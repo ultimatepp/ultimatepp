@@ -347,7 +347,7 @@ public:
 	void ShowEditor(bool b)                          { editor.Show(b); }
 	bool NewTopicEx(const String& name, const String& create);
 	void Open(const String& grouppath);
-	void GoTo(const String& topic, const String& link, const String& create);
+	void GoTo(const String& topic, const String& link, const String& create, bool before);
 	
 	static int  GetSerial();
 
