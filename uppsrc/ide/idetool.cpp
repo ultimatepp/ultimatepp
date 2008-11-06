@@ -76,7 +76,7 @@ void Ide::RescanCode()
 //*/
 }
 
-void Ide::OpenTopic(const String& topic, const String& createafter)
+void Ide::OpenTopic(const String& topic, const String& createafter, bool before)
 {
 	TopicLink tl = ParseTopicLink(topic);
 	if(tl) {
@@ -84,14 +84,14 @@ void Ide::OpenTopic(const String& topic, const String& createafter)
 		if(designer) {
 			TopicEditor *te = dynamic_cast<TopicEditor *>(&designer->DesignerCtrl());
 			if(te)
-				te->GoTo(tl.topic, tl.label, createafter);
+				te->GoTo(tl.topic, tl.label, createafter, before);
 		}
 	}
 }
 
 void Ide::OpenTopic(const String& topic)
 {
-	OpenTopic(topic, String());
+	OpenTopic(topic, String(), false);
 }
 
 void Ide::OpenATopic()
@@ -113,7 +113,7 @@ void Ide::IdeOpenTopicFile(const String& file)
 	if(designer) {
 		TopicEditor *te = dynamic_cast<TopicEditor *>(&designer->DesignerCtrl());
 		if(te)
-			te->GoTo(GetFileTitle(file), "", "");
+			te->GoTo(GetFileTitle(file), "", "", false);
 	}
 }
 

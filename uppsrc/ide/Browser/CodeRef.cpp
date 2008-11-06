@@ -339,22 +339,23 @@ void TopicEditor::InsertNew(const String& coderef)
 	editor.PrevPara();
 }
 
-void TopicEditor::GoTo(const String& _topic, const String& link, const String& create)
+void TopicEditor::GoTo(const String& _topic, const String& link, const String& create, bool before)
 {
 	if(topic.FindSetCursor(_topic) && !IsNull(link)) {
 		editor.Select(editor.GetLength(), 0);
 		editor.GotoLabel(link);
 		if(!IsNull(create)) {
-			for(bool firstpass = true; firstpass; firstpass = false)
-				for(;;) {
-					int c = editor.GetCursor();
-					RichText::FormatInfo f = editor.GetFormatInfo();
-					if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") && !firstpass)
-						break;
-					editor.NextPara();
-					if(editor.GetCursor() == c)
-						break;
-				}
+			if(!before)
+				for(bool firstpass = true; firstpass; firstpass = false)
+					for(;;) {
+						int c = editor.GetCursor();
+						RichText::FormatInfo f = editor.GetFormatInfo();
+						if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") && !firstpass)
+							break;
+						editor.NextPara();
+						if(editor.GetCursor() == c)
+							break;
+					}
 			InsertNew(create);
 		}
 	}

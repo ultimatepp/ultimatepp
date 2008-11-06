@@ -121,10 +121,10 @@ void AssistEditor::SyncAnnotationPopup()
 	annotation_popup.Ctrl::PopUp(this, false, false, true);
 }
 
-void AssistEditor::OpenTopic(String topic, String create)
+void AssistEditor::OpenTopic(String topic, String create, bool before)
 {
 	if(theide)
-		theide->OpenTopic(topic, create);
+		theide->OpenTopic(topic, create, before);
 }
 
 void AssistEditor::NewTopic(String group, String coderef)
@@ -155,12 +155,12 @@ void AssistEditor::EditAnnotation(bool fastedit)
 	if(tl.GetCount() > 1) {
 		MenuBar bar;
 		for(int i = 0; i < tl.GetCount(); i++)
-			bar.Add(tl[i], THISBACK2(OpenTopic, tl[i] + '#' + coderef, String()));
+			bar.Add(tl[i], THISBACK3(OpenTopic, tl[i] + '#' + coderef, String(), false));
 		bar.Execute();
 		return;
 	}
 	if(tl.GetCount()) {
-		OpenTopic(tl[0] + '#' + coderef, String());
+		OpenTopic(tl[0] + '#' + coderef, String(), false);
 		return;
 	}
 	String scope, item;
@@ -168,7 +168,8 @@ void AssistEditor::EditAnnotation(bool fastedit)
 	const CppItem *m = GetCodeRefItem(coderef);
 	int access = m ? m->access : 0;
 	VectorMap<String, String> tpp;
-	for(int pass = 0; pass < 2; pass++)
+	int backi = 0;
+	for(int pass = 0; pass < 2; pass++) {
 		for(int i = GetCursorLine(); pass ? i < GetLineCount() : i >= 0; pass ? i++ : i--) {
 			String coderef2;
 			if(GetAnnotationRefs(tl, coderef2, i) && tl.GetCount()) {
@@ -176,7 +177,7 @@ void AssistEditor::EditAnnotation(bool fastedit)
 				SplitCodeRef(coderef2, scope2, item2);
 				m = GetCodeRefItem(coderef2);
 				if(scope2 == scope && m && m->access == access && tl.GetCount() == 1 && fastedit) {
-					OpenTopic(tl[0] + '#' + coderef2, coderef);
+					OpenTopic(tl[0] + '#' + coderef2, coderef, false);
 					return;
 				}
 				for(int j = 0; j < tl.GetCount(); j++)
@@ -184,11 +185,14 @@ void AssistEditor::EditAnnotation(bool fastedit)
 						tpp.Add(tl[j], coderef2);
 			}
 		}
+		if(pass = 0)
+			backi = tpp.GetCount();
+	}
 	MenuBar bar;
 	if(tpp.GetCount()) {
 		for(int i = 0; i < tpp.GetCount(); i++) {
 			String l = tpp.GetKey(i);
-			bar.Add(l, THISBACK2(OpenTopic, l + '#' + tpp[i], coderef));
+			bar.Add(l, THISBACK3(OpenTopic, l + '#' + tpp[i], coderef, i >= backi));
 		}
 		bar.Separator();
 	}
