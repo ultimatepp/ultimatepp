@@ -710,3 +710,17 @@ bool Ide::HotKey(dword key)
 		return true;
 	return TopWindow::HotKey(key);
 }
+
+String Ide::IdeGetFileName()
+{
+	return editfile;
+}
+
+String Ide::IdeGetNestFolder()
+{
+	Vector<String> w = GetUppDirs();
+	for(int i = 0; i < w.GetCount(); i++)
+		if(editfile.StartsWith(w[i]))
+			return w[i];
+	return Null;
+}

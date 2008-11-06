@@ -50,10 +50,13 @@ AssistEditor::AssistEditor()
 	searchindex <<= THISBACK(SearchIndex);
 	navigatorpane.Add(indexpane.SizePos());
 	
-	scopepane.Add(browser.search_scope.HSizePos().TopPos(0, cy));
-	scopepane.Add(browser.scope.HSizePos().VSizePos(cy + 2, 0));
+	int c2 = cy + 2;
+	scopepane.Add(browser.search_scope.HSizePos(0, 4 * cy + 2).TopPos(0, cy));
+	for(int i = 0; i < 4; i++)
+		scopepane.Add(browser.rangebutton[i].RightPos((3 - i) * cy, cy).TopPos(0, cy));
+	scopepane.Add(browser.scope.HSizePos().VSizePos(c2, 0));
 	itempane.Add(browser.search_item.HSizePos().TopPos(0, cy));
-	itempane.Add(browser.item.HSizePos().VSizePos(cy + 2, cy + 2));
+	itempane.Add(browser.item.HSizePos().VSizePos(c2, c2));
 	itempane.Add(browser.search.HSizePos().BottomPos(0, cy));
 	scope_item.Vert(scopepane, itempane);
 	scope_item.SetPos(3000);
@@ -953,17 +956,30 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
 {
 	String qitem = n[q].qitem;
 	int i = q;
+	int qml = 0;
+	int qcpp = -1;
+	int qcppml = 0;
+	int qimpl = -1;
+	int qimplml = 0;
+	String currentfile = editfile;
 	while(i < n.GetCount() && n[i].qitem == qitem) {
 		const CppItem& m = n[i];
-		if(m.impl) {
-			GotoCpp(m);
-			return;
+		int ml = GetMatchLen(editfile, GetCppFile(m.file));
+		if(m.impl && ml > qimplml) {
+			qimplml = ml;
+			qimpl = i;
 		}
-		if(m.filetype == FILE_CPP || m.filetype == FILE_C)
+		if((m.filetype == FILE_CPP || m.filetype == FILE_C) && ml > qcppml) {
+			qcpp = i;
+			qcppml = ml;
+		}
+		if(ml > qml) {
 			q = i;
+			qml = ml;
+		}
 		i++;
 	}
-	GotoCpp(n[q]);
+	GotoCpp(n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q]);
 }
 
 void Ide::IdeGotoCodeRef(String coderef)

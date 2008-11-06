@@ -4,7 +4,7 @@
 #include "ide\Common/init"
 #include "PdfDraw/init"
 #include "RichEdit/init"
-#define BLITZ_INDEX__ F85DF9C95A76CA3576D27A3E33F57D4BB
+#define BLITZ_INDEX__ F6E4212E192F89F940FE740C750E7BAB0
 #include "TopicI.icpp"
 #undef BLITZ_INDEX__
 #endif

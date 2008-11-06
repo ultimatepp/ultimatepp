@@ -34,7 +34,10 @@ void           ScanLayFile(const char *fn);
 String         MakeCodeRef(const String& scope, const String& item);
 void           SplitCodeRef(const String& ref, String& scope, String& item);
 
+const CppItem *GetCodeRefItem(const String& ref, const String& rfile);
 const CppItem *GetCodeRefItem(const String& ref);
+
+int            GetMatchLen(const char *s, const char *t);
 
 enum { WITHBODY = 33 };
 
@@ -118,12 +121,15 @@ public:
 	EditString             search_item;
 	EditString             search;
 	FrameRight<Button>     clear;
+	int                    range;
+	ButtonOption           rangebutton[4];
 	Callback               WhenKeyItem;
 	Callback               WhenClear;
 	
+	String             GetPm();
 	void               Load();
 	void               LoadScope();
-	void               Goto(const String& coderef);
+	void               Goto(const String& coderef, const String& rfile);
 	void               Search();
 	void               NameStart()               { display.namestart = true; }
 	String             GetCodeRef(int i) const;
@@ -133,6 +139,7 @@ public:
 	bool               Key(dword key, int count);
 	bool               IsSearch() const;
 	void               ClearSearch();
+	void               SetRange(int r);
 	
 	CodeBrowser();
 };

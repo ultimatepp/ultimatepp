@@ -15,7 +15,7 @@ void ReferenceDlg::EnterItemOk()
 
 void ReferenceDlg::Set(const String& s)
 {
-	Goto(s);
+	Goto(s, Null);
 	reference <<= s;
 }
 
