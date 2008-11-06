@@ -345,7 +345,7 @@ void AssistEditor::Assist()
 					GatherItems(typeset[i], xp.GetCount(), in_types, xp.GetCount() == 0);
 		}
 		else {
-			GatherItems(parser.current_scope, true, in_types, true);
+			GatherItems(parser.current_scope, false, in_types, true);
 			Index<String> in_types2;
 			GatherItems("", false, in_types2, true);
 		}
@@ -879,7 +879,18 @@ void Ide::ContextGoto()
 	Vector<String> xp = editor.ReadBack(q);
 	Index<String> type;
 	Parser parser;
-	editor.Context(parser, editor.GetCursor());
+	int ci = editor.GetCursor();
+	for(;;) {
+		int c = editor.Ch(ci);
+		if(c == '{' && editor.Ch(ci + 1)) {
+			ci++;
+			break;
+		}
+		if(c == '}' || c == 0)
+			break;
+		ci++;
+	}
+	editor.Context(parser, ci);
 	if(xp.GetCount() == 0 && IsNull(tp))
 		type.Add(parser.current_scope);
 	else {
