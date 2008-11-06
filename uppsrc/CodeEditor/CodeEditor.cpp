@@ -838,7 +838,7 @@ void CodeEditor::DefaultHlStyles()
 	SetHlStyle(INK_COMMENT, Green, false, true);
 	SetHlStyle(INK_CONST_STRING, Red);
 
-	SetHlStyle(INK_CONST_STRINGOP, Green);
+	SetHlStyle(INK_CONST_STRINGOP, LtBlue);
 	SetHlStyle(INK_CONST_INT, Red);
 	SetHlStyle(INK_CONST_FLOAT, Magenta);
 	SetHlStyle(INK_CONST_HEX, Blue);

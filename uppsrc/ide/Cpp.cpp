@@ -166,7 +166,7 @@ void AssistEditor::ExpressionType(const String& ttype, const Vector<String>& xp,
 		const CppItem& m = n[i];
 		if(m.name == id) {
 			LLOG("Member " << m.qtype << "'" << m.name << "'");
-			ExpressionType(ResolveTParam(m.qtype, tparam), xp, ii + 1, typeset, m.IsData());
+			ExpressionType(ResolveTParam(m.qtype, tparam), xp, ii + 1, typeset, m.IsData() && !m.isptr);
 		}
 	}
 	if(typeset.GetCount() != c0 || IsNull(type))
