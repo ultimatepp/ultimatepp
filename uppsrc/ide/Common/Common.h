@@ -68,6 +68,8 @@ public:
 	virtual void      IdeGotoCodeRef(String link) = 0;
 	virtual void      IdeOpenTopicFile(const String& file) = 0;
 	virtual void      IdeFlushFile() = 0;
+	virtual String    IdeGetFileName() = 0;
+	virtual String    IdeGetNestFolder() = 0;
 
 	virtual ~IdeContext() {}
 };

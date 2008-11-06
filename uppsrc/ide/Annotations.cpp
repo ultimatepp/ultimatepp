@@ -56,14 +56,6 @@ bool AssistEditor::GetAnnotationRefs(Vector<String>& tl, String& coderef, int q)
 	return true;
 }
 
-int BestMatch(const char *s, const char *t)
-{
-	int i = 0;
-	while(s[i] == t[i] && *s)
-		i++;
-	return i;
-}
-
 bool AssistEditor::GetAnnotationRef(String& t, String& coderef, int q)
 {
 	Vector<String> tl;
@@ -75,7 +67,7 @@ bool AssistEditor::GetAnnotationRef(String& t, String& coderef, int q)
 	int mi = 0;
 	int m = 0;
 	for(int i = 0; i < tl.GetCount(); i++) {
-		int mm = BestMatch(tl[i], path);
+		int mm = GetMatchLen(tl[i], path);
 		if(mm > m) {
 			mi = i;
 			m = mm;

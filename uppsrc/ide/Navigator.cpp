@@ -194,7 +194,7 @@ void AssistEditor::SyncCursor()
 		String coderef;
 		while(ii >= 0 && IsNull(coderef))
 			coderef = GetAnnotation(ii--);
-		browser.Goto(coderef);
+		browser.Goto(coderef, theide->editfile);
 	}
 }
 
@@ -220,7 +220,7 @@ void AssistEditor::BrowserGotoNF()
 
 	String cref = browser.GetCodeRef();
  	if(assist_active && !(theide && theide->SwapSIf(cref)))
-		IdeGotoCodeRef(cref);
+		theide->IdeGotoCodeRef(cref);
 
 	if(scope == browser.scope.GetKey()) {
 		browser.scope.ScrollTo(scopesc);

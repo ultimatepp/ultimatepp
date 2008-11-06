@@ -534,6 +534,9 @@ public:
 	virtual   void      IdeOpenTopicFile(const String& file);
 	virtual   void      IdeFlushFile();
 
+	virtual   String    IdeGetFileName();
+	virtual   String    IdeGetNestFolder();
+
 	enum {
 		EDITING, BUILDING, RUNNING, DEBUGGING,
 	};

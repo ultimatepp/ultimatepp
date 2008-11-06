@@ -7,6 +7,23 @@ bool MatchCib(const String& s, const String& match)
 	return q > 0 && !iscid(s[q - 1]) || q == 0;	
 }
 
+bool MatchPm(int file, const String& pm)
+{
+	if(IsNull(pm))
+		return true;
+	return GetCppFile(file).StartsWith(pm);
+}
+
+bool MatchPm(const Array<CppItem>& n, const String& pm)
+{
+	if(IsNull(pm))
+		return true;
+	for(int i = 0; i < n.GetCount(); i++)
+		if(MatchPm(n[i].file, pm))
+			return true;
+	return false;
+}
+
 bool HasItem(const Array<CppItem>& n, const String& m)
 {
 	if(IsNull(m))
@@ -39,10 +56,25 @@ struct ScopeLess {
 	}
 };
 
+String CodeBrowser::GetPm()
+{
+	String pm;
+	if(TheIde() && range)
+		if(range == 1)
+			pm = TheIde()->IdeGetNestFolder();
+		else {
+			pm = TheIde()->IdeGetFileName();
+			if(range == 2)
+				pm = GetFileFolder(pm);
+		}
+	return pm;
+}
+
 void CodeBrowser::Load()
 {
 	String find = ToUpper((String)~search);
 	String match = ToUpper((String)~search_scope);
+	String pm = GetPm();
 	Vector<String> txt;
 	Vector<Value>  ndx;
 	Index<int>     fi;
@@ -50,7 +82,7 @@ void CodeBrowser::Load()
 		String s = CodeBase().GetKey(i);
 		const Array<CppItem>& n = CodeBase()[i];
 		if(s.GetCount()) {
-			if(MatchCib(s, match) && (MatchCib(s, find) || HasItem(n, find))) {
+			if(MatchCib(s, match) && (MatchCib(s, find) || HasItem(n, find)) && MatchPm(n, pm)) {
 				txt.Add(s);
 				ndx.Add(s);
 			}
@@ -58,8 +90,10 @@ void CodeBrowser::Load()
 		else {
 			int i = 0;
 			while(i < n.GetCount()) {
-				fi.FindAdd(n[i].file);
-				i = FindNext(n, i);
+				int f = n[i].file;
+				if(fi.Find(f) < 0 && MatchPm(f, pm))
+					fi.Add(f);
+				i++;
 			}
 		}
 	}
@@ -135,10 +169,13 @@ void CodeBrowser::LoadScope()
 		VectorMap<String, bool> inherited;
 		if(file < 0)
 			GatherMethods(scope, inherited, false);
-		for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
+		Index<String> set;
+		for(int i = 0; i < n.GetCount(); i = file < 0 ? FindNext(n, i) : i + 1) {
 			CppItemInfo m;
 			(CppItem&) m = n[i];
-			if((file < 0 || m.file == file) && m.uname.StartsWith(match) && (all || m.uname.StartsWith(find))) {
+			if((file < 0 || m.file == file) && m.uname.StartsWith(match) &&
+			   (all || m.uname.StartsWith(find)) && set.Find(m.qitem) < 0) {
+				set.Add(m.qitem);
 				int q = inherited.Find(m.qitem);
 				if(q >= 0) {
 					m.over = true;
@@ -188,7 +225,7 @@ int SearchItemFilter(int c)
 	return IsAlNum(c) ? c : 0;
 }
 
-void CodeBrowser::Goto(const String& coderef)
+void CodeBrowser::Goto(const String& coderef, const String& rfile)
 {
 	if(IsNull(coderef))
 		item.KillCursor();
@@ -201,7 +238,7 @@ void CodeBrowser::Goto(const String& coderef)
 		String sc, im;
 		SplitCodeRef(coderef, sc, im);
 		if(IsNull(sc)) {
-			const CppItem *m = GetCodeRefItem(coderef);
+			const CppItem *m = GetCodeRefItem(coderef, rfile);
 			if(m)
 				scope.FindSetCursor(m->file, 2);
 		}
@@ -262,6 +299,14 @@ void CodeBrowser::ClearSearch()
 	WhenClear();
 }
 
+void CodeBrowser::SetRange(int r)
+{
+	range = r;
+	for(int i = 0; i < 4; i++)
+		rangebutton[i] <<= range == i;
+	Load();
+}
+
 CodeBrowser::CodeBrowser()
 {
 	scope.AddKey();
@@ -285,4 +330,10 @@ CodeBrowser::CodeBrowser()
 	clear.SetImage(BrowserImg::Clear());
 	clear.NoWantFocus();
 	clear <<= THISBACK(ClearSearch);
+	range = 0;
+	static const char *tip[] = { "All", "Nest", "Package", "File" };
+	for(int i = 0; i < 4; i++)
+		rangebutton[i].SetImage(BrowserImg::Get(BrowserImg::I_range_all + i)).Tip(tip[i])
+		              <<= THISBACK1(SetRange, i);
+	rangebutton[0] <<= true;
 }
