@@ -21,15 +21,20 @@ your application and system environment.&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Function List]]}}&]
 [s3; &]
 [s5;:GetExeFilePath`(`): [_^String^ String]_[* GetExeFilePath]()&]
-[s2;#%% Returns the absolute path towards the application`'s binary.&]
+[s2;%% Returns the absolute path towards the application`'s binary.&]
 [s3; &]
+[s4; &]
+[s5;:GetEnv`(const char`*`): [_^String^ String]_[* GetEnv]([@(0.0.255) const]_[@(0.0.255) cha
+r]_`*[*@3 id])&]
+[s2;%% Returns the value of the environment variable [*@3 id].&]
+[s3;%% &]
 [s4; &]
 [s5;:GetExeDirFile`(const char`*`): [_^String^ String]_[* GetExeDirFile]([@(0.0.255) const]_
 [@(0.0.255) char]_`*[*@3 fp])&]
-[s2;#%% Returns the absolute path of a file that is found in the 
-folder where you application`'s binary resides.&]
-[s2;%% [@(129.0.0) fp..................................................]the 
-name of the file&]
+[s2;%% Returns the absolute path of a file that is found in the folder 
+where you application`'s binary resides.&]
+[s2;%% [*@(129.0.0) fp][@(129.0.0) ..................................................]the
+ name of the file&]
 [s3; &]
 [s4; &]
 [s5;:GetHomeDirectory`(`): [_^String^ String]_[* GetHomeDirectory]()&]
@@ -38,10 +43,10 @@ name of the file&]
 [s4; &]
 [s5;:GetHomeDirFile`(const char`*`): [_^String^ String]_[* GetHomeDirFile]([@(0.0.255) cons
 t]_[@(0.0.255) char]_`*[*@3 fp])&]
-[s2;#%% Returns the absolute path of a file that is found in the 
-current user`'s home folder.&]
-[s2;%% [@(129.0.0) fp..................................................]the 
-name of the file&]
+[s2;%% Returns the absolute path of a file that is found in the current 
+user`'s home folder.&]
+[s2;%% [*@(129.0.0) fp][@(129.0.0) ..................................................]the
+ name of the file&]
 [s3; &]
 [s4; &]
 [s5;:GetExeTitle`(`): [_^String^ String]_[* GetExeTitle]()&]
@@ -50,7 +55,7 @@ name of the file&]
 [s4; &]
 [s5;:UseHomeDirectoryConfig`(bool`): [@(0.0.255) void]_[* UseHomeDirectoryConfig]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
-[s2;#%% Sets the search path for configuration to either the current 
+[s2;%% Sets the search path for configuration to either the current 
 users`' home folder or to the folder where the application`'s 
 binary resides.&]
 [s2;%% [*@(129.0.0) b]...................................................use 
@@ -59,14 +64,14 @@ home folder (true) or application folder (false)&]
 [s4; &]
 [s5;:ConfigFile`(const char`*`): [_^String^ String]_[* ConfigFile]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 file])&]
-[s2;#%% Returns the absolute path of a configuration file found in 
+[s2;%% Returns the absolute path of a configuration file found in 
 the configuration files search path.&]
-[s2;%% [@(129.0.0) file ]...............................................the 
+[s2;%% [*@(129.0.0) file]...............................................the 
 name of the file&]
 [s3; &]
 [s4; &]
 [s5;:ConfigFile`(`): [_^String^ String]_[* ConfigFile]()&]
-[s2;#%% Returns the default configuration file from the configuration 
+[s2;%% Returns the default configuration file from the configuration 
 files search path. The default configuration file is called [*/ `[application 
 title`]][* .cfg].&]
 [s3; &]
@@ -88,11 +93,11 @@ exit code&]
 [s3; &]
 [s4; &]
 [s5;:GetExitCode`(`): [@(0.0.255) int]_[* GetExitCode]()&]
-[s2;#%% Gets the exit code that will be returned on application exit.&]
+[s2;%% Gets the exit code that will be returned on application exit.&]
 [s3; &]
 [s4; &]
 [s5;:IsMainRunning`(`): [@(0.0.255) bool]_[* IsMainRunning]()&]
-[s2;#%% Return true if the applications execution has reached and 
+[s2;%% Return true if the applications execution has reached and 
 not yet exited the main function.&]
 [s3; &]
 [s4; &]
@@ -124,13 +129,15 @@ the value of `"DESKTOP`_SESSION`" environment variable is returned.&]
 [s5;:LaunchWebBrowser`(const String`&`): [@(0.0.255) void]_[* LaunchWebBrowser]([@(0.0.255) c
 onst]_[_^String^ String][@(0.0.255) `&]_[*@3 url])&]
 [s2;%% Opens an URL in the default Web Browser.&]
-[s2;%% [*@(129.0.0) url................................................]the 
+[s2;%% [*@(129.0.0) url]................................................the 
 URL that will be opened in the browser&]
 [s3; &]
 [s4; &]
 [s5;:SetHomeDirectory`(const char`*`): [@(0.0.255) void]_[* SetHomeDirectory]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 dir])&]
-[s2;#%% Sets the current user`'s home folder.&]
-[s2;%% [*@(129.0.0) dir][@(129.0.0) ................................................]the 
+[s2; [*@3 POSIX specific]&]
+[s2;%% Sets the current user`'s home folder.&]
+[s2;%% [*@(129.0.0) dir]................................................the 
 URL that will be opened in the browser&]
+[s1; &]
 [s0; ]
