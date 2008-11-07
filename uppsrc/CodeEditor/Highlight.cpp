@@ -227,15 +227,23 @@ void CodeEditor::Bracket(int pos, HlSt& hls)
 
 Index<String> CodeEditor::keyword[HIGHLIGHT_COUNT];
 Index<String> CodeEditor::name[HIGHLIGHT_COUNT];
-Index<String> CodeEditor::kw_upp_macros;
-Index<String> CodeEditor::kw_sql_base;
-Index<String> CodeEditor::kw_sql_bool;
-Index<String> CodeEditor::kw_sql_func;
+Index<String> CodeEditor::kw_upp;
+int CodeEditor::kw_macros;
+int CodeEditor::kw_logs;
+int CodeEditor::kw_sql_base;
+int CodeEditor::kw_sql_func;
 
 const Index<String>& CodeEditor::CppKeywords()
 {
 	InitKeywords();
 	return keyword[0];
+}
+
+int CodeEditor::InitUpp(const char **q)
+{
+	while(*q)
+		kw_upp.Add(*q++);
+	return kw_upp.GetCount();
 }
 
 void CodeEditor::InitKeywords()
@@ -313,14 +321,17 @@ void CodeEditor::InitKeywords()
 		};
 		static const char *upp_macros[] = {
 			"CLASSNAME", "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3",
+			"QUOTE", "XASSERT", "NEVER", "XNEVER", "CHECK", "XCHECK", "ASSERT", "RQUOTE",
+			"NAMESPACE_UPP", "END_UPP_NAMESPACE",
+			NULL
+		};
+		static const char *upp_logs[] = {
 			"LOG", "LOGF", "DUMP", "DUMPC", "DUMPCC", "DUMPCCC",
 			"LLOG", "LLOGF", "LDUMP", "LDUMPC", "LDUMPCC", "LDUMPCCC",
 			"DLOG", "DLOGF", "DDUMP", "DDUMPC", "DDUMPCC", "DDUMPCCC",
-			"LOGBEGIN", "LOGEND", "LOGBLOCK", "LOGHEXDUMP",
-			"QUOTE", "XASSERT", "NEVER", "XNEVER", "CHECK", "XCHECK", "ASSERT",
-			"RLOG", "RLOGBEGIN", "RLOGEND", "RLOGBLOCK", "RLOGHEXDUMP", "RQUOTE",
-			"RLOGSRCPOS", "RDUMP", "RDUMPC",
-			"NAMESPACE_UPP", "END_UPP_NAMESPACE",
+			"RLOG", "RLOGF", "RDUMP", "RDUMPC", "RDUMPCC", "RDUMPCCC",
+			"LOGBEGIN", "LOGEND", "LOGBLOCK", "LOGHEXDUMP", "LOGSRCPOS", 
+			"RLOGBEGIN", "RLOGEND", "RLOGBLOCK", "RLOGHEXDUMP", "RLOGSRCPOS", 
 			NULL
 		};
 		static const char *sql_base[] = {
@@ -366,18 +377,11 @@ void CodeEditor::InitKeywords()
 			while(*q)
 				name[i].Add(*q++);
 		}
-		q = upp_macros;
-		while(*q)
-			kw_upp_macros.Add(*q++);
-		q = sql_base;
-		while(*q)
-			kw_sql_base.Add(*q++);
-		q = sql_func;
-		while(*q)
-			kw_sql_func.Add(*q++);
-		q = sql_bool;
-		while(*q)
-			kw_sql_bool.Add(*q++);
+		kw_macros = InitUpp(upp_macros);
+		kw_logs = InitUpp(upp_logs);
+		kw_sql_base = InitUpp(sql_base);
+		kw_sql_func = InitUpp(sql_func);
+		InitUpp(sql_bool);
 	}
 }
 
@@ -575,12 +579,14 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			while(iscid(*q) && q < e)
 				id.Cat(*q++);
 			String iid = id;
+			int uq = kw_upp.Find(iid);
 			hls.Put(int(q - p), keyword[highlight].Find(iid) >= 0 ? hl_style[INK_KEYWORD] :
 			                    name[highlight].Find(iid) >= 0 ? hl_style[INK_UPP] :
-			                    kw_upp_macros.Find(iid) >= 0 ? hl_style[INK_UPPMACROS] :
-			                    kw_sql_base.Find(iid) >= 0 ? hl_style[INK_SQLBASE] :
-			                    kw_sql_func.Find(iid) >= 0 ? hl_style[INK_SQLFUNC] :
-			                    kw_sql_bool.Find(iid) >= 0 ? hl_style[INK_SQLBOOL] :
+			                    uq >= 0 ? uq < kw_macros ? hl_style[INK_UPPMACROS] :
+			                              uq < kw_logs ? hl_style[INK_UPPLOGS] :
+			                              uq < kw_sql_base ? hl_style[INK_SQLBASE] : 
+			                              uq < kw_sql_func ? hl_style[INK_SQLFUNC] :
+			                              hl_style[INK_SQLBOOL] :
 			                    IsUpperString(iid) && !sm.macro ? hl_style[INK_UPPER] :
 			                    hl_style[INK_NORMAL]);
 			p = q;

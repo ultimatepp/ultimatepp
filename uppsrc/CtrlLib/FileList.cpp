@@ -33,7 +33,7 @@ const wchar *strdirsep(const wchar *s) {
 	return NULL;
 }
 
-void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, bool isdir, Font font,
+void DrawFileName(Draw& ww, int x0, int y, int wcx, int cy, const WString& mname, bool isdir, Font font,
                   Color ink, Color extink, const WString& desc, Font descfont, bool justname, Color uln)
 {
 	FontInfo fi = font.Info();
@@ -43,72 +43,75 @@ void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, 
 		extpos = -1;
 	const wchar *ext = extpos >= slash && extpos >= 0 ? mname.Begin() + extpos + 1
 	                                                  : mname.End();
-	const wchar *name = mname;
-	if(justname && slash >= 0)
-		name += slash + 1;
-	int txtcx = GetTextSize(fi, name);
-	int x0 = x;
-	if(txtcx <= wcx) {
-		w.DrawText(x, y, name, font, ink, (int)(ext - name));
-		w.DrawText(x + GetTextSize(fi, name, ext), y, ext, font, extink, (int)(mname.End() - ext));
-		if(!IsEmpty(desc))
-			DrawTextEllipsis(w, x + fi.GetHeight(), y, wcx - txtcx,
-			                 desc, "...", descfont, extink);
-		x += txtcx;
-	}
-	else {
-		int dot3 = 3 * fi['.'];
-		if(2 * dot3 > wcx) {
-			int n = GetTextFitCount(fi, name, wcx);
-			w.DrawText(x, y, name, font, ink, n);
-			x += GetTextSize(fi, name, name + n);
+	for(int pass = IsNull(uln); pass < 2; pass++) {
+		NilDraw nd;
+		Draw *w = pass ? &ww : &nd;
+		const wchar *name = mname;
+		if(justname && slash >= 0)
+			name += slash + 1;
+		int txtcx = GetTextSize(fi, name);
+		int x = x0;
+		if(txtcx <= wcx) {
+			w->DrawText(x, y, name, font, ink, (int)(ext - name));
+			w->DrawText(x + GetTextSize(fi, name, ext), y, ext, font, extink, (int)(mname.End() - ext));
+			if(!IsEmpty(desc) && pass)
+				DrawTextEllipsis(*w, x + fi.GetHeight(), y, wcx - txtcx,
+				                 desc, "...", descfont, extink);
+			x += txtcx;
 		}
 		else {
-			const wchar *end = mname.End();
-			int dircx = 2 * fi['.'] + fi[DIR_SEP];
-			const wchar *bk = strdirsep(name);
-			if(bk) {
-				wcx -= dircx;
-				w.DrawText(x, y, ".." DIR_SEPS, font, SColorDisabled, 3);
-				x += dircx;
-				do {
-					txtcx -= GetTextSize(fi, name, bk + 1);
-					name = bk + 1;
-					if(txtcx < wcx) {
-						w.DrawText(x, y, name, font, ink, (int)(ext - name));
-						x += GetTextSize(fi, name, ext);
-						w.DrawText(x, y, ext, font, extink, (int)(end - ext));
-						x += GetTextSize(fi, ext, end);
-						goto end;
-					}
-					bk = strdirsep(name);
-				}
-				while(bk);
-			}
-			wcx -= dot3;
-			int extcx = GetTextSize(fi, ext, end);
-			if(2 * extcx > wcx || ext == end) {
+			int dot3 = 3 * fi['.'];
+			if(2 * dot3 > wcx) {
 				int n = GetTextFitCount(fi, name, wcx);
-				w.DrawText(x, y, name, font, ink, n);
+				w->DrawText(x, y, name, font, ink, n);
 				x += GetTextSize(fi, name, name + n);
-				w.DrawText(x, y, "...", font, SColorDisabled, 3);
-				x += dot3;
 			}
 			else {
-				wcx -= extcx;
-				int n = (int)(GetTextFitLim(fi, name, end, wcx) - name);
-				w.DrawText(x, y, name, font, ink, n);
-				x += GetTextSize(fi, name, name + n);
-				w.DrawText(x, y, "...", font, SColorDisabled, 3);
-				w.DrawText(x + dot3, y, ext, font, extink, (int)(end - ext));
-				x += dot3 + extcx;
+				const wchar *end = mname.End();
+				int dircx = 2 * fi['.'] + fi[DIR_SEP];
+				const wchar *bk = strdirsep(name);
+				if(bk) {
+					wcx -= dircx;
+					w->DrawText(x, y, ".." DIR_SEPS, font, SColorDisabled, 3);
+					x += dircx;
+					do {
+						txtcx -= GetTextSize(fi, name, bk + 1);
+						name = bk + 1;
+						if(txtcx < wcx) {
+							w->DrawText(x, y, name, font, ink, (int)(ext - name));
+							x += GetTextSize(fi, name, ext);
+							w->DrawText(x, y, ext, font, extink, (int)(end - ext));
+							x += GetTextSize(fi, ext, end);
+							goto end;
+						}
+						bk = strdirsep(name);
+					}
+					while(bk);
+				}
+				wcx -= dot3;
+				int extcx = GetTextSize(fi, ext, end);
+				if(2 * extcx > wcx || ext == end) {
+					int n = GetTextFitCount(fi, name, wcx);
+					w->DrawText(x, y, name, font, ink, n);
+					x += GetTextSize(fi, name, name + n);
+					w->DrawText(x, y, "...", font, SColorDisabled, 3);
+					x += dot3;
+				}
+				else {
+					wcx -= extcx;
+					int n = (int)(GetTextFitLim(fi, name, end, wcx) - name);
+					w->DrawText(x, y, name, font, ink, n);
+					x += GetTextSize(fi, name, name + n);
+					w->DrawText(x, y, "...", font, SColorDisabled, 3);
+					w->DrawText(x + dot3, y, ext, font, extink, (int)(end - ext));
+					x += dot3 + extcx;
+				}
 			}
 		}
+	end:
+		if(pass == 0)
+			ww.DrawRect(x0, y + fi.GetAscent() + 1, x - x0, 1, uln);
 	}
-end:
-	if(IsNull(uln))
-		return;
-	w.DrawRect(x0, y + fi.GetAscent() + 1, x - x0, 1, uln);
 }
 
 void FileList::Paint(Draw& w, const Rect& r, const Value& q,

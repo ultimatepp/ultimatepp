@@ -189,10 +189,8 @@ protected:
 
 	static Index<String> keyword[HIGHLIGHT_COUNT];
 	static Index<String> name[HIGHLIGHT_COUNT];
-	static Index<String> kw_upp_macros;
-	static Index<String> kw_sql_base;
-	static Index<String> kw_sql_bool;
-	static Index<String> kw_sql_func;
+	static Index<String> kw_upp;
+	static int kw_macros, kw_logs, kw_sql_base, kw_sql_func;
 
 	struct Isx : Moveable<Isx> {
 		int    line;
@@ -304,6 +302,7 @@ protected:
 
 	struct HlSt;
 	
+	static int  InitUpp(const char **q);
 	static void InitKeywords();
 
 	const wchar *HlString(HlSt& hls, const wchar *p);
