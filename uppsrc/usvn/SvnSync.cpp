@@ -83,6 +83,11 @@ void SvnSync::SyncList()
 			list.Add(MESSAGE, Null, AttrText("Commit message:").SetFont(StdFont().Bold()));
 			list.SetLineCy(list.GetCount() - 1, EditField::GetStdHeight() + 4);
 			list.SetCtrl(list.GetCount() - 1, 1, message.Add().SetFilter(CharFilterSvnMsg));
+			int q = msgmap.Find(w.working);
+			if(q >= 0) {
+				message.Top() <<= msgmap[q];
+				msgmap.Unlink(q);
+			}
 		}
 		else
 			list.Add(-1, Null, "", AttrText("Nothing to do").SetFont(StdFont().Italic()));
@@ -185,8 +190,14 @@ void MoveSvn(const String& path, const String& tp)
 void SvnSync::DoSync()
 {
 	SyncList();
-	if(Execute() != IDOK || list.GetCount() == 0)
+	msgmap.Sweep();
+	if(Execute() != IDOK || list.GetCount() == 0) {
+		int repoi = 0;
+		for(int i = 0; i < list.GetCount(); i++)
+			if(list.Get(i, 0) == MESSAGE)
+				msgmap.GetAdd(works[repoi++].working) = list.Get(i, 3);
 		return;
+	}
 	SysConsole sys;
 	int repoi = 0;
 	int i = 0;
@@ -198,7 +209,9 @@ void SvnSync::DoSync()
 			int action = list.Get(i, 0);
 			String path = list.Get(i, 1);
 			if(action == MESSAGE) {
-				sys.System(SvnCmd("commit", w).Cat() << w.working << " -m \"" << list.Get(i, 3) << "\"");
+				String msg = list.Get(i, 3);
+				if(sys.System(SvnCmd("commit", w).Cat() << w.working << " -m \"" << msg << "\""))
+					msgmap.GetAdd(w.working) = msg;
 				i++;
 				break;
 			}
@@ -247,6 +260,16 @@ void SvnSync::DoSync()
 	sys.Perform();
 }
 
+void SvnSync::SetMsgs(const String& s)
+{
+	LoadFromString(msgmap, s);
+}
+
+String SvnSync::GetMsgs()
+{
+	return StoreAsString(msgmap);
+}
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 {
@@ -255,6 +278,10 @@ GUI_APP_MAIN
 //	svn.Select("svn://10.0.0.19/upp", "", "");
 //	return;
 
-	SvnSync().Perform();
+	SvnSync ss;
+	String mp = ConfigFile("usvn.msg");
+	ss.SetMsgs(LoadFromFile(mp));
+	ss.Perform();
+	SaveToFile(mp, ss.GetMsgs());
 }
 #endif

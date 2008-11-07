@@ -27,6 +27,8 @@ class WString;
 class StringBuffer;
 class WStringBuffer;
 
+class Stream;
+
 template <class B>
 class AString : public B {
 	typedef typename B::tchar  tchar;
@@ -97,7 +99,7 @@ public:
 	int    FindFirstOf(int len, const tchar *s, int from) const;
 	int    FindFirstOf(const tchar *s, int from = 0) const;
 	int    FindFirstOf(const String& s, int from = 0) const   { return FindFirstOf(s.GetCount(), ~s, from); }
-
+	
 	friend bool operator<(const String& a, const String& b)   { return a.Compare(b) < 0; }
 	friend bool operator<(const String& a, const tchar *b)    { return a.Compare(b) < 0; }
 	friend bool operator<(const tchar *a, const String& b)    { return b.Compare(a) > 0; }

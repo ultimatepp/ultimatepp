@@ -97,9 +97,8 @@ int GetItemHeight(const CppItem& m, int cx);
 
 struct CppItemInfoDisplay : public Display
 {
-	String hkey;
-	int    htopic;
 	bool   namestart;
+	bool   showtopic;
 
 	int DoPaint(Draw& w, const Rect& r, const Value& q,
 		        Color _ink, Color paper, dword style) const;
@@ -107,14 +106,13 @@ struct CppItemInfoDisplay : public Display
 		               Color _ink, Color paper, dword style) const;
 	virtual Size GetStdSize(const Value& q) const;
 	
-	CppItemInfoDisplay() { namestart = false; }
+	CppItemInfoDisplay() { namestart = false; showtopic = false; }
 };
 
-class CodeBrowser {
+struct CodeBrowser {
 	typedef CodeBrowser CLASSNAME;
-	CppItemInfoDisplay display;
 
-public:
+	CppItemInfoDisplay     display;
 	ArrayCtrl              scope;
 	ArrayCtrl              item;
 	EditString             search_scope;
@@ -142,20 +140,6 @@ public:
 	void               SetRange(int r);
 	
 	CodeBrowser();
-};
-
-struct BrowserQuery {
-	String name;
-	String package;
-	String file;
-	bool   a_private, a_protected, a_public;
-	bool   code, data, type, macro;
-	bool   documented, notdocumented;
-
-	void Clear();
-	void Serialize(Stream& s);
-
-	BrowserQuery() { Clear(); }
 };
 
 struct TopicInfo : Moveable<TopicInfo> {

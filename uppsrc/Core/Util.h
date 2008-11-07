@@ -316,23 +316,35 @@ bool LoadFromFile(Callback1<Stream&> serialize, const char *file = NULL);
 bool StoreToFile(Callback1<Stream&> serialize, const char *file = NULL);
 
 template <class T>
+void SerializeTFn(Stream &s, T *x)
+{
+	s % *x;
+}
+
+template <class T>
+Callback1<Stream&> SerializeCb(T& x)
+{
+	return callback1(SerializeTFn<T>, &x);
+}
+
+template <class T>
 bool Load(T& x, Stream& s) {
-	return Load(callback(&x, &T::Serialize), s);
+	return Load(SerializeCb(x), s);
 }
 
 template <class T>
 bool Store(T& x, Stream& s) {
-	return Store(callback(&x, &T::Serialize), s);
+	return Store(SerializeCb(x), s);
 }
 
 template <class T>
 bool LoadFromFile(T& x, const char *name = NULL) {
-	return LoadFromFile(callback(&x, &T::Serialize), name);
+	return LoadFromFile(SerializeCb(x), name);
 }
 
 template <class T>
 bool StoreToFile(T& x, const char *name = NULL) {
-	return StoreToFile(callback(&x, &T::Serialize), name);
+	return StoreToFile(SerializeCb(x), name);
 }
 
 template <class T>

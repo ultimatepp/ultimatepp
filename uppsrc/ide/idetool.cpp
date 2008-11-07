@@ -272,11 +272,20 @@ Vector<String> Ide::SvnDirs()
 	return r;
 }
 
+INITBLOCK {
+	RegisterGlobalConfig("svn-msgs");
+}
+
 void Ide::SyncSvn()
 {
 	SvnSync svn;
+	String msgs;
+	LoadFromGlobal(msgs, "svn-msgs");
+	svn.SetMsgs(msgs);
 	Vector<String> r = SvnDirs();
 	for(int i = 0; i < r.GetCount(); i++)
 		svn.Dir(r[i]);
 	svn.DoSync();
+	msgs = svn.GetMsgs();
+	StoreToGlobal(msgs, "svn-msgs");
 }

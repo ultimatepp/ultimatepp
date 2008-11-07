@@ -152,24 +152,26 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	if(m.inherited && m.IsType())
 		w.DrawRect(r.left, r.top, r.Width(), 1, SColorDisabled);
 
-	String k = MakeCodeRef(m.scope, m.qitem);
-	int cnt = GetRefLinks(k).GetCount();
-	if(cnt) {
-		Size sz = BrowserImg::Ref().GetSize();
-		int xx = r.right - sz.cx - 1;
-		int yy = r.top + (r.Height() - sz.cy) / 2;
-		DrawHighlightImage(w, xx, yy, BrowserImg::Ref());
-		if(cnt > 1) {
-			String txt = AsString(cnt);
-			Font fnt = Arial(10).Bold();
-			Size tsz = GetTextSize(txt, fnt);
-			Point p(xx + (sz.cx - tsz.cx) / 2, yy + (sz.cy - tsz.cy) / 2);
-			for(int ax = -1; ax <= 1; ax++)
-				for(int ay = -1; ay <= 1; ay++)
-					w.DrawText(p.x + ax, p.y + ay, txt, fnt, White);
-			w.DrawText(p.x, p.y, txt, fnt, Blue);
+	if(showtopic) {
+		String k = MakeCodeRef(m.scope, m.qitem);
+		int cnt = GetRefLinks(k).GetCount();
+		if(cnt) {
+			Size sz = BrowserImg::Ref().GetSize();
+			int xx = r.right - sz.cx - 1;
+			int yy = r.top + (r.Height() - sz.cy) / 2;
+			DrawHighlightImage(w, xx, yy, BrowserImg::Ref());
+			if(cnt > 1) {
+				String txt = AsString(cnt);
+				Font fnt = Arial(10).Bold();
+				Size tsz = GetTextSize(txt, fnt);
+				Point p(xx + (sz.cx - tsz.cx) / 2, yy + (sz.cy - tsz.cy) / 2);
+				for(int ax = -1; ax <= 1; ax++)
+					for(int ay = -1; ay <= 1; ay++)
+						w.DrawText(p.x + ax, p.y + ay, txt, fnt, White);
+				w.DrawText(p.x, p.y, txt, fnt, Blue);
+			}
+			x += sz.cx + 3;
 		}
-		x += sz.cx + 3;
 	}
 
 	return x;
