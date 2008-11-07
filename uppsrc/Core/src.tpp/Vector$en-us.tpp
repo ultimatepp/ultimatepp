@@ -11,6 +11,7 @@ topic "Vector";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [*C+75 $$10,10#20308344770720113750957135429985:code]
 [{_}%EN-US 
+[s1; [*@3;4 Vector]&]
 [s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
 [s1;:Vector`:`:class:%- [@(0.0.255) class]_[* Vector]_:_[@(0.0.255) public]_[*@3 MoveableAndDe
 epCopyOption][@(0.0.255) <]_[* Vector][@(0.0.255) <][*@4 T][@(0.0.255) >]_>&]
@@ -38,7 +39,31 @@ picked Vector is logic error with exception of&]
 [s10; &]
 [s0; Optional deep copy is implemented through DeepCopyOptionTemplate 
 macro.&]
-[s0; &]
+[s1; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s0;%- &]
+[s5;:Vector`:`:Vector`(`):%- [* Vector]()&]
+[s2; Default constructor. Constructs empty Vector.&]
+[s3; &]
+[s4;%- &]
+[s5;:Vector`:`:Vector`(pick`_ Vector`&`):%- [* Vector]([@(0.128.128) pick`_]_[* Vector][@(0.0.255) `&
+]_[*@3 v])&]
+[s2; Pick constructor. Transfers source Vector in low constant time, 
+but destroys it by picking.&]
+[s7; v-|Source Vector.&]
+[s3; &]
+[s4;%- &]
+[s5;:Vector`:`:Vector`(const Vector`&`,int`):%- [* Vector]([@(0.0.255) const]_[* Vector][@(0.0.255) `&
+]_[*@3 v], [@(0.0.255) int])&]
+[s2; Optional deep copy constructor.&]
+[s6; Requires T to have deep copy constructor or optional deep copy 
+constructor.&]
+[s2; [*C@3 v]-|Source Vector. [%-*@3 v].&]
+[s3; &]
+[s4;%- &]
+[s5;:Vector`:`:`~Vector`(`):%- [@(0.0.255) `~][* Vector]()&]
+[s2; Destructor. Calls destructors of all elements in Vector.&]
+[s1; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s4;H0;%- &]
 [s5;:Vector`:`:Add`(`):%- [*@4 T][@(0.0.255) `&]_[* Add]()&]
@@ -400,21 +425,6 @@ is used as part of UPP.&]
 [s7; [*C@3 s]-|Target/source stream.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Vector`:`:Vector`(`):%- [* Vector]()&]
-[s2; Default constructor. Constructs empty Vector.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Vector`:`:`~Vector`(`):%- [@(0.0.255) `~][* Vector]()&]
-[s2; Destructor. Calls destructors of all elements in Vector.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Vector`:`:Vector`(pick`_ Vector`&`):%- [* Vector]([@(0.128.128) pick`_]_[* Vector][@(0.0.255) `&
-]_[*@3 v])&]
-[s2; Pick constructor. Transfers source Vector in low constant time, 
-but destroys it by picking.&]
-[s7; [*C@3 v]-|Source Vector.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Vector`:`:operator`=`(pick`_ Vector`&`):%- [@(0.0.255) void]_[* operator`=]([@(0.128.128) p
 ick`_]_[_^Vector^ Vector][@(0.0.255) `&]_[*@3 v])&]
 [s2; Pick operator. Transfers source Vector in low constant time, 
@@ -427,13 +437,7 @@ but destroys it by picking.&]
 [s7; [*/ Return value]-|[* true] if Vector is in picked state, [* false] 
 otherwise.&]
 [s3;%- &]
-[s4;%- &]
-[s5;:Vector`:`:Vector`(const Vector`&`,int`):%- [* Vector]([@(0.0.255) const]_[* Vector][@(0.0.255) `&
-]_[*@3 v], [@(0.0.255) int])&]
-[s2; Optional deep copy constructor.&]
-[s6; Requires T to have deep copy constructor or optional deep copy 
-constructor.&]
-[s7; [*C@3 v]-|Source Vector.&]
+[s4; &]
 [s5;%- friend_T`&_operator<<`=[@(64) (T`&_][@3 dest][@(64) , ][@(0.0.255) const][@(64) _T`&_][@3 s
 rc][@(64) )]&]
 [s2; Optional deep copy operator. Defined using DeepCopyOptionTemplate.&]
