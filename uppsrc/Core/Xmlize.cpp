@@ -171,10 +171,6 @@ bool LoadFromXML(Callback1<XmlIO> xmlize, const String& xml)
 static String sXMLFile(const char *file)
 {
 	return file ? String(file) : ConfigFile(GetExeTitle() + ".xml");
-/*	if(file)
-		return IsFullPath(file) ? String(file) : ConfigFile(file);
-	else
-		return ConfigFile(GetExeTitle() + ".xml");*/
 }
 
 bool StoreAsXMLFile(Callback1<XmlIO> xmlize, const char *name, const char *file)
