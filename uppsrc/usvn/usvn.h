@@ -104,8 +104,9 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 		MESSAGE,
 	};
 	
-	Array<Option>     confirm;
-	Array<EditString> message;
+	Array<Option>            confirm;
+	Array<EditString>        message;
+	ArrayMap<String, String> msgmap;
 	
 	SvnWorks works;
 	
@@ -115,6 +116,9 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	typedef SvnSync CLASSNAME;
 
 public:
+	void   SetMsgs(const String& s);
+	String GetMsgs();
+
 	void Dir(const char *dir);
 	void Perform();
 	void DoSync();

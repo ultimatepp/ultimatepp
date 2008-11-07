@@ -633,6 +633,11 @@ element.&]
 [s7; [*/ Return value]-|Key of the element dropped at the end of AMap.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AMap`:`:Trim`(int`):%- [@(0.0.255) void]_[* Trim]([@(0.0.255) int]_[*@3 n])&]
+[s2; Reduces the number of items in map to [%-*@3 n]. [%-*@3 n] must 
+be lover than or equal to GetCount().&]
+[s3; &]
+[s4;%- &]
 [s5;:AMap`:`:GetKey`(int`)const:%- [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[* GetKey]([@(0.0.255) i
 nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Returns a constant reference to the key of element at the specified 
@@ -648,6 +653,11 @@ NTL is used as part of UPP.&]
 [s0; Requires T to have serialization operator defined.&]
 [s7; [*C@3 s]-|Target/source stream.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:AMap`:`:Swap`(AMap`&`):%- [@(0.0.255) void]_[* Swap]([_^AMap^ AMap][@(0.0.255) `&]_[*@3 x])
+&]
+[s2; Swap AMap content with another AMap (of the same type).&]
+[s3; &]
 [s4;%- &]
 [s5;:AMap`:`:GetIndex`(`)const:%- [@(0.0.255) const]_Index[@(0.0.255) <][*@4 K], 
 [*@4 HashFn][@(0.0.255) >`&]_[* GetIndex]()_[@(0.0.255) const]&]
@@ -675,10 +685,13 @@ ick`_]&]
 [s4;%- &]
 [s5;:AMap`:`:GetValues`(`)const:%- [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[* GetValues]()_
 [@(0.0.255) const]&]
-[s2; Returns a constant reference to the basic random access container 
+[s7; Returns a constant reference to the basic random access container 
+of values.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AMap`:`:GetValues`(`):%- [*@4 V][@(0.0.255) `&]_[* GetValues]()&]
+[s2; Returns a (writable) reference to the basic random access container 
 of values. Destroys AIndex by picking.&]
-[s7; [*/ Return value]-|Constant reference to the basic random access 
-container of values.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AMap`:`:PickValues`(`)pick`_:%- [*@4 V]_[* PickValues]()_[@(0.128.128) pick`_]&]

@@ -27,7 +27,6 @@ void LogCon(int level, const char *fmt, ...)
 	LOG(buffer);
 }
 
-
 void LogGui(const char *fmt, ...)
 {
 	if(!dlog || !dlev || int(~(*dlev)) > 0)

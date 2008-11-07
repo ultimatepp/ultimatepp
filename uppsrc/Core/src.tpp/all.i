@@ -18,3 +18,7 @@ TOPIC("algo$en-us")
 #include "algo$en-us.tppi"
 END_TOPIC
 
+TOPIC("AMap$en-us")
+#include "AMap$en-us.tppi"
+END_TOPIC
+

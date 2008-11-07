@@ -27,5 +27,6 @@ ReferenceDlg::ReferenceDlg()
 	item.WhenLeftDouble = THISBACK(EnterItemOk);
 	Sizeable().Zoomable();
 	Icon(TopicImg::Topic());
+	display.showtopic = true;
 	Load();
 }
