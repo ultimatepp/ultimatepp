@@ -798,6 +798,7 @@ public:
 	void      EditFile0(const String& path, byte charset = CHARSET_DEFAULT, bool astext = false,
 	                    const String& header = Null);
 	void      EditFile(const String& path);
+	void      AddEditFile(const String& path);
 	void      ReloadFile();
 	void      AddLru();
 	bool      CanToggleReadOnly();

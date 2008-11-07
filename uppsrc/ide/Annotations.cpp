@@ -185,7 +185,7 @@ void AssistEditor::EditAnnotation(bool fastedit)
 						tpp.Add(tl[j], coderef2);
 			}
 		}
-		if(pass = 0)
+		if(pass == 0)
 			backi = tpp.GetCount();
 	}
 	MenuBar bar;

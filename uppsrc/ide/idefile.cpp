@@ -452,6 +452,14 @@ void Ide::EditUsingDesigner()
 	EditFile0(path, cs);
 }
 
+void Ide::AddEditFile(const String& path)
+{
+	actual.file.Add(path);		       
+	SaveLoadPackage();
+	ShowFile(package.GetCount() - 1);
+	filelist.SetCursor(filelist.GetCount() - 1);
+}
+
 void Ide::EditFile(const String& p)
 {
 	if(p.IsEmpty()) {
@@ -478,21 +486,25 @@ void Ide::EditFile(const String& p)
 		String pkg = package[i].name;
 		Package p;
 		p.Load(PackagePathA(pkg));
-		for(int i = 0; i < p.file.GetCount(); i++)
-			if(PathIsEqual(SourcePath(pkg, p.file[i]), path)) {
+		for(int j = 0; j < p.file.GetCount(); j++)
+			if(PathIsEqual(SourcePath(pkg, p.file[j]), path)) {
 				package.FindSetCursor(pkg);
-				ShowFile(i);
-				filelist.FindSetCursor(p.file[i]);
+				ShowFile(j);
+				filelist.FindSetCursor(p.file[j]);
 				return;
 			}
+		if(GetFileExt(path) == ".tpp" && PathIsEqual(SourcePath(pkg, GetFileName(path)), path)) {
+			filelist.KillCursor();
+			package.KillCursor();
+			package.SetCursor(i);
+			AddEditFile(GetFileName(path));
+			return;
+		}
 	}
 	filelist.KillCursor();
 	package.KillCursor();
 	package.SetCursor(package.GetCount() - 2);
-	actual.file.Add(path);
-	SaveLoadPackage();
-	ShowFile(package.GetCount() - 1);
-	filelist.SetCursor(filelist.GetCount() - 1);
+	AddEditFile(path);
 }
 
 void Ide::CheckFileUpdate()
