@@ -858,7 +858,8 @@ void CodeEditor::DefaultHlStyles()
 	SetHlStyle(INK_SQLBASE, Black);
 	SetHlStyle(INK_SQLFUNC, Black);
 	SetHlStyle(INK_SQLBOOL, Black);
-	SetHlStyle(INK_UPPMACROS, Black);
+	SetHlStyle(INK_UPPMACROS, Cyan);
+	SetHlStyle(INK_UPPLOGS, Green);
 
 	SetHlStyle(PAPER_BLOCK1, Blend(LtBlue, White, 240));
 	SetHlStyle(PAPER_BLOCK2, Blend(LtGreen, White, 240));
