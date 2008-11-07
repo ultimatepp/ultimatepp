@@ -155,30 +155,10 @@ int64 fceil64(double value)
 
 String AsString(double x, int digits)
 {
-	if(IsNull(x))
-		return Null;
-
+	if(IsNull(x)) return Null;
 	if(fabs(x) >= 1e15)
-		return Format("%g", x);
-
-	char h[64];
-	strcpy(h, Format("%.*f", abs(digits), x));
-	if(digits <= 0)
-		return h;
-	char* s = h;
-	char* e = s + strlen(s);
-
-	if(digits > 0)
-	{
-		while(e[-1] == '0')
-			e--;
-		if(e[-1] == '.')
-			e--;
-		*e = 0;
-		if(!strcmp(s, "-0"))
-			s++;
-	}
-	return s;
+		return FormatDoubleExp(x, tabs(digits), digits < 0 ? FD_ZERO : 0);
+	return FormatDoubleFix(x, tabs(digits), digits < 0 ? FD_ZERO : 0);
 }
 
 // modulo: working version of math function `fmod'.
