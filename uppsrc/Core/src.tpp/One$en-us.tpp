@@ -156,4 +156,4 @@ it.&]
 [s5;:`:`:One`:`:operator bool`(`)const: [@(0.0.255) operator]_[@(0.0.255) bool]()_[@(0.0.255) c
 onst]&]
 [s7;%% [*/ Return value]-|true if there is content.&]
-[s0;%% ]
+[s0; ]
