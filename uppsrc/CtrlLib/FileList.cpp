@@ -33,31 +33,35 @@ const wchar *strdirsep(const wchar *s) {
 	return NULL;
 }
 
-void DrawFileName(Draw& ww, int x0, int y, int wcx, int cy, const WString& mname, bool isdir, Font font,
+void DrawFileName(Draw& ww, int x0, int y, int wcx0, int cy, const WString& mname, bool isdir, Font font,
                   Color ink, Color extink, const WString& desc, Font descfont, bool justname, Color uln)
 {
-	FontInfo fi = font.Info();
-	int extpos = (isdir ? -1 : mname.ReverseFind('.'));
-	int slash = isdir ? -1 : max(mname.ReverseFind('\\'), mname.ReverseFind('/'));
-	if(extpos < slash)
-		extpos = -1;
-	const wchar *ext = extpos >= slash && extpos >= 0 ? mname.Begin() + extpos + 1
-	                                                  : mname.End();
 	for(int pass = IsNull(uln); pass < 2; pass++) {
 		NilDraw nd;
 		Draw *w = pass ? &ww : &nd;
+		FontInfo fi = font.Info();
+		int extpos = (isdir ? -1 : mname.ReverseFind('.'));
+		int slash = isdir ? -1 : max(mname.ReverseFind('\\'), mname.ReverseFind('/'));
+		if(extpos < slash)
+			extpos = -1;
+		const wchar *ext = extpos >= slash && extpos >= 0 ? mname.Begin() + extpos + 1
+		                                                  : mname.End();
 		const wchar *name = mname;
 		if(justname && slash >= 0)
 			name += slash + 1;
 		int txtcx = GetTextSize(fi, name);
 		int x = x0;
+		int wcx = wcx0;
 		if(txtcx <= wcx) {
-			w->DrawText(x, y, name, font, ink, (int)(ext - name));
-			w->DrawText(x + GetTextSize(fi, name, ext), y, ext, font, extink, (int)(mname.End() - ext));
+			if(pass == 0)
+				ww.DrawRect(x0, y + fi.GetAscent() + 1, txtcx, 1, uln);
+			ww.DrawText(x, y, name, font, ink, (int)(ext - name));
+			ww.DrawText(x + GetTextSize(fi, name, ext), y, ext, font, extink, (int)(mname.End() - ext));
 			if(!IsEmpty(desc) && pass)
-				DrawTextEllipsis(*w, x + fi.GetHeight(), y, wcx - txtcx,
+				DrawTextEllipsis(ww, x + fi.GetHeight(), y, wcx - txtcx,
 				                 desc, "...", descfont, extink);
 			x += txtcx;
+			return;
 		}
 		else {
 			int dot3 = 3 * fi['.'];
