@@ -2,6 +2,10 @@ TOPIC("Format$en-us")
 #include "Format$en-us.tppi"
 END_TOPIC
 
+TOPIC("MathUtil$en-us")
+#include "MathUtil$en-us.tppi"
+END_TOPIC
+
 TOPIC("FormatFn$en-us")
 #include "FormatFn$en-us.tppi"
 END_TOPIC
