@@ -78,11 +78,15 @@ topic "Math utility";
 [ {{10000F(128)G(128)@1 [s0;%% [* Function List]]}}&]
 [s0; &]
 [s5;:Random`(`): [_^dword^ dword]_[* Random]()&]
-[s2;%% Returns the next random generated number.&]
+[s2;%% Returns the next random generated number. MT safe and efficient 
+variant of Merssene twister MT19937 by Takuji Nishimura and Makoto 
+Matsumoto is used to get random numbers, with the seed obtained 
+from host platform specific resources (`'/dev/urandom`' in Posix 
+systems, GUID generator in Win32).&]
 [s3;%% &]
 [s4; &]
 [s5;:Random`(dword`): [_^dword^ dword]_[* Random]([_^dword^ dword]_[*@3 n])&]
-[s2; Returns the nextrandom generatednumber smaller than [*@3 n].&]
+[s2; Returns the nextrandom generated number smaller than [*@3 n].&]
 [s3;%% &]
 [s4; &]
 [s5;:sqr`(double`): [@(0.0.255) double]_[* sqr]_([@(0.0.255) double]_[*@3 a])&]
