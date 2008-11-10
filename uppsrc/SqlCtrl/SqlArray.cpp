@@ -30,7 +30,7 @@ bool SqlArray::PerformInsert() {
 	ASSERT(IsCursor());
 	SqlInsert insert(table);
 	for(int i = 0; i < GetIndexCount(); i++)
-		if(!GetId(i).IsNull())
+		if(!GetId(i).IsNull() && (i || !IsNull(GetKey())))
 			insert(GetId(i), Get(i));
 	if(!fk.IsNull())
 		insert(fk, fkv);
@@ -69,7 +69,7 @@ bool SqlArray::UpdateRow() {
 	else {
 		SqlUpdate update(table);
 		for(int i = 0; i < GetIndexCount(); i++)
-			if(!GetId(i).IsNull() && IsModified(i))
+			if(!GetId(i).IsNull() && IsModified(i) && (i || lateinsert))
 				update(GetId(i), Get(i));
 		if(update) {
 			Session().ClearError();
