@@ -497,8 +497,8 @@ public:
 	int        GetTotalCy() const;
 	int        GetLineAt(int y) const;
 
-	Rect       GetScreenRect(int i, int col) const;
-	Rect       GetScreenRectM(int i, int col) const;
+	Rect       GetScreenCellRect(int i, int col) const;
+	Rect       GetScreenCellRectM(int i, int col) const;
 
 	Point      GetClickPos() const                     { return clickpos; }
 	int        GetClickColumn() const                  { return clickpos.x; }

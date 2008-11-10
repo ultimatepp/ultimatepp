@@ -544,12 +544,12 @@ int  ArrayCtrl::GetLineY(int i) const
 	                           + (linecy + horzgrid) * (i - ln.GetCount());
 }
 
-Rect ArrayCtrl::GetScreenRect(int i, int col) const
+Rect ArrayCtrl::GetScreenCellRect(int i, int col) const
 {
 	return GetCellRect(i, col).Offseted(GetScreenView().TopLeft());
 }
 
-Rect ArrayCtrl::GetScreenRectM(int i, int col) const
+Rect ArrayCtrl::GetScreenCellRectM(int i, int col) const
 {
 	return GetCellRectM(i, col).Offseted(GetScreenView().TopLeft());
 }
