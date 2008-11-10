@@ -63,7 +63,7 @@ public:
 	friend class Column;
 
 protected:
-	enum { PROPORTIONAL, REDUCELAST, REDUCENEXT, SCROLL };
+	enum { PROPORTIONAL, REDUCELAST, REDUCENEXT, SCROLL, FIXED };
 
 	Array<Column> col;
 	HScrollBar    sb;
@@ -128,8 +128,8 @@ public:
 	
 	void          SwapTabs(int first, int second);
 	void          MoveTab(int from, int to);
-	int           GetTabIndex(int i)                      { return col[i].index; }
-	int           FindIndex(int ndx);
+	int           GetTabIndex(int i) const                { return col[i].index; }
+	int           FindIndex(int ndx) const;
 
 	void          StartSplitDrag(int s);
 	int           GetSplit(int x);
@@ -149,6 +149,7 @@ public:
 	HeaderCtrl&   ReduceNext();
 	HeaderCtrl&   ReduceLast();
 	HeaderCtrl&   Absolute();
+	HeaderCtrl&   Fixed();
 	HeaderCtrl&   SetStyle(const Style& s)                { style = &s; Refresh(); return *this; }
 	HeaderCtrl&   Moving(bool b = true)                   { moving = b; return *this; }
 

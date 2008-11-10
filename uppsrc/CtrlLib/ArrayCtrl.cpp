@@ -544,6 +544,16 @@ int  ArrayCtrl::GetLineY(int i) const
 	                           + (linecy + horzgrid) * (i - ln.GetCount());
 }
 
+Rect ArrayCtrl::GetScreenRect(int i, int col) const
+{
+	return GetCellRect(i, col).Offseted(GetScreenView().TopLeft());
+}
+
+Rect ArrayCtrl::GetScreenRectM(int i, int col) const
+{
+	return GetCellRectM(i, col).Offseted(GetScreenView().TopLeft());
+}
+
 ArrayCtrl& ArrayCtrl::SetLineCy(int cy)
 {
 	linecy = cy;
@@ -946,20 +956,21 @@ void ArrayCtrl::AddRowNumCtrl(Ctrl& ctrl) {
 	AddCtrlAt(Null, ctrl);
 }
 
-Rect ArrayCtrl::GetCellRect(int i, int col)
+Rect ArrayCtrl::GetCellRect(int i, int col) const
 {
 	Rect r;
 	r.top = GetLineY(i) - sb;
 	r.bottom = r.top + GetLineCy(i);
 	int x = 0;
+	HeaderCtrl& h = const_cast<HeaderCtrl&>(header); // Ugly!!!
 	for(i = 0; header.GetTabIndex(i) != col; i++)
-		x += header.GetTabWidth(i);
+		x += h.GetTabWidth(i);
 	r.left = x - header.GetScroll();
-	r.right = r.left + header.GetTabWidth(i) - vertgrid + (col == column.GetCount() - 1);
+	r.right = r.left + h.GetTabWidth(i) - vertgrid + (col == column.GetCount() - 1);
 	return r;
 }
 
-Rect ArrayCtrl::GetCellRectM(int i, int col)
+Rect ArrayCtrl::GetCellRectM(int i, int col) const
 {
 	Rect r = GetCellRect(i, col);
 	int cm = column[col].margin;
