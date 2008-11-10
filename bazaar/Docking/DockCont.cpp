@@ -763,7 +763,10 @@ void DockCont::SyncFrames(bool lock)
 {
 	bool frames = !lock && (IsDocked() || IsAutoHide());
 	handle.Show(frames);
-	SetFrame(0, frames ? Single<DockCont::DockContFrame>() : NullFrame());
+	if (frames)
+		SetFrame(0, Single<DockCont::DockContFrame>());
+	else 
+		SetFrame(0, NullFrame());
 }
 
 DockCont::DockCont()
