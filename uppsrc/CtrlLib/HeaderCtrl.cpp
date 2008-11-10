@@ -509,6 +509,8 @@ int HeaderCtrl::GetSplit(int px) {
 }
 
 Image HeaderCtrl::CursorImage(Point p, dword) {
+	if(mode == FIXED)
+		return Image::Arrow();
 	if(HasCapture())
 		return split >= 0 ? CtrlsImg::HorzPos() : Image::Arrow();
 	int q = GetSplit(p.x);
