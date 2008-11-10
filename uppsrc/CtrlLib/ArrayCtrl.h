@@ -232,8 +232,6 @@ private:
 	void   InsertCache(int i);
 	void   RemoveCache(int i);
 
-	void   RefreshRow(int i);
-
 	void   SetSb();
 	void   HeaderLayout();
 	void   Scroll();
@@ -243,8 +241,8 @@ private:
 	void   DoClick(Point p, dword flags);
 	void   ClickColumn(Point p);
 	void   ClickSel(dword flags);
-	Rect   GetCellRect(int i, int col);
-	Rect   GetCellRectM(int i, int col);
+	Rect   GetCellRect(int i, int col) const;
+	Rect   GetCellRectM(int i, int col) const;
 
 	Point           FindCellCtrl(Ctrl *c);
 	void            SyncCtrls(int from = 0);
@@ -487,6 +485,8 @@ public:
 	const Display&  GetDisplay(int row, int col);
 	const Display&  GetDisplay(int col);
 
+	void       RefreshRow(int i);
+
 	void       SetCtrl(int i, int col, Ctrl& ctrl, bool value = true);
 
 	ArrayCtrl& SetLineCy(int cy);
@@ -496,6 +496,9 @@ public:
 	int        GetLineCy(int i) const;
 	int        GetTotalCy() const;
 	int        GetLineAt(int y) const;
+
+	Rect       GetScreenRect(int i, int col) const;
+	Rect       GetScreenRectM(int i, int col) const;
 
 	Point      GetClickPos() const                     { return clickpos; }
 	int        GetClickColumn() const                  { return clickpos.x; }

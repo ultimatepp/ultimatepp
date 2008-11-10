@@ -166,6 +166,7 @@ HeaderCtrl& HeaderCtrl::Proportional() { mode = PROPORTIONAL; SbTotal(); return 
 HeaderCtrl& HeaderCtrl::ReduceNext()   { mode = REDUCENEXT; SbTotal(); return *this; }
 HeaderCtrl& HeaderCtrl::ReduceLast()   { mode = REDUCELAST; SbTotal(); return *this; }
 HeaderCtrl& HeaderCtrl::Absolute()     { mode = SCROLL; SbTotal(); return *this; }
+HeaderCtrl& HeaderCtrl::Fixed()        { mode = FIXED; SbTotal(); return *this; }
 
 int  HeaderCtrl::SumMin(int from)
 {
@@ -575,6 +576,8 @@ void HeaderCtrl::MouseMove(Point p, dword keyflags) {
 		Refresh();
 		return;
 	}
+	if(mode == FIXED)
+		return;
 	int q = GetSplit(p.x);
 	q = IsNull(q) || q >= 0 ? -1 : -1 - q;
 	if(q != light)
@@ -673,7 +676,7 @@ void HeaderCtrl::ShowTab(int i, bool show) {
 	WhenLayout();
 }
 
-int HeaderCtrl::FindIndex(int ndx)
+int HeaderCtrl::FindIndex(int ndx) const
 {
 	if(ndx >= 0 && ndx < col.GetCount() && col[ndx].index == ndx) return ndx;
 	for(int i = 0; i < col.GetCount(); i++)
