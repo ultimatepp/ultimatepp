@@ -383,6 +383,7 @@ class CallbackArgTarget
 	T result;
 
 	void SetResult(const T& value)      { result = value; }
+	void Set(T value)                   { result = value; }
 
 public:
 	typedef CallbackArgTarget CLASSNAME;
@@ -391,6 +392,8 @@ public:
 	bool IsNullInstance() const         { return IsNull(result); }
 
 	Callback operator[](const T& value) { return THISBACK1(SetResult, value); }
+	operator Callback1<const T&>()      { return THISBACK(SetResult); }
+	operator Callback1<T>()             { return THISBACK(Set); }
 
 	CallbackArgTarget()                 { result = Null; }
 };
