@@ -751,7 +751,7 @@ OCI8Connection::OCI8Connection(Oracle8& s)
 : session(&s)
 , oci8(s.oci8)
 {
-	LOG("OCI8Connection construct, #" << ++conn_count << " total");
+	LLOG("OCI8Connection construct, #" << ++conn_count << " total");
 	refcursor = false;
 	if(!session->AllocOciHandle(&stmthp, OCI_HTYPE_STMT)
 	|| !session->AllocOciHandle(&errhp, OCI_HTYPE_ERROR))
@@ -786,7 +786,7 @@ void OCI8Connection::Clear() {
 
 OCI8Connection::~OCI8Connection() {
 	Clear();
-	LOG("OCI8Connection destruct, #" << --conn_count << " left");
+	LLOG("OCI8Connection destruct, #" << --conn_count << " left");
 }
 
 SqlConnection *Oracle8::CreateConnection() {
