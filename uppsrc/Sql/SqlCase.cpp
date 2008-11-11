@@ -87,6 +87,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			}
 			switch(dialect) {
 			case MSSQL:
+				if(x.year < 1753) x.year = 1753; // Date::Low()
 				*r << Format("convert(datetime, '%d/%d/%d', 120)", x.year, x.month, x.day);
 				break;
 			case ORACLE:
@@ -107,6 +108,7 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			}
 			switch(dialect) {
 			case MSSQL:
+				if(x.year < 1753) x.year = 1753; // Date::Low()
 				*r << Format(x.hour || x.minute || x.second
 				             ? "convert(datetime, '%d/%d/%d %d:%d:%d', 120)"
 				             : "convert(datetime, '%d/%d/%d', 120)",
