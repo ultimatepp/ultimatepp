@@ -1,6 +1,12 @@
 #ifdef _MSC_VER
 #pragma setlocale("C")
 #endif
+// pathCtrl.cpp
+
+T_("Close")
+csCZ("Zavřít")
+
+
 // pathedit.lay
 
 T_("&Initial segment:")
