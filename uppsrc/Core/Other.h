@@ -74,7 +74,7 @@ public:
 	template <class T> T& Get()                   { ASSERT(Is<T>()); Chk(); return ((Data<T>*)ptr)->data; }
 	template <class T> const T& Get() const       { ASSERT(Is<T>()); Chk(); return ((Data<T>*)ptr)->data; }
 
-	void Clear()                                  { if(ptr) delete ptr; ptr = NULL; }
+	void Clear()                                  { if(ptr && !IsPicked()) delete ptr; ptr = NULL; }
 
 	bool IsEmpty() const                          { return ptr == NULL; }
 	bool IsPicked() const                         { return ptr == (void *)1; }
