@@ -3,7 +3,7 @@ LAYOUT(GridPanel, 892, 540)
 	ITEM(Button, clear_grid, SetLabel(t_("Clear grid")).RightPosZ(292, 96).BottomPosZ(28, 20))
 	ITEM(Button, reset_grid, SetLabel(t_("Reset grid")).RightPosZ(188, 92).BottomPosZ(28, 20))
 	ITEM(Button, exit, SetLabel(t_("Exit")).RightPosZ(188, 200).BottomPosZ(4, 20))
-	ITEM(LineEdit, log0, SetFont(Courier(12)).RightPosZ(4, 180).VSizePosZ(4, 28))
+	ITEM(LineEdit, log0, SetFont(CourierZ(12)).RightPosZ(4, 180).VSizePosZ(4, 28))
 	ITEM(Button, clear, SetLabel(t_("Clear")).RightPosZ(4, 64).BottomPosZ(4, 20))
 	ITEM(Button, debug, SetLabel(t_("Debug")).RightPosZ(72, 64).BottomPosZ(4, 20))
 	ITEM(TabCtrl, opts, RightPosZ(188, 200).VSizePosZ(4, 52))
@@ -99,3 +99,4 @@ LAYOUT(ColorsOptionsLayout, 168, 200)
 	ITEM(ColorPusher, live_color, LeftPosZ(88, 76).TopPosZ(152, 20))
 	ITEM(Switch, odd_even_mode, SetLabel(t_("Off\nColumn\nRow")).LeftPosZ(4, 160).TopPosZ(80, 15))
 END_LAYOUT
+

@@ -1,3 +1,4 @@
+/*
 struct alpha {
 	int beta;
 };
@@ -66,3 +67,9 @@ void Foo(volatile ::String)
 {
 	
 }
+*/
+SqlInsert::operator SqlStatement() const {}
+
+struct String {
+	operator std::string() const                           { return std::string(Begin(), End()); }
+};

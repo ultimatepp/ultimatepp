@@ -1,9 +1,9 @@
-#include <CtrlLib/CtrlLib.h>
 #include <GridCtrl/GridCtrl.h>
+
+using namespace Upp;
+
 #define  LAYOUTFILE "main.lay"
 #include <CtrlCore/lay.h>
-#include <stdlib.h>
-#include <DateTimeCtrl/DateTimeCtrl.h>
 
 #define LOG_PANEL
 
@@ -99,7 +99,7 @@ struct App : public WithGridPanel<TopWindow>
 		colors.DropFocus();
 
 
-		grid.Add(numsopt.total_rows);
+//		grid.Add(numsopt.total_rows);
 
 		for(int i = 0; i < numsopt.total_rows; i++)
 			for(int j = 0; j < numsopt.total_cols; j++)

@@ -2,7 +2,8 @@ uses
 	Core,
 	CtrlLib,
 	CodeEditor,
-	Sql;
+	Sql,
+	plugin\pcre;
 
 file
 	test.cpp,
