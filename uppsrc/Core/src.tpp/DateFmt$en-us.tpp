@@ -10,11 +10,12 @@ topic "Date formatting and scanning";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;%- Date formatting and scanning&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*]StrToDate[@(64) (][^`:`:Date^@(64) D
-ate][@(64) `&_][@3 d][@(64) , ][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][@3 s][@(64) )
-]&]
+[s0;%- [*@3;4 Date formatting and scanning]&]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Global functions]]}}&]
+[s0;%- &]
+[s5;:StrToDate`(Date`&`,const char`*`):%- [@(0.0.255) const]_[@(0.0.255) char]_`*[* StrToDa
+te]([_^Date^ Date][@(0.0.255) `&]_[*@3 d], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Scans a string for a Date. Order of day, month and year is specified 
 using SetDateScan. In place of month both number and text is 
 accepted `- text must match abbreviated or full name of month.&]
@@ -22,33 +23,39 @@ accepted `- text must match abbreviated or full name of month.&]
 [s7; [%-*C@3 s]-|String to scan.&]
 [s7; [*/ Return value]-|NULL if no date is found in s or position right 
 after the date.&]
-[s0;3 &]
-[s5;K%- [^`:`:String^ String]_Format[@(64) (][^`:`:Date^@(64) Date][@(64) _][@3 date][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:Format`(Date`):%- [_^String^ String]_[* Format]([_^Date^ Date]_[*@3 date])&]
 [s2; Formats date. Date is formated using the standard Format function, 
 where the string set by SetDateFormat is used as formating string, 
 and the three supplied integer value arguments are year, month 
 and day.&]
 [s7; [%-*C@3 date]-|Date to format.&]
 [s7; [*/ Return value]-|Formatted date.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) int][@(64) _]CharFilterDate[@(64) (][@(0.0.255) int][@(64) _][@3 c][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:CharFilterDate`(int`):%- [@(0.0.255) int]_[* CharFilterDate]([@(0.0.255) int]_[*@3 c])&]
 [s2; Character filter for dates. Its behaviour is specified by SetDateFilter 
 function.&]
 [s7; [%-*C@3 c]-|Character to filter.&]
 [s7; [*/ Return value]-|Filtered character.&]
-[s0; &]
-[s0;%- void_[* SetDateFormat](const_char_`*[*@3 fmt])&]
+[s3; &]
+[s4;%- &]
+[s5;:SetDateFormat`(const char`*`):%- [@(0.0.255) void]_[* SetDateFormat]([@(0.0.255) const
+]_[@(0.0.255) char]_`*[*@3 fmt])&]
 [s2; Sets formating string for dates.&]
 [s7; [%-*C@3 fmt]-|Formating string.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]SetDateScan[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char
-][@(64) _`*][@3 scan][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:SetDateScan`(const char`*`):%- [@(0.0.255) void]_[* SetDateScan]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 scan])&]
 [s2; Sets date scan string `- this string represents order of day, 
 month and year for StrToDate function.&]
 [s7; [%-*C@3 scan]-|Date scan string.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]SetDateFilter[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) ch
-ar][@(64) _`*][@3 seps][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:SetDateFilter`(const char`*`):%- [@(0.0.255) void]_[* SetDateFilter]([@(0.0.255) const
+]_[@(0.0.255) char]_`*[*@3 seps])&]
 [s2; Specifies CharFilterDate behaviour. Digits are always allowed 
 in CharFilterDate. If there is `"a`" at the beginning of seps 
 string, letters are allowed. If there is `"A`", letters are allowed 
@@ -57,5 +64,5 @@ list of characters allowed as separator follows. `"`\a`" after
 character designates `"amend`" character `- if used, all characters 
 up to next `"amend`" character are replaced by it.&]
 [s7; [%-*C@3 seps]-|Filter`-string.&]
-[s0;3 &]
+[s1; &]
 [s0; ]

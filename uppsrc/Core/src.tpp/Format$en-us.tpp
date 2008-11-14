@@ -10,7 +10,7 @@ topic "Text formatting";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*4 Format `- text formatting]&]
+[s0; [*@3;4 Format `- text formatting]&]
 [s0;*+117 &]
 [s5;:`:`:Format`(const char`*`,const`:`:Vector`<`:`:Value`>`&`):%- [^`:`:String^ String
 ]_[* Format][@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][*@3 format][@(64) , 
@@ -345,12 +345,13 @@ width&]
 ][^Formatting^@(64) Formatting][@(64) `&_fmt)]&]
 [s2; Formatter has to have form of function with single [^Formatting^ Formatting] 
 argument.&]
-[s3; &]
+[s1; &]
 [ {{10000F(128)G(128)@1 [s0; [* Formatting]]}}&]
-[s4;%- &]
+[s0;%- &]
 [s1;:Formatting`:`:struct:%- [@(0.0.255) struct]_[* Formatting]&]
 [s2; This structure passes all informations to format Value argument 
 to the formatter.&]
+[s3; &]
 [s4;%- &]
 [s5;:Formatting`:`:language:%- [@(0.0.255) int]_[* language]&]
 [s2; Language of resulting text.&]
@@ -366,7 +367,7 @@ to the formatter.&]
 [s4;%- &]
 [s5;:Formatting`:`:id:%- String_[* id]&]
 [s2; Formatter`-id.&]
-[s3; &]
+[s1; &]
 [ {{10000F(128)G(128)@1 [s0; [* Format registration functions]]}}&]
 [s3;%- &]
 [s5;:RegisterFormatter`(int`,const char`*`,Formatter`)init`_:%- [@(0.0.255) void]_[* Regi
@@ -407,4 +408,5 @@ terNullFormatter]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id],
 Formatter_[*@3 f])&]
 [s2; Registers formatter [%-*@3 id] to be applied when the Value argument 
 is Void (Value()) or ErrorValue.&]
+[s1; &]
 [s0; ]

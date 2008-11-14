@@ -11,8 +11,7 @@ topic "Miscellaneous";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [s1; [*@3;4 Exc]&]
-[s0; &]
-[s1;:Exc`:`:class:%- [@(0.0.255)3 class][3 _][*3 Exc][3 _:_][@(0.0.255)3 public][3 _][*@3;3 String]&]
+[s0;%- [@(0.0.255)3 class][3 _][*3 Exc][3 _:_][@(0.0.255)3 public][3 _][*@3;3 String]&]
 [s0; &]
 [s0; This is the preferred root class of U`+`+ exception. It is basically 
 a String. The idea is that all kinds of exception can be either 

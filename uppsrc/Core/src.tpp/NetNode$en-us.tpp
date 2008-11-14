@@ -10,53 +10,55 @@ topic "NetNode";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s0; [@(0.0.255) class]_[* NetNode]_:_[@(0.0.255) private]_[*@3 Moveable][@(0.0.255) <][* NetNode][@(0.0.255) >
-]_&]
-[s2;%% &]
-[s2;%% This class represents single network node (network resource). 
+[s0; [*@3;4 NetNode]&]
+[s1;:NetNode`:`:class: [@(0.0.255)3 class][3 _][*3 NetNode][3 _:_][@(0.0.255)3 private][3 _][*@3;3 M
+oveable][@(0.0.255)3 <][*3 NetNode][@(0.0.255)3 >][3 _]&]
+[s6;l0;%% WIN32 specific&]
+[s6;l0;%% &]
+[s0;%% This class represents single network node (network resource). 
 It is [^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable] and 
 has deep copy.&]
-[s0;%% &]
+[s1;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
+[s0; &]
+[s5;:NetNode`:`:NetNode`(`): [* NetNode]()&]
+[s2;%% Default constructor.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:NetNode`:`:GetName`(`)const: [_^`:`:String^ String]_[* GetName]()_[@(0.0.255) cons
-t]&]
+[s5;:NetNode`:`:NetNode`(const NetNode`&`): [* NetNode]([@(0.0.255) const]_[* NetNode][@(0.0.255) `&
+]_[*@3 s])&]
+[s2;%% Deep copy constructor.&]
+[s1;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s0; &]
+[s5;:NetNode`:`:GetName`(`)const: [_^String^ String]_[* GetName]()_[@(0.0.255) const]&]
 [s2;%% Returns the name of network node (e.g. for displaying in GUI).&]
 [s3; &]
 [s4; &]
-[s5;:`:`:NetNode`:`:GetPath`(`)const: [_^`:`:String^ String]_[* GetPath]()_[@(0.0.255) cons
-t]&]
+[s5;:NetNode`:`:GetPath`(`)const: [_^String^ String]_[* GetPath]()_[@(0.0.255) const]&]
 [s2;%% If node represents a disk share, it returns a path to this 
 share (like `\`\SERVER`\DATA). FindFile can be used to retrieve 
 the list of files on this path (you have to add a file mask). 
 If this method returns empty String, node is not a disk share.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:NetNode`:`:Enum`(`)const: [_^`:`:Array^ Array][@(0.0.255) <][_^`:`:NetNode^ NetNod
-e][@(0.0.255) >]_[* Enum]()_[@(0.0.255) const]&]
+[s5;:NetNode`:`:Enum`(`)const: [_^Array^ Array][@(0.0.255) <][_^NetNode^ NetNode][@(0.0.255) >
+]_[* Enum]()_[@(0.0.255) const]&]
 [s2;%% Returns the array of subnodes.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:NetNode`:`:Serialize`(`:`:Stream`&`): [@(0.0.255) void]_[* Serialize]([_^`:`:Stream^ S
-tream][@(0.0.255) `&]_[*@3 s])&]
+[s5;:NetNode`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
+]_[*@3 s])&]
 [s2;%% Serializes the Node.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:NetNode`:`:EnumRoot`(`): [@(0.0.255) static] [_^`:`:Array^ Array][@(0.0.255) <][_^`:`:NetNode^ N
+[s5;:NetNode`:`:EnumRoot`(`): [@(0.0.255) static] [_^Array^ Array][@(0.0.255) <][_^NetNode^ N
 etNode][@(0.0.255) >]_[* EnumRoot]()&]
 [s2;%% Enumerates root nodes.&]
 [s3; &]
 [s4; &]
-[s5;:`:`:NetNode`:`:NetNode`(`): [* NetNode]()&]
-[s2;%% Default constructor.&]
-[s3; &]
-[s4; &]
-[s5;:`:`:NetNode`:`:NetNode`(const`:`:NetNode`&`): [* NetNode]([@(0.0.255) const]_[* NetNod
-e][@(0.0.255) `&]_[*@3 s])&]
-[s2;%% Deep copy constructor.&]
-[s3; &]
-[s4; &]
-[s5;:`:`:NetNode`:`:operator`=`(const`:`:NetNode`&`): [_^`:`:NetNode^ NetNode][@(0.0.255) `&
-]_[* operator`=]([@(0.0.255) const]_[_^`:`:NetNode^ NetNode][@(0.0.255) `&]_[*@3 s])&]
+[s5;:NetNode`:`:operator`=`(const NetNode`&`): [_^NetNode^ NetNode][@(0.0.255) `&]_[* opera
+tor`=]([@(0.0.255) const]_[_^NetNode^ NetNode][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Deep copy assignment.&]
-[s0;%% ]
+[s1; &]
+[s0; ]
