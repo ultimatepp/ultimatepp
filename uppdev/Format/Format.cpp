@@ -4,6 +4,8 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+	DDUMP(Format("%.*f", 2, 1.22));
+	return;
 	Value a, b;
 	String s;
 	Date d = GetSysDate();

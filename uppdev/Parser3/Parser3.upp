@@ -1,6 +1,8 @@
+uses
+	Core;
+
 file
-	src.tpp,
-	test.cpp;
+	Parser3.cpp;
 
 mainconfig
 	"" = "";

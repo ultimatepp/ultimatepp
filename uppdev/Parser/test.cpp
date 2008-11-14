@@ -183,6 +183,32 @@ void Foo()
 	Ctrl::LogPos::x;
 }
 
+static WString ss[12];
+
+struct XXX {
+	String s[10];
+	String t;
+};
+
+
+void isptr() {
+	String p[2];
+	Vector<String> pp;
+	XXX xx;
+	xx.t. ;
+	xx.s[2]. ;
+	ss[1]. ;
+	p[1]. ;
+	pp[1]. ;
+}
+
+class Test {
+	void Priv();
+
+public:
+	void Public() { Priv(); /* test if it can see it */ };
+};
+
 int  TabCtrl::GetTab(Point p) const
 {
 	if(p.y >= 0 && p.y < style->tabheight)

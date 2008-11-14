@@ -6,6 +6,23 @@ topic "sdfgsdfg sdfjkl ghlskdjfh glskdhj fglksjd hfglkjshdfglkjhds fgkl dslk skl
 [0 $$4,0#96390100711032703541132217272105:end]
 [{_}%EN-US 
 [s1;%- &]
+[s0;%- &]
+[s0;%- &]
+[s2;:FormatInt`(int`):%- [_^String^ String]_[* FormatInt]([@(0.0.255) int]_[*@3 i])&]
+[s3; Outputs decimally formatted signed integer without `+ or any 
+paddings. Supposed to be quite fast. Equivalent to FormatIntBase(i, 
+10).&]
+[s3; &]
+[s0;l288;O9;~~~.640; [* i]-|the number to format.&]
+[s4;%- &]
+[s1;%- &]
+[s2;:FormatInt`(int`):%- [_^String^ String]_[* FormatInt]([@(0.0.255) int]_[*@3 i])&]
+[s3; Outputs decimally formatted signed integer without `+ or any 
+paddings. Supposed to be quite fast. Equivalent to FormatIntBase(i, 
+10).&]
+[s3; &]
+[s0;l288;O9;~~~.640; [* i]-|the number to format.&]
+[s1;%- &]
 [s2;:sgn`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) in
 t]_[* sgn]([*@4 T]_[*@3 a])&]
 [s3;  [%-*@3 a].&]

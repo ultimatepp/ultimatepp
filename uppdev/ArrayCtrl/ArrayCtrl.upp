@@ -3,8 +3,11 @@ uses
 	Crypto;
 
 file
+	app.tpp,
 	ArrayCtrl.h,
-	main.cpp;
+	main.cpp,
+	src.tpp,
+	srcimp.tpp;
 
 mainconfig
 	"" = "GUI";

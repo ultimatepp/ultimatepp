@@ -2,8 +2,7 @@ charset "windows-1250";
 
 uses
 	CtrlLib,
-	GridCtrl,
-	DateTimeCtrl;
+	GridCtrl;
 
 library
 	,
@@ -25,3 +24,4 @@ mainconfig
 custom() "",
 	"",
 	"";
+
