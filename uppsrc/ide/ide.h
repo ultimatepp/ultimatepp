@@ -487,6 +487,7 @@ public:
 	virtual   void   PackageCursor();
 	virtual   void   SyncWorkspace();
 	virtual   void   BuildFileMenu(Bar& menu);
+	virtual   void   ProjectSvn(Bar& bar);
 	virtual   void   FilePropertiesMenu(Bar& menu);
 	virtual   String GetOutputDir();
 	virtual   void   FileSelected();
@@ -875,6 +876,8 @@ public:
 		void  SyncT(int kind);
 		void  ConvertST();
 		void  ExportProject();
+		void  SyncSvnDirs(const Vector<String>& working);
+		void  SyncSvnDir(const String& working);
 		void  SyncSvn();
 
 	void      BuildMenu(Bar& menu);
