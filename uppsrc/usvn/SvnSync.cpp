@@ -186,6 +186,7 @@ void SvnSync::DoSync()
 {
 	SyncList();
 	msgmap.Sweep();
+again:
 	if(Execute() != IDOK || list.GetCount() == 0) {
 		int repoi = 0;
 		for(int i = 0; i < list.GetCount(); i++)
@@ -193,6 +194,12 @@ void SvnSync::DoSync()
 				msgmap.GetAdd(works[repoi++].working) = list.Get(i, 3);
 		return;
 	}
+	for(int i = 0; i < list.GetCount(); i++)
+		if(list.Get(i, 0) == MESSAGE && IsNull(list.Get(i, 3))) {
+			if(PromptYesNo("Commit message is empty.&Do you want to continue?"))
+				break;
+			goto again;
+		}
 	SysConsole sys;
 	int repoi = 0;
 	int i = 0;
