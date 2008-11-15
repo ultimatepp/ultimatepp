@@ -9,8 +9,7 @@ SvnSync::SvnSync()
 	list.AddColumn("Path");
 	list.ColumnWidths("153 619");
 	list.NoCursor().EvenRowColor();
-	usr.NullText("use cached");
-	pwd.NullText("use cached");
+	list.SetLineCy(max(Draw::GetStdFontCy(), 20));
 	Sizeable().Zoomable();
 	setup <<= THISBACK(Setup);
 }
@@ -71,10 +70,10 @@ void SvnSync::SyncList()
 						if(pass == action < 0) {
 							int ii = list.GetCount();
 							list.Add(action, file,
-							         action <= 0 ? Value(AttrText(an).Ink(color)) : Value(true),
+							         action < 0 ? Value(AttrText(an).Ink(color)) : Value(true),
 							         AttrText("  " + file.Mid(path.GetCount() + 1)).Ink(color));
-							if(action > 0)
-								list.SetCtrl(ii, 0, confirm.Add().SetLabel(an).NoWantFocus());
+							if(action >= 0)
+								list.SetCtrl(ii, 0, revert.Add().SetLabel("Revert\n" + an).NoWantFocus());
 						}
 					}
 				}
@@ -148,10 +147,6 @@ void SvnSync::Perform()
 	if(cl.GetCount())
 		for(int i = 0; i < cl.GetCount(); i++) {
 			if(cl[i] == "-") {
-				usr_lbl.Hide();
-				usr.Hide();
-				pwd_lbl.Hide();
-				pwd.Hide();
 				works.Load(LoadFile(ConfigFile("svnworks")));
 				DoSync();
 				SaveFile(ConfigFile("svnworks"), works.Save());
@@ -201,6 +196,7 @@ void SvnSync::DoSync()
 	SysConsole sys;
 	int repoi = 0;
 	int i = 0;
+	bool commit = false;
 	while(i < list.GetCount()) {
 		SvnWork w = works[repoi++];
 		i++;
@@ -208,7 +204,7 @@ void SvnSync::DoSync()
 		while(i < list.GetCount()) {
 			int action = list.Get(i, 0);
 			String path = list.Get(i, 1);
-			if(action == MESSAGE) {
+			if(action == MESSAGE && commit) {
 				String msg = list.Get(i, 3);
 				if(sys.System(SvnCmd("commit", w).Cat() << w.working << " -m \"" << msg << "\""))
 					msgmap.GetAdd(w.working) = msg;
@@ -217,41 +213,51 @@ void SvnSync::DoSync()
 			}
 			if(action == REPOSITORY)
 				break;
-			switch(action) {
-			case ADD:
-				SvnDel(path);
-				sys.System("svn add --force " + path);
-				break;
-			case REMOVE:
-				sys.System("svn delete " + path);
-				break;
-			case CONFLICT:
-				sys.System("svn resolved " + path);
-				break;
-			case REPLACE: {
+			Value v = list.Get(i, 2);
+			if(IsNumber(v) && (int)v == 0) {
+				if(action == REPLACE || action == ADD)
+					DeleteFolderDeep(path);
+				if(action != ADD)
+					sys.System("svn revert " + path);
+			}
+			else {
+				commit = true;
+				switch(action) {
+				case ADD:
 					SvnDel(path);
-					String tp = AppendFileName(GetFileFolder(path), Format(Uuid::Create()));
-					FileMove(path, tp);
-					sys.System(SvnCmd("update", w).Cat() << ' ' << path);
-					MoveSvn(path, tp);
-					sDeleteFolderDeep(path);
-					FileMove(tp, path);
-					Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
-					for(int i = 0; i < ln.GetCount(); i++) {
-						String h = ln[i];
-						if(h.GetCount() > 7) {
-							String file = h.Mid(7);
-							if(IsFullPath(file)) {
-								h.Trim(7);
-								if(h == "?      ")
-									sys.System("svn add --force " + file);
-								if(h == "!      ")
-									sys.System("svn delete " + file);
+					sys.System("svn add --force " + path);
+					break;
+				case REMOVE:
+					sys.System("svn delete " + path);
+					break;
+				case CONFLICT:
+					sys.System("svn resolved " + path);
+					break;
+				case REPLACE: {
+						SvnDel(path);
+						String tp = AppendFileName(GetFileFolder(path), Format(Uuid::Create()));
+						FileMove(path, tp);
+						sys.System(SvnCmd("update", w).Cat() << ' ' << path);
+						MoveSvn(path, tp);
+						sDeleteFolderDeep(path);
+						FileMove(tp, path);
+						Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
+						for(int i = 0; i < ln.GetCount(); i++) {
+							String h = ln[i];
+							if(h.GetCount() > 7) {
+								String file = h.Mid(7);
+								if(IsFullPath(file)) {
+									h.Trim(7);
+									if(h == "?      ")
+										sys.System("svn add --force " + file);
+									if(h == "!      ")
+										sys.System("svn delete " + file);
+								}
 							}
 						}
 					}
+					break;
 				}
-				break;
 			}
 			i++;
 		}
@@ -270,6 +276,11 @@ String SvnSync::GetMsgs()
 	return StoreAsString(msgmap);
 }
 
+bool IsSvnDir(const String& p)
+{
+	return DirectoryExists(AppendFileName(p, ".svn"));
+}
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 {
@@ -285,3 +296,4 @@ GUI_APP_MAIN
 	SaveToFile(mp, ss.GetMsgs());
 }
 #endif
+

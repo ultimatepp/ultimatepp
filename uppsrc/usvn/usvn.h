@@ -92,6 +92,8 @@ public:
 String SvnCmd(const char *cmd, const String& user, const String& pwd);
 String SvnCmd(const char *cmd, const SvnWork& w);
 
+bool   IsSvnDir(const String& p);
+
 struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	enum {
 		MODIFY,
@@ -104,7 +106,7 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 		MESSAGE,
 	};
 	
-	Array<Option>            confirm;
+	Array<Switch>            revert;
 	Array<EditString>        message;
 	ArrayMap<String, String> msgmap;
 	

@@ -267,7 +267,7 @@ Vector<String> Ide::SvnDirs()
 	Vector<String> d = GetUppDirs();
 	Vector<String> r;
 	for(int i = 0; i < d.GetCount(); i++)
-		if(DirectoryExists(AppendFileName(d[i], ".svn")))
+		if(IsSvnDir(d[i]))
 			r.Add(d[i]);
 	return r;
 }
@@ -276,16 +276,25 @@ INITBLOCK {
 	RegisterGlobalConfig("svn-msgs");
 }
 
-void Ide::SyncSvn()
+void Ide::SyncSvnDirs(const Vector<String>& working)
 {
 	SvnSync svn;
 	String msgs;
 	LoadFromGlobal(msgs, "svn-msgs");
 	svn.SetMsgs(msgs);
-	Vector<String> r = SvnDirs();
-	for(int i = 0; i < r.GetCount(); i++)
-		svn.Dir(r[i]);
+	for(int i = 0; i < working.GetCount(); i++)
+		svn.Dir(working[i]);
 	svn.DoSync();
 	msgs = svn.GetMsgs();
 	StoreToGlobal(msgs, "svn-msgs");
+}
+
+void Ide::SyncSvn()
+{
+	SyncSvnDirs(SvnDirs());
+}
+
+void Ide::SyncSvnDir(const String& working)
+{
+	SyncSvnDirs(Vector<String>() << working);
 }

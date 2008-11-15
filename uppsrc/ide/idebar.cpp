@@ -276,6 +276,17 @@ void Ide::Setup(Bar& menu) {
 #endif
 }
 
+void Ide::ProjectSvn(Bar& menu)
+{
+	Vector<String> w = SvnDirs();
+	String p = GetFileFolder(editfile);
+	if(IsSvnDir(p))
+		w.Insert(0, p);
+	for(int i = 0; i < w.GetCount(); i++)
+		menu.Add("Synchronize " + w[i], THISBACK1(SyncSvnDir, w[i]));
+	menu.Add("Synchronize everything..", THISBACK(SyncSvn));
+}
+
 void Ide::Project(Bar& menu) {
 	if(menu.IsToolBar() && !debugger)
 	{
@@ -308,7 +319,7 @@ void Ide::Project(Bar& menu) {
 	menu.MenuSeparator();
 	menu.Add("Export project..", THISBACK(ExportProject));
 	if(SvnDirs().GetCount())
-		menu.Add("SVN Synchronize..", THISBACK(SyncSvn));
+		menu.Add("SVN", THISBACK(ProjectSvn));
 }
 
 void Ide::FilePropertiesMenu(Bar& menu)
