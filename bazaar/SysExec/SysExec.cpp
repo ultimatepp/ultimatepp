@@ -292,7 +292,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 
 } // END SysExec()
 
-bool SysExec(String const &command, String const &args, String OutStr)
+bool SysExec(String const &command, String const &args, String &OutStr)
 {
 	String ErrStr;
 	return SysExec(command, args, Environment(), OutStr, ErrStr);
