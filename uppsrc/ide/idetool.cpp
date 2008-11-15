@@ -278,6 +278,7 @@ INITBLOCK {
 
 void Ide::SyncSvnDirs(const Vector<String>& working)
 {
+	SaveFile();
 	SvnSync svn;
 	String msgs;
 	LoadFromGlobal(msgs, "svn-msgs");
