@@ -159,6 +159,7 @@ struct WorkspaceWork {
 	virtual void   SyncWorkspace()                    {}
 	virtual void   FileSelected()                     {}
 	virtual void   FileRename(const String& nm)       {}
+	virtual void   SyncSvnDir(const String& working)  {}
 
 	void   ScanWorkspace();
 	void   SavePackage();
