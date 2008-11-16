@@ -131,6 +131,17 @@ int ItemCompare(const Value& v1, const Value& v2)
 	return q ? q : a.line - b.line;
 }
 
+int ItemCompareLexical(const Value& v1, const Value& v2)
+{
+	const CppItemInfo& a = ValueTo<CppItemInfo>(v1);
+	const CppItemInfo& b = ValueTo<CppItemInfo>(v2);
+	int q = (int)b.IsType() - (int)a.IsType();
+	if(q) return q;
+	q = SgnCompare(a.name, b.name);
+	if(q) return q;
+	return SgnCompare(a.qitem, b.qitem);
+}
+
 void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool g)
 {
 	int q = CodeBase().Find(type);
@@ -185,7 +196,7 @@ void CodeBrowser::LoadScope()
 			}
 		}
 	}
-	item.Sort(1, ItemCompare);
+	item.Sort(1, sort ? ItemCompareLexical : ItemCompare);
 	if(item.FindSetCursor(key))
 		item.ScCursor(sc);
 	clear.Enable(IsSearch());
@@ -336,4 +347,7 @@ CodeBrowser::CodeBrowser()
 		rangebutton[i].SetImage(BrowserImg::Get(BrowserImg::I_range_all + i)).Tip(tip[i])
 		              <<= THISBACK1(SetRange, i);
 	rangebutton[0] <<= true;
+	sort.Tip("Order by names");
+	sort.SetImage(BrowserImg::Sort());
+	sort <<= THISBACK(LoadScope);
 }
