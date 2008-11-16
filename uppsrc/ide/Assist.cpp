@@ -55,7 +55,8 @@ AssistEditor::AssistEditor()
 	for(int i = 0; i < 4; i++)
 		scopepane.Add(browser.rangebutton[i].RightPos((3 - i) * cy, cy).TopPos(0, cy));
 	scopepane.Add(browser.scope.HSizePos().VSizePos(c2, 0));
-	itempane.Add(browser.search_item.HSizePos().TopPos(0, cy));
+	itempane.Add(browser.search_item.HSizePos(0, cy + 2).TopPos(0, cy));
+	itempane.Add(browser.sort.RightPos(0, cy).TopPos(0, cy));
 	itempane.Add(browser.item.HSizePos().VSizePos(c2, c2));
 	itempane.Add(browser.search.HSizePos().BottomPos(0, cy));
 	scope_item.Vert(scopepane, itempane);

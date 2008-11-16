@@ -121,6 +121,7 @@ struct CodeBrowser {
 	FrameRight<Button>     clear;
 	int                    range;
 	ButtonOption           rangebutton[4];
+	ButtonOption           sort;
 	Callback               WhenKeyItem;
 	Callback               WhenClear;
 	
@@ -138,6 +139,7 @@ struct CodeBrowser {
 	bool               IsSearch() const;
 	void               ClearSearch();
 	void               SetRange(int r);
+	void               Sort();
 	
 	CodeBrowser();
 };
