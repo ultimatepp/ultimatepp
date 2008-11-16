@@ -140,6 +140,7 @@ protected:
 	void        Drop();
 	void        EnableDrop(bool b);
 	void        PseudoPush();
+	int         dropwidth;
 
 	typedef DropChoice CLASSNAME;
 
@@ -172,6 +173,10 @@ public:
 	DropChoice& Appending()                           { appending = true; return *this; }
 	DropChoice& AlwaysDrop(bool e = true);
 	DropChoice& NoDropFocus()                         { dropfocus = false; return *this; }
+
+	DropChoice& DropWidth(int w)                      { dropwidth = w; return *this; }
+	DropChoice& DropWidthZ(int w)                     { dropwidth = HorzLayoutZoom(w); return *this; }
+
 
 	DropChoice& SetScrollBarStyle(const ScrollBar::Style& s) { list.SetScrollBarStyle(s); return *this; }
 
@@ -228,6 +233,9 @@ public:
 	WithDropChoice& SetLineCy(int lcy)                    { select.SetLineCy(lcy); return *this; }
 	WithDropChoice& SetDisplay(const Display& d, int lcy) { select.SetDisplay(d, lcy); return *this; }
 	WithDropChoice& AlwaysDrop(bool b = true)             { select.AlwaysDrop(b); return *this; }
+
+	WithDropChoice& DropWidth(int w)                      { select.DropWidth(w); return *this; }
+	WithDropChoice& DropWidthZ(int w)                     { select.DropWidthZ(w); return *this; }
 
 	WithDropChoice();
 };
