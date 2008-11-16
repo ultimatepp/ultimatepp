@@ -599,9 +599,12 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	if(IsActiveFile()) {
 		menu.Separator();
 		String p = GetActiveFilePath();
-		if(GetFileExt(p) == ".tpp" && IsFolder(p))
+		if(GetFileExt(p) == ".tpp" && IsFolder(p)) {
 			menu.Add("Includeable", THISBACK(ToggleIncludeable))
 			    .Check(FileExists(AppendFileName(p, "all.i")));
+			if(IsSvnDir(p))
+				menu.Add("Svn Synchronize " + p, THISBACK1(SyncSvnDir, p));
+		}
 		else
 			menu.Add("Optimize for speed", THISBACK(ToggleFileSpeed))
 			    .Check(ActiveFile().optimize_speed);
