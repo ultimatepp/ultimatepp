@@ -447,6 +447,8 @@ NAMESPACE_UPP
 
 #include "CoWork.h"
 
+#include "LocalProcess.h"
+
 #include "Win32Util.h"
 
 #if (defined(HEAPDBG) || defined(TESTLEAKS)) && defined(PLATFORM_POSIX)

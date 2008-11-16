@@ -1,4 +1,4 @@
-#include "SlaveProcess.h"
+#include "Core.h"
 
 NAMESPACE_UPP
 

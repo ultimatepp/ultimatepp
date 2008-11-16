@@ -68,6 +68,8 @@ file
 	Util.cpp optimize_speed,
 	mathutil.cpp optimize_speed,
 	Random.cpp,
+	LocalProcess.h,
+	LocalProcess.cpp,
 	Containers readonly separator,
 	Algo.h,
 	Topt.h,

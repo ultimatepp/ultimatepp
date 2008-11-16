@@ -5,8 +5,6 @@ uses
 
 file
 	usvn.h,
-	SlaveProcess.h,
-	SlaveProcess.cpp,
 	Console.cpp,
 	SvnFs.cpp,
 	SvnWorks.cpp,
