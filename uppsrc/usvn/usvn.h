@@ -5,8 +5,6 @@
 
 using namespace Upp;
 
-#include "SlaveProcess.h"
-
 #define LAYOUTFILE <usvn/usvn.lay>
 #include <CtrlCore/lay.h>
 
