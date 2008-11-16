@@ -10,6 +10,7 @@ DropChoice::DropChoice() {
 	list.WhenSelect = callback(this, &DropChoice::Select);
 	dropfocus = true;
 	EnableDrop(false);
+	dropwidth = 0;
 }
 
 void DropChoice::EnableDrop(bool b)
@@ -29,7 +30,7 @@ void DropChoice::Drop() {
 		owner->SetWantFocus();
 	if(!list.FindSetCursor(owner->GetData()) && list.GetCount() > 0)
 		list.SetCursor(0);
-	list.PopUp(owner);
+	list.PopUp(owner,dropwidth);
 }
 
 void DropChoice::Select() {
