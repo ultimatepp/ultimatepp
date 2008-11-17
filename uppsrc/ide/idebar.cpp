@@ -97,7 +97,15 @@ void Ide::EditSpecial(Bar& menu)
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
 	menu.Add(AK_FORMATCODE, THISBACK(FormatCode))
-		.Help("Reformat code in editor");
+	    .Help("Reformat code in editor");
+	menu.Add(AK_TOUPPER, THISBACK(TextToUpper))
+	    .Help("Convert letters in selection to uppercase"); 
+	menu.Add(AK_TOLOWER, THISBACK(TextToLower))
+	    .Help("Convert letters in selection to lowercase"); 
+	menu.Add(AK_INITCAPS, THISBACK(TextInitCaps))
+	    .Help("Capitalize the first character of words in selection"); 
+	menu.Add(AK_SWAPCASE, THISBACK(SwapCase))
+	    .Help("Swap the case of letters in selection"); 
 }
 
 void Ide::Edit(Bar& menu) {

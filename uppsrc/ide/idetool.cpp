@@ -245,6 +245,47 @@ String FormatElapsedTime(double run)
 	return rtime;
 }
 
+void Ide::AlterText(WString (*op)(const WString& in))
+{
+	if(designer)
+		return;
+	editor.NextUndo();
+	if(!editor.IsSelection())
+		editor.SelectAll();
+	WString w = editor.GetSelectionW();
+	editor.RemoveSelection();
+	editor.Paste((*op)(w));
+}
+
+void Ide::TextToUpper()
+{
+	AlterText(UPP::ToUpper);
+}
+
+void Ide::TextToLower()
+{
+	AlterText(UPP::ToLower);
+}
+
+void Ide::TextInitCaps()
+{
+	AlterText(UPP::InitCaps);
+}
+
+static WString sSwapCase(const WString& s)
+{
+	WStringBuffer r;
+	r.SetCount(s.GetCount());
+	for(int i = 0; i < s.GetCount(); i++)
+		r[i] = IsUpper(s[i]) ? ToLower(s[i]) : ToUpper(s[i]);
+	return r;
+}
+
+void Ide::SwapCase()
+{
+	AlterText(sSwapCase);
+}
+
 void Ide::Times()
 {
 	WithStatisticsLayout<TopWindow> statdlg;

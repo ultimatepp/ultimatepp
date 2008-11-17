@@ -1623,6 +1623,22 @@ WString InitCaps(const wchar *s)
 	return r;
 }
 
+WString InitCaps(const WString& s)
+{
+	WStringBuffer r;
+	r.SetCount(s.GetCount());
+	bool spc = true;
+	for(int i = 0; i < s.GetCount(); i++) {
+		int c = s[i];
+		if(spc)
+			r[i] = ToUpper(c);
+		else
+			r[i] = ToLower(c);
+		spc = IsSpace(c);
+	}
+	return r;
+}
+
 WString ToUpper(const WString& w)
 {
 	int l = w.GetLength();
