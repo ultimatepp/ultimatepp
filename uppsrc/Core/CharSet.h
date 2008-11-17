@@ -193,6 +193,7 @@ void ToLower(char *s, int len, byte charset = CHARSET_DEFAULT);
 void ToAscii(char *s, int len, byte charset = CHARSET_DEFAULT);
 
 WString InitCaps(const wchar *s);
+WString InitCaps(const WString& s);
 WString ToUpper(const WString& w);
 WString ToLower(const WString& w);
 WString ToAscii(const WString& w);

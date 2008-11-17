@@ -866,6 +866,11 @@ public:
 		void  TranslateString();
 		void  SwapChars()        { editor.SwapChars(); }
 		void  CopyWord()         { editor.CopyWord(); }
+		void  AlterText(WString (*op)(const WString& in));
+		void  TextToUpper();
+		void  TextToLower();
+		void  TextInitCaps();
+		void  SwapCase();
 
 	void      MacroMenu(Bar& menu);
 		bool  HasMacros();
