@@ -107,6 +107,7 @@ void AssistEditor::SyncAnnotationPopup()
 					}
 				break;
 			}
+		result.SetStyles(topic_text.GetStyles());
 		annotation_popup.Pick(result, GetRichTextStdScreenZoom());
 	}
 	else

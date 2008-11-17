@@ -161,6 +161,7 @@ can be interpreted either as the absolute number of decimal digits
 excluding leading zeros. Decimal point is always output as a 
 period independent on language settings. [%-*@3 flags] can be a 
 binary combination ([@(0.0.255) `|]) of&]
+[s0; &]
 [ {{2098:7902<288;h1; [s0; FD`_SIGN]
 :: [s0; [/ always prepend sign (`+10)]]
 :: [s0; FD`_REL]
