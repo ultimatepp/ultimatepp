@@ -65,6 +65,9 @@ bool PopUpTable::Key(dword key, int n) {
 }
 
 void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
+	if(inpopup)
+		return;
+	inpopup++;
 	DoClose();
 	int h = AddFrameSize(width, min(droplines * GetLineCy(), GetTotalCy())).cy;
 	Rect rt = RectC(x, bottom, width, h);
@@ -93,11 +96,14 @@ void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		Animate(popup, rt, GUIEFFECT_SLIDE);
 		Ctrl::Remove();
 	}
-	CenterCursor();
-	SetRect(rt);
-	Ctrl::PopUp(owner, true, true, GUI_DropShadows());
-	SetFocus();
-	open = true;
+	if(!open) {
+		CenterCursor();
+		SetRect(rt);
+		Ctrl::PopUp(owner, true, true, GUI_DropShadows());
+		SetFocus();
+		open = true;
+	}
+	inpopup--;
 }
 
 void PopUpTable::PopUp(Ctrl *owner, int width)
@@ -130,6 +136,7 @@ PopUpTable::PopUpTable() {
 	SetFrame(DropFrame());
 	droplines = 16;
 	open = false;
+	inpopup = 0;
 }
 
 PopUpTable::~PopUpTable() {}

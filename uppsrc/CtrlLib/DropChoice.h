@@ -9,6 +9,7 @@ public:
 
 protected:
 	int          droplines;
+	int          inpopup;
 	bool         open;
 
 	void         DoClose();
