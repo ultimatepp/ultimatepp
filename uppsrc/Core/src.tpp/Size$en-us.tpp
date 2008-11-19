@@ -204,7 +204,7 @@ onst]&]
 [s2; Serializes the size to a stream [*@(141.42.0) s].&]
 [s1; &]
 [s0; &]
-[ {{10000F(128)G(128)@1 [s0; [*@2 Friend List]]}}&]
+[ {{10000F(128)G(128)@1 [s0; [* Friend List]]}}&]
 [s0; &]
 [s5;:`:`:Size`_`:`:operator`+`(`:`:Size`_`):%- [@(0.0.255) friend][@(64) _]Size`_[@(64) _]o
 perator`+[@(64) (]Size`_[@(64) _][@3 s][@(64) )]&]
