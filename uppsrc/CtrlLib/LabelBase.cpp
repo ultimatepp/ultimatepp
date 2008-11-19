@@ -552,6 +552,8 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 		margin = _margin;
 		Sync();
 	}
+	else
+		Refresh();
 }
 
 END_UPP_NAMESPACE
