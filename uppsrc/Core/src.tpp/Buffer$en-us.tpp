@@ -10,12 +10,11 @@ topic "Buffer";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; Buffer&]
-[s5;K%- template_<[@(0.0.255) class][@(64) _][@4 T][@(64) >__][@(0.0.255) class][@(64) _]Buffer[@(64) _
-:_][@(0.0.255) private][@(64) _][^`:`:Moveable^@(64) Moveable][@(64) <_]Buffer[@(64) <][@4 T][@(64) >
-_>_]&]
-[s0; class_[* Buffer]&]
-[s2; &]
+[s0; [*@3;4 Buffer]&]
+[s1;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]&]
+[s1;:Buffer`:`:class:%- [@(0.0.255) class]_[* Buffer]_:_[@(0.0.255) private]_[*@3 Moveable][@(0.0.255) <
+]_[* Buffer][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
+[s0;%- &]
 [s0; [%-*C@4 T]-|Type of elements stored in Buffer.&]
 [s0; &]
 [s0; Buffer is a simple class used to manage a fixed size plain old 
@@ -23,72 +22,88 @@ C dynamically allocated vector of elements of a specified type.
 The size of the buffer is specified as a constructor parameter 
 and it can be also reallocated with new size, while loosing all 
 current data.&]
+[s0; &]
 [s0; Buffer is a [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
 ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick] (only) 
 transfer semantics. Calling methods of picked Buffer is logic 
-error with the exceptions of&]
+error with the exceptions of:&]
 [s0; [C+75 void Alloc(int size);]&]
 [s0; [C+75 void Alloc(int size, const T`& in);]&]
 [s0; [C+75 void Clear();]&]
 [s0; [C+75 void operator`=(pick`_ Buffer`& v);]&]
-[s0;*C@4 &]
-[s0;%- [%%/ Derived from][%%  ]Moveable< Buffer<T> > &]
-[s0;3 &]
-[s0;:`:`:Buffer`:`:Buffer`(`):%- [* Buffer]()&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3; &]
+[s5;:Buffer`:`:Buffer`(`):%- [* Buffer]()&]
 [s2; Constructs an empty buffer.&]
-[s0;3 &]
-[s0;:`:`:Buffer`:`:Buffer`(int`):%- [* Buffer](int_[*@3 size])&]
-[s2; Constructs the Buffer.&]
-[s6; [@4 T][@0  must have default constructor.]&]
-[s7; [%-*C@3 size]-|Number of elements.&]
-[s0;3 &]
-[s0;:`:`:Buffer`:`:Buffer`(int`,const T`&`):%- [* Buffer](int_[*@3 size], 
-const_T`&_[*@3 init])&]
-[s2; Constructs the Buffer initializing the elements to the specified 
-value.&]
-[s6; [@4 T][@0  must have deep copy constructor.]&]
-[s7; [%-*C@3 size]-|Number of elements.&]
-[s7; [%-*C@3 init]-|Initialization value.&]
-[s0;3 &]
-[s0;:`:`:Buffer`:`:Buffer`(pick`_`:`:Buffer`&`):%- [* Buffer](pick`__[* Buffer]`&_[*@3 v])&]
-[s2; Pick constructor.&]
-[s7; [%-*C@3 v]-|Source Buffer.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]operator`=[@(64) (pick`__][^`:`:Buffer^@(64) Buffer][@(64) `&
-_][@3 v][@(64) )]&]
-[s2; Pick operator.&]
-[s7; [%-*C@3 v]-|Source buffer to be picked.&]
-[s0;3 &]
-[s5;K%- operator_T`*()&]
-[s7; [*/ Return value]-|Returns a pointer to the first element of the 
-Buffer or NULL if the Buffer is empty.&]
-[s0;3 &]
-[s5;K%- operator_[@(0.0.255) const][@(64) _T`*()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Returns a pointer to the first element of the 
-Buffer or NULL if the Buffer is empty.&]
-[s0;3 &]
-[s5;K%- T_`*operator`~[@(64) ()]&]
-[s7; [*/ Return value]-|Returns a pointer to the first element of the 
-Buffer or NULL if the Buffer is empty.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) const][@(64) _T_`*]operator`~[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Returns a pointer to the first element of the 
-Buffer or NULL if the Buffer is empty.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Alloc[@(64) (][@(0.0.255) int][@(64) _][@3 size][@(64) )]&]
-[s2; Clears the buffer and allocates it with the new size. All current 
-elements are lost.&]
-[s6; [@4 T][@0  must have default constructor.]&]
-[s7; [%-*C@3 size]-|Number of elements.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Alloc[@(64) (][@(0.0.255) int][@(64) _][@3 size][@(64) , 
-][@(0.0.255) const][@(64) _T`&_][@3 in][@(64) )]&]
-[s2; Clears the buffer and allocates it with the new size, using 
-the initialization value. All current elements are lost.&]
-[s6; [@4 T][@0  must have deep copy constructor.]&]
-[s7; [%-*C@3 size]-|Number of elements.&]
-[s7; [%-*C@3 in]-|Initialization value.&]
-[s0;3 &]
-[s5;K%- [@(0.0.255) void][@(64) _]Clear[@(64) ()]&]
-[s0; Clears the buffer to the same state as default constructor. 
-All current elements are destroyed.]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:Buffer`(int`):%- [* Buffer]([@(0.0.255) int]_[*@3 size])&]
+[s2; Constructs the Buffer with a [%-*@3 size][%-  number of elements].&]
+[s6; T must have default constructor.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:Buffer`(int`,const T`&`):%- [* Buffer]([@(0.0.255) int]_[*@3 size], 
+[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
+[s2; Constructs the Buffer initializing the [%-@3 size ]elements to 
+the specified value [%-@3 init].&]
+[s6; T must have default constructor.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:Buffer`(pick`_ Buffer`&`):%- [* Buffer]([@(0.128.128) pick`_]_[* Buffer][@(0.0.255) `&
+]_[*@3 v])&]
+[s2;%- [%% Pick constructor. Destroys source container ][*@3 v.]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:`~Buffer`(`):%- [@(0.0.255) `~][* Buffer]()&]
+[s2; Default destructor.&]
+[s3;%- &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:Buffer`:`:operator`=`(pick`_ Buffer`&`):%- [@(0.0.255) void]_[* operator`=]([@(0.128.128) p
+ick`_]_[_^Buffer^ Buffer][@(0.0.255) `&]_[*@3 v])&]
+[s2; Pick operator. Source buffer [%-*@3 v ]is destroyed.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:operator T`*`(`):%- [* operator_T`*]()&]
+[s2; Returns a pointer to the first element of the Buffer or NULL 
+if the Buffer is empty.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:operator const T`*`(`)const:%- [* operator_const_T`*]()_[@(0.0.255) const]&]
+[s2; Returns a pointer to the first element of the Buffer or NULL 
+if the Buffer is empty.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:operator`~`(`):%- [*@4 T]_`*[* operator`~]()&]
+[s2; Returns a pointer to the first element of the Buffer or NULL 
+if the Buffer is empty.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:operator`~`(`)const:%- [@(0.0.255) const]_[*@4 T]_`*[* operator`~]()_[@(0.0.255) c
+onst]&]
+[s2; Returns a pointer to the first element of the Buffer or NULL 
+if the Buffer is empty.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:Alloc`(int`):%- [@(0.0.255) void]_[* Alloc]([@(0.0.255) int]_[*@3 size])&]
+[s2; Clears the buffer and allocates it with the new size [%-*@3 size]. 
+All current elements are lost.&]
+[s6; T must have default constructor.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:Alloc`(int`,const T`&`):%- [@(0.0.255) void]_[* Alloc]([@(0.0.255) int]_[*@3 s
+ize], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 in])&]
+[s2; Clears the buffer and allocates it with the new size [%-*@3 size], 
+using the initialization value [%-*@3 in]. All current elements 
+are lost.&]
+[s6; T must have deep copy constructor.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Buffer`:`:Clear`(`):%- [@(0.0.255) void]_[* Clear]()&]
+[s2; Clears the buffer to the same state as default constructor. 
+All current elements are destroyed.&]
+[s3; &]
+[s0; ]
