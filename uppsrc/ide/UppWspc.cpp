@@ -412,7 +412,7 @@ void WorkspaceWork::RemoveFile()
 
 void WorkspaceWork::DelFile()
 {
-	if(!filelist.IsCursor() || filelist[filelist.GetCursor()].isdir) return;
+	if(!filelist.IsCursor() || filelist[fileindex[filelist.GetCursor()]].isdir) return;
 	String file = GetActiveFilePath();
 	if(IsFolder(file)) {
 		if(!PromptYesNo("Remove the topic group and discard ALL topics?")) return;
@@ -430,20 +430,22 @@ void WorkspaceWork::RenameFile()
 {
 	if(!filelist.IsCursor()) return;
 	String n = GetActiveFileName();
+	int i = filelist.GetCursor();
+	if(i < 0 || i >= fileindex.GetCount())
+		return;
+	int ii = fileindex[i];
 	if(!EditText(n, "Rename file", "New name")) return;
 	String spath = GetActiveFilePath();
 	String dpath = SourcePath(GetActivePackage(), n);
-	if(!filelist[filelist.GetCursor()].isdir && GetFileLength(spath) >= 0) {
+	if(!filelist[i].isdir && GetFileLength(spath) >= 0) {
 		if(!::MoveFile(spath, dpath)) {
 			Exclamation("Failed to rename the file.&&" + GetErrorMessage(GetLastError()));
 			return;
 		}
 	}
 	FileRename(dpath);
-	int i = filelist.GetCursor();
 	int s = filelist.GetSbPos();
-	if(i >= 0 && i < fileindex.GetCount())
-		(String &)actual.file[i] = n;
+	(String &)actual.file[ii] = n;
 	SaveLoadPackage();
 	filelist.SetSbPos(s);
 	filelist.SetCursor(i);
