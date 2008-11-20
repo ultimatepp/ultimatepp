@@ -264,7 +264,7 @@ set to 0 / NULL.&]
 [s4;%- &]
 [s5;:Stream`:`:Stream`(const Stream`&`):%- [* Stream]([@(0.0.255) const]_[* Stream][@(0.0.255) `&
 ]_[*@3 s])&]
-[s2; Default copy constructor..&]
+[s2; Default copy constructor.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:`~Stream`(`):%- [@(0.0.255) `~][* Stream]()&]
