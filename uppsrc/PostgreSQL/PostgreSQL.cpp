@@ -51,7 +51,7 @@ int OidToType(Oid oid)
 		case PGSQL_TIMESTAMPZOID:
 			return TIME_V;
 		case PGSQL_BYTEAOID:
-			return BYTEA_V;
+			return SQLRAW_V;
 	}
 	return STRING_V;
 }
@@ -357,7 +357,7 @@ void PostgreSQLConnection::SetParam(int i, const Value& r)
 		p = "NULL";
 	else
 		switch(r.GetType()) {
-		case BYTEA_V: {
+		case SQLRAW_V: {
 			String raw = SqlRaw(r);
 			size_t rl;
 			unsigned char *s = PQescapeByteaConn(conn, (const byte *)~raw, raw.GetLength(), &rl);

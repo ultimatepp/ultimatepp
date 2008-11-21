@@ -14,8 +14,6 @@ NAMESPACE_UPP
 
 // Postgre -> Value types
 // Bytea_v values are stored as bytea data, but recived as string type
-const int BYTEA_V = 34;
-
 const char *PostgreSQLReadString(const char *s, String& stmt);
 
 bool PostgreSQLPerformScript(const String& text,

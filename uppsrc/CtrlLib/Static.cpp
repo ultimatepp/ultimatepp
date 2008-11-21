@@ -338,6 +338,11 @@ void DisplayCtrl::SetData(const Value& v)
 	Refresh();
 }
 
+Value DisplayCtrl::GetData() const
+{
+	return pr.GetValue();
+}
+
 void DisplayCtrl::SetDisplay(const Display& d)
 {
 	pr.SetDisplay(d);

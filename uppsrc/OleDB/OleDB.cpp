@@ -502,6 +502,16 @@ void OleDBConnection::SetParam(int i, const Value& r)
 				par.bindproc = &DBInDouble;
 			}
 			break;
+		
+		case SQLRAW_V:
+			l = String(SqlRaw(r)).GetLength();
+			if(par.vtype != SQLRAW_V || par.alloc < l) {
+				ClearArgs();
+				par.vtype = SQLRAW_V;
+				par.alloc = max(2 * l, 32);
+				par.bindproc = &DBInString;
+			}
+			break;
 
 		case STRING_V:
 			l = String(r).GetLength();
@@ -522,7 +532,7 @@ void OleDBConnection::SetParam(int i, const Value& r)
 				par.bindproc = &DBInWString;
 			}
 			break;
-
+		
 		case DATE_V:
 		case TIME_V:
 			if(par.vtype != TIME_V) {
@@ -797,6 +807,16 @@ void OleDBConnection::SyncArgs()
 			rowbytes = (rowbytes + 7) & -8;
 			cb->obValue = rowbytes;
 			rowbytes += 8;
+			break;
+
+		case SQLRAW_V:
+			cb->wType = DBTYPE_BYTES;
+			cb->dwPart = DBPART_STATUS | DBPART_VALUE | DBPART_LENGTH;
+			cb->cbMaxLen = par.alloc + 1;
+			cb->obValue = rowbytes;
+			rowbytes = (rowbytes + par.alloc + 1 + 3) & -4;
+			cb->obLength = rowbytes;
+			rowbytes += sizeof(DBLENGTH);
 			break;
 
 		case STRING_V:

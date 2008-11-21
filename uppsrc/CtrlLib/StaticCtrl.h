@@ -101,6 +101,7 @@ public:
 	virtual void   Paint(Draw& w);
 	virtual Size   GetMinSize() const;
 	virtual void   SetData(const Value& v);
+	virtual Value  GetData() const;
 
 private:
 	PaintRect pr;
