@@ -28,6 +28,9 @@
 #define STRING_(x, n)              COLUMN_(OleDBTextType(n), String, x, n, 0)
 #define STRING_ARRAY_(x, n, items) COLUMN_ARRAY_(OleDBTextType(n), String, x, n, 0, items)
 
+#define LONGRAW(x)                 COLUMN("varbinary(max)", String, x, 0, 0)
+#define LONGRAW_(x)                COLUMN_("varbinary(max)", String, x, 0, 0)
+
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
 #define KEY                        INLINE_ATTRIBUTE("key")
 #define NOT_NULL                   INLINE_ATTRIBUTE("not null")
