@@ -22,6 +22,10 @@ TOPIC("Buffer$en-us")
 #include "Buffer$en-us.tppi"
 END_TOPIC
 
+TOPIC("CParser$en-us")
+#include "CParser$en-us.tppi"
+END_TOPIC
+
 TOPIC("Exc$en-us")
 #include "Exc$en-us.tppi"
 END_TOPIC
