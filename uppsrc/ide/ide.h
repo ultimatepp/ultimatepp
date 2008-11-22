@@ -367,6 +367,7 @@ struct AssistEditor : CodeEditor {
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void SelectionChanged();
+	virtual void DirtyFrom(int line);
 
 	struct IndexItem : Moveable<IndexItem> {
 		String text;
@@ -401,6 +402,16 @@ struct AssistEditor : CodeEditor {
 	bool           inbody;
 	bool           thisback, thisbackn;
 	Ide           *theide;
+	WString        cachedline;
+	int            cachedpos;
+	int            cachedln;
+	
+	RichTextCtrl   param_info;
+	int            param_line;
+	WString        param_test;
+	CppItem        param_item;
+	String         param_qtf;
+	String         param_editfile;
 	
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
@@ -409,6 +420,9 @@ struct AssistEditor : CodeEditor {
 	void           SyncAssist();
 	void           AssistInsert();
 	bool           InCode();
+	
+	void           SyncParamInfo();
+	void           StartParamInfo();
 
 	void           Complete();
 

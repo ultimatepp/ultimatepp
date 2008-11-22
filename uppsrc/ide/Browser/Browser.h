@@ -77,6 +77,7 @@ struct ItemTextPart : Moveable<ItemTextPart> {
 	int len;
 	int type;
 	int ii;
+	int pari;
 };
 
 Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, const char *natural);
@@ -186,6 +187,8 @@ struct ReferenceDlg : WithReferenceDlgLayout<TopWindow>, CodeBrowser {
 #define IMAGEFILE <ide/Browser/Topic.iml>
 #define IMAGECLASS TopicImg
 #include <Draw/iml_header.h>
+
+String DecoratedItem(const String& name, const CppItem& m, const char *natural, int pari = INT_MIN);
 
 int  CharFilterID(int c);
 
@@ -307,7 +310,7 @@ protected:
 
 	void   Tools(Bar& bar);
 	void   Label(String&);
-	String CreateQtf(const String& item, const String& name, const CppItem& m, bool onlyhdr = false);
+//	String CreateQtf(const String& item, const String& name, const CppItem& m, bool onlyhdr = false);
 	void   InsertItem();
 
 	void   FindBrokenRef();

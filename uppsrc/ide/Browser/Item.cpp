@@ -75,10 +75,13 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 	                         << ", tname: " << m.tname << ", m.ctname: " << m.ctname);
 	Vector<ItemTextPart> part;
 	bool param = false;
+	int pari = -1;
+	int par = 0;
 	while(*s) {
 		ItemTextPart& p = part.Add();
 		p.pos = (int)(s - ~m.natural);
 		p.type = ITEM_TEXT;
+		p.pari = pari;
 		int n = 1;
 		if(*s >= '0' && *s <= '9') {
 			while(s[n] >= '0' && s[n] <= '9')
@@ -134,6 +137,27 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 		}
 		else {
 			p.type = ITEM_SIGN;
+			if(pari >= 0) {
+				if(*s == '(')
+					par++;
+				if(*s == ')') {
+					par--;
+					if(par < 0) {
+						p.pari = -1;
+						pari = -1;
+						param = false;
+					}
+				}
+				if(*s == ',' && par == 0) {
+					p.pari = -1;
+					pari++;
+				}
+			}
+			else
+			if(*s == '(' && param) {
+				pari = 0;
+				par = 0;
+			}
 			while(s[n] && !iscid(s[n]))
 				n++;
 		}

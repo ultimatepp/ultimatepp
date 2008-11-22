@@ -38,6 +38,7 @@ file
 	t.cpp,
 	Cpp.cpp,
 	Assist.cpp,
+	ParamInfo.cpp,
 	Navigator.cpp,
 	Annotations.cpp,
 	Virtuals.cpp,
