@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)  // DLOG(x)
 
 #define IMAGECLASS CtrlCoreImg
 #define IMAGEFILE <CtrlCore/Ctrl.iml>
@@ -237,7 +237,6 @@ bool Ctrl::IsOpen() const
 
 void Ctrl::Show(bool ashow) {
 	if(visible != ashow) {
-		LLOG("Show " << Name() << " " << ashow);
 		visible = true;
 		fullrefresh = false;
 		RefreshFrame();
@@ -246,11 +245,7 @@ void Ctrl::Show(bool ashow) {
 		RefreshFrame();
 		if(parent)
 			StateH(SHOW);
-// 01/12/2007 - mdelfede
-// added support for windowed controls
-//		else
 		if(top)
-// 01/12/2007 - END
 			WndShow(visible);
 		if(InFrame() && parent)
 			RefreshParentLayout();
@@ -584,7 +579,7 @@ void Ctrl::DoRemove() {
 	CancelModeDeep();
 	if(HasChildDeep(mouseCtrl) || mouseCtrl == this)
 		mouseCtrl = NULL;
-	LLOG("DoRemove " << Name() << " focusCtrl: " << UPP::Name(focusCtrl) << BeginIndent);
+	LLOG("DoRemove " << Name() << " focusCtrl: " << UPP::Name(focusCtrl));
 #ifdef PLATFORM_X11
 	if(popupgrab) {
 		EndPopupGrab();
@@ -631,7 +626,7 @@ void Ctrl::DoRemove() {
 		}
 		SyncCaret();
 	}
-	LLOG(EndIndent << "//DoRemove " << Name() << " focusCtrl: " << UPP::Name(focusCtrl));
+	LLOG("//DoRemove " << Name() << " focusCtrl: " << UPP::Name(focusCtrl));
 }
 
 void Ctrl::Close()

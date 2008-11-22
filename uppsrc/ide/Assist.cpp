@@ -79,6 +79,7 @@ AssistEditor::AssistEditor()
 	annotation_popup.Background(White);
 	annotation_popup.SetFrame(BlackFrame());
 	annotation_popup.Margins(6);
+	annotation_popup.NoSb();
 	
 	thisback = false;
 	

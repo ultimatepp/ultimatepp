@@ -118,7 +118,7 @@ void AssistEditor::SyncAnnotationPopup()
 	int y = r.top - h - 16;
 	if(y < GetWorkArea().top)
 		y = r.bottom;
-	annotation_popup.SetRect(r.left, y, 600, h + 24);
+	annotation_popup.SetRect(r.left, y, 600, h + 16);
 	annotation_popup.Ctrl::PopUp(this, false, false, true);
 }
 
