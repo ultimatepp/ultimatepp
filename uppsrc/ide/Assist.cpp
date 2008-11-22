@@ -81,6 +81,17 @@ AssistEditor::AssistEditor()
 	annotation_popup.Margins(6);
 	
 	thisback = false;
+	
+	cachedpos = INT_MAX;
+	cachedln = -1;
+	
+	param_line = -1;
+
+	param_info.Margins(2);
+	param_info.Background(SWhite());
+	param_info.SetFrame(BlackFrame());
+	param_info.BackPaint();
+	param_info.NoSb();
 }
 
 int CppItemInfoOrder(const Value& va, const Value& vb) {
@@ -108,9 +119,27 @@ String AssistEditor::ReadIdBack(int q)
 	return id;
 }
 
+void AssistEditor::DirtyFrom(int line)
+{
+	if(line >= cachedln) {
+		cachedpos = INT_MAX;
+		cachedline.Clear();
+		cachedln = -1;
+	}
+	CodeEditor::DirtyFrom(line);
+}
+
 int AssistEditor::Ch(int i)
 {
-	return i >= 0 && i < GetLength() ? GetChar(i) : 0;
+	if(i >= 0 && i < GetLength()) {
+		if(i < cachedpos || i - cachedpos >= cachedline.GetCount()) {
+			cachedln = GetLine(i);
+			cachedline = GetWLine(cachedln);
+			cachedpos = GetPos(cachedln);
+		}
+		return cachedline[i - cachedpos];
+	}
+	return 0;
 }
 
 int AssistEditor::ParsBack(int q)
@@ -430,30 +459,12 @@ void AssistEditor::AssistInsert()
 {
 	if(assist.IsCursor()) {
 		const CppItemInfo& f = ValueTo<CppItemInfo>(assist.Get(0));
+		param_item = f;
 		String txt = f.name;
 		int l = txt.GetCount();
 		int pl = txt.GetCount();
-		if(!thisback) {
-			if(f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
-				txt << '(';
-				pl = l = txt.GetCount();
-				if(IsNull(f.param))
-					l++;
-				else {
-					Vector<String> p = Split(f.param, ';', false);
-					for(int i = 0; i < p.GetCount(); i++) {
-						if(i) {
-							txt << (inbody ? (char)184 : ',');
-							txt << ' ';
-						}
-						txt << p[i];
-						if(i == 0)
-							pl = txt.GetCount();
-					}
-				}
-				txt << ')';
-			}
-		}
+		if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND)
+			txt << "()";
 		int cl = GetCursor();
 		int ch = cl;
 		while(iscid(Ch(cl - 1)))
@@ -475,6 +486,13 @@ void AssistEditor::AssistInsert()
 				}
 			}
 		int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
+		if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
+			SetCursor(GetCursor() - 1);
+			StartParamInfo();
+			if(f.qptype.GetCount() == 0)
+				SetCursor(GetCursor() + 1);
+		}
+		else
 		if(thisback) {
 			if(thisbackn)
 				SetCursor(GetCursor() - 1);

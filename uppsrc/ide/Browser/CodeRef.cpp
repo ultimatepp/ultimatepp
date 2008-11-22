@@ -172,19 +172,23 @@ bool IsCodeRefType(const String& type)
 	return CodeBase().Find(type) >= 0;
 }
 
-String DecoratedItem(const String& name, const CppItem& m, const char *natural)
+String DecoratedItem(const String& name, const CppItem& m, const char *natural, int pari)
 {
 	String qtf = "[%00-00K ";
 	Vector<ItemTextPart> n = ParseItemNatural(name, m, natural);
-	if(m.virt)
-		qtf << "[@B virtual] ";
-	if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
-		qtf << "[@B static] ";
+	if(pari < 0) {
+		if(m.virt)
+			qtf << "[@B virtual] ";
+		if(m.kind == CLASSFUNCTION || m.kind == CLASSFUNCTIONTEMPLATE)
+			qtf << "[@B static] ";
+	}
 	Vector<String> qt = Split(m.qptype, sSplitT, false);
 	Vector<String> tt = Split(m.qtype, sSplitT, false);
 	for(int i = 0; i < n.GetCount(); i++) {
 		ItemTextPart& p = n[i];
 		qtf << "[";
+		if(p.pari == pari)
+			qtf << "$C";
 		switch(p.type) {
 		case ITEM_PNAME:
 			qtf << "*";
@@ -206,10 +210,10 @@ String DecoratedItem(const String& name, const CppItem& m, const char *natural)
 			break;
 		default:
 			int q = p.type - ITEM_PTYPE;
-			if(q >= 0 && q < qt.GetCount() && IsCodeRefType(qt[q]))
+			if(q >= 0 && q < qt.GetCount() && IsCodeRefType(qt[q]) && pari < 0)
 				qtf << "_^" << qt[q] << '^';
 			q = p.type - ITEM_TYPE;
-			if(q >= 0 && q < tt.GetCount() && IsCodeRefType(tt[q]))
+			if(q >= 0 && q < tt.GetCount() && IsCodeRefType(tt[q]) && pari < 0)
 				qtf << "_^" << tt[q] << '^';
 			break;
 		}
@@ -220,7 +224,7 @@ String DecoratedItem(const String& name, const CppItem& m, const char *natural)
 	return qtf + "]";
 }
 
-String TopicEditor::CreateQtf(const String& item, const String& name, const CppItem& m, bool onlyhdr)
+String CreateQtf(const String& item, const String& name, const CppItem& m, bool onlyhdr = false)
 {
 	String qtf;
 	bool str = m.kind == STRUCT || m.kind == STRUCTTEMPLATE;

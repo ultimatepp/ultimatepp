@@ -202,6 +202,7 @@ void AssistEditor::SelectionChanged()
 {
 	CodeEditor::SelectionChanged();
 	SyncCursor();
+	SyncParamInfo();
 }
 
 void AssistEditor::SearchIndex()
