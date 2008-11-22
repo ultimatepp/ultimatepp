@@ -1,1 +1,1 @@
-#define IDE_VERSION    "811.r173"
+#define IDE_VERSION    "811.r174"

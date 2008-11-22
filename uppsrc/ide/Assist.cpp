@@ -590,26 +590,6 @@ bool AssistEditor::Key(dword key, int count)
 				Assist();
 		}
 	}
-	if(key == ',') {
-		if(Ch(GetCursor()) == 184) {
-			int q = GetCursor() + 1;
-			int lvl = 0;
-			while(q < GetLength()) {
-				int ch = Ch(q);
-				if(ch == '\n')
-					return b;
-				if(ch == 184 || lvl <= 0 && ch == ')') {
-					SetSelection(GetCursor(), q);
-					return b;
-				}
-				if(ch == '(')
-					lvl++;
-				if(ch == '(')
-					lvl--;
-				q++;
-			}
-		}
-	}
 	return b;
 }
 
