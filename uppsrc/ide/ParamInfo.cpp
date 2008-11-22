@@ -38,7 +38,7 @@ void AssistEditor::SyncParamInfo()
 	int y = r.top - h - 6;
 	if(y < GetWorkArea().top)
 		y = r.bottom;
-	r = RectC(r.left, y, min(param_info.GetWidth(), cx) + 32, h + 6);
+	r = RectC(r.left, y, min(param_info.GetWidth(), cx) + 8, h + 6);
 	if(param_qtf != qtf || r != param_info.GetRect()) {
 		param_qtf = qtf;
 		if(IsNull(qtf)) {

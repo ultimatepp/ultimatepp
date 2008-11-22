@@ -84,7 +84,7 @@ public:
 	RichTextView&   HMargins(int a);
 	RichTextView&   VMargins(int a);
 	RichTextView&   Margins(int a);
-	RichTextView&   NoSb(bool b = true)                       { sb.Hide(); return *this; }
+	RichTextView&   NoSb(bool b = true)                       { sb.AutoHide(!b); sb.Show(!b); return *this; }
 	RichTextView&   AutoHideSb(bool b = true)                 { sb.AutoHide(b); return *this; }
 	RichTextView&   HyperlinkDecoration(bool b = true)        { hldec = b; Refresh(); return *this; }
 	RichTextView&   NoHyperlinkDecoration()                   { return HyperlinkDecoration(false); }

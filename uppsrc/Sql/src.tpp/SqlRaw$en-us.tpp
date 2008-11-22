@@ -34,5 +34,4 @@ which parameters are raw binary data (to be stored into raw binary
 data columns).&]
 [s6; Note that only input parameters `- values in Insert/Update statements 
 `- can be SqlRaw. When fetching data from database, normal String 
-values are returned for binary columns.&]
-[s0; ]
+values are returned for binary columns.]
