@@ -3,29 +3,36 @@
 void AssistEditor::SyncParamInfo()
 {
 	String qtf;
-	int i = GetCursorLine();
-	if(param_line >= 0 && param_line < GetLineCount() && i >= param_line && i < param_line + 10
-	   && param_editfile == theide->editfile && GetWLine(param_line).StartsWith(param_test)) {
-		int c = GetCursor();
-		i = GetPos(param_line) + param_test.GetCount();
-		if(c >= i) {
-			int par = 0;
-			int pari = 0;
-			for(;;) {
-				int ch = Ch(i++);
-				if(i > c) {
-					qtf = "[A1  " + DecoratedItem(param_item.name, param_item, param_item.natural, pari);
-					break;
-				}
-				if(ch == ')') {
-					if(par <= 0)
+	int mpar = INT_MAX;
+	for(int q = 0; q < PARAMN; q++) {
+		ParamInfo& m = param[q];
+		int i = GetCursorLine();
+		if(m.line >= 0 && m.line < GetLineCount() && i >= m.line && i < m.line + 10
+		   && m.editfile == theide->editfile && GetWLine(m.line).StartsWith(m.test)) {
+			int c = GetCursor();
+			i = GetPos(m.line) + m.test.GetCount();
+			if(c >= i) {
+				int par = 0;
+				int pari = 0;
+				for(;;) {
+					int ch = Ch(i++);
+					if(i > c) {
+						if(par < mpar) {
+							qtf = "[A1  " + DecoratedItem(m.item.name, m.item, m.item.natural, pari);
+							mpar = par;
+						}
 						break;
-					par--;
+					}
+					if(ch == ')') {
+						if(par <= 0)
+							break;
+						par--;
+					}
+					if(ch == '(')
+						par++;
+					if(ch == ',' && par == 0)
+						pari++;
 				}
-				if(ch == '(')
-					par++;
-				if(ch == ',' && par == 0)
-					pari++;
 			}
 		}
 	}
@@ -53,11 +60,14 @@ void AssistEditor::SyncParamInfo()
 	}
 }
 
-void AssistEditor::StartParamInfo()
+void AssistEditor::StartParamInfo(const CppItem& m)
 {
 	int x = GetCursor();
-	param_line = GetLinePos(x);
-	param_test = GetWLine(param_line).Mid(0, x);
-	param_editfile = theide->editfile;
+	ParamInfo& f = param[parami];
+	f.line = GetLinePos(x);
+	f.test = GetWLine(f.line).Mid(0, x);
+	f.item = m;
+	f.editfile = theide->editfile;
 	SyncParamInfo();
+	parami = (parami + 1) % PARAMN;
 }

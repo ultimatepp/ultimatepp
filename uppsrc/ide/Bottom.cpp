@@ -197,10 +197,8 @@ bool Ide::IsBottomShown() const
 
 void Ide::SwapBottom()
 {
-	if(editor.assist.IsOpen()) {
-		editor.CloseAssist();
+	if(editor.Esc())
 		return;
-	}
 	if(editor.IsFindOpen())
 		editor.FindClose();
 	else
