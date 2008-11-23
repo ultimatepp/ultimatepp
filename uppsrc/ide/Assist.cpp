@@ -86,7 +86,7 @@ AssistEditor::AssistEditor()
 	cachedpos = INT_MAX;
 	cachedln = -1;
 	
-	param_line = -1;
+	parami = 0;
 
 	param_info.Margins(2);
 	param_info.Background(SWhite());
@@ -460,7 +460,6 @@ void AssistEditor::AssistInsert()
 {
 	if(assist.IsCursor()) {
 		const CppItemInfo& f = ValueTo<CppItemInfo>(assist.Get(0));
-		param_item = f;
 		String txt = f.name;
 		int l = txt.GetCount();
 		int pl = txt.GetCount();
@@ -489,7 +488,7 @@ void AssistEditor::AssistInsert()
 		int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
 		if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
 			SetCursor(GetCursor() - 1);
-			StartParamInfo();
+			StartParamInfo(f);
 			if(f.qptype.GetCount() == 0)
 				SetCursor(GetCursor() + 1);
 		}
@@ -996,3 +995,20 @@ void Ide::IdeGotoCodeRef(String coderef)
 	if(q >= 0)
 		JumpToDefinition(n, q);
 }
+
+bool AssistEditor::Esc()
+{
+	bool r = false;
+	if(assist.IsOpen()) {
+		CloseAssist();
+		r = true;
+	}
+	if(param_info.IsOpen()) {
+		for(int i = 0; i < PARAMN; i++)
+			param[i].line = -1;
+		param_info.Close();
+		r = true;
+	}
+	return r;
+}
+

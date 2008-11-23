@@ -407,11 +407,18 @@ struct AssistEditor : CodeEditor {
 	int            cachedln;
 	
 	RichTextCtrl   param_info;
-	int            param_line;
-	WString        param_test;
-	CppItem        param_item;
 	String         param_qtf;
-	String         param_editfile;
+	struct ParamInfo {
+		int            line;
+		WString        test;
+		CppItem        item;
+		String         editfile;
+		
+		ParamInfo()    { line = -1; }
+	};
+	enum { PARAMN = 16 };
+	ParamInfo param[PARAMN];
+	int       parami;
 	
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
@@ -422,7 +429,7 @@ struct AssistEditor : CodeEditor {
 	bool           InCode();
 	
 	void           SyncParamInfo();
-	void           StartParamInfo();
+	void           StartParamInfo(const CppItem& m);
 
 	void           Complete();
 
@@ -481,6 +488,8 @@ struct AssistEditor : CodeEditor {
 	void           Annotate(const String& filename);
 	void           OpenTopic(String topic, String create, bool before);
 	void           NewTopic(String group, String coderef);
+	
+	bool           Esc();
 
 	void           SerializeNavigator(Stream& s);
 
