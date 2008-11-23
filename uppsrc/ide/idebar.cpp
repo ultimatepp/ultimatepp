@@ -42,6 +42,8 @@ void Ide::File(Bar& menu) {
 			.Check(editor.IsReadOnly())
 			.Help("Set / clear read-only flag for current file");
 
+	menu.AddMenu(!designer, AK_PRINT, CtrlImg::print(), THISBACK(Print));
+
 //	menu.Add("Export project", THISBACK(ExportProject))
 //		.Help("Copy all project files into given directory");
 

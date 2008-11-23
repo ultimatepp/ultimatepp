@@ -46,6 +46,7 @@ file
 	Goto.cpp,
 	Setup.cpp,
 	Custom.cpp,
+	Print.cpp,
 	idetool.cpp,
 	Install.cpp,
 	idebar.cpp,

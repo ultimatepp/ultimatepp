@@ -865,6 +865,7 @@ public:
 		void   Exit();
 		String GetOpposite();
 		void   GoOpposite();
+		void   Print();
 
 
 	void      Edit(Bar& menu);

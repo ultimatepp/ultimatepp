@@ -412,7 +412,6 @@ public:
 
 	bool                      dobody;
 	String                    current_scope;
-	int                       current_namespacel;
 	String                    current_key;
 	String                    current_name;
 	CppItem                   current;
