@@ -173,8 +173,11 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 				    keysym = 0;
 			}
 			else {
-				XLookupString(&event->xkey, buff, 1, &keysym, NULL);
-				chr = *buff;
+				int len = XLookupString(&event->xkey, buff, sizeof(buff), &keysym, NULL);
+				buff[len] = 0;
+				chr = FromUtf8(buff, len)[0];
+				if(len > 1)
+					wtext = FromUtf8(buff, len);
 			}
 			if(keysym == XK_Control_L || keysym == XK_Control_R) {
 				keysym = XK_Control_L;
