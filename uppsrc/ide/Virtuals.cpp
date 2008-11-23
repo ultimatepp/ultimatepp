@@ -125,9 +125,6 @@ void AssistEditor::Virtuals()
 	StoreToGlobal(dlg, "VirtualsDlg");
 	if(c != IDOK)
 		return;
-	String cls = ctx.current_scope.Mid(ctx.current_namespacel);
-	if(cls[0] == ':' && cls[1] == ':')
-		cls = cls.Mid(2);
 	String text;
 	String ctext;
 	if(!dlg.list.IsSelection() && dlg.list.IsCursor())
@@ -136,7 +133,7 @@ void AssistEditor::Virtuals()
 		if(dlg.list.IsSelected(i)) {
 			String n = (String)dlg.list.Get(i, 1);
 			text << "\tvirtual " << RemoveDefPar(n) << ";\r\n";
-			ctext << MakeDefinition(cls, n) << "\n{\n}\n\n";
+			ctext << MakeDefinition(ctx.current_scope, n) << "\n{\n}\n\n";
 		}
 	Paste(text.ToWString());
 	WriteClipboardText(ctext);
