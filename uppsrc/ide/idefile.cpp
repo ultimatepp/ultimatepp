@@ -519,6 +519,11 @@ void Ide::CheckFileUpdate()
 		"Current file was changed outside the IDE, but was also edited inside it.&"
 		"Would you like to reload the file or to keep changes made in the IDE ?",
 		"Reload", "Keep")) return;
+
+	if(editor.assist_active) {
+		FileIn in(editfile);
+		CodeBaseScan(in, editfile);
+	}
 	ReloadFile();
 }
 
