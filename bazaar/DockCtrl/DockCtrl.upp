@@ -6,6 +6,7 @@ uses
 	Draw;
 
 file
+	READMEFIRST.txt,
 	"Header Files" readonly separator,
 	DockCtrl.h,
 	"Source Files" readonly separator,
