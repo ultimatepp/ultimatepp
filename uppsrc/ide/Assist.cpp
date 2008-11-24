@@ -133,12 +133,14 @@ void AssistEditor::DirtyFrom(int line)
 int AssistEditor::Ch(int i)
 {
 	if(i >= 0 && i < GetLength()) {
-		if(i < cachedpos || i - cachedpos >= cachedline.GetCount()) {
+		if(i < cachedpos || i - cachedpos > cachedline.GetCount()) {
 			cachedln = GetLine(i);
 			cachedline = GetWLine(cachedln);
 			cachedpos = GetPos(cachedln);
+			DDUMP(cachedline);
 		}
-		return cachedline[i - cachedpos];
+		i -= cachedpos;
+		return i < cachedline.GetCount() ? cachedline[i] : '\n';
 	}
 	return 0;
 }

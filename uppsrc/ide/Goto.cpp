@@ -208,6 +208,7 @@ void AssistEditor::SwapSContext(Parser& p)
 	else
 		for(;;) {
 			int c = Ch(i);
+			DDUMP((char)c);
 			if(c == '{') {
 				i++;
 				break;
