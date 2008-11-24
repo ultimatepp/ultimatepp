@@ -137,7 +137,6 @@ int AssistEditor::Ch(int i)
 			cachedln = GetLine(i);
 			cachedline = GetWLine(cachedln);
 			cachedpos = GetPos(cachedln);
-			DDUMP(cachedline);
 		}
 		i -= cachedpos;
 		return i < cachedline.GetCount() ? cachedline[i] : '\n';
