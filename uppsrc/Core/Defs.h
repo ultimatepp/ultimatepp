@@ -269,7 +269,7 @@ typedef uint64             qword;
 #endif
 
 #define MAKEQWORD(a, b)  ((qword) (((dword) (a)) | ((qword) ((dword) (b))) << 32))
-#define HIDWORD(a)       (dword)((a) >> 32)
+#define HIDWORD(a)       (dword)(((uint64)a) >> 32)
 #define LODWORD(a)       dword(a)
 
 #define OFFSETOF(clss, mbr) ((int)(uintptr_t)&(((clss *)1)->mbr) - 1)
