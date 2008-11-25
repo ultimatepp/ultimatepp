@@ -27,16 +27,14 @@ inline int Distance(const Point &p0, const Point &p1)
 
 inline int32 Round(double a)
 {
-	#ifdef flagGCC
-	return (int32) a;
-	#else
+#if defined(COMPILER_MSC) && defined(CPU_32)
 	int32 retval;
-
 	__asm fld a
 	__asm fistp retval
 	return retval;
-
-	#endif
+#else
+	return (int32) a;
+#endif
 }
 
 #ifdef flagDEBUG

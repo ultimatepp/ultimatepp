@@ -217,6 +217,13 @@ String GetCurrentDirectory() {
 }
 #endif
 
+#ifdef PLATFORM_POSIX
+void SetCurrentDirectory(const char *path)
+{
+	chdir(path);
+}
+#endif
+
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 
 String GetTempPath()

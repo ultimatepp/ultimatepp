@@ -427,6 +427,7 @@ private:
 	Vector<Value>           current_row;
 	DBROWCOUNT              fetch_rowcount;
 	bool                    fetch_eof;
+	String                  last_insert_table;
 
 	enum {
 		MAX_FETCH_ROWS = 100,
@@ -452,7 +453,8 @@ OleDBConnection::~OleDBConnection()
 Value OleDBConnection::GetInsertedId() const
 {
 	Sql sql(GetSession());
-	return sql % Select(SqlId("@@IDENTITY")).Get();
+	return last_insert_table.GetCount() ? sql.Select("IDENT_CURRENT('" + last_insert_table + "')")
+	                                    : sql.Select("@@IDENTITY");
 }
 
 void OleDBConnection::Clear()
@@ -557,6 +559,12 @@ void OleDBConnection::SetParam(int i, const Value& r)
 bool OleDBConnection::Execute()
 {
 	try {
+		// There seems to be a problem in MSSQL with "select @@IDENTITY" nested in another select
+		// "select IDENTITIY_CURRENT('tablename') works, thus this ugly workaround
+		last_insert_table.Clear();
+		CParser p(statement);
+		if((p.Id("insert") || p.Id("INSERT")) && (p.Id("into") || p.Id("INTO")) && p.IsId())
+			last_insert_table = p.ReadId();
 		return TryExecute();
 	}
 	catch(Exc e) {
@@ -734,7 +742,7 @@ bool OleDBConnection::Fetch()
 void OleDBConnection::TryPrefetch()
 {
 	LTIMING("OleDBConnection::TryPrefetch");
-
+	
 	ULONG countrows;
 	HROW *prows = fetch_hrows;
 
