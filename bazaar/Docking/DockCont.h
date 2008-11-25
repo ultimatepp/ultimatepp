@@ -7,25 +7,23 @@
 
 class DockWindow;
 
-struct ImgButton : public Pusher
-{
+struct ImgButton : public Pusher {
 	private:
 		const Value *look;
 		Image img;
 	public:		
-		ImgButton()	{ Transparent(true); }
-		virtual void Paint(Draw &w);
+		ImgButton()										{ Transparent(true); }
+		virtual void Paint(Draw& w);
 		virtual void MouseEnter(Point p, dword kflags) 	{ Refresh(); Pusher::MouseEnter(p, kflags); }
 		virtual void MouseLeave() 						{ Refresh(); Pusher::MouseLeave(); }
 
-		ImgButton& 	SetImage(const Image &_img) { img = _img; Refresh(); return *this; }
-		ImgButton& 	SetLook(const Value *_look) { look = _look; Refresh(); return *this; }
+		ImgButton& 	SetImage(const Image& _img) 		{ img = _img; Refresh(); return *this; }
+		ImgButton& 	SetLook(const Value *_look) 		{ look = _look; Refresh(); return *this; }
 };
 
 #define DOCKCONT_WND_OFFSET 4 // Should get from API?
 
-class DockCont : public TopWindow
-{
+class DockCont : public TopWindow {
 public:
 	typedef DockCont CLASSNAME;
 
@@ -61,7 +59,7 @@ private:
 		
 		DockContMenu(DockWindow *dockwindow = NULL) : DockMenu(dockwindow) { };
 		
-		void ContainerMenu(Bar &bar, DockCont *c, bool withgroups  = true);
+		void ContainerMenu(Bar& bar, DockCont *c, bool withgroups  = true);
 	private:		
 		virtual void MenuDock(int align, DockableCtrl *dc);
 		virtual void MenuFloat(DockableCtrl *dc);
@@ -79,8 +77,7 @@ private:
 		virtual void FrameAddSize(Size& sz) { sz += 4; }
 	};		
 		
-	struct Handle : public FrameCtrl<Ctrl>
-	{
+	struct Handle : public FrameCtrl<Ctrl> {
 		Callback WhenContext;
 		Callback WhenLeftDrag;
 		Callback WhenLeftDouble;
@@ -90,13 +87,13 @@ private:
 		virtual void FrameLayout(Rect& r);
 		virtual void FrameAddSize(Size& sz);
 		
-		virtual void Paint(Draw &w);
+		virtual void Paint(Draw& w);
 		virtual void LeftDrag(Point p, dword keyflags)	{ /*RefreshFocus(true);*/ WhenLeftDrag(); }
 		virtual void LeftDouble(Point p, dword keyflags) { /*RefreshFocus(true);*/ WhenLeftDouble(); }
 		virtual void RightDown(Point p, dword keyflags) { /*RefreshFocus(true);*/ WhenContext(); }
 		
 		//void	RefreshFocus(bool _focus);
-		int		GetHandleSize(const DockableCtrl::Style &s) const;
+		int		GetHandleSize(const DockableCtrl::Style& s) const;
 	};
 		
 	int 		dragging;
@@ -128,25 +125,25 @@ private:
 	DockableCtrl *Get0(int ix) const;
 	DockableCtrl *GetCurrent0() const							{ return Get0(tabbar.GetCursor()); }
 	
-	void 	AddRemoveButton(Ctrl &c, bool state);
-	bool 	IsDockAllowed0(int align, const Value &v) const;
-	void	SyncButtons(DockableCtrl &dc);
-	Ctrl *  FindFirstChild() const;
+	void 	AddRemoveButton(Ctrl& c, bool state);
+	bool 	IsDockAllowed0(int align, const Value& v) const;
+	void	SyncButtons(DockableCtrl& dc);
+	Ctrl   *FindFirstChild() const;
 
-	Ctrl *			CtrlCast(const Value &v) const		{ return IsDockCont(v) ? (Ctrl *)ContCast(v) : (Ctrl *)DockCast(v); }
-	DockCont *		ContCast(const Value &v) const 		{ return ValueTo<DockCont *>(v); } 
-	DockableCtrl *	DockCast(const Value &v) const 		{ return ValueTo<DockableCtrl *>(v); }
-	bool			IsDockCont(const Value &v) const	{ return IsType<DockCont *>(v); }
-	Ctrl * 			GetCtrl(int ix) const				{ return CtrlCast(tabbar.Get(ix)); }
+	Ctrl           *CtrlCast(const Value& v) const		{ return IsDockCont(v) ? (Ctrl *)ContCast(v) : (Ctrl *)DockCast(v); }
+	DockCont       *ContCast(const Value& v) const 		{ return ValueTo<DockCont *>(v); } 
+	DockableCtrl   *DockCast(const Value& v) const 		{ return ValueTo<DockableCtrl *>(v); }
+	bool			IsDockCont(const Value& v) const	{ return IsType<DockCont *>(v); }
+	Ctrl           *GetCtrl(int ix) const				{ return CtrlCast(tabbar.Get(ix)); }
 	Value 			ValueCast(DockableCtrl *dc) const 	{ return RawToValue<DockableCtrl *>(dc); }
 	Value 			ValueCast(DockCont *dc) const 		{ return RawToValue<DockCont *>(dc); }
 public:
 	void 			SetCursor(int ix)					{ tabbar.SetCursor(ix); TabSelected(); }	
-	void 			SetCursor(Ctrl &c);
+	void 			SetCursor(Ctrl& c);
 	int 			GetCursor()	const					{ return tabbar.GetCursor(); }
-	DockableCtrl &	Get(int ix) const					{ return *Get0(ix); }
-	DockableCtrl &	GetCurrent() const					{ return Get(tabbar.GetCursor()); }
-	void 			AddFrom(DockCont &cont, int except = -1);
+	DockableCtrl& 	Get(int ix) const					{ return *Get0(ix); }
+	DockableCtrl& 	GetCurrent() const					{ return Get(tabbar.GetCursor()); }
+	void 			AddFrom(DockCont& cont, int except = -1);
 	int				GetCount() const					{ return tabbar.GetCount(); }
 	void 			Clear();	
 	
@@ -167,15 +164,15 @@ public:
 	DockState		GetDockState() const		{ return dockstate; }
 	
 	void			StateNotDocked(DockWindow *dock = NULL) 	{ if (dock) base = dock; dockstate = STATE_NONE; }
-	void			StateDocked(DockWindow &dock);	
-	void 			StateFloating(DockWindow &dock);	
-	void			StateAutoHide(DockWindow &dock)				{ StateDocked(dock); Hide(); dockstate = STATE_AUTOHIDE; }
-	void			StateTabbed(DockWindow &dock)				{ StateFloating(dock); Hide(); dockstate = STATE_TABBED; }	
+	void			StateDocked(DockWindow& dock);	
+	void 			StateFloating(DockWindow& dock);	
+	void			StateAutoHide(DockWindow& dock)				{ StateDocked(dock); Hide(); dockstate = STATE_AUTOHIDE; }
+	void			StateTabbed(DockWindow& dock)				{ StateFloating(dock); Hide(); dockstate = STATE_TABBED; }	
 	void			StartMouseDrag();
 	
 	void			SetAllDockerPos();
 	
-	DockWindow *	GetDockWindow() const			{ return base; }
+	DockWindow     *GetDockWindow() const			{ return base; }
 	void			SyncButtons()					{ if (GetCount()) SyncButtons(GetCurrent()); }
 	void			SyncTabs(int align, bool text);				
 	void 			Lock(bool lock);
@@ -184,7 +181,7 @@ public:
 	
 	void 			Grouping(bool grouping)			{ tabbar.Grouping(grouping); GroupRefresh(); }
 	void			GroupRefresh();	
-	void			GetGroups(Vector<String> &groups);
+	void			GetGroups(Vector<String>& groups);
 	
 	void			WindowButtons(bool menu, bool hide, bool close);
 	

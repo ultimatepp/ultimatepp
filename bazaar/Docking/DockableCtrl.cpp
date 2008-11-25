@@ -11,12 +11,12 @@ DockCont * DockableCtrl::GetContainer() const
 	return dynamic_cast<DockCont *>(GetParent());
 }
 
-DockableCtrl & DockableCtrl::Set(const Image &_icon, const char *_title, String _group)
+DockableCtrl&  DockableCtrl::Set(const Image& _icon, const char *_title, String _group)
 {
 	return SetGroup(_group).Title(_title).Icon(_icon);
 }
 
-DockableCtrl & DockableCtrl::SizeHint(const Size &min, const Size &max, const Size &std)
+DockableCtrl&  DockableCtrl::SizeHint(const Size& min, const Size& max, const Size& std)
 {
 	minsize = min; maxsize = max; stdsize = std; 
 	return *this;	
@@ -58,7 +58,7 @@ int DockableCtrl::GetDockAlign() const
 	return c && c->GetDockAlign();
 }
 
-DockableCtrl & DockableCtrl::SetGroup(const String &g)
+DockableCtrl&  DockableCtrl::SetGroup(const String& g)
 {
 	DockCont *c = GetContainer();
 	group = g;
@@ -91,7 +91,7 @@ void DockableCtrlImgsLook(Value* look, int i, int n)
 		*look++ = DockingImg::Get(i++);
 }
 
-Image ChCrop(const Value &element, Size canvas, Rect crop, Color baseline)
+Image ChCrop(const Value& element, Size canvas, Rect crop, Color baseline)
 {
 	ImageDraw draw(canvas);
 	ChPaint(draw, canvas, element);	
@@ -114,7 +114,7 @@ Image StandardHighlight(Color inside, Color border)
 	return ib;
 }
 
-Image AlphaHighlight(const Image &img, int alpha)
+Image AlphaHighlight(const Image& img, int alpha)
 {
 	ImageDraw draw(img.GetSize());
 	draw.Alpha().DrawRect(img.GetSize(), GrayColor(alpha));
@@ -129,7 +129,7 @@ Image AlphaHighlight(const Image &img, int alpha)
 
 CH_STYLE(DockableCtrl, Style, StyleDefault)
 {
-	const TabCtrl::Style* style = &TabCtrl::StyleDefault();
+	const TabCtrl::Style *style = &TabCtrl::StyleDefault();
 	
 	handle[0] = ChCrop(style->normal[0], Size(20, 20), Rect(2, 2, 11, 20), SColorShadow); // No focus
 	handle[1] = Colorize(handle[0], SColorHighlight(), 160); // Focus

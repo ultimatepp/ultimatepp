@@ -20,7 +20,7 @@ void DockTabBar::FrameAddSize(Size& sz)
 		TabBar::FrameAddSize(sz);
 }
 
-void DockTabBar::PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, const Font &font, Color ink, dword style)
+void DockTabBar::PaintTabData(Draw& w, Point p, const Size& sz, const Value& q, const Font& font, Color ink, dword style)
 {
 	DockableCtrl *d;
 	WString txt;
@@ -40,7 +40,7 @@ void DockTabBar::PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, 
 	TabCenterText(p, sz, font);
 	if(icons)
 	{
-		const Image &icon = (style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon();
+		const Image& icon = (style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon();
 		int al = GetAlign();
 		Point ip = p;
 		Size isz = icon.GetSize();
@@ -61,7 +61,7 @@ void DockTabBar::PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, 
 		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
 }
 
-Size DockTabBar::GetStdSize(Value &q)
+Size DockTabBar::GetStdSize(Value& q)
 {
 	DockableCtrl *d;
 	Value v;
@@ -118,14 +118,14 @@ void AutoHideBar::MouseLeave()
 	DockTabBar::MouseLeave();
 }
 
-void AutoHideBar::AddCtrl(DockCont &c, const String &group)
+void AutoHideBar::AddCtrl(DockCont& c, const String& group)
 { 
 	TabBar::Add(RawToValue<DockCont *>(&c), group); 
 	if (GetCount() == autohide+1)
 		RefreshParentLayout();		
 }
 
-void AutoHideBar::RemoveCtrl(DockCont &c, int ix)
+void AutoHideBar::RemoveCtrl(DockCont& c, int ix)
 {
 	if (c.IsOpen()) c.Close();
 
@@ -245,7 +245,7 @@ void AutoHideBar::HideAnimate(Ctrl *c)
 	DockTabBar::SetCursor(-1);
 }
 
-void AutoHideBar::AdjustSize(Rect &r, const Size &sz)
+void AutoHideBar::AdjustSize(Rect& r, const Size& sz)
 {
 	switch (DockTabBar::GetAlign()) {
 	 	case DockTabBar::LEFT: 
@@ -263,7 +263,7 @@ void AutoHideBar::AdjustSize(Rect &r, const Size &sz)
 	};		
 }
 
-int AutoHideBar::FindCtrl(DockCont &c) const
+int AutoHideBar::FindCtrl(DockCont& c) const
 {
 	if (&c == ctrl) return GetCursor();
 	for (int i = 0; i < GetCount(); i++) {

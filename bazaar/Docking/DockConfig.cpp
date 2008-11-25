@@ -2,7 +2,7 @@
 
 #define HIGHLIGHT_DURATION 1000
 
-DockConfigDlg::DockConfigDlg(DockWindow &dockwindow) 
+DockConfigDlg::DockConfigDlg(DockWindow& dockwindow) 
 : dock(dockwindow),
   dockers(dockwindow.GetDockableCtrls()),
   menu(&dockwindow),
@@ -20,7 +20,7 @@ DockConfigDlg::DockConfigDlg(DockWindow &dockwindow)
 	RefreshTree(true);
 		
 	// Setup layout list
-	const ArrayMap<String, String> &l = dock.GetLayouts();
+	const ArrayMap<String, String>& l = dock.GetLayouts();
 	for (int i = 0; i < l.GetCount(); i++)
 		list.Add(l.GetKey(i));
 	
@@ -96,7 +96,7 @@ void DockConfigDlg::RefreshTree(bool dogroups)
 	}
 }
 
-void DockConfigDlg::OnTreeContext(Bar &bar)
+void DockConfigDlg::OnTreeContext(Bar& bar)
 {
 	int id = tree.GetCursor();
 	if (id >= 0) {

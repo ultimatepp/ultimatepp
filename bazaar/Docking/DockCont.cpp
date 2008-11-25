@@ -377,8 +377,11 @@ void DockCont::TabClosed(Value v)
 		c->Remove();
 		base->CloseContainer(*c);
 	}
-	else
-		base->Close(*DockCast(v));
+	else {
+		DockableCtrl *c = DockCast(v);
+		base->SaveDockerPos(*c);
+		c->Remove();
+	}
 	waitsync = true;
 	Layout();
 	if (tabbar.GetCount() == 1) 
@@ -410,7 +413,7 @@ void DockCont::RestoreCurrent()
 	base->RestoreDockerPos(GetCurrent(), true);
 }
 
-void DockCont::AddFrom(DockCont &cont, int except)
+void DockCont::AddFrom(DockCont& cont, int except)
 {
 	bool all = except < 0 || except >= cont.GetCount();
 	for (int i = cont.GetCount() - 1; i >= 0; i--)
@@ -431,7 +434,7 @@ void DockCont::Clear()
 	handle.dc = NULL;
 }
 
-void DockCont::StateDocked(DockWindow &dock)
+void DockCont::StateDocked(DockWindow& dock)
 {
 	base = &dock;
 	dockstate = STATE_DOCKED;	
@@ -439,7 +442,7 @@ void DockCont::StateDocked(DockWindow &dock)
 	Show(); 
 }
 
-void DockCont::StateFloating(DockWindow &dock)
+void DockCont::StateFloating(DockWindow& dock)
 {
 	base = &dock; 
 	dockstate = STATE_FLOATING;
@@ -447,14 +450,14 @@ void DockCont::StateFloating(DockWindow &dock)
 	Show(); 
 }
 
-void DockCont::SyncButtons(DockableCtrl &dc)
+void DockCont::SyncButtons(DockableCtrl& dc)
 {
 	if (base) {
 		Ctrl::LogPos lp;
-		const DockableCtrl::Style &s = dc.GetStyle();
+		const DockableCtrl::Style& s = dc.GetStyle();
 		int btnsize = handle.GetHandleSize(s) - 3;
 		
-		Logc &inc = s.handle_vert ? lp.y : lp.x;
+		Logc& inc = s.handle_vert ? lp.y : lp.x;
 		lp.x = s.handle_vert ? Ctrl::Logc(ALIGN_LEFT, 1, btnsize) : Ctrl::Logc(ALIGN_RIGHT, 1, btnsize);
 		lp.y = Ctrl::Logc(ALIGN_TOP, 1, btnsize);		
 		
@@ -492,7 +495,7 @@ Ctrl * DockCont::FindFirstChild() const
 	return NULL;
 }
 
-void DockCont::SetCursor(Ctrl &c)
+void DockCont::SetCursor(Ctrl& c)
 {
 	for (int i = 0; i < GetCount(); i++) 
 		if (GetCtrl(i) == &c)
@@ -507,7 +510,7 @@ void DockCont::GroupRefresh()
 	Refresh();
 }
 
-void DockCont::GetGroups(Vector<String> &groups)
+void DockCont::GetGroups(Vector<String>& groups)
 {
 	for (int i = 0; i < tabbar.GetCount(); i++) {
 		Value v = tabbar.Get(i);
@@ -532,7 +535,7 @@ void DockCont::GetGroups(Vector<String> &groups)
 
 void DockCont::SetAllDockerPos()
 {
-	DockWindow::PosInfo &pi = Single<DockWindow::PosInfo>();
+	DockWindow::PosInfo& pi = Single<DockWindow::PosInfo>();
 	for (int i = 0; i < GetCount(); i++) {
 		Value v = tabbar.Get(i);
 		if (IsDockCont(v))
@@ -550,7 +553,7 @@ void DockCont::WindowButtons(bool menu, bool hide, bool _close)
 	SyncButtons();
 }
 
-void DockCont::AddRemoveButton(Ctrl &c, bool state)
+void DockCont::AddRemoveButton(Ctrl& c, bool state)
 {
 	if (state && !c.GetParent()) 
 		Add(c); 
@@ -627,7 +630,7 @@ bool DockCont::IsDockAllowed(int align, int dc_ix) const
 	return true;
 }
 
-bool DockCont::IsDockAllowed0(int align, const Value &v) const
+bool DockCont::IsDockAllowed0(int align, const Value& v) const
 {
 	return IsDockCont(v) ? ContCast(v)->IsDockAllowed(align, -1) : base->IsDockAllowed(align, *DockCast(v));
 }
@@ -650,7 +653,7 @@ void DockCont::Serialize(Stream& s)
 {
 	int ctrl = 'D';
 	int cont = 'C';
-	const Vector<DockableCtrl *> &dcs = base->GetDockableCtrls();
+	const Vector<DockableCtrl *>& dcs = base->GetDockableCtrls();
 	
 	if (s.IsStoring()) {		
 		if (GetCount() == 1 && IsDockCont(tabbar.Get(0)))
@@ -702,7 +705,7 @@ void DockCont::Serialize(Stream& s)
 		TabSelected();
 	}	
 }
-void DockCont::DockContMenu::ContainerMenu(Bar &bar, DockCont *c, bool withgroups)
+void DockCont::DockContMenu::ContainerMenu(Bar& bar, DockCont *c, bool withgroups)
 {
 	DockableCtrl *dc = &c->GetCurrent();
 	cont = c;

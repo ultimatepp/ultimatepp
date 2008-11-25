@@ -21,21 +21,21 @@ void DockWindow::State(int reason)
 	TopWindow::State(reason);
 }
 
-void DockWindow::Dock(int align, DockableCtrl &dc, int pos)
+void DockWindow::Dock(int align, DockableCtrl& dc, int pos)
 {
 	ALIGN_ASSERT(align);
 	Register(dc);
 	DockContainer(align, *GetReleasedContainer(dc), pos);
 }
 
-void DockWindow::Tabify(DockableCtrl &target, DockableCtrl &dc)
+void DockWindow::Tabify(DockableCtrl& target, DockableCtrl& dc)
 {
 	ASSERT(GetContainer(target));	
 	Register(dc);
 	DockAsTab(*GetContainer(target), dc);
 }
 
-void DockWindow::Float(DockableCtrl &dc, Point p)
+void DockWindow::Float(DockableCtrl& dc, Point p)
 {
 	if (dc.GetParent() && p.IsNullInstance())
 		p = GetScreenRect().TopLeft(); 
@@ -44,20 +44,20 @@ void DockWindow::Float(DockableCtrl &dc, Point p)
 	FloatContainer(*GetReleasedContainer(dc), p);
 }
 
-void DockWindow::Float(DockableCtrl &dc, const char *title, Point p)
+void DockWindow::Float(DockableCtrl& dc, const char *title, Point p)
 {
 	dc.Title(title); 
 	Float(dc, p);	
 }
 
-void DockWindow::AutoHide(DockableCtrl &dc)
+void DockWindow::AutoHide(DockableCtrl& dc)
 {
 	if (dc.IsAutoHide()) return;
 	int align = GetDockAlign(dc);
 	AutoHide(align == DOCK_NONE ? DOCK_TOP : align,  dc);	
 }
 
-void DockWindow::AutoHide(int align, DockableCtrl &dc)
+void DockWindow::AutoHide(int align, DockableCtrl& dc)
 {
 	ALIGN_ASSERT(align);
 	Register(dc);
@@ -74,7 +74,7 @@ int DockWindow::FindDocker(Ctrl *dc)
 	return -1;
 }
 
-DockableCtrl &DockWindow::Register(DockableCtrl &dc)
+DockableCtrl& DockWindow::Register(DockableCtrl& dc)
 {
 	int ix = FindDocker(&dc); 
 	if (ix < 0) {
@@ -85,7 +85,7 @@ DockableCtrl &DockWindow::Register(DockableCtrl &dc)
 	return *dockers[ix];
 }
 
-void DockWindow::Deregister(DockableCtrl &dc)
+void DockWindow::Deregister(DockableCtrl& dc)
 {
 	int ix = FindDocker(&dc); 
 	Close(dc);
@@ -95,26 +95,26 @@ void DockWindow::Deregister(DockableCtrl &dc)
 	}
 }
 
-void DockWindow::Close(DockableCtrl &dc)
+void DockWindow::Close(DockableCtrl& dc)
 {
 	DockCont *c = GetContainer(dc);
 	if (c && c->GetCount() > 1) {
 		SaveDockerPos(dc);
 		dc.Remove();
 		c->Layout();
-		c = NULL;
+		return;
 	}
 	if (c) CloseContainer(*c);
 }
 
-void DockWindow::ActivateDockable(Ctrl &c)
+void DockWindow::ActivateDockable(Ctrl& c)
 {
 	int ix = FindDocker(&c);
 	if (ix >= 0)
 		Activate(*dockers[ix]);
 }
 
-void DockWindow::ActivateDockableChild(Ctrl &c)
+void DockWindow::ActivateDockableChild(Ctrl& c)
 {
 	Ctrl *p = c.GetParent();
 	int ix = -1;
@@ -124,7 +124,7 @@ void DockWindow::ActivateDockableChild(Ctrl &c)
 		Activate(*dockers[ix]);
 }
 
-void DockWindow::Activate(DockableCtrl &dc)
+void DockWindow::Activate(DockableCtrl& dc)
 {
 	if (dc.IsVisible() && dc.IsOpen()) return;
 	DockCont *c = GetContainer(dc);
@@ -141,7 +141,7 @@ void DockWindow::Activate(DockableCtrl &dc)
 		c->SetCursor(dc);
 }
 
-void DockWindow::SaveDockerPos(DockableCtrl &dc, PosInfo &pi)
+void DockWindow::SaveDockerPos(DockableCtrl& dc, PosInfo& pi)
 {
 	// Get the container
 	DockCont *cont = GetContainer(dc);
@@ -191,7 +191,7 @@ void DockWindow::SaveDockerPos(DockableCtrl &dc, PosInfo &pi)
 	pi.data = s;	
 }
 
-void DockWindow::SetDockerPosInfo(DockableCtrl &dc, const PosInfo &pi)
+void DockWindow::SetDockerPosInfo(DockableCtrl& dc, const PosInfo& pi)
 {
 	// Find PosInfo record for the ctrl
 	int ix = FindDocker(&dc);
@@ -199,7 +199,7 @@ void DockWindow::SetDockerPosInfo(DockableCtrl &dc, const PosInfo &pi)
 	dockerpos[ix] = pi;
 }
 
-void DockWindow::SaveDockerPos(DockableCtrl &dc)
+void DockWindow::SaveDockerPos(DockableCtrl& dc)
 {
 	// Find PosInfo record for the ctrl
 	int ix = FindDocker(&dc);
@@ -207,7 +207,7 @@ void DockWindow::SaveDockerPos(DockableCtrl &dc)
 	SaveDockerPos(dc, dockerpos[ix]);
 }
 
-void DockWindow::RestoreDockerPos(DockableCtrl &dc, bool savefirst)
+void DockWindow::RestoreDockerPos(DockableCtrl& dc, bool savefirst)
 {
 	// Find PosInfo record for the ctrl
 	int ix = FindDocker(&dc);
@@ -347,21 +347,21 @@ DockCont * DockWindow::CreateContainer()
 	return dc;
 }
 
-DockCont * DockWindow::CreateContainer(DockableCtrl &dc)
+DockCont * DockWindow::CreateContainer(DockableCtrl& dc)
 {
 	DockCont *c = CreateContainer();
 	c->Add(dc);
 	return c;
 }
 
-void DockWindow::DestroyContainer(DockCont &c)
+void DockWindow::DestroyContainer(DockCont& c)
 {
 	for (int i = 0; i < conts.GetCount(); i++)
 		if (&conts[i] == &c) 
 			return conts.Remove(i);
 }
 
-DockCont *DockWindow::GetReleasedContainer(DockableCtrl &dc)
+DockCont *DockWindow::GetReleasedContainer(DockableCtrl& dc)
 {
 	DockCont *c = GetContainer(dc);
 	if (c && c->GetCount() > 1) {
@@ -377,7 +377,7 @@ DockCont *DockWindow::GetReleasedContainer(DockableCtrl &dc)
 	return c;
 }
 
-void DockWindow::SyncContainer(DockCont &c)
+void DockWindow::SyncContainer(DockCont& c)
 {
 	c.Grouping(grouping);
 	c.WindowButtons(menubtn, hidebtn, closebtn);
@@ -408,7 +408,7 @@ void DockWindow::SyncAll()
 /*
  * Docking/Undocking helpers
 */ 
-void DockWindow::Undock0(Ctrl &c, bool do_animatehl, int fsz, bool ishighlight)
+void DockWindow::Undock0(Ctrl& c, bool do_animatehl, int fsz, bool ishighlight)
 {
 	int al = GetDockAlign(c);
 	Ctrl *p = c.GetParent();
@@ -436,7 +436,7 @@ void DockWindow::DoFrameSize(bool animate, int align, int targetsize)
 			dockframe[align].Hide();
 	}
 	else {
-		FrameAnim &a = frameanim[align];
+		FrameAnim& a = frameanim[align];
 		if (a.inc)
 			dockframe[align].SetSize(a.target);
 		a.target = max(targetsize, 0);
@@ -451,7 +451,7 @@ void DockWindow::FrameAnimateTick()
 {
 	bool done = true;
 	for (int i = 0; i < 4; i++) {
-		FrameAnim &a = frameanim[i];
+		FrameAnim& a = frameanim[i];
 		if (a.inc) {
 			int sz = dockframe[i].GetSize() + a.inc;
 			if (a.inc > 0 && sz >= a.target || a.inc < 0 && sz <= a.target) {
@@ -468,7 +468,7 @@ void DockWindow::FrameAnimateTick()
 	if (done)
 		KillTimeCallback(TIMEID_ANIMATE);
 }
-void DockWindow::Undock(DockCont &c)
+void DockWindow::Undock(DockCont& c)
 {
 	if (!c.IsFloating() && !c.IsHidden()) {
 		if (c.IsAutoHide()) {
@@ -496,7 +496,7 @@ void DockWindow::Undock(DockCont &c)
 	}		
 }
 
-void DockWindow::Unfloat(DockCont &c)
+void DockWindow::Unfloat(DockCont& c)
 {
 	if (c.IsFloating()) {
 		c.SyncUserSize(true, true);
@@ -506,7 +506,7 @@ void DockWindow::Unfloat(DockCont &c)
 	}
 }
 
-void DockWindow::DockAsTab(DockCont &target, DockableCtrl &dc)
+void DockWindow::DockAsTab(DockCont& target, DockableCtrl& dc)
 {
 	DockCont *c = GetContainer(dc);
 	if (c) {
@@ -521,12 +521,12 @@ void DockWindow::DockAsTab(DockCont &target, DockableCtrl &dc)
 	target.Add(dc);
 }
 
-void DockWindow::Dock0(int align, Ctrl &c, int pos, bool do_animatehl, bool ishighlight)
+void DockWindow::Dock0(int align, Ctrl& c, int pos, bool do_animatehl, bool ishighlight)
 {
 	Dock0(align, c, pos, CtrlBestSize(c), do_animatehl, ishighlight);
 }
 
-void DockWindow::Dock0(int align, Ctrl &c, int pos, Size sz, bool do_animatehl, bool ishighlight)
+void DockWindow::Dock0(int align, Ctrl& c, int pos, Size sz, bool do_animatehl, bool ishighlight)
 {
 	int fsz = IsTB(align) ? sz.cy : sz.cx;
 	if (!dockframe[align].IsShown())
@@ -539,14 +539,14 @@ void DockWindow::Dock0(int align, Ctrl &c, int pos, Size sz, bool do_animatehl, 
 /*
  * Container docking
 */ 
-void DockWindow::DockContainer(int align, DockCont &c, int pos)
+void DockWindow::DockContainer(int align, DockCont& c, int pos)
 {
 	Detach(c);
 	c.StateDocked(*this);
 	Dock0(align, c, pos);
 }
 
-void DockWindow::DockContainerAsTab(DockCont &target, DockCont &c, bool do_nested)
+void DockWindow::DockContainerAsTab(DockCont& target, DockCont& c, bool do_nested)
 {
 	Detach(c);	
 	if (do_nested) {
@@ -559,7 +559,7 @@ void DockWindow::DockContainerAsTab(DockCont &target, DockCont &c, bool do_neste
 	}
 }
 
-void DockWindow::FloatContainer(DockCont &c, Point p, bool move)
+void DockWindow::FloatContainer(DockCont& c, Point p, bool move)
 {
 	ASSERT(IsOpen());
 	if (c.IsFloating()) return;
@@ -574,7 +574,7 @@ void DockWindow::FloatContainer(DockCont &c, Point p, bool move)
 	c.Open(this);
 }
 
-void DockWindow::FloatFromTab(DockCont &c, DockCont &tab)
+void DockWindow::FloatFromTab(DockCont& c, DockCont& tab)
 {
 	Rect r = c.GetScreenRect();
 	tab.SetRect(r);
@@ -583,13 +583,13 @@ void DockWindow::FloatFromTab(DockCont &c, DockCont &tab)
 	tab.MoveBegin();
 }
 
-void DockWindow::AutoHideContainer(int align, DockCont &c)
+void DockWindow::AutoHideContainer(int align, DockCont& c)
 {
 	while (c.GetCount() && !c.IsAutoHide())
 		AutoHide(align, c.Get(0));	
 }
 
-void DockWindow::CloseContainer(DockCont &c)
+void DockWindow::CloseContainer(DockCont& c)
 {
 	c.Clear(); 
 	Detach(c);
@@ -612,7 +612,7 @@ DockCont *DockWindow::GetMouseDockTarget()
 	return NULL;
 }
 
-int DockWindow::GetDockAlign(const Ctrl &c) const
+int DockWindow::GetDockAlign(const Ctrl& c) const
 {
 	Ctrl *p = c.GetParent();
 	while (p && p->GetParent() != this) p = p->GetParent();
@@ -621,7 +621,7 @@ int DockWindow::GetDockAlign(const Ctrl &c) const
 	return DOCK_NONE;
 }
 
-int DockWindow::GetDockAlign(const Point &p) const
+int DockWindow::GetDockAlign(const Point& p) const
 {
 	for (int i = 0; i < 4; i++) 
 		if (dockpane[i].IsVisible() && dockpane[i].GetScreenRect().Contains(p)) 
@@ -629,7 +629,7 @@ int DockWindow::GetDockAlign(const Point &p) const
 	return DOCK_NONE;
 }
 
-Size DockWindow::CtrlBestSize(const Ctrl &c, bool restrict) const
+Size DockWindow::CtrlBestSize(const Ctrl& c, bool restrict) const
 {
 	Size mn = c.GetMinSize();
 	Size mx = c.GetMaxSize();
@@ -639,7 +639,7 @@ Size DockWindow::CtrlBestSize(const Ctrl &c, bool restrict) const
 	return minmax(std, mn, mx);
 }
 
-DockCont *DockWindow::FindDockTarget(DockCont &dc, int &dock)
+DockCont *DockWindow::FindDockTarget(DockCont& dc, int& dock)
 {
 	Point p = GetMousePos();
 	Rect r = GetScreenView(); // IODO: This is not technically correct if the user has added additional frames. 
@@ -777,7 +777,7 @@ int DockWindow::GetQuad(Point p, Rect r)
 	}
 }
 
-Rect DockWindow::GetFinalAnimRect(int align, Ctrl &c)
+Rect DockWindow::GetFinalAnimRect(int align, Ctrl& c)
 {
 	if (c.GetParent() != &dockpane[align])
 		// c is docked as a tab
@@ -805,7 +805,7 @@ Rect DockWindow::GetFinalAnimRect(int align, Ctrl &c)
 }
 
 // HighlightCtrl
-void DockWindow::HighlightCtrl::Paint(Draw &w)
+void DockWindow::HighlightCtrl::Paint(Draw& w)
 {	
 	if (buffer.IsEmpty())
 		ChPaint(w, GetSize(), *highlight);
@@ -813,7 +813,7 @@ void DockWindow::HighlightCtrl::Paint(Draw &w)
 		w.DrawImage(0, 0, buffer);
 }
 
-void DockWindow::HighlightCtrl::SetHighlight(const Value &hl, bool _isnested, bool _cannest, Image bg)
+void DockWindow::HighlightCtrl::SetHighlight(const Value& hl, bool _isnested, bool _cannest, Image bg)
 {
 	highlight = &hl;
 	img = bg;	
@@ -842,7 +842,7 @@ void DockWindow::HighlightCtrl::CreateBuffer()
 		if (isnested) {
 			Rect r = sz;
 			Rect t = r;
-			const TabCtrl::Style &s = TabBar::StyleDefault();
+			const TabCtrl::Style& s = TabBar::StyleDefault();
 			t.bottom -= s.tabheight + s.sel.top + 1;	// Nasty bodge! See TabBar::GetStyleHeight
 			r.top = t.bottom-1;
 			r.right = max(min(150, r.GetWidth()/3), 20);
@@ -871,10 +871,10 @@ void DockWindow::StartHighlight(DockCont *dc)
 		StopHighlight(IsAnimatedHighlight());
 }
 
-void DockWindow::Highlight(int align, DockCont &cont, DockCont *target)
+void DockWindow::Highlight(int align, DockCont& cont, DockCont *target)
 {
-	HighlightCtrl &hl = GetHighlightCtrl();
-	DockableCtrl &dc = cont.GetCurrent();
+	HighlightCtrl& hl = GetHighlightCtrl();
+	DockableCtrl& dc = cont.GetCurrent();
 	ASSERT(&hl != (Ctrl *)&cont);
 
 	hl.SizeHint(cont.GetMinSize(), cont.GetMaxSize(), cont.GetStdSize()).Show();
@@ -905,7 +905,7 @@ void DockWindow::Highlight(int align, DockCont &cont, DockCont *target)
 
 void DockWindow::StopHighlight(bool do_animatehl)
 {
-	HighlightCtrl &hl = GetHighlightCtrl();
+	HighlightCtrl& hl = GetHighlightCtrl();
 	if (hl.GetParent()) {
 		UndoFrameReorder();
 		Undock0(hl, do_animatehl, hl.oldframesize, true);
@@ -927,7 +927,7 @@ void DockWindow::DoFrameReorder(int align)
 void DockWindow::UndoFrameReorder()
 {
 	if (IsReorderingFrames()) {
-		CtrlFrame &c = GetFrame(dockframepos);
+		CtrlFrame& c = GetFrame(dockframepos);
 		RemoveFrame(dockframepos);
 		InsertFrame(prehighlightframepos, c);
 		prehighlightframepos = -1;
@@ -951,7 +951,7 @@ bool DockWindow::NeedFrameReorder(int align)
 	return false;
 }
 
-void DockWindow::ContainerDragStart(DockCont &dc)
+void DockWindow::ContainerDragStart(DockCont& dc)
 {
 	if (!dc.IsFloating()) {
 		// Reposition if not under the mouse
@@ -972,9 +972,9 @@ void DockWindow::ContainerDragStart(DockCont &dc)
 	}
 }
 
-void DockWindow::ContainerDragMove(DockCont &dc)
+void DockWindow::ContainerDragMove(DockCont& dc)
 {
-	HighlightCtrl &hl = GetHighlightCtrl();
+	HighlightCtrl& hl = GetHighlightCtrl();
 	Point p = GetMousePos();
 	if (hl.GetParent()) {
 		if (!hl.bounds.Contains(p))
@@ -997,11 +997,11 @@ void DockWindow::ContainerDragMove(DockCont &dc)
 		StartHighlight(&dc);
 }
 	
-void DockWindow::ContainerDragEnd(DockCont &dc)
+void DockWindow::ContainerDragEnd(DockCont& dc)
 {
 	KillTimeCallback(TIMEID_ANIMATE_DELAY);
 	if (!dc.IsFloating()) return;
-	HighlightCtrl &hl = GetHighlightCtrl();
+	HighlightCtrl& hl = GetHighlightCtrl();
 
 	Ctrl *p = hl.GetParent();
 	int align = DOCK_NONE; 
@@ -1036,14 +1036,14 @@ void DockWindow::LockLayout(bool lock)
 	SyncAll();
 }
 
-DockWindow &DockWindow::TabAutoAlign(bool al)
+DockWindow& DockWindow::TabAutoAlign(bool al)
 {
 	tabalign = al;
 	SyncAll(); 
 	return *this;		
 }
 
-DockWindow &DockWindow::TabShowText(bool text)
+DockWindow& DockWindow::TabShowText(bool text)
 {
 	tabtext = text; 
 	SyncAll(); 
@@ -1056,7 +1056,7 @@ void DockWindow::SetFrameSize(int align, int size)
 	dockframe[align].SetSize(size);
 }
 
-DockWindow & DockWindow::Animate(bool highlight, bool frame, bool window, int ticks, int interval)
+DockWindow&  DockWindow::Animate(bool highlight, bool frame, bool window, int ticks, int interval)
 {
 	animatehl = highlight;
 	animatewnd = window;
@@ -1068,7 +1068,7 @@ DockWindow & DockWindow::Animate(bool highlight, bool frame, bool window, int ti
 	return *this;
 }
 
-DockWindow & DockWindow::Grouping(bool _grouping)
+DockWindow&  DockWindow::Grouping(bool _grouping)
 {
 	if (_grouping != grouping) {
 		grouping = _grouping;
@@ -1077,7 +1077,7 @@ DockWindow & DockWindow::Grouping(bool _grouping)
 	return *this;
 }
 
-DockWindow & DockWindow::SetFrameOrder(int first, int second, int third, int fourth)
+DockWindow&  DockWindow::SetFrameOrder(int first, int second, int third, int fourth)
 {
 	if (fourth != DOCK_NONE)
 		DoFrameReorder(fourth);
@@ -1091,23 +1091,23 @@ DockWindow & DockWindow::SetFrameOrder(int first, int second, int third, int fou
 	return *this;
 }
 
-DockWindow & DockWindow::AllowDockAll()
+DockWindow&  DockWindow::AllowDockAll()
 {
 	return AllowDockLeft().AllowDockRight().AllowDockTop().AllowDockBottom();	
 }
 
-DockWindow & DockWindow::AllowDockNone()
+DockWindow&  DockWindow::AllowDockNone()
 {
 	return AllowDockLeft(false).AllowDockRight(false).AllowDockTop(false).AllowDockBottom(false);
 }
 
-bool DockWindow::IsDockAllowed(int align, DockableCtrl &dc)
+bool DockWindow::IsDockAllowed(int align, DockableCtrl& dc)
 {
 	ALIGN_ASSERT(align);
 	return dockable[align] && dc.IsDockAllowed(align);
 }
 
-DockWindow & DockWindow::AutoHide(bool v)
+DockWindow&  DockWindow::AutoHide(bool v)
 {
 	if (v != autohide) {
 		autohide = v;
@@ -1116,7 +1116,7 @@ DockWindow & DockWindow::AutoHide(bool v)
 	return *this;
 }
 
-DockWindow & DockWindow::WindowButtons(bool menu, bool hide, bool close)
+DockWindow&  DockWindow::WindowButtons(bool menu, bool hide, bool close)
 {
 	if (menu == menubtn && close == closebtn && hide == hidebtn) return *this;;
 	menubtn = menu;
@@ -1147,9 +1147,9 @@ void DockWindow::DockLayout(bool tb_precedence)
 	AddFrame(dockframe[2+i]);
 }
 
-DockableCtrl & DockWindow::Dockable(Ctrl &ctrl, WString title)
+DockableCtrl&  DockWindow::Dockable(Ctrl& ctrl, WString title)
 {
-	DockableCtrl &dc = Register(ctrls.Add().SizeHint(ctrl.GetMinSize()));
+	DockableCtrl& dc = Register(ctrls.Add().SizeHint(ctrl.GetMinSize()));
 	if (!IsNull(title)) dc.Title(title);
 	dc << ctrl.SizePos();
 	return dc;
@@ -1160,7 +1160,7 @@ void DockWindow::DockManager()
 	DockConfigDlg(*this).Run();
 }
 
-void DockWindow::DockWindowMenu(Bar &bar)
+void DockWindow::DockWindowMenu(Bar& bar)
 {
 	if (IsGrouping())
 		menu.GroupListMenu(bar);
@@ -1175,7 +1175,7 @@ void DockWindow::DockWindowMenu(Bar &bar)
 	bar.Add(t_("Manage Windows..."), THISBACK(DockManager));
 }
 
-void DockWindow::SerializeWindow(Stream &s)
+void DockWindow::SerializeWindow(Stream& s)
 {
 	int version = VERSION;
 	int v = version;
@@ -1208,7 +1208,7 @@ void DockWindow::ClearLayout()
 	conts.Clear();	
 }
 
-void DockWindow::SerializeLayout(Stream &s, bool withsavedlayouts)
+void DockWindow::SerializeLayout(Stream& s, bool withsavedlayouts)
 {
 	StopHighlight(false);
 	int cnt = 0;
@@ -1238,8 +1238,8 @@ void DockWindow::SerializeLayout(Stream &s, bool withsavedlayouts)
 		for (int i = 0; i < dockers.GetCount(); i++)
 			dockers[i]->SetGroup(Null);
 		for (int i = 0; i < groups.GetCount(); i++) {
-			Vector<int> &v = groups[i];
-			const String &g = groups.GetKey(i);
+			Vector<int>& v = groups[i];
+			const String& g = groups.GetKey(i);
 			for (int j = 0; j < v.GetCount(); j++) {
 				int ix = v[j];
 				if (ix >= 0 && ix < dockers.GetCount())
@@ -1256,7 +1256,7 @@ void DockWindow::SerializeLayout(Stream &s, bool withsavedlayouts)
 		}
 		// Write docked
 		for (int i = 0; i < 4; i++) {
-			DockPane &pane = dockpane[i];
+			DockPane& pane = dockpane[i];
 			int fsz = dockframe[i].IsShown() ? dockframe[i].GetSize() : 0;
 			
 			s / fsz % pane;
@@ -1302,7 +1302,7 @@ void DockWindow::SerializeLayout(Stream &s, bool withsavedlayouts)
 		}
 		// Read docked
 		for (int i = 0; i < 4; i++) {
-			DockPane &pane = dockpane[i];
+			DockPane& pane = dockpane[i];
 			dockframe[i].Hide();
 			int fsz;
 			s / fsz % pane;
@@ -1422,14 +1422,14 @@ DockWindow::DockWindow()
 // PopUpDockWindow
 #define POPUP_SPACING 0
 
-void PopUpDockWindow::ContainerDragStart(DockCont &dc)
+void PopUpDockWindow::ContainerDragStart(DockCont& dc)
 {
 	DockWindow::ContainerDragStart(dc);
 	last_target = NULL;
 	last_popup = NULL;	
 }
 
-void PopUpDockWindow::ContainerDragMove(DockCont &dc)
+void PopUpDockWindow::ContainerDragMove(DockCont& dc)
 {
 	int align = DOCK_NONE;
 
@@ -1482,7 +1482,7 @@ void PopUpDockWindow::ContainerDragMove(DockCont &dc)
 	}
 }
 
-void PopUpDockWindow::ContainerDragEnd(DockCont &dc)
+void PopUpDockWindow::ContainerDragEnd(DockCont& dc)
 {
 	HidePopUps(true, true);
 	DockWindow::ContainerDragEnd(dc);	
@@ -1511,7 +1511,7 @@ int PopUpDockWindow::PopUpHighlight(PopUpButton *pb, int cnt)
 	return ix;
 }
 
-void PopUpDockWindow::ShowOuterPopUps(DockCont &dc)
+void PopUpDockWindow::ShowOuterPopUps(DockCont& dc)
 {
 	Rect wrect = GetScreenRect();
 	Point cp = wrect.CenterPoint();
@@ -1527,7 +1527,7 @@ void PopUpDockWindow::ShowOuterPopUps(DockCont &dc)
 	if (dc.IsDockAllowed(DOCK_BOTTOM)) 	ShowPopUp(outer[DOCK_BOTTOM], prect.Offseted(cp.x - psz.cx, wrect.bottom - POPUP_SPACING - psz.cy*2));
 }
 
-void PopUpDockWindow::ShowInnerPopUps(DockCont &dc, DockCont *target)
+void PopUpDockWindow::ShowInnerPopUps(DockCont& dc, DockCont *target)
 {
 	ASSERT(target);
 	Rect wrect = GetScreenRect();
@@ -1562,7 +1562,7 @@ void PopUpDockWindow::ShowInnerPopUps(DockCont &dc, DockCont *target)
 		ShowPopUp(inner[4], prect.Offseted(cp.x-psz.cx, cp.y-psz.cy));
 }
 
-void PopUpDockWindow::ShowPopUp(PopUpButton &pb, const Rect &r)
+void PopUpDockWindow::ShowPopUp(PopUpButton& pb, const Rect& r)
 {
 	pb.SetRect(r);
 	if (!pb.IsPopUp())
@@ -1579,7 +1579,7 @@ void PopUpDockWindow::HidePopUps(bool _inner, bool _outer)
 			outer[i].Close();	
 }
 
-PopUpDockWindow & PopUpDockWindow::SetStyle(const Style &s)
+PopUpDockWindow&  PopUpDockWindow::SetStyle(const Style& s)
 {
 	style = &s;
 	for (int i = 0; i < 5; i++)

@@ -10,8 +10,7 @@ using namespace Upp;
 
 class DockCont;
 
-class DockableCtrl : public ParentCtrl
-{
+class DockableCtrl : public ParentCtrl {
 public:
 	typedef DockableCtrl CLASSNAME;
 	
@@ -38,24 +37,24 @@ private:
 	String 			group;
 	bool			dockable[4];
 
-	const Style *	style;
+	const Style    *style;
 	
-	DockCont *		GetContainer() const;
+	DockCont       *GetContainer() const;
 	
 public:
-	Callback1<Bar &> WhenMenuBar;
+	Callback1<Bar&> WhenMenuBar;
 
-	virtual void WindowMenu(Bar &bar) 				{ WhenMenuBar(bar); }
+	virtual void WindowMenu(Bar& bar) 				{ WhenMenuBar(bar); }
 	
-	const Image &	GetIcon()						{ return icon; }
-	DockableCtrl &	Icon(const Image& m)			{ icon = m; return *this; }
-	DockableCtrl &	Title(const char *_title)		{ title = _title; if (GetParent()) GetParent()->Refresh(); return *this; }
-	DockableCtrl &	Title(const WString& _title)	{ title = _title; if (GetParent()) GetParent()->Refresh(); return *this; }
-	const WString & GetTitle()						{ return title; }
+	const Image& 	GetIcon()						{ return icon; }
+	DockableCtrl& 	Icon(const Image& m)			{ icon = m; return *this; }
+	DockableCtrl& 	Title(const char *_title)		{ title = _title; if (GetParent()) GetParent()->Refresh(); return *this; }
+	DockableCtrl& 	Title(const WString& _title)	{ title = _title; if (GetParent()) GetParent()->Refresh(); return *this; }
+	const WString&  GetTitle()						{ return title; }
 
-	DockableCtrl &	Set(const Image &icon, const char *_title, String group = Null);
+	DockableCtrl& 	Set(const Image& icon, const char *_title, String group = Null);
 
-	DockableCtrl &	SizeHint(const Size &min, const Size &max = Null, const Size &std = Null);
+	DockableCtrl& 	SizeHint(const Size& min, const Size& max = Null, const Size& std = Null);
 	void       		SetMinSize(Size sz) 			{ minsize = sz; }
 	void       		SetMaxSize(Size sz) 			{ maxsize = sz; }	
 	void 			SetStdSize(Size sz) 			{ stdsize = sz; }
@@ -63,19 +62,19 @@ public:
 	virtual Size	GetMaxSize() const				{ return maxsize.IsNullInstance() ? Ctrl::GetMaxSize() : maxsize; }	
 	virtual Size	GetStdSize() const				{ return stdsize.IsNullInstance() ? minsize : stdsize; }
 		
-	DockableCtrl &	SetStyle(const Style &s)		{ style = &s; RefreshParentLayout(); return *this; }
-	const Style &	GetStyle()						{ return style ? *style : StyleDefault(); }
+	DockableCtrl& 	SetStyle(const Style& s)		{ style = &s; RefreshParentLayout(); return *this; }
+	const Style& 	GetStyle()						{ return style ? *style : StyleDefault(); }
 	
-	virtual const String &GetGroup() const			{ return group; }
-	virtual DockableCtrl &SetGroup(const String &g);
+	virtual const String& GetGroup() const			{ return group; }
+	virtual DockableCtrl& SetGroup(const String& g);
 	
-	DockableCtrl &	AllowDockAll()					{ return AllowDockLeft().AllowDockRight().AllowDockTop().AllowDockBottom(); }
-	DockableCtrl &	AllowDockNone()					{ return AllowDockLeft(false).AllowDockRight(false).AllowDockTop(false).AllowDockBottom(false); }
-	DockableCtrl &	AllowDockLeft(bool v = true)	{ dockable[0] = v; return *this; }
-	DockableCtrl &	AllowDockTop(bool v = true)		{ dockable[1] = v; return *this; }
-	DockableCtrl &	AllowDockRight(bool v = true)	{ dockable[2] = v; return *this; }
-	DockableCtrl &	AllowDockBottom(bool v = true)	{ dockable[3] = v; return *this; }
-	DockableCtrl &	AllowDock(int a, bool v = true)	{ ASSERT(a >= 0 && a < 4); dockable[a] = v; return *this; }	
+	DockableCtrl& 	AllowDockAll()					{ return AllowDockLeft().AllowDockRight().AllowDockTop().AllowDockBottom(); }
+	DockableCtrl& 	AllowDockNone()					{ return AllowDockLeft(false).AllowDockRight(false).AllowDockTop(false).AllowDockBottom(false); }
+	DockableCtrl& 	AllowDockLeft(bool v = true)	{ dockable[0] = v; return *this; }
+	DockableCtrl& 	AllowDockTop(bool v = true)		{ dockable[1] = v; return *this; }
+	DockableCtrl& 	AllowDockRight(bool v = true)	{ dockable[2] = v; return *this; }
+	DockableCtrl& 	AllowDockBottom(bool v = true)	{ dockable[3] = v; return *this; }
+	DockableCtrl& 	AllowDock(int a, bool v = true)	{ ASSERT(a >= 0 && a < 4); dockable[a] = v; return *this; }	
 	bool			IsDockAllowed(int a)			{ ASSERT(a >= 0 && a < 4); return dockable[a]; }
 	
 	bool 			IsFloating() const;
@@ -92,7 +91,7 @@ public:
 
 struct DockableParent : public DockableCtrl
 {
-	virtual void Paint(Draw &w) { w.DrawRect(GetSize(), SColorFace); }
+	virtual void Paint(Draw& w) { w.DrawRect(GetSize(), SColorFace); }
 };
 
 #endif

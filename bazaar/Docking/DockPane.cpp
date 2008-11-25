@@ -1,19 +1,19 @@
 #include "DockPane.h"
 
-int DockPane::ClientToPos(const Size &p)
+int DockPane::ClientToPos(const Size& p)
 {
 	int w = (width>>1)*pos.GetCount()-1;
 	return minmax(vert ? 10000 * p.cy / (GetSize().cy - w) : 10000 * p.cx / (GetSize().cx - w), 0, 9999);	
 }
 
-void DockPane::CumulativePos(Vector<int> &p) const
+void DockPane::CumulativePos(Vector<int>& p) const
 {
 	for (int i = 1; i < p.GetCount()-1; i++)
 		p[i] += p[i-1];		
 	p.Top() = 10000;
 }
 
-void DockPane::NonCumulativePos(Vector<int> &p) const
+void DockPane::NonCumulativePos(Vector<int>& p) const
 {
 	for (int i = p.GetCount()-1; i > 0; i--)
 		p[i] -= p[i-1];		
@@ -73,7 +73,7 @@ void DockPane::EndAnimate()
 	Layout();
 }
 
-void DockPane::SmartReposDown(Vector<int> &p, int ix) 
+void DockPane::SmartReposDown(Vector<int>& p, int ix) 
 {
 	int n = 0;
 	int sum = 0;
@@ -143,7 +143,7 @@ void DockPane::SmartReposDown(Vector<int> &p, int ix)
 	CumulativePos(p);	
 }
 
-void DockPane::SmartReposUp(Vector<int> &p, int ix, int sz) 
+void DockPane::SmartReposUp(Vector<int>& p, int ix, int sz) 
 {
 	int n = 0;
 	int sum = 0;
@@ -232,7 +232,7 @@ void DockPane::SmartReposUp(Vector<int> &p, int ix, int sz)
 	CumulativePos(p);
 }
 
-void DockPane::SimpleRepos(Vector<int> &p, int ix, int inc)
+void DockPane::SimpleRepos(Vector<int>& p, int ix, int inc)
 {
 	int cnt = p.GetCount();
 	if (cnt == 1) {
@@ -299,7 +299,7 @@ void DockPane::FixChildSizes()
 	ASSERT(pos[cnt-1] == 10000);
 }
 
-int DockPane::FindIndex(Ctrl &child)
+int DockPane::FindIndex(Ctrl& child)
 {
 	int ix = 0;
 	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext()) {
@@ -317,14 +317,14 @@ Ctrl * DockPane::FindCtrl(int ix)
 	return c;
 }
 
-void DockPane::Swap(Ctrl &child, Ctrl &newctrl)
+void DockPane::Swap(Ctrl& child, Ctrl& newctrl)
 {
 	newctrl.SetRect(child.GetRect());
 	Ctrl::AddChildBefore(&newctrl, &child);
 	Ctrl::RemoveChild(&child);
 }
 
-void DockPane::Dock(Ctrl &newctrl, Size sz, int ps, bool animate, bool save)
+void DockPane::Dock(Ctrl& newctrl, Size sz, int ps, bool animate, bool save)
 {
 	if (IsAnimating())
 		EndAnimate();
@@ -360,7 +360,7 @@ void DockPane::Dock(Ctrl &newctrl, Size sz, int ps, bool animate, bool save)
 	}
 }
 
-void DockPane::Undock(Ctrl &child, bool animate, bool restore)
+void DockPane::Undock(Ctrl& child, bool animate, bool restore)
 {
 	if (IsAnimating())
 		EndAnimate();	
@@ -381,7 +381,7 @@ void DockPane::Undock(Ctrl &child, bool animate, bool restore)
 	}
 }
 
-Rect DockPane::GetFinalAnimRect(Ctrl &ctrl)
+Rect DockPane::GetFinalAnimRect(Ctrl& ctrl)
 {
 	ASSERT(ctrl.GetParent() == this);
 	if (!IsAnimating())

@@ -13,16 +13,16 @@
 #define DOCK_RIGHT 	(int)DockWindow::DOCK_RIGHT
 #define DOCK_BOTTOM (int)DockWindow::DOCK_BOTTOM
 
-void DockMenu::LayoutListMenu(Bar &bar)
+void DockMenu::LayoutListMenu(Bar& bar)
 {
 	int cnt = dock->LayoutCount();
 	for (int i = 0; i < cnt; i++)
 		bar.Add(dock->GetLayoutName(i), THISBACK1(MenuLoadLayout, i)); 
 }
 
-void DockMenu::GroupListMenu(Bar &bar)
+void DockMenu::GroupListMenu(Bar& bar)
 {
-	const Vector<DockableCtrl *> &dcs = dock->GetDockableCtrls();
+	const Vector<DockableCtrl *>& dcs = dock->GetDockableCtrls();
 	Array<String> groups;
 	for (int i = 0; i < dcs.GetCount(); i++) {
 		String s = dcs[i]->GetGroup();
@@ -44,9 +44,9 @@ void DockMenu::GroupListMenu(Bar &bar)
 		bar.Add(t_("All"), THISBACK1(GroupWindowsMenu, String(Null)));
 }
 
-void DockMenu::WindowListMenu(Bar &bar, String group)
+void DockMenu::WindowListMenu(Bar& bar, String group)
 {
-	const Vector<DockableCtrl *> &dcs = dock->GetDockableCtrls();
+	const Vector<DockableCtrl *>& dcs = dock->GetDockableCtrls();
 	if (group == t_("All")) group = Null;
 	
 	for (int i = 0; i < dcs.GetCount(); i++) {
@@ -55,7 +55,7 @@ void DockMenu::WindowListMenu(Bar &bar, String group)
 	}
 }
 
-void DockMenu::GroupMenu(Bar &bar, String group)
+void DockMenu::GroupMenu(Bar& bar, String group)
 {
 	if (group.IsEmpty()) group = t_("All");
 	String text = group;
@@ -71,21 +71,21 @@ void DockMenu::GroupMenu(Bar &bar, String group)
 	bar.Add(true, t_("Close") + text, CtrlImg::Remove(), DOCKBACK1(CloseGroup, group));		
 }
 
-void DockMenu::GroupWindowsMenu(Bar &bar, String group)
+void DockMenu::GroupWindowsMenu(Bar& bar, String group)
 {
 	GroupMenu(bar, group);
 	bar.Separator();
 	WindowListMenu(bar, group);
 }
 
-void DockMenu::WindowMenu(Bar &bar, DockableCtrl *dc)
+void DockMenu::WindowMenu(Bar& bar, DockableCtrl *dc)
 {
 	WindowMenuNoClose(bar, dc);
 	bar.Separator();
 	bar.Add(true, t_("Close"), CtrlImg::Remove(), THISBACK1(MenuClose, dc));				
 }
 
-void DockMenu::WindowMenuNoClose(Bar &bar, DockableCtrl *dc)
+void DockMenu::WindowMenuNoClose(Bar& bar, DockableCtrl *dc)
 {
 	bar.Add(true, t_("Dock"), 		THISBACK1(WindowDockMenu, dc)).Check(dc->IsDocked() || dc->IsTabbed());
 	bar.Add(true, t_("Float"), 		THISBACK1(MenuFloat, dc)).Check(dc->IsFloating());
@@ -93,13 +93,13 @@ void DockMenu::WindowMenuNoClose(Bar &bar, DockableCtrl *dc)
 		bar.Add(true, t_("Auto-Hide"), 	THISBACK1(WindowHideMenu, dc)).Check(dc->IsAutoHide());
 }
 
-void DockMenu::GroupAlignMenu(Bar &bar, String group, int mode)
+void DockMenu::GroupAlignMenu(Bar& bar, String group, int mode)
 {
 	for (int i = 0; i < 4; i++)
 		bar.Add(AlignText(i), 	GROUPMACRO(i, group, mode));
 }
 
-void DockMenu::WindowAlignMenu(Bar &bar, DockableCtrl *dc, bool dodock)
+void DockMenu::WindowAlignMenu(Bar& bar, DockableCtrl *dc, bool dodock)
 {
 	for (int i = 0; i < 4; i++)
  		bar.Add(!dodock || dock->IsDockAllowed(i, *dc), AlignText(i), 	
