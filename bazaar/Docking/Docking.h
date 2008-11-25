@@ -85,8 +85,8 @@ protected:
 	int             GetQuad(Point p, Rect r);
 	Rect            GetFinalAnimRect(int align, Ctrl& c);
 	// Helpers
-	bool            IsTL(int align) const                               { return align < 2; } //ie (align == DOCK_LEFT || align == DOCK_TOP)
-	bool            IsTB(int align) const                               { return align & 1; } //ie (align == DOCK_TOP || align == DOCK_BOTTOM)
+	bool            IsTL(int align) const                   { return align < 2; } //ie (align == DOCK_LEFT || align == DOCK_TOP)
+	bool            IsTB(int align) const                   { return align & 1; } //ie (align == DOCK_TOP || align == DOCK_BOTTOM)
 	int             GetDockAlign(const Ctrl& c) const;
 	int             GetDockAlign(const Point& p) const;
 	bool            IsFrameAnimating(int align) const       { return frameanim[align].inc; }    
@@ -281,7 +281,7 @@ private:
 	void            DoFrameReorder(int align);
 	void            UndoFrameReorder();
 	
-	Size            CtrlBestSize(const Ctrl& c, bool restrict = true) const;
+	Size            CtrlBestSize(const Ctrl& c, int align, bool restrict = true) const;
 	
 	void            ClearLayout();
 };

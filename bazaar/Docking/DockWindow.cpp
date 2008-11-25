@@ -523,7 +523,7 @@ void DockWindow::DockAsTab(DockCont& target, DockableCtrl& dc)
 
 void DockWindow::Dock0(int align, Ctrl& c, int pos, bool do_animatehl, bool ishighlight)
 {
-	Dock0(align, c, pos, CtrlBestSize(c), do_animatehl, ishighlight);
+	Dock0(align, c, pos, CtrlBestSize(c, align), do_animatehl, ishighlight);
 }
 
 void DockWindow::Dock0(int align, Ctrl& c, int pos, Size sz, bool do_animatehl, bool ishighlight)
@@ -629,13 +629,17 @@ int DockWindow::GetDockAlign(const Point& p) const
 	return DOCK_NONE;
 }
 
-Size DockWindow::CtrlBestSize(const Ctrl& c, bool restrict) const
+Size DockWindow::CtrlBestSize(const Ctrl& c, int align, bool restrict) const
 {
 	Size mn = c.GetMinSize();
 	Size mx = c.GetMaxSize();
 	Size std = c.GetStdSize();
-	if (restrict) 
-		mx = minmax(GetSize()/2, mn, mx);
+	if (restrict) {
+		if (IsTB(align))
+			mx.cy = minmax(GetSize().cy/2, mn.cy, mx.cy);
+		else
+			mx.cx = minmax(GetSize().cx/2, mn.cx, mx.cx);
+	}
 	return minmax(std, mn, mx);
 }
 

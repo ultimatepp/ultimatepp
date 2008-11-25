@@ -32,6 +32,7 @@ private:
 DockingExample::DockingExample()
 {
 	Title("DockingExample1 : Simple Docking");
+	Sizeable().MaximizeBox();
 		
 	// This a button so that we can open the Dock Manager
 	Add(button.SetLabel("Manager").LeftPosZ(4, 100).TopPosZ(4, 23));
