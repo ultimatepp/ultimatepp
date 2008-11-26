@@ -490,7 +490,8 @@ void AssistEditor::AssistInsert()
 		if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
 			SetCursor(GetCursor() - 1);
 			StartParamInfo(f);
-			if(f.qptype.GetCount() == 0)
+			int x = f.natural.ReverseFind('(');
+			if(x >= 0 && f.natural[x + 1] == ')')
 				SetCursor(GetCursor() + 1);
 		}
 		else
