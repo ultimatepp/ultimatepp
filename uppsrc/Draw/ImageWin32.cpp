@@ -238,7 +238,8 @@ void Image::Data::Paint(Draw& w, int x, int y, const Rect& src, Color c)
 		w.DrawRect(x, y, sz.cx, sz.cy, c);
 		return;
 	}
-	if(GetKind() == IMAGE_OPAQUE && paintcount == 0 && sr == Rect(sz) && !w.IsMetaFile() && IsWinNT()) {//TODO !IsWinNT
+	if(GetKind() == IMAGE_OPAQUE && paintcount == 0 && sr == Rect(sz) && !w.IsMetaFile()
+	   && IsWinNT() && !w.IsPrinter()) {
 		LTIMING("Image Opaque direct set");
 		SetSurface(w, x, y, sz.cx, sz.cy, buffer);
 		paintcount++;

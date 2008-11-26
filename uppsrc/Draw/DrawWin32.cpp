@@ -396,6 +396,10 @@ void PrintDraw::InitPrinter()
 	::SetWindowExtEx(handle, 600, 600, NULL);
 	::SetWindowOrgEx(handle, 0, 0, NULL);
 	actual_offset = Point(0, 0);
+	pagePixels.cx=600*pagePixels.cx/inchPixels.cx; 
+	pagePixels.cy=600*pagePixels.cy/inchPixels.cy; 
+	inchPixels.cx=600;
+	inchPixels.cy=600;
 }
 
 void PrintDraw::StartPage()
