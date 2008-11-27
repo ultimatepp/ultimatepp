@@ -1,8 +1,8 @@
 #include "Docking.h"
 
 #define ALIGN_ASSERT(al)	ASSERT(al >= 0 && al < 4)
-#define FRAME_MOVE_DIV 		3 // Outside fraction of the highlight that the mouse must be in to trigger dockpane reordering
-#define VERSION				5
+#define FRAME_MOVE_DIV 		5 // Outside fraction of the highlight that the mouse must be in to trigger dockpane reordering
+#define VERSION				5 // Serialisation version
 
 /*
  * Public interface

@@ -23,7 +23,8 @@ LRESULT DockCont::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			case WM_ENTERSIZEMOVE:
 				dragging = 1;
 				break;
-			case WM_MOVE:
+			case WM_MOVING:
+				LOG("Got Message: LeftDown " << GetMouseLeft());
 				if (GetMouseLeft() && dragging >= 1)
 					(dragging > 2) ? Moving() : MoveBegin();
 				dragging++;
