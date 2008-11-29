@@ -80,6 +80,7 @@ void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp)
 		}
 		xi++;
 	}
+	
 	xi = 0;
 	while(xi < cx)
 		if(todo[xi]) {
