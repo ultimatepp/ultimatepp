@@ -575,7 +575,6 @@ int CharFilterTopicSearch(int c)
 
 TopicCtrl::TopicCtrl()
 {
-	Icon(IdeImg::doc());
 	showwords = true;
 	all = false;
 	lang <<= THISBACK(Lang);

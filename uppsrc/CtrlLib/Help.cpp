@@ -86,6 +86,7 @@ void HelpWindow::Forward()
 void HelpWindow::SetZoom()
 {
 	zoom.d = 1000;
+	current_link = Null;
 	GoTo0(topic);
 	Refresh();
 }
@@ -223,6 +224,7 @@ HelpWindow::HelpWindow()
 	Icon(CtrlImg::help());
 	SetBar();
 	tree.BackPaint();
+	view.BackPaintHint();
 }
 
 END_UPP_NAMESPACE
