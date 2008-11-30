@@ -32,6 +32,13 @@ LAYOUT(ColorizeLayout, 148, 68)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(36, 24))
 END_LAYOUT
 
+LAYOUT(FreeRotateLayout, 148, 68)
+	ITEM(Label, dv___0, SetLabel(t_("Angle")).LeftPosZ(8, 32).TopPosZ(8, 19))
+	ITEM(EditIntSpin, angle, Min(0).Max(360).NotNull(true).LeftPosZ(44, 64).TopPosZ(8, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(8, 64).TopPosZ(36, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(36, 24))
+END_LAYOUT
+
 LAYOUT(RescaleLayout, 192, 92)
 	ITEM(Label, dv___0, SetLabel(t_("Width")).LeftPosZ(8, 32).TopPosZ(8, 19))
 	ITEM(EditInt, cx, Min(1).Max(9999).NotNull(true).LeftPosZ(44, 44).TopPosZ(8, 19))

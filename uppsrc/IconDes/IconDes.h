@@ -238,6 +238,7 @@ private:
 	void  MirrorY();
 	void  SymmX();
 	void  SymmY();
+	void  FreeRotate();
 	void  Rotate();
 	void  SmoothRescale();
 	void  KeyMove(int dx, int dy);

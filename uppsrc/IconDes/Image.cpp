@@ -268,6 +268,31 @@ void IconDes::Colorize()
 	}
 }
 
+
+void IconDes::FreeRotate()
+{
+	WithFreeRotateLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Colorize");
+	PlaceDlg(dlg);
+	dlg.angle <<= 0;
+	dlg.angle <<= dlg.Breaker();
+	Image bk = ImageStart();
+	Size tsz = bk.GetSize();
+	Image src = Magnify(bk, 3, 3);
+	for(;;) {
+		Image h = DownSample3x(UPP::Rotate(src, (int)~dlg.angle * 10));
+		Size sz = h.GetSize();
+		ImageSet(Crop(h, (sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, tsz.cx, tsz.cy));
+		switch(dlg.Run()) {
+		case IDCANCEL:
+			ImageSet(bk);
+			return;
+		case IDOK:
+			return;
+		}
+	}
+}
+
 void IconDes::Chroma()
 {
 	WithColorizeLayout<TopWindow> dlg;
