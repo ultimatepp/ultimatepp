@@ -130,7 +130,6 @@ void RGBACtrl::Alpha()
 	UpdateAction();
 }
 
-
 void RGBACtrl::MaskSet(int a)
 {
 	alpha.Set(a);

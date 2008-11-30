@@ -187,6 +187,23 @@ void RegisterIconDes()
 	RegisterIdeModule(Single<IconDesModule>());
 }
 
+void IdeIconDes::CopyId(const String& n)
+{
+	ClearClipboard();
+	AppendClipboardText(n);
+}
+
+void IdeIconDes::ListMenuEx(Bar& bar)
+{
+	String n = GetCurrentName();
+	String c = GetFileTitle(filename);
+	c.Set(0, ToUpper(c[0]));
+	c = c.EndsWith("Img") ? c : c + "Img";
+	c << "::" << n << "()";
+	bar.Separator();
+	bar.Add(n.GetCount(), "Copy '" + c + '\'', CtrlImg::copy(), THISBACK1(CopyId, c));
+}
+
 INITBLOCK {
 	RegisterGlobalConfig("icondes-ctrl");
 }

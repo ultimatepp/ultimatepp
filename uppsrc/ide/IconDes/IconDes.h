@@ -11,16 +11,18 @@ struct IdeIconDes : IdeDesigner, IconDes {
 	virtual void   EditMenu(Bar& menu);
 	virtual Ctrl&  DesignerCtrl()             { return *this; }
 
-	virtual void Serialize(Stream& s);
+	virtual void   Serialize(Stream& s);
 
 	int     format;
 	String  filename;
 	Time    filetime;
 
 	virtual void   ToolEx(Bar& bar);
+	virtual void   ListMenuEx(Bar& bar);
 
 	bool   Load(const char *filename);
 	void   FileProperties();
+	void   CopyId(const String& n);
 
 	typedef IdeIconDes CLASSNAME;
 

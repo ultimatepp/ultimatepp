@@ -5,6 +5,14 @@
 
 #include <RichEdit/RichEdit.h>
 
+#include <Web/Web.h>
+
+#include <ide/Browser/Browser.h>
+#include <ide/QuickTabs/QuickTabs.h>
+#include <CodeEditor/CodeEditor.h>
+#include <usvn/usvn.h>
+#include <ide/IconDes/IconDes.h>
+
 #define LAYOUTFILE <ide/ide.lay>
 #include <CtrlCore/lay.h>
 
@@ -16,13 +24,6 @@
 #define KEYNAMESPACE IdeKeys
 #define KEYFILE      <ide/ide.key>
 #include             <CtrlLib/key_header.h>
-
-#include <Web/Web.h>
-
-#include <ide/Browser/Browser.h>
-#include <ide/QuickTabs/QuickTabs.h>
-#include <CodeEditor/CodeEditor.h>
-#include <usvn/usvn.h>
 
 #include "UppDlg.h"
 
@@ -885,6 +886,13 @@ public:
 		void  FindPrevError();
 		void  ClearEditedFile();
 		void  ClearEditedAll();
+	
+		void  InsertColor();
+		void  InsertLay(const String& fn);
+		void  InsertIml(const String& fn, String classname);
+		void  InsertTpp(const String& fn);
+		void  InsertMenu(Bar& bar);
+		void  EditorMenu(Bar& bar);
 
 	void      EditSpecial(Bar& menu);
 		void  TranslateString();
@@ -990,7 +998,6 @@ public:
 		bool  SwapSIf(const char *cref);
 		void  SwapS();
 		void  ContextGoto();
-		void  InsertColor();
 
 
 	void      ConsoleMenu(Bar& menu);

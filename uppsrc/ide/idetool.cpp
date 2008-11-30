@@ -117,14 +117,6 @@ void Ide::IdeOpenTopicFile(const String& file)
 	}
 }
 
-void Ide::InsertColor()
-{
-	TopWindow test;
-	ColorPopUp h;
-	test.Add(h.SizePos());
-	test.Run();
-}
-
 struct FileStat {
 	int  count;
 	int  len;

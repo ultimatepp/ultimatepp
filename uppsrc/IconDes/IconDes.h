@@ -273,6 +273,7 @@ private:
 
 public:
 	virtual void ToolEx(Bar& bar);
+	virtual void ListMenuEx(Bar& bar);
 
 	void  ListMenu(Bar& bar);
 	void  EditBar(Bar& bar);
@@ -300,6 +301,8 @@ public:
 	Image  GetImage(int ii) const;
 	String GetName(int ii) const;
 	bool   GetExport(int ii) const;
+
+	String GetCurrentName() const;
 
 	EditPos GetEditPos();
 	void    SetEditPos(const EditPos& o);
