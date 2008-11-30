@@ -475,6 +475,7 @@ Ide::Ide()
 	editor2.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	editor2.WhenLeftDown = THISBACK(SwapEditors);
 	editor.WhenAction = THISBACK(AddHistory);
+	editor.WhenBar = THISBACK(EditorMenu);
 
 	macro_api = MacroEditor();
 

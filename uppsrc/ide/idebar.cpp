@@ -476,7 +476,7 @@ void Ide::BrowseMenu(Bar& menu) {
 	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
 	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
 	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
-//	menu.Add(AK_INSERTCOLOR, THISBACK(InsertColor));
+	menu.Add(!designer, "Insert", THISBACK(InsertMenu));
 	menu.Separator();
 	menu.Add("Rescan code", THISBACK(RescanCode));
 	menu.MenuSeparator();

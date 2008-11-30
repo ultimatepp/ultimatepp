@@ -282,7 +282,13 @@ void IconDes::ListMenu(Bar& bar)
 			        THISBACK1(InsertRemoved, i));
 		}
 	}
+	bar.Separator();
+	EditBar(bar);
+	ListMenuEx(bar);
 }
+
+void IconDes::ListMenuEx(Bar& bar) {}
+
 
 void IconDes::Clear()
 {
@@ -316,6 +322,13 @@ Image IconDes::GetImage(int ii) const
 String IconDes::GetName(int ii) const
 {
 	return slot[ii].name;
+}
+
+String IconDes::GetCurrentName() const
+{
+	if(list.IsCursor())
+		return slot[list.GetCursor()].name;
+	return String();
 }
 
 bool IconDes::GetExport(int ii) const

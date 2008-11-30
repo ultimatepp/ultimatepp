@@ -47,6 +47,7 @@ file
 	Setup.cpp,
 	Custom.cpp,
 	Print.cpp,
+	Insert.cpp,
 	idetool.cpp,
 	Install.cpp,
 	idebar.cpp,

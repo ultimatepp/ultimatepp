@@ -63,3 +63,4 @@ LAYOUT(ImgColorLayout, 188, 164)
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(44, 64).TopPosZ(132, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(116, 64).TopPosZ(132, 24))
 END_LAYOUT
+
