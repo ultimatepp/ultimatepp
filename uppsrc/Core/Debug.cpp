@@ -41,9 +41,8 @@ static void sLogFile(char *fn, const char *app = ".log")
 	*fn = '\0';
 	strcat(path, ".upp/");
 	const char *exe = procexepath_();
-	if(!exe) {
+	if(!*exe)
 		exe = Argv0__;
-	}
 	const char *q = strrchr(exe, '/');
 	if(q)
 		exe = q + 1;
