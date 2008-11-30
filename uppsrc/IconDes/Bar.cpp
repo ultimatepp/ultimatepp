@@ -144,6 +144,7 @@ void IconDes::ImageBar(Bar& bar)
 	bar.Add(c, "Horizontal symmetry", IconDesImg::SymmX(), THISBACK(SymmX));
 	bar.Add(c, "Vertical symmetry", IconDesImg::SymmY(), THISBACK(SymmY));
 	bar.Add(c, "Rotate", IconDesImg::Rotate(), THISBACK(Rotate));
+	bar.Add(c, "Free Rotate", IconDesImg::FreeRotate(), THISBACK(FreeRotate));
 	bar.Add(c, "Smooth Rescale", IconDesImg::Rescale(), THISBACK(SmoothRescale));
 	bar.Add(c, "Blur/Sharpen", IconDesImg::BlurSharpen(), THISBACK(BlurSharpen));
 	bar.Add(c, "Colorize", IconDesImg::Colorize(), THISBACK(Colorize));
