@@ -1,0 +1,5 @@
+#ifndef _AggCtrl_icpp_init_stub
+#define _AggCtrl_icpp_init_stub
+#include "CtrlLib/init"
+#include "agg24/init"
+#endif

@@ -3,9 +3,11 @@ uses
 
 file
 	a.h,
-	aaa.h,
+	Tst readonly separator,
+	aaa.h charset "UTF-8",
 	src.tpp,
-	main.cpp,
+	Test readonly separator,
+	main3.cpp,
 	aaa.lay;
 
 mainconfig

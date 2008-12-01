@@ -19,6 +19,11 @@ public:
 		CtrlLayout(*this, "Window title");
 		addButton <<= THISBACK(AddButtonClicked);
 		removeButton <<= THISBACK(RemoveButtonClicked);
+		dropList.Add("A");
+		dropList.Add("B");
+		dropList.Add("C");
+		dropList.Add("D");
+		dropList.Add("E");
 	}
 	
 	void AddButtonClicked()
@@ -38,5 +43,11 @@ public:
 
 GUI_APP_MAIN
 {
-	DropListBug().Run();
+	DropListBug bug;
+	bug.Open();
+	bool quit = false;
+	while(!quit) {
+		Sleep(1000);
+		Ctrl::ProcessEvents(&quit);
+	}
 }

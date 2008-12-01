@@ -10,39 +10,71 @@ using namespace Upp;
 
 class aaa : public WithaaaLayout<TopWindow> 
 {
+	virtual bool Accept();
 public:
 	typedef aaa CLASSNAME;
 	aaa();
+	
+	void Test(
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x);
 };
 
 #endif
 
 
-PO?ÍTA?
-ZUB
-ZUBY
-LASO
-LASA
-LÁVA
-VLASY
-O?I
-NOS
-HALA
-HLAVA
-LUK
-OKNO
-K?ŽE
-LOPATA
-PUSA
-GUMA
-HRNEK
-VLAS
-VLAK
-ZEM
-KDYŽ
-OPICE
-DVE?E
-CHLEBA
-D?TI
 
 

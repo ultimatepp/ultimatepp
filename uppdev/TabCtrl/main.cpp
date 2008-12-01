@@ -18,6 +18,7 @@ TabCtrlTest::TabCtrlTest()
 	tab.Add(tab2, "Second").Image(CtrlImg::cut());
 	tab.Add(tab3, "Third");
 	tab.Add(arr.SizePos(), "Array");
+	tab.SetStyle(tab.StyleDefault().Standard());
 
 	arr.AddColumn("1")
 		.Ctrls(DefaultCtrlFactory<Option>())
