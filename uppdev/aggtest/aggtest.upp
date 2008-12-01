@@ -1,9 +1,10 @@
 uses
-	CtrlLib;
+	CtrlLib,
+	AggCtrl;
 
 file
 	aggtest.h,
-	src.tpp,
+	lion.cpp,
 	main.cpp,
 	aggtest.lay;
 

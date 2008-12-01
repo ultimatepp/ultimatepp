@@ -1,0 +1,4 @@
+#ifndef _agg24_icpp_init_stub
+#define _agg24_icpp_init_stub
+#include "Core/init"
+#endif
