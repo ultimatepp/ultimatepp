@@ -338,6 +338,9 @@ void   TreeCtrl::Remove(const Vector<int>& id)
 
 void   TreeCtrl::Clear()
 {
+	for(int i = 0; i < item.GetCount(); i++)
+		if(item[i].ctrl)
+			item[i].ctrl->Remove();
 	item.Clear();
 	item.Add();
 	item[0].linei = -1;
