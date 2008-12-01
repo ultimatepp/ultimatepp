@@ -496,7 +496,7 @@ TopWindow::TopWindow()
 	WhenClose = THISBACK(Close);
 	overlapped.Clear();
 	dokeys = true;
-	fullscreen = false;
+	fullscreen = frameless = false;
 }
 
 TopWindow::~TopWindow()
