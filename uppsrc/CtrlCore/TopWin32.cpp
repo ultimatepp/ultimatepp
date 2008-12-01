@@ -93,6 +93,9 @@ void TopWindow::SyncCaption()
 	if(sizeable)
 		style |= WS_THICKFRAME;
 #ifndef PLATFORM_WINCE
+	if(frameless)
+		style = (style & ~WS_CAPTION) | WS_POPUP;
+	else
 	if(IsNull(icon) && !maximizebox && !minimizebox) {
 		style |= WS_POPUPWINDOW|WS_DLGFRAME;
 		exstyle |= WS_EX_DLGMODALFRAME;

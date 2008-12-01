@@ -115,6 +115,7 @@ private:
 	bool        maximizebox:1;
 	bool        sizeable:1;
 	bool        tool:1;
+	bool        frameless:1;
 	byte        state;
 	Image       icon, largeicon;
 #ifdef PLATFORM_X11
@@ -196,6 +197,8 @@ public:
 	bool       IsTopMost() const;
 	TopWindow& FullScreen(bool b = true)              { fullscreen = b; return *this; }
 	bool       IsFullScreen() const                   { return fullscreen; }
+	TopWindow& FrameLess(bool b = true)               { frameless = b; return *this; }
+	bool       IsFrameLess() const                    { return frameless; }
 	TopWindow& NoAccessKeysDistribution()             { dokeys = false; return *this; }
 
 	TopWindow& Icon(const Image& m);
