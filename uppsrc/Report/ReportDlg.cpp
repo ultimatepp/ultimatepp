@@ -4,6 +4,27 @@ NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x)
 
+void Print(Report& r, PrinterJob& pd, bool center)
+{
+	Draw& w = pd;
+	Size sz = w.GetPageMMs();
+	Point mg = r.GetMargins();
+	Size pgsz = r.GetPage(0).GetSize();
+	int x = 0;
+	int y = 0;
+	if(center) {
+		x = Nvl(mg.x, (6000 * sz.cx / 254 - pgsz.cx) / 2);
+		y = Nvl(mg.y, (6000 * sz.cy / 254 - pgsz.cy) / 2);
+	}
+	for(int i = 0; i < pd.GetPageCount(); i++) {
+		Drawing iw = r.GetPage(pd[i]);
+		Size sz = iw.GetSize();
+		w.StartPage();
+		w.DrawDrawing(x, y, sz.cx, sz.cy, iw);
+		w.EndPage();
+	}
+}
+
 bool Print0(Report& r, int i, const char *_name, bool dodlg) {
 	PrinterJob pd(_name);
 	pd.CurrentPage(i);
@@ -12,18 +33,7 @@ bool Print0(Report& r, int i, const char *_name, bool dodlg) {
 	pd.Landscape(pgsz.cx > pgsz.cy);
 	if(dodlg && !pd.Execute())
 		return false;
-	Draw& w = pd;
-	Size sz = w.GetPageMMs();
-	Point mg = r.GetMargins();
-	int x = Nvl(mg.x, (6000 * sz.cx / 254 - pgsz.cx) / 2);
-	int y = Nvl(mg.y, (6000 * sz.cy / 254 - pgsz.cy) / 2);
-	for(int i = 0; i < pd.GetPageCount(); i++) {
-		Drawing iw = r.GetPage(pd[i]);
-		Size sz = iw.GetSize();
-		w.StartPage();
-		w.DrawDrawing(x, y, sz.cx, sz.cy, iw);
-		w.EndPage();
-	}
+	Print(r, pd);
 	return true;
 }
 

@@ -8,3 +8,4 @@ LAYOUT(ReportWindowLayout, 340, 276)
 	ITEM(Button, pdf, SetLabel(t_("PDF export..")).RightPosZ(8, 88).TopPosZ(168, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 88).BottomPosZ(4, 24))
 END_LAYOUT
+
