@@ -496,8 +496,10 @@ protected:
 	Size   pagePixels;
 	Size   pageMMs;
 	Size   inchPixels;
+	Size   nativeDpi;
 	Size   sheetPixels;
 	Point  pageOffset;
+	int    native;
 
 	Draw();
 
@@ -520,6 +522,7 @@ protected:
 	FontInfo  lastFont;
 
 	Point        actual_offset;
+	Point        actual_offset_bak;
 	struct Cloff : Moveable<Cloff> {
 		Point org;
 	#ifdef PLATFORM_WIN32
@@ -571,6 +574,8 @@ protected:
 	void   Reset();
 	void   SetOrg();
 	friend HPALETTE GetQlibPalette();
+	void   DotsMode();
+
 
 	static const char *FontScreenSans;
 	static const char *FontScreenSerif;
@@ -640,6 +645,17 @@ public:
 
 	bool  Pixels() const                                { return pixels; }
 	bool  Dots() const                                  { return !pixels; }
+	bool  IsNative() const                              { return native; }
+
+	void BeginNative();
+	void EndNative();
+	Size GetNativeDpi() const;
+	int  GetNativeX(int x) const;
+	int  GetNativeY(int x) const;
+	void Native(int& x, int& y) const;
+	void Native(Point& p) const;
+	void Native(Size& sz) const;
+	void Native(Rect& r) const;
 
 	bool  IsPrinter() const                             { return printer; }
 	bool  IsAborted() const                             { return aborted; }

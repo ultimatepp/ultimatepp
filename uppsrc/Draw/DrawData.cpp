@@ -29,16 +29,14 @@ One<DataDrawer> DataDrawer::Create(const String& id)
 	return NULL;
 }
 
-bool IsEqColumn(const Image& m, int x, RGBA c)
+bool IsWhiteColumn(const Image& m, int x)
 {
 	LTIMING("IsEqColumn");
 	Size sz = m.GetSize();
 	const RGBA *s = ~m + x;
-	if(c.a != 255)
-		return false;
 	while(sz.cy > 1) {
 		s += sz.cx;
-		if(*s != c)
+		if((s->a & s->r & s->g & s->b) != 255)
 			return false;
 		sz.cy--;
 	}
@@ -68,14 +66,13 @@ void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp)
 #endif
 	while(xi < cx) {
 		int xi0 = xi;
-		RGBA c = m[0][xi0];
-		while(w.Dots() && IsEqColumn(m, xi, c) && xi < cx)
+		while(w.Dots() && IsWhiteColumn(m, xi) && xi < cx)
 			xi++;
 		if(xi - xi0 >= 16) {
 #ifdef BENCHMARK_RLE
 			sRle += xi - xi0;
 #endif
-			w.DrawRect(x + xi0, y, xi - xi0, ccy, c);
+			w.DrawRect(x + xi0, y, xi - xi0, ccy, White);
 			Fill(~todo + xi0, ~todo + xi, false);
 		}
 		xi++;
@@ -87,7 +84,7 @@ void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp)
 			int xi0 = xi;
 			while(xi < cx && todo[xi] && xi - xi0 < 2000)
 				xi++;
-			w.DrawImage(x + xi0, y, Crop(m, xi0, 0, xi - xi0, ccy));
+			m.PaintImage(w, x + xi0, y, RectC(xi0, 0, xi - xi0, ccy), Null);
 		}
 		else
 			xi++;
@@ -96,6 +93,9 @@ void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp)
 void Draw::DrawDataOp(int x, int y, int cx, int cy, const String& data, const char *id)
 {
 	DrawLock __;
+	BeginNative();
+	Native(x, y);
+	Native(cx, cy);
 	One<DataDrawer> dd = DataDrawer::Create(id);
 	if(dd) {
 		dd->Open(data, cx, cy);
@@ -115,6 +115,7 @@ void Draw::DrawDataOp(int x, int y, int cx, int cy, const String& data, const ch
 			DrawImage(x, y, m);
 		}
 	}
+	EndNative();
 }
 
 DataDrawer::~DataDrawer() {}

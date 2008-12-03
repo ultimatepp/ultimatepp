@@ -8,6 +8,43 @@ NAMESPACE_UPP
 
 static StaticMutex sDrawLock;
 
+Size Draw::GetNativeDpi() const
+{
+	return nativeDpi;
+}
+
+int Draw::GetNativeX(int x) const
+{
+	return inchPixels != nativeDpi ? iscale(x, nativeDpi.cx, 600) : x;
+}
+
+int Draw::GetNativeY(int y) const
+{
+	return inchPixels != nativeDpi ? iscale(y, nativeDpi.cy, 600) : y;
+}
+
+void Draw::Native(int& x, int& y) const
+{
+	x = GetNativeX(x);
+	y = GetNativeY(y);
+}
+
+void Draw::Native(Point& p) const
+{
+	Native(p.x, p.y);
+}
+
+void Draw::Native(Size& sz) const
+{
+	Native(sz.cx, sz.cy);
+}
+
+void Draw::Native(Rect& r) const
+{
+	Native(r.left, r.top);
+	Native(r.right, r.bottom);
+}
+
 #ifdef BENCH
 static TimingInspector sDrawTiming("DRAW");
 #endif
@@ -58,11 +95,14 @@ Stream& Draw::PutRect(const Rect& r)
 void Draw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
 	DrawLock __;
+	BeginNative();
+	Native(x, y);
+	Native(cx, cy);
 	LTIMING("DrawImageOp");
 	if(IsNull(src))
 		return;
 	Size sz = Size(cx, cy);
-	if((cx > 2000 || cy > 2000) && IsNull(color) && (!IsSystem() || IsPrinter())) {
+	if((cx > 2000 || cy > 1500) && IsNull(color) && IsPrinter()) {
 		int yy = 0;
 		ImageRaster ir(img);
 		RescaleImage rm;
@@ -75,14 +115,15 @@ void Draw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rec
 			DrawImageBandRLE(*this, x, y + yy, ib, 16);
 			yy += ccy;
 		}
-		return;
 	}
+	else
 	if(src.GetSize() == sz)
 		img.PaintImage(*this, x, y, src, color);
 	else {
 		Image h = Rescale(img, Size(cx, cy), src);
 		h.PaintImage(*this, x, y, h.GetSize(), color);
 	}
+	EndNative();
 }
 
 // -------------------------------
