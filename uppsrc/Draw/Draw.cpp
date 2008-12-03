@@ -95,12 +95,12 @@ Stream& Draw::PutRect(const Rect& r)
 void Draw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
 	DrawLock __;
+	if(IsNull(src))
+		return;
 	BeginNative();
 	Native(x, y);
 	Native(cx, cy);
 	LTIMING("DrawImageOp");
-	if(IsNull(src))
-		return;
 	Size sz = Size(cx, cy);
 	if((cx > 2000 || cy > 1500) && IsNull(color) && IsPrinter()) {
 		int yy = 0;
