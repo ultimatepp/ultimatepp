@@ -343,7 +343,7 @@ void Draw::Init()
 	DrawLock __;
 	pagePixels = Size(Xwidth, Xheight);
 	pageMMs = Size(XwidthMM, XheightMM);
-	inchPixels = 254 * pagePixels / pageMMs / 10;
+	nativeDpi = inchPixels = 254 * pagePixels / pageMMs / 10;
 	sheetPixels = pagePixels;
 	pageOffset = Point(0, 0);
 	InitFonts();
