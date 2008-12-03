@@ -378,6 +378,11 @@ Draw::Draw()
 	Init();
 }
 
+void Draw::BeginNative() {}
+
+void Draw::EndNative() {}
+
+
 #ifdef PLATFORM_XFT
 Draw::Draw(Drawable _dw, GC _gc, XftDraw *_xftdraw, const Vector<Rect>& _clip)
 #else

@@ -410,7 +410,11 @@ bool FindFile::Search(const char *name) {
 		handle = UnicodeWin32().FindFirstFileW(ToSystemCharsetW(name), w);
 	else
 		handle = FindFirstFile(ToSystemCharset(name), a);
-	return handle != INVALID_HANDLE_VALUE;
+	if(handle == INVALID_HANDLE_VALUE)
+		return false;
+	if(!PatternMatch(pattern, GetName()))
+		return Next();
+	return true;
 }
 
 void FindFile::Close() {

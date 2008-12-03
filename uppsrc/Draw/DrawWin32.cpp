@@ -190,6 +190,34 @@ Size Draw::GetSizeCaps(int i, int j) const {
 	return Size(GetDeviceCaps(handle, i), GetDeviceCaps(handle, j));
 }
 
+void Draw::DotsMode()
+{
+	::SetMapMode(handle, MM_ANISOTROPIC);
+	::SetViewportExtEx(handle, nativeDpi.cx, nativeDpi.cy, NULL);
+	::SetViewportOrgEx(handle, 0, 0, NULL);
+	::SetWindowExtEx(handle, 600, 600, NULL);
+	::SetWindowOrgEx(handle, 0, 0, NULL);
+}
+
+void Draw::BeginNative()
+{
+	if(inchPixels != nativeDpi && ++native == 1) {
+		::SetMapMode(handle, MM_TEXT);
+		actual_offset_bak = actual_offset;
+		Native(actual_offset);
+		SetOrg();
+	}
+}
+
+void Draw::EndNative()
+{
+	if(inchPixels != nativeDpi && --native == 0) {
+		DotsMode();
+		actual_offset = actual_offset_bak;
+		SetOrg();
+	}
+}
+
 void Draw::LoadCaps() {
 	DrawLock __;
 	color16 = false;
@@ -198,22 +226,10 @@ void Draw::LoadCaps() {
 		color16 = GetDeviceCaps(handle, SIZEPALETTE) != 256;
 	pagePixels = GetSizeCaps(HORZRES, VERTRES);
 	pageMMs = GetSizeCaps(HORZSIZE, VERTSIZE);
-	inchPixels = GetSizeCaps(LOGPIXELSX, LOGPIXELSY);
+	nativeDpi = inchPixels = GetSizeCaps(LOGPIXELSX, LOGPIXELSY);
 	sheetPixels = GetSizeCaps(PHYSICALWIDTH, PHYSICALHEIGHT);
 	pageOffset = GetSizeCaps(PHYSICALOFFSETX, PHYSICALOFFSETY);
 	is_mono = GetDeviceCaps(handle, BITSPIXEL) == 1 && GetDeviceCaps(handle, PLANES) == 1;
-/*
-	if(!is_mono)
-	{
-		HBITMAP hbmp = (HBITMAP)GetCurrentObject(handle, OBJ_BITMAP);
-		if(hbmp)
-		{
-			BITMAP bmp;
-			GetObject(hbmp, sizeof(bmp), &bmp);
-			is_mono = bmp.bmPlanes == 1 && bmp.bmBitsPixel == 1;
-		}
-	}
-*/
 }
 
 void Draw::SetDevice(const char *s) {
@@ -390,16 +406,14 @@ void PrintDraw::InitPrinter()
 	Init();
 	printer = true;
 	pixels = false;
-	::SetMapMode(handle, MM_ANISOTROPIC);
-	::SetViewportExtEx(handle, inchPixels.cx, inchPixels.cy, NULL);
-	::SetViewportOrgEx(handle, 0, 0, NULL);
-	::SetWindowExtEx(handle, 600, 600, NULL);
-	::SetWindowOrgEx(handle, 0, 0, NULL);
+	nativeDpi = inchPixels;
+	DotsMode();
+	native = 0;
 	actual_offset = Point(0, 0);
-	pagePixels.cx=600*pagePixels.cx/inchPixels.cx; 
-	pagePixels.cy=600*pagePixels.cy/inchPixels.cy; 
-	inchPixels.cx=600;
-	inchPixels.cy=600;
+	pagePixels.cx = 600 * pagePixels.cx / inchPixels.cx; 
+	pagePixels.cy = 600 * pagePixels.cy / inchPixels.cy; 
+	inchPixels.cx = 600;
+	inchPixels.cy = 600;
 }
 
 void PrintDraw::StartPage()

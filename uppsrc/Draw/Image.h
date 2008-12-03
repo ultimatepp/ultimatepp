@@ -175,6 +175,7 @@ private:
 	void PaintImage(Draw& w, int x, int y, const Rect& src, Color c) const;
 
 	friend void SetPaintOnly___(Image& m);
+	friend void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);
 
 #ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE
