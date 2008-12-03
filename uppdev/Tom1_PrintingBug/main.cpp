@@ -15,8 +15,8 @@ public:
 	}
 	
 	Image MakeImage2(Size sz) const {
-		ImageBuffer ib(sz.cx / 3, sz.cy / 3);
-		Fill(ib, LtBlue(), ib.GetLength());
+		ImageBuffer ib(sz.cx, sz.cy);
+		Fill(ib, LtGray(), ib.GetLength());
 		const Color c[] = { LtBlue() };
 		for(int y = 0; y < ib.GetWidth(); y++) {
 			for(int x = 0; x < ib.GetHeight(); x++)
@@ -25,10 +25,15 @@ public:
 		return ib;
 	}
 
+	void DrawIt(Draw& w, Size sz) const {
+		w.DrawRect(sz, White);
+		w.DrawRect(sz / 4, LtGray);
+		w.DrawText(0, 0, "O", Roman(sz.cy / 3).Italic(), Red());
+	}
+
 	Image MakeImage(Size sz) const {
-		ImageDraw iw(sz / 3);
-		iw.DrawRect(sz / 3, Blue);
-		iw.DrawText(0, 0, "O", Roman(sz.cy / 3).Italic(), Red());
+		ImageDraw iw(sz);
+		DrawIt(iw, sz);
 		return iw;
 	}
 	
@@ -47,8 +52,9 @@ public:
 	
 	virtual void Paint(Draw &w){
 		Size sz = GetSize();
-		w.DrawRect(GetSize(), White);
-		w.DrawImage(0, 0, MakeImage(GetSize()));
+		w.DrawRect(sz, White);
+		w.DrawImage(sz.cx / 3, sz.cy / 3, MakeImage(GetSize()));
+		w.DrawText(0, 0, "O", Roman(GetSize().cy / 3).Italic(), Red());
 		w.DrawText(10,500,"Press 'P' to print image, 'R' to print rectangle test, 'C' to another test...");
 		w.DrawText(10,530,"(This really drains your ink/toner cartridge, so try e.g. Microsoft XPS Document Writer.)");
 	}
@@ -60,12 +66,22 @@ public:
 				if(job.Execute()){
 					Draw &draw = job;
 					draw.StartPage();
-					draw.DrawImage(0, 0, MakeImage(draw.GetPagePixels()));
+					Size sz = draw.GetPagePixels();
+//					draw.DrawText(draw.NativeX(700), draw.NativeY(700), "O", Roman(draw.NativeY(600)).Italic(), Red());
+					DrawIt(draw, sz);
+					draw.DrawImage(sz.cx / 3, sz.cy / 3, MakeImage(sz));
+					draw.Offset(200, 1000);
+					draw.DrawImage(sz.cx / 3, sz.cy / 3, MakeImage(sz));
 					draw.EndPage();
 				}
 				return true;
+			case K_T:
+				if(job.Execute()) {
+					Draw &draw = job;
+				}
+				return true;
 			case K_R:
-				if(job.Execute()){
+				if(job.Execute()) {
 					Draw &draw = job;
 					draw.StartPage();
 					bool flag = false;
