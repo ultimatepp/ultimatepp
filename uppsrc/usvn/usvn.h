@@ -102,6 +102,8 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 		
 		REPOSITORY,
 		MESSAGE,
+		
+		DELETEC = -2
 	};
 	
 	Array<Switch>            revert;
