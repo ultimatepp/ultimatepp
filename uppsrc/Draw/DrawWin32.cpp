@@ -224,7 +224,7 @@ void Draw::LoadCaps() {
 	palette = (GetDeviceCaps(handle, RASTERCAPS) & RC_PALETTE);
 	if(palette)
 		color16 = GetDeviceCaps(handle, SIZEPALETTE) != 256;
-	pagePixels = GetSizeCaps(HORZRES, VERTRES);
+	pageDots = pagePixels = GetSizeCaps(HORZRES, VERTRES);
 	pageMMs = GetSizeCaps(HORZSIZE, VERTSIZE);
 	nativeDpi = inchPixels = GetSizeCaps(LOGPIXELSX, LOGPIXELSY);
 	sheetPixels = GetSizeCaps(PHYSICALWIDTH, PHYSICALHEIGHT);
@@ -410,8 +410,8 @@ void PrintDraw::InitPrinter()
 	DotsMode();
 	native = 0;
 	actual_offset = Point(0, 0);
-	pagePixels.cx = 600 * pagePixels.cx / inchPixels.cx; 
-	pagePixels.cy = 600 * pagePixels.cy / inchPixels.cy; 
+	pageDots.cx = 600 * pagePixels.cx / inchPixels.cx; 
+	pageDots.cy = 600 * pagePixels.cy / inchPixels.cy; 
 	inchPixels.cx = 600;
 	inchPixels.cy = 600;
 }

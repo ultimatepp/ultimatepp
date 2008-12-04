@@ -341,7 +341,7 @@ void Draw::SetLineStyle(int width)
 void Draw::Init()
 {
 	DrawLock __;
-	pagePixels = Size(Xwidth, Xheight);
+	pageDots = pagePixels = Size(Xwidth, Xheight);
 	pageMMs = Size(XwidthMM, XheightMM);
 	nativeDpi = inchPixels = 254 * pagePixels / pageMMs / 10;
 	sheetPixels = pagePixels;
