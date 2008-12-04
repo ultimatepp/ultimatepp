@@ -95,12 +95,13 @@ Stream& Draw::PutRect(const Rect& r)
 void Draw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
 	DrawLock __;
-	if(IsNull(src))
-		return;
-	BeginNative();
-	Native(x, y);
-	Native(cx, cy);
 	LTIMING("DrawImageOp");
+	bool tonative = !IsNative();
+	if(tonative) {
+		BeginNative();
+		Native(x, y);
+		Native(cx, cy);
+	}
 	Size sz = Size(cx, cy);
 	if((cx > 2000 || cy > 1500) && IsNull(color) && IsPrinter()) {
 		int yy = 0;
@@ -123,7 +124,8 @@ void Draw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rec
 		Image h = Rescale(img, Size(cx, cy), src);
 		h.PaintImage(*this, x, y, h.GetSize(), color);
 	}
-	EndNative();
+	if(tonative)
+		EndNative();
 }
 
 // -------------------------------
