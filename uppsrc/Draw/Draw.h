@@ -493,6 +493,7 @@ protected:
 
 	typedef Link<FontInfo::Data, 2> FontLink;
 
+	Size   pageDots;
 	Size   pagePixels;
 	Size   pageMMs;
 	Size   inchPixels;
@@ -636,12 +637,9 @@ public:
 	bool  PaletteMode() const                           { return palette; }
 	bool  IsMono() const                                { return is_mono; }
 
-	Size  GetPagePixels() const                         { return pagePixels; }
-//	Size  GetPageDots() const                           { return pagePixels; }
+	Size  GetPagePixels() const                         { return native ? pagePixels : pageDots; }
+	Size  GetPixelsPerInch() const                      { return native ? nativeDpi : inchPixels; }
 	Size  GetPageMMs() const                            { return pageMMs; }
-	Size  GetPixelsPerInch() const                      { return inchPixels; }
-//	Size  GetSheetPixels() const                        { return sheetPixels; }
-//	Point GetPageOffset() const                         { return pageOffset; }
 
 	bool  Pixels() const                                { return pixels; }
 	bool  Dots() const                                  { return !pixels; }
