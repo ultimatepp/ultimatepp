@@ -780,11 +780,9 @@ public:
 	int           doc_serial;
 	TopicCtrl     doc;
 
-	int             state_icon;
-
-	String        export_name;
-	String        export_outdir;
-	bool          export_usedonly;
+	int           state_icon;
+	
+	String        export_dir;
 
 // ------------------------------------
 
@@ -912,7 +910,8 @@ public:
 	void      Project(Bar& menu);
 		void  SyncT(int kind);
 		void  ConvertST();
-		void  ExportProject();
+		void  ExportMakefile(const String& ep);
+		void  ExportProject(const String& ep, bool all, bool gui);
 		void  SyncSvnDirs(const Vector<String>& working);
 		void  SyncSvnDir(const String& working);
 		void  SyncSvn();

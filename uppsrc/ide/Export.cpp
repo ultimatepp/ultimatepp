@@ -33,20 +33,13 @@ void CopyFolder(const char *_dst, const char *_src, Index<String>& used, bool al
 	}
 }
 
-void Ide::ExportProject() {
-	WithExportLayout<TopWindow> dlg;
-	CtrlLayoutOKCancel(dlg, "Export project");
-	FrameRight<Button> dsb;
-	DirSel(dlg.outdir, dsb);
-	CtrlRetriever r;
-	if(IsNull(export_name))
-		export_name = main;
-	r(dlg.outdir, export_outdir);
-	r(dlg.name, export_name);
-	r(dlg.usedonly, export_usedonly);
-	if(dlg.Execute() != IDOK)
-		return;
-	r.Retrieve();
+void Ide::ExportMakefile(const String& ep)
+{
+	SaveMakeFile(AppendFileName(ep, "Makefile"), true);
+}
+
+void Ide::ExportProject(const String& ep, bool all, bool gui)
+{
 	SaveFile(false);
 	::Workspace wspc;
 	wspc.Scan(main);
@@ -69,24 +62,23 @@ void Ide::ExportProject() {
 		}
 		used.FindAdd(SourcePath(pn, "init"));
 	}
-	String ep = AppendFileName(export_outdir, export_name);
 	if(FileExists(ep)) {
-		if(!PromptYesNo("There is a [* " + DeQtf(export_name) + "] file in the output directory.&"
+		if(gui && !PromptYesNo(DeQtf(ep) + " is existing file.&"
 		                "Do you want to delete it?")) return;
 		FileDelete(ep);
 	}
 	if(DirectoryExists(ep)) {
-		if(!PromptYesNo("Do you want to replace existing [* " + DeQtf(export_name) + "] export?"))
-			return;
+		if(gui && !PromptYesNo(DeQtf(ep) + " is existing directory.&"
+		                "Do you want to replace it?")) return;
 		DeleteFolderDeep(ep);
 	}
-	
+
 	Progress pi("Exporting project");
 	pi.SetTotal(wspc.GetCount());
 	for(int i = 0; i < wspc.GetCount(); i++) {
-		if(pi.StepCanceled())
+		if(gui && pi.StepCanceled())
 			return;
-		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, !export_usedonly);
+		CopyFolder(AppendFileName(ep, wspc[i]), PackageDirectory(wspc[i]), used, all);
 	}
-	SaveMakeFile(AppendFileName(ep, "Makefile"), true);
+	ExportMakefile(ep);
 }

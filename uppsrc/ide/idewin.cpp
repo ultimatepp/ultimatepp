@@ -178,8 +178,10 @@ void Ide::Serialize(Stream& s) {
 		editor.SerializeNavigator(s);
 	if(version >= 10)
 		s % showtime;
-	if(version >= 11)
-		s % export_outdir;
+	if(version >= 11) {
+		String d;
+		s % d;
+	}
 	s.Magic();
 }
 
@@ -605,9 +607,6 @@ Ide::Ide()
 	doc_serial = -1;
 
 	showtime = true;
-	
-	export_outdir = GetHomeDirFile("export++");
-	export_usedonly = true;
 }
 
 Ide::~Ide()
@@ -843,6 +842,7 @@ void AppMain___()
 				ide.console.console = true;
 				bool clean = false;
 				bool makefile = false;
+				int  exporting = 0;
 				String mkf;
 				for(int i = 3; i < arg.GetCount(); i++)
 					if(arg[i][0] == '>')
@@ -887,6 +887,12 @@ void AppMain___()
 								break;
 							case 'l':
 								break;
+							case 'x':
+								exporting = 1;
+								break;
+							case 'X':
+								exporting = 2;
+								break;
 							default:
 								SilentMode = false;
 								Puts("Invalid build option(s)");
@@ -900,6 +906,16 @@ void AppMain___()
 					}
 				if(clean)
 					ide.Clean();
+				if(exporting) {
+					mkf = GetFullPath(mkf);
+					Cout() << mkf << '\n';
+					RealizeDirectory(mkf);
+					if(makefile)
+						ide.ExportMakefile(mkf);
+					else
+						ide.ExportProject(mkf, exporting == 2, false);
+				}
+				else
 				if(makefile) {
 					ide.SaveMakeFile(IsNull(mkf) ? "Makefile" : mkf);
 					SetExitCode(0);
