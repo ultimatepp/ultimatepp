@@ -117,6 +117,7 @@ void Ide::SetMain(const String& package)
 	SaveWorkspace();
 	transferfilecache.Clear();
 	main = package;
+	export_dir = GetHomeDirFile(main);
 	mainconfigname.Clear();
 	mainconfigparam.Clear();
 	ScanWorkspace();
@@ -718,8 +719,10 @@ void Ide::SerializeWorkspace(Stream& s) {
 		}
 	}
 	if(version >= 8) {
-		s % export_usedonly;
-		s % export_name;
+		bool dummyb;
+		String dummy;
+		s % dummyb;
+		s % dummy;
 	}
 	SerializeFindInFiles(s);
 	String om;

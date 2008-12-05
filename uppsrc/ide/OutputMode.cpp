@@ -124,11 +124,14 @@ struct OutMode : WithOutputModeLayout<TopWindow> {
 	Ide& ide;
 	ModePane debug;
 	ModePane release;
+	FrameRight<Button> dsb;
 
 	void Load();
 	void Save();
 	void Preset();
 	void SyncLock();
+	
+	void Export(int kind);
 
 	typedef OutMode CLASSNAME;
 
@@ -145,6 +148,7 @@ void OutMode::Load()
 	}
 	method <<= ide.method;
 	mode <<= ide.targetmode;
+	export_dir <<= ide.export_dir;
 	debug.Load(ide.debug);
 	LoadFromWorkspace(debug, "outputmode-debug");
 	release.Load(ide.release);
@@ -156,6 +160,7 @@ void OutMode::Save()
 {
 	ide.method = ~method;
 	ide.targetmode = ~mode;
+	ide.export_dir = ~export_dir;
 	debug.Save(ide.debug);
 	StoreToWorkspace(debug, "outputmode-debug");
 	release.Save(ide.release);
@@ -165,6 +170,20 @@ void OutMode::Save()
 	ide.recent_buildmode.GetAdd(ide.method) = ss.GetResult();
 }
 
+void OutMode::Export(int kind)
+{
+	String ep = ~export_dir;
+	if(IsNull(ep)) {
+		Exclamation("Missing output directory!");
+		return;
+	}
+	if(kind == 2)
+		ide.ExportMakefile(ep);
+	else
+		ide.ExportProject(ep, kind, true);
+	Break(IDOK);
+}
+
 bool MapFlag(const VectorMap<String, String>& map, const char *key)
 {
 	return map.Get(key, "0") == "1";
@@ -172,13 +191,15 @@ bool MapFlag(const VectorMap<String, String>& map, const char *key)
 
 void Ide::SerializeOutputMode(Stream& s)
 {
-	int version = 0;
+	int version = 1;
 	s / version;
 	s % method;
 	s / targetmode;
 	s % debug;
 	s % release;
 	s % recent_buildmode;
+	if(version >= 1)
+		s % export_dir;
 }
 
 void OutMode::SyncLock()
@@ -223,6 +244,10 @@ OutMode::OutMode(Ide& ide)
 	CtrlLayoutOKCancel(*this, "Output mode");
 	method <<= THISBACK(Preset);
 	SyncLock();
+	DirSel(export_dir, dsb);
+	export_all <<= THISBACK1(Export, 1);
+	export_used <<= THISBACK1(Export, 0);
+	export_makefile <<= THISBACK1(Export, 2);
 }
 
 void Ide::SetupOutputMode()
