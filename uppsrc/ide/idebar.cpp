@@ -276,6 +276,8 @@ void Ide::Setup(Bar& menu) {
 		.Help("Log detailed description of build and debug");
 	menu.Add("Environment..", THISBACK(SetupFormat))
 		.Help("Fonts, tabs, indentation, status bar");
+	menu.Add("Abbreviations..", THISBACK(Abbreviations))
+		.Help("Edit abbreviation keywords and code");
 	menu.Add("Keyboard shortcuts..", callback(EditKeys))
 		.Help("Edit key bindings");
 	menu.Add("Build methods..", THISBACK(SetupBuildMethods))
@@ -474,6 +476,7 @@ void Ide::BrowseMenu(Bar& menu) {
 	menu.Add(!designer, AK_VIRTUALS, callback(&editor, &AssistEditor::Virtuals));
 	menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
 	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
+	menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 	menu.Add(!designer, "Insert", THISBACK(InsertMenu));
 	menu.Separator();
 	menu.Add("Rescan code", THISBACK(RescanCode));

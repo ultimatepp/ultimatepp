@@ -989,7 +989,7 @@ void CodeEditor::PutI(WithDropChoice<EditString>& edit)
 }
 
 CodeEditor::CodeEditor() {
-	bracket_flash = true;
+	bracket_flash = false;
 	highlight_bracket_pos0 = 0;
 	bracket_start = 0;
 	stat_edit_time = 0;
@@ -1016,7 +1016,7 @@ CodeEditor::CodeEditor() {
 	bar.WhenAnnotationRightClick = Proxy(WhenAnnotationRightClick);
 	highlight = HIGHLIGHT_NONE;
 	hilite_scope = 0;
-	hilite_bracket = 2;
+	hilite_bracket = 1;
 	hilite_ifdef = 1;
 	indent_spaces = false;
 	indent_amount = GetTabSize();

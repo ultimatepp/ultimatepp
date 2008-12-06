@@ -457,6 +457,47 @@ void AssistEditor::Complete()
 	PopUpAssist(true);
 }
 
+void AssistEditor::Abbr()
+{
+	CloseAssist();
+	int c = GetCursor();
+	int ch;
+	String s;
+	while(IsAlpha(ch = Ch(c - 1))) {
+		s.Insert(0, ch);
+		--c;
+	}
+	int len = s.GetCount();
+	s = theide->abbr.Get(s, String());
+	if(IsNull(s))
+		return;
+	NextUndo();
+	SetCursor(c);
+	Remove(c, len);
+	int linepos = c;
+	int line = GetLinePos(linepos);
+	WString h = GetWLine(line).Mid(0, linepos);
+	DDUMP(h);
+	for(int i = 0; i < s.GetCount(); i++) {
+		ch = s[i];
+		switch(ch) {
+		case '@':
+			c = GetCursor();
+			break;
+		case '\n':
+			InsertChar('\n');
+			for(int j = 0; j < h.GetCount(); j++)
+				InsertChar(h[j]);
+			break;
+		default:
+			if((byte)s[i] >= ' ' || s[i] == '\t')
+				InsertChar(s[i]);
+			break;
+		}
+	}
+	SetCursor(c);
+}
+
 void AssistEditor::AssistInsert()
 {
 	if(assist.IsCursor()) {

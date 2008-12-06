@@ -124,7 +124,7 @@ void   LineEdit::Paint0(Draw& w) {
 						int l = ngp - gp;
 						LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
 						w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * l, fsz.cy, h.paper);
-						if(showtabs && h.paper != SColorHighlight) {
+						if(showtabs && h.paper != SColorHighlight && q < tx.GetLength()) {
 							Color c = Blend(SColorLight, SColorHighlight);
 							w.DrawRect(gp * fsz.cx - scx + 2, y + fsz.cy / 2,
 							           l * fsz.cx - 4, 1, c);

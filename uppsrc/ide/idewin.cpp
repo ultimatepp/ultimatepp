@@ -933,6 +933,7 @@ void AppMain___()
 		}
 
 		LoadFromFile(ide);
+		ide.LoadAbbr();
 
 		ide.SyncCh();
 
