@@ -37,19 +37,8 @@ AssistEditor::AssistEditor()
 	InsertFrame(1, navigatorframe);
 	navigatorframe.Left(navigatorpane, HorzLayoutZoom(140));
 
-	int cy = searchindex.GetStdSize().cy;
+	int cy = browser.search_scope.GetStdSize().cy;
 
-	indexpane.Add(searchindex.HSizePos().TopPos(0, cy));
-	indexpane.Add(index.HSizePos().VSizePos(cy + 2, 0));
-	index.AddColumn("");
-	index.AddIndex();
-	index.NoHeader().AutoHideSb().NoGrid();
-	index.WhenLeftClick = index.WhenLeftDouble = THISBACK(IndexClick);
-	searchindex.NullText(String("Search (") + GetKeyDesc(IdeKeys::AK_SEARCHINDEX().key[0]) + ") ");
-	searchindex.SetFilter(CharFilterAlphaToUpper);
-	searchindex <<= THISBACK(SearchIndex);
-	navigatorpane.Add(indexpane.SizePos());
-	
 	int c2 = cy + 2;
 	scopepane.Add(browser.search_scope.HSizePos(0, 4 * cy + 2).TopPos(0, cy));
 	for(int i = 0; i < 4; i++)
@@ -477,7 +466,6 @@ void AssistEditor::Abbr()
 	int linepos = c;
 	int line = GetLinePos(linepos);
 	WString h = GetWLine(line).Mid(0, linepos);
-	DDUMP(h);
 	for(int i = 0; i < s.GetCount(); i++) {
 		ch = s[i];
 		switch(ch) {
@@ -573,8 +561,6 @@ bool AssistEditor::Key(dword key, int count)
 		SyncCursor();
 		return true;
 	}
-	if(searchindex.HasFocus())
-		return NavigatorKey(key);
 	
 	if(popup.IsOpen()) {
 		int k = key & ~K_CTRL;
