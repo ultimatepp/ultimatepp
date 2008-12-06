@@ -58,6 +58,7 @@ file
 	Macro.cpp,
 	Calc.cpp,
 	FormatCode.cpp,
+	Abbr.cpp,
 	Compile readonly separator,
 	Methods.cpp,
 	AutoSetup.cpp,

@@ -433,6 +433,7 @@ struct AssistEditor : CodeEditor {
 	void           StartParamInfo(const CppItem& m);
 
 	void           Complete();
+	void           Abbr();
 
 	void           Context(Parser& parser, int pos);
 	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
@@ -783,6 +784,7 @@ public:
 	int           state_icon;
 	
 	String        export_dir;
+	VectorMap<String, String> abbr;
 
 // ------------------------------------
 
@@ -848,6 +850,9 @@ public:
 
 	void      GotoPos(String path, int line);
 	void      GotoCpp(const CppItem& pos);
+	
+	void      LoadAbbr();
+	void      SaveAbbr();
 
 	Vector<String> SvnDirs();
 
@@ -980,6 +985,7 @@ public:
 		void  SetupFormat();
 		void  ToggleVerboseBuild();
 		void  AutoSetup();
+		void  Abbreviations();
 
 	void      BrowseMenu(Bar& menu);
 		void  RescanCode();
