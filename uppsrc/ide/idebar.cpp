@@ -334,7 +334,7 @@ void Ide::Project(Bar& menu) {
 
 void Ide::FilePropertiesMenu(Bar& menu)
 {
-	menu.Separator();
+	menu.MenuSeparator();
 	menu.Add(IsActiveFile(), AK_FILEPROPERTIES, THISBACK(FileProperties))
 		.Help("File properties stored in package");
 	menu.Add(IsActiveFile(), AK_SAVEENCODING, THISBACK(ChangeCharset))
@@ -413,7 +413,7 @@ void Ide::BuildMenu(Bar& menu) {
 	menu.Add(console.GetLineCount(), AK_FINDPREVERROR, THISBACK(FindPrevError))
 		.Help("Find previous error line according to error output in the console window");
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_LINUX)
-	menu.Separator();
+	menu.MenuSeparator();
 	menu.Add(!IsNull(target), "Open output directory", THISBACK(OpenOutputFolder));
 #endif
 }
@@ -460,12 +460,8 @@ void Ide::DebugMenu(Bar& menu)
 }
 
 void Ide::BrowseMenu(Bar& menu) {
-//	menu.AddMenu(AK_TOGGLEINDEX, IdeImg::index(), THISBACK1(ToggleNavigator, (int)AssistEditor::NAV_INDEX))
-//	     .Check(editor.IsIndex());
 	menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK1(ToggleNavigator, (int)AssistEditor::NAV_BROWSER))
 	     .Check(editor.IsBrowser());
-	if(editor.IsIndex())
-		menu.Add(AK_SEARCHINDEX, THISBACK(SearchIndex));
 	menu.Add(AK_SEARCHCODE, THISBACK(SearchCode));
 	menu.Add(!designer, AK_GOTO, THISBACK(Goto));
 	menu.Add(AK_GOTOGLOBAL, THISBACK(GotoGlobal));
@@ -478,7 +474,7 @@ void Ide::BrowseMenu(Bar& menu) {
 	menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
 	menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 	menu.Add(!designer, "Insert", THISBACK(InsertMenu));
-	menu.Separator();
+	menu.MenuSeparator();
 	menu.Add("Rescan code", THISBACK(RescanCode));
 	menu.MenuSeparator();
 	menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))

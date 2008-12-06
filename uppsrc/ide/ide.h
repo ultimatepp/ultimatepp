@@ -379,11 +379,6 @@ struct AssistEditor : CodeEditor {
 	SplitterFrame     navigatorframe;
 	StaticRect        navigatorpane;
 
-	EditString        searchindex;
-	ArrayCtrl         index;
-	Vector<IndexItem> indexitem;
-	ParentCtrl        indexpane;
-
 	CodeBrowser       browser;
 	ParentCtrl        scopepane;
 	ParentCtrl        itempane;
@@ -463,23 +458,16 @@ struct AssistEditor : CodeEditor {
 
 	void           SwapSContext(Parser& p);
 	
-	void           MakeIndex();
-	void           SyncIndex();
-	void           IndexSync();
-	void           SearchIndex();
-	void           IndexClick();
 	void           SyncCursor();
 
-	bool           NavigatorKey(dword key);
 	void           SyncNavigator();
 	void           GotoBrowserScope();
 	void           BrowserGoto();
 	void           BrowserGotoNF();
 
-	enum { NAV_NONE = 0, NAV_INDEX = 1, NAV_BROWSER = 2 };
+	enum { NAV_NONE = 0, NAV_BROWSER = 2 };
 
 	int            GetNavigator() const                          { return navigator; }
-	bool           IsIndex() const                               { return navigator == NAV_INDEX; }
 	bool           IsBrowser() const                             { return navigator == NAV_BROWSER; }
 	void           Navigator(int navigator);
 
@@ -996,7 +984,6 @@ public:
 		void  OpenATopic();
 		void  ToggleNavigator(int nav);
 		void  SearchCode();
-		void  SearchIndex();
 		void  Goto();
 		void  GotoGlobal();
 		void  ScanFile();

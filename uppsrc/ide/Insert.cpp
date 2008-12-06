@@ -114,6 +114,6 @@ void Ide::InsertMenu(Bar& bar)
 void Ide::EditorMenu(Bar& bar)
 {
 	bar.Add("Insert", THISBACK(InsertMenu));
-	bar.Separator();
+	bar.MenuSeparator();
 	editor.StdBar(bar);
 }
