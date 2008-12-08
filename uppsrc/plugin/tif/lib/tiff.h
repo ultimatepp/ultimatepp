@@ -27,8 +27,6 @@
 #ifndef _TIFF_
 #define	_TIFF_
 
-#include <string.h>
-
 #include "tiffconf.h"
 
 /*
