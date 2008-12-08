@@ -222,7 +222,7 @@ void RulerCtrl::Paint(Draw& draw)
 
 	enum {
 		SMALL_LIMIT = 100,
-		TEXT_LIMIT = 50,
+//		TEXT_LIMIT = 50,
 		TGAP = 3,
 		HGAP = 2,
 		VGAP = 0,
@@ -261,7 +261,7 @@ void RulerCtrl::Paint(Draw& draw)
 		rep_count = ceil(pos2 / text_repeat) - floor(pos1 / text_repeat) + 1;
 	}
 	if(!text_step.IsEmpty() && (!text_value.IsEmpty() || text_convert)
-	&& rep_count > 0 && rep_count * text_step.GetCount() <= TEXT_LIMIT) {
+	&& rep_count > 0 /*&& rep_count * text_step.GetCount() <= TEXT_LIMIT*/) {
 		int ix = BinFindIndex(text_step, pos1 - rep_index * text_repeat);
 		int ppos = (is_right ? SMALL_SIZE : cheight - cy - SMALL_SIZE);
 		for(int c = fround(rep_count); --c >= 0; ix = 0, rep_index++) {

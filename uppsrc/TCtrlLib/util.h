@@ -1,5 +1,7 @@
 NAMESPACE_UPP
 
+#define ASSERT_INDEX(arrayctrl, index) ASSERT(arrayctrl.GetIndexCount() == index)
+
 #define TOOL(x) \
 	void        COMBINE(Tool, x)(Bar& bar); \
 	void        COMBINE(On, x)(); \
