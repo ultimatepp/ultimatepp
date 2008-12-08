@@ -1082,12 +1082,6 @@ Fax3Cleanup(TIFF* tif)
 
 	if (Fax3State(tif)->subaddress)
 		_TIFFfree(Fax3State(tif)->subaddress);
-	
-//Patch by cxl, 08-01-29
-	if (Fax3State(tif)->faxdcs)
-		_TIFFfree(Fax3State(tif)->faxdcs);
-//end of patch
-
 	_TIFFfree(tif->tif_data);
 	tif->tif_data = NULL;
 

@@ -22,6 +22,7 @@
 
 /* Define to 1 if you have the <search.h> header file. */
 #define HAVE_SEARCH_H 1
+#define HAVE_STRING_H 1
 
 /* Set the native cpu bit order */
 #define HOST_FILLORDER FILLORDER_LSB2MSB
