@@ -6,6 +6,8 @@
 
 NAMESPACE_UPP
 
+#define BYREF
+
 #define LTIMING(x) // RTIMING(x)
 
 typedef ULONG DBLENGTH;
@@ -195,6 +197,17 @@ static Value DBOutDouble(const DBBINDING& binding, const byte *data)
 	return *(const double *)(data + binding.obValue);
 }
 
+#ifdef BYREF
+static Value DBOutString(const DBBINDING& binding, const byte *data)
+{
+	return String(*(char **)(data + binding.obValue), *(const DBLENGTH *)(data + binding.obLength));
+}
+
+static Value DBOutWString(const DBBINDING& binding, const byte *data)
+{
+	return WString(*(const wchar **)(data + binding.obValue), *(const DBLENGTH *)(data + binding.obLength) >> 1);
+}
+#else
 static Value DBOutString(const DBBINDING& binding, const byte *data)
 {
 	return String(data + binding.obValue, *(const DBLENGTH *)(data + binding.obLength));
@@ -204,10 +217,31 @@ static Value DBOutWString(const DBBINDING& binding, const byte *data)
 {
 	return WString((const wchar *)(data + binding.obValue), *(const DBLENGTH *)(data + binding.obLength) >> 1);
 }
+#endif
 
 static Value DBOutTime(const DBBINDING& binding, const byte *data)
 {
 	return FromDATE(*(const DATE *)(data + binding.obValue));
+}
+
+static Value DBOutBytes(const DBBINDING& binding, const byte *data)
+{
+	String r;
+	HRESULT hr;
+	BYTE pbBuff[3000];
+	ULONG cbRead;
+	ISequentialStream* pISequentialStream;
+	IUnknown* pIUnknown = *((IUnknown**)(data + binding.obValue));
+	pIUnknown->QueryInterface(IID_ISequentialStream, (void**)&pISequentialStream);
+	ULONG cbNeeded = 3000;
+	do {
+	   hr = pISequentialStream->Read(pbBuff, cbNeeded, &cbRead);
+	   r.Cat(pbBuff, 3000);
+	}
+	while (SUCCEEDED(hr) && hr != S_FALSE && cbRead == cbNeeded);
+	pISequentialStream->Release();
+	pIUnknown->Release();
+	return r;
 }
 
 /*
@@ -217,21 +251,23 @@ static Value DBOutGuid(const DBBINDING& binding, const byte *data)
 }
 */
 
-static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count, Buffer<OutBindProc>& bindproc, int& rowbytes)
+static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
+                                            Buffer<OutBindProc>& bindproc, int& rowbytes, Array<DBOBJECT>& object)
 {
 	rowbytes = 0;
 	Buffer<DBBINDING> dbbind(count);
+	object.Clear();
 	bindproc.Alloc(count);
 	OutBindProc *ob = bindproc;
 	DBBINDING *db = dbbind;
 	memset(db, 0, count * sizeof(DBBINDING));
 	for(; --count >= 0; col++, db++, ob++) {
 		db->iOrdinal = col->iOrdinal;
-		db->obStatus = rowbytes;
 		db->dwPart = DBPART_STATUS | DBPART_VALUE;
 		db->dwMemOwner = DBMEMOWNER_CLIENTOWNED;
 		db->eParamIO = DBPARAMIO_NOTPARAM;
-		rowbytes += sizeof(dword);
+		db->obStatus = rowbytes;
+		rowbytes += sizeof(DBSTATUS);
 		switch(col->wType) {
 		case DBTYPE_I1:
 		case DBTYPE_I2:
@@ -292,6 +328,49 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count, 
 			rowbytes += sizeof(DATE);
 			break;
 
+#ifdef BYREF
+		case DBTYPE_GUID:
+		case DBTYPE_STR:
+			db->wType = DBTYPE_BYREF|DBTYPE_STR;
+			*ob = &DBOutString;
+			db->cbMaxLen = col->ulColumnSize + 1;
+		byref:
+			db->obValue = rowbytes;
+			db->dwMemOwner = DBMEMOWNER_PROVIDEROWNED;
+			rowbytes += sizeof(void *);
+			db->obLength = rowbytes;
+			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
+			rowbytes += sizeof(DBLENGTH);
+			db->cbMaxLen = sizeof(void *)/*col->ulColumnSize*/;
+			break;
+
+		case DBTYPE_BYTES:
+			if(col->dwFlags & DBCOLUMNFLAGS_ISLONG) {
+				db->wType = DBTYPE_IUNKNOWN;
+				db->cbMaxLen = sizeof(ISequentialStream*);
+				db->pObject = &object.Add();
+				db->pObject->iid = IID_ISequentialStream;
+				db->pObject->dwFlags = STGM_READ;
+				db->obValue = rowbytes;
+				rowbytes += sizeof(ISequentialStream*);
+				*ob = &DBOutBytes;
+		    }
+		    else {
+				db->wType = DBTYPE_BYREF|DBTYPE_BYTES;
+				*ob = &DBOutString;
+				db->cbMaxLen = sizeof(void *);
+				goto byref;
+		    }
+		    break;
+
+		case DBTYPE_BSTR:
+		case DBTYPE_WSTR:
+			db->wType = DBTYPE_BYREF|DBTYPE_WSTR;
+			*ob = &DBOutWString;
+			db->cbMaxLen = sizeof(OLECHAR) * (col->ulColumnSize + 1);
+			goto byref;
+
+#else
 		case DBTYPE_BYTES:
 			db->wType = DBTYPE_BYTES;
 			db->obValue = rowbytes;
@@ -326,7 +405,7 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count, 
 			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
 			rowbytes += sizeof(DBLENGTH);
 			break;
-
+#endif
 /*
 		case DBTYPE_GUID:
 			rowbytes = (rowbytes + 7) & -8;
@@ -428,6 +507,7 @@ private:
 	DBROWCOUNT              fetch_rowcount;
 	bool                    fetch_eof;
 	String                  last_insert_table;
+	Array<DBOBJECT>         object;
 
 	enum {
 		MAX_FETCH_ROWS = 100,
@@ -698,7 +778,7 @@ void OleDBConnection::Execute(IRef<IRowset> rowset)
 			break;
 		}
 	}
-	fetch_bindings = GetRowDataBindings(columns, fetchcols, fetch_bindprocs, fetch_rowbytes);
+	fetch_bindings = GetRowDataBindings(columns, fetchcols, fetch_bindprocs, fetch_rowbytes, object);
 	fetch_chunk = minmax<int>(MAX_FETCH_BYTES / (fetch_rowbytes + 1), 1, MAX_FETCH_ROWS);
 	fetch_rowbuffer.Alloc(fetch_rowbytes);
 	fetch_hrows.Alloc(fetch_chunk);
