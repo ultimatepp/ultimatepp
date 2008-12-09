@@ -1,6 +1,6 @@
 uses
 	CtrlLib,
-	plugin/agg24;
+	agg24;
 
 file
 	agg_upp_bind.h charset "UTF-8"
