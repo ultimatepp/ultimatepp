@@ -44,8 +44,8 @@ void AggDrawer::DrawEllipse(int x1, int y1, int cx, int cy, int width)
 //	m_ras.add_path(tr);
 //	ren.color( color );
 	
-	typedef agg::wrap_mode_reflect_auto_pow2 wrap_x_type;
-	typedef agg::wrap_mode_reflect_auto_pow2 wrap_y_type;
+//	typedef agg::wrap_mode_reflect_auto_pow2 wrap_x_type;
+//	typedef agg::wrap_mode_reflect_auto_pow2 wrap_y_type;
 //	typedef agg::span_pattern_rgb<agg::rgba8, agg::order_rgb, wrap_x_type, wrap_y_type> span_gen_type;
 //	typedef agg::renderer_scanline_aa<ren_base, span_gen_type> renderer_type;
 
@@ -55,12 +55,6 @@ void AggDrawer::DrawEllipse(int x1, int y1, int cx, int cy, int width)
 //	renderer_type rp(renb, sg);
 //	agg::render_scanlines(m_ras, m_sl, rp);
 //	agg::render_scanlines_aa_solid(m_ras, m_sl, m_ren, agg::rgba(1,1,0.5) );
-}
-
-
-void AggDrawer::DrawEllipse(int x1, int y1, int cx, int cy, const color_type& fill_ct, int width, const color_type& ct)
-{
-
 }
 
 void AggDrawer::RenderScanlines()

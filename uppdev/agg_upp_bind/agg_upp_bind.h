@@ -6,7 +6,17 @@
 //#define AGG_RGBA32
 //#define AGG_BGRA32
 
-#include <plugin/agg24/agg24.h>
+#include <agg24/agg_rendering_buffer.h>
+#include <agg24/agg_basics.h>
+#include <agg24/agg_renderer_base.h>
+#include <agg24/agg_pixfmt_rgba.h>
+#include <agg24/agg_renderer_scanline.h>
+#include <agg24/agg_rasterizer_scanline_aa.h>
+#include <agg24/agg_scanline_p.h>
+#include <agg24/agg_path_storage.h>
+#include <agg24/agg_conv_stroke.h>
+#include <agg24/agg_ellipse.h>
+
 #include <CtrlLib/CtrlLib.h>
 
 NAMESPACE_UPP
