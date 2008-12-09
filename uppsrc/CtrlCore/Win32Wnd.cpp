@@ -813,7 +813,13 @@ Rect MonitorRectForHWND(HWND hwnd)
 
 Rect Ctrl::GetWorkArea() const
 {
-	return MonitorRectForHWND(GetHWND());
+// return MonitorRectForHWND(GetHWND());
+// mst:2008-12-08, hack for better multimonitor support.
+	const Ctrl *topctl = GetTopCtrl();
+	HWND hwnd = topctl->GetHWND();
+	if(!hwnd && !((topctl = topctl->GetOwnerCtrl()) && (hwnd = topctl->GetHWND())))
+		hwnd = ::GetFocus();
+	return MonitorRectForHWND(hwnd);
 }
 
 static BOOL CALLBACK sMonEnumProc(HMONITOR monitor, HDC hdc, LPRECT lprcMonitor, LPARAM data)
