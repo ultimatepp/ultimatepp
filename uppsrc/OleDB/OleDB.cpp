@@ -6,7 +6,7 @@
 
 NAMESPACE_UPP
 
-#define BYREF
+// #define BYREF // This was not success, maybe later?
 
 #define LTIMING(x) // RTIMING(x)
 
@@ -372,14 +372,26 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
 
 #else
 		case DBTYPE_BYTES:
-			db->wType = DBTYPE_BYTES;
-			db->obValue = rowbytes;
-			*ob = &DBOutString;
-			db->cbMaxLen = min<int>(col->ulColumnSize, 10000000);
-			rowbytes += (db->cbMaxLen + 1 + 3) & -4;
-			db->obLength = rowbytes;
-			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
-			rowbytes += sizeof(DBLENGTH);
+			if(col->dwFlags & DBCOLUMNFLAGS_ISLONG) {
+				db->wType = DBTYPE_IUNKNOWN;
+				db->cbMaxLen = sizeof(ISequentialStream*);
+				db->pObject = &object.Add();
+				db->pObject->iid = IID_ISequentialStream;
+				db->pObject->dwFlags = STGM_READ;
+				db->obValue = rowbytes;
+				rowbytes += sizeof(ISequentialStream*);
+				*ob = &DBOutBytes;
+		    }
+		    else {
+				db->wType = DBTYPE_BYTES;
+				db->obValue = rowbytes;
+				*ob = &DBOutString;
+				db->cbMaxLen = min<int>(col->ulColumnSize, 10000000);
+				rowbytes += (db->cbMaxLen + 1 + 3) & -4;
+				db->obLength = rowbytes;
+				db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
+				rowbytes += sizeof(DBLENGTH);
+		    }
 			break;
 
 		case DBTYPE_STR:
