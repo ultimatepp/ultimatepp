@@ -341,7 +341,7 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
 			db->obLength = rowbytes;
 			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
 			rowbytes += sizeof(DBLENGTH);
-			db->cbMaxLen = sizeof(void *)/*col->ulColumnSize*/;
+			db->cbMaxLen = sizeof(void *);
 			break;
 
 		case DBTYPE_BYTES:
