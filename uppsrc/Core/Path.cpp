@@ -895,9 +895,9 @@ bool DirectoryCreate(const char *path, int mode)
 	return ::mkdir(ToSystemCharset(path), mode) == 0;
 }
 
-void RealizePath(String file, int mode)
+bool RealizePath(const String& file, int mode)
 {
-	RealizeDirectory(GetFileFolder(file), mode);
+	return RealizeDirectory(GetFileFolder(file), mode);
 }
 #else
 bool DirectoryCreate(const char *path)
@@ -908,9 +908,9 @@ bool DirectoryCreate(const char *path)
 		return !!CreateDirectory(ToSystemCharset(path), 0);
 }
 
-void RealizePath(String file)
+bool RealizePath(const String& file)
 {
-	RealizeDirectory(GetFileFolder(file));
+	return RealizeDirectory(GetFileFolder(file));
 }
 #endif
 
@@ -923,11 +923,12 @@ void RealizePath(String file)
 #endif
 
 #ifdef POSIX
-void RealizeDirectory(String dir, int mode)
+bool RealizeDirectory(const String& d, int mode)
 #else
-void RealizeDirectory(String dir)
+bool RealizeDirectory(const String& d)
 #endif
 {
+	String dir = NormalizePath(d);
 	Vector<String> p;
 	while(dir.GetLength() > DIR_MIN) {
 		p.Add(dir);
@@ -936,10 +937,12 @@ void RealizeDirectory(String dir)
 	for(int i = p.GetCount() - 1; i >= 0; i--)
 		if(!DirectoryExists(p[i]))
 #ifdef POSIX
-			DirectoryCreate(p[i], mode);
+			if(!DirectoryCreate(p[i], mode))
 #else
-			DirectoryCreate(p[i]);
+			if(!DirectoryCreate(p[i]))
 #endif
+				return false;
+	return true;
 }
 
 bool DeleteFolderDeep(const char *dir)

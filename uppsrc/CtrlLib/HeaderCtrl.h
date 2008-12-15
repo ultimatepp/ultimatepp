@@ -62,8 +62,9 @@ public:
 
 	friend class Column;
 
-protected:
 	enum { PROPORTIONAL, REDUCELAST, REDUCENEXT, SCROLL, FIXED };
+
+protected:
 
 	Array<Column> col;
 	HScrollBar    sb;
@@ -139,6 +140,8 @@ public:
 
 	void          SetHeight(int cy);
 	int           GetHeight() const;
+	
+	int           GetMode() const                         { return mode; }
 	
 	static const Style& StyleDefault();
 

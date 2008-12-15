@@ -1498,7 +1498,8 @@ void ArrayCtrl::MouseMove(Point p, dword)
 
 Image ArrayCtrl::CursorImage(Point p, dword)
 {
-	return header.GetSplit(p.x) < 0 ? Image::Arrow() : CtrlsImg::HorzPos();
+	return header.GetSplit(p.x) < 0 || header.GetMode() == HeaderCtrl::FIXED ? Image::Arrow()
+	                                                                         : CtrlsImg::HorzPos();
 }
 
 void ArrayCtrl::RightDown(Point p, dword flags) {
