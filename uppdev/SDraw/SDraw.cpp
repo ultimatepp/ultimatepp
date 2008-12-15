@@ -42,6 +42,7 @@ Image SDraw::Render()
 SDraw::SDraw(int cx, int cy)
 {
 	buffer.Create(cx, cy);
+	Fill(~buffer, White(), buffer.GetLength());
 	m_rbuf.attach((agg::int8u *)~buffer, cx, cy, cx * 4);
 	m_pixf.attach(m_rbuf);
 	m_renb.attach(m_pixf);  //ren_base
