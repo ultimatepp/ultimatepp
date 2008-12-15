@@ -894,6 +894,11 @@ bool DirectoryCreate(const char *path, int mode)
 {
 	return ::mkdir(ToSystemCharset(path), mode) == 0;
 }
+
+void RealizePath(String file, int mode)
+{
+	RealizeDirectory(GetFileFolder(file), mode);
+}
 #else
 bool DirectoryCreate(const char *path)
 {
@@ -901,6 +906,11 @@ bool DirectoryCreate(const char *path)
 		return !!UnicodeWin32().CreateDirectoryW(ToSystemCharsetW(path), 0);
 	else
 		return !!CreateDirectory(ToSystemCharset(path), 0);
+}
+
+void RealizePath(String file)
+{
+	RealizeDirectory(GetFileFolder(file));
 }
 #endif
 
@@ -912,18 +922,24 @@ bool DirectoryCreate(const char *path)
 #define DIR_MIN 1
 #endif
 
+#ifdef POSIX
+void RealizeDirectory(String dir, int mode)
+#else
 void RealizeDirectory(String dir)
+#endif
 {
-	if(dir.GetLength() > DIR_MIN) {
-		RealizeDirectory(GetFileFolder(dir));
-		if(!DirectoryExists(dir))
-			DirectoryCreate(dir);
+	Vector<String> p;
+	while(dir.GetLength() > DIR_MIN) {
+		p.Add(dir);
+		dir = GetFileFolder(dir);
 	}
-}
-
-void RealizePath(String file)
-{
-	RealizeDirectory(GetFileFolder(file));
+	for(int i = p.GetCount() - 1; i >= 0; i--)
+		if(!DirectoryExists(p[i]))
+#ifdef POSIX
+			DirectoryCreate(p[i], mode);
+#else
+			DirectoryCreate(p[i]);
+#endif
 }
 
 bool DeleteFolderDeep(const char *dir)
