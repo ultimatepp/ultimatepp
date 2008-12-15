@@ -47,18 +47,10 @@ void SvnSync::SyncList()
 						h.Trim(7);
 						bool simple = h.Mid(1, 6) == "      ";
 						int action = simple ? String("MC?!~").Find(h[0]) : -1;
+						if(h == "    S  ")
+							action = REPLACE;
 						String an;
 						Color  color;
-						if(action == ADD) {
-							int q = file.ReverseFind('.');
-							if(q >= 0 && (file.Mid(q + 1) == "mine" || file[q + 1] == 'r' && IsDigit(file[q + 2]))
-							   && FileExists(file.Mid(0, q))) {
-								action = DELETEC;
-								an = "Delete";
-								color = Black;
-							}
-						}
-						else
 						if(action < 0) {
 							color = Black;
 							if(simple && h[0] == 'A')
@@ -72,10 +64,22 @@ void SvnSync::SyncList()
 							}
 						}
 						else {
-							static const char *as[] = { "Modify", "Resolved", "Add", "Remove", "Replace" };
-							static Color c[] = { LtBlue, Magenta, Green, LtRed, LtMagenta };
-							an = as[action];
-							color = c[action];
+							int q = file.ReverseFind('.');
+							if(action == ADD && q >= 0 && (file.Mid(q + 1) == "mine" ||
+							   file[q + 1] == 'r' && IsDigit(file[q + 2]))
+							   && FileExists(file.Mid(0, q))) {
+								action = DELETEC;
+								an = "Delete";
+								color = Black;
+							}
+							else {
+								static const char *as[] = {
+									"Modify", "Resolved", "Add", "Remove", "Replace"
+								};
+								static Color c[] = { LtBlue, Magenta, Green, LtRed, LtMagenta };
+								an = as[action];
+								color = c[action];
+							}
 						}
 						if(pass == action < 0) {
 							int ii = list.GetCount();

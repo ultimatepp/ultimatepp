@@ -172,14 +172,18 @@ bool        FileMove(const char *oldname, const char *newname);
 bool        FileDelete(const char *filename);
 
 bool        DirectoryExists(const char *name);
+
 #ifdef PLATFORM_POSIX
 bool        DirectoryCreate(const char *dirname, int mode = 0755);
+void        RealizeDirectory(String dir, int mode = 0755);
+void        RealizePath(String file, int mode = 0755);
 #else
 bool        DirectoryCreate(const char *dirname);
-#endif
-bool        DirectoryDelete(const char *dirname);
 void        RealizeDirectory(String dir);
 void        RealizePath(String file);
+#endif
+
+bool        DirectoryDelete(const char *dirname);
 
 struct Time;
 Time        FileGetTime(const char *filename);
