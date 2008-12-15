@@ -175,12 +175,12 @@ bool        DirectoryExists(const char *name);
 
 #ifdef PLATFORM_POSIX
 bool        DirectoryCreate(const char *dirname, int mode = 0755);
-void        RealizeDirectory(String dir, int mode = 0755);
-void        RealizePath(String file, int mode = 0755);
+bool        RealizeDirectory(const String& dir, int mode = 0755);
+bool        RealizePath(const String& file, int mode = 0755);
 #else
 bool        DirectoryCreate(const char *dirname);
-void        RealizeDirectory(String dir);
-void        RealizePath(String file);
+bool        RealizeDirectory(const String& dir);
+bool        RealizePath(const String& file);
 #endif
 
 bool        DirectoryDelete(const char *dirname);

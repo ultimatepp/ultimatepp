@@ -296,6 +296,7 @@ void Ide::ProjectSvn(Bar& menu)
 		w.Insert(0, p);
 	for(int i = 0; i < w.GetCount(); i++)
 		menu.Add("Synchronize " + w[i], THISBACK1(SyncSvnDir, w[i]));
+	menu.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
 }
 
 void Ide::Project(Bar& menu) {
