@@ -296,7 +296,6 @@ void Ide::ProjectSvn(Bar& menu)
 		w.Insert(0, p);
 	for(int i = 0; i < w.GetCount(); i++)
 		menu.Add("Synchronize " + w[i], THISBACK1(SyncSvnDir, w[i]));
-	menu.Add("Synchronize everything..", THISBACK(SyncSvn));
 }
 
 void Ide::Project(Bar& menu) {
@@ -329,7 +328,10 @@ void Ide::Project(Bar& menu) {
 		menu.Add("Convert s_ -> t_", THISBACK(ConvertST));
 	FilePropertiesMenu(menu);
 	if(SvnDirs().GetCount())
-		menu.Add("SVN", THISBACK(ProjectSvn));
+		if(menu.IsMenuBar())
+			menu.Add("SVN", THISBACK(ProjectSvn));
+		else
+			menu.Add("SVN Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
 }
 
 void Ide::FilePropertiesMenu(Bar& menu)
