@@ -566,14 +566,14 @@ LAYOUT(InsertColorLayout, 432, 520)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(284, 144).TopPosZ(492, 24))
 END_LAYOUT
 
-LAYOUT(AbbreviationsLayout, 424, 476)
+LAYOUT(AbbreviationsLayout, 664, 476)
 	ITEM(ArrayCtrl, abbr, LeftPosZ(4, 108).TopPosZ(4, 432))
-	ITEM(CodeEditor, code, LeftPosZ(116, 304).TopPosZ(4, 408))
+	ITEM(CodeEditor, code, LeftPosZ(116, 544).TopPosZ(4, 408))
 	ITEM(Button, add, SetLabel(t_("Add")).LeftPosZ(4, 64).TopPosZ(444, 24))
 	ITEM(Button, edit, SetLabel(t_("Edit")).LeftPosZ(72, 64).TopPosZ(444, 24))
 	ITEM(Button, remove, SetLabel(t_("Remove")).LeftPosZ(140, 64).TopPosZ(444, 24))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(288, 64).TopPosZ(444, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(356, 64).TopPosZ(444, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(524, 64).TopPosZ(444, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(592, 64).TopPosZ(444, 24))
 	ITEM(Label, dv___7, SetLabel(t_("Use '@' character to place the caret.")).LeftPosZ(116, 304).TopPosZ(416, 19))
 END_LAYOUT
 
