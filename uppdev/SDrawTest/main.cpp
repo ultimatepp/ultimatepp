@@ -257,8 +257,10 @@ struct App : TopWindow {
 		mtx *= agg::trans_affine_scaling(scale, scale);
 		mtx *= agg::trans_affine_rotation(angle / 100.00);
 		mtx *= agg::trans_affine_translation(sz.cx/2, sz.cy/2);
+		{ RTIMING("Render");
 		agg::conv_transform<agg::path_storage, agg::trans_affine> trans(path, mtx);
 		agg::render_all_paths(agd.m_ras, agd.m_sl, agd.m_ren, trans, colors, path_idx, npaths);
+		}
 
 		w.DrawImage(0, 0, agd.buffer);
 	}

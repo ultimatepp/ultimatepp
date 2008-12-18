@@ -9,6 +9,7 @@
 #include <agg24/agg_pixfmt_rgba.h>
 #include <agg24/agg_renderer_scanline.h>
 #include <agg24/agg_rasterizer_scanline_aa.h>
+#include <agg24/agg_rasterizer_outline_aa.h>
 #include <agg24/agg_scanline_u.h>
 #include <agg24/agg_bounding_rect.h>
 #include <agg24/agg_path_storage.h>
@@ -18,6 +19,9 @@
 NAMESPACE_UPP
 
 struct SDraw {
+	typedef agg::renderer_base<agg::pixfmt_bgra32> renderer_base;
+	typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
+
 	Size                                           sz;
 
 	Rect                                           m_r;
@@ -25,10 +29,8 @@ struct SDraw {
 
 	agg::rendering_buffer                          m_rbuf;
 	agg::rasterizer_scanline_aa<>                  m_ras;
+//	agg::rasterizer_outline_aa<renderer_base>      m_ras;
 	agg::scanline_u8                               m_sl;
-
-	typedef agg::renderer_base<agg::pixfmt_bgra32> renderer_base;
-	typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
 
 	renderer_base                                  m_renb;
 	renderer_solid                                 m_ren;
