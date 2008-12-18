@@ -40,7 +40,7 @@ struct App : TopWindow {
 	}
 
 	App() {
-		Ctrl::ShowRepaint(50);
+//		Ctrl::ShowRepaint(50);
 
 		AddFrame(TopSeparatorFrame());
 		AddFrame(menu);
@@ -65,9 +65,11 @@ struct App : TopWindow {
 		{
 			Option& o = option.Add();
 			o.SetLabel(FormatIntRoman(i, true)); // mine
+	//		o.NoWantFocus();
 
-			TreeCtrl::Node node(CtrlImg::File(),o,300);
-
+			TreeCtrl::Node node(CtrlImg::File(), o, 300);
+			if(Random(2))
+				node.Set("Label");
 			parent.Add(tree.Add(parent[rand() % parent.GetCount()], node)); // mine
 
 //			parent.Add(tree.Add(parent[rand() % parent.GetCount()], CtrlImg::File(),
@@ -79,6 +81,7 @@ struct App : TopWindow {
 		tree.WhenDropInsert = THISBACK(DropInsert);
 		tree.WhenDrag = THISBACK(Drag);
 		tree.MultiSelect();
+		tree.HighlightCtrl();
 		Sizeable();
 
 	}
