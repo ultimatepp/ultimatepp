@@ -418,7 +418,7 @@ int ConvertTime::Filter(int chr) const
 		return chr;
 	if(chr == ',')
 		return '.';
-	return 0;
+	return CharFilterDate(chr);
 }
 
 Value ConvertTime::Format(const Value& q) const
