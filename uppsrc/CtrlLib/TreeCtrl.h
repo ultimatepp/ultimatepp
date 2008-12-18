@@ -99,6 +99,7 @@ private:
 	bool         chldlck;
 	bool         mousemove;
 	bool         accel;
+	bool         highlight_ctrl;
 
 	bool         selclick;
 	int          dropitem, dropinsert;
@@ -302,7 +303,7 @@ public:
 	TreeCtrl& MouseMoveCursor(bool m = true) { mousemove = m; return *this; }
 	TreeCtrl& Accel(bool a = true)           { accel = a; return *this; }
 	TreeCtrl& SetDisplay(const Display& d);
-	
+	TreeCtrl& HighlightCtrl(bool a = true)   { highlight_ctrl = a; Refresh(); return *this; }
 
 	TreeCtrl& SetScrollBarStyle(const ScrollBar::Style& s) { sb.SetStyle(s); return *this; }
 

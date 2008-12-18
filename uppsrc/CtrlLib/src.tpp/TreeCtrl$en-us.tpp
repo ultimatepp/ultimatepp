@@ -669,4 +669,48 @@ pixels.&]
 d]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% White background of tree is not painted.&]
 [s0;%% &]
+[s4; &]
+[s5;:TreeCtrl`:`:PopUpEx`(bool`): [_^TreeCtrl^ TreeCtrl][@(0.0.255) `&]_[* PopUpEx]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% In case that the display size of node value is greater than 
+currently available area, attempts to show the complete value 
+when cursor hovers over the node.&]
+[s3;%% &]
+[s4; &]
+[s5;:TreeCtrl`:`:NoPopUpEx`(`): [_^TreeCtrl^ TreeCtrl][@(0.0.255) `&]_[* NoPopUpEx]()&]
+[s2;%% Same as PopUpEx(false).&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:MouseMoveCursor`(bool`): [_^TreeCtrl^ TreeCtrl][@(0.0.255) `&]_[* MouseMov
+eCursor]([@(0.0.255) bool]_[*@3 m]_`=_[@(0.0.255) true])&]
+[s2;%% Mouse cursor moves tree cursor without clicking, just by moving 
+the mouse over the tree.&]
+[s3;%% &]
+[s4; &]
+[s5;:TreeCtrl`:`:Accel`(bool`): [_^TreeCtrl^ TreeCtrl][@(0.0.255) `&]_[* Accel]([@(0.0.255) b
+ool]_[*@3 a]_`=_[@(0.0.255) true])&]
+[s2;%% Activates simple keyboard accelerator. Node values are converted 
+using StdFormat to text and then the first letter is used to 
+find the appropriate item.&]
+[s3;%% &]
+[s4; &]
+[s5;:TreeCtrl`:`:SetDisplay`(const Display`&`): [_^TreeCtrl^ TreeCtrl][@(0.0.255) `&]_[* Se
+tDisplay]([@(0.0.255) const]_[_^Display^ Display][@(0.0.255) `&]_[*@3 d])&]
+[s2;%% Sets the universal Display used for all node values. This 
+can be overridden for particular node by assigning node specific 
+Display.&]
+[s3;%% &]
+[s4; &]
+[s5;:TreeCtrl`:`:HighlightCtrl`(bool`): [_^TreeCtrl^ TreeCtrl][@(0.0.255) `&]_[* HighlightC
+trl]([@(0.0.255) bool]_[*@3 a]_`=_[@(0.0.255) true])&]
+[s2;%% Paints the background area of embedded widgets with the same 
+color as that used to paint regular values `- respects selection, 
+cursor position etc.&]
+[s3;%% &]
+[s4; &]
+[s5;:TreeCtrl`:`:SetScrollBarStyle`(const ScrollBar`:`:Style`&`): [_^TreeCtrl^ TreeCtrl
+][@(0.0.255) `&]_[* SetScrollBarStyle]([@(0.0.255) const]_[_^ScrollBar`:`:Style^ ScrollBa
+r`::Style][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Assigns a chameleon visual style of scrollbar of TreeCtrl.&]
+[s3;%% &]
 [s0; ]
