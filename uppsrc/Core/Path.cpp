@@ -922,7 +922,7 @@ bool RealizePath(const String& file)
 #define DIR_MIN 1
 #endif
 
-#ifdef POSIX
+#ifdef PLATFORM_POSIX
 bool RealizeDirectory(const String& d, int mode)
 #else
 bool RealizeDirectory(const String& d)
