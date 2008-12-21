@@ -1,6 +1,8 @@
+optimize_speed;
+
 file
 	SDraw.h,
-	SDraw.cpp,
+	SDraw.cpp optimize_speed,
 	agg readonly separator,
 	agg_array.h,
 	agg_basics.h,

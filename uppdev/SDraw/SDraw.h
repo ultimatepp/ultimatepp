@@ -3,6 +3,10 @@
 
 #include <Draw/Draw.h>
 
+#define  STIMING(x)          //   RTIMING(x)
+
+#define  AGGUPP 1
+
 #include "agg_basics.h"
 #include "agg_renderer_base.h"
 #include "agg_pixfmt_rgba.h"
@@ -14,14 +18,17 @@
 #include "agg_conv_stroke.h"
 #include "agg_conv_curve.h"
 
+
+#include <agg24/agg_scanline_bin.h>
+
 NAMESPACE_UPP
 
 struct Matrix2D : agg::trans_affine {};
 
 class SDraw {
 	typedef agg::renderer_base<agg::pixfmt_bgra32> renderer_base;
-//	typedef agg::renderer_scanline_bin_solid<renderer_base> renderer_solid;
-	typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
+	typedef agg::renderer_scanline_bin_solid<renderer_base> renderer_solid;
+//	typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
 	
 	Size                          size;
 	ImageBuffer&                  buffer;
@@ -33,7 +40,8 @@ class SDraw {
 
 	agg::rendering_buffer         rbuf;
 	agg::rasterizer_scanline_aa<> rasterizer;
-	agg::scanline_p8              scanline_p;
+	agg::scanline_bin             scanline_p;
+//	agg::scanline_p8              scanline_p;
 	renderer_base                 renb;
 	renderer_solid                renderer;
 	agg::pixfmt_bgra32            pixf;
