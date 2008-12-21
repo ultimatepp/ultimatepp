@@ -150,7 +150,7 @@ static char g_lion[] =
 	"M 99,265 L 96,284 L 92,299 L 73,339 L 73,333 L 87,300 L 99,265 L 99,265 L 99,265\n";
     
        
-void PaintLion(SDraw& w)
+void PaintLion(SDraw *sw, Draw *w)
 {
 	// Parse the lion and then detect its bounding
 	// box and arrange polygons orientations (make all polygons
@@ -159,11 +159,16 @@ void PaintLion(SDraw& w)
 	const char* ptr = g_lion;
 	unsigned npaths = 0;
 	Color color = Null;
+	Vector<Point> p;
 	
 	while (*ptr) {
 		if (*ptr != 'M' && isalnum(*ptr)) {
 			if(!IsNull(color)) {
-				w.Fill(color);
+				if(sw)
+					sw->Fill(color);
+				else
+					w->DrawPolygon(p, color);
+				p.Clear();
 			}
 			unsigned c = 0;
 			sscanf(ptr, "%x", &c);
@@ -182,20 +187,31 @@ void PaintLion(SDraw& w)
 				while (*ptr && !isdigit(*ptr))
 					ptr++;
 					
-				x = atof(ptr);
+				x = ScanDouble(ptr);
 				
 				while (*ptr &&  isdigit(*ptr))
 					ptr++;
 					
 				while (*ptr && !isdigit(*ptr))
 					ptr++;
-					
-				y = atof(ptr);
+
+				y = ScanDouble(ptr);
 				
-				if (c == 'M')
-					w.MoveTo(x, y);
+				if(c == 'M') {
+					if(sw)
+						sw->MoveTo(x, y);
+					else {
+						if(!IsNull(color))
+							w->DrawPolygon(p, color);
+						p.Clear();
+						p.Add(Point((int)x, (int)y));
+					}
+				}
 				else
-					w.LineTo(x, y);
+					if(sw)
+						sw->LineTo(x, y);
+					else
+						p.Add(Point((int)x, (int)y));
 				
 				while (*ptr && isdigit(*ptr))
 					ptr++;
@@ -208,7 +224,10 @@ void PaintLion(SDraw& w)
 				ptr++;
 		}
 	}
-	w.Fill(color);
+	if(sw)
+		sw->Fill(color);
+	else
+		w->DrawPolygon(p, color);
 }
 
 struct App : TopWindow {
@@ -224,6 +243,7 @@ struct App : TopWindow {
 		ImageBuffer ib(sz);
 		Fill(~ib, White(), ib.GetLength());
 		SDraw agd(ib);
+		
 //		agd.Rotate(angle / 100.00);
 //		agd.Translate(500, 500);
 //		agd.Scale(1.5, 1.5);
@@ -231,14 +251,45 @@ struct App : TopWindow {
 /*
 		agd.MoveTo(100 + 10, 100 - 10).LineTo(200 + 20, 100 - 60).LineTo(200 + 23, 200- 50).LineTo(20, 300)
 		   .Fill(100 * Green()).Stroke(Blue(), 2);*/
-		PaintLion(agd);
-		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-		agd.MoveTo(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(Cyan(), 4);
-		agd.MoveTo(300, 200).LineTo(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
+		PaintLion(&agd, NULL);
+//		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
+//		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
+//		agd.MoveTo(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(Cyan(), 4);
+//		agd.MoveTo(300, 200).LineTo(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
 //		d="M300,200 h-150 a150,150 0 1,0 150,-150 z"
   //      fill="red" stroke="blue" stroke-width="5"
+		for(int i = 0; i < 100; i++) {
+			RTIMING("Lion");
+			PaintLion(&agd, NULL);
+//			agd.MoveTo(200, 200).LineTo(200, 210).LineTo(210, 205).Fill(Blue());
+//			agd.MoveTo(200, 200).LineTo(200, 300).LineTo(300, 250).Fill(Blue());
+		}
+
+#if 0
+		for(int i = 0; i < 1000; i++) {
+			RTIMING("Small rect");
+			agd.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 105).Fill(Red());
+		}
+
+		for(int i = 0; i < 1000; i++) {
+			RTIMING("Large rect");
+			agd.MoveTo(200, 200).LineTo(200, 300).LineTo(300, 250).Fill(Blue());
+		}
+#endif
 		w.DrawImage(0, 0, ib);
+
+
+		ImageDraw iw(500, 500);
+		iw.DrawRect(0, 0, 500, 500, LtGray());
+		for(int i = 0; i < 100; i++) {
+			RTIMING("ImageDraw");
+			Vector<Point> p;
+//			p.Add(Point(200, 200));
+//			p.Add(Point(200, 210));
+//			p.Add(Point(210, 205));
+			PaintLion(NULL, &iw);
+		}
+		w.DrawImage(500, 0, iw);
 	}
 	
 	App() { Sizeable(); }

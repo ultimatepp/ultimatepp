@@ -28,6 +28,7 @@ namespace agg
                                   BaseRenderer& ren, 
                                   const ColorT& color)
     {
+        STIMING("render_scanline_aa_solid");
         int y = sl.y();
         unsigned num_spans = sl.num_spans();
         typename Scanline::const_iterator span = sl.begin();

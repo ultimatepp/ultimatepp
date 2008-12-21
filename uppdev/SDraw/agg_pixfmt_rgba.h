@@ -1914,12 +1914,77 @@ namespace agg
                     ((value_type*)&v)[order_type::G] = c.g;
                     ((value_type*)&v)[order_type::B] = c.b;
                     ((value_type*)&v)[order_type::A] = c.a;
+#if AGGUPP
+#if 1
+					while(len >= 16) {
+						((pixel_type*)p)[0] = v;
+						((pixel_type*)p)[1] = v;
+						((pixel_type*)p)[2] = v;
+						((pixel_type*)p)[3] = v;
+						((pixel_type*)p)[4] = v;
+						((pixel_type*)p)[5] = v;
+						((pixel_type*)p)[6] = v;
+						((pixel_type*)p)[7] = v;
+						((pixel_type*)p)[8] = v;
+						((pixel_type*)p)[9] = v;
+						((pixel_type*)p)[10] = v;
+						((pixel_type*)p)[11] = v;
+						((pixel_type*)p)[12] = v;
+						((pixel_type*)p)[13] = v;
+						((pixel_type*)p)[14] = v;
+						((pixel_type*)p)[15] = v;
+						p += 16 * 4;
+						len -= 16;
+					}
+					switch(len) {
+					case 15: ((pixel_type*)p)[14] = v;
+					case 14: ((pixel_type*)p)[13] = v;
+					case 13: ((pixel_type*)p)[12] = v;
+					case 12: ((pixel_type*)p)[11] = v;
+					case 11: ((pixel_type*)p)[10] = v;
+					case 10: ((pixel_type*)p)[9] = v;
+					case 9: ((pixel_type*)p)[8] = v;
+					case 8: ((pixel_type*)p)[7] = v;
+					case 7: ((pixel_type*)p)[6] = v;
+					case 6: ((pixel_type*)p)[5] = v;
+					case 5: ((pixel_type*)p)[4] = v;
+					case 4: ((pixel_type*)p)[3] = v;
+					case 3: ((pixel_type*)p)[2] = v;
+					case 2: ((pixel_type*)p)[1] = v;
+					case 1: ((pixel_type*)p)[0] = v;
+					}
+#else
+					while(len >= 8) {
+						((pixel_type*)p)[0] = v;
+						((pixel_type*)p)[1] = v;
+						((pixel_type*)p)[2] = v;
+						((pixel_type*)p)[3] = v;
+						((pixel_type*)p)[4] = v;
+						((pixel_type*)p)[5] = v;
+						((pixel_type*)p)[6] = v;
+						((pixel_type*)p)[7] = v;
+						p += 8 * 4;
+						len -= 8;
+					}
+					switch(len & 7) {
+					case 7: ((pixel_type*)p)[6] = v;
+					case 6: ((pixel_type*)p)[5] = v;
+					case 5: ((pixel_type*)p)[4] = v;
+					case 4: ((pixel_type*)p)[3] = v;
+					case 3: ((pixel_type*)p)[2] = v;
+					case 2: ((pixel_type*)p)[1] = v;
+					case 1: ((pixel_type*)p)[0] = v;
+					case 0:;
+					}
+#endif
+#else                    
                     do
                     {
                         *(pixel_type*)p = v;
                         p += 4;
                     }
                     while(--len);
+#endif
                 }
                 else
                 {
@@ -2004,6 +2069,45 @@ namespace agg
             if (c.a)
             {
                 value_type* p = (value_type*)m_rbuf->row_ptr(x, y, len) + (x << 2);
+#if AGGUPP
+				if(c.a == base_mask)
+	                do 
+	                {
+	                    if(*covers == base_mask) 
+	                    {
+	                        p[order_type::R] = c.r;
+	                        p[order_type::G] = c.g;
+	                        p[order_type::B] = c.b;
+	                        p[order_type::A] = base_mask;
+	                    }
+	                    else
+	                    {
+	                        blender_type::blend_pix(p, c.r, c.g, c.b, *covers);
+	                    }
+	                    p += 4;
+	                    ++covers;
+	                }
+	                while(--len);
+				else
+	                do 
+	                {
+	                    calc_type alpha = (calc_type(c.a) * (calc_type(*covers) + 1)) >> 8;
+	                    if(alpha == base_mask)
+	                    {
+	                        p[order_type::R] = c.r;
+	                        p[order_type::G] = c.g;
+	                        p[order_type::B] = c.b;
+	                        p[order_type::A] = base_mask;
+	                    }
+	                    else
+	                    {
+	                        blender_type::blend_pix(p, c.r, c.g, c.b, alpha, *covers);
+	                    }
+	                    p += 4;
+	                    ++covers;
+	                }
+	                while(--len);
+#else
                 do 
                 {
                     calc_type alpha = (calc_type(c.a) * (calc_type(*covers) + 1)) >> 8;
@@ -2022,6 +2126,7 @@ namespace agg
                     ++covers;
                 }
                 while(--len);
+#endif
             }
         }
 

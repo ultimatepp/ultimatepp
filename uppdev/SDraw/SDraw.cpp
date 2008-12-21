@@ -55,13 +55,17 @@ SDraw& SDraw::Arc(double rx, double ry, double angle, bool large_arc_flag,
 
 SDraw& SDraw::Fill(const RGBA& c)
 {
+	STIMING("Fill");
 	if(inpath)
 		path.close_polygon();
 	rasterizer.reset();
-	path.arrange_orientations_all_paths(agg::path_flags_cw);
-	rasterizer.add_path(curved_trans);
+	{ STIMING("arrange");
+	path.arrange_orientations_all_paths(agg::path_flags_cw); }
+	{ STIMING("rasterize path");
+	rasterizer.add_path(curved_trans); }
+	{ RTIMING("render");
 	renderer.color(agg::rgba8(c.r, c.g, c.b, c.a));
-	agg::render_scanlines(rasterizer, scanline_p, renderer);
+	agg::render_scanlines(rasterizer, scanline_p, renderer); }
 	inpath = false;
 	return *this;
 }

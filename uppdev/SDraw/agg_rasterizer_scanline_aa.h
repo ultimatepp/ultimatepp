@@ -233,6 +233,7 @@ namespace agg
         {
             for(;;)
             {
+                STIMING("sweep");
                 if(m_scan_y > m_outline.max_y()) return false;
                 sl.reset_spans();
                 unsigned num_cells = m_outline.scanline_num_cells(m_scan_y);
@@ -280,7 +281,6 @@ namespace agg
                 if(sl.num_spans()) break;
                 ++m_scan_y;
             }
-
             sl.finalize(m_scan_y);
             ++m_scan_y;
             return true;
