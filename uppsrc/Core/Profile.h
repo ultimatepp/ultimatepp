@@ -54,8 +54,8 @@ private:
 };
 
 #define RTIMING(x) \
-	static TimingInspector COMBINE(sTmStat, __LINE__)(x); \
-	TimingInspector::Routine COMBINE(sTmStatR, __LINE__)(COMBINE(sTmStat, __LINE__));
+	static UPP::TimingInspector COMBINE(sTmStat, __LINE__)(x); \
+	UPP::TimingInspector::Routine COMBINE(sTmStatR, __LINE__)(COMBINE(sTmStat, __LINE__));
 
 #define RACTIVATE_TIMING()    TimingInspector::Activate(true);
 #define RDEACTIVATE_TIMING()  TimingInspector::Activate(false);
