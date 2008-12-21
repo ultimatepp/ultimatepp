@@ -1,7 +1,6 @@
 uses
 	CtrlLib,
-	AggCtrl,
-	SDraw;
+	AggCtrl;
 
 file
 	aggtest.h,
