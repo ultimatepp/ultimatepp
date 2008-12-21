@@ -106,8 +106,24 @@ void AABuffer::Polygon(const Vector<Point>& p, RGBA color)
 		Pixel *l = Line(y >> 2);
 		for(int i = xl; i < xh; i++) {
 			if(l[i].complex)
-				delete l[i].complex;
+				delete[] l[i].complex;
 			l[i].simple = color;
+		}
+		for(int i = 0; i < 4; i++) {
+			Pixel *l = Line((y >> 2) + i);
+			Vector<int>& v = ln[y + i];
+			if(v.GetCount() >= 2) {
+				int x = v[0];
+				Pixel *p = l + (x >> 2);
+				while(x < v[1]) {
+					int n = min(3 - (x & 3) + 1, 4);
+					if(!p->complex)
+						p->complex = new RGBA[16];
+					Fill(p->complex + 4 * i, color, n);
+					x += n;
+					p++;
+				}
+			}
 		}
 	}
 }
@@ -138,12 +154,11 @@ struct RGBAi {
 Image AABuffer::Result()
 {
 	LTIMING("Downscale");
-	Size tsz = size / 4;
-	ImageBuffer tb(tsz);
+	ImageBuffer tb(size);
 	const Pixel *s = pixel;
 	RGBA *t = tb;
-	for(int y = 0; y < tsz.cy; y++) {
-		for(int x = 0; x < tsz.cx; x++) {
+	for(int y = 0; y < size.cy; y++) {
+		for(int x = 0; x < size.cx; x++) {
 			if(s->complex) {
 				RGBAi m;
 				const RGBA *c = s->complex;
@@ -199,7 +214,7 @@ struct App : TopWindow {
 	}
 	
 	App() {
-		p << Point(4 * 20, 4 * 20) << Point(4 * 200, 4 * 20) << Point(4 * 230, 4 * 150) << Point(4 * 120, 4 * 200);
+		p << Point(4 * 20, 4 * 20) << Point(4 * 200, 4 * 20) << Point(4 * 230, 4 * 150)/* << Point(4 * 120, 4 * 200)*/;
 	}
 };
 

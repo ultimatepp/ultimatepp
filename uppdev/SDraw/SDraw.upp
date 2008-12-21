@@ -1,7 +1,37 @@
-uses
-	agg24;
-
 file
 	SDraw.h,
-	SDraw.cpp;
+	SDraw.cpp,
+	agg readonly separator,
+	agg_array.h,
+	agg_basics.h,
+	agg_bezier_arc.h,
+	agg_bezier_arc.cpp,
+	agg_clip_liang_barsky.h,
+	agg_color_rgba.h,
+	agg_config.h,
+	agg_conv_adaptor_vcgen.h,
+	agg_conv_curve.h,
+	agg_conv_stroke.h,
+	agg_conv_transform.h,
+	agg_curves.h,
+	agg_curves.cpp,
+	agg_gamma_functions.h,
+	agg_math.h,
+	agg_math_stroke.h,
+	agg_path_storage.h,
+	agg_pixfmt_rgba.h,
+	agg_rasterizer_cells_aa.h,
+	agg_rasterizer_scanline_aa.h,
+	agg_rasterizer_sl_clip.h,
+	agg_renderer_base.h,
+	agg_renderer_scanline.h,
+	agg_rendering_buffer.h,
+	agg_scanline_p.h,
+	agg_scanline_u.h,
+	agg_trans_affine.h,
+	agg_trans_affine.cpp,
+	agg_shorten_path.h,
+	agg_vcgen_stroke.h,
+	agg_vcgen_stroke.cpp,
+	agg_vertex_sequence.h;
 

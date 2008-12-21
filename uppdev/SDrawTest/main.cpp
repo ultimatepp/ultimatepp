@@ -150,28 +150,26 @@ static char g_lion[] =
 	"M 99,265 L 96,284 L 92,299 L 73,339 L 73,333 L 87,300 L 99,265 L 99,265 L 99,265\n";
     
        
-unsigned parse_lion(agg::path_storage& path, agg::rgba8* colors, unsigned* path_idx) {
+void PaintLion(SDraw& w)
+{
 	// Parse the lion and then detect its bounding
 	// box and arrange polygons orientations (make all polygons
 	// oriented clockwise or counterclockwise)
 	
 	const char* ptr = g_lion;
 	unsigned npaths = 0;
+	Color color = Null;
 	
 	while (*ptr) {
 		if (*ptr != 'M' && isalnum(*ptr)) {
+			if(!IsNull(color)) {
+				w.Fill(color);
+			}
 			unsigned c = 0;
 			sscanf(ptr, "%x", &c);
-			
-			// New color. Every new color creates new path in the path object.
-			path.close_polygon();
-			colors[npaths] = agg::rgb8_packed(c);
-			path_idx[npaths] = path.start_new_path();
-			npaths++;
-			
+			color = Color(c >> 16, (c >> 8) & 255, c & 255);
 			while (*ptr && *ptr != '\n')
 				ptr++;
-				
 			if (*ptr == '\n')
 				ptr++;
 		} else {
@@ -194,12 +192,10 @@ unsigned parse_lion(agg::path_storage& path, agg::rgba8* colors, unsigned* path_
 					
 				y = atof(ptr);
 				
-				if (c == 'M') {
-					path.close_polygon();
-					path.move_to(x, y);
-				} else {
-					path.line_to(x, y);
-				}
+				if (c == 'M')
+					w.MoveTo(x, y);
+				else
+					w.LineTo(x, y);
 				
 				while (*ptr && isdigit(*ptr))
 					ptr++;
@@ -212,9 +208,7 @@ unsigned parse_lion(agg::path_storage& path, agg::rgba8* colors, unsigned* path_
 				ptr++;
 		}
 	}
-	
-	path.arrange_orientations_all_paths(agg::path_flags_cw);
-	return npaths;
+	w.Fill(color);
 }
 
 struct App : TopWindow {
@@ -227,46 +221,29 @@ struct App : TopWindow {
 
 	virtual void Paint(Draw& w) {
 		Size sz = GetSize();
-		SDraw agd(sz.cx, sz.cy);
-/*		agd.SetBackground(agg::rgba(0, 1.0, 1.0, false));
-		agd.DrawLine(0,0,100,100,10);
-		agd.SetBrushColor(agg::rgba(0, 0, 0));
-		agd.DrawEllipse(0, 0, sz.cx, sz.cy, 3);
-		
-		w.DrawImage(0, 0, agd.Render());
-*/
-		agg::path_storage path;
-	
-		agg::rgba8        colors[100];
-		unsigned          path_idx[100];
-		unsigned          npaths;
-		double            x1,y1,x2,y2;
-		double            base_dx,base_dy,scale;
-	
-		npaths = ::parse_lion(path, colors, path_idx);
-		agg::pod_array_adaptor<unsigned> pathidx(path_idx, 100);
-		agg::bounding_rect(path, pathidx, 0, npaths, &x1, &y1, &x2, &y2);
-		base_dx=(x2-x1);
-		base_dy=(y2-y1);
-		
-		scale = min(sz.cy / base_dy, sz.cx / base_dx);
-
-		agd.m_renb.clear(agg::rgba8(255, 255, 255));
-		agg::trans_affine mtx;
-		mtx *= agg::trans_affine_translation(-base_dx/2.0, -base_dy/2.0);
-		mtx *= agg::trans_affine_scaling(scale, scale);
-		mtx *= agg::trans_affine_rotation(angle / 100.00);
-		mtx *= agg::trans_affine_translation(sz.cx/2, sz.cy/2);
-		{ RTIMING("Render");
-		agg::conv_transform<agg::path_storage, agg::trans_affine> trans(path, mtx);
-		agg::render_all_paths(agd.m_ras, agd.m_sl, agd.m_ren, trans, colors, path_idx, npaths);
-		}
-
-		w.DrawImage(0, 0, agd.buffer);
+		ImageBuffer ib(sz);
+		Fill(~ib, White(), ib.GetLength());
+		SDraw agd(ib);
+//		agd.Rotate(angle / 100.00);
+//		agd.Translate(500, 500);
+//		agd.Scale(1.5, 1.5);
+//		agd.MoveTo(100, 100).LineTo(200.5, 100).LineTo(200, 200).LineTo(0, 300).Stroke(Blue(), 10);
+/*
+		agd.MoveTo(100 + 10, 100 - 10).LineTo(200 + 20, 100 - 60).LineTo(200 + 23, 200- 50).LineTo(20, 300)
+		   .Fill(100 * Green()).Stroke(Blue(), 2);*/
+		PaintLion(agd);
+		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
+		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
+		agd.MoveTo(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(Cyan(), 4);
+		agd.MoveTo(300, 200).LineTo(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
+//		d="M300,200 h-150 a150,150 0 1,0 150,-150 z"
+  //      fill="red" stroke="blue" stroke-width="5"
+		w.DrawImage(0, 0, ib);
 	}
 	
 	App() { Sizeable(); }
 };
+
 
 GUI_APP_MAIN
 {

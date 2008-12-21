@@ -1,4 +1,3 @@
 #ifndef _SDraw_icpp_init_stub
 #define _SDraw_icpp_init_stub
-#include "agg24/init"
 #endif

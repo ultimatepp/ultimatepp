@@ -3,54 +3,76 @@
 
 #include <Draw/Draw.h>
 
-#include <agg24/agg_rendering_buffer.h>
-#include <agg24/agg_basics.h>
-#include <agg24/agg_renderer_base.h>
-#include <agg24/agg_pixfmt_rgba.h>
-#include <agg24/agg_renderer_scanline.h>
-#include <agg24/agg_rasterizer_scanline_aa.h>
-#include <agg24/agg_rasterizer_outline_aa.h>
-#include <agg24/agg_scanline_u.h>
-#include <agg24/agg_bounding_rect.h>
-#include <agg24/agg_path_storage.h>
-#include <agg24/agg_conv_stroke.h>
-#include <agg24/agg_ellipse.h>
+#include "agg_basics.h"
+#include "agg_renderer_base.h"
+#include "agg_pixfmt_rgba.h"
+#include "agg_renderer_scanline.h"
+#include "agg_rasterizer_scanline_aa.h"
+#include "agg_scanline_u.h"
+#include "agg_scanline_p.h"
+#include "agg_path_storage.h"
+#include "agg_conv_stroke.h"
+#include "agg_conv_curve.h"
 
 NAMESPACE_UPP
 
-struct SDraw {
+struct Matrix2D : agg::trans_affine {};
+
+class SDraw {
 	typedef agg::renderer_base<agg::pixfmt_bgra32> renderer_base;
+//	typedef agg::renderer_scanline_bin_solid<renderer_base> renderer_solid;
 	typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
-
-	Size                                           sz;
-
-	Rect                                           m_r;
-	ImageBuffer                                    buffer;
-
-	agg::rendering_buffer                          m_rbuf;
-	agg::rasterizer_scanline_aa<>                  m_ras;
-//	agg::rasterizer_outline_aa<renderer_base>      m_ras;
-	agg::scanline_u8                               m_sl;
-
-	renderer_base                                  m_renb;
-	renderer_solid                                 m_ren;
-	agg::pixfmt_bgra32                             m_pixf;
 	
-	void AttachBuffers();
+	Size                          size;
+	ImageBuffer&                  buffer;
+	
+	Matrix2D                      mtx;
 
+	agg::path_storage             path;
+	bool                          inpath;
+
+	agg::rendering_buffer         rbuf;
+	agg::rasterizer_scanline_aa<> rasterizer;
+	agg::scanline_p8              scanline_p;
+	renderer_base                 renb;
+	renderer_solid                renderer;
+	agg::pixfmt_bgra32            pixf;
+
+
+	typedef agg::conv_curve<agg::path_storage>  Curved;
+	typedef agg::conv_stroke<Curved>            CurvedStroked;
+	typedef agg::conv_transform<CurvedStroked>  CurvedStrokedTrans;
+	typedef agg::conv_transform<Curved>         CurvedTrans;
+
+	Curved                        curved;
+	CurvedStroked                 curved_stroked;
+	CurvedStrokedTrans            curved_stroked_trans;
+	CurvedTrans                   curved_trans;
+	
 public:
-	void DrawLine(int x1, int y1, int x2, int y2, int width = 0);
-	void DrawEllipse(int x1, int y1, int cx, int cy, int width);
+	SDraw& MoveTo(double x, double y);
+	SDraw& LineTo(double x, double y);
+	SDraw& Quadratic(double x1, double y1, double x, double y);
+	SDraw& Quadratic(double x, double y);
+	SDraw& Cubic(double x1, double y1, double x2, double y2, double x, double y);
+	SDraw& Cubic(double x2, double y2, double x, double y);
+	SDraw& Arc(double rx, double ry, double angle, bool large_arc_flag, bool sweep_flag,
+	           double x, double y);
 	
-	void SetBackground(const agg::rgba8&  ct)	{ m_renb.clear(ct); }
-	void SetBrushColor(const agg::rgba8&  ct)   { m_ren.color(ct); }
+	SDraw& Fill(const RGBA& rgba);
+	SDraw& Stroke(const RGBA& rgba, int width);
 	
-	Image Render();
+	void   Apply(const Matrix2D& m)       { mtx *= m; }
+	void   operator*=(const Matrix2D& m)  { Apply(m); }
 	
-	SDraw(int cx, int cy);
+	void   Translate(double x, double y);
+	void   Rotate(double a);
+	void   Scale(double scalex, double scaley);
+	void   Scale(double scale);
+
+	SDraw(ImageBuffer& ib);
 };
 
 END_UPP_NAMESPACE
 
 #endif
-
