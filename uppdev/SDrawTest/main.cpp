@@ -230,11 +230,101 @@ void PaintLion(SDraw *sw, Draw *w)
 		w->DrawPolygon(p, color);
 }
 
-struct App : TopWindow {
-	int angle;
+inline double fx_to_dbl(const FIXED& p) {
+	return double(p.value) + double(p.fract) * (1.0 / 65536.0);
+}
 
-	virtual void MouseMove(Point p, dword keyflags) {
-		angle = p.y;
+void RenderCharPath(const char* gbuf,
+                    unsigned total_size,
+                    SDraw& sw)
+{
+	bool flip_y = true;
+    const char* cur_glyph = gbuf;
+    const char* end_glyph = gbuf + total_size;
+    double x, y;
+    
+    while(cur_glyph < end_glyph)
+    {
+        const TTPOLYGONHEADER* th = (TTPOLYGONHEADER*)cur_glyph;
+        
+        const char* end_poly = cur_glyph + th->cb;
+        const char* cur_poly = cur_glyph + sizeof(TTPOLYGONHEADER);
+
+        x = fx_to_dbl(th->pfxStart.x);
+        y = fx_to_dbl(th->pfxStart.y);
+        if(flip_y) y = -y;
+        sw.MoveTo(x, y);
+
+        while(cur_poly < end_poly)
+        {
+            const TTPOLYCURVE* pc = (const TTPOLYCURVE*)cur_poly;
+            
+            if (pc->wType == TT_PRIM_LINE)
+            {
+                int i;
+                for (i = 0; i < pc->cpfx; i++)
+                {
+                    x = fx_to_dbl(pc->apfx[i].x);
+                    y = fx_to_dbl(pc->apfx[i].y);
+                    if(flip_y) y = -y;
+                    sw.LineTo(x, y);
+                }
+            }
+            
+            if (pc->wType == TT_PRIM_QSPLINE)
+            {
+                int u;
+                for (u = 0; u < pc->cpfx - 1; u++)  // Walk through points in spline
+                {
+                    POINTFX pnt_b = pc->apfx[u];    // B is always the current point
+                    POINTFX pnt_c = pc->apfx[u+1];
+                    
+                    if (u < pc->cpfx - 2)           // If not on last spline, compute C
+                    {
+                        // midpoint (x,y)
+                        *(int*)&pnt_c.x = (*(int*)&pnt_b.x + *(int*)&pnt_c.x) / 2;
+                        *(int*)&pnt_c.y = (*(int*)&pnt_b.y + *(int*)&pnt_c.y) / 2;
+                    }
+                    
+                    double x2, y2;
+                    x  = fx_to_dbl(pnt_b.x);
+                    y  = fx_to_dbl(pnt_b.y);
+                    x2 = fx_to_dbl(pnt_c.x);
+                    y2 = fx_to_dbl(pnt_c.y);
+                    if(flip_y) { y = -y; y2 = -y2; }
+                    sw.Quadratic(x, y, x2, y2);
+                }
+            }
+            cur_poly += sizeof(WORD) * 2 + sizeof(POINTFX) * pc->cpfx;
+        }
+        cur_glyph += th->cb;
+    }
+}
+
+void RenderCharacter(SDraw& sw, int ch, Font fnt)
+{
+	ScreenDraw w;
+	w.SetFont(fnt);
+	GLYPHMETRICS gm;
+	MAT2 m_matrix;
+    memset(&m_matrix, 0, sizeof(m_matrix));
+    m_matrix.eM11.value = 1;
+    m_matrix.eM22.value = 1;
+	int gsz = GetGlyphOutlineW(w.GetHandle(), ch, GGO_NATIVE, &gm, 0, NULL, &m_matrix);
+	if(gsz < 0)
+		return;
+	Buffer<char> gb(gsz);
+	gsz = GetGlyphOutlineW(w.GetHandle(), ch, GGO_NATIVE, &gm, gsz, gb, &m_matrix);
+	if(gsz < 0)
+		return;
+	RenderCharPath(gb, gsz, sw);
+}
+
+struct App : TopWindow {
+	Point p;
+
+	virtual void MouseMove(Point _p, dword keyflags) {
+		p = _p;
 		Refresh();
 	}
 
@@ -244,21 +334,24 @@ struct App : TopWindow {
 		Fill(~ib, White(), ib.GetLength());
 		SDraw agd(ib);
 		
-//		agd.Rotate(angle / 100.00);
-//		agd.Translate(500, 500);
-//		agd.Scale(1.5, 1.5);
+	//	agd.Scale(p.x / 100.0, p.y / 100.0);
+		agd.Rotate(p.y / 100.00);
+		agd.Translate(500, 300);
+//		agd.Scale(1.4);
 //		agd.MoveTo(100, 100).LineTo(200.5, 100).LineTo(200, 200).LineTo(0, 300).Stroke(Blue(), 10);
 /*
 		agd.MoveTo(100 + 10, 100 - 10).LineTo(200 + 20, 100 - 60).LineTo(200 + 23, 200- 50).LineTo(20, 300)
 		   .Fill(100 * Green()).Stroke(Blue(), 2);*/
-		PaintLion(&agd, NULL);
+		agd.AntiAliased(true);
+//		PaintLion(&agd, NULL);
 //		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
 //		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
 //		agd.MoveTo(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(Cyan(), 4);
 //		agd.MoveTo(300, 200).LineTo(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
 //		d="M300,200 h-150 a150,150 0 1,0 150,-150 z"
   //      fill="red" stroke="blue" stroke-width="5"
-		for(int i = 0; i < 100; i++) {
+
+		for(int i = 0; i < 0; i++) {
 			RTIMING("Lion");
 			PaintLion(&agd, NULL);
 //			agd.MoveTo(200, 200).LineTo(200, 210).LineTo(210, 205).Fill(Blue());
@@ -271,25 +364,56 @@ struct App : TopWindow {
 			agd.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 105).Fill(Red());
 		}
 
+#endif
+
+#if 0
 		for(int i = 0; i < 1000; i++) {
 			RTIMING("Large rect");
-			agd.MoveTo(200, 200).LineTo(200, 300).LineTo(300, 250).Fill(Blue());
+			agd.MoveTo(200, 200).LineTo(200, 600).LineTo(600, 600).LineTo(600, 200).Fill(Blue());
 		}
-#endif
-		w.DrawImage(0, 0, ib);
 
+		for(int i = 0; i < 1000; i++) {
+			RTIMING("Small rect");
+			agd.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 110).LineTo(100, 110).Fill(Red());
+		}
+
+		agd.StrokeColor(Blue());
+		agd.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 110).LineTo(100, 110).Stroke();
+
+		agd.MoveTo(50, 200).Arc(50, 50, 0, true, true, 150, 200).Arc(50, 50, 0, true, true, 50, 200)
+		   .Stroke(Blue(), 2);
+		
+		agd.MoveTo(0, 0).Ellipse(100, 100).Stroke();
+
+#endif
+///		agd.Scale(1.5);
+		Matrix2D m;
+//		m.rotate(p.x / 300.0);
+//		agd.MoveTo(0, 0).LineTo(0, 600).LineTo(600, 600).LineTo(200, 0)
+//			.Fill(Black());
+//		   .Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true)
+//		   .Stroke(Black(), 1);
+
+		agd.EvenOdd(true);
+		RenderCharacter(agd, 'R', Courier(14));
+		agd.Fill(Black());
+//		agd.Fill(Black()).Stroke(LtRed(), 2);
+//		agd.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
+
+		w.DrawImage(0, 0, ib);
+		w.DrawText(550, 300, p.y, "R", Courier(14), Black());
 
 		ImageDraw iw(500, 500);
 		iw.DrawRect(0, 0, 500, 500, LtGray());
-		for(int i = 0; i < 100; i++) {
+		for(int i = 0; i < 1; i++) {
 			RTIMING("ImageDraw");
 			Vector<Point> p;
 //			p.Add(Point(200, 200));
 //			p.Add(Point(200, 210));
 //			p.Add(Point(210, 205));
-			PaintLion(NULL, &iw);
+		//	PaintLion(NULL, &iw);
 		}
-		w.DrawImage(500, 0, iw);
+	//	w.DrawImage(500, 0, iw);
 	}
 	
 	App() { Sizeable(); }

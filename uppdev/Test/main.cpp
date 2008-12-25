@@ -31,6 +31,9 @@ Test::Test()
 
 GUI_APP_MAIN
 {
+	for(int i = -100; i < 100; i++)
+		DLOG(i << " " << i % 10 << " " << i % -10);
+	return;
 	Test().Run();
 }
 
