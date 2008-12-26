@@ -103,6 +103,7 @@ public:
 	SDraw& Quadratic(double x, double y);
 	SDraw& Cubic(double x1, double y1, double x2, double y2, double x, double y);
 	SDraw& Cubic(double x2, double y2, double x, double y);
+	SDraw& Close();
 
 	SDraw& Fill();
 	SDraw& Stroke();
@@ -138,6 +139,7 @@ public:
 void Arc(SDraw& sw, double x, double y, double rx, double ry,
                     double start_angle, double sweep_angle, bool startline);
 
+void RenderCharacter(SDraw& sw, int ch, Font fnt);
 
 END_UPP_NAMESPACE
 

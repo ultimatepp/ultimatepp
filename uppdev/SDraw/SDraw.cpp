@@ -46,6 +46,12 @@ SDraw& SDraw::Cubic(double x2, double y2, double x, double y)
 	return *this;
 }
 
+SDraw& SDraw::Close()
+{
+	path.close_polygon();
+	return *this;
+}
+
 SDraw& SDraw::Fill()
 {
 	STIMING("Fill");
