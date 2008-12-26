@@ -330,6 +330,7 @@ public:
 
 #ifdef PLATFORM_XFT
 	String     GetFileName() const;
+	XftFont   *GetXftFont() const                 { return ptr->xftfont0; }
 #endif
 #ifdef PLATFORM_WIN32
 	HFONT      GetHFONT() const                   { return ptr->hfont; }
