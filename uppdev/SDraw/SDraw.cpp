@@ -46,13 +46,6 @@ SDraw& SDraw::Cubic(double x2, double y2, double x, double y)
 	return *this;
 }
 
-SDraw& SDraw::Arc(double rx, double ry, double angle, bool large_arc_flag,
-                  bool sweep_flag, double x2, double y2)
-{
-	path.arc_to(rx, ry, angle, large_arc_flag, sweep_flag, x2, y2);
-	return *this;
-}
-
 SDraw& SDraw::Fill()
 {
 	STIMING("Fill");
@@ -140,16 +133,6 @@ SDraw& SDraw::Fill(const RGBA& rgba)
 Pointf SDraw::Current() const
 {
 	return Pointf(path.last_x(), path.last_y());
-}
-
-SDraw& SDraw::Ellipse(double rx, double ry)
-{
-	Pointf l = Current();
-	MoveTo(l.x, ry / 2);
-	Arc(rx / 2, ry / 2, 0, true, true, l.x + rx, l.y + ry / 2);
-	Arc(rx / 2, ry / 2, 0, true, true, l.x, l.y + ry / 2);
-	MoveTo(l.x, l.y);
-	return *this;
 }
 
 SDraw& SDraw::Stroke(const RGBA& rgba, double width)

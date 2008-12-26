@@ -104,9 +104,6 @@ public:
 	SDraw& Cubic(double x1, double y1, double x2, double y2, double x, double y);
 	SDraw& Cubic(double x2, double y2, double x, double y);
 
-	SDraw& Arc(double rx, double ry, double angle, bool large_arc_flag, bool sweep_flag,
-	           double x, double y);
-
 	SDraw& Fill();
 	SDraw& Stroke();
 	
@@ -137,6 +134,10 @@ public:
 
 	SDraw(ImageBuffer& ib);
 };
+
+void Arc(SDraw& sw, double x, double y, double rx, double ry,
+                    double start_angle, double sweep_angle, bool startline);
+
 
 END_UPP_NAMESPACE
 

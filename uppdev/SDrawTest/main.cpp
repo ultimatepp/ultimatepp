@@ -335,8 +335,8 @@ struct App : TopWindow {
 		SDraw agd(ib);
 		
 	//	agd.Scale(p.x / 100.0, p.y / 100.0);
-		agd.Rotate(p.y / 100.00);
-		agd.Translate(500, 300);
+//		agd.Rotate(p.y / 100.00);
+//		agd.Translate(500, 300);
 //		agd.Scale(1.4);
 //		agd.MoveTo(100, 100).LineTo(200.5, 100).LineTo(200, 200).LineTo(0, 300).Stroke(Blue(), 10);
 /*
@@ -400,6 +400,18 @@ struct App : TopWindow {
 //		agd.Fill(Black()).Stroke(LtRed(), 2);
 //		agd.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
 
+		agd.Begin();
+		agd.LineJoin(LINEJOIN_ROUND);
+		agd.MoveTo(100, 100);
+		Arc(agd, 100, 100, 150, 100, p.x / 100.0, p.y / 100.0, true);
+		agd.Fill(LtBlue());
+		agd.Stroke(Black(), 2);
+		agd.MoveTo(100, 100);
+		Arc(agd, 100, 100, 150, 100, p.x / 100.0 + p.y / 100.0, M_2PI - p.x / 100.0, true);
+		agd.Fill(LtRed());
+		agd.Stroke(Black(), 2);
+		Arc(agd, 500, 300, 100, 100, 0, M_PI * 2, false);
+
 		w.DrawImage(0, 0, ib);
 		w.DrawText(550, 300, p.y, "R", Courier(14), Black());
 
@@ -414,6 +426,7 @@ struct App : TopWindow {
 		//	PaintLion(NULL, &iw);
 		}
 	//	w.DrawImage(500, 0, iw);
+	
 	}
 	
 	App() { Sizeable(); }
