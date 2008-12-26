@@ -121,6 +121,7 @@ public:
 
 	void            Show(bool b = true);
 	void            Hide()                                 { Show(false); }
+	bool            IsVisible() const                      { return true; }
 
 	void            Info(const char *title, const char *text, int timeout = 10)    { Message(title, text, timeout); }
 	void            Warning(const char *title, const char *text, int timeout = 10) { Message(title, text, timeout); }
@@ -198,6 +199,7 @@ public:
 
 	void            Show(bool b = true);
 	void            Hide()                                 { Show(false); }
+	bool            IsVisible() const                      { return visible; }
 	void            Break()                                { EndLoop(0); }
 	void            Run()                                  { EventLoop(this); }
 
