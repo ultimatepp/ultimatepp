@@ -1,11 +1,13 @@
 #include "SDraw.h"
 
+NAMESPACE_UPP
+
 //----------------------------------------------------------------------------
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
 // Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// is granted provided this copyright notice appears in all coM_PIes. 
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -22,93 +24,93 @@
 
 // Recycled for U++ by Miroslav Fidler 2008
 
-const double bezier_arc_angle_epsilon = 0.01;
-
 void sSubArc(double cx, double cy, double rx, double ry, 
-          double start_angle, double sweep_angle,
-          double* curve)
+             double start_angle, double sweep_angle,
+             double *px, double *py)
 {
 	double x0 = cos(sweep_angle / 2.0);
 	double y0 = sin(sweep_angle / 2.0);
 	double tx = (1.0 - x0) * 4.0 / 3.0;
 	double ty = y0 - tx * x0 / y0;
-	double px[4];
-	double py[4];
-	px[0] =  x0;
-	py[0] = -y0;
-	px[1] =  x0 + tx;
-	py[1] = -ty;
-	px[2] =  x0 + tx;
-	py[2] =  ty;
-	px[3] =  x0;
-	py[3] =  y0;
+	double x[4], y[4];
+	x[0] =  x0;
+	y[0] = -y0;
+	x[1] =  x0 + tx;
+	y[1] = -ty;
+	x[2] =  x0 + tx;
+	y[2] =  ty;
+	x[3] =  x0;
+	y[3] =  y0;
 	
 	double sn = sin(start_angle + sweep_angle / 2.0);
 	double cs = cos(start_angle + sweep_angle / 2.0);
 	
 	unsigned i;
 	for(i = 0; i < 4; i++) {
-	curve[i * 2]     = cx + rx * (px[i] * cs - py[i] * sn);
-	curve[i * 2 + 1] = cy + ry * (px[i] * sn + py[i] * cs);
+		px[i] = cx + rx * (x[i] * cs - y[i] * sn);
+		py[i] = cy + ry * (x[i] * sn + y[i] * cs);
 	}
 }
 
 void Arc(SDraw& sw, double x,  double y, double rx, double ry, 
-                    double start_angle,  double sweep_angle)
+                    double start_angle,  double sweep_angle, bool startline)
 {
+	const double bezier_arc_angle_epsilon = 0.01;
 	start_angle = fmod(start_angle, 2.0 * M_PI);
 	if(sweep_angle >=  2.0 * M_PI) sweep_angle =  2.0 * M_PI;
 	if(sweep_angle <= -2.0 * M_PI) sweep_angle = -2.0 * M_PI;
-
 	if(fabs(sweep_angle) < 1e-10) {
-		sw.MoveTo(x + rx * cos(start_angle), 
-		m_num_vertices = 4;
-		m_cmd = path_cmd_line_to;
-		m_vertices[0] = ;
-		m_vertices[1] = y + ry * sin(start_angle);
-		m_vertices[2] = x + rx * cos(start_angle + sweep_angle);
-		m_vertices[3] = y + ry * sin(start_angle + sweep_angle);
+		double px = x + rx * cos(start_angle);
+		double py = y + ry * sin(start_angle);
+		if(startline)
+			sw.LineTo(px, py);
+		else
+			sw.MoveTo(px, py);
+		sw.LineTo(x + rx * cos(start_angle + sweep_angle), y + ry * sin(start_angle + sweep_angle));
 		return;
 	}
+	double total_sweep = 0.0;
+	double local_sweep = 0.0;
+	double prev_sweep;
+	bool done = false;
+	bool first = true;
+	for(int i = 0; !done && i < 4; i++) {
+		if(sweep_angle < 0.0) {
+			prev_sweep  = total_sweep;
+			local_sweep = -M_PI * 0.5;
+			total_sweep -= M_PI * 0.5;
+			if(total_sweep <= sweep_angle + bezier_arc_angle_epsilon) {
+			    local_sweep = sweep_angle - prev_sweep;
+			    done = true;
+			}
+		}
+		else {
+			prev_sweep  = total_sweep;
+			local_sweep =  M_PI * 0.5;
+			total_sweep += M_PI * 0.5;
+			if(total_sweep >= sweep_angle - bezier_arc_angle_epsilon) {
+			    local_sweep = sweep_angle - prev_sweep;
+	    		done = true;
+			}
+		}
+		double px[4];
+		double py[4];
+		sSubArc(x, y, rx, ry, start_angle, local_sweep, px, py);
+		DDUMP(i);
+		DDUMP(px[0]);
+		DDUMP(py[0]);
+		DDUMP(px[3]);
+		DDUMP(py[3]);
+		if(first)
+			if(startline)
+				sw.LineTo(px[0], py[0]);
+			else
+				sw.MoveTo(px[0], py[0]);
+		first = false;
+		sw.Cubic(px[1], py[1], px[2], py[2], px[3], py[3]);
+		start_angle += local_sweep;
+	}
+	DLOG("----------");
+}
 
-        double total_sweep = 0.0;
-        double local_sweep = 0.0;
-        double prev_sweep;
-        m_num_vertices = 2;
-        m_cmd = path_cmd_curve4;
-        bool done = false;
-        do
-        {
-            if(sweep_angle < 0.0)
-            {
-                prev_sweep  = total_sweep;
-                local_sweep = -pi * 0.5;
-                total_sweep -= pi * 0.5;
-                if(total_sweep <= sweep_angle + bezier_arc_angle_epsilon)
-                {
-                    local_sweep = sweep_angle - prev_sweep;
-                    done = true;
-                }
-            }
-            else
-            {
-                prev_sweep  = total_sweep;
-                local_sweep =  pi * 0.5;
-                total_sweep += pi * 0.5;
-                if(total_sweep >= sweep_angle - bezier_arc_angle_epsilon)
-                {
-                    local_sweep = sweep_angle - prev_sweep;
-                    done = true;
-                }
-            }
-
-            arc_to_bezier(x, y, rx, ry, 
-                          start_angle, 
-                          local_sweep, 
-                          m_vertices + m_num_vertices - 2);
-
-            m_num_vertices += 6;
-            start_angle += local_sweep;
-        }
-        while(!done && m_num_vertices < 26);
-    }
+END_UPP_NAMESPACE

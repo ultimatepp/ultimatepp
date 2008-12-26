@@ -1,0 +1,6 @@
+#ifndef _md5_icpp_init_stub
+#define _md5_icpp_init_stub
+#include "Core/init"
+#include "Web/init"
+#include "plugin\zip/init"
+#endif
