@@ -149,6 +149,9 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 		cc << " -arch i386";
 	}
 
+	if(HasFlag("SSE2"))
+		cc << " -msse2 -mfpmath=sse";
+
 	String cc_speed = cc;
 	bool   release = false;
 
@@ -161,9 +164,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 		if(opt == R_SPEED || pkg.optimize_speed)
 			cc = cc_speed;
 	}
-
-	if(HasFlag("SSE2"))
-		cc << " -msse2 -mfpmath=sse";
 
 	Vector<String> sfile, isfile;
 	Vector<String> soptions, isoptions;

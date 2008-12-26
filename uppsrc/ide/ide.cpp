@@ -336,7 +336,7 @@ bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& e
 	error = ln.Find("error", 0) > 0 ? 1 : (ln.Find("warning", 0) > 0 ? 2 : 3);
 	while(*s == ' ' || *s == '\t')
 		s++;
-	for(; *s; s++) {
+	for(; s < ln.End(); s++) {
 		if(*s != '\"' && (byte)*s >= 32 && *s != '(' && (file.GetLength() < 3 || *s != ':'))
 			file.Cat(*s);
 		else {
