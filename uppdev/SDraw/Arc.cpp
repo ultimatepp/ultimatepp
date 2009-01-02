@@ -96,11 +96,6 @@ void Arc(SDraw& sw, double x,  double y, double rx, double ry,
 		double px[4];
 		double py[4];
 		sSubArc(x, y, rx, ry, start_angle, local_sweep, px, py);
-		DDUMP(i);
-		DDUMP(px[0]);
-		DDUMP(py[0]);
-		DDUMP(px[3]);
-		DDUMP(py[3]);
 		if(first)
 			if(startline)
 				sw.LineTo(px[0], py[0]);
@@ -110,7 +105,6 @@ void Arc(SDraw& sw, double x,  double y, double rx, double ry,
 		sw.Cubic(px[1], py[1], px[2], py[2], px[3], py[3]);
 		start_angle += local_sweep;
 	}
-	DLOG("----------");
 }
 
 END_UPP_NAMESPACE

@@ -3,6 +3,9 @@
 
 using namespace Upp;
 
+#define TOPICFILE <SDrawTest/app.tpp/all.i>
+#include <Core/topic_group.h>
+
 static char g_lion[] =
 	"f2cc99\n"
 	"M 69,18 L 82,8 L 99,3 L 118,5 L 135,12 L 149,21 L 156,13 L 165,9 L 177,13 L 183,28 L 180,50 L 164,91 L 155,107 L 154,114 L 151,121 L 141,127 L 139,136 L 155,206 L 157,251 L 126,342 L 133,357 L 128,376 L 83,376 L 75,368 L 67,350 L 61,350 L 53,369 L 4,369 L 2,361 L 5,354 L 12,342 L 16,321 L 4,257 L 4,244 L 7,218 L 9,179 L 26,127 L 43,93 L 32,77 L 30,70 L 24,67 L 16,49 L 17,35 L 18,23 L 30,12 L 40,7 L 53,7 L 62,12 L 69,18 L 69,18 L 69,18\n"
@@ -239,39 +242,51 @@ struct App : TopWindow {
 	}
 
 	virtual void Paint(Draw& w) {
+		RTIMING("Paint");
 		Size sz = GetSize();
 		ImageBuffer ib(sz);
 		Fill(~ib, White(), ib.GetLength());
-		SDraw agd(ib);
+		SDraw sw(ib);
+
+		sw.AntiAliased(true);
+		sw.Scale(0.0005 * p.x);
 		
-	//	agd.Scale(p.x / 100.0, p.y / 100.0);
-		agd.Rotate(p.y / 100.00);
-		agd.Translate(500, 300);
-//		agd.Scale(1.4);
-//		agd.MoveTo(100, 100).LineTo(200.5, 100).LineTo(200, 200).LineTo(0, 300).Stroke(Blue(), 10);
+		{
+			static RichText txt = ParseQTF(GetTopic("topic://SDrawTest/app/main$en-us"));
+			RTIMING("QTF");
+			txt.Paint(sw, 0, 0, 4000);
+		}
+		   		
+	//	sw.Scale(p.x / 100.0, p.y / 100.0);
+//		Arc(sw, 500, 300, 400, 100, 0, M_2PI);
+//		sw.FillMask(0);
+	//	sw.Rotate(p.y / 100.00);
+//		sw.Scale(1.4);
+//		sw.MoveTo(100, 100).LineTo(200.5, 100).LineTo(200, 200).LineTo(0, 300).Stroke(Blue(), 10);
 /*
-		agd.MoveTo(100 + 10, 100 - 10).LineTo(200 + 20, 100 - 60).LineTo(200 + 23, 200- 50).LineTo(20, 300)
+		sw.MoveTo(100 + 10, 100 - 10).LineTo(200 + 20, 100 - 60).LineTo(200 + 23, 200- 50).LineTo(20, 300)
 		   .Fill(100 * Green()).Stroke(Blue(), 2);*/
-		agd.AntiAliased(true);
-//		PaintLion(&agd, NULL);
-//		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-//		agd.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-//		agd.MoveTo(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(Cyan(), 4);
-//		agd.MoveTo(300, 200).LineTo(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
+//		PaintLion(&sw, NULL);
+//		sw.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
+//		sw.MoveTo(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
+//		sw.MoveTo(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(Cyan(), 4);
+//		sw.MoveTo(300, 200).LineTo(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
 //		d="M300,200 h-150 a150,150 0 1,0 150,-150 z"
   //      fill="red" stroke="blue" stroke-width="5"
 
+		Arc(sw, 20, 30, 40, 10, 0, M_2PI);
+		sw.FillMask(50);
 		for(int i = 0; i < 0; i++) {
 			RTIMING("Lion");
-			PaintLion(&agd, NULL);
-//			agd.MoveTo(200, 200).LineTo(200, 210).LineTo(210, 205).Fill(Blue());
-//			agd.MoveTo(200, 200).LineTo(200, 300).LineTo(300, 250).Fill(Blue());
+			sw.MoveTo(200, 200).LineTo(200, 210).LineTo(210, 205).FillMask(0);
+			PaintLion(&sw, NULL);
+//			sw.MoveTo(200, 200).LineTo(200, 300).LineTo(300, 250).Fill(Blue());
 		}
 
 #if 0
 		for(int i = 0; i < 1000; i++) {
 			RTIMING("Small rect");
-			agd.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 105).Fill(Red());
+			sw.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 105).Fill(Red());
 		}
 
 #endif
@@ -279,49 +294,54 @@ struct App : TopWindow {
 #if 0
 		for(int i = 0; i < 1000; i++) {
 			RTIMING("Large rect");
-			agd.MoveTo(200, 200).LineTo(200, 600).LineTo(600, 600).LineTo(600, 200).Fill(Blue());
+			sw.MoveTo(200, 200).LineTo(200, 600).LineTo(600, 600).LineTo(600, 200).Fill(Blue());
 		}
 
 		for(int i = 0; i < 1000; i++) {
 			RTIMING("Small rect");
-			agd.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 110).LineTo(100, 110).Fill(Red());
+			sw.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 110).LineTo(100, 110).Fill(Red());
 		}
 
-		agd.StrokeColor(Blue());
-		agd.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 110).LineTo(100, 110).Stroke();
+		sw.StrokeColor(Blue());
+		sw.MoveTo(100, 100).LineTo(100, 110).LineTo(110, 110).LineTo(100, 110).Stroke();
 
-		agd.MoveTo(50, 200).Arc(50, 50, 0, true, true, 150, 200).Arc(50, 50, 0, true, true, 50, 200)
+		sw.MoveTo(50, 200).Arc(50, 50, 0, true, true, 150, 200).Arc(50, 50, 0, true, true, 50, 200)
 		   .Stroke(Blue(), 2);
 		
-		agd.MoveTo(0, 0).Ellipse(100, 100).Stroke();
+		sw.MoveTo(0, 0).Ellipse(100, 100).Stroke();
 
 #endif
-///		agd.Scale(1.5);
+
+///		sw.Scale(1.5);
 		Matrix2D m;
 //		m.rotate(p.x / 300.0);
-//		agd.MoveTo(0, 0).LineTo(0, 600).LineTo(600, 600).LineTo(200, 0)
+//		sw.MoveTo(0, 0).LineTo(0, 600).LineTo(600, 600).LineTo(200, 0)
 //			.Fill(Black());
 //		   .Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true)
 //		   .Stroke(Black(), 1);
+#if 0
+		sw.EvenOdd(true);
+		Text(sw, p.x / 10.0, 0, "Ahoj Jáchyme jak se máš?", Roman(30));
+		sw.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
+		sw.Stroke(Black(), 1);
+//		sw.Fill(Black()).Stroke(LtRed(), 2);
+		sw.MoveTo(100, 100).LineTo(100, 300).LineTo(400, 400);
+		sw.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
 
-		agd.EvenOdd(true);
-		RenderCharacter(agd, 'R', Courier(14));
-		agd.Fill(Black());
-//		agd.Fill(Black()).Stroke(LtRed(), 2);
-//		agd.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
+		sw.Begin();
+		sw.LineJoin(LINEJOIN_ROUND);
+		sw.MoveTo(100, 100);
+	//	Arc(sw, 100, 100, 150, 100, p.x / 100.0, p.y / 100.0, true);
+		sw.Fill(LtBlue());
+		sw.Stroke(Black(), 2);
+		sw.MoveTo(100, 100);
+	//	Arc(sw, 100, 100, 150, 100, p.x / 100.0 + p.y / 100.0, M_2PI - p.x / 100.0, true);
+		sw.Fill(LtRed());
+		sw.Stroke(Black(), 2);
+		Arc(sw, 500, 300, 100, 100, 0, M_PI * 2, false);
+		
 
-		agd.Begin();
-		agd.LineJoin(LINEJOIN_ROUND);
-		agd.MoveTo(100, 100);
-		Arc(agd, 100, 100, 150, 100, p.x / 100.0, p.y / 100.0, true);
-		agd.Fill(LtBlue());
-		agd.Stroke(Black(), 2);
-		agd.MoveTo(100, 100);
-		Arc(agd, 100, 100, 150, 100, p.x / 100.0 + p.y / 100.0, M_2PI - p.x / 100.0, true);
-		agd.Fill(LtRed());
-		agd.Stroke(Black(), 2);
-		Arc(agd, 500, 300, 100, 100, 0, M_PI * 2, false);
-
+#endif
 		w.DrawImage(0, 0, ib);
 		w.DrawText(550, 300, p.y, "R", Courier(14), Black());
 
@@ -339,12 +359,13 @@ struct App : TopWindow {
 	
 	}
 	
-	App() { Sizeable(); }
+	App() { Sizeable().Zoomable(); }
 };
 
 
 GUI_APP_MAIN
 {
+	SetDefaultCharset(CHARSET_WIN1250);
 	App().Run();
 }
 
