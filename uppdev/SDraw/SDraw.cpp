@@ -2,6 +2,9 @@
 
 NAMESPACE_UPP
 
+#define LTIMING(x) RTIMING(x)
+
+
 SDraw& SDraw::MoveTo(double x, double y)
 {
 	if(inpath)
@@ -54,14 +57,28 @@ SDraw& SDraw::Close()
 
 SDraw& SDraw::Fill()
 {
-	STIMING("Fill");
+	LTIMING("Fill");
 	if(inpath)
 		path.close_polygon();
 	rasterizer.reset();
 	rasterizer.filling_rule(attr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
-	path.arrange_orientations_all_paths(agg::path_flags_cw);
 	rasterizer.add_path(curved_trans);
 	renderer.color(*(color_type *)&attr.fill);
+	if(mask.GetCount()) {
+		agg::rendering_buffer mask_rbuf;
+		mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
+		agg::alpha_mask_gray8 mask(mask_rbuf);
+		agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
+		if(attr.antialiased) {
+			renderer.color(*(color_type *)&attr.fill);
+			agg::render_scanlines(rasterizer, sl, renderer);
+		}
+		else {
+			rendererb.color(*(color_type *)&attr.fill);
+			agg::render_scanlines(rasterizer, sl, rendererb);
+		}
+	}
+	else
 	if(attr.antialiased) {
 		renderer.color(*(color_type *)&attr.fill);
 		agg::render_scanlines(rasterizer, scanline_p, renderer);
@@ -70,6 +87,77 @@ SDraw& SDraw::Fill()
 		rendererb.color(*(color_type *)&attr.fill);
 		agg::render_scanlines(rasterizer, scanline_p, rendererb);
 	}
+	rasterizer.reset();
+	inpath = false;
+	return *this;
+}
+
+SDraw& SDraw::FillMask(int alpha)
+{
+	if(mask.GetCount() == 0) {
+		mask.Add().Alloc(size.cx * size.cy);
+		memset(~mask.Top(), 255, size.cx * size.cy);
+	}
+
+	agg::rendering_buffer mask_rbuf;
+	mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
+
+	typedef agg::renderer_base<agg::pixfmt_gray8> ren_base;
+	
+	agg::pixfmt_gray8 pixf(mask_rbuf);
+	ren_base rb(pixf);
+	agg::scanline_p8 sl;
+
+	if(inpath)
+		path.close_polygon();
+	rasterizer.reset();
+	rasterizer.filling_rule(attr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
+	rasterizer.add_path(curved_trans);
+	if(attr.antialiased) {
+		agg::renderer_scanline_aa_solid<ren_base> r(rb);
+		r.color(agg::gray8(alpha, 255));
+		agg::render_scanlines(rasterizer, sl, r);
+	}
+	else {
+		agg::renderer_scanline_bin_solid<ren_base> r(rb);
+		r.color(agg::gray8(alpha, 255));
+		agg::render_scanlines(rasterizer, sl, r);
+	}
+	rasterizer.reset();
+	inpath = false;
+	return *this;
+}
+
+SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, int alpha, bool tile)
+{
+	if(image.GetWidth() == 0 || image.GetHeight() == 0)
+		return *this;
+	span_alloc sa;
+	Matrix2D m = attr.mtx * transsrc;
+	m.invert();
+	interpolator_type interpolator(m);
+	Size isz = image.GetSize();
+	agg::rendering_buffer buf((agg::int8u*)~image, isz.cx, isz.cy, isz.cx * sizeof(RGBA));
+	pixfmt img_pixf(buf);
+	if(inpath)
+		path.close_polygon();
+	rasterizer.reset();
+	rasterizer.filling_rule(attr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
+	path.arrange_orientations_all_paths(agg::path_flags_cw);
+	rasterizer.add_path(curved_trans);
+	span_gen_type sg(img_pixf, agg::rgba8_pre(0, 0, 0, 0), interpolator);
+	sg.alpha(alpha);
+	sg.tile(tile);
+	if(mask.GetCount()) {
+		agg::rendering_buffer mask_rbuf;
+		mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
+		agg::alpha_mask_gray8 mask(mask_rbuf);
+		agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
+		renderer.color(*(color_type *)&attr.fill);
+		agg::render_scanlines_aa(rasterizer, sl, renb, sa, sg);
+	}
+	else
+		agg::render_scanlines_aa(rasterizer, scanline_p, renb, sa, sg);
 	rasterizer.reset();
 	inpath = false;
 	return *this;
@@ -90,6 +178,21 @@ SDraw& SDraw::Stroke()
 	rasterizer.reset();
 	rasterizer.filling_rule(agg::fill_non_zero);
 	rasterizer.add_path(curved_stroked_trans);
+	if(mask.GetCount()) {
+		agg::rendering_buffer mask_rbuf;
+		mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
+		agg::alpha_mask_gray8 mask(mask_rbuf);
+		agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
+		if(attr.antialiased) {
+			renderer.color(*(color_type *)&attr.stroke);
+			agg::render_scanlines(rasterizer, sl, renderer);
+		}
+		else {
+			rendererb.color(*(color_type *)&attr.stroke);
+			agg::render_scanlines(rasterizer, sl, rendererb);
+		}
+	}
+	else
 	if(attr.antialiased) {
 		renderer.color(*(color_type *)&attr.stroke);
 		agg::render_scanlines(rasterizer, scanline_p, renderer);
@@ -103,62 +206,30 @@ SDraw& SDraw::Stroke()
 	return *this;
 }
 
-SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, int alpha, bool tile)
-{
-	span_alloc sa;
-	Matrix2D m = attr.mtx * transsrc;
-	m.invert();
-	interpolator_type interpolator(m);
-	Size isz = image.GetSize();
-	agg::rendering_buffer buf((agg::int8u*)~image, isz.cx, isz.cy, isz.cx * sizeof(RGBA));
-	pixfmt img_pixf(buf);
-	if(inpath)
-		path.close_polygon();
-	rasterizer.reset();
-	rasterizer.filling_rule(attr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
-	path.arrange_orientations_all_paths(agg::path_flags_cw);
-	rasterizer.add_path(curved_trans);
-	span_gen_type sg(img_pixf, agg::rgba8_pre(0, 0, 0, 0), interpolator);
-	sg.alpha(alpha);
-	sg.tile(tile);
-	agg::render_scanlines_aa(rasterizer, scanline_p, renb, sa, sg);
-	rasterizer.reset();
-	inpath = false;
-	return *this;
-}
-
-SDraw& SDraw::Fill(const RGBA& rgba)
-{
-	RGBA h = attr.fill;
-	attr.fill = rgba;
-	Fill();
-	attr.fill = h;
-	return *this;
-}
-
 Pointf SDraw::Current() const
 {
 	return Pointf(path.last_x(), path.last_y());
 }
 
+SDraw& SDraw::Fill(const RGBA& rgba)
+{
+	attr.fill = rgba;
+	Fill();
+	return *this;
+}
+
 SDraw& SDraw::Stroke(const RGBA& rgba, double width)
 {
-	RGBA h = attr.stroke;
-	double hw = attr.width;
 	attr.stroke = rgba;
 	attr.width = width;
 	Stroke();
-	attr.stroke = h;
-	attr.width = hw;
 	return *this;
 }
 
 SDraw& SDraw::Stroke(const RGBA& rgba)
 {
-	RGBA h = attr.stroke;
 	attr.stroke = rgba;
 	Stroke();
-	attr.stroke = h;
 	return *this;
 }
 

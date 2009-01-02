@@ -30,40 +30,26 @@ inline double fx_to_dbl(const FIXED& p) {
 	return double(p.value) + double(p.fract) * (1.0 / 65536.0);
 }
 
-void RenderCharPath(const char* gbuf, unsigned total_size, SDraw& sw)
+void RenderCharPath(const char* gbuf, unsigned total_size, SDraw& sw, double xx, double yy)
 {
-	bool flip_y = true;
     const char* cur_glyph = gbuf;
     const char* end_glyph = gbuf + total_size;
-    double x, y;
     
-    while(cur_glyph < end_glyph)
-    {
+    while(cur_glyph < end_glyph) {
         const TTPOLYGONHEADER* th = (TTPOLYGONHEADER*)cur_glyph;
         
         const char* end_poly = cur_glyph + th->cb;
         const char* cur_poly = cur_glyph + sizeof(TTPOLYGONHEADER);
 
-        x = fx_to_dbl(th->pfxStart.x);
-        y = fx_to_dbl(th->pfxStart.y);
-        if(flip_y) y = -y;
-        sw.MoveTo(x, y);
+        sw.MoveTo(xx + fx_to_dbl(th->pfxStart.x), yy - fx_to_dbl(th->pfxStart.y));
 
         while(cur_poly < end_poly)
         {
             const TTPOLYCURVE* pc = (const TTPOLYCURVE*)cur_poly;
             
-            if (pc->wType == TT_PRIM_LINE)
-            {
-                int i;
-                for (i = 0; i < pc->cpfx; i++)
-                {
-                    x = fx_to_dbl(pc->apfx[i].x);
-                    y = fx_to_dbl(pc->apfx[i].y);
-                    if(flip_y) y = -y;
-                    sw.LineTo(x, y);
-                }
-            }
+			if (pc->wType == TT_PRIM_LINE)
+				for(int i = 0; i < pc->cpfx; i++)
+					sw.LineTo(xx + fx_to_dbl(pc->apfx[i].x), yy - fx_to_dbl(pc->apfx[i].y));
             
             if (pc->wType == TT_PRIM_QSPLINE)
             {
@@ -80,13 +66,8 @@ void RenderCharPath(const char* gbuf, unsigned total_size, SDraw& sw)
                         *(int*)&pnt_c.y = (*(int*)&pnt_b.y + *(int*)&pnt_c.y) / 2;
                     }
                     
-                    double x2, y2;
-                    x  = fx_to_dbl(pnt_b.x);
-                    y  = fx_to_dbl(pnt_b.y);
-                    x2 = fx_to_dbl(pnt_c.x);
-                    y2 = fx_to_dbl(pnt_c.y);
-                    if(flip_y) { y = -y; y2 = -y2; }
-                    sw.Quadratic(x, y, x2, y2);
+                    sw.Quadratic(xx + fx_to_dbl(pnt_b.x), yy - fx_to_dbl(pnt_b.y),
+                                 xx + fx_to_dbl(pnt_c.x), yy - fx_to_dbl(pnt_c.y));
                 }
             }
             cur_poly += sizeof(WORD) * 2 + sizeof(POINTFX) * pc->cpfx;
@@ -95,23 +76,53 @@ void RenderCharPath(const char* gbuf, unsigned total_size, SDraw& sw)
     }
 }
 
-void RenderCharacter(SDraw& sw, int ch, Font fnt)
+struct FontChar {
+	Font fnt;
+	int  chr;
+	
+	bool operator==(const FontChar& b) const { return fnt == b.fnt && chr == b.chr; }
+	unsigned GetHashValue() const            { return CombineHash(fnt, chr); }
+};
+
+struct sMakeCharOutline : LRUCache<String, FontChar>::Maker {
+	FontChar fc;
+
+	FontChar Key() const     { return fc; }
+	int      Make(String& s) const {
+		RTIMING("Make");
+		static ScreenDraw w;
+		w.SetFont(fc.fnt);
+		GLYPHMETRICS gm;
+		MAT2 m_matrix;
+	    memset(&m_matrix, 0, sizeof(m_matrix));
+	    m_matrix.eM11.value = 1;
+	    m_matrix.eM22.value = 1;
+   		s.Clear();
+		int gsz = GetGlyphOutlineW(w.GetHandle(), fc.chr, GGO_NATIVE, &gm, 0, NULL, &m_matrix);
+		if(gsz < 0)
+			return 0;
+		StringBuffer gb(gsz);
+		gsz = GetGlyphOutlineW(w.GetHandle(), fc.chr, GGO_NATIVE, &gm, gsz, ~gb, &m_matrix);
+		if(gsz < 0)
+			return 0;
+		s = gb;
+		return gsz;
+	}
+};
+
+void Character(SDraw& sw, double x, double y, int ch, Font fnt)
 {
-	ScreenDraw w;
-	w.SetFont(fnt);
-	GLYPHMETRICS gm;
-	MAT2 m_matrix;
-    memset(&m_matrix, 0, sizeof(m_matrix));
-    m_matrix.eM11.value = 1;
-    m_matrix.eM22.value = 1;
-	int gsz = GetGlyphOutlineW(w.GetHandle(), ch, GGO_NATIVE, &gm, 0, NULL, &m_matrix);
-	if(gsz < 0)
-		return;
-	Buffer<char> gb(gsz);
-	gsz = GetGlyphOutlineW(w.GetHandle(), ch, GGO_NATIVE, &gm, gsz, gb, &m_matrix);
-	if(gsz < 0)
-		return;
-	RenderCharPath(gb, gsz, sw);
+	RTIMING("Character");
+	String s;
+	INTERLOCKED {
+		static LRUCache<String, FontChar> cache;
+		cache.Shrink(100000);
+		sMakeCharOutline h;
+		h.fc.fnt = fnt;
+		h.fc.chr = ch;
+		s = cache.Get(h);
+	}
+	RenderCharPath(s, s.GetLength(), sw, x, y);
 }
 
 #endif

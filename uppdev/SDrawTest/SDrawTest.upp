@@ -3,7 +3,8 @@ uses
 	SDraw;
 
 file
-	main.cpp;
+	app.tpp,
+	main.cpp charset "windows-1250";
 
 mainconfig
 	"" = "GUI",
