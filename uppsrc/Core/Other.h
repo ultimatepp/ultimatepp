@@ -297,10 +297,10 @@ public:
 	~LinkOwner()                         { Link<T, N>::DeleteList(); }
 };
 
-template <class T>
+template <class T, class K = String>
 struct LRUCache {
 	struct Maker {
-		virtual String Key() const = 0;
+		virtual K      Key() const = 0;
 		virtual int    Make(T& object) const = 0;
 		virtual ~Maker() {}
 	};
@@ -312,9 +312,17 @@ private:
 		One<T> data;
 		bool   flag;
 	};
+	
+	struct Key : Moveable<Key> {
+		K            key;
+		const void  *type;
+		
+		bool operator==(const Key& b) const { return key == b.key && type == b.type; }
+		unsigned GetHashValue() const { return CombineHash(key, (uintptr_t)type); }
+	};
 
-	Index<String> key;
-	Vector<Item>  data;
+	Index<Key>   key;
+	Vector<Item> data;
 	int  head;
 
 	int  size;
@@ -342,8 +350,8 @@ public:
 	LRUCache() { head = -1; size = 0; count = 0; ClearCounters(); }
 };
 
-template <class T>
-void LRUCache<T>::LinkHead(int i)
+template <class T, class K>
+void LRUCache<T, K>::LinkHead(int i)
 {
 	Item& m = data[i];
 	if(head >= 0) {
@@ -360,8 +368,8 @@ void LRUCache<T>::LinkHead(int i)
 }
 
 
-template <class T>
-void LRUCache<T>::Unlink(int i)
+template <class T, class K>
+void LRUCache<T, K>::Unlink(int i)
 {
 	Item& m = data[i];
 	if(m.prev == i)
@@ -375,8 +383,8 @@ void LRUCache<T>::Unlink(int i)
 	count--;
 }
 
-template <class T>
-void LRUCache<T>::Shrink(int maxsize)
+template <class T, class K>
+void LRUCache<T, K>::Shrink(int maxsize)
 {
 	if(maxsize < 0)
 		return;
@@ -389,18 +397,19 @@ void LRUCache<T>::Shrink(int maxsize)
 	}
 }
 
-template <class T>
-void LRUCache<T>::ClearCounters()
+template <class T, class K>
+void LRUCache<T, K>::ClearCounters()
 {
 	flag = !flag;
 	newsize = foundsize = 0;
 }
 
-template <class T>
-const T& LRUCache<T>::Get(const Maker& m)
+template <class T, class K>
+const T& LRUCache<T, K>::Get(const Maker& m)
 {
-	String k = m.Key();
-	k.Cat((const char *)&typeid(m), sizeof(void *));
+	Key k;
+	k.key = m.Key();
+	k.type = &typeid(m);
 	int q = key.Find(k);
 	if(q < 0) {
 		q = key.Put(k);
