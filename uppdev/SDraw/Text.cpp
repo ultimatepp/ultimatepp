@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-void Text(SDraw& sw, double x, double y, const wchar *text, Font fnt, int n, double *dx)
+SDraw& SDraw::Text(double x, double y, const wchar *text, Font fnt, int n, double *dx)
 {
 	RTIMING("Text");
 	FontInfo fi = fnt.Info();
@@ -11,28 +11,32 @@ void Text(SDraw& sw, double x, double y, const wchar *text, Font fnt, int n, dou
 	y += fi.GetAscent();
 	while(n) {
 		int ch = *text++;
-		Character(sw, x, y, ch, fnt);
+		Character(x, y, ch, fnt);
 		if(dx)
 			x += *dx++;
 		else
 			x += fi[ch];
 		n--;
 	}
+	return *this;
 }
 
-void Text(SDraw& sw, double x, double y, const WString& s, Font fnt, double *dx)
+SDraw& SDraw::Text(double x, double y, const WString& s, Font fnt, double *dx)
 {
-	Text(sw, x, y, s, fnt, s.GetLength(), dx);
+	Text(x, y, s, fnt, s.GetLength(), dx);
+	return *this;
 }
 
-void Text(SDraw& sw, double x, double y, const String& s, Font fnt, double *dx)
+SDraw& SDraw::Text(double x, double y, const String& s, Font fnt, double *dx)
 {
-	Text(sw, x, y, s.ToWString(), fnt, dx);
+	Text(x, y, s.ToWString(), fnt, dx);
+	return *this;
 }
 
-void Text(SDraw& sw, double x, double y, const char *text, Font fnt, int n, double *dx)
+SDraw& SDraw::Text(double x, double y, const char *text, Font fnt, int n, double *dx)
 {
-	Text(sw, x, y, ToUnicode(text, n < 0 ? strlen(text) : n, CHARSET_DEFAULT), fnt, dx);
+	Text(x, y, ToUnicode(text, n < 0 ? strlen(text) : n, CHARSET_DEFAULT), fnt, dx);
+	return *this;
 }
 
 END_UPP_NAMESPACE

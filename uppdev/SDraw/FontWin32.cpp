@@ -94,7 +94,7 @@ struct sMakeCharOutline : LRUCache<String, FontChar>::Maker {
 	}
 };
 
-void Character(SDraw& sw, double x, double y, int ch, Font fnt)
+SDraw& SDraw::Character(double x, double y, int ch, Font fnt)
 {
 	RTIMING("Character");
 	String s;
@@ -106,7 +106,8 @@ void Character(SDraw& sw, double x, double y, int ch, Font fnt)
 		h.fc.chr = ch;
 		s = cache.Get(h);
 	}
-	RenderCharPath(s, s.GetLength(), sw, x, y);
+	RenderCharPath(s, s.GetLength(), *this, x, y);
+	return *this;
 }
 
 #endif

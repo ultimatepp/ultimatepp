@@ -107,7 +107,7 @@ bool SDraw::PathVisible(double w) const
 	return max.x + w >= 0 && max.y + w >= 0 && min.x - w <= sizef.cx && min.y - w <= sizef.cy;
 }
 
-SDraw& SDraw::Fill()
+SDraw& SDraw::Fill(const RGBA& color)
 {
 	LTIMING("Fill");
 	if(inpath)
@@ -116,28 +116,27 @@ SDraw& SDraw::Fill()
 		rasterizer.reset();
 		rasterizer.filling_rule(attr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
 		rasterizer.add_path(curved_trans);
-		renderer.color(*(color_type *)&attr.fill);
 		if(mask.GetCount()) {
 			agg::rendering_buffer mask_rbuf;
 			mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
 			agg::alpha_mask_gray8 mask(mask_rbuf);
 			agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
 			if(attr.antialiased) {
-				renderer.color(*(color_type *)&attr.fill);
+				renderer.color(*(color_type *)&color);
 				agg::render_scanlines(rasterizer, sl, renderer);
 			}
 			else {
-				rendererb.color(*(color_type *)&attr.fill);
+				rendererb.color(*(color_type *)&color);
 				agg::render_scanlines(rasterizer, sl, rendererb);
 			}
 		}
 		else
 		if(attr.antialiased) {
-			renderer.color(*(color_type *)&attr.fill);
+			renderer.color(*(color_type *)&color);
 			agg::render_scanlines(rasterizer, scanline_p, renderer);
 		}
 		else {
-			rendererb.color(*(color_type *)&attr.fill);
+			rendererb.color(*(color_type *)&color);
 			agg::render_scanlines(rasterizer, scanline_p, rendererb);
 		}
 		rasterizer.reset();
@@ -182,7 +181,7 @@ SDraw& SDraw::FillMask(int alpha)
 	return *this;
 }
 
-SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, int alpha, bool tile)
+SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, int alpha, dword flags)
 {
 	if(image.GetWidth() == 0 || image.GetHeight() == 0)
 		return *this;
@@ -201,13 +200,12 @@ SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, int alpha, bool
 	rasterizer.add_path(curved_trans);
 	span_gen_type sg(img_pixf, agg::rgba8_pre(0, 0, 0, 0), interpolator);
 	sg.alpha(alpha);
-	sg.tile(tile);
+	sg.tile(flags);
 	if(mask.GetCount()) {
 		agg::rendering_buffer mask_rbuf;
 		mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
 		agg::alpha_mask_gray8 mask(mask_rbuf);
 		agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
-		renderer.color(*(color_type *)&attr.fill);
 		agg::render_scanlines_aa(rasterizer, sl, renb, sa, sg);
 	}
 	else
@@ -217,20 +215,28 @@ SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, int alpha, bool
 	return *this;
 }
 
-SDraw& SDraw::Stroke()
+SDraw& SDraw::Stroke(const RGBA& color, double width)
 {
 	double scl = attr.mtx.scale();
 	curved.approximation_scale(scl);
 	curved.angle_tolerance(0.0);
-	curved_stroked.width(attr.width);
+	curved_stroked.width(width);
 	curved_stroked.line_join((agg::line_join_e)attr.join);
 	curved_stroked.line_cap((agg::line_cap_e)attr.cap);
 	curved_stroked.miter_limit(attr.miter_limit);
 	curved_stroked.approximation_scale(scl);
-	if(attr.width * scl > 1.0)
+	if(width * scl > 1.0)
 		curved.angle_tolerance(0.2);
 	rasterizer.reset();
 	rasterizer.filling_rule(agg::fill_non_zero);
+	inpath = false;
+	path_storage b;
+	b.concat_path(curved_stroked);
+	b.Swap(path);
+	Fill(color);
+	b.Swap(path);
+	return *this;
+/*	
 	rasterizer.add_path(curved_stroked_trans);
 	if(mask.GetCount()) {
 		agg::rendering_buffer mask_rbuf;
@@ -238,54 +244,31 @@ SDraw& SDraw::Stroke()
 		agg::alpha_mask_gray8 mask(mask_rbuf);
 		agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
 		if(attr.antialiased) {
-			renderer.color(*(color_type *)&attr.stroke);
+			renderer.color(*(color_type *)&color);
 			agg::render_scanlines(rasterizer, sl, renderer);
 		}
 		else {
-			rendererb.color(*(color_type *)&attr.stroke);
+			rendererb.color(*(color_type *)&color);
 			agg::render_scanlines(rasterizer, sl, rendererb);
 		}
 	}
 	else
 	if(attr.antialiased) {
-		renderer.color(*(color_type *)&attr.stroke);
+		renderer.color(*(color_type *)&color);
 		agg::render_scanlines(rasterizer, scanline_p, renderer);
 	}
 	else {
-		rendererb.color(*(color_type *)&attr.stroke);
+		rendererb.color(*(color_type *)&color);
 		agg::render_scanlines(rasterizer, scanline_p, rendererb);
 	}
 	rasterizer.reset();
 	inpath = false;
-	return *this;
-}
-
-SDraw& SDraw::Fill(const RGBA& rgba)
-{
-	attr.fill = rgba;
-	Fill();
-	return *this;
-}
-
-SDraw& SDraw::Stroke(const RGBA& rgba, double width)
-{
-	attr.stroke = rgba;
-	attr.width = width;
-	Stroke();
-	return *this;
-}
-
-SDraw& SDraw::Stroke(const RGBA& rgba)
-{
-	attr.stroke = rgba;
-	Stroke();
-	return *this;
+	return *this;*/
 }
 
 void SDraw::Translate(double x, double y)
 {
-	attr.mtx.tx += x;
-	attr.mtx.ty += y;
+	Apply(Translate2D(x, y));
 }
 
 void SDraw::Rotate(double a)
@@ -321,7 +304,6 @@ SDraw::SDraw(ImageBuffer& ib)
 :	buffer(ib),
 	curved(path),
 	curved_stroked(curved),
-    curved_stroked_trans(curved_stroked, attr.mtx),
 	curved_trans(curved, attr.mtx)
 {
 	size = ib.GetSize();
@@ -339,9 +321,7 @@ SDraw::SDraw(ImageBuffer& ib)
 	attr.cap = LINECAP_BUTT;
 	attr.join = LINEJOIN_MITER;
 	attr.miter_limit = 4;
-	attr.width = 1;
 	attr.evenodd = false;
-	attr.fill = attr.stroke = Black();
 	attr.antialiased = true;
 }
 

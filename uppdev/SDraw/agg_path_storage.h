@@ -834,7 +834,8 @@ namespace agg
             }
         }
 
-
+		// AGGUPP
+		void Swap(path_base& b) { UPP::Swap(m_iterator, b.m_iterator); m_vertices.Swap(b.m_vertices); }
 
     private:
         unsigned perceive_polygon_orientation(unsigned start, unsigned end);

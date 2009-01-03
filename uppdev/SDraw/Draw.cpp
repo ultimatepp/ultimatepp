@@ -111,7 +111,7 @@ void SDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Co
 		for(int i = 0; i < n; i++)
 			ddx[i] = dx[i];
 	}
-	Text(*this, x, y, text, font, n, ddx);
+	Text(x, y, text, font, n, ddx);
 	Fill(ink);
 	End();
 }

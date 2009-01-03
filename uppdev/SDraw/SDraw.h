@@ -5,7 +5,7 @@
 
 #define  STIMING(x)          //   RTIMING(x)
 
-#define  AGGUPP 0
+#define  AGGUPP 1
 
 #include "agg_basics.h"
 #include "agg_renderer_base.h"
@@ -32,6 +32,7 @@ struct Matrix2D : agg::trans_affine {
 	void   Transform(double& x, double& y) const { transform(&x, &y); }
 	Pointf Transformed(double x, double y) const { Transform(x, y); return Pointf(x, y); }
 	Pointf Transformed(Pointf p) const           { Transform(p.x, p.y); return p; }
+	Matrix2D Inverted() const                    { Matrix2D h = *this; h.invert(); return h; }
 };
 
 struct Translate2D : Matrix2D {
@@ -80,6 +81,48 @@ public:
 		                    Color ink, int n, const int *dx);
 
 private:
+	class vertex_upp_storage {
+		Vector<Pointf> v;
+		Vector<int>    c;
+    public:
+		typedef double value_type;
+		void remove_all() { v.Clear(); c.Clear(); }
+		void free_all()   { remove_all(); }
+		void add_vertex(double x, double y, unsigned cmd) { v.Add(Pointf(x, y)); c.Add(cmd); }
+		void modify_vertex(unsigned i, double x, double y) { v[i].x = x; v[i].y = y; }
+		void modify_vertex(unsigned i, double x, double y, unsigned cmd) { modify_vertex(i, x, y); c[i] = cmd; }
+		void modify_command(unsigned i, unsigned cmd) { c[i] = cmd; }
+		void swap_vertices(unsigned v1, unsigned v2) { v.Swap(v1, v2); c.Swap(v1, v2); }
+		unsigned last_command() const { return c.GetCount() ? c.Top() : agg::path_cmd_stop; }
+		unsigned last_vertex(double* x, double* y) const {
+			if(c.GetCount() == 0) {
+				*x = *y = 0.0;
+				return agg::path_cmd_stop;
+			}
+			return vertex(v.GetCount() - 1, x, y);
+		}
+		unsigned prev_vertex(double* x, double* y) const {
+			if(c.GetCount() < 2) {
+				*x = *y = 0.0;
+				return agg::path_cmd_stop;
+			}
+			return vertex(v.GetCount() - 2, x, y);
+		}
+		double last_x() const { return v.GetCount() ? v.Top().x : 0.0; }
+		double last_y() const { return v.GetCount() ? v.Top().y : 0.0; }
+		unsigned total_vertices() const { return v.GetCount(); }
+		unsigned vertex(unsigned i, double* x, double* y) const {
+			*x = v[i].x;
+			*y = v[i].y;
+			return c[i];
+		}
+		unsigned command(unsigned i) const { return c[i]; }
+		
+		void Swap(vertex_upp_storage& b) { UPP::Swap(v, b.v); UPP::Swap(c, b.c); }
+    };
+
+	typedef agg::path_base<vertex_upp_storage> path_storage;
+
 	typedef agg::pixfmt_rgba32_pre pixfmt;
 	typedef agg::rgba8 color_type;
 	typedef agg::renderer_base<agg::pixfmt_rgba32_pre> renderer_base;
@@ -98,9 +141,6 @@ private:
 	
 	struct Attr : Moveable<Attr> {
 		Matrix2D          mtx;
-		RGBA              fill;
-		RGBA              stroke;
-		double            width;
 		bool              evenodd;
 		byte              join;
 		byte              cap;
@@ -111,7 +151,7 @@ private:
 	Attr                          attr;
 	Vector<Attr>                  attrstack;
 
-	agg::path_storage             path;
+	path_storage                  path;
 	bool                          inpath;
 
 	agg::rendering_buffer         rbuf;
@@ -122,14 +162,12 @@ private:
 	renderer_solid_bin            rendererb;
 	agg::pixfmt_rgba32_pre        pixf;
 
-	typedef agg::conv_curve<agg::path_storage>  Curved;
+	typedef agg::conv_curve<path_storage>       Curved;
 	typedef agg::conv_stroke<Curved>            CurvedStroked;
-	typedef agg::conv_transform<CurvedStroked>  CurvedStrokedTrans;
 	typedef agg::conv_transform<Curved>         CurvedTrans;
 
 	Curved                        curved;
 	CurvedStroked                 curved_stroked;
-	CurvedStrokedTrans            curved_stroked_trans;
 	CurvedTrans                   curved_trans;
 	
 	Rectf                         pathrect;
@@ -140,11 +178,10 @@ private:
 	void   MinMax(Pointf& min, Pointf& max, Pointf p) const;
 	bool   PathVisible(double d) const;
 	Pointf Reflection() const;
-	
-public:
 	Pointf Current() const        { return current; }
 	Rectf  PathRect() const       { return pathrect; }
-
+	
+public:
 	void   Begin();
 	void   End();
 	
@@ -156,20 +193,22 @@ public:
 	SDraw& Cubic(double x2, double y2, double x, double y);
 	SDraw& Close();
 
-	SDraw& Fill();
-	SDraw& Stroke();
-	
-	
-	SDraw& Fill(const Image& image, const Matrix2D& transsrc = Matrix2D(), int alpha = 255, bool tile = false);
+	SDraw& Fill(const Image& image, const Matrix2D& transsrc = Matrix2D(),
+	            int alpha = 255, dword flags = false);
 	SDraw& FillMask(int alpha);
 	
 	SDraw& Fill(const RGBA& rgba);
 	SDraw& Stroke(const RGBA& rgba, double width);
-	SDraw& Stroke(const RGBA& rgba);
+
+	SDraw& Arc(double x, double y, double rx, double ry,
+	           double start_angle, double sweep_angle, bool startline = false);
+
+	SDraw& Character(double x, double y, int ch, Font fnt);
+	SDraw& Text(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
+	SDraw& Text(double x, double y, const WString& s, Font fnt, double *dx = NULL);
+	SDraw& Text(double x, double y, const String& s, Font fnt, double *dx = NULL);
+	SDraw& Text(double x, double y, const char *text, Font fnt, int n = -1, double *dx = NULL);
 	
-	SDraw& SetFill(const RGBA& rgba)                    { attr.fill = rgba; return *this; }
-	SDraw& SetStroke(const RGBA& rgba)                  { attr.stroke = rgba; return *this; }
-	SDraw& Width(double width)                          { attr.width = width; return *this; }
 	SDraw& LineCap(int linecap)                         { attr.cap = linecap; return *this; }
 	SDraw& LineJoin(int linejoin)                       { attr.join = linejoin; return *this; }
 	SDraw& MiterLimit(double l)                         { attr.miter_limit = l; return *this; }
@@ -183,17 +222,10 @@ public:
 	
 	void   Apply(const Matrix2D& m)       { attr.mtx *= m; }
 	void   operator*=(const Matrix2D& m)  { Apply(m); }
-	
+
 	SDraw(ImageBuffer& ib);
 };
 
-void Arc(SDraw& sw, double x, double y, double rx, double ry,
-                    double start_angle, double sweep_angle, bool startline = false);
-void Character(SDraw& sw, double x, double y, int ch, Font fnt);
-void Text(SDraw& sw, double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
-void Text(SDraw& sw, double x, double y, const WString& s, Font fnt, double *dx = NULL);
-void Text(SDraw& sw, double x, double y, const String& s, Font fnt, double *dx = NULL);
-void Text(SDraw& sw, double x, double y, const char *text, Font fnt, int n = -1, double *dx = NULL);
 
 END_UPP_NAMESPACE
 
