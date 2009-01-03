@@ -63,10 +63,10 @@ void Arc(SDraw& sw, double x,  double y, double rx, double ry,
 		double px = x + rx * cos(start_angle);
 		double py = y + ry * sin(start_angle);
 		if(startline)
-			sw.LineTo(px, py);
+			sw.Line(px, py);
 		else
-			sw.MoveTo(px, py);
-		sw.LineTo(x + rx * cos(start_angle + sweep_angle), y + ry * sin(start_angle + sweep_angle));
+			sw.Move(px, py);
+		sw.Line(x + rx * cos(start_angle + sweep_angle), y + ry * sin(start_angle + sweep_angle));
 		return;
 	}
 	double total_sweep = 0.0;
@@ -98,9 +98,9 @@ void Arc(SDraw& sw, double x,  double y, double rx, double ry,
 		sSubArc(x, y, rx, ry, start_angle, local_sweep, px, py);
 		if(first)
 			if(startline)
-				sw.LineTo(px[0], py[0]);
+				sw.Line(px[0], py[0]);
 			else
-				sw.MoveTo(px[0], py[0]);
+				sw.Move(px[0], py[0]);
 		first = false;
 		sw.Cubic(px[1], py[1], px[2], py[2], px[3], py[3]);
 		start_angle += local_sweep;

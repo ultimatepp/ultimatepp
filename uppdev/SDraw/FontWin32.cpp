@@ -14,11 +14,6 @@
 //          mcseemagg@yahoo.com
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
-//
-// Arc generator. Produces at most 4 consecutive cubic bezier curves, i.e., 
-// 4, 7, 10, or 13 vertices.
-//
-//----------------------------------------------------------------------------
 
 // Recycled for U++ by Miroslav Fidler 2008
 
@@ -32,47 +27,36 @@ inline double fx_to_dbl(const FIXED& p) {
 
 void RenderCharPath(const char* gbuf, unsigned total_size, SDraw& sw, double xx, double yy)
 {
-    const char* cur_glyph = gbuf;
-    const char* end_glyph = gbuf + total_size;
-    
-    while(cur_glyph < end_glyph) {
-        const TTPOLYGONHEADER* th = (TTPOLYGONHEADER*)cur_glyph;
-        
-        const char* end_poly = cur_glyph + th->cb;
-        const char* cur_poly = cur_glyph + sizeof(TTPOLYGONHEADER);
-
-        sw.MoveTo(xx + fx_to_dbl(th->pfxStart.x), yy - fx_to_dbl(th->pfxStart.y));
-
-        while(cur_poly < end_poly)
-        {
-            const TTPOLYCURVE* pc = (const TTPOLYCURVE*)cur_poly;
-            
+	const char* cur_glyph = gbuf;
+	const char* end_glyph = gbuf + total_size;
+	
+	while(cur_glyph < end_glyph) {
+		const TTPOLYGONHEADER* th = (TTPOLYGONHEADER*)cur_glyph;
+		const char* end_poly = cur_glyph + th->cb;
+		const char* cur_poly = cur_glyph + sizeof(TTPOLYGONHEADER);
+		sw.Move(xx + fx_to_dbl(th->pfxStart.x), yy - fx_to_dbl(th->pfxStart.y));
+		while(cur_poly < end_poly) {
+			const TTPOLYCURVE* pc = (const TTPOLYCURVE*)cur_poly;
 			if (pc->wType == TT_PRIM_LINE)
 				for(int i = 0; i < pc->cpfx; i++)
-					sw.LineTo(xx + fx_to_dbl(pc->apfx[i].x), yy - fx_to_dbl(pc->apfx[i].y));
-            
-            if (pc->wType == TT_PRIM_QSPLINE)
-            {
-                int u;
-                for (u = 0; u < pc->cpfx - 1; u++)  // Walk through points in spline
-                {
-                    POINTFX pnt_b = pc->apfx[u];    // B is always the current point
-                    POINTFX pnt_c = pc->apfx[u+1];
-                    
-                    if (u < pc->cpfx - 2)           // If not on last spline, compute C
-                    {
-                        // midpoint (x,y)
-                        *(int*)&pnt_c.x = (*(int*)&pnt_b.x + *(int*)&pnt_c.x) / 2;
-                        *(int*)&pnt_c.y = (*(int*)&pnt_b.y + *(int*)&pnt_c.y) / 2;
-                    }
-                    
-                    sw.Quadratic(xx + fx_to_dbl(pnt_b.x), yy - fx_to_dbl(pnt_b.y),
-                                 xx + fx_to_dbl(pnt_c.x), yy - fx_to_dbl(pnt_c.y));
-                }
-            }
-            cur_poly += sizeof(WORD) * 2 + sizeof(POINTFX) * pc->cpfx;
-        }
-        cur_glyph += th->cb;
+					sw.Line(xx + fx_to_dbl(pc->apfx[i].x), yy - fx_to_dbl(pc->apfx[i].y));
+			if (pc->wType == TT_PRIM_QSPLINE) {
+				int u;
+				for (u = 0; u < pc->cpfx - 1; u++) { // Walk through points in spline
+					POINTFX pnt_b = pc->apfx[u];     // B is always the current point
+					POINTFX pnt_c = pc->apfx[u+1];
+					if (u < pc->cpfx - 2) {          // If not on last spline, compute C
+						// midpoint (x,y)
+						*(int*)&pnt_c.x = (*(int*)&pnt_b.x + *(int*)&pnt_c.x) / 2;
+						*(int*)&pnt_c.y = (*(int*)&pnt_b.y + *(int*)&pnt_c.y) / 2;
+					}
+					sw.Quadratic(xx + fx_to_dbl(pnt_b.x), yy - fx_to_dbl(pnt_b.y),
+					             xx + fx_to_dbl(pnt_c.x), yy - fx_to_dbl(pnt_c.y));
+				}
+			}
+			cur_poly += sizeof(WORD) * 2 + sizeof(POINTFX) * pc->cpfx;
+		}
+		cur_glyph += th->cb;
     }
 }
 

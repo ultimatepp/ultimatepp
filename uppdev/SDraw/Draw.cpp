@@ -57,13 +57,13 @@ bool SDraw::IsPaintingOp(const Rect& r) const
 void SDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
 	RTIMING("Rect");
-	MoveTo(x, y).LineTo(x + cx - 1, y).LineTo(x + cx - 1, y + cy - 1).LineTo(x, y + cy - 1);
+	Move(x, y).Line(x + cx - 1, y).Line(x + cx - 1, y + cy - 1).Line(x, y + cy - 1);
 	Fill(color);
 }
 
 void SDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
-	MoveTo(x, y).LineTo(x + cx - 1, y).LineTo(x + cx - 1, y + cy - 1).LineTo(x, y + cy - 1);
+	Move(x, y).Line(x + cx - 1, y).Line(x + cx - 1, y + cy - 1).Line(x, y + cy - 1);
 	Fill(img, Translate2D(x, y));
 }
 
@@ -73,8 +73,8 @@ void SDraw::DrawDataOp(int x, int y, int cx, int cy, const String& data, const c
 
 void SDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
-	MoveTo(x1, y1);
-	LineTo(x2, y2);
+	Move(x1, y1);
+	Line(x2, y2);
 	Stroke(color, width);
 }
 
