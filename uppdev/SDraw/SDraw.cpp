@@ -4,22 +4,40 @@ NAMESPACE_UPP
 
 #define LTIMING(x) RTIMING(x)
 
-
-SDraw& SDraw::MoveTo(double x, double y)
+inline void SDraw::PathPoint(double x, double y)
 {
-	if(inpath)
-		path.close_polygon();
-	else
+	if(inpath) {
+		pathrect.left = min(pathrect.left, x);
+		pathrect.top = min(pathrect.top, y);
+		pathrect.right = max(pathrect.right, x);
+		pathrect.bottom = max(pathrect.bottom, y);
+	}
+	else {
 		path.remove_all();
+		pathrect.left = pathrect.right = x;
+		pathrect.top = pathrect.bottom = y;
+	}
+	inpath = true;
+	current = Pointf(x, y);
+}
+
+inline void SDraw::ControlPoint(double x, double y)
+{
+	control = Pointf(x, y);
+	PathPoint(x, y);
+}
+
+SDraw& SDraw::Move(double x, double y)
+{
+	PathPoint(x, y);
 	path.move_to(x, y);
 	inpath = true;
 	return *this;
 }
 
-SDraw& SDraw::LineTo(double x, double y)
+SDraw& SDraw::Line(double x, double y)
 {
-	if(!inpath)
-		path.remove_all();
+	PathPoint(x, y);
 	path.line_to(x, y);
 	inpath = true;
 	return *this;
@@ -27,25 +45,37 @@ SDraw& SDraw::LineTo(double x, double y)
 
 SDraw& SDraw::Quadratic(double x1, double y1, double x, double y)
 {
+	ControlPoint(x1, y1);
+	PathPoint(x, y);
 	path.curve3(x1, y1, x, y);
 	return *this;
 }
 
+Pointf SDraw::Reflection() const
+{
+	return current + current - control;
+}
+
 SDraw& SDraw::Quadratic(double x, double y)
 {
-	path.curve3(x, y);
+	Pointf c = Reflection();
+	path.curve3(c.x, c.y, x, y);
 	return *this;
 }
 
 SDraw& SDraw::Cubic(double x1, double y1, double x2, double y2, double x, double y)
 {
+	ControlPoint(x1, y1);
+	ControlPoint(x2, y2);
+	PathPoint(x, y);
 	path.curve4(x1, y1, x2, y2, x, y);
 	return *this;
 }
 
 SDraw& SDraw::Cubic(double x2, double y2, double x, double y)
 {
-	path.curve4(x2, y2, x, y);
+	Pointf c = Reflection();
+	path.curve4(c.x, c.y, x2, y2, x, y);
 	return *this;
 }
 
@@ -55,39 +85,63 @@ SDraw& SDraw::Close()
 	return *this;
 }
 
+inline void SDraw::MinMax(Pointf& minv, Pointf& maxv, Pointf p) const
+{
+	p = attr.mtx.Transformed(p);
+	minv.x = min(minv.x, p.x);
+	minv.y = min(minv.y, p.y);
+	maxv.x = max(maxv.x, p.x);
+	maxv.y = max(maxv.y, p.y);
+}
+
+bool SDraw::PathVisible(double w) const
+{
+	Pointf h = attr.mtx.Transformed(w, w);
+	w = max(abs(h.x), abs(h.y));
+	Pointf min;
+	Pointf max;
+	min = max = attr.mtx.Transformed(pathrect.TopLeft());
+	MinMax(min, max, pathrect.TopRight());
+	MinMax(min, max, pathrect.BottomLeft());
+	MinMax(min, max, pathrect.BottomRight());
+	return max.x + w >= 0 && max.y + w >= 0 && min.x - w <= sizef.cx && min.y - w <= sizef.cy;
+}
+
 SDraw& SDraw::Fill()
 {
 	LTIMING("Fill");
 	if(inpath)
 		path.close_polygon();
-	rasterizer.reset();
-	rasterizer.filling_rule(attr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
-	rasterizer.add_path(curved_trans);
-	renderer.color(*(color_type *)&attr.fill);
-	if(mask.GetCount()) {
-		agg::rendering_buffer mask_rbuf;
-		mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
-		agg::alpha_mask_gray8 mask(mask_rbuf);
-		agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
+	if(PathVisible(0)) {
+		rasterizer.reset();
+		rasterizer.filling_rule(attr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
+		rasterizer.add_path(curved_trans);
+		renderer.color(*(color_type *)&attr.fill);
+		if(mask.GetCount()) {
+			agg::rendering_buffer mask_rbuf;
+			mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
+			agg::alpha_mask_gray8 mask(mask_rbuf);
+			agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
+			if(attr.antialiased) {
+				renderer.color(*(color_type *)&attr.fill);
+				agg::render_scanlines(rasterizer, sl, renderer);
+			}
+			else {
+				rendererb.color(*(color_type *)&attr.fill);
+				agg::render_scanlines(rasterizer, sl, rendererb);
+			}
+		}
+		else
 		if(attr.antialiased) {
 			renderer.color(*(color_type *)&attr.fill);
-			agg::render_scanlines(rasterizer, sl, renderer);
+			agg::render_scanlines(rasterizer, scanline_p, renderer);
 		}
 		else {
 			rendererb.color(*(color_type *)&attr.fill);
-			agg::render_scanlines(rasterizer, sl, rendererb);
+			agg::render_scanlines(rasterizer, scanline_p, rendererb);
 		}
+		rasterizer.reset();
 	}
-	else
-	if(attr.antialiased) {
-		renderer.color(*(color_type *)&attr.fill);
-		agg::render_scanlines(rasterizer, scanline_p, renderer);
-	}
-	else {
-		rendererb.color(*(color_type *)&attr.fill);
-		agg::render_scanlines(rasterizer, scanline_p, rendererb);
-	}
-	rasterizer.reset();
 	inpath = false;
 	return *this;
 }
@@ -206,11 +260,6 @@ SDraw& SDraw::Stroke()
 	return *this;
 }
 
-Pointf SDraw::Current() const
-{
-	return Pointf(path.last_x(), path.last_y());
-}
-
 SDraw& SDraw::Fill(const RGBA& rgba)
 {
 	attr.fill = rgba;
@@ -276,6 +325,7 @@ SDraw::SDraw(ImageBuffer& ib)
 	curved_trans(curved, attr.mtx)
 {
 	size = ib.GetSize();
+	sizef = size;
 	UPP::Fill(~buffer, White(), buffer.GetLength()); //!!!
 	rbuf.attach((agg::int8u *)~buffer, size.cx, size.cy, size.cx * 4);
 	pixf.attach(rbuf);
@@ -283,6 +333,8 @@ SDraw::SDraw(ImageBuffer& ib)
 	renderer.attach(renb);
 	rendererb.attach(renb);
 	inpath = false;
+	pathrect = Null;
+	control = current = Null;
 
 	attr.cap = LINECAP_BUTT;
 	attr.join = LINEJOIN_MITER;

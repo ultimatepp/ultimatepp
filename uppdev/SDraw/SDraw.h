@@ -27,7 +27,11 @@
 NAMESPACE_UPP
 
 struct Matrix2D : agg::trans_affine {
-	Matrix2D operator*(const Matrix2D& s) const { Matrix2D x = *this; x *= s; return x; }
+	Matrix2D operator*(const Matrix2D& s) const  { Matrix2D x = *this; x *= s; return x; }
+	
+	void   Transform(double& x, double& y) const { transform(&x, &y); }
+	Pointf Transformed(double x, double y) const { Transform(x, y); return Pointf(x, y); }
+	Pointf Transformed(Pointf p) const           { Transform(p.x, p.y); return p; }
 };
 
 struct Translate2D : Matrix2D {
@@ -88,6 +92,7 @@ private:
 	typedef renderer_base::color_type x;
 	
 	Size                          size;
+	Sizef                         sizef;
 	ImageBuffer&                  buffer;
 	Array< Buffer<byte> >         mask;
 	
@@ -127,14 +132,24 @@ private:
 	CurvedStrokedTrans            curved_stroked_trans;
 	CurvedTrans                   curved_trans;
 	
+	Rectf                         pathrect;
+	Pointf                        current, control;
+	
+	void   PathPoint(double x, double y);
+	void   ControlPoint(double x, double y);
+	void   MinMax(Pointf& min, Pointf& max, Pointf p) const;
+	bool   PathVisible(double d) const;
+	Pointf Reflection() const;
+	
 public:
-	Pointf Current() const;
+	Pointf Current() const        { return current; }
+	Rectf  PathRect() const       { return pathrect; }
 
 	void   Begin();
 	void   End();
 	
-	SDraw& MoveTo(double x, double y);
-	SDraw& LineTo(double x, double y);
+	SDraw& Move(double x, double y);
+	SDraw& Line(double x, double y);
 	SDraw& Quadratic(double x1, double y1, double x, double y);
 	SDraw& Quadratic(double x, double y);
 	SDraw& Cubic(double x1, double y1, double x2, double y2, double x, double y);
