@@ -2,7 +2,7 @@ optimize_speed;
 
 file
 	SDraw.h,
-	SDraw.cpp optimize_speed,
+	SDraw.cpp,
 	FontX11.cpp,
 	FontWin32.cpp,
 	Arc.cpp,

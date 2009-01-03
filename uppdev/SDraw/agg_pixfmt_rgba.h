@@ -2069,45 +2069,6 @@ namespace agg
             if (c.a)
             {
                 value_type* p = (value_type*)m_rbuf->row_ptr(x, y, len) + (x << 2);
-#if AGGUPP
-				if(c.a == base_mask)
-	                do 
-	                {
-	                    if(*covers == base_mask) 
-	                    {
-	                        p[order_type::R] = c.r;
-	                        p[order_type::G] = c.g;
-	                        p[order_type::B] = c.b;
-	                        p[order_type::A] = base_mask;
-	                    }
-	                    else
-	                    {
-	                        blender_type::blend_pix(p, c.r, c.g, c.b, *covers);
-	                    }
-	                    p += 4;
-	                    ++covers;
-	                }
-	                while(--len);
-				else
-	                do 
-	                {
-	                    calc_type alpha = (calc_type(c.a) * (calc_type(*covers) + 1)) >> 8;
-	                    if(alpha == base_mask)
-	                    {
-	                        p[order_type::R] = c.r;
-	                        p[order_type::G] = c.g;
-	                        p[order_type::B] = c.b;
-	                        p[order_type::A] = base_mask;
-	                    }
-	                    else
-	                    {
-	                        blender_type::blend_pix(p, c.r, c.g, c.b, alpha, *covers);
-	                    }
-	                    p += 4;
-	                    ++covers;
-	                }
-	                while(--len);
-#else
                 do 
                 {
                     calc_type alpha = (calc_type(c.a) * (calc_type(*covers) + 1)) >> 8;
@@ -2126,7 +2087,6 @@ namespace agg
                     ++covers;
                 }
                 while(--len);
-#endif
             }
         }
 

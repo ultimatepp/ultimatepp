@@ -1,5 +1,4 @@
 #include <CtrlLib/CtrlLib.h>
-#include <SDraw/SDraw.h>
 
 using namespace Upp;
 
@@ -151,9 +150,8 @@ static char g_lion[] =
 	"M 147,338 L 142,341 L 143,345 L 141,354 L 147,343 L 147,338 L 147,338 L 147,338\n"
 	"M 157,342 L 156,349 L 150,356 L 157,353 L 163,346 L 162,342 L 157,342 L 157,342 L 157,342\n"
 	"M 99,265 L 96,284 L 92,299 L 73,339 L 73,333 L 87,300 L 99,265 L 99,265 L 99,265\n";
-    
        
-void PaintLion(SDraw *sw, Draw *w)
+void PaintLion(Draw *w)
 {
 	// Parse the lion and then detect its bounding
 	// box and arrange polygons orientations (make all polygons
@@ -167,10 +165,7 @@ void PaintLion(SDraw *sw, Draw *w)
 	while (*ptr) {
 		if (*ptr != 'M' && isalnum(*ptr)) {
 			if(!IsNull(color)) {
-				if(sw)
-					sw->Fill(color);
-				else
-					w->DrawPolygon(p, color);
+				w->DrawPolygon(p, color);
 				p.Clear();
 			}
 			unsigned c = 0;
@@ -201,20 +196,13 @@ void PaintLion(SDraw *sw, Draw *w)
 				y = ScanDouble(ptr);
 				
 				if(c == 'M') {
-					if(sw)
-						sw->Move(x, y);
-					else {
-						if(!IsNull(color))
-							w->DrawPolygon(p, color);
-						p.Clear();
-						p.Add(Point((int)x, (int)y));
-					}
+					if(!IsNull(color))
+						w->DrawPolygon(p, color);
+					p.Clear();
+					p.Add(Point((int)x, (int)y));
 				}
 				else
-					if(sw)
-						sw->Line(x, y);
-					else
-						p.Add(Point((int)x, (int)y));
+					p.Add(Point((int)x, (int)y));
 				
 				while (*ptr && isdigit(*ptr))
 					ptr++;
@@ -227,10 +215,7 @@ void PaintLion(SDraw *sw, Draw *w)
 				ptr++;
 		}
 	}
-	if(sw)
-		sw->Fill(color);
-	else
-		w->DrawPolygon(p, color);
+	w->DrawPolygon(p, color);
 }
 
 struct App : TopWindow {
@@ -244,147 +229,8 @@ struct App : TopWindow {
 	virtual void Paint(Draw& w) {
 		RTIMING("Paint");
 		Size sz = GetSize();
-		ImageBuffer ib(sz);
-		Fill(~ib, White(), ib.GetLength());
-		SDraw sw(ib);
-
-		sw.AntiAliased(true);
-		//Text(sw, 500, 500, Format("%d", p.y), Arial(20));
-		//sw.Fill(Black());
-
-		sw.Scale(0.0005 * p.x);
-		sw.Rotate(0.01 * p.y - M_PI);
-/*
-		DDUMP(0.01 * 394 - M_PI);
-		sw.Begin();		
-		sw.Rotate(0.01 * 394 - M_PI);
-		sw.Move(100, 100).Line(200, 100).Line(200, 200).Fill(Black());
-		sw.End();
-		
-		DDUMP(0.01 * 390 - M_PI);
-		sw.Rotate(0.01 * 390 - M_PI);
-		sw.Move(100, 100).Line(200, 100).Line(200, 200).Fill(Blue());
-*/		
-		if(1) {
-			static RichText txt = ParseQTF(GetTopic("topic://SDrawTest/app/main$en-us"));
-			RTIMING("QTF");
-			txt.Paint(sw, 0, 0, 4000);
-		}
-		
-		   		
-	//	sw.Scale(p.x / 100.0, p.y / 100.0);
-//		Arc(sw, 500, 300, 400, 100, 0, M_2PI);
-//		sw.FillMask(0);
-	//	sw.Rotate(p.y / 100.00);
-//		sw.Scale(1.4);
-//		sw.Move(100, 100).Line(200.5, 100).Line(200, 200).Line(0, 300).Stroke(Blue(), 10);
-/*
-		sw.Move(100 + 10, 100 - 10).Line(200 + 20, 100 - 60).Line(200 + 23, 200- 50).Line(20, 300)
-		   .Fill(100 * Green()).Stroke(Blue(), 2);*/
-		PaintLion(&sw, NULL);
-//		sw.Move(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-//		sw.Move(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-		sw.Move(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(Cyan(), 4);
-//		sw.Move(300, 200).Line(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
-//		d="M300,200 h-150 a150,150 0 1,0 150,-150 z"
-  //      fill="red" stroke="blue" stroke-width="5"
-  
-  		sw.EvenOdd(false);
-  		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(520, 510).Line(580, 510).Line(580, 580).Fill(Black());
-
-		sw.Translate(150, 0);
-  		sw.EvenOdd(false);
-  		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(520, 510).Line(580, 510).Line(580, 580).Fill(Red());
-
-		sw.Translate(150, 0);
-  		sw.EvenOdd(true);
-  		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(520, 510).Line(580, 510).Line(580, 580).Fill(Blue());
-
-		sw.Arc(20, 30, 40, 10, 0, M_2PI).FillMask(50);
-		for(int i = 0; i < 0; i++) {
-			RTIMING("Lion");
-			sw.Move(200, 200).Line(200, 210).Line(210, 205).FillMask(0);
-			PaintLion(&sw, NULL);
-//			sw.Move(200, 200).Line(200, 300).Line(300, 250).Fill(Blue());
-		}
-
-#if 0
-		for(int i = 0; i < 1000; i++) {
-			RTIMING("Small rect");
-			sw.Move(100, 100).Line(100, 110).Line(110, 105).Fill(Red());
-		}
-
-#endif
-
-#if 0
-		for(int i = 0; i < 1000; i++) {
-			RTIMING("Large rect");
-			sw.Move(200, 200).Line(200, 600).Line(600, 600).Line(600, 200).Fill(Blue());
-		}
-
-		for(int i = 0; i < 1000; i++) {
-			RTIMING("Small rect");
-			sw.Move(100, 100).Line(100, 110).Line(110, 110).Line(100, 110).Fill(Red());
-		}
-
-		sw.StrokeColor(Blue());
-		sw.Move(100, 100).Line(100, 110).Line(110, 110).Line(100, 110).Stroke();
-
-		sw.Move(50, 200).Arc(50, 50, 0, true, true, 150, 200).Arc(50, 50, 0, true, true, 50, 200)
-		   .Stroke(Blue(), 2);
-		
-		sw.Move(0, 0).Ellipse(100, 100).Stroke();
-
-#endif
-
-///		sw.Scale(1.5);
-		Matrix2D m;
-//		m.rotate(p.x / 300.0);
-//		sw.Move(0, 0).Line(0, 600).Line(600, 600).Line(200, 0)
-//			.Fill(Black());
-//		   .Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true)
-//		   .Stroke(Black(), 1);
-#if 0
-		sw.EvenOdd(true);
-		Text(sw, p.x / 10.0, 0, "Ahoj Jáchyme jak se máš?", Roman(30));
-		sw.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
-		sw.Stroke(Black(), 1);
-//		sw.Fill(Black()).Stroke(LtRed(), 2);
-		sw.Move(100, 100).Line(100, 300).Line(400, 400);
-		sw.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
-
-		sw.Begin();
-		sw.LineJoin(LINEJOIN_ROUND);
-		sw.Move(100, 100);
-	//	Arc(sw, 100, 100, 150, 100, p.x / 100.0, p.y / 100.0, true);
-		sw.Fill(LtBlue());
-		sw.Stroke(Black(), 2);
-		sw.Move(100, 100);
-	//	Arc(sw, 100, 100, 150, 100, p.x / 100.0 + p.y / 100.0, M_2PI - p.x / 100.0, true);
-		sw.Fill(LtRed());
-		sw.Stroke(Black(), 2);
-		Arc(sw, 500, 300, 100, 100, 0, M_PI * 2, false);
-		
-
-#endif
-		w.DrawImage(0, 0, ib);
-		w.DrawText(550, 300, p.y, "R", Courier(14), Black());
-
-		ImageDraw iw(500, 500);
-		iw.DrawRect(0, 0, 500, 500, LtGray());
-		for(int i = 0; i < 1; i++) {
-			RTIMING("ImageDraw");
-			Vector<Point> p;
-//			p.Add(Point(200, 200));
-//			p.Add(Point(200, 210));
-//			p.Add(Point(210, 205));
-		//	PaintLion(NULL, &iw);
-		}
-	//	w.DrawImage(500, 0, iw);
-	
+		w.DrawRect(sz, White());
+		PaintLion(&w);
 	}
 	
 	App() { Sizeable().Zoomable(); p = Point(0, 0); }
