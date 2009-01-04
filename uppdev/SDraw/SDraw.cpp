@@ -169,6 +169,18 @@ SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, dword flags, in
 	return *this;
 }
 
+SDraw& SDraw::Fill(const Image& image, double x1, double y1, double x2, double y2,
+                   dword flags, int alpha)
+{
+	Matrix2D m;
+	Size sz = image.GetSize();
+	m.translate(x1 / sz.cx, y1 / sz.cy);
+	m.scale((x2 - x1) / sz.cx);
+	m.rotate(atan((y2 - y1) / (x2 - x1))); //!!!
+	Fill(image, m, flags, alpha);
+	return *this;
+}
+
 SDraw::path_storage SDraw::MakeStroke(double width)
 {
 	double scl = pathattr.mtx.scale();
@@ -182,7 +194,7 @@ SDraw::path_storage SDraw::MakeStroke(double width)
 	if(pathattr.dash.GetCount()) {
 		agg::conv_dash<Curved> dashed(curved);
 		dashed.Set(&pathattr.dash, pathattr.dash_start);
-		agg::conv_stroke<agg::conv_dash<Curved>> curved_stroked(dashed);
+		agg::conv_stroke<agg::conv_dash<Curved> > curved_stroked(dashed);
 		curved_stroked.width(width);
 		curved_stroked.line_join((agg::line_join_e)pathattr.join);
 		curved_stroked.line_cap((agg::line_cap_e)pathattr.cap);

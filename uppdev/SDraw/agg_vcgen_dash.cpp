@@ -68,9 +68,9 @@ namespace agg
         m_curr_dash_start = 0.0;
         while(ds > 0.0)
         {
-            if(ds > (*m_dashes)[m_curr_dash])
+            if(ds > (*m_dashes)[(int)m_curr_dash])
             {
-                ds -= (*m_dashes)[m_curr_dash];
+                ds -= (*m_dashes)[(int)m_curr_dash];
                 ++m_curr_dash;
                 m_curr_dash_start = 0.0;
                 if((int)m_curr_dash >= (*m_dashes).GetCount()) m_curr_dash = 0;
@@ -156,7 +156,7 @@ namespace agg
 
             case polyline:
                 {
-                    double dash_rest = (*m_dashes)[m_curr_dash] - m_curr_dash_start;
+                    double dash_rest = (*m_dashes)[(int)m_curr_dash] - m_curr_dash_start;
 
                     unsigned cmd = (m_curr_dash & 1) ? 
                                    path_cmd_move_to : 

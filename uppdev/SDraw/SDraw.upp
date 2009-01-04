@@ -4,6 +4,7 @@ file
 	SDraw.h,
 	Matrix2D.cpp,
 	SDraw.cpp,
+	Gradient.cpp,
 	FontX11.cpp,
 	FontWin32.cpp,
 	Arc.cpp,
