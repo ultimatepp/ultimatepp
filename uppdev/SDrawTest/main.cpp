@@ -259,12 +259,12 @@ void PaintExample(SDraw& sw)
 		sw.Move(100, 100).Line(200, 100).Line(200, 200).Fill(Blue());
 */		
 		if(1) {
-			sw.Begin();
-			sw.Arc(500, 500, 500, 500, 0, M_2PI).Clip();		
+//			sw.Begin();
+//			sw.Arc(500, 500, 500, 500, 0, M_2PI).Clip();		
 			static RichText txt = ParseQTF(GetTopic("topic://SDrawTest/app/main$en-us"));
-			RTIMING("QTF");
+//			RTIMING("QTF");
 			txt.Paint(sw, 0, 0, 4000);
-			sw.End();
+//			sw.End();
 		}
 		
 		   		
@@ -366,12 +366,13 @@ void PaintExample(SDraw& sw)
 		sw.Text(50, 250, "Ahoj jak se máš?", Roman(300)).Dash("5 5 1 5").Stroke(1, Black());
 		sw.Text(50, 150, "Ahoj jak se máš?", Roman(100)).Fill(Gray()).Stroke(2, Red());
 		sw.Arc(800, 800, 100, 100, 0, M_PI, false).Dash("10 5 1 5").Stroke(5, Black());
-
+/*
 		sw.Text(500, 500, "HELLO WORLD!", Arial(300).Bold())
 		  .Fill(TestImg::test(), m, true);
 		sw.Text(500, 800, "HELLO WORLD!", Roman(600).Bold())
 		  .Stroke(35, Black())
 		  .Stroke(30, TestImg::test(), m, true);
+*/
 }
 
 struct App : TopWindow {
