@@ -160,9 +160,11 @@ int SliderCtrl::ClientToSlider(int p) const
 {
 	if(max <= min)
 		return min;
+	Size hsz = CtrlImg::hthumb().GetSize();
+	Size vsz = CtrlImg::vthumb().GetSize();
+	p -= HoVe(hsz.cx / 2, vsz.cy / 2);
 	return minmax(min + iscale(p, max - min,
-	                           HoVe(GetSize().cx - CtrlImg::hthumb().GetSize().cx,
-	                                GetSize().cy - CtrlImg::vthumb().GetSize().cy)), min, max);
+	                           HoVe(GetSize().cx - hsz.cx, GetSize().cy - vsz.cy)), min, max);
 }
 
 void SliderCtrl::Dec()
