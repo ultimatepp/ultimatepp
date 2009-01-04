@@ -119,7 +119,7 @@ private:
 			*y = v[i].y;
 			return c[i];
 		}
-		unsigned command(unsigned i) const { return i < c.GetCount() ? c[i] : agg::path_cmd_stop; }
+		unsigned command(unsigned i) const { return (int)i < c.GetCount() ? c[i] : agg::path_cmd_stop; }
     };
 
 	typedef agg::path_base<vertex_upp_storage> path_storage;
@@ -137,7 +137,7 @@ private:
 	Size                          size;
 	Sizef                         sizef;
 	ImageBuffer&                  buffer;
-	Array< Buffer<byte> >         mask;
+	Array< Buffer<byte> >         clip;
 	
 	struct Attr : Moveable<Attr> {
 		Matrix2D                        mtx;
@@ -147,8 +147,8 @@ private:
 		double                          miter_limit;
 		WithDeepCopy< Vector<double> >  dash;
 		double                          dash_start;
-		int                             masklevel;
-		bool                            hasmask;
+		int                             cliplevel;
+		bool                            hasclip;
 	};
 
 	Attr                          attr;
@@ -201,7 +201,7 @@ public:
 	SDraw& Stroke(double width, const Image& image, const Matrix2D& transsrc,
 	              dword flags = 0, int alpha = 255);
 
-	SDraw& FillMask(int alpha);
+	SDraw& Clip(int alpha = 255);
 
 	SDraw& Arc(double x, double y, double rx, double ry,
 	           double start_angle, double sweep_angle, bool startline = false);
