@@ -4,6 +4,7 @@ uses
 
 file
 	app.tpp,
+	test.iml,
 	main.cpp charset "windows-1250";
 
 mainconfig

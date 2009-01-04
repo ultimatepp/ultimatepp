@@ -10,7 +10,7 @@ static inline double ft_dbl(int p)
 }
 
 bool RenderOutline(const FT_Outline& outline, SDraw& path)
-{   
+{
 	FT_Vector   v_last;
 	FT_Vector   v_control;
 	FT_Vector   v_start;
@@ -110,10 +110,10 @@ bool RenderOutline(const FT_Outline& outline, SDraw& path)
 				           ft_dbl(vec2.x), -ft_dbl(vec2.y),
 				           ft_dbl(v_start.x), -ft_dbl(v_start.y));
 				goto Close;
-            }
+			}
 		}
-		path.Close();
 	Close:
+		path.Close();
 		first = last + 1; 
     }
 	return true;
