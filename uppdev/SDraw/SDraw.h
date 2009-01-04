@@ -50,6 +50,21 @@ enum {
 	LINEJOIN_MITER = agg::miter_join,
 	LINEJOIN_ROUND = agg::round_join,
 	LINEJOIN_BEVEL = agg::bevel_join,
+	
+	FILL_NONE      = 0,
+	FILL_PAD       = 1,
+	FILL_REPEAT    = 2,
+	FILL_REFLECT   = 3,
+};
+
+class Gradient {
+	Vector<double> pos;
+	Vector<RGBA>   color;
+
+public:
+	Image Generate(int w) const;
+	Gradient& Stop(double pos, RGBA c);
+	Gradient(RGBA c1, RGBA c2);
 };
 
 class SDraw : public Draw {
@@ -92,9 +107,9 @@ private:
 		void remove_all() { v.Clear(); c.Clear(); }
 		void free_all()   { remove_all(); }
 		void add_vertex(double x, double y, unsigned cmd) { v.Add(Pointf(x, y)); c.Add(cmd); }
-		void modify_vertex(unsigned i, double x, double y) { v[i].x = x; v[i].y = y; }
-		void modify_vertex(unsigned i, double x, double y, unsigned cmd) { modify_vertex(i, x, y); c[i] = cmd; }
-		void modify_command(unsigned i, unsigned cmd) { c[i] = cmd; }
+		void modify_vertex(int i, double x, double y) { v[i].x = x; v[i].y = y; }
+		void modify_vertex(int i, double x, double y, unsigned cmd) { modify_vertex(i, x, y); c[i] = cmd; }
+		void modify_command(int i, unsigned cmd) { c[i] = cmd; }
 		void swap_vertices(unsigned v1, unsigned v2) { v.Swap(v1, v2); c.Swap(v1, v2); }
 		unsigned last_command() const { return c.GetCount() ? c.Top() : agg::path_cmd_stop; }
 		unsigned last_vertex(double* x, double* y) const {
@@ -114,12 +129,12 @@ private:
 		double last_x() const { return v.GetCount() ? v.Top().x : 0.0; }
 		double last_y() const { return v.GetCount() ? v.Top().y : 0.0; }
 		unsigned total_vertices() const { return v.GetCount(); }
-		unsigned vertex(unsigned i, double* x, double* y) const {
+		unsigned vertex(int i, double* x, double* y) const {
 			*x = v[i].x;
 			*y = v[i].y;
 			return c[i];
 		}
-		unsigned command(unsigned i) const { return (int)i < c.GetCount() ? c[i] : agg::path_cmd_stop; }
+		unsigned command(int i) const { return (int)i < c.GetCount() ? c[i] : agg::path_cmd_stop; }
     };
 
 	typedef agg::path_base<vertex_upp_storage> path_storage;
@@ -196,6 +211,10 @@ public:
 	SDraw& Fill(const RGBA& rgba);
 	SDraw& Fill(const Image& image, const Matrix2D& transsrc = Matrix2D(),
 	            dword flags = 0, int alpha = 255);
+	SDraw& Fill(const Image& image, double x1, double y1, double x2, double y2,
+	            dword flags = 0, int alpha = 255);
+	SDraw& Fill(const Gradient& gradient, double x1, double y1, double x2, double y2,
+	            dword flags = FILL_PAD);
 	
 	SDraw& Stroke(double width, const RGBA& rgba);
 	SDraw& Stroke(double width, const Image& image, const Matrix2D& transsrc,

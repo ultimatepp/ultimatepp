@@ -3,9 +3,9 @@ uses
 	SDraw;
 
 file
+	main.cpp charset "windows-1250",
 	app.tpp,
-	test.iml,
-	main.cpp charset "windows-1250";
+	test.iml;
 
 mainconfig
 	"" = "GUI",
