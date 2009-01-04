@@ -466,6 +466,11 @@ void ChHostSkin()
 			Win32Look(s.arealook, XP_REBAR, 0, 1);
 		}
 
+		CtrlImg::Set("hthumb", XpImage(XP_TRACKBAR, TKP_THUMB, TUS_NORMAL, Null, Size(10, 20)));
+		CtrlImg::Set("hthumb1", XpImage(XP_TRACKBAR, TKP_THUMB, TUS_PRESSED, Null, Size(10, 20)));
+		CtrlImg::Set("vthumb", XpImage(XP_TRACKBAR, TKP_THUMBVERT, TUS_NORMAL, Null, Size(20, 10)));
+		CtrlImg::Set("vthumb1", XpImage(XP_TRACKBAR, TKP_THUMBVERT, TUS_PRESSED, Null, Size(20, 10)));
+
 		XpElement e;
 		for(int i = 0; i < 4; i++) {
 			{
