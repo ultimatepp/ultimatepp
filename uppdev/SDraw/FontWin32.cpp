@@ -46,7 +46,6 @@ void RenderCharPath(const char* gbuf, unsigned total_size, SDraw& sw, double xx,
 					POINTFX pnt_b = pc->apfx[u];     // B is always the current point
 					POINTFX pnt_c = pc->apfx[u+1];
 					if (u < pc->cpfx - 2) {          // If not on last spline, compute C
-						// midpoint (x,y)
 						*(int*)&pnt_c.x = (*(int*)&pnt_b.x + *(int*)&pnt_c.x) / 2;
 						*(int*)&pnt_c.y = (*(int*)&pnt_b.y + *(int*)&pnt_c.y) / 2;
 					}
@@ -56,6 +55,7 @@ void RenderCharPath(const char* gbuf, unsigned total_size, SDraw& sw, double xx,
 			}
 			cur_poly += sizeof(WORD) * 2 + sizeof(POINTFX) * pc->cpfx;
 		}
+		sw.Close();
 		cur_glyph += th->cb;
     }
 }
@@ -107,6 +107,7 @@ SDraw& SDraw::Character(double x, double y, int ch, Font fnt)
 		s = cache.Get(h);
 	}
 	RenderCharPath(s, s.GetLength(), *this, x, y);
+	EvenOdd(true);
 	return *this;
 }
 

@@ -232,7 +232,7 @@ struct App : TopWindow {
 		w.DrawRect(sz, White());
 		PaintLion(&w);
 	}
-	
+
 	App() { Sizeable().Zoomable(); p = Point(0, 0); }
 };
 

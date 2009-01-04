@@ -75,7 +75,7 @@ void SDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	Move(x1, y1);
 	Line(x2, y2);
-	Stroke(color, width);
+	Stroke(width, color);
 }
 
 void SDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)

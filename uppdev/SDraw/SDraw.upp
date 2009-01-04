@@ -2,6 +2,7 @@ optimize_speed;
 
 file
 	SDraw.h,
+	Matrix2D.cpp,
 	SDraw.cpp,
 	FontX11.cpp,
 	FontWin32.cpp,
@@ -12,14 +13,13 @@ file
 	agg_array.h,
 	agg_alpha_mask_u8.h,
 	agg_basics.h,
-	agg_bezier_arc.h,
-	agg_bezier_arc.cpp,
 	agg_clip_liang_barsky.h,
 	agg_color_rgba.h,
 	agg_color_gray.h,
 	agg_config.h,
 	agg_conv_adaptor_vcgen.h,
 	agg_conv_curve.h,
+	agg_conv_dash.h,
 	agg_conv_stroke.h,
 	agg_conv_transform.h,
 	agg_curves.h,
@@ -41,7 +41,6 @@ file
 	agg_renderer_scanline.h,
 	agg_rendering_buffer.h,
 	agg_scanline_p.h,
-	agg_scanline_u.h,
 	agg_span_allocator.h,
 	agg_span_image_filter.h,
 	agg_span_image_filter_upp.h,
@@ -51,5 +50,7 @@ file
 	agg_shorten_path.h,
 	agg_vcgen_stroke.h,
 	agg_vcgen_stroke.cpp,
+	agg_vcgen_dash.h,
+	agg_vcgen_dash.cpp,
 	agg_vertex_sequence.h;
 

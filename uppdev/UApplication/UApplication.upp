@@ -1,0 +1,18 @@
+uses
+	CtrlLib,
+	GridCtrl;
+
+file
+	UApplication.h charset "UTF-8",
+	MainWorkSpace.h charset "UTF-8",
+	TrayMenu.cpp,
+	MainWorkSpace.cpp charset "UTF-8",
+	MainMenu.cpp charset "UTF-8",
+	UApplication.iml,
+	UApplication.t charset "UTF-8",
+	main.cpp charset "UTF-8",
+	UApplication.lay charset "UTF-8";
+
+mainconfig
+	"" = "GUI";
+

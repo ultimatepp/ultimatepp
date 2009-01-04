@@ -6,6 +6,14 @@ using namespace Upp;
 #define TOPICFILE <SDrawTest/app.tpp/all.i>
 #include <Core/topic_group.h>
 
+#define IMAGECLASS TestImg
+#define IMAGEFILE <SDrawTest/test.iml>
+#include <Draw/iml_header.h>
+
+#define IMAGECLASS TestImg
+#define IMAGEFILE <SDrawTest/test.iml>
+#include <Draw/iml_source.h>
+
 static char g_lion[] =
 	"f2cc99\n"
 	"M 69,18 L 82,8 L 99,3 L 118,5 L 135,12 L 149,21 L 156,13 L 165,9 L 177,13 L 183,28 L 180,50 L 164,91 L 155,107 L 154,114 L 151,121 L 141,127 L 139,136 L 155,206 L 157,251 L 126,342 L 133,357 L 128,376 L 83,376 L 75,368 L 67,350 L 61,350 L 53,369 L 4,369 L 2,361 L 5,354 L 12,342 L 16,321 L 4,257 L 4,244 L 7,218 L 9,179 L 26,127 L 43,93 L 32,77 L 30,70 L 24,67 L 16,49 L 17,35 L 18,23 L 30,12 L 40,7 L 53,7 L 62,12 L 69,18 L 69,18 L 69,18\n"
@@ -233,27 +241,12 @@ void PaintLion(SDraw *sw, Draw *w)
 		w->DrawPolygon(p, color);
 }
 
-struct App : TopWindow {
-	Point p;
+void PaintExample(SDraw& sw)
+{
 
-	virtual void MouseMove(Point _p, dword keyflags) {
-		p = _p;
-		Refresh();
-	}
-
-	virtual void Paint(Draw& w) {
-		RTIMING("Paint");
-		Size sz = GetSize();
-		ImageBuffer ib(sz);
-		Fill(~ib, White(), ib.GetLength());
-		SDraw sw(ib);
-
-		sw.AntiAliased(true);
 		//Text(sw, 500, 500, Format("%d", p.y), Arial(20));
 		//sw.Fill(Black());
 
-		sw.Scale(0.0005 * p.x);
-		sw.Rotate(0.01 * p.y - M_PI);
 /*
 		DDUMP(0.01 * 394 - M_PI);
 		sw.Begin();		
@@ -284,24 +277,24 @@ struct App : TopWindow {
 		PaintLion(&sw, NULL);
 //		sw.Move(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
 //		sw.Move(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-		sw.Move(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(Cyan(), 4);
+		sw.Move(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(4, Cyan());
 //		sw.Move(300, 200).Line(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
 //		d="M300,200 h-150 a150,150 0 1,0 150,-150 z"
   //      fill="red" stroke="blue" stroke-width="5"
   
   		sw.EvenOdd(false);
   		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(520, 510).Line(580, 510).Line(580, 580).Fill(Black());
+  		  .Move(520, 510).Line(580, 510).Line(580, 570).Fill(Black());
 
 		sw.Translate(150, 0);
   		sw.EvenOdd(false);
   		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(520, 510).Line(580, 510).Line(580, 580).Fill(Red());
+  		  .Move(580, 570).Line(580, 510).Line(520, 510).Fill(Red());
 
 		sw.Translate(150, 0);
   		sw.EvenOdd(true);
   		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(520, 510).Line(580, 510).Line(580, 580).Fill(Blue());
+  		  .Move(520, 510).Line(580, 510).Line(580, 570).Fill(Blue());
 
 		sw.Arc(20, 30, 40, 10, 0, M_2PI).FillMask(50);
 		for(int i = 0; i < 0; i++) {
@@ -349,7 +342,6 @@ struct App : TopWindow {
 //		   .Stroke(Black(), 1);
 #if 0
 		sw.EvenOdd(true);
-		Text(sw, p.x / 10.0, 0, "Ahoj Jáchyme jak se máš?", Roman(30));
 		sw.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
 		sw.Stroke(Black(), 1);
 //		sw.Fill(Black()).Stroke(LtRed(), 2);
@@ -367,12 +359,36 @@ struct App : TopWindow {
 		sw.Fill(LtRed());
 		sw.Stroke(Black(), 2);
 		Arc(sw, 500, 300, 100, 100, 0, M_PI * 2, false);
-		
-
 #endif
-		w.DrawImage(0, 0, ib);
-		w.DrawText(550, 300, p.y, "R", Courier(14), Black());
+		sw.Text(50, 250, "Ahoj jak se máš?", Roman(300)).Dash("5 5 1 5").Stroke(1, Black());
+		sw.Text(50, 150, "Ahoj jak se máš?", Roman(100)).Fill(Gray()).Stroke(2, Red());
+		sw.Arc(800, 800, 100, 100, 0, M_PI, false).Dash("10 5 1 5").Stroke(5, Black());
 
+		sw.Text(500, 500, "HELLO WORLD!", Arial(300).Bold())
+		  .Fill(TestImg::test(), m, true);
+		sw.Text(500, 800, "HELLO WORLD!", Roman(600).Bold())
+		  .Stroke(35, Black())
+		  .Stroke(30, TestImg::test(), m, true);
+}
+
+struct App : TopWindow {
+	Point p;
+
+	virtual void MouseMove(Point _p, dword keyflags) {
+		p = _p;
+		Refresh();
+	}
+
+	virtual void Paint(Draw& w) {
+		RTIMING("Paint");
+		Size sz = GetSize();
+		ImageBuffer ib(sz);
+		Fill(~ib, White(), ib.GetLength());
+		SDraw sw(ib);
+		sw.Scale(0.0005 * p.x);
+		sw.Rotate(0.01 * p.y - M_PI);
+		PaintExample(sw);
+		w.DrawImage(0, 0, ib);
 		ImageDraw iw(500, 500);
 		iw.DrawRect(0, 0, 500, 500, LtGray());
 		for(int i = 0; i < 1; i++) {
@@ -394,6 +410,14 @@ struct App : TopWindow {
 GUI_APP_MAIN
 {
 	SetDefaultCharset(CHARSET_WIN1250);
+#ifndef _DEBUG
+	ImageBuffer ib(500, 500);
+	for(int i = 0; i < 100; i++) {
+		RTIMING("Benchmark");
+		SDraw sw(ib);
+		PaintExample(sw);
+	}
+#endif
 	App().Run();
 }
 

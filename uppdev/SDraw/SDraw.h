@@ -16,8 +16,10 @@
 #include "agg_scanline_u.h"
 #include "agg_scanline_p.h"
 #include "agg_path_storage.h"
+#include "agg_conv_transform.h"
 #include "agg_conv_stroke.h"
 #include "agg_conv_curve.h"
+#include "agg_conv_dash.h"
 #include "agg_span_allocator.h"
 #include "agg_span_interpolator_linear.h"
 #include "agg_image_accessors.h"
@@ -35,9 +37,10 @@ struct Matrix2D : agg::trans_affine {
 	Matrix2D Inverted() const                    { Matrix2D h = *this; h.invert(); return h; }
 };
 
-struct Translate2D : Matrix2D {
-	Translate2D(double x, double y) { tx = x; ty = y; }
-};
+Matrix2D Translate2D(double x, double y);
+Matrix2D Rotate2D(double angle);
+Matrix2D Scale2D(double scalex, double scaley);
+Matrix2D Scale2D(double scale);
 
 enum {
 	LINECAP_BUTT = agg::butt_cap,
@@ -116,9 +119,7 @@ private:
 			*y = v[i].y;
 			return c[i];
 		}
-		unsigned command(unsigned i) const { return c[i]; }
-		
-		void Swap(vertex_upp_storage& b) { UPP::Swap(v, b.v); UPP::Swap(c, b.c); }
+		unsigned command(unsigned i) const { return i < c.GetCount() ? c[i] : agg::path_cmd_stop; }
     };
 
 	typedef agg::path_base<vertex_upp_storage> path_storage;
@@ -126,7 +127,6 @@ private:
 	typedef agg::pixfmt_rgba32_pre pixfmt;
 	typedef agg::rgba8 color_type;
 	typedef agg::renderer_base<agg::pixfmt_rgba32_pre> renderer_base;
-	typedef agg::renderer_scanline_bin_solid<renderer_base> renderer_solid_bin;
 	typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
 	typedef agg::span_interpolator_linear<> interpolator_type;
 	typedef agg::image_accessor_clip<pixfmt> img_source_type;
@@ -140,15 +140,19 @@ private:
 	Array< Buffer<byte> >         mask;
 	
 	struct Attr : Moveable<Attr> {
-		Matrix2D          mtx;
-		bool              evenodd;
-		byte              join;
-		byte              cap;
-		double            miter_limit;
-		bool              antialiased;
+		Matrix2D                        mtx;
+		bool                            evenodd;
+		byte                            join;
+		byte                            cap;
+		double                          miter_limit;
+		WithDeepCopy< Vector<double> >  dash;
+		double                          dash_start;
+		int                             masklevel;
+		bool                            hasmask;
 	};
 
 	Attr                          attr;
+	Attr                          pathattr;
 	Vector<Attr>                  attrstack;
 
 	path_storage                  path;
@@ -159,15 +163,12 @@ private:
 	agg::scanline_p8              scanline_p;
 	renderer_base                 renb;
 	renderer_solid                renderer;
-	renderer_solid_bin            rendererb;
 	agg::pixfmt_rgba32_pre        pixf;
 
 	typedef agg::conv_curve<path_storage>       Curved;
-	typedef agg::conv_stroke<Curved>            CurvedStroked;
 	typedef agg::conv_transform<Curved>         CurvedTrans;
 
 	Curved                        curved;
-	CurvedStroked                 curved_stroked;
 	CurvedTrans                   curved_trans;
 	
 	Rectf                         pathrect;
@@ -180,11 +181,10 @@ private:
 	Pointf Reflection() const;
 	Pointf Current() const        { return current; }
 	Rectf  PathRect() const       { return pathrect; }
+	Attr&  Cttr()                 { return inpath ? pathattr : attr; }
+	path_storage MakeStroke(double width);
 	
 public:
-	void   Begin();
-	void   End();
-	
 	SDraw& Move(double x, double y);
 	SDraw& Line(double x, double y);
 	SDraw& Quadratic(double x1, double y1, double x, double y);
@@ -193,12 +193,15 @@ public:
 	SDraw& Cubic(double x2, double y2, double x, double y);
 	SDraw& Close();
 
-	SDraw& Fill(const Image& image, const Matrix2D& transsrc = Matrix2D(),
-	            int alpha = 255, dword flags = false);
-	SDraw& FillMask(int alpha);
-	
 	SDraw& Fill(const RGBA& rgba);
-	SDraw& Stroke(const RGBA& rgba, double width);
+	SDraw& Fill(const Image& image, const Matrix2D& transsrc = Matrix2D(),
+	            dword flags = 0, int alpha = 255);
+	
+	SDraw& Stroke(double width, const RGBA& rgba);
+	SDraw& Stroke(double width, const Image& image, const Matrix2D& transsrc,
+	              dword flags = 0, int alpha = 255);
+
+	SDraw& FillMask(int alpha);
 
 	SDraw& Arc(double x, double y, double rx, double ry,
 	           double start_angle, double sweep_angle, bool startline = false);
@@ -209,23 +212,25 @@ public:
 	SDraw& Text(double x, double y, const String& s, Font fnt, double *dx = NULL);
 	SDraw& Text(double x, double y, const char *text, Font fnt, int n = -1, double *dx = NULL);
 	
-	SDraw& LineCap(int linecap)                         { attr.cap = linecap; return *this; }
-	SDraw& LineJoin(int linejoin)                       { attr.join = linejoin; return *this; }
-	SDraw& MiterLimit(double l)                         { attr.miter_limit = l; return *this; }
-	SDraw& EvenOdd(bool evenodd)                        { attr.evenodd = evenodd; return *this; }
-	SDraw& AntiAliased(bool aa)                         { attr.antialiased = aa; return *this; }
+	SDraw& LineCap(int linecap);
+	SDraw& LineJoin(int linejoin);
+	SDraw& MiterLimit(double l);
+	SDraw& EvenOdd(bool evenodd);
+	SDraw& Dash(const Vector<double>& dash, double start = 0);
+	SDraw& Dash(const char *dash, double start = 0);
 
+	void   Transform(const Matrix2D& m);
+
+	void   Begin();
+	void   End();
+	
 	void   Translate(double x, double y);
 	void   Rotate(double a);
 	void   Scale(double scalex, double scaley);
 	void   Scale(double scale);
-	
-	void   Apply(const Matrix2D& m)       { attr.mtx *= m; }
-	void   operator*=(const Matrix2D& m)  { Apply(m); }
 
 	SDraw(ImageBuffer& ib);
 };
-
 
 END_UPP_NAMESPACE
 
