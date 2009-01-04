@@ -243,6 +243,7 @@ void PaintLion(SDraw *sw, Draw *w)
 
 void PaintExample(SDraw& sw)
 {
+//		sw.Arc(500, 500, 400, 400, 0, M_2PI).Clip();
 
 		//Text(sw, 500, 500, Format("%d", p.y), Arial(20));
 		//sw.Fill(Black());
@@ -371,11 +372,28 @@ void PaintExample(SDraw& sw)
 		  .Stroke(35, Black())
 		  .Stroke(30, TestImg::test(), m, true);
 */
-//		sw.Text(0, 0, "HELLO WORLD!", Arial(300).Bold())
-//		  .Fill(Gradient(50 * Blue(), Red()).Stop(0.4, Green()));
+		sw.Text(0, 0, "HELLO WORLD!", Arial(300).Bold())
+		  .Fill(Gradient(50 * Blue(), Red()).Stop(0.4, Green()), 0, 0, GetTextSize("HELLO WORLD!", Arial(300).Bold()).cx, 0);
 
-//		sw.Move(300, 300).Line(600, 300).Line(600, 600).Line(300, 600)
-//		  .Fill(TestImg::test(), 300, 300, 600, 300, FILL_REPEAT);
+		for(int h = 0; h < 3; h++) {
+			sw.Begin();
+			sw.Translate(500 * h, 300 * h);
+			double q = h * 0.2 + 1;
+			sw.Move(0, 0).Line(1600, 0).Line(1600, 1600).Line(0, 1600)
+			  .Fill(TestImg::test(), q * 300, 300, q * 600, 300, 0 * FILL_REPEAT);
+	
+			sw.Move(q * 300, 300).Line(q * 600, 300).Line(q * 600, 600).Line(q * 300, 600).Close().Stroke(1, LtRed());
+			sw.End();
+		}
+
+		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
+		  .Fill(TestImg::test(), 1500, 300, 1500, 600, 0 * FILL_REPEAT);
+
+		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
+		  .Fill(TestImg::test(), 2500, 600, 2500, 300, 0 * FILL_REPEAT);
+
+		sw.Move(0, 0).Line(1600, 0).Line(1600, 1600).Line(0, 1600)
+		  .Fill(TestImg::test(), 700, 600, 800, 100, 0 * FILL_REPEAT);
 }
 
 struct App : TopWindow {
@@ -427,4 +445,3 @@ GUI_APP_MAIN
 #endif
 	App().Run();
 }
-

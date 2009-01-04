@@ -140,7 +140,7 @@ SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, dword flags, in
 	if(image.GetWidth() == 0 || image.GetHeight() == 0)
 		return *this;
 	span_alloc sa;
-	Matrix2D m = pathattr.mtx * transsrc;
+	Matrix2D m = transsrc * pathattr.mtx;
 	m.invert();
 	interpolator_type interpolator(m);
 	Size isz = image.GetSize();
@@ -150,7 +150,6 @@ SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, dword flags, in
 		path.close_polygon();
 	rasterizer.reset();
 	rasterizer.filling_rule(pathattr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
-	path.arrange_orientations_all_paths(agg::path_flags_cw);
 	rasterizer.add_path(curved_trans);
 	span_gen_type sg(img_pixf, agg::rgba8_pre(0, 0, 0, 0), interpolator);
 	sg.alpha(alpha);
@@ -174,9 +173,12 @@ SDraw& SDraw::Fill(const Image& image, double x1, double y1, double x2, double y
 {
 	Matrix2D m;
 	Size sz = image.GetSize();
-	m.translate(x1 / sz.cx, y1 / sz.cy);
-	m.scale((x2 - x1) / sz.cx);
-	m.rotate(atan((y2 - y1) / (x2 - x1))); //!!!
+	m.scale(agg::calc_distance(x1, y1, x2, y2) / sz.cx);
+	if(abs(x2 - x1) < abs(y2 - y1) / 1000000)
+		m.rotate(y2 > y1 ? M_PI_2 : -M_PI_2);
+	else
+		m.rotate(atan((y2 - y1) / (x2 - x1))); //!!!
+	m.translate(x1, y1);
 	Fill(image, m, flags, alpha);
 	return *this;
 }
