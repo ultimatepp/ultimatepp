@@ -259,9 +259,12 @@ void PaintExample(SDraw& sw)
 		sw.Move(100, 100).Line(200, 100).Line(200, 200).Fill(Blue());
 */		
 		if(1) {
+			sw.Begin();
+			sw.Arc(500, 500, 500, 500, 0, M_2PI).Clip();		
 			static RichText txt = ParseQTF(GetTopic("topic://SDrawTest/app/main$en-us"));
 			RTIMING("QTF");
 			txt.Paint(sw, 0, 0, 4000);
+			sw.End();
 		}
 		
 		   		
@@ -296,10 +299,10 @@ void PaintExample(SDraw& sw)
   		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
   		  .Move(520, 510).Line(580, 510).Line(580, 570).Fill(Blue());
 
-		sw.Arc(20, 30, 40, 10, 0, M_2PI).FillMask(50);
+//		sw.Arc(20, 30, 40, 10, 0, M_2PI).Clip(50);
 		for(int i = 0; i < 0; i++) {
 			RTIMING("Lion");
-			sw.Move(200, 200).Line(200, 210).Line(210, 205).FillMask(0);
+			sw.Move(200, 200).Line(200, 210).Line(210, 205).Clip(0);
 			PaintLion(&sw, NULL);
 //			sw.Move(200, 200).Line(200, 300).Line(300, 250).Fill(Blue());
 		}

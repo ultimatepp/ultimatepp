@@ -117,9 +117,9 @@ SDraw& SDraw::Fill(const RGBA& color)
 		rasterizer.reset();
 		rasterizer.filling_rule(pathattr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
 		rasterizer.add_path(curved_trans);
-		if(mask.GetCount()) {
+		if(clip.GetCount()) {
 			agg::rendering_buffer mask_rbuf;
-			mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
+			mask_rbuf.attach(~clip.Top(), size.cx, size.cy, size.cx);
 			agg::alpha_mask_gray8 mask(mask_rbuf);
 			agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
 			renderer.color(*(color_type *)&color);
@@ -131,35 +131,6 @@ SDraw& SDraw::Fill(const RGBA& color)
 		}
 		rasterizer.reset();
 	}
-	inpath = false;
-	return *this;
-}
-
-SDraw& SDraw::FillMask(int alpha)
-{
-	if(mask.GetCount() == 0) {
-		mask.Add().Alloc(size.cx * size.cy);
-		memset(~mask.Top(), 255, size.cx * size.cy);
-	}
-
-	agg::rendering_buffer mask_rbuf;
-	mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
-
-	typedef agg::renderer_base<agg::pixfmt_gray8> ren_base;
-	
-	agg::pixfmt_gray8 pixf(mask_rbuf);
-	ren_base rb(pixf);
-	agg::scanline_p8 sl;
-
-	if(inpath)
-		path.close_polygon();
-	rasterizer.reset();
-	rasterizer.filling_rule(pathattr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
-	rasterizer.add_path(curved_trans);
-	agg::renderer_scanline_aa_solid<ren_base> r(rb);
-	r.color(agg::gray8(alpha, 255));
-	agg::render_scanlines(rasterizer, sl, r);
-	rasterizer.reset();
 	inpath = false;
 	return *this;
 }
@@ -184,9 +155,9 @@ SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, dword flags, in
 	span_gen_type sg(img_pixf, agg::rgba8_pre(0, 0, 0, 0), interpolator);
 	sg.alpha(alpha);
 	sg.tile(flags);
-	if(mask.GetCount()) {
+	if(clip.GetCount()) {
 		agg::rendering_buffer mask_rbuf;
-		mask_rbuf.attach(~mask.Top(), size.cx, size.cy, size.cx);
+		mask_rbuf.attach(~clip.Top(), size.cx, size.cy, size.cx);
 		agg::alpha_mask_gray8 mask(mask_rbuf);
 		agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
 		agg::render_scanlines_aa(rasterizer, sl, renb, sa, sg);
@@ -252,6 +223,42 @@ SDraw& SDraw::Stroke(double width, const Image& image, const Matrix2D& transsrc,
 	return *this;
 }
 
+SDraw& SDraw::Clip(int alpha)
+{
+	int l = size.cx * size.cy;
+	Buffer<byte> cl(l);
+	memset(~cl, 0, l);
+	agg::rendering_buffer mask_rbuf;
+	mask_rbuf.attach(~cl, size.cx, size.cy, size.cx);
+	typedef agg::renderer_base<agg::pixfmt_gray8> ren_base;
+	agg::pixfmt_gray8 pixf(mask_rbuf);
+	ren_base rb(pixf);
+	agg::scanline_p8 sl;
+	if(inpath)
+		path.close_polygon();
+	rasterizer.reset();
+	rasterizer.filling_rule(pathattr.evenodd ? agg::fill_even_odd : agg::fill_non_zero);
+	rasterizer.add_path(curved_trans);
+	agg::renderer_scanline_aa_solid<ren_base> r(rb);
+	r.color(agg::gray8(alpha, 255));
+	agg::render_scanlines(rasterizer, sl, r);
+	rasterizer.reset();
+	inpath = false;
+	if(clip.GetCount()) {
+		byte *s = ~clip.Top();
+		for(int i = 0; i < l; i++)
+			cl[i] = ((cl[i] + (cl[i] >> 7)) * *s) >> 8;
+	}
+	if(attr.hasclip)
+		clip.Top() = cl;
+	else {
+		clip.Add() = cl;
+		attr.hasclip = true;
+		attr.cliplevel = clip.GetCount();
+	}
+	return *this;
+}
+
 void SDraw::Translate(double x, double y)
 {
 	Transform(Translate2D(x, y));
@@ -284,6 +291,7 @@ void SDraw::End()
 		return;
 	}
 	attr = attrstack.Pop();
+	clip.SetCount(attr.cliplevel);
 }
 
 void   SDraw::Transform(const Matrix2D& m) { Cttr().mtx = m * attr.mtx; }
@@ -339,7 +347,8 @@ SDraw::SDraw(ImageBuffer& ib)
 	attr.join = LINEJOIN_MITER;
 	attr.miter_limit = 4;
 	attr.evenodd = false;
-	attr.masklevel = 0;
+	attr.hasclip = false;
+	attr.cliplevel = 0;
 }
 
 END_UPP_NAMESPACE
