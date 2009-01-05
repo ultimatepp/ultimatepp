@@ -249,7 +249,7 @@ Vector<SqlColumnInfo> PostgreSQLSession::EnumColumns(String database, String tab
 			ci.width = type_mod;
 		ci.precision = (type_mod >> 16) & 0xffff;
 		ci.scale = type_mod & 0xffff;
-		ci.nullable = sql[4] == "0";
+		ci.nullable = AsString(sql[4]) == "0";
 	}
 	return vec;
 }
