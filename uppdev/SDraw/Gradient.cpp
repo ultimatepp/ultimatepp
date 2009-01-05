@@ -44,7 +44,8 @@ Gradient::Gradient(RGBA c1, RGBA c2)
 	color.Add(c2);
 }
 
-SDraw& SDraw::Fill(const Gradient& gradient, double x1, double y1, double x2, double y2, dword flags)
+SDraw& SDraw::Fill(const Gradient& gradient, double x1, double y1, double x2, double y2,
+                   dword flags)
 {
 	Image m = gradient.Generate(256);
 	Fill(m, x1, y1, x2, y2, true);
