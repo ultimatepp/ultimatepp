@@ -373,8 +373,11 @@ void PaintExample(SDraw& sw)
 		  .Stroke(30, TestImg::test(), m, true);
 */
 		sw.Text(0, 0, "HELLO WORLD!", Arial(300).Bold())
-		  .Fill(Gradient(50 * Blue(), Red()).Stop(0.4, Green()), 0, 0, GetTextSize("HELLO WORLD!", Arial(300).Bold()).cx, 0);
+		  .Fill(Gradient(50 * Blue(), Red()).Stop(0.4, Green()),
+		        100, 0, GetTextSize("HELLO WORLD!", Arial(300).Bold()).cx - 100, 0,
+		        0);
 
+	if(1) {
 		for(int h = 0; h < 3; h++) {
 			sw.Begin();
 			sw.Translate(500 * h, 300 * h);
@@ -394,6 +397,14 @@ void PaintExample(SDraw& sw)
 
 		sw.Move(0, 0).Line(1600, 0).Line(1600, 1600).Line(0, 1600)
 		  .Fill(TestImg::test(), 700, 600, 800, 100, 0 * FILL_REPEAT);
+	}
+
+		sw.Path("M153 334 C153 334 151 334 151 334 C151 339 153 344 156 344 C164 344 171 339 171 334 "
+		        "C171 322 164 314 156 314 C142 314 131 322 131 334 C131 350 142 364 156 364 "
+		        "C175 364 191 350 191 334 C191 311 175 294 156 294 C131 294 111 311 111 334 "
+		        "C111 361 131 384 156 384 C186 384 211 361 211 334 C211 300 186 274 156 274 ")
+		.Stroke(2, Red());
+		sw.Path("M500,500 L600,500 L550,600").Fill(Black()).Stroke(2, LtRed());
 }
 
 struct App : TopWindow {
@@ -410,8 +421,11 @@ struct App : TopWindow {
 		ImageBuffer ib(sz);
 		Fill(~ib, White(), ib.GetLength());
 		SDraw sw(ib);
-		sw.Scale(0.0005 * p.x);
-		sw.Rotate(0.01 * p.y - M_PI);
+		sw.Scale(0.2);
+//		sw.Rotate(0.01 * p.y - M_PI);
+		PaintExample(sw);
+		sw.Rotate(0.05);
+		sw.Opacity(0.5);
 		PaintExample(sw);
 		w.DrawImage(0, 0, ib);
 		ImageDraw iw(500, 500);

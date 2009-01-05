@@ -162,6 +162,7 @@ private:
 		double                          miter_limit;
 		WithDeepCopy< Vector<double> >  dash;
 		double                          dash_start;
+		double                          opacity;
 		int                             cliplevel;
 		bool                            hasclip;
 	};
@@ -198,7 +199,11 @@ private:
 	Rectf  PathRect() const       { return pathrect; }
 	Attr&  Cttr()                 { return inpath ? pathattr : attr; }
 	path_storage MakeStroke(double width);
-	
+	Pointf ReadPoint(CParser& p, bool rel);
+	void   RenderClip(byte *t, int alpha);
+	void   RectPath(const Rect& r);
+	void   RectPath(int x, int y, int cx, int cy);
+
 public:
 	SDraw& Move(double x, double y);
 	SDraw& Line(double x, double y);
@@ -210,17 +215,16 @@ public:
 
 	SDraw& Fill(const RGBA& rgba);
 	SDraw& Fill(const Image& image, const Matrix2D& transsrc = Matrix2D(),
-	            dword flags = 0, int alpha = 255);
+	            dword flags = 0);
 	SDraw& Fill(const Image& image, double x1, double y1, double x2, double y2,
-	            dword flags = 0, int alpha = 255);
+	            dword flags = 0);
 	SDraw& Fill(const Gradient& gradient, double x1, double y1, double x2, double y2,
 	            dword flags = FILL_PAD);
 	
 	SDraw& Stroke(double width, const RGBA& rgba);
-	SDraw& Stroke(double width, const Image& image, const Matrix2D& transsrc,
-	              dword flags = 0, int alpha = 255);
+	SDraw& Stroke(double width, const Image& image, const Matrix2D& transsrc, dword flags = 0);
 
-	SDraw& Clip(int alpha = 255);
+	SDraw& Clip(double opacity = 1.0);
 
 	SDraw& Arc(double x, double y, double rx, double ry,
 	           double start_angle, double sweep_angle, bool startline = false);
@@ -231,6 +235,10 @@ public:
 	SDraw& Text(double x, double y, const String& s, Font fnt, double *dx = NULL);
 	SDraw& Text(double x, double y, const char *text, Font fnt, int n = -1, double *dx = NULL);
 	
+	SDraw& Path(CParser& p);
+	SDraw& Path(const char *path);
+	
+	SDraw& Opacity(double o);
 	SDraw& LineCap(int linecap);
 	SDraw& LineJoin(int linejoin);
 	SDraw& MiterLimit(double l);
