@@ -1,0 +1,11 @@
+uses
+	Core,
+	Web;
+
+file
+	SendMail.cpp,
+	U:\smtp.txt;
+
+mainconfig
+	"" = "";
+

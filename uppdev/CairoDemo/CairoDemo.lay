@@ -1,0 +1,4 @@
+LAYOUT(CairoDemoLayout, 772, 468)
+	ITEM(CairoCtrl, _cairo, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+

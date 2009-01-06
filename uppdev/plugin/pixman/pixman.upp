@@ -1,0 +1,10 @@
+options
+	-I"./lib",
+	-DPACKAGE="Pixman";
+
+file
+	pixmanlib1.c,
+	pixmanlib2.c,
+	pixmanlib3.c,
+	pixmanlib4.c;
+
