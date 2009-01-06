@@ -290,12 +290,12 @@ void PaintExample(SDraw& sw)
   		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
   		  .Move(520, 510).Line(580, 510).Line(580, 570).Fill(Black());
 
-		sw.Translate(150, 0);
+//		sw.Translate(150, 0);
   		sw.EvenOdd(false);
   		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
   		  .Move(580, 570).Line(580, 510).Line(520, 510).Fill(Red());
 
-		sw.Translate(150, 0);
+//		sw.Translate(150, 0);
   		sw.EvenOdd(true);
   		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
   		  .Move(520, 510).Line(580, 510).Line(580, 570).Fill(Blue());
@@ -372,12 +372,12 @@ void PaintExample(SDraw& sw)
 		  .Stroke(35, Black())
 		  .Stroke(30, TestImg::test(), m, true);
 */
-		sw.Text(0, 0, "HELLO WORLD!", Arial(300).Bold())
+		sw.Text(1000, 50, "HELLO WORLD!", Arial(300).Bold())
 		  .Fill(Gradient(50 * Blue(), Red()).Stop(0.4, Green()),
-		        100, 0, GetTextSize("HELLO WORLD!", Arial(300).Bold()).cx - 100, 0,
+		        1000, 0, GetTextSize("HELLO WORLD!", Arial(300).Bold()).cx - 100, 0,
 		        0);
 
-	if(1) {
+	if(0) {
 		for(int h = 0; h < 3; h++) {
 			sw.Begin();
 			sw.Translate(500 * h, 300 * h);
@@ -392,8 +392,6 @@ void PaintExample(SDraw& sw)
 		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
 		  .Fill(TestImg::test(), 1500, 300, 1500, 600, 0 * FILL_REPEAT);
 
-		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-		  .Fill(TestImg::test(), 2500, 600, 2500, 300, 0 * FILL_REPEAT);
 
 		sw.Move(0, 0).Line(1600, 0).Line(1600, 1600).Line(0, 1600)
 		  .Fill(TestImg::test(), 700, 600, 800, 100, 0 * FILL_REPEAT);
@@ -405,6 +403,9 @@ void PaintExample(SDraw& sw)
 		        "C111 361 131 384 156 384 C186 384 211 361 211 334 C211 300 186 274 156 274 ")
 		.Stroke(2, Red());
 		sw.Path("M500,500 L600,500 L550,600").Fill(Black()).Stroke(2, LtRed());
+
+//	sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
+//	  .Fill(TestImg::test(), 500, 500, 1500, 500, FILL_VCOPY|FILL_HCOPY|FILL_REPEAT);
 }
 
 struct App : TopWindow {
@@ -421,12 +422,12 @@ struct App : TopWindow {
 		ImageBuffer ib(sz);
 		Fill(~ib, White(), ib.GetLength());
 		SDraw sw(ib);
-		sw.Scale(0.2);
+		sw.Scale(0.3);
 //		sw.Rotate(0.01 * p.y - M_PI);
 		PaintExample(sw);
 		sw.Rotate(0.05);
-		sw.Opacity(0.5);
-		PaintExample(sw);
+	//	sw.Opacity(0.5);
+	//	PaintExample(sw);
 		w.DrawImage(0, 0, ib);
 		ImageDraw iw(500, 500);
 		iw.DrawRect(0, 0, 500, 500, LtGray());

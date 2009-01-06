@@ -215,11 +215,14 @@ namespace agg
         {
             m_alpha = 256;
             m_tile = false;
+            m_vcopy = m_hcopy = false;
         }
         const color_type& background_color() const { return m_back_color; }
         void background_color(const color_type& v)   { m_back_color = v; }
         void alpha(int a) { m_alpha = a + (a >> 7); }
 		void tile(bool b) { m_tile = b; }
+		void vcopy()      { m_vcopy = true; }
+		void hcopy()      { m_hcopy = true; }
 
         //--------------------------------------------------------------------
         void generate(color_type* span, int x, int y, unsigned len)
@@ -258,6 +261,20 @@ namespace agg
                 int y_lr = y_hr >> image_subpixel_shift;
                 
                 unsigned weight;
+                
+                if(m_hcopy) {
+                    if(x_lr > maxx)
+                        x_lr = maxx;
+                    if(x_lr < 0)
+                        x_lr = 0;
+                }
+                
+                if(m_vcopy) {
+                    if(y_lr > maxy)
+                        y_lr = maxy;
+                    if(y_lr < 0)
+                        y_lr = 0;
+                }
 
                 if(m_tile) { //AGGUPP
                     x_lr = (x_lr + ax) % cx;
@@ -314,8 +331,8 @@ namespace agg
                 }
                 else
                 {
-                    if(x_lr < -1   || y_lr < -1 ||
-                       x_lr > maxx || y_lr > maxy)
+                    if((x_lr < -1 || x_lr > maxx) && !m_hcopy ||
+                       (y_lr > maxy || y_lr < -1) && !m_vcopy)
                     {
                         fg[order_type::R] = back_r;
                         fg[order_type::G] = back_g;
@@ -354,6 +371,9 @@ namespace agg
                         }
 
                         x_lr++;
+                        
+                        if(m_hcopy && x_lr > maxx)
+                            x_lr = maxx;
 
 		                if(m_tile) //AGGUPP
 		                    x_lr = (x_lr + ax) % cx;
@@ -378,8 +398,11 @@ namespace agg
                             fg[order_type::A] += back_a * weight;
                         }
 
-                        x_lr--;
+						if(!m_hcopy)
+	                        x_lr--;
                         y_lr++;
+                        if(m_vcopy)
+                            y_lr = maxy;
 
 		                if(m_tile) { //AGGUPP
 		                    x_lr = (x_lr + ax) % cx;
@@ -407,6 +430,8 @@ namespace agg
                         }
 
                         x_lr++;
+                        if(m_hcopy && x_lr > maxx)
+                            x_lr = maxx;
 		                if(m_tile) //AGGUPP
 		                    x_lr = (x_lr + ax) % cx;
 
@@ -449,7 +474,7 @@ namespace agg
     private:
         color_type m_back_color;
         int        m_alpha;
-        bool       m_tile;
+        bool       m_tile, m_hcopy, m_vcopy;
     };
 
 

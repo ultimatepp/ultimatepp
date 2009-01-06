@@ -48,7 +48,7 @@ SDraw& SDraw::Fill(const Gradient& gradient, double x1, double y1, double x2, do
                    dword flags)
 {
 	Image m = gradient.Generate(256);
-	Fill(m, x1, y1, x2, y2, true);
+	Fill(m, x1, y1, x2, y2, FILL_HCOPY|FILL_REPEAT);
 	return *this;
 }
 

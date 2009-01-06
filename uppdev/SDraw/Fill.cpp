@@ -55,7 +55,11 @@ SDraw& SDraw::Fill(const Image& image, const Matrix2D& transsrc, dword flags)
 	rasterizer.add_path(curved_trans);
 	span_gen_type sg(img_pixf, agg::rgba8_pre(0, 0, 0, 0), interpolator);
 	sg.alpha(int(pathattr.opacity * 255));
-	sg.tile(flags);
+	sg.tile(flags & FILL_REPEAT);
+	if(flags & FILL_HCOPY)
+		sg.hcopy();
+	if(flags & FILL_VCOPY)
+		sg.vcopy();
 	if(clip.GetCount()) {
 		agg::rendering_buffer mask_rbuf;
 		mask_rbuf.attach(~clip.Top(), size.cx, size.cy, size.cx);

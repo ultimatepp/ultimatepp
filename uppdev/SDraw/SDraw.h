@@ -55,6 +55,8 @@ enum {
 	FILL_PAD       = 1,
 	FILL_REPEAT    = 2,
 	FILL_REFLECT   = 3,
+	FILL_HCOPY     = 4,
+	FILL_VCOPY     = 8,
 };
 
 class Gradient {

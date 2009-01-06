@@ -1,0 +1,6 @@
+#ifndef _plugin_cairo_icpp_init_stub
+#define _plugin_cairo_icpp_init_stub
+#include "Core/init"
+#include "plugin\png/init"
+#include "plugin\pixman/init"
+#endif

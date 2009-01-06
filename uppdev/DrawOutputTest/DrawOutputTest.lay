@@ -1,0 +1,9 @@
+LAYOUT(DrawOutputTestLayout, 948, 514)
+	ITEM(CairoCtrl, _cairoCtrl, LeftPosZ(480, 450).TopPosZ(20, 450))
+	ITEM(Button, saveSvgButton, SetLabel(t_("Save as SVG")).RightPosZ(20, 96).BottomPosZ(12, 20))
+	ITEM(Button, nextButton, SetLabel(t_("Next")).LeftPosZ(96, 64).BottomPosZ(12, 20))
+	ITEM(Button, savePdfButton, SetLabel(t_("Save as PDF")).RightPosZ(128, 96).BottomPosZ(12, 20))
+	ITEM(Button, previousButton, SetLabel(t_("Previous")).LeftPosZ(20, 64).BottomPosZ(12, 20))
+	ITEM(Picture, _picture, LeftPosZ(20, 450).TopPosZ(20, 450))
+END_LAYOUT
+
