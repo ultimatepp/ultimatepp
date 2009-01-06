@@ -3,7 +3,7 @@
 NAMESPACE_UPP
 
 //#define SMTP_DEBUG // uncomment this line to turn on LOG-based SMTP emulation
-#define SMTP_LOG // uncomment this line to turn on command-line based logging of SMTP communication
+//#define SMTP_LOG // uncomment this line to turn on command-line based logging of SMTP communication
 
 static String GetDelimiter(const char *b, const char *e, String init)
 {
