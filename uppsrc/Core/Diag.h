@@ -93,18 +93,18 @@ inline void UnlockLog() {}
 
 #define DEBUGCODE(x)     x
 
-#define LOG(a)           UPP::LockLog(), UPP::VppLog() << a << EOL, UPP::UnlockLog()
+#define LOG(a)           UPP::LockLog(), UPP::VppLog() << a << UPP::EOL, UPP::UnlockLog()
 #define LOGF             UPP::__LOGF__
-#define LOGBEGIN()       UPP::LockLog(), UPP::VppLog() << LOG_BEGIN
-#define LOGEND()         UPP::VppLog() << LOG_END, UPP::UnlockLog()
+#define LOGBEGIN()       UPP::LockLog(), UPP::VppLog() << UPP::LOG_BEGIN
+#define LOGEND()         UPP::VppLog() << UPP::LOG_END, UPP::UnlockLog()
 #define LOGBLOCK(n)      RLOGBLOCK(n)
 #define LOGHEXDUMP(s, a) UPP::HexDump(VppLog(), s, a)
 #define QUOTE(a)         { LOG(#a); a; }
-#define LOGSRCPOS()      UPP::LockLog(), UPP::VppLog() << __FILE__ << '#' << __LINE__ << EOL, UPP::UnlockLog()
-#define DUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << EOL, UPP::UnlockLog()
-#define DUMPC(c)         UPP::LockLog(), UPP::DumpContainer(VppLog() << #c << ':' << EOL, (c)), UPP::UnlockLog()
-#define DUMPCC(c)        UPP::LockLog(), UPP::DumpContainer2(VppLog() << #c << ':' << EOL, (c)), UPP::UnlockLog()
-#define DUMPCCC(c)       UPP::LockLog(), UPP::DumpContainer3(VppLog() << #c << ':' << EOL, (c)), UPP::UnlockLog()
+#define LOGSRCPOS()      UPP::LockLog(), UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL, UPP::UnlockLog()
+#define DUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << UPP::EOL, UPP::UnlockLog()
+#define DUMPC(c)         UPP::LockLog(), UPP::DumpContainer(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
+#define DUMPCC(c)        UPP::LockLog(), UPP::DumpContainer2(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
+#define DUMPCCC(c)       UPP::LockLog(), UPP::DumpContainer3(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define XASSERT(c, d)    if(!bool(c)) { LOG("XASSERT failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
 #define NEVER()          ASSERT(0)
 #define XNEVER(d)        if(1) { LOG("NEVER failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
