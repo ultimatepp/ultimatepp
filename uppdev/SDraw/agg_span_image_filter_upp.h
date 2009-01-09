@@ -202,6 +202,37 @@ namespace agg
             base_mask  = color_type::base_mask
         };
 
+		int  ax, ay, cx, cy, maxx, maxy;
+		bool hreflect, vreflect;
+		bool hrepeat, vrepeat;
+		bool hcopy, vcopy;
+		
+		void AdjustX(int& x_lr) {
+			if(hcopy) {
+				if(x_lr > maxx)
+					x_lr = maxx;
+				if(x_lr < 0)
+					x_lr = 0;
+			}
+			if(hreflect)
+				x_lr = (x_lr + ax) / cx & 1 ? (ax - x_lr - 1) % cx : (x_lr + ax) % cx;
+			if(hrepeat)
+				x_lr = (x_lr + ax) % cx;
+		}
+		
+		void AdjustY(int& y_lr) {
+			if(vcopy) {
+				if(y_lr > maxy)
+					y_lr = maxy;
+				if(y_lr < 0)
+					y_lr = 0;
+			}
+			if(vreflect)
+				y_lr = (y_lr + ay) / cy & 1 ? (ay - y_lr - 1) % cy : (y_lr + ay) % cy;
+			if(vrepeat)
+				y_lr = (y_lr + ay) % cy;
+		}
+		
         //--------------------------------------------------------------------
         span_image_filter_rgba_bilinear_clip() {
             alpha = 256;
@@ -214,15 +245,11 @@ namespace agg
             m_back_color(back_color)
         {
             m_alpha = 256;
-            m_tile = false;
-            m_vcopy = m_hcopy = false;
+            hreflect = hrepeat = vreflect = vrepeat = hcopy = vcopy = false;
         }
         const color_type& background_color() const { return m_back_color; }
         void background_color(const color_type& v)   { m_back_color = v; }
         void alpha(int a) { m_alpha = a + (a >> 7); }
-		void tile(bool b) { m_tile = b; }
-		void vcopy()      { m_vcopy = true; }
-		void hcopy()      { m_hcopy = true; }
 
         //--------------------------------------------------------------------
         void generate(color_type* span, int x, int y, unsigned len)
@@ -237,15 +264,15 @@ namespace agg
             value_type back_a = m_back_color.a;
 
             const value_type *fg_ptr;
-            int cx = base_type::source().width();
-            int cy = base_type::source().height();
-            int maxx = base_type::source().width() - 1;
-            int maxy = base_type::source().height() - 1;
-            int ax, ay;
-            if(m_tile) {
-				ax = 60000 / cx * cx;
-				ay = 60000 / cy * cy;
-			}
+            cx = base_type::source().width();
+            cy = base_type::source().height();
+            maxx = base_type::source().width() - 1;
+            maxy = base_type::source().height() - 1;
+
+            if(hreflect || hrepeat)
+				ax = 6000000 / cx * cx;
+            if(vreflect || vrepeat)
+				ay = 6000000 / cy * cy;
 
             do
             {
@@ -262,24 +289,8 @@ namespace agg
                 
                 unsigned weight;
                 
-                if(m_hcopy) {
-                    if(x_lr > maxx)
-                        x_lr = maxx;
-                    if(x_lr < 0)
-                        x_lr = 0;
-                }
-                
-                if(m_vcopy) {
-                    if(y_lr > maxy)
-                        y_lr = maxy;
-                    if(y_lr < 0)
-                        y_lr = 0;
-                }
-
-                if(m_tile) { //AGGUPP
-                    x_lr = (x_lr + ax) % cx;
-                    y_lr = (y_lr + ay) % cy;
-                }
+                AdjustX(x_lr);
+                AdjustY(y_lr);
 
                 if(x_lr >= 0    && y_lr >= 0 &&
                    x_lr <  maxx && y_lr <  maxy) 
@@ -331,8 +342,10 @@ namespace agg
                 }
                 else
                 {
-                    if((x_lr < -1 || x_lr > maxx) && !m_hcopy ||
-                       (y_lr > maxy || y_lr < -1) && !m_vcopy)
+                    int x0 = x_lr;
+                    int y0 = y_lr;
+                    if((x_lr < -1 || x_lr > maxx) && !hcopy ||
+                       (y_lr > maxy || y_lr < -1) && !vcopy)
                     {
                         fg[order_type::R] = back_r;
                         fg[order_type::G] = back_g;
@@ -369,14 +382,9 @@ namespace agg
                             fg[order_type::B] += back_b * weight;
                             fg[order_type::A] += back_a * weight;
                         }
-
-                        x_lr++;
                         
-                        if(m_hcopy && x_lr > maxx)
-                            x_lr = maxx;
-
-		                if(m_tile) //AGGUPP
-		                    x_lr = (x_lr + ax) % cx;
+                        x_lr = x0 + 1;
+                        AdjustX(x_lr);
 
                         weight = x_hr * (image_subpixel_scale - y_hr);
                         if(x_lr >= 0    && y_lr >= 0 &&
@@ -398,16 +406,12 @@ namespace agg
                             fg[order_type::A] += back_a * weight;
                         }
 
-						if(!m_hcopy)
-	                        x_lr--;
-                        y_lr++;
-                        if(m_vcopy)
-                            y_lr = maxy;
-
-		                if(m_tile) { //AGGUPP
-		                    x_lr = (x_lr + ax) % cx;
-        		            y_lr = (y_lr + ay) % cy;
-		                }
+						if(!hcopy) {
+	                        x_lr = x0;
+							AdjustX(x_lr);
+						}
+                        y_lr = y0 + 1;
+                        AdjustY(y_lr);
 
                         weight = (image_subpixel_scale - x_hr) * y_hr;
                         if(x_lr >= 0    && y_lr >= 0 &&
@@ -429,11 +433,8 @@ namespace agg
                             fg[order_type::A] += back_a * weight;
                         }
 
-                        x_lr++;
-                        if(m_hcopy && x_lr > maxx)
-                            x_lr = maxx;
-		                if(m_tile) //AGGUPP
-		                    x_lr = (x_lr + ax) % cx;
+                        x_lr = x0 + 1;
+						AdjustX(x_lr);
 
                         weight = x_hr * y_hr;
                         if(x_lr >= 0    && y_lr >= 0 &&
@@ -462,10 +463,18 @@ namespace agg
                     }
                 }
 
-                span->r = (m_alpha * (value_type)fg[order_type::R]) >> 8; //AGGUPP
-                span->g = (m_alpha * (value_type)fg[order_type::G]) >> 8;
-                span->b = (m_alpha * (value_type)fg[order_type::B]) >> 8;
-                span->a = (m_alpha * (value_type)fg[order_type::A]) >> 8;
+				if(m_alpha == 255) {// AGGUPP
+	                span->r = fg[order_type::R];
+	                span->g = fg[order_type::G];
+	                span->b = fg[order_type::B];
+	                span->a = fg[order_type::A];
+				}
+				else {
+	                span->r = (m_alpha * (value_type)fg[order_type::R]) >> 8; //AGGUPP
+	                span->g = (m_alpha * (value_type)fg[order_type::G]) >> 8;
+	                span->b = (m_alpha * (value_type)fg[order_type::B]) >> 8;
+	                span->a = (m_alpha * (value_type)fg[order_type::A]) >> 8;
+				}
                 ++span;
                 ++base_type::interpolator();
 
@@ -474,7 +483,6 @@ namespace agg
     private:
         color_type m_back_color;
         int        m_alpha;
-        bool       m_tile, m_hcopy, m_vcopy;
     };
 
 

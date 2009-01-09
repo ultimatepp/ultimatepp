@@ -2,17 +2,39 @@
 
 NAMESPACE_UPP
 
-Image Gradient::Generate(int cx) const
+SDraw& SDraw::ColorStop(double pos, const RGBA& color)
 {
-	RTIMING("Gradient");
-	ImageBuffer ib(cx, 1);
-	RGBA *t = ~ib;
-	cx--;
+	Attr& a = Cttr();
+	pos = minmax(pos, 0.0, 1.0);
+	int i = FindLowerBound(a.stop, pos);
+	a.stop.Insert(i, pos);
+	a.stop_color.Insert(i, color);
+	return *this;
+}
+
+SDraw& SDraw::ClearStops()
+{
+	Attr& a = Cttr();
+	a.stop.Clear();
+	a.stop_color.Clear();
+	return *this;
+}
+
+void   SDraw::MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx)
+{
 	int l = 0;
-	RGBA cl = color[0];
-	for(int i = 0; i < pos.GetCount() - 1; i++) {
-		int h = (int)(pos[i + 1] * cx);
-		RGBA ch = color[i + 1];
+	RGBA cl = color1;
+	for(int i = 0; i <= pathattr.stop.GetCount(); i++) {
+		int h;
+		RGBA ch;
+		if(i < pathattr.stop.GetCount()) {
+			h = (int)(pathattr.stop[i] * (cx - 1));
+			ch = pathattr.stop_color[i];
+		}
+		else {
+			h = cx - 1;
+			ch = color2;
+		}
 		int w = h - l;
 		for(int j = 0; j < w; j++) {
 			t->r = ((w - j) * cl.r + j * ch.r) / w;
@@ -25,30 +47,16 @@ Image Gradient::Generate(int cx) const
 		l = h;
 	}
 	*t = cl;
-	return ib;
 }
 
-Gradient& Gradient::Stop(double p, RGBA c)
+SDraw& SDraw::Fill(double x1, double y1, const RGBA& color1,
+                   double x2, double y2, const RGBA& color2, int style)
 {
-	int i = FindLowerBound(pos, p);
-	pos.Insert(i, p);
-	color.Insert(i, c);
-	return *this;
-}
-
-Gradient::Gradient(RGBA c1, RGBA c2)
-{
-	pos.Add(0);
-	color.Add(c1);
-	pos.Add(1.0);
-	color.Add(c2);
-}
-
-SDraw& SDraw::Fill(const Gradient& gradient, double x1, double y1, double x2, double y2,
-                   dword flags)
-{
-	Image m = gradient.Generate(256);
-	Fill(m, x1, y1, x2, y2, FILL_HCOPY|FILL_REPEAT);
+	ImageBuffer ib(2048, 1); // adapt size according to bound rect
+	MakeGradient(ib, color1, color2, 2048);
+	Fill(ib, x1, y1, x2, y2, FILL_VPAD | FILL_FAST | 
+	     (style == GRADIENT_PAD ? FILL_HPAD : style == GRADIENT_REPEAT
+	                                        ? FILL_HREPEAT : FILL_HREFLECT));
 	return *this;
 }
 

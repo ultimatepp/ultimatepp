@@ -51,22 +51,25 @@ enum {
 	LINEJOIN_ROUND = agg::round_join,
 	LINEJOIN_BEVEL = agg::bevel_join,
 	
-	FILL_NONE      = 0,
-	FILL_PAD       = 1,
-	FILL_REPEAT    = 2,
-	FILL_REFLECT   = 3,
-	FILL_HCOPY     = 4,
-	FILL_VCOPY     = 8,
-};
+	FILL_EXACT      = 0,
 
-class Gradient {
-	Vector<double> pos;
-	Vector<RGBA>   color;
+	FILL_HPAD       = 1,
+	FILL_HREPEAT    = 2,
+	FILL_HREFLECT   = 3,
 
-public:
-	Image Generate(int w) const;
-	Gradient& Stop(double pos, RGBA c);
-	Gradient(RGBA c1, RGBA c2);
+	FILL_VPAD       = 4,
+	FILL_VREPEAT    = 8,
+	FILL_VREFLECT   = 12,
+
+	FILL_PAD        = FILL_HPAD|FILL_VPAD,
+	FILL_REPEAT     = FILL_HREPEAT|FILL_VREPEAT,
+	FILL_REFLECT    = FILL_HREFLECT|FILL_VREFLECT,
+	
+	FILL_FAST       = 256,
+	
+	GRADIENT_PAD     = 0,
+	GRADIENT_REPEAT  = 1,
+	GRADIENT_REFLECT = 2,
 };
 
 class SDraw : public Draw {
@@ -163,6 +166,8 @@ private:
 		byte                            cap;
 		double                          miter_limit;
 		WithDeepCopy< Vector<double> >  dash;
+		WithDeepCopy< Vector<double> >  stop;
+		WithDeepCopy< Vector<RGBA> >    stop_color;
 		double                          dash_start;
 		double                          opacity;
 		int                             cliplevel;
@@ -205,6 +210,7 @@ private:
 	void   RenderClip(byte *t, int alpha);
 	void   RectPath(const Rect& r);
 	void   RectPath(int x, int y, int cx, int cy);
+	void   MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx);
 
 public:
 	SDraw& Move(double x, double y);
@@ -215,13 +221,20 @@ public:
 	SDraw& Cubic(double x2, double y2, double x, double y);
 	SDraw& Close();
 
-	SDraw& Fill(const RGBA& rgba);
+	SDraw& Fill(const RGBA& color);
 	SDraw& Fill(const Image& image, const Matrix2D& transsrc = Matrix2D(),
 	            dword flags = 0);
 	SDraw& Fill(const Image& image, double x1, double y1, double x2, double y2,
 	            dword flags = 0);
-	SDraw& Fill(const Gradient& gradient, double x1, double y1, double x2, double y2,
-	            dword flags = FILL_PAD);
+	SDraw& Fill(double x1, double y1, const RGBA& color1,
+	            double x2, double y2, const RGBA& color2,
+	            int style = GRADIENT_PAD);
+	SDraw& Fill(double x1, double y1, double r, double fx, double fy,
+	            const RGBA& color1, const RGBA& color2,
+	            int style = GRADIENT_PAD);
+	SDraw& Fill(double x1, double y1, double r,
+	            const RGBA& color1, const RGBA& color2,
+	            int style = GRADIENT_PAD);
 	
 	SDraw& Stroke(double width, const RGBA& rgba);
 	SDraw& Stroke(double width, const Image& image, const Matrix2D& transsrc, dword flags = 0);
@@ -239,6 +252,9 @@ public:
 	
 	SDraw& Path(CParser& p);
 	SDraw& Path(const char *path);
+	
+	SDraw& ColorStop(double pos, const RGBA& color);
+	SDraw& ClearStops();
 	
 	SDraw& Opacity(double o);
 	SDraw& LineCap(int linecap);

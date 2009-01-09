@@ -8,6 +8,7 @@ file
 	Stroke.cpp,
 	Clip.cpp,
 	Gradient.cpp,
+	RadialGradient.cpp,
 	FontX11.cpp,
 	FontWin32.cpp,
 	Arc.cpp,
