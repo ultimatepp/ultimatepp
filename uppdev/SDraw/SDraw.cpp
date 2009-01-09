@@ -4,7 +4,7 @@ NAMESPACE_UPP
 
 #define LTIMING(x) RTIMING(x)
 
-void SDraw::PathPoint(double x, double y)
+inline void SDraw::PathPoint(double x, double y)
 {
 	if(inpath) {
 		pathrect.left = min(pathrect.left, x);
@@ -38,6 +38,7 @@ SDraw& SDraw::Move(double x, double y)
 
 SDraw& SDraw::Line(double x, double y)
 {
+	control = current;
 	PathPoint(x, y);
 	path.line_to(x, y);
 	inpath = true;
@@ -143,7 +144,10 @@ void SDraw::End()
 	clip.SetCount(attr.cliplevel);
 }
 
-void   SDraw::Transform(const Matrix2D& m) { Cttr().mtx = m * attr.mtx; }
+void   SDraw::Transform(const Matrix2D& m)
+{
+	Cttr().mtx = m * attr.mtx;
+}
 
 SDraw& SDraw::Opacity(double o)            { Cttr().opacity *= o; return *this; }
 SDraw& SDraw::LineCap(int linecap)         { Cttr().cap = linecap; return *this; }
@@ -184,7 +188,6 @@ SDraw::SDraw(ImageBuffer& ib)
 {
 	size = ib.GetSize();
 	sizef = size;
-	UPP::Fill(~buffer, White(), buffer.GetLength()); //!!!
 	rbuf.attach((agg::int8u *)~buffer, size.cx, size.cy, size.cx * 4);
 	pixf.attach(rbuf);
 	renb.attach(pixf);

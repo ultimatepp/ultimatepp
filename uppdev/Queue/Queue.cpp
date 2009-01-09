@@ -155,3 +155,4 @@ CONSOLE_APP_MAIN
 	for(int i = 0; i < 128 * 15; i++)
 		DUMP((int)a1.Get());
 }
+

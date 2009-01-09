@@ -2,8 +2,7 @@ uses
 	Core;
 
 file
-	Patrik.cpp,
-	Queue.cpp;
+	bsr.cpp;
 
 mainconfig
 	"" = "";
