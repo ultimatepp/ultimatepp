@@ -116,13 +116,16 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::FixedAuto()
 	return Min(n).Max(n);
 }
 
-GridCtrl::ItemRect& GridCtrl::ItemRect::Edit(Ctrl &ctrl)
+GridCtrl::ItemRect& GridCtrl::ItemRect::Edit(Ctrl &ctrl, bool b)
 {
-	ctrl.Hide();
-	ctrl.SetFrame(BlackFrame());
-	//ctrl.SetFrame(NullFrame());
-	(*edits)[id].ctrl = &ctrl;
-	parent->holder.AddChild(&ctrl);
+	if(b)
+	{
+		ctrl.Hide();
+		ctrl.SetFrame(BlackFrame());
+		//ctrl.SetFrame(NullFrame());
+		(*edits)[id].ctrl = &ctrl;
+		parent->holder.AddChild(&ctrl);
+	}
 	return *this;
 }
 
@@ -223,14 +226,15 @@ void GridCtrl::ItemRect::Serialize(Stream &s)
 
 static void MakeOption(One<Ctrl>& ctrl)
 {
-	ctrl.Create<Option>();
+	ctrl.Create<Option>().ShowLabel(false);
 	ctrl->SetData(0);
 	ctrl->WantFocus();
 }
 
 GridCtrl::ItemRect& GridCtrl::ItemRect::Option()
 {
-	return Ctrls(MakeOption).CtrlAlignHorzCenter(CtrlsImg::O0().GetSize().cx);
+//	return Ctrls(MakeOption).CtrlAlignHorzCenter(CtrlsImg::O0().GetSize().cx);
+	return Ctrls(MakeOption).CtrlAlignHorzPos().CtrlAlignVertPos();
 }
 
 GridCtrl::Item& GridCtrl::Item::Editable(bool b)

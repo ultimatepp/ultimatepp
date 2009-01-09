@@ -18,7 +18,8 @@ static Image (*vhdr[])() =
 	GridImg::VHdr3,
 	GridImg::VHdr4,
 	GridImg::VHdr5,
-	GridImg::VHdr6
+	GridImg::VHdr6,
+	GridImg::VHdr7
 };
 
 void GridDisplay::SetDefault()
@@ -38,12 +39,6 @@ void GridDisplay::Paint(Draw &w, int x, int y, int cx, int cy, const Value &val,
 						Color &fg, Color &bg, Font &fnt, bool found, int fs, int fe)
 {
 	if(cx == 0 || cy == 0) return;
-
-	if(style & GD::READONLY)
-	{
-		bg = Blend(bg, SGray(), 40);
-		fg = Blend(fg, SGray(), 200);
-	}
 
 	Color mg = bg;
 
@@ -145,6 +140,7 @@ void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, in
 		}
 
 		Color dark(76, 83, 92);
+		//Color dark(155, 154, 153);
 		Color bright(White);
 
 		if(!firstx) w.DrawRect(x, y, 1, cy, bright);

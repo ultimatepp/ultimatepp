@@ -278,5 +278,8 @@
 	
 	+ summary row
 	- toolbar wasn't rebuilded after right mouse click on row
+	- to WhenEndEdit() was passed new cursor position instead of old
+	- small refactoring
+	
 	
 	

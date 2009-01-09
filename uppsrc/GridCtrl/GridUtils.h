@@ -45,7 +45,7 @@ inline int32 Round(double a)
 #define LGR LogGui
 
 extern LineEdit *dlog;
-extern DropList *dlev;
+extern int       dlev;
 
 void LogGui(const char *fmt, ...);
 void LogGui(int level, const char *fmt, ...);
