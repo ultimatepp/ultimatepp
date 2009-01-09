@@ -3,7 +3,7 @@
 NAMESPACE_UPP
 
 LineEdit *dlog = NULL;
-DropList *dlev = NULL;
+int dlev = 0;
 
 static int pos = 0;
 
@@ -29,9 +29,10 @@ void LogCon(int level, const char *fmt, ...)
 
 void LogGui(const char *fmt, ...)
 {
-	if(!dlog || !dlev || int(~(*dlev)) > 0)
+	if(!dlog || dlev > 0)
 		return;
 
+	pos = dlog->GetLength();
 	char buffer[1024];
 	va_list argptr;
 	va_start(argptr, fmt);
@@ -47,9 +48,10 @@ void LogGui(const char *fmt, ...)
 
 void LogGui(int level, const char *fmt, ...)
 {
-	if(!dlog || !dlev || level < int(~(*dlev)))
+	if(!dlog || level < dlev)
 		return;
 
+	pos = dlog->GetLength();
 	char buffer[1024];
 	va_list argptr;
 	va_start(argptr, fmt);

@@ -19,7 +19,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 			BTN_PLUS,
 			BTN_CLEAN
 		};
-	private:
+
 		class PopUpGrid : public GridCtrl
 		{
 			private:
@@ -121,9 +121,11 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		DropGrid& NullAction(bool b = true);
 		DropGrid& ClearButton(bool b = true);
 		DropGrid& NoDrop(bool b = true);
+		DropGrid& SetData();
+		DropGrid& SearchHideRows(bool b = true);
 
-		GridCtrl::ItemRect& AddColumn(const char *name, int width = GridCtrl::GD_COL_WIDTH, bool idx = false);
-		GridCtrl::ItemRect& AddColumn(Id id, const char *name, int width = GridCtrl::GD_COL_WIDTH, bool idx = false);
+		GridCtrl::ItemRect& AddColumn(const char *name, int width = -1, bool idx = false);
+		GridCtrl::ItemRect& AddColumn(Id id, const char *name, int width = -1, bool idx = false);
 		GridCtrl::ItemRect& AddIndex(const char *name = NULL);
 		GridCtrl::ItemRect& AddIndex(Id id);
 
@@ -211,7 +213,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		
 		Callback WhenLeftDown;
 
-		GridCtrl::ItemRect& AddRow(int n = 1, int size = GridCtrl::GD_ROW_HEIGHT);
+		GridCtrl::ItemRect& AddRow(int n = 1, int size = -1);
 		DropGrid& Add() { AddRow(); return *this; }
 
 		//$-DropCtrl& Add(const Value& [, const Value& ]...);

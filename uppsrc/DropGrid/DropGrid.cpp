@@ -129,9 +129,9 @@ void DropGrid::Drop()
 	Rect rs = GetScreenRect();
 	int width = rs.Width();
 	int resize_height = list.GetResizePanelHeight();
-	int list_height = max(list.GetHeight(), GridCtrl::GD_ROW_HEIGHT + GridCtrl::GD_HDR_HEIGHT * header);
+	int list_height = max(list.GetHeight(), list.GD_ROW_HEIGHT + list.GD_HDR_HEIGHT * header);
 	int height = list_height + 4 + resize_height;
-	int drop_height = drop_lines * GridCtrl::GD_ROW_HEIGHT + header * GridCtrl::GD_HDR_HEIGHT + 4 + resize_height;
+	int drop_height = drop_lines * list.GD_ROW_HEIGHT + header * list.GD_HDR_HEIGHT + 4 + resize_height;
 	if(!display_all && height > drop_height)
 		height = drop_height;
 
@@ -192,26 +192,27 @@ void DropGrid::Paint(Draw& w)
 	else
 		clear.Hide();
 	
-	w.DrawRect(sz, SColorPaper());
+	//w.DrawRect(sz, SColorPaper());
 	GridDisplay &disp = display ? *display : list.GetDisplay();
 	bool hf = HasFocus();
 	bool isnull = rowid < 0;
 	Color fg = hf ? SColorHighlightText() : IsEnabled() ? SColorText() : SColorDisabled();
-	Color bg = !IsEnabled() ? SColorFace
+	Color bg = !IsEnabled() ? EditField::StyleDefault().disabled //SColorFace
 	                        : notnull && isnull ? Blend(SColorPaper, Color(255, 0, 0), /*hf ? 55 :*/ 32)
 	                                            : hf ? SColorHighlight() : SColorPaper();
 
-	const int d = 1;
+	const int d = 0;
+	
 	if(isnull)
 		w.DrawRect(d, d, sz.cx - d * 2, sz.cy - d * 2, bg);
 	else
 	{
 		Font fnt(StdFont());
-		Paint0(w, 1, 1, d, d, sz.cx - d * 2, sz.cy - d * 2, Format0(Null, rowid), 0, fg, bg/*SColorPaper()*/, fnt);
+		Paint0(w, 1, 1, d, d, sz.cx - d * 2, sz.cy - d * 2, Format0(Null, rowid), 0, fg, bg, fnt);
 	}
 
 	if(hf)
-		DrawFocus(w, d - 1, d - 1, sz.cx - (d - 1) * 2, sz.cy - (d - 1) * 2);
+		DrawFocus(w, d - 0, d - 0, sz.cx - (d - 0) * 2, sz.cy - (d - 0) * 2);
 }
 
 
@@ -540,6 +541,12 @@ void DropGrid::SetData(const Value& v)
 	}
 	else
 		ClearValue();
+}
+
+DropGrid& DropGrid::SearchHideRows(bool b)
+{
+	list.SearchHideRows(b);
+	return *this;
 }
 
 void DropGrid::DoAction(int row, bool action, bool chg)
