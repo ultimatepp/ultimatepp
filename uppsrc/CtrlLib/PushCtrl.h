@@ -176,6 +176,7 @@ protected:
 	bool   threestate;
 	bool   notnull;
 	bool   blackedge;
+	bool   showlabel;
 
 public:
 	void   Set(int b);
@@ -187,6 +188,7 @@ public:
 	Option& BlackEdge(bool b = true)              { blackedge = b; Refresh(); return *this; }
 	Option& SwitchImage(bool b = true)            { switchimage = b; Refresh(); return *this; }
 	Option& ThreeState(bool b = true)             { threestate = b; notnull = false; return *this; }
+	Option& ShowLabel(bool b = true)              { showlabel = b; Refresh(); return *this; }
 	Option& NotNull(bool nn = true)               { notnull = nn; Refresh(); return *this; }
 	Option& NoNotNull()                           { return NotNull(false); }
 
