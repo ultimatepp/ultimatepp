@@ -25,6 +25,7 @@ TopicLink  ParseTopicLink(const char *link);
 
 Topic      GetTopic(const String& package, const String& group, const String& topic);
 Topic      GetTopic(const char *path);
+Topic      GetTopicLNG(const char *path);
 
 VectorMap<String, VectorMap<String, Vector<String> > >& TopicBase();
 

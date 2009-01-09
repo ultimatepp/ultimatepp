@@ -86,6 +86,12 @@ Topic GetTopic(const char *path)
 	return t;
 }
 
+Topic GetTopicLNG(const char *path)
+{
+	return GetTopic(path +
+	                ("$" + ToLower(LNGAsText(SetLNGCharset(GetCurrentLanguage(), CHARSET_DEFAULT)))));
+}
+
 END_UPP_NAMESPACE
 
 void RegisterTopic__(const char *topicfile, const char *topic, const char *title,
