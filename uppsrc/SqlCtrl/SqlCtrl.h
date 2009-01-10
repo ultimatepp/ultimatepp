@@ -112,6 +112,7 @@ public:
 	void      Limit(int count)                             { Limit(0, count); }
 
 	SqlArray& SetTable(SqlId _table)                       { table = _table; return *this; }
+	SqlArray& SetTable(SqlId table, SqlId key)             { AddKey(key); return SetTable(table); }
 	SqlArray& SetWhere(SqlBool _where)                     { where = _where; return *this;  }
 	SqlArray& SetOrderBy(SqlSet _orderby)                  { orderby = _orderby; return *this; }
 	SqlArray& SetOrderBy(const SqlVal& a)                  { return SetOrderBy(SqlSet(a)); }

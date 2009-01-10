@@ -20,5 +20,6 @@ file
 	SqlCtrl.iml,
 	SqlCtrl.usc,
 	Info readonly separator,
-	Copying;
+	Copying,
+	src.tpp;
 
