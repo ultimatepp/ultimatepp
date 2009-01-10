@@ -57,4 +57,17 @@ is usually reserved for tables where key is logical and edited
 by user.&]
 [s0;%% &]
 [s3; &]
+[s4; &]
+[s5;:SqlArray`:`:SetTable`(SqlId`,SqlId`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* SetTabl
+e]([_^SqlId^ SqlId]_[*@3 `_table], [_^SqlId^ SqlId]_[*@3 key])&]
+[s2;%% Sets both the table and the primary key. Same as SetTable([%-*@3 `_table]); 
+AddKey([%-*@3 key)].&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:SetWhere`(SqlBool`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* SetWhere]([_^SqlBool^ S
+qlBool]_[*@3 where])&]
+[s2;%% Sets the [%-*@3 where] expression. This expression is combined 
+with foreign key (defined by Join) expression when performing 
+Query.&]
+[s3;%% &]
 [s0; ]
