@@ -59,6 +59,8 @@ topic "class aaa : public WithaaaLayout<TopWindow> ";
 [s0; [R6 hlava]&]
 [s0; [R6 hlína]&]
 [s0; [R6 sto]&]
+[s0; [R6 sedm]&]
+[s0; [R6 pět]&]
 [s0; [R6 host]&]
 [s0; [R6 hlas]&]
 [s0; [R6 hloupost]&]

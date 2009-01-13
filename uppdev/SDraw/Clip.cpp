@@ -31,7 +31,7 @@ SDraw& SDraw::Clip(double opacity)
 	if(clip.GetCount()) {
 		byte *s = ~clip.Top();
 		for(int i = 0; i < l; i++)
-			cl[i] = ((cl[i] + (cl[i] >> 7)) * *s) >> 8;
+			cl[i] = ((cl[i] + (cl[i] >> 7)) * s[i]) >> 8;
 	}
 	if(attr.hasclip)
 		clip.Top() = cl;
