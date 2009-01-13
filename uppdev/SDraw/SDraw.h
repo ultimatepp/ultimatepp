@@ -159,6 +159,7 @@ private:
 	Sizef                         sizef;
 	ImageBuffer&                  buffer;
 	Array< Buffer<byte> >         clip;
+	Array< ImageBuffer >          mask;
 	
 	struct Attr : Moveable<Attr> {
 		Matrix2D                        mtx;
@@ -173,6 +174,7 @@ private:
 		double                          opacity;
 		int                             cliplevel;
 		bool                            hasclip;
+		bool                            mask;
 	};
 
 	Attr                          attr;
@@ -212,8 +214,12 @@ private:
 	void   RectPath(int x, int y, int cx, int cy);
 	void   MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx);
 	void   ColorStop0(Attr& a, double pos, const RGBA& color);
+	void   FinishMask();
+	void   SetRbuf();
 
 public:
+	void   Clear(const RGBA& color);
+
 	SDraw& Move(double x, double y);
 	SDraw& Line(double x, double y);
 	SDraw& Quadratic(double x1, double y1, double x, double y);
@@ -269,6 +275,8 @@ public:
 
 	void   Begin();
 	void   End();
+	
+	void   BeginMask();
 	
 	void   Translate(double x, double y);
 	void   Rotate(double a);

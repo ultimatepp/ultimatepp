@@ -129,7 +129,7 @@ struct UppRadialSpan {
 	int         alpha;
 	RGBA        gradient[2048];
 	bool        focus;
-	double      r2, mul;
+	double      C;
 	
 	void SetAlpha(int a) { alpha = a + (a >> 7); }
 
@@ -144,13 +144,11 @@ struct UppRadialSpan {
 		fy = _fy;
 		focus = cx != fx || cy != fy;
 		if(focus) {
-			r2 = double(r) * r;
 			fx -= cx;
 			fy -= cy;
 			double fx2 = double(fx) * double(fx);
 			double fy2 = double(fy) * double(fy);
-			double d = (r2 - (fx2 + fy2));
-			mul = 2048 * double(r) / d;
+			C = fx * fx + fy * fy - r * r;
 		}
 		else {
 			cx <<= 6;
@@ -160,6 +158,8 @@ struct UppRadialSpan {
 	}
 	
 	void generate(agg::rgba8 *_span, int x, int y, unsigned len) {
+		if(r <= 0)
+			return;
 		interpolator.begin(x + 0.5, y + 0.5, len);
 		RGBA *span = (RGBA *)_span;
 		while(len--) {
@@ -170,15 +170,12 @@ struct UppRadialSpan {
 				y >>= 8;
 				double dx = x - cx - fx;
 				double dy = y - cy - fy;
-				if(dx == 0 && dy == 0) {
+				if(dx == 0 && dy == 0)
 					h = 0;
-				}
 				else {
 					double A = dx * dx + dy * dy;
-					double B = 2 * (fx * dx + fy * dy);
-					double C = fx * fx + fy * fy - r * r;
-					double t = (sqrt(B * B - 4 * A * C) - 2 * B) / (2 * A);
-					int q = 0;
+					double b = (fx * dx + fy * dy);
+					double t = (sqrt(b * b - A * C) - b) / (A);
 					h = t >= 0.001 ? int(2047 / t) : 2047;
 				}
 			}

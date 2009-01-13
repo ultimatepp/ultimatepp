@@ -1,18 +1,4 @@
-#include <CtrlLib/CtrlLib.h>
-#include <SDraw/SDraw.h>
-
-using namespace Upp;
-
-#define TOPICFILE <SDrawTest/app.tpp/all.i>
-#include <Core/topic_group.h>
-
-#define IMAGECLASS TestImg
-#define IMAGEFILE <SDrawTest/test.iml>
-#include <Draw/iml_header.h>
-
-#define IMAGECLASS TestImg
-#define IMAGEFILE <SDrawTest/test.iml>
-#include <Draw/iml_source.h>
+#include "bench.h"
 
 static char g_lion[] =
 	"f2cc99\n"
@@ -161,7 +147,7 @@ static char g_lion[] =
 	"M 99,265 L 96,284 L 92,299 L 73,339 L 73,333 L 87,300 L 99,265 L 99,265 L 99,265\n";
     
        
-void PaintLion(SDraw *sw, Draw *w)
+void PaintLion(SDraw *sw, Cairo *ca, Draw *w)
 {
 	// Parse the lion and then detect its bounding
 	// box and arrange polygons orientations (make all polygons
@@ -177,7 +163,12 @@ void PaintLion(SDraw *sw, Draw *w)
 			if(!IsNull(color)) {
 				if(sw)
 					sw->Fill(color);
-				else
+				if(ca)
+				{
+					ca->SetSourceRGB(color);
+					ca->Fill();
+				}
+				if (w)
 					w->DrawPolygon(p, color);
 				p.Clear();
 			}
@@ -211,18 +202,23 @@ void PaintLion(SDraw *sw, Draw *w)
 				if(c == 'M') {
 					if(sw)
 						sw->Move(x, y);
-					else {
+					if (ca)
+						ca->MoveTo(x, y);
+					if (w) {
 						if(!IsNull(color))
 							w->DrawPolygon(p, color);
 						p.Clear();
 						p.Add(Point((int)x, (int)y));
 					}
 				}
-				else
+				else {
 					if(sw)
 						sw->Line(x, y);
-					else
+					if (ca)
+						ca->LineTo(x, y);
+					if (w)
 						p.Add(Point((int)x, (int)y));
+				}
 				
 				while (*ptr && isdigit(*ptr))
 					ptr++;
@@ -237,421 +233,11 @@ void PaintLion(SDraw *sw, Draw *w)
 	}
 	if(sw)
 		sw->Fill(color);
-	else
+	if(ca)
+	{
+		ca->SetSourceRGB(color);
+		ca->Fill();
+	}
+	if (w)
 		w->DrawPolygon(p, color);
 }
-
-void PaintExample(SDraw& sw)
-{
-//		sw.Arc(500, 500, 400, 400, 0, M_2PI).Clip();
-
-		//Text(sw, 500, 500, Format("%d", p.y), Arial(20));
-		//sw.Fill(Black());
-
-/*
-		DDUMP(0.01 * 394 - M_PI);
-		sw.Begin();		
-		sw.Rotate(0.01 * 394 - M_PI);
-		sw.Move(100, 100).Line(200, 100).Line(200, 200).Fill(Black());
-		sw.End();
-		
-		DDUMP(0.01 * 390 - M_PI);
-		sw.Rotate(0.01 * 390 - M_PI);
-		sw.Move(100, 100).Line(200, 100).Line(200, 200).Fill(Blue());
-*/		
-		if(1) {
-			sw.Begin();
-//			sw.Arc(500, 500, 500, 500, 0, M_2PI).Clip();
-			static RichText txt = ParseQTF(GetTopic("topic://SDrawTest/app/main$en-us"));
-//			RTIMING("QTF");
-			txt.Paint(sw, 0, 0, 4000);
-			sw.End();
-		}
-		
-		   		
-	//	sw.Scale(p.x / 100.0, p.y / 100.0);
-//		Arc(sw, 500, 300, 400, 100, 0, M_2PI);
-//		sw.FillMask(0);
-	//	sw.Rotate(p.y / 100.00);
-//		sw.Scale(1.4);
-//		sw.Move(100, 100).Line(200.5, 100).Line(200, 200).Line(0, 300).Stroke(Blue(), 10);
-/*
-		sw.Move(100 + 10, 100 - 10).Line(200 + 20, 100 - 60).Line(200 + 23, 200- 50).Line(20, 300)
-		   .Fill(100 * Green()).Stroke(Blue(), 2);*/
-		PaintLion(&sw, NULL);
-//		sw.Move(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-//		sw.Move(200, 300).Quadratic(400,50, 600,300).Fill(Green()).Stroke(Red(), 10);
-		sw.Move(100, 200).Cubic(100,100, 250,100, 250,200).Cubic(400,300, 400,200).Stroke(4, Cyan());
-//		sw.Move(300, 200).Line(150, 200).Arc(150, 150, 0, 1,0, 300, 50).Fill(Red()).Stroke(Blue(), 2);
-//		d="M300,200 h-150 a150,150 0 1,0 150,-150 z"
-  //      fill="red" stroke="blue" stroke-width="5"
-  
-  		sw.EvenOdd(false);
-  		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(520, 510).Line(580, 510).Line(580, 570).Fill(Black());
-
-//		sw.Translate(150, 0);
-  		sw.EvenOdd(false);
-  		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(580, 570).Line(580, 510).Line(520, 510).Fill(Red());
-
-//		sw.Translate(150, 0);
-  		sw.EvenOdd(true);
-  		sw.Move(500, 500).Line(600, 500).Line(600, 600).Close()
-  		  .Move(520, 510).Line(580, 510).Line(580, 570).Fill(Blue());
-
-//		sw.Arc(20, 30, 40, 10, 0, M_2PI).Clip(50);
-		for(int i = 0; i < 0; i++) {
-			RTIMING("Lion");
-			sw.Move(200, 200).Line(200, 210).Line(210, 205).Clip(0);
-			PaintLion(&sw, NULL);
-//			sw.Move(200, 200).Line(200, 300).Line(300, 250).Fill(Blue());
-		}
-
-#if 0
-		for(int i = 0; i < 1000; i++) {
-			RTIMING("Small rect");
-			sw.Move(100, 100).Line(100, 110).Line(110, 105).Fill(Red());
-		}
-
-#endif
-
-#if 0
-		for(int i = 0; i < 1000; i++) {
-			RTIMING("Large rect");
-			sw.Move(200, 200).Line(200, 600).Line(600, 600).Line(600, 200).Fill(Blue());
-		}
-
-		for(int i = 0; i < 1000; i++) {
-			RTIMING("Small rect");
-			sw.Move(100, 100).Line(100, 110).Line(110, 110).Line(100, 110).Fill(Red());
-		}
-
-		sw.StrokeColor(Blue());
-		sw.Move(100, 100).Line(100, 110).Line(110, 110).Line(100, 110).Stroke();
-
-		sw.Move(50, 200).Arc(50, 50, 0, true, true, 150, 200).Arc(50, 50, 0, true, true, 50, 200)
-		   .Stroke(Blue(), 2);
-		
-		sw.Move(0, 0).Ellipse(100, 100).Stroke();
-
-#endif
-
-///		sw.Scale(1.5);
-		Matrix2D m;
-//		m.rotate(p.x / 300.0);
-//		sw.Move(0, 0).Line(0, 600).Line(600, 600).Line(200, 0)
-//			.Fill(Black());
-//		   .Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true)
-//		   .Stroke(Black(), 1);
-#if 0
-		sw.EvenOdd(true);
-		sw.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
-		sw.Stroke(Black(), 1);
-//		sw.Fill(Black()).Stroke(LtRed(), 2);
-		sw.Move(100, 100).Line(100, 300).Line(400, 400);
-		sw.Fill(StreamRaster::LoadFileAny("U:/ImgTest/Jachym.bmp"), m, 255, true);
-
-		sw.Begin();
-		sw.LineJoin(LINEJOIN_ROUND);
-		sw.Move(100, 100);
-	//	Arc(sw, 100, 100, 150, 100, p.x / 100.0, p.y / 100.0, true);
-		sw.Fill(LtBlue());
-		sw.Stroke(Black(), 2);
-		sw.Move(100, 100);
-	//	Arc(sw, 100, 100, 150, 100, p.x / 100.0 + p.y / 100.0, M_2PI - p.x / 100.0, true);
-		sw.Fill(LtRed());
-		sw.Stroke(Black(), 2);
-		Arc(sw, 500, 300, 100, 100, 0, M_PI * 2, false);
-#endif
-		sw.Text(50, 250, "Ahoj jak se máš?", Roman(300)).Dash("5 5 1 5").Stroke(1, Black());
-//		sw.Text(50, 150, "Ahoj jak se máš?", Roman(100)).Fill(Gray()).Stroke(2, Red());
-//		sw.Arc(800, 800, 100, 100, 0, M_PI, false).Dash("10 5 1 5").Stroke(5, Black());
-/*
-		sw.Text(500, 800, "HELLO WORLD!", Roman(600).Bold())
-		  .Stroke(35, Black())
-		  .Stroke(30, TestImg::test(), m, true);
-*/
-//		sw.Text(1000, 50, "HELLO WORLD!", Arial(300).Bold())
-//		  .Fill(Gradient(50 * Blue(), Red()).Stop(0.4, Green()),
-//		        1000, 0, GetTextSize("HELLO WORLD!", Arial(300).Bold()).cx - 100, 0,
-//		        0);
-
-	if(0) {
-		for(int h = 0; h < 3; h++) {
-			sw.Begin();
-			sw.Translate(500 * h, 300 * h);
-			double q = h * 0.2 + 1;
-			sw.Move(0, 0).Line(1600, 0).Line(1600, 1600).Line(0, 1600)
-			  .Fill(TestImg::test(), q * 300, 300, q * 600, 300, 0 * FILL_HREPEAT);
-	
-			sw.Move(q * 300, 300).Line(q * 600, 300).Line(q * 600, 600).Line(q * 300, 600).Close().Stroke(1, LtRed());
-			sw.End();
-		}
-
-		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-		  .Fill(TestImg::test(), 1500, 300, 1500, 600, 0 * FILL_HREPEAT);
-
-
-		sw.Move(0, 0).Line(1600, 0).Line(1600, 1600).Line(0, 1600)
-		  .Fill(TestImg::test(), 700, 600, 800, 100, 0 * FILL_VREPEAT);
-	}
-
-		sw.Path("M153 334 C153 334 151 334 151 334 C151 339 153 344 156 344 C164 344 171 339 171 334 "
-		        "C171 322 164 314 156 314 C142 314 131 322 131 334 C131 350 142 364 156 364 "
-		        "C175 364 191 350 191 334 C191 311 175 294 156 294 C131 294 111 311 111 334 "
-		        "C111 361 131 384 156 384 C186 384 211 361 211 334 C211 300 186 274 156 274 ")
-		.Stroke(2, Red());
-		sw.Path("M500,500 L600,500 L550,600").Fill(Black()).Stroke(2, LtRed());
-}
-
-unsigned fast_sqrt(unsigned val);
-
-/*
-void RadialGradient(ImageBuffer& ib, int cx, int cy, int r, RGBA c1, RGBA c2, int fx, int fy)
-{
-	Size sz = ib.GetSize();
-	RGBA *t = ib;
-	for(int y = 0; y < sz.cy; y++)
-		for(int x = 0; x < sz.cx; x++) {
-			int dc = fast_sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
-			if(dc < r) {
-				int df = fast_sqrt((x - fx) * (x - fx) + (y - fy) * (y - fy));
-				int d = 256 * df / (r - dc + df);
-				
-	//			int d = dc * (dc / r) + df * (r - dc) / r;
-	//			d = dc * df / 
-	//			d = d % r;
-	//			d = (d / r & 1) ? d % r : (1000 * r - d) % r;
-				if(dc <= r) {
-					t->r = ((256 - d) * c1.r + d * c2.r) >> 8;
-					t->g = ((256 - d) * c1.g + d * c2.g) >> 8;
-					t->b = ((256 - d) * c1.b + d * c2.b) >> 8;
-					t->a = ((256 - d) * c1.a + d * c2.a) >> 8;
-				}
-			}
-			else
-				*t = c2;
-			t++;
-		}
-}
-*/
-
-struct App : TopWindow {
-	Point p;
-
-	virtual void MouseMove(Point _p, dword keyflags) {
-		p = _p;
-		Refresh();
-	}
-
-	virtual void Paint(Draw& w) {
-		RTIMING("Paint");
-		Size sz = GetSize();
-		ImageBuffer ib(sz);
-		Fill(~ib, White(), ib.GetLength());
-		SDraw sw(ib);
-		sw.Clear(White());
-		const char *txt = "This is just a test of alpha mask blending";
-		Size tsz = GetTextSize(txt, Roman(50).Italic());
-
-//			sw.Text(0, 0, txt, Roman(70))
-//			  .Fill(Blue());
-
-//		sw.Arc(500, 500, 400, 400, 0, M_2PI).Clip();
-//		sw.Arc(700, 700, 400, 400, 0, M_2PI).Clip();
-
-
-//			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
-//				sw.Text(10, y, txt, Roman(70))
-//				  .Fill(Blue());
-
-
-		sw.Begin();
-			sw.BeginMask();
-			sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
-			  .Fill(0, 0, White(), tsz.cx, 0, Black());
-			sw.End();
-			sw.Text(0, 0, txt, Roman(50))
-			  .Fill(Blue());
-		sw.End();
-//		sw.Text(500, 500, "Test", Arial(50)).Fill(Black());
-		sw.Begin();
-			sw.BeginMask();
-			sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
-			  .Fill(0, 0, Black(), tsz.cx, 0, White());
-			sw.End();
-			sw.Text(0, 0, txt, Roman(50).Italic())
-			  .Fill(Red());
-		sw.End();
-		
-		sw.Begin();
-			sw.BeginMask();
-			sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
-			  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, tsz.cx / 2, White(), Black());
-			sw.End();
-			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
-				sw.Text(10, y, txt, Roman(50))
-				  .Fill(Blue());
-		sw.End();
-		sw.Begin();
-			sw.BeginMask();
-			sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
-			  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, tsz.cx / 2, Black(), White());
-			sw.End();
-			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
-				sw.Text(10, y, txt, Roman(50).Italic())
-				  .Fill(Blue());
-		sw.End();
-
-		sw.Translate(0.5, 0.5);
-		sw.Move(10, tsz.cy).Line(tsz.cx + 20, tsz.cy)
-		  .Line(tsz.cx + 20, tsz.cx + tsz.cy + 20).Line(10, tsz.cx + tsz.cy + 20)
-		  .Close()
-		  .Stroke(1, Cyan());
-
-		
-//		RadialGradient(ib, 200, 200, 100, White(), Blue(), 150, 160);
-		
-		
-		
-//		PaintExample(sw);
-		sw.Rotate(0.05);
-	//	sw.Opacity(0.5);
-	//	PaintExample(sw);
-		w.DrawImage(0, 0, ib);
-		ImageDraw iw(500, 500);
-		iw.DrawRect(0, 0, 500, 500, LtGray());
-		for(int i = 0; i < 1; i++) {
-			RTIMING("ImageDraw");
-			Vector<Point> p;
-//			p.Add(Point(200, 200));
-//			p.Add(Point(200, 210));
-//			p.Add(Point(210, 205));
-		//	PaintLion(NULL, &iw);
-		}
-	//	w.DrawImage(500, 0, iw);
-//		w.DrawText(0, 0, AsString(gradient_t));
-	}
-	
-	App() { Sizeable().Zoomable(); p = Point(0, 0); }
-};
-
-
-void BenchmarkImageFill()
-{
-	ImageBuffer ib(1000, 1000);
-	Fill(~ib, White(), ib.GetLength());
-	SDraw sw(ib);
-	for(int i = 0; i < 10 * 0; i++) {
-		RTIMING("BenchmarkImageFill FILL_HREPEAT|FILL_VREFLECT");
-		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-		  .Fill(TestImg::test(), 800, 500, 1800, 800
-		  		, FILL_HREPEAT|FILL_VREFLECT
-		);
-	}
-	for(int i = 0; i < 10 * 0; i++) {
-		RTIMING("BenchmarkImageFill FILL_EXACT");
-		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-		  .Fill(TestImg::test(), 800, 500, 1800, 800
-		);
-	}
-	for(int i = 0; i < 10 * 0; i++) {
-		RTIMING("BenchmarkImageFill FILL_PAD");
-		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-		  .Fill(TestImg::test(), 800, 500, 1800, 800, FILL_PAD);
-	}
-	for(int i = 0; i < 10 * 1; i++) {
-		RTIMING("BenchmarkImageFill FILL_REPEAT");
-		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-		  .Fill(TestImg::test(), 800, 500, 1800, 800, FILL_REPEAT);
-	}
-}
-
-
-GUI_APP_MAIN
-{
-	SetDefaultCharset(CHARSET_WIN1250);
-
-//	BenchmarkImageFill();
-
-#ifndef _DEBUG
-	ImageBuffer ib(500, 500);
-	for(int i = 0; i < 0; i++) {
-		RTIMING("Benchmark");
-		SDraw sw(ib);
-		PaintExample(sw);
-	}
-#endif
-	App().Run();
-}
-
-#if 0
-		SDraw sw(ib);
-//		sw.Scale(1, 0.5);
-//		sw.Translate(300, 300);
-//		sw.Scale(0.01 * p.x);
-		
-//		sw.Text(0, 0, "HELLO WORLD!", Arial(300).Bold())
-//		  .Fill(Gradient(50 * Blue(), Red()).Stop(0.4, Green()),
-//		        1000, 0, 1500, 0, GRADIENT_REFLECT);
-
-//		sw.Rotate(0.01 * p.y - M_PI);
-		sw.Text(500, 200, "Hello world!", Arial(400)).Fill(Black()).Fill(Black());
-
-#if 0
-		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-		  .Fill(TestImg::test(), 800, 500, 1800, 800, 0
-		        |FILL_PAD
-		        |FILL_REPEAT
-		        |FILL_FAST
-		  		|FILL_HREPEAT|FILL_VREFLECT
-		);
-#endif
-//		sw.Text(500, 50, "HELLO WORLD!", Arial(300).Bold())
-//		  .ColorStop(0.4, Green())
-//		  .Fill(1000, 0, 50 * Blue(), 1500, 0, Red(), GRADIENT_REFLECT);
-
-//		sw.Arc(230, 200, 110, 100, 0, 2 * M_PI)
-		  //.Fill((230 - 110) * 0.2, (200 - 100) * 0.4, 100, 110, 100,
-//		        Color(200, 200, 200), Color(0, 0, 255));
-
-//		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-//		  .ColorStop(0.2, LtRed())
-//		  .ColorStop(0.7, Yellow())
-//		  .Fill(400, 400, 400, p.x, p.y, White(), Blue(), GRADIENT_REFLECT);
-//		  .Fill(400, 400, 400, White(), Blue(), GRADIENT_REPEAT);
-//		  .Fill(400, 400, 400, p.x, p.y, White(), Blue());
-
-	//	sw.Opacity(0.5);
-
-//		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
-		sw.Move(400, 400).Line(600, 400).Line(600, 600).Line(400, 600)
-//		sw.Arc(500, 500, 100, 100, 0, M_2PI)
-		  .ColorStop(0.2, LtRed())
-		  .ColorStop(0.7, Yellow())
-		  .Fill(500, 500, 80, p.x, p.y, White(), Blue(), GRADIENT_REFLECT);
-//		  .Fill(200, 200, 100, 150, 160, White(), Blue());
-
-//		sw.Arc(200, 200, 100, 100, 0, M_2PI)
-//		;
-#if 0
-		sw.Arc(200, 200, 100, 100, 0, M_2PI)
-		  .Fill(200, 200, 100, 150, 150, White(), Black())
-		  .Opacity(0.3)
-		  .Fill(100, 200, LtRed(), 300, 200, Blue())
-		;
-#endif
-		sw.Arc(200, 200, 50, 50, 0, M_2PI)
-		  .ColorStop(0.5, Color(0, 128, 128))
-		  .Fill(200, 200, 50, Black(), White())
-//		  .Fill(200, 200, 100, 150, 150, Black(), White())
-		  .Stroke(1, Black())
-		;
-
-		sw.Arc(400, 200, 50, 50, 0, M_2PI)
-		  .ColorStop(0.5, Color(0, 128, 128))
-		  .Fill(400, 200, 50, 375, 175, Black(), White())
-		  .Stroke(1, Black())
-		;
-#endif

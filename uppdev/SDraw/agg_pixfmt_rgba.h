@@ -174,8 +174,9 @@ namespace agg
                                          unsigned alpha,
                                          unsigned cover)
         {
-            alpha = color_type::base_mask - alpha;
-            cover = (cover + 1) << (base_shift - 8);
+//AGGUPP
+            alpha = color_type::base_mask + 1 - (alpha + (alpha >> (base_shift - 1)));
+            cover = (cover + (cover >> (base_shift - 1))) << (base_shift - 8);
             p[Order::R] = (value_type)((p[Order::R] * alpha + cr * cover) >> base_shift);
             p[Order::G] = (value_type)((p[Order::G] * alpha + cg * cover) >> base_shift);
             p[Order::B] = (value_type)((p[Order::B] * alpha + cb * cover) >> base_shift);
@@ -187,7 +188,8 @@ namespace agg
                                          unsigned cr, unsigned cg, unsigned cb,
                                          unsigned alpha)
         {
-            alpha = color_type::base_mask - alpha;
+//AGGUPP
+            alpha = color_type::base_mask + 1 - (alpha + (alpha >> (base_shift - 1)));
             p[Order::R] = (value_type)(((p[Order::R] * alpha) >> base_shift) + cr);
             p[Order::G] = (value_type)(((p[Order::G] * alpha) >> base_shift) + cg);
             p[Order::B] = (value_type)(((p[Order::B] * alpha) >> base_shift) + cb);

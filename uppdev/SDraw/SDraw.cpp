@@ -4,6 +4,11 @@ NAMESPACE_UPP
 
 #define LTIMING(x) RTIMING(x)
 
+void SDraw::Clear(const RGBA& color)
+{
+	Upp::Fill(~buffer, color, buffer.GetLength());
+}
+
 inline void SDraw::PathPoint(double x, double y)
 {
 	if(inpath) {
@@ -16,6 +21,7 @@ inline void SDraw::PathPoint(double x, double y)
 		path.remove_all();
 		pathrect.left = pathrect.right = x;
 		pathrect.top = pathrect.bottom = y;
+		pathattr = attr;
 	}
 	inpath = true;
 	current = Pointf(x, y);
@@ -131,16 +137,19 @@ void SDraw::Scale(double scale)
 void SDraw::Begin()
 {
 	attrstack.Add(attr);
+	attr.hasclip = false;
 }
 
 void SDraw::End()
 {
 	if(attrstack.GetCount() == 0) {
-		ASSERT_(0, "SDraw::End: attribute stack is empty");
+		ASSERT_(0, "Painter::End: attribute stack is empty");
 		return;
 	}
 	pathattr = attr = attrstack.Pop();
 	clip.SetCount(attr.cliplevel);
+	if(attr.mask)
+		FinishMask();
 }
 
 void   SDraw::Transform(const Matrix2D& m)
@@ -221,6 +230,14 @@ SDraw& SDraw::Dash(const char *dash, double start)
 	return *this;
 }
 
+void SDraw::SetRbuf()
+{
+	rbuf.attach((agg::int8u *)~buffer, size.cx, size.cy, size.cx * 4);
+	pixf.attach(rbuf);
+	renb.attach(pixf);
+	renderer.attach(renb);
+}
+
 SDraw::SDraw(ImageBuffer& ib)
 :	buffer(ib),
 	curved(path),
@@ -228,10 +245,6 @@ SDraw::SDraw(ImageBuffer& ib)
 {
 	size = ib.GetSize();
 	sizef = size;
-	rbuf.attach((agg::int8u *)~buffer, size.cx, size.cy, size.cx * 4);
-	pixf.attach(rbuf);
-	renb.attach(pixf);
-	renderer.attach(renb);
 	inpath = false;
 	pathrect = Null;
 	control = current = Null;
@@ -244,7 +257,10 @@ SDraw::SDraw(ImageBuffer& ib)
 	attr.cliplevel = 0;
 	attr.dash_start = 0.0;
 	attr.opacity = 1.0;
+	attr.mask = false;
 	pathattr = attr;
+	
+	SetRbuf();
 }
 
 END_UPP_NAMESPACE
