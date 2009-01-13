@@ -454,16 +454,15 @@ struct App : TopWindow {
 		
 		
 		SDraw sw(ib);
-		sw.Translate(300, 300);
-		sw.Scale(0.01 * p.x);
+//		sw.Translate(300, 300);
+//		sw.Scale(0.01 * p.x);
 		
 //		sw.Text(0, 0, "HELLO WORLD!", Arial(300).Bold())
 //		  .Fill(Gradient(50 * Blue(), Red()).Stop(0.4, Green()),
 //		        1000, 0, 1500, 0, GRADIENT_REFLECT);
 
-		sw.Rotate(0.01 * p.y - M_PI);
-//		sw.Text(500, 200, "Hello world!", Arial(400)).Fill(Black())
-//		  .Fill(Gradient(100 * Cyan(), LtRed()).Stop(0.3, Green()), 520, 500, 570, 500);
+//		sw.Rotate(0.01 * p.y - M_PI);
+		sw.Text(500, 200, "Hello world!", Arial(400)).Fill(Black()).Fill(Black());
 
 #if 0
 		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
@@ -483,23 +482,41 @@ struct App : TopWindow {
 //		        Color(200, 200, 200), Color(0, 0, 255));
 
 //		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
+//		  .ColorStop(0.2, LtRed())
+//		  .ColorStop(0.7, Yellow())
+//		  .Fill(400, 400, 400, p.x, p.y, White(), Blue(), GRADIENT_REFLECT);
+//		  .Fill(400, 400, 400, White(), Blue(), GRADIENT_REPEAT);
+//		  .Fill(400, 400, 400, p.x, p.y, White(), Blue());
 
 	//	sw.Opacity(0.5);
 
-//		sw.Arc(200, 200, 100, 100, 0, M_2PI)
+		sw.Arc(500, 500, 100, 100, 0, M_2PI)
 //		  .ColorStop(0.2, LtRed())
 //		  .ColorStop(0.7, Yellow())
-//		  .Fill(200, 200, 100, p.x, p.y, White(), Blue());
+		  .Fill(500, 500, 100, p.x, p.y, White(), Blue());
 //		  .Fill(200, 200, 100, 150, 160, White(), Blue());
 
+//		sw.Arc(200, 200, 100, 100, 0, M_2PI)
+//		;
+#if 0
 		sw.Arc(200, 200, 100, 100, 0, M_2PI)
-		  .Fill(200, 200, 100, 150, 160, White(), Blue())
-		;
-		sw.Arc(200, 200, 100, 100, 0, M_2PI)
-		  .Opacity(0.6)
+		  .Fill(200, 200, 100, 150, 150, White(), Black())
+		  .Opacity(0.3)
 		  .Fill(100, 200, LtRed(), 300, 200, Blue())
 		;
+#endif
+		sw.Arc(200, 200, 50, 50, 0, M_2PI)
+		  .ColorStop(0.5, Color(0, 128, 128))
+		  .Fill(200, 200, 50, Black(), White())
+//		  .Fill(200, 200, 100, 150, 150, Black(), White())
+		  .Stroke(1, Black())
+		;
 
+		sw.Arc(400, 200, 50, 50, 0, M_2PI)
+		  .ColorStop(0.5, Color(0, 128, 128))
+		  .Fill(400, 200, 50, 375, 175, Black(), White())
+		  .Stroke(1, Black())
+		;
 		
 //		PaintExample(sw);
 		sw.Rotate(0.05);

@@ -2,21 +2,30 @@
 
 NAMESPACE_UPP
 
-SDraw& SDraw::ColorStop(double pos, const RGBA& color)
+void SDraw::ColorStop0(Attr& a, double pos, const RGBA& color)
 {
-	Attr& a = Cttr();
 	pos = minmax(pos, 0.0, 1.0);
 	int i = FindLowerBound(a.stop, pos);
 	a.stop.Insert(i, pos);
 	a.stop_color.Insert(i, color);
+}
+
+SDraw& SDraw::ColorStop(double pos, const RGBA& color)
+{
+	ColorStop0(pathattr, pos, color);
+	if(!inpath)
+		ColorStop0(attr, pos, color);
 	return *this;
 }
 
 SDraw& SDraw::ClearStops()
 {
-	Attr& a = Cttr();
-	a.stop.Clear();
-	a.stop_color.Clear();
+	pathattr.stop.Clear();
+	pathattr.stop_color.Clear();
+	if(!inpath) {
+		attr.stop.Clear();
+		attr.stop_color.Clear();
+	}
 	return *this;
 }
 

@@ -41,6 +41,7 @@ Matrix2D Translate2D(double x, double y);
 Matrix2D Rotate2D(double angle);
 Matrix2D Scale2D(double scalex, double scaley);
 Matrix2D Scale2D(double scale);
+Matrix2D Sheer2D();
 
 enum {
 	LINECAP_BUTT = agg::butt_cap,
@@ -204,13 +205,13 @@ private:
 	Pointf Reflection() const;
 	Pointf Current() const        { return current; }
 	Rectf  PathRect() const       { return pathrect; }
-	Attr&  Cttr()                 { return inpath ? pathattr : attr; }
 	path_storage MakeStroke(double width);
 	Pointf ReadPoint(CParser& p, bool rel);
 	void   RenderClip(byte *t, int alpha);
 	void   RectPath(const Rect& r);
 	void   RectPath(int x, int y, int cx, int cy);
 	void   MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx);
+	void   ColorStop0(Attr& a, double pos, const RGBA& color);
 
 public:
 	SDraw& Move(double x, double y);
