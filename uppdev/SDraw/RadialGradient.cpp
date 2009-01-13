@@ -128,33 +128,74 @@ struct UppRadialSpan {
 	int         style;
 	int         alpha;
 	RGBA        gradient[2048];
+	bool        focus;
+	double      r2, mul;
 	
 	void SetAlpha(int a) { alpha = a + (a >> 7); }
 
 	void prepare() {}
 	
+	void Set(int _x, int _y, int _r, int _fx, int _fy)
+	{
+		cx = _x;
+		cy = _y;
+		r = _r;
+		fx = _fx;
+		fy = _fy;
+		focus = cx != fx || cy != fy;
+		if(focus) {
+			r2 = double(r) * r;
+			fx -= cx;
+			fy -= cy;
+			double fx2 = double(fx) * double(fx);
+			double fy2 = double(fy) * double(fy);
+			double d = (r2 - (fx2 + fy2));
+			mul = 2048 * double(r) / d;
+		}
+		else {
+			cx <<= 6;
+			cy <<= 6;
+			r <<= 6;
+		}
+	}
+	
 	void generate(agg::rgba8 *_span, int x, int y, unsigned len) {
 		interpolator.begin(x + 0.5, y + 0.5, len);
 		RGBA *span = (RGBA *)_span;
-		bool focus = cx != fx || cy != fy;
 		while(len--) {
-			int x;
-			int y;
 			interpolator.coordinates(&x, &y);
-			x >>= 2;
-			y >>= 2;
-			int dc = Upp::fastint_sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
-			RGBA v;
-			if(dc < r) {
-				if(focus) {
-					int df = Upp::fastint_sqrt((x - fx) * (x - fx) + (y - fy) * (y - fy));
-					v = gradient[minmax(2047 * df / (r - dc + df), 0, 2047)];
+			int h;
+			if(focus) {
+				x >>= 8;
+				y >>= 8;
+				double dx = x - cx - fx;
+				double dy = y - cy - fy;
+				if(dx == 0 && dy == 0) {
+					h = 0;
 				}
-				else
-					v = gradient[minmax(2047 * dc / r, 0, 2047)];
+				else {
+					double A = dx * dx + dy * dy;
+					double B = 2 * (fx * dx + fy * dy);
+					double C = fx * fx + fy * fy - r * r;
+					double t = (sqrt(B * B - 4 * A * C) - 2 * B) / (2 * A);
+					int q = 0;
+					h = t >= 0.001 ? int(2047 / t) : 2047;
+				}
 			}
+			else {
+				x >>= 2;
+				y >>= 2;
+				int dc = Upp::fastint_sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
+				h = 2047 * dc / r;
+			}
+			if(style == GRADIENT_REPEAT)
+				h = h & 2047;
 			else
-				v = gradient[2047];
+			if(style == GRADIENT_REFLECT)
+				h = (h & 2048) ? (2047 - h & 2047) : (h & 2047);
+			else
+				h = minmax(h, 0, 2047);
+			RGBA v = gradient[h];
 			if(alpha == 256)
 				*span = v;
 			else {
@@ -180,14 +221,7 @@ SDraw& SDraw::Fill(double x1, double y1, double r, double fx, double fy, const R
 	sg.interpolator.transformer(m);
 	sg.SetAlpha(int(pathattr.opacity * 255));
 	sg.style = style;
-//	pathattr.mtx.Transform(x1, y1);
-	sg.cx = (int)x1 << 6;
-	sg.cy = (int)y1 << 6;
-//	pathattr.mtx.Transform(fx, fy);
-	sg.fx = (int)fx << 6;
-	sg.fy = (int)fy << 6;
-//	pathattr.mtx.Transform(r, fx); // ??!
-	sg.r = (int)r << 6;
+	sg.Set((int)x1, (int)y1, (int)r, (int)fx, (int)fy);
 	MakeGradient(sg.gradient, color1, color2, 2048);
 
 	rasterizer.reset();

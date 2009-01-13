@@ -16,7 +16,6 @@ inline void SDraw::PathPoint(double x, double y)
 		path.remove_all();
 		pathrect.left = pathrect.right = x;
 		pathrect.top = pathrect.bottom = y;
-		pathattr = attr;
 	}
 	inpath = true;
 	current = Pointf(x, y);
@@ -140,28 +139,69 @@ void SDraw::End()
 		ASSERT_(0, "SDraw::End: attribute stack is empty");
 		return;
 	}
-	attr = attrstack.Pop();
+	pathattr = attr = attrstack.Pop();
 	clip.SetCount(attr.cliplevel);
 }
 
 void   SDraw::Transform(const Matrix2D& m)
 {
-	Cttr().mtx = m * attr.mtx;
+	pathattr.mtx = m * attr.mtx;
+	if(!inpath)
+		attr.mtx = m * attr.mtx;
 }
 
-SDraw& SDraw::Opacity(double o)            { Cttr().opacity *= o; return *this; }
-SDraw& SDraw::LineCap(int linecap)         { Cttr().cap = linecap; return *this; }
-SDraw& SDraw::LineJoin(int linejoin)       { Cttr().join = linejoin; return *this; }
-SDraw& SDraw::MiterLimit(double l)         { Cttr().miter_limit = l; return *this; }
-SDraw& SDraw::EvenOdd(bool evenodd)        { Cttr().evenodd = evenodd; return *this; }
+SDraw& SDraw::Opacity(double o)
+{
+	pathattr.opacity *= o;
+	if(!inpath)
+		attr.opacity *= o;
+	return *this;
+}
+
+SDraw& SDraw::LineCap(int linecap)
+{
+	pathattr.cap = linecap;
+	if(!inpath)
+		attr.cap = linecap;
+	return *this;
+}
+
+SDraw& SDraw::LineJoin(int linejoin)
+{
+	pathattr.join = linejoin;
+	if(!inpath)
+		attr.join = linejoin;
+	return *this;
+}
+
+SDraw& SDraw::MiterLimit(double l)
+{
+	pathattr.miter_limit = l;
+	if(!inpath)
+		attr.miter_limit = l;
+	return *this;
+}
+
+SDraw& SDraw::EvenOdd(bool evenodd)
+{
+	pathattr.evenodd = evenodd;
+	if(!inpath)
+		attr.evenodd = evenodd;
+	return *this;
+}
 
 SDraw& SDraw::Dash(const Vector<double>& dash, double start)
 {
-	Attr& a = Cttr();
-	a.dash <<= dash;
+	pathattr.dash <<= dash;
 	if(dash.GetCount() & 1)
-		a.dash.Append(dash);
-	a.dash_start = start;
+		pathattr.dash.Append(dash);
+	pathattr.dash_start = start;
+	if(!inpath) {
+		attr.dash <<= dash;
+		if(dash.GetCount() & 1)
+			attr.dash.Append(dash);
+		attr.dash_start = start;
+	}
 	return *this;
 }
 
@@ -204,6 +244,7 @@ SDraw::SDraw(ImageBuffer& ib)
 	attr.cliplevel = 0;
 	attr.dash_start = 0.0;
 	attr.opacity = 1.0;
+	pathattr = attr;
 }
 
 END_UPP_NAMESPACE
