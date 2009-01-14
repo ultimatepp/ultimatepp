@@ -1,6 +1,6 @@
 uses
 	CtrlLib,
-	SDraw;
+	Painter;
 
 file
 	main.cpp charset "windows-1250",
