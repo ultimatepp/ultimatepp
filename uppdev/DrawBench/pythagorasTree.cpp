@@ -29,7 +29,7 @@ void AddRect(Cairo &c, double size)
 	c.Restore();
 }
 
-void DoRect(SDraw &sw, double size)
+void DoRect(Painter &sw, double size)
 {
 	if(size < 1)
 		return;
@@ -53,7 +53,7 @@ void DoRect(SDraw &sw, double size)
 	sw.End();
 }
 
-void DrawPythagorasTree(Size sz, SDraw *sw, Cairo *ca)
+void DrawPythagorasTree(Size sz, Painter *sw, Cairo *ca)
 {
 	double size = 128;
 	

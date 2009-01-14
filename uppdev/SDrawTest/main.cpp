@@ -1,5 +1,5 @@
 #include <CtrlLib/CtrlLib.h>
-#include <SDraw/SDraw.h>
+#include <Painter/Painter.h>
 
 using namespace Upp;
 
@@ -161,7 +161,7 @@ static char g_lion[] =
 	"M 99,265 L 96,284 L 92,299 L 73,339 L 73,333 L 87,300 L 99,265 L 99,265 L 99,265\n";
     
        
-void PaintLion(SDraw *sw, Draw *w)
+void PaintLion(Painter *sw, Draw *w)
 {
 	// Parse the lion and then detect its bounding
 	// box and arrange polygons orientations (make all polygons
@@ -241,7 +241,7 @@ void PaintLion(SDraw *sw, Draw *w)
 		w->DrawPolygon(p, color);
 }
 
-void PaintExample(SDraw& sw)
+void PaintExample(Painter& sw)
 {
 //		sw.Arc(500, 500, 400, 400, 0, M_2PI).Clip();
 
@@ -262,7 +262,7 @@ void PaintExample(SDraw& sw)
 		if(1) {
 			sw.Begin();
 //			sw.Arc(500, 500, 500, 500, 0, M_2PI).Clip();
-			static RichText txt = ParseQTF(GetTopic("topic://SDrawTest/app/main$en-us"));
+			static RichText txt = ParseQTF(GetTopic("topic://PainterTest/app/main$en-us"));
 //			RTIMING("QTF");
 			txt.Paint(sw, 0, 0, 4000);
 			sw.End();
@@ -303,7 +303,7 @@ void PaintExample(SDraw& sw)
 //		sw.Arc(20, 30, 40, 10, 0, M_2PI).Clip(50);
 		for(int i = 0; i < 0; i++) {
 			RTIMING("Lion");
-			sw.Move(200, 200).Line(200, 210).Line(210, 205).Clip(0);
+			sw.Move(200, 200).Line(200, 210).Line(210, 205).Clip();
 			PaintLion(&sw, NULL);
 //			sw.Move(200, 200).Line(200, 300).Line(300, 250).Fill(Blue());
 		}
@@ -450,7 +450,7 @@ struct App : TopWindow {
 		Size sz = GetSize();
 		ImageBuffer ib(sz);
 		Fill(~ib, White(), ib.GetLength());
-		SDraw sw(ib);
+		BufferPainter sw(ib);
 		sw.Clear(White());
 		const char *txt = "This is just a test of alpha mask blending";
 		Size tsz = GetTextSize(txt, Roman(50).Italic());
@@ -488,7 +488,7 @@ struct App : TopWindow {
 		sw.Begin();
 			sw.BeginMask();
 			sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
-			  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, tsz.cx / 2, White(), Black());
+			  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, White(), tsz.cx / 2, Black());
 			sw.End();
 			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
 				sw.Text(10, y, txt, Roman(50))
@@ -497,7 +497,7 @@ struct App : TopWindow {
 		sw.Begin();
 			sw.BeginMask();
 			sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
-			  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, tsz.cx / 2, Black(), White());
+			  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, Black(), tsz.cx / 2, White());
 			sw.End();
 			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
 				sw.Text(10, y, txt, Roman(50).Italic())
@@ -542,7 +542,7 @@ void BenchmarkImageFill()
 {
 	ImageBuffer ib(1000, 1000);
 	Fill(~ib, White(), ib.GetLength());
-	SDraw sw(ib);
+	BufferPainter sw(ib);
 	for(int i = 0; i < 10 * 0; i++) {
 		RTIMING("BenchmarkImageFill FILL_HREPEAT|FILL_VREFLECT");
 		sw.Move(0, 0).Line(3000, 0).Line(3000, 3000).Line(0, 3000)
@@ -579,7 +579,7 @@ GUI_APP_MAIN
 	ImageBuffer ib(500, 500);
 	for(int i = 0; i < 0; i++) {
 		RTIMING("Benchmark");
-		SDraw sw(ib);
+		Painter sw(ib);
 		PaintExample(sw);
 	}
 #endif
@@ -587,7 +587,7 @@ GUI_APP_MAIN
 }
 
 #if 0
-		SDraw sw(ib);
+		Painter sw(ib);
 //		sw.Scale(1, 0.5);
 //		sw.Translate(300, 300);
 //		sw.Scale(0.01 * p.x);

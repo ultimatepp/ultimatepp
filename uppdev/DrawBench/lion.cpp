@@ -147,7 +147,7 @@ static char g_lion[] =
 	"M 99,265 L 96,284 L 92,299 L 73,339 L 73,333 L 87,300 L 99,265 L 99,265 L 99,265\n";
     
        
-void PaintLion(SDraw *sw, Cairo *ca, Draw *w)
+void PaintLion(Painter *sw, Cairo *ca, Draw *w)
 {
 	// Parse the lion and then detect its bounding
 	// box and arrange polygons orientations (make all polygons
