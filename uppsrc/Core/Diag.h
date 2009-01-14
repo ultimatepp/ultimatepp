@@ -107,6 +107,7 @@ inline void UnlockLog() {}
 #define DUMPCCC(c)       UPP::LockLog(), UPP::DumpContainer3(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define XASSERT(c, d)    if(!bool(c)) { LOG("XASSERT failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
 #define NEVER()          ASSERT(0)
+#define NEVER_(msg)      ASSERT_(0, msg)
 #define XNEVER(d)        if(1) { LOG("NEVER failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
 #define CHECK(c)         if(!bool(c)) { ASSERT(0); } else
 #define XCHECK(c, d)     if(!bool(c)) { LOG("XCHECK failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
@@ -145,6 +146,7 @@ inline void LOGF(const char *format, ...) {}
 #define DUMPCCC(a)
 #define XASSERT(c, d)
 #define NEVER()
+#define NEVER_(msg)
 #define XNEVER(d)
 #define CHECK(c)         (c)
 #define XCHECK(c, d)     (c)
