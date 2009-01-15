@@ -9,8 +9,6 @@ BufferPainter::path_storage BufferPainter::MakeStroke(double width)
 	curved.angle_tolerance(0.0);
 	if(width * scl > 1.0)
 		curved.angle_tolerance(0.2);
-	rasterizer.reset();
-	rasterizer.filling_rule(agg::fill_non_zero);
 	path_storage b;
 	if(pathattr.dash.GetCount()) {
 		agg::conv_dash<Curved> dashed(curved);

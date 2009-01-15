@@ -143,7 +143,7 @@ bool Sqlite3Connection::Execute() {
 		return false;
 	}
 	got_first_row = got_row_data = (retcode==SQLITE_ROW);
-	if (got_row_data) {
+//	if (got_row_data) { // By WebChaot, 2009-01-15
 		int numfields = sqlite3_column_count(current_stmt);
 		info.SetCount(numfields);
 		for (int i = 0; i < numfields; ++i) {
@@ -177,7 +177,7 @@ bool Sqlite3Connection::Execute() {
 					break;
 			}
 		}
-	}
+//	}
 	return true;
 }
 

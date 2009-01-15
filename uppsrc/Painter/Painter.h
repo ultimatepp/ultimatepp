@@ -9,8 +9,6 @@
 
 #include "agg_basics.h"
 #include "agg_renderer_base.h"
-#include "agg_pixfmt_rgba.h"
-#include "agg_pixfmt_gray.h"
 #include "agg_renderer_scanline.h"
 #include "agg_rasterizer_scanline_aa.h"
 #include "agg_scanline_u.h"
@@ -23,7 +21,6 @@
 #include "agg_span_allocator.h"
 #include "agg_span_interpolator_linear.h"
 #include "agg_image_accessors.h"
-#include "agg_span_image_filter_upp.h"
 #include "agg_alpha_mask_u8.h"
 
 NAMESPACE_UPP
@@ -214,9 +211,6 @@ public:
 
 	Painter& Clip();
 
-	Painter& Arc(double x, double y, double rx, double ry,
-	             double start_angle, double sweep_angle, bool startline = false);
-
 	Painter& Character(double x, double y, int ch, Font fnt);
 	Painter& Text(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
 	Painter& Text(double x, double y, const WString& s, Font fnt, double *dx = NULL);
@@ -250,6 +244,12 @@ public:
 	void   Scale(double scale);
 	
 	void   Paint(const Painting& p);
+	
+	Painter& Arc(double x, double y, double rx, double ry,
+	             double start_angle, double sweep_angle, bool startline = false);
+	Painter& Ellipse(double x, double y, double rx, double ry);
+	Painter& Circle(double x, double y, double r);
+	Painter& Rectangle(double x, double y, double cx, double cy);
 };
 
 #include "BufferPainter.h"

@@ -187,7 +187,7 @@ Matrix2D GetImageLineMatrix(double x1, double y1, double x2, double y2, const Im
 	Matrix2D m;
 	Size sz = image.GetSize();
 	m.scale(agg::calc_distance(x1, y1, x2, y2) / sz.cx);
-	if(abs(x2 - x1) < abs(y2 - y1) / 1e-6)
+	if(abs(x2 - x1) < abs(y2 - y1) * 1e-6)
 		m.rotate(y2 > y1 ? M_PI_2 : -M_PI_2);
 	else
 		m.rotate(atan((y2 - y1) / (x2 - x1)));
@@ -241,6 +241,26 @@ void Painter::Scale(double scalex, double scaley)
 void Painter::Scale(double scale)
 {
 	Transform(Scale2D(scale));
+}
+
+Painter& Painter::Ellipse(double x, double y, double rx, double ry)
+{
+	return Arc(x, y, rx, ry, 0, M_2PI);
+}
+
+Painter& Painter::Circle(double x, double y, double r)
+{
+	return Ellipse(x, y, r, r);
+}
+
+Painter& Painter::Rectangle(double x, double y, double cx, double cy)
+{
+	Move(x, y);
+	Line(x + cx, y);
+	Line(x + cx, y + cy);
+	Line(x, y + cy);
+	Close();
+	return *this;
 }
 
 END_UPP_NAMESPACE

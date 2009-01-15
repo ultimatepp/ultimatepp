@@ -122,8 +122,7 @@ bool BufferPainter::PathVisible(double w) const
 
 void BufferPainter::SetRbuf()
 {
-	rbuf.attach((agg::int8u *)~buffer, size.cx, size.cy, size.cx * 4);
-	pixf.attach(rbuf);
+	pixf.attach(buffer);
 	renb.attach(pixf);
 	renderer.attach(renb);
 }

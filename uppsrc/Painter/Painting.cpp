@@ -230,7 +230,19 @@ Painting PaintingPainter::GetResult()
 	Painting p;
 	p.cmd = cmd.GetResult();
 	p.data = data;
+	p.size = size;
 	return p;
+}
+
+void PaintingPainter::Create(double cx, double cy)
+{
+	cmd.Create();
+	size.cx = cx;
+	size.cy = cy;
+}
+
+void PaintingPainter::Create(Sizef sz)
+{
 }
 
 END_UPP_NAMESPACE

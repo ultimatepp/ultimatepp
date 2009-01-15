@@ -1,3 +1,5 @@
+description "Advanced rendering system";
+
 optimize_speed;
 
 file
@@ -11,6 +13,7 @@ file
 	Text.cpp,
 	Path.cpp,
 	BufferPainter.h,
+	PixFmt.cpp,
 	BufferPainter.cpp,
 	Context.cpp,
 	Fill.cpp,
@@ -27,8 +30,6 @@ file
 	agg_alpha_mask_u8.h,
 	agg_basics.h,
 	agg_clip_liang_barsky.h,
-	agg_color_rgba.h,
-	agg_color_gray.h,
 	agg_config.h,
 	agg_conv_adaptor_vcgen.h,
 	agg_conv_curve.h,
@@ -45,8 +46,6 @@ file
 	agg_math.h,
 	agg_math_stroke.h,
 	agg_path_storage.h,
-	agg_pixfmt_gray.h,
-	agg_pixfmt_rgba.h,
 	agg_rasterizer_cells_aa.h,
 	agg_rasterizer_scanline_aa.h,
 	agg_rasterizer_sl_clip.h,

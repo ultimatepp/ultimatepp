@@ -33,7 +33,7 @@ void BufferPainter::FinishMask()
 			s++;
 			t++;
 		}
-	else {
+	else
 		while(s < e) {
 			byte v = ((s->a + (s->a >> 7)) * (77 * s->r + 151 * s->g + 28 * s->b)) >> 16;
 			*t = (*cs * (v + (v >> 7))) >> 8;
@@ -41,7 +41,6 @@ void BufferPainter::FinishMask()
 			t++;
 			cs++;
 		}
-	}
 	buffer = mask.Top();
 	mask.Drop();
 	SetRbuf();

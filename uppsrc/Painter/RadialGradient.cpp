@@ -156,8 +156,9 @@ struct UppRadialSpan {
 			r <<= 6;
 		}
 	}
-	
-	void generate(agg::rgba8 *_span, int x, int y, unsigned len) {
+
+	void generate(RGBA *_span, int x, int y, unsigned len)
+	{
 		if(r <= 0)
 			return;
 		interpolator.begin(x + 0.5, y + 0.5, len);

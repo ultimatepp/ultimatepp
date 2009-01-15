@@ -23,7 +23,7 @@ void BufferPainter::FillOp(const RGBA& c)
 				mask_rbuf.attach(~clip.Top(), size.cx, size.cy, size.cx);
 				agg::alpha_mask_gray8 mask(mask_rbuf);
 				agg::scanline_u8_am<agg::alpha_mask_gray8> sl(mask);
-				renderer.color(*(color_type *)&color);
+				renderer.color(color);
 				agg::render_scanlines(rasterizer, sl, renderer);
 			}
 			else {
@@ -58,8 +58,6 @@ struct UppImageAggSpan {
 	const RGBA *image;
 	int         alpha;
 	
-	void SetAlpha(int a) { alpha = a + (a >> 7); }
-
 	void SetImage(const Image& img) {
 		image = ~img;
 		cx = img.GetWidth();
@@ -77,7 +75,7 @@ struct UppImageAggSpan {
 			x = minmax(x, 0, maxx);
 		else
 		if(hstyle == FILL_HREFLECT)
-			x = (x + ax) / cx & 1 ? (ax - x - 1) % cx : (x + ax) % cx;
+			x = (x + ax) / cx & 1 ? (x + ax) % cx : (ax - x - 1) % cx;
 		else
 		if(hstyle == FILL_HREPEAT)
 			x = (x + ax) % cx;
@@ -85,7 +83,7 @@ struct UppImageAggSpan {
 			y = minmax(y, 0, maxy);
 		else
 		if(vstyle == FILL_VREFLECT)
-			y = (y + ay) / cy & 1 ? (ay - y - 1) % cy : (y + ay) % cy;
+			y = (y + ay) / cy & 1 ? (y + ay) % cy : (ay - y - 1) % cy;
 		else
 		if(vstyle == FILL_VREPEAT)
 			y = (y + ay) % cy;
@@ -94,7 +92,8 @@ struct UppImageAggSpan {
 
 	void prepare() {}
 	
-	void generate(agg::rgba8 *_span, int x, int y, unsigned len) {
+	void generate(RGBA *_span, int x, int y, unsigned len)
+	{
 		interpolator.begin(x + 0.5, y + 0.5, len);
 		RGBA *span = (RGBA *)_span;
 		fixed = hstyle && vstyle;
@@ -182,7 +181,7 @@ void BufferPainter::FillOp(const Image& image, const Matrix2D& transsrc, dword f
 	m.invert();
 	UppImageAggSpan sg;
 	sg.interpolator.transformer(m);
-	sg.SetAlpha(int(pathattr.opacity * 255));
+	sg.alpha = int(pathattr.opacity * 256);
 	sg.SetImage(image);
 	sg.style = flags & 15;
 	sg.hstyle = flags & 3;
