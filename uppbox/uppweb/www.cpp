@@ -515,7 +515,7 @@ GUI_APP_MAIN
 
 	bi << BarLink("http://www.ultimatepp.org/forum", "Forums");
 //	bcom << BarLink(Www("mailing"), "Mailing lists");
-	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
+//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
 	bi << BarLink(Www("Funding"), "Funding Ultimate++");
 //	bcom << BarLink(Www("helpus"), "Getting involved");
 //	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
