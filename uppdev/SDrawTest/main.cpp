@@ -451,68 +451,33 @@ struct App : TopWindow {
 		ImageBuffer ib(sz);
 		Fill(~ib, White(), ib.GetLength());
 		BufferPainter sw(ib);
+
 		sw.Clear(White());
-		const char *txt = "This is just a test of alpha mask blending";
-		Size tsz = GetTextSize(txt, Roman(50).Italic());
 
-//			sw.Text(0, 0, txt, Roman(70))
-//			  .Fill(Blue());
+		PaintingPainter p;
+		PaintLion(&p, NULL);
+		p.Text(300, 100, "Lion", Arial(100))
+		    .Dash("4 2")
+//			.Fill(Black())
+//			.Fill(TestImg::test(), 1000, 200, 300, 200, FILL_REPEAT)
+			.Stroke(1, Black())
+		;
+		Painting pic = p;
 
-//		sw.Arc(500, 500, 400, 400, 0, M_2PI).Clip();
-//		sw.Arc(700, 700, 400, 400, 0, M_2PI).Clip();
-
-
-//			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
-//				sw.Text(10, y, txt, Roman(70))
-//				  .Fill(Blue());
-
-
-		sw.Begin();
-			sw.BeginMask();
-			sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
-			  .Fill(0, 0, White(), tsz.cx, 0, Black());
-			sw.End();
-			sw.Text(0, 0, txt, Roman(50))
-			  .Fill(Blue());
-		sw.End();
-//		sw.Text(500, 500, "Test", Arial(50)).Fill(Black());
-		sw.Begin();
-			sw.BeginMask();
-			sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
-			  .Fill(0, 0, Black(), tsz.cx, 0, White());
-			sw.End();
-			sw.Text(0, 0, txt, Roman(50).Italic())
-			  .Fill(Red());
-		sw.End();
-		
-		sw.Begin();
-			sw.BeginMask();
-			sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
-			  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, White(), tsz.cx / 2, Black());
-			sw.End();
-			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
-				sw.Text(10, y, txt, Roman(50))
-				  .Fill(Blue());
-		sw.End();
-		sw.Begin();
-			sw.BeginMask();
-			sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
-			  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, Black(), tsz.cx / 2, White());
-			sw.End();
-			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
-				sw.Text(10, y, txt, Roman(50).Italic())
-				  .Fill(Blue());
-		sw.End();
-
-		sw.Translate(0.5, 0.5);
-		sw.Move(10, tsz.cy).Line(tsz.cx + 20, tsz.cy)
-		  .Line(tsz.cx + 20, tsz.cx + tsz.cy + 20).Line(10, tsz.cx + tsz.cy + 20)
-		  .Close()
-		  .Stroke(1, Cyan());
-
+		sw.Paint(p);
+		sw.Translate(300, 300);
+		sw.Rotate(0.5);
+		sw.Opacity(0.2);
+		sw.Paint(p);
 		
 //		RadialGradient(ib, 200, 200, 100, White(), Blue(), 150, 160);
 		
+		sw.Text(300, 100, "Lion", Arial(100))
+//		    .Dash("4 2")
+//			.Fill(Black())
+//			.Fill(TestImg::test(), 1000, 200, 300, 200, FILL_REPEAT)
+			.Stroke(4, Black())
+		;
 		
 		
 //		PaintExample(sw);
@@ -537,6 +502,66 @@ struct App : TopWindow {
 	App() { Sizeable().Zoomable(); p = Point(0, 0); }
 };
 
+
+
+//			sw.Text(0, 0, txt, Roman(70))
+//			  .Fill(Blue());
+
+//		sw.Arc(500, 500, 400, 400, 0, M_2PI).Clip();
+//		sw.Arc(700, 700, 400, 400, 0, M_2PI).Clip();
+
+
+//			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
+//				sw.Text(10, y, txt, Roman(70))
+//				  .Fill(Blue());
+
+void MaskBlending(Painter& sw, Size sz)
+{
+	const char *txt = "This is just a test of alpha mask blending";
+	Size tsz = GetTextSize(txt, Roman(50).Italic());
+	sw.Begin();
+		sw.BeginMask();
+		sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
+		  .Fill(0, 0, White(), tsz.cx, 0, Black());
+		sw.End();
+		sw.Text(0, 0, txt, Roman(50))
+		  .Fill(Blue());
+	sw.End();
+//		sw.Text(500, 500, "Test", Arial(50)).Fill(Black());
+	sw.Begin();
+		sw.BeginMask();
+		sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
+		  .Fill(0, 0, Black(), tsz.cx, 0, White());
+		sw.End();
+		sw.Text(0, 0, txt, Roman(50).Italic())
+		  .Fill(Red());
+	sw.End();
+	
+	sw.Begin();
+		sw.BeginMask();
+		sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
+		  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, White(), tsz.cx / 2, Black());
+		sw.End();
+		for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
+			sw.Text(10, y, txt, Roman(50))
+			  .Fill(Blue());
+	sw.End();
+	sw.Begin();
+		sw.BeginMask();
+		sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
+		  .Fill(tsz.cx / 2, tsz.cy + tsz.cx / 2, Black(), tsz.cx / 2, White());
+		sw.End();
+		for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
+			sw.Text(10, y, txt, Roman(50).Italic())
+			  .Fill(Blue());
+	sw.End();
+
+	sw.Translate(0.5, 0.5);
+	sw.Move(10, tsz.cy).Line(tsz.cx + 20, tsz.cy)
+	  .Line(tsz.cx + 20, tsz.cx + tsz.cy + 20).Line(10, tsz.cx + tsz.cy + 20)
+	  .Close()
+	  .Stroke(1, Cyan());
+}
 
 void BenchmarkImageFill()
 {
