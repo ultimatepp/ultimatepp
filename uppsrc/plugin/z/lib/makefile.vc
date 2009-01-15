@@ -1,0 +1,28 @@
+# $Id: makefile.vc 10656 2007-01-19 01:31:01Z mloskot $
+#
+# Makefile to build zlib using NMAKE and Visual C++ compiler.
+#
+OBJ = \
+    adler32.obj \
+    compress.obj \
+    crc32.obj \
+    deflate.obj \
+    gzio.obj \
+    infback.obj \
+    inffast.obj \
+    inflate.obj \
+    inftrees.obj \
+    trees.obj \
+    uncompr.obj \
+    zutil.obj
+
+GDAL_ROOT	=	..\..
+
+!INCLUDE $(GDAL_ROOT)\nmake.opt
+
+default:	$(OBJ)
+	xcopy /D  /Y *.obj ..\o
+
+clean:
+	-del *.obj
+
