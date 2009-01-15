@@ -6,6 +6,7 @@ Pointf Painter::ReadPoint(CParser& p)
 {
 	Pointf t;
 	t.x = p.IsDouble() ? p.ReadDouble() : 0;
+	p.Char(',');
 	t.y = p.IsDouble() ? p.ReadDouble() : 0;
 	return t;
 }
