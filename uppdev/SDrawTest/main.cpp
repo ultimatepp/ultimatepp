@@ -437,106 +437,10 @@ void RadialGradient(ImageBuffer& ib, int cx, int cy, int r, RGBA c1, RGBA c2, in
 }
 */
 
-struct App : TopWindow {
-	Point p;
-
-	virtual void MouseMove(Point _p, dword keyflags) {
-		p = _p;
-		Refresh();
-	}
-
-	virtual void Paint(Draw& w) {
-		RTIMING("Paint");
-		Size sz = GetSize();
-		ImageBuffer ib(sz);
-		Fill(~ib, White(), ib.GetLength());
-		BufferPainter sw(ib);
-
-		sw.Clear(White());
-
-		PaintingPainter p;
-		PaintLion(&p, NULL);
-		p.Text(300, 100, "Lion", Arial(100))
-		    .Dash("4 2")
-//			.Fill(Black())
-//			.Fill(TestImg::test(), 1000, 200, 300, 200, FILL_REPEAT)
-			.Stroke(1, Black())
-		;
-		Painting pic = p;
-
-		sw.Paint(p);
-		sw.Translate(300, 300);
-		sw.Rotate(0.5);
-		sw.Opacity(0.2);
-		sw.Paint(p);
-		
-//		RadialGradient(ib, 200, 200, 100, White(), Blue(), 150, 160);
-		
-		sw.Text(300, 100, "Lion", Arial(100))
-//		    .Dash("4 2")
-//			.Fill(Black())
-//			.Fill(TestImg::test(), 1000, 200, 300, 200, FILL_REPEAT)
-			.Stroke(4, Black())
-		;
-		
-		
-//		PaintExample(sw);
-		sw.Rotate(0.05);
-	//	sw.Opacity(0.5);
-	//	PaintExample(sw);
-		w.DrawImage(0, 0, ib);
-		ImageDraw iw(500, 500);
-		iw.DrawRect(0, 0, 500, 500, LtGray());
-		for(int i = 0; i < 1; i++) {
-			RTIMING("ImageDraw");
-			Vector<Point> p;
-//			p.Add(Point(200, 200));
-//			p.Add(Point(200, 210));
-//			p.Add(Point(210, 205));
-		//	PaintLion(NULL, &iw);
-		}
-	//	w.DrawImage(500, 0, iw);
-//		w.DrawText(0, 0, AsString(gradient_t));
-	}
-	
-	App() { Sizeable().Zoomable(); p = Point(0, 0); }
-};
-
-
-
-//			sw.Text(0, 0, txt, Roman(70))
-//			  .Fill(Blue());
-
-//		sw.Arc(500, 500, 400, 400, 0, M_2PI).Clip();
-//		sw.Arc(700, 700, 400, 400, 0, M_2PI).Clip();
-
-
-//			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
-//				sw.Text(10, y, txt, Roman(70))
-//				  .Fill(Blue());
-
 void MaskBlending(Painter& sw, Size sz)
 {
 	const char *txt = "This is just a test of alpha mask blending";
 	Size tsz = GetTextSize(txt, Roman(50).Italic());
-	sw.Begin();
-		sw.BeginMask();
-		sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
-		  .Fill(0, 0, White(), tsz.cx, 0, Black());
-		sw.End();
-		sw.Text(0, 0, txt, Roman(50))
-		  .Fill(Blue());
-	sw.End();
-//		sw.Text(500, 500, "Test", Arial(50)).Fill(Black());
-	sw.Begin();
-		sw.BeginMask();
-		sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
-		  .Fill(0, 0, Black(), tsz.cx, 0, White());
-		sw.End();
-		sw.Text(0, 0, txt, Roman(50).Italic())
-		  .Fill(Red());
-	sw.End();
-	
 	sw.Begin();
 		sw.BeginMask();
 		sw.Move(0, 0).Line(tsz.cx + 20, 0).Line(tsz.cx + 20, sz.cy + 20).Line(0, sz.cy + 20)
@@ -555,13 +459,64 @@ void MaskBlending(Painter& sw, Size sz)
 			sw.Text(10, y, txt, Roman(50).Italic())
 			  .Fill(Blue());
 	sw.End();
+	sw.Begin();
+		sw.BeginMask();
+		sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
+		  .Fill(0, 0, White(), tsz.cx, 0, Black());
+		sw.End();
+		sw.Text(0, 0, txt, Roman(50))
+		  .Fill(Blue());
+	sw.End();
+	sw.Begin();
+		sw.BeginMask();
+		sw.Move(0, 0).Line(tsz.cx, 0).Line(tsz.cx, sz.cy).Line(0, sz.cy)
+		  .Fill(0, 0, Black(), tsz.cx, 0, White());
+		sw.End();
+		sw.Text(0, 0, txt, Roman(50).Italic())
+		  .Fill(Red());
+	sw.End();
+	
 
-	sw.Translate(0.5, 0.5);
+//	sw.Translate(0.5, 0.5);
 	sw.Move(10, tsz.cy).Line(tsz.cx + 20, tsz.cy)
 	  .Line(tsz.cx + 20, tsz.cx + tsz.cy + 20).Line(10, tsz.cx + tsz.cy + 20)
 	  .Close()
 	  .Stroke(1, Cyan());
 }
+
+struct App : TopWindow {
+	Point p;
+
+	virtual void MouseMove(Point _p, dword keyflags) {
+		p = _p;
+		Refresh();
+	}
+
+	virtual void Paint(Draw& w) {
+		RTIMING("Paint");
+		Size sz = GetSize();
+		PaintingPainter p(500, 800);
+		p.Clear(White());
+		PaintLion(&p, NULL);
+		w.DrawRect(sz, White());
+		w.DrawPainting(0, 0, 200, 200, p.GetResult());
+	}
+	
+	App() { Sizeable().Zoomable(); p = Point(0, 0); }
+};
+
+
+
+//			sw.Text(0, 0, txt, Roman(70))
+//			  .Fill(Blue());
+
+//		sw.Arc(500, 500, 400, 400, 0, M_2PI).Clip();
+//		sw.Arc(700, 700, 400, 400, 0, M_2PI).Clip();
+
+
+//			for(int y = tsz.cy + 10; y < sz.cy; y += tsz.cy)
+//				sw.Text(10, y, txt, Roman(70))
+//				  .Fill(Blue());
 
 void BenchmarkImageFill()
 {
@@ -602,10 +557,10 @@ GUI_APP_MAIN
 
 #ifndef _DEBUG
 	ImageBuffer ib(500, 500);
-	for(int i = 0; i < 0; i++) {
+	for(int i = 0; i < 100; i++) {
 		RTIMING("Benchmark");
-		Painter sw(ib);
-		PaintExample(sw);
+		BufferPainter sw(ib);
+		PaintLion(&sw, NULL);
 	}
 #endif
 	App().Run();
