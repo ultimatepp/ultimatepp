@@ -66,12 +66,14 @@ enum {
 	FILL_REPEAT     = FILL_HREPEAT|FILL_VREPEAT,
 	FILL_REFLECT    = FILL_HREFLECT|FILL_VREFLECT,
 	
-	FILL_FAST       = 256,
+	FILL_FAST       = 128,
 	
 	GRADIENT_PAD     = 0,
 	GRADIENT_REPEAT  = 1,
 	GRADIENT_REFLECT = 2,
 };
+
+class Painting;
 
 class Painter : public Draw {
 protected:
@@ -159,6 +161,8 @@ private:
 	void   RectPath(int x, int y, int cx, int cy);
 	void   RectPath(const Rect& r);
 
+	static RGBA GetRGBA(StringStream& ss);
+
 public:
 	void     Clear(const RGBA& color);
 
@@ -244,9 +248,12 @@ public:
 	void   Rotate(double a);
 	void   Scale(double scalex, double scaley);
 	void   Scale(double scale);
+	
+	void   Paint(const Painting& p);
 };
 
 #include "BufferPainter.h"
+#include "Painting.h"
 
 END_UPP_NAMESPACE
 
