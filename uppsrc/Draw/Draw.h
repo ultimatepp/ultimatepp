@@ -88,6 +88,8 @@ enum {
 class Drawing;
 class Draw;
 
+class Painting;
+
 #ifdef PLATFORM_WIN32
 HDC ScreenHDC();
 #endif
@@ -727,6 +729,7 @@ public:
 	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
 		                    Color ink, int n, const int *dx);
 	virtual void DrawDrawingOp(const Rect& target, const Drawing& w);
+	virtual void DrawPaintingOp(const Rect& target, const Painting& w);
 
 	void  Begin()                                       { BeginOp(); }
 	void  End()                                         { EndOp(); }
@@ -827,6 +830,9 @@ public:
 
 	void DrawDrawing(const Rect& r, const Drawing& iw) { DrawDrawingOp(r, iw); }
 	void DrawDrawing(int x, int y, int cx, int cy, const Drawing& iw);
+
+	void DrawPainting(const Rect& r, const Painting& iw) { DrawPaintingOp(r, iw); }
+	void DrawPainting(int x, int y, int cx, int cy, const Painting& iw);
 
 	void DrawText(int x, int y, int angle, const wchar *text, Font font = StdFont(),
 		          Color ink = DefaultInk, int n = -1, const int *dx = NULL);

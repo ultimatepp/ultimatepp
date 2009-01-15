@@ -336,6 +336,28 @@ bool Draw::IsPainting(int x, int y, int cx, int cy) const
 	return IsPainting(RectC(x, y, cx, cy));
 }
 
+void (*DrawPaintingFn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos);
+
+void RegisterDrawPaintingFn(void (*fn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos))
+{
+	DrawPaintingFn = fn;
+}
+
+void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
+{
+	if(DrawPaintingFn) {
+		Size sz = target.GetSize();
+		ImageBuffer ib(sz);
+		DrawPaintingFn(ib, pw, sz, Point(0, 0));
+		DrawImage(target.left, target.top, ib);
+	}
+}
+
+void Draw::DrawPainting(int x, int y, int cx, int cy, const Painting& ig)
+{
+	DrawPainting(RectC(x, y, cx, cy), ig);
+}
+
 // ---------------------------
 
 void NilDraw::BeginOp() {}

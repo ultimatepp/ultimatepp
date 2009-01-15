@@ -223,15 +223,20 @@ void Painter::Paint(const Painting& pic)
 	}
 }
 
-Image AsImage(const Painting& p, Size sz, Size isz, Point pos)
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos)
 {
-	ImageBuffer ib(sz);
 	BufferPainter sw(ib);
 	Sizef psz = p.GetSize();
-	sw.Scale(psz.cx / sz.cx, psz.cy / sz.cy);
-	sw.Clear(White());
+	sw.Scale(sz.cx / psz.cx, sz.cy / psz.cy);
+	sw.Translate(-pos.x, -pos.y);
 	sw.Paint(p);
-	return ib;
+}
+
+void RegisterDrawPaintingFn(void (*fn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos));
+
+INITBLOCK
+{
+	RegisterDrawPaintingFn(PaintImageBuffer);
 }
 
 END_UPP_NAMESPACE

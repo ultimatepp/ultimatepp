@@ -137,4 +137,4 @@ public:
 	PaintingPainter(Sizef sz)                        { Create(sz); }
 };
 
-Image AsImage(const Painting& p, Size sz);
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos);
