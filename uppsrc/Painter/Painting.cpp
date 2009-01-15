@@ -243,6 +243,7 @@ void PaintingPainter::Create(double cx, double cy)
 
 void PaintingPainter::Create(Sizef sz)
 {
+	Create(sz.cx, sz.cy);
 }
 
 END_UPP_NAMESPACE
