@@ -84,7 +84,7 @@ void BufferPainter::CubicOp(double x1, double y1, double x2, double y2, double x
 
 void BufferPainter::CubicOp(double x2, double y2, double x, double y, bool rel)
 {
-	Pointf c = current + current - qcontrol;
+	Pointf c = current + current - ccontrol;
 	PathPoint0(c.x, c.y);
 	PathPoint(x2, y2, rel);
 	ccontrol = Pointf(x2, y2);
