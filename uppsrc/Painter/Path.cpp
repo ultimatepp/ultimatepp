@@ -14,6 +14,7 @@ Painter& Painter::Path(CParser& p)
 {
 	while(!p.IsEof()) {
 		int c = p.GetChar();
+		p.Spaces();
 		bool rel = IsLower(c);
 		Pointf t, t1, t2;
 		switch(ToUpper(c)) {
@@ -23,7 +24,7 @@ Painter& Painter::Path(CParser& p)
 		case 'L':
 			while(p.IsDouble()) {
 				t = ReadPoint(p);
-				Move(t.x, t.y, rel);
+				Line(t.x, t.y, rel);
 			}
 			break;
 		case 'Z':

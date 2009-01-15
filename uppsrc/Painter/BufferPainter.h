@@ -1,3 +1,27 @@
+inline RGBA Mul8(const RGBA& s, int mul)
+{
+	RGBA t;
+	t.r = (mul * s.r) >> 8;
+	t.g = (mul * s.g) >> 8;
+	t.b = (mul * s.b) >> 8;
+	t.a = (mul * s.a) >> 8;
+	return t;
+}
+
+inline RGBA MulA(const RGBA& s, int alpha)
+{
+	return Mul8(s, alpha + (alpha >> 7));
+}
+
+inline void AlphaBlend(RGBA& t, const RGBA& c)
+{
+	int alpha = 256 - (c.a + (c.a >> 7));
+	t.r = c.r + (alpha * t.r >> 8);
+	t.g = c.g + (alpha * t.g >> 8);
+	t.b = c.b + (alpha * t.b >> 8);
+	t.a = c.a + (alpha * t.a >> 8);
+}
+
 class BufferPainter : public Painter {
 protected:
 	virtual void   ClearOp(const RGBA& color);
@@ -88,15 +112,66 @@ private:
 		unsigned command(int i) const { return (int)i < c.GetCount() ? c[i] : agg::path_cmd_stop; }
     };
 
+	class upp_pixfmt {
+		Size  sz;
+		RGBA *buffer;
+
+    public:
+		typedef RGBA pixel_type;
+		typedef RGBA color_type;
+		typedef byte value_type;
+		typedef int  calc_type;
+		typedef agg::const_row_info<RGBA> row_data;
+
+		void attach(ImageBuffer& ib) { buffer = ib; sz = ib.GetSize(); }
+
+		int width()  const { return sz.cx;  }
+		int height() const { return sz.cy; }
+		int stride() const { return sz.cx; }
+		
+		RGBA* row_ptr(int y)              { return buffer + sz.cx * y; }
+		RGBA *ptr(int x, int y)           { return buffer + sz.cx * y + x; }
+		const RGBA* row_ptr(int y) const  { return buffer + sz.cx * y; }
+		
+		void blend_hline(int x, int y, int len, RGBA c, byte cover);
+		void blend_solid_hspan(int x, int y, int len, const RGBA& c, const byte* covers);
+		void blend_color_hspan(int x, int y, int len, const RGBA* colors,
+		                       const byte* covers, byte cover);
+    };
+
+	struct upp_pixfmt_clip {
+		Size  sz;
+		byte *buffer;
+
+		typedef byte pixel_type;
+		typedef byte color_type;
+		typedef byte value_type;
+		typedef int  calc_type;
+		typedef agg::const_row_info<RGBA> row_data;
+
+		int width()  const { return sz.cx;  }
+		int height() const { return sz.cy; }
+		int stride() const { return sz.cx; }
+		
+		byte* row_ptr(int y)              { return buffer + sz.cx * y; }
+		byte *ptr(int x, int y)           { return buffer + sz.cx * y + x; }
+		const byte* row_ptr(int y) const  { return buffer + sz.cx * y; }
+		
+		void blend_hline(int x, int y, int len, byte, byte cover);
+		void blend_solid_hspan(int x, int y, int len, byte, const byte* covers);
+		void blend_color_hspan(int x, int y, int len, byte *,
+		                       const byte* covers, byte cover);
+    };
+
 	typedef agg::path_base<vertex_upp_storage> path_storage;
 
-	typedef agg::pixfmt_rgba32_pre pixfmt;
-	typedef agg::rgba8 color_type;
-	typedef agg::renderer_base<agg::pixfmt_rgba32_pre> renderer_base;
+	typedef upp_pixfmt pixfmt;
+	typedef RGBA color_type;
+	typedef agg::renderer_base<pixfmt> renderer_base;
 	typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
 	typedef agg::span_interpolator_linear<> interpolator_type;
 	typedef agg::image_accessor_clip<pixfmt> img_source_type;
-	typedef agg::span_image_filter_rgba_bilinear_clip<pixfmt, interpolator_type> span_gen_type;
+//	typedef agg::span_image_filter_rgba_bilinear_clip<pixfmt, interpolator_type> span_gen_type;
 	typedef agg::span_allocator<color_type> span_alloc;
 	typedef renderer_base::color_type x;
 	
@@ -129,12 +204,11 @@ private:
 	path_storage                  path;
 	bool                          inpath;
 
-	agg::rendering_buffer         rbuf;
 	agg::rasterizer_scanline_aa<> rasterizer;
 	agg::scanline_p8              scanline_p;
 	renderer_base                 renb;
 	renderer_solid                renderer;
-	agg::pixfmt_rgba32_pre        pixf;
+	pixfmt                        pixf;
 
 	typedef agg::conv_curve<path_storage>       Curved;
 	typedef agg::conv_transform<Curved>         CurvedTrans;
@@ -154,7 +228,7 @@ private:
 	Rectf  PathRect() const       { return pathrect; }
 	path_storage MakeStroke(double width);
 	Pointf ReadPoint(CParser& p, bool rel);
-	void   RenderClip(byte *t, int alpha);
+	void   RenderClip(byte *t);
 	void   MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx);
 	void   ColorStop0(Attr& a, double pos, const RGBA& color);
 	void   FinishMask();

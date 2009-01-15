@@ -223,4 +223,15 @@ void Painter::Paint(const Painting& pic)
 	}
 }
 
+Image AsImage(const Painting& p, Size sz, Size isz, Point pos)
+{
+	ImageBuffer ib(sz);
+	BufferPainter sw(ib);
+	Sizef psz = p.GetSize();
+	sw.Scale(psz.cx / sz.cx, psz.cy / sz.cy);
+	sw.Clear(White());
+	sw.Paint(p);
+	return ib;
+}
+
 END_UPP_NAMESPACE

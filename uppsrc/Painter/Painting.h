@@ -1,9 +1,13 @@
 class Painting {
 	String     cmd;
 	ValueArray data;
+	Sizef      size;
 	
 	friend class PaintingPainter;
 	friend class Painter;
+
+public:
+	Sizef   GetSize() const                { return size; }
 };
 
 enum {
@@ -57,6 +61,7 @@ enum {
 class PaintingPainter : public Painter {
 	StringStream cmd;
 	ValueArray   data;
+	Sizef        size;
 
 	void Put(int c)                { cmd.Put(c); }
 	void Put32(int c)              { cmd.Put32(c); }
@@ -121,4 +126,15 @@ protected:
 public:
 	Painting GetResult();
 	operator Painting()                              { return GetResult(); }
+	
+	void Create(double cx, double cy);
+	void Create(Sizef sz);
+	
+	Sizef GetSize() const                            { return size; }
+	
+	PaintingPainter()                                {}
+	PaintingPainter(double cx, double cy)            { Create(cx, cy); }
+	PaintingPainter(Sizef sz)                        { Create(sz); }
 };
+
+Image AsImage(const Painting& p, Size sz);
