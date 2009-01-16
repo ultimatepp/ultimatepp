@@ -66,6 +66,7 @@ void Painter::DrawRectOp(int x, int y, int cx, int cy, Color color)
 
 void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
+	// Color and src support!!!
 	RectPath(x, y, cx, cy);
 	Fill(img, Translate2D(x, y));
 }
@@ -79,7 +80,7 @@ void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 }
 
 void Painter::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
-                               int count_count, int width, Color color, Color doxor)
+                                 int count_count, int width, Color color, Color doxor)
 {
 }
 
