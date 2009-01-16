@@ -1057,6 +1057,28 @@ public:
 	}
 };
 
+class LanguageInfoRU : public LanguageInfo
+{
+public:
+	LanguageInfoRU()
+		: LanguageInfo(LNG_('R', 'U', 'R', 'U'))
+	{
+		english_name = "Russian";
+		native_name = "\xD0\xA0\xD1\x83\xD1\x81\xD1\x81\xD0\xBA\xD0\xB8\xD0\xB9";
+	}
+};
+
+class LanguageInfoUK : public LanguageInfo
+{
+public:
+	LanguageInfoUK()
+		: LanguageInfo(LNG_('U', 'K', 'U', 'A'))
+	{
+		english_name = "Ukrainian";
+		native_name = "\xD0\xA3\xD0\xBA\xD1\x80\xD0\xB0\xD1\x97\xD0\xBD\xD1\x81\xD1\x8C\xD0\xBA\xD0\xB0";
+	}
+};
+
 const LanguageInfo& GetLanguageInfo(int lcode)
 {
 	static bool init_std = false;
@@ -1068,6 +1090,8 @@ const LanguageInfo& GetLanguageInfo(int lcode)
 		LanguageInfo::Register(new LanguageInfoGE);
 		LanguageInfo::Register(new LanguageInfoFR);
 		LanguageInfo::Register(new LanguageInfoES);
+		LanguageInfo::Register(new LanguageInfoRU);
+		LanguageInfo::Register(new LanguageInfoUK);
 	}
 
 	static int recent = 0;
