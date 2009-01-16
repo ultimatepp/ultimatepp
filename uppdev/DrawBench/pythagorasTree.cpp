@@ -27,6 +27,9 @@ void AddRect(Cairo &c, double size)
 	c.Rotate(-M_PI/4.);
 	AddRect(c, size / M_SQRT2);
 	c.Restore();
+	
+	c.Fill();
+
 }
 
 void DoRect(Painter &sw, double size)
@@ -76,7 +79,6 @@ void DrawPythagorasTree(Size sz, Painter *sw, Cairo *ca)
 		ca->MoveTo(sz.cx/2, size/2);
 		AddRect(*ca, size);
 		ca->SetSourceRGB(Black());
-		ca->Fill();
 		ca->Restore();
 	}
 }
