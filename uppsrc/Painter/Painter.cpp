@@ -70,10 +70,6 @@ void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const 
 	Fill(img, Translate2D(x, y));
 }
 
-void Painter::DrawDataOp(int x, int y, int cx, int cy, const String& data, const char *id)
-{
-}
-
 void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	Move(x1, y1);

@@ -336,16 +336,41 @@ bool Draw::IsPainting(int x, int y, int cx, int cy) const
 	return IsPainting(RectC(x, y, cx, cy));
 }
 
-void (*DrawPaintingFn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos);
+static void (*sIgfn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos);
+static void (*sIwfn)(ImageBuffer& ib, const Drawing& p);
 
-void RegisterDrawPaintingFn(void (*fn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos))
+void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos),
+                           void (*iw)(ImageBuffer& ib, const Drawing& p))
 {
-	DrawPaintingFn = fn;
+	sIgfn = ig;
+	sIwfn = iw;
+}
+
+bool HasPainter()
+{
+	return sIgfn && sIwfn;
+}
+
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos)
+{
+	if(sIgfn)
+		(*sIgfn)(ib, p, sz, pos);
+}
+
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p)
+{
+	PaintImageBuffer(ib, p, ib.GetSize(), Point(0, 0));
+}
+
+void PaintImageBuffer(ImageBuffer& ib, const Drawing& iw)
+{
+	if(sIwfn)
+		(*sIwfn)(ib, iw);
 }
 
 void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 {
-	if(!DrawPaintingFn)
+	if(!HasPainter())
 		return;
 	Size sz = target.GetSize();
 	if((sz.cx > 2000 || sz.cy > 1500) && IsPrinter()) {
@@ -354,7 +379,7 @@ void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 			int ccy = min(sz.cy - yy, 100);
 			ImageBuffer ib(sz.cx, ccy);
 			Fill(~ib, RGBAZero(), ib.GetLength());
-			DrawPaintingFn(ib, pw, sz, Point(0, yy));
+			PaintImageBuffer(ib, pw, sz, Point(0, yy));
 			DrawImageBandRLE(*this, target.left, target.top + yy, ib, 16);
 			yy += ccy;
 		}
@@ -362,7 +387,7 @@ void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 	else {
 		ImageBuffer ib(sz);
 		Fill(~ib, RGBAZero(), ib.GetLength());
-		DrawPaintingFn(ib, pw, sz, Point(0, 0));
+		PaintImageBuffer(ib, pw, sz, Point(0, 0));
 		DrawImage(target.left, target.top, ib);
 	}
 }

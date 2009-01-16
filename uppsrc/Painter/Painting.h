@@ -138,3 +138,4 @@ public:
 };
 
 void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos);
+void PaintImageBuffer(ImageBuffer& ib, const Drawing& p);
