@@ -223,7 +223,7 @@ void Painter::Paint(const Painting& pic)
 	}
 }
 
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos)
+void PaintImageBufferPaintingFn(ImageBuffer& ib, const Painting& p, Size sz, Point pos)
 {
 	BufferPainter sw(ib);
 	Sizef psz = p.GetSize();
@@ -232,11 +232,22 @@ void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos)
 	sw.Paint(p);
 }
 
-void RegisterDrawPaintingFn(void (*fn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos));
+void PaintImageBufferDrawingFn(ImageBuffer& ib, const Drawing& iw)
+{
+	BufferPainter sw(ib);
+	Sizef sz = ib.GetSize();
+	Size isz = iw.GetSize();
+	sw.Scale(sz.cx / isz.cx, sz.cy / isz.cy);
+	sw.DrawDrawing(0, 0, isz.cx, isz.cy, iw);
+}
+
+void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos),
+                           void (*iw)(ImageBuffer& ib, const Drawing& p));
+
 
 INITBLOCK
 {
-	RegisterDrawPaintingFn(PaintImageBuffer);
+	RegisterPaintingFns__(PaintImageBufferPaintingFn, PaintImageBufferDrawingFn);
 }
 
 END_UPP_NAMESPACE

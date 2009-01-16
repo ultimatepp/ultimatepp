@@ -105,7 +105,7 @@ void Draw::DrawDataOp(int x, int y, int cx, int cy, const String& data, const ch
 		if(cx > 2048 || cy > 2048) {
 			int yy = 0;
 			while(yy < cy) {
-				int ccy = min(cy - yy, 16);
+				int ccy = min(cy - yy, 32);
 				ImageBuffer ib(cx, ccy);
 				dd->Render(ib);
 				DrawImageBandRLE(*this, x, y + yy, ib, 16);

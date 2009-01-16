@@ -473,6 +473,11 @@ void SColorDkShadow_Write(Color c);
 inline Color InvertColor() { return Color(255, 0); }
 inline Color DefaultInk() { return Black(); } //TODO!
 
+bool HasPainter();
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos);
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p);
+void PaintImageBuffer(ImageBuffer& ib, const Drawing& p);
+
 class Draw {
 protected:
 	bool      palette:1;

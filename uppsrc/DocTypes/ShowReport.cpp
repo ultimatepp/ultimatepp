@@ -85,10 +85,18 @@ Image ReportCtrl::GetPage(int i) {
 	if(pagei[ii] != i) {
 		pagei[ii] = i;
 		Size sz = Size(max(pagesize.cx - 2, 1), max(pagesize.cy - 2, 1));
-		ImageDraw iw(sz);
-		iw.DrawRect(sz, White);
-		iw.DrawDrawing(0, 0, sz.cx, sz.cy, report->GetPage(i));
-		page[ii] = iw;
+		if(HasPainter()) {
+			ImageBuffer ib(sz);
+			Fill(~ib, White(), ib.GetLength());
+			PaintImageBuffer(ib, report->GetPage(i));
+			page[ii] = ib;
+		}
+		else {
+			ImageDraw iw(sz);
+			iw.DrawRect(sz, White);
+			iw.DrawDrawing(0, 0, sz.cx, sz.cy, report->GetPage(i));
+			page[ii] = iw;
+		}
 	}
 	return page[ii];
 }
