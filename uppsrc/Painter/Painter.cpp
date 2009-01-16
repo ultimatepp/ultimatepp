@@ -10,7 +10,7 @@ void Painter::OffsetOp(Point p)
 
 void Painter::RectPath(int x, int y, int cx, int cy)
 {
-	Move(x, y).Line(x + cx - 1, y).Line(x + cx - 1, y + cy - 1).Line(x, y + cy - 1).Close();
+	Move(x, y).Line(x + cx, y).Line(x + cx, y + cy).Line(x, y + cy).Close();
 }
 
 void Painter::RectPath(const Rect& r)
