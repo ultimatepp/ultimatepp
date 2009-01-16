@@ -1,0 +1,460 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/ubuntu/Desktop
+Programs:         /usr/bin
+Application Data: /home/ubuntu
+Music:            
+Pictures:         
+Video:            
+Personal:         
+Templates:        
+Download:         
+Temp:             /home/ubuntu
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.830 GHz
+Battery info
+There is no battery
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1833 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1833 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 28%
+Total physical memory:    2113114112 bytes (2.0Gb)
+Free physical memory:     1509265408 bytes (1.4Gb)
+Total paging file:        273801216 bytes (261.1Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.27-7-generic #1 SMP Fri Oct 24 06:42:44 UTC 2008,
+ architecture: i686
+Distro:  ubuntu, version: 8.10
+Desktop: xfce, version: 
+
+Program compiled with gnuc version 40103. Compilation date: Dec  2 2008
+
+Default exes info:
+Default program for '.html' is 'firefox.desktop'
+Default program for '.doc' is 'abiword.desktop'
+Default program for '.png' is 'gpicview.desktop'
+Default program for '.pdf' is 'evince.desktop'
+Default program for '.txt' is 'mousepad.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/cdrom'
+ Type: 'Optical', Volume: 'Xubuntu 8.10 i386', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 618119168 (589.5Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  1443139584 (1.3Gb)
+ Total Bytes User: 2031824896 (1.9Gb), Total Free Bytes: 1443139584 (1.3Gb)
+Drive path:'/media/disk-1'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  475602944 (453.6Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 475602944 (453.6Mb)
+
+Other Info:
+Process Id:          8327
+Process name:        'SysInfoDemoConsole'
+Process file name:   '/media/disk/SysInfoDemoConsole'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777892, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27262979, processId:   7840, Name: xfdesktop
+ File name: /usr/bin/xfdesktop
+ Window caption: 'Escritorio '
+Window hwnd: 27262980, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778118, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778119, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778120, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778121, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778123, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778124, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778125, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778126, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778127, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778128, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778129, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778130, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778131, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778132, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971523, processId:   7810, Name: Thunar
+ File name: /usr/bin/Thunar
+ Window caption: 'disk - Administrador de Archivos '
+Window hwnd: 20971524, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971575, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971590, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971592, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971601, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971602, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971603, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971574, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778278, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778279, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778280, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778281, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778282, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778283, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778284, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778285, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778286, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778287, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778288, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778289, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 16778290, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778291, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778292, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971963, processId:   7810, Name: Thunar
+ File name: /usr/bin/Thunar
+ Window caption: 'disk-1 - Administrador de Archivos '
+Window hwnd: 20971964, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971978, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971988, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971990, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971999, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972000, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972001, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971968, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972127, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971977, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778472, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778473, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778474, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778475, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778476, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778477, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 16778478, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778479, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778480, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778481, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778482, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778483, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778484, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778485, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16778486, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 44040202, processId:   8286, Name: xfce4-terminal
+ File name: /usr/bin/xfce4-terminal
+ Window caption: 'Terminal - ubuntu@ubuntu: /media/disk '
+Window hwnd: 44040203, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 44040259, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 44040255, processId:      0, Name: 
+ File name: 
+ Window caption: 'ubuntu@ubuntu: /media/disk '
+Window hwnd: 44040266, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777857, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874429, processId:   7802, Name: xfce4-panel
+ File name: /usr/bin/xfce4-panel
+ Window caption: 'Xfce Panel '
+Window hwnd: 18874430, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874432, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874433, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874435, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 18874436, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874439, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777824, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874400, processId:   7802, Name: xfce4-panel
+ File name: /usr/bin/xfce4-panel
+ Window caption: 'Xfce Panel '
+Window hwnd: 18874401, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874407, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874408, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874410, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874417, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874419, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874420, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874422, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874423, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874427, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777425, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777424, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777423, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777422, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 10485763, processId:   7739, Name: 
+ File name: 
+ Window caption: 'gnome-screensaver '
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 16777390, processId:   7794, Name: xfwm4
+ File name: /usr/bin/xfwm4
+ Window caption: 'xfwm4 '
+Window hwnd: 16777391, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   6436: Priority: 5, Program: /bin/bash
+Id   6437: Priority: 5, Program: /bin/bash
+Id   6438: Priority: 5, Program: /bin/bash
+Id   6439: Priority: 5, Program: /bin/bash
+Id   6440: Priority: 5, Program: /bin/bash
+Id   7533: Priority: 5, Program: /bin/bash
+Id   7620: Priority: 5, Program: /bin/dash
+Id   7730: Priority: 5, Program: /usr/bin/dbus-launch
+Id   7731: Priority: 5, Program: /bin/dbus-daemon
+Id   7743: Priority: 5, Program: /usr/bin/xfce4-session
+Id   7752: Priority: 5, Program: /usr/lib/libgconf2-4/gconfd-2
+Id   7753: Priority: 5, Program: /usr/bin/gnome-screensaver
+Id   7755: Priority: 5, Program: /usr/lib/gvfs/gvfsd
+Id   7760: Priority: 5, Program: /usr/bin/xfce-mcs-manager
+Id   7792: Priority: 5, Program: /usr/bin/gnome-keyring-daemon
+Id   7794: Priority: 5, Program: /usr/bin/xfwm4
+Id   7802: Priority: 5, Program: /usr/bin/xfce4-panel
+Id   7810: Priority: 5, Program: /usr/bin/Thunar
+Id   7824: Priority: 5, Program: /usr/lib/gamin/gam_server
+Id   7835: Priority: 5, Program: /usr/lib/xfce4/panel-plugins/xfce4-menu-plugin
+Id   7836: Priority: 5, Program: /usr/lib/xfce4/panel-plugins/xfce4-places-plugin
+Id   7840: Priority: 5, Program: /usr/bin/xfdesktop
+Id   7850: Priority: 5, Program: /usr/lib/xfce4/panel-plugins/xfce4-mixer-plugin
+Id   7857: Priority: 5, Program: /usr/lib/thunar/xfce4/panel-plugins/thunar-tpa
+Id   7866: Priority: 5, Program: /usr/bin/nm-applet
+Id   7868: Priority: 5, Program: /usr/bin/python2.5
+Id   7870: Priority: 5, Program: /usr/bin/update-notifier
+Id   7883: Priority: 5, Program: /usr/bin/gnome-power-manager
+Id   7918: Priority: 5, Program: /usr/lib/notification-daemon/notification-daemon
+Id   8286: Priority: 5, Program: /usr/bin/xfce4-terminal
+Id   8292: Priority: 5, Program: /bin/bash
+Id   8327: Priority: 5, Program: /media/disk/SysInfoDemoConsole
+
+Press enter to end...

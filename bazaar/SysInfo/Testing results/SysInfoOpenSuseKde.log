@@ -1,0 +1,183 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/linux/Desktop
+Programs:         /usr/bin
+Application Data: /home/linux
+Music:            
+Pictures:         
+Video:            
+Personal:         
+Templates:        
+Download:         
+Temp:             /home/linux
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.830 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 34%
+Total physical memory:    2115579904 bytes (2.0Gb)
+Free physical memory:     1381380096 bytes (1.3Gb)
+Total paging file:        410140672 bytes (391.1Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     0 bytes (0b)
+Free virtual memory:      0 bytes (0b)
+
+Os info:
+Kernel:  Linux, version: 2.6.25.5-1.1-default #1 SMP 2008-06-07 01:55:22 +0200,
+ architecture: i686
+Distro:  openSUSE, version: 11.0
+Desktop: kde, version: 4.0.4 (KDE 4.0.4 >= 20080505) 
+
+Program compiled with gnuc version 40103. Compilation date: Nov 30 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is ''
+Default program for '.png' is 'okularApplication_kimgio.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'writer.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/mnt/livecd'
+ Not mounted
+Drive path:'/read-only'
+ Not mounted
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  475635712 (453.6Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 475635712 (453.6Mb)
+
+Other Info:
+Process Id:          4621
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    104, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068724, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068725, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 31457282, processId:   4034, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 23068957, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068965, processId:   4008, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 23068958, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 8388609, processId:   4546, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 23069072, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23069080, processId:   4008, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 23069073, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 33554433, processId:   4565, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 23068715, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068716, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 31457305, processId:   4034, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 23068714, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29363248, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3796: Priority: 5, Program: /bin/bash
+Id   3929: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3930: Priority: 5, Program: /bin/dbus-daemon
+Id   3939: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3940: Priority: 5, Program: /usr/lib/kde4/libexec/klauncher
+Id   3942: Priority: 5, Program: /usr/bin/kded4
+Id   3989: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3991: Priority: 5, Program: /usr/bin/ksmserver
+Id   4008: Priority: 5, Program: /usr/bin/kwin
+Id   4026: Priority: 5, Program: /usr/bin/krunner
+Id   4027: Priority: 5, Program: /usr/bin/knotify4
+Id   4034: Priority: 5, Program: /usr/bin/plasma
+Id   4154: Priority: 5, Program: /usr/bin/kdeinit4
+Id   4160: Priority: 5, Program: /usr/bin/kdeinit4
+Id   4172: Priority: 5, Program: /usr/bin/kaccess
+Id   4180: Priority: 5, Program: /usr/bin/klipper
+Id   4186: Priority: 5, Program: /usr/bin/kmix
+Id   4187: Priority: 5, Program: /usr/bin/policykit-kde
+Id   4194: Priority: 5, Program: /opt/kde3/bin/kdeinit
+Id   4202: Priority: 5, Program: /opt/kde3/bin/kdeinit
+Id   4272: Priority: 5, Program: /opt/kde3/bin/kdeinit
+Id   4307: Priority: 5, Program: /opt/kde3/bin/knetworkmanager
+Id   4310: Priority: 5, Program: /opt/kde3/bin/kdeinit
+Id   4315: Priority: 5, Program: /opt/kde3/bin/kpowersave
+Id   4546: Priority: 5, Program: /usr/bin/dolphin
+Id   4551: Priority: 5, Program: /usr/bin/kdeinit4
+Id   4565: Priority: 5, Program: /usr/bin/konsole
+Id   4566: Priority: 5, Program: /bin/bash
+Id   4621: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...

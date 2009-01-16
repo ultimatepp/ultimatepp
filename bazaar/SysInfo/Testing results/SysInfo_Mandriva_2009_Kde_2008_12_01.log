@@ -1,0 +1,37 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/guest/Escritorio
+Programs:         /usr/bin
+Application Data: /home/guest
+Music:            /home/guest/Música
+Pictures:         /home/guest/Imágenes
+Video:            /home/guest/Videos
+Personal:         /home/guest/Documentos
+Templates:        /home/guest/Plantillas
+Download:         /home/guest/Descargas
+Temp:             /home/guest
+Os:               /bin
+System:           
+
+System info:
+System manufacturer '', product name '',
+ version '', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version '',
+ release date ''
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...

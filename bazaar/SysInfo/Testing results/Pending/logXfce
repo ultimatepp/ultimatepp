@@ -1,0 +1,449 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/goblix/Desktop
+Programs:         /usr/bin
+Application Data: /home/goblix
+Music:            
+Pictures:         
+Video:            
+Personal:         
+Templates:        
+Download:         
+Temp:             /home/goblix
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.830 GHz
+Battery info
+Working with battery: yes, Percentage: 100%, Remaining: 129 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1828 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1828 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 27%
+Total physical memory:    2110574592 bytes (2.0Gb)
+Free physical memory:     1519685632 bytes (1.4Gb)
+Total paging file:        299720704 bytes (285.8Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.24.3 #1 SMP Wed Mar 19 10:46:49 BRT 2008,
+ architecture: i686
+Distro:  slackware, version: 2.7.0
+Desktop: kde, version: 3.5.9
+
+Program compiled with gnuc version 40103. Compilation date: Dec 29 2008
+
+Default exes info:
+Default program for '.html' is ''
+Default program for '.doc' is ''
+Default program for '.png' is ''
+Default program for '.pdf' is ''
+Default program for '.txt' is ''
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/mnt/live'
+ Not mounted
+Drive path:'/mnt/live/usr'
+ Not mounted
+Drive path:'/mnt/live/mnt/sdb1'
+ Not mounted
+Drive path:'/mnt/live/memory'
+ Not mounted
+Drive path:'/mnt/live/memory/changes'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Core-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Defapps-7-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Deflibs-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Dev4Use-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Extrapps-5-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.GStreamer-1-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kde-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kdelibs-1-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kernel-3-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Mozilla-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.X11-6-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.X3D-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Xwm-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.Goblix-6-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.Kde-3-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.User-7-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/boot'
+ Not mounted
+Drive path:'/mnt/sda1'
+ Type: 'Hard', Volume: 'WinRE', 
+ MaxName: 255, File System: fuseblk
+ Free Bytes User:  1331318784 (1.2Gb)
+ Total Bytes User: 1572859904 (1.5Gb), Total Free Bytes: 1331318784 (1.2Gb)
+Drive path:'/mnt/sda2'
+ Type: 'Hard', Volume: 'Vista', 
+ MaxName: 255, File System: fuseblk
+ Free Bytes User:  22954090496 (21.4Gb)
+ Total Bytes User: 57675657216 (53.7Gb), Total Free Bytes: 22954090496 (21.4Gb)
+Drive path:'/mnt/sda3'
+ Type: 'Hard', Volume: 'Linux', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  45526114304 (42.4Gb)
+ Total Bytes User: 54519554048 (50.8Gb), Total Free Bytes: 45526114304 (42.4Gb)
+Drive path:'/mnt/sda6'
+ Type: 'Hard', Volume: 'Compartido', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  61500878848 (57.3Gb)
+ Total Bytes User: 130094362624 (121.2Gb), Total Free Bytes: 61500878848 (57.3Gb)
+Drive path:'/mnt/sdb1'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  1688125440 (1.6Gb)
+ Total Bytes User: 2044051456 (1.9Gb), Total Free Bytes: 1688125440 (1.6Gb)
+
+Other Info:
+Process Id:          10731
+Process name:        'SysInfo demo console'
+Process file name:   '/mnt/live/mnt/sdb1/SysInfo demo console'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    101, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583378, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777219, processId:  10581, Name: xfdesktop
+ File name: /usr/bin/xfdesktop
+ Window caption: 'Desktop '
+Window hwnd: 16777220, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583578, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583579, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583580, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583581, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583582, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583583, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583584, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583585, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583586, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583587, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583590, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583591, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583592, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680228, processId:  10578, Name: Thunar
+ File name: /usr/bin/Thunar
+ Window caption: 'sdb1 - File Manager '
+Window hwnd: 14680229, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680247, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680263, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 14680265, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680283, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680284, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680285, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680286, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680287, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680237, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680246, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583740, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583741, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583742, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583743, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583744, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583745, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583746, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583747, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583748, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583751, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583752, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 12583753, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 44040222, processId:  10711, Name: Terminal
+ File name: /usr/bin/Terminal
+ Window caption: 'Terminal '
+Window hwnd: 44040223, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 44040285, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 44040281, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 44040297, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583442, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874449, processId:  10583, Name: xfce4-panel
+ File name: /usr/bin/xfce4-panel
+ Window caption: 'Xfce Panel '
+Window hwnd: 18874450, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874452, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874453, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874455, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874457, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874459, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874460, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874461, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874462, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583410, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874404, processId:  10583, Name: xfce4-panel
+ File name: /usr/bin/xfce4-panel
+ Window caption: 'Xfce Panel '
+Window hwnd: 18874405, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 18874407, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874408, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874412, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874414, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874429, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874432, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874433, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874434, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874437, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874439, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874442, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874443, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874445, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874446, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583031, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583030, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583029, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12583028, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 12582994, processId:  10577, Name: xfwm4
+ File name: /usr/bin/xfwm4
+ Window caption: 'xfwm4 '
+Window hwnd: 12582995, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id  10499: Priority: 5, Program: /bin/bash
+Id  10523: Priority: 5, Program: /bin/bash
+Id  10525: Priority: 5, Program: /usr/bin/xinit
+Id  10556: Priority: 5, Program: /bin/bash
+Id  10570: Priority: 5, Program: /usr/bin/dbus-launch
+Id  10571: Priority: 5, Program: /usr/bin/dbus-daemon
+Id  10573: Priority: 5, Program: /usr/bin/xfce4-session
+Id  10576: Priority: 5, Program: /usr/bin/xfce-mcs-manager
+Id  10577: Priority: 5, Program: /usr/bin/xfwm4
+Id  10578: Priority: 5, Program: /usr/bin/Thunar
+Id  10580: Priority: 5, Program: /usr/libexec/gam_server
+Id  10581: Priority: 5, Program: /usr/bin/xfdesktop
+Id  10583: Priority: 5, Program: /usr/bin/xfce4-panel
+Id  10588: Priority: 5, Program: /usr/libexec/xfce4/panel-plugins/xfce4-menu-plugin
+Id  10591: Priority: 5, Program: /usr/libexec/xfce4/panel-plugins/xfce4-verve-plugin
+Id  10598: Priority: 5, Program: /usr/bin/xbindkeys
+Id  10604: Priority: 5, Program: /usr/bin/ivman
+Id  10606: Priority: 5, Program: /usr/libexec/xfce4/panel-plugins/xfce4-genmon-plugin
+Id  10607: Priority: 5, Program: /usr/libexec/xfce4/panel-plugins/xfce4-clipman-plugin
+Id  10608: Priority: 5, Program: /usr/libexec/xfce4/panel-plugins/xfce4-systemload-plugin
+Id  10609: Priority: 5, Program: /usr/libexec/xfce4/panel-plugins/orageclock
+Id  10610: Priority: 5, Program: /usr/libexec/xfce4/panel-plugins/xfce4-smartpm-plugin
+Id  10611: Priority: 5, Program: /usr/libexec/xfce4/panel-plugins/xfce4-screenshooter-plugin
+Id  10631: Priority: 5, Program: /usr/bin/dbus-daemon
+Id  10633: Priority: 5, Program: /usr/libexec/notification-daemon-xfce
+Id  10711: Priority: 5, Program: /usr/bin/Terminal
+Id  10713: Priority: 5, Program: /bin/bash
+Id  10731: Priority: 5, Program: /mnt/live/mnt/sdb1/SysInfo demo console
+Id  10798: Priority: 5, Program: /usr/bin/kdeinit
+
+Press enter to end...

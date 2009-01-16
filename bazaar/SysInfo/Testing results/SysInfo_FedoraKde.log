@@ -1,0 +1,2480 @@
+ 
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.830 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     928243712 bytes (885.2Mb)
+Total paging file:        768692224 bytes (733.1Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2241896448 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1833 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     926339072 bytes (883.4Mb)
+Total paging file:        769077248 bytes (733.4Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2241912832 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     925323264 bytes (882.5Mb)
+Total paging file:        769683456 bytes (734.0Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2241925120 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1833 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1833 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     924147712 bytes (881.3Mb)
+Total paging file:        770043904 bytes (734.4Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2241937408 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     923529216 bytes (880.7Mb)
+Total paging file:        770576384 bytes (734.9Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2241953792 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     922800128 bytes (880.1Mb)
+Total paging file:        770805760 bytes (735.1Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2241970176 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     921972736 bytes (879.3Mb)
+Total paging file:        771788800 bytes (736.0Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2241982464 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     921120768 bytes (878.4Mb)
+Total paging file:        771809280 bytes (736.1Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2242002944 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     920121344 bytes (877.5Mb)
+Total paging file:        771989504 bytes (736.2Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2242015232 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Window was closed before!
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20976120, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20976128, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20976141, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976143, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976145, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976147, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976121, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 58720257, processId:   4751, Name: kwrite
+ File name: /usr/bin/kwrite
+ Window caption: 'Untitled - KWrite '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+Id   4751: Priority: 5, Program: /usr/bin/kwrite
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 2.241 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     913289216 bytes (871.0Mb)
+Total paging file:        772820992 bytes (737.0Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2242027520 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20976474, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20976482, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20976495, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976497, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976499, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976501, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976475, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 58720257, processId:   4840, Name: kwrite
+ File name: /usr/bin/kwrite
+ Window caption: 'test.txt - KWrite '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+Id   4837: Priority: 5, Program: /usr/bin/kfmclient
+Id   4839: Priority: 5, Program: /usr/bin/kioclient
+Id   4840: Priority: 5, Program: /usr/bin/kwrite
+
+Press enter to end...
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/fedora/Desktop
+Programs:         /usr/bin
+Application Data: /home/fedora
+Music:            /home/fedora/Music
+Pictures:         /home/fedora/Pictures
+Video:            /home/fedora/Videos
+Personal:         /home/fedora/Documents
+Templates:        /home/fedora/Templates
+Download:         /home/fedora/Download
+Temp:             /home/fedora
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 56%
+Total physical memory:    2115461120 bytes (2.0Gb)
+Free physical memory:     911663104 bytes (869.4Mb)
+Total paging file:        773394432 bytes (737.6Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.25-14.fc9.i686 #1 SMP Thu May 1 06:28:41 EDT 2008,
+ architecture: i686
+
+Distro:  fedora, version: Fedora 9 (Sulphur)  
+Desktop: kde, version: 4.0.3 (KDE 4.0.3)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 27 2008
+
+Default exes info:
+Default program for '.html' is 'kfmclient_html.desktop'
+Default program for '.doc' is 'kword.desktop'
+Default program for '.png' is 'gwenview.desktop'
+Default program for '.pdf' is 'okularApplication_pdf.desktop'
+Default program for '.txt' is 'kwrite.desktop'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Fedora-9-Live-KD', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  55296 (54.0Kb)
+ Total Bytes User: 2242043904 (2.1Gb), Total Free Bytes: 55296 (54.0Kb)
+Drive path:'/mnt/live'
+ Type: 'Optical', Volume: 'Fedora-9-Live-KDE-i686', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 724975616 (691.4Mb), Total Free Bytes: 0 (0b)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  426999808 (407.2Mb)
+ Total Bytes User: 509321216 (485.7Mb), Total Free Bytes: 426999808 (407.2Mb)
+
+Other Info:
+Process Id:          3988
+Process name:        'SysInfoDemo'
+Process file name:   '/media/disk/SysInfoDemo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971576, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068675, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 20972385, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972393, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20972409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20972386, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 50331649, processId:   3838, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'disk - Dolphin '
+Window hwnd: 20976892, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976900, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20976913, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976915, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976917, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976919, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20976893, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 56623105, processId:   4925, Name: kwrite
+ File name: /usr/bin/kwrite
+ Window caption: 'test.txt - KWrite '
+Window hwnd: 20971709, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 20971717, processId:   3330, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 20971733, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971735, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971737, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971710, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360129, processId:   3746, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'disk : SysInfoDemo '
+Window hwnd: 20971567, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971568, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068712, processId:   3364, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 20971563, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 27270230, processId:      0, Name: Qt-subapplication
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   3141: Priority: 5, Program: /bin/bash
+Id   3191: Priority: 5, Program: /usr/bin/dbus-launch
+Id   3192: Priority: 5, Program: /bin/dbus-daemon
+Id   3226: Priority: 5, Program: /bin/bash
+Id   3258: Priority: 5, Program: /usr/bin/gpg-agent
+Id   3292: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3293: Priority: 5, Program: /usr/libexec/kde4/klauncher
+Id   3295: Priority: 5, Program: /usr/bin/kded4
+Id   3301: Priority: 5, Program: /usr/libexec/gam_server
+Id   3321: Priority: 5, Program: /usr/bin/kwrapper4
+Id   3323: Priority: 5, Program: /usr/bin/ksmserver
+Id   3330: Priority: 5, Program: /usr/bin/kwin
+Id   3364: Priority: 5, Program: /usr/bin/plasma
+Id   3434: Priority: 5, Program: /usr/bin/knotify4
+Id   3517: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3537: Priority: 5, Program: /usr/bin/krunner
+Id   3552: Priority: 5, Program: /usr/bin/kaccess
+Id   3553: Priority: 5, Program: /usr/bin/kmix
+Id   3554: Priority: 5, Program: /usr/bin/kerneloops-applet
+Id   3557: Priority: 5, Program: /usr/bin/nm-applet
+Id   3558: Priority: 5, Program: /usr/bin/python
+Id   3563: Priority: 5, Program: /usr/bin/python
+Id   3568: Priority: 5, Program: /usr/bin/klipper
+Id   3570: Priority: 5, Program: /usr/libexec/gconfd-2
+Id   3580: Priority: 5, Program: /usr/bin/kpowersave
+Id   3586: Priority: 5, Program: /usr/bin/kdeinit
+Id   3589: Priority: 5, Program: /usr/bin/dcopserver
+Id   3591: Priority: 5, Program: /usr/bin/kdeinit
+Id   3595: Priority: 5, Program: /usr/bin/kded
+Id   3746: Priority: 5, Program: /usr/bin/konsole
+Id   3747: Priority: 5, Program: /bin/bash
+Id   3838: Priority: 5, Program: /usr/bin/dolphin
+Id   3864: Priority: 5, Program: /usr/bin/kdeinit4
+Id   3988: Priority: 5, Program: /media/disk/SysInfoDemo
+Id   4922: Priority: 5, Program: /usr/bin/kfmclient
+Id   4924: Priority: 5, Program: /usr/bin/kioclient
+Id   4925: Priority: 5, Program: /usr/bin/kwrite
+
+Press enter to end...

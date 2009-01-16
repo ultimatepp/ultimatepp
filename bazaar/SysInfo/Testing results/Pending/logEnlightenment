@@ -1,0 +1,431 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/goblix/Desktop
+Programs:         /usr/bin
+Application Data: /home/goblix
+Music:            
+Pictures:         
+Video:            
+Personal:         
+Templates:        
+Download:         
+Temp:             /home/goblix
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.830 GHz
+Battery info
+Working with battery: yes, Percentage: 100%, Remaining: 75 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1828 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1828 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 28%
+Total physical memory:    2110574592 bytes (2.0Gb)
+Free physical memory:     1515511808 bytes (1.4Gb)
+Total paging file:        321523712 bytes (306.6Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.24.3 #1 SMP Wed Mar 19 10:46:49 BRT 2008,
+ architecture: i686
+Distro:  slackware, version: 2.7.0
+Desktop: kde, version: 3.5.9
+
+Program compiled with gnuc version 40103. Compilation date: Dec 29 2008
+
+Default exes info:
+Default program for '.html' is ''
+Default program for '.doc' is ''
+Default program for '.png' is ''
+Default program for '.pdf' is ''
+Default program for '.txt' is ''
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/mnt/live'
+ Not mounted
+Drive path:'/mnt/live/usr'
+ Not mounted
+Drive path:'/mnt/live/mnt/sdb1'
+ Not mounted
+Drive path:'/mnt/live/memory'
+ Not mounted
+Drive path:'/mnt/live/memory/changes'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Core-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Defapps-7-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Deflibs-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Dev4Use-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Extrapps-5-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.GStreamer-1-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kde-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kdelibs-1-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kernel-3-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Mozilla-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.X11-6-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.X3D-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Xwm-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.Goblix-6-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.Kde-3-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.User-7-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/boot'
+ Not mounted
+Drive path:'/mnt/sda1'
+ Type: 'Hard', Volume: 'WinRE', 
+ MaxName: 255, File System: fuseblk
+ Free Bytes User:  1331318784 (1.2Gb)
+ Total Bytes User: 1572859904 (1.5Gb), Total Free Bytes: 1331318784 (1.2Gb)
+Drive path:'/mnt/sda2'
+ Type: 'Hard', Volume: 'Vista', 
+ MaxName: 255, File System: fuseblk
+ Free Bytes User:  22954090496 (21.4Gb)
+ Total Bytes User: 57675657216 (53.7Gb), Total Free Bytes: 22954090496 (21.4Gb)
+Drive path:'/mnt/sda3'
+ Type: 'Hard', Volume: 'Linux', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  45526114304 (42.4Gb)
+ Total Bytes User: 54519554048 (50.8Gb), Total Free Bytes: 45526114304 (42.4Gb)
+Drive path:'/mnt/sda6'
+ Type: 'Hard', Volume: 'Compartido', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  61500878848 (57.3Gb)
+ Total Bytes User: 130094362624 (121.2Gb), Total Free Bytes: 61500878848 (57.3Gb)
+Drive path:'/mnt/sdb1'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  1685942272 (1.6Gb)
+ Total Bytes User: 2044051456 (1.9Gb), Total Free Bytes: 1685942272 (1.6Gb)
+
+Other Info:
+Process Id:          10641
+Process name:        'SysInfo demo console'
+Process file name:   '/mnt/live/mnt/sdb1/SysInfo demo console'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    101, processId:      0, Name: 
+ File name: 
+ Window caption: 'Desk-0 '
+Window hwnd: 4194429, processId:      0, Name: 
+ File name: 
+ Window caption: '_DESKTOP_DRAG_CONTROL '
+Window hwnd: 4194430, processId:      0, Name: 
+ File name: 
+ Window caption: '_DESKTOP_DRAG_CONTROL '
+Window hwnd: 4194431, processId:      0, Name: 
+ File name: 
+ Window caption: '_DESKTOP_DRAG_CONTROL '
+Window hwnd: 4194451, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194454, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194455, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194456, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194457, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194458, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194452, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194443, processId:      0, Name: _IB_0
+ File name: 
+ Window caption: 'Iconbox '
+Window hwnd: 4194453, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194489, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194491, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194492, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194493, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194494, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194495, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194496, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194497, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 4194490, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194487, processId:      0, Name: 0
+ File name: 
+ Window caption: 'Pager-0 '
+Window hwnd: 4194498, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194499, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194577, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194579, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194580, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194581, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194582, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194583, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194584, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194585, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194578, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194575, processId:      0, Name: 1
+ File name: 
+ Window caption: 'Pager-1 '
+Window hwnd: 4194586, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194587, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196406, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196412, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196413, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196414, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 4196415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196416, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196407, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 8388611, processId:  10593, Name: nautilus
+ File name: /usr/bin/nautilus
+ Window caption: ''
+Window hwnd: 4196408, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196410, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196411, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196502, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196509, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196510, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196511, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196512, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196513, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196503, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 8388671, processId:  10593, Name: nautilus
+ File name: /usr/bin/nautilus
+ Window caption: 'sdb1 - File Browser '
+Window hwnd: 4196504, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196505, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196506, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4196507, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 4196508, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197543, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197550, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197551, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197552, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197553, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197554, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197544, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680071, processId:  10621, Name: konsole
+ File name: /usr/bin/konsole
+ Window caption: 'Shell - Konsole '
+Window hwnd: 4197545, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197546, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197547, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197548, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4197549, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194346, processId:      0, Name: 
+ File name: 
+ Window caption: 'Desk-1 '
+Window hwnd: 4194438, processId:      0, Name: 
+ File name: 
+ Window caption: '_DESKTOP_DRAG_CONTROL '
+Window hwnd: 4194439, processId:      0, Name: 
+ File name: 
+ Window caption: '_DESKTOP_DRAG_CONTROL '
+Window hwnd: 4194440, processId:      0, Name: 
+ File name: 
+ Window caption: '_DESKTOP_DRAG_CONTROL '
+Window hwnd: 4194348, processId:      0, Name: 
+ File name: 
+ Window caption: 'Edge-R '
+
+Press enter to continue...
+
+Process list:
+Id  10493: Priority: 5, Program: /bin/bash
+Id  10517: Priority: 5, Program: /bin/bash
+Id  10518: Priority: 5, Program: /usr/bin/xinit
+Id  10549: Priority: 5, Program: /usr/bin/e16
+Id  10555: Priority: 5, Program: /usr/bin/ivman
+Id  10590: Priority: 5, Program: /usr/bin/dbus-daemon
+Id  10592: Priority: 5, Program: /usr/libexec/notification-daemon-xfce
+Id  10593: Priority: 5, Program: /usr/bin/nautilus
+Id  10595: Priority: 5, Program: /usr/libexec/gconfd-2
+Id  10599: Priority: 5, Program: /usr/bin/dbus-launch
+Id  10600: Priority: 5, Program: /usr/bin/dbus-daemon
+Id  10602: Priority: 5, Program: /usr/libexec/gnome-vfs-daemon
+Id  10606: Priority: 5, Program: /usr/libexec/bonobo-activation-server
+Id  10618: Priority: 5, Program: /usr/libexec/mapping-daemon
+Id  10621: Priority: 5, Program: /usr/bin/konsole
+Id  10624: Priority: 5, Program: /usr/bin/kdeinit
+Id  10628: Priority: 5, Program: /usr/bin/kdeinit
+Id  10630: Priority: 5, Program: /usr/bin/kdeinit
+Id  10632: Priority: 5, Program: /usr/bin/kdeinit
+Id  10634: Priority: 5, Program: /usr/libexec/gam_server
+Id  10638: Priority: 5, Program: /bin/bash
+Id  10641: Priority: 5, Program: /mnt/live/mnt/sdb1/SysInfo demo console
+
+Press enter to end...

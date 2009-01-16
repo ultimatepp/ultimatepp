@@ -1,0 +1,766 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          C:\Documents and Settings\23853\Escritorio
+Programs:         C:\Archivos de programa
+Application Data: C:\Documents and Settings\23853\Datos de programa
+Music:            C:\Documents and Settings\23853\Mis documentos\Mi música
+Pictures:         C:\Documents and Settings\23853\Mis documentos\Mis imágenes
+Video:            C:\Documents and Settings\23853\Mis documentos\Mis vídeos
+Personal:         C:\Documents and Settings\23853\Mis documentos
+Templates:        C:\Documents and Settings\23853\Plantillas
+Download:         C:\Documents and Settings\23853\Escritorio
+Temp:             C:\DOCUME~1\23853\CONFIG~1\Temp
+Os:               C:\WINDOWS
+System:           C:\WINDOWS\system32
+
+System info:
+System manufacturer 'Dell Optiplex 755', product name 'OPTIPLEX 755',
+ version '', number of processors: 2
+Real CPU Speed: 2.328 GHz
+Battery info
+There is no battery
+Bios version '',
+ release date ''
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     E6550  @ 2.33GHz',
+ architecture 'x86 Family 6 Model 15 Stepping 11', speed 2327 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     E6550  @ 2.33GHz',
+ architecture 'x86 Family 6 Model 15 Stepping 11', speed 2327 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 40%
+Total physical memory:    2111344640 bytes (2.0Gb)
+Free physical memory:     1246093312 bytes (1.2Gb)
+Total paging file:        4095778816 bytes (3.8Gb)
+Free paging file:         2939035648 bytes (2.7Gb)
+Total virtual memory:     2147352576 bytes (2.0Gb)
+Free virtual memory:      2117468160 bytes (2.0Gb)
+
+Os info:
+Kernel:  Windows XP, version: 5.1 Service Pack 2 (Build 2600),
+ architecture: 32 bits
+Distro:  Professional, version: 
+Desktop: Windows XP, version: 
+
+Program compiled with msc version 150030729. Compilation date: Dec  1 2008
+
+Default exes info:
+Default program for '.html' is 'C:\Archivos de programa\Internet Explorer\IEXPLORE.EXE'
+Default program for '.doc' is 'C:\Archivos de programa\Microsoft Office\OFFICE11\WINWORD.EXE'
+Default program for '.png' is 'C:\WINDOWS\system32\shimgvw.dll'
+Default program for '.pdf' is 'C:\Archivos de programa\Adobe\Acrobat 7.0\Acrobat\Acrobat.exe'
+Default program for '.txt' is 'C:\Archivos de programa\Windows NT\Accesorios\WORDPAD.EXE'
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'A:\'
+ Not mounted
+Drive path:'C:\'
+ Type: 'Hard', Volume: 'Local', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  84657565696 (78.8Gb)
+ Total Bytes User: 159932342272 (148.9Gb), Total Free Bytes: 84657565696 (78.8Gb)
+Drive path:'D:\'
+ Not mounted
+Drive path:'G:\'
+ Type: 'Network', Volume: 'Apl32', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  3120226304 (2.9Gb)
+ Total Bytes User: 96636764160 (90.0Gb), Total Free Bytes: 3120226304 (2.9Gb)
+Drive path:'J:\'
+ Type: 'Network', Volume: 'Mswin311', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  676614144 (645.3Mb)
+ Total Bytes User: 2147483648 (2.0Gb), Total Free Bytes: 676614144 (645.3Mb)
+Drive path:'M:\'
+ Type: 'Network', Volume: '23853$', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  684982272 (653.3Mb)
+ Total Bytes User: 2147483648 (2.0Gb), Total Free Bytes: 684982272 (653.3Mb)
+Drive path:'N:\'
+ Type: 'Network', Volume: 'Pccom', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  10417651712 (9.7Gb)
+ Total Bytes User: 10737418240 (10.0Gb), Total Free Bytes: 10417651712 (9.7Gb)
+Drive path:'O:\'
+ Type: 'Network', Volume: '21tf_com', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  2852200448 (2.7Gb)
+ Total Bytes User: 238370684928 (222.0Gb), Total Free Bytes: 2852200448 (2.7Gb)
+Drive path:'P:\'
+ Type: 'Network', Volume: '21tf_apl', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  2197319680 (2.0Gb)
+ Total Bytes User: 48318382080 (45.0Gb), Total Free Bytes: 2197319680 (2.0Gb)
+Drive path:'Q:\'
+ Type: 'Network', Volume: 'servired', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  659349504 (628.8Mb)
+ Total Bytes User: 1073741824 (1.0Gb), Total Free Bytes: 659349504 (628.8Mb)
+Drive path:'Y:\'
+ Type: 'Network', Volume: 'proyecto', 
+ MaxName: 0, File System: NTFS
+ Free Bytes User:  14910078976 (13.9Gb)
+ Total Bytes User: 1546188226560 (1.4Tb), Total Free Bytes: 14910078976 (13.9Gb)
+
+Other Info:
+Process Id:          3148
+Process name:        'SysInfo demo console.exe'
+Process file name:   'C:\desarrollo\upp\out\MSC9.Debug.Debug_full\SysInfo demo console.exe'
+Process priority is: 5
+Now changed to high priority: Yes
+Process priority is: 8
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd: 394482, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd: 918684, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd:  65684, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd: 196698, processId:   2068, Name: Explorer.EXE
+ File name: C:\WINDOWS\Explorer.EXE
+ Window caption: ''
+Window hwnd: 3016168, processId:   2068, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 789472, processId:   2788, Name: EXCEL.EXE
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\EXCEL.EXE
+ Window caption: ''
+Window hwnd: 1181656, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd: 1508866, processId:   2068, Name: BROWSEUI.dll
+ File name: C:\WINDOWS\system32\BROWSEUI.dll
+ Window caption: ''
+Window hwnd: 853342, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd: 2819784, processId:   2068, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 1116148, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd: 1508712, processId:   2068, Name: BROWSEUI.dll
+ File name: C:\WINDOWS\system32\BROWSEUI.dll
+ Window caption: ''
+Window hwnd: 1574508, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd: 525962, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd: 1508904, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd: 787918, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd:  68400, processId:   3596, Name: iexplore.exe
+ File name: C:\Archivos de programa\Internet Explorer\iexplore.exe
+ Window caption: ''
+Window hwnd:  68324, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd:  68278, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd:  68240, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd:  68104, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd:  68010, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd:  67966, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd: 592038, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd:  67908, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd: 198806, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd: 264252, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd: 788356, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: ''
+Window hwnd:  65692, processId:   2068, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 787238, processId:   2068, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 394052, processId:   2068, Name: BROWSEUI.dll
+ File name: C:\WINDOWS\system32\BROWSEUI.dll
+ Window caption: ''
+Window hwnd: 393978, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd: 656718, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+Window hwnd:  66822, processId:   3256, Name: WISPTIS.EXE
+ File name: C:\WINDOWS\system32\WISPTIS.EXE
+ Window caption: ''
+Window hwnd:  65844, processId:   2444, Name: SHSTAT.EXE
+ File name: C:\Archivos de programa\McAfee\VirusScan Enterprise\SHSTAT.EXE
+ Window caption: ''
+Window hwnd: 131356, processId:   2376, Name: PDVDDXSrv.exe
+ File name: C:\Archivos de programa\CyberLink\PowerDVD DX\PDVDDXSrv.exe
+ Window caption: ''
+Window hwnd: 3607526, processId:   3148, Name: UNKNOWN
+ File name: UNKNOWN
+ Window caption: 'C:\desarrollo\upp\out\MSC9.Debug.Debug_full\SysInfo demo console.exe'
+Window hwnd: 1313608, processId:   3548, Name: theide.exe
+ File name: C:\Desarrollo\upp\theide.exe
+ Window caption: 'SysInfo demo console -  - TheIDE - [C:\Desarrollo\Aplicaciones\SysInfo\SysInfo.cpp UTF-8] { MyApps }'
+Window hwnd: 2098696, processId:   2788, Name: EXCEL.EXE
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\EXCEL.EXE
+ Window caption: 'Microsoft Excel - Testing results.xls'
+Window hwnd: 787678, processId:   2068, Name: BROWSEUI.dll
+ File name: C:\WINDOWS\system32\BROWSEUI.dll
+ Window caption: 'C:\Documents and Settings\23853\Escritorio\Plan de ensayos'
+Window hwnd: 854928, processId:   3548, Name: theide.exe
+ File name: C:\Desarrollo\upp\theide.exe
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 1444686, processId:   3548, Name: theide.exe
+ File name: C:\Desarrollo\upp\theide.exe
+ Window caption: ''
+Window hwnd: 1248220, processId:   2788, Name: mso.dll
+ File name: C:\Archivos de programa\Archivos comunes\Microsoft Shared\office11\mso.dll
+ Window caption: ''
+Window hwnd: 723808, processId:   2788, Name: VBE6.DLL
+ File name: C:\ARCHIV~1\ARCHIV~1\MICROS~1\VBA\VBA6\VBE6.DLL
+ Window caption: ''
+Window hwnd: 1247492, processId:   2788, Name: VBE6.DLL
+ File name: C:\ARCHIV~1\ARCHIV~1\MICROS~1\VBA\VBA6\VBE6.DLL
+ Window caption: ''
+Window hwnd: 1378400, processId:   2788, Name: FM20.DLL
+ File name: C:\WINDOWS\system32\FM20.DLL
+ Window caption: ''
+Window hwnd: 1312812, processId:   2788, Name: VBE6.DLL
+ File name: C:\ARCHIV~1\ARCHIV~1\MICROS~1\VBA\VBA6\VBE6.DLL
+ Window caption: ''
+Window hwnd: 1640634, processId:   2788, Name: ole32.dll
+ File name: C:\WINDOWS\system32\ole32.dll
+ Window caption: ''
+Window hwnd: 1902532, processId:   2788, Name: mso.dll
+ File name: C:\Archivos de programa\Archivos comunes\Microsoft Shared\office11\mso.dll
+ Window caption: ''
+Window hwnd:  66072, processId:   2628, Name: ctfmon.exe
+ File name: C:\WINDOWS\system32\ctfmon.exe
+ Window caption: ''
+Window hwnd: 1050020, processId:   2068, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 1117132, processId:    468, Name: UNKNOWN
+ File name: UNKNOWN
+ Window caption: ''
+Window hwnd: 1115156, processId:    468, Name: Database.exe
+ File name: C:\Desarrollo\Aplicaciones\exe\Database.exe
+ Window caption: 'Datos 0.1'
+Window hwnd: 1639858, processId:   2068, Name: BROWSEUI.dll
+ File name: C:\WINDOWS\system32\BROWSEUI.dll
+ Window caption: 'C:\Datos\10 Biblioteca\20 Libros\Normas\Aernnova\Fabricacion utillajes'
+Window hwnd: 852732, processId:   3000, Name: WINWORD.EXE
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\WINWORD.EXE
+ Window caption: 'SENER-00XXXXXX-Rev 0 Inspeccion Senertrough.doc - Microsoft Word'
+Window hwnd: 1312120, processId:   3000, Name: WINWORD.EXE
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\WINWORD.EXE
+ Window caption: ''
+Window hwnd: 265800, processId:   3000, Name: mso.dll
+ File name: C:\Archivos de programa\Archivos comunes\Microsoft Shared\office11\mso.dll
+ Window caption: ''
+Window hwnd: 526088, processId:   2068, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 1050056, processId:   3596, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 1050158, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd: 1050132, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 1246408, processId:    468, Name: Database.exe
+ File name: C:\Desarrollo\Aplicaciones\exe\Database.exe
+ Window caption: ''
+Window hwnd: 5899458, processId:    468, Name: Database.exe
+ File name: C:\Desarrollo\Aplicaciones\exe\Database.exe
+ Window caption: ''
+Window hwnd: 1049778, processId:   3872, Name: WINMM.dll
+ File name: C:\WINDOWS\system32\WINMM.dll
+ Window caption: ''
+Window hwnd: 853168, processId:   3872, Name: theide.exe
+ File name: C:\Desarrollo\upp\theide.exe
+ Window caption: ''
+Window hwnd: 1377280, processId:   3872, Name: theide.exe
+ File name: C:\Desarrollo\upp\theide.exe
+ Window caption: ''
+Window hwnd: 328714, processId:   3600, Name: OUTLLIB.dll
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\OUTLLIB.dll
+ Window caption: 'Calendario - Microsoft Outlook'
+Window hwnd: 1509014, processId:   3596, Name: Flash10a.ocx
+ File name: C:\WINDOWS\system32\Macromed\Flash\Flash10a.ocx
+ Window caption: ''
+Window hwnd: 1967702, processId:   3596, Name: Flash10a.ocx
+ File name: C:\WINDOWS\system32\Macromed\Flash\Flash10a.ocx
+ Window caption: ''
+Window hwnd: 133898, processId:   3600, Name: outllibr.dll
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\3082\outllibr.dll
+ Window caption: ''
+Window hwnd: 133932, processId:   3600, Name: WINMM.dll
+ File name: C:\WINDOWS\system32\WINMM.dll
+ Window caption: ''
+Window hwnd:  68342, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd:  68332, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd:  68296, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd:  68286, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd:  68258, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd:  68246, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd:  68126, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd:  68114, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd:  68028, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd:  68018, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd:  67984, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd:  67974, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd:  67942, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd:  67932, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd: 591958, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd:  67916, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd: 460990, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd: 198836, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd: 3868602, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd: 264268, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd: 460772, processId:   3596, Name: mshtml.dll
+ File name: C:\WINDOWS\system32\mshtml.dll
+ Window caption: ''
+Window hwnd: 329696, processId:   3596, Name: AcroIEHelper.dll
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\ActiveX\AcroIEHelper.dll
+ Window caption: ''
+Window hwnd: 526264, processId:   3596, Name: WINMM.dll
+ File name: C:\WINDOWS\system32\WINMM.dll
+ Window caption: ''
+Window hwnd: 2623070, processId:   3596, Name: ole32.dll
+ File name: C:\WINDOWS\system32\ole32.dll
+ Window caption: ''
+Window hwnd: 2622826, processId:   3596, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 984730, processId:   3596, Name: UNKNOWN
+ File name: UNKNOWN
+ Window caption: ''
+Window hwnd: 3671666, processId:   3596, Name: iexplore.exe
+ File name: C:\Archivos de programa\Internet Explorer\iexplore.exe
+ Window caption: ''
+Window hwnd: 133928, processId:   3600, Name: COMCTL32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\COMCTL32.dll
+ Window caption: ''
+Window hwnd: 1048912, processId:   2244, Name: WORDPAD.EXE
+ File name: C:\Archivos de programa\Windows NT\Accesorios\WORDPAD.EXE
+ Window caption: 'Metrologia.txt - WordPad'
+Window hwnd: 131694, processId:   2068, Name: stobject.dll
+ File name: C:\WINDOWS\system32\stobject.dll
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 1442926, processId:   3000, Name: WINWORD.EXE
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\WINWORD.EXE
+ Window caption: ''
+Window hwnd: 1180928, processId:   3000, Name: VBE6.DLL
+ File name: C:\ARCHIV~1\ARCHIV~1\MICROS~1\VBA\VBA6\VBE6.DLL
+ Window caption: ''
+Window hwnd: 1246328, processId:   3000, Name: ole32.dll
+ File name: C:\WINDOWS\system32\ole32.dll
+ Window caption: ''
+Window hwnd: 721650, processId:   3000, Name: mso.dll
+ File name: C:\Archivos de programa\Archivos comunes\Microsoft Shared\office11\mso.dll
+ Window caption: ''
+Window hwnd: 459582, processId:   2068, Name: comctl32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\comctl32.dll
+ Window caption: ''
+Window hwnd: 590212, processId:   2244, Name: ole32.dll
+ File name: C:\WINDOWS\system32\ole32.dll
+ Window caption: ''
+Window hwnd: 1443408, processId:   3600, Name: OUTLLIB.dll
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\OUTLLIB.dll
+ Window caption: ''
+Window hwnd: 722148, processId:   3600, Name: outllibr.dll
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\3082\outllibr.dll
+ Window caption: ''
+Window hwnd: 2622724, processId:   3600, Name: COMCTL32.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\COMCTL32.dll
+ Window caption: ''
+Window hwnd: 460042, processId:   3600, Name: MAPIR.DLL
+ File name: C:\Archivos de programa\Archivos comunes\SYSTEM\MSMAPI\3082\MAPIR.DLL
+ Window caption: ''
+Window hwnd: 263374, processId:   3600, Name: ole32.dll
+ File name: C:\WINDOWS\system32\ole32.dll
+ Window caption: ''
+Window hwnd: 1049836, processId:   3600, Name: msmapi32.dll
+ File name: C:\Archivos de programa\Archivos comunes\System\MSMAPI\3082\msmapi32.dll
+ Window caption: ''
+Window hwnd: 328790, processId:   3600, Name: MAPIR.DLL
+ File name: C:\Archivos de programa\Archivos comunes\SYSTEM\MSMAPI\3082\MAPIR.DLL
+ Window caption: ''
+Window hwnd: 1377430, processId:   3600, Name: MAPIR.DLL
+ File name: C:\Archivos de programa\Archivos comunes\SYSTEM\MSMAPI\3082\MAPIR.DLL
+ Window caption: ''
+Window hwnd: 656426, processId:   3600, Name: OUTLLIB.dll
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\OUTLLIB.dll
+ Window caption: ''
+Window hwnd: 197770, processId:   3600, Name: MAPIR.DLL
+ File name: C:\Archivos de programa\Archivos comunes\SYSTEM\MSMAPI\3082\MAPIR.DLL
+ Window caption: ''
+Window hwnd: 525058, processId:   3600, Name: mso.dll
+ File name: C:\Archivos de programa\Archivos comunes\Microsoft Shared\office11\mso.dll
+ Window caption: ''
+Window hwnd: 590598, processId:   3600, Name: OUTLOOK.EXE
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\OUTLOOK.EXE
+ Window caption: ''
+Window hwnd: 132176, processId:   2068, Name: WINMM.dll
+ File name: C:\WINDOWS\system32\WINMM.dll
+ Window caption: ''
+Window hwnd: 132162, processId:   2640, Name: PCSuite.exe
+ File name: C:\Archivos de programa\Nokia\Nokia PC Suite 7\PCSuite.exe
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd:  66354, processId:   2640, Name: PCSuite.exe
+ File name: C:\Archivos de programa\Nokia\Nokia PC Suite 7\PCSuite.exe
+ Window caption: ''
+Window hwnd:  66352, processId:   2640, Name: PCSuite.exe
+ File name: C:\Archivos de programa\Nokia\Nokia PC Suite 7\PCSuite.exe
+ Window caption: ''
+Window hwnd:  66336, processId:   3384, Name: UNKNOWN
+ File name: UNKNOWN
+ Window caption: ''
+Window hwnd:  66332, processId:   3384, Name: UNKNOWN
+ File name: UNKNOWN
+ Window caption: ''
+Window hwnd:  66328, processId:   3384, Name: UNKNOWN
+ File name: UNKNOWN
+ Window caption: ''
+Window hwnd:  66190, processId:   2684, Name: PcSync2_spa.nlr
+ File name: C:\ARCHIVOS DE PROGRAMA\NOKIA\NOKIA PC SUITE 7\Lang\PcSync2_spa.nlr
+ Window caption: ''
+Window hwnd:  66334, processId:   2068, Name: fxsst.dll
+ File name: C:\WINDOWS\system32\fxsst.dll
+ Window caption: ''
+Window hwnd:  66324, processId:   3704, Name: MPAPI3s.exe
+ File name: C:\Archivos de programa\Archivos comunes\Nokia\MPAPI\MPAPI3s.exe
+ Window caption: ''
+Window hwnd:  66318, processId:   3592, Name: NclMSBTSrv.exe
+ File name: C:\Archivos de programa\PC Connectivity Solution\Transports\NclMSBTSrv.exe
+ Window caption: ''
+Window hwnd: 131820, processId:   3508, Name: NclRSSrv.exe
+ File name: C:\Archivos de programa\PC Connectivity Solution\Transports\NclRSSrv.exe
+ Window caption: ''
+Window hwnd:  66280, processId:   3404, Name: NclUSBSrv.exe
+ File name: C:\Archivos de programa\PC Connectivity Solution\Transports\NclUSBSrv.exe
+ Window caption: ''
+Window hwnd:  66250, processId:   2684, Name: NGSCM.DLL
+ File name: C:\Archivos de programa\Nokia\Nokia PC Suite 7\NGSCM.DLL
+ Window caption: ''
+Window hwnd:  66256, processId:   2684, Name: COMCTL32.dll
+ File name: C:\WINDOWS\system32\COMCTL32.dll
+ Window caption: ''
+Window hwnd:  66244, processId:   3208, Name: ServiceLayer.exe
+ File name: C:\Archivos de programa\PC Connectivity Solution\ServiceLayer.exe
+ Window caption: ''
+Window hwnd: 262260, processId:   2640, Name: PCSuite.exe
+ File name: C:\Archivos de programa\Nokia\Nokia PC Suite 7\PCSuite.exe
+ Window caption: ''
+Window hwnd:  66184, processId:   2684, Name: ole32.dll
+ File name: C:\WINDOWS\system32\ole32.dll
+ Window caption: ''
+Window hwnd: 196836, processId:   2068, Name: webcheck.dll
+ File name: C:\WINDOWS\system32\webcheck.dll
+ Window caption: ''
+Window hwnd:  66076, processId:   2512, Name: WorkFlowTray.exe
+ File name: C:\Archivos de programa\ScanSoft\OmniPagePro14.0\WorkFlowTray.exe
+ Window caption: ''
+Window hwnd:  66078, processId:   2628, Name: MSUTB.dll
+ File name: C:\WINDOWS\system32\MSUTB.dll
+ Window caption: ''
+Window hwnd:  66066, processId:   2584, Name: OpScheduler.exe
+ File name: C:\Archivos de programa\ScanSoft\OmniPagePro14.0\OpScheduler.exe
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd:  66022, processId:   2384, Name: CLI.EXE
+ File name: C:\Archivos de programa\ATI Technologies\ATI.ACE\CLI.EXE
+ Window caption: ''
+Window hwnd: 131298, processId:   2384, Name: CLI.EXE
+ File name: C:\Archivos de programa\ATI Technologies\ATI.ACE\CLI.EXE
+ Window caption: ''
+Window hwnd: 131240, processId:   2352, Name: smax4pnp.exe
+ File name: C:\Archivos de programa\Analog Devices\Core\smax4pnp.exe
+ Window caption: ''
+Window hwnd:  66008, processId:   2600, Name: SPrnAgent.exe
+ File name: C:\Archivos de programa\ScanSoft\OmniPagePro14.0\PdfPrn\SPrnAgent.exe
+ Window caption: ''
+Window hwnd:  66014, processId:   2612, Name: bthprops.cpl
+ File name: C:\WINDOWS\system32\bthprops.cpl
+ Window caption: ''
+Window hwnd:  66010, processId:   2612, Name: rundll32.exe
+ File name: C:\WINDOWS\system32\rundll32.exe
+ Window caption: ''
+Window hwnd:  66172, processId:   2068, Name: NETSHELL.dll
+ File name: C:\WINDOWS\system32\NETSHELL.dll
+ Window caption: ''
+Window hwnd:  66170, processId:   2068, Name: cscui.dll
+ File name: C:\WINDOWS\System32\cscui.dll
+ Window caption: ''
+Window hwnd:  66148, processId:   2444, Name: COMCTL32.dll
+ File name: C:\WINDOWS\WinSxS\X86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\COMCTL32.dll
+ Window caption: ''
+Window hwnd: 131360, processId:   2444, Name: SHSTAT.EXE
+ File name: C:\Archivos de programa\McAfee\VirusScan Enterprise\SHSTAT.EXE
+ Window caption: ''
+Window hwnd:  65978, processId:   2416, Name: UpdRes.dll
+ File name: C:\Archivos de programa\McAfee\Common Framework\040A\UpdRes.dll
+ Window caption: ''
+Window hwnd:  66002, processId:   2416, Name: COMCTL32.dll
+ File name: C:\WINDOWS\system32\COMCTL32.dll
+ Window caption: ''
+Window hwnd:  65954, processId:   2416, Name: COMCTL32.dll
+ File name: C:\WINDOWS\system32\COMCTL32.dll
+ Window caption: ''
+Window hwnd:  65944, processId:   2416, Name: AgentRes.dll
+ File name: C:\Archivos de programa\McAfee\Common Framework\040A\AgentRes.dll
+ Window caption: ''
+Window hwnd:  65882, processId:   2416, Name: UdaterUI.exe
+ File name: C:\Archivos de programa\McAfee\Common Framework\UdaterUI.exe
+ Window caption: ''
+Window hwnd:  65886, processId:   2544, Name: McTray.exe
+ File name: C:\Archivos de programa\McAfee\Common Framework\McTray.exe
+ Window caption: ''
+Window hwnd:  65868, processId:   2572, Name: Opware14.exe
+ File name: C:\Archivos de programa\ScanSoft\OmniPagePro14.0\Opware14.exe
+ Window caption: ''
+Window hwnd:  65858, processId:   2444, Name: COMCTL32.dll
+ File name: C:\WINDOWS\WinSxS\X86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.2982_x-ww_ac3f9c03\COMCTL32.dll
+ Window caption: ''
+Window hwnd:  65818, processId:   2376, Name: PDVDDXSrv.exe
+ File name: C:\Archivos de programa\CyberLink\PowerDVD DX\PDVDDXSrv.exe
+ Window caption: ''
+Window hwnd:  65814, processId:   2376, Name: PDVDDXSrv.exe
+ File name: C:\Archivos de programa\CyberLink\PowerDVD DX\PDVDDXSrv.exe
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd:  65806, processId:   2376, Name: PDVDDXSrv.exe
+ File name: C:\Archivos de programa\CyberLink\PowerDVD DX\PDVDDXSrv.exe
+ Window caption: ''
+Window hwnd:  65792, processId:   2400, Name: Acrotray.esp
+ File name: C:\Archivos de programa\Adobe\Acrobat 7.0\Distillr\Acrotray.esp
+ Window caption: ''
+Window hwnd:  65752, processId:   2352, Name: smax4pnp.exe
+ File name: C:\Archivos de programa\Analog Devices\Core\smax4pnp.exe
+ Window caption: ''
+Window hwnd:  65708, processId:   2360, Name: Iaanotif.exe
+ File name: C:\Archivos De Programa\Intel\Intel Matrix Storage Manager\Iaanotif.exe
+ Window caption: ''
+Window hwnd: 262204, processId:   2068, Name: SHLWAPI.dll
+ File name: C:\WINDOWS\system32\SHLWAPI.dll
+ Window caption: ''
+Window hwnd:  65668, processId:   2068, Name: SHLWAPI.dll
+ File name: C:\WINDOWS\system32\SHLWAPI.dll
+ Window caption: ''
+Window hwnd: 131182, processId:   2068, Name: UNKNOWN
+ File name: UNKNOWN
+ Window caption: ''
+Window hwnd: 131186, processId:   2068, Name: Explorer.EXE
+ File name: C:\WINDOWS\Explorer.EXE
+ Window caption: ''
+Window hwnd:  65578, processId:   1028, Name: Ati2evxx.exe
+ File name: C:\WINDOWS\system32\Ati2evxx.exe
+ Window caption: ''
+Window hwnd:  66178, processId:   2684, Name: gdiplus.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.GdiPlus_6595b64144ccf1df_1.0.2600.2180_x-ww_522f9f82\gdiplus.dll
+ Window caption: ''
+Window hwnd:  66396, processId:   2384, Name: gdiplus.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.GdiPlus_6595b64144ccf1df_1.0.2600.2180_x-ww_522f9f82\gdiplus.dll
+ Window caption: ''
+Window hwnd: 1049612, processId:   3600, Name: OUTLLIB.dll
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\OUTLLIB.dll
+ Window caption: ''
+Window hwnd: 984376, processId:   3000, Name: GdiPlus.DLL
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\GdiPlus.DLL
+ Window caption: ''
+Window hwnd: 786774, processId:   2068, Name: BROWSEUI.dll
+ File name: C:\WINDOWS\system32\BROWSEUI.dll
+ Window caption: 'M:\Escritorio\20 Solar\80 Rendimiento termico colector CCP\10 Medicion dimensional colector\10 '
+Window hwnd: 2098678, processId:   2068, Name: gdiplus.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.GdiPlus_6595b64144ccf1df_1.0.2600.2180_x-ww_522f9f82\gdiplus.dll
+ Window caption: ''
+Window hwnd: 1312088, processId:   3596, Name: gdiplus.dll
+ File name: C:\WINDOWS\WinSxS\x86_Microsoft.Windows.GdiPlus_6595b64144ccf1df_1.0.2600.2180_x-ww_522f9f82\gdiplus.dll
+ Window caption: ''
+Window hwnd: 1115476, processId:   3872, Name: theide.exe
+ File name: C:\Desarrollo\upp\theide.exe
+ Window caption: 'Database - GUI - TheIDE - [Help Topics] { MyApps }'
+Window hwnd: 2623058, processId:   3596, Name: IEFRAME.dll
+ File name: C:\WINDOWS\system32\IEFRAME.dll
+ Window caption: '::Biansa:: - Microsoft Internet Explorer proporcionado por SENER INGENIERIA Y SISTEMAS'
+Window hwnd: 2688698, processId:   2788, Name: GdiPlus.DLL
+ File name: C:\Archivos de programa\Microsoft Office\OFFICE11\GdiPlus.DLL
+ Window caption: ''
+Window hwnd: 329004, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd:  65682, processId:   2068, Name: SHELL32.dll
+ File name: C:\WINDOWS\system32\SHELL32.dll
+ Window caption: 'Program Manager'
+
+Press enter to continue...
+
+Process list:
+Id      0: Priority: Not accesible, Program: [System Process]
+Id      4: Priority: 5, Program: System
+Id    676: Priority: 5, Program: smss.exe
+Id    780: Priority: Not accesible, Program: csrss.exe
+Id    808: Priority: 8, Program: winlogon.exe
+Id    852: Priority: 5, Program: services.exe
+Id    864: Priority: 5, Program: lsass.exe
+Id   1028: Priority: 5, Program: ati2evxx.exe
+Id   1044: Priority: 5, Program: svchost.exe
+Id   1108: Priority: Not accesible, Program: svchost.exe
+Id   1244: Priority: 5, Program: svchost.exe
+Id   1380: Priority: Not accesible, Program: svchost.exe
+Id   1420: Priority: Not accesible, Program: svchost.exe
+Id   1580: Priority: 5, Program: spoolsv.exe
+Id   1712: Priority: 5, Program: ASFAgent.exe
+Id   1760: Priority: 5, Program: CATSysDemon.exe
+Id   1788: Priority: Not accesible, Program: svchost.exe
+Id   1824: Priority: 5, Program: GoogleUpdaterService.exe
+Id   1856: Priority: 5, Program: IAANTmon.exe
+Id   1904: Priority: 5, Program: FrameworkService.exe
+Id   1936: Priority: 8, Program: Mcshield.exe
+Id   2012: Priority: 5, Program: VsTskMgr.exe
+Id    200: Priority: 5, Program: MDM.EXE
+Id    592: Priority: Not accesible, Program: naPrdMgr.exe
+Id   2020: Priority: Not accesible, Program: alg.exe
+Id   2068: Priority: 5, Program: explorer.exe
+Id   2352: Priority: 5, Program: smax4pnp.exe
+Id   2360: Priority: 5, Program: IAAnotif.exe
+Id   2376: Priority: 5, Program: PDVDDXSrv.exe
+Id   2384: Priority: 5, Program: CLI.exe
+Id   2400: Priority: 5, Program: acrotray.exe
+Id   2416: Priority: 5, Program: UdaterUI.exe
+Id   2444: Priority: 5, Program: shstat.exe
+Id   2512: Priority: 5, Program: WorkFlowTray.exe
+Id   2544: Priority: 5, Program: Mctray.exe
+Id   2572: Priority: 5, Program: opware14.exe
+Id   2584: Priority: 5, Program: OpScheduler.exe
+Id   2600: Priority: 5, Program: SPrnAgent.exe
+Id   2612: Priority: 5, Program: rundll32.exe
+Id   2628: Priority: 5, Program: ctfmon.exe
+Id   2640: Priority: 5, Program: PCSuite.exe
+Id   2684: Priority: 5, Program: PcSync2.exe
+Id   3208: Priority: 5, Program: ServiceLayer.exe
+Id   3384: Priority: 5, Program: ntvdm.exe
+Id   3404: Priority: 8, Program: NclUSBSrv.exe
+Id   3508: Priority: 8, Program: NclRSSrv.exe
+Id   3592: Priority: 8, Program: NclMSBTSrv.exe
+Id   3704: Priority: 5, Program: MPAPI3s.exe
+Id   2276: Priority: 5, Program: CLI.exe
+Id   3256: Priority: 8, Program: WISPTIS.EXE
+Id    436: Priority: 5, Program: svchost.exe
+Id   3600: Priority: 5, Program: OUTLOOK.EXE
+Id   2244: Priority: 5, Program: wordpad.exe
+Id   3000: Priority: 5, Program: WINWORD.EXE
+Id   3596: Priority: 5, Program: iexplore.exe
+Id   3872: Priority: 5, Program: theide.exe
+Id    468: Priority: 5, Program: Database.exe
+Id   2788: Priority: 5, Program: EXCEL.EXE
+Id   3548: Priority: 5, Program: theide.exe
+Id    164: Priority: 5, Program: mspdbsrv.exe
+Id   3148: Priority: 8, Program: SysInfo demo console.exe
+
+Press enter to end...

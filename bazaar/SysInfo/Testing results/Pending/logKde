@@ -1,0 +1,276 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/goblix/Desktop
+Programs:         /usr/bin
+Application Data: /home/goblix
+Music:            
+Pictures:         
+Video:            
+Personal:         
+Templates:        
+Download:         
+Temp:             /home/goblix
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.830 GHz
+Battery info
+Working with battery: yes, Percentage: 100%, Remaining: 113 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1828 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1828 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 31%
+Total physical memory:    2110574592 bytes (2.0Gb)
+Free physical memory:     1452556288 bytes (1.4Gb)
+Total paging file:        346923008 bytes (330.9Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.24.3 #1 SMP Wed Mar 19 10:46:49 BRT 2008,
+ architecture: i686
+Distro:  slackware, version: 2.7.0
+Desktop: kde, version: 3.5.9
+
+Program compiled with gnuc version 40103. Compilation date: Dec 29 2008
+
+Default exes info:
+Default program for '.html' is ''
+Default program for '.doc' is ''
+Default program for '.png' is ''
+Default program for '.pdf' is ''
+Default program for '.txt' is ''
+Default program for '.xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/mnt/live'
+ Not mounted
+Drive path:'/mnt/live/usr'
+ Not mounted
+Drive path:'/mnt/live/mnt/sdb1'
+ Not mounted
+Drive path:'/mnt/live/memory'
+ Not mounted
+Drive path:'/mnt/live/memory/changes'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Core-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Defapps-7-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Deflibs-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Dev4Use-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Extrapps-5-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.GStreamer-1-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kde-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kdelibs-1-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Kernel-3-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Mozilla-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.X11-6-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.X3D-2-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/a.Xwm-4-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.Goblix-6-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.Kde-3-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/mnt/live/memory/images/z.User-7-i486-v2.7.lzm'
+ Not mounted
+Drive path:'/boot'
+ Not mounted
+Drive path:'/mnt/sda1'
+ Type: 'Hard', Volume: 'WinRE', 
+ MaxName: 255, File System: fuseblk
+ Free Bytes User:  1331318784 (1.2Gb)
+ Total Bytes User: 1572859904 (1.5Gb), Total Free Bytes: 1331318784 (1.2Gb)
+Drive path:'/mnt/sda2'
+ Type: 'Hard', Volume: 'Vista', 
+ MaxName: 255, File System: fuseblk
+ Free Bytes User:  22954090496 (21.4Gb)
+ Total Bytes User: 57675657216 (53.7Gb), Total Free Bytes: 22954090496 (21.4Gb)
+Drive path:'/mnt/sda3'
+ Type: 'Hard', Volume: 'Linux', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  45526114304 (42.4Gb)
+ Total Bytes User: 54519554048 (50.8Gb), Total Free Bytes: 45526114304 (42.4Gb)
+Drive path:'/mnt/sda6'
+ Type: 'Hard', Volume: 'Compartido', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  61500878848 (57.3Gb)
+ Total Bytes User: 130094362624 (121.2Gb), Total Free Bytes: 61500878848 (57.3Gb)
+Drive path:'/mnt/sdb1'
+ Type: 'Hard', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  1686396928 (1.6Gb)
+ Total Bytes User: 2044051456 (1.9Gb), Total Free Bytes: 1686396928 (1.6Gb)
+
+Other Info:
+Process Id:          10679
+Process name:        'SysInfo demo console'
+Process file name:   '/mnt/live/mnt/sdb1/SysInfo demo console'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Ending process
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    101, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680105, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680106, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777227, processId:  10599, Name: kdesktop
+ File name: /usr/bin/kdeinit
+ Window caption: 'KDE Desktop '
+Window hwnd: 14684521, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14684535, processId:  10597, Name: kwin
+ File name: /usr/bin/kdeinit
+ Window caption: 'kwin '
+Window hwnd: 14684536, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14684537, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14684538, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14684539, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14684540, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14684522, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194368, processId:  10648, Name: nautilus
+ File name: /usr/bin/nautilus
+ Window caption: 'sdb1 - File Browser '
+Window hwnd: 14680127, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680139, processId:  10597, Name: kwin
+ File name: /usr/bin/kdeinit
+ Window caption: 'kwin '
+Window hwnd: 14680140, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680141, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680142, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680143, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680144, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680128, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 29360135, processId:  10645, Name: konsole
+ File name: /usr/bin/kdeinit
+ Window caption: 'Shell - Konsole '
+Window hwnd: 14680091, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680092, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874378, processId:  10602, Name: kicker
+ File name: /usr/bin/kdeinit
+ Window caption: 'kicker '
+Window hwnd: 14680088, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id  10491: Priority: 5, Program: /bin/bash
+Id  10515: Priority: 5, Program: /bin/bash
+Id  10516: Priority: 5, Program: /usr/bin/xinit
+Id  10547: Priority: 5, Program: /bin/bash
+Id  10548: Priority: 5, Program: /bin/bash
+Id  10580: Priority: 5, Program: /usr/bin/kdeinit
+Id  10583: Priority: 5, Program: /usr/bin/kdeinit
+Id  10585: Priority: 5, Program: /usr/bin/kdeinit
+Id  10587: Priority: 5, Program: /usr/bin/kdeinit
+Id  10589: Priority: 5, Program: /usr/libexec/gam_server
+Id  10594: Priority: 5, Program: /usr/bin/kwrapper
+Id  10596: Priority: 5, Program: /usr/bin/kdeinit
+Id  10597: Priority: 5, Program: /usr/bin/kdeinit
+Id  10599: Priority: 5, Program: /usr/bin/kdeinit
+Id  10602: Priority: 5, Program: /usr/bin/kdeinit
+Id  10603: Priority: 5, Program: /usr/bin/kdeinit
+Id  10605: Priority: 5, Program: /usr/bin/kdeinit
+Id  10612: Priority: 5, Program: /usr/bin/artsd
+Id  10614: Priority: 5, Program: /usr/bin/kdeinit
+Id  10617: Priority: 5, Program: /usr/bin/kdeinit
+Id  10632: Priority: 5, Program: /usr/bin/kdeinit
+Id  10636: Priority: 5, Program: /usr/bin/kdeinit
+Id  10644: Priority: 5, Program: /usr/bin/kdeinit
+Id  10645: Priority: 5, Program: /usr/bin/kdeinit
+Id  10646: Priority: 5, Program: /bin/bash
+Id  10648: Priority: 5, Program: /usr/bin/nautilus
+Id  10650: Priority: 5, Program: /usr/libexec/gconfd-2
+Id  10654: Priority: 5, Program: /usr/bin/dbus-launch
+Id  10655: Priority: 5, Program: /usr/bin/dbus-daemon
+Id  10657: Priority: 5, Program: /usr/libexec/gnome-vfs-daemon
+Id  10661: Priority: 5, Program: /usr/libexec/bonobo-activation-server
+Id  10673: Priority: 5, Program: /usr/libexec/mapping-daemon
+Id  10679: Priority: 5, Program: /mnt/live/mnt/sdb1/SysInfo demo console
+
+Press enter to end...

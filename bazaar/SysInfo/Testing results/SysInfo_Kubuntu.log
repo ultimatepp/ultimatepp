@@ -1,0 +1,395 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/ubuntu/Desktop
+Programs:         /usr/bin
+Application Data: /home/ubuntu
+Music:            /home/ubuntu/MÃºsica
+Pictures:         /home/ubuntu/ImÃ¡genes
+Video:            /home/ubuntu/VÃ­deos
+Personal:         /home/ubuntu/Documentos
+Templates:        /home/ubuntu/Plantillas
+Download:         /home/ubuntu/Desktop
+Temp:             /home/ubuntu
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.830 GHz
+Battery info
+Working with battery: no, Percentage: 0%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 77%
+Total physical memory:    2113114112 bytes (2.0Gb)
+Free physical memory:     484175872 bytes (461.7Mb)
+Total paging file:        969584640 bytes (924.7Mb)
+Free paging file:         9273344 bytes (8.8Mb)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4711993344 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.27-7-generic #1 SMP Fri Oct 24 06:42:44 UTC 2008,
+ architecture: i686
+
+Distro:  ubuntu, version: 8.10
+Desktop: kde, version: 4.1.2 (KDE 4.1.2)
+
+Program compiled with gnuc version 40103. Compilation date: Nov 18 2008
+
+Default exes info:
+Default program for 'html' is ''
+Default program for 'doc' is 'ooo-writer.desktop'
+Default program for 'xls' is 'ooo-calc.desktop'
+Default program for 'pdf' is 'ooo-writer.desktop'
+Default program for 'txt' is 'ooo-writer.desktop'
+Default program for 'xyz' is 'ooo-writer.desktop'
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/cdrom'
+ Type: 'Hard', Volume: 'Kubuntu 8.10 i386', 
+ MaxName: 255, File System: iso9660
+ Free Bytes User:  0 (0b)
+ Total Bytes User: 3895754752 (3.6Gb), Total Free Bytes: 0 (0b)
+Drive path:'/rofs'
+ Type: 'Hard', Volume: 'tmpfs on /tmp type tmpfs (rw,nosuid,nodev)
+/dev/sdb1 on /media/disk type vfat (rw,nosuid,nodev,uhelper=hal,uid=999,codepage=437,iocharset=utf8) [', 
+ MaxName: 256, File System: squashfs
+ Free Bytes User:  102400 (100.0Kb)
+ Total Bytes User: 1570766848 (1.5Gb), Total Free Bytes: 102400 (100.0Kb)
+Drive path:'/media/disk'
+ Type: 'Hard', Volume: '/dev/sda3 on /media/Linux type ext3 (rw,nosuid,nodev,uhelper=hal) [Linux', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  1945272320 (1.8Gb)
+ Total Bytes User: 2054717440 (1.9Gb), Total Free Bytes: 1945272320 (1.8Gb)
+Drive path:'/media/Linux'
+ Type: 'Hard', Volume: 'Linux', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  46841380864 (43.6Gb)
+ Total Bytes User: 54519554048 (50.8Gb), Total Free Bytes: 46841380864 (43.6Gb)
+Drive path:'/media/Compartido'
+ Type: 'Hard', Volume: 'Compartido', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  71806185472 (66.9Gb)
+ Total Bytes User: 130094362624 (121.2Gb), Total Free Bytes: 71806185472 (66.9Gb)
+
+Other Info:
+Process Id:          16418
+Process name:        'Demo_32Ubuntu'
+Process file name:   '/media/disk/Demo_32Ubuntu'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Window was closed before!
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:    122, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874431, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18876330, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18882269, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18897510, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18898514, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18876648, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874419, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874401, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874402, processId:   8036, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 4194305, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777218, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874369, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874373, processId:   8036, Name: kwin
+ File name: /usr/bin/kwin
+ Window caption: 'kwin '
+Window hwnd: 18874375, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874396, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874415, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068674, processId:   8146, Name: krunner
+ File name: /usr/bin/krunner
+ Window caption: 'Ejecutar orden '
+Window hwnd: 23068676, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 25165838, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 25165861, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 25165889, processId:   8234, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 18874428, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 25165901, processId:   8234, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Qt-subapplication '
+Window hwnd: 8388609, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 10485761, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 23068720, processId:   8146, Name: Qt-subapplication
+ File name: /usr/bin/krunner
+ Window caption: 'Qt-subapplication '
+Window hwnd: 10485764, processId:   7998, Name: kded4
+ File name: /usr/bin/kded4
+ Window caption: 'KWrited - Escuchando en el dispositivo /dev/pts/0 '
+Window hwnd: 10485766, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 33554435, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 31457284, processId:   8275, Name: klipper
+ File name: /usr/bin/klipper
+ Window caption: 'klipper '
+Window hwnd: 31457286, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 31457307, processId:   8275, Name: klipper
+ File name: /usr/bin/klipper
+ Window caption: ''
+Window hwnd: 35651585, processId:   8297, Name: kded
+ File name: /usr/bin/kdeinit
+ Window caption: 'kded '
+Window hwnd: 35651586, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 39845889, processId:   8266, Name: printer-applet
+ File name: /usr/bin/python2.5
+ Window caption: 'Estado de impresión del documento '
+Window hwnd: 39845891, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 33554459, processId:   8277, Name: kmix
+ File name: /usr/bin/kmix
+ Window caption: 'Configurar - KMix '
+Window hwnd: 37748737, processId:   8303, Name: guidance-power-manager
+ File name: /usr/bin/python2.5
+ Window caption: 'Guidance Power Manager '
+Window hwnd: 37748739, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 39845916, processId:   8266, Name: printer-applet
+ File name: /usr/bin/python2.5
+ Window caption: 'Estado de la impresora '
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 37748792, processId:   8303, Name: guidance-power-manager
+ File name: /usr/bin/python2.5
+ Window caption: 'Acerca de Guidance Power Manager '
+Window hwnd: 46137345, processId:   8282, Name: knetworkmanager
+ File name: /usr/bin/knetworkmanager
+ Window caption: 'knetworkmanager '
+Window hwnd: 46137346, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 46137354, processId:   8282, Name: knetworkmanager
+ File name: /usr/bin/knetworkmanager
+ Window caption: 'knetworkmanager '
+Window hwnd: 35651592, processId:   8297, Name: kded
+ File name: /usr/bin/kdeinit
+ Window caption: 'kded '
+Window hwnd: 35651594, processId:   8297, Name: kded
+ File name: /usr/bin/kdeinit
+ Window caption: 'kded '
+Window hwnd: 35651596, processId:   8297, Name: kded
+ File name: /usr/bin/kdeinit
+ Window caption: 'kded '
+Window hwnd: 46137356, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 46137363, processId:   8282, Name: knetworkmanager
+ File name: /usr/bin/knetworkmanager
+ Window caption: 'knetworkmanager '
+Window hwnd: 46137407, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 46137408, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 52428801, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 33554485, processId:   8277, Name: kmix
+ File name: /usr/bin/kmix
+ Window caption: ''
+Window hwnd: 33554433, processId:   8277, Name: kmix
+ File name: /usr/bin/kmix
+ Window caption: 'HDA Intel '
+Window hwnd: 60817409, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 65011713, processId:   8694, Name: knotify
+ File name: /usr/bin/kdeinit
+ Window caption: 'knotify '
+Window hwnd: 65011714, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 31457352, processId:   8275, Name: klipper
+ File name: /usr/bin/klipper
+ Window caption: 'klipper '
+Window hwnd: 31457368, processId:   8275, Name: klipper
+ File name: /usr/bin/klipper
+ Window caption: 'klipper '
+Window hwnd: 48234499, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 48235112, processId:   8812, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'dolphin '
+Window hwnd: 48235125, processId:   8812, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: 'dolphin '
+Window hwnd: 62914564, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360134, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 37748855, processId:   8303, Name: guidance-power-manager
+ File name: /usr/bin/python2.5
+ Window caption: 'guidance-power-manager '
+Window hwnd: 48260691, processId:   8812, Name: dolphin
+ File name: /usr/bin/dolphin
+ Window caption: ''
+Window hwnd: 62915016, processId:  11108, Name: Qt-subapplication
+ File name: /usr/bin/konsole
+ Window caption: 'Qt-subapplication '
+Window hwnd: 62915031, processId:  11108, Name: Qt-subapplication
+ File name: /usr/bin/konsole
+ Window caption: 'Qt-subapplication '
+Window hwnd: 25200200, processId:   8234, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 25199707, processId:   8234, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: 'Preferencias del escritorio - Área de trabajo de Plasma '
+Window hwnd: 25168565, processId:   8234, Name: Qt-subapplication
+ File name: /usr/bin/plasma
+ Window caption: ''
+Window hwnd: 73400321, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 69206019, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue...
+
+Process list:
+Id   6616: Priority: 5, Program: /bin/bash
+Id   6618: Priority: 5, Program: /bin/bash
+Id   6624: Priority: 5, Program: /bin/bash
+Id   6625: Priority: 5, Program: /bin/bash
+Id   6626: Priority: 5, Program: /bin/bash
+Id   7708: Priority: 5, Program: /bin/bash
+Id   7816: Priority: 5, Program: /usr/bin/ck-launch-session
+Id   7868: Priority: 5, Program: /bin/dash
+Id   7895: Priority: 5, Program: /bin/dbus-daemon
+Id   7896: Priority: 5, Program: /usr/bin/dbus-launch
+Id   7991: Priority: 5, Program: /usr/bin/kdeinit4
+Id   7992: Priority: 5, Program: /usr/lib/kde4/libexec/klauncher
+Id   7998: Priority: 5, Program: /usr/bin/kded4
+Id   8029: Priority: 5, Program: /usr/bin/kwrapper4
+Id   8030: Priority: 5, Program: /usr/bin/ksmserver
+Id   8036: Priority: 5, Program: /usr/bin/kwin
+Id   8141: Priority: 5, Program: /usr/bin/knotify4
+Id   8146: Priority: 5, Program: /usr/bin/krunner
+Id   8234: Priority: 5, Program: /usr/bin/plasma
+Id   8235: Priority: 5, Program: /usr/bin/nepomukserver
+Id   8237: Priority: 5, Program: /usr/bin/nepomukservicestub
+Id   8242: Priority: 5, Program: /usr/bin/nepomukservicestub
+Id   8243: Priority: 5, Program: /usr/bin/nepomukservicestub
+Id   8244: Priority: 5, Program: /usr/bin/nepomukservicestub
+Id   8253: Priority: 5, Program: /usr/bin/kdeinit4
+Id   8262: Priority: 5, Program: /usr/bin/kaccess
+Id   8266: Priority: 5, Program: /usr/bin/python2.5
+Id   8268: Priority: 1, Program: /usr/bin/python2.5
+Id   8273: Priority: 5, Program: /usr/bin/python2.5
+Id   8275: Priority: 5, Program: /usr/bin/klipper
+Id   8277: Priority: 5, Program: /usr/bin/kmix
+Id   8282: Priority: 5, Program: /usr/bin/knetworkmanager
+Id   8285: Priority: 5, Program: /usr/bin/kdeinit
+Id   8288: Priority: 5, Program: /usr/bin/kdeinit
+Id   8291: Priority: 5, Program: /usr/bin/kdeinit
+Id   8297: Priority: 5, Program: /usr/bin/kdeinit
+Id   8303: Priority: 5, Program: /usr/bin/python2.5
+Id   8694: Priority: 5, Program: /usr/bin/kdeinit
+Id   8697: Priority: 5, Program: /usr/bin/artsd
+Id   8812: Priority: 5, Program: /usr/bin/dolphin
+Id  11108: Priority: 5, Program: /usr/bin/konsole
+Id  11290: Priority: 5, Program: /bin/bash
+Id  15595: Priority: 5, Program: /usr/bin/krandrtray
+Id  16418: Priority: 5, Program: /media/disk/Demo_32Ubuntu
+Id  16499: Priority: 4, Program: /usr/bin/kdeinit4
+Id  16503: Priority: 5, Program: /usr/bin/kdeinit4
+Id  16627: Priority: 5, Program: /usr/bin/kate
+
+Press enter to end...

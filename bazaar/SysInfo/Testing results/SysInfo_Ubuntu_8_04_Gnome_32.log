@@ -1,0 +1,454 @@
+
+Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown
+Introduce number of test cycles or just type enter to run it once: 
+SysInfo functions demo
+
+Special folders
+Desktop:          /home/aupa/Escritorio
+Programs:         /usr/bin
+Application Data: /home/aupa
+Music:            /home/aupa/Escritorio
+Pictures:         /home/aupa/Escritorio
+Video:            /home/aupa/Escritorio
+Personal:         /home/aupa/Escritorio
+Templates:        /home/aupa/Escritorio
+Download:         /home/aupa/Escritorio
+Temp:             /home/aupa
+Os:               /bin
+System:           
+
+System info:
+System manufacturer 'TOSHIBA', product name 'Satellite A300',
+ version 'PSAJ0E-014013CE', number of processors: 2
+Real CPU Speed: 1.829 GHz
+Battery info
+Working with battery: no, Percentage: 100%, Remaining: 10000 min
+Bios version 'V2.70   ',
+ release date '04/14/2008'
+Processor #0: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1000 MHz
+Processor #1: Vendor 'GenuineIntel',
+ identifier 'Intel(R) Core(TM)2 Duo CPU     T5550  @ 1.83GHz',
+ architecture 'i686
+ Family 6 Model 15 Stepping 13', speed 1833 MHz
+
+Press enter to continue...
+
+Memory info:
+Percent of memory in use: 55%
+Total physical memory:    2116001792 bytes (2.0Gb)
+Free physical memory:     935841792 bytes (892.5Mb)
+Total paging file:        406704128 bytes (387.9Mb)
+Free paging file:         0 bytes (0b)
+Total virtual memory:     4721266688 bytes (4.4Gb)
+Free virtual memory:      4721266688 bytes (4.4Gb)
+
+Os info:
+Kernel:  Linux, version: 2.6.24-21-generic #1 SMP Tue Oct 21 23:43:45 UTC 2008,
+ architecture: i686
+
+Distro:  ubuntu, version: 8.04
+Desktop: gnome, version: 2.22.3
+
+Program compiled with gnuc version 40103. Compilation date: Nov 18 2008
+
+Default exes info:
+Default program for 'html' is 'firefox.desktop'
+Default program for 'doc' is 'ooo-writer.desktop'
+Default program for 'png' is 'eog.desktop'
+Default program for 'pdf' is 'evince.desktop'
+Default program for 'txt' is 'gedit.desktop'
+Default program for 'xyz' is ''
+
+Press enter to continue...
+
+Drives list:
+Drive path:'/'
+ Type: 'Hard', Volume: 'Linux', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  46841184256 (43.6Gb)
+ Total Bytes User: 54519554048 (50.8Gb), Total Free Bytes: 46841184256 (43.6Gb)
+Drive path:'/home'
+ Type: 'Hard', Volume: 'Compartido', 
+ MaxName: 255, File System: ext3
+ Free Bytes User:  71851614208 (66.9Gb)
+ Total Bytes User: 130094362624 (121.2Gb), Total Free Bytes: 71851614208 (66.9Gb)
+Drive path:'/media/disk'
+ Type: 'Removable', Volume: '', 
+ MaxName: 260, File System: vfat
+ Free Bytes User:  1947697152 (1.8Gb)
+ Total Bytes User: 2054717440 (1.9Gb), Total Free Bytes: 1947697152 (1.8Gb)
+
+Other Info:
+Process Id:          7572
+Process name:        'demo'
+Process file name:   '/home/100Aplicaciones/exe/demo'
+Process priority is: 5
+Now changed to high priority: No
+Process priority is: 5
+
+Launch file 'test.txt':
+
+If modify 'test.txt' it will ask you to save or not the file
+If you answer Yes or No the program will be terminated
+If you answer Cancel or wait more than 5 seconds the program will be killed
+
+Press enter to terminate 'test.txt'
+Process terminated
+
+Press enter to continue...
+
+Windows list:
+Window hwnd:     88, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874767, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 4194305, processId:   5967, Name: seahorse-agent
+ File name: /usr/bin/gnome-session
+ Window caption: 'seahorse-agent '
+Window hwnd: 18874768, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 6291457, processId:   5967, Name: x-session-manager
+ File name: /usr/bin/gnome-session
+ Window caption: 'x-session-manager '
+Window hwnd: 18874769, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 8388609, processId:   6032, Name: gnome-settings-daemon
+ File name: /usr/lib/gnome-settings-daemon/gnome-settings-daemon
+ Window caption: 'gnome-settings-daemon '
+Window hwnd: 18874770, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 8388611, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874771, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 8388612, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874772, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 12582913, processId:   6055, Name: gnome-screensaver
+ File name: 
+ Window caption: 'gnome-screensaver '
+Window hwnd: 12582915, processId:   6055, Name: 
+ File name: 
+ Window caption: 'gnome-screensaver '
+Window hwnd: 18874773, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680065, processId:   6062, Name: gnome-panel
+ File name: 
+ Window caption: 'gnome-panel '
+Window hwnd: 18874774, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777217, processId:   6064, Name: nautilus
+ File name: /usr/bin/nautilus
+ Window caption: 'Administrador de archivos '
+Window hwnd: 18874775, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 20971521, processId:   6137, Name: bluetooth-applet
+ File name: /usr/bin/bluetooth-applet
+ Window caption: 'Miniaplicación para Bluetooth '
+Window hwnd: 18874776, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 23068673, processId:   6141, Name: update-notifier
+ File name: /usr/bin/update-notifier
+ Window caption: 'notificador-de-actualizaciones '
+Window hwnd: 18874369, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874370, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874388, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874389, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874390, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874391, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874392, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874393, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874394, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874395, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874396, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 16777220, processId:   6064, Name: 
+ File name: /usr/bin/nautilus
+ Window caption: 'Administrador de archivos '
+Window hwnd: 18874777, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 33554433, processId:   6154, Name: gnome-volume-manager
+ File name: 
+ Window caption: 'gnome-volume-manager '
+Window hwnd: 18874778, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 25165825, processId:   6147, Name: tracker-applet
+ File name: /usr/bin/tracker-applet
+ Window caption: 'Tracker '
+Window hwnd: 18874779, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 37748737, processId:   6146, Name: evolution-alarm-notify
+ File name: /usr/lib/evolution/2.22/evolution-alarm-notify
+ Window caption: 'evolution-alarm-notify '
+Window hwnd: 18874780, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 29360129, processId:   6149, Name: gnome-power-manager
+ File name: 
+ Window caption: 'Gestión de energía '
+Window hwnd: 18874781, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 35651585, processId:   6160, Name: nm-applet
+ File name: /usr/bin/nm-applet
+ Window caption: 'nm-applet '
+Window hwnd: 18874782, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 39845889, processId:   6162, Name: gdl_box
+ File name: /opt/google/desktop/bin/gdl_box
+ Window caption: 'gdl_box '
+Window hwnd: 33554435, processId:   6179, Name: 
+ File name: /usr/lib/gnome-volume-manager/gnome-volume-manager
+ Window caption: 'gnome-volume-manager '
+Window hwnd: 23068675, processId:   6141, Name: 
+ File name: /usr/bin/update-notifier
+ Window caption: 'notificador-de-actualizaciones '
+Window hwnd: 18874785, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 44040193, processId:   6159, Name: applet.py
+ File name: /usr/bin/python2.5
+ Window caption: 'applet.py '
+Window hwnd: 18874787, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 48234497, processId:   6187, Name: gdesklets-daemon
+ File name: 
+ Window caption: 'gdesklets-daemon '
+Window hwnd: 16777389, processId:   6064, Name: 
+ File name: /usr/bin/nautilus
+ Window caption: 'Administrador de archivos '
+Window hwnd: 16777250, processId:   6064, Name: desktop_window
+ File name: /usr/bin/nautilus
+ Window caption: 'Escritorio '
+Window hwnd: 18874877, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 62918231, processId:      0, Name: theide-svn
+ File name: 
+ Window caption: 'SysInfo demo non-gui -  - TheIDE - [/home/100Aplicaciones/SysInfo/SysInfo.cpp UTF-8] { MyApps } '
+Window hwnd: 18874993, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 31457316, processId:   7570, Name: xterm
+ File name: 
+ Window caption: 'bash '
+Window hwnd: 14680067, processId:   6062, Name: gnome-panel
+ File name: 
+ Window caption: 'Panel lateral expandido inferior '
+Window hwnd: 39845893, processId:   6162, Name: gdl_box
+ File name: /opt/google/desktop/bin/gdl_box
+ Window caption: 'Cuadro de búsqueda rápida '
+Window hwnd: 18874789, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 50331649, processId:   6233, Name: evolution-exchange-storage
+ File name: /usr/lib/evolution/2.22/evolution-exchange-storage
+ Window caption: 'evolution-exchange-storage '
+Window hwnd: 18874790, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 52428801, processId:   6266, Name: gtk-window-decorator
+ File name: /usr/bin/gtk-window-decorator
+ Window caption: 'gtk-window-decorator '
+Window hwnd: 52428803, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 52428870, processId:   6266, Name: gtk-window-decorator
+ File name: /usr/bin/gtk-window-decorator
+ Window caption: 'gtk-window-decorator '
+Window hwnd: 52429196, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 14680113, processId:   6062, Name: 
+ File name: 
+ Window caption: 'gnome-panel '
+Window hwnd: 16777468, processId:   6064, Name: 
+ File name: /usr/bin/nautilus
+ Window caption: 'Administrador de archivos '
+Window hwnd: 37748739, processId:   6146, Name: 
+ File name: /usr/lib/evolution/2.22/evolution-alarm-notify
+ Window caption: 'evolution-alarm-notify '
+Window hwnd: 23068705, processId:   6141, Name: 
+ File name: /usr/bin/update-notifier
+ Window caption: 'notificador-de-actualizaciones '
+Window hwnd: 18874804, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 54525953, processId:   6351, Name: trashapplet
+ File name: /usr/lib/gnome-applets/trashapplet
+ Window caption: 'Miniaplicación de la papelera '
+Window hwnd: 18874806, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 56623105, processId:   6348, Name: gweather-applet-2
+ File name: /usr/lib/gnome-applets/gweather-applet-2
+ Window caption: 'gweather-applet-2 '
+Window hwnd: 14680319, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 18874814, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 58720257, processId:   6359, Name: mixer_applet2
+ File name: /usr/lib/gnome-applets/mixer_applet2
+ Window caption: 'Miniaplicación del volumen '
+Window hwnd: 18874816, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 60817409, processId:   6363, Name: fast-user-switch-applet
+ File name: /usr/lib/fast-user-switch-applet/fast-user-switch-applet
+ Window caption: 'Miniaplicación del selector de usuarios '
+Window hwnd: 54526078, processId:   6351, Name: trashapplet
+ File name: /usr/lib/gnome-applets/trashapplet
+ Window caption: 'Miniaplicación de la papelera '
+
+Press enter to continue with the next 20 windows...
+Window hwnd: 14680473, processId:   6062, Name: 
+ File name: 
+ Window caption: 'gnome-panel '
+Window hwnd: 54526214, processId:   6351, Name: 
+ File name: /usr/lib/gnome-applets/trashapplet
+ Window caption: 'Miniaplicación de la papelera '
+Window hwnd: 14682855, processId:   6062, Name: gnome-panel
+ File name: 
+ Window caption: 'gnome-panel '
+Window hwnd: 14683126, processId:   6062, Name: gnome-panel
+ File name: 
+ Window caption: 'gnome-panel '
+Window hwnd: 29360163, processId:   6181, Name: 
+ File name: /usr/bin/gnome-power-manager
+ Window caption: 'Gestión de energía '
+Window hwnd: 60817895, processId:   6363, Name: 
+ File name: /usr/lib/fast-user-switch-applet/fast-user-switch-applet
+ Window caption: 'Miniaplicación del selector de usuarios '
+Window hwnd: 50331651, processId:   6233, Name: 
+ File name: /usr/lib/evolution/2.22/evolution-exchange-storage
+ Window caption: 'evolution-exchange-storage '
+Window hwnd: 14683218, processId:   6062, Name: gnome-panel
+ File name: 
+ Window caption: 'gnome-panel '
+Window hwnd: 14683291, processId:   6062, Name: gnome-panel
+ File name: 
+ Window caption: 'gnome-panel '
+Window hwnd: 18874859, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 62914561, processId:   6411, Name: <unknown>
+ File name: /usr/bin/theide-svn
+ Window caption: '<unknown> '
+Window hwnd: 62914563, processId:   6411, Name: <unknown>
+ File name: /usr/bin/theide-svn
+ Window caption: '<unknown> '
+Window hwnd: 62915607, processId:   6411, Name: <unknown>
+ File name: /usr/bin/theide-svn
+ Window caption: '<unknown> '
+Window hwnd: 62915643, processId:   6411, Name: 
+ File name: /usr/bin/theide-svn
+ Window caption: '<unknown> '
+Window hwnd: 48234499, processId:   6496, Name: 
+ File name: /usr/bin/python2.5
+ Window caption: 'gdesklets-daemon '
+Window hwnd: 62924205, processId:      0, Name: 
+ File name: 
+ Window caption: ''
+Window hwnd: 29360192, processId:   6181, Name: gnome-power-manager
+ File name: /usr/bin/gnome-power-manager
+ Window caption: 'Brillo '
+
+Press enter to continue...
+
+Process list:
+Id   5967: Priority: 5, Program: /usr/bin/gnome-session
+Id   6017: Priority: 5, Program: /usr/lib/libgconf2-4/gconfd-2
+Id   6025: Priority: 5, Program: /usr/bin/seahorse-agent
+Id   6028: Priority: 5, Program: /usr/bin/gnome-keyring-daemon
+Id   6031: Priority: 5, Program: /usr/bin/dbus-daemon
+Id   6032: Priority: 5, Program: /usr/lib/gnome-settings-daemon/gnome-settings-daemon
+Id   6047: Priority: 5, Program: /usr/lib/pulseaudio/pulse/gconf-helper
+Id   6060: Priority: 5, Program: /usr/bin/gnome-screensaver
+Id   6061: Priority: 5, Program: /bin/dash
+Id   6064: Priority: 5, Program: /usr/bin/nautilus
+Id   6068: Priority: 5, Program: /usr/lib/bonobo-activation/bonobo-activation-server
+Id   6095: Priority: 5, Program: /usr/lib/gvfs/gvfsd
+Id   6117: Priority: 5, Program: /usr/lib/gvfs/gvfs-fuse-daemon
+Id   6136: Priority: 5, Program: /usr/bin/compiz.real
+Id   6137: Priority: 5, Program: /usr/bin/bluetooth-applet
+Id   6141: Priority: 5, Program: /usr/bin/update-notifier
+Id   6146: Priority: 5, Program: /usr/lib/evolution/2.22/evolution-alarm-notify
+Id   6147: Priority: 5, Program: /usr/bin/tracker-applet
+Id   6152: Priority: 1, Program: /usr/bin/trackerd
+Id   6159: Priority: 5, Program: /usr/bin/python2.5
+Id   6160: Priority: 5, Program: /usr/bin/nm-applet
+Id   6162: Priority: 5, Program: /opt/google/desktop/bin/gdl_box
+Id   6167: Priority: 5, Program: /usr/lib/gvfs/gvfsd-trash
+Id   6177: Priority: 5, Program: /usr/lib/gvfs/gvfsd-burn
+Id   6178: Priority: 5, Program: /opt/google/desktop/bin/gdl_service
+Id   6179: Priority: 5, Program: /usr/lib/gnome-volume-manager/gnome-volume-manager
+Id   6181: Priority: 5, Program: /usr/bin/gnome-power-manager
+Id   6217: Priority: 5, Program: /usr/lib/evolution/evolution-data-server-2.22
+Id   6223: Priority: 5, Program: /opt/google/desktop/bin/gdl_config
+Id   6224: Priority: 5, Program: /opt/google/desktop/bin/gdl_indexer
+Id   6225: Priority: 5, Program: /opt/google/desktop/bin/gdl_fs_crawler
+Id   6233: Priority: 5, Program: /usr/lib/evolution/2.22/evolution-exchange-storage
+Id   6263: Priority: 5, Program: /bin/dash
+Id   6264: Priority: 5, Program: /bin/dash
+Id   6266: Priority: 5, Program: /usr/bin/gtk-window-decorator
+Id   6348: Priority: 5, Program: /usr/lib/gnome-applets/gweather-applet-2
+Id   6351: Priority: 5, Program: /usr/lib/gnome-applets/trashapplet
+Id   6359: Priority: 5, Program: /usr/lib/gnome-applets/mixer_applet2
+Id   6363: Priority: 5, Program: /usr/lib/fast-user-switch-applet/fast-user-switch-applet
+Id   6411: Priority: 5, Program: /usr/bin/theide-svn
+Id   6496: Priority: 5, Program: /usr/bin/python2.5
+Id   7571: Priority: 5, Program: /bin/bash
+Id   7572: Priority: 5, Program: /home/100Aplicaciones/exe/demo
+
+Press enter to end...
