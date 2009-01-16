@@ -345,9 +345,23 @@ void RegisterDrawPaintingFn(void (*fn)(ImageBuffer& ib, const Painting& pw, Size
 
 void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 {
-	if(DrawPaintingFn) {
-		Size sz = target.GetSize();
+	if(!DrawPaintingFn)
+		return;
+	Size sz = target.GetSize();
+	if((sz.cx > 2000 || sz.cy > 1500) && IsPrinter()) {
+		int yy = 0;
+		while(yy < sz.cy) {
+			int ccy = min(sz.cy - yy, 100);
+			ImageBuffer ib(sz.cx, ccy);
+			Fill(~ib, RGBAZero(), ib.GetLength());
+			DrawPaintingFn(ib, pw, sz, Point(0, yy));
+			DrawImageBandRLE(*this, target.left, target.top + yy, ib, 16);
+			yy += ccy;
+		}
+	}
+	else {
 		ImageBuffer ib(sz);
+		Fill(~ib, RGBAZero(), ib.GetLength());
 		DrawPaintingFn(ib, pw, sz, Point(0, 0));
 		DrawImage(target.left, target.top, ib);
 	}

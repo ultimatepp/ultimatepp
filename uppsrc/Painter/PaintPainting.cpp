@@ -227,8 +227,8 @@ void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos)
 {
 	BufferPainter sw(ib);
 	Sizef psz = p.GetSize();
-	sw.Scale(sz.cx / psz.cx, sz.cy / psz.cy);
 	sw.Translate(-pos.x, -pos.y);
+	sw.Scale(sz.cx / psz.cx, sz.cy / psz.cy);
 	sw.Paint(p);
 }
 
