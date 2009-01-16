@@ -3,6 +3,7 @@ description "Report example";
 uses
 	CtrlLib,
 	Report,
+	Painter,
 	Painter;
 
 file
