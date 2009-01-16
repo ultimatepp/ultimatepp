@@ -1,0 +1,6 @@
+#ifndef _Automation_demo_console_icpp_init_stub
+#define _Automation_demo_console_icpp_init_stub
+#include "Core/init"
+#include "Automation/init"
+#include "SysInfo/init"
+#endif
