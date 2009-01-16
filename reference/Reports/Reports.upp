@@ -2,7 +2,8 @@ description "Report example";
 
 uses
 	CtrlLib,
-	Report;
+	Report,
+	Painter;
 
 file
 	main.cpp;
