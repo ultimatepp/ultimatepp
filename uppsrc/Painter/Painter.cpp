@@ -72,9 +72,10 @@ void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const 
 
 void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
-	Move(x1, y1);
-	Line(x2, y2);
-	Stroke(width, color);
+	double h = width / 2;
+	Move(x1 + h, y1 + h);
+	Line(x2 + h, y2 + h);
+	Stroke(max(width, 0), color);
 }
 
 void Painter::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
@@ -94,6 +95,10 @@ void Painter::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color
 
 void Painter::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
+	Sizef sz = r.GetSize();
+	Ellipse(r.left + sz.cx / 2, r.top + sz.cy / 2, sz.cx / 2, sz.cy / 2);
+	Fill(color);
+	Stroke(max(pen, 0), pencolor);
 }
 
 void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)

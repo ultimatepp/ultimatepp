@@ -24,7 +24,7 @@ file
 	Mask.cpp,
 	Painting.h,
 	Painting.cpp,
-	PaintPainting.cpp,
+	PaintPainting.icpp,
 	agg readonly separator,
 	agg_array.h,
 	agg_alpha_mask_u8.h,
