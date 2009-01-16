@@ -110,7 +110,7 @@ inline void BufferPainter::MinMax(Pointf& minv, Pointf& maxv, Pointf p) const
 bool BufferPainter::PathVisible(double w) const
 {
 	Pointf h = pathattr.mtx.Transformed(w, w);
-	w = max(abs(h.x), abs(h.y));
+	w = max(fabs(h.x), fabs(h.y));
 	Pointf min;
 	Pointf max;
 	min = max = pathattr.mtx.Transformed(pathrect.TopLeft());

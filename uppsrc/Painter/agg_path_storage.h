@@ -933,7 +933,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    template<class VC> 
+/*    template<class VC> 
     void path_base<VC>::arc_to(double rx, double ry,
                                double angle,
                                bool large_arc_flag,
@@ -979,7 +979,7 @@ namespace agg
             move_to(x, y);
         }
     }
-
+*/
     //------------------------------------------------------------------------
     template<class VC> 
     void path_base<VC>::arc_rel(double rx, double ry,
