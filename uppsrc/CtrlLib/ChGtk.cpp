@@ -985,6 +985,23 @@ void ChHostSkin()
 			s.overthumb = m != GetGTK(w, 0, 0, "slider", GTK_SLIDER|GTK_VAL1, 16, 32) && engine != "Qt";
 			gtk_widget_destroy(w);
 			gtk_object_sink(adj);
+			
+			w = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
+			Setup(w);
+			int cx = GtkInt(w, "slider-length");
+			int cy = 15;
+			if(engine == "Glider")
+				cy += cx-3;
+			if(engine == "Human" || engine == "DarkRoom" || engine == "Crux")
+				cy = 13;
+			CtrlImg::Set("hthumb",GetGTK(w, 0, 0, "hscale", GTK_SLIDER, cx, cy));
+			CtrlImg::Set("hthumb1",GetGTK(w, 2, 0, "hscale", GTK_SLIDER, cx, cy));
+			gtk_widget_destroy(w);
+			w = gtk_hscale_new_with_range(0.0, 100.0, 1.0);
+			Setup(w);
+			CtrlImg::Set("vthumb",GetGTK(w, 0, 0, "vscale", GTK_SLIDER|GTK_VAL1, cy, cx));
+			CtrlImg::Set("vthumb1",GetGTK(w, 2, 0, "vscale", GTK_SLIDER|GTK_VAL1, cy, cx));
+			gtk_widget_destroy(w);
 
 		}
 	}
