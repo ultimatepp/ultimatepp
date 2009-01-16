@@ -26,7 +26,7 @@ static inline double ft_dbl(int p)
     return double(p) / 64.0;
 }
 
-bool RenderOutline(const FT_Outline& outline, SDraw& path)
+bool RenderOutline(const FT_Outline& outline, Painter& path, double xx, double yy)
 {
 	FT_Vector   v_last;
 	FT_Vector   v_control;
@@ -65,7 +65,7 @@ bool RenderOutline(const FT_Outline& outline, SDraw& path)
 			point--;
 			tags--;
 		}
-		path.MoveTo(ft_dbl(v_start.x), -ft_dbl(v_start.y));
+		path.Move(ft_dbl(v_start.x) + xx, -ft_dbl(v_start.y) + yy);
 		while(point < limit) {
 			point++;
 			tags++;
@@ -73,7 +73,7 @@ bool RenderOutline(const FT_Outline& outline, SDraw& path)
 			tag = FT_CURVE_TAG(tags[0]);
 			switch(tag) {
 			case FT_CURVE_TAG_ON:
-				path.LineTo(ft_dbl(point->x), -ft_dbl(point->y));
+				path.Line(ft_dbl(point->x) + xx, -ft_dbl(point->y) + yy);
 				continue;
 			case FT_CURVE_TAG_CONIC:
 				v_control.x = point->x;
@@ -88,20 +88,20 @@ bool RenderOutline(const FT_Outline& outline, SDraw& path)
 					vec.x = point->x;
 					vec.y = point->y;
 					if(tag == FT_CURVE_TAG_ON) {
-						path.Quadratic(ft_dbl(v_control.x), -ft_dbl(v_control.y),
-						               ft_dbl(vec.x), -ft_dbl(vec.y));
+						path.Quadratic(ft_dbl(v_control.x) + xx, -ft_dbl(v_control.y) + yy,
+						               ft_dbl(vec.x) + xx, -ft_dbl(vec.y) + yy);
 						continue;
 					}
 					if(tag != FT_CURVE_TAG_CONIC) return false;
 					v_middle.x = (v_control.x + vec.x) / 2;
 					v_middle.y = (v_control.y + vec.y) / 2;
-					path.Quadratic(ft_dbl(v_control.x), -ft_dbl(v_control.y),
-					               ft_dbl(v_middle.x), -ft_dbl(v_middle.y));
+					path.Quadratic(ft_dbl(v_control.x) + xx, -ft_dbl(v_control.y) + yy,
+					               ft_dbl(v_middle.x) + xx, -ft_dbl(v_middle.y) + yy);
 					v_control = vec;
 					goto Do_Conic;
 				}
-				path.Quadratic(ft_dbl(v_control.x), -ft_dbl(v_control.y),
-				               ft_dbl(v_start.x), -ft_dbl(v_start.y));
+				path.Quadratic(ft_dbl(v_control.x) + xx, -ft_dbl(v_control.y) + yy,
+				               ft_dbl(v_start.x) + xx, -ft_dbl(v_start.y) + yy);
 				goto Close;
 
 			default:
@@ -118,14 +118,14 @@ bool RenderOutline(const FT_Outline& outline, SDraw& path)
 					FT_Vector vec;
 					vec.x = point->x;
 					vec.y = point->y;
-					path.Cubic(ft_dbl(vec1.x), -ft_dbl(vec1.y),
-					           ft_dbl(vec2.x), -ft_dbl(vec2.y),
-					           ft_dbl(vec.x), -ft_dbl(vec.y));
+					path.Cubic(ft_dbl(vec1.x) + xx, -ft_dbl(vec1.y) + yy,
+					           ft_dbl(vec2.x) + xx, -ft_dbl(vec2.y) + yy,
+					           ft_dbl(vec.x) + xx, -ft_dbl(vec.y) + yy);
 					continue;
 				}
-				path.Cubic(ft_dbl(vec1.x), -ft_dbl(vec1.y),
-				           ft_dbl(vec2.x), -ft_dbl(vec2.y),
-				           ft_dbl(v_start.x), -ft_dbl(v_start.y));
+				path.Cubic(ft_dbl(vec1.x) + xx, -ft_dbl(vec1.y) + yy,
+				           ft_dbl(vec2.x) + xx, -ft_dbl(vec2.y) + yy,
+				           ft_dbl(v_start.x) + xx, -ft_dbl(v_start.y) + yy);
 				goto Close;
 			}
 		}
@@ -136,13 +136,13 @@ bool RenderOutline(const FT_Outline& outline, SDraw& path)
 	return true;
 }
 
-void RenderCharacter(Painter& sw, int ch, Font fnt)
+void Painter::CharacterOp(double x, double y, int ch, Font fnt)
 {
 	FontInfo fi = fnt.Info();
 	FT_Face face = XftLockFace(fi.GetXftFont());
 	int glyph_index = FT_Get_Char_Index(face, ch);
 	if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0)
-		RenderOutline(face->glyph->outline, sw);
+		RenderOutline(face->glyph->outline, *this, x, y);
 	XftUnlockFace(fi.GetXftFont());
 }
 

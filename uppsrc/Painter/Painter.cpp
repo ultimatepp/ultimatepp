@@ -187,7 +187,7 @@ Matrix2D GetImageLineMatrix(double x1, double y1, double x2, double y2, const Im
 	Matrix2D m;
 	Size sz = image.GetSize();
 	m.scale(agg::calc_distance(x1, y1, x2, y2) / sz.cx);
-	if(abs(x2 - x1) < abs(y2 - y1) * 1e-6)
+	if(fabs(x2 - x1) < fabs(y2 - y1) * 1e-6)
 		m.rotate(y2 > y1 ? M_PI_2 : -M_PI_2);
 	else
 		m.rotate(atan((y2 - y1) / (x2 - x1)));
