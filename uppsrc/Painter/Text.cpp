@@ -4,7 +4,6 @@ NAMESPACE_UPP
 
 void Painter::TextOp(double x, double y, const wchar *text, Font fnt, int n, double *dx)
 {
-	RTIMING("Text");
 	FontInfo fi = fnt.Info();
 	if(n < 0)
 		n = wstrlen(text);

@@ -73,7 +73,6 @@ struct sMakeCharOutline : LRUCache<String, FontChar>::Maker {
 
 	FontChar Key() const     { return fc; }
 	int      Make(String& s) const {
-		RTIMING("Make");
 		static ScreenDraw w;
 		w.SetFont(fc.fnt);
 		GLYPHMETRICS gm;

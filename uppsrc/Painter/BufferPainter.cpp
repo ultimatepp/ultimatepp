@@ -2,8 +2,6 @@
 
 NAMESPACE_UPP
 
-#define LTIMING(x) RTIMING(x)
-
 void BufferPainter::ClearOp(const RGBA& color)
 {
 	Upp::Fill(~buffer, color, buffer.GetLength());

@@ -93,7 +93,6 @@ void PaintingPainter::StrokeOp(double width, const RGBA& color)
 	Put(PAINTING_STROKE_SOLID);
 	Putf(width);
 	Put(color);
-	DDUMP(Color(color));
 }
 
 void PaintingPainter::StrokeOp(double width, const Image& image, const Matrix2D& transsrc, dword flags)
