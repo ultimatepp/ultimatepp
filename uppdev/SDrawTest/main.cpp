@@ -553,6 +553,19 @@ GUI_APP_MAIN
 {
 	SetDefaultCharset(CHARSET_WIN1250);
 
+	PaintingPainter p(500, 800);
+	p.Clear(White());
+	p.Opacity(0.5);
+	PaintLion(&p, NULL);
+
+	PrinterJob job;
+	if(job.Execute()){
+		Draw &draw = job;
+		draw.StartPage();
+		draw.DrawPainting(0, 0, 4000, 6000, p);
+		draw.EndPage();
+	}
+
 //	BenchmarkImageFill();
 
 #ifndef _DEBUG
