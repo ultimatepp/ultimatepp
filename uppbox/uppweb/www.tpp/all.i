@@ -82,11 +82,11 @@ TOPIC("vsstd$en-us")
 #include "vsstd$en-us.tppi"
 END_TOPIC
 
-TOPIC("download$en-us")
-#include "download$en-us.tppi"
-END_TOPIC
-
 TOPIC("examples$en-us")
 #include "examples$en-us.tppi"
+END_TOPIC
+
+TOPIC("download$en-us")
+#include "download$en-us.tppi"
 END_TOPIC
 
