@@ -60,7 +60,6 @@ bool Painter::IsPaintingOp(const Rect& r) const
 
 void Painter::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
-	RTIMING("Rect");
 	RectPath(x, y, cx, cy);
 	Fill(color);
 }
