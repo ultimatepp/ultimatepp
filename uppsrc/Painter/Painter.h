@@ -99,6 +99,7 @@ protected:
 	virtual void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
 	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
 		                    Color ink, int n, const int *dx);
+	virtual void DrawPaintingOp(const Rect& target, const Painting& w);
 
 protected:
 	virtual void   ClearOp(const RGBA& color) = 0;
@@ -144,6 +145,7 @@ protected:
 	virtual void   MiterLimitOp(double l) = 0;
 	virtual void   EvenOddOp(bool evenodd) = 0;
 	virtual void   DashOp(const Vector<double>& dash, double start = 0) = 0;
+	virtual void   NoAAOp(bool noaa) = 0;
 
 	virtual void   TransformOp(const Matrix2D& m) = 0;
 
@@ -229,6 +231,7 @@ public:
 	Painter& EvenOdd(bool evenodd);
 	Painter& Dash(const Vector<double>& dash, double start = 0);
 	Painter& Dash(const char *dash, double start = 0);
+	Painter& NoAA(bool noaa = true);
 
 	void   Transform(const Matrix2D& m);
 

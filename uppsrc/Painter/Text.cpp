@@ -8,7 +8,6 @@ void Painter::TextOp(double x, double y, const wchar *text, Font fnt, int n, dou
 	FontInfo fi = fnt.Info();
 	if(n < 0)
 		n = wstrlen(text);
-	y += fi.GetAscent();
 	while(n) {
 		int ch = *text++;
 		Character(x, y, ch, fnt);

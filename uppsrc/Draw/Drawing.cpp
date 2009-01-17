@@ -381,6 +381,13 @@ static void wsDrawDrawing(Draw& w, Stream& s, const DrawingPos& ps) {
 	w.DrawDrawing(ps(rc), dw);
 }
 
+static void wsDrawPainting(Draw& w, Stream& s, const DrawingPos& ps) {
+	Painting dw;
+	Rect rc;
+	s % dw % rc;
+	w.DrawPainting(ps(rc), dw);
+}
+
 static void wsDrawLine(Draw& w, Stream& s, const DrawingPos& ps) {
 	int x1, y1, x2, y2, width;
 	Color color;
@@ -591,6 +598,7 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 			Register(DRAWRECT, wsDrawRect);
 			Register(DRAWIMAGE, wsDrawImage);
 			Register(DRAWDRAWING, wsDrawDrawing);
+			Register(DRAWPAINTING, wsDrawPainting);
 			Register(DRAWLINE, wsDrawLine);
 			Register(DRAWELLIPSE, wsDrawEllipse);
 			Register(DRAWTEXT, wsDrawText);
@@ -637,6 +645,11 @@ void DrawingDraw::DrawDrawingOp(const Rect& target, const Drawing& w)
 {
 	DrawingOp(DRAWDRAWING) % const_cast<Drawing&>(w) % const_cast<Rect&>(target);
 	return;
+}
+
+void DrawingDraw::DrawPaintingOp(const Rect& target, const Painting& w)
+{
+	DrawingOp(DRAWPAINTING) % const_cast<Painting&>(w) % const_cast<Rect&>(target);
 }
 
 void Draw::DrawDrawing(int x, int y, int cx, int cy, const Drawing& w) {

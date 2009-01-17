@@ -162,6 +162,12 @@ inline Painter& Painter::Dash(const Vector<double>& dash, double start)
 	return *this;
 }
 
+inline Painter& Painter::NoAA(bool noaa)
+{
+	NoAAOp(noaa);
+	return *this;
+}
+
 inline void Painter::Transform(const Matrix2D& m)
 {
 	TransformOp(m);

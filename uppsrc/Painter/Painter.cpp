@@ -42,6 +42,7 @@ bool Painter::ExcludeClipOp(const Rect& r)
 
 bool Painter::IntersectClipOp(const Rect& r)
 {
+	return true;
 	RectPath(r);
 	Clip();
 	return true;
@@ -120,6 +121,17 @@ void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, 
 	}
 	Text(x, y, text, font, n, ddx);
 	Fill(ink);
+	End();
+}
+
+void Painter::DrawPaintingOp(const Rect& target, const Painting& p)
+{
+	Size sz = target.GetSize();
+	Sizef psz = p.GetSize();
+	Begin();
+	Translate(target.left, target.top);
+	Scale(sz.cx / psz.cx, sz.cy / psz.cy);
+	Paint(p);
 	End();
 }
 

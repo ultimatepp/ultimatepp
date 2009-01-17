@@ -1,15 +1,3 @@
-class Painting {
-	String     cmd;
-	ValueArray data;
-	Sizef      size;
-	
-	friend class PaintingPainter;
-	friend class Painter;
-
-public:
-	Sizef   GetSize() const                { return size; }
-};
-
 enum {
 	PAINTING_EOF,
 	PAINTING_CLEAR,
@@ -51,6 +39,7 @@ enum {
 	PAINTING_MITERLIMIT,
 	PAINTING_EVENODD,
 	PAINTING_DASH,
+	PAINTING_NOAA,
 	
 	PAINTING_TRANSFORM,
 	PAINTING_BEGIN,
@@ -115,6 +104,7 @@ protected:
 	virtual void   MiterLimitOp(double l);
 	virtual void   EvenOddOp(bool evenodd);
 	virtual void   DashOp(const Vector<double>& dash, double start);
+	virtual void   NoAAOp(bool noaa);
 
 	virtual void   TransformOp(const Matrix2D& m);
 
@@ -136,6 +126,3 @@ public:
 	PaintingPainter(double cx, double cy)            { Create(cx, cy); }
 	PaintingPainter(Sizef sz)                        { Create(sz); }
 };
-
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos);
-void PaintImageBuffer(ImageBuffer& ib, const Drawing& p);

@@ -65,6 +65,8 @@ protected:
 	virtual void   MiterLimitOp(double l);
 	virtual void   EvenOddOp(bool evenodd);
 	virtual void   DashOp(const Vector<double>& dash, double start);
+	virtual void NoAAOp(bool noaa);
+
 
 	virtual void   TransformOp(const Matrix2D& m);
 
@@ -122,7 +124,9 @@ private:
 		typedef byte value_type;
 		typedef int  calc_type;
 		typedef agg::const_row_info<RGBA> row_data;
-
+		
+		bool noaa;
+		
 		void attach(ImageBuffer& ib) { buffer = ib; sz = ib.GetSize(); }
 
 		int width()  const { return sz.cx;  }
@@ -195,6 +199,7 @@ private:
 		int                             cliplevel;
 		bool                            hasclip;
 		bool                            mask;
+		bool                            noaa;
 	};
 
 	Attr                          attr;

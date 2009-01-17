@@ -336,11 +336,11 @@ bool Draw::IsPainting(int x, int y, int cx, int cy) const
 	return IsPainting(RectC(x, y, cx, cy));
 }
 
-static void (*sIgfn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos);
-static void (*sIwfn)(ImageBuffer& ib, const Drawing& p);
+static void (*sIgfn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, bool noaa);
+static void (*sIwfn)(ImageBuffer& ib, const Drawing& p, bool noaa);
 
-void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos),
-                           void (*iw)(ImageBuffer& ib, const Drawing& p))
+void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, bool noaa),
+                           void (*iw)(ImageBuffer& ib, const Drawing& p, bool noaa))
 {
 	sIgfn = ig;
 	sIwfn = iw;
@@ -351,21 +351,21 @@ bool HasPainter()
 	return sIgfn && sIwfn;
 }
 
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos)
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos, bool noaa)
 {
 	if(sIgfn)
-		(*sIgfn)(ib, p, sz, pos);
+		(*sIgfn)(ib, p, sz, pos, noaa);
 }
 
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p)
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, bool noaa)
 {
-	PaintImageBuffer(ib, p, ib.GetSize(), Point(0, 0));
+	PaintImageBuffer(ib, p, ib.GetSize(), Point(0, 0), noaa);
 }
 
-void PaintImageBuffer(ImageBuffer& ib, const Drawing& iw)
+void PaintImageBuffer(ImageBuffer& ib, const Drawing& iw, bool noaa)
 {
 	if(sIwfn)
-		(*sIwfn)(ib, iw);
+		(*sIwfn)(ib, iw, noaa);
 }
 
 void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
@@ -378,16 +378,16 @@ void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 		while(yy < sz.cy) {
 			int ccy = min(sz.cy - yy, 100);
 			ImageBuffer ib(sz.cx, ccy);
-			Fill(~ib, RGBAZero(), ib.GetLength());
-			PaintImageBuffer(ib, pw, sz, Point(0, yy));
+			Fill(~ib, White(), ib.GetLength());
+			PaintImageBuffer(ib, pw, sz, Point(0, yy), true);
 			DrawImageBandRLE(*this, target.left, target.top + yy, ib, 16);
 			yy += ccy;
 		}
 	}
 	else {
 		ImageBuffer ib(sz);
-		Fill(~ib, RGBAZero(), ib.GetLength());
-		PaintImageBuffer(ib, pw, sz, Point(0, 0));
+		Fill(~ib, IsPrinter() ? White() : SColorPaper(), ib.GetLength());
+		PaintImageBuffer(ib, pw, sz, Point(0, 0), IsPrinter());
 		DrawImage(target.left, target.top, ib);
 	}
 }

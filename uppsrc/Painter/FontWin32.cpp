@@ -96,7 +96,6 @@ struct sMakeCharOutline : LRUCache<String, FontChar>::Maker {
 
 void Painter::CharacterOp(double x, double y, int ch, Font fnt)
 {
-	RTIMING("Character");
 	String s;
 	INTERLOCKED {
 		static LRUCache<String, FontChar> cache;
@@ -106,7 +105,7 @@ void Painter::CharacterOp(double x, double y, int ch, Font fnt)
 		h.fc.chr = ch;
 		s = cache.Get(h);
 	}
-	RenderCharPath(s, s.GetLength(), *this, x, y);
+	RenderCharPath(s, s.GetLength(), *this, x, y + fnt.Info().GetAscent());
 	EvenOdd(true);
 }
 
