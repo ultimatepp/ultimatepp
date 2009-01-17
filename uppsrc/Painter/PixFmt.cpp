@@ -6,6 +6,8 @@ void BufferPainter::upp_pixfmt::blend_hline(int x, int y, int len, RGBA c, byte 
 {
 	if(c.a == 0) return;
 	RGBA *t = ptr(x, y);
+	if(noaa)
+		cover = cover > 127 ? 255 : 0;
 	if((c.a & cover) == 255) {
 #if 1
 		while(len >= 16) {
@@ -57,6 +59,8 @@ void BufferPainter::upp_pixfmt::blend_solid_hspan(int x, int y, int len,
 	RGBA *e = t + len;
 	while(t < e) {
 		byte cover = *covers++;
+		if(noaa)
+			cover = cover > 127 ? 255 : 0;
 		if((cover & c.a) == 255) // is it worth it?
 			*t++ = c;
 		else
@@ -69,9 +73,14 @@ void BufferPainter::upp_pixfmt::blend_color_hspan(int x, int y, int len, const R
 {
 	RGBA *t = ptr(x, y);
 	RGBA *e = t + len;
+	if(noaa)
+		cover = cover > 127 ? 255 : 0;
 	while(t < e) {
-		if(covers)
+		if(covers) {
 			cover = *covers++;
+			if(noaa)
+				cover = cover > 127 ? 255 : 0;
+		}
 		if((cover & colors->a) == 255)
 			*t = *colors;
 		else

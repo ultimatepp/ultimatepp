@@ -213,6 +213,7 @@ void BufferPainter::FillOp(double fx, double fy, const RGBA& color1,
 {
 	if(inpath)
 		path.close_polygon();
+	pixf.noaa = pathattr.noaa;
 	span_alloc sa;
 	Matrix2D m = pathattr.mtx;
 	m.invert();

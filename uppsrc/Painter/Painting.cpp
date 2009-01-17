@@ -93,6 +93,7 @@ void PaintingPainter::StrokeOp(double width, const RGBA& color)
 	Put(PAINTING_STROKE_SOLID);
 	Putf(width);
 	Put(color);
+	DDUMP(Color(color));
 }
 
 void PaintingPainter::StrokeOp(double width, const Image& image, const Matrix2D& transsrc, dword flags)
@@ -135,6 +136,7 @@ void PaintingPainter::ClipOp()
 void PaintingPainter::CharacterOp(double x, double y, int ch, Font fnt)
 {
 	Put(PAINTING_CHARACTER);
+	Putf(x, y);
 	Put32(ch);
 	Put(fnt);
 }
@@ -202,6 +204,12 @@ void PaintingPainter::DashOp(const Vector<double>& dash, double start)
 	for(int i = 0; i < dash.GetCount(); i++)
 		Putf(dash[i]);
 	Putf(start);
+}
+
+void PaintingPainter::NoAAOp(bool noaa)
+{
+	Put(PAINTING_NOAA);
+	Put(noaa);
 }
 
 void PaintingPainter::TransformOp(const Matrix2D& m)

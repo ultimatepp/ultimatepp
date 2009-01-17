@@ -147,6 +147,7 @@ BufferPainter::BufferPainter(ImageBuffer& ib)
 	attr.dash_start = 0.0;
 	attr.opacity = 1.0;
 	attr.mask = false;
+	attr.noaa = false;
 	pathattr = attr;
 
 	SetRbuf();

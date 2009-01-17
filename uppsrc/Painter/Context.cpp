@@ -23,9 +23,8 @@ void BufferPainter::EndOp()
 void   BufferPainter::TransformOp(const Matrix2D& m)
 {
 	ASSERT_(!inpath, "Cannot change transformation during path definition");
-	pathattr.mtx = m * attr.mtx;
-	if(!inpath)
-		attr.mtx = m * attr.mtx;
+	attr.mtx = m * attr.mtx;
+	pathattr.mtx = attr.mtx;
 }
 
 void BufferPainter::OpacityOp(double o)
@@ -71,6 +70,13 @@ void BufferPainter::DashOp(const Vector<double>& dash, double start)
 		attr.dash <<= dash;
 		attr.dash_start = start;
 	}
+}
+
+void BufferPainter::NoAAOp(bool noaa)
+{
+	pathattr.noaa = noaa;
+	if(!inpath)
+		attr.noaa = noaa;
 }
 
 END_UPP_NAMESPACE

@@ -6,6 +6,7 @@ void BufferPainter::FillOp(const RGBA& c)
 {
 	if(inpath)
 		path.close_polygon();
+	pixf.noaa = pathattr.noaa;
 	RGBA color = c;
 	if(PathVisible(0) && color.a) {
 		if(pathattr.opacity != 1.0) {
@@ -177,6 +178,7 @@ void BufferPainter::FillOp(const Image& image, const Matrix2D& transsrc, dword f
 		path.close_polygon();
 	span_alloc sa;
 
+	pixf.noaa = pathattr.noaa;
 	Matrix2D m = transsrc * pathattr.mtx;
 	m.invert();
 	UppImageAggSpan sg;

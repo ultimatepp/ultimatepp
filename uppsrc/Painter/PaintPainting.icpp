@@ -30,7 +30,7 @@ void Painter::Paint(const Painting& pic)
 {
 	StringStream ss(pic.cmd);
 	Pointf p, p1, p2;
-	Color  c, c1;
+	RGBA  c, c1;
 	Value  v;
 	int    f, ch, n, hasdx;
 	Matrix2D m;
@@ -117,6 +117,7 @@ void Painter::Paint(const Painting& pic)
 			sGet(w, ss);
 			sGet(c, ss);
 			Stroke(w, c);
+			DDUMP((Color)c);
 			break;
 		case PAINTING_STROKE_IMAGE:
 			sGet(w, ss);
@@ -206,6 +207,9 @@ void Painter::Paint(const Painting& pic)
 				Dash(dash, r);
 			}
 			break;
+		case PAINTING_NOAA:
+			NoAA(ss.Get());
+			break;
 		case PAINTING_TRANSFORM:
 			sGet(m, ss);
 			Transform(m);
@@ -223,26 +227,28 @@ void Painter::Paint(const Painting& pic)
 	}
 }
 
-void PaintImageBufferPaintingFn(ImageBuffer& ib, const Painting& p, Size sz, Point pos)
+void PaintImageBufferPaintingFn(ImageBuffer& ib, const Painting& p, Size sz, Point pos, bool noaa)
 {
 	BufferPainter sw(ib);
+	sw.NoAA(noaa);
 	Sizef psz = p.GetSize();
 	sw.Translate(-pos.x, -pos.y);
 	sw.Scale(sz.cx / psz.cx, sz.cy / psz.cy);
 	sw.Paint(p);
 }
 
-void PaintImageBufferDrawingFn(ImageBuffer& ib, const Drawing& iw)
+void PaintImageBufferDrawingFn(ImageBuffer& ib, const Drawing& iw, bool noaa)
 {
 	BufferPainter sw(ib);
+	sw.NoAA(noaa);
 	Sizef sz = ib.GetSize();
 	Size isz = iw.GetSize();
 	sw.Scale(sz.cx / isz.cx, sz.cy / isz.cy);
 	sw.DrawDrawing(0, 0, isz.cx, isz.cy, iw);
 }
 
-void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos),
-                           void (*iw)(ImageBuffer& ib, const Drawing& p));
+void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, bool noaa),
+                           void (*iw)(ImageBuffer& ib, const Drawing& p, bool noaa));
 
 
 INITBLOCK

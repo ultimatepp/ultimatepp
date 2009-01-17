@@ -142,7 +142,7 @@ void Painter::CharacterOp(double x, double y, int ch, Font fnt)
 	FT_Face face = XftLockFace(fi.GetXftFont());
 	int glyph_index = FT_Get_Char_Index(face, ch);
 	if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0)
-		RenderOutline(face->glyph->outline, *this, x, y);
+		RenderOutline(face->glyph->outline, *this, x, y + fnt.Info().GetAscent());
 	XftUnlockFace(fi.GetXftFont());
 }
 

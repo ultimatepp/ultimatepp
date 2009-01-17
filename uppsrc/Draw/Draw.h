@@ -473,10 +473,35 @@ void SColorDkShadow_Write(Color c);
 inline Color InvertColor() { return Color(255, 0); }
 inline Color DefaultInk() { return Black(); } //TODO!
 
+class Painting : AssignValueTypeNo<Painting, 48, Moveable<Painting> >{
+	String     cmd;
+	ValueArray data;
+	Sizef      size;
+	
+	friend class PaintingPainter;
+	friend class Painter;
+
+public:
+	Sizef   GetSize() const                     { return size; }
+
+	void    Clear()                             { size = Null; data.Clear(); cmd.Clear(); }
+	void    Serialize(Stream& s)                { s % cmd % data % size; }
+	bool    IsNullInstance() const              { return data.IsEmpty(); }
+	bool    operator==(const Painting& b) const { return cmd == b.cmd && data == b.data && size == b.size; }
+	unsigned GetHashValue() const               { return CombineHash(cmd, data); }
+	String  ToString() const                    { return "painting " + AsString(size); }
+
+	operator Value() const                      { return RichValue<Painting>(*this); }
+	Painting(const Value& q)                    { *this = RichValue<Painting>::Extract(q); }
+
+	Painting()                                  { size = Null; }
+	Painting(const Nuller&)                     { size = Null; }
+};
+
 bool HasPainter();
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos);
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p);
-void PaintImageBuffer(ImageBuffer& ib, const Drawing& p);
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos, bool noaa = false);
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, bool noaa = false);
+void PaintImageBuffer(ImageBuffer& ib, const Drawing& p, bool noaa = false);
 
 class Draw {
 protected:
@@ -693,6 +718,7 @@ public:
 		DRAWPOLYPOLYLINE    = 16,
 		DRAWPOLYPOLYPOLYGON = 17,
 		DRAWDATA            = 18,
+		DRAWPAINTING        = 19,
 	};
 	typedef void (*Drawer)(Draw&, Stream&, const DrawingPos&);
 
@@ -1064,6 +1090,7 @@ public:
 		                    Color ink, int n, const int *dx);
 
 	virtual void DrawDrawingOp(const Rect& target, const Drawing& w);
+	virtual void DrawPaintingOp(const Rect& target, const Painting& w);
 
 private:
 	Size         size;
