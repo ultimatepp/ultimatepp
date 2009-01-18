@@ -76,7 +76,7 @@ struct UppImageAggSpan {
 			x = minmax(x, 0, maxx);
 		else
 		if(hstyle == FILL_HREFLECT)
-			x = (x + ax) / cx & 1 ? (x + ax) % cx : (ax - x - 1) % cx;
+			x = (x + ax) / cx & 1 ? (ax - x - 1) % cx : (x + ax) % cx;
 		else
 		if(hstyle == FILL_HREPEAT)
 			x = (x + ax) % cx;
@@ -84,7 +84,7 @@ struct UppImageAggSpan {
 			y = minmax(y, 0, maxy);
 		else
 		if(vstyle == FILL_VREFLECT)
-			y = (y + ay) / cy & 1 ? (y + ay) % cy : (ay - y - 1) % cy;
+			y = (y + ay) / cy & 1 ? (ay - y - 1) % cy : (y + ay) % cy;
 		else
 		if(vstyle == FILL_VREPEAT)
 			y = (y + ay) % cy;
