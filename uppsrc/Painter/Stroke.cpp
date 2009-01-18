@@ -2,14 +2,14 @@
 
 NAMESPACE_UPP
 
-BufferPainter::path_storage BufferPainter::MakeStroke(double width)
+BufferPainter::StrokeInfo BufferPainter::BeginStroke(double width)
 {
+	StrokeInfo f;
 	double scl = pathattr.mtx.scale();
 	curved.approximation_scale(scl);
 	curved.angle_tolerance(0.0);
 	if(width * scl > 1.0)
 		curved.angle_tolerance(0.2);
-	path_storage b;
 	if(pathattr.dash.GetCount()) {
 		agg::conv_dash<Curved> dashed(curved);
 		dashed.Set(&pathattr.dash, pathattr.dash_start);
@@ -19,7 +19,7 @@ BufferPainter::path_storage BufferPainter::MakeStroke(double width)
 		curved_stroked.line_cap((agg::line_cap_e)pathattr.cap);
 		curved_stroked.miter_limit(pathattr.miter_limit);
 		curved_stroked.approximation_scale(scl);
-		b.concat_path(curved_stroked);
+		f.path.concat_path(curved_stroked);
 	}
 	else {
 		agg::conv_stroke<Curved> curved_stroked(curved);
@@ -28,47 +28,49 @@ BufferPainter::path_storage BufferPainter::MakeStroke(double width)
 		curved_stroked.line_cap((agg::line_cap_e)pathattr.cap);
 		curved_stroked.miter_limit(pathattr.miter_limit);
 		curved_stroked.approximation_scale(scl);
-		b.concat_path(curved_stroked);
+		f.path.concat_path(curved_stroked);
 	}
-	return b;
+	Swap(f.path, path);
+	f.evenodd = pathattr.evenodd;
+	pathattr.evenodd = false;
+	inpath = false;	
+	return f;
+}
+
+void BufferPainter::EndStroke(StrokeInfo& f)
+{
+	Swap(f.path, path);
+	pathattr.evenodd = f.evenodd;
 }
 
 void BufferPainter::StrokeOp(double width, const RGBA& color)
 {
-	path_storage b = MakeStroke(width);
-	Swap(b, path);
-	inpath = false;
+	StrokeInfo f = BeginStroke(width);
 	Fill(color);
-	Swap(b, path);
+	EndStroke(f);
 }
 
 void BufferPainter::StrokeOp(double width, const Image& image, const Matrix2D& transsrc, dword flags)
 {
-	path_storage b = MakeStroke(width);
-	Swap(b, path);
-	inpath = false;
+	StrokeInfo f = BeginStroke(width);
 	Fill(image, transsrc, flags);
-	Swap(b, path);
+	EndStroke(f);
 }
 
 void BufferPainter::StrokeOp(double width, double x1, double y1, const RGBA& color1,
                              double x2, double y2, const RGBA& color2, int style)
 {
-	path_storage b = MakeStroke(width);
-	Swap(b, path);
-	inpath = false;
+	StrokeInfo f = BeginStroke(width);
 	Fill(x1, y1, color1, x2, y2, color2, style);
-	Swap(b, path);
+	EndStroke(f);
 }
 
 void BufferPainter::StrokeOp(double width, double fx, double fy, const RGBA& color1,
                              double x, double y, double r, const RGBA& color2, int style)
 {
-	path_storage b = MakeStroke(width);
-	Swap(b, path);
-	inpath = false;
+	StrokeInfo f = BeginStroke(width);
 	Fill(fx, fy, color1, x, y, r, color2, style);
-	Swap(b, path);
+	EndStroke(f);
 }
 
 END_UPP_NAMESPACE

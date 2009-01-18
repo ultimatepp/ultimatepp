@@ -224,6 +224,11 @@ private:
 	Rectf                         pathrect;
 	Pointf                        current, ccontrol, qcontrol;
 	
+	struct StrokeInfo {
+		bool         evenodd;
+		path_storage path;
+	};
+	
 	void   PathPoint0(double x, double y);
 	void   PathPoint(double& x, double& y, bool rel);
 	void   EndPoint(double& x, double& y, bool rel);
@@ -231,7 +236,8 @@ private:
 	bool   PathVisible(double d) const;
 	Pointf Current() const        { return current; }
 	Rectf  PathRect() const       { return pathrect; }
-	path_storage MakeStroke(double width);
+	StrokeInfo BeginStroke(double width);
+	void   EndStroke(StrokeInfo& f);
 	Pointf ReadPoint(CParser& p, bool rel);
 	void   RenderClip(byte *t);
 	void   MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx);
