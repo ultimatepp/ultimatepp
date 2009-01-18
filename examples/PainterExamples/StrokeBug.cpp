@@ -11,10 +11,12 @@ void StrokeBug(Painter& sw)
 	sw.Translate(-300, 0);
 	sw.Text(100, 100, txt, fnt)
 	  .Stroke(10, 100, 100, Blue(), 100 + tsz.cx, 100, LtRed())
-	  .Stroke(0.25, White()); // _DBG_
-	sw.Path("M 100 100 L 200 100 L 180 90 L 180 120").Stroke(25, Blue());
+	  .Stroke(0.25, White());
+	sw.Path("M 100 100 L 200 100 L 210 90 L 220 40 L 230 90 L 240 100 L 400 100")
+	  .EvenOdd(true)
+	  .Stroke(24, Blue());
 }
 
 INITBLOCK {
-	RegisterExample("Stroke bug", StrokeBug);
+	RegisterExample("Stroke bug (fixed)", StrokeBug);
 }
