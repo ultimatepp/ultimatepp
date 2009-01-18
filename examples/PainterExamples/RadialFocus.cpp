@@ -32,8 +32,8 @@ void RadialFocusRepeat(Painter& sw)
 }
 
 INITBLOCK {
-	RegisterExample("Radial gradient with focus", RadialFocus);
-	RegisterExample("Radial gradient with focus - PAD", RadialFocusPad);
-	RegisterExample("Radial gradient with focus - REFLECT", RadialFocusReflect);
-	RegisterExample("Radial gradient with focus - REPEAT", RadialFocusRepeat);
+	RegisterExample("Radial gradient - focus", RadialFocus);
+	RegisterExample("Radial gradient - focus - PAD", RadialFocusPad);
+	RegisterExample("Radial gradient - focus - REFLECT", RadialFocusReflect);
+	RegisterExample("Radial gradient - focus - REPEAT", RadialFocusRepeat);
 }
