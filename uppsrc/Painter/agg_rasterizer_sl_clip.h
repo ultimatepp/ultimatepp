@@ -35,7 +35,7 @@ namespace agg
         }
         static int xi(int v) { return v; }
         static int yi(int v) { return v; }
-        static int upscale(double v) { STIMING("upscale"); return iround(v * poly_subpixel_scale); }
+        static int upscale(double v) { return iround(v * poly_subpixel_scale); }
         static int downscale(int v)  { return v; }
     };
 

@@ -107,24 +107,24 @@ void PaintingPainter::StrokeOp(double width, const Image& image, const Matrix2D&
 void PaintingPainter::StrokeOp(double width, double x1, double y1, const RGBA& color1, double x2, double y2, const RGBA& color2, int style)
 {
 	Put(PAINTING_STROKE_GRADIENT);
-	Put(color1);
-	Put(color2);
-	Put(style);
 	Putf(width);
 	Putf(x1, y1);
+	Put(color1);
 	Putf(x2, y2);
+	Put(color2);
+	Put(style);
 }
 
 void PaintingPainter::StrokeOp(double width, double fx, double fy, const RGBA& color1, double x, double y, double r, const RGBA& color2, int style)
 {
 	Put(PAINTING_STROKE_RADIAL);
-	Put(color1);
-	Put(color2);
-	Put(style);
 	Putf(width);
 	Putf(fx, fy);
+	Put(color1);
 	Putf(x, y);
 	Putf(r);
+	Put(color2);
+	Put(style);
 }
 
 void PaintingPainter::ClipOp()
