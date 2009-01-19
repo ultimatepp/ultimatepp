@@ -7,6 +7,11 @@ SqlCol SqlCol::As(const char *as) const
 	return name + SqlCase(MSSQL | PGSQL, " as ")(" ") + as;
 }
 
+SqlCol SqlId::Of(const char *of) const
+{
+	return of + ('.' + ToString());
+}
+
 SqlCol SqlId::Of(SqlId id) const
 {
 	return id.IsNull() ? ToString() : id.ToString() + '.' + ToString();
