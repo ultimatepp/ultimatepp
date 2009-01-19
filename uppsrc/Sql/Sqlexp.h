@@ -104,6 +104,7 @@ public:
 	String        operator~() const          { return ToString(); }
 
 	SqlCol        Of(SqlId id) const;
+	SqlCol        Of(const char *of) const;
 	SqlId         As(const char *as) const;
 	SqlId         As(SqlId id) const         { return As(~~id); }
 	SqlId         operator[](int i) const;
@@ -483,6 +484,7 @@ public:
 
 	operator SqlSet() const                           { return SqlSet(text, SqlSet::SETOP); }
 	operator SqlStatement() const                     { return SqlStatement(text); }
+	SqlVal   AsValue() const                          { return SqlVal(text, SqlVal::LOW); }
 
 	SqlSelect(Fields f);
 	SqlSelect(const SqlSet& s)                        { text = ~s; }
