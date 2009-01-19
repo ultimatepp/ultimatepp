@@ -101,7 +101,7 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        void add_cells(int x, unsigned len, const cover_type* covers)
+        /*void add_cells(int x, unsigned len, const cover_type* covers)
         {
             memcpy(m_cover_ptr, covers, len * sizeof(cover_type));
             if(x == m_last_x+1 && m_cur_span->len > 0)
@@ -118,7 +118,7 @@ namespace agg
             m_cover_ptr += len;
             m_last_x = x + len - 1;
         }
-
+*/
         //--------------------------------------------------------------------
         void add_span(int x, unsigned len, unsigned cover)
         {
