@@ -213,7 +213,7 @@ void PaintLion(Painter& sw)
 	
 	for(int i = 0; i < 10; i++) {
 		sw.Begin();
-			sw.Opacity(1 - (i + 1) / 10.0);
+			sw.Opacity(0.5);
 			sw.Translate(600, 200);
 			sw.Rotate(i / 10.0 * M_2PI);
 			sw.Rectangle(0, 0, 200, 500)
