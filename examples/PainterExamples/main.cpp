@@ -26,6 +26,20 @@ struct App : TopWindow {
 	SplitterFrame  split;
 	ArrayCtrl      list;
 	
+	virtual bool Key(dword key, int count)
+	{
+		if(key == K_CTRL_P) {
+			PaintingPainter sw(1000, 1000);
+			sw.Clear(White());
+			if(list.IsCursor())
+				Examples()[list.GetCursor()].example(sw);
+			PrinterJob pb;
+			if(pb.Execute())
+				pb.GetDraw().DrawPainting(0, 0, 4000, 4000, sw);
+		}
+		return TopWindow::Key(key, count);
+	}
+	
 	virtual void Paint(Draw& w)
 	{
 		ImageBuffer ib(GetSize());
