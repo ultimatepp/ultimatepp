@@ -36,6 +36,24 @@ struct App : TopWindow {
 			PrinterJob pb;
 			if(pb.Execute())
 				pb.GetDraw().DrawPainting(0, 0, 4000, 4000, sw);
+			return true;
+		}
+		if(key == K_CTRL_B) {
+			int time;
+			int time0 = GetTickCount();
+			int n = 0;
+			for(;;) {
+				time = GetTickCount();
+				if(time - time0 > 1000) break;
+				ImageBuffer ib(GetSize());
+				BufferPainter sw(ib);
+				sw.Clear(White());
+				if(list.IsCursor())
+					Examples()[list.GetCursor()].example(sw);
+				n++;
+			}
+			PromptOK("Benchmark: " + AsString(double(time - time0) / n) + " ms");
+			return true;
 		}
 		return TopWindow::Key(key, count);
 	}
