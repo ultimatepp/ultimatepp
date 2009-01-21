@@ -49,6 +49,7 @@ void BufferPainter::upp_pixfmt::blend_hline(int x, int y, int len, RGBA c, byte 
 		while(t < e)
 			AlphaBlend(*t++, c);
 	}
+	FinishBlend();
 }
 
 void BufferPainter::upp_pixfmt::blend_solid_hspan(int x, int y, int len,
@@ -56,6 +57,10 @@ void BufferPainter::upp_pixfmt::blend_solid_hspan(int x, int y, int len,
 {
 	if(c.a == 0) return;
 	RGBA *t = ptr(x, y);
+#ifdef USE_MMX
+	AlphaBlendCover((dword *)t, *(dword *)&c, covers, len);
+	return;
+#else
 	RGBA *e = t + len;
 	while(t < e) {
 		byte cover = *covers++;
@@ -64,8 +69,10 @@ void BufferPainter::upp_pixfmt::blend_solid_hspan(int x, int y, int len,
 		if((cover & c.a) == 255) // is it worth it?
 			*t++ = c;
 		else
-			AlphaBlend(*t++, MulA(c, cover));
+			AlphaBlendCover(*t++, c, cover);
 	}
+#endif
+	FinishBlend();
 }
 
 void BufferPainter::upp_pixfmt::blend_color_hspan(int x, int y, int len, const RGBA *colors,
@@ -87,10 +94,11 @@ void BufferPainter::upp_pixfmt::blend_color_hspan(int x, int y, int len, const R
 		if(cover == 255)
 			AlphaBlend(*t, *colors);
 		else
-			AlphaBlend(*t, MulA(*colors, cover));
+			AlphaBlendCover(*t, *colors, cover);
 		colors++;
 		t++;
 	}
+	FinishBlend();
 }
 
 END_UPP_NAMESPACE
