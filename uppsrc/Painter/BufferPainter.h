@@ -1,4 +1,4 @@
-//#define USE_MMX
+// #define USE_MMX
 
 inline RGBA Mul8(const RGBA& s, int mul)
 {

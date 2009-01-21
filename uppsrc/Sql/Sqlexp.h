@@ -489,6 +489,8 @@ public:
 	SqlSelect(Fields f);
 	SqlSelect(const SqlSet& s)                        { text = ~s; }
 	SqlSelect()                                       {}
+#define E__QSelect(I)   SqlSelect(__List##I(E__SqlVal));
+__Expand(E__QSelect);
 
 	bool IsEmpty()                                    { return text.IsEmpty(); }
 

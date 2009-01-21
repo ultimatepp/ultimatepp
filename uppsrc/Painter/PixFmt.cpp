@@ -58,8 +58,10 @@ void BufferPainter::upp_pixfmt::blend_solid_hspan(int x, int y, int len,
 	if(c.a == 0) return;
 	RGBA *t = ptr(x, y);
 #ifdef USE_MMX
-	AlphaBlendCover((dword *)t, *(dword *)&c, covers, len);
-	return;
+	if(!noaa) {
+		AlphaBlendCover((dword *)t, *(dword *)&c, covers, len);
+		return;
+	}
 #else
 	RGBA *e = t + len;
 	while(t < e) {
