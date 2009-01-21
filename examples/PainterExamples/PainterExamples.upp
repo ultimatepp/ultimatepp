@@ -22,6 +22,7 @@ file
 	TextStrokeGradient.cpp,
 	MaskBlending.cpp,
 	RadialMaskBlending.cpp,
+	RichText.cpp,
 	StrokeBug.cpp,
 	Test.iml;
 
