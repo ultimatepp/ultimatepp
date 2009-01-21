@@ -162,6 +162,14 @@ SqlSelect::SqlSelect(Fields f) {
 
 #define E__SCat(I)       set.Cat(p##I)
 
+#define E__QSqlSelectF(I) \
+SqlSelect::SqlSelect(__List##I(E__SqlVal)) { \
+	SqlSet set; \
+	__List##I(E__SCat); \
+	text = ~set; \
+}
+__Expand(E__QSqlSelectF);
+
 #define E__QSelectF(I) \
 SqlSelect Select(__List##I(E__SqlVal)) { \
 	SqlSet set; \
