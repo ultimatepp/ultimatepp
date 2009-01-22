@@ -24,6 +24,7 @@ file
 	RadialMaskBlending.cpp,
 	RichText.cpp,
 	StrokeBug.cpp,
+	Examples.lay,
 	Test.iml;
 
 mainconfig
