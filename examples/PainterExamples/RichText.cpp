@@ -73,6 +73,7 @@ void RichTextExample(Painter& sw)
 	ParseQTF(qtf).Paint(sw, 10, 10, 5000);
 }
 
-INITBLOCK {
+INITBLOCK
+{
 	RegisterExample("RichText", RichTextExample);
 }

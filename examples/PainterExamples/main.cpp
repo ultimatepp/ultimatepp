@@ -25,14 +25,24 @@ void RegisterExample(const char *name, void (*ex)(Painter& pw))
 struct App : TopWindow {
 	SplitterFrame  split;
 	ArrayCtrl      list;
+	FrameBottom< WithCtrlLayout<StaticRect> > ctrl;
+	
+	void DoPaint(Painter& sw)
+	{
+		sw.Translate(~ctrl.translate_x, ~ctrl.translate_y);
+		sw.Scale(~ctrl.scale);
+		sw.Rotate(~ctrl.rotate);
+		sw.Opacity(~ctrl.opacity);
+		sw.Clear(White());
+		if(list.IsCursor())
+			Examples()[list.GetCursor()].example(sw);
+	}
 	
 	virtual bool Key(dword key, int count)
 	{
 		if(key == K_CTRL_P) {
 			PaintingPainter sw(1000, 1000);
-			sw.Clear(White());
-			if(list.IsCursor())
-				Examples()[list.GetCursor()].example(sw);
+			DoPaint(sw);
 			PrinterJob pb;
 			if(pb.Execute())
 				pb.GetDraw().DrawPainting(0, 0, 4000, 4000, sw);
@@ -47,9 +57,7 @@ struct App : TopWindow {
 				if(time - time0 > 1000) break;
 				ImageBuffer ib(GetSize());
 				BufferPainter sw(ib);
-				sw.Clear(White());
-				if(list.IsCursor())
-					Examples()[list.GetCursor()].example(sw);
+				DoPaint(sw);
 				n++;
 			}
 			PromptOK("Benchmark: " + AsString(double(time - time0) / n) + " ms");
@@ -62,15 +70,50 @@ struct App : TopWindow {
 	{
 		ImageBuffer ib(GetSize());
 		BufferPainter sw(ib);
-		sw.Clear(White());
-		if(list.IsCursor())
-			Examples()[list.GetCursor()].example(sw);
+		DoPaint(sw);
 		w.DrawImage(0, 0, ib);
 	}
 	
 	void Sync()
 	{
 		Refresh();
+	}
+	
+	void ToSlider(EditDouble *e, SliderCtrl *slider)
+	{
+		double v = ~*e;
+		*slider <<= fround(1000.0 * (v - e->GetMin()) / (e->GetMax() - e->GetMin()));
+		Refresh();
+	}
+	
+	void ToEdit(EditDouble *e, SliderCtrl *slider)
+	{
+		int x = ~*slider;
+		*e <<= x * (e->GetMax() - e->GetMin()) / 1000.0 + e->GetMin();
+		Refresh();
+	}
+	
+	void Pair(EditDouble& e, SliderCtrl& slider)
+	{
+		e <<= THISBACK2(ToSlider, &e, &slider);
+		slider <<= THISBACK2(ToEdit, &e, &slider);
+		slider.MinMax(0, 1000);
+	}
+
+	void ToSlider()
+	{
+		ToSlider(&ctrl.rotate, &ctrl.rotate_slider);
+		ToSlider(&ctrl.scale, &ctrl.scale_slider);
+		ToSlider(&ctrl.translate_x, &ctrl.translate_x_slider);
+		ToSlider(&ctrl.translate_y, &ctrl.translate_y_slider);
+		ToSlider(&ctrl.opacity, &ctrl.opacity_slider);
+	}
+	
+	void Reset()
+	{
+		ctrl.rotate <<= ctrl.translate_x <<= ctrl.translate_y <<= 0;
+		ctrl.scale <<= ctrl.opacity <<= 1.0;
+		ToSlider();
 	}
 	
 	typedef App CLASSNAME;
@@ -86,6 +129,15 @@ struct App : TopWindow {
 		list.FindSetCursor(LoadFile(ConfigFile("last")));
 		Sync();
 		Sizeable().Zoomable();
+		ctrl.Height(ctrl.GetLayoutSize().cy);
+		CtrlLayout(ctrl);
+		list.InsertFrame(0, ctrl);
+		Reset();
+		Pair(ctrl.rotate, ctrl.rotate_slider);
+		Pair(ctrl.scale, ctrl.scale_slider);
+		Pair(ctrl.translate_x, ctrl.translate_x_slider);
+		Pair(ctrl.translate_y, ctrl.translate_y_slider);
+		Pair(ctrl.opacity, ctrl.opacity_slider);		
 	}
 	~App()
 	{
