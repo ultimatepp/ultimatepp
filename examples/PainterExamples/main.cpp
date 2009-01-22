@@ -30,40 +30,37 @@ struct App : TopWindow {
 	void DoPaint(Painter& sw)
 	{
 		sw.Translate(~ctrl.translate_x, ~ctrl.translate_y);
-		sw.Scale(~ctrl.scale);
 		sw.Rotate(~ctrl.rotate);
+		sw.Scale(~ctrl.scale, (double)~ctrl.scale * (double)~ctrl.scale_x);
 		sw.Opacity(~ctrl.opacity);
 		sw.Clear(White());
 		if(list.IsCursor())
 			Examples()[list.GetCursor()].example(sw);
 	}
 	
-	virtual bool Key(dword key, int count)
+	void Print()
 	{
-		if(key == K_CTRL_P) {
-			PaintingPainter sw(1000, 1000);
+		PaintingPainter sw(1000, 1000);
+		DoPaint(sw);
+		PrinterJob pb;
+		if(pb.Execute())
+			pb.GetDraw().DrawPainting(0, 0, 4000, 4000, sw);
+	}
+	
+	void Benchmark()
+	{
+		int time;
+		int time0 = GetTickCount();
+		int n = 0;
+		for(;;) {
+			time = GetTickCount();
+			if(time - time0 > 1000) break;
+			ImageBuffer ib(GetSize());
+			BufferPainter sw(ib);
 			DoPaint(sw);
-			PrinterJob pb;
-			if(pb.Execute())
-				pb.GetDraw().DrawPainting(0, 0, 4000, 4000, sw);
-			return true;
+			n++;
 		}
-		if(key == K_CTRL_B) {
-			int time;
-			int time0 = GetTickCount();
-			int n = 0;
-			for(;;) {
-				time = GetTickCount();
-				if(time - time0 > 1000) break;
-				ImageBuffer ib(GetSize());
-				BufferPainter sw(ib);
-				DoPaint(sw);
-				n++;
-			}
-			PromptOK("Benchmark: " + AsString(double(time - time0) / n) + " ms");
-			return true;
-		}
-		return TopWindow::Key(key, count);
+		PromptOK("Benchmark: " + AsString(double(time - time0) / n) + " ms");
 	}
 	
 	virtual void Paint(Draw& w)
@@ -104,6 +101,7 @@ struct App : TopWindow {
 	{
 		ToSlider(&ctrl.rotate, &ctrl.rotate_slider);
 		ToSlider(&ctrl.scale, &ctrl.scale_slider);
+		ToSlider(&ctrl.scale_x, &ctrl.scale_x_slider);
 		ToSlider(&ctrl.translate_x, &ctrl.translate_x_slider);
 		ToSlider(&ctrl.translate_y, &ctrl.translate_y_slider);
 		ToSlider(&ctrl.opacity, &ctrl.opacity_slider);
@@ -112,7 +110,7 @@ struct App : TopWindow {
 	void Reset()
 	{
 		ctrl.rotate <<= ctrl.translate_x <<= ctrl.translate_y <<= 0;
-		ctrl.scale <<= ctrl.opacity <<= 1.0;
+		ctrl.scale <<= ctrl.scale_x <<= ctrl.opacity <<= 1.0;
 		ToSlider();
 	}
 	
@@ -135,9 +133,13 @@ struct App : TopWindow {
 		Reset();
 		Pair(ctrl.rotate, ctrl.rotate_slider);
 		Pair(ctrl.scale, ctrl.scale_slider);
+		Pair(ctrl.scale_x, ctrl.scale_x_slider);
 		Pair(ctrl.translate_x, ctrl.translate_x_slider);
 		Pair(ctrl.translate_y, ctrl.translate_y_slider);
-		Pair(ctrl.opacity, ctrl.opacity_slider);		
+		Pair(ctrl.opacity, ctrl.opacity_slider);
+		ctrl.reset <<= THISBACK(Reset);
+		ctrl.benchmark <<= THISBACK(Benchmark);
+		ctrl.print <<= THISBACK(Print);
 	}
 	~App()
 	{
