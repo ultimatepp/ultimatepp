@@ -27,7 +27,8 @@ public:
 	};	
 	static const Style& StyleDefault();		
 	static const Style& StyleDefaultVert();		
-	
+
+	enum { TIMEID_HIGHLIGHT = ParentCtrl::TIMEID_COUNT, TIMEID_COUNT };
 private:
 	Size			minsize;
 	Size			maxsize;
@@ -40,7 +41,7 @@ private:
 	const Style    *style;
 	
 	DockCont       *GetContainer() const;
-	
+	void			StopHighlight() 				{ Refresh(); }
 public:
 	Callback1<Bar&> WhenMenuBar;
 
@@ -85,6 +86,7 @@ public:
 	int 			GetDockAlign() const;
 	
 	void			Highlight();
+	void			TimedHighlight(int ms);
 	
 	DockableCtrl();
 };

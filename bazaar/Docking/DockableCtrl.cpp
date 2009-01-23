@@ -70,7 +70,13 @@ void DockableCtrl::Highlight()
 {
 	if (!GetParent() || !IsOpen()) return;
 	ViewDraw v(this); 
-	ChPaint(v, GetSize(), GetStyle().highlight);	
+	ChPaint(v, GetSize(), GetStyle().highlight[1]);	
+}
+
+void DockableCtrl::TimedHighlight(int ms)
+{
+	Highlight();
+	SetTimeCallback(ms, THISBACK(StopHighlight), TIMEID_HIGHLIGHT);
 }
 
 DockableCtrl::DockableCtrl()

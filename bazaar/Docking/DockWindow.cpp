@@ -126,7 +126,8 @@ void DockWindow::ActivateDockableChild(Ctrl& c)
 
 void DockWindow::Activate(DockableCtrl& dc)
 {
-	if (dc.IsVisible() && dc.IsOpen()) return;
+	if (dc.IsVisible() && dc.IsOpen()) 
+		return dc.TimedHighlight(200);
 	DockCont *c = GetContainer(dc);
 	if (!c)
 		c = CreateContainer(dc);
@@ -216,10 +217,7 @@ void DockWindow::RestoreDockerPos(DockableCtrl& dc, bool savefirst)
 	if (savefirst)
 		SaveDockerPos(dc);
 	if (pi.state == DockCont::STATE_NONE) {
-		if (dc.IsVisible())
-			Float(dc, dc.GetScreenRect().TopLeft());
-		else
-			Float(dc);
+		Float(dc);
 		return;
 	}	
 	
@@ -591,6 +589,7 @@ void DockWindow::AutoHideContainer(int align, DockCont& c)
 
 void DockWindow::CloseContainer(DockCont& c)
 {
+	c.SetAllDockerPos();
 	c.Clear(); 
 	Detach(c);
 	DestroyContainer(c);	

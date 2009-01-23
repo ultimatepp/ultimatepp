@@ -332,12 +332,16 @@ void DockPane::Dock(Ctrl& newctrl, Size sz, int ps, bool animate, bool save)
 	int cnt = pos.GetCount();
 	if (!cnt) animate = false;
 	int tsz = cnt ? ClientToPos(sz) : 10000;
-	ps = min(ps, cnt-1);
+	ps = min(ps, cnt);
 	if (ps >= 0) {
-		Ctrl *c = GetFirstChild();
-		for (int i = 0; i < ps; i++)
-			c = c->GetNext();
-		Ctrl::AddChildBefore(&newctrl, c);
+		if (ps && ps == cnt)
+			Ctrl::AddChild(&newctrl, GetLastChild());
+		else {			
+			Ctrl *c = GetFirstChild();
+			for (int i = 0; i < ps; i++)
+				c = c->GetNext();
+			Ctrl::AddChildBefore(&newctrl, c);
+		}
 		pos.Insert(ps);
 		pos[ps] = (ps > 0) ? pos[ps-1] : 0;
 	}

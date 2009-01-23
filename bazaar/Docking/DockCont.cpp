@@ -536,13 +536,18 @@ void DockCont::GetGroups(Vector<String>& groups)
 
 void DockCont::SetAllDockerPos()
 {
-	DockWindow::PosInfo& pi = Single<DockWindow::PosInfo>();
+	DockWindow::PosInfo pi;
+	bool posset = false;
 	for (int i = 0; i < GetCount(); i++) {
 		Value v = tabbar.Get(i);
 		if (IsDockCont(v))
 			ContCast(v)->SetAllDockerPos();
-		else
-			base->SetDockerPosInfo(*DockCast(v), pi);
+		else {
+			DockableCtrl &dc = *DockCast(v);
+			if (!posset)
+				base->SaveDockerPos(dc, pi);
+			base->SetDockerPosInfo(dc, pi);
+		}
 	}
 }
 
