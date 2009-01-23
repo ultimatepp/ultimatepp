@@ -378,6 +378,7 @@ namespace agg
     template<class Clip> 
     void rasterizer_scanline_aa<Clip>::line_to(int x, int y)
     {
+        RTIMING("line_to");
         m_clipper.line_to(m_outline, 
                           conv_type::downscale(x), 
                           conv_type::downscale(y));
@@ -399,6 +400,7 @@ namespace agg
     template<class Clip> 
     void rasterizer_scanline_aa<Clip>::line_to_d(double x, double y) 
     { 
+        RTIMING("line_to_d");
         m_clipper.line_to(m_outline, 
                           conv_type::upscale(x), 
                           conv_type::upscale(y)); 
