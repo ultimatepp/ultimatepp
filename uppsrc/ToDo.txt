@@ -1,3 +1,21 @@
+TODO:
+
+Major issues
+
+09/01/23:
+	SqlExp - caching of prepared statements
+	Decimal class
+	Socket in the Core
+	TheIDE - colored prints
+	       - macros
+	       - improve THISBACKs
+	       - improve virtuals
+	       - svn sync in initial dialog
+	mutable lock!
+
+
+
+===================
 mutable and ONCELOCK!
 
 Shell_NotifyIconA and NOTIFYICONDATAA.
@@ -28,7 +46,6 @@ Linux:
 
 Core:
 	Date format: http://www.ultimatepp.org/forum/index.php?t=pmsg_view&&id=1494
-	Merssene twister for GUID
 
 CtrlLib/CtrlCore:
 	Dialog icon only if really needed (?)

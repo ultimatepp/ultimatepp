@@ -158,7 +158,14 @@ inline Painter& Painter::EvenOdd(bool evenodd)
 
 inline Painter& Painter::Dash(const Vector<double>& dash, double start)
 {
-	DashOp(dash, start);
+	if(dash.GetCount() & 1) {
+		Vector<double> dash1;
+		dash1.Append(dash);
+		dash1.Append(dash);
+		DashOp(dash1, start);
+	}
+	else
+		DashOp(dash, start);
 	return *this;
 }
 

@@ -167,10 +167,9 @@ struct UppRadialSpan {
 			interpolator.coordinates(&x, &y);
 			int h;
 			if(focus) {
-				x >>= 8;
-				y >>= 8;
-				double dx = x - cx - fx;
-				double dy = y - cy - fy;
+				const double q256 = 1 / 256.0;
+				double dx = q256 * x - cx - fx;
+				double dy = q256 * y - cy - fy;
 				if(dx == 0 && dy == 0)
 					h = 0;
 				else {
