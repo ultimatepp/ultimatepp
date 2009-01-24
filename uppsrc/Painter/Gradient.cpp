@@ -27,7 +27,7 @@ void BufferPainter::ClearStopsOp()
 	}
 }
 
-void   BufferPainter::MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx)
+void BufferPainter::MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx)
 {
 	int l = 0;
 	RGBA cl = color1;
@@ -59,8 +59,9 @@ void   BufferPainter::MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx)
 void BufferPainter::FillOp(double x1, double y1, const RGBA& color1,
                            double x2, double y2, const RGBA& color2, int style)
 {
-	ImageBuffer ib(2048, 1); // adapt size according to bound rect
-	MakeGradient(ib, color1, color2, 2048);
+	int n = max(2, int((abs(pathrect.GetWidth()) + abs(pathrect.GetHeight())) * pathattr.mtx.scale()));
+	ImageBuffer ib(n, 1);
+	MakeGradient(ib, color1, color2, n);
 	Fill(ib, x1, y1, x2, y2, FILL_VPAD | FILL_FAST | 
 	     (style == GRADIENT_PAD ? FILL_HPAD : style == GRADIENT_REPEAT
 	                                        ? FILL_HREPEAT : FILL_HREFLECT));

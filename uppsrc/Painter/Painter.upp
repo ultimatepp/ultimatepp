@@ -40,7 +40,6 @@ file
 	agg_curves.cpp,
 	agg_dda_line.h,
 	agg_gamma_functions.h,
-	agg_image_accessors.h,
 	agg_image_filters.h,
 	agg_image_filters.cpp,
 	agg_math.h,

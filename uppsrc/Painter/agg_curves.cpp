@@ -13,9 +13,7 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include <math.h>
-#include "agg_curves.h"
-#include "agg_math.h"
+#include "Painter.h"
 
 namespace agg
 {
@@ -231,6 +229,7 @@ namespace agg
                             double x2, double y2, 
                             double x3, double y3)
     {
+        PAINTER_TIMING("curve3_div::bezier");
         m_points.add(point_d(x1, y1));
         recursive_bezier(x1, y1, x2, y2, x3, y3, 0);
         m_points.add(point_d(x3, y3));

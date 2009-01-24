@@ -103,6 +103,8 @@ void RichEdit::StyleKeys()
 
 void RichEdit::ApplyStyleKey(int i)
 {
+	if(i < 0 || i >= 20)
+		return;
 	const StyleKey& k = stylekey[i];
 	if(!IsNull(k.styleid)) {
 		int q = style.FindKey(k.styleid);
@@ -130,6 +132,14 @@ void RichEdit::ApplyStyleKey(int i)
 		paper <<= k.paper;
 		SetPaper();
 	}
+}
+
+RichEdit::StyleKey::StyleKey()
+{
+	styleid = Null;
+	height = Null;
+	ink = Null;
+	paper = Null;
 }
 
 END_UPP_NAMESPACE

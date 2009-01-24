@@ -153,6 +153,7 @@ namespace agg
     void render_scanline_aa(const Scanline& sl, BaseRenderer& ren, 
                             SpanAllocator& alloc, SpanGenerator& span_gen)
     {
+        PAINTER_TIMING("render_scanline_aa");
         int y = sl.y();
 
         unsigned num_spans = sl.num_spans();
@@ -437,6 +438,7 @@ namespace agg
     template<class Rasterizer, class Scanline, class Renderer>
     void render_scanlines(Rasterizer& ras, Scanline& sl, Renderer& ren)
     {
+        PAINTER_TIMING("render_scanlines");
         if(ras.rewind_scanlines())
         {
             sl.reset(ras.min_x(), ras.max_x());
