@@ -95,6 +95,7 @@ struct sMakeCharOutline : LRUCache<String, FontChar>::Maker {
 
 void Painter::CharacterOp(double x, double y, int ch, Font fnt)
 {
+	PAINTER_TIMING("CharacterOp");
 	String s;
 	INTERLOCKED {
 		static LRUCache<String, FontChar> cache;
