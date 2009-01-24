@@ -490,6 +490,7 @@ struct AssistEditor : CodeEditor {
 
 void DirSel(EditField& f, FrameRight<Button>& b);
 bool CopyFolder(const char *dst, const char *src, Progress *pi);
+void SvnSyncDirs(const Vector<String>& working);
 
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext {
 public:
