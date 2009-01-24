@@ -622,6 +622,7 @@ namespace agg
     template<class Cell> 
     void rasterizer_cells_aa<Cell>::sort_cells()
     {
+        PAINTER_TIMING("sort_cells");
         if(m_sorted) return; //Perform sort only the first time.
 
         add_curr_cell();

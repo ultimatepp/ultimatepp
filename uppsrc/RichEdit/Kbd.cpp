@@ -135,7 +135,7 @@ bool RichEdit::Key(dword key, int count)
 			return true;
 		}
 		if(key >= (K_SHIFT|K_ALT_0) && key <= (K_SHIFT|K_ALT_9)) {
-			ApplyStyleKey(key - K_SHIFT|K_ALT_0 + 10);
+			ApplyStyleKey(key - (K_SHIFT|K_ALT_0) + 10);
 			return true;
 		}
 		if(key == K_SHIFT_SPACE)

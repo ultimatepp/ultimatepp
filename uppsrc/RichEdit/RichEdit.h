@@ -341,6 +341,8 @@ private:
 		int    height;
 		Color  ink;
 		Color  paper;
+		
+		StyleKey();
 	};
 	
 	StyleKey   stylekey[20];

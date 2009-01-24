@@ -4,6 +4,7 @@ NAMESPACE_UPP
 
 void BufferPainter::upp_pixfmt::blend_hline(int x, int y, int len, RGBA c, byte cover)
 {
+	PAINTER_TIMING("Blend hline");
 	if(c.a == 0) return;
 	RGBA *t = ptr(x, y);
 	if(noaa)
@@ -55,6 +56,7 @@ void BufferPainter::upp_pixfmt::blend_hline(int x, int y, int len, RGBA c, byte 
 void BufferPainter::upp_pixfmt::blend_solid_hspan(int x, int y, int len,
                                                   const RGBA& c, const byte *covers)
 {
+	PAINTER_TIMING("Blend solid hspan");
 	if(c.a == 0) return;
 	RGBA *t = ptr(x, y);
 #ifdef USE_MMX
@@ -80,6 +82,7 @@ void BufferPainter::upp_pixfmt::blend_solid_hspan(int x, int y, int len,
 void BufferPainter::upp_pixfmt::blend_color_hspan(int x, int y, int len, const RGBA *colors,
                                                   const byte *covers, byte cover)
 {
+	PAINTER_TIMING("Blend color hspan");
 	RGBA *t = ptr(x, y);
 	RGBA *e = t + len;
 	if(noaa)

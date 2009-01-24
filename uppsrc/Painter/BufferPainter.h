@@ -250,8 +250,6 @@ private:
 	typedef agg::renderer_base<pixfmt> renderer_base;
 	typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_solid;
 	typedef agg::span_interpolator_linear<> interpolator_type;
-	typedef agg::image_accessor_clip<pixfmt> img_source_type;
-//	typedef agg::span_image_filter_rgba_bilinear_clip<pixfmt, interpolator_type> span_gen_type;
 	typedef agg::span_allocator<color_type> span_alloc;
 	typedef renderer_base::color_type x;
 	

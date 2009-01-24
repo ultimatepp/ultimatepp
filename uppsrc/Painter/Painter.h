@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 
-#define  STIMING(x)          //   RTIMING(x)
+#define  PAINTER_TIMING(x) // RTIMING(x)
 
 #define  AGGUPP 1
 
@@ -20,7 +20,6 @@
 #include "agg_conv_dash.h"
 #include "agg_span_allocator.h"
 #include "agg_span_interpolator_linear.h"
-#include "agg_image_accessors.h"
 #include "agg_alpha_mask_u8.h"
 
 NAMESPACE_UPP

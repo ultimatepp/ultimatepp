@@ -4,6 +4,7 @@ NAMESPACE_UPP
 
 void BufferPainter::FillOp(const RGBA& c)
 {
+	PAINTER_TIMING("FillOp");
 	if(inpath)
 		path.close_polygon();
 	pixf.noaa = pathattr.noaa;
