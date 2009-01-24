@@ -309,9 +309,8 @@ INITBLOCK {
 	RegisterGlobalConfig("svn-msgs");
 }
 
-void Ide::SyncSvnDirs(const Vector<String>& working)
+void SvnSyncDirs(const Vector<String>& working)
 {
-	SaveFile();
 	SvnSync svn;
 	String msgs;
 	LoadFromGlobal(msgs, "svn-msgs");
@@ -321,6 +320,12 @@ void Ide::SyncSvnDirs(const Vector<String>& working)
 	svn.DoSync();
 	msgs = svn.GetMsgs();
 	StoreToGlobal(msgs, "svn-msgs");
+}
+
+void Ide::SyncSvnDirs(const Vector<String>& working)
+{
+	SaveFile();
+	SvnSyncDirs(working);
 }
 
 void Ide::SyncSvn()

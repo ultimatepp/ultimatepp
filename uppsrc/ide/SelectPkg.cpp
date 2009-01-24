@@ -104,7 +104,6 @@ inline bool PackageLess(String a, String b)
 	return a < b;
 };
 
-
 struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	virtual bool Key(dword key, int count);
 
@@ -162,6 +161,10 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	void           SyncBase(String initvars);
 	void           SyncList();
 	static bool    Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b);
+	
+	Vector<String> GetSvnDirs();
+	void           SyncSvnDir(const String& dir);
+	void           SyncSvnDirs();
 };
 
 bool SelectPackageDlg::Key(dword key, int count)
@@ -267,7 +270,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	all = !main;
 	progress.Hide();
 	brief <<= THISBACK(SyncBrief);
-	search.NullText("Search", StdFont().Italic(), SColorDisabled());
+	search.NullText("Search (Ctrl+Q)", StdFont().Italic(), SColorDisabled());
 	search <<= THISBACK(SyncList);
 	search.SetFilter(CharFilterDefaultToUpperAscii);
 	SyncBrief();
@@ -345,6 +348,30 @@ void SelectPackageDlg::OnNew() {
 	StoreToGlobal(dlg, "NewPackage");
 }
 
+Vector<String> SelectPackageDlg::GetSvnDirs()
+{
+	Vector<String> r;
+	Vector<String> dirs = SplitDirs(GetVar("UPP"));
+	for(int i = 0; i < dirs.GetCount(); i++) {
+		String d = NormalizePath(dirs[i]);
+		if(IsSvnDir(d))
+			r.Add(d);
+	}
+	return r;
+}
+
+void SelectPackageDlg::SyncSvnDir(const String& dir)
+{
+	SvnSyncDirs(Vector<String>() << dir);
+	Load();
+}
+
+void SelectPackageDlg::SyncSvnDirs()
+{
+	SvnSyncDirs(GetSvnDirs());
+	Load();
+}
+
 void SelectPackageDlg::ToolBase(Bar& bar)
 {
 	bar.Add("New assembly", THISBACK(OnBaseAdd))
@@ -353,6 +380,13 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 		.Key(K_CTRL_ENTER);
 	bar.Add(base.IsCursor(), "Remove assembly", THISBACK(OnBaseRemove))
 		.Key(K_CTRL_DELETE);
+	Vector<String> d = GetSvnDirs();
+	if(d.GetCount()) {
+		bar.Separator();
+		for(int i = 0; i < d.GetCount(); i++)
+			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncSvnDir, d[i]));
+		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvnDirs));
+	}
 }
 
 void SelectPackageDlg::OnBaseAdd()
@@ -395,8 +429,7 @@ void SelectPackageDlg::OnBaseRemove()
 void SelectPackageDlg::Load()
 {
 	update = msecs();
-	if(selectvars)
-	{
+	if(selectvars) {
 		list.Enable(base.IsCursor());
 		if(!base.IsCursor())
 			return;
