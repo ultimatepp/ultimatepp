@@ -11,6 +11,13 @@ void Cubic(Painter& sw)
 	  .Stroke(2, Red());
 }
 
+void CubicDashed(Painter& sw)
+{
+	sw.Move(100, 200).Cubic(100, 100, 250, 100, 250, 200).Cubic(400, 300, 400, 200)
+	  .Dash("4")
+	  .Stroke(2, Red());
+}
+
 void Cubics(Painter& sw)
 {
 	sw.Begin();
@@ -32,6 +39,7 @@ void Quadratic(Painter& sw)
 INITBLOCK {
 	RegisterExample("Path: Move, Line, Fill, Stroke", Triangle);
 	RegisterExample("Path: Cubic", Cubic);
+	RegisterExample("Path: Cubic, Dashed stroke", CubicDashed);
 	RegisterExample("Path: Cubics, using Path", Cubics);
 	RegisterExample("Path: Quadratic", Quadratic);
 }
