@@ -558,7 +558,7 @@ Ctrl::Ctrl() {
 	activex = false;
 	isdhctrl = false;
 #endif
-	backpaint = TRANSPARENTBACKPAINT;
+	backpaint = IsCompositedGui() ? FULLBACKPAINT : TRANSPARENTBACKPAINT;
 	inframe = false;
 	ignoremouse = transparent = false;
 	caretcx = caretcy = caretx = carety = 0;

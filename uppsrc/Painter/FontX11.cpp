@@ -138,6 +138,7 @@ bool RenderOutline(const FT_Outline& outline, Painter& path, double xx, double y
 
 void Painter::CharacterOp(double x, double y, int ch, Font fnt)
 {
+	PAINTER_TIMING("CharacterOp");
 	FontInfo fi = fnt.Info();
 	FT_Face face = XftLockFace(fi.GetXftFont());
 	int glyph_index = FT_Get_Char_Index(face, ch);

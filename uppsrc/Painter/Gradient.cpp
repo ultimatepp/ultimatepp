@@ -59,7 +59,8 @@ void BufferPainter::MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx)
 void BufferPainter::FillOp(double x1, double y1, const RGBA& color1,
                            double x2, double y2, const RGBA& color2, int style)
 {
-	int n = max(2, int((abs(pathrect.GetWidth()) + abs(pathrect.GetHeight())) * pathattr.mtx.scale()));
+	int n = max(2, int((fabs(pathrect.GetWidth()) + fabs(pathrect.GetHeight()))
+	                   * pathattr.mtx.scale()));
 	ImageBuffer ib(n, 1);
 	MakeGradient(ib, color1, color2, n);
 	Fill(ib, x1, y1, x2, y2, FILL_VPAD | FILL_FAST | 
