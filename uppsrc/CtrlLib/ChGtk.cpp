@@ -617,7 +617,8 @@ void ChHostSkin()
 
 	gtk_antialias = Nvl(GtkStyleInt("gtk-xft-antialias"), -1);
 	gtk_hinting = Nvl(GtkStyleInt("gtk-xft-hinting"), -1);
-	gtk_hintstyle = GtkStyleString("gtk-xft-hintstyle");
+//	gtk_hintstyle = GtkStyleString("gtk-xft-hintstyle");
+	gtk_hintstyle = gtk_hinting? "hintfull" : "hintnone"; // Gtk does not seem to follow its own rules...
 	gtk_rgba = GtkStyleString("gtk-xft-rgba");
 
 	const char *q = strrchr(font_name, ' ');
