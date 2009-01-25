@@ -23,7 +23,7 @@ file
 	MaskBlending.cpp,
 	RadialMaskBlending.cpp,
 	RichText.cpp,
-	StrokeBug.cpp,
+	Stroke.cpp,
 	Examples.lay,
 	Test.iml;
 
