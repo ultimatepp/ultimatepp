@@ -110,59 +110,69 @@ void   LineEdit::Paint0(Draw& w) {
 					hl[i].paper = color[PAPER_SELECTED];
 					hl[i].ink = color[INK_SELECTED];
 				}
-			int gp = 0;
-			int scx = fsz.cx * sc.x;
-			if(ln >= 0) {
+			for(int pass = 0; pass < 2; pass++) {
+				int gp = 0;
+				int scx = fsz.cx * sc.x;
 				Buffer<wchar> txt(ln);
 				for(int i = 0; i < ln; i++)
 					txt[i] = hl[i].chr;
-				int q = 0;
-				while(q < ln) {
-					Highlight& h = hl[q];
-					if(txt[q] == '\t') {
-						int ngp = (gp + tabsize) / tabsize * tabsize;
-						int l = ngp - gp;
-						LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
-						w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * l, fsz.cy, h.paper);
-						if(showtabs && h.paper != SColorHighlight && q < tx.GetLength()) {
-							Color c = Blend(SColorLight, SColorHighlight);
-							w.DrawRect(gp * fsz.cx - scx + 2, y + fsz.cy / 2,
-							           l * fsz.cx - 4, 1, c);
-							w.DrawRect(ngp * fsz.cx - scx - 3, y + 3,
-							           1, fsz.cy - 6, c);
+				if(ln >= 0) {
+					int q = 0;
+					while(q < ln) {
+						Highlight& h = hl[q];
+						if(txt[q] == '\t') {
+							if(pass == 0) {
+								int ngp = (gp + tabsize) / tabsize * tabsize;
+								int l = ngp - gp;
+								LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
+								w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * l, fsz.cy, h.paper);
+								if(showtabs && h.paper != SColorHighlight && q < tx.GetLength()) {
+									Color c = Blend(SColorLight, SColorHighlight);
+									w.DrawRect(gp * fsz.cx - scx + 2, y + fsz.cy / 2,
+									           l * fsz.cx - 4, 1, c);
+									w.DrawRect(ngp * fsz.cx - scx - 3, y + 3,
+									           1, fsz.cy - 6, c);
+								}
+								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + l)
+									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+								q++;
+								gp = ngp;
+							}
 						}
-						if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + l)
-							w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
-						q++;
-						gp = ngp;
-					}
-					else {
-						bool cjk = IsCJKIdeograph(txt[q]);
-						int p = q + 1;
-						while(p < len && h == hl[p] && txt[p] != '\t' && IsCJKIdeograph(txt[p]) == cjk)
-							p++;
-						int l = p - q;
-						int ll = cjk ? 2 * l : l;
-						LLOG("Highlight -> paper[" << q << "] = " << h.paper);
-						w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * ll, fsz.cy, h.paper);
-						if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + ll)
-							w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
-						if(cjk)
-							dx2.At(l, 2 * fsz.cx);
-						else
-							dx.At(l, fsz.cx);
-						w.DrawText(gp * fsz.cx - scx,
-						           y + fascent - h.font.Info().GetAscent(),
-						           ~txt + q, h.font, h.ink, l, cjk ? dx2 : dx);
-						q = p;
-						gp += ll;
+						else {
+							bool cjk = IsCJKIdeograph(txt[q]);
+							int p = q + 1;
+							while(p < len && h == hl[p] && txt[p] != '\t' && IsCJKIdeograph(txt[p]) == cjk)
+								p++;
+							int l = p - q;
+							int ll = cjk ? 2 * l : l;
+							LLOG("Highlight -> paper[" << q << "] = " << h.paper);
+							if(pass == 0) {
+								w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * ll, fsz.cy, h.paper);
+								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + ll)
+									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+							}
+							else {
+								if(cjk)
+									dx2.At(l, 2 * fsz.cx);
+								else
+									dx.At(l, fsz.cx);
+								w.DrawText(gp * fsz.cx - scx,
+								           y + fascent - h.font.Info().GetAscent(),
+								           ~txt + q, h.font, h.ink, l, cjk ? dx2 : dx);
+							}
+							q = p;
+							gp += ll;
+						}
 					}
 				}
+				if(pass == 0) {
+					int gpx = gp * fsz.cx - scx;
+					w.DrawRect(gpx, y, sz.cx - gpx, fsz.cy, hl.Top().paper);
+					if(bordercolumn > 0 && bordercolumn >= gp)
+						w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+				}
 			}
-			int gpx = gp * fsz.cx - scx;
-			w.DrawRect(gpx, y, sz.cx - gpx, fsz.cy, hl.Top().paper);
-			if(bordercolumn > 0 && bordercolumn >= gp)
-				w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 		}
 		y += fsz.cy;
 		sell -= len + 1;
