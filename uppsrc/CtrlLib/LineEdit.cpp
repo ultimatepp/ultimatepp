@@ -110,21 +110,21 @@ void   LineEdit::Paint0(Draw& w) {
 					hl[i].paper = color[PAPER_SELECTED];
 					hl[i].ink = color[INK_SELECTED];
 				}
+			Buffer<wchar> txt(ln);
+			for(int i = 0; i < ln; i++)
+				txt[i] = hl[i].chr;
 			for(int pass = 0; pass < 2; pass++) {
 				int gp = 0;
 				int scx = fsz.cx * sc.x;
-				Buffer<wchar> txt(ln);
-				for(int i = 0; i < ln; i++)
-					txt[i] = hl[i].chr;
 				if(ln >= 0) {
 					int q = 0;
 					while(q < ln) {
 						Highlight& h = hl[q];
 						if(txt[q] == '\t') {
+							int ngp = (gp + tabsize) / tabsize * tabsize;
+							int l = ngp - gp;
+							LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
 							if(pass == 0) {
-								int ngp = (gp + tabsize) / tabsize * tabsize;
-								int l = ngp - gp;
-								LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
 								w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * l, fsz.cy, h.paper);
 								if(showtabs && h.paper != SColorHighlight && q < tx.GetLength()) {
 									Color c = Blend(SColorLight, SColorHighlight);
@@ -135,9 +135,9 @@ void   LineEdit::Paint0(Draw& w) {
 								}
 								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + l)
 									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
-								q++;
-								gp = ngp;
 							}
+							q++;
+							gp = ngp;
 						}
 						else {
 							bool cjk = IsCJKIdeograph(txt[q]);
