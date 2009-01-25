@@ -163,7 +163,10 @@ static void sPanicMessageBox(const char *title, const char *text)
 	size_hints.height = 120;
 	size_hints.min_width = 600;
 	size_hints.min_height = 120;
-	char *h[1]; h[0] = "";
+	char *h[1];
+	char hh[1];
+	*hh = 0;
+	h[0] = hh;
 	XSetStandardProperties(display, win, title, title, None, h, 0, &size_hints);
 	XSelectInput(display, win, ExposureMask|KeyPressMask|ButtonPressMask|StructureNotifyMask);
 	XGCValues values;
@@ -379,7 +382,7 @@ void Ctrl::InitX11(const char *display)
 
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
 	GUI_DragFullWindow_Write(1);
-	GUI_PopUpEffect_Write(GUIEFFECT_SLIDE);
+	GUI_PopUpEffect_Write(IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
 	GUI_DropShadows_Write(1);
 	GUI_AltAccessKeys_Write(1);
 	GUI_AKD_Conservative_Write(0);
