@@ -65,6 +65,7 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 			for(int i = 0; i < invalid.GetCount(); i++)
 				if(invalid[i].Intersects(WndCaretRect)) {
 					XorCaret();
+					XSync(Xdisplay, false);
 					caret = true;
 					break;
 				}
