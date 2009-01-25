@@ -1239,6 +1239,13 @@ void ChHostSkin()
 		DropEdge_Write(ViewEdge());
 
 	SwapOKCancel_Write(true);
+
+	GUI_GlobalStyle_Write(GUISTYLE_XP);
+	GUI_DragFullWindow_Write(1);
+	GUI_PopUpEffect_Write(Ctrl::IsCompositedGui() ? GUIEFFECT_NONE : GUIEFFECT_SLIDE);
+	GUI_DropShadows_Write(1);
+	GUI_AltAccessKeys_Write(1);
+	GUI_AKD_Conservative_Write(0);
 }
 
 END_UPP_NAMESPACE

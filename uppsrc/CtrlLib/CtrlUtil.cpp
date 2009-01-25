@@ -15,38 +15,39 @@ void Animate(Ctrl& c, const Rect& target, int type)
 		type = GUI_PopUpEffect();
 	Rect r0 = c.GetRect();
 	dword time0 = GetTickCount();
-	for(;;) {
-		dword t = (GetTickCount() - time0);
-		if(t > 200)
-			break;
-		if(type == GUIEFFECT_SLIDE) {
-			int q = 25 * t / 200;
-			q *= q;
-			Rect r = r0;
-			if(r.left > target.left)
-				r.left = max(r.left - q, target.left);
-			if(r.top > target.top)
-				r.top = max(r.top - q, target.top);
-			if(r.right < target.right)
-				r.right = min(r.right + q, target.right);
-			if(r.bottom < target.bottom)
-				r.bottom = min(r.bottom + q, target.bottom);
-			if(r.GetWidth() > target.GetWidth())
-				r.right = r.left + target.GetWidth();
-			if(r.GetHeight() > target.GetHeight())
-				r.bottom = r.top + target.GetHeight();
-			if(r == target)
+	if(type)
+		for(;;) {
+			dword t = (GetTickCount() - time0);
+			if(t > 200)
 				break;
-			c.SetRect(r);
+			if(type == GUIEFFECT_SLIDE) {
+				int q = 25 * t / 200;
+				q *= q;
+				Rect r = r0;
+				if(r.left > target.left)
+					r.left = max(r.left - q, target.left);
+				if(r.top > target.top)
+					r.top = max(r.top - q, target.top);
+				if(r.right < target.right)
+					r.right = min(r.right + q, target.right);
+				if(r.bottom < target.bottom)
+					r.bottom = min(r.bottom + q, target.bottom);
+				if(r.GetWidth() > target.GetWidth())
+					r.right = r.left + target.GetWidth();
+				if(r.GetHeight() > target.GetHeight())
+					r.bottom = r.top + target.GetHeight();
+				if(r == target)
+					break;
+				c.SetRect(r);
+			}
+			else
+			if(type == GUIEFFECT_FADE)
+				c.SetAlpha((byte)(255 * t / 200));
+			else
+				break;
+			c.Sync();
+			Sleep(0);
 		}
-		else
-		if(type == GUIEFFECT_FADE)
-			c.SetAlpha((byte)(255 * t / 200));
-		else
-			break;
-		c.Sync();
-		Sleep(0);
-	}
 	c.SetRect(target);
 	c.SetAlpha(255);
 }

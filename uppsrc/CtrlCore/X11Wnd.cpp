@@ -280,6 +280,7 @@ void Ctrl::TimerAndPaint() {
 	}
 	SyncCaret();
 	AnimateCaret();
+	XSync(Xdisplay, false);
 }
 
 bool Ctrl::ProcessEvent(bool *)

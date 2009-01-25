@@ -4,7 +4,7 @@ NAMESPACE_UPP
 
 #ifdef PLATFORM_X11
 
-#define LLOG(x)        //DLOG(x)
+#define LLOG(x)        // DLOG(x)
 
 #define LTIMING(x)     //TIMING(x)
 
@@ -126,18 +126,22 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			while(ev1->type == NoExpose && IsWaitingEvent());
 			LLOG("ev1 type:" << ev1->type << " state:" << ev1->xkey.state <<
 			     "keycode:" << ev1->xkey.keycode);
-			if(ev1->type != KeyRelease ||
-			   ev1->xkey.state != event->xkey.state ||
-			   ev1->xkey.keycode != event->xkey.keycode ||
-			   !IsWaitingEvent()) {
-			   	XPutBackEvent(Xdisplay, ev1);
-			   	break;
+			if(ev1->type == KeyPress)
+				*ev2 = *ev1;
+			else {
+				if(ev1->type != KeyRelease ||
+				   ev1->xkey.state != event->xkey.state ||
+				   ev1->xkey.keycode != event->xkey.keycode ||
+				   !IsWaitingEvent()) {
+				   	XPutBackEvent(Xdisplay, ev1);
+				   	break;
+				}
+				do
+					XNextEvent(Xdisplay, ev2);
+				while(ev2->type == NoExpose && IsWaitingEvent());
+				LLOG("ev2 type:" << ev2->type << " state:" << ev2->xkey.state <<
+				     "keycode:" << ev2->xkey.keycode);
 			}
-			do
-				XNextEvent(Xdisplay, ev2);
-			while(ev2->type == NoExpose && IsWaitingEvent());
-			LLOG("ev2 type:" << ev2->type << " state:" << ev2->xkey.state <<
-			     "keycode:" << ev2->xkey.keycode);
 			if(ev2->type != KeyPress ||
 			   ev2->xkey.state != event->xkey.state ||
 			   ev2->xkey.keycode != event->xkey.keycode) {
