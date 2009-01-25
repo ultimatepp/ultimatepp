@@ -402,6 +402,8 @@ namespace agg
     void rasterizer_scanline_aa<Clip>::line_to_d(double x, double y) 
     { 
         PAINTER_TIMING("line_to_d");
+//        extern int agg_line_counter;
+//        agg_line_counter++;
         m_clipper.line_to(m_outline, 
                           conv_type::upscale(x), 
                           conv_type::upscale(y)); 

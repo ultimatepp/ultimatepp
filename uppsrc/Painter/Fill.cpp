@@ -1,10 +1,13 @@
 #include "Painter.h"
 
+// int agg_line_counter; _DBG_
+
 NAMESPACE_UPP
 
 void BufferPainter::FillOp(const RGBA& c)
 {
 	PAINTER_TIMING("FillOp");
+//	agg_line_counter = 0;
 	if(inpath)
 		path.close_polygon();
 	pixf.noaa = pathattr.noaa;
@@ -36,6 +39,7 @@ void BufferPainter::FillOp(const RGBA& c)
 		}
 	}
 	inpath = false;
+//	DDUMP(agg_line_counter);
 }
 
 struct UppImageAggSpan {
