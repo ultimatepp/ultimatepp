@@ -273,6 +273,7 @@ void Draw::Reset() {
 
 Draw::Draw() {
 	DrawLock __;
+	native = 0;
 	InitColors();
 	InitFonts();
 	actual_offset = Point(0, 0);
@@ -282,6 +283,7 @@ Draw::Draw() {
 
 Draw::Draw(HDC hdc) {
 	DrawLock __;
+	native = 0;
 	InitColors();
 	InitFonts();
 	Reset();

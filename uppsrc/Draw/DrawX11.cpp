@@ -354,6 +354,7 @@ void Draw::Init()
 	device = 0;
 	pixels = true;
 	printer = aborted = backdraw = is_mono = false;
+	native = 0;
 }
 
 void Draw::Init(const Vector<Rect>& _clip, Point _offset)

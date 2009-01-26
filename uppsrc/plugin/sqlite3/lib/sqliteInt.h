@@ -35,18 +35,16 @@
 #include <inttypes.h>
 #endif
 
+#include <stdint.h>
+
 /*
 ** If possible, use the C99 intptr_t type to define an integral type of
 ** equivalent size to a pointer.  (Technically it's >= sizeof(void *), but
 ** practically it's == sizeof(void *)).  We fall back to an int if this type
 ** isn't defined.
 */
-#ifdef HAVE_INTPTR_T
-  typedef intptr_t sqlite3_intptr_t;
-#else
-  typedef int sqlite3_intptr_t;
-#endif
 
+typedef intptr_t sqlite3_intptr_t;
 
 /*
 ** The macro unlikely() is a hint that surrounds a boolean
