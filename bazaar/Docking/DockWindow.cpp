@@ -377,6 +377,7 @@ DockCont *DockWindow::GetReleasedContainer(DockableCtrl& dc)
 
 void DockWindow::SyncContainer(DockCont& c)
 {
+	c.ToolWindow(childtoolwindows);	
 	c.Grouping(grouping);
 	c.WindowButtons(menubtn, hidebtn, closebtn);
 	c.SyncButtons();
@@ -1412,6 +1413,12 @@ DockWindow::DockWindow()
 	tabtext = true;
 	tabalign = false;
 	frameorder = true;
+
+#ifdef PLATFORM_WIN32
+	childtoolwindows = true;
+#else
+	childtoolwindows = false;
+#endif
 	
 	for (int i = 0; i < 4; i++) {
 		dockframe[i].Set(dockpane[i], 0, i);

@@ -787,9 +787,6 @@ DockCont::DockCont()
 	animating = false;
 	usersize.cx = usersize.cy = Null;
 	BackPaint();
-#ifdef PLATFORM_WIN32
-	ToolWindow();
-#endif
 	NoCenter().Sizeable(true).MaximizeBox(false).MinimizeBox(false);
 
 	tabbar.AutoHideMin(1);

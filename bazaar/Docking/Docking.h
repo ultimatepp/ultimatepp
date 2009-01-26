@@ -114,6 +114,7 @@ private:
 	bool tabtext;
 	bool tabalign;
 	bool frameorder;
+	bool childtoolwindows;
 	dword nesttoggle;
 	String layoutbackup;
 	int  dockframepos;
@@ -230,6 +231,9 @@ public:
 	bool            HasMenuButtons() const          { return menubtn; } 
 	bool            HasHideButtons() const          { return hidebtn; }
 	bool            HasCloseButtons() const         { return closebtn; }
+	
+	void			ChildToolWindows(bool v = true)	{ childtoolwindows = v; SyncAll(); }
+	bool			HasToolWindows() const			{ return childtoolwindows; }
 	
 	DockableCtrl&   Register(DockableCtrl& dc); 
 	void            Deregister(DockableCtrl& dc);
