@@ -164,7 +164,7 @@ void HomeBudget::Setup()
 	about <<= THISBACK(About);
 	help <<= THISBACK(Help);
 
-	category.AlwaysDrop().Resizeable(false).Header(false);
+	category/*.AlwaysDrop()*/.Resizeable(false).Header(false);
 	category.AddPlus(THISBACK(NewCategory));
 
 	dosummary = true;
