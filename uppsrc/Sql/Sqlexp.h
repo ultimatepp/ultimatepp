@@ -491,6 +491,7 @@ public:
 	SqlSelect()                                       {}
 #define E__QSelect(I)   SqlSelect(__List##I(E__SqlVal));
 __Expand(E__QSelect);
+#undef  E__QSelect
 
 	bool IsEmpty()                                    { return text.IsEmpty(); }
 
@@ -516,6 +517,7 @@ inline SqlSelect Select(Fields f)           { return SqlSelect(f); }
 
 #define E__QSelect(I)   SqlSelect Select(__List##I(E__SqlVal));
 __Expand(E__QSelect);
+#undef  E__QSelect
 
 class SqlDelete {
 	String text;

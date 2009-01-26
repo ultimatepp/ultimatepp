@@ -265,6 +265,8 @@ GridCtrl::GridCtrl() : holder(*this)
 	enabled = true;
 	sync_flag = 0;
 	paint_flag = 0;
+	
+	ctrlpos.y = -1; // cxl 09/01/26, valgrind uninitialized variable
 }
 
 GridCtrl::~GridCtrl()
@@ -1912,7 +1914,7 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 			Item& it = GetItem(r, c);
 			if(it.rcx > 0 || it.rcy > 0)
 			{
-				popup.text = r == 0 ? it.val : GetStdConvertedColumn(c, it.val);
+				popup.text = r == 0 ? it.val : (Value)GetStdConvertedColumn(c, it.val);
 				Point p = GetMousePos();
 				Point p0 = GetMouseViewPos();
 				int x = hitems[c].npos + p.x - p0.x - 1 - sbx.Get();

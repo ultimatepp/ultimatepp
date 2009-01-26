@@ -79,8 +79,8 @@ file
 	lib\select.c,
 	lib\sqlite3.h,
 	lib\sqlite3ext.h,
-	lib\sqliteInt.h,
 	lib\sqliteLimit.h,
+	lib\sqliteInt.h,
 	lib\table.c,
 	lib\tokenize.c,
 	lib\trigger.c,
@@ -98,3 +98,4 @@ file
 	lib\vdbemem.c,
 	lib\vtab.c,
 	lib\where.c;
+
