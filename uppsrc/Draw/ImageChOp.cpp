@@ -319,6 +319,18 @@ int ImageMargin(const Image& _m, int p, int dist)
 	return d + 1;
 }
 
+int ImageMarginV(const Image& _m, int p, int dist)
+{
+	Image m = Unmultiply(_m);
+	Size sz = m.GetSize();
+	Color c = m[sz.cx / 2][p];
+	int d;
+	for(d = p; d >= 0; d--)
+		if(Diff(m[sz.cx / 2][d], c) > dist || Diff(m[sz.cx / 2][sz.cy - d - 1], c) > dist)
+			break;
+	return d + 1;
+}
+
 ChPartMaker::ChPartMaker(const Image& m)
 {
 	image = m;
