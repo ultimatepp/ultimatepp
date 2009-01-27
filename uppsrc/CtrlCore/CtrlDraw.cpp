@@ -234,6 +234,14 @@ struct sDrawLevelCheck {
 #define DOLEVELCHECK
 #endif
 
+void Ctrl::PaintCaret(Draw& w)
+{
+#ifdef PLATFORM_X11
+	if(this == caretCtrl && WndCaretVisible)
+		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
+#endif
+}
+
 void Ctrl::CtrlPaint(Draw& w, const Rect& clip) {
 	LEVELCHECK(w, this);
 	LTIMING("CtrlPaint");
@@ -277,12 +285,14 @@ void Ctrl::CtrlPaint(Draw& w, const Rect& clip) {
 				w.Clip(oview);
 				w.Offset(view.left, view.top);
 				Paint(w);
+				PaintCaret(w);
 				w.End();
 				w.End();
 			}
 			else {
 				w.Clipoff(view);
 				Paint(w);
+				PaintCaret(w);
 				w.End();
 			}
 		}
@@ -350,6 +360,7 @@ bool Ctrl::PaintOpaqueAreas(Draw& w, const Rect& r, const Rect& clip, bool nochi
 		{
 			LEVELCHECK(bw, this);
 			Paint(bw);
+			PaintCaret(bw);
 		}
 		bw.Put(w, opaque.TopLeft());
 	}
@@ -360,6 +371,7 @@ bool Ctrl::PaintOpaqueAreas(Draw& w, const Rect& r, const Rect& clip, bool nochi
 		{
 			LEVELCHECK(w, this);
 			Paint(w);
+			PaintCaret(w);
 		}
 		w.End();
 		w.End();

@@ -313,18 +313,24 @@ bool Ctrl::IsModified() const
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
+#ifdef PLATFORM_X11
+	if(this == caretCtrl)
+		RefreshCaret();
+#endif
 	caretx = x;
 	carety = y;
 	caretcx = cx;
 	caretcy = cy;
+#ifdef PLATFORM_X11
+	WndCaretTime = GetTickCount();
+	if(this == caretCtrl)
+		RefreshCaret();
+#endif
 }
 
 void Ctrl::SetCaret(const Rect& r)
 {
-	caretx = r.left;
-	carety = r.top;
-	caretcx = r.GetWidth();
-	caretcy = r.GetHeight();
+	SetCaret(r.left, r.top, r.GetWidth(), r.GetHeight());
 }
 
 Rect Ctrl::GetCaret() const

@@ -538,6 +538,7 @@ private:
 	void    RefreshAccessKeysDo(bool vis);
 	static  void  DefferedFocusSync();
 	static  void  SyncCaret();
+	static  void  RefreshCaret();
 	static  bool  DispatchKey(dword keycode, int count);
 	void    SetFocusWnd();
 	void    KillFocusWnd();
@@ -556,6 +557,7 @@ private:
 	Rect    GetClippedView();
 	void    ScrollRefresh(const Rect& r, int dx, int dy);
 	void    SyncScroll();
+	void    PaintCaret(Draw& w);
 	void    CtrlPaint(Draw& w, const Rect& clip);
 	void    RemoveFullRefresh();
 	bool    PaintOpaqueAreas(Draw& w, const Rect& r, const Rect& clip, bool nochild = false);
@@ -688,9 +690,7 @@ protected:
 
 private:
 	static ArrayMap<Window, XWindow>& Xwindow();
-	static Ptr<Ctrl> WndCaretCtrl;
 	static int       WndCaretTime;
-	static Rect      WndCaretRect;
 	static bool      WndCaretVisible;
 	static int       Xbuttons;
 	static int       Xbuttontime;
@@ -704,7 +704,6 @@ private:
 	static void     TimerAndPaint();
 	static void     ProcessEvent(XEvent& event);
 	       void     Invalidate(XWindow& xw, const Rect& r);
-	static void     XorCaret();
 	static void     AnimateCaret();
 	       void     DoPaint(const Vector<Rect>& invalid);
 	       void     SetLastActive(XWindow *w, Ctrl *la);
