@@ -6,10 +6,6 @@ Color (*QTFColor[])() = {
 	Black, LtGray, White, Red, Green, Blue, LtRed, WhiteGray, LtCyan, Yellow
 };
 
-Color (*QTFSColor[])()= {
-	SColorText, SColorFace, SColorPaper, Red, Green, Blue, LtRed, WhiteGray, LtCyan, Yellow
-};
-
 Color NullColorF()
 {
 	return Null;
@@ -29,27 +25,12 @@ static Color (*QTFColorL[])() = {
 	/*Y*/LtYellow, /*Z*/White
 };
 
-static Color (*QTFSColorl[])() = { //TODO
-	/*a*/SColorPaper, /*b*/SColorHighlight, /*c*/Cyan, /*d*/SColorPaper, /*e*/SColorPaper, /*f*/SColorPaper, /*g*/ Green, /*h*/SColorPaper,
-	/*i*/SColorPaper, /*j*/SColorPaper, /*k*/SColorText, /*l*/SColorFace, /*m*/Magenta, /*n*/NullColorF, /*o*/Brown, /*p*/SColorPaper,
-	/*q*/SColorPaper, /*r*/Red, /*s*/SColorPaper, /*t*/SColorPaper, /*u*/SColorPaper, /*v*/SColorPaper, /*w*/WhiteGray, /*x*/SColorPaper,
-	/*y*/Yellow, /*z*/ White
-};
-
-static Color (*QTFSColorL[])() = { //TODO
-	/*A*/SColorPaper, /*B*/LtBlue, /*C*/LtCyan, /*D*/SColorPaper, /*E*/SColorPaper, /*F*/SColorPaper, /*G*/LtGreen, /*H*/SColorPaper,
-	/*I*/SColorPaper, /*J*/SColorPaper, /*K*/SColorShadow, /*L*/WhiteGray, /*M*/LtMagenta, /*N*/NullColorF, /*O*/Brown, /*P*/SColorPaper,
-	/*Q*/SColorPaper, /*R*/LtRed, /*S*/SColorPaper, /*T*/SColorPaper, /*U*/SColorPaper, /*V*/SColorPaper, /*W*/SColorPaper, /*X*/SColorPaper,
-	/*Y*/LtYellow, /*Z*/White
-};
-
 int QTFFontHeight[] = {
 	50, 67, 84, 100, 134, 167, 200, 234, 300, 400
 };
 
 class RichQtfParser {
 	const char *term;
-	bool        scolors;
 	WString     text;
 	RichPara    paragraph;
 	RichTable   tablepart;
@@ -115,12 +96,12 @@ public:
 
 	void     Parse(const char *qtf, byte accesskey);
 
-	RichQtfParser(bool scolors);
+	RichQtfParser();
 };
 
 void init_s_nodeqtf();
 
-RichQtfParser::RichQtfParser(bool _scolors)
+RichQtfParser::RichQtfParser()
 {
 	format.Face(Font::ARIAL);
 	format.Height(100);
@@ -130,7 +111,6 @@ RichQtfParser::RichQtfParser(bool _scolors)
 	istable = false;
 	oldtab = false;
 	init_s_nodeqtf();
-	scolors = _scolors;
 }
 
 bool RichQtfParser::Key2(int c, int d)
@@ -211,13 +191,13 @@ Color RichQtfParser::GetColor()
 	}
 	else
 	if(c >= '0' && c <= '9')
-		return (*((scolors ? QTFSColor : QTFColor)[c - '0']))();
+		return QTFColor[c - '0']();
 	else
 	if(c >= 'a' && c <= 'z')
-		return (*((scolors ? QTFSColorl : QTFColorl)[c - 'a']))();
+		return QTFColorl[c - 'a']();
 	else
 	if(c >= 'A' && c <= 'Z')
-		return (*((scolors ? QTFSColorL : QTFColorL)[c - 'A']))();
+		return QTFColorL[c - 'A']();
 	else
 		return Red;
 }
@@ -945,9 +925,9 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 	FlushStyles();
 }
 
-RichText ParseQTF(const char *qtf, bool scolors, byte accesskey)
+RichText ParseQTF(const char *qtf, byte accesskey)
 {
-	RichQtfParser p(scolors);
+	RichQtfParser p;
 	try {
 		p.Parse(qtf, accesskey);
 	}

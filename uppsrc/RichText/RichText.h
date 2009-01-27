@@ -370,7 +370,7 @@ public:
 
 String AsQTF(const RichObject& obj);
 
-RichText ParseQTF(const char *qtf, bool scolors = false, byte accesskey = 0);
+RichText ParseQTF(const char *qtf, byte accesskey = 0);
 
 RichText AsRichText(const wchar *s, const RichPara::Format& f = RichPara::Format());
 
