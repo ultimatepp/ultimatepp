@@ -1059,13 +1059,11 @@ void ChHostSkin()
 				GTK_WIDGET_FLAGS (w) &= GTK_SENSITIVE;
 			if(i == 0) {
 				img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN, "entry", GTK_SHADOW, 20, 20);
-				efm = max(ImageMargin(img, 4, 0), 1);
+				efm = minmax(ImageMarginV(img, 4, 0), 1, 5);
 			}
-			img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN,
-			             "entry", GTK_SHADOW, 2 * efm + 3, 2 * efm + 3);
-			ImageBuffer eb(img);
-			eb.SetHotSpot(Point(efm, efm));
-			s.edge[i] = Image(eb);
+			s.edge[i] = WithHotSpot(GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN,
+			                        "entry", GTK_SHADOW, 2 * efm + 5, 2 * efm + 5), efm, efm);
+			LOGPNG(s.edge[i]);
 			s.activeedge = true;
 			gtk_widget_destroy(w);
 		}

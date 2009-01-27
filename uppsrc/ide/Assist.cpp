@@ -37,7 +37,7 @@ AssistEditor::AssistEditor()
 	InsertFrame(1, navigatorframe);
 	navigatorframe.Left(navigatorpane, HorzLayoutZoom(140));
 
-	int cy = browser.search_scope.GetStdSize().cy;
+	int cy = EditField::GetStdHeight();
 
 	int c2 = cy + 2;
 	scopepane.Add(browser.search_scope.HSizePos(0, 4 * cy + 2).TopPos(0, cy));

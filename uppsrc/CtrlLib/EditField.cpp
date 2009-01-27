@@ -195,13 +195,14 @@ int  EditField::GetCaret(int cursor)
 
 int  EditField::GetViewHeight(Font font)
 {
-	Size sz = Size(font.Info().GetHeight() * 4, font.Info().GetHeight() + 4);
-	return sz.cy;
+	Size sz(0, 0);
+	EditFieldFrame().FrameAddSize(sz);
+	return font.Info().GetHeight() + (sz.cy <= 2 ? 4 : sz.cy <= 4 ? 2 : 0);
 }
 
 int  EditField::GetStdHeight(Font font)
 {
-	Size sz = Size(font.Info().GetHeight() * 4, font.Info().GetHeight() + 4);
+	Size sz = Size(10, GetViewHeight());
 	EditFieldFrame().FrameAddSize(sz);
 	return sz.cy;
 }
