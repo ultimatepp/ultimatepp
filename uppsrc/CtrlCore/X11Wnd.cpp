@@ -40,9 +40,7 @@ ArrayMap<Window, Ctrl::XWindow>& Ctrl::Xwindow()
 	return Single< ArrayMap<Window, XWindow> >();
 }
 
-Ptr<Ctrl> Ctrl::WndCaretCtrl;
 int       Ctrl::WndCaretTime;
-Rect      Ctrl::WndCaretRect;
 bool      Ctrl::WndCaretVisible;
 int       Ctrl::Xbuttons;
 Window    Ctrl::grabWindow, Ctrl::focusWindow;
@@ -60,15 +58,6 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 	if(IsVisible()) {
 		LTIMING("DoPaint");
 		fullrefresh = false;
-		bool caret = false;
-		if(WndCaretCtrl == this && WndCaretVisible)
-			for(int i = 0; i < invalid.GetCount(); i++)
-				if(invalid[i].Intersects(WndCaretRect)) {
-					XorCaret();
-					XSync(Xdisplay, false);
-					caret = true;
-					break;
-				}
 //		if(GLX) return;
 		GC gc = XCreateGC(Xdisplay, (Drawable)top->window, 0, 0);
 		XftDraw *xftdraw = XftDrawCreate(Xdisplay, (Drawable) top->window,
@@ -77,19 +66,12 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 		UpdateArea(draw, draw.GetClip());
 		XftDrawDestroy(xftdraw);
 		XFreeGC(Xdisplay, gc);
-		if(caret)
-			XorCaret();
 	}
 }
 
 void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	if(r.IsEmpty() || !GetWindow()) return;
-	bool caret = false;
-	if(WndCaretCtrl == this && WndCaretVisible && r.Intersects(WndCaretRect)) {
-		caret = true;
-		XorCaret();
-	}
 	int cx = r.Width() - abs(dx);
 	int cy = r.Height() - abs(dy);
 	GC gc = XCreateGC(Xdisplay, GetWindow(), 0, 0);
@@ -105,8 +87,6 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 				ur.Add(xw->invalid[i]);
 	for(int i = 0; i < ur.GetCount(); i++)
 		Invalidate(*xw, ur[i].Offseted(dx, dy));
-	if(caret)
-		XorCaret();
 }
 
 bool Ctrl::IsWaitingEvent()
@@ -802,50 +782,13 @@ void Ctrl::FocusSync()
 	}
 }
 
-void  Ctrl::XorCaret()
-{
-	if(WndCaretCtrl && WndCaretCtrl->top && WndCaretCtrl->top->window) {
-		LTIMING("XorCaret");
-//		DLOG("XorCaret " << WndCaretRect << ", ctrl " << UPP::Name(WndCaretCtrl));
-		GC gc = XCreateGC(Xdisplay, WndCaretCtrl->top->window, 0, 0);
-		XSetFunction(Xdisplay, gc, GXinvert);
-		XFillRectangle(Xdisplay, WndCaretCtrl->top->window, gc,
-		               WndCaretRect.left, WndCaretRect.top,
-		               WndCaretRect.Width(), WndCaretRect.Height());
-		XFreeGC(Xdisplay, gc);
-	}
-	else
-		WndCaretCtrl = NULL;
-}
-
 void  Ctrl::AnimateCaret()
 {
-	if(WndCaretCtrl && WndCaretCtrl->top) {
-		int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
-		if(v != WndCaretVisible) {
-			XorCaret();
-			WndCaretVisible = v;
-		}
+	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
+	if(v != WndCaretVisible) {
+		RefreshCaret();
+		WndCaretVisible = v;
 	}
-}
-
-void Ctrl::WndDestroyCaret()
-{
-	LLOG("WndDestroyCaret vis: " << WndCaretVisible << ", ctrl: " << UPP::Name(WndCaretCtrl));
-	if(WndCaretVisible)
-		XorCaret();
-	WndCaretCtrl = NULL;
-}
-
-void Ctrl::WndCreateCaret(const Rect& cr)
-{
-	LLOG("WndCreateCaret " << cr);
-	WndDestroyCaret();
-	WndCaretCtrl = this;
-	WndCaretRect = cr - GetRect().TopLeft();
-	WndCaretVisible = true;
-	WndCaretTime = GetTickCount();
-	XorCaret();
 }
 
 void Ctrl::Invalidate(XWindow& xw, const Rect& _r)
@@ -997,10 +940,6 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 	Rect r = ctrl->GetScreenView() - top->GetScreenRect().TopLeft();
 	Vector<Rect> clip;
 	clip.Add(r);
-	caret = Ctrl::WndCaretCtrl == ctrl && Ctrl::WndCaretVisible &&
-	        r.Intersects(Ctrl::WndCaretRect);
-	if(caret)
-		Ctrl::XorCaret();
 	dw = top->GetWindow();
 	gc = XCreateGC(Xdisplay, dw, 0, 0);
 #ifdef PLATFORM_XFT
@@ -1013,8 +952,6 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 ViewDraw::~ViewDraw()
 {
 	XFreeGC(Xdisplay, gc);
-	if(caret)
-		Ctrl::XorCaret();
 }
 
 #endif

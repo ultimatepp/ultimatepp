@@ -278,7 +278,21 @@ void Ctrl::DefferedFocusSync()
 	}
 }
 
+void Ctrl::RefreshCaret()
+{
+	if(caretCtrl)
+		caretCtrl->Refresh(caretCtrl->caretx, caretCtrl->carety,
+		                   caretCtrl->caretcx, caretCtrl->caretcy);
+}
+
 void Ctrl::SyncCaret() {
+#ifdef PLATFORM_X11
+	if(focusCtrl != caretCtrl) {
+		RefreshCaret();
+		caretCtrl = focusCtrl;
+		RefreshCaret();
+	}
+#else
 	Rect cr;
 	cr.Clear();
 	if(focusCtrl && focusCtrl->IsVisible()) {
@@ -301,6 +315,7 @@ void Ctrl::SyncCaret() {
 		caretCtrl = focusCtrl;
 		caretRect = cr;
 	}
+#endif
 }
 
 Ctrl *Ctrl::GetActiveWindow()
