@@ -35,14 +35,21 @@
 #include <inttypes.h>
 #endif
 
-#include <stdint.h>
-
 /*
 ** If possible, use the C99 intptr_t type to define an integral type of
 ** equivalent size to a pointer.  (Technically it's >= sizeof(void *), but
 ** practically it's == sizeof(void *)).  We fall back to an int if this type
 ** isn't defined.
 */
+
+#if defined(__GNUC__)
+#include <stdint.h>
+#endif
+
+#ifdef _MSC_VER
+#include <stdlib.h>
+#endif
+
 
 typedef intptr_t sqlite3_intptr_t;
 
