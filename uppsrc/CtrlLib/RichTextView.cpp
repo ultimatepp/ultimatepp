@@ -308,9 +308,9 @@ void  RichTextView::Pick(pick_ RichText& txt, Zoom z) {
 	sb.SetLine(z * 100);
 }
 
-void  RichTextView::SetQTF(const char *qtf, Zoom z, bool scolors)
+void  RichTextView::SetQTF(const char *qtf, Zoom z)
 {
-	Pick(ParseQTF(qtf, scolors), z);
+	Pick(ParseQTF(qtf), z);
 }
 
 RichTextView& RichTextView::PageWidth(int _cx)

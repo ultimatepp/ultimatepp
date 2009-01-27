@@ -50,7 +50,7 @@ public:
 	void            Clear();
 	void            Pick(pick_ RichText& t);
 	void            Pick(pick_ RichText& txt, Zoom z);
-	void            SetQTF(const char *qtf, Zoom z = Zoom(1, 1), bool scolors = false);
+	void            SetQTF(const char *qtf, Zoom z = Zoom(1, 1));
 	const RichText& Get() const                               { return text; }
 	String          GetQTF(byte cs = CHARSET_UTF8) const      { return AsQTF(text, cs); }
 
@@ -104,7 +104,7 @@ public:
 	virtual void  SetData(const Value& v);
 
 public:
-	void            SetQTF(const char *qtf, Zoom z = GetRichTextStdScreenZoom()) { RichTextView::SetQTF(qtf, z, true); }
+	void            SetQTF(const char *qtf, Zoom z = GetRichTextStdScreenZoom()) { RichTextView::SetQTF(qtf, z); }
 	void            operator=(const char *qtf)                                   { SetQTF(qtf); }
 	RichTextCtrl();
 };
