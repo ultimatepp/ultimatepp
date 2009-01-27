@@ -11,13 +11,13 @@ GUI_APP_MAIN
 	String letters = "sSzZEeDNB12345679kKrRLCc";
 	Report r;
 	Size page = r.GetPageSize();
-	r.DrawText(0, 0, letters, fnt);
-	for(int y = isz.cy * 2; y + isz.cy < page.cy; y += isz.cy * 2)
-		for(int x = 0; x < page.cx; x += isz.cx * 2) {
-			int ch = letters[rand() % letters.GetCount()];
+//	r.DrawText(0, 0, letters, fnt);
+	for(int y = 0; y + isz.cy < page.cy; y += 3 * isz.cy / 2)
+		for(int x = 0; x < page.cx; x += 3 * isz.cx / 2) {
+			int ch = letters[Random(letters.GetCount())];
 			PaintingPainter gw(isz.cx, isz.cy);
 			gw.Begin();
-			if((rand() & 3) == 0) {
+			if(Random(4) == 0) {
 				gw.Translate(isz.cx, 0);
 				gw.Scale(-1, 1);
 			}
@@ -26,6 +26,31 @@ GUI_APP_MAIN
 			gw.End();
 			r.DrawPainting(x, y, isz.cx, isz.cy, gw);
 		}
+	r.NewPage();
+	String pairs = "BNDH";
+	for(int y = 0; y + isz.cy < page.cy; y += 3 * isz.cy / 2)
+		for(int x = 0; x < page.cx; x += 3 * isz.cx) {
+			int ch = pairs[Random(pairs.GetCount())];
+			int cl = ToLower(ch);
+			if(Random(3) == 0)
+				cl = ToLower(pairs[Random(pairs.GetCount())]);
+			r.DrawText(x, y, String(ch, 1) + String(cl, 1), fnt);
+		}
+	r.NewPage();
+	for(int i = 0; i < 10; i++) {
+		int a, b;
+		do {
+			a = Random(20) + 1;
+			b = Random(20) + 1;
+		}
+		while(a + b < 0 || a + b > 20);
+		r.DrawText(10, 10 + isz.cy * 2 * i, Format("%d + %d = ", a, b), fnt);
+		do {
+			a = Random(20) + 1;
+			b = Random(20) + 1;
+		}
+		while(a - b < 0);
+		r.DrawText(2000, 10 + isz.cy * 2 * i, Format("%d - %d = ", a, b), fnt);
+	}
 	Perform(r);
 }
-

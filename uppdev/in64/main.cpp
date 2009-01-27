@@ -4,13 +4,15 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+	uint64 a = Random(100), b = Random(100);
+	uint64 c = a * b;
+	uint64 d = b / a;
 	DUMP(sizeof(int *));
 	DUMP(sizeof(int));
 	DUMP(sizeof(dword));
 	DUMP(sizeof(int64));
 
-	int64 a = 1;
-
+/*
 	for(int i = 0; i < 20; i++)
 		Cout() << (a = a * 13) << '\n';
 
@@ -39,4 +41,5 @@ CONSOLE_APP_MAIN
 	DUMP(((int64)x));
 	DUMP(((int64)y));
 	DUMP(((int64)z));
+*/
 }
