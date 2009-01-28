@@ -1,0 +1,13 @@
+uses
+	Core,
+	CtrlLib;
+
+file
+	ScanLine.h,
+	ScanLine.cpp,
+	Rasterizer.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
