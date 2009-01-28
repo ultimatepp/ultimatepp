@@ -1,13 +1,13 @@
 #include "ide.h"
 
-class PrintDlg : public WithPrintLayout<TopWindow> {
-	typedef PrintDlg CLASSNAME;
+class PrinterDlg : public WithPrintLayout<TopWindow> {
+	typedef PrinterDlg CLASSNAME;
 
 public:
-	PrintDlg();
+	PrinterDlg();
 };
 
-PrintDlg::PrintDlg()
+PrinterDlg::PrinterDlg()
 {
 	CtrlLayoutOKCancel(*this, "Print");
 	columns <<= 1;
@@ -16,7 +16,7 @@ PrintDlg::PrintDlg()
 }
 
 INITBLOCK {
-	RegisterGlobalConfig("PrintDlg");
+	RegisterGlobalConfig("PrinterDlg");
 };
 
 struct Printer {
@@ -66,7 +66,7 @@ struct Printer {
 		NextLine();
 	}
 	
-	Printer(PrintDlg& dlg, Draw& w, int tabs) : w(w), tabs(tabs) {
+	Printer(PrinterDlg& dlg, Draw& w, int tabs) : w(w), tabs(tabs) {
 		cols = ~dlg.columns;
 		line = ~dlg.line;
 		page = w.GetPagePixels();
@@ -98,10 +98,10 @@ void Ide::Print()
 {
 	if(designer)
 		return;
-	PrintDlg dlg;
-	LoadFromGlobal(dlg, "PrintDlg");
+	PrinterDlg dlg;
+	LoadFromGlobal(dlg, "PrinterDlg");
 	int c = dlg.Execute();
-	StoreToGlobal(dlg, "PrintDlg");
+	StoreToGlobal(dlg, "PrinterDlg");
 	if(c != IDOK)
 		return;
 	PrinterJob job;
