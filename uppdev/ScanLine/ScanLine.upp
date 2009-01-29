@@ -6,6 +6,7 @@ file
 	ScanLine.h,
 	ScanLine.cpp,
 	Rasterizer.cpp,
+	RasterizerClip.cpp,
 	main.cpp;
 
 mainconfig
