@@ -1,21 +1,53 @@
 #include "ScanLine.h"
 
-Rasterizer::Rasterizer(Size _sz)
+void Rasterizer::Reset()
 {
-	sz = _sz;
+#ifdef YLINK
+	cell.Clear();
+	cell.Reserve(2000);
+	ylink.Alloc(sz.cy, -1);
+	line.Reserve(1000);
+#else
+	cell.Alloc(sz.cy);
+#endif
 	x1 = y1 = 0;
 	min_y = INT_MAX;
 	max_y = INT_MIN;
+	current.area = current.cover = 0;
+	current.x = -30000;
+	current_y = 0;
 	finish = true;
-	current.Init();
-	cell.Alloc(sz.cy);
+}
+
+void Rasterizer::SetClip(const Rectf& rect)
+{
+	cliprect = rect & Sizef(sz);
+}
+
+Rasterizer::Rasterizer(int cx, int cy)
+{
+	sz.cx = cx;
+	sz.cy = cy;
+	ymax = (sz.cy << 8) - 1;
+	xmax = (sz.cx << 8) - 1;
 	cliprect = Sizef(sz);
+	Reset();
 }
 
 inline void Rasterizer::AddCurrent()
 {
-	if((current.area | current.cover)) {
+	if(current.area | current.cover) {
+		PAINTER_TIMING("AddCurrent");
+#ifdef YLINK
+		CellY& c = cell.Add();
+		(Cell&)c = current;
+		c.ylink = ylink[current_y];
+		ylink[current_y] = cell.GetCount() - 1;
+#else
+		if(cell[current_y].GetCount() == 0)
+			cell[current_y].Reserve(16);
 		cell[current_y].Add(current);
+#endif
 //		DLOG(current.x << ", y=" << current_y);
 	}
 }
@@ -98,6 +130,7 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 
 void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 {
+//	PAINTER_TIMING("LineRaw");
 	enum dx_limit_e { dx_limit = 16384 << 8 };
 	int dx = x2 - x1;
 	if(dx >= dx_limit || dx <= -dx_limit) {
@@ -116,8 +149,6 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	int fy2 = y2 & 255;
 	
 	ASSERT(ey1 >= 0 && ey1 < sz.cy && ey2 >= 0 && ey2 < sz.cy);
-
-	DLOG(ex1 << ", " << ey1 << " - " << ex2 << ", " << ey2);
 
 	int x_from, x_to;
 	int p, rem, mod, lift, delta, first, incr;
@@ -206,9 +237,42 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	RenderHLine(ey1, x_from, 256 - first, x2, fy2);
 }
 
+bool Rasterizer::BeginRender(int y, const Cell *&c, const Cell *&e)
+{
+	if(finish) {
+		AddCurrent();
+		finish = false;
+		DDUMP(cell.GetCount());
+	}
+	if(y < min_y || y > max_y) return false;
+#ifdef YLINK
+	int link = ylink[y];
+	if(link < 0) return false;
+	line.SetCount(0);
+	Cell *t = line;
+	do {
+		line.Add(cell[link]);
+		link = cell[link].ylink;
+	}
+	while(link >= 0);
+	Sort(line);
+	c = line;
+	e = line.End();
+	return true;
+#else
+	Vector<Cell>& cl = cell[y];
+	if(cl.GetCount() == 0) return false;
+	Sort(cl);
+	c = cl;
+	e = cl.End();
+	return true;
+#endif
+}
+
+#if 0
 inline unsigned Alpha(int area)
 {
-	int cover = area >> (2 * 8 + 1 - 8);
+	int cover = area >> 9;
 	if(cover < 0) cover = -cover;
 /*	if(evenodd) {
 		cover &= 511;
@@ -219,25 +283,31 @@ inline unsigned Alpha(int area)
 	return (cover + 1) / 2;
 }
 
+int sl_hist[100];
+int d_hist[100];
+
 ScanLine Rasterizer::Get(int y)
 {
+	PAINTER_TIMING("Get");
 	if(finish) {
 		AddCurrent();
 		finish = false;
 	}
 	ScanLine r;
+	StringBuffer b;
 	r.len = 0;
 	r.x = 0;
 	Vector<Cell>& cl = cell[y];
-	Sort(cl);
 	if(y < min_y || y > max_y || cl.GetCount() == 0) return r;
+	{
+		PAINTER_TIMING("Sort");
+		Sort(cl);
+	}
 	const Cell *c = cl;
 	const Cell *e = cl.End();
 	r.x = c->x;
 	int cover = 0;
-	DDUMP(y);
 	while(c < e) {
-//		DDUMP(c->x);
 		int x = c->x;
 		int area = c->area;
 		cover += c->cover;
@@ -248,23 +318,39 @@ ScanLine Rasterizer::Get(int y)
 			c++;
 		}
 		if(area) {
-			r.data.Cat(Alpha((cover << (8 + 1)) - area));
+			b.Cat(Alpha((cover << (8 + 1)) - area));
 			r.len++;
 			x++;
 		}
-//		else
-//			r.data.Cat(0);
 		if(c < e && c->x > x) {
 			byte val = Alpha(cover << (8 + 1));
 			int n = c->x - x;
 			r.len += n;
 			while(n > 0) {
 				int q = min(n, 127);
-				r.data.Cat(q + 128);
-				r.data.Cat(val);
+				b.Cat(q + 128);
+				b.Cat(val);
 				n -= q;
 			}
 		}
     }
+	r.data = b;
+	sl_hist[min(cl.GetCount(), 99)]++;
+	d_hist[min(r.data.GetCount(), 99)]++;
 	return r;
 }
+
+EXITBLOCK {
+	LOG("Cells");
+	int sum = 0;
+	for(int i = 0; i < 100; i++) {
+		sum += sl_hist[i];
+		LOG(i << " " << sl_hist[i] << " " << sum);
+	}
+	LOG("Scanline Data");
+	for(int i = 0; i < 100; i++) {
+		sum += d_hist[i];
+		LOG(i << " " << d_hist[i] << " " << sum);
+	}
+}
+#endif
