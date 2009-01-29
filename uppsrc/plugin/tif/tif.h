@@ -3,8 +3,12 @@
 
 #include <Draw/Draw.h>
 
+struct tiff;
 
 NAMESPACE_UPP
+
+struct tiff *TIFFStreamOpen(const char *filename, const char *mode, Stream *stream, bool destruct = false);
+struct tiff *TIFFFileStreamOpen(const char *filename, const char *mode);
 
 class TIFRaster : public StreamRaster {
 public:

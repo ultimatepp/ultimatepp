@@ -16,6 +16,7 @@ class SysConsole : public WithConsoleLayout<TopWindow> {
 
 public:
 	int  System(const char *s);
+	int  CheckSystem(const char *s);
 	void Perform()	                            { exit.Show(); Execute(); }
 
 	SysConsole();

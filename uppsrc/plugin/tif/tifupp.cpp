@@ -5,6 +5,7 @@
 #define int32 tif_int32
 #define uint32 tif_uint32
 #include <plugin/tif/lib/tiffio.h>
+#include <plugin/tif/lib/tiffiop.h>
 #undef int32
 #undef uint32
 
@@ -338,6 +339,100 @@ static void BltPack4(byte *dest, const byte *src, unsigned count)
 		dest[0] = src[0];
 }
 
+static tsize_t ReadStream(thandle_t fd, tdata_t buf, tsize_t size)
+{
+	Stream *stream = reinterpret_cast<Stream *>(fd);
+	ASSERT(stream->IsOpen());
+//	RLOG("TiffStream::TIFRaster::Data & " << (int)wrapper.stream.GetPos() << ", count = " << size
+//		<< ", end = " << (int)(wrapper.stream.GetPos() + size));
+	return stream->Get(buf, size);
+}
+
+static tsize_t WriteStream(thandle_t fd, tdata_t buf, tsize_t size)
+{
+	Stream *stream = reinterpret_cast<Stream *>(fd);
+	ASSERT(stream->IsOpen());
+	stream->Put(buf, size);
+	return stream->IsError() ? 0 : size;
+}
+
+static toff_t SeekStream(thandle_t fd, toff_t off, int whence)
+{
+	Stream *stream = reinterpret_cast<Stream *>(fd);
+	ASSERT(stream->IsOpen());
+	toff_t size = (toff_t)stream->GetSize();
+	toff_t destpos = (toff_t)(off + (whence == 1 ? stream->GetPos() : whence == 2 ? size : 0));
+	stream->Seek(destpos);
+//	RLOG("TIFRaster::Data::SeekStream -> " << (int)off << ", whence = " << whence << " -> pos = " << (int)wrapper.stream.GetPos());
+	return (toff_t)stream->GetPos();
+}
+
+static int CloseStream(thandle_t fd)
+{
+	return 0;
+}
+
+static int CloseOwnedStream(thandle_t fd)
+{
+	delete reinterpret_cast<Stream *>(fd);
+	return 0;
+}
+
+static toff_t SizeStream(thandle_t fd)
+{
+	Stream *stream = reinterpret_cast<Stream *>(fd);
+	ASSERT(stream->IsOpen());
+//	RLOG("TIFRaster::Data::SizeStream -> " << (int)wrapper.stream.GetSize());
+	return (toff_t)stream->GetSize();
+}
+
+static int MapStream(thandle_t fd, tdata_t *pbase, toff_t *psize)
+{
+	return 0;
+}
+
+static void UnmapStream(thandle_t fd, tdata_t base, toff_t size)
+{
+}
+
+struct ::tiff *TIFFFileStreamOpen(const char *filename, const char *mode)
+{
+	One<FileStream> fs = new FileStream;
+	int m = _TIFFgetMode(mode, "TIFFOpen");
+	dword fmode = FileStream::READ;
+
+	switch(m) {
+		case O_RDONLY: {
+			fmode = FileStream::READ;
+			break;
+		}
+		case O_RDWR: {
+			fmode = FileStream::READWRITE;
+			break;
+		}
+		case O_RDWR|O_CREAT:
+		case O_RDWR|O_TRUNC:
+		case O_RDWR|O_CREAT|O_TRUNC: {
+			fmode = FileStream::CREATE;
+			break;
+		}
+	}
+	if(!fs->Open(filename, fmode))
+		return NULL;
+	return TIFFStreamOpen(filename, mode, -fs, true);
+}
+
+struct ::tiff *TIFFStreamOpen(const char *filename, const char *mode, Stream *stream, bool destruct)
+{
+	return TIFFClientOpen(filename, mode, reinterpret_cast<thandle_t>(stream),
+		&ReadStream, &WriteStream,
+		&SeekStream,
+		destruct ? &CloseOwnedStream : &CloseStream,
+		&SizeStream,
+		&MapStream, &UnmapStream);
+}
+
+
 struct TIFRaster::Data : public TIFFRGBAImage {
 	Data(Stream& stream);
 	~Data();
@@ -354,14 +449,6 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 
 	Stream&          stream;
 	TIFF             *tiff;
-
-	static tsize_t   ReadStream(thandle_t fd, tdata_t buf, tsize_t size);
-	static tsize_t   WriteStream(thandle_t fd, tdata_t buf, tsize_t size);
-	static toff_t    SeekStream(thandle_t fd, toff_t off, int whence);
-	static int       CloseStream(thandle_t fd);
-	static toff_t    SizeStream(thandle_t fd);
-	static int       MapStream(thandle_t fd, tdata_t *pbase, toff_t *psize);
-	static void      UnmapStream(thandle_t fd, tdata_t base, toff_t size);
 
 	struct Page {
 		uint32       width, height;
@@ -607,54 +694,6 @@ void TIFRaster::Data::Error(const char *fn, const char *fmt, va_list ap)
 	}
 }
 
-tsize_t TIFRaster::Data::ReadStream(thandle_t fd, tdata_t buf, tsize_t size)
-{
-	Data& wrapper = *reinterpret_cast<Data *>(fd);
-	ASSERT(wrapper.stream.IsOpen());
-//	RLOG("TiffStream::TIFRaster::Data & " << (int)wrapper.stream.GetPos() << ", count = " << size
-//		<< ", end = " << (int)(wrapper.stream.GetPos() + size));
-	return wrapper.stream.Get(buf, size);
-}
-
-tsize_t TIFRaster::Data::WriteStream(thandle_t fd, tdata_t buf, tsize_t size)
-{
-	NEVER();
-	return 0;
-}
-
-toff_t TIFRaster::Data::SeekStream(thandle_t fd, toff_t off, int whence)
-{
-	Data& wrapper = *reinterpret_cast<Data *>(fd);
-	ASSERT(wrapper.stream.IsOpen());
-	toff_t size = (toff_t)wrapper.stream.GetSize();
-	toff_t destpos = (toff_t)(off + (whence == 1 ? wrapper.stream.GetPos() : whence == 2 ? size : 0));
-	wrapper.stream.Seek(destpos);
-//	RLOG("TIFRaster::Data::SeekStream -> " << (int)off << ", whence = " << whence << " -> pos = " << (int)wrapper.stream.GetPos());
-	return (toff_t)wrapper.stream.GetPos();
-}
-
-int TIFRaster::Data::CloseStream(thandle_t fd)
-{
-	return 0;
-}
-
-toff_t TIFRaster::Data::SizeStream(thandle_t fd)
-{
-	Data& wrapper = *reinterpret_cast<Data *>(fd);
-	ASSERT(wrapper.stream.IsOpen());
-//	RLOG("TIFRaster::Data::SizeStream -> " << (int)wrapper.stream.GetSize());
-	return (toff_t)wrapper.stream.GetSize();
-}
-
-int TIFRaster::Data::MapStream(thandle_t fd, tdata_t *pbase, toff_t *psize)
-{
-	return 0;
-}
-
-void TIFRaster::Data::UnmapStream(thandle_t fd, tdata_t base, toff_t size)
-{
-}
-
 TIFRaster::Data::Data(Stream& stream)
 : stream(stream)
 {
@@ -668,10 +707,11 @@ TIFRaster::Data::~Data()
 		TIFFClose(tiff);
 }
 
+
+
 bool TIFRaster::Data::Create()
 {
-	tiff = TIFFClientOpen("tiff@" + Format64((intptr_t)this), "r", reinterpret_cast<thandle_t>(this),
-		ReadStream, WriteStream, SeekStream, CloseStream, SizeStream, MapStream, UnmapStream);
+	tiff = TIFFStreamOpen("tiff@" + Format64((intptr_t)this), "r", &stream);
 	if(!tiff)
 		return false;
 
