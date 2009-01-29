@@ -1,22 +1,28 @@
 #include "ScanLine.h"
 
-Rasterizer::Rasterizer(int cy)
+Rasterizer::Rasterizer(Size _sz)
 {
+	sz = _sz;
+	x1 = y1 = 0;
 	min_y = INT_MAX;
 	max_y = INT_MIN;
 	finish = true;
 	current.Init();
-	cell.Alloc(cy);
+	cell.Alloc(sz.cy);
+	cliprect = Sizef(sz);
 }
 
 inline void Rasterizer::AddCurrent()
 {
-	if(current.area | current.cover)
+	if((current.area | current.cover) && current_y >= 0 && current_y < sz.cy) {
 		cell[current_y].Add(current);
+//		DLOG(current.x << ", y=" << current_y);
+	}
 }
 
 inline void Rasterizer::SetCurrent(int x, int y)
 {
+	DLOG("cury=" << y);
 	if(current.x != x || current_y != y) {
 		AddCurrent();
 		current.x = x;
@@ -90,15 +96,15 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 	current.area  += (fx2 + 256 - first) * delta;
 }
 
-void Rasterizer::Line(int x1, int y1, int x2, int y2)
+void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 {
 	enum dx_limit_e { dx_limit = 16384 << 8 };
 	int dx = x2 - x1;
 	if(dx >= dx_limit || dx <= -dx_limit) {
 		int cx = (x1 + x2) >> 1;
 		int cy = (y1 + y2) >> 1;
-		Line(x1, y1, cx, cy);
-		Line(cx, cy, x2, y2);
+		LineRaw(x1, y1, cx, cy);
+		LineRaw(cx, cy, x2, y2);
 		return;
     }
 	int dy = y2 - y1;
@@ -109,13 +115,15 @@ void Rasterizer::Line(int x1, int y1, int x2, int y2)
 	int fy1 = y1 & 255;
 	int fy2 = y2 & 255;
 
+	DLOG(ex1 << ", " << ey1 << " - " << ex2 << ", " << ey2);
+
 	int x_from, x_to;
 	int p, rem, mod, lift, delta, first, incr;
 
 	if(ey1 < min_y) min_y = ey1;
-	if(ey1 > max_y) max_y = ey1;
+	if(ey1 > max_y && ey1 < sz.cy) max_y = ey1;
 	if(ey2 < min_y) min_y = ey2;
-	if(ey2 > max_y) max_y = ey2;
+	if(ey2 > max_y && ey2 < sz.cy) max_y = ey2;
 
 	SetCurrent(ex1, ey1);
 
@@ -225,7 +233,9 @@ ScanLine Rasterizer::Get(int y)
 	const Cell *e = cl.End();
 	r.x = c->x;
 	int cover = 0;
+	DDUMP(y);
 	while(c < e) {
+		DDUMP(c->x);
 		int x = c->x;
 		int area = c->area;
 		cover += c->cover;
@@ -240,7 +250,7 @@ ScanLine Rasterizer::Get(int y)
 		else
 			r.data.Cat(0);
 		r.len++;
-		x++;
+		x++;		
 		if(c < e && c->x > x) {
 			byte val = Alpha(cover << (8 + 1));
 			int n = c->x - x;

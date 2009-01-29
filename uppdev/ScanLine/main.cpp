@@ -1,32 +1,83 @@
 #include "ScanLine.h"
 
 struct App : TopWindow {
+	double x1, y1, x2, y2, x3, y3;
+
+	String Text() {
+		return Format("Move(%f, %f) Line(%f, %f)  Line(%f, %f)", x1, y1, x2, y2, x3, y3);
+	}
+	
+	virtual void LeftDown(Point p, dword keyflags)
+	{
+		x1 = p.x;
+		y1 = p.y;
+		Refresh();
+		ClearClipboard();
+		AppendClipboardText(Text());
+	}
+	virtual void RightDown(Point p, dword)
+	{
+		x2 = p.x;
+		y2 = p.y;
+		Refresh();
+		ClearClipboard();
+		AppendClipboardText(Text());
+	}
+	virtual void MouseMove(Point p, dword keyflags)
+	{
+		x3 = p.x;
+		y3 = p.y;
+		Refresh();
+		ClearClipboard();
+		AppendClipboardText(Text());
+	}
+
 	virtual void Paint(Draw& w) {
 		ScanLine a, b;
 		static byte line1[] = { 1, 50, 100, 128, 128, 128, 128, 128, 100, 50, 1 };
 		a = Pack(0, line1, __countof(line1));
-		ImageBuffer ib(400, 400);
+		ImageBuffer ib(500, 500);
 		Fill(~ib, White(), ib.GetLength());
-		Apply(ib[20], 100, Black(), a);
+/*		Apply(ib[20], 100, Black(), a);
 		a.x = 10;
 		Apply(ib[30], 100, Blue(), a);
 		for(int i = 0; i < 20; i++) {
 			b = Pack(i, line1, __countof(line1));
 			Apply(ib[50 + 2 * i], 100, Black(), And(a, b));
 		}
-		
-		Rasterizer r(400);
-		r.Line(100 * 256, 100 * 256, 300 * 256, 100 * 256);
-		r.Line(300 * 256, 100 * 256, 200 * 256, 300 * 256);
-		r.Line(200 * 256, 300 * 256, 100 * 256, 100 * 256);
+*/		
+		Rasterizer r(Size(500, 500));
+		r.SetClip(RectfC(100, 100, 200, 200));
+
+#if 0
+		r.Move(121.000000, 121.000000);
+		r.Line(0.000000, 0.000000);
+		r.Line(597.000000, 44.000000);
+		r.Line(121.000000, 121.000000);
+#endif
+		r.Move(153.000000, 297.000000);
+		r.Line(173.000000, 255.000000);
+		r.Line(564.000000, 213.000000);
+		r.Line(153.000000, 297.000000);
+#if 0
+		r.Move(x1, y1);
+		r.Line(x2, y2);
+		r.Line(x3, y3);
+		r.Line(x1, y1);
+#endif
 		for(int y = r.MinY(); y <= r.MaxY(); y++) {
 			ScanLine sl = r.Get(y);
 			DUMP(sl);
-			Apply(ib[y], 400, Black(), sl);
+			Apply(ib[y], 400, Blue(), sl);
 		}
 		
 		w.DrawRect(GetSize(), White());
 		w.DrawImage(0, 0, ib);
+		w.DrawText(0, GetSize().cy - 40, Text());
+	}
+
+	App() {
+		x1 = y1 = x2 = y2 = 0;
 	}
 };
 

@@ -99,7 +99,7 @@ ScanLine Pack(int x, const byte *data, int len)
 String ScanLine::ToString() const
 {
 	String s;
-	s << "x = " << x << ", len = " << len << ": ";
+	s << "x = " << x << ", len = " << len << ", right = " << len + x << ": ";
 	for(int i = 0; i < data.GetCount(); i++) {
 		byte val = data[i];
 		if(val > 128) {
@@ -118,16 +118,15 @@ String ScanLine::ToString() const
 void Apply(RGBA *t, int len, const RGBA& color, const ScanLine& s)
 {
 	t += s.x;
-	len -= s.x;
 	int si = 0;
-	while(len >= 0 && si < s.data.GetLength()) {
+	const RGBA *e = t + len;
+	while(t < e && si < s.data.GetLength()) {
 		byte val = s.data[si++];
 		if(val > 128) {
-			int n = min(len, val - 128);
+			int n = min(e - t, val - 128);
 			val = s.data[si++];
 			while(n--)
 				AlphaBlendCover7(*t++, color, val);
-			len -= n;
 		}
 		else
 			AlphaBlendCover7(*t++, color, val);

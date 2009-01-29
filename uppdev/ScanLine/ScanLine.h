@@ -54,27 +54,36 @@ class Rasterizer {
 		unsigned start;
 		unsigned num;
 	};
-	
+
+	Rectf                   cliprect;
+	double                  x1, y1;
 	Buffer< Vector<Cell> >  cell;
 	int                     current_y;
 	Cell                    current;
 	int                     min_y;
 	int                     max_y;
+	Size                    sz;
 	bool                    finish;
 	
 	void AddCurrent();
 	void SetCurrent(int x, int y);
 	void RenderHLine(int ey, int x1, int y1, int x2, int y2);
+	void LineClip(double x1, double y1, double x2, double y2);
 
 public:
-	void Line(int x1, int y1, int x2, int y2);
+	void LineRaw(int x1, int y1, int x2, int y2);
+	
+	void Move(double x, double y);
+	void Line(double x, double y);
 
-	int  MinY() const { return min_y; }
-	int  MaxY() const { return max_y; }
+	int  MinY() const                         { return min_y; }
+	int  MaxY() const                         { return max_y; }
+	
+	void SetClip(const Rectf& rect)           { cliprect = rect; }
 
 	ScanLine Get(int y);
 	
-	Rasterizer(int cy);
+	Rasterizer(Size sz);
 };
 
 #endif
