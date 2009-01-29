@@ -51,3 +51,15 @@ int SysConsole::System(const char *cmd)
 		}
 	return code;
 }
+
+int SysConsole::CheckSystem(const char *s)
+{
+	int exitcode = System(s);
+	if(exitcode) {
+		if(exitcode < 0)
+			AddResult("Error running " + String(s));
+		else
+			AddResult("exitcode = " + FormatInt(exitcode));
+	}
+	return exitcode;
+}

@@ -216,63 +216,63 @@ again:
 		}
 	SysConsole sys;
 	int repoi = 0;
-	int i = 0;
+	int l = 0;
 	bool commit = false;
-	while(i < list.GetCount()) {
+	while(l < list.GetCount()) {
 		SvnWork w = works[repoi++];
-		i++;
+		l++;
 		String message;
-		while(i < list.GetCount()) {
-			int action = list.Get(i, 0);
-			String path = list.Get(i, 1);
+		while(l < list.GetCount()) {
+			int action = list.Get(l, 0);
+			String path = list.Get(l, 1);
 			if(action == MESSAGE && commit) {
-				String msg = list.Get(i, 3);
-				if(sys.System(SvnCmd("commit", w).Cat() << w.working << " -m \"" << msg << "\""))
+				String msg = list.Get(l, 3);
+				if(sys.CheckSystem(SvnCmd("commit", w).Cat() << w.working << " -m \"" << msg << "\""))
 					msgmap.GetAdd(w.working) = msg;
-				i++;
+				l++;
 				break;
 			}
 			if(action == REPOSITORY)
 				break;
-			Value v = list.Get(i, 2);
+			Value v = list.Get(l, 2);
 			if(IsNumber(v) && (int)v == 0) {
 				if(action == REPLACE || action == ADD)
 					DeleteFolderDeep(path);
 				if(action != ADD)
-					sys.System("svn revert " + path);
+					sys.CheckSystem("svn revert " + path);
 			}
 			else {
 				commit = true;
 				switch(action) {
 				case ADD:
 					SvnDel(path);
-					sys.System("svn add --force " + path);
+					sys.CheckSystem("svn add --force " + path);
 					break;
 				case REMOVE:
-					sys.System("svn delete " + path);
+					sys.CheckSystem("svn delete " + path);
 					break;
 				case CONFLICT:
-					sys.System("svn resolved " + path);
+					sys.CheckSystem("svn resolved " + path);
 					break;
 				case REPLACE: {
 						SvnDel(path);
 						String tp = AppendFileName(GetFileFolder(path), Format(Uuid::Create()));
 						FileMove(path, tp);
-						sys.System(SvnCmd("update", w).Cat() << ' ' << path);
+						sys.CheckSystem(SvnCmd("update", w).Cat() << ' ' << path);
 						MoveSvn(path, tp);
 						sDeleteFolderDeep(path);
 						FileMove(tp, path);
 						Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
-						for(int i = 0; i < ln.GetCount(); i++) {
-							String h = ln[i];
+						for(int l = 0; l < ln.GetCount(); l++) {
+							String h = ln[l];
 							if(h.GetCount() > 7) {
 								String file = h.Mid(7);
 								if(IsFullPath(file)) {
 									h.Trim(7);
 									if(h == "?      ")
-										sys.System("svn add --force " + file);
+										sys.CheckSystem("svn add --force " + file);
 									if(h == "!      ")
-										sys.System("svn delete " + file);
+										sys.CheckSystem("svn delete " + file);
 								}
 							}
 						}
@@ -283,9 +283,9 @@ again:
 					break;
 				}
 			}
-			i++;
+			l++;
 		}
-		sys.System(SvnCmd("update", w).Cat() << w.working);
+		sys.CheckSystem(SvnCmd("update", w).Cat() << w.working);
 	}
 	sys.Perform();
 }
