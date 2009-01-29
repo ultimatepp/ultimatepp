@@ -1,5 +1,6 @@
 uses
-	CtrlLib;
+	CtrlLib,
+	Geom;
 
 file
 	test.iml,
@@ -7,3 +8,4 @@ file
 
 mainconfig
 	"" = "GUI ST";
+

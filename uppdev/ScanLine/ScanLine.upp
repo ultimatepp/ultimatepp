@@ -1,3 +1,5 @@
+optimize_speed;
+
 uses
 	Core,
 	CtrlLib;
@@ -6,7 +8,9 @@ file
 	ScanLine.h,
 	ScanLine.cpp,
 	Rasterizer.cpp,
+	Rasterizer.hpp,
 	RasterizerClip.cpp,
+	Lion.cpp,
 	main.cpp;
 
 mainconfig
