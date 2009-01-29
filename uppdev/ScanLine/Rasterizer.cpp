@@ -14,7 +14,7 @@ Rasterizer::Rasterizer(Size _sz)
 
 inline void Rasterizer::AddCurrent()
 {
-	if((current.area | current.cover) && current_y >= 0 && current_y < sz.cy) {
+	if((current.area | current.cover)) {
 		cell[current_y].Add(current);
 //		DLOG(current.x << ", y=" << current_y);
 	}
@@ -22,8 +22,8 @@ inline void Rasterizer::AddCurrent()
 
 inline void Rasterizer::SetCurrent(int x, int y)
 {
-	DLOG("cury=" << y);
-	if(current.x != x || current_y != y) {
+//	DLOG("cury=" << y);
+	if((current.x - x) | (current_y - y)) {
 		AddCurrent();
 		current.x = x;
 		current_y = y;
@@ -44,7 +44,7 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 	if(ex1 == ex2) {
 		int delta = y2 - y1;
 		current.cover += delta;
-		current.area  += (fx1 + fx2) * delta;
+		current.area += (fx1 + fx2) * delta;
 		return;
 	}
 	int p = (256 - fx1) * (y2 - y1);
@@ -69,7 +69,7 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 	SetCurrent(ex1, ey);
 	y1 += delta;
 	if(ex1 != ex2) {
-		p = (y2 - y1 + delta) << 8;
+		p = (y2 - y1 + delta) * 256;
 		int lift = p / dx;
 		int rem = p % dx;
 		if (rem < 0) {
@@ -85,7 +85,7 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 				delta++;
 			}
 			current.cover += delta;
-			current.area += delta << 8;
+			current.area += delta * 256;
 			y1 += delta;
 			ex1 += incr;
 			SetCurrent(ex1, ey);
@@ -114,6 +114,8 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	int ey2 = y2 >> 8;
 	int fy1 = y1 & 255;
 	int fy2 = y2 & 255;
+	
+	ASSERT(ey1 >= 0 && ey1 < sz.cy && ey2 >= 0 && ey2 < sz.cy);
 
 	DLOG(ex1 << ", " << ey1 << " - " << ex2 << ", " << ey2);
 
@@ -169,7 +171,7 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 		dy = -dy;
     }
 	delta = p / dy;
-	mod   = p % dy;
+	mod = p % dy;
 	if(mod < 0) {
 		delta--;
 		mod += dy;
@@ -235,7 +237,7 @@ ScanLine Rasterizer::Get(int y)
 	int cover = 0;
 	DDUMP(y);
 	while(c < e) {
-		DDUMP(c->x);
+//		DDUMP(c->x);
 		int x = c->x;
 		int area = c->area;
 		cover += c->cover;
@@ -245,12 +247,13 @@ ScanLine Rasterizer::Get(int y)
 			cover += c->cover;
 			c++;
 		}
-		if(area)
+		if(area) {
 			r.data.Cat(Alpha((cover << (8 + 1)) - area));
-		else
-			r.data.Cat(0);
-		r.len++;
-		x++;		
+			r.len++;
+			x++;
+		}
+//		else
+//			r.data.Cat(0);
 		if(c < e && c->x > x) {
 			byte val = Alpha(cover << (8 + 1));
 			int n = c->x - x;

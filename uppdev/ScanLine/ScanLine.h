@@ -42,9 +42,9 @@ ScanLine Pack(int x, const byte *data, int len);
 
 class Rasterizer {
 	struct Cell : Moveable<Cell> {
-		int x;
-		int cover;
-		int area;
+		int   x;
+		int   cover;
+		int   area;
 
 		void Init()                         { x = 0x7FFFFFFF; cover = area  = 0; }
 		bool operator<(const Cell& b) const { return x < b.x; }

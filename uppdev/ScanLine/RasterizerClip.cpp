@@ -6,6 +6,11 @@ void Rasterizer::Move(double x, double y)
 	y1 = y;
 }
 
+inline int Cv(double x)
+{
+	return int(minmax(x * 256 + 65536.5, 0.0, 200000.0)) - 65536;
+}
+
 void Rasterizer::LineClip(double x1, double y1, double x2, double y2)
 {
 	if(y1 < cliprect.top) {
@@ -29,6 +34,7 @@ void Rasterizer::LineClip(double x1, double y1, double x2, double y2)
 	if(y2 > cliprect.bottom) {
 		x2 = (x2 - x1) * (cliprect.bottom - y1) / (y2 - y1) + x1;
 		y2 = cliprect.bottom;
+		DDUMP(Cv(y2));
 	}
 /*
 	if(x1 < cliprect.left) {
@@ -54,7 +60,8 @@ void Rasterizer::LineClip(double x1, double y1, double x2, double y2)
 		x2 = cliprect.right;
 	}
 */
-	LineRaw(int(x1 * 256 + 0.5), int(y1 * 256 + 0.5), int(x2 * 256 + 0.5), int(y2 * 256 + 0.5));
+	int ymax = (sz.cy << 8) - 1;
+	LineRaw(Cv(x1), min(Cv(y1), ymax), Cv(x2), min(Cv(y2), ymax));
 }
 
 void Rasterizer::Line(double x2, double y2)
