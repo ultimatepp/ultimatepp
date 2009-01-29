@@ -117,18 +117,20 @@ String ScanLine::ToString() const
 
 void Apply(RGBA *t, int len, const RGBA& color, const ScanLine& s)
 {
+	RGBA *e = t + len;
+	const char *q = ~s.data;
+	const char *qe = s.data.End();
 	t += s.x;
-	int si = 0;
-	const RGBA *e = t + len;
-	while(t < e && si < s.data.GetLength()) {
-		byte val = s.data[si++];
+	while(t < e && q < qe) {
+		byte val = *q++;
 		if(val > 128) {
-			int n = min(e - t, val - 128);
-			val = s.data[si++];
-			while(n--)
+			RGBA *e1 = min(e, t + val - 128);
+			val = *q++;
+			while(t < e1)
 				AlphaBlendCover7(*t++, color, val);
 		}
 		else
 			AlphaBlendCover7(*t++, color, val);
+//		DDUMP(t - e);
 	}
 }

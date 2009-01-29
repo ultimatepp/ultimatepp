@@ -47,8 +47,15 @@ struct App : TopWindow {
 		}
 */		
 		Rasterizer r(Size(500, 500));
-		r.SetClip(RectfC(100, 100, 200, 200));
+//		r.SetClip(RectfC(100, 100, 200, 200));
 
+
+#if 1
+		r.Move( 36.000000, 142.000000);
+		r.Line(480.000000, 148.000000);
+		r.Line(429.000000, 148.000000);
+		r.Line( 36.000000, 142.000000);
+#endif	
 #if 0
 		r.Move(121.000000, 121.000000);
 		r.Line(0.000000, 0.000000);
@@ -61,23 +68,16 @@ struct App : TopWindow {
 		r.Line(564.000000, 213.000000);
 		r.Line(153.000000, 297.000000);
 #endif
-#if 1
-		r.Move( 36.000000, 142.000000);
-		r.Line(480.000000, 148.000000);
-		r.Line(429.000000, 148.000000);
-		r.Line( 36.000000, 142.000000);
-#endif
 #if 0
 		r.Move(x1, y1);
 		r.Line(x2, y2);
 		r.Line(x3, y3);
 		r.Line(x1, y1);
 #endif
-
 		for(int y = r.MinY(); y <= r.MaxY(); y++) {
 			ScanLine sl = r.Get(y);
 			DUMP(sl);
-			Apply(ib[y], 400, Blue(), sl);
+			Apply(ib[y], 500, Blue(), sl);
 		}
 		
 		w.DrawRect(GetSize(), White());
@@ -86,13 +86,13 @@ struct App : TopWindow {
 	}
 
 	App() {
-		Sizeable().Zoomable();
 		x1 = y1 = x2 = y2 = 0;
 	}
 };
 
 GUI_APP_MAIN {
 	App().Run();
+	return;
 
 	ScanLine a, b, c;
 	static byte line1[] = { 1, 50, 100, 128, 128, 128, 128, 128, 100, 50, 1 };
