@@ -55,16 +55,25 @@ struct App : TopWindow {
 		r.Line(597.000000, 44.000000);
 		r.Line(121.000000, 121.000000);
 #endif
+#if 0
 		r.Move(153.000000, 297.000000);
 		r.Line(173.000000, 255.000000);
 		r.Line(564.000000, 213.000000);
 		r.Line(153.000000, 297.000000);
+#endif
+#if 1
+		r.Move( 36.000000, 142.000000);
+		r.Line(480.000000, 148.000000);
+		r.Line(429.000000, 148.000000);
+		r.Line( 36.000000, 142.000000);
+#endif
 #if 0
 		r.Move(x1, y1);
 		r.Line(x2, y2);
 		r.Line(x3, y3);
 		r.Line(x1, y1);
 #endif
+
 		for(int y = r.MinY(); y <= r.MaxY(); y++) {
 			ScanLine sl = r.Get(y);
 			DUMP(sl);
@@ -77,6 +86,7 @@ struct App : TopWindow {
 	}
 
 	App() {
+		Sizeable().Zoomable();
 		x1 = y1 = x2 = y2 = 0;
 	}
 };
