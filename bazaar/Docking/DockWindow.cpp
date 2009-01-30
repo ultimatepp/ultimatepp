@@ -1402,22 +1402,14 @@ void DockWindow::EnableFloating(bool enable)
 }
 
 DockWindow::DockWindow()
+: init(false), tabbing(true), grouping(true), nestedtabs(false), nesttoggle(K_CTRL | K_SHIFT),
+  locked(false), menubtn(true), closebtn(true), hidebtn(true), tabtext(true), tabalign(false),
+  frameorder(true), autohide(true), childtoolwindows(false)
 {
 	menu.Set(*this);
-	init = false;
-	tabbing = grouping = true;
-	nestedtabs = false;
-	locked = false;
-	nesttoggle = K_CTRL | K_SHIFT;
-	menubtn = closebtn = hidebtn = true;
-	tabtext = true;
-	tabalign = false;
-	frameorder = true;
 
 #ifdef PLATFORM_WIN32
 	childtoolwindows = true;
-#else
-	childtoolwindows = false;
 #endif
 	
 	for (int i = 0; i < 4; i++) {
@@ -1426,7 +1418,7 @@ DockWindow::DockWindow()
 		hideframe[i].SetAlign(i);
 		dockframe[i].Hide();
 	}
-	AllowDockAll().AutoHide(true).Animate().AnimateDelay(30);
+	AllowDockAll().Animate().AnimateDelay(30);
 }
 
 // PopUpDockWindow

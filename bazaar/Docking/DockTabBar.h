@@ -20,7 +20,7 @@ public:
 	bool 			IsAutoHide() const				{ return GetCount() <= autohide; }
 
 	DockTabBar& 	AutoHideMin(int hidemin = 1)	{ autohide = hidemin; return *this; }
-	DockTabBar& 	Icons(bool b = true)			{ icons = b; }
+	DockTabBar& 	Icons(bool b = true)			{ icons = b; return *this; }
 
 	void			SyncRepos()						{ Repos(); }
 	void			ShowText(bool show)				{ showtext = show; }

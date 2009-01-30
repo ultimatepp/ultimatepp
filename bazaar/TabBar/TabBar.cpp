@@ -93,6 +93,7 @@ void TabScrollBar::Clear()
 	start_pos = 0;
 	new_pos = 0;
 	old_pos = 0;
+	sz = Size(0, 0);
 	ready = false;	
 }
 
@@ -485,7 +486,6 @@ void TabBar::PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, cons
 	WString txt;
 	Font f = font;
 	Color i = ink;
-	int a = GetTextAngle();
 
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);

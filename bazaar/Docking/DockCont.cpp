@@ -579,11 +579,12 @@ Image DockCont::GetHighlightImage()
 	Ctrl *ctrl = GetCtrl(GetCursor());
 	if (!ctrl) return Image();
 	Size sz = ctrl->GetRect().GetSize();
-	if (tabbar.IsAutoHide())
+	if (tabbar.IsAutoHide()) {
 		if (tabbar.IsVert())
 			sz.cx -= tabbar.GetFrameSize();
 		else
 			sz.cy -= tabbar.GetFrameSize();
+	}
 	ImageDraw img(sz);
 	ctrl->DrawCtrlWithParent(img);
 	return img;

@@ -76,7 +76,6 @@ void DockPane::EndAnimate()
 void DockPane::SmartReposDown(Vector<int>& p, int ix) 
 {
 	int n = 0;
-	int sum = 0;
 	int dif = 0;
 	int maxsize = 0;
 	int totalsize = 0;
@@ -146,7 +145,6 @@ void DockPane::SmartReposDown(Vector<int>& p, int ix)
 void DockPane::SmartReposUp(Vector<int>& p, int ix, int sz) 
 {
 	int n = 0;
-	int sum = 0;
 	int dif = 0;
 	int minsize = 0;
 	int maxsize = 0;
@@ -295,7 +293,6 @@ void DockPane::FixChildSizes()
 		for (int i = 0; i < cnt; i++)
 			pos[i] -= sum*(i+1);
 	pos[cnt-1] -= rem;
-	int p = pos[cnt-1];
 	ASSERT(pos[cnt-1] == 10000);
 }
 

@@ -10,9 +10,9 @@ using namespace Upp;
 
 struct AlignedFrame : FrameCtrl<Ctrl>
 {
-	int layout;
-	int framesize;
 	int border;
+	int framesize;
+	int layout;
 public:	
 	enum
 	{
@@ -34,10 +34,10 @@ public:
 	bool		  IsBR() const		{ return layout >= 2; }
 	
 	AlignedFrame& SetAlign(int align) { layout = align; FrameSet(); RefreshParentLayout(); return *this; }
-	AlignedFrame& SetLeft()		{ return SetAlign(LEFT); }
-	AlignedFrame& SetTop()		{ return SetAlign(TOP); }
-	AlignedFrame& SetRight()	{ return SetAlign(RIGHT); }
-	AlignedFrame& SetBottom()	{ return SetAlign(BOTTOM); }	
+	AlignedFrame& SetLeft()			{ return SetAlign(LEFT); }
+	AlignedFrame& SetTop()			{ return SetAlign(TOP); }
+	AlignedFrame& SetRight()		{ return SetAlign(RIGHT); }
+	AlignedFrame& SetBottom()		{ return SetAlign(BOTTOM); }	
 	AlignedFrame& SetFrameSize(int sz, bool refresh = true);
 		
 	int 		  GetAlign() const		{ return layout; }
@@ -48,7 +48,7 @@ protected:
 	void Fix(Point& p);
 	
 	bool		  HasBorder()				{ return border >= 0; }
-	AlignedFrame& SetBorder(int _border)	{ border = _border; }
+	AlignedFrame& SetBorder(int _border)	{ border = _border; return *this; }
 	
 	virtual	void  FrameSet()				{ }
 };
@@ -259,7 +259,7 @@ public:
 	TabBar& AutoScrollHide(bool b = true);
 	TabBar& InactiveDisabled(bool b = true);
 	
-	TabBar& SetDisplay(const Display &d) 	{ display = &d; Refresh(); }
+	TabBar& SetDisplay(const Display &d) 	{ display = &d; Refresh(); return *this; }
 	
 	int 	Find(const Value &v) const;
 	

@@ -173,7 +173,7 @@ void DockConfigDlg::OnNewGroup()
 {
 	String s;
 	if (EditText(s, t_("New Group"), t_("Group name:"), 25)) {
-		if (!s.IsEmpty())
+		if (!s.IsEmpty()) {
 			if (groups.Find(s) < 0) {
 				int id = tree.Add(0, Image(), Value(-1), Value(s));
 				groups.Add(s, id);
@@ -184,6 +184,7 @@ void DockConfigDlg::OnNewGroup()
 				PromptOK(t_("Group '%s' already exists."));
 				OnNewGroup();
 			}
+		}
 	}
 }
 
@@ -293,11 +294,12 @@ void DockConfigDlg::Highlight(DockableCtrl *dc)
 
 void DockConfigDlg::StopHighlight()
 {
-	if (highlight)
+	if (highlight) {
 		if (DockCont *dc = dynamic_cast<DockCont *>(highlight->GetParent()))
 			dc->Refresh();
 		else
 			highlight->Refresh();
+	}
 	highlight = NULL;
 }
 

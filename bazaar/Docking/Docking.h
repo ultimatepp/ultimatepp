@@ -225,7 +225,7 @@ public:
 	bool            IsAutoHide()                    { return autohide; }
 	
 	dword           NestedToggleKey()               { return nesttoggle; }
-	dword           SetNestedToggleKey(dword key)   { nesttoggle = key; }
+	DockWindow&     SetNestedToggleKey(dword key)   { nesttoggle = key; return *this; }
 	
 	DockWindow&     WindowButtons(bool menu, bool hide, bool close);
 	bool            HasMenuButtons() const          { return menubtn; } 
