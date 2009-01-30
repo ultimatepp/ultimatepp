@@ -31,7 +31,12 @@
 #define LONGRAW(x)                 COLUMN("varbinary(max)", String, x, 0, 0)
 #define LONGRAW_(x)                COLUMN_("varbinary(max)", String, x, 0, 0)
 
-#define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
+#define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")\
+                                   ATTRIBUTE("alter table @t add constraint PK_@x primary key "\
+                                             "(@c)",\
+                                             "alter table @t drop constraint PK_@x;")\
+                                   ATTRIBUTE("create index PKX_@x on @t(@c);", \
+                                             "drop index PKX_@x;")
 #define KEY                        INLINE_ATTRIBUTE("key")
 #define NOT_NULL                   INLINE_ATTRIBUTE("not null")
 #define IDENTITY                   INLINE_ATTRIBUTE("identity")

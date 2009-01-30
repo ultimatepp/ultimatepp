@@ -22,7 +22,7 @@ public:
 
 void   SetAssertFailedHook(void (*h)(const char *));
 
-void   SetIniFile(const char *name);
+void   SetIniFile(const char *name = NULL);
 String GetIniKey(const char *name);
 VectorMap<String, String> LoadIniFile(const char *filename);
 

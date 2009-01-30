@@ -14,7 +14,7 @@ GUI_APP_MAIN
 	String name = cmdline[0];
 	UpdateFile(name);
 	String exec = GetExeDirFile(name);
-	for(i = 1; i < cmdline.GetCount(); i++)
+	for(int i = 1; i < cmdline.GetCount(); i++)
 		if(cmdline[i].Find(' ') >= 0)
 			exec << " \"" << cmdline[i] << "\"";
 		else

@@ -362,16 +362,17 @@ VectorMap<String, String> LoadIniFile(const char *filename) {
 }
 
 const char *sIniFile;
+static bool s_ini_loaded;
 
 void SetIniFile(const char *name) {
 	sIniFile = name;
+	s_ini_loaded = false;
 }
 
 String GetIniKey(const char *name) {
-	static bool loaded;
 	static VectorMap<String, String> key;
-	if(!loaded) {
-		loaded = true;
+	if(!s_ini_loaded) {
+		s_ini_loaded = true;
 		key = LoadIniFile(sIniFile ? sIniFile : ~ConfigFile("q.ini"));
 	#ifdef PLATFORM_WIN32
 		if(key.GetCount() == 0)
