@@ -1,5 +1,7 @@
 #include "ScanLine.h"
 
+#ifndef RASTERIZER2
+
 void Rasterizer::Reset()
 {
 #ifdef YLINK
@@ -242,7 +244,7 @@ bool Rasterizer::BeginRender(int y, const Cell *&c, const Cell *&e)
 	if(finish) {
 		AddCurrent();
 		finish = false;
-		DDUMP(cell.GetCount());
+//		DDUMP(cell.GetCount());
 	}
 	if(y < min_y || y > max_y) return false;
 #ifdef YLINK
@@ -353,4 +355,6 @@ EXITBLOCK {
 		LOG(i << " " << d_hist[i] << " " << sum);
 	}
 }
+#endif
+
 #endif

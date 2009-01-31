@@ -122,6 +122,7 @@ GUI_APP_MAIN {
 	for(;;) {
 		time = GetTickCount();
 		if(time - time0 > 1000) break;
+		PAINTER_TIMING("All");
 		PaintLion(sz);
 		n++;
 	}

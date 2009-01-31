@@ -7,8 +7,11 @@ uses
 file
 	ScanLine.h,
 	ScanLine.cpp,
+	Rasterizer.h,
 	Rasterizer.cpp,
-	Rasterizer.hpp,
+	Rasterizer2.h,
+	Rasterizer2.cpp,
+	Rasterizer2.hpp,
 	RasterizerClip.cpp,
 	Lion.cpp,
 	main.cpp;
