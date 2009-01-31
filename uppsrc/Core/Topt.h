@@ -178,8 +178,6 @@ inline void AssertMoveable() {}
 template <class T, class B = EmptyClass>
 class Moveable : public B
 {
-public:
-//	void operator=(const Moveable& b) { B::operator = (b); } // MSC 6.0 empty base class bug fix
 };
 
 #define NTL_MOVEABLE(T)
@@ -209,25 +207,67 @@ inline void AssertMoveable(T *t = 0) { if(t) AssertMoveable0(t); }
 
 #endif
 
-NTL_MOVEABLE(bool);
-NTL_MOVEABLE(char);
-NTL_MOVEABLE(signed char);
-NTL_MOVEABLE(unsigned char);
-NTL_MOVEABLE(short);
-NTL_MOVEABLE(unsigned short);
-NTL_MOVEABLE(int);
-NTL_MOVEABLE(unsigned int);
-NTL_MOVEABLE(long);
-NTL_MOVEABLE(unsigned long);
-NTL_MOVEABLE(int64);
-NTL_MOVEABLE(uint64);
-NTL_MOVEABLE(float);
-NTL_MOVEABLE(double);
-NTL_MOVEABLE(void *);
-NTL_MOVEABLE(const void *);
+template <class T>
+inline void Swap_(T& a, T& b) { T tmp = a; a = b; b = tmp; }
+
+template <class T>
+inline void MoveableSwap(T& x, T& y)
+{
+	if(sizeof(T) == 1)
+		Swap_(*(byte *)&x, *(byte *)&y);
+	else
+	if(sizeof(T) == 2)
+		Swap_(*(uint16 *)&x, *(uint16 *)&y);
+	else
+	if(sizeof(T) == 4)
+		Swap_(*(uint32 *)&x, *(uint32 *)&y);
+	else
+	if(sizeof(T) == 8)
+		Swap_(*(uint64 *)&x, *(uint64 *)&y);
+	else
+	if(sizeof(T) == 12) {
+		Swap_(*(uint64 *)&x, *(uint64 *)&y);
+		Swap_(*((uint32 *)&x + 2), *((uint32 *)&y + 2));
+	}
+	else
+	if(sizeof(T) == 16) {
+		Swap_(*(uint64 *)&x, *(uint64 *)&y);
+		Swap_(*((uint64 *)&x + 1), *((uint64 *)&y + 1));
+	}
+	else
+		Swap_(x, y);
+}
+
+template <class T, class B = EmptyClass>
+class MoveableWithSwap : public Moveable<T, B> {
+	friend void Swap(T& a, T& b)     { MoveableSwap(a, b); }
+	friend void IterSwap(T *a, T *b) { Swap(*a, *b); }
+};
+
+#define NTL_MOVEABLE_WITH_SWAP(T) \
+	inline void Swap(T& a, T& b)     { MoveableSwap(a, b); } \
+	inline void IterSwap(T *a, T *b) { MoveableSwap(*a, *b); } \
+	NTL_MOVEABLE(T)
+
+NTL_MOVEABLE_WITH_SWAP(bool);
+NTL_MOVEABLE_WITH_SWAP(char);
+NTL_MOVEABLE_WITH_SWAP(signed char);
+NTL_MOVEABLE_WITH_SWAP(unsigned char);
+NTL_MOVEABLE_WITH_SWAP(short);
+NTL_MOVEABLE_WITH_SWAP(unsigned short);
+NTL_MOVEABLE_WITH_SWAP(int);
+NTL_MOVEABLE_WITH_SWAP(unsigned int);
+NTL_MOVEABLE_WITH_SWAP(long);
+NTL_MOVEABLE_WITH_SWAP(unsigned long);
+NTL_MOVEABLE_WITH_SWAP(int64);
+NTL_MOVEABLE_WITH_SWAP(uint64);
+NTL_MOVEABLE_WITH_SWAP(float);
+NTL_MOVEABLE_WITH_SWAP(double);
+NTL_MOVEABLE_WITH_SWAP(void *);
+NTL_MOVEABLE_WITH_SWAP(const void *);
 
 #if defined(_NATIVE_WCHAR_T_DEFINED) || defined(COMPILER_GCC)
-NTL_MOVEABLE(wchar_t);
+NTL_MOVEABLE_WITH_SWAP(wchar_t);
 #endif
 
 template <class T, class B = EmptyClass>
