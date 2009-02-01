@@ -35,9 +35,6 @@ struct App : TopWindow {
 	}
 
 	virtual void Paint(Draw& w) {
-		ScanLine a, b;
-		static byte line1[] = { 1, 50, 100, 128, 128, 128, 128, 128, 100, 50, 1 };
-		a = Pack(0, line1, __countof(line1));
 		ImageBuffer ib(500, 500);
 		Fill(~ib, White(), ib.GetLength());
 /*		Apply(ib[20], 100, Black(), a);
@@ -112,6 +109,8 @@ struct App : TopWindow {
 };
 
 GUI_APP_MAIN {
+	DUMP(sizeof(LineSegment));
+	DUMP(sizeof(CubicSegment));
 #ifdef _DEBUG
 	App().Run();
 #else _DEBUG

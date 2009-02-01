@@ -18,13 +18,17 @@ npaths(0),base_dx(0),base_dy(0),scale(1.0){
 	parse_lion();
 };
 void AggTestCtrl::onDraw(Draw& dest){
+	scale = 1;
 	rb.clear(agg::rgba8(255, 255, 255));
-	agg::trans_affine mtx;
-	mtx *= agg::trans_affine_translation(-base_dx/2.0, -base_dy/2.0);
-	mtx *= agg::trans_affine_scaling(scale, scale);
-	mtx *= agg::trans_affine_translation(rbuf.width()/2, rbuf.height()/2);
-	agg::conv_transform<agg::path_storage, agg::trans_affine> trans(path, mtx);
-	agg::render_all_paths(rasterizer, sl, r, trans, colors, path_idx, npaths);
+	for(int i = 0; i < 200; i++) {
+		RTIMING("Lion");
+		agg::trans_affine mtx;
+		mtx *= agg::trans_affine_translation(-base_dx/2.0, -base_dy/2.0);
+		mtx *= agg::trans_affine_scaling(scale, scale);
+		mtx *= agg::trans_affine_translation(rbuf.width()/2, rbuf.height()/2);
+		agg::conv_transform<agg::path_storage, agg::trans_affine> trans(path, mtx);
+		agg::render_all_paths(rasterizer, sl, r, trans, colors, path_idx, npaths);
+	}
 };
 void AggTestCtrl::onInit(){
 };

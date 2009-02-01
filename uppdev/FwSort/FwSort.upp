@@ -7,5 +7,5 @@ file
 	FwSort.cpp;
 
 mainconfig
-	"" = "";
+	"" = "SSE2";
 
