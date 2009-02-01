@@ -1,28 +1,24 @@
 class Rasterizer {
-	struct Cell : MoveableWithSwap<Cell> {
-		int16 x;
-		int16 cover;
-		int   area;
-
-		bool operator<(const Cell& b) const { return x < b.x; }
-    };
-
 	Rectf                   cliprect;
 	double                  x1, y1;
-	Buffer< Vector<Cell> >  cell;
+	Buffer< Vector<dword> >  cell;
 	int                     xmax, ymax;
 	int                     min_y;
 	int                     max_y;
 	Size                    sz;
 
+	inline dword Cell(int x, int w, int c)     { return (x << 18) + (w << 9) + c; }
+	inline int   GetX(dword cell)              { return cell >> 18; }
+	inline int   GetW(dword cell)              { return (cell >> 9) & 511; }
+	inline int   GetC(dword cell)              { return (cell & 256) ? -512 | (cell & 511) : (cell & 511); }
+
 	void  Init();
-	Cell *AddCells(int y, int n);
+	dword *AddCells(int y, int n);
 	void  RenderHLine(int ey, int x1, int y1, int x2, int y2);
 	void  LineClip(double x1, double y1, double x2, double y2);
 	int   CvX(double x);
 	int   CvY(double y);
 	void  CvLine(double x1, double y1, double x2, double y2);
-	bool  BeginRender(int y, const Cell *&c, const Cell *&e);
 
 public:
 	struct Target {

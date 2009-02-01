@@ -6,13 +6,17 @@ uses
 
 file
 	ScanLine.h,
-	ScanLine.cpp,
+	ScanLineFiller.cpp,
+	SolidFiller.cpp,
+	SolidFillerMask.cpp,
 	Rasterizer.h,
 	Rasterizer.cpp,
 	Rasterizer2.h,
 	Rasterizer2.cpp,
-	Rasterizer2.hpp,
+	Rasterizer3.h,
+	Rasterizer3.cpp,
 	RasterizerClip.cpp,
+	help.txt,
 	Lion.cpp,
 	main.cpp;
 

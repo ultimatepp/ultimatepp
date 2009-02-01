@@ -1,3 +1,5 @@
+optimize_speed;
+
 uses
 	CtrlLib,
 	AggCtrl;

@@ -1,6 +1,6 @@
 #include "ScanLine.h"
 
-#ifdef RASTERIZER2
+#ifdef RASTERIZER3
 
 void Rasterizer::Init()
 {
@@ -33,10 +33,10 @@ Rasterizer::Rasterizer(int cx, int cy)
 	Reset();
 }
 
-inline Rasterizer::Cell *Rasterizer::AddCells(int y, int n)
+inline dword *Rasterizer::AddCells(int y, int n)
 {
-	Vector<Cell>& v = cell[y];
-	if(v.GetAlloc() == 0) {
+	Vector<dword>& v = cell[y];
+	if(v.GetCount() == 0) {
 		v.Reserve(16);
 		v.SetCount(n);
 		return &v[0];
@@ -52,15 +52,12 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 	int ex2 = x2 >> 8;
 	int fx1 = x1 & 255;
 	int fx2 = x2 & 255;
-	Cell *c;
+	dword *c;
 	if(y1 == y2)
 		return;
 	int dy = y2 - y1;
 	if(ex1 == ex2) {
-		c = AddCells(ey, 1);
-		c->x = ex1;
-		c->cover = dy;
-		c->area = (fx1 + fx2) * dy;
+		*AddCells(ey, 1) = Cell(ex1, fx1 + fx2, dy);
 		return;
 	}
 	int dx = x2 - x1;
@@ -74,10 +71,7 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 			mod += dx;
 		}
 		c = AddCells(ey, abs(ex2 - ex1) + 1);
-		c->x = ex1;
-		c->cover = delta;
-		c->area = fx1 * delta;
-		c++;
+		*c++ = Cell(ex1, fx1, delta);
 		ex1--;
 		y1 += delta;
 		if(ex1 != ex2) {
@@ -96,18 +90,12 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 					mod -= dx;
 					delta++;
 				}
-				c->x = ex1;
-				c->cover = delta;
-				c->area = delta * 256;
-				c++;
+				*c++ = Cell(ex1, 256, delta);
 				y1 += delta;
 				ex1--;
 			}
 		}
-		c->x = ex2;
-		dy = y2 - y1;
-		c->cover = dy;
-		c->area = (fx2 + 256) * dy;
+		*c++ = Cell(ex2, fx2 + 256, y2 - y1);
 	}
 	else {
 		int p = (256 - fx1) * dy;
@@ -118,10 +106,7 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 			mod += dx;
 		}
 		c = AddCells(ey, abs(ex2 - ex1) + 1);
-		c->x = ex1;
-		c->cover = delta;
-		c->area = (fx1 + 256) * delta;
-		c++;
+		*c++ = Cell(ex1, fx1 + 256, delta);
 		ex1++;
 		y1 += delta;
 		if(ex1 != ex2) {
@@ -140,18 +125,12 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 					mod -= dx;
 					delta++;
 				}
-				c->x = ex1;
-				c->cover = delta;
-				c->area = delta * 256;
-				c++;
+				*c++ = Cell(ex1, 256, delta);
 				y1 += delta;
 				ex1++;
 			}
 		}
-		c->x = ex2;
-		dy = y2 - y1;
-		c->cover = dy;
-		c->area = fx2 * dy;
+		*c++ = Cell(ex2, fx2, y2 - y1);
 	}
 }
 
@@ -177,7 +156,6 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	
 	ASSERT(ey1 >= 0 && ey1 < sz.cy && ey2 >= 0 && ey2 < sz.cy);
 
-	Cell *c;
 	int x_from, x_to;
 	int p, rem, mod, lift, delta, first, incr;
 
@@ -194,7 +172,6 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	if(dx == 0) {
 		int ex = x1 >> 8;
 		int two_fx = (x1 - (ex << 8)) << 1;
-		int area;
 		first = 256;
 		if(dy < 0) {
 			first = 0;
@@ -202,25 +179,15 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 		}
 		x_from = x1;
 		delta = first - fy1;
-		c = AddCells(ey1, 1);
-		c->x = ex1;
-		c->cover = delta;
-		c->area = two_fx * delta;
+		*AddCells(ey1, 1) = Cell(ex1, two_fx, delta);
 		ey1 += incr;
 		delta = first + first - 256;
-		area = two_fx * delta;
 		while(ey1 != ey2) {
-			c = AddCells(ey1, 1);
-			c->x = ex1;
-			c->cover = delta;
-			c->area = area;
+			*AddCells(ey1, 1) = Cell(ex1, two_fx, delta);
 			ey1 += incr;
 		}
 		delta = fy2 - 256 + first;
-		c = AddCells(ey1, 1);
-		c->x = ex1;
-		c->cover = delta;
-		c->area = two_fx * delta;
+		*AddCells(ey1, 1) = Cell(ex1, two_fx, delta);
 		return;
     }
 	p = (256 - fy1) * dx;
@@ -267,7 +234,6 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 
 inline unsigned Alpha(int area)
 {
-//	return min(abs(area >> 9), 256);
 	int cover = area >> 9;
 	if(cover < 0) cover = -cover;
 /*	if(evenodd) {
@@ -275,40 +241,40 @@ inline unsigned Alpha(int area)
 		if(cover > 256)
 			cover = 512 - cover;
     }*/
-/*    if(cover > 255) {
-    	cover = 255;
-    }*/
 	return cover;
 }
 
 void Rasterizer::Render(int y, Target& g)
 {
 	PAINTER_TIMING("Render");
-	const Cell *c, *e;
+	const dword *c, *e;
 	if(y < min_y || y > max_y) return;
-	Vector<Cell>& cl = cell[y];
+	Vector<dword>& cl = cell[y];
 	if(cl.GetCount() == 0) return;
 	Sort(cl);
 	c = cl;
 	e = cl.End();
-	g.Start(c->x, (e - 1)->x);
+	g.Start(GetX(*c), GetX(*(e - 1)));
 	int cover = 0;
 	while(c < e) {
-		int x = c->x;
-		int area = c->area;
-		cover += c->cover;
+		int x = GetX(*c);
+		int cv = GetC(*c);
+		DDUMP(cv);
+		int area = GetW(*c) * cv;
+		cover += cv;
 		c++;
-		while(c < e && c->x == x) {
-			area += c->area;
-			cover += c->cover;
+		while(c < e && GetX(*c) == x) {
+			int cv = GetC(*c);
+			area += GetW(*c) * cv;
+			cover += cv;
 			c++;
 		}
 		if(area) {
-			g.Render(abs(((cover << 9) - area) >> 9));
+			g.Render(Alpha((cover << (8 + 1)) - area));
 			x++;
 		}
-		if(c < e && c->x > x)
-			g.Render(abs(cover), c->x - x);
+		if(c < e && GetX(*c) > x)
+			g.Render(Alpha(cover << (8 + 1)), GetX(*c) - x);
     }
 }
 

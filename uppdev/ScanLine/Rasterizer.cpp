@@ -1,6 +1,6 @@
 #include "ScanLine.h"
 
-#ifndef RASTERIZER2
+#ifdef RASTERIZER1
 
 void Rasterizer::Reset()
 {

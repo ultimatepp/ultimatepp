@@ -2,5 +2,4 @@
 #define _aggtest_icpp_init_stub
 #include "CtrlLib/init"
 #include "AggCtrl/init"
-#include "SDraw/init"
 #endif
