@@ -140,7 +140,7 @@ private:
 		bool           IsCtrl() const             { return ptr.GetBit(); }
 		CellCtrl&      GetCtrl() const            { ASSERT(IsCtrl()); return *(CellCtrl *)ptr.GetPtr(); }
 
-		void           Set(const Display& d)      { ptr.Set0((void *)&d); }
+		void           Set(const Display& d)      { ASSERT(!IsCtrl()); ptr.Set0((void *)&d); }
 		bool           IsDisplay() const          { return !ptr.GetBit() && ptr.GetPtr(); }
 		const Display& GetDisplay() const         { ASSERT(IsDisplay()); return *(const Display *)ptr.GetPtr(); }
 

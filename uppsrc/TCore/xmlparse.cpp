@@ -388,7 +388,7 @@ String ToXml(const char *s, byte charset)
 {
 	if(charset == CHARSET_DEFAULT)
 		charset = GetDefaultCharset();
-	String result;
+	StringBuffer result;
 	for(; *s; s++)
 		/**/ if(*s == '<')  result.Cat("&lt;");
 		else if(*s == '>')  result.Cat("&gt;");
