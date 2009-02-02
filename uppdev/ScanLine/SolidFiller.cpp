@@ -55,13 +55,14 @@ void SolidFiller::Render(int val, int len)
 	}
 }
 
-void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color)
+void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd)
 {
 	Size sz = ib.GetSize();
 	SolidFiller f;
 	f.c = color;
 	for(int y = r.MinY(); y <= r.MaxY(); y++) {
 		f.t = ib[y];
-		r.Render(y, f);
+		r.Render(y, f, evenodd);
 	}
+	r.Reset();
 }

@@ -191,7 +191,7 @@ Image PaintLion(Size sz)
 		r.Move(p[0].x, p[0].y);
 		for(int j = 1; j < p.GetCount(); j++)
 			r.Line(p[j].x, p[j].y);
-		Render(ib, r, l[i].color);
+		Render(ib, r, l[i].color, false);
 		r.Reset();
 	}
 	return ib;

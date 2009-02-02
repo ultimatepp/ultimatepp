@@ -33,15 +33,13 @@ public:
 
 	void LineRaw(int x1, int y1, int x2, int y2);
 	
+	void SetClip(const Rectf& rect);
 	void Move(double x, double y);
 	void Line(double x, double y);
 
 	int  MinY() const                         { return min_y; }
 	int  MaxY() const                         { return max_y; }
-	
-	void SetClip(const Rectf& rect);
-
-	void Render(int y, Target& g);
+	void Render(int y, Target& g, bool evenodd);
 
 	void Reset();
 	

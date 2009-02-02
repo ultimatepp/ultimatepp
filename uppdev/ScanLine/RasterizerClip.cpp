@@ -11,21 +11,9 @@ inline int Cv(double x)
 	return int(x * 256 + 0.5);
 }
 
-inline int Rasterizer::CvX(double x)
-{
-//	PAINTER_TIMING("CvX");
-	return min(Cv(x), xmax);
-}
-
-inline int Rasterizer::CvY(double y)
-{
-	return min(Cv(y), ymax);
-//	PAINTER_TIMING("CvY");
-}
-
 void Rasterizer::CvLine(double x1, double y1, double x2, double y2)
 {
-	LineRaw(CvX(x1), CvY(y1), CvX(x2), CvY(y2));
+	LineRaw(Cv(x1), Cv(y1), Cv(x2), Cv(y2));
 }
 
 void Rasterizer::LineClip(double x1, double y1, double x2, double y2)

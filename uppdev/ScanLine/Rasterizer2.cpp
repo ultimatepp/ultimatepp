@@ -2,6 +2,8 @@
 
 #ifdef RASTERIZER2
 
+#define LLOG(x) // LOG(x)
+
 void Rasterizer::Init()
 {
 	x1 = y1 = 0;
@@ -13,7 +15,7 @@ void Rasterizer::Reset()
 {
 	PAINTER_TIMING("Rasterizer::Reset");
 	Init();
-	for(int i = 0; i < sz.cy; i++)
+	for(int i = 0; i < sz.cy + 1; i++)
 		cell[i].SetCount(0);
 }
 
@@ -26,9 +28,7 @@ Rasterizer::Rasterizer(int cx, int cy)
 {
 	sz.cx = cx;
 	sz.cy = cy;
-	cell.Alloc(sz.cy);
-	ymax = (sz.cy << 8) - 1;
-	xmax = (sz.cx << 8) - 1;
+	cell.Alloc(sz.cy + 1);
 	cliprect = Sizef(sz);
 	Reset();
 }
@@ -158,6 +158,8 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 {
 //	PAINTER_TIMING("LineRaw");
+	LLOG("Rasterizer::LineRaw " << x1 / 256.0 << ':' << y1 / 256.0
+	     << " - " << x2 / 256.0 << ':' << y2 / 256.0);
 	enum dx_limit_e { dx_limit = 16384 << 8 };
 	int dx = x2 - x1;
 	if(dx >= dx_limit || dx <= -dx_limit) {
@@ -175,16 +177,16 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	int fy1 = y1 & 255;
 	int fy2 = y2 & 255;
 	
-	ASSERT(ey1 >= 0 && ey1 < sz.cy && ey2 >= 0 && ey2 < sz.cy);
+	ASSERT(ey1 >= 0 && ey1 <= sz.cy && ey2 >= 0 && ey2 <= sz.cy);
 
 	Cell *c;
 	int x_from, x_to;
 	int p, rem, mod, lift, delta, first, incr;
 
 	if(ey1 < min_y) min_y = ey1;
-	if(ey1 > max_y && ey1 < sz.cy) max_y = ey1;
+	if(ey1 > max_y) max_y = min(ey1, sz.cy - 1);
 	if(ey2 < min_y) min_y = ey2;
-	if(ey2 > max_y && ey2 < sz.cy) max_y = ey2;
+	if(ey2 > max_y) max_y = min(ey2, sz.cy - 1);
 
 	if(ey1 == ey2) {
 		RenderHLine(ey1, x1, fy1, x2, fy2);
@@ -265,23 +267,7 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	RenderHLine(ey1, x_from, 256 - first, x2, fy2);
 }
 
-inline unsigned Alpha(int area)
-{
-//	return min(abs(area >> 9), 256);
-	int cover = area >> 9;
-	if(cover < 0) cover = -cover;
-/*	if(evenodd) {
-		cover &= 511;
-		if(cover > 256)
-			cover = 512 - cover;
-    }*/
-/*    if(cover > 255) {
-    	cover = 255;
-    }*/
-	return cover;
-}
-
-void Rasterizer::Render(int y, Target& g)
+void Rasterizer::Render(int y, Target& g, bool evenodd)
 {
 	PAINTER_TIMING("Render");
 	const Cell *c, *e;
@@ -303,13 +289,26 @@ void Rasterizer::Render(int y, Target& g)
 			cover += c->cover;
 			c++;
 		}
-		if(area) {
-			g.Render(abs(((cover << 9) - area) >> 9));
-			x++;
+		if(evenodd) {
+			if(area) {
+				int h = abs(((cover << 9) - area) >> 9) & 511;
+				g.Render(h > 256 ? 512 - h : h);
+				x++;
+			}
+			if(c < e && c->x > x) {
+				int h = abs(cover) & 511;
+				g.Render(h > 256 ? 512 - h : h, c->x - x);
+			}
 		}
-		if(c < e && c->x > x)
-			g.Render(abs(cover), c->x - x);
-    }
+		else {
+			if(area) {
+				g.Render(min(abs(((cover << 9) - area) >> 9), 256));
+				x++;
+			}
+			if(c < e && c->x > x)
+				g.Render(min(abs(cover), 256), c->x - x);
+		}
+	}
 }
 
 #endif

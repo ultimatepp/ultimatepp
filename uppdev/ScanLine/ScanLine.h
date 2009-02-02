@@ -63,7 +63,7 @@ struct ScanLine {
 
 #endif
 
-void     Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color);
+void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd);
 
 struct VertexTarget {
 	virtual void Move(Pointf p) = 0;
@@ -96,28 +96,28 @@ public:
 	virtual void End();
 };
 
-struct LineSegment {
-	byte   kind;
-	Pointf x;
-};
+double SquareDist(Pointf p1, Pointf p2);
 
-struct QuadraticSegment {
-	byte   kind;
-	Pointf x;
-	Pointf x1;
-};
+void ApproximateQuadratic(VertexTarget& t, Pointf p1, Pointf p2, Pointf p3, double tolerance);
+void ApproximateCubic(VertexTarget& t, Pointf x0, Pointf x1, Pointf x2, Pointf x, double tolerance);
 
-struct CubicSegment {
-	byte   kind;
-	Pointf x;
-	Pointf x1;
-	Pointf x2;
-};
-
-void Quadratic(VertexTarget& t, Pointf x0, Pointf x1, Pointf x, double epsilon);
-void Cubic(VertexTarget& t, Pointf x0, Pointf x1, Pointf x2, Pointf x, double epsilon);
+#define Painter NewPainter
 
 class Painter {
+	enum {
+		MOVE, LINE, QUADRATIC, CUBIC
+	};
+	struct Segment {
+		byte   kind;
+		Pointf p;
+	};	
+	struct QuadraticSegment : Segment{
+		Pointf p1;
+	};	
+	struct CubicSegment : QuadraticSegment {
+		Pointf p2;
+	};
+	
 	Vector<byte> path;
 	
 	template <class T>
@@ -126,10 +126,12 @@ class Painter {
 		path.SetCount(q + sizeof(T));
 		return *(T *)&path[q];
 	}
-
-	void Move(Pointf t) {
-	}
+	
+public:
+	void Move(Pointf p);
+	void Line(Pointf p);
+	void Quadratic(Pointf p1, Pointf p);
+	void Cubic(Pointf p1, Pointf p2, Pointf p);
 };
-
 
 #endif

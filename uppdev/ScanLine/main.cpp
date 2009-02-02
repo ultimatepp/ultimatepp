@@ -2,11 +2,21 @@
 
 Image PaintLion(Size sz);
 
+struct Raget : VertexTarget {
+	Rasterizer& r;
+
+	virtual void Line(Pointf p)   { r.Line(p.x, p.y); DUMP(p); }
+	virtual void Move(Pointf p)   { r.Move(p.x, p.y); }
+	virtual void End() {}
+
+	Raget(Rasterizer& r) : r(r) {}
+};
+
 struct App : TopWindow {
 	double x1, y1, x2, y2, x3, y3;
 
 	String Text() {
-		return Format("Move(%f, %f) Line(%f, %f)  Line(%f, %f)", x1, y1, x2, y2, x3, y3);
+		return Format("r.Move(%f, %f);\nr.Line(%f, %f);\nr.Line(%f, %f);\nr.Line(%f, %f);\n", x1, y1, x2, y2, x3, y3, x1, y1);
 	}
 	
 	virtual void LeftDown(Point p, dword keyflags)
@@ -35,7 +45,7 @@ struct App : TopWindow {
 	}
 
 	virtual void Paint(Draw& w) {
-		ImageBuffer ib(500, 500);
+		ImageBuffer ib(600, 600);
 		Fill(~ib, White(), ib.GetLength());
 /*		Apply(ib[20], 100, Black(), a);
 		a.x = 10;
@@ -45,45 +55,15 @@ struct App : TopWindow {
 			Apply(ib[50 + 2 * i], 100, Black(), And(a, b));
 		}
 */		
-		Rasterizer r(500, 500);
-		r.SetClip(RectfC(100, 100, 200, 200));
+		Rasterizer r(600, 600);
+//		r.SetClip(RectfC(100, 100, 200, 200));
 
 
 #if 0
-		r.Move( 36.000000, 142.000000);
-		r.Line(480.000000, 148.000000);
-		r.Line(429.000000, 148.000000);
-		r.Line( 36.000000, 142.000000);
-#endif	
-#if 0
-		r.Move(121.000000, 121.000000);
+		r.Move(195.000000, 65.000000);
 		r.Line(0.000000, 0.000000);
-		r.Line(597.000000, 44.000000);
-		r.Line(121.000000, 121.000000);
-#endif
-#if 0
-		r.Move(153.000000, 297.000000);
-		r.Line(173.000000, 255.000000);
-		r.Line(564.000000, 213.000000);
-		r.Line(153.000000, 297.000000);
-#endif
-#if 0
-		r.Move(285.000000, 84.000000);
-		r.Line(0.000000, 0.000000);
-		r.Line(43.000000, 247.000000);
-		r.Line(285.000000, 84.000000);
-#endif
-#if 0
-		r.Move(44.000000, 89.000000);
-		r.Line(107.000000, 37.000000);
-		r.Line(323.000000, 262.000000);
-		r.Line(44.000000, 89.000000);		
-#endif
-#if 1
-		r.Move(365.000000, 209.000000);
-		r.Line(376.000000, 150.000000);
-		r.Line(69.000000, 226.000000);
-		r.Line(365.000000, 209.000000);
+		r.Line(183.000000, 501.000000);
+		r.Line(195.000000, 65.000000);
 #endif
 #if 0
 		r.Move(x1, y1);
@@ -91,16 +71,31 @@ struct App : TopWindow {
 		r.Line(x3, y3);
 		r.Line(x1, y1);
 #endif
-/*		for(int y = r.MinY(); y <= r.MaxY(); y++) {
-			ScanLine sl = r.Get(y);
-			DUMP(sl);
-			Apply(ib[y], 500, Blue(), sl);
-		}
-*/		
+
+		Raget q(r);
+#if 1
+		r.Move(200, 300);
+		ApproximateQuadratic(q, Pointf(200, 300), Pointf(400, 50), Pointf(600, 300), 0.3);
+		r.Line(200, 300);
+		Render(ib, r, Red(), false);
+#endif
+		r.Move(100, 200);
+		ApproximateCubic(q, Pointf(100, 200), Pointf(100, 100), Pointf(250, 100), Pointf(250, 200), 0.2);
+		r.Line(150, 400);
+		r.Line(100, 200);
+		Render(ib, r, Blue(), false);
+	
+		LOG("---------");
+/*
+		r.Move(200, 300);
+		Quadratic(q, Pointf(200, 300), Pointf(400, 50), Pointf(600, 300), 10);
+		r.Line(200, 300);
+		Render(ib, r, Blue(), false);
+*/
 		w.DrawRect(GetSize(), White());
 		w.DrawImage(0, 0, ib);
 		w.DrawText(0, GetSize().cy - 40, Text());
-		w.DrawImage(300, 300, PaintLion(GetSize()));
+//		w.DrawImage(300, 300, PaintLion(GetSize()));
 	}
 
 	App() {
@@ -109,10 +104,9 @@ struct App : TopWindow {
 };
 
 GUI_APP_MAIN {
-	DUMP(sizeof(LineSegment));
-	DUMP(sizeof(CubicSegment));
-#ifdef _DEBUG
 	App().Run();
+#ifdef _DEBUG
+//	App().Run();
 #else _DEBUG
 	Size sz(800, 600);
 	int time;
