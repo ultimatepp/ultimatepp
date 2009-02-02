@@ -33,15 +33,15 @@ void FwSortSimple(I begin, I end, const Less& less)
 }
 
 template <class I, class Less>
-inline I SelectMin2(I ptr, const Less& less)
+inline int SelectMin2(I ptr, int i, const Less& less)
 {
-	return less(ptr[0], ptr[1]) ? ptr : ptr + 1;
+	return less(ptr[i + 1], ptr[i]);
 }
 
 template <class I, class Less>
-inline I SelectMin3(I ptr, const Less& less)
+inline int SelectMin3(I ptr, int i, const Less& less)
 {
-	I l = SelectMin2(ptr, less);
+	int l = SelectMin2(ptr, less);
 	I h = ptr + 2;
 	return less(*l, *h) ? l : h;
 }
