@@ -273,8 +273,13 @@ bool Sqlite3Session::Open(const char* filename) {
 	// However, using the ATTACH sql command, it can connect to more databases.
 	// I don't know how to get the list of attached databases from the API
 	current_dbname = "main";
-	bool opened = (SQLITE_OK == sqlite3_open(filename, &db));
-	return opened;
+	if(SQLITE_OK == sqlite3_open(filename, &db))
+		return true;
+	if(db) {
+		sqlite3_close(db);
+		db = NULL;
+	}
+	return false;
 }
 void Sqlite3Session::Close() {
 	if (NULL != db) {
