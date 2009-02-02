@@ -65,7 +65,8 @@ void   Splitter::Paint(Draw& w) {
 		w.DrawRect(r, GUI_GlobalStyle() >= GUISTYLE_XP ? Blend(SColorHighlight, SColorFace) : SColorShadow);
 		w.ExcludeClip(r);
 	}
-	w.DrawRect(sz, SColorFace());
+	if(!IsTransparent())
+		w.DrawRect(sz, SColorFace());
 	w.End();
 }
 
