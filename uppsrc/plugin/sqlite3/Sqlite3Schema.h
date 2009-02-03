@@ -45,18 +45,10 @@
 #define UNIQUE                     ATTRIBUTE("create unique index IDX_@x on @t(@c);", \
                                              "drop index IDX_@x;")
 
-#define REFERENCES(x)              ATTRIBUTE("alter table @t add (constraint FK_@x foreign key "\
-                                             "(@c) references " #x ");",\
-                                             "alter table @t drop constraint FK_@x;")
-#define REFERENCES_CASCADE(x)      ATTRIBUTE("alter table @t add (constraint FK_@x foreign key "\
-                                             "(@c) references " #x " on delete cascade);",\
-                                             "alter table @t drop constraint FK_@x;")
-#define REFERENCES_(n, x)          ATTRIBUTE("alter table @t add (constraint FK_@x$" #n " foreign key "\
-                                             "(@c) references " #x ");",\
-                                             "alter table @t drop constraint FK_@x$" #n ";")
-#define REFERENCES_CASCADE_(n, x)  ATTRIBUTE("alter table @t add (constraint FK_@x$" #n " foreign key "\
-                                             "(@c) references " #x " on delete cascade);",\
-                                             "alter table @t drop constraint FK_@x$" #n ";")
+#define REFERENCES(x)
+#define REFERENCES_CASCADE(x)
+#define REFERENCES_(n, x)
+#define REFERENCES_CASCADE_(n, x)
 
 #define DUAL_PRIMARY_KEY(k1, k2)   INLINE_ATTRIBUTE(", primary key (" #k1 ", " #k2 ")")
 

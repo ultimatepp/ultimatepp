@@ -188,6 +188,7 @@ private:
 	int   dropline, dropcol;
 	int   sortcolumn;
 	bool  sortcolumndescending;
+	bool  columnsortfindkey;
 	int   acceptingrow;
 
 	mutable int   selectcount;
@@ -586,6 +587,7 @@ public:
 	ArrayCtrl& NoFocusSetCursor()                      { focussetcursor = false; return *this; }
 	ArrayCtrl& MovingHeader(bool b)                    { header.Moving(b); return *this; }
 	ArrayCtrl& NoMovingHeader()                        { return MovingHeader(false); }
+	ArrayCtrl& ColumnSortFindKey()                     { columnsortfindkey = true; return *this; }
 	ArrayCtrl& AllSorting();
 
 	ArrayCtrl& ColumnWidths(const char *s);
