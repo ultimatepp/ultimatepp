@@ -57,7 +57,7 @@ void Exp(const char *s, SqlStatement sql)
 }
 #endif
 
-CONSOLE_APP_MAIN
+GUI_APP_MAIN
 {
 #ifdef GENERATE_QTF
 	qtf << "[C1 {{1:1 SqlExp C`+`+:: PostgreSQL";

@@ -3,7 +3,7 @@
 
 using namespace Upp;
 
-#define MODEL <SQLArray/db.sch>
+#define MODEL <SqlArray/db.sch>
 
 #define SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>
 #include "Sql/sch_header.h"
