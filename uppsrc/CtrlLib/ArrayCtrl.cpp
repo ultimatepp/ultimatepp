@@ -2128,6 +2128,7 @@ void ArrayCtrl::Sort(int from, int count, const ArrayCtrl::Order& order) {
 
 void ArrayCtrl::ColumnSort(int column, const ValueOrder& order)
 {
+	Value key = GetKey();
 	CHECK(KillCursor());
 	ClearCache();
 	Vector<Value> hv;
@@ -2137,6 +2138,8 @@ void ArrayCtrl::ColumnSort(int column, const ValueOrder& order)
 	SortB(GetStableSortOrder(hv, order));
 	Refresh();
 	SyncInfo();
+	if(columnsortfindkey)
+		FindSetCursor(key);
 }
 
 void ArrayCtrl::SetSortColumn(int ii, bool desc)
@@ -2308,6 +2311,7 @@ void ArrayCtrl::Reset() {
 	sortcolumn = -1;
 	allsorting = false;
 	acceptingrow = 0;
+	columnsortfindkey = false;
 	linecy = Draw::GetStdFontCy();
 	Clear();
 	sb.SetLine(linecy);
