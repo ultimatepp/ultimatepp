@@ -9,6 +9,6 @@ file
 	SqlExp.cpp;
 
 mainconfig
-	"" = "",
-	"" = "QTF";
+	"" = "GUI",
+	"" = "GUI QTF";
 
