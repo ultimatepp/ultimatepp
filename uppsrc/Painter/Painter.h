@@ -44,7 +44,7 @@ enum {
 	LINECAP_SQUARE = agg::square_cap,
 	LINECAP_ROUND = agg::round_cap,
 
-	LINEJOIN_MITER = agg::miter_join,
+	LINEJOIN_MITER = agg::miter_join_revert,
 	LINEJOIN_ROUND = agg::round_join,
 	LINEJOIN_BEVEL = agg::bevel_join,
 	

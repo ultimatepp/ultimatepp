@@ -237,6 +237,7 @@ class FontInfo : Moveable<FontInfo> {
 	};
 
 	struct Data : public Link<Data, 2> {
+		bool         HasChar(int ch) const;
 		void         GetMetrics(CharMetrics *t, int from, int count);
 	#ifdef PLATFORM_X11
 		void         CreateFont(int i, int cs);
@@ -319,6 +320,7 @@ public:
 	int        GetOverhang() const                { return ptr->overhang; }
 	int        GetAveWidth() const                { return ptr->avewidth; }
 	int        GetMaxWidth() const                { return ptr->maxwidth; }
+	int        HasChar(int ch) const              { return ptr->HasChar(ch); }
 	int        GetWidth(int c) const;
 	int        operator[](int c) const            { return GetWidth(c); }
 	int        GetLeftSpace(int c) const;
