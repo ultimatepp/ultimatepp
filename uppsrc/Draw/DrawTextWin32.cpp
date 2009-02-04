@@ -38,6 +38,19 @@ dword Font::GetFaceInfo(int index) {
 	                                                    : 0;
 }
 
+void Win32_GetGlyphIndices(HDC hdc, LPCWSTR s, int n, LPWORD r, DWORD flag)
+{
+	typedef DWORD (WINAPI *GGIW)(HDC, LPCWSTR, int, LPWORD, DWORD);
+	static GGIW fn;
+	ONCELOCK
+		if(HMODULE hDLL = LoadLibrary("gdi32"))
+			fn = (GGIW) GetProcAddress(hDLL, "GetGlyphIndicesW");
+	if(fn)
+		fn(hdc, s, n, r, flag);
+	else
+		memset(r, 0, n * sizeof(WORD));
+}
+
 int CALLBACK Draw::AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dword type, LPARAM param)
 {
 #ifdef PLATFORM_WINCE
@@ -62,30 +75,23 @@ int CALLBACK Draw::AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dword typ
 		typ |= Font::LOCAL;
 #ifndef PLATFORM_WINCE
 	{
-		typedef DWORD (WINAPI *GGIW)(HDC, LPCWSTR, int, LPWORD, DWORD);
-		static GGIW fn;
-		ONCELOCK
-			if(HMODULE hDLL = LoadLibrary("gdi32"))
-				fn = (GGIW) GetProcAddress(hDLL, "GetGlyphIndicesW");
-		if(fn) {
-			HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
-			HFONT hfnt = (HFONT) CreateFontIndirect(logfont);
-			HFONT o = (HFONT) SelectObject(hdc, hfnt);
-			wchar wch[128];
-			WORD  pos[128];
-			for(int i = 0; i < 128; i++)
-				wch[i] = i + 256;
-			(*fn)(hdc,  (LPCWSTR) wch, 128, pos, 1);
-			SelectObject(hdc, o);
-			DeleteObject(hfnt);
-			DeleteDC(hdc);
-			int n = 0;
-			for(int i = 0; i < 128; i++)
-				if(pos[i] == 0xffff)
-					n++;
-			if(n > 10)
-				typ |= Font::COMPOSED;
-		}
+		HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
+		HFONT hfnt = (HFONT) CreateFontIndirect(logfont);
+		HFONT o = (HFONT) SelectObject(hdc, hfnt);
+		wchar wch[128];
+		WORD  pos[128];
+		for(int i = 0; i < 128; i++)
+			wch[i] = i + 256;
+		Win32_GetGlyphIndices(hdc,  (LPCWSTR) wch, 128, pos, 1);
+		SelectObject(hdc, o);
+		DeleteObject(hfnt);
+		DeleteDC(hdc);
+		int n = 0;
+		for(int i = 0; i < 128; i++)
+			if(pos[i] == 0xffff)
+				n++;
+		if(n > 10)
+			typ |= Font::COMPOSED;
 	}
 #endif
 #ifdef PLATFORM_WINCE
@@ -195,6 +201,17 @@ FontInfo::Data::~Data()
 		if(base[i]) delete[] base[i];
 }
 
+bool FontInfo::Data::HasChar(int ch) const
+{
+	HDC hdc = ScreenHDC();
+	HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
+	WCHAR c = ch;
+	WORD pos;
+	Win32_GetGlyphIndices(hdc, &c, 1, &pos, 1);
+	::SelectObject(hdc, ohfont);	
+	return pos != 0xffff;
+}
+
 int sGetCW(HDC hdc, wchar *h, int n)
 {
 	SIZE sz;
@@ -207,7 +224,6 @@ void FontInfo::Data::GetMetrics(CharMetrics *t, int from, int count)
 	HDC hdc = ScreenHDC();
 	HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
 	if(from >= 8192) {
-		TIMING("GetMetricsSlow");
 		wchar h[3];
 		h[0] = 'x';
 		h[1] = 'x';
