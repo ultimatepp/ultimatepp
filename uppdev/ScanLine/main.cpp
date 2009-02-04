@@ -80,7 +80,7 @@ struct App : TopWindow {
 		Render(ib, r, Red(), false);
 #endif
 		r.Move(100, 200);
-		ApproximateCubic(q, Pointf(100, 200), Pointf(100, 100), Pointf(250, 100), Pointf(250, 200), 0.2);
+		ApproximateCubic(q, Pointf(100, 200), Pointf(100, 100), Pointf(250, 100), Pointf(250, 200), 2);
 		r.Line(150, 400);
 		r.Line(100, 200);
 		Render(ib, r, Blue(), false);
