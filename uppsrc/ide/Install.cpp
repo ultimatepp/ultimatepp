@@ -246,7 +246,7 @@ bool CopyFolder(const char *dst, const char *src, Progress *pi)
 
 bool CopyFolder(Progress& pi, const char *dst, const char *src)
 {
-	CopyFolder(dst, src, &pi);
+	return CopyFolder(dst, src, &pi);
 }
 
 void ChkSupp(const char *s, String& dir)
