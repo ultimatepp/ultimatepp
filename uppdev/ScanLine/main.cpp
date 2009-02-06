@@ -14,6 +14,8 @@ struct Raget : VertexTarget {
 
 struct App : TopWindow {
 	double x1, y1, x2, y2, x3, y3;
+	
+	Pointf p1, p2, p3, p4;
 
 	String Text() {
 		return Format("r.Move(%f, %f);\nr.Line(%f, %f);\nr.Line(%f, %f);\nr.Line(%f, %f);\n", x1, y1, x2, y2, x3, y3, x1, y1);
@@ -21,30 +23,24 @@ struct App : TopWindow {
 	
 	virtual void LeftDown(Point p, dword keyflags)
 	{
-		x1 = p.x;
-		y1 = p.y;
+		(keyflags & K_ALT ? p4 : p1) = p;
 		Refresh();
-		ClearClipboard();
-		AppendClipboardText(Text());
 	}
 	virtual void RightDown(Point p, dword)
 	{
-		x2 = p.x;
-		y2 = p.y;
+		p2 = p;
 		Refresh();
-		ClearClipboard();
-		AppendClipboardText(Text());
 	}
 	virtual void MouseMove(Point p, dword keyflags)
 	{
-		x3 = p.x;
-		y3 = p.y;
+		p2 = p;
 		Refresh();
-		ClearClipboard();
-		AppendClipboardText(Text());
 	}
+	virtual Image CursorImage(Point p, dword keyflags) { return Image::Cross(); }
 
-	virtual void Paint(Draw& w) {
+	virtual void Paint(Draw& w);
+
+	virtual void Paint1(Draw& w) {
 		ImageBuffer ib(600, 600);
 		Fill(~ib, White(), ib.GetLength());
 /*		Apply(ib[20], 100, Black(), a);
@@ -72,15 +68,14 @@ struct App : TopWindow {
 		r.Line(x1, y1);
 #endif
 
-		Raget q(r);
 #if 1
 		r.Move(200, 300);
-		ApproximateQuadratic(q, Pointf(200, 300), Pointf(400, 50), Pointf(600, 300), 0.3);
+//		ApproximateQuadratic(q, Pointf(200, 300), Pointf(400, 50), Pointf(600, 300), 0.3);
 		r.Line(200, 300);
 		Render(ib, r, Red(), false);
 #endif
 		r.Move(100, 200);
-		ApproximateCubic(q, Pointf(100, 200), Pointf(100, 100), Pointf(250, 100), Pointf(250, 200), 2);
+//		ApproximateCubic(q, Pointf(100, 200), Pointf(100, 100), Pointf(250, 100), Pointf(250, 200), 2);
 		r.Line(150, 400);
 		r.Line(100, 200);
 		Render(ib, r, Blue(), false);
@@ -99,9 +94,86 @@ struct App : TopWindow {
 	}
 
 	App() {
-		x1 = y1 = x2 = y2 = 0;
+		p1 = p4 = Pointf(100, 100);
+		p2 = Pointf(200, 100);
+		p3 = Pointf(150, 200);
 	}
 };
+
+struct RasterizerTarget : VertexTarget {
+	Rasterizer&  r;
+	ImageBuffer& ib;
+	
+	virtual void Line(const Pointf& p)
+	{
+		r.Line(p.x, p.y);
+	}
+	virtual void Move(const Pointf& p)
+	{
+		r.Move(p.x, p.y);
+	}
+	virtual void End()
+	{
+		Render(ib, r, Black(), false);
+	}
+	
+	RasterizerTarget(ImageBuffer& ib, Rasterizer& r) : ib(ib), r(r) {}
+};
+
+#if 1
+void App::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	ImageBuffer ib(sz.cx, sz.cy);
+	Rasterizer r(sz.cx, sz.cy);
+	Fill(~ib, White(), ib.GetLength());
+	RasterizerTarget tgt(ib, r);
+
+	Stroker s(20, 4, 0.3, LINECAP_ROUND, LINEJOIN_ROUND);
+
+	s|tgt;
+	
+	s.Move(p1);
+	s.Line(p2);
+//	s.Line(p3);
+//	s.Line(p4);
+	s.End();
+
+	w.DrawImage(0, 0, ib);
+}
+
+#else
+struct LineTarget : VertexTarget {
+	Draw& w;
+	Pointf p;
+	
+	virtual void Line(const Pointf& p1)
+	{
+		w.DrawLine(p.x, p.y, p1.x, p1.y);
+		p = p1;
+	}
+	virtual void Move(const Pointf& p1)
+	{
+		p = p1;
+	}
+	virtual void End() {}
+	
+	LineTarget(Draw& w) : w(w) {}
+};
+
+void App::Paint(Draw& w)
+{
+	w.DrawRect(GetSize(), White());
+	LineTarget ltg(w);
+	Stroker s(20, 4, 0.3, LINECAP_ROUND, LINEJOIN_ROUND);
+	s|ltg;
+	s.Move(p1);
+	s.Line(p2);
+//	s.Line(p3);
+//	s.Line(p4);
+	s.End();
+}
+#endif
 
 GUI_APP_MAIN {
 	App().Run();

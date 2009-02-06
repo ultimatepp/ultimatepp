@@ -40,14 +40,14 @@ GUI_APP_MAIN
 	for(int i = 0; i < 10; i++) {
 		int a, b;
 		do {
-			a = Random(20) + 1;
-			b = Random(20) + 1;
+			a = Random(35) + 1;
+			b = Random(35) + 1;
 		}
 		while(a + b < 0 || a + b > 20);
 		r.DrawText(10, 10 + isz.cy * 2 * i, Format("%d + %d = ", a, b), fnt);
 		do {
-			a = Random(20) + 1;
-			b = Random(20) + 1;
+			a = Random(35) + 1;
+			b = Random(35) + 1;
 		}
 		while(a - b < 0);
 		r.DrawText(2000, 10 + isz.cy * 2 * i, Format("%d - %d = ", a, b), fnt);

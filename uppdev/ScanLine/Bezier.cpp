@@ -1,16 +1,7 @@
 #include "ScanLine.h"
 
-double SquareDist(Pointf p1, Pointf p2)
-{
-	return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
-}
-
-Pointf Mid(Pointf a, Pointf b)
-{
-	return (a + b) / 2;
-}
-
-static void sQuadratic(VertexTarget& t, Pointf p1, Pointf p2, Pointf p3, double qt, int lvl)
+static void sQuadratic(VertexTarget& t, const Pointf& p1, const Pointf& p2, const Pointf& p3,
+                       double qt, int lvl)
 {
 	if(lvl < 32) {
 		Pointf d = p3 - p1;
@@ -31,14 +22,16 @@ static void sQuadratic(VertexTarget& t, Pointf p1, Pointf p2, Pointf p3, double 
 	t.Line(p3);
 }
 
-void ApproximateQuadratic(VertexTarget& t, Pointf p1, Pointf p2, Pointf p3, double tolerance)
+void ApproximateQuadratic(VertexTarget& t, const Pointf& p1, const Pointf& p2, const Pointf& p3,
+                          double tolerance)
 {
 	sQuadratic(t, p1, p2, p3, tolerance * tolerance, 0);
 	t.Line(p3);
 }
 
-static void sCubic(VertexTarget& t, Pointf p1, Pointf p2, Pointf p3, Pointf p4, double qt,
-                   int lvl)
+static void sCubic(VertexTarget& t,
+                   const Pointf& p1, const Pointf& p2, const Pointf& p3, const Pointf& p4,
+                   double qt, int lvl)
 {
 	if(lvl < 32) {
 		Pointf d = p4 - p1;
@@ -66,7 +59,9 @@ static void sCubic(VertexTarget& t, Pointf p1, Pointf p2, Pointf p3, Pointf p4, 
 	t.Line(p4);
 }
 
-void ApproximateCubic(VertexTarget& t, Pointf p1, Pointf p2, Pointf p3, Pointf p4, double tolerance)
+void ApproximateCubic(VertexTarget& t,
+                      const Pointf& p1, const Pointf& p2, const Pointf& p3, const Pointf& p4,
+                      double tolerance)
 {
 	sCubic(t, p1, p2, p3, p4, tolerance * tolerance, 0);
 	t.Line(p4);

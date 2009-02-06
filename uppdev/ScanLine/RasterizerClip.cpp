@@ -8,7 +8,7 @@ void Rasterizer::Move(double x, double y)
 
 inline int Cv(double x)
 {
-	return int(x * 256 + 0.5);
+	return fround(x * 256);
 }
 
 void Rasterizer::CvLine(double x1, double y1, double x2, double y2)
