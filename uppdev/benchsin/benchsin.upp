@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	benchsin.cpp;
+
+mainconfig
+	"" = "SSE2",
+	"" = "";
+

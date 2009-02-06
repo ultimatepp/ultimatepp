@@ -1,12 +1,11 @@
 uses
-	CtrlLib;
+	CtrlLib,
+	Geom;
 
 file
-	"GeomTest.h"
-	, main.cpp
-
-
-;
+	GeomTest.h,
+	main.cpp;
 
 mainconfig
 	"" = "GUI ST";
+

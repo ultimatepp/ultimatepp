@@ -7,12 +7,14 @@ struct App : TopWindow {
 	Pointf p1;
 	Pointf p2;
 	Pointf p3;
+	bool   round;
 
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void MouseMove(Point p, dword keyflags);
 	virtual void Paint(Draw& w);
+	virtual Image CursorImage(Point p, dword keyflags) { return Image::Cross(); }
 	
-	App() { BackPaint(); p2 = p3 = Pointf(0.0, 0.0); p1 = Pointf(300.0, 300.0); }
+	App() { BackPaint(); p2 = Pointf(1195, 300); p3 = Pointf(500.0, 300.0); p1 = Pointf(300.0, 300.0); round = true; }
 };
 
 Pointf Ortogonal(Pointf p)
@@ -20,47 +22,40 @@ Pointf Ortogonal(Pointf p)
 	return Pointf(-p.y, p.x);
 }
 
+double SquareLength(Pointf p)
+{
+	return p.x * p.x + p.y * p.y;
+}
+
 double Length(Pointf p)
 {
-	return sqrt(p.x * p.x + p.y * p.y);
+	return sqrt(SquareLength(p));
 }
 
-double Intersection0(Pointf p1, Pointf v1, Pointf p2, Pointf v2)
+double Bearing(Pointf p)
 {
-// p1.x + v1.x * t1 = p2.x + v2.x * t2;
-// p1.y + v1.y * t1 = p2.y + v2.y * t2;
-// t2 = (p1.x + v1.x * t1 - p2.x) / v2.x
-// m2 = v2.y / v2.x;
-// p1.y + v1.y * t1 = p2.y + v2.y * (p1.x + v1.x * t1 - p2.x) / v2.x;
-// p1.y + v1.y * t1 = p2.y + m2 * p1.x + m2 * v1.x * t1 - m2 * p2.x;
-
-// p1.y + v1.y * t1 = ;
-// v1.y * t1 - m2 * v1.x * t1 = p2.y + m2 * p1.x - m2 * p2.x - p1.y;
-// t1 = (p2.y + m2 * p1.x - m2 * p2.x - p1.y) / (v1.y - m2 * v1.x)
-	double m2 = v2.y / v2.x;
-	return (p2.y - p1.y + m2 * (p1.x - p2.x)) / (v1.y - m2 * v1.x);
-}
-
-Pointf Swapped(Pointf p)
-{
-	return Pointf(p.y, p.x);
-}
-
-double Intersection(Pointf p1, Pointf v1, Pointf p2, Pointf v2)
-{
-	return v2.x < 1e-30 ? Intersection0(Swapped(p1), Swapped(v1), Swapped(p2), Swapped(v2))
-	                    : Intersection0(p1, v1, p2, v2);
-}
-
-Pointf Mirror(Pointf c, Pointf p)
-{
-	return 2 * c - p;
+	if(p.y == 0)
+		return (p.x >= 0 ? 0 : M_PI);
+	if(p.x == 0)
+		return (p.y >= 0 ? M_PI_2 : 3 * M_PI_2);
+	double b = atan2(p.y, p.x);
+	if(b < 0)
+		b += 2 * M_PI;
+	return b;
 }
 
 double Distance(Pointf p1, Pointf p2)
 {
 	return Length(p1 - p2);
 }
+
+double SquareDistance(Pointf p1, Pointf p2)
+{
+	return SquareLength(p1 - p2);
+}
+
+Pointf PolarPointf(double a)                         { return Pointf(cos(a), sin(a)); }
+Pointf Polar(Pointf p, double r, double a)           { return p + r * PolarPointf(a) ; }
 
 void App::LeftDown(Point p, dword keyflags)
 {
@@ -74,79 +69,125 @@ void App::MouseMove(Point p, dword keyflags)
 	Refresh();
 }
 
+void Round(Painter& sw, Pointf p, Pointf v1, Pointf v2, double r)
+{
+	double tolerance = 0.3;
+	double a1 = Bearing(v1);
+	double a2 = Bearing(v2);
+	double df = acos(1 - tolerance / r);
+	if(a1 < a2)
+		a1 += 2 * M_PI;
+	while(a1 > a2) {
+		sw.Line(Polar(p, r, a1));
+		a1 -= df;
+	}
+}
+
 void App::Paint(Draw& w)
 {
 	ImageBuffer ib(GetSize());
 	BufferPainter sw(ib);
 	sw.Clear(White());
-	sw.Move(p1.x, p1.y).Line(p2.x, p2.y).Line(p3.x, p3.y);
-	sw.Stroke(40, Gray());
-	sw.Stroke(2, LtRed());
+	
+	int join = 0;
+//	sw.Move(p1.x, p1.y).Line(p2.x, p2.y).Line(p3.x, p3.y);
+//	sw.Stroke(40, Gray());
+//	sw.Stroke(2, LtRed());
 	
 	sw.Circle(p2.x, p2.y, 3).Fill(White()).Stroke(1, Black());
-	
+
 	double w2 = 20;
-	double miterlimit = 4 * w2;
+	double qmiterlimit = 16 * w2 * w2;
 	
 	Pointf v1 = p2 - p1;
-	Pointf o1 = Ortogonal(v1);
-	double l1 = Length(v1);
-	double u1 = w2 / l1;
+	Pointf o1 = Ortogonal(v1) * w2 / Length(v1);
 	
-	Pointf t1 = p1 + u1 * o1;
-	Pointf b1 = p1 - u1 * o1;
+	Pointf t1 = p1 + o1;
+	Pointf b1 = p1 - o1;
 
 	Pointf v2 = p3 - p2;
-	Pointf o2 = Ortogonal(v2);
-	double l2 = Length(v2);
-	double u2 = w2 / l2;
+	Pointf o2 = Ortogonal(v2) * w2 / Length(v2);
 	
-	Pointf t2 = p2 + u2 * o2;
-	Pointf b2 = p2 - u2 * o2;
-//	DrawPoint(w, t2);
-//	DrawPoint(w, b2);
-	
-	double s1 = Intersection(t1, v1, t2, v2);
+	Pointf t2 = p2 + o2;
+	Pointf b2 = p2 - o2;
 
-	Pointf ts = t1 + s1 * v1;
-	Pointf bs = Mirror(p2, ts);
-	
-	Pointf t3 = p3 + u2 * o2;
-	Pointf b3 = p3 - u2 * o2;
-
-	if(s1 < 1) {
-		Swap(t1, b1);
-		Swap(t2, b2);
-		Swap(ts, bs);
-		Swap(t3, b3);
-		u1 = -u1;
-		u2 = -u2;
+	Color c;
+	double d = join == 1 ? 0 : v1.y * v2.x - v2.y * v1.x;
+	if(d > 1e-30) {
+		Pointf ts = t1 + v1 * (v2.y * (t1.x - t2.x) - v2.x * (t1.y - t2.y)) / d;
+		sw.Move(t1);
+		if(join || SquareDistance(ts, p2) > qmiterlimit) {
+			sw.Line(t1 + v1);
+			if(join == 2)
+				Round(sw, p2, o1, o2, w2);
+			sw.Line(t2);
+		}
+		else
+			sw.Line(ts);
+		sw.Line(t2 + v2);
+		sw.Move(b2 + v2);
+		sw.Line(b2);
+		sw.Line(p2);
+		sw.Line(b1 + v1);
+		sw.Line(b1);
+		c = LtBlue();
 	}
-
-	if(Distance(ts, p2) > miterlimit) {
-		Pointf bevel1 = p2 + u1 * o1;
-		Pointf bevel2 = p2 + u2 * o2;
-		sw.Move(t1.x, t1.y);
-		sw.Line(bevel1.x, bevel1.y);
-		sw.Line(bevel2.x, bevel2.y);
-		sw.Line(t3.x, t3.y);
+	else
+	if(d < -1e-30) {
+		Pointf ts = b2 + v2 * (v1.y * (t2.x - t1.x) - v1.x * (t2.y - t1.y)) / d;
+		sw.Move(b2 + v2);
+		if(join || SquareDistance(ts, p2) > qmiterlimit) {
+			sw.Line(b2);
+			if(join == 2)
+				Round(sw, p2, -o2, -o1, w2);
+			sw.Line(b1 + v1);
+		}
+		else
+			sw.Line(ts);
+		sw.Line(b1);
+		sw.Move(t1);
+		sw.Line(t1 + v1);
+		sw.Line(p2);
+		sw.Line(t2);
+		sw.Line(t2 + v2);
+		c = LtGreen();
 	}
 	else {
-		sw.Move(t1.x, t1.y);
-		sw.Line(ts.x, ts.y);
-		sw.Line(t3.x, t3.y);
+		sw.Move(t1);
+		sw.Line(t1 + v1);
+		if(round)
+			Round(sw, p2, o1, o2, w2);
+		sw.Line(t2);
+		sw.Line(t2 + v2);
+		sw.Move(b2 + v2);
+		sw.Line(b2);
+		sw.Line(b1 + v1);
+		sw.Line(b1);
+		c = LtRed();
 	}
-	
-	sw.Move(b1.x, b1.y);
-	sw.Line(bs.x, bs.y);
-	sw.Line(b3.x, b3.y);
-	sw.Stroke(1, LtRed());
+
+
+	sw.Move(b1);
+	sw.Line(t1);
+
+	sw.Move(p3 - o2);
+	sw.Line(p3 + o2);
+
+#if 0
+	sw.EvenOdd(true);
+	sw.Fill(c);
+#else
+	sw.Stroke(1, c);
+#endif
 
 	w.DrawImage(0, 0, ib);
+	
+	String s;
+	s << p1 << " - " << p2 << " - " << p3 << ", D=" << d;
+	w.DrawText(0, 0, s);
 }
 
 GUI_APP_MAIN
 {
 	App().Run();
 }
-

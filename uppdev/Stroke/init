@@ -2,4 +2,5 @@
 #define _Stroke_icpp_init_stub
 #include "CtrlLib/init"
 #include "Painter/init"
+#include "Geom/init"
 #endif

@@ -65,28 +65,66 @@ struct ScanLine {
 
 void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd);
 
+double SquareDist(const Pointf& p1, const Pointf& p2);
+Pointf Mid(const Pointf& a, const Pointf& b);
+Pointf Ortogonal(const Pointf& p);
+double SquareLength(const Pointf& p);
+double Length(const Pointf& p);
+double Bearing(const Pointf& p);
+double Distance(const Pointf& p1, const Pointf& p2);
+double SquareDistance(const Pointf& p1, const Pointf& p2);
+Pointf PolarPointf(double a);
+Pointf Polar(const Pointf& p, double r, double a);
+
 struct VertexTarget {
-	virtual void Move(Pointf p) = 0;
-	virtual void Line(Pointf p) = 0;
+	virtual void Move(const Pointf& p) = 0;
+	virtual void Line(const Pointf& p) = 0;
 	virtual void End() = 0;
 };
 
 struct VertexProcessor : VertexTarget {
 	VertexTarget *target;
+	
+	void PutMove(const Pointf& p) { target->Move(p); }
+	void PutLine(const Pointf& p) { target->Line(p); }
+	void PutEnd()                 { target->End(); }
+	
+	VertexProcessor& operator|(VertexProcessor& b) { target = &b; return b; }
+	void             operator|(VertexTarget& b)    { target = &b; }
 };
 
-class Stroker : VertexProcessor {
-public:
-	virtual void Move(double x, double y);
-	virtual void Line(double x, double y);
-	virtual void End();
+enum {
+	LINECAP_BUTT,
+	LINECAP_SQUARE,
+	LINECAP_ROUND,
+
+	LINEJOIN_MITER,
+	LINEJOIN_ROUND,
+	LINEJOIN_BEVEL,
 };
 
-class Dasher : VertexProcessor {
+class Stroker : public VertexProcessor {
+	double w2;
+	double qmiter;
+	double fid;
+
+	Pointf p0, v0, o0, a0, b0;
+	Pointf p1, v1, o1, a1, b1;
+	Pointf p2;
+	int    linecap;
+	int    linejoin;
+	
+	void   Finish();
+	void   Round(const Pointf& p, const Pointf& v1, const Pointf& v2, double r);
+	void   Cap(const Pointf& p0, const Pointf& v0, const Pointf& o0,
+	           const Pointf& a0, const Pointf& b0);
+
 public:
-	virtual void Move(double x, double y);
-	virtual void Line(double x, double y);
+	virtual void Move(const Pointf& p);
+	virtual void Line(const Pointf& p);
 	virtual void End();
+	
+	Stroker(double width, double miterlimit, double tolerance, int linecap, int linejoin);
 };
 
 class Transformer : VertexProcessor {
@@ -96,10 +134,8 @@ public:
 	virtual void End();
 };
 
-double SquareDist(Pointf p1, Pointf p2);
-
-void ApproximateQuadratic(VertexTarget& t, Pointf p1, Pointf p2, Pointf p3, double tolerance);
-void ApproximateCubic(VertexTarget& t, Pointf x0, Pointf x1, Pointf x2, Pointf x, double tolerance);
+void ApproximateQuadratic(VertexTarget& t, const Pointf& p1, const Pointf& p2, const Pointf& p3, double tolerance);
+void ApproximateCubic(VertexTarget& t, const Pointf& x0, const Pointf& x1, const Pointf& x2, const Pointf& x, double tolerance);
 
 #define Painter NewPainter
 
