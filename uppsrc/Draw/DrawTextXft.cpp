@@ -88,6 +88,11 @@ static int sCheckComposed(const char *face)
 	return n > 10;
 }
 
+bool FontInfo::Data::HasChar(int ch) const
+{
+	return XftCharExists(Xdisplay, xftfont, ch);
+}
+
 void Draw::InitPlatformFonts()
 {
 	for(int i = 0; i < __countof(basic_fonts); i++) {
