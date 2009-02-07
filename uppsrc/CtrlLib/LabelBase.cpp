@@ -240,7 +240,7 @@ Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
 		p.y = (r.bottom + r.top - txtsz.cy) / 2;
 	Color color = ink;
 	if(IsNull(color))
-		color = disabled ? SColorDisabled : SColorText;
+		color = disabled ? SColorDisabled : SColorLabel; /////////
 	int ix;
 	if(IsNull(lspc))
 		ix = r.left + push;
