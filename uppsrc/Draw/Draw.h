@@ -429,6 +429,7 @@ Color SColorMark();
 Color SColorDisabled();
 Color SColorLight();
 Color SColorFace();
+Color SColorLabel();
 Color SColorShadow();
 
 Color SColorLtFace();
@@ -466,6 +467,7 @@ void SColorMark_Write(Color c);
 void SColorDisabled_Write(Color c);
 void SColorLight_Write(Color c);
 void SColorFace_Write(Color c);
+void SColorLabel_Write(Color c);
 void SColorShadow_Write(Color c);
 
 void SColorLtFace_Write(Color c);

@@ -34,9 +34,9 @@ CH_COLOR(SColorDisabled, Gray());
 CH_COLOR(SColorLight, White());
 CH_COLOR(SColorShadow, Gray());
 CH_COLOR(SColorMark, LtBlue());
+CH_COLOR(SColorLabel, Black()); //////////////
 
 CH_COLOR(SColorLtFace, Blend(SColorFace, SColorLight));
 CH_COLOR(SColorDkShadow, Blend(SColorShadow, SColorText));
-CH_COLOR(SColorLabel, SColorText());
 
 END_UPP_NAMESPACE
