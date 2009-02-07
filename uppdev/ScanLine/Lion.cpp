@@ -185,12 +185,12 @@ Image PaintLion(Size sz)
 	}
 
 	static Vector<ColorPolygon> l = Lion();
-	Rasterizer r(sz.cx, sz.cy);
+	static Rasterizer r(sz.cx, sz.cy);
 	for(int i = 0; i < l.GetCount(); i++) {
 		Vector<Pointf>& p = l[i].point;
-		r.Move(p[0].x, p[0].y);
+		r.Move(p[0]);
 		for(int j = 1; j < p.GetCount(); j++)
-			r.Line(p[j].x, p[j].y);
+			r.Line(p[j]);
 		Render(ib, r, l[i].color, false);
 		r.Reset();
 	}

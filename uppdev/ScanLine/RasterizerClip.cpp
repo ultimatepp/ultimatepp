@@ -1,14 +1,8 @@
 #include "ScanLine.h"
 
-void Rasterizer::Move(double x, double y)
-{
-	x1 = x;
-	y1 = y;
-}
-
 inline int Cv(double x)
 {
-	return fround(x * 256);
+	return int(x * 256 + 0.5);
 }
 
 void Rasterizer::CvLine(double x1, double y1, double x2, double y2)
@@ -92,10 +86,14 @@ void Rasterizer::LineClip(double x1, double y1, double x2, double y2)
 	CvLine(x1, y1, x2, y2);
 }
 
-void Rasterizer::Line(double x2, double y2)
+void Rasterizer::Move(const Pointf& p)
+{
+	p0 = p;
+}
+
+void Rasterizer::Line(const Pointf& p)
 {
 	PAINTER_TIMING("Line");
-	LineClip(x1, y1, x2, y2);
-	x1 = x2;
-	y1 = y2;
+	LineClip(p0.x, p0.y, p.x, p.y);
+	p0 = p;
 }
