@@ -1,5 +1,16 @@
 #include "ScanLine.h"
 
+#define LLOG(x) LOG(x)
+
+void VertexTarget::End()
+{
+}
+
+void VertexFilter::End()
+{
+	PutEnd();
+}
+
 Stroker::Stroker(double width, double miterlimit, double tolerance, int linecap, int linejoin)
 :	linecap(linecap),
 	linejoin(linejoin)
@@ -13,6 +24,7 @@ Stroker::Stroker(double width, double miterlimit, double tolerance, int linecap,
 
 void Stroker::Move(const Pointf& p)
 {
+	LLOG("Stroker::Move " << p);
 	Finish();
 	p1 = p;
 	p0 = p2 = Null;
@@ -33,16 +45,19 @@ void Stroker::Round(const Pointf& p, const Pointf& v1, const Pointf& v2, double 
 
 void Stroker::Line(const Pointf& p3)
 {
-	if(p3 == p2)
-		return;
+	LLOG("Stroker::Line " << p3);
 	if(IsNull(p1)) {
 		Move(p3);
 		return;
 	}
 	if(IsNull(p2)) {
+		Pointf v = p3 - p1;
+		double l = Length(v);
+		if(l < 1e-30)
+			return;
 		p2 = p3;
-		v1 = p2 - p1;
-		o1 = Ortogonal(v1) * w2 / Length(v1);
+		v1 = v;
+		o1 = Ortogonal(v1) * w2 / l;
 		a1 = p1 + o1;
 		b1 = p1 - o1;
 		if(IsNull(p0)) {
@@ -56,7 +71,10 @@ void Stroker::Line(const Pointf& p3)
 	}
 
 	Pointf v2 = p3 - p2;
-	Pointf o2 = Ortogonal(v2) * w2 / Length(v2);
+	double l = Length(v2);
+	if(l < 1e-30)
+		return;
+	Pointf o2 = Ortogonal(v2) * w2 / l;
 	Pointf a2 = p2 + o2;
 	Pointf b2 = p2 - o2;
 
@@ -128,7 +146,7 @@ void Stroker::Cap(const Pointf& p, const Pointf& v, const Pointf& o,
 
 void Stroker::Finish()
 {
-	if(IsNull(p1) || IsNull(p2))
+	if(IsNull(p1) || IsNull(p2) || IsNull(p0))
 		return;
 	if(p2 == p0)
 		Line(p0 + v0);
@@ -140,11 +158,11 @@ void Stroker::Finish()
 		Cap(p0, v0, o0, b0, a0);
 		Cap(p2, -v1, -o1, a1 + v1, b1 + v1);
 	}
-	p1 = p2 = Null;
-	PutEnd();
+	p0 = p1 = p2 = Null;
 }
 
 void Stroker::End()
 {
 	Finish();
+	PutEnd();
 }

@@ -1,12 +1,10 @@
 #include "ScanLine.h"
 
-#ifdef RASTERIZER2
-
 #define LLOG(x) // LOG(x)
 
 void Rasterizer::Init()
 {
-	x1 = y1 = 0;
+	p0 = Pointf(0, 0);
 	min_y = INT_MAX;
 	max_y = INT_MIN;
 }
@@ -157,9 +155,33 @@ inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
 
 void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 {
-//	PAINTER_TIMING("LineRaw");
+	PAINTER_TIMING("LineRaw");
 	LLOG("Rasterizer::LineRaw " << x1 / 256.0 << ':' << y1 / 256.0
 	     << " - " << x2 / 256.0 << ':' << y2 / 256.0);
+	int ex1 = x1 >> 8;
+	int ex2 = x2 >> 8;
+	int ey1 = y1 >> 8;
+	int ey2 = y2 >> 8;
+
+	ASSERT(ey1 >= 0 && ey1 <= sz.cy && ey2 >= 0 && ey2 <= sz.cy);
+
+	if(ey1 < min_y) {
+		if(ey1 < 0) return;
+		min_y = ey1;
+	}
+	if(ey1 > max_y) {
+		if(ey1 > sz.cy) return;
+		max_y = min(ey1, sz.cy - 1);
+	}
+	if(ey2 < min_y) {
+		if(ey2 < 0) return;
+		min_y = ey2;
+	}
+	if(ey2 > max_y) {
+		if(ey2 > sz.cy) return;
+		max_y = min(ey2, sz.cy - 1);
+	}
+
 	enum dx_limit_e { dx_limit = 16384 << 8 };
 	int dx = x2 - x1;
 	if(dx >= dx_limit || dx <= -dx_limit) {
@@ -170,23 +192,13 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 		return;
     }
 	int dy = y2 - y1;
-	int ex1 = x1 >> 8;
-	int ex2 = x2 >> 8;
-	int ey1 = y1 >> 8;
-	int ey2 = y2 >> 8;
 	int fy1 = y1 & 255;
 	int fy2 = y2 & 255;
 	
-	ASSERT(ey1 >= 0 && ey1 <= sz.cy && ey2 >= 0 && ey2 <= sz.cy);
 
 	Cell *c;
 	int x_from, x_to;
 	int p, rem, mod, lift, delta, first, incr;
-
-	if(ey1 < min_y) min_y = ey1;
-	if(ey1 > max_y) max_y = min(ey1, sz.cy - 1);
-	if(ey2 < min_y) min_y = ey2;
-	if(ey2 > max_y) max_y = min(ey2, sz.cy - 1);
 
 	if(ey1 == ey2) {
 		RenderHLine(ey1, x1, fy1, x2, fy2);
@@ -310,5 +322,3 @@ void Rasterizer::Render(int y, Target& g, bool evenodd)
 		}
 	}
 }
-
-#endif

@@ -3,8 +3,6 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-#define RASTERIZER2
-
 using namespace Upp;
 
 #define PAINTER_TIMING(x)  //  RTIMING(x)
@@ -49,22 +47,6 @@ struct ScanLine {
 	String ToString() const;
 };
 
-#ifdef RASTERIZER2
-
-#include "Rasterizer2.h"
-
-#elif defined(RASTERIZER3)
-
-#include "Rasterizer3.h"
-
-#else
-
-#include "Rasterizer.h"
-
-#endif
-
-void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd);
-
 double SquareDist(const Pointf& p1, const Pointf& p2);
 Pointf Mid(const Pointf& a, const Pointf& b);
 Pointf Ortogonal(const Pointf& p);
@@ -79,18 +61,20 @@ Pointf Polar(const Pointf& p, double r, double a);
 struct VertexTarget {
 	virtual void Move(const Pointf& p) = 0;
 	virtual void Line(const Pointf& p) = 0;
-	virtual void End() = 0;
+	virtual void End();
 };
 
-struct VertexProcessor : VertexTarget {
+struct VertexFilter : VertexTarget {
 	VertexTarget *target;
 	
-	void PutMove(const Pointf& p) { target->Move(p); }
-	void PutLine(const Pointf& p) { target->Line(p); }
-	void PutEnd()                 { target->End(); }
+	virtual void End();
+
+	void PutMove(const Pointf& p)               { target->Move(p); }
+	void PutLine(const Pointf& p)               { target->Line(p); }
+	void PutEnd()                               { target->End(); }
 	
-	VertexProcessor& operator|(VertexProcessor& b) { target = &b; return b; }
-	void             operator|(VertexTarget& b)    { target = &b; }
+	VertexFilter& operator|(VertexFilter& b)    { target = &b; return b; }
+	void          operator|(VertexTarget& b)    { target = &b; }
 };
 
 enum {
@@ -103,7 +87,7 @@ enum {
 	LINEJOIN_BEVEL,
 };
 
-class Stroker : public VertexProcessor {
+class Stroker : public VertexFilter {
 	double w2;
 	double qmiter;
 	double fid;
@@ -127,19 +111,79 @@ public:
 	Stroker(double width, double miterlimit, double tolerance, int linecap, int linejoin);
 };
 
-class Transformer : VertexProcessor {
+struct Dasher : public VertexFilter {
+	Vector<double> pattern;
+	int            patterni;
+	double         rem;
+	bool           flag;
+	Pointf         p0;
+
+	void    Put(const Pointf& p);
+
 public:
-	virtual void Move(double x, double y);
-	virtual void Line(double x, double y);
-	virtual void End();
+	virtual void Move(const Pointf& p);
+	virtual void Line(const Pointf& p);
+	
+	Dasher(double width, const Vector<double>& pattern, double distance);
 };
 
 void ApproximateQuadratic(VertexTarget& t, const Pointf& p1, const Pointf& p2, const Pointf& p3, double tolerance);
 void ApproximateCubic(VertexTarget& t, const Pointf& x0, const Pointf& x1, const Pointf& x2, const Pointf& x, double tolerance);
 
-#define Painter NewPainter
+class Rasterizer : public VertexTarget {
+public:
+	virtual void Move(const Pointf& p);
+	virtual void Line(const Pointf& p);
 
-class Painter {
+private:
+	struct Cell : MoveableWithSwap<Cell> {
+		int16 x;
+		int16 cover;
+		int   area;
+
+		bool operator<(const Cell& b) const { return x < b.x; }
+    };
+
+	Rectf                   cliprect;
+	Pointf                  p0;
+	Buffer< Vector<Cell> >  cell;
+	int                     xmax, ymax;
+	int                     min_y;
+	int                     max_y;
+	Size                    sz;
+
+	void  Init();
+	Cell *AddCells(int y, int n);
+	void  RenderHLine(int ey, int x1, int y1, int x2, int y2);
+	void  LineClip(double x1, double y1, double x2, double y2);
+	int   CvX(double x);
+	int   CvY(double y);
+	void  CvLine(double x1, double y1, double x2, double y2);
+	bool  BeginRender(int y, const Cell *&c, const Cell *&e);
+
+public:
+	struct Target {
+		virtual void Start(int x, int len) = 0;
+		virtual void Render(int val) = 0;
+		virtual void Render(int val, int len) = 0;
+	};
+
+	void LineRaw(int x1, int y1, int x2, int y2);
+	
+	void SetClip(const Rectf& rect);
+
+	int  MinY() const                         { return min_y; }
+	int  MaxY() const                         { return max_y; }
+	void Render(int y, Target& g, bool evenodd);
+
+	void Reset();
+	
+	Rasterizer(int cx, int cy);
+};
+
+void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd);
+
+class BufferPainter {
 	enum {
 		MOVE, LINE, QUADRATIC, CUBIC
 	};
