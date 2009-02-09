@@ -668,11 +668,8 @@ bool PlotterCtrl::Push(Point pt, dword keyflags)
 	bool push = false;
 	SyncPush();
 	drag_start = FromPushClient(pt);
-	if(drag_drop) {
-//		lock_drag_drop = true;
+	if(drag_drop)
 		push = drag_drop->Push(drag_start, keyflags);
-//		lock_drag_drop = false;
-	}
 	return push;
 }
 
@@ -694,28 +691,20 @@ void PlotterCtrl::Drag(Point start, Point prev, Point curr, dword keyflags)
 
 void PlotterCtrl::Drop(Point start, Point end, dword keyflags)
 {
-	if(drag_drop) {
-		lock_drag_drop = true;
+	if(drag_drop)
 		drag_drop->Drop(drag_start, FromPushClient(end), keyflags);
-		lock_drag_drop = false;
-	}
 }
 
 void PlotterCtrl::Click(Point pt, dword keyflags)
 {
-	if(drag_drop) {
-		lock_drag_drop = true;
+	if(drag_drop)
 		drag_drop->Click(FromPushClient(pt), keyflags);
-		lock_drag_drop = false;
-	}
 }
 
 void PlotterCtrl::Cancel()
 {
 	if(drag_drop) {
-		lock_drag_drop = true;
 		drag_drop->Cancel();
-		lock_drag_drop = false;
 	}
 }
 
