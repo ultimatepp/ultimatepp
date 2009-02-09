@@ -58,23 +58,22 @@ double SquareDistance(const Pointf& p1, const Pointf& p2);
 Pointf PolarPointf(double a);
 Pointf Polar(const Pointf& p, double r, double a);
 
-struct VertexTarget {
+struct LinearPathConsumer {
 	virtual void Move(const Pointf& p) = 0;
 	virtual void Line(const Pointf& p) = 0;
 	virtual void End();
 };
 
-struct VertexFilter : VertexTarget {
-	VertexTarget *target;
-	
+struct LinearPathFilter : LinearPathConsumer {
 	virtual void End();
+
+	LinearPathConsumer *target;
 
 	void PutMove(const Pointf& p)               { target->Move(p); }
 	void PutLine(const Pointf& p)               { target->Line(p); }
 	void PutEnd()                               { target->End(); }
 	
-	VertexFilter& operator|(VertexFilter& b)    { target = &b; return b; }
-	void          operator|(VertexTarget& b)    { target = &b; }
+	template <class T> T& operator|(T& b)       { target = &b; return b; }
 };
 
 enum {
@@ -87,7 +86,7 @@ enum {
 	LINEJOIN_BEVEL,
 };
 
-class Stroker : public VertexFilter {
+class Stroker : public LinearPathFilter {
 	double w2;
 	double qmiter;
 	double fid;
@@ -111,7 +110,7 @@ public:
 	Stroker(double width, double miterlimit, double tolerance, int linecap, int linejoin);
 };
 
-struct Dasher : public VertexFilter {
+struct Dasher : public LinearPathFilter {
 	Vector<double> pattern;
 	int            patterni;
 	double         rem;
@@ -127,10 +126,10 @@ public:
 	Dasher(double width, const Vector<double>& pattern, double distance);
 };
 
-void ApproximateQuadratic(VertexTarget& t, const Pointf& p1, const Pointf& p2, const Pointf& p3, double tolerance);
-void ApproximateCubic(VertexTarget& t, const Pointf& x0, const Pointf& x1, const Pointf& x2, const Pointf& x, double tolerance);
+void ApproximateQuadratic(LinearPathConsumer& t, const Pointf& p1, const Pointf& p2, const Pointf& p3, double tolerance);
+void ApproximateCubic(LinearPathConsumer& t, const Pointf& x0, const Pointf& x1, const Pointf& x2, const Pointf& x, double tolerance);
 
-class Rasterizer : public VertexTarget {
+class Rasterizer : public LinearPathConsumer {
 public:
 	virtual void Move(const Pointf& p);
 	virtual void Line(const Pointf& p);
@@ -182,6 +181,25 @@ public:
 };
 
 void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd);
+
+struct Xform2D {
+	Pointf x, y, t;
+	
+	Pointf GetScaleXY() const;
+	double GetScale() const;
+	bool   IsRegular() const;
+	Pointf Transform(const Pointf& f) const;
+	
+	static Xform2D Identity();
+	static Xform2D Translation(double x, double y);
+	static Xform2D Scale(double sx, double sy);
+	static Xform2D Scale(double scale);
+	static Xform2D Rotation(double fi);
+	static Xform2D Sheer(double fi);	
+};
+
+Xform2D operator*(const Xform2D& a, const Xform2D& b);
+Xform2D Inverse(const Xform2D& m);
 
 class BufferPainter {
 	enum {

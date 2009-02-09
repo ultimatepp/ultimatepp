@@ -30,4 +30,3 @@ void BufferPainter::Cubic(Pointf p1, Pointf p2, Pointf p)
 	m.p1 = p1;
 	m.p2 = p2;
 }
-

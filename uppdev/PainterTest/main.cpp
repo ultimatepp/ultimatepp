@@ -1,4 +1,4 @@
-#include "ScanLine.h"
+#include "PainterTest.h"
 
 Image PaintLion(Size sz);
 

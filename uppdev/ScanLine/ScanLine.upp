@@ -13,7 +13,7 @@ file
 	Bezier.cpp,
 	Stroker.cpp,
 	Dasher.cpp,
-	Xform.cpp,
+	Xform2D.cpp,
 	Rasterizer.cpp,
 	RasterizerClip.cpp,
 	Path.cpp,

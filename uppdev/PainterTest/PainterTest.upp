@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	PainterTest.h,
+	lion.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

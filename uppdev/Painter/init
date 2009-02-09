@@ -1,0 +1,5 @@
+#ifndef _Painter_icpp_init_stub
+#define _Painter_icpp_init_stub
+#include "Core/init"
+#include "CtrlLib/init"
+#endif
