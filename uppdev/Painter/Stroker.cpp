@@ -1,15 +1,8 @@
-#include "ScanLine.h"
+#include "Painter.h"
 
-#define LLOG(x) LOG(x)
+#define LLOG(x) // DLOG(x)
 
-void LinearPathConsumer::End()
-{
-}
-
-void LinearPathFilter::End()
-{
-	PutEnd();
-}
+NAMESPACE_UPP
 
 Stroker::Stroker(double width, double miterlimit, double tolerance, int linecap, int linejoin)
 :	linecap(linecap),
@@ -32,7 +25,6 @@ void Stroker::Move(const Pointf& p)
 
 void Stroker::Round(const Pointf& p, const Pointf& v1, const Pointf& v2, double r)
 {
-	double tolerance = 0.3;
 	double a1 = Bearing(v1);
 	double a2 = Bearing(v2);
 	if(a1 < a2)
@@ -166,3 +158,5 @@ void Stroker::End()
 	Finish();
 	PutEnd();
 }
+
+END_UPP_NAMESPACE

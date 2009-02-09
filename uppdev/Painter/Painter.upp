@@ -1,0 +1,30 @@
+optimize_speed;
+
+uses
+	Core,
+	CtrlLib;
+
+file
+	Painter.h,
+	Painter.hpp,
+	Painter.cpp,
+	PainterPath.cpp,
+	BufferPainter.h,
+	Math.cpp,
+	Xform2D.cpp,
+	Approximate.cpp,
+	Stroker.cpp,
+	Dasher.cpp,
+	Transformer.cpp,
+	Rasterizer.cpp,
+	RasterizerClip.cpp,
+	ScanLineFiller.cpp,
+	SolidFiller.cpp,
+	SolidFillerMask.cpp,
+	Path.cpp,
+	Context.cpp,
+	Render.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,4 +1,6 @@
-#include "ScanLine.h"
+#include "Painter.h"
+
+NAMESPACE_UPP
 
 static void sQuadratic(LinearPathConsumer& t, const Pointf& p1, const Pointf& p2, const Pointf& p3,
                        double qt, int lvl)
@@ -66,3 +68,5 @@ void ApproximateCubic(LinearPathConsumer& t,
 	sCubic(t, p1, p2, p3, p4, tolerance * tolerance, 0);
 	t.Line(p4);
 }
+
+END_UPP_NAMESPACE
