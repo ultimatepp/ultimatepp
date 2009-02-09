@@ -30,7 +30,9 @@ void App::DoPaint0(Painter& sw)
 	sw.Opacity(~ctrl.opacity);
 	sw.LineCap(~ctrl.linecap);
 	sw.LineJoin(~ctrl.linejoin);
+	{ PAINTER_TIMING("FILL");
 	sw.Clear(White());
+	}
 	PAINTER_TIMING("Paint");
 	if(list.IsCursor())
 		Examples()[list.GetCursor()].example(sw);
@@ -64,7 +66,7 @@ void App::Benchmark()
 	for(;;) {
 		time = GetTickCount();
 		if(time - time0 > 1000) break;
-		ImageBuffer ib(GetSize());
+		ImageBuffer ib(800, 600);
 		BufferPainter sw(ib);
 		DoPaint(sw);
 		n++;

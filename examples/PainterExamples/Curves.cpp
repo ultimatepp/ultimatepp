@@ -2,7 +2,9 @@
 
 void Triangle(Painter& sw)
 {
-	sw.Move(100, 100).Line(300, 100).Line(200, 300).Fill(Red()).Stroke(3, Blue());
+	sw.Move(100, 100).Line(300, 102).Line(200, 300).Fill(Red()).Stroke(3, Blue());
+	sw.Translate(500, 0);
+	sw.Move(100, 100).Line(300, 102).Line(200, 300).Fill(Red()).Dash("10").Stroke(5, Blue());
 }
 
 void Cubic(Painter& sw)

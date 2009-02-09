@@ -24,6 +24,8 @@ file
 	RadialMaskBlending.cpp,
 	RichText.cpp,
 	Stroke.cpp,
+	Path.cpp,
+	ThinLine.cpp,
 	Examples.lay,
 	Test.iml;
 
