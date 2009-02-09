@@ -132,6 +132,9 @@ public:
 	void StdView();
 	
 	void InitPickMatrix() { picking.InitPickMatrix(); }
+	
+	void Refresh()        { pane.Refresh(); }
+	
 	Vector<int> Pick(int x, int y);
 };
 

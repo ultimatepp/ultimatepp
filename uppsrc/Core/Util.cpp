@@ -425,7 +425,21 @@ String TextSettings::Get(const char *group, const char *key) const
 {
 	int itemi = settings.Find(group);
 	return itemi < 0 ? Null : settings.Get(group).Get(key, Null);
+}
 
+String TextSettings::Get(int groupIndex, const char *key) const
+{
+	return groupIndex >= 0 && groupIndex < settings.GetCount() ?
+	              settings[groupIndex].Get(key, Null) : Null;
+}
+
+String TextSettings::Get(int groupIndex, int keyIndex) const
+{
+	if (groupIndex >= 0 && groupIndex < settings.GetCount())
+		return keyIndex >= 0 && keyIndex < settings[groupIndex].GetCount() ?
+		          settings[groupIndex][keyIndex] : Null;
+	else
+		return Null;
 }
 
 // --------------------------------------------------------------

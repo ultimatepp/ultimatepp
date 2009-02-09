@@ -300,12 +300,20 @@ class TextSettings {
 public:
 	String Get(const char *group, const char *key) const;
 	String Get(const char *key) const                            { return Get("", key); }
-
+	String Get(int groupIndex, const char *key) const;
+	String Get(int groupIndex, int keyIndex) const;
+	
 	String operator()(const char *group, const char *key) const  { return Get(group, key); }
 	String operator()(const char *key) const                     { return Get(key); }
 
 	void Clear()                                                 { settings.Clear(); }
 	void Load(const char *filename);
+	
+	int GetGroupCount()                                          { return settings.GetCount(); }
+	int GetKeyCount(int group)                                   { return settings[group].GetCount(); }
+	
+	String GetGroupName(int groupIndex)                          { return settings.GetKey(groupIndex); }
+	String GetKey(int groupIndex, int keyIndex)                  { return settings[groupIndex].GetKey(keyIndex); }
 };
 
 // ------------------- Advanced streaming --------------------
