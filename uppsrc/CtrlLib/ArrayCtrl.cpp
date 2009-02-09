@@ -1114,6 +1114,14 @@ bool ArrayCtrl::AcceptRow() {
 		Column& m = column[i];
 		if(m.edit && !m.edit->Accept())
 			return false;
+		if(IsCtrl(cursor, i)) {
+			Ctrl *c =  GetCtrl(cursor, i).ctrl;
+			acceptingrow++;
+			bool b = c->Accept();
+			acceptingrow--;
+			if(!b)
+				return false;
+		}
 	}
 	for(i = 0; i < control.GetCount(); i++)
 		if(!control[i].ctrl->Accept())
