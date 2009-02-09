@@ -145,64 +145,53 @@ static char g_lion[] =
 	"M 147,338 L 142,341 L 143,345 L 141,354 L 147,343 L 147,338 L 147,338 L 147,338\n"
 	"M 157,342 L 156,349 L 150,356 L 157,353 L 163,346 L 162,342 L 157,342 L 157,342 L 157,342\n"
 	"M 99,265 L 96,284 L 92,299 L 73,339 L 73,333 L 87,300 L 99,265 L 99,265 L 99,265\n";
-    
-       
-void PaintLion(Painter& sw)
+
+struct ColorPolygon : Moveable<ColorPolygon> {
+	Vector<Pointf> point;
+	Color          color;
+};
+
+Vector<ColorPolygon> Lion()
 {
 	const char* ptr = g_lion;
-	unsigned npaths = 0;
-	Color color = Null;
-	Vector<Point> p;
-	
-	while (*ptr) {
-		if (*ptr != 'M' && isalnum(*ptr)) {
-			if(!IsNull(color)) {
-				sw.Fill(color);
-				p.Clear();
-			}
-			unsigned c = 0;
-			sscanf(ptr, "%x", &c);
-			color = Color(c >> 16, (c >> 8) & 255, c & 255);
-			while (*ptr && *ptr != '\n')
-				ptr++;
-			if (*ptr == '\n')
-				ptr++;
+	Vector<ColorPolygon> data;
+	Color color;
+	CParser p(g_lion);
+	while(!p.IsEof())
+		if(p.Char('M')) {
+			data.Add().color = color;
+			goto line;
+		}
+		else
+		if(p.Char('L')) {
+		line:
+			double x = p.ReadDouble();
+			p.Char(',');
+			double y = p.ReadDouble();
+			data.Top().point.Add(Pointf(x, y));
 		}
 		else {
-			double x = 0.0;
-			double y = 0.0;
-			
-			while (*ptr && *ptr != '\n') {
-				int c = *ptr;
-				
-				while (*ptr && !isdigit(*ptr))
-					ptr++;
-					
-				x = ScanDouble(ptr);
-				
-				while (*ptr &&  isdigit(*ptr))
-					ptr++;
-					
-				while (*ptr && !isdigit(*ptr))
-					ptr++;
-
-				y = ScanDouble(ptr);
-				
-				if(c == 'M')
-					sw.Move(x, y);
-				else
-					sw.Line(x, y);
-				while (*ptr && isdigit(*ptr))
-					ptr++;
-				while (*ptr && *ptr != '\n' && !isalpha(*ptr))
-					ptr++;
-			}
-			if (*ptr == '\n')
-				ptr++;
+			dword c = p.ReadNumber(16);
+			color = Color(c >> 16, (c >> 8) & 255, c & 255);
 		}
+	return data;
+}
+
+void PaintLion(Painter& sw)
+{
+	static Vector<ColorPolygon> l = Lion();
+	for(int i = 0; i < l.GetCount(); i++) {
+		Vector<Pointf>& p = l[i].point;
+		sw.Move(p[0].x, p[0].y);
+		for(int j = 1; j < p.GetCount(); j++)
+			sw.Line(p[j].x, p[j].y);
+		sw.Fill(l[i].color);
 	}
-	sw.Fill(color);
-	
+}
+       
+void Demo(Painter& sw)
+{
+	PaintLion(sw);
 	String txt = "U++ Painter";
 	Font fnt = Roman(180).Bold();
 	Size tsz = GetTextSize(txt, fnt);
@@ -210,7 +199,7 @@ void PaintLion(Painter& sw)
 	  .Fill(TestImg::test(), 0, 400, 500, 400, FILL_REFLECT)
 	  .Stroke(5, 0, 500, Blue(), tsz.cx, 500, LtRed())
 	  .Stroke(1, White());
-	
+
 	for(int i = 0; i < 10; i++) {
 		sw.Begin();
 			sw.Opacity(0.5);
@@ -223,5 +212,6 @@ void PaintLion(Painter& sw)
 }
 
 INITBLOCK {
-	RegisterExample("U++ Painter", PaintLion);
+	RegisterExample("Lion", PaintLion);
+	RegisterExample("U++ Painter", Demo);
 }
