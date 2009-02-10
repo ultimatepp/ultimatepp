@@ -24,6 +24,12 @@ bool Xform2D::IsRegular() const
 	return abs(d.x - d.y) < 1e-10 * abs(max(d.x, d.y));
 }
 
+Xform2D::Xform2D()
+{
+	x.x = y.y = 1;
+	x.y = y.x = t.x = t.y = 0;
+}
+
 Xform2D operator*(const Xform2D& a, const Xform2D& b)
 {
 	Xform2D r;
@@ -40,7 +46,6 @@ Xform2D Xform2D::Translation(double x, double y)
 {
 	Xform2D m;
 	m.x.x = m.y.y = 1;
-	m.x.y = m.y.x = 0;
 	m.t = Pointf(x, y);
 	return m;
 }
@@ -50,7 +55,6 @@ Xform2D Xform2D::Scale(double sx, double sy)
 	Xform2D m;
 	m.x.x = sx;
 	m.y.y = sy;
-	m.x.y = m.y.x = m.t.x = m.t.y = 0;
 	return m;
 }
 
@@ -76,7 +80,6 @@ Xform2D Xform2D::Sheer(double fi)
 {
 	Xform2D m;
 	m.x.x = m.y.y = 1;
-	m.y.x = m.t.x = m.t.y = 0;
 	m.x.y = atan(fi);
 	return m;
 }
@@ -85,7 +88,6 @@ Xform2D Xform2D::Identity()
 {
 	Xform2D m;
 	m.x.x = m.y.y = 1;
-	m.x.y = m.y.x = m.t.x = m.t.y = 0;
 	return m;
 }
 
@@ -100,8 +102,8 @@ Xform2D Inverse(const Xform2D& m)
 	double det = Determinant(m);
 	r.x = Pointf(m.y.y, -m.x.y) / det;
 	r.y = Pointf(-m.y.x, m.x.x) / det;
-	r.t.x = -m.t.x * m.x.x - m.t.y * m.x.y;
-	r.t.y = -m.t.x * m.y.x - m.t.y * m.y.y;
+	r.t.x = -m.t.x * r.x.x - m.t.y * r.x.y;
+	r.t.y = -m.t.x * r.y.x - m.t.y * r.y.y;
 	return r;
 }
 

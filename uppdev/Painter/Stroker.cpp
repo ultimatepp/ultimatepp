@@ -4,10 +4,10 @@
 
 NAMESPACE_UPP
 
-Stroker::Stroker(double width, double miterlimit, double tolerance, int linecap, int linejoin)
-:	linecap(linecap),
-	linejoin(linejoin)
+void Stroker::Init(double width, double miterlimit, double tolerance, int _linecap, int _linejoin)
 {
+	linecap = _linecap;
+	linejoin = _linejoin;
 	w2 = width / 2;
 	qmiter = miterlimit * w2;
 	qmiter *= qmiter;

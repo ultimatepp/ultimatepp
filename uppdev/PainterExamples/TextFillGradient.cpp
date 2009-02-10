@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void TextFillGradient(Painter& sw)
 {
 	const char *txt = "GRADIENT TEXT";
@@ -14,5 +12,3 @@ void TextFillGradient(Painter& sw)
 INITBLOCK {
 	RegisterExample("Filling text with linear gradient", TextFillGradient);
 }
-
-#endif

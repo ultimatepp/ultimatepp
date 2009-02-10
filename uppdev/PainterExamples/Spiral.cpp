@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void PathSpiral(Painter& sw)
 {
 	sw.Path("M153 334 C153 334 151 334 151 334 C151 339 153 344 156 344 C164 344 171 339 171 334 "
@@ -14,5 +12,3 @@ void PathSpiral(Painter& sw)
 INITBLOCK {
 	RegisterExample("Path spiral", PathSpiral);
 }
-
-#endif

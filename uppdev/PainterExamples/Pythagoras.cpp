@@ -9,11 +9,9 @@ void DoRect(Painter &sw, double size, bool image)
 	sw.Line(0, size);
 	sw.Line(size, size);
 	sw.Line(size, 0);
-#if 0
 	if(image)
 		sw.Fill(TestImg::test(), 0, 0, size, 0);
 	else
-#endif
 		sw.Fill(Blue());
 	
 	sw.Begin();
@@ -38,8 +36,6 @@ void PythagorasTree(Painter& sw)
 	sw.End();
 }
 
-#if 0
-
 void PythagorasTreeImage(Painter& sw)
 {
 	sw.Begin();
@@ -48,9 +44,8 @@ void PythagorasTreeImage(Painter& sw)
 	DoRect(sw, 160, true);
 	sw.End();
 }
-#endif
 
 INITBLOCK {
 	RegisterExample("Pythagoras tree", PythagorasTree);
-//	RegisterExample("Pythagoras tree image", PythagorasTreeImage);
+	RegisterExample("Pythagoras tree image", PythagorasTreeImage);
 }

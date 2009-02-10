@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void FillGradient(Painter& sw)
 {
 	sw.Rectangle(10, 10, 1000, 600)
@@ -28,5 +26,3 @@ INITBLOCK {
 	RegisterExample("Linear gradient - REFLECT", FillGradientReflect);
 	RegisterExample("Linear gradient - REPEAT", FillGradientRepeat);
 }
-
-#endif

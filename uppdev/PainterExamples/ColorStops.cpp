@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void GradientStop(Painter& sw)
 {
 	sw.Rectangle(20.5, 20.5, 500, 100)
@@ -15,5 +13,3 @@ void GradientStop(Painter& sw)
 INITBLOCK {
 	RegisterExample("Gradient stops", GradientStop);
 }
-
-#endif

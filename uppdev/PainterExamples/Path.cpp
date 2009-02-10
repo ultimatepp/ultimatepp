@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-	
 void Path(Painter& sw)
 {
 	sw.Translate(52, 52);
@@ -19,5 +17,3 @@ void Path(Painter& sw)
 INITBLOCK {
 	RegisterExample("Path example", Path);
 }
-
-#endif

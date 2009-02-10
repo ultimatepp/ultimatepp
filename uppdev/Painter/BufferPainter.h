@@ -55,7 +55,7 @@ private:
 	           const Pointf& a0, const Pointf& b0);
 
 public:	
-	Stroker(double width, double miterlimit, double tolerance, int linecap, int linejoin);
+	void Init(double width, double miterlimit, double tolerance, int linecap, int linejoin);
 };
 
 class Dasher : public LinearPathFilter {
@@ -64,7 +64,7 @@ public:
 	virtual void Line(const Pointf& p);
 
 private:
-	const Vector<double>& pattern;
+	const Vector<double> *pattern;
 	int            patterni;
 	double         sum, rem;
 	bool           flag;
@@ -73,7 +73,7 @@ private:
 	void    Put(const Pointf& p);
 
 public:
-	Dasher(const Vector<double>& pattern, double distance);
+	void Init(const Vector<double>& pattern, double distance);
 };
 
 struct Transformer : public LinearPathFilter {
@@ -117,6 +117,11 @@ inline void AlphaBlendCover8(RGBA& t, const RGBA& c, int cover)
 	t.a = a + (alpha * t.a >> 8);
 }
 
+inline int Q8(double x)
+{
+	return int(x * 256 + 0.5);
+}
+
 class Rasterizer : public LinearPathConsumer {
 public:
 	virtual void Move(const Pointf& p);
@@ -134,7 +139,6 @@ private:
 	Rectf                   cliprect;
 	Pointf                  p0;
 	Buffer< Vector<Cell> >  cell;
-	int                     xmax, ymax;
 	int                     min_y;
 	int                     max_y;
 	Size                    sz;
@@ -180,10 +184,31 @@ struct ScanLine {
 };
 
 struct SpanSource {
-	virtual void Get(RGBA *_span, int x, int y, unsigned len);
+	virtual void Get(RGBA *span, int x, int y, unsigned len) = 0;
 };
 
 void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd);
+void Render(ImageBuffer& ib, Rasterizer& r, SpanSource *s, RGBA *buffer, int opacity8, bool evenodd);
+
+Image MipMap(const Image& img);
+Image MakeMipMap(const Image& img, int level);
+
+class LinearInterpolator {
+	struct Dda2 {
+		int count, lift, rem, mod, p;
+		
+		void  Set(int a, int b, int len);
+		int   Get();
+	};
+
+	Xform2D xform;
+	Dda2    ddax, dday;
+	
+public:
+	void  Begin(int x, int y, int len);
+	void  Get(int& x, int& y);
+	void  Set(const Xform2D& m)                    { xform = m; }
+};
 
 class BufferPainter : public Painter {
 protected:
@@ -198,8 +223,23 @@ protected:
 	virtual void   CloseOp();
 
 	virtual void   FillOp(const RGBA& color);
+	virtual void   FillOp(const Image& image, const Xform2D& transsrc, dword flags);
+	virtual void   FillOp(const Pointf& p1, const RGBA& color1,
+	                      const Pointf& p2, const RGBA& color2,
+	                      int style);
+	virtual void   FillOp(const Pointf& f, const RGBA& color1, 
+	                      const Pointf& c, double r, const RGBA& color2,
+	                      int style);
 
 	virtual void   StrokeOp(double width, const RGBA& rgba);
+	virtual void   StrokeOp(double width, const Image& image, const Xform2D& transsrc,
+	                        dword flags);
+	virtual void   StrokeOp(double width, const Pointf& p1, const RGBA& color1,
+	                        const Pointf& p2, const RGBA& color2,
+	                        int style);
+	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
+	                        const Pointf& c, double r, const RGBA& color2,
+	                        int style);
 
 	virtual void   ColorStopOp(double pos, const RGBA& color);
 	virtual void   ClearStopsOp();
@@ -267,16 +307,21 @@ public:
 	Rectf        pathrect;
 	
 	Rasterizer   rasterizer;
+	Buffer<RGBA> span;
 
 	void        *PathAddRaw(int type, int size);
 	template <class T> T& PathAdd(int type) { return *(T *)PathAddRaw(type, sizeof(T)); }
 
-	void         DoMove0();
-	void         ClearPath();
-	void         RenderPath(LinearPathFilter *first_filter, LinearPathFilter *last_filter,
-	                        const RGBA& color, bool evenodd);
 	Pointf       PathPoint(const Pointf& p, bool rel);
 	Pointf       EndPoint(const Pointf& p, bool rel);
+	void         DoMove0();
+	void         ClearPath();
+	void         RenderPath(double width, SpanSource *ss, const RGBA& color);
+	void         RenderImage(double width, const Image& image, const Xform2D& transsrc, dword flags);
+	void         RenderRadial(double width, const Pointf& f, const RGBA& color1,
+	                          const Pointf& c, double r, const RGBA& color2, int style);
+	void         MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx);
+	Image        GetGradient(const RGBA& color1, const RGBA& color2, const Pointf& p1, const Pointf& p2);
 	void         ColorStop0(Attr& a, double pos, const RGBA& color);
 
 public:

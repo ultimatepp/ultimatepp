@@ -189,7 +189,6 @@ void PaintLion(Painter& sw)
 	}
 }
 
-/*
 void Demo(Painter& sw)
 {
 	PaintLion(sw);
@@ -200,7 +199,6 @@ void Demo(Painter& sw)
 	  .Fill(TestImg::test(), 0, 400, 500, 400, FILL_REFLECT)
 	  .Stroke(5, 0, 500, Blue(), tsz.cx, 500, LtRed())
 	  .Stroke(1, White());
-
 	for(int i = 0; i < 10; i++) {
 		sw.Begin();
 			sw.Opacity(0.5);
@@ -211,9 +209,8 @@ void Demo(Painter& sw)
 		sw.End();
 	}
 }
-*/
 
 INITBLOCK {
 	RegisterExample("Lion", PaintLion);
-//	RegisterExample("U++ Painter", Demo);
+	RegisterExample("U++ Painter", Demo);
 }

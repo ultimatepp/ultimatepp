@@ -1,5 +1,3 @@
-optimize_speed;
-
 uses
 	Core,
 	CtrlLib;
@@ -9,6 +7,9 @@ file
 	Painter.hpp,
 	Painter.cpp,
 	PainterPath.cpp,
+	FontWin32.cpp,
+	FontX11.cpp,
+	Text.cpp,
 	BufferPainter.h,
 	Math.cpp,
 	Xform2D.cpp,
@@ -16,14 +17,18 @@ file
 	Stroker.cpp,
 	Dasher.cpp,
 	Transformer.cpp,
-	Rasterizer.cpp,
-	RasterizerClip.cpp,
+	Interpolator.cpp optimize_speed,
+	Rasterizer.cpp optimize_speed,
+	RasterizerClip.cpp optimize_speed,
 	ScanLineFiller.cpp,
-	SolidFiller.cpp,
+	SolidFiller.cpp optimize_speed,
 	SolidFillerMask.cpp,
-	Path.cpp,
+	Path.cpp optimize_speed,
 	Context.cpp,
-	Render.cpp;
+	Render.cpp optimize_speed,
+	Image.cpp optimize_speed,
+	Gradient.cpp optimize_speed,
+	RadialGradient.cpp optimize_speed;
 
 mainconfig
 	"" = "GUI";
