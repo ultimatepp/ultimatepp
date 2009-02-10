@@ -21,6 +21,8 @@ struct Xform2D {
 	static Xform2D Scale(double scale);
 	static Xform2D Rotation(double fi);
 	static Xform2D Sheer(double fi);	
+	
+	Xform2D();
 };
 
 Xform2D operator*(const Xform2D& a, const Xform2D& b);
@@ -69,8 +71,26 @@ protected:
 	virtual void   CloseOp() = 0;
 
 	virtual void   FillOp(const RGBA& color) = 0;
+	virtual void   FillOp(const Image& image, const Xform2D& transsrc, dword flags) = 0;
+	virtual void   FillOp(const Pointf& p1, const RGBA& color1,
+	                      const Pointf& p2, const RGBA& color2,
+	                      int style) = 0;
+	virtual void   FillOp(const Pointf& f, const RGBA& color1, 
+	                      const Pointf& c, double r, const RGBA& color2,
+	                      int style) = 0;
 
 	virtual void   StrokeOp(double width, const RGBA& rgba) = 0;
+	virtual void   StrokeOp(double width, const Image& image, const Xform2D& transsrc,
+	                        dword flags) = 0;
+	virtual void   StrokeOp(double width, const Pointf& p1, const RGBA& color1,
+	                        const Pointf& p2, const RGBA& color2,
+	                        int style) = 0;
+	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
+	                        const Pointf& c, double r, const RGBA& color2,
+	                        int style) = 0;
+
+	virtual void   CharacterOp(double x, double y, int ch, Font fnt);
+	virtual void   TextOp(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
 
 	virtual void   ColorStopOp(double pos, const RGBA& color) = 0;
 	virtual void   ClearStopsOp() = 0;
@@ -142,8 +162,47 @@ public:
 	Painter& Path(const char *path);
 
 	Painter& Fill(const RGBA& color);
+	Painter& Fill(const Image& image, const Xform2D& transsrc = Xform2D::Identity(), dword flags = 0);
+	Painter& Fill(const Image& image, Pointf p1, Pointf p2, dword flags = 0);
+	Painter& Fill(const Image& image, double x1, double y1, double x2, double y2,
+	              dword flags = 0);
+	Painter& Fill(const Pointf& p1, const RGBA& color1,
+	              const Pointf& p2, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Fill(double x1, double y1, const RGBA& color1,
+	              double x2, double y2, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Fill(const Pointf& f, const RGBA& color1,
+	              const Pointf& c, double r, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Fill(double fx, double fy, const RGBA& color1,
+	              double cx, double cy, double r, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Fill(const Pointf& c, const RGBA& color1,
+	              double r, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Fill(double x, double y, const RGBA& color1,
+	              double r, const RGBA& color2, int style = GRADIENT_PAD);
 
 	Painter& Stroke(double width, const RGBA& color);
+	Painter& Stroke(double width, const Image& image, const Xform2D& transsrc, dword flags = 0);
+	Painter& Stroke(double width, const Image& image, const Pointf& p1, const Pointf& p2,
+	                dword flags = 0);
+	Painter& Stroke(double width, const Image& image, double x1, double y1, double x2, double y2,
+	                dword flags = 0);
+	Painter& Stroke(double width, const Pointf& p1, const RGBA& color1,
+	                const Pointf& p2, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Stroke(double width, double x1, double y1, const RGBA& color1,
+	                double x2, double y2, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Stroke(double width, const Pointf& f, const RGBA& color1,
+	                const Pointf& c, double r, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Stroke(double width, double fx, double fy, const RGBA& color1,
+	                double cx, double cy, double r, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Stroke(double width, const Pointf& c, const RGBA& color1,
+	                double r, const RGBA& color2, int style = GRADIENT_PAD);
+	Painter& Stroke(double width, double x, double y, const RGBA& color1,
+	                double r, const RGBA& color2, int style = GRADIENT_PAD);
+
+	Painter& Character(double x, double y, int ch, Font fnt);
+	Painter& Text(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
+	Painter& Text(double x, double y, const WString& s, Font fnt, double *dx = NULL);
+	Painter& Text(double x, double y, const String& s, Font fnt, double *dx = NULL);
+	Painter& Text(double x, double y, const char *text, Font fnt, int n = -1, double *dx = NULL);
 
 	void Begin();
 	void End();
@@ -164,6 +223,8 @@ public:
 	Painter& Rotate(double a);
 	Painter& Scale(double scalex, double scaley);
 	Painter& Scale(double scale);
+
+	Painter& Rectangle(double x, double y, double cx, double cy);
 };
 
 #include "Painter.hpp"

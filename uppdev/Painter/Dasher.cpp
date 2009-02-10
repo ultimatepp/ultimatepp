@@ -29,26 +29,26 @@ void Dasher::Line(const Pointf& p)
 		pos += rem;
 		Put(pos / len * v + p0);
 		flag = !flag;
-		rem = pattern[patterni];
-		patterni = (patterni + 1) % pattern.GetCount();
+		rem = (*pattern)[patterni];
+		patterni = (patterni + 1) % pattern->GetCount();
 	}
 	rem -= len - pos;
 	Put(p);
 	p0 = p;
 }
 
-Dasher::Dasher(const Vector<double>& p, double distance)
-:	pattern(p)
+void Dasher::Init(const Vector<double>& p, double distance)
 {
-	sum = Sum0(pattern);
+	pattern = &p;
+	sum = Sum0(p);
 	if(sum == 0)
 		return;
 	distance -= int(distance / sum) * sum;
 	patterni = 0;
 	flag = false;
 	for(;;) {
-		rem = pattern[patterni];
-		patterni = (patterni + 1) % pattern.GetCount();
+		rem = (*pattern)[patterni];
+		patterni = (patterni + 1) % pattern->GetCount();
 		flag = !flag;
 		if(rem > distance) {
 			rem -= distance;

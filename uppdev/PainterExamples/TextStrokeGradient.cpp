@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void TextStrokeGradient(Painter& sw)
 {
 	const char *txt = "GRADIENT TEXT";
@@ -14,5 +12,3 @@ void TextStrokeGradient(Painter& sw)
 INITBLOCK {
 	RegisterExample("Stroking text with linear gradient", TextStrokeGradient);
 }
-
-#endif

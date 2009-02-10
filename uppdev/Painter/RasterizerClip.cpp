@@ -4,14 +4,9 @@
 
 NAMESPACE_UPP
 
-inline int Cv(double x)
-{
-	return int(x * 256 + 0.5);
-}
-
 void Rasterizer::CvLine(double x1, double y1, double x2, double y2)
 {
-	LineRaw(Cv(x1), Cv(y1), Cv(x2), Cv(y2));
+	LineRaw(Q8(x1), Q8(y1), Q8(x2), Q8(y2));
 }
 
 void Rasterizer::LineClip(double x1, double y1, double x2, double y2)

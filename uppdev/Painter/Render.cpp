@@ -7,19 +7,37 @@ void BufferPainter::ClearOp(const RGBA& color)
 	UPP::Fill(~ib, color, ib.GetLength());
 }
 
-void BufferPainter::RenderPath(LinearPathFilter *first_filter,
-                               LinearPathFilter *last_filter, const RGBA& color, bool evenodd)
+void BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 {
+	if(width == 0)
+		return;
 	Transformer trans(pathattr.mtx);
 	trans.target = &rasterizer;
 	LinearPathConsumer *g;
-	if(first_filter) {
-		last_filter->target = &trans;
-		g = first_filter;
+	Stroker stroker;
+	Dasher dasher;
+	bool evenodd = pathattr.evenodd;
+	if(width > 0) {
+		stroker.Init(width, pathattr.miter_limit, pathattr.tolerance, pathattr.cap, pathattr.join);
+		stroker.target = &trans;
+		if(pathattr.dash.GetCount()) {
+			dasher.Init(pathattr.dash, pathattr.dash_start);
+			dasher.target = &stroker;
+			g = &dasher;
+		}
+		else
+			g = &stroker;
+		evenodd = false;
 	}
-	else
+	else {
+		Close();
 		g = &trans;
+	}
 	byte *data = path.data;
+	int opacity = int(256 * pathattr.opacity);
+	RGBA c;
+	if(!ss)
+		c = Mul8(color, opacity);
 	Pointf pos = Pointf(0, 0);
 	{
 		PAINTER_TIMING("Pipeline");
@@ -59,27 +77,25 @@ void BufferPainter::RenderPath(LinearPathFilter *first_filter,
 		}
 	}
 	g->End();
-	Render(ib, rasterizer, color, evenodd);
+	if(ss) {
+		if(!span)
+			span.Alloc(ib.GetWidth() + 1);
+		Render(ib, rasterizer, ss, span, opacity, evenodd);
+	}
+	else
+		Render(ib, rasterizer, c, evenodd);
 	rasterizer.Reset();
 	current = Null;
 }
 
 void BufferPainter::FillOp(const RGBA& color)
 {
-	Close();
-	RenderPath(NULL, NULL, color, pathattr.evenodd);
+	RenderPath(-1, NULL, color);
 }
 
 void BufferPainter::StrokeOp(double width, const RGBA& color)
 {
-	Stroker stroker(width, pathattr.miter_limit, pathattr.tolerance, pathattr.cap, pathattr.join);
-	if(pathattr.dash.GetCount()) {
-		Dasher dasher(pathattr.dash, pathattr.dash_start);
-		dasher.target = &stroker;
-		RenderPath(&dasher, &stroker, color, false);
-	}
-	else
-		RenderPath(&stroker, &stroker, color, false);
+	RenderPath(width, NULL, color);
 }
 
 END_UPP_NAMESPACE

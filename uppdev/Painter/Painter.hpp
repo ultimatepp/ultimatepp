@@ -61,9 +61,51 @@ Painter& Painter::Fill(const RGBA& color)
 }
 
 inline
+Painter& Painter::Fill(const Image& image, const Xform2D& transsrc, dword flags)
+{
+	FillOp(image, transsrc, flags);
+	return *this;
+}
+
+inline
+Painter& Painter::Fill(const Pointf& p1, const RGBA& color1, const Pointf& p2, const RGBA& color2, int style)
+{
+	FillOp(p1, color1, p2, color2, style);
+	return *this;
+}
+
+inline
+Painter& Painter::Fill(const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style)
+{
+	FillOp(f, color1, c, r, color2, style);
+	return *this;
+}
+
+inline
 Painter& Painter::Stroke(double width, const RGBA& color)
 {
 	StrokeOp(width, color);
+	return *this;
+}
+
+inline
+Painter& Painter::Stroke(double width, const Image& image, const Xform2D& transsrc, dword flags)
+{
+	StrokeOp(width, image, transsrc, flags);
+	return *this;
+}
+
+inline
+Painter& Painter::Stroke(double width, const Pointf& p1, const RGBA& color1, const Pointf& p2, const RGBA& color2, int style)
+{
+	StrokeOp(width, p1, color1, p2, color2, style);
+	return *this;
+}
+
+inline
+Painter& Painter::Stroke(double width, const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style)
+{
+	StrokeOp(width, f, color1, c, r, color2, style);
 	return *this;
 }
 
