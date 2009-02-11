@@ -2,15 +2,6 @@
 
 NAMESPACE_UPP
 
-struct SolidFiller : Rasterizer::Target {
-	RGBA *t;
-	RGBA  c;
-	
-	void Start(int minx, int maxx)      { t += minx; }
-	void Render(int val)                { AlphaBlendCover8(*t++, c, val); } 
-	void Render(int val, int len);
-};
-
 void SolidFiller::Render(int val, int len)
 {
 	if(val == 0) {
@@ -69,19 +60,6 @@ void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd)
 	r.Reset();
 }
 
-struct SpanFiller : Rasterizer::Target {
-	RGBA       *t;
-	const RGBA *s;
-	int         y;
-	RGBA       *buffer;
-	SpanSource *ss;
-	int         alpha;
-	
-	void Start(int minx, int maxx);
-	void Render(int val);
-	void Render(int val, int len);
-};
-
 void SpanFiller::Start(int minx, int maxx)
 {
 	t += minx;
@@ -116,21 +94,6 @@ void SpanFiller::Render(int val, int len)
 	else
 		while(t < e)
 			AlphaBlendCover8(*t++, *s++, val);
-}
-
-void Render(ImageBuffer& ib, Rasterizer& r, SpanSource *s, RGBA *buffer, int alpha, bool evenodd)
-{
-	Size sz = ib.GetSize();
-	SpanFiller f;
-	f.ss = s;
-	f.buffer = buffer;
-	f.alpha = alpha;
-	for(int y = r.MinY(); y <= r.MaxY(); y++) {
-		f.t = ib[y];
-		f.y = y;
-		r.Render(y, f, evenodd);
-	}
-	r.Reset();
 }
 
 END_UPP_NAMESPACE

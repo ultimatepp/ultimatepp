@@ -1,9 +1,9 @@
 #include "Examples.h"
 
-#if 0
-
 void ClippingExample(Painter& sw)
 {
+	sw.Rectangle(0, 0, 100000, 100000).Clip();
+	
 	Font fnt = Roman(150).Bold();
 	String txt = "CLIPPED!";
 	Size tsz = GetTextSize(txt, fnt);
@@ -17,5 +17,3 @@ void ClippingExample(Painter& sw)
 INITBLOCK {
 	RegisterExample("Clipping", ClippingExample);
 }
-
-#endif

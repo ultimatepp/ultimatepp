@@ -35,21 +35,43 @@ void BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 	}
 	byte *data = path.data;
 	int opacity = int(256 * pathattr.opacity);
-	RGBA c;
-	if(!ss)
-		c = Mul8(color, opacity);
 	Pointf pos = Pointf(0, 0);
 	int i = 0;
+	Rasterizer::Target *rg;
+	SpanFiller   span_filler;
+	SolidFiller  solid_filler;
+	RecFiller    record_filler(ib.GetWidth());
+	bool clip = width == -2;
+	if(clip) {
+		rg = &record_filler;
+	}
+	else
+	if(ss) {
+		if(!span)
+			span.Alloc(ib.GetWidth() + 1);
+		span_filler.ss = ss;
+		span_filler.buffer = span;
+		span_filler.alpha = opacity;
+		rg = &span_filler;
+	}
+	else {
+		solid_filler.c = Mul8(color, opacity);
+		rg = &solid_filler;
+	}
 	for(;;) {
 		if(i >= path.type.GetCount() || path.type[i] == DIV) {
 			g->End();
-			if(ss) {
-				if(!span)
-					span.Alloc(ib.GetWidth() + 1);
-				Render(ib, rasterizer, ss, span, opacity, evenodd);
+			for(int y = rasterizer.MinY(); y <= rasterizer.MaxY(); y++) {
+				solid_filler.t = span_filler.t = ib[y];
+				span_filler.y = y;
+				rasterizer.Render(y, *rg, evenodd);
+				if(clip) {
+					record_filler.Finish();
+					Buffer<byte> h;
+					int maxx, maxlen;
+					record_filler.GetResult(h, maxx, maxlen);
+				}
 			}
-			else
-				Render(ib, rasterizer, c, evenodd);
 			rasterizer.Reset();
 			if(i >= path.type.GetCount())
 				break;
@@ -106,6 +128,11 @@ void BufferPainter::FillOp(const RGBA& color)
 void BufferPainter::StrokeOp(double width, const RGBA& color)
 {
 	RenderPath(width, NULL, color);
+}
+
+void BufferPainter::ClipOp()
+{
+	RenderPath(-2, NULL, RGBAZero());
 }
 
 END_UPP_NAMESPACE
