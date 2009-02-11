@@ -49,7 +49,7 @@ void Stroker::Line(const Pointf& p3)
 			return;
 		p2 = p3;
 		v1 = v;
-		o1 = Ortogonal(v1) * w2 / l;
+		o1 = Orthogonal(v1) * w2 / l;
 		a1 = p1 + o1;
 		b1 = p1 - o1;
 		if(IsNull(p0)) {
@@ -66,7 +66,7 @@ void Stroker::Line(const Pointf& p3)
 	double l = Length(v2);
 	if(l < 1e-30)
 		return;
-	Pointf o2 = Ortogonal(v2) * w2 / l;
+	Pointf o2 = Orthogonal(v2) * w2 / l;
 	Pointf a2 = p2 + o2;
 	Pointf b2 = p2 - o2;
 
@@ -74,7 +74,7 @@ void Stroker::Line(const Pointf& p3)
 	if(d > 1e-30) {
 		Pointf ts = a1 + v1 * (v2.y * (a1.x - a2.x) - v2.x * (a1.y - a2.y)) / d;
 		PutMove(a1);
-		if(linejoin != LINEJOIN_MITER || SquareDistance(ts, p2) > qmiter) {
+		if(linejoin != LINEJOIN_MITER || SquaredDistance(ts, p2) > qmiter) {
 			PutLine(a1 + v1);
 			if(linejoin == LINEJOIN_ROUND)
 				Round(p2, o1, o2, w2);
@@ -91,7 +91,7 @@ void Stroker::Line(const Pointf& p3)
 	if(d < -1e-30) {
 		Pointf ts = b2 + v2 * (v1.y * (a2.x - a1.x) - v1.x * (a2.y - a1.y)) / d;
 		PutMove(b2);
-		if(linejoin != LINEJOIN_MITER || SquareDistance(ts, p2) > qmiter) {
+		if(linejoin != LINEJOIN_MITER || SquaredDistance(ts, p2) > qmiter) {
 			if(linejoin == LINEJOIN_ROUND)
 				Round(p2, -o2, -o1, w2);
 			PutLine(b1 + v1);
@@ -127,7 +127,7 @@ void Stroker::Cap(const Pointf& p, const Pointf& v, const Pointf& o,
 {
 	PutMove(a);
 	if(linecap == LINECAP_SQUARE) {
-		Pointf nv = Ortogonal(o);
+		Pointf nv = Orthogonal(o);
 		PutLine(a + nv);
 		PutLine(b + nv);
 	}

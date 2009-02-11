@@ -132,8 +132,8 @@ struct PainterImageSpan : SpanSource {
 		cy = image.GetHeight();
 		maxx = cx - 1;
 		maxy = cy - 1;
-		ax = 6000000 / cx * cx;
-		ay = 6000000 / cy * cy;
+		ax = 6000000 / cx * cx * 2;
+		ay = 6000000 / cy * cy * 2;
 	}
 	
 	RGBA Pixel(int x, int y) { return image[y][x]; }
@@ -163,45 +163,43 @@ struct PainterImageSpan : SpanSource {
 		interpolator.Begin(x, y, len);
 		fixed = hstyle && vstyle;
 		while(len--) {
-			int x_hr;
-			int y_hr;
-			interpolator.Get(x_hr, y_hr);
-			x_hr -= 128;
-			y_hr -= 128;
-			int x_lr = x_hr >> 8;
-			int y_lr = y_hr >> 8;
+			Point h = interpolator.Get();
+	//		h -= 128;
+			Point l = h >> 8;
 			if(hstyle == FILL_HREPEAT)
-				x_lr = (x_lr + ax) % cx;
+				l.x = (l.x + ax) % cx;
 			if(vstyle == FILL_VREPEAT)
-				y_lr = (y_lr + ay) % cy;
+				l.y = (l.y + ay) % cy;
 			if(fast) {
-				if(x_lr > 0 && x_lr < maxx && y_lr > 0 && y_lr < maxy)
-					*span = Pixel(x_lr, y_lr);
+				if(l.x > 0 && l.x < maxx && l.y > 0 && l.y < maxy)
+					*span = Pixel(l.x, l.y);
 				else
-				if(style == 0 && (x_lr < -1 || x_lr > cx || y_lr < -1 || y_lr > cy))
+				if(style == 0 && (l.x < -1 || l.x > cx || l.y < -1 || l.y > cy))
 					*span = RGBAZero();
 				else
-					*span = GetPixel(x_lr, y_lr);
+					*span = GetPixel(l.x, l.y);
 			}
 			else {
 				RGBAV v;
-				v.Set(256 * 256 / 2);
-				x_hr &= 255;
-				y_hr &= 255;
-				if(x_lr > 0 && x_lr < maxx && y_lr > 0 && y_lr < maxy) {
-					v.Put((256 - x_hr) * (256 - y_hr), Pixel(x_lr, y_lr));
-					v.Put(x_hr * (256 - y_hr), Pixel(x_lr + 1, y_lr));
-					v.Put((256 - x_hr) * y_hr, Pixel(x_lr, y_lr + 1));
-					v.Put(x_hr * y_hr, Pixel(x_lr + 1, y_lr + 1));
+				v.Set(0);
+	//			v.Set(256 * 256 / 2);
+				h.x &= 255;
+				h.y &= 255;
+				Point u = -h + 256;
+				if(l.x > 0 && l.x < maxx && l.y > 0 && l.y < maxy) {
+					v.Put(u.x * u.y, Pixel(l.x, l.y));
+					v.Put(h.x * u.y, Pixel(l.x + 1, l.y));
+					v.Put(u.x * h.y, Pixel(l.x, l.y + 1));
+					v.Put(h.x * h.y, Pixel(l.x + 1, l.y + 1));
 				}
 				else
-				if(style == 0 && (x_lr < -1 || x_lr > cx || y_lr < -1 || y_lr > cy))
+				if(style == 0 && (l.x < -1 || l.x > cx || l.y < -1 || l.y > cy))
 					v.Set(0);
 				else {
-					v.Put((256 - x_hr) * (256 - y_hr), GetPixel(x_lr, y_lr));
-					v.Put(x_hr * (256 - y_hr), GetPixel(x_lr + 1, y_lr));
-					v.Put((256 - x_hr) * y_hr, GetPixel(x_lr, y_lr + 1));
-					v.Put(x_hr * y_hr, GetPixel(x_lr + 1, y_lr + 1));
+					v.Put(u.x * u.y, GetPixel(l.x, l.y));
+					v.Put(h.x * u.y, GetPixel(l.x + 1, l.y));
+					v.Put(u.x * h.y, GetPixel(l.x, l.y + 1));
+					v.Put(h.x * h.y, GetPixel(l.x + 1, l.y + 1));
 				}
 				span->r = byte(v.r >> 16);
 				span->g = byte(v.g >> 16);

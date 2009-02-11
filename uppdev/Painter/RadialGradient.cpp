@@ -162,12 +162,12 @@ struct PainterRadialSpan : SpanSource {
 		interpolator.Begin(x, y, len);
 		RGBA *span = (RGBA *)_span;
 		while(len--) {
-			interpolator.Get(x, y);
+			Point p = interpolator.Get();
 			int h;
 			if(focus) {
 				const double q256 = 1 / 256.0;
-				double dx = q256 * x - cx - fx;
-				double dy = q256 * y - cy - fy;
+				double dx = q256 * p.x - cx - fx;
+				double dy = q256 * p.y - cy - fy;
 				if(dx == 0 && dy == 0)
 					h = 0;
 				else {
@@ -178,9 +178,8 @@ struct PainterRadialSpan : SpanSource {
 				}
 			}
 			else {
-				x >>= 2;
-				y >>= 2;
-				int dc = Upp::fastint_sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
+				p >>= 2;
+				int dc = Upp::fastint_sqrt((p.x - cx) * (p.x - cx) + (p.y - cy) * (p.y - cy));
 				h = 2047 * dc / r;
 			}
 			if(style == GRADIENT_REPEAT)

@@ -100,6 +100,7 @@ void SpanFiller::Render(int val, int len)
 {
 	if(val == 0) {
 		t += len;
+		s += len;
 		return;
 	}
 	const RGBA *e = t + len;

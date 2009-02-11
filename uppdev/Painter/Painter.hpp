@@ -47,9 +47,23 @@ Painter& Painter::Cubic(const Pointf& p2, const Pointf& p, bool rel)
 }
 
 inline
+Painter& Painter::Arc(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel)
+{
+	ArcOp(c, r, angle, sweep, rel);
+	return *this;
+}
+
+inline
 Painter& Painter::Close()
 {
 	CloseOp();
+	return *this;
+}
+
+inline
+Painter& Painter::Div()
+{
+	DivOp();
 	return *this;
 }
 

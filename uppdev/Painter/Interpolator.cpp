@@ -31,16 +31,15 @@ int LinearInterpolator::Dda2::Get()
 
 void LinearInterpolator::Begin(int x, int y, int len)
 {
-	Pointf p1 = xform.Transform(Pointf(x, y) + 0.5);
-	Pointf p2 = xform.Transform(Pointf(x + len, y) + 0.5);
+	Pointf p1 = xform.Transform(Pointf(x, y)/* + 0.5*/);
+	Pointf p2 = xform.Transform(Pointf(x + len, y)/* + 0.5*/);
 	ddax.Set(Q8(p1.x), Q8(p2.x), len);
 	dday.Set(Q8(p1.y), Q8(p2.y), len);
 }
 
-void LinearInterpolator::Get(int& x, int& y)
+Point LinearInterpolator::Get()
 {
-	x = ddax.Get();
-	y = dday.Get();
+	return Point(ddax.Get(), dday.Get());
 }
 
 END_UPP_NAMESPACE

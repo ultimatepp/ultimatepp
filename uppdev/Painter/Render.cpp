@@ -39,52 +39,62 @@ void BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 	if(!ss)
 		c = Mul8(color, opacity);
 	Pointf pos = Pointf(0, 0);
-	{
-		PAINTER_TIMING("Pipeline");
-		for(int i = 0; i < path.type.GetCount(); i++) {
-			switch(path.type[i]) {
-			case MOVE: {
-				const LinearData *d = (LinearData *)data;
-				data += sizeof(LinearData);
-				g->Move(pos = d->p);
+	int i = 0;
+	for(;;) {
+		if(i >= path.type.GetCount() || path.type[i] == DIV) {
+			g->End();
+			if(ss) {
+				if(!span)
+					span.Alloc(ib.GetWidth() + 1);
+				Render(ib, rasterizer, ss, span, opacity, evenodd);
+			}
+			else
+				Render(ib, rasterizer, c, evenodd);
+			rasterizer.Reset();
+			if(i >= path.type.GetCount())
 				break;
-			}
-			case LINE: {
-				const LinearData *d = (LinearData *)data;
-				data += sizeof(LinearData);
-				g->Line(pos = d->p);
-				break;
-			}
-			case QUADRATIC: {
-				const QuadraticData *d = (QuadraticData *)data;
-				data += sizeof(QuadraticData);
-				ApproximateQuadratic(*g, pos, d->p1, d->p, pathattr.tolerance);
-				pos = d->p;
-				break;
-			}
-			case CUBIC: {
-				const CubicData *d = (CubicData *)data;
-				data += sizeof(CubicData);
-				ApproximateCubic(*g, pos, d->p1, d->p2, d->p, pathattr.tolerance);
-				pos = d->p;
-				break;
-			}
-			case ARC:
-			default:
-				NEVER();
-				return;
-			}
 		}
+		else
+		switch(path.type[i]) {
+		case MOVE: {
+			const LinearData *d = (LinearData *)data;
+			data += sizeof(LinearData);
+			g->Move(pos = d->p);
+			break;
+		}
+		case LINE: {
+			const LinearData *d = (LinearData *)data;
+			data += sizeof(LinearData);
+			g->Line(pos = d->p);
+			break;
+		}
+		case QUADRATIC: {
+			const QuadraticData *d = (QuadraticData *)data;
+			data += sizeof(QuadraticData);
+			ApproximateQuadratic(*g, pos, d->p1, d->p, pathattr.tolerance);
+			pos = d->p;
+			break;
+		}
+		case CUBIC: {
+			const CubicData *d = (CubicData *)data;
+			data += sizeof(CubicData);
+			ApproximateCubic(*g, pos, d->p1, d->p2, d->p, pathattr.tolerance);
+			pos = d->p;
+			break;
+		}
+		case ARC: {
+			const ArcData *d = (ArcData *)data;
+			data += sizeof(ArcData);
+			ApproximateArc(*g, d->p, d->r, d->angle, d->sweep, pathattr.tolerance);
+			pos = d->EndPoint();
+			break;
+		}
+		default:
+			NEVER();
+			return;
+		}
+		i++;
 	}
-	g->End();
-	if(ss) {
-		if(!span)
-			span.Alloc(ib.GetWidth() + 1);
-		Render(ib, rasterizer, ss, span, opacity, evenodd);
-	}
-	else
-		Render(ib, rasterizer, c, evenodd);
-	rasterizer.Reset();
 	current = Null;
 }
 

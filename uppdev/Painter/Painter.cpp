@@ -4,13 +4,13 @@ NAMESPACE_UPP
 
 Painter& Painter::Move(const Pointf& p)
 {
-	MoveOp(p, false);
+	Move(p, false);
 	return *this;
 }
 
 Painter& Painter::Line(const Pointf& p)
 {
-	LineOp(p, false);
+	Line(p, false);
 	return *this;
 }
 
@@ -182,6 +182,77 @@ Painter& Painter::RelCubic(double x2, double y2, double x, double y)
 	return *this;
 }
 
+Painter& Painter::Arc(const Pointf& c, double rx, double ry, double angle, double sweep, bool rel)
+{
+	return Arc(c, Pointf(rx, ry), angle, sweep, rel);
+}
+
+Painter& Painter::Arc(const Pointf& c, double r, double angle, double sweep, bool rel)
+{
+	return Arc(c, Pointf(r, r), angle, sweep, rel);
+}
+
+Painter& Painter::Arc(double x, double y, double rx, double ry, double angle, double sweep, bool rel)
+{
+	return Arc(Pointf(x, y), rx, ry, angle, sweep, rel);
+}
+
+Painter& Painter::Arc(double x, double y, double r, double angle, double sweep, bool rel)
+{
+	return Arc(Pointf(x, y), r, angle, sweep, rel);
+}
+
+Painter& Painter::Arc(const Pointf& c, const Pointf& r, double angle, double sweep)
+{
+	return Arc(c, r, angle, sweep, false);
+}
+
+Painter& Painter::Arc(const Pointf& c, double rx, double ry, double angle, double sweep)
+{
+	return Arc(c, rx, ry, angle, sweep, false);
+}
+
+Painter& Painter::Arc(const Pointf& c, double r, double angle, double sweep)
+{
+	return Arc(c, r, angle, sweep, false);
+}
+
+Painter& Painter::Arc(double x, double y, double rx, double ry, double angle, double sweep)
+{
+	return Arc(x, y, rx, ry, angle, sweep, false);
+}
+
+Painter& Painter::Arc(double x, double y, double r, double angle, double sweep)
+{
+	return Arc(x, y, r, angle, sweep, false);
+}
+
+
+Painter& Painter::RelArc(const Pointf& c, const Pointf& r, double angle, double sweep)
+{
+	return Arc(c, r, angle, sweep, true);
+}
+
+Painter& Painter::RelArc(const Pointf& c, double rx, double ry, double angle, double sweep)
+{
+	return Arc(c, rx, ry, angle, sweep, true);
+}
+
+Painter& Painter::RelArc(const Pointf& c, double r, double angle, double sweep)
+{
+	return Arc(c, r, angle, sweep, true);
+}
+
+Painter& Painter::RelArc(double x, double y, double rx, double ry, double angle, double sweep)
+{
+	return Arc(x, y, rx, ry, angle, sweep, true);
+}
+
+Painter& Painter::RelArc(double x, double y, double r, double angle, double sweep)
+{
+	return Arc(x, y, r, angle, sweep, true);
+}
+
 Xform2D GetLineSzXform(const Pointf& p1, const Pointf& p2, const Sizef& sz)
 {
 	Xform2D m = Xform2D::Scale(Distance(p1, p2) / sz.cx);
@@ -293,12 +364,17 @@ Painter& Painter::Dash(const char *dash, double start)
 
 Painter& Painter::Rectangle(double x, double y, double cx, double cy)
 {
-	Move(x, y);
-	Line(x + cx, y);
-	Line(x + cx, y + cy);
-	Line(x, y + cy);
-	Close();
-	return *this;
+	return Move(x, y).RelLine(cx, 0).RelLine(0, cy).RelLine(-cx, 0).Close();
+}
+
+Painter& Painter::Ellipse(double x, double y, double rx, double ry)
+{
+	return Move(x + rx, y).Arc(x, y, rx, ry, 0, 2 * M_PI).Close();
+}
+
+Painter& Painter::Circle(double x, double y, double r)
+{
+	return Ellipse(x, y, r, r);
 }
 
 END_UPP_NAMESPACE
