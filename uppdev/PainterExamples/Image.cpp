@@ -43,6 +43,13 @@ void ImagePad(Painter& sw)
 	  .Stroke(2, Black());
 }
 
+void ImagePadFast(Painter& sw)
+{
+	sw.Rectangle(10, 10, 1000, 600)
+	  .Fill(TestImg::test(), 100, 100, 500, 100, FILL_PAD|FILL_FAST)
+	  .Stroke(2, Black());
+}
+
 void ImageRepeat(Painter& sw)
 {
 	sw.Rectangle(10, 10, 1000, 600)
@@ -55,6 +62,7 @@ INITBLOCK {
 	RegisterExample("Image fill exact fast", ImageExactFast);
 	RegisterExample("Image fill reflect", ImageReflect);
 	RegisterExample("Image fill pad", ImagePad);
+	RegisterExample("Image fill pad fast", ImagePadFast);
 	RegisterExample("Image fill repeat", ImageRepeat);
 	RegisterExample("Image vpad&hreflect", ImageVPadHReflect);
 }

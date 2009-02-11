@@ -1,12 +1,11 @@
-double SquareDist(const Pointf& p1, const Pointf& p2);
 Pointf Mid(const Pointf& a, const Pointf& b);
-Pointf Ortogonal(const Pointf& p);
-double SquareLength(const Pointf& p);
+Pointf Orthogonal(const Pointf& p);
+double Squared(const Pointf& p);
 double Length(const Pointf& p);
 double Bearing(const Pointf& p);
 double Distance(const Pointf& p1, const Pointf& p2);
-double SquareDistance(const Pointf& p1, const Pointf& p2);
-Pointf PolarPointf(double a);
+double SquaredDistance(const Pointf& p1, const Pointf& p2);
+Pointf Polar(double a);
 Pointf Polar(const Pointf& p, double r, double a);
 
 struct LinearPathConsumer {
@@ -21,6 +20,8 @@ void ApproximateQuadratic(LinearPathConsumer& t,
 void ApproximateCubic(LinearPathConsumer& t,
                       const Pointf& x0, const Pointf& x1, const Pointf& x2, const Pointf& x,
                       double tolerance);
+void ApproximateArc(LinearPathConsumer& t, const Pointf& p, const Pointf& r,
+                    double angle, double sweep, double tolerance);
 
 struct LinearPathFilter : LinearPathConsumer {
 	virtual void End();
@@ -205,9 +206,10 @@ class LinearInterpolator {
 	Dda2    ddax, dday;
 	
 public:
-	void  Begin(int x, int y, int len);
-	void  Get(int& x, int& y);
-	void  Set(const Xform2D& m)                    { xform = m; }
+	void   Set(const Xform2D& m)                    { xform = m; }
+
+	void   Begin(int x, int y, int len);
+	Point  Get();
 };
 
 class BufferPainter : public Painter {
@@ -220,7 +222,9 @@ protected:
 	virtual void   QuadraticOp(const Pointf& p, bool rel);
 	virtual void   CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel);
 	virtual void   CubicOp(const Pointf& p2, const Pointf& p, bool rel);
+	virtual void   ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel);
 	virtual void   CloseOp();
+	virtual void   DivOp();
 
 	virtual void   FillOp(const RGBA& color);
 	virtual void   FillOp(const Image& image, const Xform2D& transsrc, dword flags);
@@ -259,7 +263,7 @@ protected:
 
 public:
 	enum {
-		MOVE, LINE, QUADRATIC, CUBIC, ARC
+		MOVE, LINE, QUADRATIC, CUBIC, ARC, DIV
 	};
 	struct LinearData {
 		Pointf p;
@@ -271,8 +275,10 @@ public:
 		Pointf p2;
 	};
 	struct ArcData : LinearData {
-		double cx, cy;
-		double angle1, angle2;
+		Pointf r;
+		double angle, sweep;
+		
+		Pointf EndPoint() const;
 	};
 	struct Path {	
 		Vector<byte> type;

@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void Radial(Painter& sw)
 {
 	sw.Circle(400.5, 400.5, 200)
@@ -12,5 +10,3 @@ void Radial(Painter& sw)
 INITBLOCK {
 	RegisterExample("Radial gradient", Radial);
 }
-
-#endif

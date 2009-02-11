@@ -10,6 +10,7 @@ void Painter::TextOp(double x, double y, const wchar *text, Font fnt, int n, dou
 	while(n) {
 		int ch = *text++;
 		Character(x, y, ch, fnt);
+		Div();
 		if(dx)
 			x += *dx++;
 		else

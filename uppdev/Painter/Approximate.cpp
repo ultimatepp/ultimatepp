@@ -5,13 +5,13 @@ NAMESPACE_UPP
 static void sQuadratic(LinearPathConsumer& t, const Pointf& p1, const Pointf& p2, const Pointf& p3,
                        double qt, int lvl)
 {
-	if(lvl < 32) {
+	if(lvl < 16) {
 		Pointf d = p3 - p1;
-		double q = d.x * d.x + d.y * d.y;
+		double q = Squared(d);
 		if(q > 1e-30) {
 			Pointf pd = p2 - p1;
 			double u = (pd.x * d.x + pd.y * d.y) / q;
-			if(u <= 0 || u >= 1 || SquareDist(u * d, d) > qt) {
+			if(u <= 0 || u >= 1 || SquaredDistance(u * d, pd) > qt) {
 				Pointf p12 = Mid(p1, p2);
 				Pointf p23 = Mid(p2, p3);
 				Pointf div = Mid(p12, p23);
@@ -35,7 +35,7 @@ static void sCubic(LinearPathConsumer& t,
                    const Pointf& p1, const Pointf& p2, const Pointf& p3, const Pointf& p4,
                    double qt, int lvl)
 {
-	if(lvl < 32) {
+	if(lvl < 16) {
 		Pointf d = p4 - p1;
 		double q = d.x * d.x + d.y * d.y;
 		if(q >= 1e-30) {
@@ -44,7 +44,7 @@ static void sCubic(LinearPathConsumer& t,
 			double u1 = (d2.x * d.x + d2.y * d.y) / q;
 			double u2 = (d3.x * d.x + d3.y * d.y) / q;
 			if(u1 <= 0 || u1 >= 1 || u2 <= 0 || u2 >= 1 ||
-			   SquareDist(u1 * d, d2) > qt || SquareDist(u2 * d, d3) > qt) {
+			   SquaredDistance(u1 * d, d2) > qt || SquaredDistance(u2 * d, d3) > qt) {
 				Pointf p12 = Mid(p1, p2);
 				Pointf p23 = Mid(p2, p3);
 				Pointf p34 = Mid(p3, p4);
@@ -67,6 +67,23 @@ void ApproximateCubic(LinearPathConsumer& t,
 {
 	sCubic(t, p1, p2, p3, p4, tolerance * tolerance, 0);
 	t.Line(p4);
+}
+
+void ApproximateArc(LinearPathConsumer& t, const Pointf& c, const Pointf& r,
+                    double angle, double sweep, double tolerance)
+{
+	while(angle + sweep < 0)
+		angle += 2000 * M_PI;
+	double fid = acos(1 - tolerance / max(r.x, r.y));
+	if(abs(sweep / fid) > 1000)
+		fid = sweep / 1000;
+	double a = angle;
+	double e = angle + sweep;
+	while(fid > 0 ? a < e : a > e) {
+		t.Line(Polar(a) * r + c);
+		a += fid;
+	}
+	t.Line(Polar(angle + sweep) * r + c);
 }
 
 END_UPP_NAMESPACE

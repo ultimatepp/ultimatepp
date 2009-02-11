@@ -20,13 +20,16 @@ file
 	TextFillSolid.cpp,
 	TextFillGradient.cpp,
 	TextStrokeGradient.cpp,
+	Div.cpp,
 	MaskBlending.cpp,
 	RadialMaskBlending.cpp,
 	RichText.cpp,
 	Stroke.cpp,
 	Dash.cpp,
 	Path.cpp,
+	Arc.cpp,
 	ThinLine.cpp,
+	Big.cpp,
 	Examples.lay,
 	Test.iml;
 

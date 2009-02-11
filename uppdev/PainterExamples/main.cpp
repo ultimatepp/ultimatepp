@@ -177,6 +177,7 @@ App::App() {
 	ctrl.print <<= THISBACK(Print);
 	Reset();
 	LoadFromFile(*this);
+	Title("Painter 2.0");
 }
 
 App::~App()

@@ -12,19 +12,19 @@ Pointf Mid(const Pointf& a, const Pointf& b)
 	return (a + b) / 2;
 }
 
-Pointf Ortogonal(const Pointf& p)
+Pointf Orthogonal(const Pointf& p)
 {
 	return Pointf(-p.y, p.x);
 }
 
-double SquareLength(const Pointf& p)
+double Squared(const Pointf& p)
 {
 	return p.x * p.x + p.y * p.y;
 }
 
 double Length(const Pointf& p)
 {
-	return sqrt(SquareLength(p));
+	return sqrt(Squared(p));
 }
 
 double Bearing(const Pointf& p)
@@ -37,19 +37,19 @@ double Distance(const Pointf& p1, const Pointf& p2)
 	return Length(p1 - p2);
 }
 
-double SquareDistance(const Pointf& p1, const Pointf& p2)
+double SquaredDistance(const Pointf& p1, const Pointf& p2)
 {
-	return SquareLength(p1 - p2);
+	return Squared(p1 - p2);
 }
 
-Pointf PolarPointf(double a)
+Pointf Polar(double a)
 {
 	return Pointf(cos(a), sin(a));
 }
 
 Pointf Polar(const Pointf& p, double r, double a)
 {
-	return p + r * PolarPointf(a);
+	return p + r * Polar(a);
 }
 
 END_UPP_NAMESPACE

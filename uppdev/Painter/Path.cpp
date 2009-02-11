@@ -13,8 +13,8 @@ void BufferPainter::ClearPath()
 Pointf BufferPainter::PathPoint(const Pointf& p, bool rel)
 {
 	Pointf r;
-	r.x = IsNull(p.x) ? current.x : rel ? p.x + current.x : r.x;
-	r.y = IsNull(p.y) ? current.y : rel ? p.y + current.y : r.y;
+	r.x = IsNull(p.x) ? current.x : rel ? p.x + current.x : p.x;
+	r.y = IsNull(p.y) ? current.y : rel ? p.y + current.y : p.y;
 	if(IsNull(current)) {
 		ClearPath();
 		pathrect.left = pathrect.right = r.x;
@@ -27,7 +27,7 @@ Pointf BufferPainter::PathPoint(const Pointf& p, bool rel)
 		pathrect.right = max(pathrect.right, r.x);
 		pathrect.bottom = max(pathrect.bottom, r.y);
 	}
-	return p;
+	return r;
 }
 
 Pointf BufferPainter::EndPoint(const Pointf& p, bool rel)
@@ -87,12 +87,36 @@ void BufferPainter::CubicOp(const Pointf& p2, const Pointf& p, bool rel)
 	CubicOp(2 * current - ccontrol, p2, p, rel);
 }
 
+Pointf BufferPainter::ArcData::EndPoint() const
+{
+	return r * Polar(angle + sweep) + p;
+}
+
+void BufferPainter::ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel)
+{
+	DoMove0();
+	ArcData& m = PathAdd<ArcData>(ARC);
+	m.p = PathPoint(c, rel);
+	m.r = r;
+	m.angle = angle;
+	m.sweep = sweep;
+	PathPoint(c + r, rel);
+	PathPoint(c - r, rel);
+	current = m.EndPoint();
+}
+
 void BufferPainter::CloseOp()
 {
 	if(!IsNull(move) && current != move) {
 		Line(move);
 		move = Null;
 	}
+}
+
+void BufferPainter::DivOp()
+{
+	CloseOp();
+	path.type.Add(DIV);
 }
 
 END_UPP_NAMESPACE

@@ -69,8 +69,8 @@ Xform2D Xform2D::Rotation(double fi)
 	double sinf = sin(fi);
 	Xform2D m;
 	m.x.x = cosf;
-	m.x.y = sinf;
-	m.y.x = -sinf;
+	m.x.y = -sinf;
+	m.y.x = sinf;
 	m.y.y = cosf;
 	m.t.x = m.t.y = 0;
 	return m;

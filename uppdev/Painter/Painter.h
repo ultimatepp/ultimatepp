@@ -68,7 +68,9 @@ protected:
 	virtual void   QuadraticOp(const Pointf& p, bool rel) = 0;
 	virtual void   CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel) = 0;
 	virtual void   CubicOp(const Pointf& p2, const Pointf& p, bool rel) = 0;
+	virtual void   ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel) = 0;
 	virtual void   CloseOp() = 0;
+	virtual void   DivOp() = 0;
 
 	virtual void   FillOp(const RGBA& color) = 0;
 	virtual void   FillOp(const Image& image, const Xform2D& transsrc, dword flags) = 0;
@@ -115,48 +117,63 @@ public:
 	void     Clear(const RGBA& color);
 
 	Painter& Move(const Pointf& p, bool rel);
-	Painter& Line(const Pointf& p, bool rel);
-	Painter& Quadratic(const Pointf& p1, const Pointf& p, bool rel);
-	Painter& Quadratic(const Pointf& p, bool rel);
-	Painter& Cubic(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel);
-	Painter& Cubic(const Pointf& p2, const Pointf& p, bool rel);
-
 	Painter& Move(const Pointf& p);
+	Painter& Move(double x, double y, bool rel);
+	Painter& Move(double x, double y);
+	Painter& RelMove(const Pointf& p);
+	Painter& RelMove(double x, double y);
+
+	Painter& Line(const Pointf& p, bool rel);
 	Painter& Line(const Pointf& p);
+	Painter& Line(double x, double y, bool rel);
+	Painter& Line(double x, double y);
+	Painter& RelLine(const Pointf& p);
+	Painter& RelLine(double x, double y);
+
+	Painter& Quadratic(const Pointf& p1, const Pointf& p, bool rel);
 	Painter& Quadratic(const Pointf& p1, const Pointf& p);
 	Painter& Quadratic(const Pointf& p);
-	Painter& Cubic(const Pointf& p1, const Pointf& p2, const Pointf& p);
-	Painter& Cubic(const Pointf& p2, const Pointf& p);
-
-	Painter& RelMove(const Pointf& p);
-	Painter& RelLine(const Pointf& p);
-	Painter& RelQuadratic(const Pointf& p1, const Pointf& p);
-	Painter& RelQuadratic(const Pointf& p);
-	Painter& RelCubic(const Pointf& p1, const Pointf& p2, const Pointf& p);
-	Painter& RelCubic(const Pointf& p2, const Pointf& p);
-
-	Painter& Move(double x, double y, bool rel);
-	Painter& Line(double x, double y, bool rel);
-	Painter& Quadratic(double x1, double y1, double x, double y, bool rel);
 	Painter& Quadratic(double x, double y, bool rel);
-	Painter& Cubic(double x1, double y1, double x2, double y2, double x, double y, bool rel);
-	Painter& Cubic(double x2, double y2, double x, double y, bool rel);
-
-	Painter& Move(double x, double y);
-	Painter& Line(double x, double y);
+	Painter& Quadratic(double x1, double y1, double x, double y, bool rel);
+	Painter& Quadratic(const Pointf& p, bool rel);
 	Painter& Quadratic(double x1, double y1, double x, double y);
 	Painter& Quadratic(double x, double y);
-	Painter& Cubic(double x1, double y1, double x2, double y2, double x, double y);
-	Painter& Cubic(double x2, double y2, double x, double y);
-
-	Painter& RelMove(double x, double y);
-	Painter& RelLine(double x, double y);
+	Painter& RelQuadratic(const Pointf& p1, const Pointf& p);
 	Painter& RelQuadratic(double x1, double y1, double x, double y);
 	Painter& RelQuadratic(double x, double y);
+	Painter& RelQuadratic(const Pointf& p);
+
+	Painter& Cubic(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel);
+	Painter& Cubic(const Pointf& p2, const Pointf& p, bool rel);
+	Painter& Cubic(const Pointf& p1, const Pointf& p2, const Pointf& p);
+	Painter& Cubic(const Pointf& p2, const Pointf& p);
+	Painter& Cubic(double x1, double y1, double x2, double y2, double x, double y, bool rel);
+	Painter& Cubic(double x2, double y2, double x, double y, bool rel);
+	Painter& Cubic(double x1, double y1, double x2, double y2, double x, double y);
+	Painter& Cubic(double x2, double y2, double x, double y);
+	Painter& RelCubic(const Pointf& p1, const Pointf& p2, const Pointf& p);
+	Painter& RelCubic(const Pointf& p2, const Pointf& p);
 	Painter& RelCubic(double x1, double y1, double x2, double y2, double x, double y);
 	Painter& RelCubic(double x2, double y2, double x, double y);
 
+	Painter& Arc(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel);
+	Painter& Arc(const Pointf& c, double rx, double ry, double angle, double sweep, bool rel);
+	Painter& Arc(const Pointf& c, double r, double angle, double sweep, bool rel);
+	Painter& Arc(double x, double y, double rx, double ry, double angle, double sweep, bool rel);
+	Painter& Arc(double x, double y, double r, double angle, double sweep, bool rel);
+	Painter& Arc(const Pointf& c, const Pointf& r, double angle, double sweep);
+	Painter& Arc(const Pointf& c, double rx, double ry, double angle, double sweep);
+	Painter& Arc(const Pointf& c, double r, double angle, double sweep);
+	Painter& Arc(double x, double y, double rx, double ry, double angle, double sweep);
+	Painter& Arc(double x, double y, double r, double angle, double sweep);
+	Painter& RelArc(const Pointf& c, const Pointf& r, double angle, double sweep);
+	Painter& RelArc(const Pointf& c, double rx, double ry, double angle, double sweep);
+	Painter& RelArc(const Pointf& c, double r, double angle, double sweep);
+	Painter& RelArc(double x, double y, double rx, double ry, double angle, double sweep);
+	Painter& RelArc(double x, double y, double r, double angle, double sweep);
+
 	Painter& Close();
+	Painter& Div();
 
 	Painter& Path(CParser& p);
 	Painter& Path(const char *path);
@@ -213,7 +230,7 @@ public:
 	Painter& LineCap(int linecap);
 	Painter& LineJoin(int linejoin);
 	Painter& MiterLimit(double l);
-	Painter& EvenOdd(bool evenodd);
+	Painter& EvenOdd(bool evenodd = true);
 	Painter& Dash(const Vector<double>& dash, double start);
 	Painter& Dash(const char *dash, double start = 0);
 	Painter& NoAA(bool noaa);
@@ -225,6 +242,8 @@ public:
 	Painter& Scale(double scale);
 
 	Painter& Rectangle(double x, double y, double cx, double cy);
+	Painter& Ellipse(double x, double y, double rx, double ry);
+	Painter& Circle(double x, double y, double r);
 };
 
 #include "Painter.hpp"
