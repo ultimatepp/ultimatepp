@@ -123,6 +123,13 @@ Painter& Painter::Stroke(double width, const Pointf& f, const RGBA& color1, cons
 	return *this;
 }
 
+inline
+Painter& Painter::Clip()
+{
+	ClipOp();
+	return *this;
+}
+
 inline Painter& Painter::ColorStop(double pos, const RGBA& color)
 {
 	ColorStopOp(pos, color);

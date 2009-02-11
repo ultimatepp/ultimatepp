@@ -91,6 +91,8 @@ protected:
 	                        const Pointf& c, double r, const RGBA& color2,
 	                        int style) = 0;
 
+	virtual void   ClipOp() = 0;
+
 	virtual void   CharacterOp(double x, double y, int ch, Font fnt);
 	virtual void   TextOp(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
 
@@ -214,6 +216,8 @@ public:
 	                double r, const RGBA& color2, int style = GRADIENT_PAD);
 	Painter& Stroke(double width, double x, double y, const RGBA& color1,
 	                double r, const RGBA& color2, int style = GRADIENT_PAD);
+
+	Painter& Clip();
 
 	Painter& Character(double x, double y, int ch, Font fnt);
 	Painter& Text(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);

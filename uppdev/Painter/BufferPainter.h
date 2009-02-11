@@ -188,8 +188,47 @@ struct SpanSource {
 	virtual void Get(RGBA *span, int x, int y, unsigned len) = 0;
 };
 
-void Render(ImageBuffer& ib, Rasterizer& r, const RGBA& color, bool evenodd);
-void Render(ImageBuffer& ib, Rasterizer& r, SpanSource *s, RGBA *buffer, int opacity8, bool evenodd);
+struct SolidFiller : Rasterizer::Target {
+	RGBA *t;
+	RGBA  c;
+	
+	void Start(int minx, int maxx)      { t += minx; }
+	void Render(int val)                { AlphaBlendCover8(*t++, c, val); } 
+	void Render(int val, int len);
+};
+
+struct SpanFiller : Rasterizer::Target {
+	RGBA       *t;
+	const RGBA *s;
+	int         y;
+	RGBA       *buffer;
+	SpanSource *ss;
+	int         alpha;
+	
+	void Start(int minx, int maxx);
+	void Render(int val);
+	void Render(int val, int len);
+};
+
+struct RecFiller : Rasterizer::Target {
+	Buffer<byte> buffer;
+	byte        *t;
+	int          x;
+	int          maxx;
+	int          maxlen;
+	int          cx;
+	bool         empty;
+	
+	void Span(int c, int len);
+
+	virtual void Render(int val);
+	virtual void Render(int val, int len);
+	virtual void Start(int x, int len);
+	void Finish();
+	void GetResult(Buffer<byte>& tgt, int& maxx, int& maxlen);
+	
+	RecFiller(int cx);
+};
 
 Image MipMap(const Image& img);
 Image MakeMipMap(const Image& img, int level);
@@ -244,6 +283,8 @@ protected:
 	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
 	                        const Pointf& c, double r, const RGBA& color2,
 	                        int style);
+
+	virtual void   ClipOp();
 
 	virtual void   ColorStopOp(double pos, const RGBA& color);
 	virtual void   ClearStopsOp();
