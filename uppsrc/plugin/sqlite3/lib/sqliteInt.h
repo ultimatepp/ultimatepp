@@ -48,6 +48,7 @@
 
 #ifdef _MSC_VER
 #include <stdlib.h>
+#include <stddef.h>
 #endif
 
 
