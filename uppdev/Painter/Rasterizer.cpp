@@ -282,7 +282,7 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	RenderHLine(ey1, x_from, 256 - first, x2, fy2);
 }
 
-void Rasterizer::Render(int y, Target& g, bool evenodd)
+void Rasterizer::Render(int y, Rasterizer::Filler& g, bool evenodd)
 {
 	PAINTER_TIMING("Render");
 	const Cell *c, *e;

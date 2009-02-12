@@ -7,10 +7,11 @@ void BufferPainter::ClearOp(const RGBA& color)
 	UPP::Fill(~ib, color, ib.GetLength());
 }
 
-void BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
+Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 {
+	Buffer<ClipLine> newclip;
 	if(width == 0)
-		return;
+		return newclip;
 	Transformer trans(pathattr.mtx);
 	trans.target = &rasterizer;
 	LinearPathConsumer *g;
@@ -37,13 +38,14 @@ void BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 	int opacity = int(256 * pathattr.opacity);
 	Pointf pos = Pointf(0, 0);
 	int i = 0;
-	Rasterizer::Target *rg;
+	Rasterizer::Filler *rg;
 	SpanFiller   span_filler;
 	SolidFiller  solid_filler;
-	RecFiller    record_filler(ib.GetWidth());
-	bool clip = width == -2;
-	if(clip) {
-		rg = &record_filler;
+	ClipFiller   clip_filler(ib.GetWidth());
+	bool doclip = width == -2;
+	if(doclip) {
+		rg = &clip_filler;
+		newclip.Alloc(ib.GetHeight());
 	}
 	else
 	if(ss) {
@@ -58,19 +60,29 @@ void BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 		solid_filler.c = Mul8(color, opacity);
 		rg = &solid_filler;
 	}
+	
 	for(;;) {
 		if(i >= path.type.GetCount() || path.type[i] == DIV) {
 			g->End();
 			for(int y = rasterizer.MinY(); y <= rasterizer.MaxY(); y++) {
 				solid_filler.t = span_filler.t = ib[y];
 				span_filler.y = y;
-				rasterizer.Render(y, *rg, evenodd);
-				if(clip) {
-					record_filler.Finish();
-					Buffer<byte> h;
-					int maxx, maxlen;
-					record_filler.GetResult(h, maxx, maxlen);
+				Rasterizer::Filler *rf = rg;
+				MaskFillerFilter mf;
+				if(clip.GetCount()) {
+					const ClipLine& s = clip.Top()[y];
+					if(s.IsEmpty()) goto empty;
+					if(!s.IsFull()) {
+						mf.Set(rg, s);
+						rf = &mf;
+					}
 				}
+				if(doclip)
+					clip_filler.Clear();
+				rasterizer.Render(y, *rf, evenodd);
+				if(doclip)
+					clip_filler.Finish(newclip[y]);
+			empty:;
 			}
 			rasterizer.Reset();
 			if(i >= path.type.GetCount())
@@ -113,11 +125,12 @@ void BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 		}
 		default:
 			NEVER();
-			return;
+			return newclip;
 		}
 		i++;
 	}
 	current = Null;
+	return newclip;
 }
 
 void BufferPainter::FillOp(const RGBA& color)
@@ -132,7 +145,14 @@ void BufferPainter::StrokeOp(double width, const RGBA& color)
 
 void BufferPainter::ClipOp()
 {
-	RenderPath(-2, NULL, RGBAZero());
+	Buffer<ClipLine> newclip = RenderPath(-2, NULL, RGBAZero());
+	if(attr.hasclip)
+		clip.Top() = newclip;
+	else {
+		clip.Add() = newclip;
+		attr.hasclip = true;
+		attr.cliplevel = clip.GetCount();
+	}
 }
 
 END_UPP_NAMESPACE

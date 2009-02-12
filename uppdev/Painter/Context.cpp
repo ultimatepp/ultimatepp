@@ -16,8 +16,8 @@ void BufferPainter::EndOp()
 	}
 	pathattr = attr = attrstack.Top();
 	attrstack.Drop();
-#if 0
 	clip.SetCount(attr.cliplevel);
+#if 0
 	if(attr.mask)
 		FinishMask();
 #endif
@@ -126,6 +126,8 @@ BufferPainter::BufferPainter(ImageBuffer& ib)
 	attr.mask = false;
 	attr.noaa = false;
 	pathattr = attr;
+	
+	gradientn = Null;
 }
 
 END_UPP_NAMESPACE

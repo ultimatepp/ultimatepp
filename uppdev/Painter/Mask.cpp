@@ -2,115 +2,96 @@
 
 NAMESPACE_UPP
 
-RecFiller::RecFiller(int _cx)
+ClipFiller::ClipFiller(int _cx)
 {
 	cx = _cx;
 	buffer.Alloc(2 * cx + 2);
 }
 
-void RecFiller::Start(int xmin, int xmax)
+void ClipFiller::Clear()
 {
 	t = ~buffer;
 	x = 0;
-	maxlen = 0;
-	maxx = 0;
+	empty = true;
+	full = true;
+	last = -1;
+}
+
+void ClipFiller::Start(int xmin, int xmax)
+{
 	Render(0, xmin);
 }
 
-void RecFiller::Render(int val)
+void ClipFiller::Span(int val, int len)
 {
-	Render(val, 1); //!Optimize later!
-/*
-	if(val == 0) {
-		*t++ = 0;
-		*t++ = 0;
+	int v = val >> 1;
+	if(last == val) {
+		int n = min(v + 128 - *lastn - 1, len);
+		*lastn += n;
+		len -= n;
 	}
-	else
-	if(val == 256) {
-		*t++ = 0;
-		*t++ = 128;
-	}
-	else
-		*t++ = val;
-	x++;
-*/
-}
-
-void RecFiller::Span(int c, int len)
-{
+	last = -1;
 	while(len > 128) {
 		int n = min(len, 128);
 		*t++ = 0;
-		*t++ = c + n - 1;
+		*t++ = v + n - 1;
 		len -= n;
 	}
 	if(len) {
 		*t++ = 0;
-		*t++ = c + len - 1;
+		last = val;
+		lastn = t;
+		*t++ = v + len - 1;
 	}
 }
 
-void RecFiller::Render(int val, int len)
+void ClipFiller::Render(int val, int len)
 {
-	DLOG(val << " " << len);
 	if(val == 256) {
-		Span(128, len);
-		if(len > maxlen) {
-			maxx = x;
-			maxlen = len;
-		}
+		Span(256, len);
+		empty = false;
 	}
-	else
-	if(val == 0)
-		Span(0, len);
 	else {
-		memset(t, val, len);
-		t += len;
+		full = false;
+		if(val == 0)
+			Span(0, len);
+		else {
+			memset(t, val, len);
+			t += len;
+			empty = false;
+			last = -1;
+		}
 	}
 	x += len;
 }
 
-void RecFiller::Finish()
+void ClipFiller::Render(int val)
 {
+	Render(val, 1);
+}
+
+void ClipFiller::Finish(ClipLine& cl)
+{
+	if(empty)
+		return;
 	while(x < cx) {
 		int n = min(cx - x, 128);
 		*t++ = 0;
 		*t++ = n - 1;
 		x += n;
+		full = false;
 	}
+	if(full)
+		cl.SetFull();
+	else
+		cl.Set(~buffer, t - ~buffer);
 }
 
-void RecFiller::GetResult(Buffer<byte>& tgt, int& _maxx, int& _maxlen)
+void MaskFillerFilter::Render(int val)
 {
-	tgt.Clear();
-	int l = t - ~buffer;
-	tgt.Alloc(l);
-	memcpy(~tgt, ~buffer, l);
-	_maxx = maxx;
-	_maxlen = maxlen;
-	LOGHEXDUMP(~tgt, l);
-	DDUMP(maxx);
-	DDUMP(maxlen);
-}
-
-struct RasterizerMaskFilter : Rasterizer::Target {
-	Rasterizer::Target *t;
-	byte               *mask;
-	int                 empty;
-	int                 full;
-	
-	void Start(int minx, int maxx);
-	void Render(int val, int len);
-	void Render(int val);
-	RasterizerMaskFilter()                        { empty = full = 0; }
-};
-
-void RasterizerMaskFilter::Render(int val)
-{
-	Render(val, 1);
-/*	for(;;) {
+	for(;;) {
 		if(empty) {
-			f.t++;
+			t->Render(0);
 			empty--;
 			return;
 		}
@@ -124,17 +105,15 @@ void RasterizerMaskFilter::Render(int val)
 			t->Render(val * m >> 8);
 			return;
 		}
-		else {
-			if(m < 128)
-				empty = m + 1;
-			else
-				full = m - 128 + 1;
-		}
+		m = *mask++;
+		if(m < 128)
+			empty = m + 1;
+		else
+			full = m - 128 + 1;
 	}
-*/
 }
 
-void RasterizerMaskFilter::Render(int val, int len)
+void MaskFillerFilter::Render(int val, int len)
 {
 	while(len)
 		if(empty) {
@@ -146,21 +125,19 @@ void RasterizerMaskFilter::Render(int val, int len)
 		else
 		if(full) {
 			int n = min(len, full);
-			t->Render(256, n);
+			t->Render(val, n);
 			full -= n;
 			len -= n;
-			empty = false;
 		}
 		else {
 			byte m = *mask++;
 			if(m) {
 				int r = val * m >> 8;
-				if(r)
-					empty = false;
 				t->Render(r);
 				len--;
 			}
 			else {
+				m = *mask++;
 				if(m < 128)
 					empty = m + 1;
 				else
@@ -169,17 +146,17 @@ void RasterizerMaskFilter::Render(int val, int len)
 		}
 }
 
-struct RasterizerNil : Rasterizer::Target {
+struct NilFiller : Rasterizer::Filler {
 	void Start(int minx, int maxx) {}
 	void Render(int val, int len)  {}
 	void Render(int val)           {}
 };
 
-void RasterizerMaskFilter::Start(int minx, int maxx)
+void MaskFillerFilter::Start(int minx, int maxx)
 {
 	t->Start(minx, maxx);
-	Rasterizer::Target *h = t;
-	RasterizerNil nil;
+	Rasterizer::Filler *h = t;
+	NilFiller nil;
 	t = &nil;
 	Render(0, minx);
 	t = h;
