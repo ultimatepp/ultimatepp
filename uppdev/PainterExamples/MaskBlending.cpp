@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void MaskBlending(Painter& sw)
 {
 	const char *txt = "This is just a test of alpha mask blending";
@@ -25,5 +23,3 @@ void MaskBlending(Painter& sw)
 INITBLOCK {
 	RegisterExample("Blending using alpha mask", MaskBlending);
 }
-
-#endif

@@ -23,7 +23,7 @@ struct App : TopWindow {
 	FrameBottom< WithCtrlLayout<StaticRect> > ctrl;
 	
 	typedef App CLASSNAME;
-	
+
 	void DoPaint0(Painter& sw);
 	void DoPaint(Painter& sw);
 	void Print();

@@ -1,5 +1,7 @@
 #include "Examples.h"
-	
+
+#ifndef _DEBUG
+
 void Big(Painter& sw)
 {
 	int n = 0;
@@ -45,3 +47,5 @@ INITBLOCK {
 	RegisterExample("Really Big Polygon", Big);
 	RegisterExample("Really Big Stroke", BigStroke);
 }
+
+#endif

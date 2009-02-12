@@ -17,10 +17,8 @@ void BufferPainter::EndOp()
 	pathattr = attr = attrstack.Top();
 	attrstack.Drop();
 	clip.SetCount(attr.cliplevel);
-#if 0
 	if(attr.mask)
 		FinishMask();
-#endif
 }
 
 void   BufferPainter::TransformOp(const Xform2D& m)

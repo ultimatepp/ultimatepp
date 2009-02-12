@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void RichTextExample(Painter& sw)
 {
 	const char *qtf =
@@ -79,5 +77,3 @@ INITBLOCK
 {
 	RegisterExample("RichText", RichTextExample);
 }
-
-#endif
