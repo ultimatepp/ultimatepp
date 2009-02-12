@@ -35,7 +35,7 @@ void Cubics(Painter& sw)
 
 void Quadratic(Painter& sw)
 {
-	sw.Move(200, 300).Quadratic(400, 50, 600, 300).Quadratic(1000, 300).Stroke(1, Blue());
+	sw.Move(200, 300).Quadratic(400, 50, 600, 300).Quadratic(1000, 300).Stroke(10, Blue());
 }
 
 INITBLOCK {
