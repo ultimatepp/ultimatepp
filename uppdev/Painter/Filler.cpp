@@ -96,4 +96,19 @@ void SpanFiller::Render(int val, int len)
 			AlphaBlendCover8(*t++, *s++, val);
 }
 
+void NoAAFillerFilter::Start(int minx, int maxx)
+{
+	t->Start(minx, maxx);
+}
+
+void NoAAFillerFilter::Render(int val, int len)
+{
+	t->Render(val < 128 ? 0 : 256, len);
+}
+
+void NoAAFillerFilter::Render(int val)
+{
+	t->Render(val < 128 ? 0 : 256);
+}
+
 END_UPP_NAMESPACE

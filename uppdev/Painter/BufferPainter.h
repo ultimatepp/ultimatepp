@@ -249,6 +249,16 @@ struct MaskFillerFilter : Rasterizer::Filler {
 	void Set(Rasterizer::Filler *f, const byte *m) { t = f; mask = m; empty = full = 0; }
 };
 
+struct NoAAFillerFilter : Rasterizer::Filler {
+	Rasterizer::Filler *t;
+
+	void Start(int minx, int maxx);
+	void Render(int val, int len);
+	void Render(int val);
+	
+	void Set(Rasterizer::Filler *f)                 { t = f; }
+};
+
 Image MipMap(const Image& img);
 Image MakeMipMap(const Image& img, int level);
 

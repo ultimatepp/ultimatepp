@@ -237,7 +237,7 @@ public:
 	Painter& EvenOdd(bool evenodd = true);
 	Painter& Dash(const Vector<double>& dash, double start);
 	Painter& Dash(const char *dash, double start = 0);
-	Painter& NoAA(bool noaa);
+	Painter& NoAA(bool noaa = true);
 
 	Painter& Transform(const Xform2D& m);
 	Painter& Translate(double x, double y);
