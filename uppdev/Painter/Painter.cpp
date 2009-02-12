@@ -362,6 +362,64 @@ Painter& Painter::Dash(const char *dash, double start)
 	return *this;
 }
 
+Painter& Painter::Character(double x, double y, int ch, Font fnt)
+{
+	return Character(Pointf(x, y), ch, fnt);
+}
+
+void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double *dx)
+{
+	FontInfo fi = fnt.Info();
+	double x = p.x;
+	while(n) {
+		int ch = *text++;
+		Character(x, p.y, ch, fnt);
+		Div();
+		if(dx)
+			x += *dx++;
+		else
+			x += fi[ch];
+		n--;
+	}
+}
+
+Painter& Painter::Text(double x, double y, const wchar *text, Font fnt, int n, double *dx)
+{
+	return Text(Pointf(x, y), text, fnt, n < 0 ? wstrlen(text) : n, dx);
+}
+
+Painter& Painter::Text(const Pointf& p, const WString& s, Font fnt, double *dx)
+{
+	return Text(p, ~s, fnt, s.GetLength(), dx);
+}
+
+Painter& Painter::Text(double x, double y, const WString& s, Font fnt, double *dx)
+{
+	return Text(Pointf(x, y), s, fnt, dx);
+}
+
+Painter& Painter::Text(const Pointf& p, const String& s, Font fnt, double *dx)
+{
+	return Text(p, s.ToWString(), fnt, dx);
+}
+
+Painter& Painter::Text(double x, double y, const String& s, Font fnt, double *dx)
+{
+	return Text(Pointf(x, y), s, fnt, dx);
+}
+
+Painter& Painter::Text(const Pointf& p, const char *text, Font fnt, int n, double *dx)
+{
+	if(n < 0)
+		n = strlen(text);
+	return Text(p, ToUnicode(text, n, CHARSET_DEFAULT), fnt, n, dx);
+}
+
+Painter& Painter::Text(double x, double y, const char *text, Font fnt, int n, double *dx)
+{
+	return Text(Pointf(x, y), text, fnt, n, dx);
+}
+
 Painter& Painter::Rectangle(double x, double y, double cx, double cy)
 {
 	return Move(x, y).RelLine(cx, 0).RelLine(0, cy).RelLine(-cx, 0).Close();

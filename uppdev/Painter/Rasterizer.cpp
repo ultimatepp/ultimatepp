@@ -1,5 +1,7 @@
 #include "Painter.h"
 
+// The genesis of this code can be dated back to LibART
+
 #define LLOG(x) // LOG(x)
 
 NAMESPACE_UPP

@@ -58,7 +58,31 @@ enum {
 	GRADIENT_REFLECT = 2,
 };
 
-class Painter {
+class Painter : public Draw {
+public:
+	void OffsetOp(Point p);
+	void RectPath(int x, int y, int cx, int cy);
+	void RectPath(const Rect& r);
+	bool ClipOp(const Rect& r);
+	bool ClipoffOp(const Rect& r);
+	bool ExcludeClipOp(const Rect& r);
+	bool IntersectClipOp(const Rect& r);
+	Rect GetClipOp() const;
+	bool IsPaintingOp(const Rect& r) const;
+	void DrawRectOp(int x, int y, int cx, int cy, Color color);
+	void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
+	void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
+	void DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
+	                        int count_count, int width, Color color, Color doxor);
+	void DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
+	                           const int *subpolygon_counts, int scc,
+	                           const int *disjunct_polygon_counts, int dpcc, Color color,
+	                           int width, Color outline, uint64 pattern, Color doxor);
+	void DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color);
+	void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
+	void DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx);
+	void DrawPaintingOp(const Rect& target, const Painting& p);
+
 protected:
 	virtual void   ClearOp(const RGBA& color) = 0;
 
@@ -93,8 +117,9 @@ protected:
 
 	virtual void   ClipOp() = 0;
 
-	virtual void   CharacterOp(double x, double y, int ch, Font fnt);
-	virtual void   TextOp(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
+	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt);
+	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1, 
+	                      double *dx = NULL);
 
 	virtual void   ColorStopOp(double pos, const RGBA& color) = 0;
 	virtual void   ClearStopsOp() = 0;
@@ -111,6 +136,8 @@ protected:
 
 	virtual void   BeginOp() = 0;
 	virtual void   EndOp() = 0;
+
+	virtual void   BeginMaskOp() = 0;
 
 protected:
 	Pointf ReadPoint(CParser& p);
@@ -219,14 +246,21 @@ public:
 
 	Painter& Clip();
 
+	Painter& Character(const Pointf& p, int ch, Font fnt);
 	Painter& Character(double x, double y, int ch, Font fnt);
+	Painter& Text(const Pointf& p, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
 	Painter& Text(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
+	Painter& Text(const Pointf& p, const WString& s, Font fnt, double *dx = NULL);
 	Painter& Text(double x, double y, const WString& s, Font fnt, double *dx = NULL);
+	Painter& Text(const Pointf& p, const String& s, Font fnt, double *dx = NULL);
 	Painter& Text(double x, double y, const String& s, Font fnt, double *dx = NULL);
+	Painter& Text(const Pointf& p, const char *text, Font fnt, int n = -1, double *dx = NULL);
 	Painter& Text(double x, double y, const char *text, Font fnt, int n = -1, double *dx = NULL);
 
 	void Begin();
 	void End();
+
+	void BeginMask();
 
 	Painter& ColorStop(double pos, const RGBA& color);
 	Painter& ClearStops();
@@ -245,12 +279,15 @@ public:
 	Painter& Scale(double scalex, double scaley);
 	Painter& Scale(double scale);
 
+	void     Paint(const Painting& p);
+
 	Painter& Rectangle(double x, double y, double cx, double cy);
 	Painter& Ellipse(double x, double y, double rx, double ry);
 	Painter& Circle(double x, double y, double r);
 };
 
 #include "Painter.hpp"
+#include "Painting.h"
 #include "BufferPainter.h"
 
 END_UPP_NAMESPACE

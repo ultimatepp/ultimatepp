@@ -40,26 +40,22 @@ void App::DoPaint0(Painter& sw)
 
 void App::DoPaint(Painter& sw)
 {
-#if 0
 	if(ctrl.painting) {
 		PaintingPainter h(2000, 2000);
 		DoPaint0(h);
 		sw.Paint(h);
 	}
 	else
-#endif
 		DoPaint0(sw);
 }
 
 void App::Print()
 {
-#if 0
 	PaintingPainter sw(1000, 1000);
 	DoPaint(sw);
 	PrinterJob pb;
 	if(pb.Execute())
 		pb.GetDraw().DrawPainting(0, 0, 4000, 4000, sw);
-#endif
 }
 
 void App::Benchmark()

@@ -1,4 +1,5 @@
 #include "Painter.h"
+#include "Fillers.h"
 
 NAMESPACE_UPP
 

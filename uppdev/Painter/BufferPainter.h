@@ -177,32 +177,11 @@ struct SpanSource {
 	virtual void Get(RGBA *span, int x, int y, unsigned len) = 0;
 };
 
-struct SolidFiller : Rasterizer::Filler {
-	RGBA *t;
-	RGBA  c;
-	
-	void Start(int minx, int maxx)      { t += minx; }
-	void Render(int val)                { AlphaBlendCover8(*t++, c, val); } 
-	void Render(int val, int len);
-};
-
-struct SpanFiller : Rasterizer::Filler {
-	RGBA       *t;
-	const RGBA *s;
-	int         y;
-	RGBA       *buffer;
-	SpanSource *ss;
-	int         alpha;
-	
-	void Start(int minx, int maxx);
-	void Render(int val);
-	void Render(int val, int len);
-};
-
-class ClipLine {
+class ClipLine : NoCopy {
 	byte *data;
 	
 public:
+	void Clear()                     { if(!IsFull()) delete[] data; data = NULL; }
 	void Set(const byte *s, int len) { data = new byte[len]; memcpy(data, s, len); }
 	void SetFull()                   { ASSERT(!data); data = (byte *)1; }
 
@@ -211,52 +190,7 @@ public:
 	operator const byte*() const     { return data; }
 	
 	ClipLine()                       { data = NULL; }
-	~ClipLine()                      { if(!IsFull()) delete[] data; }
-};
-
-struct ClipFiller : Rasterizer::Filler {
-	Buffer<byte> buffer;
-	byte        *t;
-	int          x;
-	int          cx;
-	int          last;
-	byte        *lastn;
-	bool         empty;
-	bool         full;
-	
-	void Span(int c, int len);
-
-	virtual void Render(int val);
-	virtual void Render(int val, int len);
-	virtual void Start(int x, int len);
-
-	void   Clear();
-	void   Finish(ClipLine& cl);
-	
-	ClipFiller(int cx);
-};
-
-struct MaskFillerFilter : Rasterizer::Filler {
-	Rasterizer::Filler *t;
-	const byte         *mask;
-	int                 empty;
-	int                 full;
-
-	void Start(int minx, int maxx);
-	void Render(int val, int len);
-	void Render(int val);
-	
-	void Set(Rasterizer::Filler *f, const byte *m) { t = f; mask = m; empty = full = 0; }
-};
-
-struct NoAAFillerFilter : Rasterizer::Filler {
-	Rasterizer::Filler *t;
-
-	void Start(int minx, int maxx);
-	void Render(int val, int len);
-	void Render(int val);
-	
-	void Set(Rasterizer::Filler *f)                 { t = f; }
+	~ClipLine()                      { Clear(); }
 };
 
 Image MipMap(const Image& img);
@@ -331,6 +265,8 @@ protected:
 	virtual void   BeginOp();
 	virtual void   EndOp();
 
+	virtual void   BeginMaskOp();
+
 public:
 	enum {
 		MOVE, LINE, QUADRATIC, CUBIC, ARC, DIV
@@ -372,12 +308,14 @@ public:
 		bool                            noaa;
 	};
 	
-	ImageBuffer& ib;
+	ImageBuffer&               ib;
 
 	Attr                       attr;
 	Attr                       pathattr;
 	Array<Attr>                attrstack;
 	Vector< Buffer<ClipLine> > clip;
+	Array< ImageBuffer >       mask;
+
 	
 	Image                      gradient;
 	RGBA                       gradient1, gradient2;
@@ -405,6 +343,7 @@ public:
 	void             MakeGradient(RGBA color1, RGBA color2, int cx);
 	void             Gradient(const RGBA& color1, const RGBA& color2, const Pointf& p1, const Pointf& p2);
 	void             ColorStop0(Attr& a, double pos, const RGBA& color);
+	void             FinishMask();
 
 public:
 	BufferPainter(ImageBuffer& ib);

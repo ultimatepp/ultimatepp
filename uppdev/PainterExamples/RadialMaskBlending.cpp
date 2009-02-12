@@ -1,7 +1,5 @@
 #include "Examples.h"
 
-#if 0
-
 void RadialMaskBlending(Painter& sw)
 {
 	const char *txt = "This is just a test of radial mask blending";
@@ -31,5 +29,3 @@ void RadialMaskBlending(Painter& sw)
 INITBLOCK {
 	RegisterExample("Blending using radial alpha mask", RadialMaskBlending);
 }
-
-#endif
