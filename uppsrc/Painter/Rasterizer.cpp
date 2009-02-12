@@ -1,6 +1,27 @@
 #include "Painter.h"
 
-// The genesis of this code can be dated back to LibART
+// This code is based in AGG rasterizer with this original information:
+
+//----------------------------------------------------------------------------
+// Anti-Grain Geometry - Version 2.4
+// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
+//
+// Permission to copy, use, modify, sell and distribute this software 
+// is granted provided this copyright notice appears in all copies. 
+// This software is provided "as is" without express or implied
+// warranty, and with no claim as to its suitability for any purpose.
+//
+//----------------------------------------------------------------------------
+//
+// The author gratefully acknowleges the support of David Turner, 
+// Robert Wilhelm, and Werner Lemberg - the authors of the FreeType 
+// libray - in producing this work. See http://www.freetype.org for details.
+//
+//----------------------------------------------------------------------------
+// Contact: mcseem@antigrain.com
+//          mcseemagg@yahoo.com
+//          http://www.antigrain.com
+//----------------------------------------------------------------------------
 
 #define LLOG(x) // LOG(x)
 
