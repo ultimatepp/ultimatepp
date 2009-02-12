@@ -127,7 +127,7 @@ struct PainterRadialSpan : SpanSource {
 	int         cx, cy, r, fx, fy;
 	int         style;
 	int         alpha;
-	RGBA        gradient[2048];
+	const RGBA *gradient;
 	bool        focus;
 	double      C;
 	
@@ -201,7 +201,8 @@ void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& colo
 	sg.interpolator.Set(Inverse(pathattr.mtx));
 	sg.style = style;
 	sg.Set((int)c.x, (int)c.y, (int)r, (int)f.x, (int)f.y);
-	MakeGradient(sg.gradient, color1, color2, 2048);
+	MakeGradient(color1, color2, 2048);
+	sg.gradient = gradient[0];
 	RenderPath(width, &sg, RGBAZero());
 }
 

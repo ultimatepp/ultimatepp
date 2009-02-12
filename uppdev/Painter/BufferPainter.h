@@ -154,7 +154,7 @@ private:
 	bool  BeginRender(int y, const Cell *&c, const Cell *&e);
 
 public:
-	struct Target {
+	struct Filler {
 		virtual void Start(int x, int len) = 0;
 		virtual void Render(int val) = 0;
 		virtual void Render(int val, int len) = 0;
@@ -166,29 +166,18 @@ public:
 
 	int  MinY() const                         { return min_y; }
 	int  MaxY() const                         { return max_y; }
-	void Render(int y, Target& g, bool evenodd);
+	void Render(int y, Filler& g, bool evenodd);
 
 	void Reset();
 	
 	Rasterizer(int cx, int cy);
 };
 
-struct ScanLine {
-	int          xmin, xmax;
-	Buffer<byte> data;
-	int          datalen;
-
-	bool IsFull();
-	bool IsEmpty();
-
-	String ToString() const;
-};
-
 struct SpanSource {
 	virtual void Get(RGBA *span, int x, int y, unsigned len) = 0;
 };
 
-struct SolidFiller : Rasterizer::Target {
+struct SolidFiller : Rasterizer::Filler {
 	RGBA *t;
 	RGBA  c;
 	
@@ -197,7 +186,7 @@ struct SolidFiller : Rasterizer::Target {
 	void Render(int val, int len);
 };
 
-struct SpanFiller : Rasterizer::Target {
+struct SpanFiller : Rasterizer::Filler {
 	RGBA       *t;
 	const RGBA *s;
 	int         y;
@@ -210,24 +199,54 @@ struct SpanFiller : Rasterizer::Target {
 	void Render(int val, int len);
 };
 
-struct RecFiller : Rasterizer::Target {
+class ClipLine {
+	byte *data;
+	
+public:
+	void Set(const byte *s, int len) { data = new byte[len]; memcpy(data, s, len); }
+	void SetFull()                   { ASSERT(!data); data = (byte *)1; }
+
+	bool IsEmpty() const             { return !data; }
+	bool IsFull() const              { return data == (byte *)1; }
+	operator const byte*() const     { return data; }
+	
+	ClipLine()                       { data = NULL; }
+	~ClipLine()                      { if(!IsFull()) delete[] data; }
+};
+
+struct ClipFiller : Rasterizer::Filler {
 	Buffer<byte> buffer;
 	byte        *t;
 	int          x;
-	int          maxx;
-	int          maxlen;
 	int          cx;
+	int          last;
+	byte        *lastn;
 	bool         empty;
+	bool         full;
 	
 	void Span(int c, int len);
 
 	virtual void Render(int val);
 	virtual void Render(int val, int len);
 	virtual void Start(int x, int len);
-	void Finish();
-	void GetResult(Buffer<byte>& tgt, int& maxx, int& maxlen);
+
+	void   Clear();
+	void   Finish(ClipLine& cl);
 	
-	RecFiller(int cx);
+	ClipFiller(int cx);
+};
+
+struct MaskFillerFilter : Rasterizer::Filler {
+	Rasterizer::Filler *t;
+	const byte         *mask;
+	int                 empty;
+	int                 full;
+
+	void Start(int minx, int maxx);
+	void Render(int val, int len);
+	void Render(int val);
+	
+	void Set(Rasterizer::Filler *f, const byte *m) { t = f; mask = m; empty = full = 0; }
 };
 
 Image MipMap(const Image& img);
@@ -345,9 +364,14 @@ public:
 	
 	ImageBuffer& ib;
 
-	Attr         attr;
-	Attr         pathattr;
-	Array<Attr>  attrstack;
+	Attr                       attr;
+	Attr                       pathattr;
+	Array<Attr>                attrstack;
+	Vector< Buffer<ClipLine> > clip;
+	
+	Image                      gradient;
+	RGBA                       gradient1, gradient2;
+	int                        gradientn;
 
 	Path         path;
 	Pointf       current, ccontrol, qcontrol, move;
@@ -359,17 +383,18 @@ public:
 	void        *PathAddRaw(int type, int size);
 	template <class T> T& PathAdd(int type) { return *(T *)PathAddRaw(type, sizeof(T)); }
 
-	Pointf       PathPoint(const Pointf& p, bool rel);
-	Pointf       EndPoint(const Pointf& p, bool rel);
-	void         DoMove0();
-	void         ClearPath();
-	void         RenderPath(double width, SpanSource *ss, const RGBA& color);
-	void         RenderImage(double width, const Image& image, const Xform2D& transsrc, dword flags);
-	void         RenderRadial(double width, const Pointf& f, const RGBA& color1,
-	                          const Pointf& c, double r, const RGBA& color2, int style);
-	void         MakeGradient(RGBA *t, RGBA color1, RGBA color2, int cx);
-	Image        GetGradient(const RGBA& color1, const RGBA& color2, const Pointf& p1, const Pointf& p2);
-	void         ColorStop0(Attr& a, double pos, const RGBA& color);
+	Pointf           PathPoint(const Pointf& p, bool rel);
+	Pointf           EndPoint(const Pointf& p, bool rel);
+	void             DoMove0();
+	void             ClearPath();
+	Buffer<ClipLine> RenderPath(double width, SpanSource *ss, const RGBA& color);
+	void             RenderImage(double width, const Image& image, const Xform2D& transsrc,
+	                             dword flags);
+	void             RenderRadial(double width, const Pointf& f, const RGBA& color1,
+	                            const Pointf& c, double r, const RGBA& color2, int style);
+	void             MakeGradient(RGBA color1, RGBA color2, int cx);
+	void             Gradient(const RGBA& color1, const RGBA& color2, const Pointf& p1, const Pointf& p2);
+	void             ColorStop0(Attr& a, double pos, const RGBA& color);
 
 public:
 	BufferPainter(ImageBuffer& ib);
