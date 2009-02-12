@@ -39,9 +39,10 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 	Pointf pos = Pointf(0, 0);
 	int i = 0;
 	Rasterizer::Filler *rg;
-	SpanFiller   span_filler;
-	SolidFiller  solid_filler;
-	ClipFiller   clip_filler(ib.GetWidth());
+	SpanFiller          span_filler;
+	SolidFiller         solid_filler;
+	ClipFiller          clip_filler(ib.GetWidth());
+	NoAAFillerFilter    noaa_filler;
 	bool doclip = width == -2;
 	if(doclip) {
 		rg = &clip_filler;
@@ -60,7 +61,10 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 		solid_filler.c = Mul8(color, opacity);
 		rg = &solid_filler;
 	}
-	
+	if(pathattr.noaa) {
+		noaa_filler.Set(rg);
+		rg = &noaa_filler;
+	}
 	for(;;) {
 		if(i >= path.type.GetCount() || path.type[i] == DIV) {
 			g->End();
