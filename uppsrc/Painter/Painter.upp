@@ -1,3 +1,5 @@
+description "2D software rendering with PDF/SVG strength";
+
 uses
 	Core,
 	CtrlLib;

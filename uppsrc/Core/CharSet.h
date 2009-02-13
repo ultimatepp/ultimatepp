@@ -205,3 +205,12 @@ String  ToAscii(const String& s, byte charset = CHARSET_DEFAULT);
 String  ToUpper(const char *s, byte charset = CHARSET_DEFAULT);
 String  ToLower(const char *s, byte charset = CHARSET_DEFAULT);
 String  ToAscii(const char *s, byte charset = CHARSET_DEFAULT);
+
+WString LoadStreamBOMW(Stream& in);
+String  LoadStreamBOM(Stream& in);
+WString LoadFileBOMW(const char *path);
+String  LoadFileBOM(const char *path);
+bool    SaveStreamBOM(Stream& out, const WString& data);
+bool    SaveFileBOM(const char *path, const WString& data);
+bool    SaveStreamBOMUtf8(Stream& out, const String& data);
+bool    SaveFileBOMUtf8(const char *path, const String& data);
