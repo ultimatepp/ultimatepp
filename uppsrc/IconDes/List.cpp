@@ -257,23 +257,18 @@ void IconDes::MoveSlot(int d)
 
 void IconDes::ListMenu(Bar& bar)
 {
-	bar.Add("Insert image..", IconDesImg::Insert(), THISBACK(InsertImage))
-	   .Key(K_INSERT);
-	bar.Add(IsCurrent(), "Image..", IconDesImg::Edit(), THISBACK(EditImage));
-	bar.Add(IsCurrent(), "Remove image", IconDesImg::Remove(), THISBACK(RemoveImage));
-	bar.Add(IsCurrent(), "Duplicate", IconDesImg::Duplicate(), THISBACK(Duplicate))
-	   .Key(K_CTRL_D);
-	bar.Add("Insert from clipboard", IconDesImg::InsertPaste(), THISBACK(InsertPaste))
-	   .Key(K_ALT_V);
-	bar.Add("Insert from file(s)..", IconDesImg::InsertFile(), THISBACK(InsertFile))
-	   .Key(K_ALT_O);
+	using namespace IconDesKeys;
+	bar.Add(AK_INSERT_IMAGE, IconDesImg::Insert(), THISBACK(InsertImage));
+	bar.Add(IsCurrent(), AK_IMAGE, IconDesImg::Edit(), THISBACK(EditImage));
+	bar.Add(IsCurrent(), AK_REMOVE_IMAGE, IconDesImg::Remove(), THISBACK(RemoveImage));
+	bar.Add(IsCurrent(), AK_DUPLICATE, IconDesImg::Duplicate(), THISBACK(Duplicate));
+	bar.Add(AK_INSERT_CLIP, IconDesImg::InsertPaste(), THISBACK(InsertPaste));
+	bar.Add(AK_INSERT_FILE, IconDesImg::InsertFile(), THISBACK(InsertFile));
 	bar.Separator();
-	bar.Add(IsCurrent() && list.GetCursor() > 0, "Move up", IconDesImg::MoveUp(),
-	        THISBACK1(MoveSlot, -1))
-	   .Key(K_ALT|K_CTRL_UP);
-	bar.Add(IsCurrent() && list.GetCursor() < slot.GetCount() - 1, "Move down", IconDesImg::MoveDown(),
-	        THISBACK1(MoveSlot, 1))
-	   .Key(K_ALT|K_CTRL_DOWN);
+	bar.Add(IsCurrent() && list.GetCursor() > 0, AK_MOVE_UP, IconDesImg::MoveUp(),
+	        THISBACK1(MoveSlot, -1));
+	bar.Add(IsCurrent() && list.GetCursor() < slot.GetCount() - 1, AK_MOVE_DOWN, IconDesImg::MoveDown(),
+	        THISBACK1(MoveSlot, 1));
 	if(removed.GetCount()) {
 		bar.Separator();
 		for(int i = removed.GetCount() - 1; i >= 0; i--) {

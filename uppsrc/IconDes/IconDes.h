@@ -13,6 +13,11 @@ NAMESPACE_UPP
 #define LAYOUTFILE <IconDes/IconDes.lay>
 #include <CtrlCore/lay.h>
 
+#define KEYNAMESPACE IconDesKeys
+#define KEYGROUPNAME "Icon designer"
+#define KEYFILE      <IconDes/IconDes.key>
+#include             <CtrlLib/key_header.h>
+
 class AlphaCtrl : public Ctrl {
 public:
 	virtual void Layout();
