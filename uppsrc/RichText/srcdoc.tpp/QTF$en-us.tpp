@@ -10,7 +10,7 @@ topic "QTF";
 texts).&]
 [s0; &]
 [s0; It is byte oriented format. Bytes with values 2`-31 are ignored. 
-Other are interpreted as characters or formatting commands.&]
+Other values are interpreted as characters or formatting commands.&]
 [s0; &]
 [s0; Letters ([@4 a]`-[@4 zA]`-[@4 Z]), numbers ([@4 0]`-[@4 9]), space (32) 
 and characters&]
