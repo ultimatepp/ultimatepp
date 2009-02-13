@@ -155,6 +155,10 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len;
 	int hy = py.y - format.before - format.ruler;
 	int phy = py.page;
+	if(format.ruler && hy >= 0 && hy + format.ruler < page.bottom)
+		pw.Page(phy).DrawRect(z * page.left + z * format.lm, z * hy,
+		                      z * page.right - z * page.left - z * format.rm - z * format.lm,
+			                  max(1, z * format.ruler), format.rulerink);
 	if(pi.sell < 0 && pi.selh > 0)
 		for(int p = opy.page; p <= py.page; p++) {
 			int top = z * (p == opy.page ? opy.y : page.top);
@@ -361,10 +365,6 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 		pw.Page(py.page).DrawRect(z * page.left, top, z * page.right - z * page.left,
 		                          z * min(py.y + format.after, page.bottom) - top, InvertColor);
 	}
-	if(format.ruler && hy >= 0 && hy + format.ruler < page.bottom)
-		pw.Page(phy).DrawRect(z * page.left + z * format.lm, z * hy,
-		                      z * page.right - z * page.left - z * format.rm - z * format.lm,
-			                  max(1, z * format.ruler), format.rulerink);
 }
 
 void RichPara::GetRichPos(RichPos& rp, int pos) const

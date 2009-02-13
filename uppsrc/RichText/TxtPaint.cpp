@@ -80,7 +80,7 @@ PageY RichTxt::GetNextPageY(int parti, const RichContext& rc) const
 				py.page++;
 				py.y = rc.page.top;
 			}
-			py.y += pp.before;
+			py.y += pp.before + pp.ruler;
 			if(py.y + pp.cy < rc.page.bottom)
 				py.y += pp.cy;
 			else
@@ -98,7 +98,7 @@ PageY RichTxt::GetNextPageY(int parti, const RichContext& rc) const
 			}
 		}
 		else
-			py.y += pp.before + pp.cy + pp.after;
+			py.y += pp.before + pp.cy + pp.after + pp.ruler;
 		return py;
 	}
 }
@@ -194,7 +194,7 @@ RichCaret RichTxt::GetCaret(int pos, RichContext rc) const
 				if(p.keepnext && parti + 1 < part.GetCount() && part[parti + 1].Is<Para>()) {
 					Sync(parti + 1, rc);
 					const Para& pp = part[parti + 1].Get<Para>();
-					nbefore = pp.before;
+					nbefore = pp.before + pp.ruler;
 					nline = pp.linecy[0];
 				}
 				RichCaret tp = Get(parti, rc.styles).GetCaret(pos, rc.page, rc.py, nbefore, nline);
@@ -230,7 +230,7 @@ int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 					if(part[parti].Get<Para>().keepnext && parti + 1 < part.GetCount() && IsPara(parti + 1)) {
 						Sync(parti + 1, rc);
 						const Para& pp = part[parti + 1].Get<Para>();
-						nbefore = pp.before;
+						nbefore = pp.before + pp.ruler;
 						nline = pp.linecy[0];
 					}
 					return Get(parti, rc.styles).GetPos(x, y, rc.page, rc.py, nbefore, nline) + pos;
@@ -325,7 +325,7 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 			if(p.keepnext && parti + 1 < part.GetCount() && IsPara(parti + 1)) {
 				Sync(parti + 1, rc);
 				const Para& pp = part[parti + 1].Get<Para>();
-				nbefore = pp.before;
+				nbefore = pp.before + pp.ruler;
 				nline = pp.linecy[0];
 			}
 			if(p.haspos)
@@ -355,7 +355,7 @@ PageY RichTxt::GetTop(RichContext rc) const
 	else {
 		Sync(0, rc);
 		const Para& pp = part[0].Get<Para>();
-		rc.py.y += pp.before;
+		rc.py.y += pp.before + pp.ruler;
 		if(BreaksPage(rc.py, pp, 0, rc.page))
 			rc.Page();
 		return rc.py;
