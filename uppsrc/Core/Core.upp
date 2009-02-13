@@ -50,6 +50,7 @@ file
 	StrUtil.cpp optimize_speed,
 	CharSet.h,
 	CharSet.cpp optimize_speed,
+	Bom.cpp,
 	Kernel32W.dli,
 	Mpr32W.dli,
 	Path.h,

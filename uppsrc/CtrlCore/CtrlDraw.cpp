@@ -119,7 +119,12 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 	dx = sgn(dx) * min(abs(dx), vsz.cx);
 	dy = sgn(dy) * min(abs(dy), vsz.cy);
 	Rect r = _r & vsz;
-	Ctrl *w = GetTopCtrl();
+	Ctrl *w;
+	for(w = this; w->parent; w = w->parent)
+		if(w->InFrame()) {
+			Refresh();
+			return;
+		}
 	if(!w || !w->top) return;
 	Rect view = InFrame() ? GetView() : GetClippedView();
 	Rect sr = (r + view.TopLeft()) & view;
@@ -178,11 +183,7 @@ void  Ctrl::ScrollView(int dx, int dy) {
 
 void  Ctrl::SyncScroll()
 {
-// 01/12/2007 - mdelfede
-// added support for windowed controls
-//	if(parent || !top)
 	if(!top)
-// 01/12/2007 - END
 		return;
 	Vector<Scroll> scroll = top->scroll;
 	top->scroll.Clear();
