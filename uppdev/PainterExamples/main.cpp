@@ -187,3 +187,36 @@ GUI_APP_MAIN
 {
 	App().Run();
 }
+
+/*
+struct RGBFiller {
+	int   a;
+	byte  rgb[3];
+	int   i;
+	byte *t;
+	int   v[5];
+	int   n;
+	
+	void Flush() {
+		*t = v[0] * 
+		int add = 1 + ((((uintptr_t)t) >> 1) & 1);
+		t += add;
+		i = (i + add) & 3;
+	}
+	
+	void Finish() {
+		Flush(); Flush(); Flush();
+	}
+	
+	virtual void Render(int val) {
+		int v1 = (7 * val) >> 6;
+		v[0] += v1;
+		v[1] += 2 * v1;
+		v[2] += val - 6 * v1;
+		v[3] += 2 * v1;
+		v[4] += v1;
+		if(++n > 3)
+			Flush();
+	}
+};
+*/
