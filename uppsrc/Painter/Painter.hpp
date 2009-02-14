@@ -54,6 +54,13 @@ Painter& Painter::Arc(const Pointf& c, const Pointf& r, double angle, double swe
 }
 
 inline
+Painter& Painter::SvgArc(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p, bool rel)
+{
+	SvgArcOp(r, xangle, large, sweep, p, rel);
+	return *this;
+}
+
+inline
 Painter& Painter::Close()
 {
 	CloseOp();

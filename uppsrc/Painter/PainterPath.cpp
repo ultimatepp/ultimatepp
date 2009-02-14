@@ -2,12 +2,25 @@
 
 NAMESPACE_UPP
 
+bool Painter::ReadBool(CParser& p)
+{
+	while(p.Char(','));
+	if(p.Char('1')) return true;
+	p.Char('0');
+	return false;
+}
+
+double Painter::ReadDouble(CParser& p)
+{
+	while(p.Char(','));
+	return p.IsDouble() ? p.ReadDouble() : 0;
+}
+
 Pointf Painter::ReadPoint(CParser& p)
 {
 	Pointf t;
-	t.x = p.IsDouble() ? p.ReadDouble() : 0;
-	p.Char(',');
-	t.y = p.IsDouble() ? p.ReadDouble() : 0;
+	t.x = ReadDouble(p);
+	t.y = ReadDouble(p);
 	return t;
 }
 
@@ -21,11 +34,11 @@ Painter& Painter::Path(CParser& p)
 		switch(ToUpper(c)) {
 		case 'M':
 			t = ReadPoint(p);
-			Move(t.x, t.y);
+			Move(t, rel);
 		case 'L':
 			while(p.IsDouble()) {
 				t = ReadPoint(p);
-				Line(t.x, t.y, rel);
+				Line(t, rel);
 			}
 			break;
 		case 'Z':
@@ -44,27 +57,37 @@ Painter& Painter::Path(CParser& p)
 				t1 = ReadPoint(p);
 				t2 = ReadPoint(p);
 				t = ReadPoint(p);
-				Cubic(t1.x, t1.y, t2.x, t2.y, t.x, t.y, rel);
+				Cubic(t1, t2, t, rel);
 			}
 			break;
 		case 'S':
 			while(p.IsDouble()) {
 				t2 = ReadPoint(p);
 				t = ReadPoint(p);
-				Cubic(t2.x, t2.y, t.x, t.y, rel);
+				Cubic(t2, t, rel);
 			}
 			break;
 		case 'Q':
 			while(p.IsDouble()) {
 				t1 = ReadPoint(p);
 				t = ReadPoint(p);
-				Quadratic(t1.x, t1.y, t.x, t.y, rel);
+				Quadratic(t1, t, rel);
 			}
 			break;
 		case 'T':
 			while(p.IsDouble()) {
 				t = ReadPoint(p);
-				Quadratic(t.x, t.y, rel);
+				Quadratic(t, rel);
+			}
+			break;
+		case 'A':
+			while(p.IsDouble()) {
+				t1 = ReadPoint(p);
+				double xangle = ReadDouble(p);
+				bool large = ReadBool(p);
+				bool sweep = ReadBool(p);
+				t = ReadPoint(p);
+				SvgArc(t1, xangle * M_PI / 180.0, large, sweep, t, rel);
 			}
 			break;
 		default:

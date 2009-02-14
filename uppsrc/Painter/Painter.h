@@ -14,6 +14,7 @@ struct Xform2D {
 	double GetScale() const;
 	bool   IsRegular() const;
 	Pointf Transform(const Pointf& f) const;
+	Pointf Transform(double x, double y) const;
 	
 	static Xform2D Identity();
 	static Xform2D Translation(double x, double y);
@@ -93,6 +94,8 @@ protected:
 	virtual void   CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel) = 0;
 	virtual void   CubicOp(const Pointf& p2, const Pointf& p, bool rel) = 0;
 	virtual void   ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel) = 0;
+	virtual void   SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep,
+	                        const Pointf& p, bool rel) = 0;
 	virtual void   CloseOp() = 0;
 	virtual void   DivOp() = 0;
 
@@ -140,7 +143,16 @@ protected:
 	virtual void   BeginMaskOp() = 0;
 
 protected:
-	Pointf ReadPoint(CParser& p);
+	static bool   ReadBool(CParser& p);
+	static double ReadDouble(CParser& p);
+	static Pointf ReadPoint(CParser& p);
+	void   ArcSegment(const Pointf& c, double th0, double th1, const Pointf& r, double xAxisRotation);
+	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle);
+	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
+                    const Pointf& p, const Pointf& p0);
+//	void   DoSvgArc(double rx, double ry, double x_axis_rotation,
+//	                int large_arc_flag, int sweep_flag,
+//	                double x, double y, double curx, double cury);
 
 public:
 	void     Clear(const RGBA& color);
@@ -200,6 +212,16 @@ public:
 	Painter& RelArc(const Pointf& c, double r, double angle, double sweep);
 	Painter& RelArc(double x, double y, double rx, double ry, double angle, double sweep);
 	Painter& RelArc(double x, double y, double r, double angle, double sweep);
+
+	Painter& SvgArc(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p, bool rel);
+	Painter& SvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p, bool rel);
+	Painter& SvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y, bool rel);
+	Painter& SvgArc(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p);
+	Painter& SvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p);
+	Painter& SvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y);
+	Painter& RelSvgArc(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p);
+	Painter& RelSvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p);
+	Painter& RelSvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y);
 
 	Painter& Close();
 	Painter& Div();

@@ -253,6 +253,46 @@ Painter& Painter::RelArc(double x, double y, double r, double angle, double swee
 	return Arc(x, y, r, angle, sweep, true);
 }
 
+Painter& Painter::SvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p, bool rel)
+{
+	return SvgArc(Pointf(rx, ry), xangle, large, sweep, p, rel);
+}
+
+Painter& Painter::SvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y, bool rel)
+{
+	return SvgArc(Pointf(rx, ry), xangle, large, sweep, Pointf(x, y), rel);
+}
+
+Painter& Painter::SvgArc(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p)
+{
+	return SvgArc(r, xangle, large, sweep, p, false);
+}
+
+Painter& Painter::SvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p)
+{
+	return SvgArc(rx, ry, xangle, large, sweep, p, false);
+}
+
+Painter& Painter::SvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y)
+{
+	return SvgArc(rx, ry, xangle, large, sweep, x, y, false);
+}
+
+Painter& Painter::RelSvgArc(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p)
+{
+	return SvgArc(r, xangle, large, sweep, p, true);
+}
+
+Painter& Painter::RelSvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p)
+{
+	return SvgArc(rx, ry, xangle, large, sweep, p, true);
+}
+
+Painter& Painter::RelSvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y)
+{
+	return SvgArc(rx, ry, xangle, large, sweep, x, y, true);
+}
+
 Xform2D GetLineSzXform(const Pointf& p1, const Pointf& p2, const Sizef& sz)
 {
 	Xform2D m = Xform2D::Scale(Distance(p1, p2) / sz.cx);

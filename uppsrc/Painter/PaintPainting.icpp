@@ -28,6 +28,7 @@ void Painter::Paint(const Painting& pic)
 	double r, w;
 	Font   fnt;
 	int ii = 0;
+	bool   large, sweep;
 	for(;;) {
 		int cmd = ss.Get();
 		if(cmd < 0)
@@ -78,6 +79,15 @@ void Painter::Paint(const Painting& pic)
 			sGet(r, ss);
 			sGet(w, ss);
 			ArcOp(p, p1, r, w, rel);
+			break;
+		case PAINTING_SVGARC:
+		case PAINTING_SVGARC_REL:			
+			sGet(p1, ss);
+			sGet(r, ss);
+			sGet(large, ss);
+			sGet(sweep, ss);
+			sGet(p, ss);
+			SvgArcOp(p1, r, large, sweep, p, rel);
 			break;
 		case PAINTING_CLOSE:
 			CloseOp();

@@ -57,6 +57,16 @@ void PaintingPainter::ArcOp(const Pointf& c, const Pointf& r, double angle, doub
 	Putf(sweep);
 }
 
+void PaintingPainter::SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p, bool rel)
+{
+	Put(PAINTING_SVGARC + rel);
+	Putf(r);
+	Putf(xangle);
+	Put(large);
+	Put(sweep);
+	Putf(p);
+}
+
 void PaintingPainter::CloseOp()
 {
 	Put(PAINTING_CLOSE);

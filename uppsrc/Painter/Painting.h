@@ -15,6 +15,8 @@ enum {
 	PAINTING_CUBIC_S_REL,
 	PAINTING_ARC,
 	PAINTING_ARC_REL,
+	PAINTING_SVGARC,
+	PAINTING_SVGARC_REL,
 	PAINTING_CLOSE,
 	PAINTING_DIV,
 	
@@ -72,6 +74,8 @@ protected:
 	virtual void   CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel);
 	virtual void   CubicOp(const Pointf& p2, const Pointf& p, bool rel);
 	virtual void   ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel);
+	virtual void   SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep,
+	                        const Pointf& p, bool rel);
 	virtual void   CloseOp();
 	virtual void   DivOp();
 
