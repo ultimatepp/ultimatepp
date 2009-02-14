@@ -11,6 +11,8 @@ void Arc(Painter& sw)
 		"a25,75 -30 0,1 50,-25 l 50,-25 "
 		"a25,100 -30 0,1 50,-25 l 50,-25"
 	).Stroke(5, Red());
+	sw.Path("M300,200 h-150 a150,150 0 1,0 150,-150 z").Fill(Red()).Stroke(5, Blue());
+	sw.Path("M275,175 v-150 a150,150 0 0,0 -150,150 z").Fill(Yellow()).Stroke(5, Blue());
 }
 
 INITBLOCK {
