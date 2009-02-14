@@ -8,6 +8,7 @@ file
 	Painter.h,
 	Painter.hpp,
 	Painter.cpp,
+	SvgArc.cpp,
 	PainterPath.cpp,
 	FontWin32.cpp optimize_speed,
 	FontX11.cpp optimize_speed,

@@ -105,6 +105,14 @@ void BufferPainter::ArcOp(const Pointf& c, const Pointf& r, double angle, double
 	current = m.EndPoint();
 }
 
+void BufferPainter::SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep,
+                             const Pointf& p, bool rel)
+{
+	DoMove0();
+	Pointf c = current;
+	DoSvgArc(r, xangle, large, sweep, EndPoint(p, rel), c);
+}
+
 void BufferPainter::CloseOp()
 {
 	if(!IsNull(move) && current != move) {

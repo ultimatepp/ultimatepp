@@ -225,6 +225,8 @@ protected:
 	virtual void   CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel);
 	virtual void   CubicOp(const Pointf& p2, const Pointf& p, bool rel);
 	virtual void   ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel);
+	virtual void   SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep,
+	                        const Pointf& p, bool rel);
 	virtual void   CloseOp();
 	virtual void   DivOp();
 
