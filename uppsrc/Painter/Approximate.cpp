@@ -75,7 +75,7 @@ void ApproximateArc(LinearPathConsumer& t, const Pointf& c, const Pointf& r,
 	while(angle + sweep < 0)
 		angle += 2000 * M_PI;
 	double fid = acos(1 - tolerance / max(r.x, r.y));
-	if(abs(sweep / fid) > 1000)
+	if(fabs(sweep / fid) > 1000)
 		fid = sweep / 1000;
 	double a = angle;
 	double e = angle + sweep;

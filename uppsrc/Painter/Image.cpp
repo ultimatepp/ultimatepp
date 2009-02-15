@@ -213,7 +213,6 @@ struct PainterImageSpan : SpanSource {
 
 void BufferPainter::RenderImage(double width, const Image& image, const Xform2D& transsrc, dword flags)
 {
-	Close();
 	if(image.GetWidth() == 0 || image.GetHeight() == 0)
 		return;
 	PainterImageSpan ss;
@@ -227,6 +226,7 @@ void BufferPainter::RenderImage(double width, const Image& image, const Xform2D&
 
 void BufferPainter::FillOp(const Image& image, const Xform2D& transsrc, dword flags)
 {
+	Close();
 	RenderImage(-1, image, transsrc, flags);
 }
 

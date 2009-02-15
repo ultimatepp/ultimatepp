@@ -26,7 +26,7 @@ double Xform2D::GetScale() const
 bool Xform2D::IsRegular() const
 {
 	Pointf d = GetScaleXY();
-	return abs(d.x - d.y) < 1e-10 * abs(max(d.x, d.y));
+	return fabs(d.x - d.y) < 1e-10 * fabs(max(d.x, d.y));
 }
 
 Xform2D::Xform2D()
