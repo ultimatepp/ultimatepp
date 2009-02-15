@@ -1,5 +1,5 @@
 #include "Examples.h"
-	
+
 void Path(Painter& sw)
 {
 	sw.Translate(52, 52);

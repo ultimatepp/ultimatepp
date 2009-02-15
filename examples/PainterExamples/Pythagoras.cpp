@@ -4,7 +4,7 @@ void DoRect(Painter &sw, double size, bool image)
 {
 	if(size < 1)
 		return;
-	
+
 	sw.Move(0, 0);
 	sw.Line(0, size);
 	sw.Line(size, size);
@@ -16,13 +16,13 @@ void DoRect(Painter &sw, double size, bool image)
 	
 	sw.Begin();
 	sw.Translate(0, size);
-	sw.Rotate(M_PI/4.);
+	sw.Rotate(M_PI/4.0);
 	DoRect(sw, size / M_SQRT2, image);
 	sw.End();
 
 	sw.Begin();
 	sw.Translate(size / 2, 1.5 * size);
-	sw.Rotate(-M_PI/4.);
+	sw.Rotate(-M_PI/4.0);
 	DoRect(sw, size / M_SQRT2, image);
 	sw.End();
 }

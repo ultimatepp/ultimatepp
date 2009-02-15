@@ -188,7 +188,19 @@ void PaintLion(Painter& sw)
 		sw.Fill(l[i].color);
 	}
 }
-       
+
+void PaintLionNoAA(Painter& sw)
+{
+	static Vector<ColorPolygon> l = Lion();
+	for(int i = 0; i < l.GetCount(); i++) {
+		Vector<Pointf>& p = l[i].point;
+		sw.Move(p[0].x, p[0].y);
+		for(int j = 1; j < p.GetCount(); j++)
+			sw.Line(p[j].x, p[j].y);
+		sw.NoAA().Fill(l[i].color);
+	}
+}
+
 void Demo(Painter& sw)
 {
 	PaintLion(sw);
@@ -199,7 +211,6 @@ void Demo(Painter& sw)
 	  .Fill(TestImg::test(), 0, 400, 500, 400, FILL_REFLECT)
 	  .Stroke(5, 0, 500, Blue(), tsz.cx, 500, LtRed())
 	  .Stroke(1, White());
-
 	for(int i = 0; i < 10; i++) {
 		sw.Begin();
 			sw.Opacity(0.5);
@@ -213,5 +224,6 @@ void Demo(Painter& sw)
 
 INITBLOCK {
 	RegisterExample("Lion", PaintLion);
+	RegisterExample("Lion NoAA", PaintLionNoAA);
 	RegisterExample("U++ Painter", Demo);
 }
