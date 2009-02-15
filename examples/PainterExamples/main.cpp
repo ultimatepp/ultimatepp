@@ -31,7 +31,7 @@ void App::DoPaint0(Painter& sw)
 	sw.LineCap(~ctrl.linecap);
 	sw.LineJoin(~ctrl.linejoin);
 	{ PAINTER_TIMING("FILL");
-		sw.Clear(White());
+	sw.Clear(White());
 	}
 	PAINTER_TIMING("Paint");
 	if(list.IsCursor())
@@ -173,6 +173,7 @@ App::App() {
 	ctrl.print <<= THISBACK(Print);
 	Reset();
 	LoadFromFile(*this);
+	Title("Painter 2.0");
 }
 
 App::~App()

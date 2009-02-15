@@ -2,7 +2,7 @@
 
 void Stroke(Painter& sw)
 {
-	const char *txt = "GRM";//ADIENT TEXT";
+	const char *txt = "GRM";
 	Font fnt = Arial(100).Bold();
 	Size tsz = GetTextSize(txt, fnt);
 	sw.Scale(3, 3);

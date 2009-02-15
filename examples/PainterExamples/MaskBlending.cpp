@@ -23,4 +23,3 @@ void MaskBlending(Painter& sw)
 INITBLOCK {
 	RegisterExample("Blending using alpha mask", MaskBlending);
 }
-

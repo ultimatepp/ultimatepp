@@ -1,5 +1,4 @@
 #include "Examples.h"
-		
 	
 void ThinPolygon(Painter& sw)
 {
