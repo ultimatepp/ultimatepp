@@ -129,7 +129,7 @@ public:
 	virtual void Line(const Pointf& p);
 
 private:
-	struct Cell : MoveableWithSwap<Cell> {
+	struct Cell : Moveable<Cell> {
 		int16 x;
 		int16 cover;
 		int   area;

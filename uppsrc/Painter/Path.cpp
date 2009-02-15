@@ -45,7 +45,8 @@ void *BufferPainter::PathAddRaw(int type, int size)
 
 void BufferPainter::MoveOp(const Pointf& p, bool rel)
 {
-	PathAdd<LinearData>(MOVE).p = move = ccontrol = qcontrol = EndPoint(p, rel);
+	move = ccontrol = qcontrol = EndPoint(p, rel);
+	PathAdd<LinearData>(MOVE).p = move;
 }
 
 void BufferPainter::DoMove0()
@@ -70,7 +71,7 @@ void BufferPainter::QuadraticOp(const Pointf& p1, const Pointf& p, bool rel)
 
 void BufferPainter::QuadraticOp(const Pointf& p, bool rel)
 {
-	QuadraticOp(2 * current - qcontrol, p, rel);
+	QuadraticOp(2.0 * current - qcontrol, p, rel);
 }
 
 void BufferPainter::CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel)
@@ -84,7 +85,7 @@ void BufferPainter::CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p,
 
 void BufferPainter::CubicOp(const Pointf& p2, const Pointf& p, bool rel)
 {
-	CubicOp(2 * current - ccontrol, p2, p, rel);
+	CubicOp(2.0 * current - ccontrol, p2, p, rel);
 }
 
 Pointf BufferPainter::ArcData::EndPoint() const
@@ -115,7 +116,7 @@ void BufferPainter::SvgArcOp(const Pointf& r, double xangle, bool large, bool sw
 
 void BufferPainter::CloseOp()
 {
-	if(!IsNull(move) && current != move) {
+	if(!IsNull(move) && !IsNull(current) && current != move) {
 		Line(move);
 		move = Null;
 	}

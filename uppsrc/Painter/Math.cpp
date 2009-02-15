@@ -9,7 +9,7 @@ double SquareDist(const Pointf& p1, const Pointf& p2)
 
 Pointf Mid(const Pointf& a, const Pointf& b)
 {
-	return (a + b) / 2;
+	return 0.5 * (a + b);
 }
 
 Pointf Orthogonal(const Pointf& p)
