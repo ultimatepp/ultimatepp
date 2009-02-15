@@ -8,6 +8,7 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 		simple[i] = left[i] = right[i] = lmiddle[i] = rmiddle[i]
 			= Button::StyleEdge().look[i];
 		monocolor[i] = Button::StyleEdge().monocolor[i];
+		fmonocolor[i] = i == 3 ? SColorDisabled() : SColorText();
 		look[i] = trivial[i] = ChLookWith(simple[i], CtrlsImg::DA(), monocolor[i]);
 		edge[i] = EditFieldEdge();
 	}
@@ -320,10 +321,11 @@ void MultiButton::Paint(Draw& w)
 			ChPaint(w, x, border, cx, sz.cy - 2 * border, style->simple[st]);
 		else
 		if(frm) {
-			if(IsTrivial() && style->usetrivial)
+			if(IsTrivial() && style->usetrivial) {
 				dopaint = false;
 			ChPaint(w, x, border, cx, sz.cy - 2 * border,
 			        dopaint ? v : style->trivial[st]);
+			}
 		}
 		else {
 			w.Clip(x, 0, cx, sz.cy);
@@ -359,7 +361,7 @@ void MultiButton::Paint(Draw& w)
 			else
 				if(!right) p.x += style->roff;
 			if(b.monoimg || IsNull(b.img))
-				w.DrawImage(p.x, p.y, m, style->monocolor[st]);
+				w.DrawImage(p.x, p.y, m, frm ? style->fmonocolor[st] : style->monocolor[st]);
 			else
 				w.DrawImage(p.x, p.y, m);
 
@@ -372,7 +374,7 @@ void MultiButton::Paint(Draw& w)
 		(b.left ? left : right) = true;
 	}
 	Rect r, cr;
-	Color text = SColorText();
+	Color text = SColorLabel();
 	Color paper = Null;
 	if(ComplexFrame()) {
 		cr = GetSize();

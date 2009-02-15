@@ -39,3 +39,4 @@ INITBLOCK {
 #endif
 
 #undef KEYGROUPNAME
+#undef KEYFILE

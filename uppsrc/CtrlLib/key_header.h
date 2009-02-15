@@ -28,3 +28,4 @@ namespace KEYNAMESPACE {
 #undef KEYGROUPNAME
 #undef KEY
 #undef KEY2
+#undef KEYFILE
