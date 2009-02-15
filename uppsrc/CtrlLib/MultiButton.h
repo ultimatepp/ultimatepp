@@ -30,6 +30,7 @@ public:
 		Value trivial[4];
 		int   trivialborder;
 		Color monocolor[4];
+		Color fmonocolor[4];
 		Point pressoffset;
 		Value sep1, sep2;
 		int   sepm;

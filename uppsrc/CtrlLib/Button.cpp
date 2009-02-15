@@ -182,8 +182,8 @@ CH_STYLE(Button, Style, StyleNormal)
 {
 	CtrlsImageLook(look, CtrlsImg::I_B);
 	monocolor[0] = monocolor[1] = monocolor[2] = monocolor[3] =
-		Blend(Blend(SColorHighlight, SColorShadow), SColorText, 80);
-	textcolor[0] = textcolor[1] = textcolor[2] = SColorText();
+		Blend(Blend(SColorHighlight, SColorShadow), SColorLabel, 80);
+	textcolor[0] = textcolor[1] = textcolor[2] = SColorLabel();
 	textcolor[3] = SColorDisabled();
 	font = StdFont();
 	pressoffset = Point(0, 0);

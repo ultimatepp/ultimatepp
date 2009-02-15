@@ -400,7 +400,7 @@ void QuickTabs::DrawTab(Draw &w, int i)
 	int ty = (h - t.tsz.cy) / 2 + 1;
 	DrawFileName(w, x + QT_MARGIN + (QT_FILEICON + QT_SPACEICON) * int(file_icons), ty,
 	             t.tsz.cx, t.tsz.cy, fn.ToWString(),
-	             false, StdFont(), Black, LtBlue, Null, Null, false);
+	             false, StdFont(),  SColorLabel(), LtBlue, Null, Null, false);
 
 }
 

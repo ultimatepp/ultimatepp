@@ -728,7 +728,7 @@ void ChHostSkin()
 		ChGtkColor(s.textcolor, 0 * 5);
 		s.pressoffset = po;
 
-		Color c = SColorPaper();
+		Color c = SColorFace();
 		for(int i = 0; i < 4; i++)
 			s.monocolor[i] = c.GetR() + c.GetG() + c.GetB() < 3 * 128 ? White() : Black();
 		s.monocolor[3] = Gray();
@@ -1170,6 +1170,7 @@ void ChHostSkin()
 		s.topitemtext[0] = menu_topitemtext_color[0];
 		s.topitemtext[1] = menu_topitemtext_color[1];
 		s.topitemtext[2] = menu_topitemtext_color[2];
+		SColorMenuText_Write(menu_topitemtext_color[0]);
 		s.topitem[1] = s.topitem[0];
 		GtkCh(s.topitem[2], sw, GTK_STATE_PRELIGHT);
 		s.topitemtext[2] = ChGtkColor(2, top_item);
