@@ -8,12 +8,12 @@ void Big(Painter& sw)
 	double sgn = 1;
 	for(int r = 400; r > 5; r -= 3) {
 		for(int i = 0; i < 400; i++) {
-			Pointf p = Polar(sgn * i * M_2PI / 400) * r + Pointf(400, 400);
+			Pointf p = Polar(sgn * i * M_2PI / 400) * (double)r + Pointf(400, 400);
 			if(i)
 				sw.Line(p);
 			else
 				sw.Move(p);
-			sw.Line(Polar(sgn * (i * M_2PI / 400 + M_2PI / 800)) * (r - 6) + Pointf(400, 400));
+			sw.Line(Polar(sgn * (i * M_2PI / 400 + M_2PI / 800)) * ((double)r - 6) + Pointf(400, 400));
 			n += 2;
 		}
 		sw.Close();
