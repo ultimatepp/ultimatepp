@@ -1,0 +1,6 @@
+#ifndef _Mirrors_icpp_init_stub
+#define _Mirrors_icpp_init_stub
+#include "CtrlLib/init"
+#include "Report/init"
+#include "Painter/init"
+#endif
