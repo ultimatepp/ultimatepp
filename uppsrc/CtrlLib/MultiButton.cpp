@@ -321,11 +321,10 @@ void MultiButton::Paint(Draw& w)
 			ChPaint(w, x, border, cx, sz.cy - 2 * border, style->simple[st]);
 		else
 		if(frm) {
-			if(IsTrivial() && style->usetrivial) {
+			if(IsTrivial() && style->usetrivial)
 				dopaint = false;
 			ChPaint(w, x, border, cx, sz.cy - 2 * border,
 			        dopaint ? v : style->trivial[st]);
-			}
 		}
 		else {
 			w.Clip(x, 0, cx, sz.cy);
