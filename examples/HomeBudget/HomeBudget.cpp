@@ -155,6 +155,7 @@ void HomeBudget::Setup()
 		month.GoEnd();
 		UpdateSummary();
 	}
+	
 	EnableMoney();
 	Sizeable().Zoomable();
 
@@ -164,7 +165,7 @@ void HomeBudget::Setup()
 	about <<= THISBACK(About);
 	help <<= THISBACK(Help);
 
-	category/*.AlwaysDrop()*/.Resizeable(false).Header(false);
+	category.Resizeable(false).Header(false);
 	category.AddPlus(THISBACK(NewCategory));
 
 	dosummary = true;
@@ -184,8 +185,13 @@ void HomeBudget::Serialize(Stream &s)
 void HomeBudget::GenMonthList(int year)
 {
 	months.Clear();
-	for(int i = 0; i < 12; i++)
-		months.Add(Date(year, i + 1, 1), Format("%Month %.4d", i + 1, year));
+	
+	int curr_year = GetSysDate().year;
+	int max_year = max(year,curr_year);
+
+	for(int scan_year = min(year, curr_year) - 1; scan_year <= max_year; scan_year++)
+		for(int i = 0; i < 12; i++)
+			months.Add(Date(scan_year, i + 1, 1), Format("%Month %.4d", i + 1, scan_year));
 }
 
 void HomeBudget::LoadMoney(int dtid)
@@ -782,7 +788,7 @@ void HomeBudget::ClearAll()
 void HomeBudget::About()
 {
 	WithAboutLayout<TopWindow> dlg;
-	CtrlLayoutCancel(dlg, t_("O programie"));
+	CtrlLayoutCancel(dlg, t_("About"));
 	dlg.info.NoSb();
 	Size sz = dlg.info.GetSize();
 	dlg.info.SetQTF(GetTopic(String("HomeBudget/src/About$") + (lang == 0 ? "en-us" : "pl-pl")), Zoom(150, 1400));
