@@ -10,8 +10,10 @@ NAMESPACE_UPP
 
 #define LTIMING(x) // RTIMING(x)
 
+#ifndef CPU_64
 typedef ULONG DBLENGTH;
 typedef LONG  DBROWCOUNT;
+#endif
 
 typedef Value (*OutBindProc)(const DBBINDING& binding, const byte *data);
 typedef void (*InBindProc)(const DBBINDING& binding, byte *data, const Value& value);
@@ -80,7 +82,7 @@ const char *OleDBParseString(const char *s)
 String OleDBParseStringError(const char *s)
 {
 	String err = "Parse error: unterminated string ";
-	int l = strlen(s);
+	int l = (int)strlen(s);
 	enum { SAMPLE = 10 };
 	if(l <= SAMPLE)
 		err.Cat(s, l);
@@ -112,7 +114,7 @@ int OleDBParse(const char *statement, String& out, OleDBConnection *conn, OleDBS
 					session->SetError(OleDBParseStringError(b), statement);
 				return -1;
 			}
-			cmd.Cat(b, s - b);
+			cmd.Cat(b, int(s - b));
 		}
 		else if(*s == '?') {
 			++s;
@@ -210,12 +212,12 @@ static Value DBOutWString(const DBBINDING& binding, const byte *data)
 #else
 static Value DBOutString(const DBBINDING& binding, const byte *data)
 {
-	return String(data + binding.obValue, *(const DBLENGTH *)(data + binding.obLength));
+	return String(data + binding.obValue, (int)*(const DBLENGTH *)(data + binding.obLength));
 }
 
 static Value DBOutWString(const DBBINDING& binding, const byte *data)
 {
-	return WString((const wchar *)(data + binding.obValue), *(const DBLENGTH *)(data + binding.obLength) >> 1);
+	return WString((const wchar *)(data + binding.obValue), (int)*(const DBLENGTH *)(data + binding.obLength) >> 1);
 }
 #endif
 
@@ -386,8 +388,8 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
 				db->wType = DBTYPE_BYTES;
 				db->obValue = rowbytes;
 				*ob = &DBOutString;
-				db->cbMaxLen = min<int>(col->ulColumnSize, 10000000);
-				rowbytes += (db->cbMaxLen + 1 + 3) & -4;
+				db->cbMaxLen = min<DBLENGTH>(col->ulColumnSize, 10000000);
+				rowbytes += int((db->cbMaxLen + 1 + 3) & -4);
 				db->obLength = rowbytes;
 				db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
 				rowbytes += sizeof(DBLENGTH);
@@ -399,8 +401,8 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
 			db->wType = DBTYPE_STR;
 			db->obValue = rowbytes;
 			*ob = &DBOutString;
-			db->cbMaxLen = min<unsigned>(col->ulColumnSize, 1000000) + 1;
-			rowbytes += (db->cbMaxLen + 1 + 3) & -4;
+			db->cbMaxLen = min<DBLENGTH>(col->ulColumnSize, 1000000) + 1;
+			rowbytes += int((db->cbMaxLen + 1 + 3) & -4);
 			db->obLength = rowbytes;
 			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
 			rowbytes += sizeof(DBLENGTH);
@@ -410,9 +412,9 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
 		case DBTYPE_WSTR:
 			db->wType = DBTYPE_WSTR;
 			db->obValue = rowbytes;
-			db->cbMaxLen = sizeof(OLECHAR) * (min<unsigned>(col->ulColumnSize, 1000000) + 1);
+			db->cbMaxLen = sizeof(OLECHAR) * (min<DBLENGTH>(col->ulColumnSize, 1000000) + 1);
 			*ob = &DBOutWString;
-			rowbytes += (db->cbMaxLen + 3) & -4;
+			rowbytes += int((db->cbMaxLen + 3) & -4);
 			db->obLength = rowbytes;
 			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
 			rowbytes += sizeof(DBLENGTH);
@@ -746,7 +748,7 @@ void OleDBConnection::Execute(IRef<IRowset> rowset)
 	OleBuffer<OLECHAR> names;
 	ULONG fetchcols;
 	IRef<IColumnsInfo> cinfo(~fetch_rowset);
-	OleDBVerify(cinfo->GetColumnInfo(&fetchcols, columns.Set(), names.Set()));
+	OleDBVerify(cinfo->GetColumnInfo((DBORDINAL *)&fetchcols, columns.Set(), names.Set()));
 	info.SetCount(fetchcols);
 	for(int i = 0; i < (int)fetchcols; i++) {
 		SqlColumnInfo& colinfo = info[i];
@@ -754,7 +756,7 @@ void OleDBConnection::Execute(IRef<IRowset> rowset)
 		colinfo.name = WString((const wchar *)dbci.pwszName).ToString();
 		colinfo.precision = (dbci.bPrecision == (byte)~0 ? int(Null) : dbci.bPrecision);
 		colinfo.scale = (dbci.bScale == (byte)~0 ? int(Null) : dbci.bScale);
-		colinfo.width = dbci.ulColumnSize;
+		colinfo.width = (int)dbci.ulColumnSize;
 		switch(dbci.wType) {
 		case DBTYPE_I1: case DBTYPE_I2: case DBTYPE_I4:
 		case DBTYPE_UI1: case DBTYPE_UI2: case DBTYPE_UI4:
@@ -801,7 +803,7 @@ void OleDBConnection::Execute(IRef<IRowset> rowset)
 
 int OleDBConnection::GetRowsProcessed() const
 {
-	return fetch_rowcount;
+	return (int)fetch_rowcount;
 }
 
 bool OleDBConnection::Fetch()
@@ -835,7 +837,7 @@ void OleDBConnection::TryPrefetch()
 {
 	LTIMING("OleDBConnection::TryPrefetch");
 	
-	ULONG countrows;
+	DBCOUNTITEM countrows;
 	HROW *prows = fetch_hrows;
 
 	{
@@ -1417,7 +1419,6 @@ Vector<String> OleDBSession::EnumPrimaryKeys(String database, String table)
 			IndexSort(ordinal, out);
 	}
 	return out;
-	return out;
 }
 
 String OleDBSession::EnumRowID(String database, String table)
@@ -1444,7 +1445,7 @@ bool OleDBPerformScript(const String& text, StatementExecutor& executor, Gate2<i
 				const char *s = p;
 				while(*++p && (*p != '\'' || *++p == '\''))
 					;
-				cmd.Cat(s, p - s);
+				cmd.Cat(s, int(p - s));
 			}
 			else {
 				if(*p > ' ')
@@ -1453,7 +1454,7 @@ bool OleDBPerformScript(const String& text, StatementExecutor& executor, Gate2<i
 					cmd.Cat(' ');
 				p++;
 			}
-		if(progress_canceled(p - text.Begin(), text.GetLength()))
+		if(progress_canceled(int(p - text.Begin()), text.GetLength()))
 			return false;
 		if(!IsNull(cmd) && !executor.Execute(cmd))
 			return false;
