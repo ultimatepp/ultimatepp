@@ -128,6 +128,7 @@ Size BarPane::Repos(bool _horz, int maxsize)
 
 Size BarPane::GetPaneSize(bool horz, int maxsize) const
 {
+	int msz = maxsize;
 	maxsize -= 2 * (horz ? hmargin : vmargin);
 	Size asz(0, 0);
 	int bmargin = horz ? vmargin : hmargin;
@@ -142,7 +143,7 @@ Size BarPane::GetPaneSize(bool horz, int maxsize) const
 			}
 			int gapsize = q->gapsize;
 			if(gapsize == INT_MAX && q->ctrl == NULL) {
-				if(maxsize == INT_MAX) {
+				if(msz == INT_MAX) {
 					q++;
 					break;
 				}
