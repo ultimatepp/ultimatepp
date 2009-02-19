@@ -216,9 +216,9 @@ void BufferPainter::RenderImage(double width, const Image& image, const Xform2D&
 	if(image.GetWidth() == 0 || image.GetHeight() == 0)
 		return;
 	PainterImageSpan ss;
-	ss.style = flags & 15;
-	ss.hstyle = flags & 3;
-	ss.vstyle = flags & 12;
+	ss.style = byte(flags & 15);
+	ss.hstyle = byte(flags & 3);
+	ss.vstyle = byte(flags & 12);
 	ss.fast = flags & FILL_FAST;
 	ss.Set(transsrc * pathattr.mtx, image);
 	RenderPath(width, &ss, RGBAZero());

@@ -120,12 +120,14 @@ inline void UnlockLog() {}
 #define DLOG(x)          LOG(x)
 #define DDUMP(x)         DUMP(x)
 #define DDUMPC(x)        DUMPC(x)
+#define DTIMING(x)       TIMING(x)
 
 #else
 
 #define DLOG(x)          @ // To clean logs after debugging, this produces error in release mode
 #define DDUMP(x)         @
 #define DDUMPC(x)        @
+#define DTIMING(x)       @
 
 #define ASSERT(x)
 
