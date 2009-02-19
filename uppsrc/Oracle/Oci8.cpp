@@ -1062,8 +1062,8 @@ Vector<String> Oracle8::EnumReservedWords()
 
 void OracleBlob::SetStreamSize(int64 pos) {
 	ASSERT(pos <= GetStreamSize());
-	if(pos < GetStreamSize())
-		session->oci8.OCILobTrim(session->svchp, session->errhp, locp, pos);
+	if(pos < (int)GetStreamSize())
+		session->oci8.OCILobTrim(session->svchp, session->errhp, locp, (int)pos);
 }
 
 dword OracleBlob::Read(int64 at, void *ptr, dword size) {
