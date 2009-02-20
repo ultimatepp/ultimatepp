@@ -7579,19 +7579,24 @@ void GridPopUp::LostFocus()
 
 void GridPopUp::PopUp(Ctrl *owner, int x, int y, int width, int height)
 {
-	ctrl = owner;
-	SetRect(Rect(x, y, x + width, y + height));
-	if(open)
+	if(!open)
+	{
+		ctrl = owner;
+		open = true;
+		Ctrl::PopUp(owner, true, false, GUI_DropShadows());
+		SetAlpha(230);
+	}
+	else
+	{
+		SetRect(Rect(x, y, x + width, y + height));
 		return;
-	Ctrl::PopUp(owner, true, false, GUI_DropShadows());
-	SetAlpha(230);
-	open = true;
+	}
 }
 
 void GridPopUp::Close()
 {
-	open = false;
 	Ctrl::Close();
+	open = false;
 }
 
 void GridCtrl::UpdateHighlighting(int mode, Point p)
