@@ -772,7 +772,7 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 					w.DrawRect(0, r.bottom, size.cx, 1, gridcolor);
 				r.left = 0;
 				r.right = x;
-				if(i == cursor && !nocursor && multiselect && GetSelectCount() != 1 && hasfocus0 && !isdrag)
+				if(i == cursor && !nocursor && multiselect && (GetSelectCount() != 1 || !IsSel(i)) && hasfocus0 && !isdrag)
 					DrawFocus(w, r, st & Display::SELECT ? SColorPaper() : SColorText());
 				r.bottom += horzgrid;
 				r.left = x;

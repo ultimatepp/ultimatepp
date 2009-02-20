@@ -264,7 +264,7 @@ struct UEnumFORMATETC : public IEnumFORMATETC {
 
 struct UDropSource : public IDropSource {
 	ULONG rc;
-	Image move, copy;
+	Image no, move, copy;
 
 	STDMETHOD(QueryInterface)(REFIID riid, void ** ppvObj);
 	STDMETHOD_(ULONG, AddRef)(void)  { return ++rc; }
@@ -455,7 +455,7 @@ STDMETHODIMP UDropSource::GiveFeedback(DWORD dwEffect)
 		if(!IsNull(move)) m = move;
 	}
 	else
-		m = Image::No();
+		m = no;
 	Ctrl::OverrideCursor(m);
 	Ctrl::SetMouseCursor(m);
 	return S_OK;
@@ -484,6 +484,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	UDropSource *dsrc = new UDropSource;
 	DWORD result = 0;
 	Image m = Ctrl::OverrideCursor(CtrlCoreImg::DndMove());
+	dsrc->no = MakeDragImage(CtrlCoreImg::DndNone(), CtrlCoreImg::DndNone98(), sample);
 	if(actions & DND_COPY)
 		dsrc->copy = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndCopy(), CtrlCoreImg::DndCopy98(), sample);
 	if(actions & DND_MOVE)
