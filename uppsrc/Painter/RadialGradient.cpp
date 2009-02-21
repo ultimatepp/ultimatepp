@@ -198,7 +198,10 @@ void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& colo
                                  const Pointf& c, double r, const RGBA& color2, int style)
 {
 	PainterRadialSpan sg;
-	sg.interpolator.Set(Inverse(pathattr.mtx));
+	Xform2D m = pathattr.mtx;
+	if(subpixel)
+		m = m * Xform2D::Scale(1.0 / 3, 1);
+	sg.interpolator.Set(Inverse(m));
 	sg.style = style;
 	sg.Set((int)c.x, (int)c.y, (int)r, (int)f.x, (int)f.y);
 	MakeGradient(color1, color2, 2048);

@@ -146,13 +146,10 @@ protected:
 	static bool   ReadBool(CParser& p);
 	static double ReadDouble(CParser& p);
 	static Pointf ReadPoint(CParser& p);
-	void   ArcSegment(const Pointf& c, double th0, double th1, const Pointf& r, double xAxisRotation);
+	void   DoArc0(double theta, double th_sweep, const Xform2D& m);
 	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle);
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
                     const Pointf& p, const Pointf& p0);
-//	void   DoSvgArc(double rx, double ry, double x_axis_rotation,
-//	                int large_arc_flag, int sweep_flag,
-//	                double x, double y, double curx, double cury);
 
 public:
 	void     Clear(const RGBA& color);

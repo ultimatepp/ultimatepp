@@ -305,6 +305,8 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	RenderHLine(ey1, x_from, 256 - first, x2, fy2);
 }
 
+void Rasterizer::Filler::End() {}
+
 void Rasterizer::Render(int y, Rasterizer::Filler& g, bool evenodd)
 {
 	PAINTER_TIMING("Render");
@@ -347,6 +349,7 @@ void Rasterizer::Render(int y, Rasterizer::Filler& g, bool evenodd)
 				g.Render(min(abs(cover), 256), c->x - x);
 		}
 	}
+	g.End();
 }
 
 END_UPP_NAMESPACE

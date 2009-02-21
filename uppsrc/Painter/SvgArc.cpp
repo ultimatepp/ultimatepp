@@ -2,6 +2,30 @@
 
 NAMESPACE_UPP
 
+void Painter::DoArc0(double theta, double th_sweep, const Xform2D& m)
+{
+	int nsegs = int(ceil(fabs(th_sweep / (M_PI * 0.5 + 0.001))));
+	for(int i = 0; i < nsegs; i++) {
+		double th0 = theta + i * th_sweep / nsegs;
+		double th1 = theta + (i + 1) * th_sweep / nsegs;
+		double thHalf = 0.5 * (th1 - th0);
+		double t = (8.0 / 3.0) * sin(thHalf * 0.5) * sin(thHalf * 0.5) / sin(thHalf);
+		double x3 = cos(th1);
+		double y3 = sin(th1);
+		Cubic(m.Transform(cos(th0) - t * sin(th0), sin(th0) + t * cos(th0)),
+		      m.Transform(x3 + t * sin(th1), y3 - t * cos(th1)),
+		      m.Transform(x3, y3));
+	}
+}
+
+void Painter::DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle)
+{
+	Xform2D m = Xform2D::Scale(r.x, r.y);
+	m = m * Xform2D::Translation(c.x, c.y);
+	Line(m.Transform(cos(angle), sin(angle)));
+	DoArc0(angle, sweep, m);
+}
+
 void Painter::DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
                        const Pointf& p1, const Pointf& p0)
 {
@@ -33,21 +57,11 @@ void Painter::DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
 	else
 	if(th_sweep > 0 && !sweep)
 		th_sweep -= 2 * M_PI;
-	int nsegs = int(ceil(fabs(th_sweep / (M_PI * 0.5 + 0.001))));
 	m = Xform2D::Rotation(xangle);
 	m.x *= r;
 	m.y *= r;
-	for(int i = 0; i < nsegs; i++) {
-		double th0 = theta + i * th_sweep / nsegs;
-		double th1 = theta + (i + 1) * th_sweep / nsegs;
-		double thHalf = 0.5 * (th1 - th0);
-		double t = (8.0 / 3.0) * sin(thHalf * 0.5) * sin(thHalf * 0.5) / sin(thHalf);
-		double x3 = c.x + cos(th1);
-		double y3 = c.y + sin(th1);
-		Cubic(m.Transform(c.x + cos(th0) - t * sin(th0), c.y + sin(th0) + t * cos(th0)),
-		      m.Transform(x3 + t * sin(th1), y3 - t * cos(th1)),
-		      m.Transform(x3, y3));
-	}
+	m = Xform2D::Translation(c.x, c.y) * m;
+	DoArc0(theta, th_sweep, m);
 }
 
 END_UPP_NAMESPACE

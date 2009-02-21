@@ -59,6 +59,65 @@ void SolidFiller::Render(int val, int len)
 	}
 }
 
+void SubpixelFiller::Start(int minx, int maxx)
+{
+	x = minx / 3;
+	t += x;
+	v = sbuffer;
+	int n = minx % 3 + 3;
+	while(n--)
+		*v++ = 0;
+	v[0] = v[1] = v[2] = v[3] = v[4] = 0;
+	if(ss) {
+		int xx = maxx / 3;
+		ss->Get(buffer, x, y, xx - x + 2);
+		s = buffer;
+	}
+}
+
+void SubpixelFiller::Render(int val)
+{
+	int h = (7282 * val) >> 16;
+	int h2 = h + h;
+	v[-2] += h;
+	v[-1] += h2;
+	v[0] += val - h2 - h2 - h2;
+	v[1] += h2;
+	v[2] += h;
+	v[3] = 0;
+	v++;
+	x++;
+}
+
+void SubpixelFiller::Render(int val, int len)
+{
+	while(len--)
+		Render(val);
+}
+
+void SubpixelFiller::End()
+{
+	int16 *q = sbuffer + 3;
+	while(q < v) {
+		RGBA c = ss ? Mul8(*s++, alpha) : color;
+		int a, alpha;
+		a = c.a * q[0] >> 8;
+		alpha = 256 - (a + (a >> 7));
+		t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
+		a = c.a * q[1] >> 8;
+		alpha = 256 - (a + (a >> 7));
+		t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
+		a = c.a * q[2] >> 8;
+		alpha = 256 - (a + (a >> 7));
+		t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
+		a = c.a * (q[0] + q[1] + q[2]) / 3 >> 8;
+		alpha = 256 - (a + (a >> 7));
+		t->a = a + (alpha * t->a >> 8);
+		t++;
+		q += 3;
+	}
+}
+
 void SpanFiller::Start(int minx, int maxx)
 {
 	t += minx;
