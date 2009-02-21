@@ -10,7 +10,6 @@ void ClippingExample(Painter& sw)
 		sw.Text(0, 0, txt, fnt).Fill(Green());
 	sw.End();
 	sw.Text(0, 0, txt, fnt).Stroke(0.5, Black());
-
 }
 
 void NoClippingExample(Painter& sw)

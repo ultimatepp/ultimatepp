@@ -67,7 +67,7 @@ void App::Benchmark()
 		time = GetTickCount();
 		if(time - time0 > 1000) break;
 		ImageBuffer ib(800, 600);
-		BufferPainter sw(ib);
+		BufferPainter sw(ib, ctrl.subpixel);
 		DoPaint(sw);
 		n++;
 	}
@@ -77,7 +77,7 @@ void App::Benchmark()
 void App::Paint(Draw& w)
 {
 	ImageBuffer ib(GetSize());
-	BufferPainter sw(ib);
+	BufferPainter sw(ib, ctrl.subpixel);
 	DoPaint(sw);
 	w.DrawImage(0, 0, ib);
 }
@@ -123,6 +123,7 @@ void App::Reset()
 	ctrl.rotate <<= ctrl.translate_x <<= ctrl.translate_y <<= 0;
 	ctrl.scale <<= ctrl.scale_x <<= ctrl.opacity <<= 1.0;
 	ctrl.painting = false;
+	ctrl.subpixel = false;
 	ctrl.linejoin <<= LINEJOIN_MITER;
 	ctrl.linecap <<= LINECAP_BUTT;
 	ToSlider();
@@ -137,7 +138,7 @@ void App::Serialize(Stream& s)
 		% ctrl.translate_x % ctrl.translate_x_slider
 		% ctrl.translate_y % ctrl.translate_y_slider
 		% ctrl.opacity % ctrl.opacity_slider
-		% ctrl.painting
+		% ctrl.painting % ctrl.subpixel
 	;
 }
 
@@ -167,7 +168,7 @@ App::App() {
 	ctrl.linejoin.Add(LINEJOIN_MITER, "Miter joins");
 	ctrl.linejoin.Add(LINEJOIN_ROUND, "Round joins");
 	ctrl.linejoin.Add(LINEJOIN_BEVEL, "Bevel joins");
-	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= THISBACK(Sync);
+	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= ctrl.subpixel <<= THISBACK(Sync);
 	ctrl.reset <<= THISBACK(Reset);
 	ctrl.benchmark <<= THISBACK(Benchmark);
 	ctrl.print <<= THISBACK(Print);
@@ -187,36 +188,3 @@ GUI_APP_MAIN
 {
 	App().Run();
 }
-
-/*
-struct RGBFiller {
-	int   a;
-	byte  rgb[3];
-	int   i;
-	byte *t;
-	int   v[5];
-	int   n;
-	
-	void Flush() {
-		*t = v[0] * 
-		int add = 1 + ((((uintptr_t)t) >> 1) & 1);
-		t += add;
-		i = (i + add) & 3;
-	}
-	
-	void Finish() {
-		Flush(); Flush(); Flush();
-	}
-	
-	virtual void Render(int val) {
-		int v1 = (7 * val) >> 6;
-		v[0] += v1;
-		v[1] += 2 * v1;
-		v[2] += val - 6 * v1;
-		v[3] += 2 * v1;
-		v[4] += v1;
-		if(++n > 3)
-			Flush();
-	}
-};
-*/
