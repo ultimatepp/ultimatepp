@@ -1,0 +1,4 @@
+LAYOUT(GridExLayout, 240, 164)
+	ITEM(GridCtrl, grid, HSizePosZ(0, 4).VSizePosZ(0, 4))
+END_LAYOUT
+

@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	GridCtrl;
+
+file
+	GridEx.h,
+	main.cpp,
+	GridEx.lay;
+
+mainconfig
+	"" = "GUI";
+
