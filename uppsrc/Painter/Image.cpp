@@ -220,7 +220,10 @@ void BufferPainter::RenderImage(double width, const Image& image, const Xform2D&
 	ss.hstyle = byte(flags & 3);
 	ss.vstyle = byte(flags & 12);
 	ss.fast = flags & FILL_FAST;
-	ss.Set(transsrc * pathattr.mtx, image);
+	Xform2D m = transsrc * pathattr.mtx;
+	if(subpixel)
+		m = m * Xform2D::Scale(1 / 3.0, 1);
+	ss.Set(m, image);
 	RenderPath(width, &ss, RGBAZero());
 }
 

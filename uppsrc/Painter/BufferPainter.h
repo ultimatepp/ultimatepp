@@ -20,8 +20,6 @@ void ApproximateQuadratic(LinearPathConsumer& t,
 void ApproximateCubic(LinearPathConsumer& t,
                       const Pointf& x0, const Pointf& x1, const Pointf& x2, const Pointf& x,
                       double tolerance);
-void ApproximateArc(LinearPathConsumer& t, const Pointf& p, const Pointf& r,
-                    double angle, double sweep, double tolerance);
 
 struct LinearPathFilter : LinearPathConsumer {
 	virtual void End();
@@ -158,6 +156,7 @@ public:
 		virtual void Start(int x, int len) = 0;
 		virtual void Render(int val) = 0;
 		virtual void Render(int val, int len) = 0;
+		virtual void End();
 	};
 
 	void LineRaw(int x1, int y1, int x2, int y2);
@@ -271,7 +270,7 @@ protected:
 
 public:
 	enum {
-		MOVE, LINE, QUADRATIC, CUBIC, ARC, DIV
+		MOVE, LINE, QUADRATIC, CUBIC, DIV
 	};
 	struct LinearData {
 		Pointf p;
@@ -281,12 +280,6 @@ public:
 	};	
 	struct CubicData : QuadraticData {
 		Pointf p2;
-	};
-	struct ArcData : LinearData {
-		Pointf r;
-		double angle, sweep;
-		
-		Pointf EndPoint() const;
 	};
 	struct Path {	
 		Vector<byte> type;
@@ -311,6 +304,8 @@ public:
 	};
 	
 	ImageBuffer&               ib;
+	Buffer<int16>              subpixel;
+	int                        render_cx;
 
 	Attr                       attr;
 	Attr                       pathattr;
@@ -348,5 +343,5 @@ public:
 	void             FinishMask();
 
 public:
-	BufferPainter(ImageBuffer& ib);
+	BufferPainter(ImageBuffer& ib, bool subpixel = false);
 };

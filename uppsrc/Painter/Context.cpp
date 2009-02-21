@@ -105,13 +105,18 @@ void BufferPainter::ClearStopsOp()
 	}
 }
 
-BufferPainter::BufferPainter(ImageBuffer& ib)
-: ib(ib),
-  rasterizer(ib.GetWidth(), ib.GetHeight())
+BufferPainter::BufferPainter(ImageBuffer& ib, bool subpixel_)
+:	ib(ib),
+	rasterizer(subpixel_ ? 3 * ib.GetWidth() : ib.GetWidth(), ib.GetHeight())
 {
 	ClearPath();
 
-	attr.mtx = Xform2D::Identity();
+	render_cx = ib.GetWidth();
+	if(subpixel_) {
+		render_cx *= 3;
+		subpixel.Alloc(render_cx + 30);
+	}
+	attr.mtx = Xform2D::Scale(subpixel ? 3 : 1, 1);
 	attr.tolerance = 0.3;
 	attr.cap = LINECAP_BUTT;
 	attr.join = LINEJOIN_MITER;

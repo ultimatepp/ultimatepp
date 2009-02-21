@@ -92,7 +92,6 @@ Xform2D Xform2D::Sheer(double fi)
 Xform2D Xform2D::Identity()
 {
 	Xform2D m;
-	m.x.x = m.y.y = 1;
 	return m;
 }
 

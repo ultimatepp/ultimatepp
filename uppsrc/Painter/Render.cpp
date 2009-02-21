@@ -42,9 +42,12 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 	Rasterizer::Filler *rg;
 	SpanFiller          span_filler;
 	SolidFiller         solid_filler;
-	ClipFiller          clip_filler(ib.GetWidth());
+	SubpixelFiller      subpixel_filler;
+	ClipFiller          clip_filler(render_cx);
 	NoAAFillerFilter    noaa_filler;
+	MaskFillerFilter    mf;
 	bool doclip = width == -2;
+	subpixel_filler.sbuffer = subpixel;
 	if(doclip) {
 		rg = &clip_filler;
 		newclip.Alloc(ib.GetHeight());
@@ -52,15 +55,30 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 	else
 	if(ss) {
 		if(!span)
-			span.Alloc(ib.GetWidth() + 1);
-		span_filler.ss = ss;
-		span_filler.buffer = span;
-		span_filler.alpha = opacity;
-		rg = &span_filler;
+			span.Alloc(ib.GetWidth() + 3);
+		if(subpixel) {
+			subpixel_filler.ss = ss;
+			subpixel_filler.buffer = span;
+			subpixel_filler.alpha = opacity;
+			rg = &subpixel_filler;
+		}
+		else {
+			span_filler.ss = ss;
+			span_filler.buffer = span;
+			span_filler.alpha = opacity;
+			rg = &span_filler;
+		}
 	}
 	else {
-		solid_filler.c = Mul8(color, opacity);
-		rg = &solid_filler;
+		if(subpixel) {
+			subpixel_filler.color = Mul8(color, opacity);
+			subpixel_filler.ss = NULL;
+			rg = &subpixel_filler;
+		}
+		else {
+			solid_filler.c = Mul8(color, opacity);
+			rg = &solid_filler;
+		}
 	}
 	if(pathattr.noaa) {
 		noaa_filler.Set(rg);
@@ -70,10 +88,9 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 		if(i >= path.type.GetCount() || path.type[i] == DIV) {
 			g->End();
 			for(int y = rasterizer.MinY(); y <= rasterizer.MaxY(); y++) {
-				solid_filler.t = span_filler.t = ib[y];
-				span_filler.y = y;
+				solid_filler.t = subpixel_filler.t = span_filler.t = ib[y];
+				span_filler.y = subpixel_filler.y = y;
 				Rasterizer::Filler *rf = rg;
-				MaskFillerFilter mf;
 				if(clip.GetCount()) {
 					const ClipLine& s = clip.Top()[y];
 					if(s.IsEmpty()) goto empty;
@@ -119,13 +136,6 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 			data += sizeof(CubicData);
 			ApproximateCubic(*g, pos, d->p1, d->p2, d->p, pathattr.tolerance);
 			pos = d->p;
-			break;
-		}
-		case ARC: {
-			const ArcData *d = (ArcData *)data;
-			data += sizeof(ArcData);
-			ApproximateArc(*g, d->p, d->r, d->angle, d->sweep, pathattr.tolerance);
-			pos = d->EndPoint();
 			break;
 		}
 		default:

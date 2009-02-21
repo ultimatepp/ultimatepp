@@ -22,6 +22,23 @@ struct SpanFiller : Rasterizer::Filler {
 	void Render(int val, int len);
 };
 
+struct SubpixelFiller : Rasterizer::Filler {
+	int16        *sbuffer;
+	RGBA         *t;
+	int16        *v;
+	RGBA         *s;
+	RGBA          color;
+	SpanSource   *ss;
+	int           alpha;
+	RGBA         *buffer;
+	int           x, y;
+
+	void Start(int minx, int maxx);
+	void Render(int val);	
+	void Render(int val, int len);
+	void End();
+};
+
 struct ClipFiller : Rasterizer::Filler {
 	Buffer<byte> buffer;
 	byte        *t;
@@ -53,6 +70,7 @@ struct MaskFillerFilter : Rasterizer::Filler {
 	void Start(int minx, int maxx);
 	void Render(int val, int len);
 	void Render(int val);
+	void End() { t->End(); }
 	
 	void Set(Rasterizer::Filler *f, const byte *m) { t = f; mask = m; empty = full = 0; }
 };
@@ -63,6 +81,7 @@ struct NoAAFillerFilter : Rasterizer::Filler {
 	void Start(int minx, int maxx);
 	void Render(int val, int len);
 	void Render(int val);
+	void End() { t->End(); }
 	
 	void Set(Rasterizer::Filler *f)                 { t = f; }
 };

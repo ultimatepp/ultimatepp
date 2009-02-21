@@ -88,22 +88,10 @@ void BufferPainter::CubicOp(const Pointf& p2, const Pointf& p, bool rel)
 	CubicOp(2.0 * current - ccontrol, p2, p, rel);
 }
 
-Pointf BufferPainter::ArcData::EndPoint() const
-{
-	return r * Polar(angle + sweep) + p;
-}
-
 void BufferPainter::ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel)
 {
 	DoMove0();
-	ArcData& m = PathAdd<ArcData>(ARC);
-	m.p = PathPoint(c, rel);
-	m.r = r;
-	m.angle = angle;
-	m.sweep = sweep;
-	PathPoint(c + r, rel);
-	PathPoint(c - r, rel);
-	current = m.EndPoint();
+	DoArc(PathPoint(c, rel), r, angle, sweep, 0);
 }
 
 void BufferPainter::SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep,
