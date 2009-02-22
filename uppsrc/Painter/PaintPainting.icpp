@@ -235,26 +235,26 @@ void Painter::Paint(const Painting& pic)
 	}
 }
 
-void PaintImageBufferPaintingFn(ImageBuffer& ib, const Painting& p, Size sz, Point pos, bool noaa)
+void PaintImageBufferPaintingFn(ImageBuffer& ib, const Painting& p, Size sz, Point pos, int mode)
 {
-	BufferPainter sw(ib, noaa ? QUALITY_NOAA : QUALITY_ANTIALIASED);
+	BufferPainter sw(ib, mode);
 	Sizef psz = p.GetSize();
 	sw.Translate(-pos.x, -pos.y);
 	sw.Scale(sz.cx / psz.cx, sz.cy / psz.cy);
 	sw.Paint(p);
 }
 
-void PaintImageBufferDrawingFn(ImageBuffer& ib, const Drawing& iw, bool noaa)
+void PaintImageBufferDrawingFn(ImageBuffer& ib, const Drawing& iw, int mode)
 {
-	BufferPainter sw(ib, noaa ? QUALITY_NOAA : QUALITY_ANTIALIASED);
+	BufferPainter sw(ib, mode);
 	Sizef sz = ib.GetSize();
 	Size isz = iw.GetSize();
 	sw.Scale(sz.cx / isz.cx, sz.cy / isz.cy);
 	sw.DrawDrawing(0, 0, isz.cx, isz.cy, iw);
 }
 
-void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, bool noaa),
-                           void (*iw)(ImageBuffer& ib, const Drawing& p, bool noaa));
+void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, int mode),
+                           void (*iw)(ImageBuffer& ib, const Drawing& p, int mode));
 
 
 INITBLOCK

@@ -57,10 +57,6 @@ enum {
 	GRADIENT_PAD     = 0,
 	GRADIENT_REPEAT  = 1,
 	GRADIENT_REFLECT = 2,
-	
-	QUALITY_NOAA        = 0,
-	QUALITY_ANTIALIASED = 1,
-	QUALITY_SUBPIXEL    = 2,
 };
 
 class Painter : public Draw {

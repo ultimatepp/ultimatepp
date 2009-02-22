@@ -302,7 +302,7 @@ public:
 	};
 	
 	ImageBuffer&               ib;
-	int                        quality;
+	int                        mode;
 	Buffer<int16>              subpixel;
 	int                        render_cx;
 
@@ -341,5 +341,5 @@ public:
 	void             FinishMask();
 
 public:
-	BufferPainter(ImageBuffer& ib, int quality = 0);
+	BufferPainter(ImageBuffer& ib, int mode = 0);
 };

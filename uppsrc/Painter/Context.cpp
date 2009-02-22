@@ -98,15 +98,15 @@ void BufferPainter::ClearStopsOp()
 	}
 }
 
-BufferPainter::BufferPainter(ImageBuffer& ib, int quality_)
+BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 :	ib(ib),
-	quality(quality_),
-	rasterizer(quality_ == QUALITY_SUBPIXEL ? 3 * ib.GetWidth() : ib.GetWidth(), ib.GetHeight())
+	mode(mode),
+	rasterizer(mode == MODE_SUBPIXEL ? 3 * ib.GetWidth() : ib.GetWidth(), ib.GetHeight())
 {
 	ClearPath();
 
 	render_cx = ib.GetWidth();
-	if(quality == QUALITY_SUBPIXEL) {
+	if(mode == MODE_SUBPIXEL) {
 		render_cx *= 3;
 		subpixel.Alloc(render_cx + 30);
 	}
