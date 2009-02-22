@@ -502,10 +502,16 @@ public:
 	Painting(const Nuller&)                     { size = Null; }
 };
 
+enum {
+	MODE_ANTIALIASED = 0,
+	MODE_NOAA        = 1,
+	MODE_SUBPIXEL    = 2,
+};
+
 bool HasPainter();
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos, bool noaa = false);
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p, bool noaa = false);
-void PaintImageBuffer(ImageBuffer& ib, const Drawing& p, bool noaa = false);
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos, int mode = MODE_ANTIALIASED);
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, int mode = MODE_ANTIALIASED);
+void PaintImageBuffer(ImageBuffer& ib, const Drawing& p, int mode = MODE_ANTIALIASED);
 
 class Draw {
 protected:

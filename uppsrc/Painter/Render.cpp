@@ -80,7 +80,7 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 			rg = &solid_filler;
 		}
 	}
-	if(quality == QUALITY_NOAA) {
+	if(mode == MODE_NOAA) {
 		noaa_filler.Set(rg);
 		rg = &noaa_filler;
 	}

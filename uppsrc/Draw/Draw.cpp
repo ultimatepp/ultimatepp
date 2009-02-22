@@ -336,11 +336,11 @@ bool Draw::IsPainting(int x, int y, int cx, int cy) const
 	return IsPainting(RectC(x, y, cx, cy));
 }
 
-static void (*sIgfn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, bool noaa);
-static void (*sIwfn)(ImageBuffer& ib, const Drawing& p, bool noaa);
+static void (*sIgfn)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, int mode);
+static void (*sIwfn)(ImageBuffer& ib, const Drawing& p, int mode);
 
-void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, bool noaa),
-                           void (*iw)(ImageBuffer& ib, const Drawing& p, bool noaa))
+void RegisterPaintingFns__(void (*ig)(ImageBuffer& ib, const Painting& pw, Size sz, Point pos, int mode),
+                           void (*iw)(ImageBuffer& ib, const Drawing& p, int mode))
 {
 	sIgfn = ig;
 	sIwfn = iw;
@@ -351,21 +351,21 @@ bool HasPainter()
 	return sIgfn && sIwfn;
 }
 
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos, bool noaa)
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, Size sz, Point pos, int mode)
 {
 	if(sIgfn)
-		(*sIgfn)(ib, p, sz, pos, noaa);
+		(*sIgfn)(ib, p, sz, pos, mode);
 }
 
-void PaintImageBuffer(ImageBuffer& ib, const Painting& p, bool noaa)
+void PaintImageBuffer(ImageBuffer& ib, const Painting& p, int mode)
 {
-	PaintImageBuffer(ib, p, ib.GetSize(), Point(0, 0), noaa);
+	PaintImageBuffer(ib, p, ib.GetSize(), Point(0, 0), mode);
 }
 
-void PaintImageBuffer(ImageBuffer& ib, const Drawing& iw, bool noaa)
+void PaintImageBuffer(ImageBuffer& ib, const Drawing& iw, int mode)
 {
 	if(sIwfn)
-		(*sIwfn)(ib, iw, noaa);
+		(*sIwfn)(ib, iw, mode);
 }
 
 void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
