@@ -154,19 +154,21 @@ GridCtrl::GridCtrl() : holder(*this)
 	chameleon         = false;
 	summary_row       = false;
 	update_summary    = true;
+	popups            = true;
 
 	mouse_move        = false;
 	row_modified      = 0;
 
 	valid_cursor      = false;
 
-	curpos.x  = curpos.y  = -1;
-	oldcur.x  = oldcur.y  = -1;
-	curid.x   = curid.y   = -1;
-	ctrlid.x  = ctrlid.y  = -1;
-	osz.cx    = osz.cy    = -1;
-	livecur.x = livecur.y = -1;
-	leftpnt.x = leftpnt.y = -1;
+	curpos.x   = curpos.y  = -1;
+	oldcur.x   = oldcur.y  = -1;
+	curid.x    = curid.y   = -1;
+	ctrlid.x   = ctrlid.y  = -1;
+	ctrlpos.x  = ctrlpos.y = -1;
+	osz.cx     = osz.cy    = -1;
+	livecur.x  = livecur.y = -1;
+	leftpnt.x  = leftpnt.y = -1;
 	shiftpos.x = shiftpos.y = -1;
 
 	fixed_width  = 0;
@@ -264,9 +266,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	is_clipboard = false;
 	enabled = true;
 	sync_flag = 0;
-	paint_flag = 0;
-	
-	ctrlpos.y = -1; // cxl 09/01/26, valgrind uninitialized variable
+	paint_flag = 0;	
 }
 
 GridCtrl::~GridCtrl()
@@ -1884,14 +1884,22 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 			}
 		}
 	}
-	else if(!IsPopUp())
+	else
+		SyncPopup();
+}
+
+void GridCtrl::SyncPopup()
+{
+	if(!IsPopUp() && popups)
 	{
+		Point p = GetMouseViewPos();
+		
 		bool fc = p.x < fixed_width;
 		bool fr = p.y < fixed_height;
 		
 		int c = GetMouseCol(p, !fc, fc);
 		int r = GetMouseRow(p, !fr, fr);
-		
+				
 		bool new_cell = false;
 		
 		if(r != oldSplitRow)
@@ -1905,22 +1913,30 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 			new_cell = true;
 		}
 		
-		bool newpos = c >= 0 && r >= 0;
+		bool valid_pos = c >= 0 && r >= 0;
 		
-		Ctrl* ctrl = newpos ? GetCtrl(r, c, true, false, false) : NULL;
+		Ctrl* ctrl = valid_pos ? GetCtrl(r, c, true, false, false) : NULL;
 
-		if(newpos && !ctrl)
+		if(valid_pos && !ctrl)
 		{
 			Item& it = GetItem(r, c);
 			if(it.rcx > 0 || it.rcy > 0)
 			{
-				popup.text = r == 0 ? it.val : (Value)GetStdConvertedColumn(c, it.val);
-				Point p = GetMousePos();
-				Point p0 = GetMouseViewPos();
-				int x = hitems[c].npos + p.x - p0.x - 1 - sbx.Get();
-				int y = vitems[r].npos + p.y - p0.y - 1 - sby.Get();
-				popup.PopUp(this, x, y, max(it.rcx + 10, hitems[c].nsize + 1), max(it.rcy + 10, vitems[r].nsize + 1));
-				popup.Refresh();
+				if(new_cell)
+				{
+					Point p0 = GetMousePos();
+					int x = hitems[c].npos + p0.x - p.x - 1 - sbx.Get() * int(!fc);
+					int y = vitems[r].npos + p0.y - p.y - 1 - sby.Get() * int(!fr);
+					popup.PopUp(this, x, y, max(it.rcx + 10, hitems[c].nsize + 1), max(it.rcy + 10, vitems[r].nsize + 1));
+				}
+
+				String text = r == 0 ? it.val : (Value)GetStdConvertedColumn(c, it.val);
+				
+				if(text != popup.text)
+				{
+					popup.text = text;
+					popup.Refresh();
+				}
 			}
 			else
 				popup.Close();
@@ -1948,6 +1964,8 @@ void GridCtrl::LeftDown(Point p, dword keyflags)
 
 	if(resizing)
 	{
+		popup.Close();
+		
 		splitCol  = curSplitCol;
 		splitRow  = curSplitRow;
 		resizeCol = curResizeCol;
@@ -2468,9 +2486,11 @@ void GridCtrl::Scroll()
 			ScrollView(Rect(0, fixed_height, fixed_width, sz.cy - summary_height), 0, delta.cy);
 		}
 	}
+
 	if(live_cursor)
 		SetCursor0(GetMousePos() - GetScreenRect().TopLeft(), CU_MOUSE | CU_HIGHLIGHT);
 
+	SyncPopup();
 }
 
 void GridCtrl::SetFixedRows(int n)
@@ -7511,6 +7531,7 @@ void GridPopUp::Paint(Draw &w)
 	Size sz = GetSize();
 
 	DrawBorder(w, sz, BlackBorder);
+//	gd->Paint(Draw &w¸ int x¸ int y¸ int cx¸ int cy¸ const Value &val¸ dword style¸ Color &fg¸ Color &bg¸ Font &fnt¸ bool found = false¸ int fs = 0¸ int fe = 0)
 	w.DrawRect(1, 1, sz.cx - 2, sz.cy - 2, Color(240, 240, 240));
 	Size tsz = GetTextSize(text, StdFont());
 	w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, text);
@@ -7579,6 +7600,10 @@ void GridPopUp::LostFocus()
 
 void GridPopUp::PopUp(Ctrl *owner, int x, int y, int width, int height)
 {
+	Rect r(x, y, x + width, y + height);
+	if(r != GetRect())
+		SetRect(r);
+	
 	if(!open)
 	{
 		ctrl = owner;
@@ -7586,17 +7611,12 @@ void GridPopUp::PopUp(Ctrl *owner, int x, int y, int width, int height)
 		Ctrl::PopUp(owner, true, false, GUI_DropShadows());
 		SetAlpha(230);
 	}
-	else
-	{
-		SetRect(Rect(x, y, x + width, y + height));
-		return;
-	}
 }
 
 void GridPopUp::Close()
 {
-	Ctrl::Close();
 	open = false;
+	Ctrl::Close();
 }
 
 void GridCtrl::UpdateHighlighting(int mode, Point p)

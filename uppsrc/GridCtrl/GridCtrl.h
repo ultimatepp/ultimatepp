@@ -59,7 +59,7 @@ class GridPopUpHeader : public Ctrl
 
 		virtual void Paint(Draw &w);
 		void PopUp(Ctrl *owner, int x, int y, int width, int height);
-		void Close();
+		virtual void Close();
 };
 
 class GridButton : public Ctrl
@@ -110,6 +110,7 @@ class GridPopUp : public Ctrl
 		bool open;
 		String text;
 		Ctrl* ctrl;
+		GridDisplay* gd;
 
 		GridPopUp() : open(false) {}
 		Point Offset(Point p);
@@ -127,7 +128,7 @@ class GridPopUp : public Ctrl
 	    virtual Image CursorImage(Point p, dword flags);
 	    virtual void  LostFocus();
 		void PopUp(Ctrl *owner, int x, int y, int width, int height);
-		void Close();
+		virtual void Close();
 };
 
 class GridOperation
@@ -836,6 +837,7 @@ class GridCtrl : public Ctrl
 		bool chameleon:1;
 		bool summary_row:1;
 		bool update_summary:1;
+		bool popups:1;
 
 		bool search_hide:1;
 		bool search_highlight:1;
@@ -1085,6 +1087,7 @@ class GridCtrl : public Ctrl
 		GridCtrl& FullRowResizing(bool b = true)  { full_row_resizing = b;  return *this; }
 		GridCtrl& Chameleon(bool b = true)        { chameleon         = b;  return *this; }
 		GridCtrl& SummaryRow(bool b = true)       { summary_row       = b;  return *this; }
+		GridCtrl& Popups(bool b = true)           { popups            = b;  return *this; }
 		
 		GridCtrl& SearchOffset(int offset)        { find_offset = offset;   return *this; }
 		GridCtrl& SearchMoveCursor(bool b = true) { search_move_cursor = b; return *this; }
@@ -1563,6 +1566,7 @@ class GridCtrl : public Ctrl
 		private:
 		void UpdateCtrls(int opt = UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_FOCUS);
 		void SyncSummary();
+		void SyncPopup();
 
 		void SetCtrlsData();
 		bool GetCtrlsData(bool samerow = false, bool doall = false, bool updates = true);
