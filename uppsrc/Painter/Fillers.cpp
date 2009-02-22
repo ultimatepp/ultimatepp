@@ -77,6 +77,7 @@ void SubpixelFiller::Start(int minx, int maxx)
 	sbuffer[0] = sbuffer[1] = sbuffer[2] = sbuffer[3] =
 	sbuffer[4] = sbuffer[5] = sbuffer[6] = sbuffer[7] = 0;
 	v = sbuffer + 3 + minx % 3;
+	end = v + maxx + 1;
 	if(ss) {
 		int xx = maxx / 3;
 		ss->Get(buffer, x, y, xx - x + 2);
@@ -134,8 +135,11 @@ void SubpixelFiller::Render(int val, int len)
 
 void SubpixelFiller::End()
 {
-	int n = (3333333 - (v - begin)) % 3;
-	while(n--)
+//	int n = (3333333 - (v - begin)) % 3;
+//	while(n--)
+	if(v < end)
+		Render(0);
+	if(v < end)
 		Render(0);
 	int16 *q = begin;
 	while(q < v) {
