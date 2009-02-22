@@ -43,7 +43,6 @@ enum {
 	PAINTING_MITERLIMIT,
 	PAINTING_EVENODD,
 	PAINTING_DASH,
-	PAINTING_NOAA,
 	
 	PAINTING_TRANSFORM,
 	PAINTING_BEGIN,
@@ -113,7 +112,6 @@ protected:
 	virtual void   MiterLimitOp(double l);
 	virtual void   EvenOddOp(bool evenodd);
 	virtual void   DashOp(const Vector<double>& dash, double start);
-	virtual void   NoAAOp(bool noaa);
 
 	virtual void   TransformOp(const Xform2D& m);
 

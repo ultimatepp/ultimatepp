@@ -73,13 +73,6 @@ void BufferPainter::DashOp(const Vector<double>& dash, double start)
 	}
 }
 
-void BufferPainter::NoAAOp(bool noaa)
-{
-	pathattr.noaa = noaa;
-	if(IsNull(current))
-		attr.noaa = noaa;
-}
-
 void BufferPainter::ColorStop0(Attr& a, double pos, const RGBA& color)
 {
 	pos = minmax(pos, 0.0, 1.0);
@@ -105,14 +98,15 @@ void BufferPainter::ClearStopsOp()
 	}
 }
 
-BufferPainter::BufferPainter(ImageBuffer& ib, bool subpixel_)
+BufferPainter::BufferPainter(ImageBuffer& ib, int quality_)
 :	ib(ib),
-	rasterizer(subpixel_ ? 3 * ib.GetWidth() : ib.GetWidth(), ib.GetHeight())
+	quality(quality_),
+	rasterizer(quality_ == QUALITY_SUBPIXEL ? 3 * ib.GetWidth() : ib.GetWidth(), ib.GetHeight())
 {
 	ClearPath();
 
 	render_cx = ib.GetWidth();
-	if(subpixel_) {
+	if(quality == QUALITY_SUBPIXEL) {
 		render_cx *= 3;
 		subpixel.Alloc(render_cx + 30);
 	}
@@ -127,7 +121,6 @@ BufferPainter::BufferPainter(ImageBuffer& ib, bool subpixel_)
 	attr.dash_start = 0.0;
 	attr.opacity = 1.0;
 	attr.mask = false;
-	attr.noaa = false;
 	pathattr = attr;
 	
 	gradientn = Null;

@@ -192,12 +192,6 @@ inline Painter& Painter::Dash(const Vector<double>& dash, double start)
 	return *this;
 }
 
-inline Painter& Painter::NoAA(bool noaa)
-{
-	NoAAOp(noaa);
-	return *this;
-}
-
 inline Painter& Painter::Transform(const Xform2D& m)
 {
 	TransformOp(m);

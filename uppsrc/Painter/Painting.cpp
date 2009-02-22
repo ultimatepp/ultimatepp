@@ -235,12 +235,6 @@ void PaintingPainter::DashOp(const Vector<double>& dash, double start)
 	Putf(start);
 }
 
-void PaintingPainter::NoAAOp(bool noaa)
-{
-	Put(PAINTING_NOAA);
-	Put(noaa);
-}
-
 void PaintingPainter::TransformOp(const Xform2D& m)
 {
 	Put(PAINTING_TRANSFORM);
