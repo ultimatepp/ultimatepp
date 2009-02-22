@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 
-#define PAINTER_TIMING(x)  //RTIMING(x)
+#define PAINTER_TIMING(x)   // RTIMING(x)
 
 NAMESPACE_UPP
 
@@ -21,7 +21,7 @@ struct Xform2D {
 	static Xform2D Scale(double sx, double sy);
 	static Xform2D Scale(double scale);
 	static Xform2D Rotation(double fi);
-	static Xform2D Sheer(double fi);	
+	static Xform2D Sheer(double fi);
 	
 	Xform2D();
 };

@@ -89,6 +89,7 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 			g->End();
 			for(int y = rasterizer.MinY(); y <= rasterizer.MaxY(); y++) {
 				solid_filler.t = subpixel_filler.t = span_filler.t = ib[y];
+				subpixel_filler.end = subpixel_filler.t + ib.GetWidth();
 				span_filler.y = subpixel_filler.y = y;
 				Rasterizer::Filler *rf = rg;
 				if(clip.GetCount()) {

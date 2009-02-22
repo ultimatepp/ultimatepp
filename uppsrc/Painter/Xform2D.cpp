@@ -4,6 +4,7 @@ NAMESPACE_UPP
 
 Pointf Xform2D::Transform(const Pointf& f) const
 {
+	PAINTER_TIMING("Transform");
 	return Pointf(f.x * x.x + f.y * x.y + t.x, f.x * y.x + f.y * y.y + t.y);
 }
 

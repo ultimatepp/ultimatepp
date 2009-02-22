@@ -27,6 +27,7 @@ inline double fx_to_dbl(const FIXED& p) {
 
 void RenderCharPath(const char* gbuf, unsigned total_size, Painter& sw, double xx, double yy)
 {
+	PAINTER_TIMING("RenderCharPath");
 	const char* cur_glyph = gbuf;
 	const char* end_glyph = gbuf + total_size;
 	
@@ -99,7 +100,7 @@ void Painter::CharacterOp(const Pointf& p, int ch, Font fnt)
 	String s;
 	INTERLOCKED {
 		static LRUCache<String, FontChar> cache;
-		cache.Shrink(100000);
+		cache.Shrink(500000);
 		sMakeCharOutline h;
 		h.fc.fnt = fnt;
 		h.fc.chr = ch;
