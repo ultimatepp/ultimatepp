@@ -30,7 +30,7 @@ static inline byte *sSpan(byte *t, int c, int& len)
 
 void BufferPainter::FinishMask()
 {
-	Buffer<byte> wb(2 * ib.GetWidth());
+	Buffer<byte> wb(quality == QUALITY_SUBPIXEL ? 6 * ib.GetWidth() : 2 * ib.GetWidth());
 	bool creating = false;
 	if(!attr.hasclip) {
 		clip.Add().Alloc(ib.GetHeight());
@@ -53,18 +53,26 @@ void BufferPainter::FinishMask()
 				if(val == 0) {
 					if(c256) t = sSpan(t, 128, c256);
 					c0++;
+					if(quality == QUALITY_SUBPIXEL)
+						c0 += 2;
 					full = false;
 				}
 				else
 				if(val == 256) {
 					if(c0) t = sSpan(t, 0, c0);
 					c256++;
+					if(quality == QUALITY_SUBPIXEL)
+						c256 += 2;
 					empty = false;
 				}
 				else {
 					if(c256) t = sSpan(t, 128, c256);
 					if(c0) t = sSpan(t, 0, c0);
 					*t++ = val;
+					if(quality == QUALITY_SUBPIXEL) {
+						*t++ = val;
+						*t++ = val;
+					}
 					full = empty = false;
 				}
 				s++;
