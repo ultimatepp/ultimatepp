@@ -6,6 +6,7 @@ static void sQuadratic(LinearPathConsumer& t, const Pointf& p1, const Pointf& p2
                        double qt, int lvl)
 {
 	if(lvl < 16) {
+		PAINTER_TIMING("Quadratic approximation");
 		Pointf d = p3 - p1;
 		double q = Squared(d);
 		if(q > 1e-30) {
@@ -36,6 +37,7 @@ static void sCubic(LinearPathConsumer& t,
                    double qt, int lvl)
 {
 	if(lvl < 16) {
+		PAINTER_TIMING("Cubic approximation");
 		Pointf d = p4 - p1;
 		double q = d.x * d.x + d.y * d.y;
 		if(q >= 1e-30) {

@@ -24,15 +24,18 @@ struct SpanFiller : Rasterizer::Filler {
 
 struct SubpixelFiller : Rasterizer::Filler {
 	int16        *sbuffer;
-	int16        *begin, *end;
-	RGBA         *t;
+	int16        *begin;
+	RGBA         *t, *end;
 	int16        *v;
 	RGBA         *s;
 	RGBA          color;
 	SpanSource   *ss;
 	int           alpha;
 	RGBA         *buffer;
-	int           x, y;
+	int           y;
+
+	void Write(int len);
+	void Render0(int val);	
 
 	void Start(int minx, int maxx);
 	void Render(int val);	

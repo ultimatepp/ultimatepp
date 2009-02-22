@@ -66,7 +66,7 @@ void SolidFiller::Render(int val, int len)
 
 void SubpixelFiller::Start(int minx, int maxx)
 {
-	x = minx / 3;
+	int x = minx / 3;
 	if(x > 0) {
 		begin = sbuffer;
 		x--;
@@ -77,7 +77,6 @@ void SubpixelFiller::Start(int minx, int maxx)
 	sbuffer[0] = sbuffer[1] = sbuffer[2] = sbuffer[3] =
 	sbuffer[4] = sbuffer[5] = sbuffer[6] = sbuffer[7] = 0;
 	v = sbuffer + 3 + minx % 3;
-	end = v + maxx + 1;
 	if(ss) {
 		int xx = maxx / 3;
 		ss->Get(buffer, x, y, xx - x + 2);
@@ -85,9 +84,9 @@ void SubpixelFiller::Start(int minx, int maxx)
 	}
 }
 
-void SubpixelFiller::Render(int val) // Optimize: Render0
+inline
+void SubpixelFiller::Render0(int val)
 {
-#if 1
 	int h = val / 9;
 	int h2 = h + h;
 	v[-2] += h;
@@ -96,84 +95,93 @@ void SubpixelFiller::Render(int val) // Optimize: Render0
 	v[1] += h2;
 	v[2] += h;
 	v[3] = 0;
-#else
-	int h = val / 3;
-	v[-1] += h;
-	v[0] += val - h - h;
-	v[1] += h;
-	v[2] = 0;
-#endif
 	v++;
-	x++;
+}
+
+void SubpixelFiller::Render(int val)
+{
+	Render0(val);
 }
 
 void SubpixelFiller::Render(int val, int len)
 {
-/*	if(len > 9) {
-		int q = (3333333 - x) % 3;
-		len -= q;
+	if(len > 9) {
+		Render(val);
+		Render(val);
+		int q = (3333333 - (v - begin)) % 3;
+		len -= q + 2;
 		while(q--)
 			Render(val);
-		int16 *h = v;
+		int l = v - begin;
 		Render(val);
 		Render(val);
-		Render(val);
-		v = h;
-		End();
-		q = len / 3 - 1;
-		len -= q * 3;
-		RGBA *e = t + q;
-		while(t < e)
-			AlphaBlendCover8(*t++, ss ? Mul8(*s++, alpha) : color, val);
-		v = sbuffer + 3;
-		v[-2] = v[-1] = v[0] = v[1] = v[2] = 0;
-		x = 0;
-	}*/
+		Write(l / 3);
+		l = len / 3;
+		len -= 3 * l;
+		RGBA *e = min(t + l, end);
+		if(val == 256)
+			if(!ss && color.a == 255) {
+				FillRGBA(t, color, e - t);
+				t = e;
+			}
+			else
+				while(t < e)
+					AlphaBlend(*t++, ss ? Mul8(*s++, alpha) : color);
+		else
+			while(t < e)
+				AlphaBlendCover8(*t++, ss ? Mul8(*s++, alpha) : color, val);
+		v = begin = sbuffer + 3;
+		int h = val / 9;
+		v[0] = h + h + h;
+		v[1] = h;
+		v[2] = 0;
+	}
 	while(len--)
 		Render(val);
 }
 
-void SubpixelFiller::End()
+void SubpixelFiller::Write(int len)
 {
-//	int n = (3333333 - (v - begin)) % 3;
-//	while(n--)
-	if(v < end)
-		Render(0);
-	if(v < end)
-		Render(0);
+	RGBA *e = min(t + len, end);
 	int16 *q = begin;
-	while(q < v) {
+	while(t < e) {
 		RGBA c = ss ? Mul8(*s++, alpha) : color;
 		int a, alpha;
-/*		if(c.a == 255) {
+		if(c.a == 255) {
 			alpha = 256 - q[0];
-			t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
+			t->r = (c.r * q[0] + alpha * t->r) >> 8;
 			alpha = 256 - q[1];
-			t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
+			t->g = (c.g * q[1] + alpha * t->g) >> 8;
 			alpha = 256 - q[2];
-			t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
+			t->b = (c.b * q[2] + alpha * t->b) >> 8;
 			a = (q[0] + q[1] + q[2]) / 3;
+			alpha = 256 - a;
+			t->a = (a * 255 + alpha * t->a) >> 8;
+		}
+		else {
+			a = c.a * q[0] >> 8;
+			alpha = 256 - (a + (a >> 7));
+			t->r = (c.r * q[0] + alpha * t->r) >> 8;
+			a = c.a * q[1] >> 8;
+			alpha = 256 - (a + (a >> 7));
+			t->g = (c.g * q[1] + alpha * t->g) >> 8;
+			a = c.a * q[2] >> 8;
+			alpha = 256 - (a + (a >> 7));
+			t->b = (c.b * q[2] + alpha * t->b) >> 8;
 			a = c.a * (q[0] + q[1] + q[2]) / 3 >> 8;
 			alpha = 256 - (a + (a >> 7));
 			t->a = a + (alpha * t->a >> 8);
 		}
-		else {*/
-			a = c.a * q[0] >> 8;
-			alpha = 256 - (a + (a >> 7));
-			t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
-			a = c.a * q[1] >> 8;
-			alpha = 256 - (a + (a >> 7));
-			t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
-			a = c.a * q[2] >> 8;
-			alpha = 256 - (a + (a >> 7));
-			t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
-			a = c.a * (q[0] + q[1] + q[2]) / 3 >> 8;
-			alpha = 256 - (a + (a >> 7));
-			t->a = a + (alpha * t->a >> 8);
-//		}
 		t++;
 		q += 3;
 	}
+}
+
+void SubpixelFiller::End()
+{
+	Render(0);
+	Render(0);
+	Write((v - begin) / 3);
 }
 
 void SpanFiller::Start(int minx, int maxx)
