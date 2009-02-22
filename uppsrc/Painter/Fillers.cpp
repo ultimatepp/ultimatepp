@@ -3,6 +3,35 @@
 
 NAMESPACE_UPP
 
+void FillRGBA(RGBA *t, RGBA c, int len)
+{
+	while(len >= 16) {
+		t[0] = c; t[1] = c; t[2] = c; t[3] = c;
+		t[4] = c; t[5] = c; t[6] = c; t[7] = c;
+		t[8] = c; t[9] = c; t[10] = c; t[11] = c;
+		t[12] = c; t[13] = c; t[14] = c; t[15] = c;
+		t += 16;
+		len -= 16;
+	}
+	switch(len) {
+	case 15: t[14] = c;
+	case 14: t[13] = c;
+	case 13: t[12] = c;
+	case 12: t[11] = c;
+	case 11: t[10] = c;
+	case 10: t[9] = c;
+	case 9: t[8] = c;
+	case 8: t[7] = c;
+	case 7: t[6] = c;
+	case 6: t[5] = c;
+	case 5: t[4] = c;
+	case 4: t[3] = c;
+	case 3: t[2] = c;
+	case 2: t[1] = c;
+	case 1: t[0] = c;
+	}
+}
+
 void SolidFiller::Start(int minx, int maxx)
 {
 	t += minx;
@@ -20,31 +49,7 @@ void SolidFiller::Render(int val, int len)
 		return;
 	}
 	if(((val - 256) | (c.a - 255)) == 0) {
-		while(len >= 16) {
-			t[0] = c; t[1] = c; t[2] = c; t[3] = c;
-			t[4] = c; t[5] = c; t[6] = c; t[7] = c;
-			t[8] = c; t[9] = c; t[10] = c; t[11] = c;
-			t[12] = c; t[13] = c; t[14] = c; t[15] = c;
-			t += 16;
-			len -= 16;
-		}
-		switch(len) {
-		case 15: t[14] = c;
-		case 14: t[13] = c;
-		case 13: t[12] = c;
-		case 12: t[11] = c;
-		case 11: t[10] = c;
-		case 10: t[9] = c;
-		case 9: t[8] = c;
-		case 8: t[7] = c;
-		case 7: t[6] = c;
-		case 6: t[5] = c;
-		case 5: t[4] = c;
-		case 4: t[3] = c;
-		case 3: t[2] = c;
-		case 2: t[1] = c;
-		case 1: t[0] = c;
-		}
+		FillRGBA(t, c, len);
 		t += len;
 	}
 	else {
@@ -62,12 +67,16 @@ void SolidFiller::Render(int val, int len)
 void SubpixelFiller::Start(int minx, int maxx)
 {
 	x = minx / 3;
+	if(x > 0) {
+		begin = sbuffer;
+		x--;
+	}
+	else
+		begin = sbuffer + 3;
 	t += x;
-	v = sbuffer;
-	int n = minx % 3 + 3;
-	while(n--)
-		*v++ = 0;
-	v[0] = v[1] = v[2] = v[3] = v[4] = 0;
+	sbuffer[0] = sbuffer[1] = sbuffer[2] = sbuffer[3] =
+	sbuffer[4] = sbuffer[5] = sbuffer[6] = sbuffer[7] = 0;
+	v = sbuffer + 3 + minx % 3;
 	if(ss) {
 		int xx = maxx / 3;
 		ss->Get(buffer, x, y, xx - x + 2);
@@ -75,9 +84,10 @@ void SubpixelFiller::Start(int minx, int maxx)
 	}
 }
 
-void SubpixelFiller::Render(int val)
+void SubpixelFiller::Render(int val) // Optimize: Render0
 {
-	int h = (7282 * val) >> 16;
+#if 1
+	int h = val / 9;
 	int h2 = h + h;
 	v[-2] += h;
 	v[-1] += h2;
@@ -85,34 +95,78 @@ void SubpixelFiller::Render(int val)
 	v[1] += h2;
 	v[2] += h;
 	v[3] = 0;
+#else
+	int h = val / 3;
+	v[-1] += h;
+	v[0] += val - h - h;
+	v[1] += h;
+	v[2] = 0;
+#endif
 	v++;
 	x++;
 }
 
 void SubpixelFiller::Render(int val, int len)
 {
+/*	if(len > 9) {
+		int q = (3333333 - x) % 3;
+		len -= q;
+		while(q--)
+			Render(val);
+		int16 *h = v;
+		Render(val);
+		Render(val);
+		Render(val);
+		v = h;
+		End();
+		q = len / 3 - 1;
+		len -= q * 3;
+		RGBA *e = t + q;
+		while(t < e)
+			AlphaBlendCover8(*t++, ss ? Mul8(*s++, alpha) : color, val);
+		v = sbuffer + 3;
+		v[-2] = v[-1] = v[0] = v[1] = v[2] = 0;
+		x = 0;
+	}*/
 	while(len--)
 		Render(val);
 }
 
 void SubpixelFiller::End()
 {
-	int16 *q = sbuffer + 3;
+	int n = (3333333 - (v - begin)) % 3;
+	while(n--)
+		Render(0);
+	int16 *q = begin;
 	while(q < v) {
 		RGBA c = ss ? Mul8(*s++, alpha) : color;
 		int a, alpha;
-		a = c.a * q[0] >> 8;
-		alpha = 256 - (a + (a >> 7));
-		t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
-		a = c.a * q[1] >> 8;
-		alpha = 256 - (a + (a >> 7));
-		t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
-		a = c.a * q[2] >> 8;
-		alpha = 256 - (a + (a >> 7));
-		t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
-		a = c.a * (q[0] + q[1] + q[2]) / 3 >> 8;
-		alpha = 256 - (a + (a >> 7));
-		t->a = a + (alpha * t->a >> 8);
+/*		if(c.a == 255) {
+			alpha = 256 - q[0];
+			t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
+			alpha = 256 - q[1];
+			t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
+			alpha = 256 - q[2];
+			t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
+			a = (q[0] + q[1] + q[2]) / 3;
+			a = c.a * (q[0] + q[1] + q[2]) / 3 >> 8;
+			alpha = 256 - (a + (a >> 7));
+			t->a = a + (alpha * t->a >> 8);
+		}
+		else {*/
+			a = c.a * q[0] >> 8;
+			alpha = 256 - (a + (a >> 7));
+			t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
+			a = c.a * q[1] >> 8;
+			alpha = 256 - (a + (a >> 7));
+			t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
+			a = c.a * q[2] >> 8;
+			alpha = 256 - (a + (a >> 7));
+			t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
+			a = c.a * (q[0] + q[1] + q[2]) / 3 >> 8;
+			alpha = 256 - (a + (a >> 7));
+			t->a = a + (alpha * t->a >> 8);
+//		}
 		t++;
 		q += 3;
 	}

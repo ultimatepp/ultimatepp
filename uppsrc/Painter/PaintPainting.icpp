@@ -218,9 +218,6 @@ void Painter::Paint(const Painting& pic)
 				DashOp(dash, r);
 			}
 			break;
-		case PAINTING_NOAA:
-			NoAAOp(ss.Get());
-			break;
 		case PAINTING_TRANSFORM:
 			sGet(m, ss);
 			TransformOp(m);
@@ -240,8 +237,7 @@ void Painter::Paint(const Painting& pic)
 
 void PaintImageBufferPaintingFn(ImageBuffer& ib, const Painting& p, Size sz, Point pos, bool noaa)
 {
-	BufferPainter sw(ib);
-	sw.NoAA(noaa);
+	BufferPainter sw(ib, noaa ? QUALITY_NOAA : QUALITY_ANTIALIASED);
 	Sizef psz = p.GetSize();
 	sw.Translate(-pos.x, -pos.y);
 	sw.Scale(sz.cx / psz.cx, sz.cy / psz.cy);
@@ -250,8 +246,7 @@ void PaintImageBufferPaintingFn(ImageBuffer& ib, const Painting& p, Size sz, Poi
 
 void PaintImageBufferDrawingFn(ImageBuffer& ib, const Drawing& iw, bool noaa)
 {
-	BufferPainter sw(ib);
-	sw.NoAA(noaa);
+	BufferPainter sw(ib, noaa ? QUALITY_NOAA : QUALITY_ANTIALIASED);
 	Sizef sz = ib.GetSize();
 	Size isz = iw.GetSize();
 	sw.Scale(sz.cx / isz.cx, sz.cy / isz.cy);

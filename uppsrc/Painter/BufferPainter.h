@@ -259,7 +259,6 @@ protected:
 	virtual void   MiterLimitOp(double l);
 	virtual void   EvenOddOp(bool evenodd);
 	virtual void   DashOp(const Vector<double>& dash, double start);
-	virtual void   NoAAOp(bool noaa);
 
 	virtual void   TransformOp(const Xform2D& m);
 
@@ -300,10 +299,10 @@ public:
 		int                             cliplevel;
 		bool                            hasclip;
 		bool                            mask;
-		bool                            noaa;
 	};
 	
 	ImageBuffer&               ib;
+	int                        quality;
 	Buffer<int16>              subpixel;
 	int                        render_cx;
 
@@ -312,7 +311,6 @@ public:
 	Array<Attr>                attrstack;
 	Vector< Buffer<ClipLine> > clip;
 	Array< ImageBuffer >       mask;
-
 	
 	Image                      gradient;
 	RGBA                       gradient1, gradient2;
@@ -324,7 +322,7 @@ public:
 	
 	Rasterizer   rasterizer;
 	Buffer<RGBA> span;
-
+	
 	void        *PathAddRaw(int type, int size);
 	template <class T> T& PathAdd(int type) { return *(T *)PathAddRaw(type, sizeof(T)); }
 
@@ -343,5 +341,5 @@ public:
 	void             FinishMask();
 
 public:
-	BufferPainter(ImageBuffer& ib, bool subpixel = false);
+	BufferPainter(ImageBuffer& ib, int quality = 0);
 };
