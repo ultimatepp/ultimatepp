@@ -132,7 +132,7 @@ void App::Reset()
 	ctrl.rotate <<= ctrl.translate_x <<= ctrl.translate_y <<= 0;
 	ctrl.scale <<= ctrl.scale_x <<= ctrl.opacity <<= 1.0;
 	ctrl.painting = false;
-	ctrl.quality = QUALITY_ANTIALIASED;
+	ctrl.quality = MODE_ANTIALIASED;
 	ctrl.linejoin <<= LINEJOIN_MITER;
 	ctrl.linecap <<= LINECAP_BUTT;
 	ToSlider();
