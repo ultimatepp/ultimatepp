@@ -85,36 +85,140 @@ void SubpixelFiller::Start(int minx, int maxx)
 }
 
 inline
-void SubpixelFiller::Render0(int val)
+void SubpixelFiller::Render1(int val)
 {
+	int16 *w = v;
 	int h = val / 9;
 	int h2 = h + h;
-	v[-2] += h;
-	v[-1] += h2;
-	v[0] += val - h2 - h2 - h2;
-	v[1] += h2;
-	v[2] += h;
-	v[3] = 0;
+	w[-2] += h;
+	w[-1] += h2;
+	w[0] += val - h2 - h2 - h2;
+	w[1] += h2;
+	w[2] += h;
+	w[3] = 0;
 	v++;
+}
+
+void SubpixelFiller::Render2(int val)
+{
+	int16 *w = v;
+	int h = val / 9;
+	int h2 = h + h;
+	w[-2] += h;
+	w[-1] += h2 + h;
+	w[0] += val - h2 - h2 - h2 + h2;
+	w[1] += h2 + val - h2 - h2 - h2;
+	w[2] += h + h2;
+	w[3] = h;
+	w[4] = 0;
+	v += 2;
 }
 
 void SubpixelFiller::Render(int val)
 {
-	Render0(val);
+	int16 *w = v;
+	int h = val / 9;
+	int h2 = h + h;
+	w[-2] += h;
+	w[2] += h;
+	w[-1] += h2;
+	w[1] += h2;
+	w[0] += val - h2 - h2 - h2;
+	w[3] = 0;
+	v++;
+}
+
+void SubpixelFiller::RenderN(int val, int n)
+{
+	int16 *w = v;
+	int h = val / 9;
+	int h2 = h + h;
+	int hv2 = val - h2 - h2;
+	int h3 = h2 + h;
+	int hh;
+	v += n;
+	switch(n) {
+	case 1: 
+		w[-2] += h;
+		w[-1] += h2;
+		w[1] += h2;
+		w[0] += hv2 - h2;
+		w[2] += h;
+		w[3] = 0;
+		break;
+	case 2:
+		w[-2] += h;
+		w[3] = h;
+		w[-1] += h3;
+		w[2] += h3;
+		w[0] += hv2;
+		w[1] += hv2;
+		w[4] = 0;
+		break;
+	case 3:
+		w[-2] += h;
+		w[4] = h;
+		w[-1] += h3;
+		w[3] = h3;
+		hh = hv2 + h;
+		w[0] += hh;
+		w[2] += hh;
+		w[1] += hv2 + h2;
+		w[5] =   0;
+		break;
+	case 4:
+		w[-2] += h;
+		w[5] = h;
+		w[-1] += h3;
+		w[4] = h3;
+		hh = hv2 + h;
+		w[0] +=  hh;
+		w[3] = hh;
+		hh = hv2 + h3;
+		w[1] += hh;
+		w[2] += hh;
+		w[6] = 0;
+		break;
+	case 5:
+		w[-2] += h;
+		w[6] =   h;
+		w[-1] += h3;
+		w[5] =   h3;
+		hh = hv2 + h;
+		w[0] += hh;
+		w[4] = hh;
+		hh = h3 + hv2;
+		w[1] += hh;
+		w[3] = hh;
+		w[2] += h3 + hv2 + h;
+		w[7] = 0;
+		break;
+	case 6:
+		w[-2] += h;
+		w[7] = h;
+		w[-1] += h3;
+		w[6] = h3;
+		hh = hv2 + h;
+		w[0] += hh;
+		w[5] = hh;
+		hh = h3 + hv2;
+		w[1] += hh;
+		w[4] = hh;
+		hh = h3 + hv2 + h;
+		w[2] += hh;
+		w[3] = hh;
+		w[8] = 0;
+		break;
+	}
 }
 
 void SubpixelFiller::Render(int val, int len)
 {
-	if(len > 9) {
-		Render(val);
-		Render(val);
-		int q = (3333333 - (v - begin)) % 3;
+	if(len > 6) {
+		int q = (3333333 - (v + 2 - begin)) % 3;
 		len -= q + 2;
-		while(q--)
-			Render(val);
-		int l = v - begin;
-		Render(val);
-		Render(val);
+		int l = v + 2 + q - begin;
+		RenderN(val, q + 4);
 		Write(l / 3);
 		l = len / 3;
 		len -= 3 * l;
@@ -136,8 +240,7 @@ void SubpixelFiller::Render(int val, int len)
 		v[1] = h;
 		v[2] = 0;
 	}
-	while(len--)
-		Render(val);
+	RenderN(val, len);
 }
 
 void SubpixelFiller::Write(int len)
@@ -147,30 +250,28 @@ void SubpixelFiller::Write(int len)
 	while(t < e) {
 		RGBA c = ss ? Mul8(*s++, alpha) : color;
 		int a, alpha;
-		if(c.a == 255) {
-			alpha = 256 - q[0];
-			t->r = (c.r * q[0] + alpha * t->r) >> 8;
-			alpha = 256 - q[1];
-			t->g = (c.g * q[1] + alpha * t->g) >> 8;
-			alpha = 256 - q[2];
-			t->b = (c.b * q[2] + alpha * t->b) >> 8;
-			a = (q[0] + q[1] + q[2]) / 3;
-			alpha = 256 - a;
-			t->a = (a * 255 + alpha * t->a) >> 8;
-		}
+		if(t->a != 255)
+			AlphaBlendCover8(*t, c, (q[0] + q[1] + q[2]) / 3);
 		else {
-			a = c.a * q[0] >> 8;
-			alpha = 256 - (a + (a >> 7));
-			t->r = (c.r * q[0] + alpha * t->r) >> 8;
-			a = c.a * q[1] >> 8;
-			alpha = 256 - (a + (a >> 7));
-			t->g = (c.g * q[1] + alpha * t->g) >> 8;
-			a = c.a * q[2] >> 8;
-			alpha = 256 - (a + (a >> 7));
-			t->b = (c.b * q[2] + alpha * t->b) >> 8;
-			a = c.a * (q[0] + q[1] + q[2]) / 3 >> 8;
-			alpha = 256 - (a + (a >> 7));
-			t->a = a + (alpha * t->a >> 8);
+			if(c.a == 255) {
+				alpha = 256 - q[0];
+				t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
+				alpha = 256 - q[1];
+				t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
+				alpha = 256 - q[2];
+				t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
+			}
+			else {
+				a = c.a * q[0] >> 8;
+				alpha = 256 - a - (a >> 7);
+				t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
+				a = c.a * q[1] >> 8;
+				alpha = 256 - a - (a >> 7);
+				t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
+				a = c.a * q[2] >> 8;
+				alpha = 256 - a - (a >> 7);
+				t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
+			}
 		}
 		t++;
 		q += 3;
@@ -179,9 +280,8 @@ void SubpixelFiller::Write(int len)
 
 void SubpixelFiller::End()
 {
-	Render(0);
-	Render(0);
-	Write((v - begin) / 3);
+	v[3] = v[4] = 0;
+	Write((v + 2 - begin) / 3);
 }
 
 void SpanFiller::Start(int minx, int maxx)
