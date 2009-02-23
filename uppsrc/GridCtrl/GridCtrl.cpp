@@ -1916,6 +1916,8 @@ void GridCtrl::SyncPopup()
 		bool valid_pos = c >= 0 && r >= 0;
 		
 		Ctrl* ctrl = valid_pos ? GetCtrl(r, c, true, false, false) : NULL;
+		
+		bool close = true;
 
 		if(valid_pos && !ctrl)
 		{
@@ -1937,12 +1939,17 @@ void GridCtrl::SyncPopup()
 					popup.text = text;
 					popup.Refresh();
 				}
+				
+				close = false;
 			}
-			else
-				popup.Close();
 		}
-		else
+		
+		if(close)
+		{
 			popup.Close();
+			oldSplitCol = -1;
+			oldSplitRow = -1;
+		}
 	}
 }
 
