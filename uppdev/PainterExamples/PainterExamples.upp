@@ -34,5 +34,6 @@ file
 	Test.iml;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI SSE2";
 
