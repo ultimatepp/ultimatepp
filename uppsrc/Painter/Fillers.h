@@ -35,7 +35,9 @@ struct SubpixelFiller : Rasterizer::Filler {
 	int           y;
 
 	void Write(int len);
-	void Render0(int val);	
+	void RenderN(int val, int n);
+	void Render2(int val);
+	void Render1(int val);
 
 	void Start(int minx, int maxx);
 	void Render(int val);	

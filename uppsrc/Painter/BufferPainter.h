@@ -109,7 +109,7 @@ inline void AlphaBlend(RGBA& t, const RGBA& c)
 inline void AlphaBlendCover8(RGBA& t, const RGBA& c, int cover)
 {
 	int a = c.a * cover >> 8;
-	int alpha = 256 - (a + (a >> 7));
+	int alpha = 256 - a - (a >> 7);
 	t.r = (c.r * cover >> 8) + (alpha * t.r >> 8);
 	t.g = (c.g * cover >> 8) + (alpha * t.g >> 8);
 	t.b = (c.b * cover >> 8) + (alpha * t.b >> 8);
