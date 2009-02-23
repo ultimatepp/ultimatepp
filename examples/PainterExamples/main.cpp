@@ -31,9 +31,11 @@ void App::DoPaint0(Painter& sw)
 	sw.LineCap(~ctrl.linecap);
 	sw.LineJoin(~ctrl.linejoin);
 	{ PAINTER_TIMING("FILL");
-	sw.Clear(White());
+		if(ctrl.transparent)
+			sw.Clear(RGBAZero());
+		else
+			sw.Clear(White());
 	}
-	PAINTER_TIMING("Paint");
 	if(list.IsCursor())
 		Examples()[list.GetCursor()].example(sw);
 }
@@ -67,7 +69,8 @@ void App::Benchmark()
 		time = GetTickCount();
 		if(time - time0 > 1000) break;
 		ImageBuffer ib(800, 600);
-		BufferPainter sw(ib);
+		BufferPainter sw(ib, ctrl.quality);
+		PAINTER_TIMING("Paint");
 		DoPaint(sw);
 		n++;
 	}
@@ -76,8 +79,14 @@ void App::Benchmark()
 
 void App::Paint(Draw& w)
 {
-	ImageBuffer ib(GetSize());
-	BufferPainter sw(ib);
+	Size sz = GetSize();
+	if(ctrl.transparent) {
+		for(int y = 0; y + 32 < sz.cy; y += 32)
+			for(int x = 0; x + 32 < sz.cx; x += 32)
+				w.DrawRect(x, y, 32, 32, (x ^ y) & 32 ? Color(254, 172, 120) : Color(124, 135, 253));
+	}
+	ImageBuffer ib(sz);
+	BufferPainter sw(ib, ctrl.quality);
 	DoPaint(sw);
 	w.DrawImage(0, 0, ib);
 }
@@ -123,6 +132,7 @@ void App::Reset()
 	ctrl.rotate <<= ctrl.translate_x <<= ctrl.translate_y <<= 0;
 	ctrl.scale <<= ctrl.scale_x <<= ctrl.opacity <<= 1.0;
 	ctrl.painting = false;
+	ctrl.quality = MODE_ANTIALIASED;
 	ctrl.linejoin <<= LINEJOIN_MITER;
 	ctrl.linecap <<= LINECAP_BUTT;
 	ToSlider();
@@ -137,7 +147,7 @@ void App::Serialize(Stream& s)
 		% ctrl.translate_x % ctrl.translate_x_slider
 		% ctrl.translate_y % ctrl.translate_y_slider
 		% ctrl.opacity % ctrl.opacity_slider
-		% ctrl.painting
+		% ctrl.painting % ctrl.quality % ctrl.transparent
 	;
 }
 
@@ -167,7 +177,7 @@ App::App() {
 	ctrl.linejoin.Add(LINEJOIN_MITER, "Miter joins");
 	ctrl.linejoin.Add(LINEJOIN_ROUND, "Round joins");
 	ctrl.linejoin.Add(LINEJOIN_BEVEL, "Bevel joins");
-	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= THISBACK(Sync);
+	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= ctrl.quality <<= ctrl.transparent <<= THISBACK(Sync);
 	ctrl.reset <<= THISBACK(Reset);
 	ctrl.benchmark <<= THISBACK(Benchmark);
 	ctrl.print <<= THISBACK(Print);
