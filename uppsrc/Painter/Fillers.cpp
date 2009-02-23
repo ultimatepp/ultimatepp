@@ -128,10 +128,9 @@ void SubpixelFiller::Render(int val)
 	v++;
 }
 
-void SubpixelFiller::RenderN(int val, int n)
+void SubpixelFiller::RenderN(int val, int h, int n)
 {
 	int16 *w = v;
-	int h = val / 9;
 	int h2 = h + h;
 	int hv2 = val - h2 - h2;
 	int h3 = h2 + h;
@@ -214,11 +213,12 @@ void SubpixelFiller::RenderN(int val, int n)
 
 void SubpixelFiller::Render(int val, int len)
 {
+	int h = val / 9;
 	if(len > 6) {
 		int q = (3333333 - (v + 2 - begin)) % 3;
 		len -= q + 2;
 		int l = v + 2 + q - begin;
-		RenderN(val, q + 4);
+		RenderN(val, h, q + 4);
 		Write(l / 3);
 		l = len / 3;
 		len -= 3 * l;
@@ -235,12 +235,11 @@ void SubpixelFiller::Render(int val, int len)
 			while(t < e)
 				AlphaBlendCover8(*t++, ss ? Mul8(*s++, alpha) : color, val);
 		v = begin = sbuffer + 3;
-		int h = val / 9;
 		v[0] = h + h + h;
 		v[1] = h;
 		v[2] = 0;
 	}
-	RenderN(val, len);
+	RenderN(val, h, len);
 }
 
 void SubpixelFiller::Write(int len)
@@ -249,30 +248,23 @@ void SubpixelFiller::Write(int len)
 	int16 *q = begin;
 	while(t < e) {
 		RGBA c = ss ? Mul8(*s++, alpha) : color;
-		int a, alpha;
+		int a;
 		if(t->a != 255)
 			AlphaBlendCover8(*t, c, (q[0] + q[1] + q[2]) / 3);
-		else {
+		else
 			if(c.a == 255) {
-				alpha = 256 - q[0];
-				t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
-				alpha = 256 - q[1];
-				t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
-				alpha = 256 - q[2];
-				t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
+				t->r = (c.r * q[0] >> 8) + ((257 - q[0]) * t->r >> 8);
+				t->g = (c.g * q[1] >> 8) + ((257 - q[1]) * t->g >> 8);
+				t->b = (c.b * q[2] >> 8) + ((257 - q[2]) * t->b >> 8);
 			}
 			else {
 				a = c.a * q[0] >> 8;
-				alpha = 256 - a - (a >> 7);
-				t->r = (c.r * q[0] >> 8) + (alpha * t->r >> 8);
+				t->r = (c.r * q[0] >> 8) + ((256 - a - (a >> 7)) * t->r >> 8);
 				a = c.a * q[1] >> 8;
-				alpha = 256 - a - (a >> 7);
-				t->g = (c.g * q[1] >> 8) + (alpha * t->g >> 8);
+				t->g = (c.g * q[1] >> 8) + ((256 - a - (a >> 7)) * t->g >> 8);
 				a = c.a * q[2] >> 8;
-				alpha = 256 - a - (a >> 7);
-				t->b = (c.b * q[2] >> 8) + (alpha * t->b >> 8);
+				t->b = (c.b * q[2] >> 8) + ((256 - a - (a >> 7)) * t->b >> 8);
 			}
-		}
 		t++;
 		q += 3;
 	}

@@ -21,8 +21,12 @@ NAMESPACE_UPP
 
 #ifdef PLATFORM_WIN32
 
-inline double fx_to_dbl(const FIXED& p) {
+double fx_to_dbl(const FIXED& p) {
 	return double(p.value) + double(p.fract) * (1.0 / 65536.0);
+}
+
+Pointf fx_to_dbl(const Pointf& pp, const POINTFX& p) {
+	return Pointf(pp.x + fx_to_dbl(p.x), pp.y - fx_to_dbl(p.y));
 }
 
 void RenderCharPath(const char* gbuf, unsigned total_size, Painter& sw, double xx, double yy)
@@ -30,30 +34,25 @@ void RenderCharPath(const char* gbuf, unsigned total_size, Painter& sw, double x
 	PAINTER_TIMING("RenderCharPath");
 	const char* cur_glyph = gbuf;
 	const char* end_glyph = gbuf + total_size;
-	
+	Pointf pp(xx, yy);
 	while(cur_glyph < end_glyph) {
 		const TTPOLYGONHEADER* th = (TTPOLYGONHEADER*)cur_glyph;
 		const char* end_poly = cur_glyph + th->cb;
 		const char* cur_poly = cur_glyph + sizeof(TTPOLYGONHEADER);
-		sw.Move(xx + fx_to_dbl(th->pfxStart.x), yy - fx_to_dbl(th->pfxStart.y));
+		sw.Move(fx_to_dbl(pp, th->pfxStart));
 		while(cur_poly < end_poly) {
 			const TTPOLYCURVE* pc = (const TTPOLYCURVE*)cur_poly;
 			if (pc->wType == TT_PRIM_LINE)
 				for(int i = 0; i < pc->cpfx; i++)
-					sw.Line(xx + fx_to_dbl(pc->apfx[i].x), yy - fx_to_dbl(pc->apfx[i].y));
-			if (pc->wType == TT_PRIM_QSPLINE) {
-				int u;
-				for (u = 0; u < pc->cpfx - 1; u++) { // Walk through points in spline
-					POINTFX pnt_b = pc->apfx[u];     // B is always the current point
-					POINTFX pnt_c = pc->apfx[u+1];
-					if (u < pc->cpfx - 2) {          // If not on last spline, compute C
-						*(int*)&pnt_c.x = (*(int*)&pnt_b.x + *(int*)&pnt_c.x) / 2;
-						*(int*)&pnt_c.y = (*(int*)&pnt_b.y + *(int*)&pnt_c.y) / 2;
-					}
-					sw.Quadratic(xx + fx_to_dbl(pnt_b.x), yy - fx_to_dbl(pnt_b.y),
-					             xx + fx_to_dbl(pnt_c.x), yy - fx_to_dbl(pnt_c.y));
+					sw.Line(fx_to_dbl(pp, pc->apfx[i]));
+			if (pc->wType == TT_PRIM_QSPLINE)
+				for(int u = 0; u < pc->cpfx - 1; u++) {
+					Pointf b = fx_to_dbl(pp, pc->apfx[u]);
+					Pointf c = fx_to_dbl(pp, pc->apfx[u + 1]);
+					if (u < pc->cpfx - 2)
+						c = Mid(b, c);
+					sw.Quadratic(b, c);
 				}
-			}
 			cur_poly += sizeof(WORD) * 2 + sizeof(POINTFX) * pc->cpfx;
 		}
 		sw.Close();
