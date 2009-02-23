@@ -36,7 +36,6 @@ void App::DoPaint0(Painter& sw)
 		else
 			sw.Clear(White());
 	}
-	PAINTER_TIMING("Paint");
 	if(list.IsCursor())
 		Examples()[list.GetCursor()].example(sw);
 }
@@ -71,6 +70,7 @@ void App::Benchmark()
 		if(time - time0 > 1000) break;
 		ImageBuffer ib(800, 600);
 		BufferPainter sw(ib, ctrl.quality);
+		PAINTER_TIMING("Paint");
 		DoPaint(sw);
 		n++;
 	}
