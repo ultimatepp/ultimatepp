@@ -8,10 +8,22 @@ topic "";
 [s1;%- &]
 [s2;:SubpixelFiller`:`:Write`(int`):%- [@(0.0.255) void]_[* Write]([@(0.0.255) int]_[*@3 len])
 &]
-[s3; This function flushes the content of filtered subpixel buffer.&]
-[s0; Important note: due to rounding errors during filtering, sometimes 
+[s3; This function writes the filtered subpixel buffer to RGBA output, 
+performing per`-channel (subpixel) alpha blending. Note that 
+it is only possible to do correct per`-channel blending when 
+target is opaque (a `=`= 255). If it is not, normal anti`-aliasing 
+is used, using average.&]
+[s3; Important note: due to rounding errors during filtering, sometimes 
 the subpixel value can be 257. This is remedied by using 257 
 instead of 256 in the pixel blending command.&]
 [s0; &]
+[s4; &]
+[s1;%- &]
+[s2;:SubpixelFiller`:`:RenderN`(int`,int`,int`):%- [@(0.0.255) void]_[* RenderN]([@(0.0.255) i
+nt]_[*@3 val], [@(0.0.255) int]_[*@3 h], [@(0.0.255) int]_[*@3 n])&]
+[s3; This function adds 1 `- 6 val values to filtered subpixel buffer 
+in single pass (6 is just enough needed for Render optimizations). 
+Case variants are created by adding shifted Render filtering 
+procedures.&]
 [s4; &]
 [s0; ]
