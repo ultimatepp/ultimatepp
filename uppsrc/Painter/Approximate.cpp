@@ -29,7 +29,7 @@ void ApproximateQuadratic(LinearPathConsumer& t, const Pointf& p1, const Pointf&
                           double tolerance)
 {
 	sQuadratic(t, p1, p2, p3, tolerance * tolerance, 0);
-	t.Line(p3);
+//	t.Line(p3);
 }
 
 static void sCubic(LinearPathConsumer& t,
