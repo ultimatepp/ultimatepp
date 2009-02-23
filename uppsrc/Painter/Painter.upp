@@ -34,7 +34,8 @@ file
 	Image.cpp optimize_speed,
 	Mask.cpp optimize_speed,
 	Gradient.cpp optimize_speed,
-	RadialGradient.cpp optimize_speed;
+	RadialGradient.cpp optimize_speed,
+	srcimp.tpp;
 
 mainconfig
 	"" = "GUI";
