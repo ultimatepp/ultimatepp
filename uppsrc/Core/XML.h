@@ -60,6 +60,7 @@ class XmlParser {
 
 	void                      Ent(StringBuffer& out);
 	void                      Next();
+	void                      ReadAttr(StringBuffer& b, int c);
 
 public:
 	void   SkipWhites();
