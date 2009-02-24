@@ -181,6 +181,23 @@ void XmlParser::SkipWhites()
 	}
 }
 
+void XmlParser::ReadAttr(StringBuffer& attrval, int c)
+{
+	term++;
+	while(*term && *term != c)
+		if(*term == '&')
+			Ent(attrval);
+		else {
+			const char *e = term;
+			while(*++e && *e != '&' && *e != c)
+				;
+			attrval.Cat(term, (int)(e - term));
+			term = e;
+		}
+	if(*term == c)
+		term++;
+}
+
 void XmlParser::Next()
 {
 	nattr.Clear();
@@ -293,23 +310,13 @@ void XmlParser::Next()
 					term++;
 					SkipWhites();
 					StringBuffer attrval;
-					if(*term == '\"') {
-						term++;
-						while(*term && *term != '\"')
-							if(*term == '&')
-								Ent(attrval);
-							else {
-								const char *e = term;
-								while(*++e && *e != '&' && *e != '\"')
-									;
-								attrval.Cat(term, (int)(e - term));
-								term = e;
-							}
-						if(*term == '\"')
-							term++;
-					}
-					else {
-						while((byte)*term > ' ' && *term != '>')
+					if(*term == '\"')
+						ReadAttr(attrval, '\"');
+					else
+					if(*term == '\'')
+						ReadAttr(attrval, '\'');
+					else
+						while((byte)*term > ' ' && *term != '>' && *term != '/')
 							if(*term == '&')
 								Ent(attrval);
 							else {
@@ -319,7 +326,6 @@ void XmlParser::Next()
 								attrval.Cat(term,(int) (e - term));
 								term = e;
 							}
-					}
 					if(attr == "xml:space" && attrval.GetLength() == 8 && !memcmp(~attrval, "preserve", 8))
 						npreserve = true;
 					String aval = FromUtf8(~attrval, attrval.GetLength()).ToString();
