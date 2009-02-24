@@ -38,9 +38,10 @@ void AbbreviationsDlg::Finish(const String& s)
 void AbbreviationsDlg::Add()
 {
 	String s;
-	EditText(s, "New abbreviation", "Keyword", CharFilterAlpha);
-	abbr.Add(s, Null);
-	Finish(s);
+	if(EditText(s, "New abbreviation", "Keyword", CharFilterAlpha)) {
+		abbr.Add(s, Null);
+		Finish(s);
+	}
 }
 
 void AbbreviationsDlg::Remove()
@@ -55,9 +56,10 @@ void AbbreviationsDlg::Edit()
 	if(!abbr.IsCursor())
 		return;
 	String s = abbr.GetKey();
-	EditText(s, "Edit keyword", "Keyword", CharFilterAlpha);
-	abbr.Set(0, s);
-	Finish(s);
+	if(EditText(s, "Edit keyword", "Keyword", CharFilterAlpha)) {
+		abbr.Set(0, s);
+		Finish(s);
+	}
 }
 
 AbbreviationsDlg::AbbreviationsDlg()

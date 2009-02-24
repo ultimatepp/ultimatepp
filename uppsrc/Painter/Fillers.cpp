@@ -84,36 +84,6 @@ void SubpixelFiller::Start(int minx, int maxx)
 	}
 }
 
-inline
-void SubpixelFiller::Render1(int val)
-{
-	int16 *w = v;
-	int h = val / 9;
-	int h2 = h + h;
-	w[-2] += h;
-	w[-1] += h2;
-	w[0] += val - h2 - h2 - h2;
-	w[1] += h2;
-	w[2] += h;
-	w[3] = 0;
-	v++;
-}
-
-void SubpixelFiller::Render2(int val)
-{
-	int16 *w = v;
-	int h = val / 9;
-	int h2 = h + h;
-	w[-2] += h;
-	w[-1] += h2 + h;
-	w[0] += val - h2 - h2 - h2 + h2;
-	w[1] += h2 + val - h2 - h2 - h2;
-	w[2] += h + h2;
-	w[3] = h;
-	w[4] = 0;
-	v += 2;
-}
-
 void SubpixelFiller::Render(int val)
 {
 	int16 *w = v;
@@ -232,8 +202,14 @@ void SubpixelFiller::Render(int val, int len)
 				while(t < e)
 					AlphaBlend(*t++, ss ? Mul8(*s++, alpha) : color);
 		else
-			while(t < e)
-				AlphaBlendCover8(*t++, ss ? Mul8(*s++, alpha) : color, val);
+			if(ss)
+				while(t < e)
+					AlphaBlendCover8(*t++, Mul8(*s++, alpha), val);
+			else {
+				RGBA c = Mul8(color, val);
+				while(t < e)
+					AlphaBlend(*t++, c);
+			}
 		v = begin = sbuffer + 3;
 		v[0] = h + h + h;
 		v[1] = h;
