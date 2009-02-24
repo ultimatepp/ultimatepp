@@ -96,7 +96,7 @@ void Test::QuadraticOp(const Pointf& p1, const Pointf& p, bool rel)
 GUI_APP_MAIN
 {
 	Test test;
-	test.Character(0, 0, 'G', Roman(100));
+	test.Character(0, 0, 'Q', Roman(20).Italic());
 	DDUMP(quad);
 	DDUMP(move);
 	DDUMP(line);
