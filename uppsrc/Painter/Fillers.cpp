@@ -248,8 +248,8 @@ void SubpixelFiller::Write(int len)
 
 void SubpixelFiller::End()
 {
-	v[3] = v[4] = 0;
-	Write((v + 2 - begin) / 3);
+	v[3] = v[4] = v[5] = 0;
+	Write((v + 3 - begin) / 3);
 }
 
 void SpanFiller::Start(int minx, int maxx)
