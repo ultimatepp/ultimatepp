@@ -6,7 +6,7 @@ void Big(Painter& sw)
 {
 	int n = 0;
 	double sgn = 1;
-	for(int r = 400; r > 5; r -= 3) {
+	for(double r = 400; r > 5; r -= 3) {
 		for(int i = 0; i < 400; i++) {
 			Pointf p = Polar(sgn * i * M_2PI / 400) * r + Pointf(400, 400);
 			if(i)
