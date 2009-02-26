@@ -35,7 +35,9 @@ file
 	Mask.cpp optimize_speed,
 	Gradient.cpp optimize_speed,
 	RadialGradient.cpp optimize_speed,
-	srcimp.tpp;
+	srcimp.tpp,
+	Info readonly separator,
+	Copying;
 
 mainconfig
 	"" = "GUI";

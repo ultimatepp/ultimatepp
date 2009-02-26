@@ -1,0 +1,9 @@
+uses
+	Sql;
+
+library(WIN32) odbc32;
+
+file
+	ODBC.h,
+	ODBC.cpp;
+

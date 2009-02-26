@@ -1,0 +1,4 @@
+#ifndef _ODBC_icpp_init_stub
+#define _ODBC_icpp_init_stub
+#include "Sql/init"
+#endif
