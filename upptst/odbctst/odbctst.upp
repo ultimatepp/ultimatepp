@@ -1,0 +1,10 @@
+uses
+	Core,
+	ODBC;
+
+file
+	odbctst.cpp;
+
+mainconfig
+	"" = "";
+

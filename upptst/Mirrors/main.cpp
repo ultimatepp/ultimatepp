@@ -37,20 +37,20 @@ GUI_APP_MAIN
 			r.DrawText(x, y, String(ch, 1) + String(cl, 1), fnt);
 		}
 	r.NewPage();
-	for(int i = 0; i < 10; i++) {
+	for(int i = 0; i < 18; i++) {
 		int a, b;
+		do {
+			a = Random(100) + 1;
+			b = Random(100) + 1;
+		}
+		while(a + b < 0 || a + b > 100);
+		r.DrawText(10, 10 + 3 * isz.cy / 2  * i, Format("%d + %d =", a, b), fnt);
 		do {
 			a = Random(50) + 1;
 			b = Random(50) + 1;
 		}
-		while(a + b < 0 || a + b > 50);
-		r.DrawText(10, 10 + isz.cy * 2 * i, Format("%d + %d = ", a, b), fnt);
-		do {
-			a = Random(30) + 1;
-			b = Random(20) + 1;
-		}
 		while(a - b < 1);
-		r.DrawText(2000, 10 + isz.cy * 2 * i, Format("%d - %d = ", a, b), fnt);
+		r.DrawText(2000, 10 + 3 * isz.cy / 2 * i, Format("%d - %d =", a, b), fnt);
 	}
 	Perform(r);
 }
