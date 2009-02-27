@@ -8,6 +8,7 @@
 NAMESPACE_UPP
 
 bool   ODBCPerformScript(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled = false);
+String MSSQLTextType(int width);
 
 class ODBCSession : public SqlSession {
 public:
@@ -37,10 +38,13 @@ private:
 	friend class ODBCConnection;
 	HENV                  henv;
 	HDBC                  hdbc;
-	Link<ODBCConnection>  clink;
+	HSTMT                 hstmt;
 	String                user;
+	int                   tlevel;
+	ODBCConnection       *current;
 
-	bool   IsOk(SQLRETURN ret)                  { return SQL_SUCCEEDED(ret); }
+	void   FlushConnections();
+	bool   IsOk(SQLRETURN ret);
 
 public:
 	bool Connect(const char *cs);

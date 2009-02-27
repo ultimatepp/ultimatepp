@@ -23,7 +23,7 @@
 NAMESPACE_UPP
 
 bool   OleDBPerformScript(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled = false);
-String OleDBTextType(int width);
+String MSSQLTextType(int width);
 
 class OleDBSession : public SqlSession
 {
