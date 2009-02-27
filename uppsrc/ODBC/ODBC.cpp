@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#define LLOG(x)
+
 class ODBCConnection : public SqlConnection
 {
 public:
@@ -83,7 +85,7 @@ void ODBCSession::Close()
 
 void ODBCSession::FlushConnections()
 {
-	DLOG("FlushConnections");
+	LLOG("FlushConnections");
 	if(current) {
 		current->Flush();
 		current = NULL;
@@ -238,7 +240,7 @@ SqlConnection *ODBCSession::CreateConnection()
 ODBCConnection::ODBCConnection(ODBCSession *session_)
 :	session(session_)
 {
-	DLOG("ODBCConnection " << (void *)this << " " << (void *)session);
+	LLOG("ODBCConnection " << (void *)this << " " << (void *)session);
 	rowcount = rowi = 0;
 }
 
@@ -246,7 +248,7 @@ ODBCConnection::~ODBCConnection()
 {
 	if(IsCurrent())
 		session->current = NULL;
-	DLOG("~ODBCConnection " << (void *)this << " " << (void *)session);
+	LLOG("~ODBCConnection " << (void *)this << " " << (void *)session);
 }
 
 bool ODBCConnection::IsOk(SQLRETURN ret) const
@@ -305,7 +307,7 @@ void ODBCConnection::SetParam(int i, const Value& r)
 
 bool ODBCConnection::Execute()
 {
-	DLOG("Execute " << (void *)this << " " << (void *)session);
+	LLOG("Execute " << (void *)this << " " << (void *)session);
 	if(session->hstmt == SQL_NULL_HANDLE)
 		return false;
 	if(IsCurrent())
@@ -388,9 +390,8 @@ int ODBCConnection::GetRowsProcessed() const
 
 bool ODBCConnection::Fetch0()
 {
-	DLOG("Fetch0 " << (void *)this << " " << (void *)session);
+	LLOG("Fetch0 " << (void *)this << " " << (void *)session);
 	int ret = SQLFetch(session->hstmt);
-	DDUMP(ret == SQL_NO_DATA);
 	if(ret == SQL_NO_DATA || !IsOk(ret))
 		return false;
 	fetchrow.Clear();
@@ -465,13 +466,13 @@ bool ODBCConnection::Fetch()
 
 void ODBCConnection::GetColumn(int i, Ref r) const
 {
-	DLOG("GetColumn " << (void *)this << " " << (void *)session);
+	LLOG("GetColumn " << (void *)this << " " << (void *)session);
 	r.SetValue(fetchrow[i]);
 }
 
 void ODBCConnection::Flush()
 {
-	DLOG("Flush " << (void *)this);
+	LLOG("Flush " << (void *)this);
 	rowcount = 0;
 	rowi = 0;
 	while(Fetch0()) {
