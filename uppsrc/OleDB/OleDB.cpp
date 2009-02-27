@@ -1464,7 +1464,7 @@ bool OleDBPerformScript(const String& text, StatementExecutor& executor, Gate2<i
 	return true;
 }
 
-String OleDBTextType(int width)
+String MSSQLTextType(int width)
 {
 	if(width <= 4000)
 		return NFormat("varchar(%d)", width);
