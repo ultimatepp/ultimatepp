@@ -3,6 +3,8 @@ uses
 
 library(WIN32) odbc32;
 
+library(!WIN32) odbc;
+
 file
 	ODBC.h,
 	ODBC.cpp;
