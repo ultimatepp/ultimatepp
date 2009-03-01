@@ -31,3 +31,4 @@ LAYOUT(SetPasswordLayout, 216, 112)
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(5, 80).BottomPosZ(4, 22))
 END_LAYOUT
+

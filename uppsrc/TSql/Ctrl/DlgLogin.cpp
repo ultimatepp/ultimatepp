@@ -164,7 +164,9 @@ One<SqlSession> DlgLogin::Login(LoginProc loginproc, String& connect_string)
 		}
 
 		if(!session || !session -> IsOpen()) {
-			Exclamation(NFormat(t_("Error creating database connection.&[* \1%s\1]&User name: [* \1%s\1]&Database: [* \1%s\1]&Server: [* \1%[(default)]~s\1]&Connection type: [* \1%[(default)]~s\1]"), session->GetLastError(), u, d, s, t));
+			Exclamation(NFormat(t_("Error creating database connection.&[* \1%s\1]&User name: [* \1%s\1]&Database: [* \1%s\1]&Server: [* \1%[(default)]~s\1]&Connection type: [* \1%[(default)]~s\1]"),
+				(session ? session->GetLastError() : String(t_("(unknown error)"))),
+				u, d, s, t));
 			continue;
 		}
 
