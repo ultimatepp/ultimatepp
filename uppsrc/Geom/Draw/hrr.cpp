@@ -821,12 +821,15 @@ static void DrawAlphaImage(Draw& draw, Rect dest, Image img, Rect src, int alpha
 	Size outsz = min(src.Size(), dest.Size());
 	ImageBuffer temp(outsz);
 	Rescale(ImageWriter(temp, false), outsz, ImageRaster(img), src);
+	byte conv[256];
+	for(int i = 0; i < 256; i++)
+		conv[i] = (i * alpha) >> 8;
 	for(RGBA *p = ~temp, *e = ~temp + temp.GetLength(); p < e; p++) {
 //		int a = (p->a + (p->a >> 7)) * alpha;
-//		p->r = p->r * a >> 16;
-//		p->g = p->g * a >> 16;
-//		p->b = p->b * a >> 16;
-		p->a = p->a * alpha >> 8;
+		p->r = conv[p->r];
+		p->g = conv[p->g];
+		p->b = conv[p->b];
+		p->a = conv[p->a];
 	}
 //	temp.SetKind(IMAGE_PREMULTIPLIED);
 	draw.DrawImage(dest, Image(temp));
@@ -1128,9 +1131,9 @@ void HRR::Paint(Draw& draw, const Matrixf& trg_pix, GisTransform transform,
 			Rect dest = (transform.TargetExtent(map) * trg_pix).Inflated(1) & Rectf(clip);
 //			Rect dest = RectfToRect(Rectf(x, y, x + 1, y + 1) * scale + delta);
 //			Rect clip = dest & draw.GetClip();
-			if(dest.IsEmpty())
+			Rect rdest = (dest & cdest) - cdest.TopLeft();
+			if(rdest.IsEmpty())
 				continue;
-			Rect rdest = dest - cdest.TopLeft();
 			LinearSegmentTree tleft, ttop, tright, tbottom;
 			PlanarSegmentTree tplanar;
 			if(!is_straight) {
@@ -1261,8 +1264,15 @@ void HRR::Paint(Draw& draw, const Matrixf& trg_pix, GisTransform transform,
 	if(use_bg) {
 		if(alpha < 100) {
 			int coef = alpha * 255 / 100;
-			for(RGBA *p = ~out_blend, *e = p + out_blend.GetLength(); p < e; p++)
-				p->a = (p->a * coef) >> 8;
+			byte conv[256];
+			for(int i = 0; i < 256; i++)
+				conv[i] = (i * coef) >> 8;
+			for(RGBA *p = ~out_blend, *e = p + out_blend.GetLength(); p < e; p++) {
+				p->r = conv[p->r];
+				p->g = conv[p->g];
+				p->b = conv[p->b];
+				p->a = conv[p->a];
+			}
 		}
 		draw.DrawImage(cdest, out_blend);
 	}

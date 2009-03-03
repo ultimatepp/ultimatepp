@@ -37,9 +37,9 @@ DlgLoginSetPass::DlgLoginSetPass()
 {
 	user.SetReadOnly();
 	password.Password();
-	password.SetFilter(&CharFilterToUpper);
+//	password.SetFilter(&CharFilterToUpper);
 	password2.Password();
-	password2.SetFilter(&CharFilterToUpper);
+//	password2.SetFilter(&CharFilterToUpper);
 	CtrlLayoutOKCancel(*this, DlgLoginSetPassHelpTitle());
 	HelpTopic("DlgLoginSetPass");
 }
@@ -82,11 +82,11 @@ DlgLogin::DlgLogin()
 	copyright.SetZoom(screen);
 //	app.Font(Roman(1).Bold().Italic());
 //	version.Font(GuiFont().Bold());
-	user.SetFilter(&CharFilterToUpper);
+//	user.SetFilter(&CharFilterToUpper);
 	password.Password();
-	password.SetFilter(&CharFilterToUpper);
-	database.SetFilter(&CharFilterToUpper);
-	server.SetFilter(&CharFilterToUpper);
+//	password.SetFilter(&CharFilterToUpper);
+//	database.SetFilter(&CharFilterToUpper);
+//	server.SetFilter(&CharFilterToUpper);
 	SetStyle(PROGRESS_STYLE);
 	abort <<= THISBACK(OnAbort);
 	ClearCanceled();
