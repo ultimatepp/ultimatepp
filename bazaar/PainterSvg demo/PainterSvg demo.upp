@@ -1,0 +1,17 @@
+description "Svg Painter demo";
+
+uses
+	CtrlLib,
+	Painter;
+
+file
+	SvgDemo.cpp,
+	..\PainterSvg\ParseSvg.cpp,
+	Examples.h,
+	main.cpp,
+	Examples.lay;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI SSE2";
+
