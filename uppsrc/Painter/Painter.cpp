@@ -338,6 +338,11 @@ Painter& Painter::Translate(double x, double y)
 	return *this;
 }
 
+Painter& Painter::Translate(const Pointf& p)
+{
+	return Translate(p.x, p.y);
+}
+
 Painter& Painter::Stroke(double width, const Image& image, const Pointf& p1, const Pointf& p2, dword flags)
 {
 	return Stroke(width, image, GetLineSzXform(p1, p2, image.GetSize()), flags);
@@ -474,5 +479,41 @@ Painter& Painter::Circle(double x, double y, double r)
 {
 	return Ellipse(x, y, r, r);
 }
+
+void NilPainter::ClearOp(const RGBA& color) {}
+void NilPainter::MoveOp(const Pointf& p, bool rel) {}
+void NilPainter::LineOp(const Pointf& p, bool rel) {}
+void NilPainter::QuadraticOp(const Pointf& p1, const Pointf& p, bool rel) {}
+void NilPainter::QuadraticOp(const Pointf& p, bool rel) {}
+void NilPainter::CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel) {}
+void NilPainter::CubicOp(const Pointf& p2, const Pointf& p, bool rel) {}
+void NilPainter::ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel) {}
+void NilPainter::SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p, bool rel) {}
+void NilPainter::CloseOp() {}
+void NilPainter::DivOp() {}
+void NilPainter::FillOp(const RGBA& color) {}
+void NilPainter::FillOp(const Image& image, const Xform2D& transsrc, dword flags) {}
+void NilPainter::FillOp(const Pointf& p1, const RGBA& color1, const Pointf& p2, const RGBA& color2, int style) {}
+void NilPainter::FillOp(const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style) {}
+void NilPainter::StrokeOp(double width, const RGBA& rgba) {}
+void NilPainter::StrokeOp(double width, const Image& image, const Xform2D& transsrc, dword flags) {}
+void NilPainter::StrokeOp(double width, const Pointf& p1, const RGBA& color1, const Pointf& p2, const RGBA& color2, int style) {}
+void NilPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, const Pointf& c, double r, const RGBA& color2, int style) {}
+void NilPainter::ClipOp() {}
+void NilPainter::CharacterOp(const Pointf& p, int ch, Font fnt) {}
+void NilPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double *dx) {}
+void NilPainter::ColorStopOp(double pos, const RGBA& color) {}
+void NilPainter::ClearStopsOp() {}
+void NilPainter::OpacityOp(double o) {}
+void NilPainter::LineCapOp(int linecap) {}
+void NilPainter::LineJoinOp(int linejoin) {}
+void NilPainter::MiterLimitOp(double l) {}
+void NilPainter::EvenOddOp(bool evenodd) {}
+void NilPainter::DashOp(const Vector<double>& dash, double start) {}
+void NilPainter::TransformOp(const Xform2D& m) {}
+void NilPainter::BeginOp() {}
+void NilPainter::EndOp() {}
+void NilPainter::BeginMaskOp() {}
+void NilPainter::BeginOnPathOp(double, bool) {}
 
 END_UPP_NAMESPACE

@@ -6,6 +6,7 @@ void BufferPainter::BeginOp()
 {
 	attrstack.Add(attr);
 	attr.hasclip = false;
+	attr.onpath = false;
 }
 
 void BufferPainter::EndOp()
@@ -19,13 +20,18 @@ void BufferPainter::EndOp()
 	clip.SetCount(attr.cliplevel);
 	if(attr.mask)
 		FinishMask();
+	if(attr.onpath) {
+		attr.onpath = false;
+		onpath = onpathstack.Top();
+		onpathstack.Drop();
+		pathlen = pathlenstack.Pop();
+	}
 }
 
 void   BufferPainter::TransformOp(const Xform2D& m)
 {
 	ASSERT_(IsNull(current), "Cannot change transformation during path definition");
 	pathattr.mtx = attr.mtx = m * attr.mtx;
-	pathattr.tolerance = attr.tolerance = 0.3 / attr.mtx.GetScale();
 }
 
 void BufferPainter::OpacityOp(double o)
@@ -101,7 +107,7 @@ void BufferPainter::ClearStopsOp()
 BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 :	ib(ib),
 	mode(mode),
-	rasterizer(mode == MODE_SUBPIXEL ? 3 * ib.GetWidth() : ib.GetWidth(), ib.GetHeight())
+	rasterizer(ib.GetWidth(), ib.GetHeight(), mode == MODE_SUBPIXEL)
 {
 	ClearPath();
 
@@ -110,8 +116,6 @@ BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 		render_cx *= 3;
 		subpixel.Alloc(render_cx + 30);
 	}
-	attr.mtx = Xform2D::Scale(subpixel ? 3 : 1, 1);
-	attr.tolerance = 0.3;
 	attr.cap = LINECAP_BUTT;
 	attr.join = LINEJOIN_MITER;
 	attr.miter_limit = 4;

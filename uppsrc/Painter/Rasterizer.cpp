@@ -47,9 +47,10 @@ void Rasterizer::SetClip(const Rectf& rect)
 	cliprect = rect & Sizef(sz);
 }
 
-Rasterizer::Rasterizer(int cx, int cy)
+Rasterizer::Rasterizer(int cx, int cy, bool subpixel)
 {
-	sz.cx = cx;
+	mx = subpixel ? 3 * 256 : 256;
+	sz.cx = subpixel ? 3 * cx : cx;
 	sz.cy = cy;
 	cell.Alloc(sz.cy + 1);
 	cliprect = Sizef(sz);

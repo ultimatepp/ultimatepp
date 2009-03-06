@@ -136,15 +136,16 @@ bool RenderOutline(const FT_Outline& outline, Painter& path, double xx, double y
 	return true;
 }
 
-void Painter::CharacterOp(const Pointf& p, int ch, Font fnt)
+void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt)
 {
 	PAINTER_TIMING("CharacterOp");
 	FontInfo fi = fnt.Info();
 	FT_Face face = XftLockFace(fi.GetXftFont());
 	int glyph_index = FT_Get_Char_Index(face, ch);
 	if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0)
-		RenderOutline(face->glyph->outline, *this, p.x, p.y + fnt.Info().GetAscent());
+		RenderOutline(face->glyph->outline, sw, p.x, p.y + fnt.Info().GetAscent());
 	XftUnlockFace(fi.GetXftFont());
+	sw.EvenOdd(true);
 }
 
 #endif

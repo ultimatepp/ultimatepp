@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 
-#define PAINTER_TIMING(x)   // RTIMING(x)
+#define PAINTER_TIMING(x)    RTIMING(x)
 
 NAMESPACE_UPP
 
@@ -120,7 +120,7 @@ protected:
 
 	virtual void   ClipOp() = 0;
 
-	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt);
+	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt) = 0;
 	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1, 
 	                      double *dx = NULL);
 
@@ -140,6 +140,7 @@ protected:
 	virtual void   EndOp() = 0;
 
 	virtual void   BeginMaskOp() = 0;
+	virtual void   BeginOnPathOp(double q, bool absolute) = 0;
 
 protected:
 	static bool   ReadBool(CParser& p);
@@ -279,6 +280,7 @@ public:
 	void End();
 
 	void BeginMask();
+	void BeginOnPath(double q, bool absolute = false);
 
 	Painter& ColorStop(double pos, const RGBA& color);
 	Painter& ClearStops();
@@ -292,6 +294,7 @@ public:
 
 	Painter& Transform(const Xform2D& m);
 	Painter& Translate(double x, double y);
+	Painter& Translate(const Pointf& p);
 	Painter& Rotate(double a);
 	Painter& Scale(double scalex, double scaley);
 	Painter& Scale(double scale);
@@ -303,9 +306,71 @@ public:
 	Painter& Circle(double x, double y, double r);
 };
 
+void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt);
+
 #include "Painter.hpp"
 #include "Painting.h"
 #include "BufferPainter.h"
+
+class NilPainter : public Painter {
+protected:
+	virtual void   ClearOp(const RGBA& color);
+
+	virtual void   MoveOp(const Pointf& p, bool rel);
+	virtual void   LineOp(const Pointf& p, bool rel);
+	virtual void   QuadraticOp(const Pointf& p1, const Pointf& p, bool rel);
+	virtual void   QuadraticOp(const Pointf& p, bool rel);
+	virtual void   CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel);
+	virtual void   CubicOp(const Pointf& p2, const Pointf& p, bool rel);
+	virtual void   ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel);
+	virtual void   SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep,
+	                        const Pointf& p, bool rel);
+	virtual void   CloseOp();
+	virtual void   DivOp();
+
+	virtual void   FillOp(const RGBA& color);
+	virtual void   FillOp(const Image& image, const Xform2D& transsrc, dword flags);
+	virtual void   FillOp(const Pointf& p1, const RGBA& color1,
+	                      const Pointf& p2, const RGBA& color2,
+	                      int style);
+	virtual void   FillOp(const Pointf& f, const RGBA& color1, 
+	                      const Pointf& c, double r, const RGBA& color2,
+	                      int style);
+
+	virtual void   StrokeOp(double width, const RGBA& rgba);
+	virtual void   StrokeOp(double width, const Image& image, const Xform2D& transsrc,
+	                        dword flags);
+	virtual void   StrokeOp(double width, const Pointf& p1, const RGBA& color1,
+	                        const Pointf& p2, const RGBA& color2,
+	                        int style);
+	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
+	                        const Pointf& c, double r, const RGBA& color2,
+	                        int style);
+
+	virtual void   ClipOp();
+
+	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt);
+	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1, 
+	                      double *dx = NULL);
+
+	virtual void   ColorStopOp(double pos, const RGBA& color);
+	virtual void   ClearStopsOp();
+	
+	virtual void   OpacityOp(double o);
+	virtual void   LineCapOp(int linecap);
+	virtual void   LineJoinOp(int linejoin);
+	virtual void   MiterLimitOp(double l);
+	virtual void   EvenOddOp(bool evenodd);
+	virtual void   DashOp(const Vector<double>& dash, double start);
+
+	virtual void   TransformOp(const Xform2D& m);
+
+	virtual void   BeginOp();
+	virtual void   EndOp();
+
+	virtual void   BeginMaskOp();
+	virtual void   BeginOnPathOp(double q, bool abs);
+};
 
 END_UPP_NAMESPACE
 

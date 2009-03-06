@@ -213,6 +213,11 @@ inline void Painter::BeginMask()
 	BeginMaskOp();
 }
 
+inline void Painter::BeginOnPath(double q, bool abs)
+{
+	BeginOnPathOp(q, abs);
+}
+
 inline Painter& Painter::Character(const Pointf& p, int ch, Font fnt)
 {
 	CharacterOp(p, ch, fnt);

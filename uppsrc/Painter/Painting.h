@@ -48,6 +48,7 @@ enum {
 	PAINTING_BEGIN,
 	PAINTING_END,
 	PAINTING_BEGINMASK,
+	PAINTING_BEGINONPATH,
 };
 
 class PaintingPainter : public Painter {
@@ -119,6 +120,7 @@ protected:
 	virtual void   EndOp();
 
 	virtual void   BeginMaskOp();
+	virtual void   BeginOnPathOp(double q, bool abs);
 
 public:
 	Painting GetResult();

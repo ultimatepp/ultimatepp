@@ -256,6 +256,13 @@ void PaintingPainter::BeginMaskOp()
 	Put(PAINTING_BEGINMASK);
 }
 
+void PaintingPainter::BeginOnPathOp(double q, bool abs)
+{
+	Put(PAINTING_BEGINONPATH);
+	Putf(q);
+	Put(abs);
+}
+
 Painting PaintingPainter::GetResult()
 {
 	Painting p;
