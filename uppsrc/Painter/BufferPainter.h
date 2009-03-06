@@ -116,11 +116,6 @@ inline void AlphaBlendCover8(RGBA& t, const RGBA& c, int cover)
 	t.a = a + (alpha * t.a >> 8);
 }
 
-inline int Q8(double x)
-{
-	return int(x * 256 + 0.5);
-}
-
 class Rasterizer : public LinearPathConsumer {
 public:
 	virtual void Move(const Pointf& p);
@@ -141,6 +136,7 @@ private:
 	int                     min_y;
 	int                     max_y;
 	Size                    sz;
+	double                  mx;
 
 	void  Init();
 	Cell *AddCells(int y, int n);
@@ -150,6 +146,9 @@ private:
 	int   CvY(double y);
 	void  CvLine(double x1, double y1, double x2, double y2);
 	bool  BeginRender(int y, const Cell *&c, const Cell *&e);
+
+	static int Q8Y(double y) { return int(y * 256 + 0.5); }
+	int Q8X(double x)        { return int(x * mx + 0.5); }
 
 public:
 	struct Filler {
@@ -169,7 +168,7 @@ public:
 
 	void Reset();
 	
-	Rasterizer(int cx, int cy);
+	Rasterizer(int cx, int cy, bool subpixel);
 };
 
 struct SpanSource {
@@ -205,6 +204,8 @@ class LinearInterpolator {
 
 	Xform2D xform;
 	Dda2    ddax, dday;
+
+	static int Q8(double x) { return int(256 * x + 0.5); }
 	
 public:
 	void   Set(const Xform2D& m)                    { xform = m; }
@@ -228,6 +229,8 @@ protected:
 	                        const Pointf& p, bool rel);
 	virtual void   CloseOp();
 	virtual void   DivOp();
+
+	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt);
 
 	virtual void   FillOp(const RGBA& color);
 	virtual void   FillOp(const Image& image, const Xform2D& transsrc, dword flags);
@@ -266,10 +269,11 @@ protected:
 	virtual void   EndOp();
 
 	virtual void   BeginMaskOp();
+	virtual void   BeginOnPathOp(double q, bool abs);
 
-public:
+private:
 	enum {
-		MOVE, LINE, QUADRATIC, CUBIC, DIV
+		MOVE, LINE, QUADRATIC, CUBIC, DIV, CHAR
 	};
 	struct LinearData {
 		Pointf p;
@@ -280,13 +284,21 @@ public:
 	struct CubicData : QuadraticData {
 		Pointf p2;
 	};
+	struct CharData : LinearData {
+		int  ch;
+		int  _filler;
+		Font fnt;
+	};
 	struct Path {	
 		Vector<byte> type;
 		Vector<byte> data;
 	};
+	struct PathLine : Moveable<PathLine> {
+		Pointf p;
+		double len;
+	};
 	struct Attr : Moveable<Attr> {
 		Xform2D                         mtx;
-		double                          tolerance;
 		bool                            evenodd;
 		byte                            join;
 		byte                            cap;
@@ -296,9 +308,11 @@ public:
 		WithDeepCopy< Vector<RGBA> >    stop_color;
 		double                          dash_start;
 		double                          opacity;
+
 		int                             cliplevel;
 		bool                            hasclip;
 		bool                            mask;
+		bool                            onpath;
 	};
 	
 	ImageBuffer&               ib;
@@ -311,6 +325,8 @@ public:
 	Array<Attr>                attrstack;
 	Vector< Buffer<ClipLine> > clip;
 	Array< ImageBuffer >       mask;
+	Vector< Vector<PathLine> > onpathstack;
+	Vector<double>             pathlenstack;
 	
 	Image                      gradient;
 	RGBA                       gradient1, gradient2;
@@ -319,9 +335,16 @@ public:
 	Path         path;
 	Pointf       current, ccontrol, qcontrol, move;
 	Rectf        pathrect;
+	bool         ischar;
 	
 	Rasterizer   rasterizer;
 	Buffer<RGBA> span;
+
+	Vector<PathLine> onpath;
+	double           pathlen;
+	
+	struct OnPathTarget;
+	friend struct OnPathTarget;
 	
 	void        *PathAddRaw(int type, int size);
 	template <class T> T& PathAdd(int type) { return *(T *)PathAddRaw(type, sizeof(T)); }
@@ -330,6 +353,7 @@ public:
 	Pointf           EndPoint(const Pointf& p, bool rel);
 	void             DoMove0();
 	void             ClearPath();
+	void             ApproximateChar(LinearPathConsumer& t, const CharData& ch, double tolerance);
 	Buffer<ClipLine> RenderPath(double width, SpanSource *ss, const RGBA& color);
 	void             RenderImage(double width, const Image& image, const Xform2D& transsrc,
 	                             dword flags);
@@ -339,6 +363,8 @@ public:
 	void             Gradient(const RGBA& color1, const RGBA& color2, const Pointf& p1, const Pointf& p2);
 	void             ColorStop0(Attr& a, double pos, const RGBA& color);
 	void             FinishMask();
+	
+	enum { FILL = -1, CLIP = -2, ONPATH = -3 };
 
 public:
 	BufferPainter(ImageBuffer& ib, int mode = 0);

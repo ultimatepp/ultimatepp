@@ -10,8 +10,6 @@ struct PainterRadialSpan : SpanSource {
 	const RGBA *gradient;
 	double      C;
 	
-	void prepare() {}
-	
 	void Set(double _x, double _y, double _r, double _fx, double _fy)
 	{
 		cx = _x;
@@ -63,8 +61,6 @@ void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& colo
 {
 	PainterRadialSpan sg;
 	Xform2D m = pathattr.mtx;
-	if(subpixel)
-		m = m * Xform2D::Scale(1.0 / 3, 1);
 	sg.interpolator.Set(Inverse(m));
 	sg.style = style;
 	sg.Set(c.x, c.y, r, f.x, f.y);

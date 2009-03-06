@@ -231,6 +231,10 @@ void Painter::Paint(const Painting& pic)
 		case PAINTING_BEGINMASK:
 			BeginMaskOp();
 			break;
+		case PAINTING_BEGINONPATH:
+			sGet(r, ss);
+			BeginOnPathOp(r, ss.Get());
+			break;
 		}
 	}
 }

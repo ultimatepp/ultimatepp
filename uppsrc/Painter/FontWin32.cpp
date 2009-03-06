@@ -93,7 +93,7 @@ struct sMakeCharOutline : LRUCache<String, FontChar>::Maker {
 	}
 };
 
-void Painter::CharacterOp(const Pointf& p, int ch, Font fnt)
+void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt)
 {
 	PAINTER_TIMING("CharacterOp");
 	String s;
@@ -105,8 +105,8 @@ void Painter::CharacterOp(const Pointf& p, int ch, Font fnt)
 		h.fc.chr = ch;
 		s = cache.Get(h);
 	}
-	RenderCharPath(s, s.GetLength(), *this, p.x, p.y + fnt.Info().GetAscent());
-	EvenOdd(true);
+	RenderCharPath(s, s.GetLength(), sw, p.x, p.y + fnt.Info().GetAscent());
+	sw.EvenOdd(true);
 }
 
 #endif

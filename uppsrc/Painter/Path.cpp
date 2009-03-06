@@ -8,6 +8,7 @@ void BufferPainter::ClearPath()
 	path.data.Clear();
 	current = move = Null;
 	ccontrol = qcontrol = Pointf(0, 0);
+	ischar = false;
 }
 
 Pointf BufferPainter::PathPoint(const Pointf& p, bool rel)
@@ -114,6 +115,22 @@ void BufferPainter::DivOp()
 {
 	CloseOp();
 	path.type.Add(DIV);
+}
+
+void BufferPainter::CharacterOp(const Pointf& p, int ch, Font fnt)
+{
+#if 0
+	DoMove0();
+	PaintCharacter(*this, p, ch, fnt);
+#else
+	move = current = EndPoint(p, false);
+	CharData& m = PathAdd<CharData>(CHAR);
+	m.p = EndPoint(p, false);
+	m.ch = ch;
+	m.fnt = fnt;
+	ischar = true;
+	EvenOdd();
+#endif
 }
 
 END_UPP_NAMESPACE

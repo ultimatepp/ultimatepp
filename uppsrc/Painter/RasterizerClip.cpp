@@ -7,7 +7,7 @@ NAMESPACE_UPP
 void Rasterizer::CvLine(double x1, double y1, double x2, double y2)
 {
 	LLOG("CvLine " << x1 << ", " << y1 << " - " << x2 << ", " << y2);
-	LineRaw(Q8(x1), Q8(y1), Q8(x2), Q8(y2));
+	LineRaw(Q8X(x1), Q8Y(y1), Q8X(x2), Q8Y(y2));
 }
 
 void Rasterizer::LineClip(double x1, double y1, double x2, double y2)

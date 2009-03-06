@@ -14,6 +14,8 @@ bool Sqlite3PerformScript(const String& text,
 	Gate2<int, int> progress_canceled = false
 );
 
+class Sqlite3Connection;
+
 class Sqlite3Session : public SqlSession {
 public:
 	virtual bool           IsOpen() const               { return NULL != db; }
@@ -32,9 +34,14 @@ protected:
 	virtual SqlConnection *CreateConnection();
 
 private:
+	friend class Sqlite3Connection;
+
 	sqlite3 *db;
 	String current_filename;
 	String current_dbname;
+	Link<Sqlite3Connection> clink;
+	
+	void Reset();
 
 public:
 	bool Open(const char *filename);
@@ -46,8 +53,8 @@ public:
 	virtual void   Commit();
 	virtual void   Rollback();
 
-	Sqlite3Session()       { db = NULL; Dialect(SQLITE3); }
-	~Sqlite3Session()      { Close(); }
+	Sqlite3Session();
+	~Sqlite3Session();
 };
 
 END_UPP_NAMESPACE

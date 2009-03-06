@@ -87,6 +87,8 @@ inline void LockLog() {}
 inline void UnlockLog() {}
 #endif
 
+#define STATIC_ASSERT(x)
+
 #ifdef _DEBUG
 
 #define _DBG_

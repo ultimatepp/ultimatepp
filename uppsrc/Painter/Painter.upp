@@ -30,11 +30,13 @@ file
 	Context.cpp,
 	Fillers.h,
 	Fillers.cpp optimize_speed,
+	RenderChar.cpp,
 	Render.cpp optimize_speed,
 	Image.cpp optimize_speed,
 	Mask.cpp optimize_speed,
 	Gradient.cpp optimize_speed,
 	RadialGradient.cpp optimize_speed,
+	OnPath.cpp,
 	srcimp.tpp,
 	Info readonly separator,
 	Copying;

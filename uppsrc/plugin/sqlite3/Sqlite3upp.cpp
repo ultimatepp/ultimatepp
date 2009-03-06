@@ -7,7 +7,7 @@ NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x)
 
-class Sqlite3Connection : public SqlConnection {
+class Sqlite3Connection : public SqlConnection, public Link<Sqlite3Connection> {
 protected:
 	virtual void        SetParam(int i, const Value& r);
 	virtual bool        Execute();
@@ -34,6 +34,7 @@ private:
 
 	friend class Sqlite3Session;
 	void             BindParam(int i, const Value& r);
+	void             Reset();
 
 public:
 	Sqlite3Connection(Sqlite3Session& the_session, sqlite3 *the_db);
@@ -42,11 +43,14 @@ public:
 
 Sqlite3Connection::Sqlite3Connection(Sqlite3Session& the_session, sqlite3 *the_db)
 :	session(the_session), db(the_db), current_stmt(NULL), got_first_row(false), got_row_data(false)
-{}
+{
+	LinkBefore(&session.clink);
+}
 
 Sqlite3Connection::~Sqlite3Connection()
 {
 	Cancel();
+	Unlink();
 }
 
 void Sqlite3Connection::Cancel()
@@ -58,7 +62,14 @@ void Sqlite3Connection::Cancel()
 			session.SetError(sqlite3_errmsg(db), "Finalizing statement: "+ current_stmt_string);
 		current_stmt = NULL;
 		current_stmt_string.Clear();
+		parse = true;
 	}
+}
+
+void Sqlite3Connection::Reset()
+{
+	if(current_stmt && sqlite3_reset(current_stmt) != SQLITE_OK)
+		session.SetError(sqlite3_errmsg(db), "Resetting statement: " + current_stmt_string);
 }
 
 void Sqlite3Connection::SetParam(int i, const Value& r)
@@ -299,20 +310,42 @@ void Sqlite3Session::Close() {
 SqlConnection *Sqlite3Session::CreateConnection() {
 	return new Sqlite3Connection(*this, db);
 }
+
+void Sqlite3Session::Reset()
+{
+	for(Sqlite3Connection *s = clink.GetNext(); s != &clink; s = s->GetNext())
+		s->Reset();
+}
+
+Sqlite3Session::Sqlite3Session()
+{
+	db = NULL;
+	Dialect(SQLITE3);
+}
+
+Sqlite3Session::~Sqlite3Session()
+{
+	Close();
+}
+
 void Sqlite3Session::Begin() {
 	static const char begin[] = "BEGIN;";
 	if(trace)
 		*trace << begin << "\n";
+	Reset();
 	if(SQLITE_OK != sqlite3_exec(db,begin,NULL,NULL,NULL))
 		SetError(sqlite3_errmsg(db), begin);
 }
+
 void Sqlite3Session::Commit() {
 	static const char commit[] = "COMMIT;";
 	if(trace)
 		*trace << commit << "\n";
+	Reset();
 	if(SQLITE_OK != sqlite3_exec(db,commit,NULL,NULL,NULL))
 		SetError(sqlite3_errmsg(db), commit);
 }
+
 void Sqlite3Session::Rollback() {
 	static const char rollback[] = "ROLLBACK;";
 	if(trace)
