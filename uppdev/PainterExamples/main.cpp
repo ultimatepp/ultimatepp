@@ -81,8 +81,8 @@ void App::Paint(Draw& w)
 {
 	Size sz = GetSize();
 	if(ctrl.transparent) {
-		for(int y = 0; y + 32 < sz.cy; y += 32)
-			for(int x = 0; x + 32 < sz.cx; x += 32)
+		for(int y = 0; y < sz.cy; y += 32)
+			for(int x = 0; x < sz.cx; x += 32)
 				w.DrawRect(x, y, 32, 32, (x ^ y) & 32 ? Color(254, 172, 120) : Color(124, 135, 253));
 	}
 	ImageBuffer ib(sz);

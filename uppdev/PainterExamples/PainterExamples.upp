@@ -25,6 +25,7 @@ file
 	RadialMaskBlending.cpp,
 	RichText.cpp,
 	Stroke.cpp,
+	OnPath.cpp,
 	Dash.cpp,
 	Path.cpp,
 	Arc.cpp,
