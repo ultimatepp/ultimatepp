@@ -10,33 +10,26 @@ topic "Index";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;~~~64; Index&]
-[s0;~~~64; template <class [*@4 T], class [*@4 HashFn] `= StdHash<[*@4 T]> 
->&]
-[s0;3 &]
-[s5;K%- template_<[@(0.0.255) class][@(64) _][@4 T][@(64) , ][@(0.0.255) class][@(64) _][@4 HashFn][@(64) _
-`=_StdHash<][@4 T][@(64) >_>__][@(0.0.255) class][@(64) _]Index[@(64) _:_][@(0.0.255) private][@(64) _
-][^`:`:MoveableAndDeepCopyOption^@(64) MoveableAndDeepCopyOption][@(64) <_]Index[@(64) <
-][@4 T][@(64) , ][@4 HashFn][@(64) _>_>, ][@(0.0.255) public][@(64) _][^`:`:AIndex^@(64) AIndex
-][@(64) <][@4 T][@(64) , ][^`:`:Vector^@(64) Vector][@(64) <][@4 T][@(64) >, 
-][@4 HashFn][@(64) >_]&]
-[s0; &]
-[s0; [*C@4 T]-|Type of elements stored in Index. T is required to be 
-[*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  ]and 
-must have [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ deep copy 
-constructor] and deep copy assignment.&]
-[s0; [*C@4 HashFn]-|Hashing class. Must have [*C unsigned operator()(const 
-T`& x)] method defined, returning hash value for elements. Defaults 
-to[*  ][*C StdHash<T>] which requires [*C unsigned GetHashValue(const 
-T`&)][C  ]function returning hash value of elements to be defined.&]
-[s0; Base class&]
-[s0; [^topic`:`/`/Core`/src`/AIndex`$en`-us^ AIndex<T, Vector<T>, HashFn> 
-] &]
-[s0; &]
-[s0; Vector flavor of index. Inherits most of its functionality from 
+[s0;~~~64; [*@3;4 Index]&]
+[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 , 
+][@(0.0.255)3 class][3 _][*@4;3 HashFn][3 _`=_StdHash][@(0.0.255)3 <][*@4;3 T][@(0.0.255)3 >][3 _
+>]&]
+[s1;:Index`:`:class:%- [@(0.0.255) class]_[* Index]_:_[@(0.0.255) private]_[*@3 MoveableAndDee
+pCopyOption][@(0.0.255) <]_[* Index][@(0.0.255) <][*@4 T], [*@4 HashFn]_>_>, 
+[@(0.0.255) public]_[*@3 AIndex][@(0.0.255) <][*@4 T], [_^Vector^ Vector][@(0.0.255) <][*@4 T][@(0.0.255) >
+], [*@4 HashFn][@(0.0.255) >]_&]
+[s8; [*@4 T]-|Type of elements stored in Index. T is required to be 
+[/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][/  ]and must 
+have [/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ deep copy constructor] 
+and deep copy assignment.&]
+[s8; [*@4 HashFn]-|Hashing class. Must have unsigned operator()(const 
+T`& x) method defined, returning hash value for elements. Defaults 
+to StdHash<T> which requires unsigned GetHashValue(const T`&) 
+function returning hash value of elements to be defined.&]
+[s9; Vector flavor of index. Inherits most of its functionality from 
 [^topic`:`/`/Core`/src`/AIndex`$en`-us^ AIndex] and adds only members 
 specific for its flavor.&]
-[s0; Like any other NTL container, Index is a [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
+[s9; Like any other NTL container, Index is a [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ m
 oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick 
 and optional deep copy] transfer semantics. Calling methods of 
 picked Index is logic error with exception of&]
@@ -46,47 +39,63 @@ picked Index is logic error with exception of&]
 ][/+75 (defined in AIndex)]&]
 [s0; [C+75 void ][*C+75 Clear][C+75 ()]&]
 [s0; [C+75 bool ][*C+75 IsPicked][C+75 () const]&]
-[s0; Optional deep copy operator is inherited from AIndex class. 
-Pick operator is implicitly defined by composition.&]
-[s0; Members&]
-[s0;3 &]
-[s5;K%- T_Pop[@(64) ()]&]
-[s2; Drops last element of the Index and returns its value.&]
-[s6; Requires T to have deep copy constructor.&]
-[s7; [*/ Return value]-|Value of the dropped element.&]
-[s0;3 &]
-[s0;:`:`:Index`:`:Index`(`): [* Index]()&]
+[s9; Optional deep copy operator is inherited from AIndex class. 
+Pick operator is implicitly defined by composition&]
+[s0; .&]
+[s0; [* Base class]&]
+[s0; [^topic`:`/`/Core`/src`/AIndex`$en`-us`#AIndex`:`:class^ AIndex<T, 
+Vector<T>, HashFn>]&]
+[s3; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:Index`:`:Index`(`):%- [* Index]()&]
 [s2; Constructs empty Index.&]
-[s0;3 &]
-[s0;:`:`:Index`:`:Index`(pick`_`:`:Index`&`): [* Index](pick`_ Index`& 
-[*@3 s])&]
+[s3; &]
+[s4;%- &]
+[s5;:Index`:`:Index`(pick`_ Index`&`):%- [* Index]([@(0.128.128) pick`_]_[* Index][@(0.0.255) `&
+]_[*@3 s])&]
 [s2; Pick constructor. Transfers source Index in low constant time, 
 but destroys it by picking.&]
 [s7; [*C@3 s]-|Source Index.&]
-[s0;3 &]
-[s5;K%- [^`:`:Index^ Index]`&_operator`=[@(64) (pick`__][^`:`:Vector^@(64) Vector][@(64) <][^T^@(64) T
-][@(64) >`&_][@3 x][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:Index`:`:Index`(pick`_ Vector`<T`>`&`):%- [* Index]([@(0.128.128) pick`_]_[_^Vector^ V
+ector][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s])&]
 [s2; Pick operator. Transfers source Vector to Index in low constant 
 time, but destroys it by picking.&]
 [s7; [*C@3 x]-|Source Vector.&]
-[s0;3 &]
-[s0;:`:`:Index`:`:Index`(const`:`:Index`&`,int`): [* Index](const Index`& 
-[*@3 s], int)&]
+[s3; &]
+[s4;%- &]
+[s5;:Index`:`:Index`(const Index`&`,int`):%- [* Index]([@(0.0.255) const]_[* Index][@(0.0.255) `&
+]_[*@3 s], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
 constructor.&]
 [s7; [*C@3 s]-|Source Index.&]
-[s0;3 &]
-[s0;:`:`:Index`:`:Index`(pick`_`:`:Vector`<T`>`&`): [* Index](pick`_ 
-Vector<T>`& [*@3 s])&]
-[s2; Pick`-constructs Index from Vector. Transfers source container 
-in low constant time, but destroys it by picking.&]
-[s7; [*C@3 s]-|Source Vector.&]
-[s0;3 &]
-[s0;:`:`:Index`:`:Index`(const`:`:Vector`<T`>`&`,int`): [* Index](const 
-Vector<T>`& [*@3 s], int)&]
+[s3; &]
+[s4;%- &]
+[s5;:Index`:`:Index`(const Vector`<T`>`&`,int`):%- [* Index]([@(0.0.255) const]_[_^Vector^ V
+ector][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Deep`-copy constructs Index from Vector.&]
-[s0; Requires T to have deep copy constructor or optional deep copy 
+[s6; Requires T to have deep copy constructor or optional deep copy 
 constructor.&]
-[s7; [*C@3 s]-|Source Vector.&]
+[s7; [*@3 s]-|Source Vector.&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:Index`:`:Pop`(`):%- [*@4 T]_[* Pop]()&]
+[s2; Drops last element of the Index and returns its value.&]
+[s6; Requires T to have deep copy constructor.&]
+[s7; [*/ Return value]-|Value of the dropped element.&]
+[s3; &]
+[s4;%- &]
+[s5;:Index`:`:operator`=`(pick`_ Vector`<T`>`&`):%- [_^Index^ Index][@(0.0.255) `&]_[* oper
+ator`=]([@(0.128.128) pick`_]_[_^Vector^ Vector][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 x])
+&]
+[s2; Pick operator. Transfers source Vector to Index in low constant 
+time, but destroys it by picking.&]
+[s7; [*@3 x]-|Source Vector.&]
+[s3; &]
 [s0; ]
