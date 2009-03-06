@@ -30,6 +30,14 @@ TOPIC("ArrayMap$en-us")
 #include "ArrayMap$en-us.tppi"
 END_TOPIC
 
+TOPIC("BiArray$en-us")
+#include "BiArray$en-us.tppi"
+END_TOPIC
+
+TOPIC("BiVector$en-us")
+#include "BiVector$en-us.tppi"
+END_TOPIC
+
 TOPIC("DateFmt$en-us")
 #include "DateFmt$en-us.tppi"
 END_TOPIC
@@ -44,6 +52,10 @@ END_TOPIC
 
 TOPIC("FormatFn$en-us")
 #include "FormatFn$en-us.tppi"
+END_TOPIC
+
+TOPIC("Indext$en-us")
+#include "Indext$en-us.tppi"
 END_TOPIC
 
 TOPIC("MathUtil$en-us")

@@ -14,10 +14,10 @@ topic "BiVector";
 [s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
 [s1;:BiVector`:`:class:%- [@(0.0.255) class]_[* BiVector]_:_[@(0.0.255) private]_[*@3 Moveable
 AndDeepCopyOption][@(0.0.255) <]_[* BiVector][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
-[s7;#l0;i704;~~~.704; [*C@4 T]-|Type of elements stored in the [* BiVector]. 
-T is required to be [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
-]and must have either [*/ deep copy constructor], [*/ pick constructor] 
-or [*/ default constructor].&]
+[s8; [*@4 T]-|Type of elements stored in the BiVector. T is required 
+to be [/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][/  
+]and must have either [/ deep copy constructor], [/ pick constructor] 
+or [/ default constructor].&]
 [s0; &]
 [s0;# Vector flavor of bidirectional container. Allows adding elements 
 at both sides of sequence in constant amortized time.&]
