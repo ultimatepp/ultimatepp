@@ -1,0 +1,5 @@
+#ifndef _odbctest_icpp_init_stub
+#define _odbctest_icpp_init_stub
+#include "Core/init"
+#include "ODBC/init"
+#endif
