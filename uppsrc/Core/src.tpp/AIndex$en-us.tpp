@@ -10,9 +10,10 @@ topic "AIndex";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;i448;a25;kKO9;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
-[@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 HashFn]>&]
-[s1;:`:`:AIndex`:`:class:%- [@(0.0.255) class]_[* AIndex]&]
+[s0;i448;a25;kKO9; [*@3;4 AIndex]&]
+[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 , 
+][@(0.0.255)3 class][3 _][*@4;3 V][3 , ][@(0.0.255)3 class][3 _][*@4;3 HashFn][@(0.0.255)3 >]&]
+[s1;:AIndex`:`:class:%- [@(0.0.255) class]_[* AIndex]&]
 [s8; [*C@4 T]-|Type of elements to store. T must satisfy requirements 
 for container flavor identified by parameter V and must have 
 [*C operator`=`=] defined.&]
@@ -55,9 +56,37 @@ restore ordering using [* Sweep] method.&]
 oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ pick 
 and optional deep copy] transfer semantics, although these features 
 are more important in derived concrete index flavors.&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:AIndex`:`:AIndex`(`):%- [* AIndex]()&]
+[s2; Default constructor.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AIndex`:`:AIndex`(const AIndex`&`,int`):%- [* AIndex]([@(0.0.255) const]_[* AIndex][@(0.0.255) `&
+]_[*@3 s], [@(0.0.255) int])&]
+[s2; Optional deep copy constructor.&]
+[s6; -|Requires T to have deep copy constructor or optional deep copy 
+constructor.&]
+[s3; &]
+[s4; &]
+[s5;:AIndex`:`:AIndex`(pick`_ V`&`):%- [* AIndex]([@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&
+]_[*@3 s])&]
+[s2; Pick`-constructs [* AIndex] from a basic random access container 
+[%-*@3 s]. Transfers the source container in short constant time, 
+but destroys it by picking.&]
+[s3; &]
+[s4;%- &]
+[s5;:AIndex`:`:AIndex`(const V`&`,int`):%- [* AIndex]([@(0.0.255) const]_[*@4 V][@(0.0.255) `&
+]_[*@3 s], [@(0.0.255) int])&]
+[s2; Deep`-copy constructs AIndex from basic random access container.&]
+[s6; Requires T to have deep copy constructor or optional deep copy 
+constructor.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:AIndex`:`:Add`(const T`&`,unsigned`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 T
 ][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Adds a new element [%-*@3 x] with a precomputed hash value [%-*@3 `_hash]. 
@@ -284,6 +313,8 @@ tor`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s4;%- &]
 [s5;:AIndex`:`:ClearIndex`(`):%- [@(0.0.255) void]_[* ClearIndex]()&]
 [s2; Restores multi`-key ordering.&]
+[s3; &]
+[s4; &]
 [s5;:`:`:AIndex`:`:UnlinkKey`(const T`&`,unsigned`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) c
 onst]_[*@4 T][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Unlinks all elements with value [%-*@3 k] using precomputed [%-*@3 `_hash]. 
@@ -420,56 +451,34 @@ onst]&]
 of elements.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:operator`=`(pick`_ V`&`):%- AIndex[@(0.0.255) `&]_[* operator`=]([@(0.128.128) p
-ick`_]_[*@4 V][@(0.0.255) `&]_[*@3 s])&]
+[s5;:AIndex`:`:operator`=`(pick`_ V`&`):%- [_^AIndex^ AIndex][@(0.0.255) `&]_[* operator`=](
+[@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&]_[*@3 s])&]
 [s2; Assigns basic random access container to AIndex. Transfers the 
 source container in short constant time, but destroys it by picking.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:operator`<`<`=`(const V`&`):%- AIndex[@(0.0.255) `&]_[* operator<<`=]([@(0.0.255) c
-onst]_[*@4 V][@(0.0.255) `&]_[*@3 s])&]
+[s5;:AIndex`:`:operator`<`<`=`(const V`&`):%- [_^AIndex^ AIndex][@(0.0.255) `&]_[* operator
+<<`=]([@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 s])&]
 [s2; Assigns the basic random access container to AIndex, while preserving 
 the value of the source container.&]
 [s6; Requires T to have deep copy constructor or optional deep copy.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:AIndex`(pick`_ V`&`):%- [* AIndex]([@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&
-]_[*@3 s])&]
-[s2; Pick`-constructs AIndex from a basic random access container. 
-Transfers the source container in short constant time, but destroys 
-it by picking.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AIndex`:`:AIndex`(const V`&`,int`):%- [* AIndex]([@(0.0.255) const]_[*@4 V][@(0.0.255) `&
-]_[*@3 s], [@(0.0.255) int])&]
-[s2; Deep`-copy constructs AIndex from basic random access container.&]
-[s6; Requires T to have deep copy constructor or optional deep copy 
-constructor.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AIndex`:`:Begin`(`)const:%- ConstIterator_[* Begin]()_[@(0.0.255) const]&]
+[s5;:AIndex`:`:Begin`(`)const:%- [_^AIndex`:`:ConstIterator^ ConstIterator]_[* Begin]()_[@(0.0.255) c
+onst]&]
 [s2; Returns a constant iterator to the first element in AIndex.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:End`(`)const:%- ConstIterator_[* End]()_[@(0.0.255) const]&]
+[s5;:AIndex`:`:End`(`)const:%- [_^AIndex`:`:ConstIterator^ ConstIterator]_[* End]()_[@(0.0.255) c
+onst]&]
 [s2; Returns a constant iterator to the position just beyond the 
 last element in AIndex.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:GetIter`(int`)const:%- ConstIterator_[* GetIter]([@(0.0.255) int]_[*@3 pos])
-_[@(0.0.255) const]&]
+[s5;:AIndex`:`:GetIter`(int`)const:%- [_^AIndex`:`:ConstIterator^ ConstIterator]_[* GetIt
+er]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the element at specified position. 
 Same as [* Begin() `+ i]. The benefit of this method is that [* pos] 
 is range checked in debug mode.&]
 [s3;%- &]
-[s4;%- &]
-[s5;:AIndex`:`:AIndex`(`):%- [* AIndex]()&]
-[s2; Default constructor.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AIndex`:`:AIndex`(const AIndex`&`,int`):%- [* AIndex]([@(0.0.255) const]_[* AIndex][@(0.0.255) `&
-]_[*@3 s], [@(0.0.255) int])&]
-[s2; Optional deep copy constructor.&]
-[s6; Requires T to have deep copy constructor or optional deep copy 
-constructor.&]
 [s0; ]

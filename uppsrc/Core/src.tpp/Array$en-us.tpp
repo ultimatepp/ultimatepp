@@ -10,9 +10,10 @@ topic "Array";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;i448;a25;kKO9;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]&]
+[s0;i448;a25;kKO9;%- [*@3;4 Array]&]
+[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
 [s1;:Array`:`:class:%- [@(0.0.255) class]_[* Array]_:_[@(0.0.255) public]_[*@3 MoveableAndDeep
-CopyOption][@(0.0.255) <]_[* Array][@(0.0.255) <][*@4 T][@(0.0.255) >]_>&]
+CopyOption][@(0.0.255) <]_[* Array][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
 [s8; [*@4 T]-|Type or base class of elements stored in the Array. There 
 is no common requirement for T.&]
 [s9; The most universal form of basic random access container. Its 
@@ -51,6 +52,34 @@ constructor) and testing for 0 (that is NULL) pointer.&]
 oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick 
 and optional deep copy] transfer semantics.&]
 [s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:Array`:`:Array`(`):%- [* Array]()&]
+[s2; Default constructor. Constructs an empty Array.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Array`:`:Array`(pick`_ Array`&`):%- [* Array]([@(0.128.128) pick`_]_[* Array][@(0.0.255) `&
+]_[*@3 v])&]
+[s2; Pick constructor. Transfers the source Array in low constant 
+time, but destroys it by picking. &]
+[s7; [*@3 v]-|Source Array.&]
+[s3; &]
+[s4; &]
+[s5;:Array`:`:Array`(const Array`&`,int`):%- [* Array]([@(0.0.255) const]_[* Array][@(0.0.255) `&
+]_[*@3 v], [@(0.0.255) int])&]
+[s2; Optional deep copy constructor.&]
+[s6; Requires T to have deep copy constructor or optional deep copy 
+constructor if the Array stores only objects of type T.&]
+[s6; Requires polymorphic deep copy if the Array stores also objects 
+of type derived from T.&]
+[s7; [*@3 v]-|Source Array.&]
+[s3; &]
+[s4; &]
+[s5;:Array`:`:`~Array`(`):%- [@(0.0.255) `~][* Array]()&]
+[s2; Destructor. Invokes the destructor of every element in the Array.&]
+[s3;%- &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s4;H0;%- &]
 [s5;:Array`:`:Add`(`):%- [*@4 T][@(0.0.255) `&]_[* Add]()&]
@@ -427,7 +456,7 @@ onst]&]
 [s2; Drops the last element in the Array, giving up ownership (same 
 as Detach(GetCount() `- 1)). Client is responsible for deletion 
 of element.&]
-[s0; Invalidates iterators to the Array.&]
+[s6; Invalidates iterators to the Array.&]
 [s7; [*/ Return value]-|Pointer to element allocated on the heap.&]
 [s3;%- &]
 [s4;%- &]
@@ -488,35 +517,10 @@ Arrays (those storing objects derived from T).&]
 [s7; [*C@3 s]-|Target/source stream.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:Array`(`):%- [* Array]()&]
-[s2; Default constructor. Constructs an empty Array.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Array`:`:`~Array`(`):%- [@(0.0.255) `~][* Array]()&]
-[s2; Destructor. Invokes the destructor of every element in the Array.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Array`:`:Array`(pick`_ Array`&`):%- [* Array]([@(0.128.128) pick`_]_[* Array][@(0.0.255) `&
-]_[*@3 v])&]
-[s2; Pick constructor. Transfers the source Array in low constant 
-time, but destroys it by picking. &]
-[s7; [*C@3 v]-|Source Array.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Array`:`:operator`=`(pick`_ Array`&`):%- [@(0.0.255) void]_[* operator`=]([@(0.128.128) p
 ick`_]_[_^Array^ Array][@(0.0.255) `&]_[*@3 v])&]
 [s2; Pick operator. Transfers the source Array in low constant time, 
 but destroys it by picking.&]
-[s7; [*C@3 v]-|Source Array.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Array`:`:Array`(const Array`&`,int`):%- [* Array]([@(0.0.255) const]_[* Array][@(0.0.255) `&
-]_[*@3 v], [@(0.0.255) int])&]
-[s2; Optional deep copy constructor.&]
-[s6; Requires T to have deep copy constructor or optional deep copy 
-constructor if the Array stores only objects of type T.&]
-[s6; Requires polymorphic deep copy if the Array stores also objects 
-of type derived from T.&]
 [s7; [*C@3 v]-|Source Array.&]
 [s3;%- &]
 [s4;%- &]
@@ -589,4 +593,5 @@ in simple constant time operation.&]
 elements in an Array without any requirements for T.&]
 [s7; [*C@3 a]-|Iterator to first element.&]
 [s7; [*C@3 b]-|Iterator to second element.&]
+[s3; &]
 [s0; ]

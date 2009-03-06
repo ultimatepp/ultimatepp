@@ -10,10 +10,11 @@ topic "AMap";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s5;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 K], [@(0.0.255) class]_[*@4 T], 
-[@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 HashFn][@(0.0.255) >]&]
-[s1;:`:`:AMap`:`:class:%- [@(0.0.255) class]_[* AMap]&]
-[s0;*%- &]
+[s5; [*@3;4 AMap]&]
+[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 K][3 , 
+][@(0.0.255)3 class][3 _][*@4;3 T][3 , ][@(0.0.255)3 class][3 _][*@4;3 V][3 , 
+][@(0.0.255)3 class][3 _][*@4;3 HashFn][@(0.0.255)3 >]&]
+[s1;:AMap`:`:class:%- [@(0.0.255) class]_[* AMap]&]
 [s8; [*@4 K]-|Type of keys. K must have deep copy constructor, be [/^dpp`:`/`/SourceDoc`/Containers`/Moveable^ m
 oveable] and must have operator`=`= defined.&]
 [s8; [*@4 T]-|Type of values. T must satisfy requirements for container 
@@ -31,6 +32,38 @@ oveable][*/  ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick
 and optional deep copy] transfer semantics, although these features 
 are more important in derived concrete index flavors.&]
 [s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3; &]
+[s5;:AMap`:`:AMap`(`):%- [* AMap]()&]
+[s2; Constructor. Constructs an empty AMap.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AMap`:`:AMap`(const AMap`&`,int`):%- [* AMap]([@(0.0.255) const]_[* AMap][@(0.0.255) `&]_
+[*@3 s], [@(0.0.255) int])&]
+[s2; Optional deep copy constructor.&]
+[s6; Requires T to have deep copy constructor or optional deep copy 
+constructor.&]
+[s7; [*C s]-|Source AMap.&]
+[s4; &]
+[s5;:AMap`:`:AMap`(pick`_ Index`<K`,HashFn`>`&`,pick`_ V`&`):%- [* AMap]([@(0.128.128) pi
+ck`_]_Index[@(0.0.255) <][*@4 K], [*@4 HashFn][@(0.0.255) >`&]_[*@3 ndx], 
+[@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&]_[*@3 val])&]
+[s2; This form of constructors creates AMap by picking Index of keys 
+[%-*@3 ndx] and basic random access container of values. Both containers 
+must have same number of elements [%-*@3 val].&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AMap`:`:AMap`(pick`_ Vector`<K`>`&`,pick`_ V`&`):%- [* AMap]([@(0.128.128) pick`_]_V
+ector[@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[*@3 ndx], [@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&
+]_[*@3 val])&]
+[s2; This form of constructors creates AMap by picking Vector of 
+keys and basic random access container of values. Both containers 
+must have same number of elements.&]
+[s7; [*C@3 ndx]-|Keys.&]
+[s7; [*@3 val]-|Values.&]
+[s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
 [s5;:AMap`:`:Add`(const K`&`,const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 K
@@ -650,7 +683,7 @@ position.&]
 [*@3 s])&]
 [s2; Serializes the content of AMap to/from Stream. Works only if 
 NTL is used as part of UPP.&]
-[s0; Requires T to have serialization operator defined.&]
+[s6; Requires T to have serialization operator defined.&]
 [s7; [*C@3 s]-|Target/source stream.&]
 [s3;%- &]
 [s4;%- &]
@@ -698,35 +731,6 @@ of values. Destroys AIndex by picking.&]
 [s2; Returns basic random access container of values. Destroys AIndex 
 by picking.&]
 [s7; [*/ Return value]-|Basic random access container of values.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AMap`:`:AMap`(`):%- [* AMap]()&]
-[s2; Constructor. Constructs an empty AMap.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AMap`:`:AMap`(const AMap`&`,int`):%- [* AMap]([@(0.0.255) const]_[* AMap][@(0.0.255) `&]_
-[*@3 s], [@(0.0.255) int])&]
-[s2; Optional deep copy constructor.&]
-[s6; Requires T to have deep copy constructor or optional deep copy 
-constructor.&]
-[s7; [*C s]-|Source AMap.&]
-[s4; &]
-[s5;:AMap`:`:AMap`(pick`_ Index`<K`,HashFn`>`&`,pick`_ V`&`):%- [* AMap]([@(0.128.128) pi
-ck`_]_Index[@(0.0.255) <][*@4 K], [*@4 HashFn][@(0.0.255) >`&]_[*@3 ndx], 
-[@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&]_[*@3 val])&]
-[s2; This form of constructors creates AMap by picking Index of keys 
-[%-*@3 ndx] and basic random access container of values. Both containers 
-must have same number of elements [%-*@3 val].&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AMap`:`:AMap`(pick`_ Vector`<K`>`&`,pick`_ V`&`):%- [* AMap]([@(0.128.128) pick`_]_V
-ector[@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[*@3 ndx], [@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&
-]_[*@3 val])&]
-[s2; This form of constructors creates AMap by picking Vector of 
-keys and basic random access container of values. Both containers 
-must have same number of elements.&]
-[s7; [*C@3 ndx]-|Keys.&]
-[s7; [*C@3 val]-|Values.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AMap`:`:KeyType`:`:typedef:%- [@(0.0.255) typedef]_K_[* KeyType]&]
@@ -795,4 +799,5 @@ Same as [* Begin() `+ i]. Benefit of this methods is that in debug
 mode [* pos] is range checked.&]
 [s7; [*C@3 i]-|Required position.&]
 [s7; [*/ Return value]-|Constant value iterator.&]
+[s3; &]
 [s0; ]
