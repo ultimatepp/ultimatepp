@@ -10,10 +10,12 @@ topic "Algorithms";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*5 Algorithms]&]
+[s0; [*@3;4 Algorithms]&]
+[s0; A number of generic algorithms.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Global Functions]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:Swap`(T`&`,T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) v
 oid]_[* Swap]([*@4 T][@(0.0.255) `&]_[*@3 a], [*@4 T][@(0.0.255) `&]_[*@3 b])&]
 [s2; Swaps values. Specific types might specialize [* Swap] with more 
@@ -395,4 +397,5 @@ by const method of [* T].&]
 [s7; [*C@3 method]-|Method of T.&]
 [s7; [*C@3 relation]-|Ordering relation for value returned by method.&]
 [s7; [*/ Return value]-|Ordering predicate.&]
+[s3; &]
 [s0; ]
