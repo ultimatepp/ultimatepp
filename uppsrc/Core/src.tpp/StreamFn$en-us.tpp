@@ -13,7 +13,7 @@ topic "Stream utilities";
 [s0; [5 Stream helpers]&]
 [s0;3%- &]
 [ {{10000t/25b/25@1 [s0;%- [* Function List]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:LoadStream`(Stream`&`):%- [_^String^ String]_[* LoadStream]([_^Stream^ Stream][@(0.0.255) `&
 ]_[*@3 in])&]
 [s2; Reads the stream starting with the current position till the 
@@ -166,4 +166,5 @@ ToString method of x.&]
 [s7; [%-*C@3 s]-|Output stream.&]
 [s7; [%-*C@3 x]-|Data to write.&]
 [s7; [*/ Return value]-|s for chaining.&]
+[s3; &]
 [s0; ]

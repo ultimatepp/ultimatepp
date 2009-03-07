@@ -26,7 +26,7 @@ topic "Thread";
 [s3;%% &]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:Thread`:`:Run`(Callback`): [@(0.0.255) bool]_[* Run]([_^Callback^ Callback]_[*@3 cb])&]
 [s2;%% Starts a new thread.&]
 [s3; &]
