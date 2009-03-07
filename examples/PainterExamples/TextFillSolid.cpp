@@ -30,20 +30,7 @@ void SomeTexts(Painter& sw)
 	}
 }
 
-void ZBug(Painter& sw)
-{
-	sw.Text(100, 100, "z", Roman(25).Italic()).Fill(Black());
-	sw.Text(130, 100, "z", Roman(70).Italic()).Fill(Black());
-}
-
-void WBug(Painter& sw)
-{
-	sw.Text(100, 100, "w", Roman(20).Bold()).Fill(Black());
-}
-
 INITBLOCK {
 	RegisterExample("Filling text with solid color", TextFillSolid);
 	RegisterExample("Various fonts", SomeTexts);
-	RegisterExample("ZBug", ZBug);
-	RegisterExample("WBug", WBug);
 }
