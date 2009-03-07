@@ -367,5 +367,5 @@ private:
 	enum { FILL = -1, CLIP = -2, ONPATH = -3 };
 
 public:
-	BufferPainter(ImageBuffer& ib, int mode = 0);
+	BufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
 };
