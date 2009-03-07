@@ -38,6 +38,10 @@ TOPIC("BiVector$en-us")
 #include "BiVector$en-us.tppi"
 END_TOPIC
 
+TOPIC("Color$en-us")
+#include "Color$en-us.tppi"
+END_TOPIC
+
 TOPIC("DateFmt$en-us")
 #include "DateFmt$en-us.tppi"
 END_TOPIC
@@ -74,6 +78,10 @@ TOPIC("Point$en-us")
 #include "Point$en-us.tppi"
 END_TOPIC
 
+TOPIC("PtePtr$en-us")
+#include "PtePtr$en-us.tppi"
+END_TOPIC
+
 TOPIC("Rect$en-us")
 #include "Rect$en-us.tppi"
 END_TOPIC
@@ -86,12 +94,24 @@ TOPIC("Size$en-us")
 #include "Size$en-us.tppi"
 END_TOPIC
 
+TOPIC("Stream$en-us")
+#include "Stream$en-us.tppi"
+END_TOPIC
+
+TOPIC("StreamFn$en-us")
+#include "StreamFn$en-us.tppi"
+END_TOPIC
+
 TOPIC("String$en-us")
 #include "String$en-us.tppi"
 END_TOPIC
 
 TOPIC("String1$en-us")
 #include "String1$en-us.tppi"
+END_TOPIC
+
+TOPIC("StringBuffer$en-us")
+#include "StringBuffer$en-us.tppi"
 END_TOPIC
 
 TOPIC("Thread$en-us")
