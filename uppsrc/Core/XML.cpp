@@ -15,7 +15,7 @@ String DeXml(const char *s, byte charset)
 		else if(*s == '&')  result.Cat("&amp;");
 		else if(*s == '\'') result.Cat("&apos;");
 		else if(*s == '\"') result.Cat("&quot;");
-		else if((byte)*s < ' ' && *s != '\n') result.Cat(NFormat("&#x%02x;", (byte)*s));
+		else if((byte)*s < ' ') result.Cat(NFormat("&#x%02x;", (byte)*s));
 		else if(!(*s & 0x80) || charset == CHARSET_UTF8) result.Cat(*s);
 		else result.Cat(ToUtf8(ToUnicode(*s, charset)));
 	return result;
