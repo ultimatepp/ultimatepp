@@ -4,9 +4,9 @@ NAMESPACE_UPP
 
 void BufferPainter::BeginOp()
 {
+	attr.onpath = false;
 	attrstack.Add(attr);
 	attr.hasclip = false;
-	attr.onpath = false;
 }
 
 void BufferPainter::EndOp()
