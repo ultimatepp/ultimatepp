@@ -8,7 +8,7 @@ void SvgDemo(Painter& sw)
 	
 	try {
 		if (FileExists(file))	
-			ParseSVG(sw, file);	  
+			ParseSVG(sw, LoadFileBOM(file));
 		else {
 			sw.Scale(1./20);
 			sw.Text(200, 200, "Please copy the svg file in '" + file + "'", Font(Font::ARIAL, 400));

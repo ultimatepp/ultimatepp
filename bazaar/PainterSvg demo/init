@@ -1,5 +1,5 @@
 #ifndef _PainterSvg_demo_icpp_init_stub
 #define _PainterSvg_demo_icpp_init_stub
 #include "CtrlLib/init"
-#include "Painter/init"
+#include "PainterSvg/init"
 #endif

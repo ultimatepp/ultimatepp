@@ -2,7 +2,7 @@
 #define _PainterExamples_Examples_h_
 
 #include <CtrlLib/CtrlLib.h>
-#include <Painter/Painter.h>
+#include <PainterSvg/PainterSvg.h>
 
 using namespace Upp;
 
@@ -35,7 +35,5 @@ struct App : TopWindow {
 	App();
 	~App();
 };
-
-
 
 #endif

@@ -2,12 +2,11 @@ description "Svg Painter demo";
 
 uses
 	CtrlLib,
-	Painter;
+	PainterSvg;
 
 file
-	SvgDemo.cpp,
-	..\PainterSvg\ParseSvg.cpp,
 	Examples.h,
+	SvgDemo.cpp,
 	main.cpp,
 	Examples.lay;
 

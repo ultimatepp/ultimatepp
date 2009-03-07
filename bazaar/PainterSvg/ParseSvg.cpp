@@ -1,7 +1,6 @@
-#include <CtrlLib/CtrlLib.h>
-#include <Painter/Painter.h>
+#include "PainterSvg.h"
 
-using namespace Upp;
+NAMESPACE_UPP
 
 Color GetSvgColor(const char *color);
 String GetValueStringXml(String str, const char* var);
@@ -616,9 +615,7 @@ void ParseG(Painter& p, XmlParser &xp, Svg2DTransform transf, SvgStyle style)
 }
 void ParseSVG(Painter& p, const char *svg)
 {
-	String strXml = LoadFileBOM(svg);
-	XmlParser xp(strXml);
-
+	XmlParser xp(svg);
 	while(!xp.IsTag())
 		xp.Skip();
 	xp.PassTag("svg");
@@ -633,3 +630,4 @@ void ParseSVG(Painter& p, const char *svg)
 	p.End();
 }
 
+END_UPP_NAMESPACE

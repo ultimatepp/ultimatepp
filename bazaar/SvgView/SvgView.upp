@@ -1,0 +1,15 @@
+description "Simple SVG viewer (PainterSvg demo)";
+
+uses
+	CtrlLib,
+	plugin\tif,
+	plugin\jpg,
+	plugin\gif,
+	PainterSvg;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
