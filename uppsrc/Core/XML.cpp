@@ -4,7 +4,7 @@ NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x);
 
-String DeXml(const char *s, byte charset)
+String DeXml(const char *s, byte charset, bool escapelf)
 {
 	if(charset == CHARSET_DEFAULT)
 		charset = GetDefaultCharset();
@@ -15,7 +15,7 @@ String DeXml(const char *s, byte charset)
 		else if(*s == '&')  result.Cat("&amp;");
 		else if(*s == '\'') result.Cat("&apos;");
 		else if(*s == '\"') result.Cat("&quot;");
-		else if((byte)*s < ' ' && *s != '\n') result.Cat(NFormat("&#x%02x;", (byte)*s));
+		else if((byte)*s < ' ' && (escapelf || *s != '\n')) result.Cat(NFormat("&#x%02x;", (byte)*s));
 		else if(!(*s & 0x80) || charset == CHARSET_UTF8) result.Cat(*s);
 		else result.Cat(ToUtf8(ToUnicode(*s, charset)));
 	return result;
@@ -102,7 +102,7 @@ String  XmlTag::Text(const char *text, byte charset)
 
 XmlTag& XmlTag::operator()(const char *attr, const char *val)
 {
-	tag << ' ' << attr << "=\"" << DeXml(val) << "\"";
+	tag << ' ' << attr << "=\"" << DeXml(val, CHARSET_DEFAULT, true) << "\"";
 	return *this;
 }
 
