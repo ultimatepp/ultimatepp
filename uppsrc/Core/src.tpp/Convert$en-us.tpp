@@ -10,385 +10,577 @@ topic "Convert";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; Convert&]
-[s5;K%- [@(0.0.255) class][@(64) _]Convert&]
-[s2; Convert`-derived classes serve as bidirectional Value`-Value 
+[ {{10000@(113.42.0) [s0; [*@7;4 Convert]]}}&]
+[s3;%- &]
+[s1;:Convert`:`:class:%- [@(0.0.255)3 class][3 _][*3 Convert]&]
+[s9; Convert`-derived classes serve as bidirectional Value`-Value 
 converters. One direction is represented by Format method and 
 usually converts the Value to the textual representation. Reverse 
 direction is represented by the Scan method.&]
-[s2; If the conversion is not possible (e.g. due to invalid textual 
+[s9; If the conversion is not possible (e.g. due to invalid textual 
 representation), convert methods should return `"ErrorValue`" 
 to indicate the problem.&]
 [s0; &]
-[s5;K%- virtual [^`:`:Value^ Value]_Format[@(64) (][@(0.0.255) const][@(64) _][^`:`:Value^@(64) V
-alue][@(64) `&_][@3 q][@(64) )_][@(0.0.255) const]&]
+[s3; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:Convert`:`:Format`(const Value`&`)const:%- [@(0.0.255) virtual] 
+[_^Value^ Value]_[* Format]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 q])_[@(0.0.255) c
+onst]&]
 [s2; [%- Converts the Value. Default ]implementation uses Value`::ToString 
 to convert the Value.&]
 [s7; [%-*C@3 q]-|Value.&]
 [s7; [*/ Return value]-|Converted Value.&]
-[s0; &]
-[s5;K%- virtual [^`:`:Value^ Value]_Scan[@(64) (][@(0.0.255) const][@(64) _][^`:`:Value^@(64) V
-alue][@(64) `&_][@3 text][@(64) )_][@(0.0.255) const]&]
+[s3; &]
+[s4;%- &]
+[s5;:Convert`:`:Scan`(const Value`&`)const:%- [@(0.0.255) virtual] 
+[_^Value^ Value]_[* Scan]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 text])_[@(0.0.255) c
+onst]&]
 [s2; Converts the Value in reverse direction. Default implementation 
 returns [@3 text] (no conversion is performed).&]
 [s7; [%-*C@3 text]-|Value.&]
 [s7; [*/ Return value]-|Converted Value.&]
-[s0; &]
-[s5;K%- virtual [@(0.0.255) int][@(64) _]Filter[@(64) (][@(0.0.255) int][@(64) _][@3 chr][@(64) )_][@(0.0.255) c
-onst]&]
+[s3; &]
+[s4;%- &]
+[s5;:Convert`:`:Filter`(int`)const:%- [@(0.0.255) virtual] [@(0.0.255) int]_[* Filter]([@(0.0.255) i
+nt]_[*@3 chr])_[@(0.0.255) const]&]
 [s2; Adjusts characters allowed in textual representation of Value.&]
 [s7; [%-*C@3 chr]-|Character to adjust.&]
 [s7; [*/ Return value]-|Adjusted character. Zero indicates that character 
 is rejected. Filter is allowed to alter the input character (e.g. 
 by upper`-casing it, changing `',`' to `'.`' etc..). Default 
 implementation returns unaltered [@3 chr].&]
-[s0; &]
-[s5;K%- [^`:`:Value^ Value]_operator()[@(64) (][@(0.0.255) const][@(64) _][^`:`:Value^@(64) Val
-ue][@(64) `&_][@3 q][@(64) )_][@(0.0.255) const]&]
+[s3; &]
+[s4;%- &]
+[s5;:Convert`:`:operator`(`)`(const Value`&`)const:%- [_^Value^ Value]_[* operator()]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 q])_[@(0.0.255) const]&]
 [s2; Invokes the Format method. Helper functor`-like syntax.&]
 [s7; [%-*C@3 q]-|Value.&]
 [s7; [*/ Return value]-|Converted Value.&]
-[s0; &]
+[s3; &]
 [s0;3 &]
-[s5;K%- [@(0.0.255) class][@(64) _]ConvertDate[@(64) _:_][@(0.0.255) public][@(64) _][^`:`:Convert^@(64) C
-onvert]&]
-[s2; Date Converter. Textual date format depends on actual regional 
+[s0;%- &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 ConvertDate]]}}&]
+[s3;%- &]
+[s1;:ConvertDate`:`:class:%- [@(0.0.255)3 class][3 _][*3 ConvertDate][3 _:_][@(0.0.255)3 public][3 _
+][*@3;3 Convert]&]
+[s9; Date Converter. Textual date format depends on actual regional 
 settings.&]
-[s0;%- [%%/ Derived from][%%  ]Convert&]
+[s9; &]
+[s0;%- [%% Derived from ][^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^ Conve
+rt]&]
+[s3; &]
 [s0; &]
-[s5;K%- virtual [^`:`:Value^ Value]_Scan[@(64) (][@(0.0.255) const][@(64) _][^`:`:Value^@(64) V
-alue][@(64) `&_][@3 text][@(64) )_][@(0.0.255) const]&]
-[s2; Sets the range of Dates allowed.&]
-[s7; [%-*C@3 `_min]-|Minimal Date.&]
-[s7; [%-*C@3 `_max]-|Maximal Date.&]
-[s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDate^ ConvertDate]`&_Min[@(64) (][^`:`:Date^@(64) Date][@(64) _][@3 `_min][@(64) )
-]&]
-[s2; Sets minimal allowed Date.&]
-[s7; [%-*C@3 `_min]-|Minimal Date.&]
-[s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDate^ ConvertDate]`&_Max[@(64) (][^`:`:Date^@(64) Date][@(64) _][@3 `_max][@(64) )
-]&]
-[s2; Sets maximal allowed Date.&]
-[s7; [%-*C@3 `_max]-|Maximal Date.&]
-[s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDate^ ConvertDate]`&_NotNull[@(64) (][@(0.0.255) bool][@(64) _][@3 b][@(64) _
-`=_true)]&]
-[s2; Allows/disallows Null dates. (Null dates are represented by 
-the empty text).&]
-[s7; [%-*C@3 b]-|true to disallow Null dates.&]
-[s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDate^ ConvertDate]`&_NoNotNull[@(64) ()]&]
-[s2; Same as NotNull(false).&]
-[s0; &]
-[s5;K%- [^`:`:Date^ Date]_GetMin[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Minimal allowed date.&]
-[s0; &]
-[s5;K%- [^`:`:Date^ Date]_GetMax[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Maximal allowed date.&]
-[s0; &]
-[s5;K%- [@(0.0.255) bool][@(64) _]IsNotNull[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|true is Nulls are disallowed.&]
-[s0; &]
-[s5;K%- ConvertDate[@(64) (][^`:`:Date^@(64) Date][@(64) _][@3 minval][@(64) _`=_][^`:`:Date^@(64) D
-ate][@(64) (][@3 0][@(64) , ][@3 0][@(64) , ][@3 0][@(64) ), ][^`:`:Date^@(64) Date][@(64) _][@3 maxv
-al][@(64) _`=_][^`:`:Date^@(64) Date][@(64) (][@3 9999][@(64) , ][@3 12][@(64) , 
-][@3 31][@(64) ), ][@(0.0.255) bool][@(64) _][@3 notnull][@(64) _`=_false)]&]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:ConvertDate`:`:ConvertDate`(Date`,Date`,bool`):%- [* ConvertDate]([_^Date^ Date]_[*@3 m
+inval]_`=_Date`::Low(), [_^Date^ Date]_[*@3 maxval]_`=_Date`::High(), 
+[@(0.0.255) bool]_[*@3 notnull]_`=_[@(0.0.255) false])&]
 [s2; Constructor.&]
 [s7; [%-*C@3 minval]-|Minimum Date allowed.&]
 [s7; [%-*C@3 maxval]-|Maximum Date allowed.&]
 [s7; [%-*C@3 notnull]-|Disallow Nulls.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDate`:`:`~ConvertDate`(`):%- [@(0.0.255) `~][* ConvertDate]()&]
+[s2; Default destructor.&]
+[s3;%- &]
 [s0; &]
-[s0;3 &]
-[s5;K%- [@(0.0.255) class][@(64) _]ConvertDouble[@(64) _:_][@(0.0.255) public][@(64) _][^`:`:Convert^@(64) C
-onvert]&]
-[s2; Floating point number converter.&]
-[s2; &]
-[s0;%- [%%/ Derived from][%%  ]Convert&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDouble^ ConvertDouble]`&_Pattern[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) c
-har][@(64) _`*][@3 p][@(64) )]&]
-[s2; Formatting tag used for conversion to textual representation 
-(includes standard printf formatting tags, see Format function 
-for description). Default tag is [@4 %.10g].&]
-[s7; [%-*C@3 p]-|Pattern.&]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:ConvertDate`:`:MinMax`(Date`,Date`):%- [_^ConvertDate^ ConvertDate][@(0.0.255) `&]_[* M
+inMax]([_^Date^ Date]_[*@3 `_min], [_^Date^ Date]_[*@3 `_max])&]
+[s2; Sets the range of Dates allowed.&]
+[s7; [%-*C@3 `_min]-|Minimal Date.&]
+[s7; [%-*C@3 `_max]-|Maximal Date.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDouble^ ConvertDouble]`&_MinMax[@(64) (][@(0.0.255) double][@(64) _][@3 `_
-min][@(64) , ][@(0.0.255) double][@(64) _][@3 `_max][@(64) )]&]
-[s2; Sets minimal and maximal allowed numbers.&]
-[s7; [%-*C@3 `_min]-|Lower limit.&]
-[s7; [%-*C@3 `_max]-|Upper limit.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDate`:`:Min`(Date`):%- [_^ConvertDate^ ConvertDate][@(0.0.255) `&]_[* Min]([_^Date^ D
+ate]_[*@3 `_min])&]
+[s2; Sets minimal allowed Date.&]
+[s7; [%-*C@3 `_min]-|Minimal Date.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDouble^ ConvertDouble]`&_Min[@(64) (][@(0.0.255) double][@(64) _][@3 `_min
-][@(64) )]&]
-[s2; Sets minimal allowed number.&]
-[s7; [%-*C@3 `_min]-|Lower limit.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDate`:`:Max`(Date`):%- [_^ConvertDate^ ConvertDate][@(0.0.255) `&]_[* Max]([_^Date^ D
+ate]_[*@3 `_max])&]
+[s2; Sets maximal allowed Date.&]
+[s7; [%-*C@3 `_max]-|Maximal Date.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDouble^ ConvertDouble]`&_Max[@(64) (][@(0.0.255) double][@(64) _][@3 `_max
-][@(64) )]&]
-[s2; Sets maximal allowed number.&]
-[s7; [%-*C@3 `_max]-|Upper limit.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDate`:`:NotNull`(bool`):%- [_^ConvertDate^ ConvertDate][@(0.0.255) `&]_[* NotNu
+ll]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Allows/disallows Null dates. (Null dates are represented by 
+the empty text).&]
+[s7; [%-*C@3 b]-|true to disallow Null dates.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDouble^ ConvertDouble]`&_NotNull[@(64) (][@(0.0.255) bool][@(64) _][@3 b][@(64) _
-`=_true)]&]
-[s2; Allows/disallows Nulls. (Nulls are represented by the empty 
-text).&]
-[s7; [%-*C@3 b]-|true to disallow.&]
-[s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertDouble^ ConvertDouble]`&_NoNotNull[@(64) ()]&]
-[s2; Equivalent to NotNull(false).&]
-[s0; &]
-[s5;K%- [@(0.0.255) double][@(64) _]GetMin[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Lower limit.&]
-[s0; &]
-[s5;K%- [@(0.0.255) double][@(64) _]GetMax[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Upper limit.&]
-[s0; &]
-[s5;K%- [@(0.0.255) bool][@(64) _]IsNotNull[@(64) ()_][@(0.0.255) const]&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDate`:`:NoNotNull`(`):%- [_^ConvertDate^ ConvertDate][@(0.0.255) `&]_[* NoNotNu
+ll]()&]
+[s2; Same as [^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertDate`:`:NotNull`(bool`)^ N
+otNull](false).&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDate`:`:GetMin`(`)const:%- [_^Date^ Date]_[* GetMin]()_[@(0.0.255) const]&]
+[s7; [*/ Return value]-|Minimal allowed date.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDate`:`:GetMax`(`)const:%- [_^Date^ Date]_[* GetMax]()_[@(0.0.255) const]&]
+[s7; [*/ Return value]-|Maximal allowed date.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDate`:`:IsNotNull`(`)const:%- [@(0.0.255) bool]_[* IsNotNull]()_[@(0.0.255) con
+st]&]
 [s7; [*/ Return value]-|true is Nulls are disallowed.&]
+[s3; &]
 [s0; &]
-[s5;K%- ConvertDouble[@(64) (][@(0.0.255) double][@(64) _][@3 minval][@(64) _`=_DOUBLE`_NULL`_L
-IM, ][@(0.0.255) double][@(64) _][@3 maxval][@(64) _`=_`-DOUBLE`_NULL`_LIM, 
-][@(0.0.255) bool][@(64) _][@3 notnull][@(64) _`=_false)]&]
+[s0;%- &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 ConvertDouble]]}}&]
+[s3; &]
+[s1;:ConvertDouble`:`:class:%- [@(0.0.255)3 class][3 _][*3 ConvertDouble][3 _:_][@(0.0.255)3 pub
+lic][3 _][*@3;3 Convert]&]
+[s9; Floating point number converter.&]
+[s0; &]
+[s0;%- [%%/ Derived from][%%  ][^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^ C
+onvert]&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:ConvertDouble`:`:ConvertDouble`(double`,double`,bool`):%- [* ConvertDouble]([@(0.0.255) d
+ouble]_[*@3 minval]_`=_DOUBLE`_NULL`_LIM, [@(0.0.255) double]_[*@3 maxval]_`=_`-DOUBLE`_
+NULL`_LIM, [@(0.0.255) bool]_[*@3 notnull]_`=_[@(0.0.255) false])&]
 [s2; Constructor.&]
 [s7; [%-*C@3 minval]-|Lower limit `- default value means there is no 
 limit.&]
 [s7; [%-*C@3 maxval]-|Upper limit `- default value means there is no 
 limit.&]
 [s7; [%-*C@3 notnull]-|If true, Nulls are not allowed.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:`~ConvertDouble`(`):%- [@(0.0.255) `~][* ConvertDouble]()&]
+[s2; Default destructor.&]
+[s3;%- &]
 [s0; &]
-[s0; &]
-[s0; &]
-[s5;K%- [@(0.0.255) class][@(64) _]ConvertInt[@(64) _:_][@(0.0.255) public][@(64) _][^`:`:Convert^@(64) C
-onvert]&]
-[s2; Integer converter.&]
-[s2; &]
-[s0;%- [%%/ Derived from][%%  ]Convert&]
-[s0; &]
-[s5;K%- [^`:`:ConvertInt^ ConvertInt]`&_MinMax[@(64) (][@(0.0.255) int][@(64) _][@3 `_min][@(64) ,
- ][@(0.0.255) int][@(64) _][@3 `_max][@(64) )]&]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:ConvertDouble`:`:Pattern`(const char`*`):%- [_^ConvertDouble^ ConvertDouble][@(0.0.255) `&
+]_[* Pattern]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p])&]
+[s2; Formatting tag used for conversion to textual representation 
+(includes standard printf formatting tags, see Format function 
+for description). Default tag is [@4 %.10g].&]
+[s7; [%-*C@3 p]-|Pattern.&]
+[s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:MinMax`(double`,double`):%- [_^ConvertDouble^ ConvertDouble][@(0.0.255) `&
+]_[* MinMax]([@(0.0.255) double]_[*@3 `_min], [@(0.0.255) double]_[*@3 `_max])&]
 [s2; Sets minimal and maximal allowed numbers.&]
 [s7; [%-*C@3 `_min]-|Lower limit.&]
 [s7; [%-*C@3 `_max]-|Upper limit.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertInt^ ConvertInt]`&_Min[@(64) (][@(0.0.255) int][@(64) _][@3 `_min][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:Min`(double`):%- [_^ConvertDouble^ ConvertDouble][@(0.0.255) `&]_[* M
+in]([@(0.0.255) double]_[*@3 `_min])&]
 [s2; Sets minimal allowed number.&]
 [s7; [%-*C@3 `_min]-|Lower limit.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertInt^ ConvertInt]`&_Max[@(64) (][@(0.0.255) int][@(64) _][@3 `_max][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:Max`(double`):%- [_^ConvertDouble^ ConvertDouble][@(0.0.255) `&]_[* M
+ax]([@(0.0.255) double]_[*@3 `_max])&]
 [s2; Sets maximal allowed number.&]
 [s7; [%-*C@3 `_max]-|Upper limit.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertInt^ ConvertInt]`&_NotNull[@(64) (][@(0.0.255) bool][@(64) _][@3 b][@(64) _`=
-_true)]&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:NotNull`(bool`):%- [_^ConvertDouble^ ConvertDouble][@(0.0.255) `&]_
+[* NotNull]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Allows/disallows Nulls. (Nulls are represented by the empty 
 text).&]
 [s7; [%-*C@3 b]-|true to disallow.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertInt^ ConvertInt]`&_NoNotNull[@(64) ()]&]
-[s2; Equivalent to NotNull(false).&]
-[s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [@(0.0.255) int][@(64) _]GetMin[@(64) ()_][@(0.0.255) const]&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:NoNotNull`(`):%- [_^ConvertDouble^ ConvertDouble][@(0.0.255) `&]_[* N
+oNotNull]()&]
+[s2; Equivalent to [^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertDouble`:`:NotNull`(bool`)^ N
+otNull](false).&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:GetMin`(`)const:%- [@(0.0.255) double]_[* GetMin]()_[@(0.0.255) const
+]&]
 [s7; [*/ Return value]-|Lower limit.&]
-[s0; &]
-[s5;K%- [@(0.0.255) int][@(64) _]GetMax[@(64) ()_][@(0.0.255) const]&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:GetMax`(`)const:%- [@(0.0.255) double]_[* GetMax]()_[@(0.0.255) const
+]&]
 [s7; [*/ Return value]-|Upper limit.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertDouble`:`:IsNotNull`(`)const:%- [@(0.0.255) bool]_[* IsNotNull]()_[@(0.0.255) c
+onst]&]
+[s7; [*/ Return value]-|true is Nulls are disallowed.&]
+[s3; &]
 [s0; &]
-[s5;K%- [@(0.0.255) bool][@(64) _]IsNotNull[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|true if null are not allowed.&]
 [s0; &]
-[s5;K%- ConvertInt[@(64) (][@(0.0.255) int][@(64) _][@3 minval][@(64) _`=_`-INT`_MAX, 
-][@(0.0.255) int][@(64) _][@3 maxval][@(64) _`=_INT`_MAX, ][@(0.0.255) bool][@(64) _][@3 notnul
-l][@(64) _`=_false)]&]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 ConvertInt]]}}&]
+[s3; &]
+[s1;:ConvertInt`:`:class:%- [@(0.0.255)3 class][3 _][*3 ConvertInt][3 _:_][@(0.0.255)3 public][3 _
+][*@3;3 Convert]&]
+[s9; Integer converter.&]
+[s0; &]
+[s0;%- [%%/ Derived from][%%  ][^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^ C
+onvert]&]
+[s3; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:ConvertInt`:`:ConvertInt`(int`,int`,bool`):%- [* ConvertInt]([@(0.0.255) int]_[*@3 min
+val]_`=_`-INT`_MAX, [@(0.0.255) int]_[*@3 maxval]_`=_INT`_MAX, [@(0.0.255) bool]_[*@3 not
+null]_`=_[@(0.0.255) false])&]
 [s2; Constructor.&]
 [s7; [%-*C@3 minval]-|Lower limit. Default value results in no limit.&]
 [s7; [%-*C@3 maxval]-|Upper limit. Default value results in no limit.&]
 [s7; [%-*C@3 notnull]-|If true, Nulls are not allowed.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertInt`:`:`~ConvertInt`(`):%- [@(0.0.255) `~][* ConvertInt]()&]
+[s2; Default destructor.&]
+[s3;%- &]
 [s0; &]
-[s0; &]
-[s0; &]
-[s5;K%- [@(0.0.255) class][@(64) _]ConvertString[@(64) _:_][@(0.0.255) public][@(64) _][^`:`:Convert^@(64) C
-onvert]&]
-[s2; String `"converter`". Of course, String already is textual representation 
-of itself, the real purpose of this class is to introduce constraints 
-of String value.&]
-[s2; &]
-[s0;%- [%%/ Derived from][%%  ]Convert&]
-[s0; &]
-[s5;K%- [^`:`:ConvertString^ ConvertString]`&_MaxLen[@(64) (][@(0.0.255) int][@(64) _][@3 `_max
-len][@(64) )]&]
-[s2; Sets maximum length of String allowed.&]
-[s7; [%-*C@3 `_maxlen]-|Length.&]
-[s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [@(0.0.255) int][@(64) _]GetMaxLength[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Maximum length of String allowed.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertString^ ConvertString]`&_NotNull[@(64) (][@(0.0.255) bool][@(64) _][@3 b][@(64) _
-`=_true)]&]
-[s2; Disallows empty Strings.&]
-[s7; [%-*C@3 b]-|true to disallow.&]
-[s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:ConvertString^ ConvertString]`&_NoNotNull[@(64) ()]&]
-[s2; Same as NotNull(false).&]
-[s0; &]
-[s5;K%- [@(0.0.255) bool][@(64) _]IsNotNull[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|true mean empty Strings are not allowed.&]
-[s0; &]
-[s5;K%- ConvertString[@(64) (][@(0.0.255) int][@(64) _][@3 maxlen][@(64) _`=_INT`_MAX, 
-][@(0.0.255) bool][@(64) _][@3 notnull][@(64) _`=_false)]&]
-[s2; Constructor.&]
-[s7; [%-*C@3 maxlen]-|Maximum length `- default is unlimited.&]
-[s7; [%-*C@3 notnull]-|If true, empty strings are not allowed.&]
-[s0; &]
-[s0; &]
-[s0; &]
-[s5;K%- [@(0.0.255) class][@(64) _]ConvertTime[@(64) _:_][@(0.0.255) public][@(64) _][^`:`:Convert^@(64) C
-onvert]&]
-[s2; Time converter.&]
-[s2; &]
-[s0;%- [%%/ Derived from][%%  ]Convert&]
-[s0; &]
-[s5;K%- [^`:`:ConvertTime^ ConvertTime]`&_MinMax[@(64) (][^`:`:Time^@(64) Time][@(64) _][@3 `_m
-in][@(64) , ][^`:`:Time^@(64) Time][@(64) _][@3 `_max][@(64) )]&]
-[s2;%- Time limeits.&]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:ConvertInt`:`:MinMax`(int`,int`):%- [_^ConvertInt^ ConvertInt][@(0.0.255) `&]_[* MinMa
+x]([@(0.0.255) int]_[*@3 `_min], [@(0.0.255) int]_[*@3 `_max])&]
+[s2; Sets minimal and maximal allowed numbers.&]
 [s7; [%-*C@3 `_min]-|Lower limit.&]
 [s7; [%-*C@3 `_max]-|Upper limit.&]
 [s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertInt`:`:Min`(int`):%- [_^ConvertInt^ ConvertInt][@(0.0.255) `&]_[* Min]([@(0.0.255) i
+nt]_[*@3 `_min])&]
+[s2; Sets minimal allowed number.&]
+[s7; [%-*C@3 `_min]-|Lower limit.&]
+[s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertInt`:`:Max`(int`):%- [_^ConvertInt^ ConvertInt][@(0.0.255) `&]_[* Max]([@(0.0.255) i
+nt]_[*@3 `_max])&]
+[s2; Sets maximal allowed number.&]
+[s7; [%-*C@3 `_max]-|Upper limit.&]
+[s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertInt`:`:NotNull`(bool`):%- [_^ConvertInt^ ConvertInt][@(0.0.255) `&]_[* NotNull](
+[@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Allows/disallows Nulls. (Nulls are represented by the empty 
+text).&]
+[s7; [%-*C@3 b]-|true to disallow.&]
+[s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertInt`:`:NoNotNull`(`):%- [_^ConvertInt^ ConvertInt][@(0.0.255) `&]_[* NoNotNull](
+)&]
+[s2; Equivalent to [^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertInt`:`:NotNull`(bool`)^ N
+otNull](false).&]
+[s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertInt`:`:GetMin`(`)const:%- [@(0.0.255) int]_[* GetMin]()_[@(0.0.255) const]&]
+[s7; [*/ Return value]-|Lower limit.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertInt`:`:GetMax`(`)const:%- [@(0.0.255) int]_[* GetMax]()_[@(0.0.255) const]&]
+[s7; [*/ Return value]-|Upper limit.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertInt`:`:IsNotNull`(`)const:%- [@(0.0.255) bool]_[* IsNotNull]()_[@(0.0.255) cons
+t]&]
+[s7; [*/ Return value]-|true if null are not allowed.&]
+[s3; &]
 [s0; &]
-[s5;K%- [^`:`:ConvertTime^ ConvertTime]`&_NotNull[@(64) (][@(0.0.255) bool][@(64) _][@3 b][@(64) _
-`=_true)]&]
+[s0; &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 ConvertString]]}}&]
+[s3; &]
+[s1;:ConvertString`:`:class:%- [@(0.0.255)3 class][3 _][*3 ConvertString][3 _:_][@(0.0.255)3 pub
+lic][3 _][*@3;3 Convert]&]
+[s9; String `"converter`". Of course, String already is textual representation 
+of itself, the real purpose of this class is to introduce constraints 
+of String value.&]
+[s0; &]
+[s0;%- [%%/ Derived from][%%  ][^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^ C
+onvert]&]
+[s3; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3; &]
+[s5;:ConvertString`:`:ConvertString`(int`,bool`):%- [* ConvertString]([@(0.0.255) int]_[*@3 m
+axlen]_`=_INT`_MAX, [@(0.0.255) bool]_[*@3 notnull]_`=_[@(0.0.255) false])&]
+[s2; Constructor.&]
+[s7; [%-*C@3 maxlen]-|Maximum length `- default is unlimited.&]
+[s7; [%-*C@3 notnull]-|If true, empty strings are not allowed.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertString`:`:`~ConvertString`(`):%- [@(0.0.255) `~][* ConvertString]()&]
+[s2; Default destructor.&]
+[s3;%- &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3; &]
+[s5;:ConvertString`:`:MaxLen`(int`):%- [_^ConvertString^ ConvertString][@(0.0.255) `&]_[* M
+axLen]([@(0.0.255) int]_[*@3 `_maxlen])&]
+[s2; Sets maximum length of String allowed.&]
+[s7; [%-*C@3 `_maxlen]-|Length.&]
+[s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertString`:`:GetMaxLength`(`)const:%- [@(0.0.255) int]_[* GetMaxLength]()_[@(0.0.255) c
+onst]&]
+[s7; [*/ Return value]-|Maximum length of String allowed.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertString`:`:NotNull`(bool`):%- [_^ConvertString^ ConvertString][@(0.0.255) `&]_
+[* NotNull]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Disallows empty Strings.&]
 [s7; [%-*C@3 b]-|true to disallow.&]
 [s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertString`:`:NoNotNull`(`):%- [_^ConvertString^ ConvertString][@(0.0.255) `&]_[* N
+oNotNull]()&]
+[s2; Same as [^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertString`:`:NotNull`(bool`)^ N
+otNull](false).&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertString`:`:IsNotNull`(`)const:%- [@(0.0.255) bool]_[* IsNotNull]()_[@(0.0.255) c
+onst]&]
+[s7; [*/ Return value]-|true mean empty Strings are not allowed.&]
+[s3; &]
 [s0; &]
-[s5;K%- [^`:`:ConvertTime^ ConvertTime]`&_NoNotNull[@(64) ()]&]
-[s2; Same as NotNull(false).&]
 [s0; &]
-[s5;K%- [^`:`:Time^ Time]_GetMin[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Lower limit.&]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 ConvertString]]}}&]
+[s3; &]
+[s1;:ConvertTime`:`:class:%- [@(0.0.255)3 class][3 _][*3 ConvertTime][3 _:_][@(0.0.255)3 public][3 _
+][*@3;3 Convert]&]
+[s9; Time converter.&]
 [s0; &]
-[s5;K%- [^`:`:Time^ Time]_GetMax[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|Upper limit.&]
+[s0;%- [%%/ Derived from][%%  ][^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^ C
+onvert]&]
+[s3; &]
 [s0; &]
-[s5;K%- [@(0.0.255) bool][@(64) _]IsNotNull[@(64) ()_][@(0.0.255) const]&]
-[s7; [*/ Return value]-|true means Nulls are disallowed.&]
-[s0; &]
-[s5;K%- ConvertTime[@(64) (][^`:`:Time^@(64) Time][@(64) _][@3 minval][@(64) _`=_Null, 
-][^`:`:Time^@(64) Time][@(64) _][@3 maxval][@(64) _`=_Null, ][@(0.0.255) bool][@(64) _][@3 notn
-ull][@(64) _`=_false)]&]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3;%- &]
+[s5;:ConvertTime`:`:ConvertTime`(Time`,Time`,bool`):%- [* ConvertTime]([_^Time^ Time]_[*@3 m
+inval]_`=_ToTime(Date`::Low()), [_^Time^ Time]_[*@3 maxval]_`=_ToTime(Date`::High()), 
+[@(0.0.255) bool]_[*@3 notnull]_`=_[@(0.0.255) false])&]
 [s2;%- Constructor.&]
 [s7; [%-*C@3 minval]-|Lower limit. Default means there is no limit.&]
 [s7; [%-*C@3 maxval]-|Upper limit. Default means there is no limit.&]
 [s7; [%-*C@3 notnull]-|true disallows Nulls.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertTime`:`:`~ConvertTime`(`):%- [@(0.0.255) `~][* ConvertTime]()&]
+[s2; Default destructor.&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:ConvertTime`:`:MinMax`(Time`,Time`):%- [_^ConvertTime^ ConvertTime][@(0.0.255) `&]_[* M
+inMax]([_^Time^ Time]_[*@3 `_min], [_^Time^ Time]_[*@3 `_max])&]
+[s2;%- Time limeits.&]
+[s7; [%-*C@3 `_min]-|Lower limit.&]
+[s7; [%-*C@3 `_max]-|Upper limit.&]
+[s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertTime`:`:NotNull`(bool`):%- [_^ConvertTime^ ConvertTime][@(0.0.255) `&]_[* NotNu
+ll]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Disallows empty Strings.&]
+[s7; [%-*C@3 b]-|true to disallow.&]
+[s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertTime`:`:NoNotNull`(`):%- [_^ConvertTime^ ConvertTime][@(0.0.255) `&]_[* NoNotNu
+ll]()&]
+[s2; Same as [^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertTime`:`:NotNull`(bool`)^ N
+otNull](false).&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertTime`:`:GetMin`(`)const:%- [_^Time^ Time]_[* GetMin]()_[@(0.0.255) const]&]
+[s7; [*/ Return value]-|Lower limit.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertTime`:`:GetMax`(`)const:%- [_^Time^ Time]_[* GetMax]()_[@(0.0.255) const]&]
+[s7; [*/ Return value]-|Upper limit.&]
+[s3; &]
+[s4;%- &]
+[s5;:ConvertTime`:`:IsNotNull`(`)const:%- [@(0.0.255) bool]_[* IsNotNull]()_[@(0.0.255) con
+st]&]
+[s7; [*/ Return value]-|true means Nulls are disallowed.&]
+[s3; &]
 [s0; &]
 [s0; &]
-[s0; &]
-[s5;K%- [@(0.0.255) class][@(64) _]FormatConvert[@(64) _:_][@(0.0.255) public][@(64) _][^`:`:Convert^@(64) C
-onvert]&]
-[s2; This unidirectional Convert class (only Format direction implemented) 
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 FormatConvert]]}}&]
+[s3; &]
+[s1;:FormatConvert`:`:class:%- [@(0.0.255)3 class][3 _][*3 FormatConvert][3 _:_][@(0.0.255)3 pub
+lic][3 _][*@3;3 Convert]&]
+[s9; This unidirectional Convert class (only Format direction implemented) 
 converts single Value or ValueArray using Format function and 
 specified formatter pattern.&]
-[s0;%- [%%/ Derived from][%%  ]Convert&]
-[s0; &]
-[s5;K%- [@(0.0.255) void][@(64) _]SetFormat[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _
-`*][@3 fmt][@(64) )]&]
+[s9; &]
+[s0;%- [%%/ Derived from][%%  ][^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^ C
+onvert]&]
+[s3; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:FormatConvert`:`:SetFormat`(const char`*`):%- [@(0.0.255) void]_[* SetFormat]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 fmt])&]
 [s2; Sets formatting pattern.&]
 [s7; [%-*C@3 fmt]-|The pattern.&]
-[s0; &]
+[s3; &]
 [s0;3 &]
 [s0;3 &]
-[s5;K%- [@(0.0.255) class][@(64) _]JoinConvert[@(64) _:_][@(0.0.255) public][@(64) _][^`:`:Convert^@(64) C
-onvert]&]
-[s2; This unidirectional Convert class (only Format direction is 
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 JoinConvert]]}}&]
+[s3; &]
+[s1;:JoinConvert`:`:class:%- [@(0.0.255)3 class][3 _][*3 JoinConvert][3 _:_][@(0.0.255)3 public][3 _
+][*@3;3 Convert]&]
+[s9; This unidirectional Convert class (only Format direction is 
 implemented) converts ValueArray using a set of other Convert 
 instances. Resulting textual representation is created by joining 
 a set of defined elements `- some of them static texts, others 
 referring to elements of input ValueArray, converted using specified 
 Convert.&]
-[s2; &]
-[s0;%- [%%/ Derived from][%%  ]Convert&]
 [s0; &]
-[s5;K%- [^`:`:JoinConvert^ JoinConvert]`&_Add[@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) ch
-ar][@(64) _`*][@3 text][@(64) )]&]
+[s0;%- [%%/ Derived from][%%  ][^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^ C
+onvert]&]
+[s3; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:JoinConvert`:`:Add`(const char`*`):%- [_^JoinConvert^ JoinConvert][@(0.0.255) `&]_[* A
+dd]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text])&]
 [s2; Adds static text to the list of elements.&]
 [s7; [%-*C@3 text]-|Text.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:JoinConvert^ JoinConvert]`&_Add[@(64) (][@(0.0.255) int][@(64) _][@3 pos][@(64) , 
-][@(0.0.255) const][@(64) _][^`:`:Convert^@(64) Convert][@(64) `&_][@3 cv][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:JoinConvert`:`:Add`(int`,const Convert`&`):%- [_^JoinConvert^ JoinConvert][@(0.0.255) `&
+]_[* Add]([@(0.0.255) int]_[*@3 pos], [@(0.0.255) const]_[_^Convert^ Convert][@(0.0.255) `&]_
+[*@3 cv])&]
 [s2; Add element referring to input value, to be converted using 
 specified Convert.&]
 [s7; [%-*C@3 pos]-|Index of input ValueArray element.&]
 [s7; [%-*C@3 cv]-|Convert.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:JoinConvert^ JoinConvert]`&_Add[@(64) (][@(0.0.255) int][@(64) _][@3 pos][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:JoinConvert`:`:Add`(int`):%- [_^JoinConvert^ JoinConvert][@(0.0.255) `&]_[* Add]([@(0.0.255) i
+nt]_[*@3 pos])&]
 [s2; Add element referring to input value, to be converted using 
 default Convert.&]
 [s7; [%-*C@3 pos]-|Index of input ValueArray element.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:JoinConvert^ JoinConvert]`&_Add[@(64) (][@(0.0.255) const][@(64) _][^`:`:Convert^@(64) C
-onvert][@(64) `&_][@3 cv][@(64) )]&]
+[s3; &]
+[s4;%- &]
+[s5;:JoinConvert`:`:Add`(const Convert`&`):%- [_^JoinConvert^ JoinConvert][@(0.0.255) `&]_
+[* Add]([@(0.0.255) const]_[_^Convert^ Convert][@(0.0.255) `&]_[*@3 cv])&]
 [s2; Add element referring to input value, to be converted using 
 specified Convert. Index of input element is the index of previous 
 input element plus 1.&]
 [s7; [%-*C@3 cv]-|Convert.&]
 [s7; [*/ Return value]-|`*this.&]
-[s0; &]
-[s5;K%- [^`:`:JoinConvert^ JoinConvert]`&_Add[@(64) ()]&]
+[s3; &]
+[s4;%- &]
+[s5;:JoinConvert`:`:Add`(`):%- [_^JoinConvert^ JoinConvert][@(0.0.255) `&]_[* Add]()&]
 [s2; Add element referring to input value, to be converted using 
 default Convert. Index of input element is the index of previous 
 input element plus 1.&]
 [s7; [*/ Return value]-|`*this.&]
+[s3; &]
+[s0; &]
 [s0;3 &]
-[s0;3 &]
-[s0;3 &]
-[s0; [3 Standard Converts]&]
-[s0; Standard converts are simple global functions returning a constant 
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 Standard Converts]]}}&]
+[s3; &]
+[s9; Standard converts are simple global functions returning a constant 
 reference to the single global variable representing the particular 
 Convert class. Following table lists names of these functions 
 and respective constructors of Convert classes used to create 
-global variable&]
-[s0;3 &]
-[ {{3310:6690h1;@(204) [s0; [1 Function name]]
-:: [s0; [1 Definition]]
-::@2 [s0; [*C1 StdConvert]]
-:: [s0; [C1 Convert]]
-:: [s0; [*C1 StdConvertInt]]
-:: [s0; [C1 ConvertInt]]
-:: [s0; [*C1 StdConvertIntNotNull]]
-:: [s0; [C1 ConvertInt(`-INT`_MAX, INT`_MAX, true)]]
-:: [s0; [*C1 StdConvertDouble]]
-:: [s0; [C1 ConvertDouble]]
-:: [s0; [*C1 StdConvertDoubleNotNull]]
-:: [s0; [C1 ConvertDouble(`-DOUBLE`_NULL`_LIM, DOUBLE`_NULL`_LIM, true)]]
-:: [s0; [*C1 StdConvertDate]]
-:: [s0; [C1 ConvertDate]]
-:: [s0; [*C1 StdConvertDateNotNull]]
-:: [s0; [C1 ConvertDate(Date(0, 0, 0), Date(3000, 12, 31), true)]]
-:: [s0; [*C1 StdConvertTime]]
-:: [s0; [C1 ConvertTime]]
-:: [s0; [*C1 StdConvertTimeNotNull]]
-:: [s0; [C1 ConvertTime(Null, Null, true)]]
-:: [s0; [*C1 StdConvertString]]
-:: [s0; [C1 ConvertString]]
-:: [s0; [*C1 StdConvertStringNotNull]]
-:: [s0; [C1 ConvertString(INT`_MAX, true)]]}}&]
-[s0; ]
+global variable:&]
+[s3; &]
+[s0; &]
+[s5;:StdConvert`(`):%- [@(0.0.255) const]_[_^Convert^ Convert][@(0.0.255) `&]_[* StdConvert](
+)&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^1 Convert]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertInt`(`):%- [@(0.0.255) const]_[_^ConvertInt^ ConvertInt][@(0.0.255) `&]_[* Std
+ConvertInt]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertInt`:`:class^1 ConvertInt]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertIntNotNull`(`):%- [@(0.0.255) const]_[_^ConvertInt^ ConvertInt][@(0.0.255) `&
+]_[* StdConvertIntNotNull]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertInt`:`:class^1 ConvertInt][C1 (`-IN
+T`_MAX, INT`_MAX, true)]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertDouble`(`):%- [@(0.0.255) const]_[_^ConvertDouble^ ConvertDouble][@(0.0.255) `&
+]_[* StdConvertDouble]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertDouble`:`:class^1 ConvertDouble]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertDoubleNotNull`(`):%- [@(0.0.255) const]_[_^ConvertDouble^ ConvertDouble][@(0.0.255) `&
+]_[* StdConvertDoubleNotNull]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertDouble`:`:class^1 ConvertDouble][C1 (
+`-DOUBLE`_NULL`_LIM, DOUBLE`_NULL`_LIM, true)]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertDate`(`):%- [@(0.0.255) const]_[_^ConvertDate^ ConvertDate][@(0.0.255) `&]_[* S
+tdConvertDate]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertDate`:`:class^1 ConvertDate]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertDateNotNull`(`):%- [@(0.0.255) const]_[_^ConvertDate^ ConvertDate][@(0.0.255) `&
+]_[* StdConvertDateNotNull]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertDate`:`:class^1 ConvertDate][C1 (Da
+te(0, 0, 0), Date(3000, 12, 31), true)]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertTime`(`):%- [@(0.0.255) const]_[_^ConvertTime^ ConvertTime][@(0.0.255) `&]_[* S
+tdConvertTime]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertTime`:`:class^1 ConvertTime]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertTimeNotNull`(`):%- [@(0.0.255) const]_[_^ConvertTime^ ConvertTime][@(0.0.255) `&
+]_[* StdConvertTimeNotNull]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertTime`:`:class^1 ConvertTime][C1 (Nu
+ll, Null, true)]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertString`(`):%- [@(0.0.255) const]_[_^ConvertString^ ConvertString][@(0.0.255) `&
+]_[* StdConvertString]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertString`:`:class^1 ConvertString]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:StdConvertStringNotNull`(`):%- [@(0.0.255) const]_[_^ConvertString^ ConvertString][@(0.0.255) `&
+]_[* StdConvertStringNotNull]()&]
+[s2; [C^topic`:`/`/Core`/src`/Convert`$en`-us`#ConvertString`:`:class^1 ConvertString][C1 (
+INT`_MAX, true)]&]
+[s3;%- &]
+[s0;3%- ]

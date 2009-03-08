@@ -42,6 +42,10 @@ TOPIC("Color$en-us")
 #include "Color$en-us.tppi"
 END_TOPIC
 
+TOPIC("Convert$en-us")
+#include "Convert$en-us.tppi"
+END_TOPIC
+
 TOPIC("DateFmt$en-us")
 #include "DateFmt$en-us.tppi"
 END_TOPIC
