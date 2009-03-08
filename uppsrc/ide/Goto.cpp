@@ -247,7 +247,7 @@ bool Ide::SwapSIf(const char *cref)
 		return false;
 	}
 	if(count < 1)
-		return;
+		return false;
 	int file = GetCppFileIndex(editfile);
 	int line = p.current.line;
 	LLOG("SwapS line: " << line);
