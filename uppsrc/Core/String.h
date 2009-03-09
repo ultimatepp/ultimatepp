@@ -487,6 +487,7 @@ int CompareNoCase(const char *a, const String& b, byte encoding = 0) {
 
 String TrimLeft(const String& s);
 String TrimRight(const String& s);
+String TrimBoth(const String& s);
 
 inline StringBuffer& operator<<(StringBuffer& s, const char *x)
 {

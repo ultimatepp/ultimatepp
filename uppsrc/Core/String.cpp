@@ -441,6 +441,11 @@ String TrimRight(const String& str)
 	return String(~str, s + 1);
 }
 
+String TrimBoth(const String& str)
+{
+	return TrimLeft(TrimRight(str));
+}
+
 struct StringICompare__
 {
 	int encoding;

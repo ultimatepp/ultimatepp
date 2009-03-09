@@ -12,6 +12,7 @@
 #include <CodeEditor/CodeEditor.h>
 #include <usvn/usvn.h>
 #include <ide/IconDes/IconDes.h>
+#include <TextDiffCtrl/TextDiffCtrl.h>
 
 #define LAYOUTFILE <ide/ide.lay>
 #include <CtrlCore/lay.h>
@@ -859,7 +860,8 @@ public:
 		String GetOpposite();
 		void   GoOpposite();
 		void   Print();
-
+		void   Diff();
+		void   SvnHistory();
 
 	void      Edit(Bar& menu);
 		void  EditAsText();
