@@ -15,4 +15,5 @@
 #include "art\BlueBar/init"
 #include "plugin/astyle/init"
 #include "usvn/init"
+#include "TextDiffCtrl/init"
 #endif

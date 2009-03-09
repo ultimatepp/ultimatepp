@@ -15,7 +15,8 @@ uses
 	HexView,
 	art\BlueBar,
 	plugin/astyle,
-	usvn;
+	usvn,
+	TextDiffCtrl;
 
 link(WIN32 MSC) /MAP;
 
@@ -59,6 +60,7 @@ file
 	Calc.cpp,
 	FormatCode.cpp,
 	Abbr.cpp,
+	Diff.cpp,
 	Compile readonly separator,
 	Methods.cpp,
 	AutoSetup.cpp,

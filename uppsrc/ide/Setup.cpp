@@ -36,33 +36,6 @@ public:
 };
 
 void FontSelectManager::FaceSelect() {
-	height->Clear();
-#ifdef PLATFORM_WIN32
-	int f = face->GetData();
-	int h = -1;
-	int lh = height->GetData();
-	int lhh = -1;
-
-	int i;
-	for(i = 1; i < 32; i++) {
-		FontInfo fi = Font(f, i).Info();
-		int hh = fi.GetHeight();
-		if(hh != h) {
-			height->Add(hh);
-			if(hh >= lh && lhh < 0)
-				lhh = hh;
-			h = hh;
-		}
-	}
-	if(lhh >= 0)
-		height->SetData(lhh);
-	else
-	if(height->GetCount())
-		height->SetIndex(0);
-#else
-	for(int i = 6; i < 32; i++)
-		height->Add(i);
-#endif
 	Select();
 }
 
@@ -89,6 +62,9 @@ void FontSelectManager::Set(DropList& _face, DropList& _height,
 			LLOG("Face: " << Font::GetFaceName(i));
 		}
 	face->SetIndex(0);
+	height->ClearList();
+	for(int i = 6; i < 32; i++)
+		height->Add(i);
 	FaceSelect();
 }
 
