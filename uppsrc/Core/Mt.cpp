@@ -260,6 +260,11 @@ void Semaphore::Release()
 	ReleaseSemaphore(handle, 1, NULL);
 }
 
+void Semaphore::Release(int n)
+{
+	ReleaseSemaphore(handle, n, NULL);
+}
+
 void Semaphore::Wait()
 {
 	WaitForSingleObject(handle, INFINITE);

@@ -125,8 +125,10 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			html << "<TABLE WIDTH=\"100%\" BORDER=0>";
 			if(tf.before > 0)
 				html << "<TR><TD HEIGHT=" << HtmlDot(tf.before, z) << " COLSPAN=3></TD></TR>";
-			html << "<TR><TD><TABLE BORDER=0 WIDTH=" << HtmlDot(tf.lm, z) << "><TR><TD></TD></TR></TABLE></TD>\r\n"
-					"<TD WIDTH=\"98%\">";
+			html << "<TR>";
+			if (tf.lm > 0)
+				html << "<TD><TABLE BORDER=0 WIDTH=" << HtmlDot(tf.lm, z) << "><TR><TD></TD></TR></TABLE></TD>\r\n";
+			html <<	"<TD WIDTH=\"100%\">";
 
 			String style;
 			style << "border-collapse:collapse;table-layout:auto;"
@@ -175,8 +177,9 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 				}
 				html << "</TR>\r\n";
 			}
-			html << "</TABLE></TD>\r\n"
-			     << "<TD><TABLE BORDER=0 WIDTH=" << HtmlDot(tf.rm, z) << "><TR><TD></TD></TR></TABLE></TD>";
+			html << "</TABLE></TD>\r\n";
+			if (tf.rm > 0)
+				html << "<TD><TABLE BORDER=0 WIDTH=" << HtmlDot(tf.rm, z) << "><TR><TD></TD></TR></TABLE></TD>";
 			if(tf.after > 0)
 				html << "<TR><TD HEIGHT=" << HtmlDot(tf.after, z) << " COLSPAN=3></TD></TR>";
 			html << "</TABLE>\r\n";
