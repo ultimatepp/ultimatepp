@@ -84,6 +84,7 @@ void FileDiff::Open()
 
 void FileDiff::Execute(const String& f)
 {
+	editfile = f;
 	Open();
 	if(IsNull(r))
 		return;

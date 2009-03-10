@@ -58,6 +58,73 @@ by user.&]
 [s0;%% &]
 [s3; &]
 [s4; &]
+[s5;:SqlArray`:`:StartDuplicate`(`): [@(0.0.255) void]_[* StartDuplicate]()&]
+[s2;%% Similar to StartInsert, but copies the content of current 
+line to the newly inserted one.&]
+[s3; &]
+[s4; &]
+[s5;:SqlArray`:`:DoRemove`(`): [@(0.0.255) void]_[* DoRemove]()&]
+[s2;%% Performs removal of line from SqlArray AND database. If AskRemove 
+is active (default), user is prompted (using PromptYesNo) before 
+removing.&]
+[s3; &]
+[s4; &]
+[s5;:SqlArray`:`:SetSession`(SqlSession`&`): [@(0.0.255) void]_[* SetSession]([_^SqlSession^ S
+qlSession][@(0.0.255) `&]_[*@3 `_session])&]
+[s2;%% Sets the sql session used for. (Default is SQL).&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:Join`(SqlId`,ArrayCtrl`&`): [@(0.0.255) void]_[* Join]([_^SqlId^ SqlId]_[*@3 f
+k], [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[*@3 master])&]
+[s2;%% Joins this SqlArray with [%-*@3 master] using foreign key [%-*@3 fk]. 
+SqlArray will represent a detail; when cursor in master changes, 
+SqlArray reloads with a query (issuing select to database) formed 
+by (optional) SetWhere SqlBool expression and fk `=`= master.GetKey().&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:Join`(ArrayCtrl`&`): [@(0.0.255) void]_[* Join]([_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
+]_[*@3 master])&]
+[s2;%% Joins [%-*@3 master].using the name of key (first index) as 
+foreign key name.&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:Query`(`): [@(0.0.255) void]_[* Query]()&]
+[s2;%% Reloads the content (issuing select).&]
+[s3; &]
+[s4; &]
+[s5;:SqlArray`:`:AppendQuery`(SqlBool`): [@(0.0.255) void]_[* AppendQuery]([_^SqlBool^ SqlB
+ool]_[*@3 where])&]
+[s2;%% Appends a query with [%-*@3 where], adding rows to current content. 
+Foreign keys and master defined by Join are combined with where. 
+This is rather untypical operation.&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:Query`(SqlBool`): [@(0.0.255) void]_[* Query]([_^SqlBool^ SqlBool]_[*@3 wher
+e])&]
+[s2;%% Performs SetWhere([%-*@3 where]); Query().&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:ReQuery`(`): [@(0.0.255) void]_[* ReQuery]()&]
+[s2;%% Similar to Query, but restores the position of cursor to the 
+row with same key as was active before this operations if possible. 
+Tries to keep relative scroll position as well.&]
+[s3; &]
+[s4; &]
+[s5;:SqlArray`:`:Limit`(int`,int`): [@(0.0.255) void]_[* Limit]([@(0.0.255) int]_[*@3 `_offse
+t], [@(0.0.255) int]_[*@3 `_count])&]
+[s2;%% Allows to fetch only part of query results, on database engines 
+which support it.&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:Limit`(int`): [@(0.0.255) void]_[* Limit]([@(0.0.255) int]_[*@3 count])&]
+[s2;%% Same as Limit(0, [%-*@3 count]).&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:SetTable`(SqlId`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* SetTable]([_^SqlId^ S
+qlId]_[*@3 `_table])&]
+[s2;%% Sets the source table for this SqlArray.&]
+[s3;%% &]
+[s4; &]
 [s5;:SqlArray`:`:SetTable`(SqlId`,SqlId`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* SetTabl
 e]([_^SqlId^ SqlId]_[*@3 `_table], [_^SqlId^ SqlId]_[*@3 key])&]
 [s2;%% Sets both the table and the primary key. Same as SetTable([%-*@3 `_table]); 
@@ -70,4 +137,43 @@ qlBool]_[*@3 where])&]
 with foreign key (defined by Join) expression when performing 
 Query.&]
 [s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:SetOrderBy`(SqlSet`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* SetOrderBy](
+[_^SqlSet^ SqlSet]_[*@3 `_orderby])&]
+[s5;:SqlArray`:`:SetOrderBy`(const SqlVal`&`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* Set
+OrderBy]([@(0.0.255) const]_[_^SqlVal^ SqlVal][@(0.0.255) `&]_[*@3 a])&]
+[s5;:SqlArray`:`:SetOrderBy`(const SqlVal`&`,const SqlVal`&`): [_^SqlArray^ SqlArray][@(0.0.255) `&
+]_[* SetOrderBy]([@(0.0.255) const]_[_^SqlVal^ SqlVal][@(0.0.255) `&]_[*@3 a], 
+[@(0.0.255) const]_[_^SqlVal^ SqlVal][@(0.0.255) `&]_[*@3 b])&]
+[s5;:SqlArray`:`:SetOrderBy`(const SqlVal`&`,const SqlVal`&`,const SqlVal`&`): [_^SqlArray^ S
+qlArray][@(0.0.255) `&]_[* SetOrderBy]([@(0.0.255) const]_[_^SqlVal^ SqlVal][@(0.0.255) `&]_
+[*@3 a], [@(0.0.255) const]_[_^SqlVal^ SqlVal][@(0.0.255) `&]_[*@3 b], 
+[@(0.0.255) const]_[_^SqlVal^ SqlVal][@(0.0.255) `&]_[*@3 c])&]
+[s2;%% Sets the sorting order `- affects `"ORDER BY`" part of query.&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:GoEndPostQuery`(bool`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* GoEndPost
+Query]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% If active, cursor is placed to the last row of SqlArray after 
+the query instead of first one.&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:AutoInsertId`(bool`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* AutoInsertI
+d]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Lets the database engine to create the value for auto`-increment 
+keys.&]
+[s3;%% &]
+[s4; &]
+[s5;:SqlArray`:`:AppendingAuto`(`): [_^SqlArray^ SqlArray][@(0.0.255) `&]_[* AppendingAuto](
+)&]
+[s2;%% Combines Appending and AutoInsertId.&]
+[s3; &]
+[s4; &]
+[s5;:SqlArray`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]
+[s2;%% Clears the content.&]
+[s3; &]
+[s4; &]
+[s5;:SqlArray`:`:Reset`(`): [@(0.0.255) void]_[* Reset]()&]
+[s2;%% Resets SqlArray to initial state `- all settings, indexes 
+and columns are removed.&]
 [s0; ]
