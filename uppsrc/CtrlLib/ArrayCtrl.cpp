@@ -1418,7 +1418,8 @@ void ArrayCtrl::LeftDown(Point p, dword flags)
 		header.StartSplitDrag(q);
 		return;
 	}
-	q = GetLineAt(p.y + sb);
+	q = clickpos.y = GetLineAt(p.y + sb);
+	ClickColumn(p);
 	selclick = false;
 	if(q >= 0 && q < GetCount() && IsSel(q) && (flags & (K_CTRL|K_SHIFT)) == 0) {
 		selclick = true;
