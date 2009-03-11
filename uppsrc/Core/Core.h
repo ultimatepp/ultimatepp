@@ -419,8 +419,6 @@ NAMESPACE_UPP
 #include "Vcont.hpp"
 #include "Index.hpp"
 
-#include "Mt2.h"
-
 #include "Value.h"
 #include "Gtypes.h"
 #include "Color.h"
