@@ -1,0 +1,5 @@
+#ifndef _PainterSvg_icpp_init_stub
+#define _PainterSvg_icpp_init_stub
+#include "Painter/init"
+#include "plugin\jpg/init"
+#endif
