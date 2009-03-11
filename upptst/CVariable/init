@@ -1,0 +1,4 @@
+#ifndef _CVariable_icpp_init_stub
+#define _CVariable_icpp_init_stub
+#include "Core/init"
+#endif
