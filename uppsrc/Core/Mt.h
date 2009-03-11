@@ -258,7 +258,10 @@ inline int  AtomicDec(volatile Atomic& t)             { return AtomicXAdd(t, -1)
 
 class Mutex : NoCopy {
 	pthread_mutex_t  mutex[1];
+#ifdef flagPROFILEMT
 	MtInspector     *mti;
+#endif
+	friend class ConditionVariable;
 
 public:
 #ifdef flagPROFILEMT
@@ -291,6 +294,19 @@ public:
 
 	struct ReadLock;
 	struct WriteLock;
+};
+
+class ConditionVariable {
+	pthread_cond_t cv[1];
+	
+public:
+	void Wait(Mutex& m)  { pthread_cond_wait(cv, m.mutex); }
+
+	void Signal()        { pthread_cond_signal(cv); }
+	void Broadcast()     { pthread_cond_broadcast(cv); }
+	
+	ConditionVariable()  { pthread_cond_init(cv, NULL); }
+	~ConditionVariable() { pthread_cond_destroy(cv); }
 };
 
 #endif
