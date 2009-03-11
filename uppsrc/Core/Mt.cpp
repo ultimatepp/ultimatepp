@@ -354,6 +354,60 @@ RWMutex::~RWMutex()
 	CloseHandle ( m_wrwset );
 }
 
+struct sCVWaiter_ {
+	Semaphore   sem;
+	sCVWaiter_ *next;
+};
+	
+static thread__ byte sCVbuffer[sizeof(sCVWaiter_)];
+static thread__ sCVWaiter_ *sCV;
+
+void ConditionVariable::Wait(Mutex& m)
+{
+	{
+		Mutex::Lock __(mutex);
+		if(!sCV)
+			sCV = new(sCVbuffer) sCVWaiter_;
+		sCV->next = NULL;
+		if(head)
+			tail->next = sCV;
+		else
+			head = sCV;
+		tail = sCV;
+	}
+	m.Leave();
+	sCV->sem.Wait();
+	m.Enter();
+}
+
+void ConditionVariable::Signal()
+{
+	Mutex::Lock __(mutex);
+	if(head) {
+		head->sem.Release();
+		head = head->next;
+	}
+}
+
+void ConditionVariable::Broadcast()
+{
+	Mutex::Lock __(mutex);
+	while(head) {
+		head->sem.Release();
+		head = head->next;
+	}
+}
+
+ConditionVariable::ConditionVariable()
+{
+	head = tail = NULL;
+}
+
+ConditionVariable::~ConditionVariable()
+{
+	Broadcast();
+}
+
 #endif
 
 #ifdef PLATFORM_POSIX

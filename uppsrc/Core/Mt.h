@@ -230,6 +230,21 @@ public:
 	struct WriteLock;
 };
 
+class ConditionVariable {
+	Mutex                 mutex;
+	friend struct sCVWaiter_;
+	
+	sCVWaiter_ *head, *tail;
+	
+public:
+	void Wait(Mutex& m);
+	void Signal();
+	void Broadcast();
+	
+	ConditionVariable();
+	~ConditionVariable();
+};
+
 #endif
 
 #ifdef PLATFORM_POSIX
@@ -242,7 +257,6 @@ inline int  AtomicInc(volatile Atomic& t)             { return AtomicXAdd(t, +1)
 inline int  AtomicDec(volatile Atomic& t)             { return AtomicXAdd(t, -1) - 1; }
 
 class Mutex : NoCopy {
-protected:
 	pthread_mutex_t  mutex[1];
 	MtInspector     *mti;
 
