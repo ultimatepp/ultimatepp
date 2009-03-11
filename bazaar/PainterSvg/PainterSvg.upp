@@ -1,7 +1,0 @@
-uses
-	Painter;
-
-file
-	PainterSvg.h,
-	ParseSvg.cpp;
-
