@@ -73,7 +73,7 @@ isplay][@(0.0.255) `&]_[*@3 display])&]
 Default action is to call WhenAction callback.&]
 [s3; &]
 [s0;%- &]
-[ {{10000F(128)G(128)@1 [s0; [* Protected Member List]]}}&]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3;%- &]
 [s5;:DataPusher`:`:SetConvert`(const Convert`&`):%- [_^DataPusher^ DataPusher][@(0.0.255) `&
 ]_[* SetConvert]([@(0.0.255) const]_[_^Convert^ Convert][@(0.0.255) `&]_[*@3 `_convert])&]

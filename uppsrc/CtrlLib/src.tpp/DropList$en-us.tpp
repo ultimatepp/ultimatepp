@@ -10,9 +10,11 @@ topic "DropList";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s0;i448;a25;kKO9;:DropList`:`:class: [@(0.0.255) class]_[* DropList]_:_[@(0.0.255) public]_
-[*@3 MultiButton], [@(0.0.255) public]_[*@3 Convert]&]
-[s0; &]
+[ {{10000@3 [s0;%% [*@(229)4 DropList]]}}&]
+[s3; &]
+[s1;:DropList`:`:class: [@(0.0.255)3 class][3 _][*3 DropList][3 _:_][@(0.0.255)3 public][3 _][*@3;3 M
+ultiButton][3 , ][@(0.0.255)3 public][3 _][*@3;3 Convert]&]
+[s0;%% &]
 [s2;%% 
 @@image:337&143
 €ƒ¶€—€€€ƒéÿ€€€€ø¯œí×Ï‰Â°Þ˜‡áìçŽŽÛàÕ™ÜÀ©¼ÎùÕŠ•ªÑ±©¨˜¼©•±˜‰Ä´ðÁ¨‰Ùâ×­þ‚˜ÞÚÃ’–úÐÃÿ
@@ -20,23 +22,25 @@ topic "DropList";
 çÚ¹¿ƒ”ÆË£³Éà¨Úú»âÀá°½Ñ–äÕÌ© ð°¸ÚÂ¬Œªž‚Š£ÜùÖÌòœý å°¿Û»™ž¿˜‰üžö¦»ÎÁÀ÷Ê¤•§ Ò°–©§”°ü
 Žï›²Ã—†˜Çü×ãçú€ãÖó±
 &]
-[s2;%% This widget provides the selection of values from the drop`-down 
+[s0;%% &]
+[s9;%% This widget provides the selection of values from the drop`-down 
  list. List is organized in key`-value pairs; when item is selected, 
 the key of items becomes the new DropList value (as used by SetData/GetData 
 interface). The value of DropList does not necessarily have to 
 be in the list as key, you can e.g. assign a value to DropList 
 with empty list and fill the list later.&]
-[s2;%% Both key and value are of generic Value type. You can associate 
+[s9;%% Both key and value are of generic Value type. You can associate 
 specific Display and Convert with the list and that way use DropList 
 to represent any type of value (colors, line width, fonts etc..).&]
-[s2;%% DropList also implements the single`-direction Convert interface, 
+[s9;%% DropList also implements the single`-direction Convert interface, 
 where Format is defined as key`->value translation.&]
-[s2;%% Note: DropBox is implementation helper class used to share 
+[s9;%% Note: DropBox is implementation helper class used to share 
 some code between DropList and similar classes. DropBox is derived 
 from Ctrl.&]
+[s3;%% &]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* DropList Public Members]]}}&]
 [s3; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* DropList public members]]}}&]
-[s4; &]
 [s5;:DropList`:`:Style`:`:typedef: [@(0.0.255) typedef]_[_^MultiButton`:`:Style^ MultiBut
 ton`::Style]_[* Style]&]
 [s2;%% The chameleon style of DropList is in fact the Style of MultiButton 
@@ -296,14 +300,13 @@ list.&]
 [s5;:DropList`:`:operator Value`(`)const: [@(0.0.255) operator]_Value()_[@(0.0.255) const
 ]&]
 [s2;%% These methods are deprecated in favor of operator`~ and operator<<`=.&]
-[s0; &]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* DropList Related Global Functions]]}}&]
-[s0; &]
-[s0;%% These are simple utility function for filling DropList`'s 
+[s9;%% These are simple utility function for filling DropList`'s 
 list and MapConvert.&]
-[s3; &]
-[s4; &]
+[s3;%% &]
+[s0;%% &]
 [s5;:Add`(DropList`&`,const VectorMap`<Value`,Value`>`&`): [@(0.0.255) void]_[* Add]([_^DropList^ D
 ropList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^VectorMap^ VectorMap][@(0.0.255) <
 ][_^Value^ Value], [_^Value^ Value][@(0.0.255) >`&]_[*@3 values])&]
@@ -320,4 +323,5 @@ apConvert][@(0.0.255) `&]_[*@3 convert], [@(0.0.255) const]_[_^VectorMap^ Vector
 ][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^MapConvert^ MapConvert][@(0.0.255) `&]_[*@3 c
 onvert])&]
 [s2;%% Fills the DropList from MapConvert.&]
+[s3; &]
 [s0; ]
