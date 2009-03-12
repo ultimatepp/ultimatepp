@@ -97,7 +97,7 @@ protected:
 	class CommandConnection : public Connection
 	{
 	public:
-		CommandConnection(Socket socket, const char *command);
+		CommandConnection(Socket& socket, const char *command);
 
 		virtual bool      Run();
 
@@ -126,50 +126,59 @@ CommandServer::Connection::~Connection()
 //////////////////////////////////////////////////////////////////////
 // CommandServer::CommandConnection::
 
-CommandServer::CommandConnection::CommandConnection(Socket _socket, const char *_command)
+CommandServer::CommandConnection::CommandConnection(Socket& _socket, const char *_command)
 : Connection(_socket)
 {
-	String environment;
-	String pathlist;
-	if(*_command == ':') {
-		const char *b = ++_command;
-		while(*_command && *_command++ != '\n')
-			;
-		environment = ASCII85Decode(String(b, _command));
-		for(b = environment; *b; b += strlen(b) + 1)
-			if(!MemICmp(b, "PATH=", 5)) {
-				pathlist = b + 5;
-				break;
-			}
-	}
-	if(*_command == '=')
-		_command++;
-	String command = _command;
-	if(!IsNull(pathlist)) {
-		String exec;
-		if(*_command == '\"') {
-			while(*++_command && (*_command != '\"' || *++_command == '\"'))
-				exec.Cat(*_command);
+	_socket.Clear();
+	
+	try {
+		String environment;
+		String pathlist;
+		if(*_command == ':') {
+			const char *b = ++_command;
+			while(*_command && *_command++ != '\n')
+				;
+			environment = ASCII85Decode(String(b, _command));
+			for(b = environment; *b; b += strlen(b) + 1)
+				if(!MemICmp(b, "PATH=", 5)) {
+					pathlist = b + 5;
+					break;
+				}
 		}
-		else
-			while(*_command && (byte)*_command > ' ')
-				exec.Cat(*_command++);
-		command = GetFileOnPath(exec, pathlist, true);
-#ifdef PLATFORM_WIN32
-		if(IsNull(command))
-			command = GetFileOnPath(exec + ".exe", pathlist, true);
-#endif
-		if(IsNull(command))
-			command = exec;
-		if(command.Find(' ') >= 0)
-			command = '\"' + command + '\"';
-		command << ' ' << _command;
+		if(*_command == '=')
+			_command++;
+		String command = _command;
+		if(!IsNull(pathlist)) {
+			String exec;
+			if(*_command == '\"') {
+				while(*++_command && (*_command != '\"' || *++_command == '\"'))
+					exec.Cat(*_command);
+			}
+			else
+				while(*_command && (byte)*_command > ' ')
+					exec.Cat(*_command++);
+			command = GetFileOnPath(exec, pathlist, true);
+	#ifdef PLATFORM_WIN32
+			if(IsNull(command))
+				command = GetFileOnPath(exec + ".exe", pathlist, true);
+	#endif
+			if(IsNull(command))
+				command = exec;
+			if(command.Find(' ') >= 0)
+				command = '\"' + command + '\"';
+			command << ' ' << _command;
+		}
+		LOG("CommandServer::CommandConnection(" << command << ")");
+		slave = StartProcess(command, environment);
+		LOG("CommandServer::CommandConnection -> OK");
+		socket.Write("+\0", 2);
+		name << "[command]" << command;
 	}
-	LOG("CommandServer::CommandConnection(" << command << ")");
-	slave = StartProcess(command, environment);
-	LOG("CommandServer::CommandConnection -> OK");
-	socket.Write("+\0", 2);
-	name << "[command]" << command;
+	catch(Exc e) {
+		if(socket.IsOpen())
+			socket.Write('-' + e + '\0');
+		throw;
+	}
 }
 
 bool CommandServer::CommandConnection::Run()
