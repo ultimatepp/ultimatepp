@@ -97,7 +97,7 @@ String HtmlParaStyle(const RichPara::Format& f, Zoom z)
 
 String FormatClass(Index<String>& css, const String& fmt)
 {
-	return " CLASS=" + FormatIntAlpha(css.FindAdd(fmt) + 1);
+	return " class=\"" + FormatIntAlpha(css.FindAdd(fmt) + 1) + "\"";
 }
 
 void TabBorder(String& style, const char *txt, int border, Color bordercolor, const RichTable::Format& tf, Zoom z)
@@ -122,29 +122,30 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			int nx = t.format.column.GetCount();
 			int ny = t.cell.GetCount();
 			const RichTable::Format& tf = t.format;
-			html << "<TABLE WIDTH=\"100%\" BORDER=0>";
+			html << "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 			if(tf.before > 0)
-				html << "<TR><TD HEIGHT=" << HtmlDot(tf.before, z) << " COLSPAN=3></TD></TR>";
-			html << "<TR>";
+				html << "<tr><td height=" << HtmlDot(tf.before, z) << " colspan=\"3\"></td></tr>";
+			html << "<tr>";
 			if (tf.lm > 0)
-				html << "<TD><TABLE BORDER=0 WIDTH=" << HtmlDot(tf.lm, z) << "><TR><TD></TD></TR></TABLE></TD>\r\n";
-			html <<	"<TD WIDTH=\"100%\">";
+				html << "<td><table border=\"0\" width=" << HtmlDot(tf.lm, z) << "><tr><td></td></tr></table></td>\r\n";
+			html <<	"<td width=\"100%\">";
 
 			String style;
 			style << "border-collapse:collapse;table-layout:auto;"
 			      << "border:" << HtmlDotl(tf.frame, z) << " solid " << ColorToHtml(tf.framecolor) << ';';
 
-			html << "<TABLE WIDTH=\"100%\"" << FormatClass(css, style) << ">";
+			html << "<table width=\"100%\"" << FormatClass(css, style) << ">";
 			int sum = 0;
 			for(int i = 0; i < nx; i++)
 				sum += t.format.column[i];
-			html << "<COLGROUP>";
+			html << "<colgroup>";
 			for(int i = 0; i < nx; i++)
-				html << "<COL width=\"" << 100 * t.format.column[i] / sum << "%\">";
+				html << "<col width=\"" << 100 * t.format.column[i] / sum << "%\">";
+			html << "</colgroup>";
 			html << "\r\n";
 			for(int i = 0; i < ny; i++) {
 				const Array<RichCell>& r = t.cell[i];
-				html << "<TR>";
+				html << "<tr>";
 				for(int j = 0; j < r.GetCount(); j++) {
 					if(t(i, j)) {
 						const RichCell& c = r[j];
@@ -164,7 +165,7 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 						case ALIGN_BOTTOM: style << "bottom"; break;
 						}
 						style << ';';
-						html << "<TD" << FormatClass(css, style);
+						html << "<td" << FormatClass(css, style);
 						if(c.hspan)
 							html << " colspan=" << c.hspan + 1;
 						if(c.vspan)
@@ -172,28 +173,28 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 						html << '>';
 						html << AsHtml(c.text, styles, css, links, labels, outdir, namebase, z,
 						               im, escape, imtolerance);
-						html << "</TD>\r\n";
+						html << "</td>\r\n";
 					}
 				}
-				html << "</TR>\r\n";
+				html << "</tr>\r\n";
 			}
-			html << "</TABLE></TD>\r\n";
+			html << "</table></td>\r\n";
 			if (tf.rm > 0)
-				html << "<TD><TABLE BORDER=0 WIDTH=" << HtmlDot(tf.rm, z) << "><TR><TD></TD></TR></TABLE></TD>";
+				html << "<td><table border=\"0\" width=" << HtmlDot(tf.rm, z) << "><tr><td></td></tr></table></td>";
 			if(tf.after > 0)
-				html << "<TR><TD HEIGHT=" << HtmlDot(tf.after, z) << " COLSPAN=3></TD></TR>";
-			html << "</TABLE>\r\n";
+				html << "<tr><td height=" << HtmlDot(tf.after, z) << " colspan=\"3\"></td></tr>";
+			html << "</tr></table>\r\n";
 		}
 		else
 		if(text.IsPara(i)) {
 			RichPara p = text.Get(i, styles);
 			if(p.format.ruler)
-				html << "<HR>";
+				html << "<hr>";
 			String lbl;
 			if(!IsNull(p.format.label)) {
 				lbl = labels.Get(p.format.label, Null);
 				if(lbl.GetCount())
-					html << "<A NAME=\"" << lbl << "\">";
+					html << "<a name=\"" << lbl << "\">";
 			}
 			bool bultext = false;
 			if(p.format.bullet == RichPara::BULLET_TEXT)
@@ -205,17 +206,17 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 					}
 				}
 			if(bultext) {
-				html << "<TABLE WIDTH=\"100%\" BORDER=0 "
-				        "CELLPADDING=2 CELLSPACING=2>"
-				        "<TR>";
+				html << "<table width=\"100%\" border=\"0\" "
+				        "cellpadding=\"2\" cellspacing=\"2\">"
+				        "<tr>";
 				int q = z * p.format.lm - 8;
 				if(q > 0)
-					html << Format("<TD WIDTH=%d></TD>", q);
-				html << Format("<TD VALIGN=\"top\" WIDTH=%d BGCOLOR=\"#F0F0F0\">\r\n",
+					html << Format("<td width=\"%d\"></td>", q);
+				html << Format("<td valign=\"top\" width=\"%d\" bgcolor=\"#F0F0F0\">\r\n",
 				               max(z * p.format.indent, 0));
 				p.format.ruler = p.format.after = p.format.before = p.format.indent = p.format.lm = 0;
 			}
-			String par = "<P" + FormatClass(css, HtmlParaStyle(p.format, z)) + ">";
+			String par = "<p" + FormatClass(css, HtmlParaStyle(p.format, z)) + ">";
 			html << par;
 			for(int i = 0; i < p.part.GetCount(); i++) {
 				const RichPara::Part& part = p.part[i];
@@ -232,10 +233,10 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 					PNGEncoder png;
 					png.SaveFile(AppendFileName(outdir, name), part.object.ToImage(sz));
 					if(psz.cx * psz.cy)
-						html << "<A HREF=\"" << lname << "\">";
-					html << "<IMG SRC=\"" << name << "\" BORDER=0 ALT=\"\">";
+						html << "<a href=\"" << lname << "\">";
+					html << "<img src=\"" << name << "\" border=\"0\" alt=\"\">";
 					if(psz.cx * psz.cy) {
-						html << "</A>";
+						html << "</a>";
 						PNGEncoder png;
 						png.SaveFile(AppendFileName(outdir, lname), part.object.ToImage(psz));
 					}
@@ -260,31 +261,31 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 					}
 					String endtag;
 					if(!lnk.IsEmpty() && lnk[0] != ':') {
-						html << "<A HREF=\"" << lnk << "\">";
-						endtag = "</A>";
+						html << "<a href=\"" << lnk << "\">";
+						endtag = "</a>";
 					}
 					String cs;
 					if(part.text[0] != 9)
 						cs = HtmlCharStyle(part.format, p.format);
 					if(!cs.IsEmpty()) {
-						html << "<SPAN" << FormatClass(css, cs) << ">";
-						endtag = "</SPAN>" + endtag;
+						html << "<span" << FormatClass(css, cs) << ">";
+						endtag = "</span>" + endtag;
 					}
 					if(part.format.sscript == 1) {
-						html << "<SUP>";
-						endtag = "</SUP>" + endtag;
+						html << "<sup>";
+						endtag = "</sup>" + endtag;
 					}
 					if(part.format.sscript == 2) {
-						html << "<SUB>";
-						endtag = "</SUB>" + endtag;
+						html << "<sub>";
+						endtag = "</sub>" + endtag;
 					}
 					if(part.format.IsStrikeout()) {
-						html << "<STRIKE>";
-						endtag = "</STRIKE>" + endtag;
+						html << "<strike>";
+						endtag = "</strike>" + endtag;
 					}
 					if(part.format.capitals) {
-						html << "<SPAN STYLE=\"font-variant: small-caps;\">";
-						endtag << "</SPAN>";
+						html << "<span style=\"font-variant: small-caps;\">";
+						endtag << "</span>";
 					}
 					bool spc = false;
 					const wchar *end = part.text.End();
@@ -308,14 +309,14 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 							if(*s == 9) {
 								if(bultext) {
 									if(!cs.IsEmpty() && part.text[0] != 9)
-										html << "</SPAN>";
-									html << "</P>";
-									html << "</TD>\r\n<TD VALIGN=\"top\" BGCOLOR=\"#F0F0F0\">\r\n";
+										html << "</span>";
+									html << "</p>";
+									html << "</td>\r\n<td valign=\"top\" bgcolor=\"#F0F0F0\">\r\n";
 									html << par;
 									if(s[1]) {
 										cs = HtmlCharStyle(part.format, p.format);
 										if(!cs.IsEmpty())
-											html << "<SPAN" << FormatClass(css, cs) << ">";
+											html << "<span" << FormatClass(css, cs) << ">";
 									}
 								}
 								else
@@ -330,11 +331,11 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			}
 			if(p.part.GetCount() == 0)
 				html << "&nbsp;";
-			html << "</P>";
+			html << "</p>";
 			if(bultext)
-				html << "</TD></TR></TABLE>";
+				html << "</td></tr></table>";
 			if(lbl.GetCount())
-				html << "</A>";
+				html << "</a>";
 			html << "\r\n";
 		}
 	}
