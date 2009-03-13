@@ -1094,19 +1094,19 @@ void Clock::SetMinuteLine()
 
 void Clock::SetHourLeft()
 {
-	sel.hour = SetMinMax(--sel.hour, 0, 23).value;
+	sel.hour = SetMinMax(sel.hour - 1, 0, 23).value;
 	UpdateTime();
 }
 
 void Clock::SetHourRight()
 {
-	sel.hour = SetMinMax(++sel.hour, 0, 23).value;
+	sel.hour = SetMinMax(sel.hour + 1, 0, 23).value;
 	UpdateTime();
 }
 
 void Clock::SetMinuteLeft()
 {
-	MinMax mm = SetMinMax(--sel.minute, 0, 59);
+	MinMax mm = SetMinMax(sel.minute - 1, 0, 59);
 	sel.minute = mm.value;
 	sel.hour = SetMinMax(sel.hour + mm.diff, 0, 23).value;
 	UpdateTime();
@@ -1114,7 +1114,7 @@ void Clock::SetMinuteLeft()
 
 void Clock::SetMinuteRight()
 {
-	MinMax mm = SetMinMax(++sel.minute, 0, 59);
+	MinMax mm = SetMinMax(sel.minute + 1, 0, 59);
 	sel.minute = mm.value;
 	sel.hour = SetMinMax(sel.hour + mm.diff, 0, 23).value;
 	UpdateTime();
