@@ -342,10 +342,10 @@ void Ide::FilePropertiesMenu(Bar& menu)
 		.Help("File properties stored in package");
 	menu.Add(IsActiveFile(), AK_SAVEENCODING, THISBACK(ChangeCharset))
 	    .Help("Convert actual file to different encoding");
-	menu.AddMenu(IsActiveFile(), AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
+	menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
 	    .Help("Show differences between the project and arbitrary files");
 	if(IsSvnDir(GetFileFolder(editfile)))
-		menu.AddMenu(IsActiveFile(), AK_SVNDIFF, IdeImg::Diff(), THISBACK(SvnHistory))
+		menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_SVNDIFF, IdeImg::Diff(), THISBACK(SvnHistory))
 		    .Help("Show svn history of file");
 }
 
