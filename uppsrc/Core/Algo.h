@@ -182,7 +182,7 @@ T Find(T ptr, T end, const V& value, const C& equal)
 template <class T, class V>
 T Find(T ptr, T end, const V& value)
 {
-	return Find(ptr, end, value, StdEqual<T>());
+	return Find(ptr, end, value, StdEqual<V>());
 }
 
 template <class T, class V, class C>
