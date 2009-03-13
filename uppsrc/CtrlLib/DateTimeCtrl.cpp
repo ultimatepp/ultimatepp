@@ -769,20 +769,20 @@ Clock& Clock::SetStyle(const Style& s)
 	return *this;
 }
 
-void Clock::PaintPtr(int n, Draw& w, Point p, double pos, double m, int d, Color color, Point cf)
+void Clock::PaintPtr(int n, Draw& w, Point p, double pos, double m, double rd, int d, Color color, Point cf)
 {
 	double dx = m * sin(pos * 2 * M_PI);
 	double dy = m * cos(pos * 2 * M_PI);
 
 	lines[n].s.x = p.x - int(dx * 35 / 2);
 	lines[n].s.y = p.y + int(dy * 35 / 2);
-	lines[n].e.x = p.x + int(dx * cf.x);
-	lines[n].e.y = p.y - int(dy * cf.y);
+	lines[n].e.x = p.x + int(dx * (cf.x - rd));
+	lines[n].e.y = p.y - int(dy * (cf.y - rd));
 
 	w.DrawLine(lines[n].s, lines[n].e, d, color);
 }
 
-void Clock::PaintCenteredText(Draw& w, int x, int y, const char *text, Font fnt, Color c)
+void Clock::PaintCenteredText(Draw& w, int x, int y, const char *text, const Font& fnt, Color c)
 {
 	Size tsz = GetTextSize(text, fnt);
 	w.DrawText(x - tsz.cx / 2, y - tsz.cy / 2, text, fnt, c);
@@ -829,6 +829,8 @@ void Clock::Paint(Draw& w)
 
 	w.DrawRect(sz, st.bgmain);
 	DrawBg(w, 0, 0, sz.cx, hs, st.header);
+	
+	w.Clip(0, hs, sz.cx, sz.cy - hs);
 
 	if(colon)
 		PaintCenteredText(w, sz.cx / 2, hs / 2 - 1, " : ", StdFont().Bold(), SColorHighlightText());
@@ -836,6 +838,7 @@ void Clock::Paint(Draw& w)
 	//w.DrawEllipse(cm.x - r / 2, cm.y - r / 2, cf.x, cf.x, Blend(st.header, White, 250), PEN_NULL, Black);
 
 	Font fnt = st.font;
+	fnt.Height(max(6, min(16, fnt.GetHeight() * cf.x / Ctrl::VertLayoutZoom(65))));
 
 	for(int i = 1; i <= 12; i++) {
 		PaintCenteredText(w,
@@ -851,11 +854,13 @@ void Clock::Paint(Draw& w)
 		                   cur_point == i ? CtrlImg::BigDotH()
 		                                  : i % 5 == 0 ? CtrlImg::BigDot() : CtrlImg::SmallDot());
 	}
-
-	PaintPtr(0, w, cm, cur_time / 3600.0 / 12, 0.5, 5, cur_line == 0 ? st.arrowhl : st.arrowhour, cf);
-	PaintPtr(1, w, cm, cur_time / 3600.0, 0.6, 3, cur_line == 1 ? st.arrowhl : st.arrowminute, cf);
+	
+	PaintPtr(0, w, cm, cur_time / 3600.0 / 12.0, 0.5, 3.0, 5, cur_line == 0 ? st.arrowhl : st.arrowhour, cf);
+	PaintPtr(1, w, cm, cur_time / 3600.0, 0.6, 3.0, 3, cur_line == 1 ? st.arrowhl : st.arrowminute, cf);
 	if(seconds)
-		PaintPtr(2, w, cm, cur_time / 60.0, 0.75, 2, cur_line == 2 ? st.arrowhl : st.arrowsecond, cf);
+		PaintPtr(2, w, cm, cur_time / 60.0, 0.75, 5.0, 2, cur_line == 2 ? st.arrowhl : st.arrowsecond, cf);
+	
+	w.End();
 }
 
 int Clock::GetDir(int pp, int cp)

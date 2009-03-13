@@ -321,8 +321,8 @@ private:
 	bool seconds;
 	bool colon;
 
-	void PaintPtr(int n, Draw& w, Point p, double pos, double m, int d, Color color, Point cf);
-	void PaintCenteredText(Draw& w, int x, int y, const char *text, Font fnt, Color c);
+	void PaintPtr(int n, Draw& w, Point p, double pos, double m, double rd, int d, Color color, Point cf);
+	void PaintCenteredText(Draw& w, int x, int y, const char *text, const Font& fnt, Color c);
 	void PaintCenteredImage(Draw &w, int x, int y, const Image& img);
 
 	void SetHourEdit();
@@ -493,6 +493,7 @@ public:
 		drop.AddButton().Main() <<= THISBACK(OnDrop);
 		drop.NoDisplay();
 		drop.SetStyle(drop.StyleFrame());
+		drop.GetButton(0).SetMonoImage(Grayscale(CtrlsImg::DA()));
 		cc.calendar   <<= THISBACK(OnCalendarChoice);
 		cc.clock      <<= THISBACK(OnClockChoice);
 		cc.WhenPopDown  = THISBACK(OnClose);
