@@ -1,559 +1,212 @@
-#include <CtrlLib/CtrlLib.h>
-
+#include <Core/Core.h>
 #include <plugin/bz2/bz2.h>
-#include <plugin/ftp/ftp.h>
 
 using namespace Upp;
 
-class EditDir : public EditString
+void Log(const char *txt)
 {
-	public:
-		typedef EditDir CLASSNAME;
-		EditDir()
-		{
-			AddFrame(btn);
-			btn.SetImage(CtrlImg::smallright()).NoWantFocus();
-			btn <<= THISBACK(SelectDir);
-		}
-	private:
-		FrameRight<Button> btn;
-		void SelectDir()
-		{
-			FileSel fs;
-			fs.ActiveDir(GetData());
-			if(fs.ExecuteSelectDir())
-				SetData(fs.Get());
-		}
-};
-
-#define  LAYOUTFILE <MakeInstall3/install.lay>
-#include <CtrlCore/lay.h>
-#define AFN AppendFileName
-#define CHECKPOINT(x) SaveCheckpoint(x); checkpoint_##x
-
-#include <Wincon.h>
-
-String version = "801-dev1";
-
-String outdir      = "c:\\Dev\\upp.install.final";
-String uppdir      = "c:\\Dev\\upp.uvs";
-String uppsrc      = "c:\\Dev\\upp.uvs\\uppsrc.uc";
-String examples    = "c:\\Dev\\upp.uvs\\examples.uc";
-String reference   = "c:\\Dev\\upp.uvs\\reference.uc";
-String tutorial    = "c:\\Dev\\upp.uvs\\tutorial.uc";
-String bazaar      = "c:\\Dev\\upp.svn\\bazaar";
-String theide      = "c:\\Dev\\upp";
-String mingw       = "c:\\Dev\\upp.install\\mingw";
-String sdl         = "c:\\Dev\\upp.install\\sdl";
-String wi          = "c:\\Dev\\upp.uvs\\uppbox.uc\\WinInstaller2";
-String wipackage   = "myapps";
-String builder     = "MSC80";
-String builder_gcc = "MINGW430";
-String sevenzipdir = "c:\\Program Files\\7-Zip";
-
-int rebuildall = 1;
-bool iserror = false;
-
-FtpClient ftp;
-String vdir;
-Vector<String> upt;
-
-void Sys(const char *s)
-{
-	Cout() << s << '\n';
-	if(system(s))
-	{
-		Cout() << "Failed!";
-		throw Exc(s);
-	}
+	Cout() << txt << "\r\n";
 }
 
-void SysPass(const char *s)
+void Error(const char *e)
 {
-	Cout() << s << '\n';
-	if(system(s))
-	{
-		RLOG(s);
-		iserror = true;
-		Cout() << "Failed!";
-	}
+	Log(e);
+	abort();
 }
 
-void SaveCheckpoint(int cp)
+String Syx(const char *s)
 {
-	SaveFile(AFN(outdir, "checkpoint.tmp"), AsString(cp));
-}
-
-int GetCheckpoint()
-{
-	String s = LoadFile(AFN(outdir, "checkpoint.tmp"));
-	int cp = StrInt(s);
-	return IsNull(cp) ? 0 : cp;
+	Log(s);
+	String r = Sys(s);
+	if(r.IsVoid())
+		Error("Failed: " + String(s));
+	return r;
 }
 
 void CopyFolder(const char *src, const char *dst, bool deep = true)
 {
-	Cout() << Sprintf("Copying %s\n", src);
+	Cout() << Sprintf("Directory %s\n", src);
 	RealizeDirectory(dst);
 	FindFile ff(String(src) + "/*.*");
-	while(ff)
-	{
-		String name = ff.GetName();
-		String s = AFN(src, name);
-		String d = AFN(dst, name);
-		if(ff.IsFile())
-		{
+	while(ff) {
+		String s = AppendFileName(src, ff.GetName());
+		String d = AppendFileName(dst, ff.GetName());
+		if(ff.IsFile()) {
 			String q = LoadFile(s);
 			String ext = ToLower(GetFileExt(s));
-			if(ext != ".aux" && ext != ".$old" && ext != ".upt" && ext != ".dat")
+			if(ext != ".aux" && ext != ".$old")
 				SaveFile(d, q);
 		}
-		else if(ff.IsFolder())
-		{
-			if(name != ".svn" && (deep || *GetFileExt(s)))
+		else
+		if(ff.IsFolder() && *ff.GetName() != '.') {
+			if(deep || *GetFileExt(s))
 				CopyFolder(s, d, deep);
 		}
 		ff.Next();
 	}
 }
 
-void ScanUpp(const char *src, Vector<String> &upps)
+int CrLfSm(int c)
 {
-	FindFile ff(String(src) + "/*.*");
-	while(ff)
-	{
-		String s = AFN(src, ff.GetName());
-		if(ff.IsFile())
-		{
-			String ext = ToLower(GetFileExt(s));
-			if(ext == ".upp")
-				if(LoadFile(s).Find("mainconfig") >= 0)
-				upps.Add(GetFileTitle(s));
-		}
-		else if(ff.IsFolder())
-			ScanUpp(s, upps);
-		ff.Next();
-	}
-}
-
-void ScanUpt(const char *src, Vector<String> &upts)
-{
-	FindFile ff(String(src) + "/*.*");
-	while(ff)
-	{
-		String s = AFN(src, ff.GetName());
-		if(ff.IsFile())
-		{
-			String ext = ToLower(GetFileExt(s));
-			if(ext == ".upt")
-				upts.Add(GetFileName(s));
-		}
-		else if(ff.IsFolder())
-			ScanUpt(s, upts);
-		ff.Next();
-	}
-}
-
-void CopyUpt(const char *src, const char *dst)
-{
-	FindFile ff(String(src) + "/*.*");
-	while(ff)
-	{
-		String s = AFN(src, ff.GetName());
-		String d = AFN(dst, ff.GetName());
-		if(ff.IsFile())
-		{
-			String ext = ToLower(GetFileExt(s));
-			if(ext == ".upt")
-			{
-				SaveFile(d, LoadFile(s));
-				upt.Add(GetFileName(s));
-				Cout() << Sprintf("Copying %s\n", s);
-			}
-		}
-		else if(ff.IsFolder())
-			CopyUpt(s, dst);
-		ff.Next();
-	}
-}
-
-void UpdateList(String &list, const Vector<String> &files)
-{
-	for(int i = 0; i < files.GetCount(); i++)
-		list += " " + files[i];
+	return c == ';' || c == '\r' || c == '\n';
 }
 
 void CopyFolders(const char *src, const char *dst, const char *folders, bool deep = true)
 {
-	Vector<String> folder = Split(folders, ';');
+	Vector<String> folder = Split(LoadFile(folders), CrLfSm);
 	for(int i = 0; i < folder.GetCount(); i++)
-		CopyFolder(AFN(src, folder[i]), AFN(outdir, AFN(dst, folder[i])), deep);
+		CopyFolder(AppendFileName(src, folder[i]), AppendFileName(dst, folder[i]), deep);
+}
+/*
+void MakeInstall(const String& ifn)
+{
+	SetCurrentDirectory(AppendFileName(outdir, "u"));
+	DeleteFile("c:\\upp.7z");
+	Syx("7z a c:\\upp.7z * -r -mx -m0fb=255 -mf=off");
+	SetCurrentDirectory("C:\\");
+	Syx("umk uppbox WinInstaller2 MSC8 -ar " + ifn);
+	DeleteFile("c:\\upp.7z");
+}
+*/
+
+String tmp = "u:/upp.tmp";
+String upptmp = tmp + "/u";
+String upp = "u:/upp.src";
+String uppsrc = upp + "/uppsrc";
+String win32 = "u:/theide";
+
+void CopyIdeFile(const String& fn)
+{
+	SaveFile(upptmp + '/' + fn, LoadFile(win32 + '/' + fn));
 }
 
-bool ShowFtpProgress()
+int NoCrLf(int c) { return c == '\r' || c == '\n' ? 0 : c; }
+int FilterVersion(int c) { return c == ':' ? '_' : c; }
+
+CONSOLE_APP_MAIN
 {
-	int a = ftp.GetSavePos();
-	int b = ftp.GetSaveTotal();
-	Cout() << Sprintf("%d %%,  %d bytes (%d total)        \r", a * 100 / b, a, b);
-	return false;
-}
+	String version = Filter(Syx("svnversion " + upp), NoCrLf);
+	Log("version: " + version);
+	
+	DeleteFolderDeep(tmp);
+	RealizeDirectory(tmp);
+	
+	CopyFolders(uppsrc, upptmp + "/uppsrc", uppsrc + "/packages");
+	CopyFolders(uppsrc, upptmp + "/uppsrc", uppsrc + "/packages1", false);
+	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
+	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"");
+	Syx("umk upptmp ide MSC9 -ar " + upptmp + "/theide.exe");
+	Syx("umk upptmp umk MSC9 -ar " + upptmp + "/umk.exe");
 
-void Error(const char *s)
-{
-	Cout() << "\n## ERROR " << s << '\n';
-	throw Exc();
-}
+	CopyIdeFile("dbghelp.dll");
+	CopyIdeFile("en-us.scd");
+	CopyIdeFile("en-gb.scd");
 
-void SfSave(const char *fn)
-{
-	ftp.WhenProgress = callback(ShowFtpProgress);
-	Cout() << Sprintf("connecting to sf.net...");
-	if(!ftp.Connect("upload.sourceforge.net", "anonymous", "", true))
-		Error("Unable to connect to sf.net: " + ftp.GetError());
-	Cout() << Sprintf("connected\n");
-	if(!ftp.Cd("incoming"))
-		Error("FTP error (cd incoming): " + ftp.GetError());
-	Cout() << Sprintf("uploading %s\n", fn);
-	if(!ftp.Save(GetFileName(fn), LoadFile(fn)))
-		Error("FTP error (file upload): " + ftp.GetError());
-	Cout() << Sprintf("OK: %s uploaded\n", fn);
-}
+	SetCurrentDirectory(upptmp);
+	
+	SaveFile("install.upp", LoadFile(uppsrc + "/install.upp"));
+	SaveFile("license.chk", "1");
 
-String OutDir(const char *fn)
-{
-	return AFN(outdir, fn);
-}
+	Syx(win32 + "/7za/7za.exe a " + tmp + "/upp.7z * -r -mx -m0fb=255 -mf=off");
+	SetCurrentDirectory(tmp);
+	Syx("umk uppbox WinInstaller2 MSC9 -ar u:/upp-win32-" + Filter(version, FilterVersion) + ".exe");
 
-void CopyFile(const char *src, const char *dst)
-{
-	SaveFile(dst, LoadFile(src));
-}
+#if 0
+	Cout() << "Ssvnversion
+	
+	version = ~dlg.version;
+	outdir = ~dlg.outdir;
+	uppdir = ~dlg.uppdir;
+	idedir = ~dlg.idedir;
+	mingw = ~dlg.mingw;
 
-String Quote(const String& s)
-{
-	String t;
-	for(int i = 0; i < s.GetLength(); i++)
-		if(s[i] == '\\')
-			t += "\\\\";
-		else
-			t += s[i];
-	return t;
-}
-
-void SaveVar(const String &path, const String &var = Null)
-{
-	String upp = IsNull(var) ? "UPP = \"" + Quote(OutDir("u\\uppsrc")) + "\";\n"
-							 : "UPP = \"" + Quote(OutDir(var)) + ';' + Quote(OutDir("u\\uppsrc")) + "\";\n";
-	SaveFile(path, upp + "COMMON = \"" + Quote(OutDir("u\\common")) + "\";\n" +
-						 "OUTPUT = \"" + Quote(OutDir("out")) + "\";\n");
-}
-
-GUI_APP_MAIN
-{
-	try
-	{
-		WithInstallLayout<TopWindow> dlg;
-		CtrlLayoutOKCancel(dlg, "MakeInstall");
-
-		for(int i = 0; i <= 5; ++i)
-			dlg.checkpoint.Add(i , AsString(i));
-
-		dlg.checkpoint = GetCheckpoint();
-
-		dlg.builder     <<= builder;
-		dlg.builder_gcc <<= builder_gcc;
-		dlg.version     <<= version;
-		dlg.outdir      <<= outdir;
-		dlg.uppdir      <<= uppdir;
-		dlg.uppsrc      <<= uppsrc;
-		dlg.examples    <<= examples;
-		dlg.reference   <<= reference;
-		dlg.tutorial    <<= tutorial;
-		dlg.bazaar      <<= bazaar;
-		dlg.outdir      <<= outdir;
-		dlg.uppdir      <<= uppdir;
-		dlg.theide      <<= theide;
-		dlg.mingw       <<= mingw;
-		dlg.sdl         <<= sdl;
-		dlg.wi          <<= wi;
-		dlg.wipackage   <<= wipackage;
-		dlg.sevenzipdir <<= sevenzipdir;
-
-		dlg.rebuild_all = rebuildall;
-
-		LoadFromFile(dlg);
-		int c = dlg.Execute();
-		StoreToFile(dlg);
-
-		if(c != IDOK)
-			return;
-
+	String version_h = AppendFileName(uppdir, "uppsrc/ide/version.h");
+	String version_bak = AppendFileName(uppdir, "uppsrc/ide/version.bak");
+	MoveFile(version_h, version_bak);
+	SaveFile(version_h, "#define IDE_VERSION \"" + version + "\"");
+	try {
 		AllocConsole();
 
-		builder     = ~dlg.builder;
-		builder_gcc = ~dlg.builder_gcc;
-		version     = ~dlg.version;
-		outdir      = ~dlg.outdir;
-		uppdir      = ~dlg.uppdir;
-		uppsrc      = ~dlg.uppsrc;
-		examples    = ~dlg.examples;
-		reference   = ~dlg.reference;
-		tutorial    = ~dlg.tutorial;
-		bazaar      = ~dlg.bazaar;
-		mingw       = ~dlg.mingw;
-		sdl         = ~dlg.sdl;
-		theide      = ~dlg.theide;
-		wi          = ~dlg.wi;
-		wipackage   = ~dlg.wipackage;
-		rebuildall  = dlg.rebuild_all;
-
-		sevenzipdir = ~dlg.sevenzipdir;
-
-		String sevenzipfile = sevenzipdir;
-
-		if(sevenzipfile != "")
-		{
-			sevenzipfile = "\"" + sevenzipfile + "\\7z\"";
-		} else {
-			sevenzipfile = "7z";
-		}
-
-		vdir = AFN(outdir, version);
-
-		String packages =
-			" common"
-			" examples"
-			" reference"
-			" tutorial"
-			" bazaar"
-			" uppsrc";
-
-		String libs =
-			" sdl";
-
-		String compiler_mingw =
-			" mingw";
-
-		String idefiles =
-			" theide.exe"
-			" umk.exe"
-			" dbghelp.dll"
-			" install.upp"
-			" en-us.scd"
-			" en-gb.scd"
-			" license.chk";
-
-		String uppmingw 	= AFN(vdir, "upp-mingw-" 	+ version + ".exe");
-		String uppwin		= AFN(vdir, "upp-win-" 		+ version + ".exe");
-		String uppsource 	= AFN(vdir, "upp-src-" 		+ version + ".zip");
-
-		Vector<String> upp_examples;
-		Vector<String> upp_reference;
-		Vector<String> upp_tutorial;
-
-		if(dlg.use_checkpoint)
-		{
-			if(upt.IsEmpty())
-			{
-				ScanUpt(uppsrc, upt);
-				UpdateList(idefiles, upt);
-				if(upt.IsEmpty())
-				{
-					Exclamation("Upt files not found");
-					return;
-				}
-			}
-
-			switch((int)~dlg.checkpoint)
-			{
-				case 1: goto checkpoint_1;
-				case 2: goto checkpoint_2;
-				case 3: goto checkpoint_3;
-				case 4: goto checkpoint_4;
-				case 5: goto checkpoint_5;
-			}
-		}
-
-		SaveCheckpoint(Null);
-
-		DeleteFolderDeep(vdir);
+		vdir = AppendFileName(outdir, version);
+//		if(DirectoryExists(vdir))
+//			Error("version already exists");
 		RealizeDirectory(vdir);
 
-		Cout() << "Removing files...\n";
-
-		DeleteFolderDeep(OutDir("u"));
-		DeleteFolderDeep(OutDir("out"));
-
-		DeleteFile(AFN(outdir, "checkpoint.tmp"));
-		DeleteFile(AFN(outdir, "upp-win.7z"));
-		DeleteFile(AFN(outdir, "upp-mingw.7z"));
-
-		Cout() << "Copying uppsrc...\n";
-
-		CopyFolders(uppsrc, "u/uppsrc",
-			"ide;IconDes;Topic;CtrlLib;HexView;Esc;CodeEditor;Core;RichEdit;RichText;"
-			"Draw;coff;CppBase;CtrlCore;Report;"
-			"MySql;Ole;OleDB;Oracle;Sql;SqlCommander;SqlCtrl;Updater;"
-			"PdfDraw;PostgreSQL;GLCtrl;DropGrid;CbGen;Crypto;"
-			"plugin;BuildAll;"
-			"Geom;umk;GridCtrl;AllForI18n;art"
+		DeleteFolderDeep(AppendFileName(outdir, "u"));
+		CopyUppFolders("uppsrc", "u/uppsrc",
+			"BuildAll;CbGen;CodeEditor;"
+			"coff;Core;CppBase;Crypto;CtrlCore;"
+			"CtrlLib;Draw;DropGrid;Esc;Geom;"
+			"GLCtrl;GridCtrl;HexView;IconDes;ide;"
+			"MySql;Ole;OleDB;Oracle;PdfDraw;"
+			"plugin;PostgreSQL;Report;RichEdit;RichText;"
+			"Sql;SqlCommander;SqlCtrl;umk;Updater"
 		);
 
-		CopyFolders(uppsrc, "u/uppsrc", "Web;Web/TServ;Web/SSL", false);
 
-		Cout() << "Copying upt's...\n";
+		CopyUppFolders("uppsrc", "u/uppsrc", "Web;Web/TServ;Web/SSL", false);
 
-		CopyUpt(uppsrc, AFN(outdir, "u"));
-		UpdateList(idefiles, upt);
+		CopyUppFolder("examples", "u/examples");
+		CopyUppFolder("reference", "u/reference");
+		CopyUppFolder("tutorial", "u/tutorial");
+		CopyUppFolder("uppsrc/Common", "u/Common");
 
-		Cout() << idefiles << '\n';
+		CopyFolder(AppendFileName(idedir, "sdl"), AppendFileName(outdir, "u/sdl"));
 
-		SaveFile(AFN(outdir, "u/uppsrc/ide/version.h"), "#define IDE_VERSION \"" + version + "\"\n");
-
-		Cout() << "Copying examples...\n";
-
-		CopyFolder(examples, OutDir("u/examples"));
-		Cout() << "Copying reference...\n";
-		CopyFolder(reference, OutDir("u/reference"));
-		Cout() << "Copying tutorial...\n";
-		CopyFolder(tutorial, OutDir("u/tutorial"));
-		Cout() << "Copying bazaar...\n";
-		CopyFolder(bazaar, OutDir("u/bazaar"));
-		Cout() << "Copying common...\n";
-		CopyFolder(AFN(uppsrc, "Common"), OutDir("u/Common"));
-
-		if(dlg.make_mingw || dlg.make_win)
-		{
-			Cout() << "Copying sdl...\n";
-			CopyFolder(sdl, OutDir("u/sdl"));
+		if(dlg.make_mingw || dlg.make_win) {
+			Sys("umk uppsrc ide MSC71cdb -arm " + AppendFileName(outdir, "u/theide.exe"));
+			Sys("umk uppsrc umk MSC71cdb -arm " + AppendFileName(outdir, "u/umk.exe"));
 		}
 
-		if(dlg.make_mingw)
-		{
-			Cout() << "Copying mingw...\n";
-			CopyFolder(mingw, OutDir("u/mingw"));
+		MoveFile(AppendFileName(outdir, "u/theide.map"), AppendFileName(vdir, "theide.map"));
+		MoveFile(AppendFileName(outdir, "u/umk.map"), AppendFileName(vdir, "umk.map"));
+
+		CopyIdeFile("dbghelp.dll", "u/dbghelp.dll");
+		SaveFile(AppendFileName(outdir, "u/install.upp"),
+		         LoadFile(AppendFileName(uppdir, "uppsrc/install.upp")));
+		CopyIdeFile("en-us.scd", "u/en-us.scd");
+		CopyIdeFile("en-gb.scd", "u/en-gb.scd");
+		SaveFile(AppendFileName(outdir, "u/license.chk"), "1");
+
+		FindFile ff(AppendFileName(idedir, "*.upt"));
+		while(ff) {
+			SaveFile(AppendFileName(outdir, String("u/") + ff.GetName()),
+			         LoadFile(AppendFileName(idedir, ff.GetName())));
+			ff.Next();
 		}
 
-	CHECKPOINT(1):
-
-		if(dlg.test_mingw)
-		{
-			ScanUpp(OutDir("u\\examples"), upp_examples);
-			ScanUpp(OutDir("u\\reference"), upp_reference);
-			ScanUpp(OutDir("u\\tutorial"), upp_tutorial);
-
-			DUMPC(upp_examples);
-			DUMPC(upp_reference);
-			DUMPC(upp_tutorial);
-
-			if(upp_examples.IsEmpty() ||
-			   upp_reference.IsEmpty() ||
-			   upp_tutorial.IsEmpty())
-			   throw Exc("Upp not found");
-
-			String opt = dlg.test_mingw_blitz == 1 ? " -b " : "";
-
-			String bgcc = " " + builder_gcc + " ";
-
-			if(dlg.test_mingw_ide)
-			{
-				SaveVar(AFN(theide, "upptmp.var"));
-					Sys(theide + "\\umk upptmp ide" + bgcc + opt);
-			}
-
-			if(dlg.test_mingw_examples)
-			{
-				SaveVar(AFN(theide, "upptmp.var"), "u\\examples");
-				for(int i = 0; i < upp_examples.GetCount(); i++)
-					SysPass(theide + "\\umk upptmp " + upp_examples[i] + bgcc + opt);
-			}
-
-			if(dlg.test_mingw_reference)
-			{
-				SaveVar(AFN(theide, "upptmp.var"), "u\\reference");
-				for(int i = 0; i < upp_reference.GetCount(); i++)
-					SysPass(theide + "\\umk upptmp " + upp_reference[i] + bgcc + opt);
-			}
-
-			if(dlg.test_mingw_tutorial)
-			{
-				SaveVar(AFN(theide, "upptmp.var"), "u\\tutorial");
-				for(int i = 0; i < upp_tutorial.GetCount(); i++)
-					SysPass(theide + "\\umk upptmp " + upp_tutorial[i] + bgcc + opt);
-			}
-
-			if(iserror)
-				throw Exc("MinGW error");
-		}
-
-		if(dlg.make_mingw || dlg.make_win)
-		{
-			SaveVar(AFN(theide, "upptmp.var"));
-
-			String opt = rebuildall ? "-arm " : "-rm ";
-			Sys(theide + "\\umk upptmp ide " + builder + " " + opt + " " + OutDir("u/theide.exe"));
-			Sys(theide + "\\umk upptmp umk " + builder + " -arm " + OutDir("u/umk.exe"));
-
-			MoveFile(AFN(outdir, "u/theide.map"), AFN(vdir, "theide.map"));
-			MoveFile(AFN(outdir, "u/umk.map"), AFN(vdir, "umk.map"));
-
-			CopyFile(AFN(theide, "dbghelp.dll"), AFN(outdir, "u/dbghelp.dll"));
-
-			SaveFile(AFN(outdir, "u/install.upp"), LoadFile(AFN(uppsrc, "install.upp")));
-
-			CopyFile(AFN(theide, "en-us.scd"), AFN(outdir, "u/en-us.scd"));
-			CopyFile(AFN(theide, "en-gb.scd"), AFN(outdir, "u/en-gb.scd"));
-
-			SaveFile(AFN(outdir, "u/license.chk"), "1");
-		}
-
-	CHECKPOINT(2):
-
+		String mw = AppendFileName(outdir, "u/mingw");
+		CopyFolder(mingw, mw);
+		
 		DeleteFolderDeep(vdir);
 		RealizeDirectory(vdir);
 
+		String uppmingw = AppendFileName(vdir, "upp-mingw-" + version + ".exe");
 		if(dlg.make_mingw)
-		{
-			String outfile = AFN(outdir, "upp-mingw.7z");
-			if(!FileExists(outfile))
-			{
-				SetCurrentDirectory(AFN(outdir, "u"));
-				Sys(sevenzipfile + " a -r -mx -m0fb=255 -mf=off " + outfile + packages + libs + compiler_mingw + idefiles);
-			}
-			SaveFile(AFN(wi, "data.rc"), "1112 RCDATA MOVEABLE PURE \"" + Quote(outfile) + "\"");
-			SetCurrentDirectory(theide);
-			Sys(theide + "\\umk " + wipackage + " WinInstaller2 " + builder + " -ar " + uppmingw);
-		}
+			MakeInstall(uppmingw);
 
-	CHECKPOINT(3):
-
+		String uppwin = AppendFileName(vdir, "upp-win-" + version + ".exe");
+		DeleteFolderDeep(mw);
 		if(dlg.make_win)
-		{
-			String outfile = AFN(outdir, "upp-win.7z");
-			if(!FileExists(outfile))
-			{
-				SetCurrentDirectory(AFN(outdir, "u"));
-				Sys(sevenzipfile + " a -r -mx -m0fb=255 -mf=off " + outfile + packages + libs + idefiles);
-			}
-			SaveFile(AFN(wi, "data.rc"), "1112 RCDATA MOVEABLE PURE \"" + Quote(outfile) + "\"");
-			SetCurrentDirectory(theide);
-			Sys(theide + "\\umk " + wipackage + " WinInstaller2 " + builder + " -ar " + uppwin);
-		}
+			MakeInstall(uppwin);
 
-	CHECKPOINT(4):
-
+		String uppsrc = AppendFileName(vdir, "upp-src-" + version + ".zip");
 		if(dlg.make_src)
 		{
-			SetCurrentDirectory(AFN(outdir, "u"));
-			Sys(sevenzipfile + " a -tzip -r " + uppsource + packages);
+			FindFile ff(AppendFileName(outdir, "u/*.*"));
+			while(ff) {
+				String name = ff.GetName();
+				String p = AppendFileName(outdir, "u/" + name);
+				if(ff.IsFile())
+					DeleteFile(p);
+				ff.Next();
+			}
+			SetCurrentDirectory(AppendFileName(outdir, "u"));
+			Sys("zip -r " + uppsrc + " *");
 		}
-
-	CHECKPOINT(5):
-
-		if(dlg.upload)
-		{
-			if(!IsNull(dlg.hour))
-			{
+		
+		if(dlg.upload) {
+			if(!IsNull(dlg.hour)) {
 				Time tm = GetSysTime();
 				Time tmu = tm;
 				tmu.hour = (int)~dlg.hour;
@@ -569,19 +222,16 @@ GUI_APP_MAIN
 			if(dlg.make_win)
 				SfSave(uppwin);
 			if(dlg.make_src)
-				SfSave(uppsource);
+				SfSave(uppsrc);
 			Cout() << "*** Uploading finished at " << GetSysTime() << '\n';
 		}
 		Cout() << Sprintf("*** OK\n");
-
 		PromptOK("Release successfull");
 	}
-	catch(Exc &e)
-	{
-		Exclamation(DeQtfLf(e));
-	}
-	catch(...)
-	{
+	catch(...) {
 		Exclamation("Error!");
 	}
+	DeleteFile(version_h);
+	MoveFile(version_bak, version_h);
+#endif
 }
