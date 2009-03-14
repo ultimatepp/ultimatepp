@@ -1,0 +1,6 @@
+#ifndef _MakeInstall4_icpp_init_stub
+#define _MakeInstall4_icpp_init_stub
+#include "plugin\bz2/init"
+#include "Core/init"
+#include "plugin\ftp/init"
+#endif
