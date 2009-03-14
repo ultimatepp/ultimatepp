@@ -1,0 +1,5 @@
+#ifndef _TextDiff_icpp_init_stub
+#define _TextDiff_icpp_init_stub
+#include "CtrlLib/init"
+#include "TextDiffCtrl/init"
+#endif

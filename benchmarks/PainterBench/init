@@ -1,0 +1,6 @@
+#ifndef _PainterBench_icpp_init_stub
+#define _PainterBench_icpp_init_stub
+#include "CtrlLib/init"
+#include "GLCtrl/init"
+#include "Painter/init"
+#endif
