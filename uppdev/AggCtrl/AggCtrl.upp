@@ -26,6 +26,7 @@ file
 	PixFmts.h,
 	AggCtrl.h,
 	AggCtrlWin32.cpp,
+	Test.cpp,
 	AggCtrlX11.cpp;
 
 mainconfig
