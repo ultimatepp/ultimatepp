@@ -74,6 +74,11 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 CONSOLE_APP_MAIN
 {
+	if(FileExists("u:/theide/theide.exe"))
+		win32 = "u:/theide";
+	else
+		win32 = "u:/Win32/theide";
+
 	Vector<String> s = Split(Syx("svnversion " + upp), NoDigit);
 	if(s.GetCount() == 0)
 		Error("Invalid version");
@@ -87,8 +92,8 @@ CONSOLE_APP_MAIN
 	CopyFolders(uppsrc, upptmp + "/uppsrc", uppsrc + "/packages1", false);
 	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"");
-	Syx("umk upptmp ide MSC9 -ar " + upptmp + "/theide.exe");
-	Syx("umk upptmp umk MSC9 -ar " + upptmp + "/umk.exe");
+	Syx(win32 + "/umk upptmp ide MSC9 -ar " + upptmp + "/theide.exe");
+	Syx(win32 + "/umk upptmp umk MSC9 -ar " + upptmp + "/umk.exe");
 
 	CopyIdeFile("dbghelp.dll");
 	CopyIdeFile("en-us.scd");
@@ -101,5 +106,5 @@ CONSOLE_APP_MAIN
 
 	Syx(win32 + "/7za/7za.exe a " + tmp + "/upp.7z * -r -mx -m0fb=255 -mf=off");
 	SetCurrentDirectory(tmp);
-	Syx("umk uppbox WinInstaller2 MSC9 -ar u:/upp-win32-" + Filter(version, FilterVersion) + ".exe");
+	Syx(win32 + "/umk uppbox WinInstaller2 MSC9 -ar u:/upp-win32-" + Filter(version, FilterVersion) + ".exe");
 }
