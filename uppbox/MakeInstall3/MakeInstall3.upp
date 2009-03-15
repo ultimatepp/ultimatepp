@@ -1,5 +1,3 @@
-description "Install creator - Wine version for nightly builds";
-
 uses
 	plugin\bz2,
 	Core,
