@@ -83,7 +83,7 @@ void AutoSetup()
 	}
 	dlg.visualcppmethod8x64 <<= "MSC8x64";
 	String  sdk9 = NormalizePathNN(GetWinRegString("InstallationFolder",
-	                                               "Software\\Microsoft\\Microsoft SDKs\\Windows\\v6.0a",
+	                                               "Software\\Microsoft\\Microsoft SDKs\\Windows\\v6.1",
 	                                                HKEY_CURRENT_USER));
 	String bin9;
 	if(!IsNull(sdk9) && FileExists(AppendFileName(sdk9, "VC\\Bin\\cl.exe")))
