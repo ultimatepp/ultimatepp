@@ -55,7 +55,7 @@ bool DockableCtrl::IsHidden() const
 int DockableCtrl::GetDockAlign() const
 {
 	DockCont *c = GetContainer();
-	return c && c->GetDockAlign();
+	return c ? c->GetDockAlign() : -1;
 }
 
 DockableCtrl&  DockableCtrl::SetGroup(const String& g)
@@ -149,6 +149,7 @@ CH_STYLE(DockableCtrl, Style, StyleDefault)
 	DockableCtrlImgsLook(close, DockingImg::I_DClosed, 4);
 	DockableCtrlImgsLook(windowpos, DockingImg::I_DMenud, 4);
 	DockableCtrlImgsLook(autohide, DockingImg::I_DHided, 4);
+	DockableCtrlImgsLook(pin, DockingImg::I_DPind, 4);
 	
 	Image img = StandardHighlight(Blend(SColorHighlight, SColorPaper, 90), Blend(SColorHighlight, SBlack, 90));
 	highlight[0] = img;	

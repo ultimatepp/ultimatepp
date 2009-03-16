@@ -54,12 +54,12 @@ public:
 	virtual void MouseLeave();	
 
 	void 	AddCtrl(DockCont& c, const String& group = Null);
-	int 	FindCtrl(DockCont& c) const;
+	int 	FindCtrl(const DockCont& c) const;
 	DockCont *GetCtrl(int ix)	const				{ return ValueTo<DockCont *>(Get(ix));  }	
 	void	RemoveCtrl(int ix);
 	void	RemoveCtrl(DockCont& c)					{ return RemoveCtrl(c, FindCtrl(c)); }
 	void	RemoveCtrl(DockCont& c, int ix);
-	bool 	HasCtrl(DockCont& c) const				{ return (FindCtrl(c) >= 0); }
+	bool 	HasCtrl(const DockCont& c) const		{ return (FindCtrl(c) >= 0); }
 	
 	void	ShowAnimate(Ctrl *c);	
 	

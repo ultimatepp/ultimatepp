@@ -404,9 +404,22 @@ void DockCont::Dock(int align)
 	base->DockContainer(align, *this);
 }
 
+void DockCont::AutoHide()
+{
+	AutoHideAlign(IsAutoHide() ? GetAutoHideAlign() : GetDockAlign());
+}
+
 void DockCont::AutoHideAlign(int align)
 {
-	base->AutoHideContainer((align == DockWindow::DOCK_NONE) ? DockWindow::DOCK_TOP : align, *this);
+	ASSERT(base);
+	if (IsAutoHide()) {
+		if (align == DockWindow::DOCK_NONE)
+			base->FloatContainer(*this, Null, false);
+		else			
+			base->DockContainer(align, *this);	
+	}
+	else	
+		base->AutoHideContainer((align == DockWindow::DOCK_NONE) ? DockWindow::DOCK_TOP : align, *this);
 }
 
 void DockCont::RestoreCurrent()
@@ -435,24 +448,18 @@ void DockCont::Clear()
 	handle.dc = NULL;
 }
 
-void DockCont::StateDocked(DockWindow& dock)
+void DockCont::State(DockWindow& dock, DockCont::DockState state)
 {
 	base = &dock;
-	dockstate = STATE_DOCKED;	
+	dockstate = state;	
 	SyncFrames();
-	Show(); 
-}
-
-void DockCont::StateFloating(DockWindow& dock)
-{
-	base = &dock; 
-	dockstate = STATE_FLOATING;
-	SyncFrames();
+	SyncButtons();
 	Show(); 
 }
 
 void DockCont::SyncButtons(DockableCtrl& dc)
 {
+//	if (!handle.IsShown()) return;
 	if (base) {
 		Ctrl::LogPos lp;
 		const DockableCtrl::Style& s = dc.GetStyle();
@@ -469,7 +476,7 @@ void DockCont::SyncButtons(DockableCtrl& dc)
 		bool ah = base->IsAutoHide();
 		autohide.Show(ah);
 		if (ah && autohide.GetParent()) {
-			autohide.SetLook(s.autohide).SetPos(lp);
+			autohide.SetLook(IsAutoHide() ? s.pin : s.autohide).SetPos(lp);
 			inc.SetA(inc.GetA() + btnsize + 1);		
 		}
 		if (windowpos.GetParent())
@@ -625,6 +632,11 @@ void DockCont::SyncUserSize(bool h, bool v)
 int DockCont::GetDockAlign() const
 {
 	return base->GetDockAlign(*this); 	
+}
+
+int DockCont::GetAutoHideAlign() const
+{
+	return base->GetAutoHideAlign(*this); 		
 }
 
 bool DockCont::IsDockAllowed(int align, int dc_ix) const

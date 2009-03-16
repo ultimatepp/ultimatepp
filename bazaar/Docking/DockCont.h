@@ -116,7 +116,7 @@ private:
 	// Menus/Buttons
 	void 	Float();
 	void 	Dock(int align);
-	void 	AutoHide()											{ AutoHideAlign(GetDockAlign()); }
+	void 	AutoHide();
 	void 	AutoHideAlign(int align);
 	void	RestoreCurrent();
 
@@ -129,6 +129,8 @@ private:
 	bool 	IsDockAllowed0(int align, const Value& v) const;
 	void	SyncButtons(DockableCtrl& dc);
 	Ctrl   *FindFirstChild() const;
+
+	void			State(DockWindow& dock, DockCont::DockState state);	
 
 	Ctrl           *CtrlCast(const Value& v) const		{ return IsDockCont(v) ? (Ctrl *)ContCast(v) : (Ctrl *)DockCast(v); }
 	DockCont       *ContCast(const Value& v) const 		{ return ValueTo<DockCont *>(v); } 
@@ -156,6 +158,7 @@ public:
 		
 	bool 			IsDocked() const			{ return dockstate == STATE_DOCKED; }
 	int				GetDockAlign() const;		
+	int				GetAutoHideAlign() const;		
 	bool			IsFloating() const			{ return dockstate == STATE_FLOATING; }
 	bool 			IsAutoHide() const			{ return dockstate == STATE_AUTOHIDE; }	
 	bool			IsTabbed() const			{ return dockstate == STATE_TABBED; }
@@ -164,10 +167,10 @@ public:
 	DockState		GetDockState() const		{ return dockstate; }
 	
 	void			StateNotDocked(DockWindow *dock = NULL) 	{ if (dock) base = dock; dockstate = STATE_NONE; }
-	void			StateDocked(DockWindow& dock);	
-	void 			StateFloating(DockWindow& dock);	
-	void			StateAutoHide(DockWindow& dock)				{ StateDocked(dock); Hide(); dockstate = STATE_AUTOHIDE; }
-	void			StateTabbed(DockWindow& dock)				{ StateFloating(dock); Hide(); dockstate = STATE_TABBED; }	
+	void			StateDocked(DockWindow& dock)				{ State(dock, STATE_DOCKED); }
+	void 			StateFloating(DockWindow& dock)				{ State(dock, STATE_FLOATING); }
+	void			StateAutoHide(DockWindow& dock)				{ State(dock, STATE_AUTOHIDE); Hide(); }
+	void			StateTabbed(DockWindow& dock)				{ State(dock, STATE_TABBED); Hide(); }	
 	void			StartMouseDrag();
 	
 	void			SetAllDockerPos();

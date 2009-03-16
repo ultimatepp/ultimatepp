@@ -89,6 +89,7 @@ protected:
 	bool            IsTB(int align) const                   { return align & 1; } //ie (align == DOCK_TOP || align == DOCK_BOTTOM)
 	int             GetDockAlign(const Ctrl& c) const;
 	int             GetDockAlign(const Point& p) const;
+	int				GetAutoHideAlign(const DockCont& c) const;
 	bool            IsFrameAnimating(int align) const       { return frameanim[align].inc; }    
 	bool            IsPaneAnimating(int align) const        { return dockpane[align].IsAnimating(); }
 	bool            CheckNesting() const                    { return (GetMouseFlags() & nesttoggle) ? !nestedtabs : nestedtabs; }

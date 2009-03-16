@@ -122,7 +122,7 @@ void AutoHideBar::AddCtrl(DockCont& c, const String& group)
 { 
 	TabBar::Add(RawToValue<DockCont *>(&c), group); 
 	if (GetCount() == autohide+1)
-		RefreshParentLayout();		
+		RefreshParentLayout();
 }
 
 void AutoHideBar::RemoveCtrl(DockCont& c, int ix)
@@ -234,6 +234,15 @@ void AutoHideBar::ShowAnimate(Ctrl *c)
 void AutoHideBar::HideAnimate(Ctrl *c)
 {
 	ASSERT(ctrl);
+	// If the popup has a child popup active then reset timer and keep the popup visible
+	Vector<Ctrl *> wins = Ctrl::GetTopCtrls();
+	for(int i = 0; i < wins.GetCount(); i++) {
+		if (wins[i]->IsPopUp() && wins[i]->GetOwner() == &popup) {
+			KillSetTimeCallback(autohide_timeout, THISBACK1(HideAnimate, ctrl), TIMEID_HIDE_TIMEOUT);
+			return;
+		}
+	}
+	
 #ifdef PLATFORM_WIN32
 	Rect r = popup.GetRect();
 	AdjustSize(r, -r.GetSize());
@@ -263,7 +272,7 @@ void AutoHideBar::AdjustSize(Rect& r, const Size& sz)
 	};		
 }
 
-int AutoHideBar::FindCtrl(DockCont& c) const
+int AutoHideBar::FindCtrl(const DockCont& c) const
 {
 	if (&c == ctrl) return GetCursor();
 	for (int i = 0; i < GetCount(); i++) {

@@ -629,6 +629,15 @@ int DockWindow::GetDockAlign(const Point& p) const
 	return DOCK_NONE;
 }
 
+int DockWindow::GetAutoHideAlign(const DockCont& c) const
+{
+	for (int i = 0; i < 4; i++) {
+		if (hideframe[i].HasCtrl(c))
+			return i;
+	}
+	return DOCK_NONE;
+}
+
 Size DockWindow::CtrlBestSize(const Ctrl& c, int align, bool restrict) const
 {
 	Size mn = c.GetMinSize();
@@ -962,6 +971,11 @@ void DockWindow::ContainerDragStart(DockCont& dc)
 		Rect r = dc.GetScreenRect();
 		Point pt = GetMousePos();
 		Point tl = r.TopLeft();
+
+		Detach(dc);	
+		dc.StateFloating(*this);		
+		r.SetSize(CtrlBestSize(dc, false));
+
 		if (r.left > pt.x || r.right < pt.x)
 			tl.x += pt.x - r.left - r.Width()/2;
 		if (r.top < pt.y)
@@ -971,7 +985,8 @@ void DockWindow::ContainerDragStart(DockCont& dc)
 			Undock0(dc, true);
 			dc.StateNotDocked();
 		}
-		FloatContainer(dc, tl);
+		dc.SetRect(Rect(tl, r.GetSize()));
+		dc.Open(this);
 		dc.StartMouseDrag();
 	}
 }
