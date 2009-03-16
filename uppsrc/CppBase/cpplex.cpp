@@ -320,7 +320,7 @@ void Lex::Next()
 			tm.ptr = pos;
 			for(;;) {
 				while(*ptr != '\"') {
-					if((byte)*ptr < ' ') {
+					if((byte)*ptr < ' ' && *ptr != 9) {
 						tm.code = te_badstring;
 						return;
 					}
