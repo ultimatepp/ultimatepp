@@ -108,3 +108,5 @@ CONSOLE_APP_MAIN
 	SetCurrentDirectory(tmp);
 	Syx(win32 + "/umk uppbox WinInstaller2 MSC9 -ar u:/upp-win32-" + Filter(version, FilterVersion) + ".exe");
 }
+
+~/googlecode_upload.py -s win32_daily_build -p upp-mirror upp-win32-962.exe

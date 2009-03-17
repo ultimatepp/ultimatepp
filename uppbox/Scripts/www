@@ -1,0 +1,3 @@
+rm ~/tmp/makeweb
+~/bin/theide uppbox uppweb GCC -abrs ~/tmp/makeweb
+~/tmp/makeweb
