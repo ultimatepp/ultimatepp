@@ -479,6 +479,17 @@ struct RWMutex::WriteLock : NoCopy {
 
 typedef RWMutex StaticRWMutex;
 
+struct LazyUpdate {
+	mutable bool  dirty;
+
+public:
+	void Invalidate()              { dirty = true; }
+	bool BeginUpdate() const       { return dirty; }
+	void EndUpdate() const         { dirty = false; }
+
+	LazyUpdate()                   { dirty = true; }
+};
+
 #define INTERLOCKED
 #define INTERLOCKED_(x) { x.Enter(); }
 
