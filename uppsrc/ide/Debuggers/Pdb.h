@@ -314,6 +314,8 @@ struct Pdb : Debugger, ParentCtrl {
 	void      ExplorerTree();
 	void      Data();
 	void      AddWatch();
+	void      ClearWatches();
+	void      DropWatch(PasteClip& clip);
 	void      SetTab(int i);
 
 	void      SetTree(const String& exp);
@@ -341,6 +343,8 @@ struct Pdb : Debugger, ParentCtrl {
 	void      AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
 
 	bool      Create(One<Host> host, const String& exefile, const String& cmdline);
+
+	void      SerializeSession(Stream& s);
 
 	typedef Pdb CLASSNAME;
 

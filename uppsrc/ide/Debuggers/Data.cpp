@@ -533,10 +533,25 @@ void Pdb::SetTab(int i)
 	Tab();
 }
 
+void Pdb::ClearWatches()
+{
+	watches.Clear();
+}
+
 void Pdb::AddWatch()
 {
 	SetTab(2);
 	watches.DoAppend();
+}
+
+void Pdb::DropWatch(PasteClip& clip)
+{
+	String s = StringStream(GetString(clip)).GetLine();
+	if(s.GetCount()) {
+		watches.Add(s);
+		clip.SetAction(DND_COPY);
+		Data();
+	}
 }
 
 #endif

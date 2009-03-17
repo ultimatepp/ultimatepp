@@ -501,6 +501,35 @@ void StaticSemaphore::Initialize()
 		BarrierWrite(semaphore, new(buffer) Semaphore);
 }
 
+void LazyUpdate::Invalidate()
+{
+	dirty = true;
+}
+
+bool LazyUpdate::BeginUpdate() const
+{
+	bool b = dirty;
+	ReadMemoryBarrier();
+	if(b) {
+		mutex.Enter();
+		if(dirty) return true;
+		mutex.Leave();
+	}
+	return false;
+}
+
+void LazyUpdate::EndUpdate() const
+{
+	WriteMemoryBarrier();
+	dirty = false;
+	mutex.Leave();
+}
+
+LazyUpdate::LazyUpdate()
+{
+	dirty = true;
+}
+
 #endif
 
 END_UPP_NAMESPACE

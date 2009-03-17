@@ -30,6 +30,7 @@ void Pdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_AUTOS, THISBACK1(SetTab, 0));
 	bar.Add(b, AK_LOCALS, THISBACK1(SetTab, 1));
 	bar.Add(b, AK_WATCHES, THISBACK1(SetTab, 2));
+	bar.Add(b, AK_CLEARWATCHES, THISBACK(ClearWatches));
 	bar.Add(b, AK_ADDWATCH, THISBACK(AddWatch));
 	bar.Add(b, AK_EXPLORER, THISBACK(DoExplorer));
 	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 4));
@@ -94,6 +95,7 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 		cl << exefile;
 	if(!IsNull(cmdline))
 		cl << ' ' << cmdline;
+
 	Buffer<char> cmd(cl.GetLength() + 1);
 	memcpy(cmd, cl, cl.GetLength() + 1);
 	PROCESS_INFORMATION pi;
@@ -132,6 +134,26 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 //	Sync();
 
 	return true;
+}
+
+INITBLOCK {
+	RegisterWorkspaceConfig("pdb-debugger");
+}
+
+void Pdb::SerializeSession(Stream& s)
+{
+	int version = 0;
+	s / version;
+	int n = watches.GetCount();
+	s / n;
+	for(int i = 0; i < n; i++) {
+		String w;
+		if(s.IsStoring())
+			w = watches.Get(i, 0);
+		s % w;
+		if(s.IsLoading())
+			watches.Add(w);
+	}
 }
 
 Pdb::Pdb()
@@ -226,6 +248,7 @@ Pdb::Pdb()
 	threadlist <<= THISBACK(SetThread);
 
 	watches.WhenAcceptEdit = THISBACK(Data);
+	watches.WhenDrop = THISBACK(DropWatch);
 	tab <<= THISBACK(Data);
 
 	tree.WhenOpen = THISBACK(TreeExpand);
@@ -236,6 +259,8 @@ Pdb::Pdb()
 		String desc = in.GetLine();
 		treetype.Add(type, desc);
 	}
+	StringStream ss(WorkspaceConfigData("pdb-debugger"));
+	Load(callback(this, &Pdb::SerializeSession), ss);
 }
 
 void Pdb::CleanupOnExit()
@@ -270,6 +295,9 @@ Pdb::~Pdb()
 	FileOut out(fn);
 	for(int i = 0; i < treetype.GetCount(); i++)
 		out << treetype.GetKey(i) << "\r\n" << treetype[i] << "\r\n";
+	StringStream ss;
+	Store(callback(this, &Pdb::SerializeSession), ss);
+	WorkspaceConfigData("pdb-debugger") = ss;
 	if(hProcess != INVALID_HANDLE_VALUE) {
 		if(!running)
 			ContinueDebugEvent(event.dwProcessId, event.dwThreadId, DBG_CONTINUE);
@@ -290,11 +318,9 @@ Pdb::~Pdb()
 
 One<Debugger> PdbCreate(One<Host> host, const String& exefile, const String& cmdline)
 {
-	Pdb *dbg = new Pdb;
-	if(!dbg->Create(host, exefile, cmdline)) {
-		delete dbg;
-		return NULL;
-	}
+	One<Debugger> dbg;
+	if(!dbg.Create<Pdb>().Create(host, exefile, cmdline))
+		dbg.Clear();
 	return dbg;
 }
 
