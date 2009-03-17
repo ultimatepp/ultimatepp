@@ -475,6 +475,9 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 				p++;
 			}
 		else
+		if((*p == '\"' || *p == '\'') || ss.linecont && ss.string)
+			p = HlString(hls, p);
+		else
 		if(pair == MAKELONG('/', '*')) {
 			hls.Put(2, hl_style[INK_COMMENT]);
 			p += 2;
@@ -547,9 +550,6 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			if(p - t > 0)
 				hls.Put(int(p - t), hl_style[c]);
 		}
-		else
-		if(*p == '\"' || *p == '\'')
-			p = HlString(hls, p);
 		else
 		if(pair == MAKELONG('t', '_') && p[2] == '(' && p[3] == '\"') {
 			int pos0 = hls.pos;

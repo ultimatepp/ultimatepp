@@ -119,9 +119,10 @@ void CodeEditor::SyntaxState::Grounding(const wchar *b, const wchar *e)
 void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 {
 	Grounding(ln, e);
-	string = false;
-	if(!linecont)
+	if(!linecont) {
 		linecomment = false;
+		string = false;
+	}
 	linecont = e > ln && e[-1] == '\\';
 	const wchar *p = ln;
 	int lindent = 0;
