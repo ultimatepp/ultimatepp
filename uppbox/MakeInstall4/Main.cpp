@@ -106,7 +106,7 @@ CONSOLE_APP_MAIN
 
 	Syx(win32 + "/7za/7za.exe a " + tmp + "/upp.7z * -r -mx -m0fb=255 -mf=off");
 	SetCurrentDirectory(tmp);
-	Syx(win32 + "/umk uppbox WinInstaller2 MSC9 -ar u:/upp-win32-" + Filter(version, FilterVersion) + ".exe");
+	Syx(win32 + "/umk uppbox WinInstaller2 MSC9 -ar u:/upload/upp-win32-" + Filter(version, FilterVersion) + ".exe");
 }
 
-~/googlecode_upload.py -s win32_daily_build -p upp-mirror upp-win32-962.exe
+// ~/googlecode_upload.py -s win32_daily_build -p upp-mirror upp-win32-962.exe

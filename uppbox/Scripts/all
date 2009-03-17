@@ -3,6 +3,8 @@ echo Path: $PATH
 echo Home: $HOME
 export WINEDEBUG=-all wine program.exe
 
+mkdir ~/upload || true
+
 bash ~/upp.src/uppbox/Scripts/www
 
 bash ~/upp.src/uppbox/Scripts/win
