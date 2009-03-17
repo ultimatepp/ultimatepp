@@ -131,19 +131,22 @@ void SvnDiff::Execute(const String& f)
 		String l = ss.GetLine();
 		if(l[0] == 'r') {
 			Vector<String> h = Split(l, '|');
-			if(h.GetCount() > 2) {
+			if(h.GetCount() > 3) {
 				String rev = TrimBoth(h[0]);
-				String usr = TrimBoth(h[1]);
-				String msg;
+				String s = rev;
+				Vector<String> t = Split(h[2], ' ');
+				if(t.GetCount() > 1)
+					s << ' ' << t[0];
+				s << ' ' << TrimBoth(h[1]);
 				while(!ss.IsEof()) {
 					l = ss.GetLine();
 					if(l.GetCount()) {
 						if(l[0] != '-')
-							msg = l;
+							s << ": " << l;
 						break;
 					}
 				}
-				r.Add(rev, rev + ' ' + usr + ": " + msg);
+				r.Add(rev, s);
 			}
 		}
 	}
