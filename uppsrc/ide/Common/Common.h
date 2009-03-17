@@ -448,7 +448,7 @@ FileSel&  OutputFs();
 Image     IdeFileImage(const String& filename, bool fast = false);
 
 void             RegisterWorkspaceConfig(const char *name);
-void             RegisterWorkspaceConfig(const char *name, Callback WhenFlush);
+void             RegisterNWorkspaceConfig(const char *name, Callback WhenFlush);
 String&          WorkspaceConfigData(const char *name);
 
 template <class T>

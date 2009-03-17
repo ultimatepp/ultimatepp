@@ -168,7 +168,7 @@ SvnDiff::SvnDiff()
 {
 	r.Height(EditField::GetStdHeight());
 	r.SetDropLines(32);
-	Icon(IdeImg::Diff());
+	Icon(IdeImg::SvnDiff());
 	diff.AddFrameRight(r);
 	r <<= THISBACK(Load);
 }

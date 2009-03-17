@@ -364,6 +364,22 @@ public:
 	void LeaveWrite()    { Get().LeaveWrite(); }
 };
 
+class StaticConditionVariable : NoCopy {
+	volatile ConditionVariable *cv;
+	byte                        buffer[sizeof(ConditionVariable)];
+	
+	void Initialize();
+
+public:
+	ConditionVariable& Get()      { if(!ReadWithBarrier(cv)) Initialize(); return *const_cast<ConditionVariable *>(cv); }
+	operator ConditionVariable&() { return Get(); }
+
+	void Wait(Mutex& m)  { Get().Wait(m); }
+
+	void Signal()        { Get().Signal(); }
+	void Broadcast()     { Get().Broadcast(); }
+};
+
 #define INTERLOCKED \
 for(bool i_b_ = true; i_b_;) \
 	for(static UPP::StaticMutex i_ss_; i_b_;) \
@@ -396,6 +412,18 @@ if(!ReadWithBarrier(ptr)) { \
 		BarrierWrite(ptr, init); \
 	cs.Leave(); \
 }
+
+struct LazyUpdate {
+	mutable Mutex mutex;
+	mutable bool  dirty;
+
+public:
+	void Invalidate();
+	bool BeginUpdate() const;
+	void EndUpdate() const;
+
+	LazyUpdate();
+};
 
 #else
 

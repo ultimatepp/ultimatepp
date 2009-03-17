@@ -157,7 +157,6 @@ struct Gdb : Dbg {
 	void      Watches();
 	void      Autos();
 	void      Data();
-
 	void      QuickWatch();
 
 	void      CopyStack();
