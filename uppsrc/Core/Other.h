@@ -343,6 +343,8 @@ public:
 
 	const T& Get(const Maker& m);
 
+	void Clear();
+
 	void ClearCounters();
 	int  GetFoundSize() const       { return foundsize; }
 	int  GetNewSize() const         { return newsize; }
@@ -395,6 +397,17 @@ void LRUCache<T, K>::Shrink(int maxsize)
 		Unlink(tail);
 		key.Unlink(tail);
 	}
+}
+
+template <class T, class K>
+void LRUCache<T, K>::Clear()
+{
+	head = -1;
+	size = 0;
+	count = 0;
+	newsize = foundsize = 0;
+	key.Clear();
+	data.Clear();
 }
 
 template <class T, class K>

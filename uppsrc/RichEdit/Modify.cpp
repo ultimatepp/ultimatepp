@@ -277,7 +277,7 @@ void RichEdit::InsertObject(int type)
 	RichObjectType& richtype = RichObject::GetType(type);
 	RichObject object = RichObject(&richtype, Value());
 	RichObject o = object;
-	o.DefaultAction();
+	o.DefaultAction(context);
 	if(o.GetSerialId() != object.GetSerialId()) {
 		RichText::FormatInfo finfo = GetFormatInfo();
 		RemoveSelection();

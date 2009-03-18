@@ -147,7 +147,6 @@ protected:
 	const RichTxt&   GetConstText(int& pos) const;
 	RichTable&       GetTable0(int table, bool update);
 	RichTable&       GetUpdateTable(int table);
-	const RichTable& GetConstTable(int table) const;
 	RichTxt&         GetTableUpdateText(int table, const RichStyles& style, int& pi);
 
 	void        CombineFormat(FormatInfo& f, int pi, int pi2, bool& first, const RichStyles& style) const;
@@ -202,7 +201,10 @@ public:
 	const RichTable&      GetTable(int i) const;
 
 	int                   GetLength() const;
+
 	int                   GetTableCount() const;
+	const RichTable&      GetConstTable(int table) const;
+
 	bool                  IsEmpty() const;
 
 	RichCellPos           GetCellPos(int table, int row, int column) const;

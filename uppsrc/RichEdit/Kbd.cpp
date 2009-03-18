@@ -83,7 +83,7 @@ bool RichEdit::Key(dword key, int count)
 				NextUndo();
 				objectpos = c;
 				RichObject o = object;
-				o.DefaultAction();
+				o.DefaultAction(context);
 				if(o.GetSerialId() != object.GetSerialId())
 					ReplaceObject(o);
 				return true;

@@ -196,7 +196,7 @@ Callback callback2(Object *object, R (O::*method)(A, B), T1 arg1, T2 arg2) {
 
 template <class Object, class R, class O, class A, class B, class T1, class T2>
 Callback callback2(const Object *object, R (O::*method)(A, B) const, T1 arg1, T2 arg2) {
-	return Callback(new CallbackMethodActionArg2<Object, R (O::*)(A, B) const, T1, T2>
+	return Callback(new CallbackMethodActionArg2<const Object, R (O::*)(A, B) const, T1, T2>
 	                    (object, method, arg1, arg2));
 }
 

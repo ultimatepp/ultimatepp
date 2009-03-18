@@ -112,6 +112,7 @@ void RichEdit::Paint(Draw& w)
 				DrawFrame(w, tr.left, i * (pw.size.cy + 3) + 1 - sb,
 				          pw.size.cx + 2, pw.size.cy + 2, SColorShadow);
 		PaintInfo pi;
+		pi.context = context;
 		pi.zoom = zoom;
 		pi.top = GetPageY(sb);
 		pi.bottom = GetPageY(sb + sz.cy);
@@ -592,6 +593,8 @@ RichEdit::RichEdit()
 	zoom = 100;
 	Clear();
 
+	context = NULL;
+	
 	nolinks = false;
 
 	showcodes = LtBlue;

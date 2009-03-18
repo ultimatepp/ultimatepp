@@ -122,6 +122,7 @@ bool RichPara::BreaksPage(PageY py, const Lines& pl, int i, const Rect& page) co
 struct RichObjectImageMaker : ImageMaker {
 	RichObject object;
 	Size       sz;
+	void       *context;
 
 	virtual String Key() const;
 	virtual Image  Make() const;
@@ -134,6 +135,7 @@ String RichObjectImageMaker::Key() const
 	b.Cat((const char *)&id, sizeof(id));
 	b.Cat((const char *)&sz.cx, sizeof(sz.cx));
 	b.Cat((const char *)&sz.cy, sizeof(sz.cy));
+	b.Cat((const char *)&context, sizeof(context));
 	return b;
 }
 
@@ -141,7 +143,7 @@ Image RichObjectImageMaker::Make() const
 {
 	ImageDraw iw(sz);
 	iw.DrawRect(sz, SColorPaper());
-	object.Paint(iw, sz);
+	object.Paint(iw, sz, context);
 	return iw;
 }
 
@@ -247,10 +249,11 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 								RichObjectImageMaker im;
 								im.object = o;
 								im.sz = sz;
+								im.context = pi.context;
 								draw.DrawImage(0, 0, MakeImagePaintOnly(im));
 							}
 							else
-								o.Paint(draw, sz);
+								o.Paint(draw, sz, pi.context);
 						draw.End();
 					}
 					i++;

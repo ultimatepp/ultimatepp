@@ -156,14 +156,15 @@ public:
 	int           GetLength() const;
 	int           GetTableCount() const;
 
+	void          RemoveRow(int rowi);
+	void          InsertRow(int rowi, const RichStyles& style);
+
 private:
 	void          Normalize0();
 
 	RichTable     Copy(const Rect& sel) const;
 	void          Paste(Point pos, const RichTable& tab);
 	void          RemoveRow0(int rowi);
-	void          RemoveRow(int rowi);
-	void          InsertRow(int rowi, const RichStyles& style);
 	void          RemoveColumn0(int column);
 	void          RemoveColumn(int column);
 	void          InsertColumn(int column, const RichStyles& style);

@@ -17,7 +17,7 @@ struct scImageMaker : LRUCache<Image>::Maker {
 	bool  paintonly;
 
 	virtual String Key() const {
-		String q = m->Key();
+//		String q = m->Key();
 		return m->Key();
 	}
 	virtual int    Make(Image& object) const {
@@ -32,6 +32,11 @@ struct scImageMaker : LRUCache<Image>::Maker {
 
 static int sMaxSize;
 static int sMaxSizeMax = 4000000;
+
+void ClearMakeImageCache()
+{
+	sImageCache().Clear();
+}
 
 void SetMakeImageCacheMax(int m)
 {

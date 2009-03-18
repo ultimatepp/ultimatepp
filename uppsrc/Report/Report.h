@@ -45,7 +45,7 @@ public:
 
 	void                  NewPage()                   { Page(pagei + 1); }
 
-	void                  Put(const RichText& txt);
+	void                  Put(const RichText& txt, void *context = NULL);
 	void                  Put(const char *qtf);
 	Report&               operator<<(const char *qtf) { Put(qtf); return *this; }
 

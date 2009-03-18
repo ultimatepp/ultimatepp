@@ -18,7 +18,7 @@ void RichEdit::InsertTable()
 		return;
 	WithCreateTableLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, t_("Insert table"));
-	dlg.header = true;
+	dlg.header = false;
 	dlg.columns <<= 2;
 	dlg.columns.MinMax(1, 20);
 	dlg.ActiveFocus(dlg.columns);
@@ -111,26 +111,48 @@ void RichEdit::TableProps()
 	Advn(r, dlg.frame.SetUnit(unit), fmt.frame);
 	r(dlg.framecolor, fmt.framecolor);
 	Advn(r, dlg.grid.SetUnit(unit), fmt.grid);
+	Advn(r, dlg.header, fmt.header);
+	Advn(r, dlg.keep, fmt.keep);
 	r(dlg.gridcolor, fmt.gridcolor);
-	switch(dlg.Run()) {
-	case IDCANCEL:
-		return;
-	case IDNO:
-		NextUndo();
-		DestroyTable();
-		return;
-	default:
-		r.Retrieve();
-		NextUndo();
-		SaveTableFormat(cursorp.table);
-		if(dlg.equalize) {
-			Vector<String> r = Split((String)~dlg.ratios, ':');
-			for(int i = 0; i < fmt.column.GetCount(); i++)
-				fmt.column[i] = i < r.GetCount() ? max(atoi(r[i]), 1) : 1;
+	for(;;) {
+		switch(dlg.Run()) {
+		case IDCANCEL:
+			return;
+		case IDNO:
+			NextUndo();
+			DestroyTable();
+			return;
+		default:
+			r.Retrieve();
+			const RichTable& tbl = text.GetConstTable(cursorp.table);
+			bool valid = true;
+			Point violator(0, 0);
+			int vspan = 0;
+			for(int rw = 0; valid && rw < fmt.header && rw < tbl.GetRows(); rw++)
+				for(int co = 0; valid && co < tbl.GetColumns(); co++)
+					if(tbl(rw, co) && (vspan = tbl[rw][co].vspan) + rw > fmt.header) {
+						valid = false;
+						violator.x = co;
+						violator.y = rw;
+						break;
+					}
+			if(!valid) {
+				Exclamation(NFormat(t_("Invalid header row count %d, cell at rw %d, co %d has vspan = %d."),
+					fmt.header, violator.y + 1, violator.x + 1, vspan));
+				continue;
+			}
+			NextUndo();
+			SaveTableFormat(cursorp.table);
+			if(dlg.equalize) {
+				Vector<String> r = Split((String)~dlg.ratios, ':');
+				for(int i = 0; i < fmt.column.GetCount(); i++)
+					fmt.column[i] = i < r.GetCount() ? max(atoi(r[i]), 1) : 1;
+			}
+			text.SetTableFormat(cursorp.table, fmt);
+			Finish();
+			return;
 		}
-		text.SetTableFormat(cursorp.table, fmt);
 	}
-	Finish();
 }
 
 bool RichEdit::RemoveSpecial(int ll, int hh, bool back)
