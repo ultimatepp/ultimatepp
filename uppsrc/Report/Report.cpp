@@ -148,7 +148,7 @@ Report& Report::Landscape()
 	return *this;
 }
 
-void Report::Put(const RichText& txt)
+void Report::Put(const RichText& txt, void *context)
 {
 	PageY py(pagei, y);
 	PaintInfo paintinfo;
@@ -156,6 +156,7 @@ void Report::Put(const RichText& txt)
 	paintinfo.bottom = PageY(INT_MAX, INT_MAX);
 	paintinfo.indexentry = Null;
 	paintinfo.hyperlink = Null;
+	paintinfo.context = context;
 	txt.Paint(*this, py, GetPageRect(), paintinfo);
 	py = txt.GetHeight(py, GetPageRect());
 	Page(py.page);

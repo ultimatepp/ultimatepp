@@ -17,6 +17,7 @@ PaintInfo::PaintInfo()
 	highlight = Yellow();
 	indexentry = LtGreen();
 	coloroverride = false;
+	context = NULL;
 }
 
 String RichPara::Number::AsText(const RichPara::NumberFormat& format) const

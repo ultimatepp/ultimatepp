@@ -97,7 +97,7 @@ void Ide::SearchCode()
 {
 	if(editor.navigator != AssistEditor::NAV_BROWSER)
 		editor.Navigator(AssistEditor::NAV_BROWSER);
-	if(editor.browser.IsSearch())
+	if(editor.browser.search.HasFocus() && editor.browser.IsSearch())
 		editor.browser.ClearSearch();
 	else
 		editor.browser.search.SetFocus();

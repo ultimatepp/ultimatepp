@@ -309,6 +309,8 @@ void RichTxt::GetRichPos(int pos, RichPos& rp, int ti, int maxlevel, const RichS
 
 RichPara::Format RichTxt::GetFirstFormat(const RichStyles& style) const
 {
+	if(part.IsEmpty())
+		return RichPara::Format();
 	if(IsTable(0)) {
 		const RichTable& tab = GetTable(0);
 		return tab[0][0].text.GetFirstFormat(style);

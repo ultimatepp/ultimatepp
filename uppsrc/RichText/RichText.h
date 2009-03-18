@@ -124,6 +124,17 @@ struct RichObjectType : Moveable<RichObjectType> {
 	virtual String GetClipFmts() const;
 	virtual String GetClip(const Value& data, const String& fmt) const;
 
+	virtual Size   GetDefaultSize(const Value& data, Size maxsize, void *context) const;
+	virtual Size   GetPhysicalSize(const Value& data, void *context) const;
+	virtual Size   GetPixelSize(const Value& data, void *context) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz, void *context) const;
+	virtual Image  ToImage(const Value& data, Size sz, void *context) const;
+	virtual void   Menu(Bar& bar, RichObject& ex, void *context) const;
+	virtual void   DefaultAction(RichObject& ex, void *context) const;
+	virtual String GetLink(const Value& data, Point pt, Size sz, void *context) const;
+	
+	Size           StdDefaultSize(const Value& data, Size maxsize, void * context) const;
+
 	RichObjectType();
 	virtual ~RichObjectType();
 };
@@ -153,8 +164,8 @@ public:
 	void   SetSize(int cx, int cy)               { size = Size(cx, cy); NewSerial(); }
 	void   SetSize(Size sz)                      { size = sz; NewSerial(); }
 	Size   GetSize() const                       { return size; }
-	void   Paint(Draw& w, Size sz) const;
-	Image  ToImage(Size sz) const;
+	void   Paint(Draw& w, Size sz, void *context = NULL) const;
+	Image  ToImage(Size sz, void *context = NULL) const;
 	Size   GetPhysicalSize() const               { return physical_size; }
 	Size   GetPixelSize() const                  { return pixel_size; }
 	Size   GetDefaultSize(Size maxsize) const    { return type ? type->GetDefaultSize(data, maxsize) : physical_size; }
@@ -177,8 +188,8 @@ public:
 	void   SetYDelta(int yd)                     { ydelta = yd; }
 	int    GetYDelta() const                     { return ydelta; }
 
-	void   Menu(Bar& bar)                        { if(type) type->Menu(bar, *this); }
-	void   DefaultAction()                       { if(type) type->DefaultAction(*this); }
+	void   Menu(Bar& bar, void *context = NULL)  { if(type) type->Menu(bar, *this, context); }
+	void   DefaultAction(void *context = NULL)   { if(type) type->DefaultAction(*this, context); }
 
 	operator bool() const                        { return !IsNull(data); }
 
@@ -239,6 +250,7 @@ struct PaintInfo {
 	int     highlightpara;
 	Color   highlight;
 	bool    coloroverride;
+	void    *context;
 
 	PaintInfo();
 };

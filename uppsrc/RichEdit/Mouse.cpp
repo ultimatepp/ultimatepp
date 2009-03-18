@@ -208,7 +208,7 @@ void RichEdit::RightDown(Point p, dword flags)
 			object = GetObject();
 			if(!object) return;
 			o = object;
-			o.Menu(menu);
+			o.Menu(menu, context);
 			if(!menu.IsEmpty())
 				menu.Separator();
 			menu.Add(t_("Object position.."), THISBACK(AdjustObjectSize));
@@ -287,7 +287,7 @@ void RichEdit::LeftDouble(Point p, dword flags)
 			RichObject object = GetObject();
 			if(!object) return;
 			RichObject o = object;
-			o.DefaultAction();
+			o.DefaultAction(context);
 			if(object.GetSerialId() != o.GetSerialId())
 				ReplaceObject(o);
 		}

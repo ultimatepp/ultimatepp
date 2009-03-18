@@ -147,6 +147,7 @@ public:
 
 
 private:
+	void                     *context;
 	Size                     p_size;
 	bool                     sizetracking;
 	ScrollBar                sb;
@@ -658,6 +659,7 @@ public:
 	RichEdit&       Unit(int u)                           { unit = u; Refresh(); return *this; }
 	RichEdit&       SpellCheck(bool b)                    { spellcheck = b; Refresh(); return *this; }
 	RichEdit&       SetZoom(int z)                        { zoom = z; Refresh(); return *this; }
+	RichEdit&       SetContext(void *ctx)                 { context = ctx; Refresh(); return *this; }
 
 	struct UndoInfo {
 		int              undoserial;

@@ -10,12 +10,12 @@ String RichObjectType::GetCreateName() const
 	return Null;
 }
 
-Size RichObjectType::GetDefaultSize(const Value& data, Size maxsize) const
+Size RichObjectType::StdDefaultSize(const Value& data, Size maxsize, void * context) const
 {
 	if(IsNull(data)) return Size(0, 0);
-	Size psz = GetPhysicalSize(data);
+	Size psz = GetPhysicalSize(data, context);
 	if((psz.cx | psz.cy) == 0)
-		psz = 625 * GetPixelSize(data) / 100;
+		psz = 625 * GetPixelSize(data, context) / 100;
 	Size sz;
 	for(int i = 1; i < 10000; i++) {
 		sz = psz / i;
@@ -23,6 +23,16 @@ Size RichObjectType::GetDefaultSize(const Value& data, Size maxsize) const
 			break;
 	}
 	return sz;
+}
+
+Size RichObjectType::GetDefaultSize(const Value& data, Size maxsize, void *context) const
+{
+	return GetDefaultSize(data, maxsize);
+}
+
+Size RichObjectType::GetDefaultSize(const Value& data, Size maxsize) const
+{
+	return StdDefaultSize(data, maxsize, NULL);
 }
 
 Value RichObjectType::Read(const String& s) const
@@ -55,20 +65,59 @@ String RichObjectType::GetClip(const Value& data, const String& fmt) const
 	return Null;
 }
 
+void RichObjectType::Menu(Bar& bar, RichObject& data, void *context) const
+{
+	Menu(bar, data);
+}
+
 void RichObjectType::Menu(Bar& bar, RichObject& data) const {}
+
+void RichObjectType::DefaultAction(RichObject& data, void *context) const
+{
+	DefaultAction(data);
+}
+
 void RichObjectType::DefaultAction(RichObject& data) const {}
+
+Size RichObjectType::GetPhysicalSize(const Value& data, void *context) const
+{
+	return GetPhysicalSize(data);
+}
+
 Size RichObjectType::GetPhysicalSize(const Value& data) const { return Size(0, 0); }
+
+Size RichObjectType::GetPixelSize(const Value& data, void *context) const
+{ 
+	return GetPixelSize(data);
+}
+
 Size RichObjectType::GetPixelSize(const Value& data) const { return Size(1, 1); }
+
+void RichObjectType::Paint(const Value& data, Draw& w, Size sz, void *context) const
+{
+	Paint(data, w, sz);
+}
+
 void RichObjectType::Paint(const Value& data, Draw& w, Size sz) const {}
 
 Image RichObjectType::ToImage(const Value& data, Size sz) const
 {
+	return ToImage(data, sz, NULL);
+}
+
+Image RichObjectType::ToImage(const Value& data, Size sz, void *context) const
+{
 	ImageDraw w(sz);
-	Paint(data, w, sz);
+	Paint(data, w, sz, context);
 	return w;
 }
 
 String RichObjectType::GetLink(const Value& data, Point pt, Size sz) const
+{
+	return GetLink(data, pt, sz, NULL);
+}
+
+String RichObjectType::GetLink(const Value& data, Point pt, Size sz, void *context) const
 {
 	return Null;
 }
@@ -105,10 +154,10 @@ void RichObject::Register(const char *name, RichObjectType *type)
 	Map().FindAdd(name, type);
 }
 
-void RichObject::Paint(Draw& w, Size sz) const
+void RichObject::Paint(Draw& w, Size sz, void *context) const
 {
 	if(type)
-		type->Paint(data, w, sz);
+		type->Paint(data, w, sz, context);
 	else {
 		w.DrawRect(sz, SColorFace());
 		DrawFrame(w, sz, SColorText());
@@ -116,13 +165,13 @@ void RichObject::Paint(Draw& w, Size sz) const
 	}
 }
 
-Image RichObject::ToImage(Size sz) const
+Image RichObject::ToImage(Size sz, void *context) const
 {
 	if(type)
-		return type->ToImage(data, sz);
+		return type->ToImage(data, sz, context);
 	else {
 		ImageDraw w(sz);
-		Paint(w, sz);
+		Paint(w, sz, context);
 		return w;
 	}
 }
