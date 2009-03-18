@@ -1,7 +1,6 @@
-echo makewww started at `date`
-echo Path: $PATH
-echo Home: $HOME
 export WINEDEBUG=-all wine program.exe
+
+set -e
 
 mkdir ~/upload || true
 
