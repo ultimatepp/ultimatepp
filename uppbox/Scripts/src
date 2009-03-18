@@ -1,1 +1,3 @@
-bin/theide uppsrc ide GCC -asrxM upp.src
+rm ~/upload/* || true
+~/bin/theide upptmp ide GCC -asrxM ~/upp.tmp/u/upp.src
+tar -xvvzf ~/upload/upp-src-`svnversion ~/upp.src` ~/upp.tmp/u/
