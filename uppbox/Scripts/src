@@ -1,3 +1,3 @@
 rm ~/upload/* || true
 ~/bin/theide uppsrc ide GCC -asrxM ~/upp.tmp/u
-tar -xvvzf ~/upload/upp-src-`svnversion ~/upp.src`.tar.gz ~/upp.tmp/u/
+tar -cvvzf ~/upload/upp-src-`svnversion ~/upp.src`.tar.gz ~/upp.tmp/u/
