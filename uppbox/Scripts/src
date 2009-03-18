@@ -1,7 +1,14 @@
 set -e
 
 rm ~/upload/* || true
-rm ~/upp.tmp/*    # rm removes Win32 specific files (.dll, .exe), so we have "clean" sources now
+
+#remove Win32 specific files
+rm ~/upp.tmp/u/*.exe || true
+rm ~/upp.tmp/u/*.map || true
+rm ~/upp.tmp/u/*.dll || true
+rm ~/upp.tmp/u/*.upp || true
+rm ~/upp.tmp/u/*.chk || true
+
 ~/bin/theide uppsrc ide GCC -asrxM ~/upp.tmp/u
 cd ~/upp.tmp
 mv u upp-src-`svnversion ~/upp.src`
