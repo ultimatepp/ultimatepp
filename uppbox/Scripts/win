@@ -1,3 +1,5 @@
+set -e
+
 rm ~/upload/* || true
 wine "u:\Win32\theide\umk" uppbox MakeInstall4 MSC9 -ar "u:\mku.exe"
 wine "u:\mku.exe"
