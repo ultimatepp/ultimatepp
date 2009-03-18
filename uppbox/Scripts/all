@@ -9,6 +9,4 @@ bash ~/upp.src/uppbox/Scripts/www
 
 bash ~/upp.src/uppbox/Scripts/win
 
-rm ~/upp.tmp/*    # rm removes Win32 specific files (.dll, .exe), so we have "clean" sources now
-
 bash ~/upp.src/uppbox/Scripts/src
