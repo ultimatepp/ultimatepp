@@ -4,3 +4,4 @@ rm ~/upp.tmp/*    # rm removes Win32 specific files (.dll, .exe), so we have "cl
 cd ~/upp.tmp
 mv u upp-src-`svnversion ~/upp.src`
 tar -cvvzf ~/upload/upp-src-`svnversion ~/upp.src`.tar.gz upp-src-`svnversion ~/upp.src`
+mv upp-src-`svnversion ~/upp.src` u
