@@ -435,7 +435,7 @@ zhTW("將%s與後面換位下移之")
 
 T_("Find")
 deDE("Suchen")
-esES("")
+esES("Encontrar")
 fiFI("Etsi")
 huHU("Keresés")
 plPL("Znajdź")
