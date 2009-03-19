@@ -467,7 +467,21 @@ Painter& Painter::Text(double x, double y, const char *text, Font fnt, int n, do
 
 Painter& Painter::Rectangle(double x, double y, double cx, double cy)
 {
+	if (cx < 0) { x += cx; cx = -cx;}
+	if (cy < 0) { y += cy; cy = -cy;}
 	return Move(x, y).RelLine(cx, 0).RelLine(0, cy).RelLine(-cx, 0).Close();
+}
+
+Painter& Painter::RoundedRectangle(double x, double y, double cx, double cy, double r)
+{
+	ASSERT(r >= 0);
+	if (cx < 0) { x += cx; cx = -cx;}
+	if (cy < 0) { y += cy; cy = -cy;}
+	Move(x + r, y).Arc(x + r, y + r, r, r, -M_PI / 2, -M_PI / 2)
+	.Line(x, y + cy - r).Arc(x + r, y + cy - r, r, r, M_PI, -M_PI / 2)
+	.Line(x + cx - r, y + cy).Arc(x + cx - r, y + cy - r, r, r, M_PI / 2, -M_PI / 2)
+	.Line(x + cx, y + r).Arc(x + cx - r, y + r, r, r, 0, -M_PI / 2).Line(x + r, y);
+	return *this;
 }
 
 Painter& Painter::Ellipse(double x, double y, double rx, double ry)
