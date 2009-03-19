@@ -72,8 +72,8 @@ It should be used as reaction to accelerator key by derived class.&]
 [s3;%% &]
 [s4; &]
 [s5;:Pusher`:`:FinishPush`(`): [@(0.0.255) bool]_[* FinishPush]()&]
-[s7;%% [*/ Return value]-|Forces end of pushed state and invokes PerformAction 
-method (default implementation invokes standard WhenAction callback).&]
+[s2;%% Forces end of pushed state and invokes PerformAction method 
+(default implementation invokes standard WhenAction callback).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Pusher`:`:RefreshPush`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* RefreshPush]()&]

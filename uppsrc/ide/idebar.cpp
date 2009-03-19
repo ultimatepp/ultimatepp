@@ -344,8 +344,10 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	    .Help("Convert actual file to different encoding");
 	menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_DIFF, IdeImg::Diff(), THISBACK(Diff))
 	    .Help("Show differences between the project and arbitrary files");
+	menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_PATCH, IdeImg::Patch(), THISBACK(Patch))
+	    .Help("Show differences with patch file applied");
 	if(IsSvnDir(GetFileFolder(editfile)))
-		menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_SVNDIFF, IdeImg::Diff(), THISBACK(SvnHistory))
+		menu.AddMenu(IsActiveFile() && !IsFolder(editfile), AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
 		    .Help("Show svn history of file");
 }
 
