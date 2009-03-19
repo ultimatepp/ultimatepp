@@ -30,6 +30,7 @@ file
 	Path.cpp,
 	Arc.cpp,
 	ThinLine.cpp,
+	Shapes.cpp,
 	Big.cpp,
 	Examples.lay,
 	Test.iml;
