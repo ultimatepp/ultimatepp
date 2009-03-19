@@ -636,19 +636,56 @@ void ButtonOption::Serialize(Stream& s) {
 }
 
 void  ButtonOption::Paint(Draw& w) {
+	const Style *st;
+	if (style)
+		st = style;
+	else
+		st = &StyleDefault();
+	
 	Size sz = GetSize();
-	Size isz = image.GetSize();
-	Rect r = sz;
+	bool ds = !IsShowEnabled();
+	DrawLabel dl;
+	dl.text = label;
+	dl.font = StdFont();
+	dl.limg = DisabledImage((option && !IsNull(image1)) ? image1 : image, !IsEnabled());
+	dl.disabled = ds;
+	dl.lspc = !label.IsEmpty() && !image.IsEmpty() ? 4 : 0;
+	if(VisibleAccessKeys() && IsEnabled())
+		dl.accesskey = accesskey;
 	int i = !IsShowEnabled() ? CTRL_DISABLED :
 	         push ? CTRL_PRESSED :
 	         HasMouse() || HasFocus() ? CTRL_HOT :
 	         CTRL_NORMAL;
 	if(option) i = CTRL_PRESSED;
-	ChPaint(w, sz, style ? style->look[i] : GetButtonStyle(this)->look[i]);
-	Point p = r.CenterPos(image.GetSize());
-	w.DrawImage(p.x, p.y, DisabledImage((option && !IsNull(image1)) ? image1 : image, !IsEnabled()));
+	ChPaint(w, sz, st->look[i]);
+	dl.ink = st->textcolor[i];
+	dl.Paint(w, 3, 3, sz.cx - 6, sz.cy - 6, true);
+	if(HasFocus() && st->drawfocus)
+		DrawFocus(w, Rect(sz).Deflated(3));
 }
 
+CH_STYLE(ButtonOption, Style, StyleDefault)
+{
+	const Button::Style& bs = Button::StyleNormal(); 
+	for (int i = 0; i < 4; i++)
+	{
+		look[i] = bs.look[i];
+		textcolor[i] = bs.textcolor[i];
+	}
+	drawfocus = false;
+}
+
+CH_STYLE(ButtonOption, Style, StyleFlat)
+{
+	const ToolButton::Style& tbs = ToolButton::StyleDefault(); 
+	for (int i = 0; i < 4; i++)
+	{
+		look[i] = tbs.look[i];
+		textcolor[i] = tbs.textcolor[i];
+	}
+	drawfocus = false;
+}
+	
 void  ButtonOption::LeftDown(Point, dword) {
 	push = true;
 	Refresh();
@@ -686,6 +723,27 @@ void  ButtonOption::SetData(const Value& v)
 Value ButtonOption::GetData() const
 {
 	return (int)Get();
+}
+
+dword ButtonOption::GetAccessKeys() const
+{
+	return AccessKeyBit(accesskey);
+}
+
+void  ButtonOption::AssignAccessKeys(dword used)
+{
+	if(!accesskey) {
+		accesskey = ChooseAccessKey(label, used);
+		if(accesskey) Refresh();
+		used |= AccessKeyBit(accesskey);
+	}
+	Ctrl::AssignAccessKeys(used);
+}
+
+ButtonOption& ButtonOption::SetLabel(const String& text) {
+	accesskey = ExtractAccessKey(text, label);
+	Refresh();
+	return *this;
 }
 
 // --------------------

@@ -380,7 +380,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 					if(HasAnyDebug())
 						lib << " -debug -OPT:NOREF";
 					else
-						lib << " -release -OPT:REF,ICF,NOWIN98";
+						lib << " -release -OPT:REF,ICF";
 					if(IsMscArm())
 						lib <<  " -subsystem:windowsce,4.20 /ARMPADCODE";
 					else

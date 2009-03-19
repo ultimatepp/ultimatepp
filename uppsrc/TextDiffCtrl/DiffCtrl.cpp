@@ -8,9 +8,8 @@ TextDiffCtrl::TextDiffCtrl()
 	right.NoGutter();
 	Horz(left, right);
 	left.WhenScroll = right.ScrollWhen(left);
-	right.HideSb();
 	right.WhenScroll = left.ScrollWhen(right);
-//	compright.NumberBgColor(HistoryBg());
+	right.HideSb();
 }
 
 static bool SmallDiff(const char *s1, const char *s2)

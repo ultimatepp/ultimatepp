@@ -207,30 +207,42 @@ public:
 	virtual void  SetData(const Value& v);
 	virtual Value GetData() const;
 	virtual void  Serialize(Stream& s);
+	virtual dword GetAccessKeys() const;
+	virtual void  AssignAccessKeys(dword used);
 
 public:
 	struct Style : ChStyle<Style> {
 		Value look[4];
+		Color textcolor[4];
+		bool  drawfocus;
 	};
 
 private:
 	Image        image;
 	Image        image1;
+	String       label;
 	const Style *style;
 	bool         option;
 	bool         push;
+	byte         accesskey;
 
 public:
 	ButtonOption&  SetImage(const Image& img)                 { image = img; Refresh(); return *this; }
 	ButtonOption&  SetImage(const Image& m, const Image& m1)  { image = m; image1 = m1; Refresh(); return *this; }
 	void operator=(const Image& img)                          { SetImage(img); }
-
+	
+	ButtonOption& SetLabel(const String& text);
+	String GetLabel() const                                   { return label; }        
+	
 	void Set(bool b)                                          { option = b; UpdateRefresh(); }
 	bool Get() const                                          { return option; }
 
 	void operator=(bool b)                                    { Set(b); }
 	operator bool() const                                     { return Get(); }
 
+	static const Style& StyleDefault();
+	static const Style& StyleFlat();
+	
 	ButtonOption& SetStyle(const Style& s)                    { style = &s; Refresh(); return *this; }
 	ButtonOption& AutoStyle()                                 { style = NULL; Refresh(); return *this; }
 

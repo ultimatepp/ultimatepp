@@ -142,17 +142,18 @@ void TextCompareCtrl::Paint(Draw& draw)
 	if(gutter_width > 0)
 	{
 		int t = 0, b = 0;
+		int gx = sz.cx - gutter_width;
 		for(int i = 0; i < lcnt; i++)
 			if(lines[i].level > 1) {
 				b = idivceil(sz.cy * i, lcnt);
 				if(b >= t) {
-					draw.DrawRect(0, t, gutter_width, b - t, gutter_bg);
-					draw.DrawRect(0, b, gutter_width, 1, gutter_fg);
+					draw.DrawRect(gx, t, gutter_width, b - t, gutter_bg);
+					draw.DrawRect(gx, b, gutter_width, 1, gutter_fg);
 					t = b + 1;
 				}
 			}
 
-		draw.DrawRect(0, t, gutter_width, sz.cy - t, gutter_bg);
+		draw.DrawRect(gx, t, gutter_width, sz.cy - t, gutter_bg);
 
 		int total = letter.cy * lcnt;
 		if(total <= 0)
@@ -160,30 +161,30 @@ void TextCompareCtrl::Paint(Draw& draw)
 		int page_height = (sz.cy * sz.cy) / total;
 		int ty = max(0, (sz.cy * offset.cy) / total);
 		int by = min(sz.cy, ty + page_height);
-		draw.DrawRect(0, ty, gutter_width, 2, Black);
-		draw.DrawRect(0, by - 2, gutter_width, 2, Black);
-		draw.DrawRect(0, ty, 2, by - ty, Black);
-		draw.DrawRect(gutter_width - 2, ty, 2, by - ty, Black);
+		draw.DrawRect(gx, ty, gutter_width, 2, Black);
+		draw.DrawRect(gx, by - 2, gutter_width, 2, Black);
+		draw.DrawRect(gx, ty, 2, by - ty, Black);
+		draw.DrawRect(gx + gutter_width - 2, ty, 2, by - ty, Black);
 	}
 
 	Font ifont = Font(font).Italic();
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
-		draw.DrawRect(gutter_width, y, number_width, letter.cy, number_bg);
+		draw.DrawRect(0, y, number_width, letter.cy, number_bg);
 		if(!IsNull(l.number))
-			draw.DrawText(gutter_width, y + number_yshift, FormatInt(l.number), number_font, l.color);
+			draw.DrawText(0, y + number_yshift, FormatInt(l.number), number_font, l.color);
 	}
-	draw.Clip(gutter_width + number_width, 0, sz.cx - gutter_width - number_width, sz.cy);
+	draw.Clip(number_width, 0, sz.cx - gutter_width - number_width, sz.cy);
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
 		draw.DrawRect(0, y, sz.cx, letter.cy, SWhite());
-		draw.DrawText(gutter_width + number_width - offset.cx, y, ExpandTabs(l.text), l.level == 1 ? ifont : font, l.color);
+		draw.DrawText(number_width - offset.cx, y, ExpandTabs(l.text), l.level == 1 ? ifont : font, l.color);
 	}
-	draw.End();
 	int lcy = lcnt * letter.cy - offset.cy;
-	draw.DrawRect(gutter_width, lcy, sz.cx, sz.cy - lcy, SGray());
+	draw.DrawRect(0, lcy, sz.cx, sz.cy - lcy, SGray());
+	draw.End();
 }
 
 void TextCompareCtrl::TabSize(int t)

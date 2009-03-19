@@ -80,7 +80,7 @@ void Ide::ConsolePaste()
 }
 
 void Ide::Serialize(Stream& s) {
-	int version = 11;
+	int version = 12;
 	s.Magic(0x1234);
 	s / version;
 	s % main;
@@ -182,6 +182,8 @@ void Ide::Serialize(Stream& s) {
 		String d;
 		s % d;
 	}
+	if(version >= 12)
+		s % DiffFs();
 	s.Magic();
 }
 

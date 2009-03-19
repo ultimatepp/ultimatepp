@@ -110,7 +110,7 @@ int Prompt(Callback1<const String&> WhenLink,
 	Vector<Ctrl *> wins = Ctrl::GetTopWindows();
 	for(int i = 0; i < wins.GetCount(); i++) {
 		TopWindow *w = dynamic_cast<TopWindow *>(wins[i]);
-		if(w && w->GetScreenRect().Intersects(dlg.GetScreenRect()) && w->IsTopMost()) {
+		if(w && w->IsTopMost()) {
 			dlg.TopMost();
 			break;
 		}
