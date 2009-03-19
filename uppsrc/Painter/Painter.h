@@ -302,6 +302,7 @@ public:
 	void     Paint(const Painting& p);
 
 	Painter& Rectangle(double x, double y, double cx, double cy);
+	Painter& RoundedRectangle(double x, double y, double cx, double cy, double r);
 	Painter& Ellipse(double x, double y, double rx, double ry);
 	Painter& Circle(double x, double y, double r);
 };
