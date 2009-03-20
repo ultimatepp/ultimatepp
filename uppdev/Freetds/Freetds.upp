@@ -1,0 +1,12 @@
+uses
+	Core;
+
+library
+	sybdb;
+
+file
+	Freetds.cpp;
+
+mainconfig
+	"" = "";
+
