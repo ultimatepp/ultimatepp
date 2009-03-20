@@ -2,40 +2,30 @@
 
 using namespace Upp;
 
-/*
-struct CacheLock {
-	Mutex mutex;
-	bool  dirty;
+struct DblSum {
+	Vector<double> d;
+	mutable double sum;
+	LazyUpdate dirty;
 
 public:
-	void Dirty()        { dirty = true; }
-	void Clear()        { dirty = false; }
-	bool EnterUpdate() {
-		if(dirty) {
-			mutex.Enter();
-			if(dirty) return true;
-			mutex.Leave();
+	void Add(double x)  { d.Add(x); dirty.Invalidate(); }
+	double Sum() const {
+		if(dirty.BeginUpdate()) {
+			Vector<int> o = GetSortOrder(d);
+			sum = 0;
+			for(int i = 0; i < o.GetCount(); i++)
+				sum += d[o[i]];
+			dirty.EndUpdate();
 		}
-		return false;
-	}
-	void LeaveUpdate() {
-		dirty = false;
-		mutex.Leave();
+		return sum;
 	}
 };
 
-bool b = dirty;
-mfence
-if(b) {
-	initcode;
-	sfence
-	dirty = false;
-}
-*/
-
-static bool y;
-
 CONSOLE_APP_MAIN
 {
-	y = ReadWithBarrier(y);
+	DblSum x;
+	x.Add(100);
+	for(int i = 0; i < 1000*1000; i++)
+		x.Add(1e-10);
+	DDUMP(x.Sum());
 }
