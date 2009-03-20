@@ -30,6 +30,7 @@ options(XGNU) -ffunction-sections;
 link(SOLARIS) "-Wl,-R -Wl,/usr/local/lib";
 
 file
+	Config.h,
 	Core.h,
 	Defs.h,
 	Cpu.cpp optimize_speed,
