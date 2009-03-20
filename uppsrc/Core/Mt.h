@@ -234,7 +234,7 @@ class ConditionVariable {
 	Mutex                 mutex;
 	friend struct sCVWaiter_;
 	
-	sCVWaiter_ *head, *tail;
+	struct sCVWaiter_ *head, *tail;
 	
 public:
 	void Wait(Mutex& m);
