@@ -10,9 +10,12 @@ topic "TreeCtrl";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s0;%% [4 TreeCtrl]&]
-[s0;%% &]
-[s0;%% 
+[ {{10000@3 [s0; [*@(229)4 TreeCtrl]]}}&]
+[s3;%% &]
+[s1;:TreeCtrl`:`:class: [@(0.0.255)3 class][3 _][*3 TreeCtrl][3 _:_][@(0.0.255)3 public][3 _][*@3;3 C
+trl]&]
+[s2;%% &]
+[s2;%% 
 @@image:1212&1156
 ŠƒÂ€¹€€€‚Çÿ€€€€ø·œíÉÒÜ´²”€ó¥ÎÁ¨¸€‹¶Ü€ÆÇ€â€¬Òì€Ø°„Ö”‹Èƒ€¬ Å˜ªƒö™þÌ¤”ø±ô°Šôôô
 õ¬ç·äçûê¢ÕÊ­ëø–¾¯»»í¿ºÃ€ßàåäú÷ï¼‘ýÁÔÇäÑÊë—á«à‘ø­Á¢ðƒÅàÇŸ·è”ÄÑóüŠ¡ŸÙåðœ”‹æ­ÙÔèß
@@ -49,142 +52,15 @@ topic "TreeCtrl";
 äŒ»áïÈ¨à€Ò
 &]
 [s0;%% &]
-[s0;%% TreeCtrl hierarchy management is based on integer id numbers. 
+[s9;%% TreeCtrl hierarchy management is based on integer id numbers. 
 Each node in tree (item) has associated integer id unique for 
 the tree. Child nodes of item are organized as an array. TreeCtrl 
 provides operation to insert child nodes at specified array position 
 and to query child and parent nodes. Root item has fixed id 0.&]
+[s3;%% &]
 [s0;%% &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Nested class TreeCtrl`::Node]]}}&]
-[s0;%% &]
-[s1;:`:`:TreeCtrl`:`:Node`:`:class: [@(0.0.255) class][@(64) _][* TreeCtrl`::Node]&]
-[s2;%% This class represents the content and appearance of single 
-TreeCtrl node`-item.&]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:image: [_^Image^ Image]_[* image]&]
-[s2;%% Node icon.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:margin: [@(0.0.255) int]_[* margin]&]
-[s2;%% Space between icon and value of the item, or item`'s widget. 
-Defaults to 2.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:key: [_^Value^ Value]_[* key]&]
-[s2;%% Item key. This is not displayed.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:value: [_^Value^ Value]_[* value]&]
-[s2;%% Item value.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:display: [@(0.0.255) const]_[_^Display^ Display]_`*[* display]&]
-[s2;%% Display used to render value. Defaults to NULL, which means 
-StdDisplay is to be used.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:size: [_^Size^ Size]_[* size]&]
-[s2;%% Size of value area. Defaults to Null `- in that case, value 
-area size is determined by display`->GetStdSize(value) or ctrl`->GetMinSize() 
-if widget for item is used.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:ctrl: [_^Ptr^ Ptr][@(0.0.255) <][_^Ctrl^ Ctrl][@(0.0.255) >]_[* ctrl]&]
-[s2;%% Widget associated with item.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:canopen: [@(0.0.255) bool]_[* canopen]&]
-[s2;%% Item can be opened.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:canselect: [@(0.0.255) bool]_[* canselect]&]
-[s2;%% Item can be selected.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:SetImage`(const Image`&`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&
-]_[* SetImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
-[s2;%% Sets image.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Set`(const Value`&`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_
-[* Set]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
-[s2;%% Sets both key and value to [%-*@3 v].&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Set`(const Value`&`,const Value`&`): [_^TreeCtrl`:`:Node^ Node
-][@(0.0.255) `&]_[* Set]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v], 
-[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 t])&]
-[s2;%% Sets key and value.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:SetDisplay`(const Display`&`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&
-]_[* SetDisplay]([@(0.0.255) const]_[_^Display^ Display][@(0.0.255) `&]_[*@3 d])&]
-[s2;%% Sets display.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:SetSize`(Size`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_[* SetS
-ize]([_^Size^ Size]_[*@3 sz])&]
-[s2;%% Sets size.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:SetCtrl`(Ctrl`&`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_[* Se
-tCtrl]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 `_ctrl])&]
-[s2;%% Sets widget.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:CanOpen`(bool`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_[* CanO
-pen]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
-[s2;%% Sets canopen flag.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:CanSelect`(bool`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_[* Ca
-nSelect]([@(0.0.255) bool]_[*@3 b])&]
-[s2;%% Sets canselect flag.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Node`(`): [* Node]()&]
-[s2;%% Default constructor.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Node`(const Image`&`,const Value`&`): [* Node]([@(0.0.255) const
-]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
-]_[*@3 v])&]
-[s2;%% Assigns icon, key and value.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Node`(const Image`&`,const Value`&`,const Value`&`): [* Node](
-[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [@(0.0.255) const]_[_^Value^ Va
-lue][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 t])&]
-[s2;%% Assigns icon, key and value.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Node`(const Value`&`): [* Node]([@(0.0.255) const]_[_^Value^ Value
-][@(0.0.255) `&]_[*@3 v])&]
-[s2;%% Assigns key and value.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Node`(const Value`&`,const Value`&`): [* Node]([@(0.0.255) const
-]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_
-[*@3 t])&]
-[s2;%% Assigns key and value.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Node`(Ctrl`&`): [* Node]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
-[s2;%% Assigns widget.&]
-[s3; &]
-[s4; &]
-[s5;:TreeCtrl`:`:Node`:`:Node`(const Image`&`,Ctrl`&`,int`,int`): [* Node]([@(0.0.255) co
-nst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl], 
-[@(0.0.255) int]_[*@3 cx]_`=_[@3 0], [@(0.0.255) int]_[*@3 cy]_`=_[@3 0])&]
-[s2;%% Assigns icon, widget and its dimensions.&]
-[s0;%% &]
-[ {{10000F(128)G(128)@1 [s0;%% [* CtrlCtrl public members]]}}&]
-[s3; &]
-[s1;:TreeCtrl`:`:class: [@(0.0.255) class]_[* TreeCtrl]_:_[@(0.0.255) public]_[*@3 Ctrl]&]
-[s2;%% Tree widget.&]
-[s3; &]
-[s4; &]
 [s5;:TreeCtrl`:`:WhenOpen: [_^Callback1^ Callback1][@(0.0.255) <int>]_[* WhenOpen]&]
 [s2;%% Tree item was opened, parameter is the item id.  &]
 [s3; &]
@@ -233,8 +109,8 @@ the second parameter is insert index within parent`'s child list.
 See [^PasteClip^ PasteClip] for more details.&]
 [s3; &]
 [s4; &]
-[s5;:TreeCtrl`:`:WhenDrop: [_^Callback1^ Callback1][@(0.0.255) <][_^PasteClip^ PasteClip][@(0.0.255) `&
->]_[* WhenDrop]&]
+[s5;:TreeCtrl`:`:WhenDrop: [_^Callback1^ Callback1][@(0.0.255) <]PasteClip[@(0.0.255) `&>]_
+[* WhenDrop]&]
 [s2;%% This callback manages drag`&drop when WhenDropItem and WhenDropInsert 
 do not apply `- drop into empty area. See [^PasteClip^ PasteClip] 
 for more details.&]
@@ -713,4 +589,135 @@ cursor position etc.&]
 r`::Style][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Assigns a chameleon visual style of scrollbar of TreeCtrl.&]
 [s3;%% &]
-[s0; ]
+[s0;%% &]
+[s0; &]
+[s0; &]
+[ {{10000@3 [s0; [*@(229)4 TreeCtrl`::Node]]}}&]
+[s3; &]
+[s1;:TreeCtrl`:`:Node`:`:class: [@(0.0.255)3 class][3 _][*3 Node]&]
+[s9;%% This class represents the content and appearance of single 
+TreeCtrl node`-item.&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
+[s3; &]
+[s5;:TreeCtrl`:`:Node`:`:Node`(`): [* Node]()&]
+[s2;%% Default constructor.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:Node`(const Image`&`,const Value`&`): [* Node]([@(0.0.255) const
+]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
+]_[*@3 v])&]
+[s2;%% Assigns icon, key and value.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:Node`(const Image`&`,const Value`&`,const Value`&`): [* Node](
+[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [@(0.0.255) const]_[_^Value^ Va
+lue][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 t])&]
+[s2;%% Assigns icon, key and value.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:Node`(const Value`&`): [* Node]([@(0.0.255) const]_[_^Value^ Value
+][@(0.0.255) `&]_[*@3 v])&]
+[s2;%% Assigns key and value.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:Node`(const Value`&`,const Value`&`): [* Node]([@(0.0.255) const
+]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_
+[*@3 t])&]
+[s2;%% Assigns key and value.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:Node`(Ctrl`&`): [* Node]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl])&]
+[s2;%% Assigns widget.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:Node`(const Image`&`,Ctrl`&`,int`,int`): [* Node]([@(0.0.255) co
+nst]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl], 
+[@(0.0.255) int]_[*@3 cx]_`=_[@3 0], [@(0.0.255) int]_[*@3 cy]_`=_[@3 0])&]
+[s2;%% Assigns icon, widget and its dimensions.&]
+[s3;%% &]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s3; &]
+[s5;:TreeCtrl`:`:Node`:`:image: [_^Image^ Image]_[* image]&]
+[s2;%% Node icon.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:margin: [@(0.0.255) int]_[* margin]&]
+[s2;%% Space between icon and value of the item, or item`'s widget. 
+Defaults to 2.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:key: [_^Value^ Value]_[* key]&]
+[s2;%% Item key. This is not displayed.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:value: [_^Value^ Value]_[* value]&]
+[s2;%% Item value.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:display: [@(0.0.255) const]_[_^Display^ Display]_`*[* display]&]
+[s2;%% Display used to render value. Defaults to NULL, which means 
+StdDisplay is to be used.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:size: [_^Size^ Size]_[* size]&]
+[s2;%% Size of value area. Defaults to Null `- in that case, value 
+area size is determined by display`->GetStdSize(value) or ctrl`->GetMinSize() 
+if widget for item is used.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:ctrl: [_^Ptr^ Ptr][@(0.0.255) <][_^Ctrl^ Ctrl][@(0.0.255) >]_[* ctrl]&]
+[s2;%% Widget associated with item.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:canopen: [@(0.0.255) bool]_[* canopen]&]
+[s2;%% Item can be opened.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:canselect: [@(0.0.255) bool]_[* canselect]&]
+[s2;%% Item can be selected.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:SetImage`(const Image`&`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&
+]_[* SetImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
+[s2;%% Sets image.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:Set`(const Value`&`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_
+[* Set]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
+[s2;%% Sets both key and value to [%-*@3 v].&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:Set`(const Value`&`,const Value`&`): [_^TreeCtrl`:`:Node^ Node
+][@(0.0.255) `&]_[* Set]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v], 
+[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 t])&]
+[s2;%% Sets key and value.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:SetDisplay`(const Display`&`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&
+]_[* SetDisplay]([@(0.0.255) const]_[_^Display^ Display][@(0.0.255) `&]_[*@3 d])&]
+[s2;%% Sets display.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:SetSize`(Size`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_[* SetS
+ize]([_^Size^ Size]_[*@3 sz])&]
+[s2;%% Sets size.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:SetCtrl`(Ctrl`&`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_[* Se
+tCtrl]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 `_ctrl])&]
+[s2;%% Sets widget.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:CanOpen`(bool`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_[* CanO
+pen]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Sets canopen flag.&]
+[s3; &]
+[s4; &]
+[s5;:TreeCtrl`:`:Node`:`:CanSelect`(bool`): [_^TreeCtrl`:`:Node^ Node][@(0.0.255) `&]_[* Ca
+nSelect]([@(0.0.255) bool]_[*@3 b])&]
+[s2;%% Sets canselect flag.&]
+[s3; &]
+[s0;%% ]
