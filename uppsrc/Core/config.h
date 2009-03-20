@@ -1,6 +1,11 @@
 #if __GNUC__
 
 	#define COMPILER_GCC 1
+	
+	#if __WIN32
+		#define COMPILER_MINGW
+		#define PLATFORM_WIN32
+	#endif
 
 	#if __unix
 		#define PLATFORM_POSIX 1
@@ -25,7 +30,7 @@
 		#define CPU_64 1
 		#define CPU_AMD64 1
 		#define CPU_SSE2 1
-	#elif __i386
+	#elif __i386 || __i386__ || i386
 		#define CPU_LE 1
 		#define CPU_LITTLE_ENDIAN 1
 		#define CPU_UNALIGNED 1
