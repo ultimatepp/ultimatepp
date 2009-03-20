@@ -2,5 +2,9 @@ file
 	win,
 	www,
 	src,
-	all;
+	all,
+	Makefile;
+
+mainconfig
+	"" = "SCRIPTS";
 

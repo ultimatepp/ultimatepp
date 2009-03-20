@@ -9,7 +9,8 @@ rm ~/upp.tmp/u/*.dll || true
 rm ~/upp.tmp/u/*.upp || true
 rm ~/upp.tmp/u/*.chk || true
 
-~/bin/theide uppsrc ide GCC -asrxM ~/upp.tmp/u
+~/bin/theide uppsrc ide GCC -asrxM ~/upp.tmp/u/uppsrc
+# cp ~/upp.src/uppbox/Scripts/Makefile ~/upp.tmp/u
 cd ~/upp.tmp
 mv u upp-src-`svnversion ~/upp.src`
 tar -cvvzf ~/upload/upp-src-`svnversion ~/upp.src`.tar.gz upp-src-`svnversion ~/upp.src`
