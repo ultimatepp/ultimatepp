@@ -6,18 +6,17 @@ NAMESPACE_UPP
 
 int iscale(int x, int y, int z)
 {
-#ifdef __NOASSEMBLY__
-	int64 res = x;
-	res *= y;
-	res /= z;
-	return (int)res;
-#else
-	__asm
-	{
+#if CPU_32 && COMPILER_MSC
+	__asm {
 		mov		eax, [x]
 		imul	[y]
 		idiv	[z]
 	}
+#else
+	int64 res = x;
+	res *= y;
+	res /= z;
+	return (int)res;
 #endif
 }
 
@@ -25,16 +24,8 @@ int iscale(int x, int y, int z)
 
 int iscalefloor(int x, int y, int z)
 {
-#ifdef __NOASSEMBLY__
-	int64 res = x;
-	int64 mulres = res * y;
-	res = mulres / z;
-	if(res * z != mulres)
-		res--;
-	return (int)res;
-#else
-	__asm
-	{
+#if CPU_32 && COMPILER_MSC
+	__asm {
 		mov		eax, [x]
 		imul	[y]
 		idiv	[z]
@@ -43,6 +34,13 @@ int iscalefloor(int x, int y, int z)
 		dec		eax
 	__1:
 	}
+#else
+	int64 res = x;
+	int64 mulres = res * y;
+	res = mulres / z;
+	if(res * z != mulres)
+		res--;
+	return (int)res;
 #endif
 }
 
@@ -50,16 +48,8 @@ int iscalefloor(int x, int y, int z)
 
 int iscaleceil(int x, int y, int z)
 {
-#ifdef __NOASSEMBLY__
-	int64 res = x;
-	int64 mulres = res * y;
-	res = mulres / z;
-	if(res * z != mulres)
-		res++;
-	return (int)res;
-#else
-	__asm
-	{
+#if CPU_32 && COMPILER_MSC
+	__asm {
 		mov		eax, [x]
 		imul	[y]
 		idiv	[z]
@@ -68,10 +58,17 @@ int iscaleceil(int x, int y, int z)
 		inc		eax
 	__1:
 	}
+#else
+	int64 res = x;
+	int64 mulres = res * y;
+	res = mulres / z;
+	if(res * z != mulres)
+		res++;
+	return (int)res;
 #endif
 }
 
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 #pragma warning(default: 4035)
 #endif
 
