@@ -60,52 +60,24 @@ void RenderCharPath(const char* gbuf, unsigned total_size, Painter& sw, double x
     }
 }
 
-struct FontChar {
-	Font fnt;
-	int  chr;
-	
-	bool operator==(const FontChar& b) const { return fnt == b.fnt && chr == b.chr; }
-	unsigned GetHashValue() const            { return CombineHash(fnt, chr); }
-};
-
-struct sMakeCharOutline : LRUCache<String, FontChar>::Maker {
-	FontChar fc;
-
-	FontChar Key() const     { return fc; }
-	int      Make(String& s) const {
-		static ScreenDraw w;
-		w.SetFont(fc.fnt);
-		GLYPHMETRICS gm;
-		MAT2 m_matrix;
-	    memset(&m_matrix, 0, sizeof(m_matrix));
-	    m_matrix.eM11.value = 1;
-	    m_matrix.eM22.value = 1;
-   		s.Clear();
-		int gsz = GetGlyphOutlineW(w.GetHandle(), fc.chr, GGO_NATIVE, &gm, 0, NULL, &m_matrix);
-		if(gsz < 0)
-			return 0;
-		StringBuffer gb(gsz);
-		gsz = GetGlyphOutlineW(w.GetHandle(), fc.chr, GGO_NATIVE, &gm, gsz, ~gb, &m_matrix);
-		if(gsz < 0)
-			return 0;
-		s = gb;
-		return gsz;
-	}
-};
-
 void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt)
 {
 	PAINTER_TIMING("CharacterOp");
-	String s;
-	INTERLOCKED {
-		static LRUCache<String, FontChar> cache;
-		cache.Shrink(500000);
-		sMakeCharOutline h;
-		h.fc.fnt = fnt;
-		h.fc.chr = ch;
-		s = cache.Get(h);
-	}
-	RenderCharPath(s, s.GetLength(), sw, p.x, p.y + fnt.Info().GetAscent());
+	static ScreenDraw w;
+	w.SetFont(fnt);
+	GLYPHMETRICS gm;
+	MAT2 m_matrix;
+	memset(&m_matrix, 0, sizeof(m_matrix));
+	m_matrix.eM11.value = 1;
+	m_matrix.eM22.value = 1;
+	int gsz = GetGlyphOutlineW(w.GetHandle(), ch, GGO_NATIVE, &gm, 0, NULL, &m_matrix);
+	if(gsz < 0)
+		return;
+	StringBuffer gb(gsz);
+	gsz = GetGlyphOutlineW(w.GetHandle(), ch, GGO_NATIVE, &gm, gsz, ~gb, &m_matrix);
+	if(gsz < 0)
+		return;
+	RenderCharPath(~gb, gsz, sw, p.x, p.y + fnt.Info().GetAscent());
 	sw.EvenOdd(true);
 }
 
