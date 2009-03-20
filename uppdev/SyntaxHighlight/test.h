@@ -32,4 +32,21 @@ CONSOLE_APP_MAIN
 	LoadFromXML(y, s);
 	for(int i = 0; i < (int)y.size(); i++)
 		DUMP(y[i]);
+	
+	"asdasdasd"\
+	sdfsdf
+	
+	"\
+abstract,\
+alias,\
+align,\
+asm,\
+assert,\
+auto,\
+body,\
+bool,\
+break"
+
+
+
 }

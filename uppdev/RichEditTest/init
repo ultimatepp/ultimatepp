@@ -1,5 +1,4 @@
 #ifndef _RichEditTest_icpp_init_stub
 #define _RichEditTest_icpp_init_stub
 #include "RichEdit/init"
-#include "Painter/init"
 #endif

@@ -6,6 +6,7 @@ file
 	todo.txt;
 
 mainconfig
-	"" = "GUI MT",
-	"" = "GUI NOGTK";
+	"" = "GUI",
+	"" = "GUI NOGTK",
+	"" = "GUI MT";
 
