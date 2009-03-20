@@ -57,8 +57,8 @@ QTF.&]
 [s0;%- &]
 [ {{10000@3 [s0; [*@(229)4 Label]]}}&]
 [s3; &]
-[s1;K:`:`:Label`:`:class:%- [@(0.0.255) class][@(64) _]Label[@(64) _:_][@(0.0.255) public][@(64) _
-][^`:`:StaticText^@(64) StaticText]&]
+[s1;:Label`:`:class:%- [@(0.0.255)3 class][3 _][*3 Label][3 _:_][@(0.0.255)3 public][3 _][*@3;3 Stat
+icText]&]
 [s9; Generally used to label other widgets. Differs from StaticText 
 by implementing hotkey processing. Hotkeys are assigned automatically 
 by U`+`+ library, however they can also by preassigned using 

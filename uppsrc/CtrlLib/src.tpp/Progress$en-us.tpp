@@ -1,16 +1,20 @@
 topic "Progress";
 [2 $$0,0#00000000000000000000000000000000:Default]
-[i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483380:class]
-[l288;2 $$2,2#27521748481378242620020725143825:desc]
-[a83;*R6 $$3,0#31310162474203024125188417583966:caption]
-[l288;i1121;b17;O9;~~~.1408;2 $$4,0#10431211400427159095818037425705:param]
-[i448;a25;kKO9;*@(64)2 $$5,0#37138531426314131252341829483370:item]
-[*+117 $$6,6#14700283458701402223321329925657:header]
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
+[l288;a4;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
+[l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
+[b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s3; Progress&]
-[s1;K:`:`:Progress`:`:class:%- [@(0.0.255) class]_[@0 Progress]_:_[@(0.0.255) public]_[^`:`:WithProgressLayout^ W
-ithProgressLayout]<[^`:`:TopWindow^ TopWindow]>_&]
-[s2; Progress is simple helper dialog that can be used to show a 
+[ {{10000@3 [s0; [*@(229)4 Progress]]}}&]
+[s3; &]
+[s1;:Progress`:`:class:%- [@(0.0.255)3 class][3 _][*3 Progress][3 _:_][@(0.0.255)3 public][3 _][*@3;3 W
+ithProgressLayout][@(0.0.255)3 <][_^TopWindow^3 TopWindow][@(0.0.255)3 >][3 _]&]
+[s9; Progress is simple helper dialog that can be used to show a 
 progress of long operation and to cancel it.&]
 [s2; &]
 [s2; 
@@ -92,96 +96,117 @@ progress of long operation and to cancel it.&]
 ·ÚÕßóµ®ìÇ‹«Ú¸ÌÍÁ´€˚‹ı°ü‹¿œáäÓÍßÒﬂ◊·æﬁ“ŸƒÂ€Á∫ÏπùÁŒÊˇ°ØáÿÀ á§∞‡Ä—˚ÁÓ˜»î¡ê‡”‚ˇÅ©“Ÿä
 
 &]
-[s2; &]
-[s0; &]
-[s5;K:`:`:Progress`:`:SetOwner`(`:`:Ctrl`*`):%- [@(0.0.255) void]_[@0 SetOwner]([^`:`:Ctrl^ C
-trl]_`*[@3 `_owner])&]
+[s3; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
+[s3; &]
+[s5;:Progress`:`:Progress`(`):%- [* Progress]()&]
+[s2; Default constructor.&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:Progress`(Ctrl`*`):%- [* Progress]([_^Ctrl^ Ctrl]_`*[*@3 `_owner])&]
+[s5;:Progress`:`:Progress`(const char`*`,int`):%- [* Progress]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 txt], [@(0.0.255) int]_[*@3 total]_`=_[@3 0])&]
+[s5;:Progress`:`:Progress`(Ctrl`*`,const char`*`,int`):%- [* Progress]([_^Ctrl^ Ctrl]_`*[*@3 `_
+owner], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 txt], [@(0.0.255) int]_[*@3 total]_`=_[@3 0
+])&]
+[s2; Convenience constructor variants can set owner, text and total 
+number of steps.&]
+[s3; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:Progress`:`:SetOwner`(Ctrl`*`):%- [@(0.0.255) void]_[* SetOwner]([_^Ctrl^ Ctrl]_`*[*@3 `_
+owner])&]
 [s2; Sets the owner window of progress. [%-*@3 `_owner] can be child 
 of owner window too. Note that if owner is not specified, current 
 active window is used as owner.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:Create`(`):%- [@(0.0.255) void]_[@0 Create]()&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:Create`(`):%- [@(0.0.255) void]_[* Create]()&]
 [s2; Forces dialog to appear on the screen.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:Cancel`(`):%- [@(0.0.255) void]_[@0 Cancel]()&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:Cancel`(`):%- [@(0.0.255) void]_[* Cancel]()&]
 [s2; Closes the dialog and sets it to canceled mode.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:Set`(int`,int`):%- [@(0.0.255) void]_[@0 Set]([@(0.0.255) int]_[@3 pos],
- [@(0.0.255) int]_[@3 total])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:Set`(int`,int`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 pos], 
+[@(0.0.255) int]_[*@3 total])&]
+[s2; Sets the current progress position and total.&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:SetPos`(int`):%- [@(0.0.255) void]_[* SetPos]([@(0.0.255) int]_[*@3 pos])&]
 [s2; Sets the current progress position.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:SetPos`(int`):%- [@(0.0.255) void]_[@0 SetPos]([@(0.0.255) int]_[@3 pos
-])&]
-[s2;   [%-*@3 pos] &]
-[s0; &]
-[s5;K:`:`:Progress`:`:SetText`(const char`*`):%- [@(0.0.255) void]_[@0 SetText]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[@3 s])&]
-[s5;K:`:`:Progress`:`:SetText`(const`:`:String`&`):%- [@(0.0.255) void]_[@0 SetText]([@(0.0.255) c
-onst]_[^`:`:String^ String]`&_[@3 s])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:SetText`(const char`*`):%- [@(0.0.255) void]_[* SetText]([@(0.0.255) const
+]_[@(0.0.255) char]_`*[*@3 s])&]
+[s5;:Progress`:`:SetText`(const String`&`):%- [@(0.0.255) void]_[* SetText]([@(0.0.255) con
+st]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
 [s2; Sets the text to be displayed in dialog.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:SetTotal`(int`):%- [@(0.0.255) void]_[@0 SetTotal]([@(0.0.255) int]_[@3 t
-otal])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:SetTotal`(int`):%- [@(0.0.255) void]_[* SetTotal]([@(0.0.255) int]_[*@3 tota
+l])&]
 [s2; Sets the [%-*@3 total] number of progress steps.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:Step`(int`):%- [@(0.0.255) void]_[@0 Step]([@(0.0.255) int]_[@3 steps]_
-`=_[@3 1])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:Step`(int`):%- [@(0.0.255) void]_[* Step]([@(0.0.255) int]_[*@3 steps]_`=_[@3 1
+])&]
 [s2; Advances progress by [%-*@3 steps]. If total number of steps is 
 zero, `"running bar`" is displayed.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:GetPos`(`)const:%- [@(0.0.255) int]_[@0 GetPos]()_[@(0.0.255) const]&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:GetPos`(`)const:%- [@(0.0.255) int]_[* GetPos]()_[@(0.0.255) const]&]
 [s2; Returns the current number of progress steps.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:GetTotal`(`)const:%- [@(0.0.255) int]_[@0 GetTotal]()_[@(0.0.255) con
-st]&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:GetTotal`(`)const:%- [@(0.0.255) int]_[* GetTotal]()_[@(0.0.255) const]&]
 [s2; Returns the total number of steps (as set by [* Set ]or [* SetTotal]).&]
-[s0; &]
-[s5;K:`:`:Progress`:`:GetText`(`)const:%- [^`:`:String^ String]_[@0 GetText]()_[@(0.0.255) c
-onst]&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:GetText`(`)const:%- [_^String^ String]_[* GetText]()_[@(0.0.255) const]&]
 [s2; Returns the text of Progress.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:Canceled`(`):%- [@(0.0.255) bool]_[@0 Canceled]()&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:Canceled`(`):%- [@(0.0.255) bool]_[* Canceled]()&]
 [s2; Shows a Cancel button if not shown yet. If this button is pressed, 
 sets dialog to canceled mode. Returns true if dialog was canceled.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:SetCanceled`(int`,int`):%- [@(0.0.255) bool]_[@0 SetCanceled]([@(0.0.255) i
-nt]_[@3 pos], [@(0.0.255) int]_[@3 total])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:SetCanceled`(int`,int`):%- [@(0.0.255) bool]_[* SetCanceled]([@(0.0.255) i
+nt]_[*@3 pos], [@(0.0.255) int]_[*@3 total])&]
 [s2; Same as Set([%-*@3 pos], [%-*@3 total]), Canceled().&]
-[s0; &]
-[s5;K:`:`:Progress`:`:SetPosCanceled`(int`):%- [@(0.0.255) bool]_[@0 SetPosCanceled]([@(0.0.255) i
-nt]_[@3 pos])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:SetPosCanceled`(int`):%- [@(0.0.255) bool]_[* SetPosCanceled]([@(0.0.255) i
+nt]_[*@3 pos])&]
 [s2; Same as SetPos([%-*@3 pos]), Canceled().&]
-[s0; &]
-[s5;K:`:`:Progress`:`:StepCanceled`(int`):%- [@(0.0.255) bool]_[@0 StepCanceled]([@(0.0.255) i
-nt]_[@3 steps]_`=_[@3 1])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:StepCanceled`(int`):%- [@(0.0.255) bool]_[* StepCanceled]([@(0.0.255) int]_
+[*@3 steps]_`=_[@3 1])&]
 [s2; Same as Set([%-*@3 steps]), Canceled().&]
-[s0; &]
-[s5;K:`:`:Progress`:`:Reset`(`):%- [@(0.0.255) void]_[@0 Reset]()&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:Reset`(`):%- [@(0.0.255) void]_[* Reset]()&]
 [s2; Resets dialog to default settings.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:Granularity`(int`):%- [@(0.0.255) void]_[@0 Granularity]([@(0.0.255) i
-nt]_[@3 ms])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:Granularity`(int`):%- [@(0.0.255) void]_[* Granularity]([@(0.0.255) int]_[*@3 m
+s])&]
 [s2; Sets how much often should dialog refresh.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:AlignText`(int`):%- [@(0.0.255) void]_[@0 AlignText]([@(0.0.255) int]_
-[@3 align])&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:AlignText`(int`):%- [@(0.0.255) void]_[* AlignText]([@(0.0.255) int]_[*@3 al
+ign])&]
 [s2; Sets text alignment. Allowed values are ALIGN`_LEFT, ALIGN`_CENTER 
 and ALIGN`_RIGHT.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:operator`:`:Gate2`<int`,int`>`(`):%- [@(0.0.255) operator_Gate2]<
-[@(0.0.255) int], [@(0.0.255) int]>()&]
+[s3; &]
+[s4;%- &]
+[s5;:Progress`:`:operator Gate2`<int`,int`>`(`):%- [* operator_Gate2<int, 
+int>]()&]
 [s2; Returns a callback to dialog`'s SetCanceled method.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:`:`:Progress`(`):%- [@0 Progress]()&]
-[s2; Default constructor.&]
-[s0; &]
-[s5;K:`:`:Progress`:`:`:`:Progress`(`:`:Ctrl`*`):%- [@0 Progress]([^`:`:Ctrl^ Ctrl]_`*[@3 `_
-owner])&]
-[s5;K:`:`:Progress`:`:`:`:Progress`(const char`*`,int`):%- [@0 Progress]([@(0.0.255) cons
-t]_[@(0.0.255) char]_`*[@3 txt], [@(0.0.255) int]_[@3 total]_`=_[@3 0])&]
-[s5;K:`:`:Progress`:`:`:`:Progress`(`:`:Ctrl`*`,const char`*`,int`):%- [@0 Progress]([^`:`:Ctrl^ C
-trl]_`*[@3 `_owner], [@(0.0.255) const]_[@(0.0.255) char]_`*[@3 txt], 
-[@(0.0.255) int]_[@3 total]_`=_[@3 0])&]
-[s2; Convenience constructor variants can set owner, text and total 
-number of steps.&]
+[s3; &]
 [s0; ]
