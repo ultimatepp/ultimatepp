@@ -974,7 +974,7 @@ void AppMain___()
 #ifdef PLATFORM_POSIX
 	catch(...) {
 		Exclamation("Unknown exception !");
-		LOG("!!!!! Uknown exception");
+		LOG("!!!!! Unknown exception");
 	}
 #endif
 }

@@ -188,6 +188,7 @@ String PackagePath(const String& name);
 String SourcePath(const String& package, const String& name);
 inline
 String PackageDirectory(const String& name) { return GetFileDirectory(PackagePath(name)); }
+bool   IsNestReadOnly(const String& path);
 
 String GetLocalDir();
 String LocalPath(const String& filename);

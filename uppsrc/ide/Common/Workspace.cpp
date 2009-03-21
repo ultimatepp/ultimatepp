@@ -182,6 +182,15 @@ String SourcePath(const String& package, const String& file) {
 	return NormalizePath(AppendFileName(GetFileFolder(PackagePath(package)), file));
 }
 
+bool IsNestReadOnly(const String& path)
+{
+	Vector<String> d = GetUppDirs();
+	for(int i = 0; i < d.GetCount(); i++)
+		if(path.StartsWith(d[i]) && FileExists(AppendFileName(d[i], "readonly")))
+			return true;
+	return false;
+}
+
 String GetAnyFileName(const char *path)
 {
 	const char *p = path;
