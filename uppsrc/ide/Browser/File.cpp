@@ -67,7 +67,7 @@ Topic ReadTopic(const char *text)
 					b.Cat(p.ReadInt());
 					p.PassChar(',');
 				}
-				topic.text = ZDecompress(b, b.GetLength());
+				topic.text = ZDecompress(~b, b.GetLength());
 			}
 			else {
 				topic.text << p.GetPtr();

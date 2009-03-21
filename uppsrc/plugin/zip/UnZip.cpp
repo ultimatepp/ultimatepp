@@ -115,6 +115,8 @@ UnZip::UnZip()
 	zip = NULL;
 }
 
+UnZip::~UnZip() {}
+
 bool FileUnZip::Create(const char *name)
 {
 	if(!zip.Open(name))

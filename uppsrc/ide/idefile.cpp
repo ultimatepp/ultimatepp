@@ -360,7 +360,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editor.SetCharset(charset);
 	AddLru();
 
-	if(!astext && !debugger && editastext.Find(path) < 0) {
+	if(!astext && !debugger && editastext.Find(path) < 0 && !IsNestReadOnly(editfile)) {
 		for(int i = 0; i < GetIdeModuleCount() && !designer; i++)
 			designer = GetIdeModule(i).CreateDesigner(this, path, charset);
 		if(designer) {
@@ -370,6 +370,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 				designer->DesignerCtrl().SetFrame(tabs);
 				tabs.SetAddFile(editfile);
 			}
+			
 			MakeTitle();
 			SetBar();
 			return;
@@ -401,7 +402,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		editor.SetPickUndoData(fd.undodata);
 		editor.SetLineInfo(fd.lineinfo);
 		editor.SetLineInfoRem(fd.lineinforem);
-		if(ff.IsReadOnly())
+		if(ff.IsReadOnly() || IsNestReadOnly(editfile))
 			editor.SetReadOnly();
 		fd.undodata.Clear();
 		PosSync();

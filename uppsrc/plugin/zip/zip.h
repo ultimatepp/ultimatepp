@@ -44,6 +44,7 @@ public:
 
 	UnZip(Stream& in);
 	UnZip();
+	virtual ~UnZip();
 };
 
 class FileUnZip : public UnZip {
@@ -104,7 +105,7 @@ public:
 	
 	Zip();
 	Zip(Stream& out);
-	~Zip();
+	virtual ~Zip();
 };
 
 class FileZip : public Zip {
