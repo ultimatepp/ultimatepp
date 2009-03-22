@@ -207,6 +207,7 @@ bool   IsUnique(const ArrayCtrl& table, Id column);
 int    SwapRows(ArrayCtrl& table, int row1, int row2);
 void   SetColumn(ArrayCtrl& table, int index, const Value& value);
 void   SetColumn(ArrayCtrl& table, Id column, const Value& value);
+Index<int> GetSelIndex(const ArrayCtrl& table);
 
 BorderFrame& TopJoinFrame();
 BorderFrame& BottomJoinFrame();

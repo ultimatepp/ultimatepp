@@ -110,16 +110,20 @@ Array<HelpIndexFormattedEntry> HelpTopicFormatIndex();
 class RichObjectDisplay : public Display
 {
 public:
-	RichObjectDisplay(const RichObjectType *type = NULL) : type(type) {}
+	RichObjectDisplay(const RichObjectType *type = NULL, void *context = NULL) : type(type), context(context) {}
 
 	void                  SetType(const RichObjectType *t) { type = t; }
 	const RichObjectType *GetType() const                  { return type; }
+
+	void                  SetContext(void *t)              { context = t; }
+	 void                *GetContext() const               { return context; }
 
 	virtual void          Paint(Draw& draw, const Rect& rc, const Value& v, Color ink, Color paper, dword style) const;
 	virtual Size          GetStdSize(const Value& v) const;
 
 private:
 	const RichObjectType *type;
+	void                 *context;
 };
 
 END_UPP_NAMESPACE

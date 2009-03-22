@@ -124,9 +124,12 @@ String HttpClient::Execute(Gate2<int, int> progress)
 	int sock_port = (use_proxy ? proxy_port : port);
 
 	LLOG("socket host = " << sock_host << ":" << sock_port);
-	if(!socket.IsOpen() && !ClientSocket(socket, sock_host, sock_port, true, NULL, 0, false)) {
-		error = Socket::GetErrorText();
-		return String::GetVoid();
+	if(!socket.IsOpen()) {
+		if(!ClientSocket(socket, sock_host, sock_port, true, NULL, 0, false)) {
+			error = Socket::GetErrorText();
+			return String::GetVoid();
+		}
+		socket.Linger(0);
 	}
 	while(!socket.PeekWrite(1000)) {
 		int time = msecs();
@@ -312,28 +315,32 @@ String HttpClient::Execute(Gate2<int, int> progress)
 						;
 					body.Remove(0, nextline);
 					if(part_length <= 0) {
-						p = body.Begin();
-						while(p < e - 2)
-							if(*p == '\n' && (p[1] == '\n' || p[1] == '\r' && p[2] == '\n'))
-								goto EXIT;
-							else
+						for(;;) {
+							const char *b = body.Begin();
+							p = b;
+							while(*p && *p != '\n')
 								p++;
-						while(socket.IsOpen() && !socket.IsError() && !socket.IsEof()) {
-							if(msecs(end_time) >= 0) {
-								error = NFormat("Timeout reading footer block (%d B).", body.GetLength());
-								goto EXIT;
+							if(!*p && socket.IsOpen() && !socket.IsError() && !socket.IsEof()) {
+								if(msecs(end_time) >= 0) {
+									error = NFormat("Timeout reading footer block (%d B).", body.GetLength());
+									break;
+								}
+								if(body.GetLength() > 3)
+									body.Remove(0, body.GetLength() - 3);
+								String part = socket.Read(1000);
+								body.Cat(part);
+								continue;
 							}
-							if(body.GetLength() > 3)
-								body.Remove(0, body.GetLength() - 3);
-							String part = socket.Read(1000);
-							body.Cat(part);
-							const char *p = body;
-							while(*p && !(*p == '\n' && (p[1] == '\n' || p[1] == '\r' && p[2] == '\n')))
+							const char *l = p;
+							if(*p == '\n')
 								p++;
-							if(*p)
-								goto EXIT;
+							if(l > b && l[-1] == '\r')
+								l--;
+							if(l == b)
+								break;
+							server_headers.Cat(b, p - b);
 						}
-						break;
+						goto EXIT;
 					}
 					if(body.GetLength() >= part_length) {
 						chunked.Cat(body, part_length);

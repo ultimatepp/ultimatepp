@@ -1121,14 +1121,14 @@ void RichObjectDisplay::Paint(Draw& draw, const Rect& rc, const Value& v, Color 
 		return;
 	draw.DrawRect(rc, paper);
 	if(type) {
-		Size rawsize = type->GetPhysicalSize(v);
+		Size rawsize = type->GetPhysicalSize(v, context);
 		if(MulVector(rawsize, outsize) >= 0)
 			outsize.cy = iscale(outsize.cx, rawsize.cy, rawsize.cx);
 		else
 			outsize.cx = iscale(outsize.cy, rawsize.cx, rawsize.cy);
 		Rect rrc(Point((rc.TopLeft() + rc.BottomRight() - outsize) >> 1), outsize);
 		draw.Clipoff(rrc);
-		type->Paint(v, draw, outsize);
+		type->Paint(v, draw, outsize, context);
 		draw.End();
 	}
 	else {
@@ -1139,7 +1139,7 @@ void RichObjectDisplay::Paint(Draw& draw, const Rect& rc, const Value& v, Color 
 
 Size RichObjectDisplay::GetStdSize(const Value& v) const
 {
-	return type ? type->GetPhysicalSize(v) : CtrlImg::question().GetSize();
+	return type ? type->GetPhysicalSize(v, context) : CtrlImg::question().GetSize();
 }
 
 /*
