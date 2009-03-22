@@ -328,13 +328,16 @@ void CParser::SkipTerm()
 	else
 	if(IsChar('\''))
 		ReadString('\'', false);
-	else
-	if(*term)
+	else		
+	if(*term) {
+		if(*term == '\n')
+			line++;
 		term++;
+	}
 	DoSpaces();
 }
 
-CParser::Pos  CParser::GetPos()
+CParser::Pos CParser::GetPos()
 {
 	Pos p;
 	p.line = line;
