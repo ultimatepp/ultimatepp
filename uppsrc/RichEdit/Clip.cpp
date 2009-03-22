@@ -43,7 +43,7 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 		}
 	}
 	if(d.Accept("text/QTF"))
-		clip = ParseQTF(~d);
+		clip = ParseQTF(~d, 0, context);
 	else
 	if(d.Accept(RTFS))
 		clip = ParseRTF(~d);

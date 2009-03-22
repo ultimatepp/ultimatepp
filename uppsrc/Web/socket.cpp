@@ -395,7 +395,7 @@ void Socket::Data::Linger(int msecs)
 	ASSERT(IsOpen());
 	linger ls;
 	ls.l_onoff = !IsNull(msecs) ? 1 : 0;
-	ls.l_linger = !IsNull(msecs) ? (msecs / 1000) + 1 : 0;
+	ls.l_linger = !IsNull(msecs) ? (msecs + 999) / 1000 : 0;
 	if(setsockopt(socket, SOL_SOCKET, SO_LINGER,
 		reinterpret_cast<const char *>(&ls), sizeof(ls)))
 		SetSockError("setsockopt(SO_LINGER)");

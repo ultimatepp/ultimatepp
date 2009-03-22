@@ -122,7 +122,7 @@ String RichObjectType::GetLink(const Value& data, Point pt, Size sz, void *conte
 	return Null;
 }
 
-void RichObject::InitSize(int cx, int cy)
+void RichObject::InitSize(int cx, int cy, void *context)
 {
 	Size sz;
 	Size phsz = GetPixelSize();
@@ -192,26 +192,26 @@ const RichObjectType& RichObject::GetType() const
 	return Single<UnknownRichObject>();
 }
 
-void   RichObject::Set(RichObjectType *_type, const Value& _data, Size maxsize)
+void   RichObject::Set(RichObjectType *_type, const Value& _data, Size maxsize, void *context)
 {
 	Clear();
 	type = _type;
 	if(type) {
 		data = _data;
-		physical_size = type->GetPhysicalSize(data);
-		pixel_size = type->GetPixelSize(data);
-		size = type->GetDefaultSize(data, maxsize);
+		physical_size = type->GetPhysicalSize(data, context);
+		pixel_size = type->GetPixelSize(data, context);
+		size = type->GetDefaultSize(data, maxsize, context);
 	}
 	NewSerial();
 }
 
-bool   RichObject::Set(const String& _type_name, const Value& _data, Size maxsize)
+bool   RichObject::Set(const String& _type_name, const Value& _data, Size maxsize, void *context)
 {
 	NewSerial();
 	type_name = _type_name;
 	RichObjectType *t = Map().Get(type_name, NULL);
 	if(t) {
-		Set(t, _data);
+		Set(t, _data, maxsize, context);
 		return true;
 	}
 	else {
@@ -222,7 +222,7 @@ bool   RichObject::Set(const String& _type_name, const Value& _data, Size maxsiz
 	return false;
 }
 
-bool   RichObject::Read(const String& _type_name, const String& _data, Size sz)
+bool   RichObject::Read(const String& _type_name, const String& _data, Size sz, void *context)
 {
 	NewSerial();
 	type_name = _type_name;
@@ -231,8 +231,8 @@ bool   RichObject::Read(const String& _type_name, const String& _data, Size sz)
 		Clear();
 		type = t;
 		data = type->Read(_data);
-		physical_size = type->GetPhysicalSize(data);
-		pixel_size = type->GetPixelSize(data);
+		physical_size = type->GetPhysicalSize(data, context);
+		pixel_size = type->GetPixelSize(data, context);
 		size = sz;
 		return true;
 	}

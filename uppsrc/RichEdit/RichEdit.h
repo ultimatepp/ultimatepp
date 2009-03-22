@@ -645,7 +645,7 @@ public:
 
 	void            Clear();
 	void            Pick(pick_ RichText& t);
-	void            SetQTF(const char *qtf)               { Pick(ParseQTF(qtf)); }
+	void            SetQTF(const char *qtf)               { Pick(ParseQTF(qtf, 0, context)); }
 	const RichText& Get() const                           { return text; }
 	String          GetQTF(byte cs = CHARSET_UTF8) const  { return AsQTF(text, cs); }
 	void            ApplyStylesheet(const RichText& r);

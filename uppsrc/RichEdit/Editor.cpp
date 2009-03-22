@@ -418,7 +418,7 @@ Value RichEdit::GetData() const
 
 void  RichEdit::SetData(const Value& v)
 {
-	Pick(ParseQTF((String)v));
+	Pick(ParseQTF((String)v, 0, context));
 }
 
 void  RichEdit::Serialize(Stream& s)
@@ -430,7 +430,7 @@ void  RichEdit::Serialize(Stream& s)
 		h = AsQTF(text);
 	s % h;
 	if(s.IsLoading())
-		Pick(ParseQTF(h));
+		Pick(ParseQTF(h, 0, context));
 }
 
 int RichEdit::fh[] = {

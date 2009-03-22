@@ -90,6 +90,15 @@ void SetColumn(ArrayCtrl& table, Id column, const Value& value)
 	SetColumn(table, table.GetPos(column), value);
 }
 
+Index<int> GetSelIndex(const ArrayCtrl& table)
+{
+	Index<int> out;
+	for(int i = 0; i < table.GetCount(); i++)
+		if(table.IsSelected(i))
+			out.Add(i);
+	return out;
+}
+
 BorderFrame& TopJoinFrame()
 {
 	static const ColorF b[] = { (ColorF)1, &SLtGray, &SLtGray, &SLtGray, &SGray };

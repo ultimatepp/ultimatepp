@@ -30,6 +30,7 @@ int QTFFontHeight[] = {
 };
 
 class RichQtfParser {
+	void       *context;
 	const char *term;
 	WString     text;
 	RichPara    paragraph;
@@ -96,17 +97,19 @@ public:
 
 	void     Parse(const char *qtf, int accesskey);
 
-	RichQtfParser();
+	RichQtfParser(void *context);
 };
 
 void init_s_nodeqtf();
 
-RichQtfParser::RichQtfParser()
+RichQtfParser::RichQtfParser(void *context_)
+: context(context_)
 {
 	format.Face(Font::ARIAL);
 	format.Height(100);
 	format.charset = GetDefaultCharset();
 	format.language = 0;
+	context = NULL;
 	breakpage = false;
 	istable = false;
 	oldtab = false;
@@ -286,7 +289,7 @@ void RichQtfParser::ReadObject()
 				seven >>= 1;
 			}
 		}
-		obj.Read(type, data, sz);
+		obj.Read(type, data, sz, context);
 		obj.KeepRatio(keepratio);
 		obj.SetYDelta(yd);
 	}
@@ -925,9 +928,9 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 	FlushStyles();
 }
 
-RichText ParseQTF(const char *qtf, int accesskey)
+RichText ParseQTF(const char *qtf, int accesskey, void *context)
 {
-	RichQtfParser p;
+	RichQtfParser p(context);
 	try {
 		p.Parse(qtf, accesskey);
 	}

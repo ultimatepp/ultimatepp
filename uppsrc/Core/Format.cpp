@@ -306,38 +306,31 @@ String FormatDoubleFix(double d, int digits, int flags)
 	String out;
 	if(flags & FD_SIGN || d < 0 && !IsNull(exp))
 		out.Cat(d >= 0 ? '+' : '-');
-	if(IsNull(exp) || exp < -digits)
-	{
+	if(IsNull(exp) || exp < -digits) {
 		out.Cat('0');
-		if(flags & FD_ZERO)
-		{
+		if((flags & FD_ZERO) && digits) {
 			out.Cat('.');
 			out.Cat('0', digits);
 		}
 	}
-	else if(exp < 0)
-	{
+	else if(exp < 0) {
 		out.Cat("0.");
 		out.Cat('0', -1 - exp);
 		int fill = digits + exp + 1;
 		if(!(flags & FD_ZERO) || dig.GetLength() >= fill)
 			out.Cat(dig, min(fill, dig.GetLength()));
-		else
-		{
+		else {
 			out.Cat(dig);
 			out.Cat('0', fill - dig.GetLength());
 		}
 	}
-	else if(exp < dig.GetLength())
-	{
+	else if(exp < dig.GetLength()) {
 		out.Cat(dig, ++exp);
-		if(digits > 0 && ((flags & FD_ZERO) || dig.GetLength() > exp))
-		{
+		if(digits > 0 && ((flags & FD_ZERO) || dig.GetLength() > exp)) {
 			out.Cat('.');
 			if(!(flags & FD_ZERO) || dig.GetLength() - exp >= digits)
 				out.Cat(dig.Begin() + exp, min(dig.GetLength() - exp, digits));
-			else
-			{
+			else {
 				out.Cat(dig.Begin() + exp, dig.GetLength() - exp);
 				out.Cat('0', digits - (dig.GetLength() - exp));
 			}

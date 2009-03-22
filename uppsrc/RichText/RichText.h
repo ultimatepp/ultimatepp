@@ -108,16 +108,8 @@ class Bar;
 struct RichObjectType : Moveable<RichObjectType> {
 	virtual String GetTypeName(const Value& v) const = 0;
 	virtual String GetCreateName() const;
-	virtual Size   GetDefaultSize(const Value& data, Size maxsize) const;
-	virtual Size   GetPhysicalSize(const Value& data) const;
-	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(const Value& data, Size sz) const;
 	virtual Value  Read(const String& s) const;
 	virtual String Write(const Value& v) const;
-	virtual void   Menu(Bar& bar, RichObject& ex) const;
-	virtual void   DefaultAction(RichObject& ex) const;
-	virtual String GetLink(const Value& data, Point pt, Size sz) const;
 
 	virtual bool   Accept(PasteClip& clip);
 	virtual Value  Read(PasteClip& clip);
@@ -133,10 +125,20 @@ struct RichObjectType : Moveable<RichObjectType> {
 	virtual void   DefaultAction(RichObject& ex, void *context) const;
 	virtual String GetLink(const Value& data, Point pt, Size sz, void *context) const;
 	
-	Size           StdDefaultSize(const Value& data, Size maxsize, void * context) const;
+	Size           StdDefaultSize(const Value& data, Size maxsize, void *context) const;
 
 	RichObjectType();
 	virtual ~RichObjectType();
+	
+protected:
+	virtual Size   GetDefaultSize(const Value& data, Size maxsize) const;
+	virtual Size   GetPhysicalSize(const Value& data) const;
+	virtual Size   GetPixelSize(const Value& data) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
+	virtual Image  ToImage(const Value& data, Size sz) const;
+	virtual void   Menu(Bar& bar, RichObject& ex) const;
+	virtual void   DefaultAction(RichObject& ex) const;
+	virtual String GetLink(const Value& data, Point pt, Size sz) const;
 };
 
 class RichObject : Moveable<RichObject> {
@@ -168,18 +170,18 @@ public:
 	Image  ToImage(Size sz, void *context = NULL) const;
 	Size   GetPhysicalSize() const               { return physical_size; }
 	Size   GetPixelSize() const                  { return pixel_size; }
-	Size   GetDefaultSize(Size maxsize) const    { return type ? type->GetDefaultSize(data, maxsize) : physical_size; }
+	Size   GetDefaultSize(Size maxsize, void *context = NULL) const { return type ? type->GetDefaultSize(data, maxsize, context) : physical_size; }
 
-	void   Set(RichObjectType *type, const Value& data, Size maxsize = Size(3967, 3967));
-	bool   Set(const String& type_name, const Value& data, Size maxsize = Size(3967, 3967));
+	void   Set(RichObjectType *type, const Value& data, Size maxsize = Size(3967, 3967), void *context = NULL);
+	bool   Set(const String& type_name, const Value& data, Size maxsize = Size(3967, 3967), void *context = NULL);
 
 	String GetTypeName() const;
 	Value  GetData() const                       { return data; }
-	String GetLink(Point pt, Size sz) const      { return type ? type->GetLink(data, pt, sz) : String(); }
+	String GetLink(Point pt, Size sz, void *context = NULL) const { return type ? type->GetLink(data, pt, sz, context) : String(); }
 
 	const RichObjectType& GetType() const;
 
-	bool   Read(const String& type, const String& data, Size sz);
+	bool   Read(const String& type, const String& data, Size sz, void *context = NULL);
 	String Write() const                         { return type ? type->Write(data) : (String)data; }
 
 	void   KeepRatio(bool b)                     { keepratio = b; }
@@ -197,7 +199,7 @@ public:
 
 	int64  GetSerialId() const                   { return serial; }
 	
-	void   InitSize(int cx, int cy);
+	void   InitSize(int cx, int cy, void *context = NULL);
 
 	RichObject();
 	RichObject(RichObjectType *type, const Value& data, Size maxsize = Size(3967, 3967));
@@ -382,7 +384,7 @@ public:
 
 String AsQTF(const RichObject& obj);
 
-RichText ParseQTF(const char *qtf, int accesskey = 0);
+RichText ParseQTF(const char *qtf, int accesskey = 0, void *context = NULL);
 
 RichText AsRichText(const wchar *s, const RichPara::Format& f = RichPara::Format());
 
