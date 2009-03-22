@@ -38,6 +38,8 @@ struct App : public TopWindow {
 		bar.Add(numbers_enabled, "Numbers", CtrlImg::information(), THISBACK(SubMenu));
 		bar.Separator();
 		bar.Add("Zoom &Out", CtrlImg::error(), THISBACK(Exit));
+		bar.Add("Zoom Aut", CtrlImg::error(), THISBACK(Exit));
+		bar.Add("Zoom Aut", CtrlImg::error(), THISBACK(Exit));
 		bar.Add("Exit", THISBACK(Exit))
 		   .Key(K_CTRL_E);
 	}

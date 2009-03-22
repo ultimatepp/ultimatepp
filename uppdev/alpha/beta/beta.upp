@@ -2,11 +2,11 @@ uses
 	CtrlLib;
 
 file
-	"beta.h"
-	, main.cpp
-	, "beta.lay"
-	, "beta.iml"
-;
+	beta.h,
+	main.cpp,
+	beta.lay,
+	beta.iml;
 
 mainconfig
 	"" = "GUI MT";
+
