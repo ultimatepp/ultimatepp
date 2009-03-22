@@ -110,9 +110,16 @@ void   MenuItemBase::AssignAccessKeys(dword used)
 void DrawMnemonicText(Draw& w, int x, int y, const String& s, Font font, Color color,
                       int mnemonic)
 {
-	int q = s.Find(ToUpper(mnemonic));
-	int e = s.Find(ToLower(mnemonic));
-	if(q < 0 || e >= 0 && e < q) q = e;
+	int apos = HIWORD(mnemonic);
+	int akey = LOWORD(mnemonic);
+	int q;
+	if(apos && apos < s.GetLength())
+		q = apos - 1;
+	else {
+		q = s.Find(ToUpper(mnemonic));
+		if(q < 0)
+			q = s.Find(ToLower(mnemonic));
+	}
 	w.DrawText(x, y, s, font, color);
 	if(q < 0) return;
 	FontInfo f = font.Info();

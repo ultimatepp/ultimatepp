@@ -120,7 +120,7 @@ int  ExtractAccessKey(const char *s, String& label)
 	while(*s)
 		if((*s == '&' && !qtf || *s == '\b') && s[1] && s[1] != '&') {
 			akey = ToAscii(ToUpper(s[1]));
-			pos = s - start + 1; 
+			pos = text.GetLength() + 1; 
 			s++;
 		}
 		else
@@ -130,12 +130,12 @@ int  ExtractAccessKey(const char *s, String& label)
 	return MAKELONG(akey, pos);
 }
 
-byte  ChooseAccessKey(const char *text, dword used)
+int  ChooseAccessKey(const char *text, dword used)
 {
 	for(const char *s = text; *s; s++) {
 		byte ac = ToAscii(*s);
 		if(ac >= 'A' && ac <= 'Z' && (Ctrl::AccessKeyBit(ac) & used) == 0)
-			return ac;
+			return MAKELONG(ac, s - text + 1);
 	}
 	for(const char *s = text; *s; s++) {
 		byte ac = ToUpper(ToAscii(*s));

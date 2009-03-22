@@ -25,7 +25,7 @@ void DrawSmartText(Draw& w, int x, int y, int cx, const char *text,
 
 int   ExtractAccessKey(const char *s, String& label);
 bool  CompareAccessKey(int accesskey, dword key);
-byte  ChooseAccessKey(const char *s, dword used);
+int   ChooseAccessKey(const char *s, dword used);
 
 void DrawFocus(Draw& w, int x, int y, int cx, int cy, Color c = SColorText());
 void DrawFocus(Draw& w, const Rect& r, Color c = SColorText());
