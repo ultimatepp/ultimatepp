@@ -85,10 +85,13 @@ void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text,
 	int cy = font.Info().GetHeight();
 	const wchar *s = text;
 	const wchar *t = s;
+	int apos = HIWORD(accesskey);
+	int akey = LOWORD(accesskey);
 	for(;;) {
 		if(*s == '\n' || *s == '\0') {
 			int a = x;
 			const wchar *q = t;
+			const wchar *start = NULL; 
 			while(q < s) {
 				while(q < s && *q < ' ') {
 					if(*q == '\t')
@@ -97,14 +100,16 @@ void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text,
 				}
 				t = q;
 				bool ak = false;
+				start = q;
 				while(q < s && *q >= ' ') {
-					if(accesskey && ToUpper(ToAscii(*q)) == accesskey) {
+					if(akey && ToUpper(ToAscii(*q)) == akey && (apos == 0 || q - start + 1 == apos)) {
 						ak = true;
-						accesskey = 0;
+						akey = 0;
 						break;
 					}
 					q++;
 				}
+				start = NULL;
 				draw.DrawText(a, y, t, font, ink, (int)(q - t));
 				a += GetTextSize(t, font, (int)(q - t)).cx;
 				if(ak) {

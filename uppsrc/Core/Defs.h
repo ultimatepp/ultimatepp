@@ -263,12 +263,12 @@ typedef uint64             qword;
 #define HIWORD(a)        (word)((a) >> 16)
 #define LOWORD(a)        word(a)
 
-#define MAKEWORD(a, b)   ((word)  (((byte) (a)) | ((word) ((byte) (b))) << 8))
-#define MAKELONG(a, b)   ((dword) (((word) (a)) | ((dword) ((word) (b))) << 16))
+#define MAKEWORD(l, h)   ((word)  (((byte) (l)) | ((word) ((byte) (h))) << 8))
+#define MAKELONG(l, h)   ((dword) (((word) (l)) | ((dword) ((word) (h))) << 16))
 
 #endif
 
-#define MAKEQWORD(a, b)  ((qword) (((dword) (a)) | ((qword) ((dword) (b))) << 32))
+#define MAKEQWORD(l, h)  ((qword) (((dword) (l)) | ((qword) ((dword) (h))) << 32))
 #define HIDWORD(a)       (dword)(((uint64)a) >> 32)
 #define LODWORD(a)       dword(a)
 

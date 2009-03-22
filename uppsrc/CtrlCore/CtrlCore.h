@@ -1147,7 +1147,7 @@ public:
 	static bool  IterateFocusForward(Ctrl *ctrl, Ctrl *top, bool noframe = false, bool init = false, bool all = false);
 	static bool  IterateFocusBackward(Ctrl *ctrl, Ctrl *top, bool noframe = false, bool all = false);
 
-	static dword AccessKeyBit(byte accesskey);
+	static dword AccessKeyBit(int accesskey);
 	dword   GetAccessKeysDeep() const;
 	void    DistributeAccessKeys();
 	bool    VisibleAccessKeys();

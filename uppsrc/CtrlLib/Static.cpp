@@ -38,7 +38,7 @@ Label& Label::SetText(const char *text)
 Label& Label::SetLabel(const char *_text)
 {
 	String text;
-	byte accesskey = ExtractAccessKey(_text, text);
+	int accesskey = ExtractAccessKey(_text, text);
 	LabelBase::SetText(text);
 	lbl.accesskey = accesskey;
 	return *this;

@@ -105,26 +105,29 @@ void DrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font
 	DrawTLText(draw, x, y, cx, ToUnicode(text, CHARSET_DEFAULT), font, ink, accesskey);
 }
 
-bool CompareAccessKey(byte accesskey, dword key)
+bool CompareAccessKey(int accesskey, dword key)
 {
-	return accesskey && dword(ToUpper(accesskey) - 'A' + K_ALT_A) == key;
+	return accesskey && dword(ToUpper(accesskey & 255) - 'A' + K_ALT_A) == key;
 }
 
-byte  ExtractAccessKey(const char *s, String& label)
+int  ExtractAccessKey(const char *s, String& label)
 {
-	byte accesskey = 0;
+	byte akey = 0;
+	int  pos = 0;
 	String text;
+	const char* start = s;
 	bool qtf = *s == '\1';
 	while(*s)
 		if((*s == '&' && !qtf || *s == '\b') && s[1] && s[1] != '&') {
-			accesskey = ToAscii(ToUpper(s[1]));
+			akey = ToAscii(ToUpper(s[1]));
+			pos = s - start + 1; 
 			s++;
 		}
 		else
 			text.Cat(*s++);
 	text.Shrink();
 	label = text;
-	return accesskey;
+	return MAKELONG(akey, pos);
 }
 
 byte  ChooseAccessKey(const char *text, dword used)
@@ -154,6 +157,7 @@ DrawLabel::DrawLabel()
 	ink = Null;
 	align = valign = ALIGN_CENTER;
 	accesskey = 0;
+	accesspos = -1;
 }
 
 Size DrawLabel::GetSize(int txtcx) const

@@ -374,7 +374,7 @@ void EscDraw::DrawSmartText(EscEscape& e)
 	String text;
 	if(ii < e.GetCount() && e[ii].IsArray())
 		text = ToUtf8((WString)e[ii++]);
-	byte accesskey = ExtractAccessKey(text, text);
+	int accesskey = ExtractAccessKey(text, text);
 	Font font = StdFont().Height(11);
 	if(ii < e.GetCount())
 		font = FontEsc(e[ii++]);
