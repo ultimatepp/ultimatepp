@@ -36,7 +36,7 @@ class RichQtfParser {
 	RichTable   tablepart;
 	bool        istable;
 	bool        breakpage;
-	byte        accesskey;
+	int         accesskey;
 
 	struct PFormat : public RichPara::Format {
 		byte                  charset;
@@ -94,7 +94,7 @@ public:
 
 	RichText target;
 
-	void     Parse(const char *qtf, byte accesskey);
+	void     Parse(const char *qtf, int accesskey);
 
 	RichQtfParser();
 };
@@ -476,7 +476,7 @@ void RichQtfParser::FinishOldTable()
 
 void RichQtfParser::Cat(int chr)
 {
-	if(accesskey && ToUpper(ToAscii(chr)) == accesskey) {
+	if(accesskey && ToUpper(ToAscii(chr)) == LOBYTE(accesskey)) {
 		Flush();
 		format.Underline(!format.IsUnderline());
 		text.Cat(chr);
@@ -491,7 +491,7 @@ void RichQtfParser::Cat(int chr)
 
 extern bool s_nodeqtf[128];
 
-void RichQtfParser::Parse(const char *qtf, byte _accesskey)
+void RichQtfParser::Parse(const char *qtf, int _accesskey)
 {
 	accesskey = _accesskey;
 	term = qtf;
@@ -925,7 +925,7 @@ void RichQtfParser::Parse(const char *qtf, byte _accesskey)
 	FlushStyles();
 }
 
-RichText ParseQTF(const char *qtf, byte accesskey)
+RichText ParseQTF(const char *qtf, int accesskey)
 {
 	RichQtfParser p;
 	try {

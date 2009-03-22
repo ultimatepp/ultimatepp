@@ -124,8 +124,9 @@ bool Ctrl::Key(dword key, int count)
 void Ctrl::GotFocus()                               {}
 void Ctrl::LostFocus()                              {}
 
-dword  Ctrl::AccessKeyBit(byte accesskey)
+dword  Ctrl::AccessKeyBit(int accesskey)
 {
+	accesskey &= 255;
 	if(accesskey >= 'A' && accesskey <= 'Z')
 		return (uint64)2 << (accesskey - 'A');
 	return !!accesskey;

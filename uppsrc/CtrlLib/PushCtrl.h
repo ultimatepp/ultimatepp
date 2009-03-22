@@ -23,7 +23,7 @@ private:
 	void    EndPush();
 
 protected:
-	byte    accesskey;
+	int     accesskey;
 	String  label;
 	Font    font;
 
@@ -222,9 +222,9 @@ private:
 	Image        image1;
 	String       label;
 	const Style *style;
+	int          accesskey;
 	bool         option;
 	bool         push;
-	byte         accesskey;
 
 public:
 	ButtonOption&  SetImage(const Image& img)                 { image = img; Refresh(); return *this; }

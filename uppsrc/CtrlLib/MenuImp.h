@@ -39,7 +39,7 @@ protected:
 	Font    font;
 	bool    isenabled;
 	byte    type;
-	byte    accesskey;
+	int     accesskey;
 	Size    maxiconsize;
 	const MenuBar::Style *style;
 

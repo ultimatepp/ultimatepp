@@ -23,8 +23,8 @@ int  GetSmartTextHeight(const char *s, int cx, Font font = StdFont());
 void DrawSmartText(Draw& w, int x, int y, int cx, const char *text,
                    Font font = StdFont(), Color ink = DefaultInk, int accesskey = 0);
 
-byte  ExtractAccessKey(const char *s, String& label);
-bool  CompareAccessKey(byte accesskey, dword key);
+int   ExtractAccessKey(const char *s, String& label);
+bool  CompareAccessKey(int accesskey, dword key);
 byte  ChooseAccessKey(const char *s, dword used);
 
 void DrawFocus(Draw& w, int x, int y, int cx, int cy, Color c = SColorText());
@@ -55,6 +55,7 @@ struct DrawLabel {
 	int       align, valign;
 
 	int       accesskey;
+	int       accesspos;
 
 	Size      GetSize(int txtcx, Size sz1, int lspc, Size sz2, int rspc) const;
 	Size      GetSize(int txtcx = INT_MAX) const;
