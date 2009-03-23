@@ -1,16 +1,21 @@
 topic "FileList";
 [2 $$0,0#00000000000000000000000000000000:Default]
-[i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483380:class]
-[l288;2 $$2,2#27521748481378242620020725143825:desc]
-[a83;*R6 $$3,0#31310162474203024125188417583966:caption]
-[l288;i1121;b17;O9;~~~.1408;2 $$4,0#10431211400427159095818037425705:param]
-[i448;a25;kKO9;*@(64)2 $$5,0#37138531426314131252341829483370:item]
-[*+117 $$6,6#14700283458701402223321329925657:header]
-[{_}%EN-US 
-[s1;K:`:`:FileList`:`:class:%- [@(0.0.255) class]_[@0 FileList]_:_[@(0.0.255) public]_[^`:`:ColumnList^ C
-olumnList]&]
-[s2; &]
-[s2; 
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
+[l288;a4;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
+[l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
+[b42;2 $$9,9#13035079074754324216151401829390:normal]
+[{_} 
+[ {{10000@3 [s0;%% [*@(229)4 FileList]]}}&]
+[s3; &]
+[s1;:FileList`:`:class: [@(0.0.255)3 class][3 _][*3 FileList][3 _:_][@(0.0.255)3 public][3 _][*@3;3 C
+olumnList][3 , ][@(0.0.255)3 private][3 _][*@3;3 Display]&]
+[s2;%% &]
+[s2;%% 
 @@image:2240&1320
 ÇÉ¿ÅàÅÄÄÉ¯˛ÄÄÄÄ¯∑úÌùø≥Â∆áô∆ıÖàú—˙≈ËÔ∞ÂØ‡·Ñ¢¶•Ù∞¡ß¶ﬁÜ§˚ë„Ü‚ÉÏÕπúöë¿‡∏…ñÅ’ˆÄéñ◊éÀ
 ¬ñÿò„Ê‡º€¿¬¿ıÍﬁùÎ€Á’øˇ‘˙ù”“øÍÁ◊›Ü˜˙¥⁄∫∫˙≈ÙæÍæ«˙ÁüÛﬂ˛ÁÁ®®Ä®®®®®®®∂®˚ñˇ˘∑˜Ä—––––≤À
@@ -157,161 +162,211 @@ olumnList]&]
 ˆ©œÛ˝†œøÔ˜ˆÿè∞≈ÑËÀ˝˚øÙÒÛªÔ†ûêò¬Öªê…Ö»ø‘öÄàÃó¿¶ó†—ˇßÄÄÏå˜‡œîîîîîÃ˝≤‡‡äÇÇÇˇÇÇÇÇÇÇ≤
 €≤¸ø£Œ‡Û
 &]
-[s2; &]
-[s2; This class is the ColumnList specialization for displaying lists 
-of files or similar items. List consists of File structures with 
-elements appropriate to describe and display individual files.&]
+[s2;%% &]
+[s9;%% This class is the ColumnList specialization for displaying 
+lists of files or similar items. List consists of File structures 
+with elements appropriate to describe and display individual 
+files.&]
+[s3;%% &]
 [s0; &]
-[s1;l288;K:`:`:FileList`:`:File`:`:struct:%- [@(0.0.255) struct]_[@0 FileList`::File]&]
-[s2;l480; Structure used to hold information about the item. Some 
-items, like file length, are in fact not directly used by FileList 
-and are only provided to make FileList usage simpler for its 
-primary applications (e.g. file selectors).&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:isdir:%- [@(0.0.255) bool]_[@0 isdir]&]
-[s2;l480; If true, item contains directory.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:icon:%- [^`:`:Image^ Image]_[@0 icon]&]
-[s2;l480; File icon.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:name:%- [^`:`:String^ String]_[@0 name]&]
-[s2;l480; Filename.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:font:%- [^`:`:Font^ Font]_[@0 font]&]
-[s2;l480; Font used to display the filename.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:ink:%- [^`:`:Color^ Color]_[@0 ink]&]
-[s2;l480; Color used to display the filename.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:length:%- [@(0.0.255) int]_[@0 length]&]
-[s2;l480; Length of file.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:time:%- [^`:`:Time^ Time]_[@0 time]&]
-[s2;l480; Last write time.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:extink:%- [^`:`:Color^ Color]_[@0 extink]&]
-[s2;l480; Color used to display the file extension.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:desc:%- [^`:`:String^ String]_[@0 desc]&]
-[s2;l480; Additional description of file, displayed after the filename.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:descfont:%- [^`:`:Font^ Font]_[@0 descfont]&]
-[s2;l480; Font used for additional description.&]
-[s0;l288; &]
-[s5;l288;K:`:`:FileList`:`:File`:`:operator const`:`:String`&`(`)const:%- operator_[@(0.0.255) c
-onst]_[^`:`:String^ String]`&()_[@(0.0.255) const]&]
-[s2;l480; Returns name.&]
-[s0;l288; &]
-[s0; &]
-[s0; &]
-[s5;K:`:`:FileList`:`:WhenRename:%- [^`:`:Callback2^ Callback2]<[@(0.0.255) const]_String
-`&, [@(0.0.255) const]_String`&>_[@0 WhenRename]&]
-[s2; This callback is called when filename was renamed by user. First 
-argument is the original filename, second one is the new filename.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:StartEdit`(`):%- [@(0.0.255) void]_[@0 StartEdit]()&]
-[s2; Starts the editation of the current item for rename.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:EndEdit`(`):%- [@(0.0.255) void]_[@0 EndEdit]()&]
-[s2; Ends the editation of item.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:IsEdit`(`)const:%- [@(0.0.255) bool]_[@0 IsEdit]()_[@(0.0.255) const]&]
-[s2; True if editation is active.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:OkEdit`(`):%- [@(0.0.255) void]_[@0 OkEdit]()&]
-[s2; Ends the editation and calls WhenRename to actually rename the 
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s3;%% &]
+[s5;:FileList`:`:WhenRename: [_^Callback2^ Callback2][@(0.0.255) <const]_String[@(0.0.255) `&
+], [@(0.0.255) const]_String[@(0.0.255) `&>]_[* WhenRename]&]
+[s2;%% This callback is called when filename was renamed by user. 
+First argument is the original filename, second one is the new 
 filename.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:Get`(int`)const:%- [@(0.0.255) const]_[^`:`:FileList`:`:File^ File]`&
-_[@0 Get]([@(0.0.255) int]_[@3 i])_[@(0.0.255) const]&]
-[s2; Returns the file item structure at specified index.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:operator`[`]`(int`)const:%- [@(0.0.255) const]_[^`:`:FileList`:`:File^ F
-ile]`&_[@0 operator`[`]]([@(0.0.255) int]_[@3 i])_[@(0.0.255) const]&]
-[s2; Same as Get([%-*@3 i]).&]
-[s0; &]
-[s5;K:`:`:FileList`:`:Insert`(int`,const`:`:String`&`,const`:`:Image`&`,`:`:Font`,`:`:Color`,bool`,int`,`:`:Time`,`:`:Color`,const`:`:String`&`,`:`:Font`,`:`:Value`):%- [@(0.0.255) v
-oid]_[@0 Insert]([@(0.0.255) int]_[@3 ii], [@(0.0.255) const]_[^`:`:String^ String]`&_[@3 nam
-e], [@(0.0.255) const]_[^`:`:Image^ Image]`&_[@3 icon]_`=_Null, [^`:`:Font^ Font]_[@3 font]_
-`=_StdFont(), [^`:`:Color^ Color]_[@3 ink]_`=_SColorText(), [@(0.0.255) bool]_[@3 isdir]_
-`=_false, [@(0.0.255) int]_[@3 length]_`=_[@3 0], [^`:`:Time^ Time]_[@3 time]_`=_Null, 
-[^`:`:Color^ Color]_[@3 extink]_`=_Null, [@(0.0.255) const]_[^`:`:String^ String]`&_[@3 des
-c]_`=_Null, [^`:`:Font^ Font]_[@3 descfont]_`=_Null, Value data `= 
-Null)&]
-[s2; Inserts a new file item at specified position.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:Add`(const`:`:String`&`,const`:`:Image`&`,`:`:Font`,`:`:Color`,bool`,int`,`:`:Time`,`:`:Color`,const`:`:String`&`,`:`:Font`,`:`:Value`):%- [@(0.0.255) v
-oid]_[@0 Add]([@(0.0.255) const]_[^`:`:String^ String]`&_[@3 name], [@(0.0.255) const]_[^`:`:Image^ I
-mage]`&_[@3 icon]_`=_Null, [^`:`:Font^ Font]_[@3 font]_`=_StdFont(), 
-[^`:`:Color^ Color]_[@3 ink]_`=_SColorText(), [@(0.0.255) bool]_[@3 isdir]_`=_false, 
-[@(0.0.255) int]_[@3 length]_`=_[@3 0], [^`:`:Time^ Time]_[@3 time]_`=_Null, 
-[^`:`:Color^ Color]_[@3 extink]_`=_Null, [@(0.0.255) const]_[^`:`:String^ String]`&_[@3 des
-c]_`=_Null, [^`:`:Font^ Font]_[@3 descfont]_`=_Null, Value data `= 
-Null)&]
-[s2; Adds a new file item at the end of list.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:GetCurrentName`(`)const:%- [^`:`:String^ String]_[@0 GetCurrentName
-]()_[@(0.0.255) const]&]
-[s2; Returns the filename of item with cursor. If there is no cursor, 
-returns empty String.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:Find`(const char`*`):%- [@(0.0.255) int]_[@0 Find]([@(0.0.255) const]_
-[@(0.0.255) char]_`*[@3 name])&]
-[s2; The index of the item with specified [%-*@3 name] or negative 
-value if not in the list. Search is linear.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:FindSetCursor`(const char`*`):%- [@(0.0.255) bool]_[@0 FindSetCurso
-r]([@(0.0.255) const]_[@(0.0.255) char]_`*[@3 name])&]
-[s2; If item with [%-*@3 name].is in the list, sets the cursor to it 
-and returns true, otherwise returns false.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:Sort`(const`:`:FileList`:`:Order`&`):%- [@(0.0.255) void]_[@0 Sort](
-[@(0.0.255) const]_[^`:`:FileList`:`:Order^ Order]`&_[@3 order])&]
-[s2; Sorts the list. Order contains single virtual method for ordering 
-File structures.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:IconWidth`(int`):%- [^`:`:FileList^ FileList]`&_[@0 IconWidth]([@(0.0.255) i
-nt]_[@3 w])&]
-[s2; Sets the space reserved for painting the file icon.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:GetIconWidth`(`)const:%- [@(0.0.255) int]_[@0 GetIconWidth]()_[@(0.0.255) c
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:StartEdit`(`): [@(0.0.255) void]_[* StartEdit]()&]
+[s2;%% Starts the editation of the current item for rename.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:EndEdit`(`): [@(0.0.255) void]_[* EndEdit]()&]
+[s2;%% Ends the editation of item.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:IsEdit`(`)const: [@(0.0.255) bool]_[* IsEdit]()_[@(0.0.255) const]&]
+[s2;%% True if editation is active.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:OkEdit`(`): [@(0.0.255) void]_[* OkEdit]()&]
+[s2;%% Ends the editation and calls WhenRename to actually rename 
+the filename.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:Get`(int`)const: [@(0.0.255) const]_[_^FileList`:`:File^ File][@(0.0.255) `&
+]_[* Get]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s2;%% Returns the file item structure at specified index.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:operator`[`]`(int`)const: [@(0.0.255) const]_[_^FileList`:`:File^ File][@(0.0.255) `&
+]_[* operator`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s2;%% Same as Get([%-*@3 i]).&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:Insert`(int`,const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`): [@(0.0.255) v
+oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 name], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon]_`=_Null, 
+[_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_SColorText(), 
+[@(0.0.255) bool]_[*@3 isdir]_`=_[@(0.0.255) false], [_^int64^ int64]_[*@3 length]_`=_[@3 0],
+ [_^Time^ Time]_[*@3 time]_`=_Null, [_^Color^ Color]_[*@3 extink]_`=_Null, 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 desc]_`=_Null, 
+[_^Font^ Font]_[*@3 descfont]_`=_Null, [_^Value^ Value]_[*@3 data]_`=_Null, 
+[_^Color^ Color]_[*@3 underline]_`=_Null)&]
+[s2;%% Inserts a new file item at specified position.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:Add`(const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`): [@(0.0.255) v
+oid]_[* Add]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 name], 
+[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon]_`=_Null, 
+[_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_SColorText(), 
+[@(0.0.255) bool]_[*@3 isdir]_`=_[@(0.0.255) false], [_^int64^ int64]_[*@3 length]_`=_[@3 0],
+ [_^Time^ Time]_[*@3 time]_`=_Null, [_^Color^ Color]_[*@3 extink]_`=_Null, 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 desc]_`=_Null, 
+[_^Font^ Font]_[*@3 descfont]_`=_Null, [_^Value^ Value]_[*@3 data]_`=_Null, 
+[_^Color^ Color]_[*@3 underline]_`=_Null)&]
+[s2;%% Adds a new file item at the end of list.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:GetCurrentName`(`)const: [_^String^ String]_[* GetCurrentName]()_[@(0.0.255) c
 onst]&]
-[s2; Returns the value set by IconWidth.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:Renaming`(bool`):%- [^`:`:FileList^ FileList]`&_[@0 Renaming]([@(0.0.255) b
-ool]_[@3 b]_`=_true)&]
-[s2; In renaming mode, user is allowed to edit the name of item (by 
-holding mouse button over the item). WhenRename callback is called 
-when user accepts the new name.&]
-[s0; &]
-[s5;K:`:`:FileList`:`:JustName`(bool`):%- [^`:`:FileList^ FileList]`&_[@0 JustName]([@(0.0.255) b
-ool]_[@3 b]_`=_true)&]
-[s2; In JustName mode, if filename contains [* `\] or [* /] characters, 
+[s2;%% Returns the filename of item with cursor. If there is no cursor, 
+returns empty String.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:Find`(const char`*`): [@(0.0.255) int]_[* Find]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 name])&]
+[s2;%% The index of the item with specified [%-*@3 name] or negative 
+value if not in the list. Search is linear.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:FindSetCursor`(const char`*`): [@(0.0.255) bool]_[* FindSetCursor]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 name])&]
+[s2;%% If item with [%-*@3 name].is in the list, sets the cursor to 
+it and returns true, otherwise returns false.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:Sort`(const FileList`:`:Order`&`): [@(0.0.255) void]_[* Sort]([@(0.0.255) c
+onst]_[_^FileList`:`:Order^ Order][@(0.0.255) `&]_[*@3 order])&]
+[s2;%% Sorts the list. Order contains single virtual method for ordering 
+File structures.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:IconWidth`(int`): [_^FileList^ FileList][@(0.0.255) `&]_[* IconWidth]([@(0.0.255) i
+nt]_[*@3 w])&]
+[s2;%% Sets the space reserved for painting the file icon.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:GetIconWidth`(`)const: [@(0.0.255) int]_[* GetIconWidth]()_[@(0.0.255) con
+st]&]
+[s2;%% Returns the value set by IconWidth.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:Renaming`(bool`): [_^FileList^ FileList][@(0.0.255) `&]_[* Renaming]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% In renaming mode, user is allowed to edit the name of item 
+(by holding mouse button over the item). WhenRename callback 
+is called when user accepts the new name.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:JustName`(bool`): [_^FileList^ FileList][@(0.0.255) `&]_[* JustName]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% In JustName mode, if filename contains [* `\] or [* /] characters, 
 only the part after last such character is displayed as filename.&]
+[s3;%% &]
+[s0;%% &]
+[s0;%% &]
 [s0; &]
-[s0; &]
-[s3;%- FileList routines&]
-[s0;@(0.0.255) &]
-[s5;K:`:`:Load`(`:`:FileList`&`,const`:`:String`&`,const char`*`,bool`,`:`:Callback3`<bool`,const`:`:String`&`,`:`:Image`&`>`,`:`:FileSystemInfo`&`):%- [@(0.0.255) b
-ool]_[@0 Load]([^`:`:FileList^ FileList]`&_[@3 list], [@(0.0.255) const]_[^`:`:String^ Stri
-ng]`&_[@3 dir], [@(0.0.255) const]_[@(0.0.255) char]_`*[@3 patterns], 
-[^bool^ bool]_[@3 dirs]_`=_false, [^`:`:Callback3^ Callback3]<[^bool^ bool], 
-[@(0.0.255) const]_[^`:`:String^ String]`&, Image`&>_[@3 WhenIcon]_`=_CNULL, 
-[^`:`:FileSystemInfo^ FileSystemInfo]`&_[@3 filesystem]_`=_StdFileSystemInfo())&]
-[s2; This function loads [%-*@3 list] with file items in [%-*@3 dir]. 
+[ {{10000@3 [s0;%% [*@(229)4 FileList`::File]]}}&]
+[s3;%% &]
+[s1;:FileList`:`:File`:`:struct: [@(0.0.255)3 struct][3 _][*3 File]&]
+[s9;%% Structure used to hold information about the item. Some items, 
+like file length, are in fact not directly used by FileList and 
+are only provided to make FileList usage simpler for its primary 
+applications (e.g. file selectors).&]
+[s3;%% &]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s3; &]
+[s5;:FileList`:`:File`:`:isdir: [@(0.0.255) bool]_[* isdir]&]
+[s2;%% If true, item contains directory.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:icon: [_^Image^ Image]_[* icon]&]
+[s2;%% File icon.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:name: [_^String^ String]_[* name]&]
+[s2;%% Filename.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:font: [_^Font^ Font]_[* font]&]
+[s2;%% Font used to display the filename.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:ink: [_^Color^ Color]_[* ink]&]
+[s2;%% Color used to display the filename.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:length: [_^int64^ int64]_[* length]&]
+[s2;%% Length of file.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:time: [_^Time^ Time]_[* time]&]
+[s2;%% Last write time.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:extink: [_^Color^ Color]_[* extink]&]
+[s2;%% Color used to display the file extension.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:desc: [_^String^ String]_[* desc]&]
+[s2;%% Additional description of file, displayed after the filename.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:descfont: [_^Font^ Font]_[* descfont]&]
+[s2;%% Font used for additional description.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:File`:`:operator const String`&`(`)const: [* operator_const_String`&](
+)_[@(0.0.255) const]&]
+[s2;%% Returns name.&]
+[s3;%% &]
+[s0;%% &]
+[s0;%% &]
+[s0;%% &]
+[s0; [+150 FileList routines]&]
+[s3; &]
+[s5;:Load`(FileList`&`,const String`&`,const char`*`,bool`,Callback3`<bool`,const String`&`,Image`&`>`,FileSystemInfo`&`,const String`&`,bool`): [@(0.0.255) b
+ool]_[* Load]([_^FileList^ FileList][@(0.0.255) `&]_[*@3 list], [@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 dir], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 patterns], 
+[@(0.0.255) bool]_[*@3 dirs]_`=_[@(0.0.255) false], [_^Callback3^ Callback3][@(0.0.255) <bo
+ol], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&], Image[@(0.0.255) `&>]_[*@3 WhenI
+con]_`=_CNULL, [_^FileSystemInfo^ FileSystemInfo][@(0.0.255) `&]_[*@3 filesystem]_`=_St
+dFileSystemInfo(), [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 search]_`=_[_^String^ S
+tring](), [@(0.0.255) bool]_[*@3 hidden]_`=_[@(0.0.255) true])&]
+[s2;%% This function loads [%-*@3 list] with file items in [%-*@3 dir]. 
 [%-*@3 patterns] contain allowed file masks separated by semicolon 
 (e.g. `"`*.cpp;`*.h`"). If [%-*@3 dirs] is false, files in the 
 list are displayed with `"disabled`" color (useful for directory 
 selection). [%-*@3 WhenIcon] specifies icon assignment for individual 
 filenames (first bool paremeter is true for directories). [%-*@3 filesystem] 
 specifies the file system interface.&]
-[s0; &]
-[s5;K:`:`:SortByName`(`:`:FileList`&`):%- [@(0.0.255) void]_[@0 SortByName]([^`:`:FileList^ F
-ileList]`&_[@3 list])&]
-[s2; Sorts the list by names.&]
-[s0; &]
-[s5;K:`:`:SortByExt`(`:`:FileList`&`):%- [@(0.0.255) void]_[@0 SortByExt]([^`:`:FileList^ F
-ileList]`&_[@3 list])&]
-[s2; Sorts the list by extensions.&]
-[s0; &]
-[s0; ]
+[s3;%% &]
+[s4; &]
+[s5;:SortByName`(FileList`&`): [@(0.0.255) void]_[* SortByName]([_^FileList^ FileList][@(0.0.255) `&
+]_[*@3 list])&]
+[s2;%% Sorts the list by names.&]
+[s3;%% &]
+[s4; &]
+[s5;:SortByExt`(FileList`&`): [@(0.0.255) void]_[* SortByExt]([_^FileList^ FileList][@(0.0.255) `&
+]_[*@3 list])&]
+[s2;%% Sorts the list by extensions.&]
+[s3;%% &]
+[s4; &]
+[s5;:GetDriveImage`(char`): [_^Image^ Image]_[* GetDriveImage]([@(0.0.255) char]_[*@3 drive`_
+style])&]
+[s2;%% Returns the OS dependent icon of [%-*@3 drive`_style].&]
+[s3;%% &]
+[s0;%% ]
