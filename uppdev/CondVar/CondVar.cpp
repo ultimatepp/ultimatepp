@@ -1,6 +1,7 @@
 #include <Core/Core.h>
 
-namespace Upp {
+using namespace Upp;
 
+static StaticConditionVariable z;
 
-};
+CONSOLE_APP_MAIN {}
