@@ -111,6 +111,8 @@ class TextDiffCtrl : public Splitter {
 public:
 	void Set(Stream& l, Stream& r);
 	void Set(const String& l, const String& r);
+	void InsertFrameLeft(CtrlFrame& f)                     { left.InsertFrame(0, f); }
+	void InsertFrameRight(CtrlFrame& f)                    { right.InsertFrame(0, f); }
 	void AddFrameLeft(CtrlFrame& f)                        { left.AddFrame(f); }
 	void AddFrameRight(CtrlFrame& f)                       { right.AddFrame(f); }
 	
