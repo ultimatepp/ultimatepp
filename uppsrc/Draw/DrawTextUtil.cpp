@@ -87,9 +87,6 @@ void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text,
 	const wchar *t = s;
 	int apos = HIWORD(accesskey);
 	int akey = LOWORD(accesskey);
-	DDUMP(text);
-	DDUMP(akey);
-	DDUMP(apos);
 	for(;;) {
 		if(*s == '\n' || *s == '\0') {
 			int a = x;
