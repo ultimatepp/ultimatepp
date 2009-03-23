@@ -52,7 +52,7 @@ DiffDlg::DiffDlg()
 {
 	Add(diff.SizePos());
 	Sizeable().Zoomable();
-	diff.AddFrameLeft(p);
+	diff.InsertFrameLeft(p);
 	int cy = EditField::GetStdHeight();
 	p.Height(cy);
 	p.Add(l.VSizePos().HSizePos(0, 6 * cy));
@@ -95,7 +95,7 @@ FileDiff::FileDiff()
 {
 	r.Height(EditField::GetStdHeight());
 	Icon(IdeImg::Diff());
-	diff.AddFrameRight(r);
+	diff.InsertFrameRight(r);
 	r <<= THISBACK(Open);
 }
 
@@ -290,7 +290,7 @@ SvnDiff::SvnDiff()
 	r.Height(EditField::GetStdHeight());
 	r.SetDropLines(32);
 	Icon(IdeImg::SvnDiff());
-	diff.AddFrameRight(r);
+	diff.InsertFrameRight(r);
 	r <<= THISBACK(Load);
 }
 

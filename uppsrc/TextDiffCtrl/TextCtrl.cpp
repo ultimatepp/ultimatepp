@@ -4,28 +4,7 @@ namespace Upp {
 
 
 inline Color HistoryBg() { return Color(255, 255, 0); }
-/*
-struct GapDisplay : public Display {
-	virtual void Paint(Draw& draw, const Rect& rc, const Value& v, Color ink, Color paper, dword style) const
-	{
-		draw.DrawRect(rc, paper);
-		Rect clip = rc.Deflated(3, 0);
-		draw.Clip(clip);
-		WString txt = IsString(v) ? v : StdConvert().Format(v);
-		Font fnt = StdFont();
-		int tcy = GetTLTextHeight(txt, fnt);
-		DrawTLText(draw, rc.left + 5, rc.top + max((rc.Height() - tcy) / 2, 0), rc.Width(), txt, fnt, ink);
-		draw.End();
-	}
-};
 
-struct HistoryRowDisplay : public GapDisplay {
-	virtual void Paint(Draw& draw, const Rect& rc, const Value& v, Color ink, Color paper, dword style) const
-	{
-		GapDisplay::Paint(draw, rc, v, ink, style & CURSOR ? paper : HistoryBg(), style);
-	}
-};
-*/
 TextCompareCtrl::TextCompareCtrl()
 {
 	letter = Size(1, 1);
@@ -46,11 +25,10 @@ TextCompareCtrl::TextCompareCtrl()
 
 void TextCompareCtrl::LeftDown(Point pt, dword keyflags)
 {
-	if(pt.x < gutter_width || HasCapture())
-	{
+	Size sz = GetSize();
+	if(pt.x > sz.cx - gutter_width || HasCapture()) {
 		if(!HasCapture())
 			SetCapture();
-		Size sz = GetSize();
 		int line = (pt.y * lines.GetCount()) / sz.cy;
 		int page_lines = sz.cy / letter.cy;
 		scroll.SetY(line - page_lines / 2);
