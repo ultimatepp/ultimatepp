@@ -1,16 +1,21 @@
 topic "FileSel";
 [2 $$0,0#00000000000000000000000000000000:Default]
-[i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483380:class]
-[l288;2 $$2,2#27521748481378242620020725143825:desc]
-[a83;*R6 $$3,0#31310162474203024125188417583966:caption]
-[l288;i1121;b17;O9;~~~.1408;2 $$4,0#10431211400427159095818037425705:param]
-[i448;a25;kKO9;*@(64)2 $$5,0#37138531426314131252341829483370:item]
-[*+117 $$6,6#14700283458701402223321329925657:header]
-[{_}%EN-US 
-[s1;K:`:`:FileSel`:`:class:%- [@(0.0.255) class]_[@0 FileSel]_:_[@(0.0.255) public]_[^`:`:WithFileSelectorLayout^ W
-ithFileSelectorLayout]<[^`:`:TopWindow^ TopWindow]>_&]
-[s2; &]
-[s2; 
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
+[l288;a4;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
+[l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
+[b42;2 $$9,9#13035079074754324216151401829390:normal]
+[{_} 
+[ {{10000@3 [s0;%% [*@(229)4 FileSel]]}}&]
+[s3; &]
+[s1;:FileSel`:`:class: [@(0.0.255) class]_[* FileSel]_:_[@(0.0.255) public]_[*@3 WithFileSelec
+torLayout][@(0.0.255) <][_^TopWindow^ TopWindow][@(0.0.255) >]_&]
+[s0; &]
+[s2;%% 
 @@image:1755&1627
 ŠƒÔ²€€‚Îş€€€€ø—œí‰¸Åƒö»°¬ºŒş¢â‚¨ê®¸¦ ¢€‘‚ì¡’–ˆÑ‚ˆû¢ÛÆÜ²¦úÍõœÆÑõ‡ç†Ñ”¨ƒ
 ò°Î¢±¢òÉ¤Œ’‘ ²Ê¤‚¡‹¬¡¦ğó¾ó÷ÜÜ„„®‰ÁúªÏÛ§Îíİıú¹şÕİïû¼Ï¹şõª««ûô¿åë÷êÖ÷×Ùƒ²…ì‘œÍß
@@ -282,170 +287,208 @@ ithFileSelectorLayout]<[^`:`:TopWindow^ TopWindow]>_&]
 ½Ÿº§“óı«å¢÷ü¢ºğûÀ±ûßõç¼™¦äìÛ§’Ùı›»ƒóÚÖù¢¸¯¥şêÜàªñ¼ú‡ÜûàÜÂéàÄøññ®Ÿú€œ¨¾Ñù¥ÀÖ
 —™‹½ºó»âç¾Ÿ§Ş÷ï˜½¯œŸ¿Â´°ŒÃ¥úÿƒ™ÒšÜ
 &]
-[s2; &]
-[s2; Dialog for selecting files or directories.  &]
+[s2;%% &]
+[s9;%% Dialog for selecting files or directories.&]
+[s3; &]
 [s0; &]
-[s5;K:`:`:FileSel`:`:WhenIcon:%- [^`:`:Callback3^ Callback3]<[^bool^ bool], 
-[@(0.0.255) const]_[^`:`:String^ String]`&, [^Image^ Image]`&>_[@0 WhenIcon]&]
-[s2; This callback can be used to alter icons for files. First parameter 
-designates directory, second is the filename. Client code can 
-alter Image passed as third parameter.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:Serialize`(`:`:Stream`&`):%- [@(0.0.255) void]_[@0 Serialize]([^`:`:Stream^ S
-tream]`&_[@3 s])&]
-[s2; Serializes current settings of FileSel. That includes current 
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
+[s3;%% &]
+[s5;:FileSel`:`:WhenIcon: [_^Callback3^ Callback3][@(0.0.255) <bool], 
+[@(0.0.255) const]_String[@(0.0.255) `&], Image[@(0.0.255) `&>]_[* WhenIcon]&]
+[s2;%% This callback can be used to alter icons for files. First 
+parameter designates directory, second is the filename. Client 
+code can alter Image passed as third parameter.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
+]_[*@3 s])&]
+[s2;%% Serializes current settings of FileSel. That includes current 
 directory, currently selected file type, size of FileSel window, 
 LRU list of visited directories and `"Sort by`" switch state.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:ExecuteOpen`(const char`*`):%- [@(0.0.255) bool]_[@0 ExecuteOpen]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[@3 title]_`=_NULL)&]
-[s2; Executes `"Open file`" dialog. [%-*@3 title] can specify alternate 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:ExecuteOpen`(const char`*`): [@(0.0.255) bool]_[* ExecuteOpen]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 title]_`=_NULL)&]
+[s2;%% Executes `"Open file`" dialog. [%-*@3 title] can specify alternate 
 caption of dialog. If user selects a file to open, returns true.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:ExecuteSaveAs`(const char`*`):%- [@(0.0.255) bool]_[@0 ExecuteSaveAs
-]([@(0.0.255) const]_[@(0.0.255) char]_`*[@3 title]_`=_NULL)&]
-[s2; Executes `"Save as`" dialog. [%-*@3 title] can specify alternate 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:ExecuteSaveAs`(const char`*`): [@(0.0.255) bool]_[* ExecuteSaveAs]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 title]_`=_NULL)&]
+[s2;%% Executes `"Save as`" dialog. [%-*@3 title] can specify alternate 
 caption of dialog. If user selects a destination file, returns 
 true.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:ExecuteSelectDir`(const char`*`):%- [@(0.0.255) bool]_[@0 ExecuteSel
-ectDir]([@(0.0.255) const]_[@(0.0.255) char]_`*[@3 title]_`=_NULL)&]
-[s2; Executes directory selection dialog. [%-*@3 title] can specify 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:ExecuteSelectDir`(const char`*`): [@(0.0.255) bool]_[* ExecuteSelectDir](
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 title]_`=_NULL)&]
+[s2;%% Executes directory selection dialog. [%-*@3 title] can specify 
 alternate caption of dialog. If user selects a file to open, 
 returns true.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:Get`(`)const:%- [^`:`:String^ String]_[@0 Get]()_[@(0.0.255) const]&]
-[s2; Returns the path of the first chosen file. If there is none, 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:Get`(`)const: [_^String^ String]_[* Get]()_[@(0.0.255) const]&]
+[s2;%% Returns the path of the first chosen file. If there is none, 
 returns empty String.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:Set`(const`:`:String`&`):%- [@(0.0.255) void]_[@0 Set]([@(0.0.255) con
-st]_[^`:`:String^ String]`&_[@3 s])&]
-[s2; Sets [%-*@3 s] to be the chosen file: if it contains a full path, 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:Set`(const String`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Sets [%-*@3 s] to be the chosen file: if it contains a full path, 
 file selector goes to the directory, filename is put into the 
 file name editor of file selector.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:Set`(const`:`:Vector`<`:`:String`>`&`):%- [@(0.0.255) void]_[@0 Set](
-[@(0.0.255) const]_[^`:`:Vector^ Vector]<[^`:`:String^ String]>`&_[@3 s])&]
-[s2; Sets a group of files to be chosen.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:operator`:`:String`(`)const:%- operator_[^`:`:String^ String]()_[@(0.0.255) c
-onst]&]
-[s2; Same as Get().&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:operator`=`(const`:`:String`&`):%- [@(0.0.255) void]_[@0 operator`=](
-[@(0.0.255) const]_[^`:`:String^ String]`&_[@3 s])&]
-[s2; Same as Set([%-*@3 s]).&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:operator`~`(`)const:%- [^`:`:String^ String]_[@0 operator`~]()_[@(0.0.255) c
-onst]&]
-[s2; Same as Get().&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:operator`<`<`=`(const`:`:String`&`):%- [@(0.0.255) void]_[@0 operato
-r<<`=]([@(0.0.255) const]_[^`:`:String^ String]`&_[@3 s])&]
-[s2; Same as Set([%-*@3 s]).&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:GetCount`(`)const:%- [@(0.0.255) int]_[@0 GetCount]()_[@(0.0.255) cons
-t]&]
-[s2; Returns a count of chosen files.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:GetFile`(int`)const:%- [^`:`:String^ String]_[@0 GetFile]([@(0.0.255) i
-nt]_[@3 i])_[@(0.0.255) const]&]
-[s2; Returns a chosen file [%-*@3 i].&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:operator`[`]`(int`)const:%- [^`:`:String^ String]_[@0 operator`[`]](
-[@(0.0.255) int]_[@3 i])_[@(0.0.255) const]&]
-[s2; Same as GetFile([%-*@3 i]).&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:ClearFiles`(`):%- [@(0.0.255) void]_[@0 ClearFiles]()&]
-[s2; Clear the selection of files.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:GetReadOnly`(`)const:%- [@(0.0.255) bool]_[@0 GetReadOnly]()_[@(0.0.255) c
-onst]&]
-[s2; Returns the status of read`-only option. (Usually this option 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:Set`(const Vector`<String`>`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) cons
+t]_[_^Vector^ Vector][@(0.0.255) <][_^String^ String][@(0.0.255) >`&]_[*@3 s])&]
+[s2;%% Sets a group of files to be chosen.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:operator String`(`)const: [* operator_String]()_[@(0.0.255) const]&]
+[s2;%% Same as Get().&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:operator`=`(const String`&`): [@(0.0.255) void]_[* operator`=]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Same as Set([%-*@3 s]).&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:operator`~`(`)const: [_^String^ String]_[* operator`~]()_[@(0.0.255) const]&]
+[s2;%% Same as Get().&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:operator`<`<`=`(const String`&`): [@(0.0.255) void]_[* operator<<`=]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Same as Set([%-*@3 s]).&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:GetCount`(`)const: [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
+[s2;%% Returns a count of chosen files.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:GetFile`(int`)const: [_^String^ String]_[* GetFile]([@(0.0.255) int]_[*@3 i])
+_[@(0.0.255) const]&]
+[s2;%% Returns a chosen file [%-*@3 i].&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:operator`[`]`(int`)const: [_^String^ String]_[* operator`[`]]([@(0.0.255) i
+nt]_[*@3 i])_[@(0.0.255) const]&]
+[s2;%% Same as GetFile([%-*@3 i]).&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:ClearFiles`(`): [@(0.0.255) void]_[* ClearFiles]()&]
+[s2;%% Clear the selection of files.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:GetReadOnly`(`)const: [@(0.0.255) bool]_[* GetReadOnly]()_[@(0.0.255) const
+]&]
+[s2;%% Returns the status of read`-only option. (Usually this option 
 is used to open files in read only mode).&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:GetActiveDir`(`)const:%- [^`:`:String^ String]_[@0 GetActiveDir]()_[@(0.0.255) c
-onst]&]
-[s2; Returns the active directory of file selector.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:GetActiveType`(`)const:%- [@(0.0.255) int]_[@0 GetActiveType]()_[@(0.0.255) c
-onst]&]
-[s2; Returns the active file type index of file selector.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:Filesystem`(`:`:FileSystemInfo`&`):%- [@(0.0.255) void]_[@0 Filesyst
-em]([^`:`:FileSystemInfo^ FileSystemInfo]`&_[@3 fsys])&]
-[s2; Sets the file system to browse. Default is normal local file 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:GetActiveDir`(`)const: [_^String^ String]_[* GetActiveDir]()_[@(0.0.255) co
+nst]&]
+[s2;%% Returns the active directory of file selector.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:GetActiveType`(`)const: [@(0.0.255) int]_[* GetActiveType]()_[@(0.0.255) co
+nst]&]
+[s2;%% Returns the active file type index of file selector.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:Filesystem`(FileSystemInfo`&`): [@(0.0.255) void]_[* Filesystem]([_^FileSystemInfo^ F
+ileSystemInfo][@(0.0.255) `&]_[*@3 fsys])&]
+[s2;%% Sets the file system to browse. Default is normal local file 
 system.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:GetFilesystem`(`)const:%- [^`:`:FileSystemInfo^ FileSystemInfo]`&_
-[@0 GetFilesystem]()_[@(0.0.255) const]&]
-[s2; Returns the file system used in file selector.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:Type`(const char`*`,const char`*`):%- [^`:`:FileSel^ FileSel]`&_[@0 T
-ype]([@(0.0.255) const]_[@(0.0.255) char]_`*[@3 name], [@(0.0.255) const]_[@(0.0.255) char]_
-`*[@3 ext])&]
-[s2; Adds a file type displayed as [%-*@3 name]. [%-*@3 ext] contains 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:GetFilesystem`(`)const: [_^FileSystemInfo^ FileSystemInfo][@(0.0.255) `&]_
+[* GetFilesystem]()_[@(0.0.255) const]&]
+[s2;%% Returns the file system used in file selector.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:Type`(const char`*`,const char`*`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* T
+ype]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name], [@(0.0.255) const]_[@(0.0.255) char
+]_`*[*@3 ext])&]
+[s2;%% Adds a file type displayed as [%-*@3 name]. [%-*@3 ext] contains 
 a set of file masks separated by spaces. Example: Type(`"Source 
 files`", `"`*.c `*.h`").&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:AllFilesType`(`):%- [^`:`:FileSel^ FileSel]`&_[@0 AllFilesType]()&]
-[s2; Same as Type(`"All files`", `"`*.`*`").&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:ActiveDir`(const`:`:String`&`):%- [^`:`:FileSel^ FileSel]`&_[@0 Acti
-veDir]([@(0.0.255) const]_[^`:`:String^ String]`&_[@3 d])&]
-[s2; Sets the active directory of file selector (directory where 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:AllFilesType`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* AllFilesType]()&]
+[s2;%% Same as Type(`"All files`", `"`*.`*`").&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:ActiveDir`(const String`&`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* ActiveD
+ir]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 d])&]
+[s2;%% Sets the active directory of file selector (directory where 
 file selector starts).&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:ActiveType`(int`):%- [^`:`:FileSel^ FileSel]`&_[@0 ActiveType]([@(0.0.255) i
-nt]_[@3 i])&]
-[s2; Sets the active file type.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:DefaultExt`(const char`*`):%- [^`:`:FileSel^ FileSel]`&_[@0 DefaultE
-xt]([@(0.0.255) const]_[@(0.0.255) char]_`*[@3 ext])&]
-[s2; Sets the file extension to add for `"Save as`" dialog if none 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:ActiveType`(int`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* ActiveType]([@(0.0.255) i
+nt]_[*@3 i])&]
+[s2;%% Sets the active file type.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:DefaultExt`(const char`*`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* DefaultE
+xt]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 ext])&]
+[s2;%% Sets the file extension to add for `"Save as`" dialog if none 
 is specified.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:Multi`(bool`):%- [^`:`:FileSel^ FileSel]`&_[@0 Multi]([@(0.0.255) bool
-]_[@3 b]_`=_true)&]
-[s2; In this mode, more than single file can be selected. Default 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:Multi`(bool`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* Multi]([@(0.0.255) bool
+]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% In this mode, more than single file can be selected. Default 
 is false.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:ReadOnlyOption`(bool`):%- [^`:`:FileSel^ FileSel]`&_[@0 ReadOnlyOpti
-on]([@(0.0.255) bool]_[@3 b]_`=_true)&]
-[s2; Makes `"Read only`" option visible. Default is false.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:MkDirOption`(bool`):%- [^`:`:FileSel^ FileSel]`&_[@0 MkDirOption]([@(0.0.255) b
-ool]_[@3 b]_`=_true)&]
-[s2; Makes `"Make directory`" button visible. Default is true.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:NoMkDirOption`(`):%- [^`:`:FileSel^ FileSel]`&_[@0 NoMkDirOption]()&]
-[s2; Same as MkDirOption(false).&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:BaseDir`(const char`*`):%- [^`:`:FileSel^ FileSel]`&_[@0 BaseDir]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[@3 dir])&]
-[s2; Sets [%-*@3 dir] to be the base directory. If used, files can 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:ReadOnlyOption`(bool`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* ReadOnlyOpti
+on]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Makes `"Read only`" option visible. Default is false.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:MkDirOption`(bool`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* MkDirOption]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Makes `"Make directory`" button visible. Default is true.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:NoMkDirOption`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* NoMkDirOption]()&]
+[s2;%% Same as MkDirOption(false).&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:BaseDir`(const char`*`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* BaseDir]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 dir])&]
+[s2;%% Sets [%-*@3 dir] to be the base directory. If used, files can 
 be selected only inside this base directory (or its subdirectories) 
 and selected file paths are relative to it.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:Asking`(bool`):%- [^`:`:FileSel^ FileSel]`&_[@0 Asking]([@(0.0.255) bo
-ol]_[@3 b]_`=_true)&]
-[s2; If active, file selector asks before returning the path of existing 
-file in `"Save as`" dialog. Default is active.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:NoAsking`(`):%- [^`:`:FileSel^ FileSel]`&_[@0 NoAsking]()&]
-[s2; Same as Asking(false).&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:EditFileName`(bool`):%- [^`:`:FileSel^ FileSel]`&_[@0 EditFileName](
-[@(0.0.255) bool]_[@3 b])&]
-[s2; If active, user can type files into filename edit field. Default 
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:Asking`(bool`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* Asking]([@(0.0.255) bo
+ol]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% If active, file selector asks before returning the path of 
+existing file in `"Save as`" dialog. Default is active.&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:NoAsking`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* NoAsking]()&]
+[s2;%% Same as Asking(false).&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:EditFileName`(bool`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* EditFileName](
+[@(0.0.255) bool]_[*@3 b])&]
+[s2;%% If active, user can type files into filename edit field. Default 
 is active.&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:NoEditFileName`(`):%- [^`:`:FileSel^ FileSel]`&_[@0 NoEditFileName](
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:NoEditFileName`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* NoEditFileName](
 )&]
-[s2; Same as EditFileName(false).&]
-[s0; &]
-[s5;K:`:`:FileSel`:`:AppModal`(bool`):%- [^`:`:FileSel^ FileSel]`&_[@0 AppModal]([@(0.0.255) b
-ool]_[@3 b]_`=_true)&]
-[s5;K:`:`:FileSel`:`:NoAppModal`(`):%- [^`:`:FileSel^ FileSel]`&_[@0 NoAppModal]()&]
-[s2; If active (default), dialog is run as application modal.&]
+[s2;%% Same as EditFileName(false).&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:AppModal`(bool`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* AppModal]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:NoAppModal`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* NoAppModal]()&]
+[s2;%% If active (default), dialog is run as application modal.&]
+[s3; &]
 [s0; ]
