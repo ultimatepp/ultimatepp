@@ -5,6 +5,7 @@ class HttpClient
 {
 public:
 	HttpClient();
+	HttpClient(const char *url);
 
 	HttpClient&  TimeoutMsecs(int t)              { timeout_msecs = t; return *this; }
 	HttpClient&  MaxHeaderSize(int m)             { max_header_size = m; return *this; }
@@ -28,6 +29,7 @@ public:
 	HttpClient&  NoStdHeaders()                   { return StdHeaders(false); }
 	HttpClient&  Accept(String a)                 { accept = a; return *this; }
 	HttpClient&  Agent(String a)                  { agent = a; return *this; }
+	HttpClient&  ContentType(String a)            { contenttype = a; return *this; }
 
 	HttpClient&  Method(int m)                    { method = m; return *this; }
 	HttpClient&  Get()                            { return Method(METHOD_GET); }
@@ -35,6 +37,10 @@ public:
 	HttpClient&  Head()                           { return Method(METHOD_HEAD); }
 
 	HttpClient&  PostData(String pd)              { postdata = pd; return *this; }
+	HttpClient&  PostUData(String pd)             { return PostData(UrlEncode(pd)); }
+	HttpClient&  Post(const String& data)         { Post(); return PostData(data); }
+	HttpClient&  PostU(const String& data)        { Post(); return PostUData(data); }
+	HttpClient&  PostU(const char *key, const String& data);
 
 	String       Execute(Gate2<int, int> progress = false);
 	String       ExecuteRedirect(int max_redirect = DEFAULT_MAX_REDIRECT,
@@ -53,6 +59,8 @@ public:
 
 	void         Close()                          { socket.Close(); }
 
+	static void  Trace(bool b = true);
+	
 public:
 	Socket       socket;
 	bool         keepalive;
@@ -78,6 +86,7 @@ public:
 	String       client_headers;
 	String       accept;
 	String       agent;
+	String       contenttype;
 	String       postdata;
 
 	int          status_code;
@@ -103,6 +112,7 @@ public:
 	};
 
 private:
+	void         Init();
 	String       ReadUntilProgress(char until, int start_time, int end_time, Gate2<int, int> progress);
 };
 

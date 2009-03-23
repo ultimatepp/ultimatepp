@@ -501,6 +501,13 @@ void StaticSemaphore::Initialize()
 		BarrierWrite(semaphore, new(buffer) Semaphore);
 }
 
+void StaticConditionVariable::Initialize()
+{
+	Mutex::Lock __(sMutexLock());
+	if(!ReadWithBarrier(cv))
+		BarrierWrite(cv, new(buffer) ConditionVariable);
+}
+
 void LazyUpdate::Invalidate()
 {
 	dirty = true;

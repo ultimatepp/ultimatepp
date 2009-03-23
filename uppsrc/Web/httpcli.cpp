@@ -2,11 +2,17 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)       RLOG(x)
-#define LLOGBLOCK(x)  // RLOGBLOCK(x)
-#define LDUMP(x)      // RDUMP(x)
+bool HttpClient_Trace__;
 
-HttpClient::HttpClient()
+#define LLOG(x)       if(HttpClient_Trace__) RLOG(x); else;
+#define LLOGBLOCK(x)  // DLOGBLOCK(x)
+
+void HttpClient::Trace(bool b)
+{
+	HttpClient_Trace__ = b;
+}
+
+void HttpClient::Init()
 {
 	port = DEFAULT_PORT;
 	timeout_msecs = DEFAULT_TIMEOUT_MSECS;
@@ -15,6 +21,18 @@ HttpClient::HttpClient()
 	keepalive = false;
 	std_headers = true;
 	method = METHOD_GET;
+}
+
+
+HttpClient::HttpClient()
+{
+	Init();
+}
+
+HttpClient::HttpClient(const char *url)
+{
+	Init();
+	URL(url);
 }
 
 HttpClient& HttpClient::URL(const char *u)
@@ -105,6 +123,14 @@ String HttpClient::ReadUntilProgress(char until, int start_time, int end_time, G
 	return String::GetVoid();
 }
 
+HttpClient& HttpClient::PostU(const char *key, const String& data)
+{
+	if(postdata.GetCount())
+		postdata << '&';
+	postdata << key << '=' << UrlEncode(data);
+	return *this;
+}
+
 String HttpClient::Execute(Gate2<int, int> progress)
 {
 	LLOGBLOCK("HttpClient::Execute");
@@ -143,9 +169,14 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		}
 	}
 	String request;
+	String ctype = contenttype;
 	switch(method) {
 		case METHOD_GET:  request << "GET "; break;
-		case METHOD_POST: request << "POST "; break;
+		case METHOD_POST:
+			request << "POST ";
+			if(IsNull(ctype))
+				ctype = "application/x-www-form-urlencoded";
+			break;
         case METHOD_HEAD: request << "HEAD "; break;
 		default: NEVER(); // invalid method
 	}
@@ -171,6 +202,8 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		request << "Agent: " << Nvl(agent, "Ultimate++ HTTP client") << "\r\n";
 		if(method == METHOD_POST)
 			request << "Content-Length: " << postdata.GetLength() << "\r\n";
+		if(ctype.GetCount())
+			request << "Content-Type: " << ctype << "\r\n";
 	}
 	if(use_proxy && !IsNull(proxy_username))
 		 request << "Proxy-Authorization: basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
@@ -220,6 +253,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 	bool ce_gzip = false;
 	for(;;) {
 		String line = ReadUntilProgress('\n', start_time, end_time, progress);
+		LLOG("< " << line);
 		if(socket.IsError()) {
 			error = Socket::GetErrorText();
 			return String::GetVoid();
