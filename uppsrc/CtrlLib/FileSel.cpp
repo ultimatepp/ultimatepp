@@ -221,7 +221,8 @@ Image NativePathIcon(const char *path, bool folder)
 		return GetFileIcon(path, false);
 #endif
 #ifdef PLATFORM_POSIX
-	bool isdrive = folder && ((path == "/media") || (path == "/mnt"));
+	String p = path;
+	bool isdrive = folder && ((p == "/media") || (p == "/mnt"));
 	FindFile ff(path);
 	return isdrive ? PosixGetDriveImage(GetFileName(path))
 				   : GetFileIcon(path, GetFileName(path), folder, ff.GetMode() & 0111);
