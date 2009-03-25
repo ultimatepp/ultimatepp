@@ -429,6 +429,7 @@ bool ODBCConnection::Fetch0()
 				sb.SetLength(li);
 				if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_CHAR, ~sb, li + 1, &li)))
 				   break;
+				LOGHEXDUMP(~sb, li);
 				v = String(sb);
 			}
 			break;
