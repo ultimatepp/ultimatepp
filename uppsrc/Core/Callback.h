@@ -263,7 +263,7 @@ Callback callback3(Object *object, R (O::*method)(A, B, C), T1 arg1, T2 arg2, T3
 
 template <class Object, class R, class O, class A, class B, class C, class T1, class T2, class T3> 
 Callback callback3(const Object *object, R (O::*method)(A, B, C) const, T1 arg1, T2 arg2, T3 arg3) {
-	return Callback(new CallbackMethodActionArg3<Object, R (O::*)(A, B, C) const, T1, T2, T3>
+	return Callback(new CallbackMethodActionArg3<const Object, R (O::*)(A, B, C) const, T1, T2, T3>
 	                    (object, method, arg1, arg2, arg3));
 }
 
@@ -336,7 +336,7 @@ Callback callback4(Object *object, R (O::*method)(A, B, C, D), T1 arg1, T2 arg2,
 
 template <class Object, class R, class O, class A, class B, class C, class D, class T1, class T2, class T3, class T4> 
 Callback callback4(const Object *object, R (O::*method)(A, B, C, D) const, T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-	return Callback(new CallbackMethodActionArg4<Object, R (O::*)(A, B,C,D) const, T1, T2, T3, T4>
+	return Callback(new CallbackMethodActionArg4<const Object, R (O::*)(A, B,C,D) const, T1, T2, T3, T4>
 	                    (object, method, arg1, arg2, arg3, arg4));
 }
 
