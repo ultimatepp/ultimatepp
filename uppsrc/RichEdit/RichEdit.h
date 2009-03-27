@@ -660,6 +660,7 @@ public:
 	RichEdit&       SpellCheck(bool b)                    { spellcheck = b; Refresh(); return *this; }
 	RichEdit&       SetZoom(int z)                        { zoom = z; Refresh(); return *this; }
 	RichEdit&       SetContext(void *ctx)                 { context = ctx; Refresh(); return *this; }
+	void           *GetContext() const                    { return context; }
 
 	struct UndoInfo {
 		int              undoserial;
