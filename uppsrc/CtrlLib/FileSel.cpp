@@ -242,7 +242,7 @@ bool MatchSearch(const String& filename, const String& search)
 
 bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
           Callback3<bool, const String&, Image&> WhenIcon, FileSystemInfo& filesystem,
-          const String& search, bool hidden)
+          const String& search, bool hidden, bool hiddenfiles)
 {
 	if(dir.IsEmpty()) {
 		Array<FileSystemInfo::FileInfo> root = filesystem.Find(Null);
@@ -269,10 +269,14 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 		for(int t = 0; t < ffi.GetCount(); t++) {
 			const FileSystemInfo::FileInfo& fi = ffi[t];
 			bool nd = dirs && !fi.is_directory;
+			bool show = hidden;
+			if(!show && filesystem.IsWin32() ? !fi.is_hidden : fi.filename[0] != '.')
+				show = true;
+			if(!show && hiddenfiles && fi.is_file)
+				show = true;
 			if(fi.filename != "." && fi.filename != ".." != 0 &&
 			   (fi.is_directory || PatternMatchMulti(patterns, fi.filename)) &&
-			   MatchSearch(fi.filename, search) &&
-			   (hidden || (filesystem.IsWin32() ? !fi.is_hidden : fi.filename[0] != '.'))) {
+			   MatchSearch(fi.filename, search) && show) {
 			#ifdef PLATFORM_X11
 				Image img = isdrive ? PosixGetDriveImage(fi.filename)
 				                    : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111);
@@ -399,7 +403,7 @@ void FileSel::SearchLoad()
 	list.Clear();
 	String d = GetDir();
 	String emask = GetMask();
-	if(!UPP::Load(list, d, emask, mode == SELECTDIR, WhenIcon, *filesystem, ~search, ~hidden)) {
+	if(!UPP::Load(list, d, emask, mode == SELECTDIR, WhenIcon, *filesystem, ~search, ~hidden, ~hiddenfiles)) {
 		Exclamation(t_("[A3* Unable to read the directory !]&&") + DeQtf((String)~dir) + "&&" +
 		            GetErrorMessage(GetLastError()));
 		if(!basedir.IsEmpty() && String(~dir).IsEmpty()) {
@@ -410,6 +414,7 @@ void FileSel::SearchLoad()
 		olddir = Null;
 		SearchLoad();
 	}
+	hiddenfiles.Enable(!hidden);
 	if(d.IsEmpty()) {
 		if(filesystem->IsWin32()) {
 			mkdir.Disable();
@@ -1186,6 +1191,9 @@ void FileSel::Serialize(Stream& s) {
 	if(version >= 7) {
 		s % hidden;
 	}
+	if(version >= 8) {
+		s % hiddenfiles;
+	}
 }
 
 String FileSel::GetFile(int i) const {
@@ -1242,6 +1250,8 @@ FileSel::FileSel() {
 	Add(sortext);
 	hidden <<= THISBACK(SearchLoad);
 	Add(hidden);
+	hiddenfiles <<= THISBACK(SearchLoad);
+	Add(hiddenfiles);
 	mkdir <<= THISBACK(MkDir);
 	Add(mkdir);
 	plus <<= THISBACK(Plus);
