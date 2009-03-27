@@ -487,7 +487,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 			szcy = false;
 		WhenHelp = parentmenu->WhenHelp;
 	}
-	Rect r = GetWorkArea();
+	Rect r = GetWorkArea(p);
 	restorefocus = GetFocusCtrl();
 	LLOG("PopUp " << UPP::Name(this) << " set restorefocus:" << UPP::Name(restorefocus));
 	DistributeAccessKeys();
@@ -517,7 +517,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 		}
 	}
 	if(p.x + sz.cx > r.right) {
-		p.x = max(p.x + rsz.cx - sz.cx, 0);
+		p.x = max(p.x + rsz.cx - sz.cx, r.left);
 		szx = szcx;
 		pane.LeftPos(0, sz.cx);
 	}

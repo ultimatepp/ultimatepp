@@ -71,7 +71,7 @@ void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 	DoClose();
 	int h = AddFrameSize(width, min(droplines * GetLineCy(), GetTotalCy())).cy;
 	Rect rt = RectC(x, bottom, width, h);
-	Rect area = Ctrl::GetWorkArea();
+	Rect area = Ctrl::GetWorkArea(Point(x, top));
 	bool up = false;
 	if(rt.bottom > area.bottom) {
 		up = true;

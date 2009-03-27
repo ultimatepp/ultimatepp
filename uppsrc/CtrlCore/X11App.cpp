@@ -417,8 +417,23 @@ Rect Ctrl::GetDefaultWindowRect()
 	return RectC(pos + 20, pos + 20, cx, cy);
 }
 
+void Ctrl::GetWorkArea(Array<Rect>& out)
+{
+	out.Add(GetPrimaryWorkArea());
+}
+
 Rect Ctrl::GetWorkArea() const
 {
+	return GetPrimaryWorkArea();
+}
+
+Rect Ctrl::GetWorkArea(Point pt)
+{
+	Array<Rect> rc;
+	GetWorkArea(rc);
+	for(int i = 0; i < rc.GetCount(); i++)
+		if(rc[i].Contains(pt))
+			return rc[i];
 	return GetPrimaryWorkArea();
 }
 

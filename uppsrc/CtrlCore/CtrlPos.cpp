@@ -133,7 +133,7 @@ Size Ctrl::GetStdSize() const
 
 Size Ctrl::GetMaxSize() const
 {
-	return GetWorkArea().Size();
+	return GetVirtualWorkArea().Size();
 }
 
 void Ctrl::SyncLayout(int force)

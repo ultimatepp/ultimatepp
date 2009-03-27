@@ -1296,6 +1296,8 @@ public:
 	static Rect   GetVirtualScreenArea();
 	static Rect   GetPrimaryWorkArea();
 	static Rect   GetPrimaryScreenArea();
+	static void   GetWorkArea(Array<Rect>& rc);
+	static Rect   GetWorkArea(Point pt);
 	static int    GetKbdDelay();
 	static int    GetKbdSpeed();
 	static bool   IsAlphaSupported();
