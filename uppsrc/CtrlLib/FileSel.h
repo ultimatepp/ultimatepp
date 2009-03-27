@@ -109,7 +109,7 @@ public:
 bool Load(FileList& list, const String& dir, const char *patterns, bool dirs = false,
           Callback3<bool, const String&, Image&> WhenIcon = CNULL,
           FileSystemInfo& filesystem = StdFileSystemInfo(), const String& search = String(),
-          bool hidden = true);
+          bool hidden = true, bool hiddenfiles = true);
 void SortByName(FileList& list);
 void SortByExt(FileList& list);
 
