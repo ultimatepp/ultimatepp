@@ -828,15 +828,33 @@ static BOOL CALLBACK sMonEnumProc(HMONITOR monitor, HDC hdc, LPRECT lprcMonitor,
 	Zero(moninfo);
 	moninfo.cbSize = sizeof(moninfo);
 	MultiMon().GetMonitorInfo(monitor, &moninfo);
-	*(Rect *)data |= Rect(moninfo.rcWork);
+	((Array<Rect> *)data)->Add(Rect(moninfo.rcWork));
 	return TRUE;
+}
+
+void Ctrl::GetWorkArea(Array<Rect>& rc)
+{
+	MultiMon().EnumDisplayMonitors(NULL, NULL, &sMonEnumProc, (LPARAM)&rc);
 }
 
 Rect Ctrl::GetVirtualWorkArea()
 {
 	Rect out = GetPrimaryWorkArea();
-	MultiMon().EnumDisplayMonitors(NULL, NULL, &sMonEnumProc, (LPARAM)&out);
+	Array<Rect> rc;
+	GetWorkArea(rc);
+	for(int i = 0; i < rc.GetCount(); i++)
+		out |= rc[i];
 	return out;
+}
+
+Rect Ctrl::GetWorkArea(Point pt)
+{
+	Array<Rect> rc;
+	GetWorkArea(rc);
+	for(int i = 0; i < rc.GetCount(); i++)
+		if(rc[i].Contains(pt))
+			return rc[i];
+	return GetPrimaryWorkArea();
 }
 
 Rect Ctrl::GetVirtualScreenArea()
