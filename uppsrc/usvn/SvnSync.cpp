@@ -222,13 +222,14 @@ again:
 	bool changes = false;
 	for(int i = 0; i < list.GetCount(); i++) {
 		int action = list.Get(i, 0);
+		Value v = list.Get(i, 2);
 		if(action == MESSAGE) {
 			if(changes && IsNull(list.Get(i, 3))
 			&& !PromptYesNo("Commit message is empty.&Do you want to continue?"))
 				goto again;
 			changes = false;
 		}
-		else if(action != MODIFY && action != REPOSITORY)
+		else if(action != REPOSITORY && IsNumber(v) && (int)v)
 			changes = true;
 	}
 	SysConsole sys;
