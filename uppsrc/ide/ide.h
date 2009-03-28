@@ -362,7 +362,6 @@ String ResolveTParam(const String& type, const Vector<String>& tparam);
 void   ResolveTParam(Vector<String>& type, const Vector<String>& tparam);
 String Qualify(const String& scope, const String& type);
 int    CharFilterMacro(int c);
-FileSel& DiffFs();
 
 struct AssistEditor : CodeEditor {
 	virtual bool Key(dword key, int count);

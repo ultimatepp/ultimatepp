@@ -130,8 +130,6 @@ public:
 	SvnSync();
 };
 
-void RunFileDiff(String editfile, FileSel& fs);
-void RunPatchDiff(String editfile, FileSel& fs);
 void RunSvnDiff(String editfile);
 
 #endif
