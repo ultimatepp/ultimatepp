@@ -10,6 +10,7 @@ SvnSync::SvnSync()
 	list.ColumnWidths("170 600");
 	list.NoCursor().EvenRowColor();
 	list.SetLineCy(max(Draw::GetStdFontCy(), 20));
+	list.WhenLeftClick = THISBACK(Diff);
 	Sizeable().Zoomable();
 	setup <<= THISBACK(Setup);
 }
@@ -104,6 +105,16 @@ void SvnSync::SyncList()
 		}
 		else
 			list.Add(-1, Null, "", AttrText("Nothing to do").SetFont(StdFont().Italic()));
+	}
+}
+
+void SvnSync::Diff()
+{
+	int cr = list.GetClickRow();
+	if(cr >= 0) {
+		String f = list.Get(cr, 1);
+		if(!IsNull(f))
+			RunSvnDiff(f);
 	}
 }
 

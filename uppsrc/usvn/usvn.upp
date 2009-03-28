@@ -1,7 +1,7 @@
 description "Simple svn GUI frontend, also a module that can be used in other applications";
 
 uses
-	CtrlLib;
+	TextDiffCtrl;
 
 file
 	usvn.h,
@@ -9,7 +9,9 @@ file
 	SvnFs.cpp,
 	SvnWorks.cpp,
 	SvnSync.cpp,
+	Diff.cpp,
 	notes.txt,
+	usvn.iml,
 	usvn.lay,
 	Info readonly separator,
 	Copying;

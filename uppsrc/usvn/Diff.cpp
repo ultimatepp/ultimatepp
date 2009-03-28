@@ -1,4 +1,8 @@
-#include "ide.h"
+#include "usvn.h"
+
+#define IMAGECLASS UsvnImg
+#define IMAGEFILE  "usvn.iml"
+#include <Draw/iml.h>
 
 struct DiffDlg : public TopWindow {
 	TextDiffCtrl         diff;
@@ -70,14 +74,16 @@ struct FileDiff : DiffDlg {
 	
 	typedef FileDiff CLASSNAME;
 	
-	FileDiff();
+	FileDiff(FileSel& fs);
+	
+	FileSel& fs;
 };
 
 void FileDiff::Open()
 {
-	if(!AnySourceFs().ExecuteOpen())
+	if(!fs.ExecuteOpen())
 		return;
-	String f = ~AnySourceFs();
+	String f = ~fs;
 	r <<= f;
 	diff.Set(LoadFile(editfile), extfile = LoadFile(f));
 }
@@ -91,19 +97,20 @@ void FileDiff::Execute(const String& f)
 	DiffDlg::Execute(f);
 }
 
-FileDiff::FileDiff()
+FileDiff::FileDiff(FileSel& fs_)
+: fs(fs_)
 {
 	r.Height(EditField::GetStdHeight());
-	Icon(IdeImg::Diff());
+	Icon(UsvnImg::Diff());
 	diff.InsertFrameRight(r);
 	r <<= THISBACK(Open);
 }
 
-void Ide::Diff()
+void RunFileDiff(String editfile, FileSel& fs)
 {
 	if(IsNull(editfile))
 		return;
-	FileDiff dlg;
+	FileDiff dlg(fs);
 	dlg.Execute(editfile);
 }
 
@@ -117,6 +124,8 @@ FileSel& DiffFs() {
 }
 
 struct PatchDiff : FileDiff {
+	PatchDiff(FileSel& fs) : FileDiff(fs) {}
+	
 	virtual void Open();
 	
 	void Copy(FileIn& in, FileIn& oin, int& l, int ln, int n);
@@ -220,12 +229,12 @@ void PatchDiff::Open()
 	diff.Set(LoadFile(editfile), extfile);
 }
 
-void Ide::Patch()
+void RunPatchDiff(String editfile, FileSel& fs)
 {
 	if(IsNull(editfile))
 		return;
-	PatchDiff dlg;
-	dlg.Execute(editfile);	
+	PatchDiff dlg(fs);
+	dlg.Execute(editfile);
 }
 
 struct SvnDiff : DiffDlg {
@@ -241,42 +250,45 @@ struct SvnDiff : DiffDlg {
 
 void SvnDiff::Execute(const String& f)
 {
-	editfile = f;
-	String log = Sys("svn log " + f);
-	if(log.IsVoid()) {
-		Exclamation("Error executing 'svn log'");
-		return;
-	}
-	StringStream ss(log);
-	while(!ss.IsEof()) {
-		String l = ss.GetLine();
-		if(l[0] == 'r') {
-			Vector<String> h = Split(l, '|');
-			if(h.GetCount() > 3) {
-				String rev = TrimBoth(h[0]);
-				String s = rev;
-				Vector<String> t = Split(h[2], ' ');
-				if(t.GetCount() > 1)
-					s << ' ' << t[0];
-				s << ' ' << TrimBoth(h[1]);
-				while(!ss.IsEof()) {
-					l = ss.GetLine();
-					if(l.GetCount()) {
-						if(l[0] != '-')
-							s << ": " << l;
-						break;
+	{
+		WaitCursor wait;
+		editfile = f;
+		String log = Sys("svn log " + f);
+		if(log.IsVoid()) {
+			Exclamation("Error executing 'svn log'");
+			return;
+		}
+		StringStream ss(log);
+		while(!ss.IsEof()) {
+			String l = ss.GetLine();
+			if(l[0] == 'r') {
+				Vector<String> h = Split(l, '|');
+				if(h.GetCount() > 3) {
+					String rev = TrimBoth(h[0]);
+					String s = rev;
+					Vector<String> t = Split(h[2], ' ');
+					if(t.GetCount() > 1)
+						s << ' ' << t[0];
+					s << ' ' << TrimBoth(h[1]);
+					while(!ss.IsEof()) {
+						l = ss.GetLine();
+						if(l.GetCount()) {
+							if(l[0] != '-')
+								s << ": " << l;
+							break;
+						}
 					}
+					r.Add(rev, s);
 				}
-				r.Add(rev, s);
 			}
 		}
+		if(r.GetCount() == 0) {
+			Exclamation("No parsable history for the file");
+			return;
+		}
+		r.SetIndex(0);
+		Load();
 	}
-	if(r.GetCount() == 0) {
-		Exclamation("No parsable history for the file");
-		return;
-	}
-	r.SetIndex(0);
-	Load();
 	DiffDlg::Execute(f);
 }
 
@@ -289,15 +301,15 @@ SvnDiff::SvnDiff()
 {
 	r.Height(EditField::GetStdHeight());
 	r.SetDropLines(32);
-	Icon(IdeImg::SvnDiff());
+	Icon(UsvnImg::SvnDiff());
 	diff.InsertFrameRight(r);
 	r <<= THISBACK(Load);
 }
 
-void Ide::SvnHistory()
+void RunSvnDiff(String editfile)
 {
 	if(IsNull(editfile))
 		return;
 	SvnDiff dlg;
-	dlg.Execute(editfile);	
+	dlg.Execute(editfile);
 }
