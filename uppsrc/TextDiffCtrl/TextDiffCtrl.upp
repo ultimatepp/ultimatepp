@@ -2,5 +2,6 @@ file
 	TextDiffCtrl.h,
 	TextDiff.cpp,
 	TextCtrl.cpp,
-	DiffCtrl.cpp;
+	DiffCtrl.cpp,
+	Diff.iml;
 

@@ -810,14 +810,16 @@ void Ide::Diff()
 {
 	if(IsNull(editfile))
 		return;
-	RunFileDiff(editfile, AnySourceFs());
+	FileDiff diffdlg(AnySourceFs());
+	diffdlg.Execute(editfile);
 }
 
 void Ide::Patch()
 {
 	if(IsNull(editfile))
 		return;
-	RunPatchDiff(editfile, AnySourceFs());
+	PatchDiff diffdlg(AnySourceFs());
+	diffdlg.Execute(editfile);
 }
 
 void Ide::SvnHistory()

@@ -119,6 +119,46 @@ public:
 	TextDiffCtrl();
 };
 
+struct DiffDlg : public TopWindow {
+	TextDiffCtrl         diff;
+	FrameTop<StaticRect> p;
+	DataPusher           l;
+	Button               write;
+	String               editfile;
+	String               extfile;
+	
+	typedef DiffDlg CLASSNAME;
+	
+	void Write();
+	void Execute(const String& f);
+	
+	DiffDlg();
+};
+
+FileSel& DiffFs();
+
+struct FileDiff : DiffDlg {
+	FrameTop<DataPusher> r;
+	
+	virtual void Open();
+	void Execute(const String& f);
+	
+	typedef FileDiff CLASSNAME;
+	
+	FileDiff(FileSel& fs);
+	
+	FileSel& fs;
+};
+
+struct PatchDiff : FileDiff {
+	PatchDiff(FileSel& fs) : FileDiff(fs) {}
+	
+	virtual void Open();
+	
+	void Copy(FileIn& in, FileIn& oin, int& l, int ln, int n);
+	void LoadDiff(const char *fn);
+};
+
 };
 
 #endif
