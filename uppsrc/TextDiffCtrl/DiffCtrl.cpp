@@ -38,16 +38,19 @@ void TextDiffCtrl::Set(Stream& l, Stream& r)
 	Vector<String> rl = GetLineMap(r);
 	Array<TextSection> sections = CompareLineMaps(ll, rl);
 
-	Point left_pos = left.GetPos();
-	Point right_pos = right.GetPos();
-	int sb_pos = left.GetSb();
+//	Point left_pos = left.GetPos();
+//	Point right_pos = right.GetPos();
+//	int sb_pos = left.GetSb();
 
 	int outln = 0;
 	left.SetCount(0);
 	right.SetCount(0);
+	int firstdiff = -1;
 	for(int i = 0; i < sections.GetCount(); i++) {
 		const TextSection& sec = sections[i];
 		bool diff = !sec.same;
+		if(firstdiff < 0 && diff)
+			firstdiff = outln;
 		Color c1 = (diff ? LtBlue() : SBlack()), c2 = (diff ? LtBlue() : SBlack());
 		int maxcount = max(sec.count1, sec.count2);
 		left.AddCount(maxcount);
@@ -67,6 +70,8 @@ void TextDiffCtrl::Set(Stream& l, Stream& r)
 			right.Set(outln + l, Null, c2, Null, 2);
 		outln += maxcount;
 	}
+	if(firstdiff >= 0)
+		left.SetSb(max(firstdiff - 2, 0));
 }
 
 void TextDiffCtrl::Set(const String& l, const String& r)

@@ -1,4 +1,4 @@
 #ifndef _usvn_icpp_init_stub
 #define _usvn_icpp_init_stub
-#include "CtrlLib/init"
+#include "TextDiffCtrl/init"
 #endif

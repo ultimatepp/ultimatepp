@@ -1,7 +1,7 @@
 #ifndef _usvn_usvn_h_
 #define _usvn_usvn_h_
 
-#include <CtrlLib/CtrlLib.h>
+#include <TextDiffCtrl/TextDiffCtrl.h>
 
 using namespace Upp;
 
@@ -115,6 +115,7 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	
 	void SyncList();
 	void Setup();
+	void Diff();
 
 	typedef SvnSync CLASSNAME;
 
@@ -128,5 +129,9 @@ public:
 	
 	SvnSync();
 };
+
+void RunFileDiff(String editfile, FileSel& fs);
+void RunPatchDiff(String editfile, FileSel& fs);
+void RunSvnDiff(String editfile);
 
 #endif

@@ -1,5 +1,5 @@
 LAYOUT(SvnSyncLayout, 672, 592)
-	ITEM(ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 36))
+	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(4, 64).BottomPosZ(4, 24))
 	ITEM(Button, setup, SetLabel(t_("Setup working directories")).LeftPosZ(88, 144).TopPosZ(564, 24))
 	ITEM(Button, ok, SetLabel(t_("Synchronize!")).RightPosZ(4, 84).BottomPosZ(4, 24))

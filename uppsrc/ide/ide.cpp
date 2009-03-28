@@ -805,3 +805,24 @@ const Workspace& Ide::IdeWorkspace() const
 	}
 	return wspc;
 }
+
+void Ide::Diff()
+{
+	if(IsNull(editfile))
+		return;
+	RunFileDiff(editfile, AnySourceFs());
+}
+
+void Ide::Patch()
+{
+	if(IsNull(editfile))
+		return;
+	RunPatchDiff(editfile, AnySourceFs());
+}
+
+void Ide::SvnHistory()
+{
+	if(IsNull(editfile))
+		return;
+	RunSvnDiff(editfile);
+}
