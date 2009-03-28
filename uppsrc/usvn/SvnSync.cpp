@@ -219,12 +219,18 @@ again:
 				msgmap.GetAdd(works[repoi++].working) = list.Get(i, 3);
 		return;
 	}
-	for(int i = 0; i < list.GetCount(); i++)
-		if(list.Get(i, 0) == MESSAGE && IsNull(list.Get(i, 3))) {
-			if(PromptYesNo("Commit message is empty.&Do you want to continue?"))
-				break;
-			goto again;
+	bool changes = false;
+	for(int i = 0; i < list.GetCount(); i++) {
+		int action = list.Get(i, 0);
+		if(action == MESSAGE) {
+			if(changes && IsNull(list.Get(i, 3))
+			&& !PromptYesNo("Commit message is empty.&Do you want to continue?"))
+				goto again;
+			changes = false;
 		}
+		else if(action != MODIFY && action != REPOSITORY)
+			changes = true;
+	}
 	SysConsole sys;
 	int repoi = 0;
 	int l = 0;
