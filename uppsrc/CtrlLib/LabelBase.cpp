@@ -20,42 +20,6 @@ void CtrlsImageLook(Value *look, int i, const Image& image, int n)
 		*look++ = ChLookWith(CtrlsImg::Get(i++), image);
 }
 
-CtrlsImgLook& CtrlsImgLook::operator()(int i, int n)
-{
-	while(n-- > 0)
-		Add(CtrlsImg::Get(i++));
-	return *this;
-}
-
-CtrlsImgLook& CtrlsImgLook::operator()(int i, const Image& img, Color (*fn)(int i), int n)
-{
-	for(int q = 0; q < n; q++)
-		Add(ChLookWith(CtrlsImg::Get(i++), img, fn, q));
-	return *this;
-}
-
-CtrlsImgLook& CtrlsImgLook::operator()(int i, const Image& img, int n)
-{
-	for(int q = 0; q < n; q++)
-		Add(ChLookWith(CtrlsImg::Get(i++), img));
-	return *this;
-}
-
-CtrlsImgLook::CtrlsImgLook(int i, int n)
-{
-	operator()(i, n);
-}
-
-CtrlsImgLook::CtrlsImgLook(int i, const Image& img, Color (*fn)(int i), int n)
-{
-	operator()(i, img, fn, n);
-}
-
-CtrlsImgLook::CtrlsImgLook(int i, const Image& img, int n)
-{
-	operator()(i, img, n);
-}
-
 String DeAmp(const char *s)
 {
 	String out;

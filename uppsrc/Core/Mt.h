@@ -453,7 +453,7 @@ public:
 	void  Enter()                {}
 	void  Leave()                {}
 
-	struct Lock;
+	class Lock;
 };
 
 typedef Mutex StaticMutex;
