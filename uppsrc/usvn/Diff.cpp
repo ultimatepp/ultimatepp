@@ -1,7 +1,7 @@
 #include "usvn.h"
 
 #define IMAGECLASS UsvnImg
-#define IMAGEFILE  "usvn.iml"
+#define IMAGEFILE  <usvn/usvn.iml>
 #include <Draw/iml.h>
 
 struct SvnDiff : DiffDlg {
