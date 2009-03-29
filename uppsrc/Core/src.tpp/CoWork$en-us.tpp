@@ -10,6 +10,8 @@ topic "class CoWork";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
+[ {{10000@(113.42.0) [s0;%% [*@7;4 CoWork]]}}&]
+[s4; &]
 [s1;:CoWork`:`:class: [@(0.0.255)3 class][3 _][*3 CoWork]&]
 [s2;%% This class is indented as loop`-parallelization tool. Whenever 
 loop iterations are independent (they do not share any data), 

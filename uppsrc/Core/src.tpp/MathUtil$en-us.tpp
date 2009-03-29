@@ -10,7 +10,7 @@ topic "Math utility";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s0; [@3;4 Math utility]&]
+[s0; [*@3;4 Math utility]&]
 [s0;%% A number of mathematical functions and constants.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constant List]]}}&]
