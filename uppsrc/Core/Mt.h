@@ -135,10 +135,10 @@ inline U ReadWithBarrier(const volatile U& b)
 }
 
 template <class U, class V>
-inline void BarrierWrite(volatile U& ptr, V data)
+inline void BarrierWrite(volatile U& dest, V data)
 {
 	WriteMemoryBarrier();
-	ptr = data;
+	dest = data;
 }
 
 class Semaphore : NoCopy {
