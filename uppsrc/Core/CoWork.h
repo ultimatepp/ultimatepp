@@ -38,8 +38,6 @@ public:
 
 	CoWork();
 	~CoWork();
-
-	static void Quit();
 };
 
 #else
@@ -48,7 +46,7 @@ class CoWork : NoCopy {
 public:
 	void     Do(Callback cb)        { cb(); }
 	CoWork&  operator&(Callback cb) { cb(); return *this; }
-	void Finish()                   {}
+	void     Finish()               {}
 };
 
 #endif
