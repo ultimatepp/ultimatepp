@@ -314,20 +314,26 @@ public:
 inline int  AtomicRead(const volatile Atomic& t)      { return ReadWithBarrier(t); }
 inline void AtomicWrite(volatile Atomic& t, int val)  { BarrierWrite(t, val); }
 
-struct Mutex::Lock : NoCopy {
+class Mutex::Lock : NoCopy {
 	Mutex& s;
+
+public:
 	Lock(Mutex& s) : s(s) { s.Enter(); }
 	~Lock()               { s.Leave(); }
 };
 
-struct RWMutex::ReadLock : NoCopy {
+class RWMutex::ReadLock : NoCopy {
 	RWMutex& s;
+
+public:
 	ReadLock(RWMutex& s) : s(s) { s.EnterRead(); }
 	~ReadLock()                 { s.LeaveRead(); }
 };
 
-struct RWMutex::WriteLock : NoCopy {
+class RWMutex::WriteLock : NoCopy {
 	RWMutex& s;
+
+public:
 	WriteLock(RWMutex& s) : s(s) { s.EnterWrite(); }
 	~WriteLock()                 { s.LeaveWrite(); }
 };
@@ -441,7 +447,8 @@ inline int  AtomicInc(volatile Atomic& t)             { ++t; return t; }
 inline int  AtomicDec(volatile Atomic& t)             { --t; return t; }
 inline int  AtomicXAdd(volatile Atomic& t, int incr)  { Atomic x = t; t += incr; return x; }
 
-struct Mutex : NoCopy {
+class Mutex : NoCopy {
+public:
 	bool  TryEnter()             { return true; }
 	void  Enter()                {}
 	void  Leave()                {}
@@ -451,12 +458,14 @@ struct Mutex : NoCopy {
 
 typedef Mutex StaticMutex;
 
-struct Mutex::Lock : NoCopy {
+class Mutex::Lock : NoCopy {
+public:
 	Lock(Mutex&) {}
 	~Lock()                {}
 };
 
-struct RWMutex : NoCopy {
+class RWMutex : NoCopy {
+public:
 	void EnterWrite() {}
 	void LeaveWrite() {}
 

@@ -433,31 +433,6 @@ RWMutex::~RWMutex()
 	pthread_rwlock_destroy(rwlock);
 }
 
-/*
-Event::Event()
-{
-	pthread_mutex_init(mutex, NULL);
-	pthread_cond_init(cond, NULL);
-}
-
-Event::~Event()
-{
-	pthread_mutex_destroy(mutex);
-	pthread_cond_destroy(cond);
-}
-
-void Event::Wait()
-{
-	pthread_mutex_lock(mutex);
-    pthread_cond_wait(cond, mutex);
-	pthread_mutex_unlock(mutex);
-}
-
-void Event::Go()
-{
-	pthread_cond_signal(cond);
-}
-*/
 void Semaphore::Release()
 {
 	sem_post(&sem);
