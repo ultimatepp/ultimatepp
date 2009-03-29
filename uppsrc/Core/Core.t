@@ -228,7 +228,7 @@ ruRU("Пт")
 srSP("Pe")
 trTR("Cu")
 zhCN("")
-zhTW("")
+zhTW("Fri")
 
 T_("date\vSa")
 csCZ("So")
