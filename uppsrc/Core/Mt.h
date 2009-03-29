@@ -419,7 +419,7 @@ if(!ReadWithBarrier(ptr)) { \
 	cs.Leave(); \
 }
 
-struct LazyUpdate {
+class LazyUpdate {
 	mutable Mutex mutex;
 	mutable bool  dirty;
 
@@ -488,7 +488,7 @@ struct RWMutex::WriteLock : NoCopy {
 
 typedef RWMutex StaticRWMutex;
 
-struct LazyUpdate {
+class LazyUpdate {
 	mutable bool  dirty;
 
 public:
