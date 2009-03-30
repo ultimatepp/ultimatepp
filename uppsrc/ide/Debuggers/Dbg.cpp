@@ -132,7 +132,7 @@ String Dbg::FastCmd(const char *command)
 	bool lock = false;
 	if(command) {
 		LLOG("FastCmd: " << command);
-		dbg->Write(String(command) + "\n"); // TRC 04/10/20: must not use \r\n as LINUX hates it
+		dbg->Write(String(command) + "\n");
 		PutVerbose(command);
 	}
 	String result;

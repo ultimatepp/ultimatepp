@@ -7,12 +7,14 @@ SvnSync::SvnSync()
 	list.AddIndex();
 	list.AddColumn("Action");
 	list.AddColumn("Path");
-	list.ColumnWidths("170 600");
+	list.AddColumn("Changes");
+	list.ColumnWidths("170 500 100");
 	list.NoCursor().EvenRowColor();
 	list.SetLineCy(max(Draw::GetStdFontCy(), 20));
 	list.WhenLeftClick = THISBACK(Diff);
 	Sizeable().Zoomable();
 	setup <<= THISBACK(Setup);
+	BackPaint();
 }
 
 void SvnSync::Setup()
@@ -34,7 +36,8 @@ void SvnSync::SyncList()
 		String path = GetFullPath(w.working);
 		list.Add(REPOSITORY, path,
 		         AttrText("Working directory").SetFont(StdFont().Bold()).Ink(White).Paper(Blue),
-		         AttrText(path).SetFont(Arial(20).Bold()).Paper(Blue).Ink(White));
+		         AttrText(path).SetFont(Arial(20).Bold()).Paper(Blue).Ink(White),
+		         AttrText("").SetFont(Arial(20).Bold()).Paper(Blue).Ink(White));
 		list.SetLineCy(list.GetCount() - 1, 26);
 		Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
 		bool actions = false;
@@ -87,8 +90,12 @@ void SvnSync::SyncList()
 							list.Add(action, file,
 							         action < 0 ? Value(AttrText(an).Ink(color)) : Value(true),
 							         AttrText("  " + file.Mid(path.GetCount() + 1)).Ink(color));
-							if(action >= 0)
+							if(action >= 0) {
 								list.SetCtrl(ii, 0, revert.Add().SetLabel("Revert\n" + an).NoWantFocus());
+								Ctrl& b = diff.Add().SetLabel("Changes..").SizePos().NoWantFocus();
+								b <<= THISBACK1(DoDiff, ii);
+								list.SetCtrl(ii, 2, b);
+							}
 						}
 					}
 				}
@@ -108,14 +115,18 @@ void SvnSync::SyncList()
 	}
 }
 
+void SvnSync::DoDiff(int ii)
+{
+	String f = list.Get(ii, 1);
+	if(!IsNull(f))
+		RunSvnDiff(f);
+}
+
 void SvnSync::Diff()
 {
 	int cr = list.GetClickRow();
-	if(cr >= 0) {
-		String f = list.Get(cr, 1);
-		if(!IsNull(f))
-			RunSvnDiff(f);
-	}
+	if(cr >= 0)
+		DoDiff(cr);
 }
 
 #ifdef PLATFORM_WIN32
@@ -326,11 +337,6 @@ bool IsSvnDir(const String& p)
 #ifdef flagMAIN
 GUI_APP_MAIN
 {
-//	SvnSel svn;
-//	svn.Select();
-//	svn.Select("svn://10.0.0.19/upp", "", "");
-//	return;
-
 	SvnSync ss;
 	String mp = ConfigFile("usvn.msg");
 	ss.SetMsgs(LoadFromFile(mp));

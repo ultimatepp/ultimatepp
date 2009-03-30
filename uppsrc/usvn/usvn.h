@@ -109,12 +109,14 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	
 	Array<Switch>            revert;
 	Array<EditString>        message;
+	Array<Button>            diff;
 	ArrayMap<String, String> msgmap;
 	
 	SvnWorks works;
 	
 	void SyncList();
 	void Setup();
+	void DoDiff(int ii);
 	void Diff();
 
 	typedef SvnSync CLASSNAME;

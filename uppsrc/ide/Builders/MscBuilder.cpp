@@ -485,7 +485,7 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(HasAnyDebug())
 				link << " -incremental:yes -debug -OPT:NOREF";
 			else
-				link << " -incremental:no -release -OPT:REF,ICF,NOWIN98";
+				link << " -incremental:no -release -OPT:REF,ICF";
 			if(IsMscArm())
 				link << " -subsystem:windowsce,4.20 /ARMPADCODE -NODEFAULTLIB:\"oldnames.lib\" ";
 			else
