@@ -169,9 +169,9 @@ inline bool IsCJKIdeograph(int c)  { return c >= 0x2e80 && c <= 0xdfaf || c >= 0
 
 word UnicodeCombine(word chr, word combine);
 
-void ToUpper(wchar *t, const char *s, int len);
-void ToLower(wchar *t, const char *s, int len);
-void ToAscii(wchar *t, const char *s, int len);
+void ToUpper(wchar *t, const wchar *s, int len);
+void ToLower(wchar *t, const wchar *s, int len);
+void ToAscii(wchar *t, const wchar *s, int len);
 
 void ToUpper(wchar *s, int len);
 void ToLower(wchar *s, int len);
