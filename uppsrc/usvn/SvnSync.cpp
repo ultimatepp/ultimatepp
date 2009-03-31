@@ -339,9 +339,8 @@ GUI_APP_MAIN
 {
 	SvnSync ss;
 	String mp = ConfigFile("usvn.msg");
-	ss.SetMsgs(LoadFromFile(mp));
+	ss.SetMsgs(LoadFile(mp));
 	ss.Perform();
-	SaveToFile(mp, ss.GetMsgs());
+	SaveFile(mp, ss.GetMsgs());
 }
 #endif
-
