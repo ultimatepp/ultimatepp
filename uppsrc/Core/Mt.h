@@ -206,7 +206,7 @@ public:
 
 	~Mutex()                     { DeleteCriticalSection(&section); }
 
-	struct Lock;
+	class Lock;
 };
 
 /* Win32 RWMutex implementation by Chris Thomasson, cristom@comcast.net */
@@ -226,8 +226,8 @@ public:
 	RWMutex();
 	~RWMutex();
 
-	struct ReadLock;
-	struct WriteLock;
+	class ReadLock;
+	class WriteLock;
 };
 
 class ConditionVariable {
@@ -274,7 +274,7 @@ public:
 #endif
 	void  Leave()             { pthread_mutex_unlock(mutex); }
 
-	struct Lock;
+	class Lock;
 
 	Mutex();
 	~Mutex()           { pthread_mutex_destroy(mutex); }
@@ -292,8 +292,8 @@ public:
 	RWMutex();
 	~RWMutex();
 
-	struct ReadLock;
-	struct WriteLock;
+	class ReadLock;
+	class WriteLock;
 };
 
 class ConditionVariable {
@@ -472,16 +472,16 @@ public:
 	void EnterRead() {}
 	void LeaveRead() {}
 
-	struct ReadLock;
-	struct WriteLock;
+	class ReadLock;
+	class WriteLock;
 };
 
-struct RWMutex::ReadLock : NoCopy {
+class RWMutex::ReadLock : NoCopy {
 	ReadLock(RWMutex&) {}
 	~ReadLock()        {}
 };
 
-struct RWMutex::WriteLock : NoCopy {
+class RWMutex::WriteLock : NoCopy {
 	WriteLock(RWMutex&) {}
 	~WriteLock()        {}
 };
