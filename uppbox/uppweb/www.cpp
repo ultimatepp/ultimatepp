@@ -7,14 +7,13 @@
 #define LLOG(x)  // LOG(x)
 
 #ifdef PLATFORM_WIN32
-//String rootdir = "e:\\src\\";
-String rootdir = "u:\\";
+String rootdir = "u:\\upp.src";
 String uppbox =    rootdir + "uppbox";
 String uppsrc =    rootdir + "uppsrc";
 String reference = rootdir + "reference";
 String examples =  rootdir + "examples";
-String targetdir = rootdir + "uppwww";
-String diffdir   = rootdir + "wwwupp";
+String targetdir = "u:\\uppwww";
+String diffdir   = "u:\\wwwupp";
 #else
 String rootdir;
 String uppbox;
@@ -179,9 +178,6 @@ String QtfAsHtml(const char *qtf, Index<String>& css,
 }
 
 #define TOPICFILE <uppweb/www.tpp/all.i>
-#include <Core/topic_group.h>
-
-#define TOPICFILE <uppweb/www_news.tpp/all.i>
 #include <Core/topic_group.h>
 
 #define TOPICFILE <ide/app.tpp/all.i>
@@ -438,22 +434,23 @@ void ExportPage(int i)
 
 GUI_APP_MAIN
 {
+#ifdef PLATFORM_POSIX
 	StdLogSetup(LOG_COUT);
-
-	RLOG("--- uppweb started at " << GetSysTime());
-
 	rootdir = GetHomeDirFile("upp.src");
+	targetdir = GetHomeDirFile("uppwww");
+	diffdir   = GetHomeDirFile("wwwupp");
+#endif
+
 	uppbox =    AppendFileName(rootdir, "uppbox");
 	uppsrc =    AppendFileName(rootdir, "uppsrc");
 	reference = AppendFileName(rootdir, "reference");
 	examples =  AppendFileName(rootdir, "examples");
-	targetdir = GetHomeDirFile("uppwww");
-	diffdir   = GetHomeDirFile("wwwupp");
+
+	RLOG("--- uppweb started at " << GetSysTime());
 
 	DeleteFolderDeep(targetdir);
 	DirectoryCreate(targetdir);
 
-	DUMP(uppsrc);
 	GatherRefLinks(uppsrc);
 
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));

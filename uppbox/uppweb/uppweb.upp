@@ -19,7 +19,6 @@ file
 	cpp.cpp,
 	www.cpp,
 	www.tpp,
-	www_news.tpp,
 	article.tpp,
 	reference.tpp,
 	examples.tpp,

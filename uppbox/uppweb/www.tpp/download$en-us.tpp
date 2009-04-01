@@ -9,8 +9,14 @@ ttp://code.google.com/p/upp`-mirror/source/checkout]&]
 `- if you want to accelerate U`+`+ development, use this and 
 report bugs!]&]
 [s0;2 &]
+[s0; [2 The automated releases are provided by Google Code at:]&]
 [s0;2 &]
+[s0;= [2  ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 http://code.go
+ogle.com/p/upp`-mirror/downloads/list]&]
 [s0;2 &]
+[s0; [2 Note that latest builds are generally considered the most stable.]&]
+[s0;2 &]
+[s0; [2 There are also older, platform specific releases on Sourceforge.net.]&]
 [s0; [*2 upp][2  package contains stable releases of Ultimate`+`+ system. 
 Each ][@(128.0.255)2 release][2  contains several distributions:]&]
 [s0;2 &]
