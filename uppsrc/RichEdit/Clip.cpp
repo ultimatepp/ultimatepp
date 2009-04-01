@@ -164,6 +164,7 @@ void RichEdit::Copy()
 	if(IsSelection()) {
 		ClearClipboard();
 		RichText txt = GetSelection();
+		DUMP(AsQTF(txt));
 		AppendClipboardUnicodeText(txt.GetPlainText());
 		Value clip = RawPickToValue(txt);
 		AppendClipboard("text/QTF", clip, sQTF);

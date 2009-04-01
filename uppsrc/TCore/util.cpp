@@ -1211,6 +1211,23 @@ String InstallServiceCmd(String service_name, String app_name, String arguments)
 }
 #endif
 
+int ComparePath(const char *a, const char *b, int length) {
+	ASSERT(length >= 0);
+	if(length <= 0)
+		return 0;
+#if PLATFORM_PATH_HAS_CASE
+	return memcmp(a, b, length);
+#else
+	return MemICmp(a, b, length);
+#endif
+}
+
+int ComparePath(String fa, String fb) {
+	int la = fa.GetLength(), lb = fb.GetLength();
+	int r = ComparePath(fa, fb, min(la, lb));
+	return r ? r : cmp(la, lb);
+}
+
 String AppendPath(String s, String new_path)
 {
 	String np = new_path;

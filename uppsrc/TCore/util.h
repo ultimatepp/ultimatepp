@@ -260,6 +260,11 @@ inline Rectf PeekIDR(const byte *p)
 	return Rectf(PeekID(p), PeekID(p + 8), PeekID(p + 16), PeekID(p + 24));
 }
 
+int     ComparePath(const char *a, const char *b, int length);
+int     ComparePath(String fa, String fb);
+
+inline bool LessPath(String fa, String fb) { return ComparePath(fa, fb) < 0; }
+
 String AppendPath(String s, String new_path);
 String AppendPathList(String s, String path_list);
 
