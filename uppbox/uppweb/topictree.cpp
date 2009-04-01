@@ -36,7 +36,6 @@ void GatherRefLinks(const char *upp)
 		if(pff.IsFolder()) {
 			String package = pff.GetName();
 			String pdir = AppendFileName(upp, package);
-			RLOG("GatherRefLinks " << pdir);
 			TopicLink tl;
 			tl.package = package;
 			for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next()) {
@@ -97,13 +96,17 @@ struct GatherLinkIterator : RichText::Iterator {
 
 String TopicFileName(const char *dir, const char *topic)
 {
+	DUMP(dir);
+	DUMP(topic);
 	TopicLink tl = ParseTopicLink(topic);
 	return AppendFileName(dir, AppendFileName(tl.package, AppendFileName(tl.group + ".tpp", tl.topic + ".tpp")));
 }
 
 String TopicFileName(const char *topic)
 {
+	DUMP(topic);
 	String p = TopicFileName(uppbox, topic);
+	DUMP(p);
 	if(FileExists(p))
 		return p;
 	return TopicFileName(uppsrc, topic);
@@ -123,11 +126,13 @@ static void sGatherTopics(VectorMap<String, Topic> *map, const char *topic)
 String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& title)
 {
 	static StaticCriticalSection mapl;
+	LLOG("Gather topics: " << topic);
 	int q;
 	INTERLOCKED_(mapl)
 		q = map.Find(topic);
 	if(q < 0) {
 		LLOG("GatherTopics " << topic);
+		DUMP(TopicFileName(topic));
 		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
 		title = p.title;
 		String t = p;
