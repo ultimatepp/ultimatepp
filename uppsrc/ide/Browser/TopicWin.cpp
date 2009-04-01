@@ -10,7 +10,7 @@ TopicEditor::TopicEditor()
 	editor.InsertFrame(0, TopSeparatorFrame());
 	editor.InsertFrame(1, tool);
 	SetBar();
-	Font tf = Arial(16).Bold();
+	Font tf = StdFont().Bold();
 	int dcy = EditField::GetStdHeight(tf);
 	title.SetFont(tf);
 	right.Add(title.HSizePos(2, 2).TopPos(0, dcy));

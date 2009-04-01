@@ -2,28 +2,20 @@
 bool PatternMatch(const char *p, const char *s);
 bool PatternMatchMulti(const char *p, const char *s);
 
-const char  *GetFileNamePos(const char *fileName);
-const char  *GetFileExtPos(const char *fileName);
+const char  *GetFileNamePos(const char *path);
+const char  *GetFileExtPos(const char *path);
 
-bool    HasFileName(const char *fp);
-bool    HasFileExt(const char *fp);
-bool    HasWildcards(const char *fp);
-bool    IsFullPath(const char *fp);
+bool    HasFileExt(const char *path);
+bool    HasWildcards(const char *path);
+bool    IsFullPath(const char *path);
 
-String  GetFileDirectory(const char *fp); // with DIR_SEP at the end
-String  GetFileFolder(const char *fileName); // without DIR_SEP at the end, if not Win32 root
-String  GetFileTitle(const char *fp);
-String  GetFileExt(const char *fp);
-String  GetFileName(const char *fp);
+String  GetFileDirectory(const char *path); // with DIR_SEP at the end
+String  GetFileFolder(const char *path); // without DIR_SEP at the end, if not Win32 root
+String  GetFileTitle(const char *path);
+String  GetFileExt(const char *path);
+String  GetFileName(const char *path);
 
-String  AppendFileName(const String& path, const char *fp);
-
-bool PathIsEqual(const char *p1, const char *p2);
-
-int     ComparePath(const char *a, const char *b, int length);
-int     ComparePath(String fa, String fb);
-
-inline bool LessPath(String fa, String fb) { return ComparePath(fa, fb) < 0; }
+String  AppendFileName(const String& path, const char *filename);
 
 String WinPath(const char *path);
 String UnixPath(const char *path);
@@ -36,8 +28,8 @@ inline String  NativePath(const char *path) { return WinPath(path); }
 inline String  NativePath(const char *path) { return UnixPath(path); }
 #endif
 
-String  AppendExt(const char *fn, const char *ext);
-String  ForceExt(const char *fn, const char *ext);
+String  AppendExt(const char *path, const char *ext);
+String  ForceExt(const char *path, const char *ext);
 
 String  GetFileOnPath(const char *file, const char *paths, bool current = true, const char *curdir = NULL);
 
@@ -166,6 +158,8 @@ bool        IsFolder(String path);
 
 String      NormalizePath(const char *path);
 String      NormalizePath(const char *path, const char *currdir);
+
+bool        PathIsEqual(const char *p1, const char *p2);
 
 bool        FileCopy(const char *oldname, const char *newname);
 bool        FileMove(const char *oldname, const char *newname);
