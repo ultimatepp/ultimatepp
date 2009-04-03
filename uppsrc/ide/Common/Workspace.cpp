@@ -163,6 +163,16 @@ bool IsFullDirectory(const String& d) {
 	return false;
 }
 
+bool IsFolder(const String& path)
+{
+	if(IsNull(path) || *path.Last() == '\\' || *path.Last() == '/' || *path.Last() == ':')
+		return true;
+	if(path.Find('?') >= 0 || path.Find('*') >= 0)
+		return false;
+	FindFile ff(path);
+	return ff && ff.IsDirectory();
+}
+
 String PackagePath(const String& name) {
 	String uppfile = NativePath(name);
 	if(IsFullPath(uppfile)) return NormalizePath(uppfile);

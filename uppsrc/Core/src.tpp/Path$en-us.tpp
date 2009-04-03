@@ -12,6 +12,17 @@ topic "";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 File path utilities]]}}&]
 [s9; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* FileTime]]}}&]
+[s3; &]
+[s1;:FileTime`:`:struct: [@(0.0.255)3 struct][3 _][*3 FileTime][3 _:_][@(0.0.255)3 public][3 _][*@3;3 C
+ompareRelOps][@(0.0.255)3 <const][3 _][*3 FileTime][@(0.0.255)3 `&][3 , 
+`&Compare`_FileTime][@(0.0.255)3 >][3 _]&]
+[s2;%% FileTime is a structure that encapsulates host specific type 
+used for file or directory timestamps.&]
+[s2;%% It has defined ordering and can be compared to Time. Time 
+has conversion constructor from FileTime and AsFileTime method 
+for backwards conversion.&]
+[s9;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Function List]]}}&]
 [s3; &]
 [s5;:PatternMatch`(const char`*`,const char`*`): [@(0.0.255) bool]_[* PatternMatch]([@(0.0.255) c
@@ -147,9 +158,157 @@ nst]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3
 is no extension, appends it. Returns result.&]
 [s3;%% &]
 [s4; &]
+[s5;:GetFileOnPath`(const char`*`,const char`*`,bool`,const char`*`): [_^String^ String
+]_[* GetFileOnPath]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 paths], [@(0.0.255) bool]_[*@3 current]_`=_[@(0.0.255) t
+rue], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 curdir]_`=_NULL)&]
+[s2;%% Attempts to find a [%-*@3 file] on semicolon separated list 
+directory [%-*@3 paths]. If [%-*@3 current] is true, [%-*@3 curdir].is 
+added to this list. If [%-*@3 curdir] is NULL, the real current 
+directory (obtained using GetCurrentDirectory) is used instead.&]
+[s3;%% &]
+[s4; &]
+[s5;:GetCurrentDirectory`(`): [_^String^ String]_[* GetCurrentDirectory]()&]
+[s2;%% Returns the current directory.&]
+[s3; &]
+[s4; &]
+[s5;:GetFileLength`(const char`*`): [_^int64^ int64]_[* GetFileLength]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 path])&]
+[s2;%% Returns the length of file at [%-*@3 path ]or negative number 
+if file does not exist.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileExists`(const char`*`): [@(0.0.255) bool]_[* FileExists]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 path])&]
+[s2;%% Returns true if [%-*@3 path] represents a file.&]
+[s3;%% &]
+[s4; &]
+[s5;:DirectoryExists`(const char`*`): [@(0.0.255) bool]_[* DirectoryExists]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 path])&]
+[s2;%% Returns true if [%-*@3 path] represents a directory.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileGetTime`(const char`*`): [_^Time^ Time]_[* FileGetTime]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 path])&]
+[s2;%% Returns the last write time of file at [%-*@3 path] or Null 
+if file does not exist.&]
+[s3;%% &]
+[s4; &]
+[s5;:SetFileTime`(const char`*`,FileTime`): [@(0.0.255) bool]_[* SetFileTime]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path], [_^FileTime^ FileTime]_[*@3 ft])&]
+[s2;%% Sets the last write time of file at [%-*@3 path ]to [%-*@3 ft].&]
+[s3;%% &]
+[s4; &]
+[s5;:FileSetTime`(const char`*`,Time`): [@(0.0.255) bool]_[* FileSetTime]([@(0.0.255) const
+]_[@(0.0.255) char]_`*[*@3 path], [_^Time^ Time]_[*@3 time])&]
+[s2;%% Sets the last write time of file at [%-*@3 path ]to [%-*@3 time].&]
+[s3;%% &]
+[s4; &]
+[s5;:TimeToFileTime`(Time`): [_^FileTime^ FileTime]_[* TimeToFileTime]([_^Time^ Time]_[*@3 ti
+me])&]
+[s2;%% Converts Time to FileTime.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileCopy`(const char`*`,const char`*`): [@(0.0.255) bool]_[* FileCopy]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 oldpath], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 newpath])
+&]
+[s2;%% Copies a file at [%-*@3 oldpath] to a new file at [%-*@3 newpath] 
+(if already exists, overwrites it). Returns true on success.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileMove`(const char`*`,const char`*`): [@(0.0.255) bool]_[* FileMove]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 oldpath], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 newpath])
+&]
+[s2;%% Moves a file at [%-*@3 oldpath] to a new file at [%-*@3 newpath] 
+(if already exists, overwrites it). Returns true on success.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileDelete`(const char`*`): [@(0.0.255) bool]_[* FileDelete]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 path])&]
+[s2;%% Deletes file at [%-*@3 path]. Returns true on success.&]
+[s3;%% &]
+[s4; &]
+[s5;:DirectoryCreate`(const char`*`,int`): [@(0.0.255) bool]_[* DirectoryCreate]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) int]_[*@3 mode]_`=_[@3 0755])&]
+[s6; `[POSIX`]&]
+[s2;%% Creates new directory at [%-*@3 path] with access [%-*@3 mode].&]
+[s3;%% &]
+[s4; &]
+[s5;:RealizeDirectory`(const String`&`,int`): [@(0.0.255) bool]_[* RealizeDirectory]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 path], [@(0.0.255) int]_[*@3 mode]_`=_[@3 0755])
+&]
+[s6; `[POSIX`]&]
+[s2;%% Creates all missing directories on [%-*@3 path] with access 
+[%-*@3 mode].&]
+[s3;%% &]
+[s4; &]
+[s5;:RealizePath`(const String`&`,int`): [@(0.0.255) bool]_[* RealizePath]([@(0.0.255) cons
+t]_[_^String^ String][@(0.0.255) `&]_[*@3 path], [@(0.0.255) int]_[*@3 mode]_`=_[@3 0755])&]
+[s6; `[POSIX`]&]
+[s2; [%% Same as RealizeDirectory(GetFileFolder(][*@3 path][%% ), ][*@3 mode][%% ) 
+`- creates all directories required before writing file at ][*@3 path.]&]
+[s3;%% &]
+[s4; &]
+[s5;:DirectoryCreate`(const char`*`): [@(0.0.255) bool]_[* DirectoryCreate]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 path])&]
+[s6; `[Win32`]&]
+[s2;%% Creates new directory.&]
+[s3;%% &]
+[s4; &]
+[s5;:RealizeDirectory`(const String`&`): [@(0.0.255) bool]_[* RealizeDirectory]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 path])&]
+[s6; `[Win32`]&]
+[s2;%% Creates all missing directories on [%-*@3 path].&]
+[s3;%% &]
+[s4; &]
+[s5;:RealizePath`(const String`&`): [@(0.0.255) bool]_[* RealizePath]([@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 path])&]
+[s6; `[Win32`]&]
+[s2; [%% Same as RealizeDirectory(GetFileFolder(][*@3 path][%% )) `- creates 
+all directories required before writing file at ][*@3 path.]&]
+[s3;%% &]
+[s4; &]
+[s5;:DirectoryDelete`(const char`*`): [@(0.0.255) bool]_[* DirectoryDelete]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 path])&]
+[s2;%% Deletes a directory at [%-*@3 path]. Returns true on success.&]
+[s3;%% &]
+[s4; &]
+[s5;:NormalizePath`(const char`*`,const char`*`): [_^String^ String]_[* NormalizePath]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 currdir])
+&]
+[s2;%% Converts [%-*@3 path] to normalized format. If [%-*@3 path] is 
+relative, it is converted to absolute using [%-*@3 currdir] as 
+reference point. All `"..`" and `".`" segments of path are resolved 
+and removed from the result.&]
+[s3;%% &]
+[s4; &]
+[s5;:NormalizePath`(const char`*`): [_^String^ String]_[* NormalizePath]([@(0.0.255) const]_
+[@(0.0.255) char]_`*[*@3 path])&]
+[s2;%% Same as NormalizePath([%-*@3 path]., GetCurrentDirectory()).&]
+[s3;%% &]
+[s4; &]
 [s5;:PathIsEqual`(const char`*`,const char`*`): [@(0.0.255) bool]_[* PathIsEqual]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 p1], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p2])&]
 [s2;%% Returns true if [%-*@3 p1] and [%-*@3 p2] identify the same file 
-or directory.&]
+or directory. Both paths can be relative (current directory is 
+then used as reference point) and can contain segments `".`" 
+or `"..`".&]
+[s3;%% &]
+[s4; &]
+[s5;:DeleteFolderDeep`(const char`*`): [@(0.0.255) bool]_[* DeleteFolderDeep]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 dir])&]
+[s2;%% Removes [%-*@3 dir] and everything it contains. Returns true 
+on success.&]
+[s3;%% &]
+[s4; &]
+[s5;:GetTempPath`(`): [_^String^ String]_[* GetTempPath]()&]
+[s2;%% Returns a path to directory suitable for storing temporary 
+files.&]
+[s3; &]
+[s4; &]
+[s5;:GetTempFileName`(const char`*`): [_^String^ String]_[* GetTempFileName]([@(0.0.255) co
+nst]_[@(0.0.255) char]_`*[*@3 prefix]_`=_NULL)&]
+[s2;%% Returns a unique path of temporary file. If [%-*@3 prefix ]is 
+not NULL, it is prepended to the filename.&]
 [s3;%% &]
 [s0; ]

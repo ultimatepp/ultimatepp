@@ -20,6 +20,7 @@ void HttpClient::Init()
 	max_content_size = DEFAULT_MAX_CONTENT_SIZE;
 	keepalive = false;
 	std_headers = true;
+	hasurlvar = false;
 	method = METHOD_GET;
 }
 
@@ -46,6 +47,8 @@ HttpClient& HttpClient::URL(const char *u)
 	t = u;
 	while(*u && *u != ':' && *u != '/' && *u != '?')
 		u++;
+	if(*u == '?' && u[1])
+		hasurlvar = true;
 	host = String(t, u);
 	port = DEFAULT_PORT;
 	if(*u == ':')
@@ -123,11 +126,23 @@ String HttpClient::ReadUntilProgress(char until, int start_time, int end_time, G
 	return String::GetVoid();
 }
 
-HttpClient& HttpClient::PostU(const char *key, const String& data)
+HttpClient& HttpClient::Post(const char *id, const String& data)
 {
 	if(postdata.GetCount())
 		postdata << '&';
-	postdata << key << '=' << UrlEncode(data);
+	postdata << id << '=' << UrlEncode(data);
+	return *this;
+}
+
+HttpClient& HttpClient::UrlVar(const char *id, const String& data)
+{
+	int c = *path.Last();
+	if(hasurlvar && c != '&')
+		path << '&';
+	if(!hasurlvar && c != '?')
+		path << '?';
+	path << id << '=' << UrlEncode(data);
+	hasurlvar = true;
 	return *this;
 }
 
