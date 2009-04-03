@@ -18,9 +18,9 @@ Irenkov Alexander, Gabriel Schmotzer, Domingo Alvarez Duarte,
 Andrei Cosma, Koldo Ramirez, Tom Olá, George Brink]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
-Luis Ramirez]&]
+Luis Ramirez, Gabriel Schmotzer]&]
 [s0;i704;O9; PR `& SEO:-|[* Pavel_Stratil]&]
-[s0;i704;O9; U`+`+ Logo:[+117 -|][* Robert_Vroemisse]&]
+[s0;i704;O9; U`+`+ Logo:[+117 -|][* Robert_Vroemisse, ]&]
 [s0;+108 &]
 [ {{3333:6667 [s0; Ultimate`+`+ team email]
 :: [s0; [^mailto`:upp`@ntllib`.org^ upp`@ntllib.org]]

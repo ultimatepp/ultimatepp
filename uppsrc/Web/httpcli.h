@@ -16,6 +16,7 @@ public:
 	HttpClient&  Path(String p)                   { path = p; return *this; }
 	HttpClient&  User(String u, String p)         { username = u; password = p; return *this; }
 	HttpClient&  URL(const char *url);
+	HttpClient&  Url(const char *id, const String& data);
 	HttpClient&  KeepAlive(bool k)                { keepalive = k; return *this; }
 	HttpClient&  Proxy(String h, int p)           { proxy_host = h; proxy_port = p; return *this; }
 	HttpClient&  Proxy(const char *url);
@@ -39,8 +40,10 @@ public:
 	HttpClient&  PostData(String pd)              { postdata = pd; return *this; }
 	HttpClient&  PostUData(String pd)             { return PostData(UrlEncode(pd)); }
 	HttpClient&  Post(const String& data)         { Post(); return PostData(data); }
-	HttpClient&  PostU(const String& data)        { Post(); return PostUData(data); }
-	HttpClient&  PostU(const char *key, const String& data);
+	HttpClient&  Post(const char *id, const String& data);
+
+	HttpClient&  UrlVar(const char *id, const String& data);
+	HttpClient&  operator()(const char *id, const String& data) { return UrlVar(id, data); }
 
 	String       Execute(Gate2<int, int> progress = false);
 	String       ExecuteRedirect(int max_redirect = DEFAULT_MAX_REDIRECT,
@@ -73,8 +76,6 @@ public:
 
 	String       host;
 	int          port;
-	bool         is_post;
-	bool         std_headers;
 	int          method;
 	String       proxy_host;
 	int          proxy_port;
@@ -89,11 +90,15 @@ public:
 	String       contenttype;
 	String       postdata;
 
+	bool         is_post;
+	bool         std_headers;
+	bool         hasurlvar;
+	bool         is_redirect;
+
 	int          status_code;
 	String       status_line;
 	String       server_headers;
 
-	bool         is_redirect;
 	String       redirect_url;
 
 	enum {

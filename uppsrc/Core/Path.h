@@ -58,11 +58,11 @@ class  FindFile {
 
 	void        Init();
 	bool        Next0();
+	void        Close();
 
 public:
-	bool        Search(const char *name);
+	bool        Search(const char *path);
 	bool        Next();
-	void        Close();
 
 	dword       GetAttributes() const;
 	String      GetName() const;
@@ -152,38 +152,36 @@ inline bool operator!=(FileTime a, Time b) { return Time(a) != b; }
 
 #endif
 
-int64       GetFileLength(const char *name);
-bool        FileExists(const char *name);
-bool        IsFolder(String path);
-
-String      NormalizePath(const char *path);
-String      NormalizePath(const char *path, const char *currdir);
-
-bool        PathIsEqual(const char *p1, const char *p2);
-
-bool        FileCopy(const char *oldname, const char *newname);
-bool        FileMove(const char *oldname, const char *newname);
-bool        FileDelete(const char *filename);
-
-bool        DirectoryExists(const char *name);
-
-#ifdef PLATFORM_POSIX
-bool        DirectoryCreate(const char *dirname, int mode = 0755);
-bool        RealizeDirectory(const String& dir, int mode = 0755);
-bool        RealizePath(const String& file, int mode = 0755);
-#else
-bool        DirectoryCreate(const char *dirname);
-bool        RealizeDirectory(const String& dir);
-bool        RealizePath(const String& file);
-#endif
-
-bool        DirectoryDelete(const char *dirname);
+int64       GetFileLength(const char *path);
+bool        FileExists(const char *path);
+bool        DirectoryExists(const char *path);
 
 struct Time;
-Time        FileGetTime(const char *filename);
-bool        SetFileTime(const char *filename, FileTime ft);
-bool        FileSetTime(const char *filename, Time time);
+Time        FileGetTime(const char *path);
+bool        SetFileTime(const char *path, FileTime ft);
+bool        FileSetTime(const char *path, Time time);
 FileTime    TimeToFileTime(Time time);
+
+bool        FileCopy(const char *oldpath, const char *newpath);
+bool        FileMove(const char *oldpath, const char *newpath);
+bool        FileDelete(const char *path);
+
+#ifdef PLATFORM_POSIX
+bool        DirectoryCreate(const char *path, int mode = 0755);
+bool        RealizeDirectory(const String& path, int mode = 0755);
+bool        RealizePath(const String& path, int mode = 0755);
+#else
+bool        DirectoryCreate(const char *path);
+bool        RealizeDirectory(const String& path);
+bool        RealizePath(const String& path);
+#endif
+
+bool        DirectoryDelete(const char *path);
+
+String      NormalizePath(const char *path, const char *currdir);
+String      NormalizePath(const char *path);
+
+bool        PathIsEqual(const char *p1, const char *p2);
 
 #ifdef PLATFORM_POSIX
 inline bool DeleteFile(const char *fn)      { return unlink(fn) == 0; }

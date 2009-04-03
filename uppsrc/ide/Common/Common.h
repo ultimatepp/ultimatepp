@@ -196,6 +196,7 @@ String LocalPath(const String& filename);
 Vector<String> IgnoreList();
 
 bool   IsFullDirectory(const String& d);
+bool   IsFolder(const String& path);
 
 bool   IsCSourceFile(const char *path);
 bool   IsCHeaderFile(const char *path);

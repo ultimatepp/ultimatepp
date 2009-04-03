@@ -687,16 +687,6 @@ bool DirectoryExists(const char *name) {
 	return ff && ff.IsDirectory();
 }
 
-bool IsFolder(String path)
-{
-	if(IsNull(path) || *path.Last() == '\\' || *path.Last() == '/' || *path.Last() == ':')
-		return true;
-	if(path.Find('?') >= 0 || path.Find('*') >= 0)
-		return false;
-	FindFile ff(path);
-	return ff && ff.IsDirectory();
-}
-
 String NormalizePath(const char *path) {
 #ifdef PLATFORM_WINCE
 	return NormalizePath(path, "");
