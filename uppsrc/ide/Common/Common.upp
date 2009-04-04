@@ -1,18 +1,10 @@
-description "TheIDE - common library";
-
 uses
-	CtrlLib,
-	Esc;
+	ide\Core;
 
 file
 	Common.h,
-	Common.cpp,
-	Hdepend.cpp optimize_speed,
-	Package.cpp,
-	Workspace.cpp,
-	usc.cpp,
 	ComDlg.cpp,
-	common.iml,
-	Info readonly separator,
-	Copying;
+	Module.cpp,
+	Util.cpp,
+	common.iml;
 

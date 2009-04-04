@@ -1,5 +1,9 @@
 #include "Common.h"
 
+#define IMAGECLASS IdeCommonImg
+#define IMAGEFILE  <ide/Common/common.iml>
+#include <Draw/iml_source.h>
+
 void IdeFileIcon0(bool dir, const String& filename, Image& img, bool fast = false)
 {
 	if(dir) return;

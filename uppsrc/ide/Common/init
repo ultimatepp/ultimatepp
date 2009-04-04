@@ -1,5 +1,4 @@
 #ifndef _ide_Common_icpp_init_stub
 #define _ide_Common_icpp_init_stub
-#include "CtrlLib/init"
-#include "Esc/init"
+#include "ide\Core/init"
 #endif
