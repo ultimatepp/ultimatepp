@@ -1,6 +1,7 @@
 #ifndef _ide_icpp_init_stub
 #define _ide_icpp_init_stub
 #include "ide\Common/init"
+#include "ide\Core/init"
 #include "ide\LayDes/init"
 #include "ide\IconDes/init"
 #include "ide\Builders/init"
