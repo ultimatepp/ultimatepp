@@ -1,7 +1,3 @@
-#define NEWBUILD
-
-#ifdef NEWBUILD
-
 struct PackageMode : Moveable<PackageMode> {
 	int debug;
 	int blitz;
@@ -43,6 +39,7 @@ struct MakeBuild {
 	virtual void DoProcessEvents() = 0;
 	virtual void ReQualifyCodeBase() = 0;
 	virtual void SetErrorEditor() = 0;
+	virtual String GetMain() = 0;
 
 	struct TransferFileInfo
 	{
@@ -56,7 +53,6 @@ struct MakeBuild {
 	int          targetmode;
 	TargetMode   debug;
 	TargetMode   release;
-	String       main;
 	String       cmdout;
 	String       target;
 	String       onefile;
@@ -82,8 +78,6 @@ struct MakeBuild {
 	                               Host& host, Builder& builder);
 	bool Build(const Workspace& wspc, String mainparam, String outfile, bool clear_console = true);
 	bool Build();
-	void DoBuild();
-	String GetOutputDir();
 	void CleanPackage(const Workspace& wspc, int package);
 	void RebuildAll();
 	void Clean();
@@ -91,5 +85,3 @@ struct MakeBuild {
 	
 	MakeBuild();
 };
-
-#endif
