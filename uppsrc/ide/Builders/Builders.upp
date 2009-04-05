@@ -1,8 +1,8 @@
 description "TheIDE - builders - routines to compile programs";
 
 uses
-	ide\Common,
-	coff\binobj;
+	coff\binobj,
+	ide\Core;
 
 file
 	Builders.h,
@@ -11,6 +11,8 @@ file
 	MscBuilder.cpp,
 	JavaBuilder.cpp,
 	ScriptBuilder.cpp,
+	Build.h,
+	Build.cpp,
 	Info readonly separator,
 	Copying;
 
