@@ -41,10 +41,20 @@ void WorkspaceWork::ScanWorkspace() {
 	actualfileindex = -1;
 	filelist.Clear();
 	package.Clear();
-	for(int i = 0; i < wspc.package.GetCount(); i++)
-		package.Add(wspc.package.GetKey(i),
+	for(int i = 0; i < wspc.package.GetCount(); i++) {
+		String pk = wspc.package.GetKey(i);
+		Font fnt = ListFont();
+		if(i == 0)
+			fnt.Bold();
+		PackageInfo pi = GetPackageInfo(pk);
+		if(pi.bold)
+			fnt.Bold();
+		if(pi.italic)
+			fnt.Italic();
+		package.Add(pk,
 		            wspc.GetPackage(i).optimize_speed ? IdeCommonImg::FastPackage() : IdeImg::Package(),
-		            i == 0 ? ListFont().Bold() : ListFont(), SColorText, false, 0, Null, SColorMark);
+		            fnt, Nvl(pi.ink, SColorText()), false, 0, Null, SColorMark);
+	}
 	if(!organizer) {
 		package.Add(prjaux, IdeImg::PrjAux(), ListFont(), Magenta);
 		package.Add(ideaux, IdeImg::IdeAux(), ListFont(), Magenta);
@@ -58,6 +68,7 @@ void WorkspaceWork::SavePackage()
 {
 	if(IsNull(actualpackage) || actualpackage == "<METAPACKAGE>")
 		return;
+	InvalidatePackageInfo(actualpackage);
 	String pp = PackagePathA(actualpackage);
 	RealizePath(pp);
 	if(organizer && backup.Find(pp) < 0) {

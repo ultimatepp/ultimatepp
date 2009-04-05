@@ -24,7 +24,7 @@ topic "Resolving memory leaks";
 [{_}%EN-US 
 [s2; Resolving memory leaks&]
 [s0; Before 2008.1 release, the memory leaks debugging facilities 
-have changed. Where we try to explain why logic has changed and 
+have changed. Here we try to explain why logic has changed and 
 what problem is it supposed to solve:&]
 [s0; &]
 [s0; Previous method involved watching for particular ADDRESS to 

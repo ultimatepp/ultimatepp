@@ -1,4 +1,4 @@
-description "BMP image file format";
+description "BMP image file format\3770,128,128";
 
 uses
 	Draw;

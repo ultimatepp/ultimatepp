@@ -1,4 +1,4 @@
-description "Fundamental graphics operations, including raster image processing";
+description "Fundamental graphics operations, including raster image processing\377128,0,255";
 
 acceptflags
 	NOGTK;

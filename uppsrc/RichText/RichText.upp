@@ -1,4 +1,4 @@
-description "Rich-text data structures and painting, including RTF and HTML export/import";
+description "Rich-text data structures and painting, including RTF and HTML export/import\3770,0,128";
 
 uses
 	CtrlCore,

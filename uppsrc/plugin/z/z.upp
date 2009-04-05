@@ -1,4 +1,4 @@
-description "zlib compressor/decompressor and its U++ encapsulation";
+description "zlib compressor/decompressor and its U++ encapsulation\3770,128,128";
 
 optimize_speed;
 

@@ -5,6 +5,16 @@ inline bool MoveFile(const char *oldpath, const char *newpath)
 }
 #endif
 
+struct PackageInfo : Moveable<PackageInfo> {
+	Time   stamp;
+	String path;
+	Color  ink;
+	bool   bold, italic;
+};
+
+void        InvalidatePackageInfo(const String& name);
+PackageInfo GetPackageInfo(const String& name);
+
 struct FileTemplate {
 	String filename;
 	String condition;
