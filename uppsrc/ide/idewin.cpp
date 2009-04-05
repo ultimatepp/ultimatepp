@@ -919,7 +919,7 @@ void AppMain___()
 				}
 				else
 				if(makefile) {
-					ide.SaveMakeFile(IsNull(mkf) ? "Makefile" : mkf);
+					ide.SaveMakeFile(IsNull(mkf) ? "Makefile" : mkf, false);
 					SetExitCode(0);
 				}
 				else

@@ -1,7 +1,5 @@
 #include "Builders.h"
 
-#ifdef NEWBUILD
-
 #include <plugin/bz2/bz2.h>
 
 #define LDUMP(x) // DUMP(x)
@@ -262,7 +260,7 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 		VectorMap<String, String> env(Environment(), 1);
 		host->exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
 		env.GetAdd("PATH") = Join(host->exedirs, ";");
-		env.GetAdd("UPP_MAIN__") = GetFileDirectory(PackagePath(main));
+		env.GetAdd("UPP_MAIN__") = GetFileDirectory(PackagePath(GetMain()));
 		for(int i = 0; i < env.GetCount(); i++) {
 			LDUMP(env.GetKey(i));
 			LDUMP(env[i]);
@@ -566,18 +564,8 @@ bool MakeBuild::Build()
 	Index<String> p = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam,
 	                                *host, *CreateBuilder(~host));
 	Workspace wspc;
-	wspc.Scan(main, p.GetKeys());
+	wspc.Scan(GetMain(), p.GetKeys());
 	return Build(wspc, mainconfigparam, Null);
-}
-
-void MakeBuild::DoBuild()
-{
-	Build();
-}
-
-String MakeBuild::GetOutputDir()
-{
-	return GetFileFolder(target);
 }
 
 void MakeBuild::CleanPackage(const Workspace& wspc, int package)
@@ -708,5 +696,3 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 
 	EndBuilding(true);
 }
-
-#endif

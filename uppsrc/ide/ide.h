@@ -401,7 +401,7 @@ void DirSel(EditField& f, FrameRight<Button>& b);
 bool CopyFolder(const char *dst, const char *src, Progress *pi);
 void SvnSyncDirs(const Vector<String>& working);
 
-struct Ide : public TopWindow, public WorkspaceWork, public IdeContext {
+struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	virtual   void   Paint(Draw& w);
 	virtual   bool   Key(dword key, int count);
@@ -460,6 +460,19 @@ public:
 
 	virtual   String    IdeGetFileName();
 	virtual   String    IdeGetNestFolder();
+
+	virtual void   ConsoleShow();
+	virtual void   ConsoleSync();
+	virtual void   ConsoleClear();
+	virtual void   SetupDefaultMethod();
+	virtual Vector<String> PickErrors();
+	virtual void   BeginBuilding(bool sync_files, bool clear_console);
+	virtual void   EndBuilding(bool ok);
+	virtual void   ClearErrorEditor();
+	virtual void   DoProcessEvents();
+	virtual void   ReQualifyCodeBase();
+	virtual void   SetErrorEditor();
+	virtual String GetMain();
 
 	enum {
 		EDITING, BUILDING, RUNNING, DEBUGGING,
@@ -533,13 +546,6 @@ public:
 		}
 	};
 
-	struct TransferFileInfo
-	{
-		String sourcepath;
-		int    filetime;
-		int    filesize;
-	};
-
 	String posfile[2];
 	int    posline[2];
 	Image  posimg[2];
@@ -548,24 +554,12 @@ public:
 	int              histi;
 
 	ArrayMap<String, FileData> filedata;
-	ArrayMap<String, TransferFileInfo> transferfilecache;
 	Index<String> editastext;
 
 	DropList   mainconfiglist;
 	String     mainconfigname;
-	String     mainconfigparam;
 
-	String       method;
-	int          targetmode;
-	TargetMode   debug;
-	TargetMode   release;
-
-	String       onefile;
 	int          build_time;
-	String       target;
-	String       cmdout;
-
-	bool         stoponerrors;
 
 	MultiButton               buildmode;
 	PopUpTable                methodlist;
@@ -655,8 +649,6 @@ public:
 	// Formats editor's code with Ide format parameters
 	void FormatCode();
 
-	bool      use_target;
-
 	bool      browser_closeesc;
 	bool      bookmark_pos;
 
@@ -709,7 +701,6 @@ public:
 	void      SwapBottom();
 	bool      IsBottomShown() const;
 
-	void      SetHdependDirs();
 	void      MakeTitle();
 	void      MakeIcon();
 	void      AdjustMainConfig();
@@ -738,7 +729,6 @@ public:
 
 	void      SetupOutputMode();
 	void      SyncBuildMode();
-	void      SetupDefaultMethod();
 	void      SetupBuildMethods();
 	void      DropMethodList();
 	void      SelectMethod();
@@ -824,35 +814,11 @@ public:
 	void      BuildMenu(Bar& menu);
 		void BuildPackageMenu(Bar& menu);
 
-		Index<String> PackageConfig(const ::Workspace& wspc, int package,
-		                            const VectorMap<String, String>& bm, String mainparam,
-		                            Host& host, Builder& b, String *target = NULL);
-		const TargetMode& GetTargetMode();
-		One<Host>     CreateHost(bool sync_files);
-		bool          SyncHostFiles(RemoteHost& host);
-		String        OutDir(const Index<String>& cfg, const String& package, const VectorMap<String, String>& bm,
-		                     bool use_target = false);
-		One<Builder>  CreateBuilder(Host *host);
-		bool  BuildPackage(const ::Workspace& wspc, int pkindex, int pknumber, int pktotal,
-		                   String mainparam, String outfile, Vector<String>& linkfile, String& linkopt,
-		                   bool link = false);
-		static Vector<String> GetAllUses(const ::Workspace& wspc, int index);
-		Vector<String> GetAllLibraries(const ::Workspace& wspc, int index,
-			                           const VectorMap<String, String>& bm, String mainparam,
-			                           Host& host, Builder& builder);
-		bool  Build(const Workspace& workspace, String mainparam, String outfile = Null, bool clear_console = true);
-		bool  Build();
 		void  DoBuild();
 		void  PackageBuild();
-		void  BeginBuilding(bool sync_files = true, bool clear_console = true);
-		void  EndBuilding(bool ok);
 		void  StopBuild();
-		void  Clean();
-		void  CleanPackage(const ::Workspace& wspc, int package);
 		void  PackageClean();
-		void  RebuildAll();
 		void  CreateMakefile();
-		void  SaveMakeFile(const String& file, bool exporting = false);
 		void  CleanUppOut();
 		void  SwitchHeader();
 		void  FileCompile();
@@ -905,7 +871,6 @@ public:
 
 
 	void      ConsoleMenu(Bar& menu);
-		void  ConsoleClear();
 		void  ConsoleCopy();
 		void  ConsolePaste();
 
@@ -935,9 +900,7 @@ public:
 	bool      FindLineError(int l, Host& host);
 	bool      FindLineError(String ln, Host& host, String& file, int& lineno, int& error);
 	void      FindError();
-	void	  ClearErrorEditor();
 	void	  ClearErrorEditor(String file);
-	void	  SetErrorEditor();
 
 	void      FindWildcard();
 	void      FindFolder();

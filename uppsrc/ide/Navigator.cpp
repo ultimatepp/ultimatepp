@@ -102,3 +102,17 @@ void Ide::SearchCode()
 	else
 		editor.browser.search.SetFocus();
 }
+
+void Ide::SwitchHeader() {
+	int c = filelist.GetCursor();
+	if(c < 0) return;
+	String currfile = filelist[c];
+	const char *ext = GetFileExtPos(currfile);
+	if(!stricmp(ext, ".h") || !stricmp(ext, ".hpp")
+	|| !stricmp(ext, ".lay") || !stricmp(ext, ".iml")) {
+		int f = filelist.Find(ForceExt(currfile, ".cpp"));
+		if(f < 0) f = filelist.Find(ForceExt(currfile, ".c"));
+		if(f < 0) f = filelist.Find(ForceExt(currfile, ".cc"));
+		if(f >= 0) filelist.SetCursor(f);
+	}
+}
