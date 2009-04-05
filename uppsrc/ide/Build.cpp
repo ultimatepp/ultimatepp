@@ -279,11 +279,6 @@ One<Builder> Ide::CreateBuilder(Host *host)
 	return b;
 }
 
-int CharFilterSlash(int c)
-{
-	return c == '\\' ? '/' : c;
-}
-
 String Ide::OutDir(const Index<String>& cfg, const String& package, const VectorMap<String, String>& bm,
                    bool use_target)
 {

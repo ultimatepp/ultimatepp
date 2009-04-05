@@ -1,7 +1,9 @@
 #ifndef BUILDERS_H
 #define BUILDERS_H
 
-#include <ide/Common/Common.h>
+#include <ide/Core/Core.h>
+
+#include "Build.h"
 
 void PutCompileTime(int time, int count);
 

@@ -1,17 +1,5 @@
 #include "ide.h"
 
-String GetDefaultMethod()
-{
-	return LoadFile(ConfigFile("default_method"));
-}
-
-VectorMap<String, String> GetMethodVars(const String& method)
-{
-	VectorMap<String, String> map;
-	LoadVarFile(ConfigFile((String)~method + ".bm"), map);
-	return map;
-}
-
 class TextOption : public Option {
 public:
 	virtual void   SetData(const Value& data);

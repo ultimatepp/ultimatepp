@@ -32,6 +32,8 @@
 
 #include <plugin/astyle/astyle.h>
 
+#include <ide/Builders/Builders.h>
+
 const char *FindTag(const char *txt, const char *tag);
 const char *FindAfter(const char *txt, const char *tag);
 int         IdeLocateLine(String old_file, int old_line, String new_file);
@@ -155,29 +157,6 @@ void DlCharsetD(DropList& d);
 void                      SetupBuildMethods();
 VectorMap<String, String> GetMethodVars(const String& method);
 String                    GetDefaultMethod();
-
-struct PackageMode : Moveable<PackageMode> {
-	int debug;
-	int blitz;
-
-	void Serialize(Stream& s) { s / debug / blitz / blitz; }
-
-	PackageMode() { debug = blitz = Null; }
-};
-
-struct TargetMode {
-	bool        target_override;
-	String      target;
-	int         linkmode;
-	bool        createmap;
-	String      version;
-	PackageMode def;
-	VectorMap<String, PackageMode> package;
-
-	void        Serialize(Stream& s);
-
-	TargetMode() { def.debug = def.blitz = 0; target_override = false; linkmode = 0; createmap = false; }
-};
 
 bool CheckLicense();
 bool Install();
