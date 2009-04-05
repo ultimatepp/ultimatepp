@@ -1,4 +1,4 @@
-description "Basic library of GUI elements";
+description "Basic library of GUI elements\3770,0,255";
 
 acceptflags
 	NOGTK;

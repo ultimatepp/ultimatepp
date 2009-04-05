@@ -1,4 +1,4 @@
-description "PDF output as Draw derived class";
+description "PDF output as Draw derived class\377128,0,255";
 
 uses
 	Draw;

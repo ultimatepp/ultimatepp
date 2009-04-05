@@ -1,4 +1,4 @@
-description "BZ2 compressor/decompressor";
+description "BZ2 compressor/decompressor\3770,128,128";
 
 optimize_speed;
 

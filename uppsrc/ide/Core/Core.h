@@ -265,6 +265,8 @@ public:
 	Array<Config>            config;
 	Array<CustomStep>        custom;
 	Time                     time;
+	bool                     bold, italic;
+	Color                    ink;
 
 	int   GetCount() const                { return file.GetCount(); }
 	File& operator[](int i)               { return file[i]; }

@@ -161,6 +161,8 @@ Package::Package()
 	charset = 0;
 	optimize_speed = false;
 	noblitz = true;
+	bold = italic = false;
+	ink = Null;
 }
 
 bool StdResolver(const String& error, const String& path, int line)
@@ -208,8 +210,29 @@ void Package::Load(const char *path)
 				if(p.Id("charset"))
 					charset = CharsetByName(p.ReadString());
 				else
-				if(p.Id("description"))
+				if(p.Id("description")) {
 					description = p.ReadString();
+					const char *q = strchr(description, 255);
+					ink = Null;
+					bold = italic = false;
+					if(q) {
+						CParser p(q + 1);
+						bold = p.Char('B');
+						italic = p.Char('I');
+						if(p.IsNumber()) {
+							RGBA c = Black();
+							c.r = p.ReadInt();
+							p.Char(',');
+							if(p.IsNumber())
+								c.g = p.ReadInt();
+							p.Char(',');
+							if(p.IsNumber())
+								c.b = p.ReadInt();
+							ink = c;
+						}
+						description = String(~description, q);
+					}
+				}
 				else
 				if(p.Id("acceptflags")) {
 					do
@@ -340,8 +363,17 @@ void putfopt(Stream& out, const char *key, const Array<OptItem>& m)
 
 bool Package::Save(const char *path) const {
 	StringStream out;
-	if(description.GetCount())
-		out << "description " << AsCString(description) << ";\n\n";
+	if(description.GetCount() || italic || bold || !IsNull(ink)) {
+		String d = description;
+		d.Cat(255);
+		if(bold)
+			d << 'B';
+		if(italic)
+			d << 'I';
+		if(!IsNull(ink))
+			d << (int)ink.GetR() << ',' << (int)ink.GetG() << ',' << (int)ink.GetB();
+		out << "description " << AsCString(d) << ";\n\n";
+	}
 	if(charset > 0 && charset < CharsetCount() || charset == CHARSET_UTF8)
 		out << "charset " << AsCString(CharsetName(charset)) << ";\n\n";
 	if(optimize_speed)

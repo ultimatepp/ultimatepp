@@ -86,6 +86,9 @@ UsesDlg::UsesDlg()
 void PackageEditor::SaveOptions() {
 	if(!actualpackage.IsEmpty()) {
 		actual.description = ~description;
+		actual.ink = ~ink;
+		actual.bold = ~bold;
+		actual.italic = ~italic;
 		actual.charset = (byte)(int)~charset;
 		actual.accepts = Split(accepts.GetText().ToString(), ' ');
 		actual.optimize_speed = optimize_speed;
@@ -111,6 +114,9 @@ void PackageEditor::Empty()
 	charset.Disable();
 	noblitz.Disable();
 	description.Disable();
+	ink.Disable();
+	italic.Disable();
+	bold.Disable();
 	optimize_speed.Disable();
 	filelist.Clear();
 	filelist.Disable();
@@ -154,6 +160,9 @@ void PackageEditor::PackageCursor()
 		Empty();
 	else {
 		description <<= actual.description;
+		ink <<= actual.ink;
+		bold <<= actual.bold;
+		italic <<= actual.italic;
 		charset <<= (int)actual.charset;
 		optimize_speed = actual.optimize_speed;
 		noblitz = actual.noblitz;
@@ -164,6 +173,9 @@ void PackageEditor::PackageCursor()
 		}
 		accepts = s.ToWString();
 		description.Enable();
+		ink.Enable();
+		bold.Enable();
+		italic.Enable();
 		charset.Enable();
 		noblitz.Enable();
 		optimize_speed.Enable();
@@ -556,6 +568,11 @@ PackageEditor::PackageEditor()
 	fileoption.WhenCursor = THISBACK(AdjustFileOptionCursor);
 	fileoption.WhenBar = THISBACK(FileOptionMenu);
 	fileoption.WhenLeftDouble = THISBACK(EditFileOption);
+	
+	ink.NullText("(std)");
+	ink <<=
+	bold <<=
+	italic <<= THISBACK(SaveOptionsLoad);
 }
 
 void EditPackages(const char *main, const char *startwith, String& cfg) {

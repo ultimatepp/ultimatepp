@@ -1,5 +1,38 @@
 #include "ide.h"
 
+static VectorMap<String, PackageInfo> sPi;
+
+void InvalidatePackageInfo(const String& name)
+{
+	int q = sPi.Find(name);
+	if(q >= 0)
+		sPi[q].path.Clear();
+}
+
+PackageInfo GetPackageInfo(const String& name)
+{
+	String path = PackagePath(name);
+	Time tm = FileGetTime(path);
+	int q = sPi.Find(name);
+	if(q >= 0) {
+		if(path == sPi[q].path && tm == sPi[q].stamp)
+			return sPi[q];
+	}
+	else {
+		q = sPi.GetCount();
+		sPi.Add(name);
+	}
+	PackageInfo& pi = sPi[q];
+	pi.path = path;
+	pi.stamp = tm;
+	Package p;
+	p.Load(path);
+	pi.ink = p.ink;
+	pi.italic = p.italic;
+	pi.bold = p.bold;
+	return pi;
+}
+
 class BaseSetupDlg : public WithBaseSetupLayout<TopWindow>
 {
 public:

@@ -1,4 +1,4 @@
-description "GUI core system";
+description "GUI core system\3770,0,255";
 
 uses
 	Draw,
