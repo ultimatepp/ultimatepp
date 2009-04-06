@@ -76,7 +76,7 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 	return cfg;
 }
 
-static String NoCr(const char *s)
+String NoCr(const char *s)
 {
 	String out;
 	while(*s)
