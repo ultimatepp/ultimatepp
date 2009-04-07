@@ -2,7 +2,6 @@
 
 void ExpanderCtrl::Layout()
 {
-	Repos();
 	scroll.SetPage(Hv(GetSize()));
 	UpdateScrollBar();
 }
@@ -12,20 +11,6 @@ void ExpanderCtrl::ChildMouseEvent(Ctrl *child, int event, Point p, int zdelta, 
 	int i = -1;
 	if (event == MOUSEWHEEL)
 		scroll.Wheel(zdelta);
-}
-
-void ExpanderCtrl::Paint(Draw&w)
-{
-	Rect r = GetSize();
-	if (exp.GetCount()) {
-		if (IsHorz())
-			r.right = exp.Top().GetRect().right;
-		else
-			r.top = exp.Top().GetRect().bottom;
-		if (r.bottom < r.top || r.right < r.left)
-			return;
-	}
-	w.DrawRect(r, SColorFace);
 }
 
 ExpandFrame & ExpanderCtrl::AddExpander(Ctrl &c, bool expand, int size)

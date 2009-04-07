@@ -49,7 +49,6 @@ private:
 	bool			childfocus:1;
 	bool			ignorefocus:1;
 	bool			hasarrow:1;
-	bool			bg:1;
 	
 	const Style *	style;	
 	const Style *	St() const					{ return style ? style : &StyleDefault(); }		
@@ -86,8 +85,6 @@ public:
 	ExpandFrame& Collapse()						{ return Expand(false); }
 	bool 		 IsExpanded() const				{ return expand; }
 	
-	ExpandFrame& NoBackground(bool v = true)	{ bg = !v; return *this; }
-	
 	virtual Size GetMinSize() const;
 	virtual Size GetStdSize() const;
 	
@@ -106,7 +103,7 @@ public:
 	virtual void Layout();					
 	virtual void MouseWheel(Point p, int zdelta, dword keyflags) { scroll.Wheel(zdelta); }
 	virtual void ChildMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags);
-	virtual void Paint(Draw&w);
+
 private:
 	Array<ExpandFrame> 		exp;
 	ScrollBar 				scroll;

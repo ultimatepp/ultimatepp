@@ -93,7 +93,7 @@ void ExpandFrame::Paint(Draw& w)
 	int focus = (childfocus || ignorefocus) ? 1 : 0;
 	bool lr = (type == LEFT || type == RIGHT);
 	
-	if (expand && bg) {
+	if (expand) {
 		Rect rr = r;
 		switch (type) {
 		case LEFT:
@@ -293,10 +293,12 @@ ExpandFrame& ExpandFrame::Expand(bool _expand)
 	expand = _expand;
 	UpdateButton();
 	if (!IsSet()) return *this;
+	bool hasfocus = HasFocusDeep();
 	GetLastChild()->Show(expand);
-	if (!expand && childfocus)
+/*	if (!expand && childfocus)
 		Ctrl::IterateFocusForward(GetFocusCtrl(), GetParent());		
-	else
+	else*/
+	if (expand && childfocus)
 		GetLastChild()->SetFocus();
 	childfocus = expand;
 	RefreshParentLayout();
