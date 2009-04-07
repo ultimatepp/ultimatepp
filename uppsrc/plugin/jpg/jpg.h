@@ -23,6 +23,8 @@ public:
 	virtual const RasterFormat *GetFormat();
 	virtual Value   GetMetaData(String id);
 	virtual void    EnumMetaData(Vector<String>& id_list);
+	
+	Image   GetExifThumbnail();
 };
 
 class JPGEncoder : public StreamRasterEncoder {

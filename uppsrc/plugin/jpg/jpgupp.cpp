@@ -192,6 +192,7 @@ public:
 	void ScanExifData(const char *begin);
 	Value GetMetaData(String id);
 	void EnumMetaData(Vector<String>& id_list);
+	String GetThumbnail();
 
 private:
 	bool Init();
@@ -212,6 +213,7 @@ private:
 	RGBA palette[256];
 
 	VectorMap<String, Value> metadata;
+	int                      thumboffset, thumblen;
 
 	struct jpeg_decompress_struct cinfo;
 	struct jpeg_longjmp_error_mgr jerr;
@@ -369,6 +371,53 @@ void JPGRaster::Data::EnumMetaData(Vector<String>& id_list)
 {
 	ScanMetaData();
 	id_list <<= metadata.GetKeys();
+}
+
+String JPGRaster::Data::GetThumbnail()
+{
+	ScanMetaData();
+	String app1 = GetMetaData("APP1");
+	if(!app1.GetCount())
+		return Null;
+	const char *begin = ~app1 + 6;
+	const char *end = app1.End();
+	const char *p = begin + Exif32(begin + 4);
+	if(p + 2 >= end) return Null;
+	p += Exif16(p) * 12 + 2;
+	if(p + 4 >= end) return Null;
+	p = begin + Exif32(p);
+	if(p <= begin || p + 2 >= end) return Null;
+	word count = Exif16(p);
+	p += 2;
+	dword offset = 0;
+	dword len = 0;
+	for(int n = 0; n < count; n++) {
+		if(p + 12 >= end) Null;
+		if(Exif32(p + 4) == 1) {
+			dword val = 0;
+			switch(Exif16(p + 2)) {
+			case 4:
+			case 9:
+				val = Exif32(p + 8);
+				break;
+			case 3:
+			case 8:
+				val = Exif16(p + 8);
+				break;
+			}
+			if(val)
+				switch(Exif16(p)) {
+				case 0x201:
+					offset = val;
+					break;
+				case 0x202:
+					len = val;
+					break;
+				}
+		}
+		p += 12;
+	}
+	return offset && len && begin + offset + len < end ? String(begin + offset, len) : String();
 }
 
 bool JPGRaster::Data::Init()
@@ -617,6 +666,12 @@ void JPGEncoder::Start(Size sz)
 void JPGEncoder::WriteLineRaw(const byte *s)
 {
 	data->WriteLineRaw(s);
+}
+
+Image JPGRaster::GetExifThumbnail()
+{
+	ASSERT(data);
+	return StreamRaster::LoadStringAny(data->GetThumbnail());
 }
 
 END_UPP_NAMESPACE
