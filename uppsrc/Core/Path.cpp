@@ -799,6 +799,34 @@ Time FileGetTime(const char *filename)
 #endif//PLATFORM
 }
 
+FileTime GetFileTime(const char *filename)
+{
+#if defined(PLATFORM_WIN32)
+	HANDLE handle;
+	if(IsWinNT())
+		handle = UnicodeWin32().CreateFileW(ToSystemCharsetW(filename), GENERIC_READ,
+		                    FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	else
+		handle = CreateFile(ToSystemCharset(filename), GENERIC_READ,
+		                    FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	FileTime ft0;
+	memset(&ft0, 0, sizeof(ft0));
+	if(handle == INVALID_HANDLE_VALUE)
+		return ft0;
+	FileTime ft;
+	bool res = GetFileTime(handle, 0, 0, &ft);
+	CloseHandle(handle);
+	return res ? ft : ft0;
+#elif defined(PLATFORM_POSIX)
+	struct stat st;
+	if(stat(ToSystemCharset(filename), &st))
+		return 0;
+	return st.st_mtime;
+#else
+	#error
+#endif//PLATFORM
+}
+
 bool SetFileTime(const char *filename, FileTime ft)
 {
 #if defined(PLATFORM_WIN32)

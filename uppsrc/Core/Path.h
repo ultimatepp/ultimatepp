@@ -157,6 +157,7 @@ bool        FileExists(const char *path);
 bool        DirectoryExists(const char *path);
 
 struct Time;
+FileTime    GetFileTime(const char *path);
 Time        FileGetTime(const char *path);
 bool        SetFileTime(const char *path, FileTime ft);
 bool        FileSetTime(const char *path, Time time);
