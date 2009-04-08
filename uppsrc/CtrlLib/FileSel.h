@@ -7,6 +7,9 @@ void DrawFileName(Draw& w, int x, int y, int wcx, int cy, const WString& mname, 
 Image NativePathIcon(const char *path, bool folder);
 Image NativePathIcon(const char *path);
 
+Image NativePathLargeIcon(const char *path, bool folder);
+Image NativePathLargeIcon(const char *path);
+
 class FileList : public ColumnList, private Display {
 public:
 	virtual void  LeftDown(Point p, dword);

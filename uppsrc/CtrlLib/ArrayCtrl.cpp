@@ -653,7 +653,7 @@ Point ArrayCtrl::FindCellCtrl(Ctrl *ctrl)
 			for(int j = 0; j < ci.GetCount(); j++)
 				if(IsCtrl(i, j)) {
 					CellCtrl& c = GetCtrl(i, j);
-					if(&c == ctrl || c.ctrl == ctrl)
+					if(&c == ctrl || c.ctrl == ctrl || c.ctrl->HasChildDeep(ctrl))
 						return Point(j, i);
 				}
 		}
