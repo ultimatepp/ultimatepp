@@ -966,6 +966,7 @@ EditField& EditField::SetFont(Font _font)
 EditField& EditField::NullText(const char *text, Font fnt, Color ink)
 {
 	nulltext = text;
+	nulltext << " ";
 	nullink = ink;
 	nullfont = fnt;
 	Refresh();

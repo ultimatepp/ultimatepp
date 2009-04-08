@@ -534,4 +534,21 @@ void NilPainter::EndOp() {}
 void NilPainter::BeginMaskOp() {}
 void NilPainter::BeginOnPathOp(double, bool) {}
 
+ImagePainter::ImagePainter(Size sz, int mode)
+:	ImageBuffer__(sz), BufferPainter(ImageBuffer__::ib, mode)
+{}
+
+ImagePainter::ImagePainter(int cx, int cy, int mode)
+:	ImageBuffer__(Size(cx, cy)), BufferPainter(ImageBuffer__::ib, mode)
+{}
+
+DrawPainter::DrawPainter(Draw& w, Size sz, int mode)
+:	ImagePainter(sz, mode), w(w)
+{}
+
+DrawPainter::~DrawPainter()
+{
+	w.DrawImage(0, 0, *this);
+}
+	
 END_UPP_NAMESPACE

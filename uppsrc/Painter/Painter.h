@@ -313,6 +313,31 @@ void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt);
 #include "Painting.h"
 #include "BufferPainter.h"
 
+class ImageBuffer__ {
+protected:
+	ImageBuffer ib;
+	
+public:
+	ImageBuffer__(Size sz) : ib(sz) {}
+};
+
+class ImagePainter : private ImageBuffer__, public BufferPainter {
+public:
+	ImagePainter(Size sz, int mode = MODE_ANTIALIASED);
+	ImagePainter(int cx, int cy, int mode = MODE_ANTIALIASED);
+	
+	Image GetResult() { return ImageBuffer__::ib; }
+	operator Image()  { return GetResult(); }
+};
+
+class DrawPainter : public ImagePainter {
+	Draw& w;
+
+public:
+	DrawPainter(Draw& w, Size sz, int mode = MODE_ANTIALIASED);
+	~DrawPainter();
+};
+
 class NilPainter : public Painter {
 protected:
 	virtual void   ClearOp(const RGBA& color);

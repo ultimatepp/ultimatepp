@@ -7,6 +7,7 @@ struct FileIconMaker : ImageMaker {
 	String file;
 	bool   exe;
 	bool   dir;
+	bool   large;
 
 	virtual String Key() const {
 		return file + (exe ? "1" : "0") + (dir ? "1" : "0");
@@ -19,7 +20,7 @@ struct FileIconMaker : ImageMaker {
 			SHFILEINFO info;
 			SHGetFileInfo(ToSystemCharset(file), dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
 			              &info, sizeof(info),
-			              SHGFI_ICON|SHGFI_SMALLICON|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
+			              SHGFI_ICON|(large ? SHGFI_LARGEICON : SHGFI_SMALLICON)|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
 			HICON icon = info.hIcon;
 			ICONINFO iconinfo;
 			if(!icon || !GetIconInfo(icon, &iconinfo))
@@ -41,13 +42,14 @@ struct FileIconMaker : ImageMaker {
 };
 
 
-Image GetFileIcon(const char *path, bool dir, bool force = false)
+Image GetFileIcon(const char *path, bool dir, bool force, bool large)
 {
 	FileIconMaker m;
 	String ext = GetFileExt(path);
 	m.exe = false;
 	m.dir = false;
 	m.file = path;
+	m.large = large;
 	if(force)
 		m.exe = true;
 	else
@@ -86,9 +88,9 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 #else
 Image GtkThemeIcon(const char *name, int size);
 
-Image GnomeImage(const char *s)
+Image GnomeImage(const char *s, bool large = false)
 {
-	return GtkThemeIcon(String("gnome-") + s, 16);
+	return GtkThemeIcon(String("gnome-") + s, large);
 }
 
 struct ExtToMime {
@@ -150,6 +152,7 @@ bool ExtToMime::GetMime(const String& ext, String& maj, String& min)
 
 struct FileExtMaker : ImageMaker {
 	String ext;
+	bool   large;
 
 	virtual String Key() const {
 		return ext;
@@ -160,43 +163,59 @@ struct FileExtMaker : ImageMaker {
 		String minor;
 		if(!Single<ExtToMime>().GetMime(ext, major, minor))
 			return Null;
-		Image img = GnomeImage("mime-" + major + '-' + minor);
+		Image img = GnomeImage("mime-" + major + '-' + minor, large ? 48 : 16);
 		return IsNull(img) ? GnomeImage("mime-" + major) : img;
 	}
 };
 
-Image PosixGetDriveImage(String dir)
+Image PosixGetDriveImage(String dir, bool large)
 {
 	static Image cdrom = GnomeImage("dev-cdrom");
+	static Image lcdrom = GnomeImage("dev-cdrom", true);
 	static Image harddisk = GnomeImage("dev-harddisk");
+	static Image lharddisk = GnomeImage("dev-harddisk", true);
 	static Image floppy = GnomeImage("dev-floppy");
+	static Image lfloppy = GnomeImage("dev-floppy", true);
 	static Image computer = GnomeImage("dev-computer");
-	if(dir.GetCount() == 0 || dir == "/")
-		return IsNull(computer) ? CtrlImg::Computer() : computer;
-	if(dir.Find("cdrom") == 0 || dir.Find("cdrecorder") == 0)
-		return IsNull(cdrom) ? CtrlImg::CdRom() : cdrom;
-	if(dir.Find("floppy") == 0 || dir.Find("zip") == 0)
-		return IsNull(floppy) ? CtrlImg::Diskette() : floppy;
-	return IsNull(harddisk) ? CtrlImg::Hd() : harddisk;
+	static Image lcomputer = GnomeImage("dev-computer", true);
+	if(dir.GetCount() == 0 || dir == "/") {
+		Image m = large ? lcomputer : computer;
+		return IsNull(m) ? CtrlImg::Computer() : m;
+	}
+	if(dir.Find("cdrom") == 0 || dir.Find("cdrecorder") == 0) {
+		Image m = large ? lcdrom : cdrom;
+		return IsNull(m) ? CtrlImg::CdRom() : m;
+	}
+	if(dir.Find("floppy") == 0 || dir.Find("zip") == 0) {
+		Image m = large ? lfloppy : floppy;
+		return IsNull(m) ? CtrlImg::Diskette() : m;
+	}
+	Image m = large ? lharddisk : harddisk;
+	return IsNull(m) ? CtrlImg::Hd() : m;
 }
 
-Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe)
+Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe, bool large)
 {
 	static Image file = GnomeImage("fs-regular");
+	static Image lfile = GnomeImage("fs-regular", true);
 	static Image dir = GnomeImage("fs-directory");
+	static Image ldir = GnomeImage("fs-directory", true);
 	static Image exe = GnomeImage("fs-executable");
+	static Image lexe = GnomeImage("fs-executable", true);
 	static Image home = GnomeImage("fs-home");
+	static Image lhome = GnomeImage("fs-home", true);
 	static Image desktop = GnomeImage("fs-desktop");
+	static Image ldesktop = GnomeImage("fs-desktop", true);
 	if(isdir) {
 		Image img = dir;
 		if(AppendFileName(folder, filename) == GetHomeDirectory())
-			return home;
+			return large ? lhome : home;
 		else
 		if(folder == GetHomeDirectory() && filename == "Desktop")
-			return desktop;
+			return large ? ldesktop : desktop;
 		else
 		if(folder == "/media" || filename.GetCount() == 0)
-			return PosixGetDriveImage(filename);
+			return PosixGetDriveImage(filename, large);
 		return dir;
 	}
 	FileExtMaker m;
@@ -204,35 +223,52 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 	Image img;
 	if(m.ext.GetCount()) {
 		m.ext = m.ext.Mid(1);
+		m.large = large;
 		img = MakeImage(m);
 	}
-	return IsNull(img) ? isexe ? exe : file : img;
+	return IsNull(img) ? isexe ? (large ? lexe : exe) : (large ? lfile : file) : img;
 }
 
 #endif
 #endif
 
-Image NativePathIcon(const char *path, bool folder)
+Image NativePathIcon0(const char *path, bool folder, bool large)
 {
 #if defined(PLATFORM_WIN32)
 	if (folder)
-		return GetFileIcon(path, true, true);
+		return GetFileIcon(path, true, true, large);
 	else
-		return GetFileIcon(path, false);
+		return GetFileIcon(path, false, false, large);
 #endif
 #ifdef PLATFORM_POSIX
 	String p = path;
 	bool isdrive = folder && ((p == "/media") || (p == "/mnt"));
 	FindFile ff(path);
-	return isdrive ? PosixGetDriveImage(GetFileName(path))
-				   : GetFileIcon(path, GetFileName(path), folder, ff.GetMode() & 0111);
+	return isdrive ? PosixGetDriveImage(GetFileName(path), large)
+				   : GetFileIcon(path, GetFileName(path), folder, ff.GetMode() & 0111, large);
 #endif
+}
+
+Image NativePathIcon(const char *path, bool folder)
+{
+	return NativePathIcon0(path, folder, false);
 }
 
 Image NativePathIcon(const char *path)
 {
 	FindFile ff(path);
 	return NativePathIcon(path, ff.IsFolder());
+}
+
+Image NativePathLargeIcon(const char *path, bool folder)
+{
+	return NativePathIcon0(path, folder, true);
+}
+
+Image NativePathLargeIcon(const char *path)
+{
+	FindFile ff(path);
+	return NativePathLargeIcon(path, ff.IsFolder());
 }
 
 bool MatchSearch(const String& filename, const String& search)
@@ -250,7 +286,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			if(MatchSearch(root[i].filename, search))
 				list.Add(root[i].filename,
 			#ifdef PLATFORM_WIN32
-					GetFileIcon(root[i].filename, false, true),
+					GetFileIcon(root[i].filename, false, true, false),
 			#else
 					GetDriveImage(root[i].root_style),
 			#endif
@@ -281,7 +317,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 				Image img = isdrive ? PosixGetDriveImage(fi.filename)
 				                    : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111);
 			#else
-				Image img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory);
+				Image img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false);
 			#endif
 				if(IsNull(img))
 					img = fi.is_directory ? CtrlImg::Dir() : CtrlImg::File();
@@ -956,7 +992,7 @@ void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 #ifdef PLATFORM_X11
 	Image img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false);
 #else
-	Image img = s.GetCount() ? GetFileIcon(s, false, true) : CtrlImg::Computer();
+	Image img = s.GetCount() ? GetFileIcon(s, false, true, false) : CtrlImg::Computer();
 #endif
 	if(IsNull(img))
 		img = CtrlImg::Dir();
