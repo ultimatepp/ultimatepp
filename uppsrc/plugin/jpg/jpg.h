@@ -3,7 +3,6 @@
 
 #include <Draw/Draw.h>
 
-
 NAMESPACE_UPP
 
 class JPGRaster : public StreamRaster {

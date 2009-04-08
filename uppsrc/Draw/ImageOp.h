@@ -68,7 +68,7 @@ public:
 
 void DrawRasterData(Draw& w, int x, int y, int cx, int cy, const String& data);
 
-void  Rescale(RasterEncoder& tgt, Size sz, Raster& src, const Rect& src_rc,
+bool  Rescale(RasterEncoder& tgt, Size sz, Raster& src, const Rect& src_rc,
               Gate2<int, int> progress = false);
 Image Rescale(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
 Image Rescale(const Image& src, Size sz, Gate2<int, int> progress = false);
