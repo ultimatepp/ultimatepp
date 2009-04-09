@@ -314,8 +314,8 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			   (fi.is_directory || PatternMatchMulti(patterns, fi.filename)) &&
 			   MatchSearch(fi.filename, search) && show) {
 			#ifdef PLATFORM_X11
-				Image img = isdrive ? PosixGetDriveImage(fi.filename)
-				                    : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111);
+				Image img = isdrive ? PosixGetDriveImage(fi.filename, false)
+				                    : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#else
 				Image img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false);
 			#endif
@@ -990,7 +990,7 @@ void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 	String s = q;
 	w.DrawRect(r, paper);
 #ifdef PLATFORM_X11
-	Image img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false);
+	Image img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
 #else
 	Image img = s.GetCount() ? GetFileIcon(s, false, true, false) : CtrlImg::Computer();
 #endif
