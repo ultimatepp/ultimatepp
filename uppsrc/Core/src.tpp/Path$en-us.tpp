@@ -188,6 +188,13 @@ st]_[@(0.0.255) char]_`*[*@3 path])&]
 [s2;%% Returns true if [%-*@3 path] represents a directory.&]
 [s3;%% &]
 [s4; &]
+[s5;:GetFileTime`(const char`*`): [_^FileTime^ FileTime]_[* GetFileTime]([@(0.0.255) const]_
+[@(0.0.255) char]_`*[*@3 path])&]
+[s2;%% Returns the last write time of file at [%-*@3 path]. If item 
+does not exist, result is set to zero (using memset, as FileTime 
+is structure in Win32).&]
+[s3;%% &]
+[s4; &]
 [s5;:FileGetTime`(const char`*`): [_^Time^ Time]_[* FileGetTime]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 path])&]
 [s2;%% Returns the last write time of file at [%-*@3 path] or Null 
