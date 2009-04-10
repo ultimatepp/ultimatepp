@@ -16,7 +16,6 @@ SqlDetail& SqlDetail::Add(SqlId id, Ctrl& ctrl)
 	return *this;
 }
 
-
 SqlDetail& SqlDetail::Join(SqlId id, ArrayCtrl& master)
 {
 	master.AddCtrlAt(0, *this);
