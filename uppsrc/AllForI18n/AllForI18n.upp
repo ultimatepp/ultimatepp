@@ -1,4 +1,4 @@
-description "This package is only useful for translating U++ to other languages";
+description "This package is only useful for translating U++ to other languages\377";
 
 uses
 	CtrlLib,
@@ -11,7 +11,8 @@ uses
 	GridCtrl,
 	Web,
 	Oracle,
-	usvn;
+	usvn,
+	SqlCtrl;
 
 file
 	main.cpp;

@@ -405,6 +405,12 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 	CancelMode();
 	if(r.Contains(GetMousePos()))
 		DispatchMouse(MOUSEMOVE, GetMousePos() - r.TopLeft());
+
+	if(redirect) {
+		int windowType = XInternAtom(Xdisplay, "_NET_WM_WINDOW_TYPE_POPUP_MENU", false);
+		XChangeProperty(Xdisplay, w, XInternAtom(Xdisplay, "_NET_WM_WINDOW_TYPE", false), XA_ATOM, 32, 
+		                PropModeReplace, (byte *)&windowType, 1);
+	}
 }
 
 void Ctrl::WndDestroy()

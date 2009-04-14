@@ -10,4 +10,5 @@
 #include "GridCtrl/init"
 #include "Oracle/init"
 #include "usvn/init"
+#include "SqlCtrl/init"
 #endif
