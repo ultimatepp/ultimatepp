@@ -929,7 +929,7 @@ skSK("Tý.")
 srSP("")
 trTR("Hft.")
 zhCN("星期")
-zhTW("")
+zhTW("Wk")
 
 T_("Previous hour")
 csCZ("Předchozí hodina")

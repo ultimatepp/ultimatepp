@@ -2203,6 +2203,8 @@ void ArrayCtrl::DoColumnSort()
 		cs.descending = sortcolumndescending;
 		cs.order = c.order;
 		cs.cmp = c.cmp;
+		if(!cs.order && !cs.cmp)
+			cs.cmp = StdValueCompare;
 		ColumnSort(sortcolumn, cs);
 	}
 }
