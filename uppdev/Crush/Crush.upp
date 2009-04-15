@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	Crush.h,
+	main.cpp,
+	Crush.lay;
+
+mainconfig
+	"" = "GUI";
+

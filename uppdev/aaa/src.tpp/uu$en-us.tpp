@@ -6,7 +6,7 @@ topic "sdfgsdfg sdfjkl ghlskdjfh glskdhj fglksjd hfglkjshdfglkjhds fgkl dslk skl
 [0 $$4,0#96390100711032703541132217272105:end]
 [{_}%EN-US 
 [s1;%- &]
-[s0;%- &]
+[s0;*@3%- &]
 [s0;%- &]
 [s2;:FormatInt`(int`):%- [_^String^ String]_[* FormatInt]([@(0.0.255) int]_[*@3 i])&]
 [s3; Outputs decimally formatted signed integer without `+ or any 
