@@ -1,3 +1,5 @@
+description "\377128,128,0";
+
 optimize_speed;
 
 uses

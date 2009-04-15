@@ -1,4 +1,4 @@
-description "PNG image file format U++ encapsulation";
+description "PNG image file format U++ encapsulation\3770,128,128";
 
 uses
 	Core,

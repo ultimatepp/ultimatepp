@@ -1,0 +1,14 @@
+description "\3770,0,255";
+
+uses
+	CtrlLib;
+
+file
+	Test.h charset "UTF-8",
+	TestArrayCtrl.h charset "UTF-8",
+	main.cpp charset "UTF-8",
+	Test.lay;
+
+mainconfig
+	"" = "GUI";
+

@@ -2,7 +2,7 @@
 #define _plugin_png_icpp_init_stub
 #include "Core/init"
 #include "Draw/init"
-#define BLITZ_INDEX__ F9A38A4CDA02AC861A35747162FC2BA11
+#define BLITZ_INDEX__ F8AB1A143647FCEBA0320CAB622866F52
 #include "pngreg.icpp"
 #undef BLITZ_INDEX__
 #endif
