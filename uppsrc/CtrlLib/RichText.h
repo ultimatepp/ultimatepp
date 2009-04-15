@@ -26,6 +26,7 @@ private:
 	int           highlight;
 	int           sell, selh;
 	int           cursor, anchor;
+	bool          lazy;
 
 	void          EndSizeTracking();
 	void          SetSb();
@@ -88,6 +89,8 @@ public:
 	RichTextView&   AutoHideSb(bool b = true)                 { sb.AutoHide(b); return *this; }
 	RichTextView&   HyperlinkDecoration(bool b = true)        { hldec = b; Refresh(); return *this; }
 	RichTextView&   NoHyperlinkDecoration()                   { return HyperlinkDecoration(false); }
+	RichTextView&   Lazy(bool b)                              { lazy = b; return *this; }
+	RichTextView&   NoLazy()                                  { return Lazy(false); }
 
 	void            operator=(const char *qtf)                { SetQTF(qtf); }
 
