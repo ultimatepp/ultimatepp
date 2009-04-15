@@ -84,7 +84,7 @@ void Pdb::Sync0()
 			for(int i = 0; i < f.param.GetCount(); i++) {
 				if(i)
 					r << ", ";
-				r << f.param.GetKey(i) << "=" << Visualise(f.param[i], 30).GetString();
+				r << f.param.GetKey(i) << "=" << Visualise(f.param[i]).GetString();
 			}
 			r << ')';
 			if(c < 0)

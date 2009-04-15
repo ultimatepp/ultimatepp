@@ -186,7 +186,7 @@ void Pdb::TryAuto(const String& exp, const VectorMap<String, Value>& prev)
 		try {
 			CParser p(exp);
 			Val v = Exp(p);
-			Visualise(r, v, 2, 20);
+			Visualise(r, v, 2);
 		}
 		catch(CParser::Error) {
 			r.Clear();
