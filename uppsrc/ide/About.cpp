@@ -37,6 +37,7 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	w.PageWidth(2900);
 	w.NoSb();
 	w.SetFrame(NullFrame());
+	w.NoLazy();
 	parent.Add(w.TopPos(isz.cy + 3, 99).LeftPos(0, isz.cx));
 	return sz;
 }
@@ -87,6 +88,7 @@ struct AboutDlg : TopWindow {
 		about.RightPos(0, 1000 - isz.cx).VSizePos();
 		about.HMargins(4);
 		about.SetFrame(NullFrame());
+		about.NoLazy();
 		Background(PaintRect(ColorDisplay(), SColorPaper()));
 		Add(about);
 		Title("About TheIDE");

@@ -242,7 +242,8 @@ void  RichTextView::EndSizeTracking()
 
 void  RichTextView::Layout()
 {
-	if(IsOpen()) {
+	sizetracking = false;
+	if(IsOpen() && lazy) {
 		sizetracking = true;
 		KillTimeCallback(TIMEID_ENDSIZETRACKING);
 		SetTimeCallback(250, THISBACK(EndSizeTracking), TIMEID_ENDSIZETRACKING);
@@ -392,6 +393,7 @@ RichTextView::RichTextView()
 	SetFrame(ViewFrame());
 	AddFrame(sb);
 	NoWantFocus();
+	lazy = true;
 }
 
 RichTextView::~RichTextView() {}
