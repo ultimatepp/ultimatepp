@@ -48,8 +48,9 @@ bool IsOk(const String& q)
 	return true;
 }
 
-void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int maxlen)
+void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 {
+	const int maxlen = 300;
 	if(result.length > maxlen)
 		return;
 	if(val.ref > 0 || val.type < 0)
@@ -62,7 +63,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 			else {
 				String x = ReadString(val.address, slen + 1);
 				String dt;
-				if(x.GetLength() > (IsOk(x) ? slen : 20)) {
+				if(x.GetLength() > slen) {
 					x.Trim(x.GetLength() - 1);
 					dt = "..";
 				}
@@ -73,7 +74,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 		}
 		if(expandptr > 0 && (val.type != UNKNOWN || val.ref > 1) && val.address) {
 			result.Cat("->", SColorMark);
-			Visualise(result, DeRef(val), expandptr - 1, slen, maxlen);
+			Visualise(result, DeRef(val), expandptr - 1, slen);
 		}
 		return;
 	}
@@ -126,7 +127,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 		Val r = t.member[i];
 		r.address += val.address;
 		try {
-			Visualise(result, r, max(expandptr - 1, 0), 32, maxlen);
+			Visualise(result, r, max(expandptr - 1, 0), slen);
 		}
 		catch(CParser::Error e) {
 			result.Cat(e, SColorDisabled);
@@ -143,7 +144,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 		result.Cat(t.static_member.GetKey(i));
 		result.Cat("=", SColorMark);
 		try {
-			Visualise(result, t.static_member[i], max(expandptr - 1, 0), 32, maxlen);
+			Visualise(result, t.static_member[i], max(expandptr - 1, 0), slen);
 		}
 		catch(CParser::Error e) {
 			result.Cat(e, SColorDisabled);
@@ -167,7 +168,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 				Val r = t.member[i];
 				r.address += adr;
 				try {
-					Visualise(result, r, max(expandptr - 1, 0), 32, maxlen);
+					Visualise(result, r, max(expandptr - 1, 0), slen);
 				}
 				catch(CParser::Error e) {
 					result.Cat(e, SColorDisabled);
@@ -178,11 +179,33 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int m
 	result.Cat(" }", SColorMark);
 }
 
-Pdb::Visual Pdb::Visualise(Val v, int maxlen)
+void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr)
+{
+	int cx = autos.HeaderObject().GetTabWidth(1);
+	int l = 30;
+	int h = 300;
+	for(int i = 0; i < 8; i++) {
+		int slen = (l + h) / 2;
+		result.length = 0;
+		result.part.Clear();
+		Visualise(result, val, expandptr, slen);
+		int x = 0;
+		for(int i = 0; i < result.part.GetCount(); i++)
+			x += GetTextSize(result.part[i].text, StdFont()).cx;
+		if(x < cx)
+			l = slen;
+		else
+			h = slen;
+		if(l + 1 >= h)
+			break;
+	}	
+}
+
+Pdb::Visual Pdb::Visualise(Val v)
 {
 	Visual r;
 	try {
-		Visualise(r, v, 2, 150, maxlen);
+		Visualise(r, v, 2);
 	}
 	catch(CParser::Error e) {
 		r.Cat(e, SColorDisabled);
@@ -190,13 +213,13 @@ Pdb::Visual Pdb::Visualise(Val v, int maxlen)
 	return r;
 }
 
-Pdb::Visual Pdb::Visualise(const String& exp, int maxlen)
+Pdb::Visual Pdb::Visualise(const String& exp)
 {
 	Visual r;
 	try {
 		CParser p(exp);
 		Val v = Exp(p);
-		Visualise(r, v, 2, 150, maxlen);
+		Visualise(r, v, 2);
 	}
 	catch(CParser::Error e) {
 		r.Cat(e, SColorDisabled);

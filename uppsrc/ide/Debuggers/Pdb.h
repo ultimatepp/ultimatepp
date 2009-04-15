@@ -268,9 +268,10 @@ struct Pdb : Debugger, ParentCtrl {
 	Val        Multiplicative(CParser& p);
 	Val        Exp0(CParser& p);
 	Val        Exp(CParser& p);
-	void       Visualise(Visual& result, Pdb::Val val, int expandptr, int slen, int maxlen = 250);
-	Visual     Visualise(Val v, int maxlen = 250);
-	Visual     Visualise(const String& rexp, int maxlen = 250);
+	void       Visualise(Visual& result, Pdb::Val val, int expandptr, int slen);
+	void       Visualise(Visual& result, Pdb::Val val, int expandptr);
+	Visual     Visualise(Val v);
+	Visual     Visualise(const String& rexp);
 
 // code
 	int        Disassemble(adr_t ip);
