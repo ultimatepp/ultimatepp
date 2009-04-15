@@ -411,6 +411,8 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 		XChangeProperty(Xdisplay, w, XInternAtom(Xdisplay, "_NET_WM_WINDOW_TYPE", false), XA_ATOM, 32, 
 		                PropModeReplace, (byte *)&windowType, 1);
 	}
+	
+	RefreshLayoutDeep();
 }
 
 void Ctrl::WndDestroy()
