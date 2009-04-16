@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)
+#define LLOG(x) // LOG(x)
 
 class ODBCConnection : public SqlConnection
 {
@@ -253,7 +253,7 @@ ODBCConnection::~ODBCConnection()
 
 bool ODBCConnection::IsOk(SQLRETURN ret) const
 {
-	if(SQL_SUCCEEDED(ret))
+	if(SQL_SUCCEEDED(ret) || ret == SQL_NO_DATA)
 		return true;
 	SQLCHAR       SqlState[6], Msg[SQL_MAX_MESSAGE_LENGTH];
 	SQLINTEGER    NativeError;
@@ -481,7 +481,7 @@ void ODBCConnection::Flush()
 	text.SetCount(info.GetCount());
 	time.Clear();
 	time.SetCount(info.GetCount());
-	while(Fetch0()) {
+	while(info.GetCount() && Fetch0()) {
 		rowcount++;
 		for(int i = 0; i < info.GetCount(); i++)
 			switch(info[i].type) {
@@ -496,6 +496,7 @@ void ODBCConnection::Flush()
 				break;
 			}
 	}
+	LLOG("Flush fetched " << rowcount);
 }
 
 void ODBCConnection::Cancel()

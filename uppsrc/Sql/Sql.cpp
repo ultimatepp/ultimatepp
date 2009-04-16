@@ -124,12 +124,8 @@ bool Sql::Execute() {
 	bool b = cn->Execute();
 	session.SetTime(GetTickCount() - cn->starttime);
 	session.SetStatus(SqlSession::END_EXECUTING);
-	if(!b) {
-		if(s) {
-			*s << "## ERROR: " << session.GetLastError() << '\n';
-		}
+	if(!b)
 		session.SetStatus(SqlSession::EXECUTING_ERROR);
-	}
 	for(int i = 0; i < cn->info.GetCount(); i++)
 		cn->info[i].name = ToUpper(cn->info[i].name);
 
