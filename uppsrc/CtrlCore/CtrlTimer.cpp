@@ -76,6 +76,8 @@ void KillTimeCallback(void *id) {
 
 void Ctrl::TimerProc(dword time)
 {
+	if(IsPanicMode())
+		return;
 	sTimerLock.Enter();
 	TimeEvent *list = tevents();
 	if(sTClick > time)
