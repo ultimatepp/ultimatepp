@@ -1,4 +1,4 @@
-description "Rich text editor";
+description "Rich text editor\3770,0,255";
 
 uses
 	CtrlLib;

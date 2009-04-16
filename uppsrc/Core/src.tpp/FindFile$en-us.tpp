@@ -94,8 +94,8 @@ onst]&]
 [s3; &]
 [s4; &]
 [s5;:FindFile`:`:IsHidden`(`)const:%- [@(0.0.255) bool]_[* IsHidden]()_[@(0.0.255) const]&]
-[s6; `[Win32`]&]
-[s2; Returns true if entry has hidden flag set.&]
+[s2; Returns true if entry has hidden flag set in Win32 or starts 
+with `'.`' in POSIX.&]
 [s3; &]
 [s4; &]
 [s5;:FindFile`:`:IsReadOnly`(`)const:%- [@(0.0.255) bool]_[* IsReadOnly]()_[@(0.0.255) cons
@@ -139,4 +139,4 @@ this is used as condition to the loop that enumerates directory.&]
 [s5;:FindFile`:`:FindFile`(const char`*`):%- [* FindFile]([@(0.0.255) const]_[@(0.0.255) ch
 ar]_`*[*@3 name])&]
 [s2; Initializes and performs Search([%-*@3 name]).&]
-[s3; ]
+[s0; ]

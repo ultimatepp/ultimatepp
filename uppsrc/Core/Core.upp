@@ -1,4 +1,4 @@
-description "Non-GUI code. Streams, NTL containers, concrete types, Value, XML, C parsing etc...\377128,0,0";
+description "Non-GUI code. Streams, NTL containers, concrete types, Value, XML, C parsing etc...\377B128,0,0";
 
 acceptflags
 	USEMALLOC;

@@ -129,7 +129,7 @@ public:
 	FileTime    GetLastWriteTime() const  { return Stat().st_mtime; }
 
 	bool        IsReadOnly() const        { return !(GetMode() & (S_IWUSR|S_IWGRP|S_IWOTH)); }
-
+	bool        IsHidden() const          { return *name == '.'; }
 	bool        IsDirectory() const       { return S_ISDIR(GetMode()); }
 	bool        IsFolder() const;
 
