@@ -69,7 +69,7 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large)
 #ifdef PLATFORM_X11
 
 #ifdef flagNOGTK
-Image PosixGetDriveImage(String dir)
+Image PosixGetDriveImage(String dir, bool)
 {
 	if(dir.GetCount() == 0 || dir == "/")
 		return CtrlImg::Computer();
@@ -80,7 +80,7 @@ Image PosixGetDriveImage(String dir)
 	return CtrlImg::Hd();
 }
 
-Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe)
+Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe, bool)
 {
 	return Null;
 }
