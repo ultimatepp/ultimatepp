@@ -475,6 +475,12 @@ void ODBCConnection::Flush()
 	LLOG("Flush " << (void *)this);
 	rowcount = 0;
 	rowi = 0;
+	number.Clear();
+	number.SetCount(info.GetCount());
+	text.Clear();
+	text.SetCount(info.GetCount());
+	time.Clear();
+	time.SetCount(info.GetCount());
 	while(Fetch0()) {
 		rowcount++;
 		for(int i = 0; i < info.GetCount(); i++)
