@@ -2,7 +2,7 @@
 #define _CtrlCore_icpp_init_stub
 #include "Draw/init"
 #include "plugin\bmp/init"
-#define BLITZ_INDEX__ FBC17513242E99EC4440BC76CBB3D45F5
+#define BLITZ_INDEX__ F558C58023E3A844EE560E2C19C8138B7
 #include "CtrlCore.icpp"
 #undef BLITZ_INDEX__
 #endif
