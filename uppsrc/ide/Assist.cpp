@@ -518,7 +518,7 @@ void AssistEditor::AssistInsert()
 		int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
 		if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
 			SetCursor(GetCursor() - 1);
-			StartParamInfo(f);
+			StartParamInfo(f, cl);
 			int x = f.natural.ReverseFind('(');
 			if(x >= 0 && f.natural[x + 1] == ')')
 				SetCursor(GetCursor() + 1);
