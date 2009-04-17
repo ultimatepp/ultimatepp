@@ -1,5 +1,10 @@
 #include "Common.h"
 
+bool Debugger::Tip(const String&, CodeEditor::MouseTip&)
+{
+	return false;
+}
+
 bool FinishSave(String tmpfile, String outfile)
 {
 	Progress progress;

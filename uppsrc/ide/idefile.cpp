@@ -201,6 +201,7 @@ void Ide::PosSync()
 			editor.SetPtr(posline[i], posimg[i], i);
 		else
 			editor.SetPtr(-1, Image(), i);
+	editor.SyncTip();
 }
 
 bool Ide::IsProjectFile(const String& f) const

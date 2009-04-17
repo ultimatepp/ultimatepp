@@ -611,6 +611,8 @@ Ide::Ide()
 	doc_serial = -1;
 
 	showtime = true;
+	
+	editor.WhenTip = THISBACK(EditorTip);
 }
 
 Ide::~Ide()

@@ -3,6 +3,7 @@
 
 #include <ide/Core/Core.h>
 #include <CtrlLib/CtrlLib.h>
+#include <CodeEditor/CodeEditor.h>
 
 #define IMAGECLASS IdeCommonImg
 #define IMAGEFILE  <ide/Common/common.iml>
@@ -15,6 +16,7 @@ struct Debugger {
 	virtual void Run() = 0;
 	virtual void Stop() = 0;
 	virtual bool IsFinished() = 0;
+	virtual bool Tip(const String& exp, CodeEditor::MouseTip& mt);
 
 	virtual ~Debugger() {}
 };

@@ -223,6 +223,28 @@ void Pdb::Autos()
 //	MarkChanged(prev, autos);
 }
 
+bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
+{
+/*	mt.display = &StdDisplay();
+	mt.value = exp;
+	mt.sz = Size(100, 20);
+	return true;*/
+	Visual r;
+	try {
+		CParser p(exp);
+		Val v = Exp(p);
+		Visualise(r, v, 2);
+		if(r.part.GetCount()) {
+			mt.sz = r.GetSize() + Size(4, 4);
+			mt.value = RawPickToValue(r);
+			mt.display = &Single<VisualDisplay>();
+			return true;
+		}
+	}
+	catch(CParser::Error) {}
+	return false;
+}
+
 void Pdb::Data()
 {
 	switch(tab.Get()) {

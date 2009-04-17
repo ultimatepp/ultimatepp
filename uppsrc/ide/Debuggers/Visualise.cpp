@@ -179,6 +179,14 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 	result.Cat(" }", SColorMark);
 }
 
+Size Pdb::Visual::GetSize() const
+{
+	int cx = 0;
+	for(int i = 0; i < part.GetCount(); i++)
+		cx += GetTextSize(part[i].text, StdFont()).cx;
+	return Size(cx, StdFont().Info().GetHeight());
+}
+
 void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr)
 {
 	int cx = autos.HeaderObject().GetTabWidth(1);
@@ -189,9 +197,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr)
 		result.length = 0;
 		result.part.Clear();
 		Visualise(result, val, expandptr, slen);
-		int x = 0;
-		for(int i = 0; i < result.part.GetCount(); i++)
-			x += GetTextSize(result.part[i].text, StdFont()).cx;
+		int x = result.GetSize().cx;
 		if(x < cx)
 			l = slen;
 		else
@@ -239,8 +245,6 @@ const
 			const VisualPart& p = v.part[i];
 			Size sz = GetTextSize(p.text, StdFont());
 			w.DrawRect(x, y, sz.cx, r.Height(), blue || !p.mark ? paper : SColorLtFace);
-//			if(p.mark)
-//				w.DrawRect(x, r.bottom - 1, sz.cx, 1, SLtRed);
 			w.DrawText(x, y, p.text, StdFont(), blue ? ink : p.ink);
 			x += sz.cx;
 		}
