@@ -327,6 +327,7 @@ void Ide::SetupFormat() {
 		(ide.show_status_bar, show_status_bar)
 		(ide.toolbar_in_row, toolbar_in_row)
 		(ide.splash_screen, splash_screen)
+		(ide.sort, sort)
 		(ide.mute_sounds, mute_sounds)
 		(ide.wrap_console_text, wrap_console_text)
 		(ide.assist, editor.auto_assist)

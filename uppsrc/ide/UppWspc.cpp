@@ -41,8 +41,13 @@ void WorkspaceWork::ScanWorkspace() {
 	actualfileindex = -1;
 	filelist.Clear();
 	package.Clear();
+	Vector<String> pks;
+	for(int i = 0; i < wspc.package.GetCount(); i++)
+		pks.Add(wspc.package.GetKey(i));
+	if(sort)
+		Sort(pks.Begin() + 1, pks.End(), StdLess<String>());
 	for(int i = 0; i < wspc.package.GetCount(); i++) {
-		String pk = wspc.package.GetKey(i);
+		String pk = pks[i];
 		Font fnt = ListFont();
 		if(i == 0)
 			fnt.Bold();
@@ -750,6 +755,7 @@ WorkspaceWork::WorkspaceWork()
 	package.BackPaintHint();
 	filelist.BackPaintHint();
 	showtime = false;
+	sort = true;
 }
 
 void WorkspaceWork::SerializeClosed(Stream& s)

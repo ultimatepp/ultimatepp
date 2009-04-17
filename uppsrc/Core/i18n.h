@@ -12,7 +12,7 @@ const char *t_GetLngString(const char *id);
 
 const char *GetENUS(const char *id);
 
-// t_ and tt_ would cause translation files sync to report error, so that
+// t_ and tt_ would cause translation files sync to report error, therefore it
 // has to be included from file that is not part of package...
 #include "t_.h"
 
