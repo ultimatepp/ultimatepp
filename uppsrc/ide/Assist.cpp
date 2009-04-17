@@ -97,6 +97,7 @@ void AssistEditor::CloseAssist()
 	if(annotation_popup.IsOpen())
 		annotation_popup.Close();
 	assist_item.Clear();
+	CloseTip();
 }
 
 String AssistEditor::ReadIdBack(int q)

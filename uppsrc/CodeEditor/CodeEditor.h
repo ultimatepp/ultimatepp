@@ -156,11 +156,14 @@ class CodeEditor : public LineEdit {
 	friend class EditorBar;
 
 public:
-	virtual bool Key(dword code, int count);
-	virtual void LeftDown(Point p, dword keyflags);
-	virtual void LeftDouble(Point p, dword keyflags);
-	virtual void MouseMove(Point p, dword keyflags);
-	virtual void Serialize(Stream& s);
+	virtual bool  Key(dword code, int count);
+	virtual void  LeftDown(Point p, dword keyflags);
+	virtual void  LeftDouble(Point p, dword keyflags);
+	virtual void  MouseMove(Point p, dword keyflags);
+	virtual Image CursorImage(Point p, dword keyflags);
+	virtual void  Serialize(Stream& s);
+	virtual void  MouseLeave();
+
 	void         CheckEdited(bool e = true) { check_edited = e; }
 	bool         GetCheckEdited()           { return check_edited; }
 
@@ -299,6 +302,18 @@ protected:
 	int    iwc;
 
 	int    highlight;
+	
+	struct Tip : Ctrl {
+		Value v;
+		const Display *d;
+		
+		virtual void Paint(Draw& w);
+		
+		Tip();
+	};
+	
+	Tip   tip;
+	int   tippos;
 
 	struct HlSt;
 	
@@ -368,12 +383,19 @@ private:
 	HlStyle  hl_style[HL_COUNT];
 
 public:
-	Callback WhenSelection;
-	Callback1<const String&> WhenDbgView;
-	Callback WhenLeftDown;
-	Callback WhenAnnotationMove;
-	Callback WhenAnnotationClick;
-	Callback WhenAnnotationRightClick;
+	struct MouseTip {
+		int            pos;
+		Value          value;
+		const Display *display;
+		Size           sz;
+	};
+
+	Callback         WhenSelection;
+	Gate1<MouseTip&> WhenTip;
+	Callback         WhenLeftDown;
+	Callback         WhenAnnotationMove;
+	Callback         WhenAnnotationClick;
+	Callback         WhenAnnotationRightClick;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
@@ -482,6 +504,9 @@ public:
 	void     DefaultHlStyles();
 	void     LoadHlStyles(const char *s);
 	String   StoreHlStyles();
+	
+	void     SyncTip();
+	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
 
 	const char *GetHlName(int i);
 	bool        HasHlFont(int i);

@@ -570,13 +570,57 @@ void CodeEditor::LeftDown(Point p, dword keyflags) {
 	WhenLeftDown();
 }
 
+void CodeEditor::Tip::Paint(Draw& w)
+{
+	Rect r = GetSize();
+	w.DrawRect(r, SColorInfo());
+	r.left++;
+	if(d)
+		d->Paint(w, r, v, SColorText(), SColorPaper(), 0);
+}
+
+CodeEditor::Tip::Tip()
+{
+	SetFrame(BlackFrame());
+	BackPaint();
+}
+
+void CodeEditor::SyncTip()
+{
+	MouseTip mt;
+	mt.pos = tippos;
+	if(tippos >= 0 && IsVisible() && WhenTip(mt)) {
+		tip.d = mt.display;
+		tip.v = mt.value;
+		Point p = Upp::GetMousePos();
+		Size sz = tip.AddFrameSize(mt.sz);
+		tip.SetRect(p.x, p.y + 24, sz.cx, sz.cy);
+		if(!tip.IsOpen())
+			tip.PopUp(this, false, false, true);
+		tip.Refresh();
+	}
+	else
+		CloseTip();
+}
+
 void CodeEditor::MouseMove(Point p, dword f) {
 	LineEdit::MouseMove(p, f);
 	if(IsSelection()) return;
-	int pos = GetMousePos(p);
-	int l, h;
-	if(GetWordPos(pos, l, h) || pos > 0 && GetWordPos(pos - 1, l, h))
-		WhenDbgView(Get(l, h - l));
+	tippos = GetMousePos(p);
+	SyncTip();	
+}
+
+Image CodeEditor::CursorImage(Point p, dword keyflags)
+{
+	if(tip.IsOpen())
+		return Image::Arrow();
+	return LineEdit::CursorImage(p, keyflags);
+}
+
+void CodeEditor::MouseLeave()
+{
+	tippos = -1;
+	LineEdit::MouseLeave();
 }
 
 WString CodeEditor::GetI()
@@ -1033,6 +1077,7 @@ CodeEditor::CodeEditor() {
 	auto_enclose = false;
 	mark_lines = true;
 	check_edited = false;
+	tippos = -1;
 }
 
 CodeEditor::~CodeEditor() {}

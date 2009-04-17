@@ -20,6 +20,7 @@ struct Pdb : Debugger, ParentCtrl {
 	virtual bool SetBreakpoint(const String& filename, int line, const String& bp);
 	virtual bool RunTo();
 	virtual void Run();
+	virtual bool Tip(const String& exp, CodeEditor::MouseTip& mt);
 	virtual void Serialize(Stream& s);
 
 	struct ModuleInfo : Moveable<ModuleInfo> {
@@ -124,6 +125,7 @@ struct Pdb : Debugger, ParentCtrl {
 		void   Cat(const char *text, Color ink = SColorText);
 		String GetString() const;
 		void   Clear() { part.Clear(); length = 0; }
+		Size   GetSize() const;
 
 		Visual()       { length = 0; }
 	};

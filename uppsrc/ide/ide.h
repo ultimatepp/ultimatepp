@@ -849,6 +849,7 @@ public:
 
 		String GetLogPath();
 		void  OpenLog();
+		bool  EditorTip(CodeEditor::MouseTip& mt);
 
 	void      Setup(Bar& menu);
 		void  SetupFormat();

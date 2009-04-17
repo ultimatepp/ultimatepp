@@ -280,3 +280,8 @@ void Ide::OpenLog()
 	if(FileExists(p))
 		EditFile(p);
 }
+
+bool Ide::EditorTip(CodeEditor::MouseTip& mt)
+{
+	return debugger && debugger->Tip(editor.ReadIdBack(mt.pos), mt);
+}
