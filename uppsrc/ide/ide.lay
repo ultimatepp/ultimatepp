@@ -91,8 +91,7 @@ LAYOUT(BatchBuildLayout, 276, 276)
 END_LAYOUT
 
 LAYOUT(FindFileLayout, 450, 280)
-	ITEM(Label, dv___0, SetLabel(t_("&File name:")).LeftPosZ(4, 56).TopPosZ(4, 19))
-	ITEM(EditField, mask, HSizePosZ(62, 4).TopPosZ(4, 19))
+	ITEM(EditField, mask, HSizePosZ(4, 4).TopPosZ(4, 19))
 	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(28, 34))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))

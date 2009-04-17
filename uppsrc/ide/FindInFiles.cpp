@@ -202,6 +202,11 @@ static const char *FindFileMatch(const char *pattern, const char *file, String& 
 	return NULL;
 }
 
+int CharFilterFindFileMask(int c)
+{
+	return ToUpper(ToAscii(c));
+}
+
 void Ide::FindFileName() {
 	const Workspace& wspc = IdeWorkspace();
 
@@ -211,56 +216,25 @@ void Ide::FindFileName() {
 	ffdlg.list.AddColumn("Package");
 	ffdlg.list.AddColumn("File");
 	ffdlg.list.WhenLeftDouble = ffdlg.Acceptor(IDOK);
+	ffdlg.mask.NullText("Search");
+	ffdlg.mask.SetFilter(CharFilterFindFileMask);
 	ffdlg.mask <<= ffdlg.Breaker(IDYES);
 	int prev = 0;
-	for(;;)
-	{
+	for(;;) {
 		ffdlg.list.Clear();
-		String mask = ffdlg.mask.GetText().ToString();
-		String rem = String::GetVoid();
-		bool simple = (mask.Find('/') < 0 && mask.Find('\\') < 0);
+		String mask = ~ffdlg.mask;
 		const char *best_err = NULL;
 		for(int p = 0; p < wspc.GetCount(); p++) {
 			String packname = wspc[p];
 			const Package& pack = wspc.GetPackage(p);
 			for(int f = 0; f < pack.file.GetCount(); f++) {
 				String fn = pack.file[f];
-				String rr = rem;
-				const char *errptr = FindFileMatch(mask, fn, rr);
-				if(errptr && simple) {
-					const char *b = fn.Begin(), *e = fn.End();
-					while(e > b && e[-1] != '\\' && e[-1] != '/')
-						e--;
-					if(b != e) {
-						rr = rem;
-						errptr = FindFileMatch(mask, e, rr);
-					}
-				}
-				if(!errptr) {
-					rem = rr;
+				if(ToUpper(packname).Find(mask) >= 0 || ToUpper(fn).Find(mask) >= 0)
 					ffdlg.list.Add(packname, pack.file[f]);
-				}
-				else if(!best_err || errptr > best_err)
-					best_err = errptr;
 			}
 		}
-		if(ffdlg.list.GetCount() == 0) {
-			int px = int(best_err - mask.Begin());
-			ffdlg.mask.SetSelection(px, ffdlg.mask.GetLength());
-			BeepMuteExclamation();
-		}
-		else if(!rem.IsEmpty() && prev < mask.GetLength()) {
-			int l, h;
-			ffdlg.mask.GetSelection(l, h);
-			if(l == mask.GetLength()) {
-				ffdlg.mask.SetText((mask + rem).ToWString());
-				ffdlg.mask.SetSelection(l, l + rem.GetLength());
-			}
-		}
-		prev = mask.GetLength();
 		if(ffdlg.list.GetCount() > 0)
 			ffdlg.list.SetCursor(0);
-
 		switch(ffdlg.Run()) {
 		case IDCANCEL:
 			return;

@@ -1007,7 +1007,18 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
 		}
 		i++;
 	}
-	GotoCpp(n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q]);
+	const CppItem& pos = n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q];
+	String path = GetCppFile(pos.file);
+	if(ToLower(GetFileExt(path)) == ".lay") {
+		AddHistory();
+		EditFile(path);
+		LayDesigner *l = dynamic_cast<LayDesigner *>(~designer);
+		if(l && pos.name.StartsWith("With"))
+			l->FindLayout(pos.name.Mid(4));
+		AddHistory();
+	}
+	else
+		GotoCpp(pos);
 }
 
 void Ide::IdeGotoCodeRef(String coderef)
