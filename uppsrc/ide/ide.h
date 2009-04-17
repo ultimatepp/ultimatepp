@@ -317,6 +317,7 @@ struct AssistEditor : CodeEditor {
 	String         param_qtf;
 	struct ParamInfo {
 		int            line;
+		int            pos;
 		WString        test;
 		CppItem        item;
 		String         editfile;
@@ -336,7 +337,7 @@ struct AssistEditor : CodeEditor {
 	bool           InCode();
 	
 	void           SyncParamInfo();
-	void           StartParamInfo(const CppItem& m);
+	void           StartParamInfo(const CppItem& m, int pos);
 
 	void           Complete();
 	void           Abbr();

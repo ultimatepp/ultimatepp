@@ -4,6 +4,7 @@ void AssistEditor::SyncParamInfo()
 {
 	String qtf;
 	int mpar = INT_MAX;
+	int pos = 0;
 	for(int q = 0; q < PARAMN; q++) {
 		ParamInfo& m = param[q];
 		int i = GetCursorLine();
@@ -20,6 +21,7 @@ void AssistEditor::SyncParamInfo()
 						if(par < mpar) {
 							qtf = "[A1  " + DecoratedItem(m.item.name, m.item, m.item.natural, pari);
 							mpar = par;
+							pos = m.pos;
 						}
 						break;
 					}
@@ -46,6 +48,8 @@ void AssistEditor::SyncParamInfo()
 	if(y < GetWorkArea().top)
 		y = r.bottom;
 	r = RectC(r.left, y, min(param_info.GetWidth(), cx) + 8, h + 6);
+	r.OffsetHorz(GetColumnLine(pos).x * GetFontSize().cx);
+	r.OffsetHorz(min(GetWorkArea().right - r.right, 0));
 	if(param_qtf != qtf || r != param_info.GetRect()) {
 		param_qtf = qtf;
 		if(IsNull(qtf)) {
@@ -60,7 +64,7 @@ void AssistEditor::SyncParamInfo()
 	}
 }
 
-void AssistEditor::StartParamInfo(const CppItem& m)
+void AssistEditor::StartParamInfo(const CppItem& m, int pos)
 {
 	int x = GetCursor();
 	ParamInfo& f = param[parami];
@@ -68,6 +72,7 @@ void AssistEditor::StartParamInfo(const CppItem& m)
 	f.test = GetWLine(f.line).Mid(0, x);
 	f.item = m;
 	f.editfile = theide->editfile;
+	f.pos = pos;
 	SyncParamInfo();
 	parami = (parami + 1) % PARAMN;
 }
