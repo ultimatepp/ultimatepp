@@ -159,6 +159,7 @@ struct WorkspaceWork {
 
 	bool         organizer;
 	bool         showtime;
+	bool         sort;
 
 	virtual void   PackageCursor();
 	virtual void   FileCursor();
