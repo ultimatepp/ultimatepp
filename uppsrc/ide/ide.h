@@ -12,6 +12,7 @@
 #include <CodeEditor/CodeEditor.h>
 #include <usvn/usvn.h>
 #include <ide/IconDes/IconDes.h>
+#include <ide/LayDes/LayDes.h>
 #include <TextDiffCtrl/TextDiffCtrl.h>
 
 #define LAYOUTFILE <ide/ide.lay>
@@ -270,6 +271,7 @@ String ResolveTParam(const String& type, const Vector<String>& tparam);
 void   ResolveTParam(Vector<String>& type, const Vector<String>& tparam);
 String Qualify(const String& scope, const String& type);
 int    CharFilterMacro(int c);
+int    CharFilterFileName(int c);
 
 struct AssistEditor : CodeEditor {
 	virtual bool Key(dword key, int count);

@@ -433,6 +433,9 @@ private:
 
 	void        SaveEditPos();
 	void        RestoreEditPos();
+	
+	void        FindLayout(const String& name);
+
 
 	bool           Load(const char *filename, byte charset);
 
@@ -460,6 +463,7 @@ public:
 
 	void Serialize(Stream& s)                 { designer.Serialize(s); }
 	bool Load(const char *filename, byte cs)  { return designer.Load(filename, cs); }
+	void FindLayout(const String& name)       { designer.FindLayout(name); }
 
 	LayDesigner()                             { parent.Add(designer.DesignerCtrl().SizePos()); }
 };

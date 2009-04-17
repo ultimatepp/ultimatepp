@@ -81,6 +81,11 @@ void LayDes::RestoreEditPos()
 	SyncItems();
 }
 
+void LayDes::FindLayout(const String& name)
+{
+	layoutlist.FindSetCursor(name);
+}
+
 bool LayDes::Load(const char *file, byte _charset)
 {
 	charset = _charset;
