@@ -1,0 +1,16 @@
+if [ ! -f /usr/lib/libdl.so ]
+then
+	cd uppsrc
+	sed -e s/-ldl//g Makefile >Makefile2
+	rm Makefile
+	mv Makefile2 Makefile
+fi
+
+if which gmake
+then
+	gmake -C uppsrc
+else
+	make -C uppsrc
+fi
+
+cp uppsrc/ide.out ~/theide

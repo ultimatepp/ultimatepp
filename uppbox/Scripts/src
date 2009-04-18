@@ -11,8 +11,16 @@ rm ~/upp.tmp/u/*.chk || true
 
 rm ~/upp.tmp/u/*.scd || true
 
-~/bin/theide uppsrc ide GCC -asrxM ~/upp.tmp/u/uppsrc
+cp ~/upp.src/uppbox/Scripts/GCCMK.bm ~/.upp/theide
+
+~/bin/theide uppsrc ide GCCMK -asrxM ~/upp.tmp/u/uppsrc
+
 cp ~/upp.src/uppbox/Scripts/Makefile ~/upp.tmp/u
+cp ~/upp.src/uppbox/Scripts/domake ~/upp.tmp/u
+cp ~/upp.src/uppbox/Scripts/doinstall ~/upp.tmp/u
+cp ~/upp.src/uppbox/Scripts/readme ~/upp.tmp/u
+cp ~/upp.src/uppbox/Scripts/GCCMK.bm ~/upp.tmp/u/GCC.bm
+
 cd ~/upp.tmp
 mv u upp-src-`svnversion ~/upp.src`
 tar -cvvzf ~/upload/upp-src-`svnversion ~/upp.src`.tar.gz upp-src-`svnversion ~/upp.src`

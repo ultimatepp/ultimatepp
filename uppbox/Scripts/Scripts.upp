@@ -3,7 +3,11 @@ file
 	www,
 	src,
 	all,
-	Makefile;
+	GCCMK.bm,
+	Makefile,
+	doinstall,
+	domake,
+	readme;
 
 mainconfig
 	"" = "SCRIPTS";
