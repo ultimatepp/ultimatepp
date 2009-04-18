@@ -88,7 +88,7 @@ StaticRWMutex as well.&]
 / Mutex`::LeaveLeave for block of code using C`+`+ constructor 
 / destructor rules. Using [* operator StaticRWMutex`::RWMutex], 
 it can be used with StaticRWMutex as well.&]
-[s0; &]
+[s3; &]
 [ {{10000t/25b/25@1 [s0; [* Constructor / Destructor detail]]}}&]
 [s3; &]
 [s5;:RWMutex`:`:WriteLock`:`:WriteLock`(RWMutex`&`): [* WriteLock]([_^RWMutex^ RWMutex][@(0.0.255) `&
