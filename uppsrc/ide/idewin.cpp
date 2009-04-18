@@ -689,7 +689,8 @@ void AppMain___()
 	String home = Environment().Get("UPP_HOME", Null);
 	if(!IsNull(home))
 		SetHomeDirectory(home);
-	if(LoadFile(ConfigFile("version")) != IDE_VERSION && !FileExists(ConfigFile("noinstall"))) {
+	FindFile ff(ConfigFile("*.var"));
+	if(!ff) {
 		if(!Install())
 			return;
 		SaveFile(ConfigFile("version"), IDE_VERSION);
