@@ -1,0 +1,24 @@
+mkdir ~/upp
+mkdir ~/upp.out
+mkdir ~/MyApps
+
+cp -r uppsrc ~/upp
+cp -r examples ~/upp
+cp -r bazaar ~/upp
+cp -r tutorial ~/upp
+cp -r reference ~/upp
+
+rm -r ~/upp/uppsrc/_out
+rm -r ~/upp/uppsrc/ide.out
+
+mkdir ~/.upp
+mkdir ~/.upp/theide
+
+cp GCC.bm ~/.upp/theide
+
+echo UPP = \"$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/uppsrc.var
+echo UPP = \"$HOME/upp/examples\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/examples.var
+echo UPP = \"$HOME/upp/reference\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/reference.var
+echo UPP = \"$HOME/upp/tutorial\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/tutorial.var
+echo UPP = \"$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/bazaar.var
+echo UPP = \"$HOME/MyApps\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/MyApps.var

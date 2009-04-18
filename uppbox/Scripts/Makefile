@@ -1,9 +1,12 @@
 .PHONY: all install clean
 
 all:
-	make -C uppsrc
-	cp uppsrc/ide.out ~/theide
+	sh domake
 
 install:
+	sh domake
+	sh doinstall
 	
 clean:
+	rm -r uppsrc/_out
+	rm uppsrc/ide.out
