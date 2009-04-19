@@ -4,6 +4,7 @@ then
 	sed -e s/-ldl//g Makefile >Makefile2
 	rm Makefile
 	mv Makefile2 Makefile
+	cd ..
 fi
 
 if which gmake
