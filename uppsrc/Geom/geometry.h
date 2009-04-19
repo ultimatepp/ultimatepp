@@ -34,45 +34,45 @@ inline double fpabsmax     (Pointf p)                         { return max(fabs(
 //inline double Length(Size a)              { return hypot(a.cx, a.cy); }
 
 
-inline Pointf Move         (Pointf p, double dx, double dy)   { return Pointf(p.x + dx, p.y + dy); }
-inline Pointf Mid          (Pointf p, Pointf q)               { return Pointf((p.x + q.x) / 2, (p.y + q.y) / 2); }
-inline Pointf Mid          (Pointf p, Pointf q, double wt)    { return p + (q - p) * wt; }
-inline double Squared      (Pointf p)                         { return p.x * p.x + p.y * p.y; }
-inline double Squared      (Pointf p, Pointf q)               { return Squared(q - p); }
-inline double Length       (Pointf p)                         { return sqrt(Squared(p)); }
-Pointf        Length       (Pointf p, double l);
-inline Pointf Unit         (Pointf p)                         { return Length(p, 1); }
-inline Pointf Rotated      (Pointf p, double a)               { double s = sin(a), c = cos(a); return Pointf(p.x * c - p.y * s, p.x * s + p.y * c); }
-inline Pointf Rotated      (Pointf p, double angle, Pointf c) { return c + Rotated(p - c, angle); }
-Pointf        Project      (Pointf p, Pointf a, Pointf b);
-Pointf        Bezier2      (Pointf a, Pointf b, Pointf c, double t);
-double        Bezier2Length(Pointf a, Pointf b, Pointf c, double t);
-Sizef         Bezier2Tangent(Pointf a, Pointf b, Pointf c, double t);
-Sizef         Orthogonal   (Sizef  p, Sizef against);
-Sizef         Orthonormal  (Sizef  p, Sizef against);
-Sizef         FarthestAxis (Sizef  p);
-inline Pointf Reversed     (Pointf p)                         { return Pointf(-p.x, -p.y); }
-inline Pointf ReversedX    (Pointf p)                         { return Pointf(-p.x, p.y); }
-inline Pointf ReversedY    (Pointf p)                         { return Pointf(p.x, -p.y); }
+inline Pointf Move         (const Pointf& p, double dx, double dy)   { return Pointf(p.x + dx, p.y + dy); }
+inline Pointf Mid          (const Pointf& p, const Pointf& q)        { return Pointf((p.x + q.x) / 2, (p.y + q.y) / 2); }
+inline Pointf Mid          (const Pointf& p, const Pointf& q, double wt) { return p + (q - p) * wt; }
+inline double Squared      (const Pointf& p)                         { return p.x * p.x + p.y * p.y; }
+inline double Squared      (const Pointf& p, const Pointf& q)        { return Squared(q - p); }
+inline double Length       (const Pointf& p)                         { return sqrt(Squared(p)); }
+Pointf        Length       (const Pointf& p, double l);
+inline Pointf Unit         (const Pointf& p)                         { return Length(p, 1); }
+inline Pointf Rotated      (const Pointf& p, double a)               { double s = sin(a), c = cos(a); return Pointf(p.x * c - p.y * s, p.x * s + p.y * c); }
+inline Pointf Rotated      (const Pointf& p, double angle, const Pointf& c) { return c + Rotated(p - c, angle); }
+Pointf        Project      (const Pointf& p, const Pointf& a, const Pointf& b);
+Pointf        Bezier2      (const Pointf& a, const Pointf& b, const Pointf& c, double t);
+double        Bezier2Length(const Pointf& a, const Pointf& b, const Pointf& c, double t);
+Sizef         Bezier2Tangent(const Pointf& a, const Pointf& b, const Pointf& c, double t);
+Sizef         Orthogonal   (const Sizef& p, const Sizef& against);
+Sizef         Orthonormal  (const Sizef& p, const Sizef& against);
+Sizef         FarthestAxis (const Sizef& p);
+inline Pointf Reversed     (const Pointf& p)                         { return Pointf(-p.x, -p.y); }
+inline Pointf ReversedX    (const Pointf& p)                         { return Pointf(-p.x, p.y); }
+inline Pointf ReversedY    (const Pointf& p)                         { return Pointf(p.x, -p.y); }
 //inline Pointf Abs          (Pointf p)                         { return Pointf(fabs(p.x), fabs(p.y)); }
-inline Pointf Left         (Pointf p)                         { return Pointf(-p.y, p.x); }
-inline Pointf Right        (Pointf p)                         { return Pointf(p.y, -p.x); }
+inline Pointf Left         (const Pointf& p)                         { return Pointf(-p.y, p.x); }
+inline Pointf Right        (const Pointf& p)                         { return Pointf(p.y, -p.x); }
 
-inline double Distance     (Pointf p, Pointf q)               { return Length(p - q); }
-double        Bearing      (Pointf p); // 0 to 2 * M_PI
-inline double Bearing      (Pointf p, Pointf c)               { return Bearing(p - c); }
-inline bool   Select       (Pointf p, Pointf A, Pointf B)     { return Squared(p - A) < Squared(p - B); }
+inline double Distance     (const Pointf& p, const Pointf& q) { return Length(p - q); }
+double        Bearing      (const Pointf& p); // 0 to 2 * M_PI
+inline double Bearing      (const Pointf& p, const Pointf& c) { return Bearing(p - c); }
+inline bool   Select       (const Pointf& p, const Pointf& A, const Pointf& B) { return Squared(p - A) < Squared(p - B); }
 
-inline double operator ^   (Pointf p, Pointf q)               { return p.x * q.x + p.y * q.y; }
-inline double operator %   (Pointf p, Pointf q)               { return p.x * q.y - p.y * q.x; }
-inline double operator |   (Pointf p, Pointf q)               { return Distance(p, q); }
+inline double operator ^   (const Pointf& p, const Pointf& q) { return p.x * q.x + p.y * q.y; }
+inline double operator %   (const Pointf& p, const Pointf& q) { return p.x * q.y - p.y * q.x; }
+inline double operator |   (const Pointf& p, const Pointf& q) { return Distance(p, q); }
 
 inline Pointf PolarPointf  (double a)                         { return Pointf(cos(a), sin(a)); }
 inline Pointf PolarPointf  (double r, double a)               { return Pointf(r * cos(a), r * sin(a)); }
-inline Pointf PolarPointf  (Pointf c, double r, double a)     { return Pointf(c.x + r * cos(a), c.y + r * sin(a)); }
+inline Pointf PolarPointf  (const Pointf& c, double r, double a) { return Pointf(c.x + r * cos(a), c.y + r * sin(a)); }
 
-inline Point  PointfToPoint(Pointf p)                         { return Point(fround(p.x), fround(p.y)); }
-inline Size   PointfToSize (Pointf p)                         { return Size(fround(p.x), fround(p.y)); }
+inline Point  PointfToPoint(const Pointf& p)                  { return Point(fround(p.x), fround(p.y)); }
+inline Size   PointfToSize (const Pointf& p)                  { return Size(fround(p.x), fround(p.y)); }
 
 //////////////////////////////////////////////////////////////////////
 
@@ -82,30 +82,30 @@ inline Size   PointfToSize (Pointf p)                         { return Size(frou
 //inline Sizef  Sizef_RX     ()                                 { return Sizef(-1, 1); }
 //inline Sizef  Sizef_RY     ()                                 { return Sizef(1, -1); }
 
-inline Sizef  fpmin        (Sizef p, Sizef q)                 { return Sizef(min(p.cx, q.cx), min(p.cy, q.cy)); }
-inline Sizef  fpmax        (Sizef p, Sizef q)                 { return Sizef(max(p.cx, q.cx), max(p.cy, q.cy)); }
-inline Sizef  fpminmax     (Sizef p, Sizef mn, Sizef mx)      { return Sizef(minmax(p.cx, mn.cx, mx.cx), minmax(p.cy, mn.cy, mx.cy)); }
+inline Sizef  fpmin        (const Sizef& p, const Sizef& q)     { return Sizef(min(p.cx, q.cx), min(p.cy, q.cy)); }
+inline Sizef  fpmax        (const Sizef& p, const Sizef& q)     { return Sizef(max(p.cx, q.cx), max(p.cy, q.cy)); }
+inline Sizef  fpminmax     (const Sizef& p, const Sizef& mn, const Sizef& mx) { return Sizef(minmax(p.cx, mn.cx, mx.cx), minmax(p.cy, mn.cy, mx.cy)); }
 
-inline double fpmin        (Sizef p)                          { return min(p.cx, p.cy); }
-inline double fpmax        (Sizef p)                          { return max(p.cx, p.cy); }
-inline double AbsMin       (Sizef p)                          { return min(fabs(p.cx), fabs(p.cy)); }
-inline double AbsMax       (Sizef p)                          { return max(fabs(p.cx), fabs(p.cy)); }
+inline double fpmin        (const Sizef& p)                     { return min(p.cx, p.cy); }
+inline double fpmax        (const Sizef& p)                     { return max(p.cx, p.cy); }
+inline double AbsMin       (const Sizef& p)                     { return min(fabs(p.cx), fabs(p.cy)); }
+inline double AbsMax       (const Sizef& p)                     { return max(fabs(p.cx), fabs(p.cy)); }
 
-inline Sizef  Mid          (Sizef p, Sizef q)                 { return Sizef((p.cx + q.cx) / 2, (p.cy + q.cy) / 2); }
+inline Sizef  Mid          (const Sizef& p, const Sizef& q)     { return Sizef((p.cx + q.cx) / 2, (p.cy + q.cy) / 2); }
 //inline double Squared      (Sizef p)                          { return p.cx * p.cx + p.cy * p.cy; }
-inline double Squared      (Sizef p, Sizef q)                 { return Squared(q - p); }
+inline double Squared      (const Sizef& p, const Sizef& q)     { return Squared(q - p); }
 //inline double Length       (Sizef p)                          { return sqrt(Squared(p)); }
-Sizef         Length       (Sizef p, double l);
-inline Sizef  Unit         (Sizef p)                          { return Length(p, 1); }
-inline Sizef  Reversed     (Sizef s)                          { return Sizef(-s.cx, -s.cy); }
-inline Sizef  ReversedX    (Sizef s)                          { return Sizef(-s.cx, s.cy); }
-inline Sizef  ReversedY    (Sizef s)                          { return Sizef(s.cx, -s.cy); }
-inline Sizef  Abs          (Sizef s)                          { return Sizef(fabs(s.cx), fabs(s.cy)); }
-inline Sizef  Left         (Sizef s)                          { return Sizef(-s.cy, s.cx); }
-inline Sizef  Right        (Sizef s)                          { return Sizef(s.cy, -s.cx); }
+Sizef         Length       (const Sizef& p, double l);
+inline Sizef  Unit         (const Sizef& p)                     { return Length(p, 1); }
+inline Sizef  Reversed     (const Sizef& s)                     { return Sizef(-s.cx, -s.cy); }
+inline Sizef  ReversedX    (const Sizef& s)                     { return Sizef(-s.cx, s.cy); }
+inline Sizef  ReversedY    (const Sizef& s)                     { return Sizef(s.cx, -s.cy); }
+inline Sizef  Abs          (const Sizef& s)                     { return Sizef(fabs(s.cx), fabs(s.cy)); }
+inline Sizef  Left         (const Sizef& s)                     { return Sizef(-s.cy, s.cx); }
+inline Sizef  Right        (const Sizef& s)                     { return Sizef(s.cy, -s.cx); }
 
-inline Point  SizefToPoint (Sizef s)                          { return Point(fround(s.cx), fround(s.cy)); }
-inline Size   SizefToSize  (Sizef s)                          { return Size(fround(s.cx), fround(s.cy)); }
+inline Point  SizefToPoint (const Sizef& s)                     { return Point(fround(s.cx), fround(s.cy)); }
+inline Size   SizefToSize  (const Sizef& s)                     { return Size(fround(s.cx), fround(s.cy)); }
 
 //////////////////////////////////////////////////////////////////////
 // Rectf::
@@ -115,29 +115,29 @@ inline Size   SizefToSize  (Sizef s)                          { return Size(frou
 
 //////////////////////////////////////////////////////////////////////
 
-inline Rectf  operator *   (Rectf r, double f)                { return Rectf(r.left * f, r.top * f, r.right * f, r.bottom * f); }
-inline Rectf  operator *   (Rectf r, Sizef s)                 { return Rectf(r.left * s.cx, r.top * s.cy, r.right * s.cx, r.bottom * s.cy); }
-inline Rectf  operator *   (Rectf r, Pointf p)                { return Rectf(r.left * p.x, r.top * p.y, r.right * p.x, r.bottom * p.y); }
-inline Rectf  operator *   (Rectf r, Rectf s)                 { return Rectf(r.left * s.left, r.top * s.top, r.right * s.right, r.bottom * s.bottom); }
+inline Rectf  operator *   (const Rectf& r, double f)         { return Rectf(r.left * f, r.top * f, r.right * f, r.bottom * f); }
+inline Rectf  operator *   (const Rectf& r, const Sizef& s)   { return Rectf(r.left * s.cx, r.top * s.cy, r.right * s.cx, r.bottom * s.cy); }
+inline Rectf  operator *   (const Rectf& r, const Pointf& p)  { return Rectf(r.left * p.x, r.top * p.y, r.right * p.x, r.bottom * p.y); }
+inline Rectf  operator *   (const Rectf& r, const Rectf& s)   { return Rectf(r.left * s.left, r.top * s.top, r.right * s.right, r.bottom * s.bottom); }
 
-inline Rectf  operator /   (Rectf r, double f)                { return Rectf(r.left / f, r.top / f, r.right / f, r.bottom / f); }
-inline Rectf  operator /   (Rectf r, Sizef s)                 { return Rectf(r.left / s.cx, r.top / s.cy, r.right / s.cx, r.bottom / s.cy); }
-inline Rectf  operator /   (Rectf r, Pointf p)                { return Rectf(r.left / p.x, r.top / p.y, r.right / p.x, r.bottom / p.y); }
-inline Rectf  operator /   (Rectf r, Rectf s)                 { return Rectf(r.left / s.left, r.top / s.top, r.right / s.right, r.bottom / s.bottom); }
+inline Rectf  operator /   (const Rectf& r, double f)         { return Rectf(r.left / f, r.top / f, r.right / f, r.bottom / f); }
+inline Rectf  operator /   (const Rectf& r, const Sizef& s)   { return Rectf(r.left / s.cx, r.top / s.cy, r.right / s.cx, r.bottom / s.cy); }
+inline Rectf  operator /   (const Rectf& r, const Pointf& p)  { return Rectf(r.left / p.x, r.top / p.y, r.right / p.x, r.bottom / p.y); }
+inline Rectf  operator /   (const Rectf& r, const Rectf& s)   { return Rectf(r.left / s.left, r.top / s.top, r.right / s.right, r.bottom / s.bottom); }
 
-extern Rectf& SetUnion     (Rectf& rc, Pointf pt);
-inline Rectf  GetUnion     (Rectf rc, Pointf pt)              { return SetUnion(rc, pt); }
+extern Rectf& SetUnion     (Rectf& rc, const Pointf& pt);
+inline Rectf  GetUnion     (const Rectf& rc, const Pointf& p) { Rectf tmp = rc; return SetUnion(tmp, p); }
 extern Rectf  GetUnion     (const Array<Pointf>& pt);
-extern Rectf& SetMinMaxMove(Rectf& rc, Rectf outer_rc);
-inline Rectf  GetMinMaxMove(Rectf rc, Rectf outer_rc)         { return SetMinMaxMove(rc, outer_rc); }
-extern double Distance     (Rectf rc, Pointf pt);
-inline double Diagonal     (Rectf rc)                         { return Length(rc.Size()); }
-inline double Area         (Rectf rc)                         { return rc.Width() * rc.Height(); }
-inline Rectf  PointfRectf  (Pointf pt)                        { return Rectf(pt.x, pt.y, pt.x, pt.y); }
-inline Rectf  SortRectf    (Pointf p, Pointf q)               { return Rectf(fpmin(p, q), fpmax(p, q)); }
-inline Rect   RectfToRect  (Rectf rc)                         { return Rect(fround(rc.left), fround(rc.top), fround(rc.right), fround(rc.bottom)); }
+extern Rectf& SetMinMaxMove(Rectf& rc, const Rectf& outer_rc);
+inline Rectf  GetMinMaxMove(const Rectf& rc, const Rectf& outer_rc) { Rectf tmp = rc; return SetMinMaxMove(tmp, outer_rc); }
+extern double Distance     (const Rectf& rc, const Pointf& pt);
+inline double Diagonal     (const Rectf& rc)                  { return Length(rc.Size()); }
+inline double Area         (const Rectf& rc)                  { return rc.Width() * rc.Height(); }
+inline Rectf  PointfRectf  (const Pointf& pt)                 { return Rectf(pt.x, pt.y, pt.x, pt.y); }
+inline Rectf  SortRectf    (const Pointf& p, const Pointf& q) { return Rectf(fpmin(p, q), fpmax(p, q)); }
+inline Rect   RectfToRect  (const Rectf& rc)                  { return Rect(fround(rc.left), fround(rc.top), fround(rc.right), fround(rc.bottom)); }
 
-inline Pointf fpminmax     (Pointf p, Rectf rc)               { return Pointf(minmax(p.x, rc.left, rc.right), minmax(p.y, rc.top, rc.bottom)); }
+inline Pointf fpminmax     (const Pointf& p, const Rectf& rc) { return Pointf(minmax(p.x, rc.left, rc.right), minmax(p.y, rc.top, rc.bottom)); }
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -176,7 +176,7 @@ extern Matrixf  MatrixfMove   (Pointf vector);
 extern Matrixf  MatrixfRotate (double angle, Pointf fix = Pointf(0, 0));
 extern Matrixf  MatrixfScale  (double scale, Pointf fix = Pointf(0, 0));
 extern Matrixf  MatrixfScale  (Pointf scale, Pointf fix = Pointf(0, 0));
-extern Matrixf  MatrixfScale  (Rectf src, Rectf dest);
+extern Matrixf  MatrixfScale  (const Rectf& src, const Rectf& dest);
 extern Matrixf  MatrixfMirror (Pointf A, Pointf B);
 extern Matrixf  MatrixfAffine (Pointf src1, Pointf dest1, Pointf src2, Pointf dest2);
 extern Matrixf  MatrixfAffine (Pointf src1, Pointf dest1, Pointf src2, Pointf dest2, Pointf src3, Pointf dest3);
@@ -213,9 +213,9 @@ double          Distance      (Pointf X, Pointf C, double radius, double *arg = 
 //////////////////////////////////////////////////////////////////////
 // set intersection with rectangle
 
-bool            Crosses       (Rectf R, Pointf A, Pointf B);
-bool            Crosses       (Rectf R, Pointf A, Pointf B, double bulge);
-bool            Crosses       (Rectf R, Pointf C, double radius);
+bool            Crosses       (const Rectf& R, Pointf A, Pointf B);
+bool            Crosses       (const Rectf& R, Pointf A, Pointf B, double bulge);
+bool            Crosses       (const Rectf& R, Pointf C, double radius);
 
 //////////////////////////////////////////////////////////////////////
 // set intersection with polygon
@@ -231,9 +231,9 @@ int             ContainsPoly  (const Array<Pointf>& chkpoly, const Array<Pointf>
 
 //////////////////////////////////////////////////////////////////////
 
-bool            ClipLine      (Pointf& A, Pointf& B, Rectf box);
-bool            ClipLine      (Pointf& A, Pointf& B, Rect box);
-bool            ClipLine      (Point& A, Point& B, Rect box);
+bool            ClipLine      (Pointf& A, Pointf& B, const Rectf& box);
+bool            ClipLine      (Pointf& A, Pointf& B, const Rect& box);
+bool            ClipLine      (Point& A, Point& B, const Rect& box);
 
 //////////////////////////////////////////////////////////////////////
 
@@ -246,9 +246,9 @@ void            SplitPolygon  (const Point *vertices, int vertex_count, const in
 void            SplitPolygon  (const Vector<Point>& vertices, const Vector<int>& counts,
 	Vector<Point>& out_vertices, Vector<int>& out_counts, Rect clip = Null, int max_trace_points = 8000);
 void            SplitPolygon  (Array<Pointf>::ConstIterator vertices, int vertex_count, const int *counts, int count_count,
-	Array<Pointf>& out_vertices, Vector<int>& out_counts, Rectf clip = Null, int max_trace_points = 8000);
+	Array<Pointf>& out_vertices, Vector<int>& out_counts, const Rectf& clip = Null, int max_trace_points = 8000);
 void            SplitPolygon  (const Array<Pointf>& vertices, const Vector<int>& counts,
-	Array<Pointf>& out_vertices, Vector<int>& out_counts, Rectf clip = Null, int max_trace_points = 8000);
+	Array<Pointf>& out_vertices, Vector<int>& out_counts, const Rectf& clip = Null, int max_trace_points = 8000);
 
 //////////////////////////////////////////////////////////////////////
 
@@ -285,8 +285,8 @@ public:
 	VecLine&      SetReversed();
 
 	Pointf        Intersect(VecLine another) const;
-	VecLine&      SetClip(Rectf rect);
-	VecLine       Clip(Rectf rect) const { return VecLine(*this).Clip(rect); }
+	VecLine&      SetClip(const Rectf& rect);
+	VecLine       Clip(const Rectf& rect) const            { return VecLine(*this).Clip(rect); }
 
 	double        Distance(Pointf point, double *arg = NULL) const;
 
@@ -302,10 +302,10 @@ public:
 //template BitWiseType<VecLine>;
 //template DumpType<VecLine>;
 
-inline Pointf  operator & (VecLine l1, VecLine l2)        { return l1.Intersect(l2); }
-inline VecLine operator & (VecLine line, Rectf rect)      { return line.Clip(rect); }
-inline double  operator | (VecLine ln, Pointf pt)         { return ln.Distance(pt); }
-inline double  operator | (Pointf pt, VecLine ln)         { return ln.Distance(pt); }
+inline Pointf  operator & (VecLine l1, VecLine l2)          { return l1.Intersect(l2); }
+inline VecLine operator & (VecLine line, const Rectf& rect) { return line.Clip(rect); }
+inline double  operator | (VecLine ln, Pointf pt)           { return ln.Distance(pt); }
+inline double  operator | (Pointf pt, VecLine ln)           { return ln.Distance(pt); }
 
 //////////////////////////////////////////////////////////////////////
 
@@ -429,7 +429,7 @@ public:
 
 	bool        ContainsBearing(double bearing) const;
 	double      Distance(Pointf point, double *arg = NULL) const;
-	bool        Crosses(Rectf rect) const;
+	bool        Crosses(const Rectf& rect) const;
 	Pointf      GetPointAt(double t) const;
 	double      GetMaxDistance(Pointf point, Pointf *farthest = NULL) const;
 
@@ -502,7 +502,7 @@ public:
 
 	VecArcIterator& Level(int _level)              { level = _level; return *this; }
 	VecArcIterator& Precision(double prec  )       { precision = prec; return *this; }
-	VecArcIterator& Clip(Rectf rect, DrawProc _mv) { clip = rect; moveto = _mv; return *this; }
+	VecArcIterator& Clip(const Rectf& rect, DrawProc _mv) { clip = rect; moveto = _mv; return *this; }
 	VecArcIterator& ArcTo(ArcProc _arc)            { arcto = _arc; return *this; }
 
 	void            Go(); // recurse the arc

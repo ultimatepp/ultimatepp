@@ -422,7 +422,7 @@ void SplitPolygon(const Vector<Point>& vertices, const Vector<int>& counts,
 }
 
 void SplitPolygon(Array<Pointf>::ConstIterator vertices, int vertex_count, const int *counts, int count_count,
-	Array<Pointf>& out_vertices, Vector<int>& out_counts, Rectf clip, int max_trace_points)
+	Array<Pointf>& out_vertices, Vector<int>& out_counts, const Rectf& clip, int max_trace_points)
 {
 	POLY_TIMING("SplitPolygon");
 	PolygonIterator<double> pi(clip, max_trace_points);
@@ -433,7 +433,7 @@ void SplitPolygon(Array<Pointf>::ConstIterator vertices, int vertex_count, const
 }
 
 void SplitPolygon(const Array<Pointf>& vertices, const Vector<int>& counts,
-	Array<Pointf>& out_vertices, Vector<int>& out_counts, Rectf clip, int max_trace_points)
+	Array<Pointf>& out_vertices, Vector<int>& out_counts, const Rectf& clip, int max_trace_points)
 {
 	SplitPolygon(vertices.Begin(), vertices.GetCount(), counts.Begin(), counts.GetCount(),
 		out_vertices, out_counts, clip, max_trace_points);
