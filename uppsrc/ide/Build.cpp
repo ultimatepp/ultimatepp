@@ -73,11 +73,19 @@ void Ide::DoBuild()
 	Build();
 }
 
+int Find(const Workspace& wspc, const FileList& package)
+{
+	for(int i = 0; i < wspc.GetCount(); i++)
+		if(wspc[i] == package.GetCurrentName())
+			return i;
+	return -1;
+}
+
 void Ide::PackageBuild()
 {
 	BeginBuilding(true, true);
-	int pi = package.GetCursor();
 	const Workspace& wspc = IdeWorkspace();
+	int pi = Find(wspc, package);
 	if(pi >= 0 && pi <= wspc.GetCount()) {
 		Vector<String> linkfile;
 		String linkopt;
@@ -102,8 +110,8 @@ String Ide::GetOutputDir()
 
 void Ide::PackageClean()
 {
-	int pi = package.GetCursor();
 	const Workspace& wspc = IdeWorkspace();
+	int pi = Find(wspc, package);
 	if(pi >= 0 && pi < wspc.GetCount()) {
 		console.Clear();
 		CleanPackage(wspc, pi);
