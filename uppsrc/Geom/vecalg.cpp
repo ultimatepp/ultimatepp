@@ -67,7 +67,7 @@ static inline char CheckAgainstInterval(double x, double l, double h)
 // Crosses: checks whether a line crosses a rectangle.
 //////////////////////////////////////////////////////////////////////
 
-bool Crosses(Rectf R, Pointf A, Pointf B)
+bool Crosses(const Rectf& R, Pointf A, Pointf B)
 {
 	if(R.Contains(A) || R.Contains(B))
 		return true;
@@ -139,7 +139,7 @@ bool Crosses(Rectf R, Pointf A, Pointf B)
 // Crosses: checks whether a bulge crosses a rectangle.
 //////////////////////////////////////////////////////////////////////
 
-bool Crosses(Rectf R, Pointf A, Pointf B, double bulge)
+bool Crosses(const Rectf& R, Pointf A, Pointf B, double bulge)
 {
 	if(R.Contains(A) || R.Contains(B))
 		return true;
@@ -151,7 +151,7 @@ bool Crosses(Rectf R, Pointf A, Pointf B, double bulge)
 // Crosses: checks whether a circle crosses a rectangle.
 //////////////////////////////////////////////////////////////////////
 
-bool Crosses(Rectf R, Pointf C, double radius)
+bool Crosses(const Rectf& R, Pointf C, double radius)
 {
 	Rectf box = PointfRectf(C);
 	box.Inflate(radius);
@@ -175,7 +175,7 @@ bool Crosses(Rectf R, Pointf C, double radius)
 
 //////////////////////////////////////////////////////////////////////
 
-bool ClipLine(Pointf& A, Pointf& B, Rectf R)
+bool ClipLine(Pointf& A, Pointf& B, const Rectf& R)
 {
 	if(IsNull(R) || R.IsEmpty()) // null rectangle
 		return false;
@@ -234,7 +234,7 @@ bool ClipLine(Pointf& A, Pointf& B, Rectf R)
 
 //////////////////////////////////////////////////////////////////////
 
-bool ClipLine(Pointf& A, Pointf& B, Rect R)
+bool ClipLine(Pointf& A, Pointf& B, const Rect& R)
 {
 	if(R.IsEmpty()) // null rectangle
 		return false;
@@ -294,7 +294,7 @@ bool ClipLine(Pointf& A, Pointf& B, Rect R)
 
 //////////////////////////////////////////////////////////////////////
 
-bool ClipLine(Point& A, Point& B, Rect R)
+bool ClipLine(Point& A, Point& B, const Rect& R)
 {
 	if(R.IsEmpty()) // null rectangle
 		return false;
@@ -574,7 +574,7 @@ VecLine& VecLine::SetReversed()
 
 //////////////////////////////////////////////////////////////////////
 
-VecLine& VecLine::SetClip(Rectf R)
+VecLine& VecLine::SetClip(const Rectf& R)
 {
 	if(IsNull(*this)) // null line
 		return *this;
@@ -1318,7 +1318,7 @@ double VecArcInfo::GetMaxDistance(Pointf point, Pointf *farthest) const
 
 //////////////////////////////////////////////////////////////////////
 
-bool VecArcInfo::Crosses(Rectf R) const
+bool VecArcInfo::Crosses(const Rectf& R) const
 {
 	if(IsNull(*this))
 		return false;

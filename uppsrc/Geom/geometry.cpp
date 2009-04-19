@@ -2,23 +2,25 @@
 
 NAMESPACE_UPP
 
-Pointf Length(Pointf p, double length)
+Pointf Length(const Pointf& p, double length)
 {
 	double l = max(Length(p), AbsMax(p));
+	Pointf out = p;
 	if(l)
-		p *= length / l;
-	return p;
+		out *= length / l;
+	return out;
 }
 
-Sizef Length(Sizef p, double length)
+Sizef Length(const Sizef& p, double length)
 {
 	double l = max(Length(p), AbsMax(p));
+	Sizef out = p;
 	if(l)
-		p *= length / l;
-	return p;
+		out *= length / l;
+	return out;
 }
 
-Pointf Project(Pointf p, Pointf A, Pointf B)
+Pointf Project(const Pointf& p, const Pointf& A, const Pointf& B)
 {
 	Pointf AB = B - A;
 	double length = Squared(AB);
@@ -27,7 +29,7 @@ Pointf Project(Pointf p, Pointf A, Pointf B)
 	return A + AB * ((AB ^ (p - A)) / length);
 }
 
-double Bearing(Pointf p)
+double Bearing(const Pointf& p)
 {
 	if(p.y == 0)
 		return (p.x >= 0 ? 0 : M_PI);
@@ -39,13 +41,13 @@ double Bearing(Pointf p)
 	return b;
 }
 
-Pointf Bezier2(Pointf a, Pointf b, Pointf c, double t)
+Pointf Bezier2(const Pointf& a, const Pointf& b, const Pointf& c, double t)
 {
 	Pointf ab = b - a, bc = c - b;
 	return a + (ab * (2 * t) + (bc - ab) * (t * t));
 }
 
-double Bezier2Length(Pointf a, Pointf b, Pointf c, double t)
+double Bezier2Length(const Pointf& a, const Pointf& b, const Pointf& c, double t)
 {
 	Pointf v = b - a, w = (c - b) - v;
 	v *= 2;
@@ -61,28 +63,28 @@ double Bezier2Length(Pointf a, Pointf b, Pointf c, double t)
 	return wl * (x * hypot(x, d) + (d * d) * argsinh(x / d));
 }
 
-Sizef Bezier2Tangent(Pointf a, Pointf b, Pointf c, double t)
+Sizef Bezier2Tangent(const Pointf& a, const Pointf& b, const Pointf& c, double t)
 {
 	Sizef ab = b - a, bc = c - b;
 	return 2.0 * (ab + t * (bc - ab));
 }
 
-Sizef Orthogonal(Sizef v, Sizef against)
+Sizef Orthogonal(const Sizef& v, const Sizef& against)
 {
 	return v - against * ((v ^ against) / Squared(against));
 }
 
-Sizef Orthonormal(Sizef v, Sizef against)
+Sizef Orthonormal(const Sizef& v, const Sizef& against)
 {
 	return Unit(Orthogonal(v, against));
 }
 
-Sizef GetFarthestAxis(Sizef v)
+Sizef GetFarthestAxis(const Sizef& v)
 {
 	return fabs(v.cx) <= fabs(v.cy) ? Sizef(1, 0) : Sizef(0, 1);
 }
 
-double Distance(Rectf rc, Pointf pt)
+double Distance(const Rectf& rc, const Pointf& pt)
 {
 	double dx = (pt.x >= rc.right  ? pt.x - rc.right  : pt.x <= rc.left ? pt.x - rc.left : 0);
 	double dy = (pt.y >= rc.bottom ? pt.y - rc.bottom : pt.y <= rc.top  ? pt.y - rc.top  : 0);
@@ -93,7 +95,7 @@ double Distance(Rectf rc, Pointf pt)
 	return hypot(dx, dy);
 }
 
-Rectf& SetUnion(Rectf& rc, Pointf pt)
+Rectf& SetUnion(Rectf& rc, const Pointf& pt)
 {
 	if(IsNull(pt))
 		return rc;
@@ -120,7 +122,7 @@ Rectf GetUnion(const Array<Pointf>& pt)
 	return rc;
 }
 
-Rectf& SetMinMaxMove(Rectf& rc, Rectf outer_rc)
+Rectf& SetMinMaxMove(Rectf& rc, const Rectf& outer_rc)
 {
 	if(IsNull(rc))
 		return rc;
@@ -167,7 +169,7 @@ Matrixf MatrixfScale(Pointf scale, Pointf f)
 	return out;
 }
 
-Matrixf MatrixfScale(Rectf src, Rectf dest)
+Matrixf MatrixfScale(const Rectf& src, const Rectf& dest)
 {
 	Matrixf result(Pointf(dest.Width() / src.Width(), 0), Pointf(0, dest.Height() / src.Height()));
 	result.a = dest.TopLeft() - src.TopLeft() * result;
