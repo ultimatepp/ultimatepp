@@ -4,7 +4,6 @@ all:
 	sh domake
 
 install:
-	sh domake
 	sh doinstall
 	
 clean:
