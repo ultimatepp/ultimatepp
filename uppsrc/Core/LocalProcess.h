@@ -45,9 +45,9 @@ private:
 #endif
 	int          exit_code;
 
-public:
 	typedef LocalProcess CLASSNAME;
 
+public:
 	bool Start(const char *cmdline, const char *envptr = NULL);
 
 	LocalProcess()                                                    { Init(); }
