@@ -54,7 +54,7 @@ void AlignedFrame::FramePaint(Draw& w, const Rect& r)
 				n.bottom -= framesize;
 				break;		
 		}
-		FieldFrame().FramePaint(w, n);
+		ViewFrame().FramePaint(w, n);
 	}
 	else
 		FrameCtrl<Ctrl>::FramePaint(w, r);		
@@ -79,6 +79,16 @@ void AlignedFrame::Fix(Point& p)
 		Swap(p.x, p.y);
 }
 
+Size AlignedFrame::Fixed(const Size& sz)
+{
+	return IsVert() ? Size(sz.cy, sz.cx) : Size(sz.cx, sz.cy);
+}
+
+Point AlignedFrame::Fixed(const Point& p)
+{
+	return IsVert() ? Point(p.y, p.x) : Point(p.x, p.y);
+}
+
 // TabScrollBar
 TabScrollBar::TabScrollBar()
 {
@@ -93,7 +103,7 @@ void TabScrollBar::Clear()
 	start_pos = 0;
 	new_pos = 0;
 	old_pos = 0;
-	sz = Size(0, 0);
+	sz.Clear();
 	ready = false;	
 }
 
@@ -127,7 +137,11 @@ void TabScrollBar::Paint(Draw &w)
 		ready = true;
 	}
 	Size rsz = GetSize();
+	#ifdef TABBAR_DEBUG
+	w.DrawRect(rsz, Red);
+	#else
 	w.DrawRect(rsz, White);
+	#endif
 	Point p;
 	
 	if(total > sz.cx) {
@@ -271,7 +285,7 @@ TabBar::TabBar()
 	
 	style[0] = style[1] = style[2] = style[3] = NULL;
 	SetAlign(TOP);
-	SetFrameSize(GetHeight());	
+	SetFrameSize(GetHeight());
 	BackPaint();
 }
 
@@ -473,15 +487,12 @@ Value TabBar::AlignValue(int align, const Value &v, const Size &isz)
 	return v;
 }
 
-void TabBar::TabCenter(Point &p, const Size &sz, int h)
+WString TabBar::ParseLabel(const WString& s)
 {
-	if (IsHorz())
-		p.y += (sz.cy - h) / 2;
-	else
-		p.x += (sz.cx - h) / 2 * ((GetAlign() == LEFT) ? 1 : -1);	
+	return s;
 }
 
-void TabBar::PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, const Font &font, Color ink, dword style)
+void TabBar::PaintTabData(Draw& w, const Rect& r, const Value& q, const Font &font, Color ink, dword style, int bl)
 {
 	WString txt;
 	Font f = font;
@@ -496,16 +507,41 @@ void TabBar::PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, cons
 	}
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
-	TabCenterText(p, sz, font);
-	w.DrawText(p.x, p.y, GetTextAngle(), txt, f, i);	
+
+	int align = GetAlign();
+	
+	Point p;
+	
+	int fy = GetTextSize(txt, f).cy / 2;
+	
+	if(align == LEFT)
+	{
+		p = r.BottomLeft();
+		p.x = bl - fy;
+	}
+	else if(align == RIGHT)
+	{
+		p = r.TopRight();
+		p.x = bl + fy + 1;
+	}
+	else
+	{
+		p = r.TopLeft();
+		p.y = bl - fy;
+	}
+			
+	w.DrawText(p.x, p.y, GetTextAngle(), ParseLabel(txt), f, i);	
 }
 
 void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enable, bool dragsample)
 {
 	TabBar::Tab &t = tabs[n];
 	int cnt = dragsample ? 1 : tabs.GetCount();
-	Size tsz, isz(0, 0);
+	Size tsz, fsz(sz.cx, sz.cy + TB_SBSEPARATOR * !sc.IsShown()), isz(0, 0);
+	Fix(fsz);
+	
 	Point p;
+	
 	int align = GetAlign();
 	bool ac = n == active;
 	bool hl = n == highlight;
@@ -529,63 +565,101 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 		tsz = Size(t.size.cx + lx, t.size.cy - s.sel.top);
 	}
 
-	if (align == BOTTOM) {
-		p.y -= s.sel.top - TB_SBSEPARATOR;
-	}
-	if (align == RIGHT) {
-		p.y -= s.sel.top - TB_SBSEPARATOR;
-	}
+	if (align == BOTTOM || align == RIGHT)
+		p.y -= s.sel.top - TB_SBSEPARATOR * sc.IsVisible();
 
-	t.real_pos = p;
-	t.real_size = tsz;
-	Fix(t.real_pos);
-	Fix(t.real_size);
+	t.real_pos = Fixed(p);
+	t.real_size = Fixed(tsz);
 		
 	ChPaint(w, t.real_pos.x, t.real_pos.y, t.real_size.cx, t.real_size.cy, sv);
 	
+	#ifdef TABBAR_DEBUG
+	DrawFrame(w, Rect(t.real_pos, t.real_size), Blue);
+	#endif
+	
+	Point cp;
+
+	Size bsz(t.size.cx + lx, t.size.cy - s.sel.top);
+	
+	int cly = (fsz.cy - s.sel.top - s.sel.bottom * ac) / 2 + s.sel.top;
+	
 	if(crosses && cnt > neverempty) {
-		Point cp;
-		const Image &cimg = TabBarImg::CR0(); 
-		// Use style? - yes it should be styled, but win32 dosn't support crosses on tabs,
-		// maybe we should use some generic cross with some magic heuristic styling..
+
+		const Image &cimg = TabBarImg::CR0();
 		isz = cimg.GetSize();		
-		Fix(isz);
+
 		if (align == LEFT)
-			cp.x = p.x + TB_MARGIN;
-		else
-			cp.x = p.x + tsz.cx - isz.cx - TB_MARGIN;
-		cp.y = p.y + (tsz.cy - isz.cy) / 2;
-		Fix(cp);
+		{
+			cp.x = cly - isz.cy / 2;
+			cp.y = x + TB_MARGIN;
+		}
+		else if (align == RIGHT)
+		{
+			cp.x = fsz.cy - (cly - isz.cy / 2 + isz.cy);
+			cp.y = x + bsz.cx - isz.cx - TB_MARGIN;
+		}
+		else if (align == TOP)
+		{
+			cp.x = x + bsz.cx - isz.cx - TB_MARGIN;
+			cp.y = cly - isz.cy / 2;
+		}
+		else if (align == BOTTOM)
+		{
+			cp.x = x + bsz.cx - isz.cx - TB_MARGIN;
+			cp.y = fsz.cy - (cly - isz.cy / 2 + isz.cy);
+		}
+
 		t.cross_pos = cp;
 		t.cross_size = isz;
 		w.DrawImage(cp.x, cp.y, (ac || hl) ? (cross == n ? TabBarImg::CR2 : ac ? TabBarImg::CR1 : TabBarImg::CR0) : TabBarImg::CR0);
 		isz.cx += 2;
 	}
 
-	p.x += TB_MARGIN;
-	tsz.cx -= TB_MARGIN * 2;
-	switch (align) {
-	case BOTTOM:
-		if (ac)	
-			p.y -= s.sel.top;
-		break;
-	case RIGHT: 
-		p.y = sz.cx - p.y;
-		break;
-	case LEFT: 
-		p.x += tsz.cx;
-		break;
+	bsz.cx -= TB_MARGIN * 2 + isz.cx;
+	
+	if (align == LEFT)
+	{
+		cp.x = cly - bsz.cy / 2;
+		cp.y = x + TB_MARGIN + isz.cx;
 	}
-	tsz.cx -= isz.cx;		
-	Fix(p);
-	Fix(tsz);
+	else if (align == RIGHT)
+	{
+		cp.x = fsz.cy - (cly - bsz.cy / 2 + bsz.cy);
+		cp.y = x + TB_MARGIN;
+	}
+	else if (align == TOP)
+	{
+		cp.x = x + TB_MARGIN;
+		cp.y = cly - bsz.cy / 2;
+	}
+	else if (align == BOTTOM)
+	{
+		cp.x = x + TB_MARGIN;
+		cp.y = fsz.cy - (cly - bsz.cy / 2 + bsz.cy);
+	}
+		
+	Fix(bsz);
+	
+	Rect r(cp, bsz);
+	
+	#ifdef TABBAR_DEBUG
+	w.DrawRect(r, Green);
+	//w.DrawText(p.x, p.y, AsString(s.sel.bottom) + ", " + AsString(s.sel.top) + ", st:" + AsString(GetHeight()) + ", sz:" + AsString(sz.cy) + ", rs:" + AsString(t.real_size.cy), StdFont().Bold());
+	#endif
+
+	if(align == RIGHT || align == BOTTOM)
+		cly = fsz.cy - cly - 1;
+
 	if (display)
-		display->Paint(w, Rect(p, tsz),	t.data, s.text_color[ndx], SColorDisabled(), ndx);
-	else {
-		PaintTabData(w, p, tsz,
-			t.data, s.font,
-			s.text_color[ndx], ndx);
-	}		
+		display->Paint(w, r, t.data, s.text_color[ndx], SColorDisabled(), ndx);
+	else
+		PaintTabData(w, r, t.data, s.font, s.text_color[ndx], ndx, cly);
+	
+	#ifdef TABBAR_DEBUG
+	Point pp(p.x, cly);
+	Fix(pp);
+	w.DrawRect(pp.x, pp.y, IsVert() ? 1 : bsz.cx, IsVert() ? bsz.cy : 1, LtBlue);
+	#endif
 }
 
 void TabBar::Paint(Draw &w)
@@ -594,11 +668,18 @@ void TabBar::Paint(Draw &w)
 	const Style &st = *style[align];
 	Size sz = GetSize();
 	
+	#ifdef TABBAR_DEBUG
+	w.DrawRect(sz, Yellow);
+	#else
 	w.DrawRect(sz, SColorFace());
-
-	IsVert() ? 
-		w.DrawRect(align == LEFT ? sz.cx - 1 : 0, 0, 1, sz.cy, Color(128, 128, 128)):
-		w.DrawRect(0, align == TOP ? sz.cy - 1 : 0, sz.cx, 1, Color(128, 128, 128));	
+	#endif
+	
+	if(sc.IsShown())
+	{
+		IsVert() ? 
+			w.DrawRect(align == LEFT ? sz.cx - 1 : 0, 0, 1, sz.cy, Color(128, 128, 128)):
+			w.DrawRect(0, align == TOP ? sz.cy - 1 : 0, sz.cx, 1, Color(128, 128, 128));	
+	}
 
 	if (!tabs.GetCount()) return;
 	
@@ -722,11 +803,10 @@ Size TabBar::GetStdSize(Value &q)
 {
 	if (display)
 		return display->GetStdSize(q);
-	else if (q.GetType() == STRING_V)
-		return GetTextSize((String)q, StdFont());
-	else if (q.GetType() == WSTRING_V)
-		return GetTextSize((WString)q, StdFont());	
-	return GetTextSize("A Tab", StdFont());	
+	else if (q.GetType() == STRING_V || q.GetType() == WSTRING_V)
+		return GetTextSize(ParseLabel(WString(q)), StdFont());
+	else
+		return GetTextSize("A Tab", StdFont());	
 }
 
 TabBar& TabBar::Add(const Value &data, String group, bool make_active)
@@ -764,9 +844,9 @@ int TabBar::GetWidth() const
 	return tabs[GetLast()].Right() + style[GetAlign()]->margin * 2;
 }
 
-int TabBar::GetHeight() const
+int TabBar::GetHeight(bool scrollbar) const
 {
-	return TabBar::GetStyleHeight(*style[GetAlign()]) + TB_SBSEPARATOR;
+	return TabBar::GetStyleHeight(*style[GetAlign()]) + TB_SBSEPARATOR * int(scrollbar);
 }
 
 int TabBar::GetStyleHeight(const Style &s)
@@ -814,6 +894,7 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 	tabs[i].pos.y = 0;
 	tabs[i].size.cx = GetWidth(i);
 	tabs[i].size.cy = GetStyleHeight(*style[1]);
+
 	return j;	
 }
 
@@ -824,13 +905,13 @@ void TabBar::SyncScrollBar(bool synctotal)
 	if (autoscrollhide) {
 		bool v = sc.IsScrollable();
 		if (sc.IsShown() != v) {
-			SetFrameSize((v ? sc.GetFrameSize() : 0) + GetHeight(), false);
+			SetFrameSize((v ? sc.GetFrameSize() : 0) + GetHeight(v), false);
 			sc.Show(v);	
 			PostCallback(THISBACK(RefreshParentLayout));
 		}
 	}
 	else {
-		SetFrameSize(sc.GetFrameSize() + GetHeight(), false);
+		SetFrameSize(sc.GetFrameSize() + GetHeight(true), false);
 		sc.Show();
 	}
 }
@@ -988,6 +1069,11 @@ void TabBar::LeftUp(Point p, dword keyflags)
 	ReleaseCapture();
 }
 
+void TabBar::LeftDouble(Point p, dword keysflags)
+{
+	WhenLeftDouble();
+}
+
 void TabBar::RightDown(Point p, dword keyflags)
 {
 	MenuBar::Execute(THISBACK(ContextMenu), GetMousePos());
@@ -1027,6 +1113,24 @@ void TabBar::MouseWheel(Point p, int zdelta, dword keyflags)
 	MouseMove(p, 0);
 }
 
+bool TabBar::ProcessMouse(int i, const Point& p)
+{
+	if(i >= 0 && tabs[i].HasMouse(p))
+	{
+		bool iscross = crosses ? tabs[i].HasMouseCross(p) : false;
+		if(highlight != i || (iscross && cross != i || !iscross && cross == i))
+		{
+			cross = iscross ? i : -1;
+			highlight = i;
+			WhenHighlight();
+			Refresh();
+		}
+		return true;
+	}
+	
+	return false;
+}
+
 void TabBar::MouseMove(Point p, dword keyflags)
 {
 	if(HasCapture())
@@ -1037,37 +1141,23 @@ void TabBar::MouseMove(Point p, dword keyflags)
 		Refresh();
 		return;
 	}
-
-	int h = highlight;
-	bool iscross = false;
-	bool istab = false;
+	
+	if(ProcessMouse(active, p))
+		return;
+		
 	for(int i = 0; i < tabs.GetCount(); i++)
 	{
-		if(tabs[i].HasMouse(p))
-		{
-			istab = true;
-			iscross = crosses ? tabs[i].HasMouseCross(p) : false;
-			if(highlight != i || (iscross && cross != i))
-			{
-				cross = iscross ? i : -1;
-				highlight = i;
-				WhenHighlight();
-				Refresh();
-				return;
-			}
-		}
+		if(i == active)
+			continue;
+		
+		if(ProcessMouse(i, p))
+			return;
 	}
 
-	if(!istab && h >= 0)
+	if(highlight >= 0 || cross >= 0)
 	{
-		highlight = -1;
+		highlight = cross = -1;
 		WhenHighlight();
-		Refresh();
-	}
-
-	if(!iscross && cross >= 0)
-	{
-		cross = -1;
 		Refresh();
 	}
 }
@@ -1076,8 +1166,8 @@ void TabBar::MouseLeave()
 {
 	if(isdrag)
 		return;
-	highlight = -1;
-	cross = -1;
+	highlight = cross = -1;
+	WhenHighlight();
 	Refresh();
 }
 
@@ -1161,7 +1251,7 @@ void TabBar::DragRepeat(Point p)
 	}
 }
 
-void TabBar::SetCursor(int n)
+void TabBar::SetCursor(int n, bool scroll)
 {
 	if(tabs.GetCount() == 0)
 		return;
@@ -1188,21 +1278,30 @@ void TabBar::SetCursor(int n)
 
 	SetGroupActive(tabs[n].id);
 
-	int cx = tabs[n].pos.x - sc.GetPos();
-	if(cx < 0)
-		sc.AddPos(cx - 10);
-	else
+	if(scroll)
 	{
-		Size sz = Ctrl::GetSize();
-		Fix(sz);
-		cx = tabs[n].pos.x + tabs[n].size.cx - sz.cx - sc.GetPos();
-		if(cx > 0)
-			sc.AddPos(cx + 10);
+		int cx = tabs[n].pos.x - sc.GetPos();
+		if(cx < 0)
+			sc.AddPos(cx - 10);
+		else
+		{
+			Size sz = Ctrl::GetSize();
+			Fix(sz);
+			cx = tabs[n].pos.x + tabs[n].size.cx - sz.cx - sc.GetPos();
+			if(cx > 0)
+				sc.AddPos(cx + 10);
+		}
 	}
-	if(HasMouse())
-		MouseMove(GetMouseViewPos(), 0);
 
-	UpdateActionRefresh();
+	Refresh();
+
+	if(Ctrl::HasMouse())
+	{
+		Sync();
+		MouseMove(GetMouseViewPos(), 0);
+	}
+	
+	UpdateAction();
 }
 
 void TabBar::SetTabGroup(int n, const String &group)
@@ -1231,11 +1330,12 @@ void TabBar::Close(int n)
 			nc = max(0, GetPrev(c));
 		SetGroupActive(tabs[nc].id);
 	}
+	
 	sc.AddTotal(-tabs[n].size.cx);
 	tabs.Remove(n);
 	MakeGroups();
 	Repos();
-	SetCursor(-1);
+	SetCursor(-1, false);
 }
 
 const TabBar::Style& TabBar::AlignStyle(int align, Style &s)

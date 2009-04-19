@@ -8,11 +8,13 @@ using namespace Upp;
 #define IMAGEFILE <TabBar/TabBar.iml>
 #include <Draw/iml_header.h>
 
+//#define TABBAR_DEBUG
+
 struct AlignedFrame : FrameCtrl<Ctrl>
 {
-	int border;
-	int framesize;
 	int layout;
+	int framesize;
+	int border;
 public:	
 	enum
 	{
@@ -34,10 +36,10 @@ public:
 	bool		  IsBR() const		{ return layout >= 2; }
 	
 	AlignedFrame& SetAlign(int align) { layout = align; FrameSet(); RefreshParentLayout(); return *this; }
-	AlignedFrame& SetLeft()			{ return SetAlign(LEFT); }
-	AlignedFrame& SetTop()			{ return SetAlign(TOP); }
-	AlignedFrame& SetRight()		{ return SetAlign(RIGHT); }
-	AlignedFrame& SetBottom()		{ return SetAlign(BOTTOM); }	
+	AlignedFrame& SetLeft()		{ return SetAlign(LEFT); }
+	AlignedFrame& SetTop()		{ return SetAlign(TOP); }
+	AlignedFrame& SetRight()	{ return SetAlign(RIGHT); }
+	AlignedFrame& SetBottom()	{ return SetAlign(BOTTOM); }	
 	AlignedFrame& SetFrameSize(int sz, bool refresh = true);
 		
 	int 		  GetAlign() const		{ return layout; }
@@ -46,6 +48,8 @@ public:
 protected:
 	void Fix(Size& sz);
 	void Fix(Point& p);
+	Size Fixed(const Size& sz);
+	Point Fixed(const Point& p);
 	
 	bool		  HasBorder()				{ return border >= 0; }
 	AlignedFrame& SetBorder(int _border)	{ border = _border; return *this; }
@@ -143,14 +147,17 @@ protected:
 		int first;
 		int last;
 	};	
-private:
-	int id;
+protected:
+
 	TabScrollBar sc;
 
 	Vector<Group> groups;
 	Vector<Tab> tabs;
-	int highlight;
 	int active;
+
+private:
+	int id;
+	int highlight;
 	int target;
 	int cross;
 	bool crosses:1;
@@ -182,7 +189,7 @@ private:
 
 	int GetWidth(int n);
 	int GetWidth() const;
-	int GetHeight() const;
+	int GetHeight(bool scrollbar = true) const;
 	
 	static int GetStyleHeight(const Style& s);
 	
@@ -194,6 +201,7 @@ protected:
 	virtual void Paint(Draw &w);
 	virtual void LeftDown(Point p, dword keysflags);
 	virtual void LeftUp(Point p, dword keysflags);
+	virtual void LeftDouble(Point p, dword keysflags);
 	virtual void RightDown(Point p, dword keyflags);
 	virtual void MiddleDown(Point p, dword keyflags);
 	virtual void MiddleUp(Point p, dword keyflags);
@@ -210,6 +218,8 @@ protected:
 	virtual void FrameLayout(Rect& r);
 	virtual void Layout();
 
+	bool ProcessMouse(int i, const Point& p);
+
 	void Repos();
 	void MakeGroups();
 	int  FindGroup(const String& g) const;
@@ -218,16 +228,13 @@ protected:
 	void DoCloseGroup(int n);
 	void NewGroup(const String &name, const Value &data = Value());
 
+	virtual WString ParseLabel(const WString& s);
 	// Sub-class display overide & helpers
-	virtual void PaintTabData(Draw& w, Point p, const Size &sz, const Value& q, const Font &font, 
-		Color ink, dword style);
+	virtual void PaintTabData(Draw& w, const Rect &t, const Value& q, const Font &font, 
+		Color ink, dword style, int bl);
 	virtual Size GetStdSize(Value &q); 
 
-	int		GetTextAngle()	{ return AlignedFrame::IsVert() ? (GetAlign() == LEFT ? 900 : 2700) : 0; }
-	void 	TabCenterText(Point &p, const Size &sz, const Font &f)	{ TabCenter(p, sz, f.GetHeight()); }
-	void 	TabCenter(Point &p, const Size &sz, const Size &hsz)	{ TabCenter(p, sz, IsVert() ? sz.cx : sz.cy); }
-	void 	TabCenter(Point &p, const Size &sz, int h);
-	
+	int		GetTextAngle()	{ return AlignedFrame::IsVert() ? (GetAlign() == LEFT ? 900 : 2700) : 0; }	
 	int 	GetTargetTab(Point p);	
 	
 	const Style &GetStyle() { return *style[GetAlign()]; }
@@ -242,6 +249,7 @@ public:
 	Callback WhenCursor;
 	Callback1<Value> WhenClose;
 	Callback WhenCloseAll;
+	Callback WhenLeftDouble;
 
 	TabBar();
 
@@ -259,8 +267,8 @@ public:
 	TabBar& AutoScrollHide(bool b = true);
 	TabBar& InactiveDisabled(bool b = true);
 	
-	TabBar& SetDisplay(const Display &d) 	{ display = &d; Refresh(); return *this; }
-	
+	TabBar& SetDisplay(const Display &d) 	{ display = &d; Refresh(); }
+	TabBar& SetBorder(int border)           { AlignedFrame::SetBorder(border); return *this; }
 	int 	Find(const Value &v) const;
 	
 	Value  	Get(int n) const				{ ASSERT(n >= 0 && n < tabs.GetCount()); return tabs[n].data;}
@@ -285,7 +293,7 @@ public:
 	int    	GetCount() const 			{ return tabs.GetCount(); }
 	int    	GetCursor() const 			{ return active; }
 	int	   	GetHighlight() const 		{ return highlight; }
-	void   	SetCursor(int n);
+	void   	SetCursor(int n, bool scroll = true);
 	void	SetTabGroup(int n, const String &group);
 
 	bool   	HasCursor() const			{ return active >= 0; }
