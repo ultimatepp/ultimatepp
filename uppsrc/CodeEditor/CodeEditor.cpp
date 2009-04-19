@@ -638,7 +638,8 @@ WString CodeEditor::GetI()
 	return ft;
 }
 
-void CodeEditor::FindWord(bool back) {
+void CodeEditor::FindWord(bool back)
+{
 	WString I = GetI();
 	if(!IsNull(I))
 		Find(back, I, true, false, false, false);
