@@ -38,11 +38,13 @@ private:
 
 	int                      rowsprocessed;
 	Vector< Vector<double> > number;
+	Vector< Vector<int64> >  num64;
 	Vector< Vector<String> > text;
 	Vector< Vector<Time> >   time;
 	int                      rowcount;
 	int                      rowi;
 	Vector<Value>            fetchrow;
+	Vector<bool>             binary;
 	
 	bool                   IsOk(SQLRETURN ret) const;
 	void                   Flush();
@@ -345,6 +347,7 @@ bool ODBCConnection::Execute()
 	}
 	session->current = this;
 	info.Clear();
+	binary.Clear();
 	for(int i = 1; i <= ncol; i++) {
 		SQLCHAR      ColumnName[256];
 		SQLSMALLINT  NameLength;
@@ -355,6 +358,7 @@ bool ODBCConnection::Execute()
 		if(!IsOk(SQLDescribeCol(session->hstmt, i, ColumnName, 255, &NameLength, &DataType,
 		                        &ColumnSize, &DecimalDigits, &Nullable)))
 			return false;
+		binary.Add(false);
 		SqlColumnInfo& f = info.Add();
 		f.nullable = Nullable != SQL_NO_NULLS;
 		f.precision = DecimalDigits;
@@ -371,12 +375,20 @@ bool ODBCConnection::Execute()
 		case SQL_DOUBLE:
 		case SQL_BIT:
 		case SQL_TINYINT:
-		case SQL_BIGINT:
 			f.type = DOUBLE_V;
+			break;
+		case SQL_BIGINT:
+			f.type = INT64_V;
 			break;
 		case SQL_TYPE_DATE:
 		case SQL_TYPE_TIMESTAMP:
 			f.type = TIME_V;
+			break;
+		case SQL_BINARY:
+		case SQL_VARBINARY:
+		case SQL_LONGVARBINARY:
+			f.type = STRING_V;
+			binary.Top() = true;
 			break;
 		default:
 			f.type = STRING_V;
@@ -402,6 +414,7 @@ bool ODBCConnection::Fetch0()
 		return false;
 	fetchrow.Clear();
 	double dbl;
+	int64 n64;
 	SQL_TIMESTAMP_STRUCT tm;
 	SQLLEN li;
 	for(int i = 0; i < info.GetCount(); i++) {
@@ -412,6 +425,12 @@ bool ODBCConnection::Fetch0()
 			   break;
 			if(li != SQL_NULL_DATA)
 				v = dbl;
+			break;
+		case INT64_V:
+			if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_SBIGINT, &n64, sizeof(dbl), &li)))
+			   break;
+			if(li != SQL_NULL_DATA)
+				v = n64;
 			break;
 		case TIME_V:
 			if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_TYPE_TIMESTAMP, &tm, sizeof(tm), &li)))
@@ -428,12 +447,13 @@ bool ODBCConnection::Fetch0()
 			}
 			break;
 		default:
-			if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_CHAR, &tm, 0, &li)))
+			int ct = binary[i] ? SQL_C_BINARY : SQL_C_CHAR;
+			if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, &tm, 0, &li)))
 			   break;
 			if(li != SQL_NULL_DATA) {
 				StringBuffer sb;
 				sb.SetLength(li);
-				if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_CHAR, ~sb, li + 1, &li)))
+				if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, ~sb, li + 1, &li)))
 				   break;
 				v = String(sb);
 			}
@@ -456,6 +476,9 @@ bool ODBCConnection::Fetch()
 		switch(info[i].type) {
 		case DOUBLE_V:
 			v = number[i][rowi];
+			break;
+		case INT64_V:
+			v = num64[i][rowi];
 			break;
 		case TIME_V:
 			v = time[i][rowi];
@@ -494,6 +517,9 @@ void ODBCConnection::Flush()
 			case DOUBLE_V:
 				number[i].Add(fetchrow[i]);
 				break;
+			case INT64_V:
+				num64[i].Add(fetchrow[i]);
+				break;
 			case STRING_V:
 				text[i].Add(fetchrow[i]);
 				break;
@@ -524,13 +550,6 @@ Value ODBCConnection::GetInsertedId() const
 	Sql sql(GetSession());
 	return last_insert_table.GetCount() ? sql.Select("IDENT_CURRENT('" + last_insert_table + "')")
 	                                    : sql.Select("@@IDENTITY");
-}
-
-String MSSQLTextType(int width)
-{
-	if(width <= 4000)
-		return NFormat("varchar(%d)", width);
-	return "text";
 }
 
 END_UPP_NAMESPACE

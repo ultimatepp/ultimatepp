@@ -8,7 +8,6 @@
 NAMESPACE_UPP
 
 bool   ODBCPerformScript(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled = false);
-String MSSQLTextType(int width);
 
 class ODBCConnection;
 
