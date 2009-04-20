@@ -1,3 +1,8 @@
+#define BIT(x)                     COLUMN("bit", int, x, 0, 0)
+#define BIT_ARRAY(x, items)        COLUMN_ARRAY("bit", int, x, 0, 0, items)
+#define BIT_(x)                    COLUMN_("bit", int, x, 0, 0)
+#define BIT_ARRAY_(x, items)       COLUMN_ARRAY_("bit", int, x, 0, 0, items)
+
 #define BOOL(x)                    COLUMN("bit", int, x, 0, 0)
 #define BOOL_ARRAY(x, items)       COLUMN_ARRAY("bit", int, x, 0, 0, items)
 #define BOOL_(x)                   COLUMN_("bit", int, x, 0, 0)
