@@ -406,4 +406,12 @@ SqlVal OuterJoin(SqlCol col)
 	return SqlCol(~col + "(+)");
 }
 
+SqlVal SqlBinary(const String& data)
+{
+	String x = SqlCase(MSSQL, "0x")(MY_SQL, "x\'")(SQLITE3, "X\'")("\'");
+	x << HexString(data)
+	  << SqlCase(MSSQL, "")("\'");
+	return SqlVal(x, SqlS::HIGH);
+}
+
 END_UPP_NAMESPACE

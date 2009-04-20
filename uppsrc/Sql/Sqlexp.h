@@ -3,7 +3,7 @@ enum {
 	SQLITE3   = 2,
 	MY_SQL    = 4,
 	MSSQL     = 8,
-	PGSQL     = 16, // not implemented yet
+	PGSQL     = 16,
 	FIREBIRD  = 32, // not implemented yet
 	DB2       = 64, // not implemented yet
 };
@@ -278,6 +278,8 @@ inline SqlVal operator++(SqlId a)           { return NextVal(a); }
 SqlVal SqlRowNum();
 
 SqlVal SqlArg();
+
+SqlVal SqlBinary(const String& data);
 
 class SqlBool : public SqlS, Moveable<SqlBool> {
 public:
