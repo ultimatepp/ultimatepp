@@ -100,4 +100,4 @@ md])&]
 [s2;%% Runs process defined by [%-*@3 cmd] command line. If [%-*@3 cmd] 
 was executed successfully and returned zero exit code, returns 
 its standard output, otherwise returns String`::GetVoid().&]
-[s3;%% ]
+[s0; ]

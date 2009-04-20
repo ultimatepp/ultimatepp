@@ -327,8 +327,14 @@ bool ODBCConnection::Execute()
 	param.Clear();
 	for(int i = 0; i < bparam.GetCount(); i++) {
 		Param& p = bparam[i];
-		if(!IsOk(SQLBindParameter(session->hstmt, i + 1, SQL_PARAM_INPUT, p.ctype, p.sqltype,
-		                          p.data.GetCount(), 0, (SQLPOINTER)~p.data, p.data.GetLength(),
+		SQLSMALLINT     DataType;
+		SQLULEN         ParameterSize;
+		SQLSMALLINT     DecimalDigits;
+		SQLSMALLINT     Nullable;
+		if(!IsOk(SQLDescribeParam(session->hstmt, i + 1, &DataType, &ParameterSize, &DecimalDigits, &Nullable)))
+			return false;
+		if(!IsOk(SQLBindParameter(session->hstmt, i + 1, SQL_PARAM_INPUT, p.ctype, DataType,
+		                          ParameterSize, DecimalDigits, (SQLPOINTER)~p.data, p.data.GetLength(),
 		                          &p.li)))
 			return false;
 	}
