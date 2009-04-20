@@ -15,10 +15,10 @@ cp ~/upp.src/uppbox/Scripts/GCCMK.bm ~/.upp/theide
 
 ~/bin/theide uppsrc ide GCCMK -asrxM ~/upp.tmp/u/uppsrc
 
-cp ~/upp.src/uppbox/Scripts/Makefile ~/upp.tmp/u
-cp ~/upp.src/uppbox/Scripts/domake ~/upp.tmp/u
-cp ~/upp.src/uppbox/Scripts/doinstall ~/upp.tmp/u
-cp ~/upp.src/uppbox/Scripts/readme ~/upp.tmp/u
+dos2unix -n ~/upp.src/uppbox/Scripts/Makefile ~/upp.tmp/u
+dos2unix -n ~/upp.src/uppbox/Scripts/domake ~/upp.tmp/u
+dos2unix -n ~/upp.src/uppbox/Scripts/doinstall ~/upp.tmp/u
+dos2unix -n ~/upp.src/uppbox/Scripts/readme ~/upp.tmp/u
 cp ~/upp.src/uppbox/Scripts/GCCMK.bm ~/upp.tmp/u/GCC.bm
 
 cd ~/upp.tmp
