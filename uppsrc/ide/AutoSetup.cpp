@@ -218,7 +218,7 @@ void AutoSetup()
 		String vc = AppendFileName(vs9, "Vc");
 		String m = ~dlg.visualcppmethod9;
 		String sdk = ~dlg.sdk9;
-		if(IsNull(sdk9))
+		if(IsNull(sdk))
 			sdk = AppendFileName(vc, "PlatformSDK");
 		SaveFile(
 			AppendFileName(dir, m + ".bm"),
