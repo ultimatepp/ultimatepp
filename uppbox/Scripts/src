@@ -23,7 +23,7 @@ cp ~/Scripts/readme ~/upp.tmp/u
 cp ~/Scripts/GCCMK.bm ~/upp.tmp/u/GCC.bm
 
 cd ~/upp.tmp
-mv u upp-src-`svnversion ~/upp.src`
-tar -cvvzf ~/upload/upp-src-`svnversion ~/upp.src`.tar.gz upp-src-`svnversion ~/upp.src`
+mv u upp-x11-src-`svnversion ~/upp.src`
+tar -cvvzf ~/upload/upp-x11-src-`svnversion ~/upp.src`.tar.gz upp-src-`svnversion ~/upp.src`
 ~/bin/upload
-mv upp-src-`svnversion ~/upp.src` u
+mv upp-x11-src-`svnversion ~/upp.src` u
