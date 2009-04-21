@@ -35,11 +35,8 @@ inline double fpabsmax     (Pointf p)                         { return max(fabs(
 
 
 inline Pointf Move         (const Pointf& p, double dx, double dy)   { return Pointf(p.x + dx, p.y + dy); }
-inline Pointf Mid          (const Pointf& p, const Pointf& q)        { return Pointf((p.x + q.x) / 2, (p.y + q.y) / 2); }
 inline Pointf Mid          (const Pointf& p, const Pointf& q, double wt) { return p + (q - p) * wt; }
-inline double Squared      (const Pointf& p)                         { return p.x * p.x + p.y * p.y; }
 inline double Squared      (const Pointf& p, const Pointf& q)        { return Squared(q - p); }
-inline double Length       (const Pointf& p)                         { return sqrt(Squared(p)); }
 Pointf        Length       (const Pointf& p, double l);
 inline Pointf Unit         (const Pointf& p)                         { return Length(p, 1); }
 inline Pointf Rotated      (const Pointf& p, double a)               { double s = sin(a), c = cos(a); return Pointf(p.x * c - p.y * s, p.x * s + p.y * c); }
@@ -58,8 +55,6 @@ inline Pointf ReversedY    (const Pointf& p)                         { return Po
 inline Pointf Left         (const Pointf& p)                         { return Pointf(-p.y, p.x); }
 inline Pointf Right        (const Pointf& p)                         { return Pointf(p.y, -p.x); }
 
-inline double Distance     (const Pointf& p, const Pointf& q) { return Length(p - q); }
-double        Bearing      (const Pointf& p); // 0 to 2 * M_PI
 inline double Bearing      (const Pointf& p, const Pointf& c) { return Bearing(p - c); }
 inline bool   Select       (const Pointf& p, const Pointf& A, const Pointf& B) { return Squared(p - A) < Squared(p - B); }
 

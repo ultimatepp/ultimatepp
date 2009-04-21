@@ -1,4 +1,4 @@
-description "2D software rendering with PDF/SVG strength";
+description "2D software rendering with PDF/SVG strength\377";
 
 uses
 	Core,
@@ -17,7 +17,6 @@ file
 	Painting.cpp,
 	PaintPainting.icpp,
 	BufferPainter.h,
-	Math.cpp,
 	Xform2D.cpp,
 	Approximate.cpp,
 	Stroker.cpp,
