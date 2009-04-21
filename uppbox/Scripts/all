@@ -4,6 +4,9 @@ set -e
 
 mkdir ~/upload || true
 
+rm -r ~/upp.tmp
+mkdir ~/upp.tmp
+
 bash ~/upp.src/uppbox/Scripts/www
 
 bash ~/upp.src/uppbox/Scripts/win
