@@ -1,13 +1,3 @@
-Pointf Mid(const Pointf& a, const Pointf& b);
-Pointf Orthogonal(const Pointf& p);
-double Squared(const Pointf& p);
-double Length(const Pointf& p);
-double Bearing(const Pointf& p);
-double Distance(const Pointf& p1, const Pointf& p2);
-double SquaredDistance(const Pointf& p1, const Pointf& p2);
-Pointf Polar(double a);
-Pointf Polar(const Pointf& p, double r, double a);
-
 struct LinearPathConsumer {
 	virtual void Move(const Pointf& p) = 0;
 	virtual void Line(const Pointf& p) = 0;

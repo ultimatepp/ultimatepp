@@ -2,7 +2,7 @@
 #define _Painter_icpp_init_stub
 #include "Core/init"
 #include "CtrlLib/init"
-#define BLITZ_INDEX__ F2A6068A655C8BCC8084C48CF22A1199F
+#define BLITZ_INDEX__ F29F240C27A55FC08EDAB469DECA3ACA3
 #include "PaintPainting.icpp"
 #undef BLITZ_INDEX__
 #endif

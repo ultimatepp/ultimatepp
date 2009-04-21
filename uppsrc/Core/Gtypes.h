@@ -697,3 +697,13 @@ enum Alignment {
 Size        GetRatioSize(Size stdsize, int cx, int cy);
 Size        GetFitSize(Size objsize, int cx, int cy);
 inline Size GetFitSize(Size objsize, Size intosize) { return GetFitSize(objsize, intosize.cx, intosize.cy); }
+
+Pointf Mid(const Pointf& a, const Pointf& b);
+Pointf Orthogonal(const Pointf& p);
+double Squared(const Pointf& p);
+double Length(const Pointf& p);
+double Bearing(const Pointf& p);
+double Distance(const Pointf& p1, const Pointf& p2);
+double SquaredDistance(const Pointf& p1, const Pointf& p2);
+Pointf Polar(double a);
+Pointf Polar(const Pointf& p, double r, double a);
