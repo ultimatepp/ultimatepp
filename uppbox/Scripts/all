@@ -7,8 +7,8 @@ mkdir ~/upload || true
 rm -r ~/upp.tmp
 mkdir ~/upp.tmp
 
-bash ~/upp.src/uppbox/Scripts/www
+bash ~/Scripts/www
 
-bash ~/upp.src/uppbox/Scripts/win
+bash ~/Scripts/win
 
-bash ~/upp.src/uppbox/Scripts/src
+bash ~/Scripts/src
