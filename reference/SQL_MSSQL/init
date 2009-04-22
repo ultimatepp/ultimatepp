@@ -1,0 +1,4 @@
+#ifndef _SQL_MSSQL_icpp_init_stub
+#define _SQL_MSSQL_icpp_init_stub
+#include "MSSQL/init"
+#endif
