@@ -1,3 +1,8 @@
+description "MSSQL interface\377";
+
+uses
+	ODBC;
+
 file
 	MSSQL.h,
 	MSSQLSchema.h,
