@@ -1,0 +1,13 @@
+description "Using MSSQL interface\377";
+
+uses
+	MSSQL;
+
+file
+	app.h,
+	database.sch,
+	app.cpp;
+
+mainconfig
+	"" = "";
+
