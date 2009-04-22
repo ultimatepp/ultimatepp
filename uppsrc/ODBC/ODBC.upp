@@ -1,3 +1,5 @@
+description "Generic ODBC interface\377";
+
 uses
 	Sql;
 

@@ -7,6 +7,15 @@ namespace Upp {
 
 String MsSqlTextType(int width);
 
+typedef ODBCSession MSSQLSession;
+
+inline
+bool   MSSQLPerformScript(const String& text, StatementExecutor& executor,
+                         Gate2<int, int> progress_canceled = false)
+{
+	return ODBCPerformScript(text, executor, progress_canceled);
+}
+
 };
 
 #endif

@@ -276,11 +276,20 @@ void ODBCConnection::SetParam(int i, const Value& r)
 {
 	Param& p = param.At(i);
 	if(IsNumber(r)) {
-		double x = r;
-		p.ctype = SQL_C_DOUBLE;
-		p.sqltype = SQL_DOUBLE;
-		p.data = String((char *)&x, sizeof(x));
-		p.li = sizeof(x);
+		if(r.Is<int64>()) {
+			int64 x = r;
+			p.ctype = SQL_C_SBIGINT;
+			p.sqltype = SQL_BIGINT;
+			p.data = String((char *)&x, sizeof(x));
+			p.li = sizeof(x);
+		}
+		else {
+			double x = r;
+			p.ctype = SQL_C_DOUBLE;
+			p.sqltype = SQL_DOUBLE;
+			p.data = String((char *)&x, sizeof(x));
+			p.li = sizeof(x);
+		}
 	}
 	if(IsString(r)) {
 		p.ctype = SQL_C_CHAR;
@@ -427,7 +436,7 @@ bool ODBCConnection::Fetch0()
 				v = dbl;
 			break;
 		case INT64_V:
-			if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_SBIGINT, &n64, sizeof(dbl), &li)))
+			if(!IsOk(SQLGetData(session->hstmt, i + 1, SQL_C_SBIGINT, &n64, sizeof(n64), &li)))
 			   break;
 			if(li != SQL_NULL_DATA)
 				v = n64;
