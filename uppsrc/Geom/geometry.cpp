@@ -29,6 +29,7 @@ Pointf Project(const Pointf& p, const Pointf& A, const Pointf& B)
 	return A + AB * ((AB ^ (p - A)) / length);
 }
 
+/* TRC 09/04/22: moved to Core by CXL
 double Bearing(const Pointf& p)
 {
 	if(p.y == 0)
@@ -40,6 +41,7 @@ double Bearing(const Pointf& p)
 		b += 2 * M_PI;
 	return b;
 }
+*/
 
 Pointf Bezier2(const Pointf& a, const Pointf& b, const Pointf& c, double t)
 {

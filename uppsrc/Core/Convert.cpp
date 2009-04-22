@@ -448,7 +448,7 @@ GLOBAL_VAR_INIT(const ConvertInt, StdConvertInt)
 GLOBAL_VARP_INIT(const ConvertInt, StdConvertIntNotNull, (-INT_MAX, INT_MAX, true))
 GLOBAL_VAR_INIT(const ConvertDouble, StdConvertDouble)
 GLOBAL_VARP_INIT(const ConvertDouble, StdConvertDoubleNotNull,
-            (-DOUBLE_NULL_LIM, DOUBLE_NULL_LIM, true))
+            (DOUBLE_NULL_LIM, -DOUBLE_NULL_LIM, true))
 GLOBAL_VAR_INIT(const ConvertDate, StdConvertDate)
 GLOBAL_VARP_INIT(const ConvertDate, StdConvertDateNotNull, (Date(0, 0, 0), Date(3000, 12, 31), true))
 GLOBAL_VAR_INIT(const ConvertTime, StdConvertTime)
