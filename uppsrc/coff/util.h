@@ -7,7 +7,7 @@
 	#undef __offsetof
 #endif
 
-#ifdef PLATFORM_FREEBSD
+#ifdef PLATFORM_BSD
 #include <sys/types.h>
 #include <sys/stat.h>
 #endif

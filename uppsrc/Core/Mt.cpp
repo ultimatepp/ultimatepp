@@ -179,7 +179,7 @@ void Thread::Sleep(int msec)
 	::Sleep(msec);
 #endif
 #ifdef PLATFORM_POSIX
-	timespec tval;
+	::timespec tval;
 	tval.tv_sec = msec / 1000;
 	tval.tv_nsec = (msec % 1000) * 1000000;
 	nanosleep(&tval, NULL);

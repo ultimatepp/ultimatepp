@@ -1331,7 +1331,7 @@ bool FileMapping::Map(int64 mapoffset, dword maplen)
 			(dword)(rawoffset >> 32), (dword)(rawoffset >> 0), rawsize);
 #else
 		rawbase = (byte *)mmap(0, rawsize, PROT_READ | PROT_WRITE,
-#ifdef PLATFORM_FREEBSD
+#ifdef PLATFORM_BSD
 			MAP_NOSYNC,
 #else
 			MAP_SHARED,

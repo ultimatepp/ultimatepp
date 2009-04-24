@@ -46,7 +46,7 @@ static void sLogFile(char *fn, const char *app = ".log")
 	const char *q = strrchr(exe, '/');
 	if(q)
 		exe = q + 1;
-	if(!exe)
+	if(!*exe)
 		exe = "upp";
 	strcat(path, exe);
 	mkdir(path, 0755);

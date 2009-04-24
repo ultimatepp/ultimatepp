@@ -11,7 +11,7 @@ library(WIN32 !GUI !GNU !GCC) "ole32 oleaut32 oldnames";
 
 library(LINUX) "pthread dl";
 
-library(FREEBSD) pthread;
+library(BSD) pthread;
 
 library(WIN32 !MSC8ARM) "advapi32 shell32 winmm mpr";
 
