@@ -164,7 +164,7 @@ char *PermanentCopy(const char *s)
 #ifndef PLATFORM_WIN32
 void Sleep(int msec)
 {
-	timespec tval;
+	::timespec tval;
 	tval.tv_sec = msec / 1000;
 	tval.tv_nsec = (msec % 1000) * 1000000;
 	nanosleep(&tval, NULL);

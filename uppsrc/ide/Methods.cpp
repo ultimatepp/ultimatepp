@@ -204,7 +204,7 @@ BuildMethods::BuildMethods()
 	remote_os.Add("WINCE");
 	remote_os.Add("UNIX");
 	remote_os.Add("SOLARIS");
-	remote_os.Add("FREEBSD");
+	remote_os.Add("BSD");
 	method.AddCtrl("REMOTE_TRANSFER", remote_file_access);
 	remote_file_access.Add("0", "direct (SAMBA)");
 	remote_file_access.Add("1", "indirect (transfer)");

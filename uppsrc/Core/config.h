@@ -7,7 +7,7 @@
 		#define PLATFORM_WIN32
 	#endif
 
-	#if __unix
+	#if __unix || __unix__
 		#define PLATFORM_POSIX 1
 		
 		#ifdef flagGUI
@@ -16,9 +16,23 @@
 	
 		#if __linux
 			#define PLATFORM_LINUX 1
-		#else // ToDo
-			#define PLATFORM_BSD 1
-			#define PLATFORM_FREEBSD 1
+		#else
+			#if __FreeBSD__ || __OpenBSD__ || __NetBSD__
+				#define PLATFORM_BSD 1
+				#if __FreeBSD__
+					#define PLATFORM_BSD 1
+				#endif
+				#if __OpenBSD__
+					#define PLATFORM_OPENBSD 1
+				#endif
+				#if __NetBSD__
+					#define PLATFORM_NETBSD 1
+				#endif
+			#elif __sun
+				#define PLATFORM_SOLARIS 1
+			#else
+				#error Unknown OS
+			#endif
 		#endif
 	#endif
 	

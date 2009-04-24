@@ -39,7 +39,7 @@ const char *procexepath_() {
 	static char h[_MAX_PATH + 1];
 	ONCELOCK {
 		char link[100];
-#ifdef PLATFORM_FREEBSD
+#ifdef PLATFORM_BSD
 		sprintf(link, "/proc/%d/file", getpid());
 #else
 		sprintf(link, "/proc/%d/exe", getpid());

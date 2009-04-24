@@ -289,13 +289,36 @@ void LocalHost::AddFlags(Index<String>& cfg)
 #if   defined(PLATFORM_WIN32)
 	cfg.Add("WIN32");
 #endif
+
 #ifdef PLATFORM_LINUX
 	cfg.Add("LINUX");
-#elif defined(PLATFORM_FREEBSD)
+#endif
+
+#ifdef PLATFORM_POSIX
+	cfg.Add("POSIX");
+#endif
+
+#ifdef PLATFORM_BSD
+	cfg.Add("BSD");
+#endif
+
+#ifdef PLATFORM_BSD
 	cfg.Add("FREEBSD");
-#elif defined(PLATFORM_SOLARIS)
+#endif
+
+#ifdef PLATFORM_OPENBSD
+	cfg.Add("OPENBSD");
+#endif
+
+#ifdef PLATFORM_NETBSD
+	cfg.Add("NETBSD");
+#endif
+
+#ifdef PLATFORM_SOLARIS
 	cfg.Add("SOLARIS");
-#elif defined(PLATFORM_OSX11)
+#endif
+
+#ifdef PLATFORM_OSX11
 	cfg.Add("OSX11");
 #endif
 }
