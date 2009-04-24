@@ -6,11 +6,13 @@
 
 #include <Core/Core.h>
 using namespace Upp;
-//#include <plugin/bz2/bz2.h>
 
 void Error(char *sz = "Installation files are damaged");
 
 void LZMAExtract(const char *ptr, int len, const char *outdir, Gate2<int, int> progress);
+
+extern "C"
+BOOL BrowseFolder( HWND hwndOwner, LPTSTR lpszDir, LPCTSTR lpszTitle );
 
 class ProgressMeter {
 public:

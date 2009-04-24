@@ -1,3 +1,5 @@
+description "\377B128,0,0";
+
 uses
 	Core;
 
@@ -8,6 +10,7 @@ file
 	Install.h,
 	Progress.cpp,
 	7zMain.cpp,
+	Browse.c,
 	Install.cpp,
 	data.rc,
 	install.rc,
