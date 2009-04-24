@@ -13,7 +13,8 @@ CAPTION "Ultimate++"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "Install path",100,7,16,41,8
-    EDITTEXT        101,51,14,173,12,ES_AUTOHSCROLL
+    EDITTEXT        101,51,14,120,12,ES_AUTOHSCROLL
+	PUSHBUTTON      "Browse..",999,174,14,50,14
     DEFPUSHBUTTON   "Install !",IDOK,7,35,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,174,35,50,14
 END

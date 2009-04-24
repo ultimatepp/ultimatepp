@@ -49,11 +49,20 @@ BOOL CALLBACK Proc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			WinExec(exe, SW_SHOWNORMAL);
 			break;
 		}
+		case 999: {
+		    BOOL retVal;
+			char Folder[256] = "C:\\";
+			char FolderName[17] = "Select Directory";
+			if(BrowseFolder( 0, Folder, FolderName)) {
+				strcat(Folder, "\\upp");
+				SetWindowText(GetDlgItem(hwnd, 101), Folder);
+			}
+			break;
+		}
 		case IDCANCEL:
 			EndDialog(hwnd, 0);
 			break;
 		}
-		break;
 	}
 	return 0;
 }
