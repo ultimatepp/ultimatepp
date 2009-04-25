@@ -120,6 +120,7 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 		     "keycode:" << event->xkey.keycode);
 		for(;;) {
 			XEvent ev1[1], ev2[1];
+			bool hasev2 = false;
 			if(!IsWaitingEvent()) break;
 			do
 				XNextEvent(Xdisplay, ev1);
@@ -141,17 +142,20 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 				while(ev2->type == NoExpose && IsWaitingEvent());
 				LLOG("ev2 type:" << ev2->type << " state:" << ev2->xkey.state <<
 				     "keycode:" << ev2->xkey.keycode);
+				hasev2 = true;
 			}
 			if(ev2->type != KeyPress ||
 			   ev2->xkey.state != event->xkey.state ||
 			   ev2->xkey.keycode != event->xkey.keycode) {
-			   	XPutBackEvent(Xdisplay, ev2);
-			   	XPutBackEvent(Xdisplay, ev1);
-			   	break;
+				if(hasev2)
+					XPutBackEvent(Xdisplay, ev2);
+				XPutBackEvent(Xdisplay, ev1);
+				break;
 			}
 			else {
 				XFilterEvent(ev1, None);
-				XFilterEvent(ev2, None);
+				if(hasev2)
+					XFilterEvent(ev2, None);
 			}
 			count++;
 		}
