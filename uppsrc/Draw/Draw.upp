@@ -83,6 +83,3 @@ file
 	srcdoc.tpp,
 	Copying;
 
-mainconfig
-	"Debug" = "MSC GUI DEBUG WIN32";
-

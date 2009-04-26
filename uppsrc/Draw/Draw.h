@@ -394,8 +394,6 @@ enum {
 
 class Image;
 
-struct DrawingPos;
-
 //DEPRECATED: TODO
 Color SBlack();
 Color SGray();
@@ -547,8 +545,6 @@ protected:
 
 	Draw();
 
-	friend bool DrawDrawing(Draw& w, Stream& s, const Rect& target, Size sz);
-
 	friend class  BackRectDraw;
 	friend class  ImageDraw;
 	friend class  FontInfo;
@@ -656,6 +652,30 @@ public:
 	void       CloneClip();
 #endif
 
+	enum {
+		BEGIN               = 1,
+		OFFSET              = 2,
+		CLIP                = 3,
+		CLIPOFF             = 4,
+		EXCLUDECLIP         = 5,
+		INTERSECTCLIP       = 6,
+		END                 = 7,
+		DRAWRECT            = 8,
+		DRAWIMAGE           = 9,
+		DRAWMONOIMAGE       = 10,
+		DRAWDRAWING         = 11,
+		DRAWLINE            = 12,
+		DRAWELLIPSE         = 13,
+		DRAWTEXT            = 14,
+		DRAWARC             = 15,
+		DRAWPOLYPOLYLINE    = 16,
+		DRAWPOLYPOLYPOLYGON = 17,
+		DRAWDATA            = 18,
+		DRAWPAINTING        = 19,
+	};
+	
+	struct DrawingPos;
+
 public:
 	static int  FontCacheMax;
 
@@ -708,34 +728,6 @@ public:
 	bool  IsSystem() const                              { return gc != None; }
 #endif
 	bool  IsDrawing() const;
-
-	enum {
-		BEGIN               = 1,
-		OFFSET              = 2,
-		CLIP                = 3,
-		CLIPOFF             = 4,
-		EXCLUDECLIP         = 5,
-		INTERSECTCLIP       = 6,
-		END                 = 7,
-		DRAWRECT            = 8,
-		DRAWIMAGE           = 9,
-		DRAWMONOIMAGE       = 10,
-		DRAWDRAWING         = 11,
-		DRAWLINE            = 12,
-		DRAWELLIPSE         = 13,
-		DRAWTEXT            = 14,
-		DRAWARC             = 15,
-		DRAWPOLYPOLYLINE    = 16,
-		DRAWPOLYPOLYPOLYGON = 17,
-		DRAWDATA            = 18,
-		DRAWPAINTING        = 19,
-	};
-	typedef void (*Drawer)(Draw&, Stream&, const DrawingPos&);
-
-	Stream&  DrawingOp(int code);
-	Stream&  PutRect(const Rect& r);
-
-	static void  Register(int code, Drawer drawer);
 
 	virtual void StartPage();
 	virtual void EndPage();
@@ -983,54 +975,14 @@ public:
 	template <class T>	static void Register(const char *id)  { AddFormat(id, &DataDrawer::FactoryFn<T>); }
 };
 
-struct DrawingPos {
-	Size    source;
-	Size    target;
-	Point   srcoff;
-	Point   trgoff;
-	Point   trgini;
-	Vector<Point16> stack;
-
-	bool  Identity() const                               { return source == target; }
-
-	int   GetX(int x) const;
-	int   GetY(int y) const;
-	int   GetCx(int cx) const;
-	int   GetCy(int cy) const;
-	int   GetW(int w) const;
-	Point Get(int x, int y) const;
-	Point Get(Point p) const;
-	Size  Get(Size sz) const;
-	Rect  Get(const Rect& r) const;
-	Rect  Get(int x, int y, int cx, int cy) const;
-
-	Point operator()(int x, int y) const                 { return Get(x, y); }
-	Point operator()(Point p) const                      { return Get(p); }
-	Size  operator()(Size sz) const                      { return Get(sz); }
-	Rect  operator()(const Rect& r) const                { return Get(r); }
-	Rect  operator()(int x, int y, int cx, int cy) const { return Get(x, y, cx, cy); }
-
-	void TransformX(int& x) const                        { x = GetX(x); }
-	void TransformY(int& y) const                        { y = GetY(y); }
-	void TransformW(int& w) const                        { w = GetW(w); }
-	void Transform(int& x, int& y) const                 { TransformX(x); TransformY(y); }
-	void Transform(Point& p) const                       { p = Get(p); }
-	void Transform(Size& sz) const                       { sz = Get(sz); }
-	void Transform(Rect& r) const                        { r = Get(r); }
-};
-
-class DrawerRegistrator {
-public:
-	DrawerRegistrator(int code, Draw::Drawer w)          { Draw::Register(code, w); }
-};
-
 #ifdef PLATFORM_WIN32
 class WinMetaFile;
 #endif
 
 class Drawing : Moveable<Drawing> {
-	Size   size;
-	String data;
+	Size       size;
+	String     data;
+	ValueArray val;
 
 	friend class DrawingDraw;
 	friend class Draw;
@@ -1105,14 +1057,14 @@ public:
 private:
 	Size         size;
 	StringStream drawing;
+	ValueArray   val;
 
 	void         DInit();
 	void         DrawingBegin();
+	Stream&      DrawingOp(int code);
 
 public:
 	void     SetPixels(bool b = true)         { pixels = b; }
-
-	Stream&  GetStream()                      { return drawing; }
 
 	void     Create(int cx, int cy);
 	void     Create(Size sz);

@@ -1,4 +1,4 @@
-description "Oracle interface";
+description "Oracle interface\377";
 
 uses
 	Sql;
@@ -18,12 +18,6 @@ file
 	Oracle8.h,
 	Oci8.cpp,
 	Oci8.dli,
-	contest.cpp,
 	Info readonly separator,
 	Copying;
-
-mainconfig
-	"Console Test" = "",
-	"Console Test (remote)" = "",
-	"Console Test Remote Shared" = "SHARED";
 
