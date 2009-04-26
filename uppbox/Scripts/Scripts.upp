@@ -1,6 +1,10 @@
 file
 	win,
 	www,
+	deb64,
+	idebuild,
+	uppdeb,
+	uppnighty2deb,
 	src,
 	all,
 	GCCMK.bm,
