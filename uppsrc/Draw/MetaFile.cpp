@@ -5,29 +5,12 @@ NAMESPACE_UPP
 #ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE
 
-static void wsMetaDraw(Draw& w, Stream& s, const DrawingPos& ps) {
-	Rect r;
-	WinMetaFile wmf;
-	s % r % wmf;
-	wmf.Paint(w, ps(r));
-}
-
-INITBLOCK {
-	Draw::Register(555, wsMetaDraw);
-};
-
 void WinMetaFile::Init() {
 	hemf = NULL;
 }
 
 void WinMetaFile::Paint(Draw& w, const Rect& r) const {
 	ChkP();
-	DrawingDraw *dw = dynamic_cast<DrawingDraw *>(&w);
-	if(dw) {
-		Stream& s = dw->DrawingOp(555) % const_cast<Rect&>(r);
-		s % const_cast<WinMetaFile&>(*this);
-		return;
-	}
 	if(hemf)
 		PlayEnhMetaFile(w, hemf, r);
 }

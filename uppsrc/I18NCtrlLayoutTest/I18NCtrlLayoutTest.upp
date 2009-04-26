@@ -2,8 +2,8 @@ uses
 	CtrlLib;
 
 file
-	Layout.lay,
 	I18NCtrlLayoutTest.h,
+	Layout.lay,
 	main.cpp;
 
 mainconfig

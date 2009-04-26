@@ -73,23 +73,6 @@ bool Draw::IsDrawing() const
 	return dynamic_cast<const DrawingDraw *>(this);
 }
 
-Stream& Draw::DrawingOp(int code)
-{
-	ASSERT(IsDrawing());
-	Stream& drawing = static_cast<DrawingDraw *>(this)->GetStream();
-	drawing / code;
-	return drawing;
-}
-
-/*
-Stream& Draw::PutRect(const Rect& r)
-{
-	ASSERT(IsDrawing());
-	Stream& drawing = dynamic_cast<DrawingDraw *>(this)->GetStream();
-	return Pack16(drawing, const_cast<Rect&>(r));
-}
-*/
-
 // -------------------------------
 
 void Draw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)

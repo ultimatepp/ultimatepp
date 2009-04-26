@@ -1,4 +1,4 @@
-description "Esc scripting language interpreter";
+description "Esc scripting language interpreter\377";
 
 optimize_speed;
 
@@ -17,7 +17,4 @@ file
 	Info readonly separator,
 	srcdoc.tpp,
 	Copying;
-
-mainconfig
-	"" = "";
 

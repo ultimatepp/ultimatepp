@@ -899,6 +899,7 @@ void DrawPolyPolyPolygon(Draw& draw, const Point *vertices, int vertex_count,
 #endif
 }
 
+/*
 static void wsPolyPolyPolygon(Draw& draw, Stream& stream, const DrawingPos& dp)
 {
 //	TIMING("wsPolyPolygon")
@@ -920,6 +921,7 @@ static void wsPolyPolyPolygon(Draw& draw, Stream& stream, const DrawingPos& dp)
 }
 
 static DrawerRegistrator MK__s(wPolyPolyPolygon, wsPolyPolyPolygon);
+*/
 
 void DrawPolyPolyPolygon(Draw& draw, const Vector<Point>& vertices,
 	const Vector<int>& subpolygon_counts, const Vector<int>& disjunct_polygon_counts,

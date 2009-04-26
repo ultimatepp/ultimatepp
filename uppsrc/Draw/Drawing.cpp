@@ -75,6 +75,13 @@ static void StreamPackInts(Stream& stream, const int *in, int count)
 
 // ------------------------------
 
+Stream& DrawingDraw::DrawingOp(int code)
+{
+	ASSERT(IsDrawing());
+	drawing / code;
+	return drawing;
+}
+
 void DrawingDraw::DrawingBegin()
 {
 	Cloff& w = cloff.Add();
@@ -154,13 +161,27 @@ void DrawingDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 void DrawingDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
 	Rect s = src;
-	DrawingOp(DRAWIMAGE) % x % y % cx % cy % const_cast<Image&>(img) % s % color;
+	DrawingOp(DRAWIMAGE) % x % y % cx % cy % s % color;
+	val.Add(img);
 }
 
 void DrawingDraw::DrawDataOp(int x, int y, int cx, int cy, const String& data, const char *id)
 {
 	String h = id;
-	DrawingOp(DRAWDATA) % x % y % cx % cy % const_cast<String&>(data) % h;
+	DrawingOp(DRAWDATA) % x % y % cx % cy % h;
+	val.Add(data);
+}
+
+void DrawingDraw::DrawDrawingOp(const Rect& target, const Drawing& w)
+{
+	DrawingOp(DRAWDRAWING) % const_cast<Rect&>(target);
+	val.Add(w);
+}
+
+void DrawingDraw::DrawPaintingOp(const Rect& target, const Painting& w)
+{
+	DrawingOp(DRAWPAINTING) % const_cast<Rect&>(target);
+	val.Add(w);
 }
 
 void DrawingDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
@@ -237,419 +258,358 @@ Drawing DrawingDraw::GetResult()
 	out.size = size;
 	LLOG("GetResult size: " << size);
 	out.data = drawing.GetResult();
+	out.val = val;
 	return out;
 }
 
 // ------------------------------
 
-int   DrawingPos::GetX(int x) const {
+struct Draw::DrawingPos : StringStream {
+	Size    source;
+	Size    target;
+	Point   srcoff;
+	Point   trgoff;
+	Point   trgini;
+	Vector<Point16> stack;
+
+	bool  Identity() const                               { return source == target; }
+
+	int   GetX(int x) const;
+	int   GetY(int y) const;
+	int   GetCx(int cx) const;
+	int   GetCy(int cy) const;
+	int   GetW(int w) const;
+	Point Get(int x, int y) const;
+	Point Get(Point p) const;
+	Rect  Get(const Rect& r) const;
+	Rect  Get(int x, int y, int cx, int cy) const;
+
+	Point operator()(int x, int y) const                 { return Get(x, y); }
+	Point operator()(Point p) const                      { return Get(p); }
+	Rect  operator()(const Rect& r) const                { return Get(r); }
+	Rect  operator()(int x, int y, int cx, int cy) const { return Get(x, y, cx, cy); }
+
+	void TransformX(int& x) const                        { x = GetX(x); }
+	void TransformY(int& y) const                        { y = GetY(y); }
+	void TransformW(int& w) const                        { w = GetW(w); }
+	void Transform(int& x, int& y) const                 { TransformX(x); TransformY(y); }
+	void Transform(Point& p) const                       { p = Get(p); }
+	void Transform(Rect& r) const                        { r = Get(r); }
+	
+	Rect  GetRect();
+	
+	DrawingPos(const String& src) : StringStream(src) {}
+};
+
+Rect Draw::DrawingPos::GetRect()
+{
+	Rect r;
+	*this % r;
+	return Get(r);
+}
+
+int   Draw::DrawingPos::GetX(int x) const {
 	return iscale(x + srcoff.x, target.cx, source.cx) - trgoff.x;
 }
 
-int   DrawingPos::GetY(int y) const {
+int   Draw::DrawingPos::GetY(int y) const {
 	return iscale(y + srcoff.y, target.cy, source.cy) - trgoff.y;
 }
 
-int   DrawingPos::GetCx(int cx) const {
+int   Draw::DrawingPos::GetCx(int cx) const {
 	return iscale(cx, target.cx, source.cx);
 }
 
-int   DrawingPos::GetCy(int cy) const {
+int   Draw::DrawingPos::GetCy(int cy) const {
 	return iscale(cy, target.cy, source.cy);
 }
 
-int   DrawingPos::GetW(int w) const {
+int   Draw::DrawingPos::GetW(int w) const {
 	return iscale(w, target.cx + target.cy, source.cx + source.cy);
 }
 
-Point DrawingPos::Get(int x, int y) const {
+Point Draw::DrawingPos::Get(int x, int y) const {
 	return Point(GetX(x), GetY(y));
 }
 
-Point DrawingPos::Get(Point p) const {
+Point Draw::DrawingPos::Get(Point p) const {
 	return Get(p.x, p.y);
 }
 
-Size  DrawingPos::Get(Size sz) const {
-	return Size(GetCx(sz.cx), GetCy(sz.cy));
-}
-
-Rect  DrawingPos::Get(const Rect& r) const {
+Rect  Draw::DrawingPos::Get(const Rect& r) const {
 	return Rect(GetX(r.left), GetY(r.top), GetX(r.right), GetY(r.bottom));
 }
 
-Rect  DrawingPos::Get(int x, int y, int cx, int cy) const {
+Rect  Draw::DrawingPos::Get(int x, int y, int cx, int cy) const {
 	return Get(RectC(x, y, cx, cy));
 }
 
-Rect GetRect16(Stream& s) {
-	Rect r;
-	Pack16(s, r);
-	return r;
-}
-
-Point GetPoint16(Stream& s) {
-	Point p;
-	Pack16(s, p);
-	return p;
-}
-
-static void wsBegin(Draw& w, Stream&, const DrawingPos& ps) {
-	w.Begin();
-	DrawingPos& cps = const_cast<DrawingPos&>(ps);
-	cps.stack.Add(cps.srcoff);
-}
-
-static void wsOffset(Draw& w, Stream& s, const DrawingPos& ps) {
-	Point off;
-	s % off;
-	w.Offset(ps(off));
-	DrawingPos& cps = const_cast<DrawingPos&>(ps);
-	cps.stack.Add(cps.srcoff);
-	cps.srcoff += off;
-	cps.trgoff = w.GetOffset() - cps.trgini;
-}
-
-static void wsClip(Draw& w, Stream& s, const DrawingPos& ps) {
-	Rect rc;
-	s % rc;
-	w.Clip(ps(rc));
-	DrawingPos& cps = const_cast<DrawingPos&>(ps);
-	cps.stack.Add(cps.srcoff);
-}
-
-static void wsClipoff(Draw& w, Stream& s, const DrawingPos& ps) {
-	Rect rc;
-	s % rc;
-	w.Clipoff(ps(rc));
-	DrawingPos& cps = const_cast<DrawingPos&>(ps);
-	cps.stack.Add(cps.srcoff);
-	cps.srcoff += rc.TopLeft();
-	cps.trgoff = w.GetOffset() - cps.trgini;
-}
-
-static void wsExcludeClip(Draw& w, Stream& s, const DrawingPos& ps) {
-	Rect rc;
-	s % rc;
-	w.ExcludeClip(ps(rc));
-}
-
-static void wsIntersectClip(Draw& w, Stream& s, const DrawingPos& ps) {
-	Rect rc;
-	s % rc;
-	w.IntersectClip(ps(rc));
-}
-
-static void wsEnd(Draw& w, Stream& s, const DrawingPos& ps) {
-	w.End();
-	DrawingPos& cps = const_cast<DrawingPos&>(ps);
-	cps.srcoff = cps.stack.Pop();
-	cps.trgoff = w.GetOffset() - cps.trgini;
-}
-
-static void wsDrawRect(Draw& w, Stream& s, const DrawingPos& ps) {
-	int   x, y, cx, cy;
-	Color color;
-	s % x % y % cx % cy % color;
-	LLOG("wsDrawRect " << RectC(x, y, cx, cy) << " ps:" << ps(x, y, cx, cy) << " color:" << color);
-	w.DrawRect(ps(x, y, cx, cy), color);
-}
-
-static void wsDrawImage(Draw& w, Stream& s, const DrawingPos& ps) {
-	int x, y, cx, cy;
-	Image img;
-	Rect src;
-	Color color;
-	s % x % y % cx % cy % img % src % color;
-	Rect r = ps(x, y, cx, cy);
-	w.DrawImageOp(r.left, r.top, r.Width(), r.Height(), img, src, color);
-}
-
-static void wsDrawData(Draw& w, Stream& s, const DrawingPos& ps)
-{
-	String data, id;
-	int x, y, cx, cy;
-	s % x % y % cx % cy % const_cast<String&>(data) % id;
-	Rect r = ps(x, y, cx, cy);
-	w.DrawData(r, data, id);
-}
-
-static void wsDrawDrawing(Draw& w, Stream& s, const DrawingPos& ps) {
-	Drawing dw;
-	Rect rc;
-	s % dw % rc;
-	w.DrawDrawing(ps(rc), dw);
-}
-
-static void wsDrawPainting(Draw& w, Stream& s, const DrawingPos& ps) {
-	Painting dw;
-	Rect rc;
-	s % dw % rc;
-	w.DrawPainting(ps(rc), dw);
-}
-
-static void wsDrawLine(Draw& w, Stream& s, const DrawingPos& ps) {
-	int x1, y1, x2, y2, width;
-	Color color;
-	s % x1 % y1 % x2 % y2 % width % color;
-	w.DrawLine(ps(x1, y1), ps(x2, y2), width > 0 ? ps.GetW(width) : width, color);
-}
-
-#ifndef PLATFORM_WINCE
-
-static void wsDrawPolyPolyline(Draw& w, Stream& stream, const DrawingPos& dp)
-{
-	int width, vertex_count, count_count;
-	Color color, doxor;
-	int version;
-	stream / version;
-	stream % width % color % doxor;
-	stream % vertex_count % count_count;
-	Buffer<Point> vertices(vertex_count);
-	Buffer<int> counts(count_count);
-	StreamUnpackPoints(stream, vertices, vertex_count);
-	StreamUnpackInts(stream, counts, count_count);
-	if(!dp.Identity()) {
-		for(Point *p = vertices, *e = p + vertex_count; p < e; p++)
-			dp.Transform(*p);
-		if(width > 0)
-			dp.TransformW(width);
-	}
-	w.DrawPolyPolyline(vertices, vertex_count, counts, count_count, width, color, doxor);
-}
-
-static void wsDrawPolyPolyPolygon(Draw& w, Stream& stream, const DrawingPos& dp)
-{
-	Color color, outline, doxor;
-	uint64 pattern;
-	int width, vertex_count, subpolygon_count_count, disjunct_polygon_count_count;
-	int version = 2;
-	stream / version;
-	stream % color % width % outline % pattern % doxor;
-	stream % vertex_count % subpolygon_count_count % disjunct_polygon_count_count;
-	Buffer<Point> vertices(vertex_count);
-	Buffer<int> subpolygon_counts(subpolygon_count_count);
-	Buffer<int> disjunct_polygon_counts(disjunct_polygon_count_count);
-	StreamUnpackPoints(stream, vertices, vertex_count);
-	StreamUnpackInts(stream, subpolygon_counts, subpolygon_count_count);
-	StreamUnpackInts(stream, disjunct_polygon_counts, disjunct_polygon_count_count);
-	if(!dp.Identity()) {
-		for(Point *p = vertices, *e = p + vertex_count; p < e; p++)
-			dp.Transform(*p);
-		dp.TransformW(width);
-	}
-	w.DrawPolyPolyPolygon(vertices, vertex_count,
-		                  subpolygon_counts, subpolygon_count_count,
-		                  disjunct_polygon_counts, disjunct_polygon_count_count,
-		                  color, width, outline, pattern, doxor);
-}
-
-static void wsDrawArc(Draw& w, Stream& s, const DrawingPos& ps)
-{
-	Rect r;
-	Point start, end;
-	Color color;
-	int width;
-	s % r % start % end % color % width;
-	w.DrawArc(r, start, end, width, color);
-}
-
-#endif
-
-static void wsDrawEllipse(Draw& w, Stream& s, const DrawingPos& ps) {
-	Rect r;
-	s % r;
-	Color color, pencolor;
-	int pen;
-	s % color / pen % pencolor;
-	w.DrawEllipse(ps(r), color, pen > 0 ? ps.GetW(pen) : pen, pencolor);
-}
-
-static void wsDrawText(Draw& w, Stream& s, const DrawingPos& ps) {
-	int x, y, n, angle;
-	Font font;
-	Color ink;
-	byte cs;
-	s % x % y % angle % font % ink / n % cs;
-	if(font.GetHeight() == 0) {
-		FontInfo fi = font.Info();
-		font.Height(fi.GetHeight() - fi.GetInternal());
-	}
-	bool unicode = cs == CHARSET_UNICODE;
-	WString text;
-	if(unicode) {
-		Buffer<wchar> txt(n);
-		s.GetW(txt, n);
-		text = WString(txt, n);
-	}
-	else {
-		Buffer<char> txt(n);
-		s.Get(txt, n);
-		text = ToUnicode(txt, n, cs);
-	}
-	LLOG("wsDrawText \"" << WString(text, n)
-	     << "\" at: (" << x << ", " << y << ", " << angle << ")");
-	bool dxb;
-	s % dxb;
-	Buffer<int> dx(n);
-	int *wd = dx;
-	int nn = n;
-	angle %= 3600;
-	if(ps.Identity()) {
-		if(dxb) {
-			while(nn--)
-				s / *wd++;
-			w.DrawText(x, y, angle, text, font, ink, dx);
-		}
-		else
-			w.DrawText(x, y, angle, text, font, ink);
-	}
-	else {
-		FontInfo fi = font.Info();
-		const wchar *wp = ~text;
-		int odd = (angle / 900) & 1;
-		if(angle % 900 == 0) {
-			int error = 0;
-			int a, b;
-			if(odd) {
-				a = ps.target.cy;
-				b = ps.source.cy;
-				int ht = ps.GetCx(fi.GetFontHeight());
-				font.Width(ps.GetCy(fi.GetAveWidth())).Height(ht ? ht : 1);
-				FontInfo nf = font.Info();
-				x = angle == 2700 ? ps.GetX(x - fi.GetAscent()) + nf.GetAscent()
-				                  : ps.GetX(x + fi.GetAscent()) - nf.GetAscent();
-				y = ps.GetY(y);
-			}
-			else {
-				a = ps.target.cx;
-				b = ps.source.cx;
-				int ht = ps.GetCy(fi.GetFontHeight());
-				font.Width(ps.GetCx(fi.GetAveWidth())).Height(ht ? ht : 1);
-				FontInfo nf = font.Info();
-				x = ps.GetX(x);
-				y = angle == 1800 ? ps.GetY(y - fi.GetAscent()) + nf.GetAscent()
-				                  : ps.GetY(y + fi.GetAscent()) - nf.GetAscent();
-			}
-			while(nn--) {
-				int c;
-				if(dxb)
-					s / c;
-				else
-					c = fi[*wp++];
-				*wd++ = (c * a + error) / b;
-				error = (c * a + error) % b;
-			}
-			w.DrawText(x, y, angle, text, font, ink, dx);
-		}
-		else {
-			double ang = (double) (angle % 900) * M_2PI / 3600;
-			double sx = (double) ps.target.cx / ps.source.cx;
-			double sy = (double) ps.target.cy / ps.source.cy;
-			double ang2 = atan((odd ? sx / sy : sy / sx) * tan(ang));
-			double q = (odd ? sx : sy) * sin(ang) / sin(ang2);
-			double error = 0;
-			while(nn--) {
-				int cx;
-				if(dxb)
-					s / cx;
-				else
-					cx = fi[*wp++];
-				double ncx = q * cx + error;
-				*wd++ = cx = (int) ncx;
-				error = ncx - cx;
-			}
-			int ht = (int)(fi.GetFontHeight() * (sx * sin(ang) * sin(ang2) + sy * cos(ang) * cos(ang2)));
-			font.Width(int(q * fi.GetAveWidth())).Height(ht ? ht : 1);
-			w.DrawText(ps.GetX(x), ps.GetY(y), int(ang2 * 3600 / M_2PI) + (angle / 900) * 900,
-					   text, font, ink, dx);
-		}
-	}
-}
-
-static VectorMap<int, Draw::Drawer>& sDrawerMap()
-{
-	return Single< VectorMap<int, Draw::Drawer> > ();
-}
-
-void Draw::Register(int code, Drawer drawer)
-{
-	static StaticCriticalSection lock;
-	CriticalSection::Lock __(lock);
-	VectorMap<int, Draw::Drawer>& map = sDrawerMap();
-	int i = map.Find(code);
-	if(i >= 0) {
-		ASSERT(map[i] == drawer);
-		return;
-	}
-	map.Add(code, drawer);
-}
-
 void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
-	{
-		ONCELOCK {
-			Register(BEGIN, wsBegin);
-			Register(OFFSET, wsOffset);
-			Register(CLIP, wsClip);
-			Register(CLIPOFF, wsClipoff);
-			Register(EXCLUDECLIP, wsExcludeClip);
-			Register(INTERSECTCLIP, wsIntersectClip);
-			Register(END, wsEnd);
-			Register(DRAWRECT, wsDrawRect);
-			Register(DRAWIMAGE, wsDrawImage);
-			Register(DRAWDRAWING, wsDrawDrawing);
-			Register(DRAWPAINTING, wsDrawPainting);
-			Register(DRAWLINE, wsDrawLine);
-			Register(DRAWELLIPSE, wsDrawEllipse);
-			Register(DRAWTEXT, wsDrawText);
-#ifndef PLATFORM_WINCE
-			Register(DRAWARC, wsDrawArc);
-			Register(DRAWPOLYPOLYLINE, wsDrawPolyPolyline);
-			Register(DRAWPOLYPOLYPOLYGON, wsDrawPolyPolyPolygon);
-#endif
-			Register(DRAWDATA, wsDrawData);
-		}
-	}
-
 #ifdef _DEBUG
 	int cl = GetCloffLevel();
 #endif
-	DrawingPos pos;
-	pos.srcoff = pos.trgoff = Point(0, 0);
-	pos.target = target.Size();
-	pos.source = w.size;
+	DrawingPos ps(w.data);
+	ps.srcoff = ps.trgoff = Point(0, 0);
+	ps.target = target.Size();
+	ps.source = w.size;
 	LLOG("DrawDrawingOp size: " << w.size);
-	if(pos.target.cx == 0 || pos.target.cy == 0 || pos.source.cx == 0 || pos.source.cy == 0)
+	if(ps.target.cx == 0 || ps.target.cy == 0 || ps.source.cx == 0 || ps.source.cy == 0)
 		return;
 	Clipoff(target);
-	pos.trgini = GetOffset();
-	VectorMap<int, Draw::Drawer>& map = sDrawerMap();
-	StringStream s(w.data);
-//	LOGBEGIN();
-	while(!s.IsEof()) {
+	ps.trgini = GetOffset();
+	Rect r;
+	int   x, y, cx, cy, width, vertex_count, count_count;
+	Color color, pencolor, doxor;
+	Image img;
+	Drawing dw;
+	Painting sw;
+	Point p, p1;
+	int vi = 0;
+	while(!ps.IsEof()) {
 		int code;
-		s / code;
-		int i = map.Find(code);
-		if(i < 0)
+		ps / code;
+		switch(code) {
+		case BEGIN: 
+			Begin();
+			ps.stack.Add(ps.srcoff);
 			break;
-		(*map[i])(*this, s, pos);
+		case OFFSET:
+			ps % p;
+			Offset(ps(p));
+			ps.stack.Add(ps.srcoff);
+			ps.srcoff += p;
+			ps.trgoff = GetOffset() - ps.trgini;
+			break;
+		case CLIP:
+			Clip(ps.GetRect());
+			ps.stack.Add(ps.srcoff);
+			break;
+		case CLIPOFF:
+			ps % r;
+			Clipoff(ps(r));
+			ps.stack.Add(ps.srcoff);
+			ps.srcoff += r.TopLeft();
+			ps.trgoff = GetOffset() - ps.trgini;
+			break;
+		case EXCLUDECLIP:
+			ExcludeClip(ps.GetRect());
+			break;
+		case INTERSECTCLIP:
+			IntersectClip(ps.GetRect());
+			break;
+		case END:
+			End();
+			ps.srcoff = ps.stack.Pop();
+			ps.trgoff = GetOffset() - ps.trgini;
+			break;
+		case DRAWRECT:
+			ps % x % y % cx % cy % color;
+			DrawRect(ps(x, y, cx, cy), color);
+			break;
+		case DRAWIMAGE:
+			ps % x % y % cx % cy;
+			if(w.val.GetCount())
+				img = w.val[vi++];
+			else
+				ps % img;
+			ps % r % color;
+			DrawImageOp(ps.GetX(x), ps.GetY(y), ps.GetCx(cx), ps.GetCy(cy), img, r, color);
+			break;
+		case DRAWDATA:
+			{
+				String data, id;
+				ps % x % y % cx % cy % id;
+				if(w.val.GetCount())
+					data = w.val[vi++];
+				else
+					ps % data;
+				DrawData(ps(x, y, cx, cy), data, id);
+			}
+			break;
+		case DRAWDRAWING:
+			if(w.val.GetCount())
+				dw = w.val[vi++];
+			else
+				ps % dw;
+			DrawDrawing(ps.GetRect(), dw);
+			break;
+		case DRAWPAINTING:
+			if(w.val.GetCount())
+				sw = w.val[vi++];
+			else
+				ps % sw;
+			DrawPainting(ps.GetRect(), sw);
+			break;
+		case DRAWLINE:
+			ps % x % y % cx % cy % width % color;
+			DrawLine(ps(x, y), ps(cx, cy), width > 0 ? ps.GetW(width) : width, color);
+			break;
+		case DRAWELLIPSE:
+			r = ps.GetRect();
+			ps % color / width % pencolor;
+			DrawEllipse(r, color, width > 0 ? ps.GetW(width) : width, pencolor);
+			break;
+#ifndef PLATFORM_WINCE
+		case DRAWARC:
+			r = ps.GetRect();
+			ps % p % p1 % color % width;
+			DrawArc(r, ps(p), ps(p1), width > 0 ? ps.GetW(width) : width, color);
+			break;
+		case DRAWPOLYPOLYLINE:
+			{
+				int version;
+				ps / version;
+				ps % width % color % doxor;
+				ps % vertex_count % count_count;
+				Buffer<Point> vertices(vertex_count);
+				Buffer<int> counts(count_count);
+				StreamUnpackPoints(ps, vertices, vertex_count);
+				StreamUnpackInts(ps, counts, count_count);
+				if(!ps.Identity()) {
+					for(Point *p = vertices, *e = p + vertex_count; p < e; p++)
+						ps.Transform(*p);
+					if(width > 0)
+						ps.TransformW(width);
+				}
+				DrawPolyPolyline(vertices, vertex_count, counts, count_count, width, color, doxor);
+			}
+			break;
+		case DRAWPOLYPOLYPOLYGON:
+			{
+				Color outline;
+				uint64 pattern;
+				int subpolygon_count_count, disjunct_polygon_count_count;
+				int version = 2;
+				ps / version;
+				ps % color % width % outline % pattern % doxor;
+				ps % vertex_count % subpolygon_count_count % disjunct_polygon_count_count;
+				Buffer<Point> vertices(vertex_count);
+				Buffer<int> subpolygon_counts(subpolygon_count_count);
+				Buffer<int> disjunct_polygon_counts(disjunct_polygon_count_count);
+				StreamUnpackPoints(ps, vertices, vertex_count);
+				StreamUnpackInts(ps, subpolygon_counts, subpolygon_count_count);
+				StreamUnpackInts(ps, disjunct_polygon_counts, disjunct_polygon_count_count);
+				if(!ps.Identity()) {
+					for(Point *p = vertices, *e = p + vertex_count; p < e; p++)
+						ps.Transform(*p);
+					ps.TransformW(width);
+				}
+				DrawPolyPolyPolygon(vertices, vertex_count,
+				                    subpolygon_counts, subpolygon_count_count,
+				                    disjunct_polygon_counts, disjunct_polygon_count_count,
+				                    color, width, outline, pattern, doxor);
+			}
+			break;
+#endif
+		case DRAWTEXT:
+			{
+				int n, angle;
+				Font font;
+				Color ink;
+				byte cs;
+				ps % x % y % angle % font % ink / n % cs;
+				if(font.GetHeight() == 0) {
+					FontInfo fi = font.Info();
+					font.Height(fi.GetHeight() - fi.GetInternal());
+				}
+				bool unicode = cs == CHARSET_UNICODE;
+				WString text;
+				if(unicode) {
+					Buffer<wchar> txt(n);
+					ps.Stream::GetW(txt, n);
+					text = WString(txt, n);
+				}
+				else {
+					Buffer<char> txt(n);
+					ps.Stream::Get(txt, n);
+					text = ToUnicode(txt, n, cs);
+				}
+				LLOG("wsDrawText \"" << WString(text, n)
+				     << "\" at: (" << x << ", " << y << ", " << angle << ")");
+				bool dxb;
+				ps % dxb;
+				Buffer<int> dx(n);
+				int *wd = dx;
+				int nn = n;
+				angle %= 3600;
+				if(ps.Identity()) {
+					if(dxb) {
+						while(nn--)
+							ps / *wd++;
+						DrawText(x, y, angle, text, font, ink, dx);
+					}
+					else
+						DrawText(x, y, angle, text, font, ink);
+				}
+				else {
+					FontInfo fi = font.Info();
+					const wchar *wp = ~text;
+					int odd = (angle / 900) & 1;
+					if(angle % 900 == 0) {
+						int error = 0;
+						int a, b;
+						if(odd) {
+							a = ps.target.cy;
+							b = ps.source.cy;
+							int ht = ps.GetCx(fi.GetFontHeight());
+							font.Width(ps.GetCy(fi.GetAveWidth())).Height(ht ? ht : 1);
+							FontInfo nf = font.Info();
+							x = angle == 2700 ? ps.GetX(x - fi.GetAscent()) + nf.GetAscent()
+							                  : ps.GetX(x + fi.GetAscent()) - nf.GetAscent();
+							y = ps.GetY(y);
+						}
+						else {
+							a = ps.target.cx;
+							b = ps.source.cx;
+							int ht = ps.GetCy(fi.GetFontHeight());
+							font.Width(ps.GetCx(fi.GetAveWidth())).Height(ht ? ht : 1);
+							FontInfo nf = font.Info();
+							x = ps.GetX(x);
+							y = angle == 1800 ? ps.GetY(y - fi.GetAscent()) + nf.GetAscent()
+							                  : ps.GetY(y + fi.GetAscent()) - nf.GetAscent();
+						}
+						while(nn--) {
+							int c;
+							if(dxb)
+								ps / c;
+							else
+								c = fi[*wp++];
+							*wd++ = (c * a + error) / b;
+							error = (c * a + error) % b;
+						}
+						DrawText(x, y, angle, text, font, ink, dx);
+					}
+					else {
+						double ang = (double) (angle % 900) * M_2PI / 3600;
+						double sx = (double) ps.target.cx / ps.source.cx;
+						double sy = (double) ps.target.cy / ps.source.cy;
+						double ang2 = atan((odd ? sx / sy : sy / sx) * tan(ang));
+						double q = (odd ? sx : sy) * sin(ang) / sin(ang2);
+						double error = 0;
+						while(nn--) {
+							int cx;
+							if(dxb)
+								ps / cx;
+							else
+								cx = fi[*wp++];
+							double ncx = q * cx + error;
+							*wd++ = cx = (int) ncx;
+							error = ncx - cx;
+						}
+						int ht = (int)(fi.GetFontHeight() * (sx * sin(ang) * sin(ang2) + sy * cos(ang) * cos(ang2)));
+						font.Width(int(q * fi.GetAveWidth())).Height(ht ? ht : 1);
+						DrawText(ps.GetX(x), ps.GetY(y), int(ang2 * 3600 / M_2PI) + (angle / 900) * 900,
+						         text, font, ink, dx);
+					}
+				}
+			}
+		}
 	}
 //	LOGEND();
 	End();
 #ifdef _DEBUG
 	ASSERT(GetCloffLevel() == cl);
 #endif
-}
-
-void DrawingDraw::DrawDrawingOp(const Rect& target, const Drawing& w)
-{
-	DrawingOp(DRAWDRAWING) % const_cast<Drawing&>(w) % const_cast<Rect&>(target);
-	return;
-}
-
-void DrawingDraw::DrawPaintingOp(const Rect& target, const Painting& w)
-{
-	DrawingOp(DRAWPAINTING) % const_cast<Painting&>(w) % const_cast<Rect&>(target);
 }
 
 void Draw::DrawDrawing(int x, int y, int cx, int cy, const Drawing& w) {
@@ -726,8 +686,14 @@ void Drawing::Append(Drawing& dw)
 
 void Drawing::Serialize(Stream& s)
 {
+	if(val.GetCount())
+		size.cy |= 0x80000000;
 	s % size;
 	s % data;
+	if(size.cy & 0x80000000) {
+		size.cy &= ~0x80000000;
+		s % val;
+	}
 }
 
 #ifdef PLATFORM_WIN32
