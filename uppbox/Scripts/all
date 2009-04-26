@@ -12,3 +12,5 @@ bash ~/Scripts/www
 bash ~/Scripts/win
 
 bash ~/Scripts/src
+
+bash ~/Scripts/deb64

@@ -1,0 +1,177 @@
+#!/bin/bash
+# idebuild
+# Batch builds TheIDE in optimal mode
+#
+
+######################################################################
+#convert a path to absolute one
+rel2abs()
+{
+    # make sure file is specified
+    if [ -z "$1" ]
+    then
+       echo "$0 <path>"
+       return 1
+    fi
+
+    # already absolute case
+    if [ "${1:0:1}" = "/" ] || [ "$PWD" = "/" ]
+    then
+       ABS=""
+    else
+       ABS="$PWD"
+    fi
+
+    # loop thru path
+    IFS="/"
+    for DIR in $1
+    do
+       if [ -n "$DIR" ]
+       then
+          if [ "$DIR" = ".." ]
+          then
+             ABS="${ABS%/*}"
+
+          elif [ "$DIR" != "." ]
+          then
+             ABS="$ABS/$DIR"
+          fi
+       fi
+    done
+    IFS=":"
+
+    echo $ABS
+    return 0
+} 
+
+######################################################################
+echo
+echo "UPP ide BATCH BUILDER"
+echo "CopyRight(c) 2008 By Massimo Del Fedele"
+echo
+
+# checks for parameters
+if [ x"$1" = x -o x"$2" = x ]
+then
+	echo "idebuild <upp base folder> <out file full path>"
+	exit 1
+fi
+
+# sets up source and dest folder names
+src=$(rel2abs $1)
+dst=$(rel2abs $2)
+
+# checks if source folder exists
+if [ -d $src ]
+then
+	true
+else
+	echo "source folder '$src' does not exist"
+	exit 1
+fi
+
+# sets up subfolders
+uppsrc="uppsrc"
+#common="Common"
+
+#subfolders="$uppsrc $common"
+subfolders="$uppsrc"
+
+# checks if upp subfolder are in source folder
+for name in $subfolders
+do
+	if [ ! -d $src/$name ]
+	then
+		echo "bad source folder '$src'"
+		echo "missing '$src/$name' subfolder"
+		exit 1
+	fi
+done
+
+#trivial check of dest file name...
+if [ -d $dst ]
+then
+	echo "'dst' is a directory"
+	exit 1
+fi
+if [ -f $dst ]
+then
+	rm $dst
+	if [ -f $dst ]
+	then
+		echo "'dst' exists and can't be erased"
+		exit 1
+	fi
+fi
+touch $dst
+if [ -f $dst ]
+then
+	rm $dst
+else
+	echo "'dst' is not a valid executable name"
+	exit 1
+fi
+
+#now finds ide executable - prefers newest versions rather than 'theide' stable
+#as if it's possible uses latest devel to build stuffs
+#gathers also the ide cfg folder - new way, subfolder of ~/.Upp
+executables="theide-svn theide-dev theide ide"
+idecfgfolder=""
+for executable in $executables
+do
+	ideexec="`which $executable`"
+	if [ x$ideexec != x ]
+	then
+		idecfgfolder="$HOME/.upp/$executable"
+		break
+	fi
+done
+if [ x$idecfgfolder = x ]
+then		
+	echo "Error -- Ide executable not found"
+	exit 1
+fi
+
+# checks if ide cfg folder is ok
+if [ -d $idecfgfolder ]
+then
+	true
+else
+	echo "Error -- Ide configuration folder '$idecfgfolder' not found"
+	exit 1
+fi
+
+#creates a temporary folder for ide output stuffs
+outtmp="`mktemp -t -d idebuild.XXXXXXX`"
+
+#creates a temporary assembly on ide cfg folder, just to build ide
+tmpassembly="$idecfgfolder/idebuild.var"
+echo UPP = "$src/uppsrc" > $tmpassembly
+echo OUTPUT = "$outtmp" >> $tmpassembly
+echo COMMON = "$src/uppsrc/Common" >> $tmpassembly
+
+#forks ide to build release executable
+$ideexec idebuild ide GCC -abrs theide
+#$ideexec idebuild ide GCC -absl theide
+ideresult=$?
+
+#checks the result code
+if [ $ideresult = 0 ]
+then
+	echo "BUILD OK"
+	#moves the result to dest name
+#	mv "$outtmp/GCC.Gui.Shared/theide" $dst
+	mv "$outtmp/GCC.Blitz.Gui.Shared/theide" $dst
+#	mv "$outtmp/GCC.Debug_full.Gui.Shared/theide" $dst
+else
+	echo "ERROR - TheIDE returned '$ideresult' error code"
+fi
+
+#deletes the temporary assembly
+if [ -f $tmpassembly ]
+then
+	rm $tmpassembly
+fi
+
+#deletes temporary folder
+rm -rf $outtmp

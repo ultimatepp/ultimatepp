@@ -1,0 +1,52 @@
+#!/bin/bash
+# dostable
+# quick go to create deb package from my stable repo
+#
+#################################################################
+#		REPLACE VALUES WITH YOUR OWN			#
+# SVN repository full path
+NIGHTY_PATH="~/upp.tmp/u"
+#
+# Destination path for generated debian
+DEST_PATH="~/upload"
+#
+# Mantainer name and email
+export MAINTAINER="Massimo Del Fedele"
+#
+export EMAIL="max@veneto.com"
+#################################################################
+#
+# checks if nighty repo and destination path are ok
+if [ ! -d $NIGHTY_PATH/uppsrc ]
+then
+	echo "ERROR - UPP path not found in '$NIGHTY_PATH'"
+	echo "Please modify current script to fit your Upp development path"
+	exit 1
+fi
+
+if [ ! -d $DEST_PATH ]
+then
+	echo "ERROR - Invalid destinatio path '$DEST_PATH'"
+	echo "Please modify current script to fit your destination path"
+	exit 1
+fi
+
+#locates 'uppnighty2deb' script - first try on path
+uppnighty2deb="`which uppnighty2deb`"
+if [ x$uppnighty2deb = x ]
+then
+	# couldn't find it on path, just try on this script's path
+	LSOF=$(lsof -p $$ 2>/dev/null | grep -E "/"$(basename $0)"$")
+	uppnighty2deb=$(echo $LSOF | sed -r s/'^([^\/]+)\/'/'\/'/1 2>/dev/null)
+	uppnighty2deb=$(dirname $uppnighty2deb)/uppnighty2deb
+fi
+if [ ! -f $uppnighty2deb ]
+then
+	echo "ERROR - Could not find 'uppnighty2deb' script"
+	echo "Please check if it's on current path"
+	exit 1
+fi
+
+#just run uppnighty2deb with my params
+$uppnighty2deb $NIGHTY_PATH $DEST_PATH
+
