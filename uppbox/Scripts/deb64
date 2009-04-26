@@ -50,3 +50,4 @@ fi
 #just run uppnighty2deb with my params
 $uppnighty2deb $NIGHTY_PATH $DEST_PATH
 
+~/bin/upload
