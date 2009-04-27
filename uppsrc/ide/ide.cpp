@@ -806,6 +806,16 @@ const Workspace& Ide::IdeWorkspace() const
 	return wspc;
 }
 
+int Ide::GetPackageIndex()
+{
+	const Workspace& wspc = IdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++)
+		if(wspc[i] == package.GetCurrentName())
+			return i;
+	return -1;
+}
+
+
 void Ide::Diff()
 {
 	if(IsNull(editfile))

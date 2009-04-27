@@ -368,7 +368,7 @@ void Ide::BuildFileMenu(Bar& menu)
 
 void Ide::BuildPackageMenu(Bar& menu)
 {
-	int pi = package.GetCursor();
+	int pi = GetPackageIndex();
 	bool b = !IdeIsDebugLock() && idestate == EDITING && pi >= 0 && pi < IdeWorkspace().GetCount();
 	menu.Add(b, AK_BUILDPACKAGE, THISBACK(PackageBuild))
 		.Help("Build current package");
