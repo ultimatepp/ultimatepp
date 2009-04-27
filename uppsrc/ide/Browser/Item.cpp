@@ -60,7 +60,7 @@ static String s_pick_("pick_");
 static bool sOperatorTab[256];
 
 INITBLOCK {
-	for(const char *s = "!+-*^/%~&|=[]:?<>."; *s; s++)
+	for(const char *s = "!+-*^/%~&|=[]:?."; *s; s++)
 		sOperatorTab[*s] = true;
 }
 
@@ -138,9 +138,9 @@ Vector<ItemTextPart> ParseItemNatural(const String& name, const CppItem& m, cons
 		else {
 			p.type = ITEM_SIGN;
 			if(pari >= 0) {
-				if(*s == '(')
+				if(*s == '(' || *s == '<')
 					par++;
-				if(*s == ')') {
+				if(*s == ')' || *s == '>') {
 					par--;
 					if(par < 0) {
 						p.pari = -1;
