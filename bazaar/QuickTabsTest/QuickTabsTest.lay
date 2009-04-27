@@ -1,5 +1,5 @@
-LAYOUT(QuickTabsLayout, 516, 388)
-	ITEM(DocEdit, dv___0, HSizePosZ(20, 28).TopPosZ(84, 292))
-	ITEM(Button, golastvis, LeftPosZ(20, 56).TopPosZ(44, 24))
+LAYOUT(QuickTabsLayout, 516, 419)
+	ITEM(EditString, file, HSizePosZ(3, 3).TopPosZ(4, 19))
+	ITEM(Option, stacking, SetLabel(t_("Stacking")).LeftPosZ(3, 96).TopPosZ(25, 16))
 END_LAYOUT
 

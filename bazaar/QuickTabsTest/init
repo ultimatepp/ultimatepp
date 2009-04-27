@@ -1,5 +1,5 @@
 #ifndef _QuickTabsTest_icpp_init_stub
 #define _QuickTabsTest_icpp_init_stub
 #include "CtrlLib/init"
-#include "QuickTabs/init"
+#include "TabBar/init"
 #endif

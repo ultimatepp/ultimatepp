@@ -45,6 +45,7 @@ private:
 	void			StopHighlight() 				{ Refresh(); }
 public:
 	Callback1<Bar&> WhenMenuBar;
+	Callback		WhenState;
 
 	virtual void WindowMenu(Bar& bar) 				{ WhenMenuBar(bar); }
 	

@@ -30,18 +30,15 @@ protected:
 	int autohide;
 	bool icons:1;
 	bool showtext:1;
-//	PasteClip *clip;
-	
-	virtual void PaintTabData(Draw& w, Point p, const Size& sz, const Value& q, const Font& font, 
-		Color ink, dword style);
-	virtual Size GetStdSize(Value& q); 	
+
+	virtual void PaintTabData(Draw& w, const Rect &t, const Tab& tab, const Font &font, 
+		Color ink, dword style, int bl);
+	virtual Size GetStdSize(const Value &q);
 
 	virtual void RightDown(Point p, dword keyflags);
 	virtual void LeftDown(Point p, dword keyflags)	{ TabBar::LeftDown(p, keyflags &= ~K_SHIFT); }
 	virtual void LeftUp(Point p, dword keyflags)	{ TabBar::LeftUp(p, keyflags &= ~K_SHIFT); }
 	virtual void LeftDrag(Point p, dword keyflags);
-//	virtual void DragAndDrop(Point p, PasteClip& d);
-//	virtual void DragLeave();
 };
 
 class DockCont;

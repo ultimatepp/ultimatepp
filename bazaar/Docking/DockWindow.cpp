@@ -63,10 +63,10 @@ void DockWindow::AutoHide(int align, DockableCtrl& dc)
 	Register(dc);
 	DockCont *c = GetReleasedContainer(dc);
 	c->StateAutoHide(*this);
-	hideframe[align].AddCtrl(*c, dc.GetGroup());	
+	hideframe[align].AddCtrl(*c, dc.GetGroup());
 }
 
-int DockWindow::FindDocker(Ctrl *dc)
+int DockWindow::FindDocker(const Ctrl *dc)
 {
 	for (int i = 0; i < dockers.GetCount(); i++)
 		if (dc == (Ctrl *) dockers[i])
@@ -85,13 +85,20 @@ DockableCtrl& DockWindow::Register(DockableCtrl& dc)
 	return *dockers[ix];
 }
 
-void DockWindow::Deregister(DockableCtrl& dc)
+void DockWindow::Deregister(const DockableCtrl& dc)
 {
 	int ix = FindDocker(&dc); 
-	Close(dc);
 	if (ix >= 0) {
+		DockableCtrl &dc = *dockers[ix];
 		dockers.Remove(ix);
+		Close(dc);
 		dockerpos.Remove(ix);
+	}
+	for (int i = 0; i < ctrls.GetCount(); i++) {
+		if (&dc == &ctrls[i]) {
+			ctrls.Remove(i);
+			break;
+		}
 	}
 }
 
@@ -1494,6 +1501,7 @@ void PopUpDockWindow::ContainerDragMove(DockCont& dc)
 		Highlight(align, dc, target);
 	}
 	else  {
+		PopUpHighlight(hide, 4);
 		StopHighlight(IsAnimatedHighlight());
 		last_popup = NULL;
 	}
@@ -1501,8 +1509,14 @@ void PopUpDockWindow::ContainerDragMove(DockCont& dc)
 
 void PopUpDockWindow::ContainerDragEnd(DockCont& dc)
 {
+	int align = DOCK_NONE;
+	if (IsAutoHide() && showhide)
+		align = PopUpHighlight(hide, 4);
 	HidePopUps(true, true);
-	DockWindow::ContainerDragEnd(dc);	
+	if (align != DOCK_NONE)
+		AutoHideContainer(align, dc);	
+	else
+		DockWindow::ContainerDragEnd(dc);	
 	last_target = NULL;
 	last_popup = NULL;	
 }
@@ -1542,6 +1556,13 @@ void PopUpDockWindow::ShowOuterPopUps(DockCont& dc)
 	if (dc.IsDockAllowed(DOCK_TOP)) 	ShowPopUp(outer[DOCK_TOP], prect.Offseted(cp.x - psz.cx, wrect.top + POPUP_SPACING));	 
 	if (dc.IsDockAllowed(DOCK_RIGHT)) 	ShowPopUp(outer[DOCK_RIGHT], prect.Offseted(wrect.right - POPUP_SPACING - psz.cx*2, cp.y - psz.cy));
 	if (dc.IsDockAllowed(DOCK_BOTTOM)) 	ShowPopUp(outer[DOCK_BOTTOM], prect.Offseted(cp.x - psz.cx, wrect.bottom - POPUP_SPACING - psz.cy*2));
+	
+	if (IsAutoHide() && showhide) {
+		ShowPopUp(hide[DOCK_LEFT], prect.Offseted(wrect.left + POPUP_SPACING + style->outersize, cp.y - psz.cy));	
+		ShowPopUp(hide[DOCK_TOP], prect.Offseted(cp.x - psz.cx, wrect.top + POPUP_SPACING + style->outersize));	 
+		ShowPopUp(hide[DOCK_RIGHT], prect.Offseted(wrect.right - POPUP_SPACING - psz.cx*2 - style->outersize, cp.y - psz.cy));
+		ShowPopUp(hide[DOCK_BOTTOM], prect.Offseted(cp.x - psz.cx, wrect.bottom - POPUP_SPACING - psz.cy*2 - style->outersize));		
+	}
 }
 
 void PopUpDockWindow::ShowInnerPopUps(DockCont& dc, DockCont *target)
@@ -1591,9 +1612,12 @@ void PopUpDockWindow::HidePopUps(bool _inner, bool _outer)
 	if (_inner)
 		for (int i = 0; i < 5; i++)
 			inner[i].Close();	
-	if (_outer)
+	if (_outer) {
 		for (int i = 0; i < 4; i++)
-			outer[i].Close();	
+			outer[i].Close();
+		for (int i = 0; i < 4; i++)
+			hide[i].Close();
+	}				
 }
 
 PopUpDockWindow&  PopUpDockWindow::SetStyle(const Style& s)
@@ -1603,10 +1627,13 @@ PopUpDockWindow&  PopUpDockWindow::SetStyle(const Style& s)
 		inner[i].icon = &s.inner[i];	
 	for (int i = 0; i < 4; i++)
 		outer[i].icon = &s.outer[i];
+	for (int i = 0; i < 4; i++)
+		hide[i].icon = &s.hide[i];
 	return *this;	
 }
 
 PopUpDockWindow::PopUpDockWindow()
+: showhide(true)
 {
 	SetStyle(StyleDefault());
 	AnimateDelay(0);
@@ -1614,16 +1641,21 @@ PopUpDockWindow::PopUpDockWindow()
 
 CH_STYLE(PopUpDockWindow, Style, StyleDefault)
 {
-	outer[0] = DockingImg::DockLeft();
-	outer[1] = DockingImg::DockTop();
-	outer[2] = DockingImg::DockRight();
-	outer[3] = DockingImg::DockBottom();
-	
 	inner[0] = DockingImg::DockLeft();
 	inner[1] = DockingImg::DockTop();
 	inner[2] = DockingImg::DockRight();
 	inner[3] = DockingImg::DockBottom();
-	inner[4] = DockingImg::DockTab();
+	inner[4] = DockingImg::DockTab();	
+	
+	outer[0] = DockingImg::DockLeft();
+	outer[1] = DockingImg::DockTop();
+	outer[2] = DockingImg::DockRight();
+	outer[3] = DockingImg::DockBottom();
+
+	hide[0] = DockingImg::HideLeft();
+	hide[1] = DockingImg::HideTop();
+	hide[2] = DockingImg::HideRight();
+	hide[3] = DockingImg::HideBottom();
 
 	highlight = DockingImg::DockHL();
 	

@@ -79,7 +79,7 @@ protected:
 	// For finding drag-drop targets and computing boundary rect
 	DockCont       *GetMouseDockTarget();
 	DockCont       *FindDockTarget(DockCont& dc, int& al);
-	int             FindDocker(Ctrl *dc);
+	int             FindDocker(const Ctrl *dc);
 	Rect            GetAlignBounds(int al, Rect r, bool center, bool allow_lr = true, bool allow_tb = true);
 	int             GetPointAlign(const Point p, Rect r, bool center, bool allow_lr = true, bool allow_tb = true);
 	int             GetQuad(Point p, Rect r);
@@ -147,6 +147,12 @@ public:
 
 	DockableCtrl&   Dockable(Ctrl& ctrl, WString title);
 	DockableCtrl&   Dockable(Ctrl& ctrl, const char *title = 0)         { return Dockable(ctrl, (WString)title); }
+
+	template<class T>
+	DockableCtrl&   CreateDockable(WString title)						{ return Register(ctrls.Create<T>().Title(title)); }
+	template<class T>
+	DockableCtrl&   CreateDockable(const char *title = 0)         		{ return CreateDockable<T>((WString)title); }
+
 	
 	void            DockLeft(DockableCtrl& dc, int pos = -1)            { Dock(DOCK_LEFT, dc, pos); }
 	void            DockTop(DockableCtrl& dc, int pos = -1)             { Dock(DOCK_TOP, dc, pos); }
@@ -237,7 +243,7 @@ public:
 	bool			HasToolWindows() const			{ return childtoolwindows; }
 	
 	DockableCtrl&   Register(DockableCtrl& dc); 
-	void            Deregister(DockableCtrl& dc);
+	void            Deregister(const DockableCtrl& dc);
 	const Vector<DockableCtrl *>& GetDockableCtrls() const { return dockers; }
 
 	void            DockManager();
@@ -263,7 +269,6 @@ public:
 	void            SetHighlightStyle(DockableCtrl::Style& s)   { GetHighlightCtrl().SetStyle(s); }
 	
 	DockWindow();       
-
 private:
 	// Container management
 	DockCont       *GetContainer(Ctrl& dc)      { return dynamic_cast<DockCont *>(dc.GetParent()); }
@@ -291,19 +296,17 @@ private:
 	void            ClearLayout();
 };
 
-// WARNING!
-// PopUpDockWindow is currently unstable, but will be supported in future revisions
 class PopUpDockWindow : public DockWindow {
 public:
 	struct Style : ChStyle<Style> {
 		Value inner[5];
 		Value outer[4];
+		Value hide[4];
 		Value highlight;
 		int innersize;
 		int outersize;
 	};  
 	static const Style& StyleDefault();     
-	
 protected:
 	virtual void ContainerDragStart(DockCont& dc);
 	virtual void ContainerDragMove(DockCont& dc);
@@ -321,7 +324,9 @@ private:
 	DockCont       *last_target;
 	PopUpButton    *last_popup;
 	PopUpButton     inner[5];
-	PopUpButton     outer[4];   
+	PopUpButton     outer[4];
+	PopUpButton     hide[4];
+	bool			showhide;
 	
 	int     PopUpHighlight(PopUpButton *pb, int cnt);
 	void    ShowOuterPopUps(DockCont& dc);
@@ -331,6 +336,9 @@ private:
 public:
 	PopUpDockWindow&    SetStyle(const Style& s);
 	PopUpDockWindow();
+	
+	PopUpDockWindow&	AutoHidePopUps(bool v = true) { showhide = v; return *this; }
+
 };
 
 

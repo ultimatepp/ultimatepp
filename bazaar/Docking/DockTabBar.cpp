@@ -20,10 +20,12 @@ void DockTabBar::FrameAddSize(Size& sz)
 		TabBar::FrameAddSize(sz);
 }
 
-void DockTabBar::PaintTabData(Draw& w, Point p, const Size& sz, const Value& q, const Font& font, Color ink, dword style)
+void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style, int bl)
 {
 	DockableCtrl *d;
 	WString txt;
+	const Value &q = tab.data;
+	
 	ink = (style == CTRL_DISABLED) ? SColorDisabled : ink;
 	
 	if (IsTypeRaw<DockCont *>(q)) {
@@ -37,31 +39,40 @@ void DockTabBar::PaintTabData(Draw& w, Point p, const Size& sz, const Value& q, 
 		txt = d->GetTitle();
 	}
 
-	TabCenterText(p, sz, font);
+	Point p = GetTextPosition(r, GetTextSize(txt, font).cy, bl);		
 	if(icons)
 	{
 		const Image& icon = (style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon();
-		int al = GetAlign();
-		Point ip = p;
-		Size isz = icon.GetSize();
-		if (al == RIGHT)
-			ip.x -= isz.cx-1;
-		else if (al == LEFT)
-			ip.y -= isz.cy;
-		if (IsVert()) {
-			w.DrawImage(ip.x-1, ip.y, icon);
-			p.y += (isz.cy + TB_SPACEICON) * ((al == LEFT) ? -1 : 1);
+		if (!icon.IsEmpty()) {
+			int al = GetAlign();
+			Size isz = icon.GetSize();
+			Point ip;
+			switch (al) {
+				case LEFT:
+					ip = Point(r.left + (r.Width() - isz.cy) / 2, p.y - isz.cy);
+					p.y -= isz.cy + TB_SPACEICON;
+					break;
+				case TOP:
+					ip = Point(p.x, r.top + (r.Height() - isz.cy) / 2);
+					p.x += isz.cx + TB_SPACEICON;
+					break;
+				case RIGHT:
+					ip = Point(r.left + (r.Width() - isz.cy) / 2, p.y);
+					p.y += isz.cy + TB_SPACEICON;
+					break;
+				case BOTTOM:
+					ip = Point(p.x, r.top + (r.Height() - isz.cy) / 2);
+					p.x += isz.cx + TB_SPACEICON;				
+					break;
+			};	
+			w.DrawImage(ip.x, ip.y, icon);
 		}
-		else {			
-			w.DrawImage(ip.x, ip.y-2, icon);
-			p.x += isz.cx + TB_SPACEICON;
-		}	
 	}
 	if (showtext)
 		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
 }
 
-Size DockTabBar::GetStdSize(Value& q)
+Size DockTabBar::GetStdSize(const Value& q)
 {
 	DockableCtrl *d;
 	Value v;
@@ -123,6 +134,8 @@ void AutoHideBar::AddCtrl(DockCont& c, const String& group)
 	TabBar::Add(RawToValue<DockCont *>(&c), group); 
 	if (GetCount() == autohide+1)
 		RefreshParentLayout();
+	else
+		Refresh();
 }
 
 void AutoHideBar::RemoveCtrl(DockCont& c, int ix)
@@ -182,7 +195,10 @@ void AutoHideBar::TabHighlight()
 
 void AutoHideBar::TabClose(Value v)
 {
-	RemoveCtrl(*(ValueTo<DockCont *>(v)), -1);
+	DockCont &dc = *(ValueTo<DockCont *>(v));
+	RemoveCtrl(dc, -1);
+	dc.StateNotDocked();
+	dc.SignalStateChange();
 	if (GetCount() == autohide-1)
 		RefreshParentLayout();	
 }
@@ -242,7 +258,7 @@ void AutoHideBar::HideAnimate(Ctrl *c)
 			return;
 		}
 	}
-	
+	DockTabBar::KillCursor();	
 #ifdef PLATFORM_WIN32
 	Rect r = popup.GetRect();
 	AdjustSize(r, -r.GetSize());
@@ -251,7 +267,6 @@ void AutoHideBar::HideAnimate(Ctrl *c)
 	popup.Close();
 	ctrl->Remove();
 	ctrl = NULL;
-	DockTabBar::SetCursor(-1);
 }
 
 void AutoHideBar::AdjustSize(Rect& r, const Size& sz)

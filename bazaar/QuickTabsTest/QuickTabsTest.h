@@ -3,7 +3,7 @@
 
 #define QUICKTABS_TEST
 #include <CtrlLib/CtrlLib.h>
-#include <QuickTabs/QuickTabs.h>
+#include "QuickTabs.h"
 
 using namespace Upp;
 
@@ -16,13 +16,15 @@ class App : public WithQuickTabsLayout<TopWindow>
 {
 	private:
 		QuickTabs l_tabs;
-		QuickTabs t_tabs;
+		FileTabs t_tabs;
 		QuickTabs r_tabs;
 		QuickTabs b_tabs;
 	public:
 		typedef App CLASSNAME;
 		App();
 		void Drag();
+		void OnFileCursor();
+		void OnStacking();
 		void GoLastVis();
 		
 };

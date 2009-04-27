@@ -382,6 +382,7 @@ void DockCont::TabClosed(Value v)
 		DockableCtrl *c = DockCast(v);
 		base->SaveDockerPos(*c);
 		c->Remove();
+		c->WhenState();		
 	}
 	waitsync = true;
 	Layout();
@@ -442,9 +443,29 @@ void DockCont::AddFrom(DockCont& cont, int except)
 
 void DockCont::Clear()
 {
-	for (int i = 0; i < tabbar.GetCount(); i++)
-		CtrlCast(tabbar.Get(i))->Close();
-	tabbar.Clear();
+	if (tabbar.GetCount()) {
+		// Copy tabbar values and clear to prevent this being called multple times if child 
+		//  if destroyed on closing. pfft
+		Vector<Value> v;
+		v.SetCount(tabbar.GetCount());
+		for (int i = 0; i < tabbar.GetCount(); i++)
+			v[i] = tabbar.Get(i);
+		tabbar.Clear();
+		// Remove ctrls and signal correct state change
+		for (int i = 0; i < v.GetCount(); i++) {
+			if (IsDockCont(v[i])) { 
+				DockCont *dc = ContCast(v[i]);
+				dc->Remove();
+				dc->State(*base, STATE_NONE);
+			}
+			else {
+				DockableCtrl *dc = DockCast(v[i]);
+				dc->Remove();
+				dc->WhenState();
+			}
+		}		
+
+	}
 	handle.dc = NULL;
 }
 
@@ -455,6 +476,17 @@ void DockCont::State(DockWindow& dock, DockCont::DockState state)
 	SyncFrames();
 	SyncButtons();
 	Show(); 
+	SignalStateChange();
+}
+
+void DockCont::SignalStateChange()
+{
+	for (int i = tabbar.GetCount()-1; i >= 0; i--) {
+		if (IsDockCont(tabbar.Get(i)))
+			ContCast(tabbar.Get(i))->SignalStateChange();
+		else
+			DockCast(tabbar.Get(i))->WhenState();
+	}
 }
 
 void DockCont::SyncButtons(DockableCtrl& dc)
@@ -803,7 +835,7 @@ DockCont::DockCont()
 	NoCenter().Sizeable(true).MaximizeBox(false).MinimizeBox(false);
 
 	tabbar.AutoHideMin(1);
-	tabbar.WhenCursor 		= THISBACK(TabSelected);
+	tabbar<<= THISBACK(TabSelected);
 	tabbar.WhenClose 		= THISBACK(TabClosed);
 	tabbar.WhenCloseAll		= THISBACK(RefreshLayout);
 	tabbar.SetBottom();	

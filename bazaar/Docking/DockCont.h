@@ -181,6 +181,7 @@ public:
 	void 			Lock(bool lock);
 	void 			SyncFrames();
 	void 			SyncFrames(bool lock);
+	void			SignalStateChange();	
 	
 	void 			Grouping(bool grouping)			{ tabbar.Grouping(grouping); GroupRefresh(); }
 	void			GroupRefresh();	

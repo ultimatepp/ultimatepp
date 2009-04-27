@@ -117,9 +117,9 @@ protected:
 
 		Value data;
 		String group;	
+		BiVector<Value> stack;
 
 		bool visible;
-		bool frozen;
 
 		Point pos;
 		Size  size;
@@ -168,6 +168,9 @@ private:
 	bool nosel:1;
 	bool nohl:1;
 	bool inactivedisabled:1;
+	bool stacking:1;
+	bool groupsort:1;
+	Gate2<Value, Value> stackfunc;	
 	int neverempty;
 	Point mouse, oldp;
 	int group;
@@ -190,6 +193,12 @@ private:
 	int GetWidth(int n);
 	int GetWidth() const;
 	int GetHeight(bool scrollbar = true) const;
+
+	void DoStacking();
+	void DoUnstacking();
+	void StackRemove(BiVector<Value> &stack, int ix);
+	int  FindInStack(const Value &data, int &stackix) const;
+	void CycleTabStack(int n);
 	
 	static int GetStyleHeight(const Style& s);
 	
@@ -230,11 +239,13 @@ protected:
 
 	virtual WString ParseLabel(const WString& s);
 	// Sub-class display overide & helpers
-	virtual void PaintTabData(Draw& w, const Rect &t, const Value& q, const Font &font, 
+	virtual void PaintTabData(Draw& w, const Rect &t, const Tab& tab, const Font &font, 
 		Color ink, dword style, int bl);
-	virtual Size GetStdSize(Value &q); 
+	virtual Size GetStdSize(const Tab &t); 
+	Size 		 GetStdSize(const Value &v); 
 
 	int		GetTextAngle()	{ return AlignedFrame::IsVert() ? (GetAlign() == LEFT ? 900 : 2700) : 0; }	
+	Point	GetTextPosition(const Rect& r, int cy, int bl) const;	
 	int 	GetTargetTab(Point p);	
 	
 	const Style &GetStyle() { return *style[GetAlign()]; }
@@ -242,11 +253,14 @@ protected:
 	// Sub-class menu overrides
 	virtual void ContextMenu(Bar& bar);
 	virtual void GroupMenu(Bar &bar, int n);
+	
+	struct TabGroupSort {
+		bool operator () (const Tab& a, const Tab& b) const { return a.group < b.group; }	
+	};	
 public:
 	typedef TabBar CLASSNAME;
 
 	Callback WhenHighlight;
-	Callback WhenCursor;
 	Callback1<Value> WhenClose;
 	Callback WhenCloseAll;
 	Callback WhenLeftDouble;
@@ -260,10 +274,12 @@ public:
 	TabBar& Insert(int ix, const Value &data, bool make_active = false)		{ return Insert(ix, data, Null, make_active); }
 	TabBar& Insert(int ix, const Value &data, String group = Null, bool make_active = false);
 	void 	Close(int n);
+	void 	CloseData(const Value &data);
 	void 	Clear();
 
 	TabBar& Crosses(bool b = true);
-	TabBar& Grouping(bool b = true);		
+	TabBar& Grouping(bool b = true);
+	TabBar& GroupSort(bool b = true);		
 	TabBar& AutoScrollHide(bool b = true);
 	TabBar& InactiveDisabled(bool b = true);
 	
@@ -274,17 +290,19 @@ public:
 	Value  	Get(int n) const				{ ASSERT(n >= 0 && n < tabs.GetCount()); return tabs[n].data;}
 	void	Set(int n, const Value &data, const String &group = Null);
 	virtual Value GetData() const			{ return HasCursor() ? Get(active) : Value(); }
-	virtual void SetData(const Value &data) { int n = Find(data); if (n >= 0) SetCursor(n); }
+	virtual void SetData(const Value &data);
 	
 	Value 	GetGroupData(const String &s) const 				{ return GetGroupData(FindGroup(s)); }
 	void 	SetGroupData(const String &s, const Value &data) 	{ SetGroupData(FindGroup(s), data); }
 	Value 	GetGroupData(int n) const 							{ ASSERT(n >= 0 && n < groups.GetCount()); return groups[n].data; }
 	void 	SetGroupData(int n, const Value &data) 				{ ASSERT(n >= 0 && n < groups.GetCount()); groups[n].data = data;}
 
-	String 	GetGroupName() const      	{ return group == 0 ? Null : groups[group].name; }
-	int  	SetGroup(const String &s)   { group = max(0, FindGroup(s)); return group; }
-	int  	SetGroup(int c)             { group = c; return group;     }
+	String 	GetGroupName() const      	{ return (group == 0) ? Null : groups[group].name; }
+	String 	GetGroupName(int i) const	{ return groups[i].name;	   }
+	int  	SetGroup(const String &s)   { DoGrouping(max(0, FindGroup(s))); return group; }
+	int  	SetGroup(int c)             { DoGrouping(c); return group;     }
 	int  	GetGroup() const            { return group;            	   }
+	int 	GetGroupCount() const		{ return groups.GetCount();	   }
 	void 	SetGroupActive(int id)      { groups[group].active = id;   }
 	int  	GetGroupActive() const      { return groups[group].active; }
 	int  	GetFirst() const            { return groups[group].first;  }
@@ -293,11 +311,16 @@ public:
 	int    	GetCount() const 			{ return tabs.GetCount(); }
 	int    	GetCursor() const 			{ return active; }
 	int	   	GetHighlight() const 		{ return highlight; }
-	void   	SetCursor(int n, bool scroll = true);
+	void   	SetCursor(int n);
+	void	KillCursor()				{ active = -1; Refresh(); }	
 	void	SetTabGroup(int n, const String &group);
 
 	bool   	HasCursor() const			{ return active >= 0; }
 	bool   	HasHighlight() const		{ return highlight >= 0; }
+
+	TabBar& StackingFunc(Gate2<Value, Value> func);
+	TabBar& NoStacking();
+	bool	IsStacking()				{ return stacking; }
 
 	TabBar& NeverEmpty(int limit = 1)	{ neverempty = max(limit, 1); Refresh(); return *this; }
 	TabBar& CanEmpty()					{ neverempty = 0; Refresh(); return *this; }

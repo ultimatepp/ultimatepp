@@ -5,9 +5,12 @@ flags
 
 uses
 	CtrlLib,
-	QuickTabs;
+	TabBar;
 
 file
+	QuickTabs.h,
+	QuickTabs.cpp,
+	FileTabs.cpp,
 	QuickTabsTest.h,
 	QuickTabsTest.cpp,
 	QuickTabsTest.lay;

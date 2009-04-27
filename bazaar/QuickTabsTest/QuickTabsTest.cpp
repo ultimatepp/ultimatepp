@@ -7,20 +7,19 @@ Image IdeFileImage(const String& t, bool a)
   
 App::App()
 {
-	l_tabs.SetLayout(FloatFrame::LAYOUT_LEFT);
-	t_tabs.SetLayout(FloatFrame::LAYOUT_TOP);
-	r_tabs.SetLayout(FloatFrame::LAYOUT_RIGHT);
-	b_tabs.SetLayout(FloatFrame::LAYOUT_BOTTOM);
-	CtrlLayout(*this, "Window title");
+	t_tabs.SetTop();
+/*	l_tabs.SetLeft();
+	r_tabs.SetRight();
+	b_tabs.SetBottom();
+*/	CtrlLayout(*this, "Window title");
 	Sizeable().Zoomable();
-	golastvis <<= THISBACK(GoLastVis);
 	
+//	AddFrame(t_tabs);
+/*	AddFrame(r_tabs);
 	AddFrame(l_tabs);
-	AddFrame(r_tabs);
-	AddFrame(t_tabs);
 	AddFrame(b_tabs);
-	AddFrame(ViewFrame());
-	
+*/	AddFrame(ViewFrame());
+/*	
 	l_tabs.Crosses(true);	
 	l_tabs.Add("/ala/Test.cpp");
 	l_tabs.Add("/ala/Test.h");
@@ -53,18 +52,41 @@ App::App()
 	b_tabs.Add("/test/Test.cpp");
 	b_tabs.Add("/test/Test.h");
 	b_tabs.Grouping(true);
-
+*/
+	AddFrame(t_tabs);
+	t_tabs.Stacking(true);
 	t_tabs.Crosses(true);	
 	t_tabs.Add("/ala/Test.cpp");
-	t_tabs.Add("/ala/Test.h");
 	t_tabs.Add("/ala/SuperProgram.cpp", true);
-	t_tabs.Add("/kasia/SuperProgram.h");
+	t_tabs.Add("/ala/Test.h");
+	t_tabs.Add("/ala/SuperProgram.h");
+	t_tabs.Add("/MyApp/MyApp.cpp");
+	t_tabs.Add("/MyApp/MyApp.h");
+	t_tabs.Add("/MyApp/MyApp.lay");
+	t_tabs.Add("/MyApp/MyApp.iml");
+	t_tabs.Add("/MyApp/main.cpp");	
 	t_tabs.Add("/kasia/Synchronize.cpp");
 	t_tabs.Add("/kasia/Synchronize.h");
-	t_tabs.Add("/test/Test.cpp");
-	t_tabs.Add("/test/Test.h");
+	t_tabs.Add("/CtrlLib/LabelBase.h");
+	t_tabs.Add("/CtrlLib/LabelBase.cpp");
+	t_tabs.Add("/CtrlLib/ScrollBar.h");
+	t_tabs.Add("/CtrlLib/ScrollBar.cpp");	
+
 	t_tabs.Grouping(true);
+	t_tabs <<= THISBACK(OnFileCursor);
 	
+	stacking <<= t_tabs.IsStacking();
+	stacking <<= THISBACK(OnStacking);
+}
+
+void App::OnFileCursor()
+{
+	file <<= ~t_tabs;
+}
+
+void App::OnStacking()
+{
+	t_tabs.Stacking(stacking);
 }
 
 void App::GoLastVis()
