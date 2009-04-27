@@ -113,7 +113,7 @@ outtmp="`mktemp -t -d uppnighty2deb.XXXXXXX`"
 
 #build theide
 echo "building TheIDE......"
-$idebuild $src $outtmp/theide
+bash $idebuild $src $outtmp/theide
 if [ $? = 0 ]
 then
 	true
@@ -125,7 +125,7 @@ fi
 
 #creates the deb package
 echo "Creating package......"
-$uppdeb $src $outtmp/theide $dst $release
+bash $uppdeb $src $outtmp/theide $dst $release
 result=$?
 
 #remove temporary folder
