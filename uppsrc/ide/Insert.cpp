@@ -94,7 +94,6 @@ void Ide::InsertMenu(Bar& bar)
 			String fn = p[i];
 			String ext = ToLower(GetFileExt(fn));
 			String pp = pn + '/' + fn;
-			DDUMP(fn);
 			if(ext == ".lay") {
 				bar.Add(fn + " include", THISBACK1(InsertLay, pp));
 				n++;
