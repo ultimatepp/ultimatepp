@@ -342,7 +342,8 @@ static void BltPack4(byte *dest, const byte *src, unsigned count)
 static tsize_t ReadStream(thandle_t fd, tdata_t buf, tsize_t size)
 {
 	Stream *stream = reinterpret_cast<Stream *>(fd);
-	ASSERT(stream->IsOpen());
+	if(!stream->IsOpen())
+		return 0;
 //	RLOG("TiffStream::TIFRaster::Data & " << (int)wrapper.stream.GetPos() << ", count = " << size
 //		<< ", end = " << (int)(wrapper.stream.GetPos() + size));
 	return stream->Get(buf, size);

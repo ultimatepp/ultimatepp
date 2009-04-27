@@ -294,11 +294,11 @@ void FontInfo::Retain(const FontInfo& f)
 	charset = f.charset;
 }
 
-FontInfo Draw::GetFontInfo(byte charset, Font font) {
+
+FontInfo Draw::GetFontInfoW(Font font) {
 	DrawLock __;
 	LTIMING("GetFontInfo");
-	if(charset == CHARSET_DEFAULT)
-		charset = GetDefaultCharset();
+	byte charset = CHARSET_UNICODE;
 	if(lastFont.IsEqual(charset, font, 0, device))
 		return lastFont;
 #ifdef PLATFORM_WIN32
@@ -310,16 +310,6 @@ FontInfo Draw::GetFontInfo(byte charset, Font font) {
 #endif
 	fi.charset = charset;
 	return fi;
-}
-
-FontInfo Draw::GetFontInfo(Font font)
-{
-	return GetFontInfo(CHARSET_DEFAULT, font);
-}
-
-FontInfo Draw::GetFontInfoW(Font font)
-{
-	return GetFontInfo(CHARSET_UNICODE, font);
 }
 
 void Draw::SetFont(Font font, int angle) {

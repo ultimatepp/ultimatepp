@@ -233,8 +233,8 @@ Pdb::Visual Pdb::Visualise(const String& exp)
 	return r;
 }
 
-void Pdb::VisualDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style)
-const
+void Pdb::VisualDisplay::Paint(Draw& w, const Rect& r, const Value& q,
+                               Color ink, Color paper, dword style) const
 {
 	int x = r.left;
 	int y = r.top + (r.Height() - Draw::GetStdFontCy()) / 2;
