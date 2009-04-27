@@ -48,13 +48,13 @@ void Pdb::Sync0()
 {
 	stop = false;
 	const CONTEXT& context = threads.Get((int)~threadlist).context;
-	#ifdef CPU_32
+#ifdef CPU_32
 	adr_t eip = context.Eip;
 	adr_t ebp = context.Ebp;
-	#else
+#else
 	adr_t eip = context.Rip;
 	adr_t ebp = context.Rbp;
-	#endif
+#endif
 	adr_t spmax = threads.Get(event.dwThreadId).sp;
 	framelist.Clear();
 	frame.Clear();

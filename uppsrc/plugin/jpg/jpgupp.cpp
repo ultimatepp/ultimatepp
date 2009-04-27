@@ -671,7 +671,8 @@ void JPGEncoder::WriteLineRaw(const byte *s)
 Image JPGRaster::GetExifThumbnail()
 {
 	ASSERT(data);
-	return StreamRaster::LoadStringAny(data->GetThumbnail());
+	StringStream ss(data->GetThumbnail());
+	return StreamRaster::LoadStringAny(ss);
 }
 
 END_UPP_NAMESPACE

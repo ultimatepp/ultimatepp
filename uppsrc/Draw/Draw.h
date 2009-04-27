@@ -942,15 +942,7 @@ public:
 #endif
 
 private: //Deprecated
-	FontInfo GetFontInfo(byte charset, Font font = StdFont());
-	FontInfo GetFontInfo(Font font = StdFont());
 	FontInfo GetFontInfoW(Font font = StdFont());
-
-	Size GetTextSize(const wchar *text, Font font = StdFont(), int n = -1) { return UPP::GetTextSize(text, font, n); }
-	Size GetTextSize(const WString& text, Font font = StdFont()) { return UPP::GetTextSize(text, font); }
-	Size GetTextSize(const char *text, byte charset, Font font = StdFont(), int n = -1) { return UPP::GetTextSize(text, charset, font); }
-	Size GetTextSize(const char *text, Font font = StdFont(), int n = -1) { return UPP::GetTextSize(text, font, n); }
-	Size GetTextSize(const String& text, Font font = StdFont()) { return UPP::GetTextSize(text, font); }
 
 private:
 	Draw(const Draw&);

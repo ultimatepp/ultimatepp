@@ -751,12 +751,12 @@ void DrawPolyPolyPolygon(Draw& draw, const Point *vertices, int vertex_count,
 //		TIMING("DrawPolyPolygon/stream");
 		Vector<Point> out_vertices;
 		Vector<int> out_subpolygon_counts, out_polygon_counts;
-		StreamPolyPolyPolygon(draw.DrawingOp(wPolyPolyPolygon),
+/*		StreamPolyPolyPolygon(draw.DrawingOp(wPolyPolyPolygon),
 			out_vertices, vertices, vertex_count,
 			out_subpolygon_counts, subpolygon_counts, subpolygon_count_count,
 			out_polygon_counts, disjunct_polygon_counts, disjunct_polygon_count_count,
 			color, width, outline, pattern, doxor);
-		return;
+*/		return;
 	}
 //	TIMING("DrawPolyPolygon/hdc");
 	bool is_xor = !IsNull(doxor);

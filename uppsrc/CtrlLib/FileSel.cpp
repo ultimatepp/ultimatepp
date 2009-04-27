@@ -64,6 +64,7 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large)
 		m.file = "x." + ext;
 	return MakeImage(m);
 }
+
 #endif
 
 #ifdef PLATFORM_X11
