@@ -5,10 +5,10 @@
 #################################################################
 #		REPLACE VALUES WITH YOUR OWN			#
 # SVN repository full path
-NIGHTY_PATH="~/upp.tmp/u"
+NIGHTY_PATH="/home/upp/upp.tmp/u"
 #
 # Destination path for generated debian
-DEST_PATH="~/upload"
+DEST_PATH="/home/upp/upload"
 #
 # Mantainer name and email
 export MAINTAINER="Massimo Del Fedele"
@@ -48,6 +48,6 @@ then
 fi
 
 #just run uppnighty2deb with my params
-$uppnighty2deb $NIGHTY_PATH $DEST_PATH
+bash $uppnighty2deb $NIGHTY_PATH $DEST_PATH
 
 ~/bin/upload
