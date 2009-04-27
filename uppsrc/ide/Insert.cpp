@@ -41,6 +41,7 @@ InsertColorDlg::InsertColorDlg()
 	color <<= THISBACK1(Select, 1);
 	ahex <<= THISBACK1(Select, 2);
 	hex <<= THISBACK1(Select, 3);
+	Sync();
 }
 
 void Ide::InsertColor()
@@ -83,7 +84,7 @@ void Ide::InsertTpp(const String& fn)
 void Ide::InsertMenu(Bar& bar)
 {
 	bar.Add("Insert color..", THISBACK(InsertColor));
-	int pi = package.GetCursor();
+	int pi = GetPackageIndex();
 	const Workspace& wspc = IdeWorkspace();
 	if(pi >= 0 && pi < wspc.GetCount()) {
 		String pn = wspc[pi];
@@ -93,6 +94,7 @@ void Ide::InsertMenu(Bar& bar)
 			String fn = p[i];
 			String ext = ToLower(GetFileExt(fn));
 			String pp = pn + '/' + fn;
+			DDUMP(fn);
 			if(ext == ".lay") {
 				bar.Add(fn + " include", THISBACK1(InsertLay, pp));
 				n++;

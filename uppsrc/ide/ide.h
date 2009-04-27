@@ -681,6 +681,8 @@ public:
 
 // ------------------------------------
 
+	int       GetPackageIndex();
+
 	void      BeepMuteExclamation() { if(!mute_sounds) BeepExclamation(); }
 	void      BeepMuteInformation() { if(!mute_sounds) BeepInformation(); }
 
