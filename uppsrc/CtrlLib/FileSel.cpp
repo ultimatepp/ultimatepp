@@ -1211,7 +1211,7 @@ void FileSel::Serialize(Stream& s) {
 	}
 	if(version >= 2) {
 		SerializePlacement(s);
-		s % list;
+		list.SerializeSettings(s);
 	}
 	if(version >= 3) {
 		s % lastsby;

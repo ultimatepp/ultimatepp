@@ -58,7 +58,7 @@ void TopicEditor::Serialize(Stream& s)
 	s / version;
 	editor.SerializeSettings(s);
 	s % left_right;
-	topic.Serialize(s);
+	topic.SerializeSettings(s);
 	s % allfonts;
 	SyncFonts();
 }

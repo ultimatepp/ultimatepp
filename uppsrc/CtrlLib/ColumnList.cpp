@@ -1013,16 +1013,16 @@ void ColumnList::SerializeSettings(Stream& s) {
 	SyncInfo();
 }
 
+/* Error-prone!
 void ColumnList::Serialize(Stream& s) {
 	int version = 1;
 	s / version / ncl;
 	if(version >= 1) {
-		int cnt;
+		int cnt = item.GetCount();
 		s.Magic();
 		s / cnt;
-		if (s.IsLoading())
-			item.SetCount(cnt);
-		for (int i = 0; i < item.GetCount(); i++) {
+		item.SetCount(cnt);
+		for(int i = 0; i < cnt; i++) {
 			Item &q = item[i];
 			s % q.key % q.value % q.canselect;
 			if (s.IsLoading()) {
@@ -1035,6 +1035,7 @@ void ColumnList::Serialize(Stream& s) {
 	Refresh();
 	SyncInfo();
 }
+*/
 
 ColumnList::ColumnList() {
 	clickkill = false;

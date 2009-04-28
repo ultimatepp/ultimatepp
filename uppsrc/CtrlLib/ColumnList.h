@@ -1,6 +1,5 @@
 class ColumnList : public Ctrl, private CtrlFrame {
 public:
-	virtual void  Serialize(Stream& s);
 	virtual void  Paint(Draw& w);
 	virtual void  Layout();
 	virtual Image CursorImage(Point p, dword);
