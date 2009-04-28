@@ -90,8 +90,8 @@ void Ide::Serialize(Stream& s) {
 	s % AnyPackageFs();
 	s % pfsplit;
 	s % wesplit;
-	s % package;
-	s % filelist;
+	package.SerializeSettings(s);
+	filelist.SerializeSettings(s);
 	s % editorfont;
 	if(version >= 6)
 		s % tfont;
