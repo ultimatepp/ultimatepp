@@ -29,9 +29,9 @@ TestWindow::TestWindow()
 {
 	Title("ColumnList Example").Sizeable();
 	
-	list[0].ColumnMode().Columns(3).ItemHeight(max(16, list[0].GetItemHeight()));
+	list[0].Columns(3).ItemHeight(max(16, list[0].GetItemHeight()));
 	list[1].RowMode().ItemWidth(80).ItemHeight(max(34, list[1].GetItemHeight()));
-	list[2].ListMode().Columns(3).ItemHeight(max(16, list[2].GetItemHeight()));
+	list[2].ColumnMode().Columns(3).ItemHeight(max(16, list[2].GetItemHeight()));
 	
 	for (int i = 0; i < 3; i++)
 		list[i].SetDisplay(display);
@@ -42,9 +42,9 @@ TestWindow::TestWindow()
 			list[j].Add(i, s, true);
 	}
 
-	label[0].SetLabel("Column Mode (Default):");
+	label[0].SetLabel("List Mode (Default):");
 	label[1].SetLabel("Row Mode:");
-	label[2].SetLabel("List Mode:");
+	label[2].SetLabel("Column Mode:");
 	
 	*this << list[0] << list[1] << list[2];
 	*this << label[0] << label[1] << label[2];
