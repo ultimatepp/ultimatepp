@@ -33,7 +33,7 @@ protected:
 
 	virtual void PaintTabData(Draw& w, const Rect &t, const Tab& tab, const Font &font, 
 		Color ink, dword style, int bl);
-	virtual Size GetStdSize(const Value &q);
+	virtual Size GetStdSize(const Tab &q);
 
 	virtual void RightDown(Point p, dword keyflags);
 	virtual void LeftDown(Point p, dword keyflags)	{ TabBar::LeftDown(p, keyflags &= ~K_SHIFT); }

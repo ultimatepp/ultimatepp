@@ -72,9 +72,10 @@ void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font
 		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
 }
 
-Size DockTabBar::GetStdSize(const Value& q)
+Size DockTabBar::GetStdSize(const Tab& t)
 {
 	DockableCtrl *d;
+	const Value &q = t.data;
 	Value v;
 	if (IsTypeRaw<DockCont *>(q)) {
 		DockCont *c = ValueTo<DockCont *>(q);
