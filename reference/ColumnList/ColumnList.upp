@@ -1,0 +1,11 @@
+description "ColumnList examples, shows all 3 modes of ColumnList\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
