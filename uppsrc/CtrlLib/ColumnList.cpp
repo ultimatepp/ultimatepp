@@ -427,7 +427,7 @@ void ColumnList::Paint(Draw& w) {
 	}
 	if(HasCapture())
 		w.DrawRect(mpos - dx, 0, 1, sz.cy, Blend(SColorHighlight, SColorFace));
-	(mode == MODE_COLUMNS) ? 
+	(mode == MODE_COLUMN) ? 
 		scroller.Set(Point(sb, 0)) : 
 		scroller.Set(sb);
 }
@@ -492,7 +492,7 @@ void ColumnList::SetSb()
 		sb.SetPage(GetPageItems());
 		sb.SetLine(1);		
 		break;
-	case MODE_COLUMNS: {
+	case MODE_COLUMN: {
 		int icnt = max(1, GetColumnItems());
 		int ccnt = GetCount()/icnt;
 		ccnt += (GetCount() % icnt) ? 1 : 0;	
@@ -518,7 +518,7 @@ void ColumnList::ScrollInto(int pos)
 	case MODE_ROWS:
 		sb.ScrollInto((pos / ncl) * cy, max(0, sb.GetLine() - (GetSize().cy - sb.GetPage())));
 		return;
-	case MODE_COLUMNS:
+	case MODE_COLUMN:
 		sb.ScrollInto(pos / max(1, GetColumnItems()));
 		return;
 	case MODE_LIST:
@@ -542,7 +542,7 @@ void ColumnList::Scroll()
 		sz.cy = sz.cy / cy * cy;
 		scroller.Scroll(*this, sz, sb, cy);
 		break;		
-	case MODE_COLUMNS:
+	case MODE_COLUMN:
 		sz.cy = sz.cy / cy * cy;
 		scroller.Scroll(*this, sz, Point(sb, 0), Size(GetColumnCx(0), 0));
 		break;		
@@ -603,8 +603,8 @@ int ColumnList::GetSbPos(const Size &sz) const
 {
 	switch (mode) {
 	case MODE_ROWS:
-		return (sb / cy)*ncl;
-	case MODE_COLUMNS:
+		return (sb / cy) * ncl;
+	case MODE_COLUMN:
 		return (cy ? sb * (sz.cy / cy) : 0);
 	case MODE_LIST:
 		return sb;
@@ -920,7 +920,7 @@ void ColumnList::DragAndDrop(Point p, PasteClip& d)
 
 void ColumnList::DragRepeat(Point p)
 {
-	sb = sb + ((mode == MODE_COLUMNS) ? GetDragScroll(this, p, 1).x : GetDragScroll(this, p, 1).y);
+	sb = sb + ((mode == MODE_COLUMN) ? GetDragScroll(this, p, 1).x : GetDragScroll(this, p, 1).y);
 }
 
 void ColumnList::DragEnter()
@@ -1037,13 +1037,24 @@ void ColumnList::Serialize(Stream& s) {
 }
 */
 
+ColumnList& ColumnList::Mode(int m)
+{
+	mode = m;
+	scroller.Clear();
+	if(m == MODE_COLUMN)
+		sb.Horz();
+	else
+		sb.Vert();
+	return *this;
+}
+
 ColumnList::ColumnList() {
 	clickkill = false;
 	ncl = 1;
 	cx = 50;
 	cy = Draw::GetStdFontCy();
 	cursor = -1;
-	ColumnMode();
+	ListMode();
 	AddFrame(sb);
 	sb.WhenScroll = THISBACK(Scroll);
 	sb.AutoHide();
