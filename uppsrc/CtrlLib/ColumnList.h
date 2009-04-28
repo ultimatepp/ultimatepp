@@ -91,8 +91,8 @@ private:
 
 public:
 	enum {
-		MODE_COLUMNS,		
 		MODE_LIST,
+		MODE_COLUMN,		
 		MODE_ROWS	
 	};
 
@@ -126,7 +126,7 @@ public:
 	void    KillCursor();
 	bool    IsCursor() const                           { return cursor >= 0; }
 
-	int     GetSbPos() const                           { return sb; }
+	int     GetSbPos() const                           { return GetSbPos(GetSize()); }
 	void    SetSbPos(int y);
 
 	void    SetFrame(CtrlFrame& frame);
@@ -178,10 +178,10 @@ public:
 
 	void         SerializeSettings(Stream& s);
 
-	ColumnList&  Mode(int m)                          { mode = m; scroller.Clear(); sb.Vert(); return *this; }
+	ColumnList&  Mode(int m);
 	ColumnList&  ListMode()                           { return Mode(MODE_LIST); }
 	ColumnList&  RowMode()                            { return Mode(MODE_ROWS); }
-	ColumnList&  ColumnMode()                         { return Mode(MODE_COLUMNS); }
+	ColumnList&  ColumnMode()                         { return Mode(MODE_COLUMN); }
 	ColumnList&  Columns(int _n)                      { ncl = _n; Refresh(); return *this; }
 	int          GetColumns() const                   { return ncl; }
 	ColumnList&  ItemHeight(int _cy)                  { cy = _cy; RefreshLayout(); Refresh(); return *this; }
