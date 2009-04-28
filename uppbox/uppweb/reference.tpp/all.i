@@ -190,3 +190,7 @@ TOPIC("VirtualArray$en-us")
 #include "VirtualArray$en-us.tppi"
 END_TOPIC
 
+TOPIC("ColumnList$en-us")
+#include "ColumnList$en-us.tppi"
+END_TOPIC
+
