@@ -20,6 +20,8 @@ public:
 	virtual void  DragAndDrop(Point p, PasteClip& d);
 	virtual void  DragRepeat(Point p);
 	virtual void  DragLeave();
+	virtual Value GetData() const;
+	virtual void  SetData(const Value& key);
 
 private:
 	virtual void  FrameLayout(Rect& r);
@@ -28,7 +30,7 @@ private:
 
 private:
 	int        ncl;
-	int        cy;
+	int        cx, cy;
 	int        cursor, anchor;
 	int        dx;
 	int        ci;
@@ -41,8 +43,8 @@ private:
 	bool       clickkill;
 	bool       nobg;
 	bool       popupex;
-
 	bool       selclick;
+	int	   	   mode;
 
 	DisplayPopup info;
 
@@ -51,6 +53,7 @@ private:
 	struct Item {
 		bool           sel;
 		bool           canselect;
+		Value          key;
 		Value          value;
 		const Display *display;
 	};
@@ -79,11 +82,21 @@ private:
 	void    UpdateSelect();
 	void    RefreshSel();
 	void    DoLeftDown(Point p, dword);
+	dword   SwapKey(dword key);
+	void    PaintRows(Draw &w, Size &sz);
+	int     GetSbPos(const Size &sz) const;
+	void    ScrollInto(int pos);
 
 	bool    DnDInsert(int i, int py, PasteClip& d, int q);
 	void    DnD(int _drop, bool _insert);
 
 public:
+	enum {
+		MODE_COLUMNS,		
+		MODE_LIST,
+		MODE_ROWS	
+	};
+
 	Callback         WhenLeftClick;
 	Callback1<Point> WhenLeftClickPos;
 	Callback         WhenLeftDouble;
@@ -122,16 +135,28 @@ public:
 	void         Clear();
 	void         Add(const Value& val, bool canselect = true);
 	void         Add(const Value& val, const Display& display, bool canselect = true);
-	int          GetCount() const                     { return item.GetCount();; }
-	const Value& Get(int i) const                     { return item[i].value; }
-	const Value& operator[](int i) const              { return item[i].value; }
+	void         Add(const Value& key, const Value& val, bool canselect = true);
+	void         Add(const Value& key, const Value& val, const Display& display, bool canselect = true);
 
+	int          GetCount() const                     { return item.GetCount(); }
+	const Value& Get(int i) const                     { return item[i].key; }
+	const Value& GetValue(int i) const                { return item[i].value; }
+	const Value& operator[](int i) const              { return item[i].key; }
+
+	void         Set(int ii, const Value& key, const Value& val, bool canselect = true);
+	void         Set(int ii, const Value& key, const Value& val, const Display& display, bool canselect = true);
 	void         Set(int ii, const Value& val, bool canselect = true);
 	void         Set(int ii, const Value& val, const Display& display, bool canselect = true);
 
+	void         Set(const Value& key, const Value& val, const Display& display, bool canselect);
+	void         Set(const Value& key, const Value& val, bool canselect);
+
 	void         Insert(int ii, const Value& val, bool canselect = true);
 	void         Insert(int ii, const Value& val, const Display& display, bool canselect = true);
+	void         Insert(int ii, const Value& key, const Value& val, bool canselect = true);
+	void         Insert(int ii, const Value& key, const Value& val, const Display& display, bool canselect = true);
 	void         Remove(int ii);
+	void         Remove(const Value & key)			  { int ii = Find(key); if (ii >= 0) Remove(ii); }
 
 	void         RemoveSelection();
 
@@ -141,18 +166,29 @@ public:
 	bool         IsSelected(int i) const;
 	bool         IsSel(int i) const;
 
+	int          Find(const Value& key) const;
+
 	void         Sort(const ValueOrder& order);
 
 	Image        GetDragSample();
 
 	void         InsertDrop(int ii, const Vector<Value>& data, PasteClip& d, bool self);
+	void         InsertDrop(int ii, const Vector<Value>& keys, const Vector<Value>& data, PasteClip& d, bool self);
 	void         InsertDrop(int ii, const ColumnList& src, PasteClip& d);
 	void         InsertDrop(int ii, PasteClip& d);
 
+	void         SerializeSettings(Stream& s);
+
+	ColumnList&  Mode(int m)                          { mode = m; scroller.Clear(); sb.Vert(); return *this; }
+	ColumnList&  ListMode()                           { return Mode(MODE_LIST); }
+	ColumnList&  RowMode()                            { return Mode(MODE_ROWS); }
+	ColumnList&  ColumnMode()                         { return Mode(MODE_COLUMNS); }
 	ColumnList&  Columns(int _n)                      { ncl = _n; Refresh(); return *this; }
 	int          GetColumns() const                   { return ncl; }
 	ColumnList&  ItemHeight(int _cy)                  { cy = _cy; RefreshLayout(); Refresh(); return *this; }
 	int          GetItemHeight() const                { return cy; }
+	ColumnList&  ItemWidth(int _cx)                   { cx = _cx; RefreshLayout(); Refresh(); return *this; }
+	int          GetItemWidth() const                 { return cx; }
 	ColumnList&  RoundSize(bool b = true);
 	ColumnList&  NoRoundSize()                        { return RoundSize(false); }
 	ColumnList&  ClickKill(bool b = true)             { clickkill = b; return *this; }

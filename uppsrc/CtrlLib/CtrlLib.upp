@@ -7,7 +7,7 @@ uses
 	CtrlCore,
 	RichText;
 
-uses(POSIX) PdfDraw;
+uses(POSIX | LINUX | FREEBSD) PdfDraw;
 
 file
 	CtrlLib.h,

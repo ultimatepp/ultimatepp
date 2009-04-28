@@ -7,6 +7,8 @@ void ColumnList::MouseWheel(Point p, int zdelta, dword keyflags) {
 }
 
 int  ColumnList::GetColumnCx(int i) const {
+	if (mode == MODE_ROWS)
+		return cx;
 	int szcx = GetSize().cx;
 	int cx = max(szcx / max(ncl, 1), Draw::GetStdFontCy());
 	return i == ncl - 1 ? szcx - i * cx : cx;
@@ -18,6 +20,8 @@ int ColumnList::GetColumnItems() const {
 }
 
 int  ColumnList::GetDragColumn(int x) const {
+	if (mode == MODE_ROWS)
+		return -1;	
 	int cx = GetColumnCx();
 	int i = 0;
 	if(cx == 0) return -1;
@@ -52,10 +56,17 @@ Image ColumnList::CursorImage(Point p, dword)
 
 int ColumnList::GetItem(Point p)
 {
-	int i = p.y / cy + GetColumnItems() * (p.x / GetColumnCx(0));
-	if(i < 0 || i >= GetPageItems())
+	int i;
+	int max = GetPageItems();
+	if (mode == MODE_ROWS) {
+		i = ((p.y + sb % cy) / cy) * ncl + (p.x / cx);
+		max += ncl*2;
+	}
+	else
+		i = p.y / cy + GetColumnItems() * (p.x / GetColumnCx(0));
+	if(i < 0 || i >= max)
 		return -1;
-	i += sb;
+	i += GetSbPos();
 	return i >= 0 && i < GetCount() ? i : -1;
 }
 
@@ -194,9 +205,12 @@ void ColumnList::MouseLeave()
 }
 
 Rect ColumnList::GetItemRect(int i) const {
-	i -= sb;
+	if (mode == MODE_ROWS)
+		return (i >= 0) ? RectC( (i % ncl) * cx, (i / ncl) * cy - sb, cx, cy) : Rect(0, 0, 0, 0);
+	i -= GetSbPos();
 	int n = GetColumnItems();
-	if(i < 0 || n == 0) return Rect(0, 0, 0, 0);
+	if(i < 0 || n == 0) 
+		return Rect(0, 0, 0, 0);
 	int cl = i / n;
 	int x = 0;
 	for(int q = 0; q < cl; q++)
@@ -205,7 +219,7 @@ Rect ColumnList::GetItemRect(int i) const {
 }
 
 void ColumnList::Page(bool down) {
-	int q = sb;
+	int q = GetSbPos();
 	if(down)
 		sb.NextPage();
 	else
@@ -213,13 +227,31 @@ void ColumnList::Page(bool down) {
 	if(q == sb)
 		SetCursor(down ? GetCount() - 1 : 0);
 	else
-		SetCursor(cursor - q + sb);
+		SetCursor(cursor - q + GetSbPos());
+}
+
+dword ColumnList::SwapKey(dword key)
+{
+	if (mode == MODE_ROWS) {
+		switch(key) {
+		case K_UP:
+			return K_LEFT;
+		case K_DOWN:
+			return K_RIGHT;
+		case K_LEFT:
+			return K_UP;
+		case K_RIGHT:
+			return K_DOWN;
+		}
+	}
+	return key;	
 }
 
 bool ColumnList::Key(dword _key, int count) {
 	int c = cursor;
 	bool sel = _key & K_SHIFT;
 	int key = _key & ~K_SHIFT;
+	key = SwapKey(key);
 	switch(key) {
 	case K_UP:
 		if(c < 0)
@@ -236,10 +268,10 @@ bool ColumnList::Key(dword _key, int count) {
 			c++;
 		break;
 	case K_LEFT:
-		c = max(c - GetColumnItems(), 0);
+		c = max(c - ((mode == MODE_ROWS) ? ncl : GetColumnItems()), 0);
 		break;
 	case K_RIGHT:
-		c = min(c + GetColumnItems(), GetCount() - 1);
+		c = min(c + ((mode == MODE_ROWS) ? ncl : GetColumnItems()), GetCount() - 1);
 		break;
 	case K_PAGEUP:
 		Page(false);
@@ -357,22 +389,65 @@ dword ColumnList::PaintItem(Draw& w, int i, const Rect& r)
 
 void ColumnList::Paint(Draw& w) {
 	Size sz = GetSize();
-	if(GetColumnCx(0) == 0) return;
-	int x = 0;
-	int i = sb;
+	if(!GetColumnCx(0) || !cy) return;
+	if (mode == MODE_ROWS)
+		return PaintRows(w, sz);
+	else {	
+		int x = 0;
+		int i = GetSbPos(sz);
+		int coli = 0;
+		while(x < sz.cx) {
+			int cx = GetColumnCx(coli++);
+			int y = 0;
+			while(y + cy <= sz.cy) {
+				Rect rect = RectC(x, y, cx, cy);
+				if(i < GetCount()) {
+					if(w.IsPainting(rect)) {
+						Rect r = rect;
+						r.right--;
+						dword style = PaintItem(w, i, r);
+						w.DrawRect(rect.right - 1, rect.top, 1, rect.Height(),
+						           x + cx < sz.cx ? SColorDisabled : SColorPaper);
+						if(i == cursor && selcount != 1 && multi && item[i].canselect)
+							DrawFocus(w, r, style & Display::SELECT ? SColorPaper() : SColorText());
+					}
+				}
+				else
+					w.DrawRect(rect, SColorPaper);
+				if(i == dropitem && insert)
+					DrawHorzDrop(w, x, y, cx);
+				if(i + 1 == dropitem && insert && y + 2 * cy > sz.cy)
+					DrawHorzDrop(w, x, y + cy - 2, cx);
+				y += cy;
+				i++;
+			}
+			w.DrawRect(x, y, cx, sz.cy - y, SColorPaper);
+			x += cx;
+		}
+	}
+	if(HasCapture())
+		w.DrawRect(mpos - dx, 0, 1, sz.cy, Blend(SColorHighlight, SColorFace));
+	(mode == MODE_COLUMNS) ? 
+		scroller.Set(Point(sb, 0)) : 
+		scroller.Set(sb);
+}
+
+void ColumnList::PaintRows(Draw &w, Size &sz)
+{
+	int pos = sb % cy;
+	int y = -pos;
+	int i = GetSbPos(sz);
 	int coli = 0;
-	while(x < sz.cx) {
-		int cx = GetColumnCx(coli++);
-		int y = 0;
-		while(y + cy <= sz.cy) {
+	while(y < sz.cy-pos+cy) {
+		int x = 0;
+		while (x + cx <= sz.cx) {
 			Rect rect = RectC(x, y, cx, cy);
 			if(i < GetCount()) {
 				if(w.IsPainting(rect)) {
 					Rect r = rect;
-					r.right--;
 					dword style = PaintItem(w, i, r);
-					w.DrawRect(rect.right - 1, rect.top, 1, rect.Height(),
-					           x + cx < sz.cx ? SColorDisabled : SColorPaper);
+//					w.DrawRect(rect.right - 1, rect.top, 1, rect.Height(),
+//					           x + cx < sz.cx ? SColorDisabled : SColorPaper);
 					if(i == cursor && selcount != 1 && multi && item[i].canselect)
 						DrawFocus(w, r, style & Display::SELECT ? SColorPaper() : SColorText());
 				}
@@ -383,15 +458,12 @@ void ColumnList::Paint(Draw& w) {
 				DrawHorzDrop(w, x, y, cx);
 			if(i + 1 == dropitem && insert && y + 2 * cy > sz.cy)
 				DrawHorzDrop(w, x, y + cy - 2, cx);
-			y += cy;
+			x += cx;
 			i++;
 		}
 		w.DrawRect(x, y, cx, sz.cy - y, SColorPaper);
-		x += cx;
+		y += cy;
 	}
-	if(HasCapture())
-		w.DrawRect(mpos - dx, 0, 1, sz.cy, Blend(SColorHighlight, SColorFace));
-	scroller.Set(sb);
 }
 
 Image ColumnList::GetDragSample()
@@ -407,23 +479,77 @@ Image ColumnList::GetDragSample()
 	return Crop(iw, 0, 0, sz.cx, y);;
 }
 
-int  ColumnList::GetPageItems() const {
+int  ColumnList::GetPageItems() const 
+{
 	return ncl * GetColumnItems();
 }
 
-void ColumnList::SetSb() {
-	sb.SetTotal(GetCount());
-	sb.SetPage(GetPageItems());
+void ColumnList::SetSb() 
+{
+	switch (mode) {
+	case MODE_LIST:
+		sb.SetTotal(GetCount());
+		sb.SetPage(GetPageItems());
+		sb.SetLine(1);		
+		break;
+	case MODE_COLUMNS: {
+		int icnt = max(1, GetColumnItems());
+		int ccnt = GetCount()/icnt;
+		ccnt += (GetCount() % icnt) ? 1 : 0;	
+		sb.SetTotal(ccnt);
+		sb.SetPage(ncl);
+		sb.SetLine(1);		
+		break;
+		}
+	case MODE_ROWS:	{
+		int rcnt = GetCount()/ncl;
+		rcnt += (GetCount() % ncl) ? 1 : 0;
+		sb.SetTotal(rcnt*cy);
+		sb.SetPage((GetSize().cy/cy)*cy);	
+		sb.SetLine(cy);	
+		break;
+		}
+	}
 }
 
-void ColumnList::Layout() {
+void ColumnList::ScrollInto(int pos)
+{
+	switch(mode) {
+	case MODE_ROWS:
+		sb.ScrollInto((pos / ncl) * cy, max(0, sb.GetLine() - (GetSize().cy - sb.GetPage())));
+		return;
+	case MODE_COLUMNS:
+		sb.ScrollInto(pos / max(1, GetColumnItems()));
+		return;
+	case MODE_LIST:
+		sb.ScrollInto(pos);
+		return;
+	}
+}
+
+void ColumnList::Layout() 
+{
+	if (mode == MODE_ROWS)
+		ncl = max(GetSize().cx / cx, 1);
 	SetSb();
 }
 
-void ColumnList::Scroll() {
+void ColumnList::Scroll() 
+{
 	Size sz = GetSize();
-	sz.cy = sz.cy / cy * cy;
-	scroller.Scroll(*this, sz, sb, cy);
+	switch (mode) {
+	case MODE_LIST:
+		sz.cy = sz.cy / cy * cy;
+		scroller.Scroll(*this, sz, sb, cy);
+		break;		
+	case MODE_COLUMNS:
+		sz.cy = sz.cy / cy * cy;
+		scroller.Scroll(*this, sz, Point(sb, 0), Size(GetColumnCx(0), 0));
+		break;		
+	case MODE_ROWS:
+		scroller.Scroll(*this, sz, sb, 1);
+		break;
+	}
 	info.Cancel();
 }
 
@@ -445,7 +571,7 @@ void ColumnList::SetCursor0(int c, bool sel)
 		RefreshCursor();
 	cursor = c;
 	int q = sb;
-	sb.ScrollInto(cursor);
+	ScrollInto(cursor);
 	if(q != sb)
 		Refresh();
 	else
@@ -473,6 +599,19 @@ void ColumnList::SetCursor(int c)
 	SetCursor0(c, true);
 }
 
+int ColumnList::GetSbPos(const Size &sz) const
+{
+	switch (mode) {
+	case MODE_ROWS:
+		return (sb / cy)*ncl;
+	case MODE_COLUMNS:
+		return (cy ? sb * (sz.cy / cy) : 0);
+	case MODE_LIST:
+		return sb;
+	}
+	return sb;
+}
+
 void ColumnList::SetSbPos(int y)
 {
 	SetSb();
@@ -494,7 +633,7 @@ void ColumnList::KillCursor()
 void ColumnList::GotFocus()
 {
 	if(cursor < 0 && GetCount())
-		SetCursor(sb);
+		SetCursor(GetSbPos());
 	Refresh();
 	SyncInfo();
 }
@@ -507,6 +646,8 @@ void ColumnList::LostFocus()
 
 int ColumnList::RoundedCy()
 {
+	if (mode != MODE_LIST)
+	    return GetRect().GetHeight();
 	Rect r = GetRect();
 	Rect rr = r;
 	frame->FrameLayout(r);
@@ -572,6 +713,25 @@ void ColumnList::Sort(const ValueOrder& order)
 	SyncInfo();
 }
 
+Value ColumnList::GetData() const
+{
+	if (!multi)
+		return (cursor >= 0) ? Get(cursor) : Value();
+	for (int i = 0; i < item.GetCount(); i++)
+		if (item[i].sel)
+			return item[i].key;
+	return Value();
+}
+
+void ColumnList::SetData(const Value& key)
+{
+	int ii = Find(key);
+	if (ii >= 0) {
+		SelectOne(ii, true);
+		SetCursor(ii);
+	}
+}
+
 void ColumnList::Clear() {
 	CancelMode();
 	KillCursor();
@@ -585,12 +745,23 @@ void ColumnList::Clear() {
 
 void ColumnList::Insert(int ii, const Value& val, bool canselect)
 {
+	Insert(ii, val, val, canselect);
+}
+
+void ColumnList::Insert(int ii, const Value& val, const Display& display, bool canselect)
+{
+	Insert(ii, val, val, display, canselect);
+}
+
+void ColumnList::Insert(int ii, const Value& key, const Value& val, bool canselect)
+{
 	int c = -1;
 	if(cursor >= ii) {
 		c = cursor + 1;
 		KillCursor();
 	}
 	Item& m = item.Insert(ii);
+	m.key = key;
 	m.value = val;
 	m.sel = false;
 	m.canselect = canselect;
@@ -599,33 +770,58 @@ void ColumnList::Insert(int ii, const Value& val, bool canselect)
 	SyncInfo();
 	SetSb();
 	if(c >= 0)
-		SetCursor(c);
+		SetCursor(c);	
 }
 
-void ColumnList::Insert(int ii, const Value& val, const Display& display, bool canselect)
+void ColumnList::Insert(int ii, const Value& key, const Value& val, const Display& display, bool canselect)
 {
-	Insert(ii, val, canselect);
+	Insert(ii, key, val, canselect);
 	item[ii].display = &display;
 	SyncInfo();
 }
 
 void ColumnList::Set(int ii, const Value& val, bool canselect)
 {
+	Set(ii, val, val, canselect);
+}
+
+void ColumnList::Set(int ii, const Value& val, const Display& display, bool canselect)
+{
+	Set(ii, val, val, display, canselect);
+}
+
+void ColumnList::Set(int ii, const Value& key, const Value& val, bool canselect)
+{
 	Item& m = item[ii];
 	m.value = val;
+	m.key = key;
 	m.sel = false;
 	m.canselect = canselect;
 	m.display = NULL;
 	RefreshItem(ii);
 	SyncInfo();
-	SetSb();
+	SetSb();	
 }
 
-void ColumnList::Set(int ii, const Value& val, const Display& display, bool canselect)
+void ColumnList::Set(int ii, const Value& key, const Value& val, const Display& display, bool canselect)
 {
-	Set(ii, val, canselect);
+	Set(ii, key, val, canselect);
 	item[ii].display = &display;
-	SyncInfo();
+	SyncInfo();	
+}
+
+void ColumnList::Set(const Value &key, const Value& val, const Display& display, bool canselect)
+{
+	int ii = Find(key);
+	if (ii >= 0)
+		Set(ii, key, val, display, canselect);		
+}
+
+void ColumnList::Set(const Value &key, const Value& val, bool canselect)
+{
+	int ii = Find(key);
+	if (ii >= 0)
+		Set(ii, key, val, canselect);			
 }
 
 void ColumnList::Remove(int ii)
@@ -645,12 +841,22 @@ void ColumnList::Remove(int ii)
 
 void ColumnList::Add(const Value& val, bool canselect)
 {
-	Insert(item.GetCount(), val, canselect);
+	Insert(item.GetCount(), val, val, canselect);
 }
 
 void ColumnList::Add(const Value& val, const Display& display, bool canselect)
 {
-	Add(val, canselect);
+	Add(val, val, display, canselect);
+}
+
+void ColumnList::Add(const Value& key, const Value& val, bool canselect)
+{
+	Insert(item.GetCount(), key, val, canselect);
+}
+
+void ColumnList::Add(const Value& key, const Value& val, const Display& display, bool canselect)
+{
+	Add(key, val, canselect);
 	item.Top().display = &display;
 }
 
@@ -714,7 +920,7 @@ void ColumnList::DragAndDrop(Point p, PasteClip& d)
 
 void ColumnList::DragRepeat(Point p)
 {
-	sb = sb + GetDragScroll(this, p, 1).y;
+	sb = sb + ((mode == MODE_COLUMNS) ? GetDragScroll(this, p, 1).x : GetDragScroll(this, p, 1).y);
 }
 
 void ColumnList::DragEnter()
@@ -735,7 +941,15 @@ void ColumnList::RemoveSelection()
 			Remove(i); // Optimize!
 }
 
-void ColumnList::InsertDrop(int ii, const Vector<Value>& data, PasteClip& d, bool self)
+int ColumnList::Find(const Value &key) const
+{
+	for (int i = 0; i < item.GetCount(); i++)
+		if (item[i].key == key)
+			return i;
+	return -1;
+}
+
+void ColumnList::InsertDrop(int ii, const Vector<Value>& keys, const Vector<Value>& data, PasteClip& d, bool self)
 {
 	if(data.GetCount() == 0)
 		return;
@@ -754,6 +968,7 @@ void ColumnList::InsertDrop(int ii, const Vector<Value>& data, PasteClip& d, boo
 	for(int i = 0; i < data.GetCount(); i++) {
 		Item& m = item[ii + i];
 		m.value = data[i];
+		m.key = keys[i];
 		m.sel = false;
 		m.canselect = true;
 		m.display = NULL;
@@ -768,12 +983,20 @@ void ColumnList::InsertDrop(int ii, const Vector<Value>& data, PasteClip& d, boo
 			SelectOne(ii + i, true);
 }
 
+void ColumnList::InsertDrop(int ii, const Vector<Value>& data, PasteClip& d, bool self)
+{
+	InsertDrop(ii, data, data, d, self);
+}
+
 void ColumnList::InsertDrop(int ii, const ColumnList& src, PasteClip& d)
 {
+	Vector<Value> keys;
 	Vector<Value> data;
 	for(int i = 0; i < src.GetCount(); i++)
-		if(src.IsSel(i))
-			data.Add(src[i]);
+		if(src.IsSel(i)) {
+			data.Add(src.GetValue(i));
+			keys.Add(src[i]);
+		}
 	InsertDrop(ii, data, d, &src == this);
 }
 
@@ -782,7 +1005,7 @@ void ColumnList::InsertDrop(int ii, PasteClip& d)
 	InsertDrop(ii, GetInternal<ColumnList>(d), d);
 }
 
-void ColumnList::Serialize(Stream& s) {
+void ColumnList::SerializeSettings(Stream& s) {
 	int version = 0;
 	s / version;
 	s / ncl;
@@ -790,11 +1013,36 @@ void ColumnList::Serialize(Stream& s) {
 	SyncInfo();
 }
 
+void ColumnList::Serialize(Stream& s) {
+	int version = 1;
+	s / version / ncl;
+	if(version >= 1) {
+		int cnt;
+		s.Magic();
+		s / cnt;
+		if (s.IsLoading())
+			item.SetCount(cnt);
+		for (int i = 0; i < item.GetCount(); i++) {
+			Item &q = item[i];
+			s % q.key % q.value % q.canselect;
+			if (s.IsLoading()) {
+				q.display = NULL;
+				q.sel = false;
+			}
+		}
+		s.Magic();
+	}
+	Refresh();
+	SyncInfo();
+}
+
 ColumnList::ColumnList() {
 	clickkill = false;
 	ncl = 1;
+	cx = 50;
 	cy = Draw::GetStdFontCy();
 	cursor = -1;
+	ColumnMode();
 	AddFrame(sb);
 	sb.WhenScroll = THISBACK(Scroll);
 	sb.AutoHide();
