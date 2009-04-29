@@ -149,9 +149,9 @@ public:
 	DockableCtrl&   Dockable(Ctrl& ctrl, const char *title = 0)         { return Dockable(ctrl, (WString)title); }
 
 	template<class T>
-	DockableCtrl&   CreateDockable(WString title)						{ return Register(ctrls.Create<T>().Title(title)); }
+	T&   CreateDockable(WString title);
 	template<class T>
-	DockableCtrl&   CreateDockable(const char *title = 0)         		{ return CreateDockable<T>((WString)title); }
+	T&   CreateDockable(const char *title = 0)         					{ return CreateDockable<T>((WString)title); }
 
 	
 	void            DockLeft(DockableCtrl& dc, int pos = -1)            { Dock(DOCK_LEFT, dc, pos); }
@@ -387,5 +387,15 @@ private:
 	int     ListIndex() const;
 	void    DupePrompt(String type);
 };
+
+template <class T>
+T& DockWindow::CreateDockable(WString title)
+{
+	T &q = ctrls.Create<T>();
+	Register(q.Title(title));	
+	return q;
+}
+
+
 
 #endif
