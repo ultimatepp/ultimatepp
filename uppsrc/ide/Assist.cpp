@@ -40,14 +40,12 @@ AssistEditor::AssistEditor()
 	int cy = EditField::GetStdHeight();
 
 	int c2 = cy + 2;
-	scopepane.Add(browser.search_scope.HSizePos(0, 4 * cy + 2).TopPos(0, cy));
+	scopepane.Add(browser.scope.SizePos());
+	itempane.Add(browser.search.HSizePos(0, 5 * cy + 2).TopPos(0, cy));
 	for(int i = 0; i < 4; i++)
-		scopepane.Add(browser.rangebutton[i].RightPos((3 - i) * cy, cy).TopPos(0, cy));
-	scopepane.Add(browser.scope.HSizePos().VSizePos(c2, 0));
-	itempane.Add(browser.search_item.HSizePos(0, cy + 2).TopPos(0, cy));
+		itempane.Add(browser.rangebutton[i].RightPos((4 - i) * cy, cy).TopPos(0, cy));
 	itempane.Add(browser.sort.RightPos(0, cy).TopPos(0, cy));
-	itempane.Add(browser.item.HSizePos().VSizePos(c2, c2));
-	itempane.Add(browser.search.HSizePos().BottomPos(0, cy));
+	itempane.Add(browser.item.HSizePos().VSizePos(c2, 0));
 	scope_item.Vert(scopepane, itempane);
 	scope_item.SetPos(3000);
 	navigatorpane.Add(scope_item);
@@ -59,7 +57,7 @@ AssistEditor::AssistEditor()
 	browser.WhenClear = THISBACK(SyncCursor);
 	browser.NameStart();
 		
-	navigator = NAV_BROWSER;
+	navigator = true;
 
 	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
 	WhenAnnotationClick = THISBACK1(EditAnnotation, true);
@@ -556,11 +554,18 @@ bool AssistEditor::Key(dword key, int count)
 {
 	if(browser.Key(key, count))
 		return true;
-	if((key == K_ESCAPE || key == K_ENTER) && (browser.search.HasFocus() ||
-	   browser.search_item.HasFocus() || browser.search_scope.HasFocus())) {
-		SetFocus();
-		SyncCursor();
-		return true;
+	if(browser.search.HasFocus()) {
+		if(key == K_ENTER) {
+			browser.search.Clear();
+			GotoBrowserScope();
+			return true;
+		}
+		if(key == K_ESCAPE) {
+			browser.search.Clear();
+			SetFocus();
+			SyncCursor();
+			return true;
+		}
 	}
 	
 	if(popup.IsOpen()) {

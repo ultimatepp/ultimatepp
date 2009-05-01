@@ -2,7 +2,7 @@
 
 void AssistEditor::SyncNavigator()
 {
-	if(navigator == NAV_BROWSER) {
+	if(IsNavigator()) {
 		browser.Load();
 		SyncCursor();
 	}
@@ -14,7 +14,7 @@ void AssistEditor::SyncCursor()
 	String k = GetKeyDesc(IdeKeys::AK_SEARCHCODE().key[0]) + ") ";
 	browser.search.NullText(String("Find (") + k);
 	browser.clear.Tip(String("Clear (") + k);
-	if(navigator == NAV_BROWSER) {
+	if(IsNavigator()) {
 		int ii = GetCursorLine();
 		String coderef;
 		while(ii >= 0 && IsNull(coderef))
@@ -59,20 +59,29 @@ void AssistEditor::BrowserGoto()
 
 void AssistEditor::GotoBrowserScope()
 {
-	browser.item.GoBegin();
-	BrowserGoto();
+	if(browser.scope.IsCursor()) {
+		Value x = browser.scope.Get(2);
+		if(IsNumber(x)) {
+			int file = (int)x;
+			theide->EditFile(GetCppFile(file));
+			return;
+		}
+	}
+	if(browser.item.GetCount()) {
+		browser.item.GoBegin();
+		BrowserGoto();
+	}
 }
 
-void AssistEditor::Navigator(int nav)
+void AssistEditor::Navigator(bool nav)
 {
 	navigator = nav;
 	navigatorframe.Show(navigator);
-	if(navigator == NAV_BROWSER) {
+	if(IsNavigator()) {
 		scope_item.Show();
 		browser.ClearSearch();
-	}
-	if(navigator)
 		SetFocus();
+	}
 	SyncNavigator();
 	SyncCursor();
 }
@@ -88,15 +97,15 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	Navigator(navigator);
 }
 
-void Ide::ToggleNavigator(int nav)
+void Ide::ToggleNavigator()
 {
-	editor.Navigator(editor.GetNavigator() == nav ? 0 : nav);
+	editor.Navigator(!editor.navigator);
 }
 
 void Ide::SearchCode()
 {
-	if(editor.navigator != AssistEditor::NAV_BROWSER)
-		editor.Navigator(AssistEditor::NAV_BROWSER);
+	if(!editor.navigator)
+		editor.Navigator(true);
 	if(editor.browser.search.HasFocus() && editor.browser.IsSearch())
 		editor.browser.ClearSearch();
 	else

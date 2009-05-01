@@ -377,11 +377,8 @@ struct AssistEditor : CodeEditor {
 	void           BrowserGoto();
 	void           BrowserGotoNF();
 
-	enum { NAV_NONE = 0, NAV_BROWSER = 2 };
-
-	int            GetNavigator() const                          { return navigator; }
-	bool           IsBrowser() const                             { return navigator == NAV_BROWSER; }
-	void           Navigator(int navigator);
+	bool           IsNavigator() const                             { return navigator; }
+	void           Navigator(bool navigator);
 
 	bool           GetAnnotationRefs(Vector<String>& tl, String& coderef, int q = -1);
 	bool           GetAnnotationRef(String& t, String& coderef, int q = -1);
@@ -866,7 +863,7 @@ public:
 		void  OpenTopic(const String& topic, const String& createafter, bool before);
 		void  OpenTopic(const String& topic);
 		void  OpenATopic();
-		void  ToggleNavigator(int nav);
+		void  ToggleNavigator();
 		void  SearchCode();
 		void  Goto();
 		void  GotoGlobal();
