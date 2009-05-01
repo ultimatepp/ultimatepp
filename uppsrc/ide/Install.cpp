@@ -322,16 +322,12 @@ bool Install()
 	String supp;
 	String Folder = DefaultInstallFolder();
 	ChkSupp("/usr/local/share/" + Folder, supp);
-	ChkSupp("/usr/X11R6/share/" + Folder, supp);
 	ChkSupp("/usr/local/lib/" + Folder, supp);
-	ChkSupp("/usr/local/bin/" + Folder, supp);
 	ChkSupp("/usr/share/" + Folder, supp);
 	ChkSupp("/usr/lib/" + Folder, supp);
-	ChkSupp("/usr/bin/" + Folder, supp);
-	if(IsNull(supp)) {
-		Exclamation("'" + Folder + "' directory not found.");
+	if(IsNull(supp))
 		return true;
-	}
+
 	Progress pi;
 	if(dlg.Run() != IDOK) return true;
 	String upp(dlg.path);
