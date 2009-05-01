@@ -42,10 +42,13 @@ void WorkspaceWork::ScanWorkspace() {
 	filelist.Clear();
 	package.Clear();
 	Vector<String> pks;
-	for(int i = 0; i < wspc.package.GetCount(); i++)
+	Vector<bool> speed;
+	for(int i = 0; i < wspc.package.GetCount(); i++) {
 		pks.Add(wspc.package.GetKey(i));
+		speed.Add(wspc.GetPackage(i).optimize_speed);
+	}
 	if(sort)
-		Sort(pks.Begin() + 1, pks.End(), StdLess<String>());
+		IndexSort(pks.Begin() + 1, pks.End(), speed.Begin() + 1, StdLess<String>());
 	for(int i = 0; i < wspc.package.GetCount(); i++) {
 		String pk = pks[i];
 		Font fnt = ListFont();
@@ -57,7 +60,7 @@ void WorkspaceWork::ScanWorkspace() {
 		if(pi.italic)
 			fnt.Italic();
 		package.Add(pk,
-		            wspc.GetPackage(i).optimize_speed ? IdeCommonImg::FastPackage() : IdeImg::Package(),
+		            speed[i] ? IdeCommonImg::FastPackage() : IdeImg::Package(),
 		            fnt, Nvl(pi.ink, SColorText()), false, 0, Null, SColorMark);
 	}
 	if(!organizer) {

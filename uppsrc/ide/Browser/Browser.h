@@ -117,7 +117,6 @@ struct CodeBrowser {
 	ArrayCtrl              scope;
 	ArrayCtrl              item;
 	EditString             search_scope;
-	EditString             search_item;
 	EditString             search;
 	FrameRight<Button>     clear;
 	int                    range;

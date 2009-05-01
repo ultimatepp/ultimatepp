@@ -78,7 +78,7 @@ private:
 
 struct NullFrameClass : public CtrlFrame {
 	virtual void FrameLayout(Rect& r);
-	virtual void FramePaint(Draw& draw, const Rect& r);
+	virtual void FramePaint(Draw& w, const Rect& r);
 	virtual void FrameAddSize(Size& sz);
 };
 
@@ -873,7 +873,7 @@ public:
 	virtual void   ClearModify();
 	virtual bool   IsModified() const;
 
-	virtual void   Paint(Draw& draw);
+	virtual void   Paint(Draw& w);
 	virtual int    OverPaint() const;
 
 	virtual void   CancelMode();

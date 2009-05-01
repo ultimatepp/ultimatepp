@@ -107,8 +107,6 @@ public:
 	Callback2<int, PasteClip&>   WhenDropInsert;
 	Callback1<PasteClip&>        WhenDrop;
 
-
-
 	// depracated - use WhenSel
 	Callback         WhenSelection;
 	Callback         WhenEnterItem;
