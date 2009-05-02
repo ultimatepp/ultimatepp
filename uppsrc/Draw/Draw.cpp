@@ -8,6 +8,11 @@ NAMESPACE_UPP
 
 static StaticMutex sDrawLock;
 
+INITBLOCK {
+	RichValue<Painting>::Register();
+	RichValue<Drawing>::Register();
+}
+
 Size Draw::GetNativeDpi() const
 {
 	return nativeDpi;

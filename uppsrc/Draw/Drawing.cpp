@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  // LOG(x)
+#define LLOG(x)  // DLOG(x)
 
 #ifdef COMPILER_MSC
 #pragma warning(disable: 4700)
@@ -682,6 +682,16 @@ void Drawing::Append(Drawing& dw)
 	if(IsNull(size))
 		size = dw.size;
 	data << dw.data;
+	for(int i = 0; i < dw.val.GetCount(); i++)
+		val.Add(dw.val[i]);
+}
+
+Drawing::Drawing(const Value& src)
+{
+	if(IsNull(src))
+		size = Null;
+	else
+		*this = RichValue<Drawing>::Extract(src);
 }
 
 void Drawing::Serialize(Stream& s)

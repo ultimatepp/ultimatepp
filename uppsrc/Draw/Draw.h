@@ -87,7 +87,6 @@ enum {
 
 class Drawing;
 class Draw;
-
 class Painting;
 
 #ifdef PLATFORM_WIN32
@@ -475,7 +474,7 @@ void SColorDkShadow_Write(Color c);
 inline Color InvertColor() { return Color(255, 0); }
 inline Color DefaultInk() { return Black(); } //TODO!
 
-class Painting : AssignValueTypeNo<Painting, 48, Moveable<Painting> >{
+class Painting : AssignValueTypeNo<Painting, 48, Moveable<Painting> > {
 	String     cmd;
 	ValueArray data;
 	Sizef      size;
@@ -488,7 +487,7 @@ public:
 
 	void    Clear()                             { size = Null; data.Clear(); cmd.Clear(); }
 	void    Serialize(Stream& s)                { s % cmd % data % size; }
-	bool    IsNullInstance() const              { return data.IsEmpty(); }
+	bool    IsNullInstance() const              { return cmd.IsEmpty(); }
 	bool    operator==(const Painting& b) const { return cmd == b.cmd && data == b.data && size == b.size; }
 	unsigned GetHashValue() const               { return CombineHash(cmd, data); }
 	String  ToString() const                    { return "painting " + AsString(size); }
@@ -971,7 +970,7 @@ public:
 class WinMetaFile;
 #endif
 
-class Drawing : Moveable<Drawing> {
+class Drawing : AssignValueTypeNo<Drawing, 49, Moveable<Drawing> > {
 	Size       size;
 	String     data;
 	ValueArray val;
@@ -994,10 +993,13 @@ public:
 
 	void Serialize(Stream& s);
 
-	bool IsNullInstance() const    { return data.IsEmpty(); }
+	bool    IsNullInstance() const             { return data.IsEmpty(); }
+	bool    operator==(const Drawing& b) const { return val == b.val && data == b.data && size == b.size; }
+	String  ToString() const                   { return "drawing " + AsString(size); }
+	unsigned GetHashValue() const              { return CombineHash(data, val); }
 
-	operator Value() const         { return RawValue<Drawing>(*this); }
-	Drawing(const Value& src)      { if(!IsNull(src)) *this = RawValue<Drawing>::Extract(src); }
+	operator Value() const         { return RichValue<Drawing>(*this); }
+	Drawing(const Value& src);
 
 	Drawing()                      { size = Null; }
 	Drawing(const Nuller&)         { size = Null; }
