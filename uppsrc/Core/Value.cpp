@@ -137,6 +137,8 @@ static void sRegisterStd()
 		RichValue<WString>::Register();
 		RichValue<Date>::Register();
 		RichValue<Time>::Register();
+		RichValue<ValueArray>::Register();
+		RichValue<ValueMap>::Register();		
 	};
 }
 
@@ -352,8 +354,10 @@ ValueArray::ValueArray(const Value& src)
 }
 
 void ValueArray::Serialize(Stream& s) {
-	if(s.IsStoring())
-		Clone();
+	if(s.IsLoading()) {
+		data->Release();
+		Create();
+	}
 	data->Serialize(s);
 }
 
@@ -404,10 +408,6 @@ const Value& ValueArray::Get(int i) const {
 template<>
 String AsString(const ValueArray& v) {
 	return sAsString(v.Get());
-}
-
-INITBLOCK {
-	RichValue<ValueArray>::Register();
 }
 
 bool ValueMap::Data::IsNull() const {
@@ -544,10 +544,6 @@ Value ValueMap::operator[](const Value& key) const
 {
 	int q = data->key.Find(key);
 	return q >= 0 ? data->value[q] : ErrorValue();
-}
-
-INITBLOCK {
-	RichValue<Color>::Register();
 }
 
 // ----------------------------------

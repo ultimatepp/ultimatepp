@@ -236,6 +236,10 @@ void Image::Serialize(Stream& s)
 		s.Put(~*this, len * sizeof(RGBA));
 }
 
+INITBLOCK {
+	RichValue<Image>::Register();
+}
+
 bool Image::operator==(const Image& img) const
 {
 	if(GetLength() != img.GetLength())

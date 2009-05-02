@@ -4,6 +4,10 @@ NAMESPACE_UPP
 
 //#BLITZ_APPROVE
 
+INITBLOCK {
+	RichValue<Uuid>::Register();
+}
+
 void Uuid::Serialize(Stream& s) {
 	int version = 0;
 	s / version % a % b %c % d;
