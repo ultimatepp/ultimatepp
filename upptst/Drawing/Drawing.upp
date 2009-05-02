@@ -1,0 +1,12 @@
+description "Using Drawing to store and paint pictures\377";
+
+uses
+	CtrlLib,
+	Painter;
+
+file
+	Drawing.cpp;
+
+mainconfig
+	"" = "GUI";
+
