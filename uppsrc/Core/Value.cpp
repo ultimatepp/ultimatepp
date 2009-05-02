@@ -165,6 +165,7 @@ void Value::Serialize(Stream& s) {
 	}
 	else {
 		type = GetType();
+		ASSERT_(!type || Typemap().Find(type) >= 0, "Missing RichValueType<" + AsString(type) + ">::Register");
 		s / type;
 		ptr->Serialize(s);
 	}
