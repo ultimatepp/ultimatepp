@@ -587,8 +587,6 @@ GUI_APP_MAIN
 	);
 	BeepInformation();
 
-	return;
-
 	Vector<String> upload;
 	{
 		FindFile ff(AppendFileName(targetdir, "*.*"));
