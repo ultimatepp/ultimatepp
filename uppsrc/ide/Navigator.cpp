@@ -108,8 +108,16 @@ void Ide::SearchCode()
 		editor.Navigator(true);
 	if(editor.browser.search.HasFocus() && editor.browser.IsSearch())
 		editor.browser.ClearSearch();
-	else
+	else {
+		WString id = editor.GetI();
+		if(!IsNull(id)) {
+			editor.browser.search <<= id;
+			editor.browser.search.SetSelection();
+			editor.browser.Load();
+			editor.browser.scope.GoBegin();
+		}
 		editor.browser.search.SetFocus();
+	}
 }
 
 void Ide::SwitchHeader() {

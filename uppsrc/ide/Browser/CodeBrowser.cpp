@@ -217,16 +217,10 @@ const CppItemInfo& CodeBrowser::GetItemInfo() const
 	return GetItemInfo(item.GetCursor());
 }
 
-int SearchScopeFilter(int c)
-{
-	c = ToUpper(c);
-	return IsAlNum(c) || c == '/' || c == '.' || c == '<' || c == '>' ? c : 0;
-}
-
 int SearchItemFilter(int c)
 {
 	c = ToUpper(c);
-	return IsAlNum(c) ? c : 0;
+	return IsAlNum(c) || c == '/' || c == '.' || c == '<' || c == '>' || c == '_' ? c : 0;
 }
 
 void CodeBrowser::Goto(const String& coderef, const String& rfile)
@@ -320,7 +314,7 @@ CodeBrowser::CodeBrowser()
 	scope.WhenSel = THISBACK(LoadScope);
 	scope.NoHeader().NoGrid();
 	search_scope <<= THISBACK(Load);
-	search_scope.SetFilter(SearchScopeFilter);
+	search_scope.SetFilter(SearchItemFilter);
 	search_scope.NullText("Search type or header ");
 	item.AddKey();
 	item.AddColumn("Item").SetDisplay(display).Margin(2);
