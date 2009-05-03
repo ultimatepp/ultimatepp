@@ -178,12 +178,24 @@ int  CharFilterDate(int c)
 	if(s_date_letters && IsLetter(c))
 		return s_date_upper ? ToUpper(c) : c;
 	;
-	int a = 0;
-	for(const char *s = s_date_seps; *s; s++) {
+	int r = 0;
+	const char *s = s_date_seps;
+	while(*s) {
 		if(c == (byte)*s)
-			return a ? a : *s;
-		if(s[1] == '\a')
-			a = *s++;
+			return c;
+		if(*s == '\r') {
+			s++;
+			while(*s != '\r') {
+				if((byte)*s == c)
+					return r;
+				if(*s == '\0')
+					return 0;
+				s++;
+			}
+			s++;
+		}
+		else
+			r = *s++;
 	}
 	return 0;
 }
