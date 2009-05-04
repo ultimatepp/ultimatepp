@@ -1,4 +1,4 @@
-#include "ide.h" 
+#include "ide.h"
 
 struct OptionDisplay : Display {
 	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink,

@@ -291,7 +291,7 @@ void Ide::Setup(Bar& menu) {
 void Ide::ProjectSvn(Bar& menu)
 {
 	Vector<String> w = SvnDirs();
-	String p = GetFileFolder(editfile);
+	String p = GetFileFolder(PackagePath(actualpackage));
 	if(IsSvnDir(p))
 		w.Insert(0, p);
 	for(int i = 0; i < w.GetCount(); i++)

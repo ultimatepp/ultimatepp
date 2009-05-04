@@ -96,15 +96,16 @@ void CodeBrowser::Load()
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		String pn = wspc[i];
 		const Package& p = wspc.GetPackage(i);
-		for(int j = 0; j < p.GetCount(); j++) {
-			String s = GetFileText(AppendFileName(pn, p[j]));
-			if(fs.Find(s) < 0 && (IsNull(find) || MatchCib(s, find)) && MatchCib(s, match)) {
-				int f = GetCppFileIndex(SourcePath(pn, p[j]));
-				txt.Add(s);
-				ndx.Add(f);
-				fs.Add(s);
+		for(int j = 0; j < p.GetCount(); j++)
+			if(!p[j].separator) {
+				String s = GetFileText(AppendFileName(pn, p[j]));
+				if(fs.Find(s) < 0 && (IsNull(find) || MatchCib(s, find)) && MatchCib(s, match)) {
+					int f = GetCppFileIndex(SourcePath(pn, p[j]));
+					txt.Add(s);
+					ndx.Add(f);
+					fs.Add(s);
+				}
 			}
-		}
 	}
 	IndexSort(txt, ndx, ScopeLess());
 	Value key = scope.GetKey();
