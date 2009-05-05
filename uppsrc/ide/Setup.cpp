@@ -371,7 +371,7 @@ void Ide::SetupFormat() {
 	edt.tabsize <<= rtvr <<=
 		hlt.hlstyle.WhenCtrlsAction = ed.WhenAction = tf.WhenAction =
 		con.WhenAction = f1.WhenAction = f2.WhenAction = dlg.Breaker(222);
-	edt.showtimeafter <<= (Date)FileGetTime(ConfigFile("version"));
+	edt.showtimeafter <<= Nvl((Date)FileGetTime(ConfigFile("version")), GetSysDate() - 1);
 	edt.today <<= dlg.Breaker(444);
 	hlt.hl_restore <<= dlg.Breaker(333);
 	ide.chstyle.Add(0, "Host platform");

@@ -214,9 +214,9 @@ void SetCurrentLanguage(int lang)
 		sCurrentLangMap().Clear();
 		sCurrentSLangMap().Clear();
 	}
-	SetDateFormat(t_("date-format"));
-	SetDateScan(t_("date-scan"));
-	SetDateFilter(t_("date-filter"));
+	SetDateFormat(t_("date-format\a%2:02d/%3:02d/%1:4d"));
+	SetDateScan(t_("date-scan\amdy"));
+	SetDateFilter(t_("date-filter\aA/\a .-"));
 }
 
 const char *t_GetLngString_(const char *id)
