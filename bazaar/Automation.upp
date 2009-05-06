@@ -1,0 +1,15 @@
+description "Ole Automation";
+
+uses
+	Core;
+
+library(WIN32) Oleaut32;
+
+file
+	Automation.h,
+	AutomationBase.h,
+	Automation.cpp;
+
+mainconfig
+	"" = "MT";
+
