@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	Draw.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

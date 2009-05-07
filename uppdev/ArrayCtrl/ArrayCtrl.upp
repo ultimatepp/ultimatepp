@@ -1,3 +1,5 @@
+description "\377B0,0,255";
+
 uses
 	CtrlLib,
 	Crypto;

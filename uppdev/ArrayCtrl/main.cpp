@@ -25,7 +25,7 @@ struct App : TopWindow {
 
 	void DnDInsertB(int line, PasteClip& d)
 	{
-		if(AcceptInternal<ArrayCtrl>(d, "array"))
+		if(AcceptInternal()<ArrayCtrl>(d, "array"))
 			b.InsertDrop(line, d);
 	}
 

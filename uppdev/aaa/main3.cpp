@@ -51,5 +51,6 @@ GUI_APP_MAIN
 	s.Cat(s.GetIter())
 	s.Cat()
 	s.EndsWith(s.GetHashValue())
+	Escape(a, <, >, )()
 }
 

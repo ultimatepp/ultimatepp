@@ -12,6 +12,7 @@ void SecondThread()
 
 GUI_APP_MAIN
 {
+	String x = "asdfasdfkjasdfkl alsjd fl hdasflk hdasfkl;jahs dlfkjh alsfhj la flf";
 	Thread d;
 	d.Run(callback(SecondThread));
 	PromptOK("test");
