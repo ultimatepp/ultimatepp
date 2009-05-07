@@ -1,0 +1,12 @@
+uses
+	Core,
+	SysInfo;
+
+file
+	main.cpp,
+	src.tpp,
+	srcimp.tpp;
+
+mainconfig
+	"" = "";
+
