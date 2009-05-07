@@ -950,10 +950,8 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 	clip.Add(r);
 	dw = top->GetWindow();
 	gc = XCreateGC(Xdisplay, dw, 0, 0);
-#ifdef PLATFORM_XFT
 	xftdraw = XftDrawCreate(Xdisplay, (Drawable) dw,
 	                        DefaultVisual(Xdisplay, Xscreenno), Xcolormap);
-#endif
 	Init(clip, r.TopLeft());
 }
 
