@@ -1491,7 +1491,7 @@ public:
 	~Modality()      { End(); }
 };
 
-class ViewDraw : public Draw {
+class ViewDraw : public SystemDraw {
 public:
 	ViewDraw(Ctrl *ctrl);
 	~ViewDraw();
