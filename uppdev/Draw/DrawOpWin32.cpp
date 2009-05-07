@@ -7,7 +7,7 @@ NAMESPACE_UPP
 #define LLOG(x)      // LOG(x)
 #define LTIMING(x)   // RTIMING(x)
 
-void Draw::BeginOp()
+void SystemDraw::BeginOp()
 {
 	LTIMING("Begin");
 	DrawLock __;
@@ -23,7 +23,7 @@ void Draw::BeginOp()
 	}
 }
 
-void Draw::OffsetOp(Point p)
+void SystemDraw::OffsetOp(Point p)
 {
 	DrawLock __;
 	Begin();
@@ -32,7 +32,7 @@ void Draw::OffsetOp(Point p)
 	SetOrg();
 }
 
-bool Draw::ClipOp(const Rect& r)
+bool SystemDraw::ClipOp(const Rect& r)
 {
 	DrawLock __;
 	Begin();
@@ -40,7 +40,7 @@ bool Draw::ClipOp(const Rect& r)
 	return IntersectClip(r);
 }
 
-bool Draw::ClipoffOp(const Rect& r)
+bool SystemDraw::ClipoffOp(const Rect& r)
 {
 	DrawLock __;
 	Begin();
@@ -53,7 +53,7 @@ bool Draw::ClipoffOp(const Rect& r)
 	return q;
 }
 
-void Draw::EndOp()
+void SystemDraw::EndOp()
 {
 	DrawLock __;
 	LTIMING("End");
@@ -67,7 +67,7 @@ void Draw::EndOp()
 	cloff.Drop();
 }
 
-bool Draw::ExcludeClipOp(const Rect& r)
+bool SystemDraw::ExcludeClipOp(const Rect& r)
 {
 	DrawLock __;
 #ifdef PLATFORM_WINCE
@@ -83,7 +83,7 @@ bool Draw::ExcludeClipOp(const Rect& r)
 	return q == SIMPLEREGION || q == COMPLEXREGION;
 }
 
-bool Draw::IntersectClipOp(const Rect& r)
+bool SystemDraw::IntersectClipOp(const Rect& r)
 {
 	DrawLock __;
 #ifdef PLATFORM_WINCE
@@ -99,23 +99,15 @@ bool Draw::IntersectClipOp(const Rect& r)
 	return q == SIMPLEREGION || q == COMPLEXREGION;
 }
 
-Rect Draw::GetClipOp() const
-{
-	DrawLock __;
-	Rect r;
-	::GetClipBox(handle, r);
-	return r;
-}
-
-bool Draw::IsPaintingOp(const Rect& r) const
+bool SystemDraw::IsPaintingOp(const Rect& r) const
 {
 	DrawLock __;
 	LTIMING("IsPainting");
-	LLOG("Draw::IsPaintingOp r: " << r);
+	LLOG("SystemDraw::IsPaintingOp r: " << r);
 	return ::RectVisible(handle, r);
 }
 
-void Draw::DrawRectOp(int x, int y, int cx, int cy, Color color)
+void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
 	DrawLock __;
 	LTIMING("DrawRect");
@@ -130,7 +122,7 @@ void Draw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	}
 }
 
-void Draw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
+void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	DrawLock __;
 	if(IsNull(width) || IsNull(color)) return;
@@ -141,7 +133,7 @@ void Draw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 
 #ifndef PLATFORM_WINCE
 
-void Draw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
+void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
                             const int *counts, int count_count,
 	                        int width, Color color, Color doxor)
 {
@@ -165,7 +157,7 @@ void Draw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
 }
 
 static void DrawPolyPolyPolygonRaw(
-	Draw& draw, const Point *vertices, int vertex_count,
+	SystemDraw& draw, const Point *vertices, int vertex_count,
 	const int *subpolygon_counts, int subpolygon_count_count,
 	const int *disjunct_polygon_counts, int disjunct_polygon_count_count)
 {
@@ -195,7 +187,7 @@ static void DrawPolyPolyPolygonRaw(
 	}
 }
 
-void Draw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
+void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	const int *subpolygon_counts, int subpolygon_count_count,
 	const int *disjunct_polygon_counts, int disjunct_polygon_count_count,
 	Color color, int width, Color outline, uint64 pattern, Color doxor)
@@ -268,7 +260,7 @@ void Draw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	}
 }
 
-void Draw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
+void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 {
 	DrawLock __;
 	SetDrawPen(width, color);
@@ -277,7 +269,7 @@ void Draw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color co
 
 #endif
 
-void Draw::DrawEllipseOp(const Rect& r, Color color, int width, Color pencolor)
+void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int width, Color pencolor)
 {
 	DrawLock __;
 	SetColor(color);
@@ -285,7 +277,7 @@ void Draw::DrawEllipseOp(const Rect& r, Color color, int width, Color pencolor)
 	::Ellipse(GetHandle(), r.left, r.top, r.right, r.bottom);
 }
 
-void Draw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,
+void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,
                       int n, const int *dx) {
 	while(n > 30000) {
 		DrawTextOp(x, y, angle, text, font, ink, 30000, dx);

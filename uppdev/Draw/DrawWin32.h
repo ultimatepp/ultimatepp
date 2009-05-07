@@ -48,6 +48,10 @@ private:
 	dword style;
 	Size  pagePixels;
 	Size  nativeDpi;
+	bool  palette:1;
+	bool  color16:1;
+	bool  is_mono:1;
+	int   native;
 
 	SystemDraw();
 
@@ -87,19 +91,23 @@ private:
 	void   Init();
 
 	void   LoadCaps();
-	void   SetDevice(const char *devicename);
 	void   SetPrinterMode();
 	void   Reset();
 	void   SetOrg();
 	friend HPALETTE GetQlibPalette();
 	void   DotsMode();
 
+	static void      InitColors();
+	
+	friend class BackDraw;
+	friend class ScreenDraw;
+	friend class PrintDraw;
+
 public:
+	static void SetAutoPalette(bool ap);
 	static bool AutoPalette();
 
 	static void Flush()                                 { GdiFlush(); }
-
-	bool         IsMetaFile() const                     { return device == -1; }
 
 	COLORREF GetColor(Color color) const;
 
@@ -187,19 +195,21 @@ public:
 };
 #endif
 
-class ScreenDraw : public Draw {
+class ScreenDraw : public SystemDraw {
 public:
 	ScreenDraw(bool ic = false);
 	~ScreenDraw();
 };
 
 #ifndef PLATFORM_WINCE
-class PrintDraw : public Draw {
+class PrintDraw : public SystemDraw {
 public:
 	virtual void StartPage();
 	virtual void EndPage();
 
 private:
+	bool aborted;
+	
 	void  InitPrinter();
 public:
 	PrintDraw(HDC hdc, const char *jobname);
