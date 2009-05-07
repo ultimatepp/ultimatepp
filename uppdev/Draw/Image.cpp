@@ -206,7 +206,7 @@ int Image::GetKind() const
 	return data ? data->GetKind() : IMAGE_EMPTY;
 }
 
-void Image::PaintImage(Draw& w, int x, int y, const Rect& src, Color c) const
+void Image::PaintImage(SystemDraw& w, int x, int y, const Rect& src, Color c) const
 {
 	if(data)
 		data->Paint(w, x, y, src, c);

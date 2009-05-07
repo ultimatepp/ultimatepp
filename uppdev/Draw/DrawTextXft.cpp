@@ -1,5 +1,7 @@
 #include "Draw.h"
 
+#ifdef PLATFORM_X11
+
 NAMESPACE_UPP
 
 #define LLOG(x)       //LOG(x)
@@ -370,3 +372,5 @@ void Draw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
 }
 
 END_UPP_NAMESPACE
+
+#endif

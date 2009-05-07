@@ -196,8 +196,7 @@ FontInfo& FontInfo::operator=(const FontInfo& f)
 
 bool FontInfo::IsEqual(byte _charset, Font f, int angle, int device) const
 {
-	return ptr && ptr->font == f && ptr->angle == angle && ptr->device == device &&
-	       charset == _charset;
+	return ptr && ptr->font == f && ptr->angle == angle && charset == _charset;
 }
 
 FontInfo::CharMetrics FontInfo::GetCM(int c) const

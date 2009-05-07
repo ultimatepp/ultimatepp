@@ -133,9 +133,4 @@ Size GetTextSize(const String& text, Font font)
 	return GetTextSize(text, font, text.GetLength());
 }
 
-Font Draw::GetStdFont()
-{
-	return AStdFont;
-}
-
 END_UPP_NAMESPACE

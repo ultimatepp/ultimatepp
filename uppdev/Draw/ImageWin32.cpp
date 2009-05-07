@@ -88,7 +88,7 @@ void SetSurface(HDC dc, int x, int y, int cx, int cy, const RGBA *pixels)
 	                    bi, DIB_RGB_COLORS);
 }
 
-void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels)
+void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 {
 	SetSurface(w.GetHandle(), x, y, cx, cy, pixels);
 }
@@ -100,7 +100,7 @@ class DrawSurface : NoCopy {
 	HDC          dc, dcMem;
 	HBITMAP      hbmp, hbmpOld;
 
-	void  Init(Draw& w, int x, int y, int cx, int cy);
+	void  Init(SystemDraw& w, int x, int y, int cx, int cy);
 	RGBA* Line(int i) const { ASSERT(i >= 0 && i < size.cy); return (RGBA *)pixels + size.cx * (size.cy - i - 1); }
 
 public:
@@ -110,12 +110,12 @@ public:
 	const RGBA *operator[](int i) const { return Line(i); }
 	int         GetLineDelta() const    { return -size.cx; }
 
-	DrawSurface(Draw& w, const Rect& r);
-	DrawSurface(Draw& w, int x, int y, int cx, int cy);
+	DrawSurface(SystemDraw& w, const Rect& r);
+	DrawSurface(SystemDraw& w, int x, int y, int cx, int cy);
 	~DrawSurface();
 };
 
-void DrawSurface::Init(Draw& w, int _x, int _y, int cx, int cy)
+void DrawSurface::Init(SystemDraw& w, int _x, int _y, int cx, int cy)
 {
 	DrawLock __;
 	dc = w.GetHandle();
@@ -129,12 +129,12 @@ void DrawSurface::Init(Draw& w, int _x, int _y, int cx, int cy)
 	::BitBlt(dcMem, 0, 0, cx, cy, dc, x, y, SRCCOPY);
 }
 
-DrawSurface::DrawSurface(Draw& w, const Rect& r)
+DrawSurface::DrawSurface(SystemDraw& w, const Rect& r)
 {
 	Init(w, r.left, r.top, r.Width(), r.Height());
 }
 
-DrawSurface::DrawSurface(Draw& w, int x, int y, int cx, int cy)
+DrawSurface::DrawSurface(SystemDraw& w, int x, int y, int cx, int cy)
 {
 	Init(w, x, y, cx, cy);
 }
@@ -215,7 +215,7 @@ void Image::Data::CreateHBMP(HDC dc, const RGBA *data)
 	ResCount++;
 }
 
-void Image::Data::Paint(Draw& w, int x, int y, const Rect& src, Color c)
+void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
 	DrawLock __;
 	ASSERT(!paintonly || IsNull(c));
@@ -238,8 +238,7 @@ void Image::Data::Paint(Draw& w, int x, int y, const Rect& src, Color c)
 		w.DrawRect(x, y, sz.cx, sz.cy, c);
 		return;
 	}
-	if(GetKind() == IMAGE_OPAQUE && paintcount == 0 && sr == Rect(sz) && !w.IsMetaFile()
-	   && IsWinNT() && !w.IsPrinter()) {
+	if(GetKind() == IMAGE_OPAQUE && paintcount == 0 && sr == Rect(sz) && IsWinNT() && w.IsGui()) {
 		LTIMING("Image Opaque direct set");
 		SetSurface(w, x, y, sz.cx, sz.cy, buffer);
 		paintcount++;

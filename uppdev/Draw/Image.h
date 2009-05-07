@@ -153,7 +153,7 @@ private:
 		void        SysInit();
 		void        SysRelease();
 		int         GetKind();
-		void        Paint(Draw& w, int x, int y, const Rect& src, Color c);
+		void        Paint(SystemDraw& w, int x, int y, const Rect& src, Color c);
 		void        PaintOnlyShrink();
 
 		Data(ImageBuffer& b);
@@ -172,7 +172,7 @@ private:
 
 	friend class Draw;
 
-	void PaintImage(Draw& w, int x, int y, const Rect& src, Color c) const;
+	void PaintImage(SystemDraw& w, int x, int y, const Rect& src, Color c) const;
 
 	friend void SetPaintOnly___(Image& m);
 	friend void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);

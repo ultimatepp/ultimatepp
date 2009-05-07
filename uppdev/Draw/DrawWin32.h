@@ -45,15 +45,12 @@ public:
 	virtual int  GetCloffLevel() const;
 
 private:
-	dword style;
 	Size  pagePixels;
 	Size  nativeDpi;
 	bool  palette:1;
 	bool  color16:1;
 	bool  is_mono:1;
 	int   native;
-
-	SystemDraw();
 
 	friend class  ImageDraw;
 	friend class  FontInfo;
@@ -63,7 +60,6 @@ private:
 
 	FontInfo  lastFont;
 
-	Point     actual_offset;
 	Point     actual_offset_bak;
 
 	struct Cloff : Moveable<Cloff> {
@@ -75,7 +71,6 @@ private:
 	Array<Cloff> cloff;
 	Rect         drawingclip;
 
-	HDC       handle;
 	COLORREF  lastTextColor;
 	Color     lastColor;
 	HBRUSH    orgBrush;
@@ -88,7 +83,6 @@ private:
 
 	void   Unselect0();
 	void   Cinit();
-	void   Init();
 
 	void   LoadCaps();
 	void   SetPrinterMode();
@@ -103,13 +97,24 @@ private:
 	friend class ScreenDraw;
 	friend class PrintDraw;
 
+protected:
+	dword style;
+	HDC   handle;
+	Point actual_offset;
+
+	SystemDraw();
+	void   Init();
+
 public:
 	static void SetAutoPalette(bool ap);
 	static bool AutoPalette();
+	bool PaletteMode()                                  { return palette; }
 
 	static void Flush()                                 { GdiFlush(); }
 
 	COLORREF GetColor(Color color) const;
+	
+	Point    GetOffset() const;
 
 #ifndef PLATFORM_WINCE
 	Point LPtoDP(Point p) const;
@@ -180,7 +185,7 @@ public:
 	HENHMETAFILE GetHEMF() const                  { ChkP(); return hemf; }
 };
 
-class WinMetaFileDraw : public Draw {
+class WinMetaFileDraw : public SystemDraw {
 	Size size;
 
 public:
