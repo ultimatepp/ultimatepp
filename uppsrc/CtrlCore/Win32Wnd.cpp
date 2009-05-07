@@ -1016,7 +1016,7 @@ void Ctrl::WndUpdate(const Rect& r)
 		HRGN hrgn = CreateRectRgn(0, 0, 0, 0);
 		if(GetUpdateRgn(hwnd, hrgn, FALSE) != NULLREGION) {
 			SelectClipRgn(hdc, hrgn);
-			Draw draw(hdc);
+			SystemDraw draw(hdc);
 			bool hcr = focusCtrl && focusCtrl->GetTopCtrl() == top &&
 			           caretRect.Intersects(r + top->GetRect().TopLeft());
 			if(hcr) ::HideCaret(hwnd);

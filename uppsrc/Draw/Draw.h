@@ -948,6 +948,8 @@ private:
 	void operator=(const Draw&);
 };
 
+typedef Draw SystemDraw;
+
 void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);
 
 class DataDrawer {

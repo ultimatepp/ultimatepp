@@ -84,7 +84,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			break;
 #ifndef PLATFORM_WINCE
 	case WM_QUERYNEWPALETTE:
-		if(!Draw::AutoPalette()) break;
+		if(!SystemDraw::AutoPalette()) break;
 		{
 			HDC hDC = GetDC(hwnd);
 			HPALETTE hOldPal = SelectPalette(hDC, GetQlibPalette(), FALSE);
@@ -104,10 +104,10 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			SyncScroll();
 			HDC dc = BeginPaint(hwnd, &ps);
 			fullrefresh = false;
-			Draw draw(dc);
+			SystemDraw draw(dc);
 #ifndef PLATFORM_WINCE
 			HPALETTE hOldPal;
-			if(draw.PaletteMode() && Draw::AutoPalette()) {
+			if(draw.PaletteMode() && SystemDraw::AutoPalette()) {
 				hOldPal = SelectPalette(dc, GetQlibPalette(), TRUE);
 				int n = RealizePalette(dc);
 				LLOG("In paint realized " << n << " colors");
@@ -121,7 +121,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			sPainting = Null;
 #endif
 #ifndef PLATFORM_WINCE
-			if(draw.PaletteMode() && Draw::AutoPalette())
+			if(draw.PaletteMode() && SystemDraw::AutoPalette())
 				SelectPalette(dc, hOldPal, TRUE);
 #endif
 			EndPaint(hwnd, &ps);
