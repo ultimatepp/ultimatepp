@@ -8,3 +8,4 @@ END_LAYOUT
 LAYOUT(sdgf, 384, 252)
 	ITEM(ArrayCtrl, dv___0, LeftPosZ(32, 150).TopPosZ(32, 100))
 END_LAYOUT
+
