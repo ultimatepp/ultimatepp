@@ -321,8 +321,6 @@ class FontInfo : Moveable<FontInfo> {
 	static void  FreeFonts();
 
 	typedef Link<Data, 2> FontLink;
-	
-	friend class Font;
 
 #ifdef PLATFORM_WIN32
 	static int CALLBACK AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dword type, LPARAM param);
@@ -331,6 +329,10 @@ class FontInfo : Moveable<FontInfo> {
 	static FontInfo     AcquireFontInfo0(Font font, HDC hdc, int angle);
 	static FontInfo     AcquireFontInfo(Font font, int angle);
 #endif
+
+	friend class Font;
+	friend class SystemDraw;
+	friend void StaticExitDraw_();
 
 public:
 	int        GetAscent() const                  { return ptr->ascent; }
@@ -551,7 +553,7 @@ private:
 public:
 	enum {
 		DOTS = 0x001,
-		SYSTEM = 0x002,
+		GUI = 0x002,
 		PRINTER = 0x004,
 		BACK = 0x008,
 		PALETTE = 0x020,
@@ -607,7 +609,7 @@ public:
 
 	bool  Dots() const                                  { return GetInfo() & DOTS; }
 	bool  Pixels() const                                { return !Dots(); }
-	bool  IsSystem() const                              { return GetInfo() & SYSTEM; }
+	bool  IsGui() const                                 { return GetInfo() & GUI; }
 	bool  IsPrinter() const                             { return GetInfo() & PRINTER; }
 	bool  IsNative() const                              { return GetInfo() & NATIVE; }
 	bool  IsBack() const                                { return GetInfo() & BACK; }
@@ -845,30 +847,35 @@ public:
 
 class NilDraw : public Draw {
 public:
+	virtual dword GetInfo() const;
+	virtual Size  GetPagePixels() const;
 	virtual void BeginOp();
+	virtual void EndOp();
+	virtual void OffsetOp(Point p);
 	virtual bool ClipOp(const Rect& r);
 	virtual bool ClipoffOp(const Rect& r);
-	virtual void DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color);
-	virtual void DrawDataOp(int x, int y, int cx, int cy, const String& data, const char *id);
-	virtual void DrawDrawingOp(const Rect& target, const Drawing& w);
-	virtual void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
-	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
-	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
-	virtual void DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor);
-	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor);
-	virtual void DrawRectOp(int x, int y, int cx, int cy, Color color);
-	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx);
-	virtual void EndOp();
-	virtual void EndPage();
 	virtual bool ExcludeClipOp(const Rect& r);
-	virtual Rect GetClipOp() const;
 	virtual bool IntersectClipOp(const Rect& r);
 	virtual bool IsPaintingOp(const Rect& r) const;
-	virtual void OffsetOp(Point p);
-	virtual void StartPage();
 
-	NilDraw();
-	~NilDraw();
+	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color);
+	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
+	virtual void DrawDataOp(int x, int y, int cx, int cy, const String& data, const char *id);
+	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
+	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count,
+	                                const int *counts, int count_count,
+	                                int width, Color color, Color doxor);
+	virtual void DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
+	                                   const int *subpolygon_counts, int scc,
+	                                   const int *disjunct_polygon_counts, int dpcc,
+	                                   Color color, int width, Color outline,
+	                                   uint64 pattern, Color doxor);
+	virtual void DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color);
+	virtual void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
+	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
+		                    Color ink, int n, const int *dx);
+	virtual void DrawDrawingOp(const Rect& target, const Drawing& w);
+	virtual void DrawPaintingOp(const Rect& target, const Painting& w);
 };
 
 void         AddNotEmpty(Vector<Rect>& result, int left, int right, int top, int bottom);

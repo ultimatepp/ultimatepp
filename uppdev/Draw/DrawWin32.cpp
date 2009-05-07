@@ -9,14 +9,14 @@ NAMESPACE_UPP
 
 static COLORREF sLightGray;
 
-Size Draw::GetNativeDpi() const
+Size SystemDraw::GetNativeDpi() const
 {
 	return nativeDpi;
 }
 
 void StaticExitDraw_()
 {
-	Draw::FreeFonts();
+	FontInfo::FreeFonts();
 }
 
 EXITBLOCK
@@ -37,7 +37,7 @@ HPALETTE GetQlibPalette()
 {
 	static HPALETTE hQlibPalette;
 	if(hQlibPalette) return hQlibPalette;
-	Draw::InitColors();
+	SystemDraw::InitColors();
 	LOGPALETTE *pal = (LOGPALETTE *) new byte[sizeof(LOGPALETTE) + 256 * sizeof(PALETTEENTRY)];
 	pal->palNumEntries = 0;
 	pal->palVersion    = 0x300;
@@ -54,7 +54,7 @@ HPALETTE GetQlibPalette()
 }
 #endif
 
-Draw& GLOBAL_VP(ScreenDraw, ScreenInfo, (true))
+SystemDraw& GLOBAL_VP(ScreenDraw, ScreenInfo, (true))
 
 HDC ScreenHDC()
 {
@@ -62,10 +62,10 @@ HDC ScreenHDC()
 }
 
 static bool _AutoPalette = true;
-bool Draw::AutoPalette() { return _AutoPalette; }
-void Draw::SetAutoPalette(bool ap) { _AutoPalette = ap; }
+bool SystemDraw::AutoPalette() { return _AutoPalette; }
+void SystemDraw::SetAutoPalette(bool ap) { _AutoPalette = ap; }
 
-COLORREF Draw::GetColor(Color c) const {
+COLORREF SystemDraw::GetColor(Color c) const {
 	COLORREF color = c;
 #ifdef PLATFORM_WINCE
 	return color;
@@ -100,11 +100,11 @@ COLORREF Draw::GetColor(Color c) const {
 #endif
 }
 
-void Draw::InitColors()
+void SystemDraw::InitColors()
 {
 }
 
-void Draw::SetColor(Color color)
+void SystemDraw::SetColor(Color color)
 {
 	DrawLock __;
 	LLOG("SetColor " << color);
@@ -128,7 +128,7 @@ void Draw::SetColor(Color color)
 	}
 }
 
-void Draw::SetDrawPen(int width, Color color) {
+void SystemDraw::SetDrawPen(int width, Color color) {
 	DrawLock __;
 	if(IsNull(width))
 		width = PEN_NULL;
@@ -151,38 +151,38 @@ void Draw::SetDrawPen(int width, Color color) {
 }
 
 
-void Draw::SetOrg() {
+void SystemDraw::SetOrg() {
 	DrawLock __;
 #ifdef PLATFORM_WINCE
 	::SetViewportOrgEx(handle, actual_offset.x, actual_offset.y, 0);
 #else
-	LLOG("Draw::SetOrg: clip = " << GetClip() << ", offset = " << actual_offset);
+	LLOG("SystemDraw::SetOrg: clip = " << GetClip() << ", offset = " << actual_offset);
 	::SetWindowOrgEx(handle, -actual_offset.x, -actual_offset.y, 0);
-	LLOG("//Draw::SetOrg: clip = " << GetClip());
+	LLOG("//SystemDraw::SetOrg: clip = " << GetClip());
 #endif
 }
 
 #ifndef PLATFORM_WINCE
-Point Draw::LPtoDP(Point p) const {
+Point SystemDraw::LPtoDP(Point p) const {
 	DrawLock __;
 	::LPtoDP(handle, p, 1);
 	return p;
 }
 
-Point Draw::DPtoLP(Point p) const {
+Point SystemDraw::DPtoLP(Point p) const {
 	DrawLock __;
 	::DPtoLP(handle, p, 1);
 	return p;
 }
 
-Rect  Draw::LPtoDP(const Rect& r) const {
+Rect  SystemDraw::LPtoDP(const Rect& r) const {
 	DrawLock __;
 	Rect w = r;
 	::LPtoDP(handle, reinterpret_cast<POINT *>(&w), 2);
 	return w;
 }
 
-Rect  Draw::DPtoLP(const Rect& r) const {
+Rect  SystemDraw::DPtoLP(const Rect& r) const {
 	DrawLock __;
 	Rect w = r;
 	::LPtoDP(handle, reinterpret_cast<POINT *>(&w), 2);
@@ -190,12 +190,12 @@ Rect  Draw::DPtoLP(const Rect& r) const {
 }
 #endif
 
-Size Draw::GetSizeCaps(int i, int j) const {
+Size SystemDraw::GetSizeCaps(int i, int j) const {
 	DrawLock __;
 	return Size(GetDeviceCaps(handle, i), GetDeviceCaps(handle, j));
 }
 
-void Draw::DotsMode()
+void SystemDraw::DotsMode()
 {
 	::SetMapMode(handle, MM_ANISOTROPIC);
 	::SetViewportExtEx(handle, nativeDpi.cx, nativeDpi.cy, NULL);
@@ -204,9 +204,9 @@ void Draw::DotsMode()
 	::SetWindowOrgEx(handle, 0, 0, NULL);
 }
 
-void Draw::BeginNative()
+void SystemDraw::BeginNative()
 {
-	if(inchPixels != nativeDpi && ++native == 1) {
+	if(GetPixelsPerInch() != nativeDpi && ++native == 1) {
 		::SetMapMode(handle, MM_TEXT);
 		actual_offset_bak = actual_offset;
 		Native(actual_offset);
@@ -214,37 +214,27 @@ void Draw::BeginNative()
 	}
 }
 
-void Draw::EndNative()
+void SystemDraw::EndNative()
 {
-	if(inchPixels != nativeDpi && --native == 0) {
+	if(GetPixelsPerInch() != nativeDpi && --native == 0) {
 		DotsMode();
 		actual_offset = actual_offset_bak;
 		SetOrg();
 	}
 }
 
-void Draw::LoadCaps() {
+void SystemDraw::LoadCaps() {
 	DrawLock __;
 	color16 = false;
 	palette = (GetDeviceCaps(handle, RASTERCAPS) & RC_PALETTE);
 	if(palette)
 		color16 = GetDeviceCaps(handle, SIZEPALETTE) != 256;
-	pageDots = pagePixels = GetSizeCaps(HORZRES, VERTRES);
-	pageMMs = GetSizeCaps(HORZSIZE, VERTSIZE);
-	nativeDpi = inchPixels = GetSizeCaps(LOGPIXELSX, LOGPIXELSY);
-	sheetPixels = GetSizeCaps(PHYSICALWIDTH, PHYSICALHEIGHT);
-	pageOffset = GetSizeCaps(PHYSICALOFFSETX, PHYSICALOFFSETY);
+	pagePixels = GetSizeCaps(HORZRES, VERTRES); _DBG_
+	nativeDpi = GetSizeCaps(LOGPIXELSX, LOGPIXELSY);
 	is_mono = GetDeviceCaps(handle, BITSPIXEL) == 1 && GetDeviceCaps(handle, PLANES) == 1;
 }
 
-void Draw::SetDevice(const char *s) {
-	DrawLock __;
-	static Index<String> map;
-	device = map.FindAdd(s) + 1;
-	LoadCaps();
-}
-
-void Draw::Cinit() {
+void SystemDraw::Cinit() {
 	DrawLock __;
 	lastColor = Color::FromCR(COLORREF(-5));
 	lastPenColor = Color::FromCR(COLORREF(-5));
@@ -256,7 +246,7 @@ void Draw::Cinit() {
 	lastFont.Clear();
 }
 
-void Draw::Init() {
+void SystemDraw::Init() {
 	DrawLock __;
 	Cinit();
 	SetBkMode(handle, TRANSPARENT);
@@ -269,33 +259,31 @@ void Draw::Init() {
 	LoadCaps();
 }
 
-void Draw::Reset() {
+void SystemDraw::Reset() {
 	DrawLock __;
-	device = 0;
-	pixels = true;
-	printer = aborted = backdraw = is_mono = false;
+	style = GUI;
 }
 
-Draw::Draw() {
+SystemDraw::SystemDraw() {
 	DrawLock __;
 	native = 0;
 	InitColors();
-	InitFonts();
+	FontInfo::InitFonts();
 	actual_offset = Point(0, 0);
 	Reset();
 	handle = NULL;
 }
 
-Draw::Draw(HDC hdc) {
+SystemDraw::SystemDraw(HDC hdc) {
 	DrawLock __;
 	native = 0;
 	InitColors();
-	InitFonts();
+	FontInfo::InitFonts();
 	Reset();
 	Attach(hdc);
 }
 
-void Draw::Unselect0() {
+void SystemDraw::Unselect0() {
 	DrawLock __;
 	if(orgPen) SelectObject(handle, orgPen);
 	if(orgBrush) SelectObject(handle, orgBrush);
@@ -305,44 +293,32 @@ void Draw::Unselect0() {
 	Cinit();
 }
 
-void Draw::Unselect() {
+void SystemDraw::Unselect() {
 	DrawLock __;
 	while(cloff.GetCount())
 		End();
 	Unselect0();
 }
 
-Draw::~Draw() {
+SystemDraw::~SystemDraw() {
 	DrawLock __;
 	if(handle)
 		Unselect();
 }
 
-HDC Draw::BeginGdi() {
+HDC SystemDraw::BeginGdi() {
 	DrawLock __;
 	Begin();
 	return handle;
 }
 
-void Draw::EndGdi() {
+void SystemDraw::EndGdi() {
 	DrawLock __;
 	Unselect0();
 	End();
 }
 
-NilDraw::NilDraw() {
-	DrawLock __;
-	Attach(ScreenInfo().GetHandle());
-	pixels = false;
-	cloff.Clear();
-}
-
-NilDraw::~NilDraw() {
-	DrawLock __;
-	Detach();
-}
-
-void BackDraw::Create(Draw& w, int cx, int cy) {
+void BackDraw::Create(SystemDraw& w, int cx, int cy) {
 	ASSERT(w.GetHandle());
 	DrawLock __;
 	Destroy();
@@ -353,17 +329,17 @@ void BackDraw::Create(Draw& w, int cx, int cy) {
 	ASSERT(hbmp);
 	ASSERT(handle);
 #ifndef PLATFORM_WINCE
-	if(w.PaletteMode() && AutoPalette()) {
+	if(AutoPalette()) {
 		::SelectPalette(handle, GetQlibPalette(), FALSE);
 		::RealizePalette(handle);
 	}
 #endif
 	hbmpold = (HBITMAP) ::SelectObject(handle, hbmp);
 	Init();
-	backdraw = true;
+	style = GUI|BACK;
 }
 
-void BackDraw::Put(Draw& w, int x, int y) {
+void BackDraw::Put(SystemDraw& w, int x, int y) {
 	DrawLock __;
 	ASSERT(handle);
 	LTIMING("BackDraw::Put");
@@ -392,7 +368,7 @@ ScreenDraw::ScreenDraw(bool ic) {
 	Attach(CreateDC(NULL, NULL, NULL, NULL));
 #else
 	Attach((ic ? CreateIC : CreateDC)("DISPLAY", NULL, NULL, NULL));
-	if(PaletteMode() && AutoPalette()) {
+	if(AutoPalette()) {
 		SelectPalette(handle, GetQlibPalette(), TRUE);
 		RealizePalette(handle);
 	}
@@ -411,25 +387,20 @@ void PrintDraw::InitPrinter()
 {
 	DrawLock __;
 	Init();
-	printer = true;
-	pixels = false;
-	nativeDpi = inchPixels;
+	style = PRINTER|DOTS;
 	DotsMode();
 	native = 0;
 	actual_offset = Point(0, 0);
-	pageDots.cx = 600 * pagePixels.cx / inchPixels.cx; 
-	pageDots.cy = 600 * pagePixels.cy / inchPixels.cy; 
-	inchPixels.cx = 600;
-	inchPixels.cy = 600;
+	aborted = false;
 }
 
 void PrintDraw::StartPage()
 {
 	DrawLock __;
-	if(IsAborted()) return;
+	if(aborted) return;
 	Unselect();
 	if(::StartPage(handle) <= 0)
-		Abort();
+		aborted = true;
 	else
 		InitPrinter();
 }
@@ -437,15 +408,14 @@ void PrintDraw::StartPage()
 void PrintDraw::EndPage()
 {
 	DrawLock __;
-	if(IsAborted()) return;
+	if(aborted) return;
 	Unselect();
-	ASSERT(printer);
 	if(::EndPage(handle) <= 0)
-		Abort();
+		aborted = true;
 }
 
 PrintDraw::PrintDraw(HDC hdc, const char *docname)
-   : Draw(hdc)
+   : SystemDraw(hdc)
 {
 	DrawLock __;
 	DOCINFO di;
@@ -453,16 +423,15 @@ PrintDraw::PrintDraw(HDC hdc, const char *docname)
 	di.cbSize = sizeof(di);
 	String sys_docname = ToSystemCharset(docname);
 	di.lpszDocName = ~sys_docname;
-	if(::StartDoc(hdc, &di) <= 0) {
-		Abort();
-		return;
-	}
-	InitPrinter();
+	if(::StartDoc(hdc, &di) <= 0)
+		aborted = true;
+	else
+		InitPrinter();
 }
 
 PrintDraw::~PrintDraw() {
 	DrawLock __;
-	if(IsAborted())
+	if(aborted)
 		::AbortDoc(handle);
 	else
 		::EndDoc(handle);
