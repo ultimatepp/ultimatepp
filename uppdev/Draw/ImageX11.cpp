@@ -116,7 +116,7 @@ static XPicture sGetSolidFill(Color c)
 	return f.picture;
 }
 
-void Image::Data::Paint(Draw& w, int x, int y, const Rect& src, Color c)
+void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
 	DrawLock __;
 	while(ResCount > 512) {

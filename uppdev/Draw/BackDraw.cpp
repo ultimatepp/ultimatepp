@@ -1,8 +1,8 @@
 #include "Draw.h"
 
-// ---------------------------
+NAMESPACE_UPP
 
-Draw& ScreenInfo();
+SystemDraw& ScreenInfo();
 
 void BackDraw::Create(int cx, int cy)
 {
@@ -29,8 +29,6 @@ BackDraw::~BackDraw()
 	Destroy();
 }
 
-Draw& ScreenInfo();
-
 bool ScreenInPaletteMode()
 {
 	return ScreenInfo().PaletteMode();
@@ -40,3 +38,5 @@ Size GetScreenSize()
 {
 	return ScreenInfo().GetPagePixels();
 }
+
+END_UPP_NAMESPACE

@@ -104,6 +104,16 @@ Stream& DrawingDraw::DrawingOp(int code)
 	return drawing;
 }
 
+dword DrawingDraw::GetInfo() const
+{
+	return DOTS;
+}
+
+Size DrawingDraw::GetPagePixels() const
+{
+	return size;
+}
+
 void DrawingDraw::BeginOp()
 {
 	DrawingOp(DRAWING_BEGIN);

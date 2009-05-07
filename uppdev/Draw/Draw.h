@@ -84,6 +84,7 @@ enum {
 class Drawing;
 class Draw;
 class Painting;
+class SystemDraw;
 
 #ifdef PLATFORM_WIN32
 HDC ScreenHDC();
@@ -736,6 +737,17 @@ public:
 		          Color ink = DefaultInk, const int *dx = NULL);
 
 	static void SinCos(int angle, double& sina, double& cosa);
+	
+	// deprecated:
+	static void SetStdFont(Font font)                   { UPP::SetStdFont(font); }
+	static Font GetStdFont()                            { return UPP::GetStdFont(); }
+	static Size GetStdFontSize()                        { return UPP::GetStdFontSize(); }
+	static int  GetStdFontCy()                          { return GetStdFontSize().cy; }
+	
+	static void Flush();
+	
+	HDC   BeginGdi();
+	void  EndGdi();
 };
 
 void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);
@@ -793,6 +805,8 @@ public:
 
 class DrawingDraw : public Draw {
 public:
+	virtual dword GetInfo() const;
+	virtual Size  GetPagePixels() const;
 	virtual void BeginOp();
 	virtual void EndOp();
 	virtual void OffsetOp(Point p);
@@ -968,7 +982,6 @@ DrawingToPdfFnType GetDrawingToPdfFn();
 #ifdef PLATFORM_X11
 #include "DrawX11.h"
 #endif
-
 
 #include "BackDraw.h"
 

@@ -31,7 +31,7 @@ void Draw::SinCos(int angle, double& sina, double& cosa)
 
 Size Draw::GetPixelsPerInch() const
 {
-	return IsDots() ? Size(600, 600) : Size(96, 96);
+	return Dots() ? Size(600, 600) : Size(96, 96);
 }
 
 int Draw::GetNativeX(int x) const
@@ -396,6 +396,23 @@ void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
 void Draw::DrawPainting(int x, int y, int cx, int cy, const Painting& ig)
 {
 	DrawPainting(RectC(x, y, cx, cy), ig);
+}
+
+HDC Draw::BeginGdi()
+{
+	SystemDraw *w = dynamic_cast<SystemDraw *>(this);
+	return w ? w->BeginGdi() : NULL;
+}
+
+void Draw::EndGdi()
+{
+	SystemDraw *w = dynamic_cast<SystemDraw *>(this);
+	if(w) w->EndGdi();
+}
+
+void Draw::Flush()
+{
+	SystemDraw::Flush();
 }
 
 // ---------------------------

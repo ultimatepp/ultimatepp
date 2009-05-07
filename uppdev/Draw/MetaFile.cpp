@@ -11,8 +11,9 @@ void WinMetaFile::Init() {
 
 void WinMetaFile::Paint(Draw& w, const Rect& r) const {
 	ChkP();
-	if(hemf)
-		PlayEnhMetaFile(w, hemf, r);
+	SystemDraw *h = dynamic_cast<SystemDraw *>(&w);
+	if(hemf && h)
+		PlayEnhMetaFile(h->GetHandle(), hemf, r);
 }
 
 void WinMetaFile::Paint(Draw& w, int x, int y, int cx, int cy) const {
@@ -197,7 +198,7 @@ bool WinMetaFileDraw::Create(HDC hdc, int cx, int cy, const char *app, const cha
 
 	Init();
 
-	pixels = false;
+	style = DOTS|BACK;
 
 	::SetMapMode(handle, MM_ANISOTROPIC);
 	::SetWindowOrgEx(handle, 0, 0, 0);
@@ -213,14 +214,6 @@ bool WinMetaFileDraw::Create(HDC hdc, int cx, int cy, const char *app, const cha
 	}
 
 	actual_offset = Point(0, 0);
-
-	printer = false;
-	pixels = false;
-	actual_offset = Point(0, 0);
-	device = -1;
-	aborted = false;
-	palette = false;
-	backdraw = true;
 
 	return true;
 }

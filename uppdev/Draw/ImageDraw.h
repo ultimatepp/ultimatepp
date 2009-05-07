@@ -1,4 +1,4 @@
-class ImageDraw : public Draw {
+class ImageDraw : public SystemDraw {
 	Size    size;
 
 #ifdef PLATFORM_WIN32
