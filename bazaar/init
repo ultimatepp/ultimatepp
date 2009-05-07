@@ -1,4 +1,0 @@
-#ifndef _zLibs_Automation_icpp_init_stub
-#define _zLibs_Automation_icpp_init_stub
-#include "Core/init"
-#endif
