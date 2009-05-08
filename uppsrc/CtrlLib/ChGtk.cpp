@@ -1050,7 +1050,7 @@ void ChHostSkin()
 			s.first[i] = s.last[i] = s.both[i] = s.normal[i];
 		s.margin = 0;
 
-		s.sel = Rect(0, 0, 0, 4);
+		s.sel = Rect(0, 2, 0, 4);
 		s.extendleft = 2;
 		ChGtkColor(s.text_color, 0);
 	}
