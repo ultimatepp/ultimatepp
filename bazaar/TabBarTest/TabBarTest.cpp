@@ -10,6 +10,17 @@ struct TabBarTest : TopWindow
 	TabBar t_tabs;
 	TabBar b_tabs;
 	
+	typedef TabBarTest CLASSNAME;
+	
+	bool Stack(Value a, Value b)
+	{
+		String as = a;
+		String bs = b;
+		as = as.Left(as.Find('.'));
+		bs = bs.Left(bs.Find('.'));
+		return as == bs;
+	}
+	
 	TabBarTest()
 	{
 		l_tabs.Crosses(true);	
@@ -35,15 +46,17 @@ struct TabBarTest : TopWindow
 		r_tabs.Grouping(true);
 		
 		t_tabs.Crosses(true);	
-		t_tabs.Add("/ala/Test.cpp");
-		t_tabs.Add("/ala/Test.h");
+		t_tabs.Add("Test.cpp");
+		t_tabs.Add("Test.h");
 		t_tabs.Add("/ala/SuperProgram.cpp", true);
 		t_tabs.Add("/kasia/SuperProgram.h");
 		t_tabs.Add("/kasia/Synchronize.cpp");
 		t_tabs.Add("/kasia/Synchronize.h");
 		t_tabs.Add("/test/Test.cpp");
 		t_tabs.Add("/test/Test.h");
-		t_tabs.Grouping(true);
+		t_tabs.StackingFunc(THISBACK(Stack));
+		//t_tabs.Grouping(true);
+		//t_tabs.Stacking(true);
 		
 		b_tabs.Crosses(true);	
 		b_tabs.Add("/ala/Test.cpp");

@@ -562,7 +562,7 @@ WString TabBar::ParseLabel(const WString& s)
 	return s;
 }
 
-void TabBar::PaintTabData(Draw& w, const Rect& r, const Tab& tab, const Font &font, Color ink, dword style, int bl)
+void TabBar::PaintTabData(Draw& w, const Rect& r, const Tab& tab, const Font &font, Color ink, dword style)
 {
 	WString txt;
 	Font f = font;
@@ -579,30 +579,57 @@ void TabBar::PaintTabData(Draw& w, const Rect& r, const Tab& tab, const Font &fo
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
 	
-	Point p = GetTextPosition(r, GetTextSize(txt, font).cy,  bl);
+	Point p = GetTextPosition(r, GetTextSize(txt, font).cy, TB_MARGIN);
 	w.DrawText(p.x, p.y, GetTextAngle(), ParseLabel(txt), f, i);	
 }
 
-Point TabBar::GetTextPosition(const Rect& r, int fy, int bl) const
+Point TabBar::GetTextPosition(const Rect& r, int cy, int space) const
 {
 	Point 	p;
 	int align = GetAlign();
 	
-	fy /= 2;
 	if(align == LEFT)
 	{
-		p = r.BottomLeft();
-		p.x = bl - fy;
+		p.y = r.bottom - space;
+		p.x = r.left + (r.GetWidth() - cy) / 2;
 	}
 	else if(align == RIGHT)
 	{
-		p = r.TopRight();
-		p.x = bl + fy + 1;
+		p.y = r.top + space;
+		p.x = r.right - (r.GetWidth() - cy) / 2;
 	}
 	else
 	{
-		p = r.TopLeft();
-		p.y = bl - fy;
+		p.x = r.left + space;
+		p.y = r.top + (r.GetHeight() - cy) / 2;
+	}
+	return p;
+}
+
+Point TabBar::GetImagePosition(const Rect& r, int cx, int cy, int space, int side) const
+{
+	Point p;
+	int align = GetAlign();
+
+	if (align == LEFT)
+	{
+		p.x = r.left + (r.GetWidth() - cy) / 2;
+		p.y = side == LEFT ? r.bottom - space - cx : r.top + space;
+	}
+	else if (align == RIGHT)
+	{
+		p.x = r.right - (r.GetWidth() + cy) / 2;
+		p.y = side == LEFT ? r.top + space : r.bottom - space - cx;
+	}
+	else if (align == TOP)
+	{
+		p.x = side == LEFT ? r.left + space : r.right - cx - space;
+		p.y = r.top + (r.GetHeight() - cy) / 2;
+	}
+	else if (align == BOTTOM)
+	{
+		p.x = side == LEFT ? r.left + space : r.right - cx - space;
+		p.y = r.bottom - (r.GetHeight() + cy) / 2;
 	}
 	return p;
 }
@@ -611,9 +638,9 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 {
 	TabBar::Tab &t = tabs[n];
 	int cnt = dragsample ? 1 : tabs.GetCount();
-	Size tsz, fsz(sz.cx, sz.cy + TB_SBSEPARATOR * !sc.IsShown()), isz(0, 0);
-	Fix(fsz);
+	int sep = TB_SBSEPARATOR * sc.IsVisible();
 	
+	Size tsz;
 	Point p;
 	
 	int align = GetAlign();
@@ -630,110 +657,52 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 	int lx = n > 0 ? s.extendleft : 0;
 	int x = t.pos.x - sc.GetPos() + s.margin - lx;
 	
-	if (ac) {
-		p = Point(x - s.sel.left, 0);		
-		tsz = Size(t.size.cx + lx + s.sel.right + s.sel.left, t.size.cy + s.sel.bottom);
-	}
-	else {
-		p = Point(x, s.sel.top);
-		tsz = Size(t.size.cx + lx, t.size.cy - s.sel.top);
-	}
+	p = Point(x - s.sel.left, 0);		
+	tsz = Size(t.size.cx + lx + s.sel.right + s.sel.left, t.size.cy + s.sel.bottom);
 
 	if (align == BOTTOM || align == RIGHT)
-		p.y -= s.sel.top - TB_SBSEPARATOR * sc.IsVisible();
+		p.y -= s.sel.bottom - sep;
+			
+	Rect ra(Fixed(p), Fixed(tsz));
 
-	t.real_pos = Fixed(p);
-	t.real_size = Fixed(tsz);
+	p = Point(x, s.sel.top);
+	tsz = Size(t.size.cx + lx, t.size.cy - s.sel.top);
+
+	int dy = -s.sel.top * ac;
+	
+	if (align == BOTTOM || align == RIGHT)
+	{
+		p.y -= s.sel.top - sep;
+		dy = -dy;
+	}
+	
+	Rect rn(Fixed(p), Fixed(tsz));
+
+	t.real_pos = (ac ? ra : rn).TopLeft();
+	t.real_size = (ac ? ra : rn).GetSize();
 		
-	ChPaint(w, t.real_pos.x, t.real_pos.y, t.real_size.cx, t.real_size.cy, sv);
+	ChPaint(w, Rect(t.real_pos, t.real_size), sv);
+	
+	rn = Rect(Fixed(Point(p.x, p.y + dy)), Fixed(tsz));
 	
 	#ifdef TABBAR_DEBUG
-	DrawFrame(w, Rect(t.real_pos, t.real_size), Blue);
+	DrawFrame(w, rn, Green);
 	#endif
-	
-	Point cp;
-
-	Size bsz(t.size.cx + lx, t.size.cy - s.sel.top);
-	
-	int cly = (fsz.cy - s.sel.top - s.sel.bottom * ac) / 2 + s.sel.top;
 	
 	if(crosses && (cnt > neverempty || t.stack.GetCount())) {
 
-		const Image &cimg = TabBarImg::CR0();
-		isz = cimg.GetSize();		
+		Size isz = TabBarImg::CR0().GetSize();
+		Point p = GetImagePosition(rn, isz.cx, isz.cy, TB_MARGIN, RIGHT);
 
-		if (align == LEFT)
-		{
-			cp.x = cly - isz.cy / 2;
-			cp.y = x + TB_MARGIN;
-		}
-		else if (align == RIGHT)
-		{
-			cp.x = fsz.cy - (cly - isz.cy / 2 + isz.cy);
-			cp.y = x + bsz.cx - isz.cx - TB_MARGIN;
-		}
-		else if (align == TOP)
-		{
-			cp.x = x + bsz.cx - isz.cx - TB_MARGIN;
-			cp.y = cly - isz.cy / 2;
-		}
-		else if (align == BOTTOM)
-		{
-			cp.x = x + bsz.cx - isz.cx - TB_MARGIN;
-			cp.y = fsz.cy - (cly - isz.cy / 2 + isz.cy);
-		}
-
-		t.cross_pos = cp;
+		t.cross_pos = p;
 		t.cross_size = isz;
-		w.DrawImage(cp.x, cp.y, (ac || hl) ? (cross == n ? TabBarImg::CR2 : ac ? TabBarImg::CR1 : TabBarImg::CR0) : TabBarImg::CR0);
-		isz.cx += 2;
-	}
-
-	bsz.cx -= TB_MARGIN * 2 + isz.cx;
-	
-	if (align == LEFT)
-	{
-		cp.x = cly - bsz.cy / 2;
-		cp.y = x + TB_MARGIN + isz.cx;
-	}
-	else if (align == RIGHT)
-	{
-		cp.x = fsz.cy - (cly - bsz.cy / 2 + bsz.cy);
-		cp.y = x + TB_MARGIN;
-	}
-	else if (align == TOP)
-	{
-		cp.x = x + TB_MARGIN;
-		cp.y = cly - bsz.cy / 2;
-	}
-	else if (align == BOTTOM)
-	{
-		cp.x = x + TB_MARGIN;
-		cp.y = fsz.cy - (cly - bsz.cy / 2 + bsz.cy);
+		w.DrawImage(p.x, p.y, (ac || hl) ? (cross == n ? TabBarImg::CR2 : ac ? TabBarImg::CR1 : TabBarImg::CR0) : TabBarImg::CR0);
 	}
 		
-	Fix(bsz);
-	
-	Rect r(cp, bsz);
-	
-	#ifdef TABBAR_DEBUG
-	w.DrawRect(r, Green);
-	//w.DrawText(p.x, p.y, AsString(s.sel.bottom) + ", " + AsString(s.sel.top) + ", st:" + AsString(GetHeight()) + ", sz:" + AsString(sz.cy) + ", rs:" + AsString(t.real_size.cy), StdFont().Bold());
-	#endif
-
-	if(align == RIGHT || align == BOTTOM)
-		cly = fsz.cy - cly - 1;
-
 	if (display)
-		display->Paint(w, r, t.data, s.text_color[ndx], SColorDisabled(), ndx);
+		display->Paint(w, rn, t.data, s.text_color[ndx], SColorDisabled(), ndx);
 	else
-		PaintTabData(w, r, t, s.font, s.text_color[ndx], ndx, cly);
-	
-	#ifdef TABBAR_DEBUG
-	Point pp(p.x, cly);
-	Fix(pp);
-	w.DrawRect(pp.x, pp.y, IsVert() ? 1 : bsz.cx, IsVert() ? bsz.cy : 1, LtBlue);
-	#endif
+		PaintTabData(w, rn, t, s.font, s.text_color[ndx], ndx);	
 }
 
 void TabBar::Paint(Draw &w)
@@ -802,7 +771,7 @@ void TabBar::Paint(Draw &w)
 		// Draw target marker
 		int drag = isctrl ? highlight : active;
 		if(target != drag && target != drag + 1)
-		{			
+		{
 			last = GetLast();
 			first = GetFirst();
 			int x = (target == last + 1 ? tabs[last].Right() : tabs[target].pos.x)

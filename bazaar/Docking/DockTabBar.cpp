@@ -20,7 +20,7 @@ void DockTabBar::FrameAddSize(Size& sz)
 		TabBar::FrameAddSize(sz);
 }
 
-void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style, int bl)
+void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
 {
 	DockableCtrl *d;
 	WString txt;
@@ -39,37 +39,21 @@ void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font
 		txt = d->GetTitle();
 	}
 
-	Point p = GetTextPosition(r, GetTextSize(txt, font).cy, bl);		
+	Size isz;
 	if(icons)
 	{
 		const Image& icon = (style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon();
 		if (!icon.IsEmpty()) {
-			int al = GetAlign();
-			Size isz = icon.GetSize();
-			Point ip;
-			switch (al) {
-				case LEFT:
-					ip = Point(r.left + (r.Width() - isz.cy) / 2, p.y - isz.cy);
-					p.y -= isz.cy + TB_SPACEICON;
-					break;
-				case TOP:
-					ip = Point(p.x, r.top + (r.Height() - isz.cy) / 2);
-					p.x += isz.cx + TB_SPACEICON;
-					break;
-				case RIGHT:
-					ip = Point(r.left + (r.Width() - isz.cy) / 2, p.y);
-					p.y += isz.cy + TB_SPACEICON;
-					break;
-				case BOTTOM:
-					ip = Point(p.x, r.top + (r.Height() - isz.cy) / 2);
-					p.x += isz.cx + TB_SPACEICON;				
-					break;
-			};	
+			isz = icon.GetSize();
+			Point ip = GetImagePosition(r, isz.cx, isz.cy, TB_SPACEICON, LEFT);
 			w.DrawImage(ip.x, ip.y, icon);
 		}
 	}
 	if (showtext)
+	{
+		Point p = GetTextPosition(r, GetTextSize(txt, font).cy, isz.cx + TB_SPACEICON + TB_MARGIN);
 		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
+	}
 }
 
 Size DockTabBar::GetStdSize(const Tab& t)

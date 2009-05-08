@@ -240,12 +240,13 @@ protected:
 	virtual WString ParseLabel(const WString& s);
 	// Sub-class display overide & helpers
 	virtual void PaintTabData(Draw& w, const Rect &t, const Tab& tab, const Font &font, 
-		Color ink, dword style, int bl);
+		Color ink, dword style);
 	virtual Size GetStdSize(const Tab &t); 
 	Size 		 GetStdSize(const Value &v); 
 
 	int		GetTextAngle()	{ return AlignedFrame::IsVert() ? (GetAlign() == LEFT ? 900 : 2700) : 0; }	
-	Point	GetTextPosition(const Rect& r, int cy, int bl) const;	
+	Point	GetTextPosition(const Rect& r, int cy, int space) const;
+	Point   GetImagePosition(const Rect& r, int cx, int cy, int space, int side) const;
 	int 	GetTargetTab(Point p);	
 	
 	const Style &GetStyle() { return *style[GetAlign()]; }

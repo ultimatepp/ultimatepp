@@ -32,7 +32,7 @@ protected:
 	bool showtext:1;
 
 	virtual void PaintTabData(Draw& w, const Rect &t, const Tab& tab, const Font &font, 
-		Color ink, dword style, int bl);
+		Color ink, dword style);
 	virtual Size GetStdSize(const Tab &q);
 
 	virtual void RightDown(Point p, dword keyflags);
