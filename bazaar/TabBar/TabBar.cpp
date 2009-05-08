@@ -535,7 +535,7 @@ Value TabBar::AlignValue(int align, const Value &v, const Size &isz)
 			case AlignedFrame::LEFT: 
 				temp = RotateAntiClockwise(temp);
 				img = temp; // GCC
-				img.SetHotSpot(Point(1, 5));
+				img.SetHotSpot(Point(10, 10));
 				img.Set2ndSpot(Point(isz.cy / 2, isz.cx / 2));
 				break;
 			case AlignedFrame::RIGHT: 
@@ -613,23 +613,23 @@ Point TabBar::GetImagePosition(const Rect& r, int cx, int cy, int space, int sid
 
 	if (align == LEFT)
 	{
-		p.x = r.left + (r.GetWidth() - cy) / 2;
+		p.x = r.left + (r.GetWidth() - cy) / 2 + 1;
 		p.y = side == LEFT ? r.bottom - space - cx : r.top + space;
 	}
 	else if (align == RIGHT)
 	{
-		p.x = r.right - (r.GetWidth() + cy) / 2;
+		p.x = r.right - (r.GetWidth() + cy) / 2 - 1;
 		p.y = side == LEFT ? r.top + space : r.bottom - space - cx;
 	}
 	else if (align == TOP)
 	{
 		p.x = side == LEFT ? r.left + space : r.right - cx - space;
-		p.y = r.top + (r.GetHeight() - cy) / 2;
+		p.y = r.top + (r.GetHeight() - cy) / 2 + 1;
 	}
 	else if (align == BOTTOM)
 	{
 		p.x = side == LEFT ? r.left + space : r.right - cx - space;
-		p.y = r.bottom - (r.GetHeight() + cy) / 2;
+		p.y = r.bottom - (r.GetHeight() + cy) / 2 - 1;
 	}
 	return p;
 }
