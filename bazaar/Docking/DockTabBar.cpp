@@ -39,7 +39,8 @@ void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font
 		txt = d->GetTitle();
 	}
 
-	Size isz;
+	Size isz(0, 0);
+	
 	if(icons)
 	{
 		const Image& icon = (style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon();
@@ -51,7 +52,7 @@ void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font
 	}
 	if (showtext)
 	{
-		Point p = GetTextPosition(r, GetTextSize(txt, font).cy, isz.cx + TB_SPACEICON + TB_MARGIN);
+		Point p = GetTextPosition(r, GetTextSize(txt, font).cy, isz.cx > 0 ? isz.cx + TB_SPACEICON + TB_MARGIN : TB_MARGIN);
 		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
 	}
 }
