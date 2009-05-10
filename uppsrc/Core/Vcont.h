@@ -54,6 +54,7 @@ public:
 	void     InsertN(int i, int count = 1);
 	T&       Insert(int i)           { InsertN(i); return Get(i); }
 	void     Insert(int i, const T& x, int count = 1);
+	void     InsertPick(int i, pick_ T& x);
 	void     Insert(int i, const Vector& x);
 	void     Insert(int i, const Vector& x, int offset, int count);
 	void     InsertPick(int i, pick_ Vector& x);
@@ -114,7 +115,7 @@ public:
 	friend void Swap(Vector& a, Vector& b)  { UPP::Swap(a.items, b.items); UPP::Swap(a.alloc, b.alloc); UPP::Swap(a.vector, b.vector); }
 	friend void Append(Vector& dst, const Vector& src)         { dst.Append(src); }
 
-//obsolete names
+//deprecated
 	T&       DoIndex(int i)             { return At(i); }
 	T&       DoIndex(int i, const T& x) { return At(i, x); }
 
@@ -164,6 +165,7 @@ public:
 	void     InsertN(int i, int count = 1);
 	T&       Insert(int i)              { InsertN(i); return Get(i); }
 	void     Insert(int i, const T& x, int count = 1);
+	void     InsertPick(int i, pick_ T& x);
 	void     Insert(int i, const Array& x);
 	void     Insert(int i, const Array& x, int offset, int count);
 	void     Append(const Array& x)               { Insert(GetCount(), x); }

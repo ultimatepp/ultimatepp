@@ -272,6 +272,15 @@ void Vector<T>::Insert(int q, const T& x, int count) {
 }
 
 template <class T>
+void Vector<T>::InsertPick(int i, pick_ T& x)
+{
+	if(!count) return;
+	ASSERT(&x < vector || &x > vector + items);
+	RawInsert(q, count);
+	::new(vector[q]) T(x);
+}
+
+template <class T>
 void Vector<T>::Insert(int q, const Vector& x, int offset, int count) {
 	ASSERT(offset >= 0 && count >= 0 && offset + count <= x.GetCount());
 	ASSERT(!vector || x.vector != vector);
@@ -436,6 +445,13 @@ template <class T>
 void Array<T>::Insert(int i, const T& x, int count) {
 	vector.InsertN(i, count);
 	Init(vector.Begin() + i, vector.Begin() + i + count, x);
+}
+
+template <class T>
+void Array<T>::InsertPick(int i, pick_ T& x)
+{
+	vector.InsertN(i, 1);
+	vector[i] = new T(x);
 }
 
 template <class T>

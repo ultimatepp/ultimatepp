@@ -225,6 +225,16 @@ void LayDes::Serialize(Stream& s)
 	SetBar();
 }
 
+int TypeFilter(int c)
+{
+	return iscid(c) || c == '<' || c == '>' || c == ':' || c == ',' ? c : 0;
+}
+
+int VariableFilter(int c)
+{
+	return iscid(c) || c == '.' || c == '[' || c == ']' ? c : 0;
+}
+
 LayDes::LayDes()
 {
 	charset = CHARSET_UTF8;
@@ -256,6 +266,8 @@ LayDes::LayDes()
 	variable <<= THISBACK(VariableEdit);
 	type.Disable();
 	variable.Disable();
+	type.SetFilter(TypeFilter);
+	variable.SetFilter(VariableFilter);
 
 	item.AddColumn("Type", 20).Margin(0);
 	item.AddColumn("Var / lbl", 10).Margin(0);
