@@ -287,7 +287,7 @@ TabBar::TabBar()
 	
 	style[0] = style[1] = style[2] = style[3] = NULL;
 	SetAlign(TOP);
-	SetFrameSize(GetHeight());
+	SetFrameSize(GetHeight(false));
 	BackPaint();
 }
 
@@ -1060,7 +1060,7 @@ TabBar& TabBar::AutoScrollHide(bool b)
 {
 	autoscrollhide = b;
 	sc.Hide();
-	SetFrameSize(GetHeight(), false);
+	SetFrameSize(GetHeight(false), false);
 	SyncScrollBar(GetWidth());
 	return *this;
 }
