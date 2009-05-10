@@ -61,7 +61,7 @@ Array<LayoutItem> ReadItems(CParser& p, byte charset)
 		LayoutItem& m = items.Add();
 		m.Create(type);
 		m.SetCharset(charset);
-		if(p.IsId()) m.variable = ReadVar(p);
+		m.variable = ReadVar(p);
 		if(strncmp(m.variable, "dv___", 5) == 0)
 			m.variable.Clear();
 		p.PassChar(',');

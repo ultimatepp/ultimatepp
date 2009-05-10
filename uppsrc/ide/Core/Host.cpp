@@ -214,7 +214,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 		out << "#!/bin/sh\n"
 		    << cmdline << '\n'
 		    << "echo \"<--- Finished, press any key to close the window --->\"\nread\n";
-		cmdline = LinuxHostConsole + " bash " + script;
+		cmdline = LinuxHostConsole + " sh " + script;
 	}
 	Buffer<char> cmd_buf(strlen(cmdline) + 1);
 	char *cmd_out = cmd_buf;
@@ -302,7 +302,7 @@ void LocalHost::AddFlags(Index<String>& cfg)
 	cfg.Add("BSD");
 #endif
 
-#ifdef PLATFORM_BSD
+#ifdef PLATFORM_FREEBSD
 	cfg.Add("FREEBSD");
 #endif
 

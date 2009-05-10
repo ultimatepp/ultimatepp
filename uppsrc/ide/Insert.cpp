@@ -83,6 +83,8 @@ void Ide::InsertTpp(const String& fn)
 
 void Ide::InsertMenu(Bar& bar)
 {
+	if(bar.IsScanKeys())
+		return;
 	bar.Add("Insert color..", THISBACK(InsertColor));
 	int pi = GetPackageIndex();
 	const Workspace& wspc = IdeWorkspace();

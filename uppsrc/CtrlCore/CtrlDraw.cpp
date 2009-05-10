@@ -235,7 +235,7 @@ struct sDrawLevelCheck {
 #define DOLEVELCHECK
 #endif
 
-void Ctrl::PaintCaret(Draw& w)
+void Ctrl::PaintCaret(SystemDraw& w)
 {
 #ifdef PLATFORM_X11
 	if(this == caretCtrl && WndCaretVisible)
@@ -243,7 +243,7 @@ void Ctrl::PaintCaret(Draw& w)
 #endif
 }
 
-void Ctrl::CtrlPaint(Draw& w, const Rect& clip) {
+void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	LEVELCHECK(w, this);
 	LTIMING("CtrlPaint");
 	Rect rect = GetRect().GetSize();
@@ -324,16 +324,16 @@ void Ctrl::ShowRepaint(int q)
 	sShowRepaint = q;
 }
 
-void ShowRepaintRect(Draw& w, const Rect& r, Color c)
+void ShowRepaintRect(SystemDraw& w, const Rect& r, Color c)
 {
 	if(sShowRepaint) {
 		w.DrawRect(r, c);
-		Draw::Flush();
+		SystemDraw::Flush();
 		Sleep(sShowRepaint);
 	}
 }
 
-bool Ctrl::PaintOpaqueAreas(Draw& w, const Rect& r, const Rect& clip, bool nochild)
+bool Ctrl::PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild)
 {
 	LTIMING("PaintOpaqueAreas");
 	if(!IsShown() || r.IsEmpty() || !r.Intersects(clip) || !w.IsPainting(r))
@@ -402,7 +402,7 @@ void CombineArea(Vector<Rect>& area, const Rect& r)
 	area.Add(r);
 }
 
-void Ctrl::GatherTransparentAreas(Vector<Rect>& area, Draw& w, Rect r, const Rect& clip)
+void Ctrl::GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip)
 {
 	LTIMING("GatherTransparentAreas");
 	Point off = r.TopLeft();
@@ -454,7 +454,7 @@ Ctrl *Ctrl::FindBestOpaque(const Rect& clip)
 	return w;
 }
 
-void Ctrl::UpdateArea0(Draw& draw, const Rect& clip, int backpaint)
+void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 {
 	LTIMING("UpdateArea");
 	LLOG("========== UPDATE AREA " << UPP::Name(this) << " ==========");
@@ -496,7 +496,7 @@ void Ctrl::UpdateArea0(Draw& draw, const Rect& clip, int backpaint)
 	LLOG("========== END");
 }
 
-void Ctrl::UpdateArea(Draw& draw, const Rect& clip)
+void Ctrl::UpdateArea(SystemDraw& draw, const Rect& clip)
 {
 	if(IsPanicMode())
 		return;
@@ -570,7 +570,9 @@ void Ctrl::DrawCtrlWithParent(Draw& w, int x, int y)
 		Ctrl *top = parent->GetTopRect(r, inframe);
 		w.Clip(x, y, r.Width(), r.Height());
 		w.Offset(x - r.left, y - r.top);
-		top->UpdateArea(w, r);
+		SystemDraw *ws = dynamic_cast<SystemDraw *>(&w);
+		if(ws)
+			top->UpdateArea(*ws, r);
 		w.End();
 		w.End();
 	}
@@ -581,7 +583,9 @@ void Ctrl::DrawCtrlWithParent(Draw& w, int x, int y)
 void Ctrl::DrawCtrl(Draw& w, int x, int y)
 {
 	w.Offset(x, y);
-	UpdateArea(w, GetRect().GetSize());
+	SystemDraw *ws = dynamic_cast<SystemDraw *>(&w);
+	if(ws)
+		UpdateArea(*ws, GetRect().GetSize());
 	w.End();
 }
 

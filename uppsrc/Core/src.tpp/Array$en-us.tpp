@@ -331,6 +331,13 @@ value.&]
 [s7; [*C@3 count]-|Number of elements to insert.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Array`:`:InsertPick`(int`,pick`_ T`&`):%- [@(0.0.255) void]_[* InsertPick]([@(0.0.255) i
+nt]_[*@3 i], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s2; Inserts an element at [%-*@3 i] picking the content of [%-*@3 x].&]
+[s6;~~~.992; Requires T to have pick constructor.&]
+[s6;~~~.992; Invalidates iterators to the Array.&]
+[s3; &]
+[s4;%- &]
 [s5;:Array`:`:Insert`(int`,const Array`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int]_
 [*@3 i], [@(0.0.255) const]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x])&]
 [s2; Inserts all elements from another Array.&]
