@@ -272,11 +272,10 @@ void Vector<T>::Insert(int q, const T& x, int count) {
 }
 
 template <class T>
-void Vector<T>::InsertPick(int i, pick_ T& x)
+void Vector<T>::InsertPick(int q, pick_ T& x)
 {
-	if(!count) return;
 	ASSERT(&x < vector || &x > vector + items);
-	RawInsert(q, count);
+	RawInsert(q, 1);
 	::new(vector[q]) T(x);
 }
 
