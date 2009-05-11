@@ -674,10 +674,6 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
-#ifdef PLATFORM_WIN32
-	InstallCrashDump();
-#endif
-
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
 
@@ -955,7 +951,12 @@ void AppMain___()
 		ide.UpdateFormat();
 		RestoreKeys(LoadFile(ConfigFile("ide.key")));
 		ide.editor.LoadHlStyles(LoadFile(ConfigFile("ide.colors")));
-		ActivateUsrLog();
+		if(FileExists(ConfigFile("developide"))) {
+	#ifdef PLATFORM_WIN32
+			InstallCrashDump();
+	#endif
+			ActivateUsrLog();
+		}
 		if(clset || ide.OpenMainPackage()) {
 			StoreToFile(ide);
 			SyncRefs();
