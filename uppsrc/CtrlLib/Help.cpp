@@ -16,7 +16,7 @@ void HelpWindow::FinishText(RichText& text)
 bool HelpWindow::GoTo0(const String& link)
 {
 	if(IsNull(link) || current_link == link)
-		return false;
+		return true;
 	Topic t = AcquireTopic(link);
 	SetBar();
 	if(!IsNull(t.text)) {
@@ -44,6 +44,8 @@ HelpWindow::Pos HelpWindow::GetPos()
 
 void HelpWindow::GoTo(const String& link)
 {
+	if(IsNull(link) || current_link == link)
+		return;
 	Pos p = GetPos();
 	if(GoTo0(link)) {
 		if(!IsNull(p.link))
@@ -52,7 +54,8 @@ void HelpWindow::GoTo(const String& link)
 		SetBar();
 		return;
 	}
-	LaunchWebBrowser(link);
+	if(link.StartsWith("www.") || link.StartsWith("http") || link.StartsWith("mailto:"))
+		LaunchWebBrowser(link);
 }
 
 void HelpWindow::Back()

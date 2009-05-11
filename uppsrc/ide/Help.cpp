@@ -257,19 +257,6 @@ Topic TopicCtrl::AcquireTopic(const String& t)
 	internal = (byte)*topic < 32;
 	if(*topic == '\3')
 		return GetTopic(topic.Mid(1));
-/*	if(*topic == '\1') {
-		Topic t;
-		t.title = "Summary";
-		String group = topic.Mid(1);
-		int q = group.Find('\2');
-		String package = group.Mid(q + 1);
-		group.Trim(q);
-		String path = AppendFileName(AppendFileName(PackageDirectory(package), group + ".tpp"),
-		                             "index$en-us.tpp");
-		if(FileExists(path))
-			return ReadTopic(LoadFile(path));
-		return Topic();
-	}*/
 	if(topic[0] == ':' && topic[1] == ':') {
 		String lbl;
 		Vector<String> link = GetTypeRefLinks(topic, lbl);
