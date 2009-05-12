@@ -11,9 +11,10 @@ void AssistEditor::SyncNavigator()
 
 void AssistEditor::SyncCursor()
 {
-	String k = GetKeyDesc(IdeKeys::AK_SEARCHCODE().key[0]) + ") ";
-	browser.search.NullText(String("Find (") + k);
-	browser.clear.Tip(String("Clear (") + k);
+	String k = "(" + GetKeyDesc(IdeKeys::AK_SEARCHCODE().key[0]) + ") ";
+	browser.search.NullText(String("Find ") + k);
+	browser.search.Tip(IsNull(browser.search) ? String() : "Clear " + k);
+//	browser.clear.Tip(String("Clear (") + k);
 	if(IsNavigator()) {
 		int ii = GetCursorLine();
 		String coderef;
@@ -109,9 +110,9 @@ void Ide::SearchCode()
 	if(editor.browser.search.HasFocus() && editor.browser.IsSearch())
 		editor.browser.ClearSearch();
 	else {
-		WString id = editor.GetI();
+		String id = editor.GetI().ToString();
 		if(!IsNull(id)) {
-			editor.browser.search <<= id;
+			editor.browser.search <<= Filter(id, SearchItemFilter);
 			editor.browser.search.SetSelection();
 			editor.browser.Load();
 			editor.browser.scope.GoBegin();

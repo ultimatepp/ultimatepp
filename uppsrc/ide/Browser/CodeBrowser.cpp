@@ -7,6 +7,13 @@ bool MatchCib(const String& s, const String& match)
 	return q > 0 && !iscid(s[q - 1]) || q == 0;	
 }
 
+bool MatchPm(const String& fn, const String& pm)
+{
+	if(IsNull(pm))
+		return true;
+	return fn.StartsWith(pm);
+}
+
 bool MatchPm(int file, const String& pm)
 {
 	if(IsNull(pm))
@@ -81,13 +88,13 @@ void CodeBrowser::Load()
 		for(int i = 0; i < n.GetCount(); i++) {
 			int f = n[i].file;
 			if(fi.Find(f) < 0) {
-				fi.Add(f);
 				String s = GetFileText(GetCppFile(f));
 				if(s.StartsWith(pm) && MatchCib(s, match) &&
-				   (IsNull(find) || MatchCib(s, find) || s.GetCount() == 0 && n[i].uname.StartsWith(find))) {
+				   (IsNull(find) || MatchCib(s, find) || n[i].uname.StartsWith(find))) {
 					txt.Add(s);
 					ndx.Add(f);
 					fs.Add(s);
+					fi.Add(f);
 				}
 			}
 		}
@@ -96,10 +103,12 @@ void CodeBrowser::Load()
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		String pn = wspc[i];
 		const Package& p = wspc.GetPackage(i);
+		String pp = PackageDirectory(pn);
 		for(int j = 0; j < p.GetCount(); j++)
 			if(!p[j].separator) {
+				String fn = AppendFileName(pp, p[j]);
 				String s = GetFileText(AppendFileName(pn, p[j]));
-				if(fs.Find(s) < 0 && (IsNull(find) || MatchCib(s, find)) && MatchCib(s, match)) {
+				if(fs.Find(s) < 0 && (IsNull(find) || MatchCib(s, find)) && MatchCib(s, match) && MatchPm(fn, pm)) {
 					int f = GetCppFileIndex(SourcePath(pn, p[j]));
 					txt.Add(s);
 					ndx.Add(f);
@@ -115,7 +124,7 @@ void CodeBrowser::Load()
 		scope.Add(IsString(ndx[i]) ? ndx[i] : Null, txt[i], ndx[i]);
 	if(scope.FindSetCursor(key))
 		scope.ScCursor(sc);
-	clear.Enable(IsSearch());
+//	clear.Enable(IsSearch());
 }
 
 int ItemCompare(const Value& v1, const Value& v2)
@@ -170,6 +179,7 @@ void CodeBrowser::LoadScope()
 	int file = IsNumber(x) ? (int)x : -1;
 	String scope = file < 0 ? String(x) : String();
 	int q = CodeBase().Find(scope);
+	bool filematch = file >= 0 && MatchCib(GetFileText(GetCppFile(file)), find);
 	if(q >= 0) {
 		const Array<CppItem>& n = CodeBase()[q];
 		VectorMap<String, bool> inherited;
@@ -179,7 +189,7 @@ void CodeBrowser::LoadScope()
 		for(int i = 0; i < n.GetCount(); i = file < 0 ? FindNext(n, i) : i + 1) {
 			CppItemInfo m;
 			(CppItem&) m = n[i];
-			if((file < 0 || m.file == file) && m.uname.StartsWith(find) && set.Find(m.qitem) < 0) {
+			if((m.uname.StartsWith(find) || filematch && m.file == file) && set.Find(m.qitem) < 0) {
 				set.Add(m.qitem);
 				int q = inherited.Find(m.qitem);
 				if(q >= 0) {
@@ -193,7 +203,7 @@ void CodeBrowser::LoadScope()
 	item.Sort(1, sort ? ItemCompareLexical : ItemCompare);
 	if(item.FindSetCursor(key))
 		item.ScCursor(sc);
-	clear.Enable(IsSearch());
+//	clear.Enable(IsSearch());
 }
 
 String CodeBrowser::GetCodeRef(int i) const
@@ -259,7 +269,7 @@ void CodeBrowser::Search()
 
 bool CodeBrowser::Key(dword key, int count)
 {
-	clear.Enable(IsSearch());
+//	clear.Enable(IsSearch());
 	if(key == K_UP || key == K_DOWN) {
 		if(search.HasFocus()) {
 			int l, h;
@@ -302,9 +312,11 @@ void CodeBrowser::ClearSearch()
 
 void CodeBrowser::SetRange(int r)
 {
+	if(range == r)
+		r = 0;
 	range = r;
-	for(int i = 0; i < 4; i++)
-		rangebutton[i] <<= range == i;
+	for(int i = 0; i < 3; i++)
+		rangebutton[i] <<= range == i + 1;
 	Load();
 }
 
@@ -324,16 +336,16 @@ CodeBrowser::CodeBrowser()
 	search.NullText("Find ");
 	search.SetFilter(SearchItemFilter);
 	search <<= THISBACK(Search);
-	search.AddFrame(clear);
-	clear.SetImage(BrowserImg::Clear());
-	clear.NoWantFocus();
-	clear <<= THISBACK(ClearSearch);
+//	search.AddFrame(clear);
+//	clear.SetImage(BrowserImg::Clear());
+//	clear.NoWantFocus();
+//	clear <<= THISBACK(ClearSearch);
 	range = 0;
-	static const char *tip[] = { "All", "Nest", "Package", "File" };
-	for(int i = 0; i < 4; i++)
-		rangebutton[i].SetImage(BrowserImg::Get(BrowserImg::I_range_all + i)).Tip(tip[i])
-		              <<= THISBACK1(SetRange, i);
-	rangebutton[0] <<= true;
+	static const char *tip[] = { "Nest", "Package", "File" };
+	for(int i = 0; i < 3; i++)
+		rangebutton[i].SetImage(BrowserImg::Get(BrowserImg::I_range_nest + i)).Tip(tip[i])
+		              <<= THISBACK1(SetRange, i + 1);
+	SetRange(0);
 	sort.Tip("Order by names");
 	sort.SetImage(BrowserImg::Sort());
 	sort <<= THISBACK(LoadScope);
