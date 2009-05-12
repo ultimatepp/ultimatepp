@@ -1,1 +1,0 @@
-FN(void, gnome_triggers_vdo, (const char *msg, const char *level, const char *supinfo[]))
