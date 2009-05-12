@@ -110,6 +110,8 @@ struct CppItemInfoDisplay : public Display
 	CppItemInfoDisplay() { namestart = false; showtopic = false; }
 };
 
+int SearchItemFilter(int c);
+
 struct CodeBrowser {
 	typedef CodeBrowser CLASSNAME;
 
@@ -118,9 +120,9 @@ struct CodeBrowser {
 	ArrayCtrl              item;
 	EditString             search_scope;
 	EditString             search;
-	FrameRight<Button>     clear;
+//	FrameRight<Button>     clear;
 	int                    range;
-	ButtonOption           rangebutton[4];
+	ButtonOption           rangebutton[3];
 	ButtonOption           sort;
 	Callback               WhenKeyItem;
 	Callback               WhenClear;

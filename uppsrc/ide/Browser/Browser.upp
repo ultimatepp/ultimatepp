@@ -14,7 +14,7 @@ file
 	Util.cpp,
 	Item.cpp,
 	ItemDisplay.cpp,
-	CodeBrowser.cpp,
+	CodeBrowser.cpp optimize_speed,
 	Browser.lay,
 	Browser.iml,
 	Topic readonly separator,
