@@ -173,7 +173,15 @@ bool IsFolder(const String& path)
 	return ff && ff.IsDirectory();
 }
 
-String PackagePath(const String& name) {
+VectorMap<String, String> package_cache;
+
+void InvalidatePackageCache()
+{
+	package_cache.Clear();
+}
+
+String PackagePath0(const String& name)
+{
 	String uppfile = NativePath(name);
 	if(IsFullPath(uppfile)) return NormalizePath(uppfile);
 	Vector<String> d = GetUppDirs();
@@ -185,6 +193,17 @@ String PackagePath(const String& name) {
 	}
 	return d.GetCount() ? NormalizePath(AppendFileName(AppendFileName(d[0], uppfile),
 		                                GetFileName(uppfile)) + ".upp") : "";
+}
+
+String PackagePath(const String& name)
+{
+	int q = package_cache.Find(name);
+	if(q < 0) {
+		String h = PackagePath0(name);
+		package_cache.Add(name, h);
+		return h;
+	}
+	return package_cache[q];
 }
 
 String SourcePath(const String& package, const String& file) {

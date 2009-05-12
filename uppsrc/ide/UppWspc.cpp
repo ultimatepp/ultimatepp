@@ -211,6 +211,7 @@ void WorkspaceWork::TouchFile(const String& path)
 
 void WorkspaceWork::PackageCursor()
 {
+	InvalidatePackageCache();
 	filelist.WhenBar.Clear();
 	actualpackage = GetActivePackage();
 	if(actualpackage.IsEmpty()) return;
