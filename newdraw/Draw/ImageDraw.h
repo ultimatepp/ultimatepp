@@ -17,7 +17,7 @@ class ImageDraw : public SystemDraw {
 #endif
 
 #ifdef PLATFORM_X11
-	Draw    alpha;
+	SystemDraw   alpha;
 #endif
 
 	bool    has_alpha;

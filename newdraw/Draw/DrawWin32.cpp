@@ -470,6 +470,17 @@ PrintDraw::~PrintDraw() {
 }
 #endif
 
+
+bool ScreenInPaletteMode()
+{
+	return ScreenInfo().PaletteMode();
+}
+
+Size GetScreenSize()
+{
+	return ScreenInfo().GetPageSize();
+}
+
 #endif
 
 END_UPP_NAMESPACE

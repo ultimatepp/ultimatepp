@@ -293,9 +293,6 @@ class FontInfo : Moveable<FontInfo> {
 	Data *ptr;
 	int   charset;
 
-	friend class Draw;
-	friend class SystemDraw;
-
 	CharMetrics       *CreateMetricsPage(int page) const;
 	CharMetrics       *GetPage(int page) const;
 	void               ComposeMetrics(Font fnt, CharMetrics *m, int from) const;
@@ -322,6 +319,7 @@ class FontInfo : Moveable<FontInfo> {
 	static void  InitFonts();
 	static void  SyncStdFont();
 	static void  FreeFonts();
+	static FontInfo     AcquireFontInfo(Font font, int angle);
 
 	typedef Link<Data, 2> FontLink;
 
@@ -330,12 +328,16 @@ class FontInfo : Moveable<FontInfo> {
 	static int          EnumFace(HDC hdc, const char *face);
 	static void         ForceFace(HDC hdc, const char *face, const char *aface);
 	static FontInfo     AcquireFontInfo0(Font font, HDC hdc, int angle);
-	static FontInfo     AcquireFontInfo(Font font, int angle);
+#endif
+
+#ifdef PLATFORM_X11
+	static XftFont     *CreateXftFont(Font font, int angle);
 #endif
 
 	friend class Font;
+	friend class Draw;
 	friend class SystemDraw;
-	friend void StaticExitDraw_();
+	friend void  StaticExitDraw_();
 
 public:
 	int        GetAscent() const                  { return ptr->ascent; }
@@ -749,9 +751,11 @@ public:
 	static int  GetStdFontCy()                          { return GetStdFontSize().cy; }
 	
 	static void Flush();
-	
+
+#ifdef PLATFORM_WIN32
 	HDC   BeginGdi();
 	void  EndGdi();
+#endif
 };
 
 void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);
@@ -859,7 +863,6 @@ public:
 	DrawingDraw();
 	DrawingDraw(int cx, int cy);
 	DrawingDraw(Size sz);
-	~DrawingDraw();
 };
 
 class NilDraw : public Draw {

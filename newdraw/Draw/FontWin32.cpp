@@ -5,7 +5,7 @@ NAMESPACE_UPP
 #ifdef PLATFORM_WIN32
 
 #define LLOG(x)     //  LOG(x)
-#define LTIMING(x)
+#define LTIMING(x)  //  TIMING(x)
 
 struct FontFaceInfo : Moveable<FontFaceInfo> {
 	String name;

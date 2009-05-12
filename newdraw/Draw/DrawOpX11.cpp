@@ -7,7 +7,7 @@ NAMESPACE_UPP
 #define LLOG(x)     // LOG(x)
 #define LTIMING(x)  // TIMING(x)
 
-void Draw::BeginOp()
+void SystemDraw::BeginOp()
 {
 	Cloff f = cloff.Top();
 	Vector<Rect> newclip;
@@ -17,7 +17,7 @@ void Draw::BeginOp()
 	cloff.Add(f);
 }
 
-void Draw::OffsetOp(Point p)
+void SystemDraw::OffsetOp(Point p)
 {
 	Cloff f = cloff.Top();
 	f.offseti = offset.GetCount();
@@ -26,9 +26,9 @@ void Draw::OffsetOp(Point p)
 	cloff.Add(f);
 }
 
-bool Draw::ClipOp(const Rect& r)
+bool SystemDraw::ClipOp(const Rect& r)
 {
-	LLOG("Draw::ClipOp(" << r << ")");
+	LLOG("SystemDraw::ClipOp(" << r << ")");
 	Cloff f = cloff.Top();
 	bool ch = false;
 	Vector<Rect> newclip = Intersect(clip.Top(), r + actual_offset, ch);
@@ -42,9 +42,9 @@ bool Draw::ClipOp(const Rect& r)
 	return clip.Top().GetCount();
 }
 
-bool Draw::ClipoffOp(const Rect& r)
+bool SystemDraw::ClipoffOp(const Rect& r)
 {
-	LLOG("Draw::ClipOffOp(" << r << ")");
+	LLOG("SystemDraw::ClipOffOp(" << r << ")");
 	Cloff f = cloff.Top();
 	bool ch = false;
 	Vector<Rect> newclip = Intersect(clip.Top(), r + actual_offset, ch);
@@ -61,7 +61,7 @@ bool Draw::ClipoffOp(const Rect& r)
 	return clip.Top().GetCount();
 }
 
-void Draw::EndOp()
+void SystemDraw::EndOp()
 {
 	ASSERT(cloff.GetCount());
 	cloff.Drop();
@@ -70,9 +70,9 @@ void Draw::EndOp()
 	SetClip();
 }
 
-bool Draw::ExcludeClipOp(const Rect& r)
+bool SystemDraw::ExcludeClipOp(const Rect& r)
 {
-	LLOG("Draw::ExcludeClipOp(" << r << ")");
+	LLOG("SystemDraw::ExcludeClipOp(" << r << ")");
 	CloneClip();
 	Vector<Rect>& cl = clip.Top();
 	bool ch = false;
@@ -84,7 +84,7 @@ bool Draw::ExcludeClipOp(const Rect& r)
 	return clip.Top().GetCount();
 }
 
-bool Draw::IntersectClipOp(const Rect& r)
+bool SystemDraw::IntersectClipOp(const Rect& r)
 {
 	CloneClip();
 	Vector<Rect>& cl = clip.Top();
@@ -97,24 +97,7 @@ bool Draw::IntersectClipOp(const Rect& r)
 	return clip.Top().GetCount();
 }
 
-Rect Draw::GetClipOp() const
-{
-	LLOG("Draw::GetClipOp; #clip = " << clip.GetCount() << ", #cloff = " << cloff.GetCount()
-		<< ", clipi = " << cloff.Top().clipi);
-	const Vector<Rect>& cl = clip[cloff.Top().clipi];
-	Rect box(0, 0, 0, 0);
-	if(!cl.GetCount()) return box;
-	box = cl[0];
-	LLOG("cl[0] = " << box);
-	for(int i = 1; i < cl.GetCount(); i++) {
-		LLOG("cl[" << i << "] = " << cl[i]);
-		box |= cl[i];
-	}
-	LLOG("out box = " << box << ", actual offset = " << actual_offset);
-	return box - actual_offset;
-}
-
-bool Draw::IsPaintingOp(const Rect& r) const
+bool SystemDraw::IsPaintingOp(const Rect& r) const
 {
 	LTIMING("IsPaintingOp");
 	Rect rr = r + actual_offset;
@@ -125,7 +108,7 @@ bool Draw::IsPaintingOp(const Rect& r) const
 	return false;
 }
 
-void Draw::DrawRectOp(int x, int y, int cx, int cy, Color color)
+void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
 	LTIMING("DrawRect");
 	DrawLock __;
@@ -143,7 +126,7 @@ void Draw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	}
 }
 
-void Draw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
+void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	DrawLock __;
 	if(IsNull(width) || IsNull(color)) return;
@@ -154,7 +137,7 @@ void Draw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 	          x2 + actual_offset.x, y2 + actual_offset.y);
 }
 
-void Draw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
+void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
 	                          const int *counts, int count_count,
 	                          int width, Color color, Color doxor)
 {
@@ -213,7 +196,7 @@ void Draw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
 	XChangeGC(Xdisplay, GetGC(), GCForeground | GCLineWidth | GCFunction, &gcv_old);
 }
 
-static void DrawPolyPolyPolygonRaw(Draw& draw, const Point *vertices, int vertex_count,
+static void DrawPolyPolyPolygonRaw(SystemDraw& draw, const Point *vertices, int vertex_count,
 	const int *subpolygon_counts, int subpolygon_count_count, const int *, int)
 {
 	DrawLock __;
@@ -234,7 +217,7 @@ static void DrawPolyPolyPolygonRaw(Draw& draw, const Point *vertices, int vertex
 	}
 }
 
-void Draw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
+void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	 const int *subpolygon_counts, int subpolygon_count_count,
 	const int *disjunct_polygon_counts, int disjunct_polygon_count_count,
 	Color color, int width, Color outline, uint64 pattern, Color doxor)
@@ -278,7 +261,7 @@ void Draw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	XChangeGC(Xdisplay, GetGC(), GCForeground | GCFunction | GCLineWidth, &gcv_old);
 }
 
-void Draw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
+void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
 	DrawLock __;
 	SetLineStyle(pen);
@@ -294,7 +277,7 @@ void Draw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 	}
 }
 
-void Draw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
+void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 {
 	DrawLock __;
 	XGCValues gcv, gcv_old;
@@ -313,6 +296,93 @@ void Draw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color co
 	XDrawArc(Xdisplay, GetDrawable(), GetGC(), rc.left + offset.x, rc.top + offset.y,
 		rc.Width(), rc.Height(), angle1, angle2);
 	XChangeGC(Xdisplay, GetGC(), GCForeground, &gcv_old);
+}
+
+void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
+                      Color ink, int n, const int *dx) {
+	LTIMING("DrawText");
+	LLOG("DrawText " << ToUtf8(WString(text, n)) << " color:" << ink << " font:" << font);
+	//TODO - X11 seems to crash when displaying too long strings (?)
+	int ox = x + actual_offset.x;
+	int oy = y + actual_offset.y;
+	SetForeground(ink);
+	SetFont(font, angle);
+	const FontInfo::Data *fd = lastFont.ptr;
+	XftColor c;
+	c.color.red = ink.GetR() << 8;
+	c.color.green = ink.GetG() << 8;
+	c.color.blue = ink.GetB() << 8;
+	c.color.alpha = 0xffff;
+	c.pixel = GetXPixel(ink.GetR(), ink.GetG(), ink.GetB());
+	if(angle) {
+		int xpos = 0;
+		for(int i = 0; i < n; i++) {
+			wchar h = text[i];
+			XftDrawString16(xftdraw, &c, fd->xftfont,
+			                int(ox + xpos * fd->cosa + fd->offset.cx),
+			                int(oy - xpos * fd->sina + fd->offset.cy),
+			                (FcChar16 *)&h, 1);
+			xpos += dx ? dx[i] : lastFont[text[i]];
+		}
+		if(font.IsUnderline() || font.IsStrikeout()) {
+			x += fd->offset.cx;
+			y += fd->offset.cy;
+			if(font.IsUnderline())
+				DrawLine(
+					int(x + fd->underline_position * fd->sina),
+					int(y + fd->underline_position * fd->cosa),
+					int(x + xpos * fd->cosa + fd->underline_position * fd->sina),
+					int(y - xpos * fd->sina + fd->underline_position * fd->cosa),
+					fd->underline_thickness,
+					ink
+				);
+			if(font.IsStrikeout()) {
+				int p = 2 * fd->ascent / 3;
+				DrawLine(
+					int(x + p * fd->sina),
+					int(y + p * fd->cosa),
+					int(x + xpos * fd->cosa + p * fd->sina),
+					int(y - xpos * fd->sina + p * fd->cosa),
+					fd->underline_thickness,
+					ink
+				);
+			}
+		}
+	}
+	else {
+		if(dx) {
+			int xpos = ox;
+			Buffer<XftCharSpec> ch(n);
+			for(int i = 0; i < n; i++) {
+				ch[i].ucs4 = text[i];
+				ch[i].x = xpos;
+				ch[i].y = oy + fd->ascent;
+				xpos += dx[i];
+			}
+			XftDrawCharSpec(xftdraw, &c, fd->xftfont, ch, n);
+		}
+		else
+			XftDrawString16(xftdraw, &c, fd->xftfont, ox, oy + fd->ascent,
+			                (FcChar16 *)text, n);
+		LLOG("XftColor: r=" << c.color.red << ", g=" << c.color.green << ", b=" << c.color.blue
+			<< ", alpha=" << c.color.alpha << ", pixel=" << FormatIntHex(c.pixel));
+		if(font.IsUnderline() || font.IsStrikeout()) {
+			int cx;
+			if(dx && n > 0) {
+				cx = 0;
+				Sum(cx, dx, dx + n - 1);
+				cx += lastFont[text[n - 1]];
+			}
+			else
+				cx = GetTextSize(text, font, n).cx;
+			if(font.IsUnderline())
+				DrawRect(x, y + lastFont.GetAscent() + lastFont.ptr->underline_position,
+				         cx, lastFont.ptr->underline_thickness, ink);
+			if(font.IsStrikeout())
+				DrawRect(x, y + 2 * lastFont.GetAscent() / 3,
+				         cx, lastFont.ptr->underline_thickness, ink);
+		}
+	}
 }
 
 #endif

@@ -659,12 +659,6 @@ DrawingDraw::DrawingDraw(int cx, int cy) {
 	Create(cx, cy);
 }
 
-DrawingDraw::~DrawingDraw() {
-#ifdef PLATFORM_X11
-	XFreeGC(Xdisplay, gc);
-#endif
-}
-
 Size Drawing::RatioSize(int cx, int cy) const {
 	return GetRatioSize(GetSize(), cx, cy);
 }
