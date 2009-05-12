@@ -228,7 +228,7 @@ public:
 class PdfDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
-	virtual Size  GetPagePixels() const;
+	virtual Size  GetPageSize() const;
 
 	virtual void StartPage();
 	virtual void EndPage();

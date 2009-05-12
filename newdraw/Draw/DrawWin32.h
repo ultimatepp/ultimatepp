@@ -3,7 +3,7 @@
 class SystemDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
-	virtual Size  GetPagePixels() const;
+	virtual Size  GetPageSize() const;
 
 	virtual void BeginOp();
 	virtual void EndOp();
@@ -39,7 +39,8 @@ public:
 	virtual int  GetCloffLevel() const;
 
 private:
-	Size  pagePixels;
+	Size  pageSize;
+	Size  nativeSize;
 	Size  nativeDpi;
 	bool  palette:1;
 	bool  color16:1;
@@ -135,22 +136,28 @@ public:
 };
 
 #ifndef PLATFORM_WINCE
-class WinMetaFile {
+class WinMetaFile/* : NoCopy */{
 	Size size;
-	mutable HENHMETAFILE hemf;
+	/*mutable */HENHMETAFILE hemf; //TODO: Remove picks
 
-	void     ChkP() const                   { ASSERT(!IsPicked()); }
+	void     ChkP() const                   { /*ASSERT(!IsPicked());*/ }
 	void     Init();
-	void     Pick(pick_ WinMetaFile& src);
-	void     Copy(const WinMetaFile& src);
+//	void     Pick(pick_ WinMetaFile& src);
+//	void     Copy(const WinMetaFile& src);
 
 public:
 	void          Attach(HENHMETAFILE emf);
 	HENHMETAFILE *Detach();
+	
+	void     Set(const void *data, int len);
+	void     Set(const String& data)        { Set(~data, data.GetCount()); }
+	
+	String   Get() const;
 
-	bool     IsPicked() const               { return (uintptr_t) hemf == 0xffffffff; }
+//	bool     IsPicked() const               { return (uintptr_t) hemf == 0xffffffff; }
 
 	operator bool() const                   { ChkP(); return hemf; }
+	void     SetSize(const Size& sz)        { size = sz; }
 	Size     GetSize() const                { ChkP(); return hemf ? size : Size(0, 0); }
 
 	void     Clear();
@@ -162,17 +169,19 @@ public:
 
 	void     ReadClipboard();
 	void     WriteClipboard() const;
-	bool     Load(const char *file);
+	void     Load(const char *file)         { Set(LoadFile(file)); }
 
-	WinMetaFile()                                 { Init(); }
+	WinMetaFile()                           { Init(); }
 	WinMetaFile(HENHMETAFILE hemf);
 	WinMetaFile(HENHMETAFILE hemf, Size sz);
 	WinMetaFile(const char *file);
+	WinMetaFile(void *data, int len);
+	WinMetaFile(const String& data);
 
-	WinMetaFile(pick_ WinMetaFile& src)           { Pick(src); }
-	WinMetaFile(const WinMetaFile& src, int)      { Copy(src); }
-	void     operator=(pick_ WinMetaFile& src)    { Clear(); Pick(src); }
-	void     operator<<=(const WinMetaFile& src)  { Clear(); Copy(src); }
+//	WinMetaFile(pick_ WinMetaFile& src)           { Pick(src); }
+//	WinMetaFile(const WinMetaFile& src, int)      { Copy(src); }
+//	void     operator=(pick_ WinMetaFile& src)    { Clear(); Pick(src); }
+//	void     operator<<=(const WinMetaFile& src)  { Clear(); Copy(src); }
 
 	~WinMetaFile()                                { Clear(); }
 
@@ -192,6 +201,14 @@ public:
 	WinMetaFileDraw(int cx, int cy, const char *app = NULL, const char *name = NULL, const char *file = NULL);
 	~WinMetaFileDraw();
 };
+
+void DrawWMF(Draw& w, int x, int y, int cx, int cy, const String& wmf);
+void DrawWMF(Draw& w, int x, int y, const String& wmf);
+Drawing LoadWMF(const char *path, int cx, int cy);
+Drawing LoadWMF(const char *path);
+
+String  AsWMF(const Drawing& iw);
+
 #endif
 
 class ScreenDraw : public SystemDraw {

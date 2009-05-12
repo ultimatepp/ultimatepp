@@ -109,7 +109,7 @@ dword DrawingDraw::GetInfo() const
 	return DOTS;
 }
 
-Size DrawingDraw::GetPagePixels() const
+Size DrawingDraw::GetPageSize() const
 {
 	return size;
 }

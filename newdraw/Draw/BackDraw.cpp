@@ -37,7 +37,7 @@ bool ScreenInPaletteMode()
 
 Size GetScreenSize()
 {
-	return ScreenInfo().GetPagePixels();
+	return ScreenInfo().GetPageSize();
 }
 
 END_UPP_NAMESPACE
