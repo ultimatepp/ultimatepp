@@ -69,7 +69,11 @@ struct Printer {
 	Printer(PrinterDlg& dlg, Draw& w, int tabs) : w(w), tabs(tabs) {
 		cols = ~dlg.columns;
 		line = ~dlg.line;
+#ifdef SYSTEMDRAW
+		page = w.GetPageSize();
+#else
 		page = w.GetPagePixels();
+#endif
 		columncx = page.cx / cols;
 		cx = page.cx / cols - 100;
 		int l = 0;

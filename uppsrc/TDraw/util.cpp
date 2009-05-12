@@ -11,6 +11,8 @@ enum { DOC_SCREEN_ZOOM = 140 };
 
 NAMESPACE_UPP
 
+#ifndef SYSTEMDRAW
+
 Size GetPixelsPerMeter(const Draw& draw)
 {
 	if(draw.Dots())
@@ -132,6 +134,15 @@ Size PointsToPixels(const Draw& draw, Size points)
 	return iscale(points, draw.GetPixelsPerInch(), Size(72, 72));
 }
 
+#else
+
+int VertDotsToPixels(const Draw& draw, int dots)
+{
+	return dots;
+}
+
+#endif
+
 void RGBtoHSV(Color c, double& h, double& s, double& v)
 {
 	RGBtoHSV(c.GetR() / 255.0, c.GetG() / 255.0, c.GetB() / 255.0, h, s, v);
@@ -169,6 +180,27 @@ Color GetColorGradient(Color c1, Color c2, int ratio1, int ratio2, double gamma)
 #ifdef PLATFORM_WIN32
 static void DrawDragDropRectRaw(Draw& draw, const Rect& rc, HBRUSH brush, int width)
 {
+#ifdef SYSTEMDRAW
+	SystemDraw *w = dynamic_cast<SystemDraw *>(&draw);
+	if(w) {
+		SystemDraw& draw = *w;
+		UnrealizeObject(brush);
+		HGDIOBJ old_brush = SelectObject(draw, brush);
+		SetBrushOrgEx(draw, ~rc.left, ~rc.top, NULL);
+		Size size = rc.Size();
+		enum { NOTPATINVERT = 0x00A50065 };
+		if(2 * width >= min(size.cx, size.cy))
+			::PatBlt(draw, rc.left, rc.top, size.cx, size.cy, NOTPATINVERT);
+		else
+		{
+			::PatBlt(draw, rc.left, rc.top, size.cx, width, NOTPATINVERT);
+			::PatBlt(draw, rc.left, rc.bottom - width, size.cx, width, NOTPATINVERT);
+			::PatBlt(draw, rc.left, rc.top + width, width, size.cy - 2 * width, NOTPATINVERT);
+			::PatBlt(draw, rc.right - width, rc.top + width, width, size.cy - 2 * width, NOTPATINVERT);
+		}
+		SelectObject(draw, old_brush);
+	}
+#else
 	UnrealizeObject(brush);
 	HGDIOBJ old_brush = SelectObject(draw, brush);
 	SetBrushOrgEx(draw, ~rc.left, ~rc.top, NULL);
@@ -184,6 +216,7 @@ static void DrawDragDropRectRaw(Draw& draw, const Rect& rc, HBRUSH brush, int wi
 		::PatBlt(draw, rc.right - width, rc.top + width, width, size.cy - 2 * width, NOTPATINVERT);
 	}
 	SelectObject(draw, old_brush);
+#endif
 }
 #endif
 
@@ -206,6 +239,10 @@ static void DrawDragDropRectRaw(Draw& draw, const Rect& rc, int width)
 void DrawDragDropRect(Draw& draw, const Rect& rc_old, const Rect& rc_new, int width, Color c1, Color c2)
 {
 #ifdef PLATFORM_WIN32
+#ifdef SYSTEMDRAW
+	SystemDraw *w = dynamic_cast<SystemDraw *>(&draw);
+	if(w) { SystemDraw& draw = *w;
+#endif
 	static const word halftone[] = { 0x5555, 0xaaaa, 0x5555, 0xaaaa, 0x5555, 0xaaaa, 0x5555, 0xaaaa };
 	HBITMAP bitmap = CreateBitmap(8, 8, 1, 1, halftone);
 	HBRUSH brush = CreatePatternBrush(bitmap);
@@ -219,6 +256,9 @@ void DrawDragDropRect(Draw& draw, const Rect& rc_old, const Rect& rc_new, int wi
 		DrawDragDropRectRaw(draw, rc_new, brush, width);
 	DeleteObject(brush);
 	draw.EndGdi();
+#ifdef SYSTEMDRAW
+	}
+#endif
 #endif
 #ifdef PLATFORM_X11
 	XGCValues gcv_old, gcv_new;
@@ -591,6 +631,10 @@ static void DrawPolyPolygonRaw(Draw& draw, const Point *vertices, int vertex_cou
 	bool is_inside, int outline_width, Color outline_color
 )
 {
+#ifdef SYSTEMDRAW
+	SystemDraw *w = dynamic_cast<SystemDraw *>(&draw);
+	if(w) { SystemDraw& draw = *w;
+#endif
 	draw.SetDrawPen(outline_width, outline_color);
 	ASSERT(sizeof(POINT) == sizeof(Point)); // modify algorithm when not
 	enum { MAX_POLY = 8000 };
@@ -603,8 +647,13 @@ static void DrawPolyPolygonRaw(Draw& draw, const Point *vertices, int vertex_cou
 			draw.SetDrawPen(PEN_NULL, Black);
 			Vector<Point> split_vertices;
 			Vector<int> split_counts;
+		#ifdef SYSTEMDRAW
+			SplitPolygon(vertices, vertex_count, subpolygon_counts, subpolygon_count_count,
+				split_vertices, split_counts, Size(9999, 9999));
+		#else
 			SplitPolygon(vertices, vertex_count, subpolygon_counts, subpolygon_count_count,
 				split_vertices, split_counts, draw.GetClip());
+		#endif
 			//!! todo: maxcount for splitpolygon
 			const Point *sv = split_vertices.Begin();
 			for(const int *sc = split_counts.Begin(), *se = split_counts.End(); sc < se; sc++) {
@@ -631,6 +680,9 @@ static void DrawPolyPolygonRaw(Draw& draw, const Point *vertices, int vertex_cou
 		}
 		draw.SetDrawPen(outline_width, outline_color);
 	}
+#ifdef SYSTEMDRAW
+	}
+#endif
 }
 #elif defined(PLATFORM_X11)
 static void FillPolyPolygonRaw(GC gc, Drawable drawable, Rect clip, Point offset,
@@ -746,6 +798,7 @@ void DrawPolyPolyPolygon(Draw& draw, const Point *vertices, int vertex_count,
 //			NEVER();
 #endif
 
+#if 0
 	if(draw.IsDrawing())
 	{
 //		TIMING("DrawPolyPolygon/stream");
@@ -758,6 +811,7 @@ void DrawPolyPolyPolygon(Draw& draw, const Point *vertices, int vertex_count,
 			color, width, outline, pattern, doxor);
 */		return;
 	}
+#endif
 //	TIMING("DrawPolyPolygon/hdc");
 	bool is_xor = !IsNull(doxor);
 
@@ -809,6 +863,10 @@ void DrawPolyPolyPolygon(Draw& draw, const Point *vertices, int vertex_count,
 
 
 #if defined(PLATFORM_WIN32)
+	#ifdef SYSTEMDRAW
+		SystemDraw *w = dynamic_cast<SystemDraw *>(&draw);
+		if(w) { SystemDraw& draw = *w;
+	#endif
 		if(pattern) {
 			int old_rop = GetROP2(draw);
 			HGDIOBJ old_brush = GetCurrentObject(draw, OBJ_BRUSH);
@@ -877,6 +935,9 @@ void DrawPolyPolyPolygon(Draw& draw, const Point *vertices, int vertex_count,
 			if(is_xor)
 				SetROP2(draw, R2_COPYPEN);
 		}
+	#ifdef SYSTEMDRAW
+		}
+	#endif
 #elif defined(PLATFORM_X11)
 		if(fill_gc)
 			FillPolyPolygonRaw(fill_gc, draw.GetDrawable(), draw.GetClip(), draw.GetOffset(),
@@ -1190,6 +1251,7 @@ static void DrawGradient(Draw& draw, const Rect& rc, Point A, Color cA, Point B,
 	int shift = ScalarProduct(A, N);
 	int scale = ScalarProduct(B, N) - shift;
 
+#ifndef SYSTEMDRAW
 	if(draw.IsDrawing())
 	{
 		int block = 16;
@@ -1199,6 +1261,12 @@ static void DrawGradient(Draw& draw, const Rect& rc, Point A, Color cA, Point B,
 					GetColorGradient(cA, cB, ScalarProduct(Point(x, y), N) - shift, scale, gamma));
 		return;
 	}
+#endif
+
+#ifdef SYSTEMDRAW
+	SystemDraw *w = dynamic_cast<SystemDraw *>(&draw);
+	if(w) { SystemDraw& draw = *w;
+#endif
 
 	draw.BeginGdi();
 	SelectObject(draw, GetStockObject(NULL_PEN));
@@ -1242,6 +1310,11 @@ static void DrawGradient(Draw& draw, const Rect& rc, Point A, Color cA, Point B,
 	}
 
 	draw.EndGdi();
+
+#ifdef SYSTEMDRAW
+	}
+#endif
+
 #endif
 }
 
