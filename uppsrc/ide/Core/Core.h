@@ -162,6 +162,8 @@ void   SetVar(const String& var, const String& value);
 String GetAnyFileName(const char *path);
 String GetAnyFileTitle(const char *path);
 String CatAnyPath(String path, const char *more);
+
+void   InvalidatePackageCache();
 String PackagePath(const String& name);
 String SourcePath(const String& package, const String& name);
 inline

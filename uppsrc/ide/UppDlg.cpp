@@ -576,6 +576,7 @@ PackageEditor::PackageEditor()
 }
 
 void EditPackages(const char *main, const char *startwith, String& cfg) {
+	InvalidatePackageCache();
 	PackageEditor pe;
 	pe.Sizeable();
 	StringStream in(cfg);
