@@ -189,7 +189,7 @@ public:
 	bool  PaletteMode() const                           { return palette; }
 	bool  IsMono() const                                { return is_mono; }
 
-	Size  GetPagePixels() const                         { return native ? pagePixels : pageDots; }
+	Size  GetPageSize() const                         { return native ? pagePixels : pageDots; }
 	Size  GetPixelsPerInch() const                      { return native ? nativeDpi : inchPixels; }
 	Size  GetPageMMs() const                            { return pageMMs; }
 
@@ -219,7 +219,7 @@ public:
 	bool  IsDrawing() const;
 
 	virtual dword GetInfo() const;
-	virtual Size  GetPagePixels() const;
+	virtual Size  GetPageSize() const;
 
 	virtual void StartPage();
 	virtual void EndPage();
@@ -539,7 +539,7 @@ public:
 	bool  IsDrawing() const;
 
 	virtual dword GetInfo() const;
-	virtual Size  GetPagePixels() const;
+	virtual Size  GetPageSize() const;
 
 	virtual void StartPage();
 	virtual void EndPage();

@@ -13,7 +13,7 @@ dword PdfDraw::GetInfo() const
 	return DOTS;
 }
 
-Size PdfDraw::GetPagePixels() const
+Size PdfDraw::GetPageSize() const
 {
 	return pgsz;
 }

@@ -1,6 +1,8 @@
 #ifndef DRAW_H
 #define DRAW_H
 
+#define SYSTEMDRAW 1
+
 #include <Core/Core.h>
 
 #ifdef PLATFORM_X11
@@ -563,8 +565,8 @@ public:
 	};
 
 	virtual dword GetInfo() const = 0;
-	virtual Size  GetPagePixels() const = 0;
 
+	virtual Size GetPageSize() const;
 	virtual void StartPage();
 	virtual void EndPage();
 
@@ -808,7 +810,7 @@ public:
 class DrawingDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
-	virtual Size  GetPagePixels() const;
+	virtual Size  GetPageSize() const;
 	virtual void BeginOp();
 	virtual void EndOp();
 	virtual void OffsetOp(Point p);
@@ -863,7 +865,7 @@ public:
 class NilDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
-	virtual Size  GetPagePixels() const;
+	virtual Size  GetPageSize() const;
 	virtual void BeginOp();
 	virtual void EndOp();
 	virtual void OffsetOp(Point p);
@@ -990,6 +992,8 @@ DrawingToPdfFnType GetDrawingToPdfFn();
 #include "ImageDraw.h"
 #include "Debug.h"
 #include "Cham.h"
+
+typedef ImageDraw SystemImageDraw;
 
 END_UPP_NAMESPACE
 

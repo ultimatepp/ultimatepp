@@ -11,17 +11,17 @@ static COLORREF sLightGray;
 
 dword SystemDraw::GetInfo() const
 {
-	return native ? style|NATIVE : style;
+	return native || !(style & DOTS) ? style|NATIVE : style;
 }
 
-Size SystemDraw::GetPagePixels() const
+Size SystemDraw::GetPageSize() const
 {
-	return pagePixels;
+	return native && Dots() ? nativeSize : pageSize;
 }
 
 Size SystemDraw::GetNativeDpi() const
 {
-	return nativeDpi;
+	return Dots() ? nativeDpi : Size(96, 96);
 }
 
 void StaticExitDraw_()
@@ -257,7 +257,7 @@ void SystemDraw::LoadCaps() {
 	palette = (GetDeviceCaps(handle, RASTERCAPS) & RC_PALETTE);
 	if(palette)
 		color16 = GetDeviceCaps(handle, SIZEPALETTE) != 256;
-	pagePixels = GetSizeCaps(HORZRES, VERTRES);
+	nativeSize = pageSize = GetSizeCaps(HORZRES, VERTRES);
 	nativeDpi = GetSizeCaps(LOGPIXELSX, LOGPIXELSY);
 	is_mono = GetDeviceCaps(handle, BITSPIXEL) == 1 && GetDeviceCaps(handle, PLANES) == 1;
 }
@@ -420,6 +420,8 @@ void PrintDraw::InitPrinter()
 	native = 0;
 	actual_offset = Point(0, 0);
 	aborted = false;
+	pageSize.cx = 600 * nativeSize.cx / nativeDpi.cx; 
+	pageSize.cy = 600 * nativeSize.cy / nativeDpi.cy; 
 }
 
 void PrintDraw::StartPage()

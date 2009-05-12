@@ -11,9 +11,17 @@ void WinMetaFile::Init() {
 
 void WinMetaFile::Paint(Draw& w, const Rect& r) const {
 	ChkP();
+	if(!hemf)
+		return;
 	SystemDraw *h = dynamic_cast<SystemDraw *>(&w);
-	if(hemf && h)
+	if(h)
 		PlayEnhMetaFile(h->GetHandle(), hemf, r);
+	else {
+		Size sz = r.GetSize();
+		SystemImageDraw iw(sz);
+		Paint(iw, sz);
+		w.DrawImage(r.left, r.top, iw);
+	}
 }
 
 void WinMetaFile::Paint(Draw& w, int x, int y, int cx, int cy) const {
@@ -38,11 +46,12 @@ void WinMetaFile::WriteClipboard() const {
 }
 
 void WinMetaFile::Clear() {
-	if(hemf && !IsPicked())
+	if(hemf/* && !IsPicked()*/) //TODO
 		::DeleteEnhMetaFile(hemf);
 	hemf = NULL;
 }
 
+/* TODO: Remove picks
 void WinMetaFile::Pick(pick_ WinMetaFile& src) {
 	hemf = src.hemf;
 	size = src.size;
@@ -53,7 +62,7 @@ void WinMetaFile::Copy(const WinMetaFile& src) {
 	hemf = ::CopyEnhMetaFile(src.hemf, NULL);
 	size = src.size;
 }
-
+*/
 void WinMetaFile::Attach(HENHMETAFILE _hemf) {
 	Clear();
 	ENHMETAHEADER info;
@@ -64,8 +73,9 @@ void WinMetaFile::Attach(HENHMETAFILE _hemf) {
 	if(_hemf && ::GetEnhMetaFileHeader(_hemf, sizeof(info), &info)
 	   && info.rclFrame.left < info.rclFrame.right
 	   && info.rclFrame.top < info.rclFrame.bottom) {
-		size.cx = 600 * (info.rclFrame.right - info.rclFrame.left) / 2540;
-		size.cy = 600 * (info.rclFrame.bottom - info.rclFrame.top) / 2540;
+		size.cx = info.rclFrame.right - info.rclFrame.left;
+		size.cy = info.rclFrame.bottom - info.rclFrame.top;
+		size = 600 * size / 2540;
 		hemf = _hemf;
 	}
 }
@@ -82,52 +92,35 @@ struct PLACEABLE_METAFILEHEADER
 };
 #pragma pack(pop)
 
-bool WinMetaFile::Load(const char* path) {
+void WinMetaFile::Set(const void *data, int len)
+{
 	Clear();
-	FileIn file(path);
-	if(!file.Open(path) || file.GetSize() <= sizeof(ENHMETAHEADER))
-		return false;
 
-	int first = file.Get32le();
-	file.Seek(0);
+	if(len <= sizeof(ENHMETAHEADER))
+		return;
+
+	int first = Peek32le(data);
 
 	HENHMETAFILE hemf;
-	HMETAFILE hMF;
-	Size sz(1000, 1000);
-
-	if(first == 0x9AC6CDD7) {
-		PLACEABLE_METAFILEHEADER mfh;
-		file.Get(&mfh, 22);
-		String bits = LoadStream(file);
-		if((hMF = ::SetMetaFileBitsEx(bits.GetLength(), bits)) == NULL)
-			return false;
-		sz = Size(mfh.right - mfh.left, mfh.bottom - mfh.top);
-	}
-	else
-	if((hemf = ::GetEnhMetaFile(path)) != NULL) {
+	if((hemf = ::SetEnhMetaFileBits(len, (const BYTE *)data)) != NULL)
 		Attach(hemf);
-		return true;
+	else
+	if(first == 0x9AC6CDD7) {
+		const PLACEABLE_METAFILEHEADER *mfh = (const PLACEABLE_METAFILEHEADER *)data;
+		Attach(::SetWinMetaFileBits(len - 22, (const BYTE *)data + 22, NULL, NULL));
+		size = 600 * Size(mfh->right - mfh->left, mfh->bottom - mfh->top) / 2540;
+		return;
 	}
 	else
-	if((LOWORD(first) == 1 || LOWORD(first) == 2) && HIWORD(first) >= sizeof(METAHEADER) / 2) {
-		METAHEADER mh;
-		if(!file.GetAll(&mh, sizeof(mh)))
-			return false;
-		if(mh.mtVersion != 0x100 && mh.mtVersion != 0x300)
-			return false;
-		if((hMF = ::GetMetaFile(path)) == NULL)
-			return false;
-	}
-	else
-		return false;
+		Attach(::SetWinMetaFileBits(len, (const BYTE *)data, NULL, NULL));
+}
 
-	dword len = ::GetMetaFileBitsEx(hMF, 0, NULL);
-	Buffer<byte> bits(len);
-	::GetMetaFileBitsEx(hMF, len, bits);
-	Attach(::SetWinMetaFileBits(len, bits, NULL, NULL));
-	::DeleteMetaFile(hMF);
-	size = sz;
-	return true;
+String WinMetaFile::Get() const
+{
+	int size = ::GetEnhMetaFileBits(hemf, 0, 0);
+	StringBuffer b(size);
+	::GetEnhMetaFileBits(hemf, size, (BYTE *)~b);
+	return b;
 }
 
 void WinMetaFile::Serialize(Stream& s) {
@@ -155,6 +148,18 @@ void WinMetaFile::Serialize(Stream& s) {
 	}
 }
 
+WinMetaFile::WinMetaFile(void *data, int len)
+{
+	Init();
+	Set(data, len);
+}
+
+WinMetaFile::WinMetaFile(const String& data)
+{
+	Init();
+	Set(data);
+}
+
 WinMetaFile::WinMetaFile(HENHMETAFILE hemf) {
 	Init();
 	Attach(hemf);
@@ -169,6 +174,71 @@ WinMetaFile::WinMetaFile(HENHMETAFILE hemf, Size sz) {
 WinMetaFile::WinMetaFile(const char *file) {
 	Init();
 	Load(file);
+}
+
+struct cDrawWMF : DataDrawer {
+	int  y;
+	Size sz;
+	WinMetaFile wmf;
+
+	virtual void Open(const String& data, int cx, int cy);
+	virtual void Render(ImageBuffer& ib);
+};
+
+void cDrawWMF::Open(const String& data, int cx, int cy)
+{
+	y = 0;
+	wmf.Set(data);
+	sz = Size(cx, cy);
+}
+
+void cDrawWMF::Render(ImageBuffer& ib)
+{
+	if(wmf) {
+		ImageDraw iw(ib.GetSize());
+		wmf.Paint(iw, 0, -y, sz.cx, sz.cy);
+		y += ib.GetHeight();
+		ib = (Image)iw;
+	}
+	else
+		Fill(~ib, RGBAZero(), ib.GetLength());
+}
+
+INITBLOCK
+{
+	DataDrawer::Register<cDrawWMF>("wmf");
+};
+
+void DrawWMF(Draw& w, int x, int y, int cx, int cy, const String& wmf)
+{
+	w.DrawData(x, y, cx, cy, wmf, "wmf");
+}
+
+void DrawWMF(Draw& w, int x, int y, const String& wmf)
+{
+	WinMetaFile h(wmf);
+	Size sz = h.GetSize();
+	DrawWMF(w, x, y, sz.cx, sz.cy, wmf);
+}
+
+Drawing LoadWMF(const char *path, int cx, int cy)
+{
+	DrawingDraw iw(cx, cy);
+	DrawWMF(iw, 0, 0, cx, cy, LoadFile(path));
+	return iw;
+}
+
+Drawing LoadWMF(const char *path)
+{
+	String wmf = LoadFile(path);
+	WinMetaFile h(wmf);
+	if(h) {
+		Size sz = h.GetSize();
+		DrawingDraw iw(sz.cx, sz.cy);
+		DrawWMF(iw, 0, 0, sz.cx, sz.cy, wmf);
+		return iw;
+	}
+	return Null;
 }
 
 bool WinMetaFileDraw::Create(HDC hdc, int cx, int cy, const char *app, const char *name, const char *file) {
@@ -238,6 +308,14 @@ WinMetaFileDraw::WinMetaFileDraw(HDC hdc, int cx, int cy, const char *app, const
 
 WinMetaFileDraw::WinMetaFileDraw(int cx, int cy, const char *app, const char *name, const char *file) {
 	Create(cx, cy, app, name, file);
+}
+
+String AsWMF(const Drawing& iw)
+{
+	Size sz = iw.GetSize();
+	WinMetaFileDraw wd(sz.cx, sz.cy);
+	wd.DrawDrawing(0, 0, sz.cx, sz.cy, iw);
+	return wd.Close().Get();
 }
 
 #endif

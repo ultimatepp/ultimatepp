@@ -33,26 +33,24 @@ Draw::~Draw() {}
 
 Size Draw::GetPixelsPerInch() const
 {
-	return Dots() ? Size(600, 600) : Size(96, 96);
+	return IsNative() ? GetNativeDpi() : Dots() ? Size(600, 600) : Size(96, 96);
 }
 
 Size Draw::GetPageMMs() const
 {
-	return GetPagePixels() * 254 / (10 * GetPixelsPerInch());
+	return GetPageSize() * 254 / (10 * GetPixelsPerInch());
 }
 
 int Draw::GetNativeX(int x) const
 {
-	Size inchPixels = GetPixelsPerInch();
-	Size nativeDpi = GetNativeDpi();
-	return inchPixels != nativeDpi ? iscale(x, nativeDpi.cx, 600) : x;
+	Size sz = GetNativeDpi();
+	return Dots() && sz.cx != 600 ? iscale(x, sz.cx, 600) : x;
 }
 
 int Draw::GetNativeY(int y) const
 {
-	Size inchPixels = GetPixelsPerInch();
-	Size nativeDpi = GetNativeDpi();
-	return inchPixels != nativeDpi ? iscale(y, nativeDpi.cy, 600) : y;
+	Size sz = GetNativeDpi();
+	return Dots() && sz.cx != 600 ? iscale(y, sz.cy, 600) : y;
 }
 
 void Draw::Native(int& x, int& y) const
@@ -94,6 +92,8 @@ void LeaveDraw() {
 #endif
 	sDrawLock.Leave();
 }
+
+Size Draw::GetPageSize() const { return Size(0, 0); }
 
 void Draw::StartPage() {}
 void Draw::EndPage() {}
@@ -431,7 +431,7 @@ void Draw::Flush()
 // ---------------------------
 
 dword NilDraw::GetInfo() const { return DOTS; }
-Size NilDraw::GetPagePixels() const { return Size(0, 0); }
+Size NilDraw::GetPageSize() const { return Size(0, 0); }
 void NilDraw::BeginOp() {}
 void NilDraw::EndOp() {}
 void NilDraw::OffsetOp(Point p) {}

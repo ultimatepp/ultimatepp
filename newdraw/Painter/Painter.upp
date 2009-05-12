@@ -1,0 +1,42 @@
+description "2D software rendering with PDF/SVG strength\377";
+
+uses
+	Core,
+	CtrlLib;
+
+file
+	Painter.h,
+	Painter.hpp,
+	Painter.cpp,
+	SvgArc.cpp,
+	PainterPath.cpp,
+	FontWin32.cpp,
+	FontX11.cpp,
+	DrawOp.cpp,
+	Painting.h,
+	Painting.cpp,
+	PaintPainting.icpp,
+	BufferPainter.h,
+	Xform2D.cpp,
+	Approximate.cpp,
+	Stroker.cpp,
+	Dasher.cpp,
+	Transformer.cpp,
+	Interpolator.cpp optimize_speed,
+	Rasterizer.cpp optimize_speed,
+	RasterizerClip.cpp optimize_speed,
+	Path.cpp optimize_speed,
+	Context.cpp,
+	Fillers.h,
+	Fillers.cpp optimize_speed,
+	RenderChar.cpp,
+	Render.cpp optimize_speed,
+	Image.cpp optimize_speed,
+	Mask.cpp optimize_speed,
+	Gradient.cpp optimize_speed,
+	RadialGradient.cpp optimize_speed,
+	OnPath.cpp,
+	srcimp.tpp,
+	Info readonly separator,
+	Copying;
+
