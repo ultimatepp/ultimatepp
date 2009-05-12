@@ -1863,7 +1863,11 @@ String CreateHelpPDF()
 	try {
 		VectorMap<String, Value> vars;
 		PdfDraw pdf(210 * 6000 / 254, 297 * 6000 / 254);
+#ifdef SYSTEMDRAW
+		Rect margin = Rect(pdf.GetPageSize()).Deflated(236);
+#else
 		Rect margin = Rect(pdf.GetPagePixels()).Deflated(236);
+#endif
 		Progress progress;
 		progress.SetText("Sestavuji pøíruèku (odstavec %d)");
 		RichText text = HelpTopicExpand(HelpHostDPP("book"), Null, NoFormat(), progress);

@@ -49,7 +49,11 @@ void QtfCtrl::Layout() {
 	{
 		int cx = GetSize().cx - lm - rm;
 		if(cx <= 0) return;
+#ifdef SYSTEMDRAW
+		valuerect = doc.GetValueRects(zoom, NilDraw(), 0, 0, cx);
+#else
 		valuerect = doc.GetValueRects(zoom, ScreenInfo(), 0, 0, cx);
+#endif
 	}
 }
 
