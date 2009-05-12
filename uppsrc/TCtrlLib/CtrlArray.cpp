@@ -20,7 +20,7 @@ CtrlArray::Item::~Item()
 
 void CtrlArray::Item::Paint(Draw& draw)
 {
-	draw.DrawRect(draw.GetClip(), IsCursor() ? SWhiteGray : SColorFace());
+	draw.DrawRect(GetSize(), IsCursor() ? SWhiteGray : SColorFace());
 }
 
 void CtrlArray::Item::LeftDown(Point pt, dword keyflags)
@@ -179,7 +179,7 @@ void CtrlArray::Layout()
 
 void CtrlArray::Paint(Draw& draw)
 {
-	draw.DrawRect(draw.GetClip(), SGray);
+	draw.DrawRect(GetSize(), SGray);
 }
 
 void CtrlArray::RightDown(Point pt, dword keyflags)

@@ -38,13 +38,17 @@ Draw& ScreenInfo();
 
 void RtfDocOut::PutPicture(const Drawing& iw, Size sz) {
 #ifdef PLATFORM_WIN32
+#if SYSTEMDRAW
+	WinMetaFile wmf = AsWMF(iw);
+#else
 	WinMetaFile wmf = iw.AsWMF();
+#endif
 	HENHMETAFILE hemf = wmf.GetHEMF();
 	if(!hemf) return;
-	dword size = GetWinMetaFileBits(hemf, 0, NULL, MM_ANISOTROPIC, ScreenInfo());
+	dword size = GetWinMetaFileBits(hemf, 0, NULL, MM_ANISOTROPIC, ScreenHDC());
 	if(size <= 0) return;
 	StringBuffer b(size);
-	GetWinMetaFileBits(hemf, size, (byte *) ~b, MM_ANISOTROPIC, ScreenInfo());
+	GetWinMetaFileBits(hemf, size, (byte *) ~b, MM_ANISOTROPIC, ScreenHDC());
 	String data = b;
 	rtf.Cat(Format("\r\n{\\pict\\wmetafile8\\picw%d\\pich%d\\picwgoal%d\\pichgoal%d \r\n",
 			       254 * sz.cx / 60, 254 * sz.cy / 60, Dow(sz.cx), Dow(sz.cy)));

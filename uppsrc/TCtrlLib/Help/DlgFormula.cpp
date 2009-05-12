@@ -54,7 +54,7 @@ FormulaCtrl::FormulaCtrl()
 void FormulaCtrl::Paint(Draw& draw)
 {
 	RefCon<Formula> form = ParseFormula(text, font, color);
-	draw.DrawRect(draw.GetClip(), SWhite);
+	draw.DrawRect(GetSize(), SWhite);
 	if(!!form) {
 		form = new FormulaBox(form, LtBlue, FormulaBox::THICK);
 		Size client = GetSize();

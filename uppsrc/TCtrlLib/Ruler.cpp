@@ -177,7 +177,7 @@ void RulerCtrl::Paint(Draw& draw)
 	Size client = GetSize();
 	int csize = is_vert ? client.cy : client.cx;
 	int cheight = is_vert ? client.cx : client.cy;
-	Rect clip = draw.GetClip();
+	Rect clip = GetSize();
 	int cy = font.Info().GetHeight();
 	double pos1 = FromClient(0);
 	double pos2 = FromClient(csize);

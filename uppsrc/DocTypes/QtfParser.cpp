@@ -84,8 +84,13 @@ void QtfParser::Picture(int type) {
 		name.Cat(*term++);
 	if(type == 0) {
 #ifdef PLATFORM_WIN32
+#ifdef SYSTEMDRAW
+		Drawing iw = LoadWMF(GetExeDirFile(name));
+		if(!iw) iw = LoadWMF(name);
+#else
 		Drawing iw = Drawing::LoadWMF(GetExeDirFile(name));
 		if(!iw) iw = Drawing::LoadWMF(name);
+#endif
 		if(iw) Par().Cat(PaintRect(DrawingDisplay(), iw), cx, cy, state.value);
 #endif
 	}

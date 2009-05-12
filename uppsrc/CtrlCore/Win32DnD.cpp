@@ -108,6 +108,7 @@ String UDropTarget::Get(const char *fmt) const
 
 void UDropTarget::DnD(POINTL pl, bool drop, DWORD *effect, DWORD keys)
 {
+	LLOG("DnD effect: " << *effect);
 	dword e = *effect;
 	*effect = DROPEFFECT_NONE;
 	if(!ctrl)
@@ -119,20 +120,24 @@ void UDropTarget::DnD(POINTL pl, bool drop, DWORD *effect, DWORD keys)
 	d.allowed = 0;
 	d.action = 0;
 	if(e & DROPEFFECT_COPY) {
+		LLOG("DnD DROPEFFECT_COPY");
 		d.allowed = DND_COPY;
 		d.action = DND_COPY;
 	}
 	if(e & DROPEFFECT_MOVE) {
+		LLOG("DnD DROPEFFECT_MOVE");
 		d.allowed |= DND_MOVE;
 		if(Ctrl::GetDragAndDropSource())
 			d.action = DND_MOVE;
 	}
+	LLOG("DnD keys & MK_CONTROL:" << (keys & MK_CONTROL));
 	if((keys & MK_CONTROL) && (d.allowed & DND_COPY))
 		d.action = DND_COPY;
 	if((keys & (MK_ALT|MK_SHIFT)) && (d.allowed & DND_MOVE))
 		d.action = DND_MOVE;
 	ctrl->DnD(Point(pl.x, pl.y), d);
 	if(d.IsAccepted()) {
+		LLOG("DnD accepted, action: " << (int)d.action);
 		if(d.action == DND_MOVE)
 			*effect = DROPEFFECT_MOVE;
 		if(d.action == DND_COPY)
@@ -446,12 +451,15 @@ STDMETHODIMP UDropSource::QueryContinueDrag(BOOL fEscapePressed, DWORD grfKeySta
 
 STDMETHODIMP UDropSource::GiveFeedback(DWORD dwEffect)
 {
+	LLOG("GiveFeedback");
 	Image m = IsNull(move) ? copy : move;
 	if((dwEffect & DROPEFFECT_COPY) == DROPEFFECT_COPY) {
+		LLOG("GiveFeedback COPY");
 		if(!IsNull(copy)) m = copy;
 	}
 	else
 	if((dwEffect & DROPEFFECT_MOVE) == DROPEFFECT_MOVE) {
+		LLOG("GiveFeedback MOVE");
 		if(!IsNull(move)) m = move;
 	}
 	else
