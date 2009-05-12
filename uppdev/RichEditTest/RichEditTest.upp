@@ -9,4 +9,3 @@ mainconfig
 	"" = "GUI",
 	"" = "GUI NOGTK",
 	"" = "GUI MT";
-
