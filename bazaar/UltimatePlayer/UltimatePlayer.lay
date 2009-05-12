@@ -1,0 +1,26 @@
+LAYOUT(PlayerLayout, 620, 328)
+	ITEM(Splitter, spl, HSizePosZ(4, 4).VSizePosZ(4, 60))
+	ITEM(Button, play, LeftPosZ(4, 56).BottomPosZ(4, 52))
+	ITEM(Button, stop, LeftPosZ(64, 36).BottomPosZ(4, 52))
+	ITEM(Button, prev, RightPosZ(132, 64).BottomPosZ(4, 24))
+	ITEM(Button, next, RightPosZ(68, 60).BottomPosZ(4, 24))
+	ITEM(ProgressButton, vol, RightPosZ(68, 128).BottomPosZ(36, 20))
+	ITEM(Button, quit, RightPosZ(4, 28).BottomPosZ(32, 24))
+	ITEM(Button, totray, RightPosZ(4, 28).BottomPosZ(4, 24))
+	ITEM(Button, order, RightPosZ(36, 28).BottomPosZ(32, 24))
+	ITEM(Button, repeat, RightPosZ(36, 28).BottomPosZ(4, 24))
+	ITEM(StreamCtrl, info, HSizePosZ(104, 200).BottomPosZ(4, 52))
+END_LAYOUT
+
+LAYOUT(FilesLayout, 198, 100)
+	ITEM(Option, mp3, SetLabel(t_("mp3")).LeftPosZ(6, 60).TopPosZ(6, 15))
+	ITEM(Option, wma, SetLabel(t_("wma")).LeftPosZ(6, 60).TopPosZ(24, 15))
+	ITEM(Option, wav, SetLabel(t_("wav")).LeftPosZ(70, 60).TopPosZ(6, 15))
+	ITEM(Option, cda, SetLabel(t_("cda")).LeftPosZ(70, 60).TopPosZ(24, 15))
+	ITEM(Option, ogg, SetLabel(t_("ogg")).LeftPosZ(134, 60).TopPosZ(6, 15))
+	ITEM(Option, asf, SetLabel(t_("asf")).LeftPosZ(134, 60).TopPosZ(24, 15))
+	ITEM(Option, register_startup, SetLabel(t_("Register at startup")).HSizePosZ(34, 32).TopPosZ(48, 15))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(100, 66).BottomPosZ(4, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(30, 66).BottomPosZ(4, 24))
+END_LAYOUT
+

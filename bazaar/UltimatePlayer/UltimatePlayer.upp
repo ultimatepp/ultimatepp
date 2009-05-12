@@ -1,0 +1,40 @@
+uses
+	CtrlLib,
+	GridCtrl,
+	plugin\sqlite3;
+
+library
+	"fmodex_vc msacm32 psapi";
+
+options
+	"/D \"WIN32\"";
+
+file
+	ProgressButton.h,
+	ProgressButton.cpp,
+	StreamCtrl.h,
+	StreamCtrl.cpp,
+	TaskbarButton.cpp,
+	TaskbarButton.h,
+	Win32Utils.cpp,
+	Win32Utils.h,
+	build.h,
+	UltimatePlayer.rc,
+	UltimatePlayer.h,
+	UltimatePlayer.cpp,
+	UltimatePlayer.sch,
+	UltimatePlayer.lay,
+	UltimatePlayer.t charset "UTF-8",
+	UltimatePlayer.iml,
+	FMod.h,
+	FMod.cpp,
+	Changelog.txt;
+
+mainconfig
+	"" = "GUI MT",
+	"" = "GUI";
+
+custom() "",
+	"",
+	"";
+

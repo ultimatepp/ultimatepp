@@ -1,0 +1,49 @@
+[+] new feature
+[-] bug
+[*] change
+
+
+[v.1.00]
+	initial version
+   
+[v.1.01]
+	few bugs fixed, first public release
+	
+[v.1.02]
+    [+] the width and position of each column is now stored
+    [*] if stream has not title tag the file name without extension is displayed
+    [+] new options: add/insert folder to playlist, add/insert folder as playlist
+    [+] if stream is playing the play/pause button is blinking
+    [-] many grid control fixes
+    
+[v.1.1]
+    [*] saving files positions in grid optimizations (list with initial row order are not updated on exit)
+    [-] last song is no longer repeated forever..
+    [*] new highlighting style of found song
+    [+] finding active song (F3)
+    [+] following active song mode
+    [*] case sensitive searching is disabled by default
+    [+] sperate list for system music sources (explorator and cd/dvd devices)
+    [+] single instance option + passing command line between instances
+    [+] file associations
+    [+] cd playing
+    [+] tray icon (playing, stopping, hiding/opening player)
+    [+] repeating playlist, all playlist and one song modes 
+    [+] shuffle mode 
+    [+] updated to the newest fmod library
+    [+] up is now in english and polish language
+    [+] reaction on space key (play/pause)
+    [+] playing last played song on startup option
+    [+] going to last played song on startup option
+    [-] various bugfixes 
+    
+    
+[ToDo]
+    
+    [1.2]
+    - getting cd titles from internet
+    - saving system playlists as normal playlists    
+    
+    [2.0]
+    - video playing...
+    

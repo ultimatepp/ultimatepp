@@ -1,0 +1,6 @@
+#ifndef _UltimatePlayer_icpp_init_stub
+#define _UltimatePlayer_icpp_init_stub
+#include "CtrlLib/init"
+#include "GridCtrl/init"
+#include "plugin\sqlite3/init"
+#endif
