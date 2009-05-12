@@ -19,7 +19,7 @@ static void sInitXImage(XImage& ximg, Size sz)
 #endif
 }
 
-void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels)
+void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 {
 	DrawLock __;
 	Pixmap pixmap = XCreatePixmap(Xdisplay, Xroot, cx, cy, 24);
@@ -225,7 +225,7 @@ void ImageDraw::Init()
 
 	Vector<Rect> clip;
 	clip.Add(RectC(0, 0, size.cx, size.cy));
-	Draw::Init(clip, Point(0, 0));
+	SystemDraw::Init(clip, Point(0, 0));
 	alpha.Init(clip, Point(0, 0));
 
 	has_alpha = false;

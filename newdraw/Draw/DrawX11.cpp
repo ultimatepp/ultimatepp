@@ -39,12 +39,13 @@ dword       Xwhite;
 int         Xconnection;
 byte       *Xmapcolor;
 byte       *Xunmapcolor;
+bool        Xpalette;
 
 dword   (*Xgetpixel)(int r, int g, int b);
 
 void StaticExitDraw_()
 {
-	Draw::FreeFonts();
+	FontInfo::FreeFonts();
 }
 
 EXITBLOCK
@@ -186,6 +187,7 @@ void InitX11Draw(XDisplay *display)
 		Xgetpixel = GetTrueColorPixel;
 	}
 	else {
+		Xpalette = true;
 		sAllocColors();
 		int colorcount = max(1 << Xdepth, 256);
 		Buffer<XColor> cs(colorcount);
@@ -221,7 +223,7 @@ void InitX11Draw(XDisplay *display)
 	}
 //	XFree(v);
 
-	Draw::SetStdFont(ScreenSans(12));
+	FontInfo::SetStdFont(ScreenSans(12));
 }
 
 void InitX11Draw(const char *dispname)
@@ -269,7 +271,7 @@ void SetClip(GC gc, XftDraw *xftdraw, const Vector<Rect>& cl)
 	LLOG("//XftDrawSetClipRectangles");
 }
 
-void Draw::CloneClip()
+void SystemDraw::CloneClip()
 {
 	if(cloff.GetCount() > 1 && cloff.Top().clipi == cloff[cloff.GetCount() - 2].clipi) {
 		cloff.Top().clipi = clip.GetCount();
@@ -278,11 +280,10 @@ void Draw::CloneClip()
 	}
 }
 
-void Draw::SetForeground(Color color)
+void SystemDraw::SetForeground(Color color)
 {
 	DrawLock __;
 	LTIMING("SetForeground");
-	if(IsDrawing()) return;
 	int p = GetXPixel(color.GetR(), color.GetG(), color.GetB());
 	if(p == foreground) return;
 	LTIMING("XSetForeground");
@@ -291,17 +292,24 @@ void Draw::SetForeground(Color color)
 	XSetForeground(Xdisplay, gc, foreground);
 }
 
-void Draw::SetClip() {
+void SystemDraw::SetClip() {
 	DrawLock __;
-	if(IsDrawing() || dw == Xroot) return;
+	if(dw == Xroot) return;
 	LTIMING("SetClip");
 	UPP::SetClip(gc, xftdraw, clip.Top());
 }
 
-void Draw::SetLineStyle(int width)
+void SystemDraw::SetFont(Font font, int angle) {
+	DrawLock __;
+	LLOG("Set font: " << font << " face: " << font.GetFaceName());
+	if(lastFont && lastFont.IsEqual(CHARSET_UNICODE, font, angle))
+		return;
+	lastFont = FontInfo::AcquireFontInfo(font, angle);
+}
+
+void SystemDraw::SetLineStyle(int width)
 {
 	DrawLock __;
-	if(IsDrawing()) return;
 	if(width == linewidth) return;
 	linewidth = width;
 	if(IsNull(width))
@@ -328,26 +336,17 @@ void Draw::SetLineStyle(int width)
 	                   width < PEN_SOLID ? LineOnOffDash : LineSolid, CapRound, JoinRound);
 }
 
-void Draw::Init()
+void SystemDraw::Init()
 {
 	DrawLock __;
-	pageDots = pagePixels = Size(Xwidth, Xheight);
-	pageMMs = Size(XwidthMM, XheightMM);
-	nativeDpi = inchPixels = 254 * pagePixels / pageMMs / 10;
-	sheetPixels = pagePixels;
-	pageOffset = Point(0, 0);
-	InitFonts();
+	pageSize = Size(Xwidth, Xheight);
+	FontInfo::InitFonts();
 	cloff.Clear();
 	clip.Clear();
 	foreground = linewidth = Null;
-	device = 0;
-	device = 0;
-	pixels = true;
-	printer = aborted = backdraw = is_mono = false;
-	native = 0;
 }
 
-void Draw::Init(const Vector<Rect>& _clip, Point _offset)
+void SystemDraw::Init(const Vector<Rect>& _clip, Point _offset)
 {
 	DrawLock __;
 	Init();
@@ -360,7 +359,17 @@ void Draw::Init(const Vector<Rect>& _clip, Point _offset)
 	SetClip();
 }
 
-Draw::Draw()
+dword SystemDraw::GetInfo() const
+{
+	return 0;
+}
+
+Size SystemDraw::GetPageSize() const
+{
+	return pageSize;
+}
+
+SystemDraw::SystemDraw()
 {
 	DrawLock __;
 	dw = None;
@@ -369,25 +378,46 @@ Draw::Draw()
 	Init();
 }
 
-void Draw::BeginNative() {}
-
-void Draw::EndNative() {}
-
-
-Draw::Draw(Drawable _dw, GC _gc, XftDraw *_xftdraw, const Vector<Rect>& _clip)
+Size SystemDraw::GetNativeDpi() const
 {
-	LLOG("Draw");
+	return Size(96, 96);
+}
+
+void SystemDraw::BeginNative() {}
+void SystemDraw::EndNative() {}
+
+int SystemDraw::GetCloffLevel() const
+{
+	return cloff.GetCount();
+}
+
+Rect SystemDraw::GetClip() const
+{
+	LLOG("Draw::GetClipOp; #clip = " << clip.GetCount() << ", #cloff = " << cloff.GetCount()
+		<< ", clipi = " << cloff.Top().clipi);
+	const Vector<Rect>& cl = clip[cloff.Top().clipi];
+	Rect box(0, 0, 0, 0);
+	if(!cl.GetCount()) return box;
+	box = cl[0];
+	LLOG("cl[0] = " << box);
+	for(int i = 1; i < cl.GetCount(); i++) {
+		LLOG("cl[" << i << "] = " << cl[i]);
+		box |= cl[i];
+	}
+	LLOG("out box = " << box << ", actual offset = " << actual_offset);
+	return box - actual_offset;
+}
+
+SystemDraw::SystemDraw(Drawable _dw, GC _gc, XftDraw *_xftdraw, const Vector<Rect>& _clip)
+{
+	LLOG("SystemDraw");
 	dw = _dw;
 	gc = _gc;
 	xftdraw = _xftdraw;
 	Init(_clip);
 }
 
-Draw::~Draw()
-{
-}
-
-void BackDraw::Create(Draw& w, int cx, int cy)
+void BackDraw::Create(SystemDraw& w, int cx, int cy)
 {
 	DrawLock __;
 	LLOG("Creating BackDraw " << cx << "x" << cy);
@@ -401,10 +431,9 @@ void BackDraw::Create(Draw& w, int cx, int cy)
 	Vector<Rect> clip;
 	clip.Add(RectC(0, 0, cx, cy));
 	Init(clip, Point(0, 0));
-	backdraw = true;
 }
 
-void BackDraw::Put(Draw& w, int x, int y)
+void BackDraw::Put(SystemDraw& w, int x, int y)
 {
 	DrawLock __;
 	LLOG("Putting BackDraw");
@@ -423,22 +452,15 @@ void BackDraw::Destroy()
 	}
 }
 
-NilDraw::NilDraw()
+bool ScreenInPaletteMode()
 {
-	DrawLock __;
-	dw = Xroot;
-	gc = XCreateGC(Xdisplay, Xroot, 0, 0);
-	pixels = false;
-	Init(Vector<Rect>());
+	return Xpalette;
 }
 
-NilDraw::~NilDraw()
+Size GetScreenSize()
 {
-	DrawLock __;
-	XFreeGC(Xdisplay, gc);
+	return Size(Xwidth, Xheight);
 }
-
-Draw& ScreenInfo() { return Single<NilDraw>(); }
 
 END_UPP_NAMESPACE
 

@@ -1,6 +1,6 @@
 class BackDraw : public SystemDraw {
 public:
-	virtual bool IsPaintingOp(const Rect& r) const;
+	virtual bool  IsPaintingOp(const Rect& r) const;
 
 protected:
 #ifdef PLATFORM_WIN32
@@ -21,8 +21,8 @@ public:
 
 	void Create(SystemDraw& w, int cx, int cy);
 	void Create(SystemDraw& w, Size sz)                { Create(w, sz.cx, sz.cy); }
-	void Create(int cx, int cy);
-	void Create(Size sz)                               { Create(sz.cx, sz.cy); }
+//	void Create(int cx, int cy);
+//	void Create(Size sz)                               { Create(sz.cx, sz.cy); }
 	void Destroy();
 
 	void SetPaintingDraw(Draw& w, Point off)           { painting = &w; painting_offset = off; }

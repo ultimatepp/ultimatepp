@@ -3,14 +3,14 @@
 NAMESPACE_UPP
 
 SystemDraw& ScreenInfo();
-
+/*
 void BackDraw::Create(int cx, int cy)
 {
 	DrawLock __;
 	Create(ScreenInfo(), cx, cy);
 	style = GUI|BACK;
 }
-
+*/
 bool BackDraw::IsPaintingOp(const Rect& r) const
 {
 	Rect rr = r + GetOffset();
@@ -28,16 +28,6 @@ BackDraw::BackDraw()
 BackDraw::~BackDraw()
 {
 	Destroy();
-}
-
-bool ScreenInPaletteMode()
-{
-	return ScreenInfo().PaletteMode();
-}
-
-Size GetScreenSize()
-{
-	return ScreenInfo().GetPageSize();
 }
 
 END_UPP_NAMESPACE
