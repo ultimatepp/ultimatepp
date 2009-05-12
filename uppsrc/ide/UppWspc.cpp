@@ -200,9 +200,10 @@ void WorkspaceWork::TouchFile(const String& path)
 	if(!showtime)
 		return;
 	Time tm = GetSysTime();
+	String n = GetFileName(path);
 	for(int i = 0; i < filelist.GetCount(); i++) {
 		FileList::File f = filelist[i];
-		if(path == SourcePath(GetActivePackage(), f.name))
+		if(f.name == n && path == SourcePath(GetActivePackage(), f.name))
 			filelist.Set(i, f.name, f.icon, f.font, f.ink, false, 0,
 			             Null, SColorMark, Null, Null, Null, SColorMark);
 	}

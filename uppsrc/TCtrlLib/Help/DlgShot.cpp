@@ -97,7 +97,7 @@ void ImageBrowseCtrl::Layout()
 
 void ImageBrowseCtrl::Paint(Draw& draw)
 {
-	draw.DrawRect(draw.GetClip(), Color(224, 255, 255));
+	draw.DrawRect(GetSize(), Color(224, 255, 255));
 	Size org_size = image.GetSize();
 	Size out_size = GetZoomSize();
 	if(org_size.cx <= 0 || org_size.cy <= 0

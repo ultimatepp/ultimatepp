@@ -1196,7 +1196,7 @@ bool DocCtrl::FlushDirty()
 
 void DocCtrl::Paint(Draw& draw)
 {
-	draw.DrawRect(draw.GetClip(), doc_type -> paper);
+	draw.DrawRect(GetSize(), doc_type -> paper);
 }
 
 void DocCtrl::ToolFileSave(Bar& bar)

@@ -635,7 +635,7 @@ void OldTreeItem::LayoutItem()
 
 void OldTreeItem::PaintItem(Draw& draw, Point pos) const
 {
-	Rect clip = draw.GetClip();
+	Rect clip(0, 0, 9999, 9999);
 	Rect rc = Rect(pos.x - BUTTON_HALF, pos.y, clip.right, pos.y + tree_size.cy) & clip;
 	if(rc.IsEmpty())
 		return;
@@ -1178,7 +1178,7 @@ void OldTreeCtrl::Paint(Draw& draw)
 	Rect rc_butt = rc;
 	rc_butt.left += BUTTON_HALF + 1 + ICONGAP;
 	Color bg = (IsShowEnabled() ? SWhite : SLtGray);
-	DrawRectMinusRect(draw, draw.GetClip(), rc_butt, DBG_PAINT(bg, LtGreen));
+	DrawRectMinusRect(draw, GetSize(), rc_butt, DBG_PAINT(bg, LtGreen));
 	PaintItem(draw, rc.TopLeft());
 }
 
