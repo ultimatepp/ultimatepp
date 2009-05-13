@@ -655,7 +655,7 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 	const Value& sv = (cnt == 1 ? s.both : c == 0 ? s.first : c == cnt - 1 ? s.last : s.normal)[ndx];
 
 	int lx = n > 0 ? s.extendleft : 0;
-	int x = t.pos.x - sc.GetPos() + s.margin - lx;
+	int x = (dragsample ? 0 : t.pos.x - sc.GetPos() - lx) + s.margin;
 	
 	p = Point(x - s.sel.left, 0);		
 	tsz = Size(t.size.cx + lx + s.sel.right + s.sel.left, t.size.cy + s.sel.bottom);
@@ -815,12 +815,7 @@ Image TabBar::GetDragSample(int n)
 	ImageDraw iw(tsz);
 	iw.DrawRect(tsz, SColorFace()); //this need to be fixed - if inactive tab is dragged gray edges are visible
 	
-	Point temp = tab.pos;
-	tab.pos.x = sc.GetPos();
-	tab.pos.y = 0;
 	PaintTab(iw, st, GetSize(), n, true, true);
-	tab.pos.x = temp.x; 
-	tab.pos.y = temp.y;
 	
 	Image img = iw;
 	ImageBuffer ib(img);
@@ -1319,34 +1314,30 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 	bool sametab = c == tab || c == tab + 1;
 	bool internal = AcceptInternal<TabBar>(d, "tabs");
 
-	if(!sametab && d.IsAccepted())
+	if(!sametab && internal && d.IsAccepted())
+	{
+		int id = tabs[active].id;
+		Tab t = tabs[tab];
+		Tab &n = tabs.Insert(c);
+		n = t;
+		tabs.Remove(tab + int(c < tab));
+		active = FindId(id);
+		isdrag = false;
+		target = -1;
+		MakeGroups();
+		Repos();
+	}
+	else if(isdrag)
 	{
 		if(internal)
 		{
-			int id = tabs[active].id;
-			Tab t = tabs[tab];
-			Tab &n = tabs.Insert(c);
-			n = t;
-			tabs.Remove(tab + int(c < tab));
-			active = FindId(id);
+			target = -1;
 			isdrag = false;
-			MakeGroups();
-			Repos();
-			return;
 		}
-		else if(d.IsPaste())
-		{
-			CancelMode();
-			return;
-		}
+		else
+			target = c;
+		Refresh();
 	}
-	else
-	{
-		//d.Reject();
-		//unfortunately after Reject DragLeave stops working until d is accepted
-	}
-	target = c;
-	Refresh();
 }
 
 void TabBar::CancelMode()
