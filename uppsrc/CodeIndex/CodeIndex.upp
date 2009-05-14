@@ -1,9 +1,0 @@
-uses
-	CtrlLib,
-	CodeEditor;
-
-file
-	main.cpp;
-
-mainconfig
-	"" = "GUI";
