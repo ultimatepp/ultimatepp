@@ -29,11 +29,11 @@ public:
 
 	BackDraw();
 	~BackDraw();
-	
+/*	
 // Deprecated:
 	void  Put(Draw& w, int x, int y)             { Put(*(SystemDraw*)&w, x, y); }
 	void  Put(Draw& w, Point p)                  { Put(*(SystemDraw*)&w, p.x, p.y); }
 
 	void Create(Draw& w, int cx, int cy)         { Create(*(SystemDraw*)&w, cx, cy); }
-	void Create(Draw& w, Size sz)                { Create(*(SystemDraw*)&w, sz.cx, sz.cy); }
+	void Create(Draw& w, Size sz)                { Create(*(SystemDraw*)&w, sz.cx, sz.cy); }*/
 };

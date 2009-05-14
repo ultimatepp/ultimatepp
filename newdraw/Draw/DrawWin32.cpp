@@ -364,7 +364,6 @@ void BackDraw::Create(SystemDraw& w, int cx, int cy) {
 #endif
 	hbmpold = (HBITMAP) ::SelectObject(handle, hbmp);
 	Init();
-	style = GUI|BACK;
 }
 
 void BackDraw::Put(SystemDraw& w, int x, int y) {

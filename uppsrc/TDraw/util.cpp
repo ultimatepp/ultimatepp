@@ -11,8 +11,128 @@ enum { DOC_SCREEN_ZOOM = 140 };
 
 NAMESPACE_UPP
 
-#ifndef SYSTEMDRAW
+#ifdef SYSTEMDRAW
 
+Size GetPixelsPerMeter(const Draw& draw)
+{
+	if(draw.Dots())
+		return Size(DOTS_PER_METER_INT, DOTS_PER_METER_INT);
+	else
+		return Size(96 * DOTS_PER_METER_INT / 600, 96 * DOTS_PER_METER_INT / 600);
+}
+
+int GetHorzPixelsPerMeter(const Draw& draw)
+{
+	return draw.Dots() ? DOTS_PER_METER_INT : 96 * DOTS_PER_METER_INT / 600;
+}
+
+int GetVertPixelsPerMeter(const Draw& draw)
+{
+	return draw.Dots() ? DOTS_PER_METER_INT : 96 * DOTS_PER_METER_INT / 600;
+}
+
+int GetAvgPixelsPerMeter(const Draw& draw)
+{
+	Size mp = GetPixelsPerMeter(draw);
+	return (mp.cx + mp.cy) >> 1;
+}
+
+double GetHorzPixelsPerDot(const Draw& draw)
+{
+	return draw.Dots() ? 1 : GetHorzPixelsPerMeter(draw) / DOTS_PER_METER_DBL;
+}
+
+double GetVertPixelsPerDot(const Draw& draw)
+{
+	return draw.Dots() ? 1 : GetVertPixelsPerMeter(draw) / DOTS_PER_METER_DBL;
+}
+
+double GetAvgPixelsPerDot(const Draw& draw)
+{
+	if(draw.Dots())
+		return 1;
+	return GetAvgPixelsPerMeter(draw) / DOTS_PER_METER_DBL;
+}
+
+Font GetPixelFont(Font dot_font, const Draw& draw)
+{
+	if(draw.Pixels())
+		dot_font.Height(dot_font.GetHeight() * 140 / 1024);
+	return dot_font;
+}
+
+int DotsToPixels(const Draw& draw, int dots)
+{
+	return draw.Dots() ? dots : fround(dots * GetAvgPixelsPerDot(draw));
+}
+
+Size DotsToPixels(const Draw& draw, Size size)
+{
+	return draw.Dots()
+		? size
+		: iscale(size, GetPixelsPerMeter(draw), Size(DOTS_PER_METER_INT, DOTS_PER_METER_INT));
+}
+
+int HorzDotsToPixels(const Draw& draw, int dots)
+{
+	return draw.Dots() ? dots : fround(dots * GetHorzPixelsPerDot(draw));
+}
+
+int VertDotsToPixels(const Draw& draw, int dots)
+{
+	return draw.Dots() ? dots : fround(dots * GetVertPixelsPerDot(draw));
+}
+
+int PixelsToDots(const Draw& draw, int pixels)
+{
+	return draw.Dots() ? pixels : fround(pixels / GetAvgPixelsPerDot(draw));
+}
+
+Size PixelsToDots(const Draw& draw, Size size)
+{
+	return draw.Dots() ? size
+		: iscale(size, Size(DOTS_PER_METER_INT, DOTS_PER_METER_INT), GetPixelsPerMeter(draw));
+}
+
+int HorzPixelsToDots(const Draw& draw, int dots)
+{
+	return draw.Dots() ? dots : fround(dots / GetHorzPixelsPerDot(draw));
+}
+
+int VertPixelsToDots(const Draw& draw, int dots)
+{
+	return draw.Dots() ? dots : fround(dots / GetVertPixelsPerDot(draw));
+}
+
+int PixelsToPoints(const Draw& draw, int pixels)
+{
+	if(draw.Dots())
+		return pixels * 72 / 600;
+	return iscale(pixels, 72, draw.GetPixelsPerInch().cx);
+}
+
+Size PixelsToPoints(const Draw& draw, Size pixels)
+{
+	if(draw.Dots())
+		return pixels * 72 / 600;
+	return iscale(pixels, Size(72, 72), draw.GetPixelsPerInch());
+}
+
+int PointsToPixels(const Draw& draw, int points)
+{
+	if(draw.Dots())
+		return points * 600 / 72;
+	return iscale(points, draw.GetPixelsPerInch().cx, 72);
+}
+
+Size PointsToPixels(const Draw& draw, Size points)
+{
+	if(draw.Dots())
+		return points * 600 / 72;
+	return iscale(points, draw.GetPixelsPerInch(), Size(72, 72));
+}
+
+#else
 Size GetPixelsPerMeter(const Draw& draw)
 {
 	if(draw.Dots())
@@ -132,13 +252,6 @@ Size PointsToPixels(const Draw& draw, Size points)
 	if(draw.Dots())
 		return points * 600 / 72;
 	return iscale(points, draw.GetPixelsPerInch(), Size(72, 72));
-}
-
-#else
-
-int VertDotsToPixels(const Draw& draw, int dots)
-{
-	return dots;
 }
 
 #endif
