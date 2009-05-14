@@ -352,7 +352,12 @@ bool Ctrl::PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool
 	Rect opaque = (GetOpaqueRect() + viewpos) & clip;
 	if(opaque.IsEmpty())
 		return true;
-	if(backpaint == FULLBACKPAINT && !w.IsBack()) {
+#ifdef SYSTEMDRAW
+	if(backpaint == FULLBACKPAINT && !dynamic_cast<BackDraw *>(&w))
+#else
+	if(backpaint == FULLBACKPAINT && !w.IsBack())
+#endif
+	{
 		ShowRepaintRect(w, opaque, LtRed());
 		BackDraw bw;
 		bw.Create(w, opaque.GetSize());

@@ -560,10 +560,7 @@ public:
 		DOTS = 0x001,
 		GUI = 0x002,
 		PRINTER = 0x004,
-		BACK = 0x008,
-		PALETTE = 0x020,
-		MONO = 0x040,
-		NATIVE = 0x080,
+		NATIVE = 0x008,
 	};
 
 	virtual dword GetInfo() const = 0;
@@ -619,10 +616,6 @@ public:
 	bool  IsGui() const                                 { return GetInfo() & GUI; }
 	bool  IsPrinter() const                             { return GetInfo() & PRINTER; }
 	bool  IsNative() const                              { return GetInfo() & NATIVE; }
-	bool  IsBack() const                                { return GetInfo() & BACK; }
-
-	bool  IsPaletteMode() const                         { return GetInfo() & PALETTE; }
-	bool  IsMono() const                                { return GetInfo() & MONO; }
 
 	int  GetNativeX(int x) const;
 	int  GetNativeY(int x) const;

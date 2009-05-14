@@ -268,7 +268,7 @@ bool WinMetaFileDraw::Create(HDC hdc, int cx, int cy, const char *app, const cha
 
 	Init();
 
-	style = DOTS|BACK;
+	style = DOTS;
 
 	::SetMapMode(handle, MM_ANISOTROPIC);
 	::SetWindowOrgEx(handle, 0, 0, 0);
