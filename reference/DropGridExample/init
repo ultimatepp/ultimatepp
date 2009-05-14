@@ -1,0 +1,4 @@
+#ifndef _DropGridExample_icpp_init_stub
+#define _DropGridExample_icpp_init_stub
+#include "DropGrid/init"
+#endif
