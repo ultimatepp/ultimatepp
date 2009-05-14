@@ -1,4 +1,4 @@
-description "Converts binary data to COFF object files";
+description "Converts binary data to COFF object files\377";
 
 optimize_speed;
 
@@ -11,7 +11,4 @@ file
 	binobj.cpp,
 	Info readonly separator,
 	Copying;
-
-mainconfig
-	"" = "";
 

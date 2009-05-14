@@ -1,4 +1,4 @@
-description "Library for handling with COFF object file format (used by GCC toolchain)";
+description "Library for handling with COFF object file format (used by GCC toolchain)\377";
 
 optimize_speed;
 
@@ -16,7 +16,4 @@ file
 	lib.cpp,
 	Info readonly separator,
 	Copying;
-
-mainconfig
-	"" = "";
 

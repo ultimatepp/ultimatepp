@@ -1,4 +1,4 @@
-description "DropGrid";
+description "DropGrid\377";
 
 uses
 	CtrlLib,
@@ -7,9 +7,5 @@ uses
 file
 	DropGrid.h,
 	DropGrid.cpp,
-	DropGrid.usc,
-	main.cpp;
-
-mainconfig
-	"" = "GUI";
+	DropGrid.usc;
 

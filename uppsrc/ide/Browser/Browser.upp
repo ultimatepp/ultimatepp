@@ -33,6 +33,3 @@ file
 	Info readonly separator,
 	Copying;
 
-mainconfig
-	"" = "GUI";
-
