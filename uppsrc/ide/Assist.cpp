@@ -40,11 +40,13 @@ AssistEditor::AssistEditor()
 	int cy = EditField::GetStdHeight();
 
 	int c2 = cy + 2;
+	int cx = 18;
+
 	scopepane.Add(browser.scope.SizePos());
-	itempane.Add(browser.search.HSizePos(0, 4 * cy + 2).TopPos(0, cy));
+	itempane.Add(browser.search.HSizePos(0, 4 * cx + 2).TopPos(0, cy));
 	for(int i = 0; i < 3; i++)
-		itempane.Add(browser.rangebutton[i].RightPos((3 - i) * cy, cy).TopPos(0, cy));
-	itempane.Add(browser.sort.RightPos(0, cy).TopPos(0, cy));
+		itempane.Add(browser.rangebutton[i].RightPos((3 - i) * cx, cx).TopPos(0, cy));
+	itempane.Add(browser.sort.RightPos(0, cx).TopPos(0, cy));
 	itempane.Add(browser.item.HSizePos().VSizePos(c2, 0));
 	scope_item.Vert(scopepane, itempane);
 	scope_item.SetPos(3000);
