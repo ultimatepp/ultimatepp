@@ -39,6 +39,48 @@ public:
 	          String x,
 	          String x,
 	          String x,
+	          String x,   String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,        String x,
+	          String x,
+	          String x,
+	          String x,xxxxxxxx
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,     String x,
+	          String x,
+	          String x,
+	          String x,helloksjdfalsfj haskldjhf alsflhjdas flk hdasfjkahdshasjfdkljhashdfhasdfklhahdfklhasdfklhasdfkljhasd
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+	          String x,
+
+	          String x,
+	          String x,
+	          String x,helloksjdfalsfj haskldjhf alsflhjdas flk hdasfjkahdshasjfdkljhashdfhasdfklhahdfklhasdfklhasdfkljhasd
+	          String x,
+	          String x,
+	          String x,
+	          String x,
 	          String x,
 	          String x,
 	          String x,
@@ -75,7 +117,7 @@ public:
 
 #endif
 
-
+s
 
 
 počítač
