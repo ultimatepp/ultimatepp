@@ -2057,7 +2057,7 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 	ReleaseCapture();
 	fixed_click = false;
 
-	UpdateHighlighting(GS_UP, p);
+	UpdateHighlighting(resizing ? GS_MOVE : GS_UP, p);
 
 	if(moving_header)
 	{
@@ -2993,7 +2993,7 @@ Image GridCtrl::CursorImage(Point p, dword keyflags)
 
 	if(resizing_cols && curSplitCol >= 0 || resizeCol)
 	{
-		if(hitems[curSplitCol].join > 0)
+		if(curSplitCol >= 0 && hitems[curSplitCol].join > 0)
 		{
 			int idy = GetMouseRow(p, true, p.y < fixed_height, true);
 			if(idy >= 0)
@@ -3008,7 +3008,7 @@ Image GridCtrl::CursorImage(Point p, dword keyflags)
 	}
 	else if(resizing_rows && curSplitRow >= 0 || resizeRow)
 	{
-		if(vitems[curSplitRow].join > 0)
+		if(curSplitRow >= 0 && vitems[curSplitRow].join > 0)
 		{
 			int idx = GetMouseCol(p, true, p.x < fixed_width, true);
 			if(idx >= 0)
