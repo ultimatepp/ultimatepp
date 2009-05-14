@@ -411,7 +411,7 @@ void Draw::DrawPainting(int x, int y, int cx, int cy, const Painting& ig)
 	DrawPainting(RectC(x, y, cx, cy), ig);
 }
 
-#ifdef PLATFORM_WIN32
+#ifdef PLATFORM_WIN32_
 HDC Draw::BeginGdi()
 {
 	SystemDraw *w = dynamic_cast<SystemDraw *>(this);
@@ -423,12 +423,13 @@ void Draw::EndGdi()
 	SystemDraw *w = dynamic_cast<SystemDraw *>(this);
 	if(w) w->EndGdi();
 }
-#endif
 
 void Draw::Flush()
 {
 	SystemDraw::Flush();
 }
+
+#endif
 
 // ---------------------------
 

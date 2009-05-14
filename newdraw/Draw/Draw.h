@@ -750,9 +750,9 @@ public:
 	static Size GetStdFontSize()                        { return UPP::GetStdFontSize(); }
 	static int  GetStdFontCy()                          { return GetStdFontSize().cy; }
 	
-	static void Flush();
 
-#ifdef PLATFORM_WIN32
+#ifdef PLATFORM_WIN32_
+	static void Flush();
 	HDC   BeginGdi();
 	void  EndGdi();
 #endif
