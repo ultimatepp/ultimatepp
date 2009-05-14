@@ -1,0 +1,11 @@
+description "DropGrid examples\377";
+
+uses
+	DropGrid;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
