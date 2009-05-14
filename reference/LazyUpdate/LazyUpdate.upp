@@ -1,3 +1,5 @@
+description "Using LazyUpdate for MT correct lazy evaluation\377";
+
 uses
 	Core;
 
