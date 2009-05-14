@@ -294,7 +294,7 @@ TabBar::TabBar()
 void TabBar::CloseAll()
 {
 	for(int i = tabs.GetCount() - 1; i >= 0; i--)
-		if(i != active)
+		if(i != highlight)
 			tabs.Remove(i);
 
 	SyncScrollBar();
@@ -302,6 +302,7 @@ void TabBar::CloseAll()
 	Repos();
 	SetCursor(0);
 	WhenCloseAll();
+	Refresh();
 }
 
 int TabBar::GetNextId()
@@ -339,8 +340,8 @@ void TabBar::GroupMenu(Bar &bar, int n)
 
 bool TabBar::Tab::HasMouse(const Point& p) const
 {
-	return visible && p.x >= real_pos.x && p.x < real_pos.x + real_size.cx &&
-	                  p.y >= real_pos.y && p.y < real_pos.y + real_size.cy;
+	return visible && p.x >= tab_pos.x && p.x < tab_pos.x + tab_size.cx &&
+	                  p.y >= tab_pos.y && p.y < tab_pos.y + tab_size.cy;
 }
 
 bool TabBar::Tab::HasMouseCross(const Point& p) const
@@ -655,7 +656,7 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 	const Value& sv = (cnt == 1 ? s.both : c == 0 ? s.first : c == cnt - 1 ? s.last : s.normal)[ndx];
 
 	int lx = n > 0 ? s.extendleft : 0;
-	int x = (dragsample ? 0 : t.pos.x - sc.GetPos() - lx) + s.margin;
+	int x = t.pos.x - sc.GetPos() - lx + s.margin;
 	
 	p = Point(x - s.sel.left, 0);		
 	tsz = Size(t.size.cx + lx + s.sel.right + s.sel.left, t.size.cy + s.sel.bottom);
@@ -678,18 +679,18 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 	
 	Rect rn(Fixed(p), Fixed(tsz));
 
-	t.real_pos = (ac ? ra : rn).TopLeft();
-	t.real_size = (ac ? ra : rn).GetSize();
+	t.tab_pos = (ac ? ra : rn).TopLeft();
+	t.tab_size = (ac ? ra : rn).GetSize();
 		
-	ChPaint(w, Rect(t.real_pos, t.real_size), sv);
+	ChPaint(w, Rect(dragsample ? Point(0, 0) : t.tab_pos, t.tab_size), sv);
 	
-	rn = Rect(Fixed(Point(p.x, p.y + dy)), Fixed(tsz));
+	rn = Rect(dragsample ? Fixed(Point(s.sel.left * ac, s.sel.top * ac + dy)) : Fixed(Point(p.x, p.y + dy)), Fixed(tsz));
 	
 	#ifdef TABBAR_DEBUG
 	DrawFrame(w, rn, Green);
 	#endif
 	
-	if(crosses && (cnt > neverempty || t.stack.GetCount())) {
+	if(crosses && (cnt > neverempty || t.stack.GetCount()) || dragsample) {
 
 		Size isz = TabBarImg::CR0().GetSize();
 		Point p = GetImagePosition(rn, isz.cx, isz.cy, TB_MARGIN, RIGHT);
@@ -750,11 +751,11 @@ void TabBar::Paint(Draw &w)
 		if(tabs[i].visible && i != active)
 			PaintTab(w, st, sz, i, IsEnabled());
 	}
-	// Clear real_size for non-visible tabs to prevent mouse handling bugs
+	// Clear tab_size for non-visible tabs to prevent mouse handling bugs
 	for (int i = 0; i < first; i++)
-		tabs[i].real_size = Size(0, 0);	
+		tabs[i].tab_size = Size(0, 0);	
 	for (int i = last+1; i < tabs.GetCount(); i++)
-		tabs[i].real_size = Size(0, 0);		
+		tabs[i].tab_size = Size(0, 0);		
 	// Draw inactive groups
 	if (inactivedisabled)
 		for (int i = first; i <= last; i++) {
@@ -777,26 +778,28 @@ void TabBar::Paint(Draw &w)
 			int x = (target == last + 1 ? tabs[last].Right() : tabs[target].pos.x)
 			        - sc.GetPos() - (target <= first ? 1 : 2)
 			        + st.margin - (target > 0 ? st.extendleft : 0);
-			int y = st.sel.top;
-			int cy = sz.cy - y;
-			if (IsHorz()) {
-				w.DrawRect(x + 1, y, 2, cy, SRed());
-				w.DrawRect(x, y, 4, 1, SRed());
-				w.DrawRect(x, y + cy - 1, 4, 1, SRed());			
-			}
-			else{
-				w.DrawRect(y, x + 1, cy, 2, SRed());
-				w.DrawRect(y, x, 1, 4, SRed());
-				w.DrawRect(y + cy - 1, x, 1, 4, SRed());			
-			}
+
+			if (IsHorz())
+				DrawVertDrop(w, x + 1, 0, sz.cy);
+			else
+				DrawHorzDrop(w, 0, x + 1, sz.cx);
 		}
 		// Draw transparent drag image
 		Point mouse = GetMousePos() - GetScreenRect().TopLeft();
-		Size isz 	= dragtab.GetSize();
-		if (IsHorz())
-			w.DrawImage(mouse.x - isz.cx/2, 0, isz.cx, isz.cy, dragtab);
+		Size isz = dragtab.GetSize();
+		int p = 0;
+		int sep = TB_SBSEPARATOR * sc.IsVisible();
+		
+		int top = drag == active ? st.sel.bottom : st.sel.top;
+		if (align == BOTTOM || align == RIGHT)
+			p = int(drag == active) * -top + sep;
 		else
-			w.DrawImage(0, mouse.y - isz.cy/2, isz.cx, isz.cy, dragtab);		
+			p = int(drag != active) * top;
+		
+		if (IsHorz())
+			w.DrawImage(mouse.x - isz.cx / 2, p, isz.cx, isz.cy, dragtab);
+		else
+			w.DrawImage(p, mouse.y - isz.cy / 2, isz.cx, isz.cy, dragtab);		
 	}
 }
 
@@ -808,14 +811,13 @@ Image TabBar::GetDragSample()
 Image TabBar::GetDragSample(int n)
 {
 	if (n < 0) return Image();
-	Tab &tab = tabs[n];
-	const Style& st = *style[GetAlign()];
+	Tab &t = tabs[n];
 
-	Size tsz(tab.real_size);
+	Size tsz(t.tab_size);
 	ImageDraw iw(tsz);
 	iw.DrawRect(tsz, SColorFace()); //this need to be fixed - if inactive tab is dragged gray edges are visible
 	
-	PaintTab(iw, st, GetSize(), n, true, true);
+	PaintTab(iw, *style[GetAlign()], tsz, n, true, true);
 	
 	Image img = iw;
 	ImageBuffer ib(img);
@@ -959,11 +961,13 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 			return (j = i);
 		}
 	}
+	
+	Tab& t = tabs[i];
 
-	tabs[i].visible = v;
-	tabs[i].pos.y = 0;
-	tabs[i].size.cx = GetWidth(i);
-	tabs[i].size.cy = GetStyleHeight(*style[1]);
+	t.visible = v;
+	t.pos.y = 0;
+	t.size.cx = GetWidth(i);
+	t.size.cy = GetStyleHeight(*style[1]);
 
 	return j;	
 }
@@ -1316,16 +1320,19 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 
 	if(!sametab && internal && d.IsAccepted())
 	{
-		int id = tabs[active].id;
+		int id = active >= 0 ? tabs[active].id : -1;
 		Tab t = tabs[tab];
 		Tab &n = tabs.Insert(c);
 		n = t;
 		tabs.Remove(tab + int(c < tab));
-		active = FindId(id);
+		active = id >= 0 ? FindId(id) : -1;
 		isdrag = false;
 		target = -1;
 		MakeGroups();
 		Repos();
+		Refresh();
+		Sync();
+		MouseMove(p, 0);
 	}
 	else if(isdrag)
 	{

@@ -127,8 +127,8 @@ protected:
 		Point cross_pos;
 		Size  cross_size;
 		
-		Point real_pos;
-		Size  real_size;
+		Point tab_pos;
+		Size  tab_size;
 		
 		Tab() : visible(true), id(-1)
 		{}
