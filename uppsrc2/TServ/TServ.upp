@@ -1,0 +1,22 @@
+uses
+	Web,
+	plugin\bz2;
+
+target(WIN32) tserv.exe;
+
+target(!WIN32) tserv;
+
+link(GNU3) "-Wl,-R -Wl,/usr/local/lib";
+
+file
+	Makefile,
+	TServ.sh,
+	version.h,
+	tserv.cpp,
+	Info readonly separator,
+	Copying;
+
+mainconfig
+	"" = "",
+	"" = "SHARED";
+

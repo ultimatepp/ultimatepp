@@ -1,0 +1,46 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(LayoutLayout, 220, 60)
+	ITEM(Label, label1, SetLabel("&Layout:").LeftPosZ(4, 46).TopPosZ(4, 20))
+	ITEM(EditString, layout, HSizePosZ(52, 4).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel("OK").RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel("Cancel").RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(GridLayout, 172, 64)
+	ITEM(Label, dv___0, SetLabel("&X:").LeftPosZ(4, 12).TopPosZ(4, 20))
+	ITEM(EditIntSpin, x, LeftPosZ(18, 40).TopPosZ(4, 20))
+	ITEM(Label, dv___2, SetLabel("&Y:").LeftPosZ(90, 16).TopPosZ(4, 20))
+	ITEM(EditIntSpin, y, LeftPosZ(108, 40).TopPosZ(4, 20))
+	ITEM(Button, ok, SetLabel("OK").RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel("Cancel").RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(MatrixLayout, 202, 86)
+	ITEM(Label, dv___0, SetLabel("&Horizontal").LeftPosZ(4, 54).TopPosZ(4, 19))
+	ITEM(EditIntSpin, x, LeftPosZ(60, 42).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel("&spacing").LeftPosZ(108, 50).TopPosZ(4, 19))
+	ITEM(EditIntSpin, hspace, LeftPosZ(156, 42).TopPosZ(4, 19))
+	ITEM(Label, dv___4, SetLabel("&Vertical").LeftPosZ(4, 54).TopPosZ(28, 19))
+	ITEM(EditIntSpin, y, LeftPosZ(60, 42).TopPosZ(28, 19))
+	ITEM(Label, dv___6, SetLabel("s&pacing").LeftPosZ(108, 50).TopPosZ(28, 19))
+	ITEM(EditIntSpin, vspace, LeftPosZ(156, 42).TopPosZ(28, 19))
+	ITEM(Button, ok, SetLabel("OK").RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel("Cancel").RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(LangLayout, 212, 82)
+	ITEM(Label, label1, SetLabel("&New language:").LeftPosZ(4, 76).TopPosZ(4, 19))
+	ITEM(WithDropChoice<EditString>, language, LeftPosZ(82, 126).TopPosZ(4, 19))
+	ITEM(Option, copy, SetLabel("&Copy current language").HSizePosZ(4, 4).TopPosZ(28, 18))
+	ITEM(Button, ok, SetLabel("OK").HSizePosZ(44, 88).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel("Cancel").RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+LAYOUT(AliasLayout, 400, 400)
+	ITEM(ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 34))
+	ITEM(Button, ok, SetLabel("OK").RightPosZ(88, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel("Cancel").RightPosZ(4, 80).BottomPosZ(4, 22))
+END_LAYOUT
+
+#endif
