@@ -1,9 +1,0 @@
-#ifndef _VectorDes_icpp_init_stub
-#define _VectorDes_icpp_init_stub
-#include "CtrlLib/init"
-#include "Web/init"
-#include "RichText/init"
-#define BLITZ_INDEX__ F77EAE8CE855C5C553562D46B7B18AD0D
-#include "VectorDes_init.icpp"
-#undef BLITZ_INDEX__
-#endif

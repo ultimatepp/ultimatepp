@@ -240,9 +240,12 @@ Value XpLookFn(Draw& w, const Rect& rect, const Value& v, int op)
 				r.bottom++;
 			}
 			if(htheme) {
-				HDC hdc = w.BeginGdi();
-				XpTheme().DrawThemeBackground(htheme, hdc, e.part, e.state, r, NULL);
-				w.EndGdi();
+				SystemDraw *sw = dynamic_cast<SystemDraw *>(&w);
+				if(sw) {
+					HDC hdc = sw->BeginGdi();
+					XpTheme().DrawThemeBackground(htheme, hdc, e.part, e.state, r, NULL);
+					sw->EndGdi();
+				}
 			}
 			if(e.whista)
 				w.End();

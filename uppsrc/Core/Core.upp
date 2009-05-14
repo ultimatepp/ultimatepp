@@ -147,7 +147,3 @@ file
 	srcimp.tpp,
 	Copying;
 
-mainconfig
-	"Normal" = "",
-	"Remote shared" = "SHARED";
-

@@ -1,4 +1,4 @@
-description "Preview and printing of reports";
+description "Preview and printing of reports\377";
 
 uses
 	CtrlLib,
@@ -11,7 +11,4 @@ file
 	ReportI.icpp,
 	Report.lay,
 	Report.t charset "UTF-8";
-
-mainconfig
-	"" = "GUI";
 

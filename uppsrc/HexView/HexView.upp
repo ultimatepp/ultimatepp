@@ -1,4 +1,4 @@
-description "Widget to display hexadecimal dumps (e.g. memory in debugger)";
+description "Widget to display hexadecimal dumps (e.g. memory in debugger)\377";
 
 uses
 	CtrlLib;
@@ -9,7 +9,4 @@ file
 	HexView.lay,
 	Info readonly separator,
 	Copying;
-
-mainconfig
-	"" = "";
 
