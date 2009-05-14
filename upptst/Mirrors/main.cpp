@@ -43,11 +43,11 @@ GUI_APP_MAIN
 			a = Random(100) + 1;
 			b = Random(100) + 1;
 		}
-		while(a + b < 0 || a + b > 100);
+		while(a + b < 0 || a + b > 199);
 		r.DrawText(10, 10 + 3 * isz.cy / 2  * i, Format("%d + %d =", a, b), fnt);
 		do {
-			a = Random(50) + 1;
-			b = Random(50) + 1;
+			a = Random(100) + 1;
+			b = Random(100) + 1;
 		}
 		while(a - b < 1);
 		r.DrawText(2000, 10 + 3 * isz.cy / 2 * i, Format("%d - %d =", a, b), fnt);
