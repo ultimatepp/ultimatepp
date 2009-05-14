@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	I18NCtrlLayoutTest.h,
+	Layout.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

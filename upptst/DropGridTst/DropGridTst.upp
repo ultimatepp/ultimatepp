@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	DropGrid;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
