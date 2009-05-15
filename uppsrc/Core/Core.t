@@ -932,7 +932,6 @@ trTR("dmy")
 zhCN("mdy")
 zhTW("mdy")
 
-
 T_("date-filter\aA/\a .-")
 csCZ(".\r /,")
 deDE("A/\r .-")
@@ -971,6 +970,9 @@ srSP("Nevalidna specifikacija jezika.")
 trTR("Geçersiz dil.")
 zhCN("无效语言指示")
 zhTW("無效語言指示")
+
+
+// Obsolete
 
 T_("invalid day number.")
 csCZ("neplatné číslo dne.")
