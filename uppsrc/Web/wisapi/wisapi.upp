@@ -2,6 +2,10 @@ uses
 	Web,
 	TCore;
 
+target(MSC9X64) wisapi64.dll;
+
+target(!MSC9X64) wisapi.dll;
+
 link(MAIN DLL) /DEF:wisapi.def;
 
 link(!DEBUG) /MAP;
@@ -13,9 +17,6 @@ file
 	wisapi.def,
 	Info readonly separator,
 	Copying;
-
-mainconfig
-	"" = "DLL MT";
 
 custom() "pre-link",
 	"restserv w3svc",

@@ -343,7 +343,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		if(!part.IsEmpty()) {
 			if(body.GetLength() + part.GetLength() > DEFAULT_MAX_CONTENT_SIZE) {
 				error = NFormat(t_("Maximum content size exceeded: %d"), body.GetLength() + part.GetLength());
-				return tc_chunked ? chunked : body;
+				goto EXIT;
 			}
 			body.Cat(part);
 			if(tc_chunked)
@@ -410,7 +410,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 						}
 						if(progress(chunked.GetLength() + body.GetLength(), 0)) {
 							aborted = true;
-							return chunked;
+							goto EXIT;
 						}
 					}
 				}
@@ -424,7 +424,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		}
 		if(progress(chunked.GetLength() + body.GetLength(), max(content_length, 0))) {
 			aborted = true;
-			return tc_chunked ? chunked : body;
+			break;
 		}
 	}
 
@@ -432,11 +432,12 @@ EXIT:
 	if(!keepalive || socket.IsError() || socket.IsEof())
 		Close();
 
-	if(ce_gzip) {
+	if(tc_chunked)
+		body = chunked;
+
+	if(ce_gzip)
 		body = GZDecompress(body);
-		return body;
-	}
-	return tc_chunked ? chunked : body;
+	return body;
 }
 
 String HttpClientGet(String url, String proxy, String username, String password,
