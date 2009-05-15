@@ -360,8 +360,9 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editfile = path;
 	editor.SetCharset(charset);
 	AddLru();
-
-	if(!astext && !debugger && editastext.Find(path) < 0 && !IsNestReadOnly(editfile)) {
+	
+	if(!astext && !(debugger && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
+	   && editastext.Find(path) < 0 && !IsNestReadOnly(editfile)) {
 		for(int i = 0; i < GetIdeModuleCount() && !designer; i++)
 			designer = GetIdeModule(i).CreateDesigner(this, path, charset);
 		if(designer) {
