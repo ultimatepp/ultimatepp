@@ -638,13 +638,11 @@ Point TabBar::GetImagePosition(const Rect& r, int cx, int cy, int space, int sid
 void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enable, bool dragsample)
 {
 	TabBar::Tab &t = tabs[n];
+	
+	int align = GetAlign();
 	int cnt = dragsample ? 1 : tabs.GetCount();
 	int sep = TB_SBSEPARATOR * sc.IsVisible();
 	
-	Size tsz;
-	Point p;
-	
-	int align = GetAlign();
 	bool ac = n == active;
 	bool hl = n == highlight;
 
@@ -658,46 +656,50 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 	int lx = n > 0 ? s.extendleft : 0;
 	int x = t.pos.x - sc.GetPos() - lx + s.margin;
 	
-	p = Point(x - s.sel.left, 0);		
-	tsz = Size(t.size.cx + lx + s.sel.right + s.sel.left, t.size.cy + s.sel.bottom);
+	Point pa = Point(x - s.sel.left, 0);
+	Size  sa = Size(t.size.cx + lx + s.sel.right + s.sel.left, t.size.cy + s.sel.bottom);
 
-	if (align == BOTTOM || align == RIGHT)
-		p.y -= s.sel.bottom - sep;
-			
-	Rect ra(Fixed(p), Fixed(tsz));
-
-	p = Point(x, s.sel.top);
-	tsz = Size(t.size.cx + lx, t.size.cy - s.sel.top);
+	Point pn = Point(x, s.sel.top);
+	Size  sn = Size(t.size.cx + lx, t.size.cy - s.sel.top);
 
 	int dy = -s.sel.top * ac;
-	
+	int sel = s.sel.top;
+
 	if (align == BOTTOM || align == RIGHT)
 	{
-		p.y -= s.sel.top - sep;
+		pa.y -= s.sel.bottom - sep;
+		pn.y -= s.sel.top - sep;
 		dy = -dy;
+		sel = s.sel.bottom;
 	}
-	
-	Rect rn(Fixed(p), Fixed(tsz));
+			
+	Rect ra(Fixed(pa), Fixed(sa));
+	Rect rn(Fixed(pn), Fixed(sn));
 
 	t.tab_pos = (ac ? ra : rn).TopLeft();
 	t.tab_size = (ac ? ra : rn).GetSize();
 		
-	ChPaint(w, Rect(dragsample ? Point(0, 0) : t.tab_pos, t.tab_size), sv);
-	
-	rn = Rect(dragsample ? Fixed(Point(s.sel.left * ac, s.sel.top * ac + dy)) : Fixed(Point(p.x, p.y + dy)), Fixed(tsz));
+	if(dragsample)
+	{
+		ChPaint(w, Rect(Point(0, 0), t.tab_size), sv);							
+		rn = Rect(Fixed(Point(s.sel.left * ac, sel * ac + dy)), Fixed(sn));
+	}
+	else
+	{
+		ChPaint(w, Rect(t.tab_pos, t.tab_size), sv);		
+		rn = Rect(Fixed(Point(pn.x, pn.y + dy)), Fixed(sn));
+	}
 	
 	#ifdef TABBAR_DEBUG
 	DrawFrame(w, rn, Green);
 	#endif
 	
 	if(crosses && (cnt > neverempty || t.stack.GetCount()) || dragsample) {
-
-		Size isz = TabBarImg::CR0().GetSize();
-		Point p = GetImagePosition(rn, isz.cx, isz.cy, TB_MARGIN, RIGHT);
-
-		t.cross_pos = p;
-		t.cross_size = isz;
-		w.DrawImage(p.x, p.y, (ac || hl) ? (cross == n ? TabBarImg::CR2 : ac ? TabBarImg::CR1 : TabBarImg::CR0) : TabBarImg::CR0);
+		t.cross_size = TabBarImg::CR0().GetSize();
+		t.cross_pos = GetImagePosition(rn, t.cross_size.cx, t.cross_size.cy, TB_MARGIN, RIGHT);
+		w.DrawImage(t.cross_pos.x, t.cross_pos.y, (ac || hl) 
+			? (cross == n ? TabBarImg::CR2 : ac ? TabBarImg::CR1 : TabBarImg::CR0)
+			: TabBarImg::CR0);
 	}
 		
 	if (display)
