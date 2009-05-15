@@ -549,11 +549,16 @@ bool CodeEditor::GetWordPos(int pos, int& l, int& h) {
 	return true;
 }
 
-String CodeEditor::GetWord()
+String CodeEditor::GetWord(int pos)
 {
 	int l, h;
-	GetWordPos(cursor, l, h);
+	GetWordPos(pos, l, h);
 	return Get(l, h - l);
+}
+
+String CodeEditor::GetWord()
+{
+	return GetWord(cursor);
 }
 
 void CodeEditor::LeftDouble(Point p, dword keyflags) {
@@ -566,6 +571,10 @@ void CodeEditor::LeftDouble(Point p, dword keyflags) {
 }
 
 void CodeEditor::LeftDown(Point p, dword keyflags) {
+	if((keyflags & K_CTRL) && WhenCtrlClick) {
+		WhenCtrlClick(GetMousePos(p));
+		return;
+	}
 	LineEdit::LeftDown(p, keyflags);
 	WhenLeftDown();
 }
@@ -612,6 +621,8 @@ void CodeEditor::MouseMove(Point p, dword f) {
 
 Image CodeEditor::CursorImage(Point p, dword keyflags)
 {
+	if(WhenCtrlClick && (keyflags & K_CTRL))
+		return Image::Hand();
 	if(tip.IsOpen())
 		return Image::Arrow();
 	return LineEdit::CursorImage(p, keyflags);

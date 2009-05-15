@@ -613,6 +613,7 @@ Ide::Ide()
 	showtime = true;
 	
 	editor.WhenTip = THISBACK(EditorTip);
+	editor.WhenCtrlClick = THISBACK(CtrlClick);
 }
 
 Ide::~Ide()

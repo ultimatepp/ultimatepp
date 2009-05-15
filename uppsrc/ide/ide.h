@@ -389,7 +389,7 @@ struct AssistEditor : CodeEditor {
 	void           NewTopic(String group, String coderef);
 	
 	bool           Esc();
-
+	
 	void           SerializeNavigator(Stream& s);
 
 	typedef AssistEditor CLASSNAME;
@@ -870,7 +870,9 @@ public:
 		void  ScanFile();
 		bool  SwapSIf(const char *cref);
 		void  SwapS();
+		void  ContextGoto0(int pos);
 		void  ContextGoto();
+		void  CtrlClick(int pos);
 
 
 	void      ConsoleMenu(Bar& menu);

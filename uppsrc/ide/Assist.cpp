@@ -862,13 +862,13 @@ bool IsPendif(const String& l)
 	return l.Find("#endif") >= 0;
 }
 
-void Ide::ContextGoto()
+void Ide::ContextGoto0(int pos)
 {
 	if(designer)
 		return;
 	if(!editor.assist_active)
 		return;
-	int li = editor.GetCursorLine();
+	int li = editor.GetLine(pos);
 	String l = editor.GetUtf8Line(li);
 	if(IsPif(l) || IsPelse(l)) {
 		int lvl = 0;
@@ -911,14 +911,14 @@ void Ide::ContextGoto()
 		}
 		return;
 	}
-	q = editor.GetCursor();
+	q = pos;
 	while(iscid(editor.Ch(q - 1)))
 		q--;
 	String tp;
 	Vector<String> xp = editor.ReadBack(q);
 	Index<String> type;
 	Parser parser;
-	int ci = editor.GetCursor();
+	int ci = pos;
 	for(;;) {
 		int c = editor.Ch(ci);
 		if(c == '{' && editor.Ch(ci + 1)) {
@@ -937,7 +937,7 @@ void Ide::ContextGoto()
 		if(type.GetCount() == 0)
 			return;
 	}
-	String id = editor.GetWord();
+	String id = editor.GetWord(pos);
 	if(id.GetCount() == 0)
 		return;
 	Vector<String> scope;
@@ -986,6 +986,16 @@ void Ide::ContextGoto()
 			}
 		}
 	}
+}
+
+void Ide::ContextGoto()
+{
+	ContextGoto0(editor.GetCursor());
+}
+
+void Ide::CtrlClick(int pos)
+{
+	ContextGoto0(pos);
 }
 
 void Ide::JumpToDefinition(const Array<CppItem>& n, int q)
