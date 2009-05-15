@@ -164,6 +164,7 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 		String description;
 		String path;
 		String stxt;
+		String nest;
 
 		bool operator<(const PkInfo& b) const { return PackageLess(package, b.package); }
 	};
@@ -252,7 +253,7 @@ void SelectPackageDlg::ChangeDescription()
 		pkg.Save(p.path);
 		p.description = description <<= ~dlg.text;
 		if(alist.IsCursor())
-			alist.Set(1, ~dlg.text);
+			alist.Set(2, ~dlg.text);
 	}
 }
 
@@ -288,7 +289,9 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	clist.Columns(4);
 	clist.WhenEnterItem = clist.WhenKillCursor = THISBACK(ListCursor);
 	alist.AddColumn("Package");
-	alist.AddColumn("Description", 3);
+	alist.AddColumn("Nest");
+	alist.AddColumn("Description");
+	alist.ColumnWidths("108 79 317");
 	alist.WhenCursor = THISBACK(ListCursor);
 	alist.EvenRowColor();
 	alist.SetLineCy(max(16, Draw::GetStdFontCy()));
@@ -537,6 +540,7 @@ void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progre
 	}
 
 	String d = AppendFileName(upp, dir);
+	String nest = GetFileName(upp);
 	Vector<String> folders;
 	for(FindFile ff(AppendFileName(d, "*.*")); ff; ff.Next())
 		if(ff.IsFolder())
@@ -562,7 +566,8 @@ void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progre
 				pk.package = pkg;
 				pk.description = p.description;
 				pk.path = pf;
-				pk.stxt = ToUpper(pk.package + pk.description);
+				pk.stxt = ToUpper(pk.package + pk.description + nest);
+				pk.nest = nest;
 			}
 		}
 		int ppos = progress_pos + i * progress_count / folders.GetCount();
@@ -634,7 +639,7 @@ void SelectPackageDlg::SyncList()
 	for(int i = 0; i < packages.GetCount(); i++)
 		if(packages[i].stxt.Find(s) >= 0) {
 			clist.Add(packages[i].package, IdeImg::Package());
-			alist.Add(packages[i].package, packages[i].description);
+			alist.Add(packages[i].package, packages[i].nest, packages[i].description);
 			alist.SetDisplay(alist.GetCount() - 1, 0, pd);
 		}
 	if(!alist.FindSetCursor(n))

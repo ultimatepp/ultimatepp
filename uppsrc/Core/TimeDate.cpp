@@ -339,8 +339,9 @@ FileTime Time::AsFileTime() const {
 #ifdef PLATFORM_POSIX
 Time::Time(FileTime filetime) {
 	struct tm *time = localtime(&filetime.ft);
-	*this = Time(time->tm_year + 1900, time->tm_mon + 1, time->tm_mday,
-                 time->tm_hour, time->tm_min, time->tm_sec);
+	if(time)
+		*this = Time(time->tm_year + 1900, time->tm_mon + 1, time->tm_mday,
+	                 time->tm_hour, time->tm_min, time->tm_sec);
 }
 
 FileTime Time::AsFileTime() const {
