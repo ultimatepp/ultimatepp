@@ -42,12 +42,12 @@ AssistEditor::AssistEditor()
 	int c2 = cy + 2;
 	int cx = 18;
 
-	scopepane.Add(browser.scope.SizePos());
-	itempane.Add(browser.search.HSizePos(0, 4 * cx + 2).TopPos(0, cy));
+	scopepane.Add(browser.search.HSizePos(0, 4 * cx + 2).TopPos(0, cy));
 	for(int i = 0; i < 3; i++)
-		itempane.Add(browser.rangebutton[i].RightPos((3 - i) * cx, cx).TopPos(0, cy));
-	itempane.Add(browser.sort.RightPos(0, cx).TopPos(0, cy));
-	itempane.Add(browser.item.HSizePos().VSizePos(c2, 0));
+		scopepane.Add(browser.rangebutton[i].RightPos((3 - i) * cx, cx).TopPos(0, cy));
+	scopepane.Add(browser.sort.RightPos(0, cx).TopPos(0, cy));
+	scopepane.Add(browser.scope.HSizePos().VSizePos(c2, 0));
+	itempane.Add(browser.item.SizePos());
 	scope_item.Vert(scopepane, itempane);
 	scope_item.SetPos(3000);
 	navigatorpane.Add(scope_item);
