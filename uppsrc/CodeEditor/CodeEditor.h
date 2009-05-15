@@ -393,6 +393,7 @@ public:
 	Callback         WhenSelection;
 	Gate1<MouseTip&> WhenTip;
 	Callback         WhenLeftDown;
+	Callback1<int>   WhenCtrlClick;
 	Callback         WhenAnnotationMove;
 	Callback         WhenAnnotationClick;
 	Callback         WhenAnnotationRightClick;
@@ -445,6 +446,7 @@ public:
 	void   MoveNextBrk(bool sel);
 	void   MovePrevBrk(bool sel);
 
+	String GetWord(int pos);
 	String GetWord();
 
 	bool   GetWordPos(int pos, int& l, int& h);
