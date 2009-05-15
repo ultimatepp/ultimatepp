@@ -8,9 +8,6 @@ file
 	control.cpp,
 	ocx.def;
 
-mainconfig
-	"" = "DLL";
-
 custom() "idl",
 	"midl /newtlb $(!/I) /h \"$(DIR)/$(TITLE)_idl.h\" /iid \"$(DIR)/$(TITLE"
 	")_idl.cpp\" /tlb \"$(DIR)/$(TITLE).tlb\" \"$(PATH)\"\r\n",
