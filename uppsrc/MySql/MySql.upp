@@ -1,4 +1,4 @@
-description "MySQL interface";
+description "MySQL interface\377";
 
 acceptflags
 	NOMYSQL,
@@ -8,23 +8,23 @@ uses
 	Sql,
 	plugin\z;
 
-library(WIN32 !NOMYSQL MSC DEBUG !MYSQLDLL) debug/mysqlclient.lib;
+library(WIN32 !NOMYSQL MSC DEBUG !(SO | MYSQLDLL)) debug/mysqlclient.lib;
+
+library(WIN32 !NOMYSQL MSC !DEBUG !(SO | MYSQLDLL)) opt/mysqlclient.lib;
+
+library(WIN32 !NOMYSQL MSC DEBUG (SO | MYSQLDLL)) debug/libmysql.lib;
+
+library(WIN32 !NOMYSQL MSC !DEBUG (SO | MYSQLDLL)) opt/libmysql.lib;
 
 library(WIN32 !NOMYSQL MSC) ws2_32.lib;
 
 library(WIN32 GCC !NOMYSQL) mysql;
-
-library(WIN32 !NOMYSQL MSC !DEBUG !MYSQLDLL) opt/mysqlclient.lib;
 
 library(LINUX !MT) "mysqlclient ssl";
 
 library(LINUX MT) "mysqlclient_r ssl";
 
 library(FREEBSD) mysqlclient;
-
-library(WIN32 !NOMYSQL MSC DEBUG MYSQLDLL) debug/libmysql.lib;
-
-library(WIN32 !NOMYSQL MSC !DEBUG MYSQLDLL) opt/libmysql.lib;
 
 link(DEBUG SO) /nodefaultlib:LIBCD;
 
