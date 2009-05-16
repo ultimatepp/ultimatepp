@@ -1,0 +1,11 @@
+description "This package demonstrates the use of Ctrl::Lock in MT applications\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+
