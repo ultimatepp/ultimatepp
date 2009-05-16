@@ -10,6 +10,7 @@ NAMESPACE_UPP
 
 static bool StdDisplayErrorFn(const Value& e)
 {
+	GuiLock __;
 	if(!e.IsError())
 		return false;
 	String s = GetErrorText(e);
@@ -35,6 +36,26 @@ Ctrl *Ctrl::LoopCtrl;
 int   Ctrl::LoopLevel;
 
 bool Ctrl::MemoryCheck;
+
+void Ctrl::EnterMutex()
+{
+	EnterGuiMutex();
+}
+
+void Ctrl::LeaveMutex()
+{
+	LeaveGuiMutex();
+}
+
+Ctrl::Lock::Lock(Ctrl& ctrl)
+{
+	EnterGuiMutex();
+}
+
+Ctrl::Lock::~Lock()
+{
+	LeaveGuiMutex();
+}
 
 void   Ctrl::SetData(const Value&) {}
 Value  Ctrl::GetData() const       { return Value(); }
@@ -71,6 +92,7 @@ void Ctrl::Layout()                                 {}
 
 void Ctrl::PostInput()
 {
+	GuiLock __;
 	if(parent) parent->PostInput();
 }
 
@@ -96,21 +118,25 @@ void Ctrl::RightTriple(Point p, dword keyflags)
 
 void Ctrl::ChildGotFocus()
 {
+	GuiLock __;
 	if(parent) parent->ChildGotFocus();
 }
 
 void Ctrl::ChildLostFocus()
 {
+	GuiLock __;
 	if(parent) parent->ChildLostFocus();
 }
 
 void Ctrl::ChildAdded(Ctrl *q)
 {
+	GuiLock __;
 	if(parent) parent->ChildAdded(q);
 }
 
 void Ctrl::ChildRemoved(Ctrl *q)
 {
+	GuiLock __;
 	if(parent) parent->ChildRemoved(q);
 }
 
@@ -134,6 +160,7 @@ dword  Ctrl::AccessKeyBit(int accesskey)
 
 dword Ctrl::GetAccessKeysDeep() const
 {
+	GuiLock __;
 	dword used = GetAccessKeys();
 	for(Ctrl *ctrl = GetFirstChild(); ctrl; ctrl = ctrl->GetNext())
 		used |= ctrl->GetAccessKeysDeep();
@@ -142,6 +169,7 @@ dword Ctrl::GetAccessKeysDeep() const
 
 void Ctrl::AssignAccessKeys(dword used)
 {
+	GuiLock __;
 	for(Ctrl *ctrl = GetFirstChild(); ctrl; ctrl = ctrl->GetNext()) {
 		ctrl->AssignAccessKeys(used);
 		used |= ctrl->GetAccessKeys();
@@ -160,6 +188,7 @@ void Ctrl::DistributeAccessKeys()
 
 bool Ctrl::VisibleAccessKeys()
 {
+	GuiLock __;
 	if(GUI_AltAccessKeys())
 		return GetAlt() && GetTopCtrl() == GetActiveCtrl();
 	return true;
@@ -169,6 +198,7 @@ void Ctrl::State(int) {}
 
 void Ctrl::StateDeep(int reason)
 {
+	GuiLock __;
 	if(destroying)
 		return;
 	State(reason);
@@ -178,6 +208,7 @@ void Ctrl::StateDeep(int reason)
 
 void Ctrl::StateH(int reason)
 {
+	GuiLock __;
 	for(int i = 0; i < statehook().GetCount(); i++)
 		if((*statehook()[i])(this, reason))
 			return;
@@ -189,6 +220,7 @@ void Ctrl::StateH(int reason)
 
 bool   Ctrl::Accept()
 {
+	GuiLock __;
 	if(!IsEnabled() || !IsShown())
 		return true;
 	if(DisplayError(GetData())) {
@@ -202,12 +234,14 @@ bool   Ctrl::Accept()
 
 void   Ctrl::Reject()
 {
+	GuiLock __;
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
 		q->Reject();
 }
 
 void   Ctrl::Serialize(Stream& s)
 {
+	GuiLock __;
 	Value x;
 	if(s.IsStoring())
 		x = GetData();
@@ -222,21 +256,25 @@ void Ctrl::Updated() {}
 
 bool Ctrl::IsForeground() const
 {
+	GuiLock __;
 	return GetTopCtrl()->IsWndForeground();
 }
 
 void Ctrl::SetForeground()
 {
+	GuiLock __;
 	GetTopCtrl()->SetWndForeground();
 }
 
 bool Ctrl::IsOpen() const
 {
+	GuiLock __;
 	const Ctrl *q = GetTopCtrl();
 	return q->IsWndOpen() && q->isopen;
 }
 
 void Ctrl::Show(bool ashow) {
+	GuiLock __;
 	if(visible != ashow) {
 		visible = true;
 		fullrefresh = false;
@@ -254,6 +292,7 @@ void Ctrl::Show(bool ashow) {
 }
 
 bool Ctrl::IsVisible() const {
+	GuiLock __;
 	const Ctrl *q = this;
 	for(;;) {
 		if(!q->visible) return false;
@@ -264,6 +303,7 @@ bool Ctrl::IsVisible() const {
 }
 
 void Ctrl::Enable(bool aenable) {
+	GuiLock __;
 	if(enabled != aenable) {
 		enabled = aenable;
 // 01/12/2007 - mdelfede
@@ -280,10 +320,12 @@ void Ctrl::Enable(bool aenable) {
 }
 
 bool Ctrl::IsShowEnabled() const {
+	GuiLock __;
 	return IsEnabled() && (!parent || parent->IsShowEnabled());
 }
 
 Ctrl& Ctrl::SetEditable(bool aeditable) {
+	GuiLock __;
 	if(editable != aeditable) {
 		editable = aeditable;
 		RefreshFrame();
@@ -299,6 +341,7 @@ void Ctrl::SetModify()
 
 void Ctrl::ClearModify()
 {
+	GuiLock __;
 	modify = false;
 	for(Ctrl *q = firstchild; q; q = q->next)
 		q->ClearModify();
@@ -306,6 +349,7 @@ void Ctrl::ClearModify()
 
 bool Ctrl::IsModified() const
 {
+	GuiLock __;
 	if(IsModifySet()) return true;
 	for(Ctrl *q = firstchild; q; q = q->next)
 		if(q->IsModified()) return true;
@@ -314,6 +358,7 @@ bool Ctrl::IsModified() const
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
+	GuiLock __;
 #ifdef PLATFORM_X11
 	if(this == caretCtrl)
 		RefreshCaret();
@@ -413,6 +458,7 @@ String Ctrl::GetLayoutId() const
 }
 
 bool  Ctrl::SetWantFocus() {
+	GuiLock __;
 	if(IsWantFocus() && IsEnabled() && IsVisible() && IsOpen())
 		return SetFocus();
 	return false;
@@ -444,12 +490,14 @@ void Ctrl::UpdateActionRefresh() {
 };
 
 void  Ctrl::CancelModeDeep() {
+	GuiLock __;
 	CancelMode();
 	for(Ctrl *q = firstchild; q; q = q->next)
 		q->CancelModeDeep();
 }
 
 String Ctrl::Name() const {
+	GuiLock __;
 #ifdef CPU_64
 	String s = String(typeid(*this).name()) + " : 0x" + FormatIntHex(this);
 #else
@@ -495,14 +543,14 @@ String Desc(const Ctrl *ctrl)
 	else
 	  s << " \"" << q << '\"';
 	const Ctrl *top = ctrl->GetTopWindow();
- 	if(top && top != ctrl) {
+	if(top && top != ctrl) {
  		String q = top->GetDesc();
  		if(IsNull(q))
  			s << " (" << typeid(*top).name() << ")";
  		else
 	 		s << " (\"" << q << "\")";
  	}
- 	return s;
+	return s;
 }
 
 #ifdef _DEBUG
@@ -511,6 +559,7 @@ String Desc(const Ctrl *ctrl)
 #define LG(x)     s << x << '\n'
 
 void Ctrl::Dump(Stream& s) const {
+	GuiLock __;
 	LG(Name());
 	LG(sFLAG(backpaint) << sFLAG(inframe) << sFLAG(visible) << sFLAG(enabled) <<
 	   sFLAG(wantfocus) << sFLAG(editable) << sFLAG(IsModified()) << sFLAG(transparent));
@@ -552,6 +601,7 @@ bool Ctrl::IsOcxChild()
 }
 
 Ctrl::Ctrl() {
+	GuiLock __;
 	LLOG("Ctrl::Ctrl");
 	destroying = false;
 	parent = prev = next = firstchild = lastchild = NULL;
@@ -581,6 +631,7 @@ Ctrl::Ctrl() {
 void KillTimeCallbacks(void *id, void *idlim);
 
 void Ctrl::DoRemove() {
+	GuiLock __;
 	if(!IsOpen()) return;
 	ReleaseCapture();
 	CancelModeDeep();
@@ -638,6 +689,7 @@ void Ctrl::DoRemove() {
 
 void Ctrl::Close()
 {
+	GuiLock __;
 	Ctrl *q = GetTopCtrl();
 	if(!q->top) return;
 	DoRemove();
@@ -651,6 +703,7 @@ void Ctrl::Close()
 }
 
 Ctrl::~Ctrl() {
+	GuiLock __;
 	LLOG("Ctrl::~Ctrl");
 	destroying = true;
 	while(GetFirstChild())
@@ -667,33 +720,39 @@ GLOBAL_VAR(Vector<Ctrl::StateHook>, Ctrl::statehook);
 
 void Ctrl::InstallMouseHook(MouseHook hook)
 {
+	GuiLock __;
 	mousehook().Add(hook);
 }
 
 void Ctrl::DeinstallMouseHook(MouseHook hook)
 {
+	GuiLock __;
 	int q = FindIndex(mousehook(), hook);
 	if(q >= 0) mousehook().Remove(q);
 }
 
 void Ctrl::InstallKeyHook(KeyHook hook)
 {
+	GuiLock __;
 	keyhook().Add(hook);
 }
 
 void Ctrl::DeinstallKeyHook(KeyHook hook)
 {
+	GuiLock __;
 	int q = FindIndex(keyhook(), hook);
 	if(q >= 0) keyhook().Remove(q);
 }
 
 void Ctrl::InstallStateHook(StateHook hook)
 {
+	GuiLock __;
 	statehook().Add(hook);
 }
 
 void Ctrl::DeinstallStateHook(StateHook hook)
 {
+	GuiLock __;
 	int q = FindIndex(statehook(), hook);
 	if(q >= 0) statehook().Remove(q);
 }
@@ -702,6 +761,7 @@ static char sZoomText[] = "OK Cancel Exit Retry";
 
 const char *Ctrl::GetZoomText()
 {
+	GuiLock __;
 	return sZoomText;
 }
 
@@ -710,6 +770,7 @@ Size Ctrl::Csize;
 
 inline void Ctrl::Csizeinit()
 {
+	GuiLock __;
 	if(Csize.cx == 0)
 		Csize = GetTextSize(sZoomText, StdFont());
 	if(Dsize.cx == 0)
@@ -720,17 +781,20 @@ inline void Ctrl::Csizeinit()
 
 void Ctrl::SetZoomSize(Size sz, Size bsz)
 {
+	GuiLock __;
 	Csize = sz;
 	Dsize = bsz;
 }
 
 void Ctrl::NoLayoutZoom()
 {
+	GuiLock __;
 	Csize = Dsize = Size(1, 1);
 }
 
 void Ctrl::GetZoomRatio(Size& m, Size& d)
 {
+	GuiLock __;
 	m = Csize;
 	d = Dsize;
 }
@@ -776,11 +840,13 @@ String Ctrl::appname;
 
 void Ctrl::SetAppName(const String& nm)
 {
+	GuiLock __;
 	appname = nm;
 }
 
 String Ctrl::GetAppName()
 {
+	GuiLock __;
 	if(appname.IsEmpty())
 		appname = GetExeTitle();
 	return appname;
@@ -793,6 +859,7 @@ void Ctrl::ClickFocus(bool cf) { _ClickFocus = cf; }
 
 Vector<Ctrl *> Ctrl::GetTopWindows()
 {
+	GuiLock __;
 	Vector<Ctrl *> c = GetTopCtrls();
 	Vector<Ctrl *> r;
 	for(int i = 0; i < c.GetCount(); i++)
@@ -803,6 +870,7 @@ Vector<Ctrl *> Ctrl::GetTopWindows()
 
 void Ctrl::CloseTopCtrls()
 {
+	GuiLock __;
 	Vector<Ctrl *> tc = Ctrl::GetTopCtrls();
 	for(int i = 0; i < tc.GetCount(); i++)
 		tc[i]->Close();
@@ -864,12 +932,14 @@ void (*Ctrl::skin)();
 
 void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)())
 {
+	GuiLock __;
 	s_chdefault = fn1;
 	Ctrl::skin = fn2;
 }
 
 void Ctrl::SetSkin(void (*_skin)())
 {
+	GuiLock __;
 	skin = _skin;
 	ChSync();
 	Vector<Ctrl *> ctrl = GetTopCtrls();
@@ -881,6 +951,7 @@ void Ctrl::SetSkin(void (*_skin)())
 
 void Ctrl::ChSync()
 {
+	GuiLock __;
 	if(s_chdefault)
 		(*s_chdefault)();
 	if(skin)

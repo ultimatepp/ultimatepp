@@ -71,6 +71,7 @@ public:
 	static void Sleep(int ms);
 
 	static bool IsST();
+	static bool IsMain();
 	static int  GetCount();
 	static void ShutdownThreads();
 	static bool IsShutdownThreads();

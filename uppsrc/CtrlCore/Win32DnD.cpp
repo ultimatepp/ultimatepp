@@ -15,6 +15,7 @@ int ToWin32CF(const char *s)
 
 String FromWin32CF(int cf)
 {
+	GuiLock __;
 	if(cf == CF_TEXT)
 		return "text";
 	if(cf == CF_UNICODETEXT)
@@ -108,6 +109,7 @@ String UDropTarget::Get(const char *fmt) const
 
 void UDropTarget::DnD(POINTL pl, bool drop, DWORD *effect, DWORD keys)
 {
+	GuiLock __;
 	LLOG("DnD effect: " << *effect);
 	dword e = *effect;
 	*effect = DROPEFFECT_NONE;
@@ -152,6 +154,7 @@ void UDropTarget::Repeat()
 
 STDMETHODIMP UDropTarget::DragEnter(LPDATAOBJECT pDataObj, DWORD grfKeyState, POINTL pt, LPDWORD pdwEffect)
 {
+	GuiLock __;
 	LLOG("DragEnter " << pt);
 	data = pDataObj;
 	data->AddRef();
@@ -498,9 +501,11 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	if(actions & DND_MOVE)
 		dsrc->move = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndMove(), CtrlCoreImg::DndMove98(), sample);
 	sDnDSource = this;
+	int level = LeaveGuiMutexAll();
 	HRESULT r = DoDragDrop(obj, dsrc,
 	                       (actions & DND_COPY ? DROPEFFECT_COPY : 0) |
 	                       (actions & DND_MOVE ? DROPEFFECT_MOVE : 0), &result);
+	EnterGuiMutex(level);
 	DWORD re = obj->effect;
 	obj->Release();
 	dsrc->Release();

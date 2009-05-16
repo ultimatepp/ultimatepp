@@ -17,11 +17,13 @@ void DHCtrl::NcDestroy()
 
 LRESULT DHCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
+	GuiLock __;
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
 void DHCtrl::CloseHWND()
 {
+	GuiLock __;
 	if(hwnd) {
 		DestroyWindow(hwnd);
 		hwnd = NULL;
@@ -30,6 +32,7 @@ void DHCtrl::CloseHWND()
 
 void DHCtrl::OpenHWND()
 {
+	GuiLock __;
 	CloseHWND();
 	HWND phwnd = GetTopCtrl()->GetHWND();
 	if(phwnd) {
@@ -42,6 +45,7 @@ void DHCtrl::OpenHWND()
 
 void DHCtrl::SyncHWND()
 {
+	GuiLock __;
 	HWND phwnd = GetTopCtrl()->GetHWND();
 	if(phwnd) {
 		Rect r = GetScreenView();

@@ -27,6 +27,7 @@ library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
 file
 	Draw.h,
 	DrawWin32.h,
+	Mt.cpp,
 	DrawWin32.cpp,
 	DrawX11.cpp,
 	ComposeText.cpp,

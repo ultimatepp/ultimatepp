@@ -178,6 +178,7 @@ LRESULT CALLBACK Ctrl::UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
+	ASSERT(Thread::IsMain());
 	LLOG("InitWin32");
 //	RLOGBLOCK("Ctrl::InitWin32");
 #define ILOG(x) // RLOG(x)
@@ -344,6 +345,7 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 
 void  Ctrl::SetMouseCursor(const Image& image)
 {
+	GuiLock __;
 #ifndef PLATFORM_WINCE
 	static Image img;
 	if(image.GetSerialId() != img.GetSerialId()) {
@@ -359,11 +361,13 @@ void  Ctrl::SetMouseCursor(const Image& image)
 
 Ctrl *Ctrl::CtrlFromHWND(HWND hwnd)
 {
+	GuiLock __;
 	return hwnd ? Windows().Get(hwnd, NULL) : NULL;
 }
 
 HWND Ctrl::GetOwnerHWND() const
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(!hwnd) return NULL;
 	return GetWindow(hwnd, GW_OWNER);
@@ -371,12 +375,14 @@ HWND Ctrl::GetOwnerHWND() const
 
 Ctrl *Ctrl::GetOwner()
 {
+	GuiLock __;
 	HWND hwnd = GetOwnerHWND();
 	return hwnd ? CtrlFromHWND(hwnd) : NULL;
 }
 
 Ctrl *Ctrl::GetActiveCtrl()
 {
+	GuiLock __;
 	if(focusCtrl)
 		return focusCtrl->GetTopCtrl();
 	HWND actwnd = ::GetActiveWindow();
@@ -398,6 +404,7 @@ UDropTarget *NewUDropTarget(Ctrl *);
 
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
 {
+	ASSERT(Thread::IsMain());
 	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << BeginIndent);
 	ASSERT(!IsChild() && !IsOpen());
 	Rect r = GetRect();
@@ -450,6 +457,7 @@ void ReleaseUDropTarget(UDropTarget *dt);
 
 void Ctrl::WndFree()
 {
+	GuiLock __;
 	if(!top) return;
 	RevokeDragDrop(GetHWND());
 	ReleaseUDropTarget(top->dndtgt);
@@ -471,6 +479,7 @@ void Ctrl::WndFree()
 
 void Ctrl::WndDestroy()
 {
+	GuiLock __;
 	LLOG("Ctrl::WndDestroy() in " <<UPP::Name(this) << BeginIndent);
 	LLOG((DumpWindowOrder(false), ""));
 	if(top && top->hwnd) {
@@ -483,6 +492,7 @@ void Ctrl::WndDestroy()
 Image Ctrl::DoMouse(int e, Point p, int zd)
 {
 //	LLOG("Ctrl::DoMouse(" << p << ", " << e << ")");
+	GuiLock __;
 	eventCtrl = this;
 	Image img = DispatchMouse(e, p, zd);
 	SyncCaret();
@@ -508,18 +518,21 @@ sWinMsg[] = {
 
 void Ctrl::NcCreate(HWND hwnd)
 {
+	GuiLock __;
 	if(!parent)
 		top->hwnd = hwnd;
 }
 
 void Ctrl::NcDestroy()
 {
+	GuiLock __;
 	if(!parent)
 		WndFree();
 }
 
 LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	GuiLock __;
 	if(sFinished)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 #ifdef PLATFORM_WINCE
@@ -675,6 +688,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
+	ASSERT(Thread::IsMain());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
@@ -706,10 +720,12 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 
 void Ctrl::GuiSleep(int ms)
 {
+	ASSERT(Thread::IsMain());
 	ELOG("GuiSleep");
 	if(EndSession())
 		return;
 	ELOG("GuiSleep 2");
+	int level = LeaveGuiMutexAll();
 #if !defined(flagDLL) && !defined(PLATFORM_WINCE)
 	if(!OverwatchThread) {
 		DWORD dummy;
@@ -724,6 +740,7 @@ void Ctrl::GuiSleep(int ms)
 #else
 	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
 #endif
+	EnterGuiMutex(level);
 }
 
 void Ctrl::WndDestroyCaret()
@@ -734,6 +751,7 @@ void Ctrl::WndDestroyCaret()
 
 void Ctrl::WndCreateCaret(const Rect& cr)
 {
+	GuiLock __;
 	LLOG("Ctrl::WndCreateCaret(" << cr << ") in " << UPP::Name(this));
 	HWND hwnd = GetHWND();
 	if(!hwnd) return;
@@ -748,6 +766,7 @@ void Ctrl::WndCreateCaret(const Rect& cr)
 
 Rect Ctrl::GetWndUpdateRect() const
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(!hwnd) return Null;
 	Rect r;
@@ -757,6 +776,7 @@ Rect Ctrl::GetWndUpdateRect() const
 
 Rect Ctrl::GetWndScreenRect() const
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(!hwnd) return Null;
 	Rect r;
@@ -766,6 +786,7 @@ Rect Ctrl::GetWndScreenRect() const
 
 void Ctrl::WndShow(bool b)
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(hwnd)
 		::ShowWindow(hwnd, b ? SW_SHOW : SW_HIDE);
@@ -773,16 +794,19 @@ void Ctrl::WndShow(bool b)
 
 void Ctrl::WndUpdate()
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(hwnd) ::UpdateWindow(hwnd);
 }
 
 bool Ctrl::IsWndOpen() const {
+	GuiLock __;
 	return GetHWND();
 }
 
 void Ctrl::SetAlpha(byte alpha)
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(!IsAlphaSupported() || parent || !top || !hwnd)
 		return;
@@ -816,6 +840,7 @@ Rect Ctrl::GetWorkArea() const
 {
 // return MonitorRectForHWND(GetHWND());
 // mst:2008-12-08, hack for better multimonitor support.
+	GuiLock __;
 	const Ctrl *topctl = GetTopCtrl();
 	HWND hwnd = topctl->GetHWND();
 	if(!hwnd && !((topctl = topctl->GetOwnerCtrl()) && (hwnd = topctl->GetHWND())))
@@ -835,6 +860,7 @@ static BOOL CALLBACK sMonEnumProc(HMONITOR monitor, HDC hdc, LPRECT lprcMonitor,
 
 void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
+	GuiLock __;
 	MultiMon().EnumDisplayMonitors(NULL, NULL, &sMonEnumProc, (LPARAM)&rc);
 }
 
@@ -860,6 +886,7 @@ Rect Ctrl::GetWorkArea(Point pt)
 
 Rect Ctrl::GetVirtualScreenArea()
 {
+	GuiLock __;
 	return RectC(GetSystemMetrics(SM_XVIRTUALSCREEN),
 		GetSystemMetrics(SM_YVIRTUALSCREEN),
 		GetSystemMetrics(SM_CXVIRTUALSCREEN),
@@ -881,6 +908,7 @@ Rect Ctrl::GetPrimaryScreenArea()
 
 int Ctrl::GetKbdDelay()
 {
+	GuiLock __;
 #ifdef PLATFORM_WINCE
 	return 500;
 #else
@@ -892,6 +920,7 @@ int Ctrl::GetKbdDelay()
 
 int Ctrl::GetKbdSpeed()
 {
+	GuiLock __;
 #ifdef PLATFORM_WINCE
 	return 1000 / 32;
 #else
@@ -903,6 +932,7 @@ int Ctrl::GetKbdSpeed()
 
 void Ctrl::SetWndForeground()
 {
+	GuiLock __;
 	LLOG("Ctrl::SetWndForeground() in " << UPP::Name(this));
 	HWND hwnd = GetHWND();
 	if(hwnd)
@@ -911,6 +941,7 @@ void Ctrl::SetWndForeground()
 
 bool Ctrl::IsWndForeground() const
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(!hwnd)
 		return false;
@@ -926,6 +957,7 @@ bool Ctrl::IsWndForeground() const
 
 bool Ctrl::WndEnable(bool b)
 {
+	GuiLock __;
 	LLOG("Ctrl::WndEnable(" << b << ") in " << UPP::Name(this) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 	HWND hwnd = GetHWND();
 	if(!b) {
@@ -939,6 +971,7 @@ bool Ctrl::WndEnable(bool b)
 
 bool Ctrl::SetWndFocus()
 {
+	GuiLock __;
 	LLOG("Ctrl::SetWndFocus() in " <<UPP::Name(this));
 	HWND hwnd = GetHWND();
 	if(hwnd) {
@@ -953,12 +986,14 @@ bool Ctrl::SetWndFocus()
 
 bool Ctrl::HasWndFocus() const
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	return hwnd && ::GetFocus() == hwnd;
 }
 
 bool Ctrl::SetWndCapture()
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(hwnd) {
 		::SetCapture(hwnd);
@@ -969,6 +1004,7 @@ bool Ctrl::SetWndCapture()
 
 bool Ctrl::ReleaseWndCapture()
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(hwnd && HasWndCapture())
 	{
@@ -980,18 +1016,21 @@ bool Ctrl::ReleaseWndCapture()
 
 bool Ctrl::HasWndCapture() const
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	return hwnd && hwnd == ::GetCapture();
 }
 
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(hwnd)
 		::InvalidateRect(hwnd, r, false);
 }
 
 void Ctrl::WndSetPos(const Rect& rect) {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(hwnd) {
 		Rect r = rect;
@@ -1009,6 +1048,7 @@ void Ctrl::WndSetPos(const Rect& rect) {
 
 void Ctrl::WndUpdate(const Rect& r)
 {
+	GuiLock __;
 	Ctrl *top = GetTopCtrl();
 	if(top->IsOpen()) {
 		HWND hwnd = top->GetHWND();
@@ -1033,6 +1073,7 @@ void Ctrl::WndUpdate(const Rect& r)
 
 void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
+	GuiLock __;
 	if(caretCtrl && caretCtrl->GetTopCtrl() == this) {
 		WndDestroyCaret();
 		caretRect.Clear();
@@ -1098,6 +1139,7 @@ Rect Ctrl::GetDefaultWindowRect() {
 
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {
+	EnterGuiMutex();
 	Ctrl *top = ctrl->GetTopCtrl();
 	hwnd = top->GetHWND();
 	ASSERT(hwnd);
@@ -1111,6 +1153,7 @@ ViewDraw::~ViewDraw()
 	HDC hdc = Detach();
 	if(hwnd && hdc)
 		ReleaseDC(hwnd, hdc);
+	LeaveGuiMutex();
 }
 
 Vector<String> SplitCmdLine__(const char *cmd)

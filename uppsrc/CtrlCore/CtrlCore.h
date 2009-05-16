@@ -788,6 +788,14 @@ protected:
 			Ctrl&   Unicode()                         { unicode = true; return *this; }
 
 public:
+	void EnterMutex();
+	void LeaveMutex();
+	
+	struct Lock {
+		Lock(Ctrl& ctrl);
+		~Lock();
+	};
+
 	enum StateReason {
 		FOCUS      = 10,
 		ACTIVATE   = 11,

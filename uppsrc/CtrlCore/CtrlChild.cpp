@@ -6,6 +6,7 @@ NAMESPACE_UPP
 
 bool Ctrl::HasDHCtrl() const
 {
+	GuiLock __;
 	if(dynamic_cast<const DHCtrl *>(this))
 		return true;
 	for(Ctrl *q = GetFirstChild(); q; q = q->next)
@@ -16,12 +17,14 @@ bool Ctrl::HasDHCtrl() const
 
 void Ctrl::SyncDHCtrl()
 {
+	GuiLock __;
 	Ctrl *p = GetTopCtrl();
 	p->hasdhctrl = p->HasDHCtrl();
 }
 
 void  Ctrl::AddChild(Ctrl *q, Ctrl *p)
 {
+	GuiLock __;
 	ASSERT(q);
 	LLOG("Add " << UPP::Name(q) << " to: " << Name());
 	if(p == q) return;
@@ -84,6 +87,7 @@ void Ctrl::AddChildBefore(Ctrl *child, Ctrl *insbefore)
 
 void  Ctrl::RemoveChild0(Ctrl *q)
 {
+	GuiLock __;
 	ChildRemoved(q);
 	q->DoRemove();
 	q->parent = NULL;
@@ -102,6 +106,7 @@ void  Ctrl::RemoveChild0(Ctrl *q)
 
 void  Ctrl::RemoveChild(Ctrl *q)
 {
+	GuiLock __;
 	if(q->parent != this) return;
 	q->RefreshFrame();
 	RemoveChild0(q);
@@ -112,17 +117,20 @@ void  Ctrl::RemoveChild(Ctrl *q)
 
 void  Ctrl::Remove()
 {
+	GuiLock __;
 	if(parent)
 		parent->RemoveChild(this);
 }
 
 bool Ctrl::HasChild(Ctrl *q) const
 {
+	GuiLock __;
 	return q && q->IsChild() && q->parent == this;
 }
 
 bool Ctrl::HasChildDeep(Ctrl *q) const
 {
+	GuiLock __;
 	while(q && q->IsChild()) {
 		if(q->parent == this) return true;
 		q = q->parent;
@@ -153,6 +161,7 @@ static bool IterateFocusFw(Ctrl *ctrl, bool noframe, bool init, bool all)
 
 bool Ctrl::IterateFocusForward(Ctrl *ctrl, Ctrl *top, bool noframe, bool init, bool all)
 {
+	GuiLock __;
 	LLOG("IterateFocusForward(" << UPP::Name(ctrl) << ", top " << UPP::Name(top) << ", noframe " << noframe << ", init " << init << ")");
 	if(!ctrl) return false;
 	if(IterateFocusFw(ctrl->GetFirstChild(), noframe, init, all))
@@ -187,6 +196,7 @@ static bool IterateFocusBw(Ctrl *ctrl, bool noframe, bool all)
 
 bool Ctrl::IterateFocusBackward(Ctrl *ctrl, Ctrl *top, bool noframe, bool all)
 {
+	GuiLock __;
 	if(!ctrl || ctrl == top) return false;
 	if(IterateFocusBw(ctrl->GetPrev(), noframe, all))
 		return true;
@@ -202,6 +212,7 @@ bool Ctrl::IterateFocusBackward(Ctrl *ctrl, Ctrl *top, bool noframe, bool all)
 
 Ctrl *Ctrl::GetTopCtrl()
 {
+	GuiLock __;
 	Ctrl *q = this;
 	while(q->parent)
 		q = q->parent;
@@ -213,11 +224,12 @@ const Ctrl *Ctrl::GetOwner() const        { return const_cast<Ctrl *>(this)->Get
 Ctrl       *Ctrl::GetTopCtrlOwner()       { return GetTopCtrl()->GetOwner(); }
 const Ctrl *Ctrl::GetTopCtrlOwner() const { return GetTopCtrl()->GetOwner(); }
 
-Ctrl       *Ctrl::GetOwnerCtrl()          { return !IsChild() && top ? top->owner : NULL; }
+Ctrl       *Ctrl::GetOwnerCtrl()          { GuiLock __; return !IsChild() && top ? top->owner : NULL; }
 const Ctrl *Ctrl::GetOwnerCtrl() const    { return const_cast<Ctrl *>(this)->GetOwnerCtrl(); }
 
 TopWindow *Ctrl::GetTopWindow()
 {
+	GuiLock __;
 	Ctrl *q = GetTopCtrl();
 	while(q) {
 		TopWindow *w = dynamic_cast<TopWindow *>(q);
@@ -234,6 +246,7 @@ const TopWindow *Ctrl::GetTopWindow() const
 
 TopWindow *Ctrl::GetMainWindow()
 {
+	GuiLock __;
 	Ctrl *q = GetTopCtrl();
 	for(;;) {
 		Ctrl *w = q->GetOwner();

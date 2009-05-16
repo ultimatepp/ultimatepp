@@ -18,6 +18,7 @@ extern HWND utilityHWND;
 
 int  GetClipboardFormatCode(const char *format_id)
 {
+	GuiLock ___;
 	int x = (int)(intptr_t)format_id;
 	if(x >= 0 && x < 65535)
 		return x;
@@ -49,6 +50,7 @@ int  GetClipboardFormatCode(const char *format_id)
 
 void ClearClipboard()
 {
+	GuiLock __;
 	sClipMap().Clear();
 	if(OpenClipboard(utilityHWND)) {
 		EmptyClipboard();
@@ -58,6 +60,7 @@ void ClearClipboard()
 
 void SetClipboardRaw(int format, const byte *data, int length)
 {
+	GuiLock __;
 	HANDLE handle = NULL;
 	if(data) {
 		handle = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, length + 2);
@@ -81,6 +84,7 @@ void SetClipboardRaw(int format, const byte *data, int length)
 
 void AppendClipboard(int format, const byte *data, int length)
 {
+	GuiLock __;
 	if(OpenClipboard(utilityHWND)) {
 		SetClipboardRaw(format, data, length);
 		CloseClipboard();
@@ -89,6 +93,7 @@ void AppendClipboard(int format, const byte *data, int length)
 
 void AppendClipboard(const char *format, const byte *data, int length)
 {
+	GuiLock __;
 	Vector<String> f = Split(format, ';');
 	for(int i = 0; i < f.GetCount(); i++)
 		AppendClipboard(GetClipboardFormatCode(f[i]), data, length);
@@ -96,11 +101,13 @@ void AppendClipboard(const char *format, const byte *data, int length)
 
 void AppendClipboard(const char *format, const String& data)
 {
+	GuiLock __;
 	AppendClipboard(format, data, data.GetLength());
 }
 
 void AppendClipboard(const char *format, const Value& data, String (*render)(const Value&))
 {
+	GuiLock __;
 	Vector<String> f = Split(format, ';');
 	for(int i = 0; i < f.GetCount(); i++) {
 		int c = GetClipboardFormatCode(f[i]);
@@ -111,6 +118,7 @@ void AppendClipboard(const char *format, const Value& data, String (*render)(con
 
 void Ctrl::RenderFormat(int format)
 {
+	GuiLock __;
 	int q = sClipMap().Find(format);
 	if(q >= 0) {
 		String s = sClipMap()[q].Render();
@@ -120,6 +128,7 @@ void Ctrl::RenderFormat(int format)
 
 void Ctrl::RenderAllFormats()
 {
+	GuiLock __;
 	if(sClipMap().GetCount() && OpenClipboard(utilityHWND)) {
 		for(int i = 0; i < sClipMap().GetCount(); i++)
 			RenderFormat(sClipMap().GetKey(i));
@@ -129,11 +138,13 @@ void Ctrl::RenderAllFormats()
 
 void Ctrl::DestroyClipboard()
 {
+	GuiLock __;
 	sClipMap().Clear();
 }
 
 String ReadClipboard(const char *format)
 {
+	GuiLock __;
 	if(!OpenClipboard(NULL))
 		return Null;
 	HGLOBAL hmem = GetClipboardData(GetClipboardFormatCode(format));
@@ -178,6 +189,7 @@ const char *ClipFmtsText()
 
 String GetString(PasteClip& clip)
 {
+	GuiLock __;
 	if(clip.Accept("wtext")) {
 		String s = ~clip;
 		return WString((const wchar *)~s, wstrlen((const wchar *)~s)).ToString();
@@ -189,6 +201,7 @@ String GetString(PasteClip& clip)
 
 WString GetWString(PasteClip& clip)
 {
+	GuiLock __;
 	if(clip.Accept("wtext")) {
 		String s = ~clip;
 		return WString((const wchar *)~s, wstrlen((const wchar *)~s));
@@ -282,11 +295,13 @@ const char *ClipFmtsImage()
 
 bool AcceptImage(PasteClip& clip)
 {
+	GuiLock __;
 	return clip.Accept(ClipFmtsImage());
 }
 
 Image GetImage(PasteClip& clip)
 {
+	GuiLock __;
 	Image m;
 	if(Accept<Image>(clip)) {
 		LoadFromString(m, ~clip);
@@ -320,6 +335,7 @@ Image GetImage(PasteClip& clip)
 
 Image ReadClipboardImage()
 {
+	GuiLock __;
 	PasteClip d = Ctrl::Clipboard();
 	return GetImage(d);
 }
@@ -350,6 +366,7 @@ String sImage(const Value& image)
 
 String GetImageClip(const Image& img, const String& fmt)
 {
+	GuiLock __;
 	if(img.IsEmpty()) return Null;
 	if(fmt == "dib")
 		return sDib(img);
@@ -360,6 +377,7 @@ String GetImageClip(const Image& img, const String& fmt)
 
 void AppendClipboardImage(const Image& img)
 {
+	GuiLock __;
 	if(img.IsEmpty()) return;
 	AppendClipboard(ClipFmt<Image>(), img, sImage);
 	AppendClipboard("dib", img, sDib);
@@ -384,6 +402,7 @@ struct sDROPFILES {
 
 Vector<String> GetFiles(PasteClip& clip)
 {
+	GuiLock __;
 	Vector<String> f;
 	String data = clip;
 	if(data.GetCount() < sizeof(sDROPFILES) + 2)

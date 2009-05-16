@@ -24,6 +24,7 @@ static bool s_hotkey;
 
 void Ctrl::RefreshAccessKeys()
 {
+	GuiLock __;
 	if(GetAccessKeys())
 		Refresh();
 	for(Ctrl *ctrl = GetFirstChild(); ctrl; ctrl = ctrl->GetNext())
@@ -32,6 +33,7 @@ void Ctrl::RefreshAccessKeys()
 
 void Ctrl::RefreshAccessKeysDo(bool vis)
 {
+	GuiLock __;
 	if(GUI_AltAccessKeys() && vis != akv) {
 		akv = vis;
 		RefreshAccessKeys();
@@ -40,6 +42,7 @@ void Ctrl::RefreshAccessKeysDo(bool vis)
 
 bool Ctrl::DispatchKey(dword keycode, int count)
 {
+	GuiLock __;
 	if(GUI_AltAccessKeys()) {
 		bool alt = GetAlt();
 		Ctrl *c = GetActiveCtrl();
@@ -114,6 +117,7 @@ bool Ctrl::DispatchKey(dword keycode, int count)
 
 bool Ctrl::HotKey(dword key)
 {
+	GuiLock __;
 	if(!IsEnabled() || !IsVisible()) return false;
 	for(Ptr<Ctrl> ctrl = firstchild; ctrl; ctrl = ctrl->next)
 	{
@@ -131,6 +135,7 @@ bool Ctrl::HotKey(dword key)
 
 void Ctrl::DoDeactivate(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 {
+	GuiLock __;
 	if(pfocusCtrl) {
 		Ctrl *ptop = pfocusCtrl->GetTopCtrl();
 		Ctrl *ntop = nfocusCtrl ? nfocusCtrl->GetTopCtrl() : NULL;
@@ -145,6 +150,7 @@ void Ctrl::DoDeactivate(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 
 void Ctrl::DoKillFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 {
+	GuiLock __;
 	if(pfocusCtrl && !pfocusCtrl->destroying) {
 		pfocusCtrl->StateH(FOCUS);
 		LLOG("LostFocus: " << Desc(pfocusCtrl));
@@ -157,6 +163,7 @@ void Ctrl::DoKillFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 
 void Ctrl::DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate)
 {
+	GuiLock __;
 	if(activate && focusCtrl == nfocusCtrl && nfocusCtrl) {
 		Ctrl *top = nfocusCtrl->GetTopCtrl();
 		if((!pfocusCtrl || pfocusCtrl->GetTopCtrl() != top) && !top->destroying) {
@@ -178,6 +185,7 @@ void Ctrl::DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate)
 
 bool Ctrl::SetFocus0(bool activate)
 {
+	GuiLock __;
 	if(IsUsrLog())
 		UsrLogT(6, String().Cat() << "SETFOCUS " << Desc(this));
 	LLOG("Ctrl::SetFocus " << Desc(this));
@@ -208,12 +216,14 @@ bool Ctrl::SetFocus0(bool activate)
 
 bool Ctrl::SetFocus()
 {
+	GuiLock __;
 	LLOG("Ctrl::SetFocus(" << Name() << ")");
 	return SetFocus0(true);
 }
 
 void Ctrl::ActivateWnd()
 {
+	GuiLock __;
 	// notification, don't set physical focus here
 	LLOG("ActivateWnd " << Name());
 	Ptr<Ctrl> nfocusCtrl = this;
@@ -229,6 +239,7 @@ void Ctrl::ActivateWnd()
 
 void Ctrl::SetFocusWnd()
 {
+	GuiLock __;
 	// notification, don't set physical focus here
 	LLOG("Ctrl::SetFocusWnd");
 	if(focusCtrlWnd != this) {
@@ -239,6 +250,7 @@ void Ctrl::SetFocusWnd()
 
 void Ctrl::KillFocusWnd()
 {
+	GuiLock __;
 	// notification, don't set physical focus here
 	LLOG("KillFocusWnd " << Name());
 	if(this == ~focusCtrlWnd) {
@@ -251,6 +263,7 @@ void Ctrl::KillFocusWnd()
 
 void Ctrl::ClickActivateWnd()
 {
+	GuiLock __;
 	LLOG("Ctrl::ClickActivateWnd");
 	if(this == ~focusCtrlWnd && focusCtrl && focusCtrl->GetTopCtrl() != this) {
 		LLOG("Ctrl::ClickActivateWnd -> ActivateWnd");
@@ -260,6 +273,7 @@ void Ctrl::ClickActivateWnd()
 
 void Ctrl::DefferedFocusSync()
 {
+	GuiLock __;
 	while(defferedChildLostFocus.GetCount() || defferedSetFocus) {
 		LLOG("Ctrl::DeferredFocusSync, defferedSetFocus = " << UPP::Name(defferedSetFocus));
 		Vector< Ptr<Ctrl> > b = defferedChildLostFocus;
@@ -280,12 +294,14 @@ void Ctrl::DefferedFocusSync()
 
 void Ctrl::RefreshCaret()
 {
+	GuiLock __;
 	if(caretCtrl)
 		caretCtrl->Refresh(caretCtrl->caretx, caretCtrl->carety,
 		                   caretCtrl->caretcx, caretCtrl->caretcy);
 }
 
 void Ctrl::SyncCaret() {
+	GuiLock __;
 #ifdef PLATFORM_X11
 	if(focusCtrl != caretCtrl) {
 		RefreshCaret();
@@ -320,12 +336,14 @@ void Ctrl::SyncCaret() {
 
 Ctrl *Ctrl::GetActiveWindow()
 {
+	GuiLock __;
 	Ctrl *q = GetActiveCtrl();
 	return q ? q->GetTopWindow() : NULL;
 }
 
 bool  Ctrl::HasFocusDeep() const
 {
+	GuiLock __;
 	if(HasFocus() || HasChildDeep(FocusCtrl())) return true;
 	Ctrl *a = GetActiveCtrl();
 	if(!a || !a->IsPopUp()) return false;
