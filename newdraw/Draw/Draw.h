@@ -97,13 +97,29 @@ Size GetScreenSize();
 
 #include "Image.h"
 
-void EnterDraw();
-void LeaveDraw();
+#ifdef _MULTITHREADED
+void EnterGuiMutex();
+void EnterGuiMutex(int n);
+void LeaveGuiMutex();
+int  LeaveGuiMutexAll();
 
-struct DrawLock {
-	DrawLock()    { EnterDraw(); }
-	~DrawLock()   { LeaveDraw(); }
+struct GuiLock {
+	GuiLock() { EnterGuiMutex(); }
+	~GuiLock() { LeaveGuiMutex(); }
 };
+#else
+inline void EnterGuiMutex() {}
+inline void EnterGuiMutex(int n) {}
+inline void LeaveGuiMutex() {}
+inline int  LeaveGuiMutexAll() {}
+
+struct GuiLock {
+	GuiLock() {}
+	~GuiLock() {}
+};
+#endif
+
+typedef GuiLock DrawLock;
 
 const int FONT_V = 40;
 
