@@ -13,17 +13,20 @@ static dword sModState;
 
 void ClearKbdState_()
 {
+	GuiLock __;
 	sKbdState = 0;
 }
 
 Point GetMousePos()
 {
+	GuiLock __;
 	LTIMING("GetMousePos");
 	return Ctrl::mousePos;
 }
 
 void Ctrl::SyncMousePos()
 {
+	GuiLock __;
 	LTIMING("XQueryPointer");
 	int x, y, xx, yy;
 	Window dm1, dm2;
@@ -32,13 +35,13 @@ void Ctrl::SyncMousePos()
 		Ctrl::mousePos = Point(x, y);
 }
 
-bool GetShift() { return sKbdState & ShiftMask; }
-bool GetCtrl() { return sKbdState & ControlMask; }
-bool GetAlt() { return sKbdState & Mod1Mask; }
-bool GetCapsLock() { return sKbdState & LockMask; }
-bool GetMouseLeft() { return sModState & Button1Mask; }
-bool GetMouseRight() { return sModState & (Ctrl::Xbuttons >= 3 ? Button3Mask : Button2Mask); }
-bool GetMouseMiddle() { return sModState & (Ctrl::Xbuttons >= 3 ? Button2Mask : 0); }
+bool GetShift() { GuiLock __; return sKbdState & ShiftMask; }
+bool GetCtrl() { GuiLock __; return sKbdState & ControlMask; }
+bool GetAlt() { GuiLock __; return sKbdState & Mod1Mask; }
+bool GetCapsLock() { GuiLock __; return sKbdState & LockMask; }
+bool GetMouseLeft() { GuiLock __; return sModState & Button1Mask; }
+bool GetMouseRight() { GuiLock __; return sModState & (Ctrl::Xbuttons >= 3 ? Button3Mask : Button2Mask); }
+bool GetMouseMiddle() { GuiLock __; return sModState & (Ctrl::Xbuttons >= 3 ? Button2Mask : 0); }
 
 int  Ctrl::Xbuttontime;
 
@@ -54,6 +57,7 @@ dword Ctrl::KEYtoK(dword key)
 
 void Ctrl::SetLastActive(XWindow *w, Ctrl *la)
 {
+	GuiLock __; 
 	while(w) {
 		LLOG("  to " << UPP::Name(w->ctrl));
 		w->last_active = la;
@@ -63,6 +67,7 @@ void Ctrl::SetLastActive(XWindow *w, Ctrl *la)
 
 void Ctrl::EventProc(XWindow& w, XEvent *event)
 {
+	GuiLock __; 
 	Ptr<Ctrl> _this = this;
 	bool pressed = false;
 	int  count = 1;

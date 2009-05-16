@@ -11,6 +11,7 @@ Ptr<Ctrl>     Ctrl::sel_ctrl;
 
 void Ctrl::SetSelectionSource(const char *fmts)
 {
+	GuiLock __; 
 	LLOG("SetSelectionSource " << UPP::Name(this) << ": " << fmts);
 	sel_formats = Split(fmts, ';');
 	sel_ctrl = this;
@@ -19,6 +20,7 @@ void Ctrl::SetSelectionSource(const char *fmts)
 
 Ctrl::Xclipboard::Xclipboard()
 {
+	GuiLock __; 
 	XSetWindowAttributes swa;
 	win = XCreateWindow(Xdisplay, RootWindow(Xdisplay, Xscreenno),
 	                    0, 0, 10, 10, 0, CopyFromParent, InputOnly, CopyFromParent,
@@ -28,11 +30,13 @@ Ctrl::Xclipboard::Xclipboard()
 
 Ctrl::Xclipboard::~Xclipboard()
 {
+	GuiLock __; 
 	XDestroyWindow(Xdisplay, win);
 }
 
 void Ctrl::Xclipboard::Write(int fmt, const ClipData& _data)
 {
+	GuiLock __; 
 	LLOG("SetSelectionOwner " << XAtomName(fmt));
 	data.GetAdd(fmt) = _data;
 	XSetSelectionOwner(Xdisplay, XAtom("CLIPBOARD"), win, CurrentTime);
@@ -40,6 +44,7 @@ void Ctrl::Xclipboard::Write(int fmt, const ClipData& _data)
 
 void Ctrl::Xclipboard::Request(XSelectionRequestEvent *se)
 {
+	GuiLock __; 
 	LLOG("Request " << XAtomName(se->target));
 	XEvent e;
 	e.xselection.type      = SelectionNotify;
@@ -102,6 +107,7 @@ void Ctrl::Xclipboard::Request(XSelectionRequestEvent *se)
 
 String Ctrl::Xclipboard::Read(int fmt, int selection, int property)
 {
+	GuiLock __; 
 	if(data.GetCount() && (dword)selection == XAtom("CLIPBOARD")) {
 		int q = data.Find(fmt);
 		return q >= 0 ? data[q].Render() : String();
@@ -144,11 +150,13 @@ Ctrl::Xclipboard& Ctrl::xclipboard()
 
 void ClearClipboard()
 {
+	GuiLock __; 
 	Ctrl::xclipboard().Clear();
 }
 
 void AppendClipboard(const char *format, const Value& data, String (*render)(const Value& data))
 {
+	GuiLock __; 
 	Vector<String> s = Split(format, ';');
 	for(int i = 0; i < s.GetCount(); i++)
 		Ctrl::xclipboard().Write(XAtom(s[i]), ClipData(data, render));
@@ -158,36 +166,43 @@ String sRawClipData(const Value& data);
 
 void AppendClipboard(const char *fmt, const String& data)
 {
+	GuiLock __; 
 	AppendClipboard(fmt, data, sRawClipData);
 }
 
 String ReadClipboard(const char *fmt)
 {
+	GuiLock __; 
 	return Ctrl::xclipboard().Read(XAtom(fmt), XAtom("CLIPBOARD"), XAtom("CLIPDATA"));
 }
 
 void AppendClipboardText(const String& s)
 {
+	GuiLock __; 
 	AppendClipboard("STRING", s);
 }
 
 String ReadClipboardText()
 {
+	GuiLock __; 
 	return ReadClipboard("STRING");
 }
 
 void AppendClipboardUnicodeText(const WString& s)
 {
+	GuiLock __; 
 	AppendClipboard("UTF8_STRING", ToUtf8(s));
 }
 
 WString ReadClipboardUnicodeText()
 {
+	GuiLock __; 
 	return FromUtf8(ReadClipboard("UTF8_STRING"));
 }
 
 bool Ctrl::Xclipboard::IsAvailable(int fmt, const char *type)
 {
+	GuiLock __; 
 	if(data.GetCount())
 		return data.Find(fmt) >= 0;
 	String formats = Read(XAtom("TARGETS"), XAtom(type), XAtom("CLIPDATA"));
@@ -202,6 +217,7 @@ bool Ctrl::Xclipboard::IsAvailable(int fmt, const char *type)
 
 bool Ctrl::ClipHas(int type, const char *fmt)
 {
+	GuiLock __; 
 	LLOG("ClipHas " << type << ": " << fmt);
 	if(type == 0)
 		return Ctrl::xclipboard().IsAvailable(XAtom(fmt), "CLIPBOARD");
@@ -217,6 +233,7 @@ String DnDGetData(const String& f);
 
 String Ctrl::ClipGet(int type, const char *fmt)
 {
+	GuiLock __; 
 	LLOG("ClipGet " << type << ": " << fmt);
 	if(type && GetDragAndDropSource())
 		return DnDGetData(fmt);
@@ -234,6 +251,7 @@ const char *ClipFmtsText()
 
 String GetString(PasteClip& clip)
 {
+	GuiLock __; 
 	if(clip.Accept("STRING") || clip.Accept("text/plain"))
 		return ~clip;
 	if(clip.Accept("UTF8_STRING"))
@@ -245,6 +263,7 @@ String GetString(PasteClip& clip)
 
 WString GetWString(PasteClip& clip)
 {
+	GuiLock __; 
 	if(clip.Accept("STRING") || clip.Accept("text/plain"))
 		return (~clip).ToWString();
 	if(clip.Accept("UTF8_STRING"))
@@ -256,6 +275,7 @@ WString GetWString(PasteClip& clip)
 
 String GetTextClip(const WString& text, const String& fmt)
 {
+	GuiLock __; 
 	if(fmt == "STRING" || fmt == "text/plain")
 		return text.ToString();
 	if(fmt == "UTF8_STRING")
@@ -267,6 +287,7 @@ String GetTextClip(const WString& text, const String& fmt)
 
 String GetTextClip(const String& text, const String& fmt)
 {
+	GuiLock __; 
 	if(fmt == "STRING" || fmt == "text/plain")
 		return text;
 	if(fmt == "UTF8_STRING")
@@ -278,11 +299,13 @@ String GetTextClip(const String& text, const String& fmt)
 
 bool AcceptText(PasteClip& clip)
 {
+	GuiLock __; 
 	return clip.Accept(ClipFmtsText());
 }
 
 void Append(VectorMap<String, ClipData>& data, const String& text) // optimize
 {
+	GuiLock __; 
 	data.GetAdd("STRING", text);
 	data.GetAdd("text/plain", text);
 	data.GetAdd("UTF8_STRING", ToUtf8(text.ToWString()));
@@ -291,6 +314,7 @@ void Append(VectorMap<String, ClipData>& data, const String& text) // optimize
 
 void Append(VectorMap<String, ClipData>& data, const WString& text) // optimize
 {
+	GuiLock __; 
 	data.GetAdd("STRING", text.ToString());
 	data.GetAdd("text/plain", text.ToString());
 	data.GetAdd("UTF8_STRING", ToUtf8(text));
@@ -299,11 +323,13 @@ void Append(VectorMap<String, ClipData>& data, const WString& text) // optimize
 
 bool IsClipboardAvailable(const char *fmt)
 {
+	GuiLock __; 
 	return Ctrl::xclipboard().IsAvailable(XAtom(fmt), "CLIPBOARD");
 }
 
 bool IsClipboardAvailableText()
 {
+	GuiLock __; 
 	return IsClipboardAvailable("STRING") ||
 	       IsClipboardAvailable("UTF8_STRING") ||
 	       IsClipboardAvailable("text/plain") ||
@@ -312,6 +338,7 @@ bool IsClipboardAvailableText()
 
 bool AcceptFiles(PasteClip& clip)
 {
+	GuiLock __; 
 	return clip.Accept("text/uri-list");
 }
 
@@ -321,6 +348,7 @@ int JustLf(int c)
 }
 
 Vector<String> GetFiles(PasteClip& clip) {
+	GuiLock __; 
 	Vector<String> r;
 	if(clip.Accept("text/uri-list")) {
 		String txt = clip;

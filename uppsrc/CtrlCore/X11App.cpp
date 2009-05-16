@@ -14,6 +14,7 @@ XIM Ctrl::xim;
 
 Atom XAtom(const char *name)
 {
+	GuiLock __; 
 	Atom x;
 	INTERLOCKED {
 		static VectorMap<String, int> atoms;
@@ -29,12 +30,14 @@ Atom XAtom(const char *name)
 
 String XAtomName(Atom atom)
 {
+	GuiLock __; 
 	LLOG("GetAtomName");
 	return XGetAtomName(Xdisplay, atom);
 }
 
 String GetProperty(Window w, Atom property, Atom rtype)
 {
+	GuiLock __; 
 	LLOG("GetProperty");
 	String result;
 	int format;
@@ -64,6 +67,7 @@ String GetProperty(Window w, Atom property, Atom rtype)
 }
 
 bool WaitForEvent(Window w, int type, XEvent& event){
+	GuiLock __; 
 	for(int i = 0; i < 80; i++) {
 		if(XCheckTypedWindowEvent(Xdisplay, w, type, &event))
 			return true;
@@ -77,6 +81,7 @@ bool WaitForEvent(Window w, int type, XEvent& event){
 
 String ReadPropertyData(Window w, Atom property, Atom rtype)
 {
+	GuiLock __; 
 	static Atom XA_INCR = XAtom("INCR");
 	Atom type;
 	int format;
@@ -112,6 +117,7 @@ String ReadPropertyData(Window w, Atom property, Atom rtype)
 
 Vector<int> GetPropertyInts(Window w, Atom property, Atom rtype)
 {
+	GuiLock __; 
 	Vector<int> result;
 	String p = GetProperty(w, property, rtype);
 	const long int *ptr = (const long int *)~p;
@@ -132,6 +138,7 @@ bool X11ErrorTrap;
 
 bool Ctrl::TrapX11Errors()
 {
+	GuiLock __; 
 	bool b = X11ErrorTrap;
 	X11ErrorTrap = true;
 	return b;
@@ -139,11 +146,13 @@ bool Ctrl::TrapX11Errors()
 
 void Ctrl::UntrapX11Errors(bool b)
 {
+	GuiLock __; 
 	X11ErrorTrap = b;
 }
 
 static void sPanicMessageBox(const char *title, const char *text)
 {
+	GuiLock __; 
 	Ctrl::ReleaseCtrlCapture();
 	XDisplay *display = XOpenDisplay(NULL);
 	if(!display)
@@ -363,6 +372,7 @@ void SetX11ErrorHandler()
 
 void Ctrl::InitX11(const char *display)
 {
+	GuiLock __; 
 	InstallPanicMessageBox(sPanicMessageBox);
 
 	InitX11Draw(display);
@@ -400,6 +410,7 @@ void Ctrl::InitX11(const char *display)
 
 void Ctrl::ExitX11()
 {
+	GuiLock __; 
 //	if(xic)
 //		XDestroyIC(xic);
 	if(xim)
@@ -408,6 +419,7 @@ void Ctrl::ExitX11()
 
 Rect Ctrl::GetDefaultWindowRect()
 {
+	GuiLock __; 
 	static int pos = 0;
 	pos += 10;
 	int cx = Xwidth * 2 / 3;
@@ -449,6 +461,7 @@ Rect Ctrl::GetVirtualScreenArea()
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
+	GuiLock __; 
 	static Rect r;
 	if(r.right == 0) {
 		Vector<int> x = GetPropertyInts(Xroot, XAtom("_NET_WORKAREA"));

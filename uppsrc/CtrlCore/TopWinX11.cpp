@@ -8,6 +8,7 @@ NAMESPACE_UPP
 
 void TopWindow::SyncSizeHints()
 {
+	GuiLock __; 
 	Size min = GetMinSize();
 	Size max = GetMaxSize();
 	if(!sizeable)
@@ -27,11 +28,13 @@ void TopWindow::SyncSizeHints()
 
 void TopWindow::EndIgnoreTakeFocus()
 {
+	GuiLock __; 
 	ignoretakefocus = false;
 }
 
 void TopWindow::EventProc(XWindow& w, XEvent *event)
 {
+	GuiLock __; 
 	Ptr<Ctrl> this_ = this;
 	if(event->type == ClientMessage) {
 		if(event->xclient.format == 32 && event->xclient.message_type)
@@ -56,6 +59,7 @@ void TopWindow::EventProc(XWindow& w, XEvent *event)
 
 void TopWindow::DefSyncTitle()
 {
+	GuiLock __; 
 	if(title2 == title)
 		return;
 	title2 = title;
@@ -75,6 +79,7 @@ void TopWindow::DefSyncTitle()
 
 void TopWindow::SyncTitle()
 {
+	GuiLock __; 
 	LLOG("SyncTitle: " << title);
 	KillTimeCallback(TIMEID_DEFSYNCTITLE);
 	SetTimeCallback(0, THISBACK(DefSyncTitle), TIMEID_DEFSYNCTITLE);
@@ -83,6 +88,7 @@ void TopWindow::SyncTitle()
 
 void TopWindow::SyncCaption()
 {
+	GuiLock __; 
 	LLOG("SyncCaption");
 	SyncTitle();
 	if(IsOpen() && GetWindow()) {
@@ -136,6 +142,7 @@ void TopWindow::SyncCaption()
 
 void TopWindow::CenterRect(Ctrl *owner)
 {
+	GuiLock __; 
 	SetupRect();
 	if(owner && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
@@ -169,6 +176,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 
 void TopWindow::Open(Ctrl *owner)
 {
+	GuiLock __; 
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
 		DistributeAccessKeys();
 	UsrLogT(3, "OPEN " + Desc(this));
@@ -256,38 +264,45 @@ void TopWindow::Open(Ctrl *owner)
 
 void TopWindow::Open()
 {
+	GuiLock __; 
 	Open(GetActiveWindow());
 }
 
 void TopWindow::OpenMain()
 {
+	GuiLock __; 
 	Open(NULL);
 }
 
 void TopWindow::Minimize(bool)
 {
+	GuiLock __; 
 	state = MINIMIZED;
 	XIconifyWindow(Xdisplay, GetWindow(), Xscreenno);
 }
 
 void TopWindow::Maximize(bool effect)
 {
+	GuiLock __; 
 	state = MAXIMIZED;
 }
 
 void TopWindow::Overlap(bool effect)
 {
+	GuiLock __; 
 	state = OVERLAPPED;
 }
 
 TopWindow& TopWindow::TopMost(bool b, bool)
 {
+	GuiLock __; 
 	topmost = b;
 	return *this;
 }
 
 bool TopWindow::IsTopMost() const
 {
+	GuiLock __; 
 	return topmost;
 }
 

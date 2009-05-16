@@ -178,6 +178,7 @@ LRESULT CALLBACK Ctrl::UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
+	GuiLock __;
 	ASSERT(Thread::IsMain());
 	LLOG("InitWin32");
 //	RLOGBLOCK("Ctrl::InitWin32");
@@ -404,6 +405,7 @@ UDropTarget *NewUDropTarget(Ctrl *);
 
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
 {
+	GuiLock __;
 	ASSERT(Thread::IsMain());
 	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << BeginIndent);
 	ASSERT(!IsChild() && !IsOpen());
@@ -688,6 +690,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
+	GuiLock __;
 	ASSERT(Thread::IsMain());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
@@ -720,6 +723,7 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 
 void Ctrl::GuiSleep(int ms)
 {
+	GuiLock __;
 	ASSERT(Thread::IsMain());
 	ELOG("GuiSleep");
 	if(EndSession())
