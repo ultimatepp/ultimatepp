@@ -649,10 +649,19 @@ void  LayDes::MouseMove(Point p, dword keyflags)
 	}
 	p -= dragbase;
 	if(draghandle < 3) {
+		Vector<Rect> r;
+		r.SetCount(l.item.GetCount());
+		for(int i = 0; i < l.item.GetCount(); i++)
+			r[i] = CtrlRect(l.item[i].pos, l.size);
 		if((draghandle + 1) & 1)
 			l.size.cx = max(0, draglayoutsize.cx + p.x) / gx * gx;
 		if((draghandle + 1) & 2)
 			l.size.cy = max(0, draglayoutsize.cy + p.y) / gy * gy;
+		if(!sizespring)
+			for(int i = 0; i < l.item.GetCount(); i++) {
+				LayoutItem& m = l.item[i];
+				m.pos = MakeLogPos(m.pos, r[i], l.size);
+			}
 		SetStatus(true);
 		SetSb();
 		Sync();
@@ -681,7 +690,7 @@ void  LayDes::MouseMove(Point p, dword keyflags)
 		if(draghandle == 5 || draghandle == 7 || draghandle == 10)
 			r.right = max(r.left + minsize.cx, (r.right + p.x) / gy * gy);
 		if(draghandle == 12) {
-			Size sz = r.Size();
+			Size sz = r.GetSize();
 			if(i == 0) {
 				Rect q = r;
 				r.left = (r.left + p.x) / gx * gx;
