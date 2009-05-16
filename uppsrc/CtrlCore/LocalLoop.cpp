@@ -7,7 +7,7 @@ NAMESPACE_UPP
 void LocalLoop::Run()
 {
 	ASSERT(master);
-	ASSERT(Thread::IsMain());
+	ASSERT(IsMainThread());
 	master->AddChild(this);
 	Ptr<Ctrl> focus = GetFocusCtrl();
 	SetCapture();

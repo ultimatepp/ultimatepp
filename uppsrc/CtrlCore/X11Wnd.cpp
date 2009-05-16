@@ -63,7 +63,7 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 		GC gc = XCreateGC(Xdisplay, (Drawable)top->window, 0, 0);
 		XftDraw *xftdraw = XftDrawCreate(Xdisplay, (Drawable) top->window,
 		                                 DefaultVisual(Xdisplay, Xscreenno), Xcolormap);
-		Draw draw(top->window, gc, xftdraw, invalid);
+		SystemDraw draw(top->window, gc, xftdraw, invalid);
 		UpdateArea(draw, draw.GetClip());
 		XftDrawDestroy(xftdraw);
 		XFreeGC(Xdisplay, gc);
@@ -303,7 +303,7 @@ bool Ctrl::ProcessEvents(bool *)
 void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
-	ASSERT(Thread::IsMain());
+	ASSERT(IsMainThread());
 	fd_set fdset;
 	FD_ZERO(&fdset);
 	FD_SET(Xconnection, &fdset);
@@ -327,7 +327,7 @@ void Ctrl::SetTimerGranularity(int ms)
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
-	ASSERT(Thread::IsMain());
+	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
@@ -381,7 +381,7 @@ void Ctrl::SyncExpose()
 void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 {
 	GuiLock __;
-	ASSERT(Thread::IsMain());
+	ASSERT(IsMainThread());
 	LLOG("Create " << Name() << " " << GetRect());
 	ASSERT(!IsChild() && !IsOpen());
 	LLOG("Ungrab1");
@@ -442,7 +442,7 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 void Ctrl::WndDestroy()
 {
 	GuiLock __;
-	ASSERT(Thread::IsMain());
+	ASSERT(IsMainThread());
 	LLOG("WndDestroy " << Name());
 	if(!top || !isopen) return;
 	AddGlobalRepaint();
