@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#ifdef _MULTITHREADED
+
 static StaticMutex sGuiLock;
 
 static thread__ int sGuiLockLevel = 0;
@@ -37,5 +39,7 @@ int LeaveGuiMutexAll()
 	}
 	return q;
 }
+
+#endif
 
 END_UPP_NAMESPACE
