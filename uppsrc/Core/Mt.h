@@ -432,7 +432,11 @@ public:
 	LazyUpdate();
 };
 
+inline bool IsMainThread() { return Thread::IsMain(); }
+
 #else
+
+inline bool IsMainThread() { return true; }
 
 #define thread__
 
