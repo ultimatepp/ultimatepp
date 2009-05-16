@@ -314,6 +314,7 @@ private:
 
 	bool              usegrid;
 	bool              ignoreminsize;
+	bool              sizespring;
 
 	WithMatrixLayout<TopWindow>  matrix;
 	WithSettingLayout<TopWindow> setting;
@@ -392,6 +393,7 @@ private:
 
 	void        ToggleGrid();
 	void        ToggleMinSize();
+	void        ToggleSizeSpring();
 	void        Settings();
 
 	enum Code {

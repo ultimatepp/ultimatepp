@@ -144,6 +144,12 @@ void LayDes::ToggleMinSize()
 	SetBar();
 }
 
+void LayDes::ToggleSizeSpring()
+{
+	sizespring = !sizespring;
+	SetBar();
+}
+
 void LayDes::Settings()
 {
 	setting.Execute();
@@ -157,6 +163,8 @@ void LayDes::OptionBar(Bar& bar)
 	   .Check(usegrid);
 	bar.Add("Ignore min size", LayImg::MinSize(), THISBACK(ToggleMinSize))
 	   .Check(ignoreminsize);
+	bar.Add("Resize with springs", LayImg::SizeSpring(), THISBACK(ToggleSizeSpring))
+	   .Check(sizespring);
 	bar.Add("Settings..", THISBACK(Settings));
 }
 
@@ -215,11 +223,13 @@ class CVFrame : public CtrlFrame {
 
 void LayDes::Serialize(Stream& s)
 {
-	int version = 0;
+	int version = 1;
 	s / version;
 	s % setting.gridx % setting.gridy;
 	s % setting.paintgrid % setting.showicons;
 	s % ignoreminsize % usegrid;
+	if(version >= 1)
+		s % sizespring;
 	s % lsplit % isplit % rsplit;
 	item.SerializeHeader(s);
 	SetBar();
@@ -244,6 +254,7 @@ LayDes::LayDes()
 
 	usegrid = true;
 	ignoreminsize = false;
+	sizespring = false;
 
 	SetBar();
 
