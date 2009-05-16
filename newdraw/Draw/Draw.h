@@ -111,7 +111,7 @@ struct GuiLock {
 inline void EnterGuiMutex() {}
 inline void EnterGuiMutex(int n) {}
 inline void LeaveGuiMutex() {}
-inline int  LeaveGuiMutexAll() {}
+inline int  LeaveGuiMutexAll() { return 0; }
 
 struct GuiLock {
 	GuiLock() {}

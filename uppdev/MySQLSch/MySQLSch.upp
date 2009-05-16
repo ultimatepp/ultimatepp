@@ -1,0 +1,10 @@
+uses
+	Core,
+	MySql;
+
+file
+	MySQLSch.cpp;
+
+mainconfig
+	"" = "";
+

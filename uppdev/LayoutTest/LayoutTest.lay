@@ -1,4 +1,4 @@
-LAYOUT(LayoutTestLayout, 408, 252)
+LAYOUT(LayoutTestLayout, 344, 188)
 	ITEM(Button, b2, SetLabel(t_("Cancel")).RightPosZ(4, 60).BottomPosZ(5, 19))
 	ITEM(Button, b1, SetLabel(t_("OK")).LeftPosZ(4, 60).BottomPosZ(5, 19))
 END_LAYOUT
