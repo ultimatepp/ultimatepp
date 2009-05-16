@@ -103,12 +103,17 @@ void EnterGuiMutex(int n);
 void LeaveGuiMutex();
 int  LeaveGuiMutexAll();
 
-struct GuiLock {
 #ifdef _MULTITHREADED
+struct GuiLock {
 	GuiLock()  { EnterGuiMutex(); }
 	~GuiLock() { LeaveGuiMutex(); }
-#endif
 };
+#else
+struct GuiLock {
+	GuiLock()  {}
+	~GuiLock() {}
+};
+#endif
 
 typedef GuiLock DrawLock;
 
