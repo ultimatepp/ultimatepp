@@ -55,6 +55,7 @@ static int s_starttime;
 
 void Ctrl::DoPaint(const Vector<Rect>& invalid)
 {
+	GuiLock __;
 	if(IsVisible()) {
 		LTIMING("DoPaint");
 		fullrefresh = false;
@@ -71,6 +72,7 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 
 void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
+	GuiLock __;
 	if(r.IsEmpty() || !GetWindow()) return;
 	int cx = r.Width() - abs(dx);
 	int cy = r.Height() - abs(dy);
@@ -91,17 +93,20 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 
 bool Ctrl::IsWaitingEvent()
 {
+	GuiLock __;
 	return XPending(Xdisplay);
 }
 
 Ctrl *Ctrl::CtrlFromWindow(Window w)
 {
+	GuiLock __;
 	int q = Xwindow().Find(w);
 	return q >= 0 ? Xwindow()[q].ctrl : NULL;
 }
 
 Ctrl::XWindow *Ctrl::GetXWindow()
 {
+	GuiLock __;
 	if(!top) return NULL;
 	int q = Xwindow().Find(top->window);
 	return q >= 0 ? &Xwindow()[q] : NULL;
@@ -112,6 +117,7 @@ Ctrl::XWindow *Ctrl::GetXWindow()
 // Gets handle of window containing control
 Window Ctrl::GetParentWindow(void) const
 {
+	GuiLock __;
 	Ctrl const *q = GetParentWindowCtrl();
 	if(q)
 		return q->top->window;
@@ -123,6 +129,7 @@ Window Ctrl::GetParentWindow(void) const
 // Get control with parentwindow as handle
 Ctrl *Ctrl::GetParentWindowCtrl(void) const
 {
+	GuiLock __;
 	Ctrl *q = parent;
 	while(q && !q->top)
 		q = q->parent;
@@ -133,6 +140,7 @@ Ctrl *Ctrl::GetParentWindowCtrl(void) const
 // Gets the rect inside the parent window
 Rect Ctrl::GetRectInParentWindow(void) const
 {
+	GuiLock __;
 	Rect r = GetRect();
 	Ctrl *q = parent;
 	while(q)
@@ -155,6 +163,7 @@ void DnDClear();
 
 void Ctrl::ProcessEvent(XEvent *event)
 {
+	GuiLock __;
 	if(xim && XFilterEvent(event, None))
 		return;
 	ArrayMap<Window, Ctrl::XWindow>& xmap = Xwindow();
@@ -242,6 +251,7 @@ void Ctrl::ProcessEvent(XEvent *event)
 }
 
 void Ctrl::TimerAndPaint() {
+	GuiLock __;
 	LTIMING("TimerAndPaint");
 	TimerProc(GetTickCount());
 	for(int i = 0; i < Xwindow().GetCount(); i++) {
@@ -266,6 +276,7 @@ void Ctrl::TimerAndPaint() {
 
 bool Ctrl::ProcessEvent(bool *)
 {
+	GuiLock __;
 	if(!IsWaitingEvent()) return false;
 	XEvent event;
 	XNextEvent(Xdisplay, &event);
@@ -277,6 +288,7 @@ void SweepMkImageCache();
 
 bool Ctrl::ProcessEvents(bool *)
 {
+	GuiLock __;
 	if(ProcessEvent()) {
 		while(ProcessEvent() && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
 		TimerAndPaint();
@@ -290,6 +302,8 @@ bool Ctrl::ProcessEvents(bool *)
 
 void Ctrl::GuiSleep(int ms)
 {
+	GuiLock __;
+	ASSERT(Thread::IsMain());
 	fd_set fdset;
 	FD_ZERO(&fdset);
 	FD_SET(Xconnection, &fdset);
@@ -297,18 +311,23 @@ void Ctrl::GuiSleep(int ms)
 	timeout.tv_sec = ms / 1000;
 	timeout.tv_usec = ms % 1000 * 1000;
 	XFlush(Xdisplay);
+	int level = LeaveGuiMutexAll();
 	select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
+	EnterGuiMutex(level);
 }
 
 static int granularity = 10;
 
 void Ctrl::SetTimerGranularity(int ms)
 {
+	GuiLock __;
 	granularity = ms;
 }
 
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
+	GuiLock __;
+	ASSERT(Thread::IsMain());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
@@ -328,7 +347,9 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 1000 * granularity;
 		XFlush(Xdisplay);
+		int level = LeaveGuiMutexAll();
 		select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
+		EnterGuiMutex(level);
 //		GuiSleep()(granularity);
 		SyncMousePos();
 		while(IsWaitingEvent()) {
@@ -348,6 +369,7 @@ void Ctrl::EventLoop(Ctrl *ctrl)
 
 void Ctrl::SyncExpose()
 {
+	GuiLock __;
 	if(!top) return;
 	XEvent event;
 	while(XCheckTypedWindowEvent(Xdisplay, top->window, Expose, &event))
@@ -358,6 +380,8 @@ void Ctrl::SyncExpose()
 
 void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 {
+	GuiLock __;
+	ASSERT(Thread::IsMain());
 	LLOG("Create " << Name() << " " << GetRect());
 	ASSERT(!IsChild() && !IsOpen());
 	LLOG("Ungrab1");
@@ -417,6 +441,8 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 
 void Ctrl::WndDestroy()
 {
+	GuiLock __;
+	ASSERT(Thread::IsMain());
 	LLOG("WndDestroy " << Name());
 	if(!top || !isopen) return;
 	AddGlobalRepaint();
@@ -456,6 +482,7 @@ void Ctrl::WndDestroy()
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
+	GuiLock __;
 	Vector<Ctrl *> v;
 	const ArrayMap<Window, Ctrl::XWindow>& w = Xwindow();
 	for(int i = 0; i < w.GetCount(); i++)
@@ -466,6 +493,7 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 
 void Ctrl::StartPopupGrab()
 {
+	GuiLock __;
 	if(PopupGrab == 0) {
 		if(!top) return;
 		if(XGrabPointer(
@@ -480,6 +508,7 @@ void Ctrl::StartPopupGrab()
 
 void Ctrl::EndPopupGrab()
 {
+	GuiLock __;
 	if(PopupGrab == 0) return;
 	if(--PopupGrab == 0) {
 		XUngrabPointer(Xdisplay, CurrentTime);
@@ -489,6 +518,7 @@ void Ctrl::EndPopupGrab()
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 {
+	GuiLock __;
 	LLOG("POPUP: " << UPP::Name(this));
 	Ctrl *q = owner ? owner->GetTopCtrl() : GetActiveCtrl();
 	ignoretakefocus = true;
@@ -507,6 +537,7 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 
 Ctrl *Ctrl::GetActiveCtrl()
 {
+	GuiLock __;
 	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
 }
 
@@ -515,12 +546,14 @@ void  Ctrl::SetAlpha(byte alpha) {}
 
 bool Ctrl::IsCompositedGui()
 {
+	GuiLock __;
 	static bool b = XGetSelectionOwner(Xdisplay, XAtom(String().Cat() << "_NET_WM_CM_S" << Xscreenno)) != None;
 	return b;
 }
 
 Ctrl *Ctrl::GetOwner()
 {
+	GuiLock __;
 	if(!IsOpen()) return NULL;
 	int q = Xwindow().Find(GetWindow());
 	return q >= 0 ? Xwindow()[q].owner : NULL;
@@ -528,6 +561,7 @@ Ctrl *Ctrl::GetOwner()
 
 void Ctrl::WndShow(bool b)
 {
+	GuiLock __;
 	LLOG("WndShow " << b);
 	if(top) {
 		XWindowAttributes xwa;
@@ -545,6 +579,7 @@ void Ctrl::WndShow(bool b)
 
 void Ctrl::WndUpdate()
 {
+	GuiLock __;
 	LTIMING("WndUpdate");
 	LLOG("WNDUPDATE");
 	if(!top) return;
@@ -561,6 +596,7 @@ void Ctrl::WndUpdate()
 
 void Ctrl::WndUpdate(const Rect& r)
 {
+	GuiLock __;
 	LTIMING("WndUpdate Rect");
 	LLOG("WNDUPDATE " << r);
 	if(!top) return;
@@ -576,6 +612,7 @@ void Ctrl::WndUpdate(const Rect& r)
 
 void Ctrl::WndSetPos(const Rect& r)
 {
+	GuiLock __;
 	if(!top) return;
 	LLOG("WndSetPos " << Name() << r);
 	AddGlobalRepaint();
@@ -591,6 +628,7 @@ bool Ctrl::IsWndOpen() const
 
 bool Ctrl::SetWndCapture()
 {
+	GuiLock __;
 	if(!IsEnabled() || !top || !IsVisible()) return false;
 	if(top->window == grabWindow) return true;
 	int status = XGrabPointer(
@@ -606,11 +644,13 @@ bool Ctrl::SetWndCapture()
 
 bool Ctrl::HasWndCapture() const
 {
+	GuiLock __;
 	return top && top->window == grabWindow;
 }
 
 void Ctrl::ReleaseGrab()
 {
+	GuiLock __;
 	if(grabWindow) {
 		LLOG("RELEASE GRAB");
 		XUngrabPointer(Xdisplay, CurrentTime);
@@ -621,6 +661,7 @@ void Ctrl::ReleaseGrab()
 
 bool Ctrl::ReleaseWndCapture()
 {
+	GuiLock __;
 	LLOG("Releasing capture");
 	if(top && top->window == grabWindow) {
 		LLOG("Ungrab3");
@@ -630,34 +671,9 @@ bool Ctrl::ReleaseWndCapture()
 	return false;
 }
 
-/*
 void Ctrl::SetMouseCursor(const Image& image)
 {
-	if(!top) return;
-	Window w = GetWindow();
-	if(IsPopUp()) {
-		Ctrl *tw = GetTopWindow();
-		if(tw)
-			w = tw->GetWindow();
-	}
-	static Image img;
-	static Cursor shc;
-	static Window wnd;
-	if(img.GetSerialId() != image.GetSerialId() || w != wnd) {
-		img = image;
-		Cursor hc = X11Cursor(img);
-		wnd = w;
-		XDefineCursor(Xdisplay, wnd, hc);
-		if(shc)
-			XFreeCursor(Xdisplay, shc);
-		shc = hc;
-		XFlush(Xdisplay);
-	}
-}
-*/
-
-void Ctrl::SetMouseCursor(const Image& image)
-{
+	GuiLock __;
 	static Image img;
 	static Cursor shc;
 	if(img.GetSerialId() != image.GetSerialId()) {
@@ -679,6 +695,7 @@ void ClearKbdState_();
 
 void Ctrl::TakeFocus()
 {
+	GuiLock __;
 	if(IsChild()) {
 		Ctrl *w = GetTopCtrl();
 		if(w) w->TakeFocus();
@@ -722,6 +739,7 @@ void Ctrl::TakeFocus()
 
 void Ctrl::KillFocus(Window window)
 {
+	GuiLock __;
 	if(!window)
 		return;
 	int q = Xwindow().Find(window);
@@ -734,6 +752,7 @@ void Ctrl::KillFocus(Window window)
 
 bool Ctrl::SetWndFocus()
 {
+	GuiLock __;
 	LLOG("SetWndFocus " << Name());
 	if(top && top->window != focusWindow && IsEnabled() && IsVisible()) {
 		LLOG("Setting focus... ");
@@ -749,11 +768,13 @@ bool Ctrl::SetWndFocus()
 
 bool Ctrl::HasWndFocus() const
 {
+	GuiLock __;
 	return top && top->window == focusWindow;
 }
 
 Window Ctrl::GetXServerFocusWindow()
 {
+	GuiLock __;
 	Window w;
 	int    dummy;
 	XGetInputFocus(Xdisplay, &w, &dummy);
@@ -762,6 +783,7 @@ Window Ctrl::GetXServerFocusWindow()
 
 void Ctrl::FocusSync()
 {
+	GuiLock __;
 	Window fw = GetXServerFocusWindow();
 	if(fw != focusWindow) {
 		LLOG("FocusSync to " << FormatIntHex(fw));
@@ -792,6 +814,7 @@ void Ctrl::FocusSync()
 
 void  Ctrl::AnimateCaret()
 {
+	GuiLock __;
 	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
 	if(v != WndCaretVisible) {
 		RefreshCaret();
@@ -801,6 +824,7 @@ void  Ctrl::AnimateCaret()
 
 void Ctrl::Invalidate(XWindow& xw, const Rect& _r)
 {
+	GuiLock __;
 	LTIMING("Invalidate");
 	LLOG("Invalidate " << UPP::Name(xw.ctrl) << " " << _r);
 	Vector<Rect> inv;
@@ -828,6 +852,7 @@ void Ctrl::Invalidate(XWindow& xw, const Rect& _r)
 
 void Ctrl::AddGlobalRepaint()
 {
+	GuiLock __;
 	Rect rect = GetRect();
 	rect.Inflate(32, 32);//TODO !!! Not correct !!! should read frame extent instead... - or shift GraphicsExposes /  NoExposes...
 	ArrayMap<Window, Ctrl::XWindow>& w = Xwindow();
@@ -841,6 +866,7 @@ void Ctrl::AddGlobalRepaint()
 
 void Ctrl::WndInvalidateRect(const Rect& r)
 {
+	GuiLock __;
 	if(!top) return;
 	LLOG("WndInvalidateRect " << r);
 	Invalidate(Xwindow().Get(top->window), r);
@@ -848,6 +874,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 
 void Ctrl::SetWndForeground()
 {
+	GuiLock __;
 	LLOG("SetWndForeground " << Name());
 	if(!top || !IsVisible()) return;
 	if(!IsEnabled()) {
@@ -865,12 +892,14 @@ void Ctrl::SetWndForeground()
 
 bool Ctrl::IsWndForeground() const
 {
+	GuiLock __;
 	const Ctrl *q = GetTopWindow();
 	return ~focusCtrlWnd == (q ? q : GetTopCtrl());
 }
 
 bool Ctrl::WndEnable(bool b)
 {
+	GuiLock __;
 	LLOG("WndEnable");
 	if(!top) return false;
 	if(!b) {
@@ -885,6 +914,7 @@ bool Ctrl::WndEnable(bool b)
 // added support for windowed controls
 Ctrl::XWindow *Ctrl::AddXWindow(Window &w)
 {
+	GuiLock __;
 	int i = Xwindow().Find(None);
 	if(i >= 0)
 		Xwindow().SetKey(i, w);
@@ -898,6 +928,7 @@ Ctrl::XWindow *Ctrl::AddXWindow(Window &w)
 
 void Ctrl::RemoveXWindow(Window &w)
 {
+	GuiLock __;
 	int i = Xwindow().Find(w);
 	if(i >= 0) {
 		Xwindow().SetKey(i, None);
@@ -907,6 +938,7 @@ void Ctrl::RemoveXWindow(Window &w)
 }
 Ctrl::XWindow *Ctrl::XWindowFromWindow(Window &w)
 {
+	GuiLock __;
 	int i = Xwindow().Find(w);
 	if(i >= 0)
 		return &Xwindow()[i];
@@ -917,6 +949,7 @@ Ctrl::XWindow *Ctrl::XWindowFromWindow(Window &w)
 // Synchronizes the native windows inside ctrls
 void Ctrl::SyncNativeWindows(void)
 {
+	GuiLock __;
 	ArrayMap<Window, Ctrl::XWindow>& xwindows = Xwindow();
 	for(int i = 0; i < xwindows.GetCount(); i++)
 	{
@@ -944,6 +977,7 @@ void Ctrl::SyncNativeWindows(void)
 
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {
+	EnterGuiMutex();
 	Ctrl *top = ctrl->GetTopCtrl();
 	Rect r = ctrl->GetScreenView() - top->GetScreenRect().TopLeft();
 	Vector<Rect> clip;
@@ -958,6 +992,7 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 ViewDraw::~ViewDraw()
 {
 	XFreeGC(Xdisplay, gc);
+	LeaveGuiMutex();
 }
 
 #endif

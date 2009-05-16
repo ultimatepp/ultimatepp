@@ -39,6 +39,7 @@ DHCtrl::~DHCtrl()
 // Maps/unmaps the window
 void DHCtrl::MapWindow(bool map)
 {
+	GuiLock __; 
 	// no action if not initialized
 	if(!isInitialized)
 		return;
@@ -57,6 +58,7 @@ void DHCtrl::MapWindow(bool map)
 // Initializes the view
 bool DHCtrl::Init()
 {
+	GuiLock __; 
 	static bool isInitializing = false;
 
 	// Just for security sakes...
@@ -257,6 +259,7 @@ bool DHCtrl::Init()
 // Terminates the view
 void DHCtrl::Terminate(void)
 {
+	GuiLock __; 
 	BeforeTerminate();
 
 	if(!isInitialized)
@@ -296,6 +299,7 @@ void DHCtrl::Terminate(void)
 // State handler
 void DHCtrl::State(int reason)
 {
+	GuiLock __; 
 //	Window dummy;
 //	int x, y;
 //	unsigned int width, height, border, depth;
@@ -356,6 +360,7 @@ void DHCtrl::State(int reason)
 // Property Visual
 Visual *DHCtrl::GetVisual(void)
 {
+	GuiLock __; 
 	if(UserVisualInfo)
 		return UserVisualInfo->visual;
 	else
@@ -368,6 +373,7 @@ Visual *DHCtrl::GetVisual(void)
 // Property VisualInfo
 XVisualInfo DHCtrl::GetVisualInfo(void)
 {
+	GuiLock __; 
 	// if present an user visual info, just return it
 	if(UserVisualInfo)
 		return *UserVisualInfo;

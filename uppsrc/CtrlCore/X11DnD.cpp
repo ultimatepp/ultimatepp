@@ -22,15 +22,16 @@ static Atom XdndActionMove;
 
 void InitDndAtoms()
 {
-	if(XdndEnter) return;
-	XdndEnter = XAtom("XdndEnter");
-	XdndPosition = XAtom("XdndPosition");
-	XdndLeave = XAtom("XdndLeave");
-	XdndDrop = XAtom("XdndDrop");
-	XdndStatus = XAtom("XdndStatus");
-	XdndFinished = XAtom("XdndFinished");
-	XdndActionCopy = XAtom("XdndActionCopy");
-	XdndActionMove = XAtom("XdndActionMove");
+	ONCELOCK {
+		XdndEnter = XAtom("XdndEnter");
+		XdndPosition = XAtom("XdndPosition");
+		XdndLeave = XAtom("XdndLeave");
+		XdndDrop = XAtom("XdndDrop");
+		XdndStatus = XAtom("XdndStatus");
+		XdndFinished = XAtom("XdndFinished");
+		XdndActionCopy = XAtom("XdndActionCopy");
+		XdndActionMove = XAtom("XdndActionMove");
+	}
 }
 
 XEvent ClientMsg(Window src, Atom type, int format = 32)
@@ -68,6 +69,7 @@ Ptr<DnDLoop> dndloop;
 
 void DnDLoop::Leave()
 {
+	GuiLock __; 
 	if(target) {
 		LLOG("Sending XdndLeave to " << target);
 		XEvent e = ClientMsg(target, XdndLeave);
@@ -78,6 +80,7 @@ void DnDLoop::Leave()
 
 void DnDLoop::Sync()
 {
+	GuiLock __; 
 	if(Xdnd_waiting_status)
 		return;
 	bool tx = Ctrl::TrapX11Errors();
@@ -156,6 +159,7 @@ void DnDLoop::Sync()
 
 void Ctrl::DropStatusEvent(XEvent *event)
 {
+	GuiLock __; 
 	InitDndAtoms();
 	if(event->type != ClientMessage)
 		return;
@@ -181,6 +185,7 @@ void Ctrl::DropStatusEvent(XEvent *event)
 
 void DnDLoop::LeftUp(Point, dword)
 {
+	GuiLock __; 
 	LLOG("DnDLoop::LeftUp");
 	bool tx = TrapX11Errors();
 	if(target) {
@@ -213,12 +218,14 @@ void DnDLoop::LeftUp(Point, dword)
 
 void DnDLoop::MouseMove(Point p, dword)
 {
+	GuiLock __; 
 	LLOG("DnDLoop::MouseMove");
 	Sync();
 }
 
 bool DnDLoop::Key(dword, int)
 {
+	GuiLock __; 
 	LLOG("DnDLoop::Key");
 	Sync();
 	return false;
@@ -226,11 +233,13 @@ bool DnDLoop::Key(dword, int)
 
 Image DnDLoop::CursorImage(Point, dword)
 {
+	GuiLock __; 
 	return Xdnd_status == DND_MOVE ? move : Xdnd_status == DND_COPY ? copy : reject;
 }
 
 void DnDLoop::SetFmts(Window w, Atom property)
 {
+	GuiLock __; 
 	Buffer<Atom> x(fmt.GetCount());
 	for(int i = 0; i < fmt.GetCount(); i++) {
 		x[i] = fmt[i];
@@ -243,6 +252,7 @@ void DnDLoop::SetFmts(Window w, Atom property)
 
 String DnDLoop::GetData(const String& f)
 {
+	GuiLock __; 
 	int i = data->Find(f);
 	String d;
 	if(i >= 0)
@@ -255,6 +265,7 @@ String DnDLoop::GetData(const String& f)
 
 String DnDGetData(const String& f)
 {
+	GuiLock __; 
 	String d;
 	if(dndloop)
 		d = dndloop->GetData(f);
@@ -263,6 +274,7 @@ String DnDGetData(const String& f)
 
 void DnDLoop::Request(XSelectionRequestEvent *se)
 {
+	GuiLock __; 
 	LLOG("DnDRequest " << XAtomName(se->target));
 	XEvent e;
 	e.xselection.type      = SelectionNotify;
@@ -289,6 +301,7 @@ void DnDLoop::Request(XSelectionRequestEvent *se)
 
 void DnDRequest(XSelectionRequestEvent *se)
 {
+	GuiLock __; 
 	if(dndloop) dndloop->Request(se);
 }
 
@@ -301,6 +314,7 @@ Ptr<Ctrl> sDnDSource;
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
 {
+	GuiLock __; 
 	InitDndAtoms();
 	DnDLoop d;
 	d.reject = actions & DND_EXACTIMAGE ? CtrlCoreImg::DndNone() : MakeDragImage(CtrlCoreImg::DndNone(), sample);
@@ -331,6 +345,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 
 Ctrl *Ctrl::GetDragAndDropSource()
 {
+	GuiLock __; 
 	return sDnDSource;
 }
 
@@ -352,6 +367,7 @@ PasteClip sMakeDropClip(bool paste)
 
 void Ctrl::DnD(Window src, bool paste)
 {
+	GuiLock __; 
 	PasteClip d = sMakeDropClip(paste);
 	LLOG("Source action " << XdndAction);
 	DnD(XdndPos, d);
@@ -369,6 +385,7 @@ void Ctrl::DnD(Window src, bool paste)
 
 void Ctrl::DropEvent(XWindow& w, XEvent *event)
 {
+	GuiLock __; 
 	InitDndAtoms();
 	if(event->type != ClientMessage)
 		return;
