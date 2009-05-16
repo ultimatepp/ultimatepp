@@ -1,0 +1,4 @@
+#ifndef _GuiLock_icpp_init_stub
+#define _GuiLock_icpp_init_stub
+#include "CtrlLib/init"
+#endif
