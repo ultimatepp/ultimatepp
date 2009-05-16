@@ -10,6 +10,7 @@ void    TopWindow::SyncSizeHints() {}
 
 LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 #ifndef PLATFORM_WINCE
 	bool inloop;
@@ -52,6 +53,7 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 void TopWindow::SyncTitle()
 {
+	GuiLock __;
 	HWND hwnd = GetHWND();
 #ifndef PLATFORM_WINCE
 	if(hwnd)
@@ -64,6 +66,7 @@ void TopWindow::SyncTitle()
 
 void TopWindow::DeleteIco()
 {
+	GuiLock __;
 	if(ico)
 		DestroyIcon(ico);
 	if(lico)
@@ -73,6 +76,7 @@ void TopWindow::DeleteIco()
 
 void TopWindow::SyncCaption()
 {
+	GuiLock __;
 	LLOG("SyncCaption");
 	if(fullscreen)
 		return;
@@ -121,6 +125,7 @@ void TopWindow::SyncCaption()
 
 void TopWindow::CenterRect(HWND hwnd, int center)
 {
+	GuiLock __;
 	SetupRect();
 	if(hwnd && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
@@ -160,6 +165,7 @@ void   SetTrayHWND__(HWND hwnd) { trayHWND__ = hwnd; }
 
 void TopWindow::Open(HWND hwnd)
 {
+	GuiLock __;
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
 		DistributeAccessKeys();
 	UsrLogT(3, "OPEN " + Desc(this));
@@ -186,6 +192,7 @@ void TopWindow::Open(HWND hwnd)
 
 void TopWindow::Open(Ctrl *owner)
 {
+	GuiLock __;
 	LLOG("TopWindow::Open(Ctrl) -> " << UPP::Name(owner));
 	Open(owner ? owner->GetTopCtrl()->GetHWND() : NULL);
 	if(IsOpen() && top)
@@ -222,6 +229,7 @@ void TopWindow::Maximize(bool effect)
 
 void TopWindow::Overlap(bool effect)
 {
+	GuiLock __;
 	state = OVERLAPPED;
 	if(IsOpen())
 		::ShowWindow(GetHWND(), effect ? SW_SHOWNORMAL : SW_RESTORE);
@@ -229,6 +237,7 @@ void TopWindow::Overlap(bool effect)
 
 TopWindow& TopWindow::Style(dword _style)
 {
+	GuiLock __;
 	style = _style;
 	if(GetHWND())
 		::SetWindowLong(GetHWND(), GWL_STYLE, style);
@@ -238,6 +247,7 @@ TopWindow& TopWindow::Style(dword _style)
 
 TopWindow& TopWindow::ExStyle(dword _exstyle)
 {
+	GuiLock __;
 	exstyle = _exstyle;
 	if(GetHWND())
 		::SetWindowLong(GetHWND(), GWL_EXSTYLE, exstyle);
@@ -247,6 +257,7 @@ TopWindow& TopWindow::ExStyle(dword _exstyle)
 
 TopWindow& TopWindow::TopMost(bool b, bool stay_top)
 {
+	GuiLock __;
 	HWND hwnd;
 	if(hwnd = GetHWND())
 		SetWindowPos(hwnd, b ? HWND_TOPMOST : (stay_top ? HWND_NOTOPMOST : HWND_BOTTOM),

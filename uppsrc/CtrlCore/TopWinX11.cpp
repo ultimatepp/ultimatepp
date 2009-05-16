@@ -141,6 +141,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 		Size sz = GetRect().Size();
 		Rect r, wr;
 		wr = Ctrl::GetWorkArea();
+		GuiLock __;
 		Rect fm = windowFrameMargin;
 		if((fm.left|fm.right|fm.top|fm.bottom) == 0)
 			fm = Rect(8, 32, 8, 8);
@@ -238,6 +239,7 @@ void TopWindow::Open(Ctrl *owner)
 	   fe[0] >= 0 && fe[0] <= 16 && fe[1] >= 0 && fe[1] <= 16 && //fluxbox returns wrong numbers - quick&dirty workaround
 	   fe[2] >= 0 && fe[2] <= 64 && fe[3] >= 0 && fe[3] <= 48)
 	{
+		GuiLock __;
 		windowFrameMargin.left = max(windowFrameMargin.left, fe[0]);
 		windowFrameMargin.right = max(windowFrameMargin.right, fe[1]);
 		windowFrameMargin.top = max(windowFrameMargin.top, fe[2]);

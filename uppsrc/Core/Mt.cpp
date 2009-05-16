@@ -71,16 +71,23 @@ sThreadRoutine(void *arg)
 #endif
 
 static bool threadr;
+static thread__  bool sMain;
 
 bool Thread::IsST()
 {
 	return !threadr;
 }
 
+bool Thread::IsMain()
+{
+	return !threadr || sMain;
+}
+
 bool Thread::Run(Callback _cb)
 {
 	AtomicInc(sThreadCount);
-	threadr = true;
+	if(!threadr)
+		threadr = sMain = true;
 	Detach();
 	Callback *cb = new Callback(_cb);
 #ifdef PLATFORM_WIN32

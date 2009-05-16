@@ -8,6 +8,7 @@ NAMESPACE_UPP
 bool Ctrl::globalbackpaint;
 
 void Ctrl::RefreshFrame(const Rect& r) {
+	GuiLock __;
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	LTIMING("RefreshFrame");
 	LLOG("RefreshRect " << Name() << ' ' << r);
@@ -34,12 +35,14 @@ void Ctrl::RefreshFrame(const Rect& r) {
 }
 
 void Ctrl::Refresh(const Rect& area) {
+	GuiLock __;
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << ' ' <<  area);
 	RefreshFrame((area + GetView().TopLeft()) & GetView().Inflated(OverPaint()));
 }
 
 void Ctrl::Refresh() {
+	GuiLock __;
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
 	Refresh(Rect(GetSize()).Inflated(OverPaint()));
@@ -64,6 +67,7 @@ void Ctrl::RefreshFrame() {
 
 void  Ctrl::ScrollRefresh(const Rect& r, int dx, int dy)
 {
+	GuiLock __;
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	int tdx = tabs(dx), tdy = tabs(dy);
 	if(dx) WndInvalidateRect(RectC(dx >= 0 ? r.left : r.right - tdx, r.top - tdy, tdx, r.Height()));
@@ -72,6 +76,7 @@ void  Ctrl::ScrollRefresh(const Rect& r, int dx, int dy)
 
 bool Ctrl::AddScroll(const Rect& sr, int dx, int dy)
 {
+	GuiLock __;
 	if(!top)
 		return true;
 	for(int i = 0; i < top->scroll.GetCount(); i++) {
@@ -99,6 +104,7 @@ bool Ctrl::AddScroll(const Rect& sr, int dx, int dy)
 
 Rect  Ctrl::GetClippedView()
 {
+	GuiLock __;
 	Rect sv = GetScreenView();
 	Rect view = sv;
 	Ctrl *q = parent;
@@ -113,6 +119,7 @@ Rect  Ctrl::GetClippedView()
 
 void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 {
+	GuiLock __;
 	if(IsFullRefresh() || !IsVisible())
 		return;
 	Size vsz = GetSize();
@@ -183,6 +190,7 @@ void  Ctrl::ScrollView(int dx, int dy) {
 
 void  Ctrl::SyncScroll()
 {
+	GuiLock __;
 	if(!top)
 		return;
 	Vector<Scroll> scroll = top->scroll;
@@ -228,8 +236,8 @@ struct sDrawLevelCheck {
 	~sDrawLevelCheck() { Check(); }
 };
 
-#define LEVELCHECK(w, q)    sDrawLevelCheck __(w, q)
-#define DOLEVELCHECK        __.Check();
+#define LEVELCHECK(w, q)    sDrawLevelCheck _x_(w, q)
+#define DOLEVELCHECK        _x_.Check();
 #else
 #define LEVELCHECK(w, q)
 #define DOLEVELCHECK
@@ -237,6 +245,7 @@ struct sDrawLevelCheck {
 
 void Ctrl::PaintCaret(SystemDraw& w)
 {
+	GuiLock __;
 #ifdef PLATFORM_X11
 	if(this == caretCtrl && WndCaretVisible)
 		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
@@ -244,6 +253,7 @@ void Ctrl::PaintCaret(SystemDraw& w)
 }
 
 void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
+	GuiLock __;
 	LEVELCHECK(w, this);
 	LTIMING("CtrlPaint");
 	Rect rect = GetRect().GetSize();
@@ -335,6 +345,7 @@ void ShowRepaintRect(SystemDraw& w, const Rect& r, Color c)
 
 bool Ctrl::PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild)
 {
+	GuiLock __;
 	LTIMING("PaintOpaqueAreas");
 	if(!IsShown() || r.IsEmpty() || !r.Intersects(clip) || !w.IsPainting(r))
 		return true;
@@ -409,6 +420,7 @@ void CombineArea(Vector<Rect>& area, const Rect& r)
 
 void Ctrl::GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip)
 {
+	GuiLock __;
 	LTIMING("GatherTransparentAreas");
 	Point off = r.TopLeft();
 	Point viewpos = off + GetView().TopLeft();
@@ -439,6 +451,7 @@ void Ctrl::GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, con
 
 Ctrl *Ctrl::FindBestOpaque(const Rect& clip)
 {
+	GuiLock __;
 	Ctrl *w = NULL;
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
 		if(q->IsVisible() && GetScreenView().Contains(q->GetScreenRect())) {
@@ -461,6 +474,7 @@ Ctrl *Ctrl::FindBestOpaque(const Rect& clip)
 
 void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 {
+	GuiLock __;
 	LTIMING("UpdateArea");
 	LLOG("========== UPDATE AREA " << UPP::Name(this) << " ==========");
 	if(backpaint == FULLBACKPAINT || globalbackpaint && !hasdhctrl && !dynamic_cast<DHCtrl *>(this)) {
@@ -503,6 +517,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 
 void Ctrl::UpdateArea(SystemDraw& draw, const Rect& clip)
 {
+	GuiLock __;
 	if(IsPanicMode())
 		return;
 	RemoveFullRefresh();
@@ -520,6 +535,7 @@ void Ctrl::UpdateArea(SystemDraw& draw, const Rect& clip)
 
 void Ctrl::RemoveFullRefresh()
 {
+	GuiLock __;
 	fullrefresh = false;
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
 		q->RemoveFullRefresh();
@@ -527,6 +543,7 @@ void Ctrl::RemoveFullRefresh()
 
 Ctrl *Ctrl::GetTopRect(Rect& r, bool inframe)
 {
+	GuiLock __;
 	if(!inframe) {
 		r &= Rect(GetSize());
 		r.Offset(GetView().TopLeft());
@@ -540,6 +557,7 @@ Ctrl *Ctrl::GetTopRect(Rect& r, bool inframe)
 
 void  Ctrl::DoSync(Ctrl *q, Rect r, bool inframe)
 {
+	GuiLock __;
 	ASSERT(q);
 	LLOG("DoSync " << UPP::Name(q) << " " << r);
 	Ctrl *top = q->GetTopRect(r, inframe);
@@ -549,6 +567,7 @@ void  Ctrl::DoSync(Ctrl *q, Rect r, bool inframe)
 
 void  Ctrl::Sync()
 {
+	GuiLock __;
 	LLOG("Sync " << Name());
 	if(top && IsOpen()) {
 		LLOG("Sync UpdateWindow " << Name());
@@ -563,6 +582,7 @@ void  Ctrl::Sync()
 
 void Ctrl::Sync(const Rect& sr)
 {
+	GuiLock __;
 	LLOG("Sync " << Name() << "   " << sr);
 	DoSync(this, sr, true);
 	SyncCaret();
@@ -570,6 +590,7 @@ void Ctrl::Sync(const Rect& sr)
 
 void Ctrl::DrawCtrlWithParent(Draw& w, int x, int y)
 {
+	GuiLock __;
 	if(parent) {
 		Rect r = GetRect();
 		Ctrl *top = parent->GetTopRect(r, inframe);
@@ -587,6 +608,7 @@ void Ctrl::DrawCtrlWithParent(Draw& w, int x, int y)
 
 void Ctrl::DrawCtrl(Draw& w, int x, int y)
 {
+	GuiLock __;
 	w.Offset(x, y);
 	SystemDraw *ws = dynamic_cast<SystemDraw *>(&w);
 	if(ws)
@@ -596,6 +618,7 @@ void Ctrl::DrawCtrl(Draw& w, int x, int y)
 
 void Ctrl::SyncMoves()
 {
+	GuiLock __;
 	if(!top)
 		return;
 	for(int i = 0; i < top->move.GetCount(); i++) {
@@ -618,6 +641,7 @@ void Ctrl::SyncMoves()
 
 Ctrl& Ctrl::BackPaintHint()
 {
+	GuiLock __;
 	if(IsDecentMachine())
 		BackPaint();
 	return *this;
@@ -625,6 +649,7 @@ Ctrl& Ctrl::BackPaintHint()
 
 void  Ctrl::GlobalBackPaint(bool b)
 {
+	GuiLock __;
 	globalbackpaint = b;
 }
 

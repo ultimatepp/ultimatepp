@@ -61,6 +61,7 @@ void Ctrl::LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, in
 
 Image Ctrl::FrameMouseEventH(int event, Point p, int zdelta, dword keyflags)
 {
+	GuiLock __;
 	for(int i = 0; i < mousehook().GetCount(); i++)
 		if((*mousehook()[i])(this, true, event, p, zdelta, keyflags))
 			return Image::Arrow();
@@ -78,6 +79,7 @@ Image Ctrl::FrameMouseEvent(int event, Point p, int zdelta, dword keyflags)
 
 Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 {
+	GuiLock __;
 	for(int i = 0; i < mousehook().GetCount(); i++)
 		if((*mousehook()[i])(this, false, event, p, zdelta, keyflags))
 			return Image::Arrow();
@@ -89,12 +91,14 @@ Image Ctrl::MouseEventH(int event, Point p, int zdelta, dword keyflags)
 
 void Ctrl::ChildFrameMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags)
 {
+	GuiLock __;
 	if(parent)
 		parent->ChildFrameMouseEvent(child, event, p, zdelta, keyflags);
 }
 
 void Ctrl::ChildMouseEvent(Ctrl *child, int event, Point p, int zdelta, dword keyflags)
 {
+	GuiLock __;
 	if(parent)
 		parent->ChildMouseEvent(child, event, p, zdelta, keyflags);
 }
@@ -191,6 +195,7 @@ Image Ctrl::CursorImage(Point p, dword keyflags)
 
 void Ctrl::IgnoreMouseClick()
 {
+	GuiLock __;
 	LLOG("IgnoreMouseClick");
 	ignoreclick = true;
 	KillRepeat();
@@ -198,6 +203,7 @@ void Ctrl::IgnoreMouseClick()
 
 void Ctrl::IgnoreMouseUp()
 {
+	GuiLock __;
 	LLOG("Ctrl::IgnoreMouseUp");
 	if(GetMouseLeft() || GetMouseRight() || GetMouseMiddle())
 		IgnoreMouseClick();
@@ -205,6 +211,7 @@ void Ctrl::IgnoreMouseUp()
 
 void Ctrl::EndIgnore()
 {
+	GuiLock __;
 	LLOG("Ctrl::EndIgnore");
 	if(GetMouseLeft() || GetMouseRight() || GetMouseMiddle()) return;
 	KillRepeat();
@@ -213,11 +220,13 @@ void Ctrl::EndIgnore()
 
 bool Ctrl::IsMouseActive() const
 {
+	GuiLock __;
 	return IsVisible() && IsEnabled() && IsOpen() && !ignoremouse;
 }
 
 Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 {
+	GuiLock __;
 	Ctrl *q;
 	Point p = pt;
 	Rect rect = GetRect();
@@ -249,6 +258,7 @@ Ctrl *Ctrl::ChildFromPoint(Point& pt) const
 
 Image Ctrl::MEvent0(int e, Point p, int zd)
 {
+	GuiLock __;
 	LLOG("MEvent0 " << Name() << " event: " << FormatIntHex(e, 0) << " point:" << p);
 	Ptr<Ctrl> _this = this;
 	mousepos = p;
@@ -288,6 +298,7 @@ Image Ctrl::MEvent0(int e, Point p, int zd)
 }
 
 void    Ctrl::LRepeat() {
+	GuiLock __;
 	if(repeatTopCtrl && repeatTopCtrl->HasFocusDeep() && GetMouseLeft()) // 4.7.2004 cxl, IsForeground...
 		repeatTopCtrl->DispatchMouseEvent(LEFTREPEAT, repeatMousePos, 0);
 	else
@@ -311,11 +322,13 @@ void    Ctrl::LRep() {
 }
 
 void    Ctrl::LHold() {
+	GuiLock __;
 	if(sDistMax(leftmousepos, mousepos) < GUI_DragDistance() && repeatTopCtrl && GetMouseLeft())
 		repeatTopCtrl->DispatchMouseEvent(LEFTHOLD, repeatMousePos, 0);
 }
 
 void    Ctrl::RRepeat() {
+	GuiLock __;
 	if(repeatTopCtrl && repeatTopCtrl->IsForeground() && GetMouseRight())
 		repeatTopCtrl->DispatchMouseEvent(RIGHTREPEAT, repeatMousePos, 0);
 	else
@@ -327,11 +340,13 @@ void    Ctrl::RRep() {
 }
 
 void    Ctrl::RHold() {
+	GuiLock __;
 	if(sDistMax(rightmousepos, mousepos) < GUI_DragDistance() && repeatTopCtrl && GetMouseRight())
 		repeatTopCtrl->DispatchMouseEvent(RIGHTHOLD, repeatMousePos, 0);
 }
 
 void    Ctrl::MRepeat() {
+	GuiLock __;
 	if(repeatTopCtrl && repeatTopCtrl->IsForeground() && GetMouseMiddle())
 		repeatTopCtrl->DispatchMouseEvent(MIDDLEREPEAT, repeatMousePos, 0);
 	else
@@ -339,15 +354,18 @@ void    Ctrl::MRepeat() {
 }
 
 void    Ctrl::MRep() {
+	GuiLock __;
 	UPP::SetTimeCallback(-GetKbdSpeed(), callback(&Ctrl::MRepeat), &mousepos);
 }
 
 void    Ctrl::MHold() {
+	GuiLock __;
 	if(sDistMax(middlemousepos, mousepos) < GUI_DragDistance() && repeatTopCtrl && GetMouseMiddle())
 		repeatTopCtrl->DispatchMouseEvent(MIDDLEHOLD, repeatMousePos, 0);
 }
 
 void    Ctrl::KillRepeat() {
+	GuiLock __;
 	LLOG("Ctrl::KillRepeat");
 	UPP::KillTimeCallback(&mousepos);
 	repeatTopCtrl = NULL;
@@ -358,21 +376,25 @@ void    Ctrl::KillRepeat() {
 
 bool    Ctrl::HasMouse() const
 {
+	GuiLock __;
 	return mouseCtrl == this;
 }
 
 bool    Ctrl::HasMouseDeep() const
 {
+	GuiLock __;
 	return mouseCtrl == this || HasChildDeep(mouseCtrl);
 }
 
 Ctrl   *Ctrl::GetMouseCtrl()
 {
+	GuiLock __;
 	return mouseCtrl;
 }
 
 bool    Ctrl::HasMouseInFrame(const Rect& r)
 {
+	GuiLock __;
 	if(!HasMouse())
 		return false;
 	Rect q = GetVisibleScreenRect();
@@ -382,6 +404,7 @@ bool    Ctrl::HasMouseInFrame(const Rect& r)
 
 bool    Ctrl::HasMouseIn(const Rect& r) const
 {
+	GuiLock __;
 	if(!HasMouse())
 		return false;
 	Rect q = GetVisibleScreenView();
@@ -391,10 +414,12 @@ bool    Ctrl::HasMouseIn(const Rect& r) const
 
 Point Ctrl::GetMouseViewPos() const
 {
+	GuiLock __;
 	return GetMousePos() - GetVisibleScreenView().TopLeft();
 }
 
 void    Ctrl::DoCursorShape() {
+	GuiLock __;
 	Image m = CursorOverride();
 	if(IsNull(m))
 		if(mouseCtrl)
@@ -406,6 +431,7 @@ void    Ctrl::DoCursorShape() {
 }
 
 void    Ctrl::CheckMouseCtrl() {
+	GuiLock __;
 	Point p = GetMousePos();
 	if(mouseCtrl) {
 		Rect r = mouseCtrl->GetScreenRect();
@@ -436,6 +462,7 @@ bool sDblTime(int time)
 }
 
 Image Ctrl::DispatchMouse(int e, Point p, int zd) {
+	GuiLock __;
 	if(e == MOUSEMOVE) {
 		if(sDistMin(leftmousepos, p) > GUI_DragDistance() && repeatTopCtrl == this) {
 			DispatchMouseEvent(LEFTDRAG, leftmousepos, 0);
@@ -507,6 +534,7 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 }
 
 Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
+	GuiLock __;
 	if(!IsEnabled())
 		return Image::Arrow();
 	if(captureCtrl && captureCtrl != this && captureCtrl->IsMouseActive())
@@ -525,6 +553,7 @@ Image Ctrl::DispatchMouseEvent(int e, Point p, int zd) {
 }
 
 bool Ctrl::SetCapture() {
+	GuiLock __;
 	ReleaseCtrlCapture();
 	if(!GetTopCtrl()->SetWndCapture()) return false;
 	captureCtrl = mouseCtrl = this;
@@ -532,10 +561,12 @@ bool Ctrl::SetCapture() {
 }
 
 bool Ctrl::ReleaseCapture() {
+	GuiLock __;
 	return this == captureCtrl && ReleaseCtrlCapture();
 }
 
 bool Ctrl::ReleaseCtrlCapture() {
+	GuiLock __;
 	if(captureCtrl) {
 		captureCtrl->CancelMode();
 		Ctrl *w = captureCtrl->GetTopCtrl();
@@ -550,11 +581,13 @@ bool Ctrl::ReleaseCtrlCapture() {
 }
 
 bool Ctrl::HasCapture() const {
+	GuiLock __;
 	return captureCtrl == this && GetTopCtrl()->HasWndCapture();
 }
 
 Ctrl *Ctrl::GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe)
 {
+	GuiLock __;
 	if(!pointinframe)
 		p += ctrl->GetView().TopLeft();
 	Ctrl *q;
@@ -592,12 +625,14 @@ AutoWaitCursor::~AutoWaitCursor() {
 
 Image& Ctrl::CursorOverride()
 {
+	GuiLock __;
 	static Image m;
 	return m;
 }
 
 Image Ctrl::OverrideCursor(const Image& m)
 {
+	GuiLock __;
 	Image om = CursorOverride();
 	CursorOverride() = m;
 	DoCursorShape();

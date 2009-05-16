@@ -4,9 +4,6 @@ NAMESPACE_UPP
 
 #define LLOG(x)    // RLOG(x)
 #define LTIMING(x) // RTIMING(x)
-//#define BENCH
-
-static StaticMutex sDrawLock;
 
 INITBLOCK {
 	RichValue<Painting>::Register();
@@ -48,24 +45,6 @@ void Draw::Native(Rect& r) const
 {
 	Native(r.left, r.top);
 	Native(r.right, r.bottom);
-}
-
-#ifdef BENCH
-static TimingInspector sDrawTiming("DRAW");
-#endif
-
-void EnterDraw() {
-	sDrawLock.Enter();
-#ifdef BENCH
-	sDrawTiming.Start();
-#endif
-}
-
-void LeaveDraw() {
-#ifdef BENCH
-	sDrawTiming.End();
-#endif
-	sDrawLock.Leave();
 }
 
 void Draw::StartPage() {}

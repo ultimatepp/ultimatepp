@@ -27,6 +27,7 @@ void Ctrl::DragLeave() {}
 
 PasteClip& Ctrl::Clipboard()
 {
+	GuiLock __;
 	static PasteClip d;
 	d.fmt.Clear();
 	return d;
@@ -34,6 +35,7 @@ PasteClip& Ctrl::Clipboard()
 
 PasteClip& Ctrl::Selection()
 {
+	GuiLock __;
 	static PasteClip d;
 #ifdef PLATFORM_X11
 	d.fmt.Clear();
@@ -231,6 +233,7 @@ PasteClip Ctrl::dndclip;
 
 void Ctrl::DnDRepeat()
 {
+	GuiLock __;
 	if(dndctrl) {
 		dndctrl->DragRepeat(dndpos);
 		if(dndctrl) {
@@ -247,6 +250,7 @@ void Ctrl::DnDRepeat()
 
 void Ctrl::DnD(Point p, PasteClip& clip)
 {
+	GuiLock __;
 	UPP::KillTimeCallback(&dndpos);
 	dndclip = clip;
 	Point hp = p - GetScreenRect().TopLeft();
@@ -283,6 +287,7 @@ void Ctrl::DnD(Point p, PasteClip& clip)
 
 void Ctrl::DnDLeave()
 {
+	GuiLock __;
 	if(dndctrl) {
 		dndctrl->DragLeave();
 		UPP::KillTimeCallback(&dndpos);
@@ -292,6 +297,7 @@ void Ctrl::DnDLeave()
 
 Ctrl *Ctrl::GetDragAndDropTarget()
 {
+	GuiLock __;
 	return dndctrl;
 }
 
