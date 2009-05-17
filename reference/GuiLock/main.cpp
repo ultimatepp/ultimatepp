@@ -19,11 +19,16 @@ void App::Work()
 {
 	int q = 0;
 	while(!Thread::IsShutdownThreads()) {
-		for(int i = 0; i < 100; i++) {
-			Ctrl::Lock __(list);
-			list.Set(i, 0, (int64)Random());
+		{
+			GuiLock __;
+			if(list.GetCount() > 1000) {
+				if(PromptYesNo("Quit?"))
+					Break();
+				list.Clear();
+			}
+			list.Add((int64)Random());
 		}
-		Sleep(10);
+		Sleep(1);
 	}
 }
 
