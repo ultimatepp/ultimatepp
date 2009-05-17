@@ -15,12 +15,33 @@ struct App : TopWindow {
 	~App();
 };
 
+void Ask(bool *result)
+{
+	*result = PromptYesNo("Do you want to quit?");
+}
+
 void App::Work()
 {
 	int q = 0;
 	while(!Thread::IsShutdownThreads()) {
+		if(++q > 20) {
+#if 0
+			bool result;
+			Call(callback1(Ask, &result));
+			if(result) {
+				Ctrl::Lock __(*this);
+				Break();
+			}
+			q = 0;
+#else
+			if(PromptYesNo("Do you want to quit?")) {
+				Ctrl::Lock __(*this);
+				Break();
+			}
+#endif
+		}
 		for(int i = 0; i < 101; i++) {
-			GuiLock __;
+			Ctrl::Lock __(list);
 			list.Set(i, 0, (int)Random());
 		}
 		Sleep(10);
