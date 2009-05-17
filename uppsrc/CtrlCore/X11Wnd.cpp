@@ -300,10 +300,9 @@ bool Ctrl::ProcessEvents(bool *)
 	return false;
 }
 
-void Ctrl::GuiSleep(int ms)
+void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
-	ASSERT(IsMainThread());
 	fd_set fdset;
 	FD_ZERO(&fdset);
 	FD_SET(Xconnection, &fdset);
@@ -316,6 +315,11 @@ void Ctrl::GuiSleep(int ms)
 	EnterGuiMutex(level);
 }
 
+void Ctrl::GuiSleep(int ms)
+{
+	Call(&Ctrl::GuiSleep0, ms);
+}
+
 static int granularity = 10;
 
 void Ctrl::SetTimerGranularity(int ms)
@@ -324,7 +328,7 @@ void Ctrl::SetTimerGranularity(int ms)
 	granularity = ms;
 }
 
-void Ctrl::EventLoop(Ctrl *ctrl)
+void Ctrl::EventLoop0(Ctrl *ctrl)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -379,6 +383,11 @@ void Ctrl::SyncExpose()
 }
 
 void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
+{
+	Call(callback3(this, &Ctrl::Create0, owner, redirect, savebits));
+}
+
+void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -439,10 +448,9 @@ void Ctrl::Create(Ctrl *owner, bool redirect, bool savebits)
 	RefreshLayoutDeep();
 }
 
-void Ctrl::WndDestroy()
+void Ctrl::WndDestroy0()
 {
 	GuiLock __;
-	ASSERT(IsMainThread());
 	LLOG("WndDestroy " << Name());
 	if(!top || !isopen) return;
 	AddGlobalRepaint();

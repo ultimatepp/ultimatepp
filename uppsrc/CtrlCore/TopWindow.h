@@ -42,6 +42,7 @@ private:
 	dword       exstyle;
 	HICON       ico, lico;
 
+	void        DeleteIco0();
 	void        DeleteIco();
 #endif
 
@@ -100,8 +101,10 @@ private:
 
 	Rect        overlapped;
 
+	void        SyncTitle0();
 	void        SyncSizeHints();
 	void        SyncTitle();
+	void        SyncCaption0();
 	void        SyncCaption();
 
 	void        SetupRect();

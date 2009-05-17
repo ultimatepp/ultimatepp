@@ -37,13 +37,13 @@ static void sTimeCallback(dword time, int delay, Callback cb, void *id) {
 }
 
 void SetTimeCallback(int delay_ms, Callback cb, void *id) {
-	CriticalSection::Lock __(sTimerLock);
+	Mutex::Lock __(sTimerLock);
 	ASSERT(abs(delay_ms) < 0x40000000);
 	sTimeCallback(GetTickCount() + abs(delay_ms), delay_ms, cb, id);
 }
 
 void KillTimeCallbacks(void *id, void *idlim) {
-	CriticalSection::Lock __(sTimerLock);
+	Mutex::Lock __(sTimerLock);
 	TimeEvent *list = tevents();
 	for(TimeEvent *e = list->GetNext(); e != list;)
 		if(e->id >= id && e->id < idlim) {
@@ -56,13 +56,13 @@ void KillTimeCallbacks(void *id, void *idlim) {
 
 EXITBLOCK
 {
-	CriticalSection::Lock __(sTimerLock);
+	Mutex::Lock __(sTimerLock);
 	while(tevents()->GetNext() != tevents())
 		delete tevents()->GetNext();
 }
 
 bool ExistsTimeCallback(void *id) {
-	CriticalSection::Lock __(sTimerLock);
+	Mutex::Lock __(sTimerLock);
 	TimeEvent *list = tevents();
 	for(TimeEvent *e = list->GetNext(); e != list; e = e->GetNext())
 		if(e->id == id)
@@ -104,7 +104,7 @@ void Ctrl::TimerProc(dword time)
 
 void  Ctrl::InitTimer()
 {
-	CriticalSection::Lock __(sTimerLock);
+	Mutex::Lock __(sTimerLock);
 	tevents();
 }
 
@@ -142,6 +142,76 @@ bool  Ctrl::ExistsTimeCallback(int id) const {
 dword GetTimeClick()
 {
 	return sTClick;
+}
+
+void   Ctrl::EndLoop()
+{
+	GuiLock __;
+	inloop = false;
+}
+
+void   Ctrl::EndLoop(int code)
+{
+	GuiLock __;
+	ASSERT(!parent);
+	exitcode = code;
+	EndLoop();
+}
+
+bool   Ctrl::InLoop() const
+{
+	GuiLock __;
+	return inloop;
+}
+
+bool   Ctrl::InCurrentLoop() const
+{
+	GuiLock __;
+	return GetLoopCtrl() == this;
+}
+
+int    Ctrl::GetExitCode() const
+{
+	GuiLock __;
+	return exitcode;
+}
+
+struct Ctrl::CallBox {
+	Semaphore sem;
+	Callback  cb;
+};
+
+void Ctrl::Perform(Ctrl::CallBox *cbox)
+{
+	cbox->cb();
+	cbox->sem.Release();
+}
+
+void WakeUpGuiThread();
+
+void Ctrl::Call(Callback cb)
+{
+	if(IsMainThread())
+		cb();
+	else {
+		CallBox cbox;
+		cbox.cb = cb;
+		UPP::PostCallback(callback1(Ctrl::Perform, &cbox));
+		WakeUpGuiThread();
+		int level = LeaveGuiMutexAll();
+		cbox.sem.Wait();
+		EnterGuiMutex(level);
+	}
+}
+
+void Ctrl::EventLoop(Ctrl *ctrl)
+{
+	Call(callback1(&Ctrl::EventLoop0, ctrl));
+}
+
+void Ctrl::WndDestroy()
+{
+	Call(callback(this, &Ctrl::WndDestroy0));
 }
 
 END_UPP_NAMESPACE

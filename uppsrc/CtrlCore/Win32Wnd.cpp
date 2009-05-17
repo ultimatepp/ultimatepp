@@ -176,15 +176,22 @@ LRESULT CALLBACK Ctrl::UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 #define L_(x)  x
 #endif
 
+static DWORD sMainThreadId;
+
+void WakeUpGuiThread()
+{
+	::PostThreadMessage(sMainThreadId, WM_NULL, 0, 0);
+}
+
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
 	GuiLock __;
 	LLOG("InitWin32");
 //	RLOGBLOCK("Ctrl::InitWin32");
+	sMainThreadId = GetCurrentThreadId();
 #define ILOG(x) // RLOG(x)
 	Ctrl::hInstance = hInstance;
 	ILOG("RegisterClassW");
-
 #ifndef PLATFORM_WINCE
 	if(IsWinNT())
 #endif
@@ -402,50 +409,71 @@ Ctrl *Ctrl::GetActiveCtrl()
 
 UDropTarget *NewUDropTarget(Ctrl *);
 
+struct Ctrl::CreateBox {
+	HWND  parent;
+	DWORD style;
+	DWORD exstyle;
+	bool  savebits;
+	int   show;
+	bool  dropshadow;
+};
+
 void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow)
+{
+	CreateBox cr;
+	cr.parent = parent;
+	cr.style = style;
+	cr.exstyle = exstyle;
+	cr.savebits = savebits;
+	cr.show = show;
+	cr.dropshadow = dropshadow;
+	Call(callback1(this, &Ctrl::Create0, &cr));
+}
+
+void Ctrl::Create0(Ctrl::CreateBox *cr)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
 	LLOG("Ctrl::Create(parent = " << (void *)parent << ") in " <<UPP::Name(this) << BeginIndent);
 	ASSERT(!IsChild() && !IsOpen());
 	Rect r = GetRect();
-	AdjustWindowRectEx(r, style, FALSE, exstyle);
+	AdjustWindowRectEx(r, cr->style, FALSE, cr->exstyle);
 	isopen = true;
 	top = new Top;
-	ASSERT(!parent || IsWindow(parent));
+	ASSERT(!cr->parent || IsWindow(cr->parent));
 	if(!IsWinXP())
-		dropshadow = false;
+		cr->dropshadow = false;
 #ifdef PLATFORM_WINCE
 		if(parent)
-			top->hwnd = CreateWindowExW(exstyle,
-			                            savebits ? dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-			                                     : dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-			                            L"", style, r.left, r.top, r.Width(), r.Height(),
-			                            parent, NULL, hInstance, this);
+			top->hwnd = CreateWindowExW(cr->exstyle,
+			                            cr->savebits ? cr->dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
+			                                         : cr->dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
+			                            L"", cr->style, r.left, r.top, r.Width(), r.Height(),
+			                            cr->parent, NULL, hInstance, this);
 		else
 			top->hwnd = CreateWindowW(L"UPP-CLASS-W",
 			                          L"", WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-			                          parent, NULL, hInstance, this);
+			                          cr->parent, NULL, hInstance, this);
 #else
-	if(IsWinNT() && (!parent || IsWindowUnicode(parent)))
-		top->hwnd = CreateWindowExW(exstyle,
-		                            savebits ? dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
-		                                     : dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-		                            L"", style, r.left, r.top, r.Width(), r.Height(),
-		                            parent, NULL, hInstance, this);
+	if(IsWinNT() && (!cr->parent || IsWindowUnicode(cr->parent)))
+		top->hwnd = CreateWindowExW(cr->exstyle,
+		                            cr->savebits ? cr->dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
+		                                         : cr->dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
+		                            L"", cr->style, r.left, r.top, r.Width(), r.Height(),
+		                            cr->parent, NULL, hInstance, this);
 	else
-		top->hwnd = CreateWindowEx(exstyle,
-		                           savebits ? dropshadow ? "UPP-CLASS-SB-DS-A" : "UPP-CLASS-SB-A"
-		                                    : dropshadow ? "UPP-CLASS-DS-A"    : "UPP-CLASS-A",
-		                           "", style, r.left, r.top, r.Width(), r.Height(),
-		                           parent, NULL, hInstance, this);
+		top->hwnd = CreateWindowEx(cr->exstyle,
+		                           cr->savebits ? cr->dropshadow ? "UPP-CLASS-SB-DS-A" : "UPP-CLASS-SB-A"
+		                                        : cr->dropshadow ? "UPP-CLASS-DS-A"    : "UPP-CLASS-A",
+		                           "", cr->style, r.left, r.top, r.Width(), r.Height(),
+		                           cr->parent, NULL, hInstance, this);
 #endif
 
 	inloop = false;
 
 	ASSERT(top->hwnd);
 
-	::ShowWindow(top->hwnd, visible ? show : SW_HIDE);
+	::ShowWindow(top->hwnd, visible ? cr->show : SW_HIDE);
 //	::UpdateWindow(hwnd);
 	StateH(OPEN);
 	LLOG(EndIndent << "//Ctrl::Create in " <<UPP::Name(this));
@@ -478,7 +506,7 @@ void Ctrl::WndFree()
 	top = NULL;
 }
 
-void Ctrl::WndDestroy()
+void Ctrl::WndDestroy0()
 {
 	GuiLock __;
 	LLOG("Ctrl::WndDestroy() in " <<UPP::Name(this) << BeginIndent);
@@ -687,7 +715,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	return false;
 }
 
-void Ctrl::EventLoop(Ctrl *ctrl)
+void Ctrl::EventLoop0(Ctrl *ctrl)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());

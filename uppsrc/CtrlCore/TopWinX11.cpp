@@ -86,7 +86,7 @@ void TopWindow::SyncTitle()
 	LLOG("*SyncTitle: " << title);
 }
 
-void TopWindow::SyncCaption()
+void TopWindow::SyncCaption0()
 {
 	GuiLock __; 
 	LLOG("SyncCaption");
