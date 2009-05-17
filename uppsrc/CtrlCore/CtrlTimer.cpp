@@ -176,6 +176,7 @@ int    Ctrl::GetExitCode() const
 	return exitcode;
 }
 
+#ifdef _MULTITHREADED
 struct Ctrl::CallBox {
 	Semaphore sem;
 	Callback  cb;
@@ -203,6 +204,12 @@ void Ctrl::Call(Callback cb)
 		EnterGuiMutex(level);
 	}
 }
+#else
+void Ctrl::Call(Callback cb)
+{
+	cb();
+}
+#endif
 
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
