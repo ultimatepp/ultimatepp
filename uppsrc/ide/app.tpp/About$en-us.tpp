@@ -4,7 +4,7 @@ topic "Copyright © 1999-2005 Ultimate++ team";
 [s0;*IGetLocalDir;+117 &]
 [s0; [*+117 Copyright © 1999`-2008 Ultimate`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler,][+117  ][*+117 Tomáš_Rylek, 
-][*^http`:`/`/dgs`.pac`.pl`/^+117 Daniel_Kos]&]
+][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos]&]
 [s0;i704;O9; Contributors:[+117 -|][* Sandor_Hojtsy, Zsolt_Debre, Guido_Schimmels, 
 Augusto_Roman, Arijus Bernotas, Michael_Albert , Marcus_Mauhart, 
 Jan_Wilmans, Graeme_Prentice, Victor_Berchet, Ivica_Puljic, Mathiass_Sund, 
