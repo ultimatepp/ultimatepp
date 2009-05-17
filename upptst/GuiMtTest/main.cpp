@@ -24,7 +24,7 @@ void App::Work()
 {
 	int q = 0;
 	while(!Thread::IsShutdownThreads()) {
-		if(++q > 20) {
+		if(++q > 200) {
 #if 0
 			bool result;
 			Call(callback1(Ask, &result));
@@ -32,13 +32,13 @@ void App::Work()
 				Ctrl::Lock __(*this);
 				Break();
 			}
-			q = 0;
 #else
 			if(PromptYesNo("Do you want to quit?")) {
 				Ctrl::Lock __(*this);
 				Break();
 			}
 #endif
+			q = 0;
 		}
 		for(int i = 0; i < 101; i++) {
 			Ctrl::Lock __(list);
