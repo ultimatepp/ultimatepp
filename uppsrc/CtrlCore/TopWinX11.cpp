@@ -77,7 +77,7 @@ void TopWindow::DefSyncTitle()
 	}
 }
 
-void TopWindow::SyncTitle()
+void TopWindow::SyncTitle0()
 {
 	GuiLock __; 
 	LLOG("SyncTitle: " << title);

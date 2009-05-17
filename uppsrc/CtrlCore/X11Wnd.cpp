@@ -300,9 +300,10 @@ bool Ctrl::ProcessEvents(bool *)
 	return false;
 }
 
-void Ctrl::GuiSleep0(int ms)
+void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
+	ASSERT(IsMainThread());
 	fd_set fdset;
 	FD_ZERO(&fdset);
 	FD_SET(Xconnection, &fdset);
@@ -313,11 +314,6 @@ void Ctrl::GuiSleep0(int ms)
 	int level = LeaveGuiMutexAll();
 	select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
 	EnterGuiMutex(level);
-}
-
-void Ctrl::GuiSleep(int ms)
-{
-	Call(&Ctrl::GuiSleep0, ms);
 }
 
 static int granularity = 10;
