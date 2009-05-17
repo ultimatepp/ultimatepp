@@ -37,26 +37,6 @@ int   Ctrl::LoopLevel;
 
 bool Ctrl::MemoryCheck;
 
-void Ctrl::EnterMutex()
-{
-	EnterGuiMutex();
-}
-
-void Ctrl::LeaveMutex()
-{
-	LeaveGuiMutex();
-}
-
-Ctrl::Lock::Lock(Ctrl& ctrl)
-{
-	EnterGuiMutex();
-}
-
-Ctrl::Lock::~Lock()
-{
-	LeaveGuiMutex();
-}
-
 void   Ctrl::SetData(const Value&) {}
 Value  Ctrl::GetData() const       { return Value(); }
 
