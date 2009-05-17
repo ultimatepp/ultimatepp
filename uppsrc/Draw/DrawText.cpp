@@ -78,6 +78,7 @@ void Draw::SetStdFont(Font font)
 
 Size Draw::GetStdFontSize()
 {
+	DrawLock __;
 	if(!StdFontSizeSet) {
 		StdFontSizeSet = true;
 		FontInfo fi = AStdFont.Info();

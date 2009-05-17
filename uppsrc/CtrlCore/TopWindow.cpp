@@ -64,6 +64,16 @@ bool TopWindow::IsShowEnabled() const
 	return true;
 }
 
+void TopWindow::SyncCaption()
+{
+	Call(THISBACK(SyncCaption0));
+}
+
+void TopWindow::SyncTitle()
+{
+	Call(THISBACK(SyncTitle0));
+}
+
 void TopWindow::Close()
 {
 	if(InLoop()) {
@@ -273,6 +283,7 @@ void GatherWindowTree(Ctrl *w, const Vector<Ctrl *>& ws, Vector<Ctrl *>& es)
 
 int  TopWindow::Run(bool appmodal)
 {
+	GuiLock __;
 	LLOG("TopWindow::Run() <- " << typeid(*this).name());
 	LLOG("Focus = " << UPP::Name(GetFocusCtrl()));
 	if(!IsOpen())
@@ -398,6 +409,7 @@ TopWindow& TopWindow::ToolWindow(bool b)
 
 void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 {
+	GuiLock __;
 #ifndef PLATFORM_WINCE
 	int version = 0;
 	s / version;
@@ -475,6 +487,7 @@ struct DialogBackground : public Display {
 
 TopWindow::TopWindow()
 {
+	GuiLock __;
 	TransparentBackPaint();
 	background = PaintRect(Single<DialogBackground>(), Null);
 	center = 1;
@@ -501,6 +514,7 @@ TopWindow::TopWindow()
 
 TopWindow::~TopWindow()
 {
+	GuiLock __;
 	if(InLoop())
 		EndLoop(IDOK);
 	if(!IsChild())

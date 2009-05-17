@@ -51,7 +51,7 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	return Ctrl::WindowProc(message, wParam, lParam);
 }
 
-void TopWindow::SyncTitle()
+void TopWindow::SyncTitle0()
 {
 	GuiLock __;
 	HWND hwnd = GetHWND();
@@ -64,7 +64,7 @@ void TopWindow::SyncTitle()
 			::SetWindowText(hwnd, ToSystemCharset(title.ToString()));
 }
 
-void TopWindow::DeleteIco()
+void TopWindow::DeleteIco0()
 {
 	GuiLock __;
 	if(ico)
@@ -74,7 +74,12 @@ void TopWindow::DeleteIco()
 	ico = lico = NULL;
 }
 
-void TopWindow::SyncCaption()
+void TopWindow::DeleteIco()
+{
+	Call(THISBACK(DeleteIco0));
+}
+
+void TopWindow::SyncCaption0()
 {
 	GuiLock __;
 	LLOG("SyncCaption");

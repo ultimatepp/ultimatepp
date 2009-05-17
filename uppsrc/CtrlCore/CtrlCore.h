@@ -532,6 +532,9 @@ private:
 	Image   DispatchMouseEvent(int e, Point p, int zd = 0);
 	void    LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, int zdelta, dword keyflags);
 
+	struct CallBox;
+	static void Perform(CallBox *cbox);
+
 	void    StateH(int reason);
 
 	void    RefreshAccessKeys();
@@ -612,6 +615,7 @@ private:
 	void WndUpdate(const Rect& r);
 
 	void WndFree();
+	void WndDestroy0();
 	void WndDestroy();
 
 	static void InitTimer();
@@ -660,6 +664,8 @@ protected:
 	static DWORD WINAPI Win32OverwatchThread(LPVOID);
 
 	static Rect GetScreenClient(HWND hwnd);
+	struct CreateBox;
+	void  Create0(CreateBox *cr);
 	void  Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow);
 	Image DoMouse(int e, Point p, int zd = 0);
 
@@ -721,6 +727,7 @@ private:
 
 protected:
 	       void   Create(Ctrl *owner, bool redirect, bool savebits);
+	       void   Create0(Ctrl *owner, bool redirect, bool savebits);
 	       void   SyncExpose();
 	       void   TakeFocus();
 	static Window GetXServerFocusWindow();
@@ -1230,6 +1237,8 @@ public:
 	bool    ExistsTimeCallback(int id = 0) const;
 	void    PostCallback(Callback cb, int id = 0);
 	void    KillPostCallback(Callback cb, int id);
+	
+	static  void Call(Callback cb);
 
 	enum { TIMEID_COUNT = 1 };
 
@@ -1255,15 +1264,16 @@ public:
 
 	bool   IsPopUp() const          { return popup; }
 
+	static void  EventLoop0(Ctrl *ctrl);
 	static void  EventLoop(Ctrl *loopctrl = NULL);
 	static int   GetLoopLevel()     { return LoopLevel; }
 	static Ctrl *GetLoopCtrl()      { return LoopCtrl; }
 
-	void   EndLoop()                { inloop = false; }
-	void   EndLoop(int code)        { ASSERT(!parent); exitcode = code; EndLoop(); }
-	bool   InLoop() const           { return inloop; }
-	bool   InCurrentLoop() const    { return GetLoopCtrl() == this; }
-	int    GetExitCode() const      { return exitcode; }
+	void   EndLoop();
+	void   EndLoop(int code);
+	bool   InLoop() const;
+	bool   InCurrentLoop() const;
+	int    GetExitCode() const;
 
 	static PasteClip& Clipboard();
 	static PasteClip& Selection();
