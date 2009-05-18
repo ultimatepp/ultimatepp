@@ -258,27 +258,31 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 					}
 					else
 					if(c == '{') {
-						if(was_namespace)
+						if(was_namespace) {
+							brk.Add(0);
 							was_namespace = false;
+						}
 						else {
 							cl++;
 							brk.Add('}');
-							blk.Add() = line;
 							bid.Add(lindent + 1);
-							stmtline = -1;
-							par.Clear();
 						}
+						blk.Add() = line;
+						stmtline = -1;
+						par.Clear();
 					}
 					else
 					if(c == '}') {
 						if(brk.GetCount()) {
-							cl--;
+							if(brk.Top() == '}') {
+								cl--;
+								if(bid.GetCount() > 1)
+									bid.Drop();
+							}
 							brk.Drop();
 						}
 						if(blk.GetCount())
 							blk.Drop();
-						if(bid.GetCount() > 1)
-							bid.Drop();
 						stmtline = -1;
 						par.Clear();
 					}
