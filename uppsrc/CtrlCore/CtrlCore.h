@@ -533,7 +533,7 @@ private:
 	void    LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, int zdelta, dword keyflags);
 
 	struct CallBox;
-	static void Perform(CallBox *cbox);
+	static void PerformCall(CallBox *cbox);
 
 	void    StateH(int reason);
 

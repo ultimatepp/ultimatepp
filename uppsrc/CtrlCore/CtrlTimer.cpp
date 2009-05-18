@@ -182,7 +182,7 @@ struct Ctrl::CallBox {
 	Callback  cb;
 };
 
-void Ctrl::Perform(Ctrl::CallBox *cbox)
+void Ctrl::PerformCall(Ctrl::CallBox *cbox)
 {
 	cbox->cb();
 	cbox->sem.Release();
@@ -197,7 +197,7 @@ void Ctrl::Call(Callback cb)
 	else {
 		CallBox cbox;
 		cbox.cb = cb;
-		UPP::PostCallback(callback1(Ctrl::Perform, &cbox));
+		UPP::PostCallback(callback1(Ctrl::PerformCall, &cbox));
 		WakeUpGuiThread();
 		int level = LeaveGuiMutexAll();
 		cbox.sem.Wait();
