@@ -171,7 +171,7 @@ inline void DeepCopyConstructFill(T *t, const T *lim, const T& x) {
 #ifdef NO_MOVEABLE_CHECK
 
 template <class T>
-inline void AssertMoveable() {}
+inline void AssertMoveable(T *) {}
 
 #define MoveableTemplate(T)
 
