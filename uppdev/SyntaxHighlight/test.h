@@ -5,6 +5,31 @@ using namespace Upp;
 using namespace std;
 
 namespace Upp {
+	namespace www {
+		{
+			{
+			}
+		}
+	}
+}
+
+(())
+
+namespace Alfa {
+	namespace Beta {
+		[] [[]]
+		() () ((( ))) {
+			(
+			{					
+	};
+};
+
+{
+	{
+	}
+}
+
+namespace Upp {
 	template<> void Xmlize(XmlIO xml, vector<int>& data) {
 		if(xml.IsStoring())
 			for(int i = 0; i < (int)data.size(); i++)

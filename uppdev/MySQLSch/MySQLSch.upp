@@ -1,10 +1,11 @@
 uses
 	Core,
-	MySql;
+	MySql,
+	CtrlCore;
 
 file
 	MySQLSch.cpp;
 
 mainconfig
-	"" = "";
+	"" = "GUI";
 
