@@ -251,12 +251,12 @@ void CodeEditor::InitKeywords()
 	if(keyword[0].GetCount() == 0)
 	{
 		static const char *cpp[] = {
-			"__asm", "else", "struct",
+			"namespace", "__asm", "else", "struct",
 			"enum", "switch", "auto", "__except", "template",
 			"explicit", "this",
 			"bool", "extern", "mutable", "thread",
 			"break", "false", "throw",
-			"case", "__fastcall", "namespace", "true",
+			"case", "__fastcall", "true",
 			"catch", "__finally", "new", "try",
 			"__cdecl", "float", "__try",
 			"char", "for", "operator", "typedef",
@@ -493,10 +493,15 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 		}
 		else
 		if(*p == '{') {
-			ss.brk.Add('}');
+			ss.brk.Add(ss.was_namespace ? 0 : '}');
 			Bracket(int(p - text) + pos, hls);
-			hls.Put(hl_style[INK_PAR0 + max(ss.cl++, 0) % 4]);
-			++block_level;
+			hls.Put(hl_style[INK_PAR0 + max(ss.cl, 0) % 4]);
+			if(ss.was_namespace)
+				ss.was_namespace = false;
+			else {
+				++block_level;
+				++ss.cl;
+			}
 			if(hls.pos < text.GetCount())
 				hls.SetPaper(hls.pos, text.GetCount() - hls.pos + 1, BlockColor(block_level));
 			p++;
@@ -510,17 +515,21 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 		}
 		else
 		if(*p == ')' || *p == '}' || *p == ']') {
-			if(*p == '}' && hilite_scope && block_level > 0)
+			int bl = ss.brk.GetCount();
+			int bc = bl ? ss.brk.Pop() : 0;
+			if(*p == '}' && hilite_scope && block_level > 0 && bc)
 				hls.SetPaper(hls.pos, text.GetLength() + 1 - hls.pos, BlockColor(--block_level));
 			Bracket(int(p - text) + pos, hls);
 			int& l = *p == ')' ? ss.pl : *p == '}' ? ss.cl : ss.bl;
-			if(ss.brk.IsEmpty() || ss.brk.Pop() != *p || l <= 0) {
+			if(bl == 0 || bc && (bc != *p || l <= 0) || !bc && *p != '}') {
 				hls.Put(p == ~text ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
 				ss.brk.Clear();
 				ss.cl = ss.bl = ss.pl = 0;
 			}
-			else
-				hls.Put(1, hl_style[INK_PAR0 + --l % 4]);
+			else {
+				if(bc) --l;
+				hls.Put(1, hl_style[INK_PAR0 + l % 4]);
+			}
 			p++;
 		}
 		else
@@ -580,7 +589,8 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 				id.Cat(*q++);
 			String iid = id;
 			int uq = kw_upp.Find(iid);
-			hls.Put(int(q - p), keyword[highlight].Find(iid) >= 0 ? hl_style[INK_KEYWORD] :
+			int nq;
+			hls.Put(int(q - p), (nq = keyword[highlight].Find(iid)) >= 0 ? hl_style[INK_KEYWORD] :
 			                    name[highlight].Find(iid) >= 0 ? hl_style[INK_UPP] :
 			                    uq >= 0 ? uq < kw_macros ? hl_style[INK_UPPMACROS] :
 			                              uq < kw_logs ? hl_style[INK_UPPLOGS] :
@@ -590,8 +600,12 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			                    IsUpperString(iid) && !sm.macro ? hl_style[INK_UPPER] :
 			                    hl_style[INK_NORMAL]);
 			p = q;
+			if(nq == 0)
+				ss.was_namespace = true;
 		}
 		else {
+			if(*p == ';')
+				ss.was_namespace = false;
 			hls.Put(strchr("!+-*^/%~&|=[]:?<>.", *p) ? hl_style[INK_OPERATOR] : hl_style[INK_NORMAL]);
 			p++;
 		}

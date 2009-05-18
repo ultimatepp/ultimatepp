@@ -1,4 +1,4 @@
-description "The source files edit, derived from CtrlLib's LineEdit";
+description "The source files edit, derived from CtrlLib's LineEdit\377";
 
 optimize_speed;
 
@@ -8,8 +8,8 @@ uses
 file
 	CodeEditor.h,
 	hl_color.i,
-	Syntax.cpp,
 	EditorBar.cpp,
+	Syntax.cpp,
 	Highlight.cpp,
 	FindReplace.cpp,
 	Lang.cpp,
