@@ -748,7 +748,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	LLOG(EndIndent << "Leaving event loop ");
 }
 
-void Ctrl::GuiSleep(int ms)
+void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());

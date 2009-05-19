@@ -221,4 +221,9 @@ void Ctrl::WndDestroy()
 	Call(callback(this, &Ctrl::WndDestroy0));
 }
 
+void Ctrl::GuiSleep(int ms)
+{
+	Call(callback1(&Ctrl::GuiSleep0, ms));
+}
+
 END_UPP_NAMESPACE

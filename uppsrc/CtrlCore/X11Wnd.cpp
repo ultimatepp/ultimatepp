@@ -300,7 +300,7 @@ bool Ctrl::ProcessEvents(bool *)
 	return false;
 }
 
-void Ctrl::GuiSleep(int ms)
+void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
