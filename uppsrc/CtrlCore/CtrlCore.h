@@ -618,6 +618,8 @@ private:
 	void WndDestroy0();
 	void WndDestroy();
 
+	static void GuiSleep0(int ms);
+
 	static void InitTimer();
 
 	static String appname;
