@@ -129,7 +129,7 @@ void Puzzle::LeftDown(Point p, dword)
 
 void Puzzle::About()
 {
-	PromptOK("[A5 Puzzle]&Using [*^www://upp.sf.net^ Ultimate`+`+] technology.");
+	PromptOK("[A5 Puzzle]&Using [*^www://upp.ultimatepp.org^ Ultimate`+`+] technology.");
 }
 
 void Puzzle::Scores()
