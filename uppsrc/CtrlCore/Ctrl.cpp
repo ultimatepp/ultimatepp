@@ -606,6 +606,7 @@ Ctrl::Ctrl() {
 	popupgrab = false;
 	fullrefresh = false;
 	akv = false;
+	hasdhctrl = false;
 }
 
 void KillTimeCallbacks(void *id, void *idlim);
