@@ -359,14 +359,45 @@ void CodeEditor::InitKeywords()
 			"T_",
 			NULL,
 		};
+		static const char *tlng[] = {
+			"enUS", "enGB", "enAU", "enCA", "enNZ", "enIE", "enZA", "enJM", "enCB", "enBZ",
+			"enTT", "bgBG", "csCZ", "daDK", "deDE", "deCH", "deAT", "deLU", "deLI", "elGR",
+			"esES", "esMX", "esES", "esGT", "esCR", "esPA", "esDO", "esVE", "esCO", "esPE",
+			"esAR", "esEC", "esCL", "esUY", "esPY", "esBO", "esSV", "esHN", "esNI", "esPR",
+			"fiFI", "frFR", "frBE", "frCA", "frCH", "frLU", "huHU", "isIS", "itIT", "itCH",
+			"nlNL", "nlBE", "noNO", "noNO", "plPL", "ptBR", "ptPT", "roRO", "ruRU", "hrHR",
+			"srSP", "srSP", "skSK", "svSE", "svFI", "trTR", "slSI", "afZA", "sqAL", "euES",
+			"beBY", "caES", "etEE", "foFO", "idID", "lvLV", "ltLT", "ukUA", "zhCN", "zhTW",
+			"koKR", "jaJP",
+			NULL
+		};
+		static const char *sch[] = {
+			"BIT", "BIT_ARRAY", "BIT_", "BIT_ARRAY_",
+			"BOOL", "BOOL_ARRAY", "BOOL_", "BOOL_ARRAY_",
+			"INT", "INT_ARRAY", "INT_", "INT_ARRAY_",
+			"DOUBLE", "DOUBLE_ARRAY", "DOUBLE_", "DOUBLE_ARRAY_",
+			"DATE", "DATE_ARRAY", "DATE_", "DATE_ARRAY_",
+			"DATETIME", "DATETIME_ARRAY", "DATETIME_", "DATETIME_ARRAY_",
+			"TIME", "TIME_ARRAY", "TIME_", "TIME_ARRAY_",
+			"STRING", "STRING_ARRAY", "STRING_", "STRING_ARRAY_",
+			"LONG", "LONG_", "LONGRAW", "LONGRAW_", "BLOB(x)", "BLOB_", "CLOB", "CLOB_",
+			"AUTO_INCREMENT", "KEY", "NOT_NULL", "TIMESTAMP", "COMMENT", "SEQUENCE", "SEQUENCE_",
+			"PRIMARY_KEY", "INDEX", "UNIQUE", "SQLDEFAULT", "REFERENCES", "REFERENCES_",
+			"REFERENCES_CASCADE", "REFERENCES_CASCADE_", "DUAL_PRIMARY_KEY", "DUAL_UNIQUE",
+			"UNIQUE_LIST", "SQLCHECK",
+			"TABLE", "TABLE_", "END_TABLE", "TABLE_I", "TABLE_I_", "TABLE_II",
+			"TABLE_II_", "TABLE_III", "TABLE_III_", "VAR", "VAR_",
+			"COLUMN", "COLUMN_ARRAY", "ATTRIBUTE", "INLINE_ATTRIBUTE",
+			NULL
+		};
 		static const char *javan[] = {
 			NULL
 		};
 		static const char **kw[HIGHLIGHT_COUNT] = {
-			cpp, usc, java, tfile, usc
+			cpp, usc, java, tfile, usc, sch
 		};
 		static const char **nm[HIGHLIGHT_COUNT] = {
-			upp, usclib, javan, javan, usclib
+			upp, usclib, javan, tlng, usclib, javan
 		};
 		const char **q = NULL;
 		for(int i = 0; i < HIGHLIGHT_COUNT; i++) {
