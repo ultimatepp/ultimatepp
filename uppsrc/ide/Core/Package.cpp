@@ -156,13 +156,18 @@ bool LoadFOpt(CParser& p, const char *key, Array<OptItem>& v) {
 	return false;
 }
 
-Package::Package()
+void Package::Reset()
 {
 	charset = 0;
 	optimize_speed = false;
 	noblitz = true;
 	bold = italic = false;
 	ink = Null;
+}
+
+Package::Package()
+{
+	Reset();
 }
 
 bool StdResolver(const String& error, const String& path, int line)
@@ -182,9 +187,7 @@ void Package::SetPackageResolver(bool (*Resolve)(const String& error, const Stri
 void Package::Load(const char *path)
 {
 	for(;;) {
-		charset = 0;
-		optimize_speed = false;
-		noblitz = false;
+		Reset();
 		library.Clear();
 		target.Clear();
 		flag.Clear();
