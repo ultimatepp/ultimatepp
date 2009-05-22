@@ -1,4 +1,4 @@
-description "GUI widgets and routines for SQL";
+description "GUI widgets and routines for SQL\377";
 
 uses
 	Sql,

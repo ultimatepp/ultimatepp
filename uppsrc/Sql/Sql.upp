@@ -1,4 +1,4 @@
-description "Fundamental SQL classes - session, cursor, SQL language expressions, DB schemas";
+description "Fundamental SQL classes - session, cursor, SQL language expressions, DB schemas\377";
 
 charset "UTF-8";
 

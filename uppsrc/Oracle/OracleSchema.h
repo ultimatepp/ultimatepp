@@ -126,6 +126,12 @@
 #undef LONGRAW
 #undef LONGRAW_
 
+#undef BLOB
+#undef BLOB_
+
+#undef CLOB
+#undef CLOB_
+
 #undef SEQUENCE
 
 #undef PRIMARY_KEY

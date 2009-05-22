@@ -66,6 +66,16 @@
 
 #include <Sql/sch_model.h>
 
+#undef BIT(x)
+#undef BIT_ARRAY(x, items)
+#undef BIT_(x)
+#undef BIT_ARRAY_(x, items)
+
+#undef BOOL(x)
+#undef BOOL_ARRAY(x, items)
+#undef BOOL_(x)
+#undef BOOL_ARRAY_(x, items)
+
 #undef INT
 #undef INT_ARRAY
 #undef INT_
@@ -81,15 +91,18 @@
 #undef DATE_
 #undef DATE_ARRAY_
 
-#undef DATETIME
-#undef DATETIME_ARRAY
-#undef DATETIME_
-#undef DATETIME_ARRAY_
+#undef TIME
+#undef TIME_ARRAY
+#undef TIME_
+#undef TIME_ARRAY_
 
 #undef STRING
 #undef STRING_ARRAY
 #undef STRING_
 #undef STRING_ARRAY_
+
+#undef LONGRAW
+#undef LONGRAW_
 
 #undef PRIMARY_KEY
 #undef KEY
