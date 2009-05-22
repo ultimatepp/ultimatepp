@@ -229,6 +229,8 @@ bool   GetFlag(const Vector<String>& conf, const char *flag);
 String RemoveType(Vector<String>& conf, const char *flags);
 
 class Package {
+	void Reset();
+
 public:
 	struct File : public String {
 		Array<OptItem> option;
