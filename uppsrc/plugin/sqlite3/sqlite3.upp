@@ -1,4 +1,6 @@
-description "Sqlite3 database engine and U++ interface\377";
+description "Sqlite3 database engine and U++ interface\3770,128,128";
+
+noblitz;
 
 flags(NOTMFC) "!GUI !CONSOLE";
 
