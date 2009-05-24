@@ -1,0 +1,13 @@
+description "OfficeAutomation demo console";
+
+uses
+	Core,
+	OfficeAutomation,
+	SysInfo;
+
+file
+	"OfficeAutomation demo console.cpp";
+
+mainconfig
+	"" = "MT";
+
