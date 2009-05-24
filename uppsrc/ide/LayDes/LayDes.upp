@@ -1,4 +1,4 @@
-description "TheIDE - .lay designer";
+description "TheIDE - .lay designer\377B";
 
 uses
 	ide\Common,

@@ -1,4 +1,4 @@
-description "TheIDE - builders - routines to compile programs";
+description "TheIDE - builders - routines to compile programs\377B";
 
 uses
 	coff\binobj,

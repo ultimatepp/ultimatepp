@@ -1,4 +1,4 @@
-description "TheIDE - debuggers";
+description "TheIDE - debuggers\377B";
 
 uses
 	ide\Common,

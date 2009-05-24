@@ -189,7 +189,7 @@ void CodeBrowser::LoadScope()
 		for(int i = 0; i < n.GetCount(); i = file < 0 ? FindNext(n, i) : i + 1) {
 			CppItemInfo m;
 			(CppItem&) m = n[i];
-			if((m.uname.StartsWith(find) || filematch && m.file == file) && set.Find(m.qitem) < 0) {
+			if((find.GetCount() && m.uname.StartsWith(find) || filematch && m.file == file) && set.Find(m.qitem) < 0) {
 				set.Add(m.qitem);
 				int q = inherited.Find(m.qitem);
 				if(q >= 0) {

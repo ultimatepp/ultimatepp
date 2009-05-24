@@ -274,7 +274,7 @@ void CodeEditor::SyntaxState::ScanSyntax(const wchar *ln, const wchar *e)
 					else
 					if(c == '}') {
 						if(brk.GetCount()) {
-							if(brk.Top() == '}') {
+							if(brk.Top()) {
 								cl--;
 								if(bid.GetCount() > 1)
 									bid.Drop();
@@ -369,7 +369,9 @@ bool CodeEditor::SyntaxState::MatchHilite(const SyntaxState& st) const
 	return comment == st.comment
 	    && linecont == st.linecont
 	    && linecomment == st.linecomment
+	    && string == st.string
 		&& macro == st.macro
+		&& was_namespace == st.was_namespace
 		&& cl == st.cl && bl == st.bl && pl == st.pl
 		&& IsEqual(brk, st.brk)
 		&& IsEqual(blk, st.blk)
