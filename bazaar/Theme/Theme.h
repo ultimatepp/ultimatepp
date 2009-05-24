@@ -13,7 +13,7 @@ private:
 	TextSettings ini;
 	String dir;
 	
-	void Theme::LoadEditField(EditField::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
+	void LoadEditField(EditField::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadButton(Button::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadToolButton(ToolButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadMenuBar(MenuBar::Style& d, const VectorMap<String, String>& set, const String& dir);
@@ -24,6 +24,7 @@ private:
 	void LoadScrollBar(ScrollBar::Style& d, const VectorMap<String, String>& set, const String& dir);
 	void LoadMultiButton(MultiButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadTabCtrl(TabCtrl::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
+	void LoadProgress(ProgressIndicator::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 		
 	Value StringToObject(const String& s, const String& def = "");
 	

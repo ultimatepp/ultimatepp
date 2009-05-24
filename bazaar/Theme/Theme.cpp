@@ -16,7 +16,9 @@ Value Theme::StringToObject(const String& s, const String& def) {
 	if (v.GetCount() == 0)
 		return Null;
 	if (v[0] == "png") {
-		ImageBuffer img = PNGRaster().LoadFileAny(AppendFileName(dir, def));
+		Image im = PNGRaster().LoadFileAny(AppendFileName(dir, def));
+		ImageBuffer img; 
+		img = im;
 		if (img.IsEmpty())
 			return Null;
 		
@@ -40,10 +42,11 @@ inline void SetChImg(int i, const Image& img)
 	    CtrlsImg::Set(i, img);
 }
 
-template <typename T, typename V>
-inline void SetIfNotNull(T& t, V v)
+template <class T>
+inline void SetIfNotNull(T& t, const Value& v)
 {
-	if (v.Is<String>() && (String)v == "null")
+	if (v.Is<String>() 
+	&& (String)v == "null")
 		t = Null;
 	else
 		if (!IsNull(v))
@@ -221,7 +224,14 @@ void Theme::LoadTabCtrl(TabCtrl::Style& d, const VectorMap<String, String>& set,
 	
 	d.sel.top = 0;
 }
-                     
+      
+void Theme::LoadProgress(ProgressIndicator::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
+	SetIfNotNull(d.hlook, StringToObject(GetMap(set, "hlook"), dir + "\\" + file + "HLook.png"));
+	SetIfNotNull(d.hchunk, StringToObject(GetMap(set, "hchunk"), dir + "\\" + file + "HChunk.png"));
+	d.bound = true;
+	d.classic = false;
+}
+               
 void Theme::Load(const String& path) {
 	ini.Clear();
 	
@@ -283,6 +293,8 @@ void Theme::Load() {
 			LoadMultiButton(DropList::StyleDefault().Write(), set, "DropList", "DropList");
 		else if (group == "tabctrl") 
 			LoadTabCtrl(TabCtrl::StyleDefault().Write(), set, "TabCtrl", "Tab");
+		else if (group == "progress") 
+			LoadProgress(ProgressIndicator::StyleDefault().Write(), set, "Progress", "Progress");
 		else if (group  == "colors") {
 			String cf = GetMap(set, "colorface");
 			if (!cf.IsEmpty())
