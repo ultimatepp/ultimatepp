@@ -1,4 +1,4 @@
-description "TheIDE - code browser and Topic++\377";
+description "TheIDE - code browser and Topic++\377B";
 
 uses
 	CppBase,

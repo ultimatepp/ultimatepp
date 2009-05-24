@@ -552,7 +552,7 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 				hls.SetPaper(hls.pos, text.GetLength() + 1 - hls.pos, BlockColor(--block_level));
 			Bracket(int(p - text) + pos, hls);
 			int& l = *p == ')' ? ss.pl : *p == '}' ? ss.cl : ss.bl;
-			if(bl == 0 || bc && (bc != *p || l <= 0) || !bc && *p != '}') {
+			if(bc && (bc != *p || l <= 0) || bc == 0 && *p != '}') {
 				hls.Put(p == ~text ? hl_style[INK_PAR0] : hl_style[INK_ERROR]);
 				ss.brk.Clear();
 				ss.cl = ss.bl = ss.pl = 0;

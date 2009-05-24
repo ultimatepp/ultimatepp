@@ -1,4 +1,4 @@
-description "TheIDE - common library";
+description "TheIDE - common library\377B";
 
 uses
 	CtrlLib,
