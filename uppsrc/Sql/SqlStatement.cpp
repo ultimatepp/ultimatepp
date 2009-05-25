@@ -363,20 +363,20 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 bool SqlPerformScript(Stream& script,
                       Gate2<int, int> progress_canceled, bool stoponerror)
 {
-	SqlPerformScript(SQL.GetSession(), script, progress_canceled, stoponerror);
+	return SqlPerformScript(SQL.GetSession(), script, progress_canceled, stoponerror);
 }
 
 bool SqlPerformScript(SqlSession& session, const String& script,
                       Gate2<int, int> progress_canceled, bool stoponerror)
 {
-	StringStream ss(s);
+	StringStream ss(script);
 	return SqlPerformScript(session, ss, progress_canceled, stoponerror);
 }
 
 bool SqlPerformScript(const String& script,
                       Gate2<int, int> progress_canceled, bool stoponerror)
 {
-	SqlPerformScript(SQL.GetSession(), script, progress_canceled, stoponerror);
+	return SqlPerformScript(SQL.GetSession(), script, progress_canceled, stoponerror);
 }
 
 #endif
