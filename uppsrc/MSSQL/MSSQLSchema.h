@@ -69,15 +69,15 @@
 
 #include <Sql/sch_model.h>
 
-#undef BIT(x)
-#undef BIT_ARRAY(x, items)
-#undef BIT_(x)
-#undef BIT_ARRAY_(x, items)
+#undef BIT
+#undef BIT_ARRAY
+#undef BIT_
+#undef BIT_ARRAY_
 
-#undef BOOL(x)
-#undef BOOL_ARRAY(x, items)
-#undef BOOL_(x)
-#undef BOOL_ARRAY_(x, items)
+#undef BOOL
+#undef BOOL_ARRAY
+#undef BOOL_
+#undef BOOL_ARRAY_
 
 #undef INT
 #undef INT_ARRAY
