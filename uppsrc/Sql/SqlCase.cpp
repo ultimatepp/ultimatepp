@@ -10,6 +10,7 @@ enum {
 	SQLC_DATE,
 	SQLC_TIME,
 	SQLC_STRING,
+	SQLC_BINARY,
 };
 
 template <class T>
@@ -124,6 +125,39 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			}
 			break;
 		}
+		case SQLC_BINARY: {
+			int l;
+			ReadSqlValue(l, s);
+			if(r) {
+				switch(dialect) {
+				case PGSQL: {
+					*r << "\'";
+					const char *e = s + l;
+					while(s < e) {
+						byte c = *s++;
+						if(c < 32 || c > 126 || c == 39 || c == 92) {
+							*r << '\\\\';
+							r->Cat(((c >> 6) & 3) + '0');
+							r->Cat(((c >> 3) & 7) + '0');
+							r->Cat((c & 7) + '0');
+						}
+					}
+					*r << "\'::bytea";
+				}
+				case MSSQL:
+					*r << "0x" << HexString(s, l);
+					break;
+				case SQLITE3:
+				case MY_SQL:
+					*r << "X";
+				default:
+					*r << "\'" << HexString(s, l) << "\'";
+					break;
+				}
+			}
+			s += l;
+			break;
+		}
 		case SQLC_STRING: {
 			int l;
 			ReadSqlValue(l, s);
@@ -190,13 +224,18 @@ String SqlFormat(int64 x)
 	return FormatInt64(x);
 }
 
-String SqlFormat(const char *s, int l)
+String SqlFormat0(const char *s, int l, int code)
 {
 	StringBuffer b(1 + sizeof(int) + l);
-	b[0] = SQLC_STRING;
+	b[0] = code;
 	memcpy(~b + 1, &l, sizeof(int));
 	memcpy(~b + 1 + sizeof(int), s, l);
 	return b;
+}
+
+String SqlFormat(const char *s, int l)
+{
+	return SqlFormat0(s, l, SQLC_STRING);
 }
 
 String SqlFormat(const char *s)
@@ -207,6 +246,16 @@ String SqlFormat(const char *s)
 String SqlFormat(const String& x)
 {
 	return SqlFormat(x, x.GetLength());
+}
+
+String SqlFormatBinary(const char *s, int l)
+{
+	return SqlFormat0(s, l, SQLC_BINARY);
+}
+
+String SqlFormatBinary(const String& x)
+{
+	return SqlFormatBinary(x, x.GetLength());
 }
 
 String SqlFormat(Date x)

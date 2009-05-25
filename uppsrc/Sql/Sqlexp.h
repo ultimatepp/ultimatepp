@@ -78,6 +78,8 @@ String SqlFormat(const String& x);
 String SqlFormat(Date x);
 String SqlFormat(Time x);
 String SqlFormat(const Value& x);
+String SqlFormatBinary(const char *s, int l);
+String SqlFormatBinary(const String& x);
 
 class SqlCol : Moveable<SqlCol> {
 	String name;
