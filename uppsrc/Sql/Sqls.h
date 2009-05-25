@@ -355,6 +355,15 @@ public:
 
 class OciConnection;
 
+bool SqlPerformScript(SqlSession& session, Stream& script,
+                      Gate2<int, int> progress_canceled = false, bool stoponerror = false);
+bool SqlPerformScript(Stream& script,
+                      Gate2<int, int> progress_canceled = false, bool stoponerror = false);
+bool SqlPerformScript(SqlSession& session, const String& script,
+                      Gate2<int, int> progress_canceled = false, bool stoponerror = false);
+bool SqlPerformScript(const String& script,
+                      Gate2<int, int> progress_canceled = false, bool stoponerror = false);
+
 struct StdStatementExecutor : StatementExecutor {
 	StdStatementExecutor(SqlSession& session) : cursor(session) {}
 	virtual bool Execute(const String& stmt);
