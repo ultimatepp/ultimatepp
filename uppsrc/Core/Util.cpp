@@ -539,7 +539,7 @@ String HexString(const byte *s, int count, int sep)
 
 String HexString(const String& s, int sep)
 {
-	return HexString(s, s.GetCount(), sep);
+	return HexString(~s, s.GetCount(), sep);
 }
 
 String NormalizeSpaces(const char *s)

@@ -406,12 +406,16 @@ SqlVal OuterJoin(SqlCol col)
 	return SqlCol(~col + "(+)");
 }
 
+SqlVal SqlBinary(const char *s, int l)
+{
+	SqlVal x;
+	x.SetHigh(SqlFormatBinary(s, l));
+	return x;
+}
+
 SqlVal SqlBinary(const String& data)
 {
-	String x = SqlCase(MSSQL, "0x")(MY_SQL, "x\'")(SQLITE3, "X\'")("\'");
-	x << HexString(data)
-	  << SqlCase(MSSQL, "")("\'");
-	return SqlVal(x, SqlS::HIGH);
+	return SqlBinary(~data, data.GetCount());
 }
 
 END_UPP_NAMESPACE
