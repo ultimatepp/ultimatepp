@@ -354,8 +354,13 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 			stmt.Clear();
 			script.Get();
 		}
-		else
+		else {
+			if(c == '(')
+				level++;
+			if(c == ')')
+				level--;
 			stmt.Cat(script.Get());
+		}
 	}
 	return ok;
 }

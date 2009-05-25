@@ -52,6 +52,9 @@
 #define IDENTITY                   INLINE_ATTRIBUTE("identity")
 #define AUTO_INCREMENT             INLINE_ATTRIBUTE("identity")
 
+#define SQLDEFAULT(v)              ATTRIBUTE("alter table @t add constraint DF_@x default "#v " for @c;",\
+                                             "alter table @t drop constraint DF_@x;")
+
 #define INDEX                      ATTRIBUTE("create index IDX_@x on @t(@c);", \
                                              "drop index IDX_@x;")
 #define UNIQUE                     ATTRIBUTE("create unique index UNQ_@x on @t(@c);", \
