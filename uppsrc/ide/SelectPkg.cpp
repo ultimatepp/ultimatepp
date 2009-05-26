@@ -165,6 +165,7 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 		String path;
 		String stxt;
 		String nest;
+		bool   main;
 
 		bool operator<(const PkInfo& b) const { return PackageLess(package, b.package); }
 	};
@@ -185,7 +186,7 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 
 	void           OnNew();
 	void           OnBase();
-	void           OnAll();
+	void           OnFilter();
 
 	void           ListCursor();
 	void           ChangeDescription();
@@ -199,6 +200,10 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	Vector<String> GetSvnDirs();
 	void           SyncSvnDir(const String& dir);
 	void           SyncSvnDirs();
+	
+	enum {
+		MAIN_FIRST, MAIN_ALL, ALL_FIRST, ALL_ALL
+	};
 };
 
 bool SelectPackageDlg::Key(dword key, int count)
@@ -301,9 +306,12 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	splitter.SetPos(2000);
 	splitter.Zoom(selectvars ? -1 : 1);
 	newu <<= THISBACK(OnNew);
-	all <<= THISBACK(OnAll);
-	all.Show(main);
-	all = !main;
+	filter <<= THISBACK(OnFilter);
+	filter.Add(MAIN_FIRST, "Main packages of first nest");
+	filter.Add(MAIN_ALL, "All main packages");
+	filter.Add(ALL_FIRST, "All packages of first nest");
+	filter.Add(ALL_ALL, "All packages");
+	filter <<= main ? MAIN_FIRST : ALL_ALL;
 	progress.Hide();
 	brief <<= THISBACK(SyncBrief);
 	search.NullText("Search (Ctrl+Q)", StdFont().Italic(), SColorDisabled());
@@ -350,7 +358,7 @@ void SelectPackageDlg::OnOK()
 	AcceptBreak(IDOK);
 }
 
-void SelectPackageDlg::OnAll()
+void SelectPackageDlg::OnFilter()
 {
 	OnBase();
 }
@@ -363,7 +371,8 @@ void SelectPackageDlg::OnBase()
 void SelectPackageDlg::OnNew() {
 	TemplateDlg dlg;
 	LoadFromGlobal(dlg, "NewPackage");
-	dlg.Load(GetUppDirs(), !all);
+	int f = ~filter;
+	dlg.Load(GetUppDirs(), f == MAIN_FIRST || f == MAIN_ALL);
 	while(dlg.Run() == IDOK) {
 		String nest = ~dlg.nest;
 		String name = NativePath(String(~dlg.package));
@@ -437,8 +446,7 @@ void SelectPackageDlg::OnBaseEdit()
 	if(!base.IsCursor())
 		return;
 	String vars = base.Get(0), oldvars = vars;
-	if(BaseSetup(vars))
-	{
+	if(BaseSetup(vars)) {
 		if(vars != oldvars)
 			DeleteFile(VarFilePath(oldvars));
 		SyncBase(vars);
@@ -477,7 +485,8 @@ void SelectPackageDlg::Load()
 	progress.Show();
 	loading = true;
 	String case_fixed;
-	for(int i = 0; i < upp.GetCount() && (all || i < 1) && loading; i++) {
+	int f = ~filter;
+	for(int i = 0; i < upp.GetCount() && (f == MAIN_ALL || f == ALL_ALL || i < 1) && loading; i++) {
 		if(!IsSplashOpen() && !IsOpen())
 			Open();
 		Load(upp[i], Null, 1000 * i, 1000, case_fixed);
@@ -546,6 +555,7 @@ void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progre
 		if(ff.IsFolder())
 			folders.Add(ff.GetName());
 	Sort(folders, &PackageLess);
+	int f = ~filter;
 	for(int i = 0; i < folders.GetCount() && loading; i++)
 	{
 		String fo = folders[i];
@@ -561,13 +571,14 @@ void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progre
 			for(int i = 0; i < p.GetCount(); i++)
 				if(!p[i].separator)
 					FixName(dd, p[i], case_fixed);
-			if(all || p.config.GetCount()) {
+			if(f == ALL_ALL || f == ALL_FIRST || p.config.GetCount()) {
 				PkInfo& pk = packages.Add();
 				pk.package = pkg;
 				pk.description = p.description;
 				pk.path = pf;
 				pk.stxt = ToUpper(pk.package + pk.description + nest);
 				pk.nest = nest;
+				pk.main = p.config.GetCount();
 			}
 		}
 		int ppos = progress_pos + i * progress_count / folders.GetCount();
@@ -640,7 +651,7 @@ void SelectPackageDlg::SyncList()
 		if(packages[i].stxt.Find(s) >= 0) {
 			clist.Add(packages[i].package, IdeImg::Package());
 			alist.Add(packages[i].package, packages[i].nest, packages[i].description);
-			alist.SetDisplay(alist.GetCount() - 1, 0, pd);
+			alist.SetDisplay(alist.GetCount() - 1, 0, packages[i].main ? bpd : pd);
 		}
 	if(!alist.FindSetCursor(n))
 		alist.GoBegin();
