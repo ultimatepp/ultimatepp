@@ -80,7 +80,7 @@ void Theme::LoadButton(Button::Style& d, const VectorMap<String, String>& set, c
 {
 	Vector<String> look = Fill(set, "look");
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.look[i], StringToObject(look[i], dir + "\\" + file + IntStr(i)+ ".png"));
+		SetIfNotNull(d.look[i], StringToObject(look[i], dir + DIR_SEP + file + IntStr(i)+ ".png"));
 	
 	Vector<String> text = Fill(set, "textcolor");
 	for (int i = 0; i < 4; i++)
@@ -96,69 +96,78 @@ void Theme::LoadButton(Button::Style& d, const VectorMap<String, String>& set, c
 void Theme::LoadScrollBar(ScrollBar::Style& d, const VectorMap<String, String>& set, const String& dir) {
 	Vector<String> vthumb = Fill(set, "vthumb");
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.vthumb[i], StringToObject(vthumb[i], dir + "\\" + "ScrollVThumb" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.vthumb[i], StringToObject(vthumb[i], dir + DIR_SEP + "ScrollVThumb" + IntStr(i)+ ".png"));
 	
 	Vector<String> vupper = Fill(set, "vupper");
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.vupper[i], StringToObject(vupper[i], dir + "\\" + "ScrollVUpper" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.vupper[i], StringToObject(vupper[i], dir + DIR_SEP + "ScrollVUpper" + IntStr(i)+ ".png"));
 	
 	Vector<String> vlower = Fill(set, "vlower");
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.vlower[i], StringToObject(vlower[i], dir + "\\" + "ScrollVLower" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.vlower[i], StringToObject(vlower[i], dir + DIR_SEP + "ScrollVLower" + IntStr(i)+ ".png"));
 	
 	Vector<String> hthumb = Fill(set, "hthumb");
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.hthumb[i], StringToObject(hthumb[i], dir + "\\" + "ScrollHThumb" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.hthumb[i], StringToObject(hthumb[i], dir + DIR_SEP + "ScrollHThumb" + IntStr(i)+ ".png"));
 	
 	Vector<String> hupper = Fill(set, "hupper");
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.hupper[i], StringToObject(hupper[i], dir + "\\" + "ScrollHUpper" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.hupper[i], StringToObject(hupper[i], dir + DIR_SEP + "ScrollHUpper" + IntStr(i)+ ".png"));
 	
 	Vector<String> hlower = Fill(set, "hlower");
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.hlower[i], StringToObject(hlower[i], dir + "\\" + "ScrollHLower" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.hlower[i], StringToObject(hlower[i], dir + DIR_SEP + "ScrollHLower" + IntStr(i)+ ".png"));
 }
 
 void Theme::LoadOption0(const VectorMap<String, String>& set, const String& dir, const String& file) {
 	Vector<String> look = Fill(set, "look");
 	 
-	SetChImg(CtrlsImg::I_O0, StringToObject(look[0], dir + "\\" + file + IntStr(0)+ ".png"));
-	SetChImg(CtrlsImg::I_O0h, StringToObject(look[1], dir + "\\" + file + IntStr(1)+ ".png"));
-	SetChImg(CtrlsImg::I_O0p, StringToObject(look[2], dir + "\\" + file + IntStr(2)+ ".png"));
-	SetChImg(CtrlsImg::I_O0d, StringToObject(look[3], dir + "\\" + file + IntStr(3)+ ".png"));
+	SetChImg(CtrlsImg::I_O0, StringToObject(look[0], dir + DIR_SEP + file + IntStr(0)+ ".png"));
+	SetChImg(CtrlsImg::I_O0h, StringToObject(look[1], dir + DIR_SEP + file + IntStr(1)+ ".png"));
+	SetChImg(CtrlsImg::I_O0p, StringToObject(look[2], dir + DIR_SEP + file + IntStr(2)+ ".png"));
+	SetChImg(CtrlsImg::I_O0d, StringToObject(look[3], dir + DIR_SEP + file + IntStr(3)+ ".png"));
 }
 
 void Theme::LoadOption1(const VectorMap<String, String>& set, const String& dir, const String& file) {
 	Vector<String> look = Fill(set, "look");
 	 
-	SetChImg(CtrlsImg::I_O1, StringToObject(look[0], dir + "\\" + file + IntStr(0)+ ".png"));
-	SetChImg(CtrlsImg::I_O1h, StringToObject(look[1], dir + "\\" + file + IntStr(1)+ ".png"));
-	SetChImg(CtrlsImg::I_O1p, StringToObject(look[2], dir + "\\" + file + IntStr(2)+ ".png"));
-	SetChImg(CtrlsImg::I_O1d, StringToObject(look[3], dir + "\\" + file + IntStr(3)+ ".png"));
+	SetChImg(CtrlsImg::I_O1, StringToObject(look[0], dir + DIR_SEP + file + IntStr(0)+ ".png"));
+	SetChImg(CtrlsImg::I_O1h, StringToObject(look[1], dir + DIR_SEP + file + IntStr(1)+ ".png"));
+	SetChImg(CtrlsImg::I_O1p, StringToObject(look[2], dir + DIR_SEP + file + IntStr(2)+ ".png"));
+	SetChImg(CtrlsImg::I_O1d, StringToObject(look[3], dir + DIR_SEP + file + IntStr(3)+ ".png"));
+}
+
+void Theme::LoadOption2(const VectorMap<String, String>& set, const String& dir, const String& file) {
+	Vector<String> look = Fill(set, "look");
+	 
+	SetChImg(CtrlsImg::I_O2, StringToObject(look[0], dir + DIR_SEP + file + IntStr(0)+ ".png"));
+	SetChImg(CtrlsImg::I_O2h, StringToObject(look[1], dir + DIR_SEP + file + IntStr(1)+ ".png"));
+	SetChImg(CtrlsImg::I_O2p, StringToObject(look[2], dir + DIR_SEP + file + IntStr(2)+ ".png"));
+	SetChImg(CtrlsImg::I_O2d, StringToObject(look[3], dir + DIR_SEP + file + IntStr(3)+ ".png"));
 }
 
 void Theme::LoadSwitch0(const VectorMap<String, String>& set, const String& dir, const String& file) {
 	Vector<String> look = Fill(set, "look");
 	 
-	SetChImg(CtrlsImg::I_S0, StringToObject(look[0], dir + "\\" + file + IntStr(0)+ ".png"));
-	SetChImg(CtrlsImg::I_S0h, StringToObject(look[1], dir + "\\" + file + IntStr(1)+ ".png"));
-	SetChImg(CtrlsImg::I_S0p, StringToObject(look[2], dir + "\\" + file + IntStr(2)+ ".png"));
-	SetChImg(CtrlsImg::I_S0d, StringToObject(look[3], dir + "\\" + file + IntStr(3)+ ".png"));
+	SetChImg(CtrlsImg::I_S0, StringToObject(look[0], dir + DIR_SEP + file + IntStr(0)+ ".png"));
+	SetChImg(CtrlsImg::I_S0h, StringToObject(look[1], dir + DIR_SEP + file + IntStr(1)+ ".png"));
+	SetChImg(CtrlsImg::I_S0p, StringToObject(look[2], dir + DIR_SEP + file + IntStr(2)+ ".png"));
+	SetChImg(CtrlsImg::I_S0d, StringToObject(look[3], dir + DIR_SEP + file + IntStr(3)+ ".png"));
 }
 
 void Theme::LoadSwitch1(const VectorMap<String, String>& set, const String& dir, const String& file) {
 	Vector<String> look = Fill(set, "look");
 	 
-	SetChImg(CtrlsImg::I_S1, StringToObject(look[0], dir + "\\" + file + IntStr(0)+ ".png"));
-	SetChImg(CtrlsImg::I_S1h, StringToObject(look[1], dir + "\\" + file + IntStr(1)+ ".png"));
-	SetChImg(CtrlsImg::I_S1p, StringToObject(look[2], dir + "\\" + file + IntStr(2)+ ".png"));
-	SetChImg(CtrlsImg::I_S1d, StringToObject(look[3], dir + "\\" + file + IntStr(3)+ ".png"));
+	SetChImg(CtrlsImg::I_S1, StringToObject(look[0], dir + DIR_SEP + file + IntStr(0)+ ".png"));
+	SetChImg(CtrlsImg::I_S1h, StringToObject(look[1], dir + DIR_SEP + file + IntStr(1)+ ".png"));
+	SetChImg(CtrlsImg::I_S1p, StringToObject(look[2], dir + DIR_SEP + file + IntStr(2)+ ".png"));
+	SetChImg(CtrlsImg::I_S1d, StringToObject(look[3], dir + DIR_SEP + file + IntStr(3)+ ".png"));
 }
 
 void Theme::LoadToolButton(ToolButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
 	Vector<String> look = Fill(set, "look", 6);
 	for (int i = 0; i < 6; i++) 
-		SetIfNotNull(d.look[i], StringToObject(look[i], dir + "\\" + file + IntStr(i)+ ".png"));
+		SetIfNotNull(d.look[i], StringToObject(look[i], dir + DIR_SEP + file + IntStr(i)+ ".png"));
 	
 	Vector<String> text = Fill(set, "textcolor", 6);
 	for (int i = 0; i < 6; i++)
@@ -175,59 +184,64 @@ void Theme::LoadMenuBar(MenuBar::Style& d, const VectorMap<String, String>& set,
 	SetIfNotNull(d.separator.l1, StringToObject(GetMap(set, "separatorl1")));
 	SetIfNotNull(d.separator.l2, StringToObject(GetMap(set, "separatorl2")));
 	
-	SetIfNotNull(d.item, StringToObject(GetMap(set, "item"), dir + "\\" + "MenuItem.png"));
+	SetIfNotNull(d.item, StringToObject(GetMap(set, "item"), dir + DIR_SEP + "MenuItem.png"));
 	
 	Vector<String> ti = Fill(set, "topitem", 3);
 	for (int i = 0; i < 3; i++)
-		SetIfNotNull(d.topitem[i], StringToObject(ti[i], dir + "\\" + "MenuTop" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.topitem[i], StringToObject(ti[i], dir + DIR_SEP + "MenuTop" + IntStr(i)+ ".png"));
 	
 	Vector<String> tt = Fill(set, "topitemtext", 3);
 	for (int i = 0; i < 3; i++)
 		SetIfNotNull(d.topitemtext[i], StringToObject(tt[i]));
 	
-	SetIfNotNull(d.popupframe, StringToObject(GetMap(set, "popupframe"), dir + "\\" + "MenuFrame.png"));
+	SetIfNotNull(d.popupframe, StringToObject(GetMap(set, "popupframe"), dir + DIR_SEP + "MenuFrame.png"));
 }
 
 void Theme::LoadEditField(EditField::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
 	Vector<String> edge = Fill(set, "edge");
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.edge[i], StringToObject(edge[i], dir + "\\" + file + IntStr(i)+ ".png"));
+		SetIfNotNull(d.edge[i], StringToObject(edge[i], dir + DIR_SEP + file + IntStr(i)+ ".png"));
 }
 
 void Theme::LoadMultiButton(MultiButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
 	Vector<String> look = Fill(set, "look", 4);
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.look[i], StringToObject(look[i], dir + "\\" + file + "Look" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.look[i], StringToObject(look[i], dir + DIR_SEP + file + "Look" + IntStr(i)+ ".png"));
 	Vector<String> trivial = Fill(set, "trivial", 4);
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.trivial[i], StringToObject(trivial[i], dir + "\\" + file + "Trivial" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.trivial[i], StringToObject(trivial[i], dir + DIR_SEP + file + "Trivial" + IntStr(i)+ ".png"));
 	Vector<String> edge = Fill(set, "edge", 4);
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.edge[i], StringToObject(edge[i], dir + "\\" + file + "Edge" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.edge[i], StringToObject(edge[i], dir + DIR_SEP + file + "Edge" + IntStr(i)+ ".png"));
 	SetIfNotNull(d.trivialborder, StringToObject(GetMap(set, "trivialborder")));
+	SetIfNotNull(d.border, StringToObject(GetMap(set, "border")));
 }
 
 void Theme::LoadTabCtrl(TabCtrl::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
-	SetIfNotNull(d.body, StringToObject(GetMap(set, "body"), dir + "\\" + file + "Body.png"));
+	SetIfNotNull(d.body, StringToObject(GetMap(set, "body"), dir + DIR_SEP + file + "Body.png"));
 	
 	Vector<String> first = Fill(set, "first", 4);
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.first[i], StringToObject(first[i], dir + "\\" + file + "First" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.first[i], StringToObject(first[i], dir + DIR_SEP + file + "First" + IntStr(i)+ ".png"));
 	
 	Vector<String> normal = Fill(set, "normal", 4);
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.normal[i], StringToObject(normal[i], dir + "\\" + file + "Normal" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.normal[i], StringToObject(normal[i], dir + DIR_SEP + file + "Normal" + IntStr(i)+ ".png"));
 	
 	Vector<String> last = Fill(set, "last", 4);
 	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.last[i], StringToObject(last[i], dir + "\\" + file + "Last" + IntStr(i)+ ".png"));
+		SetIfNotNull(d.last[i], StringToObject(last[i], dir + DIR_SEP + file + "Last" + IntStr(i)+ ".png"));
+	
+	Vector<String> both = Fill(set, "both", 4);
+	for (int i = 0; i < 4; i++) 
+		SetIfNotNull(d.both[i], StringToObject(last[i], dir + DIR_SEP + file + "Both" + IntStr(i)+ ".png"));
 	
 	d.sel.top = 0;
 }
       
 void Theme::LoadProgress(ProgressIndicator::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
-	SetIfNotNull(d.hlook, StringToObject(GetMap(set, "hlook"), dir + "\\" + file + "HLook.png"));
-	SetIfNotNull(d.hchunk, StringToObject(GetMap(set, "hchunk"), dir + "\\" + file + "HChunk.png"));
+	SetIfNotNull(d.hlook, StringToObject(GetMap(set, "hlook"), dir + DIR_SEP + file + "HLook.png"));
+	SetIfNotNull(d.hchunk, StringToObject(GetMap(set, "hchunk"), dir + DIR_SEP + file + "HChunk.png"));
 	d.bound = true;
 	d.classic = false;
 }
@@ -261,6 +275,8 @@ void Theme::Load() {
 			LoadOption0(set, "Option", "Option0");
 		else if (group  == "option1")
 			LoadOption1(set, "Option", "Option1");
+		else if (group  == "option2")
+			LoadOption2(set, "Option", "Option2");
 		else if (group  == "switch0")
 			LoadSwitch0(set, "Switch", "Switch0");
 		else if (group  == "switch1")

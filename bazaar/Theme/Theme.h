@@ -19,6 +19,7 @@ private:
 	void LoadMenuBar(MenuBar::Style& d, const VectorMap<String, String>& set, const String& dir);
 	void LoadOption0(const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadOption1(const VectorMap<String, String>& set, const String& dir, const String& file);
+	void LoadOption2(const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadSwitch0(const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadSwitch1(const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadScrollBar(ScrollBar::Style& d, const VectorMap<String, String>& set, const String& dir);
