@@ -56,10 +56,12 @@ Sqlite3Connection::~Sqlite3Connection()
 void Sqlite3Connection::Cancel()
 {
 	if (current_stmt) {
-		if (sqlite3_reset(current_stmt) != SQLITE_OK)
-			session.SetError(sqlite3_errmsg(db), "Resetting statement: " + current_stmt_string);
-		if (sqlite3_finalize(current_stmt) != SQLITE_OK)
-			session.SetError(sqlite3_errmsg(db), "Finalizing statement: "+ current_stmt_string);
+//		if (sqlite3_reset(current_stmt) != SQLITE_OK)
+//			session.SetError(sqlite3_errmsg(db), "Resetting statement: " + current_stmt_string);
+//		if (sqlite3_finalize(current_stmt) != SQLITE_OK)
+//			session.SetError(sqlite3_errmsg(db), "Finalizing statement: "+ current_stmt_string);
+		//this seems to be the correct way how to do error recovery...
+		sqlite3_finalize(current_stmt);
 		current_stmt = NULL;
 		current_stmt_string.Clear();
 		parse = true;
