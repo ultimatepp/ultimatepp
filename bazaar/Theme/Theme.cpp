@@ -245,16 +245,35 @@ void Theme::LoadProgress(ProgressIndicator::Style& d, const VectorMap<String, St
 	d.bound = true;
 	d.classic = false;
 }
-               
-void Theme::Load(const String& path) {
+        
+void Theme::LoadHeader(HeaderCtrl::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
+	Vector<String> look = Fill(set, "look", 4);
+	for (int i = 0; i < 4; i++) 
+		SetIfNotNull(d.look[i], StringToObject(look[i], dir + DIR_SEP + file + "Look" + IntStr(i)+ ".png"));
+}
+
+Theme& Theme::Load(const String& path) {
 	ini.Clear();
 	
 	dir = path;
 	ini.Load(AppendFileName(dir, "theme.ini"));
 	
+	return *this;
+}
+
+int Theme::GetGroup(const String& group) {
+	for (int i = 0; i < ini.GetGroupCount(); i++)
+		if (ToLower(ini.GetGroupName(i)) == group)
+			return i;
+	return -1;
+}
+
+Theme& Theme::Apply() {
 	sUglyHack = this;
 	Ctrl::SetSkin(ApplyDummy);
 	sUglyHack = NULL;
+	
+	return *this;
 }
 
 void Theme::Load() {
@@ -265,7 +284,7 @@ void Theme::Load() {
 			set.Add(ini.GetKey(i, k), ini.Get(i, k));
 		}
 		
-		if (group  == "button")
+		if (group  == "button" && useButton)
 			LoadButton(Button::StyleNormal().Write(), set, "Button", "Button");
 		else if (group  == "okbutton")
 			LoadButton(Button::StyleOk().Write(), set, "OkButton", "OkButton");
@@ -311,6 +330,8 @@ void Theme::Load() {
 			LoadTabCtrl(TabCtrl::StyleDefault().Write(), set, "TabCtrl", "Tab");
 		else if (group == "progress") 
 			LoadProgress(ProgressIndicator::StyleDefault().Write(), set, "Progress", "Progress");
+		else if (group == "headerctrl") 
+			LoadHeader(HeaderCtrl::StyleDefault().Write(), set, "HeaderCtrl", "Header");
 		else if (group  == "colors") {
 			String cf = GetMap(set, "colorface");
 			if (!cf.IsEmpty())

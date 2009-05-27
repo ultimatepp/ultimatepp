@@ -13,6 +13,8 @@ private:
 	TextSettings ini;
 	String dir;
 	
+	bool useButton;
+	
 	void LoadEditField(EditField::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadButton(Button::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadToolButton(ToolButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
@@ -26,13 +28,21 @@ private:
 	void LoadMultiButton(MultiButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadTabCtrl(TabCtrl::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadProgress(ProgressIndicator::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
-		
+	void LoadHeader(HeaderCtrl::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
+	
 	Value StringToObject(const String& s, const String& def = "");
 	
 	void Load();
+	int GetGroup(const String& group);
 	
 public:
-	void Load(const String& fileName);
+	Theme& Load(const String& fileName);
+	Theme& Apply();
+	
+	bool   HasButton()						{ return GetGroup("button") >= 0; }
+	Theme& UseButton(bool use)				{ useButton = use; return *this; }	
+		
+	Theme(): useButton(true) 			{}
 };
 
 #endif
