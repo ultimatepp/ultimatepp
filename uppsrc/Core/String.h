@@ -787,4 +787,7 @@ int CharFilterNoCrLf(int c);
 String Filter(const char *s, int (*filter)(int));
 String FilterWhile(const char *s, int (*filter)(int));
 
+WString Filter(const wchar *s, int (*filter)(int));
+WString FilterWhile(const wchar *s, int (*filter)(int));
+
 #include "AString.hpp"

@@ -114,4 +114,25 @@ String FilterWhile(const char *s, int (*filter)(int))
 	return result;
 }
 
+WString Filter(const wchar *s, int (*filter)(int))
+{
+	String result;
+	while(*s) {
+		int c = (*filter)((byte)*s++);
+		if(c) result.Cat(c);
+	}
+	return result;
+}
+
+WString FilterWhile(const wchar *s, int (*filter)(int))
+{
+	String result;
+	while(*s) {
+		int c = (*filter)((byte)*s++);
+		if(!c) break;
+		result.Cat(c);
+	}
+	return result;
+}
+
 END_UPP_NAMESPACE
