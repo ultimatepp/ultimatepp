@@ -160,7 +160,7 @@ void Package::Reset()
 {
 	charset = 0;
 	optimize_speed = false;
-	noblitz = true;
+	noblitz = false;
 	bold = italic = false;
 	ink = Null;
 }
