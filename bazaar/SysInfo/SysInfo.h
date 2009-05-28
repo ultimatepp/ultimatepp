@@ -27,7 +27,7 @@ String LoadFile_Safe(String fileName);
 // #endif
 
 // Gets the program that will open by default the files with extension ext
-String GetExtExecutable(const String ext);
+String GetExtExecutable(String ext);
 
 // Open the file with the adecuated program defined in the OS by default
 bool LaunchFile(const String file);
@@ -330,6 +330,7 @@ bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity,
 // Key and mouse keys
 
 bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom);
+void Window_SetRect(long windowId, long left, long top, long right, long bottom);
 
 bool Mouse_GetPos(long &x, long &y);
 bool Mouse_SetPos(long x, long y, long windowId);
@@ -350,7 +351,6 @@ void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 5
 void GetKeyLockStatus(bool &caps, bool &num, bool &scroll);
 void SetKeyLockStatus(bool caps, bool num, bool scroll);
 
-void Window_SetRect(long windowId, long left, long top, long right, long bottom);
 
 #endif
 

@@ -190,13 +190,10 @@ String GetExtExecutable(String ext)
 	if (ext[0] != '.')
 		ext = String(".") + ext;
 #if defined(PLATFORM_WIN32)
-	String file = AppendFileName(GetHomeDirectory(), String("pru") + ext);
+	String file = AppendFileName(GetHomeDirectory(), String("dummy") + ext); // Required by FindExecutableW
 	SaveFile(file, "   ");
-	if (!FileExists(file)) {
-		exeFile = "Error getting exe";
-		puts("ERROR");
-		return exeFile;
-	}
+	if (!FileExists(file)) 
+		return "";
 	HINSTANCE ret;
 	WString fileW(file);
 	WCHAR exe[1024];
@@ -339,7 +336,7 @@ String GetShellFolder(const char *local, const char *users)
 String GetDesktopFolder()	
 {
 	String ret = GetShellFolder("XDG_DESKTOP_DIR", "DESKTOP");
-	if (ret == "")
+	if (ret.IsEmpty())
 		return AppendFileName(GetHomeDirectory(), "Desktop");
 	else
 		return ret;
@@ -376,30 +373,68 @@ String GetSystemFolder()
 /////////////////////////////////////////////////////////////////////
 // Hardware Info
 #if defined(PLATFORM_WIN32) 
-void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors)
+
+String LaunchWindowsCommand(String command)
 {
-	manufacturer = FromSystemCharset(GetWinRegString("SystemManufacturer", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
-	if (manufacturer == "") {
+	String ret;
+	char aux[1000];
+
+	FILE *fp = _popen (command, "r");
+	if (fp == NULL) 
+		return ret;
+
+	fgets (aux, 1000, fp);
+	while (!feof (fp)) {
+		ret.Cat(aux);
+		fgets (aux, 1000, fp);
+	}
+	_pclose (fp);
+	return ret;
+}
+
+void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors)
+{ 
+	{
+		StringParse fileData = LaunchWindowsCommand("wmic computersystem get manufacturer");
+		fileData.GoAfter("\r\n");
+		manufacturer = TrimBoth(fileData.GetText("\r\n"));
+	}
+	if (manufacturer.IsEmpty()) 
+		manufacturer = FromSystemCharset(GetWinRegString("SystemManufacturer", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
+	if (manufacturer.IsEmpty()) {
 		StringParse fileData = LoadFile(AppendFileName(GetSystemFolder(), "oeminfo.ini"));
 		fileData.GoAfter("Manufacturer=");
 		manufacturer = fileData.GetText("\r\n");
 	}
-	productName = FromSystemCharset(GetWinRegString("SystemProductName", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
-	if (productName == "")
+	{
+		StringParse modelData = LaunchWindowsCommand("wmic computersystem get model");
+		modelData.GoAfter("\r\n");
+		productName = TrimBoth(modelData.GetText("\r\n"));
+	}	
+	if (productName.IsEmpty())
+		productName = FromSystemCharset(GetWinRegString("SystemProductName", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
+	if (productName.IsEmpty())
 		productName = FromSystemCharset(GetWinRegString("Model", "SOFTWARE\\Microsoft\\PCHealth\\HelpSvc\\OEMInfo", HKEY_LOCAL_MACHINE));
+	
 	version = FromSystemCharset(GetWinRegString("SystemVersion", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
 	numberOfProcessors = atoi(GetEnv("NUMBER_OF_PROCESSORS"));
 }
 void GetBiosInfo(String &biosVersion, Date &biosReleaseDate)
-{
+{ 
+	// Alternative is "wmic bios get name" and "wmic bios get releasedate"
 	String strBios = FromSystemCharset(GetWinRegString("BIOSVersion", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));	
+	if (strBios.IsEmpty())
+		strBios = FromSystemCharset(GetWinRegString("SystemBiosVersion", "HARDWARE\\DESCRIPTION\\System", HKEY_LOCAL_MACHINE));	
 	for (int i = 0; i < strBios.GetLength(); ++i) {
 		if (strBios[i] == '\0')
 			biosVersion.Cat(". ");
 		else
 			biosVersion.Cat(strBios[i]);
 	}
-	StrToDate(biosReleaseDate, FromSystemCharset(GetWinRegString("BIOSReleaseDate", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE)));
+	String strDate = FromSystemCharset(GetWinRegString("BIOSReleaseDate", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
+	if (strDate.IsEmpty())
+		strDate = FromSystemCharset(GetWinRegString("SystemBiosDate", "HARDWARE\\DESCRIPTION\\System", HKEY_LOCAL_MACHINE));
+	StrToDate(biosReleaseDate, strDate);
 }
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)		
 {
@@ -481,13 +516,13 @@ typedef struct _MEMORYSTATUSEX {
 WINBASEAPI BOOL WINAPI GlobalMemoryStatusEx(LPMEMORYSTATUSEX);
 
 bool GetMemoryInfo(
-int &memoryLoad, 			// percent of memory in use		
-uint64 &totalPhys, 			// physical memory				
-uint64 &freePhys, 			// free physical memory			
-uint64 &totalPageFile,		// total paging file			
-uint64 &freePageFile,		// free paging file				
-uint64 &totalVirtual,		// total virtual memory			
-uint64 &freeVirtual)			// free virtual memory			
+	int &memoryLoad, 			// percent of memory in use		
+	uint64 &totalPhys, 			// physical memory				
+	uint64 &freePhys, 			// free physical memory			
+	uint64 &totalPageFile,		// total paging file			
+	uint64 &freePageFile,		// free paging file				
+	uint64 &totalVirtual,		// total virtual memory			
+	uint64 &freeVirtual)		// free virtual memory			
 {
 	MEMORYSTATUS status;	
 	status.dwLength = sizeof (status);
@@ -507,13 +542,13 @@ uint64 &freeVirtual)			// free virtual memory
 #ifdef COMPILER_MSC
 
 bool GetMemoryInfo(
-int &memoryLoad, 			// percent of memory in use		
-uint64 &totalPhys, 			// physical memory				
-uint64 &freePhys, 			// free physical memory			
-uint64 &totalPageFile,		// total paging file			
-uint64 &freePageFile,		// free paging file				
-uint64 &totalVirtual,		// total virtual memory			
-uint64 &freeVirtual)			// free virtual memory			
+	int &memoryLoad, 			// percent of memory in use		
+	uint64 &totalPhys, 			// physical memory				
+	uint64 &freePhys, 			// free physical memory			
+	uint64 &totalPageFile,		// total paging file			
+	uint64 &freePageFile,		// free paging file				
+	uint64 &totalVirtual,		// total virtual memory			
+	uint64 &freeVirtual)		// free virtual memory			
 {
 	MEMORYSTATUSEX status;	
 	status.dwLength = sizeof (status);
@@ -683,11 +718,11 @@ void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &na
 		if (GetModuleFileNameExW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR)))
 			fileName.Add(FromSystemCharset(WString(str).ToString()));
 		else
-			fileName.Add("UNKNOWN");	
+			fileName.Add(t_("UNKNOWN"));	
 		if (GetModuleBaseNameW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR)))
 			name.Add(FromSystemCharset(WString(str).ToString()));
 		else
-			name.Add("UNKNOWN");		
+			name.Add(t_("UNKNOWN"));		
 		CloseHandle(hProcess);
 		if (IsWindowVisible((HWND)hWnd[i])) {
 			int count = SendMessageW((HWND)hWnd[i], WM_GETTEXT, sizeof(str)/sizeof(WCHAR), (LPARAM)str);
@@ -1497,10 +1532,10 @@ Array<String> GetDriveList()
 }
 
 bool GetDriveSpace(String drive, 
-//uint64 &totalBytes,		// To determine the total number of bytes on a disk or volume, use IOCTL_DISK_GET_LENGTH_INFO.
-uint64 &freeBytesUser, 	// Total number of free bytes on a disk that are available to the user who is associated with the calling thread.
-uint64 &totalBytesUser, 	// Total number of bytes on a disk that are available to the user who is associated with the calling thread.
-uint64 &totalFreeBytes)	// Total number of free bytes on a disk.
+	//uint64 &totalBytes,	// To determine the total number of bytes on a disk or volume, use IOCTL_DISK_GET_LENGTH_INFO.
+	uint64 &freeBytesUser, 	// Total number of free bytes on a disk that are available to the user who is associated with the calling thread.
+	uint64 &totalBytesUser, // Total number of bytes on a disk that are available to the user who is associated with the calling thread.
+	uint64 &totalFreeBytes)	// Total number of free bytes on a disk.
 {
 	StringBuffer sb(drive);	
 	
@@ -1540,7 +1575,7 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
    		return false;
    	volume = vol;
    	fileSystem = fs;
-   	maxName = (int)maxName;
+   	maxName = (int)_maxName;
    	
    	return true;
 }
@@ -1578,10 +1613,10 @@ Array<String> GetDriveList()
 	return ret;
 }
 bool GetDriveSpace(String drive, 
-//uint64 &totalBytes,		// To determine the total number of bytes on a disk or volume, use IOCTL_DISK_GET_LENGTH_INFO.
-uint64 &freeBytesUser, 	// Total number of free bytes on a disk that are available to the user who is associated with the calling thread.
-uint64 &totalBytesUser, 	// Total number of bytes on a disk that are available to the user who is associated with the calling thread.
-uint64 &totalFreeBytes)	// Total number of free bytes on a disk.
+	//uint64 &totalBytes,	// To determine the total number of bytes on a disk or volume, use IOCTL_DISK_GET_LENGTH_INFO.
+	uint64 &freeBytesUser, 	// Total number of free bytes on a disk that are available to the user who is associated with the calling thread.
+	uint64 &totalBytesUser, // Total number of bytes on a disk that are available to the user who is associated with the calling thread.
+	uint64 &totalFreeBytes)	// Total number of free bytes on a disk.
 {
 	freeBytesUser = totalBytesUser = totalFreeBytes = 0;
 	
@@ -1591,7 +1626,7 @@ uint64 &totalFreeBytes)	// Total number of free bytes on a disk.
 	
 	while (drive != space.GetText())
 		;
-	space.MoveRel(-10);		space.GoBeginLine(); 
+	space.MoveRel(-10);	space.GoBeginLine(); 
 	space.GetText();	space.GetText();	// Jumps over device path and filesystem
 	totalBytesUser = 1024*space.GetUInt64();
 	space.GetText();						// Jumps over used space

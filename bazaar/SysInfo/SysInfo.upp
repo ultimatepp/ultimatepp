@@ -1,3 +1,7 @@
+description "OS, hardware and Desktop handling functions\377BI128,0,0";
+
+noblitz;
+
 uses
 	Core;
 
@@ -8,7 +12,10 @@ library(!WIN32) X11;
 file
 	SysInfo.h,
 	SysInfo.cpp,
-	src.tpp;
+	srcimp.tpp,
+	srcdoc.tpp,
+	src.tpp,
+	SysInfo.t;
 
 mainconfig
 	"" = "";
