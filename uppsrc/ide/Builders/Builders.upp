@@ -1,5 +1,7 @@
 description "TheIDE - builders - routines to compile programs\377B";
 
+noblitz;
+
 uses
 	coff\binobj,
 	ide\Core;
@@ -12,7 +14,7 @@ file
 	JavaBuilder.cpp,
 	ScriptBuilder.cpp,
 	Build.h,
-	Build.cpp,
 	Info readonly separator,
+	Build.cpp,
 	Copying;
 
