@@ -73,7 +73,7 @@ public:
 	OfficeDoc();
 	~OfficeDoc();
 	
-	static bool IsAvailable(String program);
+	static bool IsAvailable(String type);
 	
 	bool Init(String type);
 	
@@ -91,7 +91,7 @@ public:
 	
 	bool Print();
 	
-	bool SetSaved(bool);
+	bool SetSaved(bool saved);
 	bool SaveAs(String fileName, String type = "doc");
 	bool Quit();
 	

@@ -11,9 +11,9 @@ esES("Error")
 
 T_("OfficeAutomation internal error. Command \"%s\" not found for object or "
      "problem when running it")
-esES("Error interno en OfficeAutomation. Orden \"%s\" no encontrada para objeto o ")
-     "problema al ejecutarla")
-     
+esES("Error interno en OfficeAutomation. Orden \"%s\" no encontrada para objeto "
+     "o problema al ejecutarla")
+
 T_("Ole error")
 esES("Error en Ole")
 
@@ -25,6 +25,3 @@ esES("Libro de Excel no abierto correctamente")
 
 T_("Word document not loaded properly")
 esES("Documento de Word no abierto correctamente")
-
-
-

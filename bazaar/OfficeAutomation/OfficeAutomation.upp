@@ -1,4 +1,6 @@
-description "Automation of Office suites OpenOffice and Microsoft\377";
+description "Automation of Office suites OpenOffice and Microsoft\377BI28,170,255";
+
+noblitz;
 
 uses
 	Core;
@@ -9,6 +11,7 @@ file
 	OfficeAutomation.h,
 	OfficeAutomationBase.h,
 	OfficeAutomation.cpp,
+	srcdoc.tpp,
 	src.tpp,
 	OfficeAutomation.t;
 
