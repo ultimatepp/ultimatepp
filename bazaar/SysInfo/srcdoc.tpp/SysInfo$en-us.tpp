@@ -26,20 +26,20 @@ topic "SysInfo general description";
 [s0; Functions to get information and handle Desktop, OS and hardware 
 internals.&]
 [s0; &]
-[s0; Includes functions to manage:&]
+[s0; Includes functions for:&]
 [s0;0 &]
-[s0;i150;O0; Special folders&]
-[s0;i150;O0; System Info&]
-[s0;i150;O0; Memory Info&]
-[s0;i150;O0; OS Info&]
-[s0;i150;O0; Distro Info&]
-[s0;i150;O0; Default Exes&]
-[s0;i150;O0; Drives Info&]
-[s0;i150;O0; Launch File&]
-[s0;i150;O0; Find and Kill Window&]
-[s0;i150;O0; Windows List&]
-[s0;i150;O0; Process List&]
-[s0;i150;O0; Windows handling&]
-[s0;i150;O0; Mouse handling&]
-[s0;i150;O0; Keyboard handling&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetExtExecutable`(const String`)^ R
+unning files and commands]&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetDesktopFolder`(`)^ Obtainin
+g special folders]&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetSystemInfo`(String`&`,String`&`,String`&`,int`&`)^ H
+ardware, BIOS and OS info]&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetWindowsList`(Array`<long`>`&`,Array`<long`>`&`,Array`<String`>`&`,Array`<String`>`&`,Array`<String`>`&`)^ P
+rocess handling]&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#Window`_GetRect`(long`,long`&`,long`&`,long`&`,long`&`)^ W
+indows handling]&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#Mouse`_GetPos`(long`&`,long`&`)^ M
+ouse and keyboard handling]&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#LoadFile`_Safe`(String`)^ Misc
+ellaneous functions]&]
 [s0; ]
