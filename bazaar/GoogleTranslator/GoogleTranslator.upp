@@ -1,0 +1,10 @@
+description "HTTP Google Translator! Translate text direct form internet, uses post method!Max lenght is 32kb\377";
+
+uses
+	Core,
+	Web;
+
+file
+	GoogleTranslator.h,
+	GoogleTranslator.cpp charset "UTF-8";
+

@@ -1,0 +1,5 @@
+#ifndef _GoogleTranslatorDemo_icpp_init_stub
+#define _GoogleTranslatorDemo_icpp_init_stub
+#include "CtrlLib/init"
+#include "GoogleTranslator/init"
+#endif

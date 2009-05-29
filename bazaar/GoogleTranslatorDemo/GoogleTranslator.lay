@@ -1,0 +1,44 @@
+LAYOUT(GoogleTranslatorLayout, 440, 152)
+	ITEM(DropList, fromlanguagectrl, LeftPosZ(36, 84).TopPosZ(0, 19))
+	ITEM(DropList, tolanguagectrl, LeftPosZ(152, 84).TopPosZ(0, 19))
+	ITEM(Label, dv___2, SetLabel(t_("to:")).LeftPosZ(124, 28).TopPosZ(0, 19))
+	ITEM(Label, dv___3, SetLabel(t_("From:")).LeftPosZ(4, 28).TopPosZ(0, 19))
+	ITEM(Button, correcttranslationbutton, SetLabel(t_("Correct translation")).LeftPosZ(340, 96).TopPosZ(0, 19))
+	ITEM(Button, translatebutton, SetLabel(t_("Translate")).LeftPosZ(280, 56).TopPosZ(0, 19))
+	ITEM(LineEdit, textedit, SetEditable(false).HSizePosZ(0, 0).VSizePosZ(40, 0))
+	ITEM(Button, swap, SetLabel(t_("Swap")).LeftPosZ(240, 32).TopPosZ(0, 19))
+	ITEM(Label, dv___8, SetLabel(t_("Translated text:")).SetFont(StdFont().Bold()).LeftPosZ(4, 112).TopPosZ(24, 13))
+END_LAYOUT
+
+LAYOUT(MainWindow, 400, 200)
+END_LAYOUT
+
+LAYOUT(InputTextForm, 400, 200)
+	ITEM(LineEdit, textedit, HSizePosZ(0, 0).VSizePosZ(16, 0))
+	ITEM(Label, label, SetLabel(t_("Source text:")).SetFont(StdFont().Bold()).LeftPosZ(4, 104).TopPosZ(0, 13))
+END_LAYOUT
+
+LAYOUT(AboutLayout, 460, 296)
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(6, 74).BottomPosZ(4, 24))
+	ITEM(RichTextCtrl, text, HSizePosZ(8, 8).VSizePosZ(4, 32))
+END_LAYOUT
+
+LAYOUT(OptionsGeneralLayout, 292, 88)
+	ITEM(StaticText, dv___0, SetText(t_("Language:")).LeftPosZ(4, 60).TopPosZ(4, 18))
+	ITEM(DropList, lang, LeftPosZ(68, 144).TopPosZ(4, 19))
+	ITEM(Option, OptionAlwaysShowTrayIcon, SetLabel(t_("Always show tray icon")).HSizePosZ(4, 8).TopPosZ(28, 16))
+	ITEM(Option, OptionHideInTrayIconOnMinimize, SetLabel(t_("Hide in tray icon when Minimize application (only win32)")).HSizePosZ(4, 8).TopPosZ(48, 16))
+	ITEM(Option, OptionHideInTrayIconOnClose, SetLabel(t_("Hide in tray icon when Close application")).HSizePosZ(4, 8).TopPosZ(68, 16))
+END_LAYOUT
+
+LAYOUT(OptionsConnectionLayout, 284, 56)
+	ITEM(Option, useProxy, SetLabel(t_("Use HTTP proxy:")).LeftPosZ(8, 104).TopPosZ(4, 16))
+	ITEM(EditString, proxyHTTPAddress, LeftPosZ(72, 96).TopPosZ(24, 19))
+	ITEM(Label, HTTPProxyAddress, SetLabel(t_("Address:")).LeftPosZ(8, 60).TopPosZ(24, 19))
+	ITEM(Label, dv___3, SetLabel(t_("port:")).LeftPosZ(172, 30).TopPosZ(24, 19))
+	ITEM(EditInt, proxyHTTPPort, LeftPosZ(204, 64).TopPosZ(24, 19))
+END_LAYOUT
+
+LAYOUT(ShortCutLayout, 304, 108)
+END_LAYOUT
+

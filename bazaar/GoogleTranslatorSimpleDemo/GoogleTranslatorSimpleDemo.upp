@@ -1,0 +1,9 @@
+uses
+	GoogleTranslator;
+
+file
+	GoogleTranslatorSimpleDemo.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,4 @@
+#ifndef _GoogleTranslatorSimpleDemo_icpp_init_stub
+#define _GoogleTranslatorSimpleDemo_icpp_init_stub
+#include "GoogleTranslator/init"
+#endif
