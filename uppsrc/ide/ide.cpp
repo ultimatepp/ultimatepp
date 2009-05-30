@@ -309,11 +309,19 @@ bool IsTextFile(const String& file) {
 	return true;
 }
 
+Console& Ide::GetConsole()
+{
+	int q = btabs.GetCursor();
+	return q == BCONSOLE2 ? console2 : console;
+}
+
 bool Ide::FindLineError(int l, Host& host) {
 	String file;
 	int lineno;
 	int error;
-	if (FindLineError(console.GetUtf8Line(l), host, file, lineno, error)) {
+	int q = btabs.GetCursor();
+	Console& c = GetConsole();
+	if (FindLineError(c.GetUtf8Line(l), host, file, lineno, error)) {
 		file = NormalizePath(file);
 		editastext.FindAdd(file);
 		EditFile(file);
@@ -321,8 +329,9 @@ bool Ide::FindLineError(int l, Host& host) {
 		editor.CenterCursor();
 		editor.SetFocus();
 		Sync();
-		console.SetSelection(console.GetPos(l), console.GetPos(l + 1));
-		ShowConsole();
+		c.SetSelection(c.GetPos(l), c.GetPos(l + 1));
+		if(btabs.GetCursor() != BCONSOLE && btabs.GetCursor() != BCONSOLE2)
+			ShowConsole();
 		return true;
 	}
 	return false;
@@ -446,28 +455,28 @@ bool Ide::FindLineError(String ln, Host& host, String& file, int& lineno, int& e
 }
 
 void Ide::FindError() {
-	int l = console.GetLine(console.GetCursor());
+	int l = GetConsole().GetLine(GetConsole().GetCursor());
 	One<Host> host = CreateHost(false);
 	FindLineError(l, *host);
 }
 
 void Ide::FindNextError() {
-	int ln = console.GetLine(console.GetCursor());
+	int ln = GetConsole().GetLine(GetConsole().GetCursor());
 	int l = ln;
 	One<Host> host = CreateHost(false);
-	for(l = ln; l < console.GetLineCount(); l++)
+	for(l = ln; l < GetConsole().GetLineCount(); l++)
 		if(FindLineError(l, *host)) return;
 	for(l = 0; l < ln; l++)
 		if(FindLineError(l, *host)) return;
 }
 
 void Ide::FindPrevError() {
-	int ln = console.GetLine(console.GetCursor());
+	int ln = GetConsole().GetLine(GetConsole().GetCursor());
 	int l = ln;
 	One<Host> host = CreateHost(false);
 	for(l = ln - 2; l >= 0; l--)
 		if(FindLineError(l, *host)) return;
-	for(l = console.GetLineCount() - 1; l > ln; l--)
+	for(l = GetConsole().GetLineCount() - 1; l > ln; l--)
 		if(FindLineError(l, *host)) return;
 }
 

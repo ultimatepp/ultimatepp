@@ -115,8 +115,8 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 		bool bw = true;
 		for(const char *s = line; *s; s++) {
 			if(bw && Match(pattern, s, we, ignorecase)) {
-				console << fn << Format("(%d):", ln) << line << "\n";
-				console.Sync();
+				console2 << fn << Format("(%d):", ln) << line << "\n";
+				console2.Sync();
 				infile++;
 				n++;
 				break;
@@ -148,8 +148,8 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 			editor.SelectAll();
 			editor.BlockReplace();
 			SaveFile();
-			console << NFormat("%s: %d replacements made\n", fn, infile);
-			console.Sync();
+			console2 << NFormat("%s: %d replacements made\n", fn, infile);
+			console2.Sync();
 		}
 	}
 
@@ -297,8 +297,8 @@ void Ide::FindInFiles() {
 			else
 				pattern = ~ff.find;
 			pi.SetTotal(files.GetCount());
-			ShowConsole();
-			console.Clear();
+			ShowConsole2();
+			console2.Clear();
 			pi.SetPos(0);
 			int n = 0;
 			for(int i = 0; i < files.GetCount(); i++) {
@@ -307,7 +307,7 @@ void Ide::FindInFiles() {
 				if(!SearchInFile(files[i], pattern, ff.wholeword, ff.ignorecase, n))
 					break;
 			}
-			console << Format("%d occurrence(s) have been found.\n", n);
+			console2 << Format("%d occurrence(s) have been found.\n", n);
 		}
 	}
 	SetErrorEditor();
