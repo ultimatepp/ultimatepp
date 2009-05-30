@@ -1,22 +1,11 @@
 #include "Theme.h"
 
-Theme* sUglyHack = NULL;
-
-void ApplyDummy()
-{
-	if (sUglyHack == NULL)
-		return;
-	
-	Theme& t = *sUglyHack;
-	t.Load();	
-}
-
-Value Theme::StringToObject(const String& s, const String& def) {
+Value StringToObject(const String& s, const String& file = "") {
 	Vector<String> v = Split(s, ' ');
 	if (v.GetCount() == 0)
 		return Null;
 	if (v[0] == "png") {
-		Image im = PNGRaster().LoadFileAny(AppendFileName(dir, def));
+		Image im = PNGRaster().LoadFileAny(file);
 		ImageBuffer img; 
 		img = im;
 		if (img.IsEmpty())
@@ -30,10 +19,127 @@ Value Theme::StringToObject(const String& s, const String& def) {
 	}
 	else if (v[0] == "color")
 		return Color(StrInt(v[1]), StrInt(v[2]), StrInt(v[3]));
+	else if (v[0] == "rect")
+		return Rect(StrInt(v[1]), StrInt(v[2]), StrInt(v[3]), StrInt(v[3]));
 	else if (v[0] == "null")
 		return "null";
 	else 
 		return StrInt(v[0]);
+}
+
+inline String GetMap(const VectorMap<String, String>& set, const String& s) {
+	int k = set.Find(s);
+	return (k >= 0) ? set[k] : "";
+}
+
+String MakePath(const String& folder, const String& cat) {
+	return folder + DIR_SEP + cat;
+}
+
+template <class T>
+void SetIfNotNull(T& t, const Value& v) {
+	if (v.Is<String>() && (String)v == "null")
+		t = Null;
+	else
+		if (!IsNull(v))
+	    	t = v;
+}
+
+class ThemeHelper {
+private:
+	const VectorMap<String, String>& set;
+	const String& dir;
+	const String& file;
+public:
+	ThemeHelper(const VectorMap<String, String>& aset, const String& adir, const String& afile):
+			set(aset), dir(adir), file(afile)			{};
+			
+	ThemeHelper& operator ()(int& t, const String& s);
+	ThemeHelper& operator ()(bool& t, const String& s);
+	ThemeHelper& operator ()(Value& t, const String& s);
+	ThemeHelper& operator ()(Rect& t, const String& s);
+	ThemeHelper& operator ()(Point& t, const String& s);
+	ThemeHelper& operator ()(Color& t, const String& s);
+	ThemeHelper& operator ()(Size& t, const String& s);
+	
+	template <typename T>
+	ThemeHelper& operator ()(T v[], String val, int count);			
+};
+
+ThemeHelper& ThemeHelper::operator()(int& t, const String& s) {
+	Value v = StringToObject(GetMap(set, s));
+	if (!v.IsNull() && v.Is<int>())
+		t = v;
+	return *this;
+}
+
+ThemeHelper& ThemeHelper::operator()(bool& t, const String& s) {
+	Value v = StringToObject(GetMap(set, s));
+	if (!v.IsNull() && v.Is<int>())
+		t = v;
+	return *this;
+}
+
+template <typename T>
+ThemeHelper& ThemeHelper::operator ()(T v[], String val, int count) {
+	String nv = ToLower(val);
+	String all = GetMap(set, nv + "[]");
+	Vector<String> ret;
+	ret.SetCount(count, "");
+	
+	if (!all.IsEmpty())
+		for (int i = 0; i < count; i++)
+			ret[i] = all;
+	
+	for (int i = 0; i < count; i++) {
+		String temp = GetMap(set, nv + "[" + IntStr(i) + "]");
+		if (!temp.IsEmpty())
+			ret[i] = temp;
+	}	
+	
+	for (int i = 0; i < count; i++) 
+		SetIfNotNull(v[i], StringToObject(ret[i], MakePath(dir, file + val + IntStr(i)+ ".png")));
+	
+	return *this;
+}
+
+ThemeHelper& ThemeHelper::operator ()(Value& t, const String& s) {
+	String nw = ToLower(s);
+	Value v = StringToObject(GetMap(set, nw), MakePath(dir, file  + s + ".png"));
+	if (v.Is<String>() && (String)v == "null")
+		t = Null;
+	else
+		if (!IsNull(v))
+	    	t = v;
+	return *this;
+}
+
+ThemeHelper& ThemeHelper::operator ()(Rect& t, const String& s) {
+	Value v = StringToObject(GetMap(set, s));
+	if (!v.IsNull() && v.Is<Rect>())
+		t = v;
+	return *this;
+}
+
+ThemeHelper& ThemeHelper::operator ()(Point& t, const String& s) {
+	Value v = StringToObject(GetMap(set, s));
+	if (!v.IsNull() && v.Is<Point>())
+		t = v;
+	return *this;
+}
+
+ThemeHelper& ThemeHelper::operator ()(Color& t, const String& s) {
+	Value v = StringToObject(GetMap(set, s));
+	if (!v.IsNull() && v.Is<Color>())
+		t = v;
+	return *this;
+}
+
+ThemeHelper& ThemeHelper::operator ()(Size& t, const String& s) {
+	Value v = StringToObject(GetMap(set, s));
+	if (!v.IsNull() && v.Is<Size>())
+		t = v;
+	return *this;
 }
 
 inline void SetChImg(int i, const Image& img)
@@ -42,23 +148,7 @@ inline void SetChImg(int i, const Image& img)
 	    CtrlsImg::Set(i, img);
 }
 
-template <class T>
-inline void SetIfNotNull(T& t, const Value& v)
-{
-	if (v.Is<String>() 
-	&& (String)v == "null")
-		t = Null;
-	else
-		if (!IsNull(v))
-	    	t = v;
-}
-
-inline String GetMap(const VectorMap<String, String>& set, const String& s) {
-	int k = set.Find(s);
-	return (k >= 0) ? set[k] : "";
-}
-
-Vector<String> Fill(const VectorMap<String, String>& set, String val, int count = 4) {
+Vector<String> Theme::Fill(const VectorMap<String, String>& set, String val, int count) {
 	String all = GetMap(set, val + "[]");
 	Vector<String> ret;
 	ret.SetCount(count, "");
@@ -78,45 +168,26 @@ Vector<String> Fill(const VectorMap<String, String>& set, String val, int count 
 
 void Theme::LoadButton(Button::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file)
 {
-	Vector<String> look = Fill(set, "look");
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.look[i], StringToObject(look[i], dir + DIR_SEP + file + IntStr(i)+ ".png"));
-	
-	Vector<String> text = Fill(set, "textcolor");
-	for (int i = 0; i < 4; i++)
-		SetIfNotNull(d.textcolor[i], StringToObject(text[i]));
-
-	Vector<String> mono = Fill(set, "monocolor");
-	for (int i = 0; i < 4; i++)
-		SetIfNotNull(d.monocolor[i], StringToObject(text[i]));
-	
-	SetIfNotNull(d.focusmargin, StringToObject(GetMap(set, "focusmargin")));;		
+	ThemeHelper(set, dir, file)
+		(d.focusmargin,		"focusmargin")
+		(d.look,			"Look",			4)
+		(d.monocolor,		"monocolor",	4)
+		(d.overpaint,		"overpaint")
+		(d.pressoffset,		"pressoffset")
+		(d.textcolor,		"textcolor",	4)
+		(d.transparent,		"transparent")
+	;
 }
 
-void Theme::LoadScrollBar(ScrollBar::Style& d, const VectorMap<String, String>& set, const String& dir) {
-	Vector<String> vthumb = Fill(set, "vthumb");
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.vthumb[i], StringToObject(vthumb[i], dir + DIR_SEP + "ScrollVThumb" + IntStr(i)+ ".png"));
-	
-	Vector<String> vupper = Fill(set, "vupper");
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.vupper[i], StringToObject(vupper[i], dir + DIR_SEP + "ScrollVUpper" + IntStr(i)+ ".png"));
-	
-	Vector<String> vlower = Fill(set, "vlower");
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.vlower[i], StringToObject(vlower[i], dir + DIR_SEP + "ScrollVLower" + IntStr(i)+ ".png"));
-	
-	Vector<String> hthumb = Fill(set, "hthumb");
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.hthumb[i], StringToObject(hthumb[i], dir + DIR_SEP + "ScrollHThumb" + IntStr(i)+ ".png"));
-	
-	Vector<String> hupper = Fill(set, "hupper");
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.hupper[i], StringToObject(hupper[i], dir + DIR_SEP + "ScrollHUpper" + IntStr(i)+ ".png"));
-	
-	Vector<String> hlower = Fill(set, "hlower");
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.hlower[i], StringToObject(hlower[i], dir + DIR_SEP + "ScrollHLower" + IntStr(i)+ ".png"));
+void Theme::LoadScrollBar(ScrollBar::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
+	ThemeHelper(set, dir, file)
+		(d.hlower,			"HLower",		4)
+		(d.hthumb,			"HThumb",		4)
+		(d.hupper,			"HUpper",		4)
+		(d.vlower,			"VLower",		4)
+		(d.vthumb,			"VThumb",		4)
+		(d.vupper,			"VUpper",		4)
+	;
 }
 
 void Theme::LoadOption0(const VectorMap<String, String>& set, const String& dir, const String& file) {
@@ -164,99 +235,124 @@ void Theme::LoadSwitch1(const VectorMap<String, String>& set, const String& dir,
 	SetChImg(CtrlsImg::I_S1d, StringToObject(look[3], dir + DIR_SEP + file + IntStr(3)+ ".png"));
 }
 
-void Theme::LoadToolButton(ToolButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
-	Vector<String> look = Fill(set, "look", 6);
-	for (int i = 0; i < 6; i++) 
-		SetIfNotNull(d.look[i], StringToObject(look[i], dir + DIR_SEP + file + IntStr(i)+ ".png"));
-	
-	Vector<String> text = Fill(set, "textcolor", 6);
-	for (int i = 0; i < 6; i++)
-		SetIfNotNull(d.textcolor[i], StringToObject(text[i]));
+void Theme::LoadToolBar(ToolBar::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
+	ThemeHelper(set, dir, file)
+		(d.arealook,		"AreaLook")
+		(d.look,			"Look")
+	;
 }
 
-void Theme::LoadMenuBar(MenuBar::Style& d, const VectorMap<String, String>& set, const String& dir) {
-	SetIfNotNull(d.look, StringToObject(GetMap(set, "look")));
-	SetIfNotNull(d.arealook, StringToObject(GetMap(set, "arealook")));
-	SetIfNotNull(d.itemtext, StringToObject(GetMap(set, "itemtext")));
-	SetIfNotNull(d.leftgap, StringToObject(GetMap(set, "leftgap")));
-	SetIfNotNull(d.popupiconbar, StringToObject(GetMap(set, "popupiconbar")));
-	SetIfNotNull(d.popupbody, StringToObject(GetMap(set, "popupbody")));
-	SetIfNotNull(d.separator.l1, StringToObject(GetMap(set, "separatorl1")));
-	SetIfNotNull(d.separator.l2, StringToObject(GetMap(set, "separatorl2")));
-	
-	SetIfNotNull(d.item, StringToObject(GetMap(set, "item"), dir + DIR_SEP + "MenuItem.png"));
-	
-	Vector<String> ti = Fill(set, "topitem", 3);
-	for (int i = 0; i < 3; i++)
-		SetIfNotNull(d.topitem[i], StringToObject(ti[i], dir + DIR_SEP + "MenuTop" + IntStr(i)+ ".png"));
-	
-	Vector<String> tt = Fill(set, "topitemtext", 3);
-	for (int i = 0; i < 3; i++)
-		SetIfNotNull(d.topitemtext[i], StringToObject(tt[i]));
-	
-	SetIfNotNull(d.popupframe, StringToObject(GetMap(set, "popupframe"), dir + DIR_SEP + "MenuFrame.png"));
+void Theme::LoadToolButton(ToolButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
+	ThemeHelper(set, dir, file)
+		(d.contrast,		"contrast",		6)
+		(d.light,			"light",		6)
+		(d.look,			"Look",			6)
+		(d.offset,			"offset",		6)
+		(d.textcolor,		"textcolor",	6)
+	;
+	ToolBar::StyleDefault().Write().buttonstyle = d;
+}
+
+void Theme::LoadMenuBar(MenuBar::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
+	ThemeHelper(set, dir, file)
+		(d.arealook,		"AreaLook")
+		(d.item,			"Item")
+		(d.itemtext,		"itemtext")
+		(d.leftgap,			"leftgap")
+		(d.look,			"Look")
+		(d.lsepm,			"lsepm")
+		(d.maxiconsize,		"maxiconsize")
+		(d.popupbody,		"PopupBody")
+		(d.popupframe,		"PopupFrame")
+		(d.popupiconbar,	"PopupIconBar")
+		(d.pullshift,		"pullshift")
+		(d.rsepm,			"rsepm")
+		(d.textgap,			"textgap")
+		(d.topbar,			"TopBar")
+		(d.topitem,			"TopItem",		3)
+		(d.topitemtext,		"topitemtext",	3)
+	;
 }
 
 void Theme::LoadEditField(EditField::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
-	Vector<String> edge = Fill(set, "edge");
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.edge[i], StringToObject(edge[i], dir + DIR_SEP + file + IntStr(i)+ ".png"));
+	ThemeHelper(set, dir, file)
+		(d.activeedge, 		"activeedge")
+		(d.disabled, 		"disabled")
+		(d.edge, 			"Edge",			4)
+		(d.focus, 			"focus")
+		(d.invalid, 		"invalid")
+		(d.paper, 			"paper")
+		(d.selected, 		"selected")
+		(d.selectedtext, 	"selectedtext")
+		(d.text, 			"text")
+		(d.textdisabled, 	"textdisabled")
+	;
 }
 
 void Theme::LoadMultiButton(MultiButton::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
-	Vector<String> look = Fill(set, "look", 4);
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.look[i], StringToObject(look[i], dir + DIR_SEP + file + "Look" + IntStr(i)+ ".png"));
-	Vector<String> trivial = Fill(set, "trivial", 4);
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.trivial[i], StringToObject(trivial[i], dir + DIR_SEP + file + "Trivial" + IntStr(i)+ ".png"));
-	Vector<String> edge = Fill(set, "edge", 4);
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.edge[i], StringToObject(edge[i], dir + DIR_SEP + file + "Edge" + IntStr(i)+ ".png"));
-	SetIfNotNull(d.trivialborder, StringToObject(GetMap(set, "trivialborder")));
-	SetIfNotNull(d.border, StringToObject(GetMap(set, "border")));
+	ThemeHelper(set, dir, file)
+		(d.activeedge, 		"activeedge")
+		(d.border, 			"border")
+		(d.edge, 			"Edge",			4)
+		(d.fmonocolor, 		"fmonocolor",	4)
+		(d.left, 			"Left",			4)
+		(d.lmiddle, 		"LMiddle",		4)
+		(d.loff, 			"loff")
+		(d.look, 			"Look",			4)
+		(d.margin, 			"margin")
+		(d.monocolor, 		"monocolor",	4)
+		(d.overpaint, 		"overpaint")
+		(d.pressoffset, 	"pressoffset")
+		(d.right, 			"Right",		4)
+		(d.rmiddle, 		"RMiddle",		4)
+		(d.roff, 			"roff")
+		(d.trivial, 		"Trivial",		4)
+		(d.trivialborder, 	"trivialborder")
+		(d.trivialsep, 		"trivialsep")
+		(d.usetrivial, 		"usetrivial")
+	;
 }
 
 void Theme::LoadTabCtrl(TabCtrl::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
-	SetIfNotNull(d.body, StringToObject(GetMap(set, "body"), dir + DIR_SEP + file + "Body.png"));
-	
-	Vector<String> first = Fill(set, "first", 4);
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.first[i], StringToObject(first[i], dir + DIR_SEP + file + "First" + IntStr(i)+ ".png"));
-	
-	Vector<String> normal = Fill(set, "normal", 4);
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.normal[i], StringToObject(normal[i], dir + DIR_SEP + file + "Normal" + IntStr(i)+ ".png"));
-	
-	Vector<String> last = Fill(set, "last", 4);
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.last[i], StringToObject(last[i], dir + DIR_SEP + file + "Last" + IntStr(i)+ ".png"));
-	
-	Vector<String> both = Fill(set, "both", 4);
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.both[i], StringToObject(last[i], dir + DIR_SEP + file + "Both" + IntStr(i)+ ".png"));
-	
-	d.sel.top = 0;
+	ThemeHelper(set, dir, file)
+		(d.body, 			"Body")
+		(d.both, 			"Both",			4)
+		(d.edge, 			"edge")
+		(d.extendleft, 		"extendleft")
+		(d.first, 			"First",		4)
+		(d.last, 			"Last",			4)
+		(d.margin, 			"margin")
+		(d.normal, 			"Normal",		4)
+		(d.sel, 			"sel")
+		//tabheight
+		(d.text_color, 		"text_color",	4)
+	;
 }
       
 void Theme::LoadProgress(ProgressIndicator::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
-	SetIfNotNull(d.hlook, StringToObject(GetMap(set, "hlook"), dir + DIR_SEP + file + "HLook.png"));
-	SetIfNotNull(d.hchunk, StringToObject(GetMap(set, "hchunk"), dir + DIR_SEP + file + "HChunk.png"));
-	d.bound = true;
-	d.classic = false;
+	ThemeHelper(set, dir, file)
+		(d.bound, 			"bound")
+		(d.classic, 		"classic")
+		(d.hchunk, 			"HChunk")
+		(d.hlook, 			"HLook")
+		(d.vchunk, 			"VChunk")
+		(d.vlook, 			"VLook")
+	;
 }
         
 void Theme::LoadHeader(HeaderCtrl::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file) {
-	Vector<String> look = Fill(set, "look", 4);
-	for (int i = 0; i < 4; i++) 
-		SetIfNotNull(d.look[i], StringToObject(look[i], dir + DIR_SEP + file + "Look" + IntStr(i)+ ".png"));
+	ThemeHelper(set, dir, file)
+		(d.gridadjustment, 	"gridadjustment")
+		(d.look, 			"Look",			4)
+		(d.pressoffset, 	"pressoffset")
+	;
 }
 
 Theme& Theme::Load(const String& path) {
 	ini.Clear();
 	
-	dir = path;
-	ini.Load(AppendFileName(dir, "theme.ini"));
+	folder = path;
+	ini.Load(AppendFileName(folder, "theme.ini"));
 	
 	return *this;
 }
@@ -269,14 +365,6 @@ int Theme::GetGroup(const String& group) {
 }
 
 Theme& Theme::Apply() {
-	sUglyHack = this;
-	Ctrl::SetSkin(ApplyDummy);
-	sUglyHack = NULL;
-	
-	return *this;
-}
-
-void Theme::Load() {
 	for (int i = 0; i < ini.GetGroupCount(); i++) 	{
 		String group = ToLower(ini.GetGroupName(i));
 		VectorMap<String, String> set;
@@ -285,53 +373,62 @@ void Theme::Load() {
 		}
 		
 		if (group  == "button" && useButton)
-			LoadButton(Button::StyleNormal().Write(), set, "Button", "Button");
+			LoadButton(Button::StyleNormal().Write(), set, MakePath(folder, "Button"), "Button");
 		else if (group  == "okbutton")
-			LoadButton(Button::StyleOk().Write(), set, "OkButton", "OkButton");
+			LoadButton(Button::StyleOk().Write(), set, MakePath(folder, "OkButton"), "OkButton");
 		else if (group  == "edgebutton")
-			LoadButton(Button::StyleEdge().Write(), set, "EdgeButton", "EdgeButton");
+			LoadButton(Button::StyleEdge().Write(), set, MakePath(folder, "EdgeButton"), "EdgeButton");
+		else if (group  == "leftedgebutton")
+			LoadButton(Button::StyleLeftEdge().Write(), set, MakePath(folder, "LeftEdgeButton"), "LeftEdgeButton");
 		else if (group  == "option0")
-			LoadOption0(set, "Option", "Option0");
+			LoadOption0(set, MakePath(folder, "Option"), "Option0");
 		else if (group  == "option1")
-			LoadOption1(set, "Option", "Option1");
+			LoadOption1(set, MakePath(folder, "Option"), "Option1");
 		else if (group  == "option2")
-			LoadOption2(set, "Option", "Option2");
+			LoadOption2(set, MakePath(folder, "Option"), "Option2");
 		else if (group  == "switch0")
-			LoadSwitch0(set, "Switch", "Switch0");
+			LoadSwitch0(set, MakePath(folder, "Switch"), "Switch0");
 		else if (group  == "switch1")
-			LoadSwitch1(set, "Switch", "Switch1");
+			LoadSwitch1(set, MakePath(folder, "Switch"), "Switch1");
 		else if (group  == "spininc")
-			LoadButton(SpinButtons::StyleDefault().Write().inc, set, "Spin", "SpinInc");
+			LoadButton(SpinButtons::StyleDefault().Write().inc, set, MakePath(folder, "Spin"), "SpinInc");
 		else if (group  == "spindec")
-			LoadButton(SpinButtons::StyleDefault().Write().dec, set, "Spin", "SpinDec");
+			LoadButton(SpinButtons::StyleDefault().Write().dec, set, MakePath(folder, "Spin"), "SpinDec");
 		else if (group  == "scrollupbutton")
-			LoadButton(ScrollBar::StyleDefault().Write().up, set, "ScrollBar", "ScrollUpButton");
+			LoadButton(ScrollBar::StyleDefault().Write().up, set, MakePath(folder, "ScrollBar"), "ScrollUpButton");
 		else if (group  == "scrolldownbutton")
-			LoadButton(ScrollBar::StyleDefault().Write().down, set, "ScrollBar", "ScrollDownButton");
+			LoadButton(ScrollBar::StyleDefault().Write().down, set, MakePath(folder, "ScrollBar"), "ScrollDownButton");
 		else if (group  == "scrollleftbutton")
-			LoadButton(ScrollBar::StyleDefault().Write().left, set, "ScrollBar", "ScrollLeftButton");
+			LoadButton(ScrollBar::StyleDefault().Write().left, set, MakePath(folder, "ScrollBar"), "ScrollLeftButton");
 		else if (group  == "scrollrightbutton")
-			LoadButton(ScrollBar::StyleDefault().Write().right, set, "ScrollBar", "ScrollRightButton");
+			LoadButton(ScrollBar::StyleDefault().Write().right, set, MakePath(folder, "ScrollBar"), "ScrollRightButton");
 		else if (group  == "scrollbar")
-			LoadScrollBar(ScrollBar::StyleDefault().Write(), set, "ScrollBar");
+			LoadScrollBar(ScrollBar::StyleDefault().Write(), set, MakePath(folder, "ScrollBar"), "Scroll");
 		else if (group  == "toolbutton")
-			LoadToolButton(ToolButton::StyleDefault().Write(), set, "ToolButton", "ToolButton");
+			LoadToolButton(ToolButton::StyleDefault().Write(), set, MakePath(folder, "ToolButton"), "ToolButton");
 		else if (group  == "menubar")
-			LoadMenuBar(MenuBar::StyleDefault().Write(), set, "MenuBar");
-		else if (group  == "editfield") {
-			LoadEditField(EditField::StyleDefault().Write(), set, "EditField", "EditField");
-			ViewEdge_Write(EditField::StyleDefault().edge[0]);
+			LoadMenuBar(MenuBar::StyleDefault().Write(), set, MakePath(folder, "MenuBar"), "Menu");
+		else if (group  == "toolbar")
+			LoadToolBar(ToolBar::StyleDefault().Write(), set, MakePath(folder, "MenuBar"), "Menu");
+		else if (group  == "editfield") 
+			LoadEditField(EditField::StyleDefault().Write(), set, MakePath(folder, "EditField"), "EditField");
+		else if (group  == "viewedge") {
+			Value edge;
+			ThemeHelper(set, MakePath(folder, "ViewEdge"), "ViewEdge")
+				(edge, "Edge")
+			;
+			ViewEdge_Write(edge);
 		}
-		else if (group == "dropchoice")
-			LoadMultiButton(DropChoice::StyleFrame().Write(), set, "DropChoice", "DropChoice");
-		else if (group == "droplist") 
-			LoadMultiButton(DropList::StyleDefault().Write(), set, "DropList", "DropList");
-		else if (group == "tabctrl") 
-			LoadTabCtrl(TabCtrl::StyleDefault().Write(), set, "TabCtrl", "Tab");
-		else if (group == "progress") 
-			LoadProgress(ProgressIndicator::StyleDefault().Write(), set, "Progress", "Progress");
-		else if (group == "headerctrl") 
-			LoadHeader(HeaderCtrl::StyleDefault().Write(), set, "HeaderCtrl", "Header");
+		else if (group == "dropchoice" && useDropC)
+			LoadMultiButton(DropChoice::StyleFrame().Write(), set, MakePath(folder, "DropChoice"), "DropChoice");
+		else if (group == "droplist" && useDropL) 
+			LoadMultiButton(DropList::StyleDefault().Write(), set, MakePath(folder, "DropList"), "DropList");
+		else if (group == "tabctrl" && useTab) 
+			LoadTabCtrl(TabCtrl::StyleDefault().Write(), set, MakePath(folder, "TabCtrl"), "Tab");
+		else if (group == "progress" && useProgress) 
+			LoadProgress(ProgressIndicator::StyleDefault().Write(), set, MakePath(folder, "Progress"), "Progress");
+		else if (group == "headerctrl" && useHeader) 
+			LoadHeader(HeaderCtrl::StyleDefault().Write(), set, MakePath(folder, "HeaderCtrl"), "Header");
 		else if (group  == "colors") {
 			String cf = GetMap(set, "colorface");
 			if (!cf.IsEmpty())
@@ -350,4 +447,5 @@ void Theme::Load() {
 				SColorMark_Write(StringToObject(cm));
 		}
 	}
+	return *this;
 }
