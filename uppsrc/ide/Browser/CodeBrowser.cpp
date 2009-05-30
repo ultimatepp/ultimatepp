@@ -180,6 +180,7 @@ void CodeBrowser::LoadScope()
 	String scope = file < 0 ? String(x) : String();
 	int q = CodeBase().Find(scope);
 	bool filematch = file >= 0 && MatchCib(GetFileText(GetCppFile(file)), find);
+	bool scopematch = !filematch && MatchCib(scope, find);
 	if(q >= 0) {
 		const Array<CppItem>& n = CodeBase()[q];
 		VectorMap<String, bool> inherited;
@@ -189,7 +190,7 @@ void CodeBrowser::LoadScope()
 		for(int i = 0; i < n.GetCount(); i = file < 0 ? FindNext(n, i) : i + 1) {
 			CppItemInfo m;
 			(CppItem&) m = n[i];
-			if((find.GetCount() && m.uname.StartsWith(find) || filematch && m.file == file) && set.Find(m.qitem) < 0) {
+			if((find.GetCount() && m.uname.StartsWith(find) || filematch && m.file == file || scopematch) && set.Find(m.qitem) < 0) {
 				set.Add(m.qitem);
 				int q = inherited.Find(m.qitem);
 				if(q >= 0) {
