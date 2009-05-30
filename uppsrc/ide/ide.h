@@ -500,11 +500,11 @@ public:
 	RightTabs   btabs;
 	StaticRect  bottom;
 	Splitter    editor_bottom;
-	Console     console;
+	Console     console, console2;
 	IdeCalc     calc;
 	Ptr<Ctrl>   bottomctrl;
 
-	enum Bottoms { BCLOSE, BCONSOLE, BCALC, BDEBUG };
+	enum Bottoms { BCLOSE, BCONSOLE, BCONSOLE2, BCALC, BDEBUG };
 
 	FileOut    stdout_fout;
 
@@ -699,6 +699,7 @@ public:
 	void      SetBottom(int i);
 	void      ToggleBottom(int i);
 	void      ShowConsole()                      { SetBottom(1); }
+	void      ShowConsole2()                     { SetBottom(2); }
 	void      ToggleConsole()                    { ToggleBottom(1); }
 	void      SwapBottom();
 	bool      IsBottomShown() const;
@@ -901,6 +902,8 @@ public:
 	void      CycleFiles();
 
 	void      Renumber();
+
+	Console&  GetConsole();
 
 	bool      FindLineError(int l, Host& host);
 	bool      FindLineError(String ln, Host& host, String& file, int& lineno, int& error);

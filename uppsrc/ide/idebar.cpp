@@ -418,10 +418,12 @@ void Ide::BuildMenu(Bar& menu) {
 
 	menu.MenuSeparator();
 
-	menu.Add(console.GetLineCount(), AK_FINDNEXTERROR, THISBACK(FindNextError))
-		.Help("Find next error line according to error output in the console window");
-	menu.Add(console.GetLineCount(), AK_FINDPREVERROR, THISBACK(FindPrevError))
-		.Help("Find previous error line according to error output in the console window");
+	menu.Add(GetConsole().GetLineCount(), AK_FINDNEXTERROR, THISBACK(FindNextError))
+		.Help("Find next " + String(btabs.GetCursor() == BCONSOLE2 ? "position" : "error line")
+	           + "according to console pane");
+	menu.Add(GetConsole().GetLineCount(), AK_FINDPREVERROR, THISBACK(FindPrevError))
+		.Help("Find previous " + String(btabs.GetCursor() == BCONSOLE2 ? "position" : "error line")
+	          + "according to console pane");
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_LINUX)
 	menu.MenuSeparator();
 	menu.Add(!IsNull(target), "Open output directory", THISBACK(OpenOutputFolder));

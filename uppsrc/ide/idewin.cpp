@@ -60,12 +60,12 @@ void Ide::SwapPackagesFiles()
 
 void Ide::ConsoleClear()
 {
-	console <<= Null;
+	GetConsole() <<= Null;
 }
 
 void Ide::ConsoleCopy()
 {
-	console.Copy();
+	GetConsole().Copy();
 }
 
 void Ide::ConsolePaste()
@@ -74,8 +74,8 @@ void Ide::ConsolePaste()
 	if(!IsNull(s)) {
 		s.Insert(0, '\n');
 		int len = console.GetLength();
-		console.Insert(len, s.ToWString());
-		console.SetCursor(len + 1);
+		GetConsole().Insert(len, s.ToWString());
+		GetConsole().SetCursor(len + 1);
 	}
 }
 
@@ -456,10 +456,11 @@ Ide::Ide()
 	right_split.Zoom(0);
 
 	editor_bottom.Vert(right_split, bottom);
-	console.WhenBar = THISBACK(ConsoleMenu);
+	console2.WhenBar = console.WhenBar = THISBACK(ConsoleMenu);
 	editor_bottom.SetPos(8000);
 	bottom.SetFrame(btabs);
 	bottom.Add(console.SizePos().SetFrame(NullFrame()));
+	bottom.Add(console2.SizePos().SetFrame(NullFrame()));
 	bottom.Add(calc.SizePos().SetFrame(NullFrame()));
 	btabs <<= THISBACK(SyncBottom);
 	BTabs();
@@ -557,6 +558,8 @@ Ide::Ide()
 
 	console.WhenSelect = THISBACK(FindError);
 	console.SetSlots(hydra1_threads);
+
+	console2.WhenSelect = THISBACK(FindError);
 
 	editor.WhenSelection = THISBACK(Display);
 	stoponerrors = true;
