@@ -61,7 +61,7 @@ LineEdit& LineEdit::SetFont(Font f) {
 
 Size LineEdit::GetFontSize() const {
 	FontInfo fi = font.Info();
-	return Size(fi.GetAveWidth(), fi.GetHeight());
+	return Size(max(fi['M'], fi['W']), fi.GetHeight());
 }
 
 void   LineEdit::Paint0(Draw& w) {
