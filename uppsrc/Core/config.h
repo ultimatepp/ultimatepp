@@ -20,7 +20,7 @@
 			#if __FreeBSD__ || __OpenBSD__ || __NetBSD__
 				#define PLATFORM_BSD 1
 				#if __FreeBSD__
-					#define PLATFORM_BSD 1
+					#define PLATFORM_FREEBSD 1
 				#endif
 				#if __OpenBSD__
 					#define PLATFORM_OPENBSD 1
