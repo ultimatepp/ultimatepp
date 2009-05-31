@@ -16,13 +16,15 @@ library(LINUX) dl;
 
 library(LINUX !XLFD) Xft;
 
-library(BSD) X11;
+library(BSD) "X11  Xau Xdmcp";
 
 library(BSD !XLFD) "Xft fontconfig Xrender freetype expat";
 
 library(LINUX !XLFD !SHARED) "fontconfig Xrender freetype expat";
 
 library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
+
+library(FREEBSD) xcb;
 
 file
 	Draw.h,
