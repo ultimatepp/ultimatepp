@@ -198,7 +198,8 @@ void cDrawWMF::Render(ImageBuffer& ib)
 		ImageDraw iw(ib.GetSize());
 		wmf.Paint(iw, 0, -y, sz.cx, sz.cy);
 		y += ib.GetHeight();
-		ib = (Image)iw;
+		Image img(iw);
+		ib = img;
 	}
 	else
 		Fill(~ib, RGBAZero(), ib.GetLength());
