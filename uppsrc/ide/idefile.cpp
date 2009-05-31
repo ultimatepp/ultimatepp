@@ -27,6 +27,9 @@ void Ide::SetupEditor(int f, String hl, String fn)
 		if(ext == ".sch")
 			editor.Highlight(CodeEditor::HIGHLIGHT_SCH);
 		else
+		if(ext == ".sql")
+			editor.Highlight(CodeEditor::HIGHLIGHT_SQL);
+		else
 			editor.Highlight(CodeEditor::HIGHLIGHT_NONE);
 	}
 	else {
