@@ -1,0 +1,5 @@
+#ifndef _Sql05_icpp_init_stub
+#define _Sql05_icpp_init_stub
+#include "Core/init"
+#include "plugin\sqlite3/init"
+#endif

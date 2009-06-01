@@ -1,0 +1,12 @@
+uses
+	Core,
+	plugin\sqlite3;
+
+file
+	MyApp.h,
+	main.cpp,
+	MyApp.sch;
+
+mainconfig
+	"" = "";
+

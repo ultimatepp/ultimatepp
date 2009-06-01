@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin\sqlite3;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+
