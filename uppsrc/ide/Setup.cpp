@@ -43,6 +43,18 @@ void FontSelectManager::Select() {
 	WhenAction();
 }
 
+void LoadFonts(DropList *face, Index<String>& fni, bool fixed)
+{
+	for(int i = 0; i < Font::GetFaceCount(); i++)
+		if(!!(Font::GetFaceInfo(i) & Font::FIXEDPITCH) == fixed) {
+			String n = Font::GetFaceName(i);
+			if(fni.Find(n) < 0) {
+				fni.Add(n);
+				face->Add(i, n);
+			}
+		}
+}
+
 void FontSelectManager::Set(DropList& _face, DropList& _height,
                             Option& _bold, Option& _italic, Option& _naa) {
 	face = &_face;
@@ -56,11 +68,10 @@ void FontSelectManager::Set(DropList& _face, DropList& _height,
 	naa = &_naa;
 	naa->WhenAction = THISBACK(Select);
 	face->Clear();
-	for(int i = 0; i < Font::GetFaceCount(); i++)
-		if(Font::GetFaceInfo(i) & Font::FIXEDPITCH) {
-			face->Add(i, Font::GetFaceName(i));
-			LLOG("Face: " << Font::GetFaceName(i));
-		}
+	Index<String> fni;
+	LoadFonts(face, fni, true);
+	face->AddSeparator();
+	LoadFonts(face, fni, false);
 	face->SetIndex(0);
 	height->ClearList();
 	for(int i = 6; i < 32; i++)
@@ -69,7 +80,15 @@ void FontSelectManager::Set(DropList& _face, DropList& _height,
 }
 
 void FontSelectManager::Set(Font f) {
-	face->SetData(f.GetFace());
+	int fi = f.GetFace();
+	if(!face->HasKey(fi)) {
+		fi = face->FindValue(f.GetFaceName());
+		if(fi < 0)
+			fi = Font::COURIER;
+		else
+			fi = face->GetKey(fi);
+	}
+	face->SetData(fi);
 	FaceSelect();
 	height->SetData(f.GetHeight());
 	for(int i = 0; i < height->GetCount(); i++) {
