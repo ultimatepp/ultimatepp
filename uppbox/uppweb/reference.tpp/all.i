@@ -194,3 +194,7 @@ TOPIC("ColumnList$en-us")
 #include "ColumnList$en-us.tppi"
 END_TOPIC
 
+TOPIC("RichTextObject$en-us")
+#include "RichTextObject$en-us.tppi"
+END_TOPIC
+
