@@ -278,17 +278,34 @@ void RichQtfParser::ReadObject()
 		if(Key('/'))
 			yd = GetNumber();
 		StringBuffer data;
-		for(;;) {
-			while(*term < 32 && *term > 0) term++;
-			if((byte)*term >= ' ' && (byte)*term <= 127 || *term == '\0') break;
-			byte seven = *term++;
-			for(int i = 0; i < 7; i++) {
-				while((byte)*term < 32 && (byte)*term > 0) term++;
-				if((byte)*term >= ' ' && (byte)*term <= 127 || *term == '\0') break;
-				data.Cat((*term++ & 0x7f) | ((seven << 7) & 0x80));
-				seven >>= 1;
+		while(*term && (byte)*term < 32)
+			term++;
+		if(Key('`'))
+			while(*term) {
+				if(*term == '`') {
+					term++;
+					if(*term == '`')
+						data.Cat('`');
+					else
+						break;
+				}
+				else
+				if((byte)*term >= 32)
+					data.Cat(*term);
+				term++;
 			}
-		}
+		else
+			for(;;) {
+				while(*term < 32 && *term > 0) term++;
+				if((byte)*term >= ' ' && (byte)*term <= 127 || *term == '\0') break;
+				byte seven = *term++;
+				for(int i = 0; i < 7; i++) {
+					while((byte)*term < 32 && (byte)*term > 0) term++;
+					if((byte)*term >= ' ' && (byte)*term <= 127 || *term == '\0') break;
+					data.Cat((*term++ & 0x7f) | ((seven << 7) & 0x80));
+					seven >>= 1;
+				}
+			}
 		obj.Read(type, data, sz, context);
 		obj.KeepRatio(keepratio);
 		obj.SetYDelta(yd);

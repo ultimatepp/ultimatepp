@@ -432,6 +432,11 @@ according to its type. It is started with a header in the form&]
 [s0; [@(128.0.255) `@`@][@(0.0.255) format][@(128.0.255) :][@(0.0.255) cx][@(128.0.255) `&][@(0.0.255) c
 y]&]
 [s0;@(0.0.255) &]
+[s0;%- or&]
+[s0;%- &]
+[s0; [@(128.0.255) `@`@][@(0.0.255) format][@(128.0.255) :][@(0.0.255) cx][@(128.0.255) `*][@(0.0.255) c
+y]&]
+[s0;%- &]
 [s0;%- where&]
 [s0; &]
 [ {{1879:8121^ [s0; [@(0.0.255) format]]
@@ -442,12 +447,24 @@ By default, RichText recognizes the PNG format.]
 :: [s0; [@(0.0.255) cy]]
 :: [s0; Height of object in dots.]}}&]
 [s0;@(0.0.255) &]
-[s0; Header is followed by binary data of object, encoded in 7 bit 
-format. Bit 7 of data bytes is always 1, so that actual data 
-bytes are in range 128`-255. First byte in range 32`-127 ends 
-data sequence.&]
+[s0; First form with `'[@(128.0.255) `&]`' activates `"keep aspect 
+ratio`" for the object, second form with `'[@(128.0.255) `*]`' 
+leaves this option inactive.&]
 [s0; &]
-[s0; Data are encoded in 7 byte groups, which corresponds to 8 bytes 
+[s0; Optionally, there can be 3rd number, separated by `'[@(128.0.255) /]`' 
+character. This number represent vertical placement of object, 
+default value 0 means that bottom border of object is aligned 
+with baseline of text.&]
+[s0; &]
+[s0; If header is followed by `'```' character, object data are in 
+text format. In that case, object data are terminated with another 
+`'```' character. If there needs to be `'```' in the text, `'`````' 
+can be used as escape sequence.&]
+[s0; &]
+[s0; If there is not `'```', header is in binary 7 bit format. Bit 
+7 of data bytes is always 1, so that actual data bytes are in 
+range 128`-255. First byte in range 32`-127 ends data sequence. 
+Data are encoded in 7 byte groups, which corresponds to 8 bytes 
 of encoded format. First byte of this 8 bytes block always contains 
 eight bits of following bytes, LSB (that is bit 0) being the 
 eight bit for first byte in block.&]

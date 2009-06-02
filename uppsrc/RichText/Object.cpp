@@ -45,6 +45,11 @@ String RichObjectType::Write(const Value& v) const
 	return v;
 }
 
+bool RichObjectType::IsText() const
+{
+	return false;
+}
+
 bool RichObjectType::Accept(PasteClip& clip)
 {
 	return false;
@@ -190,6 +195,12 @@ const RichObjectType& RichObject::GetType() const
 	if(type)
 		return *type;
 	return Single<UnknownRichObject>();
+}
+
+void RichObject::SetData(const Value& v)
+{
+	data = v;
+	NewSerial();
 }
 
 void   RichObject::Set(RichObjectType *_type, const Value& _data, Size maxsize, void *context)
