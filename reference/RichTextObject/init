@@ -1,0 +1,5 @@
+#ifndef _RichTextObject_icpp_init_stub
+#define _RichTextObject_icpp_init_stub
+#include "CtrlLib/init"
+#include "RichEdit/init"
+#endif
