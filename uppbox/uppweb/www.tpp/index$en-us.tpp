@@ -38,11 +38,10 @@ for applications (like help and code documentation) and ][^topic`:`/`/ide`/app`/
 ssist`+`+][2  `- a powerful C`+`+ code analyzer that provides features 
 like code completion, navigation and transformation.]&]
 [s0;2 &]
-[s0; [2 TheIDE can work with GCC, MinGW and Visual C`+`+ 7.1 or 8.0 
-compilers (including free Visual C`+`+ Toolkit 2003 and ][^http`:`/`/msdn`.microsoft`.com`/vstudio`/express`/visualc`/^2 V
-isual C`+`+ 2005 Express Editio][^topic`:`/`/uppweb2`/article`/uppheap`$en`-us^2 n][2 )
- and contains a full featured debugger. TheIDE can also be used 
-to develop non`-U`+`+ applications.]&]
+[s0; [2 TheIDE can work with GCC, MinGW and Visual C`+`+ 9.0 as contained 
+in free ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 W
+indows Vista SDK][2  and contains a full featured debugger. TheIDE 
+can also be used to develop non`-U`+`+ applications.]&]
 [s0;2 &]
 [s0; [2 U`+`+ distributions combine U`+`+ with 3rd party tools like 
 MinGW compiler or SDL library to provide an instant development 
@@ -772,23 +771,26 @@ for developing large C`+`+ applications.]&]
 ´¬Ù²äÉ’¥ÒË–¬Ù²äÉÉ’¥Ë–¬Ù²¦äÉ’¥Ë–¬šÙ²äÉ’¥Ë™–¬Ù®úßú…Šèı
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Current release: [* 2008.1]&]
+[s0;l128; Current release: [* 1254]&]
 [s0;l128; License: [* BSD]&]
 [s0;l128;+92 &]
 [s0;l128;+92 &]
-[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download Ultimate`+`+ 2008.1]]
-::@(255.255.235) [s0;l32; [^http`:`/`/downloads`.sourceforge`.net`/upp`/upp`-mingw`-2008`.1`.exe`?use`_mirror`=osdn^+75 W
-in32, MinGW bundled][+75  (16_MB) ]]
-:: [s0;l32; [^http`:`/`/downloads`.sourceforge`.net`/upp`/upp`_2008`.1`_i386`.deb`?use`_mirror`=osdn^+75 L
-inux .deb i386][+75  (11 MB)]]
-:: [s0;l32; [^http`:`/`/downloads`.sourceforge`.net`/upp`/upp`_2008`.1`_amd64`.deb`?use`_mirror`=osdn^+75 L
-inux .deb AMD64][+75  (11 MB)]]
-:: [s0;l32; [^http`:`/`/downloads`.sourceforge`.net`/upp`/upp`-src`-2008`.1`.tar`.gz`?use`_mirror`=osdn^+75 s
-ources][+75  (8 MB)]]
-:: [s0;l32; [^topic`:`/`/uppweb`/www`/download`$en`-us^+75 other releases]]}}&]
+[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download Ultimate`+`+ 1254]]
+::@(255.255.235) [s0;l32; [^https`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-1254`.exe`&a`=92610870^+75 W
+in32 installer][+75  (10_MB) ]]
+:: [s0;l32; [^http`:`/`/downloads`.sourceforge`.net`/upp`/upp`_2008`.1`_i386`.deb`?use`_mirror`=osdn^+75 X
+11`-src][+75  (9MB)]]}}&]
 [s0;l128;+92 &]
 [ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Ultimate`+`+ News]]
-::@(255.255.233) [s0; [*@5$2;1 2008`-08`-06]&]
+::@(255.255.233) [s0; [*@5$2;1 2009`-06`-01]&]
+[s0; [*@5$2;1 __][*$2;1 U`+`+ 1254 released]]
+:: [s0; [*@5$2;1 2009`-05`-18]&]
+[s0; [*@5$2;1 __][*$2;1 U`+`+ 1205 released]]
+:: [s0; [*@5$2;1 2009`-05`-04]&]
+[s0; [*@5$2;1 __][*$2;1 U`+`+ 1124 released]]
+:: [s0; [*@5$2;1 2009`-04`-26]&]
+[s0; [*@5$2;1 __][*$2;1 U`+`+ 1096 released]]
+:: [s0; [*@5$2;1 2008`-08`-06]&]
 [s0; __[*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^+75 U`+`+ 2008.1 
 released]]
 :: [s0; [*@5$2;1 2008`-03`-24]&]
