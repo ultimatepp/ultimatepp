@@ -110,6 +110,7 @@ struct RichObjectType : Moveable<RichObjectType> {
 	virtual String GetCreateName() const;
 	virtual Value  Read(const String& s) const;
 	virtual String Write(const Value& v) const;
+	virtual bool   IsText() const;
 
 	virtual bool   Accept(PasteClip& clip);
 	virtual Value  Read(PasteClip& clip);
@@ -174,6 +175,7 @@ public:
 
 	void   Set(RichObjectType *type, const Value& data, Size maxsize = Size(3967, 3967), void *context = NULL);
 	bool   Set(const String& type_name, const Value& data, Size maxsize = Size(3967, 3967), void *context = NULL);
+	void   SetData(const Value& v);
 
 	String GetTypeName() const;
 	Value  GetData() const                       { return data; }
@@ -183,6 +185,7 @@ public:
 
 	bool   Read(const String& type, const String& data, Size sz, void *context = NULL);
 	String Write() const                         { return type ? type->Write(data) : (String)data; }
+	bool   IsText() const                        { return type ? type->IsText() : false; }
 
 	void   KeepRatio(bool b)                     { keepratio = b; }
 	bool   IsKeepRatio() const                   { return keepratio; }
@@ -382,7 +385,8 @@ public:
 	QtfRichObject(const RichObject& o);
 };
 
-String AsQTF(const RichObject& obj);
+RichText AsRichText(const RichObject& obj);
+String   AsQTF(const RichObject& obj);
 
 RichText ParseQTF(const char *qtf, int accesskey = 0, void *context = NULL);
 

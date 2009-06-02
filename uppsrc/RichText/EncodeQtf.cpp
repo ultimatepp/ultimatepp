@@ -221,48 +221,60 @@ void QTFEncodePara(String& qtf, const RichPara& p, const RichPara::Format& style
 			    << (object.IsKeepRatio() ? '&' : '*') << sz.cy;
 			if(object.GetYDelta())
 				qtf << '/' << object.GetYDelta();
-			if(crlf)
-				qtf << "\r\n";
 			String data = object.Write();
 			const char *q = data.Begin();
 			const char *slim = data.End();
 			int n = 0;
 			qtf.Reserve(8 * data.GetLength() / 7);
-			while(q < slim - 7) {
-				byte data[8];
-				data[0] = ((q[0] & 0x80) >> 7) |
-				          ((q[1] & 0x80) >> 6) |
-				          ((q[2] & 0x80) >> 5) |
-				          ((q[3] & 0x80) >> 4) |
-				          ((q[4] & 0x80) >> 3) |
-				          ((q[5] & 0x80) >> 2) |
-				          ((q[6] & 0x80) >> 1) |
-				          0x80;
-				data[1] = q[0] | 0x80;
-				data[2] = q[1] | 0x80;
-				data[3] = q[2] | 0x80;
-				data[4] = q[3] | 0x80;
-				data[5] = q[4] | 0x80;
-				data[6] = q[5] | 0x80;
-				data[7] = q[6] | 0x80;
-				qtf.Cat(data, 8);
-				if(crlf && ++n % 10 == 0)
-					qtf << "\r\n";
-				q += 7;
+			if(object.IsText()) {
+				qtf << "`";
+				while(q < slim) {
+					ASSERT((byte)*q >= 32 && (byte)*q <= 255);
+					if(*q == '`')
+						data.Cat('`');
+					qtf.Cat(*q++);
+				}
+				qtf << "`";
 			}
-			while(q < slim) {
-				byte seven = 0;
-				const char *lim = slim;
-				const char *s;
-				for(s = q; s < lim; s++)
-					seven = (seven >> 1) | (*s & 0x80);
-				seven >>= 8 - (lim - q);
-				qtf.Cat(seven | 0x80);
-				for(s = q; s < lim; s++)
-					qtf.Cat(*s | 0x80);
-				if(crlf && ++n % 10 == 0)
+			else {
+				if(crlf)
 					qtf << "\r\n";
-				q += 7;
+				while(q < slim - 7) {
+					byte data[8];
+					data[0] = ((q[0] & 0x80) >> 7) |
+					          ((q[1] & 0x80) >> 6) |
+					          ((q[2] & 0x80) >> 5) |
+					          ((q[3] & 0x80) >> 4) |
+					          ((q[4] & 0x80) >> 3) |
+					          ((q[5] & 0x80) >> 2) |
+					          ((q[6] & 0x80) >> 1) |
+					          0x80;
+					data[1] = q[0] | 0x80;
+					data[2] = q[1] | 0x80;
+					data[3] = q[2] | 0x80;
+					data[4] = q[3] | 0x80;
+					data[5] = q[4] | 0x80;
+					data[6] = q[5] | 0x80;
+					data[7] = q[6] | 0x80;
+					qtf.Cat(data, 8);
+					if(crlf && ++n % 10 == 0)
+						qtf << "\r\n";
+					q += 7;
+				}
+				while(q < slim) {
+					byte seven = 0;
+					const char *lim = slim;
+					const char *s;
+					for(s = q; s < lim; s++)
+						seven = (seven >> 1) | (*s & 0x80);
+					seven >>= 8 - (lim - q);
+					qtf.Cat(seven | 0x80);
+					for(s = q; s < lim; s++)
+						qtf.Cat(*s | 0x80);
+					if(crlf && ++n % 10 == 0)
+						qtf << "\r\n";
+					q += 7;
+				}
 			}
 			if(crlf)
 				qtf << "\r\n";
@@ -539,14 +551,20 @@ String DeQtfLf(const char *s) {
 	return r;
 }
 
-String AsQTF(const RichObject& obj)
+RichText AsRichText(const RichObject& obj)
 {
 	RichText x;
 	RichPara p;
 	RichPara::Format fmt;
 	p.Cat(obj, fmt);
 	x.Cat(p);
-	return AsQTF(x);
+	return x;
+}
+
+
+String AsQTF(const RichObject& obj)
+{
+	return AsQTF(AsRichText(obj));
 }
 
 END_UPP_NAMESPACE
