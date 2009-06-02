@@ -13,6 +13,11 @@
 	#define HAVE_MYSQL
 #endif
 
+#ifndef flagNOPOSTGRESQL
+	#define HAVE_POSTGRESQL
+	#include <PostgreSQL/PostgreSQL.h>
+#endif
+
 #if defined(PLATFORM_WIN32) && defined(COMPILER_MSC)
 	#define HAVE_OLEDB
 #endif
@@ -63,6 +68,9 @@ SqlCommanderApp::SqlCommanderApp() {
 #endif
 #ifdef HAVE_MYSQL
 	login.connection.Add("MYSQL");
+#endif
+#ifdef HAVE_POSTGRESQL
+	login.connection.Add("POSTGRESQL");
 #endif
 #ifdef HAVE_SQLLITE
 	login.connection.Add("SQLLITE");
@@ -130,6 +138,29 @@ void SqlCommanderApp::Run() {
 				continue;
 			}
 			session = -mysql;
+		}
+#endif
+#ifdef HAVE_POSTGRESQL
+		if(co == "POSTGRESQL") {
+			One<PostgreSQLSession> postgres = new PostgreSQLSession;
+			String conninfo;
+			conninfo << "user='" << un << "' password='" << pw << "' ";
+			if(!IsNull(sv)) {
+				String port;
+				int f = sv.Find(':');
+				if(f >= 0) {
+					port = sv.Mid(f + 1);
+					sv.Trim(f);
+				}
+				if(!IsNull(sv))
+					conninfo << "host='" << sv << "' ";
+				if(!IsNull(port))
+					conninfo << "port=" << port << ' ';
+			}
+			if(!IsNull(db))
+				conninfo << "dbname='" << db << "' ";
+			postgres->Open(conninfo);
+			session = -postgres;
 		}
 #endif
 #ifdef HAVE_SQLLITE
