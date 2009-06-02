@@ -1,11 +1,12 @@
-description "Simple SQL console utility";
+description "Simple SQL console utility\377";
 
 uses
 	SqlCtrl,
 	Oracle,
 	OleDB,
 	MySql,
-	plugin\sqlite3;
+	plugin\sqlite3,
+	PostgreSQL;
 
 link(WIN32 DEBUG MSC) /NODEFAULTLIB:libcmt;
 

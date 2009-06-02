@@ -5,4 +5,5 @@
 #include "OleDB/init"
 #include "MySql/init"
 #include "plugin\sqlite3/init"
+#include "PostgreSQL/init"
 #endif

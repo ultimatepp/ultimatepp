@@ -1,3 +1,6 @@
+acceptflags
+	NOPOSTGRESQL;
+
 uses
 	Sql;
 
