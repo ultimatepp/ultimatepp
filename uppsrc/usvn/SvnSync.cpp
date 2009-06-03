@@ -1,5 +1,19 @@
 #include "usvn.h"
 
+bool CheckSvn()
+{
+	String h;
+	if(Sys("svn", h) >= 0)
+		return true;
+#ifdef PLATFORM_WIN32
+	Exclamation("Unable to execute svn.exe!&"
+	            "You can download svn client here: [^http://www.sliksvn.com/en/download^ http://www.sliksvn.com/en/download]");
+#else
+	Exclamation("Unable to execute 'svn' binary!&Please install svn client.");
+#endif
+	return false;
+}
+
 SvnSync::SvnSync()
 {
 	CtrlLayoutOKCancel(*this, "SvnSynchronize SVN repositories");
@@ -179,6 +193,8 @@ void SvnSync::Dir(const char *dir)
 
 void SvnSync::Perform()
 {
+	if(!CheckSvn())
+		return;
 	const Vector<String>& cl = CommandLine();
 	if(cl.GetCount())
 		for(int i = 0; i < cl.GetCount(); i++) {
@@ -337,6 +353,8 @@ bool IsSvnDir(const String& p)
 #ifdef flagMAIN
 GUI_APP_MAIN
 {
+	if(!CheckSvn())
+		return;
 	SvnSync ss;
 	String mp = ConfigFile("usvn.msg");
 	ss.SetMsgs(LoadFile(mp));

@@ -419,9 +419,9 @@ void SelectPackageDlg::SyncSvnDirs()
 
 void SelectPackageDlg::ToolBase(Bar& bar)
 {
-	bar.Add("New assembly", THISBACK(OnBaseAdd))
+	bar.Add("New assembly..", THISBACK(OnBaseAdd))
 		.Key(K_INSERT);
-	bar.Add(base.IsCursor(), "Edit assembly", THISBACK(OnBaseEdit))
+	bar.Add(base.IsCursor(), "Edit assembly..", THISBACK(OnBaseEdit))
 		.Key(K_CTRL_ENTER);
 	bar.Add(base.IsCursor(), "Remove assembly", THISBACK(OnBaseRemove))
 		.Key(K_CTRL_DELETE);

@@ -93,6 +93,8 @@ String SvnCmd(const char *cmd, const SvnWork& w);
 
 bool   IsSvnDir(const String& p);
 
+bool   CheckSvn();
+
 struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	enum {
 		MODIFY,

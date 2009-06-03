@@ -75,6 +75,8 @@ SvnDiff::SvnDiff()
 
 void RunSvnDiff(String editfile)
 {
+	if(!CheckSvn())
+		return;
 	if(IsNull(editfile))
 		return;
 	SvnDiff dlg;
