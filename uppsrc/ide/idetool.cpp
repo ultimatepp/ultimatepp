@@ -311,6 +311,8 @@ INITBLOCK {
 
 void SvnSyncDirs(const Vector<String>& working)
 {
+	if(!CheckSvn())
+		return;
 	SvnSync svn;
 	String msgs;
 	LoadFromGlobal(msgs, "svn-msgs");
