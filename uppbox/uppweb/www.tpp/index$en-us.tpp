@@ -19,9 +19,9 @@ topic "index";
 [l321;b83;a83;*C$7 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%EN-US 
-[ {{6360:3640f0;g0;^l/0r/0t/0b/0 [s0; [*2 Ultimate`+`+][2  is a C`+`+ cross`-platform rapid application 
-development suite focused on programmers productivity. It includes 
-a set of libraries (GUI, SQL, etc..), and an integrated development 
+[ {{6292:3708f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  is a C`+`+ cross`-platform rapid application development 
+framework focused on programmers productivity. It includes a 
+set of libraries (GUI, SQL, etc..), and an integrated development 
 environment.]&]
 [s0;2 &]
 [s0; [2 Rapid development is achieved by the ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 s
@@ -43,10 +43,6 @@ in free ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff
 indows Vista SDK][2  and contains a full featured debugger. TheIDE 
 can also be used to develop non`-U`+`+ applications.]&]
 [s0;2 &]
-[s0; [2 U`+`+ distributions combine U`+`+ with 3rd party tools like 
-MinGW compiler or SDL library to provide an instant development 
-platform.]&]
-[s0; &]
 [s0; [*2 What you can get with the Ultimate`+`+ download in plain English]&]
 [s0; &]
 [s0;i150;O2; [2 Very effective C`+`+ library for cross`-platform development 
@@ -775,21 +771,21 @@ for developing large C`+`+ applications.]&]
 [s0;l128; License: [* BSD]&]
 [s0;l128;+92 &]
 [s0;l128;+92 &]
-[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download Ultimate`+`+ 1254]]
+[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download U`+`+ 1254]]
 ::@(255.255.235) [s0;l32; [^https`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-1254`.exe`&a`=92610870^+75 W
 in32 installer][+75  (10_MB) ]]
 :: [s0;l32; [^http`:`/`/downloads`.sourceforge`.net`/upp`/upp`_2008`.1`_i386`.deb`?use`_mirror`=osdn^+75 X
 11`-src][+75  (9MB)]]}}&]
 [s0;l128;+92 &]
-[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Ultimate`+`+ News]]
+[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 U`+`+ News]]
 ::@(255.255.233) [s0; [*@5$2;1 2009`-06`-01]&]
-[s0; [*@5$2;1 __][*$2;1 U`+`+ 1254 released]]
+[s0; [*@5$2;1 __][*$2+75 U`+`+ 1254 released]]
 :: [s0; [*@5$2;1 2009`-05`-18]&]
-[s0; [*@5$2;1 __][*$2;1 U`+`+ 1205 released]]
+[s0; [*@5$2;1 __][*$2+75 U`+`+ 1205 released]]
 :: [s0; [*@5$2;1 2009`-05`-04]&]
-[s0; [*@5$2;1 __][*$2;1 U`+`+ 1124 released]]
+[s0; [*@5$2;1 __][*$2+75 U`+`+ 1124 released]]
 :: [s0; [*@5$2;1 2009`-04`-26]&]
-[s0; [*@5$2;1 __][*$2;1 U`+`+ 1096 released]]
+[s0; [*@5$2;1 __][*$2+75 U`+`+ 1096 released]]
 :: [s0; [*@5$2;1 2008`-08`-06]&]
 [s0; __[*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^+75 U`+`+ 2008.1 
 released]]
