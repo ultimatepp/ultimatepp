@@ -1126,8 +1126,6 @@ void ChHostSkin()
 	static int shadowtype;
 	static GtkWidget *top_item;
 	static GtkWidget *menu_item;
-	Color menu_topitemtext_color[4];
-	ChGtkColor(menu_topitemtext_color, 0);
 	if(!popup) {
 		gtk_widget_style_get(bar, "shadow_type", &shadowtype, NULL);
 		top_item = gtk_menu_item_new_with_label("M");
@@ -1167,10 +1165,10 @@ void ChHostSkin()
 		ChGtkNew(top_item, "menuitem", GTK_BOX);
 		if(gtk_major_version > 2 || (gtk_major_version == 2 && gtk_minor_version >= 1))
 			sw = GtkInt("selected_shadow_type");
-		s.topitemtext[0] = menu_topitemtext_color[0];
-		s.topitemtext[1] = menu_topitemtext_color[1];
-		s.topitemtext[2] = menu_topitemtext_color[2];
-		SColorMenuText_Write(menu_topitemtext_color[0]);
+		s.topitemtext[0] = ChGtkColor(0, bar);
+		s.topitemtext[1] = ChGtkColor(1, bar);
+		s.topitemtext[2] = ChGtkColor(2, bar);
+		SColorMenuText_Write(s.topitemtext[1]);
 		s.topitem[1] = s.topitem[0];
 		GtkCh(s.topitem[2], sw, GTK_STATE_PRELIGHT);
 		s.topitemtext[2] = ChGtkColor(2, top_item);
@@ -1263,3 +1261,4 @@ END_UPP_NAMESPACE
 #endif
 
 #endif
+
