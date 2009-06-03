@@ -24,7 +24,7 @@ topic "Sql Tutorial";
 [{_}%EN-US 
 [s2; Sql Tutorial&]
 [s3; 1. SqlSession, Sql, opening database connection&]
-[s5;  SqlSession derived objects represent database connection. Each 
+[s5; SqlSession derived objects represent database connection. Each 
 SQL database (Sqlite3, Microsoft SQL, Oracle, MySQL, PostgreSQL) 
 has its own session class derived from SqlSession. Sql class 
 is used to issue SQL statements and retrieve results:&]
@@ -63,11 +63,20 @@ constructor uses global session, more on that in section 2.).
 To execute SQL statements, use [* Execute]. If executed statement 
 is Select, it may return a result set, which is retrieved using 
 [* Fetch]. Columns of result set are then accessed by Sql`::operator`[`] 
-using index of column (starts with 0).&]
+using index of column (starts with 0). Values are returned as 
+Value type.&]
 [s5; &]
-[s3; 2. Using global database, executing statements with parameters, 
+[s3; 2. Using global main database, executing statements with parameters, 
 getting resultset info&]
-[s5; &]
+[s5; Most applications need to work with just single database backend, 
+therefore repeating SqlSession parameter in all Sql declarations 
+would be tedious.&]
+[s5; To this end U`+`+ supports concept of `"main database`" which 
+is represented by [* SQL] variable. [* SQL] is of Sql type. When 
+any other Sql variable is created with default constructor (no 
+session parameter provided), it uses the same session as the 
+one the SQL is bound to. To assign session to global SQL, use 
+operator`=:&]
 [s7; #include <Core/Core.h>&]
 [s7; #include <plugin/sqlite3/Sqlite3.h>&]
 [s7; &]
@@ -85,9 +94,9 @@ getting resultset info&]
 [s7; -|sqlite3.SetTrace();&]
 [s7; #endif&]
 [s7; &]
-[s7; -|SQL `= sqlite3;&]
+[s7; -|[* SQL `= ]sqlite3;&]
 [s7; -|&]
-[s7; -|SQL.Execute(`"drop table TEST`");&]
+[s7; -|[* SQL.]Execute(`"drop table TEST`");&]
 [s7; -|SQL.ClearError();&]
 [s7; -|SQL.Execute(`"create table TEST (A INTEGER, B TEXT)`");&]
 [s7; &]
@@ -103,6 +112,16 @@ i, AsString(3 `* i));&]
 [s7; -|-|Cout() << sql`[0`] << `" `\`'`" << sql`[1`] << `"`\`'`\n`";&]
 [s7; `}&]
 [s7; &]
+[s5; As global [* SQL] is regular Sql variable too, it can be used 
+to issue SQL statements.&]
+[s5; [/ Warning: While it is possible to issue ][*/ select][/  statements 
+through ][*/ SQL][/ , based on experience this is not recommended 
+`- way too often result set of ][*/ select][/  is canceled by issuing 
+some other command, e.g. in routine called as part of Fetch loop.]&]
+[s5; To get information about result set columns, you can use [* GetColumns 
+]to retrieve the number of columns and [* GetColumnInfo] to retrieve 
+information about columns `- returns [* SqlColumnInfo] reference 
+with information like name or type of column.&]
 [s3; 3. Using SqlExp&]
 [s5; &]
 [s7; #include <Core/Core.h>&]
