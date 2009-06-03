@@ -7,7 +7,7 @@
 using namespace Upp;
 
 #define SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>
-#define MODEL <Sql06/MyApp.sch>
+#define MODEL <Sql05/MyApp.sch>
 #include "Sql/sch_header.h"
 
 #endif

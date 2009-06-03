@@ -1,3 +1,7 @@
+TABLE_(ABCTEST)
+  STRING_  (NAME, 80) NOT_NULL
+END_TABLE
+
 TABLE_(TEST)
 	INT_        (A)
 	STRING_     (B, 200)
