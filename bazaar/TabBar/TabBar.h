@@ -267,6 +267,7 @@ protected:
 						Color ink, dword style);
 	virtual void PaintStackedTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, 
 						Color ink, dword style);
+	virtual void PaintSeparator(Draw &w, const Rect r);
 	virtual Size GetStdSize(const Tab &t); 
 	virtual Size GetStackedSize(const Tab &t);
 	Size 		 GetStdSize(const Value &v); 

@@ -297,7 +297,6 @@ TabBar::TabBar()
 	allownullcursor = false;
 	icons = true;
 	mintabcount = 1;
-	
 	style[0] = style[1] = style[2] = style[3] = NULL;
 	SetAlign(TOP);
 	SetFrameSize(GetHeight(false));
@@ -744,44 +743,19 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 		}
 	}
 }
-/*
-		if (stacking) {
-			int ix = n+1;
-			if (align == LEFT) {
-				rn.bottom += t.stdcx + TB_MARGIN;
-				rn.top = rn.bottom;
-			}
-			else if (align == RIGHT) {
-				rn.top += t.stdcx + TB_MARGIN;
-				rn.bottom = rn.top;
-			}
-			else {
-				rn.left += t.stdcx + TB_MARGIN;
-				rn.right = rn.left;
-			}
-			while (ix < tabs.GetCount() && tabs[ix].stack == t.stack) {
-				Tab &q = tabs[ix];
-				if (align == LEFT) {
-					rn.top = rn.bottom + q.size.cx;
-				else if (align == RIGHT)
-					rn.bottom = rn.top + q.size.cx;
-				else 
-					rn.right = rn.left + q.size.cx;			
 
-				int ndx = !enable ? CTRL_DISABLED : 
-						   highlight == ix ? CTRL_HOT : CTRL_NORMAL;
-					
-				PaintStackedTab(w, rn, q, s.font, s.text_color[ndx], ndx);
-
-				q.tab_pos = rn.TopLeft();
-				q.tab_size = rn.GetSize();
-
-				rn.left = rn.right;
-				ix++;	
-			}
-		}
+void TabBar::PaintSeparator(Draw &w, const Rect r)
+{
+	if (IsVert()) {
+		int cy = TabBarImg::SEP().GetSize().cy;
+		ChPaint(w, 0, r.top + (r.GetHeight() - cy)/2, r.GetWidth(), cy, TabBarImg::SEPV());			
 	}
-*/
+	else {
+		int cx = TabBarImg::SEP().GetSize().cx;
+		ChPaint(w, r.left + (r.GetWidth() - cx)/2, 0, cx, r.GetHeight(), TabBarImg::SEP());			
+	}
+}
+
 void TabBar::Paint(Draw &w)
 {
 	int align = GetAlign();
@@ -844,14 +818,13 @@ void TabBar::Paint(Draw &w)
 	
 	// Separators
 	if (groupseps) {
-		Size tsz = GetTextSize("|", GetStyle().font);
+		int cy = IsVert() ? sz.cx : sz.cy;
 		for (int i = 0; i < separators.GetCount(); i++) {
 			int x = separators[i];
-			if (x > sc.GetPos() && x < limt) {
-				Point p(x - sc.GetPos() + TB_SPACE/2 - tsz.cx / 2, ((IsVert() ? sz.cx : sz.cy) - tsz.cy) / 2);
-				Fix(p);
-				w.DrawText(p.x, p.y, GetTextAngle(), "|", GetStyle().font, GetStyle().text_color[0], 1);    	
-			}
+			if (x > sc.GetPos() && x < limt)
+				PaintSeparator(w, Rect(
+					Fixed(Point(x - sc.GetPos() + GetStyle().sel.left, 0)), 
+					Fixed(Size(TB_SPACE - GetStyle().sel.left, cy-1))));
 		}
 	}
 	
@@ -1461,7 +1434,10 @@ void TabBar::RightDown(Point p, dword keyflags)
 void TabBar::MiddleDown(Point p, dword keyflags)
 {
 	if (highlight >= 0)
-		Close(highlight);
+		if (!CancelClose(tabs[highlight].key)) {		
+			Close(highlight);
+			WhenClose(tabs[highlight].key);
+		}
 }
 
 void TabBar::MiddleUp(Point p, dword keyflags)
@@ -1862,50 +1838,3 @@ TabBar& TabBar::CopySettings(const TabBar &src)
 	}
 	return *this;
 }
-
-/*
-void TabBar::Serialize(Stream& s)
-{
-	int version = 0x01;
-	int cnt;
-	if (s.IsLoading()) Clear();
-		
-	s / version / group / highlight / active;		
-	
-	ASSERT(version >= 0x01); // Incompatible with previous version, sorry	
-	
-	if (s.IsStoring()) {
-		cnt = groups.GetCount();
-		s / cnt;
-		for (int i = 1; i < groups.GetCount(); i++) {
-			Group &g = groups[i];
-			s % g.active;
-		}
-		cnt = tabs.GetCount();
-		s / cnt;
-		for (int i = 0; i < tabs.GetCount(); i++) {
-			Tab &t = tabs[i];
-			int g = FindGroup(t.group);
-			s % t.key % t.value / t.id / g;
-		}
-	}
-	else {
-		s / cnt;
-		groups.SetCount(cnt);
-		for (int i = 1; i < cnt; i++) {
-			Group &g = groups[i];
-			s % g.active;
-		}
-		s / cnt;
-		tabs.SetCount(cnt);
-		for (int i = 0; i < tabs.GetCount(); i++) {
-			int g;
-			Tab &t = tabs[i];
-			s % t.key % t.value / t.id / g;
-			t.group = groups[g].name;
-		}
-		MakeGroups();
-		Repos();
-	}
-}
-*/
