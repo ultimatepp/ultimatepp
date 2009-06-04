@@ -586,15 +586,15 @@ void TabBar::PaintTab(Draw& w, const Rect& r, const Tab& tab, const Font &font, 
 		txt = IsString(q) ? q : StdConvert().Format(q);
 
 	Point p;
-	int text_offset = 0;
-	if (PaintIcons() && !tab.HasIcon()) {
+	int text_offset = TB_MARGIN;
+	if (PaintIcons() && tab.HasIcon()) {
 		Size isz = min(tab.img.GetSize(), Size(TB_ICON, TB_ICON));
-		p = GetImagePosition(r, isz.cx, isz.cy, 2, LEFT);
+		p = GetImagePosition(r, isz.cx, isz.cy, text_offset, LEFT);
 		w.DrawImage(p.x, p.y, isz.cx, isz.cy, tab.img);
-		text_offset = TB_ICON + 4;
+		text_offset += TB_ICON + 2;
 	}
-	p = GetTextPosition(r, GetTextSize(txt, font).cy, text_offset);
-	w.DrawText(p.x, p.y, GetTextAngle(), txt, f, i);	
+	p = GetTextPosition(r, GetTextSize(txt, f).cy, text_offset);
+	w.DrawText(p.x, p.y, GetTextAngle(), txt, f, i);
 }
 
 Point TabBar::GetTextPosition(const Rect& r, int cy, int space) const
