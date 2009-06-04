@@ -16,7 +16,7 @@ library(LINUX) dl;
 
 library(LINUX !XLFD) Xft;
 
-library(BSD) "X11 Xau Xdcmp";
+library(BSD) "X11 Xau Xdmcp";
 
 library(BSD !XLFD) "Xft fontconfig Xrender freetype expat";
 

@@ -2127,6 +2127,8 @@ void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
 	SyncInfo();
 }
 
+// Fixme: Use SortB to sort CellInfo too.
+
 void ArrayCtrl::Sort(int from, int count, const ArrayCtrl::Order& order) {
 	CHECK(KillCursor());
 	ClearCache();
@@ -2139,6 +2141,8 @@ void ArrayCtrl::ColumnSort(int column, const ValueOrder& order)
 {
 	Value key = GetKey();
 	CHECK(KillCursor());
+	if(columnsortsecondary)
+		Sort(*columnsortsecondary);
 	ClearCache();
 	Vector<Value> hv;
 	for(int i = 0; i < GetCount(); i++)
@@ -2326,6 +2330,7 @@ void ArrayCtrl::Reset() {
 	linecy = Draw::GetStdFontCy();
 	Clear();
 	sb.SetLine(linecy);
+	columnsortsecondary = NULL;
 }
 
 void ArrayCtrl::CancelMode()
