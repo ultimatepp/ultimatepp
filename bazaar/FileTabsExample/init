@@ -1,0 +1,5 @@
+#ifndef _FileTabsExample_icpp_init_stub
+#define _FileTabsExample_icpp_init_stub
+#include "CtrlLib/init"
+#include "TabBar/init"
+#endif

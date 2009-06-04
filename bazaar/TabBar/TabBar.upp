@@ -6,6 +6,8 @@ uses
 file
 	TabBar.h,
 	TabBar.cpp,
+	FileTabs.h,
+	FileTabs.cpp,
 	TabBar.iml;
 
 mainconfig
