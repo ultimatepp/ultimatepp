@@ -24,6 +24,7 @@ void DropGrid::PopUpGrid::PopUp(Ctrl *owner, const Rect &r)
 	Close();
 	SetRect(r);
 	Ctrl::PopUp(owner, true, true, GUI_DropShadows());
+	SetFocus();
 }
 
 void DropGrid::PopUpGrid::CloseNoData()
@@ -94,6 +95,7 @@ void DropGrid::Close()
 	Rect r = list.GetRect();
 	list_width = r.Width();
 	list_height = r.Height();
+	SetFocus();
 }
 
 void DropGrid::CloseData()
@@ -652,6 +654,7 @@ MultiButton::SubButton& DropGrid::GetButton(int n)
 void DropGrid::DoClearValue()
 {
 	ClearValue();
+	SetFocus();
 }
 
 void DropGrid::ClearValue()
@@ -664,6 +667,7 @@ void DropGrid::ClearValue()
 		UpdateActionRefresh();
 	else
 		UpdateRefresh();
+	SetFocus();
 }
 
 void DropGrid::Reset()
