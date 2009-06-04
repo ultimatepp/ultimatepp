@@ -178,6 +178,7 @@ private:
 	Vector<bool>               modify;
 	FrameBottom<StaticRect>    scrollbox;
 	DisplayPopup               info;
+	const Order               *columnsortsecondary;
 
 	int   keypos;
 	int   cursor;
@@ -589,6 +590,8 @@ public:
 	ArrayCtrl& NoMovingHeader()                        { return MovingHeader(false); }
 	ArrayCtrl& ColumnSortFindKey()                     { columnsortfindkey = true; return *this; }
 	ArrayCtrl& AllSorting();
+	ArrayCtrl& ColumnSortSecondary(const Order& order) { columnsortsecondary = &order; return *this; }
+	ArrayCtrl& NoColumnSortSecondary()                 { columnsortsecondary = NULL; return *this; }
 
 	ArrayCtrl& ColumnWidths(const char *s);
 
