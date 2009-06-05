@@ -2,17 +2,15 @@
 
 using namespace Upp;
 
-void DoPaint(Draw& w) {
-	Size sz = GetSize();
-	w.DrawRect(sz, SWhite);
-	w.DrawRect(200, 200, 1, 1, SBlack);
-	for(int i = 0; i < 3600; i += 450)
-		w.DrawText(200, 200, i, "Test of angle!", Arial(30));
-}
-
 class TestDraw : public TopWindow {
+	Button ok;
+	DocEdit edit;
 	virtual void Paint(Draw& w) {
-		DoPaint(w);
+		Size sz = GetSize();
+		w.DrawRect(sz, SWhite);
+		w.DrawRect(200, 200, 1, 1, SBlack);
+		for(int i = 0; i < 3600; i += 450)
+			w.DrawText(200, 200, i, "Test of angle!", Arial(30));
 	}
 
 public:
@@ -25,10 +23,16 @@ public:
 TestDraw::TestDraw()
 {
 	Sizeable();
+	Add(ok.LeftPos(10, 100).TopPos(10, 20));
+	ok.SetLabel("TEST");
+	Add(edit.LeftPos(100, 300).TopPos(10, 100));
 }
 
 GUI_APP_MAIN
 {
-	Exclamation("Hello world!");
-//	TestDraw().Run();
+	DUMP(GetStdFont());
+	FontInfo fi = GetStdFont().Info();
+	DUMP(fi.GetHeight());
+	DUMP(fi['X']);
+	TestDraw().Run();
 }
