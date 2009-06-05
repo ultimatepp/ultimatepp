@@ -19,6 +19,17 @@ aaa::aaa()
 
 
 
+bool aaa::Accept()
+{
+	(}
+}
+
+}
+
+{
+
+}
+
 
 
 
