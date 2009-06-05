@@ -46,8 +46,8 @@ GUI_APP_MAIN
 		while(a + b < 90 || a + b > 400);
 		r.DrawText(10, 10 + 3 * isz.cy / 2  * i, Format("%d + %d =", a, b), fnt);
 		do {
-			a = Random(200) + 1;
-			b = Random(200) + 1;
+			a = Random(100) + 1;
+			b = Random(100) + 1;
 		}
 		while(a - b < 1);
 		r.DrawText(2000, 10 + 3 * isz.cy / 2 * i, Format("%d - %d =", a, b), fnt);
