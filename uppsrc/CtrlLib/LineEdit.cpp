@@ -446,8 +446,7 @@ void LineEdit::LeftTriple(Point, dword)
 void LineEdit::MouseMove(Point p, dword flags) {
 	if((flags & K_MOUSELEFT) && HasFocus() && HasCapture()) {
 		int c = GetMousePos(p);
-		if(mpos != c)
-			PlaceCaret(c, true);
+		PlaceCaret(c, mpos != c);
 	}
 }
 
