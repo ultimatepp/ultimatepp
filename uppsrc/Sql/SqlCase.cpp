@@ -129,31 +129,34 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			int l;
 			ReadSqlValue(l, s);
 			if(r) {
-				switch(dialect) {
-				case PGSQL: {
-					*r << "\'";
-					const char *e = s + l;
-					while(s < e) {
-						byte c = *s++;
-						if(c < 32 || c > 126 || c == 39 || c == 92) {
-							*r << '\\\\';
-							r->Cat(((c >> 6) & 3) + '0');
-							r->Cat(((c >> 3) & 7) + '0');
-							r->Cat((c & 7) + '0');
+				if(l == 0)
+					*r << "NULL";
+				else
+					switch(dialect) {
+					case PGSQL: {
+						*r << "\'";
+						const char *e = s + l;
+						while(s < e) {
+							byte c = *s++;
+							if(c < 32 || c > 126 || c == 39 || c == 92) {
+								*r << '\\\\';
+								r->Cat(((c >> 6) & 3) + '0');
+								r->Cat(((c >> 3) & 7) + '0');
+								r->Cat((c & 7) + '0');
+							}
 						}
+						*r << "\'::bytea";
 					}
-					*r << "\'::bytea";
-				}
-				case MSSQL:
-					*r << "0x" << HexString(s, l);
-					break;
-				case SQLITE3:
-				case MY_SQL:
-					*r << "X";
-				default:
-					*r << "\'" << HexString(s, l) << "\'";
-					break;
-				}
+					case MSSQL:
+						*r << "0x" << HexString(s, l);
+						break;
+					case SQLITE3:
+					case MY_SQL:
+						*r << "X";
+					default:
+						*r << "\'" << HexString(s, l) << "\'";
+						break;
+					}
 			}
 			s += l;
 			break;

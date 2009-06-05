@@ -68,7 +68,12 @@ void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const 
 {
 	// Color and src support!!!
 	RectPath(x, y, cx, cy);
-	Fill(img, Xform2D::Translation(x, y));
+	Sizef sz = img.GetSize();
+
+	Fill(img, Xform2D::Scale(cx / sz.cx, cy / sz.cy) * Xform2D::Translation(x, y));
+
+
+//	Fill(img, Xform2D::Scale(sz.cx / cx, sz.cy / cy) * Xform2D::Translation(x, y));
 }
 
 void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)

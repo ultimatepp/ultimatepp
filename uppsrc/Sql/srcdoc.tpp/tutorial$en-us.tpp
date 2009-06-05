@@ -117,13 +117,29 @@ to issue SQL statements.&]
 [s5; [/ Warning: While it is possible to issue ][*/ select][/  statements 
 through ][*/ SQL][/ , based on experience this is not recommended 
 `- way too often result set of ][*/ select][/  is canceled by issuing 
-some other command, e.g. in routine called as part of Fetch loop.]&]
+some other command, e.g. in routine called as part of Fetch loop. 
+One exception to this rule is using SQL`::operator% to fetch single 
+value like ][*C@5+75 String txt `= SQL % Select(TEXT).From(DOCTEMPLATE).Where(ID 
+`=`= id); ][/ (see further tutorial topics for detailed explanation 
+of this code).]&]
 [s5; To get information about result set columns, you can use [* GetColumns 
 ]to retrieve the number of columns and [* GetColumnInfo] to retrieve 
 information about columns `- returns [* SqlColumnInfo] reference 
 with information like name or type of column.&]
 [s3; 3. Using SqlExp&]
-[s5; &]
+[s5; U`+`+ contains an unique feature, `"SqlExp`". This is a mechanism 
+where you construct SQL statements as C`+`+ expressions (using 
+heavily overloaded operators).&]
+[s5; There are three advantages to this approach:&]
+[s5;i150;O0; SQL statements are at least partially checked at compile 
+time&]
+[s5;i150;O0; As such statements are yet to be interpreted, it is 
+possible to hide some differences between DB engines&]
+[s5;i150;O0; It is much easier to create complex dynamic SQL statements&]
+[s5; Database entity identifiers (like table or column names) can 
+be defined as [* SqlId] type. For the complete lest of supported 
+SQL statements, see [^topic`:`/`/Sql`/src`/SqlExp`$en`-us^ SqlExp 
+in examples].&]
 [s7; #include <Core/Core.h>&]
 [s7; #include <plugin/sqlite3/Sqlite3.h>&]
 [s7; &]
@@ -158,6 +174,9 @@ with information like name or type of column.&]
 [s7; -|-|Cout() << [* sql`[A`]] << `" `\`'`" << [* sql`[B`]] << `"`\`'`\n`";&]
 [s7; `}&]
 [s7; &]
+[s0; SqlId identifiers can be also used as parameter of Sql`::operator`[`] 
+to retrieve particular columns of result`-set.&]
+[s0; &]
 [s3; 4. Schema file&]
 [s7; &]
 [s5; MyApp.sch:&]

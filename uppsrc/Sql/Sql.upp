@@ -29,7 +29,6 @@ file
 	ExportSch.cpp,
 	Info readonly separator,
 	src.tpp,
-	srcimp.tpp,
 	srcdoc.tpp,
 	Copying;
 
