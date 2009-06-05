@@ -1,3 +1,75 @@
+<<<<<<< .mine
+#include <CtrlLib/CtrlLib.h>
+
+using namespace Upp;
+
+struct App : TopWindow {
+	Thread work;
+
+	void Work();
+	
+	ArrayCtrl list;
+	
+	typedef App CLASSNAME;
+
+	App();	
+	~App();
+};
+
+void Ask(bool *result)
+{
+	*result = PromptYesNo("Do you want to quit?");
+}
+
+void App::Work()
+{
+	int q = 0;
+	while(!Thread::IsShutdownThreads()) {
+		if(list.GetCount() > 500) {
+#if 0
+			bool result;
+			Call(callback1(Ask, &result));
+			if(result) {
+				GuiLock __;
+				Break();
+			}
+#else
+			if(PromptYesNo("Do you want to quit?")) {
+				GuiLock __;
+				Break();
+			}
+#endif
+			q = 0;
+			
+		}
+		{
+			GuiLock __;
+			list.Add((int)Random());
+			GuiSleep(10);
+		}
+		Sleep(1);
+	}
+}
+
+App::App()
+{
+	list.AddColumn("Test");
+	Add(list.SizePos());
+	work.Run(THISBACK(Work));
+}
+
+App::~App()
+{
+	Thread::ShutdownThreads();
+	work.Wait();
+}
+
+GUI_APP_MAIN
+{
+	App app;
+	app.Run();
+}
+=======
 #include <CtrlLib/CtrlLib.h>
 
 using namespace Upp;
@@ -66,3 +138,4 @@ GUI_APP_MAIN
 	App app;
 	app.Run();
 }
+>>>>>>> .r1219
