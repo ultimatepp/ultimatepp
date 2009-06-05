@@ -605,17 +605,17 @@ Point TabBar::GetTextPosition(const Rect& r, int cy, int space) const
 	if(align == LEFT)
 	{
 		p.y = r.bottom - space;
-		p.x = r.left + (r.GetWidth() - cy) / 2 + 2;
+		p.x = r.left + (r.GetWidth() - cy) / 2;
 	}
 	else if(align == RIGHT)
 	{
 		p.y = r.top + space;
-		p.x = r.right - (r.GetWidth() - cy) / 2 - 2;
+		p.x = r.right - (r.GetWidth() - cy) / 2;
 	}
 	else
 	{
 		p.x = r.left + space;
-		p.y = r.top + (r.GetHeight() - cy) / 2 + (align == TOP ? 2 : -2);
+		p.y = r.top + (r.GetHeight() - cy) / 2;
 	}
 	return p;
 }
@@ -948,17 +948,17 @@ TabBar& TabBar::AddKey(const Value &key, const Value &value, Image icon, String 
 
 TabBar& TabBar::InsertKey(int ix, const Value &key, const Value &value, Image icon, String group, bool make_active)
 {
-	InsertKey0(ix, key, value, icon, group);
+	int id = InsertKey0(ix, key, value, icon, group);
 	
 	MakeGroups();	
 	Repos();
 	active = -1;
 	if (make_active || (!allownullcursor && active < 0)) 
-		SetCursor(minmax(ix, 0, tabs.GetCount() - 1));		
+		SetCursor((groupsort || stacking) ? FindId(id) : ( minmax(ix, 0, tabs.GetCount() - 1)));		
 	return *this;	
 }
 
-void TabBar::InsertKey0(int ix, const Value &key, const Value &value, Image icon, String group)
+int TabBar::InsertKey0(int ix, const Value &key, const Value &value, Image icon, String group)
 {
 	ASSERT(ix >= 0);
 	int g = 0;
@@ -991,8 +991,8 @@ void TabBar::InsertKey0(int ix, const Value &key, const Value &value, Image icon
 			t.stack = tabs[tail].stack;
 			tail++;
 		}
-		else if (ix < tabs.GetCount()) {
-			ix = FindStackHead(tabs[ix].stack);
+		else {
+			ix = (ix < tabs.GetCount()) ? FindStackHead(tabs[ix].stack) : ix;
 			t.stack = stackcount++;
 		}
 		tabs.Insert(ix, t);
@@ -1000,18 +1000,14 @@ void TabBar::InsertKey0(int ix, const Value &key, const Value &value, Image icon
 			int head = FindStackHead(t.stack);
 			int headid = tabs[head].id;			
 			Sort(tabs.GetIter(head), tabs.GetIter(tail+1), TabStackSort());
-			for (int i = head; i <= tail; i++)
-				if (tabs[i].id == headid) {
-					SetStackHead(tabs[i]);
-					break;
-				}
+			while (tabs[head].id != headid)
+				CycleTabStack(head, t.stack);
 		}
 	}
 	else
 		tabs.Insert(ix, t);
+	return t.id;
 }
-
-
 
 int TabBar::GetWidth() const
 {
@@ -1361,24 +1357,42 @@ void TabBar::SetData(const Value &key)
 	}
 }
 
-void TabBar::Set(int n, const Value &newkey, const Value &newvalue)
+void TabBar::Set(int n, const Value &newkey, const Value &newvalue, Image icon)
 {
 	ASSERT(n >= 0 && n < tabs.GetCount());
 	tabs[n].key = newkey;
 	tabs[n].value = newkey;
-	DoStacking();
+	if (IsNull(icon))
+		tabs[n].img = icon;
+	if (stacking) {
+		Tab t = tabs[n];
+		tabs[n].stackid = GetStackId(tabs[n]);
+		tabs[n].sort_order = GetStackSortOrder(tabs[n]);
+		if (t.stackid != tabs[n].stackid || t.sort_order != tabs[n].sort_order) {
+			tabs.Remove(n);
+			InsertKey0(GetCount(), t.key, t.value, t.img, t.group);
+		}
+	}
 	Repos();
+	Refresh();
 }
 
-void TabBar::Set(const Value &key, const Value &newvalue)
+void TabBar::Set(const Value &key, const Value &newvalue, Image icon)
 {
 	Set(FindKey(key), key, newvalue);
 }
 
-void TabBar::Set(int n, const Value &newvalue)
+void TabBar::Set(int n, const Value &newvalue, Image icon)
+{
+	Set(n, tabs[n].key, newvalue);
+}
+
+void TabBar::SetIcon(int n, Image icon)
 {
 	ASSERT(n >= 0 && n < tabs.GetCount());
-	Set(n, tabs[n].key, newvalue);
+	tabs[n].img = icon;
+	Repos();
+	Refresh();
 }
 
 void TabBar::LeftDown(Point p, dword keyflags)
@@ -1434,9 +1448,10 @@ void TabBar::RightDown(Point p, dword keyflags)
 void TabBar::MiddleDown(Point p, dword keyflags)
 {
 	if (highlight >= 0)
-		if (!CancelClose(tabs[highlight].key)) {		
+		if (!CancelClose(tabs[highlight].key)) {
+			Value v = tabs[highlight].key;
 			Close(highlight);
-			WhenClose(tabs[highlight].key);
+			WhenClose(v);
 		}
 }
 

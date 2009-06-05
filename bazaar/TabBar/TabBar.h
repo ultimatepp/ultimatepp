@@ -260,7 +260,7 @@ protected:
 	void NewGroup(const String &name);
 	
 	// Insertion without repos/refresh - for batch actions
-	void InsertKey0(int ix, const Value &key, const Value &value, Image icon = Null, String group = Null);
+	int InsertKey0(int ix, const Value &key, const Value &value, Image icon = Null, String group = Null);
 	
 	// Sub-class Paint override
 	virtual void PaintTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, 
@@ -312,13 +312,17 @@ public:
 	TabBar& Grouping(bool b = true);
 	TabBar& GroupSort(bool b = true);
 	TabBar& GroupSeparators(bool b = true);
+	TabBar& Stacking(bool b = true);
 	TabBar& AutoScrollHide(bool b = true);
 	TabBar& InactiveDisabled(bool b = true);
 	TabBar& AllowNullCursor(bool b = true);
 	TabBar& Icons(bool v = true);
 	
-	TabBar& Stacking(bool b = true);
-	bool	IsStacking()					{ return stacking; }
+	bool	IsGrouping() const				{ return grouping; }
+	bool	IsGroupSort() const				{ return grouping; }
+	bool	HasGroupSeparators() const		{ return grouping; }
+	bool	IsStacking() const				{ return stacking; }
+	bool	IsShowInactive() const			{ return inactivedisabled; }
 	
 	TabBar& NeverEmpty()					{ MinTabCount(1); }
 	TabBar& MinTabCount(int cnt)			{ mintabcount = max(cnt, 0); Refresh(); return *this; }
@@ -331,9 +335,10 @@ public:
 	Value  	GetKey(int n) const				{ ASSERT(n >= 0 && n < tabs.GetCount()); return tabs[n].key;}
 	Value  	GetValue(int n) const			{ ASSERT(n >= 0 && n < tabs.GetCount()); return tabs[n].value;}
 	Value  	Get(const Value &key) const		{ return GetValue(FindKey(key)); }
-	void	Set(int n, const Value &newkey, const Value &newvalue);
-	void	Set(const Value	&key, const Value &newvalue);
-	void	Set(int n, const Value &newvalue);
+	void	Set(int n, const Value &newkey, const Value &newvalue, Image icon = Null);
+	void	Set(const Value	&key, const Value &newvalue, Image icon = Null);
+	void	Set(int n, const Value &newvalue, Image icon = Null);
+	void	SetIcon(int n, Image icon);
 	void 	SetTabGroup(int n, const String &group);
 	
 	virtual Value 	GetData() const			{ return (HasCursor() && active < GetCount()) ? GetKey(active) : Value(); }
@@ -365,6 +370,7 @@ public:
 
 	Vector<Value> GetKeys() const;
 	Vector<Image> GetIcons() const;
+	int			  GetScrollPos() const	{ return sc.GetPos(); }
 	TabBar&	CopySettings(const TabBar &src);
 
 	TabBar& SetStyle(int align, const Style& s)  	{ ASSERT(align >= 0 && align < 4); style[align] = &s; Refresh(); return *this; }

@@ -1,9 +1,0 @@
-uses
-	TabBar;
-
-file
-	TabBarTest.cpp;
-
-mainconfig
-	"" = "GUI";
-

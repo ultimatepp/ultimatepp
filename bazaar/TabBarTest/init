@@ -1,4 +1,0 @@
-#ifndef _TabBarTest_icpp_init_stub
-#define _TabBarTest_icpp_init_stub
-#include "TabBar/init"
-#endif
