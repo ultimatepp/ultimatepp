@@ -218,8 +218,10 @@ public:
 		int from = 0;
 		unsigned count = 0;
 		
-		while ((from = ToString().Find(s, from)) >= 0)
+		while ((from = ToString().Find(s, from)) >= 0) {
 			count++;
+			from++;
+		}
 		return count;
 	}
 private:
@@ -351,8 +353,17 @@ void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 5
 void GetKeyLockStatus(bool &caps, bool &num, bool &scroll);
 void SetKeyLockStatus(bool caps, bool num, bool scroll);
 
-
 #endif
+
+/////////////////////////////////////////////////////////////////////
+// Trash bin handling
+
+void FileToTrashBin(const char *path);
+int64 TrashBinGetCount();
+void TrashBinClear();
+
+
+void SetDesktopWallPaper(const char *path);
 
 #endif
 

@@ -27,7 +27,7 @@ topic "SysInfo general description";
 internals.&]
 [s0; &]
 [s0; Includes functions for:&]
-[s0;0 &]
+[s0; &]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetExtExecutable`(const String`)^ R
 unning files and commands]&]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetDesktopFolder`(`)^ Obtainin

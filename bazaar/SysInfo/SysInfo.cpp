@@ -2442,3 +2442,115 @@ bool Window_SaveCapture(long windowId, String fileName)
 }
 
 #endif
+
+
+#ifdef PLATFORM_POSIX
+
+String GetTrashBinDirectory()
+{
+	return AppendFileName(GetHomeDirectory(), ".local/share/Trash/files");
+}
+void FileToTrashBin(const char *path)
+{	
+	String newPath = AppendFileName(GetTrashBinDirectory(), GetFileName(path));
+	FileMove(path, newPath);
+}
+int64 TrashBinGetCount()
+{
+	int64 ret = 0;
+	FindFile ff;
+	if(ff.Search(AppendFileName(GetTrashBinDirectory(), "*"))) {
+		do {
+			String name = ff.GetName();
+			if (name != "." && name != "..")
+				ret++;
+		} while(ff.Next());
+	}
+	return ret;
+}
+void TrashBinClear()
+{
+	FindFile ff;
+	String trashBinDirectory = GetTrashBinDirectory();
+	if(ff.Search(AppendFileName(trashBinDirectory, "*"))) {
+		do {
+			String name = ff.GetName();
+			if (name != "." && name != "..") {
+				String path = AppendFileName(trashBinDirectory, name);
+				if (ff.IsFile())
+					FileDelete(path);
+				else if (ff.IsDirectory())
+					DeleteFolderDeep(path);
+			}
+		} while(ff.Next());
+	}
+}
+
+void SetDesktopWallPaper(const char *path)
+{
+	String desktopManager = GetDesktopManagerNew();
+	
+	if (desktopManager == "gnome") {
+		LaunchCommand("gconftool-2 -t str -s /desktop/gnome/background/picture_filename \"" + String(path) + "\"");
+		String mode;
+		if (*path == '\0')
+			mode = "none";		// Values "none", "wallpaper", "centered", "scaled", "stretched"
+		else
+			mode = "stretched";
+		LaunchCommand("gconftool-2 -t str -s /desktop/gnome/background/picture_options \"" + mode + "\"");	
+	} else if (desktopManager == "kde") {
+			// 1: disabled, only background color
+			// 2: tiled with first image in top left corner
+			// 3: tiled with first image centered
+			// 4: centered stretched with proportions kept until one side hits screen, space filled by background color
+			// 5: same as 4, though wallpaper aligned to top left and space after stretching filled by tiling
+			// 6: stretched to fit screen 
+		int mode;
+		if (*path == '\0')
+			mode = 1;
+		else
+			mode = 6;
+		LaunchCommand("dcop kdesktop KBackgroundIface setWallpaper \"" + String(path) + "\" " + AsString(mode));
+	} else
+		throw Exc(t_("Not possible to change Desktop bitmap"));
+}
+#endif
+
+#if defined(PLATFORM_WIN32)
+
+void FileToTrashBin(const char *path)
+{	
+	if (!FileExists(path) && !DirectoryExists(path))
+		return;
+	
+    SHFILEOPSTRUCT fileOp;
+    
+	fileOp.hwnd = NULL;
+    fileOp.wFunc = FO_DELETE;
+    fileOp.pFrom = path;
+    fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT;
+
+	if (0 != SHFileOperation(&fileOp))
+	    throw Exc(t_("Error sending file to Trash Bin"));
+}
+int64 TrashBinGetCount()
+{
+	SHQUERYRBINFO shqbi; 
+ 
+ 	shqbi.cbSize = sizeof(SHQUERYRBINFO);
+	if (S_OK != SHQueryRecycleBin(0, &shqbi))
+		throw Exc(t_("Error counting elements in Trash Bin"));
+	return shqbi.i64NumItems;
+}
+void TrashBinClear()
+{
+	if (S_OK != SHEmptyRecycleBin(0, 0, SHERB_NOCONFIRMATION | SHERB_NOPROGRESSUI | SHERB_NOSOUND))
+		throw Exc(t_("Error sending file to Trash Bin"));
+}
+// 	SetDesktopWallPaper("c:\\Fondo de escritorio.bmp");
+void SetDesktopWallPaper(const char *path)
+{
+    if (0 == SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, (LPVOID)path, SPIF_UPDATEINIFILE || SPIF_SENDWININICHANGE))
+        throw Exc(t_("Error " + AsString(GetLastError()) + " changing Desktop bitmap"));
+}
+#endif

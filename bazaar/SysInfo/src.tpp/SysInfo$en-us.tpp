@@ -10,11 +10,11 @@ topic "SysInfo function reference";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s4;%- [*R6 SysInfo]&]
+[s0;%- [*R6 SysInfo]&]
 [s0; &]
 [s0; &]
-[ {{10000@(128) [s0; [* Running files and commands]]}}&]
-[s0; &]
+[ {{10000@1 [s0; [* Running files and commands]]}}&]
+[s3; &]
 [s5;:GetExtExecutable`(const String`):%- [_^String^ String]_[* GetExtExecutable]([@(0.0.255) c
 onst]_[_^String^ String]_[*@3 ext])&]
 [s2; Gets the program that will open by default the files with extension 
@@ -74,7 +74,7 @@ path in [%-*@3 cmd].&]
 [s0; [/ -|String strOutput `= LaunchCommand(`"mencoder film.mpg `-o 
 film.avi`");]&]
 [s0; &]
-[ {{10000@(128) [s0; [* Obtaining special folders]]}}&]
+[ {{10000@1 [s0; [* Obtaining special folders]]}}&]
 [s0;%- &]
 [s5;:GetDesktopFolder`(`):%- [_^String^ String]_[* GetDesktopFolder]()&]
 [s2; Gets the default Desktop folder path.&]
@@ -128,7 +128,7 @@ film.avi`");]&]
 [s2; Gets the default system files folder path.&]
 [s3;%- &]
 [s0; &]
-[ {{10000@(128) [s0; [* Hardware, BIOS, OS and Distro info]]}}&]
+[ {{10000@1 [s0; [* Hardware, BIOS, OS and Distro info]]}}&]
 [s0;%- &]
 [s5;:GetSystemInfo`(String`&`,String`&`,String`&`,int`&`):%- [@(0.0.255) void]_[* GetSyst
 emInfo]([_^String^ String]_`&[*@3 manufacturer], [_^String^ String]_`&[*@3 productName], 
@@ -246,7 +246,7 @@ resent]_)&]
 [s0; -|Returns true if the values got are valid.&]
 [s0; &]
 [s0; &]
-[ {{10000@(128) [s0; [* Process handling]]}}&]
+[ {{10000@1 [s0; [* Process handling]]}}&]
 [s4;%- &]
 [s5;:GetWindowsList`(Array`<long`>`&`,Array`<long`>`&`,Array`<String`>`&`,Array`<String`>`&`,Array`<String`>`&`):%- [@(0.0.255) v
 oid]_[* GetWindowsList]([_^Array^ Array]<[@(0.0.255) long]>_`&[*@3 wid], 
@@ -360,7 +360,7 @@ if possible.&]
 and `"shutdown`".&]
 [s3; &]
 [s0; &]
-[ {{10000@(128) [s0; [* Windows handling]]}}&]
+[ {{10000@1 [s0; [* Windows handling]]}}&]
 [s0; &]
 [s5;:Window`_GetRect`(long`,long`&`,long`&`,long`&`,long`&`):%- [@(0.0.255) bool]_[* Wind
 ow`_GetRect]([@(0.0.255) long]_[*@3 windowId], [@(0.0.255) long]_`&[*@3 left], 
@@ -388,7 +388,7 @@ the file with name [%-*@3 fileName].&]
 [s0; -|In Posix systems the bitmap file format is .xwd&]
 [s0; -|In Windows systems the bitmap file format is .bmp.&]
 [s0; &]
-[ {{10000@(128) [s0; [* Mouse and keyboard handling]]}}&]
+[ {{10000@1 [s0; [* Mouse and keyboard handling]]}}&]
 [s3; &]
 [s5;:Mouse`_GetPos`(long`&`,long`&`):%- [@(0.0.255) bool]_[* Mouse`_GetPos]([@(0.0.255) lon
 g]_`&[*@3 x], [@(0.0.255) long]_`&[*@3 y])&]
@@ -461,7 +461,7 @@ ool]_[*@3 caps], [@(0.0.255) bool]_[*@3 num], [@(0.0.255) bool]_[*@3 scroll])&]
 [%-*@3 scroll] [%-*@3  ]lock.&]
 [s3; &]
 [s0; &]
-[ {{10000@(128) [s0; [* Miscellaneous functions]]}}&]
+[ {{10000@1 [s0; [* Miscellaneous functions]]}}&]
 [s0; &]
 [s5;:LoadFile`_Safe`(String`):%- [_^String^ String]_[* LoadFile`_Safe]([_^String^ String]_[*@3 f
 ileName])&]
@@ -476,6 +476,33 @@ files under folder /proc)&]
 [s0; &]
 [s0; LoadFile`_Safe() just get the file bytes returned by the OS 
 until the file end.&]
+[s0; &]
+[s4;%- &]
+[s5;:FileToTrashBin`(const char`*`):%- [@(0.0.255) void]_[* FileToTrashBin]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 path])&]
+[s2; Deletes file [%-*@3 path].by sending it to the Trash Bin.&]
+[s3; &]
+[s4;%- &]
+[s5;:TrashBinGetCount`(`):%- [_^int64^ int64]_[* TrashBinGetCount]()&]
+[s2; Returns the number of items (files and directories) located 
+in the Trash Bin.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:TrashBinClear`(`):%- [@(0.0.255) void]_[* TrashBinClear]()&]
+[s2; Removes all the items (files and directories) located in the 
+Trash Bin.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:SetDesktopWallPaper`(const char`*`):%- [@(0.0.255) void]_[* SetDesktopWallPaper]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path])&]
+[s2; Sets [%-*@3 path].file as desktop wallpaper. Supports Gnome, Kde 
+v3 and Windows desktops.&]
+[s0; &]
+[s0;i150;O0; In Gnome, [%-*@3 path] has to be .png&]
+[s0;i150;O0; In Kde, [%-*@3 path] has to be .png, .gif or .jpg&]
+[s0;i150;O0; In Windows, [%-*@3 path] has to be .bmp&]
+[s0; &]
+[s0; If [%-*@3 path].is empty, the desktop wallpaper is removed. &]
 [s0; &]
 [s4;%- &]
 [s5;:FileCat`(const char`*`,const char`*`):%- [@(0.0.255) bool]_[* FileCat]([@(0.0.255) con
@@ -494,7 +521,7 @@ String [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find
 [s3; &]
 [s4;%- &]
 [s5;:FormatLong`(long`):%- [_^String^ String]_[* FormatLong]([@(0.0.255) long]_[*@3 a])&]
-[s2; Returns the long number [%-*@3 a ]converted into a String.ç&]
+[s2; Returns the long number [%-*@3 a ]converted into a String.&]
 [s0; &]
 [s4;%- &]
 [s5;:BytesToKMGT`(uint64`):%- [_^String^ String]_[* BytesToKMGT]([_^uint64^ uint64]_[*@3 byte
