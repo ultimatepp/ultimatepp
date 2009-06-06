@@ -7,23 +7,23 @@ topic "OfficeSheet class reference";
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:codeitem]
 [{_} 
 [s1;:OfficeSheet`:`:class: [@(0.0.255)4 class][4 _][*4 OfficeSheet]&]
-[s2;*4 &]
-[s0; [+92 OfficeSheet class serves to manage spreadsheets made with 
-OpenOffice Calc or Microsoft Office Excel.]&]
-[s0; [+92 The class methods are designed to be as simple as possible 
+[s2;* &]
+[s0; [2 OfficeSheet class serves to manage spreadsheets made with OpenOffice 
+Calc or Microsoft Office Excel.]&]
+[s0; [2 The class methods are designed to be as simple as possible 
 and are exactly the same for both suites.]&]
-[s0; [+92 OfficeSheet handles the suites through `"Ole Automation`" 
-so it requires either OpenOffice or Microsoft Office to be previosly 
+[s0; [2 OfficeSheet handles the suites through `"Ole Automation`" so 
+it requires either OpenOffice or Microsoft Office to be previosly 
 installed in the computer.]&]
 [s0;2 &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
-[s4; &]
+[s3; &]
 [s5;:OfficeSheet`:`:OfficeSheet`(`): [* OfficeSheet]()&]
 [s2;%% OfficeSheet constructor. It has no arguments as in function 
-Init() it is defined which Office suit is going to be used.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255)2 &]
+Init() it is defined which Office suite is going to be used.&]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4; &]
+[s3; &]
 [s5;:OfficeSheet`:`:`~OfficeSheet`(`): [@(0.0.255) `~][* OfficeSheet]()&]
 [s2;%% OfficeSheet destructor. It closes spreadsheet application.&]
 [s3; &]
@@ -39,7 +39,7 @@ be init. &]
 &]
 [s2;%% Initializes OfficeSheet to use [%-*@3 type].suite.&]
 [s2;%% Valid values are `"Open`" and `"Microsoft`".&]
-[s0;%% &]
+[s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:AddSheet`(bool`): [@(0.0.255) bool]_[* AddSheet]([@(0.0.255) bool]_[*@3 v
 isible])&]
@@ -220,6 +220,7 @@ ndex])&]
 indicate the column and a number to indicate the row as in `"B7`", 
 following the format used in spreadsheets. [%-*@3 col,] [%-*@3 row 
 ]origin is (1, 1)&]
+[s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:ColRowToCell`(const int`,const int`): [@(0.0.255) static] 
 [_^String^ String]_[* ColRowToCell]([@(0.0.255) const]_[@(0.0.255) int]_[*@3 col], 

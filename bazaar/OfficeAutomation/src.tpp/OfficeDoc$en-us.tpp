@@ -7,23 +7,23 @@ topic "OfficeDoc class reference";
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:codeitem]
 [{_} 
 [s1;:OfficeDoc`:`:class: [@(0.0.255)4 class][4 _][*4 OfficeDoc]&]
-[s0;4 &]
-[s0; [+92 OfficeDoc class serves to manage documents made with OpenOffice 
+[s0;2 &]
+[s0; [2 OfficeDoc class serves to manage documents made with OpenOffice 
 Doc or Microsoft Office Word.]&]
-[s0; [+92 The class methods are designed to be as simple as possible 
+[s0; [2 The class methods are designed to be as simple as possible 
 and are exactly the same for both suites.]&]
-[s0; [+92 OfficeDoc handles the suites through `"Ole Automation`" so 
+[s0; [2 OfficeDoc handles the suites through `"Ole Automation`" so 
 it requires either OpenOffice or Microsoft Office to be previosly 
 installed in the computer.]&]
 [s0;2 &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
-[s4; &]
+[s3; &]
 [s5;:OfficeDoc`:`:OfficeDoc`(`): [* OfficeDoc]()&]
 [s2;%% OfficeDoc constructor. It has no arguments as in function 
-Init() it is defined which Office suit is going to be used.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255)2 &]
+Init() it is defined which Office suite is going to be used.&]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4; &]
+[s3; &]
 [s5;:OfficeDoc`:`:`~OfficeDoc`(`): [@(0.0.255) `~][* OfficeDoc]()&]
 [s2;%% OfficeDoc destructor. It closes document editor application.&]
 [s3; &]
