@@ -271,6 +271,8 @@ void Theme::LoadMenuBar(MenuBar::Style& d, const VectorMap<String, String>& set,
 		(d.topbar,			"TopBar")
 		(d.topitem,			"TopItem",		3)
 		(d.topitemtext,		"topitemtext",	3)
+		(d.separator.l1,	"separatorl1")
+		(d.separator.l2,	"separatorl2")
 	;
 }
 
