@@ -602,6 +602,7 @@ public:
 	bool      tabs_icons;
 	bool      tabs_crosses;
 	bool      tabs_grouping;
+	bool      tabs_serialize;
 	bool      no_parenthesis_indent;
 	bool      hilite_if_endif;
 	bool      wrap_console_text;

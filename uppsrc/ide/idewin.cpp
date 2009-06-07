@@ -106,6 +106,10 @@ void Ide::Serialize(Stream& s) {
 	s % show_tabs;
 	s % tabs_icons;
 	s % tabs_crosses;
+	if(version >= 14) {
+		s % tabs_grouping;
+		s % tabs_serialize;
+	}
 	s % no_parenthesis_indent;
 	s % hilite_scope;
 	s % hilite_if_endif;
@@ -526,6 +530,7 @@ Ide::Ide()
 	tabs_icons = false;
 	tabs_crosses = true;
 	tabs_grouping = true;
+	tabs_serialize = true;
 	no_parenthesis_indent = false;
 
 	/*

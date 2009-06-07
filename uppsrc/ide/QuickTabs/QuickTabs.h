@@ -85,6 +85,24 @@ struct Group : Moveable<Group>
 class QuickTabs : public FrameCtrl<Ctrl>
 {
 	public:
+		virtual void Paint(Draw &w);
+		virtual void LeftDown(Point p, dword keysflags);
+		virtual void LeftUp(Point p, dword keysflags);
+		virtual void RightDown(Point p, dword keyflags);
+		virtual void MiddleDown(Point p, dword keyflags);
+		virtual void MiddleUp(Point p, dword keyflags);
+		virtual void MouseMove(Point p, dword keysflags);
+		virtual void MouseLeave();
+		virtual void FrameLayout(Rect &r);
+		virtual void FrameAddSize(Size& sz);
+		virtual void FramePaint(Draw& w, const Rect& r);
+		virtual void DragAndDrop(Point p, PasteClip& d);
+		virtual void LeftDrag(Point p, dword keyflags);
+		virtual void DragEnter();
+		virtual void DragLeave();
+		virtual void DragRepeat(Point p);
+		virtual void CancelMode();
+		virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 
 	private:
 
@@ -108,24 +126,6 @@ class QuickTabs : public FrameCtrl<Ctrl>
 
 		const TabCtrl::Style *style;
 
-		virtual void Paint(Draw &w);
-		virtual void LeftDown(Point p, dword keysflags);
-		virtual void LeftUp(Point p, dword keysflags);
-		virtual void RightDown(Point p, dword keyflags);
-		virtual void MiddleDown(Point p, dword keyflags);
-		virtual void MiddleUp(Point p, dword keyflags);
-		virtual void MouseMove(Point p, dword keysflags);
-		virtual void MouseLeave();
-		virtual void FrameLayout(Rect &r);
-		virtual void FrameAddSize(Size& sz);
-		virtual void FramePaint(Draw& w, const Rect& r);
-		virtual void DragAndDrop(Point p, PasteClip& d);
-		virtual void LeftDrag(Point p, dword keyflags);
-		virtual void DragEnter();
-		virtual void DragLeave();
-		virtual void DragRepeat(Point p);
-		virtual void CancelMode();
-		virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 
 		void DrawTab(Draw &w, int i);
 		void Repos();
@@ -192,6 +192,8 @@ class QuickTabs : public FrameCtrl<Ctrl>
 		int GetPos() { return sc.GetPos(); }
 
 		void SetCursor(int n);
+		
+		void SerializeTabs(Stream& s);
 };
 
 #endif
