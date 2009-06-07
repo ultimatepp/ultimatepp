@@ -667,7 +667,7 @@ void Ide::Display() {
 
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
-	int version = 8;
+	int version = 9;
 	s / version;
 	s.Magic(0x12345);
 	if(s.IsStoring()) {
@@ -744,6 +744,12 @@ void Ide::SerializeWorkspace(Stream& s) {
 	SerializeWorkspaceConfigs(s);
 	SerializeOutputMode(s);
 	SerializeClosed(s);
+	if(version >= 9) {
+		if(tabs_serialize) {
+			tabs.SerializeTabs(s);
+			tabs2.SerializeTabs(s);
+		}
+	}
 }
 
 void Ide::SetIdeState(int newstate) {
@@ -768,7 +774,6 @@ void Ide::SetIcon()
 	int new_state_icon = 0;
 	if((bool)debugger && !IdeIsDebugLock()) {
 		new_state_icon = 1;
-
 		return;
 	}
 	else

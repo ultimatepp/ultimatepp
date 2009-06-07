@@ -890,3 +890,23 @@ void QuickTabs::Set(const QuickTabs& t)
 	Repos();
 	sc.Set(t.sc);
 }
+
+void QuickTabs::SerializeTabs(Stream& s)
+{
+	int version = 0;
+	s / version;
+	s % active % file_icons % crosses % grouping;
+	cross = -1;
+	highlight = -1;
+	target = -1;
+	int n = tabs.GetCount();
+	s % n;
+	tabs.SetCount(n);
+	for(int i = 0; i < tabs.GetCount(); i++)
+		s % tabs[i].name % tabs[i].group;
+	MakeGroups();
+	int g = GetGroup();
+	s % g;
+	SetGroup(g);
+	Repos();
+}

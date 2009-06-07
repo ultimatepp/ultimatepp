@@ -136,7 +136,6 @@ void Ide::UpdateFormat(CodeEditor& editor, QuickTabs& tabs)
 	tabs.Grouping(tabs_grouping);
 	tabs.FileIcons(tabs_icons);
 	tabs.Crosses(tabs_crosses);
-
 }
 
 void Ide::UpdateFormat() {
@@ -335,6 +334,7 @@ void Ide::SetupFormat() {
 		(edt.tabs_icons, tabs_icons)
 		(edt.tabs_crosses, tabs_crosses)
 		(edt.tabs_grouping, tabs_grouping)
+		(edt.tabs_serialize, tabs_serialize)
 		(edt.filetabs, filetabs)
 		(edt.numbers, line_numbers)
 		(edt.bookmark_pos, bookmark_pos)
