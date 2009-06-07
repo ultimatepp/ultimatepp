@@ -116,8 +116,8 @@ void SvnSync::SyncList()
 		}
 		if(actions) {
 			list.Add(MESSAGE, Null, AttrText("Commit message:").SetFont(StdFont().Bold()));
-			list.SetLineCy(list.GetCount() - 1, EditField::GetStdHeight() + 4);
-			list.SetCtrl(list.GetCount() - 1, 1, message.Add().SetFilter(CharFilterSvnMsg));
+			list.SetLineCy(list.GetCount() - 1, (3 * EditField::GetStdHeight()) + 4);
+			list.SetCtrl(list.GetCount() - 1, 1, message.Add().SetFilter(CharFilterSvnMsg).VSizePos(2, 2).HSizePos());
 			int q = msgmap.Find(w.working);
 			if(q >= 0) {
 				message.Top() <<= msgmap[q];
