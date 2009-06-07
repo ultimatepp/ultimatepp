@@ -110,7 +110,7 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	};
 	
 	Array<Switch>            revert;
-	Array<EditString>        message;
+	Array<DocEdit>           message;
 	Array<Button>            diff;
 	ArrayMap<String, String> msgmap;
 	
