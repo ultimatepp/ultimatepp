@@ -683,6 +683,11 @@ int64 GetFileLength(const char *name) {
 }
 
 bool DirectoryExists(const char *name) {
+#if defined(PLATFORM_WIN32)
+	if(name[0] && name[1] == ':' && name[2] == '\\' && name[3] == 0 &&
+	   GetDriveType(name) != DRIVE_NO_ROOT_DIR) 
+	    return true;
+#endif
 	FindFile ff(name);
 	return ff && ff.IsDirectory();
 }
