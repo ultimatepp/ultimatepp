@@ -181,7 +181,7 @@ void UpdateCodeBase(Progress& pi)
 			String ext = ToUpper(GetFileExt(path));
 			if(ext == ".C" || ext == ".CPP" || ext == ".CC" || ext == ".CXX" ||
 			   ext == ".H" || ext == ".HPP" || ext == ".HH" || ext == ".HXX" ||
-			   ext == ".LAY") {
+			   ext == ".LAY" || ext == ".SCH") {
 				fp.Add(path);
 				int q = set.Find(path);
 				Time tm = FileGetTime(path);
@@ -218,6 +218,9 @@ void UpdateCodeBase(Progress& pi)
 			String ext = ToUpper(GetFileExt(s_file));
 			if(ext == ".LAY")
 				ScanLayFile(s_file);
+			else
+			if(ext == ".SCH")
+				ScanSchFile(s_file);
 			else {
 				FileIn fi(s_file);
 				Parse(fi, ignore, base, s_file, callback(BrowserScanError));
@@ -236,7 +239,10 @@ void CodeBaseScan(Stream& s, const String& fn)
 	remove.Add(fn);
 	Remove(base, remove);
 	LLOG("Scan3 " << tm);
-	Parse(s, IgnoreList(), base, fn, CNULL);
+	if(ToUpper(GetFileExt(fn)) == ".SCH")
+		ScanSchFile(fn);
+	else
+		Parse(s, IgnoreList(), base, fn, CNULL);
 	LLOG("Scan4 " << tm);
 	FinishBase();
 	LLOG("Scan total " << tm);
