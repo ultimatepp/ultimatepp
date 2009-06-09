@@ -25,21 +25,21 @@ String XmlHeader(const char *encoding, const char *version, const char *standalo
 {
 	StringBuffer r;
 	r << "<?xml version=\"" << version << "\" encoding=\"" << encoding << "\" standalone=\""
-	  << standalone << "\" ?>\n";
+	  << standalone << "\" ?>\r\n";
 	return r;
 }
 
 String XmlPI(const char *text)
 {
 	StringBuffer r;
-	r << "<?" << text << "?>\n";
+	r << "<?" << text << "?>\r\n";
 	return r;
 }
 
 String XmlDecl(const char *text)
 {
 	StringBuffer r;
-	r << "<!" << text << ">\n";
+	r << "<!" << text << ">\r\n";
 	return r;
 }
 
@@ -56,7 +56,7 @@ String XmlDoc(const char *name, const char *xmlbody)
 String XmlComment(const char *text)
 {
 	StringBuffer out;
-	out << "<!-- " << text << " -->\n";
+	out << "<!-- " << text << " -->\r\n";
 	return out;
 }
 
@@ -65,13 +65,13 @@ XmlTag& XmlTag::Tag(const char *s)
 	tag.Clear();
 	end.Clear();
 	tag << '<' << s;
-	end << "</" << s << ">\n";
+	end << "</" << s << ">\r\n";
 	return *this;
 }
 
 String  XmlTag::operator()()
 {
-	return tag + "/>\n";
+	return tag + "/>\r\n";
 }
 
 String  XmlTag::operator()(const char* text)
@@ -79,13 +79,18 @@ String  XmlTag::operator()(const char* text)
 	StringBuffer r;
 	r << tag << '>';
 	if(strchr(text, '\n')) {
-		r << '\n';
+		r << "\r\n"
 		bool tab = true;
 		while(*text) {
 			if(tab)
 				r << '\t';
-			tab = *text == '\n';
-			r.Cat(*text++);
+			int c = (byte)*text++;
+			tab = c == '\n';
+			if(tab)
+				r << "\r\n"
+			else
+			if(c == '\t' || c >= 32)
+				r.Cat(c);
 		}
 	}
 	else
@@ -754,13 +759,13 @@ String AsXML(const XmlNode& node, dword style)
 	style &= ~(XML_HEADER|XML_DOCTYPE);
 	switch(node.GetType()) {
 	case XML_PI:
-		r << "<?" << node.GetText() << "?>\n";
+		r << "<?" << node.GetText() << "?>\r\n";
 		break;
 	case XML_DECL:
-		r << "<!" << node.GetText() << ">\n";
+		r << "<!" << node.GetText() << ">\r\n";
 		break;
 	case XML_COMMENT:
-		r << "<!--" << node.GetText() << "-->\n";
+		r << "<!--" << node.GetText() << "-->\r\n";
 		break;
 	case XML_DOC:
 		for(int i = 0; i < node.GetCount(); i++)
