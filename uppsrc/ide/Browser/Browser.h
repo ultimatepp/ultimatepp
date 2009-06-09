@@ -30,6 +30,7 @@ void           ReQualifyCodeBase();
 
 void           CodeBaseScanLay(const String& fn);
 void           ScanLayFile(const char *fn);
+void           ScanSchFile(const char *fn);
 
 String         MakeCodeRef(const String& scope, const String& item);
 void           SplitCodeRef(const String& ref, String& scope, String& item);

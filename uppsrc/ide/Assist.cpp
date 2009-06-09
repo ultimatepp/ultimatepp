@@ -308,7 +308,7 @@ void AssistEditor::SyncAssist()
 			        && memcmp(name, m.name, name.GetCount())
 			      : memcmp(name, m.name, name.GetCount()) == 0)) {
 				int q = over.Find(m.name);
-				if(q < 0 || over[q] == m.typei) {
+				if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
 					assist.Add(RawToValue(m));
 					if(q < 0)
 						over.Add(m.name, m.typei);

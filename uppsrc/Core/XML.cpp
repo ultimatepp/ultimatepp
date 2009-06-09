@@ -79,7 +79,7 @@ String  XmlTag::operator()(const char* text)
 	StringBuffer r;
 	r << tag << '>';
 	if(strchr(text, '\n')) {
-		r << "\r\n"
+		r << "\r\n";
 		bool tab = true;
 		while(*text) {
 			if(tab)
@@ -87,7 +87,7 @@ String  XmlTag::operator()(const char* text)
 			int c = (byte)*text++;
 			tab = c == '\n';
 			if(tab)
-				r << "\r\n"
+				r << "\r\n";
 			else
 			if(c == '\t' || c >= 32)
 				r.Cat(c);
