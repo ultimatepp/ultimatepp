@@ -36,6 +36,9 @@
 #define BLOB(x)                    COLUMN("blob", String, x, 0, 0)
 #define BLOB_(x)                   COLUMN_("blob", String, x, 0, 0)
 
+#define LONGRAW(x)                 COLUMN("blob", String, x, 0, 0)
+#define LONGRAW_(x)                COLUMN_("blob", String, x, 0, 0)
+
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
 #define AUTO_INCREMENT
 #define NOT_NULL                   INLINE_ATTRIBUTE("not null")
