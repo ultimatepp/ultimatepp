@@ -445,7 +445,9 @@ typedef struct KeyInfo KeyInfo;
 typedef struct Module Module;
 typedef struct NameContext NameContext;
 typedef struct Parse Parse;
+//#-
 typedef struct Select Select;
+//#+
 typedef struct SrcList SrcList;
 typedef struct StrAccum StrAccum;
 typedef struct Table Table;
@@ -1415,6 +1417,9 @@ struct NameContext {
 ** for the result set.  The KeyInfo for addrOpenTran[2] contains collating
 ** sequences for the ORDER BY clause.
 */
+
+//$-
+
 struct Select {
   ExprList *pEList;      /* The fields of the result */
   u8 op;                 /* One of: TK_UNION TK_ALL TK_INTERSECT TK_EXCEPT */
@@ -1437,6 +1442,8 @@ struct Select {
   int iLimit, iOffset;   /* Memory registers holding LIMIT & OFFSET counters */
   int addrOpenEphm[3];   /* OP_OpenEphem opcodes related to this select */
 };
+
+//$+
 
 /*
 ** The results of a select can be distributed in several ways.
