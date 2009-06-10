@@ -42,6 +42,7 @@ private:
 	Link<Sqlite3Connection> clink;
 	
 	void Reset();
+	void Cancel();
 
 public:
 	bool Open(const char *filename);
