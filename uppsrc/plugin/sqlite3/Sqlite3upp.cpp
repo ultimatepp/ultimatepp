@@ -252,6 +252,9 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 				if(strlen(s) >= 19)
 					f = Value(Time(atoi(s), atoi(s + 5), atoi(s + 8), atoi(s + 11), atoi(s + 14), atoi(s + 17)));
 				else
+				if(strlen(s) >= 10)
+					f = Value(ToTime(Date(atoi(s), atoi(s + 5), atoi(s + 8))));
+				else
 					f = Null;
 			}
 			else
@@ -319,6 +322,12 @@ void Sqlite3Session::Reset()
 		s->Reset();
 }
 
+void Sqlite3Session::Cancel()
+{
+	for(Sqlite3Connection *s = clink.GetNext(); s != &clink; s = s->GetNext())
+		s->Cancel();
+}
+
 Sqlite3Session::Sqlite3Session()
 {
 	db = NULL;
@@ -340,6 +349,7 @@ void Sqlite3Session::Begin() {
 }
 
 void Sqlite3Session::Commit() {
+	Cancel();
 	static const char commit[] = "COMMIT;";
 	if(trace)
 		*trace << commit << "\n";
@@ -349,6 +359,7 @@ void Sqlite3Session::Commit() {
 }
 
 void Sqlite3Session::Rollback() {
+	Cancel();
 	static const char rollback[] = "ROLLBACK;";
 	if(trace)
 		*trace << rollback << "\n";
