@@ -289,6 +289,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 				}
 				CppItemInfo& f = assist_item.Add(im.name);
 				f.typei = typei;
+				f.scope = ntp;
 				(CppItem&)f = im;
 			}
 		}
