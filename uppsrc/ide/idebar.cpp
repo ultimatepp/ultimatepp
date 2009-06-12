@@ -396,7 +396,7 @@ void Ide::BuildMenu(Bar& menu) {
 	menu.Add(b, AK_CLEANUPPOUT, THISBACK(CleanUppOut))
 		.Help("Remove all files and subdirectories in the output & intermediate directory (see Base setup)");
 
-	menu.MenuSeparator();
+//	menu.MenuSeparator();
 
 //	menu.Add(b, AK_CREATEMAKEFILE, THISBACK(CreateMakefile))
 //		.Help("Create makefile enabling IDE-independent project building");
