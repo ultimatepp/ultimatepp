@@ -398,8 +398,8 @@ void Ide::BuildMenu(Bar& menu) {
 
 	menu.MenuSeparator();
 
-	menu.Add(b, AK_CREATEMAKEFILE, THISBACK(CreateMakefile))
-		.Help("Create makefile enabling IDE-independent project building");
+//	menu.Add(b, AK_CREATEMAKEFILE, THISBACK(CreateMakefile))
+//		.Help("Create makefile enabling IDE-independent project building");
 
 	menu.MenuSeparator();
 
