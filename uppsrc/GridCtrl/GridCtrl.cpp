@@ -7173,7 +7173,7 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 			if(hitems[j].hidden)
 				continue;
 
-			if(Match(f, (WString) GetStdConvertedColumn(j, it.val), s, e))
+			if(Match(f, (WString) GetStdConvertedColumn(idh, it.val), s, e))
 			{
 				first_matched_row = i;
 				rowfnd = i;
@@ -7204,7 +7204,7 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 			if(hitems[j].hidden)
 				continue;
 
-			if(Match(f, (WString) GetStdConvertedColumn(j, it.val), s, e))
+			if(Match(f, (WString) GetStdConvertedColumn(idh, it.val), s, e))
 			{
 				match = true;
 				it.Found(search_highlight);
