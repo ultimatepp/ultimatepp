@@ -1,1 +1,1 @@
-#define IDE_VERSION    "-"
+#define IDE_VERSION    ""
