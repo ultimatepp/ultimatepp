@@ -111,6 +111,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	cancel_remove       = false;
 	cancel_accept       = false;
 	cancel_cursor       = false;
+	cancel_move         = false;
 
 	inserting           = false;
 	appending           = false;
@@ -4477,12 +4478,13 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 
 void GridCtrl::SyncCtrls(int row)
 {
-	//if(!ready)
+	//if(!HasCtrls())
 	//	return;
-
+	
 	Size sz = GetSize();
 	genr_ctrls = false;
 
+	
 	Vector<int> cols;
 
 	for(int i = 1; i < total_cols; i++)
@@ -4491,6 +4493,7 @@ void GridCtrl::SyncCtrls(int row)
 
 	if(cols.IsEmpty())
 		return;
+	
 
 	int dy = sby + fixed_height;
 	int dx = sbx + fixed_width;
@@ -5157,6 +5160,14 @@ bool GridCtrl::MoveRow(int n, int m, bool repaint)
 		Repaint();
 		return false;
 	}
+	
+	WhenMoveRow(n, m);
+	
+	if(cancel_move)
+	{
+		cancel_move = false;
+		return false;
+	}
 
 	LG("Moved");
 
@@ -5190,7 +5201,15 @@ void GridCtrl::MoveRows(int n, bool onerow)
 		vi.Reserve(selected_rows);
 		for(int i = fixed_rows; i < total_rows; i++)
 			if(vitems[i].IsSelect())
+			{
+				WhenMoveRow(i, n);
+				if(cancel_move)
+				{
+					cancel_move = false;
+					return;
+				}
 				vi.Add(vitems[i]);
+			}
 
 		int cnt = 0;
 
@@ -5222,6 +5241,14 @@ bool GridCtrl::SwapRows(int n, int m, bool repaint)
 	   n < fixed_rows || n > total_rows - 1 ||
 	   m < fixed_rows || m > total_rows - 1)
 		return false;
+	
+	WhenMoveRow(n, m);
+	
+	if(cancel_move)
+	{
+		cancel_move = false;
+		return false;
+	}
 
 	Swap(vitems[m], vitems[n]);
 	if(repaint)

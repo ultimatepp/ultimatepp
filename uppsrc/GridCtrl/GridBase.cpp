@@ -7,18 +7,27 @@ int GridCtrl::ItemRect::sortMode;
 
 /*---------------------------------------------------*/
 
-void GridCtrl::Item::SetCtrl(Ctrl * newCtrl)
+void GridCtrl::Item::SetCtrl(Ctrl& c)
 {
-	ctrl = newCtrl;
+	ctrl = &c;
 	ctrl->Hide();
 	ctrl->WantFocus();
-	ctrl->SetFrame(NullFrame());
-	//ctrl->SetFrame(BlackFrame());
+//	(*edits)[id].ctrl = &ctrl;
 }
 
-void GridCtrl::Item::DropCtrl()
+void GridCtrl::Item::NoCtrl()
 {
 	ctrl = NULL;
+}
+
+void GridCtrl::Item::SetDisplay(GridDisplay& gd)
+{
+	display = &gd;
+}
+
+void GridCtrl::Item::NoDisplay()
+{
+	display = NULL;
 }
 
 VectorMap<Id, int> *GridCtrl::ItemRect::aliases = NULL;
@@ -122,7 +131,6 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Edit(Ctrl &ctrl, bool b)
 	{
 		ctrl.Hide();
 		ctrl.SetFrame(BlackFrame());
-		//ctrl.SetFrame(NullFrame());
 		(*edits)[id].ctrl = &ctrl;
 		parent->holder.AddChild(&ctrl);
 	}
@@ -195,7 +203,6 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::SetFormat(const char *fmt)
 
 GridCtrl::ItemRect& GridCtrl::ItemRect::SetDisplay(GridDisplay &gd)
 {
-	//(*items)[0][id].display = &gd;
 	display = &gd;
 	return *this;
 }

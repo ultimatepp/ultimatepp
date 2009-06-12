@@ -430,19 +430,21 @@ class GridCtrl : public Ctrl
 				Convert     *convert;
 				GridDisplay *display;
 
-				void SetCtrl(Ctrl * newCtrl);
-				void DropCtrl();
+				void SetCtrl(Ctrl& ctrl);
+				void NoCtrl();
+				
+				void SetDisplay(GridDisplay& display);
+				void NoDisplay();
+				
 
 			public:
 				Value val;
-				//String cache;
 
 				Item& Editable(bool b);
 				Item& NoEditable();
 
 				Item& Clickable(bool b)  { clickable = b;     return *this; }
 				Item& NoClickable()      { clickable = false; return *this; }
-
 		};
 
 		typedef Vector< Vector<Item> > Items;
@@ -876,6 +878,7 @@ class GridCtrl : public Ctrl
 		bool cancel_remove:1;
 		bool cancel_accept:1;
 		bool cancel_cursor:1;
+		bool cancel_move:1;
 		bool mouse_move:1;
 		bool is_clipboard:1;
 		bool selecting:1;
@@ -1294,6 +1297,8 @@ class GridCtrl : public Ctrl
 
 		GridDisplay& GetDisplay() { return *display; }
 		GridCtrl&    SetDisplay(GridDisplay &gd) { display = &gd; return *this; }
+		
+		void SetDisplay(int r, int c, GridDisplay& gd);
 
 		bool IsEdit()  { return ctrls; }
 		bool StartEdit(bool mouse = false);
@@ -1314,6 +1319,7 @@ class GridCtrl : public Ctrl
 		void CancelUpdateCell() { cancel_update_cell = true; }
 		void CancelAccept()     { cancel_accept      = true; }
 		void CancelCursor()     { cancel_cursor      = true; }
+		void CancelMove()       { cancel_move        = true; }
 
 		void ClearCursor(bool remove = false);
 		void ClearRow(int r = -1, int column_offset = 0);
@@ -1692,6 +1698,8 @@ class GridCtrl : public Ctrl
 		Callback WhenRemoveRow;
 		Callback WhenRemovedRow;
 		Callback WhenDuplicateRow;
+		
+		Callback2<int, int> WhenMoveRow;
 
 		Callback WhenCancelNewRow;
 
