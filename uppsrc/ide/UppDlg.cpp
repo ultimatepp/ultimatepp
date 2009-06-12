@@ -492,9 +492,16 @@ void PackageEditor::RemoveFileOption()
 }
 
 void PackageEditor::Serialize(Stream& s) {
-	int version = 2;
+	int version = 3;
 	s / version;
-	s % filelist % package % package;
+	if(version >= 3) {
+		filelist.SerializeSettings(s);
+		package.SerializeSettings(s);
+	}
+	else {
+		s % filelist;
+		s % package % package;
+	}
 	SerializePlacement(s);
 	if(version >= 1 && version <= 2) {
 		Splitter dummy;
