@@ -139,7 +139,8 @@ void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, in
 				w.DrawImage(x, y, sx, sy, highlight ? Contrast(vhdr[theme](), 230) : vhdr[theme]());
 		}
 
-		Color dark(76, 83, 92);
+		//Color dark(76, 83, 92);
+		Color dark(155, 154, 153);
 		//Color dark(155, 154, 153);
 		Color bright(White);
 
@@ -342,6 +343,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 				tx = x + (cx - tsz.cx) / 2;
 
 			Color tfg = fg;
+			
 			if(found)
 			{
 				int chs = t - s;
@@ -351,9 +353,9 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 				{
 					int scx = GetTextSize(t, font, max(chs, fs) - chs).cx;
 					int ecx = GetTextSize(t, font, min(che, fe) - chs + 1).cx;
-					w.DrawRect(max(mx, tx) + scx, ty, ecx - scx, tcy, Color(255, 239, 45));
+					Color nbg(255 - fg.GetR(), 255 - fg.GetG(), 255 - fg.GetB());
+					w.DrawRect(max(mx, tx) + scx, ty, ecx - scx, tcy, Blend(nbg, bg, 100));
 				}
-				tfg = Black();
 			}
 
 			bool dots = !wrap && tsz.cx > gcx;

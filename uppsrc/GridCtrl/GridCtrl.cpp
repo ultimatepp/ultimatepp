@@ -237,7 +237,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	fg_live   = SColorText;
 	bg_live   = Blend(SColorHighlight, White, 100);
 	fg_found  = Color(0, 0, 0);
-	bg_found  = Color(189,231,237);
+	bg_found  = Blend(SColorHighlight, Color(189,231,237), 200);
 	fg_even   = SColorText;
 	fg_odd    = SColorText;
 	bg_even   = SColorPaper;
