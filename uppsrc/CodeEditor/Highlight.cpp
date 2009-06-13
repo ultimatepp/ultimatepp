@@ -321,7 +321,7 @@ void CodeEditor::InitKeywords()
 		};
 		static const char *upp_macros[] = {
 			"CLASSNAME", "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3",
-			"QUOTE", "XASSERT", "NEVER", "XNEVER", "CHECK", "XCHECK", "ASSERT", "RQUOTE",
+			"QUOTE", "XASSERT", "NEVER", "XNEVER", "CHECK", "XCHECK", "ASSERT",
 			"NAMESPACE_UPP", "END_UPP_NAMESPACE",
 			NULL
 		};
@@ -331,7 +331,8 @@ void CodeEditor::InitKeywords()
 			"DLOG", "DLOGF", "DDUMP", "DDUMPC", "DDUMPCC", "DDUMPCCC",
 			"RLOG", "RLOGF", "RDUMP", "RDUMPC", "RDUMPCC", "RDUMPCCC",
 			"LOGBEGIN", "LOGEND", "LOGBLOCK", "LOGHEXDUMP", "LOGSRCPOS", 
-			"RLOGBEGIN", "RLOGEND", "RLOGBLOCK", "RLOGHEXDUMP", "RLOGSRCPOS", 
+			"RLOGBEGIN", "RLOGEND", "RLOGBLOCK", "RLOGHEXDUMP", "RLOGSRCPOS", "RQUOTE",
+			"RTIMING", "TIMING", "LTIMING",
 			NULL
 		};
 		static const char *sql_base[] = {

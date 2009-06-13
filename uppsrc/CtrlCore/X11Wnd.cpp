@@ -12,7 +12,7 @@ NAMESPACE_UPP
 
 
 bool Ctrl::LogMessages
-// = true
+ = true
 ;
 #endif
 
@@ -413,12 +413,22 @@ void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
 	cw.ctrl = this;
 	cw.exposed = false;
 	cw.owner = owner;
+
+/* 
 	cw.xic = xim ? XCreateIC(xim,
 	                         XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
 	                         XNClientWindow, w,
 	                         XNFocusWindow, w,
 	                         NULL)
 	             : NULL;
+*/
+//	This seems to fix SCIM problem
+	cw.xic = xim ? XCreateIC((XIM)xim,
+	                         XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
+	                         XNClientWindow, Xroot,
+	                         NULL)
+	             : NULL;
+
 	top = new Top;
 	top->window = w;
 	long im_event_mask = 0;
