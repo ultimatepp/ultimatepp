@@ -416,13 +416,36 @@ void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
 	cw.ctrl = this;
 	cw.exposed = false;
 	cw.owner = owner;
+	
+	cw.xic = NULL;
+	
+	if(xim) {
+/*		char          **missing_list;
+		int           missing_count;
+		char          *def_string;
+	
+		static XFontSet dummy_fs = XCreateFontSet(Xdisplay, "-*-*-*-*-*-*-*-*-*-*-*-*-*-",
+		                                          &missing_list, &missing_count, &def_string);
+		DDUMP((void *)dummy_fs);
 
-	cw.xic = xim ? XCreateIC(xim,
-	                         XNInputStyle, XIMPreeditPosition|XIMStatusNothing,
-	                         XNClientWindow, w,
-	                         NULL)
-	             : NULL;
-
+		XPoint          spot;
+		spot.x = 1;
+		spot.y = 1;
+		XVaNestedList   preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, XNFontSet, dummy_fs, NULL);
+		
+		DDUMP((void *)preedit_attr);
+	
+		cw.xic = XCreateIC(xim,
+		                   XNInputStyle, XIMPreeditPosition|XIMStatusNothing,
+		                   XNPreeditAttributes, preedit_attr,
+		                   XNClientWindow, w,
+		                   NULL);
+		XFree(preedit_attr);
+		DDUMP((void *)cw.xic);*/
+		cw.xic = XCreateIC(xim,
+		                   XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
+		                   NULL);
+	}
 	top = new Top;
 	top->window = w;
 	long im_event_mask = 0;
