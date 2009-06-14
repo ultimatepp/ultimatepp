@@ -902,6 +902,30 @@ void Ide::ContextGoto0(int pos)
 		editor.SetCursor(editor.GetPos(li));
 		return;
 	}
+	int cr = editor.Ch(pos);
+	int cl = editor.Ch(pos - 1);
+	if(!IsAlNum(cr)) {
+		if(islbrkt(cr)) {
+			AddHistory();
+			editor.MoveNextBrk(false);
+			return;
+		}
+		if(isrbrkt(cr)) {
+			AddHistory();
+			editor.MovePrevBrk(false);
+			return;
+		}
+		if(islbrkt(cl)) {
+			AddHistory();
+			editor.MoveNextBrk(false);
+			return;
+		}
+		if(isrbrkt(cl)) {
+			AddHistory();
+			editor.MovePrevBrk(false);
+			return;
+		}
+	}
 	int q = l.Find("#include");
 	if(q >= 0) {
 		String path = FindIncludeFile(~l + q + 8, GetFileFolder(editfile));
