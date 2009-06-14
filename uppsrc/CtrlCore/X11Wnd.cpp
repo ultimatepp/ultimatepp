@@ -274,6 +274,7 @@ void Ctrl::TimerAndPaint() {
 	SyncCaret();
 	AnimateCaret();
 	XSync(Xdisplay, false);
+	SyncIMPosition();
 }
 
 bool Ctrl::ProcessEvent(bool *)
@@ -417,7 +418,7 @@ void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
 	cw.owner = owner;
 
 	cw.xic = xim ? XCreateIC(xim,
-	                         XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
+	                         XNInputStyle, XIMPreeditPosition|XIMStatusNothing,
 	                         XNClientWindow, w,
 	                         NULL)
 	             : NULL;
@@ -445,6 +446,8 @@ void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
 	}
 	
 	RefreshLayoutDeep();
+	
+	SyncIMPosition();
 }
 
 void Ctrl::WndDestroy0()
@@ -489,7 +492,10 @@ void Ctrl::WndDestroy0()
 		int q = Xwindow().Find(focusWindow);
 		if(q >= 0) {
 			XIC xic = Xwindow()[q].xic;
-			XSetICFocus(xic);
+			if(xic) {
+				XSetICFocus(xic);
+				SyncIMPosition();
+			}
 		}
 	}
 
@@ -827,6 +833,26 @@ void Ctrl::FocusSync()
 		KillFocus(focusWindow);
 		focusWindow = None;
 		AnimateCaret();
+	}
+}
+
+void  Ctrl::SyncIMPosition()
+{
+	if(!focusWindow)
+		return;
+	int q = Xwindow().Find(focusWindow);
+	if(q < 0)
+		return;
+	XWindow& xw = Xwindow()[q];
+	XIC xic = xw.xic;
+	if(xw.xic && xw.ctrl) {
+		XVaNestedList   preedit_attr;
+		XPoint          spot;
+		spot.x = xw.ctrl->caretx + xw.ctrl->caretcx;
+		spot.y = xw.ctrl->carety + xw.ctrl->caretcy;
+		preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, NULL);
+		XSetICValues(xw.xic, XNPreeditAttributes, preedit_attr, NULL);
+		XFree(preedit_attr);
 	}
 }
 
