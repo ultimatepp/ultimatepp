@@ -221,8 +221,15 @@ Image MakeDragImage(const Image& arrow, Image sample)
 			s += b.GetWidth();
 			Swap(c1, c2);
 		}
+#ifdef PLATFORM_X11
+		if(Ctrl::IsCompositedGui()) {
+			Image h = Rescale(b, 64, 64);
+			b = h;
+		}
+#endif
+		Over(b, Point(0, 0), arrow, arrow.GetSize());
 	}
-	Over(b, Point(0, 0), arrow, arrow.GetSize());
+
 	return b;
 }
 

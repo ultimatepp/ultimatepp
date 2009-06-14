@@ -321,7 +321,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	if(actions & DND_COPY)
 		d.copy = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndCopy(), sample);
 	if(actions & DND_MOVE)
-		d.move = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndMove(), sample);
+		d.move = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndMoveX11(), sample);
 	d.SetMaster(*this);
 	d.data = &data;
 	d.source = this;
