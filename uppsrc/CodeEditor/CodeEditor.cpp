@@ -121,6 +121,10 @@ void CodeEditor::CheckBracket(int li, int pos, int ppos, int pos0, WString ln, i
 				if(d * li >= d * limit)
 					return;
 				ln = GetWLine(li);
+				int q = ln.Find("//");
+				if(q >= 0)
+					ln = ln.Mid(0, q) + WString(' ', ln.GetCount() - q);
+				DDUMP(ln);
 				pos = d < 0 ? ln.GetLength() - 1 : 0;
 				ppos += d;
 			}
@@ -159,6 +163,31 @@ void CodeEditor::CheckBracket(int li, int pos, int ppos, int pos0, WString ln, i
 	}
 }
 
+void CodeEditor::CheckLeftBracket(int pos)
+{
+	LTIMING("CheckLeftBracket");
+	if(pos < 0 || pos >= GetLength())
+		return;
+	int ppos = pos;
+	int li = GetLinePos(pos);
+	WString ln = GetWLine(li);
+	if(islbrkt(ln[pos]))
+		CheckBracket(li, pos, ppos, ppos, ln, 1, min(li + 3000, GetLineCount()));
+}
+
+void CodeEditor::CheckRightBracket(int pos)
+{
+	LTIMING("CheckRightBracket");
+	if(pos < 0 || pos >= GetLength())
+		return;
+	int ppos = pos;
+	int li = GetLinePos(pos);
+	WString ln = GetWLine(li);
+	int c = ln[pos];
+	if(c == ')' || c == '}' || c == ']')
+		CheckBracket(li, pos, ppos, ppos, ln, -1, max(li - 3000, 0));
+}
+
 void CodeEditor::CopyWord() {
 	int p = GetCursor();
 	if(iscid(GetChar(p)) || (p > 0 && iscid(GetChar(--p)))) {
@@ -184,31 +213,6 @@ void CodeEditor::SwapChars() {
 		Insert(p, txt, true);
 		PlaceCaret(p);
 	}
-}
-
-void CodeEditor::CheckLeftBracket(int pos)
-{
-	LTIMING("CheckLeftBracket");
-	if(pos < 0 || pos >= GetLength())
-		return;
-	int ppos = pos;
-	int li = GetLinePos(pos);
-	WString ln = GetWLine(li);
-	if(islbrkt(ln[pos]))
-		CheckBracket(li, pos, ppos, ppos, ln, 1, min(li + 3000, GetLineCount()));
-}
-
-void CodeEditor::CheckRightBracket(int pos)
-{
-	LTIMING("CheckRightBracket");
-	if(pos < 0 || pos >= GetLength())
-		return;
-	int ppos = pos;
-	int li = GetLinePos(pos);
-	WString ln = GetWLine(li);
-	int c = ln[pos];
-	if(c == ')' || c == '}' || c == ']')
-		CheckBracket(li, pos, ppos, ppos, ln, -1, max(li - 3000, 0));
 }
 
 void CodeEditor::CancelBracketHighlight(int& pos)
@@ -450,17 +454,21 @@ void CodeEditor::MovePrevBrk(bool sel) {
 	int p = GetCursor();
 	if(p < 2) return;
 	if(!isrbrkt(GetChar(p - 1)))
-		while(p > 0 && !isrbrkt(GetChar(p - 1))) p--;
-	else {
-		int lvl = 1;
-		p -= 2;
-		for(;;) {
-			if(p <= 1) break;
-			int c = GetChar(p);
-			if(isrbrkt(c)) lvl++;
-			if(islbrkt(c) && --lvl == 0) break;
-			p--;
+		if(p < GetLength() - 1 && isrbrkt(GetChar(p)))
+			p++;
+		else {
+			while(p > 0 && !isrbrkt(GetChar(p - 1))) p--;
+			PlaceCaret(p, sel);
+			return;
 		}
+	int lvl = 1;
+	p -= 2;
+	for(;;) {
+		if(p <= 1) break;
+		int c = GetChar(p);
+		if(isrbrkt(c)) lvl++;
+		if(islbrkt(c) && --lvl == 0) break;
+		p--;
 	}
 	PlaceCaret(p, sel);
 }
