@@ -721,6 +721,7 @@ private:
 
 	       void  StartPopupGrab();
 	static void  EndPopupGrab();
+	static void  SyncIMPosition();
 
 	friend bool  GetMouseRight();
 	friend bool  GetMouseLeft();
