@@ -210,8 +210,10 @@ void Ctrl::ProcessEvent(XEvent *event)
 	               && event->type != MotionNotify)
 		for(XEventMap *m = sXevent; m->ID; m++)
 			if(m->ID == event->type) {
+				if(!s_starttime)
+					s_starttime = GetTickCount();
 				int t = GetTickCount() - s_starttime;
-				VppLog() << Format("%d.%03d", t / 1000, t % 1000);
+				VppLog() << Format("%d.%01d", t / 1000, t % 1000);
 				VppLog() << " EVENT " << Format("%-20.20s", m->name);
 				VppLog() << "[window: " << event->xany.window << "] ";
 				if(q >= 0)
@@ -414,18 +416,9 @@ void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
 	cw.exposed = false;
 	cw.owner = owner;
 
-/* 
 	cw.xic = xim ? XCreateIC(xim,
 	                         XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
 	                         XNClientWindow, w,
-	                         XNFocusWindow, w,
-	                         NULL)
-	             : NULL;
-*/
-//	This seems to fix SCIM problem
-	cw.xic = xim ? XCreateIC((XIM)xim,
-	                         XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
-	                         XNClientWindow, Xroot,
 	                         NULL)
 	             : NULL;
 
@@ -488,8 +481,18 @@ void Ctrl::WndDestroy0()
 		top->window = None;
 		Xwindow()[i].ctrl = NULL;
 	}
+
 	if(revertfocus && owner)
 		owner->TakeFocus();
+
+	if(focusWindow) {
+		int q = Xwindow().Find(focusWindow);
+		if(q >= 0) {
+			XIC xic = Xwindow()[q].xic;
+			XSetICFocus(xic);
+		}
+	}
+
 	delete top;
 	top = NULL;
 }
@@ -709,6 +712,7 @@ void ClearKbdState_();
 
 void Ctrl::TakeFocus()
 {
+	LLOG("TAKE_FOCUS0 " << Name());
 	GuiLock __;
 	if(IsChild()) {
 		Ctrl *w = GetTopCtrl();

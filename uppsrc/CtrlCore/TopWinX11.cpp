@@ -51,6 +51,7 @@ void TopWindow::EventProc(XWindow& w, XEvent *event)
 					TakeFocus();
 					return;
 				}
+				LLOG("Unknown WM_PROTOCOLS: " << XAtomName(a));
 			}
 	}
 	if(this_) Ctrl::EventProc(w, event);
