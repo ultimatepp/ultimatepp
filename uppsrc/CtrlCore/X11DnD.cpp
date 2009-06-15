@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-#define LLOG(x)   LOG(x)
+#define LLOG(x)   // LOG(x)
 
 #ifdef PLATFORM_X11
 
@@ -318,6 +318,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	GuiLock __; 
 	InitDndAtoms();
 	DnDLoop d;
+	Xdnd_waiting_status =  Xdnd_waiting_finished = false;
 	d.reject = actions & DND_EXACTIMAGE ? CtrlCoreImg::DndNone() : MakeDragImage(CtrlCoreImg::DndNone(), sample);
 	if(actions & DND_COPY)
 		d.copy = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndCopy(), sample);
