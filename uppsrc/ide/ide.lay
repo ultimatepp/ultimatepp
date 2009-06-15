@@ -582,3 +582,12 @@ LAYOUT(AbbreviationsLayout, 664, 476)
 	ITEM(Label, dv___7, SetLabel(t_("Use '@' character to place the caret.")).LeftPosZ(116, 304).TopPosZ(416, 19))
 END_LAYOUT
 
+LAYOUT(ImportLayout, 400, 92)
+	ITEM(Label, dv___0, SetLabel(t_("Source folder")).LeftPosZ(8, 72).TopPosZ(8, 19))
+	ITEM(EditString, folder, LeftPosZ(80, 312).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Import files")).LeftPosZ(8, 72).TopPosZ(32, 19))
+	ITEM(EditString, files, LeftPosZ(80, 312).TopPosZ(32, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(260, 64).TopPosZ(60, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(328, 64).TopPosZ(60, 24))
+END_LAYOUT
+
