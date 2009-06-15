@@ -329,6 +329,79 @@ void WorkspaceWork::AddSeparator()
 	AddItem(~name, true, true);
 }
 
+class ImportDlg : public WithImportLayout<TopWindow> {
+	typedef ImportDlg CLASSNAME;
+
+	FrameRight<Button> dir;
+	
+	void SetFolder();
+
+public:
+	ImportDlg();
+};
+
+void ImportDlg::SetFolder()
+{
+	if(!AnySourceFs().ExecuteSelectDir()) return;
+	folder <<= ~AnySourceFs();
+}
+
+ImportDlg::ImportDlg()
+{
+	CtrlLayoutOKCancel(*this, "Import directory tree into package");
+	folder.AddFrame(dir);
+	dir <<= THISBACK(SetFolder);
+	dir.SetImage(CtrlImg::smallright()).NoWantFocus();
+	files <<= "*.cpp *.h *.hpp *.c *.C *.cxx *.cc";
+}
+
+void WorkspaceWork::DoImport(const String& dir, const String& mask, bool sep, Progress& pi)
+{
+	String active = GetActivePackage();
+	if(active.IsEmpty()) return;
+	FindFile ff(AppendFileName(dir, "*.*"));
+	while(ff) {
+		String ft = ff.GetName();
+		String p = AppendFileName(dir, ft);
+		if(ff.IsFile()) {
+			if(ff.IsFile() && PatternMatchMulti(mask, ff.GetName())) {
+				if(pi.StepCanceled()) return;
+				if(sep) {
+					Package::File& f = actual.file.Add();
+					f = GetFileName(dir);
+					f.separator = f.readonly = true;
+					sep = false;
+				}
+				SaveFile(PackagePath(ft), LoadFile(p));
+				Package::File& f = actual.file.Add();
+				f = ft;
+				f.separator = f.readonly = false;
+			}
+		}
+		if(ff.IsFolder())
+			DoImport(p, mask, true, pi);
+		ff.Next();
+	}
+}
+
+void WorkspaceWork::Import()
+{
+	String active = GetActivePackage();
+	if(active.IsEmpty()) return;
+	ImportDlg dlg;
+	if(dlg.Execute() != IDOK)
+		return;
+	Progress pi("Importing file %d");
+	int fci = filelist.GetCursor();
+	int cs = filelist.GetSbPos();
+	int ci = fci >= 0 && fci < fileindex.GetCount() ? fileindex[fci] : -1;
+	DoImport(~dlg.folder, ~dlg.files, false, pi);
+	SaveLoadPackage();
+	filelist.SetSbPos(cs);
+	filelist.SetCursor(fci >= 0 ? fci : filelist.GetCount() - 1);
+	FileSelected();
+}
+
 String TppName(const String& s)
 {
 	if(s == "src")
@@ -572,8 +645,9 @@ bool WorkspaceWork::IsAux()
 	return actualpackage == tempaux || actualpackage == prjaux || actualpackage == ideaux || actualpackage == METAPACKAGE;
 }
 
-void WorkspaceWork::SpecialFileMenu(Bar& bar)
+void WorkspaceWork::SpecialFileMenu(Bar& menu)
 {
+	bool isaux = IsAux();
 	menu.Add("Insert any file(s)", THISBACK1(AddFile, ANY_FILE))
 		.Key(K_SHIFT|K_CTRL_I)
 		.Help("Insert files from anywhere on disk (discouraged in portable packages)");
@@ -585,6 +659,7 @@ void WorkspaceWork::SpecialFileMenu(Bar& bar)
 	menu.Add("Insert home directory file(s)", THISBACK1(AddFile, HOME_FILE))
 		.Help("Open file selector in current user's HOME directory");
 #endif
+	menu.Add("Import directory tree sources..", THISBACK(Import));
 }
 
 void WorkspaceWork::FileMenu(Bar& menu)

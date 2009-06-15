@@ -210,6 +210,8 @@ struct WorkspaceWork {
 	void AddItem(const String& name, bool separator, bool readonly);
 	void AddTopicGroup();
 	void AddSeparator();
+	void Import();
+	void DoImport(const String& dir, const String& mask, bool sep, Progress& pi);
 	void RemoveFile();
 	void DelFile();
 	void RenameFile();
