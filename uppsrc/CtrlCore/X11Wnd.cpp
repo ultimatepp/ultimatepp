@@ -444,6 +444,7 @@ void Ctrl::Create0(Ctrl *owner, bool redirect, bool savebits)
 		DDUMP((void *)cw.xic);*/
 		cw.xic = XCreateIC(xim,
 		                   XNInputStyle, XIMPreeditNothing|XIMStatusNothing,
+		                   XNClientWindow, w,
 		                   NULL);
 	}
 	top = new Top;
@@ -861,6 +862,7 @@ void Ctrl::FocusSync()
 
 void  Ctrl::SyncIMPosition()
 {
+/*
 	if(!focusWindow)
 		return;
 	int q = Xwindow().Find(focusWindow);
@@ -877,6 +879,7 @@ void  Ctrl::SyncIMPosition()
 		XSetICValues(xw.xic, XNPreeditAttributes, preedit_attr, NULL);
 		XFree(preedit_attr);
 	}
+*/
 }
 
 void  Ctrl::AnimateCaret()
