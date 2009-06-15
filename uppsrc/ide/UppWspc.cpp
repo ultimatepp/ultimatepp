@@ -572,16 +572,8 @@ bool WorkspaceWork::IsAux()
 	return actualpackage == tempaux || actualpackage == prjaux || actualpackage == ideaux || actualpackage == METAPACKAGE;
 }
 
-void WorkspaceWork::FileMenu(Bar& menu)
+void WorkspaceWork::SpecialFileMenu(Bar& bar)
 {
-	bool sel = filelist.IsCursor() && filelist[filelist.GetCursor()].isdir;
-	bool isaux = IsAux();
-	menu.Add(!isaux, "Insert package directory file(s)", THISBACK1(AddFile, PACKAGE_FILE))
-		.Help("Insert file relative to current package");
-	menu.Add(!isaux, "Insert topic++ group", THISBACK(AddTopicGroup));
-	menu.Add("Insert separator", THISBACK(AddSeparator))
-		.Help("Insert text separator line");
-	menu.Separator();
 	menu.Add("Insert any file(s)", THISBACK1(AddFile, ANY_FILE))
 		.Key(K_SHIFT|K_CTRL_I)
 		.Help("Insert files from anywhere on disk (discouraged in portable packages)");
@@ -593,6 +585,19 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	menu.Add("Insert home directory file(s)", THISBACK1(AddFile, HOME_FILE))
 		.Help("Open file selector in current user's HOME directory");
 #endif
+}
+
+void WorkspaceWork::FileMenu(Bar& menu)
+{
+	bool sel = filelist.IsCursor() && filelist[filelist.GetCursor()].isdir;
+	bool isaux = IsAux();
+	menu.Add(!isaux, "Insert package directory file(s)", THISBACK1(AddFile, PACKAGE_FILE))
+		.Help("Insert file relative to current package");
+	menu.Add(!isaux, "Insert topic++ group", THISBACK(AddTopicGroup));
+	menu.Add("Insert separator", THISBACK(AddSeparator))
+		.Help("Insert text separator line");
+	menu.Add("Special", THISBACK(SpecialFileMenu))
+	    .Help("Less frequently used methods of adding files to the package");
 	menu.Separator();
 	if(!organizer) {
 		if(sel)
