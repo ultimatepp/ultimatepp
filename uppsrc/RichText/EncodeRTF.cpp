@@ -1,5 +1,7 @@
 #include "RichText.h"
 
+#define LLOG(x)
+
 #include <plugin/png/png.h>
 
 NAMESPACE_UPP
@@ -97,7 +99,7 @@ String EncodeRTF(const RichText& richtext, byte charset)
 	StringStream out;
 	EncodeRTF(out, richtext, charset);
 	String s = out.GetResult();
-	LOG("EncodeRTF <<<<<\n" << s << "\n>>>>> EncodeRTF");
+	LLOG("EncodeRTF <<<<<\n" << s << "\n>>>>> EncodeRTF");
 	return s;
 }
 
