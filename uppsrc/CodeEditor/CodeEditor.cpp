@@ -124,7 +124,6 @@ void CodeEditor::CheckBracket(int li, int pos, int ppos, int pos0, WString ln, i
 				int q = ln.Find("//");
 				if(q >= 0)
 					ln = ln.Mid(0, q) + WString(' ', ln.GetCount() - q);
-				DDUMP(ln);
 				pos = d < 0 ? ln.GetLength() - 1 : 0;
 				ppos += d;
 			}

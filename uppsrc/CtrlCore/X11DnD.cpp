@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-#define LLOG(x)   // LOG(x)
+#define LLOG(x)   LOG(x)
 
 #ifdef PLATFORM_X11
 
@@ -81,7 +81,7 @@ void DnDLoop::Leave()
 void DnDLoop::Sync()
 {
 	GuiLock __; 
-	if(Xdnd_waiting_status)
+	if(Xdnd_waiting_status || Xdnd_waiting_finished)
 		return;
 	bool tx = Ctrl::TrapX11Errors();
 	Window root;
@@ -167,9 +167,10 @@ void Ctrl::DropStatusEvent(XEvent *event)
 	if(event->type == ClientMessage && dndloop && event->xclient.data.l[0] == (int)dndloop->target) {
 		if(event->xclient.message_type == XdndStatus && Xdnd_waiting_status) {
 			LLOG("XdndStatus, xdnd action: " << XAtomName(event->xclient.data.l[4]));
-			Xdnd_status = (event->xclient.data.l[1] & 1) ?
-			                 event->xclient.data.l[4] == (int)XdndActionMove ? DND_MOVE : DND_COPY
-			              : DND_NONE;
+			if(Xdnd_status == DND_NONE)
+				Xdnd_status = (event->xclient.data.l[1] & 1) ?
+				                 event->xclient.data.l[4] == (int)XdndActionMove ? DND_MOVE : DND_COPY
+				              : DND_NONE;
 			Xdnd_waiting_status = false;
 		}
 		if(event->xclient.message_type == XdndFinished && Xdnd_waiting_finished) {
@@ -194,9 +195,9 @@ void DnDLoop::LeftUp(Point, dword)
 		e.xclient.data.l[0] = src;
 		e.xclient.data.l[1] = 0;
 		e.xclient.data.l[2] = Xeventtime;
+		Xdnd_waiting_finished = true;
 		XSendEvent(Xdisplay, target, XFalse, 0, &e);
 		XFlush(Xdisplay);
-		Xdnd_waiting_finished = true;
 		int timeout = GetTickCount();
 		LLOG("Waiting for XdndFinished");
 		while(Xdnd_waiting_finished && GetTickCount() - timeout < 200) {
