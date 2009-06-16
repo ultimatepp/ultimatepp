@@ -199,7 +199,7 @@ void DockCont::Layout()
 	if (waitsync) {
 		waitsync = false;
 		if (GetCount() == 1) {
-			Value v = tabbar.Get(0);
+			Value v = tabbar.GetKey(0);
 			if (IsDockCont(v)) {
 				DockCont *dc = ContCast(v);
 				AddFrom(*dc);
@@ -233,11 +233,11 @@ void DockCont::ChildAdded(Ctrl *child)
 		return;
 	else if (DockableCtrl *dc = dynamic_cast<DockableCtrl *>(child)) {
 		Value v = ValueCast(dc);
-		tabbar.Insert(0, v, dc->GetGroup(), true);
+		tabbar.Insert(0, v, Null, dc->GetGroup(), true);
 	}	
 	else if (DockCont *dc = dynamic_cast<DockCont *>(child)) {
 		Value v = ValueCast(dc);
-		tabbar.Insert(0, v, Null, true);
+		tabbar.Insert(0, v, Null, Null, true);
 	}	
 	else 
 		return;	
@@ -339,7 +339,7 @@ void DockCont::TabDragged(int ix)
 		return;
 	if (ix >= 0) {
 		// Special code needed
-		Value v = tabbar.Get(ix);
+		Value v = tabbar.GetKey(ix);
 		if (IsDockCont(v)) {
 			DockCont *c = ContCast(v);
 			c->Remove();
@@ -361,7 +361,7 @@ void DockCont::TabContext(int ix)
 	MenuBar 		bar;
 	DockContMenu 	menu(base);
 	DockMenu 		tabmenu(base);
-	Value v = tabbar.Get(ix);
+	Value v = tabbar.GetKey(ix);
 	if (IsDockCont(v))
 		menu.ContainerMenu(bar, ContCast(v), false);
 	else
@@ -449,7 +449,7 @@ void DockCont::Clear()
 		Vector<Value> v;
 		v.SetCount(tabbar.GetCount());
 		for (int i = 0; i < tabbar.GetCount(); i++)
-			v[i] = tabbar.Get(i);
+			v[i] = tabbar.GetKey(i);
 		tabbar.Clear();
 		// Remove ctrls and signal correct state change
 		for (int i = 0; i < v.GetCount(); i++) {
@@ -482,10 +482,10 @@ void DockCont::State(DockWindow& dock, DockCont::DockState state)
 void DockCont::SignalStateChange()
 {
 	for (int i = tabbar.GetCount()-1; i >= 0; i--) {
-		if (IsDockCont(tabbar.Get(i)))
-			ContCast(tabbar.Get(i))->SignalStateChange();
+		if (IsDockCont(tabbar.GetKey(i)))
+			ContCast(tabbar.GetKey(i))->SignalStateChange();
 		else
-			DockCast(tabbar.Get(i))->WhenState();
+			DockCast(tabbar.GetKey(i))->WhenState();
 	}
 }
 
@@ -545,15 +545,15 @@ void DockCont::SetCursor(Ctrl& c)
 void DockCont::GroupRefresh()
 {
 	for (int i = 0; i < tabbar.GetCount(); i++)
-		if (!IsDockCont(tabbar.Get(i)))
-			tabbar.SetTabGroup(i, DockCast(tabbar.Get(i))->GetGroup());
+		if (!IsDockCont(tabbar.GetKey(i)))
+			tabbar.SetTabGroup(i, DockCast(tabbar.GetKey(i))->GetGroup());
 	Refresh();
 }
 
 void DockCont::GetGroups(Vector<String>& groups)
 {
 	for (int i = 0; i < tabbar.GetCount(); i++) {
-		Value v = tabbar.Get(i);
+		Value v = tabbar.GetKey(i);
 		if (IsDockCont(v))
 			ContCast(v)->GetGroups(groups);
 		else {
@@ -578,7 +578,7 @@ void DockCont::SetAllDockerPos()
 	DockWindow::PosInfo pi;
 	bool posset = false;
 	for (int i = 0; i < GetCount(); i++) {
-		Value v = tabbar.Get(i);
+		Value v = tabbar.GetKey(i);
 		if (IsDockCont(v))
 			ContCast(v)->SetAllDockerPos();
 		else {
@@ -673,11 +673,11 @@ int DockCont::GetAutoHideAlign() const
 
 bool DockCont::IsDockAllowed(int align, int dc_ix) const
 {
-	if (dc_ix >= 0) return IsDockAllowed0(align, tabbar.Get(dc_ix));
+	if (dc_ix >= 0) return IsDockAllowed0(align, tabbar.GetKey(dc_ix));
 	else if (!base->IsDockAllowed(align)) return false;
 	
 	for (int i = 0; i < tabbar.GetCount(); i++)
-		if (!IsDockAllowed0(align, tabbar.Get(i))) return false;
+		if (!IsDockAllowed0(align, tabbar.GetKey(i))) return false;
 	return true;
 }
 
@@ -689,7 +689,7 @@ bool DockCont::IsDockAllowed0(int align, const Value& v) const
 DockableCtrl * DockCont::Get0(int ix) const
 { 
 	if (ix < 0 || ix > tabbar.GetCount()) return NULL;
-	Value v = tabbar.Get(ix); 
+	Value v = tabbar.GetKey(ix); 
 	return IsDockCont(v) ? ContCast(v)->GetCurrent0() : DockCast(v); 
 }
 
@@ -707,16 +707,16 @@ void DockCont::Serialize(Stream& s)
 	const Vector<DockableCtrl *>& dcs = base->GetDockableCtrls();
 	
 	if (s.IsStoring()) {		
-		if (GetCount() == 1 && IsDockCont(tabbar.Get(0)))
-			return ContCast(tabbar.Get(0))->Serialize(s);
+		if (GetCount() == 1 && IsDockCont(tabbar.GetKey(0)))
+			return ContCast(tabbar.GetKey(0))->Serialize(s);
 
 		int cnt = GetCount();
 		s / cont / cnt;
 		for (int i = GetCount() - 1; i >= 0; i--) {
-			if (IsDockCont(tabbar.Get(i)))
-				ContCast(tabbar.Get(i))->Serialize(s);
+			if (IsDockCont(tabbar.GetKey(i)))
+				ContCast(tabbar.GetKey(i))->Serialize(s);
 			else {
-				DockableCtrl *dc = DockCast(tabbar.Get(i));
+				DockableCtrl *dc = DockCast(tabbar.GetKey(i));
 				int ix = base->FindDocker(dc);
 				s / ctrl / ix;					
 			}									

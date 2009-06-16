@@ -31,9 +31,9 @@ protected:
 	bool icons:1;
 	bool showtext:1;
 
-	virtual void PaintTabData(Draw& w, const Rect &t, const Tab& tab, const Font &font, 
-		Color ink, dword style);
-	virtual Size GetStdSize(const Tab &q);
+	virtual void PaintTab(Draw& w, const Rect &r, const Tab& tab, 
+					const Font &font, Color ink, dword style);
+	virtual Size GetStdSize(const Tab &t);
 
 	virtual void RightDown(Point p, dword keyflags);
 	virtual void LeftDown(Point p, dword keyflags)	{ TabBar::LeftDown(p, keyflags &= ~K_SHIFT); }
@@ -52,7 +52,7 @@ public:
 
 	void 	AddCtrl(DockCont& c, const String& group = Null);
 	int 	FindCtrl(const DockCont& c) const;
-	DockCont *GetCtrl(int ix)	const				{ return ValueTo<DockCont *>(Get(ix));  }	
+	DockCont *GetCtrl(int ix)	const				{ return ValueTo<DockCont *>(GetKey(ix));  }	
 	void	RemoveCtrl(int ix);
 	void	RemoveCtrl(DockCont& c)					{ return RemoveCtrl(c, FindCtrl(c)); }
 	void	RemoveCtrl(DockCont& c, int ix);

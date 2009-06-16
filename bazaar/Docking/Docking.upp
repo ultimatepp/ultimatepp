@@ -1,4 +1,4 @@
-description "Bazaar: Window Docking framework. Author: James Thomas (mrjt)";
+description "Bazaar: Window Docking framework. Author: James Thomas (mrjt)\377";
 
 uses
 	CtrlLib,
@@ -18,8 +18,8 @@ file
 	DockPane.h,
 	DockPane.cpp,
 	DockTabBar.h,
-	DockTabBar.cpp,
 	Docking.iml,
+	DockTabBar.cpp,
 	Docking.lay,
 	src.tpp,
 	Docking.t;

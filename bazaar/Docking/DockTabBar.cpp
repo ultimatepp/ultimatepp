@@ -20,11 +20,11 @@ void DockTabBar::FrameAddSize(Size& sz)
 		TabBar::FrameAddSize(sz);
 }
 
-void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
+void DockTabBar::PaintTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
 {
 	DockableCtrl *d;
 	WString txt;
-	const Value &q = tab.data;
+	const Value &q = tab.value;
 	
 	ink = (style == CTRL_DISABLED) ? SColorDisabled : ink;
 	
@@ -57,10 +57,10 @@ void DockTabBar::PaintTabData(Draw& w, const Rect &r, const Tab& tab, const Font
 	}
 }
 
-Size DockTabBar::GetStdSize(const Tab& t)
+Size DockTabBar::GetStdSize(const Tab &t)
 {
 	DockableCtrl *d;
-	const Value &q = t.data;
+	const Value &q = t.value;
 	Value v;
 	if (IsTypeRaw<DockCont *>(q)) {
 		DockCont *c = ValueTo<DockCont *>(q);
@@ -73,7 +73,7 @@ Size DockTabBar::GetStdSize(const Tab& t)
 		v = d->GetTitle();
 	}
 	int isz = (IsVert() ? d->GetIcon().GetHeight() : d->GetIcon().GetWidth());
-	return showtext ? TabBar::GetStdSize(v) + Size(isz + TB_SPACEICON, 0) : Size(isz, isz);
+	return showtext ? (TabBar::GetStdSize(v) + Size(isz+2, 0)) : Size(isz, isz);
 }
 
 void DockTabBar::RightDown(Point p, dword keyflags)
@@ -117,7 +117,7 @@ void AutoHideBar::MouseLeave()
 
 void AutoHideBar::AddCtrl(DockCont& c, const String& group)
 { 
-	TabBar::Add(RawToValue<DockCont *>(&c), group); 
+	TabBar::Add(RawToValue<DockCont *>(&c), Null, group); 
 	if (GetCount() == autohide+1)
 		RefreshParentLayout();
 	else
@@ -277,7 +277,7 @@ int AutoHideBar::FindCtrl(const DockCont& c) const
 {
 	if (&c == ctrl) return GetCursor();
 	for (int i = 0; i < GetCount(); i++) {
-		DockCont *v = ValueTo<DockCont *>(Get(i));
+		DockCont *v = ValueTo<DockCont *>(GetKey(i));
 		if (v == &c) return i;
 	}
 	return -1;
@@ -291,7 +291,7 @@ void AutoHideBar::TabDrag(int ix)
 AutoHideBar::AutoHideBar()
 {
 	ctrl = NULL;
-	AutoHideMin(0).InactiveDisabled().CanEmpty();
+	AutoHideMin(0).InactiveDisabled().MinTabCount(0);
 	popup.WhenEnter = THISBACK2(MouseEnter, Point(0, 0), 0);
 	popup.WhenLeave = THISBACK(MouseLeave);
 	DockTabBar::WhenHighlight = THISBACK(TabHighlight);
