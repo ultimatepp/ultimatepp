@@ -276,7 +276,6 @@ void WorkspaceWork::AddFile(ADDFILE af)
 {
 	String active = GetActivePackage();
 	if(active.IsEmpty()) return;
-	FileSel fss;
 	FileSel *fs = &OutputFs();
 	RealizeDirectory(GetLocalDir());
 	switch(af)
