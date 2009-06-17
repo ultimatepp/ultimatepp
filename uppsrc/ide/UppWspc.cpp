@@ -360,28 +360,35 @@ void WorkspaceWork::DoImport(const String& dir, const String& mask, bool sep, Pr
 	String active = GetActivePackage();
 	if(active.IsEmpty()) return;
 	FindFile ff(AppendFileName(dir, "*.*"));
+	Vector<String> files;
+	Vector<String> dirs;
 	while(ff) {
-		String ft = ff.GetName();
-		String p = AppendFileName(dir, ft);
-		if(ff.IsFile()) {
-			if(ff.IsFile() && PatternMatchMulti(mask, ff.GetName())) {
-				if(pi.StepCanceled()) return;
-				if(sep) {
-					Package::File& f = actual.file.Add();
-					f = GetFileName(dir);
-					f.separator = f.readonly = true;
-					sep = false;
-				}
-				SaveFile(PackagePath(ft), LoadFile(p));
-				Package::File& f = actual.file.Add();
-				f = ft;
-				f.separator = f.readonly = false;
-			}
-		}
+		String p = AppendFileName(dir, ff.GetName());
+		if(ff.IsFile() && PatternMatchMulti(mask, ff.GetName()))
+			files.Add(p);
 		if(ff.IsFolder())
-			DoImport(p, mask, true, pi);
+			dirs.Add(p);
 		ff.Next();
 	}
+	if(sep && files.GetCount()) {
+		Package::File& f = actual.file.Add();
+		f = GetFileTitle(dir);
+		f.separator = f.readonly = true;
+		sep = false;
+	}
+	Sort(files);
+	Sort(dirs);
+	for(int i = 0; i < files.GetCount(); i++) {
+		if(pi.StepCanceled())
+			throw String();
+		String name = GetFileName(files[i]);
+		SaveFile(SourcePath(active, name), LoadFile(files[i]));
+		Package::File& f = actual.file.Add();
+		f = name;
+		f.separator = f.readonly = false;
+	}
+	for(int i = 0; i < dirs.GetCount(); i++)
+		DoImport(dirs[i], mask, true, pi);
 }
 
 void WorkspaceWork::Import()
@@ -395,7 +402,10 @@ void WorkspaceWork::Import()
 	int fci = filelist.GetCursor();
 	int cs = filelist.GetSbPos();
 	int ci = fci >= 0 && fci < fileindex.GetCount() ? fileindex[fci] : -1;
-	DoImport(~dlg.folder, ~dlg.files, false, pi);
+	try {
+		DoImport(~dlg.folder, ~dlg.files, false, pi);
+	}
+	catch(String) {}
 	SaveLoadPackage();
 	filelist.SetSbPos(cs);
 	filelist.SetCursor(fci >= 0 ? fci : filelist.GetCount() - 1);
