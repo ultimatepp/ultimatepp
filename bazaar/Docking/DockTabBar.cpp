@@ -185,7 +185,7 @@ void AutoHideBar::TabClose(Value v)
 	RemoveCtrl(dc, -1);
 	dc.StateNotDocked();
 	dc.SignalStateChange();
-	if (GetCount() == autohide-1)
+	if (GetCount() == autohide)
 		RefreshParentLayout();	
 }
 
@@ -291,7 +291,7 @@ void AutoHideBar::TabDrag(int ix)
 AutoHideBar::AutoHideBar()
 {
 	ctrl = NULL;
-	AutoHideMin(0).InactiveDisabled().MinTabCount(0);
+	AutoHideMin(0).InactiveDisabled().AllowNullCursor().MinTabCount(0);
 	popup.WhenEnter = THISBACK2(MouseEnter, Point(0, 0), 0);
 	popup.WhenLeave = THISBACK(MouseLeave);
 	DockTabBar::WhenHighlight = THISBACK(TabHighlight);

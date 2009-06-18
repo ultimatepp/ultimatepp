@@ -1415,8 +1415,8 @@ void TabBar::LeftDown(Point p, dword keyflags)
 		Value v = tabs[cross].key;
 		int ix = cross;
 		if (!CancelClose(v)) {		
-			WhenClose(v);
 			Close(ix);
+			WhenClose(v);
 		}
 	}
 	else if(highlight >= 0) {
@@ -1486,7 +1486,7 @@ void TabBar::MouseWheel(Point p, int zdelta, dword keyflags)
 
 bool TabBar::ProcessMouse(int i, const Point& p)
 {
-	if(i >= 0 && tabs[i].HasMouse(p))
+	if(i >= 0 && i < tabs.GetCount() && tabs[i].HasMouse(p))
 	{
 		if (stacking && ProcessStackMouse(i, p))
 			return true;

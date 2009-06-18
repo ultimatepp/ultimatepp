@@ -363,7 +363,7 @@ public:
 	int    	GetCount() const 			{ return tabs.GetCount(); }
 
 	void   	SetCursor(int n);
-	void	KillCursor()				{ SetCursor(-1); }	
+	void	KillCursor()				{ SetCursor(-1); Refresh(); }	
 
 	Image 	GetDragSample();
 	Image 	GetDragSample(int n);
