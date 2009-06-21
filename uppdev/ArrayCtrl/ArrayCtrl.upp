@@ -6,8 +6,8 @@ uses
 
 file
 	app.tpp,
-	ArrayCtrl.h,
-	main.cpp,
+	ArrayCtrl.h include_path,
+	main.cpp optimize_speed,
 	src.tpp,
 	srcimp.tpp;
 

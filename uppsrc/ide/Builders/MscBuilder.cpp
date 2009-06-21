@@ -57,7 +57,7 @@ void   MscBuilder::AddFlags(Index<String>& cfg)
 	cfg.FindAdd("MSC");
 }
 
-String MscBuilder::CmdLine()
+String MscBuilder::CmdLine(const String& package, const Package& pkg)
 {
 	String cc;
 	if(HasFlag("ARM"))
@@ -79,7 +79,7 @@ String MscBuilder::CmdLine()
 // TRC 080605-documentation says Wp64 works in 32-bit compilation only
 //	cc << (IsMsc64() ? " -nologo -Wp64 -W3 -GR -c" : " -nologo -W3 -GR -c");
 	cc << " -nologo -W3 -GR -c";
-	cc << IncludesDefinesTargetTime();
+	cc << IncludesDefinesTargetTime(package, pkg);
 	return cc;
 }
 
@@ -162,7 +162,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 
 	bool is_shared = HasFlag("SO");
 
-	String cc = CmdLine();
+	String cc = CmdLine(package, pkg);
 	if(HasFlag("EVC")) {
 		if(!HasFlag("SH3") && !HasFlag("SH4"))
 			cc << " -Gs8192"; // disable stack checking
@@ -529,7 +529,10 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 bool MscBuilder::Preprocess(const String& package, const String& file, const String& target, bool)
 {
 	FileOut out(target);
-	return Execute(CmdLine() + " -E " + file, out);
+	String packagepath = PackagePath(package);
+	Package pkg;
+	pkg.Load(packagepath);
+	return Execute(CmdLine(package, pkg) + " -E " + file, out);
 }
 
 Builder *CreateMscBuilder()

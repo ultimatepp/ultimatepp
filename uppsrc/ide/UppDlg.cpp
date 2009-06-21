@@ -93,8 +93,12 @@ void PackageEditor::SaveOptions() {
 		actual.accepts = Split(accepts.GetText().ToString(), ' ');
 		actual.optimize_speed = optimize_speed;
 		actual.noblitz = noblitz;
-		if(IsActiveFile())
+		if(IsActiveFile()) {
 			ActiveFile().optimize_speed = optimize_speed_file;
+			DDUMP(~include_path_file);
+			ActiveFile().include_path = include_path_file;
+			DDUMP(ActiveFile().include_path);
+		}
 		SavePackage();
 	}
 }
@@ -130,6 +134,10 @@ void PackageEditor::FileEmpty()
 	fileoption.Disable();
 	optimize_speed_file = false;
 	optimize_speed_file.Disable();
+	include_path_file = false;
+	include_path_file.Disable();
+	includeable_file = false;
+	includeable_file.Disable();
 }
 
 void PackageEditor::OptionAdd(ArrayCtrl& option, int type, const char *title, const Array<OptItem>& o)
@@ -346,8 +354,14 @@ void PackageEditor::FileCursor()
 	if(IsActiveFile()) {
 		Package::File& f = ActiveFile();
 		if(!f.separator) {
-			optimize_speed_file.Enable();
-			optimize_speed_file = actual.file[actualfileindex].optimize_speed;
+			String p = GetActiveFilePath();
+			bool tpp = GetFileExt(p) == ".tpp" && IsFolder(p);
+			optimize_speed_file.Enable(!tpp);
+			optimize_speed_file <<= actual.file[actualfileindex].optimize_speed;
+			include_path_file.Enable(!tpp);
+			include_path_file <<= actual.file[actualfileindex].include_path;
+			includeable_file.Enable(tpp);
+			includeable_file <<= FileExists(AppendFileName(p, "all.i"));
 			fileoption.Enable();
 			fileoption.Clear();
 			OptionAdd(fileoption, FILEOPTION, "Additional compiler options for the file",
@@ -557,7 +571,10 @@ PackageEditor::PackageEditor()
 	charset <<= THISBACK(SaveOptions);
 	noblitz <<=
 	optimize_speed <<=
-	optimize_speed_file <<= THISBACK(SaveOptionsLoad);
+	optimize_speed_file <<=
+	include_path_file <<= THISBACK(SaveOptionsLoad);
+	
+	includeable_file <<= THISBACK(ToggleIncludeable);
 
 	Add("Add/remove flags", actual.flag);
 	Add("Uses", actual.uses);

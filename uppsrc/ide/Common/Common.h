@@ -27,7 +27,7 @@ FileSel&  AnyPackageFs();
 FileSel&  BasedSourceFs();
 FileSel&  OutputFs();
 
-Image     IdeFileImage(const String& filename, bool fast = false);
+Image     IdeFileImage(const String& filename, bool fast = false, bool include_path = false);
 
 bool FinishSave(String tmpfile, String outfile);
 bool FinishSave(String outfile);

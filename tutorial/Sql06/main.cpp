@@ -23,11 +23,14 @@ CONSOLE_APP_MAIN
 	SqlPerformScript(sch.Attributes());
 	SQL.ClearError();
 
-	for(int i = 0; i < 10; i++)
-		SQL * Insert(TEST)(A, i)(B, AsString(3 * i));
+	S_TEST x;
+	for(int i = 0; i < 10; i++) {
+		x.A = i;
+		x.B = AsString(3 * i);
+		SQL * Insert(x);
+	}
 
 	Sql sql;
-	S_TEST x;
 	sql * Select(x).From(TEST);
 	while(sql.Fetch(x))
 		Cout() << x.A << " \'" << x.B << "\'\n";
