@@ -13,7 +13,6 @@ file
 	usc.cpp,
 	Host.h,
 	Host.cpp,
-	common.iml,
 	Info readonly separator,
 	Copying;
 

@@ -4,7 +4,7 @@
 #define IMAGEFILE  <ide/Common/common.iml>
 #include <Draw/iml_source.h>
 
-void IdeFileIcon0(bool dir, const String& filename, Image& img, bool fast = false)
+void IdeFileIcon0(bool dir, const String& filename, Image& img)
 {
 	if(dir) return;
 	String ext = ToLower(GetFileExt(filename));
@@ -21,12 +21,10 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img, bool fast = fals
 		img = IdeCommonImg::Script();
 	if(ext == ".lng" || ext == ".lngj" || ext == ".t" || ext == ".jt")
 		img = IdeCommonImg::Language();
-	if(fast)
-		img = IdeCommonImg::Fast();
 	if(ext == ".icpp")
-		img = fast ? IdeCommonImg::FastISource() : IdeCommonImg::ISource();
+		img = IdeCommonImg::ISource();
 	if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx")
-		img = fast ? IdeCommonImg::FastSource() : IdeCommonImg::Source();
+		img = IdeCommonImg::Source();
 	if(ext == ".sch")
 		img = IdeCommonImg::Sch();
 	if(ext == ".sql")
@@ -35,10 +33,44 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img, bool fast = fals
 		img = IdeCommonImg::License();
 }
 
-Image IdeFileImage(const String& filename, bool fast)
+struct sImageAdd : ImageMaker {
+	Image i1, i2;
+
+	virtual String Key() const;
+	virtual Image Make() const;
+};
+
+String sImageAdd::Key() const
+{
+	int64 a[2];
+	a[0] = i1.GetSerialId();
+	a[1] = i2.GetSerialId();
+	return String((const char *)&a, 2 * sizeof(int64));
+}
+
+Image sImageAdd::Make() const
+{
+	Image dest = i1;
+	Over(dest, Point(0, 0), i2, i2.GetSize());
+	return dest;
+}
+
+Image ImageOver(const Image& back, const Image& over)
+{
+	sImageAdd h;
+	h.i1 = back;
+	h.i2 = over;
+	return MakeImage(h);
+}
+
+Image IdeFileImage(const String& filename, bool fast, bool include_path)
 {
 	Image img = CtrlImg::File();
-	IdeFileIcon0(false, filename, img, fast);
+	IdeFileIcon0(false, filename, img);
+	if(fast)
+		img = ImageOver(img, IdeCommonImg::Fast());
+	if(include_path)
+		img = ImageOver(img, IdeCommonImg::IncludePath());
 	return img;
 }
 

@@ -127,7 +127,7 @@ bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, 
 			return false;
 		if(HdependFileTime(sfile[i]) > sobjinfo[i]) {
 			ccount++;
-			if(!PreprocessJava(sfile[i], sobjfile[i], soptions[i]))
+			if(!PreprocessJava(sfile[i], sobjfile[i], soptions[i], package, pkg))
 				error = true;
 		}
 	}
@@ -178,7 +178,8 @@ bool JavaBuilder::Preprocess(const String& package, const String& file, const St
 	return Preprocess(file, target, Null, false);
 }
 
-bool JavaBuilder::PreprocessJava(String file, String target, String options)
+bool JavaBuilder::PreprocessJava(String file, String target, String options,
+                                 String package, const Package& pkg)
 {
 	String mscpp = GetVar("MSCPP_JDK");
 	String cc;
@@ -186,7 +187,7 @@ bool JavaBuilder::PreprocessJava(String file, String target, String options)
 		cc = mscpp + " /C /TP /P /nologo ";
 	else
 		cc = "cpp -C ";
-	cc << IncludesDefinesTargetTime();
+	cc << IncludesDefinesTargetTime(package, pkg);
 	int time = GetTickCount();
 	RealizePath(target);
 	String execpath;

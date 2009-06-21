@@ -47,7 +47,7 @@ struct CppBuilder : Builder {
 
 	String                 Includes(const char *sep);
 	String                 IncludesShort(const char *sep);
-	String                 IncludesDefinesTargetTime();
+	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);
 
 	String                 GetMakePath(String fn) const;
 	Point                  ExtractVersion();
@@ -72,8 +72,8 @@ struct GccBuilder : CppBuilder {
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
 	String CompilerName() const;
-	String CmdLine();
-	void BinaryToObject(String objfile, CParser& binscript, String basedir);
+	String CmdLine(const String& package, const Package& pkg);
+	void BinaryToObject(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
 };
 
 struct MscBuilder : CppBuilder {
@@ -85,7 +85,7 @@ struct MscBuilder : CppBuilder {
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
-	String CmdLine();
+	String CmdLine(const String& package, const Package& pkg);
 	String MachineName() const;
 	String LinkerName() const;
 	String PdbPch(String package, int slot, bool do_pch) const;
@@ -103,7 +103,7 @@ struct JavaBuilder : CppBuilder {
 	virtual bool   Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
 	virtual bool   Preprocess(const String& package, const String& file, const String& target, bool asmout);
 
-	bool           PreprocessJava(String file, String target, String options);
+	bool           PreprocessJava(String file, String target, String options, String package, const Package& pkg);
 	Time           AddClassDeep(String& link, String dir, String reldir);
 
 	String         JavaLine();

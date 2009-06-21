@@ -13,17 +13,18 @@ String GccBuilder::CompilerName() const
 	return HasFlag("GCC_ARM") ? "arm-wince-pe-c++" : "c++";
 }
 
-String GccBuilder::CmdLine()
+String GccBuilder::CmdLine(const String& package, const Package& pkg)
 {
 	String cc = CompilerName();
 	cc << " -c ";
-	cc << IncludesDefinesTargetTime();
+	cc << IncludesDefinesTargetTime(package, pkg);
 	if(HasFlag("GCC32"))
 		cc << " -m32";
 	return cc;
 }
 
-void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String basedir)
+void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String basedir,
+                                const String& package, const Package& pkg)
 {
 	BinObjInfo info;
 	info.Parse(binscript, basedir);
@@ -99,7 +100,7 @@ void GccBuilder::BinaryToObject(String objfile, CParser& binscript, String based
 
 	String tmpfile = ForceExt(objfile, ".c");
 	SaveFile(tmpfile, fo);
-	String cc = CmdLine();
+	String cc = CmdLine(package, pkg);
 	cc << " -c -o " << GetHostPathQ(objfile) << " -x c " << GetHostPathQ(tmpfile);
 	int slot = AllocSlot();
 	if(slot < 0 || !Run(cc, slot, objfile, 1))
@@ -123,7 +124,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 	bool is_shared = HasFlag("SO");
 	String shared_ext = (HasFlag("WIN32") ? ".dll" : ".so");
 
-	String cc = CmdLine();
+	String cc = CmdLine(package, pkg);
 	if(HasFlag("WIN32") && HasFlag("MT"))
 		cc << " -mthreads";
 	if(HasFlag("DEBUG_MINIMAL"))
@@ -249,7 +250,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 					if(brcdata.IsVoid())
 						throw Exc(NFormat("error reading file '%s'", fn));
 					CParser parser(brcdata, fn);
-					BinaryToObject(GetHostPath(objfile), parser, GetFileDirectory(fn));
+					BinaryToObject(GetHostPath(objfile), parser, GetFileDirectory(fn), package, pkg);
 				}
 				catch(Exc e) {
 					PutConsole(e);
@@ -457,7 +458,7 @@ bool GccBuilder::Preprocess(const String& package, const String& file, const Str
 	ChDir(packagedir);
 	PutVerbose("cd " + packagedir);
 
-	String cmd = CmdLine();
+	String cmd = CmdLine(package, pkg);
 	cmd << " " << Gather(pkg.option, config.GetKeys());
 	cmd << " -o " << target;
 	cmd << (asmout ? " -S " : " -E ") << GetHostPathQ(file);

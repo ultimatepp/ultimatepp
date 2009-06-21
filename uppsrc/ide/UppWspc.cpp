@@ -182,7 +182,7 @@ void WorkspaceWork::LoadActualPackage()
 					}
 				}
 			}
-			Image m = IdeFileImage(f, f.optimize_speed);
+			Image m = IdeFileImage(f, f.optimize_speed, f.include_path);
 			if(GetFileExt(p) == ".tpp" && IsFolder(p))
 				if(FileExists(AppendFileName(p, "all.i")))
 					m = TopicImg::IGroup();
@@ -712,7 +712,7 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		menu.Separator();
 		String p = GetActiveFilePath();
 		if(GetFileExt(p) == ".tpp" && IsFolder(p)) {
-			menu.Add("Includeable", THISBACK(ToggleIncludeable))
+			menu.Add("Includeable topic group", THISBACK(ToggleIncludeable))
 			    .Check(FileExists(AppendFileName(p, "all.i")));
 			if(IsSvnDir(p))
 				menu.Add("Svn Synchronize " + p, THISBACK1(SyncSvnDir, p));
@@ -720,8 +720,18 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		else
 			menu.Add("Optimize for speed", THISBACK(ToggleFileSpeed))
 			    .Check(ActiveFile().optimize_speed);
+		menu.Add("Add to include path", THISBACK(ToggleAddInclude))
+		    .Check(ActiveFile().include_path);
 	}
 	FilePropertiesMenu(menu);
+}
+
+void WorkspaceWork::ToggleAddInclude()
+{
+	if(IsActiveFile()) {
+		ActiveFile().include_path = !ActiveFile().include_path;
+		SaveLoadPackageNS();
+	}
 }
 
 void WorkspaceWork::ToggleFileSpeed()

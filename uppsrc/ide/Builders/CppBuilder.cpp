@@ -346,9 +346,14 @@ String CppBuilder::IncludesShort(const char *sep)
 	return cc;
 }
 
-String CppBuilder::IncludesDefinesTargetTime()
+String CppBuilder::IncludesDefinesTargetTime(const String& package, const Package& pkg)
 {
 	String cc = Includes(" -I");
+	for(int i = 0; i < pkg.GetCount(); i++) {
+		const Package::File& f = pkg[i];
+		if(f.include_path)
+			cc << " -I" << GetHostPathQ(GetFileFolder(SourcePath(package, f)));
+	}
 	for(int i = 0; i < config.GetCount(); i++)
 		cc << " -Dflag" << config[i];
 	Time t = GetSysTime();
