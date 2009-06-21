@@ -1,4 +1,4 @@
-description "Ultimate++ website generation and export.";
+description "Ultimate++ website generation and export.\377";
 
 uses
 	Web,
@@ -8,7 +8,8 @@ uses
 	CtrlLib,
 	plugin\png,
 	ide,
-	plugin\ftp;
+	plugin\ftp,
+	Sql;
 
 options(GCC) -DNOWSTRING;
 
