@@ -95,9 +95,7 @@ void PackageEditor::SaveOptions() {
 		actual.noblitz = noblitz;
 		if(IsActiveFile()) {
 			ActiveFile().optimize_speed = optimize_speed_file;
-			DDUMP(~include_path_file);
 			ActiveFile().include_path = include_path_file;
-			DDUMP(ActiveFile().include_path);
 		}
 		SavePackage();
 	}

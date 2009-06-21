@@ -368,7 +368,6 @@ void putfopt(Stream& out, const char *key, const Array<OptItem>& m)
 }
 
 bool Package::Save(const char *path) const {
-	DDUMP(path);
 	StringStream out;
 	if(description.GetCount() || italic || bold || !IsNull(ink)) {
 		String d = description;
@@ -411,8 +410,6 @@ bool Package::Save(const char *path) const {
 				out << " font " << f.font;
 			if(f.optimize_speed)
 				out << " optimize_speed";
-			DDUMP(f);
-			DDUMP(f.include_path);
 			if(f.include_path)
 				out << " include_path";
 			if(f.charset > 0 && f.charset < CharsetCount() || f.charset == CHARSET_UTF8)
