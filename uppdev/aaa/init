@@ -1,5 +1,0 @@
-#ifndef _aaa_icpp_init_stub
-#define _aaa_icpp_init_stub
-#include "CtrlLib/init"
-#include "Esc/init"
-#endif
