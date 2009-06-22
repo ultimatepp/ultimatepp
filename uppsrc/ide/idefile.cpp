@@ -259,7 +259,10 @@ void Ide::SaveFile(bool always)
 	fd.filetime = edittime;
 	if(!editor.IsDirty() && !always)
 		return;
-
+#ifdef PLATFORM_POSIX
+	struct stat statbuf;
+	int statcode = stat(editfile, &statbuf);
+#endif
 	TouchFile(editfile);
 	String tmpfile = editfile + ".$tmp", outfile = editfile;
 	{
@@ -308,6 +311,11 @@ void Ide::SaveFile(bool always)
 			progress.Reset();
 		}
 	}
+
+#ifdef PLATFORM_POSIX
+	if(statcode == 0)
+		chmod(editfile, statbuf.st_mode);
+#endif
 
 	if(!designer) {
 		FindFile ff(editfile);
