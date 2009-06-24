@@ -91,6 +91,11 @@ LogStream& StdLogStream()
 	return *s;
 }
 
+void CloseStdLog()
+{
+	StdLogStream().Close();
+}
+
 void StdLogSetup(dword options)
 {
 	StdLogStream().SetOptions(options);
