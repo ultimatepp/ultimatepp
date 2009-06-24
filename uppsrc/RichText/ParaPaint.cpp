@@ -141,10 +141,12 @@ String RichObjectImageMaker::Key() const
 
 Image RichObjectImageMaker::Make() const
 {
-	ImageDraw iw(sz);
+	return object.ToImage(sz, context);
+/*	ImageDraw iw(sz);
 	iw.DrawRect(sz, SColorPaper());
 	object.Paint(iw, sz, context);
 	return iw;
+*/
 }
 
 void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& pi,
