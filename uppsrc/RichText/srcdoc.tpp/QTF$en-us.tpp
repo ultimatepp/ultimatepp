@@ -441,7 +441,8 @@ y]&]
 [s0; &]
 [ {{1879:8121^ [s0; [@(0.0.255) format]]
 :: [s0; Format of objects. This format must be recognized by the application. 
-By default, RichText recognizes the PNG format.]
+By default, RichText recognizes the PNG format and [*/ iml] format 
+(see bellow).]
 :: [s0; [@(0.0.255) cx]]
 :: [s0; Width of object in dots.]
 :: [s0; [@(0.0.255) cy]]
@@ -468,6 +469,15 @@ Data are encoded in 7 byte groups, which corresponds to 8 bytes
 of encoded format. First byte of this 8 bytes block always contains 
 eight bits of following bytes, LSB (that is bit 0) being the 
 eight bit for first byte in block.&]
+[s0; &]
+[s0; [*/3 iml][*3  format]&]
+[s0;* &]
+[s0; [*/ iml][*  ]format is text format of rich object where text data 
+reference existing .iml based Image as pair [@(0.0.255) iml`_class`_name]:[@(0.0.255) i
+mage`_name]. Example of full object definition in [*/ iml] format:&]
+[s0; &]
+[s0; [*C@3 `"`@`@iml:400`*400``CtrlImg:exclamation```"]&]
+[s0;@(0.0.255) &]
 [s0;@(0.0.255) &]
 [s0;@(0.0.255) &]
 [s2; Tables&]

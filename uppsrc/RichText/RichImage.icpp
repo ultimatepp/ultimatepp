@@ -8,8 +8,8 @@ struct RichImage : public RichObjectType {
 	virtual String GetTypeName(const Value& v) const;
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(const Value& data, Size sz) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz, void *) const;
+	virtual Image  ToImage(const Value& data, Size sz, void *) const;
 
 	virtual bool   Accept(PasteClip& clip);
 	virtual Value  Read(PasteClip& clip);
@@ -57,14 +57,14 @@ Size   RichImage::GetPhysicalSize(const Value& data) const
 	return sz;
 }
 
-void   RichImage::Paint(const Value& data, Draw& w, Size sz) const
+void   RichImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 {
 	Image x = LoadImageFromString(data);
 //	Size outsz(min(sz.cx, 4 * x.GetWidth()), min(sz.cy, 4 * x.GetHeight()));
 	w.DrawImage(0, 0, sz.cx, sz.cy, x);
 }
 
-Image  RichImage::ToImage(const Value& data, Size sz) const
+Image  RichImage::ToImage(const Value& data, Size sz, void *) const
 {
 	return Rescale(LoadImageFromString(data), sz);
 }
@@ -88,7 +88,7 @@ struct RichPNG : public RichObjectType {
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
 	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(const Value& data, Size sz) const;
+	virtual Image  ToImage(const Value& data, Size sz, void *) const;
 };
 
 String RichPNG::GetTypeName(const Value& v) const
@@ -138,7 +138,7 @@ void RichPNG::Paint(const Value& data, Draw& w, Size sz) const
 	w.DrawImage(0, 0, outsz.cx, outsz.cy, x);
 }
 
-Image RichPNG::ToImage(const Value& data, Size sz) const
+Image RichPNG::ToImage(const Value& data, Size sz, void *) const
 {
 	if(IsString(data)) {
 		ImageDraw iw(sz);
@@ -160,8 +160,8 @@ struct RichRawImage : public RichObjectType {
 	virtual String Write(const Value& v) const;
 	virtual Size   GetPhysicalSize(const Value& data) const;
 	virtual Size   GetPixelSize(const Value& data) const;
-	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
-	virtual Image  ToImage(const Value& data, Size sz) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz, void *) const;
+	virtual Image  ToImage(const Value& data, Size sz, void *) const;
 };
 
 String RichRawImage::GetTypeName(const Value& v) const
@@ -199,7 +199,7 @@ Size RichRawImage::GetPixelSize(const Value& data) const
 	return Size(0, 0);
 }
 
-void RichRawImage::Paint(const Value& data, Draw& w, Size sz) const
+void RichRawImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 {
 	String s = data;
 	StringStream ss(s);
@@ -211,7 +211,7 @@ void RichRawImage::Paint(const Value& data, Draw& w, Size sz) const
 	}
 }
 
-Image RichRawImage::ToImage(const Value& data, Size sz) const
+Image RichRawImage::ToImage(const Value& data, Size sz, void *) const
 {
 	String s = data;
 	StringStream ss(s);
@@ -231,6 +231,56 @@ RichObject CreateRawImageObject(const String& s, int cx, int cy)
 	o.InitSize(cx, cy);
 	return o;
 }
+
+struct RichImlImage : public RichObjectType {
+	virtual String GetTypeName(const Value& v) const;
+	virtual Size   GetPhysicalSize(const Value& data) const;
+	virtual Size   GetPixelSize(const Value& data) const;
+	virtual void   Paint(const Value& data, Draw& w, Size sz) const;
+	virtual Image  ToImage(const Value& data, Size sz, void *) const;
+	virtual bool   IsText() const;
+	
+	Image Get(const Value& v) const;
+};
+
+Image RichImlImage::Get(const Value& v) const
+{
+	return GetImlImage((String)v);
+}
+
+String RichImlImage::GetTypeName(const Value& v) const
+{
+	return "IML";
+}
+
+bool RichImlImage::IsText() const
+{
+	return true;
+}
+
+Size RichImlImage::GetPhysicalSize(const Value& data) const
+{
+	return Get(data).GetSize();
+}
+
+Size RichImlImage::GetPixelSize(const Value& data) const
+{
+	return Get(data).GetSize();
+}
+
+void RichImlImage::Paint(const Value& data, Draw& w, Size sz) const
+{
+	w.DrawImage(0, 0, sz.cx, sz.cy, Get(data));
+}
+
+Image RichImlImage::ToImage(const Value& data, Size sz, void *) const
+{
+	return Rescale(Get(data), sz);
+}
+
+INITBLOCK {
+	RichObject::Register("iml", &Single<RichImlImage>());
+};
 
 #endif
 

@@ -112,9 +112,10 @@ Image RichObjectType::ToImage(const Value& data, Size sz) const
 
 Image RichObjectType::ToImage(const Value& data, Size sz, void *context) const
 {
-	ImageDraw w(sz);
-	Paint(data, w, sz, context);
-	return w;
+	ImageDraw iw(sz);
+	iw.DrawRect(sz, SColorPaper());
+	Paint(data, iw, sz, context);
+	return iw;
 }
 
 String RichObjectType::GetLink(const Value& data, Point pt, Size sz) const
