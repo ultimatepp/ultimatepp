@@ -113,6 +113,7 @@ protected:
 	WString         nulltext;
 	Color           nullink;
 	Font            nullfont;
+	Image           nullicon;
 	int             maxlen;
 	int             autosize;
 	byte            charset;
@@ -202,6 +203,8 @@ public:
 	EditField& SetFont(Font _font);
 	EditField& ClickSelect(bool b = true)    { clickselect = b; return *this; }
 	EditField& InitCaps(bool b = true)       { initcaps = b; return *this; }
+	EditField& NullText(const Image& icon, const char *text = t_("(default)"), Color ink = SColorDisabled);
+	EditField& NullText(const Image& icon, const char *text, Font fnt, Color ink);
 	EditField& NullText(const char *text = t_("(default)"), Color ink = SColorDisabled);
 	EditField& NullText(const char *text, Font fnt, Color ink);
 	EditField& MaxChars(int mc)              { maxlen = mc; return *this; }

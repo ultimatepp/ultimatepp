@@ -277,8 +277,14 @@ void EditField::Paint(Draw& w)
 	w.Clipoff(2, yy, sz.cx - 4, fcy);
 	int x = -sc;
 	bool ar = alignright && !HasFocus();
-	if(IsNull(text) && !IsNull(nulltext)) {
+	if(IsNull(text) && (!IsNull(nulltext) || !IsNull(nullicon))) {
 		const wchar *txt = nulltext;
+		if(!IsNull(nullicon)) {
+			int icx = nullicon.GetWidth();
+			w.DrawRect(x, 0, icx, fcy, paper);
+			w.DrawImage(x, (fcy - nullicon.GetHeight()) / 2, nullicon);
+			x += icx + 4;
+		}
 		Paints(w, x, fcy, txt, nullink, paper, nulltext.GetLength(), false, nullfont);
 	}
 	else {
@@ -963,14 +969,25 @@ EditField& EditField::SetFont(Font _font)
 	return *this;
 }
 
-EditField& EditField::NullText(const char *text, Font fnt, Color ink)
+EditField& EditField::NullText(const Image& icon, const char *text, Font fnt, Color ink)
 {
+	nullicon = icon;
 	nulltext = text;
 	nulltext << " ";
 	nullink = ink;
 	nullfont = fnt;
 	Refresh();
 	return *this;
+}
+
+EditField& EditField::NullText(const Image& icon, const char *text, Color ink)
+{
+	return NullText(icon, text, GetFont().Italic(), ink);
+}
+
+EditField& EditField::NullText(const char *text, Font fnt, Color ink)
+{
+	return NullText(Null, text, fnt, ink);
 }
 
 EditField& EditField::NullText(const char *text, Color ink)
