@@ -559,7 +559,7 @@ void PlotterCtrl::PostRefresh()
 
 void PlotterCtrl::Paint(Draw& draw)
 {
-	LOGBLOCK("PlotterCtrl::Paint");
+	LLOGBLOCK("PlotterCtrl::Paint");
 	LLOG("PlotterCtrl::Paint @ " << GetSysTime());
 	bool shown = IsDragging();
 	DragHide();
