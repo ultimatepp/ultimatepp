@@ -376,23 +376,23 @@ Theme& Theme::Apply() {
 		
 		if (group  == "button" && useButton)
 			LoadButton(Button::StyleNormal().Write(), set, MakePath(folder, "Button"), "Button");
-		else if (group  == "okbutton")
+		else if (group  == "okbutton" && useOkButton)
 			LoadButton(Button::StyleOk().Write(), set, MakePath(folder, "OkButton"), "OkButton");
-		else if (group  == "edgebutton")
+		else if (group  == "edgebutton" && useEdgeButton)
 			LoadButton(Button::StyleEdge().Write(), set, MakePath(folder, "EdgeButton"), "EdgeButton");
-		else if (group  == "leftedgebutton")
+		else if (group  == "leftedgebutton" && useLEdgeButton)
 			LoadButton(Button::StyleLeftEdge().Write(), set, MakePath(folder, "LeftEdgeButton"), "LeftEdgeButton");
-		else if (group  == "option0")
+		else if (group  == "option0" && useOption)
 			LoadOption0(set, MakePath(folder, "Option"), "Option0");
-		else if (group  == "option1")
+		else if (group  == "option1" && useOption)
 			LoadOption1(set, MakePath(folder, "Option"), "Option1");
-		else if (group  == "option2")
+		else if (group  == "option2" && useOption)
 			LoadOption2(set, MakePath(folder, "Option"), "Option2");
-		else if (group  == "switch0")
+		else if (group  == "switch0" && useSwitch)
 			LoadSwitch0(set, MakePath(folder, "Switch"), "Switch0");
-		else if (group  == "switch1")
+		else if (group  == "switch1" && useSwitch)
 			LoadSwitch1(set, MakePath(folder, "Switch"), "Switch1");
-		else if (group  == "spininc")
+		else if (group  == "spininc" && useOption)
 			LoadButton(SpinButtons::StyleDefault().Write().inc, set, MakePath(folder, "Spin"), "SpinInc");
 		else if (group  == "spindec")
 			LoadButton(SpinButtons::StyleDefault().Write().dec, set, MakePath(folder, "Spin"), "SpinDec");
@@ -411,7 +411,7 @@ Theme& Theme::Apply() {
 		else if (group  == "menubar")
 			LoadMenuBar(MenuBar::StyleDefault().Write(), set, MakePath(folder, "MenuBar"), "Menu");
 		else if (group  == "toolbar")
-			LoadToolBar(ToolBar::StyleDefault().Write(), set, MakePath(folder, "MenuBar"), "Menu");
+			LoadToolBar(ToolBar::StyleDefault().Write(), set, MakePath(folder, "ToolBar"), "ToolBar");
 		else if (group  == "editfield") 
 			LoadEditField(EditField::StyleDefault().Write(), set, MakePath(folder, "EditField"), "EditField");
 		else if (group  == "viewedge") {
@@ -447,6 +447,10 @@ Theme& Theme::Apply() {
 			String cm = GetMap(set, "colormark");
 			if (!cm.IsEmpty())
 				SColorMark_Write(StringToObject(cm));
+			
+			String cd = GetMap(set, "colordissabled");
+			if (!cd.IsEmpty())
+				SColorDisabled_Write(StringToObject(cd));
 		}
 	}
 	return *this;

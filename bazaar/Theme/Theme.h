@@ -17,6 +17,11 @@ private:
 	bool useTab;
 	bool useDropC;
 	bool useDropL;
+	bool useOkButton;
+	bool useEdgeButton;
+	bool useLEdgeButton;
+	bool useOption;
+	bool useSwitch;
 	
 	void LoadEditField(EditField::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
 	void LoadButton(Button::Style& d, const VectorMap<String, String>& set, const String& dir, const String& file);
@@ -45,6 +50,12 @@ public:
 	
 	bool   HasButton()						{ return GetGroup("button") >= 0; }
 	Theme& UseButton(bool use)				{ useButton = use; return *this; }
+	bool   HasOkButton()					{ return GetGroup("okbutton") >= 0; }
+	Theme& UseOkButton(bool use)			{ useOkButton = use; return *this; }
+	bool   HasEdgeButton()					{ return GetGroup("edgebutton") >= 0; }
+	Theme& UseEdgeButton(bool use)			{ useEdgeButton = use; return *this; }
+	bool   HasLeftEdgeButton()				{ return GetGroup("leftedgebutton") >= 0; }
+	Theme& UseLeftEdgeButton(bool use)		{ useLEdgeButton = use; return *this; }
 	bool   HasHeaderCtrl()					{ return GetGroup("headerctrl") >= 0; }
 	Theme& UseHeaderCtrl(bool use)			{ useHeader = use; return *this; }
 	bool   HasProgressIndicator()			{ return GetGroup("progress") >= 0; }
@@ -54,10 +65,16 @@ public:
 	bool   HasDropChoice()					{ return GetGroup("dropchoice") >= 0; }
 	Theme& UseDropChoice(bool use)			{ useDropC = use; return *this; }
 	bool   HasDropList()					{ return GetGroup("droplist") >= 0; }
-	Theme& UseDropList(bool use)			{ useDropL = use; return *this; }	
+	Theme& UseDropList(bool use)			{ useDropL = use; return *this; }
+	bool   HasSwitch()						{ return GetGroup("switch0") >= 0 || GetGroup("switch1") >= 0; }
+	Theme& UseSwitch(bool use)				{ useSwitch = use; return *this; }	
+	bool   HasOption()						{ return GetGroup("option0") >= 0 || GetGroup("option1") >= 0 || GetGroup("option2") >= 0; }
+	Theme& UseOption(bool use)				{ useOption = use; return *this; }
 		
 	Theme(): useButton(true), useHeader(true), useProgress(true), useTab(true),
-				useDropC(true), useDropL(true)			{}
+				useDropC(true), useDropL(true), useOkButton(true),
+				useEdgeButton(true), useLEdgeButton(true), useOption(true),
+				useSwitch(true)			{}
 };
 
 #endif
