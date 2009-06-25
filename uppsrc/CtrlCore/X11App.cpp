@@ -180,7 +180,15 @@ static void sPanicMessageBox(const char *title, const char *text)
 	XSelectInput(display, win, ExposureMask|KeyPressMask|ButtonPressMask|StructureNotifyMask);
 	XGCValues values;
 	GC gc = XCreateGC(display, win, 0, &values);
+	// New section
+	unsigned long wina[1];
+	wina[0] = XAtom("_NET_WM_STATE_ABOVE");
+	XChangeProperty(display, win, XAtom("_NET_WM_STATE"), XAtom("ATOM"), 32,
+	                PropModeReplace, (const unsigned char *)&wina, 1);
 	XMapWindow(display, win);
+	XSetInputFocus(display, win, RevertToParent, CurrentTime);
+	// End section
+	XRaiseWindow(display, win);
 	XFontStruct *font_info = XQueryFont(display, XGContextFromGC(gc));
 	for(;;) {
 		XEvent e;
