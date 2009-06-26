@@ -45,8 +45,8 @@ struct CppBuilder : Builder {
 	bool                   HasFlag(const char *f) const        { return config.Find(f) >= 0; }
 	Vector<String>         CustomStep(const String& file);
 
-	String                 Includes(const char *sep);
-	String                 IncludesShort(const char *sep);
+	String                 Includes(const char *sep, const String& package, const Package& pkg);
+	String                 IncludesShort(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);
 
 	String                 GetMakePath(String fn) const;

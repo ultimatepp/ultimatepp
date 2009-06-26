@@ -182,7 +182,7 @@ void WorkspaceWork::LoadActualPackage()
 					}
 				}
 			}
-			Image m = IdeFileImage(f, f.optimize_speed, f.include_path);
+			Image m = IdeFileImage(f, f.optimize_speed);
 			if(GetFileExt(p) == ".tpp" && IsFolder(p))
 				if(FileExists(AppendFileName(p, "all.i")))
 					m = TopicImg::IGroup();
@@ -720,18 +720,8 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		else
 			menu.Add("Optimize for speed", THISBACK(ToggleFileSpeed))
 			    .Check(ActiveFile().optimize_speed);
-		menu.Add("Add to include path", THISBACK(ToggleAddInclude))
-		    .Check(ActiveFile().include_path);
 	}
 	FilePropertiesMenu(menu);
-}
-
-void WorkspaceWork::ToggleAddInclude()
-{
-	if(IsActiveFile()) {
-		ActiveFile().include_path = !ActiveFile().include_path;
-		SaveLoadPackageNS();
-	}
 }
 
 void WorkspaceWork::ToggleFileSpeed()

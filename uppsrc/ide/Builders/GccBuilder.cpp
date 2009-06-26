@@ -238,7 +238,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 			if(rc) {
 				String exec;
 				exec << "windres -i " << GetHostPathQ(fn)
-					<< " -o " << GetHostPathQ(objfile) << IncludesShort(" --include-dir=");
+					<< " -o " << GetHostPathQ(objfile) << IncludesShort(" --include-dir=", package, pkg);
 				PutVerbose(exec);
 				int slot = AllocSlot();
 				execerr = (slot < 0 || !Run(exec, slot, GetHostPath(objfile), 1));

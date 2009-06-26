@@ -216,7 +216,6 @@ struct WorkspaceWork {
 	void DelFile();
 	void RenameFile();
 	void ToggleFileSpeed();
-	void ToggleAddInclude();
 	void ToggleIncludeable();
 
 	void AddNormalUses();
@@ -248,7 +247,7 @@ struct PackageEditor : WorkspaceWork, WithUppLayout<TopWindow> {
 	virtual void PackageCursor();
 
 	enum OptionType {
-		FLAG = 0, USES, TARGET, LIBRARY, LINK, COMPILER,
+		FLAG = 0, USES, TARGET, LIBRARY, LINK, COMPILER, INCLUDE,
 		FILEOPTION, FILEDEPENDS
 	};
 
