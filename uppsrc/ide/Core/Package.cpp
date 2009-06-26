@@ -194,6 +194,7 @@ void Package::Load(const char *path)
 		option.Clear();
 		link.Clear();
 		uses.Clear();
+		include.Clear();
 		accepts.Clear();
 		file.Clear();
 		config.Clear();
@@ -209,7 +210,8 @@ void Package::Load(const char *path)
 				   !LoadOpt(p, "library", library) &&
 				   !LoadOpt(p, "flags", flag) &&
 				   !LoadOpt(p, "target", target) &&
-				   !LoadOpt(p, "uses", uses))
+				   !LoadOpt(p, "uses", uses) &&
+				   !LoadOpt(p, "include", include))
 				if(p.Id("charset"))
 					charset = CharsetByName(p.ReadString());
 				else
@@ -263,9 +265,6 @@ void Package::Load(const char *path)
 							else
 							if(p.Id("optimize_size"))
 								file.Top().optimize_speed = false;
-							else
-							if(p.Id("include_path"))
-								file.Top().include_path = true;
 							else
 							if(p.Id("readonly"))
 								file.Top().readonly = true;
@@ -393,6 +392,7 @@ bool Package::Save(const char *path) const {
 	putopt(out, "library", library);
 	putopt(out, "options", option);
 	putopt(out, "link", link);
+	putopt(out, "include", include);
 	if(file.GetCount()) {
 		out << "file\n";
 		int i;
@@ -410,8 +410,6 @@ bool Package::Save(const char *path) const {
 				out << " font " << f.font;
 			if(f.optimize_speed)
 				out << " optimize_speed";
-			if(f.include_path)
-				out << " include_path";
 			if(f.charset > 0 && f.charset < CharsetCount() || f.charset == CHARSET_UTF8)
 				out << " charset " << AsCString(CharsetName(f.charset));
 			if(!IsNull(f.highlight))

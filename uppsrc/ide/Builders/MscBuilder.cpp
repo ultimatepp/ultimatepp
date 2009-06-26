@@ -278,7 +278,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 			if(rc) {
 				PutConsole(GetFileNamePos(fn));
 				int slot = AllocSlot();
-				if(slot < 0 || !Run("rc /fo" + GetHostPathQ(objfile) + Includes(" /i")
+				if(slot < 0 || !Run("rc /fo" + GetHostPathQ(objfile) + Includes(" /i", package, pkg)
 					+ ' ' + GetHostPathQ(fn), slot, GetHostPath(objfile), 1))
 					execerr = true;
 			}

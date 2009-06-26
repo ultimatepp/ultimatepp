@@ -330,30 +330,35 @@ Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 	return b;
 }
 
-String CppBuilder::Includes(const char *sep)
+String CppBuilder::Includes(const char *sep, const String& package, const Package& pkg)
 {
 	String cc;
 	for(int i = 0; i < include.GetCount(); i++)
 		cc << sep << GetHostPathQ(include[i]);
+	for(int i = 0; i < pkg.include.GetCount(); i++) {
+		const OptItem& m = pkg.include[i];
+		if(MatchWhen(m.when, config.GetKeys()))
+			cc << sep << GetHostPathQ(SourcePath(package, m.text));
+	}	
 	return cc;
 }
 
-String CppBuilder::IncludesShort(const char *sep)
+String CppBuilder::IncludesShort(const char *sep, const String& package, const Package& pkg)
 {
 	String cc;
 	for(int i = 0; i < include.GetCount(); i++)
 		cc << sep << GetHostPathShortQ(include[i]);
+	for(int i = 0; i < pkg.include.GetCount(); i++) {
+		const OptItem& m = pkg.include[i];
+		if(MatchWhen(m.when, config.GetKeys()))
+			cc << sep << GetHostPathShortQ(SourcePath(package, m.text));
+	}
 	return cc;
 }
 
 String CppBuilder::IncludesDefinesTargetTime(const String& package, const Package& pkg)
 {
-	String cc = Includes(" -I");
-	for(int i = 0; i < pkg.GetCount(); i++) {
-		const Package::File& f = pkg[i];
-		if(f.include_path)
-			cc << " -I" << GetHostPathQ(GetFileFolder(SourcePath(package, f)));
-	}
+	String cc = Includes(" -I", package, pkg);
 	for(int i = 0; i < config.GetCount(); i++)
 		cc << " -Dflag" << config[i];
 	Time t = GetSysTime();

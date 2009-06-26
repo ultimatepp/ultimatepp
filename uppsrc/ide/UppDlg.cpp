@@ -93,10 +93,8 @@ void PackageEditor::SaveOptions() {
 		actual.accepts = Split(accepts.GetText().ToString(), ' ');
 		actual.optimize_speed = optimize_speed;
 		actual.noblitz = noblitz;
-		if(IsActiveFile()) {
+		if(IsActiveFile())
 			ActiveFile().optimize_speed = optimize_speed_file;
-			ActiveFile().include_path = include_path_file;
-		}
 		SavePackage();
 	}
 }
@@ -188,7 +186,7 @@ void PackageEditor::PackageCursor()
 		accepts.Enable();
 		option.Enable();
 		option.Clear();
-		for(int i = FLAG; i <= COMPILER; i++)
+		for(int i = FLAG; i <= INCLUDE; i++)
 			OptionAdd(i, opt_name[i], *opt[i]);
 	}
 }
@@ -260,7 +258,7 @@ void PackageEditor::RemoveOption()
 	if(!option.IsCursor() || IsNull(actualpackage))
 		return;
 	int type = option.Get(0);
-	if(type >= FLAG && type <= COMPILER) {
+	if(type >= FLAG && type <= INCLUDE) {
 		Array<OptItem>& m = *opt[type];
 		int i = option.Get(1);
 		if(i >= 0 && i < m.GetCount())
@@ -286,7 +284,7 @@ void PackageEditor::EditOption()
 		}
 		return;
 	}
-	if(type >= FLAG && type <= COMPILER) {
+	if(type >= FLAG && type <= INCLUDE) {
 		Array<OptItem>& m = *opt[type];
 		int i = option.Get(1);
 		if(i >= 0 && i < m.GetCount()) {
@@ -306,7 +304,7 @@ void PackageEditor::MoveOption(int d)
 	if(!option.IsCursor() || IsNull(actualpackage))
 		return;
 	int type = option.Get(0);
-	if(type >= FLAG && type <= COMPILER) {
+	if(type >= FLAG && type <= INCLUDE) {
 		Array<OptItem>& m = *opt[type];
 		int i = option.Get(1);
 		if(min(i, i + d) >= 0 && max(i, i + d) < m.GetCount()) {
@@ -321,7 +319,7 @@ void PackageEditor::OptionMenu(Bar& bar)
 {
 	bool b = !IsNull(actualpackage);
 	bar.Add(b, "Add package..", IdeImg::package_add(), THISBACK1(AddOption, USES));
-	for(int j = FLAG; j <= COMPILER; j++)
+	for(int j = FLAG; j <= INCLUDE; j++)
 		if(j != USES)
 			bar.Add(b, "New " + opt_name[j] + "..", THISBACK1(AddOption, j));
 	bar.Separator();
@@ -334,7 +332,7 @@ void PackageEditor::OptionMenu(Bar& bar)
 	int type = option.IsCursor() ? (int)option.Get(0) : -1;
 	int i = -1;
 	Array<OptItem> *m = NULL;
-	if(type >= FLAG && type <= COMPILER) {
+	if(type >= FLAG && type <= INCLUDE) {
 		m = opt[type];
 		i = option.Get(1);
 	}
@@ -356,8 +354,6 @@ void PackageEditor::FileCursor()
 			bool tpp = GetFileExt(p) == ".tpp" && IsFolder(p);
 			optimize_speed_file.Enable(!tpp);
 			optimize_speed_file <<= actual.file[actualfileindex].optimize_speed;
-			include_path_file.Enable(!tpp);
-			include_path_file <<= actual.file[actualfileindex].include_path;
 			includeable_file.Enable(tpp);
 			includeable_file <<= FileExists(AppendFileName(p, "all.i"));
 			fileoption.Enable();
@@ -580,6 +576,7 @@ PackageEditor::PackageEditor()
 	Add("Libraries", actual.library);
 	Add("Link options", actual.link);
 	Add("Compiler options", actual.option);
+	Add("Internal includes", actual.include);
 
 	Init(option);
 	option.WhenCursor = THISBACK(AdjustPackageOptionCursor);
