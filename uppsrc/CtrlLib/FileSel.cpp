@@ -1151,6 +1151,15 @@ bool FileSel::Execute(int _mode) {
 		bidname = false;
 	}
 	list.SetSbPos(lastsby);
+	if(preselect.GetCount()) {
+		for(int i = 0; i < list.GetCount(); i++)
+		    if(list[i].name == preselect) {
+				list.SetCursor(i);
+				ActiveFocus(list);
+				break;
+			}
+		preselect.Clear();
+	}
 	FileUpdate();
 	Update();
 	int c = TopWindow::Run(appmodal);
@@ -1249,6 +1258,13 @@ void FileSel::SyncSplitter()
 	splitter.Add(list);
 	if(preview)
 		splitter.Add(*preview);
+}
+
+FileSel& FileSel::PreSelect(const String& path)
+{
+	ActiveDir(GetFileFolder(path));
+	preselect = GetFileName(path);
+	return *this;
 }
 
 FileSel& FileSel::Preview(Ctrl& ctrl)

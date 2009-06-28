@@ -54,12 +54,11 @@ Vector<String> SplitDirs(const char *s) {
 	return Split(s, Single<SemiTextTest>());
 }
 
-static GLOBAL_VARP(String, varsname, ("default"));
-typedef VectorMap<String, String> sHT;
-static GLOBAL_VAR(sHT, sVar);
+static String varsname = "default";
 
-String GetVarsName() {
-	return varsname();
+String GetVarsName()
+{
+	return varsname;
 }
 
 String VarFilePath(String name) {
@@ -77,14 +76,6 @@ bool SaveVarFile(const char *filename, const VectorMap<String, String>& var)
 		out << var.GetKey(i) << " = " << AsCString(var[i]) << ";\n";
 	out.Close();
 	return !out.IsError();
-}
-
-bool SaveVars(const char *name)
-{
-	if(!SaveVarFile(VarFilePath(name), sVar()))
-		return false;
-	varsname() = name;
-	return true;
 }
 
 bool LoadVarFile(const char *name, VectorMap<String, String>& _var)
@@ -115,17 +106,83 @@ bool LoadVarFile(const char *name, VectorMap<String, String>& _var)
 	}
 }
 
+bool Nest::Save(const char *path)
+{
+	return SaveVarFile(path, var);
+}
+
+bool Nest::Load(const char *path)
+{
+	InvalidatePackageCache();
+	return LoadVarFile(path, var);
+}
+
+String Nest::Get(const String& id)
+{
+	return var.Get(id, String());
+}
+
+void Nest::Set(const String& id, const String& val)
+{
+	var.GetAdd(id) = val;
+	InvalidatePackageCache();
+}
+
+String Nest::PackagePath0(const String& name)
+{
+	String uppfile = NativePath(name);
+	if(IsFullPath(uppfile)) return NormalizePath(uppfile);
+	Vector<String> d = GetUppDirs();
+	String p;
+	for(int i = 0; i < d.GetCount(); i++) {
+		p = NormalizePath(AppendFileName(AppendFileName(d[i], uppfile),
+		                  GetFileName(uppfile)) + ".upp");
+		if(FileExists(p)) return p;
+	}
+	return d.GetCount() ? NormalizePath(AppendFileName(AppendFileName(d[0], uppfile),
+		                                GetFileName(uppfile)) + ".upp") : "";
+}
+
+void Nest::InvalidatePackageCache()
+{
+	package_cache.Clear();
+}
+
+String Nest::PackagePath(const String& name)
+{
+	int q = package_cache.Find(name);
+	if(q < 0) {
+		String h = PackagePath0(name);
+		package_cache.Add(name, h);
+		return h;
+	}
+	return package_cache[q];
+}
+
+Nest& MainNest()
+{
+	return Single<Nest>();
+}
+
+bool SaveVars(const char *name)
+{
+	if(!MainNest().Save(VarFilePath(name)))
+		return false;
+	varsname = name;
+	return true;
+}
+
 bool   LoadVars(const char *name) {
-	varsname() = (name && *name ? name : "default");
-	return LoadVarFile(VarFilePath(), sVar());
+	varsname = (name && *name ? name : "default");
+	return MainNest().Load(VarFilePath());
 }
 
 String GetVar(const String& var) {
-	return sVar().Get(var, Null);
+	return MainNest().Get(var);
 }
 
 void SetVar(const String& var, const String& val) {
-	sVar().GetAdd(var) = val;
+	MainNest().Set(var, val);
 	SaveVars(GetVarsName());
 }
 
@@ -173,37 +230,14 @@ bool IsFolder(const String& path)
 	return ff && ff.IsDirectory();
 }
 
-VectorMap<String, String> package_cache;
-
 void InvalidatePackageCache()
 {
-	package_cache.Clear();
-}
-
-String PackagePath0(const String& name)
-{
-	String uppfile = NativePath(name);
-	if(IsFullPath(uppfile)) return NormalizePath(uppfile);
-	Vector<String> d = GetUppDirs();
-	String p;
-	for(int i = 0; i < d.GetCount(); i++) {
-		p = NormalizePath(AppendFileName(AppendFileName(d[i], uppfile),
-		                  GetFileName(uppfile)) + ".upp");
-		if(FileExists(p)) return p;
-	}
-	return d.GetCount() ? NormalizePath(AppendFileName(AppendFileName(d[0], uppfile),
-		                                GetFileName(uppfile)) + ".upp") : "";
+	MainNest().InvalidatePackageCache();
 }
 
 String PackagePath(const String& name)
 {
-	int q = package_cache.Find(name);
-	if(q < 0) {
-		String h = PackagePath0(name);
-		package_cache.Add(name, h);
-		return h;
-	}
-	return package_cache[q];
+	return MainNest().PackagePath(name);
 }
 
 String SourcePath(const String& package, const String& file) {

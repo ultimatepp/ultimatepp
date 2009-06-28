@@ -138,6 +138,7 @@ protected:
 	String         basedir;
 	int            activetype;
 	String         defext;
+	String         preselect;
 	Vector<String> fn;
 
 	DisplayCtrl    preview_display;
@@ -221,6 +222,7 @@ public:
 	FileSel& AllFilesType();
 	FileSel& ActiveDir(const String& d)          { dir <<= d; return *this; }
 	FileSel& ActiveType(int i)                   { activetype = i; return *this;  }
+	FileSel& PreSelect(const String& path);
 	FileSel& DefaultExt(const char *ext)         { defext = ext; return *this; }
 	FileSel& Multi(bool b = true)                { multi = b; return *this; }
 	FileSel& ReadOnlyOption(bool b = true)       { rdonly = b; return *this; }

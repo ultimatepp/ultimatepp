@@ -29,6 +29,7 @@ file
 	SelectPkg.cpp,
 	UppWspc.cpp,
 	UppDlg.cpp,
+	Package.cpp,
 	Template.cpp,
 	ide.key,
 	FindInFiles.cpp optimize_speed,
