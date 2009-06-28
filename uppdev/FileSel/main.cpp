@@ -20,6 +20,7 @@ GUI_APP_MAIN
 //	fs.NoMkDirOption();
 	fs.Multi();
 //	fs.NoEditFileName();
+	fs.PreSelect("U:/file1.txt");
 	for(;;) {
 		if(!fs.ExecuteSaveAs())
 			break;
