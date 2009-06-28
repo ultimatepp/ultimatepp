@@ -76,11 +76,11 @@ bool BaseSetupDlg::Run(String& vars)
 		String varfile = VarFilePath(varname);
 		if(varname != vars)
 		{
-			if(FileExists(varfile) && !PromptOKCancel(NFormat("Overwrite existing base file [* \1%s\1]?", varfile)))
+			if(FileExists(varfile) && !PromptOKCancel(NFormat("Overwrite existing assembly [* \1%s\1]?", varfile)))
 				continue;
 			if(!SaveVars(varname))
 			{
-				Exclamation(NFormat("Error writing base file [* \1%s\1].", VarFilePath(varname)));
+				Exclamation(NFormat("Error writing assmbly [* \1%s\1].", VarFilePath(varname)));
 				continue;
 			}
 		}

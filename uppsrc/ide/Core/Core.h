@@ -145,6 +145,22 @@ struct SemiTextTest : public TextTest {
 
 Vector<String> SplitDirs(const char *s);
 
+class Nest {
+	VectorMap<String, String> var;
+	VectorMap<String, String> package_cache;
+
+	String PackagePath0(const String& name);
+
+public:
+	bool   Save(const char *path);
+	bool   Load(const char *path);
+	String Get(const String& id);
+	void   Set(const String& id, const String& val);
+
+	void   InvalidatePackageCache();
+	String PackagePath(const String& name);
+};
+
 String VarFilePath();
 String VarFilePath(String name);
 
