@@ -1,4 +1,5 @@
 #include "Theme.h"
+#include <plugin/zip/zip.h>
 
 Value StringToObject(const String& s, const String& file = "") {
 	Vector<String> v = Split(s, ' ');
@@ -353,8 +354,35 @@ void Theme::LoadHeader(HeaderCtrl::Style& d, const VectorMap<String, String>& se
 Theme& Theme::Load(const String& path) {
 	ini.Clear();
 	
-	folder = path;
-	ini.Load(AppendFileName(folder, "theme.ini"));
+	if (DirectoryExists(path) && FileExists(AppendFileName(path, "theme.ini"))) {
+		folder = path;
+		ini.Load(AppendFileName(folder, "theme.ini"));
+		return *this;
+	}
+	
+	if (FileExists(path)) {
+		//String outdir = GetTempFileName("UppTheme");
+		String outdir = "c:\\Windows\\Temp\\" + Uuid::Create().ToString();
+		RealizeDirectory(outdir);
+		FileUnZip unzip(path);
+		while(unzip) {
+			String fn = AppendFileName(outdir, unzip.GetPath());
+			if(unzip.IsFolder()) {
+				RealizeDirectory(fn);
+				unzip.SkipFile();
+			}
+			else {
+				RealizePath(fn);
+				FileOut out(fn);
+				unzip.ReadFile(out);
+			}
+		}
+		
+		folder = outdir;
+		ini.Load(AppendFileName(outdir, "theme.ini"));
+		
+		return *this;
+	}
 	
 	return *this;
 }
