@@ -6,7 +6,7 @@ uses
 
 file
 	app.tpp,
-	ArrayCtrl.h include_path,
+	ArrayCtrl.h,
 	main.cpp optimize_speed,
 	src.tpp,
 	srcimp.tpp;
