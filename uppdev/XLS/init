@@ -1,0 +1,4 @@
+#ifndef _XLS_icpp_init_stub
+#define _XLS_icpp_init_stub
+#include "Core/init"
+#endif

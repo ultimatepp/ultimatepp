@@ -1,0 +1,40 @@
+description "U++ wrapper for XlsLib 1.2.0 (library for XLS spreadsheets, by David Hoerl)\377";
+
+uses
+	Core;
+
+file
+	binfile.cpp,
+	blank.cpp,
+	cbridge.cpp,
+	cell.cpp,
+	colinfo.cpp,
+	continue.cpp,
+	crc.cpp,
+	datast.cpp,
+	docsumminfo.cpp,
+	extformat.cpp,
+	font.cpp,
+	format.cpp,
+	globalrec.cpp,
+	index.cpp,
+	label.cpp,
+	merged.cpp,
+	number.cpp,
+	oledoc.cpp,
+	olefs.cpp,
+	oleprop.cpp,
+	overnew.cpp,
+	range.cpp,
+	recdef.cpp,
+	record.cpp,
+	row.cpp,
+	sheetrec.cpp,
+	summinfo.cpp,
+	unit.cpp,
+	workbook.cpp,
+	XLS.h;
+
+mainconfig
+	"" = "";
+
