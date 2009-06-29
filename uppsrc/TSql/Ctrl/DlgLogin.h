@@ -18,6 +18,7 @@ public:
 
 	One<SqlSession>   Login(LoginProc login_proc, String& connect);
 	void              Progress(String text);
+	bool              ProgressCanceled(String text);
 
 	enum STYLE { EDIT_STYLE, PROGRESS_STYLE };
 	void              SetStyle(STYLE style);
@@ -26,6 +27,7 @@ public:
 	bool              OnProgress(int done, int total);
 	bool              IsCanceled() const { return canceled; }
 	operator          Gate2<int, int> () { return THISBACK(OnProgress); }
+	operator          Gate1<String> ()   { return THISBACK(ProgressCanceled); }
 
 	void              Serialize(Stream& stream);
 
