@@ -140,7 +140,7 @@ void PackageEditor::OptionAdd(ArrayCtrl& option, int type, const char *title, co
 {
 	if(o.GetCount() == 0)
 		return;
-	option.Add(-1, -1, "when", title);
+	option.Add(-1, -1, type == INCLUDE ? "" : "when", title);
 	option.SetDisplay(option.GetCount() - 1, 0, Single<OptionHeaderDisplay>());
 	option.SetDisplay(option.GetCount() - 1, 1, Single<OptionHeaderDisplay>());
 	for(int i = 0; i < o.GetCount(); i++) {
@@ -248,6 +248,7 @@ void PackageEditor::AddOption(int type)
 	WithUppOptDlg<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, opt_name[type]);
 	dlg.when.SetFilter(CondFilter);
+	dlg.when.Enable(type != INCLUDE);
 	if(dlg.Run() != IDOK)
 		return;
 	SetOpt(option, type, opt[type]->Add(), ~dlg.when, ~dlg.text);
@@ -290,6 +291,7 @@ void PackageEditor::EditOption()
 		if(i >= 0 && i < m.GetCount()) {
 			WithUppOptDlg<TopWindow> dlg;
 			CtrlLayoutOKCancel(dlg, opt_name[type]);
+			dlg.when.Enable(type != INCLUDE);
 			dlg.when <<= m[i].when;
 			dlg.text <<= m[i].text;
 			if(dlg.Run() != IDOK)

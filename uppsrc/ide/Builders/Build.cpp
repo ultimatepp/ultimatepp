@@ -282,6 +282,12 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	b->host = host;
 	b->compiler = bm.Get("COMPILER", "");
 	b->include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", ""));
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pkg = wspc.GetPackage(i);
+		for(int j = 0; j < pkg.include.GetCount(); j++)
+			b->include.Add(SourcePath(wspc[i], pkg.include[j].text));
+	}	
 	b->libpath = SplitDirs(bm.Get("LIB", ""));
 	b->debug_options = bm.Get("DEBUG_OPTIONS", "");
 	b->release_options = bm.Get("RELEASE_OPTIONS", "");
