@@ -1,5 +1,7 @@
 #include "DockPane.h"
 
+NAMESPACE_UPP
+
 int DockPane::ClientToPos(const Size& p)
 {
 	int w = (width>>1)*pos.GetCount()-1;
@@ -411,3 +413,4 @@ DockPane::DockPane()
 	pos.Clear();
 }
 
+END_UPP_NAMESPACE

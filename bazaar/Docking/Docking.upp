@@ -18,8 +18,8 @@ file
 	DockPane.h,
 	DockPane.cpp,
 	DockTabBar.h,
-	Docking.iml,
 	DockTabBar.cpp,
+	Docking.iml,
 	Docking.lay,
 	src.tpp,
 	Docking.t;

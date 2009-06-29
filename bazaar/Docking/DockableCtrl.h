@@ -2,11 +2,12 @@
 #define _Docking_DockableCtrl_h_
 
 #include <CtrlLib/CtrlLib.h>
-using namespace Upp;
 
 #define IMAGECLASS DockingImg
 #define IMAGEFILE <Docking/Docking.iml>
 #include <Draw/iml_header.h>
+
+NAMESPACE_UPP
 
 class DockCont;
 
@@ -97,5 +98,7 @@ struct DockableParent : public DockableCtrl
 {
 	virtual void Paint(Draw& w) { w.DrawRect(GetSize(), SColorFace); }
 };
+
+END_UPP_NAMESPACE
 
 #endif

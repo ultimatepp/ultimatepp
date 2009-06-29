@@ -2,12 +2,13 @@
 #define _Docking_Docking_h_
 
 #include <CtrlLib/CtrlLib.h>
-using namespace Upp;
 
 #include <Docking/DockableCtrl.h>
 #include <Docking/DockCont.h>
 #include <Docking/DockPane.h>
 #include <Docking/DockMenu.h>
+
+NAMESPACE_UPP
 
 class DockWindow : public TopWindow {
 public:
@@ -396,6 +397,6 @@ T& DockWindow::CreateDockable(WString title)
 	return q;
 }
 
-
+END_UPP_NAMESPACE
 
 #endif

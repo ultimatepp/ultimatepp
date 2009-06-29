@@ -1,6 +1,8 @@
 #include "DockCont.h"
 #include "Docking.h"
 
+NAMESPACE_UPP
+
 // DockCont (Dockable Container)
 #if	defined(PLATFORM_WIN32)
 LRESULT DockCont::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
@@ -856,3 +858,4 @@ DockCont::DockCont()
 	Lock(false);	
 }
 
+END_UPP_NAMESPACE

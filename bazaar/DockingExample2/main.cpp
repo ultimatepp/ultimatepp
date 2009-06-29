@@ -1,5 +1,5 @@
 #include <Docking/Docking.h>
-
+using namespace Upp;
 /*
 ** This is an advanced example designed to show most of the available Docking features, and how
 **  might be used in a real world application.

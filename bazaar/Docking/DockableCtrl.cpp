@@ -1,10 +1,11 @@
 #include "DockableCtrl.h"
+#include <Docking/DockCont.h>
 
 #define IMAGECLASS DockingImg
 #define IMAGEFILE <Docking/Docking.iml>
 #include <Draw/iml_source.h>
 
-#include <Docking/DockCont.h>
+NAMESPACE_UPP
 
 DockCont * DockableCtrl::GetContainer() const
 {
@@ -166,3 +167,4 @@ CH_STYLE(DockableCtrl, Style, StyleDefaultVert)
 	handle_vert = true;
 }
 
+END_UPP_NAMESPACE

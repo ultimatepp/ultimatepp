@@ -2,9 +2,9 @@
 #define _Docking_DockTabBar_h_
 
 #include <CtrlLib/CtrlLib.h>
-using namespace Upp;
-
 #include <TabBar/TabBar.h>
+
+NAMESPACE_UPP
 
 class DockTabBar : public TabBar { 
 public:
@@ -86,5 +86,7 @@ private:
 	void	HideAnimate(Ctrl *c);
 	void 	AdjustSize(Rect& r, const Size& sz);
 };
+
+END_UPP_NAMESPACE
 
 #endif

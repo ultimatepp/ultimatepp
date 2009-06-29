@@ -1,5 +1,7 @@
 #include "TabBar.h"
 
+NAMESPACE_UPP
+
 String FileTabs::GetFileGroup(const String &file)
 {
 	return GetFileDirectory(file);
@@ -179,3 +181,4 @@ extcolor(LtBlue)
 	
 }
 
+END_UPP_NAMESPACE

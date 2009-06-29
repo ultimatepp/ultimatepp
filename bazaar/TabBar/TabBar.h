@@ -2,11 +2,12 @@
 #define _TabBar_TabBar_h_
 
 #include <CtrlLib/CtrlLib.h>
-using namespace Upp;
 
 #define IMAGECLASS TabBarImg
 #define IMAGEFILE <TabBar/TabBar.iml>
 #include <Draw/iml_header.h>
+
+NAMESPACE_UPP
 
 //#define TABBAR_DEBUG
 
@@ -383,5 +384,7 @@ public:
 };
 
 #include "FileTabs.h"
+
+END_UPP_NAMESPACE
 
 #endif

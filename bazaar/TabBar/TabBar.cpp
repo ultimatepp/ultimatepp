@@ -4,6 +4,8 @@
 #define IMAGEFILE <TabBar/TabBar.iml>
 #include <Draw/iml_source.h>
 
+NAMESPACE_UPP
+
 // AlignedFrame
 void AlignedFrame::FrameLayout(Rect &r)
 {
@@ -1853,3 +1855,5 @@ TabBar& TabBar::CopySettings(const TabBar &src)
 	}
 	return *this;
 }
+
+END_UPP_NAMESPACE

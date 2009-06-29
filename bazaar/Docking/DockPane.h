@@ -2,7 +2,8 @@
 #define _Docking_DockPane_h_
 
 #include <CtrlLib/CtrlLib.h>
-using namespace Upp;
+
+NAMESPACE_UPP
 
 class DockPane : public Splitter
 {
@@ -71,5 +72,7 @@ public:
 	
 	DockPane();
 };
+
+END_UPP_NAMESPACE
 
 #endif

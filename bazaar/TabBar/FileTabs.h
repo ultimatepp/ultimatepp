@@ -1,5 +1,3 @@
-#include "TabBar.h"
-
 class FileTabs : public TabBar
 {
 private:

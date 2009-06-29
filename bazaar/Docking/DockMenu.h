@@ -2,7 +2,8 @@
 #define _Docking_DockMenu_h_
 
 #include <CtrlLib/CtrlLib.h>
-using namespace Upp;
+
+NAMESPACE_UPP
 
 class DockWindow;
 class DockableCtrl;
@@ -45,5 +46,7 @@ protected:
 	
 	const char *AlignText(int align);
 };
+
+END_UPP_NAMESPACE
 
 #endif

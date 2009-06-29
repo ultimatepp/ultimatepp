@@ -1,5 +1,7 @@
 #include "Docking.h"
 
+NAMESPACE_UPP
+
 #define DOCKBACK(x)               callback(dock, &DockWindow::x)
 #define DOCKBACK1(x, arg)         callback1(dock, &DockWindow::x, arg)
 #define DOCKBACK2(m, a, b)        callback2(dock, &DockWindow::m, a, b)
@@ -145,3 +147,5 @@ const char * DockMenu::AlignText(int align)
 	}
 	return 0;
 }
+
+END_UPP_NAMESPACE

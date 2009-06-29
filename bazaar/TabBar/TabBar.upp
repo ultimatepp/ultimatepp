@@ -4,8 +4,8 @@ uses
 	CtrlLib;
 
 file
-	TabBar.cpp,
 	TabBar.h,
+	TabBar.cpp,
 	FileTabs.h,
 	FileTabs.cpp,
 	TabBar.iml;

@@ -5,6 +5,8 @@
 #include <Docking/DockableCtrl.h>
 #include <Docking/DockTabBar.h>
 
+NAMESPACE_UPP
+
 class DockWindow;
 
 struct ImgButton : public Pusher {
@@ -208,5 +210,6 @@ public:
 	DockCont();		
 };
 
+END_UPP_NAMESPACE
 
 #endif

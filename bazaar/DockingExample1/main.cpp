@@ -1,5 +1,5 @@
 #include <Docking/Docking.h>
-
+using namespace Upp;
 /*
 ** This is very simple example designed to show the basics of setting up a 
 **  docking window without many of the compicated features
