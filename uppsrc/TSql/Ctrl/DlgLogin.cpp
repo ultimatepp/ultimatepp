@@ -230,10 +230,15 @@ void DlgLogin::Progress(String text)
 	ProcessEvents();
 }
 
+bool DlgLogin::ProgressCanceled(String text)
+{
+	Progress(text);
+	return OnProgress(0, 0);
+}
+
 bool DlgLogin::OnProgress(int done, int total)
 {
-	if((int)(GetTickCount() - next_ticks) >= 0)
-	{
+	if((int)(GetTickCount() - next_ticks) >= 0) {
 		progress.SetLabel(NFormat(action_format, done));
 		ProcessEvents();
 		next_ticks = GetTickCount() + 200;
