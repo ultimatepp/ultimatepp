@@ -335,11 +335,6 @@ String CppBuilder::Includes(const char *sep, const String& package, const Packag
 	String cc;
 	for(int i = 0; i < include.GetCount(); i++)
 		cc << sep << GetHostPathQ(include[i]);
-	for(int i = 0; i < pkg.include.GetCount(); i++) {
-		const OptItem& m = pkg.include[i];
-		if(MatchWhen(m.when, config.GetKeys()))
-			cc << sep << GetHostPathQ(SourcePath(package, m.text));
-	}	
 	return cc;
 }
 
@@ -348,11 +343,6 @@ String CppBuilder::IncludesShort(const char *sep, const String& package, const P
 	String cc;
 	for(int i = 0; i < include.GetCount(); i++)
 		cc << sep << GetHostPathShortQ(include[i]);
-	for(int i = 0; i < pkg.include.GetCount(); i++) {
-		const OptItem& m = pkg.include[i];
-		if(MatchWhen(m.when, config.GetKeys()))
-			cc << sep << GetHostPathShortQ(SourcePath(package, m.text));
-	}
 	return cc;
 }
 
