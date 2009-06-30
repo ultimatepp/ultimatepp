@@ -199,8 +199,8 @@ public:
 
 	void  Serialize(Stream& s);
 
-	bool  operator==(Font f) const { return face == f.face && flags == f.flags &&
-	                                        width == f.width && height == f.height; }
+	bool  operator==(Font f) const { return ((face ^ f.face) | (flags ^ f.flags) |
+	                                         (width ^ f.width) | (height ^ f.height)) == 0; }
 	bool  operator!=(Font f) const { return !operator==(f); }
 
 	dword GetHashValue() const     { return MAKELONG(flags, width) ^ MAKELONG(face, height); }
