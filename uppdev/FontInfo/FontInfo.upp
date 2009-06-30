@@ -1,0 +1,13 @@
+optimize_speed;
+
+uses
+	CtrlLib;
+
+file
+	FontInfo.h,
+	Win32.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
