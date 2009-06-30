@@ -1,6 +1,9 @@
 uses
 	CtrlLib;
 
+include
+	gdfgsdfg;
+
 file
 	AccessKey.h,
 	test.key,
