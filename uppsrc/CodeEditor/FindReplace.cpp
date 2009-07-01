@@ -308,7 +308,7 @@ int CodeEditor::BlockReplace(WString find, WString replace, bool wholeword, bool
 	PlaceCaret(l);
 	int count = 0;
 	for(;;) {
-		if(!Find(false, find, wholeword, ignorecase, wildcards, true) || cursor >= h) break;
+		if(!Find(false, find, wholeword, ignorecase, wildcards, true) || cursor > h) break;
 		int hh, ll;
 		GetSelection(ll, hh);
 		CachePos(ll);
