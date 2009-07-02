@@ -22,6 +22,12 @@ struct CommonFontInfo {
 	int  spaceafter;
 	bool fixedpitch;
 	bool scaleable;
+
+#ifdef PLATFORM_POSIX
+	int    underline_thickness;
+	int    underline_position;
+	String path;
+#endif
 };
 
 struct GlyphInfo {
