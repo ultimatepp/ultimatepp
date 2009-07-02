@@ -2,6 +2,8 @@
 
 using namespace Upp;
 
+#if 0
+
 struct CharEntry {
 	GlyphInfo info;
 	word      chr;
@@ -20,7 +22,7 @@ CharEntry GetGlyphEntry(Font font, int chr)
 		e.chr = chr;
 		e.info = GetGlyphInfoSys(font, chr);
 	}
-	return e;	
+	return e;
 }
 
 thread__ CharEntry fc_cache[512];
@@ -63,9 +65,36 @@ Size GetTextSizeNew(const wchar *text, Font font, int n)
 	}
 	return Size(cx, GetFontInfo(font).height);
 }
+#endif
 
 GUI_APP_MAIN
 {
+	CommonFontInfo f = GetFontInfoSys(Arial(100).Bold());
+	DDUMP(f.ascent);
+	DDUMP(f.descent);
+	DDUMP(f.lineheight);
+	DDUMP(f.maxwidth);
+	DDUMP(f.path);
+	
+	FontInfo fi = Arial(100).Bold().Info();
+	DDUMP(fi.GetAscent());
+	DDUMP(fi.GetDescent());
+	DDUMP(fi.GetMaxWidth());
+	
+	for(int c = '0'; c < 'z'; c++) {
+		LOG("-------------------------");
+		DDUMP((char)c);
+		GlyphInfo g = GetGlyphInfoSys(Arial(100).Bold(), c);
+		DDUMP(g.width);
+		DDUMP(fi[c]);
+		DDUMP(g.lspc);
+		DDUMP(fi.GetLeftSpace(c));
+		DDUMP(g.rspc);
+		DDUMP(fi.GetRightSpace(c));
+	}
+	
+	
+#if 0
 	WString x = "Just a little test!";
 	RDUMP(GetTextSize(x, Arial(20), x.GetCount()));
 	RDUMP(GetTextSizeNew(x, Arial(20), x.GetCount()));
@@ -87,4 +116,5 @@ GUI_APP_MAIN
 		}
 	}
 	#endif
+#endif
 }

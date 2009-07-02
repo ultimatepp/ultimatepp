@@ -1,5 +1,7 @@
 #include "FontInfo.h"
 
+#ifdef PLATFORM_WIN32
+
 HFONT CreateWin32Font(Font font, int angle, int chrset)
 {
 #ifdef PLATFORM_WINCE
@@ -144,3 +146,5 @@ CommonFontInfo GetFontInfoSys(Font font)
 	}
 	return fi;
 }
+
+#endif

@@ -6,6 +6,7 @@ uses
 file
 	FontInfo.h,
 	Win32.cpp,
+	X11.cpp,
 	main.cpp;
 
 mainconfig
