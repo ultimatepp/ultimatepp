@@ -108,6 +108,7 @@ void TopWindow::SyncCaption0()
 	if(IsNull(icon) && !maximizebox && !minimizebox) {
 		style |= WS_POPUPWINDOW|WS_DLGFRAME;
 		exstyle |= WS_EX_DLGMODALFRAME;
+		style &= ~WS_SYSMENU;
 	}
 	else
 #endif
