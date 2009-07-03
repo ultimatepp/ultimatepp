@@ -504,7 +504,7 @@ TopWindow::TopWindow()
 	class_hint = XAllocClassHint();
 	topmost = false;
 #endif
-	maximizebox = minimizebox = sizeable = tool = false;
+	maximizebox = minimizebox = sizeable = tool = noclosebox = false;
 	state = OVERLAPPED;
 	WhenClose = THISBACK(Close);
 	overlapped.Clear();

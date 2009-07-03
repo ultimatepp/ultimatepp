@@ -105,10 +105,11 @@ void TopWindow::SyncCaption0()
 	if(frameless)
 		style = (style & ~WS_CAPTION) | WS_POPUP;
 	else
-	if(IsNull(icon) && !maximizebox && !minimizebox) {
+	if(IsNull(icon) && !maximizebox && !minimizebox || noclosebox) {
 		style |= WS_POPUPWINDOW|WS_DLGFRAME;
 		exstyle |= WS_EX_DLGMODALFRAME;
-		style &= ~WS_SYSMENU;
+		if(noclosebox)
+			style &= ~WS_SYSMENU;
 	}
 	else
 #endif

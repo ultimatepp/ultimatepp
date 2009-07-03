@@ -116,6 +116,7 @@ private:
 	WString     title;
 	bool        minimizebox:1;
 	bool        maximizebox:1;
+	bool        noclosebox:1;
 	bool        sizeable:1;
 	bool        tool:1;
 	bool        frameless:1;
@@ -203,6 +204,7 @@ public:
 	TopWindow& FrameLess(bool b = true)               { frameless = b; return *this; }
 	bool       IsFrameLess() const                    { return frameless; }
 	TopWindow& NoAccessKeysDistribution()             { dokeys = false; return *this; }
+	TopWindow& NoCloseBox(bool b = true)              { noclosebox = b; return *this; }
 
 	TopWindow& Icon(const Image& m);
 	TopWindow& LargeIcon(const Image& m);
