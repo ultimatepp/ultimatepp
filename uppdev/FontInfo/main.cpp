@@ -69,6 +69,18 @@ Size GetTextSizeNew(const wchar *text, Font font, int n)
 
 GUI_APP_MAIN
 {
+	{
+		for(int i = 0; i < 65536; i++) {
+			GlyphInfo g = GetGlyphInfoSys(Arial(100).Bold(), i);
+			if(g.IsMissing())
+				LOG(i);
+		}
+	}
+
+
+	Vector<FaceInfo> fa = GetAllFacesSys();
+	for(int i = 0; i < fa.GetCount(); i++)
+		LOG(fa[i].name << ": scalable: " << fa[i].scalable << ", fixed: " << fa[i].fixed);
 	CommonFontInfo f = GetFontInfoSys(Arial(100).Bold());
 	DDUMP(f.ascent);
 	DDUMP(f.descent);

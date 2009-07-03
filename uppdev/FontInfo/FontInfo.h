@@ -5,7 +5,7 @@
 
 using namespace Upp;
 
-struct CommonFontInfo {
+struct CommonFontInfo : Moveable<CommonFontInfo> {
 	int  ascent;
 	int  descent;
 	int  external;
@@ -30,13 +30,24 @@ struct CommonFontInfo {
 #endif
 };
 
-struct GlyphInfo {
+CommonFontInfo GetFontInfoSys(Font font);
+
+struct GlyphInfo : Moveable<GlyphInfo> {
 	int16 width;
 	int16 lspc;
 	int16 rspc;
+	
+	bool IsMissing() const { return (word)width == (word)0x8000; }
 };
 
 GlyphInfo      GetGlyphInfoSys(Font font, int chr);
-CommonFontInfo GetFontInfoSys(Font font);
+
+struct FaceInfo : Moveable<FaceInfo> {
+	String name;
+	bool   scalable;
+	bool   fixed;
+};
+
+Vector<FaceInfo> GetAllFacesSys();
 
 #endif
