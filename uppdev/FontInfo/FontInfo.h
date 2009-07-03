@@ -44,8 +44,7 @@ GlyphInfo      GetGlyphInfoSys(Font font, int chr);
 
 struct FaceInfo : Moveable<FaceInfo> {
 	String name;
-	bool   scalable;
-	bool   fixed;
+	dword  info;
 };
 
 Vector<FaceInfo> GetAllFacesSys();
