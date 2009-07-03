@@ -172,10 +172,13 @@ Vector<FaceInfo> GetAllFacesSys()
 		if(FcPatternGetString(fs->fonts[i], FC_FAMILY, 0, &family) == 0 && family) {
 			FaceInfo& fi = list.Add();
 			fi.name = (const char *)family;
+			fi.type = 0;
 			int iv;
-			fi.fixed = FcPatternGetInteger(fs->fonts[i], FC_SPACING, 0, &iv) == 0 && iv == XFT_MONO;
+			if(FcPatternGetInteger(fs->fonts[i], FC_SPACING, 0, &iv) == 0 && iv == FC_MONO)
+				fi.type |= Font::FIXEDPITCH;
 			FcBool bv;
-			fi.scalable = FcPatternGetBool(fs->fonts[i], FC_SCALABLE, 0, &bv) == 0 && bv;
+			if(FcPatternGetBool(fs->fonts[i], FC_SCALABLE, 0, &bv) == 0 && bv)
+				fi.type |= Font::SCALEABLE;
 		}
 	}
 	FcFontSetDestroy(fs);

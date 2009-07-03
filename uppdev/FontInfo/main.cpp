@@ -69,40 +69,47 @@ Size GetTextSizeNew(const wchar *text, Font font, int n)
 
 GUI_APP_MAIN
 {
+	FontInfo fi = Arial(100).Bold().Info();
+	DUMP(fi.GetAscent());
+	DUMP(fi.GetDescent());
+	DUMP(fi.GetMaxWidth());
+	
 	{
+		int from = 0;
 		for(int i = 0; i < 65536; i++) {
 			GlyphInfo g = GetGlyphInfoSys(Arial(100).Bold(), i);
-			if(g.IsMissing())
-				LOG(i);
+			if(g.IsMissing()) {
+//			if(!fi.HasChar(i)) {
+				if(from < i)
+					LOG(from << " - " << i - 1);
+				from = i + 1;
+			}
 		}
+		if(from < 65535)
+			LOG(from << " - " << 65535);
 	}
-
 
 	Vector<FaceInfo> fa = GetAllFacesSys();
 	for(int i = 0; i < fa.GetCount(); i++)
-		LOG(fa[i].name << ": scalable: " << fa[i].scalable << ", fixed: " << fa[i].fixed);
+		LOG(fa[i].name << ": scalable: " << (fa[i].info & Font::SCALEABLE) << ", fixed: " << (fa[i].info & Font::FIXEDPITCH));
 	CommonFontInfo f = GetFontInfoSys(Arial(100).Bold());
-	DDUMP(f.ascent);
-	DDUMP(f.descent);
-	DDUMP(f.lineheight);
-	DDUMP(f.maxwidth);
-	DDUMP(f.path);
-	
-	FontInfo fi = Arial(100).Bold().Info();
-	DDUMP(fi.GetAscent());
-	DDUMP(fi.GetDescent());
-	DDUMP(fi.GetMaxWidth());
+	DUMP(f.ascent);
+	DUMP(f.descent);
+	DUMP(f.lineheight);
+	DUMP(f.maxwidth);
+//	DUMP(f.path);
+
 	
 	for(int c = '0'; c < 'z'; c++) {
 		LOG("-------------------------");
-		DDUMP((char)c);
+		DUMP((char)c);
 		GlyphInfo g = GetGlyphInfoSys(Arial(100).Bold(), c);
-		DDUMP(g.width);
-		DDUMP(fi[c]);
-		DDUMP(g.lspc);
-		DDUMP(fi.GetLeftSpace(c));
-		DDUMP(g.rspc);
-		DDUMP(fi.GetRightSpace(c));
+		DUMP(g.width);
+		DUMP(fi[c]);
+		DUMP(g.lspc);
+		DUMP(fi.GetLeftSpace(c));
+		DUMP(g.rspc);
+		DUMP(fi.GetRightSpace(c));
 	}
 	
 	
