@@ -2,31 +2,46 @@
 
 #ifdef PLATFORM_WIN32
 
-HFONT CreateWin32Font(Font font, int angle, int chrset)
+#define FONTCACHE 37
+
+HFONT GetWin32Font(Font fnt, int angle, int chrset)
 {
-#ifdef PLATFORM_WINCE
-	LOGFONT lfnt;
-	Zero(lfnt);
-	lfnt.lfHeight = font.GetHeight() ? -abs(font.GetHeight()) : -12;
-	lfnt.lfWeight = font.IsBold() ? FW_BOLD : FW_NORMAL;
-	lfnt.lfItalic = font.IsItalic();
-	lfnt.lfUnderline = font.IsUnderline();
-	lfnt.lfStrikeOut = font.IsStrikeout();
-	wcscpy(lfnt.lfFaceName, ToSystemCharset(font.GetFaceName()));
-	return CreateFontIndirect(&lfnt);
-#else
-	return CreateFont(
-		font.GetHeight() ? -abs(font.GetHeight()) : -12,
-		font.GetWidth(), angle, angle, font.IsBold() ? FW_BOLD : FW_NORMAL,
-		font.IsItalic(), font.IsUnderline(), font.IsStrikeout(),
-		chrset,
-		font.IsTrueTypeOnly() ? OUT_TT_ONLY_PRECIS : OUT_DEFAULT_PRECIS,
-		CLIP_DEFAULT_PRECIS,
-		font.IsNonAntiAliased() ? NONANTIALIASED_QUALITY : DEFAULT_QUALITY,
-		DEFAULT_PITCH|FF_DONTCARE,
-		font.GetFaceName()
-	);
-#endif
+	static Font   font[FONTCACHE];
+	static HFONT  hfont[FONTCACHE];
+	ONCELOCK {
+		for(int i = 0; i < FONTCACHE; i++)
+			font[i].Face(-1);
+	}
+	int q = fnt.GetHashValue() % FONTCACHE;
+	if(font[q] != fnt) {
+		font[q] = fnt;
+		if(hfont[q])
+			DeleteObject(hfont[q]);
+	#ifdef PLATFORM_WINCE
+		LOGFONT lfnt;
+		Zero(lfnt);
+		lfnt.lfHeight = fnt.GetHeight() ? -abs(fnt.GetHeight()) : -12;
+		lfnt.lfWeight = fnt.IsBold() ? FW_BOLD : FW_NORMAL;
+		lfnt.lfItalic = fnt.IsItalic();
+		lfnt.lfUnderline = fnt.IsUnderline();
+		lfnt.lfStrikeOut = fnt.IsStrikeout();
+		wcscpy(lfnt.lfFaceName, ToSystemCharset(fnt.GetFaceName()));
+		hfont[q] = CreateFontIndirect(&lfnt);
+	#else
+		hfont[q] = CreateFont(
+			fnt.GetHeight() ? -abs(fnt.GetHeight()) : -12,
+			fnt.GetWidth(), angle, angle, fnt.IsBold() ? FW_BOLD : FW_NORMAL,
+			fnt.IsItalic(), fnt.IsUnderline(), fnt.IsStrikeout(),
+			chrset,
+			fnt.IsTrueTypeOnly() ? OUT_TT_ONLY_PRECIS : OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS,
+			fnt.IsNonAntiAliased() ? NONANTIALIASED_QUALITY : DEFAULT_QUALITY,
+			DEFAULT_PITCH|FF_DONTCARE,
+			fnt.GetFaceName()
+		);
+	#endif
+	}
+	return hfont[q];
 }
 
 int sGetCW(HDC hdc, wchar *h, int n)
@@ -57,18 +72,28 @@ static HDC Win32_IC()
 	return hdc;
 }
 
+#define GLYPHINFOCACHE 31
+
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
-	static Font      last;
-	static GlyphInfo li[256];
-
-	static int       lastpage = -1;
+	static Font      fnt[GLYPHINFOCACHE];
+	static int       pg[GLYPHINFOCACHE];
+	static GlyphInfo li[GLYPHINFOCACHE][256];
+	
+	ONCELOCK {
+		for(int i = 0; i < GLYPHINFOCACHE; i++)
+			pg[i] = -1;
+	}
 	
 	int page = chr >> 8;
-	if(font != last || page != lastpage) {
-		last = font;
-		lastpage = page;
-		HFONT hfont = CreateWin32Font(font, 0, 0);
+	int q = CombineHash(font, page) % GLYPHINFOCACHE;
+	
+	if(fnt[q] != font || pg[q] != page) {
+		DDUMP(font);
+		DDUMP(q);
+		fnt[q] = font;
+		pg[q] = page;
+		HFONT hfont = GetWin32Font(font, 0, 0);
 		if(!hfont) {
 			GlyphInfo n;
 			memset(&n, 0, sizeof(GlyphInfo));
@@ -77,7 +102,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		HDC hdc = Win32_IC();
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
 		int from = page << 8;
-		GlyphInfo *t = li;
+		GlyphInfo *t = li[q];
 		if(page >= 32) {
 			wchar h[3];
 			h[0] = 'x';
@@ -137,20 +162,19 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		Win32_GetGlyphIndices(hdc, wch, 256, pos, 1);
 		for(int i = 0; i < 256; i++)
 			if(pos[i] == 0xffff) {
-				li[i].width = 0x8000;
-				li[i].lspc = li[i].rspc = 0;
+				li[q][i].width = (int16)0x8000;
+				li[q][i].lspc = li[q][i].rspc = 0;
 			}
-		::SelectObject(hdc, ohfont);
 #endif
 	}
-	return li[chr & 255];
+	return li[q][chr & 255];
 }
 
 CommonFontInfo GetFontInfoSys(Font font)
 {
 	CommonFontInfo fi;
 	memset(&fi, 0, sizeof(fi));
-	HFONT hfont = CreateWin32Font(font, 0, 0);
+	HFONT hfont = GetWin32Font(font, 0, 0);
 	if(hfont) {
 		HDC hdc = Win32_IC();
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);

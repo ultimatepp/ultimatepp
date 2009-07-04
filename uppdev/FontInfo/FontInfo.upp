@@ -4,10 +4,14 @@ uses
 	CtrlLib;
 
 file
-	FontInfo.h,
+	FontInfo.h charset "UTF-8",
 	Win32.cpp,
 	X11.cpp,
-	main.cpp;
+	Compose.cpp,
+	FontReplace.cpp,
+	FontInfo.cpp,
+	main.cpp charset "UTF-8",
+	app.tpp;
 
 mainconfig
 	"" = "GUI";

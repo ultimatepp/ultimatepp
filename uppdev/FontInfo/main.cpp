@@ -2,58 +2,41 @@
 
 using namespace Upp;
 
-#if 0
-
-struct CharEntry {
-	GlyphInfo info;
-	word      chr;
-	Font      font;
-};
-
-CharEntry fc_cache_global[4096];
-
-CharEntry GetGlyphEntry(Font font, int chr)
-{
-	DrawLock __;
-	unsigned hash = CombineHash(font.GetHashValue(), chr) & 511;
-	CharEntry& e = fc_cache_global[hash];
-	if(e.font != font || e.chr != chr) {
-		e.font = font;
-		e.chr = chr;
-		e.info = GetGlyphInfoSys(font, chr);
+struct CharDisplay : public Display {
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+	{
+		w.DrawRect(r, paper);
+		w.DrawText(r.left, r.top, AsString(q), StdFont(), ink);
+		Font fnt;
+		fnt.FaceName("Bitstream Vera Sans Mono");
+		fnt.Height(13);
+		WString txt((int)q, 1);
+		w.DrawText(r.left + 40, r.top, txt, Courier(20), ink);
+		GlyphInfo gi = GetGlyphMetrics(fnt, q);
+		w.DrawRect(r.left + 60, r.top, gi.width, r.GetHeight(), LtCyan());
+		gi = GetGlyphInfo(fnt, q);
+		if(!gi.IsMissing()) {
+			if(gi.IsNormal())
+				w.DrawText(r.left + 60, r.top, txt, fnt);
+			else
+			if(gi.IsReplaced())
+				w.DrawText(r.left + 60, r.top, txt, fnt().Face(gi.lspc), Magenta());
+			else
+			if(gi.IsComposed()) {
+				ComposedGlyph g;
+				if(Compose(fnt, q, g)) {
+					w.DrawText(r.left + 60, r.top, WString(g.basic_char, 1), fnt, LtBlue());
+					w.DrawText(r.left + 60 + g.mark_pos.x, r.top + g.mark_pos.y,
+					           WString(g.mark_char, 1), g.mark_font, LtRed());
+				}
+			}
+		}
+		else
+			w.DrawText(r.left + 60, r.top, txt, fnt, ink);
+		w.DrawRect(r.left, r.bottom - 1, r.Width(), 1, Black());
 	}
-	return e;
-}
 
-thread__ CharEntry fc_cache[512];
-
-const GlyphInfo& GetGlyphInfo(Font font, int chr)
-{
-	unsigned hash = CombineHash(font.GetHashValue(), chr) & 511;
-	CharEntry& e = fc_cache[hash];
-	if(e.font != font || e.chr != chr)
-		e = GetGlyphEntry(font, chr);
-	return e.info;
-}
-
-struct FontEntry {
-	CommonFontInfo info;
-	Font           font;
 };
-
-thread__ FontEntry fi_cache[64];
-
-const CommonFontInfo& GetFontInfo(Font font)
-{
-	unsigned hash = font.GetHashValue() & 63;
-	FontEntry& e = fi_cache[hash];
-	if(e.font != font) {
-		DrawLock __;
-		e.font = font;
-		e.info = GetFontInfoSys(font);
-	}
-	return e.info;
-}
 
 Size GetTextSizeNew(const wchar *text, Font font, int n)
 {
@@ -65,10 +48,38 @@ Size GetTextSizeNew(const wchar *text, Font font, int n)
 	}
 	return Size(cx, GetFontInfo(font).height);
 }
-#endif
+
+struct App : TopWindow {
+	virtual void Paint(Draw& w) {
+		WString h = "Hello ěščřžýáíéúů ";
+		for(int i = 0; i < 10; i++)
+			h.Cat(20000 + i);
+		w.DrawRect(GetSize(), White());
+		Font fnt;
+		fnt.FaceName("Bitstream Vera Sans Mono");
+		fnt.Height(13);
+		DoDrawText(w, 100, 100, 0, h, fnt, Black(), h.GetCount(), NULL);
+	}
+};
 
 GUI_APP_MAIN
 {
+	SetDefaultCharset(CHARSET_UTF8);
+	App app;
+	app.Open();
+	GetGlyphInfo(Font().FaceName("Bitstream Vera Sans Mono").Height(20), 461);
+	ColumnList list;
+	list.SetDisplay(Single<CharDisplay>());
+	list.ItemHeight(25).Columns(12);
+	for(int i = 32; i < 65536; i++)
+		list.Add(i);
+	TopWindow win;
+//	list.SetCursor(461);
+	win.Add(list.SizePos());
+	win.Run();
+
+	return;
+
 	FontInfo fi = Arial(100).Bold().Info();
 	DUMP(fi.GetAscent());
 	DUMP(fi.GetDescent());
