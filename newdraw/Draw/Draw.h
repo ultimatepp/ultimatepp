@@ -207,7 +207,7 @@ public:
 	                                        width == f.width && height == f.height; }
 	bool  operator!=(Font f) const { return !operator==(f); }
 
-	dword GetHashValue() const     { return MAKELONG(flags, width) ^ MAKELONG(face, height); }
+	dword GetHashValue() const     { return CombineHash(width, flags, height, face); }
 	bool  IsNull() const           { return face == 0xffff; }
 
 	Font()                         { height = width = 0; face = flags = 0; }
