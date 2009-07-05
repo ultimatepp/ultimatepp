@@ -651,7 +651,7 @@ int ColumnList::RoundedCy()
 	Rect r = GetRect();
 	Rect rr = r;
 	frame->FrameLayout(r);
-	return r.Height() / cy * cy + rr.Height() - r.Height();
+	return (cy ? r.Height() / cy * cy : 0) + rr.Height() - r.Height();
 }
 
 void ColumnList::FrameLayout(Rect& r)

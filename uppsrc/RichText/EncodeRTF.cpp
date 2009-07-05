@@ -398,9 +398,12 @@ void RTFEncoder::PutHeader()
 			Group fnt(this, "f", i);
 			int fn = used_faces[i];
 			dword info = Font::GetFaceInfo(fn);
-			if(info & Font::SYMBOLTYPE)
+#ifdef PLATFORM_WIN32
+			if(fn == Font::SYMBOL)
 				Command("ftech");
-			else if(info & Font::FIXEDPITCH)
+			else
+#endif
+			if(info & Font::FIXEDPITCH)
 				Command("fmodern");
 			else if(fn == Font::ROMAN)
 				Command("froman");
