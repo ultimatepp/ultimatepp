@@ -53,6 +53,10 @@ struct FaceInfo : Moveable<FaceInfo> {
 
 Vector<FaceInfo> GetAllFacesSys();
 
+void Std(Font& font);
+
+bool      IsNormal(Font font, int chr);
+
 GlyphInfo GetGlyphInfo(Font font, int chr);
 void      GlyphMetrics(GlyphInfo& f, Font font, int chr);
 GlyphInfo GetGlyphMetrics(Font font, int chr);

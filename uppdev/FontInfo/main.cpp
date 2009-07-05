@@ -9,7 +9,8 @@ struct CharDisplay : public Display {
 		w.DrawText(r.left, r.top, AsString(q), StdFont(), ink);
 		Font fnt;
 		fnt.FaceName("Bitstream Vera Sans Mono");
-		fnt.Height(13);
+//		fnt.Face(Font::ARIAL);
+		fnt.Height(20);
 		WString txt((int)q, 1);
 		w.DrawText(r.left + 40, r.top, txt, Courier(20), ink);
 		GlyphInfo gi = GetGlyphMetrics(fnt, q);
@@ -59,12 +60,37 @@ struct App : TopWindow {
 		fnt.FaceName("Bitstream Vera Sans Mono");
 		fnt.Height(13);
 		DoDrawText(w, 100, 100, 0, h, fnt, Black(), h.GetCount(), NULL);
+		DoDrawText(w, 100, 300, 300, h, fnt, Black(), h.GetCount(), NULL);
 	}
 };
 
 GUI_APP_MAIN
 {
 	SetDefaultCharset(CHARSET_UTF8);
+	
+	
+#if 0
+	static dword t[] = { 0x9d15, 0x3092,0x4e26,0xe20,0xf780,0x994,0x636,0xfeb2,0xfebe,0x2126 };
+	VectorMap<String, int> stat;
+	for(int i = 0; i < __countof(t); i++) {
+		int chr = t[i];
+		LOG("-------- " << chr);
+		for(int i = 0; i < Font::GetFaceCount(); i++) {
+			Font fnt;
+			fnt.Height(20);
+			fnt.Face(i);
+			if(GetGlyphInfoSys(fnt, chr).IsNormal()) {
+				LOG(fnt.GetFaceName());
+				stat.GetAdd(fnt.GetFaceName(), 0)++;
+			}
+		}
+	}
+	LOG("--------------------------");
+	Vector<int> o = GetSortOrder(stat.GetValues());
+	for(int i = 0; i < o.GetCount(); i++)
+		LOG(stat.GetKey(o[i]) << ": " << stat[o[i]]);
+	LOG("--------------------------");
+#endif
 	App app;
 	app.Open();
 	GetGlyphInfo(Font().FaceName("Bitstream Vera Sans Mono").Height(20), 461);
@@ -122,6 +148,9 @@ GUI_APP_MAIN
 		DUMP(g.rspc);
 		DUMP(fi.GetRightSpace(c));
 	}
+	
+	
+	
 	
 	
 #if 0

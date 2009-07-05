@@ -8,7 +8,7 @@ file
 	Win32.cpp,
 	X11.cpp,
 	Compose.cpp,
-	FontReplace.cpp,
+	FontReplace.cpp charset "UTF-8",
 	FontInfo.cpp,
 	main.cpp charset "UTF-8",
 	app.tpp;

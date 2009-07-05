@@ -75,19 +75,53 @@ FT_Face CreateFTFace(const FcPattern *pattern, String *rpath) {
 	return face;
 }
 
+#define FONTCACHE 37
+
+struct FtFaceEntry {
+	Font    font;
+	FT_Face face;
+	String  path;
+};
+
 FT_Face FTFace(Font fnt, String *rpath = NULL)
 {
-	static FT_Face cached_face;
-	static Font    cached_font;
-	if(cached_font != fnt) {
-		cached_font = fnt;
-		if(cached_face)
-			FT_Done_Face(cached_face);
-		FcPattern *p = CreateFcPattern(cached_font, 0);
-		cached_face = CreateFTFace(p, rpath);
-		FcPatternDestroy(p);
+	RTIMING("FTFace");
+	DDUMP(fnt);
+	static FtFaceEntry cache[FONTCACHE];
+	ONCELOCK {
+		for(int i = 0; i < FONTCACHE; i++)
+			cache[i].font.Height(-30000);
 	}
-	return cached_face;
+	FtFaceEntry be;
+	be = cache[0];
+	for(int i = 0; i < FONTCACHE; i++) {
+		FtFaceEntry e = cache[i];
+		if(i)
+			cache[i] = be;
+		if(e.font == fnt) {
+			if(rpath)
+				*rpath = e.path;
+			if(i)
+				cache[0] = e;
+			return e.face;
+		}
+		be = e;
+	}
+	RTIMING("FTFace2");
+	if(be.face) {
+		LOG("Removing " << be.font << " - " << (void *)be.face);
+		FT_Done_Face(be.face);
+	}
+	be.font = fnt;
+	FcPattern *p = CreateFcPattern(fnt, 0);
+	be.face = CreateFTFace(p, &be.path);
+	FcPatternDestroy(p);
+	cache[0] = be;
+	if(rpath)
+		*rpath = be.path;
+	for(int i = 0; i < FONTCACHE; i++)
+		LOG(i << ": " << cache[i].font);
+	return be.face;
 }
 
 CommonFontInfo GetFontInfoSys(Font font)
@@ -122,11 +156,13 @@ CommonFontInfo GetFontInfoSys(Font font)
 
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
+	RTIMING("GetGlyphInfoSys");
 	GlyphInfo gi;
 	FT_Face face = FTFace(font, NULL);
 	gi.lspc = gi.rspc = 0;
 	gi.width = 0x8000;
 	if(face) {
+		RTIMING("GetGlyphInfoSys 2");
 		int glyph_index = FT_Get_Char_Index(face, chr);
 		if(glyph_index &&
 			(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT|FT_LOAD_NO_BITMAP) == 0 ||
@@ -157,10 +193,8 @@ Vector<FaceInfo> GetAllFacesSys()
 	Vector<FaceInfo> list;
 	for(int i = 0; i < __countof(basic_fonts); i++) {
 		FaceInfo& fi = list.Add();
-		f.name = basic_fonts[i];
-		f.scaleable = true;
-		f.fixed = i == 3 || i == 6;
-		f.compose = sCheckComposed(basic_fonts[i]);
+		fi.name = basic_fonts[i];
+		fi.info = (i == 3 || i == 6) ? Font::SCALEABLE|Font::FIXEDPITCH : Font::SCALEABLE;
 	}
 	FcPattern *p = FcPatternCreate();
 	FcObjectSet *os = FcObjectSetBuild(XFT_FAMILY, XFT_SPACING, XFT_SCALABLE, (void *)0);
@@ -172,13 +206,13 @@ Vector<FaceInfo> GetAllFacesSys()
 		if(FcPatternGetString(fs->fonts[i], FC_FAMILY, 0, &family) == 0 && family) {
 			FaceInfo& fi = list.Add();
 			fi.name = (const char *)family;
-			fi.type = 0;
+			fi.info = 0;
 			int iv;
 			if(FcPatternGetInteger(fs->fonts[i], FC_SPACING, 0, &iv) == 0 && iv == FC_MONO)
-				fi.type |= Font::FIXEDPITCH;
+				fi.info |= Font::FIXEDPITCH;
 			FcBool bv;
 			if(FcPatternGetBool(fs->fonts[i], FC_SCALABLE, 0, &bv) == 0 && bv)
-				fi.type |= Font::SCALEABLE;
+				fi.info |= Font::SCALEABLE;
 		}
 	}
 	FcFontSetDestroy(fs);
