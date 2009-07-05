@@ -4,56 +4,69 @@
 
 NAMESPACE_UPP
 
-void InitPlatformFonts();
+CommonFontInfo   GetFontInfoSys(Font font);
+GlyphInfo        GetGlyphInfoSys(Font font, int chr);
+void             GetStdFontSys(String& name, int& height);
+Vector<FaceInfo> GetAllFacesSys();
 
-Size FontInfo::StdFontSize;
-Font FontInfo::AStdFont;
+bool Replace(Font fnt, int chr, Font& rfnt);
 
-int FontInfo::FontCacheMax = 32;
-int FontInfo::FontCached;
-
-void FreeFonts();
-
-enum FontHashConst { FONTHASH = 97 };
-
-//# Pretty ugly code....
-FontInfo::Data *FontInfo::GetFontHash(int i) {
-	static byte buff[FONTHASH * sizeof(FontLink)];
-	static FontLink *fonthash;
-	ONCELOCK {
-		fonthash = (FontLink *)buff;
-		for(int i = 0; i < FONTHASH; i++)
-			fonthash[i].LinkSelfAll();
-	}
-	ASSERT(i >= 0 && i < FONTHASH);
-	return (FontInfo::Data *)&fonthash[i];
+void Std(Font& font)
+{
+	if(IsNull(font))
+		font = StdFont();
+	if(font.GetFace() == 0)
+		font.Face(GetStdFont().GetFace());
+	if(font.GetHeight() == 0)
+		font.Height(GetStdFont().GetHeight());
 }
 
-//# Pretty ugly code....
-FontInfo::Data *FontInfo::GetFontLru() {
-	static byte buff[sizeof(FontLink)];
-	static FontLink *fontlru;
-	ONCELOCK {
-		fontlru = new(buff) FontLink;
-	}
-	return (FontInfo::Data *)fontlru;
-}
+Size Font::StdFontSize;
+Font Font::AStdFont;
 
 INITBLOCK {
 	RichValue<Font>::Register();
 }
 
-void FontInfo::InitFonts()
+const Vector<FaceInfo>& Font::List()
 {
+	static Vector<FaceInfo> *q;
 	ONCELOCK {
-		static bool b;
-		if(b) return;
-		b = true;
-		DrawLock __;
-		GetFontHash(0);
-		GetFontLru();
-		InitPlatformFonts();
+		static Vector<FaceInfo> x;
+		x = GetAllFacesSys();
+		q = &x;
 	}
+	return *q;
+}
+
+void sInitFonts()
+{
+	Font::List();
+}
+
+INITBLOCK {
+	sInitFonts();
+}
+
+int Font::GetFaceCount()
+{
+	return List().GetCount();
+}
+
+String Font::GetFaceName(int index)
+{
+	const Vector<FaceInfo>& l = List();
+	if(index >= 0 && index < l.GetCount())
+		return l[index].name;
+	return Null;
+}
+
+dword Font::GetFaceInfo(int index)
+{
+	const Vector<FaceInfo>& l = List();
+	if(index >= 0 && index < l.GetCount())
+		return l[index].info;
+	return 0;
 }
 
 int FontFilter(int c)
@@ -61,8 +74,9 @@ int FontFilter(int c)
 	return c >= 'a' && c <= 'z' || c >= '0' && c <= '9' ? c : c >= 'A' && c <= 'Z' ? ToLower(c) : 0;
 }
 
-int  Font::FindFaceNameIndex(const char *name) {
-	FontInfo::InitFonts();
+int  Font::FindFaceNameIndex(const String& name) {
+	if(name == "STDFONT")
+		return 0;
 	for(int i = 1; i < GetFaceCount(); i++)
 		if(GetFaceName(i) == name)
 			return i;
@@ -73,47 +87,49 @@ int  Font::FindFaceNameIndex(const char *name) {
 	return 0;
 }
 
-FontInfo::FontInfo()
-{
-	ptr = NULL;
-	charset = CHARSET_UNICODE;
-	InitFonts();
-}
-
-SystemDraw& ScreenInfo();
-
-FontInfo Font::Info() const
+void Font::SyncStdFont()
 {
 	DrawLock __;
-	return FontInfo::AcquireFontInfo(*this, 0);
+	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetGlyphsHeight());
 }
 
-void FontInfo::SyncStdFont()
-{
-	FontInfo fi = AStdFont.Info();
-	FontInfo bfi = AStdFont().Bold().Info();
-	StdFontSize = Size(fi.GetAveWidth(), bfi.GetHeight());
-}
-
-void FontInfo::SetStdFont(Font font)
+void Font::SetStdFont(Font font)
 {
 	DrawLock __;
-	InitFonts();
 	AStdFont = font;
 	SyncStdFont();
 }
 
-Size FontInfo::GetStdFontSize()
+void Font::InitStdFont()
 {
 	ONCELOCK {
-		SyncStdFont();
+		DrawLock __;
+		List();
+		AStdFont = Arial(12);
+		String name;
+		int    height = 0;
+		GetStdFontSys(name, height);
+		int q = FindFaceNameIndex(name);
+		if(q > 0)
+			SetStdFont(Font(q, max(height, 1)));
 	}
+}
+
+Font Font::GetStdFont()
+{
+	InitStdFont();
+	return AStdFont;
+}
+
+Size Font::GetStdFontSize()
+{
+	InitStdFont();
 	return StdFontSize;
 }
 
 Font StdFont()
 {
-	return Font(0, FontInfo::GetStdFont().GetHeight());
+	return Font(0, Font::GetStdFont().GetHeight());
 }
 
 String Font::GetFaceName() const {
@@ -180,127 +196,129 @@ String AsString(const Font& f) {
 	return s + '>';
 }
 
-void FontInfo::FreeFonts() {
-	FontCacheMax = FontCached = 0;
-	for(int i = 0; i < FONTHASH; i++)
-		GetFontHash(i)->DeleteList(HASH);
-}
+struct CharEntry {
+	int64     font;
+	GlyphInfo info;
+	word      chr;
+};
 
-FontInfo::FontInfo(const FontInfo& f)
-{
-	Retain(f);
-}
+CharEntry fc_cache_global[4093];
 
-FontInfo& FontInfo::operator=(const FontInfo& f)
-{
-	Release();
-	Retain(f);
-	return *this;
-}
-
-bool FontInfo::IsEqual(byte _charset, Font f, int angle) const
-{
-	return ptr && ptr->font == f && ptr->angle == angle && charset == _charset;
-}
-
-FontInfo::CharMetrics FontInfo::GetCM(int c) const
-{
-	if(c < 0) c = (byte)c;
-	if(charset != CHARSET_UNICODE)
-		c = ToUnicode(c, charset);
-	ASSERT(c < 65536);
-	if(c >= 65536) {
-		CharMetrics h;
-		h.width = h.lspc = h.rspc = 0;
-		return h;
-	}
-	if(c < 2048)
-		return GetPage(c >> 5)[c & 31];
-	Mutex::Lock __(ptr->xmutex);
-	Kinfo& ki = ptr->kinfo.At((c >> 10) - 2);
-	if(!ki.flags) {
-		ki.flags = new byte[128];
-		memset(ki.flags, 0, 128);
-		ptr->GetMetrics(&ki.std, c, 1);
-	}
-	int fi = (c >> 3) & 127;
-	int fm = 1 << (c & 7);
-	if(ki.flags[fi] & fm)
-		return ki.std;
-	int q = ptr->xx.Find(c);
-	if(q >= 0)
-		return ptr->xx[q];
-	CharMetrics m;
-	ptr->GetMetrics(&m, c, 1);
-	if(m == ki.std)
-		ki.flags[fi] |= fm;
-	else
-		ptr->xx.Add(c, m);
-	return m;
-}
-
-int FontInfo::GetWidth(int c) const {
-	return GetCM(c).width;
-}
-
-int FontInfo::GetLeftSpace(int c) const {
-	return GetCM(c).lspc;
-}
-
-int FontInfo::GetRightSpace(int c) const {
-	return GetCM(c).rspc;
-}
-
-void FontInfo::Release()
+bool IsNormal(Font font, int chr)
 {
 	DrawLock __;
-	if(ptr) {
-		ASSERT(ptr->refcount > 0);
-		LLOG("Release " << (void *)ptr << " count:" << ptr->count);
-		if(--ptr->refcount == 0) {
-			if(FontCacheMax == 0) {
-				delete ptr;
-				return;
+	CharEntry& e = fc_cache_global[CombineHash(font.GetHashValue(), chr) % 4093];
+	if(e.font == font.AsInt64() || e.chr == chr)
+		return e.info.IsNormal();
+	return GetGlyphInfoSys(font, chr).IsNormal();
+}
+
+CharEntry GetGlyphEntry(Font font, int chr, unsigned hash)
+{
+	DrawLock __;
+	CharEntry& e = fc_cache_global[hash % 4093];
+	if(e.font != font.AsInt64() || e.chr != chr) {
+		e.font = font.AsInt64();
+		e.chr = chr;
+		e.info = GetGlyphInfoSys(font, chr);
+		if(!e.info.IsNormal()) {
+			ComposedGlyph cg;
+			Font rfnt;
+			if(Compose(font, chr, cg)) {
+				e.info.lspc = -1;
+				e.info.rspc = cg.basic_char;
 			}
-			FontInfo::Data *lru = GetFontLru();
-			ptr->LinkAfter(lru, LRU);
-			FontCached++;
-			LLOG("Placed to cache " << ptr->ptr << " cached:" << FontCached);
-			while(FontCached > FontCacheMax) {
-				ASSERT(lru->GetPrev(LRU) != lru);
-				FontCached--;
-				LLOG("Deleting from cache " << lru->GetPrev(LRU)->ptr <<
-					        " cached: " << FontCached);
-				delete lru->GetPrev(LRU);
-			}
+			else
+			if(Replace(font, chr, rfnt))
+				e.info.lspc = rfnt.GetFace();
+			else
+				e.info.lspc = -2;
 		}
 	}
+	return e;
 }
 
-void FontInfo::Retain(const FontInfo& f)
+thread__ CharEntry fc_cache[512];
+
+GlyphInfo GetGlyphInfo(Font font, int chr)
 {
-	DrawLock __;
-	ptr = f.ptr;
-	ptr->refcount++;
-	charset = f.charset;
+	Std(font);
+	unsigned hash = CombineHash(font.GetHashValue(), chr);
+	CharEntry& e = fc_cache[hash & 511];
+	if(e.font != font.AsInt64() || e.chr != chr)
+		e = GetGlyphEntry(font, chr, hash);
+	return e.info;
 }
 
-FontInfo::CharMetrics *FontInfo::CreateMetricsPage(int page) const
+void GlyphMetrics(GlyphInfo& f, Font font, int chr)
 {
-	DrawLock __;
-	CharMetrics *cm;
-	cm = new CharMetrics[32];
-	ptr->GetMetrics(cm, page << 5, 32);
-	if(page >= 8 && page < 12)
-		ComposeMetrics(ptr->font, cm, page);
-	return cm;
+	if(f.IsReplaced())
+		f = GetGlyphInfo(font().Face(f.lspc), chr);
+	if(f.IsComposed()) {
+		f = GetGlyphInfo(font, f.rspc);
+		if(f.IsComposedLM())
+			f.rspc += f.width / 2;
+	}
 }
 
-FontInfo::CharMetrics *FontInfo::GetPage(int page) const
+GlyphInfo GetGlyphMetrics(Font font, int chr)
 {
-	ASSERT(page >= 0 && page < 64);
-	ONCELOCK_PTR(ptr->base[page], CreateMetricsPage(page));
-	return ptr->base[page];
+	GlyphInfo f = GetGlyphInfo(font, chr);
+	if(f.IsMissing())
+		f = GetGlyphInfo(font, '?');
+	GlyphMetrics(f, font, chr);
+	return f;
+}
+
+struct FontEntry {
+	CommonFontInfo info;
+	int64          font;
+};
+
+thread__ FontEntry fi_cache[64];
+
+const CommonFontInfo& GetFontInfo(Font font)
+{
+	Std(font);
+	unsigned hash = font.GetHashValue() & 63;
+	FontEntry& e = fi_cache[hash];
+	if(e.font != font.AsInt64()) {
+		DrawLock __;
+		e.font = font.AsInt64();
+		e.info = GetFontInfoSys(font);
+	}
+	return e.info;
+}
+
+int Font::GetWidth(int c) const {
+	return GetGlyphMetrics(*this, c).width;
+}
+
+int Font::GetLeftSpace(int c) const {
+	return GetGlyphMetrics(*this, c).lspc;
+}
+
+int Font::GetRightSpace(int c) const {
+	return GetGlyphMetrics(*this, c).rspc;
+}
+
+thread__ int64 lastFiFont = INT_MIN;
+thread__ CommonFontInfo lastFontInfo;
+
+const CommonFontInfo& Font::Fi() const
+{
+	if(AsInt64() == lastFiFont)
+		return lastFontInfo;
+	lastFontInfo = GetFontInfo(*this);
+	lastFiFont = AsInt64();
+	return lastFontInfo;
+}
+
+FontInfo Font::Info() const
+{
+	FontInfo h;
+	h.font = *this;
+	return h;
 }
 
 END_UPP_NAMESPACE
