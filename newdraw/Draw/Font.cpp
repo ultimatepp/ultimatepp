@@ -162,7 +162,7 @@ void Font::Serialize(Stream& s) {
 				Face(COURIER);
 		}
 	}
-	s % flags % height % width;
+	s % v.flags % v.height % v.width;
 }
 
 template<>

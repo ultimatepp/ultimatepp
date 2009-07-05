@@ -52,6 +52,7 @@ file
 	DrawX11.h,
 	DrawX11.cpp,
 	DrawOpX11.cpp,
+	DrawTextX11.cpp,
 	BackDraw.h,
 	BackDraw.cpp,
 	Image readonly separator,
