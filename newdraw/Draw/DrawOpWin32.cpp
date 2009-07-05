@@ -277,37 +277,6 @@ void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int width, Color penc
 	::Ellipse(GetHandle(), r.left, r.top, r.right, r.bottom);
 }
 
-void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,
-                      int n, const int *dx) {
-	while(n > 30000) {
-		DrawTextOp(x, y, angle, text, font, ink, 30000, dx);
-		if(dx) {
-			for(int i = 0; i < 30000; i++)
-				x += *dx++;
-		}
-		else
-			x += GetTextSize(text, font, 30000).cx;
-		n -= 30000;
-		text += 30000;
-	}
-	DrawLock __;
-	COLORREF cr = GetColor(ink);
-	if(cr != lastTextColor) {
-		LLOG("Setting text color: " << ink);
-		::SetTextColor(handle, lastTextColor = cr);
-	}
-	if(angle) {
-		SetFont(font, angle);
-		::ExtTextOutW(handle, x + lastFont.ptr->offset.cx, y + lastFont.ptr->offset.cy,
-		              0, NULL, (const WCHAR *)text, n, dx);
-	}
-	else {
-		SetFont(font);
-		::ExtTextOutW(handle, x, y + lastFont.GetAscent(), 0, NULL, (const WCHAR *)text,
-		              n, dx);
-	}
-}
-
 #endif
 
 END_UPP_NAMESPACE

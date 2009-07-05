@@ -67,7 +67,6 @@ String DumpFontInfo(FontInfo fi)
 {
 	String out;
 	out << "FontInfo(font = " << fi.GetFont() << "\n"
-		"\tempty = " << fi.IsEmpty() << "\n"
 		"\tascent = " << fi.GetAscent() << "\n"
 		"\tdescent = " << fi.GetDescent() << "\n"
 		"\texternal leading = " << fi.GetExternal() << "\n"
@@ -91,13 +90,13 @@ String DumpFontInfo(FontInfo fi)
 	out << "\n\n\tright space:\n";
 	for(i = 0; i < 256; i++)
 		out << NFormat(i & 15 ? "  " : "\n\t%02x\t", i) << NFormat("%2>d", fi.GetRightSpace(i));
-	out << "\n\n\tkerning:\n";
+/*	out << "\n\n\tkerning:\n";
 	int kp = 0;
 	for(i = 0; i < 256; i++)
 		for(int j = 0; j < 256; j++)
 			if(int k = fi.GetKerning(i, j))
 				out << (kp++ & 7 ? "  " : "\n\t") << NFormat("(%02x,%02x)=%2>d", i, j, k);
-	out << (kp ? "\n" : "\tnone\n");
+	out << (kp ? "\n" : "\tnone\n");*/
 	return out;
 }
 

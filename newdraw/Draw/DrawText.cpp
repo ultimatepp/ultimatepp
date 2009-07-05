@@ -29,7 +29,66 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 	if(IsNull(ink)) return;
 	if(n < 0)
 		n = wstrlen(text);
-	ComposeText(x, y, angle, text, font, ink, n, dx);
+	Std(font);
+	double sina;
+	double cosa;
+	int    d = 0;
+	if(angle)
+		Draw::SinCos(angle, sina, cosa); //TODO global sin tables!
+	for(int i = 0; i < n; i++) {
+		wchar chr = text[i];
+		GlyphInfo gi = GetGlyphInfo(font, chr);
+		if(gi.IsNormal())
+			if(angle)
+				DrawTextOp(int(x + cosa * d), int(y - sina * d), angle, &chr, font, ink, 1, NULL);
+			else {
+				int c = 1;
+				int dd = 0;
+				if(!dx)
+					while(c < n) {
+						GlyphInfo gi2 = GetGlyphInfo(font, text[i + c]);
+						if(!gi2.IsNormal())
+							break;
+						c++;
+						dd += gi.width;
+						gi = gi2;
+					}
+				DrawTextOp(x + d, y, 0, text + i, font, ink, c, NULL);
+				i += c - 1;
+				d += dd;
+			}
+		else
+		if(gi.IsReplaced()) {
+			FontInfo fi = font.Info();
+			Font fnt = font;
+			fnt.Face(gi.lspc);
+			FontInfo fi2 = fnt.Info();
+			if(angle)
+				DrawTextOp(int(x + cosa * d), int(y - sina * (fi.GetAscent() - fi2.GetAscent() + d)),
+				             angle, &chr, fnt, ink, 1, NULL);
+			else
+				DrawTextOp(x + d, y + fi.GetAscent() - fi2.GetAscent(), 0, &chr, fnt, ink, 1, NULL);
+			GlyphMetrics(gi, font, chr);
+		}
+		else
+		if(gi.IsComposed()) {
+			ComposedGlyph cg;
+			Compose(font, chr, cg);
+			if(angle) {
+				DrawTextOp(int(x + cosa * d), int(y - sina * d), angle, &cg.basic_char, font, ink, 1, NULL);
+				DrawTextOp(int(x + cosa * (d + cg.mark_pos.x)), int(y - sina * (cg.mark_pos.y + d)), angle, &cg.mark_char, cg.mark_font, ink, 1, NULL);
+			}
+			else {
+				DrawTextOp(x + d, y, angle, &cg.basic_char, font, ink, 1, NULL);
+				DrawTextOp(x + cg.mark_pos.x + d, y + cg.mark_pos.y, angle, &cg.mark_char, cg.mark_font, ink, 1, NULL);
+			}
+			GlyphMetrics(gi, font, chr);
+		}
+		if(dx)
+			d += *dx++;
+		else
+			d += gi.width;
+	}
 }
 
 // ----------------------------

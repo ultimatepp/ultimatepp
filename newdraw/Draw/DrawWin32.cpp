@@ -24,16 +24,6 @@ Size SystemDraw::GetNativeDpi() const
 	return Dots() ? nativeDpi : Size(96, 96);
 }
 
-void StaticExitDraw_()
-{
-	FontInfo::FreeFonts();
-}
-
-EXITBLOCK
-{
-	StaticExitDraw_();
-}
-
 #ifndef PLATFORM_WINCE
 void Add(LOGPALETTE *pal, int r, int g, int b)
 {
@@ -164,16 +154,6 @@ void SystemDraw::SetDrawPen(int width, Color color) {
 	}
 }
 
-void SystemDraw::SetFont(Font font, int angle) {
-	DrawLock __;
-	LLOG("Set font: " << font << " face: " << font.GetFaceName());
-	if(lastFont && lastFont.IsEqual(CHARSET_UNICODE, font, angle))
-		return;
-	lastFont = FontInfo::AcquireFontInfo0(font, GetHandle(), angle);
-	HFONT h = (HFONT) SelectObject(handle, lastFont.ptr->hfont);
-	if(!orgFont) orgFont = h;
-}
-
 void SystemDraw::SetOrg() {
 	DrawLock __;
 #ifdef PLATFORM_WINCE
@@ -271,7 +251,7 @@ void SystemDraw::Cinit() {
 	actBrush = orgBrush = NULL;
 	actPen = orgPen = NULL;
 	orgFont = NULL;
-	lastFont.Clear();
+	lastAngle = INT_MIN;
 }
 
 void SystemDraw::Init() {
@@ -296,7 +276,6 @@ SystemDraw::SystemDraw() {
 	DrawLock __;
 	native = 0;
 	InitColors();
-	FontInfo::InitFonts();
 	actual_offset = Point(0, 0);
 	Reset();
 	handle = NULL;
@@ -306,7 +285,6 @@ SystemDraw::SystemDraw(HDC hdc) {
 	DrawLock __;
 	native = 0;
 	InitColors();
-	FontInfo::InitFonts();
 	Reset();
 	Attach(hdc);
 }

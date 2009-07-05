@@ -53,7 +53,8 @@ private:
 
 	friend void StaticExitDraw_();
 
-	FontInfo  lastFont;
+	Font      lastFont;
+	int       lastAngle;
 
 	Point     actual_offset_bak;
 

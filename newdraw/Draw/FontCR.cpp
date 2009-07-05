@@ -165,111 +165,104 @@ gc_info[128] = {
 	{ CG_NONE, 0, 0 } // CG_SMALL, 'LONG S
 };
 
-SystemDraw& ScreenInfo();
-
-void FontInfo::ComposeMetrics(Font fnt, CharMetrics *m, int page) const
+bool Compose(Font font, int chr, ComposedGlyph& cg)
 {
-	if(fnt.GetFaceInfo() & Font::COMPOSED) {
-		FontInfo fi = fnt.Info();
-		for(int i = 0; i < 32; i++) {
-			int c = gc_info[i + (page - 8) * 32].ascii;
-			m[i].lspc = fi.GetLeftSpace(c);
-			m[i].width = fi[c];
-			m[i].rspc = fi.GetRightSpace(c);
-			if(gc_info[i].type == CG_COMMA_UR && !fi.IsFixedPitch())
-				m[i].rspc += m[i].width / 2;
-		}
+	if(chr < 256 || chr > 256 + 128)
+		return false;
+	CGInfo f = gc_info[chr - 256];
+	if(f.type == CG_NONE)
+		return false;
+	GlyphInfo gi = GetGlyphInfo(font, f.ascii);
+	if(!gi.IsNormal())
+		return false;
+	int cw = gi.width;
+	CommonFontInfo fi = GetFontInfo(font);
+	gi = GetGlyphInfo(font, f.mark);
+	if(!gi.IsNormal())
+		return false;
+	int mw = gi.width;
+	cg.mark_font = font;
+	cg.mark_pos.x = cg.mark_pos.y = 0;
+	cg.basic_char = f.ascii;
+	cg.mark_char = f.mark;
+	if(cg.mark_char == CG_COMMA_UR && fi.fixedpitch)
+		cg.mark_char = CG_CARON;
+	if(cg.mark_char == CG_COMMA_T) {
+		cg.mark_pos.y -= 3 * font.GetHeight() / 4;
+		cg.mark_pos.x += 4 * cw / 10;
+		if(font.IsItalic())
+			cg.mark_pos.x += mw / 2;
 	}
+	else
+	if(cg.mark_char == CG_COMMA_UR) {
+		cg.mark_pos.y -= 2 * font.GetHeight() / 3;
+		cg.mark_pos.x += cw - mw / 4;
+		cg.mark_char = ',';
+		if(font.IsItalic())
+			cg.mark_pos.x += mw / 3;
+	}
+	else
+	if(cg.mark_char == CG_COMMA_URI) {
+		cg.mark_pos.y -= 2 * font.GetHeight() / 3;
+		cg.mark_pos.x += cw - mw / 2;
+		cg.mark_char = ',';
+		if(font.IsItalic())
+			cg.mark_pos.x += mw / 3;
+	}
+	else
+	if(cg.mark_char != CG_STROKE) {
+		if(cg.mark_char != CG_OGONEK && cg.mark_char != CG_CEDILLA && f.type == CG_CAPITAL) {
+			cg.mark_font = font(9 * font.GetHeight() / 10);
+			mw = GetGlyphInfo(cg.mark_font, f.mark).width;
+			cg.mark_pos.y -= cg.mark_char == CG_RING_ABOVE ? font.GetHeight() / 19
+			                            : font.GetHeight() / 10;
+		}
+		cg.mark_pos.x += (cw - mw) / 2;
+		if(font.IsItalic())
+			cg.mark_pos.x += mw / 5;
+	}
+	return true;
 }
 
-void Draw::ComposeText(int x, int y, int angle, const wchar *text, Font font, Color ink,
-                       int n, const int *dx) {
-	if(font.GetFaceInfo() & Font::COMPOSED) {
-		for(int i = 0; i < n; i++)
-			if(text[i] >= 256 && text[i] < 256 + 128) {
-				FontInfo fi = font.Info();
-				Clip(x, y, 9999, fi.GetHeight());
-				Buffer<wchar> ntext(n);
-				double sina;
-				double cosa;
-				Size   offset;
-				if(angle)
-					SinCos(angle, sina, cosa); //TODO global sin tables!
-				int xp = 0;
-				for(int i = 0; i < n; i++) {
-					wchar chr = text[i];
-					ntext[i] = chr;
-					if(chr >= 256 && chr < 256 + 128) {
-						CGInfo f = gc_info[chr - 256];
-						if(f.type != CG_NONE) {
-							ntext[i] = chr = f.ascii;
-							Font mfnt = font;
-							FontInfo mfi = fi;
-							int my = 0;
-							int mx = 0;
-							int cw = fi[f.ascii];
-							int mw = mfi[f.mark];
-							wchar mark = f.mark;
-							if(mark == CG_COMMA_UR && fi.IsFixedPitch())
-								mark = CG_CARON;
-							if(mark == CG_COMMA_T) {
-								my -= 3 * font.GetHeight() / 4;
-								mx += 4 * cw / 10;
-								if(font.IsItalic())
-									mx += mw / 2;
-							}
-							else
-							if(mark == CG_COMMA_UR) {
-								my -= 2 * font.GetHeight() / 3;
-								mx += cw - mw / 4;
-								mark = ',';
-								if(font.IsItalic())
-									mx += mw / 3;
-							}
-							else
-							if(mark == CG_COMMA_URI) {
-								my -= 2 * font.GetHeight() / 3;
-								mx += cw - mw / 2;
-								mark = ',';
-								if(font.IsItalic())
-									mx += mw / 3;
-							}
-							else
-							if(mark != CG_STROKE) {
-								if(f.mark != CG_OGONEK && f.mark != CG_CEDILLA && f.type == CG_CAPITAL) {
-									mfnt = font(9 * font.GetHeight() / 10);
-									mfi = mfnt.Info();
-									my -= mark == CG_RING_ABOVE ? font.GetHeight() / 19
-									                            : font.GetHeight() / 13;
-								}
-								mw = mfi[f.mark];
-								mx += (cw - mw) / 2;
-								if(font.IsItalic())
-									mx += mw / 5;
-							}
-							if(angle)
-								DrawText(int(x + cosa * (xp + mx) + sina * my),
-								         int(y - sina * (xp + mx) + cosa * my),
-								         angle, &mark, mfnt, ink, 1);
-							else
-								DrawText(x + xp + mx, y + my, &mark, mfnt, ink, 1);
-						}
-					}
-					if(angle)
-						DrawTextOp(int(x + cosa * xp), int(y - sina * xp),
-						           angle, &chr, font, ink, 1, dx);
-					if(dx)
-						xp += dx[i];
-					else
-						xp += fi[chr];
-				}
-				if(!angle)
-					DrawTextOp(x, y, angle, ntext, font, ink, n, dx);
-				End();
-				return;
-			}
+static const char *sFontReplacements[] = {
+	"sans-serif",
+	"Arial",
+	"Arial Unicode MS",
+	"Symbol",
+	"???????",
+	"?????",
+	"MS UI Gothic", 
+	"MS Mincho",
+	"Arial",
+	"AlArabiya"
+	"FreeSerif",
+	"Kochi Mincho",
+	"Kochi Gothic",
+	"Sazanami Mincho",
+	"Sazanami Gothic",
+	"Gulim",
+	"SimSun",
+	"PMingLiU",
+};
+
+bool Replace(Font fnt, int chr, Font& rfnt)
+{
+	static Vector<int> rface;
+	ONCELOCK {
+		for(int i = 0; i < __countof(sFontReplacements) && rface.GetCount() < 20; i++) {
+			int q = Font::FindFaceNameIndex(sFontReplacements[i]);
+			if(q > 0)
+				rface.Add(q);
+		}
 	}
-	DrawTextOp(x, y, angle, text, font, ink, n, dx);
+
+	Font f = fnt;
+	for(int i = 0; i < rface.GetCount(); i++)
+		if(IsNormal(f.Face(rface[i]), chr)) {
+			rfnt = f;
+			return true;
+		}
+	return false;
 }
 
 END_UPP_NAMESPACE

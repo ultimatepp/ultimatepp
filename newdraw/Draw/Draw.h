@@ -123,6 +123,8 @@ typedef GuiLock DrawLock;
 
 const int FONT_V = 40;
 
+#include "FontInt.h"
+
 class FontInfo;
 
 class Font : AssignValueTypeNo<Font, FONT_V, Moveable<Font> >{
@@ -135,20 +137,33 @@ class Font : AssignValueTypeNo<Font, FONT_V, Moveable<Font> >{
 			int16 width;
 		} v;
 	};
+	
+	static Font AStdFont;
+	static Size StdFontSize;
 
+	static const Vector<FaceInfo>& List();
+	static void SyncStdFont();
+	static void InitStdFont();
+
+	const CommonFontInfo& Fi() const;
+	
+	friend void sInitFonts();
+	
 public:
 	enum {
 		FIXEDPITCH  = 0x0001,
 		SCALEABLE   = 0x0002,
-		SYMBOLTYPE  = 0x0004,
-		COMPOSED    = 0x0008,
 		LOCAL       = 0x0010,
 	};
 
 	static int    GetFaceCount();
 	static String GetFaceName(int index);
-	static int    FindFaceNameIndex(const char *name);
+	static int    FindFaceNameIndex(const String& name);
 	static dword  GetFaceInfo(int index);
+
+	static void   SetStdFont(Font font);
+	static Font   GetStdFont();
+	static Size   GetStdFontSize();
 
 	enum {
 		STDFONT,
@@ -158,8 +173,8 @@ public:
 		ROMAN,
 		ARIAL,
 		COURIER,
-		SYMBOL,
 	#ifdef PLATFORM_WIN32
+		SYMBOL,
 		WINGDINGS,
 		TAHOMA,
 	#endif
@@ -177,51 +192,111 @@ public:
 	bool   IsTrueTypeOnly() const   { return v.flags & 0x400; }
 	String GetFaceName() const;
 	dword  GetFaceInfo() const;
+	int64  AsInt64() const          { return data; }
 
-	FontInfo Info() const;
-
-	Font& Face(int n)            { v.face = n; return *this; }
-	Font& Height(int n)          { v.height = n; return *this; }
-	Font& Width(int n)           { v.width = n; return *this; }
-	Font& Bold()                 { v.flags |= 0x8000; return *this; }
-	Font& NoBold()               { v.flags &= ~0x8000; return *this; }
-	Font& Bold(bool b)           { return b ? Bold() : NoBold(); }
-	Font& Italic()               { v.flags |= 0x4000; return *this; }
-	Font& NoItalic()             { v.flags &= ~0x4000; return *this; }
-	Font& Italic(bool b)         { return b ? Italic() : NoItalic(); }
-	Font& Underline()            { v.flags |= 0x2000; return *this; }
-	Font& NoUnderline()          { v.flags &= ~0x2000; return *this; }
-	Font& Underline(bool b)      { return b ? Underline() : NoUnderline(); }
-	Font& Strikeout()            { v.flags |= 0x1000; return *this; }
-	Font& NoStrikeout()          { v.flags &= ~0x1000; return *this; }
-	Font& Strikeout(bool b)      { return b ? Strikeout() : NoStrikeout(); }
-	Font& NonAntiAliased()       { v.flags |= 0x800; return *this; }
-	Font& NoNonAntiAliased()     { v.flags &= ~0x800; return *this; }
-	Font& NonAntiAliased(bool b) { return b ? NonAntiAliased() : NoNonAntiAliased(); }
-	Font& TrueTypeOnly()         { v.flags |= 0x400; return *this; }
-	Font& NoTrueTypeOnly()       { v.flags &= ~0x400; return *this; }
-	Font& TrueTypeOnly(bool b)   { return b ? TrueTypeOnly() : NoTrueTypeOnly(); }
+	Font& Face(int n)               { v.face = n; return *this; }
+	Font& Height(int n)             { v.height = n; return *this; }
+	Font& Width(int n)              { v.width = n; return *this; }
+	Font& Bold()                    { v.flags |= 0x8000; return *this; }
+	Font& NoBold()                  { v.flags &= ~0x8000; return *this; }
+	Font& Bold(bool b)              { return b ? Bold() : NoBold(); }
+	Font& Italic()                  { v.flags |= 0x4000; return *this; }
+	Font& NoItalic()                { v.flags &= ~0x4000; return *this; }
+	Font& Italic(bool b)            { return b ? Italic() : NoItalic(); }
+	Font& Underline()               { v.flags |= 0x2000; return *this; }
+	Font& NoUnderline()             { v.flags &= ~0x2000; return *this; }
+	Font& Underline(bool b)         { return b ? Underline() : NoUnderline(); }
+	Font& Strikeout()               { v.flags |= 0x1000; return *this; }
+	Font& NoStrikeout()             { v.flags &= ~0x1000; return *this; }
+	Font& Strikeout(bool b)         { return b ? Strikeout() : NoStrikeout(); }
+	Font& NonAntiAliased()          { v.flags |= 0x800; return *this; }
+	Font& NoNonAntiAliased()        { v.flags &= ~0x800; return *this; }
+	Font& NonAntiAliased(bool b)    { return b ? NonAntiAliased() : NoNonAntiAliased(); }
+	Font& TrueTypeOnly()            { v.flags |= 0x400; return *this; }
+	Font& NoTrueTypeOnly()          { v.flags &= ~0x400; return *this; }
+	Font& TrueTypeOnly(bool b)      { return b ? TrueTypeOnly() : NoTrueTypeOnly(); }
 	Font& FaceName(const String& name);
 
-	Font  operator()() const       { return *this; }
-	Font  operator()(int n) const  { return Font(*this).Height(n); }
+	Font  operator()() const        { return *this; }
+	Font  operator()(int n) const   { return Font(*this).Height(n); }
+
+
+	int   GetAscent() const                  { return Fi().ascent; }
+	int   GetDescent() const                 { return Fi().descent; }
+	int   GetExternal() const                { return Fi().external; }
+	int   GetInternal() const                { return Fi().internal; }
+	int   GetGlyphsHeight() const            { return Fi().height; }
+	int   GetLineHeight() const              { return Fi().lineheight; }
+	int   GetOverhang() const                { return Fi().overhang; }
+	int   GetAveWidth() const                { return Fi().avewidth; }
+	int   GetMaxWidth() const                { return Fi().maxwidth; }
+	int   HasChar(int ch) const;
+	int   GetWidth(int c) const;
+	int   operator[](int c) const            { return GetWidth(c); }
+	int   GetLeftSpace(int c) const;
+	int   GetRightSpace(int c) const;
+	bool  IsFixedPitch() const               { return Fi().fixedpitch; }
+	bool  IsScaleable() const                { return Fi().scaleable; }
+#ifdef PLATFORM_X11
+	String GetFontPath() const               { return Fi().path; }
+#endif
 
 	void  Serialize(Stream& s);
 
-	bool  operator==(Font f) const { return v.face == f.v.face && v.flags == f.v.flags &&
+	bool  operator==(Font f) const  { return v.face == f.v.face && v.flags == f.v.flags &&
 	                                        v.width == f.v.width && v.height == f.v.height; }
-	bool  operator!=(Font f) const { return !operator==(f); }
+	bool  operator!=(Font f) const  { return !operator==(f); }
 
-	dword GetHashValue() const     { return CombineHash(v.width, v.flags, v.height, v.face); }
-	bool  IsNull() const           { return v.face == 0xffff; }
+	dword GetHashValue() const      { return CombineHash(v.width, v.flags, v.height, v.face); }
+	bool  IsNull() const            { return v.face == 0xffff; }
 
-	Font()                         { v.height = v.width = 0; v.face = v.flags = 0; }
-	Font(int face, int height)     { v.face = face; v.height = height; v.flags = 0; v.width = 0; }
-	Font(const Nuller&)            { v.face = 0xffff; v.height = v.width = 0; v.flags = 0; }
+	Font()                          { v.height = v.width = 0; v.face = v.flags = 0; }
+	Font(int face, int height)      { v.face = face; v.height = height; v.flags = 0; v.width = 0; }
+	Font(const Nuller&)             { v.face = 0xffff; v.height = v.width = 0; v.flags = 0; }
 
-	operator Value() const         { return RichValue<Font>(*this); }
-	Font(const Value& q)           { *this = RichValue<Font>::Extract(q); }
+	operator Value() const          { return RichValue<Font>(*this); }
+	Font(const Value& q)            { *this = RichValue<Font>::Extract(q); }
+
+// BW compatibility
+	FontInfo Info() const;
 };
+
+//BW compatibility
+class FontInfo {
+	Font font;
+	friend class Font;
+public:
+	int    GetAscent() const                  { return font.GetAscent(); }
+	int    GetDescent() const                 { return font.GetDescent(); }
+	int    GetExternal() const                { return font.GetExternal(); }
+	int    GetInternal() const                { return font.GetInternal(); }
+	int    GetHeight() const                  { return font.GetGlyphsHeight(); }
+	int    GetLineHeight() const              { return font.GetLineHeight(); }
+	int    GetOverhang() const                { return font.GetOverhang(); }
+	int    GetAveWidth() const                { return font.GetAveWidth(); }
+	int    GetMaxWidth() const                { return font.GetMaxWidth(); }
+	int    HasChar(int c) const               { return font.HasChar(c); }
+	int    GetWidth(int c) const              { return font.GetWidth(c); }
+	int    operator[](int c) const            { return GetWidth(c); }
+	int    GetLeftSpace(int c) const          { return font.GetLeftSpace(c); }
+	int    GetRightSpace(int c) const         { return font.GetRightSpace(c); }
+	bool   IsFixedPitch() const               { return font.IsFixedPitch(); }
+	bool   IsScaleable() const                { return font.IsScaleable(); }
+	int    GetFontHeight() const              { return font.GetHeight(); }
+	Font   GetFont() const                    { return font; }
+#ifdef PLATFORM_X11
+	String GetFileName() const                { return font.GetPath(); }
+#endif
+};
+
+struct ComposedGlyph {
+	wchar  basic_char;
+	Point  mark_pos;
+	wchar  mark_char;
+	Font   mark_font;
+};
+
+bool Compose(Font fnt, int chr, ComposedGlyph& cs);
 
 template<>
 inline bool IsNull(const Font& f)            { return f.IsNull(); }
@@ -232,182 +307,9 @@ inline unsigned GetHashValue(const Font& f)  { return f.GetHashValue(); }
 template<>
 String AsString(const Font& f);
 
-class FontInfo : Moveable<FontInfo> {
-	struct CharMetrics : Moveable<CharMetrics> {
-		int  width;
-		int  lspc;
-		int  rspc;
-
-		bool operator==(const CharMetrics& b) const
-		     { return width == b.width && lspc == b.lspc && rspc == b.rspc; }
-	};
-
-	struct Kinfo : Moveable<Kinfo> {
-		CharMetrics std;
-		byte       *flags;
-
-		Kinfo() {
-			flags = NULL;
-		}
-		~Kinfo() {
-			if(flags)
-				delete[] flags;
-		}
-	};
-
-	struct Data : public Link<Data, 2> {
-		bool         HasChar(int ch) const;
-		void         GetMetrics(CharMetrics *t, int from, int count);
-	#ifdef PLATFORM_X11
-		void         CreateFont(int i, int cs);
-	#endif
-
-		int          refcount;
-		Font         font;
-		int          angle;
-	#ifdef PLATFORM_WIN32
-		HFONT        hfont;
-	#endif
-	#ifdef PLATFORM_X11
-		XftFont     *xftfont;
-		XftFont     *xftfont0;
-	#endif
-		int          ascent;
-		int          descent;
-		int          external;
-		int          internal;
-		int          height;
-		int          lineheight;
-		int          overhang;
-		Size         offset;
-		int          avewidth;
-		int          maxwidth;
-		int          firstchar;
-		int          charcount;
-		int          default_char;
-
-		CharMetrics *base[64];
-
-		Mutex         xmutex;
-		Vector<Kinfo> kinfo;
-		VectorMap<dword, CharMetrics> xx;
-
-		bool         fixedpitch;
-		bool         scaleable;
-		int          spacebefore;
-		int          spaceafter;
-	#ifdef PLATFORM_X11
-		int          underline_position;
-		int          underline_thickness;
-		double       sina;
-		double       cosa;
-		bool         twobyte;
-		String       filename;
-	#endif
-
-		VectorMap<dword, int> kerning;
-
-		Data();
-		~Data();
-	};
-
-	Data *ptr;
-	int   charset;
-
-	CharMetrics       *CreateMetricsPage(int page) const;
-	CharMetrics       *GetPage(int page) const;
-	void               ComposeMetrics(Font fnt, CharMetrics *m, int from) const;
-	CharMetrics        GetCM(int c) const;
-
-	void       Release();
-	void       Retain(const FontInfo& f);
-	FontInfo(Data *ptr) : ptr(ptr)       { charset = CHARSET_UNICODE; }
-
-	bool        IsEqual(byte charset, Font f, int angle) const;
-	CharMetrics GetComposedMetrics(int c);
-
-	static void InitPlatformFonts();
-	static Size StdFontSize;
-	static Font AStdFont;
-	static int  FontCacheMax;
-	static int  FontCached;
-
-	enum { LRU, HASH, FONTHASH = 97 };
-
-
-	static Data *GetFontHash(int i);
-	static Data *GetFontLru();
-	static void  InitFonts();
-	static void  SyncStdFont();
-	static void  FreeFonts();
-	static FontInfo     AcquireFontInfo(Font font, int angle);
-
-	typedef Link<Data, 2> FontLink;
-
-#ifdef PLATFORM_WIN32
-	static int CALLBACK AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dword type, LPARAM param);
-	static int          EnumFace(HDC hdc, const char *face);
-	static void         ForceFace(HDC hdc, const char *face, const char *aface);
-	static FontInfo     AcquireFontInfo0(Font font, HDC hdc, int angle);
-#endif
-
-#ifdef PLATFORM_X11
-	static XftFont     *CreateXftFont(Font font, int angle);
-#endif
-
-	friend class Font;
-	friend class Draw;
-	friend class SystemDraw;
-	friend void  StaticExitDraw_();
-
-public:
-	int        GetAscent() const                  { return ptr->ascent; }
-	int        GetDescent() const                 { return ptr->descent; }
-	int        GetExternal() const                { return ptr->external; }
-	int        GetInternal() const                { return ptr->internal; }
-	int        GetHeight() const                  { return ptr->height; }
-	int        GetLineHeight() const              { return ptr->lineheight; }
-	int        GetOverhang() const                { return ptr->overhang; }
-	int        GetAveWidth() const                { return ptr->avewidth; }
-	int        GetMaxWidth() const                { return ptr->maxwidth; }
-	int        HasChar(int ch) const              { return ptr->HasChar(ch); }
-	int        GetWidth(int c) const;
-	int        operator[](int c) const            { return GetWidth(c); }
-	int        GetLeftSpace(int c) const;
-	int        GetRightSpace(int c) const;
-	int        GetKerning(int c1, int c2) const   { return ptr->kerning.Get(MAKELONG(c1, c2), 0); }
-	bool       IsFixedPitch() const               { return ptr->fixedpitch; }
-	bool       IsScaleable() const                { return ptr->scaleable; }
-
-	Font       GetFont() const                    { return ptr->font; }
-	int        GetFontHeight() const              { return ptr->font.GetHeight(); }
-
-#ifdef PLATFORM_X11
-	String     GetFileName() const;
-	XftFont   *GetXftFont() const                 { return ptr->xftfont0; }
-#endif
-#ifdef PLATFORM_WIN32
-	HFONT      GetHFONT() const                   { return ptr->hfont; }
-#endif
-
-	void       Clear()                            { Release(); ptr = NULL; }
-	bool       IsEmpty() const                    { return !ptr; }
-	operator   bool() const                       { return ptr; }
-
-	FontInfo(const FontInfo& f);
-	FontInfo& operator=(const FontInfo& f);
-
-	FontInfo();
-	~FontInfo()                                   { Release(); }
-
-	static void SetStdFont(Font font);
-	static Font GetStdFont()                        { return AStdFont; }
-	static Size GetStdFontSize();
-};
-
-inline void SetStdFont(Font font)                   { FontInfo::SetStdFont(font); }
-inline Font GetStdFont()                            { return FontInfo::GetStdFont(); }
-inline Size GetStdFontSize()                        { return FontInfo::GetStdFontSize(); }
+inline void SetStdFont(Font font)                   { Font::SetStdFont(font); }
+inline Font GetStdFont()                            { return Font::GetStdFont(); }
+inline Size GetStdFontSize()                        { return Font::GetStdFontSize(); }
 inline int  GetStdFontCy()                          { return GetStdFontSize().cy; }
 
 Font StdFont();
@@ -573,8 +475,6 @@ void PaintImageBuffer(ImageBuffer& ib, const Drawing& p, int mode = MODE_ANTIALI
 class Draw : NoCopy {
 private:
 	struct DrawingPos;
-
-	void ComposeText(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx);
 
 public:
 	enum {
