@@ -126,10 +126,15 @@ const int FONT_V = 40;
 class FontInfo;
 
 class Font : AssignValueTypeNo<Font, FONT_V, Moveable<Font> >{
-	word  face;
-	word  flags;
-	int16 height;
-	int16 width;
+	union {
+		int64 data;
+		struct {
+			word  face;
+			word  flags;
+			int16 height;
+			int16 width;
+		} v;
+	};
 
 public:
 	enum {
@@ -161,40 +166,40 @@ public:
 		OTHER,
 	};
 
-	int    GetFace() const          { return face; }
-	int    GetHeight() const        { return height; }
-	int    GetWidth() const         { return width; }
-	bool   IsBold() const           { return flags & 0x8000; }
-	bool   IsItalic() const         { return flags & 0x4000; }
-	bool   IsUnderline() const      { return flags & 0x2000; }
-	bool   IsStrikeout() const      { return flags & 0x1000; }
-	bool   IsNonAntiAliased() const { return flags & 0x800; }
-	bool   IsTrueTypeOnly() const   { return flags & 0x400; }
+	int    GetFace() const          { return v.face; }
+	int    GetHeight() const        { return v.height; }
+	int    GetWidth() const         { return v.width; }
+	bool   IsBold() const           { return v.flags & 0x8000; }
+	bool   IsItalic() const         { return v.flags & 0x4000; }
+	bool   IsUnderline() const      { return v.flags & 0x2000; }
+	bool   IsStrikeout() const      { return v.flags & 0x1000; }
+	bool   IsNonAntiAliased() const { return v.flags & 0x800; }
+	bool   IsTrueTypeOnly() const   { return v.flags & 0x400; }
 	String GetFaceName() const;
 	dword  GetFaceInfo() const;
 
 	FontInfo Info() const;
 
-	Font& Face(int n)            { face = n; return *this; }
-	Font& Height(int n)          { height = n; return *this; }
-	Font& Width(int n)           { width = n; return *this; }
-	Font& Bold()                 { flags |= 0x8000; return *this; }
-	Font& NoBold()               { flags &= ~0x8000; return *this; }
+	Font& Face(int n)            { v.face = n; return *this; }
+	Font& Height(int n)          { v.height = n; return *this; }
+	Font& Width(int n)           { v.width = n; return *this; }
+	Font& Bold()                 { v.flags |= 0x8000; return *this; }
+	Font& NoBold()               { v.flags &= ~0x8000; return *this; }
 	Font& Bold(bool b)           { return b ? Bold() : NoBold(); }
-	Font& Italic()               { flags |= 0x4000; return *this; }
-	Font& NoItalic()             { flags &= ~0x4000; return *this; }
+	Font& Italic()               { v.flags |= 0x4000; return *this; }
+	Font& NoItalic()             { v.flags &= ~0x4000; return *this; }
 	Font& Italic(bool b)         { return b ? Italic() : NoItalic(); }
-	Font& Underline()            { flags |= 0x2000; return *this; }
-	Font& NoUnderline()          { flags &= ~0x2000; return *this; }
+	Font& Underline()            { v.flags |= 0x2000; return *this; }
+	Font& NoUnderline()          { v.flags &= ~0x2000; return *this; }
 	Font& Underline(bool b)      { return b ? Underline() : NoUnderline(); }
-	Font& Strikeout()            { flags |= 0x1000; return *this; }
-	Font& NoStrikeout()          { flags &= ~0x1000; return *this; }
+	Font& Strikeout()            { v.flags |= 0x1000; return *this; }
+	Font& NoStrikeout()          { v.flags &= ~0x1000; return *this; }
 	Font& Strikeout(bool b)      { return b ? Strikeout() : NoStrikeout(); }
-	Font& NonAntiAliased()       { flags |= 0x800; return *this; }
-	Font& NoNonAntiAliased()     { flags &= ~0x800; return *this; }
+	Font& NonAntiAliased()       { v.flags |= 0x800; return *this; }
+	Font& NoNonAntiAliased()     { v.flags &= ~0x800; return *this; }
 	Font& NonAntiAliased(bool b) { return b ? NonAntiAliased() : NoNonAntiAliased(); }
-	Font& TrueTypeOnly()         { flags |= 0x400; return *this; }
-	Font& NoTrueTypeOnly()       { flags &= ~0x400; return *this; }
+	Font& TrueTypeOnly()         { v.flags |= 0x400; return *this; }
+	Font& NoTrueTypeOnly()       { v.flags &= ~0x400; return *this; }
 	Font& TrueTypeOnly(bool b)   { return b ? TrueTypeOnly() : NoTrueTypeOnly(); }
 	Font& FaceName(const String& name);
 
@@ -203,16 +208,16 @@ public:
 
 	void  Serialize(Stream& s);
 
-	bool  operator==(Font f) const { return face == f.face && flags == f.flags &&
-	                                        width == f.width && height == f.height; }
+	bool  operator==(Font f) const { return v.face == f.v.face && v.flags == f.v.flags &&
+	                                        v.width == f.v.width && v.height == f.v.height; }
 	bool  operator!=(Font f) const { return !operator==(f); }
 
-	dword GetHashValue() const     { return CombineHash(width, flags, height, face); }
-	bool  IsNull() const           { return face == 0xffff; }
+	dword GetHashValue() const     { return CombineHash(v.width, v.flags, v.height, v.face); }
+	bool  IsNull() const           { return v.face == 0xffff; }
 
-	Font()                         { height = width = 0; face = flags = 0; }
-	Font(int _face, int _height)   { face = _face; height = _height; flags = 0; width = 0; }
-	Font(const Nuller&)            { face = 0xffff; height = width = 0; flags = 0; }
+	Font()                         { v.height = v.width = 0; v.face = v.flags = 0; }
+	Font(int face, int height)     { v.face = face; v.height = height; v.flags = 0; v.width = 0; }
+	Font(const Nuller&)            { v.face = 0xffff; v.height = v.width = 0; v.flags = 0; }
 
 	operator Value() const         { return RichValue<Font>(*this); }
 	Font(const Value& q)           { *this = RichValue<Font>::Extract(q); }
