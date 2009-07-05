@@ -171,12 +171,12 @@ bool Compose(Font font, int chr, ComposedGlyph& cg)
 	if(f.type == CG_NONE)
 		return false;
 	GlyphInfo gi = GetGlyphInfo(font, f.ascii);
-	if(gi.IsMissing())
+	if(!gi.IsNormal())
 		return false;
 	int cw = gi.width;
 	CommonFontInfo fi = GetFontInfo(font);
 	gi = GetGlyphInfo(font, f.mark);
-	if(gi.IsMissing())
+	if(!gi.IsNormal())
 		return false;
 	int mw = gi.width;
 	cg.mark_font = font;
