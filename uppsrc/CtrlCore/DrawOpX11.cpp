@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 NAMESPACE_UPP
 
@@ -111,7 +111,7 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
 	LTIMING("DrawRect");
-	DrawLock __;
+	GuiLock __;
 	LLOG("DrawRect " << RectC(x, y, cx, cy) << ": " << color);
 	if(IsNull(color)) return;
 	if(cx <= 0 || cy <= 0) return;
@@ -128,7 +128,7 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
-	DrawLock __;
+	GuiLock __;
 	if(IsNull(width) || IsNull(color)) return;
 	SetLineStyle(width);
 	SetForeground(color);
@@ -141,7 +141,7 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
 	                          const int *counts, int count_count,
 	                          int width, Color color, Color doxor)
 {
-	DrawLock __;
+	GuiLock __;
 	ASSERT(count_count > 0 && vertex_count > 0);
 	if(vertex_count < 2 || IsNull(color))
 		return;
@@ -199,7 +199,7 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
 static void DrawPolyPolyPolygonRaw(SystemDraw& draw, const Point *vertices, int vertex_count,
 	const int *subpolygon_counts, int subpolygon_count_count, const int *, int)
 {
-	DrawLock __;
+	GuiLock __;
 	Point offset = draw.GetOffset();
 	const Point *in = vertices;
 	for(int i = 0; i < subpolygon_count_count; i++) {
@@ -222,7 +222,7 @@ void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	const int *disjunct_polygon_counts, int disjunct_polygon_count_count,
 	Color color, int width, Color outline, uint64 pattern, Color doxor)
 {
-	DrawLock __;
+	GuiLock __;
 	if(vertex_count == 0)
 		return;
 
@@ -263,7 +263,7 @@ void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 
 void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
-	DrawLock __;
+	GuiLock __;
 	SetLineStyle(pen);
 	if(!IsNull(color)) {
 		SetForeground(color);
@@ -279,7 +279,7 @@ void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencol
 
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 {
-	DrawLock __;
+	GuiLock __;
 	XGCValues gcv, gcv_old;
 	XGetGCValues(Xdisplay, GetGC(), GCForeground, &gcv_old);
 	Point offset = GetOffset();

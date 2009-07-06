@@ -1,7 +1,7 @@
 #ifndef CTRLCORE_H
 #define CTRLCORE_H
 
-#include <Draw/Draw.h>
+#include "SystemDraw.h"
 
 NAMESPACE_UPP
 

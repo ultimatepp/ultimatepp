@@ -1,3 +1,25 @@
+#include <Draw/Draw.h>
+
+#ifdef PLATFORM_WIN32
+#include "DrawWin32.h"
+#endif
+
+#ifdef PLATFORM_X11
+#include "DrawX11.h"
+#endif
+
+NAMESPACE_UPP
+
+typedef DrawLock GuiLock;
+
+inline void EnterGuiMutex()          { EnterGMutex(); }
+inline void EnterGuiMutex(int n)     { EnterGMutex(n); }
+inline void LeaveGuiMutex()          { LeaveGMutex(); }
+inline int  LeaveGuiMutexAll()       { return LeaveGMutexAll(); }
+
+bool ScreenInPaletteMode();
+Size GetScreenSize();
+
 class BackDraw : public SystemDraw {
 public:
 	virtual bool  IsPaintingOp(const Rect& r) const;
@@ -76,3 +98,10 @@ public:
 	ImageDraw(int cx, int cy);
 	~ImageDraw();
 };
+
+typedef ImageDraw SystemImageDraw;
+
+void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
+                  Color color, uint64 pattern);
+
+END_UPP_NAMESPACE

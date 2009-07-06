@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 NAMESPACE_UPP
 
@@ -10,7 +10,7 @@ NAMESPACE_UPP
 void SystemDraw::BeginOp()
 {
 	LTIMING("Begin");
-	DrawLock __;
+	GuiLock __;
 	Cloff& w = cloff.Add();
 	w.org = actual_offset;
 	w.hrgn = CreateRectRgn(0, 0, 0, 0);
@@ -25,7 +25,7 @@ void SystemDraw::BeginOp()
 
 void SystemDraw::OffsetOp(Point p)
 {
-	DrawLock __;
+	GuiLock __;
 	Begin();
 	actual_offset += p;
 	LTIMING("Offset");
@@ -34,7 +34,7 @@ void SystemDraw::OffsetOp(Point p)
 
 bool SystemDraw::ClipOp(const Rect& r)
 {
-	DrawLock __;
+	GuiLock __;
 	Begin();
 	LTIMING("Clip");
 	return IntersectClip(r);
@@ -42,7 +42,7 @@ bool SystemDraw::ClipOp(const Rect& r)
 
 bool SystemDraw::ClipoffOp(const Rect& r)
 {
-	DrawLock __;
+	GuiLock __;
 	Begin();
 	LTIMING("Clipoff");
 	LLOG("ClipoffOp " << r << ", GetClip() = " << GetClip() << ", actual_offset = " << actual_offset);
@@ -55,7 +55,7 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 
 void SystemDraw::EndOp()
 {
-	DrawLock __;
+	GuiLock __;
 	LTIMING("End");
 	ASSERT(cloff.GetCount());
 	Cloff& w = cloff.Top();
@@ -69,7 +69,7 @@ void SystemDraw::EndOp()
 
 bool SystemDraw::ExcludeClipOp(const Rect& r)
 {
-	DrawLock __;
+	GuiLock __;
 #ifdef PLATFORM_WINCE
 	int q = ExcludeClipRect(handle, r.left, r.top, r.right, r.bottom);
 #else
@@ -85,7 +85,7 @@ bool SystemDraw::ExcludeClipOp(const Rect& r)
 
 bool SystemDraw::IntersectClipOp(const Rect& r)
 {
-	DrawLock __;
+	GuiLock __;
 #ifdef PLATFORM_WINCE
 	int q = IntersectClipRect(handle, r.left, r.top, r.right, r.bottom);
 #else
@@ -101,7 +101,7 @@ bool SystemDraw::IntersectClipOp(const Rect& r)
 
 bool SystemDraw::IsPaintingOp(const Rect& r) const
 {
-	DrawLock __;
+	GuiLock __;
 	LTIMING("IsPainting");
 	LLOG("SystemDraw::IsPaintingOp r: " << r);
 	return ::RectVisible(handle, r);
@@ -109,7 +109,7 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 
 void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
-	DrawLock __;
+	GuiLock __;
 	LTIMING("DrawRect");
 	LLOG("DrawRect " << RectC(x, y, cx, cy) << ": " << color);
 	if(IsNull(color)) return;
@@ -124,7 +124,7 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
-	DrawLock __;
+	GuiLock __;
 	if(IsNull(width) || IsNull(color)) return;
 	SetDrawPen(width, color);
 	::MoveToEx(handle, x1, y1, NULL);
@@ -137,7 +137,7 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
                             const int *counts, int count_count,
 	                        int width, Color color, Color doxor)
 {
-	DrawLock __;
+	GuiLock __;
 	ASSERT(count_count > 0 && vertex_count > 0);
 	if(vertex_count < 2 || IsNull(color))
 		return;
@@ -161,7 +161,7 @@ static void DrawPolyPolyPolygonRaw(
 	const int *subpolygon_counts, int subpolygon_count_count,
 	const int *disjunct_polygon_counts, int disjunct_polygon_count_count)
 {
-	DrawLock __;
+	GuiLock __;
 	for(int i = 0; i < disjunct_polygon_count_count; i++, disjunct_polygon_counts++)
 	{
 		int poly = *disjunct_polygon_counts;
@@ -192,7 +192,7 @@ void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	const int *disjunct_polygon_counts, int disjunct_polygon_count_count,
 	Color color, int width, Color outline, uint64 pattern, Color doxor)
 {
-	DrawLock __;
+	GuiLock __;
 	if(vertex_count == 0)
 		return;
 	bool is_xor = !IsNull(doxor);
@@ -262,7 +262,7 @@ void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 {
-	DrawLock __;
+	GuiLock __;
 	SetDrawPen(width, color);
 	::Arc(GetHandle(), rc.left, rc.top, rc.right, rc.bottom, start.x, start.y, end.x, end.y);
 }
@@ -271,7 +271,7 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int width, Color pencolor)
 {
-	DrawLock __;
+	GuiLock __;
 	SetColor(color);
 	SetDrawPen(width, pencolor);
 	::Ellipse(GetHandle(), r.left, r.top, r.right, r.bottom);

@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 NAMESPACE_UPP
 
@@ -6,7 +6,7 @@ NAMESPACE_UPP
 
 void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
-	DrawLock __;
+	GuiLock __;
 	LTIMING("DrawImageOp");
 	bool tonative = !IsNative();
 	if(tonative) {
@@ -38,6 +38,16 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 	}
 	if(tonative)
 		EndNative();
+}
+
+
+Draw& ImageDraw::Alpha()
+{
+	if(!has_alpha) {
+		alpha.DrawRect(size, GrayColor(0));
+		has_alpha = true;
+	}
+	return alpha;
 }
 
 END_UPP_NAMESPACE

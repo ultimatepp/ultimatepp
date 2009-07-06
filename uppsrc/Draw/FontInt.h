@@ -8,7 +8,7 @@ struct FaceInfo : Moveable<FaceInfo> {
 	dword  info;
 };
 
-struct CommonFontInfo : Moveable<CommonFontInfo> {
+struct CommonFontInfo {
 	int  ascent;
 	int  descent;
 	int  external;

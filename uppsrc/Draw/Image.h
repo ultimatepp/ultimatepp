@@ -50,7 +50,6 @@ inline int  Grayscale(const RGBA& c)       { return Grayscale(c.r, c.g, c.b); }
 inline byte Saturate255(int x)             { return byte(~(x >> 24) & (x | (-(x >> 8) >> 24)) & 0xff); }
 
 class  Image;
-class  ImageDraw;
 
 class ImageBuffer : NoCopy {
 	mutable int  kind;
@@ -107,7 +106,6 @@ public:
 	ImageBuffer(int cx, int cy)         { Create(cx, cy); }
 	ImageBuffer(Size sz)                { Create(sz.cx, sz.cy); }
 	ImageBuffer(Image& img);
-	ImageBuffer(ImageDraw& w);
 	ImageBuffer(ImageBuffer& b);
 };
 

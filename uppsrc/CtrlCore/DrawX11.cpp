@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 #ifdef PLATFORM_X11
 
@@ -246,7 +246,7 @@ void InitX11Draw(const char *dispname)
 
 void SetClip(GC gc, XftDraw *xftdraw, const Vector<Rect>& cl)
 {
-	DrawLock __;
+	GuiLock __;
 	LTIMING("SetClip");
 	Buffer<XRectangle> xr(cl.GetCount());
 	LLOG("SetClip");
@@ -276,7 +276,7 @@ void SystemDraw::CloneClip()
 
 void SystemDraw::SetForeground(Color color)
 {
-	DrawLock __;
+	GuiLock __;
 	LTIMING("SetForeground");
 	int p = GetXPixel(color.GetR(), color.GetG(), color.GetB());
 	if(p == foreground) return;
@@ -287,7 +287,7 @@ void SystemDraw::SetForeground(Color color)
 }
 
 void SystemDraw::SetClip() {
-	DrawLock __;
+	GuiLock __;
 	if(dw == Xroot) return;
 	LTIMING("SetClip");
 	UPP::SetClip(gc, xftdraw, clip.Top());
@@ -295,7 +295,7 @@ void SystemDraw::SetClip() {
 
 void SystemDraw::SetLineStyle(int width)
 {
-	DrawLock __;
+	GuiLock __;
 	if(width == linewidth) return;
 	linewidth = width;
 	if(IsNull(width))
@@ -324,7 +324,7 @@ void SystemDraw::SetLineStyle(int width)
 
 void SystemDraw::Init()
 {
-	DrawLock __;
+	GuiLock __;
 	pageSize = Size(Xwidth, Xheight);
 	cloff.Clear();
 	clip.Clear();
@@ -333,7 +333,7 @@ void SystemDraw::Init()
 
 void SystemDraw::Init(const Vector<Rect>& _clip, Point _offset)
 {
-	DrawLock __;
+	GuiLock __;
 	Init();
 	clip.Add() <<= _clip;
 	offset.Add(_offset);
@@ -356,7 +356,7 @@ Size SystemDraw::GetPageSize() const
 
 SystemDraw::SystemDraw()
 {
-	DrawLock __;
+	GuiLock __;
 	dw = None;
 	gc = None;
 	actual_offset = Point(0, 0);
@@ -404,7 +404,7 @@ SystemDraw::SystemDraw(Drawable _dw, GC _gc, XftDraw *_xftdraw, const Vector<Rec
 
 void BackDraw::Create(SystemDraw& w, int cx, int cy)
 {
-	DrawLock __;
+	GuiLock __;
 	LLOG("Creating BackDraw " << cx << "x" << cy);
 	Destroy();
 	size.cx = cx;
@@ -420,7 +420,7 @@ void BackDraw::Create(SystemDraw& w, int cx, int cy)
 
 void BackDraw::Put(SystemDraw& w, int x, int y)
 {
-	DrawLock __;
+	GuiLock __;
 	LLOG("Putting BackDraw");
 	ASSERT(dw != None);
 	XCopyArea(Xdisplay, dw, w.GetDrawable(), w.GetGC(), 0, 0, size.cx, size.cy,
@@ -429,7 +429,7 @@ void BackDraw::Put(SystemDraw& w, int x, int y)
 
 void BackDraw::Destroy()
 {
-	DrawLock __;
+	GuiLock __;
 	if(dw != None) {
 		XftDrawDestroy(xftdraw);
 		XFreePixmap(Xdisplay, dw);

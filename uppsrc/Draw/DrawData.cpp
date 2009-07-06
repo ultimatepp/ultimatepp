@@ -102,7 +102,7 @@ void Draw::DrawDataOp(int x, int y, int cx, int cy, const String& data, const ch
 	One<DataDrawer> dd = DataDrawer::Create(id);
 	if(dd) {
 		dd->Open(data, cx, cy);
-		if((cx > 2048 || cy > 2048) && dynamic_cast<SystemDraw *>(this)) {
+		if((cx > 2048 || cy > 2048) && GetInfo() & DATABANDS) {
 			int yy = 0;
 			while(yy < cy) {
 				int ccy = min(cy - yy, 32);

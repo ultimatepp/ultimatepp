@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 NAMESPACE_UPP
 
@@ -107,7 +107,7 @@ XftFont *GetXftFont(Font fnt, int angle)
 
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
                             Color ink, int n, const int *dx) {
-	DrawLock __;
+	GuiLock __;
 	LTIMING("DrawText");
 	LLOG("DrawText " << ToUtf8(WString(text, n)) << " color:" << ink << " font:" << font);
 	//TODO - X11 seems to crash when displaying too long strings (?)
