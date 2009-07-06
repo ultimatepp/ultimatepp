@@ -1,10 +1,9 @@
-description "Experimental (sometimes obsolete) painting code";
+description "Experimental (sometimes obsolete) painting code\377";
 
 uses
 	Draw,
 	Geom,
-	TCore,
-	PdfDraw;
+	TCore;
 
 library(WIN32) comdlg32;
 

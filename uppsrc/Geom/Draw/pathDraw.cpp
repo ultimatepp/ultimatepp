@@ -825,7 +825,7 @@ void PathDraw::Set(Draw& _draw, const PathStyle& _style, Color _color, double _w
 		dash *= -avg;
 
 	miter = style->miter;
-	clip_rect = draw->GetClip();
+	clip_rect = draw->GetPageSize(); //draw->GetClip();
 	double cr = style->width;
 	if(style->miter == style->MITER_SHARP)
 	{

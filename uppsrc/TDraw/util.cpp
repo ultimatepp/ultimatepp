@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #ifdef PLATFORM_WIN32
-#include <PdfDraw/PdfDraw.h>
+//#include <PdfDraw/PdfDraw.h>
 
 #include <commdlg.h>
 #else
@@ -888,7 +888,7 @@ void DrawPolyPolyPolygon(Draw& draw, const Point *vertices, int vertex_count,
 	if(vertex_count == 0)
 		return;
 
-#ifdef PLATFORM_WIN32
+#ifdef PLATFORM_WIN32_ //!!TODO
 	if(PdfDraw *pdf = dynamic_cast<PdfDraw *>(&draw)) {
 		pdf->DrawPolyPolyPolygon(vertices, vertex_count, subpolygon_counts, subpolygon_count_count,
 			disjunct_polygon_counts, disjunct_polygon_count_count, color, width, outline, pattern, doxor);
