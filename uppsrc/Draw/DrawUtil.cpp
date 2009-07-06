@@ -496,4 +496,18 @@ DrawingToPdfFnType GetDrawingToPdfFn()
 	return sPdf;
 }
 
+Image (*render_glyph)(int cx, int x, Font font, int chr, int py, int pcy);
+
+Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy)
+{
+	if(render_glyph)
+		return (*render_glyph)(cx, x, font, chr, py, pcy);
+	return Null;
+}
+
+void SetRenderGlyph(Image (*f)(int cx, int x, Font font, int chr, int py, int pcy))
+{
+	render_glyph = f;
+}
+
 END_UPP_NAMESPACE

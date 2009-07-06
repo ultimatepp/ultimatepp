@@ -229,6 +229,11 @@ void PdfDraw::PutFontHeight(int fi, double ht)
 		page << "/F" << ((fontid = fi) + 1) << ' ' << Pt(textht = ht) << " Tf\n";
 }
 
+#ifdef PLATFORM_WIN32
+HFONT GetWin32Font(Font fnt, int angle);
+HDC Win32_IC();
+#endif
+
 PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 {
 	fnt.Height(0);
@@ -240,18 +245,25 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 
 #ifdef USE_TTF
 #ifdef PLATFORM_WIN32
-	ScreenDraw info;
-	info.SetFont(fnt().Underline(false));
-	TEXTMETRIC tm;
-	GetTextMetrics(info.GetHandle(), &tm);
-	if(tm.tmPitchAndFamily & TMPF_TRUETYPE) {
-		of.ttf = true;
-		int c = GetOutlineTextMetrics(info.GetHandle(), 0, NULL);
-		if(c > 0) {
-			Buffer<byte> h(c);
-			OUTLINETEXTMETRIC *otm = (OUTLINETEXTMETRIC *)~h;
-			GetOutlineTextMetrics(info.GetHandle(), c, otm);
-			of.sitalic = otm->otmItalicAngle == 0 && fnt.IsItalic();
+	{
+		DrawLock __;
+		HFONT hfont = GetWin32Font(fnt, 0);
+		if(hfont) {
+			HDC hdc = Win32_IC();
+			HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
+			TEXTMETRIC tm;
+			::GetTextMetrics(hdc, &tm);
+			if(tm.tmPitchAndFamily & TMPF_TRUETYPE) {
+				of.ttf = true;
+				int c = GetOutlineTextMetrics(hdc, 0, NULL);
+				if(c > 0) {
+					Buffer<byte> h(c);
+					OUTLINETEXTMETRIC *otm = (OUTLINETEXTMETRIC *)~h;
+					GetOutlineTextMetrics(hdc, c, otm);
+					of.sitalic = otm->otmItalicAngle == 0 && fnt.IsItalic();
+				}
+			}
+			::SelectObject(hdc, ohfont);
 		}
 	}
 #endif
@@ -275,6 +287,8 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 	return of;
 }
 
+enum { FONTHEIGHT_TTF = -9999 };
+
 void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 		                 Color ink, int n, const int *dx)
 {
@@ -290,7 +304,7 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 	#endif
 	OutlineInfo of = GetOutlineInfo(fnt);
 	if(of.ttf)
-		fnt.Height(0);
+		fnt.Height(FONTHEIGHT_TTF);
 	String txt;
 	PutrgColor(ink);
 	PutRGColor(ink);
@@ -367,13 +381,7 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 	}
 }
 
-Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy)
-{
-	ImageDraw iw(cx, pcy);
-	iw.DrawRect(0, 0, cx, pcy, White);
-	iw.DrawText(x, -py, WString(chr, 1), font, Black);
-	return iw;
-}
+Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy);
 
 PdfDraw::RGlyph PdfDraw::RasterGlyph(Font fnt, int chr)
 {
@@ -645,7 +653,7 @@ String PdfDraw::Finish()
 			"end\n"
 			"end\n";
 		int cmapi = PutStream(cmap);
-		if(fnt.GetHeight()) {
+		if(fnt.GetHeight() == FONTHEIGHT_TTF) {
 			FontInfo fi = fnt.Info();
 			int t3ch = offset.GetCount() + 1;
 			int fa = fi.GetHeight() - fi.GetInternal();
@@ -708,21 +716,29 @@ String PdfDraw::Finish()
 			EndObj();
 		}
 		else {
+			String fontbuffer;
 	#ifdef PLATFORM_POSIX
 			FontInfo fi = pdffont.GetKey(i).Info();
-			String fontbuffer = LoadFile(fi.GetFileName());
+			fontbuffer = LoadFile(fi.GetFileName());
 	#endif
 	#ifdef PLATFORM_WIN32
-			ScreenDraw sd;
-			sd.SetFont(pdffont.GetKey(i));
-
-			int size = GetFontData(sd.GetHandle(), 0, 0, NULL, 0);
-			if(size == GDI_ERROR) {
-				LLOG("PdfDraw::Finish: GDI_ERROR on font " << pdffont.GetKey(i));
-				return Null;
+			{
+				DrawLock __;
+				HFONT hfont = GetWin32Font(pdffont.GetKey(i), 0);
+				if(hfont) {
+					HDC hdc = Win32_IC();
+					HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
+					int size = GetFontData(hdc, 0, 0, NULL, 0);
+					if(size == GDI_ERROR) {
+						LLOG("PdfDraw::Finish: GDI_ERROR on font " << pdffont.GetKey(i));
+						return Null;
+					}
+					StringBuffer b(size);
+					GetFontData(hdc, 0, 0, b, size);
+					::SelectObject(hdc, ohfont);
+					fontbuffer = b;
+				}
 			}
-			StringBuffer fontbuffer(size);
-			GetFontData(sd.GetHandle(), 0, 0, fontbuffer, size);
 	#endif
 
 			TTFReader ttf;
