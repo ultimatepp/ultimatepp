@@ -10,6 +10,7 @@ WString TextUnicode(const char *s, int n, byte cs, Font font)
 {
 	if(n < 0)
 		n = (int)strlen(s);
+#ifdef PLATFORM_WIN32
 	if(font.GetFace() == Font::SYMBOL) {
 		WStringBuffer b(n);
 		wchar *t = b;
@@ -19,8 +20,8 @@ WString TextUnicode(const char *s, int n, byte cs, Font font)
 		}
 		return b;
 	}
-	else
-		return ToUnicode(s, n, cs);
+#endif
+	return ToUnicode(s, n, cs);
 }
 
 void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,

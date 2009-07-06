@@ -1,5 +1,7 @@
 #ifdef PLATFORM_X11
 
+void SetClip(GC gc, XftDraw *xftdraw, const Vector<Rect>& cl);
+
 class SystemDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
@@ -93,7 +95,6 @@ public:
 
 	void  SetForeground(Color color);
 	void  SetLineStyle(int width);
-	void  SetFont(Font font, int angle);
 	void  SetClip();
 
 	Drawable GetDrawable() const              { return dw; }

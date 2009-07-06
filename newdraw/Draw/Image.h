@@ -133,19 +133,11 @@ private:
 		
 		void  *system_buffer[6];
 		SystemData& Sys() const;
+		int  GetResCount() const;
 
 #ifdef PLATFORM_WIN32
 		void CreateHBMP(HDC dc, const RGBA *data);
-		int  GetResCount() const;
 #endif
-
-#ifdef PLATFORM_X11
-		int         cursor_cheat;
-		XPicture    picture;
-		XPicture    picture8;
-		int  GetResCount() const { return !!picture; }
-#endif
-		
 
 		ImageBuffer buffer;
 		bool        paintonly;
@@ -187,8 +179,8 @@ private:
 #endif
 
 #ifdef PLATFORM_X11
-	void         SetCursorCheat(int id)      { data->cursor_cheat = id; }
-	int          GetCursorCheat() const      { return data ? data->cursor_cheat : -1; }
+	void         SetCursorCheat(int id);
+	int          GetCursorCheat() const;
 	friend       Cursor X11Cursor(const Image&);
 	friend       Image sX11Cursor__(int c);
 #endif
