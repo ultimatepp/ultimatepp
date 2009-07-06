@@ -560,7 +560,11 @@ void RTFParser::ReadFaceTable()
 			else if(PassCmd("fmodern"))
 				n.face = Font::COURIER;
 			else if(PassCmd("ftech"))
+#ifdef PLATFORM_WIN32
 				n.face = Font::SYMBOL;
+#else
+				n.face = Font::ARIAL;
+#endif
 			else if(PassCmd("fcharset")) {
 				switch(command_arg) {
 					case 0: n.charset = CHARSET_WIN1252; break; // ANSI
@@ -719,7 +723,11 @@ bool RTFParser::ReadField(const char *p)
 		if(f >= 0 && f + 1 < symdef.GetCount())
 			height = PointDots(fround(2 * atof(symdef[f + 1]))) >> 1;
 		if(face < 0)
+#ifdef PLATFORM_WIN32
 			face = Font::SYMBOL;
+#else
+			face = Font::ARIAL;
+#endif
 		if(height <= 0 || height >= MAX_DOT_HEIGHT)
 			height = state.charformat.GetHeight();
 		if(code >= 0 && code < 255) {
