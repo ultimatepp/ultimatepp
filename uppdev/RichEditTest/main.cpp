@@ -20,7 +20,7 @@ GUI_APP_MAIN
 	DUMP(GUI_PopUpEffect());
 	RichEditWithToolBar e;
 	Vector<int> h;
-	for(int i = 0; i < Font::GetFaceCount(); i++)
+	for(int i = 1; i < Font::GetFaceCount(); i++)
 		h.Add(i);
 	e.FontFaces(h);
 
