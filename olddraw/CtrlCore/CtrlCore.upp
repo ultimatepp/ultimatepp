@@ -1,0 +1,56 @@
+description "GUI core system\377B0,0,255";
+
+uses
+	Draw,
+	plugin\bmp;
+
+library(WIN32 !MSC8ARM) "advapi32 comdlg32 comctl32";
+
+file
+	Core readonly separator,
+	CtrlCore.h,
+	Win32Keys.i,
+	X11Keys.i,
+	MKeys.h,
+	Frame.cpp,
+	Ctrl.cpp,
+	CtrlChild.cpp,
+	CtrlPos.cpp,
+	CtrlDraw.cpp,
+	CtrlMouse.cpp,
+	CtrlKbd.cpp,
+	CtrlTimer.cpp,
+	CtrlClip.cpp,
+	LocalLoop.cpp,
+	CtrlCore.icpp,
+	Ctrl.iml,
+	CtrlCore.t,
+	TopWindow readonly separator,
+	TopWindow.h,
+	TopWindow.cpp,
+	lay.h,
+	llay.h,
+	Win32 readonly separator,
+	MultiMon.dli,
+	Win32Wnd.cpp,
+	Win32Clip.cpp,
+	Win32DnD.cpp,
+	Win32Proc.cpp,
+	TopWin32.cpp,
+	DHCtrl.cpp,
+	Win32Msg.i,
+	X11 readonly separator,
+	X11Wnd.cpp,
+	X11Proc.cpp,
+	TopWinX11.cpp,
+	X11Clip.cpp,
+	X11DnD.cpp,
+	X11ImgClip.cpp,
+	X11App.cpp,
+	X11DHCtrl.cpp,
+	X11Event.i,
+	Info readonly separator,
+	src.tpp,
+	srcdoc.tpp,
+	Copying;
+
