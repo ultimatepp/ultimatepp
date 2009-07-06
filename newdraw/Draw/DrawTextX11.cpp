@@ -7,20 +7,10 @@ NAMESPACE_UPP
 #define LTIMING(x)
 #define LLOG(x)
 
-extern int    gtk_antialias;
-extern int    gtk_hinting;
-extern String gtk_hintstyle;
-extern String gtk_rgba;
-
-void Std(Font& font)
-{
-	if(IsNull(font))
-		font = StdFont();
-	if(font.GetFace() == 0)
-		font.Face(GetStdFont().GetFace());
-	if(font.GetHeight() == 0)
-		font.Height(GetStdFont().GetHeight());
-}
+int    gtk_antialias = -1;
+int    gtk_hinting = -1;
+String gtk_hintstyle;
+String gtk_rgba;
 
 XftFont *CreateXftFont(Font font, int angle)
 {
@@ -124,8 +114,6 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	int ox = x + actual_offset.x;
 	int oy = y + actual_offset.y;
 	SetForeground(ink);
-	SetFont(font, angle);
-	const FontInfo::Data *fd = lastFont.ptr;
 	XftColor c;
 	c.color.red = ink.GetR() << 8;
 	c.color.green = ink.GetG() << 8;
@@ -207,11 +195,9 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 			else
 				cx = GetTextSize(text, font, n).cx;
 			if(font.IsUnderline())
-				DrawRect(x, y + lastFont.GetAscent() + lastFont.ptr->underline_position,
-				         cx, lastFont.ptr->underline_thickness, ink);
+				DrawRect(x, y + ascent + underline_position, cx, underline_thickness, ink);
 			if(font.IsStrikeout())
-				DrawRect(x, y + 2 * lastFont.GetAscent() / 3,
-				         cx, lastFont.ptr->underline_thickness, ink);
+				DrawRect(x, y + 2 * ascent / 3, cx, underline_thickness, ink);
 		}
 	}
 }

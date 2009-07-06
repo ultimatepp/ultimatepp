@@ -33,7 +33,7 @@ file
 	Font.cpp,
 	FontCR.cpp,
 	FontWin32.cpp,
-	FontX11.cpp,
+	FontFc.cpp,
 	Draw.cpp,
 	DrawText.cpp,
 	DrawData.cpp,

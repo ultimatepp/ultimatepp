@@ -4,6 +4,28 @@ NAMESPACE_UPP
 
 #ifdef PLATFORM_X11
 
+struct Image::Data::SystemData {
+	int         cursor_cheat;
+	XPicture    picture;
+	XPicture    picture8;
+};
+
+Image::Data::SystemData& Image::Data::Sys() const
+{
+	ASSERT(sizeof(system_buffer) >= sizeof(SystemData));
+	return *(SystemData *)system_buffer;
+}
+
+void Image::SetCursorCheat(int id)
+{
+	data->Sys().cursor_cheat = id;
+}
+
+int Image::GetCursorCheat() const
+{
+	return data ? data->Sys().cursor_cheat : -1;
+}
+
 static void sInitXImage(XImage& ximg, Size sz)
 {
 	Zero(ximg);
@@ -51,26 +73,33 @@ void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 	XRenderFreePicture(Xdisplay, picture);
 }
 
+int  Image::Data::GetResCount() const
+{
+	return !!Sys().picture + !!Sys().picture8;
+}
+
 void Image::Data::SysInit()
 {
-	picture = 0;
-	picture8 = 0;
-	cursor_cheat = -1;
+	SystemData& sd = Sys();
+	sd.picture = 0;
+	sd.picture8 = 0;
+	sd.cursor_cheat = -1;
 }
 
 void Image::Data::SysRelease()
 {
-	if(picture) {
+	SystemData& sd = Sys();
+	if(sd.picture) {
 		DrawLock __;
-		if(Xdisplay) XRenderFreePicture(Xdisplay, picture);
+		if(Xdisplay) XRenderFreePicture(Xdisplay, sd.picture);
 		ResCount -= !paintonly;
-		picture = 0;
+		sd.picture = 0;
 	}
-	if(picture8) {
+	if(sd.picture8) {
 		DrawLock __;
-		if(Xdisplay) XRenderFreePicture(Xdisplay, picture8);
+		if(Xdisplay) XRenderFreePicture(Xdisplay, sd.picture8);
 		ResCount -= !paintonly;
-		picture8 = 0;
+		sd.picture8 = 0;
 	}
 }
 
@@ -119,6 +148,7 @@ static XPicture sGetSolidFill(Color c)
 void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
 	DrawLock __;
+	SystemData& sd = Sys();
 	while(ResCount > 512) {
 		Image::Data *l = ResData->GetPrev();
 		l->SysRelease();
@@ -146,10 +176,10 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	Unlink();
 	LinkAfter(ResData);
 	if(IsNull(c)) {
-		if(!picture) {
+		if(!sd.picture) {
 			bool opaque = GetKind() == IMAGE_OPAQUE;
 			Pixmap pixmap = XCreatePixmap(Xdisplay, Xroot, sz.cx, sz.cy, opaque ? 24 : 32);
-			picture = XRenderCreatePicture(
+			sd.picture = XRenderCreatePicture(
 				Xdisplay, pixmap,
 			    XRenderFindStandardFormat(Xdisplay, opaque ? PictStandardRGB24
 			                                               : PictStandardARGB32),
@@ -175,16 +205,16 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 			PaintOnlyShrink();
 		}
 		XRenderComposite(Xdisplay, PictOpOver,
-		                 picture, 0, XftDrawPicture(w.GetXftDraw()),
+		                 sd.picture, 0, XftDrawPicture(w.GetXftDraw()),
 		                 sr.left, sr.top, 0, 0, x, y, ssz.cx, ssz.cy);
 	}
 	else {
 		ASSERT(!paintonly);
-		if(!picture8) {
+		if(!sd.picture8) {
 			Pixmap pixmap = XCreatePixmap(Xdisplay, Xroot, sz.cx, sz.cy, 8);
-			picture8 = XRenderCreatePicture(Xdisplay, pixmap,
-			                                XRenderFindStandardFormat(Xdisplay, PictStandardA8),
-			                                0, 0);
+			sd.picture8 = XRenderCreatePicture(Xdisplay, pixmap,
+			                                   XRenderFindStandardFormat(Xdisplay, PictStandardA8),
+			                                   0, 0);
 			ResCount++;
 			Buffer<byte> ab(len);
 			byte *t = ab;
@@ -207,7 +237,7 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 			XFreePixmap(Xdisplay, pixmap);
 		}
 		XRenderComposite(Xdisplay, PictOpOver,
-		                 sGetSolidFill(c), picture8, XftDrawPicture(w.GetXftDraw()),
+		                 sGetSolidFill(c), sd.picture8, XftDrawPicture(w.GetXftDraw()),
 		                 sr.left, sr.top, 0, 0, x, y, ssz.cx, ssz.cy);
 	}
 }

@@ -42,6 +42,7 @@ const Vector<FaceInfo>& Font::List()
 void sInitFonts()
 {
 	Font::List();
+	GetStdFont();
 }
 
 INITBLOCK {
@@ -55,6 +56,8 @@ int Font::GetFaceCount()
 
 String Font::GetFaceName(int index)
 {
+	if(index == 0)
+		return "STDFONT";
 	const Vector<FaceInfo>& l = List();
 	if(index >= 0 && index < l.GetCount())
 		return l[index].name;
@@ -96,8 +99,10 @@ void Font::SyncStdFont()
 void Font::SetStdFont(Font font)
 {
 	DrawLock __;
+	InitStdFont();
 	AStdFont = font;
 	SyncStdFont();
+	DLOG("SetStdFont " << font);
 }
 
 void Font::InitStdFont()
@@ -129,7 +134,12 @@ Size Font::GetStdFontSize()
 
 Font StdFont()
 {
-	return Font(0, Font::GetStdFont().GetHeight());
+	return Font(0, 0);
+}
+
+int Font::GetHeight() const
+{
+	return v.height ? v.height : GetStdFont().GetHeight();
 }
 
 String Font::GetFaceName() const {
@@ -306,9 +316,14 @@ int Font::GetRightSpace(int c) const {
 
 thread__ int64 lastFiFont = INT_MIN;
 thread__ CommonFontInfo lastFontInfo;
+thread__ int64 lastStdFont = INT_MIN;
 
 const CommonFontInfo& Font::Fi() const
 {
+	if(lastStdFont != AStdFont.AsInt64()) {
+		lastFiFont = INT_MIN;
+		lastStdFont = AStdFont.AsInt64();
+	}
 	if(AsInt64() == lastFiFont)
 		return lastFontInfo;
 	lastFontInfo = GetFontInfo(*this);

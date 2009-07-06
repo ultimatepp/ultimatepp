@@ -43,15 +43,9 @@ bool        Xpalette;
 
 dword   (*Xgetpixel)(int r, int g, int b);
 
-void StaticExitDraw_()
-{
-	FontInfo::FreeFonts();
-}
-
 EXITBLOCK
 {
 	if(Xdisplay) {
-		StaticExitDraw_();
 // No CloseDisplay for now...
 		XCloseDisplay(Xdisplay);
 		LLOG("Xdisplay closed");
@@ -223,7 +217,7 @@ void InitX11Draw(XDisplay *display)
 	}
 //	XFree(v);
 
-	FontInfo::SetStdFont(ScreenSans(12));
+	Font::SetStdFont(ScreenSans(12));
 }
 
 void InitX11Draw(const char *dispname)
@@ -299,14 +293,6 @@ void SystemDraw::SetClip() {
 	UPP::SetClip(gc, xftdraw, clip.Top());
 }
 
-void SystemDraw::SetFont(Font font, int angle) {
-	DrawLock __;
-	LLOG("Set font: " << font << " face: " << font.GetFaceName());
-	if(lastFont && lastFont.IsEqual(CHARSET_UNICODE, font, angle))
-		return;
-	lastFont = FontInfo::AcquireFontInfo(font, angle);
-}
-
 void SystemDraw::SetLineStyle(int width)
 {
 	DrawLock __;
@@ -340,7 +326,6 @@ void SystemDraw::Init()
 {
 	DrawLock __;
 	pageSize = Size(Xwidth, Xheight);
-	FontInfo::InitFonts();
 	cloff.Clear();
 	clip.Clear();
 	foreground = linewidth = Null;

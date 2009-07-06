@@ -182,7 +182,7 @@ public:
 	};
 
 	int    GetFace() const          { return v.face; }
-	int    GetHeight() const        { return v.height; }
+	int    GetHeight() const;
 	int    GetWidth() const         { return v.width; }
 	bool   IsBold() const           { return v.flags & 0x8000; }
 	bool   IsItalic() const         { return v.flags & 0x4000; }
@@ -237,8 +237,8 @@ public:
 	int   GetRightSpace(int c) const;
 	bool  IsFixedPitch() const               { return Fi().fixedpitch; }
 	bool  IsScaleable() const                { return Fi().scaleable; }
-#ifdef PLATFORM_X11
-	String GetFontPath() const               { return Fi().path; }
+#ifdef PLATFORM_POSIX
+	String GetPath() const                   { return Fi().path; }
 #endif
 
 	void  Serialize(Stream& s);
@@ -284,7 +284,7 @@ public:
 	bool   IsScaleable() const                { return font.IsScaleable(); }
 	int    GetFontHeight() const              { return font.GetHeight(); }
 	Font   GetFont() const                    { return font; }
-#ifdef PLATFORM_X11
+#ifdef PLATFORM_POSIX
 	String GetFileName() const                { return font.GetPath(); }
 #endif
 };
@@ -323,9 +323,9 @@ struct ScreenFixed : public Font { ScreenFixed(int n = 0) : Font(SCREEN_FIXED, n
 struct Roman     : public Font { Roman(int n) : Font(ROMAN, n) {} };
 struct Arial     : public Font { Arial(int n) : Font(ARIAL, n) {} };
 struct Courier   : public Font { Courier(int n) : Font(COURIER, n) {} };
-struct Symbol    : public Font { Symbol(int n) : Font(SYMBOL, n) {} };
 
 #ifdef PLATFORM_WIN32
+struct Symbol    : public Font { Symbol(int n) : Font(SYMBOL, n) {} };
 struct WingDings : public Font { WingDings(int n) : Font(WINGDINGS, n) {} };
 struct Tahoma    : public Font { Tahoma(int n) : Font(TAHOMA, n) {} };
 #endif
@@ -820,10 +820,6 @@ Vector<Rect> Intersect(const Vector<Rect>& b, const Rect& a, bool& changed);
 
 void Subtract(Vector<Rect>& rr, const Rect& sub);
 void Union(Vector<Rect>& rr, const Rect& add);
-
-#ifdef PLATFORM_X11
-void SetClip(GC gc, XftDraw *xftdraw, const Vector<Rect>& cl);
-#endif
 
 void DrawRect(Draw& w, const Rect& rect, const Image& img, bool ralgn = false); //??? TODO
 void DrawRect(Draw& w, int x, int y, int cx, int cy, const Image& img, bool ra = false);
