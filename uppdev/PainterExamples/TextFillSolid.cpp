@@ -1,5 +1,11 @@
 #include "Examples.h"
 
+void TextCoding(Painter& sw)
+{
+	sw.Text(100, 100, "Hello world! ščřůúžýáíé Běifānghuà 北方話",
+	        Font().FaceName("Bitstream Vera Sans Mono").Height(20))
+	  .Fill(LtBlue());	
+}
 void TextFillSolid(Painter& sw)
 {
 	sw.Text(100, 100, "Hello world!", Roman(120).Italic().Bold())
@@ -33,4 +39,5 @@ void SomeTexts(Painter& sw)
 INITBLOCK {
 	RegisterExample("Filling text with solid color", TextFillSolid);
 	RegisterExample("Various fonts", SomeTexts);
+	RegisterExample("Filling text with solid color, replacements & compositions", TextCoding);
 }
