@@ -1,4 +1,4 @@
-description "Antialiased renderer class, Painter, examples, version 2.0";
+description "Antialiased renderer class, Painter, examples, version 2.0\377";
 
 uses
 	CtrlLib,
@@ -17,7 +17,7 @@ file
 	ColorStops.cpp,
 	Radial.cpp,
 	RadialFocus.cpp,
-	TextFillSolid.cpp,
+	TextFillSolid.cpp charset "UTF-8",
 	TextFillGradient.cpp,
 	TextStrokeGradient.cpp,
 	Div.cpp,
