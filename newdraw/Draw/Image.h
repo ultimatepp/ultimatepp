@@ -128,16 +128,15 @@ private:
 
 		void   Retain()  { AtomicInc(refcount); }
 		void   Release() { if(AtomicDec(refcount) == 0) delete this; }
+		
+		struct SystemData;
+		
+		void  *system_buffer[6];
+		SystemData& Sys() const;
 
 #ifdef PLATFORM_WIN32
-		LPCSTR      cursor_cheat;
-		HBITMAP     hbmp;
-		HBITMAP     hmask;
-		HBITMAP     himg;
-		RGBA       *section;
-
 		void CreateHBMP(HDC dc, const RGBA *data);
-		int  GetResCount() const { return !!hbmp + !!hmask + !!himg; }
+		int  GetResCount() const;
 #endif
 
 #ifdef PLATFORM_X11
@@ -146,6 +145,7 @@ private:
 		XPicture    picture8;
 		int  GetResCount() const { return !!picture; }
 #endif
+		
 
 		ImageBuffer buffer;
 		bool        paintonly;
@@ -179,8 +179,8 @@ private:
 
 #ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE
-	void         SetCursorCheat(LPCSTR id)   { data->cursor_cheat = id; }
-	LPCSTR       GetCursorCheat() const      { return data ? data->cursor_cheat : NULL; }
+	void         SetCursorCheat(LPCSTR id);
+	LPCSTR       GetCursorCheat() const;
 	friend Image Win32IconCursor(LPCSTR id, int iconsize, bool cursor);
 	friend HICON IconWin32(const Image& img, bool cursor);
 #endif

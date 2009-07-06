@@ -245,9 +245,7 @@ static const char *sFontReplacements[] = {
 	"PMingLiU",
 };
 
-//!!! Add ascent replacement cache!!!
-
-struct FontMetricsReplacement {
+struct sFontMetricsReplacement {
 	Font src;
 	Font dst;
 	Font mdst;
@@ -270,7 +268,7 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 			int a = fnt.GetAscent();
 			int d = fnt.GetDescent();
 			if(f.GetAscent() > a || f.GetDescent() > d) {
-				static FontMetricsReplacement cache[256];
+				static sFontMetricsReplacement cache[256];
 				int q = CombineHash(fnt, f) & 255;
 				if(cache[q].src != fnt || cache[q].dst != f) {
 					cache[q].src = fnt;

@@ -903,10 +903,9 @@ DrawingToPdfFnType GetDrawingToPdfFn();
 #include "DrawX11.h"
 #endif
 
-#include "BackDraw.h"
+#include "SystemDraw.h"
 
 #include "Display.h"
-#include "ImageDraw.h"
 #include "Debug.h"
 #include "Cham.h"
 
