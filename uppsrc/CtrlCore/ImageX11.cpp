@@ -392,12 +392,12 @@ Image Image::SizeBottomRight()  FCURSOR_(XC_bottom_right_corner)
 Image Image::Cross() FCURSOR_(XC_crosshair)
 Image Image::Hand() FCURSOR_(XC_hand1)
 
-Cursor X11Cursor(const Image& img)
+void *X11Cursor(const Image& img)
 {
 	GuiLock __;
 	int q = img.GetCursorCheat();
 	if(q >= 0)
-		return XCreateFontCursor(Xdisplay, q);
+		return (void *)XCreateFontCursor(Xdisplay, q);
 	int len = img.GetLength();
 	Size sz = img.GetSize();
 	Pixmap pixmap = XCreatePixmap(Xdisplay, Xroot, sz.cx, sz.cy, 32);
@@ -428,7 +428,7 @@ Cursor X11Cursor(const Image& img)
 	Point p = img.GetHotSpot();
 	Cursor c = XRenderCreateCursor(Xdisplay, picture, p.x, p.y);
 	XRenderFreePicture(Xdisplay, picture);
-	return c;
+	return (void *)c;
 }
 
 #endif

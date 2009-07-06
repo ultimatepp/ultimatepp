@@ -179,7 +179,7 @@ private:
 #ifdef PLATFORM_X11
 	void         SetCursorCheat(int id);
 	int          GetCursorCheat() const;
-	friend       Cursor X11Cursor(const Image&);
+	friend       void *X11Cursor(const Image&);
 	friend       Image sX11Cursor__(int c);
 #endif
 
@@ -328,5 +328,5 @@ Image Win32DllIcon(const char *dll, int ii, bool large);
 #endif
 
 #ifdef PLATFORM_X11
-Cursor X11Cursor(const Image& img);
+void *X11Cursor(const Image& img);
 #endif

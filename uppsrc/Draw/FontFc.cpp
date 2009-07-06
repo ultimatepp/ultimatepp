@@ -1,5 +1,8 @@
 #include "Draw.h"
 
+#include <fontconfig/fontconfig.h>
+#include <fontconfig/fcfreetype.h>
+
 NAMESPACE_UPP
 
 #ifdef PLATFORM_POSIX
@@ -45,7 +48,7 @@ FcPattern *CreateFcPattern(Font font, int angle)
 		FcPatternAddMatrix(p, FC_MATRIX, &mx);
 	}
 	FcResult result;
-	FcPattern *m = XftFontMatch(Xdisplay, Xscreenno, p, &result);
+	FcPattern *m = FcFontMatch(0, p, &result);
 	FcPatternDestroy(p);
 	return m;
 }
@@ -198,7 +201,7 @@ Vector<FaceInfo> GetAllFacesSys()
 		fi.info = (i == 3 || i == 6) ? Font::SCALEABLE|Font::FIXEDPITCH : Font::SCALEABLE;
 	}
 	FcPattern *p = FcPatternCreate();
-	FcObjectSet *os = FcObjectSetBuild(XFT_FAMILY, XFT_SPACING, XFT_SCALABLE, (void *)0);
+	FcObjectSet *os = FcObjectSetBuild(FC_FAMILY, FC_SPACING, FC_SCALABLE, (void *)0);
 	FcFontSet *fs = FcFontList(NULL, p, os);
 	FcPatternDestroy(p);
 	FcObjectSetDestroy(os);
