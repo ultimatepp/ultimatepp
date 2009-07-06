@@ -14,6 +14,14 @@ bool ImageFallBack
 // = true
 ;
 
+struct Image::Data::SystemData {
+	LPCSTR      cursor_cheat;
+	HBITMAP     hbmp;
+	HBITMAP     hmask;
+	HBITMAP     himg;
+	RGBA       *section;
+};
+
 class BitmapInfo32__ {
 	Buffer<byte> data;
 
@@ -149,28 +157,30 @@ DrawSurface::~DrawSurface()
 
 void Image::Data::SysInit()
 {
-	hbmp = hmask = himg = NULL;
-	cursor_cheat = NULL;
+	SystemData& sd = Sys();
+	sd.hbmp = sd.hmask = sd.himg = NULL;
+	sd.cursor_cheat = NULL;
 }
 
 void Image::Data::SysRelease()
 {
-	if(hbmp) {
+	SystemData& sd = Sys();
+	if(sd.hbmp) {
 		DrawLock __;
-		DeleteObject(hbmp);
+		DeleteObject(sd.hbmp);
 		ResCount -= !paintonly;
 	}
-	if(hmask) {
+	if(sd.hmask) {
 		DrawLock __;
-		DeleteObject(hmask);
+		DeleteObject(sd.hmask);
 		ResCount -= !paintonly;
 	}
-	if(himg) {
+	if(sd.himg) {
 		DrawLock __;
-		DeleteObject(himg);
+		DeleteObject(sd.himg);
 		ResCount -= !paintonly;
 	}
-	himg = hbmp = hmask = NULL;
+	sd.himg = sd.hbmp = sd.hmask = NULL;
 }
 
 #ifndef PLATFORM_WINCE
@@ -193,9 +203,32 @@ static tAlphaBlend fnAlphaBlend()
 }
 #endif
 
+void    Image::SetCursorCheat(LPCSTR id)
+{
+	data->Sys().cursor_cheat = id;
+}
+
+LPCSTR  Image::GetCursorCheat() const
+{
+	return data ? data->Sys().cursor_cheat : NULL;
+}
+
+Image::Data::SystemData& Image::Data::Sys() const
+{
+	ASSERT(sizeof(system_buffer) >= sizeof(SystemData));
+	return *(SystemData *)system_buffer;
+}
+
+int  Image::Data::GetResCount() const
+{
+	SystemData& sd = Sys();
+	return !!sd.hbmp + !!sd.hmask + !!sd.himg;
+}
+
 void Image::Data::CreateHBMP(HDC dc, const RGBA *data)
 {
 	DrawLock __;
+	SystemData& sd = Sys();
 	Size sz = buffer.GetSize();
 	BitmapInfo32__ bi(sz.cx, sz.cy);
 	HDC dcMem = ::CreateCompatibleDC(dc);
@@ -204,8 +237,8 @@ void Image::Data::CreateHBMP(HDC dc, const RGBA *data)
 	HDC hbmpOld = (HDC) ::SelectObject(dcMem, hbmp32);
 	memcpy(pixels, data, buffer.GetLength() * sizeof(RGBA));
 	HDC dcMem2 = ::CreateCompatibleDC(dc);
-	hbmp = ::CreateCompatibleBitmap(dc, sz.cx, sz.cy);
-	HBITMAP o2 = (HBITMAP)::SelectObject(dcMem2, hbmp);
+	sd.hbmp = ::CreateCompatibleBitmap(dc, sz.cx, sz.cy);
+	HBITMAP o2 = (HBITMAP)::SelectObject(dcMem2, sd.hbmp);
 	::BitBlt(dcMem2, 0, 0, sz.cx, sz.cy, dcMem, 0, 0, SRCCOPY);
 	::SelectObject(dcMem2, o2);
 	::DeleteDC(dcMem2);
@@ -218,6 +251,7 @@ void Image::Data::CreateHBMP(HDC dc, const RGBA *data)
 void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
 	DrawLock __;
+	SystemData& sd = Sys();
 	ASSERT(!paintonly || IsNull(c));
 	int max = IsWinNT() ? 250 : 100;
 	while(ResCount > max) {
@@ -247,13 +281,13 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	Unlink();
 	LinkAfter(ResData);
 	if(GetKind() == IMAGE_OPAQUE) {
-		if(!hbmp) {
+		if(!sd.hbmp) {
 			LTIMING("Image Opaque create");
 			CreateHBMP(dc, buffer);
 		}
 		LTIMING("Image Opaque blit");
 		HDC dcMem = ::CreateCompatibleDC(dc);
-		HBITMAP o = (HBITMAP)::SelectObject(dcMem, hbmp);
+		HBITMAP o = (HBITMAP)::SelectObject(dcMem, sd.hbmp);
 		::BitBlt(dc, x, y, ssz.cx, ssz.cy, dcMem, sr.left, sr.top, SRCCOPY);
 		::SelectObject(dcMem, o);
 		::DeleteDC(dcMem);
@@ -262,22 +296,22 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	}
 	if(GetKind() == IMAGE_MASK/* || GetKind() == IMAGE_OPAQUE*/) {
 		HDC dcMem = ::CreateCompatibleDC(dc);
-		if(!hmask) {
+		if(!sd.hmask) {
 			LTIMING("Image Mask create");
 			Buffer<RGBA> bmp(len);
-			hmask = CreateBitMask(buffer, sz, sz, sz, bmp);
+			sd.hmask = CreateBitMask(buffer, sz, sz, sz, bmp);
 			ResCount++;
-			if(!hbmp)
+			if(!sd.hbmp)
 				CreateHBMP(dc, bmp);
 		}
 		LTIMING("Image Mask blt");
 		HBITMAP o = (HBITMAP)::SelectObject(dcMem, ::CreateCompatibleBitmap(dc, sz.cx, sz.cy));
 		::BitBlt(dcMem, 0, 0, ssz.cx, ssz.cy, dc, x, y, SRCCOPY);
 		HDC dcMem2 = ::CreateCompatibleDC(dc);
-		::SelectObject(dcMem2, hmask);
+		::SelectObject(dcMem2, sd.hmask);
 		::BitBlt(dcMem, 0, 0, ssz.cx, ssz.cy, dcMem2, sr.left, sr.top, SRCAND);
 		if(IsNull(c)) {
-			::SelectObject(dcMem2, hbmp);
+			::SelectObject(dcMem2, sd.hbmp);
 			::BitBlt(dcMem, 0, 0, ssz.cx, ssz.cy, dcMem2, sr.left, sr.top, SRCPAINT);
 		}
 		else {
@@ -294,13 +328,12 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 	}
 #ifndef PLATFORM_WINCE
 	if(fnAlphaBlend() && IsNull(c) && !ImageFallBack) {
-		if(!himg) {
+		if(!sd.himg) {
 			LTIMING("Image Alpha create");
 			BitmapInfo32__ bi(sz.cx, sz.cy);
-			himg = CreateDIBSection(ScreenHDC(), bi, DIB_RGB_COLORS,
-			                              (void **)&section, NULL, 0);
+			sd.himg = CreateDIBSection(ScreenHDC(), bi, DIB_RGB_COLORS, (void **)&sd.section, NULL, 0);
 			ResCount++;
-			memcpy(section, ~buffer, buffer.GetLength() * sizeof(RGBA));
+			memcpy(sd.section, ~buffer, buffer.GetLength() * sizeof(RGBA));
 		}
 		LTIMING("Image Alpha blit");
 		BLENDFUNCTION bf;
@@ -309,7 +342,7 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 		bf.SourceConstantAlpha = 255;
 		bf.AlphaFormat = AC_SRC_ALPHA;
 		HDC dcMem = ::CreateCompatibleDC(dc);
-		::SelectObject(dcMem, himg);
+		::SelectObject(dcMem, sd.himg);
 		fnAlphaBlend()(dc, x, y, ssz.cx, ssz.cy, dcMem, sr.left, sr.top, ssz.cx, ssz.cy, bf);
 		::DeleteDC(dcMem);
 		PaintOnlyShrink();
