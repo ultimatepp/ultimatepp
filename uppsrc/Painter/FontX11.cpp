@@ -17,9 +17,14 @@
 
 #include "Painter.h"
 
+#include <fontconfig/fontconfig.h>
+#include <fontconfig/fcfreetype.h>
+
 NAMESPACE_UPP
 
 #ifdef PLATFORM_X11
+
+FT_Face FTFace(Font fnt, String *rpath);
 
 static inline double ft_dbl(int p)
 {
@@ -136,15 +141,14 @@ bool RenderOutline(const FT_Outline& outline, Painter& path, double xx, double y
 	return true;
 }
 
-void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt)
+void PaintCharacterSys(Painter& sw, double x, double y, int ch, Font fnt)
 {
+	DrawLock __;
 	PAINTER_TIMING("CharacterOp");
-	FontInfo fi = fnt.Info();
-	FT_Face face = XftLockFace(fi.GetXftFont());
+	FT_Face face = FTFace(fnt, NULL);
 	int glyph_index = FT_Get_Char_Index(face, ch);
 	if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0)
-		RenderOutline(face->glyph->outline, sw, p.x, p.y + fnt.Info().GetAscent());
-	XftUnlockFace(fi.GetXftFont());
+		RenderOutline(face->glyph->outline, sw, x, y + fnt.GetAscent());
 	sw.EvenOdd(true);
 }
 

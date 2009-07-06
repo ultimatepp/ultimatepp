@@ -725,7 +725,7 @@ void Ctrl::SetMouseCursor(const Image& image)
 	static Cursor shc;
 	if(img.GetSerialId() != image.GetSerialId()) {
 		img = image;
-		Cursor hc = X11Cursor(IsNull(img) ? Image::Arrow() : img);
+		Cursor hc = (Cursor)X11Cursor(IsNull(img) ? Image::Arrow() : img);
 		for(int i = 0; i < Xwindow().GetCount(); i++) {
 			Window wnd = Xwindow().GetKey(i);
 			if(wnd)
