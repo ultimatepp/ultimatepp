@@ -100,7 +100,7 @@ static void Win32_GetGlyphIndices(HDC hdc, LPCWSTR s, int n, LPWORD r, DWORD fla
 		memset(r, 0, n * sizeof(WORD));
 }
 
-static HDC Win32_IC()
+HDC Win32_IC()
 {
 	static HDC hdc;
 	ONCELOCK {
