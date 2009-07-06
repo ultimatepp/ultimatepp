@@ -63,7 +63,7 @@ void RenderCharPath(const char* gbuf, unsigned total_size, Painter& sw, double x
 HFONT GetWin32Font(Font fnt, int angle);
 HDC Win32_IC();
 
-void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt)
+void PaintCharacterSys(Painter& sw, double x, double y, int ch, Font fnt)
 {
 	PAINTER_TIMING("CharacterOp");
 	DrawLock __;
@@ -83,7 +83,7 @@ void PaintCharacter(Painter& sw, const Pointf& p, int ch, Font fnt)
 		gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE, &gm, gsz, ~gb, &m_matrix);
 		if(gsz < 0)
 			return;
-		RenderCharPath(~gb, gsz, sw, p.x, p.y + fnt.GetAscent());
+		RenderCharPath(~gb, gsz, sw, x, y + fnt.GetAscent());
 		sw.EvenOdd(true);
 		::SelectObject(hdc, ohfont);
 	}

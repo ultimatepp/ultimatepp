@@ -79,8 +79,8 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 				DrawTextOp(int(x + cosa * (d + cg.mark_pos.x)), int(y - sina * (cg.mark_pos.y + d)), angle, &cg.mark_char, cg.mark_font, ink, 1, NULL);
 			}
 			else {
-				DrawTextOp(x + d, y, angle, &cg.basic_char, font, ink, 1, NULL);
-				DrawTextOp(x + cg.mark_pos.x + d, y + cg.mark_pos.y, angle, &cg.mark_char, cg.mark_font, ink, 1, NULL);
+				DrawTextOp(x + d, y, 0, &cg.basic_char, font, ink, 1, NULL);
+				DrawTextOp(x + cg.mark_pos.x + d, y + cg.mark_pos.y, 0, &cg.mark_char, cg.mark_font, ink, 1, NULL);
 			}
 			GlyphMetrics(gi, font, chr);
 		}

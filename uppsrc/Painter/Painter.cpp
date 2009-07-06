@@ -2,6 +2,27 @@
 
 NAMESPACE_UPP
 
+void PaintCharacter(Painter& sw, const Pointf& p, int chr, Font font)
+{
+	GlyphInfo gi = GetGlyphInfo(font, chr);
+	if(gi.IsNormal())
+		PaintCharacterSys(sw, p.x, p.y, chr, font);
+	else
+	if(gi.IsReplaced()) {
+		Font fnt = font;
+		fnt.Face(gi.lspc);
+		fnt.Height(gi.rspc);
+		PaintCharacterSys(sw, p.x, p.y + font.GetAscent() - fnt.GetAscent(), chr, fnt);
+	}
+	else
+	if(gi.IsComposed()) {
+		ComposedGlyph cg;
+		Compose(font, chr, cg);
+		PaintCharacterSys(sw, p.x, p.y, cg.basic_char, font);
+		PaintCharacterSys(sw, p.x + cg.mark_pos.x, p.y + cg.mark_pos.y, cg.mark_char, cg.mark_font);
+	}
+}
+
 Painter& Painter::Move(const Pointf& p)
 {
 	Move(p, false);
