@@ -1,0 +1,21 @@
+#include "PdfDraw.h"
+
+NAMESPACE_UPP
+
+String Pdf(const Array<Drawing>& report, Size sz, int margin)
+{
+	PdfDraw w(sz + 2 * margin);
+	for(int i = 0; i < report.GetCount(); i++) {
+		w.StartPage();
+		w.DrawDrawing(margin, margin, sz.cx, sz.cy, report[i]);
+		w.EndPage();
+	}
+	return w.Finish();
+}
+
+INITBLOCK
+{
+	SetDrawingToPdfFn(Pdf);
+}
+
+END_UPP_NAMESPACE
