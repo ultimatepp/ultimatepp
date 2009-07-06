@@ -30,8 +30,7 @@ struct HFontEntry {
 
 HFONT GetWin32Font(Font fnt, int angle)
 {
-	RTIMING("FTFace");
-	DDUMP(fnt);
+	LTIMING("GetWin32Font");
 	static HFontEntry cache[FONTCACHE];
 	ONCELOCK {
 		for(int i = 0; i < FONTCACHE; i++)
@@ -50,7 +49,7 @@ HFONT GetWin32Font(Font fnt, int angle)
 		}
 		be = e;
 	}
-	RTIMING("FTFace2");
+	LTIMING("GetWin32Font2");
 	if(be.hfont)
 		DeleteObject(be.hfont);
 
@@ -247,8 +246,6 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	int q = CombineHash(font, page) % GLYPHINFOCACHE;
 	
 	if(fnt[q] != font || pg[q] != page) {
-		DDUMP(font);
-		DDUMP(q);
 		fnt[q] = font;
 		pg[q] = page;
 		HFONT hfont = GetWin32Font(font, 0);

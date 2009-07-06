@@ -250,8 +250,6 @@ void SystemDraw::Cinit() {
 	lastPen = Null;
 	actBrush = orgBrush = NULL;
 	actPen = orgPen = NULL;
-	orgFont = NULL;
-	lastAngle = INT_MIN;
 }
 
 void SystemDraw::Init() {
@@ -293,7 +291,6 @@ void SystemDraw::Unselect0() {
 	DrawLock __;
 	if(orgPen) SelectObject(handle, orgPen);
 	if(orgBrush) SelectObject(handle, orgBrush);
-	if(orgFont) SelectObject(handle, orgFont);
 	if(actPen) DeleteObject(actPen);
 	if(actBrush) DeleteObject(actBrush);
 	Cinit();

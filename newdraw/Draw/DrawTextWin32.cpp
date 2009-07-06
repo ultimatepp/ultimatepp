@@ -8,17 +8,6 @@ NAMESPACE_UPP
 
 HFONT GetWin32Font(Font fnt, int angle);
 
-void SystemDraw::SetFont(Font font, int angle) {
-	DrawLock __;
-	LLOG("Set font: " << font << " face: " << font.GetFaceName());
-	if(lastFont == font && lastAngle == angle)
-		return;
-	lastFont = font;
-	lastAngle = angle;
-	HFONT h = (HFONT) SelectObject(handle, GetWin32Font(font, angle));
-	if(!orgFont) orgFont = h;
-}
-
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,
                       int n, const int *dx) {
 	Std(font);
@@ -39,7 +28,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		LLOG("Setting text color: " << ink);
 		::SetTextColor(handle, lastTextColor = cr);
 	}
-	SetFont(font, angle);
+	HGDIOBJ orgfont = ::SelectObject(handle, GetWin32Font(font, angle));
 	int ascent = font.Info().GetAscent();
 	if(angle) {
 		double sina, cosa;
@@ -50,6 +39,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	else
 		::ExtTextOutW(handle, x, y + ascent, 0, NULL, (const WCHAR *)text,
 		              n, dx);
+	::SelectObject(handle, orgfont);
 }
 
 #endif
