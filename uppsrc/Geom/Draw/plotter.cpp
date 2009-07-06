@@ -166,8 +166,8 @@ void LineDraw::Set(Draw& _draw, LineStyle pattern, Color color, int width, doubl
 		active = NULL;
 	}
 	first = last = Null;
-	clip = draw->GetClip();
-	Size size = draw->GetPagePixels();
+	Size size = draw->GetPageSize();
+	clip = draw->GetPageSize(); // GetClip()
 	max_rad = max(size.cx, size.cy);
 	vertices.Clear();
 	indices.Clear();
@@ -607,7 +607,7 @@ void Plotter::Set(Draw& _draw, Sizef _scale, Pointf _delta, int reserve, double 
 
 void Plotter::Set(Draw& _draw, const Matrixf& matrix, int reserve, double meter)
 {
-	Rect rc = _draw.GetClip();
+	Rect rc = _draw.GetPageSize(); //GetClip();
 	if(reserve < 0)
 		reserve = DotsToPixels(_draw, -reserve);
 	rc.Inflate(reserve);
@@ -664,12 +664,14 @@ void Plotter::SetMapMeters(double mm)
 
 void Plotter::SetXorMode(bool xm)
 {
+	if(SystemDraw *sdraw = dynamic_cast<SystemDraw *>(draw)) {
 #ifdef PLATFORM_WIN32
-	SetROP2(*draw, xm ? R2_NOTXORPEN : R2_COPYPEN);
+		SetROP2(*sdraw, xm ? R2_NOTXORPEN : R2_COPYPEN);
 #endif
 #ifdef PLATFORM_X11
-	XSetFunction(Xdisplay, draw->GetGC(), xm ? X11_ROP2_NOT_XOR : X11_ROP2_COPY);
+		XSetFunction(Xdisplay, sdraw->GetGC(), xm ? X11_ROP2_NOT_XOR : X11_ROP2_COPY);
 #endif
+	}
 }
 
 static inline void AddRectMatrix(Rectf& out, const Rectf& rc, const Matrixf& mx)
@@ -760,12 +762,14 @@ Point Plotter::LtoPointOrtho(Pointf pt) const
 
 static void PaintRectPart(Draw& draw, int x, int y, int w, int h)
 {
+	if(SystemDraw *sdraw = dynamic_cast<SystemDraw *>(&draw)) {
 #if defined(PLATFORM_WIN32)
-	::PatBlt(draw, x, y, w, h, PATINVERT);
+		::PatBlt(*sdraw, x, y, w, h, PATINVERT);
 #elif defined(PLATFORM_X11)
-	Point offset = draw.GetOffset();
-	XFillRectangle(Xdisplay, draw.GetDrawable(), draw.GetGC(), x + offset.x, y + offset.y, w, h);
+		Point offset = sdraw->GetOffset();
+		XFillRectangle(Xdisplay, sdraw->GetDrawable(), sdraw->GetGC(), x + offset.x, y + offset.y, w, h);
 #endif
+	}
 }
 
 static void PaintRectPart(Draw& draw, const Rect& rc) { PaintRectPart(draw, rc.left, rc.top, rc.Width(), rc.Height()); }
@@ -775,129 +779,132 @@ enum { DRAG_STEP = 4 };
 void PaintDragHorzLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgnd, int mingap)
 {
 	Size sz = rc.Size();
+	if(SystemDraw *sdraw = dynamic_cast<SystemDraw *>(&draw)) {
 #if defined(PLATFORM_WIN32)
-	draw.BeginGdi();
-	static word bmp_bits[8];
-	HBITMAP hbmp = CreateBitmap(8, 8, 1, 1, bmp_bits);
-	HBRUSH brush = CreatePatternBrush(hbmp);
-	DeleteObject(hbmp);
-	COLORREF cc1 = (COLORREF)c1 ^ (COLORREF)bgnd, cc2 = (COLORREF)c2 ^ (COLORREF)bgnd;
-	COLORREF old_bk = SetTextColor(draw, cc1);
-	HGDIOBJ old_brush = SelectObject(draw, brush);
+		sdraw->BeginGdi();
+		static word bmp_bits[8];
+		HBITMAP hbmp = CreateBitmap(8, 8, 1, 1, bmp_bits);
+		HBRUSH brush = CreatePatternBrush(hbmp);
+		DeleteObject(hbmp);
+		COLORREF cc1 = (COLORREF)c1 ^ (COLORREF)bgnd, cc2 = (COLORREF)c2 ^ (COLORREF)bgnd;
+		COLORREF old_bk = SetTextColor(*sdraw, cc1);
+		HGDIOBJ old_brush = SelectObject(*sdraw, brush);
 #elif defined(PLATFORM_X11)
-	XGCValues gcv_old, gcv_new;
-	XGetGCValues(Xdisplay, draw.GetGC(), GCForeground | GCFunction, &gcv_old);
-	gcv_new.function = X11_ROP2_XOR;
-	gcv_new.foreground = GetXPixel(c1) ^ GetXPixel(bgnd);
-	XChangeGC(Xdisplay, draw.GetGC(), GCForeground | GCFunction, &gcv_new);
+		XGCValues gcv_old, gcv_new;
+		XGetGCValues(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_old);
+		gcv_new.function = X11_ROP2_XOR;
+		gcv_new.foreground = GetXPixel(c1) ^ GetXPixel(bgnd);
+		XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_new);
 #endif
-	int whites = (sz.cx - 2 * mingap + DRAG_STEP) / (2 * DRAG_STEP);
-	if(rc.Width() <= 2 * mingap)
-		PaintRectPart(draw, rc);
-	else if(whites <= 0)
-	{
-		PaintRectPart(draw, rc.left, rc.top, mingap, sz.cy);
-		PaintRectPart(draw, rc.right - mingap, rc.top, mingap, sz.cy);
+		int whites = (sz.cx - 2 * mingap + DRAG_STEP) / (2 * DRAG_STEP);
+		if(rc.Width() <= 2 * mingap)
+			PaintRectPart(*sdraw, rc);
+		else if(whites <= 0) {
+			PaintRectPart(*sdraw, rc.left, rc.top, mingap, sz.cy);
+			PaintRectPart(*sdraw, rc.right - mingap, rc.top, mingap, sz.cy);
 #if defined(PLATFORM_WIN32)
-		SetTextColor(draw, cc2);
+			SetTextColor(*sdraw, cc2);
 #elif defined(PLATFORM_X11)
-		gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
-		XChangeGC(Xdisplay, draw.GetGC(), GCForeground, &gcv_new);
+			gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
+			XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground, &gcv_new);
 #endif
-		PaintRectPart(draw, rc.left + mingap, rc.top, sz.cx - 2 * mingap, sz.cy);
+			PaintRectPart(*sdraw, rc.left + mingap, rc.top, sz.cx - 2 * mingap, sz.cy);
+		}
+		else
+		{
+			int rem = sz.cx - whites * 2 * DRAG_STEP + DRAG_STEP;
+			int lrem = rem >> 1, rrem = (rem + 1) >> 1;
+			PaintRectPart(*sdraw, rc.left, rc.top, lrem, sz.cy);
+			PaintRectPart(*sdraw, rc.right - rrem, rc.top, rrem, sz.cy);
+			int i;
+			int start = rc.left + lrem - DRAG_STEP;
+			for(i = 1; i < whites; i++)
+				PaintRectPart(*sdraw, start + 2 * DRAG_STEP * i, rc.top, DRAG_STEP, sz.cy);
+#if defined(PLATFORM_WIN32)
+			SetTextColor(*sdraw, cc2);
+#elif defined(PLATFORM_X11)
+			gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
+			XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground, &gcv_new);
+#endif
+			start = rc.left + lrem;
+			for(i = 0; i < whites; i++)
+				PaintRectPart(*sdraw, start + 2 * DRAG_STEP * i, rc.top, DRAG_STEP, sz.cy);
+		}
+#if defined(PLATFORM_WIN32)
+		SelectObject(*sdraw, old_brush);
+		DeleteObject(brush);
+		SetTextColor(*sdraw, old_bk);
+		sdraw->EndGdi();
+#elif defined(PLATFORM_X11)
+		XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_old);
+#endif
 	}
-	else
-	{
-		int rem = sz.cx - whites * 2 * DRAG_STEP + DRAG_STEP;
-		int lrem = rem >> 1, rrem = (rem + 1) >> 1;
-		PaintRectPart(draw, rc.left, rc.top, lrem, sz.cy);
-		PaintRectPart(draw, rc.right - rrem, rc.top, rrem, sz.cy);
-		int i;
-		int start = rc.left + lrem - DRAG_STEP;
-		for(i = 1; i < whites; i++)
-			PaintRectPart(draw, start + 2 * DRAG_STEP * i, rc.top, DRAG_STEP, sz.cy);
-#if defined(PLATFORM_WIN32)
-		SetTextColor(draw, cc2);
-#elif defined(PLATFORM_X11)
-		gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
-		XChangeGC(Xdisplay, draw.GetGC(), GCForeground, &gcv_new);
-#endif
-		start = rc.left + lrem;
-		for(i = 0; i < whites; i++)
-			PaintRectPart(draw, start + 2 * DRAG_STEP * i, rc.top, DRAG_STEP, sz.cy);
-	}
-#if defined(PLATFORM_WIN32)
-	SelectObject(draw, old_brush);
-	DeleteObject(brush);
-	SetTextColor(draw, old_bk);
-	draw.EndGdi();
-#elif defined(PLATFORM_X11)
-	XChangeGC(Xdisplay, draw.GetGC(), GCForeground | GCFunction, &gcv_old);
-#endif
 }
 
 void PaintDragVertLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgnd, int mingap)
 {
 	Size sz = rc.Size();
+	if(SystemDraw *sdraw = dynamic_cast<SystemDraw *>(&draw)) {
 #if defined(PLATFORM_WIN32)
-	draw.BeginGdi();
-	static word bmp_bits[8];
-	HBITMAP hbmp = CreateBitmap(8, 8, 1, 1, bmp_bits);
-	HBRUSH brush = CreatePatternBrush(hbmp);
-	DeleteObject(hbmp);
-	COLORREF cc1 = (COLORREF)c1 ^ (COLORREF)bgnd, cc2 = (COLORREF)c2 ^ (COLORREF)bgnd;
-	COLORREF old_bk = SetTextColor(draw, cc1);
-	HGDIOBJ old_brush = SelectObject(draw, brush);
+		sdraw->BeginGdi();
+		static word bmp_bits[8];
+		HBITMAP hbmp = CreateBitmap(8, 8, 1, 1, bmp_bits);
+		HBRUSH brush = CreatePatternBrush(hbmp);
+		DeleteObject(hbmp);
+		COLORREF cc1 = (COLORREF)c1 ^ (COLORREF)bgnd, cc2 = (COLORREF)c2 ^ (COLORREF)bgnd;
+		COLORREF old_bk = SetTextColor(*sdraw, cc1);
+		HGDIOBJ old_brush = SelectObject(*sdraw, brush);
 #elif defined(PLATFORM_X11)
-	XGCValues gcv_old, gcv_new;
-	XGetGCValues(Xdisplay, draw.GetGC(), GCForeground | GCFunction, &gcv_old);
-	gcv_new.function = X11_ROP2_XOR;
-	gcv_new.foreground = GetXPixel(c1) ^ GetXPixel(bgnd);
-	XChangeGC(Xdisplay, draw.GetGC(), GCForeground | GCFunction, &gcv_new);
+		XGCValues gcv_old, gcv_new;
+		XGetGCValues(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_old);
+		gcv_new.function = X11_ROP2_XOR;
+		gcv_new.foreground = GetXPixel(c1) ^ GetXPixel(bgnd);
+		XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_new);
 #endif
-	int whites = (sz.cy - 2 * mingap + DRAG_STEP) / (2 * DRAG_STEP);
-	if(rc.Height() <= 2 * mingap)
-		PaintRectPart(draw, rc);
-	else if(whites <= 0)
-	{
-		PaintRectPart(draw, rc.left, rc.top, sz.cx, mingap);
-		PaintRectPart(draw, rc.left, rc.bottom - mingap, sz.cx, mingap);
+		int whites = (sz.cy - 2 * mingap + DRAG_STEP) / (2 * DRAG_STEP);
+		if(rc.Height() <= 2 * mingap)
+			PaintRectPart(*sdraw, rc);
+		else if(whites <= 0)
+		{
+			PaintRectPart(*sdraw, rc.left, rc.top, sz.cx, mingap);
+			PaintRectPart(*sdraw, rc.left, rc.bottom - mingap, sz.cx, mingap);
 #if defined(PLATFORM_WIN32)
-		SetTextColor(draw, cc2);
+			SetTextColor(*sdraw, cc2);
 #elif defined(PLATFORM_X11)
-		gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
-		XChangeGC(Xdisplay, draw.GetGC(), GCForeground, &gcv_new);
+			gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
+			XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground, &gcv_new);
 #endif
-		PaintRectPart(draw, rc.left, rc.top + mingap, sz.cx, sz.cy - 2 * mingap);
+			PaintRectPart(*sdraw, rc.left, rc.top + mingap, sz.cx, sz.cy - 2 * mingap);
+		}
+		else
+		{
+			int rem = sz.cy - whites * 2 * DRAG_STEP + DRAG_STEP;
+			int lrem = rem >> 1, rrem = (rem + 1) >> 1;
+			PaintRectPart(*sdraw, rc.left, rc.top, sz.cx, lrem);
+			PaintRectPart(*sdraw, rc.left, rc.bottom - rrem, sz.cx, rrem);
+			int i;
+			int start = rc.top + lrem - DRAG_STEP;
+			for(i = 1; i < whites; i++)
+				PaintRectPart(*sdraw, rc.left, start + 2 * DRAG_STEP * i, sz.cx, DRAG_STEP);
+#if defined(PLATFORM_WIN32)
+			SetTextColor(*sdraw, cc2);
+#elif defined(PLATFORM_X11)
+			gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
+			XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground, &gcv_new);
+#endif
+			start = rc.left + lrem;
+			for(i = 0; i < whites; i++)
+				PaintRectPart(*sdraw, rc.left, start + 2 * DRAG_STEP * i, sz.cx, DRAG_STEP);
+		}
+#if defined(PLATFORM_WIN32)
+		SelectObject(*sdraw, old_brush);
+		DeleteObject(brush);
+		SetTextColor(*sdraw, old_bk);
+		sdraw->EndGdi();
+#elif defined(PLATFORM_X11)
+		XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_old);
+#endif
 	}
-	else
-	{
-		int rem = sz.cy - whites * 2 * DRAG_STEP + DRAG_STEP;
-		int lrem = rem >> 1, rrem = (rem + 1) >> 1;
-		PaintRectPart(draw, rc.left, rc.top, sz.cx, lrem);
-		PaintRectPart(draw, rc.left, rc.bottom - rrem, sz.cx, rrem);
-		int i;
-		int start = rc.top + lrem - DRAG_STEP;
-		for(i = 1; i < whites; i++)
-			PaintRectPart(draw, rc.left, start + 2 * DRAG_STEP * i, sz.cx, DRAG_STEP);
-#if defined(PLATFORM_WIN32)
-		SetTextColor(draw, cc2);
-#elif defined(PLATFORM_X11)
-		gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
-		XChangeGC(Xdisplay, draw.GetGC(), GCForeground, &gcv_new);
-#endif
-		start = rc.left + lrem;
-		for(i = 0; i < whites; i++)
-			PaintRectPart(draw, rc.left, start + 2 * DRAG_STEP * i, sz.cx, DRAG_STEP);
-	}
-#if defined(PLATFORM_WIN32)
-	SelectObject(draw, old_brush);
-	DeleteObject(brush);
-	SetTextColor(draw, old_bk);
-	draw.EndGdi();
-#elif defined(PLATFORM_X11)
-	XChangeGC(Xdisplay, draw.GetGC(), GCForeground | GCFunction, &gcv_old);
-#endif
 }
 
 void PaintDragRect(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgnd, int width)
@@ -908,8 +915,7 @@ void PaintDragRect(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgnd, i
 		PaintDragHorzLine(draw, rc, LtRed, White, SWhite, width);
 	else if(rc.Width() <= 2 * width)
 		PaintDragVertLine(draw, rc, LtRed, White, SWhite, width);
-	else
-	{
+	else {
 		PaintDragHorzLine(draw, Rect(rc.left, rc.top, rc.right, rc.top + width), LtRed, White, SWhite, width);
 		PaintDragHorzLine(draw, Rect(rc.left, rc.bottom - width, rc.right, rc.bottom), LtRed, White, SWhite, width);
 		PaintDragVertLine(draw, Rect(rc.left, rc.top + width, rc.left + width, rc.bottom - width), LtRed, White, SWhite, 0);
@@ -1575,8 +1581,7 @@ void AreaTool::Paint()
 {
 	if(!plotter.draw)
 		return;
-	if(!(plotter.clip && plotter.draw->GetClip()))
-	{
+	if(!(plotter.clip.Intersects(plotter.draw->GetPageSize /*GetClip*/()))) {
 		Clear();
 		return;
 	}

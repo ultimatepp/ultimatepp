@@ -182,7 +182,7 @@ void sPalMaker::Update(Box& x, int ii)
 
 static byte sRc(int avg, int pop, int div)
 {
-	return Saturate255(255 * (avg + (pop >> 1)) / pop / (div - 1));
+	return Saturate255(iscale(avg + (pop >> 1), 255, pop * (div - 1)));
 }
 
 sPalMaker::sPalMaker(Raster& raster, RGBA *palette, int ncolors)
