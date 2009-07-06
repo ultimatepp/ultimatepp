@@ -1,5 +1,7 @@
 #ifdef PLATFORM_WIN32
 
+NAMESPACE_UPP
+
 class SystemDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
@@ -252,5 +254,10 @@ inline void     DrawCircle(HDC hdc, Point centre, int radius)     { DrawCircle(h
 inline void     DrawEllipse(HDC hdc, const Rect& rc)              { Ellipse(hdc, rc.left, rc.top, rc.right, rc.bottom); }
 
 inline void     DrawRect(HDC hdc, const Rect& rc)                 { Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom); }
+
+HDC      ScreenHDC();
+HPALETTE GetQlibPalette();
+
+END_UPP_NAMESPACE
 
 #endif

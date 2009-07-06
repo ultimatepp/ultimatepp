@@ -718,11 +718,9 @@ void RichPara::Dump()
 String RichPara::CharFormat::ToString() const
 {
 	String out;
-	out
-	<< Font(*this)
-	<< ", ink " << DumpColor(ink);
+	out << Font(*this) << ", ink " << ink;
 	if(!UPP::IsNull(paper))
-		out << ", paper " << DumpColor(paper);
+		out << ", paper " << paper;
 	switch(sscript)
 	{
 	case 0:  break;
@@ -730,7 +728,7 @@ String RichPara::CharFormat::ToString() const
 	case 2:  out << ", subscript"; break;
 	default: out << ", sscript(" << (int)sscript << ")"; break;
 	}
-	out << ", lang " << DumpLanguage(language);
+	out << ", lang " << LNGAsText(language);
 	if(!UPP::IsNull(link))
 		out << ", link " << link;
 	if(capitals)
@@ -746,7 +744,7 @@ String RichPara::Format::ToString() const
 	if(!UPP::IsNull(label))
 		out << "label <" << label << ">: ";
 	out
-	<< DumpAlign(align) << ", left " << lm << ", right " << rm
+	<< align << ", left " << lm << ", right " << rm
 	<< ", indent " << indent << ", before " << before << ", after " << after
 	<< ", tabsize " << tabsize << ", bullet " << bullet
 	<< (newpage  ? ", newpage" : "")
@@ -756,7 +754,7 @@ String RichPara::Format::ToString() const
 	int i;
 	for(i = 0; i < tab.GetCount(); i++)
 		out << (i ? "\n" : ", ")
-		<< "tab[" << i << "] = " << tab[i].pos << ", align " << DumpAlign(tab[i].align)
+		<< "tab[" << i << "] = " << tab[i].pos << ", align " << tab[i].align
 		<< ", fill " << FormatIntHex(tab[i].fillchar, 2);
 	out << "\n";
 	out << "before_number " << before_number << ", after_number " << after_number

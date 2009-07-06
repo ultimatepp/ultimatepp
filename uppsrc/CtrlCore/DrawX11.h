@@ -1,5 +1,75 @@
 #ifdef PLATFORM_X11
 
+#define Time    XTime
+#define Font    XFont
+#define Display XDisplay
+#define Picture XPicture
+
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+
+#include <X11/Xft/Xft.h>
+#include <X11/extensions/Xrender.h>
+
+#undef Picture
+#undef Time
+#undef Font
+#undef Display
+
+#undef True
+#undef False
+
+#define XFalse 0
+#define XTrue  1
+
+NAMESPACE_UPP
+
+extern XDisplay   *Xdisplay;
+extern Visual     *Xvisual;
+extern int         Xscreenno;
+extern Window      Xroot;
+extern Screen     *Xscreen;
+extern Colormap    Xcolormap;
+extern int         Xheight;
+extern int         Xwidth;
+extern int         XheightMM;
+extern int         XwidthMM;
+extern int         Xdepth;
+extern dword       Xblack;
+extern dword       Xwhite;
+extern int         Xconnection;
+
+extern dword   (*Xgetpixel)(int r, int g, int b);
+
+void          InitX11Draw(const char *dispname = NULL);
+void          InitX11Draw(XDisplay *display);
+
+void   XError();
+void   XError(const char *s);
+
+inline dword GetXPixel(int r, int g, int b) { return (*Xgetpixel)(r, g, b); }
+inline dword GetXPixel(Color color)         { return (*Xgetpixel)(color.GetR(), color.GetG(), color.GetB()); }
+
+enum {
+	X11_ROP2_ZERO,
+	X11_ROP2_AND,
+	X11_ROP2_AND_NOT,
+	X11_ROP2_COPY,
+	X11_ROP2_NOT_AND,
+	X11_ROP2_NOP,
+	X11_ROP2_XOR,
+	X11_ROP2_OR,
+	X11_ROP2_NOT_AND_NOT,
+	X11_ROP2_NOT_XOR,
+	X11_ROP2_INVERT,
+	X11_ROP2_OR_NOT,
+	X11_ROP2_NOT_COPY,
+	X11_ROP2_NOT_OR,
+	X11_ROP2_NOT_OR_NOT,
+	X11_ROP2_ONE,
+};
+
 void SetClip(GC gc, XftDraw *xftdraw, const Vector<Rect>& cl);
 
 class SystemDraw : public Draw {
@@ -103,5 +173,7 @@ public:
 
 	SystemDraw(Drawable dw, GC gc, XftDraw *xftdraw, const Vector<Rect>& clip);
 };
+
+END_UPP_NAMESPACE
 
 #endif

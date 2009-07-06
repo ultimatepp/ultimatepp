@@ -5,121 +5,36 @@
 
 #include <Core/Core.h>
 
-#ifdef PLATFORM_X11
-
-#define Time    XTime
-#define Font    XFont
-#define Display XDisplay
-#define Picture XPicture
-
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-
-#include <X11/Xft/Xft.h>
-#include <X11/extensions/Xrender.h>
-
-#undef Picture
-#undef Time
-#undef Font
-#undef Display
-
-#undef True
-#undef False
-
-#define XFalse 0
-#define XTrue  1
-#endif
-
-
 NAMESPACE_UPP
-
-#ifdef PLATFORM_X11
-
-extern XDisplay   *Xdisplay;
-extern Visual     *Xvisual;
-extern int         Xscreenno;
-extern Window      Xroot;
-extern Screen     *Xscreen;
-extern Colormap    Xcolormap;
-extern int         Xheight;
-extern int         Xwidth;
-extern int         XheightMM;
-extern int         XwidthMM;
-extern int         Xdepth;
-extern dword       Xblack;
-extern dword       Xwhite;
-extern int         Xconnection;
-
-extern dword   (*Xgetpixel)(int r, int g, int b);
-
-void          InitX11Draw(const char *dispname = NULL);
-void          InitX11Draw(XDisplay *display);
-
-void   XError();
-void   XError(const char *s);
-
-inline dword GetXPixel(int r, int g, int b) { return (*Xgetpixel)(r, g, b); }
-inline dword GetXPixel(Color color)         { return (*Xgetpixel)(color.GetR(), color.GetG(), color.GetB()); }
-
-enum {
-	X11_ROP2_ZERO,
-	X11_ROP2_AND,
-	X11_ROP2_AND_NOT,
-	X11_ROP2_COPY,
-	X11_ROP2_NOT_AND,
-	X11_ROP2_NOP,
-	X11_ROP2_XOR,
-	X11_ROP2_OR,
-	X11_ROP2_NOT_AND_NOT,
-	X11_ROP2_NOT_XOR,
-	X11_ROP2_INVERT,
-	X11_ROP2_OR_NOT,
-	X11_ROP2_NOT_COPY,
-	X11_ROP2_NOT_OR,
-	X11_ROP2_NOT_OR_NOT,
-	X11_ROP2_ONE,
-};
-
-#endif
 
 class Drawing;
 class Draw;
 class Painting;
 class SystemDraw;
 
-#ifdef PLATFORM_WIN32
-HDC ScreenHDC();
-#endif
-
-bool ScreenInPaletteMode();
-Size GetScreenSize();
-
-#include "Image.h"
-
 #ifdef _MULTITHREADED
-void EnterGuiMutex();
-void EnterGuiMutex(int n);
-void LeaveGuiMutex();
-int  LeaveGuiMutexAll();
+void EnterGMutex();
+void EnterGMutex(int n);
+void LeaveGMutex();
+int  LeaveGMutexAll();
 
-struct GuiLock {
-	GuiLock() { EnterGuiMutex(); }
-	~GuiLock() { LeaveGuiMutex(); }
+struct DrawLock {
+	DrawLock()  { EnterGMutex(); }
+	~DrawLock() { LeaveGMutex(); }
 };
 #else
-inline void EnterGuiMutex() {}
-inline void EnterGuiMutex(int n) {}
-inline void LeaveGuiMutex() {}
-inline int  LeaveGuiMutexAll() { return 0; }
+inline void EnterGMutex() {}
+inline void EnterGMutex(int n) {}
+inline void LeaveGMutex() {}
+inline int  LeaveGMutexAll() { return 0; }
 
-struct GuiLock {
-	GuiLock() {}
-	~GuiLock() {}
+struct DrawLock {
+	DrawLock() {}
+	~DrawLock() {}
 };
 #endif
 
-typedef GuiLock DrawLock;
+#include "Image.h"
 
 const int FONT_V = 40;
 
@@ -330,12 +245,6 @@ struct WingDings : public Font { WingDings(int n) : Font(WINGDINGS, n) {} };
 struct Tahoma    : public Font { Tahoma(int n) : Font(TAHOMA, n) {} };
 #endif
 
-#ifdef PLATFORM_WIN32
-#ifndef PLATFORM_WINCE
-HPALETTE GetQlibPalette();
-#endif
-#endif
-
 Size GetTextSize(const wchar *text, Font font, int n = -1);
 Size GetTextSize(const WString& text, Font font);
 Size GetTextSize(const char *text, byte charset, Font font, int n = -1);
@@ -482,6 +391,7 @@ public:
 		GUI = 0x002,
 		PRINTER = 0x004,
 		NATIVE = 0x008,
+		DATABANDS = 0x010,
 	};
 
 	virtual dword GetInfo() const = 0;
@@ -864,8 +774,6 @@ void DrawHighlightImage(Draw& w, int x, int y, const Image& img, bool highlight 
 
 Color GradientColor(Color fc, Color tc, int i, int n);
 
-void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n, Color color, uint64 pattern);
-
 enum {
 	BUTTON_NORMAL, BUTTON_OK, BUTTON_HIGHLIGHT, BUTTON_PUSH, BUTTON_DISABLED, BUTTON_CHECKED,
 	BUTTON_VERTICAL = 0x100,
@@ -891,21 +799,8 @@ typedef String (*DrawingToPdfFnType)(const Array<Drawing>& report, Size pagesize
 void SetDrawingToPdfFn(DrawingToPdfFnType Pdf);
 DrawingToPdfFnType GetDrawingToPdfFn();
 
-#ifdef PLATFORM_WIN32
-#include "DrawWin32.h"
-#endif
-
-#ifdef PLATFORM_X11
-#include "DrawX11.h"
-#endif
-
-#include "SystemDraw.h"
-
 #include "Display.h"
-#include "Debug.h"
 #include "Cham.h"
-
-typedef ImageDraw SystemImageDraw;
 
 END_UPP_NAMESPACE
 

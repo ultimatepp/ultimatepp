@@ -7,6 +7,22 @@ uses
 library(WIN32 !MSC8ARM) "advapi32 comdlg32 comctl32";
 
 file
+	SystemDraw readonly separator,
+	DrawWin32.h,
+	DrawWin32.cpp,
+	DrawOpWin32.cpp,
+	DrawTextWin32.cpp,
+	ImageWin32.cpp,
+	MetaFile.cpp,
+	DrawX11.h,
+	DrawX11.cpp,
+	DrawOpX11.cpp,
+	DrawTextX11.cpp,
+	ImageX11.cpp,
+	SystemDraw.h,
+	BackDraw.cpp,
+	SystemDraw.cpp,
+	DrawUtil.cpp,
 	Core readonly separator,
 	CtrlCore.h,
 	Win32Keys.i,

@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 NAMESPACE_UPP
 
@@ -43,7 +43,7 @@ static void sInitXImage(XImage& ximg, Size sz)
 
 void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 {
-	DrawLock __;
+	GuiLock __;
 	Pixmap pixmap = XCreatePixmap(Xdisplay, Xroot, cx, cy, 24);
 	XPicture picture = XRenderCreatePicture(
 		Xdisplay, pixmap,
@@ -90,13 +90,13 @@ void Image::Data::SysRelease()
 {
 	SystemData& sd = Sys();
 	if(sd.picture) {
-		DrawLock __;
+		GuiLock __;
 		if(Xdisplay) XRenderFreePicture(Xdisplay, sd.picture);
 		ResCount -= !paintonly;
 		sd.picture = 0;
 	}
 	if(sd.picture8) {
-		DrawLock __;
+		GuiLock __;
 		if(Xdisplay) XRenderFreePicture(Xdisplay, sd.picture8);
 		ResCount -= !paintonly;
 		sd.picture8 = 0;
@@ -120,7 +120,7 @@ inline int s255d16(int x)
 
 static XPicture sGetSolidFill(Color c)
 {
-	DrawLock __;
+	GuiLock __;
 	int q = GetHashValue(c) % (int)XRSolidFillCount;
 	XRSolidFill& f = sFill[q];
 	if(f.color == c && f.picture)
@@ -147,7 +147,7 @@ static XPicture sGetSolidFill(Color c)
 
 void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
-	DrawLock __;
+	GuiLock __;
 	SystemData& sd = Sys();
 	while(ResCount > 512) {
 		Image::Data *l = ResData->GetPrev();
@@ -244,7 +244,7 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 
 void ImageDraw::Init()
 {
-	DrawLock __;
+	GuiLock __;
 	dw = XCreatePixmap(Xdisplay, Xroot, max(size.cx, 1), max(size.cy, 1), Xdepth);
 	gc = XCreateGC(Xdisplay, dw, 0, 0);
 	xftdraw = XftDrawCreate(Xdisplay, (Drawable) dw, DefaultVisual(Xdisplay, Xscreenno), Xcolormap);
@@ -263,7 +263,7 @@ void ImageDraw::Init()
 
 ImageDraw::operator Image() const
 {
-	DrawLock __;
+	GuiLock __;
 	XImage *xim = XGetImage(Xdisplay, dw, 0, 0, max(size.cx, 1), max(size.cy, 1), AllPlanes, ZPixmap);
 	Visual *v = DefaultVisual(Xdisplay, Xscreenno);
 	RasterFormat fmt;
@@ -353,7 +353,7 @@ ImageDraw::ImageDraw(int cx, int cy)
 
 ImageDraw::~ImageDraw()
 {
-	DrawLock __;
+	GuiLock __;
 	XftDrawDestroy(xftdraw);
 	XFreePixmap(Xdisplay, dw);
 	XFreeGC(Xdisplay, gc);
@@ -394,7 +394,7 @@ Image Image::Hand() FCURSOR_(XC_hand1)
 
 Cursor X11Cursor(const Image& img)
 {
-	DrawLock __;
+	GuiLock __;
 	int q = img.GetCursorCheat();
 	if(q >= 0)
 		return XCreateFontCursor(Xdisplay, q);

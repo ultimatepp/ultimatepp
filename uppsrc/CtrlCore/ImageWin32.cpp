@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 #ifdef PLATFORM_WIN32
 #include <shellapi.h>
@@ -60,7 +60,7 @@ BitmapInfo32__::BitmapInfo32__(int cx, int cy)
 
 HBITMAP CreateBitMask(const RGBA *data, Size sz, Size tsz, Size csz, RGBA *ct)
 {
-	DrawLock __;
+	GuiLock __;
 	memset(ct, 0, tsz.cx * tsz.cy * sizeof(RGBA));
 	int linelen = (tsz.cx + 15) >> 4 << 1;
 	Buffer<byte>  mask(tsz.cy * linelen, 0xff);
@@ -90,7 +90,7 @@ HBITMAP CreateBitMask(const RGBA *data, Size sz, Size tsz, Size csz, RGBA *ct)
 
 void SetSurface(HDC dc, int x, int y, int cx, int cy, const RGBA *pixels)
 {
-	DrawLock __;
+	GuiLock __;
 	BitmapInfo32__ bi(cx, cy);
 	::SetDIBitsToDevice(dc, x, y, cx, cy, 0, 0, 0, cy, pixels,
 	                    bi, DIB_RGB_COLORS);
@@ -125,7 +125,7 @@ public:
 
 void DrawSurface::Init(SystemDraw& w, int _x, int _y, int cx, int cy)
 {
-	DrawLock __;
+	GuiLock __;
 	dc = w.GetHandle();
 	size = Size(cx, cy);
 	x = _x;
@@ -149,7 +149,7 @@ DrawSurface::DrawSurface(SystemDraw& w, int x, int y, int cx, int cy)
 
 DrawSurface::~DrawSurface()
 {
-	DrawLock __;
+	GuiLock __;
 	::BitBlt(dc, x, y, size.cx, size.cy, dcMem, 0, 0, SRCCOPY);
 	::DeleteObject(::SelectObject(dcMem, hbmpOld));
 	::DeleteDC(dcMem);
@@ -166,17 +166,17 @@ void Image::Data::SysRelease()
 {
 	SystemData& sd = Sys();
 	if(sd.hbmp) {
-		DrawLock __;
+		GuiLock __;
 		DeleteObject(sd.hbmp);
 		ResCount -= !paintonly;
 	}
 	if(sd.hmask) {
-		DrawLock __;
+		GuiLock __;
 		DeleteObject(sd.hmask);
 		ResCount -= !paintonly;
 	}
 	if(sd.himg) {
-		DrawLock __;
+		GuiLock __;
 		DeleteObject(sd.himg);
 		ResCount -= !paintonly;
 	}
@@ -191,7 +191,7 @@ typedef BOOL (WINAPI *tAlphaBlend)(HDC hdcDest, int nXOriginDest, int nYOriginDe
 
 static tAlphaBlend fnAlphaBlend()
 {
-	DrawLock __;
+	GuiLock __;
 	static tAlphaBlend pSet;
 	static bool inited = false;
 	if(!inited) {
@@ -227,7 +227,7 @@ int  Image::Data::GetResCount() const
 
 void Image::Data::CreateHBMP(HDC dc, const RGBA *data)
 {
-	DrawLock __;
+	GuiLock __;
 	SystemData& sd = Sys();
 	Size sz = buffer.GetSize();
 	BitmapInfo32__ bi(sz.cx, sz.cy);
@@ -250,7 +250,7 @@ void Image::Data::CreateHBMP(HDC dc, const RGBA *data)
 
 void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
-	DrawLock __;
+	GuiLock __;
 	SystemData& sd = Sys();
 	ASSERT(!paintonly || IsNull(c));
 	int max = IsWinNT() ? 250 : 100;
@@ -365,7 +365,7 @@ void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 
 void ImageDraw::Section::Init(int cx, int cy)
 {
-	DrawLock __;
+	GuiLock __;
 	dc = ::CreateCompatibleDC(ScreenHDC());
 	BitmapInfo32__ bi(cx, cy);
 	hbmp = CreateDIBSection(dc, bi, DIB_RGB_COLORS, (void **)&pixels, NULL, 0);
@@ -374,14 +374,14 @@ void ImageDraw::Section::Init(int cx, int cy)
 
 ImageDraw::Section::~Section()
 {
-	DrawLock __;
+	GuiLock __;
 	::DeleteObject(::SelectObject(dc, hbmpOld));
 	::DeleteDC(dc);
 }
 
 void ImageDraw::Init()
 {
-	DrawLock __;
+	GuiLock __;
 	rgb.Init(size.cx, size.cy);
 	a.Init(size.cx, size.cy);
 	Attach(rgb.dc);
@@ -468,7 +468,7 @@ Image Image::SizeBottomRight() { return Null; }
 
 static Image sWin32Icon(HICON icon, bool cursor)
 {
-	DrawLock __;
+	GuiLock __;
 	ICONINFO iconinfo;
 	if(!icon || !GetIconInfo(icon, &iconinfo))
 		return Image();
@@ -573,7 +573,7 @@ Image Win32Cursor(int id)
 
 HICON IconWin32(const Image& img, bool cursor)
 {
-	DrawLock __;
+	GuiLock __;
 	if(img.IsEmpty())
 		return NULL;
 	if(cursor) {

@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 NAMESPACE_UPP
 
@@ -22,7 +22,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		n -= 30000;
 		text += 30000;
 	}
-	DrawLock __;
+	GuiLock __;
 	COLORREF cr = GetColor(ink);
 	if(cr != lastTextColor) {
 		LLOG("Setting text color: " << ink);

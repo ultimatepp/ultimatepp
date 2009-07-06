@@ -28,7 +28,7 @@ library(FREEBSD) xcb;
 
 file
 	Draw.h,
-	Mt.cpp,
+	DrawLock.cpp,
 	FontInt.h,
 	Font.cpp,
 	FontCR.cpp,
@@ -42,8 +42,6 @@ file
 	DrawTextUtil.cpp,
 	Display.h,
 	Display.cpp,
-	Debug.h,
-	Debug.cpp,
 	Image readonly separator,
 	Image.h,
 	Image.cpp,

@@ -1,4 +1,4 @@
-#include "Draw.h"
+#include "SystemDraw.h"
 
 NAMESPACE_UPP
 
@@ -11,7 +11,7 @@ static COLORREF sLightGray;
 
 dword SystemDraw::GetInfo() const
 {
-	return native || !(style & DOTS) ? style|NATIVE : style;
+	return DATABANDS|(native || !(style & DOTS) ? style|NATIVE : style);
 }
 
 Size SystemDraw::GetPageSize() const
@@ -110,7 +110,7 @@ void SystemDraw::InitColors()
 
 void SystemDraw::SetColor(Color color)
 {
-	DrawLock __;
+	GuiLock __;
 	LLOG("SetColor " << color);
 	if(color != lastColor) {
 		LLOG("Setting, lastColor:" << FormatIntHex(lastColor.GetRaw())
@@ -133,7 +133,7 @@ void SystemDraw::SetColor(Color color)
 }
 
 void SystemDraw::SetDrawPen(int width, Color color) {
-	DrawLock __;
+	GuiLock __;
 	if(IsNull(width))
 		width = PEN_NULL;
 	if(width != lastPen || color != lastPenColor) {
@@ -155,7 +155,7 @@ void SystemDraw::SetDrawPen(int width, Color color) {
 }
 
 void SystemDraw::SetOrg() {
-	DrawLock __;
+	GuiLock __;
 #ifdef PLATFORM_WINCE
 	::SetViewportOrgEx(handle, actual_offset.x, actual_offset.y, 0);
 #else
@@ -167,26 +167,26 @@ void SystemDraw::SetOrg() {
 
 #ifndef PLATFORM_WINCE
 Point SystemDraw::LPtoDP(Point p) const {
-	DrawLock __;
+	GuiLock __;
 	::LPtoDP(handle, p, 1);
 	return p;
 }
 
 Point SystemDraw::DPtoLP(Point p) const {
-	DrawLock __;
+	GuiLock __;
 	::DPtoLP(handle, p, 1);
 	return p;
 }
 
 Rect  SystemDraw::LPtoDP(const Rect& r) const {
-	DrawLock __;
+	GuiLock __;
 	Rect w = r;
 	::LPtoDP(handle, reinterpret_cast<POINT *>(&w), 2);
 	return w;
 }
 
 Rect  SystemDraw::DPtoLP(const Rect& r) const {
-	DrawLock __;
+	GuiLock __;
 	Rect w = r;
 	::LPtoDP(handle, reinterpret_cast<POINT *>(&w), 2);
 	return w;
@@ -194,7 +194,7 @@ Rect  SystemDraw::DPtoLP(const Rect& r) const {
 #endif
 
 Size SystemDraw::GetSizeCaps(int i, int j) const {
-	DrawLock __;
+	GuiLock __;
 	return Size(GetDeviceCaps(handle, i), GetDeviceCaps(handle, j));
 }
 
@@ -232,7 +232,7 @@ int SystemDraw::GetCloffLevel() const
 }
 
 void SystemDraw::LoadCaps() {
-	DrawLock __;
+	GuiLock __;
 	color16 = false;
 	palette = (GetDeviceCaps(handle, RASTERCAPS) & RC_PALETTE);
 	if(palette)
@@ -243,7 +243,7 @@ void SystemDraw::LoadCaps() {
 }
 
 void SystemDraw::Cinit() {
-	DrawLock __;
+	GuiLock __;
 	lastColor = Color::FromCR(COLORREF(-5));
 	lastPenColor = Color::FromCR(COLORREF(-5));
 	lastTextColor = COLORREF(-1);
@@ -253,7 +253,7 @@ void SystemDraw::Cinit() {
 }
 
 void SystemDraw::Init() {
-	DrawLock __;
+	GuiLock __;
 	Cinit();
 	SetBkMode(handle, TRANSPARENT);
 	::SetTextAlign(handle, TA_BASELINE);
@@ -266,12 +266,12 @@ void SystemDraw::Init() {
 }
 
 void SystemDraw::Reset() {
-	DrawLock __;
+	GuiLock __;
 	style = GUI;
 }
 
 SystemDraw::SystemDraw() {
-	DrawLock __;
+	GuiLock __;
 	native = 0;
 	InitColors();
 	actual_offset = Point(0, 0);
@@ -280,7 +280,7 @@ SystemDraw::SystemDraw() {
 }
 
 SystemDraw::SystemDraw(HDC hdc) {
-	DrawLock __;
+	GuiLock __;
 	native = 0;
 	InitColors();
 	Reset();
@@ -288,7 +288,7 @@ SystemDraw::SystemDraw(HDC hdc) {
 }
 
 void SystemDraw::Unselect0() {
-	DrawLock __;
+	GuiLock __;
 	if(orgPen) SelectObject(handle, orgPen);
 	if(orgBrush) SelectObject(handle, orgBrush);
 	if(actPen) DeleteObject(actPen);
@@ -297,33 +297,33 @@ void SystemDraw::Unselect0() {
 }
 
 void SystemDraw::Unselect() {
-	DrawLock __;
+	GuiLock __;
 	while(cloff.GetCount())
 		End();
 	Unselect0();
 }
 
 SystemDraw::~SystemDraw() {
-	DrawLock __;
+	GuiLock __;
 	if(handle)
 		Unselect();
 }
 
 HDC SystemDraw::BeginGdi() {
-	DrawLock __;
+	GuiLock __;
 	Begin();
 	return handle;
 }
 
 void SystemDraw::EndGdi() {
-	DrawLock __;
+	GuiLock __;
 	Unselect0();
 	End();
 }
 
 void BackDraw::Create(SystemDraw& w, int cx, int cy) {
 	ASSERT(w.GetHandle());
-	DrawLock __;
+	GuiLock __;
 	Destroy();
 	size.cx = cx;
 	size.cy = cy;
@@ -342,7 +342,7 @@ void BackDraw::Create(SystemDraw& w, int cx, int cy) {
 }
 
 void BackDraw::Put(SystemDraw& w, int x, int y) {
-	DrawLock __;
+	GuiLock __;
 	ASSERT(handle);
 	LTIMING("BackDraw::Put");
 #ifdef PLATFORM_WINCE
@@ -354,7 +354,7 @@ void BackDraw::Put(SystemDraw& w, int x, int y) {
 }
 
 void BackDraw::Destroy() {
-	DrawLock __;
+	GuiLock __;
 	if(handle) {
 		Unselect();
 		::SelectObject(handle, hbmpold);
@@ -365,7 +365,7 @@ void BackDraw::Destroy() {
 }
 
 ScreenDraw::ScreenDraw(bool ic) {
-	DrawLock __;
+	GuiLock __;
 #ifdef PLATFORM_WINCE
 	Attach(CreateDC(NULL, NULL, NULL, NULL));
 #else
@@ -378,7 +378,7 @@ ScreenDraw::ScreenDraw(bool ic) {
 }
 
 ScreenDraw::~ScreenDraw() {
-	DrawLock __;
+	GuiLock __;
 	Unselect();
 	DeleteDC(handle);
 }
@@ -387,7 +387,7 @@ ScreenDraw::~ScreenDraw() {
 
 void PrintDraw::InitPrinter()
 {
-	DrawLock __;
+	GuiLock __;
 	Init();
 	style = PRINTER|DOTS;
 	DotsMode();
@@ -400,7 +400,7 @@ void PrintDraw::InitPrinter()
 
 void PrintDraw::StartPage()
 {
-	DrawLock __;
+	GuiLock __;
 	if(aborted) return;
 	Unselect();
 	if(::StartPage(handle) <= 0)
@@ -411,7 +411,7 @@ void PrintDraw::StartPage()
 
 void PrintDraw::EndPage()
 {
-	DrawLock __;
+	GuiLock __;
 	if(aborted) return;
 	Unselect();
 	if(::EndPage(handle) <= 0)
@@ -421,7 +421,7 @@ void PrintDraw::EndPage()
 PrintDraw::PrintDraw(HDC hdc, const char *docname)
    : SystemDraw(hdc)
 {
-	DrawLock __;
+	GuiLock __;
 	DOCINFO di;
 	memset(&di, 0, sizeof(di));
 	di.cbSize = sizeof(di);
@@ -434,7 +434,7 @@ PrintDraw::PrintDraw(HDC hdc, const char *docname)
 }
 
 PrintDraw::~PrintDraw() {
-	DrawLock __;
+	GuiLock __;
 	if(aborted)
 		::AbortDoc(handle);
 	else
@@ -444,16 +444,6 @@ PrintDraw::~PrintDraw() {
 }
 #endif
 
-
-bool ScreenInPaletteMode()
-{
-	return ScreenInfo().PaletteMode();
-}
-
-Size GetScreenSize()
-{
-	return ScreenInfo().GetPageSize();
-}
 
 #endif
 

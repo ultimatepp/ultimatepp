@@ -99,10 +99,10 @@ void Font::SyncStdFont()
 void Font::SetStdFont(Font font)
 {
 	DrawLock __;
+	static bool x;
 	InitStdFont();
 	AStdFont = font;
 	SyncStdFont();
-	DLOG("SetStdFont " << font);
 }
 
 void Font::InitStdFont()
@@ -115,8 +115,10 @@ void Font::InitStdFont()
 		int    height = 0;
 		GetStdFontSys(name, height);
 		int q = FindFaceNameIndex(name);
-		if(q > 0)
-			SetStdFont(Font(q, max(height, 1)));
+		if(q > 0) {
+			AStdFont = Font(q, max(height, 1));
+			SyncStdFont();
+		}
 	}
 }
 

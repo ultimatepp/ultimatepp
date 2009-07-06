@@ -95,12 +95,6 @@ ImageBuffer::ImageBuffer(Image& img)
 	Set(img);
 }
 
-ImageBuffer::ImageBuffer(ImageDraw& w)
-{
-	Image img = w;
-	Set(img);
-}
-
 ImageBuffer::ImageBuffer(ImageBuffer& b)
 {
 	kind = b.kind;
@@ -343,15 +337,6 @@ void Image::Data::PaintOnlyShrink()
 		ResCount -= GetResCount();
 		Unlink();
 	}
-}
-
-Draw& ImageDraw::Alpha()
-{
-	if(!has_alpha) {
-		alpha.DrawRect(size, GrayColor(0));
-		has_alpha = true;
-	}
-	return alpha;
 }
 
 static void sMultiply(ImageBuffer& b, int (*op)(RGBA *t, const RGBA *s, int len))
