@@ -59,15 +59,14 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 			}
 		else
 		if(gi.IsReplaced()) {
-			FontInfo fi = font.Info();
 			Font fnt = font;
 			fnt.Face(gi.lspc);
-			FontInfo fi2 = fnt.Info();
+			fnt.Height(gi.rspc);
 			if(angle)
-				DrawTextOp(int(x + cosa * d), int(y - sina * (fi.GetAscent() - fi2.GetAscent() + d)),
+				DrawTextOp(int(x + cosa * d), int(y - sina * (font.GetAscent() - fnt.GetAscent() + d)),
 				             angle, &chr, fnt, ink, 1, NULL);
 			else
-				DrawTextOp(x + d, y + fi.GetAscent() - fi2.GetAscent(), 0, &chr, fnt, ink, 1, NULL);
+				DrawTextOp(x + d, y + font.GetAscent() - fnt.GetAscent(), 0, &chr, fnt, ink, 1, NULL);
 			GlyphMetrics(gi, font, chr);
 		}
 		else

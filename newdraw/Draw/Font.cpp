@@ -90,7 +90,7 @@ int  Font::FindFaceNameIndex(const String& name) {
 void Font::SyncStdFont()
 {
 	DrawLock __;
-	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetGlyphsHeight());
+	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetCy());
 }
 
 void Font::SetStdFont(Font font)
@@ -229,8 +229,10 @@ CharEntry GetGlyphEntry(Font font, int chr, unsigned hash)
 				e.info.rspc = cg.basic_char;
 			}
 			else
-			if(Replace(font, chr, rfnt))
+			if(Replace(font, chr, rfnt)) {
 				e.info.lspc = rfnt.GetFace();
+				e.info.rspc = rfnt.GetHeight();
+			}
 			else
 				e.info.lspc = -2;
 		}
@@ -253,7 +255,7 @@ GlyphInfo GetGlyphInfo(Font font, int chr)
 void GlyphMetrics(GlyphInfo& f, Font font, int chr)
 {
 	if(f.IsReplaced())
-		f = GetGlyphInfo(font().Face(f.lspc), chr);
+		f = GetGlyphInfo(font().Face(f.lspc).Height(f.rspc), chr);
 	if(f.IsComposed()) {
 		f = GetGlyphInfo(font, f.rspc);
 		if(f.IsComposedLM())

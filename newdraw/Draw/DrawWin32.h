@@ -53,9 +53,6 @@ private:
 
 	friend void StaticExitDraw_();
 
-	Font      lastFont;
-	int       lastAngle;
-
 	Point     actual_offset_bak;
 
 	struct Cloff : Moveable<Cloff> {
@@ -71,7 +68,6 @@ private:
 	Color     lastColor;
 	HBRUSH    orgBrush;
 	HBRUSH    actBrush;
-	HFONT     orgFont;
 	HPEN      orgPen;
 	HPEN      actPen;
 	int       lastPen;
@@ -120,7 +116,6 @@ public:
 #endif
 
 	void SetColor(Color color);
-	void SetFont(Font font, int angle = 0);
 	void SetDrawPen(int width, Color color);
 
 	Size  GetSizeCaps(int i, int j) const;

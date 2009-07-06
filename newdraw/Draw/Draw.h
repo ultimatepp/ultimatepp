@@ -223,9 +223,9 @@ public:
 
 	int   GetAscent() const                  { return Fi().ascent; }
 	int   GetDescent() const                 { return Fi().descent; }
+	int   GetCy() const                      { return Fi().height; }
 	int   GetExternal() const                { return Fi().external; }
 	int   GetInternal() const                { return Fi().internal; }
-	int   GetGlyphsHeight() const            { return Fi().height; }
 	int   GetLineHeight() const              { return Fi().lineheight; }
 	int   GetOverhang() const                { return Fi().overhang; }
 	int   GetAveWidth() const                { return Fi().avewidth; }
@@ -270,7 +270,7 @@ public:
 	int    GetDescent() const                 { return font.GetDescent(); }
 	int    GetExternal() const                { return font.GetExternal(); }
 	int    GetInternal() const                { return font.GetInternal(); }
-	int    GetHeight() const                  { return font.GetGlyphsHeight(); }
+	int    GetHeight() const                  { return font.GetCy(); }
 	int    GetLineHeight() const              { return font.GetLineHeight(); }
 	int    GetOverhang() const                { return font.GetOverhang(); }
 	int    GetAveWidth() const                { return font.GetAveWidth(); }
