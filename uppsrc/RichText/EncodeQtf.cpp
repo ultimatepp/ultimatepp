@@ -52,7 +52,9 @@ void CharFmt(String& fmt, const RichPara::CharFormat& a, const RichPara::CharFor
 		case Font::ROMAN:     fmt.Cat('R'); break;
 		case Font::COURIER:   fmt.Cat('C'); break;
 		case Font::STDFONT:   fmt.Cat('G'); break;
+	#ifdef PLATFORM_WIN32
 		case Font::SYMBOL:    fmt.Cat('S'); break;
+	#endif
 		default:
 			fmt << "!" << b.GetFaceName() << "!";
 		}

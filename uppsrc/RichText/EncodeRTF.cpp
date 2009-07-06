@@ -148,8 +148,8 @@ void RTFEncoder::FacesAddFormat(const RichPara::CharFormat& format)
 void RTFEncoder::GetFaces()
 {
 	used_faces.Add(Font::ARIAL); // default font
-	used_faces.Add(Font::SYMBOL); // used for bullets
 #ifdef PLATFORM_WIN32
+	used_faces.Add(Font::SYMBOL); // used for bullets
 	used_faces.Add(Font::WINGDINGS); // used for bullets
 #endif
 	phys_colors.Add(Null);

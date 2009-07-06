@@ -565,7 +565,11 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 				case 'R': format.Face(Font::ROMAN); break;
 				case 'C': format.Face(Font::COURIER); break;
 				case 'G': format.Face(Font::STDFONT); break;
-				case 'S': format.Face(Font::SYMBOL); break;
+				case 'S':
+#ifdef PLATFORM_WIN32
+					format.Face(Font::SYMBOL);
+#endif
+					break;
 				case '.': {
 					int n = GetNumber();
 					if(n >= Font::GetFaceCount())
