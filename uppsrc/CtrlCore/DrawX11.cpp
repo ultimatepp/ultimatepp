@@ -157,7 +157,7 @@ void InitX11Draw(XDisplay *display)
 		fflush(stdout);
 		XError();
 	}
-	int Xscreenno = DefaultScreen(Xdisplay);
+	Xscreenno = DefaultScreen(Xdisplay);
 	Xroot = RootWindow(Xdisplay, Xscreenno);
 	Xscreen = ScreenOfDisplay(Xdisplay, Xscreenno);
 	Xcolormap = DefaultColormap(Xdisplay, Xscreenno);
