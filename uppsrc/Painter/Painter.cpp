@@ -445,7 +445,6 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double
 	while(n) {
 		int ch = *text++;
 		Character(x, p.y, ch, fnt);
-		DLOG(x << ", " << p.y << " " << (char)ch << ": " << fi[ch]);
 		Div();
 		if(dx)
 			x += *dx++;

@@ -147,11 +147,8 @@ void PaintCharacterSys(Painter& sw, double x, double y, int ch, Font fnt)
 	PAINTER_TIMING("CharacterOp");
 	FT_Face face = FTFace(fnt, NULL);
 	int glyph_index = FT_Get_Char_Index(face, ch);
-	DLOG(fnt << " " << fnt.GetAscent() << " " << (void *)face << " " << (char)ch << ":" << glyph_index);
-	if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0) {
+	if(glyph_index && FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0)
 		RenderOutline(face->glyph->outline, sw, x, y + fnt.GetAscent());
-		DLOG("Loaded");
-	}
 	sw.EvenOdd(true);
 }
 

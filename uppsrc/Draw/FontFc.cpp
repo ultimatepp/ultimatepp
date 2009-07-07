@@ -31,7 +31,6 @@ FcPattern *CreateFcPattern(Font font)
 	int hg = abs(font.GetHeight());
 	if(hg == 0) hg = 10;
 	String face = font.GetFaceName();
-	DDUMP(face);
 	FcPattern *p = FcPatternCreate();
 	FcPatternAddString(p, FC_FAMILY, (FcChar8*)~face);
 	FcPatternAddInteger(p, FC_SLANT, font.IsItalic() ? 110 : 0);
@@ -59,7 +58,6 @@ FT_Face CreateFTFace(const FcPattern *pattern, String *rpath) {
 
 	if(FcPatternGetString(pattern, FC_FILE, 0, &filename) != FcResultMatch)
 		return NULL;
-	DDUMP((char *)filename);
 	if(rpath)
 		*rpath = (const char *)filename;
 
@@ -90,7 +88,6 @@ struct FtFaceEntry {
 FT_Face FTFace(Font fnt, String *rpath = NULL)
 {
 	RTIMING("FTFace");
-	DLOG("FTFace " << fnt);
 	static FtFaceEntry cache[FONTCACHE];
 	ONCELOCK {
 		for(int i = 0; i < FONTCACHE; i++)
