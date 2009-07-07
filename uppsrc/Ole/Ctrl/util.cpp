@@ -6,7 +6,7 @@ NAMESPACE_UPP
 
 enum { HIMETRIC_INCH = 2540 }; // HIMETRIC units per inch
 
-Draw& ScreenInfo();
+SystemDraw& ScreenInfo();
 
 Size ToHiMetric(Size pixel_size)
 {

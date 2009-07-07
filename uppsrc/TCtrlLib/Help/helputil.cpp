@@ -1073,7 +1073,7 @@ public:
 	virtual void Paint(Draw& draw, const Rect& rc, const Value& v, Color ink, Color paper, dword style) const;
 
 	struct RTDPageDraw : public PageDraw {
-		virtual Draw& Page(int _page)          { return _page ? ScreenInfo() : w; }
+		virtual Draw& Page(int _page)          { return _page ? (Draw&)ScreenInfo() : w; }
 		virtual Draw& Info()                   { return w; }
 
 		Draw&              w;

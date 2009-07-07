@@ -17,8 +17,10 @@
 
 #include "Painter.h"
 
+#ifdef PLATFORM_X11
 #include <fontconfig/fontconfig.h>
 #include <fontconfig/fcfreetype.h>
+#endif
 
 NAMESPACE_UPP
 

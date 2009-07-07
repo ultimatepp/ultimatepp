@@ -35,7 +35,7 @@ int QtfCtrl::GetHeight(int cx) const {
 	return doc.GetHeight(zoom, cx, cache);
 }
 
-Draw& ScreenInfo();
+SystemDraw& ScreenInfo();
 
 void QtfCtrl::Layout() {
 	Size sz = sb.GetViewSize();

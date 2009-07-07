@@ -34,7 +34,7 @@ void RtfDocOut::Border(const char *cmd, int width, dword color) {
 	}
 }
 
-Draw& ScreenInfo();
+SystemDraw& ScreenInfo();
 
 void RtfDocOut::PutPicture(const Drawing& iw, Size sz) {
 #ifdef PLATFORM_WIN32
