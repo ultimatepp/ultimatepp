@@ -1,7 +1,9 @@
 #include "Draw.h"
 
+#ifdef PLATFORM_POSIX
 #include <fontconfig/fontconfig.h>
 #include <fontconfig/fcfreetype.h>
+#endif
 
 NAMESPACE_UPP
 
