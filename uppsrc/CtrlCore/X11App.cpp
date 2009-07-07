@@ -12,6 +12,11 @@ NAMESPACE_UPP
 
 XIM Ctrl::xim;
 
+Atom XAtomRaw(const char *name)
+{
+	return XInternAtom(Xdisplay, name, XFalse);
+}
+
 Atom XAtom(const char *name)
 {
 	GuiLock __; 
@@ -20,7 +25,7 @@ Atom XAtom(const char *name)
 		static VectorMap<String, int> atoms;
 		int q = atoms.Get(name, Null);
 		if(IsNull(q)) {
-			q = XInternAtom(Xdisplay, name, XFalse);
+			q = XAtomRaw(name);
 			atoms.Add(name, q);
 		}
 		x = q;
@@ -182,8 +187,8 @@ static void sPanicMessageBox(const char *title, const char *text)
 	GC gc = XCreateGC(display, win, 0, &values);
 	// New section
 	unsigned long wina[1];
-	wina[0] = XAtom("_NET_WM_STATE_ABOVE");
-	XChangeProperty(display, win, XAtom("_NET_WM_STATE"), XAtom("ATOM"), 32,
+	wina[0] = XAtomRaw("_NET_WM_STATE_ABOVE");
+	XChangeProperty(display, win, XAtomRaw("_NET_WM_STATE"), XAtomRaw("ATOM"), 32,
 	                PropModeReplace, (const unsigned char *)&wina, 1);
 	XMapWindow(display, win);
 	XSetInputFocus(display, win, RevertToParent, CurrentTime);

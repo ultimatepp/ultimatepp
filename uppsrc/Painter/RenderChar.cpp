@@ -82,7 +82,6 @@ struct sMakeGlyph : LRUCache<Value, GlyphKey>::Maker {
 		gp.tolerance = gk.tolerance;
 		PaintCharacter(gp, Pointf(0, 0), gk.chr, gk.fnt);
 		int sz = gp.glyph.GetCount() * 4;
-		DDUMP(gp.glyph.GetCount());
 		v = RawPickToValue(gp.glyph);
 		return sz;
 	}

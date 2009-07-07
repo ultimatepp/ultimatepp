@@ -653,7 +653,7 @@ String PdfDraw::Finish()
 			"end\n"
 			"end\n";
 		int cmapi = PutStream(cmap);
-		if(fnt.GetHeight() == FONTHEIGHT_TTF) {
+		if(fnt.GetHeight() != FONTHEIGHT_TTF) {
 			FontInfo fi = fnt.Info();
 			int t3ch = offset.GetCount() + 1;
 			int fa = fi.GetHeight() - fi.GetInternal();

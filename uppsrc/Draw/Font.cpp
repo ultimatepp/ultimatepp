@@ -141,7 +141,7 @@ Font StdFont()
 
 int Font::GetHeight() const
 {
-	return v.height ? v.height : GetStdFont().GetHeight();
+	return v.height || v.face ? v.height : GetStdFont().GetHeight();
 }
 
 String Font::GetFaceName() const {
