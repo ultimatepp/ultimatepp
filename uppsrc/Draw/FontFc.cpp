@@ -24,30 +24,23 @@ bool sInitFt(void)
 	return FT_Init_FreeType(&sFTlib) == 0;
 }
 
-FcPattern *CreateFcPattern(Font font, int angle)
+FcPattern *CreateFcPattern(Font font)
 {
 	LTIMING("CreateXftFont");
 	double sina, cosa;
 	int hg = abs(font.GetHeight());
 	if(hg == 0) hg = 10;
-	String n = font.GetFaceName();
-	const char *face = n;
+	String face = font.GetFaceName();
+	DDUMP(face);
 	FcPattern *p = FcPatternCreate();
-	FcPatternAddString(p, FC_FAMILY, (FcChar8*)face);
+	FcPatternAddString(p, FC_FAMILY, (FcChar8*)~face);
 	FcPatternAddInteger(p, FC_SLANT, font.IsItalic() ? 110 : 0);
 	FcPatternAddInteger(p, FC_PIXEL_SIZE, hg);
 	FcPatternAddInteger(p, FC_WEIGHT, font.IsBold() ? 200 : 100);
 	FcPatternAddBool(p, FC_MINSPACE, 1);
-	if(angle) {
-		FcMatrix mx;
-		Draw::SinCos(angle, sina, cosa);
-		mx.xx = cosa;
-		mx.xy = -sina;
-		mx.yx = sina;
-		mx.yy = cosa;
-		FcPatternAddMatrix(p, FC_MATRIX, &mx);
-	}
 	FcResult result;
+	FcConfigSubstitute(0, p, FcMatchPattern);
+	FcDefaultSubstitute(p);
 	FcPattern *m = FcFontMatch(0, p, &result);
 	FcPatternDestroy(p);
 	return m;
@@ -66,7 +59,7 @@ FT_Face CreateFTFace(const FcPattern *pattern, String *rpath) {
 
 	if(FcPatternGetString(pattern, FC_FILE, 0, &filename) != FcResultMatch)
 		return NULL;
-
+	DDUMP((char *)filename);
 	if(rpath)
 		*rpath = (const char *)filename;
 
@@ -97,6 +90,7 @@ struct FtFaceEntry {
 FT_Face FTFace(Font fnt, String *rpath = NULL)
 {
 	RTIMING("FTFace");
+	DLOG("FTFace " << fnt);
 	static FtFaceEntry cache[FONTCACHE];
 	ONCELOCK {
 		for(int i = 0; i < FONTCACHE; i++)
@@ -123,7 +117,7 @@ FT_Face FTFace(Font fnt, String *rpath = NULL)
 		FT_Done_Face(be.face);
 	}
 	be.font = fnt;
-	FcPattern *p = CreateFcPattern(fnt, 0);
+	FcPattern *p = CreateFcPattern(fnt);
 	be.face = CreateFTFace(p, &be.path);
 	FcPatternDestroy(p);
 	cache[0] = be;

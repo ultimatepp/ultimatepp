@@ -19,6 +19,7 @@ void PaintCharacter(Painter& sw, const Pointf& p, int chr, Font font)
 		ComposedGlyph cg;
 		Compose(font, chr, cg);
 		PaintCharacterSys(sw, p.x, p.y, cg.basic_char, font);
+		sw.Div();
 		PaintCharacterSys(sw, p.x + cg.mark_pos.x, p.y + cg.mark_pos.y, cg.mark_char, cg.mark_font);
 	}
 }
@@ -444,6 +445,7 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double
 	while(n) {
 		int ch = *text++;
 		Character(x, p.y, ch, fnt);
+		DLOG(x << ", " << p.y << " " << (char)ch << ": " << fi[ch]);
 		Div();
 		if(dx)
 			x += *dx++;
