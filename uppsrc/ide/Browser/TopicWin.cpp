@@ -118,8 +118,7 @@ void TopicEditor::SyncFonts()
 	ff.Add(Font::COURIER);
 	if(allfonts)
 		for(int i = Font::COURIER + 1; i < Font::GetFaceCount(); i++)
-			if(Font::GetFaceInfo(i) & Font::SCALEABLE &&
-			   !(Font::GetFaceInfo(i) & Font::SYMBOLTYPE))
+			if(Font::GetFaceInfo(i) & Font::SCALEABLE)
 				ff.Add(i);
 	editor.FontFaces(ff);
 }

@@ -1,7 +1,7 @@
 #ifndef __TDraw__
 #define __TDraw__
 
-#include <Draw/Draw.h>
+#include <CtrlLib/CtrlLib.h>
 #include <Geom/Geom.h>
 #include <Web/Web.h>
 
