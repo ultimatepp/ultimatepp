@@ -4,4 +4,5 @@
 #include "Draw/init"
 #include "plugin\png/init"
 #include "plugin\gif/init"
+#include "CtrlCore/init"
 #endif

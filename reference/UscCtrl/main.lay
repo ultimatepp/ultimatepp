@@ -1,5 +1,5 @@
 LAYOUT(MainLayout, 404, 204)
-	ITEM(CounterCtrl, counter, SetFont(Roman(34)).Ink(Color(153, 0, 51)).Paper(Color(102, 204, 204)).LeftPosZ(128, 120).TopPosZ(56, 52))
+	ITEM(CounterCtrl, counter, SetFont(RomanZ(34)).Ink(Color(153, 0, 51)).Paper(Color(102, 204, 204)).LeftPosZ(128, 120).TopPosZ(56, 52))
 	ITEM(LabelBox, dv___1, SetLabel(t_("This is the CounterCtrl")).LeftPosZ(98, 184).TopPosZ(36, 80))
 END_LAYOUT
 

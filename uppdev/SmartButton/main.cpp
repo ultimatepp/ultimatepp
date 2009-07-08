@@ -1,23 +1,23 @@
 #include <CtrlLib/CtrlLib.h>
 
+using namespace Upp;
+
 class MyApp : public TopWindow {
 	Button button;
 
-	void Click(String s) {
-		button.SetLabel("I was clicked, YOHOO!");
-		PromptOK(s);
-		button <<= THISBACK1(Click, "Button was clicked once again!");
+	void Click() {
+		if(PromptYesNo("Button was clicked. Do you want to quit?"))
+			Break();
 	}
 
 public:
 	typedef MyApp CLASSNAME;
 
 	MyApp() {
-		Title("Testing of Ultimate++");
-		button.SetRect(100, 100, 200, 50);
-		button.SetLabel("Click me!");
-		button <<= THISBACK1(Click, "Button was clicked for the first time.");
-		Add(button);
+		Title("Hello world");
+		button.SetLabel("Hello world!");
+		button <<= THISBACK(Click);
+		Add(button.HSizePos(100, 100).VSizePos(100, 100));
 	}
 };
 

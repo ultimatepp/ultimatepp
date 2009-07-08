@@ -6,9 +6,9 @@ using namespace Upp;
 // It compiles all U++ examples using MSC8 and MINGW build methods
 // or methods listed on commandline
 
-String input = "d:\\";
-String output = "e:\\all";
-String umk = "d:\\theide\\umk.exe ";
+String input = "u:\\upp.src";
+String output = "u:\\all";
+String umk = "u:\\theide\\umk.exe ";
 Vector<String> bm;
 
 Vector<String> failed;
@@ -25,7 +25,7 @@ void Build(const char *nest, const char *bm, bool release)
 	FindFile ff(AppendFileName(AppendFileName(input, nest), "*.*"));
 	bool first = true;
 	while(ff) {
-		if(ff.IsFolder()) {
+		if(ff.IsFolder() && !ff.IsHidden()) {
 			String txt;
 			txt << ff.GetName() << ' ' << bm << ' ' << mn;
 			Cout() << "  Building " << txt;
@@ -64,14 +64,14 @@ void Build(const char *nest)
 CONSOLE_APP_MAIN
 {
 	const Vector<String>& arg = CommandLine();
-	input = GetDataFile("BuildAll.cpp")[0] + String(":\\");
+	input = GetFileFolder(GetFileFolder(GetFileFolder(GetDataFile("BuildAll.cpp"))));
 	output = "C:\\out";
 	for(int i = 0; i < arg.GetCount(); i++)
 		bm.Add(arg[i]);
 	if(bm.GetCount() == 0) {
-		bm.Add("MSC71cdb");
-		bm.Add("MSC8");
-		bm.Add("MINGWI2");
+//		bm.Add("MSC71cdb");
+		bm.Add("MSC9");
+//		bm.Add("MINGWI2");
 	}
 	Build("examples");
 	Build("reference");
