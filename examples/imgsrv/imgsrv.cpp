@@ -1,5 +1,5 @@
 #include <Web/Web.h>
-#include <Draw/Draw.h>
+#include <CtrlCore/CtrlCore.h>
 //#include <plugin/png/png.h>
 #include <plugin/gif/gif.h>
 #ifdef PLATFORM_WIN32
@@ -29,9 +29,10 @@ static void SignalHandler(int signal)
 }
 #endif
 
-CONSOLE_APP_MAIN
+GUI_APP_MAIN
 {
 #ifdef PLATFORM_WIN32
+	AllocConsole();
 	SetConsoleCtrlHandler(&ControlBreak, TRUE);
 #endif
 #ifdef PLATFORM_POSIX

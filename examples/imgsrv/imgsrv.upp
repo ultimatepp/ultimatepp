@@ -1,10 +1,11 @@
-description "Simple http image server";
+description "Simple http image server\377";
 
 uses
 	Web,
 	Draw,
 	plugin\png,
-	plugin\gif;
+	plugin\gif,
+	CtrlCore;
 
 file
 	imgsrv.cpp;
