@@ -264,6 +264,31 @@ GlyphInfo GetGlyphInfo(Font font, int chr)
 	return e.info;
 }
 
+bool Font::IsNormal(int ch) const
+{
+	return GetGlyphInfo(*this, ch).IsNormal();
+}
+
+bool Font::IsComposed(int ch) const
+{
+	return GetGlyphInfo(*this, ch).IsComposed();
+}
+
+bool Font::IsReplaced(int ch) const
+{
+	return GetGlyphInfo(*this, ch).IsReplaced();
+}
+
+bool Font::IsMissing(int ch) const
+{
+	return GetGlyphInfo(*this, ch).IsMissing();
+}
+
+int Font::HasChar(int ch) const
+{
+	return !GetGlyphInfo(*this, ch).IsMissing();
+}
+
 void GlyphMetrics(GlyphInfo& f, Font font, int chr)
 {
 	if(f.IsReplaced())

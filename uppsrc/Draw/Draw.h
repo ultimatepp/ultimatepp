@@ -82,18 +82,23 @@ public:
 
 	enum {
 		STDFONT,
-		SCREEN_SERIF,
-		SCREEN_SANS,
-		SCREEN_FIXED,
-		ROMAN,
-		ARIAL,
-		COURIER,
+		SERIF,
+		SANSSERIF,
+		MONOSPACE,
 	#ifdef PLATFORM_WIN32
 		SYMBOL,
 		WINGDINGS,
 		TAHOMA,
 	#endif
 		OTHER,
+
+	// Backward compatibility:
+		ROMAN = SERIF,
+		ARIAL = SANSSERIF,
+		COURIER = MONOSPACE,
+		SCREEN_SERIF = SERIF,
+		SCREEN_SANS = SANSSERIF,
+		SCREEN_FIXED = MONOSPACE,
 	};
 
 	int    GetFace() const          { return v.face; }
@@ -145,6 +150,10 @@ public:
 	int   GetOverhang() const                { return Fi().overhang; }
 	int   GetAveWidth() const                { return Fi().avewidth; }
 	int   GetMaxWidth() const                { return Fi().maxwidth; }
+	bool  IsNormal(int ch) const;
+	bool  IsComposed(int ch) const;
+	bool  IsReplaced(int ch) const;
+	bool  IsMissing(int ch) const;
 	int   HasChar(int ch) const;
 	int   GetWidth(int c) const;
 	int   operator[](int c) const            { return GetWidth(c); }
@@ -229,8 +238,10 @@ inline int  GetStdFontCy()                          { return GetStdFontSize().cy
 
 Font StdFont();
 
-inline Font StdFont(int h)                        { return StdFont().Height(h); }
+inline Font StdFont(int h)                          { return StdFont().Height(h); }
 
+
+/*
 struct ScreenSans : public Font  { ScreenSans(int n = 0) : Font(SCREEN_SANS, n) {} };
 struct ScreenSerif : public Font { ScreenSerif(int n = 0) : Font(SCREEN_SERIF, n) {} };
 struct ScreenFixed : public Font { ScreenFixed(int n = 0) : Font(SCREEN_FIXED, n) {} };
@@ -243,6 +254,23 @@ struct Courier   : public Font { Courier(int n) : Font(COURIER, n) {} };
 struct Symbol    : public Font { Symbol(int n) : Font(SYMBOL, n) {} };
 struct WingDings : public Font { WingDings(int n) : Font(WINGDINGS, n) {} };
 struct Tahoma    : public Font { Tahoma(int n) : Font(TAHOMA, n) {} };
+#endif
+*/
+
+inline Font Serif(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
+inline Font SansSerif(int n = 0) { return Font(Font::SCREEN_SANS, n); }
+inline Font Monospace(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
+
+inline Font Roman(int n = 0) { return Font(Font::SCREEN_SANS, n); }
+inline Font Arial(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
+inline Font Courier(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
+
+inline Font ScreenSerif(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
+inline Font ScreenSans(int n = 0) { return Font(Font::SCREEN_SANS, n); }
+inline Font ScreenFixed(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
+
+#ifdef PLATFORM_WIN32 // backward comaptibility
+inline Font Tahoma(int n = 0) { return Font(Font::TAHOMA, n); }
 #endif
 
 Size GetTextSize(const wchar *text, Font font, int n = -1);
