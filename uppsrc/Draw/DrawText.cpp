@@ -45,18 +45,19 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 			else {
 				int c = 1;
 				int dd = 0;
-				if(!dx)
-					while(c < n) {
-						GlyphInfo gi2 = GetGlyphInfo(font, text[i + c]);
-						if(!gi2.IsNormal())
-							break;
-						c++;
-						dd += gi.width;
-						gi = gi2;
-					}
-				DrawTextOp(x + d, y, 0, text + i, font, ink, c, NULL);
-				i += c - 1;
+				while(c < n) {
+					GlyphInfo gi2 = GetGlyphInfo(font, text[i + c]);
+					if(!gi2.IsNormal())
+						break;
+					dd += dx ? dx[c] : gi.width;
+					c++;
+					gi = gi2;
+				}
+				DrawTextOp(x + d, y, 0, text + i, font, ink, c, dx);
 				d += dd;
+				i += c - 1;
+				if(dx)
+					dx += c - 1;
 			}
 		else
 		if(gi.IsReplaced()) {
@@ -84,10 +85,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 			}
 			GlyphMetrics(gi, font, chr);
 		}
-		if(dx)
-			d += *dx++;
-		else
-			d += gi.width;
+		d += dx ? *dx++ : gi.width;
 	}
 }
 

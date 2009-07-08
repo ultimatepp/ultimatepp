@@ -182,16 +182,13 @@ Vector<FaceInfo> GetAllFacesSys()
 		"serif",
 		"sans-serif",
 		"monospace",
-		"serif",
-		"sans-serif",
-		"monospace",
 	};
 	
 	Vector<FaceInfo> list;
 	for(int i = 0; i < __countof(basic_fonts); i++) {
 		FaceInfo& fi = list.Add();
 		fi.name = basic_fonts[i];
-		fi.info = (i == 3 || i == 6) ? Font::SCALEABLE|Font::FIXEDPITCH : Font::SCALEABLE;
+		fi.info = (i == 3) ? Font::SCALEABLE|Font::FIXEDPITCH : Font::SCALEABLE;
 	}
 	FcPattern *p = FcPatternCreate();
 	FcObjectSet *os = FcObjectSetBuild(FC_FAMILY, FC_SPACING, FC_SCALABLE, (void *)0);

@@ -209,14 +209,8 @@ Vector<FaceInfo> GetAllFacesSys()
 	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
 	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
 	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
-	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
-	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
-	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
 #else
 	HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
-	Win32_ForceFace(hdc, "Arial", NULL);
-	Win32_ForceFace(hdc, "Times New Roman", "Arial");
-	Win32_ForceFace(hdc, "Courier New", "Arial");
 	Win32_ForceFace(hdc, "Times New Roman", "Arial");
 	Win32_ForceFace(hdc, "Arial", "Arial");
 	Win32_ForceFace(hdc, "Courier New", "Arial");
