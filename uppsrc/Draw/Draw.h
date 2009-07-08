@@ -261,8 +261,8 @@ inline Font Serif(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
 inline Font SansSerif(int n = 0) { return Font(Font::SCREEN_SANS, n); }
 inline Font Monospace(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
 
-inline Font Roman(int n = 0) { return Font(Font::SCREEN_SANS, n); }
-inline Font Arial(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
+inline Font Roman(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
+inline Font Arial(int n = 0) { return Font(Font::SCREEN_SANS, n); }
 inline Font Courier(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
 
 inline Font ScreenSerif(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
