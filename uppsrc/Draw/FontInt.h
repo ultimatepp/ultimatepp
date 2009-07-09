@@ -27,13 +27,13 @@ struct CommonFontInfo {
 	bool scaleable;
 
 #ifdef PLATFORM_POSIX
-	String path;
+	char path[256];
 #endif
 };
 
 class Font;
 
-struct GlyphInfo : Moveable<GlyphInfo> {
+struct GlyphInfo {
 	int16 width;
 	int16 lspc;
 	int16 rspc;

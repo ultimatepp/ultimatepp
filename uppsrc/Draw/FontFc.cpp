@@ -129,7 +129,8 @@ CommonFontInfo GetFontInfoSys(Font font)
 {
 	CommonFontInfo fi;
 
-	FT_Face face = FTFace(font, &fi.path);
+	String path;
+	FT_Face face = FTFace(font, &path);
 	if(face) {
 		fi.ascent = face->size->metrics.ascender >> 6;
 		fi.descent = -(face->size->metrics.descender >> 6);
@@ -142,6 +143,10 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.avewidth = fi.maxwidth;
 		fi.default_char = '?';
 		fi.fixedpitch = font.GetFaceInfo() & Font::FIXEDPITCH;
+		if(path.GetCount() < 250)
+			strcpy(fi.path, ~path);
+		else
+			*fi.path = 0;
 	}
 	return fi;
 }
