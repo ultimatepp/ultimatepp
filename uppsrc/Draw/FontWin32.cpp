@@ -21,11 +21,12 @@ void GetStdFontSys(String& name, int& height)
 #endif
 }
 
-#define FONTCACHE 50
+#define FONTCACHE 96
 
 struct HFontEntry {
 	Font    font;
 	HFONT   hfont;
+	int     angle;
 };
 
 HFONT GetWin32Font(Font fnt, int angle)
@@ -42,7 +43,7 @@ HFONT GetWin32Font(Font fnt, int angle)
 		HFontEntry e = cache[i];
 		if(i)
 			cache[i] = be;
-		if(e.font == fnt) {
+		if(e.font == fnt && e.angle == angle) {
 			if(i)
 				cache[0] = e;
 			return e.hfont;
@@ -54,6 +55,7 @@ HFONT GetWin32Font(Font fnt, int angle)
 		DeleteObject(be.hfont);
 
 	be.font = fnt;
+	be.angle = angle;
 #ifdef PLATFORM_WINCE
 	LOGFONT lfnt;
 	Zero(lfnt);
