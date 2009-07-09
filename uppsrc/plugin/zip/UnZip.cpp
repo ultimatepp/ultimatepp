@@ -51,7 +51,7 @@ bool UnZip::ReadFile(Stream& out, Gate2<int, int> progress)
 		Buffer<byte> temp(65536);
 		int loaded;
 		int count = csize;
-		Crc32 crc32;
+		Crc32Stream crc32;
 		while(count > 0 && (loaded = zip->Get(temp, (int)min<int64>(count, 65536))) > 0) {
 			out.Put(temp, loaded);
 			crc32.Put(temp, loaded);
