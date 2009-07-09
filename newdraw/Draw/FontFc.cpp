@@ -45,7 +45,7 @@ FcPattern *CreateFcPattern(Font font, int angle)
 		FcPatternAddMatrix(p, FC_MATRIX, &mx);
 	}
 	FcResult result;
-	FcPattern *m = XftFontMatch(Xdisplay, Xscreenno, p, &result);
+	FcPattern *m = FcFontMatch(Xdisplay, Xscreenno, p, &result);
 	FcPatternDestroy(p);
 	return m;
 }
