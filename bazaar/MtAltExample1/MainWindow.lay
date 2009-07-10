@@ -1,0 +1,7 @@
+LAYOUT(MainWindowLayout, 504, 200)
+	ITEM(DocEdit, log, HSizePosZ(12, 188).VSizePosZ(12, 12))
+	ITEM(Button, button2, SetLabel(t_("Worker::Work2")).RightPosZ(12, 164).TopPosZ(44, 28))
+	ITEM(Button, button1, SetLabel(t_("Worker::Work1")).RightPosZ(12, 164).TopPosZ(12, 28))
+	ITEM(Label, info, SetFrame(BlackFrame()).RightPosZ(12, 164).TopPosZ(168, 19))
+END_LAYOUT
+

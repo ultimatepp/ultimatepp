@@ -1,0 +1,14 @@
+description "Example of alternative multithreading by Pavel Ostapenko\377B128,0,0";
+
+uses
+	CtrlLib,
+	MtAlt;
+
+file
+	Main.cpp,
+	Worker.h,
+	MainWindow.lay;
+
+mainconfig
+	"" = "GUI MT";
+
