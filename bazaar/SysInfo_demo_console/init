@@ -1,0 +1,5 @@
+#ifndef _SysInfo_demo_console_icpp_init_stub
+#define _SysInfo_demo_console_icpp_init_stub
+#include "Core/init"
+#include "SysInfo/init"
+#endif
