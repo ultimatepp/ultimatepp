@@ -68,7 +68,7 @@ public:
 	enum {
 		FIXEDPITCH  = 0x0001,
 		SCALEABLE   = 0x0002,
-		LOCAL       = 0x0010,
+		SPECIAL     = 0x0010,
 	};
 
 	static int    GetFaceCount();
@@ -161,6 +161,8 @@ public:
 	int   GetRightSpace(int c) const;
 	bool  IsFixedPitch() const               { return Fi().fixedpitch; }
 	bool  IsScaleable() const                { return Fi().scaleable; }
+	bool  IsSpecial() const                  { return !(GetFaceInfo() & SPECIAL); }
+
 #ifdef PLATFORM_POSIX
 	String GetPath() const                   { return Fi().path; }
 #endif

@@ -148,7 +148,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 	return fi;
 }
 
-static Vector<FaceInfo> *sList;
+static VectorMap<String, FaceInfo> *sList;
 
 static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dword type, LPARAM param)
 {
@@ -161,22 +161,34 @@ static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dw
 	if(facename && stricmp(logfont->lfFaceName, facename))
 		return 1;
 #endif
-
-	dword typ = 0;
-	if((logfont->lfPitchAndFamily & 3) == FIXED_PITCH)
-		typ |= Font::FIXEDPITCH;
-	if(type & TRUETYPE_FONTTYPE)
-		typ |= Font::SCALEABLE;
-	if(!(logfont->lfCharSet == SYMBOL_CHARSET) && logfont->lfCharSet != 0)
-		typ |= Font::LOCAL;
+	if(logfont->lfFaceName[0] == '@')
+		return 0;
+	
 #ifdef PLATFORM_WINCE
-	FontFaceInfo& f = sFontFace().Add(WString(logfont->lfFaceName).ToString());
+	FontFaceInfo& f = sFontFace().GetAdd(WString(logfont->lfFaceName).ToString());
 	f.name = FromSystemCharset(logfont->lfFaceName);
 #else
-	FaceInfo& f = sList->Add();
+	String name = FromSystemCharset(logfont->lfFaceName);
+
+	if(FindIndex(Split("Courier New CE;Courier New CYR;Courier New Greek;"
+	                   "Courier New TUR;Courier New Baltic;Arial CE;Arial CYR;"
+	                   "Arial Greek;Arial TUR;Arial Baltic;Arial CE;Times New Roman CE;"
+	                   "Times New Roman CYR;Times New Roman Greek;Times New Roman TUR;"
+	                   "Times New Roman Baltic;Times New Roman CE", ';'), name) >= 0)
+		return 1;
+
+	int q = sList->Find(name);
+	FaceInfo& f = q < 0 ? sList->Add(logfont->lfFaceName) : (*sList)[q];
 	f.name = FromSystemCharset(logfont->lfFaceName);
-	f.info = typ;
 #endif
+	if(q < 0)
+		f.info = Font::SCALEABLE;
+	if((logfont->lfPitchAndFamily & 3) == FIXED_PITCH)
+		f.info |= Font::FIXEDPITCH;
+	if(!(type & TRUETYPE_FONTTYPE))
+		f.info &= ~Font::SCALEABLE;
+	if(logfont->lfCharSet == SYMBOL_CHARSET || logfont->lfCharSet == OEM_CHARSET)
+		f.info |= Font::SPECIAL;
 	return facename ? 0 : 1;
 }
 
@@ -199,9 +211,9 @@ static void Win32_ForceFace(HDC hdc, const char *face, const char *aface)
 
 Vector<FaceInfo> GetAllFacesSys()
 {
-	Vector<FaceInfo> list;
+	VectorMap<String, FaceInfo> list;
 	sList = &list;
-	list.Add().name = "STDFONT";
+	list.Add("STDFONT").name = "STDFONT";
 	list.Top().info = 0;
 #ifdef PLATFORM_WINCE
 	HDC hdc = CreateDC(NULL, NULL, NULL, NULL);
@@ -222,7 +234,7 @@ Vector<FaceInfo> GetAllFacesSys()
 #endif
 	Win32_EnumFace(hdc, NULL);
 	DeleteDC(hdc);
-	return list;
+	return list.PickValues();
 }
 
 #define GLYPHINFOCACHE 31

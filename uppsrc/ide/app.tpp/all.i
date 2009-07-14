@@ -14,6 +14,10 @@ TOPIC("PackageTemplates$en-us")
 #include "PackageTemplates$en-us.tppi"
 END_TOPIC
 
+TOPIC("About$en-us")
+#include "About$en-us.tppi"
+END_TOPIC
+
 TOPIC("esc$en-us")
 #include "esc$en-us.tppi"
 END_TOPIC
@@ -58,6 +62,10 @@ TOPIC("Sponsor$en-us")
 #include "Sponsor$en-us.tppi"
 END_TOPIC
 
+TOPIC("install$en-us")
+#include "install$en-us.tppi"
+END_TOPIC
+
 TOPIC("BSD$en-us")
 #include "BSD$en-us.tppi"
 END_TOPIC
@@ -84,13 +92,5 @@ END_TOPIC
 
 TOPIC("Blitz$en-us")
 #include "Blitz$en-us.tppi"
-END_TOPIC
-
-TOPIC("install$en-us")
-#include "install$en-us.tppi"
-END_TOPIC
-
-TOPIC("About$en-us")
-#include "About$en-us.tppi"
 END_TOPIC
 
