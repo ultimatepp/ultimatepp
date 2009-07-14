@@ -1,0 +1,10 @@
+LAYOUT(DaysLayout, 584, 452)
+	ITEM(LineEdit, SourceCode, HSizePosZ(8, 8).VSizePosZ(76, 36))
+	ITEM(Button, ButRun, SetLabel(t_("Compile + Run")).RightPosZ(8, 100).BottomPosZ(9, 23))
+	ITEM(Label, dv___2, SetLabel(t_("Just modify source code and push \"Compile + Run\"")).SetFont(StdFont().Bold()).HSizePosZ(8, 8).TopPosZ(8, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Libs path:")).LeftPosZ(8, 68).TopPosZ(52, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Include path:")).LeftPosZ(8, 68).TopPosZ(32, 19))
+	ITEM(EditString, EditLibsPath, SetFrame(ThinInsetFrame()).HSizePosZ(76, 8).TopPosZ(52, 19))
+	ITEM(EditString, EditIncludePath, SetFrame(ThinInsetFrame()).HSizePosZ(76, 8).TopPosZ(32, 19))
+END_LAYOUT
+
