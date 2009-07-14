@@ -1,6 +1,0 @@
-#ifndef _OfficeAutomation_demo_console_icpp_init_stub
-#define _OfficeAutomation_demo_console_icpp_init_stub
-#include "Core/init"
-#include "OfficeAutomation/init"
-#include "SysInfo/init"
-#endif
