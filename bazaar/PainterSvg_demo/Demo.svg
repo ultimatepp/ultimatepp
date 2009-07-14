@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+       "http://www.w3.org/TR/2001/REC-SVG-20050904/DTD/svg10.dtd">
+<!-- Created by amaya 11.1, see http://www.w3.org/Amaya/ -->
+<svg xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="600"
+     height="600">
+  <defs>
+    <marker style="overflow:visible;" id="Arrow1Mend" refX="0.0" refY="0.0"
+            orient="auto">
+      <path transform="scale(0.4) rotate(180) translate(10,0)"
+            style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+            d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "/>
+    </marker>
+  </defs>
+  <title>Draw</title>
+  <rect x="27px" y="20px" width="161px" height="161px"
+        style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill: #9dc2de"
+        transform="translate(10,16) "/>
+  <rect x="142px" y="152px" width="132px" height="132px"
+        style="stroke: black; stroke- stroke-width: 1;fill:#808000;opacity: 0.5"/>
+  <ellipse cx="196px" cy="330px" rx="153px" ry="69px"
+        style="stroke: black; stroke-opacity: 1; fill:#ffff80;stroke-width: 7"/>
+  <text x="232px" y="65px"
+style="stroke: none;font-family: Times New Roman,Times,serif;font-size: 14pt">Text
+demo!</text>
+  <rect x="233px" y="49px" width="84px" height="19px"
+        style="stroke: black; stroke- stroke-width: 1;fill: #9dc2de;opacity: 0.5"
+        transform="translate(-1) "/>
+  <line x1="417" y1="75" x2="346" y2="133"
+        style=" stroke-opacity: 1; ;stroke-width: 4;stroke:#ff8000"/>
+  <polygon points="351 225 382 162 476 162 444 225"
+           style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill: #9dc2de"/>
+  <rect x="0px" y="0px" width="111px" height="111px" rx="21" ry="37"
+        style="stroke: black; stroke-opacity: 1; fill:#8000ff;stroke-width: 3"
+        transform="translate(379,262) "/>
+  <path
+        d="M 476,80 C 497,48 531,2 533,69 C 535,136 481,102 501,124 C 521,146 543,164 487,152 C 431,140 419,118 442,118 C 465,118 506,113 473,101 C 440,89 414,43 445,59 C 476,75 479,77 479,77 C 479,77 444,127 476,80 "
+        style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill:#ff8000"
+        transform="translate(-386,-29) "/>
+  <g transform="translate(312,411) scale(0.933673,0.717822)"
+    style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill: #9dc2de">
+    <title>Nube</title>
+    <path
+          d="M 23,34 A 45,21 0 0 1 88,12 A 41,22 0 0 1 160,33 A 51,25 0 0 1 180,73 A 42,23 0 0 1 135,104 A 38,17 0 0 1 60,120  L 10,200 25,120  A 10,20 0 0 1 16,75 A 18,20 0 0 1 23,34"/>
+  </g>
+  <path
+        d="M 39,392 Q 106,375 70,323 C 34,271 87,282 75,253 C 63,224 63,224 63,224 "
+        style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill:none;"/>
+  <path
+        d="M 246,90 Q 279,112 282,98 C 285,84 322,72 307,97 C 292,122 288,142 262,127 C 236,112 272,123 252,110 C 232,97 211,79 229,85 C 247,91 247,91 247,91 C 247,91 213,68 246,90 "
+        style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill:#00ff00"/>
+  <rect x="451px" y="38px" width="110px" height="110px"
+        style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill: none"/>
+  <path
+        d="M 450,38 Q 561,-71 561,38 C 561,147 449,261 450,149 C 452,-75 339,147 450,38 "
+        style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill: #9dc2de"
+        transform="translate(57,179) "/>
+  <path
+        d="M 57,422 Q 124,388 115,430 C 106,472 85,525 59,484 C 33,443 33,443 33,443 C 33,443 -10,456 57,422 "
+        style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill: #9dc2de"/>
+  <path
+        d="M 259,408 Q 289,388 297,406 C 305,424 322,447 294,444 C 266,441 272,423 254,430 C 236,437 229,428 259,408 "
+        style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill: #9dc2de"/>
+  <polyline
+            points="101,235 146,291 96,311 145,345 100,361 216,482 152,480 152,480 "
+            style="stroke: black; stroke-opacity: 1; stroke-width: 1;fill:none;"/>
+  <text x="287px" y="154px"
+style="font-family: Arial,Helvetica,sans-serif">Other text</text>
+  <image xlink:href="Glacier.jpg" width="300" height="225" x="0" y="0"
+         transform="translate(402,459) ">
+  </image>
+  <text x="88px" y="509px" style="fill-opacity: 1;font-size: 18pt">More
+  text</text>
+</svg>
