@@ -1,0 +1,382 @@
+=head1 NAME
+
+tcc - Tiny C Compiler
+
+=head1 SYNOPSIS
+
+usage: tcc [options] [I<infile1> I<infile2>...] [B<-run> I<infile> I<args>...]
+
+=head1 DESCRIPTION
+
+TCC options are a very much like gcc options. The main difference is that TCC
+can also execute directly the resulting program and give it runtime
+arguments.
+
+Here are some examples to understand the logic:
+
+
+=over 4
+
+
+=item C<B<tcc -run a.c>>
+
+Compile F<a.c> and execute it directly
+
+
+=item C<B<tcc -run a.c arg1>>
+
+Compile a.c and execute it directly. arg1 is given as first argument to
+the C<main()> of a.c.
+
+
+=item C<B<tcc a.c -run b.c arg1>>
+
+Compile F<a.c> and F<b.c>, link them together and execute them. arg1 is given
+as first argument to the C<main()> of the resulting program. 
+
+
+=item C<B<tcc -o myprog a.c b.c>>
+
+Compile F<a.c> and F<b.c>, link them and generate the executable F<myprog>.
+
+
+=item C<B<tcc -o myprog a.o b.o>>
+
+link F<a.o> and F<b.o> together and generate the executable F<myprog>.
+
+
+=item C<B<tcc -c a.c>>
+
+Compile F<a.c> and generate object file F<a.o>.
+
+
+=item C<B<tcc -c asmfile.S>>
+
+Preprocess with C preprocess and assemble F<asmfile.S> and generate
+object file F<asmfile.o>.
+
+
+=item C<B<tcc -c asmfile.s>>
+
+Assemble (but not preprocess) F<asmfile.s> and generate object file
+F<asmfile.o>.
+
+
+=item C<B<tcc -r -o ab.o a.c b.c>>
+
+Compile F<a.c> and F<b.c>, link them together and generate the object file F<ab.o>.
+
+
+=back
+
+
+Scripting:
+
+TCC can be invoked from I<scripts>, just as shell scripts. You just
+need to add C<#!/usr/local/bin/tcc -run> at the start of your C source:
+
+	
+	#!/usr/local/bin/tcc -run
+	#include <stdio.h>
+	
+	int main() 
+	{
+	    printf("Hello World\n");
+	    return 0;
+	}
+
+
+TCC can read C source code from I<standard input> when B<-> is used in 
+place of B<infile>. Example:
+
+	
+	echo 'main(){puts("hello");}' | tcc -run -
+
+
+=head1 OPTIONS
+
+
+=over 4
+
+
+=item B<-v>
+
+Display current TCC version, increase verbosity.
+
+
+=item B<-c>
+
+Generate an object file (B<-o> option must also be given).
+
+
+=item B<-o outfile>
+
+Put object file, executable, or dll into output file F<outfile>.
+
+
+=item B<-Bdir>
+
+Set the path where the tcc internal libraries can be found (default is
+F<PREFIX/lib/tcc>).
+
+
+=item B<-bench>
+
+Output compilation statistics.
+
+
+=item B<-run source [args...]>
+
+Compile file I<source> and run it with the command line arguments
+I<args>. In order to be able to give more than one argument to a
+script, several TCC options can be given I<after> the
+B<-run> option, separated by spaces. Example:
+
+	
+	tcc "-run -L/usr/X11R6/lib -lX11" ex4.c
+
+
+In a script, it gives the following header:
+
+	
+	#!/usr/local/bin/tcc -run -L/usr/X11R6/lib -lX11
+	#include <stdlib.h>
+	int main(int argc, char **argv)
+	{
+	    ...
+	}
+
+
+
+=back
+
+
+Preprocessor options:
+
+
+=over 4
+
+
+=item B<-Idir>
+
+Specify an additional include path. Include paths are searched in the
+order they are specified.
+
+System include paths are always searched after. The default system
+include paths are: F</usr/local/include>, F</usr/include>
+and F<PREFIX/lib/tcc/include>. (F<PREFIX> is usually
+F</usr> or F</usr/local>).
+
+
+=item B<-Dsym[=val]>
+
+Define preprocessor symbol B<sym> to
+val. If val is not present, its value is B<1>. Function-like macros can
+also be defined: B<-DF(a)=a+1>
+
+
+=item B<-Usym>
+
+Undefine preprocessor symbol B<sym>.
+
+=back
+
+
+Compilation flags:
+
+Note: each of the following warning options has a negative form beginning with
+B<-fno->.
+
+
+=over 4
+
+
+=item B<-funsigned-char>
+
+Let the C<char> type be unsigned.
+
+
+=item B<-fsigned-char>
+
+Let the C<char> type be signed.
+
+
+=item B<-fno-common>
+
+Do not generate common symbols for uninitialized data.
+
+
+=item B<-fleading-underscore>
+
+Add a leading underscore at the beginning of each C symbol.
+
+
+=back
+
+
+Warning options:
+
+
+=over 4
+
+
+=item B<-w>
+
+Disable all warnings.
+
+
+=back
+
+
+Note: each of the following warning options has a negative form beginning with
+B<-Wno->.
+
+
+=over 4
+
+
+=item B<-Wimplicit-function-declaration>
+
+Warn about implicit function declaration.
+
+
+=item B<-Wunsupported>
+
+Warn about unsupported GCC features that are ignored by TCC.
+
+
+=item B<-Wwrite-strings>
+
+Make string constants be of type C<const char *> instead of C<char
+*>.
+
+
+=item B<-Werror>
+
+Abort compilation if warnings are issued.
+
+
+=item B<-Wall> 
+
+Activate all warnings, except B<-Werror>, B<-Wunusupported> and
+B<-Wwrite-strings>.
+
+
+=back
+
+
+Linker options:
+
+
+=over 4
+
+
+=item B<-Ldir>
+
+Specify an additional static library path for the B<-l> option. The
+default library paths are F</usr/local/lib>, F</usr/lib> and F</lib>.
+
+
+=item B<-lxxx>
+
+Link your program with dynamic library libxxx.so or static library
+libxxx.a. The library is searched in the paths specified by the
+B<-L> option.
+
+
+=item B<-shared>
+
+Generate a shared library instead of an executable (B<-o> option
+must also be given).
+
+
+=item B<-static>
+
+Generate a statically linked executable (default is a shared linked
+executable) (B<-o> option must also be given).
+
+
+=item B<-rdynamic>
+
+Export global symbols to the dynamic linker. It is useful when a library
+opened with C<dlopen()> needs to access executable symbols.
+
+
+=item B<-r>
+
+Generate an object file combining all input files (B<-o> option must
+also be given).
+
+
+=item B<-Wl,-Ttext,address>
+
+Set the start of the .text section to I<address>.
+
+
+=item B<-Wl,--oformat,fmt>
+
+Use I<fmt> as output format. The supported output formats are:
+
+=over 4
+
+
+=item C<elf32-i386>
+
+ELF output format (default)
+
+=item C<binary>
+
+Binary image (only for executable output)
+
+=item C<coff>
+
+COFF output format (only for executable output for TMS320C67xx target)
+
+=back
+
+
+
+=back
+
+
+Debugger options:
+
+
+=over 4
+
+
+=item B<-g>
+
+Generate run time debug information so that you get clear run time
+error messages: C< test.c:68: in function 'test5()': dereferencing
+invalid pointer> instead of the laconic C<Segmentation
+fault>.
+
+
+=item B<-b>
+
+Generate additional support code to check
+memory allocations and array/pointer bounds. B<-g> is implied. Note
+that the generated code is slower and bigger in this case.
+
+
+=item B<-bt N>
+
+Display N callers in stack traces. This is useful with B<-g> or
+B<-b>.
+
+
+=back
+
+
+Note: GCC options B<-Ox>, B<-fx> and B<-mx> are
+ignored.
+
+=head1 SEE ALSO
+
+gcc(1)
+
+=head1 AUTHOR
+
+Fabrice Bellard
+

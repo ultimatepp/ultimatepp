@@ -1,0 +1,19 @@
+description "Tiny C Compiler wrapper\377B255,42,0";
+
+uses
+	Core;
+
+file
+	Tcc.cpp,
+	Tcc.h,
+	srcdoc.tpp,
+	srcimp.tpp,
+	src.tpp,
+	libtcc.c,
+	lib/libtcc.h,
+	lib/README,
+	Readme.txt;
+
+mainconfig
+	"" = "";
+
