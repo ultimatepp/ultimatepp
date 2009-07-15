@@ -107,6 +107,8 @@ public:
 	ImageBuffer(Size sz)                { Create(sz.cx, sz.cy); }
 	ImageBuffer(Image& img);
 	ImageBuffer(ImageBuffer& b);
+// BW, defined in CtrlCore:
+	ImageBuffer(ImageDraw& iw);
 };
 
 void Premultiply(ImageBuffer& b);
