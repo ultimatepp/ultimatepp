@@ -21,7 +21,8 @@ GUI_APP_MAIN
 	RichEditWithToolBar e;
 	Vector<int> h;
 	for(int i = 1; i < Font::GetFaceCount(); i++)
-		h.Add(i);
+		if((Font::GetFaceInfo(i) & Font::SCALEABLE) && !(Font::GetFaceInfo(i) & Font::LOCAL))
+			h.Add(i);
 	e.FontFaces(h);
 
 	DUMP(ScrollBarSize());
