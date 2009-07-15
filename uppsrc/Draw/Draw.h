@@ -438,6 +438,7 @@ public:
 	virtual bool ExcludeClipOp(const Rect& r) = 0;
 	virtual bool IntersectClipOp(const Rect& r) = 0;
 	virtual bool IsPaintingOp(const Rect& r) const = 0;
+	virtual Rect GetPaintRect() const;
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color) = 0;
 	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color) = 0;
@@ -603,6 +604,7 @@ public:
 	static Font GetStdFont()                            { return UPP::GetStdFont(); }
 	static Size GetStdFontSize()                        { return UPP::GetStdFontSize(); }
 	static int  GetStdFontCy()                          { return GetStdFontSize().cy; }
+	Size   GetPagePixels() const                        { return GetPageSize(); }
 	
 
 #ifdef PLATFORM_WIN32_
