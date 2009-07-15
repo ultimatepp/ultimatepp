@@ -50,4 +50,10 @@ Draw& ImageDraw::Alpha()
 	return alpha;
 }
 
+ImageBuffer::ImageBuffer(ImageDraw& iw)
+{
+	Image m = iw;
+	Set(m);
+}
+
 END_UPP_NAMESPACE

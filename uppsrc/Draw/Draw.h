@@ -11,6 +11,7 @@ class Drawing;
 class Draw;
 class Painting;
 class SystemDraw;
+class ImageDraw;
 
 #ifdef _MULTITHREADED
 void EnterGMutex();
