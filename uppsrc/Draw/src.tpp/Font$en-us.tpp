@@ -59,7 +59,10 @@ of binary flags:&]
 ::= [s0;%% Font`-face is monospaced.]
 ::^ [s0; [* Font`::SCALEABLE]]
 ::= [s0;%% Font`-face is freely scalable (it is in vector format, e.g. 
-Truetype).]}}&]
+Truetype).]
+::^ [s0; [* Font`::SPECIAL]]
+::= [s0;%% Font does not use Unicode encoding (typical for some symbol 
+fonts).]}}&]
 [s7; &]
 [s8; &]
 [s5;:Font`:`:SetStdFont`(Font`): [@(0.0.255) static][@0  ][@(0.0.255) void][@0 _SetStdFont(][_^Font^@0 F
@@ -301,6 +304,11 @@ there is a space inside the cell not used for glyph.&]
 [s8; &]
 [s5;:Font`:`:IsScaleable`(`)const: [@(0.0.255) bool][@0 _IsScaleable()_][@(0.0.255) const]&]
 [s2;%% True if font is freely scaleable.&]
+[s7; &]
+[s8; &]
+[s5;:Font`:`:IsSpecial`(`)const: [@(0.0.255) bool][@0 _IsSpecial()_][@(0.0.255) const]&]
+[s2;%% Returns true if font does not use unicode placement of glyphs, 
+for example some symbol fonts have this issue.&]
 [s7; &]
 [s8; &]
 [s5;:Font`:`:GetPath`(`)const: [_^String^@0 String][@0 _GetPath()]_[@(0.0.255) const]&]
