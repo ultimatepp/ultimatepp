@@ -93,7 +93,16 @@ void LeaveDraw() {
 	sDrawLock.Leave();
 }
 
-Size Draw::GetPageSize() const { return Size(0, 0); }
+Size Draw::GetPageSize() const
+{
+	return Size(INT_MAX / 2, INT_MAX / 2);
+}
+
+Rect Draw::GetPaintRect() const
+{
+	return Rect(-(INT_MAX / 2), -(INT_MAX / 2), INT_MAX / 2, INT_MAX / 2);
+}
+
 
 void Draw::StartPage() {}
 void Draw::EndPage() {}
