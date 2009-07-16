@@ -150,7 +150,10 @@ rectangle.&]
 [@(0.0.255) void]_[* DrawRectOp]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], 
 [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy], [_^Color^ Color]_[*@3 color])_`=_[@3 0]&]
 [s2;%% Implements DrawRect operation: Fills rectangle [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy
-] using [%-*@3 color].&]
+] using [%-*@3 color]. As special addition, if Draw represents 
+screen output in Ctrl`::Paint, [%-*@3 color] can be assigned special 
+value InvertColor() causing invertion of all pixels in target 
+area.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawImageOp`(int`,int`,int`,int`,const Image`&`,const Rect`&`,Color`): [@(0.0.255) v
@@ -174,7 +177,7 @@ of type [%-*@3 id] to rectangular area [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]
 This can be used for example to print compressed bitmaps (e.g. 
 in png format) directly, without the need of loading them to 
 Image, this possibly saving memory requirements, as banding can 
-be used to send the image to printer part by part. Actual conversion 
+be used to send the image to printer part by part. Actual painting 
 process is implemented in [^DataDrawer^ DataDrawer] and [%-*@3 id] 
 has to be registered using DataDrawer`::Register.&]
 [s3;%% &]
@@ -183,8 +186,9 @@ has to be registered using DataDrawer`::Register.&]
 [@(0.0.255) void]_[* DrawLineOp]([@(0.0.255) int]_[*@3 x1], [@(0.0.255) int]_[*@3 y1], 
 [@(0.0.255) int]_[*@3 x2], [@(0.0.255) int]_[*@3 y2], [@(0.0.255) int]_[*@3 width], 
 [_^Color^ Color]_[*@3 color])_`=_[@3 0]&]
-[s2;%% Implements DrawLine operation. Draws [%-*@3 x1] [%-*@3 y1] [%-*@3 x2] 
-[%-*@3 y2] [%-*@3 width] [%-*@3 color].&]
+[s2;%% Implements DrawLine operation. Draws line from [%-*@3 x1],[%-*@3 y1] 
+to [%-*@3 x2],[%-*@3 y2] (included) [%-*@3 width] pixels wide, with 
+[%-*@3 color]. &]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawPolyPolylineOp`(const Point`*`,int`,const int`*`,int`,int`,Color`,Color`): [@(0.0.255) v
@@ -194,6 +198,23 @@ ounts], [@(0.0.255) int]_[*@3 count`_count], [@(0.0.255) int]_[*@3 width],
 [_^Color^ Color]_[*@3 color], [_^Color^ Color]_[*@3 doxor])_`=_[@3 0]&]
 [s2;%%  [%-*@3 vertices] [%-*@3 vertex`_count] [%-*@3 counts] [%-*@3 count`_count] 
 [%-*@3 width] [%-*@3 color] [%-*@3 doxor].&]
+[s2;%% Draws a series of polylines. Polyline vertices are kept in 
+the array vertices. The parameter vertext`_count gives the total 
+number of vertices of all polylines in the array. The array counts 
+gives numbers of points defining the individual polylines and 
+count`_count gives number of entries in this array (i.e. the 
+number of connected polylines). The first polyline comprises 
+vertices vertices`[0`], vertices`[1`] ... vertices`[counts`[0`] 
+`- 1`], the second polyline vertices`[counts`[0`]`], vertices`[counts`[0`] 
+`+ 1`] ... vertices`[counts`[0`] `+ counts`[1`] `- 1`], etc.&]
+[s2;%% &]
+[s2;%% Draws a series of polylines. Polyline vertices are kept in 
+the array vertices. The array counts gives numbers of points 
+defining the individual polylines (i.e. the number of connected 
+polylines is equal to counts.GetCount()). The first polyline 
+comprises vertices vertices`[0`], vertices`[1`] ... vertices`[counts`[0`] 
+`- 1`], the second polyline vertices`[counts`[0`]`], vertices`[counts`[0`] 
+`+ 1`] ... vertices`[counts`[0`] `+ counts`[1`] `- 1`], etc.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawPolyPolyPolygonOp`(const Point`*`,int`,const int`*`,int`,const int`*`,int`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
@@ -206,6 +227,16 @@ n], [_^Color^ Color]_[*@3 doxor])_`=_[@3 0]&]
 [s2;%%  [%-*@3 vertices] [%-*@3 vertex`_count] [%-*@3 subpolygon`_counts] 
 [%-*@3 scc] [%-*@3 disjunct`_polygon`_counts] [%-*@3 dpcc] [%-*@3 color] 
 [%-*@3 width] [%-*@3 outline] [%-*@3 pattern] [%-*@3 doxor].&]
+[s2;%% &]
+[s2;%% Draws a series of complex polygons (i.e. polygons which may 
+contain holes). The vertices array holds all polygon defining 
+vertices. The array is divided into sections corresponding to 
+the whole complex polygons (parameters disjunct`_polygon`_counts 
+and disjunct`_polygon`_count`_count) and these sections are further 
+divided into the individual polygons defining one complex polygon 
+(i.e. outer boundary and holes). Numbers of vertices in the individual 
+polygons are held in the array subpolygon`_counts (total number 
+of simple polygons `= subpolygon`_count`_count).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawArcOp`(const Rect`&`,Point`,Point`,int`,Color`): [@(0.0.255) virtual] 
@@ -213,6 +244,13 @@ n], [_^Color^ Color]_[*@3 doxor])_`=_[@3 0]&]
 [_^Point^ Point]_[*@3 start], [_^Point^ Point]_[*@3 end], [@(0.0.255) int]_[*@3 width], 
 [_^Color^ Color]_[*@3 color])_`=_[@3 0]&]
 [s2;%%  [%-*@3 rc] [%-*@3 start] [%-*@3 end] [%-*@3 width] [%-*@3 color].&]
+[s2;%% &]
+[s2;%% Draws elliptic arc corresponding to the largest ellipse fully 
+within the rectangle rc and running counterclockwise from the 
+direction corresponding to the line connecting the centre of 
+the ellipse (rc.CenterPoint()) with the point start and ending 
+at direction of the point end from the ellipse centre. When start 
+`=`= end, the full ellipse is drawn.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawEllipseOp`(const Rect`&`,Color`,int`,Color`): [@(0.0.255) virtual] 
@@ -220,6 +258,10 @@ n], [_^Color^ Color]_[*@3 doxor])_`=_[@3 0]&]
  [_^Color^ Color]_[*@3 color], [@(0.0.255) int]_[*@3 pen], [_^Color^ Color]_[*@3 pencolor])_`=
 _[@3 0]&]
 [s2;%%  [%-*@3 r] [%-*@3 color] [%-*@3 pen] [%-*@3 pencolor].&]
+[s2;%% Draws the largest ellipse with both axes parallel to coordinate 
+axes fully within rectangle r, i.e. with center point at r.CenterPoint(), 
+semi major axis and semi minor axis equal to r.Width() / 2 and 
+r.Height() / 2.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawTextOp`(int`,int`,int`,const wchar`*`,Font`,Color`,int`,const int`*`): [@(0.0.255) v

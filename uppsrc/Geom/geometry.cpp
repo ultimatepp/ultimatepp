@@ -56,8 +56,8 @@ double Bezier2Length(const Pointf& a, const Pointf& b, const Pointf& c, double t
 	double w2 = Squared(w);
 	if(fabs(w2) <= 1e-100)
 		return t * Distance(c, a);
-	double k = ScalarProduct(v, w) / (2 * w2);
-	double d = fabs(VectorProduct(v, w)) / (2 * w2);
+	double k = ScalarProduct(Sizef(v), Sizef(w)) / (2 * w2);
+	double d = fabs(VectorProduct(Sizef(v), Sizef(w))) / (2 * w2);
 	double wl = sqrt(w2);
 	double x = t + k;
 	if(fabs(d) <= 1e-100)
