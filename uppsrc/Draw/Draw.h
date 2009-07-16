@@ -481,7 +481,7 @@ public:
 	bool  IsNative() const                              { return GetInfo() & NATIVE; }
 
 	int  GetNativeX(int x) const;
-	int  GetNativeY(int x) const;
+	int  GetNativeY(int y) const;
 	void Native(int& x, int& y) const;
 	void Native(Point& p) const;
 	void Native(Size& sz) const;

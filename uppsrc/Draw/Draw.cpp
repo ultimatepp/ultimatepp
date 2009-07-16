@@ -107,7 +107,7 @@ Rect Draw::GetPaintRect() const
 void Draw::StartPage() {}
 void Draw::EndPage() {}
 
-Size Draw::GetNativeDpi() const { return GetPixelsPerInch(); }
+Size Draw::GetNativeDpi() const { return Dots() ? Size(600, 600) : Size(96, 96); }
 void Draw::BeginNative() {}
 void Draw::EndNative() {}
 
