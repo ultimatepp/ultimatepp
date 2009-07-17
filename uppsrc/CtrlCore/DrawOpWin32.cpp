@@ -13,6 +13,7 @@ void SystemDraw::BeginOp()
 	GuiLock __;
 	Cloff& w = cloff.Add();
 	w.org = actual_offset;
+	w.drawingclip = drawingclip;
 	w.hrgn = CreateRectRgn(0, 0, 0, 0);
 	ASSERT(w.hrgn);
 	int	q = ::GetClipRgn(handle, w.hrgn);
@@ -28,6 +29,7 @@ void SystemDraw::OffsetOp(Point p)
 	GuiLock __;
 	Begin();
 	actual_offset += p;
+	drawingclip -= p;
 	LTIMING("Offset");
 	SetOrg();
 }
@@ -48,6 +50,7 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 	LLOG("ClipoffOp " << r << ", GetClip() = " << GetClip() << ", actual_offset = " << actual_offset);
 	actual_offset += r.TopLeft();
 	bool q = IntersectClip(r);
+	drawingclip -= r.TopLeft();
 	SetOrg();
 	LLOG("//ClipoffOp, GetClip() = " << GetClip() << ", actual_offset = " << actual_offset);
 	return q;
@@ -60,6 +63,7 @@ void SystemDraw::EndOp()
 	ASSERT(cloff.GetCount());
 	Cloff& w = cloff.Top();
 	actual_offset = w.org;
+	drawingclip = w.drawingclip;
 	::SelectClipRgn(handle, w.hrgn);
 	SetOrg();
 	if(w.hrgn)
@@ -74,6 +78,8 @@ bool SystemDraw::ExcludeClipOp(const Rect& r)
 	int q = ExcludeClipRect(handle, r.left, r.top, r.right, r.bottom);
 #else
 	LTIMING("ExcludeClip");
+	if(r.Contains(drawingclip))
+		drawingclip = Rect(0, 0, 0, 0);
 	Rect rr = LPtoDP(r);
 	HRGN hrgn = ::CreateRectRgnIndirect(rr);
 	int q = ::ExtSelectClipRgn(handle, hrgn, RGN_DIFF);
@@ -90,6 +96,7 @@ bool SystemDraw::IntersectClipOp(const Rect& r)
 	int q = IntersectClipRect(handle, r.left, r.top, r.right, r.bottom);
 #else
 	LTIMING("Intersect");
+	drawingclip &= r;
 	Rect rr = LPtoDP(r);
 	HRGN hrgn = ::CreateRectRgnIndirect(rr);
 	int q = ::ExtSelectClipRgn(handle, hrgn, RGN_AND);
@@ -105,6 +112,13 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 	LTIMING("IsPainting");
 	LLOG("SystemDraw::IsPaintingOp r: " << r);
 	return ::RectVisible(handle, r);
+}
+
+Rect SystemDraw::GetPaintRect() const
+{
+	GuiLock __;
+	LTIMING("GetPaintRect");
+	return drawingclip;
 }
 
 void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)

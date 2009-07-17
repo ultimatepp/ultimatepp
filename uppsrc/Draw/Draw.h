@@ -703,14 +703,15 @@ public:
 	
 private:
 	Size         size;
+	bool         dots;
 	StringStream drawing;
 	ValueArray   val;
 
 	Stream&      DrawingOp(int code);
 
 public:
-	void     Create(int cx, int cy);
-	void     Create(Size sz);
+	void     Create(int cx, int cy, bool dots = true);
+	void     Create(Size sz, bool dots = true);
 
 	Size     GetSize() const                  { return size; }
 
@@ -718,8 +719,8 @@ public:
 	operator Drawing()                        { return GetResult(); }
 
 	DrawingDraw();
-	DrawingDraw(int cx, int cy);
-	DrawingDraw(Size sz);
+	DrawingDraw(int cx, int cy, bool dots = true);
+	DrawingDraw(Size sz, bool dots = true);
 };
 
 class NilDraw : public Draw {
@@ -734,6 +735,7 @@ public:
 	virtual bool ExcludeClipOp(const Rect& r);
 	virtual bool IntersectClipOp(const Rect& r);
 	virtual bool IsPaintingOp(const Rect& r) const;
+	virtual Rect GetPaintRect() const;
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color);
 	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);

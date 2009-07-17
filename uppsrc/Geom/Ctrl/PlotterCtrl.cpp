@@ -563,12 +563,13 @@ void PlotterCtrl::Paint(Draw& draw)
 	LLOG("PlotterCtrl::Paint @ " << GetSysTime());
 	bool shown = IsDragging();
 	DragHide();
-	Rect clip = draw.GetClip();
+	Rect clip = draw.GetPaintRect();
 	if(is_painting) {
 #ifdef PLATFORM_WIN32
 		if(!paint_buffer.IsEmpty()) {
 			LLOG("-> blit paint_buffer");
-			if(!BitBlt(draw, pan_offset, *paint_draw, paint_buffer.GetSize())) {
+			SystemDraw *sdraw = dynamic_cast<SystemDraw *>(&draw);
+			if(!sdraw || !BitBlt(*sdraw, pan_offset, *paint_draw, paint_buffer.GetSize())) {
 				LLOG("-> blit error");
 			}
 		}

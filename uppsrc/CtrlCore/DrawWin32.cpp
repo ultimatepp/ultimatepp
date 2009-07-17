@@ -9,6 +9,15 @@ NAMESPACE_UPP
 
 static COLORREF sLightGray;
 
+Rect SystemDraw::GetVirtualScreenArea()
+{
+	GuiLock __;
+	return RectC(GetSystemMetrics(SM_XVIRTUALSCREEN),
+		GetSystemMetrics(SM_YVIRTUALSCREEN),
+		GetSystemMetrics(SM_CXVIRTUALSCREEN),
+		GetSystemMetrics(SM_CYVIRTUALSCREEN));
+}
+
 dword SystemDraw::GetInfo() const
 {
 	return DATABANDS|(native || !(style & DOTS) ? style|NATIVE : style);
@@ -254,6 +263,7 @@ void SystemDraw::Cinit() {
 
 void SystemDraw::Init() {
 	GuiLock __;
+	drawingclip = Rect(-(INT_MAX >> 1), -(INT_MAX >> 1), +(INT_MAX >> 1), +(INT_MAX >> 1));
 	Cinit();
 	SetBkMode(handle, TRANSPARENT);
 	::SetTextAlign(handle, TA_BASELINE);
@@ -263,6 +273,11 @@ void SystemDraw::Init() {
 	::GetViewportOrgEx(handle, actual_offset);
 #endif
 	LoadCaps();
+}
+
+void SystemDraw::InitClip(const Rect& clip)
+{
+	drawingclip = clip;
 }
 
 void SystemDraw::Reset() {
@@ -339,6 +354,7 @@ void BackDraw::Create(SystemDraw& w, int cx, int cy) {
 #endif
 	hbmpold = (HBITMAP) ::SelectObject(handle, hbmp);
 	Init();
+	InitClip(size);
 }
 
 void BackDraw::Put(SystemDraw& w, int x, int y) {
@@ -370,6 +386,7 @@ ScreenDraw::ScreenDraw(bool ic) {
 	Attach(CreateDC(NULL, NULL, NULL, NULL));
 #else
 	Attach(ic ? CreateIC("DISPLAY", NULL, NULL, NULL) : CreateDC("DISPLAY", NULL, NULL, NULL));
+	InitClip(GetVirtualScreenArea());
 	if(AutoPalette()) {
 		SelectPalette(handle, GetQlibPalette(), TRUE);
 		RealizePalette(handle);
@@ -395,7 +412,8 @@ void PrintDraw::InitPrinter()
 	actual_offset = Point(0, 0);
 	aborted = false;
 	pageSize.cx = 600 * nativeSize.cx / nativeDpi.cx; 
-	pageSize.cy = 600 * nativeSize.cy / nativeDpi.cy; 
+	pageSize.cy = 600 * nativeSize.cy / nativeDpi.cy;
+	InitClip(pageSize);
 }
 
 void PrintDraw::StartPage()

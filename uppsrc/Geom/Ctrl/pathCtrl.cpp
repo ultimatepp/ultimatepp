@@ -491,9 +491,9 @@ static void PaintSizeBreak(PlotterTool& tool, double x, double y, Pointf size)
 void PathEditorCtrl::Paint(Draw& draw)
 {
 	Rectf full = GetFullExtent();
-	Rectf vis = ClientToUnits(draw.GetClip()) & full;
-	Rect cvis = UnitsToClient(vis) & draw.GetClip();
-	DrawRectMinusRect(draw, draw.GetClip(), cvis, SGray);
+	Rectf vis = ClientToUnits(draw.GetPaintRect()) & full;
+	Rect cvis = UnitsToClient(vis) & draw.GetPaintRect();
+	DrawRectMinusRect(draw, draw.GetPaintRect(), cvis, SGray);
 	if(cvis.IsEmpty())
 		return;
 	draw.Clip(cvis);
@@ -1877,7 +1877,7 @@ bool PathStyleMapCtrl::InEditRect(int right, int bottom, Point mouse)
 
 void PathStyleMapCtrl::Paint(Draw& draw)
 {
-	Rect rc = draw.GetClip();
+	Rect rc = draw.GetPaintRect();
 	draw.Begin();
 	Size todo = ClientToRange(rc);
 	for(int i = todo.cx; i < todo.cy; i++)

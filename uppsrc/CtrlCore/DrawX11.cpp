@@ -288,6 +288,17 @@ void SystemDraw::SetForeground(Color color)
 
 void SystemDraw::SetClip() {
 	GuiLock __;
+	drawingclip = Rect(-(INT_MAX >> 1), -(INT_MAX >> 1), +(INT_MAX >> 1), +(INT_MAX >> 1));
+	if(!clip.IsEmpty()) {
+		const Vector<Rect>& topclip = clip.Top();
+		drawingclip = Rect(0, 0, 0, 0);
+		if(!topclip.IsEmpty()) {
+			drawingclip = topclip[0];
+			for(int i = 1; i < topclip.GetCount(); i++)
+				drawingclip |= topclip[i];
+		}
+		drawingclip -= actualoffset;
+	}
 	if(dw == Xroot) return;
 	LTIMING("SetClip");
 	UPP::SetClip(gc, xftdraw, clip.Top());
@@ -328,6 +339,7 @@ void SystemDraw::Init()
 	pageSize = Size(Xwidth, Xheight);
 	cloff.Clear();
 	clip.Clear();
+	drawingclip = Rect(-(INT_MAX >> 1), -(INT_MAX >> 1), +(INT_MAX >> 1), +(INT_MAX >> 1));
 	foreground = linewidth = Null;
 }
 
