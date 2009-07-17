@@ -424,7 +424,10 @@ implementation.&]
 ect][@(0.0.255) `&]_[*@3 r])&]
 [s5;:Draw`:`:Clipoff`(int`,int`,int`,int`): [@(0.0.255) bool]_[* Clipoff]([@(0.0.255) int]_
 [*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])&]
-[s2;%%  [%-*@3 x] [%-*@3 y] [%-*@3 cx] [%-*@3 cy]. [%-*@3 r].&]
+[s2;%% Implements ClipOff operation: Calls begin, then restricts all 
+painting operations to[%-  ][%-*@3 r] or [%-*@3 x][%- ,][%-*@3 y][%- ,][%-*@3 cx][%- ,][%-*@3 cy] 
+rectangle and offsets coordinates so that to left point of [%-*@3 r] 
+or point [%-*@3 x][%- ,][%-*@3 y] becomes Point(0, 0).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:ExcludeClip`(const Rect`&`): [@(0.0.255) bool]_[* ExcludeClip]([@(0.0.255) con
