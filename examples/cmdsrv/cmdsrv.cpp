@@ -72,8 +72,7 @@ CONSOLE_APP_MAIN
 			puts("Server error: " + Socket::GetErrorText());
 			puts("Reopening socket...");
 			fflush(stdout);
-			if(!server.Reopen())
-			{
+			if(!server.Reopen()) {
 				puts("Reopen on server socket failed: " + Socket::GetErrorText());
 				return;
 			}

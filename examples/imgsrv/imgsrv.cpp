@@ -64,6 +64,7 @@ GUI_APP_MAIN
 
 	int ticks = msecs();
 	while(!canceled) {
+		server.DelayedWrite();
 		server.Wait(100);
 		if(server.IsError()) {
 			puts("Server error: " + Socket::GetErrorText());
