@@ -40,9 +40,10 @@ metrics information to adjust graphic output.&]
 [s2;%% Some methods have several overloaded variants, for example 
 DrawRect has variants that specify the rectangle using Rect type 
 or x, y, cx, cy coordinates. In that case, implementation is 
-provided by single abstract virtual method ending with Op (DrawRectOp) 
-and non`-virtual method are then used to provide overloading 
-(parameter translation).&]
+provided by single abstract virtual backend method ending with 
+Op (DrawRectOp) and non`-virtual frontend methods are then used 
+to provide overloading (via parameter translation to backend 
+method parameters).&]
 [s2;%% &]
 [s2;%% Painting outside the output size is always legal `- necessary 
 clipping is performed in that case.&]
@@ -118,16 +119,17 @@ that to left point of [%-*@3 r] becomes Point(0, 0).&]
 [s5;:Draw`:`:ExcludeClipOp`(const Rect`&`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* Exclu
 deClipOp]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r])_`=_[@3 0]&]
 [s2;%% Implements ExcludeClip operation: Excludes [%-*@3 r] from the 
-output `- nothing is painted in this area. This operation is 
-only guaranteed to work in SystemDraw.&]
+output `- nothing is painted in this area. Does not affect the 
+offset/clipping stack. This operation is only guaranteed to work 
+in SystemDraw.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:IntersectClipOp`(const Rect`&`): [@(0.0.255) virtual] 
 [@(0.0.255) bool]_[* IntersectClipOp]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r
 ])_`=_[@3 0]&]
 [s2;%% Implements IntersectClip operation: Intersects current clipping 
-area with [%-*@3 r]. This operation is only guaranteed to work 
-in SystemDraw.&]
+area with [%-*@3 r]. Does not affect the offset/clipping stack. 
+This operation is only guaranteed to work in SystemDraw.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:IsPaintingOp`(const Rect`&`)const: [@(0.0.255) virtual] 
@@ -299,7 +301,8 @@ rget], [@(0.0.255) const]_[_^Painting^ Painting][@(0.0.255) `&]_[*@3 w])&]
 [s2;%% Implements DrawPainting operation: Draws [^Drawing^ Drawing] 
 [%-*@3 w] scaled into [%-*@3 target]. Base Draw provides default 
 implementation, which paints Painting using DrawImage, possibly 
-using banding technique to reduce the memory requirements.&]
+using banding technique to reduce the memory requirements. Painter 
+package has to be included in the project for this to work.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:GetNativeDpi`(`)const: [@(0.0.255) virtual] [_^Size^ Size]_[* GetNativeDpi]()_
@@ -393,13 +396,13 @@ _[@(0.0.255) const]&]
 [s4;%% &]
 [s5;:Draw`:`:Begin`(`): [@(0.0.255) void]_[* Begin]()&]
 [s2;%% Pushes current offset and clipping settings on Draw`'s internal 
-stack. Uses BeginOp for implementation.&]
+stack. Frontend to BeginOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:End`(`): [@(0.0.255) void]_[* End]()&]
 [s2;%% Pops offset and clipping settings, restoring the status before 
 pairing BeginOp, OffsetOp, ClipOp, ExcludeClipOp or IntersectClipOp. 
-Uses EndOp for implementation.&]
+Frontend to EndOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:Offset`(Point`): [@(0.0.255) void]_[* Offset]([_^Point^ Point]_[*@3 p])&]
@@ -407,7 +410,7 @@ Uses EndOp for implementation.&]
 [@(0.0.255) int]_[*@3 y])&]
 [s2;%% Calls Begin and then offsets coordinates so that [%-*@3 p] or 
 [%-*@3 x][%- ,][%-*@3 y][%-  ]becomes Point(0, 0). Uses OffsetOp for 
-implementation.&]
+implementation. Frontend to OffsetOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:Clip`(const Rect`&`): [@(0.0.255) bool]_[* Clip]([@(0.0.255) const]_[_^Rect^ Rec
@@ -416,8 +419,7 @@ t][@(0.0.255) `&]_[*@3 r])&]
  [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])&]
 [s2;%% Calls Begin and then restricts all painting operations to 
 [%-*@3 r] or [%-*@3 x][%- ,][%-*@3 y][%- ,][%-*@3 cx][%- ,][%-*@3 cy] rectangle 
-`- nothing is painted outside this rectangle. Uses ClipOp for 
-implementation.&]
+`- nothing is painted outside this rectangle. Frontend to ClipOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:Clipoff`(const Rect`&`): [@(0.0.255) bool]_[* Clipoff]([@(0.0.255) const]_[_^Rect^ R
@@ -427,43 +429,52 @@ ect][@(0.0.255) `&]_[*@3 r])&]
 [s2;%% Implements ClipOff operation: Calls begin, then restricts all 
 painting operations to[%-  ][%-*@3 r] or [%-*@3 x][%- ,][%-*@3 y][%- ,][%-*@3 cx][%- ,][%-*@3 cy] 
 rectangle and offsets coordinates so that to left point of [%-*@3 r] 
-or point [%-*@3 x][%- ,][%-*@3 y] becomes Point(0, 0).&]
+or point [%-*@3 x][%- ,][%-*@3 y] becomes Point(0, 0). Frontend to 
+ClipoffOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:ExcludeClip`(const Rect`&`): [@(0.0.255) bool]_[* ExcludeClip]([@(0.0.255) con
 st]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r])&]
 [s5;:Draw`:`:ExcludeClip`(int`,int`,int`,int`): [@(0.0.255) bool]_[* ExcludeClip]([@(0.0.255) i
 nt]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])&]
-[s2;%%  [%-*@3 x] [%-*@3 y] [%-*@3 cx] [%-*@3 cy]. [%-*@3 r].&]
+[s2;%% Excludes [%-*@3 r] or rectangle [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy] 
+from the output `- nothing is painted in this area. Does not 
+affect the offset/clipping stack. This operation is only guaranteed 
+to work in SystemDraw. Frontend to ExcludeClipOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:IntersectClip`(const Rect`&`): [@(0.0.255) bool]_[* IntersectClip]([@(0.0.255) c
 onst]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r])&]
 [s5;:Draw`:`:IntersectClip`(int`,int`,int`,int`): [@(0.0.255) bool]_[* IntersectClip]([@(0.0.255) i
 nt]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])&]
-[s2;%%  [%-*@3 x] [%-*@3 y] [%-*@3 cx] [%-*@3 cy]. [%-*@3 r].&]
+[s2;%% Intersects current clipping area with [%-*@3 r] or rectangle 
+[%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]. Does not affect the offset/clipping 
+stack. This operation is only guaranteed to work in SystemDraw. 
+Frontend to IntersectClipOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:IsPainting`(const Rect`&`)const: [@(0.0.255) bool]_[* IsPainting]([@(0.0.255) c
 onst]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r])_[@(0.0.255) const]&]
-[s2;%%  [%-*@3 r].&]
-[s3;%% &]
-[s4;%% &]
-[s5;:Draw`:`:IsPainting`(int`,int`,int`,int`)const: [@(0.0.255) bool]_[* IsPainting]([@(0.0.255) i
-nt]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])_[@(0.0.255) c
-onst]&]
-[s2;%%  [%-*@3 x] [%-*@3 y] [%-*@3 cx] [%-*@3 cy].&]
+[s5;:Draw`:`:IsPainting`(int`,int`,int`,int`)const:%% [%-@(0.0.255) bool][%- _][%-* IsPaint
+ing][%- (][%-@(0.0.255) int][%- _][%-*@3 x][%- , ][%-@(0.0.255) int][%- _][%-*@3 y][%- , 
+][%-@(0.0.255) int][%- _][%-*@3 cx][%- , ][%-@(0.0.255) int][%- _][%-*@3 cy][%- )_][%-@(0.0.255) co
+nst] .&]
+[s2;%% Tests whether that should any painting happen in [%-*@3 r] or 
+rectangle [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]. For example, if 
+Draw represents graphics output to window in Ctrl`::Paint, not 
+all areas are always required to be repainted. Frontend to IsPaintingOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawRect`(int`,int`,int`,int`,Color`): [@(0.0.255) void]_[* DrawRect]([@(0.0.255) i
 nt]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy], 
 [_^Color^ Color]_[*@3 color])&]
-[s2;%%  [%-*@3 x] [%-*@3 y] [%-*@3 cx] [%-*@3 cy] [%-*@3 color].&]
-[s3;%% &]
-[s4;%% &]
 [s5;:Draw`:`:DrawRect`(const Rect`&`,Color`): [@(0.0.255) void]_[* DrawRect]([@(0.0.255) co
 nst]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect], [_^Color^ Color]_[*@3 color])&]
-[s2;%%  [%-*@3 rect] [%-*@3 color].&]
+[s2;%% Fills [%-*@3 rect] or rectangle [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy] 
+using [%-*@3 color]. As special addition, if Draw represents screen 
+output in Ctrl`::Paint, [%-*@3 color] can be assigned special value 
+InvertColor() causing invertion of all pixels in target area. 
+Frontend to DrawRectOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawImage`(int`,int`,int`,int`,const Image`&`,const Rect`&`): [@(0.0.255) v
@@ -516,48 +527,67 @@ reduce memory requirements). If only target point [%-*@3 x],[%-*@3 y]
 is provided, Image is not rescaled. If [%-*@3 src] rectangle is 
 provided, only that portion of Image is used. If [%-*@3 color] 
 is provided, only alpha information is used and the color information 
-is replaced with it. Used DrawImageOp for implementation.&]
+is replaced with it. Frontend to DrawImageOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawData`(int`,int`,int`,int`,const String`&`,const char`*`): [@(0.0.255) v
 oid]_[* DrawData]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx],
  [@(0.0.255) int]_[*@3 cy], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data], 
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 type])&]
-[s2;%%  [%-*@3 x] [%-*@3 y] [%-*@3 cx] [%-*@3 cy] [%-*@3 data] [%-*@3 type].&]
 [s5;:Draw`:`:DrawData`(const Rect`&`,const String`&`,const char`*`): [@(0.0.255) void]_
 [* DrawData]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r], 
 [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data], [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 type])&]
-[s2;%%  [%-*@3 r] [%-*@3 data] [%-*@3 type].&]
+[s2;%% Draws arbitrary [%-*@3 data] of type [%-*@3 id] to rectangular 
+area [%-*@3 r] or [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]. This can be 
+used for example to print compressed bitmaps (e.g. in png format) 
+directly, without the need of loading them to Image, this possibly 
+saving memory requirements, as banding can be used to send the 
+image to printer part by part. Actual painting process is implemented 
+in [^DataDrawer^ DataDrawer] and [%-*@3 id] has to be registered 
+using DataDrawer`::Register. Frontend to DrawDataOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawLine`(int`,int`,int`,int`,int`,Color`): [@(0.0.255) void]_[* DrawLine]([@(0.0.255) i
 nt]_[*@3 x1], [@(0.0.255) int]_[*@3 y1], [@(0.0.255) int]_[*@3 x2], [@(0.0.255) int]_[*@3 y2], 
 [@(0.0.255) int]_[*@3 width]_`=_[@3 0], [_^Color^ Color]_[*@3 color]_`=_DefaultInk)&]
-[s2;%%  [%-*@3 x1] [%-*@3 y1] [%-*@3 x2] [%-*@3 y2] [%-*@3 width] [%-*@3 color].&]
 [s5;:Draw`:`:DrawLine`(Point`,Point`,int`,Color`): [@(0.0.255) void]_[* DrawLine]([_^Point^ P
 oint]_[*@3 p1], [_^Point^ Point]_[*@3 p2], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 color]_`=_DefaultInk)&]
-[s2;%%  [%-*@3 p1] [%-*@3 p2] [%-*@3 width] [%-*@3 color].&]
+[s2;%% Draws line from [%-*@3 x1],[%-*@3 y1] or [%-*@3 p1] to [%-*@3 x2],[%-*@3 y2] 
+or [%-*@3 p2] (included) [%-*@3 width] pixels wide, with [%-*@3 color]. 
+Width can contain special values, in that case line with width 
+1 is drawn and special dash pattern is applied `- see DrawLineOp 
+for details. Frontend to DrawLineOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawEllipse`(const Rect`&`,Color`,int`,Color`): [@(0.0.255) void]_[* DrawEll
 ipse]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r], [_^Color^ Color]_[*@3 color]_
 `=_DefaultInk, [@(0.0.255) int]_[*@3 pen]_`=_Null, [_^Color^ Color]_[*@3 pencolor]_`=_Def
 aultInk)&]
-[s2;%%  [%-*@3 r] [%-*@3 color] [%-*@3 pen] [%-*@3 pencolor].&]
 [s5;:Draw`:`:DrawEllipse`(int`,int`,int`,int`,Color`,int`,Color`): [@(0.0.255) void]_[* D
 rawEllipse]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], 
 [@(0.0.255) int]_[*@3 cy], [_^Color^ Color]_[*@3 color]_`=_DefaultInk, 
 [@(0.0.255) int]_[*@3 pen]_`=_Null, [_^Color^ Color]_[*@3 pencolor]_`=_DefaultInk)&]
-[s2;%%  [%-*@3 x] [%-*@3 y] [%-*@3 cx] [%-*@3 cy] [%-*@3 color] [%-*@3 pen] [%-*@3 pencolor].&]
+[s2;%% Draws the largest ellipse with both axes parallel to coordinate 
+axes fully within rectangle [%-*@3 r] ([%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]), 
+i.e. with center point at r.CenterPoint(), semi major axis and 
+semi minor axis equal to r.Width() / 2 and r.Height() / 2. If 
+[%-*@3 pen] is not 0, Ellipse will be have border line of width 
+[%-*@3 pen] and color [%-*@3 pencolor]. Frontend to DrawEllipseOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawArc`(const Rect`&`,Point`,Point`,int`,Color`): [@(0.0.255) void]_[* Draw
 Arc]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rc], [_^Point^ Point]_[*@3 start],
  [_^Point^ Point]_[*@3 end], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], [_^Color^ Color]_[*@3 colo
 r]_`=_DefaultInk)&]
-[s2;%%  [%-*@3 rc] [%-*@3 start] [%-*@3 end] [%-*@3 width] [%-*@3 color].&]
+[s2;%% Draws elliptic arc corresponding to the largest ellipse fully 
+within the rectangle [%-*@3 rc] and running counterclockwise from 
+the direction corresponding to the line connecting the centre 
+of the ellipse ([%-*@3 rc].CenterPoint()) with the point [%-*@3 start 
+]and ending at direction of the point [%-*@3 end ]from the ellipse 
+centre. When start `=`= end, the full ellipse is drawn. [%-*@3 width] 
+is the width of line, painted in [%-*@3 color]. Frontend to DrawArcOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawPolyPolyline`(const Point`*`,int`,const int`*`,int`,int`,Color`,Color`): [@(0.0.255) v
@@ -670,7 +700,8 @@ rawing][@(0.0.255) `&]_[*@3 iw])&]
 wDrawing]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int]_[*@3 cx], 
 [@(0.0.255) int]_[*@3 cy], [@(0.0.255) const]_[_^Drawing^ Drawing][@(0.0.255) `&]_[*@3 iw])&]
 [s2;%% Draws [^Drawing^ Drawing] [%-*@3 iw] scaled to rectangle [%-*@3 r] 
-respectively [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy].&]
+respectively [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]. Frontend to DrawDrawing 
+op.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawPainting`(const Rect`&`,const Painting`&`): [@(0.0.255) void]_[* DrawPai
@@ -681,7 +712,9 @@ rawPainting]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], [@(0.0.255) int
 [@(0.0.255) int]_[*@3 cy], [@(0.0.255) const]_[_^Painting^ Painting][@(0.0.255) `&]_[*@3 iw])
 &]
 [s2;%% Draws [^Painting^ Painting] [%-*@3 iw] scaled to rectangle [%-*@3 r] 
-respectively [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy].&]
+respectively [%-*@3 x],[%-*@3 y],[%-*@3 cx],[%-*@3 cy]. Painter package 
+has to be included in the project for this to work. Frontend 
+to DrawPaintingOp.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawText`(int`,int`,int`,const wchar`*`,Font`,Color`,int`,const int`*`): [@(0.0.255) v
