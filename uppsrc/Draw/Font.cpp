@@ -166,11 +166,23 @@ void Font::Serialize(Stream& s) {
 	int version = 1;
 	s / version;
 	if(version >= 1) {
+    	enum {
+			OLD_STDFONT, OLD_SCREEN_SERIF, OLD_SCREEN_SANS, OLD_SCREEN_FIXED,
+			OLD_ROMAN,
+			OLD_ARIAL,
+			OLD_COURIER,
+		};
 		int f = GetFace();
 		if(f > COURIER)
 			f = -1;
 		s / f;
 		String name;
+		if(f == OLD_ROMAN)
+			f = ROMAN;
+		if(f == OLD_ARIAL)
+			f = ARIAL;
+		if(f == OLD_COURIER)
+			f = COURIER;
 		if(f < 0) {
 			name = GetFaceName();
 			s % name;

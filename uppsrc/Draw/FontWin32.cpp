@@ -162,7 +162,7 @@ static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dw
 		return 1;
 #endif
 	if(logfont->lfFaceName[0] == '@')
-		return 0;
+		return 1;
 	
 #ifdef PLATFORM_WINCE
 	FontFaceInfo& f = sFontFace().GetAdd(WString(logfont->lfFaceName).ToString());
