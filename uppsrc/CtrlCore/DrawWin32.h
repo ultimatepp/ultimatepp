@@ -15,6 +15,7 @@ public:
 	virtual bool ExcludeClipOp(const Rect& r);
 	virtual bool IntersectClipOp(const Rect& r);
 	virtual bool IsPaintingOp(const Rect& r) const;
+	virtual Rect GetPaintRect() const;
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color);
 	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
@@ -98,8 +99,11 @@ protected:
 
 	SystemDraw();
 	void   Init();
+	void   InitClip(const Rect& clip);
 
 public:
+	static Rect GetVirtualScreenArea();
+
 	static void SetAutoPalette(bool ap);
 	static bool AutoPalette();
 	bool PaletteMode()                                  { return palette; }

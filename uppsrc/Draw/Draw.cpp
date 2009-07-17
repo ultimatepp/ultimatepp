@@ -432,6 +432,7 @@ bool NilDraw::ClipoffOp(const Rect& r) { return false; }
 bool NilDraw::ExcludeClipOp(const Rect& r) { return false; }
 bool NilDraw::IntersectClipOp(const Rect& r) { return false; }
 bool NilDraw::IsPaintingOp(const Rect& r) const { return false; }
+Rect NilDraw::GetPaintRect() const { return Rect(0, 0, 0, 0); }
 void NilDraw::DrawRectOp(int x, int y, int cx, int cy, Color color) {}
 void NilDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color) {}
 void NilDraw::DrawDataOp(int x, int y, int cx, int cy, const String& data, const char *id) {}

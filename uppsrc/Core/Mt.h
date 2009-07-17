@@ -482,11 +482,13 @@ public:
 };
 
 class RWMutex::ReadLock : NoCopy {
+public:
 	ReadLock(RWMutex&) {}
 	~ReadLock()        {}
 };
 
 class RWMutex::WriteLock : NoCopy {
+public:
 	WriteLock(RWMutex&) {}
 	~WriteLock()        {}
 };

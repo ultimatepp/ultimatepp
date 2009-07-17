@@ -85,6 +85,7 @@ public:
 	virtual bool ExcludeClipOp(const Rect& r);
 	virtual bool IntersectClipOp(const Rect& r);
 	virtual bool IsPaintingOp(const Rect& r) const;
+	virtual Rect GetPaintRect() const;
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color);
 	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
@@ -131,7 +132,6 @@ private:
 		Point org;
 		int clipi;
 		int offseti;
-		Rect  drawingclip;
 	};
 
 	Array<Cloff> cloff;

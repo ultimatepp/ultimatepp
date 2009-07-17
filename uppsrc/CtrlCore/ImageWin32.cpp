@@ -385,7 +385,9 @@ void ImageDraw::Init()
 	rgb.Init(size.cx, size.cy);
 	a.Init(size.cx, size.cy);
 	Attach(rgb.dc);
+	InitClip(size);
 	alpha.Attach(a.dc);
+	alpha.InitClip(size);
 	has_alpha = false;
 }
 

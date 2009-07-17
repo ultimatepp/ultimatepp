@@ -22,6 +22,7 @@ void SystemDraw::OffsetOp(Point p)
 	Cloff f = cloff.Top();
 	f.offseti = offset.GetCount();
 	actual_offset += p;
+	drawingclip -= p;
 	offset.Add(actual_offset);
 	cloff.Add(f);
 }
@@ -54,6 +55,7 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 	}
 	f.offseti = offset.GetCount();
 	actual_offset += r.TopLeft();
+	drawingclip -= r.TopLeft();
 	offset.Add(actual_offset);
 	cloff.Add(f);
 	if(ch)
@@ -106,6 +108,11 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 		if(cl[i].Intersects(rr))
 			return true;
 	return false;
+}
+
+Rect SystemDraw::GetPaintRect() const
+{
+	return drawingclip;
 }
 
 void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)

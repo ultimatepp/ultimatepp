@@ -106,7 +106,7 @@ Stream& DrawingDraw::DrawingOp(int code)
 
 dword DrawingDraw::GetInfo() const
 {
-	return DOTS;
+	return dots ? DOTS : 0;
 }
 
 Size DrawingDraw::GetPageSize() const
@@ -637,26 +637,27 @@ void Draw::DrawDrawing(int x, int y, int cx, int cy, const Drawing& w) {
 	DrawDrawing(RectC(x, y, cx, cy), w);
 }
 
-void  DrawingDraw::Create(int cx, int cy) {
-	Create(Size(cx, cy));
+void  DrawingDraw::Create(int cx, int cy, bool dots_) {
+	Create(Size(cx, cy), dots_);
 }
 
-void  DrawingDraw::Create(Size sz) {
+void  DrawingDraw::Create(Size sz, bool dots_) {
 	drawing.Create();
 	size = sz;
-	LLOG("DrawingDraw::Create, sz = " << sz << " -> clip = " << GetClip());
+	dots = dots_;
+	LLOG("DrawingDraw::Create, sz = " << sz << ", dots = " << dots << " -> clip = " << GetClip());
 }
 
 DrawingDraw::DrawingDraw()
 {
 }
 
-DrawingDraw::DrawingDraw(Size sz) {
-	Create(sz);
+DrawingDraw::DrawingDraw(Size sz, bool dots_) {
+	Create(sz, dots_);
 }
 
-DrawingDraw::DrawingDraw(int cx, int cy) {
-	Create(cx, cy);
+DrawingDraw::DrawingDraw(int cx, int cy, bool dots_) {
+	Create(cx, cy, dots_);
 }
 
 Size Drawing::RatioSize(int cx, int cy) const {
