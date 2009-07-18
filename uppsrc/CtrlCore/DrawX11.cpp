@@ -297,7 +297,7 @@ void SystemDraw::SetClip() {
 			for(int i = 1; i < topclip.GetCount(); i++)
 				drawingclip |= topclip[i];
 		}
-		drawingclip -= actualoffset;
+		drawingclip -= actual_offset;
 	}
 	if(dw == Xroot) return;
 	LTIMING("SetClip");
