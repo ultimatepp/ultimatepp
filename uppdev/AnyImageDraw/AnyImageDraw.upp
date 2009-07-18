@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	AnyImageDraw.h,
+	AnyImageDraw.cpp,
+	main.cpp,
+	AnyImageDraw.lay;
+
+mainconfig
+	"" = "GUI";
+
