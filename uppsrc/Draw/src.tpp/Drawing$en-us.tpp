@@ -17,7 +17,8 @@ ssignValueTypeNo][3 <][*3 Drawing][3 , ][@3;3 49][3 , ][_^Moveable^3 Moveable][3
 _>_]&]
 [s2;%% This concrete class, with full value semantics (with fast 
 deep copy) represents a record of Draw drawing operations that 
-can be replayed at any time. To create Drawing, use [^DrawingDraw^ DrawingDraw] 
+can be replayed at any time. In other words, Drawing is a sort 
+of vector format. To create Drawing, use [^DrawingDraw^ DrawingDraw] 
 class.&]
 [s2;%% Drawing is Value compatible with `"rich`" feature set `- as 
 Value it supports equality comparisons, serialization, Null compatibility 
