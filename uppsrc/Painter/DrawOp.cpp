@@ -135,4 +135,21 @@ void Painter::DrawPaintingOp(const Rect& target, const Painting& p)
 	End();
 }
 
+void ImageAnyDrawPainter(Draw *(*f)(Size sz), Image (*e)(Draw *w));
+
+static Draw *sCP(Size sz)
+{
+	return new ImagePainter(sz);
+}
+
+static Image sEP(Draw *w)
+{
+	ImagePainter *ip = dynamic_cast<ImagePainter *>(w);
+	return ip ? (Image)(*ip) : Image();
+}
+
+INITBLOCK {
+	ImageAnyDrawPainter(sCP, sEP);
+}
+
 END_UPP_NAMESPACE

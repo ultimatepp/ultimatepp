@@ -112,7 +112,7 @@ Image RichObjectType::ToImage(const Value& data, Size sz) const
 
 Image RichObjectType::ToImage(const Value& data, Size sz, void *context) const
 {
-	ImageDraw iw(sz);
+	ImageAnyDraw iw(sz);
 	iw.DrawRect(sz, SColorPaper());
 	Paint(data, iw, sz, context);
 	return iw;
@@ -176,7 +176,7 @@ Image RichObject::ToImage(Size sz, void *context) const
 	if(type)
 		return type->ToImage(data, sz, context);
 	else {
-		ImageDraw w(sz);
+		ImageAnyDraw w(sz);
 		Paint(w, sz, context);
 		return w;
 	}

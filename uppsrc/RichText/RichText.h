@@ -1,10 +1,12 @@
 #ifndef RICHTEXT_H
 #define RICHTEXT_H
 
-#include <CtrlCore/CtrlCore.h>
+#include <Draw/Draw.h>
 #include <plugin/png/png.h>
 
 NAMESPACE_UPP
+
+class PasteClip;
 
 struct Zoom {
 	int m, d;
@@ -426,11 +428,7 @@ inline int PointDots(int pts)  { return (pts  * 25 +  3 * ROUNDOFF +  1) /  3 - 
 inline int TwipDotSize(int twp)  { return IsNull(twp) ? 0 : minmax<int>(TwipDots(twp), 0, MAX_DOTS); }
 inline int PointDotHeight(int p) { return (minmax<int>(Nvl(p, 0), 0, MAX_POINT_HEIGHT) * 25 + 5) / 6; }
 
-void       EncodeRTF(Stream& stream, const RichText& richtext, byte charset);
-String     EncodeRTF(const RichText& richtext, byte charset);
-String     EncodeRTF(const RichText& richtext);
-RichText   ParseRTF(const char *rtf);
-
+void  SetRichTextStdScreenZoom(int m, int d);
 Zoom  GetRichTextStdScreenZoom();
 
 const Display& QTFDisplay();

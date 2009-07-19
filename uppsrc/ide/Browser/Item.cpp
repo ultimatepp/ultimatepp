@@ -61,7 +61,7 @@ static bool sOperatorTab[256];
 
 INITBLOCK {
 	for(const char *s = "!+-*^/%~&|=[]:?."; *s; s++)
-		sOperatorTab[*s] = true;
+		sOperatorTab[(int)*s] = true;
 }
 
 inline bool sOperator(byte c)

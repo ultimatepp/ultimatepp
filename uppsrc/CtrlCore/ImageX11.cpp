@@ -73,12 +73,12 @@ void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 	XRenderFreePicture(Xdisplay, picture);
 }
 
-int  Image::Data::GetResCount() const
+int  Image::Data::GetResCountImp() const
 {
 	return !!Sys().picture + !!Sys().picture8;
 }
 
-void Image::Data::SysInit()
+void Image::Data::SysInitImp()
 {
 	SystemData& sd = Sys();
 	sd.picture = 0;
@@ -86,7 +86,7 @@ void Image::Data::SysInit()
 	sd.cursor_cheat = -1;
 }
 
-void Image::Data::SysRelease()
+void Image::Data::SysReleaseImp()
 {
 	SystemData& sd = Sys();
 	if(sd.picture) {
@@ -145,7 +145,7 @@ static XPicture sGetSolidFill(Color c)
 	return f.picture;
 }
 
-void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
+void Image::Data::PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
 	GuiLock __;
 	SystemData& sd = Sys();

@@ -24,24 +24,46 @@ String RichImage::GetTypeName(const Value& v) const
 	return "image";
 }
 
+static String      (*sGetImageClip)(const Image& img, const String& fmt);
+static bool        (*sAcceptImage)(PasteClip& clip);
+static Image       (*sGetImage)(PasteClip& clip);
+static const char *(*sClipFmtsImage)();
+
+void InitRichImage(String      (*fGetImageClip)(const Image& img, const String& fmt),
+                   bool        (*fAcceptImage)(PasteClip& clip),
+                   Image       (*fGetImage)(PasteClip& clip),
+                   const char *(*fClipFmtsImage)())
+{
+	sGetImageClip = fGetImageClip;
+	sAcceptImage = fAcceptImage;
+	sGetImage = fGetImage;
+	sClipFmtsImage = fClipFmtsImage;
+}
+
 bool RichImage::Accept(PasteClip& clip)
 {
-	return AcceptImage(clip);
+	return sAcceptImage? sAcceptImage(clip) : false;
 }
 
 Value RichImage::Read(PasteClip& clip)
 {
-	return StoreImageAsString(GetImage(clip));
+	if(sGetImage)
+		return StoreImageAsString(sGetImage(clip));
+	return Null;
 }
 
 String RichImage::GetClipFmts() const
 {
-	return ClipFmtsImage();
+	if(sClipFmtsImage)
+		return sClipFmtsImage();
+	return Null;
 }
 
 String RichImage::GetClip(const Value& data, const String& fmt) const
 {
-	return GetImageClip(LoadImageFromString(data), fmt);
+	if(sGetImageClip)
+		return sGetImageClip(LoadImageFromString(data), fmt);
+	return Null;
 }
 
 Size   RichImage::GetPixelSize(const Value& data) const
@@ -141,7 +163,7 @@ void RichPNG::Paint(const Value& data, Draw& w, Size sz) const
 Image RichPNG::ToImage(const Value& data, Size sz, void *) const
 {
 	if(IsString(data)) {
-		ImageDraw iw(sz);
+		ImageAnyDraw iw(sz);
 		Paint(data, iw, sz);
 		return iw;	
 	}

@@ -1,8 +1,8 @@
 #ifndef _RichText_icpp_init_stub
 #define _RichText_icpp_init_stub
-#include "CtrlCore/init"
 #include "plugin\png/init"
-#define BLITZ_INDEX__ FD9BFF8A7459D77CDDE8AF2999BB1DAC7
+#include "Draw/init"
+#define BLITZ_INDEX__ FDE63A693846F2AB9FD888AAECF47B819
 #include "RichImage.icpp"
 #undef BLITZ_INDEX__
 #endif

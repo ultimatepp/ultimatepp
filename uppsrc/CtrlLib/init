@@ -1,9 +1,8 @@
 #ifndef _CtrlLib_icpp_init_stub
 #define _CtrlLib_icpp_init_stub
 #include "CtrlCore/init"
-#include "RichText/init"
 #include "PdfDraw/init"
-#define BLITZ_INDEX__ F57B71893CA53B1803608C307020EC5D8
+#define BLITZ_INDEX__ F0B03D5D3AD4DE5D8FCD3A246E4FAC29A
 #include "CtrlLib.icpp"
 #undef BLITZ_INDEX__
 #endif

@@ -21,9 +21,24 @@ void RichText::ApplyZoom(Zoom z)
 	RefreshAll();
 }
 
+Zoom& sRichTextStdScreenZoom()
+{
+	static Zoom *zz;
+	ONCELOCK {
+		static Zoom z(96, 600);
+		zz = &z;
+	}
+	return *zz;
+}
+
+void SetRichTextStdScreenZoom(int m, int d)
+{
+	sRichTextStdScreenZoom() = Zoom(m, d);
+}
+
 Zoom GetRichTextStdScreenZoom()
 {
-	return Zoom(Ctrl::HorzLayoutZoom(96), 600);
+	return sRichTextStdScreenZoom();
 }
 
 struct QTFDisplayCls : Display {

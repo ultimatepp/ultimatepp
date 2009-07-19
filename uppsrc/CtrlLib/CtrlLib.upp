@@ -4,8 +4,7 @@ acceptflags
 	NOGTK;
 
 uses
-	CtrlCore,
-	RichText;
+	CtrlCore;
 
 uses(POSIX | LINUX | FREEBSD) PdfDraw;
 

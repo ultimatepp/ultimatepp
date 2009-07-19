@@ -1,6 +1,8 @@
 #ifndef CTRLCORE_H
 #define CTRLCORE_H
 
+#include <RichText/RichText.h>
+
 #include "SystemDraw.h"
 
 NAMESPACE_UPP
@@ -1692,6 +1694,11 @@ inline void WriteClipboardImage(const Image& img)
 
 bool (*&DisplayErrorFn())(const Value& v);
 inline bool DisplayError(const Value& v) { return DisplayErrorFn()(v); }
+
+void       EncodeRTF(Stream& stream, const RichText& richtext, byte charset);
+String     EncodeRTF(const RichText& richtext, byte charset);
+String     EncodeRTF(const RichText& richtext);
+RichText   ParseRTF(const char *rtf);
 
 #ifdef PLATFORM_WIN32
 

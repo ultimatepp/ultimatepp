@@ -155,14 +155,14 @@ DrawSurface::~DrawSurface()
 	::DeleteDC(dcMem);
 }
 
-void Image::Data::SysInit()
+void Image::Data::SysInitImp()
 {
 	SystemData& sd = Sys();
 	sd.hbmp = sd.hmask = sd.himg = NULL;
 	sd.cursor_cheat = NULL;
 }
 
-void Image::Data::SysRelease()
+void Image::Data::SysReleaseImp()
 {
 	SystemData& sd = Sys();
 	if(sd.hbmp) {
@@ -219,7 +219,7 @@ Image::Data::SystemData& Image::Data::Sys() const
 	return *(SystemData *)system_buffer;
 }
 
-int  Image::Data::GetResCount() const
+int  Image::Data::GetResCountImp() const
 {
 	SystemData& sd = Sys();
 	return !!sd.hbmp + !!sd.hmask + !!sd.himg;
@@ -248,7 +248,7 @@ void Image::Data::CreateHBMP(HDC dc, const RGBA *data)
 	ResCount++;
 }
 
-void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
+void Image::Data::PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c)
 {
 	GuiLock __;
 	SystemData& sd = Sys();
