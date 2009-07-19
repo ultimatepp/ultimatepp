@@ -1,0 +1,16 @@
+description "Demonstrates head-less Draw application - drawing without GUI\377";
+
+uses
+	Draw,
+	Painter,
+	plugin\png,
+	RichText,
+	PdfDraw,
+	PdfDraw;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+

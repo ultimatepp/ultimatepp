@@ -1,0 +1,8 @@
+#ifndef _ConsoleDraw_icpp_init_stub
+#define _ConsoleDraw_icpp_init_stub
+#include "Draw/init"
+#include "Painter/init"
+#include "plugin\png/init"
+#include "RichText/init"
+#include "PdfDraw/init"
+#endif
