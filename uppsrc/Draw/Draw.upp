@@ -6,23 +6,15 @@ acceptflags
 uses
 	Core;
 
-library((LINUX | BSD) & !NOGTK) "gtk-x11-2.0  gdk-x11-2.0  atk-1.0  gdk_pixbuf-2.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
-
 library(WIN32 !MSC8ARM) "user32 gdi32";
-
-library(LINUX) X11;
 
 library(LINUX) dl;
 
-library(LINUX !XLFD) Xft;
+library(BSD !XLFD) "fontconfig freetype expat";
 
-library(BSD) "X11  Xau Xdmcp";
+library(LINUX !XLFD) "fontconfig expat";
 
-library(BSD !XLFD) "Xft fontconfig Xrender freetype expat";
-
-library(LINUX !XLFD !SHARED) "fontconfig Xrender freetype expat";
-
-library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
+library(OSX11) "fontconfig freetype expat";
 
 library(FREEBSD) xcb;
 
@@ -38,6 +30,7 @@ file
 	DrawText.cpp,
 	DrawData.cpp,
 	Drawing.cpp,
+	ImageAnyDraw.cpp,
 	DrawUtil.cpp,
 	DrawTextUtil.cpp,
 	Display.h,

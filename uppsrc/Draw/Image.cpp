@@ -105,6 +105,49 @@ ImageBuffer::ImageBuffer(ImageBuffer& b)
 	spot2 = b.spot2;
 }
 
+void  (Image::Data::*Image::Data::sSysInit)();
+void  (Image::Data::*Image::Data::sSysRelease)();
+int   (Image::Data::*Image::Data::sGetResCount)() const;
+void  (Image::Data::*Image::Data::sPaint)(SystemDraw& w, int x, int y, const Rect& src, Color c);
+
+void Image::Data::InitSystemImage(
+	void  (Image::Data::*fSysInit)(),
+	void  (Image::Data::*fSysRelease)(),
+	int   (Image::Data::*fGetResCount)() const,
+	void  (Image::Data::*fPaint)(SystemDraw& w, int x, int y, const Rect& src, Color c)
+)
+{
+	Image::Data::sSysInit = fSysInit;
+	Image::Data::sSysRelease = fSysRelease;
+	Image::Data::sGetResCount = fGetResCount;
+	Image::Data::sPaint = fPaint;
+}
+
+void Image::Data::SysInit()
+{
+	if(sSysInit)
+		(this->*sSysInit)();
+}
+
+void Image::Data::SysRelease()
+{
+	if(sSysRelease)
+		(this->*sSysRelease)();
+}
+
+int Image::Data::GetResCount() const
+{
+	if(sGetResCount)
+		return (this->*sGetResCount)();
+	return 0;
+}
+
+void Image::Data::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
+{
+	if(sPaint)
+		(this->*sPaint)(w, x, y, src, c);
+}
+
 void Image::Set(ImageBuffer& b)
 {
 	if(b.GetWidth() == 0 || b.GetHeight() == 0)

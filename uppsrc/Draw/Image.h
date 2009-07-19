@@ -133,7 +133,6 @@ private:
 		
 		void  *system_buffer[6];
 		SystemData& Sys() const;
-		int  GetResCount() const;
 
 #ifdef PLATFORM_WIN32
 		void CreateHBMP(HDC dc, const RGBA *data);
@@ -141,15 +140,35 @@ private:
 
 		ImageBuffer buffer;
 		bool        paintonly;
+		
+		void        SysInitImp();
+		void        SysReleaseImp();
+		int         GetResCountImp() const;
+		void        PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c);
 
 		void        SysInit();
 		void        SysRelease();
-		int         GetKind();
+		int         GetResCount() const;
 		void        Paint(SystemDraw& w, int x, int y, const Rect& src, Color c);
+
+		int         GetKind();
 		void        PaintOnlyShrink();
 
 		Data(ImageBuffer& b);
 		~Data();
+		
+		static void  (Image::Data::*sSysInit)();
+		static void  (Image::Data::*sSysRelease)();
+		static int   (Image::Data::*sGetResCount)() const;
+		static void  (Image::Data::*sPaint)(SystemDraw& w, int x, int y, const Rect& src, Color c);
+
+		friend void InstallSystemImage();
+		static void InitSystemImage(
+			void  (Image::Data::*fSysInit)(),
+			void  (Image::Data::*fSysRelease)(),
+			int   (Image::Data::*fGetResCount)() const,
+			void  (Image::Data::*fPaint)(SystemDraw& w, int x, int y, const Rect& src, Color c)
+		);
 	};
 
 	Data *data;
@@ -168,6 +187,7 @@ private:
 
 	friend void SetPaintOnly___(Image& m);
 	friend void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);
+	friend void InstallSystemImage();
 
 #ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE

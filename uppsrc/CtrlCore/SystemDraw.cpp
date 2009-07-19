@@ -56,4 +56,28 @@ ImageBuffer::ImageBuffer(ImageDraw& iw)
 	Set(m);
 }
 
+void ImageAnyDrawSystem(Draw *(*f)(Size sz), Image (*e)(Draw *w));
+
+static Draw *sCD(Size sz)
+{
+	return new ImageDraw(sz);
+}
+
+static Image sED(Draw *w)
+{
+	ImageDraw *ip = dynamic_cast<ImageDraw *>(w);
+	return ip ? (Image)(*ip) : Image();
+}
+
+void InstallSystemImage()
+{
+	Image::Data::InitSystemImage(&Image::Data::SysInitImp, &Image::Data::SysReleaseImp,
+	                             &Image::Data::GetResCountImp, &Image::Data::PaintImp);
+}
+
+INITBLOCK {
+	ImageAnyDrawSystem(sCD, sED);
+	InstallSystemImage();
+}
+
 END_UPP_NAMESPACE

@@ -1,8 +1,8 @@
 description "Rich-text data structures and painting, including RTF and HTML export/import\3770,0,128";
 
 uses
-	CtrlCore,
-	plugin\png;
+	plugin\png,
+	Draw;
 
 file
 	RichText.h,
@@ -29,9 +29,7 @@ file
 	TextTable.cpp,
 	EncodeQtf.cpp optimize_speed,
 	ParseQtf.cpp optimize_speed,
-	EncodeRTF.cpp optimize_speed,
-	ParseRTF.cpp optimize_speed,
-	EncodeHTML.cpp optimize_speed,
+	EncodeHTML.cpp,
 	Util.cpp,
 	RichText.iml,
 	Info readonly separator,

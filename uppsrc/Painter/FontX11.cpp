@@ -17,14 +17,11 @@
 
 #include "Painter.h"
 
-#ifdef PLATFORM_X11
+#ifdef PLATFORM_POSIX
 #include <fontconfig/fontconfig.h>
 #include <fontconfig/fcfreetype.h>
-#endif
 
 NAMESPACE_UPP
-
-#ifdef PLATFORM_X11
 
 FT_Face FTFace(Font fnt, String *rpath);
 
@@ -38,7 +35,6 @@ bool RenderOutline(const FT_Outline& outline, Painter& path, double xx, double y
 	FT_Vector   v_last;
 	FT_Vector   v_control;
 	FT_Vector   v_start;
-	double x1, y1, x2, y2, x3, y3;
 	FT_Vector*  point;
 	FT_Vector*  limit;
 	char*       tags;
@@ -154,6 +150,7 @@ void PaintCharacterSys(Painter& sw, double x, double y, int ch, Font fnt)
 	sw.EvenOdd(true);
 }
 
-#endif
 
 END_UPP_NAMESPACE
+
+#endif

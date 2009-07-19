@@ -2,9 +2,30 @@ description "GUI core system\377B0,0,255";
 
 uses
 	Draw,
-	plugin\bmp;
+	plugin\bmp,
+	RichText;
 
 library(WIN32 !MSC8ARM) "advapi32 comdlg32 comctl32";
+
+library((LINUX | BSD) & !NOGTK) "gtk-x11-2.0  gdk-x11-2.0  atk-1.0  gdk_pixbuf-2.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
+
+library(WIN32 !MSC8ARM) "user32 gdi32";
+
+library(LINUX) X11;
+
+library(LINUX) dl;
+
+library(LINUX !XLFD) Xft;
+
+library(BSD) "X11  Xau Xdmcp";
+
+library(BSD !XLFD) "Xft fontconfig Xrender freetype expat";
+
+library(LINUX !XLFD !SHARED) "fontconfig Xrender freetype expat";
+
+library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
+
+library(FREEBSD) xcb;
 
 file
 	SystemDraw readonly separator,
@@ -65,6 +86,9 @@ file
 	X11App.cpp,
 	X11DHCtrl.cpp,
 	X11Event.i,
+	"RTF support" readonly separator,
+	ParseRTF.cpp,
+	EncodeRTF.cpp,
 	Info readonly separator,
 	src.tpp,
 	srcdoc.tpp,

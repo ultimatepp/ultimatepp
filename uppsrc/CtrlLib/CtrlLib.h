@@ -2,7 +2,6 @@
 #define CTRLLIB_H
 
 #include <CtrlCore/CtrlCore.h>
-#include <RichText/RichText.h>
 
 NAMESPACE_UPP
 
