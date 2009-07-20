@@ -7,11 +7,11 @@ uses
 	PdfDraw;
 
 file
-	PieTest.h,
-	app.tpp,
+	PieTest.h,	
 	main.cpp,
 	PieTest.lay,
-	PieTest.iml;
+	PieTest.iml,
+      app.tpp;
 
 mainconfig
 	"" = "GUI";

@@ -56,7 +56,7 @@ Tab2::Tab2()
 	scatter2.SetMajorUnits(2,10);
 	scatter2.PlotFunction(&funct3,"X Axis",Green,18);
 	scatter2.PlotFunction(&funct1,"x^2", Color(28,85,255),6);	
-	scatter2.PlotFunction(&funct2,"-X^2",LtRed);	
+	scatter2.PlotFunction(&funct2,"-X^2",LtRed);		
 }
 
 //*******************************************************************************************
@@ -87,6 +87,7 @@ Tab3::Tab3()
 	scatter3.PlotParaFunction(para3,"Spiral",Color::Color(56,170,255),6,150);
 	scatter3.PlotParaFunction(para4,"VLine",LtRed,6,2);
 	scatter3.PlotParaFunction(para5,"HLine",LtRed,6,2);	
+	scatter3.SetAntialiasing();
 }
 
 //******************************************************************************************

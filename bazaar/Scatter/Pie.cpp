@@ -16,7 +16,8 @@ static void DrawPie(Draw& w, Point centre, int r, int start, int alpha, int widt
 		double dxy=(x-ix)*(x-ix)+(y-iy)*(y-iy);
 		if(dxy<0.1 || i ==0 || i==n) 
 			vP<<Point(ix,iy);
-		if(!w.IsDrawing() && !w.IsPrinter()) w.DrawRect(ix,iy,1,1,Blend(fill,background,150));			
+		//if(!(dynamic_cast<const DrawingDraw *>(&w)) && !w.IsPrinter()) w.DrawRect(ix,iy,1,1,Blend(fill,background,150));
+		if(w.IsGui()) w.DrawRect(ix,iy,1,1,Blend(fill,background,150));			
 	}
 	vP<<centre;	
 	w.DrawPolygon(vP,fill,width,outline,pattern,Null);

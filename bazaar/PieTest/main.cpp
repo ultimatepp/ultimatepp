@@ -6,7 +6,6 @@
 
 #define TOPICFILE <PieTest/app.tpp/all.i>
 #include <Core/topic_group.h>
-
 	
 void PieTest::EditCategory()
 {

@@ -1,0 +1,7 @@
+#ifndef _PieTest_icpp_init_stub
+#define _PieTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Scatter/init"
+#include "Report/init"
+#include "PdfDraw/init"
+#endif
