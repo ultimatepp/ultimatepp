@@ -118,7 +118,7 @@ WString Filter(const wchar *s, int (*filter)(int))
 {
 	WString result;
 	while(*s) {
-		int c = (*filter)((byte)*s++);
+		int c = (*filter)(*s++);
 		if(c) result.Cat(c);
 	}
 	return result;
@@ -128,7 +128,7 @@ WString FilterWhile(const wchar *s, int (*filter)(int))
 {
 	WString result;
 	while(*s) {
-		int c = (*filter)((byte)*s++);
+		int c = (*filter)(*s++);
 		if(!c) break;
 		result.Cat(c);
 	}
