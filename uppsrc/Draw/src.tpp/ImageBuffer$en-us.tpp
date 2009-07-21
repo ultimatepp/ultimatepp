@@ -1,4 +1,4 @@
-topic "";
+topic "ImageBuffer";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -74,14 +74,14 @@ nst]&]
 [s2;%% Returns the reference point.&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:Set2ndSpot`(Point`): [@(0.0.255) void]_[* Set2ndSpot]([_^Point^ Point]_
+[s5;:ImageBuffer`:`:Set2ndSpot`(Point`): [*@(0.0.255) void][* _Set2ndSpot]([_^Point^ Point]_
 [*@3 p])&]
 [s2;%% Sets secondary reference point. Iml designer has the ability 
 to specify this point.&]
 [s3;%% &]
 [s4; &]
-[s5;:ImageBuffer`:`:Get2ndSpot`(`)const: [_^Point^ Point]_[* Get2ndSpot]()_[@(0.0.255) cons
-t]&]
+[s5;:ImageBuffer`:`:Get2ndSpot`(`)const: [*_^Point^ Point][* _Get2ndSpot]()_[@(0.0.255) con
+st]&]
 [s2;%% Reads secondary reference point.&]
 [s3; &]
 [s4; &]
