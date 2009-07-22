@@ -89,13 +89,13 @@ rm -rf %{buildroot}
 
 install -d %{buildroot}/%{_bindir}
 install -d %{buildroot}/%{_desktopdir}
-install -d %{buildroot}/%{_datadir}/pixmaps
+install -d %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps
 install -d %{buildroot}/%{_datadir}/%{name}
 
 install out/ide.out %{buildroot}/%{_bindir}/theide
 
 cp -p uppsrc/ide/theide.desktop %{buildroot}/%{_desktopdir}/theide.desktop
-cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/pixmaps/theide.png
+cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps/theide.png
 
 cp -a bazaar %{buildroot}/%{_datadir}/%{name}/
 # cp -a Common %{buildroot}/%{_datadir}/%{name}/
@@ -146,7 +146,7 @@ rm -fr %{buildroot}
 %doc uppsrc/ide/Copying
 %{_bindir}/theide
 %{_desktopdir}/theide.desktop
-%{_datadir}/pixmaps/theide.png
+%{_datadir}/icons/hicolor/48x48/apps/theide.png
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*
 
