@@ -928,6 +928,7 @@ public:
 	void      Display();
 
 	void      SetIcon();
+	bool      IsCppBaseFile();
 	void      CheckFileUpdate();
 	void      Periodic();
 
