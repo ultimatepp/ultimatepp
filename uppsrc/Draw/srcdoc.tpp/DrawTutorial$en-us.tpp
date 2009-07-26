@@ -73,7 +73,7 @@ Point(70, 150);&]
 [s7; -|-|p << Point(330, 110) << Point(360, 180) << Point(310, 150) 
 << Point(370, 120)&]
 [s7; -|-|  << Point(330, 110);&]
-[s7; -|-|w.[* DrawPolygon](p, Cyan, 5, Magenta, INT64(0xaa55aa55aa55aa55));&]
+[s7; -|-|w.[* DrawPolygon](p, Cyan, 5, Magenta, I64(0xaa55aa55aa55aa55));&]
 [s7; -|-|&]
 [s7; -|-|w.[* DrawImage](40, 240, CtrlImg`::save());&]
 [s7; -|-|w.[* DrawImage](110, 210, 80, 80, CtrlImg`::save());&]
