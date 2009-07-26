@@ -194,7 +194,7 @@ void UpdateCodeBase(Progress& pi)
 			}
 		}
 	}
-
+	
 	Vector<String> remove(scan, 1);
 	Vector<int> rm;
 	for(int i = 0; i < set.GetCount(); i++)

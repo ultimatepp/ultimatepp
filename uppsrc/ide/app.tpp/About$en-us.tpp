@@ -1,4 +1,4 @@
-topic "Copyright © 1999-2005 Ultimate++ team";
+topic "Copyright © 1999-2009 Ultimate++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0;*IGetLocalDir;+117 &]
@@ -15,7 +15,8 @@ ritharan Sivaguru,][*  Artur Bać, Ralf Schneider, Pavel Ostapenko,
 Raul Ionitoiu, Norbert Hofer, Tomasz Pajak, Benoit Cousson, Trey 
 Van Riper, Peter Berger, Sergey Nikitin, Massimo Del Fedele, 
 Irenkov Alexander, Gabriel Schmotzer, Domingo Alvarez Duarte, 
-Andrei Cosma, Koldo Ramirez, Tom Olá, George Brink]&]
+Andrei Cosma, Koldo Ramirez, Tom Olá, George Brink, Zbigniew 
+Czapiga]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Luis Ramirez, Gabriel Schmotzer]&]

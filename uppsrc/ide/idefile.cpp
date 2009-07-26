@@ -228,11 +228,11 @@ bool Ide::IsProjectFile(const String& f) const
 
 void Ide::ScanFile()
 {
-	if(!editor.assist_active)
-		return;
-	String s = ~editor;
-	StringStream ss(s);
-	CodeBaseScan(ss, editfile);
+	if(IsCppBaseFile()) {
+		String s = ~editor;
+		StringStream ss(s);
+		CodeBaseScan(ss, editfile);
+	}
 }
 
 void Ide::SaveFile(bool always)
@@ -524,6 +524,12 @@ void Ide::EditFile(const String& p)
 	AddEditFile(path);
 }
 
+bool Ide::IsCppBaseFile()
+{
+	return IsProjectFile(editfile) && (IsCSourceFile(editfile) || IsCHeaderFile(editfile) ||
+	                                   ToUpper(GetFileExt(editfile)) == ".SCH");
+}
+
 void Ide::CheckFileUpdate()
 {
 	if(editfile.IsEmpty() || !IsForeground() || designer) return;
@@ -537,7 +543,7 @@ void Ide::CheckFileUpdate()
 		"Would you like to reload the file or to keep changes made in the IDE ?",
 		"Reload", "Keep")) return;
 
-	if(editor.assist_active) {
+	if(IsCppBaseFile()) {
 		FileIn in(editfile);
 		CodeBaseScan(in, editfile);
 	}
