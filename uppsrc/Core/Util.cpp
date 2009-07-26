@@ -809,7 +809,11 @@ static void LinuxBeep(const char *fn)
 	char h[100];
 	strcpy(h, "aplay /usr/share/sounds/");
 	strcat(h, fn);
+#ifdef CPU_BLACKFIN
+	if(vfork()) return;
+#else
 	if(fork()) return;
+#endif
 	system(h);
 	_exit(EXIT_SUCCESS);
 }

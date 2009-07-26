@@ -67,6 +67,15 @@
 		#define CPU_LE 1
 		#define CPU_LITTLE_ENDIAN 1 // is it really?
 		#define CPU_ALIGNED 1
+	#elif __bfin
+		#define CPU_32 1
+		#define CPU_BLACKFIN
+		#define CPU_LE 1
+		#define CPU_LITTLE_ENDIAN 1
+		#define CPU_ALIGNED 1
+		#define _HAVE_NO_STDWSTRING 1
+		//BF toolchain has no support for __thread (TLS), so U++ Heap not possible
+		#define flagUSEMALLOC
 	#else
 		#error Unknown CPU architecture
 	#endif

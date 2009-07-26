@@ -236,6 +236,7 @@ WString WString::GetVoid()
 	return b;
 }
 
+#ifndef _HAVE_NO_STDWSTRING
 WString::WString(const std::wstring& s)
 {
 	if(sizeof(std::wstring::value_type) == sizeof(wchar)) {
@@ -262,6 +263,7 @@ WString::operator std::wstring() const
 		return r;
 	}
 }
+#endif
 
 void WStringBuffer::Zero()
 {

@@ -172,8 +172,14 @@ MTrand::MTrand()
 	init_by_array(seed, 1024);
 }
 
+#ifdef CPU_BLACKFIN
+//on blackfin toolchain we dont have TLS support, but we can live here without
+MTrand *sRng;
+byte    sRb[sizeof(MTrand)];
+#else
 thread__ MTrand *sRng;
 thread__ byte    sRb[sizeof(MTrand)];
+#endif
 
 dword Random()
 {

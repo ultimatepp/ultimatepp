@@ -70,24 +70,88 @@ sThreadRoutine(void *arg)
 }
 #endif
 
-static bool threadr;
+static bool threadr; //indicates if *any* Thread instance is running (having called its Run()), upon first call of Run
+#ifndef CPU_BLACKFIN
 static thread__  bool sMain;
+#else
+#ifdef PLATFORM_POSIX
+static Index<pthread_t> threadsv; //a threads id vector, sMain=true ==>> 'pthread_self() pthread_t beeing present in vector, problem, wont be cleared when thread exits
+Mutex vm; //a common access synchronizer
+#endif
+#endif
 
-bool Thread::IsST()
+//to sMain: an Application can start more than one thread, without having *any* one of them called Run() of any Thread instace
+//when Run() is called *anytime*, it means, the term of *MainThread* has to be running anyway,
+//otherwise no child threads could run. they are created by main.
+//now each thread, having any Thread instace can start a first Run()
+
+Thread::~Thread()
+{
+	Detach();
+#ifdef CPU_BLACKFIN
+#ifdef PLATFORM_POSIX
+	//the static destruction replacement
+	pthread_t thid = pthread_self();
+	vm.Enter();
+	int id = threadsv.Find(thid);
+	if(id >= 0)
+		threadsv.Remove(id);
+	vm.Leave();
+#endif
+#endif
+}
+
+bool Thread::IsST() //the containing thread (of wich there may be multiple) has not run its Run() yet
 {
 	return !threadr;
 }
 
-bool Thread::IsMain()
+bool Thread::IsMain() //the calling thread is the Main Thread or the only one in App
 {
+#ifndef CPU_BLACKFIN
 	return !threadr || sMain;
+#else
+	if(!threadr) 
+		return true;
+#ifdef PLATFORM_POSIX
+	//the sMain replacement
+	pthread_t thid = pthread_self();
+	vm.Enter();
+	if(threadsv.Find(thid) >= 0)
+	{
+		vm.Leave();
+		return true;
+	}
+	vm.Leave();
+#endif
+	return false;
+#endif
 }
 
 bool Thread::Run(Callback _cb)
 {
 	AtomicInc(sThreadCount);
 	if(!threadr)
+#ifndef CPU_BLACKFIN
 		threadr = sMain = true;
+#else
+	{
+		threadr = true;
+		//the sMain replacement
+#ifdef PLATFORM_POSIX
+		pthread_t thid = pthread_self();
+		vm.Enter();
+		if(threadsv.Find(thid) < 0)
+		{
+			//thread not yet present, mark present
+			threadsv.Add(thid);
+		}
+		else
+			RLOG("BUG: Multiple Add in Mt.cpp");
+		vm.Leave();
+#endif
+	}
+#endif
 	Detach();
 	Callback *cb = new Callback(_cb);
 #ifdef PLATFORM_WIN32
