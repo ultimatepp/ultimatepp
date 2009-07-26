@@ -35,7 +35,7 @@ struct MyApp : TopWindow {
 		p.Clear();
 		p << Point(330, 110) << Point(360, 180) << Point(310, 150) << Point(370, 120)
 		  << Point(330, 110);
-		w.DrawPolygon(p, Cyan, 5, Magenta, INT64(0xaa55aa55aa55aa55ULL));
+		w.DrawPolygon(p, Cyan, 5, Magenta, I64(0xaa55aa55aa55aa55));
 
 		w.DrawImage(40, 240, CtrlImg::save());
 		w.DrawImage(110, 210, 80, 80, CtrlImg::save());
