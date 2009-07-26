@@ -15,11 +15,17 @@ topic "String and WString";
 veable][@(0.0.255)3 <][*3 String][3 , ][_^AString^3 AString][@(0.0.255)3 <][_^String0^3 Strin
 g0][@(0.0.255)3 >][3 _>_]&]
 [s0;3%- &]
-[s0; String is a value class that contains an array of characters. 
-It is designed to have fast copy operations. The array of characters 
-is zero terminated. String provides non`-mutable access to the 
-array of characters. String can store 8 bit encoded string or 
-an Utf8 encoded string&]
+[s0; String is a value class that contains an array of characters 
+(or bytes). It is designed to have fast copy operations. The 
+array of characters is zero terminated. String provides non`-mutable 
+access to the array of characters. String can store 8 bit encoded 
+string or an UTF`-8 encoded string. For UTF`-8 strings, however, 
+String works with raw 8 bit values `- there are not automatic 
+conversions performed e.g. in operator`[`]. If you need to access 
+individual UTF`-8 characters, the best practice in most cases 
+is to convert it to WString (and eventually back after processing).&]
+[s0; &]
+[s0; String is also often used to store raw binary data.&]
 [s0; &]
 [s0; WString is similar to String, but it uses 16 bit Ucs2 encoding. 
 String and WString share a number of common functions through 

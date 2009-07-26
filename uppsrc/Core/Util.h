@@ -50,6 +50,7 @@ String  FromSystemCharsetW(const wchar *src);
 #endif
 
 #ifdef PLATFORM_WIN32
+String FromOEMCharset(const String& src);
 String GetErrorMessage(dword dwError);
 #endif
 
