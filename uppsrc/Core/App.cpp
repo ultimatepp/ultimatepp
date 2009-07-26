@@ -6,12 +6,13 @@
 
 NAMESPACE_UPP
 
+#ifdef PLATFORM_WIN32
+
+
 String GetEnv(const char *id)
 {
-	return FromSystemCharset(getenv(id));
+	return FromOEMCharset(getenv(id));
 }
-
-#ifdef PLATFORM_WIN32
 
 String GetExeFilePath()
 {
@@ -25,6 +26,11 @@ String  GetHomeDirectory() {
 #endif
 
 #ifdef PLATFORM_POSIX
+
+String GetEnv(const char *id)
+{
+	return FromSystemCharset(getenv(id));
+}
 
 char Argv0__[_MAX_PATH + 1];
 

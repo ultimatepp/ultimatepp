@@ -608,14 +608,24 @@ String ToSystemCharset(const String& src)
 	return b;
 }
 
-String FromSystemCharset(const String& src)
+String FromWin32Charset(const String& src, int cp)
 {
 	WStringBuffer b(src.GetLength());
-	int q = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, ~src, src.GetLength(), (WCHAR*)~b, src.GetLength());
+	int q = MultiByteToWideChar(cp, MB_PRECOMPOSED, ~src, src.GetLength(), (WCHAR*)~b, src.GetLength());
 	if(q <= 0)
 		return src;
 	b.SetCount(q);
 	return WString(b).ToString();
+}
+
+String FromOEMCharset(const String& src)
+{
+	return FromWin32Charset(src, CP_OEMCP);
+}
+
+String FromSystemCharset(const String& src)
+{
+	return FromWin32Charset(src, CP_ACP);
 }
 
 WString ToSystemCharsetW(const char *src)

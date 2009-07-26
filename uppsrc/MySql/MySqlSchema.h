@@ -33,6 +33,9 @@
 #define STRING_(x, n)              COLUMN_(MySqlTextType(n), String, x, n, 0)
 #define STRING_ARRAY_(x, n, items) COLUMN_ARRAY_(MySqlTextType(n), String, x, n, 0, items)
 
+#define BLOB(x)                    COLUMN("longblob", String, x, 0, 0)
+#define BLOB_(x)                   COLUMN_("longblob", String, x, 0, 0)
+
 #define PRIMARY_KEY                INLINE_ATTRIBUTE("primary key")
 #define AUTO_INCREMENT             INLINE_ATTRIBUTE("auto_increment")
 #define KEY                        INLINE_ATTRIBUTE("key")
@@ -80,6 +83,9 @@
 #undef STRING_ARRAY
 #undef STRING_
 #undef STRING_ARRAY_
+
+#undef BLOB
+#undef BLOB_
 
 #undef PRIMARY_KEY
 #undef AUTO_INCREMENT
