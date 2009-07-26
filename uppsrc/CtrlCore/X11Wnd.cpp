@@ -333,7 +333,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
+	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
 	Ctrl *ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -367,7 +367,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		LoopCtrl = ploop;
 
 	LoopLevel--;
-	LLOG(EndIndent << "Leaving event loop ");
+	LLOG(LOG_END << "Leaving event loop ");
 }
 
 void Ctrl::SyncExpose()
