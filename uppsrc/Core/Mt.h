@@ -78,7 +78,7 @@ public:
 
 
 	Thread();
-	~Thread()   { Detach(); }
+	~Thread();
 
 private:
 	void operator=(const Thread&);
@@ -125,6 +125,11 @@ inline void WriteMemoryBarrier() {
 	#endif
 #endif
 }
+#endif
+
+#ifdef CPU_BLACKFIN
+inline void ReadMemoryBarrier() {} //placing in Mt.cpp somehow yields 'undefined reference'
+inline void WriteMemoryBarrier() {}
 #endif
 
 template <class U>
@@ -482,13 +487,11 @@ public:
 };
 
 class RWMutex::ReadLock : NoCopy {
-public:
 	ReadLock(RWMutex&) {}
 	~ReadLock()        {}
 };
 
 class RWMutex::WriteLock : NoCopy {
-public:
 	WriteLock(RWMutex&) {}
 	~WriteLock()        {}
 };

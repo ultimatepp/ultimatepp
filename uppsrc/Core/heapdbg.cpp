@@ -4,11 +4,13 @@
 
 NAMESPACE_UPP
 
-#include "HeapImp.h"
-
 int sMemDiagInitCount = 0;
 
-#if defined(HEAPDBG) && defined(UPP_HEAP)
+#if defined(UPP_HEAP)
+
+#include "HeapImp.h"
+
+#if defined(HEAPDBG)
 
 extern bool PanicMode;
 void HeapPanic(const char *text, void *pos, int size);
@@ -224,6 +226,7 @@ void MemoryInitDiagnostics()
 
 #endif
 
+#endif
 #endif
 
 END_UPP_NAMESPACE

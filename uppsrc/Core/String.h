@@ -684,11 +684,16 @@ public:
 	friend WString operator+(const WString& a, char b)      { WString c(a); c += b; return c; }
 	friend WString operator+(char a, const WString& b)      { WString c(a, 1); c += b; return c; }
 
+#ifndef _HAVE_NO_STDWSTRING
 	WString(const std::wstring& s);
 	operator std::wstring() const;
+#endif
+
 };
 
+#ifndef _HAVE_NO_STDWSTRING
 inline std::wstring to_string(const WString& s)             { return std::wstring(s.Begin(), s.End()); }
+#endif
 
 class WStringBuffer : NoCopy {
 	wchar   *begin;

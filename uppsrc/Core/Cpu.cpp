@@ -100,7 +100,11 @@ int CPU_Cores()
 	}
 	return n;
 }
-
+#else
+inline int CPU_Cores()
+{
+	return 1;	
+}
 #endif
 
 #ifdef PLATFORM_WIN32

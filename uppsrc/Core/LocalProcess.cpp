@@ -168,7 +168,11 @@ bool LocalProcess::Start(const char *command, const char *envptr)
 	LLOG("rpipe[" << rpipe[0] << ", " << rpipe[1] << "]");
  
  	LLOG("wpipe[" << wpipe[0] << ", " << wpipe[1] << "]");
+#ifdef CPU_BLACKFIN
+	pid = vfork(); //we *can* use vfork here, since exec is done later or the parent will exit
+#else
 	pid = fork();
+#endif
 	LLOG("\tfork, pid = " << (int)pid << ", getpid = " << (int)getpid());
 	if(pid < 0)
 		return false;
