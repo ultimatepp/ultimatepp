@@ -40,7 +40,7 @@ void RasterFormat::Set32le(dword rmask, dword gmask, dword bmask, dword amask)
 	Set24le(rmask, gmask, bmask);
 	if(amask) {
 		apos = GetChMaskPos32(amask);
-		type = RASTER_32ALPHA;
+		type = RASTER_32PREMULTIPLIED;
 	}
 	else
 		type = RASTER_32;
