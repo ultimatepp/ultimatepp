@@ -32,10 +32,15 @@ struct PaletteCv {
 	PaletteCv()                      { cv.Alloc(RASTER_MAP_R * RASTER_MAP_G * RASTER_MAP_B); }
 };
 
-struct RasterFormat {
+class RasterFormat {
 	byte  type;
 	dword rmask, gmask, bmask, amask;
+	byte  rpos, gpos, bpos, apos;
 
+	static void TailBits(RGBA *t, const byte *src, int cx, byte andm, byte shift, const RGBA *palette);
+	static void TailBitsMSB1st(RGBA *t, const byte *src, int cx, byte shift1, byte andm, byte shift, const RGBA *palette);
+
+public:
 	void Set1lf()                    { type = RASTER_1; }
 	void Set1mf()                    { type = RASTER_1|RASTER_MSBFIRST; }
 	void Set2lf()                    { type = RASTER_2; }
@@ -55,6 +60,7 @@ struct RasterFormat {
 	void SetRGBA();
 	void SetRGBAStraight();
 
+	int  GetType() const             { return type; }
 	int  IsRGBA() const;
 	int  GetByteCount(int cx) const;
 	int  GetBpp() const;
@@ -64,11 +70,6 @@ struct RasterFormat {
 
 	void Read(RGBA *t, const byte *s, int cx, const RGBA *palette) const;
 	void Write(byte *t, const RGBA *s, int cx, const PaletteCv *palcv) const;
-
-private:
-	byte  rpos, gpos, bpos, apos;
-	static void TailBits(RGBA *t, const byte *src, int cx, byte andm, byte shift, const RGBA *palette);
-	static void TailBitsMSB1st(RGBA *t, const byte *src, int cx, byte shift1, byte andm, byte shift, const RGBA *palette);
 };
 
 class Raster {
