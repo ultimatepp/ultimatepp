@@ -114,8 +114,6 @@ public:
 void Premultiply(ImageBuffer& b);
 void Unmultiply(ImageBuffer& b);
 
-void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
-
 class Image : public AssignValueTypeNo< Image, 150, Moveable<Image> > {
 private:
 	struct Data : Link<Data> {

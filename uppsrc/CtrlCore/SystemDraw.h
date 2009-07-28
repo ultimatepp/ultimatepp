@@ -104,4 +104,6 @@ typedef ImageDraw SystemImageDraw;
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
+void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels);
+
 END_UPP_NAMESPACE
