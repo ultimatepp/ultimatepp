@@ -15,7 +15,7 @@ topic "RasterFormat";
 [s1;:RasterFormat`:`:struct: [@(0.0.255)3 class][3 _][*3 RasterFormat]&]
 [s2;%% This class serves as description and converter of various 
 pixel formats. U`+`+ normally uses fixed 32`-bit RGBA format 
-for all processing, but special formats are required to e.g. 
+for all processing, but special formats are required e.g. to 
 deal with image files or to reduce memory requirements.&]
 [s3; &]
 [s0;i448;a25;kKO9;@(0.0.255) &]
