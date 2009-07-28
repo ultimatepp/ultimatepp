@@ -83,12 +83,47 @@ void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 void Painter::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
                                  int count_count, int width, Color color, Color doxor)
 {
+	while(--count_count >= 0) {
+		const Point *lp = vertices;
+		vertices += *counts++;
+		Move(*lp);
+		while(++lp < vertices)
+			Line(*lp);
+		Stroke(max(width, 0), color);
+	}
 }
 
 void Painter::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
                                   const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts,
                                   int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
 {
+	Image fill_img;
+	if(pattern && !IsNull(color)) {
+		ImageBuffer ibuf(8, 8);
+		RGBA r[2] = { color, RGBAZero() };
+		for(RGBA *out = ibuf, *end = out + 64; out < end; pattern >>= 1)
+			*out++ = r[(byte)pattern & 1];
+		fill_img = ibuf;
+	}
+	
+	while(--dpcc >= 0) {
+		const Point *sp = vertices;
+		vertices += *disjunct_polygon_counts++;
+		while(sp < vertices) {
+			const Point *pp = sp;
+			sp += *subpolygon_counts++;
+			Move(*pp);
+			while(++pp < sp)
+				Line(*pp);
+			Close();
+		}
+		if(!IsNull(fill_img))
+			Fill(fill_img, Xform2D::Identity(), FILL_HREPEAT | FILL_VREPEAT);
+		else if(!IsNull(color))
+			Fill(color);
+		if(!IsNull(outline))
+			Stroke(max(width, 0), outline);
+	}
 }
 
 void Painter::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
