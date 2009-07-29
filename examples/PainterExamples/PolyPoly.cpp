@@ -42,5 +42,5 @@ void PolyPolyPolygon(Painter& sw)
 }
 
 INITBLOCK {
-	RegisterExample("PolyPolyPolygon", PolyPolyPolygon);
+	RegisterExample("Draw::PolyPolyPolygon", PolyPolyPolygon);
 }
