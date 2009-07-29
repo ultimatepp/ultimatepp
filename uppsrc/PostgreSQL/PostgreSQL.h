@@ -58,6 +58,7 @@ private:
 
 public:
 	bool                  Open(const char *connect);
+	bool                  ReOpen();
 	void                  Close();
 
 	String                GetUser() { return PQuser(conn); }

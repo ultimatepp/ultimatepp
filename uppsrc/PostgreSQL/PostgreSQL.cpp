@@ -1,5 +1,7 @@
 #include "PostgreSQL.h"
 
+#define LLOG(x)
+
 #ifndef flagNOPOSTGRESQL
 
 NAMESPACE_UPP
@@ -150,7 +152,7 @@ bool PostgreSQLPerformScript(const String& txt, StatementExecutor& se, Gate2<int
 
 String PostgreSQLConnection::ErrorMessage()
 {
-	return FromSystemCharset(PQerrorMessage(conn));
+	return PQerrorMessage(conn);
 }
 
 String PostgreSQLConnection::ErrorCode()
@@ -160,7 +162,7 @@ String PostgreSQLConnection::ErrorCode()
 
 String PostgreSQLSession::ErrorMessage()
 {
-	return FromSystemCharset(PQerrorMessage(conn));
+	return PQerrorMessage(conn);
 }
 
 String PostgreSQLSession::ErrorCode()
@@ -310,7 +312,25 @@ bool PostgreSQLSession::Open(const char *connect)
 		return false;
 	}
 	level = 0;
+
+	int stat = PQsetClientEncoding(conn, CharsetName(GetDefaultCharset()));
+	ASSERT(stat == 0);
+	LLOG( String("Postgresql client encoding: ") + pg_encoding_to_char( PQclientEncoding(conn) ) );
+	
 	return true;
+}
+
+bool PostgreSQLSession::ReOpen()
+{
+	PQreset(conn);
+	if(PQstatus(conn) != CONNECTION_OK)
+	{
+		SetError(ErrorMessage(), "Opening database");
+		return false;
+	}
+	level = 0;
+	
+	return true;	
 }
 
 void PostgreSQLSession::Close()
