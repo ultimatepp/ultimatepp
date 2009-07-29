@@ -84,6 +84,8 @@ public:
 		friend class       Raster;
 
 		void               MakeRGBA() const;
+		void Free()                             { if(free) delete[] data; if(fmtfree) delete[] fmtdata; }
+		void Pick(pick_ Line& b);
 
 	public:
 		const RGBA         *GetRGBA() const     { if(!data) MakeRGBA(); return data; }
@@ -98,9 +100,6 @@ public:
 		Line(pick_ Line& b)                     { Pick(b); }
 		Line()                                  { data = NULL; fmtdata = NULL; raster = NULL; free = fmtfree = false; }
 		~Line()                                 { Free(); }
-
-		void Free()                             { if(free) delete[] data; if(fmtfree) delete[] fmtdata; }
-		void Pick(pick_ Line& b);
 
 		void operator=(pick_ Line& b)           { Free(); Pick(b); }
 	};
