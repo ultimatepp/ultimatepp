@@ -128,6 +128,18 @@ void Painter::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 
 void Painter::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 {
+	if(rc.Width() <= 0 || rc.Height() <= 0)
+		return;
+	Sizef radius = Sizef(rc.Size()) / 2.0;
+	Pointf center = Pointf(rc.TopLeft()) + radius;
+	double ang1 = Bearing((Pointf(start) - center) / radius);
+	double ang2 = Bearing((Pointf(end) - center) / radius);
+	double sweep = ang1 - ang2;
+	if(sweep <= 0)
+		sweep += 2 * M_PI;
+	Move(center.x + radius.cx * cos(ang1), center.y + radius.cy * sin(ang1));
+	Arc(center, radius.cx, radius.cy, ang1, -sweep);
+	Stroke(max(width, 0), color);
 }
 
 void Painter::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
