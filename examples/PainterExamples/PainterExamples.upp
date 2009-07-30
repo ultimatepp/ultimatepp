@@ -32,6 +32,7 @@ file
 	ThinLine.cpp,
 	Shapes.cpp,
 	PolyPoly.cpp,
+	DrawArc.cpp,
 	Big.cpp,
 	Examples.lay,
 	Test.iml;
