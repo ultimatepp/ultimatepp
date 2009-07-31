@@ -152,7 +152,9 @@ bool PostgreSQLPerformScript(const String& txt, StatementExecutor& se, Gate2<int
 
 String PostgreSQLConnection::ErrorMessage()
 {
-	return PQerrorMessage(conn);
+	if(PQclientEncoding(conn) >= 0)
+		return PQerrorMessage(conn);
+	return FromSystemCharset(PQerrorMessage(conn));
 }
 
 String PostgreSQLConnection::ErrorCode()
