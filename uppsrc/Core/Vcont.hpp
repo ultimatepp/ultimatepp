@@ -71,12 +71,9 @@ void Vector<T>::Free() {
 
 template <class T>
 void Vector<T>::Clear() {
-	if(vector && items >= 0)
-		SetCount(0);
-	else {
-		alloc = items = 0;
-		vector = NULL;
-	}
+	Free();
+	alloc = items = 0;
+	vector = NULL;
 }
 
 template <class T>
