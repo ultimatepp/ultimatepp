@@ -30,8 +30,10 @@ struct BufferPainter::OnPathTarget : LinearPathConsumer {
 Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 {
 	Buffer<ClipLine> newclip;
-	if(width == 0)
+	if(width == 0) {
+		current = Null;
 		return newclip;
+	}
 	Transformer trans(pathattr.mtx);
 	Stroker stroker;
 	Dasher dasher;

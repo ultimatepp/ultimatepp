@@ -72,12 +72,41 @@ void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const 
 	Fill(img, Xform2D::Scale(cx / sz.cx, cy / sz.cy) * Xform2D::Translation(x, y));
 }
 
+
+void Painter::DrawLineStroke(int width, Color color)
+{
+	switch(width) {
+		case PEN_NULL:
+			Stroke(0, color);
+			return;
+		case PEN_SOLID:
+			Stroke(1, color);
+			break;
+		case PEN_DASH:
+			Dash("18 6");
+			break;
+		case PEN_DOT:
+			Dash("3 3");
+			break;
+		case PEN_DASHDOT:
+			Dash("9 6 3 6");
+			break;
+		case PEN_DASHDOTDOT:
+			Dash("9 3 3 3 3 3");
+			break;
+	default:
+		Stroke(width, color);
+		return;
+	}
+	Stroke(1, color);
+}
+
 void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	double h = width / 2;
 	Move(x1 + h, y1 + h);
 	Line(x2 + h, y2 + h);
-	Stroke(max(width, 0), color);
+	DrawLineStroke(width, color);
 }
 
 void Painter::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
@@ -89,7 +118,7 @@ void Painter::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const 
 		Move(*lp);
 		while(++lp < vertices)
 			Line(*lp);
-		Stroke(max(width, 0), color);
+		DrawLineStroke(width, color);
 	}
 }
 
@@ -122,7 +151,7 @@ void Painter::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 		else if(!IsNull(color))
 			Fill(color);
 		if(!IsNull(outline))
-			Stroke(max(width, 0), outline);
+			DrawLineStroke(width, outline);
 	}
 }
 
@@ -139,7 +168,7 @@ void Painter::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color
 		sweep += 2 * M_PI;
 	Move(center.x + radius.cx * cos(ang1), center.y + radius.cy * sin(ang1));
 	Arc(center, radius.cx, radius.cy, ang1, -sweep);
-	Stroke(max(width, 0), color);
+	DrawLineStroke(width, color);
 }
 
 void Painter::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
@@ -147,7 +176,7 @@ void Painter::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 	Sizef sz = r.GetSize();
 	Ellipse(r.left + sz.cx / 2, r.top + sz.cy / 2, sz.cx / 2, sz.cy / 2);
 	Fill(color);
-	Stroke(max(pen, 0), pencolor);
+	DrawLineStroke(pen, pencolor);
 }
 
 void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)

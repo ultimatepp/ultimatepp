@@ -150,7 +150,8 @@ protected:
 	void   DoArc0(double theta, double th_sweep, const Xform2D& m);
 	void   DoArc(const Pointf& c, const Pointf& r, double angle, double sweep, double xangle);
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
-                    const Pointf& p, const Pointf& p0);
+	                 const Pointf& p, const Pointf& p0);
+	void   DrawLineStroke(int width, Color color);
 
 public:
 	void     Clear(const RGBA& color);
