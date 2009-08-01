@@ -156,10 +156,13 @@ public:
 };
 
 class MemoryRaster : public Raster {
-public:
-	MemoryRaster();
-	MemoryRaster(Raster& raster)                 { Load(raster); }
+	RasterFormat    format;
+	Info            info;
+	Size            size;
+	Vector< Buffer<byte> > lines;
+	Vector<RGBA>    palette;
 
+public:
 	virtual Size               GetSize()         { return size; }
 	virtual Info               GetInfo()         { return info; }
 	virtual Line               GetLine(int line);
@@ -170,12 +173,8 @@ public:
 	void                       Load(Raster& raster);
 	int                        GetLength() const;
 
-private:
-	RasterFormat    format;
-	Info            info;
-	Size            size;
-	Vector< Buffer<byte> > lines;
-	Vector<RGBA>    palette;
+	MemoryRaster();
+	MemoryRaster(Raster& raster)                 { Load(raster); }
 };
 
 class StreamRaster : public Raster {
