@@ -1,4 +1,4 @@
-topic "";
+topic "Raster";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -85,6 +85,11 @@ ine][@(0.0.255) `&]_[*@3 b])&]
 [s2;%% Pick constructor.&]
 [s3;%% &]
 [s4; &]
+[s5;:Raster`:`:Line`:`:Line`(`): [* Line]()&]
+[s2;%% Default constructor. Default constructed Line can be used 
+as target of pick transfer from another Line.&]
+[s3; &]
+[s4; &]
 [s5;:Raster`:`:Line`:`:operator`=`(pick`_ Raster`:`:Line`&`): [@(0.0.255) void]_[* operat
 or`=]([@(0.128.128) pick`_]_[_^Raster`:`:Line^ Line][@(0.0.255) `&]_[*@3 b])&]
 [s2;%% Pick assignment.&]
@@ -136,7 +141,9 @@ returns 1.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Raster`:`:Create`(`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* Create]()&]
-[s2;%% &]
+[s2;%% Called at the beginning of processing of a new raster, e.g. 
+used to read file header and get internal variables ready for 
+processing. false return value indicates failure.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Raster`:`:GetSize`(`): [@(0.0.255) virtual] [_^Size^ Size]_[* GetSize]()_`=_[@3 0]&]
@@ -149,7 +156,9 @@ returns 1.&]
 [s4;%% &]
 [s5;:Raster`:`:GetLine`(int`): [@(0.0.255) virtual] [_^Raster`:`:Line^ Line]_[* GetLine]([@(0.0.255) i
 nt]_[*@3 line])_`=_[@3 0]&]
-[s2;%%  [%-*@3 line].&]
+[s2;%% Reads a single scanline [%-*@3 line] from the raster. If possible, 
+Raster should be optimized for reading scanlines in ascending 
+order `- this what most processing functions (should) require.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Raster`:`:IsError`(`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* IsError]()&]
@@ -200,4 +209,4 @@ the progress of operation (first int is current step, second
 is number of step to do) and also to cancel the operation (if 
 it returns true; empty Image is returned in that case). Default 
 value for the parameter means no progress feedback is provided.&]
-[s3;%% ]
+[s0; ]
