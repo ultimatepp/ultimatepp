@@ -78,6 +78,7 @@ file
 		depends() xide.ico
 		depends() ide.ico,
 	Makefile,
+	theide.desktop,
 	Info readonly separator,
 	Copying;
 
