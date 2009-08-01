@@ -133,4 +133,11 @@ alse])&]
 [s2;%% Attempts to read Image from the stream, file or string, using 
 all registered decoders. [%-*@3 progress] can be used to track 
 progress of operation or to cancel it by returning true.&]
-[s3;%% ]
+[s3;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
+[s4;H0; &]
+[s5;:StreamRaster`:`:StreamRaster`(`): [* StreamRaster]()&]
+[s2;%% Puts StreamRaster into error state (error state is reset by 
+Open).&]
+[s3; &]
+[s0; ]
