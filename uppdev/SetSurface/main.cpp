@@ -7,7 +7,6 @@ struct MyApp : TopWindow {
 
 	virtual void Paint(Draw& w) {
 		w.DrawRect(GetSize(), LtGray());
-		RTIMING("Benchmark");
 		for(int i = 0; i < 100; i++) {
 			SetSurface(w, 0, 0, 256, 256, pixels);
 			SetSurface(w, RectC(300, 128, 128, 128), pixels, Size(256, 256), Point(0, 0));
