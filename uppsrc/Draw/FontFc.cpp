@@ -89,7 +89,7 @@ struct FtFaceEntry {
 
 FT_Face FTFace(Font fnt, String *rpath = NULL)
 {
-	RTIMING("FTFace");
+	LTIMING("FTFace");
 	static FtFaceEntry cache[FONTCACHE];
 	ONCELOCK {
 		for(int i = 0; i < FONTCACHE; i++)
@@ -110,7 +110,7 @@ FT_Face FTFace(Font fnt, String *rpath = NULL)
 		}
 		be = e;
 	}
-	RTIMING("FTFace2");
+	LTIMING("FTFace2");
 	if(be.face) {
 		LOG("Removing " << be.font << " - " << (void *)be.face);
 		FT_Done_Face(be.face);
@@ -158,13 +158,13 @@ CommonFontInfo GetFontInfoSys(Font font)
 
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
-	RTIMING("GetGlyphInfoSys");
+	LTIMING("GetGlyphInfoSys");
 	GlyphInfo gi;
 	FT_Face face = FTFace(font, NULL);
 	gi.lspc = gi.rspc = 0;
 	gi.width = 0x8000;
 	if(face) {
-		RTIMING("GetGlyphInfoSys 2");
+		LTIMING("GetGlyphInfoSys 2");
 		int glyph_index = FT_Get_Char_Index(face, chr);
 		if(glyph_index &&
 			(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT|FT_LOAD_NO_BITMAP) == 0 ||
