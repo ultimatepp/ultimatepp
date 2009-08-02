@@ -1,9 +1,9 @@
 uses
-	Core;
+	CtrlLib;
 
 file
 	main.cpp;
 
 mainconfig
-	"" = "CONSOLE ST";
+	"" = "GUI";
 
