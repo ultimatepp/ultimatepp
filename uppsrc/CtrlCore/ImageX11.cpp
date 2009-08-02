@@ -41,6 +41,28 @@ static void sInitXImage(XImage& ximg, Size sz)
 #endif
 }
 
+void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point srcoff)
+{
+	GuiLock __;
+	XImage ximg;
+	sInitXImage(ximg, srcsz);
+	ximg.bitmap_pad = 32;
+	ximg.bytes_per_line = sizeof(RGBA) * srcsz.cx;
+	ximg.bits_per_pixel = 32;
+	ximg.blue_mask = 0x00ff0000;
+	ximg.green_mask = 0x0000ff00;
+	ximg.red_mask = 0x000000ff;
+	ximg.bitmap_unit = 32;
+	ximg.depth = 24;
+	ximg.data = (char *)pixels;
+	XInitImage(&ximg);
+	Drawable dw = w.GetDrawable();
+	GC gc = XCreateGC(Xdisplay, dw, 0, 0);
+	XPutImage(Xdisplay, dw, gc, &ximg, srcoff.x, srcoff.y,
+	          dest.left, dest.top, dest.GetWidth(), dest.GetHeight());
+	XFreeGC(Xdisplay, gc);
+}
+
 void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 {
 	GuiLock __;
@@ -58,7 +80,6 @@ void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 	ximg.blue_mask = 0x00ff0000;
 	ximg.green_mask = 0x0000ff00;
 	ximg.red_mask = 0x000000ff;
-	Buffer<RGBA> pma;
 	ximg.bitmap_unit = 32;
 	ximg.depth = 24;
 	ximg.data = (char *)pixels;
