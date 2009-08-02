@@ -1,0 +1,11 @@
+description "Setting RGBA pixels from the buffer to window\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
