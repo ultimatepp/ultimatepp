@@ -80,4 +80,29 @@ INITBLOCK {
 	InstallSystemImage();
 }
 
+void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels);
+void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, Point poff);
+
+void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff)
+{
+	SystemDraw *sw = dynamic_cast<SystemDraw *>(&w);
+	if(sw && sw->IsGui() && IsWinNT())
+		SetSurface(*sw, dest, pixels, srcsz, poff);
+	else {
+		ImageBuffer ib(dest.GetWidth(), dest.GetHeight());
+		for(int i = 0; i < ib.GetHeight(); i++) {
+			int sl = poff.y + i;
+			if(i >= 0 && i < srcsz.cy)
+				Copy(ib[i], pixels + srcsz.cx * sl + poff.x,
+				     minmax(srcsz.cx - poff.x, 0, min(dest.GetWidth(), srcsz.cx)));
+		}
+		w.DrawImage(dest.left, dest.top, ib);
+	}
+}
+
+void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels)
+{
+	SetSurface(w, RectC(x, y, cx, cy), pixels, Size(cx, cy), Point(0, 0));
+}
+
 END_UPP_NAMESPACE

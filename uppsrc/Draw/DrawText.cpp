@@ -35,7 +35,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 	double cosa;
 	int    d = 0;
 	if(angle)
-		Draw::SinCos(angle, sina, cosa); //TODO global sin tables!
+		Draw::SinCos(angle, sina, cosa);
 	for(int i = 0; i < n; i++) {
 		wchar chr = text[i];
 		GlyphInfo gi = GetGlyphInfo(font, chr);

@@ -88,17 +88,28 @@ HBITMAP CreateBitMask(const RGBA *data, Size sz, Size tsz, Size csz, RGBA *ct)
 	return ::CreateBitmap(tsz.cx, tsz.cy, 1, 1, mask);
 }
 
-void SetSurface(HDC dc, int x, int y, int cx, int cy, const RGBA *pixels)
+void SetSurface(HDC dc, const Rect& dest, const RGBA *pixels, Size srcsz, Point srcoff)
 {
 	GuiLock __;
-	BitmapInfo32__ bi(cx, cy);
-	::SetDIBitsToDevice(dc, x, y, cx, cy, 0, 0, 0, cy, pixels,
-	                    bi, DIB_RGB_COLORS);
+	BitmapInfo32__ bi(srcsz.cx, srcsz.cy);
+	::SetDIBitsToDevice(dc, dest.left, dest.top, dest.GetWidth(), dest.GetHeight(),
+	                    srcoff.x, -srcoff.y - dest.Height() + srcsz.cy, 0, srcsz.cy, pixels, bi,
+	                    DIB_RGB_COLORS);
+}
+
+void SetSurface(HDC dc, int x, int y, int cx, int cy, const RGBA *pixels)
+{
+	SetSurface(dc, RectC(x, y, cx, cy), pixels, Size(cx, cy), Point(0, 0));
 }
 
 void SetSurface(SystemDraw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 {
 	SetSurface(w.GetHandle(), x, y, cx, cy, pixels);
+}
+
+void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, Point poff)
+{
+	SetSurface(w.GetHandle(), dest, pixels, psz, poff);
 }
 
 class DrawSurface : NoCopy {

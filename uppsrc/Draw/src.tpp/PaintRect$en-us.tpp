@@ -11,7 +11,7 @@ topic "";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 PaintRect]]}}&]
-[s4;%- &]
+[s4;H0;%- &]
 [s1;:PaintRect`:`:class:%- [@(0.0.255) class]_[* PaintRect]_:_[@(0.0.255) private]_[*@3 Moveab
 le]<[* PaintRect]>_&]
 [s2; PaintRect is a simple helper class that combines Value and a 
