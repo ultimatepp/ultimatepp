@@ -99,7 +99,6 @@ void Font::SyncStdFont()
 void Font::SetStdFont(Font font)
 {
 	DrawLock __;
-	static bool x;
 	InitStdFont();
 	AStdFont = font;
 	SyncStdFont();
