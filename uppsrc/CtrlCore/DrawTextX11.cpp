@@ -12,6 +12,8 @@ int    gtk_hinting = -1;
 String gtk_hintstyle;
 String gtk_rgba;
 
+extern int gtk_dpi;
+
 XftFont *CreateXftFont(Font font, int angle)
 {
 	LTIMING("CreateXftFont");
@@ -28,6 +30,7 @@ XftFont *CreateXftFont(Font font, int angle)
 	FcPatternAddString(p, FC_FAMILY, (FcChar8*)~face);
 	FcPatternAddInteger(p, FC_SLANT, font.IsItalic() ? 110 : 0);
 	FcPatternAddInteger(p, FC_PIXEL_SIZE, hg);
+	FcPatternAddInteger(p, FC_DPI, gtk_dpi);
 	FcPatternAddInteger(p, FC_WEIGHT, font.IsBold() ? 200 : 100);
 	FcPatternAddBool(p, FC_MINSPACE, 1);
 	if(angle) {
