@@ -14,3 +14,7 @@ TOPIC("PaintRect$en-us")
 #include "PaintRect$en-us.tppi"
 END_TOPIC
 
+TOPIC("RasterEncoder$en-us")
+#include "RasterEncoder$en-us.tppi"
+END_TOPIC
+
