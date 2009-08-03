@@ -82,10 +82,10 @@ LAYOUT(ObjectSizeLayout, 290, 102)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(4, 24))
 END_LAYOUT
 
-LAYOUT(ParaFormatLayout, 488, 352)
-	UNTYPED(para, LeftPosZ(0, 488).TopPosZ(0, 320))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(348, 64).TopPosZ(320, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(416, 64).TopPosZ(320, 24))
+LAYOUT(ParaFormatLayout, 488, 368)
+	UNTYPED(para, LeftPosZ(0, 488).TopPosZ(0, 328))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(348, 64).TopPosZ(336, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(416, 64).TopPosZ(336, 24))
 END_LAYOUT
 
 LAYOUT(StylesLayout, 700, 496)

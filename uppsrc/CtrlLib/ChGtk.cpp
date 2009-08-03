@@ -577,6 +577,7 @@ String GtkStyleString(const char *name)
 	return h;
 }
 
+extern int    gtk_dpi;
 extern int    gtk_antialias;
 extern int    gtk_hinting;
 extern String gtk_hintstyle;
@@ -622,7 +623,7 @@ void ChHostSkin()
 
 	String font_name = GtkStyleString("gtk-font-name");
 	int xdpi = Nvl(GtkStyleInt("gtk-xft-dpi"), 72 * 1024);
-
+	gtk_dpi = xdpi / 1024;
 	gtk_antialias = Nvl(GtkStyleInt("gtk-xft-antialias"), -1);
 	gtk_hinting = Nvl(GtkStyleInt("gtk-xft-hinting"), -1);
 //	gtk_hintstyle = GtkStyleString("gtk-xft-hintstyle");
