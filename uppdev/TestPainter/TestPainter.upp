@@ -3,7 +3,7 @@ uses
 	Painter;
 
 file
-	main.cpp;
+	main.cpp charset "UTF-8";
 
 mainconfig
 	"" = "GUI";
