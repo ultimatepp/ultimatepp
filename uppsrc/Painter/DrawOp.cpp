@@ -183,8 +183,9 @@ void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, 
 {
 	Begin();
 	EvenOdd(true);
+	Translate(x, y);
 	if(angle)
-		Rotate(angle * M_2PI / 36000);
+		Rotate(-angle * M_2PI / 3600);
 	if(n < 0)
 		n = wstrlen(text);
 	double *ddx = NULL;
@@ -195,7 +196,7 @@ void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, 
 		for(int i = 0; i < n; i++)
 			ddx[i] = dx[i];
 	}
-	Text(x, y, text, font, n, ddx);
+	Text(0, 0, text, font, n, ddx);
 	Fill(ink);
 	End();
 }

@@ -228,7 +228,7 @@ void SystemDraw::BeginNative()
 
 void SystemDraw::EndNative()
 {
-	if(GetPixelsPerInch() != nativeDpi && --native == 0) {
+	if(GetPixelsPerInch() == nativeDpi && --native == 0) {
 		DotsMode();
 		actual_offset = actual_offset_bak;
 		SetOrg();

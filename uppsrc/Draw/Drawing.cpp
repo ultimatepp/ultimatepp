@@ -563,65 +563,55 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 						DrawText(x, y, angle, text, font, ink);
 				}
 				else {
+					const wchar *wp = ~text;
+					double q = Length((Sizef)ps.target) / Length((Sizef)ps.source);
+					double px = 0;
+					while(nn--) {
+						int cx;
+						if(dxb)
+							ps / cx;
+						else
+							cx = font[*wp++];
+						double npx = q * cx + px;
+						*wd++ = (int)npx - (int)px;
+						px = npx;
+					}
+					int ht = (int)(font.GetHeight() * q);
+					font.Width((int)q * font.GetWidth()).Height(ht ? ht : 1);
+					DrawText(ps.GetX(x), ps.GetY(y), angle, text, font, ink, dx);
+				/*
 					FontInfo fi = font.Info();
 					const wchar *wp = ~text;
 					int odd = (angle / 900) & 1;
-					if(angle % 900 == 0) {
-						int error = 0;
-						int a, b;
-						if(odd) {
-							a = ps.target.cy;
-							b = ps.source.cy;
-							int ht = ps.GetCx(fi.GetFontHeight());
-							font.Width(ps.GetCy(fi.GetAveWidth())).Height(ht ? ht : 1);
-							FontInfo nf = font.Info();
-							x = angle == 2700 ? ps.GetX(x - fi.GetAscent()) + nf.GetAscent()
-							                  : ps.GetX(x + fi.GetAscent()) - nf.GetAscent();
-							y = ps.GetY(y);
+					double ang = (double) (angle % 900) * M_2PI / 3600;
+					double sx = (double) ps.target.cx / ps.source.cx;
+					double sy = (double) ps.target.cy / ps.source.cy;
+					double ang2 = atan((odd ? sx / sy : sy / sx) * tan(ang));
+					DDUMP(odd);
+					DDUMP(cx);
+					DDUMP(sy);
+					DDUMP(sin(ang));
+					DDUMP(sin(ang2));
+					double q = (odd ? sx : sy) * sin(ang) / sin(ang2);
+					double error = 0;
+					while(nn--) {
+						int cx;
+						if(dxb) {
+							ps / cx;
+							DDUMP(cx);
 						}
-						else {
-							a = ps.target.cx;
-							b = ps.source.cx;
-							int ht = ps.GetCy(fi.GetFontHeight());
-							font.Width(ps.GetCx(fi.GetAveWidth())).Height(ht ? ht : 1);
-							FontInfo nf = font.Info();
-							x = ps.GetX(x);
-							y = angle == 1800 ? ps.GetY(y - fi.GetAscent()) + nf.GetAscent()
-							                  : ps.GetY(y + fi.GetAscent()) - nf.GetAscent();
-						}
-						while(nn--) {
-							int c;
-							if(dxb)
-								ps / c;
-							else
-								c = fi[*wp++];
-							*wd++ = (c * a + error) / b;
-							error = (c * a + error) % b;
-						}
-						DrawText(x, y, angle, text, font, ink, dx);
+						else
+							cx = fi[*wp++];
+						double ncx = q * cx + error;
+						DDUMP(q * cx);
+						*wd++ = cx = (int) ncx;
+						error = ncx - cx;
 					}
-					else {
-						double ang = (double) (angle % 900) * M_2PI / 3600;
-						double sx = (double) ps.target.cx / ps.source.cx;
-						double sy = (double) ps.target.cy / ps.source.cy;
-						double ang2 = atan((odd ? sx / sy : sy / sx) * tan(ang));
-						double q = (odd ? sx : sy) * sin(ang) / sin(ang2);
-						double error = 0;
-						while(nn--) {
-							int cx;
-							if(dxb)
-								ps / cx;
-							else
-								cx = fi[*wp++];
-							double ncx = q * cx + error;
-							*wd++ = cx = (int) ncx;
-							error = ncx - cx;
-						}
-						int ht = (int)(fi.GetFontHeight() * (sx * sin(ang) * sin(ang2) + sy * cos(ang) * cos(ang2)));
-						font.Width(int(q * fi.GetAveWidth())).Height(ht ? ht : 1);
-						DrawText(ps.GetX(x), ps.GetY(y), int(ang2 * 3600 / M_2PI) + (angle / 900) * 900,
-						         text, font, ink, dx);
-					}
+					int ht = (int)(fi.GetFontHeight() * (sx * sin(ang) * sin(ang2) + sy * cos(ang) * cos(ang2)));
+					font.Width(int(q * fi.GetAveWidth())).Height(ht ? ht : 1);
+					DrawText(ps.GetX(x), ps.GetY(y), int(ang2 * 3600 / M_2PI) + (angle / 900) * 900,
+					         text, font, ink, dx);
+				*/
 				}
 			}
 		}
