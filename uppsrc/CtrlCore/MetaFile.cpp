@@ -11,6 +11,7 @@ void WinMetaFile::Init() {
 
 void WinMetaFile::Paint(Draw& w, const Rect& r) const {
 	ChkP();
+	w.DrawRect(r, White());
 	if(!hemf)
 		return;
 	SystemDraw *h = dynamic_cast<SystemDraw *>(&w);

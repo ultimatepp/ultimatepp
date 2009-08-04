@@ -105,7 +105,7 @@ int  Paragraph::GetWidth(int zoom) const {
 			const char *s = pptr->text;
 			int n = pptr->text.GetLength();
 			while(n--) {
-				cx += pf[*s == 31 ? 32 : (byte) *s];
+				cx += pf[*s == 31 ? 32 : ToUnicode((byte) *s, CHARSET_DEFAULT)];
 				s++;
 			}
 		}
@@ -165,11 +165,10 @@ bool Paragraph::Format(ParaTypo& pfmt, int cx, int zoom) const {
 			font.Height(DocZoom(zoom, pptr->font.GetHeight()));
 			FontInfo pf = pp->Set(font, pptr->color);
 			const char *s = pptr->text;
-//			LOG("Format " << s << " a: " << pf.GetAscent() << " d: " << pf.GetDescent());
 			int n = pptr->text.GetLength();
 			while(n--) {
 				*cp++ = *s;
-				*wp++ = pf[*s == 31 ? 32 : (byte) *s];
+				*wp++ = pf[*s == 31 ? 32 : ToUnicode((byte) *s, CHARSET_DEFAULT)];
 				*ip++ = pp;
 				s++;
 			}
