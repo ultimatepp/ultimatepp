@@ -576,7 +576,7 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 						*wd++ = (int)npx - (int)px;
 						px = npx;
 					}
-					int ht = (int)(font.GetHeight() * q);
+					int ht = (int)(font.GetHeight() * min(double(ps.target.cx) / ps.source.cx, double(ps.target.cy) / ps.source.cy));
 					font.Width((int)q * font.GetWidth()).Height(ht ? ht : 1);
 					DrawText(ps.GetX(x), ps.GetY(y), angle, text, font, ink, dx);
 				/*
