@@ -591,6 +591,16 @@ struct stat& FindFile::Stat() const {
 	return statf;
 }
 
+bool FindFile::IsSymLink() const
+{
+	if(file)  {
+		struct stat stf;
+		lstat(AppendFileName(path, name), &stf);
+		return S_ISLNK(stf.st_mode);
+	}
+	return false;
+}
+
 bool FindFile::Next() {
 	if(!dir) return false;
 	statis = false;
