@@ -16,7 +16,7 @@ void GetStdFontSys(String& name, int& height)
 	NONCLIENTMETRICS ncm;
 	ncm.cbSize = sizeof(ncm);
 	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
-	name = ncm.lfMenuFont.lfFaceName;
+	name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
 	height = abs((int)ncm.lfMenuFont.lfHeight);
 #endif
 }
