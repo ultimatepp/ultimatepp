@@ -134,7 +134,7 @@ public:
 	bool        IsFolder() const;
 
 	bool        IsFile() const            { return S_ISREG(GetMode()); }
-	bool        IsSymLink() const         { return S_ISLNK(GetMode()); }
+	bool        IsSymLink() const;
 
 	operator    bool() const              { return file; }
 
