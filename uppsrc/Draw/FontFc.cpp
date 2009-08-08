@@ -26,8 +26,6 @@ bool sInitFt(void)
 	return FT_Init_FreeType(&sFTlib) == 0;
 }
 
-int    gtk_dpi = 96;
-
 FcPattern *CreateFcPattern(Font font)
 {
 	LTIMING("CreateXftFont");
@@ -39,12 +37,11 @@ FcPattern *CreateFcPattern(Font font)
 	FcPatternAddString(p, FC_FAMILY, (FcChar8*)~face);
 	FcPatternAddInteger(p, FC_SLANT, font.IsItalic() ? 110 : 0);
 	FcPatternAddInteger(p, FC_PIXEL_SIZE, hg);
-	FcPatternAddInteger(p, FC_DPI, gtk_dpi);
 	FcPatternAddInteger(p, FC_WEIGHT, font.IsBold() ? 200 : 100);
 	FcPatternAddBool(p, FC_MINSPACE, 1);
-	FcResult result;
 	FcConfigSubstitute(0, p, FcMatchPattern);
 	FcDefaultSubstitute(p);
+	FcResult result;
 	FcPattern *m = FcFontMatch(0, p, &result);
 	FcPatternDestroy(p);
 	return m;
@@ -75,7 +72,7 @@ FT_Face CreateFTFace(const FcPattern *pattern, String *rpath) {
 	FT_F26Dot6 ysize = (FT_F26Dot6) (dsize * 64.0);
 	FT_F26Dot6 xsize = (FT_F26Dot6) (dsize * aspect * 64.0);
 
-	if(FT_New_Face (sFTlib, (const char *)filename, 0, &face))
+	if(FT_New_Face(sFTlib, (const char *)filename, 0, &face))
 		return NULL;
 
 	FT_Set_Char_Size(face, xsize, ysize, 0, 0);
@@ -90,25 +87,35 @@ struct FtFaceEntry {
 	String  path;
 };
 
+static FtFaceEntry ft_cache[FONTCACHE];
+
+void ClearFtFaceCache()
+{
+	for(int i = 0; i < FONTCACHE; i++)
+		ft_cache[i].font.Height(-30000);
+}
+
+FT_Face (*FTFaceXft)(Font fnt, String *rpath);
+
 FT_Face FTFace(Font fnt, String *rpath = NULL)
 {
 	LTIMING("FTFace");
-	static FtFaceEntry cache[FONTCACHE];
+	if(FTFaceXft)
+		return (*FTFaceXft)(fnt, rpath);
 	ONCELOCK {
-		for(int i = 0; i < FONTCACHE; i++)
-			cache[i].font.Height(-30000);
+		ClearFtFaceCache();
 	}
 	FtFaceEntry be;
-	be = cache[0];
+	be = ft_cache[0];
 	for(int i = 0; i < FONTCACHE; i++) {
-		FtFaceEntry e = cache[i];
+		FtFaceEntry e = ft_cache[i];
 		if(i)
-			cache[i] = be;
+			ft_cache[i] = be;
 		if(e.font == fnt) {
 			if(rpath)
 				*rpath = e.path;
 			if(i)
-				cache[0] = e;
+				ft_cache[0] = e;
 			return e.face;
 		}
 		be = e;
@@ -122,16 +129,19 @@ FT_Face FTFace(Font fnt, String *rpath = NULL)
 	FcPattern *p = CreateFcPattern(fnt);
 	be.face = CreateFTFace(p, &be.path);
 	FcPatternDestroy(p);
-	cache[0] = be;
+	ft_cache[0] = be;
 	if(rpath)
 		*rpath = be.path;
 	return be.face;
 }
 
+CommonFontInfo (*GetFontInfoSysXft)(Font font);
+
 CommonFontInfo GetFontInfoSys(Font font)
 {
+	if(GetFontInfoSysXft)
+		return (*GetFontInfoSysXft)(font);
 	CommonFontInfo fi;
-
 	String path;
 	FT_Face face = FTFace(font, &path);
 	if(face) {
@@ -159,9 +169,13 @@ CommonFontInfo GetFontInfoSys(Font font)
 #define TRUNC(x)    ((x) >> 6)
 #define ROUND(x)    (((x)+32) & -64)
 
+GlyphInfo (*GetGlyphInfoSysXft)(Font font, int chr);
+
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	LTIMING("GetGlyphInfoSys");
+	if(GetGlyphInfoSysXft)
+		return (*GetGlyphInfoSysXft)(font, chr);
 	GlyphInfo gi;
 	FT_Face face = FTFace(font, NULL);
 	gi.lspc = gi.rspc = 0;

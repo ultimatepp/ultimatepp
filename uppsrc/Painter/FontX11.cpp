@@ -150,7 +150,6 @@ void PaintCharacterSys(Painter& sw, double x, double y, int ch, Font fnt)
 	sw.EvenOdd(true);
 }
 
-
 END_UPP_NAMESPACE
 
 #endif

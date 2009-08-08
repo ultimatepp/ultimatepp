@@ -67,9 +67,18 @@ int TextArrayOps::GetPrevWord(int cursor)
 	return c;
 }
 
+Rect LookMargins(const Rect& r, const Value& ch)
+{
+	Rect m = ChMargins(ch);
+	int fcy = GetStdFontCy();
+	if(m.top + m.bottom + fcy > r.GetHeight())
+		m.top = m.bottom = max((r.GetHeight() - fcy) / 2, 0);
+	return m;
+}
+
 void LookFrame::FrameLayout(Rect& r)
 {
-	Rect m = ChMargins(Get());
+	Rect m = LookMargins(r, Get());
 	r.left += m.left;
 	r.right -= m.right;
 	r.top += m.top;
@@ -90,7 +99,7 @@ void LookFrame::FrameAddSize(Size& sz)
 
 void ActiveEdgeFrame::FrameLayout(Rect& r)
 {
-	Rect m = ChMargins(edge[0]);
+	Rect m = LookMargins(r, edge[0]);
 	r.left += m.left;
 	r.right -= m.right;
 	r.top += m.top;
@@ -135,6 +144,7 @@ CH_STYLE(EditField, Style, StyleDefault)
 	for(int i = 0; i < 4; i++)
 		edge[i] = CtrlsImg::EFE();
 	activeedge = false;
+	vfm = 2;
 }
 
 bool EditField::FrameIsEdge()

@@ -59,7 +59,7 @@ void SvnSync::SyncList()
 			for(int i = 0; i < ln.GetCount(); i++) {
 				String h = ln[i];
 				if(h.GetCount() > 7) {
-					String file = h.Mid(7);
+					String file = TrimLeft(h.Mid(7));
 					if(IsFullPath(file)) {
 						actions = true;
 						h.Trim(7);

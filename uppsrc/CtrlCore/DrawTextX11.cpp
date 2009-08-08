@@ -7,11 +7,10 @@ NAMESPACE_UPP
 #define LTIMING(x)
 #define LLOG(x)
 
-int    gtk_antialias = -1;
-int    gtk_hinting = -1;
-String gtk_hintstyle;
-String gtk_rgba;
-
+extern int    gtk_antialias;
+extern int    gtk_hinting;
+extern String gtk_hintstyle;
+extern String gtk_rgba;
 extern int gtk_dpi;
 
 XftFont *CreateXftFont(Font font, int angle)
@@ -22,15 +21,11 @@ XftFont *CreateXftFont(Font font, int angle)
 	Std(font);
 	int hg = abs(font.GetHeight());
 	if(hg == 0) hg = 10;
-	int i = font.GetFace();
-	if(i < 0 || i >= Font::GetFaceCount())
-		i = 0;
 	String face = font.GetFaceName();
 	FcPattern *p = FcPatternCreate();
 	FcPatternAddString(p, FC_FAMILY, (FcChar8*)~face);
 	FcPatternAddInteger(p, FC_SLANT, font.IsItalic() ? 110 : 0);
 	FcPatternAddInteger(p, FC_PIXEL_SIZE, hg);
-	FcPatternAddInteger(p, FC_DPI, gtk_dpi);
 	FcPatternAddInteger(p, FC_WEIGHT, font.IsBold() ? 200 : 100);
 	FcPatternAddBool(p, FC_MINSPACE, 1);
 	if(angle) {
@@ -106,6 +101,53 @@ XftFont *GetXftFont(Font fnt, int angle)
 	be.xftfont = CreateXftFont(fnt, angle);
 	cache[0] = be;
 	return be.xftfont;
+}
+
+CommonFontInfo XftGetFontInfoSys(Font font)
+{
+	CommonFontInfo fi;
+	String path;
+	XftFont *xftfont = GetXftFont(font, 0);
+	if(xftfont) {
+		fi.ascent = (int16)xftfont->ascent;
+		fi.descent = (int16)xftfont->descent;
+		fi.height = fi.ascent + fi.descent;
+		fi.lineheight = (int16)xftfont->height;
+		fi.external = 0;
+		fi.internal = 0;
+		fi.overhang = 0;
+		fi.maxwidth = (int16)xftfont->max_advance_width;
+		fi.avewidth = fi.maxwidth;
+		fi.default_char = '?';
+		fi.fixedpitch = font.GetFaceInfo() & Font::FIXEDPITCH;
+
+		char *fn = NULL;
+		XftPatternGetString(xftfont->pattern, XFT_FILE, 0, &fn);
+		if(fn && strlen(fn) < 250)
+			strcpy(fi.path, fn);
+	}
+	return fi;
+}
+
+GlyphInfo XftGetGlyphInfoSys(Font font, int chr)
+{
+	wchar h = chr;
+	XGlyphInfo info;
+	XftTextExtents16(Xdisplay, GetXftFont(font, 0), &h, 1, &info);
+	GlyphInfo gi;
+	gi.width = info.xOff;
+	gi.lspc = -info.x;
+	gi.rspc = info.xOff - info.width + info.x;
+	return gi;
+}
+
+INITBLOCK {
+//	extern FT_Face (*FTFaceXft)(Font fnt, String *rpath);
+	extern CommonFontInfo (*GetFontInfoSysXft)(Font font);
+	extern GlyphInfo (*GetGlyphInfoSysXft)(Font font, int chr);
+//	FTFaceXft = XftFTFace;
+	GetFontInfoSysXft = XftGetFontInfoSys;
+	GetGlyphInfoSysXft = XftGetGlyphInfoSys;
 }
 
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
