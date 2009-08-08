@@ -267,7 +267,7 @@ PdfDraw::OutlineInfo PdfDraw::GetOutlineInfo(Font fnt)
 		}
 	}
 #endif
-#ifdef PLATFORM_X11
+#ifdef PLATFORM_POSIX
 	FontInfo fi = fnt.Info();
 	String fn = fi.GetFileName();
 	String ext = ToLower(GetFileExt(fn));
@@ -299,7 +299,7 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 	#ifdef PLATFORM_WIN32
 	int fh = ff.GetHeight() - ff.GetInternal();//TODO
 	#endif
-	#ifdef PLATFORM_X11
+	#ifdef PLATFORM_POSIX
 	int fh = fnt.GetHeight();
 	#endif
 	OutlineInfo of = GetOutlineInfo(fnt);

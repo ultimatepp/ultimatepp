@@ -91,6 +91,7 @@ public:
 		Color selected, selectedtext;
 		Value edge[4];
 		bool  activeedge;
+		int   vfm;
 	};
 
 protected:

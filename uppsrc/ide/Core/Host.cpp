@@ -259,9 +259,9 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 
 	ONCELOCK {
 		struct sigaction sigchld_action;
-  		memset(&sigchld_action, 0, sizeof(sigchld_action));
-  		sigchld_action.sa_handler = sCleanZombies;
-  		sigaction(SIGCHLD, &sigchld_action, NULL);
+		memset(&sigchld_action, 0, sizeof(sigchld_action));
+		sigchld_action.sa_handler = sCleanZombies;
+		sigaction(SIGCHLD, &sigchld_action, NULL);
 	}
 
 	pid_t pid = fork();
@@ -269,8 +269,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	{
 		const char *from = environment;
 		Vector<const char *> env;
-		while(*from)
-		{
+		while(*from) {
 			env.Add(from);
 			from += strlen(from) + 1;
 		}
