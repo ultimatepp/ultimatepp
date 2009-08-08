@@ -4,9 +4,13 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	FindFile ff("u:\\upp.src\\uppdev\\aggdraw\\*.*");
+	FindFile ff("/bin/*.*");
 	while(ff) {
 		DUMP(ff.GetName());
+		DUMP(ff.IsSymLink());
+		DUMP(ff.IsFolder());
+		DUMP(ff.GetLength());
+		LOG("----------------------");
 		ff.Next();
 	}
 }
