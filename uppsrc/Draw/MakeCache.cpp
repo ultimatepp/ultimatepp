@@ -17,7 +17,6 @@ struct scImageMaker : LRUCache<Image>::Maker {
 	bool  paintonly;
 
 	virtual String Key() const {
-//		String q = m->Key();
 		return m->Key();
 	}
 	virtual int    Make(Image& object) const {
@@ -31,21 +30,27 @@ struct scImageMaker : LRUCache<Image>::Maker {
 };
 
 static int sMaxSize;
-static int sMaxSizeMax = 4000000;
+static int sMaxSizeMax = 1000000;
 
 void ClearMakeImageCache()
 {
-	sImageCache().Clear();
+	INTERLOCKED_(sMakeImage) {
+		sImageCache().Clear();
+	}
 }
 
 void SetMakeImageCacheMax(int m)
 {
-	sMaxSizeMax = m;
+	INTERLOCKED_(sMakeImage) {
+		sMaxSizeMax = m;
+	}
 }
 
 void  SetMakeImageCacheSize(int m)
 {
-	sMaxSize = m;
+	INTERLOCKED_(sMakeImage) {
+		sMaxSize = m;
+	}
 }
 
 void SweepMkImageCache()
@@ -66,10 +71,8 @@ Image MakeImage__(const ImageMaker& m, bool paintonly)
 		cm.paintonly = paintonly;
 		result = cache.Get(cm);
 		int q = min(cache.GetFoundSize() + cache.GetNewSize(), sMaxSizeMax);
-		if(q > sMaxSize) {
+		if(q > sMaxSize)
 			sMaxSize = q;
-			LLOG("ImageCache: Increasing maxsize to " << sMaxSize);
-		}
 		cache.Shrink(sMaxSize);
 	}
 	return result;
