@@ -515,6 +515,8 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	LLOG("========== END");
 }
 
+void SweepMkImageCache();
+
 void Ctrl::UpdateArea(SystemDraw& draw, const Rect& clip)
 {
 	GuiLock __;
@@ -531,6 +533,7 @@ void Ctrl::UpdateArea(SystemDraw& draw, const Rect& clip)
 	}
 	else
 		UpdateArea0(draw, clip, backpaint);
+	SweepMkImageCache();
 }
 
 void Ctrl::RemoveFullRefresh()
