@@ -18,3 +18,7 @@ TOPIC("RasterEncoder$en-us")
 #include "RasterEncoder$en-us.tppi"
 END_TOPIC
 
+TOPIC("ImageEncoder$en-us")
+#include "ImageEncoder$en-us.tppi"
+END_TOPIC
+

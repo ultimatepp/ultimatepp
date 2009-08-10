@@ -1,8 +1,9 @@
-description "PCRE regular expressions library";
+description "PCRE regular expressions library\377";
 
 file
 	Pcre.h,
 	RegExp.h,
 	RegExp.cpp,
-	lib.cpp;
+	lib.cpp,
+	COPYING;
 

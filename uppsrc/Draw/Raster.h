@@ -271,10 +271,6 @@ public:
 	virtual void Start(Size sz);
 	virtual void WriteLineRaw(const byte *data);
 
-	Size GetSize() const                { return ib.GetSize(); }
-	int  GetWidth() const               { return GetSize().cx; }
-	int  GetHeight() const              { return GetSize().cy; }
-
 	operator const RGBA *()             { return Image(ib); }
 	operator Image()                    { return Image(ib); }
 };
