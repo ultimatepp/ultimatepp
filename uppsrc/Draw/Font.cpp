@@ -135,12 +135,12 @@ Size Font::GetStdFontSize()
 
 Font StdFont()
 {
-	return Font(0, 0);
+	return Font(0, -32000);
 }
 
 int Font::GetHeight() const
 {
-	return v.height || v.face ? v.height : GetStdFont().GetHeight();
+	return v.height == -32000 ? GetStdFont().GetHeight() : v.height;
 }
 
 String Font::GetFaceName() const {

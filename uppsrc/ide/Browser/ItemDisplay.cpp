@@ -162,7 +162,7 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 			DrawHighlightImage(w, xx, yy, BrowserImg::Ref());
 			if(cnt > 1) {
 				String txt = AsString(cnt);
-				Font fnt = Arial(VertLayoutZoom(10)).Bold();
+				Font fnt = Arial(Ctrl::VertLayoutZoom(10)).Bold();
 				Size tsz = GetTextSize(txt, fnt);
 				Point p(xx + (sz.cx - tsz.cx) / 2, yy + (sz.cy - tsz.cy) / 2);
 				for(int ax = -1; ax <= 1; ax++)
