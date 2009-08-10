@@ -22,3 +22,7 @@ TOPIC("ImageEncoder$en-us")
 #include "ImageEncoder$en-us.tppi"
 END_TOPIC
 
+TOPIC("StreamRasterEncoder$en-us")
+#include "StreamRasterEncoder$en-us.tppi"
+END_TOPIC
+
