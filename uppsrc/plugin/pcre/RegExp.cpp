@@ -1,6 +1,5 @@
 #include "Pcre.h"
 
-
 NAMESPACE_UPP
 
 
@@ -143,6 +142,13 @@ String RegExp::GetString(int i)
 {
 	i = 2 * (i + 1);
 	return text.Mid(pos[i], pos[i + 1] - pos[i]);
+}
+
+void RegExp::GetMatchPos(int i, int& iPosStart, int& iPosAfterEnd)
+{
+	i = 2 * (i + 1);
+	iPosStart = pos[i];
+	iPosAfterEnd = pos[i + 1];
 }
 
 END_UPP_NAMESPACE
