@@ -12,8 +12,8 @@ topic "ImageEncoder";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 ImageEncoder]]}}&]
 [s4;H0; &]
-[s0;a25; [@(0.0.255)3 class][3 _][*3 ImageEncoder][3 _:_][@(0.0.255)3 public][3 _][*@3;3 RasterEncod
-er]&]
+[s0;a25; [@(0.0.255)3 class][3 _][*3 ImageEncoder][3 _:_][@(0.0.255)3 public][3 _][*_^RasterEncoder^3 R
+asterEncoder]&]
 [s0;l288;%% This RasterEncoder derived class encodes scanlines to 
 produce regular Image as result.&]
 [s0;l288;%% &]
@@ -28,4 +28,4 @@ produce regular Image as result.&]
 [s5;:ImageEncoder`:`:operator Image`(`): [* operator_Image]()&]
 [s2;%% Returns the resulting Image. Should only be called after all 
 scanlines (according to requested Image size) are completed.&]
-[s3;%% ]
+[s0; ]
