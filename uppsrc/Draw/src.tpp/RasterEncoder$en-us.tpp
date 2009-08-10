@@ -11,7 +11,7 @@ topic "RasterEncoder";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 RasterEncoder]]}}&]
-[s4;%- &]
+[s4;H0;%- &]
 [s1;:RasterEncoder`:`:class:%- [@(0.0.255)3 class][3 _][*3 RasterEncoder]&]
 [s2; RasterEncoder serves as consumer of RGBA scanline data. Typical 
 use is as encoder into one of common image file formats, like 
