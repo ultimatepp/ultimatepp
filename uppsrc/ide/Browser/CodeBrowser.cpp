@@ -148,8 +148,10 @@ int ItemCompareLexical(const Value& v1, const Value& v2)
 	return SgnCompare(a.qitem, b.qitem);
 }
 
-void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool g)
+void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool g, Index<String>& done)
 {
+	if(done.Find(type) >= 0) return;
+	done.Add(type);
 	int q = CodeBase().Find(type);
 	if(q < 0) return;
 	const Array<CppItem>& n = CodeBase()[q];
@@ -158,13 +160,19 @@ void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool 
 		if(m.IsType()) {
 			Vector<String> base = Split(m.qptype, ';');
 			for(int i = 0; i < base.GetCount(); i++)
-				GatherMethods(base[i], inherited, true);
+				GatherMethods(base[i], inherited, true, done);
 		}
 		if(m.IsCode() && g) {
 			bool& virt = inherited.GetAdd(m.qitem);
 			virt = virt || m.virt;
 		}
 	}
+}
+
+void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool g)
+{
+	Index<String> done;
+	GatherMethods(type, inherited, g, done);
 }
 
 void CodeBrowser::LoadScope()

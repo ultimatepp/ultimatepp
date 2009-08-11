@@ -308,4 +308,13 @@ Ctrl *Ctrl::GetDragAndDropTarget()
 	return dndctrl;
 }
 
+void InitRichImage(String      (*fGetImageClip)(const Image& img, const String& fmt),
+                   bool        (*fAcceptImage)(PasteClip& clip),
+                   Image       (*fGetImage)(PasteClip& clip),
+                   const char *(*fClipFmtsImage)());
+
+INITBLOCK {
+	InitRichImage(GetImageClip, AcceptImage, GetImage, ClipFmtsImage);
+}
+
 END_UPP_NAMESPACE

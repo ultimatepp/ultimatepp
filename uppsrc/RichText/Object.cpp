@@ -1,5 +1,7 @@
 #include "RichText.h"
 
+#define LLOG(x) DLOG(x)
+
 NAMESPACE_UPP
 
 RichObjectType::RichObjectType() {}
