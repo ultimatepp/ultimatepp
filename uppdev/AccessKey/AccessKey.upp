@@ -5,6 +5,7 @@ include
 	gdfgsdfg;
 
 file
+	bak.tpp,
 	AccessKey.h,
 	test.key,
 	main.cpp,

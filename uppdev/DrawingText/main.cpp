@@ -2,6 +2,8 @@
 
 using namespace Upp;
 
+String text = "        Test";
+
 struct App : public TopWindow {
 	Drawing dw;
 
@@ -14,9 +16,10 @@ struct App : public TopWindow {
 	App()
 	{
 		Sizeable();
-		DrawingDraw w(1000, 1000);
-		for(int i = 0; i < 10; i++)
-			w.DrawText(500, 500, 300 * i, "        Test", Arial(20));
+		Size sz = GetTextSize(text, Arial(20));
+		DrawingDraw w(2 * sz.cx, 2 * sz.cx);
+		for(int i = 0; i < 9; i++)
+			w.DrawText(sz.cx, sz.cx, 300 * i, text, Arial(20));
 		dw = w;
 	}
 };

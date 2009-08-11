@@ -8,4 +8,6 @@ file
 mainconfig
 	"" = "GUI",
 	"" = "GUI NOGTK",
-	"" = "GUI MT";
+	"" = "GUI MT",
+	"" = "GUI USEMALLOC";
+
