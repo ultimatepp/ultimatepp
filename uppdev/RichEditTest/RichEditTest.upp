@@ -3,7 +3,8 @@ uses
 
 file
 	main.cpp,
-	todo.txt;
+	todo.txt,
+	test.tpp;
 
 mainconfig
 	"" = "GUI",
