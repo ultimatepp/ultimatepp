@@ -150,6 +150,20 @@ void Ide::UpdateFormat() {
 	SetupBars();
 }
 
+void Ide::EditorFontScroll(int d)
+{
+	if(!IsActiveFile())
+		return;
+	Package::File& f = ActiveFile();
+	if(f.font != 0 || editorsplit.GetZoom() < 0)
+		return;
+	int h = editorfont.GetCy();
+	int q = editorfont.GetHeight();
+	while(editorfont.GetCy() == h && (d < 0 ? editorfont.GetCy() > 5 : editorfont.GetCy() < 40))
+		editorfont.Height(q += d);
+	editor.SetFont(editorfont);
+}
+
 struct FormatDlg : TabDlg {
 	ColorPusher hl_color[CodeEditor::HL_COUNT];
 };
