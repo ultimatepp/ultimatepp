@@ -577,10 +577,10 @@ String GtkStyleString(const char *name)
 	return h;
 }
 
-int    gtk_antialias = -1;
-int    gtk_hinting;
-String gtk_hintstyle;
-String gtk_rgba;
+extern int    gtk_antialias;
+extern int    gtk_hinting;
+extern String gtk_hintstyle;
+extern String gtk_rgba;
 
 extern void ClearFtFaceCache();
 

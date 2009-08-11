@@ -7,11 +7,10 @@ NAMESPACE_UPP
 #define LTIMING(x)
 #define LLOG(x)
 
-extern int    gtk_antialias;
-extern int    gtk_hinting;
-extern String gtk_hintstyle;
-extern String gtk_rgba;
-extern int gtk_dpi;
+int    gtk_antialias = -1;
+int    gtk_hinting;
+String gtk_hintstyle;
+String gtk_rgba;
 
 XftFont *CreateXftFont(Font font, int angle)
 {
