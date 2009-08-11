@@ -632,10 +632,13 @@ bool AssistEditor::Key(dword key, int count)
 
 void AssistEditor::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	if(assist.IsOpen())
-		assist.MouseWheel(p, zdelta, keyflags);
+	if(keyflags & K_CTRL)
+		WhenFontScroll(sgn(zdelta));
 	else
-		CodeEditor::MouseWheel(p, zdelta, keyflags);
+		if(assist.IsOpen())
+			assist.MouseWheel(p, zdelta, keyflags);
+		else
+			CodeEditor::MouseWheel(p, zdelta, keyflags);
 }
 
 void AssistEditor::LeftDown(Point p, dword keyflags)

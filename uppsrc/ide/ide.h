@@ -391,6 +391,8 @@ struct AssistEditor : CodeEditor {
 	bool           Esc();
 	
 	void           SerializeNavigator(Stream& s);
+	
+	Callback1<int> WhenFontScroll;
 
 	typedef AssistEditor CLASSNAME;
 
@@ -704,6 +706,8 @@ public:
 	void      ToggleConsole()                    { ToggleBottom(1); }
 	void      SwapBottom();
 	bool      IsBottomShown() const;
+
+	void      EditorFontScroll(int d);
 
 	void      MakeTitle();
 	void      MakeIcon();
