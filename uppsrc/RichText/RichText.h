@@ -107,7 +107,7 @@ struct PageDraw {
 class RichObject;
 class Bar;
 
-struct RichObjectType : Moveable<RichObjectType> {
+struct RichObjectType {
 	virtual String GetTypeName(const Value& v) const = 0;
 	virtual String GetCreateName() const;
 	virtual Value  Read(const String& s) const;

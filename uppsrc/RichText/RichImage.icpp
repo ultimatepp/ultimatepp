@@ -42,7 +42,7 @@ void InitRichImage(String      (*fGetImageClip)(const Image& img, const String& 
 
 bool RichImage::Accept(PasteClip& clip)
 {
-	return sAcceptImage? sAcceptImage(clip) : false;
+	return sAcceptImage ? sAcceptImage(clip) : false;
 }
 
 Value RichImage::Read(PasteClip& clip)

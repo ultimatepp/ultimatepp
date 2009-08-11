@@ -500,8 +500,13 @@ void RichPara::UnpackParts(Stream& in, const RichPara::CharFormat& chrstyle,
 			part.Top().format = format;
 			in.Get();
 		}
-		else
-			part.Top().text.Cat(in.GetUtf8());
+		else {
+			WStringBuffer wb(part.Top().text);
+			wb.Reserve(512);
+			while(in.Term() >= 32 || in.Term() == 9)
+				wb.Cat(in.GetUtf8());
+			part.Top().text = wb;
+		}
 	if(part.Top().text.GetLength() == 0 && part.Top().IsText())
 		part.Drop();
 }
