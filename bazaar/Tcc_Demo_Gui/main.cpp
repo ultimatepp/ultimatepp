@@ -88,7 +88,7 @@ void Tcc_Demo::RunProgram()
 		if (!OpGetExe) {
 		    tcc.AddSymbol("plus", (void *)&plus);
 			tcc.Link();
-			double (*mytest1)(double, char *) = (double (*)(double, char *))tcc.GetSymbol("test");
+			double (*mytest1)(double, char *) = (double (*)(double, char *))tcc.GetSymbol("test"); 
 
 			char str[1024];
 			double res = mytest1(90, str);
