@@ -1,0 +1,24 @@
+description "Tiny C Compiler wrapper\377B255,42,0";
+
+uses
+	Core;
+
+options(POSIX) -DLIBTCC;
+
+options(WIN32) "-DTCC_TARGET_PE -DLIBTCC";
+
+file
+	Tcc.cpp,
+	Tcc.h,
+	libtcc.c,
+	srcdoc.tpp,
+	srcimp.tpp,
+	src.tpp,
+	src.tpp\Tcc.t,
+	lib/libtcc.h,
+	lib/README,
+	Copying;
+
+mainconfig
+	"" = "";
+
