@@ -1,0 +1,13 @@
+description "Tiny C Compiler wrapper Demo\377";
+
+uses
+	CtrlLib,
+	Tcc;
+
+file
+	main.cpp,
+	Tcc_Demo_Gui.lay;
+
+mainconfig
+	"" = "GUI";
+

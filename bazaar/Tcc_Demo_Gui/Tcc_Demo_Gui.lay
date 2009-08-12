@@ -1,0 +1,14 @@
+LAYOUT(MainLayout, 584, 528)
+	ITEM(LineEdit, SourceCode, HSizePosZ(8, 8).VSizePosZ(152, 36))
+	ITEM(Button, ButRun, SetLabel(t_("Compile + Run")).RightPosZ(8, 100).BottomPosZ(9, 23))
+	ITEM(Label, dv___2, SetLabel(t_("Choose where do you want to get your program")).SetFont(StdFontZ(11).Bold()).HSizePosZ(8, 8).TopPosZ(4, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Libs path:")).LeftPosZ(8, 68).TopPosZ(108, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Include path:")).LeftPosZ(8, 68).TopPosZ(88, 19))
+	ITEM(EditString, EditLibsPath, SetFrame(ThinInsetFrame()).HSizePosZ(76, 8).TopPosZ(108, 19))
+	ITEM(EditString, EditExeFile, SetFrame(ThinInsetFrame()).HSizePosZ(136, 8).TopPosZ(40, 19))
+	ITEM(EditString, EditIncludePath, SetFrame(ThinInsetFrame()).HSizePosZ(76, 8).TopPosZ(88, 19))
+	ITEM(Switch, OpGetExe, SetLabel(t_("Run in memory\nGet executable file in:")).LeftPosZ(8, 128).TopPosZ(28, 32))
+	ITEM(Label, dv___9, SetLabel(t_("Modify source code and push \"Compile + Run\"")).SetFont(StdFontZ(11).Bold()).HSizePosZ(8, 8).TopPosZ(132, 19))
+	ITEM(Label, dv___10, SetLabel(t_("Define the path of these folders (see proposal)")).SetFont(StdFontZ(11).Bold()).HSizePosZ(8, 8).TopPosZ(64, 19))
+END_LAYOUT
+
