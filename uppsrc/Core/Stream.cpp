@@ -846,6 +846,15 @@ void  StringStream::_Put(const void *d, dword sz)
 	ptr += sz;
 }
 
+void StringStream::Reserve(int n)
+{
+	SetWriteMode();
+	intptr_t p = ptr - buffer;
+	wdata.SetLength(GetSize() + n);
+	SetWriteBuffer();
+	ptr = buffer + p;
+}
+
 void  StringStream::_Put(int w)
 {
 	byte h = w;

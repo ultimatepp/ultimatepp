@@ -929,6 +929,13 @@ into the Loading serialization mode.&]
 mode.&]
 [s3; &]
 [s4;%- &]
+[s5;:StringStream`:`:Reserve`(int`):%- [@(0.0.255) void]_[* Reserve]([@(0.0.255) int]_[*@3 n])
+&]
+[s2; Reserves additional [%-*@3 n] bytes of internal storage as optimization 
+hint. This might speedup the operation in certain cases if you 
+know how much data approximately will be put into StringStream.&]
+[s3; &]
+[s4;%- &]
 [s5;:StringStream`:`:GetResult`(`):%- [_^String^ String]_[* GetResult]()&]
 [s2; Returns resulting String.&]
 [s7; [*/ Return value]-|Result.&]
