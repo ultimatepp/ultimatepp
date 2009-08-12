@@ -271,6 +271,7 @@ protected:
 public:
 	void        Open(const String& data);
 	void        Create();
+	void        Reserve(int n);
 
 	String      GetResult();
 	operator    String()                     { return GetResult(); }
