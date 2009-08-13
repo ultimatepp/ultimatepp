@@ -23,11 +23,9 @@ void App::Work()
 		GuiLock __;
 		if(Thread::IsShutdownThreads())
 			break;
-		DLOG("BEGIN");
 		if(list.GetCount() > 100)
 			list.Clear();
 		list.Add((int64)Random());
-		DLOG("END");
 	}
 }
 
