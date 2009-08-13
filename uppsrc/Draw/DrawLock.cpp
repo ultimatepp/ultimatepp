@@ -1,5 +1,7 @@
 #include "Draw.h"
 
+#define LLOG(x)
+
 NAMESPACE_UPP
 
 #ifdef _MULTITHREADED
@@ -12,6 +14,7 @@ void EnterGMutex()
 {
 	if(sGLockLevel++ == 0)
 		sGLock.Enter();
+	LLOG("EnterGMutex");
 }
 
 void EnterGMutex(int n)
@@ -21,6 +24,7 @@ void EnterGMutex(int n)
 			sGLock.Enter();
 		sGLockLevel += n;
 	}
+	LLOG("EnterGMutex " << n);
 }
 
 void LeaveGMutex()
@@ -28,6 +32,7 @@ void LeaveGMutex()
 	ASSERT(sGLockLevel > 0);
 	if(--sGLockLevel == 0)
 		sGLock.Leave();
+	LLOG("LeaveGMutex");
 }
 
 int LeaveGMutexAll()
@@ -37,6 +42,7 @@ int LeaveGMutexAll()
 		sGLock.Leave();
 		sGLockLevel = 0;
 	}
+	LLOG("LeaveGMutex all");
 	return q;
 }
 

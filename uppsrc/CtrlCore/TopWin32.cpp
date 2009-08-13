@@ -76,7 +76,7 @@ void TopWindow::DeleteIco0()
 
 void TopWindow::DeleteIco()
 {
-	Call(THISBACK(DeleteIco0));
+	ICall(THISBACK(DeleteIco0));
 }
 
 void TopWindow::SyncCaption0()

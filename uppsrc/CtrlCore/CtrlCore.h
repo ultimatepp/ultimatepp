@@ -577,9 +577,17 @@ private:
 	void    SetInfoPart(int i, const char *txt);
 	String  GetInfoPart(int i) const;
 
+	static  Callback    CtrlCall;
+
+	static  bool DoCall();
+	static  bool PeekMsg(MSG& msg);
+
+
 // System window interface...
+	void WndShow0(bool b);
 	void WndShow(bool b);
 
+	void WndSetPos0(const Rect& rect);
 	void WndSetPos(const Rect& rect);
 
 	bool IsWndOpen() const;
@@ -597,23 +605,31 @@ private:
 	void ActivateWnd();
 	void ClickActivateWnd();
 	bool SetFocus0(bool activate);
+	void SetWndFocus0(bool *b);
 	bool SetWndFocus();
 	bool HasWndFocus() const;
 
 	static void WndDestroyCaret();
+	void WndCreateCaret0(const Rect& cr);
 	void WndCreateCaret(const Rect& cr);
 
+	void WndInvalidateRect0(const Rect& r);
 	void WndInvalidateRect(const Rect& r);
 
+	void SetWndForeground0();
 	void SetWndForeground();
 	bool IsWndForeground() const;
 
+	void WndEnable0(bool *b);
 	bool WndEnable(bool b);
 
 	Rect GetWndUpdateRect() const;
 	Rect GetWndScreenRect() const;
+	void WndScrollView0(const Rect& r, int dx, int dy);
 	void WndScrollView(const Rect& r, int dx, int dy);
+	void WndUpdate0();
 	void WndUpdate();
+	void WndUpdate0r(const Rect& r);
 	void WndUpdate(const Rect& r);
 
 	void WndFree();
@@ -630,6 +646,8 @@ private:
 	static Size Csize;
 	static void Csizeinit();
 	static void (*skin)();
+
+	static  void ICall(Callback cb);
 
 	friend void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
 	friend class DHCtrl;
@@ -674,6 +692,8 @@ protected:
 	Image DoMouse(int e, Point p, int zd = 0);
 
 	friend void sSetCursor(Ctrl *ctrl, const Image& m);
+	
+	typedef Ctrl CLASSNAME;
 
 public:
 	virtual void    NcCreate(HWND hwnd);
@@ -1235,9 +1255,9 @@ public:
 	void    PostCallback(Callback cb, int id = 0);
 	void    KillPostCallback(Callback cb, int id);
 	
-	static  void Call(Callback cb);
-
 	enum { TIMEID_COUNT = 1 };
+
+	static void  Call(Callback cb);
 
 	static void  SetTimerGranularity(int ms);
 

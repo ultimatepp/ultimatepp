@@ -50,6 +50,7 @@ file
 	X11Keys.i,
 	MKeys.h,
 	Frame.cpp,
+	CtrlMt.cpp,
 	Ctrl.cpp,
 	CtrlChild.cpp,
 	CtrlPos.cpp,

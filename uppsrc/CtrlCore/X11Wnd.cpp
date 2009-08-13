@@ -316,7 +316,7 @@ void Ctrl::GuiSleep0(int ms)
 	XFlush(Xdisplay);
 	int level = LeaveGuiMutexAll();
 	select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
-	EnterGuiMutex(level);
+	PerformCall();
 }
 
 static int granularity = 10;
@@ -352,7 +352,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		XFlush(Xdisplay);
 		int level = LeaveGuiMutexAll();
 		select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
-		EnterGuiMutex(level);
+		PerformCall();
 //		GuiSleep()(granularity);
 		SyncMousePos();
 		while(IsWaitingEvent()) {

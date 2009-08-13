@@ -10,12 +10,18 @@
 
 NAMESPACE_UPP
 
-typedef DrawLock GuiLock;
+#ifdef _MULTITHREADED
+void EnterGuiMutex();
+void LeaveGuiMutex();
+#else
+inline void EnterGuiMutex() {}
+inline void LeaveGuiMutex() {}
+#endif
 
-inline void EnterGuiMutex()          { EnterGMutex(); }
-inline void EnterGuiMutex(int n)     { EnterGMutex(n); }
-inline void LeaveGuiMutex()          { LeaveGMutex(); }
-inline int  LeaveGuiMutexAll()       { return LeaveGMutexAll(); }
+struct GuiLock {
+	GuiLock()  { EnterGuiMutex(); }
+	~GuiLock() { LeaveGuiMutex(); }
+};
 
 bool ScreenInPaletteMode();
 Size GetScreenSize();

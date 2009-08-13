@@ -66,12 +66,12 @@ bool TopWindow::IsShowEnabled() const
 
 void TopWindow::SyncCaption()
 {
-	Call(THISBACK(SyncCaption0));
+	ICall(THISBACK(SyncCaption0));
 }
 
 void TopWindow::SyncTitle()
 {
-	Call(THISBACK(SyncTitle0));
+	ICall(THISBACK(SyncTitle0));
 }
 
 void TopWindow::Close()

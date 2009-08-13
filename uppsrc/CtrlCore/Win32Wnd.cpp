@@ -19,7 +19,7 @@ unsigned GetHashValue(const HWND& h)
 	return (unsigned)(intptr_t)h;
 }
 
-static bool PeekMsg(MSG& msg)
+bool Ctrl::PeekMsg(MSG& msg)
 {
 	if(!PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) return false;
 	return IsWindowUnicode(msg.hwnd) ? PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)
@@ -27,6 +27,11 @@ static bool PeekMsg(MSG& msg)
 }
 
 static bool sFinished;
+
+bool IsExiting()
+{
+	return sFinished;
+}
 
 static BOOL CALLBACK sDumpWindow(HWND hwnd, LPARAM lParam) {
 	String dump;
@@ -427,7 +432,7 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	cr.savebits = savebits;
 	cr.show = show;
 	cr.dropshadow = dropshadow;
-	Call(callback1(this, &Ctrl::Create0, &cr));
+	ICall(callback1(this, &Ctrl::Create0, &cr));
 }
 
 void Ctrl::Create0(Ctrl::CreateBox *cr)
@@ -684,6 +689,8 @@ bool Ctrl::IsWaitingEvent()
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
+	if(DoCall())
+		return false;
 	if(EndSession())
 		return false;
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
@@ -756,7 +763,7 @@ void Ctrl::GuiSleep0(int ms)
 	if(EndSession())
 		return;
 	ELOG("GuiSleep 2");
-	int level = LeaveGuiMutexAll();
+	int level = LeaveGMutexAll();
 #if !defined(flagDLL) && !defined(PLATFORM_WINCE)
 	if(!OverwatchThread) {
 		DWORD dummy;
@@ -771,7 +778,7 @@ void Ctrl::GuiSleep0(int ms)
 #else
 	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
 #endif
-	EnterGuiMutex(level);
+	EnterGMutex(level);
 }
 
 void Ctrl::WndDestroyCaret()
@@ -780,7 +787,7 @@ void Ctrl::WndDestroyCaret()
 	::DestroyCaret();
 }
 
-void Ctrl::WndCreateCaret(const Rect& cr)
+void Ctrl::WndCreateCaret0(const Rect& cr)
 {
 	GuiLock __;
 	LLOG("Ctrl::WndCreateCaret(" << cr << ") in " << UPP::Name(this));
@@ -815,7 +822,7 @@ Rect Ctrl::GetWndScreenRect() const
 	return r;
 }
 
-void Ctrl::WndShow(bool b)
+void Ctrl::WndShow0(bool b)
 {
 	GuiLock __;
 	HWND hwnd = GetHWND();
@@ -823,7 +830,7 @@ void Ctrl::WndShow(bool b)
 		::ShowWindow(hwnd, b ? SW_SHOW : SW_HIDE);
 }
 
-void Ctrl::WndUpdate()
+void Ctrl::WndUpdate0()
 {
 	GuiLock __;
 	HWND hwnd = GetHWND();
@@ -961,7 +968,7 @@ int Ctrl::GetKbdSpeed()
 #endif
 }
 
-void Ctrl::SetWndForeground()
+void Ctrl::SetWndForeground0()
 {
 	GuiLock __;
 	LLOG("Ctrl::SetWndForeground() in " << UPP::Name(this));
@@ -986,33 +993,29 @@ bool Ctrl::IsWndForeground() const
 	return hwnd == fore;
 }
 
-bool Ctrl::WndEnable(bool b)
+void Ctrl::WndEnable0(bool *b)
 {
 	GuiLock __;
 	LLOG("Ctrl::WndEnable(" << b << ") in " << UPP::Name(this) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
-	HWND hwnd = GetHWND();
-	if(!b) {
+	if(*b)
 		ReleaseCapture();
-		LLOG("//Ctrl::WndEnable(" << b << ") -> true " << UPP::Name(this) << ", focusCtrlWnd = " <<UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
-		return true;
-	}
 	LLOG("//Ctrl::WndEnable(" << b << ") -> false " <<UPP::Name(this) << ", focusCtrlWnd = " <<UPP::Name(focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
-	return false;
 }
 
-bool Ctrl::SetWndFocus()
+void Ctrl::SetWndFocus0(bool *b)
 {
 	GuiLock __;
-	LLOG("Ctrl::SetWndFocus() in " <<UPP::Name(this));
+	LLOG("Ctrl::SetWndFocus() in " << UPP::Name(this));
 	HWND hwnd = GetHWND();
 	if(hwnd) {
 		LLOG("Ctrl::SetWndFocus() -> ::SetFocus(" << (void *)hwnd << ")");
 //		::SetActiveWindow(hwnd);
 		::SetFocus(hwnd);
-		return true;
+		*b = true;
+		return;
 	}
 	LLOG("//Ctrl::SetWndFocus() in " <<UPP::Name(this) << ", active window = " << (void *)::GetActiveWindow());
-	return false;
+	*b = false;
 }
 
 bool Ctrl::HasWndFocus() const
@@ -1025,6 +1028,7 @@ bool Ctrl::HasWndFocus() const
 bool Ctrl::SetWndCapture()
 {
 	GuiLock __;
+	ASSERT(IsMainThread());
 	HWND hwnd = GetHWND();
 	if(hwnd) {
 		::SetCapture(hwnd);
@@ -1036,6 +1040,7 @@ bool Ctrl::SetWndCapture()
 bool Ctrl::ReleaseWndCapture()
 {
 	GuiLock __;
+	ASSERT(IsMainThread());
 	HWND hwnd = GetHWND();
 	if(hwnd && HasWndCapture())
 	{
@@ -1052,7 +1057,7 @@ bool Ctrl::HasWndCapture() const
 	return hwnd && hwnd == ::GetCapture();
 }
 
-void Ctrl::WndInvalidateRect(const Rect& r)
+void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
 	HWND hwnd = GetHWND();
@@ -1060,7 +1065,8 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 		::InvalidateRect(hwnd, r, false);
 }
 
-void Ctrl::WndSetPos(const Rect& rect) {
+void Ctrl::WndSetPos0(const Rect& rect)
+{
 	GuiLock __;
 	HWND hwnd = GetHWND();
 	if(hwnd) {
@@ -1077,7 +1083,7 @@ void Ctrl::WndSetPos(const Rect& rect) {
 	fullrefresh = false;
 }
 
-void Ctrl::WndUpdate(const Rect& r)
+void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
 	Ctrl *top = GetTopCtrl();
@@ -1102,7 +1108,7 @@ void Ctrl::WndUpdate(const Rect& r)
 	}
 }
 
-void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
+void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	if(caretCtrl && caretCtrl->GetTopCtrl() == this) {

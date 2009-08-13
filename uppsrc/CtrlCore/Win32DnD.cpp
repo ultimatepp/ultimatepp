@@ -501,11 +501,11 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	if(actions & DND_MOVE)
 		dsrc->move = actions & DND_EXACTIMAGE ? sample : MakeDragImage(CtrlCoreImg::DndMove(), CtrlCoreImg::DndMove98(), sample);
 	sDnDSource = this;
-	int level = LeaveGuiMutexAll();
+	int level = LeaveGMutexAll();
 	HRESULT r = DoDragDrop(obj, dsrc,
 	                       (actions & DND_COPY ? DROPEFFECT_COPY : 0) |
 	                       (actions & DND_MOVE ? DROPEFFECT_MOVE : 0), &result);
-	EnterGuiMutex(level);
+	EnterGMutex(level);
 	DWORD re = obj->effect;
 	obj->Release();
 	dsrc->Release();
