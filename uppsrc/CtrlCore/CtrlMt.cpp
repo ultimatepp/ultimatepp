@@ -131,10 +131,12 @@ void Ctrl::WndDestroy()
 	ICall(callback(this, &Ctrl::WndDestroy0));
 }
 
+#ifdef PLATFORM_WIN32
 void Ctrl::WndCreateCaret(const Rect& cr)
 {
 	ICall(THISBACK1(WndCreateCaret0, cr));
 }
+#endif
 
 void Ctrl::WndShow(bool b)
 {

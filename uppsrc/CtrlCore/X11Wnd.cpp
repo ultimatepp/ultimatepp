@@ -70,7 +70,7 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 	}
 }
 
-void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
+void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	if(r.IsEmpty() || !GetWindow()) return;
@@ -314,9 +314,12 @@ void Ctrl::GuiSleep0(int ms)
 	timeout.tv_sec = ms / 1000;
 	timeout.tv_usec = ms % 1000 * 1000;
 	XFlush(Xdisplay);
-	int level = LeaveGuiMutexAll();
-	select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
-	PerformCall();
+	do {
+		int level = LeaveGMutexAll();
+		select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
+		EnterGMutex(level);
+	}
+	while(DoCall());
 }
 
 static int granularity = 10;
@@ -350,9 +353,12 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 1000 * granularity;
 		XFlush(Xdisplay);
-		int level = LeaveGuiMutexAll();
-		select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
-		PerformCall();
+		do {
+			int level = LeaveGMutexAll();
+			select(Xconnection + 1, &fdset, NULL, NULL, &timeout);
+			EnterGMutex(level);
+		}
+		while(DoCall());
 //		GuiSleep()(granularity);
 		SyncMousePos();
 		while(IsWaitingEvent()) {
@@ -606,7 +612,7 @@ Ctrl *Ctrl::GetOwner()
 	return q >= 0 ? Xwindow()[q].owner : NULL;
 }
 
-void Ctrl::WndShow(bool b)
+void Ctrl::WndShow0(bool b)
 {
 	GuiLock __;
 	LLOG("WndShow " << b);
@@ -624,7 +630,7 @@ void Ctrl::WndShow(bool b)
 	}
 }
 
-void Ctrl::WndUpdate()
+void Ctrl::WndUpdate0()
 {
 	GuiLock __;
 	LTIMING("WndUpdate");
@@ -641,7 +647,7 @@ void Ctrl::WndUpdate()
 	}
 }
 
-void Ctrl::WndUpdate(const Rect& r)
+void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
 	LTIMING("WndUpdate Rect");
@@ -657,7 +663,7 @@ void Ctrl::WndUpdate(const Rect& r)
 	xw.invalid = Subtract(xw.invalid, r, dummy);
 }
 
-void Ctrl::WndSetPos(const Rect& r)
+void Ctrl::WndSetPos0(const Rect& r)
 {
 	GuiLock __;
 	if(!top) return;
@@ -798,10 +804,11 @@ void Ctrl::KillFocus(Window window)
 		w.ctrl->KillFocusWnd();
 }
 
-bool Ctrl::SetWndFocus()
+void Ctrl::SetWndFocus0(bool *b)
 {
 	GuiLock __;
 	LLOG("SetWndFocus " << Name());
+	*b = false;
 	if(top && top->window != focusWindow && IsEnabled() && IsVisible()) {
 		LLOG("Setting focus... ");
 		LTIMING("XSetInfputFocus");
@@ -809,9 +816,8 @@ bool Ctrl::SetWndFocus()
 		XSetInputFocus(Xdisplay, top->window, RevertToParent, CurrentTime);
 		focusWindow = top->window;
 		SetFocusWnd();
-		return true;
+		*b = true;
 	}
-	return false;
 }
 
 bool Ctrl::HasWndFocus() const
@@ -934,7 +940,7 @@ void Ctrl::AddGlobalRepaint()
 		}
 }
 
-void Ctrl::WndInvalidateRect(const Rect& r)
+void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
 	if(!top) return;
@@ -942,7 +948,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	Invalidate(Xwindow().Get(top->window), r);
 }
 
-void Ctrl::SetWndForeground()
+void Ctrl::SetWndForeground0()
 {
 	GuiLock __;
 	LLOG("SetWndForeground " << Name());
@@ -967,17 +973,20 @@ bool Ctrl::IsWndForeground() const
 	return ~focusCtrlWnd == (q ? q : GetTopCtrl());
 }
 
-bool Ctrl::WndEnable(bool b)
+void Ctrl::WndEnable0(bool *b)
 {
 	GuiLock __;
 	LLOG("WndEnable");
-	if(!top) return false;
-	if(!b) {
+	if(!top) {
+		*b = false;
+		return;
+	}
+	if(!*b) {
 		ReleaseCapture();
 		if(HasWndFocus())
 			XSetInputFocus(Xdisplay, None, RevertToPointerRoot, CurrentTime);
 	}
-	return true;
+	*b = true;
 }
 
 // 01/12/2007 - mdelfede

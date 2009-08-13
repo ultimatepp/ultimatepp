@@ -580,8 +580,10 @@ private:
 	static  Callback    CtrlCall;
 
 	static  bool DoCall();
-	static  bool PeekMsg(MSG& msg);
 
+#ifdef PLATFORM_WIN32
+	static  bool PeekMsg(MSG& msg);
+#endif
 
 // System window interface...
 	void WndShow0(bool b);
@@ -693,8 +695,6 @@ protected:
 
 	friend void sSetCursor(Ctrl *ctrl, const Image& m);
 	
-	typedef Ctrl CLASSNAME;
-
 public:
 	virtual void    NcCreate(HWND hwnd);
 	virtual void    NcDestroy();
@@ -706,6 +706,8 @@ public:
 
 	static Ctrl  *CtrlFromHWND(HWND hwnd);
 #endif
+
+	typedef Ctrl CLASSNAME;
 
 #ifdef PLATFORM_X11
 protected:
