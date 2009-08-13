@@ -30,8 +30,8 @@ struct CallbackMethodActionArg : public CallbackAction {
 
 	void    Execute() { (object->*method)(arg); }
 
-	CallbackMethodActionArg(OBJECT_ *object, METHOD_ method, T arg)
-	: object(object), method(method), arg(arg) {}
+	CallbackMethodActionArg(OBJECT_ *object, METHOD_ method, T arg_)
+	: object(object), method(method) { arg = arg_; }
 };
 
 template <class Object, class M, class P, class T>

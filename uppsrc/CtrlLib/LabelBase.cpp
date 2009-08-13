@@ -450,9 +450,11 @@ void DisplayPopup::Paint(Draw& w)
 {
 	Rect r = GetSize();
 	w.DrawRect(r, SColorPaper);
-	display->PaintBackground(w, r, value, ink, paper, style);
-	r.left += margin;
-	display->Paint(w, r, value, ink, paper, style);
+	if(display) {
+		display->PaintBackground(w, r, value, ink, paper, style);
+		r.left += margin;
+		display->Paint(w, r, value, ink, paper, style);
+	}
 }
 
 DisplayPopup::DisplayPopup()

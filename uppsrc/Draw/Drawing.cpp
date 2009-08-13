@@ -635,6 +635,7 @@ void  DrawingDraw::Create(Size sz, bool dots_) {
 	drawing.Create();
 	size = sz;
 	dots = dots_;
+	val.Clear();
 	LLOG("DrawingDraw::Create, sz = " << sz << ", dots = " << dots << " -> clip = " << GetClip());
 }
 

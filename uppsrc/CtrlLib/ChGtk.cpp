@@ -560,9 +560,13 @@ bool IsEmptyImage(const Image& m)
 
 Image GtkThemeIcon(const char *name, int size)
 {
+<<<<<<< .mine
+	Image m = GetGTK(gtk__parent(), size, 0, name, GTK_THEMEICON, 0, 0);
+=======
 	Image m = GetGTK(gtk__parent(), size ? GTK_ICON_SIZE_LARGE_TOOLBAR
 	                                     : GTK_ICON_SIZE_SMALL_TOOLBAR,
 	                 0, name, GTK_THEMEICON, 0, 0);
+>>>>>>> .r1505
 	Size sz = m.GetSize();
 	int rsz = size ? 48 : 16;
 	if(sz.cx > rsz || sz.cy > rsz)
