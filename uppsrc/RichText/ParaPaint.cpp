@@ -155,6 +155,8 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 {
 	Zoom z = pi.zoom;
 	PageY opy = py;
+	if(pw.tracer)
+		pw.tracer->Paragraph(page, py, *this);
 	Lines pl = Begin(page, py, nbefore, nline);
 	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len;
 	int hy = py.y - format.before - format.ruler;
@@ -370,6 +372,8 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 		pw.Page(py.page).DrawRect(z * page.left, top, z * page.right - z * page.left,
 		                          z * min(py.y + format.after, page.bottom) - top, InvertColor);
 	}
+	if(pw.tracer)
+		pw.tracer->EndParagraph(py);
 }
 
 void RichPara::GetRichPos(RichPos& rp, int pos) const

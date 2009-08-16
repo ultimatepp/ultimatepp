@@ -37,11 +37,6 @@ void Report::Clear()
 	SetPageSize(3968, 6074);
 }
 
-Draw& Report::Info()
-{
-	return *this;
-}
-
 Rect Report::GetPageRect()
 {
 	Rect r = GetSize();

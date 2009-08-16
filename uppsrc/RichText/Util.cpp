@@ -2,11 +2,6 @@
 
 NAMESPACE_UPP
 
-Draw& SimplePageDraw::Info()
-{
-	return w;
-}
-
 Draw& SimplePageDraw::Page(int)
 {
 	return w;
