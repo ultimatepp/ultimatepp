@@ -117,6 +117,41 @@ Rect  Ctrl::GetClippedView()
 	return view - GetScreenRect().TopLeft();
 }
 
+void Ctrl::ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy)
+{
+	if(top && r.Intersects(cr)) { // Uno: Contains -> Intersetcs
+		Rect to = cr;
+		GetTopRect(to, false);
+		if(r.Intersects(cr.Offseted(-dx, -dy))) { // Uno's suggestion 06/11/26 Contains -> Intersetcs
+			Rect from = cr.Offseted(-dx, -dy);
+			GetTopRect(from, false);
+			MoveCtrl *m = FindMoveCtrlPtr(top->move, q);
+			if(m && m->from == from && m->to == to) {
+				LLOG("ScrollView Matched " << from << " -> " << to);
+				m->ctrl = NULL;
+				return;
+			}
+		}
+
+		if(r.Intersects(cr.Offseted(dx, dy))) { // Uno's suggestion 06/11/26 Contains -> Intersetcs
+			Rect from = to;
+			to = cr.Offseted(dx, dy);
+			GetTopRect(to, false);
+			MoveCtrl& m = top->scroll_move.Add(q);
+			m.from = from;
+			m.to = to;
+			m.ctrl = q;
+			LLOG("ScrollView Add " << UPP::Name(q) << from << " -> " << to);
+			return;
+		}
+		cr &= r;
+		if(!cr.IsEmpty()) {
+			Refresh(cr);
+			Refresh(cr + Point(dx, dy));
+		}
+	}
+}
+
 void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 {
 	GuiLock __;
@@ -142,41 +177,12 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 		LTIMING("ScrollCtrls1");
 		Top *top = GetTopCtrl()->top;
 		for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
-			if(q->InView()) {
-				Rect cr = q->GetRect();
-				if(top && r.Intersects(cr)) { // Uno: Contains -> Intersetcs
-					Rect to = cr;
-					GetTopRect(to, false);
-					if(r.Intersects(cr.Offseted(-dx, -dy))) { // Uno's suggestion 06/11/26 Contains -> Intersetcs
-						Rect from = cr.Offseted(-dx, -dy);
-						GetTopRect(from, false);
-						MoveCtrl *m = FindMoveCtrlPtr(top->move, q);
-						if(m && m->from == from && m->to == to) {
-							LLOG("ScrollView Matched " << from << " -> " << to);
-							m->ctrl = NULL;
-							goto done;
-						}
-					}
-
-					if(r.Intersects(cr.Offseted(dx, dy))) { // Uno's suggestion 06/11/26 Contains -> Intersetcs
-						Rect from = to;
-						to = cr.Offseted(dx, dy);
-						GetTopRect(to, false);
-						MoveCtrl& m = top->scroll_move.Add(q);
-						m.from = from;
-						m.to = to;
-						m.ctrl = q;
-						LLOG("ScrollView Add " << UPP::Name(q) << from << " -> " << to);
-						goto done;
-					}
-					cr &= r;
-					if(!cr.IsEmpty()) {
-						Refresh(cr);
-						Refresh(cr + Point(dx, dy));
-					}
-				done:;
-				}
-			}
+			if(q->InView())
+				ScrollCtrl(top, q, r, q->GetRect(), dx, dy);
+		if(parent)
+			for(Ctrl *q = parent->GetFirstChild(); q; q = q->GetNext())
+				if(q->InView() && q != this)
+					ScrollCtrl(top, q, r, q->GetScreenRect() - GetScreenView().TopLeft(), dx, dy);
 	}
 }
 
