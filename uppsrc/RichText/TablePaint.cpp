@@ -33,6 +33,8 @@ bool RichTable::RowPaint(PageDraw& pw, const RichStyles& st, const Layout& tab,
 	const PaintRow& pr = tab[i];
 	rc.py = pr.py;
 	rc.py.page += pd;
+	if(pw.tracer)
+		pw.tracer->TableRow(pg, rc.py, i, *this);
 	int gridln = LineZoom(pi.zoom, format.grid);
 	int ff2ln = gridln - gridln / 2;
 	Color gc = format.gridcolor;
@@ -71,10 +73,15 @@ bool RichTable::RowPaint(PageDraw& pw, const RichStyles& st, const Layout& tab,
 				if(paint)
 					pw.Page(rc.py.page).DrawRect(xpg.left, y - gridln, xpg.Width(), gridln, gc);
 			}
-			if(paint)
+			if(paint) {
+				if(pw.tracer)
+					pw.tracer->TableCell(rc.page, rc.py, i, j, *this);
 				row[j].Paint(pw, rc, pyy, xpg, y, ny, pi,
 				             sel && j >= pi.cells.left && i >= pi.cells.top &&
 				             j + cell.hspan <= pi.cells.right && i + cell.vspan <= pi.cells.bottom);
+				if(pw.tracer)
+					pw.tracer->EndTableCell(pyy);
+			}
 			if(pyy.page == rc.py.page)
 				ExpandFrr(frr, pyy.page, xpg.left, xpg.right, y, ny);
 			else {
@@ -90,76 +97,81 @@ bool RichTable::RowPaint(PageDraw& pw, const RichStyles& st, const Layout& tab,
 		}
 		j += cell.hspan + 1;
 	}
-
+	if(pw.tracer)
+		pw.tracer->EndTableRow(rc.py);
 	return rc.py >= pi.bottom;
 }
 
 void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
 {
+	if(pw.tracer)
+		pw.tracer->Table(rc.page, rc.py, *this);
 	const TabLayout& tab = Realize(rc);
-	if(tab.page.IsEmpty())
-		return;
-	Rect p = tab.page;
-	PaintInfo pi = _pi;
-	int frameln = LineZoom(pi.zoom, format.frame);
-	int gridln = LineZoom(pi.zoom, format.grid);
-	Rect pg = rc.page;
-	pg.left += format.lm;
-	pg.right -= format.rm;
-	pg.left = pi.zoom * pg.left;
-	pg.right = pi.zoom * pg.right;
-	pg.top = pi.zoom * pg.top;
-	pg.bottom = pi.zoom * pg.bottom;
-	pg.Deflate(frameln);
-	int hy = min(format.header, cell.GetCount());
-	Rect hpg = pg;
-	if(tab.hasheader) {
-		hpg.bottom = pi.zoom * tab.header[hy - 1].pyy.y;
-		pg.top = hpg.bottom + gridln;
-	}
-	bool allsel = false;
-	if(pi.sell < 0 && pi.selh >= 0) {
-		pi.sell = pi.selh = 0;
-		allsel = true;
-	}
-	bool sel = pi.tablesel == 0;
-	int ny = cell.GetCount();
-	VectorMap<int, Rect> frr;
-	for(int i = 0; i < ny; i++)
-		if(RowPaint(pw, rc.styles, tab, i, ny, pg, frr, pi, 0, sel))
-			break;
-
-	Color gc = format.gridcolor;
-	Color fc = format.framecolor;
-	int fl = frameln;
-	if(!IsNull(pi.showcodes)) {
-		if(fl == 0 && !IsNull(pi.showcodes)) {
-			fl = 1;
-			fc = pi.showcodes;
+	if(!tab.page.IsEmpty()) {
+		Rect p = tab.page;
+		PaintInfo pi = _pi;
+		int frameln = LineZoom(pi.zoom, format.frame);
+		int gridln = LineZoom(pi.zoom, format.grid);
+		Rect pg = rc.page;
+		pg.left += format.lm;
+		pg.right -= format.rm;
+		pg.left = pi.zoom * pg.left;
+		pg.right = pi.zoom * pg.right;
+		pg.top = pi.zoom * pg.top;
+		pg.bottom = pi.zoom * pg.bottom;
+		pg.Deflate(frameln);
+		int hy = min(format.header, cell.GetCount());
+		Rect hpg = pg;
+		if(tab.hasheader) {
+			hpg.bottom = pi.zoom * tab.header[hy - 1].pyy.y;
+			pg.top = hpg.bottom + gridln;
 		}
-		if(gridln == 0) {
-			gridln = 1;
-			gc = pi.showcodes;
+		bool allsel = false;
+		if(pi.sell < 0 && pi.selh >= 0) {
+			pi.sell = pi.selh = 0;
+			allsel = true;
 		}
-	}
-	for(int i = 0; i < frr.GetCount(); i++) {
-		PaintInfo _pi = pi;
-		pi.tablesel = 0;
-		pi.sell = pi.selh = -1;
-		int pgi = frr.GetKey(i);
-		Draw& w = pw.Page(pgi);
-		if(pgi > tab.page0 && tab.hasheader)
-			for(int i = 0; i < hy; i++) {
-				RowPaint(pw, rc.styles, tab.header, i, hy, hpg, frr, pi, pgi, false);
-				w.DrawRect(pg.left, hpg.bottom, pg.Width(), gridln, format.gridcolor);
+		bool sel = pi.tablesel == 0;
+		int ny = cell.GetCount();
+		VectorMap<int, Rect> frr;
+		for(int i = 0; i < ny; i++)
+			if(RowPaint(pw, rc.styles, tab, i, ny, pg, frr, pi, 0, sel))
+				break;
+	
+		Color gc = format.gridcolor;
+		Color fc = format.framecolor;
+		int fl = frameln;
+		if(!IsNull(pi.showcodes)) {
+			if(fl == 0 && !IsNull(pi.showcodes)) {
+				fl = 1;
+				fc = pi.showcodes;
 			}
-		Rect r = frr[i].Inflated(frameln);
-		if(!r.IsEmpty()) {
-			DrawFatFrame(w, r, fc, fl);
-			if(allsel)
-				w.DrawRect(r, InvertColor);
+			if(gridln == 0) {
+				gridln = 1;
+				gc = pi.showcodes;
+			}
+		}
+		for(int i = 0; i < frr.GetCount(); i++) {
+			PaintInfo _pi = pi;
+			pi.tablesel = 0;
+			pi.sell = pi.selh = -1;
+			int pgi = frr.GetKey(i);
+			Draw& w = pw.Page(pgi);
+			if(pgi > tab.page0 && tab.hasheader)
+				for(int i = 0; i < hy; i++) {
+					RowPaint(pw, rc.styles, tab.header, i, hy, hpg, frr, pi, pgi, false);
+					w.DrawRect(pg.left, hpg.bottom, pg.Width(), gridln, format.gridcolor);
+				}
+			Rect r = frr[i].Inflated(frameln);
+			if(!r.IsEmpty()) {
+				DrawFatFrame(w, r, fc, fl);
+				if(allsel)
+					w.DrawRect(r, InvertColor);
+			}
 		}
 	}
+	if(pw.tracer)
+		pw.tracer->EndTable(rc.py);
 }
 
 PageY RichTable::GetHeight(RichContext rc) const

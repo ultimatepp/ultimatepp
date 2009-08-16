@@ -11,7 +11,6 @@ NAMESPACE_UPP
 
 class Report : public DrawingDraw, public PageDraw {
 public:
-	virtual Draw& Info();
 	virtual Draw& Page(int i);
 
 private:
@@ -48,6 +47,8 @@ public:
 	void                  Put(const RichText& txt, void *context = NULL);
 	void                  Put(const char *qtf);
 	Report&               operator<<(const char *qtf) { Put(qtf); return *this; }
+
+	void                  SetRichTextLayoutTracer(RichTextLayoutTracer& l) { tracer = &l; }
 
 	Point                 GetMargins() const          { return mg; }
 

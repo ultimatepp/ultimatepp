@@ -6,7 +6,10 @@
 
 NAMESPACE_UPP
 
-class PasteClip;
+class  PasteClip;
+struct RichPara;
+class  RichTable;
+class  RichTxt;
 
 struct Zoom {
 	int m, d;
@@ -95,11 +98,23 @@ struct PageRect : public Rect {
 	PageRect()                           { Clear(); page = 0; }
 };
 
-struct PageDraw {
-	virtual Draw& Info() = 0;
-	virtual Draw& Page(int i) = 0;
+struct RichTextLayoutTracer {
+	virtual void  Paragraph(const Rect& page, PageY y, const RichPara& para);
+	virtual void  EndParagraph(PageY y);
+	virtual void  Table(const Rect& page, PageY y, const RichTable& table);
+	virtual void  EndTable(PageY y);
+	virtual void  TableRow(const Rect& page, PageY y, int i, const RichTable& table);
+	virtual void  EndTableRow(PageY y);
+	virtual void  TableCell(const Rect& page, PageY y, int i, int j, const RichTable& table);
+	virtual void  EndTableCell(PageY y);
+};
 
-	operator Draw&()       { return Info(); }
+struct PageDraw {
+	virtual Draw& Page(int i) = 0;
+	
+	RichTextLayoutTracer *tracer;
+	
+	PageDraw() { tracer = NULL; }
 
 	virtual ~PageDraw() {}
 };
@@ -452,7 +467,6 @@ String EncodeHtml(const RichText& text, Index<String>& css,
 struct SimplePageDraw : PageDraw {
 	Draw& w;
 
-	virtual Draw& Info();
 	virtual Draw& Page(int);
 
 	SimplePageDraw(Draw& w) : w(w) {}
@@ -465,7 +479,6 @@ struct PrintPageDraw : PageDraw {
 	NilDraw nw;
 
 	Draw& Page(int _page)     { return page == _page ? w : (Draw&)nw; }
-	Draw& Info()              { return w; }
 	void  SetPage(int _page)  { page = _page; }
 
 	PrintPageDraw(Draw& w) : w(w) {}

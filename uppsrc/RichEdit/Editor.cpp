@@ -24,7 +24,6 @@ int RichEdit::PtToDot(double pt)
 
 struct EditPageDraw : public PageDraw {
 	virtual Draw& Page(int _page);
-	virtual Draw& Info()                                { return w; }
 
 	Draw&              w;
 	int                page;

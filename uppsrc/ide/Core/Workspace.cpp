@@ -401,9 +401,11 @@ void Workspace::AddLoad(const String& name, bool match, const Vector<String>& fl
 void Workspace::AddUses(Package& p, bool match, const Vector<String>& flag)
 {
 	int q = package.GetCount();
-	for(int i = 0; i < p.uses.GetCount(); i++)
-		if((!match || MatchWhen(p.uses[i].when, flag)) && package.Find(p.uses[i].text) < 0)
-			AddLoad(p.uses[i].text, match, flag);
+	for(int i = 0; i < p.uses.GetCount(); i++) {
+		String uses = UnixPath(p.uses[i].text);
+		if((!match || MatchWhen(p.uses[i].when, flag)) && package.Find(uses) < 0)
+			AddLoad(uses, match, flag);
+	}
 	for(int i = q; i < package.GetCount(); i++)
 		AddUses(package[i], match, flag);
 }

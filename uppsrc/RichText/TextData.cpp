@@ -338,4 +338,13 @@ RichText::RichText(pick_ RichTxt& x, pick_ RichStyles& st)
 	nolinks = false;
 }
 
+void RichTextLayoutTracer::Paragraph(const Rect& page, PageY y, const RichPara& para) {}
+void RichTextLayoutTracer::EndParagraph(PageY y) {}
+void RichTextLayoutTracer::Table(const Rect& page, PageY y, const RichTable& table) {}
+void RichTextLayoutTracer::EndTable(PageY y) {}
+void RichTextLayoutTracer::TableRow(const Rect& page, PageY y, int i, const RichTable& table) {}
+void RichTextLayoutTracer::EndTableRow(PageY y) {}
+void RichTextLayoutTracer::TableCell(const Rect& page, PageY y, int i, int j, const RichTable& table) {}
+void RichTextLayoutTracer::EndTableCell(PageY y) {}
+
 END_UPP_NAMESPACE
