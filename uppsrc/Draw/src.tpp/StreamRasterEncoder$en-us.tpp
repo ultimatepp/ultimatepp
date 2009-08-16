@@ -1,4 +1,4 @@
-topic "";
+topic "StreamRasterEncoder";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -64,4 +64,4 @@ mage][@(0.0.255) `&]_[*@3 img])&]
 ng]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
 [s2; Stores [%-*@3 img] to memory and returns resulting binary data 
 as String.&]
-[s3; ]
+[s0; ]

@@ -1,4 +1,4 @@
-topic "";
+topic "SystemDraw utility functions";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -31,4 +31,4 @@ is the size of source [%-*@3 pixels] buffer, [%-*@3 poff].is offset
 in source buffer (means, only part of source buffer can be copied).&]
 [s2; [%% In the second variant, target area is ][*@3 x],[*@3 y],[*@3 cx],[*@3 cy] 
 and the source buffer has to have the same size as target.&]
-[s3;%% ]
+[s0; ]
