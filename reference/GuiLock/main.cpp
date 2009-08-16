@@ -17,18 +17,17 @@ struct App : TopWindow {
 
 void App::Work()
 {
-	int q = 0;
-	while(!Thread::IsShutdownThreads()) {
-		{
-			GuiLock __;
-			if(list.GetCount() > 1000) {
-				if(PromptYesNo("Quit?"))
-					Break();
-				list.Clear();
-			}
-			list.Add((int64)Random());
-		}
+	for(;;) {
 		Sleep(1);
+		GuiLock __;
+		if(Thread::IsShutdownThreads())
+			break;
+		if(list.GetCount() > 1000) {
+			if(PromptYesNo("Quit?"))
+				Break();
+			list.Clear();
+		}
+		list.Add((int64)Random());
 	}
 }
 
