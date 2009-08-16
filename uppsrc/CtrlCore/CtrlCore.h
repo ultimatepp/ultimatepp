@@ -561,6 +561,7 @@ private:
 	bool    AddScroll(const Rect& sr, int dx, int dy);
 	Rect    GetClippedView();
 	void    ScrollRefresh(const Rect& r, int dx, int dy);
+	void ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy);
 	void    SyncScroll();
 	void    PaintCaret(SystemDraw& w);
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
