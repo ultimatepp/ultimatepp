@@ -1,8 +1,10 @@
 #include <CtrlLib/CtrlLib.h>
 
+using namespace Upp;
+
 struct App : public TopWindow {
 	Point pos;
-	Button ok;
+	Button ok, tl;
 
 	virtual void Paint(Draw &w)
 	{
@@ -17,7 +19,8 @@ struct App : public TopWindow {
 	{
 		if(key == VK_SPACE) {
 			Size sz = GetSize();
-			Size delta(rand() % 50, rand() % 50);
+			Size delta(rand() % 50 - 25, rand() % 50 - 25);
+			delta = Size(0, -10);
 			pos += delta;
 			ScrollView(-delta);
 		}
@@ -28,11 +31,12 @@ struct App : public TopWindow {
 	{
 		pos = Point(0, 0);
 		Add(ok.HCenterPos(20).VCenterPos(20));
+		Add(tl.TopPos(0, 20).LeftPos(0, 20));
 	}
 };
 
 GUI_APP_MAIN
 {
-	Ctrl::ShowRepaint = 30;
+	Ctrl::ShowRepaint(30);
 	App().Run();
 }
