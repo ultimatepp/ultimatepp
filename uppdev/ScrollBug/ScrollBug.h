@@ -3,10 +3,10 @@
 
 #include <CtrlLib/CtrlLib.h>
 
+using namespace Upp;
+
 #define LAYOUTFILE <ScrollBug/ScrollBug.lay>
 #include <CtrlCore/lay.h>
-
-
 
 class ScrollBug : public WithScrollBugLayout<TopWindow> {
 public:
