@@ -390,6 +390,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				lnk << " -mwindowsce";
 			else if(HasFlag("WIN32")) {
 				lnk << " -mwindows";
+				if(HasFlag("MT"))
+					lnk << " -mthreads";
 				if(!HasFlag("GUI"))
 					lnk << " -mconsole";
 			}
