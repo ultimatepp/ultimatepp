@@ -83,9 +83,7 @@ void Ctrl::Call(Callback cb)
 		cb();
 	else {
 		CallBox cbox;
-		DLOG("EventLoop 1");
 		cbox.cb = cb;
-		DLOG("EventLoop 2");
 		UPP::PostCallback(callback1(PerformCall, &cbox));
 		int n = NonMain;
 		int nn = n;
