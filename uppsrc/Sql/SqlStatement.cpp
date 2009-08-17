@@ -262,7 +262,11 @@ SqlUpdate& SqlUpdate::operator()(Fields f) {
 // ------------------------------------
 
 SqlUpdate::operator SqlStatement() const {
-	return SqlStatement("update " + ~table + " set " + ~set + " where " + ~where);
+	StringBuffer stmt;
+	stmt << "update " << ~table << " set " << ~set;
+	if(!where.IsEmpty())
+		stmt << " where " << ~where;
+	return SqlStatement(stmt);
 }
 
 void SqlUpdate::Column(SqlId column, SqlVal val) {
