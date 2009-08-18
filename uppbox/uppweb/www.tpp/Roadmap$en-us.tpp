@@ -26,6 +26,37 @@ topic "Changelog";
 [s0; &]
 [s0; [*_3 Current release ]&]
 [s0; &]
+[s0; [*_4 1517]&]
+[s0; &]
+[s0; Major overhaul graphics infrastructure is finished, U`+`+ is 
+now capable of headless drawing operations&]
+[s0; (e.g. drawing graphics and text into .png files in console applications, 
+without X11)&]
+[s0; (example: [^http`:`/`/www`.ultimatepp`.org`/reference`$ConsoleDraw`.html^ http://www
+.ultimatepp.org/reference`$ConsoleDraw.html])&]
+[s0; &]
+[s0; Minor improvements:&]
+[s0; &]
+[s0; [* Library]&]
+[s0;* &]
+[s0;i150;O0; RegExp fixed to work with mingw, added GetMatchPos method&]
+[s0;i150;O0; SetSurface functions for optimized raw output of RGBA 
+data to screen (example: [^http`:`/`/www`.ultimatepp`.org`/reference`$SetSurface`.html^ h
+ttp://www.ultimatepp.org/reference`$SetSurface.html])&]
+[s0;i150;O0; Added Blackfin CPU support into Core&]
+[s0;i150;O0; EditField`::NullText method now can provide an icon&]
+[s0;i150;O0; RichText, Report: RichTextLayoutTracer ability (example: 
+[^http`:`/`/www`.ultimatepp`.org`/reference`$RichTextLayoutTracer`.html^ http://www.
+ultimatepp.org/reference`$RichTextLayoutTracer.html])&]
+[s0;i150;O0; Core: Added StringStream`::Reserve&]
+[s0; &]
+[s0; [* TheIDE]&]
+[s0; &]
+[s0;i150;O0; Added package internal include paths&]
+[s0;i150;O0; Ctrl`+mouse wheel changes font size&]
+[s0; &]
+[s0; [*_3 Previous releases]&]
+[s0;*4 &]
 [s0; [*_4 1314]&]
 [s0; &]
 [s0; [* Library]&]
@@ -46,8 +77,6 @@ topic "Changelog";
 [s0;i150;O0; FileTabs now persistent&]
 [s0;i150;O0; Non`-fixed pitch fonts allowed in editor (used as fixed...)&]
 [s0; &]
-[s0; [*_3 Previous releases]&]
-[s0;*4 &]
 [s0; [*_4 1254]&]
 [s0;*4 &]
 [s0; [* Library]&]

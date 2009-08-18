@@ -767,18 +767,21 @@ for developing large C`+`+ applications.]&]
 ´¬Ù²äÉ’¥ÒË–¬Ù²äÉÉ’¥Ë–¬Ù²¦äÉ’¥Ë–¬šÙ²äÉ’¥Ë™–¬Ù®úßú…Šèı
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Current release: [* 1314]&]
+[s0;l128; Current release: [* 1517]&]
 [s0;l128; License: [* BSD]&]
 [s0;l128;+92 &]
 [s0;l128;+92 &]
-[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download U`+`+ 1314]]
-::@(255.255.235) [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-1314`.exe^+75 W
+[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download U`+`+ 1517]]
+::@(255.255.235) [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-1517`.exe^+75 W
 in32 installer][+75  (10_MB) ]]
-:: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-1314`.tar`.gz^+75 X
+:: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-1517`.tar`.gz^+75 X
 11`-src][+75  (9MB)]]}}&]
 [s0;l128;+92 &]
 [ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 U`+`+ News]]
-::@(255.255.233) [s0; [*@5$2;1 2009`-06`-17]&]
+::@(255.255.233) [s0; [*@5$2;1 2009`-08`-18]&]
+[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
+1517 released]]
+:: [s0; [*@5$2;1 2009`-06`-17]&]
 [s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
 1314 released]]
 :: [s0; [*@5$2;1 2009`-06`-01]&]
