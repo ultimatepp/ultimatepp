@@ -1,25 +1,294 @@
-TITLE("2008.1 changelog")
-COMPRESSED
-120,156,237,91,235,114,219,70,150,126,149,94,101,214,67,198,52,77,128,164,72,201,149,218,149,168,139,53,145,100,71,148,226,73,82,46,179,9,52,73,68,0,26,198,69,20,189,59,121,151,121,150,125,177,253,206,233,6,9,136,202,216,155,104,255,217,85,150,72,160,47,167,207,229,59,183,214,47,174,248,203,95,58,173,206,55,157,207,252,219,63,82,51,89,132,249,251,95,130,94,111,248,74,186,253,87,183,223,191,217,123,245,237,127,54,118,123,77,90,197,193,42,221,129,211,29,246,187,78,207,221,197,15,167,235,184,125,183,219,115,134,238,94,111,216,237,14,59,251,94,40,179,236,253,47,161,59,28,190,162,73,46,38,185,131,190,235,12,122,195,222,208,233,14,134,46,230,186,157,142,219,25,184,125,167,215,29,186,253,125,95,101,222,251,95,228,176,251,234,219,171,93,76,234,210,78,88,188,227,236,186,189,65,207,237,116,59,110,15,91,57,195,97,207,25,244,135,221,189,221,221,125,79,38,121,160,99,187,87,224,56,174,243,106,234,12,94,129,230,223,126,251,173,237,244,58,
-134,130,30,22,115,58,61,144,234,224,89,167,231,14,156,254,94,103,175,63,116,134,157,46,22,239,15,58,253,253,68,166,50,250,253,163,247,63,123,244,65,103,63,200,21,150,248,246,185,227,12,48,101,183,181,251,141,211,27,224,160,195,110,175,63,28,116,176,185,235,186,221,174,235,116,221,189,61,183,191,219,31,236,47,148,244,85,106,143,32,65,252,183,14,166,14,90,131,111,48,177,211,235,119,221,222,30,49,171,139,157,92,119,183,191,231,244,123,157,254,46,86,218,79,213,199,34,72,85,164,98,136,236,191,62,252,227,223,143,47,95,220,140,197,47,89,231,85,79,220,132,121,16,201,92,9,204,29,182,157,103,239,233,177,35,202,223,39,69,24,138,48,200,114,161,103,66,226,179,183,144,241,92,101,251,102,64,71,76,190,21,177,90,138,145,78,149,88,6,249,66,76,85,158,171,84,228,139,20,20,7,241,92,100,69,146,232,52,111,139,11,26,179,80,248,33,22,121,158,236,191,124,185,92,46,219,133,37,32,73,218,58,157,191,156,233,180,136,94,6,177,175,238,219,201,34,
-249,143,124,242,93,148,205,39,207,242,197,228,59,215,25,238,77,158,9,25,37,175,54,63,178,92,166,24,212,153,60,171,144,20,196,65,62,249,32,100,236,139,211,243,55,135,7,231,248,98,41,175,210,241,7,201,112,59,238,151,145,113,21,120,139,99,63,200,69,172,151,37,31,132,190,83,233,50,133,10,136,72,251,74,52,206,226,76,225,241,173,90,181,219,237,230,3,190,70,42,95,104,63,19,163,60,13,241,236,84,229,111,150,177,74,233,107,163,201,231,243,116,12,233,240,251,7,111,249,77,101,189,89,144,98,36,54,78,37,153,3,73,244,40,149,115,94,229,40,213,9,184,102,214,105,120,69,154,66,91,194,149,208,49,126,128,25,144,109,220,117,155,79,192,59,247,11,121,39,125,95,249,76,207,100,127,255,13,120,150,6,190,26,21,105,166,211,134,57,243,89,36,231,10,139,69,77,49,121,33,202,33,25,84,79,137,128,222,209,9,35,93,100,74,120,60,175,93,89,158,15,74,98,241,85,174,188,60,99,46,248,42,12,176,76,38,50,29,41,195,127,158,174,238,192,141,
-39,209,28,119,248,101,167,135,106,72,24,158,134,84,160,182,126,72,134,244,132,10,220,237,252,1,33,140,22,65,232,159,0,253,212,5,113,229,152,152,210,176,138,233,209,187,22,52,40,55,204,106,137,183,154,190,36,230,217,39,112,54,151,45,225,47,117,234,147,170,207,66,57,207,154,172,89,16,102,170,237,1,177,200,228,175,153,152,209,38,53,222,87,104,58,133,148,215,210,179,70,149,193,80,210,57,72,245,84,24,102,162,145,41,37,254,6,2,70,252,149,68,75,223,78,130,123,229,155,71,214,174,154,109,193,15,141,192,167,197,60,171,234,200,91,157,229,243,84,141,127,56,47,247,249,55,209,200,33,133,91,40,153,22,63,143,117,152,87,13,54,146,241,202,152,20,184,107,44,42,74,82,216,123,100,212,231,0,248,169,8,14,112,228,28,103,6,101,153,88,130,30,250,125,157,42,197,199,34,106,15,210,84,174,30,30,18,166,91,165,110,61,230,8,19,82,53,131,62,196,30,64,24,107,177,216,106,150,79,103,188,144,247,231,42,198,208,44,79,3,143,33,0,22,79,4,
-253,222,169,107,28,62,142,139,232,199,64,45,91,252,105,12,167,66,251,25,238,210,147,107,57,13,73,59,129,66,35,29,22,81,12,51,90,232,34,244,225,55,50,45,32,249,219,234,54,103,49,144,138,164,210,18,231,106,150,155,79,87,193,124,97,63,146,231,161,79,188,254,155,120,141,132,75,210,123,163,151,144,193,248,99,120,124,79,200,5,84,155,73,28,31,207,224,166,200,174,181,248,21,211,51,58,99,246,49,156,188,216,115,193,155,85,91,188,1,69,248,32,26,203,5,224,153,233,50,48,135,129,111,82,233,133,192,100,218,19,146,155,226,72,252,252,4,254,115,26,164,126,19,152,139,237,99,153,23,41,182,89,137,44,15,72,124,119,50,8,233,248,213,3,66,14,23,65,124,250,14,148,128,75,177,206,215,114,188,62,31,139,59,153,6,204,48,24,136,241,15,158,142,146,32,84,172,20,147,157,155,241,241,197,193,249,249,155,209,100,135,8,184,184,102,111,81,229,31,148,232,8,142,88,88,255,49,75,117,4,65,131,122,157,148,8,255,152,46,92,47,212,217,209,49,239,
-40,61,79,37,144,44,207,242,161,175,85,51,51,50,60,39,215,191,86,1,223,234,54,141,221,82,175,84,231,128,31,72,69,221,231,204,188,80,69,162,1,115,88,94,211,19,14,14,0,96,161,106,210,129,254,238,56,91,43,148,147,120,40,131,206,115,135,160,221,124,236,16,110,100,219,115,55,182,66,82,91,155,81,201,108,232,224,146,195,144,136,194,151,68,39,5,212,101,198,64,65,80,179,12,124,108,22,24,1,169,88,23,243,5,233,144,31,100,73,8,37,33,95,66,7,106,139,51,152,173,140,197,20,50,7,125,222,2,244,234,217,140,190,95,234,183,58,185,73,142,239,27,85,48,184,153,60,159,60,55,11,131,211,56,23,45,139,19,250,5,180,244,93,16,239,246,32,113,242,255,1,64,238,98,60,26,78,62,224,209,180,0,4,170,180,41,26,7,41,116,76,28,254,207,63,189,102,77,42,152,66,38,11,224,92,192,88,66,50,152,140,204,64,204,138,152,141,26,26,53,213,58,84,32,86,221,39,176,246,12,15,91,150,158,72,122,169,54,54,203,114,2,55,193,39,196,
-107,158,204,84,91,216,200,30,148,133,216,0,196,79,67,233,221,182,197,136,93,15,105,42,33,43,49,69,205,102,112,155,191,67,89,36,83,64,36,125,1,151,0,237,170,134,116,230,1,11,121,41,211,24,194,49,4,193,127,107,248,222,198,149,12,103,36,246,159,101,234,235,172,249,32,172,147,27,209,146,247,168,170,164,213,141,182,24,179,172,225,209,166,65,24,228,43,86,47,134,108,142,98,106,115,170,22,123,1,178,201,251,35,108,176,190,150,86,244,54,7,3,252,67,222,68,31,66,142,231,27,1,144,126,49,245,47,203,3,193,255,22,56,18,166,207,216,166,249,204,213,189,46,17,92,252,80,4,222,45,96,179,106,118,208,12,95,47,105,99,144,31,134,144,140,5,81,198,41,232,15,132,5,220,33,165,130,43,82,8,120,218,234,94,149,10,76,84,19,49,176,125,12,5,58,103,28,188,55,183,225,221,176,252,32,67,156,104,184,67,39,219,242,104,21,231,104,141,211,10,110,109,102,52,237,34,253,53,175,132,134,251,127,32,44,153,235,92,79,190,219,235,239,9,132,135,
-223,208,163,15,248,226,86,72,121,13,34,14,11,127,174,160,157,169,204,200,254,150,11,197,216,14,61,39,32,43,17,15,169,135,94,198,214,179,87,121,62,166,115,172,195,7,123,108,82,104,118,31,177,44,179,155,80,207,171,76,120,24,36,151,174,38,99,217,67,24,112,190,210,131,122,212,112,246,72,1,63,40,34,9,131,100,170,161,202,24,134,99,167,149,148,168,138,202,58,9,60,131,24,88,127,158,50,146,226,163,134,45,65,137,206,124,202,174,72,51,170,217,133,34,44,241,141,130,102,193,39,85,194,139,79,168,148,96,159,36,44,160,14,143,197,78,48,47,131,185,140,2,203,84,38,9,8,107,89,199,250,154,147,205,3,156,47,166,176,198,120,222,170,161,252,132,232,224,232,252,156,150,185,94,144,238,65,155,47,86,132,66,9,240,130,66,111,10,240,200,64,61,163,252,183,116,108,214,156,182,15,211,164,32,219,166,32,102,26,184,132,24,9,35,167,169,76,87,237,109,63,71,161,20,219,60,249,170,7,168,106,95,69,164,107,9,30,177,201,213,236,250,62,136,138,72,
-32,72,153,194,160,176,233,100,7,254,87,166,243,12,222,21,12,32,193,112,56,209,235,84,29,11,243,130,242,183,147,64,33,48,221,223,103,142,112,140,82,25,118,92,206,63,130,208,174,131,200,216,133,87,100,185,142,130,79,198,17,27,32,10,106,84,25,219,98,93,38,230,92,21,113,131,61,227,38,254,218,162,101,237,234,64,203,24,97,22,231,121,15,64,133,179,34,192,57,60,20,34,129,167,200,22,122,187,95,152,180,24,216,189,134,243,57,148,105,45,246,21,141,119,80,177,70,179,5,103,89,126,194,1,14,139,60,215,49,162,164,49,180,183,65,63,154,15,205,149,29,22,28,51,12,211,179,107,17,236,83,20,3,232,251,243,135,235,59,221,47,59,28,194,90,130,160,35,68,130,100,235,171,86,229,201,9,41,37,105,36,129,52,9,19,98,124,71,174,166,102,122,186,72,236,187,53,240,139,6,161,246,172,160,80,114,6,239,70,176,86,99,129,9,111,77,68,135,99,79,254,155,183,177,118,158,193,244,83,34,71,232,34,79,10,227,16,31,85,31,99,235,38,194,36,26,
-240,118,242,161,28,9,243,219,164,15,141,67,89,115,185,26,184,10,53,166,232,12,64,196,158,142,97,55,103,166,195,16,37,178,84,174,14,129,6,250,149,121,112,13,49,197,85,128,234,170,190,227,188,219,105,155,13,94,9,93,175,84,4,117,161,37,242,186,75,36,238,142,85,88,90,125,145,49,23,169,6,96,130,94,3,140,213,25,140,4,101,8,87,70,11,13,35,20,26,90,61,224,249,155,211,170,170,130,169,127,202,145,177,82,237,14,106,249,245,163,250,100,68,50,134,118,135,100,46,176,104,216,193,245,2,16,213,160,140,57,251,196,85,13,195,102,242,106,164,40,169,66,76,24,35,119,8,139,106,42,96,243,78,157,16,188,155,195,108,12,111,10,177,152,44,37,70,88,171,189,130,158,51,42,53,31,81,144,130,240,19,34,160,84,152,126,175,29,6,251,201,181,123,108,231,247,143,5,21,80,171,125,113,20,200,144,116,146,100,5,157,66,38,207,208,250,246,20,111,91,226,237,188,204,28,237,0,138,80,153,82,30,32,198,199,63,220,28,95,142,142,133,158,254,138,85,
-30,79,76,177,201,13,213,244,222,94,157,93,28,92,253,52,249,240,253,241,79,107,38,89,27,44,125,89,53,88,156,6,49,188,11,69,183,148,158,110,219,25,180,140,40,207,40,145,33,54,49,137,11,206,199,96,236,240,21,156,181,225,57,206,51,85,208,68,118,210,89,14,119,105,188,202,9,244,17,195,240,154,226,148,201,78,78,46,106,242,2,238,136,60,77,198,203,183,224,229,110,21,94,154,175,240,157,247,57,36,218,64,54,162,62,78,254,218,156,236,32,217,40,83,209,150,165,169,113,137,81,63,98,20,248,211,108,182,65,13,237,128,88,39,149,113,22,154,188,75,111,214,196,74,109,187,174,177,17,230,215,78,139,253,11,243,185,58,122,67,1,86,55,20,84,120,51,121,113,33,76,164,73,0,18,153,106,148,98,96,128,103,155,171,152,176,137,204,70,222,42,242,188,213,152,77,133,137,181,57,99,189,192,10,40,80,10,208,48,79,145,170,64,61,173,97,63,140,124,236,166,28,0,113,69,168,70,213,206,40,212,200,156,200,227,16,94,128,189,4,34,229,227,88,199,147,
-23,176,3,210,161,242,253,76,81,218,190,70,152,245,182,17,116,158,77,191,22,190,193,156,56,249,165,36,97,6,179,201,76,185,214,78,242,77,162,84,42,217,165,206,47,1,226,173,50,21,86,51,104,53,187,245,148,162,5,58,101,78,97,192,140,74,227,30,40,164,87,156,139,114,130,84,43,211,154,184,32,2,26,66,85,169,150,225,49,244,3,239,98,28,134,194,94,10,163,66,160,114,78,113,190,132,40,41,41,218,4,55,119,1,82,71,60,177,75,76,177,194,237,118,224,177,241,65,28,130,128,230,181,26,205,201,85,89,99,111,225,133,137,41,179,132,130,222,169,202,151,132,239,132,191,38,141,148,83,65,70,254,217,10,93,192,80,79,7,103,54,188,156,170,25,1,45,215,93,1,59,1,142,201,12,171,67,121,153,121,198,54,176,217,132,223,127,212,225,15,246,62,139,205,38,218,202,88,51,24,13,2,207,58,52,160,27,123,21,58,222,214,132,210,81,1,210,238,2,181,220,122,15,148,225,8,14,88,127,165,126,40,84,186,170,69,111,102,208,232,237,205,228,3,181,83,
-40,53,131,7,48,152,111,170,218,27,25,99,20,57,127,147,161,102,43,64,80,244,48,187,44,9,46,253,194,31,245,101,206,231,125,217,153,241,159,190,41,95,8,68,43,88,50,162,136,173,26,133,67,186,167,239,68,145,248,172,103,12,75,221,118,175,237,114,224,221,118,219,213,162,206,248,232,188,62,210,193,128,1,141,164,15,142,91,199,110,106,166,60,88,183,219,238,208,104,222,160,234,67,70,87,199,245,161,3,51,112,208,238,110,213,189,61,134,18,99,13,24,242,145,44,198,64,71,105,186,128,141,162,6,74,235,120,102,197,89,136,41,222,217,146,219,66,231,183,106,101,237,138,13,205,20,182,198,139,96,150,79,158,191,105,76,149,39,169,228,77,245,7,29,207,96,18,182,108,118,6,3,135,10,210,82,156,35,154,106,68,85,119,144,161,97,98,162,178,219,21,155,102,27,63,108,233,97,153,106,42,79,220,27,43,228,242,37,178,74,50,189,18,187,45,39,218,65,20,110,133,4,178,94,149,43,98,227,208,3,107,140,60,73,16,217,28,148,69,212,179,200,178,45,78,78,
-94,204,51,102,92,153,22,138,8,227,151,38,194,9,24,138,25,39,50,195,151,76,135,119,166,204,84,219,220,204,33,141,241,21,2,20,170,116,108,215,16,53,178,177,60,160,92,158,97,13,36,86,179,38,216,152,41,108,62,18,95,230,171,132,66,106,11,56,179,74,136,27,11,21,37,249,10,242,181,5,50,228,124,228,77,57,117,228,68,214,186,133,28,62,48,54,220,36,234,39,59,156,174,210,194,208,4,242,36,132,245,173,205,0,211,146,139,100,86,43,141,219,96,44,12,146,50,97,176,212,195,237,95,235,228,170,94,120,179,231,46,163,243,115,57,85,225,161,190,183,34,146,84,227,43,211,132,213,228,133,167,169,3,211,136,168,100,179,181,72,149,83,151,250,16,169,60,41,127,252,187,227,51,53,95,71,147,194,84,14,241,225,102,90,196,121,33,78,20,206,186,194,84,95,133,51,229,171,237,233,245,146,210,233,205,153,113,40,11,211,122,203,216,174,187,213,142,139,31,121,115,165,189,197,131,20,9,212,30,170,185,109,21,224,251,216,212,60,215,143,57,101,50,152,36,70,
-161,146,233,49,87,26,183,180,244,78,7,190,93,15,156,110,112,214,79,233,230,159,172,109,49,140,14,156,237,214,245,231,250,110,227,156,171,69,181,19,129,48,166,158,202,173,230,125,163,217,54,169,50,64,77,78,101,198,5,23,4,152,235,66,159,205,26,16,238,241,120,229,83,209,131,214,224,202,81,173,42,41,75,63,181,217,240,29,178,189,35,187,242,129,151,7,119,65,190,106,148,31,198,144,61,34,163,140,127,53,129,3,97,56,229,130,177,125,193,21,115,36,149,100,241,144,66,83,28,255,253,120,116,115,125,118,121,218,18,199,151,71,147,15,149,239,39,199,215,163,215,155,55,229,215,77,229,221,6,220,208,131,84,73,143,85,173,60,178,144,150,32,179,149,186,151,236,186,171,205,95,94,195,26,55,84,44,110,145,250,17,127,50,49,149,105,185,131,77,26,9,248,98,42,124,138,199,210,164,77,232,84,171,0,151,234,188,197,207,170,183,176,205,13,246,44,116,13,132,142,243,88,29,216,204,140,17,109,81,221,119,74,81,17,183,72,233,210,12,220,123,126,201,189,3,203,
-215,214,186,224,80,37,182,90,185,162,232,148,219,48,101,70,83,102,50,76,206,137,166,86,45,93,108,81,136,174,182,168,168,46,52,86,249,89,204,220,86,35,29,223,193,217,53,236,111,49,121,230,113,196,98,250,111,4,227,138,91,157,252,210,16,206,2,228,250,129,9,169,1,155,182,108,192,125,209,25,109,178,181,189,9,252,248,120,71,97,72,245,64,123,1,0,210,76,49,204,167,192,155,114,230,32,48,173,15,17,202,116,174,154,70,83,160,243,10,206,196,196,171,153,69,69,6,224,57,206,0,21,10,67,118,148,219,0,60,6,90,243,93,22,156,25,193,139,176,253,66,114,167,225,202,234,34,176,202,161,59,81,130,59,110,213,100,48,193,26,97,214,222,212,71,77,25,181,44,231,147,98,250,92,75,194,90,118,44,254,85,15,31,70,176,96,115,233,70,82,207,26,199,97,38,136,131,183,103,236,20,56,124,78,213,195,44,134,6,210,242,69,28,112,105,184,20,117,131,97,97,4,227,201,21,249,188,119,85,101,89,251,15,195,109,82,44,72,145,82,215,59,184,198,72,122,
-11,211,181,1,11,215,37,161,45,142,185,224,247,220,118,156,214,37,132,106,89,180,253,20,72,58,216,174,216,253,62,146,218,216,203,68,90,39,142,73,73,224,2,188,5,78,179,160,252,148,142,74,114,180,151,94,168,126,176,173,131,92,114,217,152,8,177,248,145,98,236,211,28,239,255,238,40,206,56,221,202,216,248,88,215,96,114,43,219,241,44,114,211,3,99,3,108,113,18,27,18,188,113,42,10,164,231,153,79,66,248,112,251,82,201,231,202,95,155,232,210,6,57,230,30,25,27,26,101,81,70,159,203,132,153,164,100,138,125,54,7,166,192,118,221,237,54,29,45,174,133,129,104,28,110,235,230,72,189,78,102,251,63,80,215,224,83,21,190,91,72,179,168,69,193,18,231,128,220,183,149,27,26,181,190,68,21,145,255,225,230,154,185,102,246,160,173,196,37,72,46,148,148,62,130,67,185,172,154,19,43,186,49,67,43,17,248,113,51,131,43,79,229,40,80,150,216,140,159,16,211,99,17,147,189,83,75,187,230,150,78,181,137,19,161,149,92,114,105,152,182,47,158,65,227,169,
-145,11,240,123,73,222,167,105,138,23,229,133,132,141,59,20,121,170,20,13,205,169,17,85,133,33,172,0,217,176,165,148,190,131,198,103,116,67,199,52,129,9,86,215,27,26,67,131,51,171,247,52,119,123,155,58,172,109,242,240,165,139,90,254,91,228,58,226,92,27,142,163,72,42,153,83,173,142,208,144,24,55,121,97,27,164,136,58,168,121,78,170,127,207,45,117,190,68,81,245,97,116,3,129,40,171,45,66,254,112,171,36,114,202,56,79,109,8,206,108,138,204,171,214,137,229,138,92,149,113,149,220,134,133,81,45,20,151,119,104,233,79,26,49,88,21,56,38,59,124,11,113,199,166,97,88,209,246,198,158,162,39,51,236,246,62,155,149,155,67,77,118,222,209,101,67,118,31,51,8,217,183,5,33,16,6,132,38,178,130,218,189,18,83,133,120,139,216,8,18,61,139,253,128,203,79,22,227,232,90,192,118,87,106,60,62,190,186,158,124,176,189,26,72,194,60,49,70,58,217,137,176,16,221,212,219,217,224,103,219,94,71,88,154,186,52,162,5,186,27,0,6,67,213,37,23,
-4,77,214,202,43,224,113,42,126,52,230,200,209,4,185,151,170,93,87,170,29,23,196,68,211,86,122,60,188,183,128,109,164,121,230,215,35,137,140,99,6,234,164,112,18,66,42,14,7,22,26,201,151,55,118,214,197,73,241,160,8,116,93,230,139,116,160,168,0,132,5,101,93,4,235,71,128,16,32,70,181,28,93,214,24,91,252,105,180,208,129,167,90,107,128,50,159,200,123,154,79,228,67,205,101,171,50,28,227,69,202,11,3,63,98,33,89,205,139,184,108,69,185,98,217,61,51,169,181,221,127,180,48,44,205,182,196,185,161,181,116,29,235,155,37,124,187,202,55,177,113,106,218,53,17,66,173,160,236,196,80,56,195,87,124,234,5,60,187,28,133,216,20,18,178,33,230,171,208,68,25,32,31,145,187,79,5,75,50,94,29,171,152,10,219,92,3,193,215,140,106,59,219,205,164,178,43,252,210,22,32,54,53,21,32,145,109,4,7,138,57,4,147,218,58,35,165,182,111,41,226,121,141,255,79,97,142,187,131,47,52,199,155,132,107,73,28,213,195,246,206,131,184,184,23,114,
-46,107,109,250,90,39,57,85,200,72,108,83,191,212,136,245,117,4,26,181,93,136,51,173,31,98,70,25,213,153,18,97,173,39,30,87,238,197,172,189,87,185,46,61,248,234,96,190,58,152,175,14,230,171,131,249,234,96,190,58,152,255,111,7,179,41,169,109,46,211,149,117,12,179,52,25,68,164,214,123,62,188,36,114,102,234,31,249,230,79,91,170,71,140,216,72,48,215,252,25,213,182,184,168,111,245,114,196,151,102,203,27,108,188,147,193,83,123,109,152,235,119,88,218,56,141,202,34,6,107,234,189,248,19,190,206,35,26,215,58,114,154,143,170,43,171,104,102,157,222,29,117,11,96,82,177,47,83,42,208,218,106,145,73,133,171,61,192,201,142,237,61,115,111,41,224,86,135,201,85,245,204,56,78,90,182,214,132,167,35,155,75,105,210,20,195,217,176,144,249,66,237,100,76,183,174,30,114,115,115,167,58,211,220,179,173,188,227,182,104,48,91,173,207,107,123,20,134,43,79,160,235,123,157,254,151,93,201,178,133,199,179,56,223,237,181,24,181,248,99,21,49,181,14,169,186,
-107,250,239,134,215,196,4,230,119,72,157,146,234,169,249,158,235,235,149,159,74,163,184,149,87,0,63,2,144,113,94,248,164,95,123,237,142,104,208,95,204,53,215,1,193,38,169,223,170,114,28,113,183,10,67,230,28,70,145,117,178,243,225,230,144,228,251,38,41,226,145,199,74,183,45,192,111,190,168,162,247,161,76,91,226,2,154,200,31,236,101,187,150,45,184,87,95,138,59,67,115,253,30,30,163,120,75,156,94,127,95,85,202,195,243,179,235,159,33,180,130,254,56,36,240,50,33,67,56,81,229,63,133,52,135,187,95,38,205,117,97,166,212,210,242,2,151,71,45,27,43,194,45,159,91,241,199,38,132,224,254,23,221,47,44,215,51,93,63,42,126,63,124,198,189,160,199,86,12,242,245,138,230,86,154,249,74,23,179,182,46,40,210,245,57,76,12,124,118,96,127,158,97,221,254,160,84,255,127,81,56,163,152,243,32,245,56,194,250,23,29,182,105,64,221,86,42,141,103,89,193,65,231,60,38,162,27,222,212,40,107,186,61,135,171,206,38,162,46,111,179,87,198,32,150,219,
-183,140,42,232,58,115,24,196,124,225,124,70,190,217,252,205,96,164,253,96,198,190,241,193,61,220,202,92,211,142,22,229,13,29,51,72,188,255,95,144,150,141,167,
-
+topic "2008.1 changelog";
+[2 $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483380:class]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[a83;*R6 $$3,0#31310162474203024125188417583966:caption]
+[l288;i1121;b17;O9;~~~.1408;2 $$4,0#10431211400427159095818037425705:param]
+[i448;a25;kKO9;*@(64)2 $$5,0#37138531426314131252341829483370:item]
+[*+117 $$6,6#14700283458701402223321329925657:header]
+[l288;a17;*1 $$7,7#70004532496200323422659154056402:requirement]
+[{_}%EN-US 
+[s0; [4 Ultimate 2008.1]&]
+[s0;1 &]
+[s0; [1 Full list of all changes:]&]
+[s0; [0 `* new Core with better threading support. More here  http://www.ultimatepp.org/
+forum/index.php?t`=msg`&th`=2189`& amp; amp; amp;start`=0`&]&]
+[s0; [0 `* init`_ and GLOBAL`_ changes. More here http://www.ultimatepp.org/forum/index.
+php?t`=msg`&th`=2202`& amp; amp; amp;start`=0`&]&]
+[s0; [0 `* RichEdit now support overwrite mode (Insert key...)]&]
+[s0; [0 `* new methods Ctrl `*GetOwnerCtrl() and const Ctrl GetOwnerCtrl() 
+const]&]
+[s0; [0 `* first iteration of Drag and Drop in Ctrl (currently only 
+for win32) More here http://www.ultimatepp.org/forum/index.php?t`=msg`&th`=2222`& 
+amp; amp; amp;start`=0`&]&]
+[s0; [0 `* added Ctrl`::OverrideCursor(const Image`& m) `- Overrides 
+the image of mouse cursor.]&]
+[s0; [0 `* Ctrl now detects and delivers some new mouse events. More 
+here http://www.ultimatepp.org/forum/index.php?t`=msg`&th`=2228`& 
+amp; amp; amp;start`=0`&]&]
+[s0; [0 `* modal loop handling changes. More here http://www.ultimatepp.org/forum/index.
+php?t`=msg`&th`=2230`& amp; amp; amp;start`=0`&]&]
+[s0; [0 `* added Ctrl`::ChildFrameMouseEvent(Ctrl `*child, int event, 
+Point p, int zdelta, dword keyflags) for conroling child`'s frame 
+mouse events]&]
+[s0; [0 `* GridCtrl now supports merged cells (see JoinCells and JoinFixedCells 
+methods). Fixed some bugs.]&]
+[s0; [0 `* PostgreSQL support! (thanks to ZSolt)]&]
+[s0; [0 `* many Drag `& Drop improvements. All edit controls as well 
+as TreeCtrl and ArrayCtrl now support it.]&]
+[s0; [0 `* ArrayCtrlDnd reference was added]&]
+[s0; [0 `* fixed MaxLen restriction in edits.]&]
+[s0; [0 `* PostgreSQL now supports EnumView, EnumSequences and EnumTables. 
+GetColumns should also work.]&]
+[s0; [0 `* InnerJoin, LeftJoin, RightJoin, FullJoin and On methods 
+were added to SqlExp interface to allow do joins in sql`-92 way. 
+Old way (which work only in Oracle (and probably in Firebird)) 
+are naturally still available.]&]
+[s0; [0 `* as MinGW does not support TLS variables, it now compiles 
+as `"USEMALLOC`" in MT mode]&]
+[s0; [0 `* IconDes: Insert from file operation was added]&]
+[s0; [0 `* TheIDE now accepts file drops]&]
+[s0; [0 `* ColumnList supports drag `& drop]&]
+[s0; [0 `* fixed rotated text problem (DrawText with angle) in X11]&]
+[s0; [0 `* fixed problem with Ctrl`+1 `- Ctrl`+0 keys in X11]&]
+[s0; [0 `* ArrayCtrl and TreeCtrl support showing small popup if cell`'s 
+width is not enough to display the text. It can by switched off 
+by NoPopUpEx()]&]
+[s0; [0 `* U`+`+ is now able to produce Win64 code (ise MSC8`_64 builder) 
+(Artur Bác)]&]
+[s0; [0 `* Code editor highlights Sql functions, boolean expression, 
+U`+`+ macros and text in upper case. Default color is black. 
+Change it see the effect]&]
+[s0; [0 `* Code editor marks edited lines as well as lines with warnings 
+and errors (Ralf `- Zardos)]&]
+[s0; [0 `* inital support for drag `& drop in X11. Small stability 
+fixes to win32 drag `& drop.]&]
+[s0; [0 `* Markers of changes in code editor! (by Ralf) `+ highlighting 
+error/warnings/found in files lines.]&]
+[s0; [0 `* New QuickTabs]&]
+[s0; [0 `* Windows installer should work properly now (theide.exe is 
+not hanging on process list)]&]
+[s0; [0 `* Postgres and As() fixes (by ZSolt)]&]
+[s0; [0 `* Fixed some problems with TreeCtrl (by Mrjt) More here: http://www.ultimatepp.o
+rg/forum/index.php?t`=msg`&goto`=959 2`&#msg`_9592]&]
+[s0; [0 `* HomeBudget crashed when sql exception was thrown. Fixed.]&]
+[s0; [0 `* Some GridCtrl fixes (see internal changelog)]&]
+[s0; [0 `* Drag and Drop interface slightly refactored]&]
+[s0; [0 `* Delayed clipboard rendering support]&]
+[s0; [0 `* Topic`+`+ integrated into main Ide window]&]
+[s0; [0 `* Reduced code size produced by png plugin]&]
+[s0; [0 `* GridCtrl `- fixed text wrapping, added HeaderAlign`* methods]&]
+[s0; [0 `* MYSQLDLL `- This new MySql package flag forces linking with 
+.dll version of MySql client library.]&]
+[s0; [0 `* IconDes import file is now able to import multiple files]&]
+[s0; [0 `* Maximum number of `"varargs`" extended to 40]&]
+[s0; [0 `* Added EditField`::AlignRight]&]
+[s0; [0 `* Extended DateTimeCtrl customization abilities]&]
+[s0; [0 `* Fixed crashing Run() in PostgreSQL]&]
+[s0; [0 `* Added ArrayCtrl`::SetCtrl()]&]
+[s0; [0 `* New Image cache ops. More here http://www.ultimatepp.org/forum/index.php?t`=m
+sg`&th`=2468`& amp; amp; amp;start`=0`&]&]
+[s0; [0 `* Small ToolBar improvements (Wrap(), NoWrap(), SetButtonMinSize(Size)]&]
+[s0; [0 `* Some macro enhancements for TheIde. More here http://www.ultimatepp.org/forum
+/index.php?t`=msg`&th`=2513`& amp; amp; amp;start`=0`&]&]
+[s0; [0 `* GetHomeDirectory, GetHomeDirFile now working in Win32]&]
+[s0; [0 `* Grouping in QuickTabs (not fully finished)]&]
+[s0; [0 `* SqlExp operator `| now produces correct output for PostgreSQL]&]
+[s0; [0 `* fixed compiling SQL`_PostgreSql reference (Bas)]&]
+[s0; [0 `* optimized painting when there is a lot of out of screen 
+widgets]&]
+[s0; [0 `* TabCtrl now supports Insert and Remove of tabs]&]
+[s0; [0 `* FileSel is now using icons from windows]&]
+[s0; [0 `* multidisplay support (in Windows)]&]
+[s0; [0 `* LOG improvementes More here: http://www.ultimatepp.org/forum/index.php?t`=msg`&
+th`=2670`& amp; amp;start`=0`&]&]
+[s0; [0 `* fixed ScrollBar`::MinThumb(int sz) `- there was not return 
+value]&]
+[s0; [0 `* many DropGrid improovements (but still no documentation)]&]
+[s0; [0 `* fixed couple of bugs of GridCtrl (see changelog.txt)]&]
+[s0; [0 `* PostgreSQL: Dialect now renamed to PGSQL, PgSequence now 
+represents PGSQL SEQUENCE object.]&]
+[s0; [0 `* PostgreSQL: DUAL`_PRIMARY`_KEY was not working, added support 
+for binary columns]&]
+[s0; [0 `* SqlExp Select statement now has `"Get`" variant to be used 
+instead of `"From`" to get `"table`-less`" select, like `"select 
+nextval(`'seq`')`". In Oracle, Select(NextVal(SEQ)).Get gets 
+translated to `"select seq.nextval from DUAL`", in PGSQL to `"select 
+nextval(`'SEQ`')`".]&]
+[s0; [0 `* `-M theide commandline option generates Makefile]&]
+[s0; [0 `* Help Window is no longer a Window, but is now integrated 
+into theide main frame.]&]
+[s0; [0 `* `"Close all tabs`" and `"Close non`-project tabs`" feature 
+of tabs is now implemented]&]
+[s0; [0 `* DropList dropfocus mode is now default, added NotNull, fixed 
+refreshing right button after closing popuped list]&]
+[s0; [0 `* Fixed memory allocator connected with limit on a total number 
+of virtual memory blocks]&]
+[s0; [0 `* Fixed QuickTabs crash related to group change, reduced space 
+between icon and tab name]&]
+[s0; [0 `* GridCtrl now supports inserting after/before and duplicating 
+rows]&]
+[s0; [0 `* Change in Image interface http://www.ultimatepp.org/forum/index.php?t`=msg`&t
+h`=2579`& amp; amp;start`=0`&]&]
+[s0; [0 `* Added simple static widget DisplayCtrl]&]
+[s0; [0 `* Added FileSel preview]&]
+[s0; [0 `* Added SqlArray`::ReQuery()]&]
+[s0; [0 `* Added CPU`_Cores() `- returns the number of CPU cores in 
+system.]&]
+[s0; [0 `* New widget DropGrid http://www.ultimatepp.org/forum/index.php?t`=msg`&th`=261
+0`& amp; amp;start`=0`&]&]
+[s0; [0 `* Improved build performance]&]
+[s0; [0 `* MingGW updated from 3.4.2 to 4.2.1]&]
+[s0; [0 `* SDL updated from 1.2.7 to 1.2.12]&]
+[s0; [0 `* Sqlite updated from 3.3.0 to 3.4.2]&]
+[s0; [0 `* PCRE updated from 7.0 to 7.3]&]
+[s0; [0 `* added close group to quick tabs popuped menu]&]
+[s0; [0 `* `"Insert any file`" in TheIDE hotkey changed to Ctrl`+Shift`+O(because 
+of conflict with Italic in T`+`+ editor)]&]
+[s0; [0 `* those pesky icon.ico files wrong exports are no more generated 
+from .iml]&]
+[s0; [0 `* fixed a problem with unnamed image in .iml causing iml loss]&]
+[s0; [0 `* added `-gstabs flag for mingw `- this is supposed to solve 
+the problem with mingw 4.2 debugging]&]
+[s0; [0 `* fixed potential crash in ArrayCtrl`::AddColumn]&]
+[s0; [0 `* FileSel types change if there is an empty `"DefaultExt`", 
+extension is now taken from the `"file type`" droplist, from 
+the first mask.]&]
+[s0; [0 `* fixed clipping in Ctrl`::GetTopRect]&]
+[s0; [0 `* fixed painting LabelBox image at incorrect y`-coord (mrjt)]&]
+[s0; [0 `* fixed ArrayCtrl`::NoBackground (mrjt)]&]
+[s0; [0 `* fixed segmentation fault on Ubuntu Feisty (mdelfede)]&]
+[s0; [0 `* fixed problems with GUI and the new sqlite3 (thanks to dmcgeoch)]&]
+[s0; [0 `* Sql`::Begin and SqlSession`::Begin now perform ClearErrors]&]
+[s0; [0 `* added void Sql`::Get(Fields fo) More here: http://www.ultimatepp.org/forum/inde
+x.php?t`=msg`&th`=2719`& amp; amp; amp; amp;start`=0`&]&]
+[s0; [0 `* added String SqlSession`::GetErrorCodeString(). Some databases 
+like Postgres return `"stringed`" error codes.]&]
+[s0; [0 `* added SqlSession`::WhenDatabaseActivity(ActivityStatus status) 
+callback. Status can be (for now) EXECUTING, END`_EXECUTING, 
+FETCHING, END`_FETCHING. It can be used to react on database 
+activity (for example mouse cursor can change then, progress 
+bar can be displayed and so on)]&]
+[s0; [0 `* fixed QuickTabs highlighting problems]&]
+[s0; [0 `* added popuped menu with Close item to QuickTabs]&]
+[s0; [0 `* added network browsing class NetNode (for now, in Win32)]&]
+[s0; [0 `* EditField`::NullText now has variant with Font parameter]&]
+[s0; [0 `* added EditField`::SetInactiveConvert(Convert `&c) `- allow 
+to set convert class used when focus is out of edit field]&]
+[s0; [0 `* added Image Win32DllIcon(const char `*dll, int ii, bool 
+large) to retrieve icon as image from given dll file.]&]
+[s0; [0 `* fixed Splitter SetMin which wrongly used the 10000 ratio 
+instead of pixels. This new method should use directly pixels....]&]
+[s0; [0 `* almost all calls to Win32 API in Core are now implemented 
+to use unicode variant (like CreateFileW)]&]
+[s0; [0 `* painting Image for low`-level machines was optimized]&]
+[s0; [0 `* fixed 2 regression bugs of DateTimeCtrl. More here: http://www.ultimatepp.org/
+forum/index.php?t`=msg`&th`=2773`& amp; amp; amp; amp;start`=0`&]&]
+[s0; [0 `* TheIDE Ctrl`+F1 now searches help for the current word]&]
+[s0; [0 `* added value parameter to ArrayCtrl`::SetCtrl. More here: http://www.ultimatepp.
+org/forum/index.php?t`=msg`&th`=2779`& amp; amp; amp; amp;start`=0`&]&]
+[s0; [0 `* added IdCtrls `- a new very small utility class, modeled 
+after SqlCtrls. More here: http://www.ultimatepp.org/forum/index.php?t`=msg`&th`=27
+80`& amp; amp; amp; amp;start`=0`&]&]
+[s0; [0 `* fixed a problem in CtrlCore which prevented closing the 
+window with long operations and many timer events]&]
+[s0; [0 `* many DropGrid fixes (resizing problems, null value caused 
+selecting first item on list) and GridCtrl fixes (multiline highlighing 
+is now supported, item editable state is now respected when ctrls 
+are shown)]&]
+[s0; [0 `* Going into Help (pressing F1 or icon/menu) now does not 
+change the tree or topic.]&]
+[s0; [0 `* F1 in help now has the same effect as pressing Ctrl`+Tab]&]
+[s0; [0 `* Win64 support (library only)]&]
+[s0; [0 `* Automatic setup in TheIDE now supports (auto`-installs) 
+MSC8 `- x64 compiler]&]
+[s0; [0 `* Drawing now supports Null]&]
+[s0; [0 `* Fixed GetMinSize in .usc]&]
+[s0; [0 `* Layout Font property height now zoomed]&]
+[s0; [0 `* `"init`" files in packages. More here http://www.ultimatepp.org/forum/index.p
+hp?t`=msg`&th`=2834`& amp; amp;start`=0`&]&]
+[s0; [0 `* Fixed `"Writes to freed blocks`" bug in ide]&]
+[s0; [0 `* Added ProgessIndicator`::SetColor]&]
+[s0; [0 `* Added ASSERT`_ macro `- ASSERT with `"message`" parameter. 
+U`+`+ will now tell you what is wrong with your Value conversions]&]
+[s0; [0 `* New widget MultiButton]&]
+[s0; [0 `* added void Ctrl`::LayoutId(const char `*s) to put the name 
+of layout variable into the Ctrl]&]
+[s0; [0 `* There is now much improved chameleon support for DropList, 
+DropChoice, DropGrid, DropDate, DropTime and EditField for Windows 
+Vista]&]
+[s0; [0 `* StaticRect enhanced to support Ch Values]&]
+[s0; [0 `* Added chameleon utility functions to add and remove margins 
+from rectangle]&]
+[s0; [0 `* Chameleon can set now style for individual componenets of 
+composite widgets]&]
+[s0; [0 `* IconDes / .iml changed to premultiplied format]&]
+[s0; [0 `* Added BackPaintHint. More here http://www.ultimatepp.org/forum/index.php?t`=m
+sg`&th`=2867`& amp; amp;start`=0`&]&]
+[s0; [0 `* Fixed Upp to work in Linux again]&]
+[s0; [0 `* DateTimeCtrl replaced by DropDate and DropTime]&]
+[s0; [0 `* Improvements to painting system]&]
+[s0; [0 `* Many fixes to GridCtrl and DropGrid]&]
+[s0; [0 `* Going into Help (pressing F1 or icon/menu) now does not 
+change the tree or topic.]&]
+[s0; [0 `* F1 in help now has the same effect as pressing Ctrl`+Tab]&]
+[s0; [0 `* Win64 support (library only)]&]
+[s0; [0 `* Automatic setup in TheIDE now supports (auto`-installs) 
+MSC8 `- x64 compiler]&]
+[s0; [0 `* Drawing now supports Null]&]
+[s0; [0 `* Fixed GetMinSize in .usc]&]
+[s0; [0 `* Layout Font property height now zoomed]&]
+[s0; [0 `* `"init`" files in packages. More here http://www.ultimatepp.org/forum/index.p
+hp?t`=msg`&th`=2834`& amp; amp;start`=0`&]&]
+[s0; [0 `* Fixed `"Writes to freed blocks`" bug in ide]&]
+[s0; [0 `* Added ProgessIndicator`::SetColor]&]
+[s0; [0 `* Added ASSERT`_ macro `- ASSERT with `"message`" parameter. 
+U`+`+ will now tell you what is wrong with your Value conversions]&]
+[s0; [0 `* New widget MultiButton]&]
+[s0; [0 `* added void Ctrl`::LayoutId(const char `*s) to put the name 
+of layout variable into the Ctrl]&]
+[s0; [0 `* There is now much improved chameleon support for DropList, 
+DropChoice, DropGrid, DropDate, DropTime and EditField for Windows 
+Vista]&]
+[s0; [0 `* StaticRect enhanced to support Ch Values]&]
+[s0; [0 `* Added chameleon utility functions to add and remove margins 
+from rectangle]&]
+[s0; [0 `* Chameleon can set now style for individual componenets of 
+composite widgets]&]
+[s0; [0 `* IconDes / .iml changed to premultiplied format]&]
+[s0; [0 `* Added BackPaintHint. More here http://www.ultimatepp.org/forum/index.php?t`=m
+sg`&th`=2867`& amp; amp;start`=0`&]&]
+[s0; [0 `* Fixed Upp to work in Linux again]&]
+[s0; [0 `* DateTimeCtrl replaced by DropDate and DropTime]&]
+[s0; [0 `* Improvements to painting system]&]
+[s0; [0 `* Many fixes to GridCtrl and DropGrid]&]
+[s0; [0 `* QuickTabs refactored to use system theme to paint tabs]&]
+[s0; [0 `* Implemetation of DateTimeCtrl moved to header]&]
+[s0; [0 `* Added Build/Clean package to packages popup menu of TheIDE]&]
+[s0; [0 `* U`+`+ translated to Finish (Tom1)]&]
+[s0; [0 `* Chameleon styles now have `"Standard`" method which returns 
+the `"default`" initial value of the style]&]
+[s0; [0 `* HeaderCtrl can now move (reorganize) tabs]&]
+[s0; [0 `* ArrayCtrl sorting]&]
+[s0; [0 `* simplify translating in TheIDE. More here http://www.ultimatepp.org/forum/ind
+ex.php?t`=msg`&th`=2905`& amp; amp; amp;start`=0`&]&]
+[s0; [0 `* ConvertInt64, EditInt64]&]
+[s0; [0 `* Toolbar buttons now can have labels]&]
+[s0; [0 `* some Hydra fixes]&]
+[s0; [0 `* Visual Studion 9.0 (2008) compiler supported]&]
+[s0; [0 `* fixed Debugger going to wrong file at startup]&]
+[s0; [0 `* EditField, WithDropChoice, Bar, MenuBar, ToolBar, StatusBar, 
+MenuBar visual improvements (Vista, GTK)]&]
+[s0; [0 `* BLITZ heurestics altered. More here http://www.ultimatepp.org/forum/index.php
+?t`=msg`&th`=2986`& amp; amp; amp;start`=0`&]&]
+[s0; [0 `* DropGrid can now display clear button]&]
+[s0; [0 `* added MultiButton`::SetLabel(), DropGrid`::AddText, DropGrid`::AddClear]&]
+[s0; [0 `* added MulitButton`::RemoveButton(int)]&]
+[s0; [0 `* Some Sql addidtions. More here http://www.ultimatepp.org/forum/index.php?t`=m
+sg`&th`=3575`& amp;start`=0`&]&]
+[s0; [0 `* fixed DrawArc bug (mdelfede)]&]
+[s0; [0 `* fixed big font issue in gnome (cbpporter)]&]
+[s0; [0 `* fixed most Win64 warnings]&]
+[s0; [0 `* ide: added underlining of recently modified files]&]
+[s0; [0 `* ide: added export project ]&]
+[s0; ]
