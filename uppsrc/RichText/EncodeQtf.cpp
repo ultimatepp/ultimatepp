@@ -231,7 +231,7 @@ void QTFEncodePara(String& qtf, const RichPara& p, const RichPara::Format& style
 			if(object.IsText()) {
 				qtf << "`";
 				while(q < slim) {
-					ASSERT((byte)*q >= 32 && (byte)*q <= 255);
+					ASSERT((byte)*q >= 32);
 					if(*q == '`')
 						data.Cat('`');
 					qtf.Cat(*q++);
