@@ -21,6 +21,11 @@ void Raster::SeekPage(int page)
 	ASSERT(page == 0);
 }
 
+int Raster::GetActivePage() const
+{
+	return 0;
+}
+
 int Raster::GetPageCount()
 {
 	return 1;
