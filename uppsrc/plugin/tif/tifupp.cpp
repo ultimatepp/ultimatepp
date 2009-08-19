@@ -907,6 +907,11 @@ int TIFRaster::GetPageCount()
 	return data->pages.GetCount();
 }
 
+int TIFRaster::GetActivePage() const
+{
+	return data->page_index;
+}
+
 void TIFRaster::SeekPage(int n)
 {
 	data->SeekPage(n);
