@@ -116,6 +116,7 @@ public:
 
 public:
 	virtual void    SeekPage(int page);
+	virtual int     GetActivePage() const;
 	virtual int     GetPageCount();
 
 	virtual bool    Create();
