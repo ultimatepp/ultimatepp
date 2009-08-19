@@ -28,6 +28,7 @@ public:
 	virtual const RasterFormat *GetFormat();
 
 	virtual int                 GetPageCount();
+	virtual int                 GetActivePage() const;
 	virtual void                SeekPage(int n);
 
 private:
