@@ -13,7 +13,7 @@ class TimeStop : Moveable<TimeStop> {
 	dword starttime;
 
 public:
-	int    Elapsed() const           { return GetTickCount() - starttime; }
+	dword  Elapsed() const           { return GetTickCount() - starttime; }
 	String ToString() const;
 	void   Reset();
 
