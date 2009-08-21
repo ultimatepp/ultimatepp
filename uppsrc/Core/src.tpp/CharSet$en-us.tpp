@@ -661,7 +661,7 @@ true on success.&]
 [s5;:SaveFileBOM`(const char`*`,const WString`&`): [@(0.0.255) bool]_[* SaveFileBOM]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&
 ]_[*@3 data])&]
-[s2; Saves stream in 16`-bit UNICODE format, with BOM header. Returns 
+[s2; Saves file in 16`-bit UNICODE format, with BOM header. Returns 
 true on success.&]
 [s3;%% &]
 [s4;%% &]
