@@ -1,0 +1,14 @@
+description "pthread thread local storage test\377";
+
+uses
+	Core;
+
+library
+	pthread;
+
+file
+	pthread_tls.cpp;
+
+mainconfig
+	"" = "";
+
