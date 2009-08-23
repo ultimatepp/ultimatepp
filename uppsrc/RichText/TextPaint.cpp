@@ -128,7 +128,7 @@ bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
 		else {
 			Sync(r_parti, rc);
 			const Para& pp = part[r_parti].Get<Para>();
-			if(r_paraocx == pp.cx &&
+			if(r_paraocx == pp.ccx &&
 			   r_paraocy == Sum(pp.linecy, 0) + pp.ruler + pp.before + pp.after &&
 	 		   r_keep == pp.keep &&
 	 		   r_keepnext == pp.keepnext &&

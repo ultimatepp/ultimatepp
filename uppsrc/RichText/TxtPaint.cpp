@@ -7,7 +7,7 @@ int RichTxt::GetWidth(const RichStyles& st) const
 	int cx = 0;
 	for(int i = 0; i < part.GetCount(); i++) {
 		if(IsPara(i)) {
-			RichPara p = Get(i, st);
+			RichPara p = Get(i, st, true);
 			RichPara::Lines pl = p.FormatLines(INT_MAX);
 			int ccx = 0;
 			Sum(ccx, ~pl.width, ~pl.width + pl.clen);
@@ -23,8 +23,8 @@ int RichTxt::GetWidth(const RichStyles& st) const
 void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 {
 	int cx = rc.page.Width();
-	pp.cx = cx;
-	RichPara p = Get(parti, rc.styles);
+	pp.ccx = cx;
+	RichPara p = Get(parti, rc.styles, true);
 	RichPara::Lines pl = p.FormatLines(cx);
 	pp.ruler = p.format.ruler;
 	pp.before = p.format.before;
@@ -38,6 +38,16 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 	pp.keep = p.format.keep;
 	pp.keepnext = p.format.keepnext;
 	pp.orphan = p.format.orphan;
+}
+
+inline void RichTxt::Sync(int parti, const RichContext& rc) const {
+	int cx = rc.page.Width();
+	ASSERT(part[parti].Is<Para>());
+	const Para& pp = part[parti].Get<Para>();
+	if(pp.dirty.BeginUpdate()) {
+		Sync0(pp, parti, rc);
+		pp.dirty.EndUpdate();
+	}
 }
 
 inline
@@ -152,7 +162,7 @@ void RichTxt::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
 					nbefore = pp.before;
 					nline = pp.linecy[0];
 				}
-				RichPara p = Get(parti, rc.styles);
+				RichPara p = Get(parti, rc.styles, true);
 				if(pi.spellingchecker) {
 					if(!pp.checked) {
 						pp.spellerrors = (*pi.spellingchecker)(p);
@@ -197,7 +207,8 @@ RichCaret RichTxt::GetCaret(int pos, RichContext rc) const
 					nbefore = pp.before + pp.ruler;
 					nline = pp.linecy[0];
 				}
-				RichCaret tp = Get(parti, rc.styles).GetCaret(pos, rc.page, rc.py, nbefore, nline);
+				RichCaret tp = Get(parti, rc.styles, true)
+				               .GetCaret(pos, rc.page, rc.py, nbefore, nline);
 				tp.textpage = rc.page;
 				return tp;
 			}
@@ -233,7 +244,8 @@ int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 						nbefore = pp.before + pp.ruler;
 						nline = pp.linecy[0];
 					}
-					return Get(parti, rc.styles).GetPos(x, y, rc.page, rc.py, nbefore, nline) + pos;
+					return Get(parti, rc.styles, true)
+					       .GetPos(x, y, rc.page, rc.py, nbefore, nline) + pos;
 				}
 			}
 			pos += GetPartLength(parti) + 1;
@@ -297,7 +309,7 @@ int RichTxt::GetVertMove(int pos, int gx, RichContext rc, int dir) const
 	}
 	while(pi < GetPartCount()) {
 		int q = IsTable(pi) ? GetTable(pi).GetVertMove(p, gx, rc, dir)
-		                    : Get(pi, rc.styles).GetVertMove(p, gx, rc.page, dir);
+		                    : Get(pi, rc.styles, true).GetVertMove(p, gx, rc.page, dir);
 		if(q >= 0)
 			return q + pos;
 		if(dir > 0)
@@ -330,9 +342,9 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 			}
 			if(p.haspos)
 				if(type == LABELS)
-					Get(parti, rc.styles).GatherLabels(f, rc.page, rc.py, pos, nbefore, nline);
+					Get(parti, rc.styles, true).GatherLabels(f, rc.page, rc.py, pos, nbefore, nline);
 				else
-					Get(parti, rc.styles).GatherIndexes(f, rc.page, rc.py, pos, nbefore, nline);
+					Get(parti, rc.styles, true).GatherIndexes(f, rc.page, rc.py, pos, nbefore, nline);
 		}
 		pos += GetPartLength(parti) + 1;
 		rc.py = GetNextPageY(parti++, rc);

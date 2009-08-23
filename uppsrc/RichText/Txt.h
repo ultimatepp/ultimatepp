@@ -67,7 +67,9 @@ protected:
 		int                   length;
 		String                content;
 		Array<RichObject>     object;
-		mutable int           cx;
+		LazyUpdate            dirty;
+		int64                 updateserial;
+		mutable int           ccx;
 		mutable int           cy;
 		mutable int           ruler;
 		mutable int           before;
@@ -83,8 +85,10 @@ protected:
 		mutable bool          haspos;
 		One<RichPara::NumberFormat> number;
 
+		void Invalidate();
+
 		Para(const Para& src, int);
-		Para() { length = 0; cx = -1; numbering = -1; checked = false; haspos = false; }
+		Para() { length = 0; Invalidate(); numbering = -1; checked = false; haspos = false; }
 	};
 
 	struct Part : MoveableAndDeepCopyOption< Part, Any> {
@@ -126,13 +130,7 @@ protected:
 	void       Put(int i, const RichPara& p, const RichStyles& s);
 
 	void        Sync0(const Para& pp, int parti, const RichContext& rc) const;
-	inline void Sync(int parti, const RichContext& rc) const {
-		int cx = rc.page.Width();
-		ASSERT(part[parti].Is<Para>());
-		const Para& pp = part[parti].Get<Para>();
-		if(pp.cx == cx) return;
-		Sync0(pp, parti, rc);
-	}
+	void        Sync(int parti, const RichContext& rc) const;
 	bool        BreaksPage(PageY py, const Para& pp, int i, const Rect& page) const;
 	PageY       GetNextPageY(int parti, const RichContext& rc) const;
 	PageY       GetPartPageY(int parti, RichContext rc) const;
@@ -148,6 +146,10 @@ protected:
 	RichTable&       GetTable0(int table, bool update);
 	RichTable&       GetUpdateTable(int table);
 	RichTxt&         GetTableUpdateText(int table, const RichStyles& style, int& pi);
+
+	RichPara         Get(int parti, const RichStyles& s, bool usecache) const;
+	RichPara         Get(int parai, const Uuid& styleid, const RichStyles& s, bool usecache) const;
+	RichPara         Get(int parai, const RichStyle& style, bool usecache) const;
 
 	void        CombineFormat(FormatInfo& f, int pi, int pi2, bool& first, const RichStyles& style) const;
 	static void ApplyStyle(const FormatInfo& fi, RichPara& pa, const RichStyles& style);
