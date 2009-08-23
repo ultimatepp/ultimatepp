@@ -36,7 +36,7 @@ struct RichText::StyleChangeOp : RichTxt::ParaOp {
 	virtual bool operator()(RichTxt::Para& p) {
 		if(p.styleid == id) {
 			p.styleid = nid;
-			p.cx = -1;
+			p.Invalidate();
 			return true;
 		}
 		return false;
@@ -60,7 +60,7 @@ struct RichText::SetStylesOp : RichTxt::ParaOp {
 	RichStyles *style;
 
 	virtual bool operator()(RichTxt::Para& p) {
-		p.cx = -1;
+		p.Invalidate();
 		if(style->Find(p.styleid) < 0)
 			p.styleid = RichStyle::GetDefaultId();
 		return true;
@@ -121,7 +121,7 @@ struct RichText::OverrideStylesOp : RichTxt::ParaOp {
 
 	virtual bool operator()(RichTxt::Para& p) {
 		p.styleid = cs.Get(p.styleid, RichStyle::GetDefaultId());
-		p.cx = -1;
+		p.Invalidate();
 		return true;
 	}
 };

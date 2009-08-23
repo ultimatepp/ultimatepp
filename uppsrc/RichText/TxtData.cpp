@@ -2,6 +2,16 @@
 
 NAMESPACE_UPP
 
+void RichTxt::Para::Invalidate()
+{
+	INTERLOCKED {
+		static int64 ss;
+		dirty.Invalidate();
+		updateserial = ++ss;
+		ccx = -1;
+	}
+}
+
 RichTxt::Para::Para(const Para& src, int)
 : object(src.object, 1)
 {
@@ -11,7 +21,7 @@ RichTxt::Para::Para(const Para& src, int)
 	haspos = src.haspos;
 	if(src.number)
 		number = new RichPara::NumberFormat(*src.number);
-	cx = -1;
+	Invalidate();
 	checked = false;
 }
 
@@ -71,8 +81,8 @@ void RichTxt::SetRefresh(int parti)
 		r_type = PARA;
 		if(IsPara(parti)) {
 			Para& pp = part[parti].Get<Para>();
-			if(pp.cx >= 0) {
-				r_paraocx = pp.cx;
+			if(pp.ccx >= 0) {
+				r_paraocx = pp.ccx;
 				r_paraocy = Sum(pp.linecy, 0) + pp.before + pp.after;
 				r_keep = pp.keep;
 				r_keepnext = pp.keepnext;
@@ -113,7 +123,7 @@ void RichTxt::Put(int i, const RichPara& p, const RichStyle& s)
 		SetRefresh(i);
 	pp.number.Clear();
 	pp.content = p.Pack(s.format, pp.object);
-	pp.cx = -1;
+	pp.Invalidate();
 	pp.checked = false;
 	pp.styleid = p.format.styleid;
 	pp.length = p.GetLength();
@@ -157,25 +167,42 @@ void RichTxt::SetPick(int i, pick_ RichTable& p)
 	SetRefresh(i);
 }
 
-RichPara RichTxt::Get(int parai, const RichStyle& style) const
+RichPara RichTxt::Get(int parai, const RichStyle& style, bool usecache) const
 {
 	ASSERT(part[parai].Is<Para>());
 	const Para& pp = part[parai].Get<Para>();
 	RichPara p;
+	if(usecache)
+		p.CacheId(pp.updateserial);
 	p.Unpack(pp.content, pp.object, style.format);
 	return p;
 }
 
-RichPara RichTxt::Get(int parai, const Uuid& styleid, const RichStyles& s) const
+RichPara RichTxt::Get(int parai, const Uuid& styleid, const RichStyles& s, bool usecache) const
 {
-	RichPara p = Get(parai, GetStyle(s, styleid));
+	RichPara p = Get(parai, GetStyle(s, styleid), usecache);
 	p.format.styleid = styleid;
 	return p;
 }
 
-RichPara RichTxt::Get(int parti, const RichStyles& s) const
+RichPara RichTxt::Get(int parti, const RichStyles& s, bool usecache) const
 {
-	return Get(parti, part[parti].Get<Para>().styleid, s);
+	return Get(parti, part[parti].Get<Para>().styleid, s, usecache);
+}
+
+RichPara RichTxt::Get(int parai, const RichStyle& style) const
+{
+	return Get(parai, style, false);
+}
+
+RichPara RichTxt::Get(int parai, const Uuid& styleid, const RichStyles& s) const
+{
+	return Get(parai, styleid, s, false);
+}
+
+RichPara RichTxt::Get(int i, const RichStyles& s) const
+{
+	return Get(i, s, false);
 }
 
 bool RichTxt::IsEmpty() const
@@ -257,7 +284,7 @@ void RichTxt::SetParaStyle(int i, const Uuid& id)
 	ASSERT(IsPara(i));
 	Para& p = part[i].Get<Para>();
 	p.styleid = id;
-	p.cx = -1;
+	p.Invalidate();
 	SetRefreshFrom(i);
 }
 

@@ -178,7 +178,7 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 	int y0;
 	int lineascent = 0;
 	for(int lni = 0; lni < pl.GetCount(); lni++) {
-		Line& li = pl[lni];
+		const Line& li = pl[lni];
 		int linecy = li.Sum();
 		lineascent = li.ascent;
 		if(BreaksPage(py, pl, lni, page)) {

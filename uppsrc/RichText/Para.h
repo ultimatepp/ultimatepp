@@ -199,14 +199,27 @@ struct RichPara {
 		Line&                operator[](int i)       { return line[i]; }
 		const Line&          operator[](int i) const { return line[i]; }
 		void                 Justify(const Format& format);
-		int                  BodyHeight();
+		int                  BodyHeight() const;
+		
+		Lines();
+		~Lines();
+
+	private:
+		static Array<Lines>&       Cache();
+		bool                       incache;
+		bool                       justified;
+		int64                      cacheid;
+		
+		friend struct RichPara;
 	};
 
 	static const VectorMap<Id, FieldType *>& fieldtype();
 	static void  Register(Id id, FieldType& ft) init_;
 
-	Format      format;
+	int64       cacheid;
+	bool        incache;
 	Array<Part> part;
+	Format      format;
 
 	static void Charformat(Stream& out, const CharFormat& o, const CharFormat& n,
 	                       const CharFormat& s);
@@ -258,6 +271,11 @@ struct RichPara {
 #endif
 
 	void        ApplyZoom(Zoom z);
+	
+	void        CacheId(int64 id);
+	
+	RichPara();
+	~RichPara();
 
 private:
 	Tab         GetNextTab(int pos) const;
@@ -273,6 +291,9 @@ private:
                       int *wd, int pos, int len, int x0, int x, int y0, int y, int linecy,
                       int lineascent, Zoom z, bool highlight);
 	int         PosInLine(int x, const Rect& page, const Lines& pl, int lni) const;
+
+	static Array<RichPara>& Cache();
+
 	struct StorePart;
 };
 

@@ -232,8 +232,6 @@ RichObject CreatePNGObject(const Image& img, Size dot_size, Size size);
 RichObject CreatePNGObject(const Image& img, int cx, int cy);
 RichObject CreateRawImageObject(const String& s, int cx = 0, int cy = 0);
 
-struct RichPara;
-
 enum {
 	RICHHOT_LM = -1,
 	RICHHOT_RM = -2,

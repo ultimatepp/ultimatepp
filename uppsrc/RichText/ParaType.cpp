@@ -78,6 +78,8 @@ struct RichPara::StorePart {
 
 void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 {
+	CharFormat& pfmt = lines.hformat.Add();
+	pfmt = part.format;
 	if(part.field && pinc) {
 		for(int i = 0; i < part.fieldpart.GetCount(); i++)
 			Store(lines, part.fieldpart[i], 0);
@@ -85,7 +87,7 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 	}
 	else
 	if(part.object) {
-		*f++ = &part.format;
+		*f++ = &pfmt;
 		Size sz = part.object.GetSize();
 		*w++ = sz.cx;
 		h->ydelta = part.object.GetYDelta();
@@ -123,7 +125,7 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 			while(s < lim) {
 				wchar c = *s++;
 				if(c == 9) {
-					*f++ = &part.format;
+					*f++ = &pfmt;
 					h->ascent = pfi.GetAscent();
 					h->descent = pfi.GetDescent();
 					h->external = pfi.GetExternal();
@@ -139,7 +141,7 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 					*w++ = c >= 32 ? cwfi[c] : 0;
 				}
 				else {
-					*f++ = &part.format;
+					*f++ = &pfmt;
 					h->ascent = fi.GetAscent();
 					h->descent = fi.GetDescent();
 					h->external = fi.GetExternal();
@@ -155,7 +157,7 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 		else {
 			while(s < lim) {
 				wchar c = *s++;
-				*f++ = &part.format;
+				*f++ = &pfmt;
 				if(c == 9) {
 					h->ascent = pfi.GetAscent();
 					h->descent = pfi.GetDescent();
@@ -190,10 +192,58 @@ static int CountChars(const Array<RichPara::Part>& part)
 	return n;
 }
 
+RichPara::Lines::Lines()
+{
+	justified = false;
+	incache = false;
+	cacheid = 0;
+}
+
+Array<RichPara::Lines>& RichPara::Lines::Cache()
+{
+	static Array<Lines> x;
+	return x;
+}
+
+static StaticMutex sLineCacheMutex;
+
+RichPara::Lines::~Lines()
+{
+	if(cacheid && !line.IsPicked() && !incache) {
+		Mutex::Lock __(sLineCacheMutex);
+		Array<Lines>& cache = Cache();
+		incache = true;
+		cache.Insert(0) = *this;
+		cache.SetCount(1);
+		int total = 0;
+		for(int i = 1; i < cache.GetCount(); i++) {
+			total += cache[i].clen;
+			if(total > 10000 || i > 64) {
+				cache.SetCount(i);
+				break;
+			}
+			i++;
+		}
+	}
+}
+
 RichPara::Lines RichPara::FormatLines(int acx) const
 {
-	int i;
 	Lines lines;
+	if(cacheid) {
+		Mutex::Lock __(sLineCacheMutex);
+		Array<Lines>& cache = Lines::Cache();
+		for(int i = 0; i < cache.GetCount(); i++)
+			if(cache[i].cacheid == cacheid && cache[i].cx == acx) {
+				lines = cache[i];
+				lines.incache = false;
+				cache.Remove(i);
+				return lines;
+			}
+	}
+
+	int i;
+	lines.cacheid = cacheid;
 	lines.cx = acx;
 	lines.len = GetLength();
 	lines.clen = CountChars(part);
@@ -324,6 +374,9 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 
 void RichPara::Lines::Justify(const RichPara::Format& format)
 {
+	if(justified)
+		return;
+	justified = true;
 	if(format.align != ALIGN_JUSTIFY) return;
 	for(int i = 0; i < line.GetCount() - 1; i++) {
 		const Line& li = line[i];
@@ -365,7 +418,7 @@ void RichPara::Lines::Justify(const RichPara::Format& format)
 	}
 }
 
-int RichPara::Lines::BodyHeight()
+int RichPara::Lines::BodyHeight() const
 {
 	int sum = 0;
 	for(int i = 0; i < line.GetCount(); i++)

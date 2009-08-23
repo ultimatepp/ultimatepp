@@ -2,6 +2,46 @@
 
 NAMESPACE_UPP
 
+static StaticMutex sCacheMutex;
+
+Array<RichPara>& RichPara::Cache()
+{
+	static Array<RichPara> x;
+	return x;
+}
+
+void RichPara::CacheId(int64 id)
+{
+	ASSERT(cacheid == 0);
+	ASSERT(part.GetCount() == 0);
+	cacheid = id;
+}
+
+RichPara::RichPara()
+{
+	cacheid = 0;
+	incache = false;
+}
+
+RichPara::~RichPara()
+{
+	if(cacheid && !part.IsPicked() && !incache) {
+		Mutex::Lock __(sCacheMutex);
+		Array<RichPara>& cache = Cache();
+		incache = true;
+		cache.InsertPick(0, *this);
+		int total = 0;
+		for(int i = 1; i < cache.GetCount(); i++) {
+			total += cache[i].GetLength();
+			if(total > 10000 || i > 64) {
+				cache.SetCount(i);
+				break;
+			}
+			i++;
+		}
+	}
+}
+
 PaintInfo::PaintInfo()
 {
 	sell = selh = 0;
@@ -211,6 +251,7 @@ void RichPara::Charformat(Stream& out, const RichPara::CharFormat& o,
 
 void RichPara::Cat(const WString& s, const RichPara::CharFormat& f)
 {
+	cacheid = 0;
 	part.Add();
 	part.Top().text = s;
 	part.Top().format = f;
@@ -223,6 +264,7 @@ void RichPara::Cat(const char *s, const CharFormat& f)
 
 void RichPara::Cat(const RichObject& o, const RichPara::CharFormat& f)
 {
+	cacheid = 0;
 	part.Add();
 	part.Top().object = o;
 	part.Top().format = f;
@@ -230,6 +272,7 @@ void RichPara::Cat(const RichObject& o, const RichPara::CharFormat& f)
 
 void RichPara::Cat(Id field, const String& param, const RichPara::CharFormat& f)
 {
+	cacheid = 0;
 	Part& p = part.Add();
 	p.field = field;
 	p.fieldparam = param;
@@ -515,10 +558,21 @@ void RichPara::Unpack(const String& data, const Array<RichObject>& obj,
                       const RichPara::Format& style)
 {
 	part.Clear();
-	StringStream in(data);
-
 	format = style;
+	
+	if(cacheid) {
+		Mutex::Lock __(sCacheMutex);
+		Array<RichPara>& cache = Cache();
+		for(int i = 0; i < cache.GetCount(); i++)
+			if(cache[i].cacheid == cacheid) {
+				*this = cache[i];
+				incache = false;
+				cache.Remove(i);
+				return;
+			}
+	}
 
+	StringStream in(data);
 	dword pattr = in.Get32();
 
 	if(pattr & 1)      format.align = in.Get16();
@@ -646,6 +700,7 @@ void RichPara::Trim(int pos)
 	}
 	else
 		part.SetCount(i);
+	cacheid = 0;
 }
 
 void RichPara::Mid(int pos)
@@ -656,6 +711,7 @@ void RichPara::Mid(int pos)
 		ASSERT(part[0].IsText());
 		part[0].text = part[0].text.Mid(pos);
 	}
+	cacheid = 0;
 }
 
 void ApplyCharStyle(RichPara::CharFormat& format, const RichPara::CharFormat& f0,
@@ -695,6 +751,7 @@ void RichPara::ApplyStyle(const Format& newstyle)
 	ApplyCharStyle(h, f0, newstyle);
 	format = newstyle;
 	(CharFormat&)format = h;
+	cacheid = 0;
 }
 
 #ifdef _DEBUG

@@ -9,7 +9,7 @@ void  RichText::CatPick(pick_ RichText& p)
 	part.AppendPick(p.part);
 	for(int i = c; i < part.GetCount(); i++)
 		if(IsPara(i))
-			part[i].Get<Para>().cx = -1;
+			part[i].Get<Para>().Invalidate();
 	RefreshAll();
 }
 
