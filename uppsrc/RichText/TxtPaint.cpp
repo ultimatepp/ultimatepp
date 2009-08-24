@@ -24,7 +24,7 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 {
 	int cx = rc.page.Width();
 	pp.ccx = cx;
-	RichPara p = Get(parti, rc.styles, true);
+	RichPara p = Get(parti, rc.styles, false);
 	RichPara::Lines pl = p.FormatLines(cx);
 	pp.ruler = p.format.ruler;
 	pp.before = p.format.before;
@@ -44,6 +44,8 @@ inline void RichTxt::Sync(int parti, const RichContext& rc) const {
 	int cx = rc.page.Width();
 	ASSERT(part[parti].Is<Para>());
 	const Para& pp = part[parti].Get<Para>();
+	if(rc.page.Width() != pp.ccx)
+		pp.dirty.Invalidate();
 	if(pp.dirty.BeginUpdate()) {
 		Sync0(pp, parti, rc);
 		pp.dirty.EndUpdate();

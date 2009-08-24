@@ -67,7 +67,7 @@ protected:
 		int                   length;
 		String                content;
 		Array<RichObject>     object;
-		LazyUpdate            dirty;
+		mutable LazyUpdate    dirty;
 		int64                 updateserial;
 		mutable int           ccx;
 		mutable int           cy;
