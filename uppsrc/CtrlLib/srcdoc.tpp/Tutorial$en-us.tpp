@@ -4288,8 +4288,8 @@ that invoke [* Accept] and [* Reject] as needed before calling the
 [s7; -|-|Add(cancel.SetLabel(`"Cancel`").LeftPosZ(100, 64).TopPosZ(40, 
 24));&]
 [s7; &]
-[s7; -|-|ok <<`= [* Acceptor]([*@(128.0.255) IDOK]);&]
-[s7; -|-|cancel <<`= [* Rejector]([*@(128.0.255) IDCANCEL]);&]
+[s7; -|-|ok.[* Ok]() <<`= [* Acceptor]([*@(128.0.255) IDOK]);&]
+[s7; -|-|cancel.[* Cancel]() <<`= [* Rejector]([*@(128.0.255) IDCANCEL]);&]
 [s7; -|`}&]
 [s7; `};&]
 [s7; &]
@@ -4305,6 +4305,10 @@ that invoke [* Accept] and [* Reject] as needed before calling the
 [s7; -|`}&]
 [s7; `}&]
 [s7; &]
+[s0; &]
+[s0; Calls to [* Ok] and [* Cancel] methods of Button here make Button 
+react to Enter and Esc keys.&]
+[s0; &]
 [s0; To reduce tedious tasks even further, there are CtrlLayoutOK, 
 CtrlLayoutCancel, CtrlLayoutOKCancel etc. template functions 
 that both setup layout and assign Acceptors and Rejectors.&]
