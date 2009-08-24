@@ -549,7 +549,7 @@ void PostgreSQLConnection::GetColumn(int i, Ref f) const
 			f.SetValue(atof(s));
 			break;
 		case BOOL_V:
-			f.SetValue(*s == 't' ? true : false);
+			f.SetValue(*s == 't' ? "1" : "0");
 			break;
 		case DATE_V:
 			f.SetValue(sDate(s));
