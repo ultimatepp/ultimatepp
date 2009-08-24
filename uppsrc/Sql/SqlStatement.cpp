@@ -135,22 +135,22 @@ SqlSelect& SqlSelect::From(SqlId table1, SqlId table2, SqlId table3) {
 	return *this;
 }
 
-SqlSelect& SqlSelect::InnerJoin(SqlId table) {
+SqlSelect& SqlSelect::InnerJoin0(const String& table) {
 	text << " inner join " << ~table;
 	return *this;
 }
 
-SqlSelect& SqlSelect::LeftJoin(SqlId table) {
+SqlSelect& SqlSelect::LeftJoin0(const String& table) {
 	text << " left outer join " << ~table;
 	return *this;
 }
 
-SqlSelect& SqlSelect::RightJoin(SqlId table) {
+SqlSelect& SqlSelect::RightJoin0(const String& table) {
 	text << " right outer join " << ~table;
 	return *this;
 }
 
-SqlSelect& SqlSelect::FullJoin(SqlId table) {
+SqlSelect& SqlSelect::FullJoin0(const String& table) {
 	text << " full outer join " << ~table;
 	return *this;
 }
@@ -160,7 +160,15 @@ SqlVal SqlSelect::AsValue() const
 	return SqlVal(String("(").Cat() << text << ")", SqlVal::LOW);
 }
 
-SqlSelect::SqlSelect(Fields f) {
+SqlSelect SqlSelect::AsTable(SqlId tab) const
+{
+	SqlSelect h;
+	h.text = String("(").Cat() << text << ") as " << ~tab;
+	return h;
+}
+
+SqlSelect::SqlSelect(Fields f)
+{
 	SqlSet set(f);
 	text = ~set;
 }
