@@ -488,7 +488,7 @@ public:
 
 	operator SqlSet() const                           { return SqlSet(text, SqlSet::SETOP); }
 	operator SqlStatement() const                     { return SqlStatement(text); }
-	SqlVal   AsValue() const                          { return SqlVal(text, SqlVal::LOW); }
+	SqlVal   AsValue() const;
 
 	SqlSelect(Fields f);
 	SqlSelect(const SqlSet& s)                        { text = ~s; }
