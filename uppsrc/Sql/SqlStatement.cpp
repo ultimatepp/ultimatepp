@@ -155,6 +155,11 @@ SqlSelect& SqlSelect::FullJoin(SqlId table) {
 	return *this;
 }
 
+SqlVal SqlSelect::AsValue() const
+{
+	return SqlVal(String("(").Cat() << text << ")", SqlVal::LOW);
+}
+
 SqlSelect::SqlSelect(Fields f) {
 	SqlSet set(f);
 	text = ~set;
