@@ -6,8 +6,8 @@ void RichTxt::Para::Invalidate()
 {
 	INTERLOCKED {
 		static int64 ss;
-		dirty.Invalidate();
 		updateserial = ++ss;
+		dirty.Invalidate();
 		ccx = -1;
 	}
 }
