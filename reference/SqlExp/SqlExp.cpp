@@ -1,4 +1,4 @@
-#include <RichText/RichText.h>
+#include <CtrlLib/CtrlLib.h>
 #include <Sql/Sql.h>
 
 using namespace Upp;
@@ -133,6 +133,13 @@ GUI_APP_MAIN
 	EXP(Insert(TABLE)(COLUMN1, 12)(COLUMN2)(COLUMN).From(TABLE1).Where(COLUMN >= 0));
 
 	EXP(Update(TABLE)(COLUMN1, 13)(COLUMN2, "world").Where(COLUMN > Date(2007, 1, 1)));
+	
+	EXP(Insert(TABLE)(COLUMN, Select(COLUMN1).From(TABLE1).Where(COLUMN2 == 21).AsValue()));
+
+	EXP(Select(COLUMN).From(Select(COLUMN).From(TABLE1)));
+	EXP(Select(COLUMN).From(Select(COLUMN).From(TABLE1).AsTable(TABLE2)));
+	EXP(Select(COLUMN).From(TABLE).LeftJoin(Select(COLUMN).From(TABLE1)).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
+	EXP(Select(COLUMN).From(TABLE).LeftJoin(Select(COLUMN).From(TABLE1).AsTable(TABLE2)).On(COLUMN.Of(TABLE) == COLUMN1.Of(TABLE1)));
 
 #ifdef GENERATE_QTF
 	qtf << "}}";

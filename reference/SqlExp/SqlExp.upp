@@ -1,9 +1,10 @@
-description "Examples of SqlExp expressions";
+description "Examples of SqlExp expressions\377";
 
 uses
 	Core,
 	Sql,
-	RichText;
+	RichText,
+	CtrlLib;
 
 file
 	SqlExp.cpp;
