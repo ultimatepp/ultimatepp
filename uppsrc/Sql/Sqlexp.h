@@ -449,6 +449,11 @@ public:
 class SqlSelect {
 	String  text;
 
+	SqlSelect& InnerJoin0(const String& table);
+	SqlSelect& LeftJoin0(const String& table);
+	SqlSelect& RightJoin0(const String& table);
+	SqlSelect& FullJoin0(const String& table);
+
 public:
 	operator bool() const                             { return text.GetCount(); }
 
@@ -461,10 +466,15 @@ public:
 	SqlSelect& From(SqlId table1, SqlId table2, SqlId table3);
 	SqlSelect& From(const SqlVal& a)                  { return From(SqlSet(a)); }
 
-	SqlSelect& InnerJoin(SqlId table);
-	SqlSelect& LeftJoin(SqlId table);
-	SqlSelect& RightJoin(SqlId table);
-	SqlSelect& FullJoin(SqlId table);
+	SqlSelect& InnerJoin(SqlId table)                 { return InnerJoin0(~table); }
+	SqlSelect& LeftJoin(SqlId table)                  { return LeftJoin0(~table); }
+	SqlSelect& RightJoin(SqlId table)                 { return RightJoin0(~table); }
+	SqlSelect& FullJoin(SqlId table)                  { return FullJoin0(~table); }
+
+	SqlSelect& InnerJoin(const SqlSet& set)           { return InnerJoin0(~set(SqlSet::SETOP + 1)); }
+	SqlSelect& LeftJoin(const SqlSet& set)            { return LeftJoin0(~set(SqlSet::SETOP + 1)); }
+	SqlSelect& RightJoin(const SqlSet& set)           { return RightJoin0(~set(SqlSet::SETOP + 1)); }
+	SqlSelect& FullJoin(const SqlSet& set)            { return FullJoin0(~set(SqlSet::SETOP + 1)); }
 
 	SqlSelect& Where(const SqlBool& exp);
 	SqlSelect& On(const SqlBool& exp);
@@ -486,9 +496,10 @@ public:
 	SqlSelect& Limit(int64 offset, int limit);
 	SqlSelect& Offset(int64 offset);
 
-	operator SqlSet() const                           { return SqlSet(text, SqlSet::SETOP); }
-	operator SqlStatement() const                     { return SqlStatement(text); }
-	SqlVal   AsValue() const;
+	operator  SqlSet() const                           { return SqlSet(text, SqlSet::SETOP); }
+	operator  SqlStatement() const                     { return SqlStatement(text); }
+	SqlVal    AsValue() const;
+	SqlSelect AsTable(SqlId tab) const;
 
 	SqlSelect(Fields f);
 	SqlSelect(const SqlSet& s)                        { text = ~s; }
