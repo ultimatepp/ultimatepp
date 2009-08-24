@@ -12,8 +12,8 @@ struct MyApp : TopWindow {
 		Add(ok.SetLabel("OK").LeftPosZ(10, 64).TopPosZ(40, 24));
 		Add(cancel.SetLabel("Cancel").LeftPosZ(100, 64).TopPosZ(40, 24));
 
-		ok <<= Acceptor(IDOK);
-		cancel <<= Rejector(IDCANCEL);
+		ok.Ok() <<= Acceptor(IDOK);
+		cancel.Cancel() <<= Rejector(IDCANCEL);
 	}
 };
 
