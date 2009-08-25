@@ -447,7 +447,7 @@ void MultiButton::Paint(Draw& w)
 void MultiButton::MouseMove(Point p, dword flags)
 {
 	int h = FindButton(p.x);
-	Ctrl::Tip(h >= 0 ? Nvl(button[hl].tip, tip) : tip);
+	Ctrl::Tip(h >= 0 && h < button.GetCount() ? Nvl(button[h].tip, tip) : tip);
 	if(hl != h) {
 		hl = h;
 		Refresh();
