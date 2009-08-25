@@ -592,13 +592,6 @@ Ctrl *Ctrl::GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe)
 		p += ctrl->GetView().TopLeft();
 	Ctrl *q;
 	Rect rect = ctrl->GetRect();
-	for(q = ctrl->GetLastChild(); q; q = q->GetPrev()) {
-		if(q->InFrame() && q->IsVisible()) {
-			Rect r = q->GetRect();
-			if(r.Contains(p))
-				return GetVisibleChild(q, p - r.TopLeft(), true);
-		}
-	}
 	Rect view = ctrl->GetView();
 	if(view.Contains(p)) {
 		p -= view.TopLeft();
@@ -610,6 +603,14 @@ Ctrl *Ctrl::GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe)
 			}
 		}
 	}
+	else
+		for(q = ctrl->GetLastChild(); q; q = q->GetPrev()) {
+			if(q->InFrame() && q->IsVisible()) {
+				Rect r = q->GetRect();
+				if(r.Contains(p))
+					return GetVisibleChild(q, p - r.TopLeft(), true);
+			}
+		}
 	return ctrl;
 }
 
