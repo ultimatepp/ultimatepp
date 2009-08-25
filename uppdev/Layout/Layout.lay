@@ -1,4 +1,8 @@
 LAYOUT(LayoutLayout, 200, 404)
 	ITEM(Label, dv___0, SetLabel(t_("èwskèwsk")).LeftPosZ(28, 112).TopPosZ(264, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).Tip(t_("This is OK!")).LeftPosZ(28, 144).TopPosZ(320, 80))
+	ITEM(WithDropChoice<EditString>, tipper, Tip(t_("Just a tip!")).LeftPosZ(12, 184).TopPosZ(52, 19))
+	ITEM(EditString, aaa, Tip(t_("Another tip")).LeftPosZ(12, 64).TopPosZ(80, 19))
+	ITEM(DropList, dl, Tip(t_("Some tip is here!")).LeftPosZ(12, 64).TopPosZ(108, 19))
 END_LAYOUT
 
