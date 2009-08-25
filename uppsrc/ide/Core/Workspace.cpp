@@ -441,7 +441,7 @@ Vector<String> Workspace::GetAllAccepts(int pk) const
 		const Package& p = package[pkg[i]];
 		FindAppend(accepts, p.accepts);
 		for(int u = 0; u < p.uses.GetCount(); u++) {
-			int f = package.Find(p.uses[u].text);
+			int f = package.Find(UnixPath(p.uses[u].text));
 			if(f >= 0)
 				pkg.FindAdd(f);
 		}
