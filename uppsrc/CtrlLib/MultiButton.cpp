@@ -447,9 +447,9 @@ void MultiButton::Paint(Draw& w)
 void MultiButton::MouseMove(Point p, dword flags)
 {
 	int h = FindButton(p.x);
+	Ctrl::Tip(h >= 0 ? Nvl(button[hl].tip, tip) : tip);
 	if(hl != h) {
 		hl = h;
-		Ctrl::Tip(hl >= 0 ? Nvl(button[hl].tip, tip) : tip);
 		Refresh();
 	}
 	bool b = flags & K_MOUSELEFT;
