@@ -277,11 +277,17 @@ SqlVal Variance(const SqlVal& a) {
 }
 
 SqlVal Greatest(const SqlVal& a, const SqlVal& b) {
-	return SqlFunc("greatest", a, b);
+	return SqlFunc(SqlCase
+						(SQLITE3, "max")
+						("greatest"),
+					a, b);
 }
 
 SqlVal Least(const SqlVal& a, const SqlVal& b) {
-	return SqlFunc("least", a, b);
+	return SqlFunc(SqlCase
+						(SQLITE3, "min")
+						("least"),
+					a, b);
 }
 
 SqlVal ConvertCharset(const SqlVal& exp, const SqlVal& charset) { //TODO Dialect!
