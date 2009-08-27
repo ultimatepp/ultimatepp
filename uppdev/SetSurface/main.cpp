@@ -6,12 +6,11 @@ struct MyApp : TopWindow {
 	RGBA pixels[65536];
 
 	virtual void Paint(Draw& w) {
-		w.DrawRect(GetSize(), LtGray());
-		for(int i = 0; i < 100; i++) {
-			SetSurface(w, 0, 0, 256, 256, pixels);
-			SetSurface(w, RectC(300, 128, 128, 128), pixels, Size(256, 256), Point(0, 0));
-			SetSurface(w, RectC(300, 0, 128, 64), pixels, Size(256, 256), Point(128, 128));
-		}
+		Rect r = w.GetPaintRect();
+		w.DrawRect(r, LtGray());
+		Point p = r.TopLeft();
+		if(p.x < 256 && p.y < 256)
+			SetSurface(w, r, pixels, Size(256, 256), p);
 	}
 
 	MyApp() {
