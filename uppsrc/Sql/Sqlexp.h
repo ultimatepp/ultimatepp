@@ -471,10 +471,10 @@ public:
 	SqlSelect& RightJoin(SqlId table)                 { return RightJoin0(~table); }
 	SqlSelect& FullJoin(SqlId table)                  { return FullJoin0(~table); }
 
-	SqlSelect& InnerJoin(const SqlSet& set)           { return InnerJoin0(~set(SqlSet::SETOP + 1)); }
-	SqlSelect& LeftJoin(const SqlSet& set)            { return LeftJoin0(~set(SqlSet::SETOP + 1)); }
-	SqlSelect& RightJoin(const SqlSet& set)           { return RightJoin0(~set(SqlSet::SETOP + 1)); }
-	SqlSelect& FullJoin(const SqlSet& set)            { return FullJoin0(~set(SqlSet::SETOP + 1)); }
+	SqlSelect& InnerJoin(const SqlSet& set)           { return InnerJoin0(~set(SqlSet::SETOP)); }
+	SqlSelect& LeftJoin(const SqlSet& set)            { return LeftJoin0(~set(SqlSet::SETOP)); }
+	SqlSelect& RightJoin(const SqlSet& set)           { return RightJoin0(~set(SqlSet::SETOP)); }
+	SqlSelect& FullJoin(const SqlSet& set)            { return FullJoin0(~set(SqlSet::SETOP)); }
 
 	SqlSelect& Where(const SqlBool& exp);
 	SqlSelect& On(const SqlBool& exp);
