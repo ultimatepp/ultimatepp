@@ -40,7 +40,7 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 	pp.orphan = p.format.orphan;
 }
 
-inline void RichTxt::Sync(int parti, const RichContext& rc) const {
+void RichTxt::Sync(int parti, const RichContext& rc) const {
 	int cx = rc.page.Width();
 	ASSERT(part[parti].Is<Para>());
 	const Para& pp = part[parti].Get<Para>();
@@ -52,7 +52,6 @@ inline void RichTxt::Sync(int parti, const RichContext& rc) const {
 	}
 }
 
-inline
 bool RichTxt::BreaksPage(PageY py, const Para& pp, int i, const Rect& page) const
 {
 	int linecy = pp.linecy[i];
