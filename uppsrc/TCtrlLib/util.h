@@ -500,6 +500,20 @@ private:
 	void            OnArrayAction();
 };
 
+class CallbackDataCtrl : public Ctrl {
+public:
+	CallbackDataCtrl() { NoWantFocus(); }
+
+	virtual void            SetData(const Value& v)    { WhenSetData(v); }
+	virtual Value           GetData() const            { Value v; WhenGetData(v); return v; }
+	virtual bool            Key(dword key, int repcnt) { return WhenKey(key) || Ctrl::Key(key, repcnt); }
+
+public:
+	Callback1<const Value&> WhenSetData;
+	Callback1<Value&>       WhenGetData;
+	Gate1<dword>            WhenKey;
+};
+
 //////////////////////////////////////////////////////////////////////
 // Option3::
 

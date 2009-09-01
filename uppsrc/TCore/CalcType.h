@@ -83,11 +83,17 @@ struct CalcType<String> : public CalcCastType<String>
 };
 
 template <>
+struct CalcType<const String&> : public CalcType<String> {};
+
+template <>
 struct CalcType<WString> : public CalcCastType<WString>
 {
 	static bool   IsType(Value v) { return IsNull(v) || IsString(v); }
 	static String Describe()             { return CalcType<String>::Describe(); }
 };
+
+template <>
+struct CalcType<const WString&> : public CalcType<WString> {};
 
 template <>
 struct CalcType<Date> : public CalcCastType<Date>
