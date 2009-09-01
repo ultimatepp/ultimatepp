@@ -1269,4 +1269,40 @@ String AppendPathList(String s, String path_list)
 	return result;
 }
 
+static int GetRelativePathPos(String fn, String path)
+{
+	int count = path.GetLength();
+	if(count > 0 && (*path.Last() == '\\' || *path.Last() == '/'))
+		count--;
+	if(count > 0 && fn.GetLength() > count + 1
+		&& !MemICmp(fn, path, count) && (fn[count] == '\\' || fn[count] == '/'))
+		return count + 1;
+	return 0;
+}
+
+String GetRelativePath(String fn, String pathlist, String curdir)
+{
+	if(fn.IsEmpty())
+		return fn;
+	const char *p = pathlist;
+	while(*p)
+		if(*p == ';')
+			p++;
+		else {
+			const char *s = p;
+			while(*p && *p != ';')
+				p++;
+			if(p > s) {
+				const char *e = p;
+				if(e[-1] == '\\' || e[-1] == '/')
+					e--;
+				int rpos = GetRelativePathPos(fn, NormalizePath(String(s, e), curdir));
+				if(rpos > 0)
+					return fn.Mid(rpos);
+			}
+		}
+
+	return fn.Mid(GetRelativePathPos(fn, curdir));
+}
+
 END_UPP_NAMESPACE

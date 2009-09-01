@@ -33,7 +33,10 @@ with empty list and fill the list later.&]
 specific Display and Convert with the list and that way use DropList 
 to represent any type of value (colors, line width, fonts etc..).&]
 [s9;%% DropList also implements the single`-direction Convert interface, 
-where Format is defined as key`->value translation.&]
+where Format is defined as key`->value translation. When DisplayAll() 
+mode is on, Format returns key values for keys missing in the 
+key / value table; when DisplayAll() mode is off, such values 
+are considered invalid and Format returns Value().&]
 [s9;%% Note: DropBox is implementation helper class used to share 
 some code between DropList and similar classes. DropBox is derived 
 from Ctrl.&]
@@ -244,8 +247,11 @@ Returns `*this.&]
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% In this mode, if the current value of DropList is not present 
 as the key in the list, the value itself is used to be displayed 
-in the view area. Default is off. Returns `*this.&]
-[s3; &]
+in the view area. Default is off. Returns `*this. When DisplayAll() 
+mode is on, Convert`::Format returns key value when a given key 
+is missing in the key / value table; when DisplayAll() mode is 
+off, Convert`::Format returns Value() for unknown key values.&]
+[s0;%% &]
 [s4; &]
 [s5;:DropList`:`:DropFocus`(bool`): [_^DropList^ DropList][@(0.0.255) `&]_[* DropFocus]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]

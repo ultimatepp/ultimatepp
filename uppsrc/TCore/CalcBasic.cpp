@@ -948,10 +948,10 @@ inline ValueArray CleftAN(ValueArray va, int count)
 {
 	if(count < 0 || count > va.GetCount())
 		throw Exc(t_("invalid number of array elements"));
-	ValueArray out;
-	for(int i = 0; i < count; i++)
-		out.Add(va[i]);
-	return out;
+	Vector<Value> out;
+	out.Reserve(count);
+	out.Append(va.Get(), 0, count);
+	return ValueArray(out);
 }
 FDECLP(left, AN, &GroupArray)
 
@@ -959,10 +959,10 @@ inline ValueArray CrightAN(ValueArray va, int count)
 {
 	if(count < 0 || count > va.GetCount())
 		throw Exc(t_("invalid number of array elements"));
-	ValueArray out;
-	for(int i = 0, p = va.GetCount() - count; i < count; i++)
-		out.Add(va[p++]);
-	return out;
+	Vector<Value> out;
+	out.Reserve(count);
+	out.Append(va.Get(), va.GetCount() - count, count);
+	return ValueArray(out);
 }
 FDECLP(right, AN, &GroupArray)
 
@@ -972,10 +972,10 @@ inline ValueArray CmidANN(ValueArray va, int first, int count)
 		throw Exc(t_("invalid character index"));
 	if(count < 0 || first + count > va.GetCount())
 		throw Exc(t_("invalid number of array elements"));
-	ValueArray out;
-	while(--count >= 0)
-		out.Add(va[first++]);
-	return out;
+	Vector<Value> out;
+	out.Reserve(count);
+	out.Append(va.Get(), first, count);
+	return ValueArray(out);
 }
 FDECLP(mid, ANN, &GroupArray)
 
@@ -1159,6 +1159,76 @@ static bool CcallSV(CalcPacket& packet)
 
 FDECLQ("CcallSV", "call", &GroupSystem, &CcallSV)
 
+static Value CevaluateS(CalcPacket& packet, const String& string)
+{
+	return packet.context.Evaluate(string);
+}
+
+FDECLAP(evaluate, S, &GroupSystem)
+
+static String Cevaluate_stringS(CalcPacket& packet, const String& s)
+{
+	return packet.context.EvaluateString(s);
+}
+
+FDECLAP(evaluate_string, S, &GroupSystem)
+
+static int Cevaluate_intS(CalcPacket& packet, const String& s)
+{
+	return packet.context.EvaluateInt(s);
+}
+
+FDECLAP(evaluate_int, S, &GroupSystem)
+
+static double Cevaluate_doubleS(CalcPacket& packet, const String& s)
+{
+	return packet.context.EvaluateDouble(s);
+}
+
+FDECLAP(evaluate_double, S, &GroupSystem)
+
+static bool Cevaluate_boolS(CalcPacket& packet, const String& s)
+{
+	return packet.context.EvaluateBool(s);
+}
+
+FDECLAP(evaluate_bool, S, &GroupSystem)
+
+static Date Cevaluate_dateS(CalcPacket& packet, const String& s)
+{
+	return packet.context.EvaluateDate(s);
+}
+
+FDECLAP(evaluate_date, S, &GroupSystem)
+
+static Time Cevaluate_timeS(CalcPacket& packet, const String& s)
+{
+	return packet.context.EvaluateTime(s);
+}
+
+FDECLAP(evaluate_time, S, &GroupSystem)
+
+static String CconvertS(CalcPacket& packet, const String& s)
+{
+	return packet.context.Convert(s, true);
+}
+
+FDECLAP(convert, S, &GroupSystem)
+
+static Value CtryLL(CalcPacket& packet, CalcNodePtr try_block, CalcNodePtr catch_block)
+{
+	try {
+		return try_block->Calc(packet.context);
+	}
+	catch(Exc e) {
+		CalcContext::Nesting nesting(packet.context);
+		packet.context.Set("exception", e);
+		return catch_block->Calc(packet.context);
+	}
+}
+
+FDECLAP(try, LL, &GroupSystem)
+
 static String CreplaceSSS(String s, String what, String with)
 {
 	int wl = what.GetLength();
@@ -1291,5 +1361,13 @@ static String CtrimS(String s) { return CtrimSS(s, " "); }
 
 FDECLP(trim, S, GroupString)
 FDECLP(trim, SS, GroupString)
+
+static WString CupperS(WString s) { return ToUpper(s); }
+static WString ClowerS(WString s) { return ToLower(s); }
+static WString CasciiS(WString s) { return ToAscii(s); }
+
+FDECLP(upper, S, GroupString)
+FDECLP(lower, S, GroupString)
+FDECLP(ascii, S, GroupString)
 
 END_UPP_NAMESPACE

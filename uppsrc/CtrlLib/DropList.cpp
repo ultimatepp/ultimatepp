@@ -223,7 +223,7 @@ void DropList::Adjust(const Value& k)
 
 Value DropList::Format(const Value& q) const {
 	int i = FindKey(q);
-	return valueconvert->Format(i < 0 ? Null : GetValue(i));
+	return valueconvert->Format(i < 0 ? displayall ? q : Value() : GetValue(i));
 }
 
 DropList& DropList::AlwaysDrop(bool e)
