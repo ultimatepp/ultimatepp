@@ -58,8 +58,9 @@ void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size srcsz,
 	XInitImage(&ximg);
 	Drawable dw = w.GetDrawable();
 	GC gc = XCreateGC(Xdisplay, dw, 0, 0);
+	Point p = dest.TopLeft() + w.GetOffset();
 	XPutImage(Xdisplay, dw, gc, &ximg, srcoff.x, srcoff.y,
-	          dest.left, dest.top, dest.GetWidth(), dest.GetHeight());
+	          p.x, p.y, dest.GetWidth(), dest.GetHeight());
 	XFreeGC(Xdisplay, gc);
 }
 
