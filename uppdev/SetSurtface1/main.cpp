@@ -19,7 +19,7 @@ public:
 
 	virtual void Paint(Draw &draw) {
 		Rect paintrect=draw.GetPaintRect();
-		
+		DDUMP(paintrect);
 		Point p = paintrect.TopLeft();
 		if(p.x < ib.GetSize().cx && p.y < ib.GetSize().cy) 
 			SetSurface(draw, paintrect, ib, ib.GetSize(), p);
