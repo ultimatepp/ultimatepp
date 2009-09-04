@@ -82,9 +82,9 @@ public:
 	void          GoBegin()                       { if(GetCount()) SetIndex(0); }
 	void          GoEnd()                         { if(GetCount()) SetIndex(GetCount() - 1); }
 
-	bool          HasKey(const Value& k) const    { return key.Find(k) >= 0; }
-	int           FindKey(const Value& k) const   { return key.Find(k); }
-	int           Find(const Value& k) const      { return key.Find(k); }
+	bool          HasKey(const Value& k) const    { return FindKey(k) >= 0; }
+	int           FindKey(const Value& k) const;
+	int           Find(const Value& k) const      { return FindKey(k); }
 	int           FindValue(const Value& v) const { return list.Find(v); }
 
 	int           GetCount() const                { return key.GetCount(); }

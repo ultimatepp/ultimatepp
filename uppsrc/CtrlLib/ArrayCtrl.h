@@ -403,7 +403,8 @@ public:
 
 	void       EnableLine(int i, bool e);
 	void       DisableLine(int i)                               { EnableLine(i, false); }
-	bool       IsLineDisabled(int i) const                      { return array[i].enabled; }
+	bool       IsLineEnabled(int i) const                       { return array[i].enabled; }
+	bool       IsLineDisabled(int i) const                      { return !array[i].enabled; }
 
 	Vector<Value> ReadRow(int i) const; // deprecated name
 	Vector<Value> GetLine(int i) const                          { return ReadRow(i); }

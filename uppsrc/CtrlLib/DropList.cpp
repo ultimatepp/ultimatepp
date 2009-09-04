@@ -2,6 +2,11 @@
 
 NAMESPACE_UPP
 
+int DropList::FindKey(const Value& k) const
+{
+	return key.Find(k);
+}
+
 void DropList::Sync() {
 	Value v;
 	if(displayall)
@@ -19,13 +24,18 @@ void DropList::Sync() {
 void DropList::Change(int q) {
 	if(key.GetCount() == 0) return;
 	int i = key.Find(value);
-	i += q;
-	if(i >= key.GetCount()) i = key.GetCount() - 1;
-	if(i < 0) i = 0;
-	if(value != key[i]) {
-		value = key[i];
-		Sync();
-		UpdateAction();
+	for(int l = 0; l < list.GetCount(); l++) {
+		i += q;
+		if(i >= key.GetCount()) i = key.GetCount() - 1;
+		if(i < 0) i = 0;
+		if(list.IsLineEnabled(i)) {
+			if(value != key[i]) {
+				value = key[i];
+				Sync();
+				UpdateAction();
+			}
+			return;
+		}
 	}
 }
 
@@ -117,9 +127,11 @@ DropList& DropList::Add(const Value& _key, const Value& text)
 	return *this;
 }
 
+struct DummyValue__ {};
+
 DropList& DropList::AddSeparator()
 {
-	key.Add(Null);
+	key.Add(RawToValue(DummyValue__()));
 	list.AddSeparator();
 	list.Refresh();
 	EnableDrop();
