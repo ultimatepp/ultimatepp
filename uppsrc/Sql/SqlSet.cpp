@@ -20,12 +20,6 @@ SqlSet operator-(const SqlSet& s1, const SqlSet& s2) {
 	return SqlSet(s1() + SqlCase(MSSQL|PGSQL, " except ")(" minus ") + s2(), SqlSet::SETOP);
 }
 
-SqlSet operator-(const SqlSet& s1, const SqlSet& s2) {
-	if(s1.IsEmpty() || s2.IsEmpty())
-		return s1;
-	return SqlSet(s1() + SqlCase(MSSQL|PGSQL, " except ")(" minus ") + s2(), SqlSet::SETOP);
-}
-
 String SqlSet::operator~() const {
 	if(IsEmpty()) return "null";
 	return text;
