@@ -1,6 +1,6 @@
 #include "PostgreSQL.h"
 
-#define LLOG(x)
+#define LLOG(x) // DLOG(x)
 
 #ifndef flagNOPOSTGRESQL
 
@@ -85,6 +85,9 @@ private:
 	String          ErrorMessage();
 	String          ErrorCode();
 
+	String          FromCharset(const String& s) const { return session.FromCharset(s); }
+	String          ToCharset(const String& s) const   { return session.ToCharset(s); }
+
 public:
 	PostgreSQLConnection(PostgreSQLSession& a_session, PGconn *a_conn);
 	virtual ~PostgreSQLConnection() { Cancel(); }
@@ -154,7 +157,7 @@ String PostgreSQLConnection::ErrorMessage()
 {
 	if(PQclientEncoding(conn) >= 0)
 		return PQerrorMessage(conn);
-	return FromSystemCharset(PQerrorMessage(conn));
+	return FromCharset(PQerrorMessage(conn));
 }
 
 String PostgreSQLConnection::ErrorCode()
@@ -164,7 +167,7 @@ String PostgreSQLConnection::ErrorCode()
 
 String PostgreSQLSession::ErrorMessage()
 {
-	return PQerrorMessage(conn);
+	return FromCharset(PQerrorMessage(conn));
 }
 
 String PostgreSQLSession::ErrorCode()
@@ -303,6 +306,22 @@ void PostgreSQLSession::ExecTrans(const char * statement)
 	PQclear(result);
 }
 
+String PostgreSQLSession::FromCharset(const String& s) const
+{
+	if(!charset)
+		return s;
+	String r = UPP::ToCharset(GetDefaultCharset(), s, charset);
+	return r;
+}
+
+String PostgreSQLSession::ToCharset(const String& s) const
+{
+	if(!charset)
+		return s;
+	String r = UPP::ToCharset(charset, s);
+	return r;
+}
+
 bool PostgreSQLSession::Open(const char *connect)
 {
 	Close();
@@ -314,9 +333,17 @@ bool PostgreSQLSession::Open(const char *connect)
 		return false;
 	}
 	level = 0;
+	
+	if(PQclientEncoding(conn)) {
+		if(PQsetClientEncoding(conn, "UTF8")) {
+			SetError("Cannot set UTF8 charset", "Opening database");
+			return false;
+		}
+		charset = CHARSET_UTF8;
+	}
+	else
+		charset = CHARSET_DEFAULT;
 
-	int stat = PQsetClientEncoding(conn, CharsetName(GetDefaultCharset()));
-	ASSERT(stat == 0);
 	LLOG( String("Postgresql client encoding: ") + pg_encoding_to_char( PQclientEncoding(conn) ) );
 	
 	return true;
@@ -391,6 +418,7 @@ void PostgreSQLConnection::SetParam(int i, const Value& r)
 		case WSTRING_V:
 		case STRING_V: {
 				String v = r;
+				v = ToCharset(v);
 				StringBuffer b(v.GetLength() * 2 + 3);
 				char *q = b;
 				*q = '\'';
@@ -570,7 +598,7 @@ void PostgreSQLConnection::GetColumn(int i, Ref f) const
 				PQfreemem(q);
 			}
 			else
-				f.SetValue(String(s));
+				f.SetValue(FromCharset(String(s)));
 		}
 	}
 }

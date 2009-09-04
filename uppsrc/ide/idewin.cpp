@@ -597,7 +597,7 @@ Ide::Ide()
 
 	ff.style <<= STYLE_NO_REPLACE;
 
-	default_charset = CHARSET_WIN1252;
+	default_charset = CHARSET_UTF8;
 
 	HideBottom();
 	TheIde(this);

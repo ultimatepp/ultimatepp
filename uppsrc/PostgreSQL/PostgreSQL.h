@@ -28,6 +28,8 @@ bool PostgreSQLPerformScript(const String& text,
 
 String PostgreSQLTextType(int n);
 
+class PostgreSQLConnection;
+
 class PostgreSQLSession : public SqlSession {
 public:
 	virtual bool                  IsOpen() const                   { return conn; }
@@ -55,23 +57,31 @@ private:
 	String                ErrorMessage();
 	String                ErrorCode();
 	int                   level;
+	byte                  charset;
+	
+	String                FromCharset(const String& s) const;
+	String                ToCharset(const String& s) const;
+
+	friend class PostgreSQLConnection;
 
 public:
 	bool                  Open(const char *connect);
 	bool                  ReOpen();
 	void                  Close();
+	
+	void                  SetCharset(byte chrset)         { charset = chrset; }
 
-	String                GetUser() { return PQuser(conn); }
-	operator PGconn *     ()        { return conn; }
+	String                GetUser()                       { return PQuser(conn); }
+	operator PGconn *     ()                              { return conn; }
 
 	virtual void          Begin();
 	virtual void          Commit();
 	virtual void          Rollback();
 	virtual int           GetTransactionLevel() const;
 
-	PostgreSQLSession()  { conn = NULL; Dialect(PGSQL); level = 0; }
-	~PostgreSQLSession() { Close(); }
-	PGconn * GetPGConn() { return conn; }
+	PostgreSQLSession()                                   { conn = NULL; Dialect(PGSQL); level = 0; }
+	~PostgreSQLSession()                                  { Close(); }
+	PGconn * GetPGConn()                                  { return conn; }
 };
 
 class PgSequence : public ValueGen {
