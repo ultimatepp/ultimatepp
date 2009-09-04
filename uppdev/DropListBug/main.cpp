@@ -45,10 +45,5 @@ public:
 GUI_APP_MAIN
 {
 	DropListBug bug;
-	bug.Open();
-	bool quit = false;
-	while(!quit) {
-		Sleep(1000);
-		Ctrl::ProcessEvents(&quit);
-	}
+	bug.Run();
 }
