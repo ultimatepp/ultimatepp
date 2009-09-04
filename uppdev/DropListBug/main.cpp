@@ -19,11 +19,12 @@ public:
 		CtrlLayout(*this, "Window title");
 		addButton <<= THISBACK(AddButtonClicked);
 		removeButton <<= THISBACK(RemoveButtonClicked);
-		dropList.Add("A");
-		dropList.Add("B");
-		dropList.Add("C");
-		dropList.Add("D");
-		dropList.Add("E");
+
+		for(int i=0;i<10;i++){
+			dropList.Add(i,Format("%d",i));
+			if(((i+1)%3)==0) dropList.AddSeparator();
+		}
+
 	}
 	
 	void AddButtonClicked()
