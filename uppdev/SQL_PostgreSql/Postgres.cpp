@@ -17,7 +17,7 @@ PostgreSQLTest::PostgreSQLTest()
 
 bool PostgreSQLTest::OpenDB()
 {
-	if(!m_session.Open("host=localhost dbname=test user=test password=test"))
+	if(!m_session.Open("host=localhost dbname=test user=postgres password=pepicek12A"))
 	{
 		Exclamation(Format("Error in open: %s", DeQtf(m_session.GetLastError())));
 		return false;
@@ -31,18 +31,13 @@ bool PostgreSQLTest::OpenDB()
 	//schema
 	Progress p;
 	p.SetText(t_("Creating _DEBUG database"));
-	SqlSchema sch(POSTGRESS);
+	SqlSchema sch(PGSQL);
 	StdStatementExecutor se(m_session);
 	All_Tables(sch);
-	if(sch.ScriptChanged(SqlSchema::UPGRADE))
-		PostgreSQLPerformScript(sch.Upgrade(),se, p);
-	if(sch.ScriptChanged(SqlSchema::ATTRIBUTES)) {
-		PostgreSQLPerformScript(sch.Attributes(),se, p);
-	}
-	if(sch.ScriptChanged(SqlSchema::CONFIG)) {
-		PostgreSQLPerformScript(sch.ConfigDrop(),se, p);
-		PostgreSQLPerformScript(sch.Config(),se, p);
-	}
+
+	PostgreSQLPerformScript(sch.Upgrade(),se, p);
+	PostgreSQLPerformScript(sch.Attributes(),se, p);
+
 	sch.SaveNormal();
 
 	return true;
@@ -55,7 +50,7 @@ bool PostgreSQLTest::InsertTestData()
 	sql.Begin();
 	sql * Delete(TESTPARTNER);
 	sql * Insert(TESTPARTNER)
-		(TESTPARTNER_NAME, "First Partner")
+		(TESTPARTNER_NAME, ToCharset(CHARSET_DEFAULT, "Žáček Pepíček je šikula", CHARSET_UTF8))
 		(TESTPARTNER_ADDRESS, "First Street")
 	;
 	sql * Insert(TESTPARTNER)
@@ -83,6 +78,7 @@ void PostgreSQLTest::ShowTestData()
 
 GUI_APP_MAIN
 {
+//	SetDefaultCharset(CHARSET_WIN1250);
 	PostgreSQLTest dlg;
 	if(dlg.OpenDB() && dlg.InsertTestData())
 	{
