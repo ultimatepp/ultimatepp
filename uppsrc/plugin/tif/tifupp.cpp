@@ -260,6 +260,106 @@ static void BltPack11(byte *dest, const byte *src, byte bit_shift, unsigned coun
 	}
 }
 
+// add support for 2 bpp tif - Massimo Del Fedele
+// un-optimized way....
+// bit_shift should be shift on destination, NOT source
+static void BltPack22(byte *dest, const byte *src, byte bit_shift, unsigned count)
+{
+	unsigned c2 = count >> 2;
+	count &= 0x03;
+	byte shift1, shift2;
+	byte sMask1, sMask2;
+	byte dMask1, dMask2;
+	
+	if(!bit_shift) // fast path
+	{
+		if(c2)
+		{
+			memcpy(dest, src, c2);
+			dest += c2;
+			src += c2;
+		}
+		switch(count)
+		{
+			default:
+			case 0:
+				break;
+				
+			case 1:
+				*dest = (*dest & 0x3f) | (*src & 0x3f);
+				break;
+				
+			case 2:
+				*dest = (*dest & 0x0f) | (*src & 0x0f);
+				break;
+			
+			case 3:
+				*dest = (*dest & 0x03) | (*src & 0x03);
+				break;
+		} // switch(count)
+	}
+	else // slow path
+	{
+		bit_shift <<= 1;
+		shift1 = bit_shift;
+		shift2 = (8 - bit_shift);
+		sMask1 = 0xff << shift1;
+		dMask1 = 0xff << shift2;
+		sMask2 = 0xff >> shift2;
+		dMask2 = 0xff >> shift1;
+		while(c2--)
+		{
+			*dest = (*dest & dMask1) | ((*src & sMask1) >> shift1);
+			dest++;
+			*dest = (*dest & dMask2) | ((*src & sMask2) << shift2);
+			src++;
+		}
+		switch(count)
+		{
+			case 0:
+			default:
+				break;
+				
+			case 1:
+				*dest = (*dest & ~(0xc0 >> bit_shift)) | ((*src & 0xc0) >> bit_shift);
+				break;
+			
+			case 2:
+				if(bit_shift <= 4)
+				{
+					*dest = (*dest & ~(0xf0 >> bit_shift)) | ((*src & 0xf0) >> bit_shift);
+				}
+				else
+				{
+					*dest = (*dest & ~(0xc0 >> bit_shift)) | ((*src & 0xc0) >> bit_shift);
+					dest++;
+					*dest = (*dest & 0x3f) | ((*src & 0x30) << 2);
+				}
+				break;
+				
+			case 3:
+				if(bit_shift <= 2)
+				{
+					*dest = (*dest & ~(0xfc >> bit_shift)) | ((*src & 0xfc) >> bit_shift);
+				}
+				else if(bit_shift <= 4)
+				{
+					*dest = (*dest & ~(0xf0 >> bit_shift)) | ((*src & 0xf0) >> bit_shift);
+					dest++;
+					*dest = (*dest & 0x3f) | ((*src & 0x0c) << 4);
+				}
+				else
+				{
+					*dest = (*dest & 0xfc) | ((*src & 0xc0) >> 6);
+					dest++;
+					*dest = (*dest & 0x0f) | ((*src & 0x3c) << 2);
+				}
+				break;
+		} // switch(count)
+	} // end slow path
+
+}
+
 static void BltPack44(byte *dest, const byte *src, bool shift, unsigned count)
 {
 //	RTIMING("BltPack44");
@@ -552,6 +652,26 @@ static void putContig1(TIFFRGBAImage *img, tif_uint32 *cp,
 		BltPack11(helper->MapUp(x8, y, w8, read), src, (byte)(x & 7), w);
 }
 
+static void putContig2(TIFFRGBAImage *img, tif_uint32 *cp,
+	tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
+	tif_int32 fromskew, tif_int32 toskew, byte *pp)
+{
+	TIFRaster::Data *helper = (TIFRaster::Data *)img;
+	Size size = helper->size;
+	int iw = toskew + w;
+	bool keep_y = (iw >= 0);
+	int x4 = x >> 2;
+	int w4 = ((x + w + 3) >> 2) - x4;
+	bool read = !!((x | w) & 3) && (int)w < helper->size.cx;
+//	byte *dest = helper->dest.GetUpScan(y) + (x >> 3);
+//	int drow = (keep_y ? helper->dest.GetUpRowBytes() : -helper->dest.GetUpRowBytes());
+	int drow = keep_y ? 1 : -1;
+	const byte *src = pp;
+	int srow = (fromskew + w - 1) / helper->skewfac + 1;
+	for(; h; h--, y += drow /*dest += drow*/, src += srow)
+		BltPack22(helper->MapUp(x4, y, w4, read), src, (byte)(x & 3), w);
+}
+
 static void putContig4(TIFFRGBAImage *img, tif_uint32 *cp,
 	tif_uint32 x, tif_uint32 y, tif_uint32 w, tif_uint32 h,
 	tif_int32 fromskew, tif_int32 toskew, byte *pp)
@@ -795,7 +915,7 @@ bool TIFRaster::Data::SeekPage(int page)
 		put.contig = putContig8;
 		switch(bitspersample) {
 		case 1: bpp = 1; put.contig = putContig1; format.Set1mf(); break;
-		case 2: bpp = 4; put.contig = putContig4; format.Set4mf(); break;
+		case 2: bpp = 2; put.contig = putContig2; format.Set2mf(); break;
 		case 4: bpp = 4; put.contig = putContig4; format.Set4mf(); break;
 		case 8: format.Set8(); break;
 		default: NEVER();
