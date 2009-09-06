@@ -2,34 +2,8 @@
 
 #include <plugin/tif/tif.h>
 
-void TestLeptonica::onLineRemoval()
+static void RemoveLines(PixRaster &pixRaster)
 {
-	String fileName;
-	FileSelector fs;
-	PIX *pix;
-	
-	if(!PromptYesNo(
-		"[= [* Line removal demo]&&"
-		"Please select the 'dave-orig.png' image on TestLeptonica folder&"
-		"or some equivalent GrayScale image with horizontal stripes on it&&"
-		"[* CONTINUE ??]]"
-	))
-		return;
-	
-	fs.ReadOnlyOption();
-	if(fs.ExecuteOpen("Please select image for line removal:"))
-	{
-		FileIn s;
-		if(!s.Open(~fs))
-		{
-			PromptOK("Error opening image");
-			return;
-		}
-		One<StreamRaster>streamRaster = StreamRaster::OpenAny(s);
-
-		// Loads pixraster from source raster
-		pixRaster.Load(*streamRaster);
-		
 		// gets source image page
 		int source = pixRaster.GetActivePage();
 
@@ -88,6 +62,42 @@ void TestLeptonica::onLineRemoval()
 		// created before to fill just the stripes and leave the rest of image unchanged
 		CHECKR(pixRaster.CombineMasked(grayAdded, opened2, thresh4), "CombineMasked error");
 		int final = pixRaster.GetActivePage();
+}
+
+void TestLeptonica::onLineRemoval()
+{
+	String fileName;
+	FileSelector fs;
+	PIX *pix;
+	
+	if(!PromptYesNo(
+		"[= [* Line removal demo]&&"
+		"Please select the 'dave-orig.png' image on TestLeptonica folder&"
+		"or some equivalent GrayScale image with horizontal stripes on it&&"
+		"[* CONTINUE ??]]"
+	))
+		return;
+	
+	fs.ReadOnlyOption();
+	if(fs.ExecuteOpen("Please select image for line removal:"))
+	{
+		FileIn s;
+		if(!s.Open(~fs))
+		{
+			PromptOK("Error opening image");
+			s.Close();
+			return;
+		}
+//		One<StreamRaster>streamRaster = StreamRaster::OpenAny(s);
+
+		// Loads pixraster from source raster
+		CHECKR(pixRaster.Load(s), "Error loading image");
+		s.Close();
+		
+		int ctc = pixRaster.GetPaletteCount();
+		
+		// apply line removal algothithm
+		RemoveLines(pixRaster);
 		
 		// refresh the PixRasterCtrl control with the new image contents
 		pixRasterCtrl.Reload();

@@ -174,22 +174,40 @@ Appends [%-*@3 raster]`'s content at the end of Pixraster`'s one&]
 [ {{10000F(128)G(128)@1 [s0;%% [* File I/O]]}}&]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:Load`(String`,bool`): [@(0.0.255) void]_Load([_^String^ String]_[@3 fileN
+[s5;:PixRaster`:`:Load`(FileIn`&`,bool`): [@(0.0.255) bool]_Load([_^FileIn^ FileIn]_`&[@3 f
+s], [@(0.0.255) bool]_[@3 Append]_`=_[@(0.0.255) false])&]
+[s2;%% Loads images from stream [%-*@3 fs][%- ,] [%-*@3 Append][%- ing them 
+to current PixRaster`'s content if required].&]
+[s2;%% [* WARNING], it seems that don`'t support 8 bit alpha channel 
+images.&]
+[s0;%% &]
+[s2;%% Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:Load`(String`,bool`): [@(0.0.255) bool]_Load([_^String^ String]_[@3 fileN
 ame], [@(0.0.255) bool]_[@3 Append]_`=_[@(0.0.255) false])&]
 [s2;%% Loads images from [%-*@3 fileName ][%- named file,] [%-*@3 Append][%- ing 
 them to current PixRaster`'s content if required].&]
+[s2;%% [* WARNING], it seems that don`'t support 8 bit alpha channel 
+images.&]
+[s0;%% &]
+[s2;%% Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:Save`(String`,int`): [@(0.0.255) void]_Save([_^String^ String]_[@3 fileNa
+[s5;:PixRaster`:`:Save`(String`,int`): [@(0.0.255) bool]_Save([_^String^ String]_[@3 fileNa
 me], [@(0.0.255) int]_[@3 page]_`=_PIXRASTER`_CURPAGE)&]
 [s2;%% Stores a single [%-*@3 page ][%- of PixRaster to] [%-*@3 fileName] 
 named file.&]
+[s0;%% &]
+[s2;%% Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:SaveAll`(String`): [@(0.0.255) void]_SaveAll([_^String^ String]_[@3 fileN
+[s5;:PixRaster`:`:SaveAll`(String`): [@(0.0.255) bool]_SaveAll([_^String^ String]_[@3 fileN
 ame])&]
 [s2;%% Stores all pages of PixRaster to a [%-*@3 fileName] named file; 
 choosen file format must support multiple pages.&]
+[s0;%% &]
+[s2;%% Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s3;%% &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Page handling functions]]}}&]

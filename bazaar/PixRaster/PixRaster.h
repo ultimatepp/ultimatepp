@@ -180,9 +180,10 @@ class PixRaster : public Raster
 		void operator+=(Raster &raster) { Load(raster, true, PIXRASTER_COPY); }
 		
 		// file I/O
-		void Load(String fileName, bool Append = false);
-		void Save(String fileName, int page = PIXRASTER_CURPAGE); // @@ to do - add compression and type handling
-		void SaveAll(String fileName);
+		bool Load(FileIn &fs, bool Append = false);
+		bool Load(String fileName, bool Append = false);
+		bool Save(String fileName, int page = PIXRASTER_CURPAGE); // @@ to do - add compression and type handling
+		bool SaveAll(String fileName);
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////// LEPTONICA OPERATIONS //////////////////////////////////////////
