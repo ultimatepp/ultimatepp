@@ -1,0 +1,15 @@
+uses
+	CtrlLib,
+	PixRaster;
+
+file
+	ImageCache.h,
+	ImageCache.cpp,
+	PixRasterBaseCtrl.h,
+	PixRasterBaseCtrl.cpp,
+	PixRasterThumbsCtrl.h,
+	PixRasterThumbsCtrl.cpp,
+	PixRasterViewCtrl.h,
+	PixRasterViewCtrl.cpp,
+	PixRasterCtrl.h,
+	PixRasterCtrl.cpp;

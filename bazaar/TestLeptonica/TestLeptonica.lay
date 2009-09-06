@@ -1,0 +1,6 @@
+LAYOUT(TestLeptonicaLayout, 640, 400)
+	ITEM(Button, LineRemovalButton, SetLabel(t_("Line removal test")).LeftPosZ(8, 92).TopPosZ(8, 15))
+	ITEM(Button, QuitButton, SetLabel(t_("\aQuit")).LeftPosZ(8, 92).BottomPosZ(9, 15))
+	ITEM(PixRasterCtrl, pixRasterCtrl, SetFrame(InsetFrame()).HSizePosZ(108, 8).VSizePosZ(8, 8))
+END_LAYOUT
+

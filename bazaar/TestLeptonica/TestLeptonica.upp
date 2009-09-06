@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	PixRaster,
+	PixRasterCtrl;
+
+file
+	TestLeptonica.lay,
+	TestLeptonica.h,
+	LineRemoval.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

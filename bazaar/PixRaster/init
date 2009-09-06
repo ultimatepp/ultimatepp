@@ -1,0 +1,5 @@
+#ifndef _PixRaster_icpp_init_stub
+#define _PixRaster_icpp_init_stub
+#include "plugin\tif/init"
+#include "plugin\png/init"
+#endif

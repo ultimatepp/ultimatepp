@@ -1,0 +1,6 @@
+#ifndef _TestLeptonica_icpp_init_stub
+#define _TestLeptonica_icpp_init_stub
+#include "CtrlLib/init"
+#include "PixRaster/init"
+#include "PixRasterCtrl/init"
+#endif
