@@ -171,6 +171,7 @@ file
 	lib/watershed.h,
 	main readonly separator,
 	PixRaster.h,
+	Leptonica.h,
 	PixRasterLoad.cpp,
 	PixRaster.cpp,
 	TiffIo.cpp,
@@ -181,6 +182,5 @@ file
 	Lept-Morph.cpp,
 	Lept-Arith.cpp,
 	Lept-Blend.cpp,
-	Lept-PageSeg.cpp,
 	src.tpp;
 

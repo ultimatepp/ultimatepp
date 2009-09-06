@@ -17,7 +17,8 @@ the skew factor.&]
 [s3; [* WARNINGS ]: it operates [* ONLY ]on [* 1bpp monochromatic] images; 
 if the skew factor is too low or not found, it just returns a 
 clone of source image.&]
-[s4; &]
+[s3; Deskewed image is appended at the end of PixRaster&]
+[s3; &]
 [s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s4; &]
 [s1;%- &]
@@ -31,15 +32,17 @@ It uses [%-*@3 ReductionFactor] value while binary`-searching for
 the skew factor. If [%-*@3 skewAngle] and [%-*@3 confidenceFactor] 
 pointers are non`-NULL, it sets them to the skew angle and the 
 confidence value found when de`-skewing&]
-[s4; &]
+[s3; Deskewed image is appended at the end of PixRaster&]
+[s3; &]
 [s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
+[s4; &]
 [s1;%- &]
 [s2;:PixRaster`:`:FindSkew`(double`*`,double`*`,int`):%- [@(0.0.255) bool]_[* FindSkew]([@(0.0.255) d
 ouble]_`*[*@3 pangle], [@(0.0.255) double]_`*[*@3 pconf]_`=_NULL, [@(0.0.255) int]_[*@3 pag
 e]_`=_PIXRASTER`_CURPAGE)&]
 [s3; Try to find skew of [%-*@3 page] and returns it`'s value in [%-*@3 pangle] 
 ; confidence factor is returned in [%-*@3 pconf].&]
-[s4; &]
+[s3; &]
 [s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s4; &]
 [s1;%- &]
@@ -51,7 +54,7 @@ ol]_[* FindSkewSweep]([@(0.0.255) double]_`*[*@3 pangle], [@(0.0.255) int]_[*@3 
 of [%-*@3 page] and returns it`'s value in [%-*@3 pangle] ; Uses 
 [%-*@3 reduction] factor in binary searching, a semi`-range of 
 [%-*@3 sweeprange] skew angle and steps by [%-*@3 sweepdelta] value.&]
-[s4; &]
+[s3; &]
 [s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s4; &]
 [s1;%- &]
@@ -68,16 +71,16 @@ in [%-*@3 pconf].[%-*@3 redsweep] is the sweep reduction factor (1,
 is the half the full range, assumed about 0; in degrees , [%-*@3 sweepdelta] 
 the angle increment of sweep; in degrees and [%-*@3 minbsdelta] 
 the min binary search increment angle; in degrees.&]
-[s4; &]
+[s3; &]
 [s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
-[s0; &]
+[s3; &]
 [s3; [* Notes ]:&]
-[s0; &]
+[s3; &]
 [s3;i150;O1; This finds the skew angle, doing first a sweep through 
 a set of equal angles, and then doing a binary search until convergence.&]
 [s3;i150;O1; Caller must check the return value for validity of the 
 result.&]
-[s0; &]
+[s3; &]
 [s3;i150;O1; In computing the differential line sum variance score, 
 we sum the result over scanlines, but we always skip:&]
 [s3;l448;i150;O0; at least one scanline&]

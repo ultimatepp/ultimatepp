@@ -1,7 +1,5 @@
 #include "TestLeptonica.h"
 
-#include <plugin/tif/tif.h>
-
 static void RemoveLines(PixRaster &pixRaster)
 {
 		// gets source image page
@@ -88,13 +86,10 @@ void TestLeptonica::onLineRemoval()
 			s.Close();
 			return;
 		}
-//		One<StreamRaster>streamRaster = StreamRaster::OpenAny(s);
 
 		// Loads pixraster from source raster
 		CHECKR(pixRaster.Load(s), "Error loading image");
 		s.Close();
-		
-		int ctc = pixRaster.GetPaletteCount();
 		
 		// apply line removal algothithm
 		RemoveLines(pixRaster);

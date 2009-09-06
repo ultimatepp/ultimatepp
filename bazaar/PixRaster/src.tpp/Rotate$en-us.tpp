@@ -17,7 +17,7 @@ in black or white depending on [%-*@3 incolor] parameter.&]
 [s3; Image must be in 2, 4, 8 or 32 bpp format, either paletted or 
 grayscale. The rotated image is appended to PixRaster and active 
 page is set to it.&]
-[s0; &]
+[s3; &]
 [s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s4; &]
 [s1;%- &]
@@ -30,7 +30,7 @@ filled with [%-*@3 colorval].&]
 [s3; Image must be in 2, 4, 8 or 32 bpp format, either paletted or 
 grayscale. The rotated image is appended to PixRaster and active 
 page is set to it.&]
-[s0; &]
+[s3; &]
 [s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s4; &]
 [s1;%- &]
@@ -43,5 +43,7 @@ filled with [%-*@3 grayval].&]
 [s3; Image must be in 2, 4, 8 or 32 bpp format, either paletted or 
 grayscale. The rotated image is appended to PixRaster and active 
 page is set to it.&]
+[s3; &]
+[s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s4; &]
 [s0; ]

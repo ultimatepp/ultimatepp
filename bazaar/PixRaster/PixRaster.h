@@ -270,6 +270,11 @@ class PixRaster : public Raster
 
 		bool CombineMasked(int destPage, int sourcePage, int maskPage);
 		
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// DOCUMENT PAGE SEGMENTING FUNCTIONS
+		
+		// top level page segmenting
+		bool GetRegionsBinary(int page = PIXRASTER_CURPAGE) ;
 
 		
 }; // END class PixRaster

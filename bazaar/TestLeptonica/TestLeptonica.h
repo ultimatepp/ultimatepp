@@ -27,6 +27,7 @@ class TestLeptonica : public WithTestLeptonicaLayout<TopWindow>
 	
 		// button handlers
 		void onLineRemoval(void);
+		void onPageLayout(void);
 		void onQuit(void);
 		
 		// PIX raster
