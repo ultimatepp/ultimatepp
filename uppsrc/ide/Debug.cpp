@@ -159,6 +159,8 @@ void Ide::BuildAndDebug(bool runto)
 	String builder = bm.Get("BUILDER", "");
 	if(!Build())
 		return;
+	if(!FileExists(target))
+		return;
 	if(designer)
 		EditAsText();
 	One<Host> host = CreateHostRunDir();
@@ -170,6 +172,7 @@ void Ide::BuildAndDebug(bool runto)
 #else
 	debugger = GdbCreate(host, target, runarg);
 #endif
+	if(!debugger) return;
 	debuglock = 0;
 	const Workspace& wspc = IdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
