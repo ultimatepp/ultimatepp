@@ -1,5 +1,7 @@
 description "Fundamental graphics operations, including raster image processing\377B128,0,255";
 
+charset "UTF-8";
+
 acceptflags
 	NOGTK;
 
