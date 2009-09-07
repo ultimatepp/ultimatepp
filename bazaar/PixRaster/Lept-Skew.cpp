@@ -110,4 +110,22 @@ bool PixRaster::FindSkewSweepAndSearch(
 	
 }
 
+bool PixRaster::DeskewLocal(int page)
+{
+	if(IsEmpty())
+		return false;
+	page = getTruePage(page);
+	
+	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
+	PIX *dPix = pixDeskewLocal(sPix, 0, 0, 0, 0.0, 0.0, 0.0);
+	pixDestroy(&sPix);
+	if(!dPix)
+		return false;
+	AddPIX(dPix, PIXRASTER_CLONE);
+	SeekPage(PIXRASTER_LASTPAGE);
+	pixDestroy(&dPix);
+	return true;
+}
+
+
 END_UPP_NAMESPACE

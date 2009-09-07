@@ -16,6 +16,7 @@ TestLeptonica::TestLeptonica()
 	// connects button handlers
 	LineRemovalButton <<= THISBACK(onLineRemoval);
 	PageLayoutButton <<= THISBACK(onPageLayout);
+	BaseLineButton <<= THISBACK(onBaseLine);
 	QuitButton <<= THISBACK(onQuit);
 }
 

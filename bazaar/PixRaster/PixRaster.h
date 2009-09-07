@@ -238,6 +238,8 @@ class PixRaster : public Raster
 			double minbsdelta,
 			int page = PIXRASTER_CURPAGE);
 
+		bool DeskewLocal(int page = PIXRASTER_CURPAGE);
+
 		// NOTE : Leptonica has many more skew functions....
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,6 +278,8 @@ class PixRaster : public Raster
 		// top level page segmenting
 		bool GetRegionsBinary(int page = PIXRASTER_CURPAGE) ;
 
+		// text baseline finding routine
+		Array<int> FindBaselines(int page = PIXRASTER_CURPAGE);
 		
 }; // END class PixRaster
 

@@ -13,7 +13,7 @@ void TestLeptonica::onPageLayout()
 	
 	if(!PromptYesNo(
 		"[= [* Page layout analysis demo]&&"
-		"Please select a scanned image with mixed text and graphics&"
+		"Please select a 1 bpp scanned image with mixed text and graphics&"
 		"you can take one from TestLeptonica folder if you like&&"
 		"[* CONTINUE ??]]"
 	))

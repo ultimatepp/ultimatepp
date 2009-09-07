@@ -8,6 +8,7 @@ file
 	TestLeptonica.h,
 	LineRemoval.cpp,
 	PageLayout.cpp,
+	BaseLine.cpp,
 	main.cpp;
 
 mainconfig
