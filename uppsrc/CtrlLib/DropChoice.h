@@ -170,6 +170,7 @@ public:
 	DropChoice& SetDisplay(const Display& d)          { list.ColumnAt(0).SetDisplay(d); return *this; }
 	DropChoice& SetLineCy(int lcy)                    { list.SetLineCy(lcy); return *this; }
 	DropChoice& SetDisplay(const Display& d, int lcy) { SetDisplay(d); SetLineCy(lcy); return *this; }
+	DropChoice& SetConvert(const Convert& d)          { list.ColumnAt(0).SetConvert(d); return *this; }
 	DropChoice& SetDropLines(int n)                   { list.SetDropLines(n); return *this; }
 	DropChoice& Appending()                           { appending = true; return *this; }
 	DropChoice& AlwaysDrop(bool e = true);
@@ -233,6 +234,7 @@ public:
 	WithDropChoice& SetDisplay(const Display& d)          { select.SetDisplay(d); return *this; }
 	WithDropChoice& SetLineCy(int lcy)                    { select.SetLineCy(lcy); return *this; }
 	WithDropChoice& SetDisplay(const Display& d, int lcy) { select.SetDisplay(d, lcy); return *this; }
+	WithDropChoice& SetConvert(const Convert& d)          { select.SetConvert(d); return *this; }
 	WithDropChoice& AlwaysDrop(bool b = true)             { select.AlwaysDrop(b); return *this; }
 
 	WithDropChoice& DropWidth(int w)                      { select.DropWidth(w); return *this; }
