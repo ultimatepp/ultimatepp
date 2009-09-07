@@ -107,7 +107,7 @@ void ImageView::Serialize(Stream& s)
 	int version = 0;
 	s / version;
 	SerializePlacement(s);
-	s % files;
+	files.SerializeSettings(s);
 	s % dir;
 	s % splitter;
 }
