@@ -237,6 +237,7 @@ private:
 	void   SetSb();
 	void   HeaderLayout();
 	void   Scroll();
+	int    FindEnabled(int i, int dir);
 	void   Page(int q);
 
 	void   DoPoint(Point p, bool dosel = true);

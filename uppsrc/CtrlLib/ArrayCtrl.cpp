@@ -1251,15 +1251,21 @@ void ArrayCtrl::ShowAppendLine() {
 void ArrayCtrl::GoBegin() {
 	if(nocursor)
 		sb.Begin();
-	else
-		SetCursor(0);
+	else {
+		int q = FindEnabled(0, 1);
+		if(q >= 0)
+			SetCursor(q);
+	}
 }
 
 void ArrayCtrl::GoEnd() {
 	if(nocursor)
 		sb.End();
-	else
-		SetCursor(GetCount() - 1);
+	else {
+		int q = FindEnabled(GetCount() - 1, -1);
+		if(q >= 0)
+			SetCursor(q);
+	}
 }
 
 int  ArrayCtrl::GetCursorSc() const {
@@ -1351,12 +1357,26 @@ void ArrayCtrl::CenterCursor() {
 		ScCursor((GetSize().cy - GetLineCy(cursor)) / 2);
 }
 
+int ArrayCtrl::FindEnabled(int i, int dir)
+{
+	ASSERT(dir == -1 || dir == 1);
+	while(i >= 0 && i < array.GetCount()) {
+		if(IsLineEnabled(i))
+			return i;
+		i += dir;
+	}
+	return -1;
+}
+
 void ArrayCtrl::Page(int q) {
 	q = q * max(GetSize().cy - (linecy + horzgrid), linecy + horzgrid);
 	int a = GetCursorSc();
 	if(IsCursor()) {
-		SetCursor(cursor + q / (linecy + horzgrid));
-		ScCursor(a);
+		int i = FindEnabled(cursor + q / (linecy + horzgrid), sgn(q));
+		if(i >= 0) {
+			SetCursor(i);
+			ScCursor(a);
+		}
 	}
 	else
 	if(q > 0)
@@ -1640,7 +1660,8 @@ bool ArrayCtrl::Key(dword key, int) {
 	case K_SHIFT_UP:
 		if(IsCursor()) {
 			int d = GetEditColumn();
-			if(SetCursor0(cursor - 1))
+			int i = FindEnabled(cursor - 1,  -1);
+			if(i >= 0 && SetCursor0(i))
 				if(d >= 0)
 					StartEdit(d);
 				else
@@ -1659,7 +1680,8 @@ bool ArrayCtrl::Key(dword key, int) {
 		else
 		if(IsCursor()) {
 			int d = GetEditColumn();
-			if(SetCursor0(cursor + 1) && d >= 0)
+			int i = FindEnabled(cursor + 1, 1);
+			if(i >= 0 && SetCursor0(i) && d >= 0)
 				StartEdit(d);
 			else
 				KeyMultiSelect(aanchor, key);
