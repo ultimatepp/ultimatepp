@@ -20,11 +20,12 @@ public:
 		addButton <<= THISBACK(AddButtonClicked);
 		removeButton <<= THISBACK(RemoveButtonClicked);
 
-		for(int i=0;i<10;i++){
+		dropList.AddSeparator();
+		for(int i=0;i<1000;i++){
 			dropList.Add(i,Format("%d",i));
 			if(((i+1)%3)==0) dropList.AddSeparator();
 		}
-
+		dropList.AddSeparator();
 	}
 	
 	void AddButtonClicked()
