@@ -1755,7 +1755,6 @@ void  ArrayCtrl::Add() {
 		InvalidateCache(i);
 		RefreshRow(i);
 	}
-
 }
 
 void  ArrayCtrl::Add(const Vector<Value>& v)
