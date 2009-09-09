@@ -1306,7 +1306,12 @@ void ArrayCtrl::Select(int i, bool sel)
 
 void ArrayCtrl::EnableLine(int i, bool en)
 {
-	array[i].enabled = en;
+	array.At(i).enabled = en;
+}
+
+bool ArrayCtrl::IsLineEnabled(int i) const
+{
+	return i < 0 ? false : i < array.GetCount() ? array[i].enabled : true;
 }
 
 void ArrayCtrl::Select(int i, int count, bool sel)
@@ -1360,7 +1365,7 @@ void ArrayCtrl::CenterCursor() {
 int ArrayCtrl::FindEnabled(int i, int dir)
 {
 	ASSERT(dir == -1 || dir == 1);
-	while(i >= 0 && i < array.GetCount()) {
+	while(i >= 0 && i < GetCount()) {
 		if(IsLineEnabled(i))
 			return i;
 		i += dir;
