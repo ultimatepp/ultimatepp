@@ -9,16 +9,26 @@ void TabCtrlTest::AddTab()
 
 TabCtrlTest::TabCtrlTest()
 {
-	CtrlLayoutOK(*this, "Window title");
+	Add(tab.SizePos());
 	CtrlLayout(tab1);
 	CtrlLayout(tab2);
 	CtrlLayout(tab3);
 	b.SetRect(0, 0, 16, 16);
-	tab.Add(tab1, "First").Control(&b);
-	tab.Add(tab2, "Second").Image(CtrlImg::cut());
+	tab.Add(tab1, "First")/*.Control(&b)*/;
+	tab.Add(tab2, "Second")/*.Image(CtrlImg::cut())*/;
 	tab.Add(tab3, "Third");
 	tab.Add(arr.SizePos(), "Array");
-	tab.SetStyle(tab.StyleDefault().Standard());
+	tab.Add(arr.SizePos(), "Array");
+	tab.Add(arr.SizePos(), "Array");
+	tab.Add(arr.SizePos(), "Array");
+	tab.Add(arr.SizePos(), "Array");
+	tab.Add(arr.SizePos(), "Array");
+	tab.Add(arr.SizePos(), "Array");
+	tab.Add(arr.SizePos(), "Array");
+	tab.Add(arr.SizePos(), "Array");
+	tab.Add(arr.SizePos(), "Array");
+	tab.Set(2);
+//	tab.SetStyle(tab.StyleDefault().Standard());
 
 	arr.AddColumn("1")
 		.Ctrls(DefaultCtrlFactory<Option>())
