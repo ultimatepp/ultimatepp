@@ -155,8 +155,6 @@ bool PostgreSQLPerformScript(const String& txt, StatementExecutor& se, Gate2<int
 
 String PostgreSQLConnection::ErrorMessage()
 {
-	if(PQclientEncoding(conn) >= 0)
-		return PQerrorMessage(conn);
 	return FromCharset(PQerrorMessage(conn));
 }
 
@@ -327,8 +325,8 @@ bool PostgreSQLSession::Open(const char *connect)
 	Close();
 	conn = PQconnectdb(connect);
 	if(PQstatus(conn) != CONNECTION_OK)
-	{
-		SetError(ErrorMessage(), "Opening database");
+	{	
+		SetError(FromSystemCharset(PQerrorMessage(conn)), "Opening database");
 		Close();
 		return false;
 	}
