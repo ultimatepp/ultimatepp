@@ -28,6 +28,13 @@ bool PostgreSQLTest::OpenDB()
 	m_session.SetTrace();
 #endif
 
+	SQL = m_session;
+
+	SQL & Insert(TESTPARTNER)
+		(TESTPARTNER_NAME, "test")
+		(TESTPARTNER_ADDRESS, CurrVal(TESTPARTNER))
+	;
+
 	//schema
 	Progress p;
 	p.SetText(t_("Creating _DEBUG database"));
