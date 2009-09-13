@@ -8,28 +8,28 @@ topic "Image arithmetic operations";
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Arithmetic operations]]}}&]
 [s1; &]
-[s2;:PixRaster`:`:Invert`(int`): [@(0.0.255) bool]_[* Invert]([@(0.0.255) int]_[*@3 page]_`=_
-PIXRASTER`_CURPAGE)&]
-[s3;%%  [%-*@3 page].&]
+[s2;:Pix`:`:Invert`(`): [@(0.0.255) Pix]_[* Invert]()&]
+[s3;%% Inverts image.&]
 [s4;%% &]
 [s1; &]
-[s2;:PixRaster`:`:AddConstantGray`(int`,int`): [@(0.0.255) bool]_[* AddConstantGray]([@(0.0.255) i
-nt]_[*@3 val], [@(0.0.255) int]_[*@3 page]_`=_PIXRASTER`_CURPAGE)&]
-[s3;%%  [%-*@3 val] [%-*@3 page].&]
+[s2;:Pix`:`:AddConstantGray`(int`): [@(0.0.255) Pix]_[* AddConstantGray]([@(0.0.255) int]_[*@3 v
+al])&]
+[s3;%% Adds a constant gray [%-*@3 val] value to image.&]
 [s4;%% &]
 [s1; &]
-[s2;:PixRaster`:`:MultConstantGray`(int`,int`): [@(0.0.255) bool]_[* MultConstantGray]([@(0.0.255) i
-nt]_[*@3 val], [@(0.0.255) int]_[*@3 page]_`=_PIXRASTER`_CURPAGE)&]
-[s3;%%  [%-*@3 val] [%-*@3 page].&]
+[s2;:Pix`:`:MultConstantGray`(int`): [@(0.0.255) Pix]_[* MultConstantGray]([@(0.0.255) int]_
+[*@3 val])&]
+[s3;%% Multiply all image pixels by a constant [%-*@3 val] value.&]
 [s4;%% &]
 [s1; &]
-[s2;:PixRaster`:`:AddGray`(int`,int`): [@(0.0.255) bool]_[* AddGray]([@(0.0.255) int]_[*@3 pa
-ge1], [@(0.0.255) int]_[*@3 page2])&]
-[s3;%%  [%-*@3 page1] [%-*@3 page2].&]
+[s2;:Pix`:`:AddGray`(Pix`&`): [@(0.0.255) Pix]_[* AddGray]([@(0.0.255) Pix`&]_[*@3 pix2])&]
+[s3;%% Adds all grayscale pixels of [%-*@3 pix2] to current pix`'s 
+ones.&]
 [s4;%% &]
 [s1; &]
-[s2;:PixRaster`:`:SubtractGray`(int`,int`): [@(0.0.255) bool]_[* SubtractGray]([@(0.0.255) i
-nt]_[*@3 page1], [@(0.0.255) int]_[*@3 page2])&]
-[s3;%%  [%-*@3 page1] [%-*@3 page2].&]
+[s2;:Pix`:`:SubtractGray`(Pix`&`): [@(0.0.255) Pix]_[* SubtractGray]([@(0.0.255) Pix`&]_[*@3 p
+ix2])&]
+[s3;%% Subtracts [%-*@3 pix2] grayscale pixels from current pix`'s 
+ones.&]
 [s4;%% &]
 [s0; ]

@@ -27,18 +27,18 @@ class PixRasterCtrl : public Ctrl
 		Splitter hSplitter;
 
 		// PixRaster object associated to the control
-		PixRaster *pixRaster;
+		PixBase *pixBase;
 		
 		// thumbnail panel flag
 		bool hasThumbnails;
 		
 		// initialize the control
-		void Create(PixRaster *_pixRaster);
+		void Create(PixBase *_pixBase);
 		
 	public :
 	
 		// constructors
-		PixRasterCtrl(PixRaster *pixRaster);
+		PixRasterCtrl(PixBase *pixBase);
 		PixRasterCtrl();
 		
 		// destructor
@@ -70,10 +70,10 @@ class PixRasterCtrl : public Ctrl
 		int GetPageCount();
 		
 		// sets the PixRaster object
-		void SetPixRaster(PixRaster *_pixRaster);
+		void SetPixBase(PixBase *_pixBase);
 		
 		// gets the PixRaster object
-		PixRaster *GetPixRaster() { return pixRaster; }
+		PixBase *GetPixBase() { return pixBase; }
 		
 		// sets current page
 		void SetPage(int page);

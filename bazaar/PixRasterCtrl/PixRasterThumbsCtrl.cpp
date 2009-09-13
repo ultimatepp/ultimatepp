@@ -42,20 +42,20 @@ void PixRasterThumbsCtrl::LeftDown(Point p, dword keyflags)
 	int gapSize = iscale(10, 1000, imageScale);
 	
 	// gets the PixRaster object
-	PixRaster *pixRaster = pixRasterCtrl->GetPixRaster();
+	PixBase *pixBase = pixRasterCtrl->GetPixBase();
 
 	// iterates through page positions to find the requested one
 	int top = 0;
-	for(int iPage = 0; iPage < pixRaster->GetPageCount(); iPage++)
+	for(int iPage = 0; iPage < pixBase->GetPageCount(); iPage++)
 	{
-		int bottom = top + pixRaster->GetHeight(iPage);
+		int bottom = top + pixBase->GetHeightEx(iPage);
 		
 		if(clickPos >= top && clickPos <= bottom)
 		{
 			pixRasterCtrl->SetPage(iPage);
 			break;
 		}
-		top += pixRaster->GetHeight(iPage) + gapSize;
+		top += pixBase->GetHeightEx(iPage) + gapSize;
 	}
 	
 } // END PixRasterThumbsCtrl::LeftDown()

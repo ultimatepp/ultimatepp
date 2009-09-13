@@ -2,56 +2,41 @@
 
 NAMESPACE_UPP
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Rotates image (2-4-8 or 32 bpp) about center.
-bool PixRaster::RotateAM(double angle, BringInModes incolor, int page)
+Pix Pix::RotateAM(double angle, BringInModes incolor)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixRotateAM(sPix, angle, incolor);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixRotateAM(pix, angle, incolor);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
-}
+		return Pix();
+	return Pix(&dPix);
 
-bool PixRaster::RotateAMColor(double angle, int incolor, int page)
-{
-	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixRotateAMColor(sPix, angle, incolor);
-	pixDestroy(&sPix);
-	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
-}
+} // END Pix::RotateAM()
 
-bool PixRaster::RotateAMGray(double angle, int incolor, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::RotateAMColor(double angle, int incolor)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixRotateAMGray(sPix, angle, incolor);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixRotateAMColor(pix, angle, incolor);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
-}
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::RotateAMColor()
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::RotateAMGray(double angle, int incolor)
+{
+	if(IsEmpty())
+		return Pix();
+	PIX *dPix = pixRotateAMGray(pix, angle, incolor);
+	if(!dPix)
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::RotateAMGray()
 
 END_UPP_NAMESPACE

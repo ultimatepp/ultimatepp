@@ -1,18 +1,28 @@
 #include "TestLeptonica.h"
 
-static void BaseLine(PixRaster &pixRaster)
+static void BaseLine(Pix & source, PixRaster &pixRaster)
 {
-	CHECKR(pixRaster.DeskewLocal(), "Deskew error");
-	Array<int> intArray = pixRaster.FindBaselines();
+	pixRaster.Add(source);
+	
+	Pix deskewed = source.DeskewLocal();
+	CHECKR(deskewed, "Deskew error");
+	pixRaster.Add(deskewed);
+
+	Array<int> intArray = deskewed.FindBaselines();
 	CHECKR(intArray.GetCount(), "FindBaselines error");
-	PIX *pix = pixRaster;
-	int width = pixRaster.GetWidth();
+
+	// deep copy source
+	Pix copied(deskewed, 1);
+	
+	PIX *pix = copied;
+	int width = copied.GetWidth();
 	for(int iLine = 0; iLine < intArray.GetCount(); iLine++)
 	{
 		int y = intArray[iLine];
 		for(int x = 0; x < width; x++)
 			pixSetPixel(pix, x, y, 1);
 	}
+	pixRaster.Add(copied);
 	
 }
 
@@ -20,7 +30,8 @@ void TestLeptonica::onBaseLine()
 {
 	String fileName;
 	FileSelector fs;
-	PIX *pix;
+
+	Pix source;
 	
 	if(!PromptYesNo(
 		"[= [* Text baseline analysis demo]&&"
@@ -42,11 +53,12 @@ void TestLeptonica::onBaseLine()
 		}
 
 		// Loads pixraster from source raster
-		CHECKR(pixRaster.Load(s), "Error loading image");
+		CHECKR(source.Load(s), "Error loading image");
 		s.Close();
 		
 		// apply line removal algothithm
-		BaseLine(pixRaster);
+		pixRaster.Clear();
+		BaseLine(source, pixRaster);
 		
 		// refresh the PixRasterCtrl control with the new image contents
 		pixRasterCtrl.Reload();

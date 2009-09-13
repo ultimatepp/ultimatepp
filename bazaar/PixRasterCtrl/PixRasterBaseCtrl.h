@@ -48,6 +48,9 @@ class PixRasterBaseCtrl : public Ctrl
 		// repaint images on image cache
 		virtual void PaintCache(void);
 		
+		// repaint polygon markers over the images
+		virtual void PaintMarkers(void);
+		
 		// mouse wheel handler
 		virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 		

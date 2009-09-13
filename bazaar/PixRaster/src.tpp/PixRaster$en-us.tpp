@@ -1,4 +1,4 @@
-topic "class PixRaster";
+topic "class PixRaster : public PixBase";
 [ $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9; $$1,0#37138531426314131252341829483380:structitem]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
@@ -6,60 +6,38 @@ topic "class PixRaster";
 [H6;0 $$4,0#05600065144404261032431302351956:begin]
 [*2 $$5,0#37138531426314131252341829483370:codeitem]
 [{_} 
-[s1;:PixRaster`:`:class: [@(0.0.255) class]_[* PixRaster]_:_[@(0.0.255) public]_[*@3 Raster]&]
+[s1;:PixRaster`:`:class: [@(0.0.255) class]_[* PixRaster]_:_[@(0.0.255) public]_[*@3 PixBase]&]
+[s2;%% Multipaged Leptonica raster object.&]
+[s2;%% It contains an array of [* Pix] single`-page Leptonica raster 
+objects&]
 [s2;%% &]
 [s3; &]
 [s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Public enums]]}}&]
-[s0;2 &]
-[s4; &]
-[s5;:PixRaster`:`:PIXRASTER`_REF: [@(0.0.255) enum]_CopyModes&]
-[s2;%% &]
-[s2; Gives ownership of internal Leptonica PIX images and PIXA arrays 
-when creating or copying PixRaster objects :&]
-[s0; &]
-[s5; -|PIXRASTER`_CLONE -|-|[* PIX and PIXA`'s reference count gets increased]&]
-[s5; -|PIXRASTER`_COPY-|-|-|[* PIX and PIXAs are deep cloned]&]
-[s5; -|PIXRASTER`_COPY`_CLONE-|-|[* PIX`'s reference count increased and 
-PIXA deep cloned]&]
-[s5; -|PIXRASTER`_REF-|-|-|[* PIX and PIXAs are just referenced by pointer]&]
-[s0; &]
-[s0; [2 This enum is used mostly when dealing directly with Leptonica 
-PIX and PIXA objects. PixRaster provides wrapping for most Leptonica 
-functions, so user usually don`'t care of internal objects ownership.]&]
-[s0; [2 If you need to access internal objects keep in mind that cloned 
-or referenced objects may change by means of other calls; in 
-doubt use PIXRASTER`_COPY to get a full image copy.]&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:PIXRASTER`_BRING`_IN`_WHITE: [@(0.0.255) enum]_BringInModes&]
-[s2;%% &]
-[s2; Color filling mode in operations that adds parts to images, 
-for example rotations :&]
-[s0; &]
-[s5; -|PIXRASTER`_BRING`_IN`_WHITE-|[* Fills new parts with white color]&]
-[s5; -|PIXRASTER`_BRING`_IN`_BLACK-|[* Fills new parts with black color]&]
-[s2;%% &]
-[s3; &]
-[s0;*%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructors and destructor]]}}&]
 [s4; &]
 [s5;:PixRaster`:`:PixRaster`(`): PixRaster()&]
 [s2;%% Constructs an empty PixRaster object.&]
 [s3; &]
 [s4; &]
-[s5;:PixRaster`:`:PixRaster`(PIX`*`,CopyModes`): PixRaster([_^PIX^ PIX]_`*[@3 pix], 
-CopyModes_[@3 copyMode]_`=_PIXRASTER`_CLONE)&]
+[s5;:PixRaster`:`:PixRaster`(PIX`*`*`): PixRaster([_^PIX^ PIX]_`*`*[@3 pix])&]
 [s2;%% [%- Constructs a single page PixRaster from a Leptonica][%-*@3  
-pix] image; ownership of image is assigned by [%-*@3 copyMode] 
-parameter&]
+pix] image.&]
+[s2;%% PixRaster takes ownership of PIX object; to avoid misuse of 
+it, [%-*@3 pix] is cleared.&]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:PixRaster`(PIXA`*`,CopyModes`): PixRaster([_^PIXA^ PIXA]_`*[@3 pixa], 
-CopyModes_[@3 copyMode]_`=_PIXRASTER`_COPY`_CLONE)&]
+[s5;:PixRaster`:`:PixRaster`(PIXA`*`*`): PixRaster([_^PIXA^ PIXA]_`*`*[@3 pixa])&]
 [s2;%% Constructs a multipage PixRaster from a Leptonica [%-*@3 pixa] 
-array of images; ownership of array and images is assigned by 
-[%-*@3 copyMode] parameter&]
+array of images.&]
+[s2;%% PixRaster takes ownership of array; to avoid misuse of it, 
+[%-*@3 pixa] is cleared.&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:PixRaster`(Raster`&`,bool`): PixRaster([_^Raster^ Raster]_`&[@3 raster],
+ [@(0.0.255) bool]_[@3 deepCopy]_`=_[@(0.0.255) false], [@(0.0.255) int]_[@3 page]_`=_PIXRA
+STER`_CURPAGE)&]
+[s2;%% Constructs PixRaster from a source [%-*@3 raster] with optional 
+[%-*@3 deepCopy].&]
 [s3;%% &]
 [s4; &]
 [s5;:PixRaster`:`:`~PixRaster`(`): [@(0.0.255) `~]PixRaster()&]
@@ -67,73 +45,74 @@ array of images; ownership of array and images is assigned by
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Internal handling of Leptonica objects]]}}&]
 [s4; &]
-[s5;:PixRaster`:`:GetPIX`(int`,CopyModes`): [_^PIX^ PIX]_`*GetPIX([@(0.0.255) int]_[@3 page
-]_`=_PIXRASTER`_CURPAGE, CopyModes_[@3 copyMode]_`=_PIXRASTER`_REF)&]
-[s2;%% gets internal [* PIX] object from given [%-*@3 page] , defaulting 
-to current one.&]
-[s2;%% [%-*@3 copyMode] sets the ownership of retrieved object, defaulting 
-to simple reference.&]
+[s5;:PixRaster`:`:GetPIX`(int`): [_^PIX^ PIX]_`*GetPIX([@(0.0.255) int]_[@3 page]_`=_PIXRAS
+TER`_CURPAGE)&]
+[s2;%% Gets underlying Leptonica [* PIX ]object for [%-*@3 page].&]
+[s2;%% [* WARNING], [* Pix] owns [* PIX ]object, so don`'t free it.&]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:GetPIXA`(CopyModes`): [_^PIXA^ PIXA]_`*GetPIXA(CopyModes_[@3 copyMode]_
-`=_PIXRASTER`_REF)&]
-[s2;%% gets internal PIXA image array; [%-*@3 copyMode] sets the ownership 
-of retrieved array, defaulting to simple reference&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:operator PIX`*`(void`): operator_PIX`*([@(0.0.255) void])&]
+[s5;:PixRaster`:`:operator PIX`*`(`): operator_PIX`*()&]
 [s2;%% same as [^topic`:`/`/Leptonica`/src`/PixRaster`$en`-us`#PixRaster`:`:GetPIX`(int`,CopyModes`)^ G
-etPIX](PIXRASTER`_CURPAGE, PIXRASTER`_REF)&]
+etPIX](PIXRASTER`_CURPAGE)&]
 [s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Member images access]]}}&]
+[s0; &]
 [s4; &]
-[s5;:PixRaster`:`:SetPIX`(PIX`*`,int`,CopyModes`): [@(0.0.255) void]_SetPIX([_^PIX^ PIX]_
-`*[@3 pix], [@(0.0.255) int]_[@3 page]_`=_PIXRASTER`_CURPAGE, CopyModes_[@3 copyMode]_`=_
-PIXRASTER`_CLONE)&]
-[s2;%% sets [%-*@3 pix] at [%-*@3 page] with ownership given by [%-*@3 copyMode]. 
-Previous PIX gets it`'s reference decreased and is freed if necessary.&]
+[s5;:PixRaster`:`:Set`(Pix`&`,int`,bool`):%% [%-@(0.0.255) void][%- _Set(][%-_^PIX^ Pix][%- _
+`&][%-@3 pix][%- , ][%-@(0.0.255) int][%- _][%-@3 page][%- _`=_PIXRASTER`_CURPAGE, 
+][%-@(0.0.255) bool] [%-@3 DeepCopy][%- `=_][%-@(0.0.255) false])&]
+[s2;%% sets [%-*@3 pix] at [%-*@3 page] with optional [%-*@3 DeepCopy].&]
 [s0;%% &]
+[s4; &]
+[s5;:PixRaster`:`:Add`(Pix`&`,bool`): [@(0.0.255) void]_Add([_^PIX^ Pix]_`&[@3 pix], 
+[@(0.0.255) bool][%%  ][@3 DeepCopy]`=_[@(0.0.255) false])&]
+[s2;%% Appends a [%-*@3 pix] to the end of PixRaster with optional 
+[%-*@3 DeepCopy] .&]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:SetPIXA`(PIXA`*`,CopyModes`): [@(0.0.255) void]_SetPIXA([_^PIXA^ PIXA]_
-`*[@3 pixa], CopyModes_[@3 copyMode]_`=_PIXRASTER`_COPY`_CLONE)&]
-[s2;%% replaces image array with [%-*@3 pixa] using ownership given 
-by [%-*@3 copyMode]. Previous image array gets it`'s reference 
-decreased and is freed if necessary.&]
+[s5;:PixRaster`:`:Add`(PixRaster`&`,bool`): [@(0.0.255) void]_Add([_^PIXA^ PixRaster]_`&[@3 p
+ixr], [@(0.0.255) bool][%%  ][@3 DeepCopy]`=_[@(0.0.255) false])&]
+[s2;%% Appends [%-*@3 pixr] PixRaster at end of current one with optional 
+[%-*@3 DeepCopy] &]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:AddPIX`(PIX`*`,CopyModes`): [@(0.0.255) void]_AddPIX([_^PIX^ PIX]_`*[@3 p
-ix], CopyModes_[@3 copyMode]_`=_PIXRASTER`_CLONE)&]
-[s2;%% Appends a [%-*@3 pix] to the end of PixRaster using ownership 
-given by [%-*@3 copyMode].&]
+[s5;:PixRaster`:`:Insert`(Pix`&`,int`,bool`): [@(0.0.255) void]_Insert([_^PIX^ Pix]_`&[@3 p
+ix], [@(0.0.255) int]_[@3 where]_`=_PIXRASTER`_CURPAGE, [@(0.0.255) bool][%%  
+][@3 DeepCopy]`=_[@(0.0.255) false])&]
+[s2;%% Inserts Pix [%-*@3 pix] at [%-*@3 where] position with optional 
+[%-*@3 DeepCopy] &]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:AddPIXA`(PIXA`*`,CopyModes`): [@(0.0.255) void]_AddPIXA([_^PIXA^ PIXA]_
-`*[@3 pixa], CopyModes_[@3 copyMode]_`=_PIXRASTER`_COPY`_CLONE)&]
-[s2;%% Appends a [%-*@3 pixa] image array to the end of PixRaster using 
-ownership given by [%-*@3 copyMode].Valid modes are only PIXRASTER`_COPY 
-and PIXRASTER`_CLONE.&]
+[s5;:PixRaster`:`:Insert`(PixRaster`&`,int`,bool`): [@(0.0.255) void]_Insert([_^PIXA^ Pix
+Raster]_`&[@3 pixr], [@(0.0.255) int]_[@3 where]_`=_PIXRASTER`_CURPAGE, 
+[@(0.0.255) bool][%%  ][@3 DeepCopy]`=_[@(0.0.255) false])&]
+[s2;%% Inserts [%-*@3 pixr] PixRaster at [%-*@3 where] position with 
+optional [%-*@3 DeepCopy] &]
 [s3;%% &]
 [s4; &]
-[s5;:PixRaster`:`:InsertPIX`(PIX`*`,int`,CopyModes`): [@(0.0.255) void]_InsertPIX([_^PIX^ P
-IX]_`*[@3 pix], [@(0.0.255) int]_[@3 where]_`=_PIXRASTER`_CURPAGE, 
-CopyModes_[@3 copyMode]_`=_PIXRASTER`_COPY`_CLONE)&]
-[s2;%% Inserts a [%-*@3 pix] at [%-*@3 where] position using ownership 
-given by [%-*@3 copyMode].&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:InsertPIXA`(PIXA`*`,int`,CopyModes`): [@(0.0.255) void]_InsertPIXA([_^PIXA^ P
-IXA]_`*[@3 pixa], [@(0.0.255) int]_[@3 where]_`=_PIXRASTER`_CURPAGE, 
-CopyModes_[@3 copyMode]_`=_PIXRASTER`_COPY`_CLONE)&]
-[s2;%% Inserts a [%-*@3 pixa] image array at [%-*@3 where] position using 
-ownership given by [%-*@3 copyMode].Valid modes are only PIXRASTER`_COPY 
-and PIXRASTER`_CLONE.&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:RemovePIX`(int`,int`): [@(0.0.255) void]_RemovePIX([@(0.0.255) int]_[@3 s
-tartPage]_`=_PIXRASTER`_CURPAGE, [@(0.0.255) int]_[@3 count]_`=_[@3 1])&]
-[s2;%% Removes [%-*@3 count ]PIX images starting at [%-*@3 startPage 
+[s5;:PixRaster`:`:Remove`(int`,int`): [@(0.0.255) void]_Remove([@(0.0.255) int]_[@3 startPa
+ge]_`=_PIXRASTER`_CURPAGE, [@(0.0.255) int]_[@3 count]_`=_[@3 1])&]
+[s2;%% Removes [%-*@3 count ]Pix images starting at [%-*@3 startPage 
 ]position.&]
 [s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:operator`[`]`(int`): [_^Pix^ Pix]_`&operator`[`]([@(0.0.255) int]_[@3 pag
+e])&]
+[s2;%% Access [* Pix] at [%-*@3 page].&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:operator Pix`&`(`): operator_Pix`&()&]
+[s2;%% Access [* Pix ]at current page.&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:At`(int`): [_^Pix^ Pix]_`&At([@(0.0.255) int]_[@3 page])&]
+[s2;%% Access [* Pix ]at [%-*@3 page].&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:Clear`(`): [@(0.0.255) virtual] [@(0.0.255) void]_Clear()&]
+[s2;%% Clears PixRaster content.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Stack`-like operations]]}}&]
 [s4; &]
@@ -149,29 +128,161 @@ one.&]
 array and going backwards. Active page is set to last one.&]
 [s3;%% &]
 [s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Conversions support from other Raster derived objects]]}}&]
+[ {{10000F(128)G(128)@1 [s0;%% [* Page handling functions]]}}&]
 [s4; &]
-[s5;:PixRaster`:`:Load`(Raster`&`,bool`,CopyModes`): [@(0.0.255) void]_Load([_^Raster^ Ra
-ster][@(0.0.255) `&]_[@3 raster], [@(0.0.255) bool]_[@3 Append]_`=_[@(0.0.255) false], 
-CopyModes_[@3 copyMode]_`=_PIXRASTER`_CLONE)&]
+[s5;:PixRaster`:`:SeekPage`(int`): [@(0.0.255) virtual] [@(0.0.255) void]_SeekPage([@(0.0.255) i
+nt]_[@3 page])&]
+[s2;%% Sets active [%-*@3 page].&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetPageCount`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetPageCount()&]
+[s2;%% Gets number of images on PixRaster&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetActivePage`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetActivePage(
+)&]
+[s2;%% Gets number of currently active page&]
+[s3; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Miscellaneous Raster functions]]}}&]
+[s4; &]
+[s5;:PixRaster`:`:GetSize`(void`): [@(0.0.255) virtual] [_^Size^ Size]_GetSize([@(0.0.255) v
+oid])&]
+[s2;%% Returns the size of Raster`'s active page in pixels.&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetSizeEx`(int`): [@(0.0.255) virtual] [_^Size^ Size]_GetSizeEx([@(0.0.255) i
+nt]_[@3 page])&]
+[s2;%% Returns the size of Raster in pixels for [%-*@3 page].&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetWidth`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetWidth()&]
+[s2;%% Returns the width of Raster in pixels for active page.&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetWidthEx`(int`): [@(0.0.255) virtual] [@(0.0.255) int]_GetWidthEx([@(0.0.255) i
+nt]_[@3 page])&]
+[s2;%% Returns the width of Raster in pixels for [%-*@3 page].&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetHeight`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetHeight()&]
+[s2;%% Returns the height of Raster in pixels for active page.&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetHeightEx`(int`): [@(0.0.255) virtual] [@(0.0.255) int]_GetHeightEx([@(0.0.255) i
+nt]_[@3 page])&]
+[s2;%% Returns the height of Raster in pixels for [%-*@3 page].&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetInfo`(void`): [@(0.0.255) virtual] [_^Raster`:`:Info^ Info]_GetInfo(
+[@(0.0.255) void])&]
+[s2;%% Returns the information about Raster`'s active page.&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetInfoEx`(int`): [@(0.0.255) virtual] [_^Raster`:`:Info^ Info]_GetInfo
+Ex([@(0.0.255) int]_[@3 page])&]
+[s2;%% Returns the information about Raster for [%-*@3 page].&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetLine`(int`): [@(0.0.255) virtual] [_^Raster`:`:Line^ Line]_GetLine([@(0.0.255) i
+nt]_[@3 line])&]
+[s2;%% Reads a single scanline [%-*@3 line] from the raster`'s active 
+page. If possible, Raster should be optimized for reading scanlines 
+in ascending order `- this what most processing functions (should) 
+require.&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetLineEx`(int`,int`): [@(0.0.255) virtual] [_^Raster`:`:Line^ Line]_Ge
+tLineEx([@(0.0.255) int]_[@3 line], [@(0.0.255) int]_[@3 page])&]
+[s2;%% Reads a single scanline [%-*@3 line] from [%-*@3 page] ot the 
+raster. If possible, Raster should be optimized for reading scanlines 
+in ascending order `- this what most processing functions (should) 
+require.&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetPaletteCount`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetPaletteCo
+unt()&]
+[s2;%% Returns the size of palette for raster`'s active page. If 
+there is no palette, returns 0&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetPaletteCountEx`(int`): [@(0.0.255) virtual] [@(0.0.255) int]_GetPale
+tteCountEx([@(0.0.255) int]_[@3 page])&]
+[s2;%% Returns the size of palette for raster`'s [%-*@3 page]. If there 
+is no palette, returns 0..&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetPalette`(`): [@(0.0.255) virtual] [@(0.0.255) const]_[_^RGBA^ RGBA]_`*
+GetPalette()&]
+[s2;%% Returns active pages`'current palette, NULL if there is no 
+palette.&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetPaletteEx`(int`): [@(0.0.255) virtual] [@(0.0.255) const]_[_^RGBA^ RGB
+A]_`*GetPaletteEx([@(0.0.255) int]_[@3 page])&]
+[s2;%% Returns [%-*@3 page][%- `'s ]current palette, NULL if there is 
+no palette &]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:GetFormat`(`): [@(0.0.255) virtual] [@(0.0.255) const]_[_^RasterFormat^ R
+asterFormat]_`*GetFormat()&]
+[s2;%% Returns the format of Raster`'s active page, can return NULL 
+if format is RGBA.&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetFormatEx`(int`): [@(0.0.255) virtual] [@(0.0.255) const]_[_^RasterFormat^ R
+asterFormat]_`*GetFormatEx([@(0.0.255) int]_[@3 page])&]
+[s2;%% Returns the format of Raster`'s [%-*@3 page], can return NULL 
+if format is RGBA.&]
+[s3;%% &]
+[s4; &]
+[s5;:PixRaster`:`:IsEmpty`(void`): [@(0.0.255) bool]_IsEmpty([@(0.0.255) void])&]
+[s2;%% Returns true if PixRaster has no images.&]
+[s3; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Polygon markers access]]}}&]
+[s0; &]
+[s4; &]
+[s5;:PixRaster`:`:GetPolyMarkers`(`): [@(0.0.255) virtual] [_^PolyMarkers^ PolyMarkers]_`*
+GetPolyMarkers()&]
+[s2;%% Returns array of polygon markers for current raster page&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:GetPolyMarkersEx`(int`): [@(0.0.255) virtual] [_^PolyMarkers^ PolyMarke
+rs]_`*GetPolyMarkersEx([@(0.0.255) int]_[@3 page])&]
+[s2;%% Returns array of polygon markers for raster [%-*@3 page].&]
+[s3;%% &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Conversion and file I/O functions]]}}&]
+[s0; &]
+[s4; &]
+[s5;:PixRaster`:`:Load`(Raster`&`,bool`,bool`): [@(0.0.255) void]_Load([_^Raster^ Raster][@(0.0.255) `&
+]_[@3 raster], [@(0.0.255) bool]_[@3 Append]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[@3 Dee
+pCopy]_`=_[@(0.0.255) false])&]
 [s2;%% Loads image array from [%-*@3 raster] object or [%-*@3 Append] 
-them to current one. Ownership of added images is given by [%-*@3 copyMode].&]
+them to current one. Source images are referenced or deep copied 
+depending on [%-*@3 DeepCopy] parameter.&]
 [s3;%% &]
 [s4; &]
 [s5;:PixRaster`:`:operator`=`(Raster`&`): [@(0.0.255) void]_operator`=([_^Raster^ Raster]_
 `&[@3 raster])&]
 [s2;%% Same as [*^topic`:`/`/Leptonica`/src`/PixRaster`$en`-us`#PixRaster`:`:Load`(Raster`&`,bool`,CopyModes`)^ L
-oad][* (][%-*@3 raster][* , ][%-*@(0.0.255) false][* , PIXRASTER`_COPY)] 
+oad][* (][%-*@3 raster][* , ][%-*@(0.0.255) false][* , ][%-*@(0.0.255) false][* )] 
  Sets PixRaster`'s content equal to [%-*@3 raster]`'s one.&]
 [s3;%% &]
 [s4; &]
 [s5;:PixRaster`:`:operator`+`=`(Raster`&`): [@(0.0.255) void]_operator`+`=([_^Raster^ Ras
 ter]_`&[@3 raster])&]
 [s2;%% Same as [*^topic`:`/`/Leptonica`/src`/PixRaster`$en`-us`#PixRaster`:`:Load`(Raster`&`,bool`,CopyModes`)^ L
-oad][* (][%-*@3 raster], [%-*@(0.0.255) true][* , PIXRASTER`_COPY)]  
-Appends [%-*@3 raster]`'s content at the end of Pixraster`'s one&]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* File I/O]]}}&]
+oad][* (][%-*@3 raster], [%-*@(0.0.255) true][* , ][%-*@(0.0.255) false][* )] 
+ Appends [%-*@3 raster]`'s content at the end of PixRaster`'s one&]
+[s3; &]
+[s4; &]
+[s5;:PixRaster`:`:operator`<`<`=`(Raster`&`): [_^PixRaster^ PixRaster]_`&[@(0.0.255) oper
+ator]_<<`=(Raster_`&[@3 raster])&]
+[s2;%% Same as [*^topic`:`/`/Leptonica`/src`/PixRaster`$en`-us`#PixRaster`:`:Load`(Raster`&`,bool`,CopyModes`)^ L
+oad][* (][%-*@3 raster][* , ][%-*@(0.0.255) false][* , ][%-*@(0.0.255) true][* )] 
+ Sets PixRaster`'s content equal to [%-*@3 raster]`'s one deep 
+copying it.&]
 [s3;%% &]
 [s4; &]
 [s5;:PixRaster`:`:Load`(FileIn`&`,bool`): [@(0.0.255) bool]_Load([_^FileIn^ FileIn]_`&[@3 f
@@ -209,122 +320,4 @@ choosen file format must support multiple pages.&]
 [s0;%% &]
 [s2;%% Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
 [s3;%% &]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Page handling functions]]}}&]
-[s4; &]
-[s5;:PixRaster`:`:SeekPage`(int`): [@(0.0.255) virtual] [@(0.0.255) void]_SeekPage([@(0.0.255) i
-nt]_[@3 page])&]
-[s2;%% Sets active [%-*@3 page].&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetPageCount`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetPageCount()&]
-[s2;%% Gets number of images on PixRaster&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:GetActivePage`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetActivePage(
-)&]
-[s2;%% Gets number of currently active page&]
-[s3; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Miscellaneous Raster functions]]}}&]
-[s4; &]
-[s5;:PixRaster`:`:GetSize`(void`): [@(0.0.255) virtual] [_^Size^ Size]_GetSize([@(0.0.255) v
-oid])&]
-[s2;%% Returns the size of Raster`'s active page in pixels.&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:GetSize`(int`): [@(0.0.255) virtual] [_^Size^ Size]_GetSize([@(0.0.255) i
-nt]_[@3 page])&]
-[s2;%% Returns the size of Raster in pixels for [%-*@3 page].&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetWidth`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetWidth()&]
-[s2;%% Returns the width of Raster in pixels for active page.&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:GetWidth`(int`): [@(0.0.255) virtual] [@(0.0.255) int]_GetWidth([@(0.0.255) i
-nt]_[@3 page])&]
-[s2;%% Returns the width of Raster in pixels for [%-*@3 page].&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetHeight`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetHeight()&]
-[s2;%% Returns the height of Raster in pixels for active page.&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:GetHeight`(int`): [@(0.0.255) virtual] [@(0.0.255) int]_GetHeight([@(0.0.255) i
-nt]_[@3 page])&]
-[s2;%% Returns the height of Raster in pixels for [%-*@3 page].&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetInfo`(void`): [@(0.0.255) virtual] [_^Raster`:`:Info^ Info]_GetInfo(
-[@(0.0.255) void])&]
-[s2;%% Returns the information about Raster`'s active page.&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:GetInfo`(int`): [@(0.0.255) virtual] [_^Raster`:`:Info^ Info]_GetInfo([@(0.0.255) i
-nt]_[@3 page])&]
-[s2;%% Returns the information about Raster for [%-*@3 page].&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetLine`(int`): [@(0.0.255) virtual] [_^Raster`:`:Line^ Line]_GetLine([@(0.0.255) i
-nt]_[@3 line])&]
-[s2;%% Reads a single scanline [%-*@3 line] from the raster`'s active 
-page. If possible, Raster should be optimized for reading scanlines 
-in ascending order `- this what most processing functions (should) 
-require.&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetLine`(int`,int`): [@(0.0.255) virtual] [_^Raster`:`:Line^ Line]_GetL
-ine([@(0.0.255) int]_[@3 line], [@(0.0.255) int]_[@3 page])&]
-[s2;%% Reads a single scanline [%-*@3 line] from [%-*@3 page] ot the 
-raster. If possible, Raster should be optimized for reading scanlines 
-in ascending order `- this what most processing functions (should) 
-require.&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetPaletteCount`(`): [@(0.0.255) virtual] [@(0.0.255) int]_GetPaletteCo
-unt()&]
-[s2;%% Returns the size of palette for raster`'s active page. If 
-there is no palette, returns 0&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:GetPaletteCount`(int`): [@(0.0.255) virtual] [@(0.0.255) int]_GetPalett
-eCount([@(0.0.255) int]_[@3 page])&]
-[s2;%% Returns the size of palette for raster`'s [%-*@3 page]. If there 
-is no palette, returns 0..&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetPalette`(`): [@(0.0.255) virtual] [@(0.0.255) const]_[_^RGBA^ RGBA]_`*
-GetPalette()&]
-[s2;%% Returns active pages`'current palette, NULL if there is no 
-palette.&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:GetPalette`(int`): [@(0.0.255) virtual] [@(0.0.255) const]_[_^RGBA^ RGBA]_
-`*GetPalette([@(0.0.255) int]_[@3 page])&]
-[s2;%% Returns [%-*@3 page][%- `'s ]current palette, NULL if there is 
-no palette &]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:GetFormat`(`): [@(0.0.255) virtual] [@(0.0.255) const]_[_^RasterFormat^ R
-asterFormat]_`*GetFormat()&]
-[s2;%% Returns the format of Raster`'s active page, can return NULL 
-if format is RGBA.&]
-[s3; &]
-[s4; &]
-[s5;:PixRaster`:`:GetFormat`(int`): [@(0.0.255) virtual] [@(0.0.255) const]_[_^RasterFormat^ R
-asterFormat]_`*GetFormat([@(0.0.255) int]_[@3 page])&]
-[s2;%% Returns the format of Raster`'s [%-*@3 page], can return NULL 
-if format is RGBA.&]
-[s3;%% &]
-[s4; &]
-[s5;:PixRaster`:`:IsEmpty`(void`): [@(0.0.255) bool]_IsEmpty([@(0.0.255) void])&]
-[s2;%% Returns true if PixRaster has no images.&]
-[s3; &]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Leptonica functions wrappers]]}}&]
-[s0; &]
-[s2; [*^topic`:`/`/Leptonica`/src`/PixRaster`$en`-us`#PixRaster`:`:class^ Pixraster] 
-provides wrappers to many Leptonica image handling functions; 
-as the list is huge it has been divided by cathegories; see Leptonica 
-wrappers index.&]
 [s0; ]

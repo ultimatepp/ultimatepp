@@ -173,6 +173,8 @@ file
 	PixRaster.h,
 	PixRasterLoad.cpp,
 	PixRaster.cpp,
+	PolyMarker.h,
+	PolyMarker.cpp,
 	TiffIo.cpp,
 	UppLept.cpp,
 	Lept-Skew.cpp,

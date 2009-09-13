@@ -2,245 +2,167 @@
 
 NAMESPACE_UPP
 
-bool PixRaster::DitherToBinary(int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::DitherToBinary()
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
+		return Pix();
 	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixDitherToBinary(sPix);
-	pixDestroy(&sPix);
+	PIX *dPix = pixDitherToBinary(pix);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::DitherToBinary()
 
-bool PixRaster::DitherToBinarySpec(int lowerclip, int upperclip, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::DitherToBinarySpec(int lowerclip, int upperclip)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixDitherToBinarySpec(sPix, lowerclip, upperclip);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixDitherToBinarySpec(pix, lowerclip, upperclip);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::DitherToBinarySpec()
 
 // threshold the image -- warning, operates ONLY on grayscale pixmaps
 // original image is unchanged - a new modified image at raster's end
-bool PixRaster::ThresholdToBinary(int threshold, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::ThresholdToBinary(int threshold)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixThresholdToBinary(sPix, threshold);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixThresholdToBinary(pix, threshold);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
-}
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::ThresholdToBinary()
 
-bool PixRaster::VarThresholdToBinary(int thresholdPage, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::VarThresholdToBinary(Pix &thresholdPix)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	thresholdPage = getTruePage(thresholdPage);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *tPix = pixaGetPix(pixa, thresholdPage, L_CLONE);
-	PIX *dPix = pixVarThresholdToBinary(sPix, tPix);
-	pixDestroy(&sPix);
-	pixDestroy(&tPix);
+		return Pix();
+	PIX *dPix = pixVarThresholdToBinary(pix, thresholdPix);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::VarThresholdToBinary()
 
-bool PixRaster::DitherToBinaryLUT(int lowerclip, int upperclip, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::DitherToBinaryLUT(int lowerclip, int upperclip)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixDitherToBinaryLUT(sPix, lowerclip, upperclip);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixDitherToBinaryLUT(pix, lowerclip, upperclip);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::DitherToBinaryLUT()
 
-bool PixRaster::GenerateMaskByValue(int val, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::GenerateMaskByValue(int val)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixGenerateMaskByValue(sPix, val);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixGenerateMaskByValue(pix, val);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::GenerateMaskByValue()
 
-bool PixRaster::GenerateMaskByBand(int lower, int upper, int inband, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::GenerateMaskByBand(int lower, int upper, int inband)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixGenerateMaskByBand(sPix, lower, upper, inband);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixGenerateMaskByBand(pix, lower, upper, inband);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::GenerateMaskByBand()
 
-bool PixRaster::DitherTo2bpp(int cmapflag, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::DitherTo2bpp(int cmapflag)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixDitherTo2bpp(sPix, cmapflag);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixDitherTo2bpp(pix, cmapflag);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::DitherTo2bpp()
 
-bool PixRaster::DitherTo2bppSpec(int lowerclip, int upperclip, int cmapflag, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::DitherTo2bppSpec(int lowerclip, int upperclip, int cmapflag)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixDitherTo2bppSpec(sPix, lowerclip, upperclip, cmapflag);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixDitherTo2bppSpec(pix, lowerclip, upperclip, cmapflag);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::DitherTo2bppSpec()
 
-bool PixRaster::ThresholdTo2bpp(int nlevels, int cmapflag, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::ThresholdTo2bpp(int nlevels, int cmapflag)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixThresholdTo2bpp(sPix, nlevels, cmapflag);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixThresholdTo2bpp(pix, nlevels, cmapflag);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::ThresholdTo2bpp()
 
-bool PixRaster::ThresholdTo4bpp(int nlevels, int cmapflag, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::ThresholdTo4bpp(int nlevels, int cmapflag)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixThresholdTo4bpp(sPix, nlevels, cmapflag);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixThresholdTo4bpp(pix, nlevels, cmapflag);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::ThresholdTo4bpp()
 
-bool PixRaster::ThresholdOn8bpp(int nlevels, int cmapflag, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::ThresholdOn8bpp(int nlevels, int cmapflag)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixThresholdOn8bpp(sPix, nlevels, cmapflag);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixThresholdOn8bpp(pix, nlevels, cmapflag);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::ThresholdOn8bpp()
 
-bool PixRaster::ThresholdGrayArb(const char  *edgevals, int outdepth, int use_average, int setblack, int setwhite, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::ThresholdGrayArb(const char  *edgevals, int outdepth, int use_average, int setblack, int setwhite)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixThresholdGrayArb(sPix, edgevals, outdepth, use_average, setblack, setwhite);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixThresholdGrayArb(pix, edgevals, outdepth, use_average, setblack, setwhite);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::ThresholdGrayArb()
 
-Buffer<int> PixRaster::MakeGrayQuantIndexTable(int nlevels)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Buffer<int> Pix::MakeGrayQuantIndexTable(int nlevels)
 {
 	Buffer<int>buf;
 	
@@ -254,9 +176,10 @@ Buffer<int> PixRaster::MakeGrayQuantIndexTable(int nlevels)
 	}
 	return buf;
 
-}
+} // END Pix::MakeGrayQuantIndexTable()
 
-Buffer<int> PixRaster::MakeGrayQuantTargetTable(int nlevels, int depth)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Buffer<int> Pix::MakeGrayQuantTargetTable(int nlevels, int depth)
 {
 	Buffer<int>buf;
 	
@@ -270,81 +193,54 @@ Buffer<int> PixRaster::MakeGrayQuantTargetTable(int nlevels, int depth)
 	}
 	return buf;
 
-}
+} // END Pix::MakeGrayQuantTargetTable()
 
-bool PixRaster::GenerateMaskByBand32(unsigned refval, int delm, int delp, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::GenerateMaskByBand32(unsigned refval, int delm, int delp)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixGenerateMaskByBand32(sPix, refval, delm, delp);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixGenerateMaskByBand32(pix, refval, delm, delp);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::GenerateMaskByBand32()
 
-bool PixRaster::GenerateMaskByDiscr32(unsigned refval1, unsigned refval2, int distflag, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::GenerateMaskByDiscr32(unsigned refval1, unsigned refval2, int distflag)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixGenerateMaskByDiscr32(sPix, refval1, refval2, distflag);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixGenerateMaskByDiscr32(pix, refval1, refval2, distflag);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::GenerateMaskByDiscr32()
 
-bool PixRaster::GrayQuantFromHisto(int mPage, double minfract, int maxsize, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::GrayQuantFromHisto(Pix &mPix, double minfract, int maxsize)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	mPage = getTruePage(mPage);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *mPix = pixaGetPix(pixa, mPage, L_CLONE);
-	PIX *dPix = pixGrayQuantFromHisto(NULL, sPix, mPix, minfract, maxsize);
-	pixDestroy(&sPix);
-	pixDestroy(&mPix);
+		return Pix();
+	PIX *dPix = pixGrayQuantFromHisto(NULL, pix, mPix, minfract, maxsize);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::GrayQuantFromHisto()
 
-bool PixRaster::ThresholdToValue(int threshval, int setval, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::ThresholdToValue(int threshval, int setval)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixThresholdToValue(NULL, sPix, threshval, setval);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixThresholdToValue(NULL, pix, threshval, setval);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 
-}
+} // END Pix::ThresholdToValue()
 
 END_UPP_NAMESPACE

@@ -2,29 +2,21 @@
 
 NAMESPACE_UPP
 
-bool PixRaster::CombineMasked(int destPage, int sourcePage, int maskPage)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::CombineMasked(Pix &aPix, Pix &maskPix)
 {
 	if(IsEmpty())
 		return false;
-	sourcePage = getTruePage(sourcePage);
-	destPage = getTruePage(destPage);
 	
-	Dup(destPage);
-	PIX *dPix = GetPIX(PIXRASTER_LASTPAGE, PIXRASTER_CLONE);
-	PIX *sPix = pixaGetPix(pixa, sourcePage, L_CLONE);
-	PIX *mPix = pixaGetPix(pixa, maskPage, L_CLONE);
-	int res = pixCombineMasked(dPix, sPix, mPix);
-	pixDestroy(&sPix);
-	pixDestroy(&dPix);
-	pixDestroy(&mPix);
+	PIX *dPix = pixCopy(NULL, pix);
+	int res = pixCombineMasked(dPix, aPix, maskPix);
 	if(res)
 	{
-		Drop();
-		return false;
+		pixDestroy(&dPix);
+		return Pix();
 	}
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+	return Pix(&dPix);
 
-}
+} // END Pix::CombineMasked()
 
 END_UPP_NAMESPACE

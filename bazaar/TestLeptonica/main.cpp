@@ -10,7 +10,7 @@ TestLeptonica::TestLeptonica()
 	CtrlLayout(*this, "Leptonica library example suite");
 	
 	// sets PixRaster in PixRasterCtrl
-	pixRasterCtrl.SetPixRaster(&pixRaster);
+	pixRasterCtrl.SetPixBase(&pixRaster);
 	pixRasterCtrl.ShowThumbnails(true);
 	
 	// connects button handlers

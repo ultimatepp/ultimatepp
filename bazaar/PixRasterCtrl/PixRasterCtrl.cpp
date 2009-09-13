@@ -4,10 +4,10 @@
 #include "PixRasterViewCtrl.h"
 
 // initialize the control
-void PixRasterCtrl::Create(PixRaster *_pixRaster)
+void PixRasterCtrl::Create(PixBase *_pixBase)
 {
-	// sets the PixRaster object
-	pixRaster = _pixRaster;
+	// sets the PixBase object
+	pixBase = _pixBase;
 	
 	// creates child controls and inserts them in splitter
 	thumbs = new PixRasterThumbsCtrl(this);
@@ -27,9 +27,9 @@ void PixRasterCtrl::Create(PixRaster *_pixRaster)
 		
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // constructors
-PixRasterCtrl::PixRasterCtrl(PixRaster *_pixRaster)
+PixRasterCtrl::PixRasterCtrl(PixBase *_pixBase)
 {
-	Create(_pixRaster);
+	Create(_pixBase);
 	
 } // END Constructor class PixRasterCtrl
 
@@ -52,10 +52,10 @@ PixRasterCtrl::~PixRasterCtrl()
 } // END Destructor class PixRasterCtrl
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// sets the PixRaster object
-void PixRasterCtrl::SetPixRaster(PixRaster *_pixRaster)
+// sets the PixBase object
+void PixRasterCtrl::SetPixBase(PixBase *_pixBase)
 {
-	pixRaster = _pixRaster;
+	pixBase = _pixBase;
 	
 	// signals image change to thumbs and view
 	thumbs->Layout();
@@ -82,8 +82,8 @@ bool PixRasterCtrl::ShowThumbnails(bool s)
 // gets page count
 int PixRasterCtrl::GetPageCount()
 {
-	if(pixRaster)
-		return pixRaster->GetPageCount();
+	if(pixBase)
+		return pixBase->GetPageCount();
 	else
 		return 0;
 
@@ -145,7 +145,7 @@ void PixRasterCtrl::SetPage(int page)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // reloads ctrl content -- needed when changing images in
-// associated PixRaster control
+// associated PixBase control
 void PixRasterCtrl::Reload(void)
 {
 	thumbs->Layout();

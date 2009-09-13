@@ -1,5 +1,3 @@
-#include "lib/allheaders.h"
-
 #include "PixRaster.h"
 
 #include <Draw/Draw.h>

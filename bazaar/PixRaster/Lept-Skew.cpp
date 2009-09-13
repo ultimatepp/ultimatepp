@@ -2,59 +2,46 @@
 
 NAMESPACE_UPP
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Simple top-level deskew interfaces
-bool PixRaster::Deskew(int ReductionFactor, int page)
+Pix Pix::Deskew(int ReductionFactor)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixDeskew(sPix, ReductionFactor);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixDeskew(pix, ReductionFactor);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
-	
-}
+		return Pix();
+	return Pix(&dPix);
 
-bool PixRaster::FindSkewAndDeskew(int ReductionFactor, double *skewAngle, double *confidenceFactor, int page)
+} // END Pix::Deskew()
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::FindSkewAndDeskew(int ReductionFactor, double *skewAngle, double *confidenceFactor)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
+		return Pix();
 	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
 	l_float32 dSkew, dConf;
-	PIX *dPix = pixFindSkewAndDeskew(sPix, ReductionFactor, &dSkew, &dConf);
-	pixDestroy(&sPix);
+	PIX *dPix = pixFindSkewAndDeskew(pix, ReductionFactor, &dSkew, &dConf);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
+		return Pix();
 	if(skewAngle)
 		*skewAngle = dSkew;
 	if(confidenceFactor)
 		*confidenceFactor = dConf;
-	return true;
+	return Pix(&dPix);
 	
-}
+} // END Pix::FindSkewAndDeskew()
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Simple top-level skew angle finding interface
-bool PixRaster::FindSkew(double *pangle, double *pconf, int page)
+bool Pix::FindSkew(double *pangle, double *pconf)
 {
 	if(IsEmpty())
 		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
+
 	l_float32 dSkew, dConf;
-	int res = pixFindSkew(sPix, &dSkew, &dConf);
-	pixDestroy(&sPix);
+	int res = pixFindSkew(pix, &dSkew, &dConf);
 	if(res)
 		return false;
 	if(pangle)
@@ -63,43 +50,38 @@ bool PixRaster::FindSkew(double *pangle, double *pconf, int page)
 		*pconf = dConf;
 	return true;
 	
-}
+} // END Pix::FindSkew()
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Basic angle-finding functions with all parameters
-bool PixRaster::FindSkewSweep(double *pangle, int reduction, double sweeprange, double sweepdelta, int page)
+bool Pix::FindSkewSweep(double *pangle, int reduction, double sweeprange, double sweepdelta)
 {
 	if(IsEmpty())
 		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
+
 	l_float32 dSkew;
-	int res = pixFindSkewSweep(sPix, &dSkew, reduction, sweeprange, sweepdelta);
-	pixDestroy(&sPix);
+	int res = pixFindSkewSweep(pix, &dSkew, reduction, sweeprange, sweepdelta);
 	if(res)
 		return false;
 	if(pangle)
 		*pangle = dSkew;
 	return true;
 	
-}
+} // END Pix::FindSkewSweep()
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Angle-finding functions with all parameters
-bool PixRaster::FindSkewSweepAndSearch(
+bool Pix::FindSkewSweepAndSearch(
 	double *pangle, double *pconf,
 	int redsweep, int redsearch,
 	double sweeprange, double sweepdelta,
-	double minbsdelta,
-	int page)
+	double minbsdelta)
 {
 	if(IsEmpty())
 		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
+
 	l_float32 dSkew, dConf;
-	int res = pixFindSkewSweepAndSearch(sPix, &dSkew, &dConf, redsweep, redsearch, sweeprange, sweepdelta, minbsdelta);
-	pixDestroy(&sPix);
+	int res = pixFindSkewSweepAndSearch(pix, &dSkew, &dConf, redsweep, redsearch, sweeprange, sweepdelta, minbsdelta);
 	if(res)
 		return false;
 	if(pangle)
@@ -108,24 +90,19 @@ bool PixRaster::FindSkewSweepAndSearch(
 		*pconf = dConf;
 	return true;
 	
-}
+} // END Pix::FindSkewSweepAndSearch()
 
-bool PixRaster::DeskewLocal(int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::DeskewLocal()
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixDeskewLocal(sPix, 0, 0, 0, 0.0, 0.0, 0.0);
-	pixDestroy(&sPix);
-	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	SeekPage(PIXRASTER_LASTPAGE);
-	pixDestroy(&dPix);
-	return true;
-}
+		return Pix();
 
+	PIX *dPix = pixDeskewLocal(pix, 0, 0, 0, 0.0, 0.0, 0.0);
+	if(!dPix)
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::DeskewLocal()
 
 END_UPP_NAMESPACE

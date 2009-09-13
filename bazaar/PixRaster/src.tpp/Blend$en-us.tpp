@@ -8,13 +8,11 @@ topic "Combining/blending functions";
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Combining/blending functions]]}}&]
 [s1;%- &]
-[s2;:PixRaster`:`:CombineMasked`(int`,int`,int`):%- [@(0.0.255) bool]_[* CombineMasked]([@(0.0.255) i
-nt]_[*@3 destPage], [@(0.0.255) int]_[*@3 sourcePage], [@(0.0.255) int]_[*@3 maskPage])&]
-[s3; Creates an image from [%-*@3 destPage] with pixels replaced by 
-[%-*@3 sourcePage]`'s ones if corresponding bits of [%-*@3 maskPage 
-]are set.&]
-[s3; The combined image is appended at the end of PixRaster.&]
+[s2;:Pix`:`:CombineMasked`(Pix`&`,Pix`&`):%- [@(0.0.255) bool]_[* CombineMasked]([@(0.0.255) P
+ix`&]_[*@3 aPix], [@(0.0.255) Pix`&]_[*@3 maskPix])&]
+[s3; Replaces current Pix pixels from [%-*@3 aPix]`'s ones if corresponding 
+bits of [%-*@3 maskPix ]are set.&]
 [s3; &]
-[s3; Returns [%-@(0.0.255) true] on success, [%-@(0.0.255) false] otherwise.&]
+[s3; Returns the combined Pix on success, an empty Pix otherwise.&]
 [s4; &]
 [s0; ]

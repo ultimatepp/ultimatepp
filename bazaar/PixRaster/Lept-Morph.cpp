@@ -2,76 +2,52 @@
 
 NAMESPACE_UPP
 
-bool PixRaster::ErodeGray(int hsize, int vsize, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::ErodeGray(int hsize, int vsize)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixErodeGray(sPix, hsize, vsize);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixErodeGray(pix, hsize, vsize);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::ErodeGray()
 
-bool PixRaster::DilateGray(int hsize, int vsize, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::DilateGray(int hsize, int vsize)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixDilateGray(sPix, hsize, vsize);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixDilateGray(pix, hsize, vsize);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::DilateGray()
 
-bool PixRaster::OpenGray(int hsize, int vsize, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::OpenGray(int hsize, int vsize)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixOpenGray(sPix, hsize, vsize);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixOpenGray(pix, hsize, vsize);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::OpenGray()
 
-bool PixRaster::CloseGray(int hsize, int vsize, int page)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::CloseGray(int hsize, int vsize)
 {
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
-	
-	PIX *sPix = pixaGetPix(pixa, page, L_CLONE);
-	PIX *dPix = pixCloseGray(sPix, hsize, vsize);
-	pixDestroy(&sPix);
+		return Pix();
+	PIX *dPix = pixCloseGray(pix, hsize, vsize);
 	if(!dPix)
-		return false;
-	AddPIX(dPix, PIXRASTER_CLONE);
-	pixDestroy(&dPix);
-	SeekPage(PIXRASTER_LASTPAGE);
-	return true;
+		return Pix();
+	return Pix(&dPix);
 	
-}
+} // END Pix::CloseGray()
 
 END_UPP_NAMESPACE

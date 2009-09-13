@@ -112,7 +112,7 @@ void PixRasterBaseCtrl::PaintCache()
 	Array<Rect> rects;
 	
 	// if no associated PixRaster object, do nothing
-	if(!pixRasterCtrl || !pixRasterCtrl->GetPixRaster())
+	if(!pixRasterCtrl || !pixRasterCtrl->GetPixBase())
 		return;
 	
 	// backups old imageCache positions inside the full tiff image
@@ -169,16 +169,16 @@ void PixRasterBaseCtrl::PaintCache()
 	}
 	
 	// gets associated PixRaster object
-	PixRaster *pixRaster = pixRasterCtrl->GetPixRaster();
+	PixBase *pixBase = pixRasterCtrl->GetPixBase();
 	
 	// scans the PixRaster pages to see if some of them fits in
 	// rectangles that must be repainted
 	int currentTop = 0;
-	int currentPage = pixRaster->GetActivePage();
-	for(int i = 0 ; i < pixRaster->GetPageCount() ; i++)
+	int currentPage = pixBase->GetActivePage();
+	for(int i = 0 ; i < pixBase->GetPageCount() ; i++)
 	{
 		// sets the active page
-		pixRaster->SeekPage(i);
+		pixBase->SeekPage(i);
 		
 		// translates current top of page in view coordinates
 		int viewCurrentTop = iscale(currentTop, imageScale, 1000);
@@ -187,8 +187,8 @@ void PixRasterBaseCtrl::PaintCache()
 		Rect viewPageRect(
 			-cacheLeft,
 			-cacheTop + viewCurrentTop,
-			iscale(pixRaster->GetSize().cx, imageScale, 1000) - cacheLeft,
-			iscale(pixRaster->GetSize().cy, imageScale, 1000) - cacheTop + viewCurrentTop
+			iscale(pixBase->GetSize().cx, imageScale, 1000) - cacheLeft,
+			iscale(pixBase->GetSize().cy, imageScale, 1000) - cacheTop + viewCurrentTop
 		);
 		
 		// now scans the rectangles that must be repainted
@@ -214,7 +214,7 @@ void PixRasterBaseCtrl::PaintCache()
 				
 				// rescales the image area
 				ImageEncoder t;
-				Rescale(t, rect.GetSize(), *pixRaster, tiffRect);
+				Rescale(t, rect.GetSize(), *pixBase, tiffRect);
 		
 				// and copies insiede the cache area
 				Image img = Image(t);
@@ -223,14 +223,21 @@ void PixRasterBaseCtrl::PaintCache()
 				imageCache.Copy(Point(rect.left, rect.top), Rect(0, 0, img.GetWidth(), img.GetHeight()), img);
 			}
 		}
-		currentTop += pixRaster->GetHeight() + iscale(10, 1000, imageScale);
+		currentTop += pixBase->GetHeight() + iscale(10, 1000, imageScale);
 	}
 	
 	// restore PixRaster's active page
-	pixRaster->SeekPage(currentPage);
+	pixBase->SeekPage(currentPage);
 	
 	
 } // END PixRasterBaseCtrl::PaintCache()
+		
+///////////////////////////////////////////////////////////////////////////////////////////////
+// repaint polygon markers over the images
+void PixRasterBaseCtrl::PaintMarkers(void)
+{
+	
+} // END PixRasterBaseCtrl::PaintMarkers()
 		
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // paint routine
@@ -240,7 +247,7 @@ void PixRasterBaseCtrl::Paint(Draw &d)
 	d.DrawRect(GetSize(), SColorFace());
 
 	// if no associated PixRaster, does nothing
-	if(!pixRasterCtrl->GetPixRaster())
+	if(!pixRasterCtrl->GetPixBase())
 		return;
 
 	// paints image inside cache, if needed
@@ -270,7 +277,7 @@ void PixRasterBaseCtrl::Layout(void)
 	static bool inside = false;
 	
 	// if no associated PixRaster or no pages to display, hides scrollbar and return
-	if(!pixRasterCtrl->GetPixRaster() || !pixRasterCtrl->GetPageCount())
+	if(!pixRasterCtrl->GetPixBase() || !pixRasterCtrl->GetPageCount())
 	{
 		hScrollBar.Hide();
 		vScrollBar.Hide();
@@ -292,21 +299,21 @@ void PixRasterBaseCtrl::Layout(void)
 	int vScrollMax = vScrollBar.GetTotal();
 
 	// gets the PixRaster object
-	PixRaster *pixRaster = pixRasterCtrl->GetPixRaster();
+	PixBase *pixBase = pixRasterCtrl->GetPixBase();
 
 	// calculates max width and height
 	// and total Tiff height, for all pages, with no gaps by now
 	int rasterWidth = 0;
 	int rasterHeight = 0;
 	int maxHeight = 0;
-	int pageCount = pixRaster->GetPageCount();
+	int pageCount = pixBase->GetPageCount();
 	for(int i = 0 ; i < pageCount ; i++)
 	{
 		// sets current page
-		pixRaster->SeekPage(i);
+		pixBase->SeekPage(i);
 		
 		// gets page size
-		Size sz = pixRaster->GetSize(i);
+		Size sz = pixBase->GetSizeEx(i);
 		
 		// updates width, maximum height and total height
 		if(sz.cx > rasterWidth)

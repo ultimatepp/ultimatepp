@@ -163,20 +163,20 @@ int PixRasterViewCtrl::GetZoomFactor(void)
 void PixRasterViewCtrl::SetPage(int page)
 {
 	// gets the PixRaster object
-	PixRaster *pixRaster = pixRasterCtrl->GetPixRaster();
+	PixBase *pixBase = pixRasterCtrl->GetPixBase();
 
 	// calculate gaps to be exactly 10 pixels in every zoom factor
 	int gapSize = iscale(10, 1000, imageScale);
 	
 	// iterate thru pages to find requested page position
 	int rasterPos = 0;
-	int pageCount = pixRaster->GetPageCount();
+	int pageCount = pixBase->GetPageCount();
 	if(page > pageCount)
 		page = pageCount;
 	for(int i = 0 ; i < page ; i++)
 	{
 		// gets page size
-		Size sz = pixRaster->GetSize(i);
+		Size sz = pixBase->GetSizeEx(i);
 		
 		rasterPos += sz.cy + gapSize;
 	}

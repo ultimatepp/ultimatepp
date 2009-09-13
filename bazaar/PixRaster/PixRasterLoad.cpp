@@ -2,6 +2,7 @@
 
 NAMESPACE_UPP
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MACROS USED TO CORRECTLY HANDLE ENDIANNESS OF THE MACHINE
 #ifdef L_BIG_ENDIAN
 	#define SHIFT_START 0
@@ -13,6 +14,7 @@ NAMESPACE_UPP
 	#define SHIFT_STEP(shift) shift -= 8
 #endif
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TRANSFER A BYTE
 static inline byte ReverseByte(byte sb)
 {
@@ -29,6 +31,7 @@ static inline byte ReverseByte(byte sb)
 	return db;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // transfers a byte line -- straight bit order
 static void TransferLine_STRAIGHT(const byte *rasPnt, l_uint32 *pixPnt, int nBytes)
 {
@@ -52,6 +55,7 @@ static void TransferLine_STRAIGHT(const byte *rasPnt, l_uint32 *pixPnt, int nByt
 		
 } // END TransferLine_STRAIGHT()
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // transfers a byte line -- reverse bit order
 static void TransferLine_REVERSE(const byte *rasPnt, l_uint32 *pixPnt, int nBytes)
 {
@@ -83,20 +87,26 @@ static void TransferLine_REVERSE(const byte *rasPnt, l_uint32 *pixPnt, int nByte
 		
 } // END TransferLine_REVERSE()
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // raster loading/conversion routines
-PIX *PixRaster::LoadRASTER_RGBA(Raster &raster)
+bool Pix::LoadRASTER_RGBA(Raster &raster)
 {
+	Destroy();
 	
-} // END PixRaster::LoadRASTER_RGBA()
+} // END Pix::LoadRASTER_RGBA()
 
-PIX *PixRaster::LoadRASTER_1(Raster &raster)
+bool Pix::LoadRASTER_1(Raster &raster)
 {
+	Destroy();
+
 	// get source Raster dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 1);
+	pix = pixCreateNoInit(width, height, 1);
+	if(!pix)
+		return false;
 
 	// get PIX width (in words) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -118,18 +128,22 @@ PIX *PixRaster::LoadRASTER_1(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 
-} // END PixRaster::LoadRASTER_1()
+} // END Pix::LoadRASTER_1()
 
-PIX *PixRaster::LoadRASTER_1_MSBFIRST(Raster &raster)
+bool Pix::LoadRASTER_1_MSBFIRST(Raster &raster)
 {
+	Destroy();
+
 	// get source Rastet dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 1);
+	pix = pixCreateNoInit(width, height, 1);
+	if(!pix)
+		return false;
 
 	// get PIX width (in words) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -151,19 +165,22 @@ PIX *PixRaster::LoadRASTER_1_MSBFIRST(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 
-} // END PixRaster::LoadRASTER_1_MSBFIRST()
+} // END Pix::LoadRASTER_1_MSBFIRST()
 
-PIX *PixRaster::LoadRASTER_2(Raster &raster)
+bool Pix::LoadRASTER_2(Raster &raster)
 {
-	
+	Destroy();
+
 	// get source Raster dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height,2);
+	pix = pixCreateNoInit(width, height,2);
+	if(!pix)
+		return false;
 
 	// get PIX width (in words) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -185,19 +202,22 @@ PIX *PixRaster::LoadRASTER_2(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 
-} // END PixRaster::LoadRASTER_2()
+} // END Pix::LoadRASTER_2()
 
-PIX *PixRaster::LoadRASTER_2_MSBFIRST(Raster &raster)
+bool Pix::LoadRASTER_2_MSBFIRST(Raster &raster)
 {
+	Destroy();
 
 	// get source Rastet dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 2);
+	pix = pixCreateNoInit(width, height, 2);
+	if(!pix)
+		return false;
 
 	// get PIX width (in words) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -219,19 +239,22 @@ PIX *PixRaster::LoadRASTER_2_MSBFIRST(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 
-} // END PixRaster::LoadRASTER_2()
+} // END Pix::LoadRASTER_2()
 
-PIX *PixRaster::LoadRASTER_4(Raster &raster)
+bool Pix::LoadRASTER_4(Raster &raster)
 {
+	Destroy();
 	
 	// get source Raster dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 4);
+	pix = pixCreateNoInit(width, height, 4);
+	if(!pix)
+		return false;
 
 	// get PIX width (in words) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -253,19 +276,22 @@ PIX *PixRaster::LoadRASTER_4(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 
-} // END PixRaster::LoadRASTER_4()
+} // END Pix::LoadRASTER_4()
 
-PIX *PixRaster::LoadRASTER_4_MSBFIRST(Raster &raster)
+bool Pix::LoadRASTER_4_MSBFIRST(Raster &raster)
 {
+	Destroy();
 	
 	// get source Rastet dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 4);
+	pix = pixCreateNoInit(width, height, 4);
+	if(!pix)
+		return false;
 
 	// get PIX width (in words) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -290,18 +316,22 @@ PIX *PixRaster::LoadRASTER_4_MSBFIRST(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 
-} // END PixRaster::LoadRASTER_4()
+} // END Pix::LoadRASTER_4()
 
-PIX *PixRaster::LoadRASTER_8(Raster &raster)
+bool Pix::LoadRASTER_8(Raster &raster)
 {
+	Destroy();
+
 	// get source Rastet dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 8);
+	pix = pixCreateNoInit(width, height, 8);
+	if(!pix)
+		return false;
 
 	// get PIX width (in words) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -327,39 +357,49 @@ PIX *PixRaster::LoadRASTER_8(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 	
-} // END PixRaster::LoadRASTER_8()
+} // END Pix::LoadRASTER_8()
 
-PIX *PixRaster::LoadRASTER_8ALPHA(Raster &raster)
+bool Pix::LoadRASTER_8ALPHA(Raster &raster)
 {
+	Destroy();
+
 	Cerr() << "Upp Leptonica library : 8 bpp with alpha channel still not supported";
 	NEVER();
 	
-} // END PixRaster::LoadRASTER_8ALPHA()
+} // END Pix::LoadRASTER_8ALPHA()
 
-PIX *PixRaster::LoadRASTER_16(Raster &raster)
+bool Pix::LoadRASTER_16(Raster &raster)
 {
+	Destroy();
+
 	Cerr() << "Upp Leptonica library : 16 bpp still not supported";
 	NEVER();
 	
-} // END PixRaster::LoadRASTER_16()
+} // END Pix::LoadRASTER_16()
 
-PIX *PixRaster::LoadRASTER_16_MSBFIRST(Raster &raster)
+bool Pix::LoadRASTER_16_MSBFIRST(Raster &raster)
 {
+	Destroy();
+
 	Cerr() << "Upp Leptonica library : 16 bpp still not supported";
 	NEVER();
 	
-} // END PixRaster::LoadRASTER_16()
+} // END Pix::LoadRASTER_16()
 
-PIX *PixRaster::LoadRASTER_24(Raster &raster)
+bool Pix::LoadRASTER_24(Raster &raster)
 {
+	Destroy();
+
 	// get source Rastet dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 32);
+	pix = pixCreateNoInit(width, height, 32);
+	if(!pix)
+		return false;
 
 	// get PIX width (in bytes) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -388,18 +428,22 @@ PIX *PixRaster::LoadRASTER_24(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 	
-} // END PixRaster::LoadRASTER_24()
+} // END Pix::LoadRASTER_24()
 
-PIX *PixRaster::LoadRASTER_24_MSBFIRST(Raster &raster)
+bool Pix::LoadRASTER_24_MSBFIRST(Raster &raster)
 {
+	Destroy();
+
 	// get source Rastet dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 24);
+	pix = pixCreateNoInit(width, height, 24);
+	if(!pix)
+		return false;
 
 	// get PIX width (in bytes) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -415,18 +459,22 @@ PIX *PixRaster::LoadRASTER_24_MSBFIRST(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 	
-} // END PixRaster::LoadRASTER_24()
+} // END Pix::LoadRASTER_24()
 
-PIX *PixRaster::LoadRASTER_32(Raster &raster)
+bool Pix::LoadRASTER_32(Raster &raster)
 {
+	Destroy();
+
 	// get source Rastet dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 32);
+	pix = pixCreateNoInit(width, height, 32);
+	if(!pix)
+		return false;
 
 	// get PIX width (in bytes) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -454,18 +502,22 @@ PIX *PixRaster::LoadRASTER_32(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 	
-} // END PixRaster::LoadRASTER_32()
+} // END Pix::LoadRASTER_32()
 
-PIX *PixRaster::LoadRASTER_32_MSBFIRST(Raster &raster)
+bool Pix::LoadRASTER_32_MSBFIRST(Raster &raster)
 {
+	Destroy();
+
 	// get source Rastet dimensions
 	int width = raster.GetWidth();
 	int height = raster.GetHeight();
 
 	// create the PIX
-	PIX *pix = pixCreateNoInit(width, height, 32);
+	pix = pixCreateNoInit(width, height, 32);
+	if(!pix)
+		return false;
 
 	// get PIX width (in bytes) and pix data pointer
 	int wpl = pixGetWpl(pix);
@@ -481,8 +533,8 @@ PIX *PixRaster::LoadRASTER_32_MSBFIRST(Raster &raster)
 		// next dest line
 		pixLine += wpl;
 	}
-	return pix;
+	return true;
 	
-} // END PixRaster::LoadRASTER_32()
+} // END Pix::LoadRASTER_32()
 
 END_UPP_NAMESPACE

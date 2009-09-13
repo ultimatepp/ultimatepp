@@ -2,71 +2,37 @@
 
 NAMESPACE_UPP
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // top level page segmenting
-bool PixRaster::GetRegionsBinary(int page)
+PixRaster Pix::GetRegionsBinary()
 {
+	PixRaster pixRaster;
+	
 	if(IsEmpty())
-		return false;
-	page = getTruePage(page);
+		return PixRaster();
 	
 	PIX *ht, *tl, *tb;
-	PIX *pix = pixaGetPix(pixa, page, L_CLONE);
 	int res = pixGetRegionsBinary(pix, &ht, &tl, &tb, 0);
-	pixDestroy(&pix);
 	if(res)
-		return false;
-	AddPIX(ht);
-	AddPIX(tl);
-	AddPIX(tb);
-	pixDestroy(&ht);
-	pixDestroy(&tl);
-	pixDestroy(&tb);
+		return PixRaster();
+	Pix htPix(&ht);
+	Pix tlPix(&tl);
+	Pix tbPix(&tb);
+	pixRaster.Add(htPix);
+	pixRaster.Add(tlPix);
+	pixRaster.Add(tbPix);
 	
 	// seeks the ht page
-	SeekPage(-2);
+	pixRaster.SeekPage(-2);
 	
-	return true;
+	return pixRaster;
 	
-}
+} // END Pix::GetRegionsBinary()
 
-/*
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // text baseline finding routine
-Array<Point> PixRaster::FindBaselines(int page)
-{
-	PTA *pta;
-	NUMA *numa;
-	int res;
-	l_int32 x, y;
-	Array<Point> ptArray;
-
-	if(IsEmpty())
-		return Array<Point>();
-	page = getTruePage(page);
-	
-	PIX *pix = pixaGetPix(pixa, page, L_CLONE);
-	numa = pixFindBaselines(pix, &pta, 0);
-	pixDestroy(&pix);
-	if(!numa || !pta)
-		return Array<Point>();
-	for(int iPoint = 0; iPoint < ptaGetCount(pta); iPoint++)
-	{
-		res = ptaGetIPt(pta, iPoint, &x, &y);
-		if(res)
-		{
-			numaDestroy(&numa);
-			ptaDestroy(&pta);
-			return Array<Point>();
-		}
-		ptArray.Add(Point(x, y));
-	}
-	numaDestroy(&numa);
-	ptaDestroy(&pta);
-	return ptArray;
-}
-*/
-
-// text baseline finding routine
-Array<int> PixRaster::FindBaselines(int page)
+Array<int> Pix::FindBaselines()
 {
 	NUMA *numa;
 	int res;
@@ -75,11 +41,7 @@ Array<int> PixRaster::FindBaselines(int page)
 
 	if(IsEmpty())
 		return Array<int>();
-	page = getTruePage(page);
-	
-	PIX *pix = pixaGetPix(pixa, page, L_CLONE);
 	numa = pixFindBaselines(pix, NULL, 0);
-	pixDestroy(&pix);
 	if(!numa)
 		return Array<int>();
 	for(int iLine = 0; iLine < numaGetCount(numa); iLine++)
@@ -94,6 +56,7 @@ Array<int> PixRaster::FindBaselines(int page)
 	}
 	numaDestroy(&numa);
 	return intArray;
-}
+
+} // END Pix::FindBaseLines()
 
 END_UPP_NAMESPACE

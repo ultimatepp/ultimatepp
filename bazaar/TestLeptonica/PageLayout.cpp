@@ -1,15 +1,19 @@
 #include "TestLeptonica.h"
 
-static void PageLayout(PixRaster &pixRaster)
+static void PageLayout(Pix &source, PixRaster &pixRaster)
 {
-	CHECKR(pixRaster.GetRegionsBinary(), "Error getting page layout");	
+	pixRaster.Add(source);
+	PixRaster regions = source.GetRegionsBinary();
+	CHECKR(regions, "Error getting page layout");
+	pixRaster.Add(regions);	
 }
 
 void TestLeptonica::onPageLayout()
 {
 	String fileName;
 	FileSelector fs;
-	PIX *pix;
+	
+	Pix source;
 	
 	if(!PromptYesNo(
 		"[= [* Page layout analysis demo]&&"
@@ -31,11 +35,12 @@ void TestLeptonica::onPageLayout()
 		}
 
 		// Loads pixraster from source raster
-		CHECKR(pixRaster.Load(s), "Error loading image");
+		CHECKR(source.Load(s), "Error loading image");
 		s.Close();
 		
 		// apply line removal algothithm
-		PageLayout(pixRaster);
+		pixRaster.Clear();
+		PageLayout(source, pixRaster);
 		
 		// refresh the PixRasterCtrl control with the new image contents
 		pixRasterCtrl.Reload();
