@@ -680,6 +680,16 @@ void Calendar::SetTime(const Time &tm)
 	UpdateFields();
 }
 
+void Calendar::PopUp(Ctrl *owner, Rect &rt)
+{
+	Close();
+	Reset();
+	SetPopUp(true);
+	SetRect(rt);
+	Ctrl::PopUp(owner, true, true, GUI_DropShadows());
+	SetFocus();
+}
+
 void Calendar::SetView(const Time &v)
 {
 	view = v;
