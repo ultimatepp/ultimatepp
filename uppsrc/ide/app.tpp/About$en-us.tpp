@@ -7,16 +7,16 @@ topic "Copyright © 1999-2009 Ultimate++ team";
 ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos]&]
 [s0;i704;O9; Contributors:[+117 -|][* Sandor_Hojtsy, Zsolt_Debre, Guido_Schimmels, 
 Augusto_Roman, Arijus Bernotas, Michael_Albert , Marcus_Mauhart, 
-Jan_Wilmans, Graeme_Prentice, Victor_Berchet, Ivica_Puljic, Mathiass_Sund, 
-Andrew_Barilla, Michal_Mierzejewski, Damien_Porquet, Werner_Wenzel, 
-][%-*^http`:`/`/www`.fallingdutch`.de`/^ Bas_Wegh][* , Fabio_Busetto, 
-Michal_Pekař, Darrin_Scott, Damien_Porquet, James Thomas, ][*^http`:`/`/h4xz`.blogspot`.com^ S
-ritharan Sivaguru,][*  Artur Bać, Ralf Schneider, Pavel Ostapenko, 
-Raul Ionitoiu, Norbert Hofer, Tomasz Pajak, Benoit Cousson, Trey 
-Van Riper, Peter Berger, Sergey Nikitin, Massimo Del Fedele, 
-Irenkov Alexander, Gabriel Schmotzer, Domingo Alvarez Duarte, 
-Andrei Cosma, Koldo Ramirez, Tom Olá, George Brink, Zbigniew 
-Czapiga, Konstantin Hartwich]&]
+][*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans][* , Graeme_Prentice, Victor_Berchet, 
+Ivica_Puljic, Mathiass_Sund, Andrew_Barilla, Michal_Mierzejewski, 
+Damien_Porquet, Werner_Wenzel, ][%-*^http`:`/`/www`.fallingdutch`.de`/^ Bas_Wegh][* ,
+ Fabio_Busetto, Michal_Pekař, Darrin_Scott, Damien_Porquet, 
+James Thomas, ][*^http`:`/`/h4xz`.blogspot`.com^ Sritharan Sivaguru,][*  
+Artur Bać, Ralf Schneider, Pavel Ostapenko, Raul Ionitoiu, Norbert 
+Hofer, Tomasz Pajak, Benoit Cousson, Trey Van Riper, Peter Berger, 
+Sergey Nikitin, Massimo Del Fedele, Irenkov Alexander, Gabriel 
+Schmotzer, Domingo Alvarez Duarte, Andrei Cosma, Koldo Ramirez, 
+Tom Olá, George Brink, Zbigniew Czapiga, Konstantin Hartwich]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Luis Ramirez, Gabriel Schmotzer]&]
