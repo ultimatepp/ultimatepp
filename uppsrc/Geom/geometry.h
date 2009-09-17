@@ -232,6 +232,11 @@ bool            ClipLine      (Point& A, Point& B, const Rect& box);
 
 //////////////////////////////////////////////////////////////////////
 
+Vector<int>     ConvexHullOrder(const Vector<Point>& pt);
+Vector<int>     ConvexHullOrder(const Array<Pointf>& pt);
+
+//////////////////////////////////////////////////////////////////////
+
 Rectf           GetBoundingBox(const Array<Pointf>& vertices);
 Rect            GetBoundingBox(const Point *vertices, int vertex_count);
 Rect            GetBoundingBox(const Vector<Point>& vertices);

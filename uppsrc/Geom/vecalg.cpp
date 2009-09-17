@@ -1,11 +1,6 @@
 #include "Geom.h"
 
-
 NAMESPACE_UPP
-
-//////////////////////////////////////////////////////////////////////
-// Distance: Distance from point to line.
-//////////////////////////////////////////////////////////////////////
 
 double Distance(Pointf X, Pointf A, Pointf B, double *arg)
 {
@@ -30,20 +25,12 @@ double Distance(Pointf X, Pointf A, Pointf B, double *arg)
 	return sqrt(sqr(AX % AB) / ab2);
 }
 
-//////////////////////////////////////////////////////////////////////
-// Distance: Distance from point to arc.
-//////////////////////////////////////////////////////////////////////
-
 double Distance(Pointf X, Pointf A, Pointf B, double bulge, double* arg)
 {
 	if(bulge == 0)
 		return Distance(X, A, B, arg);
 	return VecArcInfo(A, B, bulge).Distance(X, arg);
 }
-
-//////////////////////////////////////////////////////////////////////
-// Distance: Distance from point to circle.
-//////////////////////////////////////////////////////////////////////
 
 double Distance(Pointf X, Pointf C, double radius, double *arg)
 {
@@ -52,20 +39,12 @@ double Distance(Pointf X, Pointf C, double radius, double *arg)
 	return fabs((X | C) - radius);
 }
 
-//////////////////////////////////////////////////////////////////////
-// CheckAgainstInterval: checks a real value against an interval.
-//////////////////////////////////////////////////////////////////////
-
 enum { FI_B = 0x01, FI_I = 0x02, FI_A = 0x04 };
 
 static inline char CheckAgainstInterval(double x, double l, double h)
 {
 	return x < l ? FI_B : x > h ? FI_A : FI_I;
 }
-
-//////////////////////////////////////////////////////////////////////
-// Crosses: checks whether a line crosses a rectangle.
-//////////////////////////////////////////////////////////////////////
 
 bool Crosses(const Rectf& R, Pointf A, Pointf B)
 {
@@ -135,10 +114,6 @@ bool Crosses(const Rectf& R, Pointf A, Pointf B)
 	return (ax & 1) ? temp >= 0 : temp <= 0;
 }
 
-//////////////////////////////////////////////////////////////////////
-// Crosses: checks whether a bulge crosses a rectangle.
-//////////////////////////////////////////////////////////////////////
-
 bool Crosses(const Rectf& R, Pointf A, Pointf B, double bulge)
 {
 	if(R.Contains(A) || R.Contains(B))
@@ -146,10 +121,6 @@ bool Crosses(const Rectf& R, Pointf A, Pointf B, double bulge)
 
 	return VecArcInfo(A, B, bulge).Crosses(R);
 }
-
-//////////////////////////////////////////////////////////////////////
-// Crosses: checks whether a circle crosses a rectangle.
-//////////////////////////////////////////////////////////////////////
 
 bool Crosses(const Rectf& R, Pointf C, double radius)
 {
@@ -172,8 +143,6 @@ bool Crosses(const Rectf& R, Pointf C, double radius)
 		return temp != 0;
 	return (box.left * box.right < 0 || box.top * box.bottom < 0);
 }
-
-//////////////////////////////////////////////////////////////////////
 
 bool ClipLine(Pointf& A, Pointf& B, const Rectf& R)
 {
@@ -231,8 +200,6 @@ bool ClipLine(Pointf& A, Pointf& B, const Rectf& R)
 
 	return true;
 }
-
-//////////////////////////////////////////////////////////////////////
 
 bool ClipLine(Pointf& A, Pointf& B, const Rect& R)
 {
@@ -292,8 +259,6 @@ bool ClipLine(Pointf& A, Pointf& B, const Rect& R)
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////
-
 bool ClipLine(Point& A, Point& B, const Rect& R)
 {
 	if(R.IsEmpty()) // null rectangle
@@ -352,8 +317,6 @@ bool ClipLine(Point& A, Point& B, const Rect& R)
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////
-
 Rectf GetBoundingBox(const Array<Pointf>& vertices)
 {
 	if(vertices.IsEmpty())
@@ -363,8 +326,6 @@ Rectf GetBoundingBox(const Array<Pointf>& vertices)
 		SetUnion(rc, vertices[i]);
 	return rc;
 }
-
-//////////////////////////////////////////////////////////////////////
 
 Rect GetBoundingBox(const Point *vertices, int vertex_count)
 {
@@ -382,11 +343,136 @@ Rect GetBoundingBox(const Point *vertices, int vertex_count)
 	return rc;
 }
 
-//////////////////////////////////////////////////////////////////////
-
 Rect GetBoundingBox(const Vector<Point>& vertices)
 {
 	return GetBoundingBox(vertices.Begin(), vertices.GetCount());
+}
+
+template <class C, class VP>
+class ConvexHullGenerator {
+public:
+	typedef typename C::ValueType P;
+	ConvexHullGenerator(const C& points) : points(points) {}
+	
+	Vector<int> Generate();
+
+	bool        operator () (int i, int j) const;
+	
+private:
+	void        Recurse(int ib, int ie, int& ue, int& le);
+	int         Stitch(int lb, int le, int rb, int re, bool is_lower);
+	
+	static VP   VectorProduct(const P& p, const P& a, const P& b)
+	{ return VP(a.x - p.x) * VP(b.y - p.y) - VP(b.x - p.x) * VP(a.y - p.y); }
+
+	const C& points;
+	Vector<int> lower;
+	Vector<int> upper;
+};
+
+template <class C, class VP>
+Vector<int> ConvexHullGenerator<C, VP>::Generate()
+{
+	RTIMING("ConvexHullGenerator::Generate");
+	for(int i = 0; i < points.GetCount(); i++)
+		if(!IsNull(points[i]))
+			upper.Add(i);
+	Vector<int> out;
+	if(upper.IsEmpty())
+		return out;
+	if(upper.GetCount() == 1) {
+		out.SetCount(1, upper[0]);
+		return out;
+	}
+	Sort(upper, *this);
+	int nnpt = upper.GetCount();
+	lower <<= upper;
+	int ue = nnpt;
+	int le = nnpt;
+	Recurse(0, nnpt, ue, le);
+	int lb = 0;
+	if(lower[lb] == upper[0])
+		lb++;
+	if(le > lb && lower[le - 1] == upper[ue - 1])
+		le--;
+	out.SetCount(ue + le - lb);
+	Copy(out.Begin(), upper.Begin(), upper.GetIter(ue));
+	const int *b = lower.GetIter(lb);
+	const int *e = lower.GetIter(le);
+	for(int *o = out.GetIter(ue); e > b; *o++ = *--e)
+		;
+	return out;
+}
+
+template <class C, class VP>
+bool ConvexHullGenerator<C, VP>::operator () (int i, int j) const
+{
+	const P& a = points[i];
+	const P& b = points[j];
+	if(a.x != b.x) return a.x < b.x;
+	return a.y < b.y;
+}
+
+template <class C, class VP>
+void ConvexHullGenerator<C, VP>::Recurse(int ib, int ie, int &ue, int& le)
+{
+	RTIMING("ConvexHullGenerator::Recurse");
+	if(ie - ib <= 2) {
+		ue = le = ie;
+		return;
+	}
+	int im = (ib + ie) >> 1;
+	int aue, ale, bue, ble;
+	Recurse(ib, im, aue, ale);
+	Recurse(im, ie, bue, ble);
+	ue = Stitch(ib, aue, im, bue, false);
+	le = Stitch(ib, ale, im, ble, true);
+}
+
+template <class C, class VP>
+int ConvexHullGenerator<C, VP>::Stitch(int lb, int le, int rb, int re, bool is_lower)
+{
+	RTIMING("ConvexHullGenerator::Stitch");
+	Vector<int>& index = (is_lower ? lower : upper);
+	for(;;) {
+		const P& l1 = points[index[le - 1]];
+		const P& r1 = points[index[rb + 0]];
+		if(le - lb >= 2) {
+			const P& l2 = points[index[le - 2]];
+			VP prod = VectorProduct(l1, r1, l2);
+			if(!is_lower)
+				prod = -prod;
+			if(prod >= 0) {
+				le--;
+				continue;
+			}
+		}
+		if(re - rb >= 2) {
+			const P& r2 = points[index[rb + 1]];
+			VP prod = VectorProduct(r1, r2, l1);
+			if(!is_lower)
+				prod = -prod;
+			if(prod >= 0) {
+				rb++;
+				continue;
+			}
+		}
+		break;
+	}
+	Copy(index.GetIter(le), index.GetIter(rb), index.GetIter(re));
+	return le + (re - rb);
+}
+
+Vector<int> ConvexHullOrder(const Vector<Point>& points)
+{
+	ConvexHullGenerator<Vector<Point>, int64> generator(points);
+	return generator.Generate();
+}
+
+Vector<int> ConvexHullOrder(const Array<Pointf>& points)
+{
+	ConvexHullGenerator<Array<Pointf>, double> generator(points);
+	return generator.Generate();
 }
 
 //////////////////////////////////////////////////////////////////////
