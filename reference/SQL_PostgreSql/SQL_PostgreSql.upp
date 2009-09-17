@@ -1,4 +1,6 @@
-description "Logging and using PostgreSQL";
+description "Logging and using PostgreSQL\377";
+
+charset "UTF-8";
 
 uses
 	CtrlLib,

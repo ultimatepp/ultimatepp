@@ -1,0 +1,11 @@
+description "Contructing RichText using raw RichText API\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
