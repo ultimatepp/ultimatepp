@@ -1831,7 +1831,7 @@ void SquareMarker::Paint(Draw& draw, const Vector<Point>& pt)
 	}
 	Vector<int> outix;
 	outix.SetCount(obj, 4);
-	DrawPolygons(draw, outpt, outix, color, outline_width, outline);
+	draw.DrawPolygons(outpt, outix, color, outline_width, outline);
 }
 
 One<MarkTool::Marker> MarkTool::Square(int size, Color color, Color outline, int outline_width)
@@ -1866,7 +1866,7 @@ void Square45Marker::Paint(Draw& draw, const Vector<Point>& pt)
 	}
 	Vector<int> outix;
 	outix.SetCount(obj, 4);
-	DrawPolygons(draw, outpt, outix, color, outline_width, outline);
+	draw.DrawPolygons(outpt, outix, color, outline_width, outline);
 }
 
 One<MarkTool::Marker> MarkTool::Square45(int size, Color color, Color outline, int outline_width)
@@ -1900,7 +1900,7 @@ void TriangleMarker::Paint(Draw& draw, const Vector<Point>& pt)
 	}
 	Vector<int> outix;
 	outix.SetCount(obj, 3);
-	DrawPolygons(draw, outpt, outix, color, outline_width, outline);
+	draw.DrawPolygons(outpt, outix, color, outline_width, outline);
 }
 
 One<MarkTool::Marker> MarkTool::Triangle(int size, Color color, Color outline, int outline_width)
@@ -1934,7 +1934,7 @@ void NablaMarker::Paint(Draw& draw, const Vector<Point>& pt)
 	}
 	Vector<int> outix;
 	outix.SetCount(obj, 3);
-	DrawPolygons(draw, outpt, outix, color, outline_width, outline);
+	draw.DrawPolygons(outpt, outix, color, outline_width, outline);
 }
 
 One<MarkTool::Marker> MarkTool::Nabla(int size, Color color, Color outline, int outline_width)
@@ -2032,7 +2032,7 @@ void DiamondMarker::Paint(Draw& draw, const Vector<Point>& pt)
 	}
 	Vector<int> seg;
 	seg.SetCount(pt.GetCount(), 5);
-	DrawPolygons(draw, out, seg, color, outline_width, outline);
+	draw.DrawPolygons(out, seg, color, outline_width, outline);
 }
 
 One<MarkTool::Marker> MarkTool::Diamond(int size, Color color, Color outline, int outline_width)
@@ -2075,7 +2075,7 @@ void HexagonMarker::Paint(Draw& draw, const Vector<Point>& pt)
 	}
 	Vector<int> seg;
 	seg.SetCount(pt.GetCount(), 6);
-	DrawPolygons(draw, out, seg, color, outline_width, outline);
+	draw.DrawPolygons(out, seg, color, outline_width, outline);
 }
 
 One<MarkTool::Marker> MarkTool::Hexagon(int size, Color color, Color outline, int outline_width)
@@ -2128,7 +2128,7 @@ void StarMarker::Paint(Draw& draw, const Vector<Point>& pt)
 	}
 	Vector<int> seg;
 	seg.SetCount(pt.GetCount(), 10);
-	DrawPolygons(draw, out, seg, color, outline_width, outline);
+	draw.DrawPolygons(out, seg, color, outline_width, outline);
 }
 
 One<MarkTool::Marker> MarkTool::Star(int size, Color color, Color outline, int outline_width)
@@ -2173,7 +2173,7 @@ void ThickCrossMarker::Paint(Draw& draw, const Vector<Point>& pt)
 	}
 	Vector<int> seg;
 	seg.SetCount(pt.GetCount(), 12);
-	DrawPolygons(draw, out, seg, color, outline_width, outline);
+	draw.DrawPolygons(out, seg, color, outline_width, outline);
 }
 
 One<MarkTool::Marker> MarkTool::ThickCross(int size, Color color, Color outline, int outline_width)
