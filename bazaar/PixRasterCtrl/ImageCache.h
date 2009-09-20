@@ -3,7 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
+NAMESPACE_UPP
 
 class ImageCache
 {
@@ -58,5 +58,7 @@ class ImageCache
 		void SetValid(bool v = true) { if(!imageBuffer.IsEmpty()) valid = v; else valid = false; }
 	
 }; // END Class ImageCache
+
+END_UPP_NAMESPACE
 
 #endif

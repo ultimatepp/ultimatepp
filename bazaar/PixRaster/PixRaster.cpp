@@ -31,7 +31,7 @@ void Pix::Destroy()
 		delete[] localPalette;
 		localPalette = NULL;
 	}
-	polyMarkers.Clear();
+	markers.Clear();
 
 } // END Pix::Destroy()
 
@@ -408,7 +408,7 @@ Pix::Pix()
 	pix = NULL;
 	rasterFormat = NULL;
 	localPalette = NULL;
-	polyMarkers.Clear();
+	markers.Clear();
 
 } // END Pix::Pix()
 
@@ -423,7 +423,7 @@ Pix::Pix(int width, int height, int depth, RGBA *colorTable)
 	}
 	rasterFormat = NULL;
 	localPalette = NULL;
-	polyMarkers.Clear();
+	markers.Clear();
 
 } // END Pix::Pix()
 
@@ -436,7 +436,7 @@ Pix::Pix(PIX **_pix)
 	*_pix = NULL;
 	rasterFormat = NULL;
 	localPalette = NULL;
-	polyMarkers.Clear();
+	markers.Clear();
 
 } // END Pix::Pix()
 
@@ -447,7 +447,7 @@ Pix::Pix(Pix const &_pix)
 	pix = pixClone((Pix &)_pix);
 	rasterFormat = NULL;
 	localPalette = NULL;
-	polyMarkers <<= _pix.polyMarkers;
+	markers <<= _pix.markers;
 	
 } // END Pix::Pix()
 
@@ -458,7 +458,7 @@ Pix::Pix(Pix const &_pix, int i)
 	pix = pixCopy(NULL, (Pix &)_pix);
 	rasterFormat = NULL;
 	localPalette = NULL;
-	polyMarkers <<= _pix.polyMarkers;
+	markers <<= _pix.markers;
 
 } // END Pix::Pix()
 
@@ -505,7 +505,7 @@ Pix &Pix::operator=(Pix &_pix)
 	pix = pixClone(_pix);
 	rasterFormat = NULL;
 	localPalette = NULL;
-	polyMarkers <<= _pix.polyMarkers;
+	markers <<= _pix.markers;
 	return *this;
 
 } // END Pix::operator=()
@@ -521,7 +521,7 @@ Pix &Pix::operator <<=(Pix &_pix)
 	pix = pixCopy(NULL, _pix);
 	rasterFormat = NULL;
 	localPalette = NULL;
-	polyMarkers <<= _pix.polyMarkers;
+	markers <<= _pix.markers;
 	return *this;
 
 } // END Pix::operator <<=()
@@ -536,7 +536,7 @@ Pix &Pix::DeepCopy(Pix &_pix)
 	pix = pixCopy(NULL, _pix);
 	rasterFormat = NULL;
 	localPalette = NULL;
-	polyMarkers <<= _pix.polyMarkers;
+	markers <<= _pix.markers;
 	return *this;
 
 } // END Pix::DeepCopy()
@@ -1113,7 +1113,7 @@ const RasterFormat *PixRaster::GetFormatEx(int page)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // read page polymarkers
-PolyMarkers *PixRaster::GetPolyMarkersEx(int page)
+Markers *PixRaster::GetMarkersEx(int page)
 {
 	if (IsEmpty())
 		return NULL;
@@ -1121,7 +1121,7 @@ PolyMarkers *PixRaster::GetPolyMarkersEx(int page)
 	// gets true page number
 	page = getTruePage(page);
 	
-	return At(page).GetPolyMarkers();
+	return At(page).GetMarkers();
 
 } // END PixRaster::GetPolyMarkersEx()
 

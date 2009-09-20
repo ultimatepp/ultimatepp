@@ -9,6 +9,7 @@ file
 	LineRemoval.cpp,
 	PageLayout.cpp,
 	BaseLine.cpp,
+	PageMarkers.cpp,
 	main.cpp;
 
 mainconfig

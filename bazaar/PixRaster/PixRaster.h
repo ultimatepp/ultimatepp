@@ -7,7 +7,7 @@
 #include "lib/allheaders.h"
 #undef Pix
 
-#include "PolyMarker.h"
+#include "Marker.h"
 
 NAMESPACE_UPP
 
@@ -51,7 +51,7 @@ class PixBase : public Raster
 		virtual const RasterFormat *GetFormat() { return GetFormatEx(PIXRASTER_CURPAGE); }
 		virtual int GetWidth() { return GetSize().cx; }
 		virtual int GetHeight() { return GetSize().cy; }
-		virtual PolyMarkers *GetPolyMarkers() { return GetPolyMarkersEx(PIXRASTER_CURPAGE); }
+		virtual Markers *GetMarkers() { return GetMarkersEx(PIXRASTER_CURPAGE); }
 		
 
 		// extended Raster functions -- they allow to query
@@ -64,7 +64,7 @@ class PixBase : public Raster
 		virtual const RasterFormat *GetFormatEx(int page) = 0;
 		virtual int GetWidthEx(int page)		{ return GetSizeEx(page).cx; }
 		virtual int GetHeightEx(int page)		{ return GetSizeEx(page).cy; }
-		virtual PolyMarkers *GetPolyMarkersEx(int page) = 0;
+		virtual Markers *GetMarkersEx(int page) = 0;
 		
 		virtual bool IsEmpty() = 0;
 		operator bool() { return !IsEmpty(); }
@@ -96,7 +96,7 @@ class Pix : public PixBase
 		RGBA *localPalette;
 		
 		// polygon markers
-		Array<PolyMarker>polyMarkers;
+		Markers markers;
 	
 	protected:
 	
@@ -198,8 +198,8 @@ class Pix : public PixBase
 		virtual const RasterFormat *GetFormatEx(int page);
 		
 		// gets polygon markers
-		virtual PolyMarkers *GetPolyMarkers() { return &polyMarkers; }
-		virtual PolyMarkers *GetPolyMarkersEx(int) { return &polyMarkers; }
+		virtual Markers *GetMarkers() { return &markers; }
+		virtual Markers *GetMarkersEx(int) { return &markers; }
 		
 		// file I/O
 		bool Load(FileIn &fs, int page = 0);
@@ -366,8 +366,8 @@ class PixRaster : public PixBase
 		virtual const RasterFormat *GetFormatEx(int page);
 		
 		// gets polygon markers
-		virtual PolyMarkers *GetPolyMarkers() { return GetPolyMarkersEx(PIXRASTER_CURPAGE); }
-		virtual PolyMarkers *GetPolyMarkersEx(int page);
+		virtual Markers *GetMarkers() { return GetMarkersEx(PIXRASTER_CURPAGE); }
+		virtual Markers *GetMarkersEx(int page);
 		
 		// check whether pixraster has images
 		bool IsEmpty(void) { return !pages.GetCount(); };

@@ -1,5 +1,6 @@
 #include "ImageCache.h"
 
+NAMESPACE_UPP
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // constructor
@@ -356,3 +357,5 @@ Size const ImageCache::GetSize(void)
 	return imageBuffer.GetSize();
 	
 } // EBND ImageCache::GetSize()
+
+END_UPP_NAMESPACE

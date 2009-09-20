@@ -1,6 +1,8 @@
 #include "PixRasterViewCtrl.h"
 #include "PixRasterCtrl.h"
 
+NAMESPACE_UPP
+
 #define BackColor SColorFace()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,3 +190,5 @@ void PixRasterViewCtrl::SetPage(int page)
 	Layout();
 	
 } // END PixRasterViewCtrl::SetPage()
+
+END_UPP_NAMESPACE

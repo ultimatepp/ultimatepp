@@ -1,6 +1,8 @@
 #include "PixRasterThumbsCtrl.h"
 #include "PixRasterCtrl.h"
 
+NAMESPACE_UPP
+
 // Scale factor between pane size and thumbs sizes
 const int	THUMBS_HSIZE_MUL	=	9;
 const int	THUMBS_HSIZE_DIV	=	10;
@@ -36,10 +38,10 @@ void PixRasterThumbsCtrl::LeftDown(Point p, dword keyflags)
 {
 	// gets point position in raster coordinates
 	int clickPos = vScrollBar.Get() + iscale(p.y, vScrollBar.GetPage(), GetView().GetHeight());
-	clickPos = iscale(clickPos, 1000, imageScale);
+	clickPos = ScaleToPage(clickPos);
 	
 	// gets gap size between pages
-	int gapSize = iscale(10, 1000, imageScale);
+	int gapSize = ScaleToPage(10);
 	
 	// gets the PixRaster object
 	PixBase *pixBase = pixRasterCtrl->GetPixBase();
@@ -58,4 +60,9 @@ void PixRasterThumbsCtrl::LeftDown(Point p, dword keyflags)
 		top += pixBase->GetHeightEx(iPage) + gapSize;
 	}
 	
+	// calls base class handler -- used for dragging
+	PixRasterBaseCtrl::LeftDown(p, keyflags);
+	
 } // END PixRasterThumbsCtrl::LeftDown()
+
+END_UPP_NAMESPACE

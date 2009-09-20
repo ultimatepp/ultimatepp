@@ -7,7 +7,7 @@
 
 #include "PixRasterBaseCtrl.h"
 
-using namespace Upp;
+NAMESPACE_UPP
 
 class PixRasterThumbsCtrl;
 class PixRasterViewCtrl;
@@ -83,5 +83,7 @@ class PixRasterCtrl : public Ctrl
 		void Reload(void);
 		
 } ; // END Class PixRasterCtrl
+
+END_UPP_NAMESPACE
 
 #endif

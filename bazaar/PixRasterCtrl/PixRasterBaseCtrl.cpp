@@ -1,6 +1,8 @@
 #include "PixRasterBaseCtrl.h"
 #include "PixRasterCtrl.h"
 
+NAMESPACE_UPP
+
 #define BackColor SColorFace()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +31,11 @@ PixRasterBaseCtrl::PixRasterBaseCtrl(PixRasterCtrl *t, bool hScroll, bool vScrol
 	// marks cache as invalid
 	imageCache.SetValid(false);
 	
+	// no marker selected
+	selectedMarker = NULL;
+	highlightMarker = NULL;
+	dragPolygon.Clear();
+	
 } // END constructor class PixRasterBaseCtrl
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,6 +43,167 @@ PixRasterBaseCtrl::PixRasterBaseCtrl(PixRasterCtrl *t, bool hScroll, bool vScrol
 PixRasterBaseCtrl::~PixRasterBaseCtrl()
 {
 } // END destructor class PixRasterBaseCtrl
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// converts a page and an array of page points into an array of view points
+Vector<Point> PixRasterBaseCtrl::PointsToView(int page, Vector<Point> const &pts)
+{
+	// gets the PixRaster object
+	PixBase *pixBase = pixRasterCtrl->GetPixBase();
+
+	// calculate view position inside the full tiff image
+	// in page coords
+	int viewLeft, viewTop;
+	if(hScrollBar.IsVisible())
+		viewLeft = ScaleToPage(hScrollBar.Get());
+	else
+		viewLeft = 0;
+	if(vScrollBar.IsVisible())
+		viewTop = ScaleToPage(vScrollBar.Get());
+	else
+		viewTop = 0;
+
+	// gets requested page position (in page coordinates)
+	int pageTop = 0;
+	int gapSize = ScaleToPage(10);
+	for(int i = 0; i < page; i++)
+		pageTop += pixBase->GetHeightEx(i) + gapSize;
+
+	// if page not visible, just return an empty array
+	int pageBottom = pageTop + pixBase->GetHeightEx(page);
+	int viewBottom = viewTop + ScaleToPage(GetSize().cy);
+	if(viewBottom < pageTop || viewTop > pageBottom)
+		return Vector<Point>();
+	
+	// horizontal gap if page width < ctrl width
+	int viewWidth = ScaleToPage(GetSize().cx);
+	int pageWidth = pixBase->GetWidthEx(page);
+	int hGap;
+	if(pageWidth < viewWidth)
+		hGap = (viewWidth - pageWidth) / 2;
+	else
+		hGap = 0;
+	
+	// calculates the offset of points in page coordinates
+	int dx = -viewLeft + hGap;
+	int dy = -viewTop + pageTop;
+	
+	// creates the new array scaling the coordinates
+	Vector<Point>res(pts, 1);
+	for(int iPoint = 0; iPoint < res.GetCount(); iPoint++)
+	{
+		res[iPoint].x = ScaleToView(res[iPoint].x + dx);
+		res[iPoint].y = ScaleToView(res[iPoint].y + dy);
+	}
+	return res;
+	
+} // END PixRasterBaseCtrl::PointsToView()
+		
+///////////////////////////////////////////////////////////////////////////////////////////////
+// converts a view point into page + page point
+bool PixRasterBaseCtrl::PointToPage(Point const &srcPt, int &page, Point &destPt)
+{
+	if(!pixRasterCtrl)
+		return false;
+			
+	// gets the PixRaster object
+	PixBase *pixBase = pixRasterCtrl->GetPixBase();
+	if(!pixBase || !pixBase->GetPageCount())
+		return false;
+
+	// gets point position in raster coordinates
+	int yPos = ScaleToPage(vScrollBar.Get() + srcPt.y);
+
+	// gets gap size between pages
+	int gapSize = ScaleToPage(10);
+	
+	// iterates through page positions to find the requested one
+	int top = 0;
+	for(int iPage = 0; iPage < pixBase->GetPageCount(); iPage++)
+	{
+		int pageWidth = pixBase->GetWidthEx(iPage);
+		int pageHeight = pixBase->GetHeightEx(iPage);
+		int bottom = top + pageHeight;
+		
+		if(yPos >= top && yPos <= bottom)
+		{
+			int xPos;
+			if(ScaleToView(pageWidth) >= GetSize().cx)
+				xPos = ScaleToPage(srcPt.x);
+			else
+				xPos = ScaleToPage(srcPt.x) - (ScaleToPage(GetSize().cx) - pageWidth) / 2;
+			if(xPos < 0 || xPos > pageWidth)
+				return false;
+			destPt = Point(xPos, yPos - top);
+			page = iPage;
+			return true;
+		}
+		top += pageHeight + gapSize;
+	}
+	
+} // END PixRasterBaseCtrl::PointToPage()
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// left mouse button handlers
+void PixRasterBaseCtrl::LeftDown(Point p, dword keyflags)
+{
+	// translates mouse coordinate in page and page coordinates
+	int page;
+	Point pagePt;
+	if(!PointToPage(p, page, pagePt))
+	   return;
+	   
+	// found a page on point, scan it to get the marker on it (if any)
+
+	// gets the PixRaster object
+	PixBase *pixBase = pixRasterCtrl->GetPixBase();
+
+	int minDist = ScaleToPage(5);
+	Markers *markers = pixBase->GetMarkersEx(page);
+	for(int i = 0; i < markers->GetCount(); i++)
+	{
+		Marker &marker = (*markers)[i];
+		int index;
+		Marker::HitKind hitKind = marker.Hit(pagePt, minDist, index);
+		if(hitKind == Marker::Miss)
+			continue;
+		
+		// found a marker on cursor -- start drag op
+		dragPolygon = PointsToView(page, marker.DragOutline(pagePt, pagePt, minDist));
+		selectedMarker = &marker;
+		dragPoint = pagePt;
+		dragPage = page;
+	}
+	
+	
+} // END PixRasterBaseCtrl::LeftDown()
+
+void PixRasterBaseCtrl::LeftUp(Point p, dword keyflags)
+{
+	Point endDragPoint;
+	int endDragPage;
+	
+	// if dragging a marker, stop and update it
+	if(selectedMarker)
+	{
+		int minDist = ScaleToPage(5);
+		PointToPage(p, endDragPage, endDragPoint);
+		// if dest point still on page, complete dragging op
+		// otherwise abort it
+		if(endDragPage == dragPage)
+			selectedMarker->Drag(dragPoint, endDragPoint, minDist);
+		selectedMarker = NULL;
+		pixRasterCtrl->Refresh();
+	}
+	
+} // END PixRasterBaseCtrl::LeftDown()
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// right mouse button handlers
+void PixRasterBaseCtrl::RightDown(Point p, dword keyflags)
+{
+	
+} // END PixRasterBaseCtrl::RightDown()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // middle mouse button pan handlers
@@ -49,27 +217,77 @@ void PixRasterBaseCtrl::MiddleDown(Point p, dword keyflags)
 
 void PixRasterBaseCtrl::MouseMove(Point p, dword keyflags)
 {
-	// reacts only to moves with middle button pressed
-	if(!(keyflags & K_MOUSEMIDDLE))
+	Point endDragPoint;
+	int endDragPage;
+	
+	if(!pixRasterCtrl || !pixRasterCtrl->GetPixBase())
 		return;
 	
-	// gets distance between current and pan point
-	int dx = panPoint.x - p.x + panHScroll;
-	int dy = panPoint.y - p.y + panVScroll;
-
-	// gets max scrolling values	
-	int hMax = hScrollBar.GetTotal();
-	int vMax = vScrollBar.GetTotal();
+	// check what we're dragging....
+	if(keyflags & K_MOUSEMIDDLE)
+	{
+		// moves with middle button pressed -- panning image
+		
+		// gets distance between current and pan point
+		int dx = panPoint.x - p.x + panHScroll;
+		int dy = panPoint.y - p.y + panVScroll;
 	
-	// sets new pan position
-	if(dx < 0) dx = 0;
-	if(dx > hMax) dx = hMax;
-	if(dy < 0) dy = 0;
-	if(dy > vMax) dy = vMax;
-	hScrollBar.Set(dx);
-	vScrollBar.Set(dy);
+		// gets max scrolling values	
+		int hMax = hScrollBar.GetTotal();
+		int vMax = vScrollBar.GetTotal();
+		
+		// sets new pan position
+		if(dx < 0) dx = 0;
+		if(dx > hMax) dx = hMax;
+		if(dy < 0) dy = 0;
+		if(dy > vMax) dy = vMax;
+		hScrollBar.Set(dx);
+		vScrollBar.Set(dy);
+	
+		Refresh();
+	}
+	else if((keyflags & K_MOUSELEFT) && selectedMarker)
+	{
+		// dragging a marker
+		
+		int minDist = ScaleToPage(5);
+		PointToPage(p, endDragPage, endDragPoint);
 
-	Refresh();
+		if(endDragPage == dragPage)
+			dragPolygon = PointsToView(dragPage, selectedMarker->DragOutline(dragPoint, endDragPoint, minDist));
+		else
+			dragPolygon.Clear();
+		pixRasterCtrl->Refresh();
+	}
+	else
+	{
+		// nothing else, just highlight marker under cursor
+		// and set the appropriate cursor
+		int page;
+		Point pagePt;
+		int minDist = ScaleToPage(5);
+		Marker *newMarker = NULL;
+		if(PointToPage(p, page, pagePt))
+		{
+			PixBase *pixBase = pixRasterCtrl->GetPixBase();
+			Markers *markers = pixBase->GetMarkersEx(page);
+			for(int iMarker = 0; iMarker < markers->GetCount(); iMarker++)
+			{
+				Marker &marker = (*markers)[iMarker];
+				int index;
+				if(marker.Hit(pagePt, minDist, index) != Marker::Miss)
+				{
+					newMarker = &marker;
+					break;
+				}
+			}
+		}
+		if(highlightMarker != newMarker)
+		{
+			highlightMarker = newMarker;
+			pixRasterCtrl->Refresh();
+		}
+	}
 	
 } // END PixRasterBaseCtrl::MouseMove()
 
@@ -181,14 +399,14 @@ void PixRasterBaseCtrl::PaintCache()
 		pixBase->SeekPage(i);
 		
 		// translates current top of page in view coordinates
-		int viewCurrentTop = iscale(currentTop, imageScale, 1000);
+		int viewCurrentTop = ScaleToView(currentTop);
 		
 		// gets current page size and translates it in view coordinates
 		Rect viewPageRect(
 			-cacheLeft,
 			-cacheTop + viewCurrentTop,
-			iscale(pixBase->GetSize().cx, imageScale, 1000) - cacheLeft,
-			iscale(pixBase->GetSize().cy, imageScale, 1000) - cacheTop + viewCurrentTop
+			ScaleToView(pixBase->GetSize().cx) - cacheLeft,
+			ScaleToView(pixBase->GetSize().cy) - cacheTop + viewCurrentTop
 		);
 		
 		// now scans the rectangles that must be repainted
@@ -206,10 +424,10 @@ void PixRasterBaseCtrl::PaintCache()
 			{
 				// gets back the tiff rectangle
 				Rect tiffRect(
-					iscale(rect.left + cacheLeft, 1000, imageScale), 
-					iscale(rect.top + cacheTop, 1000, imageScale) - currentTop, 
-					iscale(rect.right + cacheLeft, 1000, imageScale), 
-					iscale(rect.bottom + cacheTop, 1000, imageScale) -currentTop
+					ScaleToPage(rect.left + cacheLeft), 
+					ScaleToPage(rect.top + cacheTop) - currentTop, 
+					ScaleToPage(rect.right + cacheLeft), 
+					ScaleToPage(rect.bottom + cacheTop) -currentTop
 				);
 				
 				// rescales the image area
@@ -223,7 +441,7 @@ void PixRasterBaseCtrl::PaintCache()
 				imageCache.Copy(Point(rect.left, rect.top), Rect(0, 0, img.GetWidth(), img.GetHeight()), img);
 			}
 		}
-		currentTop += pixBase->GetHeight() + iscale(10, 1000, imageScale);
+		currentTop += pixBase->GetHeight() + ScaleToPage(10);
 	}
 	
 	// restore PixRaster's active page
@@ -234,8 +452,105 @@ void PixRasterBaseCtrl::PaintCache()
 		
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // repaint polygon markers over the images
-void PixRasterBaseCtrl::PaintMarkers(void)
+void PixRasterBaseCtrl::PaintMarkers(Draw &d)
 {
+	// if no associated PixRaster object, do nothing
+	if(!pixRasterCtrl || !pixRasterCtrl->GetPixBase())
+		return;
+	
+	// gets associated PixRaster object
+	PixBase *pixBase = pixRasterCtrl->GetPixBase();
+	
+	// calculate view position inside the full tiff image
+	int left, top;
+	if(hScrollBar.IsVisible())
+		left = hScrollBar.Get();
+	else
+		left = 0;
+	if(vScrollBar.IsVisible())
+		top = vScrollBar.Get();
+	else
+		top = 0;
+
+	// loop for all pages, to see which of them fits the view
+	int currentTop = 0;
+	int currentPage = pixBase->GetActivePage();
+	for(int i = 0 ; i < pixBase->GetPageCount() ; i++)
+	{
+		// sets the active page
+		pixBase->SeekPage(i);
+		
+		// translates current top of page in view coordinates
+		int viewCurrentTop = ScaleToView(currentTop);
+		
+		// gets current page size and translates it in view coordinates
+		Rect viewPageRect(
+			-left,
+			-top + viewCurrentTop,
+			ScaleToView(pixBase->GetSize().cx) - left,
+			ScaleToView(pixBase->GetSize().cy) - top + viewCurrentTop
+		);
+		
+		// this is when page view is smaller than ctrl view
+		int hGap;
+		int pw = viewPageRect.right - viewPageRect.left;
+		if(pw >= GetSize().cx)
+			hGap = 0;
+		else
+			hGap = (GetSize().cx - pw) / 2;
+
+		// checks wether the page fits the view..
+		viewPageRect.Intersect(GetView());
+		if(!viewPageRect.IsEmpty())
+		{
+		
+			// this page is inside view, let's take its markers
+			Markers &markers = *pixBase->GetMarkers();
+			for(int iMarker = 0; iMarker < markers.GetCount(); iMarker++)
+			{
+				Marker &marker = markers[iMarker];
+				
+				// don't paint marker being dragged... it will be done by
+				// drag routine itself
+				if(&marker == selectedMarker)
+					continue;
+				
+				switch(marker.GetKind())
+				{
+					case Marker::EmptyMarker:
+						continue;
+						
+					default:
+						Vector<Point> pts = marker.GetPoints();
+						Point points[pts.GetCount()];
+						for(int i = 0; i < pts.GetCount(); i++)
+						{
+							points[i].x = ScaleToView(pts[i].x) - left + hGap;
+							points[i].y = ScaleToView(pts[i].y) - top + viewCurrentTop;
+						}
+						if(&marker != highlightMarker)
+							d.DrawPolygon(points, pts.GetCount(),
+							marker.GetFillColor(),
+							marker.GetBorderThickness(),
+							marker.GetBorderColor(),
+							marker.GetBorderLineType(),
+							White);
+						else
+							d.DrawPolygon(points, pts.GetCount(),
+							marker.GetSelFillColor(),
+							marker.GetSelBorderThickness(),
+							marker.GetSelBorderColor(),
+							marker.GetSelBorderLineType(),
+							White);
+						break;
+				}
+			}
+		}
+		currentTop += pixBase->GetHeight() + ScaleToPage(10);
+	}
+
+	// restore PixRaster's active page
+	pixBase->SeekPage(currentPage);
 	
 } // END PixRasterBaseCtrl::PaintMarkers()
 		
@@ -258,6 +573,20 @@ void PixRasterBaseCtrl::Paint(Draw &d)
 		imageCache.Paint(d, Point(0, 0));
 	else
 		imageCache.Paint(d, Point((GetSize().cx - imageCache.GetWidth()) / 2, 0));
+	
+	// paints markers inside control
+	PaintMarkers(d);
+	
+	// if dragging, paints rubber banded polygon
+	if(selectedMarker && dragPolygon.GetCount())
+	{
+		d.DrawPolygon(dragPolygon, dragPolygon.GetCount(),
+		selectedMarker->GetFillColor(),
+		selectedMarker->GetBorderThickness(),
+		selectedMarker->GetBorderColor(),
+		PEN_DOT,
+		White);
+	}
 
 } // END LeptonicaBaseCtrl::Paint()
 
@@ -334,14 +663,14 @@ void PixRasterBaseCtrl::Layout(void)
 	}
 
 	// now calculate gaps to be exactly 10 pixels in every zoom factor
-	int gapSize = iscale(10, 1000, imageScale);
+	int gapSize = ScaleToPage(10);
 	
 	// adds total gaps sizes to total height
 	rasterHeight += (pageCount -1) * gapSize;
 
 	// and finally, sets up scrollbars and shows them
 	// and calculate cache sizes
-	int scaledRasterHeight = iscale(rasterHeight, imageScale, 1000);
+	int scaledRasterHeight = ScaleToView(rasterHeight);
 	int cacheHeight;
 	vScrollBar.SetPage(GetSize().cy);
 	vScrollBar.SetTotal(scaledRasterHeight);
@@ -360,7 +689,7 @@ void PixRasterBaseCtrl::Layout(void)
 		vScrollBar.Hide();
 		cacheHeight = scaledRasterHeight;
 	}
-	int scaledRasterWidth = iscale(rasterWidth, imageScale, 1000);
+	int scaledRasterWidth = ScaleToView(rasterWidth);
 	int cacheWidth;
 	hScrollBar.SetPage(GetSize().cx);
 	hScrollBar.SetTotal(scaledRasterWidth);
@@ -389,4 +718,6 @@ void PixRasterBaseCtrl::Layout(void)
 	// mark layout terminated
 	inside = false;
 	
-} // END LeptonicaBaseCtrl::Layout()
+} // END PixRasterBaseCtrl::Layout()
+
+END_UPP_NAMESPACE

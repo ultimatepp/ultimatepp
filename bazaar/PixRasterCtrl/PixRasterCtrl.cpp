@@ -3,6 +3,8 @@
 #include "PixRasterThumbsCtrl.h"
 #include "PixRasterViewCtrl.h"
 
+NAMESPACE_UPP
+
 // initialize the control
 void PixRasterCtrl::Create(PixBase *_pixBase)
 {
@@ -152,3 +154,4 @@ void PixRasterCtrl::Reload(void)
 	view->Layout();
 }
 		
+END_UPP_NAMESPACE

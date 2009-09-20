@@ -17,6 +17,7 @@ TestLeptonica::TestLeptonica()
 	LineRemovalButton <<= THISBACK(onLineRemoval);
 	PageLayoutButton <<= THISBACK(onPageLayout);
 	BaseLineButton <<= THISBACK(onBaseLine);
+	PageMarkersButton <<= THISBACK(onPageMarkers);
 	QuitButton <<= THISBACK(onQuit);
 }
 

@@ -7,7 +7,7 @@
 
 #include "PixRasterBaseCtrl.h"
 
-using namespace Upp;
+NAMESPACE_UPP
 
 // forward declaration
 class PixRasterCtrl;
@@ -31,8 +31,10 @@ class PixRasterThumbsCtrl : public PixRasterBaseCtrl
 		~PixRasterThumbsCtrl();
 		
 		// left click handler --> shows requested page in viewer
-		void LeftDown(Point p, dword keyflags);
+		virtual void LeftDown(Point p, dword keyflags);
 
 } ; // END class PixRasterThumbsCtrl
+
+END_UPP_NAMESPACE
 
 #endif

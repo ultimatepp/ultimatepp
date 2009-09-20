@@ -5,7 +5,7 @@
 
 #include "PixRasterBaseCtrl.h"
 
-using namespace Upp;
+NAMESPACE_UPP
 
 // Tiff view ctrl class
 class PixRasterViewCtrl : public PixRasterBaseCtrl
@@ -52,5 +52,7 @@ class PixRasterViewCtrl : public PixRasterBaseCtrl
 		virtual void SetPage(int page);
 		
 } ; // END class PixRasterViewCtrl
+
+END_UPP_NAMESPACE
 
 #endif

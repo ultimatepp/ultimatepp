@@ -5,7 +5,7 @@ static void PageLayout(Pix &source, PixRaster &pixRaster)
 	pixRaster.Add(source);
 	PixRaster regions = source.GetRegionsBinary();
 	CHECKR(regions, "Error getting page layout");
-	pixRaster.Add(regions);	
+	pixRaster.Add(regions);
 }
 
 void TestLeptonica::onPageLayout()
