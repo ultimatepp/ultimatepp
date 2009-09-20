@@ -28,13 +28,13 @@
 #define  CHARSET_MJK          26
 #define  CHARSET_CP850        27
 
-#define  CHARSET_ARMSCII_8         28
+//#define  CHARSET_ARMSCII_8         28
 #define  CHARSET_CP1046            29
 #define  CHARSET_CP1124            30
 #define  CHARSET_CP1125            31
 #define  CHARSET_CP1129            32
 #define  CHARSET_CP1133            33
-#define  CHARSET_CP1161            34
+//#define  CHARSET_CP1161            34
 #define  CHARSET_CP1162            35
 #define  CHARSET_CP1163            36
 #define  CHARSET_CP1250            37
@@ -49,8 +49,8 @@
 #define  CHARSET_CP437             46
 #define  CHARSET_CP737             47
 #define  CHARSET_CP775             48
-#define  CHARSET_CP850             49
-#define  CHARSET_CP852             50
+// 49
+// 50
 #define  CHARSET_CP853             51
 #define  CHARSET_CP855             52
 #define  CHARSET_CP856             53
@@ -143,13 +143,13 @@ extern word CHRTAB_WIN1258[128];
 extern word CHRTAB_KOI8_R[128];
 extern word CHRTAB_CP852[128];
 extern word CHRTAB_MJK[128];
-extern word CHRTAB_ARMSCII_8[128];
+//extern word CHRTAB_ARMSCII_8[128];
 extern word CHRTAB_CP1046[128];
 extern word CHRTAB_CP1124[128];
 extern word CHRTAB_CP1125[128];
 extern word CHRTAB_CP1129[128];
 extern word CHRTAB_CP1133[128];
-extern word CHRTAB_CP1161[128];
+//extern word CHRTAB_CP1161[128];
 extern word CHRTAB_CP1162[128];
 extern word CHRTAB_CP1163[128];
 extern word CHRTAB_CP1250[128];
@@ -164,8 +164,6 @@ extern word CHRTAB_CP1258[128];
 extern word CHRTAB_CP437[128];
 extern word CHRTAB_CP737[128];
 extern word CHRTAB_CP775[128];
-extern word CHRTAB_CP850[128];
-extern word CHRTAB_CP852[128];
 extern word CHRTAB_CP853[128];
 extern word CHRTAB_CP855[128];
 extern word CHRTAB_CP856[128];
