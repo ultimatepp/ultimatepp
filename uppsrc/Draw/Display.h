@@ -25,14 +25,17 @@ struct AttrText {
 	Color   ink;
 	Color   paper;
 	int     align;
+	Image   img;
+	int     imgspc;
 
-	AttrText& Ink(Color c)              { ink = c; return *this; }
-	AttrText& Paper(Color c)            { paper = c; return *this; }
-	AttrText& SetFont(Font f)           { font = f; return *this; }
-	AttrText& Align(int a)              { align = a; return *this; }
-	AttrText& Left()                    { return Align(ALIGN_LEFT); }
-	AttrText& Center()                  { return Align(ALIGN_CENTER); }
-	AttrText& Right()                   { return Align(ALIGN_RIGHT); }
+	AttrText& Ink(Color c)                          { ink = c; return *this; }
+	AttrText& Paper(Color c)                        { paper = c; return *this; }
+	AttrText& SetFont(Font f)                       { font = f; return *this; }
+	AttrText& Align(int a)                          { align = a; return *this; }
+	AttrText& Left()                                { return Align(ALIGN_LEFT); }
+	AttrText& Center()                              { return Align(ALIGN_CENTER); }
+	AttrText& Right()                               { return Align(ALIGN_RIGHT); }
+	AttrText& SetImage(const Image& m, int spc = 4) { img = m; imgspc = spc; return *this; }
 
 	operator Value() const;
 

@@ -19,6 +19,7 @@ void AttrText::Init()
 	paper = Null;
 	font = Null;
 	align = Null;
+	imgspc = 0;
 }
 
 AttrText::AttrText(const char *_text)
@@ -83,6 +84,8 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	WString txt;
 	Font font = StdFont();
 	int a = align;
+	int x = r.left;
+	int width = r.GetWidth();
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
 		txt = t.text;
@@ -94,27 +97,31 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 			font = t.font;
 		if(!IsNull(t.align))
 			a = t.align;
+		if(!IsNull(t.img)) {
+			Size isz = t.img.GetSize();
+			w.DrawImage(x, r.top + max((r.Height() - isz.cy) / 2, 0), t.img);
+			x += isz.cx + t.imgspc;
+		}
 	}
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
-	int x = r.left;
 	Size tsz = GetTLTextSize(txt, font);
 	if(a == ALIGN_RIGHT)
 		x = r.right - tsz.cx;
 	if(a == ALIGN_CENTER)
-		x += (r.Width() - tsz.cx) / 2;
+		x += (width - tsz.cx) / 2;
 	int tcy = GetTLTextHeight(txt, font);
 	int tt = r.top + max((r.Height() - tcy) / 2, 0);
-	if(tsz.cx > r.GetWidth()) {
+	if(tsz.cx > width) {
 		Size isz = DrawImg::threedots().GetSize();
-		int wd = r.GetWidth() - isz.cx;
+		int wd = width - isz.cx;
 		w.Clip(r.left, r.top, wd, r.GetHeight());
-		DrawTLText(w, x, tt, r.Width(), txt, font, ink);
+		DrawTLText(w, x, tt, width, txt, font, ink);
 		w.End();
 		w.DrawImage(r.left + wd, tt + font.Info().GetAscent() - isz.cy, DrawImg::threedots(), ink);
 	}
 	else
-		DrawTLText(w, x, tt, r.Width(), txt, font, ink);
+		DrawTLText(w, x, tt, width, txt, font, ink);
 }
 
 void StdDisplayClass::Paint(Draw& w, const Rect& r, const Value& q,
@@ -128,15 +135,21 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 {
 	Font font = StdFont();
 	WString txt;
+	Size isz(0, 0);
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
 		txt = t.text;
 		if(!IsNull(t.font))
 			font = t.font;
+		if(!IsNull(t.img)) {
+			isz = t.img.GetSize();
+			isz.cx += t.imgspc;
+		}
 	}
 	else
 		txt = IsString(q) ? q : StdConvert().Format(q);
-	return GetTLTextSize(txt, font);
+	Size sz = GetTLTextSize(txt, font);
+	return Size(sz.cx + isz.cx, max(sz.cy, isz.cy));
 }
 
 #ifdef flagSO
