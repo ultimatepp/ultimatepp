@@ -1,0 +1,11 @@
+description "Demonstrates the usage of AttrText to alter text appearance with standard Display\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
