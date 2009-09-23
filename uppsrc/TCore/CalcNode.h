@@ -42,8 +42,7 @@ protected:
 
 };
 
-class CalcConstNode : public CalcNode
-{
+class CalcConstNode : public CalcNode {
 public:
 	CalcConstNode(Value value) : CalcNode("(const)"), value(value) {}
 
@@ -56,8 +55,7 @@ public:
 	Value               value;
 };
 
-class CalcLambdaNode : public CalcNode
-{
+class CalcLambdaNode : public CalcNode {
 public:
 	CalcLambdaNode(CalcNodePtr arg) : CalcNode("#", arg) {}
 
@@ -66,8 +64,7 @@ public:
 	virtual String      Format() const;
 };
 
-class CalcLogOrNode : public CalcNode
-{
+class CalcLogOrNode : public CalcNode {
 public:
 	CalcLogOrNode(CalcNodePtr left, CalcNodePtr right) : CalcNode("||", left, right) {}
 
@@ -77,8 +74,7 @@ public:
 	virtual CalcNodePtr Optimize(CalcContext& context);
 };
 
-class CalcLogAndNode : public CalcNode
-{
+class CalcLogAndNode : public CalcNode {
 public:
 	CalcLogAndNode(CalcNodePtr left, CalcNodePtr right) : CalcNode("&&", left, right) {}
 
@@ -88,8 +84,7 @@ public:
 	virtual CalcNodePtr Optimize(CalcContext& context);
 };
 
-class CalcSelectNode : public CalcNode
-{
+class CalcSelectNode : public CalcNode {
 public:
 	CalcSelectNode(CalcNodePtr cond, CalcNodePtr left, CalcNodePtr right)
 		: CalcNode("?:") { args.SetCount(3); args[0] = cond; args[1] = left; args[2] = right; }
@@ -101,8 +96,7 @@ public:
 	enum { COND, IFTRUE, IFFALSE };
 };
 
-class CalcSwitchNode : public CalcNode
-{
+class CalcSwitchNode : public CalcNode {
 public:
 	CalcSwitchNode(CalcNodePtr cond, pick_ Vector<CalcNodePtr>& list) : CalcNode("{}")
 	{ args.Reserve(list.GetCount() + 1); args.Add(cond); args.AppendPick(list); }
@@ -113,8 +107,18 @@ public:
 	virtual CalcNodePtr Optimize(CalcContext& context);
 };
 
-class CalcFunctionNode : public CalcNode
-{
+class CalcSequenceNode : public CalcNode {
+public:
+	CalcSequenceNode(pick_ Vector<CalcNodePtr> nodes);
+	CalcSequenceNode(CalcNodePtr node1, CalcNodePtr node2);
+	
+	virtual CalcNodePtr Clone() const { return new CalcSequenceNode(*this); }
+	virtual Value       Calc(CalcContext& context) const;
+	virtual String      Format() const;
+	virtual CalcNodePtr Optimize(CalcContext& context);
+};
+
+class CalcFunctionNode : public CalcNode {
 public:
 	CalcFunctionNode(String name)                                            : CalcNode(name) {}
 	CalcFunctionNode(String name, CalcNodePtr arg)                           : CalcNode(name, arg) {}
@@ -402,6 +406,7 @@ public:
 protected:
 	virtual CalcNodePtr   ScanAny();
 //	virtual CalcNodePtr   ScanLambda();
+	virtual CalcNodePtr   ScanSequence();
 	virtual CalcNodePtr   ScanSelect();
 	virtual CalcNodePtr   ScanLogOr();
 	virtual CalcNodePtr   ScanLogAnd();
@@ -430,7 +435,7 @@ protected:
 	enum OPERATOR
 	{
 		OP_NONE,
-		OP_QUESTION, OP_COLON,
+		OP_QUESTION, OP_COLON, OP_SEMICOLON,
 		OP_LOG_AND, OP_LOG_OR,
 		OP_LT, OP_LE, OP_GE, OP_GT,
 		OP_EQ, OP_NE,

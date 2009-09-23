@@ -480,6 +480,51 @@ CalcNodePtr CalcSwitchNode::Optimize(CalcContext& context)
 		return new CalcConstNode(value);
 }
 
+CalcSequenceNode::CalcSequenceNode(pick_ Vector<CalcNodePtr> nodes)
+: CalcNode(",")
+{
+	args = nodes;
+}
+
+CalcSequenceNode::CalcSequenceNode(CalcNodePtr node1, CalcNodePtr node2)
+: CalcNode(",")
+{
+	args.SetCount(2);
+	args[0] = node1;
+	args[1] = node2;
+}
+
+Value CalcSequenceNode::Calc(CalcContext& context) const
+{
+	Value v;
+	for(int i = 0; i < args.GetCount(); i++)
+		if(!!args[i])
+			v = args[i]->Calc(context);
+	return v;
+}
+
+String CalcSequenceNode::Format() const
+{
+	StringBuffer out;
+	for(int i = 0; i < args.GetCount(); i++)
+		out << (i ? ", (" : "(") << args[i]->Format() << ')';
+	return out;
+}
+
+CalcNodePtr CalcSequenceNode::Optimize(CalcContext& context)
+{
+	Vector<CalcNodePtr> opt;
+	bool diff = false;
+	opt.SetCount(args.GetCount());
+	for(int i = 0; i < args.GetCount(); i++) {
+		if(!!args[i] && args[i] != (opt[i] = args[i]->Optimize(context)))
+			diff = true;
+	}
+	if(diff)
+		return new CalcSequenceNode(opt);
+	return this;
+}
+
 void CalcSymbols::Clear()
 {
 	var_index.Clear();
@@ -1247,7 +1292,7 @@ void CalcParser::Clear(const char *t)
 
 CalcNodePtr CalcParser::ScanAny()
 {
-	return ScanSelect();
+	return ScanSequence();
 }
 
 /*
@@ -1256,6 +1301,17 @@ CalcNodePtr CalcParser::ScanLambda()
 	return Check(OP_LAMBDA) ? new CalcLambdaNode(ScanAny()) : ScanSelect();
 }
 */
+
+CalcNodePtr CalcParser::ScanSequence()
+{
+	Vector<CalcNodePtr> seq;
+	seq.Add(ScanSelect());
+	while(Check(OP_COMMA) || Check(OP_SEMICOLON))
+		seq.Add(ScanSelect());
+	if(seq.GetCount() == 1)
+		return seq[0];
+	return new CalcSequenceNode(seq);
+}
 
 CalcNodePtr CalcParser::ScanSelect()
 {
@@ -1412,18 +1468,16 @@ CalcNodePtr CalcParser::ScanPrefix()
 				ctr = new CalcFunctionNode("[,,]");
 			else
 			{
-				CalcNodePtr arg = ScanAny();
-				if(Check(OP_DOTS))
-				{
+				CalcNodePtr arg = ScanSelect();
+				if(Check(OP_DOTS)) {
 					CalcNodePtr maxrng = ScanAny();
 					ctr = new CalcFunctionNode("[..]", arg, maxrng);
 				}
-				else
-				{
+				else {
 					Vector<CalcNodePtr> arglist;
 					arglist.Add() = arg;
 					while(Check(OP_COMMA))
-						arglist.Add() = ScanAny();
+						arglist.Add() = ScanSelect();
 					ctr = new CalcFunctionNode("[,,]", arglist);
 				}
 				if(!Force(OP_RBRACKET, "]"))
@@ -1455,8 +1509,7 @@ CalcNodePtr CalcParser::ScanPrefix()
 CalcNodePtr CalcParser::ScanPostfix(CalcNodePtr node)
 {
 	for(;;)
-		if(Check(OP_DOT))
-		{ // member access
+		if(Check(OP_DOT)) { // member access
 			byte c = Skip();
 			String id = GetIdent();
 			Vector<CalcNodePtr> nodes;
@@ -1464,12 +1517,10 @@ CalcNodePtr CalcParser::ScanPostfix(CalcNodePtr node)
 			ScanArgs(nodes);
 			node = new CalcFunctionNode(id, nodes);
 		}
-		else if(Check(OP_LBRACE))
-		{
+		else if(Check(OP_LBRACE)) {
 			Vector<CalcNodePtr> list;
-			do
-			{
-				list.Add() = ScanAny();
+			do {
+				list.Add() = ScanSelect();
 				if(!Check(OP_COMMA)) // default value
 					break;
 				list.Add() = ScanAny();
@@ -1478,8 +1529,7 @@ CalcNodePtr CalcParser::ScanPostfix(CalcNodePtr node)
 			Force(OP_RBRACE, "}");
 			node = new CalcSwitchNode(node, list);
 		}
-		else if(Check(OP_LBRACKET))
-		{
+		else if(Check(OP_LBRACKET)) {
 			CalcNodePtr index = ScanAny();
 			Force(OP_RBRACKET, "]");
 			node = new CalcFunctionNode("[]", node, index);
@@ -1490,14 +1540,13 @@ CalcNodePtr CalcParser::ScanPostfix(CalcNodePtr node)
 
 void CalcParser::ScanArgs(Vector<CalcNodePtr>& dest)
 {
-	if(Check(OP_LPAR) && !Check(OP_RPAR))
-	{
+	if(Check(OP_LPAR) && !Check(OP_RPAR)) {
 		const char *begin = pos;
 		do
-			dest | ScanAny();
+			dest | ScanSelect();
 		while(Check(OP_COMMA));
 		if(!Check(OP_RPAR))
-			Expect(NFormat("')' (zaèátek podvýrazu: %s)", StringSample(begin - 1, 20)));
+			Expect(NFormat(t_("')' (subexpression starts at: %s)"), StringSample(begin - 1, 20)));
 	}
 }
 
@@ -1511,6 +1560,7 @@ int CalcParser::GetOperator()
 	{
 	case '?': op_last = OP_QUESTION; break;
 	case ':': op_last = OP_COLON; break;
+	case ';': op_last = OP_SEMICOLON; break;
 	case '&': op_last = (*op_end == '&' ? op_end++, OP_LOG_AND : OP_BIT_AND); break;
 	case '|': op_last = (*op_end == '|' ? op_end++, OP_LOG_OR  : OP_BIT_OR); break;
 	case '^': op_last = OP_BIT_XOR; break;
