@@ -467,7 +467,7 @@ void IconDes::Redo()
 		return;
 	Slot& c = Current();
 	Vector<Image> redo = UnpackImlData(c.redo);
-	if(c.redo.GetCount() == 0)
+	if(redo.GetCount() == 0)
 		return;
 	Vector<Image> undo = UnpackImlData(c.undo);
 	sSetSsFlag(c.image, c.supersampling);
