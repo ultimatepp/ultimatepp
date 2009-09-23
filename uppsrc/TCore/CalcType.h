@@ -26,20 +26,20 @@ struct CalcRawType
 };
 
 template <class T>
-struct CalcRawNullType : public CalcRawType<T>
+struct CalcRawNullType : CalcRawType<T>
 {
 	static bool     IsType(Value v)     { return v.IsVoid() || CalcRawType<T>::IsType(v); }
 	static const T& ValueTo(Value v)    { if(v.IsVoid()) { static T t; return t; } return CalcRawType<T>::ValueTo(v); }
 };
 
 template <class T>
-struct CalcCastType : public CalcRawType<T>
+struct CalcCastType : CalcRawType<T>
 {
 	static Value    ToValue(const T& t)     { return t; }
 	static T        ValueTo(Value v)        { return v; }
 };
 
-template <class T> struct CalcType : public CalcRawType<T> {};
+template <class T> struct CalcType : CalcRawType<T> {};
 
 template <class T>
 inline Value CalcTypeToValue(const T& value) { return CalcType<T>::ToValue(value); }
@@ -68,7 +68,7 @@ const char *CalcNanError();
 const char *CalcInfError();
 
 template <>
-struct CalcType<double> : public CalcCastType<double>
+struct CalcType<double> : CalcCastType<double>
 {
 	static bool   IsType(Value v) { return IsNumber(v); }
 	static String Describe();
@@ -76,34 +76,34 @@ struct CalcType<double> : public CalcCastType<double>
 };
 
 template <>
-struct CalcType<String> : public CalcCastType<String>
+struct CalcType<String> : CalcCastType<String>
 {
 	static bool   IsType(Value v) { return IsNull(v) || IsString(v); }
 	static String Describe();
 };
 
 template <>
-struct CalcType<const String&> : public CalcType<String> {};
+struct CalcType<const String&> : CalcType<String> {};
 
 template <>
-struct CalcType<WString> : public CalcCastType<WString>
+struct CalcType<WString> : CalcCastType<WString>
 {
 	static bool   IsType(Value v) { return IsNull(v) || IsString(v); }
 	static String Describe()             { return CalcType<String>::Describe(); }
 };
 
 template <>
-struct CalcType<const WString&> : public CalcType<WString> {};
+struct CalcType<const WString&> : CalcType<WString> {};
 
 template <>
-struct CalcType<Date> : public CalcCastType<Date>
+struct CalcType<Date> : CalcCastType<Date>
 {
 	static bool   IsType(Value v) { return IsDateTime(v); }
 	static String Describe();
 };
 
 template <>
-struct CalcType<Time> : public CalcCastType<Time>
+struct CalcType<Time> : CalcCastType<Time>
 {
 	static bool   IsType(Value v) { return IsDateTime(v); }
 	static String Describe();
@@ -128,6 +128,9 @@ struct CalcType<Value>
 };
 
 template <>
+struct CalcType<const Value&> : CalcType<Value> {};
+
+template <>
 struct CalcType<ValueArray>
 {
 	static Value       ToValue(const ValueArray& t)     { return t; }
@@ -135,6 +138,9 @@ struct CalcType<ValueArray>
 	static bool        IsType(Value v)                  { return IsNull(v) || IsValueArray(v); }
 	static String      Describe();
 };
+
+template <>
+struct CalcType<const ValueArray&> : CalcType<ValueArray> {};
 
 template <>
 struct CalcType<Nuller>
