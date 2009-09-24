@@ -518,7 +518,7 @@ word CHRTAB_MJK[128] = {
 	CUNDEF, CUNDEF, CUNDEF, CUNDEF, CUNDEF, CUNDEF, CUNDEF, CUNDEF,
 	CUNDEF, CUNDEF, CUNDEF, CUNDEF, CUNDEF, CUNDEF, CUNDEF, CUNDEF,
 };
-/*
+
 word CHRTAB_ARMSCII_8[128] = {
 	0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087, 
 	0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F, 
@@ -537,7 +537,7 @@ word CHRTAB_ARMSCII_8[128] = {
 	0x0550, 0x0580, 0x0551, 0x0581, 0x0552, 0x0582, 0x0553, 0x0583, 
 	0x0554, 0x0584, 0x0555, 0x0585, 0x0556, 0x0586, 0x055A, CUNDEF, 
 };
-*/
+
 word CHRTAB_CP1046[128] = {
 	0xFE88, 0x00D7, 0x00F7, 0xF8F6, 0xF8F5, 0xF8F4, 0xF8F7, 0xFE71, 
 	0x0088, 0x25A0, 0x2502, 0x2500, 0x2510, 0x250C, 0x2514, 0x2518, 
@@ -1996,17 +1996,18 @@ void CharSetData::Gen()
 		line[0][c] = c;
 	for(c = 0; c < 128; c++) {
 		int q = table[c];
-		if(q < 16 * 128) {
-			int i = q >> 7;
-			if(!line[i]) {
-				line[i] = new byte[128];
-				memset(line[i], CUNDEF, 128);
+		if(q >= 128)
+			if(q < 16 * 128) {
+				int i = q >> 7;
+				if(!line[i]) {
+					line[i] = new byte[128];
+					memset(line[i], CUNDEF, 128);
+				}
+				line[i][q & 0x7f] = c + 128;
 			}
-			line[i][q & 0x7f] = c + 128;
-		}
-		else
-		if((q & 0xFF00) != 0xEE00)
-			map.Add(q, c + 128);
+			else
+			if((q & 0xFF00) != 0xEE00)
+				map.Add(q, c + 128);
 	}
 	for(c = 0; c < 16; c++)
 		if(!line[c])
@@ -2116,13 +2117,13 @@ static void sInit()
 	AddCharSetE("mjk",         CHRTAB_MJK,         CHARSET_ISO8859_2);
 	AddCharSetE("cp850",       CHRTAB_CP850,       CHARSET_ISO8859_1);
 #endif
-//	AddCharSetE("ARMSCII-8",             CHRTAB_ARMSCII_8         ,CHARSET_ARMSCII_8        );
+	AddCharSetE("ARMSCII-8",             CHRTAB_ARMSCII_8         ,CHARSET_ARMSCII_8        );
 	AddCharSetE("CP1046",                CHRTAB_CP1046            ,CHARSET_CP1046           );
 	AddCharSetE("CP1124",                CHRTAB_CP1124            ,CHARSET_CP1124           );
 	AddCharSetE("CP1125",                CHRTAB_CP1125            ,CHARSET_CP1125           );
 	AddCharSetE("CP1129",                CHRTAB_CP1129            ,CHARSET_CP1129           );
 	AddCharSetE("CP1133",                CHRTAB_CP1133            ,CHARSET_CP1133           );
-//	AddCharSetE("CP1161",                CHRTAB_CP1161            ,CHARSET_CP1161           );
+	AddCharSetE("CP1161",                CHRTAB_CP1161            ,CHARSET_CP1161           );
 	AddCharSetE("CP1162",                CHRTAB_CP1162            ,CHARSET_CP1162           );
 	AddCharSetE("CP1163",                CHRTAB_CP1163            ,CHARSET_CP1163           );
 	AddCharSetE("CP1250",                CHRTAB_CP1250            ,CHARSET_CP1250           );
@@ -2191,6 +2192,7 @@ static ArrayMap<String, CharSetData>& s_map()
 
 byte AddCharSet(const char *name, const word *table, byte systemcharset)
 {
+/*
 #ifdef _DEBUG
 	Index<int> chk;
 	for(int i = 0; i < 128; i++) {
@@ -2198,7 +2200,7 @@ byte AddCharSet(const char *name, const word *table, byte systemcharset)
 		ASSERT(chk.Find(table[i]) < 0);
 		chk.Add(table[i]);
 	}
-#endif
+#endif*/
 	LLOG("Adding " << name << " charset");
 	int q = s_map().GetCount();
 	CharSetData& m = s_map().Add(name);
