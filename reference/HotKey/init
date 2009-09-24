@@ -1,0 +1,4 @@
+#ifndef _HotKey_icpp_init_stub
+#define _HotKey_icpp_init_stub
+#include "CtrlLib/init"
+#endif
