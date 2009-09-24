@@ -579,6 +579,8 @@ private:
 	String  GetInfoPart(int i) const;
 
 	static  Callback    CtrlCall;
+	
+	static  Vector<Callback> hotkey;
 
 	static  bool DoCall();
 
@@ -693,6 +695,7 @@ protected:
 	void  Create0(CreateBox *cr);
 	void  Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow);
 	Image DoMouse(int e, Point p, int zd = 0);
+	static void sProcessMSG(MSG& msg);
 
 	friend void sSetCursor(Ctrl *ctrl, const Image& m);
 	
@@ -898,6 +901,9 @@ public:
 
 	static  void   InstallStateHook(StateHook hook);
 	static  void   DeinstallStateHook(StateHook hook);
+	
+	static  int    RegisterSystemHotKey(dword key, Callback cb);
+	static  void   UnregisterSystemHotKey(int id);
 
 	virtual bool   Accept();
 	virtual void   Reject();
