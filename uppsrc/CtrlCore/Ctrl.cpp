@@ -35,6 +35,8 @@ bool (*&DisplayErrorFn())(const Value& v)
 Ctrl *Ctrl::LoopCtrl;
 int   Ctrl::LoopLevel;
 
+Vector<Callback> Ctrl::hotkey;
+
 bool Ctrl::MemoryCheck;
 
 void   Ctrl::SetData(const Value&) {}

@@ -307,6 +307,11 @@ void Ctrl::ExitWin32()
 	OleUninitialize();
 
 	sFinished = true;
+	
+	for(int i = 0; i < hotkey.GetCount(); i++)
+		if(hotkey[i])
+			UnregisterHotKey(NULL, i);
+	
 	for(int i = 0; i < Windows().GetCount(); i++) {
 		HWND hwnd = Windows().GetKey(i);
 		if(hwnd)
@@ -670,8 +675,42 @@ bool PassWindowsKey(int wParam)
 	||     wParam >= 0x90; // OEM keys
 }
 
-static void sProcessMSG(MSG& msg)
+int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
 {
+	ASSERT(key >= K_DELTA);
+	int q = hotkey.GetCount();
+	for(int i = 0; i < hotkey.GetCount(); i++)
+		if(!hotkey[i]) {
+			q = i;
+			break;
+		}
+	hotkey.At(q) = cb;
+	dword mod = 0;
+	if(key & K_ALT)
+		mod |= MOD_ALT;
+	if(key & K_SHIFT)
+		mod |= MOD_SHIFT;
+	if(key & K_CTRL)
+		mod |= MOD_CONTROL;
+	
+	RegisterHotKey(NULL, q, mod, key & 0xffff);
+	return q;
+}
+
+void Ctrl::UnregisterSystemHotKey(int id)
+{
+	ASSERT(id >= 0 && id < hotkey.GetCount());
+	UnregisterHotKey(NULL, id);
+	hotkey[id].Clear();
+}
+
+void Ctrl::sProcessMSG(MSG& msg)
+{
+	if (msg.message == WM_HOTKEY) {
+		if(msg.wParam >= 0 && (int)msg.wParam < Ctrl::hotkey.GetCount())
+			Ctrl::hotkey[msg.wParam]();
+		return;
+	}
 	if(msg.message != WM_SYSKEYDOWN && msg.message != WM_SYSKEYUP
 	|| PassWindowsKey((dword)msg.wParam) || msg.wParam == VK_MENU) //17.11 Mirek - fix to get windows menu invoked on Alt+Space
 		TranslateMessage(&msg); // 04/09/07: TRC fix to make barcode reader going better
