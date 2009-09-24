@@ -161,11 +161,78 @@ bool Ctrl::HookProc(XEvent *event) { return false; }
 void DnDRequest(XSelectionRequestEvent *se);
 void DnDClear();
 
+dword X11mods(dword key)
+{
+	dword mod = 0;
+	if(key & K_ALT)
+		mod |= Mod1Mask;
+	if(key & K_SHIFT)
+		mod |= ShiftMask;
+	if(key & K_CTRL)
+		mod |= ControlMask;
+	return mod;
+}
+
+Vector<Callback> Ctrl::hotkey;
+Vector<dword> Ctrl::keyhot;
+Vector<dword> Ctrl::modhot;
+
+int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
+{
+	GuiLock __;
+	ASSERT(key >= K_DELTA);
+	bool b = TrapX11Errors();
+	KeyCode k = XKeysymToKeycode(Xdisplay, key & 0xffff);
+	dword mod = X11mods(key);
+	bool r = false;
+	for(dword nlock = 0; nlock < 2; nlock++)
+		for(dword clock = 0; clock < 2; clock++)
+			for(dword slock = 0; slock < 2; slock++)
+				r = XGrabKey(Xdisplay, k,
+				             mod | (nlock * Mod2Mask) | (clock * LockMask) | (slock * Mod3Mask),
+				             Xroot, true, GrabModeAsync, GrabModeAsync) || r;
+	UntrapX11Errors(b);
+	if(!r) return -1;
+	int q = hotkey.GetCount();
+	for(int i = 0; i < hotkey.GetCount(); i++)
+		if(!hotkey[i]) {
+			q = i;
+			break;
+		}
+	hotkey.At(q) = cb;
+	keyhot.At(q) = k;
+	modhot.At(q) = mod;
+	return q;
+}
+
+void Ctrl::UnregisterSystemHotKey(int id)
+{
+	GuiLock __;
+	if(id >= 0 && id < hotkey.GetCount() && hotkey[id]) {
+		bool b = TrapX11Errors();
+		for(dword nlock = 0; nlock < 2; nlock++)
+			for(dword clock = 0; clock < 2; clock++)
+				for(dword slock = 0; slock < 2; slock++)
+					XUngrabKey(Xdisplay, keyhot[id],
+					           modhot[id] | (nlock * Mod2Mask) | (clock * LockMask) | (slock * Mod3Mask),
+					           Xroot);
+		UntrapX11Errors(b);
+		hotkey[id].Clear();
+	}
+}
+
 void Ctrl::ProcessEvent(XEvent *event)
 {
 	GuiLock __;
 	if(xim && XFilterEvent(event, None))
 		return;
+	if(event->type == KeyPress)
+		for(int i = 0; i < hotkey.GetCount(); i++)
+			if(hotkey[i] && keyhot[i] == event->xkey.keycode
+			   && modhot[i] == (event->xkey.state & (Mod1Mask|ShiftMask|ControlMask))) {
+				hotkey[i]();
+				return;
+			}
 	ArrayMap<Window, Ctrl::XWindow>& xmap = Xwindow();
 	for(int i = 0; i < xmap.GetCount(); i++)
 		if(xmap[i].ctrl && xmap[i].ctrl->HookProc(event))

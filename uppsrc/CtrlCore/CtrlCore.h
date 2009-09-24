@@ -580,8 +580,6 @@ private:
 
 	static  Callback    CtrlCall;
 	
-	static  Vector<Callback> hotkey;
-
 	static  bool DoCall();
 
 #ifdef PLATFORM_WIN32
@@ -697,6 +695,8 @@ protected:
 	Image DoMouse(int e, Point p, int zd = 0);
 	static void sProcessMSG(MSG& msg);
 
+	static  Vector<Callback> hotkey;
+
 	friend void sSetCursor(Ctrl *ctrl, const Image& m);
 	
 public:
@@ -746,6 +746,9 @@ private:
 	       XWindow *GetXWindow();
 	static void     SyncMousePos();
 	static void     ReleaseGrab();
+	static Vector<Callback> hotkey;
+	static Vector<dword> modhot;
+	static Vector<dword> keyhot;
 
 	       void  StartPopupGrab();
 	static void  EndPopupGrab();
@@ -807,8 +810,8 @@ public:
 	virtual bool    HookProc(XEvent *event);
 	Window  GetWindow() const         { return top ? top->window : None; }
 	static  Ctrl   *CtrlFromWindow(Window w);
-	bool    TrapX11Errors();
-	void    UntrapX11Errors(bool b);
+	static bool    TrapX11Errors();
+	static void    UntrapX11Errors(bool b);
 
 	Window GetParentWindow(void) const;
 	Ctrl *GetParentWindowCtrl(void) const;

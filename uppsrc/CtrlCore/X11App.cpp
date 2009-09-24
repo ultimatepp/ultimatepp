@@ -430,6 +430,8 @@ void Ctrl::ExitX11()
 	GuiLock __; 
 //	if(xic)
 //		XDestroyIC(xic);
+	for(int i = 0; i < hotkey.GetCount(); i++)
+		UnregisterSystemHotKey(i);
 	if(xim)
 		XCloseIM(xim);
 }
