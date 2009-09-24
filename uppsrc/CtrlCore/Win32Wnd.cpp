@@ -675,6 +675,8 @@ bool PassWindowsKey(int wParam)
 	||     wParam >= 0x90; // OEM keys
 }
 
+Vector<Callback> Ctrl::hotkey;
+
 int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
 {
 	ASSERT(key >= K_DELTA);
@@ -693,15 +695,15 @@ int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
 	if(key & K_CTRL)
 		mod |= MOD_CONTROL;
 	
-	RegisterHotKey(NULL, q, mod, key & 0xffff);
-	return q;
+	return RegisterHotKey(NULL, q, mod, key & 0xffff) ? q : -1;
 }
 
 void Ctrl::UnregisterSystemHotKey(int id)
 {
-	ASSERT(id >= 0 && id < hotkey.GetCount());
-	UnregisterHotKey(NULL, id);
-	hotkey[id].Clear();
+	if(id >= 0 && id < hotkey.GetCount()) {
+		UnregisterHotKey(NULL, id);
+		hotkey[id].Clear();
+	}
 }
 
 void Ctrl::sProcessMSG(MSG& msg)

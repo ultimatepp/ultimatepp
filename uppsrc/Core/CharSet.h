@@ -84,7 +84,7 @@
 #define  CHARSET_ISO_8859_8        81
 #define  CHARSET_ISO_8859_9        82
 #define  CHARSET_JIS_X0201         83
-#define  CHARSET_KOI8_R            84
+// 84
 #define  CHARSET_KOI8_RU           85
 #define  CHARSET_KOI8_T            86
 #define  CHARSET_KOI8_U            87
