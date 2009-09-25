@@ -710,7 +710,7 @@ void Ctrl::sProcessMSG(MSG& msg)
 {
 	if (msg.message == WM_HOTKEY) {
 		if(msg.wParam >= 0 && (int)msg.wParam < Ctrl::hotkey.GetCount())
-			Ctrl::hotkey[msg.wParam]();
+			Ctrl::hotkey[(int)msg.wParam]();
 		return;
 	}
 	if(msg.message != WM_SYSKEYDOWN && msg.message != WM_SYSKEYUP
