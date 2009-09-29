@@ -557,7 +557,7 @@ HRESULT OcxControl::Draw(dword aspect, long index, void *aspectinfo,
 	SetViewportExtEx(draw_dc, 1, 1, vext);
 	int old_mode = SetMapMode(draw_dc, MM_TEXT);
 
-	UPP::Draw draw(draw_dc);
+	SystemDraw draw(draw_dc);
 	draw.Offset(rc.TopLeft());
 	DrawCtrl(draw);
 	draw.End();
