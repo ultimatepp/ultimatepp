@@ -16,6 +16,9 @@ bool   MSSQLPerformScript(const String& text, StatementExecutor& executor,
 	return ODBCPerformScript(text, executor, progress_canceled);
 }
 
+void IdentityInsert(Sql& sql, const SqlInsert& ins);
+void IdentityInsert(const SqlInsert& ins);
+
 };
 
 #endif

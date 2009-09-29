@@ -9,4 +9,15 @@ String MsSqlTextType(int width)
 	return "text";
 }
 
+void IdentityInsert(Sql& sql, const SqlInsert& ins)
+{
+	sql.Execute("SET IDENTITY_INSERT " + ins.GetTable().ToString() + " ON;" +
+	            ((SqlStatement)ins).Get(MSSQL));
+}
+
+void IdentityInsert(const SqlInsert& ins)
+{
+	IdentityInsert(SQL, ins);
+}
+
 };
