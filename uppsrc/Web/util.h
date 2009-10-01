@@ -86,6 +86,7 @@ public:
 
 	void            Clear()                                { if(t) { t->Release(); t = NULL; } }
 	bool            IsNullInstance() const                 { return !t; }
+	dword           GetHashValue() const                   { return UPP::GetHashValue((unsigned)(uintptr_t)t); }
 
 	RefCon<T>&      operator = (const RefCon<T>& rp);
 
@@ -99,7 +100,6 @@ public:
 
 	friend bool     operator == (RefCon<T> a, RefCon<T> b) { return a.t == b.t; }
 	friend bool     operator != (RefCon<T> a, RefCon<T> b) { return a.t != b.t; }
-	friend unsigned GetHashValue(RefCon<T> r)              { return GetHashValue(r.t); }
 
 protected:
 	const T        *t;
