@@ -395,6 +395,14 @@ struct CalcType<const CalcNode *> : public CalcRawType<const CalcNode *>
 	static String          Describe();
 };
 
+template <>
+struct CalcType<CalcNodePtr> : public CalcRawType<CalcNodePtr>
+{
+	static Value           ToValue(CalcNodePtr cn)     { return !!cn ? RawToValue(cn) : Value(); }
+	static CalcNodePtr     ValueTo(Value v)            { return IsTypeRaw<CalcNodePtr>(v) ? UPP::ValueTo<CalcNodePtr>(v) : NULL; }
+	static String          Describe();
+};
+
 class CalcParser
 {
 public:
