@@ -3,16 +3,16 @@
 
 NAMESPACE_UPP
 
-String CalcTypeDescribeInt()            { return t_("integer"); }
+String CalcTypeDescribeInt()             { return t_("integer"); }
 
-String CalcType<double>::Describe()     { return t_("real number"); }
-String CalcType<String>::Describe()     { return t_("string"); }
-String CalcType<Date>::Describe()       { return t_("date"); }
-String CalcType<Time>::Describe()       { return t_("date/time"); }
-String CalcType<bool>::Describe()       { return t_("logical value"); }
-String CalcType<Value>::Describe()      { return t_("any data type"); }
-String CalcType<ValueArray>::Describe() { return t_("array"); }
-String CalcType<Nuller>::Describe()     { return t_("null value"); }
+String CalcType<double>::Describe()      { return t_("real number"); }
+String CalcType<String>::Describe()      { return t_("string"); }
+String CalcType<Date>::Describe()        { return t_("date"); }
+String CalcType<Time>::Describe()        { return t_("date/time"); }
+String CalcType<bool>::Describe()        { return t_("logical value"); }
+String CalcType<Value>::Describe()       { return t_("any data type"); }
+String CalcType<ValueArray>::Describe()  { return t_("array"); }
+String CalcType<Nuller>::Describe()      { return t_("null value"); }
 
 RegisterStdCalcTypeName(double)
 RegisterStdCalcTypeName(String)
@@ -22,7 +22,6 @@ RegisterStdCalcTypeName(Time)
 RegisterStdCalcTypeName(bool)
 RegisterStdCalcTypeName(Value)
 RegisterStdCalcTypeName(ValueArray)
-RegisterStdCalcTypeName(CalcNodePtr)
 
 const char *CalcNanError()
 {

@@ -10,6 +10,9 @@ NAMESPACE_UPP
 String CalcType<const CalcNode *>::Describe() { return "lambda-výraz"; }
 RegisterStdCalcTypeName(const CalcNode *)
 
+String CalcType<CalcNodePtr>::Describe() { return t_("lambda-expression"); }
+RegisterStdCalcTypeName(CalcNodePtr)
+
 int CharFilterCalcIdent(int c)      { return IsIdent(c) ? c : 0; }
 int CharFilterCalcUpperIdent(int c) { return IsIdent(c) ? ToUpper(c) : 0; }
 
