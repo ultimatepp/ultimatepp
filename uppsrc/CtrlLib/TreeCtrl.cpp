@@ -278,6 +278,13 @@ void TreeCtrl::SetDisplay(int id, const Display& display)
 	Dirty(id);
 }
 
+const Display& TreeCtrl::GetDisplay(int id) const
+{
+	if(id >= 0 && id < item.GetCount() && item[id].display)
+		return *item[id].display;
+	return *display;
+}
+
 void   TreeCtrl::SetNode(int id, const TreeCtrl::Node& n)
 {
 	(TreeCtrl::Node&)item[id] = n;
@@ -808,10 +815,12 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 					anchor = cursor;
 				}
 		}
-		if(cursor != q)
+		if(cursor != q) {
 			WhenAction();
+		}
 		if(down)
 			WhenLeftClick();
+		Select();
 	}
 }
 
@@ -960,9 +969,9 @@ void TreeCtrl::Paint(Draw& w)
 		int x = 0;
 		x = levelcx + l.level * levelcx - org.x;
 		Point op = Point(x - levelcx2, y + msz.cy / 2);
-		Rect r = RectC(x, y, vsz.cx + 2 * m.margin, msz.cy);
+		Rect fr = RectC(x, y, vsz.cx + 2 * m.margin + isz.cx, msz.cy);
 		if(l.itemi == dropitem) {
-			dri = r;
+			dri = fr;
 			if(i == 0)
 				dri.top++;
 		}
@@ -992,7 +1001,7 @@ void TreeCtrl::Paint(Draw& w)
 				}
 				if(i == cursor && !nocursor && multiselect && GetSelectCount() != 1 && HasFocus()
 				   && !IsDragAndDropTarget())
-					DrawFocus(w, r, st & Display::SELECT ? SColorPaper() : SColorText());
+					DrawFocus(w, fr, st & Display::SELECT ? SColorPaper() : SColorText());
 			}
 		}
 	}
@@ -1081,6 +1090,9 @@ bool TreeCtrl::Key(dword key, int)
 	bool shift = key & K_SHIFT;
 	key &= ~K_SHIFT;
 	switch(key) {
+	case K_ENTER:
+		Select();
+		break;
 	case K_TAB:
 		return Tab(1);
 	case K_SHIFT_TAB:
@@ -1382,6 +1394,10 @@ void TreeCtrl::ClearSelection()
 }
 
 void TreeCtrl::SetOption(int id)
+{
+}
+
+void TreeCtrl::Select()
 {
 }
 
@@ -1691,129 +1707,6 @@ int Copy(TreeCtrl& dst, int did, int i, const TreeCtrl& src, int id)
 	for(int i = 0; i < src.GetChildCount(id); i++)
 		Copy(dst, did, i, src, src.GetChild(id, i));
 	return did;
-}
-
-CH_VALUE(TreeDropEdge, ChBorder(BlackBorder()));
-
-CtrlFrame& TreeDropFrame()
-{
-	static LookFrame m(TreeDropEdge);
-	return m;
-}
-
-PopUpTree::PopUpTree() {
-	SetFrame(TreeDropFrame());
-	Accel();
-	MouseMoveCursor();
-	NoPopUpEx();
-	maxheight = 200;
-	open = false;
-	WhenOpen = WhenClose = THISBACK(OpenClose);
-}
-
-PopUpTree::~PopUpTree() {}
-
-void PopUpTree::CancelMode() {
-	if(open) {
-		DoClose();
-		WhenCancel();
-	}
-	TreeCtrl::CancelMode();
-}
-
-void PopUpTree::DoClose() {
-	open = false;
-	Ctrl::Close();
-}
-
-void PopUpTree::Deactivate() {
-	if(open) {
-		DoClose();
-		IgnoreMouseClick();
-		WhenCancel();
-	}
-}
-
-void PopUpTree::LeftUp(Point p, dword keyflags) {
-	TreeCtrl::LeftUp(p, keyflags);
-	if(IsCursor() && !GetData().IsVoid()) {
-		DoClose();
-		WhenSelect();
-	}
-}
-
-bool PopUpTree::Key(dword key, int n) {
-	switch(key) {
-	case K_ENTER:
-	case K_ALT_DOWN:
-		DoClose();
-		WhenSelect();
-		return true;
-	case K_ESCAPE:
-		DoClose();
-		WhenCancel();
-		return true;
-	}
-	return TreeCtrl::Key(key, n);
-}
-
-void PopUpTree::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
-	DoClose();
-	int h = AddFrameSize(width, maxheight).cy;
-	showpos.x = x;
-	showpos.y = bottom;
-	showwidth = width;
-	Rect area = Ctrl::GetWorkArea();
-	up = false;
-	if(showpos.y + h > area.bottom) {
-		up = true;
-		showpos.y = top;
-	}
-	open = false;
-	Ctrl popup;
-	int ht = AddFrameSize(width, min(maxheight, GetTreeSize().cy)).cy;
-	Rect rt = RectC(showpos.x, showpos.y - (up ? ht : 0), showwidth, ht);
-	if(GUI_PopUpEffect()) {
-		if(up) {
-			popup.SetRect(Rect(rt.left, rt.bottom - 1, rt.right, rt.bottom));
-			popup.Add(TopPos(0, rt.Height()).LeftPos(0, rt.Width()));
-		}
-		else {
-			popup.SetRect(Rect(rt.left, rt.top, rt.right, rt.top + 1));
-			popup.Add(BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
-		}
-		CenterCursor();
-		popup.PopUp(owner, true, true, GUI_DropShadows());
-		SetFocus();
-		Ctrl::ProcessEvents();
-		Animate(popup, rt, GUIEFFECT_SLIDE);
-		Ctrl::Remove();
-	}
-	CenterCursor();
-	SetRect(rt);
-	Ctrl::PopUp(owner, true, true, GUI_DropShadows());
-	SetFocus();
-	open = true;
-}
-
-void PopUpTree::OpenClose(int i)
-{
-	SyncTree();
-	int ht = AddFrameSize(showwidth, min(maxheight, GetTreeSize().cy)).cy;
-	SetRect(RectC(showpos.x, showpos.y - (up ? ht : 0), showwidth, ht));
-}
-
-void PopUpTree::PopUp(Ctrl *owner, int width)
-{
-	Rect r = owner->GetScreenRect();
-	r.right = r.left + width;
-	PopUp(owner, r.left, r.top, r.bottom, width);
-}
-
-void PopUpTree::PopUp(Ctrl *owner)
-{
-	Rect r = owner->GetScreenRect();
-	PopUp(owner, r.left, r.top, r.bottom, r.Width());
 }
 
 END_UPP_NAMESPACE
