@@ -22,7 +22,7 @@ file
 	Docking.iml,
 	Docking.lay,
 	src.tpp,
-	Docking.t;
+	Docking.t charset "UTF-8";
 
 mainconfig
 	"" = "GUI";
