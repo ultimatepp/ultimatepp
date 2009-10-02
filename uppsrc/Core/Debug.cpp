@@ -228,8 +228,8 @@ void DeleteUsrLog()
 			UsrLogStream() << "log is persistent";
 	}
 	else {
-		if(!UsrLogStream().Delete())
-			RLOG("Unable to delete UsrLog, " << GetLastErrorMessage());
+		if(susrlog && !UsrLogStream().Delete())
+			LOG("Unable to delete UsrLog, " << GetLastErrorMessage());
 		susrlog = false;
 	}
 }
