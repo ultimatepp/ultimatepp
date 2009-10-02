@@ -56,6 +56,9 @@ public:
 		SOCKET                  AcceptRaw(dword *ipaddr, int timeout_msec);
 		void                    Attach(SOCKET socket, bool nodelay, bool is_blocking);
 		void                    SetSockResError(String context);
+		void                    AttachRaw(SOCKET s, bool blocking);
+
+		friend void AttachSocket(Socket& socket, SOCKET hsocket, bool blocking);
 	};
 
 	Socket() {}
@@ -150,3 +153,4 @@ public:
 
 bool ServerSocket(Socket& socket, int port, bool nodelay = true, int listen_count = 5, bool is_blocking = true, bool reuse = true);
 bool ClientSocket(Socket& socket, const char *host, int port, bool nodelay = true, dword *my_addr = NULL, int timeout = DEFAULT_CONNECT_TIMEOUT, bool is_blocking = true);
+void AttachSocket(Socket& socket, SOCKET s, bool blocking);

@@ -341,13 +341,18 @@ SOCKET Socket::Data::AcceptRaw(dword *ipaddr, int timeout_msec)
 	return connection;
 }
 
-void Socket::Data::Attach(SOCKET s, bool nodelay, bool blocking)
+void Socket::Data::AttachRaw(SOCKET s, bool blocking)
 {
 	CloseRaw(0);
 	socket = s;
+	is_blocking = blocking;
+}
+
+void Socket::Data::Attach(SOCKET s, bool nodelay, bool blocking)
+{
+	AttachRaw(s, blocking);
 	if(nodelay)
 		NoDelay();
-	is_blocking = blocking;
 	if(!is_blocking)
 		Block(false);
 }
@@ -835,6 +840,13 @@ bool ClientSocket(Socket& socket, const char *host, int port, bool nodelay, dwor
 		return false;
 	socket.Attach(data);
 	return true;
+}
+
+void AttachSocket(Socket& socket, SOCKET s, bool blocking)
+{
+	One<Socket::Data> data = new Socket::Data;
+	data->AttachRaw(s, blocking);
+	socket.Attach(data);
 }
 
 #ifdef PLATFORM_WIN32
