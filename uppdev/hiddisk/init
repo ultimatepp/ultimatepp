@@ -1,0 +1,4 @@
+#ifndef _hiddisk_icpp_init_stub
+#define _hiddisk_icpp_init_stub
+#include "CtrlLib/init"
+#endif
