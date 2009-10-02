@@ -157,6 +157,7 @@ private:
 protected:
 	virtual void SetOption(int id);
 	void         SyncTree();
+	virtual void Select();
 
 public:
 	Callback1<int>  WhenOpen;
@@ -207,6 +208,7 @@ public:
 	void   Set(int id, Value key, Value value);
 	
 	void   SetDisplay(int id, const Display& display);
+	const Display& GetDisplay(int id) const;
 	void   RefreshItem(int id)                                 { RefreshItem(id, 0); }
 
 	int    GetLineCount();
@@ -356,6 +358,24 @@ public:
 
 class PopUpTree : public TreeCtrl {
 public:
+	virtual void Deactivate();
+	virtual void Select();
+	virtual bool Key(dword key, int);
+	virtual void CancelMode();
+
+private:
+	int          maxheight;
+	Point        showpos;
+	bool         autosize;
+	int          showwidth;
+	bool         up;
+	bool         open;
+	int          droplines;
+
+	void         DoClose();
+	void         OpenClose(int i);
+
+public:
 	typedef PopUpTree CLASSNAME;
 	PopUpTree();
 	virtual ~PopUpTree();
@@ -369,21 +389,53 @@ public:
 
 	PopUpTree&   MaxHeight(int maxheight_)          { maxheight = maxheight_; return *this; }
 	int          GetMaxHeight() const               { return maxheight; }
+	PopUpTree&   AutoResize(bool b = true)          { autosize = b; return *this; }
+	PopUpTree&   SetDropLines(int n)                { droplines = n; return *this; }
+};
+
+class DropTree : public MultiButton {
+public:
+	virtual bool  Key(dword k, int cnt);
+	virtual void  SetData(const Value& data);
+	virtual Value GetData() const;
+
+private:
+	PopUpTree        tree;
+	const Display     *valuedisplay;
+	DisplayWithIcon    icond;
+	int                dropwidth;
+	bool               displayall;
+	bool               dropfocus;
+	bool               notnull;
+	
+	void Sync();
+	void Drop();
+	void Select();
+	void Cancel();
+	
+	typedef DropTree CLASSNAME;
 
 public:
-	virtual void Deactivate();
-	virtual void LeftUp(Point p, dword keyflags);
-	virtual bool Key(dword key, int);
-	virtual void CancelMode();
+	Callback      WhenDrop;
 
-protected:
-	void         DoClose();
-	void         OpenClose(int i);
+	void Clear();
 
-protected:
-	int          maxheight;
-	Point        showpos;
-	int          showwidth;
-	bool         up;
-	bool         open;
+	PopUpTree&   TreeObject()                       { return tree; }
+
+	TreeCtrl *operator->()                          { return &tree; }
+	const TreeCtrl *operator->() const              { return &tree; }
+
+	DropTree& MaxHeight(int maxheight_)             { tree.MaxHeight(maxheight_); return *this; }
+	DropTree& AutoResize(bool b = true)             { tree.AutoResize(b); return *this; }
+
+	DropTree& ValueDisplay(const Display& d);
+	DropTree& DisplayAll(bool b = true)             { displayall = b; return *this; }
+	DropTree& DropFocus(bool b = true)              { dropfocus = b; return *this; }
+	DropTree& NoDropFocus()                         { return DropFocus(false); }
+	DropTree& AlwaysDrop(bool e);
+	DropTree& SetDropLines(int d)                   { tree.SetDropLines(d); return *this; }
+	DropTree& DropWidth(int w)                      { dropwidth = w; return *this; }
+	DropTree& DropWidthZ(int w)                     { dropwidth = HorzLayoutZoom(w); return *this; }
+
+	DropTree();
 };

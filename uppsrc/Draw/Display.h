@@ -73,6 +73,24 @@ private:
 	String nulltext;
 };
 
+class DisplayWithIcon : public Display {
+	const Display *display;
+	Image icon;
+	int   lspc;
+public:
+	virtual void PaintBackground(Draw& w, const Rect& r, const Value& q,
+	                             Color ink, Color paper, dword style) const;
+	virtual void Paint(Draw& w, const Rect& r, const Value& q,
+		               Color ink, Color paper, dword style) const;
+	virtual Size GetStdSize(const Value& q) const;
+	
+	void SetIcon(const Image& img, int spc = 4)             { icon = img; lspc = spc; }
+	void SetDisplay(const Display& d)                       { display = &d; }
+	void Set(const Display& d, const Image& m, int spc = 4) { SetIcon(m, spc); SetDisplay(d); }
+	
+	DisplayWithIcon();
+};
+
 class PaintRect : Moveable<PaintRect> {
 protected:
 	Value          value;

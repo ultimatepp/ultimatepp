@@ -299,6 +299,38 @@ Size DrawingDisplayCls::RatioSize(const Value& q, int cx, int cy) const {
 
 const Display& DrawingDisplay() { return Single<DrawingDisplayCls>(); }
 
+void DisplayWithIcon::PaintBackground(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	display->PaintBackground(w, r, q, ink, paper, style);
+}
+
+void DisplayWithIcon::Paint(Draw& w, const Rect& r0, const Value& q, Color ink, Color paper, dword style) const
+{
+	Rect r = r0;
+	if(!IsNull(icon)) {
+		Size isz = icon.GetSize();
+		w.DrawImage(r.left, r.top + max((r.Height() - isz.cy) / 2, 0), icon);
+		r.left += isz.cx + lspc;
+	}
+	display->Paint(w, r, q, ink, paper, style);
+}
+
+Size DisplayWithIcon::GetStdSize(const Value& q) const
+{
+	Size sz = display->GetStdSize(q);
+	if(!IsNull(icon)) {
+		sz.cx += icon.GetSize().cx + lspc;
+		sz.cy = max(sz.cy, icon.GetSize().cy);
+	}
+	return sz;
+}
+
+DisplayWithIcon::DisplayWithIcon()
+{
+	display = &StdDisplay();
+	lspc = 0;
+}
+
 Size  PaintRect::GetStdSize() const {
 	return display ? display->GetStdSize(value) : Size(0, 0);
 }
