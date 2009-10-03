@@ -48,10 +48,10 @@ a Cross Development Tool]&]
 [s0; [/1 Thank you!]&]
 [s0; &]
 [s0;%- [%%*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans], [*^http`:`/`/www`.vegachess`.com^ vega
-chess], Daniel Jesús Pérez Burgos, yeohhs, Matt Ezell, Herbert 
-Danler, Garry Everard, Jay Krell, mobilehunter, Michael Bzdega, 
-Reza Fatahilah Shah, Keith Willis, Brian Rich, Alex Nicolson, 
-Jean`-François GUCHENS, Daryl Warder&]
+chess], Marcelo Santos, Daniel Jesús Pérez Burgos, yeohhs, 
+Matt Ezell, Herbert Danler, Garry Everard, Jay Krell, mobilehunter, 
+Michael Bzdega, Reza Fatahilah Shah, Keith Willis, Brian Rich, 
+Alex Nicolson, Jean`-François GUCHENS, Daryl Warder&]
 [s0; &]
 [s0; [2 Ultimate`+`+ project is sponsored by]&]
 [s0;= [^http`:`/`/www`.centrum`.cz^ 
