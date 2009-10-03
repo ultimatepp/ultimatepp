@@ -5,12 +5,17 @@ using namespace Upp;
 GUI_APP_MAIN
 {
 	TopWindow win;
-	PopUpTree tree;
+	DropTree dt;
 	
-	tree.SetRoot(CtrlImg::cut(), "Root");
-	tree.Add(0, Null, "Test");
+	dt->SetRoot(CtrlImg::Home(), "Home");
+	for(int i = 0; i < 10; i++) {
+		int id = dt->Add(0, CtrlImg::Computer(), "Computer " + AsString(i + 1));
+		for(int j = 0; j < i; j++)
+			dt->Add(id, CtrlImg::File(), "File " + AsString(j + 1));
+	}
+
+	dt.AutoResize();
 	
-	win.Add(tree.HSizePos().VSizePos(0, Ctrl::STDSIZE));
+	win.Add(dt.HSizePos().TopPos(0, Ctrl::STDSIZE));
 	win.Run();
 }
-
