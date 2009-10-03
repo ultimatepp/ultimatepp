@@ -7,7 +7,7 @@ NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x)
 
-String CalcType<const CalcNode *>::Describe() { return "lambda-výraz"; }
+String CalcType<const CalcNode *>::Describe() { return t_("lambda-expression"); }
 RegisterStdCalcTypeName(const CalcNode *)
 
 String CalcType<CalcNodePtr>::Describe() { return t_("lambda-expression"); }
@@ -1321,9 +1321,9 @@ CalcNodePtr CalcParser::ScanSelect()
 	CalcNodePtr node = ScanLogOr();
 	if(Check(OP_QUESTION))
 	{ // ?:
-		CalcNodePtr when1 = ScanAny();
+		CalcNodePtr when1 = ScanSelect();
 		Force(OP_COLON, ":");
-		CalcNodePtr when0 = ScanAny();
+		CalcNodePtr when0 = ScanSelect();
 		node = new CalcSelectNode(node, when1, when0);
 	}
 	return node;
@@ -1473,7 +1473,7 @@ CalcNodePtr CalcParser::ScanPrefix()
 			{
 				CalcNodePtr arg = ScanSelect();
 				if(Check(OP_DOTS)) {
-					CalcNodePtr maxrng = ScanAny();
+					CalcNodePtr maxrng = ScanSelect();
 					ctr = new CalcFunctionNode("[..]", arg, maxrng);
 				}
 				else {
@@ -1526,14 +1526,14 @@ CalcNodePtr CalcParser::ScanPostfix(CalcNodePtr node)
 				list.Add() = ScanSelect();
 				if(!Check(OP_COMMA)) // default value
 					break;
-				list.Add() = ScanAny();
+				list.Add() = ScanSelect();
 			}
 			while(Check(OP_COMMA));
 			Force(OP_RBRACE, "}");
 			node = new CalcSwitchNode(node, list);
 		}
 		else if(Check(OP_LBRACKET)) {
-			CalcNodePtr index = ScanAny();
+			CalcNodePtr index = ScanSelect();
 			Force(OP_RBRACKET, "]");
 			node = new CalcFunctionNode("[]", node, index);
 		}
