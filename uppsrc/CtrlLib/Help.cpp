@@ -27,8 +27,8 @@ bool HelpWindow::GoTo0(const String& link)
 		FinishText(txt);
 		view.Pick(txt, zoom);
 		view.GotoLabel(label, true);
-		tree.FindSetCursor(topic);
 		current_link = link;
+		tree.FindSetCursor(topic);
 		return true;
 	}
 	return false;
