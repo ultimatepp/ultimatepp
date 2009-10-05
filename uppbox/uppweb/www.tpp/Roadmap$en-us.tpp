@@ -23,9 +23,28 @@ topic "Changelog";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s0; [*R6 Roadmap]&]
-[s0; &]
+[s0;4 &]
 [s0; [*_3 Current release ]&]
+[s0;4 &]
+[s0; [*_4 1609]&]
 [s0; &]
+[s0; [* Library]&]
+[s0; &]
+[s0;i150;O0; Draw&]
+[s0;l160;i160;O3; DisplayWithIcon (Display that adds an icon to any 
+other Display)&]
+[s0;l160;i160;O3; AttrText now has `'SetImage`' (places the icon 
+to the left of  text)&]
+[s0;i150;O0; CtrlLib: DropTree widget&]
+[s0;i150;O0; Web: void AttachSocket(Socket`& socket, SOCKET s, bool 
+blocking)&]
+[s0;i150;O0; MSSQL: IdentityInsert helper (bypass of IDENTITY column 
+insertion)&]
+[s0;i150;O0; CtrlCore: RegisterSystemHotKey (system`-wide hotkey) 
+&]
+[s0;4 &]
+[s0; [*_3 Previous releases]&]
+[s0;4 &]
 [s0; [*_4 1579]&]
 [s0; &]
 [s0; [* Library]&]
@@ -37,8 +56,6 @@ hull calculation (ConvexHullOrder)&]
 [s0;i150;O0; RichText: Optimized by caching paragraph data and layout&]
 [s0;i150;O0; Draw, plugin/tif: Added GetActivePage support&]
 [s0;i150;O0; Fixed a lot of minor bugs&]
-[s0;4 &]
-[s0; [*_3 Previous releases]&]
 [s0;*4 &]
 [s0; [*_4 1517]&]
 [s0; &]
