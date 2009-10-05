@@ -14,17 +14,9 @@ GUI_APP_MAIN
 {
 	SysInfoDemo program;
 	
-	LoadFromFile(program);
-
-	if(program.lang == 0)
-		SetLanguage(LNGC_('E','S','E','S', CHARSET_UTF8));
-	else
-		SetLanguage(LNGC_('E','N','U','S', CHARSET_UTF8));
-    SetDateFormat("%3:02d/%2:02d/%1:4d");
-    SetDateScan("dmy");
+	SetLanguage(LNGC_('E','N','U','S', CHARSET_UTF8));
     
 	program.Run();
-	StoreToFile(program);
 }
 
 void SpecialFolders::Fill()
@@ -187,7 +179,7 @@ void SystemInfo::Fill()
 			row.Add(fileSystem);
 			uint64 freeBytesUser, totalBytesUser, totalFreeBytes;
 			if(!GetDriveSpace(drives[i], freeBytesUser, totalBytesUser, totalFreeBytes))
-				row.Add("Mounted but no access to drive");
+				row.Add("Installed but no access to drive");
 			else {
 				row.Add(Format64(totalBytesUser));
 				row.Add(BytesToString(totalBytesUser));				
@@ -197,7 +189,7 @@ void SystemInfo::Fill()
 				row.Add(BytesToString(totalFreeBytes));
 			}
 		} else
-			row.Add("Not mounted");
+			row.Add("Not mounted"); 
 		
 		Drives.Add(row);
 	}
@@ -351,12 +343,12 @@ void ScreenGrabTab::ButSnap_Push()
 	else
 		throw Exc("Unexpected value");
 }
+
 SysInfoDemo::SysInfoDemo()
 {
 	Title("SysInfo");
 	Icon(Images::Computer());
 	LargeIcon(Images::Computer());
-	lang = 0;
 	
 	systemInfo.Fill();
 	filesTab.Add(systemInfo.SizePos(), "System Info");	
@@ -373,55 +365,31 @@ SysInfoDemo::SysInfoDemo()
 	AddFrame(TopSeparatorFrame());
 	AddFrame(info);
 	Add(filesTab.SizePos());
-	AddFrame(tool);	
 	
 	menu.Set(THISBACK(MainMenu));
 	menu.WhenHelp = info;
-	tool.Set(THISBACK(MainBar));
-	tool.WhenHelp = info;
 
 	Sizeable().Zoomable();
-	
-	timerOn = false;
-	SetTimeCallback(-300, THISBACK(Timer));	
 }
-void SysInfoDemo::Serialize(Stream &s)
-{
-	int version = 1;
-	s / version;
-	s % lang;
-	SerializePlacement(s);
-}
-void SysInfoDemo::Timer()
-{
-	if (timerOn)
-		return;
-	timerOn = true;
-	
-	timerOn = false;
-}
-
 
 void SysInfoDemo::MainMenu(Bar& bar)
 {
 	menu.Add("Menu", THISBACK(FileMenu));
 }
+
 void SysInfoDemo::FileMenu(Bar& bar)
 {
 	bar.Add("About...", THISBACK(About)).Help("SysInfo demo gui: SysInfo package demo");
 	bar.Separator();
-	bar.Add("Exit", Images::Exit(), THISBACK(Exit)).Help("Leave the program");
+	bar.Add("Exit", THISBACK(Exit)).Help("Leave the program");
 }
+
 void SysInfoDemo::About()
 {
 	Prompt("SysInfo demo gui", Images::Computer(), DeQtf("SysInfo package demo"), "Close");
 }
-void SysInfoDemo::MainBar(Bar& bar) 
-{
-	bar.Add("Exit", Images::Exit(), THISBACK(Exit)).Help("Leave the program");
-}
+
 void SysInfoDemo::Exit() 
 {
-	if(PromptOKCancel("Leave SysInfo demo gui ?"))
-		Break();
+	Break();
 }

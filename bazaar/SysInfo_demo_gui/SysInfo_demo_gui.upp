@@ -15,12 +15,12 @@ uses
 library(WIN32) psapi;
 
 file
-	"SysInfo_demo_gui.h",
-	"SysInfo_demo_gui.iml",
-	"SysInfo_demo_gui.lay",
-	"SysInfo_demo_gui.rc",
-	Readme,
-	main.cpp;
+	main.cpp,
+	SysInfo_demo_gui.h,
+	SysInfo_demo_gui.iml,
+	SysInfo_demo_gui.lay,
+	SysInfo_demo_gui.rc,
+	Readme;
 
 mainconfig
 	"" = "GUI";

@@ -69,7 +69,6 @@ public:
 	SysInfoDemo();
 	
 	MenuBar 		menu;
-	ToolBar   		tool;
 	StatusBar  		info;
 	
 	TabCtrl			filesTab;
@@ -84,17 +83,7 @@ public:
 	void FileMenu(Bar& bar);
 	void About();
 	
-	void MainBar(Bar& bar);
-	void MenuFn();
-
 	void Exit();
-	
-	int lang;
-	void Serialize(Stream &s);
-
-private:
-	void Timer();
-	bool timerOn;
 };	
 
 
