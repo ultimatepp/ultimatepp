@@ -3,7 +3,8 @@ description "Automation of Office suites OpenOffice and Microsoft\377BI28,170,25
 noblitz;
 
 uses
-	Core;
+	Core,
+	zLibs\SysInfo;
 
 library(WIN32) Oleaut32;
 

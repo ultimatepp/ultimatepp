@@ -1,4 +1,5 @@
-#ifndef _OfficeAutomation_icpp_init_stub
-#define _OfficeAutomation_icpp_init_stub
+#ifndef _zLibs_OfficeAutomation_icpp_init_stub
+#define _zLibs_OfficeAutomation_icpp_init_stub
 #include "Core/init"
+#include "zLibs\SysInfo/init"
 #endif

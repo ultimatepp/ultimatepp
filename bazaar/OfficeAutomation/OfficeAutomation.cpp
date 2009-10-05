@@ -638,7 +638,16 @@ bool MSSheet::SaveAs(String fileName, String type)
 	else				// xls
 		vType.Int(-4143);
 
-	int ret = Ole::Method(Book, "SaveAs", vType, vFileName);
+	bool opened = false;
+	if (FileExists(fileName)) {
+		if (!FileToTrashBin(fileName)) 
+			opened = true;
+	} 
+	int ret;
+	if (opened)
+		ret = Ole::Method(Book, "Save");
+	else
+		ret = Ole::Method(Book, "SaveAs", vType, vFileName);
 
 	return (bool)ret;
 }
@@ -2059,6 +2068,10 @@ void OfficeSheet::CellToColRow(const char *cell, int &col, int &row)
 		p /= num_az;
 	}
 }
+void OfficeSheet::CellToColRow(const char *cell, Cell &cellPos)
+{
+	CellToColRow(cell, cellPos.col, cellPos.row);
+}
 String OfficeSheet::ColRowToCell(const int col, const int row)
 {
 	String cell;
@@ -2079,6 +2092,10 @@ String OfficeSheet::ColRowToCell(const int col, const int row)
 	cell = bCell;
 	
 	return cell;
+}
+String OfficeSheet::ColRowToCell(const Cell &cellPos)
+{
+	return ColRowToCell(cellPos.col, cellPos.row);
 }		
 bool OfficeSheet::IsAvailable(String strtype)
 {

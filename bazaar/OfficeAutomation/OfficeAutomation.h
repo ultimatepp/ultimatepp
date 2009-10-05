@@ -3,6 +3,11 @@
 
 using namespace Upp;
 
+struct Cell {
+	int col;
+	int row;
+};
+
 class OfficeSheet
 {
 public:
@@ -59,7 +64,9 @@ public:
 			return "Microsoft"; 
 	}
 	static void CellToColRow(const char *cell, int &col, int &row);
+	static void CellToColRow(const char *cell, Cell &cellPos);
 	static String ColRowToCell(const int col, const int row);
+	static String ColRowToCell(const Cell &cellPos);
 	
 private:
 	void *data;
