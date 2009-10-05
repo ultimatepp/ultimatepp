@@ -3,15 +3,16 @@ description "OS, hardware and Desktop handling functions\377BI128,0,0";
 noblitz;
 
 uses
-	Core;
+	Core,
+	zLibs\SysInfo;
 
 library(WIN32) "psapi gdi32 vfw32 oleaut32 wbemuuid";
 
 library(!WIN32) X11;
 
 file
-	SysInfo.h,
 	SysInfo.cpp,
+	SysInfo.h,
 	srcdoc.tpp,
 	srcimp.tpp,
 	src.tpp,

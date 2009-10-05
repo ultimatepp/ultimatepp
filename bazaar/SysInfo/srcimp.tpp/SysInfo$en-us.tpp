@@ -43,14 +43,14 @@ in Ubuntu can run properly in Fedora without recompiling.&]
 [s0; SysInfo has been tested in Linux using Gcc and in Windows using 
 MinGW and MSC 9.&]
 [s0; &]
-[s0; [* IMPORTANT:] To compile using MinGW it is required to copy the 
-next files from the MSC install or from other sources:&]
-[s0;i150;O0; To MinGW/include: &]
+[s0;~~~2048; [*@6 IMPORTANT][* :] To compile using MinGW it is required 
+to copy the next files from the MSC install or from other sources:&]
+[s0;i150;O0; To Upp`\MinGW`\include: &]
 [s0; -|`- Files Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
 WbemProv.h and WbemTran.h&]
 [s0;  -|`- They can be taken from: `\Microsoft SDKs`\Windows`\v6.1`\Include&]
 [s0; &]
-[s0;i150;O0;%- To MinGW/lib: &]
+[s0;i150;O0;%- To `\Upp`\MinGW`\lib: &]
 [s0; -|`- File wbemuuid.lib&]
 [s0; -|`- It can be taken from `\Microsoft SDKs`\Windows`\v6.1`\Lib&]
 [s0; &]

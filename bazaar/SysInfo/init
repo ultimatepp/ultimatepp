@@ -1,4 +1,5 @@
 #ifndef _SysInfo_icpp_init_stub
 #define _SysInfo_icpp_init_stub
 #include "Core/init"
+#include "zLibs\SysInfo/init"
 #endif

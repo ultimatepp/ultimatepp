@@ -4,13 +4,15 @@
 #include <shellapi.h>
 #include <Tlhelp32.h>
 #include <psapi.h>
+#include <Winioctl.h>
 #define CY tagCY
 // To compile in MinGW copy files Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
 // WbemProv.h and WbemTran.h from \Microsoft SDKs\Windows\v6.1\Include to MinGW/include and 
 // wbemuuid.lib from \Microsoft SDKs\Windows\v6.1\Lib to MinGW/lib
 #include <rpcsal.h>	
 #include <Wbemidl.h>
-#include <winnls.h>
+#include <winnls.h> 
+#include <vfw.h>
 #endif
 #ifdef PLATFORM_POSIX
 #include <sys/time.h>
@@ -44,6 +46,8 @@ using namespace Upp;
 
 bool FileCat(const char *file, const char *appendFile)
 {
+	if (!FileExists(file)) 
+		return FileCopy(appendFile, file);
 	FileAppend f(file);
 	if(!f.IsOpen())
 		return false;
@@ -80,6 +84,109 @@ String Replace(String str, String find, String replace)
 	return ret;
 }
 
+// Like StrToDate but using Time
+const char *StrToTime(struct Upp::Time& d, const char *s)
+{
+	s = StrToDate(d, s);
+
+	d.hour = 0;
+	d.minute = 0;
+	d.second = 0;
+
+	const char *fmt = "hms";
+
+	while(*fmt) {
+		while(*s && !IsDigit(*s))
+			s++;
+		int n;
+		if(IsDigit(*s)) {
+			char *q;
+			n = strtoul(s, &q, 10);
+			s = q;
+		} else
+			break;
+
+		switch(*fmt) {
+		case 'h':
+			if(n < 0 || n > 23)
+				return NULL;
+			d.hour = n;
+			break;
+		case 'm':
+			if(n < 0 || n > 59)
+				return NULL;
+			d.minute = n;
+			break;
+		case 's':
+			if(n < 0 || n > 59)
+				return NULL;
+			d.second = n;
+			break;
+		default:
+			NEVER();
+		}
+		fmt++;
+	}
+	return d.IsValid() ? s : NULL;
+}
+
+String GetUpperFolder(String folderName)
+{
+	if (folderName.IsEmpty())
+		return "";
+#ifdef PLATFORM_WIN32
+	if (folderName.GetCount() == 3)
+#else
+	if (folderName.GetCount() == 1)
+#endif
+		return folderName;
+	int len = folderName.GetCount();
+	if (folderName[len-1] == DIR_SEP)
+		len--;
+	int pos = folderName.ReverseFind(DIR_SEP, len-1);
+#ifdef PLATFORM_WIN32
+	if (pos == 2)
+#else
+	if (pos == 0)
+#endif
+		pos++;
+	return folderName.Left(pos);
+}
+
+bool CreateFolderDeep(const char *dir)
+{
+	if (DirectoryExists(dir))
+		return true;
+	String upper = GetUpperFolder(dir);
+	if (CreateFolderDeep(upper))
+		return DirectoryCreate(dir);
+	else 
+		return false;
+}
+
+bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath)
+{
+	String dirPath = AppendFileName(dir, relPath);
+	String newPath = AppendFileName(newPlace, relPath);
+	FindFile ff(AppendFileName(dirPath, "*.*"));
+	while(ff) {
+		if(ff.IsFile())
+			FileCopy(AppendFileName(dirPath, ff.GetName()), AppendFileName(newPath, ff.GetName()));
+		else if(ff.IsFolder()) {
+			DirectoryCreate(AppendFileName(newPath, ff.GetName()));
+			if(!DirectoryCopy_Each(dir, newPlace, AppendFileName(relPath, ff.GetName())))
+				return false;
+		}
+		ff.Next();
+	}
+	return true;
+}
+
+bool DirectoryCopy(const char *dir, const char *newPlace)
+{
+	return DirectoryCopy_Each(dir, newPlace, "");
+}
+
 void SearchFile_Each(String dir, String condFile, String text, Array<String> &files, Array<String> &errorList)
 {
 	FindFile ff;
@@ -90,7 +197,11 @@ void SearchFile_Each(String dir, String condFile, String text, Array<String> &fi
 				if (text.IsEmpty())
 					files.Add(p);
 				else {
-					FILE *fp = fopen(p, "r");
+#ifdef PLATFORM_POSIX
+					FILE *fp = fopen(p, "rb");
+#else
+					FILE *fp = _wfopen(p.ToWString(), L"rb");
+#endif
 					if (fp != NULL) {
 						int i = 0, c;
 						while ((c = fgetc(fp)) != EOF) {
@@ -108,7 +219,7 @@ void SearchFile_Each(String dir, String condFile, String text, Array<String> &fi
 						}
 						fclose(fp);
 					} else
-						errorList.Add(AppendFileName(dir, ff.GetName()) + ": Impossible to open file");
+						errorList.Add(AppendFileName(dir, ff.GetName()) + String(": ") + t_("Impossible to open file"));
 				}
 			} 
 		} while (ff.Next());
@@ -143,26 +254,438 @@ Array<String> SearchFile(String dir, String condFile)
 	return ret;
 }
 
-bool IsFolder(String fileName)
+bool fileDataSortAscending;
+char fileDataSortBy;
+
+FileDataArray::FileDataArray(bool use)
 {
-	FindFile ff(fileName);
-	
-	if (ff) 
-		return ff.IsFolder();
-	else
-		return false;
+	Clear();
+	fileDataSortAscending = true;
+	fileDataSortBy = 'n';
+	useId = use;
 }
 
-bool IsFile(String fileName)
+bool FileDataArray::Init(String folder, FileDataArray &orig, FileDiffArray &diff)
 {
-	FindFile ff(fileName);
+	basePath = orig.basePath;
+	fileCount = orig.fileCount;
+	folderCount = orig.folderCount;
+	fileSize = orig.fileSize;
+	useId = orig.useId;
+	fileList.SetCount(orig.GetCount());
+	for (int i = 0; i < orig.GetCount(); ++i)
+		fileList[i] = orig[i];
 	
-	if (ff) 
-		return ff.IsFile();
-	else
-		return false;
+	for (int i = 0; i < diff.GetCount(); ++i) {
+		long id;
+		if (diff[i].action != 'n') {
+		 	id = Find(diff[i].relPath, diff[i].fileName, diff[i].isFolder);
+			if (id < 0)
+				return false;
+		}
+		switch(diff[i].action) {
+		case 'u':
+			fileList[id].id = diff[i].idMaster;
+			fileList[id].length = diff[i].lengthMaster;
+			fileList[id].t = diff[i].tMaster;
+			break;
+		case 'n':
+			fileList.Add(FileData(diff[i].isFolder, diff[i].fileName, diff[i].relPath, diff[i].lengthMaster, diff[i].tMaster, diff[i].idMaster));
+			if (diff[i].isFolder) 
+				folderCount++;
+			else
+				fileCount++;
+			break;
+		case 'd':
+			fileList.Remove(id);
+			if (diff[i].isFolder) 
+				folderCount--;
+			else
+				fileCount--;
+			break;
+			break;
+		case 'p':
+			SetLastError(t_("Problem found"));
+			return false;
+		}
+	}
+	return true;
 }
 
+void FileDataArray::Clear()
+{
+	fileList.Clear();
+	errorList.Clear();
+	fileCount = folderCount = 0;
+	fileSize = 0;
+	basePath = "";
+}
+
+bool FileDataArray::Search(String dir, String condFile, bool recurse, String text)
+{
+	Clear();
+	basePath = dir;
+	Search_Each(dir, condFile, recurse, text);
+	return errorList.IsEmpty();
+}
+
+void FileDataArray::Search_Each(String dir, String condFile, bool recurse, String text)
+{
+	FindFile ff;
+	if (ff.Search(AppendFileName(dir, condFile))) {
+		do {
+			if(ff.IsFile()) {
+				String p = AppendFileName(dir, ff.GetName());
+				if (text.IsEmpty()) {
+					uint64 len = ff.GetLength();
+					fileList.Add(FileData(false, ff.GetName(), GetRelativePath(dir), len, ff.GetLastWriteTime(), 
+											(useId && ff.GetLength() > 0) ? GetFileId(p) : 0));
+					fileCount++;
+					fileSize += len;
+				} else {
+					FILE *fp = fopen(p, "r");
+					if (fp != NULL) {
+						int i = 0, c;
+						while ((c = fgetc(fp)) != EOF) {
+							if (c == text[i]) {
+								++i;
+								if (i == text.GetCount()) {
+									uint64 len = ff.GetLength();
+									fileList.Add(FileData(false, ff.GetName(), GetRelativePath(dir), len, ff.GetLastWriteTime(), useId ? GetFileId(p) : 0));
+									fileCount++;
+									fileSize += len;
+									break;
+								}
+							} else {
+								if (i != 0) 
+									fseek(fp, -(i-1), SEEK_CUR);
+								i = 0;
+							}
+						}
+						fclose(fp);
+					} else
+						errorList.Add(AppendFileName(dir, ff.GetName()) + String(": ") + t_("Impossible to open file"));
+				}
+			} 
+		} while (ff.Next());
+	}
+	ff.Search(AppendFileName(dir, "*"));
+	do {
+		String name = ff.GetName();
+		if(ff.IsDirectory() && name != "." && name != "..") {
+			String p = AppendFileName(dir, name);
+			fileList.Add(FileData(true, name, GetRelativePath(dir), 0, ff.GetLastWriteTime(), 0));
+			folderCount++;
+			if (recurse)
+				Search_Each(p, condFile, recurse, text);
+		}
+	} while (ff.Next()); 
+}
+
+int64 FileDataArray::GetFileId(String fileName)
+{
+	int64 id = -1;
+#ifdef PLATFORM_POSIX
+	FILE *fp = fopen(fileName, "rb");
+#else
+	FILE *fp = _wfopen(fileName.ToWString(), L"rb");
+#endif
+	if (fp != NULL) {
+		int c;
+		long i = 0;
+		while ((c = fgetc(fp)) != EOF) {
+			id += c*i;
+			i++;
+		}
+		fclose(fp);
+	}
+	return id;
+}
+
+void FileDataArray::SortByName(bool ascending)
+{
+	fileDataSortBy = 'n';
+	fileDataSortAscending = ascending;
+	Sort(fileList);
+}
+void FileDataArray::SortByDate(bool ascending)
+{
+	fileDataSortBy = 'd';
+	fileDataSortAscending = ascending;
+	Sort(fileList);
+}
+void FileDataArray::SortBySize(bool ascending)
+{
+	fileDataSortBy = 's';
+	fileDataSortAscending = ascending;
+	Sort(fileList);
+}
+
+bool operator<(const FileData& a, const FileData& b)
+{
+	if ((a.isFolder && b.isFolder) || (!a.isFolder && !b.isFolder)) {
+		switch (fileDataSortBy) {
+		case 'n':	return (ToLower(a.fileName) < ToLower(b.fileName))&fileDataSortAscending; 
+		case 'd':	return (a.t < b.t)&fileDataSortAscending; 
+		default:	return (a.length < b.length)&fileDataSortAscending; 
+		}
+	} else 
+		return a.isFolder;
+}
+int FileDataArray::Find(String &relFileName, String &fileName, bool isFolder)
+{
+	for (int i = 0; i < fileList.GetCount(); ++i) {
+		if ((ToLower(fileList[i].relFilename) == ToLower(relFileName)) && (ToLower(fileList[i].fileName) == ToLower(fileName)) && (fileList[i].isFolder == isFolder))
+		    return i;
+	}
+	return -1;
+}
+
+bool FileDataArray::SaveFile(const char *fileName)
+{
+	String ret;
+	
+	for (int i = 0; i < fileList.GetCount(); ++i) {
+		ret << fileList[i].relFilename << "; ";
+		ret << fileList[i].fileName << "; ";
+		ret << fileList[i].isFolder << "; ";
+		ret << fileList[i].length << "; ";
+		ret << fileList[i].t << "; ";
+		ret << fileList[i].id << "; ";
+		ret << "\n";
+	}
+	return ::SaveFile(fileName, ret);
+}
+
+bool FileDataArray::LoadFile(const char *fileName)
+{
+	Clear();
+	StringParse in = ::LoadFile(fileName);
+	
+	if (in == "")
+		return false;
+
+	int numData = in.Count("\n");
+	fileList.SetCount(numData);	
+	for (int row = 0; row < numData; ++row) {		
+		fileList[row].relFilename = in.GetText(";");	
+		fileList[row].fileName = in.GetText(";");	
+		fileList[row].isFolder = in.GetText(";") == "true" ? true : false;	
+		if (fileList[row].isFolder)
+			folderCount++;
+		else
+			fileCount++; 
+		fileList[row].length = in.GetUInt64(";");	
+		struct Upp::Time t;
+		StrToTime(t, in.GetText(";"));	
+		fileList[row].t = t;
+		fileList[row].id = in.GetUInt64(";");	
+	}
+	return true;
+}
+
+String FileDataArray::GetRelativePath(String fullPath)
+{
+	if (basePath != fullPath.Left(basePath.GetCount()))
+		return "";
+	return fullPath.Mid(basePath.GetCount());
+}
+
+int64 GetDirectoryLength(String directoryName)
+{
+	FileDataArray files;
+	files.Search(directoryName, "*.*", true);
+	return files.GetSize();
+}
+
+int64 GetLength(String fileName)
+{
+	if (FileExists(fileName))
+		return GetFileLength(fileName);
+	else	
+		return GetDirectoryLength(fileName);
+}
+
+FileDiffArray::FileDiffArray()
+{
+	Clear();
+}
+
+void FileDiffArray::Clear()
+{
+	diffList.Clear();
+}
+
+// True if equal
+bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary)
+{
+	if (master.GetCount() == 0) {
+		if (secondary.GetCount() == 0)
+			return true;
+		else
+			return false;
+	} else if (secondary.GetCount() == 0)
+		return false;
+	
+	bool equal = true;
+	diffList.Clear();
+	Array<bool> secReviewed;
+	secReviewed.SetCount(secondary.GetCount(), false);
+	
+	for (int i = 0; i < master.GetCount(); ++i) {
+		int idSec = secondary.Find(master[i].relFilename, master[i].fileName, master[i].isFolder);
+		if (idSec >= 0) {
+			bool useId = master.UseId() && secondary.UseId();
+			secReviewed[idSec] = true;
+			if (master[i].isFolder) 
+				;
+			else if ((useId && (master[i].id == secondary[idSec].id)) ||
+					 (!useId && (master[i].length == secondary[idSec].length) && (master[i].t == secondary[idSec].t)))
+				;
+			else {
+				equal = false;
+				FileDiff &f = diffList.Add();
+				bool isf = f.isFolder = master[i].isFolder;
+				f.relPath = master[i].relFilename;
+				String name = f.fileName = master[i].fileName;
+				f.idMaster = master[i].id;
+				f.idSecondary = secondary[idSec].id;
+				f.tMaster = master[i].t;
+				f.tSecondary = secondary[idSec].t;
+				f.lengthMaster = master[i].length;
+				f.lengthSecondary = secondary[idSec].length;
+				if (master[i].t >= secondary[idSec].t)
+					f.action = 'u';
+				else
+					f.action = 'p';
+			}
+		} else {
+			equal = false;
+			FileDiff &f = diffList.Add();
+			f.isFolder = master[i].isFolder;
+			f.relPath = master[i].relFilename;
+			f.fileName = master[i].fileName;
+			f.idMaster = master[i].id;
+			f.idSecondary = 0;
+			f.tMaster = master[i].t;
+			f.tSecondary = Null;
+			f.lengthMaster = master[i].length;
+			f.lengthSecondary = 0;
+			f.action = 'n';
+		}	
+	}
+	for (int i = 0; i < secReviewed.GetCount(); ++i) {
+		if (!secReviewed[i]) {
+			equal = false;
+			FileDiff &f = diffList.Add();
+			f.isFolder = secondary[i].isFolder;
+			f.relPath = secondary[i].relFilename;
+			f.fileName = secondary[i].fileName;
+			f.idMaster = 0;
+			f.idSecondary = secondary[i].id;
+			f.tMaster = Null;
+			f.tSecondary = secondary[i].t;
+			f.lengthMaster = 0;
+			f.lengthSecondary = secondary[i].length;
+			f.action = 'd';
+		}
+	}
+	return equal;
+}
+
+bool FileDiffArray::Apply(String toFolder, String fromFolder)
+{
+	for (int i = 0; i < diffList.GetCount(); ++i) {
+		bool ok = true;
+		String dest = AppendFileName(toFolder, 
+									 AppendFileName(diffList[i].relPath, diffList[i].fileName));
+		switch (diffList[i].action) {
+		case 'n': case 'u': 	
+			if (diffList[i].isFolder) {
+				if (!DirectoryExists(dest))
+					ok = DirectoryCreate(dest);
+			} else 
+				ok = FileCopy(AppendFileName(fromFolder, FormatInt(i)), dest);
+			if (!ok) {
+				SetLastError(t_("Not possible to create") + String(" ") + dest);
+				return false;
+			}
+			break;
+		case 'd': 
+			if (diffList[i].isFolder) {
+				if (DirectoryExists(dest))
+					ok = DeleteFolderDeep(dest);
+			} else {
+				if (FileExists(dest))
+					ok = FileDelete(dest);
+			}
+			if (!ok) {
+				SetLastError(t_("Not possible to delete") + String(" ") + dest);
+				return false;
+			}
+			break;		
+		case 'p': 
+			SetLastError(t_("There was a problem in the copy"));
+			return false;
+		}
+	}
+	return true;
+}
+
+bool FileDiffArray::SaveFile(const char *fileName)
+{
+	return ::SaveFile(fileName, ToString());
+}
+
+String FileDiffArray::ToString()
+{
+	String ret;
+	
+	for (int i = 0; i < diffList.GetCount(); ++i) {
+		ret << diffList[i].action << "; ";
+		ret << diffList[i].isFolder << "; ";
+		ret << diffList[i].relPath << "; ";
+		ret << diffList[i].fileName << "; ";
+		ret << diffList[i].idMaster << "; ";
+		ret << diffList[i].idSecondary << "; ";
+		ret << diffList[i].tMaster << "; ";
+		ret << diffList[i].tSecondary << "; ";
+		ret << diffList[i].lengthMaster << "; ";
+		ret << diffList[i].lengthSecondary << "; ";
+		ret << "\n";
+	}
+	return  ret;
+}
+
+bool FileDiffArray::LoadFile(const char *fileName)
+{
+	Clear();
+	StringParse in = ::LoadFile(fileName);
+	
+	if (in == "")
+		return false;
+
+	int numData = in.Count("\n");
+	diffList.SetCount(numData);	
+	for (int row = 0; row < numData; ++row) {		
+		diffList[row].action = TrimLeft(in.GetText(";"))[0];	
+		diffList[row].isFolder = in.GetText(";") == "true" ? true : false;	
+		diffList[row].relPath = in.GetText(";");	
+		diffList[row].fileName = in.GetText(";");	
+		diffList[row].idMaster = in.GetUInt64(";");
+		diffList[row].idSecondary = in.GetUInt64(";");
+		struct Upp::Time t;
+		StrToTime(t, in.GetText(";"));	
+		diffList[row].tMaster = t;
+		StrToTime(t, in.GetText(";"));	
+		diffList[row].tSecondary = t;
+		diffList[row].lengthMaster = in.GetUInt64(";");
+		diffList[row].lengthSecondary = in.GetUInt64(";");
+	}
+	return true;
+}
+	
+	
 #if defined(PLATFORM_WIN32) 
 Value GetVARIANT(VARIANT &result)
 {
@@ -221,6 +744,7 @@ Value GetVARIANT(VARIANT &result)
 }
 #endif
 
+/* Substitute them with Sys();
 /////////////////////////////////////////////////////////////////////
 // LaunchCommand
 int LaunchCommand(const char *cmd, void (*readCallBack)(String &))
@@ -259,17 +783,96 @@ String LaunchCommand(const char *cmd)
 	LaunchCommand(cmd, ret);
 	return ret;
 }
+*/
+
+bool CommandProcess::RunStep(TimeStop &t)
+{
+	lg.Add(p.Get());
+	
+	String line;
+	do {
+		line = GetLine();
+		if (ParseLine(status, line)) {
+			if (status.error)
+				return false;
+			status.remaining = (t.Elapsed()/1000.)*(status.total/status.actual - 1);
+			if (progress) {
+				if(!progress->ShowProgress(status))
+					return false;
+			}
+		}
+		DoEvents();
+	} while (!line.IsEmpty());
+	return true;
+}
+
+bool CommandProcess::Run(String cmd)
+{
+	status.Reset();
+	status.state = t_("Initializing...");
+	if(!p.Start(cmd))
+		return false;
+	
+	TimeStop t;
+	while(p.IsRunning()) {
+		 if (!RunStep(t)) 
+			break;
+	} 
+	if (status.error)
+		return false;
+	RunStep(t);
+	return p.GetExitCode() >= 0;	
+}
+
+String CommandProcess::GetLine() 
+{
+	bool removeLine;
+	return lg.GetLine(removeLine);
+}
 
 /////////////////////////////////////////////////////////////////////
 // LaunchFile
 
+#if defined(PLATFORM_WIN32)
+bool LaunchFileCreateProcess(const String file)
+{
+	STARTUPINFOW startInfo;
+    PROCESS_INFORMATION procInfo;
+
+    ZeroMemory(&startInfo, sizeof(startInfo));
+    startInfo.cb = sizeof(startInfo);
+    ZeroMemory(&procInfo, sizeof(procInfo));
+
+	WString wexec;
+	wexec = Format("\"%s\" \"%s\"", GetExtExecutable(GetFileExt(file)), file).ToWString();
+	WStringBuffer wsbexec(wexec);
+	
+    if(!CreateProcessW(NULL, wsbexec, NULL, NULL, FALSE, 0, NULL, NULL, &startInfo, &procInfo))  
+        return false;
+
+   	WaitForSingleObject(procInfo.hProcess, 0);
+
+    CloseHandle(procInfo.hProcess);
+    CloseHandle(procInfo.hThread);	
+	return true;
+}
+
+bool LaunchFileShellExecute(const String file)
+{
+	HINSTANCE ret;
+	WString fileName(file);
+	ret = ShellExecuteW(NULL, L"open", fileName, NULL, L".", SW_SHOWNORMAL);		
+
+	return (int)ret > 32;
+}
+#endif
+
 bool LaunchFile(const String file)
 {
 #if defined(PLATFORM_WIN32)
-	HINSTANCE ret;
-	WString fileName(file);
-	ret = ShellExecuteW(NULL, L"open", fileName, NULL, L".", SW_SHOWNORMAL);		//SW_SHOWMINIMIZED
-	return (int)ret > 32;
+	if (!LaunchFileShellExecute(file))			// First try
+	   	return LaunchFileCreateProcess(file);	// Second try
+	return true;
 #endif
 #ifdef PLATFORM_POSIX
 	int ret;
@@ -311,7 +914,7 @@ String GetExtExecutable(String ext)
 	if ((mime.GoAfter_Init(String(" ") + ext.Right(ext.GetCount()-1))) || (mime.GoAfter_Init(String("\t") + ext.Right(ext.GetCount()-1)))) {
 		mime.GoBeginLine();
 		mime = mime.GetText();
-		exeFile = TrimRight(LaunchCommand(String("xdg-mime query default ") + mime));
+		exeFile = TrimRight(Sys(String("xdg-mime query default ") + mime));
 	}
 #endif
 	return exeFile;
@@ -743,7 +1346,7 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 	identifier = cpu.GetText("\n");
 	cpu.GoAfter("stepping", ":");
 	String stepping = cpu.GetText();
-	architecture = LaunchCommand("uname -m");		// CPU type
+	architecture = Sys("uname -m");		// CPU type
 	architecture << " Family " << family << " Model " << model << " Stepping " << stepping;		// And 64 bits ?? uname -m
 	cpu.GoAfter_Init("cpu MHz", ":");
 	speed = cpu.GetInt();
@@ -1651,13 +2254,13 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 	if (kernel == "")
 		kernel = LoadFile_Safe("/proc/version");
 	if (kernel == "") {
-		if (LaunchCommand("sysctl_cmd -n kern.version").Find("FreeBSD") >= 0)
+		if (Sys("sysctl_cmd -n kern.version").Find("FreeBSD") >= 0)
 			kernel = "freebsd";
 	}
 	if (kerVersion == "")
 		kerVersion = LoadFile_Safe("/proc/sys/kernel/osrelease") + " " + LoadFile_Safe("/proc/sys/kernel/version");
 	if (kerArchitecture == "")
-		kerArchitecture = LaunchCommand("uname -m");	// Kernel. See too /proc/version, /proc/version_signature and uname -a looking for architecture
+		kerArchitecture = Sys("uname -m");	// Kernel. See too /proc/version, /proc/version_signature and uname -a looking for architecture
 	
 	if (kernel == "")
 		kernel = kerVersion = kerArchitecture = "UNKNOWN";	
@@ -1665,21 +2268,21 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 	// Desktop
     if(GetEnv("GNOME_DESKTOP_SESSION_ID").GetCount() || GetEnv("GNOME_KEYRING_SOCKET").GetCount()) {
 		desktop = "gnome";
-		StringParse gnomeVersion = LaunchCommand("gnome-about --version");
+		StringParse gnomeVersion = Sys("gnome-about --version");
 		gnomeVersion.GoAfter("gnome-about");
 		deskVersion = gnomeVersion.GetText();
 	} else if(GetEnv("KDE_FULL_SESSION").GetCount() || GetEnv("KDEDIR").GetCount() || GetEnv("KDE_MULTIHEAD").GetCount()) {
         desktop = "kde"; 
-        StringParse konsole = LaunchCommand("konsole --version");
+        StringParse konsole = Sys("konsole --version");
         konsole.GoAfter("KDE:");
         deskVersion = konsole.GetText("\r\n");						
 		if (deskVersion == "")		
 			deskVersion = GetEnv("KDE_SESSION_VERSION");        
 	} else {
 		StringParse desktopStr;
-		if (LaunchCommand("xprop -root _DT_SAVE_MODE").Find("xfce") >= 0)
+		if (Sys("xprop -root _DT_SAVE_MODE").Find("xfce") >= 0)
 			desktop = "xfce";
-		else if ((desktopStr = LaunchCommand("xprop -root")).Find("ENLIGHTENMENT") >= 0) {
+		else if ((desktopStr = Sys("xprop -root")).Find("ENLIGHTENMENT") >= 0) {
 			desktop = "enlightenment";
 			desktopStr.GoAfter("ENLIGHTENMENT_VERSION(STRING)", "=");
 			desktopStr = desktopStr.GetText();
@@ -1741,7 +2344,7 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 		distVersion = LoadFile_Safe("/etc/debian_version");
 	} else if (LoadFile_Safe("/etc/release").Find("Solaris") >= 0)
 		distro = "solaris";
-	else if (LaunchCommand("uname -r").Find("solaris") >= 0)
+	else if (Sys("uname -r").Find("solaris") >= 0)
 		distro = "solaris";
 	else {					// If not try with /etc/osname_version
 		distro = LoadFile_Safe("/etc/osname_version");
@@ -1880,7 +2483,7 @@ bool GetDriveSpace(String drive,
 {
 	freeBytesUser = totalBytesUser = totalFreeBytes = 0;
 	
-	StringParse space = LaunchCommand("df -T");
+	StringParse space = Sys("df -T");
 	if (space == "")
 		return false;
 	
@@ -1897,7 +2500,7 @@ bool GetDriveSpace(String drive,
 // return true if mounted
 bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &serial, */int &maxName, String &fileSystem)
 {
-	StringParse info = LaunchCommand("mount -l");
+	StringParse info = Sys("mount -l");
 	if (info  == "")
 		return false;
 	String straux;
@@ -2117,11 +2720,27 @@ String BytesToString(uint64 _bytes)
 	return ret;
 }
 
-String SecondsToString(double _seconds)
+String SecondsToString(double _seconds, bool decimals)
 {
+	long seconds = (long)_seconds;
+	if (!decimals)
+		_seconds = seconds;
+	String units;
+	if (_seconds >= 3600*2)
+		units = t_("hours");
+	else if (_seconds >= 3600)
+		units = t_("hour");
+	else if (_seconds >= 120)
+		units = t_("mins");
+	else if (_seconds >= 60)
+		units = t_("min");
+	else if (_seconds > 1)
+		units = t_("secs");
+	else
+		units = t_("sec");
+		
 	String ret;
 	bool add0;
-	long seconds = (long)_seconds;
 	
 	if (_seconds >= 60) {
 		seconds /= 60;
@@ -2142,7 +2761,25 @@ String SecondsToString(double _seconds)
 			ret = FormatDouble(seconds) + ":" + (add0 ? "0":"") + ret;
 	} else
 		ret = FormatDouble(_seconds, 2);
-	return ret;
+	return ret + " " + units;
+}
+
+// hh:mm:ss.sss
+double StringToSeconds(String str)
+{
+	double seconds = 0;
+	int pos, oldpos;
+	
+	if ((pos = str.ReverseFind(':')) >= 0) {
+		seconds += atof(str.Mid(pos+1));
+		oldpos = pos;
+		if ((pos = str.ReverseFind(':', pos-1)) >= 0) {
+			seconds += 60*atof(str.Mid(pos+1, oldpos-pos));
+			return seconds + 60*60*atof(str.Left(pos));
+		} else
+			return seconds + 60*atof(str.Left(oldpos));
+	} else
+		return atof(str);
 }
 
 void GetCompilerInfo(String &name, int &version, String &date)
@@ -2226,6 +2863,17 @@ bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity,
 	return true;
 }
 
+bool OpenCDTray()
+{
+	String dummy;
+	return Sys("eject", dummy) > 0;	
+}
+bool CloseCDTray()
+{
+	String dummy;
+	return Sys("eject -t", dummy) > 0;	
+}
+
 #endif
 #if defined(PLATFORM_WIN32)
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
@@ -2262,6 +2910,45 @@ bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity,
 	
 	return true;
 }
+
+bool DriveOpenClose(String drive, bool open)
+{
+	int operation;
+	if (open)
+		operation = IOCTL_STORAGE_EJECT_MEDIA;
+	else
+		operation = IOCTL_STORAGE_LOAD_MEDIA;
+	if (drive.IsEmpty())
+		return false;
+	else if (drive.GetCount() == 1)
+		drive += ":";
+	else {
+		drive = drive.Left(2);
+		if (drive[1] != ':')
+			return false;
+	}
+	HANDLE hDrive;
+	hDrive = CreateFile("\\\\.\\" + drive, GENERIC_READ || GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (hDrive == INVALID_HANDLE_VALUE)
+		return false;
+	bool ret = false;
+	DWORD dummyBytesReturned;
+	if (DeviceIoControl(hDrive, operation, 0, 0, 0, 0, &dummyBytesReturned, 0))
+		ret = true;
+  	CloseHandle(hDrive);
+  	return ret;
+}
+
+bool OpenCDTray(String drive)
+{
+	return DriveOpenClose(drive, true);
+}
+
+bool CloseCDTray(String drive)
+{
+	return DriveOpenClose(drive, false);
+}
+
 #endif
 
 #if defined(PLATFORM_WIN32)
@@ -2678,7 +3365,7 @@ public:
 	bool IniGrabDesktop();
 	bool IniGrabWindow(long handle);
 	bool IniGrabDesktopRectangle(int left, int top, int width, int height);
-	bool Grab(int duration);
+	bool Grab(unsigned duration);
 	bool GrabSnapshot();
 	void Close();
 };
@@ -2958,7 +3645,7 @@ bool ScreenGrab::IniGrabDesktopRectangle(int _left, int _top, int _width, int _h
 	return true;	
 }
 	
-bool ScreenGrab::Grab(int duration)
+bool ScreenGrab::Grab(unsigned duration)
 {
 	if (!opened)
 		return false;
@@ -3079,9 +3766,7 @@ bool Window_SaveCapture(long windowId, String fileName, int left, int top, int w
 		command = "xwd -id " + FormatLong(windowId) + " -silent -out \"" + fileName + "\"";
 	
 	String strret;
-	int ret = LaunchCommand(command, strret);
-	
-	return ret == 0 ? true : false;
+	return Sys(command, strret) >= 0;
 }
 
 #endif
@@ -3105,10 +3790,10 @@ String GetTrashBinDirectory()
 {
 	return AppendFileName(GetHomeDirectory(), ".local/share/Trash/files");
 }
-void FileToTrashBin(const char *path)
+bool FileToTrashBin(const char *path)
 {	
 	String newPath = AppendFileName(GetTrashBinDirectory(), GetFileName(path));
-	FileMove(path, newPath);
+	return FileMove(path, newPath);
 }
 int64 TrashBinGetCount()
 {
@@ -3123,7 +3808,7 @@ int64 TrashBinGetCount()
 	}
 	return ret;
 }
-void TrashBinClear()
+bool TrashBinClear()
 {
 	FindFile ff;
 	String trashBinDirectory = GetTrashBinDirectory();
@@ -3139,6 +3824,7 @@ void TrashBinClear()
 			}
 		} while(ff.Next());
 	}
+	return true;
 }
 
 void SetDesktopWallPaper(const char *path)
@@ -3146,13 +3832,13 @@ void SetDesktopWallPaper(const char *path)
 	String desktopManager = GetDesktopManagerNew();
 	
 	if (desktopManager == "gnome") {
-		LaunchCommand("gconftool-2 -t str -s /desktop/gnome/background/picture_filename \"" + String(path) + "\"");
+		Sys("gconftool-2 -t str -s /desktop/gnome/background/picture_filename \"" + String(path) + "\"");
 		String mode;
 		if (*path == '\0')
 			mode = "none";		// Values "none", "wallpaper", "centered", "scaled", "stretched"
 		else
 			mode = "stretched";
-		LaunchCommand("gconftool-2 -t str -s /desktop/gnome/background/picture_options \"" + mode + "\"");	
+		Sys("gconftool-2 -t str -s /desktop/gnome/background/picture_options \"" + mode + "\"");	
 	} else if (desktopManager == "kde") {
 			// 1: disabled, only background color
 			// 2: tiled with first image in top left corner
@@ -3165,7 +3851,7 @@ void SetDesktopWallPaper(const char *path)
 			mode = 1;
 		else
 			mode = 6;
-		LaunchCommand("dcop kdesktop KBackgroundIface setWallpaper \"" + String(path) + "\" " + AsString(mode));
+		Sys("dcop kdesktop KBackgroundIface setWallpaper \"" + String(path) + "\" " + AsString(mode));
 	} else
 		throw Exc(t_("Not possible to change Desktop bitmap"));
 }
@@ -3173,20 +3859,30 @@ void SetDesktopWallPaper(const char *path)
 
 #if defined(PLATFORM_WIN32)
 
-void FileToTrashBin(const char *path)
+bool FileToTrashBin(const char *path)
 {	
 	if (!FileExists(path) && !DirectoryExists(path))
-		return;
+		return false;
 	
-    SHFILEOPSTRUCT fileOp;
+	int len = strlen(path);
+	char *doublenullstr = (char *)malloc(len+2);
+	if (!doublenullstr)
+		return false;
+	strcpy(doublenullstr, path);
+	doublenullstr[len+1] = '\0';	// SHFileOperation requires a string ended with two '\0'
+	
+    SHFILEOPSTRUCT fileOp; 
     
 	fileOp.hwnd = NULL;
     fileOp.wFunc = FO_DELETE;
-    fileOp.pFrom = path;
+    fileOp.pFrom = doublenullstr;
+    fileOp.pTo = 0;
     fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_SILENT;
 
-	if (0 != SHFileOperation(&fileOp))
-	    throw Exc(t_("Error sending file to Trash Bin"));
+	int ret = SHFileOperation(&fileOp);
+	if (0 != ret)
+		return false;
+	return true;
 }
 int64 TrashBinGetCount()
 {
@@ -3194,18 +3890,18 @@ int64 TrashBinGetCount()
  
  	shqbi.cbSize = sizeof(SHQUERYRBINFO);
 	if (S_OK != SHQueryRecycleBin(0, &shqbi))
-		throw Exc(t_("Error counting elements in Trash Bin"));
+		return -1;
 	return shqbi.i64NumItems;
 }
-void TrashBinClear()
+bool TrashBinClear()
 {
 	if (S_OK != SHEmptyRecycleBin(0, 0, SHERB_NOCONFIRMATION | SHERB_NOPROGRESSUI | SHERB_NOSOUND))
-		throw Exc(t_("Error sending file to Trash Bin"));
+		return false;
+	return true;
 }
-// 	SetDesktopWallPaper("c:\\Fondo de escritorio.bmp");
 void SetDesktopWallPaper(const char *path)
 {
     if (0 == SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, (LPVOID)path, SPIF_UPDATEINIFILE || SPIF_SENDWININICHANGE))
-        throw Exc(t_("Error " + AsString(GetLastError()) + " changing Desktop bitmap"));
+        throw Exc(t_("Error") + String(" ") +  AsString(GetLastError()) + String(" ") + t_("changing Desktop bitmap"));
 }
 #endif
