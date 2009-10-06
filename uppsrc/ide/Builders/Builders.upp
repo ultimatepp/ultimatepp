@@ -13,8 +13,8 @@ file
 	MscBuilder.cpp,
 	JavaBuilder.cpp,
 	ScriptBuilder.cpp,
-	Build.h,
 	Info readonly separator,
+	Build.h,
 	Build.cpp,
 	Copying;
 
