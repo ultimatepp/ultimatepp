@@ -26,7 +26,7 @@ topic "Changelog";
 [s0;4 &]
 [s0; [*_3 Current release ]&]
 [s0;4 &]
-[s0; [*_4 1609]&]
+[s0; [*_4 1607]&]
 [s0; &]
 [s0; [* Library]&]
 [s0; &]
