@@ -171,7 +171,7 @@ public:
 	void     Append(const Array& x)               { Insert(GetCount(), x); }
 	void     Append(const Array& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     InsertPick(int i, pick_ Array& x)    { vector.InsertPick(i, x.vector); }
-	void     AppendPick(pick_ Array& x)           { Insert(GetCount(), x); }
+	void     AppendPick(pick_ Array& x)           { InsertPick(GetCount(), x); }
 	int      GetIndex(const T& item) const;
 	void     Swap(int i1, int i2)       { UPP::Swap(vector[i1], vector[i2]); }
 	void     Move(int i1, int i2);
