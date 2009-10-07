@@ -603,7 +603,7 @@ void DockCont::WindowButtons(bool menu, bool hide, bool _close)
 void DockCont::AddRemoveButton(Ctrl& c, bool state)
 {
 	if (state && !c.GetParent()) 
-		Add(c); 
+		handle.Add(c); 
 	else if (!state) 
 		c.Remove();	
 }
