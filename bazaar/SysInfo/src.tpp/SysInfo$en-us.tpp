@@ -575,6 +575,14 @@ st]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 
 [s2; Returns the resulting String obtained by replacing in [%-*@3 str] 
 String [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find 
 ]appears in [%-*@3 str].&]
+[s0; &]
+[s4;%- &]
+[s5;:ReverseFind`(const String`&`,const String`&`,int`):%- [@(0.0.255) int]_[* ReverseFin
+d]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 toFind], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s2; Find in [%-*@3 s] the string [%-*@3 toFind] beginning in [%-*@3 from 
+]in reverse order.&]
+[s2; Similar to Find() but searching to the beginning of the String.&]
 [s3; &]
 [s4;%- &]
 [s5;:FormatLong`(long`):%- [_^String^ String]_[* FormatLong]([@(0.0.255) long]_[*@3 a])&]
@@ -592,6 +600,11 @@ String [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find
 [s5;:GetUpperFolder`(String`):%- [_^String^ String]_[* GetUpperFolder]([_^String^ String]_[*@3 f
 olderName])&]
 [s2; Returns the name of the upper folder over [%-*@3 folderName].&]
+[s3; &]
+[s4;%- &]
+[s5;:CreateFolderDeep`(const char`*`):%- [@(0.0.255) bool]_[* CreateFolderDeep]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 dir])&]
+[s2; Creates folder [%-*@3 dir], creating intermediate folders if necessary&]
 [s3; &]
 [s4;%- &]
 [s5;:SecondsToString`(double`,bool`):%- [_^String^ String]_[* SecondsToString]([@(0.0.255) d
