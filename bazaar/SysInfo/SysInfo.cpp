@@ -84,6 +84,27 @@ String Replace(String str, String find, String replace)
 	return ret;
 }
 
+struct StringNormalCompare__
+{
+	int operator()(char a, char b) const { return a - b; }
+};
+
+int Compare(const String& a, int i0, const String& b, int len)
+{
+	return IterCompare(a.Begin() + i0, a.Begin() + i0 + len, b.Begin(), b.Begin() + len, StringNormalCompare__());
+}
+
+int ReverseFind(const String& s, const String& toFind, int from) 
+{
+	ASSERT(from >= 0 && from <= s.GetLength());
+	int lc = toFind.GetLength();
+	for (int i = from; i >= 0; --i) {
+		if (Compare(s, i, toFind, lc) == 0)
+			return i;
+	}
+	return -1;
+}
+
 // Like StrToDate but using Time
 const char *StrToTime(struct Upp::Time& d, const char *s)
 {

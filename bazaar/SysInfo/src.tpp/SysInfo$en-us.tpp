@@ -33,46 +33,6 @@ in the OS by default.&]
 [s0; [/ -|LaunchFile(`"c:`\`\My spreadsheet.txt`"). It will open default 
 program (probably Notepad) with document `"My spreadsheet.txt`".]&]
 [s3; &]
-[s4;%- &]
-[s5;:LaunchCommand`(const char`*`,void`(`*`)`(String`&`)`):%- [@(0.0.255) int]_[* LaunchC
-ommand]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) void]_(`*[*@3 readCal
-lBack])(String_`&))&]
-[s2; Launches command line program [%-*@3 cmd. readCallBack ]is a function 
-to manage the program output.&]
-[s0; -|Program launched has to be in .exe folder, referenced in the 
-OS default program folders or it has to be included the full 
-path in [%-*@3 cmd].&]
-[s2; Returns the command exit code .&]
-[s0; -|&]
-[s0; [/ -|Example:]&]
-[s0; [/ -|LaunchCommand(`"mencoder film.mpg `-o film.avi`", MyHandler);]&]
-[s3; &]
-[s4;%- &]
-[s5;:LaunchCommand`(const char`*`,String`&`):%- [@(0.0.255) int]_[* LaunchCommand]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 cmd], [_^String^ String]_`&[*@3 ret])&]
-[s2; Launches command line program [%-*@3 cmd. ret ]gets all the program 
-output.&]
-[s0; -|Program launched has to be in .exe folder, referenced in the 
-OS default program folders or it has to be included the full 
-path in [%-*@3 cmd].&]
-[s2; Returns the command exit code.&]
-[s0; -|&]
-[s0; [/ -|Example:]&]
-[s0; [/ -|String strOutput;]&]
-[s0; [/ -|LaunchCommand(`"mencoder film.mpg `-o film.avi`", strOutput);]&]
-[s3; &]
-[s4;%- &]
-[s5;:LaunchCommand`(const char`*`):%- [_^String^ String]_[* LaunchCommand]([@(0.0.255) cons
-t]_[@(0.0.255) char]_`*[*@3 cmd])&]
-[s2;%- [%% Launches command line program ][*@3 cmd.]&]
-[s0; -|Program launched has to be in .exe folder, referenced in the 
-OS default program folders or it has to be included the full 
-path in [%-*@3 cmd].&]
-[s0; -|Returns the program output.&]
-[s0; -|&]
-[s0; [/ -|Example:]&]
-[s0; [/ -|String strOutput `= LaunchCommand(`"mencoder film.mpg `-o 
-film.avi`");]&]
 [s0; &]
 [ {{10000@1 [s0; [* Obtaining special folders]]}}&]
 [s0;%- &]
@@ -621,15 +581,51 @@ String [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find
 [s2; Returns the long number [%-*@3 a ]converted into a String.&]
 [s0; &]
 [s4;%- &]
+[s5;:Sign`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) int]_[* Sign](
+[*@4 T]_[*@3 a])&]
+[s2; Returns&]
+[s2;i150;O0;  `+1 if [%-*@3 a]. is positive&]
+[s2;i150;O0; 0 if [%-*@3 a] is 0 and &]
+[s2;i150;O0; `-1 if [%-*@3 a] is negative.&]
+[s3; &]
+[s4;%- &]
+[s5;:GetUpperFolder`(String`):%- [_^String^ String]_[* GetUpperFolder]([_^String^ String]_[*@3 f
+olderName])&]
+[s2; Returns the name of the upper folder over [%-*@3 folderName].&]
+[s3; &]
+[s4;%- &]
+[s5;:SecondsToString`(double`,bool`):%- [_^String^ String]_[* SecondsToString]([@(0.0.255) d
+ouble]_[*@3 seconds], [@(0.0.255) bool]_[*@3 decimals]_`=_[@(0.0.255) false])&]
+[s2; Converts an amount of [%-*@3 seconds] to a String formatted as 
+HH:MM:SS.&]
+[s0; -|If [%-*@3 decimals ]it includes decimals in seconds&]
+[s0; -|It is opposite to StringToSeconds()&]
+[s3; &]
+[s4;%- &]
+[s5;:StrToTime`(struct Time`&`,const char`*`):%- [@(0.0.255) const]_[@(0.0.255) char]_`*[* S
+trToTime]([@(0.0.255) struct]_[_^Time^ Upp`::Time][@(0.0.255) `&]_[*@3 d], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s2;%- Scans a string for a Time. Order of day, month and year is 
+specified using SetDateScan. In place of month both number and 
+text is accepted `- text must match abbreviated or full name 
+of month.&]
+[s0;%- -|Similar to StrToDate() but including both date and time.&]
+[s2;%- [*@3 d]-|Found time.&]
+[s2;%- [*@3 s]-|String to scan.&]
+[s2;%- Return value-|NULL if no time is found in [*@3 s] or pointer 
+to character right after the date.&]
+[s3; &]
+[s4;%- &]
+[s5;:StringToSeconds`(String`):%- [@(0.0.255) double]_[* StringToSeconds]([_^String^ String
+]_[*@3 str])&]
+[s2; It converts a String [%-*@3 str ]formatted as HH:MM:SS to a returned 
+amount of seconds.&]
+[s0; -|It is opposite to SecondsToString()&]
+[s3; &]
+[s4;%- &]
 [s5;:BytesToString`(uint64`):%- [_^String^ String]_[* BytesToString]([_^uint64^ uint64]_[*@3 b
 ytes])&]
 [s2; Converts an amount of [%-*@3 bytes ]to a short String.&]
-[s3; &]
-[s4;%- &]
-[s5;:SecondsToString`(double`):%- [_^String^ String]_[* SecondsToString]([@(0.0.255) double
-]_[*@3 seconds])&]
-[s2; Converts an amount of [%-*@3 seconds] to a String formatted as 
-HH:MM:SS.&]
 [s3; &]
 [s4;%- &]
 [s5;:DoEvents`(`):%- [@(0.0.255) void]_[* DoEvents]()&]

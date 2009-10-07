@@ -12,6 +12,8 @@ bool FileCat(const char *file, const char *appendFile);
 // Replace find with replace in str
 String Replace(String str, String find, String replace);
 
+int ReverseFind(const String& s, const String& toFind, int from = 0);
+
 // Like StrToDate
 const char *StrToTime(struct Upp::Time& d, const char *s);
 
@@ -24,6 +26,12 @@ double StringToSeconds(String str);		// The opposite
 
 // Convert a long into a String
 String FormatLong(long a); 
+
+template<class T>
+inline int Sign(T a)
+{
+	return (a > 0) - (a < 0);
+}
 
 String GetUpperFolder(String folderName);
 
@@ -240,7 +248,7 @@ public:
 	ProcessStatus status;
 	
 protected:	
-	Upp::Time t0;
+	Time t0;
 	
 private:
 	bool RunStep(TimeStop &t);
