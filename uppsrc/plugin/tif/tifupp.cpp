@@ -540,8 +540,10 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 
 	bool             Create();
 	Raster::Info     GetInfo();
-	Raster::Line     GetLine(int i);
+	Raster::Line     GetLine(int i, Raster *owner);
 	bool             SeekPage(int page);
+	bool             FetchPage();
+	void             CloseTmpFile();
 
 	static void      Warning(const char* module, const char* fmt, va_list ap);
 	static void      Error(const char* module, const char* fmt, va_list ap);
@@ -572,7 +574,11 @@ struct TIFRaster::Data : public TIFFRGBAImage {
 	int row_bytes;
 	int cache_size;
 	bool alpha;
+	bool page_open;
+	bool page_fetched;
+	bool page_error;
 	Vector<byte> imagebuf;
+	String tmpfile;
 	FileStream filebuffer;
 	struct Row {
 		Row() : x(0), size(0) {}
@@ -820,15 +826,21 @@ TIFRaster::Data::Data(Stream& stream)
 {
 	tiff = NULL;
 	page_index = 0;
+	cache_size = 0;
+	page_open = false;
+	page_fetched = false;
+	page_error = false;
 }
 
 TIFRaster::Data::~Data()
 {
-	if(tiff)
+	if(tiff) {
+		if(page_open)
+			TIFFRGBAImageEnd(this);
+		CloseTmpFile();
 		TIFFClose(tiff);
+	}
 }
-
-
 
 bool TIFRaster::Data::Create()
 {
@@ -868,15 +880,30 @@ bool TIFRaster::Data::Create()
 	return SeekPage(0);
 }
 
-bool TIFRaster::Data::SeekPage(int page)
+bool TIFRaster::Data::SeekPage(int pgx)
 {
-	TIFFSetDirectory(tiff, page_index = page);
+	if(page_open) {
+		TIFFRGBAImageEnd(this);
+		page_open = false;
+	}
+	
+	ASSERT(pgx >= 0 && pgx < pages.GetCount());
+	page_index = pgx;
+	page_error = false;
+	TIFFSetDirectory(tiff, page_index);
+	CloseTmpFile();
+
 	char emsg[1024];
 	if(!TIFFRGBAImageBegin(this, tiff, 0, emsg)) {
 		TIFFError(TIFFFileName(tiff), emsg);
+		page_error = true;
 		return false;
 	}
+	
+	page_open = true;
+	const Page& page = pages[page_index];
 
+	size = Size(page.width, page.height);
 	if(isContig) {
 		contig = put.contig;
 		put.contig = putContigRGB;
@@ -922,19 +949,42 @@ bool TIFRaster::Data::SeekPage(int page)
 		}
 		skewfac = 8 / bitspersample;
 	}
-
-	size = Size(width, height);
 	row_bytes = (bpp * width + 31) >> 5 << 2;
+
+	page_fetched = false;
+	return true;
+}
+
+void TIFRaster::Data::CloseTmpFile()
+{
+	if(filebuffer.IsOpen()) {
+		filebuffer.Close();
+		FileDelete(tmpfile);
+	}
+	tmpfile = Null;
+}
+
+bool TIFRaster::Data::FetchPage()
+{
+	if(page_error)
+		return false;
+	if(page_fetched)
+		return true;
+
+	cache_size = 0;
+	rows.Clear();
 	int64 bytes = row_bytes * (int64)height;
-	String tmpfile;
-	if(bytes >= 100000000) {
+	if(bytes >= 1 << 28) {
 		tmpfile = GetTempFileName();
-		if(!filebuffer.Open(tmpfile, FileStream::CREATE))
+		if(!filebuffer.Open(tmpfile, FileStream::CREATE)) {
+			page_error = true;
 			return false;
+		}
 		filebuffer.SetSize(bytes);
 		if(filebuffer.IsError()) {
 			filebuffer.Close();
 			FileDelete(tmpfile);
+			page_error = true;
 			return false;
 		}
 		rows.Alloc(size.cy);
@@ -946,23 +996,27 @@ bool TIFRaster::Data::SeekPage(int page)
 
 	bool res = TIFFRGBAImageGet(this, 0, width, height);
 	TIFFRGBAImageEnd(this);
+	page_open = false;
 
 	if(filebuffer.IsOpen()) {
 		Flush();
 		if(filebuffer.IsError() || !res) {
 			filebuffer.Close();
 			FileDelete(tmpfile);
+			page_error = true;
 			return false;
 		}
-		imagebuf.SetCount(size.cy * row_bytes);
-		filebuffer.Seek(0);
-		filebuffer.GetAll(imagebuf.Begin(), imagebuf.GetCount());
-		filebuffer.Close();
-		FileDelete(tmpfile);
+//		imagebuf.SetCount(size.cy * row_bytes);
+//		filebuffer.Seek(0);
+//		filebuffer.GetAll(imagebuf.Begin(), imagebuf.GetCount());
+//		filebuffer.Close();
+//		FileDelete(tmpfile);
 	}
 //	imagebuf.SetDotSize(pages[page_index].dot_size);
 //	dest_image.palette = palette;
 //	return dest_image;
+
+	page_fetched = true;
 	return true;
 }
 
@@ -976,6 +1030,23 @@ Raster::Info TIFRaster::Data::GetInfo()
 	out.dots = page.dot_size;
 	out.hotspot = Null;
 	return out;
+}
+
+Raster::Line TIFRaster::Data::GetLine(int line, Raster *raster)
+{
+	if(!page_error && !page_fetched)
+		FetchPage();
+	if(page_error) {
+		byte *tmp = new byte[row_bytes];
+		memset(tmp, 0, row_bytes);
+		return Raster::Line(tmp, raster, true);
+	}
+	if(!imagebuf.IsEmpty())
+		return Raster::Line(&imagebuf[row_bytes * line], raster, false);
+	const byte *data = MapDown(0, line, row_bytes, raster);
+	byte *tmp = new byte[row_bytes];
+	memcpy(tmp, data, row_bytes);
+	return Raster::Line(tmp, raster, true);
 }
 
 TIFRaster::TIFRaster()
@@ -1004,7 +1075,7 @@ Raster::Info TIFRaster::GetInfo()
 
 Raster::Line TIFRaster::GetLine(int line)
 {
-	return Raster::Line(&data->imagebuf[data->row_bytes * line], this, false);
+	return data->GetLine(line, this);
 }
 
 int TIFRaster::GetPaletteCount()
@@ -1146,7 +1217,7 @@ void TIFEncoder::Data::Start(Size sz, int bpp_, const RGBA *palette)
 	TIFFSetField(tiff, TIFFTAG_IMAGEWIDTH, size.cx);
 	TIFFSetField(tiff, TIFFTAG_IMAGELENGTH, size.cy);
 	TIFFSetField(tiff, TIFFTAG_BITSPERSAMPLE, min<int>(bpp, 8));
-	TIFFSetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_PACKBITS);
+	TIFFSetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
 	TIFFSetField(tiff, TIFFTAG_PHOTOMETRIC, bpp <= 8 ? PHOTOMETRIC_PALETTE : PHOTOMETRIC_RGB);
 	TIFFSetField(tiff, TIFFTAG_SAMPLESPERPIXEL, bpp <= 8 ? 1 : bpp != 32 ? 3 : 4);
 	TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, 1);
