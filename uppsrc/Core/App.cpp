@@ -300,7 +300,7 @@ void AppInit__(int argc, const char **argv, const char **envptr)
 		String varname(b, var);
 		if(*var == '=')
 			var++;
-		EnvMap().Add(varname.ToWString(), var.ToWString());
+		EnvMap().Add(varname.ToWString(), String(var).ToWString());
 	}
 	Vector<String>& cmd = coreCmdLine__();
 	for(int i = 1; i < argc; i++)
