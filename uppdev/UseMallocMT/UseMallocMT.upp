@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	UseMallocMT.cpp;
+
+mainconfig
+	"" = "MT USEMALLOC",
+	"" = "MT";
+
