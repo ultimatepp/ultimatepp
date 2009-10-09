@@ -152,7 +152,7 @@ String GetFileName(const char *fileName) {
 
 String AppendFileName(const String& path, const char *fileName) {
 	String result = path;
-	if(result.GetLength() && *result.Last() != DIR_SEP)
+	if(result.GetLength() && *result.Last() != DIR_SEP && *fileName != DIR_SEP)
 		result += DIR_SEP;
 	result += fileName;
 	return result;

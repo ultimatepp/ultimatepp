@@ -196,8 +196,11 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	STARTUPINFO si;
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	Buffer<char> env(environment.GetCount() + 1);
-	memcpy(env, environment, environment.GetCount() + 1);
+	LOGHEXDUMP(environment, environment.GetCount());
+	String ev = ToSystemCharset(environment);
+	LOGHEXDUMP(ev, ev.GetCount());
+	Buffer<char> env(ev.GetCount() + 1);
+	memcpy(env, ev, ev.GetCount() + 1);
 	if(CreateProcess(NULL, cmd, &sa, &sa, TRUE,
 		             NORMAL_PRIORITY_CLASS|CREATE_NEW_CONSOLE,
 	                ~env, NULL, &si, &pi)) {
