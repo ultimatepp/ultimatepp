@@ -167,7 +167,7 @@ void LineDraw::Set(Draw& _draw, LineStyle pattern, Color color, int width, doubl
 	}
 	first = last = Null;
 	Size size = draw->GetPageSize();
-	clip = draw->GetPageSize(); // GetClip()
+	clip = draw->GetPaintRect();
 	max_rad = max(size.cx, size.cy);
 	vertices.Clear();
 	indices.Clear();
@@ -607,7 +607,7 @@ void Plotter::Set(Draw& _draw, Sizef _scale, Pointf _delta, int reserve, double 
 
 void Plotter::Set(Draw& _draw, const Matrixf& matrix, int reserve, double meter)
 {
-	Rect rc = _draw.GetPageSize(); //GetClip();
+	Rect rc = _draw.GetPaintRect();
 	if(reserve < 0)
 		reserve = DotsToPixels(_draw, -reserve);
 	rc.Inflate(reserve);
@@ -1581,7 +1581,7 @@ void AreaTool::Paint()
 {
 	if(!plotter.draw)
 		return;
-	if(!(plotter.clip.Intersects(plotter.draw->GetPageSize /*GetClip*/()))) {
+	if(!(plotter.clip.Intersects(plotter.draw->GetPaintRect()))) {
 		Clear();
 		return;
 	}
@@ -2599,7 +2599,7 @@ public:
 
 void TestWindow::Paint(Draw& draw)
 {
-	draw.DrawRect(draw.GetClip(), LtCyan);
+	draw.DrawRect(draw.GetPaintRect(), LtCyan);
 	Plotter plotter(draw);
 	PathTool path;
 	path.Set(plotter, SolidLine);
