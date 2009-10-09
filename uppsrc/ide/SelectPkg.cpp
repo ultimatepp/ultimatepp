@@ -166,8 +166,19 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 		String stxt;
 		String nest;
 		bool   main;
+		Time   filetime;
 
 		bool operator<(const PkInfo& b) const { return PackageLess(package, b.package); }
+	};
+	
+	struct PkCache : Moveable<PkCache> {
+		String description;
+		bool   main;
+		Time   tm;
+		bool   exists;
+		
+		void Serialize(Stream& s)  { s % description % main % tm; }
+		PkCache()                  { exists = false; }
 	};
 
 	Array<PkInfo> packages;
@@ -192,7 +203,8 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	void           ChangeDescription();
 
 	void           Load();
-	void           Load(String upp, String dir, int progress_pos, int progres_count, String& case_fixed);
+	void           Load(String upp, String dir, int progress_pos, int progress_count,
+	                    String& case_fixed, VectorMap<String, PkCache>& cache);
 	void           SyncBase(String initvars);
 	void           SyncList();
 	static bool    Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b);
@@ -470,41 +482,6 @@ void SelectPackageDlg::OnBaseRemove()
 	SyncBase(next);
 }
 
-void SelectPackageDlg::Load()
-{
-	update = msecs();
-	if(selectvars) {
-		list.Enable(base.IsCursor());
-		if(!base.IsCursor())
-			return;
-		LoadVars((String)base.Get(0));
-	}
-	Vector<String> upp = GetUppDirs();
-	packages.Clear();
-	description.Hide();
-	progress.Show();
-	loading = true;
-	String case_fixed;
-	int f = ~filter;
-	for(int i = 0; i < upp.GetCount() && (f == MAIN_ALL || f == ALL_ALL || i < 1) && loading; i++) {
-		if(!IsSplashOpen() && !IsOpen())
-			Open();
-		Load(upp[i], Null, 1000 * i, 1000, case_fixed);
-	}
-	if(!IsNull(case_fixed))
-		PromptOK("Case was fixed in some of the files:[* " + case_fixed);
-	progress.Hide();
-	while(IsSplashOpen())
-		ProcessEvents();
-	if(!IsOpen())
-		Open();
-	description.Show();
-	if(loading) {
-		loading = false;
-		SyncList();
-	}
-}
-
 void FixName(const String& dir, const String& name, String& case_fixed)
 {
 	if(IsFullPath(name))
@@ -534,7 +511,8 @@ int DirSep(int c)
 	return c == '\\' || c == '/' ? c : 0;
 }
 
-void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progress_count, String& case_fixed)
+void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progress_count,
+                            String& case_fixed, VectorMap<String, PkCache>& cache)
 {
 	if(msecs(update) >= 200)
 	{
@@ -564,26 +542,79 @@ void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progre
 		String pkg = AppendFileName(dir, fo);
 		String desc;
 		String pf = AppendFileName(dd, nm);
-		if(FileExists(pf)) {
-			Package p;
-			p.Load(pf);
-			FixName(dd, nm, case_fixed);
+		Time ft = FileGetTime(pf);
+		if(!IsNull(ft)) {
+			int q = cache.Find(pf);
+			if(q < 0 || cache[q].tm != ft) {
+				q = cache.FindAdd(pf);
+				Package p;
+				p.Load(pf);
+				cache[q].description = p.description;
+				cache[q].main = p.config.GetCount();
+				cache[q].tm = ft;
+			}
+			PkCache& p = cache[q];
+			p.exists = true;
+/*			FixName(dd, nm, case_fixed);
 			for(int i = 0; i < p.GetCount(); i++)
 				if(!p[i].separator)
 					FixName(dd, p[i], case_fixed);
-			if(f == ALL_ALL || f == ALL_FIRST || p.config.GetCount()) {
+*/			if(f == ALL_ALL || f == ALL_FIRST || p.main) {
 				PkInfo& pk = packages.Add();
 				pk.package = pkg;
 				pk.description = p.description;
 				pk.path = pf;
 				pk.stxt = ToUpper(pk.package + pk.description + nest);
 				pk.nest = nest;
-				pk.main = p.config.GetCount();
+				pk.main = p.main;
 			}
 		}
 		int ppos = progress_pos + i * progress_count / folders.GetCount();
 		int npos = progress_pos + (i + 1) * progress_count / folders.GetCount();
-		Load(upp, pkg, ppos, npos - ppos, case_fixed);
+		Load(upp, pkg, ppos, npos - ppos, case_fixed, cache);
+	}
+}
+
+void SelectPackageDlg::Load()
+{
+	update = msecs();
+	if(selectvars) {
+		list.Enable(base.IsCursor());
+		if(!base.IsCursor())
+			return;
+		LoadVars((String)base.Get(0));
+	}
+	Vector<String> upp = GetUppDirs();
+	packages.Clear();
+	description.Hide();
+	progress.Show();
+	loading = true;
+	String case_fixed;
+	int f = ~filter;
+	for(int i = 0; i < upp.GetCount() && (f == MAIN_ALL || f == ALL_ALL || i < 1) && loading; i++) {
+		if(!IsSplashOpen() && !IsOpen())
+			Open();
+		String cachefn = AppendFileName(ConfigFile("cfg"), MD5String(upp[i]) + ".pkg_cache");
+		VectorMap<String, PkCache> cache;
+		LoadFromFile(cache, cachefn);
+		Load(upp[i], Null, 1000 * i, 1000, case_fixed, cache);
+		for(int i = 0; i < cache.GetCount(); i++)
+			if(!cache[i].exists)
+				cache.Unlink(i);
+		cache.Sweep();
+		StoreToFile(cache, cachefn);
+	}
+	if(!IsNull(case_fixed))
+		PromptOK("Case was fixed in some of the files:[* " + case_fixed);
+	progress.Hide();
+	while(IsSplashOpen())
+		ProcessEvents();
+	if(!IsOpen())
+		Open();
+	description.Show();
+	if(loading) {
+		loading = false;
+		SyncList();
 	}
 }
 

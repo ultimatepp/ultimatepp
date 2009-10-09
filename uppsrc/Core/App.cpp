@@ -11,7 +11,7 @@ NAMESPACE_UPP
 
 String GetEnv(const char *id)
 {
-	return FromOEMCharset(getenv(id));
+	return WString(_wgetenv(WString(id))).ToString();
 }
 
 String GetExeFilePath()
@@ -170,11 +170,27 @@ const Vector<String>& CommandLine()
 	return coreCmdLine__();
 }
 
-typedef VectorMap<String, String> StringMap;
-GLOBAL_VAR(StringMap, coreEnvPtr__)
+VectorMap<WString, WString>& EnvMap()
+{
+	static VectorMap<WString, WString> x;
+	return x;
+}
+
 const VectorMap<String, String>& Environment()
 {
-	return coreEnvPtr__();
+	static VectorMap<String, String> *ptr = NULL;
+	INTERLOCKED {
+		static VectorMap<String, String> env;
+		static int echrset;
+		if(!ptr || GetDefaultCharset() != echrset) {
+			env.Clear();
+			echrset = GetDefaultCharset();
+			for(int i = 0; i < EnvMap().GetCount(); i++)
+				env.Add(EnvMap().GetKey(i).ToString(), EnvMap()[i].ToString());
+			ptr = &env;
+		}
+	}
+	return *ptr;
 }
 
 static int exitcode;
@@ -284,7 +300,7 @@ void AppInit__(int argc, const char **argv, const char **envptr)
 		String varname(b, var);
 		if(*var == '=')
 			var++;
-		coreEnvPtr__().Add(varname, var);
+		EnvMap().Add(varname.ToWString(), var.ToWString());
 	}
 	Vector<String>& cmd = coreCmdLine__();
 	for(int i = 1; i < argc; i++)
@@ -302,23 +318,23 @@ void AppInit__(int argc, const char **argv, const char **envptr)
 void AppInitEnvironment__()
 {
 #ifndef PLATFORM_WINCE
-	char *env = GetEnvironmentStrings();
-	for(char *ptr = env; *ptr; ptr++)
+	wchar *env = GetEnvironmentStringsW();
+	for(wchar *ptr = env; *ptr; ptr++)
 	{
-		const char *b = ptr;
+		const wchar *b = ptr;
 		if(*ptr)
 			ptr++;
 		while(*ptr && *ptr != '=')
 			ptr++;
-		String varname(b, ptr);
+		WString varname(b, ptr);
 		if(*ptr)
 			ptr++;
 		b = ptr;
 		while(*ptr)
 			ptr++;
-		coreEnvPtr__().GetAdd(ToUpper(varname)) = String(b, ptr);
+		EnvMap().GetAdd(ToUpper(varname)) = WString(b, ptr);
 	}
-	FreeEnvironmentStrings(env);
+	FreeEnvironmentStringsW(env);
 #endif
 	CommonInit();
 }
