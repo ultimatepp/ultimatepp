@@ -678,6 +678,22 @@ int CommaSpace(int c)
 	return c == ',' ? ' ' : c;
 }
 
+void ReduceCache()
+{
+	String cfgdir = ConfigFile("cfg");
+	FindFile ff(AppendFileName(cfgdir, "*.*"));
+	while(ff) {
+		if(ff.IsFile()) {
+			String fn = ff.GetName();
+			String ext = GetFileExt(fn);
+			if(ext != ".aux" && ext != ".cfg")
+				if((Date)Time(ff.GetLastAccessTime()) < GetSysDate() - 14)
+					DeleteFile(AppendFileName(cfgdir, fn));
+		}
+		ff.Next();
+	}
+}
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
@@ -978,6 +994,7 @@ void AppMain___()
 		SaveFile(ConfigFile("ide.key"), StoreKeys());
 		SaveFile(ConfigFile("ide.colors"), ide.editor.StoreHlStyles());
 		DelTemps();
+		ReduceCache();
 	}
 	catch(const CParser::Error& e) {
 		Exclamation("Parser error " + e);

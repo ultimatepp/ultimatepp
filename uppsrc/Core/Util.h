@@ -321,10 +321,10 @@ public:
 
 // ------------------- Advanced streaming --------------------
 
-bool Load(Callback1<Stream&> serialize, Stream& stream);
-bool Store(Callback1<Stream&> serialize, Stream& stream);
-bool LoadFromFile(Callback1<Stream&> serialize, const char *file = NULL);
-bool StoreToFile(Callback1<Stream&> serialize, const char *file = NULL);
+bool Load(Callback1<Stream&> serialize, Stream& stream, int version = Null);
+bool Store(Callback1<Stream&> serialize, Stream& stream, int version = Null);
+bool LoadFromFile(Callback1<Stream&> serialize, const char *file = NULL, int version = Null);
+bool StoreToFile(Callback1<Stream&> serialize, const char *file = NULL, int version = Null);
 
 template <class T>
 void SerializeTFn(Stream &s, T *x)
@@ -339,23 +339,23 @@ Callback1<Stream&> SerializeCb(T& x)
 }
 
 template <class T>
-bool Load(T& x, Stream& s) {
-	return Load(SerializeCb(x), s);
+bool Load(T& x, Stream& s, int version = Null) {
+	return Load(SerializeCb(x), s, version);
 }
 
 template <class T>
-bool Store(T& x, Stream& s) {
-	return Store(SerializeCb(x), s);
+bool Store(T& x, Stream& s, int version = Null) {
+	return Store(SerializeCb(x), s, version);
 }
 
 template <class T>
-bool LoadFromFile(T& x, const char *name = NULL) {
-	return LoadFromFile(SerializeCb(x), name);
+bool LoadFromFile(T& x, const char *name = NULL, int version = Null) {
+	return LoadFromFile(SerializeCb(x), name, version);
 }
 
 template <class T>
-bool StoreToFile(T& x, const char *name = NULL) {
-	return StoreToFile(SerializeCb(x), name);
+bool StoreToFile(T& x, const char *name = NULL, int version = Null) {
+	return StoreToFile(SerializeCb(x), name, version);
 }
 
 template <class T>
