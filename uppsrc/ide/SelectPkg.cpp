@@ -165,6 +165,7 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 		String path;
 		String stxt;
 		String nest;
+		Image  icon;
 		bool   main;
 		Time   filetime;
 
@@ -174,10 +175,11 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	struct PkCache : Moveable<PkCache> {
 		String description;
 		bool   main;
-		Time   tm;
+		Time   tm, itm;
+		Image  icon;
 		bool   exists;
 		
-		void Serialize(Stream& s)  { s % description % main % tm; }
+		void Serialize(Stream& s)  { s % description % main % tm % itm % icon; }
 		PkCache()                  { exists = false; }
 	};
 
@@ -305,9 +307,10 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	ok <<= clist.WhenLeftDouble = alist.WhenLeftDouble = THISBACK(OnOK);
 	clist.Columns(4);
 	clist.WhenEnterItem = clist.WhenKillCursor = THISBACK(ListCursor);
-	alist.AddColumn("Package");
+	alist.AddColumn("Package").Add(3);
 	alist.AddColumn("Nest");
 	alist.AddColumn("Description");
+	alist.AddIndex();
 	alist.ColumnWidths("108 79 317");
 	alist.WhenCursor = THISBACK(ListCursor);
 	alist.EvenRowColor();
@@ -542,16 +545,20 @@ void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progre
 		String pkg = AppendFileName(dir, fo);
 		String desc;
 		String pf = AppendFileName(dd, nm);
+		String ipf = AppendFileName(dd, "icon16x16.png");
 		Time ft = FileGetTime(pf);
+		Time ift = FileGetTime(ipf);
 		if(!IsNull(ft)) {
 			int q = cache.Find(pf);
-			if(q < 0 || cache[q].tm != ft) {
+			if(q < 0 || cache[q].tm != ft || cache[q].itm != ift) {
 				q = cache.FindAdd(pf);
 				Package p;
 				p.Load(pf);
 				cache[q].description = p.description;
 				cache[q].main = p.config.GetCount();
 				cache[q].tm = ft;
+				cache[q].itm = ift;
+				cache[q].icon = Rescale(StreamRaster::LoadFileAny(ipf), 16, 16);
 			}
 			PkCache& p = cache[q];
 			p.exists = true;
@@ -567,6 +574,7 @@ void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progre
 				pk.stxt = ToUpper(pk.package + pk.description + nest);
 				pk.nest = nest;
 				pk.main = p.main;
+				pk.icon = p.icon;
 			}
 		}
 		int ppos = progress_pos + i * progress_count / folders.GetCount();
@@ -596,13 +604,13 @@ void SelectPackageDlg::Load()
 			Open();
 		String cachefn = AppendFileName(ConfigFile("cfg"), MD5String(upp[i]) + ".pkg_cache");
 		VectorMap<String, PkCache> cache;
-		LoadFromFile(cache, cachefn);
+		LoadFromFile(cache, cachefn, 1);
 		Load(upp[i], Null, 1000 * i, 1000, case_fixed, cache);
 		for(int i = 0; i < cache.GetCount(); i++)
 			if(!cache[i].exists)
 				cache.Unlink(i);
 		cache.Sweep();
-		StoreToFile(cache, cachefn);
+		StoreToFile(cache, cachefn, 1);
 	}
 	if(!IsNull(case_fixed))
 		PromptOK("Case was fixed in some of the files:[* " + case_fixed);
@@ -643,16 +651,20 @@ struct PackageDisplay : Display {
 	Font fnt;
 
 	virtual Size GetStdSize(const Value& q) const {
-		Size sz = GetTextSize(String(q), fnt);
+		ValueArray va = q;
+		Size sz = GetTextSize(String(va[0]), fnt);
 		sz.cx += 20;
 		sz.cy = max(sz.cy, 16);
 		return sz;
 	}
 
 	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const {
+		ValueArray va = q;
+		String txt = va[0];
+		Image icon = va[1];
 		w.DrawRect(r, paper);
-		w.DrawImage(r.left, r.top + (r.Height() - 16) / 2, IdeImg::Package());
-		w.DrawText(r.left + 20, r.top + (r.Height() - Draw::GetStdFontCy()) / 2, String(q), fnt, ink);
+		w.DrawImage(r.left, r.top + (r.Height() - 16) / 2, IsNull(icon) ? IdeImg::Package() : icon);
+		w.DrawText(r.left + 20, r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
 	}
 
 	PackageDisplay() { fnt = StdFont(); }
@@ -678,12 +690,14 @@ void SelectPackageDlg::SyncList()
 	static PackageDisplay pd, bpd;
 	bpd.fnt.Bold();
 	String s = ~search;
-	for(int i = 0; i < packages.GetCount(); i++)
-		if(packages[i].stxt.Find(s) >= 0) {
-			clist.Add(packages[i].package, IdeImg::Package());
-			alist.Add(packages[i].package, packages[i].nest, packages[i].description);
-			alist.SetDisplay(alist.GetCount() - 1, 0, packages[i].main ? bpd : pd);
+	for(int i = 0; i < packages.GetCount(); i++) {
+		const PkInfo& pkg = packages[i];
+		if(pkg.stxt.Find(s) >= 0) {
+			clist.Add(pkg.package, IsNull(pkg.icon) ? IdeImg::Package() : pkg.icon);
+			alist.Add(pkg.package, pkg.nest, pkg.description, pkg.icon);
+			alist.SetDisplay(alist.GetCount() - 1, 0, pkg.main ? bpd : pd);
 		}
+	}
 	if(!alist.FindSetCursor(n))
 		alist.GoBegin();
 	if(!clist.FindSetCursor(n) && clist.GetCount())

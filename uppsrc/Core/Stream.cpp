@@ -1504,17 +1504,19 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count) {
 	return done;
 }
 
-void CheckedSerialize(const Callback1<Stream&> serialize, Stream& stream)
+void CheckedSerialize(const Callback1<Stream&> serialize, Stream& stream, int version)
 {
 	int pos = (int)stream.GetPos();
 	stream.Magic(0x61746164);
+	if(!IsNull(version))
+		stream.Magic(version);
 	serialize(stream);
 	stream.Magic(0x00646e65);
 	pos = int(stream.GetPos() - pos);
 	stream.Magic(pos);
 }
 
-bool Load(Callback1<Stream&> serialize, Stream& stream) {
+bool Load(Callback1<Stream&> serialize, Stream& stream, int version) {
 	StringStream backup;
 	backup.SetStoring();
 	serialize(backup);
@@ -1522,7 +1524,7 @@ bool Load(Callback1<Stream&> serialize, Stream& stream) {
 	stream.SetLoading();
 	stream.LoadThrowing();
 	try {
-		CheckedSerialize(serialize, stream);
+		CheckedSerialize(serialize, stream, version);
 	}
 	catch(LoadingError) {
 		backup.Seek(0);
@@ -1534,9 +1536,9 @@ bool Load(Callback1<Stream&> serialize, Stream& stream) {
 	return true;
 }
 
-bool Store(Callback1<Stream&> serialize, Stream& stream) {
+bool Store(Callback1<Stream&> serialize, Stream& stream, int version) {
 	stream.SetStoring();
-	CheckedSerialize(serialize, stream);
+	CheckedSerialize(serialize, stream, version);
 	return !stream.IsError();
 }
 
@@ -1544,14 +1546,14 @@ String Cfgname(const char *file) {
 	return file ? String(file) : ConfigFile();
 }
 
-bool LoadFromFile(Callback1<Stream&> serialize, const char *file) {
+bool LoadFromFile(Callback1<Stream&> serialize, const char *file, int version) {
 	FileIn f(Cfgname(file));
-	return f ? Load(serialize, f) : false;
+	return f ? Load(serialize, f, version) : false;
 }
 
-bool StoreToFile(Callback1<Stream&> serialize, const char *file) {
+bool StoreToFile(Callback1<Stream&> serialize, const char *file, int version) {
 	FileOut f(Cfgname(file));
-	return f ? Store(serialize, f) : false;
+	return f ? Store(serialize, f, version) : false;
 }
 
 Stream& Pack16(Stream& s, int& i) {
