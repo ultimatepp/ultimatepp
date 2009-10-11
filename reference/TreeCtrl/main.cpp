@@ -63,7 +63,7 @@ struct App : TopWindow {
 		optree.SetRoot("everything");
 		for(int i = 0; i < 10; i++)
 			optree.Add(i ? rand() % i : 0, x[i], AsString(i));
-	//	tree1.MultiSelect();
+		tree1.MultiSelect();
 		tree1.WhenOpen = THISBACK(OpenDir);
 		tree1.WhenClose = THISBACK(CloseDir);
 	#ifdef PLATFORM_WIN32
