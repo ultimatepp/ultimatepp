@@ -19,6 +19,7 @@ cp ~/Scripts/Makefile ~/upp.tmp/u
 cp ~/Scripts/domake ~/upp.tmp/u
 cp ~/Scripts/doinstall ~/upp.tmp/u
 cp ~/Scripts/readme ~/upp.tmp/u
+cp ~/Scripts/upp.spec ~/upp.tmp/u
 
 cp ~/Scripts/GCCMK.bm ~/upp.tmp/u/GCC.bm
 

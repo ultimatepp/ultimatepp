@@ -11,7 +11,8 @@ file
 	Makefile,
 	doinstall,
 	domake,
-	readme;
+	readme,
+	upp.spec;
 
 mainconfig
 	"" = "SCRIPTS";
