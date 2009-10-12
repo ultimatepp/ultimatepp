@@ -558,7 +558,7 @@ void SelectPackageDlg::Load(String upp, String dir, int progress_pos, int progre
 				cache[q].main = p.config.GetCount();
 				cache[q].tm = ft;
 				cache[q].itm = ift;
-				cache[q].icon = Rescale(StreamRaster::LoadFileAny(ipf), 16, 16);
+				cache[q].icon = StreamRaster::LoadFileAny(ipf);
 			}
 			PkCache& p = cache[q];
 			p.exists = true;
@@ -604,13 +604,13 @@ void SelectPackageDlg::Load()
 			Open();
 		String cachefn = AppendFileName(ConfigFile("cfg"), MD5String(upp[i]) + ".pkg_cache");
 		VectorMap<String, PkCache> cache;
-		LoadFromFile(cache, cachefn, 1);
+		LoadFromFile(cache, cachefn, 4);
 		Load(upp[i], Null, 1000 * i, 1000, case_fixed, cache);
 		for(int i = 0; i < cache.GetCount(); i++)
 			if(!cache[i].exists)
 				cache.Unlink(i);
 		cache.Sweep();
-		StoreToFile(cache, cachefn, 1);
+		StoreToFile(cache, cachefn, 4);
 	}
 	if(!IsNull(case_fixed))
 		PromptOK("Case was fixed in some of the files:[* " + case_fixed);
