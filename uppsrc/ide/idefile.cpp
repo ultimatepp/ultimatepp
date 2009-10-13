@@ -471,8 +471,11 @@ void Ide::EditUsingDesigner()
 
 void Ide::AddEditFile(const String& path)
 {
-	actual.file.Add(path);		       
-	SaveLoadPackage();
+	actual.file.Add(path);
+	if(IsAux())
+		SaveLoadPackageNS();
+	else
+		SaveLoadPackage();
 	ShowFile(package.GetCount() - 1);
 	filelist.SetCursor(filelist.GetCount() - 1);
 }

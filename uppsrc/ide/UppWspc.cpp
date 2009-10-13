@@ -312,7 +312,10 @@ void WorkspaceWork::AddItem(const String& name, bool separator, bool readonly)
 	f = name;
 	f.separator = separator;
 	f.readonly = readonly;
-	SaveLoadPackage();
+	if(separator)
+		SaveLoadPackageNS();
+	else
+		SaveLoadPackage();
 	filelist.SetSbPos(cs);
 	filelist.SetCursor(fci >= 0 ? fci : filelist.GetCount() - 1);
 	FileSelected();
@@ -497,9 +500,11 @@ void WorkspaceWork::RemoveFile()
 {
 	int i = filelist.GetCursor();
 	int s = filelist.GetSbPos();
+	bool separator = false;
 	if(i >= 0 && i < fileindex.GetCount()) {
 		int fx = fileindex[i];
-		if(actual.file[fx].separator && closed.Find(GetActiveSepfo()) >= 0) {
+		separator = actual.file[fx].separator;
+		if(separator && closed.Find(GetActiveSepfo()) >= 0) {
 			int px = fx, c;
 			while(--px >= 0 && !actual.file[fx].separator)
 				;
@@ -508,7 +513,10 @@ void WorkspaceWork::RemoveFile()
 		}
 		actual.file.Remove(fx);
 	}
-	SaveLoadPackage();
+	if(separator || IsAux())
+		SaveLoadPackageNS();
+	else
+		SaveLoadPackage();
 	filelist.SetSbPos(s);
 	filelist.SetCursor(i);
 }
