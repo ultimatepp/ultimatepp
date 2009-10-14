@@ -211,6 +211,12 @@ void GridCtrl::ClearSort()
 	Sort(0, SORT_ID);
 }
 
+void GridCtrl::ReSort()
+{
+	Multisort();
+	Repaint(false, true);
+}
+
 Vector<Id> GridCtrl::GetSortOrderId() const
 {
 	Vector<Id> v;
