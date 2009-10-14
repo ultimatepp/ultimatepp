@@ -1499,6 +1499,7 @@ class GridCtrl : public Ctrl
 		GridCtrl& MultiSort(int sort_col, int sort_mode = SORT_UP);
 		GridCtrl& MultiSort(Id id, int sort_mode = SORT_UP);
 		void ClearSort();
+		void ReSort();
 		void MarkSort(int col, int sort_mode);
 		void MarkSort(Id id, int sort_mode);
 		
