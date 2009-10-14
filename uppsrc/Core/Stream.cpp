@@ -1339,7 +1339,8 @@ bool FileMapping::Map(int64 mapoffset, dword maplen)
 		rawbase = (byte *)MapViewOfFile(hmap, /*write ? FILE_MAP_WRITE :*/ FILE_MAP_READ,
 			(dword)(rawoffset >> 32), (dword)(rawoffset >> 0), rawsize);
 #else
-		rawbase = (byte *)mmap(0, rawsize, PROT_READ | PROT_WRITE,
+		rawbase = (byte *)mmap(0, rawsize,
+			PROT_READ | (write ? PROT_WRITE : 0),
 #ifdef PLATFORM_FREEBSD
 			MAP_NOSYNC,
 #else
@@ -1347,7 +1348,7 @@ bool FileMapping::Map(int64 mapoffset, dword maplen)
 #endif
 			hfile, (dword)rawoffset);
 #endif
-		if(!rawbase)
+		if(rawbase == (byte *)~0)
 			return false;
 	}
 	offset = mapoffset;
