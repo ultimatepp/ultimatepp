@@ -569,7 +569,7 @@ public:
 	void Column(SqlId column)                        { Column(column, column); }
 	SqlInsert& operator()(SqlId column, SqlVal val)  { Column(column, val); return *this; }
 	SqlInsert& operator()(SqlId column)              { Column(column, column); return *this; }
-	SqlInsert& operator()(Fields f);
+	SqlInsert& operator()(Fields f, bool nokey = false);
 	SqlInsert& From(SqlId from);
 	SqlInsert& From(SqlSet _from)                    { from = _from; return *this; }
 	SqlInsert& From(SqlVal from)                     { return From(SqlSet(from)); }
@@ -584,7 +584,7 @@ public:
 
 	SqlInsert(SqlId table) : table(table) {}
 	SqlInsert(SqlId table, SqlSet set1, SqlSet set2) : table(table), set1(set1), set2(set2) {}
-	SqlInsert(Fields f);
+	SqlInsert(Fields f, bool nokey = false);
 
 //Deprecated!!!
 	bool  Execute(Sql& sql) const                     { return SqlStatement(*this).Execute(sql); }
@@ -597,6 +597,7 @@ public:
 
 inline SqlInsert Insert(SqlId table)                  { return SqlInsert(table); }
 inline SqlInsert Insert(Fields f)                     { return SqlInsert(f); }
+inline SqlInsert InsertNoKey(Fields f)                { return SqlInsert(f, true); }
 
 class SqlUpdate {
 	SqlId   table;

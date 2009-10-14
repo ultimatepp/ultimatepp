@@ -230,22 +230,30 @@ SqlInsert& SqlInsert::From(SqlId from) {
 
 struct InsertFieldOperator : public FieldOperator {
 	SqlInsert *insert;
+	bool       nokey;
 
 	virtual void Field(const char *name, Ref f)	{
-		insert->Column(name, (Value)f);
+		if(!nokey)
+			insert->Column(name, (Value)f);
+		nokey = false;
 	}
+	
+	InsertFieldOperator() { nokey = false; }
 };
 
-SqlInsert::SqlInsert(Fields f) {
+SqlInsert::SqlInsert(Fields f, bool nokey) {
 	InsertFieldOperator ifo;
 	ifo.insert = this;
+	ifo.nokey = nokey;
 	f(ifo);
 	table = ifo.table;
 }
 
-SqlInsert& SqlInsert::operator()(Fields f) {
+SqlInsert& SqlInsert::operator()(Fields f, bool nokey)
+{
 	InsertFieldOperator ifo;
 	ifo.insert = this;
+	ifo.nokey = nokey;
 	f(ifo);
 	return *this;
 }

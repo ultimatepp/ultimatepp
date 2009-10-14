@@ -167,6 +167,10 @@ public:
 	bool        Insert(Fields nf, const char *table);
 	bool        Insert(Fields nf, SqlId table);
 
+	bool        InsertNoKey(Fields nf, const char *table);
+	bool        InsertNoKey(Fields nf);
+	bool        InsertNoKey(Fields nf, SqlId table);
+
 	bool        Update(Fields nf);
 	bool        Update(Fields nf, const char *table);
 	bool        Update(Fields nf, SqlId table);
