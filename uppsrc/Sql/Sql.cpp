@@ -396,6 +396,42 @@ bool Sql::Insert(Fields nf, SqlId table) {
 	return Insert(nf, (const char *)~table);
 }
 
+struct NfInsertNoKey : public FieldOperator {
+	int    i;
+	Sql   *sql;
+	String clist;
+	String qlist;
+
+	virtual void Field(const char *name, Ref f) {
+		if(clist.GetCount()) {
+			clist += ", ";
+			qlist += ", ";
+		}
+		if(i) {
+			clist += name;
+			qlist += "? ";
+			sql->SetParam(i - 1, f);
+		}
+		i++;
+	}
+};
+
+bool Sql::InsertNoKey(Fields nf, const char *table) {
+	NfInsertNoKey w;
+	w.i = 0;
+	w.sql = this;
+	nf(w);
+	return Execute(String("insert into ") + (table ? String(table) : w.table) +
+	               '(' + w.clist + ") values(" + w.qlist + ')');
+}
+
+bool Sql::InsertNoKey(Fields nf) {
+	return InsertNoKey(nf, NULL);
+}
+
+bool Sql::InsertNoKey(Fields nf, SqlId table) {
+	return InsertNoKey(nf, (const char *)~table);
+}
 
 #define E__Updater(I)  sComma(I, list), list.Cat(c##I), list.Cat(" = ?"), SetParam(I - 1, v##I)
 
