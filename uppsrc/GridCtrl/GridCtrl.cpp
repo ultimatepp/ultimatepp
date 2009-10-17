@@ -4578,75 +4578,76 @@ void GridCtrl::SyncSummary()
 			if(sop == SOP_NONE)
 				continue;
 				
-			if(sop == SOP_CNT)
+			int n = 0;
+			
+			for(int j = fixed_rows; j < total_rows; j++)
 			{
-				t = total_rows - fixed_rows;
-			}
-			else
-			{
-				int n = 0;
+				if(vitems[j].IsHidden())
+					continue;
 				
-				for(int j = fixed_rows; j < total_rows; j++)
+				if(sop == SOP_CNT)
 				{
-					if(vitems[j].IsHidden())
-						continue;
-
-					int idy = vitems[j].id;
-						
-					Value v = items[idy][idx].val;
-					
-					if(IsNull(v))
-						continue;
-										
-					ProcessSummaryValue(v);
-					
-					if(n == 0 && (sop == SOP_MIN || sop == SOP_MAX))
-						t = v;
-					
-					if(IsNumber(v))
-					{
-						switch(sop)
-						{
-							case SOP_MIN:
-								if(double(v) < double(t))
-									t = v;
-								break;
-							case SOP_MAX:
-								if(double(v) > double(t))
-									t = v;
-								break;
-							case SOP_SUM:
-							case SOP_AVG:				
-								t = double(t) + double(v);
-						}
-					}
-					else if(IsType<Date>(v))
-					{
-						switch(sop)
-						{
-							case SOP_MIN:
-								if((Date) v < (Date) t)
-									t = v;
-								break;
-							case SOP_MAX:
-								if((Date) v > (Date) t)
-									t = v;
-								break;
-							case SOP_SUM:
-							case SOP_AVG:
-								t = v;
-								break;
-						}
-					}
-					
 					++n;
+					continue;
 				}
 
-				if(sop == SOP_AVG)
+				int idy = vitems[j].id;
+					
+				Value v = items[idy][idx].val;
+				
+				if(IsNull(v))
+					continue;
+									
+				ProcessSummaryValue(v);
+				
+				if(n == 0 && (sop == SOP_MIN || sop == SOP_MAX))
+					t = v;
+				
+				if(IsNumber(v))
 				{
-					if(IsNumber(t))
-						t = double(t) / double(n);						
+					switch(sop)
+					{
+						case SOP_MIN:
+							if(double(v) < double(t))
+								t = v;
+							break;
+						case SOP_MAX:
+							if(double(v) > double(t))
+								t = v;
+							break;
+						case SOP_SUM:
+						case SOP_AVG:				
+							t = double(t) + double(v);
+					}
 				}
+				else if(IsType<Date>(v))
+				{
+					switch(sop)
+					{
+						case SOP_MIN:
+							if((Date) v < (Date) t)
+								t = v;
+							break;
+						case SOP_MAX:
+							if((Date) v > (Date) t)
+								t = v;
+							break;
+						case SOP_SUM:
+						case SOP_AVG:
+							t = v;
+							break;
+					}
+				}				
+			}
+
+			if(sop == SOP_AVG)
+			{
+				if(IsNumber(t))
+					t = double(t) / double(n);						
+			}
+			else if(sop == SOP_CNT)
+			{
+				t = n;
 			}
 			
 			summary[idx].val = t;
