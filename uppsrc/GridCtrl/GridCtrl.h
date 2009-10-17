@@ -1641,8 +1641,7 @@ class GridCtrl : public Ctrl
 		void GSort(int col, int order, int from, int count = -1);
 		void Multisort();
 		int  InMultisort(int col);
-		bool ClearMultisort();
-		bool ClearSorted();
+		void ClearMultisort(int n = 0);
 		bool IsSorted();
 		void MarkSort(int col, int sort_mode, bool refresh);
 
