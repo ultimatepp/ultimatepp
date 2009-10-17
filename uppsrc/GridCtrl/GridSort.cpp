@@ -119,32 +119,20 @@ int GridCtrl::InMultisort(int col)
 	return -1;
 }
 
-bool GridCtrl::ClearMultisort()
+void GridCtrl::ClearMultisort(int n)
 {
-	if(sortOrder.IsEmpty())
-		return false;
-
-	return ClearSorted();
-}
-
-bool GridCtrl::ClearSorted()
-{
-	bool sorted = false;
-
-	for(int i = 0; i < total_cols; i++)
+	for(int i = n; i < sortOrder.GetCount(); i++)
 	{
-		if(hitems[i].sortMode > 0)
-			sorted = true;
-		hitems[i].sortmode = 0;
-		hitems[i].sortcol = 0;
+		int c = GetIdCol(sortOrder[i], true);
+		hitems[c].sortmode = 0;
+		hitems[c].sortcol = 0;
 	}
-
-	return sorted;
+	sortOrder.Clear();
 }
 
 bool GridCtrl::IsSorted()
 {
-	return sortOrder.GetCount() > 0 || sortCol >= 0;
+	return sortOrder.GetCount() > 0;
 }
 
 void GridCtrl::MarkSort(int col, int sort_mode, bool refresh)
@@ -174,10 +162,7 @@ GridCtrl& GridCtrl::Sort(int sort_col, int sort_mode, bool multisort, bool repai
 		return *this;
 
 	if(!multisort)
-	{
-		sortOrder.Clear();
-		ClearSorted();
-	}
+		ClearMultisort();
 	
 	sortOrder.Add(col);
 
@@ -228,27 +213,17 @@ Vector<Id> GridCtrl::GetSortOrderId() const
 Vector<GridCtrl::SortOrder> GridCtrl::GetSortOrder() const
 {
 	Vector<SortOrder> v;
-	if(sortOrder.GetCount() > 0)
+
+	for(int i = 0; i < sortOrder.GetCount(); i++)
 	{
-		for(int i = 0; i < sortOrder.GetCount(); i++)
-		{
-			int c = sortOrder[i];
-			SortOrder& s = v.Add();
-			s.id = c;
-			s.name = aliases.GetKey(c);
-			s.ascending = hitems[c].IsSortAsc();
-			s.descending = hitems[c].IsSortDsc();
-		}
-	}
-	else if(sortCol >= 0)
-	{
-		int c = sortCol;
+		int c = sortOrder[i];
 		SortOrder& s = v.Add();
 		s.id = c;
 		s.name = aliases.GetKey(c);
 		s.ascending = hitems[c].IsSortAsc();
 		s.descending = hitems[c].IsSortDsc();
 	}
+
 	return v;
 }
 

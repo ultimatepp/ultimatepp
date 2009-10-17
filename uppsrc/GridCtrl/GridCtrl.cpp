@@ -2099,12 +2099,6 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 
 			if(sorting_multicol && (keyflags & K_CTRL))
 			{
-				if(sortCol >= 0)
-				{
-					sortOrder.Add(sortCol);
-					sortCol = -1;
-			    }
-
 				int colidx = InMultisort(newSortCol);
 
 				if(colidx < 0)
@@ -2149,7 +2143,7 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 					hitems[idx].sortmode = 0;
 				}
 
-				ClearMultisort();
+				ClearMultisort(1);
 				hitems[j].ChangeSortMode();
 				hitems[j].sortcol = 1;
 
@@ -2158,7 +2152,7 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 				else
 					sortCol = newSortCol;
 
-				sortOrder.Clear();
+				sortOrder.Add(newSortCol);
 				
 				if(WhenSort)
 					WhenSort();
@@ -4591,20 +4585,22 @@ void GridCtrl::SyncSummary()
 			else
 			{
 				int n = 0;
+				
 				for(int j = fixed_rows; j < total_rows; j++)
 				{
+					if(vitems[j].IsHidden())
+						continue;
+
 					int idy = vitems[j].id;
-	
+						
 					Value v = items[idy][idx].val;
 					
 					if(IsNull(v))
 						continue;
-					
-					++n;
-					
+										
 					ProcessSummaryValue(v);
 					
-					if(j == fixed_rows && (sop == SOP_MIN || sop == SOP_MAX))
+					if(n == 0 && (sop == SOP_MIN || sop == SOP_MAX))
 						t = v;
 					
 					if(IsNumber(v))
@@ -4624,9 +4620,33 @@ void GridCtrl::SyncSummary()
 								t = double(t) + double(v);
 						}
 					}
+					else if(IsType<Date>(v))
+					{
+						switch(sop)
+						{
+							case SOP_MIN:
+								if((Date) v < (Date) t)
+									t = v;
+								break;
+							case SOP_MAX:
+								if((Date) v > (Date) t)
+									t = v;
+								break;
+							case SOP_SUM:
+							case SOP_AVG:
+								t = v;
+								break;
+						}
+					}
+					
+					++n;
 				}
+
 				if(sop == SOP_AVG)
-					t = double(t) / double(n);
+				{
+					if(IsNumber(t))
+						t = double(t) / double(n);						
+				}
 			}
 			
 			summary[idx].val = t;
