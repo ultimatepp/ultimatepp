@@ -1348,7 +1348,11 @@ bool FileMapping::Map(int64 mapoffset, dword maplen)
 #endif
 			hfile, (dword)rawoffset);
 #endif
+#ifdef PLATFORM_POSIX
 		if(rawbase == (byte *)~0)
+#else
+		if(!rawbase)
+#endif
 			return false;
 	}
 	offset = mapoffset;
