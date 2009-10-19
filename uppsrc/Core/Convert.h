@@ -128,7 +128,7 @@ public:
 	virtual int   Filter(int chr) const;
 
 protected:
-	Date minval, maxval;
+	Date minval, maxval, defaultval;
 	bool notnull;
 
 public:
@@ -137,6 +137,7 @@ public:
 	ConvertDate& Max(Date _max)                    { maxval = _max; return *this; }
 	ConvertDate& NotNull(bool b = true)            { notnull = b; return *this; }
 	ConvertDate& NoNotNull()                       { return NotNull(false); }
+	ConvertDate& Default(Date d)                   { defaultval = d; return *this; }
 	Date         GetMin() const                    { return minval; }
 	Date         GetMax() const                    { return maxval; }
 	bool         IsNotNull() const                 { return notnull; }
@@ -155,7 +156,7 @@ public:
 	virtual Value Format(const Value& q) const;
 
 protected:
-	Time minval, maxval;
+	Time minval, maxval, defaultval;
 	bool notnull;
 	bool seconds;
 
@@ -167,6 +168,7 @@ public:
 	ConvertTime& NoNotNull()                       { return NotNull(false); }
 	ConvertTime& Seconds(bool b = true)            { seconds = b; return *this; }
 	ConvertTime& NoSeconds()                       { return Seconds(false); }
+	ConvertTime& Default(Time d)                   { defaultval = d; return *this; }
 	Time         GetMin() const                    { return minval; }
 	Time         GetMax() const                    { return maxval; }
 	bool         IsNotNull() const                 { return notnull; }

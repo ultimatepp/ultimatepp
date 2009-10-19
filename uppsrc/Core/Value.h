@@ -504,7 +504,7 @@ String GetErrorText(const Value& v);
 inline bool          IsNull(const Value& v)               { return v.IsNull(); }
 inline const Value&  Nvl(const Value& a, const Value& b)  { return IsNull(a) ? b : a; }
 
-Value Scan(dword stdtype, const String& text);
+Value Scan(dword stdtype, const String& text, const Value& def = Null);
 
 // ----------------------- Ref
 

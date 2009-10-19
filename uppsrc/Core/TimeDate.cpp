@@ -89,14 +89,14 @@ void   SetDateScan(const char *scan)
 	strncpy(s_date_scan, scan, 63);
 }
 
-const char *StrToDate(Date& d, const char *s)
+const char *StrToDate(Date& d, const char *s, Date def)
 {
 	const char *fmt = s_date_scan;
 	if(*s == 0) {
 		d = Null;
 		return s;
 	}
-	d = GetSysDate();
+	d = Nvl(def, GetSysDate());
 	while(*fmt) {
 		while(*s && !IsDigit(*s) && !IsAlpha(*s) && (byte)*s < 128)
 			s++;
@@ -149,6 +149,11 @@ const char *StrToDate(Date& d, const char *s)
 		fmt++;
 	}
 	return d.IsValid() ? s : NULL;
+}
+
+const char * StrToDate(Date& d, const char *s)
+{
+	return StrToDate(d, s, Null);
 }
 
 static bool s_date_letters = true, s_date_upper = true;
