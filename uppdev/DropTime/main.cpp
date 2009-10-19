@@ -10,4 +10,3 @@ GUI_APP_MAIN
 	win.Add(tm.HSizePos().TopPos(10, Ctrl::STDSIZE));
 	win.Run();
 }
-
