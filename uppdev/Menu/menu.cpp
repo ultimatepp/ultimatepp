@@ -5,6 +5,11 @@ using namespace Upp;
 struct App : public TopWindow {
 	bool numbers_enabled;
 	EditString test;
+	Point p;
+	ArrayCtrl list;
+	
+	virtual void MouseMove(Point p, dword keyflags);
+	virtual void Paint(Draw& w);
 
 	void Action2(int a, int b) { PromptOK(AsString(a) + AsString(b)); }
 
@@ -65,12 +70,15 @@ struct App : public TopWindow {
 		MainBar(bar);
 		bar.Execute();
 	}
-
-	virtual void LeftDown(Point p, dword)
+	
+	void CloseSubMenu()
 	{
-		MenuBar bar;
-		BigMenu(bar);
-		bar.Execute();
+		list.Add("Close");
+	}
+	
+	void OpenSubMenu()
+	{
+		list.Add("Open");
 	}
 
 	MenuBar menu;
@@ -82,8 +90,25 @@ struct App : public TopWindow {
 		numbers_enabled = true;
 		AddFrame(menu);
 		menu.Set(THISBACK(MainBar));
+		menu.WhenSubMenuClose = THISBACK(CloseSubMenu);
+		menu.WhenSubMenuOpen = THISBACK(OpenSubMenu);
+		list.AddColumn();
+		Add(list.RightPos(0, 200).VSizePos());
 	}
 };
+
+void App::MouseMove(Point p, dword keyflags)
+{
+	this->p = p;
+	Refresh();
+}
+
+void App::Paint(Draw& w)
+{
+	w.DrawRect(GetSize(), White());
+	w.DrawText(100, 100, AsString(p));
+}
+
 
 GUI_APP_MAIN
 {
