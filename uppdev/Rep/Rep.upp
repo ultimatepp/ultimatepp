@@ -1,9 +1,12 @@
 uses
 	CtrlLib,
-	Report;
+	Report,
+	PdfDraw,
+	Painter;
 
 file
 	main.cpp;
 
 mainconfig
 	"" = "GUI";
+
