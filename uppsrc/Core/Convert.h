@@ -161,6 +161,8 @@ protected:
 
 public:
 	ConvertTime& MinMax(Time _min, Time _max)      { minval = _min; maxval = _max; return *this; }
+	ConvertTime& Min(Time _min)                    { minval = _min; return *this; }
+	ConvertTime& Max(Time _max)                    { maxval = _max; return *this; }
 	ConvertTime& NotNull(bool b = true)            { notnull = b; return *this; }
 	ConvertTime& NoNotNull()                       { return NotNull(false); }
 	ConvertTime& Seconds(bool b = true)            { seconds = b; return *this; }
