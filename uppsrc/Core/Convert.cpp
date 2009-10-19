@@ -212,7 +212,7 @@ Value StrDblValue(const char *s)
 	return Null;
 }
 
-Value Scan(dword qtype, const String& text) {
+Value Scan(dword qtype, const String& text, const Value& def) {
 	Date date;
 	const char *s;
 	switch(qtype) {
@@ -222,7 +222,7 @@ Value Scan(dword qtype, const String& text) {
 		return StrIntValue(text);
 	case DATE_V:
 		if(text.IsEmpty()) return (Date) Null;
-		s = StrToDate(date, text);
+		s = StrToDate(date, text, (Date)def);
 		if(s)
 			for(;;) {
 				if(IsDigit(*s))
@@ -234,11 +234,15 @@ Value Scan(dword qtype, const String& text) {
 		return ErrorValue(t_("Invalid date !"));
 	case TIME_V: {
 		if(text.IsEmpty()) return (Time) Null;
-		s = StrToDate(date, text);
+		s = StrToDate(date, text, (Date)def);
 		if(s)
 			try {
 				CParser p(s);
 				Time tm = ToTime(date);
+				Time d = (Time)def;
+				tm.hour = d.hour;
+				tm.minute = d.minute;
+				tm.second = d.second;
 				if(p.IsEof())
 					return tm;
 				int q = p.ReadInt();
@@ -376,14 +380,16 @@ ConvertDouble::~ConvertDouble() {}
 #endif
 
 ConvertDate::ConvertDate(Date minval, Date maxval, bool notnull)
-: minval(minval), maxval(maxval), notnull(notnull) {}
+: minval(minval), maxval(maxval), notnull(notnull) {
+	defaultval = Null;
+}
 
 ConvertDate::~ConvertDate()
 {
 }
 
 Value ConvertDate::Scan(const Value& text) const {
-	Value v = UPP::Scan(DATE_V, text);
+	Value v = UPP::Scan(DATE_V, text, defaultval);
 	if(IsError(v)) return v;
 	if(IsNull(v)) return notnull ? NotNullError() : v;
 	Date m = v;
@@ -396,7 +402,9 @@ int   ConvertDate::Filter(int chr) const {
 }
 
 ConvertTime::ConvertTime(Time minval, Time maxval, bool notnull)
-: minval(minval), maxval(maxval), notnull(notnull), seconds(true) {}
+: minval(minval), maxval(maxval), notnull(notnull), seconds(true) {
+	defaultval = Null;
+}
 
 ConvertTime::~ConvertTime()
 {

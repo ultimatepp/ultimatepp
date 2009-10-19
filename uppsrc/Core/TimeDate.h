@@ -64,6 +64,7 @@ void   SetDateFormat(const char *fmt);
 void   SetDateScan(const char *scan);
 void   SetDateFilter(const char *seps);
 
+const char *StrToDate(Date& d, const char *s, Date def);
 const char *StrToDate(Date& d, const char *s);
 String      Format(Date date);
 int         CharFilterDate(int c);

@@ -500,8 +500,8 @@ public:
 		cc.calendar.WhenSelect = Proxy(WhenSelect);
 	}
 
-	virtual void GotFocus()  { drop.RefreshFrame(); }
-	virtual void LostFocus() { drop.RefreshFrame(); }
+	virtual void GotFocus()  { T::GotFocus(); drop.RefreshFrame(); }
+	virtual void LostFocus() { T::LostFocus(); drop.RefreshFrame(); }
 	virtual Size GetMinSize() const { return drop.GetMinSize(); }
 
 	DateTimeCtrl& SetCalendarStyle(const Calendar::Style& style)   { cc.calendar.SetStyle(style); return *this;  }
@@ -534,5 +534,4 @@ public:
 	DropTime& SetTime(int y, int m, int d, int h, int n, int s);
 	DropTime& Seconds(bool b = true)                           { DateTimeCtrl<EditTime>::Seconds(b); EditTime::Seconds(b); return *this; }
 	DropTime& NoSeconds()                                      { return Seconds(false); }
-
 };
