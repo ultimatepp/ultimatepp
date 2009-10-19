@@ -256,6 +256,7 @@ public:
 	virtual void  Deactivate();
 	virtual void  CancelMode();
 	virtual void  Paint(Draw& w);
+	virtual bool  IsMenuBar() const                  { return true; }
 
 protected:
 	virtual Item& AddItem(Callback cb);
@@ -320,7 +321,8 @@ protected:
 	};
 
 public:
-	virtual bool IsMenuBar() const                  { return true; }
+	Callback WhenSubMenuOpen;
+	Callback WhenSubMenuClose;
 
 	static int GetStdHeight(Font font = StdFont());
 

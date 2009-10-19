@@ -161,6 +161,8 @@ void MenuBar::CloseMenu()
 		if(q->IsOpen()) {
 			q->doeffect = true;
 			q->Close();
+			if(q->parentmenu)
+				q->parentmenu->WhenSubMenuClose();
 		}
 		MenuBar *w = q;
 		q = q->parentmenu;
@@ -414,6 +416,7 @@ void MenuBar::SetActiveSubmenu(MenuBar *sm, Ctrl *item)
 {
 	if(submenu && submenu != sm) {
 		submenu->Close();
+		WhenSubMenuClose();
 		submenu->parentmenu = NULL;
 	}
 	if(submenuitem)
@@ -426,8 +429,11 @@ void MenuBar::SubmenuClose()
 {
 	if(parentmenu && parentmenu->GetActiveSubmenu() == this)
 		parentmenu->SetActiveSubmenu(NULL, NULL);
-	else
+	else {
 		Close();
+		if(parentmenu)
+			parentmenu->WhenSubMenuClose();
+	}
 	parentmenu = NULL;
 	Clear();
 }
