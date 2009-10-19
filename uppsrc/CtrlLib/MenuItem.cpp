@@ -380,8 +380,10 @@ void SubMenuBase::Pull(Ctrl *item, Point p, Size sz)
 		menu.SetParentMenu(parentmenu);
 	}
 	menu.PopUp(parentmenu, p, sz);
-	if(parentmenu)
+	if(parentmenu) {
 		parentmenu->doeffect = false;
+		parentmenu->WhenSubMenuOpen();
+	}
 }
 
 // ----------------------------------------------------
