@@ -80,6 +80,7 @@ private:
 	Vector<Oid>     oid;
 	int             rows;
 	int             fetched_row; //-1, if not fetched yet
+	String          last_insert_table;
 
 	void            FreeResult();
 	String          ErrorMessage();
@@ -461,6 +462,11 @@ bool PostgreSQLConnection::Execute()
 		session.SetError("Empty statement", statement);
 		return false;
 	}
+
+	CParser p(statement);
+	if((p.Id("insert") || p.Id("INSERT")) && (p.Id("into") || p.Id("INTO")) && p.IsId())
+		last_insert_table = p.ReadId();
+
 	String query;
 	int pi = 0;
 	const char *s = statement;
@@ -528,11 +534,7 @@ int PostgreSQLConnection::GetRowsProcessed() const
 
 Value PostgreSQLConnection::GetInsertedId() const
 {
-	//it needs GetInsertedId(const char * sequence)
-	//there is no other/better way to retrieve last inserted id
-	const char * sequence = NULL;
-
-	Sql sql(Format("select currval('%s')", sequence), session);
+	Sql sql("select currval('" + last_insert_table + "_id_seq')", session);
 	if(sql.Execute() && sql.Fetch())
 		return sql[0];
 	else
