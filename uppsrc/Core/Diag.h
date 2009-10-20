@@ -170,15 +170,15 @@ struct DebugLogBlock
 	const char *name;
 };
 
-#define RLOG(a)           UPP::LockLog(), UPP::VppLog() << a << EOL, UPP::UnlockLog()
+#define RLOG(a)           UPP::LockLog(), UPP::VppLog() << a << UPP::EOL, UPP::UnlockLog()
 #define RLOGBEGIN()       UPP::LockLog(), UPP::VppLog() << LOG_BEGIN
 #define RLOGEND()         UPP::VppLog() << LOG_END, UPP::UnlockLog()
 #define RLOGBLOCK(n)      UPP::DebugLogBlock MK__s(n)
 #define RLOGHEXDUMP(s, a) UPP::HexDump(UPP::VppLog(), s, a)
 #define RQUOTE(a)         { LOG(#a); a; }
-#define RLOGSRCPOS()      UPP::LockLog(), UPP::VppLog() << __FILE__ << '#' << __LINE__ << EOL
-#define RDUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << EOL, UPP::UnlockLog()
-#define RDUMPC(c)         UPP::LockLog(), UPP::DumpContainer(UPP::VppLog() << #c << ':' << EOL, (c)), UPP::UnlockLog()
+#define RLOGSRCPOS()      UPP::LockLog(), UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL
+#define RDUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << UPP::EOL, UPP::UnlockLog()
+#define RDUMPC(c)         UPP::LockLog(), UPP::DumpContainer(UPP::VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 
 // Crash support
 

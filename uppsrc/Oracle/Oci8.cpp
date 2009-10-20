@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // LLOG(x)
+#define LLOG(x) RLOG(x)
 
 //#define DLLFILENAME "ora803.dll"
 #define DLLFILENAME "oci.dll"
@@ -35,13 +35,13 @@ static String OciError(T_OCI8& oci8, OCIError *errhp, int *code)
 }
 
 bool Oracle8::AllocOciHandle(void *hp, int type) {
-	LLOG("AllocOciHandle(" << type << "), envhp = " << envhp);
+	LLOG("AllocOciHandle(type " << type << "), envhp = " << FormatIntHex(envhp));
 	*(dvoid **)hp = NULL;
 	return oci8 && !oci8.OCIHandleAlloc(envhp, (dvoid **)hp, type, 0, NULL);
 }
 
 void Oracle8::FreeOciHandle(void *hp, int type) {
-	LLOG("FreeOciHandle(" << type << ")");
+	LLOG("FreeOciHandle(" << FormatIntHex(hp) << ", type " << type << ")");
 	if(oci8 && hp) oci8.OCIHandleFree(hp, type);
 }
 

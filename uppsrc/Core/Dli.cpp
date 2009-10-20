@@ -6,7 +6,7 @@ typedef HMODULE DLLHANDLE;
 typedef void   *DLLHANDLE;
 #endif
 
-#define LLOG(x)
+#define LLOG(x) // RLOG(x)
 
 #ifdef PLATFORM_WIN32
 
@@ -163,7 +163,8 @@ void *CheckDll__(const char *fn, const char *const *names, UPP::Vector<void *>& 
 {
 	void *hmod = dlopen(fn, RTLD_LAZY | RTLD_GLOBAL);
 	if(!hmod) {
-		LLOG("Error loading library " << fn << ": " << dlerror());
+		RLOG("prdel");
+		RLOG("Error loading library " << fn << ": " << dlerror());
 /*
 		for(int i = 0; i < 100; i++) {
 			hmod = dlopen(fn + ("." + UPP::AsString(i)), RTLD_LAZY | RTLD_GLOBAL);
@@ -181,15 +182,16 @@ void *CheckDll__(const char *fn, const char *const *names, UPP::Vector<void *>& 
 		if(optional) exp++;
 		void *proc = dlsym(hmod, exp);
 		if(!proc && !optional) {
-			if(!missing)
-				LLOG(fn << " missing exports:");
-			LLOG(exp);
+			if(!missing) {
+				RLOG(fn << " missing exports:");
+			}
+			RLOG(exp);
 		}
 		plist.Add(proc);
 	}
 
 	if(missing) {
-		LLOG(missing << " missing symbols total");
+		RLOG(missing << " missing symbols total");
 		dlclose(hmod);
 		return 0;
 	}
