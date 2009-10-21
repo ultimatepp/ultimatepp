@@ -304,6 +304,24 @@ Vector<String> Split(const char *s, int chr, bool ignoreempty) {
 	return Split(s, ct, ignoreempty);
 }
 
+struct StringSplit : TextTest {
+	String test;
+
+	virtual const char *Accept(const char *s) const {
+		int l = test.GetCount();
+		if(l && memcmp(~test, s, l) == 0)
+			return s + l;
+		return NULL;
+	}
+};
+
+Vector<String> Split(const char *s, const String& delim, bool ignoreempty)
+{
+	StringSplit ss;
+	ss.test = delim;
+	return Split(s, ss, ignoreempty);
+}
+
 String Join(const Vector<String>& im, const String& delim) {
 	String r;
 	for(int i = 0; i < im.GetCount(); i++) {
