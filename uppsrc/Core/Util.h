@@ -22,8 +22,9 @@ public:
 
 void   SetAssertFailedHook(void (*h)(const char *));
 
-void   SetIniFile(const char *name = NULL);
-String GetIniKey(const char *name);
+void   SetIniFile(const char *path = NULL);
+String GetIniKey(const char *id, const String& def);
+String GetIniKey(const char *id);
 VectorMap<String, String> LoadIniFile(const char *filename);
 
 String timeFormat(double second);

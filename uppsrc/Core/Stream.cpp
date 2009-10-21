@@ -850,7 +850,7 @@ void StringStream::Reserve(int n)
 {
 	SetWriteMode();
 	intptr_t p = ptr - buffer;
-	wdata.SetLength(GetSize() + n);
+	wdata.SetLength((int)GetSize() + n);
 	SetWriteBuffer();
 	ptr = buffer + p;
 }
