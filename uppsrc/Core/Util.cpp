@@ -379,15 +379,17 @@ VectorMap<String, String> LoadIniFile(const char *filename) {
 	}
 }
 
-const char *sIniFile;
+static StaticMutex sMtx;
+static char  sIniFile[256];
 static bool s_ini_loaded;
 
 void SetIniFile(const char *name) {
-	sIniFile = name;
-	s_ini_loaded = false;
+	Mutex::Lock __(sMtx);
+	strcpy(sIniFile, name);
 }
 
-String GetIniKey(const char *name) {
+String GetIniKey(const char *id, const String& def) {
+	Mutex::Lock __(sMtx);
 	static VectorMap<String, String> key;
 	if(!s_ini_loaded) {
 		s_ini_loaded = true;
@@ -401,10 +403,14 @@ String GetIniKey(const char *name) {
 			key = LoadIniFile(GetHomeDirFile("q.ini"));
 	#endif
 	}
-	int i = key.Find(name);
-	if(i < 0) return String();
-	return key[i];
+	return key.Get(id, def);
 }
+
+String GetIniKey(const char *id)
+{
+	return GetIniKey(id, String());
+}
+
 
 void TextSettings::Load(const char *filename)
 {
