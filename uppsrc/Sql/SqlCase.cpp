@@ -171,19 +171,40 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 				*r << "NULL";
 				break;
 			}
+			if(dialect == PGSQL)
+				r->Cat('E');
 			r->Cat('\'');
 			for(const char *q = x; *q; q++) {
-				if(*q == '\'') {
+				int c = (byte)*q;
+				if(c == '\'') {
 					if(dialect == MY_SQL)
 						r->Cat("\\\'");
 					else if(dialect == PGSQL)
 						r->Cat("\\'");
 					else
 					 	r->Cat("\'\'");
-				} else {
-					if((*q == '\"' || *q == '\\') && dialect == MY_SQL)
+				}
+				else {
+					if((c == '\"' || c == '\\') && (dialect == MY_SQL || dialect == PGSQL))
 						r->Cat('\\');
-					r->Cat(*q);
+					if(dialect == PGSQL && c < 32) {
+						if(c == '\n')
+							r->Cat("\\n");
+						else
+						if(c == '\r')
+							r->Cat("\\r");
+						else {
+							char h[4];
+							int q = (byte)*s;
+							h[0] = '\\';
+							h[1] = (3 & (q >> 6)) + '0';
+							h[2] = (7 & (q >> 3)) + '0';
+							h[3] = (7 & q) + '0';
+							r->Cat(h, 4);
+						}
+					}
+					else
+						r->Cat(c);
 				}
 			}
 			r->Cat('\'');
