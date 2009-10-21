@@ -23,6 +23,9 @@ bool PostgreSQLTest::OpenDB()
 		return false;
 	}
 	m_array.SetSession(m_session);
+	
+	SQLCommander(m_session);
+	return false;
 
 #ifdef _DEBUG
 	m_session.SetTrace();
