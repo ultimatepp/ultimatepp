@@ -835,7 +835,7 @@ void ColumnList::Remove(int ii)
 	Refresh();
 	SyncInfo();
 	SetSb();
-	if(c >= 0)
+	if(c >= 0 && c < GetCount())
 		SetCursor(c);
 }
 
@@ -997,7 +997,7 @@ void ColumnList::InsertDrop(int ii, const ColumnList& src, PasteClip& d)
 			data.Add(src.GetValue(i));
 			keys.Add(src[i]);
 		}
-	InsertDrop(ii, data, d, &src == this);
+	InsertDrop(ii, keys, data, d, &src == this);
 }
 
 void ColumnList::InsertDrop(int ii, PasteClip& d)
