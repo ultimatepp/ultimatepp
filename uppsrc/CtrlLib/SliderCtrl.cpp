@@ -45,6 +45,8 @@ void SliderCtrl::Paint(Draw& w)
 			w.DrawImage(SliderToClient(value), (size.cy - CtrlImg::hthumb().GetSize().cy) >> 1,
 			            HasCapture() || HasFocus() ? CtrlImg::hthumb1() : CtrlImg::hthumb());
 	}
+	if(HasFocus())
+		DrawFocus(w, size);
 }
 
 bool SliderCtrl::Key(dword key, int repcnt)
@@ -67,6 +69,7 @@ void SliderCtrl::LeftDown(Point pos, dword keyflags)
 {
 	if(!IsEditable())
 		return;
+	SetWantFocus();
 	int thumb = SliderToClient(value);
 	int p = HoVe(pos.x, pos.y);
 	if(IsNull(thumb)) {
@@ -207,6 +210,16 @@ void SliderCtrl::Inc()
 		WhenSlideFinish();
 		UpdateActionRefresh();
 	}
+}
+
+void SliderCtrl::GotFocus()
+{
+	Refresh();
+}
+
+void SliderCtrl::LostFocus()
+{
+	Refresh();
 }
 
 SliderCtrl::~SliderCtrl() {}

@@ -23,6 +23,8 @@ public:
 	virtual void  LeftRepeat(Point pos, dword keyflags);
 	virtual void  LeftUp(Point pos, dword keyflags);
 	virtual void  MouseMove(Point pos, dword keyflags);
+	virtual void  GotFocus();
+	virtual void  LostFocus();
 
 	virtual void  SetData(const Value& value);
 	virtual Value GetData() const;
