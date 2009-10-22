@@ -373,7 +373,7 @@ VectorMap<String, String> LoadIniFile(const char *filename) {
 		}
 		else
 			for(;;) {
-				if(IsAlNum(c)) break;
+				if(IsAlNum(c) || c == '_') break;
 				if((c = in.Get()) < 0) return key;
 			}
 	}
