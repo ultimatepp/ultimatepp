@@ -124,6 +124,7 @@ inline Time&  operator+=(Time& a, double i) { return a += int64(i); }
 inline Time&  operator-=(Time& a, double i) { return a -= int64(i); }
 
 Time  GetSysTime();
+Time  GetUtcTime();
 
 String Format(Time time, bool seconds = true);
 

@@ -422,17 +422,35 @@ String Format(Time time, bool seconds) {
 }
 
 #ifdef PLATFORM_WIN32
+
 Time GetSysTime() {
 	SYSTEMTIME st;
 	GetLocalTime(&st);
 	return Time(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 }
+
+Time GetUtcTime() {
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	return Time(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+}
+
 #endif
 
 #ifdef PLATFORM_POSIX
+
 Time GetSysTime() {
 	return Time(time(NULL));
 }
+
+Time GetUtcTime()
+{
+	time_t gmt = time(NULL);
+	struct tm *utc = gmtime(&gmt);
+	return Time(utc->tm_year + 1900, utc->tm_mon + 1, utc->tm_mday, 
+	            utc->tm_hour, utc->tm_min, utc->tm_sec);
+}
+
 #endif
 
 Date GetSysDate() {
