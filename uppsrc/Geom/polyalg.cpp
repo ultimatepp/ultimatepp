@@ -506,7 +506,7 @@ void PolygonIterator<T>::Add(typename PIUtils<T>::ConstIterator vertices, int ve
 					ue--;
 			}
 			typename PIUtils<T>::PointList& seg1 = segments.Add();
-			seg1.SetCount(degen1 ? 2 : ue - ub + 1 + (ue > ub ? 0 : *counts));
+			seg1.SetCount(degen1 ? 2 : (int)(ue - ub) + 1 + (ue > ub ? 0 : *counts));
 			ASSERT(seg1.GetCount() >= 2);
 			ASSERT(ub != e);
 			typename PIUtils<T>::Iterator sp = seg1.End();
@@ -575,7 +575,7 @@ void PolygonIterator<T>::Add(typename PIUtils<T>::ConstIterator vertices, int ve
 					ue--;
 			}
 			typename PIUtils<T>::PointList& seg2 = segments.Add();
-			seg2.SetCount(degen2 ? 2 : ue - ub + 1 + (ue > ub ? 0 : *counts));
+			seg2.SetCount(degen2 ? 2 : (int)(ue - ub) + 1 + (ue > ub ? 0 : *counts));
 			ASSERT(seg2.GetCount() >= 2);
 			sp = seg2.Begin();
 			if(degen2)
@@ -965,7 +965,7 @@ void PolygonIterator<T>::Flush(int index, T ypos)
 	typename PIUtils<T>::ConstIterator qb = q.done.Begin();
 	if(*qb == p.done[0] && qb < qe)
 		qb++;
-	out_vertices.SetCountR(out_vertices.GetCount() + (qe - qb));
+	out_vertices.SetCountR(out_vertices.GetCount() + (int)(qe - qb));
 	typename PIUtils<T>::Iterator out = out_vertices.End();
 	while(qb < qe)
 		*--out = *qb++;
