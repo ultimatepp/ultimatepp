@@ -1,5 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
+using namespace Upp;
+
 struct App : TopWindow {
 	StaticRect        dynarect;
 	SliderCtrl        slider, slider2;
@@ -20,6 +22,8 @@ struct App : TopWindow {
 		slider2.Range(600);
 		slider <<= 250;
 		Add(slider.RightPosZ(5, 30).VSizePos(10, 10));
+		slider.WantFocus();
+		slider2.WantFocus();
 		Add(slider2.BottomPosZ(5, 30).HSizePos(10, 10));
 		Slider();
 
