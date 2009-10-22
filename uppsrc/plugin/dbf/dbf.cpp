@@ -125,7 +125,7 @@ DbfStream::Field::Field(const char *_name, char type, byte width, byte decimal)
 {
 	if(_name) {
 		const char *p = reinterpret_cast<const char *>(memchr(_name, 0, 11));
-		name = String(_name, p ? p - _name : 11);
+		name = String(_name, p ? (int)(p - _name) : 11);
 	}
 	name = ToUpper(name);
 }
@@ -604,7 +604,7 @@ bool DbfStream::Fetch(int row)
 
 	dbf.Seek(data_offset + row * record.GetCount());
 	byte *p = record.Begin(), *e = record.End();
-	int count = dbf.Get(p, e - p);
+	int count = dbf.Get(p, (int)(e - p));
 	if(count < record.GetCount())
 		memset(p + count, ' ', record.GetCount() - count);
 	if(count <= 0 || (*p != ' ' && *p != 0)) {
@@ -750,7 +750,7 @@ void DbfStream::DumpData(Stream& stream)
 	int i;
 	for(i = 0; i < fields.GetCount(); i++) {
 		const Field& field = GetField(i);
-		int width = max<int>(field.width, strlen(field.name));
+		int width = max<int>(field.width, (int)strlen(field.name));
 		switch(field.type) {
 		case 'D': width = max(width, 10); break;
 		}
@@ -843,7 +843,7 @@ Value DbfStream::GetItemString(int i) const
 		p++;
 	while(e > p && e[-1] == ' ')
 		e--;
-	String s(p, e - p);
+	String s(p, (int)(e - p));
 	if(charset == GetDefaultCharset())
 		return s;
 	return ToUnicode(s, charset);
@@ -920,8 +920,8 @@ Value DbfStream::GetItemMemo(int i, bool binary) const
 					return Value();
 				if(!binary) {
 					byte *p;
-					if(p = (byte *)memchr(buffer, '\0', len)) len = p - buffer;
-					if(p = (byte *)memchr(buffer, '\x1A', len)) len = p - buffer;
+					if(p = (byte *)memchr(buffer, '\0', len)) len = (unsigned)(p - buffer);
+					if(p = (byte *)memchr(buffer, '\x1A', len)) len = (unsigned)(p - buffer);
 				}
 				out = String(buffer, len);
 			}
@@ -936,7 +936,7 @@ Value DbfStream::GetItemMemo(int i, bool binary) const
 							eof = true;
 							break;
 						}
-					int l = e - buffer;
+					int l = (int)(e - buffer);
 					if(!eof && l > dbt_block_size) {
 						dbt.SeekCur(dbt_block_size - l);
 						e = buffer + l;

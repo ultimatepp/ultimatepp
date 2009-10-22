@@ -1000,7 +1000,7 @@ template <class II, class VI, class K, class Less>
 inline void __IndexSort(II begin, II end, VI pair, const Less& less, const K *)
 {
 	Sort(IndexSortIterator<II, VI, K>(begin, pair),
-		IndexSortIterator<II, VI, K>(end, pair + (end - begin)),
+		IndexSortIterator<II, VI, K>(end, pair + (int)(ptrdiff_t)(end - begin)),
 		less);
 }
 
