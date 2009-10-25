@@ -8,5 +8,5 @@ Exec=theide
 Icon=theide
 Terminal=false
 Type=Application
-Categories=Application;Development;C++
+Categories=Application;Development;IDE;C++;
 StartupNotify=false
