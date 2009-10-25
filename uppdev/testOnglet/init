@@ -1,0 +1,5 @@
+#ifndef _testOnglet_icpp_init_stub
+#define _testOnglet_icpp_init_stub
+#include "CtrlLib/init"
+#include "Docking/init"
+#endif

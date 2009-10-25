@@ -1,0 +1,13 @@
+description "Demonstrates using RichTextLayoutTracer to count number of table rows per report page\377";
+
+uses
+	CtrlLib,
+	Report,
+	Painter;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

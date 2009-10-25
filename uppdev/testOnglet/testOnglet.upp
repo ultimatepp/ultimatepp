@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	testOnglet.h,
+	main.cpp,
+	testOnglet.lay;
+
+mainconfig
+	"" = "GUI MT";
+

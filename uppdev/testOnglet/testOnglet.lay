@@ -1,0 +1,16 @@
+LAYOUT(Tab1, 400, 200)
+	ITEM(Clock, dv___0, HSizePosZ(216, 34).VSizePosZ(12, 32))
+	ITEM(Button, dv___1, LeftPosZ(36, 72).TopPosZ(12, 28))
+END_LAYOUT
+
+LAYOUT(Tab2, 400, 200)
+	ITEM(Calendar, dv___0, HSizePosZ(76, 88).VSizePosZ(12, 32))
+END_LAYOUT
+
+LAYOUT(testOngletLayout, 568, 484)
+	ITEM(TabCtrl, tabs, HSizePosZ(124, 22).VSizePosZ(8, 12))
+	ITEM(WithTab1<ParentCtrl>, tab1, LeftPosZ(132, 404).TopPosZ(40, 428))
+	ITEM(WithTab2<ParentCtrl>, tab2, LeftPosZ(132, 404).TopPosZ(40, 428))
+	ITEM(Button, bClose, SetLabel(t_("close")).HSizePosZ(24, 460).VSizePosZ(156, 280))
+END_LAYOUT
+
