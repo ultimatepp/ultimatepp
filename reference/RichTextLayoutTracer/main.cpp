@@ -5,9 +5,12 @@ using namespace Upp;
 struct TableRowTracer : RichTextLayoutTracer {
 	VectorMap<int, int> pgr;
 
-	virtual void TableRow(const Rect& page, PageY y, int, const RichTable&) {
-		pgr.GetAdd(y.page, 0)++;
-	}	
+	virtual void TableCell(const Rect& page, PageY py, int i, int j, const RichTable& table, PageY npy)
+	{
+		if(j == 0)
+			for(int i = py.page; i <= npy.page; i++)
+				pgr.GetAdd(i, 0)++;
+	}
 };
 
 GUI_APP_MAIN
@@ -16,10 +19,7 @@ GUI_APP_MAIN
 	r.Footer("[R1 ");
 	TableRowTracer t;
 	r.SetRichTextLayoutTracer(t);
-	String qtf = "&[R This is a demonstration of [* RichTextLayoutTracer]&&&{{1 Table";
-	for(int i = 0; i < 100; i++)
-		qtf << ":: " << i;
-	qtf << "}}";
+	String qtf = LoadFile("D:\\log.qtf");
 	r.Put(qtf);
 	
 	Report rr;
