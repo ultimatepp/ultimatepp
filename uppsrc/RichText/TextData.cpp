@@ -344,7 +344,7 @@ void RichTextLayoutTracer::Table(const Rect& page, PageY y, const RichTable& tab
 void RichTextLayoutTracer::EndTable(PageY y) {}
 void RichTextLayoutTracer::TableRow(const Rect& page, PageY y, int i, const RichTable& table) {}
 void RichTextLayoutTracer::EndTableRow(PageY y) {}
-void RichTextLayoutTracer::TableCell(const Rect& page, PageY y, int i, int j, const RichTable& table) {}
+void RichTextLayoutTracer::TableCell(const Rect& page, PageY y, int i, int j, const RichTable& table, PageY npy) {}
 void RichTextLayoutTracer::EndTableCell(PageY y) {}
 
 END_UPP_NAMESPACE
