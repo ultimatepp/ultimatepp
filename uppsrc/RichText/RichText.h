@@ -105,7 +105,7 @@ struct RichTextLayoutTracer {
 	virtual void  EndTable(PageY y);
 	virtual void  TableRow(const Rect& page, PageY y, int i, const RichTable& table);
 	virtual void  EndTableRow(PageY y);
-	virtual void  TableCell(const Rect& page, PageY y, int i, int j, const RichTable& table);
+	virtual void  TableCell(const Rect& page, PageY y, int i, int j, const RichTable& table, PageY ny);
 	virtual void  EndTableCell(PageY y);
 };
 

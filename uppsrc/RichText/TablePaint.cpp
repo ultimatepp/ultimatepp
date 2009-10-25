@@ -75,7 +75,7 @@ bool RichTable::RowPaint(PageDraw& pw, const RichStyles& st, const Layout& tab,
 			}
 			if(paint) {
 				if(pw.tracer)
-					pw.tracer->TableCell(rc.page, rc.py, i, j, *this);
+					pw.tracer->TableCell(rc.page, rc.py, i, j, *this, pyy);
 				row[j].Paint(pw, rc, pyy, xpg, y, ny, pi,
 				             sel && j >= pi.cells.left && i >= pi.cells.top &&
 				             j + cell.hspan <= pi.cells.right && i + cell.vspan <= pi.cells.bottom);

@@ -136,7 +136,8 @@ void TabCtrl::Layout()
 	if(tab.GetCount() && tab.Top().Right() < TabsRight())
 		x0 = 0;
 	SyncHot();
-	ScrollInto(sel);
+	if(sel < tab.GetCount())
+		ScrollInto(sel);
 	pane.VSizePos(style->tabheight + style->edge.top, style->edge.bottom)
 	    .HSizePos(style->edge.left, style->edge.right);
 	left.LeftPos(0, 16).TopPos(th - 16, 16);
