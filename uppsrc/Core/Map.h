@@ -100,6 +100,8 @@ public:
 	const V&         GetValues() const             { return value; }
 	V&               GetValues()                   { return value; }
 	V                PickValues() pick_            { return value; }
+	
+	bool             IsPicked() const              { return value.IsPicked() || key.IsPicked(); }
 
 	AMap()                                         {}
 	AMap(const AMap& s, int) : key(s.key, 0), value(s.value, 0) {}
