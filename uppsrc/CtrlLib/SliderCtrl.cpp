@@ -81,7 +81,7 @@ void SliderCtrl::LeftDown(Point pos, dword keyflags)
 	if(p >= thumb && p < thumb + HoVe(CtrlImg::hthumb().GetSize().cx, CtrlImg::vthumb().GetSize().cy))
 		SetCapture();
 	else {
-		if(p < thumb)
+		if( ( ( p < thumb) && (min == Min() ) ) || ( (p > thumb) && ( min == Max() ) ) )
 			Dec();
 		else
 			Inc();
@@ -117,7 +117,8 @@ void SliderCtrl::SetData(const Value& v)
 {
 	int i = v;
 	if(!IsNull(i))
-		i = minmax(i, min, max);
+		i = minmax(i, Min(), Max() );
+
 	if(i != value) {
 		value = i;
 		UpdateRefresh();
@@ -135,7 +136,7 @@ SliderCtrl& SliderCtrl::MinMax(int _min, int _max)
 		min = _min;
 		max = _max;
 		if(!IsNull(value)) {
-			int v = minmax(value, min, max);
+			int v = minmax(value, Min(), Max());
 			if(value != v) {
 				value = v;
 				Update();
@@ -150,39 +151,35 @@ int SliderCtrl::SliderToClient(int v) const
 {
 	if(IsNull(v))
 		return Null;
-	v = minmax(v, min, max);
-	if(max > min)
-		v = iscale(v - min, HoVe(GetSize().cx - CtrlImg::hthumb().GetSize().cx,
+	v = minmax(v, Min(), Max());
+
+	v = iscale(v - min, HoVe(GetSize().cx - CtrlImg::hthumb().GetSize().cx,
 		                         GetSize().cy - CtrlImg::vthumb().GetSize().cy), max - min);
-	else
-		v = 0;
 	return v;
 }
 
 int SliderCtrl::ClientToSlider(int p) const
 {
-	if(max <= min)
-		return min;
 	Size hsz = CtrlImg::hthumb().GetSize();
 	Size vsz = CtrlImg::vthumb().GetSize();
 	p -= HoVe(hsz.cx / 2, vsz.cy / 2);
 	return minmax(min + iscale(p, max - min,
-	                           HoVe(GetSize().cx - hsz.cx, GetSize().cy - vsz.cy)), min, max);
+	                           HoVe(GetSize().cx - hsz.cx, GetSize().cy - vsz.cy)), Min(), Max());
 }
 
 void SliderCtrl::Dec()
 {
 	int n = value;
 	if(IsNull(value))
-		n = max;
+		n = Max();
 	else
-	if(n > min) {
+	if(n > Min()) {
 		if(round_step && step > 1)
 			n = idivfloor(n - 1, step) * step;
 		else
 			n -= step;
-		if(n < min)
-			n = min;
+		if(n < Min())
+			n = Min();
 	}
 	if(n != value) {
 		value = n;
@@ -195,15 +192,15 @@ void SliderCtrl::Inc()
 {
 	int n = value;
 	if(IsNull(value))
-		n = min;
+		n = Min();
 	else
-	if(n < max) {
+	if(n < Max()) {
 		if(round_step && step > 1)
 			n = idivceil(n + 1, step) * step;
 		else
 			n += step;
-		if(n > max)
-			n = max;
+		if(n > Max())
+			n = Max();
 	}
 	if(n != value) {
 		value = n;
