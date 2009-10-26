@@ -188,10 +188,23 @@ void WakeUpGuiThread()
 	::PostThreadMessage(sMainThreadId, WM_NULL, 0, 0);
 }
 
+static void Win32PanicMessageBox(const char *title, const char *text)
+{
+#ifdef PLATFORM_WINCE
+	static wchar wtext[256], wtitle[256];
+	ToUnicode(wtext, text, strlen(text), CHARSET_DEFAULT);
+	ToUnicode(wtitle, title, strlen(title), CHARSET_DEFAULT);
+	MessageBox(::GetActiveWindow(), wtext, wtitle, MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+#else
+	MessageBox(::GetActiveWindow(), text, title, MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+#endif
+}
+
 void Ctrl::InitWin32(HINSTANCE hInstance)
 {
 	GuiLock __;
 	LLOG("InitWin32");
+	InstallPanicMessageBox(&Win32PanicMessageBox);
 //	RLOGBLOCK("Ctrl::InitWin32");
 	sMainThreadId = GetCurrentThreadId();
 #define ILOG(x) // RLOG(x)
