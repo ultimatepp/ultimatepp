@@ -1,3 +1,5 @@
+description "\3770,128,128";
+
 file
 	zip.h,
 	Zip.cpp,
