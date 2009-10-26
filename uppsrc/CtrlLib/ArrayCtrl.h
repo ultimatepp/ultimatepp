@@ -106,6 +106,7 @@ public:
 		Column& Margin(int m)                      { margin = m; return *this; }
 
 		HeaderCtrl::Column& HeaderTab();
+		Column& Tip(const char *tip)               { HeaderTab().Tip(tip); return *this; }
 
 		Column();
 	};

@@ -35,6 +35,7 @@ public:
 		int         margin;
 		Color       paper;
 		int         index;
+		String      tip;
 
 		void        Paint(bool& first, Draw& w,
 		                  int x, int y, int cx, int cy, bool disabled, bool push, bool hl);
@@ -49,6 +50,7 @@ public:
 		Column&  Max(int _max)                     { max = _max; return *this; }
 		Column&  MinMax(int m, int n)              { return Min(m).Max(n); }
 		Column&  Fixed(int f)                      { return MinMax(f, f); }
+		Column&  Tip(const char *s)                { tip = s; return *this; }
 		Column&  SetPaper(Color c)                 { paper = c; return *this; }
 		Column&  SetRatio(double ratio);
 		Column&  SetMargin(int m);
