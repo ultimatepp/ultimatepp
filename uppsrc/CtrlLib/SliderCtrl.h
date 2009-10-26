@@ -9,6 +9,9 @@ class SliderCtrl : public Ctrl {
 	int           HoVe(int  x, int  y) const;
 	int&          HoVeR(int& x, int& y) const;
 
+	int           Min() const     { return Upp::min(min, max); };
+	int           Max() const     { return Upp::max(min, max); };
+
 public:
 	typedef SliderCtrl CLASSNAME;
 
