@@ -578,9 +578,12 @@ void HeaderCtrl::MouseMove(Point p, dword keyflags) {
 		Refresh();
 		return;
 	}
+	int q = GetSplit(p.x);
+	int cx = ~q;
+	if(cx >= 0 && cx < col.GetCount() && !IsNull(col[cx].tip))
+		Tip(col[cx].tip);
 	if(mode == FIXED)
 		return;
-	int q = GetSplit(p.x);
 	q = IsNull(q) || q >= 0 ? -1 : -1 - q;
 	if(q != light)
 		Refresh();
