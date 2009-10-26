@@ -19,18 +19,12 @@ void InstallPanicMessageBox(void (*mb)(const char *title, const char *text))
 
 void PanicMessageBox(const char *title, const char *text)
 {
-#ifdef PLATFORM_WIN32
-#	ifdef PLATFORM_WINCE
-	MessageBox(::GetActiveWindow(), ToSysChrSet(text), ToSysChrSet(title), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
-#	else
-	MessageBox(::GetActiveWindow(), text, title, MB_ICONSTOP | MB_OK | MB_APPLMODAL);
-#	endif
-#else
 	if(sPanicMessageBox)
 		(*sPanicMessageBox)(title, text);
-	write(2, text, strlen(text));
-	write(2, "\n", 1);
-#endif
+	else {
+		write(2, text, strlen(text));
+		write(2, "\n", 1);
+	}
 }
 
 void    Panic(const char *msg)

@@ -158,6 +158,8 @@ void Ctrl::UntrapX11Errors(bool b)
 static void sPanicMessageBox(const char *title, const char *text)
 {
 	GuiLock __; 
+	write(2, text, strlen(text));
+	write(2, "\n", 1);
 	Ctrl::ReleaseCtrlCapture();
 	XDisplay *display = XOpenDisplay(NULL);
 	if(!display)
