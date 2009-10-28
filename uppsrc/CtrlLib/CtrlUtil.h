@@ -71,6 +71,7 @@ public:
 	PrinterJob& MinMaxPage(int minpage, int maxpage);
 	PrinterJob& PageCount(int n)                        { return MinMaxPage(0, n - 1); }
 	PrinterJob& CurrentPage(int currentpage);
+	PrinterJob& Name(const char *_name)                 { name = _name; return *this; }
 
 	PrinterJob(const char *name = NULL);
 	~PrinterJob();

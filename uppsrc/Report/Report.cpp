@@ -163,4 +163,27 @@ void Report::Put(const char *qtf)
 	Put(ParseQTF(qtf));
 }
 
+bool Report::ChoosePrinter(const char *jobname)
+{
+	printerjob.Create();
+	printerjob->Name(jobname);
+	if(!printerjob->Execute()) {
+		printerjob.Clear();
+		return false;
+	}
+	SetPageSize(printerjob->GetDraw().GetPageSize());
+	return true;
+}
+
+bool Report::ChooseDefaultPrinter(const char *jobname)
+{
+	printerjob.Create();
+	printerjob->Name(jobname);
+	Size sz = printerjob->GetDraw().GetPageSize();
+	if(sz.cx == 0 || sz.cy == 0)
+		return false;
+	SetPageSize(sz);
+	return true;
+}
+
 END_UPP_NAMESPACE

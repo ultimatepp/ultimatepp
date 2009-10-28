@@ -301,9 +301,9 @@ bool DocReport::Print0(int i, const char *_name) {
 			dlg.nFromPage = dlg.nMinPage;
 			dlg.nToPage = dlg.nMaxPage;
 		}
-		Size sz = w.GetPageMMs();
-		int x = (6000 * sz.cx / 254 - pgsz.cx) / 2;
-		int y = (6000 * sz.cy / 254 - pgsz.cy) / 2;
+		Size sz = w.GetPageSize();
+		int x = (sz.cx - pgsz.cx) / 2;
+		int y = (sz.cy - pgsz.cy) / 2;
 		for(int c = 0; c < ((dlg.Flags & PD_COLLATE) ? dlg.nCopies : 1); c++)
 			for(i = dlg.nFromPage - 1; i <= dlg.nToPage - 1; i++)
 				for(int c = 0; c < ((dlg.Flags & PD_COLLATE) ? 1 : dlg.nCopies); c++) {
