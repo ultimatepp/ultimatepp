@@ -14,12 +14,13 @@ public:
 	virtual Draw& Page(int i);
 
 private:
-	Array<Drawing> page;
-	int            pagei;
-	int            y;
-	String         header, footer;
-	int            headercy, headerspc, footercy, footerspc;
-	Point          mg;
+	Array<Drawing>  page;
+	int             pagei;
+	int             y;
+	String          header, footer;
+	int             headercy, headerspc, footercy, footerspc;
+	Point           mg;
+	One<PrinterJob> printerjob;
 
 	void    Flush();
 	String  FormatHF(const char *s, int pageno);
@@ -27,7 +28,7 @@ private:
 	void    PaintHF(Draw& w, int y, const char *qtf, int i);
 	void    StartPage(int i);
 	void    RestartPage();
-
+	
 public:
 	int                   GetCount()                  { Flush(); return page.GetCount(); }
 	Drawing               GetPage(int i)              { Flush(); return page[i]; }
@@ -51,6 +52,10 @@ public:
 	void                  SetRichTextLayoutTracer(RichTextLayoutTracer& l) { tracer = &l; }
 
 	Point                 GetMargins() const          { return mg; }
+
+	bool                  ChoosePrinter(const char *jobname = t_("Report"));
+	bool                  ChooseDefaultPrinter(const char *jobname = t_("Report"));
+	PrinterJob           *GetPrinterJob()             { return ~printerjob; }
 
 	Report&               SetPageSize(Size sz);
 	Report&               SetPageSize(int cx, int cy) { return SetPageSize(Size(cx, cy)); }

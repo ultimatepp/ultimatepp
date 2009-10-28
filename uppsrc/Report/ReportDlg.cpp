@@ -7,14 +7,14 @@ NAMESPACE_UPP
 void Print(Report& r, PrinterJob& pd, bool center)
 {
 	Draw& w = pd;
-	Size sz = w.GetPageMMs();
+	Size sz = w.GetPageSize();
 	Point mg = r.GetMargins();
 	Size pgsz = r.GetPage(0).GetSize();
 	int x = 0;
 	int y = 0;
 	if(center) {
-		x = Nvl(mg.x, (6000 * sz.cx / 254 - pgsz.cx) / 2);
-		y = Nvl(mg.y, (6000 * sz.cy / 254 - pgsz.cy) / 2);
+		x = Nvl(mg.x, (sz.cx - pgsz.cx) / 2);
+		y = Nvl(mg.y, (sz.cy - pgsz.cy) / 2);
 	}
 	for(int i = 0; i < pd.GetPageCount(); i++) {
 		Drawing iw = r.GetPage(pd[i]);
@@ -26,6 +26,10 @@ void Print(Report& r, PrinterJob& pd, bool center)
 }
 
 bool Print0(Report& r, int i, const char *_name, bool dodlg) {
+	if(r.GetPrinterJob()) {
+		Print(r, *r.GetPrinterJob());
+		return true;
+	}
 	PrinterJob pd(_name);
 	pd.CurrentPage(i);
 	pd.MinMaxPage(0, r.GetCount() - 1);
