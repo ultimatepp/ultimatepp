@@ -8,10 +8,15 @@
 #define INT64_(x)                  COLUMN_("bigint", int64, x, 0, 0)
 #define INT64_ARRAY_(x, items)     COLUMN_ARRAY_("bigint", int64, x, 0, 0, items)
 
-#define SERIAL(x)                  COLUMN("serial", int64, x, 0, 0) //int is not enough, as it is unsigned
+#define SERIAL(x)                  COLUMN("serial", int64, x, 0, 0) //int is not enough, as it is unsigned..
 #define SERIAL_ARRAY(x, items)     COLUMN_ARRAY("serial", int64, x, 0, 0, items)
 #define SERIAL_(x)                 COLUMN_("serial", int64, x, 0, 0)
 #define SERIAL_ARRAY_(x, items)    COLUMN_ARRAY_("serial", int64, x, 0, 0, items)
+
+#define ISERIAL(x)                 COLUMN("serial", int, x, 0, 0) //..but we like to choose
+#define ISERIAL_ARRAY(x, items)    COLUMN_ARRAY("serial", int, x, 0, 0, items)
+#define ISERIAL_(x)                COLUMN_("serial", int, x, 0, 0)
+#define ISERIAL_ARRAY_(x, items)   COLUMN_ARRAY_("serial", int, x, 0, 0, items)
 
 #define BIGSERIAL(x)               COLUMN("bigserial", int64, x, 0, 0)
 #define BIGSERIAL_ARRAY(x, items)  COLUMN_ARRAY("bigserial", int64, x, 0, 0, items)
