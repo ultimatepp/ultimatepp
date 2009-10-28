@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	TDraw,
+	Report;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
