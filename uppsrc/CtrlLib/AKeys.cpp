@@ -211,7 +211,7 @@ String StoreKeys()
 	String out;
 	const VectorMap<String, Vector<KeyBinding> >& g = sKeys();
 	for(int i = 0; i < g.GetCount(); i++) {
-		out << "- " << g.GetKey(i) << ";\r\n";
+		out << "- " << AsCString(g.GetKey(i)) << ";\r\n";
 		const Vector<KeyBinding>& k = g[i];
 		for(int i = 0; i < k.GetCount(); i++) {
 			const KeyBinding& b = k[i];
@@ -323,7 +323,11 @@ void RestoreKeys(const String& data)
 		while(!p.IsEof()) {
 			try {
 				p.PassChar('-');
-				String group = p.ReadId();
+				String group;
+				if(p.IsId())
+				 	group = p.ReadId();
+				else
+					group = p.ReadString();
 				p.PassChar(';');
 				int q = sKeys().Find(group);
 				if(q < 0)
