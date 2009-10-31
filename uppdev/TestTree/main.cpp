@@ -48,44 +48,13 @@ TEST::TEST()
 
 	Add(_test.SizePos());
 	
-	PostCallback(callback(this,&TEST::OnChange));
-
-	
+	PostCallback(callback(this,&TEST::OnChange));	
 }
 
 void TEST::OnChange()
 {
 	int max=1073741824, x=0;
-			
-		for (int i = 0; i < max;i++)
-		{
-			x = 2;
-		}
 		_test.addElement();
-		for (int i = 0; i < max;i++)
-		{
-			x = 2;
-		}
-		_test.addElement();
-		for (int i = 0; i < max;i++)
-		{
-			x = 2;
-		}
-		_test.addElement();
-		for (int i = 0; i < max;i++)
-		{
-			x = 2;
-		}
-		_test.addElement();
-		for (int i = 0; i < max;i++)
-		{
-			x = 2;
-		}
-		_test.addElement();
-		for (int i = 0; i < max;i++)
-		{
-			x = 2;
-		}
 }
 
 GUI_APP_MAIN
