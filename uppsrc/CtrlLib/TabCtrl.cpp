@@ -142,6 +142,7 @@ void TabCtrl::Layout()
 	    .HSizePos(style->edge.left, style->edge.right);
 	left.LeftPos(0, 16).TopPos(th - 16, 16);
 	right.RightPos(0, 16).TopPos(th - 16, 16);
+	SyncTabs();
 	Refresh();
 }
 

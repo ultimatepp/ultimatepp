@@ -380,9 +380,9 @@ void TreeCtrl::ReLine(int itemi, int level, Size& sz)
 	Item& m = item[itemi];
 	if(m.ctrl) {
 		hasctrls = true;
-		chldlck = true;
-		m.ctrl->Remove();
-		chldlck = false;
+//		chldlck = true;
+//		m.ctrl->Remove();
+//		chldlck = false;
 	}
 	m.linei = ii;
 	Size msz = m.GetSize(display);
@@ -394,8 +394,11 @@ void TreeCtrl::ReLine(int itemi, int level, Size& sz)
 			line[ii].ll = line.GetCount();
 			ReLine(m.child[i], level, sz);
 		}
-		else
+		else {
+			chldlck = true;
 			RemoveCtrls(m.child[i]);
+			chldlck = false;
+		}
 }
 
 void TreeCtrl::SyncAfterSync(Ptr<Ctrl> restorefocus)
@@ -1058,6 +1061,8 @@ void TreeCtrl::MouseWheel(Point, int zdelta, dword)
 
 void TreeCtrl::ChildGotFocus()
 {
+	if(chldlck)
+		return;
 	for(int i = 0; i < line.GetCount(); i++) {
 		Item& m = item[line[i].itemi];
 		if(m.ctrl && m.ctrl->HasFocusDeep()) {
