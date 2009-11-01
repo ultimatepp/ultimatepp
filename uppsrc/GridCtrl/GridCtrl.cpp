@@ -1918,7 +1918,7 @@ void GridCtrl::SyncPopup()
 		
 		Ctrl* ctrl = valid_pos ? GetCtrl(r, c, true, false, false) : NULL;
 		
-		bool close = true;
+		bool close = popup.IsOpen();
 
 		if(valid_pos && !ctrl)
 		{
@@ -1930,7 +1930,13 @@ void GridCtrl::SyncPopup()
 					Point p0 = GetMousePos();
 					int x = hitems[c].npos + p0.x - p.x - 1 - sbx.Get() * int(!fc);
 					int y = vitems[r].npos + p0.y - p.y - 1 - sby.Get() * int(!fr);
-					popup.PopUp(this, x, y, max(it.rcx + 10, hitems[c].nsize + 1), max(it.rcy + 10, vitems[r].nsize + 1));
+					popup.gd = it.display ? it.display : display; 
+					
+					Size scrsz = GetScreenSize();
+					int cx = min(600, min((int) (scrsz.cx * 0.4), max(it.rcx + 10, hitems[c].nsize + 1)));
+					int cy = max((fceil(it.rcx / (double) cx) + it.rcy) * Draw::GetStdFontCy() + 10, vitems[r].nsize + 1);
+					popup.PopUp(this, x, y, cx, cy);
+					UpdateHighlighting(GS_BORDER, Point(0, 0));
 				}
 
 				String text = r == 0 ? it.val : (Value)GetStdConvertedColumn(c, it.val);
@@ -1950,6 +1956,7 @@ void GridCtrl::SyncPopup()
 			popup.Close();
 			oldSplitCol = -1;
 			oldSplitRow = -1;
+			UpdateHighlighting(GS_BORDER, Point(0, 0));
 		}
 	}
 }
@@ -5370,6 +5377,8 @@ void GridCtrl::MouseLeave()
 	if(live_cursor)
 		SetCursor0(-1, -1, CU_HIGHLIGHT);
 	UpdateHighlighting(GS_BORDER, Point(0, 0));
+	oldSplitCol = -1;
+	oldSplitRow = -1;
 }
 
 void GridCtrl::MouseWheel(Point p, int zdelta, dword keyflags)
@@ -7585,11 +7594,14 @@ void GridPopUp::Paint(Draw &w)
 {
 	Size sz = GetSize();
 
+	Color fg = SColorText;
+	Color bg = SColorPaper;
+	Font fnt(StdFont());
+	gd->Paint(w, 1, 1, sz.cx - 2, sz.cy - 2, text, GD::WRAP | GD::VCENTER, fg, bg, fnt);
 	DrawBorder(w, sz, BlackBorder);
-//	gd->Paint(Draw &w¸ int x¸ int y¸ int cx¸ int cy¸ const Value &val¸ dword style¸ Color &fg¸ Color &bg¸ Font &fnt¸ bool found = false¸ int fs = 0¸ int fe = 0)
-	w.DrawRect(1, 1, sz.cx - 2, sz.cy - 2, Color(240, 240, 240));
-	Size tsz = GetTextSize(text, StdFont());
-	w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, text);
+	//w.DrawRect(1, 1, sz.cx - 2, sz.cy - 2, Color(240, 240, 240));
+	//Size tsz = GetTextSize(text, StdFont());
+	//w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, text);
 }
 
 Point GridPopUp::Offset(Point p)
@@ -7631,6 +7643,7 @@ void GridPopUp::MouseWheel(Point p, int zdelta, dword flags)
 void GridPopUp::MouseLeave()
 {
 	ctrl->MouseLeave();
+	Close();
 }
 
 void GridPopUp::MouseEnter(Point p, dword flags)
