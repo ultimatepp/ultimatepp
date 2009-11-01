@@ -38,6 +38,9 @@ WString GridDisplay::GetStdConvertedValue(const Value &v) const
 void GridDisplay::Paint(Draw &w, int x, int y, int cx, int cy, const Value &val, dword style,
 						Color &fg, Color &bg, Font &fnt, bool found, int fs, int fe)
 {
+	real_size.cx = 0;
+	real_size.cy = 0;
+
 	if(cx == 0 || cy == 0) return;
 
 	Color mg = bg;
@@ -96,6 +99,9 @@ void GridDisplay::Paint(Draw &w, int x, int y, int cx, int cy, const Value &val,
 void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, int cx, int cy, const Value &val, dword style, Font &fnt,
 		                     bool indicator, bool moved, int sortmode, int sortcol, int sortcnt, bool horizontal)
 {
+	real_size.cx = 0;
+	real_size.cy = 0;
+	
 	bool chameleon = style & GD::CHAMELEON;
 	bool highlight = style & GD::HIGHLIGHT;
 	bool readonly  = style & GD::READONLY;
@@ -152,7 +158,6 @@ void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, in
 
 		w.DrawRect(x + cx - 1, y, 1, cy, dark);
 		w.DrawRect(x, y + cy - 1, cx, 1, dark);
-
 	}
 
 	int tx = x + lm;
@@ -256,6 +261,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 	const wchar *t = s;
 
 	int lines = 0;
+	int enters = 0;
 
 	int ty = y;
 	Size tsz;
@@ -267,6 +273,8 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 
 		while(*p)
 		{
+			enters += int(*p == '\n');
+
 			if(*p == '\n' || *(p + 1) == '\0')
 			{
 				if(wrap)
@@ -298,8 +306,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 	Size isz = GridImg::Dots2().GetSize();
 	int gcx = cx - (wrap ? 0 : isz.cx);
 
-	real_size.cx = 0;	
-	real_size.cy = lines > 1 ? lines * tcy : 0;
+	real_size.cy = enters;
 
 	while(true)
 	{
@@ -389,7 +396,6 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 			else
 				p++;
 		}
-
 	}
 }
 
