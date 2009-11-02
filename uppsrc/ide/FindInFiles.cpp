@@ -374,7 +374,7 @@ void Ide::FindFolder()
 void Ide::ConstructFindInFiles() {
 	ff.find.AddButton().SetMonoImage(CtrlImg::smallright()) <<= THISBACK(FindWildcard);
 	ff.files <<= String("*.cpp *.h *.hpp *.c *.C *.cxx *.cc");
-	ff.files.AddList((String)"*.cpp *.h *.hpp *.c *.C *.cxx *.cc");
+	ff.files.AddList((String)"*.cpp *.h *.hpp *.c *.C *.cxx *.cc *.icpp");
 	ff.files.AddList((String)"*.txt");
 	ff.files.AddList((String)"*.*");
 	ff.folder.AddButton().SetMonoImage(CtrlImg::smalldown()) <<= THISBACK(FindStdDir);

@@ -82,6 +82,7 @@ file
 	FileSel.h,
 	FileList.cpp,
 	FileSel.cpp,
+	FileSelUtil.cpp,
 	Utilities readonly separator,
 	CtrlUtil.h,
 	PrinterJob.cpp,

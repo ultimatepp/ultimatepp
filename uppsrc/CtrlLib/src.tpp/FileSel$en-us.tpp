@@ -415,8 +415,21 @@ a set of file masks separated by spaces. Example: Type(`"Source
 files`", `"`*.c `*.h`").&]
 [s3; &]
 [s4; &]
+[s5;:FileSel`:`:Types`(const char`*`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* Types]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 d])&]
+[s2;%% Adds a number of file types using simple text format: `'`\n`' 
+is used to separate types, `'`\t`' is used to separate file type 
+description and file mask.&]
+[s2;%% Examples: Types(`"All files`\t`*.`*`\nText files`\t`*.txt`\nImage 
+files`\t`*.bmp `*.png `*.jpg `*.gif`")).&]
+[s3;%% &]
+[s4; &]
 [s5;:FileSel`:`:AllFilesType`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* AllFilesType]()&]
 [s2;%% Same as Type(`"All files`", `"`*.`*`").&]
+[s3; &]
+[s4; &]
+[s5;:FileSel`:`:ClearTypes`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* ClearTypes]()&]
+[s2;%% Removes all file types from FileSel.&]
 [s3; &]
 [s4; &]
 [s5;:FileSel`:`:ActiveDir`(const String`&`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* ActiveD

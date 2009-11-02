@@ -976,6 +976,23 @@ FileSel& FileSel::Type(const char *name, const char *ext) {
 	return *this;
 }
 
+FileSel& FileSel::Types(const char *d) {
+	Vector<String> s = Split(d, '\n');
+	for(int i = 0; i < s.GetCount(); i++) {
+		Vector<String> h = Split(s[i], '\t');
+		if(h.GetCount() == 2)
+			Type(h[0], h[1]);
+	}
+	return *this;
+}
+
+FileSel& FileSel::ClearTypes()
+{
+	type.Clear();
+	mask.Clear();
+	return *this;
+}
+
 FileSel& FileSel::AllFilesType() {
 	return Type(t_("All files"), "*.*");
 }
