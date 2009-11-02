@@ -2786,7 +2786,6 @@ void ToAscii(char *s, int len, byte charset)
 	ToAscii(s, s, len, charset);
 }
 
-
 WString ToUnicode(const char *src, int l, byte charset)
 {
 	charset = ResolveCharset(charset);
@@ -2802,15 +2801,19 @@ WString ToUnicode(const String& src, byte charset)
 	return ToUnicode(src, src.GetLength(), charset);
 }
 
-String  FromUnicode(const WString& src, byte charset, int def)
+String FromUnicodeBuffer(const wchar *src, int len, byte charset, int defchar)
 {
 	charset = ResolveCharset(charset);
 	if(charset == CHARSET_UTF8)
-		return ToUtf8(src);
-	int l = src.GetLength();
-	StringBuffer result(l);
-	FromUnicode(result, src, l, charset, def);
+		return ToUtf8(src, len);
+	StringBuffer result(len);
+	FromUnicode(result, src, len, charset, defchar);
 	return result;
+}
+
+String  FromUnicode(const WString& src, byte charset, int defchar)
+{
+	return FromUnicodeBuffer(~src, src.GetCount(), charset, defchar);
 }
 
 String ToCharset(byte charset, const String& src, byte scharset, int def)
