@@ -266,15 +266,25 @@ onst]_[@(0.0.255) char]_`*[*@3 src], [@(0.0.255) int]_[*@3 n], [_^byte^ byte]_[*
 in [%-*@3 charset] to UNICODE. [%-*@3 charset] [*/ can] be CHARSET`_UTF8. 
 Invalid bytes are error`-escaped using 0xEExx private range.&]
 [s3;%% &]
+[s4; &]
+[s5;:FromUnicodeBuffer`(const wchar`*`,int`,byte`,int`): [_^String^ String]_[* FromUnicod
+eBuffer]([@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 src], [@(0.0.255) int]_[*@3 len], 
+[_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT, [@(0.0.255) int]_[*@3 defchar]_`=_DEFAU
+LTCHAR)&]
+[s2;%% Converts [%-*@3 len] UNICODE characters from [%-*@3 src] to 8`-bit 
+encoding [%-*@3 charset]. [%-*@3 charset] [*/ can] be CHARSET`_UTF8. 
+Error`-escape characters 0xEExx are converted to xx bytes. If 
+code`-point does not exist in target encoding, [%-*@3 defchar ]is 
+used as result of conversion.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:FromUnicode`(const WString`&`,byte`,int`): [_^String^ String]_[* FromUnicode]([@(0.0.255) c
 onst]_[_^WString^ WString][@(0.0.255) `&]_[*@3 src], [_^byte^ byte]_[*@3 charset]_`=_CHARSE
 T`_DEFAULT, [@(0.0.255) int]_[*@3 defchar]_`=_DEFAULTCHAR)&]
-[s2;%% Converts UNICODE [%-*@3 src] encoded in [%-*@3 charset] to 8`-bit 
-encoding. [%-*@3 charset] [*/ can] be CHARSET`_UTF8. Error`-escape 
-characters 0xEExx are converted to xx bytes. If code`-point does 
-not exist in target encoding, [%-*@3 defchar ]is used as result 
-of conversion.&]
+[s2;%% Converts UNICODE [%-*@3 src] to 8`-bit encoding [%-*@3 charset]. 
+[%-*@3 charset] [*/ can] be CHARSET`_UTF8. Error`-escape characters 
+0xEExx are converted to xx bytes. If code`-point does not exist 
+in target encoding, [%-*@3 defchar ]is used as result of conversion.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:ToCharset`(byte`,const String`&`,byte`,int`): [_^String^ String]_[* ToCharset]([_^byte^ b

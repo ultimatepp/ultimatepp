@@ -229,7 +229,7 @@ public:
 RichObject CreateDrawingObject(const Drawing& dwg, Size dot_size, Size size);
 RichObject CreateDrawingObject(const Drawing& dwg, int cx = 0, int cy = 0);
 RichObject CreatePNGObject(const Image& img, Size dot_size, Size size);
-RichObject CreatePNGObject(const Image& img, int cx, int cy);
+RichObject CreatePNGObject(const Image& img, int cx = 0, int cy = 0);
 RichObject CreateRawImageObject(const String& s, int cx = 0, int cy = 0);
 
 enum {

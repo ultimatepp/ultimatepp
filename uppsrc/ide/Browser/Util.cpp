@@ -24,7 +24,7 @@ String MakeCodeRef(const String& nest, const String& item)
 int GetMatchLen(const char *s, const char *t)
 {
 	int i = 0;
-	while(s[i] == t[i] && *s)
+	while(s[i] == t[i] && s[i])
 		i++;
 	return i;
 }

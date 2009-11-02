@@ -219,7 +219,9 @@ public:
 	FileSystemInfo& GetFilesystem() const        { return *filesystem; }
 
 	FileSel& Type(const char *name, const char *ext);
+	FileSel& Types(const char *d);
 	FileSel& AllFilesType();
+	FileSel& ClearTypes();
 	FileSel& ActiveDir(const String& d)          { dir <<= d; return *this; }
 	FileSel& ActiveType(int i)                   { activetype = i; return *this;  }
 	FileSel& PreSelect(const String& path);
@@ -240,4 +242,17 @@ public:
 
 	FileSel();
 	virtual ~FileSel();
+};
+
+String SelectFileOpen(const char *types);
+String SelectFileSaveAs(const char *types);
+String SelectLoadFile(const char *types);
+bool   SelectSaveFile(const char *types, const String& data);
+
+struct SelectFileIn : FileIn {
+	SelectFileIn(const char *types);
+};
+
+struct SelectFileOut : FileOut {
+	SelectFileOut(const char *types);
 };
