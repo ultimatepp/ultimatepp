@@ -79,43 +79,27 @@ bool Speller::Check(const wchar *wrd, int wlen) const
 	int len = wlen;
 	if(len < 64) {
 		if(len == 1) return true;
-		wchar wh[64];
-		const wchar *ws = wrd;
-		const wchar *we = wrd + len;
-		wchar *wt = wh;
-		while(ws < we)
-			*wt++ = ToLower(*ws++);
+		WString wstr = WString(wrd, wlen);
+		WString wstrl = ToLower(wstr);
 
-		const char *w;
-		const char *wl;
+		String w = FromUnicode(wstr, charset);
+		String wl = FromUnicode(wstrl, charset);
 		int i;
-		int l2;
 		if(charset == CHARSET_UTF8) {
-			String wb = ToUtf8(wrd, len);
-			w = wb;
-			String wlb = ToUtf8(wh, len);
-			wl = wlb;
+			w = ToUtf8(wstr);
+			wl = ToUtf8(wstrl);
 			i = line.Find(ToLower(ToAscii(wrd[0]), charset) +
 			              (ToLower(ToAscii(wrd[1]), charset) << 8) +
 			              (wlen == 2 ? 127 : ToLower(ToAscii(wrd[2]), charset) << 16));
-			len = wb.GetCount();
-			l2 = wlb.GetCount();
 		}
 		else {
-			char wb[64];
-			FromUnicode(wb, wrd, len, charset);
-			w = wb;
-			char wlb[64];
-			FromUnicode(wlb, wh, len, charset);
-			wl = wlb;
 			if(len == 2) {
-				wb[len] = 127;
-				wlb[len++] = 127;
+				w.Cat(127);
+				wl.Cat(127);
 			}
 			i = line.Find(ToLower(wl[0], charset) +
 			              (ToLower(wl[1], charset) << 8) +
 			              (ToLower(wl[2], charset) << 16));
-			l2 = len;
 		}
 		if(i >= 0) {
 			const byte *s = line[i].begin;
@@ -123,9 +107,7 @@ bool Speller::Check(const wchar *wrd, int wlen) const
 			String q;
 			while(s < e)
 				if(*s < dict) {
-					if(q.GetLength() == len && memcmp(w, q, q.GetLength()) == 0)
-						return true;
-					if(q.GetLength() == l2 && memcmp(wl, q, q.GetLength()) == 0)
+					if(q == w || q == wl)
 						return true;
 					q.Trim(*s++);
 				}
@@ -134,9 +116,7 @@ bool Speller::Check(const wchar *wrd, int wlen) const
 					const char *x = voc[(int)*s++ - dict];
 					q.Cat(x);
 				}
-			if(q.GetLength() == len && memcmp(w, q, q.GetLength()) == 0)
-				return true;
-			if(q.GetLength() == l2 && memcmp(wl, q, q.GetLength()) == 0)
+			if(q == w || q == wl)
 				return true;
 		}
 	}
