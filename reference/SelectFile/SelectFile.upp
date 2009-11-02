@@ -1,0 +1,11 @@
+description "Demostrates the usage of FileSel Select* family of functions and classes\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
