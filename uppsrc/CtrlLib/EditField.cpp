@@ -975,7 +975,7 @@ void EditField::Reset()
 EditField& EditField::SetFont(Font _font)
 {
 	font = _font;
-	Refresh();
+	Finish(true);
 	return *this;
 }
 
