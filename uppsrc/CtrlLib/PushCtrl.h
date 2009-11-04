@@ -359,6 +359,8 @@ public:
 
 	void           SetDataAction(const Value& value);
 
+	void           Set(const Value& value);
+
 	DataPusher&    NullText(const char *text = t_("(default)"), Color ink = Brown);
 	DataPusher&    NullText(const char *text, Font fnt, Color ink);
 

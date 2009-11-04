@@ -783,6 +783,14 @@ Value DataPusher::GetData() const
 	return data;
 }
 
+void DataPusher::Set(const Value& value)
+{
+	if(value != data) {
+		data = value;
+		Refresh();
+	}
+}
+
 void DataPusher::SetData(const Value& value)
 {
 	if(value != data) {

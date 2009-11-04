@@ -107,6 +107,13 @@ Default action is to call WhenAction callback.&]
 Useful when building DataPusher derived class.&]
 [s3; &]
 [s4;%- &]
+[s5;:DataPusher`:`:Set`(const Value`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) const]_[_^Value^ V
+alue][@(0.0.255) `&]_[*@3 value])&]
+[s2; Alternative way to set data, decoupled from SetData interface. 
+Sets the data to be displayed. Intended to be used by derived 
+classes that implement own SetData/GetData.&]
+[s3; &]
+[s4;%- &]
 [s5;:DataPusher`:`:SetData`(const Value`&`):%- [@(0.0.255) virtual] 
 [@(0.0.255) void]_[* SetData]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])
 &]
