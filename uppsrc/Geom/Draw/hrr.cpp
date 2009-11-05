@@ -53,9 +53,21 @@ void ImageWriter::WriteLineRaw(const byte *s)
 	}
 }
 
+ImageBufferRaster::ImageBufferRaster(const ImageBuffer& buffer_)
+: buffer(buffer_)
+{
+	crop = buffer.GetSize();
+}
+
+ImageBufferRaster::ImageBufferRaster(const ImageBuffer& buffer_, const Rect& crop_)
+: buffer(buffer_)
+{
+	crop = crop_ & Rect(buffer.GetSize());
+}
+
 Size ImageBufferRaster::GetSize()
 {
-	return buffer.GetSize();
+	return crop.Size();
 }
 
 Raster::Info ImageBufferRaster::GetInfo()
@@ -71,7 +83,7 @@ Raster::Info ImageBufferRaster::GetInfo()
 
 Raster::Line ImageBufferRaster::GetLine(int line)
 {
-	return Line(buffer[line], false);
+	return Line(buffer[line + crop.top] + crop.left, false);
 }
 
 inline Stream& operator % (Stream& strm, Color& color)

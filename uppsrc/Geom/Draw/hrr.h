@@ -31,14 +31,16 @@ private:
 
 class ImageBufferRaster : public Raster {
 public:
-	ImageBufferRaster(const ImageBuffer& buffer) : buffer(buffer) {}
+	ImageBufferRaster(const ImageBuffer& buffer);
+	ImageBufferRaster(const ImageBuffer& buffer, const Rect& crop);
 
-	virtual Size    GetSize();
-	virtual Info    GetInfo();
-	virtual Line    GetLine(int line);
+	virtual Size       GetSize();
+	virtual Info       GetInfo();
+	virtual Line       GetLine(int line);
 
 private:
 	const ImageBuffer& buffer;
+	Rect               crop;
 };
 
 class HRRInfo
