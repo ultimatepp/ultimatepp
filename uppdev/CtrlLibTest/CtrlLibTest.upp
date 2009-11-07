@@ -1,10 +1,12 @@
 uses
-	CtrlLib;
+	CtrlLib,
+	CtrlTest2;
 
 file
 	CtrlLibTest.h,
 	main.cpp,
-	CtrlLibTest.lay;
+	CtrlLibTest.lay,
+	CtrlLibTest.iml;
 
 mainconfig
 	"" = "GUI";

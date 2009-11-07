@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	CtrlTest2.h,
+	main.cpp,
+	CtrlTest2.lay,
+	CtrlTest2.iml;
+
+mainconfig
+	"" = "GUI MT";
+
