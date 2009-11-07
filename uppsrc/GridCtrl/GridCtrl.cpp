@@ -950,6 +950,70 @@ void GridCtrl::DrawLine(bool iniLine, bool delLine)
 	}
 }
 
+Value GridCtrl::GetItemValue(const Item& it, int id, const ItemRect& hi, const ItemRect& vi)
+{
+	Value val;
+	
+	if(IsType<AttrText>(it.val))
+	{
+		const AttrText& t = ValueTo<AttrText>(it.val);
+		val = t.text;
+	}
+	else
+		val = hi.IsConvertion() && vi.IsConvertion() 
+			? GetConvertedColumn(id, it.val)
+			: it.val;
+	
+	return val;	
+}
+
+void GridCtrl::GetItemAttrs(const Item& it, int id, const ItemRect& hi, const ItemRect& vi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt)
+{
+	if(!IsNull(vi.fg))
+		fg = vi.fg;
+	else if(!IsNull(hi.fg))
+		fg = hi.fg;
+
+	if(!IsNull(vi.bg))
+		bg = vi.bg;
+	else if(!IsNull(hi.bg))
+		bg = hi.bg;
+
+	fnt = StdFont();
+
+	if(!IsNull(vi.fnt))
+		fnt = vi.fnt;
+	else if(!IsNull(hi.fnt))
+		fnt = hi.fnt;	
+
+	if(IsType<AttrText>(it.val))
+	{
+		const AttrText& t = ValueTo<AttrText>(it.val);
+		
+		if(!IsNull(t.paper)) bg  = t.paper;
+		if(!IsNull(t.ink))   fg  = t.ink;
+		if(!IsNull(t.font))  fnt = t.font;
+		dword s = 0;
+		if(!IsNull(t.align))
+		{
+			if(t.align == ALIGN_LEFT)
+				s = GD::LEFT;
+			else if(t.align == ALIGN_RIGHT)
+				s = GD::RIGHT;
+			else if(t.align == ALIGN_CENTER)
+				s = GD::HCENTER;
+			style &= ~GD::HALIGN;
+			style |= s;
+		}
+	}
+	
+	GridDisplay * hd = hi.display;
+	GridDisplay * vd = vi.display;
+	gd = display;
+	if(!hi.ignore_display && !vi.ignore_display)
+		gd = vd ? vd : (hd ? hd : (it.display ? it.display : display));	
+}
+
 GridCtrl::Item& GridCtrl::GetItemSize(int &r, int &c, int &x, int &y, int &cx, int &cy, bool &skip, bool relx, bool rely)
 {
 	int idx = hitems[c].id;
@@ -1319,16 +1383,14 @@ void GridCtrl::Paint(Draw &w)
 						style |= (even ? GD::EVEN : GD::ODD);
 					if(hasfocus)
 						style |= GD::FOCUS;
-
-					Color cfg = IsNull(vi.fg) ? hi.fg : vi.fg;
-					Color cbg = IsNull(vi.bg) ? hi.bg : vi.bg;
+					
+					Color cfg;
+					Color cbg;
 
 					Font fnt = StdFont();
-
-					if(!IsNull(vi.fnt))
-						fnt = vi.fnt;
-					else if(!IsNull(hi.fnt))
-						fnt = hi.fnt;
+					GridDisplay* gd;
+					Value val = GetItemValue(it, id, hi, vi);
+					GetItemAttrs(it, id, hi, vi, style, gd, cfg, cbg, fnt);
 
 					Color fg = SColorText;
 					Color bg = SColorPaper;
@@ -1389,39 +1451,6 @@ void GridCtrl::Paint(Draw &w)
 						bg = Blend(bg, SGray(), 40);
 						fg = Blend(fg, SGray(), 200);
 					}
-
-					Value val;
-					if(IsType<AttrText>(it.val))
-					{
-						const AttrText& t = ValueTo<AttrText>(it.val);
-						val = t.text;
-						if(custom)
-						{
-							if(!IsNull(t.paper)) bg  = t.paper;
-							if(!IsNull(t.ink))   fg  = t.ink;
-						}
-						if(!IsNull(t.font))  fnt = t.font;
-						dword s = 0;
-						if(!IsNull(t.align))
-						{
-							if(t.align == ALIGN_LEFT)
-								s = GD::LEFT;
-							else if(t.align == ALIGN_RIGHT)
-								s = GD::RIGHT;
-							else if(t.align == ALIGN_CENTER)
-								s = GD::HCENTER;
-							style &= ~GD::HALIGN;
-							style |= s;
-						}
-					}
-					else
-						val = hi.IsConvertion() && vi.IsConvertion() ? GetConvertedColumn(id, it.val) : it.val;
-
-					GridDisplay * hd = hi.display;
-					GridDisplay * vd = vi.display;
-					GridDisplay * gd = display;
-					if(!hi.ignore_display && !vi.ignore_display)
-						gd = vd ? vd : (hd ? hd : (it.display ? it.display : display));
 
 					gd->SetBgImage(vi.img);
 					gd->col = j - fixed_rows;
@@ -1923,31 +1952,42 @@ void GridCtrl::SyncPopup()
 		if(valid_pos && !ctrl)
 		{
 			Item& it = GetItem(r, c);
+			ItemRect& hi = hitems[c];
+			ItemRect& vi = vitems[r];
+			
 			if(it.rcx > 0 || it.rcy > 0)
 			{
+				close = false;
+
+				String text = r == 0 ? it.val : GetItemValue(it, hi.id, hi, vi);
+
 				if(new_cell)
 				{
+					popup.fg = SColorText;
+					popup.bg = SColorPaper;
+					popup.fnt = StdFont();
+					popup.style = 0;
+					popup.text = text;
+
 					Point p0 = GetMousePos();
-					int x = hitems[c].npos + p0.x - p.x - 1 - sbx.Get() * int(!fc);
-					int y = vitems[r].npos + p0.y - p.y - 1 - sby.Get() * int(!fr);
-					popup.gd = it.display ? it.display : display; 
+					int x = hi.npos + p0.x - p.x - 1 - sbx.Get() * int(!fc);
+					int y = vi.npos + p0.y - p.y - 1 - sby.Get() * int(!fr);
 					
+					GetItemAttrs(it, hi.id, hi, vi, popup.style, popup.gd, popup.fg, popup.bg, popup.fnt);
 					Size scrsz = GetScreenSize();
-					int cx = min(600, min((int) (scrsz.cx * 0.4), max(it.rcx + 10, hitems[c].nsize + 1)));
-					int cy = max((fceil(it.rcx / (double) cx) + it.rcy) * Draw::GetStdFontCy() + 10, vitems[r].nsize + 1);
+					int margin = popup.gd->lm + popup.gd->rm;
+					int cx = min(600, min((int) (scrsz.cx * 0.4), max(it.rcx + margin + 2, hi.nsize + 1)));
+					int lines = popup.gd->GetLinesCount(cx - margin - 2, WString(text), StdFont(), true);
+					int cy = max(lines * Draw::GetStdFontCy() + popup.gd->tm + popup.gd->bm + 2, vi.nsize + 1);
 					popup.PopUp(this, x, y, cx, cy);
 					UpdateHighlighting(GS_BORDER, Point(0, 0));
 				}
-
-				String text = r == 0 ? it.val : (Value)GetStdConvertedColumn(c, it.val);
 				
 				if(text != popup.text)
 				{
 					popup.text = text;
 					popup.Refresh();
 				}
-				
-				close = false;
 			}
 		}
 		
@@ -7587,21 +7627,13 @@ void GridCtrl::JoinRow(int left, int right)
 	JoinRow(-1, left, right);
 }
 
-
 /*----------------------------------------------------------------------------------------*/
 
 void GridPopUp::Paint(Draw &w)
 {
 	Size sz = GetSize();
-
-	Color fg = SColorText;
-	Color bg = SColorPaper;
-	Font fnt(StdFont());
-	gd->Paint(w, 1, 1, sz.cx - 2, sz.cy - 2, text, GD::WRAP | GD::VCENTER, fg, bg, fnt);
+	gd->Paint(w, 1, 1, sz.cx - 2, sz.cy - 2, text, style | GD::WRAP | GD::VCENTER, fg, bg, fnt);
 	DrawBorder(w, sz, BlackBorder);
-	//w.DrawRect(1, 1, sz.cx - 2, sz.cy - 2, Color(240, 240, 240));
-	//Size tsz = GetTextSize(text, StdFont());
-	//w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, text);
 }
 
 Point GridPopUp::Offset(Point p)
