@@ -120,6 +120,74 @@ struct FontHeight : public WithDropChoice<EditDouble> {
 #define LAYOUTFILE <RichEdit/RichEdit.lay>
 #include <CtrlCore/lay.h>
 
+class ParaFormatting : public WithParaLayout<StaticRect> {
+public:
+	DropList n[8];
+
+private:
+	UnitEdit tabpos;
+	DropList tabtype;
+	DropList tabfill;
+	bool     keepindent;
+	Font     font;
+	bool     modified;
+
+	RichPara::NumberFormat GetNumbering();
+	bool                   IsNumbering();
+	int                    ComputeIndent();
+	void                   SetMod()                  { modified = true; }
+
+	typedef ParaFormatting CLASSNAME;
+
+public:
+	void  Set(int unit, const RichText::FormatInfo& formatinfo);
+	dword Get(RichText::FormatInfo& formatinfo);
+	void  SetFont(Font fnt)                          { font = fnt; }
+	bool  IsChanged() const                          { return IsModified() || modified; }
+	void  EnableNumbering();
+	void  SetupIndent();
+
+	ParaFormatting();
+};
+
+class StyleManager : public WithStylesLayout<TopWindow> {
+public:
+	ParaFormatting            para;
+	FontHeight                height;
+
+private:
+	int                       unit;
+	ArrayMap<Uuid, RichStyle> style;
+	Index<Uuid>               dirty;
+	EditString                name;
+
+	void EnterStyle();
+	void SaveStyle();
+	void SetupFont();
+	void SetupFont0();
+	void Create();
+	void ReloadNextStyles();
+	void Remove();
+
+	void GetFont(Font& font);
+
+	void Menu(Bar& bar);
+
+	typedef StyleManager CLASSNAME;
+
+public:
+	void     Set(const RichText& text);
+	void     Set(const char *qtf);
+	bool     IsChanged() const;
+	void     Get(RichText& text);
+	RichText Get();
+	String   GetQTF();
+	
+	void     Setup(const Vector<int>& faces, int aunit = UNIT_DOT);
+
+	StyleManager();
+};
+
 class RichEdit : public Ctrl, private TextArrayOps {
 public:
 	virtual void  Layout();
@@ -204,6 +272,8 @@ private:
 
 	int                      undoserial;
 	bool                     incundoserial;
+	
+	Vector<int>              ffs;
 
 	static int fh[];
 
@@ -511,10 +581,17 @@ private:
 	void     StyleKeys();
 	void     ApplyStyleKey(int i);
 
+	struct DisplayDefault : public Display {
+		virtual void Paint(Draw& w, const Rect& r, const Value& q,
+		                   Color ink, Color paper, dword style) const;
+	};
+
 	static bool   SpellWord(const wchar *wrd, int len, int lang);
 	static void   SpellerAdd(const WString& w, int lang);
+	static int    CompareStyle(const Value& a, const Value& b);
 
 	friend class StyleKeysDlg;
+	friend class StyleManager;
 
 protected:
 	enum {
