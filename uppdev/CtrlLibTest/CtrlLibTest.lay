@@ -1,7 +1,3 @@
-LAYOUT(CtrlLibTestLayout, 452, 420)
-	ITEM(Button, btn2, SetLabel(t_("Click second")).LeftPosZ(4, 92).TopPosZ(384, 28))
-	ITEM(Button, btn1, SetLabel(t_("Click first")).LeftPosZ(100, 92).TopPosZ(384, 28))
-	ITEM(DropList, edit, LeftPosZ(28, 196).TopPosZ(44, 19))
-	ITEM(ArrayCtrl, arr, LeftPosZ(4, 436).TopPosZ(72, 308))
+LAYOUT(CtrlLibTestLayout, 200, 100)
 END_LAYOUT
 
