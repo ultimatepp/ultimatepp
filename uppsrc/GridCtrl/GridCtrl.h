@@ -111,6 +111,9 @@ class GridPopUp : public Ctrl
 		String text;
 		Ctrl* ctrl;
 		GridDisplay* gd;
+		Color fg, bg;
+		Font fnt;
+		dword style;
 
 		GridPopUp() : open(false) {}
 		Point Offset(Point p);
@@ -1670,6 +1673,8 @@ class GridCtrl : public Ctrl
 
 		int  GetIdCol(int id, bool checkall = false) const;
 		int  GetIdRow(int id, bool checkall = false) const;
+		Value GetItemValue(const Item& it, int id, const ItemRect& hi, const ItemRect& vi);
+		void  GetItemAttrs(const Item& it, int id, const ItemRect& hi, const ItemRect& vi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt);
 		Item& GetItemSize(int &r, int &c, int &x, int &y, int &cx, int &cy, bool &skip, bool relx = true, bool rely = true);
 
 	private:

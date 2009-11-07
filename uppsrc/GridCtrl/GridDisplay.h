@@ -80,6 +80,7 @@ class GridDisplay
 		int  GetThemeCount()                            { return 7;                    }
 
 		WString GetStdConvertedValue(const Value &v) const;
+		int GetLinesCount(int cx, const wchar* s, const Font& font, bool wrap);
 
 		void DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int align,
 					  const wchar *s, const Font &font, const Color &fg, const Color &bg,

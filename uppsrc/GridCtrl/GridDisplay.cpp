@@ -250,6 +250,51 @@ void GridDisplay::PaintFixed(Draw &w, bool firstx, bool firsty, int x, int y, in
 	}
 }
 
+int GridDisplay::GetLinesCount(int cx, const wchar* s, const Font& font, bool wrap)
+{
+	if(*s == 0)
+		return 0;
+
+	int tcy = font.Info().GetHeight();
+
+	const wchar *p = s;
+	const wchar *t = s;
+		
+	const wchar * e = t;
+	int ccx = max(5, cx);
+	int enters = 0;
+	int lines = 0;
+
+	while(*p)
+	{
+		bool nextline = *p == '\n';
+		enters += int(nextline);
+
+		if(nextline || *(p + 1) == '\0')
+		{
+			if(p - e > 0 && wrap)
+			{
+				int tcx = GetTextSize(e, font, p - e).cx;
+				if(tcx > cx)
+				{
+					lines += tcx / ccx;
+					if(tcx % ccx > 0)
+						lines++;						
+				}
+				else
+					lines++;
+				
+			}
+			else
+				lines++;
+			
+			e = p + 1;
+		}
+		p++;
+	}
+	return lines;
+}
+
 void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int align, const wchar *s, const Font &font, const Color &fg, const Color &bg, bool found, int fs, int fe, bool wrap)
 {
 	if(*s == 0)
@@ -268,45 +313,19 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 
 	if((align & GD::VCENTER) || (align & GD::BOTTOM))
 	{
-		const wchar * e = t;
-		int ccx = max(5, cx);
+		lines = GetLinesCount(cx, s, font, wrap);
 
-		while(*p)
-		{
-			enters += int(*p == '\n');
-
-			if(*p == '\n' || *(p + 1) == '\0')
-			{
-				if(wrap)
-				{
-					int tcx = GetTextSize(e, font, p - e).cx;
-					if(tcx > cx)
-					{
-						lines += tcx / ccx;
-						if(tcx % ccx > 0)
-							lines++;
-					}
-					else
-						lines++;
-				}
-				else
-					lines++;
-				e = p;
-			}
-			p++;
-		}
 		if(align & GD::VCENTER)
-			ty = y + (cy - tcy * lines) / 2;
+			ty = max(ty, y + (cy - tcy * lines) / 2);
 		else
 			ty = y + cy - tcy * lines;
-		p = s;
 	}
 
-
+	//w.DrawText(x, y, Format("lines: %d, cx:%d, cy%d", lines, cx, cy));
 	Size isz = GridImg::Dots2().GetSize();
 	int gcx = cx - (wrap ? 0 : isz.cx);
 
-	real_size.cy = enters;
+	real_size.cy = lines > 1 ? lines * tcy : 0;
 
 	while(true)
 	{
@@ -317,6 +336,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 		const wchar * pp = p;
 
 		bool textbreak = false;
+		
 		if(nextline || endtext)
 		{
 			int tx = x;
@@ -325,7 +345,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 			if(tsz.cx > gcx)
 			{
 				int size = 0;
-				const wchar * e = t;
+				const wchar *e = t;
 				while(e < p)
 				{
 					int tcx = GetTextSize(e, font, 1).cx;
@@ -350,7 +370,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 				tx = x + (cx - tsz.cx) / 2;
 
 			Color tfg = fg;
-			
+
 			if(found)
 			{
 				int chs = t - s;
@@ -373,6 +393,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 				w.Clip(x, y, cx, cy);
 				w.DrawImage(x + cx - isz.cx, ty + font.Info().GetAscent() - isz.cy, GridImg::Dots2, tfg);
 				w.End();
+				
 				if(p > t)
 				{
 					w.Clip(x, y, cx - isz.cx , cy);
@@ -386,6 +407,7 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 			ty += tcy;
 			t = textbreak ? p : (p = pp + 1);
 		}
+		
 		if(caret)
 			*(char *) p = ' ';
 
