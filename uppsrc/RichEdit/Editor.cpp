@@ -438,6 +438,7 @@ int RichEdit::fh[] = {
 
 RichEdit& RichEdit::FontFaces(const Vector<int>& ff)
 {
+	ffs <<= ff;
 	face.ClearList();
 	for(int i = 0; i < ff.GetCount(); i++)
 		face.Add(ff[i]);
