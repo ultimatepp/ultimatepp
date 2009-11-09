@@ -16,7 +16,7 @@ GUI_APP_MAIN
 //	SetLanguage(LNG_('P','L','P','L'));
 
 //	InstallCrashDump();
-
+	LaunchWebBrowser(GetTempPath());
 	DUMP(GUI_PopUpEffect());
 	RichEditWithToolBar e;
 	Vector<int> h;
