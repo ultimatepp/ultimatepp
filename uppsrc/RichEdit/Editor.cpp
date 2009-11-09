@@ -118,6 +118,7 @@ void RichEdit::Paint(Draw& w)
 		pi.usecache = true;
 		pi.sizetracking = sizetracking;
 		pi.showcodes = showcodes;
+		pi.showlabels = !IsNull(showcodes);
 		if(spellcheck)
 			pi.spellingchecker = SpellParagraph;
 		if(IsSelection())

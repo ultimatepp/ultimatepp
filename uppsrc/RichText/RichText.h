@@ -270,6 +270,7 @@ struct PaintInfo {
 	Color   highlight;
 	bool    coloroverride;
 	void    *context;
+	bool    showlabels;
 
 	PaintInfo();
 };
