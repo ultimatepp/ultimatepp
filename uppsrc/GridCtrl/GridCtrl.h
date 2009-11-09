@@ -108,7 +108,7 @@ class GridPopUp : public Ctrl
 	public:
 
 		bool open;
-		String text;
+		Value val;
 		Ctrl* ctrl;
 		GridDisplay* gd;
 		Color fg, bg;
@@ -1512,8 +1512,9 @@ class GridCtrl : public Ctrl
 		ScrollBar& HorzScroll() { return sbx; }
 		ScrollBar& VertScroll() { return sby; }
 
-		Value GetConvertedColumn(int col, const Value &v) const;
-		String GetStdConvertedColumn(int col, const Value &v) const;
+		Value GetStdConvertedValue(const Value& v);
+		Value GetConvertedColumn(int col, const Value& v) const;
+		Value GetStdConvertedColumn(int col, const Value& v) const;
 		String GetString(Id id) const;
 
 		bool Search(dword key);

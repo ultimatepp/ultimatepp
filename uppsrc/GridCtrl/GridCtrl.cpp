@@ -1560,17 +1560,21 @@ void GridCtrl::DrawVertDragLine(Draw &w, int pos, int size, int dx, Color c)
 	w.DrawRect(1 + dx, pos, size - dx - 1, 2, c);
 }
 
+Value GridCtrl::GetStdConvertedValue(const Value& v)
+{
+	return IsString(v) ? v : StdConvert().Format(v);
+}
+
 Value GridCtrl::GetConvertedColumn(int col, const Value &v) const
 {
 	Convert *conv = edits[col].convert;
 	return conv ? conv->Format(v) : v;
 }
 
-String GridCtrl::GetStdConvertedColumn(int col, const Value &v) const
+Value GridCtrl::GetStdConvertedColumn(int col, const Value &v) const
 {
-	Convert *conv = edits[col].convert;
-	Value val = conv ? conv->Format(v) : v;
-	return IsString(val) ? val : StdConvert().Format(val);
+	Value val = GetConvertedColumn(col, v);
+	return IsString(val) ? val : StdConvert().Format(val);//GetStdConvertedValue(val);
 }
 
 String GridCtrl::GetString(Id id) const
@@ -1879,20 +1883,20 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 				int count = max(1, selected_rows);
 
 				if(vitems[curpos.y].IsSelect())
-					popup.text = Format(t_("Moving selection (%d %s) before row %d"), count, count == 1 ? t_("row") : t_("rows"), row);
+					popup.val = Format(t_("Moving selection (%d %s) before row %d"), count, count == 1 ? t_("row") : t_("rows"), row);
 				else
-					popup.text = Format(t_("Moving row %d before row %d"), curpos.y - fixed_rows + 1, row);
+					popup.val = Format(t_("Moving row %d before row %d"), curpos.y - fixed_rows + 1, row);
 			}
 			else
 			{
 				int count = max(1, selected_items);
-				popup.text = Format(t_("Moving %d %s before row %d"), count, count == 1 ? t_("cell") : t_("cells"), row);
+				popup.val = Format(t_("Moving %d %s before row %d"), count, count == 1 ? t_("cell") : t_("cells"), row);
 			}
 
 			int px = pt.x + 15;
 			int py = pt.y + GD_ROW_HEIGHT;
 
-			popup.PopUp(this, px, py, GetTextSize(popup.text, StdFont()).cx + 6, GD_ROW_HEIGHT);
+			popup.PopUp(this, px, py, GetTextSize((String) popup.val, StdFont()).cx + 10, GD_ROW_HEIGHT);
 			SetFocus();
 
 			if(curSplitRow != oldMoveRow || scrollLeftRight)
@@ -1959,7 +1963,7 @@ void GridCtrl::SyncPopup()
 			{
 				close = false;
 
-				String text = r == 0 ? it.val : GetItemValue(it, hi.id, hi, vi);
+				Value val = GetStdConvertedValue(r == 0 ? it.val : GetItemValue(it, hi.id, hi, vi));
 
 				if(new_cell)
 				{
@@ -1967,7 +1971,7 @@ void GridCtrl::SyncPopup()
 					popup.bg = SColorPaper;
 					popup.fnt = StdFont();
 					popup.style = 0;
-					popup.text = text;
+					popup.val = val;
 
 					Point p0 = GetMousePos();
 					int x = hi.npos + p0.x - p.x - 1 - sbx.Get() * int(!fc);
@@ -1977,15 +1981,16 @@ void GridCtrl::SyncPopup()
 					Size scrsz = GetScreenSize();
 					int margin = popup.gd->lm + popup.gd->rm;
 					int cx = min(600, min((int) (scrsz.cx * 0.4), max(it.rcx + margin + 2, hi.nsize + 1)));
-					int lines = popup.gd->GetLinesCount(cx - margin - 2, WString(text), StdFont(), true);
+					int lines = popup.gd->GetLinesCount(cx - margin - 2, WString(val), StdFont(), true);
 					int cy = max(lines * Draw::GetStdFontCy() + popup.gd->tm + popup.gd->bm + 2, vi.nsize + 1);
 					popup.PopUp(this, x, y, cx, cy);
+					if(!close)
+						popup.Refresh();					
 					UpdateHighlighting(GS_BORDER, Point(0, 0));
-				}
-				
-				if(text != popup.text)
+				}				
+				else if(val != popup.val)
 				{
-					popup.text = text;
+					popup.val = val;
 					popup.Refresh();
 				}
 			}
@@ -2606,6 +2611,8 @@ void GridCtrl::Set0(int r, int c, const Value &val, bool paste)
 
 	if(paste)
 		WhenUpdateCell();
+
+	SyncSummary();
 }
 
 void GridCtrl::Set(int r, int c, const Value &val)
@@ -7632,7 +7639,7 @@ void GridCtrl::JoinRow(int left, int right)
 void GridPopUp::Paint(Draw &w)
 {
 	Size sz = GetSize();
-	gd->Paint(w, 1, 1, sz.cx - 2, sz.cy - 2, text, style | GD::WRAP | GD::VCENTER, fg, bg, fnt);
+	gd->Paint(w, 1, 1, sz.cx - 2, sz.cy - 2, val, style | GD::WRAP | GD::VCENTER, fg, bg, fnt);
 	DrawBorder(w, sz, BlackBorder);
 }
 
