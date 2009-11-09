@@ -193,6 +193,9 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 		if(py > pi.bottom)
 			break;
 
+		if(lni == 0 && format.label.GetCount() && !IsNull(pi.showcodes) && pi.showlabels)
+			pw.Page(py.page).DrawImage(z * page.left - 12, z * (py.y + (lineascent - 7) / 2),
+			                           RichTextImg::Label(), pi.showcodes);
 		const CharFormat **cf = pl.format + li.pos;
 		const CharFormat **i = cf;
 		const CharFormat **ilim = i + li.len;
