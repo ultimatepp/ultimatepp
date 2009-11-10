@@ -836,9 +836,10 @@ void Ctrl::TakeFocus()
 		return;
 	}
 	LLOG("TAKE_FOCUS " << Name());
-	ClearKbdState_();
-	if(IsEnabled() && IsVisible() && top->window != GetXServerFocusWindow())
+	if(IsEnabled() && IsVisible() && top->window != GetXServerFocusWindow()) {
+		ClearKbdState_();
 		SetWndFocus();
+	}
 	if(this != focusCtrlWnd) {
 		if(IsEnabled()) {
 			SetLastActive(w, this);
