@@ -1,0 +1,13 @@
+description "Utility for creation of RichEdit spelling dictionary files (.scd)\377";
+
+optimize_speed;
+
+uses
+	Core;
+
+file
+	MakeSpellScd.cpp;
+
+mainconfig
+	"" = "";
+
