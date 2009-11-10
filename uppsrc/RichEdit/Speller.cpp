@@ -4,6 +4,13 @@ NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x)
 
+struct SpellBlock : Moveable<SpellBlock> {
+	String first;
+	int    offset;
+	int    ctrl_len;
+	int    text_len;
+};
+
 struct Speller {
 	String        data;
 	byte          charset;
@@ -16,14 +23,18 @@ struct Speller {
 	VectorMap<dword, Line> line;
 	Index<WString> user;
 
-	bool     Set(const String& data);
-	void     Clear()                        { data.Clear(); }
-	operator bool() const                   { return !data.IsEmpty(); }
+	String            path;
+	Array<SpellBlock> block;
+	
+	bool     SetOld(const String& data);
+	void     Clear()                        { data.Clear(); path.Clear(); }
+	operator bool() const                   { return !data.IsEmpty() || path.GetCount(); }
+	bool     CheckOld(const WString& wstr) const;
 
-	bool Check(const wchar *wrd, int len) const;
+	String Get(int offset, int len);
 };
 
-bool Speller::Set(const String& _data)
+bool Speller::SetOld(const String& _data)
 {
 	data = _data;
 	const char *s = data;
@@ -61,46 +72,22 @@ bool Speller::Set(const String& _data)
 	return true;
 }
 
-bool compare3(const char *s, const char *a, const char *b, int len)
+bool Speller::CheckOld(const WString& wstr) const
 {
-	const char *e = s + len;
-	while(s < e) {
-		if(*s != *a && *s != *b)
-			return false;
-		s++;
-		a++;
-		b++;
-	}
-	return true;
-}
-
-bool Speller::Check(const wchar *wrd, int wlen) const
-{
-	int len = wlen;
+	int len = wstr.GetLength();
+	if(len == 1)
+		return true;
 	if(len < 64) {
-		if(len == 1) return true;
-		WString wstr = WString(wrd, wlen);
-		WString wstrl = ToLower(wstr);
-
 		String w = FromUnicode(wstr, charset);
-		String wl = FromUnicode(wstrl, charset);
+		String wl = FromUnicode(ToLower(wstr), charset);
 		int i;
-		if(charset == CHARSET_UTF8) {
-			w = ToUtf8(wstr);
-			wl = ToUtf8(wstrl);
-			i = line.Find(ToLower(ToAscii(wrd[0]), charset) +
-			              (ToLower(ToAscii(wrd[1]), charset) << 8) +
-			              (wlen == 2 ? 127 : ToLower(ToAscii(wrd[2]), charset) << 16));
+		if(len == 2) {
+			w.Cat(127);
+			wl.Cat(127);
 		}
-		else {
-			if(len == 2) {
-				w.Cat(127);
-				wl.Cat(127);
-			}
-			i = line.Find(ToLower(wl[0], charset) +
-			              (ToLower(wl[1], charset) << 8) +
-			              (ToLower(wl[2], charset) << 16));
-		}
+		i = line.Find(ToLower(wl[0], charset) +
+		              (ToLower(wl[1], charset) << 8) +
+		              (ToLower(wl[2], charset) << 16));
 		if(i >= 0) {
 			const byte *s = line[i].begin;
 			const byte *e = line[i].end;
@@ -120,25 +107,7 @@ bool Speller::Check(const wchar *wrd, int wlen) const
 				return true;
 		}
 	}
-	return user.Find(WString(wrd, wlen)) >= 0;
-}
-
-String GetDicFile(int lang)
-{
-	String name = LNGAsText(lang) + ".scd";
-	String dir = ConfigFile("dict");
-	String f;
-	for(;;) {
-		f = AppendFileName(dir, name);
-		if(FileExists(f)) return f;
-		String d = GetFileFolder(dir);
-		if(d == dir) break;
-		dir = d;
-	}
-	f = GetFileOnPath(name, getenv("LIB"));
-	if(f.IsEmpty())
-		f = GetFileOnPath(name, getenv("LIB"));
-	return f;
+	return user.Find(wstr) >= 0;;
 }
 
 static String sUserFile(int lang)
@@ -146,40 +115,159 @@ static String sUserFile(int lang)
 	return ConfigFile(LNGAsText(lang) + ".usp");
 }
 
-static Speller& sGetSpeller(int lang)
+String spell_path;
+
+void SetSpellPath(const String& p)
+{
+	spell_path = p;
+}
+
+static String sZet(FileIn& in, int offset, int len)
+{
+	in.Seek(offset);
+	return ZDecompress(in.Get(len));	
+}
+
+Speller *sGetSpeller(int lang)
 {
 	static ArrayMap<int, Speller> speller;
 	int q = speller.Find(lang);
 	if(q < 0) {
-		Speller& p = speller.Add(lang);
-		String f = GetDicFile(lang);
-		if(!f.IsEmpty()) {
-			p.Set(LoadFile(f));
-			FileIn user(sUserFile(lang));
-			while(!user.IsEof()) {
-				String s = user.GetLine();
-				if(!s.IsEmpty())
-					p.user.Add(FromUtf8(s));
+		String pp;
+		String dir = ConfigFile("scd");
+		for(;;) {
+			pp << dir << ';';
+			String d = GetFileFolder(dir);
+			if(d == dir) break;
+			dir = d;
+		}
+		pp << spell_path << ';' << getenv("LIB") << ';' << getenv("PATH") << ';';
+		String path = GetFileOnPath(LNGAsText(lang) + ".scd", pp);
+		if(IsNull(path))
+			return false;
+		FileIn in(path);
+		if(!in)
+			return false;
+		q = speller.GetCount();
+		Speller& f = speller.Add(lang);
+		FileIn user(sUserFile(lang));
+		while(!user.IsEof()) {
+			String s = user.GetLine();
+			if(!s.IsEmpty())
+				f.user.Add(FromUtf8(s));
+		}
+		if(in.Get() != 255)
+			f.SetOld(LoadFile(path));
+		else {
+			f.path = path;
+			int n = in.GetL();
+			LLOG("Found scd file " << path << " blocks " << n);
+			if(n > 0 && n < 100000) {
+				for(int i = 0; i < n; i++) {
+					SpellBlock& b = f.block.Add();
+					b.first = in.Get(in.Get());
+					b.ctrl_len = in.GetL();
+					b.text_len = in.GetL();
+				}
+				if(in.IsEof())
+					f.block.Clear();
+				else {
+					int off = (int)in.GetPos();
+					for(int i = 0; i < n; i++) {
+						SpellBlock& b = f.block[i];
+						b.offset = off;
+						off += b.ctrl_len + b.text_len;
+					}
+				}
 			}
 		}
-		return p;
 	}
-	return speller[q];
+	return &speller[q];
 }
 
-bool RichEdit::SpellWord(const wchar *wrd, int len, int lang)
+bool SpellWordRaw(const WString& wrd, int lang)
 {
-	Speller& p = sGetSpeller(lang);
-	return p ? p.Check(wrd, len) : true;
+	Speller *f = sGetSpeller(lang);
+	if(!f)
+		return true;
+	if(f->data.GetCount())
+		return f->CheckOld(wrd);
+	String awrd = ToUpper(ToAscii(wrd).ToString());
+	String t1 = ToUtf8(wrd);
+	String t2 = ToUtf8(ToLower(wrd));
+	for(int i = 0;; i++) {
+		if(i + 1 >= f->block.GetCount() || awrd <= f->block[i + 1].first) {
+			for(;;) {
+				if(i >= f->block.GetCount())
+					return f->user.Find(wrd) >= 0;;
+				LLOG("Spell block " << i << ": " << f->block[i].first);
+				const SpellBlock& b = f->block[i++];
+				if(b.first > awrd) {
+					LLOG("  --- end");
+					return f->user.Find(wrd) >= 0;;
+				}
+				FileIn in(f->path);
+				String ctrl = sZet(in, b.offset, b.ctrl_len);
+				String text = sZet(in, b.offset + b.ctrl_len, b.text_len);
+				in.Close();
+				String w;
+				const char *s = ctrl;
+				const char *e = ctrl.End();
+				const char *t = text;
+				const char *te = text.End();
+				while(s < e && t < te) {
+					w.Trim(*s++);
+					while(*t)
+						w.Cat(*t++);
+					if(w == t1 || w == t2)
+						return true;
+					t++;
+				}
+			}
+		}
+	}
+	return f->user.Find(wrd) >= 0;;
+}
+
+struct SpellKey : Moveable<SpellKey> {
+	int     lang;
+	WString wrd;
+	
+	unsigned GetHashValue() const { return CombineHash(lang, wrd); }
+	bool operator==(const SpellKey& b) const { return lang == b.lang && wrd == b.wrd; }
+};
+
+struct SpellMaker : LRUCache<bool, SpellKey>::Maker {
+	SpellKey k;
+	
+	SpellKey Key() const  { return k; }
+	int    Make(bool& r) const {
+		r = SpellWordRaw(k.wrd, k.lang);
+		return 1;
+	}
+};
+
+static LRUCache<bool, SpellKey> speller_cache;
+
+bool RichEdit::SpellWord(const wchar *ws, int len, int lang)
+{
+	speller_cache.Shrink(2000);
+	SpellMaker m;
+	m.k.lang = lang;
+	m.k.wrd = WString(ws, len);
+	return speller_cache.Get(m);
 }
 
 void RichEdit::SpellerAdd(const WString& w, int lang)
 {
-	Speller& p = sGetSpeller(lang);
-	if(p && !p.Check(w, w.GetLength())) {
-		FileAppend fa(sUserFile(lang));
-		fa.PutLine(ToUtf8(w));
-		p.user.Add(w);
+	if(!SpellWord(w, w.GetCount(), lang)) {
+		Speller *f = sGetSpeller(lang);
+		if(f) {
+			FileAppend fa(sUserFile(lang));
+			fa.PutLine(ToUtf8(w));
+			f->user.Add(w);
+			speller_cache.Clear();
+		}
 	}
 }
 

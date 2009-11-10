@@ -2,51 +2,27 @@
 
 #define LLOG(x)           // LOG(x)
 #define LLOGHEXDUMP(a, b) // LOGHEXDUMP(a, b)
+#define CREATEINFO
 
 using namespace Upp;
 
-byte                    charset;
-int                     vocn[256];
-Vector<String>          voc;
-VectorMap<int, String>  line;
-
-int LineCode(const String& us)
+String Utf8ToUpperAscii(const String& x)
 {
-	WString s = FromUtf8(us);
-	return ToLower(ToAscii(s[0]), CHARSET_DEFAULT) +
-	       (ToLower(ToAscii(s[1]), CHARSET_DEFAULT) << 8) +
-	       (s.GetCount() < 3 ? 127 : (ToLower(ToAscii(s[2]), CHARSET_DEFAULT) << 16));
+	return ToUpper(ToAscii(FromUtf8(x)).ToString());
 }
 
-bool Contains(const String& a, const String& b)
+bool ScdOrder(const String& a, const String& b)
 {
-	for(int i = 0; i + b.GetLength() <= a.GetLength(); i++)
-		if(memcmp(~a + i, ~b, b.GetLength()) == 0) return true;
-	return false;
-}
-
-struct LengthOrder
-{
-	bool operator()(const String& a, const String& b) const
-	{
-		return a.GetLength() > b.GetLength();
-	}
+	int q = SgnCompare(Utf8ToUpperAscii(a), Utf8ToUpperAscii(b));
+	if(q)
+		return q < 0;
+	return a < b;
 };
 
-struct NoCaseOrder
-{
-	bool operator()(const String& a, const String& b) const
-	{
-		String la = ToAscii(a);
-		String lb = ToAscii(b);
-		int q = SgnCompare(ToLower(ToAscii(a)), ToLower(ToAscii(b)));
-		if(q)
-			return q < 0;
-		q = SgnCompare(ToLower(a), ToLower(b));
-		if(q)
-			return q < 0;
-		return a < b;
-	}
+struct Block : Moveable<Block> {
+	String first;
+	int    ctrl_len;
+	int    text_len;
 };
 
 void Make()
@@ -63,164 +39,80 @@ void Make()
 		SetExitCode(1);
 		return;
 	}
-	SetDefaultCharset(CHARSET_UTF8);
-	Vector<String> w;
-	Index<int> alphabet;
-	String maxl;
-	int    maxlen = 0;
-	while(!in.IsEof()) {
-		String l = in.GetLine();
-		if(l.GetLength() > maxlen) {
-			maxlen = l.GetLength();
-			maxl = l;
-		}
-		if(FromUtf8(l).GetLength() > 1) {
-			w.Add(l);
-			for(const char *s = l; s < l.End(); s++)
-				alphabet.FindAdd((byte)*s);
-		}
-	}
-	
-	if(alphabet.GetCount() > 250) {
-		Cout() << "Alphabet is too big - only 250 different codepoints allowed.";
+
+#ifdef CREATEINFO
+	FileOut info(ForceExt(CommandLine()[1], ".info.txt"));
+	if(!out) {
+		Cout() << "Unable to open info file for writing\n";
 		SetExitCode(1);
 		return;
 	}
+	info << "    First |      len |    lenz  |     text |    textz \r\n"
+	        "------------------------------------------------------\r\n";
+#endif
+
+	SetDefaultCharset(CHARSET_UTF8);
+
+	Vector<String> w;
+	while(!in.IsEof())
+		w.Add(in.GetLine());
 	
-	Cout() << "Words loaded, now sorting\n";
+	Cout() << w.GetCount() << " words loaded, now sorting...\n";
 	
 	ASSERT(maxlen < 64);
 	
 	LLOG("Maximal length:" << maxlen << "  " << maxl);
 
-	Sort(w, NoCaseOrder());
+	Sort(w, ScdOrder);
 	
-	Cout() << "Sorted, now gathering voc candidates\n";
+	Cout() << "Sorted, now compressing..\n";
 
-// ------------------
-	
-	VectorMap<String, int> part;
-	int dict = 0;
+	Vector<Block> block;
+	String data;
 	int i = 0;
+
 	while(i < w.GetCount()) {
-		int linecode = LineCode(w[i]);
-		String prevw;
-		LLOG("line " << ~ToLower(w[i].Mid(0, 3)));
-		while(i < w.GetCount() && LineCode(w[i]) == linecode) {
-			String ww = w[i];
-			int j;
-			for(j = 0; j < prevw.GetLength(); j++)
-				if(ww[j] != prevw[j]) break;
-			if(j >= dict)
-				dict = j + 1;
-			for(int l = 2; l < ww.GetLength() - 1; l++)
-				for(int q = j; q + l <= ww.GetLength(); q++)
-					part.GetAdd(ww.Mid(q, l), 0)++;
-			prevw = ww;
+		Block& t = block.Add();
+		t.first = Utf8ToUpperAscii(w[i]);
+		String ctrl;
+		String text;
+		String pw;
+		while(i < w.GetCount() && text.GetCount() < 65000) {
+			String cw = w[i];
+			int j = 0;
+			while(j < pw.GetCount() && j < cw.GetCount() && j < 31 && pw[j] == cw[j])
+				j++;
+			ctrl.Cat(j);
+			text.Cat(cw.Mid(j));
+			text.Cat(0);
+			pw = cw;
 			i++;
 		}
+		String ztext = ZCompress(text);
+		String zctrl = ZCompress(ctrl);
+#ifdef CREATEINFO
+		info << Format("%-9.9s |%9d |%9d |%9d |%9d\r\n", t.first,
+		               ctrl.GetCount(), zctrl.GetCount(), text.GetCount(), ztext.GetCount());
+#endif
+		t.ctrl_len = zctrl.GetCount();
+		t.text_len = ztext.GetCount();
+		data.Cat(zctrl);
+		data.Cat(ztext);
 	}
-	
-	Cout() << "Creating voc\n";
 
-	int dcount = 256 - dict;
-	LLOG("dict: " << dict);
-	LLOG("dict size: " << dcount);
-	LLOG(" alphabet:" << alphabet.GetCount());
-	LLOG(" combinations: " << dcount - alphabet.GetCount());
-	
-	for(i = 0; i < alphabet.GetCount(); i++)
-		voc.Add(String(alphabet[i], 1));
+	Cout() << "Compressed, writing file directory..\n";
+	out.Put(255);
+	out.PutL(block.GetCount());
+	for(int i = 0; i < block.GetCount(); i++) {
+		Block& t = block[i];
+		out.Put(t.first.GetCount());
+		out.Put(t.first);
+		out.PutL(t.ctrl_len);
+		out.PutL(t.text_len);
+	}
 
-	Vector<int> value;
-
-	for(i = 0; i < part.GetCount(); i++)
-		value.Add() = part[i] * (part.GetKey(i).GetLength() - 1);
-
-	while(voc.GetCount() + dict < 256) {
-		int m = 0;
-		int mi = 0;
-		int i;
-		for(i = 0; i < part.GetCount(); i++)
-			if(value[i] > m) {
-				m = value[i];
-				mi = i;
-			}
-		if(m <= 0) break;
-		String v = part.GetKey(mi);
-		vocn[voc.GetCount()] = value[mi];
-		voc.Add(v);
-		LLOG("Adding " << v << " [" << v.GetCount() << "] value:" << value[mi] << " count:" << part[mi]);
-		for(i = 0; i < part.GetCount(); i++) {
-			if(Contains(part.GetKey(i), v))
-				value[i] -= v.GetLength() * part[i];
-			if(Contains(v, part.GetKey(i)))
-				value[i] -= part.GetKey(i).GetLength() * part[i];
-		}
-		value[mi] = 0;
-	}
-	
-	int sum = 0;
-	for(i = 0; i < voc.GetCount(); i++) {
-		sum += vocn[i];
-		LLOG(vocn[i] << "  " << voc[i]);
-	}
-	LLOG("Total " << sum);
-
-// ------------------
-	Sort(voc, LengthOrder());
-
-	i = 0;
-	while(i < w.GetCount()) {
-		int linecode = LineCode(w[i]);
-		String& ln = line.GetAdd(linecode);
-		LLOG("---- Line " << ToLower(ToAscii(~w[i].Mid(0, 3))));
-		String prevw;
-		bool next = false;
-		while(i < w.GetCount() && LineCode(w[i]) == linecode) {
-			String ww = w[i];
-			int j;
-			for(j = 0; j < prevw.GetLength(); j++)
-				if(ww[j] != prevw[j]) break;
-			if(next)
-				ln.Cat(j);
-			LLOG(j << "\t" << w[i]);
-			next = true;
-			const char *s = ~ww + j;
-			while(*s) {
-				int i;
-				for(i = 0; i < voc.GetCount(); i++) {
-					if(memcmp(s, voc[i], voc[i].GetLength()) == 0) {
-						LLOG("  " << s << " " << voc[i]);
-						ln.Cat(i + dict);
-						s += voc[i].GetLength();
-						break;
-					}
-				}
-				ASSERT(i < voc.GetCount());
-			}
-			prevw = ww;
-			i++;
-		}
-		LLOGHEXDUMP(~ln, ln.GetCount());
-	}
-	int l = 0;
-	for(i = 0; i < line.GetCount(); i++) {
-		line[i].Cat(0);
-		l += line[i].GetLength();
-	}
-	out.Put(CHARSET_UTF8);
-	out.Put(0);
-	out.Put(dict);
-	for(i = 0; i < voc.GetCount(); i++) {
-		out.Put(voc[i]);
-		out.Put(0);
-	}
-	for(i = 0; i < line.GetCount(); i++) {
-		out.PutL(line.GetKey(i));
-		out.PutL(line[i].GetLength());
-		out.Put(line[i]);
-	}
+	Cout() << "Writing data..\n";
+	out.Put(data);
 }
 
 CONSOLE_APP_MAIN
