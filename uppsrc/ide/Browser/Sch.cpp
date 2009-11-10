@@ -32,7 +32,7 @@ void ScanSchFile(const char *fn)
 			   p.Id("BOOL") || p.Id("BOOL_") || p.Id("STRING_") || p.Id("STRING"))
 				r << "\tString " << ReadId(p, rr) << ";\n";
 			else
-			if(p.Id("INT") || p.Id("INT_"))
+			if(p.Id("INT") || p.Id("INT_") || p.Id("SERIAL") || p.Id("ISERIAL"))
 				r << "\tint " << ReadId(p, rr) << ";\n";
 			else
 			if(p.Id("DOUBLE") || p.Id("DOUBLE_"))
