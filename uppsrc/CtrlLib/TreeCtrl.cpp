@@ -1512,7 +1512,7 @@ void TreeCtrl::AdjustAction(int parent, PasteClip& d)
 		d.SetAction(DND_COPY);
 }
 
-void TreeCtrl::InsertDrop(int parent, int ii, const TreeCtrl& src, PasteClip& d)
+Vector<int> TreeCtrl::InsertDrop(int parent, int ii, const TreeCtrl& src, PasteClip& d)
 {
 	TreeCtrl copy;
 	Vector<int> sel = src.GetSel();
@@ -1529,11 +1529,12 @@ void TreeCtrl::InsertDrop(int parent, int ii, const TreeCtrl& src, PasteClip& d)
 	}
 	for(int i = 0; i < did.GetCount(); i++)
 		SelectOne(did[i], true);
+	return did;
 }
 
-void TreeCtrl::InsertDrop(int parent, int ii, PasteClip& d)
+Vector<int> TreeCtrl::InsertDrop(int parent, int ii, PasteClip& d)
 {
-	InsertDrop(parent, ii, GetInternal<TreeCtrl>(d), d);
+	return InsertDrop(parent, ii, GetInternal<TreeCtrl>(d), d);
 }
 
 void TreeCtrl::Swap(int id1, int id2)

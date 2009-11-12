@@ -279,8 +279,8 @@ public:
 	void         RemoveSelection()              { Remove(GetSel()); }
 
 	void         AdjustAction(int parent, PasteClip& x);
-	void         InsertDrop(int parent, int ii, const TreeCtrl& src, PasteClip& x);
-	void         InsertDrop(int parent, int ii, PasteClip& d);
+	Vector<int>  InsertDrop(int parent, int ii, const TreeCtrl& src, PasteClip& x);
+	Vector<int>  InsertDrop(int parent, int ii, PasteClip& d);
 	Image        GetDragSample();
 
 	void         StdLeftDouble();
