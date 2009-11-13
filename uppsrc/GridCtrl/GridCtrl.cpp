@@ -6170,7 +6170,7 @@ void GridCtrl::ChildLostFocus()
 	Ctrl::ChildLostFocus();
 }
 
-void GridCtrl::Repaint(bool do_recalc_cols /* = false*/, bool do_recalc_rows /* = false*/)
+void GridCtrl::Repaint(bool do_recalc_cols /* = false*/, bool do_recalc_rows /* = false*/, int opt)
 {
 	if(do_recalc_cols)
 	{
@@ -6203,7 +6203,8 @@ void GridCtrl::Repaint(bool do_recalc_cols /* = false*/, bool do_recalc_rows /* 
 		UpdateSummary();
 		UpdateCtrls();
 		SyncCtrls();
-		RebuildToolBar();
+		if(!(opt & RP_NOTOOLBAR))
+			RebuildToolBar();
 		doscroll = true;
 		Refresh();
 	}
@@ -7204,7 +7205,7 @@ void GridCtrl::ShowRows(bool repaint)
 			vitems[i].size = vitems[i].tsize;
 		}
 	if(change || repaint)
-		Repaint(false, true);
+		Repaint(false, true, RP_NOTOOLBAR);
 }
 
 void GridCtrl::MenuHideColumn(int n)
@@ -7214,7 +7215,6 @@ void GridCtrl::MenuHideColumn(int n)
 	else
 		HideColumn(n);
 }
-
 
 int GridCtrl::ShowMatchedRows(const WString &f)
 {
@@ -7321,7 +7321,7 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 		if(change || search_highlight)
 		{
 			LG("Repaint %d", search_hide);
-			Repaint(false, search_hide);
+			Repaint(false, search_hide, RP_NOTOOLBAR);
 		}
 	}
 	else if(search_hide)
