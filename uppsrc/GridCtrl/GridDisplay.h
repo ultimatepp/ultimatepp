@@ -6,6 +6,7 @@
 #include <Draw/iml_header.h>
 
 #define BIT(x) (1 << x)
+#define BIT_ALL (0xFFFFFFFF)
 
 class GridCtrl;
 

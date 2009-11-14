@@ -305,7 +305,9 @@ class GridCtrl : public Ctrl
 		
 		enum GridRepaintOpts
 		{
-			RP_NOTOOLBAR = BIT(0)
+			RP_TOOLBAR   = BIT(0),
+			RP_UPDCTRLS  = BIT(1),
+			RP_ALL       = BIT_ALL
 		};
 		
 		enum GridCursorState
@@ -1287,7 +1289,7 @@ class GridCtrl : public Ctrl
 		void RefreshLeft();
 		void RefreshSummary();
 
-		void Repaint(bool recalc_cols = false, bool recalc_rows = false, int opt = 0);
+		void Repaint(bool recalc_cols = false, bool recalc_rows = false, int opt = RP_ALL);
 		void Ready(bool b);
 
 		int  GetMouseRow(Point &p, bool relative = true, bool fixed = false, bool full = true);
