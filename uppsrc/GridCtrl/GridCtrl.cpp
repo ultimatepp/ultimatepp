@@ -2342,7 +2342,7 @@ void GridCtrl::Layout()
 	UpdateSizes();
 	UpdateSb();
 	UpdateHolder();
-	UpdateCtrls(UC_CHECK_VIS | UC_SHOW);
+	UpdateCtrls(UC_CHECK_VIS | UC_SHOW | UC_FOCUS);
 	SyncCtrls();
 }
 
@@ -2521,7 +2521,7 @@ void GridCtrl::Scroll()
 	LG("Scroll (%d, %d)", delta.cx, delta.cy);
 
 	SyncCtrls();
-	UpdateCtrls(UC_CHECK_VIS | UC_SHOW | UC_SCROLL);
+	UpdateCtrls(UC_CHECK_VIS | UC_SHOW | UC_SCROLL | UC_FOCUS);
 
 	if(resizeCol || resizeRow)
 		return;
@@ -3281,7 +3281,7 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 			cs.accepted = true;
 			if(hidectrls && (edit_mode == GE_CELL || (edit_mode == GE_ROW && (isnewrow || !newvalid))))
 			{
-				UpdateCtrls(UC_HIDE | UC_CTRLS | UC_OLDCUR);
+				UpdateCtrls(UC_HIDE | UC_CTRLS | UC_OLDCUR | UC_FOCUS);
 				if(!one_click_edit || !newvalid)
 					WhenEndEdit();
 			}
@@ -4505,7 +4505,7 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 
 	edit_ctrls = isctrl;
 
-	if(!show && ctrls)
+	if(opt & UC_FOCUS && !show && ctrls)
 		SetFocus();
 
 	if(opt & UC_CTRLS)
@@ -4513,9 +4513,6 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 
 	if(opt & UC_CTRLS_OFF && !isctrl)
 		ctrls = false;
-
-	//if(opt & UC_FOCUS)
-	//	SetFocus();
 
 	if(!(opt & UC_SCROLL))
 		RebuildToolBar();
@@ -5507,7 +5504,7 @@ void GridCtrl::Clear(bool columns)
 {
 	doscroll = false;
 
-	UpdateCtrls(UC_HIDE | UC_CTRLS);
+	UpdateCtrls(UC_HIDE | UC_CTRLS | UC_FOCUS);
 
 	items.Remove(1, items.GetCount() - 1);
 	vitems.Remove(1, vitems.GetCount() - 1);
@@ -6201,9 +6198,10 @@ void GridCtrl::Repaint(bool do_recalc_cols /* = false*/, bool do_recalc_rows /* 
 		UpdateSb();
 		UpdateHolder();
 		UpdateSummary();
-		UpdateCtrls();
+		if(opt & RP_UPDCTRLS)
+			UpdateCtrls();
 		SyncCtrls();
-		if(!(opt & RP_NOTOOLBAR))
+		if(opt & RP_TOOLBAR)
 			RebuildToolBar();
 		doscroll = true;
 		Refresh();
@@ -6285,7 +6283,7 @@ bool GridCtrl::EndEdit(bool accept, bool doall, bool remove_row)
 	if(accept && !GetCtrlsData(false, doall, accept))
 		return false;
 
-	UpdateCtrls(UC_HIDE | UC_CTRLS);
+	UpdateCtrls(UC_HIDE | UC_CTRLS | UC_FOCUS);
 
 	if(!accept)
 	{
@@ -6446,7 +6444,7 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 		total_height -= vitems[rowidx].nHeight();
 
 		if(rid == ctrlid.y)
-			UpdateCtrls(UC_HIDE | UC_CTRLS);
+			UpdateCtrls(UC_HIDE | UC_CTRLS | UC_FOCUS);
 
 		bool removed = false;
 		
@@ -7205,7 +7203,7 @@ void GridCtrl::ShowRows(bool repaint)
 			vitems[i].size = vitems[i].tsize;
 		}
 	if(change || repaint)
-		Repaint(false, true, RP_NOTOOLBAR);
+		Repaint(false, true, UC_SCROLL);
 }
 
 void GridCtrl::MenuHideColumn(int n)
@@ -7227,7 +7225,6 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 		return 0;
 	}
 	
-
 	if(!search_immediate && search_highlight)
 	{
 		ClearFound(true, false);
@@ -7321,7 +7318,7 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 		if(change || search_highlight)
 		{
 			LG("Repaint %d", search_hide);
-			Repaint(false, search_hide, RP_NOTOOLBAR);
+			Repaint(false, search_hide, 0);
 		}
 	}
 	else if(search_hide)
@@ -7397,7 +7394,7 @@ bool GridCtrl::Match(const WString &f, const WString &s, int &fs, int &fe)
 
 void GridCtrl::DoFind()
 {
-	UpdateCtrls(UC_CHECK_VIS | UC_HIDE);
+	UpdateCtrls(UC_CHECK_VIS | UC_HIDE | UC_CTRLS | UC_SCROLL);
 	ShowMatchedRows((WString) ~find);
 }
 
