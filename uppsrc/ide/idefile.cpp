@@ -235,6 +235,29 @@ void Ide::ScanFile()
 	}
 }
 
+String ConvertTLine(const String& line, int flag)
+{
+	String r;
+	const char *s = line;
+	
+	while(*s) {
+		if(*s == '\"') {
+			CParser p(s);
+			p.NoSkipSpaces();
+			try {
+				r.Cat(AsCString(p.ReadOneString(), INT_MAX, NULL, flag));
+			}
+			catch(CParser::Error) {
+				return line;
+			}
+			s = p.GetPtr();
+		}
+		else
+			r.Cat(*s++);
+	}
+	return r;
+}
+
 void Ide::SaveFile(bool always)
 {
 	if(designer) {
@@ -274,7 +297,14 @@ void Ide::SaveFile(bool always)
 		if(designer)
 			designer->Save();
 		else
-			editor.Save(out, editor.GetCharset());
+			if(GetFileExt(editfile) == ".t") {
+				for(int i = 0; i < editor.GetLineCount(); i++) {
+					if(i) out.PutCrLf();
+					out.Put(ConvertTLine(editor.GetUtf8Line(i), ASCSTRING_OCTALHI));
+				}
+			}
+			else
+				editor.Save(out, editor.GetCharset());		
 		out.Close();
 		if(out.IsError()) {
 			Exclamation(NFormat("Error writing temporary file [* \1%s\1].", tmpfile));
@@ -405,13 +435,25 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	ActiveFocus(editor);
 	FileData& fd = Filedata(editfile);
 	FindFile ff(editfile);
+	bool tfile = GetFileExt(editfile) == ".t";
 	if(ff) {
 		edittime = ff.GetLastWriteTime();
 		if(edittime != fd.filetime || IsNull(fd.filetime))
 			fd.undodata.Clear();
 		FileIn in(editfile);
 		if(in)
-			editor.Load(in, charset);
+			if(tfile && editastext.Find(editfile) < 0) {
+				String f;
+				while(!in.IsEof()) {
+					if(f.GetCount())
+						f.Cat("\n");
+					f.Cat(ConvertTLine(in.GetLine(), 0));
+				}
+				editor.Set(f);
+				editor.SetCharset(CHARSET_UTF8);
+			}
+			else
+				editor.Load(in, charset);
 		editor.SetEditPos(fd.editpos);
 		if(!IsNull(fd.columnline) && fd.columnline.y >= 0 && fd.columnline.y < editor.GetLineCount())
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));
@@ -440,7 +482,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 			editor <<= "#include \"" + headername + "\"\r\n";
 			editor.SetCursor(editor.GetPos(1));
 		}
-		editor.SetCharset(charset);
+		editor.SetCharset(tfile ? CHARSET_UTF8 : charset);
 	}
 	editor.SetFocus();
 	MakeTitle();
