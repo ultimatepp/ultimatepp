@@ -121,6 +121,16 @@ void Ide::Edit(Bar& menu) {
 			designer->EditMenu(menu);
 	}
 	else {
+		if(GetFileExt(editfile) == ".t") {
+			if(editastext.Find(editfile) >= 0)
+				menu.Add(AK_DESIGNER, THISBACK(EditUsingDesigner))
+				    .Help("Edit converted strings");
+			else				
+				menu.Add(AK_EDITASTEXT, THISBACK(EditAsText))
+				    .Help("Edit raw strings");
+			menu.MenuSeparator();
+		}
+		else
 		if(editastext.Find(editfile) >= 0) {
 			menu.Add(AK_DESIGNER, THISBACK(EditUsingDesigner))
 			    .Help("Edit using the designer (not as text)");
