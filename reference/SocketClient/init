@@ -1,0 +1,5 @@
+#ifndef _SocketClient_icpp_init_stub
+#define _SocketClient_icpp_init_stub
+#include "Core/init"
+#include "Web/init"
+#endif
