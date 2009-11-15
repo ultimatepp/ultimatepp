@@ -1305,7 +1305,8 @@ bool FileMapping::Create(const char *file, int64 filesize_, bool delete_share)
 			NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if(hfile == INVALID_HANDLE_VALUE)
 		return false;
-	hmap = CreateFileMapping(hfile, NULL, PAGE_READWRITE, 0, 0, NULL);
+	long lo = (dword)filesize_, hi = (dword)(filesize_ >> 32);
+	hmap = CreateFileMapping(hfile, NULL, PAGE_READWRITE, hi, lo, NULL);
 	if(!hmap) {
 		Close();
 		return false;
@@ -1336,7 +1337,7 @@ bool FileMapping::Map(int64 mapoffset, dword maplen)
 		rawoffset = rawoff;
 		rawsize = rawsz;
 #ifdef PLATFORM_WIN32
-		rawbase = (byte *)MapViewOfFile(hmap, /*write ? FILE_MAP_WRITE :*/ FILE_MAP_READ,
+		rawbase = (byte *)MapViewOfFile(hmap, write ? FILE_MAP_WRITE : FILE_MAP_READ,
 			(dword)(rawoffset >> 32), (dword)(rawoffset >> 0), rawsize);
 #else
 		rawbase = (byte *)mmap(0, rawsize,
