@@ -444,10 +444,20 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		if(in)
 			if(tfile && editastext.Find(editfile) < 0) {
 				String f;
-				while(!in.IsEof()) {
-					if(f.GetCount())
-						f.Cat("\n");
-					f.Cat(ConvertTLine(in.GetLine(), 0));
+				String ln;
+				for(;;) {
+					int c = in.Get();
+					if(c < 0) {
+						f.Cat(ConvertTLine(ln, 0));
+						break;
+					}
+					if(c != '\r') {
+						ln.Cat(c);
+						if(c == '\n') {
+							f.Cat(ConvertTLine(ln, 0));
+							ln.Clear();
+						}
+					}
 				}
 				editor.Set(f);
 				editor.SetCharset(CHARSET_UTF8);
