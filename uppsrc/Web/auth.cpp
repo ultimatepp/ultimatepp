@@ -184,9 +184,9 @@ static String GetConnectPage(HttpQuery& out_map, const HttpQuery& map, const Str
 	out_map.Set("AUTH", "1");
 
 	Htmls body;
-	body << HtmlRow() % (HtmlCell() / "Uživatelské jméno:&nbsp;"
+	body << HtmlRow() % (HtmlCell() / t_("Username:&nbsp;")
 		+ HtmlCell() / HtmlEdit("USER", 20, 30, map.GetString("USER")))
-		<< HtmlRow() % (HtmlCell() / "Pøístupové heslo:&nbsp;"
+		<< HtmlRow() % (HtmlCell() / t_("Password:&nbsp;")
 		+ HtmlCell() / HtmlEdit("PASS", 20, 30, map.GetString("PASS"), true))
 		<< HtmlRow() % (HtmlCell() / "" + HtmlCell() / HtmlButton("LOGIN", "  Pøipojit  "));
 
@@ -204,21 +204,21 @@ static String GetSetPassPage(HttpQuery& out_map, const HttpQuery& map, const Str
 	out_map.Set("USER", map.GetString("USER"));
 	out_map.Set("AUTH", map.GetString("AUTH"));
 	Htmls out;
-	out << HtmlTag("H2") / "Pøipojení bylo úspìšné"
-		<< "\n\n<p>Pøipojení ke vzdálenému poèítaèi probìhlo úspìšnì. "
-		"Pøístupový kód ztratí platnost po pùlhodinové neèinnosti "
-		"klienta nebo na výslovnou žádost o odhlášení.\n"
+	out << HtmlTag("H2") / t_("Connection succeeded")
+		<< t_("\n\n<p>Connection to remote computer has succeeded. ")
+		<< t_("Access code will loose validity after half hour of client inactivity or on explicit request.\n")
+		<<
 		"\n"
 		"<p>";
 	if(!IsNull(error))
 		out << HtmlWarn() / error << "\n<p>\n";
 	out
-		<< HtmlTable() % (HtmlRow() % (HtmlCell() / "Zmìna hesla:&nbsp;"
+		<< HtmlTable() % (HtmlRow() % (HtmlCell() / t_("Change password:&nbsp;")
 		+ HtmlCell() / HtmlEdit("NEW_PASS", 20, 30, map.GetString("NEW_PASS"), true))
-		+ HtmlRow() % (HtmlCell() / "Opakovat heslo:&nbsp;"
+		+ HtmlRow() % (HtmlCell() / t_("Repeat password:&nbsp;")
 		+ HtmlCell() / HtmlEdit("RETYPE_PASS", 20, 30, map.GetString("RETYPE_PASS"), true))
-		+ HtmlRow() % (HtmlCell() + HtmlCell() / (HtmlButton("SET_PASS", "Zmìnit heslo")
-		+ "&nbsp;&nbsp;&nbsp;" + HtmlButton("CANCEL", " Pokraèovat "))))
+		+ HtmlRow() % (HtmlCell() + HtmlCell() / (HtmlButton("SET_PASS", "Change password")
+		+ "&nbsp;&nbsp;&nbsp;" + HtmlButton("CANCEL", t_(" Continue ")))))
 		<< "\n";
 	return out;
 }
@@ -245,9 +245,9 @@ String WebUser::Login(const HttpQuery& map, String& args, const char *iname, boo
 			String p1 = map.GetString("NEW_PASS");
 			String p2 = map.GetString("RETYPE_PASS");
 			if(IsNull(p1))
-				out = GetSetPassPage(out_map, map, "Zadejte prosím nové pøístupové heslo.");
+				out = GetSetPassPage(out_map, map, t_("Please enter a new password."));
 			else if(p1 != p2)
-				out = GetSetPassPage(out_map, map, "Zadejte prosím do obou polí stejné heslo.");
+				out = GetSetPassPage(out_map, map, t_("Please enter the password twice."));
 			else
 			{ // set it now
 				WebUser wu(map.GetString("USER"), p1, args);
@@ -277,8 +277,8 @@ String WebUser::Login(const HttpQuery& map, String& args, const char *iname, boo
 
 	if(IsNull(out))
 		out = GetConnectPage(out_map, map,
-		!IsNull(auth) ? "Platnost pøístupového kódu vypršela. Zadejte prosím znovu uživatelské jméno a heslo."
-		: !map.IsEmpty("LOGIN") ? "Zadané uživatelské jméno nebo heslo je neplatné!" : "");
+		!IsNull(auth) ? t_("Password has expired. Please login again.")
+		: !map.IsEmpty("LOGIN") ? t_("Invalid password and/or username") : "");
 
 	String hid = out_map.GetHidden();
 	return HtmlForm(isapi_name) % (hid + out);
