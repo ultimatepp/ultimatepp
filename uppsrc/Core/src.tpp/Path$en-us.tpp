@@ -115,10 +115,9 @@ no extension, returns empty string.&]
 [s4;%% &]
 [s5;:GetFileName`(const char`*`): [_^String^ String]_[* GetFileName]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 path])&]
-[s2;%% Gets file extension, including `'.`' character. If there is 
-no extension, returns empty string.&]
+[s2;%% Returns the name of file (without directory).&]
 [s2;%% Example (POSIX): GetFileName([@3 `"/home/user/test.ext`"]) returns 
-[@3 `".ext`"].&]
+[@3 `"test.ext`"].&]
 [s3;%% &]
 [s4; &]
 [s5;:AppendFileName`(const String`&`,const char`*`): [_^String^ String]_[* AppendFileName

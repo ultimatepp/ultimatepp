@@ -15,11 +15,10 @@ PopUpTree::PopUpTree() {
 	Accel();
 	MouseMoveCursor();
 	NoPopUpEx();
-	maxheight = INT_MAX;
+	SetDropLines(16);
 	open = autosize = false;
 	showpos = Null;
 	WhenOpen = WhenClose = THISBACK(OpenClose);
-	droplines = 16;
 }
 
 PopUpTree::~PopUpTree() {}
@@ -82,7 +81,7 @@ void PopUpTree::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 	}
 	open = false;
 	Ctrl popup;
-	int ht = AddFrameSize(width, min(mh, autosize ? GetTreeSize().cy : droplines * GetStdFontCy())).cy;
+	int ht = AddFrameSize(width, min(mh, autosize ? GetTreeSize().cy : INT_MAX)).cy;
 	Rect rt = RectC(showpos.x, showpos.y - (up ? ht : 0), showwidth, ht);
 	if(GUI_PopUpEffect()) {
 		if(up) {
@@ -140,7 +139,7 @@ void DropTree::Sync() {
 		icon = tree.GetNode(tree.GetCursor()).image;
 	icond.Set(valuedisplay ? *valuedisplay : tree.GetDisplay(tree.GetCursor()), icon);
 	MultiButton::SetDisplay(icond);
-	Set(tree.Get());
+	Set(tree.GetValue());
 }
 
 bool DropTree::Key(dword k, int) {
@@ -182,7 +181,6 @@ void DropTree::Clear() {
 
 void DropTree::SetData(const Value& data)
 {
-	tree <<= data;
 	if(tree.Get() != data) {
 		tree <<= data;
 		Update();

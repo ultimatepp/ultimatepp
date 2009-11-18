@@ -648,6 +648,34 @@ ctrl DropList {
 	}
 }
 
+ctrl DropTree {
+	group "Input fields";
+
+	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
+
+	Frame SetFrame = InsetFrame();
+	bool  SetEditable = true @2 ? "Editable";
+	bool  WantFocus = true;
+	bool  DisplayAll = false;
+	bool  AutoResize = false;
+	bool  DropFocus = false;
+	bool  AlwaysDrop = false @1;
+	Text  Tip;
+//	Qtf   SetInfo @1 ? "Info of control" ;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		n = r.bottom - r.top;
+		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
+		w.DrawImage((n - 7) / 2 + r.right - n, (n - 6) / 2 + r.top, "ClassicCtrlsImg::DA");
+		w.DrawText(3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
+			(.SetEditable ? "" : "R/O ") + "DropTree", Arial(10), :SMagenta);
+	}
+}
+
 template WithDropChoice {
 	bool   Dropping = true;
 	String Appending = ", ";
