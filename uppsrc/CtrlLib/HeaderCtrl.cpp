@@ -726,15 +726,23 @@ void HeaderCtrl::Serialize(Stream& s) {
 			}
 		else {
 			int t = 0;
-			for(int i = 0; i < col.GetCount(); i++) {
-				int ndx = col[i].index;
-				double r = col[i].ratio;
-				s % ndx;
-				s % r;
-				int q = FindIndex(ndx);
-				if(q >= 0) {
-					col[q].ratio = r;
-					col.Swap(t++, q);
+			for(int i = 0; i < n; i++) {
+				if(n == col.GetCount()) {
+					int ndx = col[i].index;
+					double r = col[i].ratio;
+					s % ndx;
+					s % r;
+					int q = FindIndex(ndx);
+					if(q >= 0) {
+						col[q].ratio = r;
+						col.Swap(t++, q);
+					}
+				}
+				else {
+					int dummy = 0;
+					double dummy2 = 1.0;
+					s % dummy;
+					s % dummy2;
 				}
 			}
 		}

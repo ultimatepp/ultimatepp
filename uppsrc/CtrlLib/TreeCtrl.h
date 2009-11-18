@@ -390,7 +390,7 @@ public:
 	PopUpTree&   MaxHeight(int maxheight_)          { maxheight = maxheight_; return *this; }
 	int          GetMaxHeight() const               { return maxheight; }
 	PopUpTree&   AutoResize(bool b = true)          { autosize = b; return *this; }
-	PopUpTree&   SetDropLines(int n)                { droplines = n; return *this; }
+	PopUpTree&   SetDropLines(int n)                { MaxHeight(n * (GetStdFontCy() + 4)); return *this; }
 };
 
 class DropTree : public MultiButton {
