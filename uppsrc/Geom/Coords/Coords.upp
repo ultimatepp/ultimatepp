@@ -4,7 +4,7 @@ uses
 
 file
 	GeomCoords.h,
-	util.cpp,
+	util.cpp charset "UTF-8",
 	ellipsoid.cpp,
 	coords.cpp,
 	method.h,

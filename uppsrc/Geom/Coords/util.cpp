@@ -137,17 +137,18 @@ String FormatDegree(double d, int decimals)
 	char sign = (d < 0 ? '-' : '+');
 	if(d < 0) d = -d;
 	int deg = ffloor(d);
+	String cd = ToCharset(CHARSET_DEFAULT, "%c%dÂ°", CHARSET_UTF8);
 	if(decimals <= -2)
-		return NFormat("%c%d°", sign, deg);
+		return NFormat(cd, sign, deg);
 	d = (d - deg) * 60;
 	int min = ffloor(d);
 	if(decimals <= -1)
-		return NFormat("%c%d° %02d\'", sign, deg, min);
+		return NFormat(cd + " %02d\'", sign, deg, min);
 	d = (d - min) * 60;
 	String sec = FormatDoubleFix(d, decimals);
 	if(!IsDigit(sec[1]))
 		sec.Insert(0, '0');
-	return NFormat("%c%d° %02d\' %s\"", sign, deg, min, sec);
+	return NFormat(cd + " %02d\' %s\"", sign, deg, min, sec);
 }
 
 Value ScanDegree(const char *p)
@@ -158,21 +159,21 @@ Value ScanDegree(const char *p)
 	if(IsNull(deg))
 		return Null;
 	if(deg < -360 || deg > 360)
-		return ErrorValue(NFormat("Neplatnı poèet úhlovıch stupòù: %d", deg));
+		return ErrorValue(NFormat("NeplatnÃ½ poÃ¨et ÃºhlovÃ½ch stupÃ²Ã¹: %d", deg));
 	while(*p && !IsDigit(*p))
 		p++;
 	if(*p)
 	{
 		min = ScanInt(p, &p);
 		if(min < 0 || min >= 60)
-			return ErrorValue(NFormat("Neplatnı poèet úhlovıch minut: %d", min));
+			return ErrorValue(NFormat("NeplatnÃ½ poÃ¨et ÃºhlovÃ½ch minut: %d", min));
 		while(*p && !IsDigit(*p))
 			p++;
 		if(*p)
 		{
 			sec = ScanDouble(p);
 			if(IsNull(sec) || sec < 0 || sec > 60)
-				return ErrorValue(NFormat("Neplatnı poèet úhlovıch sekund: %d", sec));
+				return ErrorValue(NFormat("NeplatnÃ½ poÃ¨et ÃºhlovÃ½ch sekund: %d", sec));
 		}
 	}
 	return ((sec / 60.0 + min) / 60.0 + tabs(deg)) * (deg >= 0 ? 1 : -1);
@@ -199,13 +200,13 @@ Value ConvertDegree::Scan(const Value& v) const
 	if(IsNull(d))
 	{
 		if(not_null)
-			return ErrorValue("Hodnota nesmí bıt prázdná.");
+			return ErrorValue("Hodnota nesmÃ­ bÃ½t prÃ¡zdnÃ¡.");
 		return Null;
 	}
 	if(!IsNull(min) && d < min)
-		return ErrorValue(NFormat("Zadanı úhel je menší ne povolená dolní mez, %s.", FormatDegree(min, 0)));
+		return ErrorValue(NFormat("ZadanÃ½ Ãºhel je menÅ¡Ã­ neÅ¾ povolenÃ¡ dolnÃ­ mez, %s.", FormatDegree(min, 0)));
 	if(!IsNull(max) && d > max)
-		return ErrorValue(NFormat("Zadanı úhel je vìtší ne povolená horní mez, %s.", FormatDegree(max, 0)));
+		return ErrorValue(NFormat("ZadanÃ½ Ãºhel je vÃ¬tÅ¡Ã­ neÅ¾ povolenÃ¡ hornÃ­ mez, %s.", FormatDegree(max, 0)));
 	return d;
 }
 
