@@ -273,6 +273,8 @@ void DropGrid::State(int reason)
 
 void DropGrid::Paint0(Draw &w, int lm, int rm, int x, int y, int cx, int cy, const Value &val, dword style, Color &fg, Color &bg, Font &fnt, bool found, int fs, int fe)
 {
+	real_size.Clear();
+	
 	w.DrawRect(x, y, cx, cy, bg);
 	int nx = x + lm;
 	int ny = y + tm;
@@ -985,7 +987,7 @@ Value DropGrid::MakeValue(int r, bool columns) const
 				v += list.GetColumnName(value_cols[i]);
 				v += ' ';
 			}
-			v += list.GetStdConvertedColumn(value_cols[i] + fc, val);
+			v += (String) list.GetStdConvertedColumn(value_cols[i] + fc, val);
 			v += ' ';
 		}
 		return v;
