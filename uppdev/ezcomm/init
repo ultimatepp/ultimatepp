@@ -1,0 +1,4 @@
+#ifndef _ezcomm_icpp_init_stub
+#define _ezcomm_icpp_init_stub
+#include "CtrlLib/init"
+#endif
