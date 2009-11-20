@@ -1,12 +1,11 @@
-<<<<<<< .mine
-topic "GUI Tutorial";
+topic "<<<<<<< .minetopic \"GUI Tutorial\";GUI Tutorial";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,3#31310162474203024125188417583966:caption]
 [b83;*4 $$2,3#07864147445237544204411237157677:title]
 [b42;a42;2 $$3,3#45413000475342174754091244180557:text]
 [l321;t246;C@5;1 $$4,4#20902679421464641399138805415013:code]
 [{_}%EN-US 
-[s1; GUI Tutorial&]
+[s1; [%-*A3 <<<<<<< .minetopic `"GUI Tutorial`";]GUI Tutorial&]
 [s2;:`_AccessKey`_AccessKey`_h: 1.GUI application main function&]
 [s3; To hide platform specific differences, U`+`+ GUI application 
 main function is defined using [* GUI`_APP`_MAIN] macro:&]
@@ -3943,15 +3942,7 @@ Reject for all children.&]
 [s3; &]
 [s3; &]
 [s0; [/ (to be continued)]&]
-[s0; ]=======
-topic "GUI Tutorial";
-[ $$0,0#00000000000000000000000000000000:Default]
-[a83;*R6 $$1,3#31310162474203024125188417583966:caption]
-[b83;*4 $$2,3#07864147445237544204411237157677:title]
-[b42;a42;2 $$3,3#45413000475342174754091244180557:text]
-[l321;t246;C@5;1 $$4,4#20902679421464641399138805415013:code]
-[{_}%EN-US 
-[s1; GUI Tutorial&]
+[s1; [*A3 `=`=`=`=`=`=`=topic `"GUI Tutorial`";]GUI Tutorial&]
 [s2; 1.GUI application main function&]
 [s3; To hide platform specific differences, U`+`+ GUI application 
 main function is defined using [* GUI`_APP`_MAIN] macro:&]
@@ -7888,4 +7879,4 @@ Reject for all children.&]
 [s3; &]
 [s3; &]
 [s0; [/ (to be continued)]&]
-[s0; ]>>>>>>> .r1684
+[s0; >>>>>>> .r1684]
