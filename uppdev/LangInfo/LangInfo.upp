@@ -2,7 +2,7 @@ uses
 	Core;
 
 file
-	ConvertDic.cpp;
+	LangInfo.cpp;
 
 mainconfig
 	"" = "";

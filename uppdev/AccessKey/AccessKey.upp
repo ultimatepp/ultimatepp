@@ -8,6 +8,7 @@ file
 	bak.tpp,
 	AccessKey.h,
 	test.key,
+	translate.t,
 	main.cpp,
 	AccessKey.lay;
 

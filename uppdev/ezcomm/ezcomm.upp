@@ -1,0 +1,18 @@
+description "EZ Comm\377";
+
+uses
+	CtrlLib;
+
+library(WIN32) ws2_32;
+
+options
+	-DULTIMATEPP;
+
+file
+	main.h,
+	main.cpp,
+	ezcomm.lay;
+
+mainconfig
+	"" = "GUI MT";
+

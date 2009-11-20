@@ -8,6 +8,7 @@ void EnumNetwork(const Array<NetNode>& nn)
 	LOGBEGIN();
 	for(int i = 0; i < nn.GetCount(); i++) {
 		const NetNode& m = nn[i];
+		LOG(m.GetName() << ' ' << m.GetPath());
 		EnumNetwork(m.Enum());
 	}
 	LOGEND();
