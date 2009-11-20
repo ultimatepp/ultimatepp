@@ -8,6 +8,5 @@ file
 	Urr.cpp,
 	Server.cpp,
 	Client.cpp,
-	doc.txt,
-	notes.txt;
+	doc.txt;
 

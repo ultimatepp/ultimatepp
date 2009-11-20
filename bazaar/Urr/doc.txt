@@ -1,91 +1,85 @@
-URR protokol
+Urr - UDP request-response protocol
 ============
 
-Motivace: Mnoho aplikaci vyzaduje jednoduchy request-response pres sit.
+Motivation: To provide simple effective by reliable protocol for request-response,
+where both request and response are usually (but not required to) small text messages, <8KB.
 
-Pomoci UDP lze problem resit dvema datagramy - pokud je vsechno optimalni. Nicmene take je dobre
-resit problem duplikace datagramu nebo pripad ze datagram requestu nedorazi a take moznost vratit
-vic dat nez je maximalni delka datagramu.
+Urr can handle request-response situation using only two datagram, in ideal situation,
+while adding security to UDP, which can handle lost, delayed or duplicated datagrams and
+response messages longer than 8KB. (It also, as an option, provides one-way messages without
+security).
 
-Dale je dobra moznost umoznit pouze jednosmerne datagramy.
-
-V dalsim jsou datove struktury popsany pomoci C; predpoklada se litte-endian architektura a zadny
-alignment mezi nimi.
-
-word je 16 bitove slovo, Uuid je 16 bytu s unikatnim identifikatorem. Unikatni identifikator je
-mozne nacist z /dev/urandom nebo generovat dobrym generatorem nahodnych cisel.
-
+In following, data structres are described using C; all data are in little-endian architecture,
+word is 16 bit word, Uuid is 16 bytes unique identificator (random generated with high quality
+random generator).
 
 Request:
 
-hlavicka:
+Header:
 
 struct UrrRequestHdr {
-	Uuid        id;         // jednoznacna identifikace requestu
-	byte        version;    // momentalne 0
-	byte        flags;      // bitove volby
-	word        blksize;    // maximalni delka datagramu (default je ted 8000) odpovedi
+	Uuid        id;         // unique identifier of request
+	byte        version;    // now 0
+	byte        flags;      // bit flags - now can be 0 or URR_ONEWAY (0x01)
+	word        blksize;    // maximum length of one datagram in response (default 8000)
 };
 
-Zatim jedina volba request ve flags je URR_ONEWAY = 0x01 - instruuje server, ze nema posilat zpet
-odpoved.
+The only allowed option in flags so far is URR_ONEWAY (0x01) - it instructs server not to
+send the response (avoids security).
 
-Za hlavickou nasleduje samotny request; je tedy v principu v teto verzi protokolu omezen na
-maximalni delku UDP (v praxi cca 65KB).
+Header is followed by request, size of request is limited by maximum UDP datagram size
+(safe bet is 8000 bytes).
 
 Response:
 
-hlavicka:
+Header:
 
 struct UrrResponseHdr {
 	Uuid        id;
 	int         part;
 };
 
-id obsahuje hodnotu z UrrRequestHdr; tim se zajisti ze client pozna skutecnou odpoved. Za hlavickou
-nasleduji vlastni data odpovedi.
+id has the value from UrrRequestHdr; this assures that client can distiguish the correct
+response (e.g. if some datagrams get duplicated and/or delayed).
 
-part vyjadruje co se vlastne vratilo. Muze to byt poradove cislo datagramu nebo jedna z hodnot
+part designates the meaing of datagram. It can be positive index of block or one of
 
-URR_LAST       = -1, // zaslany datagram je posledni
-URR_FIN        = -2, // uzavreni vicedatagramove odpovedi
-URR_SINGLE     = -3, // odpoved v jedinem datagramu
-URR_PROCESSING = -4, // server zpracovava dany request, cekej...
+URR_LAST       = -1, // this the last datagram of response
+URR_FIN        = -2, // finalizing multi-datagram response
+URR_SINGLE     = -3, // this is single datagram response
+URR_PROCESSING = -4, // server is still processing the request, retry later
 
-Protokol:
+Protocol:
 
-V "nejcastejsim pripade", kdy se odpoved vejde do jedineho datagramu a vsechno casove dobre dopadne,
-cela komunikace sestava ze dvou datagramu. Server na request odpovi s URR_SINGLE, klient si pouze
-zkontroluje id a tim to konci.
+In the most common case, when reponse fits the single datagram and no timeout (e.g. packed lost)
+is involved, all the request response consists of two datagrams. Server response with URR_SINGLE,
+client only checks the match of 'id' and roundtrip is finished.
 
-Pokud klient nedostane odpoved do urcite doby, muze request opakovat. Uuid zajisti, ze na strane
-serveru se opakovany pozadavek muze ignorovat (server si pamatuje vsechna zpracovana id za urcity
-cas, nyni 10 sekund).
+If client does not recieve the response in defined time, it repeats the request. 'id' will make
+sure that server does not process the request again (server stores all request ids 10 seconds back).
 
-Slozitejsi situace nastane, kdyz je odpoved delsi nez maximalni mozna delka datagramu (maximalni
-delka se urcuje jako minimum z UrrRequestHdr::blksize a hodnoty nastavene v serveru).
+If response is longer than 'blksize' of request, things get complicated, as response has to be split
+into more parts. Server graduallty sends datagrams with 'part' equal 0, 1, 2, ....
 
-V tom pripade je treba odpoved poslat po castech; server posila postupne odpovedi s part 0, 1, 2...
+Client acknowledges every part by sending the content of UrrResponseHdr back (without the data).
 
-Klient prijem kazde casti potvrzuje tak, ze posila zpatky serveru samotnou UrrResponseHdr. Posledni cast
-ma part = URR_LAST, i ta se potvrdi.
+The last datagram has 'part' = URR_LAST, this gets acknowledged too.
 
-Pokud klient nedostane spravnou cast ze sekvence (napriklad se datagram ztrati nebo je timeout), posle zpet znovu
-predchozi potvrzeni. Server tak vi co ma poslat na zaklade prijateho potvrzeni.
+If client fails to recieve the correct part of sequence (datagram lost or timeout), it sends back
+the acknowledge of last good datagramm - this will make server to restart from that point.
 
-Po potvrzeni URR_LAST jeste posle server URR_FIN aby klient vedel ze se potvrzeni neztratilo. Pokud URR_FIN do
-klienta nedorazi (timeout), klient proste posle potvrzeni znovu (vickrat) a server ho uz ignoruje;
-jinak receno, ztraceny URR_FIN klienta zdrzi ale neni to chyba
-(duvodem je ze je lepsi zdrzet klienta nez server; server musi cekat na potvrzeni ze klient dostal posledni cast).
+After URR_LAST server sends one last URR_FIN to make client aware that acknowledge was not lost
+(otherwise client has to send it again). If URR_FIN is lost, client repeats sending URR_LAST
+acknowledge and server ignores them - lost URR_FIN has performance impact on client, but it is not
+an error (reason: it is better to stall the client rather than server).
 
-NECO MALO O SERVERU:
+More about server:
 
-Server si v principu pamatuje poslednich 10s requestu na zaklade Uuid (nastavitelne) a odpovedi na ne.
-Pokud ovsem request nemeni data, je to pouze dotaz na data, je mozne ze klientska aplikace rekne
-serveru ze pokud request prijde znova, ma se odpoved znova vytvorit - v tom pripade se request nepamatuje.
+Server in principle stores last 10 seconds (adjustable default) requests based on Uuid and response to them.
+It is also possible that server application for some kind of requests tells the server not to store response
+(e.g. if response does not change the server) - in that case request performed again.
 
-Server si dale pamatuje odpovedi odeslane v posledni sekunde (nastavitelne). To je proto, ze ve vstupni
-fronte se muze objevit opakovany request v dobe, kdy se dotaz zpracovava. Mohlo se tak napr. stat ze server
-odpovidal vicekrat. Server si take pamatuje requesty ktery prave zpracovava, pokud ty jsou opakovane,
-vraci UrrResponseHdr s URR_PROCESSING. Klient to muze interpretovat tak, ze ma dele cekat (treba si vynuluje
-retry counter).
+Server also can store response responses of last second (adjustable). That is because in input queue there can
+be repeated request while it is processed. Therefore server would response more times. Server also
+stores requests know to being processed - if these requests repease, server respons with URR_PROCESSING.
+Client should interpret this as more waiting for result is required.
