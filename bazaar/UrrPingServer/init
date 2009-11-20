@@ -1,0 +1,4 @@
+#ifndef _UrrPingServer_icpp_init_stub
+#define _UrrPingServer_icpp_init_stub
+#include "Urr/init"
+#endif

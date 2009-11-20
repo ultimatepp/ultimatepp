@@ -1,0 +1,13 @@
+description "Udp request-response protocol\377";
+
+uses
+	Core;
+
+file
+	Urr.h,
+	Urr.cpp,
+	Server.cpp,
+	Client.cpp,
+	doc.txt,
+	notes.txt;
+

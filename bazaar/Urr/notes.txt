@@ -1,0 +1,6 @@
+500: Finished; resends 0 errors 10000 bytes 15000000 elapsed 16585ms 
+
+1000: Finished; resends 0 errors 10000 bytes 40000000 elapsed 80320ms 
+
+
+

@@ -1,0 +1,91 @@
+URR protokol
+============
+
+Motivace: Mnoho aplikaci vyzaduje jednoduchy request-response pres sit.
+
+Pomoci UDP lze problem resit dvema datagramy - pokud je vsechno optimalni. Nicmene take je dobre
+resit problem duplikace datagramu nebo pripad ze datagram requestu nedorazi a take moznost vratit
+vic dat nez je maximalni delka datagramu.
+
+Dale je dobra moznost umoznit pouze jednosmerne datagramy.
+
+V dalsim jsou datove struktury popsany pomoci C; predpoklada se litte-endian architektura a zadny
+alignment mezi nimi.
+
+word je 16 bitove slovo, Uuid je 16 bytu s unikatnim identifikatorem. Unikatni identifikator je
+mozne nacist z /dev/urandom nebo generovat dobrym generatorem nahodnych cisel.
+
+
+Request:
+
+hlavicka:
+
+struct UrrRequestHdr {
+	Uuid        id;         // jednoznacna identifikace requestu
+	byte        version;    // momentalne 0
+	byte        flags;      // bitove volby
+	word        blksize;    // maximalni delka datagramu (default je ted 8000) odpovedi
+};
+
+Zatim jedina volba request ve flags je URR_ONEWAY = 0x01 - instruuje server, ze nema posilat zpet
+odpoved.
+
+Za hlavickou nasleduje samotny request; je tedy v principu v teto verzi protokolu omezen na
+maximalni delku UDP (v praxi cca 65KB).
+
+Response:
+
+hlavicka:
+
+struct UrrResponseHdr {
+	Uuid        id;
+	int         part;
+};
+
+id obsahuje hodnotu z UrrRequestHdr; tim se zajisti ze client pozna skutecnou odpoved. Za hlavickou
+nasleduji vlastni data odpovedi.
+
+part vyjadruje co se vlastne vratilo. Muze to byt poradove cislo datagramu nebo jedna z hodnot
+
+URR_LAST       = -1, // zaslany datagram je posledni
+URR_FIN        = -2, // uzavreni vicedatagramove odpovedi
+URR_SINGLE     = -3, // odpoved v jedinem datagramu
+URR_PROCESSING = -4, // server zpracovava dany request, cekej...
+
+Protokol:
+
+V "nejcastejsim pripade", kdy se odpoved vejde do jedineho datagramu a vsechno casove dobre dopadne,
+cela komunikace sestava ze dvou datagramu. Server na request odpovi s URR_SINGLE, klient si pouze
+zkontroluje id a tim to konci.
+
+Pokud klient nedostane odpoved do urcite doby, muze request opakovat. Uuid zajisti, ze na strane
+serveru se opakovany pozadavek muze ignorovat (server si pamatuje vsechna zpracovana id za urcity
+cas, nyni 10 sekund).
+
+Slozitejsi situace nastane, kdyz je odpoved delsi nez maximalni mozna delka datagramu (maximalni
+delka se urcuje jako minimum z UrrRequestHdr::blksize a hodnoty nastavene v serveru).
+
+V tom pripade je treba odpoved poslat po castech; server posila postupne odpovedi s part 0, 1, 2...
+
+Klient prijem kazde casti potvrzuje tak, ze posila zpatky serveru samotnou UrrResponseHdr. Posledni cast
+ma part = URR_LAST, i ta se potvrdi.
+
+Pokud klient nedostane spravnou cast ze sekvence (napriklad se datagram ztrati nebo je timeout), posle zpet znovu
+predchozi potvrzeni. Server tak vi co ma poslat na zaklade prijateho potvrzeni.
+
+Po potvrzeni URR_LAST jeste posle server URR_FIN aby klient vedel ze se potvrzeni neztratilo. Pokud URR_FIN do
+klienta nedorazi (timeout), klient proste posle potvrzeni znovu (vickrat) a server ho uz ignoruje;
+jinak receno, ztraceny URR_FIN klienta zdrzi ale neni to chyba
+(duvodem je ze je lepsi zdrzet klienta nez server; server musi cekat na potvrzeni ze klient dostal posledni cast).
+
+NECO MALO O SERVERU:
+
+Server si v principu pamatuje poslednich 10s requestu na zaklade Uuid (nastavitelne) a odpovedi na ne.
+Pokud ovsem request nemeni data, je to pouze dotaz na data, je mozne ze klientska aplikace rekne
+serveru ze pokud request prijde znova, ma se odpoved znova vytvorit - v tom pripade se request nepamatuje.
+
+Server si dale pamatuje odpovedi odeslane v posledni sekunde (nastavitelne). To je proto, ze ve vstupni
+fronte se muze objevit opakovany request v dobe, kdy se dotaz zpracovava. Mohlo se tak napr. stat ze server
+odpovidal vicekrat. Server si take pamatuje requesty ktery prave zpracovava, pokud ty jsou opakovane,
+vraci UrrResponseHdr s URR_PROCESSING. Klient to muze interpretovat tak, ze ma dele cekat (treba si vynuluje
+retry counter).

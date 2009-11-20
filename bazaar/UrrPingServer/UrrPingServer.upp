@@ -1,0 +1,12 @@
+description "Example of Urr (UDP request-response) server\377";
+
+uses
+	Urr;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "MT",
+	"" = "";
+
