@@ -103,9 +103,8 @@ void Painter::DrawLineStroke(int width, Color color)
 
 void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
-	double h = width / 2;
-	Move(x1 + h, y1 + h);
-	Line(x2 + h, y2 + h);
+	Move(x1, y1);
+	Line(x2, y2);
 	DrawLineStroke(width, color);
 }
 
