@@ -1,0 +1,4 @@
+LAYOUT(MainWindowLayout, 448, 292)
+	ITEM(ArrayCtrl, m_array, AutoHideSb(true).HSizePosZ(8, 8).VSizePosZ(8, 8))
+END_LAYOUT
+
