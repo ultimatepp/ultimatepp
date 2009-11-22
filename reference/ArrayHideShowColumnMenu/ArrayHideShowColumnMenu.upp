@@ -1,0 +1,12 @@
+description "Hide/Show Menu for ArrayCtrl Columns\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	ArrayHideShowColumnMenu.lay;
+
+mainconfig
+	"" = "GUI";
+
