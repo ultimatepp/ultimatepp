@@ -75,9 +75,12 @@ void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const 
 
 void Painter::DrawLineStroke(int width, Color color)
 {
+	Begin();
+	LineCap(LINECAP_ROUND);
 	switch(width) {
 		case PEN_NULL:
 			Stroke(0, color);
+			End();
 			return;
 		case PEN_SOLID:
 			Stroke(1, color);
@@ -96,16 +99,18 @@ void Painter::DrawLineStroke(int width, Color color)
 			break;
 	default:
 		Stroke(width, color);
+		End();
 		return;
 	}
 	Stroke(1, color);
+	End();
 }
 
 void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	Move(x1, y1);
 	Line(x2, y2);
-	DrawLineStroke(width, color);
+	DrawLineStroke(width == 0 ? 1 : width, color);
 }
 
 void Painter::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,

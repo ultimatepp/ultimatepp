@@ -696,7 +696,7 @@ int HeaderCtrl::FindIndex(int ndx) const
 #endif
 
 void HeaderCtrl::Serialize(Stream& s) {
-	int version = 0x02;
+	int version = 0x03;
 	s / version;
 	if(version < 0x01) {
 		int n = col.GetCount();
@@ -716,14 +716,13 @@ void HeaderCtrl::Serialize(Stream& s) {
 		int n = col.GetCount();
 		s / n;
 		if(version < 0x02)
-		for(int i = 0; i < n; i++)
-			if(i < col.GetCount()) {
-				s % col[i].ratio;
-			}
-			else {
-				int dummy = 0;
-				s % dummy;
-			}
+			for(int i = 0; i < n; i++)
+				if(i < col.GetCount())
+					s % col[i].ratio;
+				else {
+					int dummy = 0;
+					s % dummy;
+				}
 		else {
 			int t = 0;
 			for(int i = 0; i < n; i++) {
@@ -737,12 +736,21 @@ void HeaderCtrl::Serialize(Stream& s) {
 						col[q].ratio = r;
 						col.Swap(t++, q);
 					}
+					if(version >= 0x03) {
+						bool visible = IsTabVisible(i);
+						s % visible;
+						if(i < GetCount())
+							ShowTab(i, visible);
+					}
 				}
 				else {
 					int dummy = 0;
 					double dummy2 = 1.0;
+					bool dummy3 = false;
 					s % dummy;
 					s % dummy2;
+					if(version >= 0x03)
+						s % dummy3;
 				}
 			}
 		}
