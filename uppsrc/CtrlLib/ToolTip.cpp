@@ -74,7 +74,7 @@ void ShowToolTip()
 			q.Set(text);
 			Size sz = q.GetMinSize();
 			Rect r = top->GetWorkArea();
-			Point p = GetMousePos() + Size(0, sz.cy);
+			Point p = GetMousePos() + Size(0, 22);
 			if(p.y + sz.cy > r.bottom)
 				p = GetMousePos() - Size(0, 22);
 			q.PopUp(top, p, !showmode);
