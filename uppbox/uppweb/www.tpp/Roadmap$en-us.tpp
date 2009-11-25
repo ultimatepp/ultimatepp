@@ -26,6 +26,53 @@ topic "Changelog";
 [s0;4 &]
 [s0; [*_3 Current release ]&]
 [s0; &]
+[s0; [*_4 1713]&]
+[s0; &]
+[s0; [* TheIde]&]
+[s0;i150;O0; .t files are now saved with strings converted by escaping 
+>127 characters (and back on loading). This fixes venerable problem 
+of UTF`-8 string literals in CJK Windows and MSC compiler.&]
+[s0; &]
+[s0; [* Library]&]
+[s0;* &]
+[s0; CtrlLib:&]
+[s0;i150;O0; TreeCtrl InsertDrop now returns ids of inserted nodes.&]
+[s0;i150;O0; A new set of utility functions that simplify selecting 
+files introduced (see http://www.ultimatepp.org/src`$CtrlLib`$FileSelUtil`$en`-us.
+html)&]
+[s0;i150;O0; HeaderCtrl columns now can have a tooltip&]
+[s0;i150;O0; SliderCtrl now allows reversed orientation (thanks avpavp!)&]
+[s0; &]
+[s0; RichEdit:&]
+[s0;i150;O0; New much more effective speller dictionary format, utilities 
+required to convert OpenOffice speller dictionaries into U`+`+ 
+speller files.&]
+[s0;i150;O0; Labeled paragraphs now marked with arrow displayed in 
+the left bar.&]
+[s0;i150;O0; Previously private StyleManager class capable of managing 
+paragraph styles has been made public.&]
+[s0; &]
+[s0; Report:&]
+[s0;i150;O0; New methods ChoosePrinter, ChooseDefault printer allow 
+selecting printer BEFORE report is created, setting the physical 
+page size based on chosen printer.&]
+[s0; &]
+[s0; Core:&]
+[s0;i150;O0; In Win32, console applications no longer pop up a MessageBox 
+when panicking, instead they write the panic string on the error 
+output and terminate.&]
+[s0; &]
+[s0; GridCtrl:&]
+[s0;i150;O0; Multiline popups now allowed, using GridDisplay to paint 
+the content.&]
+[s0; &]
+[s0; Bazaar:&]
+[s0;i150;O0; New functions to SysInfo&]
+[s0;i150;O0; Urr `- UDP request`-response protocol added &]
+[s0;* &]
+[s0;4 &]
+[s0; [*_3 Previous releases]&]
+[s0; &]
 [s0; [*_4 1659]&]
 [s0; &]
 [s0; [* Library]&]
@@ -47,9 +94,7 @@ primary key `'id`'&]
 [s0;i150;O0; Minor IDE speed improvements `- removed unnecessary 
 Assist`+`+ package check when inserting / removing separators 
 and auxiliary package contents&]
-[s0;i150;O0; Package selector now shows app icons if available &]
-[s0;4 &]
-[s0; [*_3 Previous releases]&]
+[s0; Package selector now shows app icons if available &]
 [s0; &]
 [s0; [*_4 1607]&]
 [s0; &]
