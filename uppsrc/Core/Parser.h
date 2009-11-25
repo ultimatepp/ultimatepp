@@ -21,6 +21,7 @@ public:
 	struct Error : public Exc                 { Error(const char *s) : Exc(s) {} };
 
 	void   ThrowError(const char *s);
+	void   ThrowError()                       { ThrowError(""); }
 
 	void   NoSkipSpaces()                     { skipspaces = false; }
 	void   SkipSpaces()                       { skipspaces = true; }
