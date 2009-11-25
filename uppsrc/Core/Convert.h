@@ -214,6 +214,13 @@ public:
 
 const NoConvertClass& NoConvert();
 
+class ErrorConvertClass : public Convert {
+public:
+	Value Scan(const Value& v) const;
+};
+
+const ErrorConvertClass& ErrorConvert();
+
 class MapConvert : public Convert {
 public:
 	virtual Value  Format(const Value& q) const;

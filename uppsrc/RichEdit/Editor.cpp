@@ -55,7 +55,7 @@ Rect RichEdit::GetTextRect() const
 		sz.cy = 16;
 	if(sz.cx < 80)
 		return RectC(0, 0, 48, max(sz.cy, 16));
-	int cx = zoom * (sz.cx - 32) / 100;
+	int cx = zoom * (sz.cx - 2 * viewborder) / 100;
 	return RectC((sz.cx - cx) / 2, 0, cx, sz.cy);
 }
 
@@ -66,7 +66,7 @@ Zoom RichEdit::GetZoom() const
 
 Size RichEdit::GetZoomedPage() const
 {
-	return Size(GetTextRect().Width(), GetZoom() * pagesz.cy);
+	return Size(GetTextRect().Width(), pagesz.cy == INT_MAX ? INT_MAX : GetZoom() * pagesz.cy);
 }
 
 int  RichEdit::GetPosY(PageY py) const
@@ -104,9 +104,11 @@ void RichEdit::Paint(Draw& w)
 		pw.size = GetZoomedPage();
 		if(pagesz.cy == INT_MAX) {
 			pw.size.cy = INT_MAX;
-			DrawFrame(w, tr.left, (int)sb ? -1 : 0, pw.size.cx + 2, 9999, SColorShadow);
+			if(viewborder)
+				DrawFrame(w, tr.left, (int)sb ? -1 : 0, pw.size.cx + 2, 9999, SColorShadow);
 		}
 		else
+		if(viewborder)
 			for(int i = 0; i <= py.page; i++)
 				DrawFrame(w, tr.left, i * (pw.size.cy + 3) + 1 - sb,
 				          pw.size.cx + 2, pw.size.cy + 2, SColorShadow);
@@ -118,7 +120,7 @@ void RichEdit::Paint(Draw& w)
 		pi.usecache = true;
 		pi.sizetracking = sizetracking;
 		pi.showcodes = showcodes;
-		pi.showlabels = !IsNull(showcodes);
+		pi.showlabels = !IsNull(showcodes) && viewborder >= 16;
 		if(spellcheck)
 			pi.spellingchecker = SpellParagraph;
 		if(IsSelection())
@@ -227,7 +229,7 @@ Rect RichEdit::GetCaretRect(const RichCaret& pr) const
 	Rect tr = GetTextRect();
 	Rect r = RectC(pr.left * zoom + tr.left, GetPosY(pr) + (pr.lineascent - pr.caretascent) * zoom - sb,
 	               overwrite && GetChar(cursor) != '\n' ? pr.Width() * zoom
-	                         : (pr.caretascent * pr.caretdescent) * zoom > 20 ? 2 : 1,
+	                         : (pr.caretascent + pr.caretdescent) * zoom > 20 ? 2 : 1,
 	               (pr.caretascent + pr.caretdescent) * zoom);
 	if(r.right > tr.right)
 		return Rect(tr.right - r.Width(), r.top, tr.right, r.bottom);
@@ -252,9 +254,8 @@ Rect RichEdit::PlaceCaret()
 		objectrect = Null;
 		Refresh();
 	}
-	if(IsSelection()) {
+	if(IsSelection())
 		KillCaret();
-	}
 	else
 		SetCaret(GetCaretRect(cursorc));
 	return rr;
@@ -575,6 +576,8 @@ RichEdit::RichEdit()
 {
 	Unicode();
 	BackPaint();
+
+	viewborder = 16;
 
 	face.NoWantFocus();
 	height.NoWantFocus();

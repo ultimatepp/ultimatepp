@@ -188,6 +188,8 @@ public:
 	StyleManager();
 };
 
+bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia = NULL);
+
 class RichEdit : public Ctrl, private TextArrayOps {
 public:
 	virtual void  Layout();
@@ -215,7 +217,8 @@ public:
 
 
 private:
-	void                     *context;
+	int                      viewborder;
+	void                    *context;
 	Size                     p_size;
 	bool                     sizetracking;
 	ScrollBar                sb;
@@ -732,6 +735,7 @@ public:
 	void            NoRuler()                             { RemoveFrame(ruler); }
 
 	RichEdit&       FontFaces(const Vector<int>& face);
+	RichEdit&       ViewBorder(int cx)                    { viewborder = cx; Refresh(); return *this; }
 	RichEdit&       ShowCodes(Color c)                    { showcodes = c; Refresh(); return *this; }
 	RichEdit&       Unit(int u)                           { unit = u; Refresh(); return *this; }
 	RichEdit&       SpellCheck(bool b)                    { spellcheck = b; Refresh(); return *this; }

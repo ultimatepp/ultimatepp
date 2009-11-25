@@ -196,8 +196,8 @@ public:
 
 	EditField& Password(bool pwd = true)     { password = pwd; Finish(); return *this; }
 	EditField& SetFilter(int (*f)(int))      { filter = f; return *this; }
-	EditField& SetConvert(const Convert& c)  { convert = &c; return *this; }
-	EditField& SetInactiveConvert(const Convert& c) { inactive_convert = &c; return *this; }
+	EditField& SetConvert(const Convert& c)  { convert = &c; Refresh(); return *this; }
+	EditField& SetInactiveConvert(const Convert& c) { inactive_convert = &c; Refresh(); return *this; }
 	EditField& AutoFormat(bool b = true)     { autoformat = b; return *this; }
 	EditField& NoAutoFormat()                { return AutoFormat(false); }
 	EditField& SetCharset(byte cs)           { charset = cs; return *this; }
