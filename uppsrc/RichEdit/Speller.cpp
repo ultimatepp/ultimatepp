@@ -187,7 +187,7 @@ Speller *sGetSpeller(int lang)
 	return &speller[q];
 }
 
-bool SpellWordRaw(const WString& wrd, int lang)
+bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia)
 {
 	Speller *f = sGetSpeller(lang);
 	if(!f)
@@ -223,6 +223,8 @@ bool SpellWordRaw(const WString& wrd, int lang)
 						w.Cat(*t++);
 					if(w == t1 || w == t2)
 						return true;
+					if(withdia && t2 == ToLower(ToAscii(w.ToWString()).ToString()))
+						withdia->Add(w);
 					t++;
 				}
 			}

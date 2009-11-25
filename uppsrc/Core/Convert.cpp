@@ -474,6 +474,16 @@ Value NoConvertClass::Format(const Value& q) const {
 
 GLOBAL_VAR_INIT(const NoConvertClass, NoConvert)
 
+Value ErrorConvertClass::Scan(const Value& v) const
+{
+	return ErrorValue();
+}
+
+const ErrorConvertClass& ErrorConvert()
+{
+	return Single<ErrorConvertClass>();
+}
+
 Value JoinConvert::Format(const Value& v) const {
 	String r;
 	ValueArray a = v;
