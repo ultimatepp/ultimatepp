@@ -114,19 +114,21 @@ void SelfUpdate() {
 	char dst[512];
 	UpdateFile("UPDATER.EXE");
 	::GetModuleFileName(NULL, dst, 512);
-	String src = GetIniKey("UPDATE");
-	if(src.IsEmpty()) return;
-	src = AppendFileName(src, GetFileNamePos(dst));
-	int dummy;
-	if(NoUpdate(dst, src, dummy)) return;
-	String commandline;
-	const Vector<String>& cmd = CommandLine();
-	for(int i = 0; i < cmd.GetCount(); i++) {
-		commandline += ' ';
-		commandline += FixArg(cmd[i]);
+	{
+		String src = GetIniKey("UPDATE");
+		if(src.IsEmpty()) return;
+		src = AppendFileName(src, GetFileNamePos(dst));
+		int dummy;
+		if(NoUpdate(dst, src, dummy)) return;
+		String commandline;
+		const Vector<String>& cmd = CommandLine();
+		for(int i = 0; i < cmd.GetCount(); i++) {
+			commandline += ' ';
+			commandline += FixArg(cmd[i]);
+		}
+		if(WinExec(GetExeDirFile("updater.exe") + " " + GetFileName(dst) + commandline, SW_SHOWNORMAL) <= 31)
+			return;
 	}
-	if(WinExec(GetExeDirFile("updater.exe") + " " + GetFileName(dst) + commandline, SW_SHOWNORMAL) <= 31)
-		return;
 	exit(0);
 }
 

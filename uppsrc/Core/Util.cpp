@@ -387,7 +387,7 @@ String GetIniKey(const char *id, const String& def) {
 	static VectorMap<String, String> key;
 	if(!s_ini_loaded) {
 		s_ini_loaded = true;
-		key = LoadIniFile(sIniFile ? sIniFile : ~ConfigFile("q.ini"));
+		key = LoadIniFile(*sIniFile ? sIniFile : ~ConfigFile("q.ini"));
 	#ifdef PLATFORM_WIN32
 		if(key.GetCount() == 0)
 			key = LoadIniFile("C:\\Q.INI");
