@@ -186,7 +186,7 @@ public:
 
 protected:
 	int  maxlen;
-	bool notnull;
+	bool notnull, trimleft, trimright;
 
 public:
 	ConvertString& MaxLen(int _maxlen)             { maxlen = _maxlen; return *this; }
@@ -194,13 +194,16 @@ public:
 	ConvertString& NotNull(bool b = true)          { notnull = b; return *this; }
 	ConvertString& NoNotNull()                     { return NotNull(false); }
 	bool           IsNotNull() const               { return notnull; }
+	ConvertString& TrimLeft(bool b = true)         { trimleft = b; return *this; }
+	ConvertString& TrimRight(bool b = true)        { trimright = b; return *this; }
+	ConvertString& TrimBoth(bool b = true)         { return TrimLeft(b).TrimRight(b); }
 
 #ifdef flagSO
 	ConvertString(int maxlen = INT_MAX, bool notnull = false);
 	virtual ~ConvertString();
 #else
 	ConvertString(int maxlen = INT_MAX, bool notnull = false)
-		: maxlen(maxlen), notnull(notnull) {}
+		: maxlen(maxlen), notnull(notnull) { trimleft = trimright = false; }
 #endif
 };
 

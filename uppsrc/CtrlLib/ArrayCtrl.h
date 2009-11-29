@@ -584,7 +584,7 @@ public:
 	ArrayCtrl& NoAutoHideSb()                          { return AutoHideSb(false); }
 	ArrayCtrl& HideSb(bool b = true)                   { sb.Show(!b); return *this; }
 	ArrayCtrl& MultiSelect(bool b = true)              { multiselect = b; return *this; }
-	bool       IsMultiSelect(bool b = true)            { return multiselect = b; }
+	bool       IsMultiSelect() const                   { return multiselect; }
 	ArrayCtrl& NoBackground(bool b = true)             { nobg = b; Transparent(); Refresh(); return *this; }
 	ArrayCtrl& PopUpEx(bool b = true)                  { popupex = b; return *this; }
 	ArrayCtrl& NoPopUpEx()                             { return PopUpEx(false); }

@@ -425,6 +425,8 @@ void Ctrl::InitX11(const char *display)
 		xim = NULL;
 		LOG("IM unsupported!");
 	}
+
+	Csizeinit();
 }
 
 void Ctrl::ExitX11()
