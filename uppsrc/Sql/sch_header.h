@@ -12,6 +12,8 @@ public:\
 	void FieldLayoutRaw(FieldOperator& f, const String& prefix = String()); \
 	void FieldLayout(FieldOperator& f); \
 	operator Fields()              { return callback(this, &S_##Table::FieldLayout); } \
+	bool operator==(const S_##Table& x) const  { return EqualFields(const_cast<S_##Table&>(*this), const_cast<S_##Table&>(x)); } \
+	bool operator!=(const S_##Table& x) const  { return !EqualFields(const_cast<S_##Table&>(*this), const_cast<S_##Table&>(x)); } \
 	S_##Table();
 
 #define TYPE(Table)                  CODETYPE(Table, __NIL)

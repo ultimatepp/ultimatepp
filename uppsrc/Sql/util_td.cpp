@@ -24,4 +24,20 @@ void td_shrink(String *array, int cnt) {
 	}
 }
 
+struct NfEqual : FieldOperator {
+	ValueArray va;
+	
+	virtual void Field(const char *name, Ref f) {
+		va.Add(f);
+	}
+};
+
+bool EqualFields(Fields a, Fields b)
+{
+	NfEqual fa, fb;
+	a(fa);
+	b(fb);
+	return fa.table == fb.table && fa.va == fb.va;
+}
+
 END_UPP_NAMESPACE
