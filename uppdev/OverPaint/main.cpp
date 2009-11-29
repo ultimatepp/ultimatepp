@@ -1,37 +1,29 @@
 #include <CtrlLib/CtrlLib.h>
 
-struct OverPaintFrame : CtrlFrame {
-	bool x;
+using namespace Upp;
 
-	virtual int  OverPaint() const { return 4; }
-	virtual void FrameLayout(Rect& r) {}
+struct OverCtrl : public Ctrl, public CtrlFrame {
 	virtual void FrameAddSize(Size& sz) {}
+	virtual void FrameLayout(Rect& r) {}
 	virtual void FramePaint(Draw& w, const Rect& r) {
-		DrawFrame(w, r.Inflated(3), x ? Blue : Red);
-	}
-};
-
-struct OverPaintCtrl : Ctrl {
-	OverPaintFrame frame;
-
-//	virtual int  OverPaint() const { return 4; }
-	virtual void LeftDown(Point p, dword keyflags) { frame.x = !frame.x; RefreshFrame(); }
-	virtual void Paint(Draw& w) {
-		Size sz = GetSize();
-		w.DrawRect(sz, Cyan);
+		w.DrawRect(r.left - 10, r.top - 10, r.GetWidth() + 20, r.GetHeight() + 20, Blue());
+		w.DrawRect(r, Red());
 	}
 
-	OverPaintCtrl() {
-		SetFrame(frame);
+	virtual int OverPaint() const { return 10; }
+	
+	OverCtrl() {
+		SetFrame(*this);
 	}
 };
 
 GUI_APP_MAIN
 {
+	OverCtrl ctrl;
 	TopWindow win;
-	OverPaintCtrl ctrl;
-	ctrl.SetRect(20, 20, 20, 20);
-	win.Add(ctrl);
+	
+	win.Add(ctrl.LeftPos(40, 40).TopPos(40, 10));
+	
 	win.Run();
-	DUMP(sizeof(Ctrl));
 }
+
