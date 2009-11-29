@@ -440,7 +440,9 @@ Value ConvertTime::Format(const Value& q) const
 }
 
 #ifdef flagSO
-ConvertString::ConvertString(int maxlen, bool notnull) : maxlen(maxlen), notnull(notnull) {}
+ConvertString::ConvertString(int maxlen, bool notnull) : maxlen(maxlen), notnull(notnull) {
+	trimleft = trimright = false;
+}
 ConvertString::~ConvertString() {}
 #endif
 
@@ -448,7 +450,14 @@ Value ConvertString::Scan(const Value& text) const {
 	if(IsError(text)) return text;
 	if(IsNull(text)) return notnull ? NotNullError() : Value(text);
 	if(text.GetType() == STRING_V && String(text).GetLength() <= maxlen ||
-	   text.GetType() == WSTRING_V && WString(text).GetLength() <= maxlen) return text;
+	   text.GetType() == WSTRING_V && WString(text).GetLength() <= maxlen) {
+		String s = text;
+		if(trimleft)
+			s = Upp::TrimLeft(s);
+		if(trimright)
+			s = Upp::TrimRight(s);
+		return s;
+	}
 	return ErrorValue(UPP::Format(t_("Please enter no more than %d characters."), maxlen));
 }
 

@@ -280,6 +280,9 @@ public:
 
 	EditString& MaxLen(int maxlen)                   { ConvertString::MaxLen(maxlen); return *this; }
 	EditString& NotNull(bool nn = true)              { ConvertString::NotNull(nn); return *this; }
+	EditString& TrimLeft(bool b)                     { ConvertString::TrimLeft(b); return *this; }
+	EditString& TrimRight(bool b)                    { ConvertString::TrimRight(b); return *this; }
+	EditString& TrimBoth(bool b)                     { ConvertString::TrimBoth(b); return *this; }
 };
 
 class EditStringNotNull : public EditString {

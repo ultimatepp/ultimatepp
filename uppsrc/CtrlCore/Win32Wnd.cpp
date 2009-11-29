@@ -284,6 +284,8 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 */
 
 // TRC 05/11/18: pSetLayeredWindowAttributes moved to GLOBAL_VAR (see below) to make OCX initialization simpler
+
+	Csizeinit();
 #undef ILOG
 }
 

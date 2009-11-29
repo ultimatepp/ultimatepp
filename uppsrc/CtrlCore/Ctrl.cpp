@@ -772,8 +772,7 @@ void Ctrl::SetZoomSize(Size sz, Size bsz)
 {
 	GuiLock __;
 	Csize = sz;
-	Dsize = bsz;
-	
+	Dsize = bsz;	
 }
 
 void Ctrl::NoLayoutZoom()

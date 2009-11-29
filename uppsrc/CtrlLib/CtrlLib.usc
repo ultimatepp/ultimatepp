@@ -518,6 +518,8 @@ subctrl EditNotNull {
 
 ctrl EditString {
 	>EditNotNull;
+	bool TrimLeft = false;
+	bool TrimRight = false;
 	raw MaxLen;
 
 	PaintData(w) {
