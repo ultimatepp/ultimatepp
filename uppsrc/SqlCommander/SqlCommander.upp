@@ -20,5 +20,6 @@ file
 
 mainconfig
 	"" = ".NOMYSQL GUI .NOAPPSQL",
-	"" = "GUI MT .NOAPPSQL";
+	"" = "GUI MT .NOAPPSQL",
+	"" = ".NOMYSQL GUI .NOAPPSQL .NOPOSTGRESQL";
 
