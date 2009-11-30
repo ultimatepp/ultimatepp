@@ -911,20 +911,14 @@ void DrawPolyPolyPolygon(Draw& draw, const Point *vertices, int vertex_count,
 //			NEVER();
 #endif
 
-#if 0
-	if(draw.IsDrawing())
-	{
-//		TIMING("DrawPolyPolygon/stream");
-		Vector<Point> out_vertices;
-		Vector<int> out_subpolygon_counts, out_polygon_counts;
-/*		StreamPolyPolyPolygon(draw.DrawingOp(wPolyPolyPolygon),
-			out_vertices, vertices, vertex_count,
-			out_subpolygon_counts, subpolygon_counts, subpolygon_count_count,
-			out_polygon_counts, disjunct_polygon_counts, disjunct_polygon_count_count,
+	if(!dynamic_cast<SystemDraw *>(&draw)) {
+		draw.DrawPolyPolyPolygon(vertices, vertex_count,
+			subpolygon_counts, subpolygon_count_count,
+			disjunct_polygon_counts, disjunct_polygon_count_count,
 			color, width, outline, pattern, doxor);
-*/		return;
+		return;
 	}
-#endif
+
 //	TIMING("DrawPolyPolygon/hdc");
 	bool is_xor = !IsNull(doxor);
 
