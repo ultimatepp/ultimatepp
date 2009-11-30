@@ -3094,14 +3094,7 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 	CurState cs;
 	if(!row_changing)
 		return cs;
-			
-	WhenCursor();
-	if(cancel_cursor)
-	{
-		cancel_cursor = false;
-		return cs;
-	}
-	
+		
 	bool mouse = opt & CU_MOUSE;
 	bool highlight = opt & CU_HIGHLIGHT;
 	bool ctrlmode = opt & CU_CTRLMODE;
@@ -3316,6 +3309,33 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 	cs.newx = isnewcol;
 	cs.newy = isnewrow;
 
+	Point t_curpos = curpos;
+	Point t_curid = curid;
+	int t_colidx = colidx;
+	int t_rowidx = rowidx;
+	bool t_valid_cursor = valid_cursor;
+
+	valid_cursor = true;
+	curpos = tmpcur;
+	colidx = curpos.x;
+	rowidx = curpos.y;
+
+	curid.x = hitems[curpos.x].id;
+	curid.y = vitems[curpos.y].id;
+
+	WhenCursor();
+	if(cancel_cursor)
+	{
+		cancel_cursor = false;
+		curpos = t_curpos;
+		curid = t_curid;
+		colidx = t_colidx;
+		rowidx = t_rowidx;
+		valid_cursor = t_valid_cursor;
+		cs.Clear();
+		return cs;
+	}
+
 	if(oldvalid)
 	{
 		SetItemCursor(oldcur, false, highlight);
@@ -3325,16 +3345,7 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 	SetItemCursor(tmpcur, true, false);
 	if(isnewrow || (!select_row && isnewcol))
 		RefreshRow(tmpcur.y, 0);
-
-	valid_cursor = true;
-
-	curpos = tmpcur;
-	colidx = curpos.x;
-	rowidx = curpos.y;
-
-	curid.x = hitems[curpos.x].id;
-	curid.y = vitems[curpos.y].id;
-
+	
 	if(call_whenchangerow && isnewrow)
 	{
 		#ifdef LOG_CALLBACKS
@@ -3355,7 +3366,7 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 
 	if(isnewrow)
 		SetCtrlsData();
-
+	
 	LG("cur(%d, %d)", curpos.x, curpos.y);
 
 	return cs;
@@ -5569,6 +5580,9 @@ void GridCtrl::Clear(bool columns)
 		Refresh();
 	}
 
+	WhenEmpty();
+	WhenCursor();
+	
 	doscroll = true;
 }
 
@@ -6472,9 +6486,6 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 			WhenRemovedRow();
 	}
 
-	if(IsEmpty())
-		WhenEmpty();
-
 	if(ready && recalc)
 	{
 		RecalcRows();
@@ -6496,6 +6507,12 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 	}
 
 	firstRow = -1;
+
+	if(IsEmpty())
+	{
+		WhenEmpty();
+		WhenCursor();
+	}
 
 	return cancel;
 }

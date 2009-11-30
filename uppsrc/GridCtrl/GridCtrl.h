@@ -350,12 +350,19 @@ class GridCtrl : public Ctrl
 			bool accepted;
 			bool valid;
 
-			CurState() : newx(false), newy(false), accepted(false), valid(true) {}
+			CurState() { Clear(); }
 			bool IsNewRow()   { return newy;         }
 			bool IsNewCol()   { return newx;         }
 			bool IsNew()      { return newx || newy; }
 			bool IsAccepted() { return accepted;     }
 			bool IsValid()    { return valid;        }
+			
+			void Clear()
+			{
+				newx = newy = false;
+				accepted = false;
+				valid = true;
+			}
 
 			operator bool() { return IsNew() && IsAccepted(); }
 		};
