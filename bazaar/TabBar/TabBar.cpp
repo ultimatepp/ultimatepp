@@ -1363,7 +1363,7 @@ void TabBar::Set(int n, const Value &newkey, const Value &newvalue, Image icon)
 {
 	ASSERT(n >= 0 && n < tabs.GetCount());
 	tabs[n].key = newkey;
-	tabs[n].value = newkey;
+	tabs[n].value = newvalue;
 	if (IsNull(icon))
 		tabs[n].img = icon;
 	if (stacking) {
