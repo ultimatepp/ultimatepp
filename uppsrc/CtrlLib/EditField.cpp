@@ -721,6 +721,8 @@ String EditField::GetSelectionData(const String& fmt) const
 
 void EditField::Undo()
 {
+	if(!IsEditable())
+		return;
 	Swap(undotext, text);
 	Swap(undoanchor, anchor);
 	Swap(undocursor, cursor);
@@ -731,6 +733,8 @@ void EditField::Undo()
 
 void EditField::Cut()
 {
+	if(!IsEditable())
+		return;
 	Copy();
 	RemoveSelection();
 	Action();
@@ -739,6 +743,8 @@ void EditField::Cut()
 
 void EditField::Paste()
 {
+	if(!IsEditable())
+		return;
 	Insert(ReadClipboardUnicodeText());
 	Action();
 	Finish();
@@ -746,6 +752,8 @@ void EditField::Paste()
 
 void EditField::Erase()
 {
+	if(!IsEditable())
+		return;
 	if(!IsSelection())
 		SelectAll();
 	RemoveSelection();
@@ -758,17 +766,15 @@ void EditField::SelectAll()
 	Finish();
 }
 
-void EditField::MenuBar(Bar& menu) {
+void EditField::StdBar(Bar& menu) {
 	menu.Add(t_("Undo"), THISBACK(Undo))
 		.Key(K_ALT_BACKSPACE)
 		.Key(K_CTRL_Z);
 	menu.Separator();
-	menu.Add(IsEditable() && IsSelection(),
-			t_("Cut"), CtrlImg::cut(), THISBACK(Cut))
+	menu.Add(IsEditable() && IsSelection(), t_("Cut"), CtrlImg::cut(), THISBACK(Cut))
 		.Key(K_SHIFT_DELETE)
 		.Key(K_CTRL_X);
-	menu.Add(IsSelection(),
-			t_("Copy"), CtrlImg::copy(), THISBACK(Copy))
+	menu.Add(IsSelection(), t_("Copy"), CtrlImg::copy(), THISBACK(Copy))
 		.Key(K_CTRL_INSERT)
 		.Key(K_CTRL_C);
 	menu.Add(IsEditable()
@@ -779,12 +785,10 @@ void EditField::MenuBar(Bar& menu) {
 			t_("Paste"), CtrlImg::paste(), THISBACK(Paste))
 		.Key(K_SHIFT_INSERT)
 		.Key(K_CTRL_V);
-	menu.Add(IsEditable(),
-			t_("Erase"), CtrlImg::remove(), THISBACK(Erase))
+	menu.Add(IsEditable(), t_("Erase"), CtrlImg::remove(), THISBACK(Erase))
 		.Key(K_DELETE);
 	menu.Separator();
-	menu.Add(GetLength(),
-			t_("Select all"), THISBACK(SelectAll))
+	menu.Add(GetLength(), t_("Select all"), THISBACK(SelectAll))
 		.Key(K_CTRL_A);
 }
 
@@ -792,7 +796,7 @@ void EditField::MenuBar(Bar& menu) {
 void EditField::RightDown(Point p, dword keyflags)
 {
 	keep_selection = true;
-	MenuBar::Execute(THISBACK(MenuBar));
+	MenuBar::Execute(WhenBar);
 	SetFocus();
 	keep_selection = false;
 }
@@ -822,29 +826,10 @@ bool EditField::Key(dword key, int rep)
 	case K_END:
 		Move(text.GetLength(), select);
 		return true;
-	case K_CTRL_C:
-	case K_CTRL_INSERT:
-		Copy();
-		return true;
-	case K_CTRL_A:
-		SetSelection();
-		return true;
 	}
 	if(!IsEditable())
 		return false;
 	switch(key) {
-	case K_CTRL_X:
-	case K_SHIFT_DELETE:
-		Cut();
-		return true;
-	case K_CTRL_V:
-	case K_SHIFT_INSERT:
-		Paste();
-		return true;
-	case K_CTRL_Z:
-	case K_ALT_BACKSPACE:
-		Undo();
-		return true;
 	case K_BACKSPACE:
 	case K_SHIFT|K_BACKSPACE:
 		if(RemoveSelection()) {
@@ -903,7 +888,8 @@ bool EditField::Key(dword key, int rep)
 			return true;
 		}
 		else
-			return false;
+			if(MenuBar::Scan(WhenBar, key))
+				return true;
 	}
 	Finish();
 	return true;
@@ -1010,6 +996,7 @@ EditField::EditField()
 	dropcaret = Rect(0, 0, 0, 0);
 	Unicode();
 	Reset();
+	WhenBar = THISBACK(StdBar);
 }
 
 EditField::~EditField() {}
