@@ -145,16 +145,10 @@ protected:
 	void    SaveUndo();
 	void    DoAutoFormat();
 	int     GetTy();
-	void    Undo();
-	void    Cut();
-	void    Paste();
-	void    Erase();
-	void    SelectAll();
-	void    MenuBar(Bar& menu);
-
-
 
 public:
+	Callback1<Bar&>   WhenBar;
+
 	static const Style& StyleDefault();
 	EditField&  SetStyle(const Style& s);
 
@@ -179,6 +173,13 @@ public:
 	bool    RemoveSelection();
 	void    CancelSelection();
 	void    Copy();
+	void    Undo();
+	void    Cut();
+	void    Paste();
+	void    Erase();
+	void    SelectAll();
+
+	void    StdBar(Bar& menu);
 
 	void           SetText(const WString& text);
 	void           SetText(const String& t)  { SetText(t.ToWString()); }
