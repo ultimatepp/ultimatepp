@@ -771,23 +771,21 @@ void WorkspaceWork::RemovePackageMenu(Bar& bar)
 {
 	if(bar.IsScanKeys() || bar.IsScanHelp() || !bar.IsMenuBar())
 		return;
-	String active = GetActivePackage();
+	String active = UnixPath(GetActivePackage());
 	int usecnt = 0;
-	for(int i = 0; i < package.GetCount(); i++)
-	{
-		String pn = package[i].name;
+	for(int i = 0; i < package.GetCount(); i++) {
+		String pn = UnixPath(package[i].name);
 		Package prj;
 		String pp = PackagePath(pn);
 		prj.Load(pp);
 		for(int i = 0; i < prj.uses.GetCount(); i++)
-			if(prj.uses[i].text == active) {
+			if(UnixPath(prj.uses[i].text) == active) {
 				usecnt++;
-				bar.Add("Remove from '" + UnixPath(pn) + '\'', THISBACK1(RemovePackage, pn))
+				bar.Add("Remove from '" + pn + '\'', THISBACK1(RemovePackage, pn))
 					.Help(NFormat("Remove package '%s' from uses section in '%s'", active, pp));
 			}
 	}
-	if(usecnt > 1)
-	{
+	if(usecnt > 1) {
 		bar.MenuSeparator();
 		bar.Add("Remove all uses", THISBACK1(RemovePackage, String(Null)))
 			.Help(NFormat("Remove package '%s' from all uses in active project and its submodules", active));
@@ -796,19 +794,18 @@ void WorkspaceWork::RemovePackageMenu(Bar& bar)
 
 void WorkspaceWork::RemovePackage(String from_package)
 {
-	String active = GetActivePackage();
+	String active = UnixPath(GetActivePackage());
 	if(IsNull(from_package) && !PromptYesNo(NFormat(
 		"Remove package [* \1%s\1] from uses sections of all current packages ?", active)))
 		return;
 	for(int i = 0; i < package.GetCount(); i++)
-		if(IsNull(from_package) || package[i].name == from_package)
-		{
+		if(IsNull(from_package) || UnixPath(package[i].name) == from_package) {
 			String pp = PackagePath(package[i].name);
 			RealizePath(pp);
 			Package prj;
 			prj.Load(pp);
 			for(int i = prj.uses.GetCount(); --i >= 0;)
-				if(prj.uses[i].text == active)
+				if(UnixPath(prj.uses[i].text) == active)
 					prj.uses.Remove(i);
 			prj.Save(pp);
 		}
