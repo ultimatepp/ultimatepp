@@ -6,6 +6,22 @@ TOPIC("apps$en-us")
 #include "apps$en-us.tppi"
 END_TOPIC
 
+TOPIC("bazaar$en-us")
+#include "bazaar$en-us.tppi"
+END_TOPIC
+
+TOPIC("baz_sysinfo$en-us")
+#include "baz_sysinfo$en-us.tppi"
+END_TOPIC
+
+TOPIC("baz_sys_implem$en-us")
+#include "baz_sys_implem$en-us.tppi"
+END_TOPIC
+
+TOPIC("baz_sys_reference$en-us")
+#include "baz_sys_reference$en-us.tppi"
+END_TOPIC
+
 TOPIC("chss$en-us")
 #include "chss$en-us.tppi"
 END_TOPIC
