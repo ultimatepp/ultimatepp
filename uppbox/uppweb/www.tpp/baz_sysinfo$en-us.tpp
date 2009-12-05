@@ -27,6 +27,4 @@ functions]&]
 [s0;2 &]
 [s0; [^topic`:`/`/uppweb`/www`/baz`_sys`_implem`$en`-us^2 Implementation 
 details]&]
-[s0;2 &]
-[s0; [2 Changes log]&]
-[s0; ]
+[s0;2 ]
