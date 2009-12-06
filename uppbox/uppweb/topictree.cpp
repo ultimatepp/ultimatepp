@@ -1,6 +1,6 @@
 #include "www.h"
 
-#define LLOG(x) LOG(x)
+#define LLOG(x)  LOG(x)
 
 StaticCriticalSection     reflink_lock;
 VectorMap<String, String> reflink;
@@ -48,7 +48,6 @@ void GatherRefLinks(const char *upp)
 							String path = AppendFileName(dir, ft.GetName());
 							tl.topic = GetFileTitle(ft.GetName());
 							String link = TopicLinkString(tl);
-							RLOG("Indexing topic " << tl.topic);
 #ifdef MTC
 							work & callback2(sDoFile, path, link);
 #else
@@ -64,7 +63,6 @@ void GatherRefLinks(const char *upp)
 		}
 	}
 }
-
 
 struct GatherLinkIterator : RichText::Iterator {
 	Index<String> link;
@@ -96,17 +94,16 @@ struct GatherLinkIterator : RichText::Iterator {
 
 String TopicFileName(const char *dir, const char *topic)
 {
-	DUMP(dir);
-	DUMP(topic);
 	TopicLink tl = ParseTopicLink(topic);
 	return AppendFileName(dir, AppendFileName(tl.package, AppendFileName(tl.group + ".tpp", tl.topic + ".tpp")));
 }
 
 String TopicFileName(const char *topic)
 {
-	DUMP(topic);
 	String p = TopicFileName(uppbox, topic);
-	DUMP(p);
+	if(FileExists(p))
+		return p;
+	p = TopicFileName(bazaar, topic);
 	if(FileExists(p))
 		return p;
 	return TopicFileName(uppsrc, topic);
@@ -132,7 +129,6 @@ String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& ti
 		q = map.Find(topic);
 	if(q < 0) {
 		LLOG("GatherTopics " << topic);
-		DUMP(TopicFileName(topic));
 		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
 		title = p.title;
 		String t = p;

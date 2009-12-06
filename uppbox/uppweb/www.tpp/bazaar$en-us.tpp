@@ -25,7 +25,7 @@ OpenOffice and Microsoft]&]
 [s0;i150;O0; [2 Scatter]&]
 [s0;i150;O0; [2 Signals]&]
 [s0;i150;O0; [2 SvgView]&]
-[s0;i150;O0;%- [%%^topic`:`/`/uppweb`/www`/baz`_sysinfo`$en`-us^2 SysInfo:][%%2  
+[s0;i150;O0;%- [%%^topic`:`/`/SysInfo`/srcdoc`/SysInfo`$en`-us^2 SysInfo:][%%2  
 ][2 OS, hardware and Desktop handling functions]&]
 [s0;i150;O0; [2 SystemLog]&]
 [s0;i150;O0; [2 TabBar]&]
