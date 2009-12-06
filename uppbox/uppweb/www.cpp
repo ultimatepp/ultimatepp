@@ -23,6 +23,7 @@ String examples;
 String targetdir;
 String diffdir;
 #endif
+String bazaar;
 
 String GetRcFile(const char *s)
 {
@@ -445,6 +446,7 @@ GUI_APP_MAIN
 	uppsrc =    AppendFileName(rootdir, "uppsrc");
 	reference = AppendFileName(rootdir, "reference");
 	examples =  AppendFileName(rootdir, "examples");
+	bazaar =  AppendFileName(rootdir, "bazaar");
 
 	RLOG("--- uppweb started at " << GetSysTime());
 
@@ -452,6 +454,7 @@ GUI_APP_MAIN
 	DirectoryCreate(targetdir);
 
 	GatherRefLinks(uppsrc);
+	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
 
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 
@@ -489,6 +492,7 @@ GUI_APP_MAIN
 
 	di = tt.GetCount();
 	bi << BarLink(Www("documentation"), "Manual");
+	bi << BarLink(Www("bazaar"), "Bazaar");
 	bi << BarLink(Www("Roadmap"), "Status & Roadmap");
 
 	String qtf;
@@ -586,6 +590,10 @@ GUI_APP_MAIN
 	         "</noscript>"
 	);
 	BeepInformation();
+	
+#ifdef PLATFORM_WIN32
+	return;
+#endif
 
 	Vector<String> upload;
 	{

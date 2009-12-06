@@ -15,6 +15,7 @@ using namespace Upp;
 
 extern String uppsrc;
 extern String uppbox;
+extern String bazaar;
 extern VectorMap<String, String> reflink;
 
 String TopicFileName(const char *dir, const char *topic);
