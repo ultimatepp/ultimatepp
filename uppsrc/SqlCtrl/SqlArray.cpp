@@ -115,13 +115,15 @@ void SqlArray::StartDuplicate() {
 }
 
 void SqlArray::SetData(const Value& v) {
-	fkv = v;
-	if(fk.IsNull()) {
-		CHECK(KillCursor());
-		Clear();
+	if(fkv != v) {
+		fkv = v;
+		if(fk.IsNull()) {
+			CHECK(KillCursor());
+			Clear();
+		}
+		else
+			Query();
 	}
-	else
-		Query();
 }
 
 Value SqlArray::GetData() const {
