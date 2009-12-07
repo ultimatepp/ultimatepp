@@ -888,8 +888,7 @@ bool EditField::Key(dword key, int rep)
 			return true;
 		}
 		else
-			if(MenuBar::Scan(WhenBar, key))
-				return true;
+			return MenuBar::Scan(WhenBar, key);
 	}
 	Finish();
 	return true;
