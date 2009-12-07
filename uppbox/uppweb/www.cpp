@@ -591,10 +591,8 @@ GUI_APP_MAIN
 	);
 	BeepInformation();
 	
-#ifdef PLATFORM_WIN32
-	return;
-#endif
-
+	RLOG("uppweb Finished, now about to upload the content");
+	
 	Vector<String> upload;
 	{
 		FindFile ff(AppendFileName(targetdir, "*.*"));
@@ -604,6 +602,7 @@ GUI_APP_MAIN
 				String f = AppendFileName(diffdir, ff.GetName());
 				if(LoadFile(f) != s) {
 					upload.Add(ff.GetName());
+					RLOG("upload: " << ff.GetName());
 				}
 			}
 			ff.Next();
