@@ -37,7 +37,7 @@ bool FtpClient::Connect(const char *host, const char *user, const char *password
 	Close();
 	char perror[512];
 	LLOG("FtpConnect(" << host << ")");
-	if(WhenProgress()) {
+	if(WhenProgress(0,0)) {
 		error = "connect aborted";
 		return false;
 	}
@@ -62,7 +62,7 @@ bool FtpClient::Connect(const char *host, const char *user, const char *password
 
 int FtpClient::Callback(netbuf *nControl, int xfered, void *arg)
 {
-	return !((FtpClient *)arg)->WhenProgress();
+	return !((FtpClient *)arg)->WhenProgress(0,0);
 }
 
 void FtpClient::Close()
@@ -89,7 +89,7 @@ String FtpClient::Load(const char *path)
 		return String::GetVoid();
 	netbuf *ftpdata;
 	LLOG("FtpAccess(" << path << ")");
-	if(WhenProgress()) {
+	if(WhenProgress(0,0)) {
 		error = t_("aborted");
 		return String::GetVoid();
 	}
@@ -99,7 +99,7 @@ String FtpClient::Load(const char *path)
 	}
 	load_data = Null;
 	int p = 0;
-	while(!WhenProgress()) {
+	while(!WhenProgress(0,0)) {
 		byte buffer[1024];
 		int ndata = FtpRead(buffer, sizeof(buffer), ftpdata);
 		LLOG("FtpRead -> " << ndata);
@@ -138,14 +138,14 @@ int FtpClient::SaveCount(const char *path, String data)
 	if(!CheckOpen())
 		return 0;
 	LLOG("FtpAccess(" << path << ")");
-	if(WhenProgress())
+	if(WhenProgress(0,data.GetLength()))
 		return 0;
 	if(!FtpAccess(path, FTPLIB_FILE_WRITE, FTPLIB_IMAGE, ftpconn, &ftpdata)) {
 		error = FtpError(ftpconn);
 		return 0;
 	}
 	while(save_pos < data.GetLength()) {
-		if(WhenProgress()) {
+		if(WhenProgress(save_pos, data.GetLength())) {
 			error = NFormat(t_("write aborted after %d bytes(s)"), save_pos);
 			FtpClose(ftpdata);
 			return save_pos;
@@ -165,7 +165,7 @@ int FtpClient::SaveCount(const char *path, String data)
 			;
 #endif
 	}
-	WhenProgress();
+	WhenProgress(save_pos, data.GetLength());
 	LLOG("FtpClose");
 	FtpClose(ftpdata);
 	return save_pos;
@@ -223,7 +223,7 @@ String FtpClient::List(const char *path)
 		return String::GetVoid();
 	netbuf *ftpdata;
 	LLOG("FtpAccess(" << path << ")");
-	if(WhenProgress()) {
+	if(WhenProgress(0,0)) {
 		error = t_("aborted");
 		return String::GetVoid();
 	}
@@ -232,7 +232,7 @@ String FtpClient::List(const char *path)
 		return String::GetVoid();
 	}
 	int p = 0;
-	while(!WhenProgress()) {
+	while(!WhenProgress(0,0)) {
 		byte buffer[1024];
 		int ndata = FtpRead(buffer, sizeof(buffer), ftpdata);
 		LLOG("FtpRead -> " << ndata);

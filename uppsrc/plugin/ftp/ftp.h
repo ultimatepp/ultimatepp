@@ -41,7 +41,7 @@ public:
 	bool    CheckOpen();
 
 public:
-	Gate    WhenProgress;
+	Gate2<int, int>    WhenProgress;
 
 private:
 	static int Callback(netbuf *nControl, int xfered, void *arg);
