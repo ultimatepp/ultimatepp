@@ -763,11 +763,11 @@ private:
 	bool                              OnLoadGateHeaders(String data);
 	bool                              OnLoadGateAll(String data);
 	bool                              OnDecompressGate(int len, int total);
-	bool                              OnFtpSaveGate();
-	bool                              OnFtpLoadGate();
+	bool                              OnFtpSaveGate(int, int);
+	bool                              OnFtpLoadGate(int, int);
 	bool                              OnSaveGate(int len, int total);
 	bool                              OnTreeGate(int count, int total);
-	bool                              OnFtpProgress();
+	bool                              OnFtpProgress(int, int);
 	void                              OnWaitConnect();
 
 	void                              DoViewSortName();
@@ -3292,7 +3292,7 @@ void DlgFiles::SetProgressSize(int size, int total, int start_msecs)
 	progress.Text(out);
 }
 
-bool DlgFiles::OnFtpLoadGate()
+bool DlgFiles::OnFtpLoadGate(int, int)
 {
 	return OnLoadGateAll(ftp_client.GetLoadedPart());
 }
@@ -3313,7 +3313,7 @@ bool DlgFiles::OnDecompressGate(int len, int total)
 	return IsCanceled();
 }
 
-bool DlgFiles::OnFtpSaveGate()
+bool DlgFiles::OnFtpSaveGate(int, int)
 {
 	return OnSaveGate(ftp_client.GetSavePos(), ftp_client.GetSaveTotal());
 }
@@ -3326,7 +3326,7 @@ bool DlgFiles::OnSaveGate(int done, int total)
 	return IsCanceled();
 }
 
-bool DlgFiles::OnFtpProgress()
+bool DlgFiles::OnFtpProgress(int, int)
 {
 	return IsCanceled();
 }
