@@ -1,10 +1,10 @@
-description "OS, hardware and Desktop handling functions\377BI128,0,0";
+description "OS, hardware and Desktop handling functions\377B255,170,0";
 
 noblitz;
 
 uses
 	Core,
-	zLibs\SysInfo;
+	Functions4U;
 
 library(WIN32) "psapi gdi32 vfw32 oleaut32 wbemuuid";
 
@@ -16,7 +16,8 @@ file
 	srcdoc.tpp,
 	srcimp.tpp,
 	src.tpp,
-	SysInfo.t;
+	SysInfo.t,
+	License.txt;
 
 mainconfig
 	"" = "";

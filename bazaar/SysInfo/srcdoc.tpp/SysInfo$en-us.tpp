@@ -26,7 +26,7 @@ topic "SysInfo general description";
 [s0; Functions to get information and handle Desktop, OS and hardware 
 internals.&]
 [s0; &]
-[s0; Includes functions for:&]
+[s0; It includes functions for:&]
 [s0; &]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetExtExecutable`(const String`)^ R
 unning files and commands]&]
@@ -44,4 +44,10 @@ ouse and keyboard handling]&]
 creen recording]&]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#LoadFile`_Safe`(String`)^ Misc
 ellaneous functions]&]
+[s0; &]
+[s0; [^topic`:`/`/zLibs`/SysInfo`/srcimp`/SysInfo`$en`-us^ Implementation 
+details]&]
+[s0; &]
+[s0; [^topic`:`/`/zLibs`/SysInfo`/srcdoc`/ChangesLog`$en`-us^ Changes 
+log]&]
 [s0; ]
