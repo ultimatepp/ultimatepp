@@ -1,0 +1,956 @@
+// Some basic functions to begin
+
+fn Pi()
+{
+	return 3.14159265;
+}
+fn atan_base(z)
+{
+	return z - z*z*z/3 + z*z*z*z*z/5 - z*z*z*z*z*z*z/7 + z*z*z*z*z*z*z*z*z/9 
+			 - z*z*z*z*z*z*z*z*z*z*z/11 + z*z*z*z*z*z*z*z*z*z*z*z*z/13;
+}
+fn atan(z)
+{
+	if (z*z < 1)
+		return atan_base(z);
+	else if (z > 0)
+		return Pi()/2 - atan_base(1/z);
+	else 
+		return 3*Pi()/2 - atan_base(1/z);		
+}
+fn ToRad(angle)
+{
+	if (angle > 0)
+		return angle*Pi()/180;
+	else
+		return (360+angle)*Pi()/180;
+}
+fn abs(a)
+{
+	if (a > 0)
+		return a;
+	else
+		return -a;
+}
+
+fn PaintEllipse(w, left, top, right, bottom, width, color)
+{
+	a = (right-left)/2.;
+	b = (bottom-top)/2.;
+	width_2 = width/2;
+	delta = Pi()/20;
+	maxi = 2*Pi();
+	
+	for (i = 0; i < maxi; i += delta) {
+		if (i == 0) {
+			x0 = left + a + (a - width_2);
+			y0 = top  + b;
+		} else {
+			x0 = x1;
+			y0 = y1;
+		}
+		x1 = left + a + (a - width_2) * cos(i + delta);
+		y1 = top  + b + (b - width_2) * sin(i + delta);
+		w.DrawLine(x0, y0, x1, y1, width, color);
+	}
+}
+
+fn PaintArc(w, cx, cy, R, ang0, ang1, direction, width, color)
+{
+	if (direction == -1) {
+		c = ang0;
+		ang0 = ang1;
+		ang1 = c;
+	}
+	ang0 = ang0*Pi()/180;
+	ang1 = ang1*Pi()/180;
+	delta = 3*Pi()/180;
+	if (ang0 > ang1)
+		ang1 += 2*Pi();
+	for (i = ang0; i < ang1; i += delta) {
+		if (i == ang0) {
+			x0 = cx + R*cos(i);
+			y0 = cy - R*sin(i);
+		} else {
+			x0 = x1;
+			y0 = y1;
+		}
+		x1 = cx + R*cos(i + delta);
+		y1 = cy - R*sin(i + delta);
+		w.DrawLine(x0, y0, x1, y1, width, color);
+	}
+}
+
+fn FillEllipse(w, left, top, right, bottom, background)
+{
+	a = (right-left)/2.;
+	b = (bottom-top)/2.;
+	delta = Pi()/10;
+	x0 = left + a;
+	y0 = top  + b;
+	
+	for (i = delta; i < Pi()/2.; i += delta) {
+		x1 = a * cos(i);
+		y1 = b * sin(i);
+		w.DrawRect(x0-x1 , y0-y1, 2*x1 , 2*y1, background);
+	}
+	width = min(a, b)/4.;
+	PaintEllipse(w, left, top, right, bottom, width, background);
+}
+
+
+ctrl EditFile {
+	group "Input fields";
+
+	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 10; return sz; }
+	
+	Text  SetTitle @1;
+	bool  SelLoad = false @2;
+	Font  SetFont = StdFont() @3;
+	bool  SetEditable = true @4 ? "Editable";
+	Frame SetFrame = InsetFrame() @5;
+	Text  Tip @6;
+	bool  WantFocus = true @7;
+	bool  NotNull = false;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		n = r.bottom - r.top;
+		DrawEdgeButton(w, RectC(r.left, r.top, n, n));
+		w.DrawImage((n - 7) / 2 + r.left, (n - 6) / 2 + r.top, "ClassicCtrlsImg::RA");
+		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
+		w.DrawImage((n - 7) / 2 + r.right - n, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");
+		w.DrawText(n + 3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
+			(.SetEditable ? "" : "R/O ")+ (.NotNull ? "!" : "") + TextToShow(), Arial(10), :SMagenta);
+	}
+	TextToShow() {
+		return "File name";
+	}
+}
+
+ctrl EditFolder {
+	>EditFile;
+	
+	TextToShow() {
+		return "Folder name";
+	}
+}
+
+enum_property ImageFit {
+	"0" : "BestFit",
+	"1" : "FillFrame",
+	"2" : "NoScale",
+	"3" : "RepeatToFill",
+	"4" : "Background"
+};
+
+enum_property ImageAngle {
+	"0" : "0º",
+	"1" : "90º",
+	"2" : "180º",
+	"3" : "270º"
+};
+
+ctrl StaticImage {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame      SetFrame @1;
+	ImageFit   SetFit;
+	ImageAngle SetAngle;
+	Color      SetBackground = :SWhite;
+
+	Paint(w) {
+		r = GetRect();
+
+		DrawCtrlFrame(w, r, .SetFrame);
+
+		sz = Size(r.right - r.left, r.bottom - r.top);
+
+		DeflateRect(r);
+		sz = Size(r.right - r.left, r.bottom - r.top);
+		w.DrawRect(r.left, r.top, sz.cx, sz.cy, .SetBackground);
+		switch(.SetAngle) {
+		case "0":
+			img = "Controls4U:Controls4U.iml:ImageSample";
+			break;
+		case "1":
+			img = "Controls4U:Controls4U.iml:ImageSample_90";
+			break;
+		case "2":
+			img = "Controls4U:Controls4U.iml:ImageSample_180";
+			break;
+		case "3":
+			img = "Controls4U:Controls4U.iml:ImageSample_270";
+			break;			
+		}
+		if (.SetFit == "0") {
+			imagesize = GetImageSize(img);
+			rectaspect  = sz.cx/sz.cy; 
+			imageaspect = imagesize.cx/imagesize.cy;
+			if (rectaspect > imageaspect) 
+				w.DrawImage(r.left+(sz.cx-imageaspect*sz.cy)/2, r.top, imageaspect*sz.cy, sz.cy, img);
+			else
+				w.DrawImage(r.left, r.top+(sz.cy-sz.cx/imageaspect)/2, sz.cx, sz.cx/imageaspect, img);
+		} else if (.SetFit == "1") {
+			w.DrawImage(r.left, r.top, sz.cx, sz.cy, img);
+		} else if (.SetFit == "2") {
+			w.DrawImage(r.left, r.top, img);
+		} else if (.SetFit == "3" || .SetFit == "4") {
+			imagesize = GetImageSize(img);
+			top = r.top;
+			for (left = r.left; left < r.right; left += imagesize.cx) 
+				for (top = r.top; top < r.bottom; top += imagesize.cy) 
+					w.DrawImage(left, top, img);
+		}
+		if (.SetFit == "4") { 
+			PaintCenterText(w, (r.right+r.left)/2,   (r.top+r.bottom)/2,   "Background", Arial(11), :SBlack);
+			PaintCenterText(w, 1+(r.right+r.left)/2, 1+(r.top+r.bottom)/2, "Background", Arial(11), :SWhite);
+		}
+	}
+}
+
+enum_property LineOrientation {
+	"\"|\"",
+	"\"-\"",
+	"\"/\"",
+	"\"\\\\\""
+};
+
+ctrl StaticLine {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+	
+	int SetWidth = 1;
+	LineOrientation SetOrientation = "\"|\"";
+	Color SetColor = :SBlack;	
+
+	Paint(w) {
+		r = GetRect();
+		sz = GetSize();
+		if (.SetOrientation == "\"|\"")
+			w.DrawLine((r.right-r.left)/2, r.top, (r.right-r.left)/2, r.bottom, .SetWidth, .SetColor);
+		else if (.SetOrientation == "\"-\"")
+			w.DrawLine(r.left, (r.bottom-r.top)/2, r.right, (r.bottom-r.top)/2, .SetWidth, .SetColor);
+		else if (.SetOrientation == "\"/\"")
+			w.DrawLine(r.left, r.bottom, r.right, r.top, .SetWidth, .SetColor);
+		else 
+			w.DrawLine(r.left, r.top, r.right, r.bottom, .SetWidth, .SetColor);					
+	}
+}
+
+fn PaintArrowEnd(sw, x0, y0, x1, y1, width, color, direction)
+{
+	wd = width;
+	if (width == 1) {
+		alen = 16;
+		awidth = 2;
+	} else {				
+		alen = 9*wd;
+		awidth = 1.5*wd;
+	}
+	if (!direction)
+		alen = -alen;
+	num = width*20/5;
+	if (x0 == x1) {
+		for (i = 0; i <= num; ++i)
+			sw.DrawLine(x0, y0, x0 + awidth*(1 - 2*i/num), y0 + alen, 1, color);
+		sw.DrawLine(x0 + awidth, y0 + alen, x0 - awidth, y0 + alen, 1, color);
+	} else if (y0 == y1) {
+		for (i = 0; i <= num; ++i)
+			sw.DrawLine(x0, y0, x0 + alen, y0 - awidth*(1 - 2*i/num), 1, color);
+		sw.DrawLine(x0 + alen, y0 - awidth, x0 + alen, y0 + awidth, 1, color);
+	} else {
+		t = atan((y1-y0)/(x1-x0));
+		xa = alen*cos(t);
+		ya = alen*sin(t);
+		xb = awidth*sin(t);
+		yb = awidth*cos(t);
+		for (i = 0; i <= num; ++i) {
+			fact = 1 - 2.*i/num;
+			if (i % 4 > 0 && i < num)
+				wid = 2;
+			else
+				wid = 1;
+			sw.DrawLine(x0, y0, x0+xa+xb*fact, y0+ya-yb*fact, wid, color);
+		}
+		sw.DrawLine(x0+xa+xb, y0+ya-yb, x0+xa-xb, y0+ya+yb, 1, color);				
+	}
+}
+
+enum_property ArrowOrientation {
+	"\"|\"",
+	"\"-\"",
+	"\"/\"",
+	"\"\\\\\"",
+	"\"┐_\"",
+	"\"_┌\"",
+	"\"└┐\"",
+	"\"┌┘\""	
+};
+
+enum_property ArrowEnds {
+	"\"<-\"",
+	"\"->\"",
+	"\"<->\"",
+	"\"-\""
+};
+
+ctrl StaticArrow {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+	
+	int SetWidth = 1;
+	ArrowOrientation SetOrientation = "|";
+	ArrowEnds SetEnds = "<-";
+	Color SetColor = :SBlack;	
+	
+	Paint(sw) {
+		true = 1;
+		false = 0;
+		r = GetRect();
+		sz = GetSize();
+		color = .SetColor;
+		width = .SetWidth;
+		
+		if (.SetOrientation == "\"|\"")
+			orientation = "|";
+		else if (.SetOrientation == "\"-\"")
+			orientation = "-";
+		else if (.SetOrientation == "\"/\"")
+			orientation = "/";
+		else if (.SetOrientation == "\"|\"")
+			orientation = "|";
+		else if (.SetOrientation == "\"\\\\\"")
+			orientation = "\\";
+		else if (.SetOrientation == "\"┐_\"")
+			orientation = "┐_";
+		else if (.SetOrientation == "\"_┌\"")
+			orientation = "_┌";
+		else if (.SetOrientation == "\"└┐\"")
+			orientation = "└┐";
+		else 
+			orientation = "┌┘";																		
+		
+		if (.SetEnds == "\"<-\"")
+			ends = "<-";
+		else if (.SetEnds == "\"->\"")
+			ends = "->";
+		else if (.SetEnds == "\"<->\"")
+			ends = "<->";
+		else
+			ends = "-";		
+		
+		if (orientation == "|") {
+			x0 = x1 = (r.right+r.left)/2;
+			y0 = r.top;
+			y1 = r.bottom;
+		} else if (orientation == "-") {
+			x0 = r.left;
+			y0 = y1 = (r.bottom+r.top)/2;
+			x1 = r.right;
+		} else if (orientation == "/") {
+			x0 = r.left;
+			y0 = r.bottom;
+			x1 = r.right;
+			y1 = r.top;
+		} else if (orientation == "┐_") {
+			x0 = r.left;
+			y0 = r.top + 2*width;
+			x1 = r.right;
+			y1 = r.bottom - 2*width;
+			middle = (r.left+r.right)/2;
+		} else if (orientation == "_┌") {
+			x0 = r.left;
+			y0 = r.bottom - 2*width;
+			x1 = r.right;
+			y1 = r.top + 2*width;
+			middle = (r.left + r.right)/2;
+		} else if (orientation == "└┐") {
+			x0 = r.left + 2*width;
+			y0 = r.top;
+			x1 = r.right - 2*width;
+			y1 = r.bottom;
+			middle = (r.top + r.bottom)/2;
+		} else if (orientation == "┌┘") {
+			x1 = r.left  + 2*width;
+			y1 = r.bottom;
+			x0 = r.right - 2*width;
+			y0 = r.top;
+			middle = (r.top + r.bottom)/2;
+		} else {
+			x0 = r.left;
+			y0 = r.top;
+			x1 = r.right;
+			y1 = r.bottom;
+		}
+		if (ends == "<-" || ends == "<->") {
+			if (x0 == x1 || orientation == "|" || orientation == "└┐" || orientation == "┌┘") {
+				PaintArrowEnd(sw, x0, y0, x0, y1, width, color, true);
+				y0 += 9*width;
+			} else if (y0 == y1 || orientation == "-" || orientation == "┐_" || orientation == "_┌") {
+				PaintArrowEnd(sw, x0, y0, x1, y0, width, color, true);
+				x0 += 9*width;
+			} else { 
+				PaintArrowEnd(sw, x0, y0, x1, y1, width, color, true);
+				t = atan((y1-y0)/(x1-x0));
+				x0 += 8*width*cos(t);
+				y0 += 8*width*sin(t);
+			}
+		}
+		if (ends == "->" || ends == "<->") {	// Same as other but swapping points
+			if (x0 == x1 || orientation == "|" || orientation == "└┐" || orientation == "┌┘") {
+				PaintArrowEnd(sw, x1, y1, x1, y0, width, color, false);
+				y1 -= 9*width;
+			} else if (y0 == y1 || orientation == "-" || orientation == "┐_" || orientation == "_┌") {
+				PaintArrowEnd(sw, x1, y1, x0, y1, width, color, false);
+				x1 -= 9*width;
+			} else { 
+				PaintArrowEnd(sw, x1, y1, x0, y0, width, color, false);
+				t = atan((y1-y0)/(x1-x0));
+				x1 -= 9*width*cos(t);
+				y1 -= 9*width*sin(t);			
+			}
+		}		
+		if (orientation == "|") 
+			sw.DrawLine(x0, y0, x1, y1, width, color);
+		else if (orientation == "-") 
+			sw.DrawLine(x0, y0, x1, y1, width, color);
+		else if (orientation == "/") {
+			sw.DrawLine(x0, y0, x1, y1, width, color);
+		} else if (orientation == "┐_") {
+			middle = (r.left+r.right)/2;
+			sw.DrawLine(x0, y0, middle, y0, width, color);
+			sw.DrawLine(middle, y0, middle, y1, width, color);
+			sw.DrawLine(middle, y1, x1,     y1, width, color);
+		} else if (orientation == "_┌") {
+			middle = (r.left + r.right)/2;
+			sw.DrawLine(x0,     y0, middle, y0, width, color);
+			sw.DrawLine(middle, y0, middle, y1, width, color);
+			sw.DrawLine(middle, y1, x1,     y1, width, color);
+		} else if (orientation == "└┐") {
+			middle = (r.top + r.bottom)/2;
+			sw.DrawLine(x0, y0,     x0, middle, width, color);
+			sw.DrawLine(x0, middle, x1, middle, width, color);
+			sw.DrawLine(x1, middle, x1, y1,     width, color);
+		} else if (orientation == "┌┘") {
+			middle = (r.top + r.bottom)/2;
+			sw.DrawLine(x0, y0,     x0, middle, width, color);
+			sw.DrawLine(x0, middle, x1, middle, width, color);
+			sw.DrawLine(x1, middle, x1, y1,     width, color);
+		} else {
+			sw.DrawLine(x0, y0, x1, y1, width, color);				
+		}
+	}
+}
+
+ctrl StaticRectangle {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+	
+	int SetWidth = 1;
+	Color SetColor = :SBlack;	
+	Color SetBackground = Null;
+	
+	Paint(w) {
+		r = GetRect();
+		w.DrawRect(r.left, r.top, r.right, r.bottom, .SetBackground);
+		w.DrawRect(r.left, r.top, r.right, r.top + .SetWidth, .SetColor);
+		w.DrawRect(r.right - .SetWidth, r.top , r.right, r.bottom , .SetColor);
+		w.DrawRect(r.left, r.bottom - .SetWidth, r.right, r.bottom, .SetColor);
+		w.DrawRect(r.left, r.top, r.left + .SetWidth, r.bottom, .SetColor);
+	}
+}
+
+ctrl StaticFrame {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+	
+	Frame SetFrame = InsetFrame();
+	Color SetBackground = Null;
+	
+	Paint(w) {
+		r = GetRect();
+		w.DrawRect(r.left, r.top, r.right, r.bottom, .SetBackground);
+		DrawCtrlFrame(w, r, .SetFrame);
+	}
+}
+	
+ctrl StaticEllipse {
+	group "Static";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+	
+	int SetWidth = 1;
+	Color SetColor = :SBlack;	
+	Color SetBackground = Null;
+		
+	Paint(w) {
+		r = GetRect();
+		FillEllipse(w, r.left, r.top, r.right, r.bottom, .SetBackground);
+		PaintEllipse(w, r.left, r.top, r.right, r.bottom, .SetWidth, .SetColor);
+	}
+}
+
+fn PaintPtr(w, cmx, cmy, pos, m, d, color, cf) {
+	dx = m * sin(pos * 2 * Pi());
+	dy = m * cos(pos * 2 * Pi());
+
+	sx = cmx - dx * 35 / 2.0;
+	sy = cmy + dy * 35 / 2.0;
+	ex = cmx + dx * cf;
+	ey = cmy - dy * cf;
+
+	w.DrawLine(sx, sy, ex, ey, d, color);
+}
+
+enum_property HourType {
+	"0" : "No",
+	"1" : "Square",
+	"2" : "Rectangle"
+};
+
+enum_property NumberType {
+	"0" : "No",
+	"1" : "Small",
+	"2" : "Big",
+	"3" : "BigSmall",
+	"4" : "Big4"
+};
+
+enum_property ColorType {
+	"0" : "WhiteType",
+	"1" : "BlackType"
+};
+
+ctrl StaticClock {
+	group "Progress";
+	GetMinSize() { return Size(80, 80); }
+	GetStdSize() { return Size(150, 150); }
+	
+	HourType SetHourType = 1;
+	NumberType SetNumberType = 1;
+	ColorType SetColorType = 0;
+	bool Seconds = true;	
+	Text Tip;
+	Frame SetFrame = BlackFrame();
+
+	Paint(w) {
+		r = GetRect();
+		ro = GetRect();
+		
+		if (.SetColorType == "0") {
+			backColor = :SWhite;
+			letterColor = :SBlack;
+		} else {
+			backColor = :SBlack;
+			letterColor = :SWhite;
+		}
+		r.right = r.bottom = min(r.right, r.bottom);
+		bigF = r.right/200;
+		hs = 20;
+		width = r.right - r.left;
+		height = r.bottom - r.top;
+		
+		FillEllipse(w, r.left, r.top, r.right, r.bottom, backColor);
+		
+		cmx = width / 2;
+		cmy = height / 2;
+		cf = min(cmy, cmx) - 2;
+		
+		if (.SetHourType != "0") {
+			for(i = 1; i <= 60; i++) {
+				x = cmx + (0.95 * sin(i * Pi() / 30.0) * cf);
+				y = cmy - (0.95 * cos(i * Pi() / 30.0) * cf);
+				if (.SetHourType == "1") {
+					if(i % 5 == 0)
+						w.DrawRect(x, y, 3*bigF, 3*bigF, letterColor);
+					else
+						w.DrawRect(x, y, 2*bigF, 2*bigF, letterColor);
+				} else if (.SetHourType == "2") {
+					if(i % 5 == 0) {
+						x2 = cmx + (0.7 * sin(i * Pi() / 30.0) * cf);
+						y2 = cmy - (0.7 * cos(i * Pi() / 30.0) * cf);
+						w.DrawLine(x, y, x2, y2, 4*bigF, :Gray);
+						w.DrawLine(x, y, x2, y2, 2*bigF, letterColor);
+					} else {
+						x2 = cmx + (0.8 * sin(i * Pi() / 30.0) * cf);
+						y2 = cmy - (0.8 * cos(i * Pi() / 30.0) * cf);
+						w.DrawLine(x, y, x2, y2, 1*bigF, :SGray);
+					}
+				}
+			}
+		}
+		if (.SetNumberType != "0") {
+			if (.SetHourType == "0") 
+				numberPos = 1;
+			else if (.SetHourType == "1") 
+				numberPos = 0.96;
+			else if (.SetHourType == "2") 
+				numberPos = 0.75;
+			
+			if (.SetNumberType == "1")  {
+				numberd = numberPos - 0.2;	
+				fnt4 = Arial(14*bigF);
+				fnt = Arial(14*bigF);
+			} else if (.SetNumberType == "2")  {
+				numberd = numberPos - 0.2;
+				fnt4 = Arial(20*bigF);
+				fnt = Arial(20*bigF);
+			} else if (.SetNumberType == "3")  {
+				numberd = numberPos - 0.2;
+				fnt4 = Arial(20*bigF);
+				fnt = Arial(14*bigF);
+			} else if (.SetNumberType == "4")  {
+				numberd = numberPos - 0.2;
+				fnt4 = Arial(20*bigF);
+			}
+			for(i = 1; i <= 12; i++) {
+				x = cmx + (numberd * sin(i * Pi() / 6.0) * cf);
+				y = cmy - (numberd * cos(i * Pi() / 6.0) * cf);
+				if (i % 3 == 0)
+					PaintCenterText(w, x, y, to_string(i), fnt4, letterColor);
+				else if (.SetNumberType != "4")
+					PaintCenterText(w, x, y, to_string(i), fnt, letterColor);
+			}
+		}
+		hour = 10;
+		minute = 34;
+		second = 15;
+
+		tm = hour * 3600 + minute * 60 + second;
+		PaintPtr(w, cmx, cmy, tm / 3600 / 12, 0.5, 5, Color(200, 200, 200), cf);
+		PaintPtr(w, cmx, cmy, tm / 3600 / 12, 0.5, 2, letterColor, cf);
+		PaintPtr(w, cmx, cmy, tm / 3600, 0.6, 3, Color(200, 200, 200), cf);
+		PaintPtr(w, cmx, cmy, tm / 3600, 0.6, 1, letterColor, cf);
+		if (.Seconds)
+			PaintPtr(w, cmx, cmy, tm / 60, 0.75, 1, Color(200, 200, 200), cf);
+
+		DrawCtrlFrame(w, ro, .SetFrame);
+	}
+}
+	
+fn PaintMarks(w, cx, cy, R, ang0, ang1, direction, step, bigF, color)
+{
+	if (direction == -1) {
+		c = ang0;
+		ang0 = ang1;
+		ang1 = c;
+	}
+	ang0 = ToRad(ang0);
+	ang1 = ToRad(ang1);
+	step = ToRad(step);
+	if (ang0 > ang1)
+		ang1 += 2*Pi();
+	width = 6*bigF;
+	for (i = ang0; i <= ang1+0.1; i += step) {
+		x0 = cx + (R-width/2+1)*cos(i);
+		y0 = cy - (R-width/2+1)*sin(i);
+		x1 = cx + 0.93*R*cos(i);
+		y1 = cy - 0.93*R*sin(i);
+		w.DrawLine(x0, y0, x1, y1, width, color);
+	}
+}
+
+fn AngAdd(ang, val)
+{
+	ang += val;
+	while (ang >= 360)
+		ang -= 360;
+	while (ang < 0)
+		ang += 360;
+	return ang;
+}
+
+fn PaintNumbers(w, cx, cy, R, a0, step, direction, minv, maxv, stepv, bigF, color)
+{
+	a0 = ToRad(a0);
+	step = ToRad(step);
+	fnt = Arial(13*bigF);
+	while (minv <= maxv) {
+		x = cx + 0.8*R*cos(a0);
+		y = cy - 0.8*R*sin(a0);
+		PaintCenterText(w, x, y, to_string(minv), fnt, color);
+		a0 += step*direction;
+		minv += stepv;
+	}
+}
+
+fn PaintHand(w, cx, cy, R, val, bigF, colorType)
+{
+	if (colorType == "0") {
+		letterColor = :SBlack;
+	} else {
+		letterColor = :SWhite;
+	}
+	val = ToRad(val);
+	x0 = cx + 0.90*R*cos(val);
+	y0 = cy - 0.90*R*sin(val);
+	x1 = cx;
+	y1 = cy;
+	w.DrawLine(x0, y0, x1, y1, 5*bigF, :SLtGray);
+	x2 = cx + 0.4*R*cos(val);
+	y2 = cy - 0.4*R*sin(val);
+	w.DrawLine(x0, y0, x2, y2, 4*bigF, letterColor);
+	x3 = cx - 0.3*R*cos(val);
+	y3 = cy + 0.3*R*sin(val);
+	w.DrawLine(x1, y1, x3, y3, 5*bigF, letterColor);
+	
+	left = cx-bigF*18;
+	right = cx+bigF*18;
+	top = cy-bigF*18;
+	bottom = cy+bigF*18;
+	FillEllipse(w, left, top, right, bottom, :SLtGray);
+	
+	left = cx-bigF*15;
+	right = cx+bigF*15;
+	top = cy-bigF*15;
+	bottom = cy+bigF*15;
+	FillEllipse(w, left, top, right, bottom, :SBlack);
+}
+
+ctrl Meter {
+	group "Progress";
+	GetMinSize() { return Size(50, 50); }
+	GetStdSize() { return Size(150, 150); }
+	
+	double SetMin = 0;
+	double SetMax = 100;
+	double SetPeak = 80;
+	double SetStep = 20;	
+	double SetAngleBegin = 120;
+	double SetAngleEnd = 40;
+	Text SetText;
+	bool ClockWise = false;
+	bool SetNumber = false;
+	ColorType SetColorType = 0;
+	Text Tip;
+	Frame SetFrame = BlackFrame();
+
+	Paint(w) {
+		r = GetRect();
+		
+		if (.SetColorType == "0") {
+			backColor = :SWhite;
+			letterColor = :SBlack;
+		} else {
+			backColor = :SBlack;
+			letterColor = :SWhite;
+		}
+		
+		w.DrawRect(r, backColor);
+		width = r.right - r.left;
+		bigF = width/200;
+		bigH = (r.bottom-r.top)/100;
+		
+		if (.ClockWise)
+			direction = -1;
+		else
+			direction = 1;
+		a = .SetAngleBegin;
+		b = .SetAngleEnd;
+		cosa = cos(ToRad(a));
+		cosb = cos(ToRad(b));
+		sina = sin(ToRad(a));
+		sinb = sin(ToRad(b));
+		minx = cosa;
+		maxx = cosa;
+		miny = sina;
+		maxy = sina;
+		angminx = a;
+		angminy = a;
+		if (cosb < minx) {
+			minx = cosb;
+			angminx = b;
+		}
+		if (cosb > maxx) 
+			maxx = cosb;
+		if (sinb > miny) {
+			miny = sinb;
+			angminy = b;
+		}
+		if (sinb < maxy)
+			maxy = sinb;
+		maxgrad = 0;
+		for (ang = a; ang != b; ang = AngAdd(ang, direction)) {
+			maxgrad++;
+			if (ang == 180) {
+				minx = -1;
+				angminx = 180;
+			} else if (ang == 0) {
+				maxx = 1;
+				angmaxx = 0; 
+			} else if (ang == 90) {
+				miny = 1;
+				angminy = 90;
+			} else if (ang == 270)
+				maxy = -1;
+		}
+		if (maxx == minx)
+			return;	// Error
+		rate = width/(maxx - minx);
+		cx = -minx*rate;
+		R = 0.92*abs(rate*minx/cos(ToRad(angminx)));
+		if (abs(miny) >= abs(maxy))
+			cy = 1.08*R*miny;
+		else
+			cy = r.bottom + 1.08*R*maxy;
+		
+		PaintArc(w, cx, cy, R, a, b, direction, 0.8*bigF, letterColor);
+		
+		if (.SetPeak < .SetMax && .SetPeak > .SetMin) {
+			valpk = .SetPeak*maxgrad/(.SetMax-.SetMin);
+			for (i = 0.93; i < 0.98; i+= 0.004)
+				PaintArc(w, cx, cy, i*R, a + valpk*direction, b, direction, 2*bigF, :SLtRed);
+			fsize = 7*min(bigF, bigH);
+			fnt = Arial(fsize);
+			txtx = cx + R*cos(ToRad(b))/2;
+			txty = cy - R*sin(ToRad(b))/2;
+			PaintCenterText(w, txtx, txty, "PEAK", fnt, :Gray);
+			w.DrawImage(txtx - fsize, txty + fsize, 1.8*fsize, 1.8*fsize, "Controls4U:Controls4U.iml:LightOff");	
+		}
+		stepa = .SetStep*maxgrad/(.SetMax-.SetMin);	
+		PaintMarks(w, cx, cy, R, a, b, direction, stepa, bigF, letterColor);
+		if (.SetNumber)
+			PaintNumbers(w, cx, cy, R, a, stepa, direction, .SetMin, .SetMax, .SetStep, bigF, letterColor);
+			   
+		fnt = Arial(20*min(bigF, bigH));
+		angtxt = ToRad(a + maxgrad*direction/2);
+		txtx = cx + R*cos(angtxt)/2;
+		txty = cy - R*sin(angtxt)/2;
+		PaintCenterText(w, txtx, txty, .SetText, fnt, letterColor);
+		
+		val = .SetMin + 0.8*(.SetMax-.SetMin);
+		vala = val*maxgrad/(.SetMax-.SetMin);
+		PaintHand(w, cx, cy, R, a + vala*direction, bigF, .SetColorType);
+		
+		DrawCtrlFrame(w, r, .SetFrame);
+	}
+}
+
+/*
+
+ctrl FileBrowser {
+	group "Complex";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame SetFrame @1;
+	bool  SetBrowseFiles = true @2 ? "Editable";
+
+	Paint(w) {
+		outer = GetRect();
+		r = outer;
+		DeflateRect(r);
+		sz = Size(r.right - r.left, r.bottom - r.top);
+		
+		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SWhite);		
+		w.DrawImage(r.left, r.top, "Controls4U:Controls4U.iml:FileBrowser_Folders");
+		if (.SetBrowseFiles) {
+			middle = r.left + (r.right-r.left)/2;
+			w.DrawLine(middle-4, r.top, middle-3, r.bottom, 2, :SWhiteGray);
+			w.DrawRect(middle-2, r.top, 4, r.bottom, :SLtGray);
+			w.DrawLine(middle+2, r.top, middle+2, r.bottom, 2, :SGray);
+			w.DrawImage(middle + 3, r.top, "Controls4U:Controls4U.iml:FileBrowser_Files");
+		}
+		DrawCtrlFrame(w, outer, .SetFrame);
+	}
+}
+
+enum_property HandleType {
+	"Simple", 
+	"Digit",
+	"Rugged"
+};
+
+ctrl Knob {
+	group "Input fields";
+	GetMinSize() { return Size(50, 50); }
+	GetStdSize() { return Size(100, 100); }
+	
+	HandleType SetType = Rugged;
+	Text Tip;
+
+	Paint(w) {
+		r = GetRect();
+		width = min(r.right-r.left, r.bottom-r.top);
+		bigF = width/200;
+		//FillEllipse(w, r.left, r.top, r.left+width, r.top+width, :SWhite);
+
+		w.DrawImage(r.left, r.top, width, width, "Controls4U:Controls4U.iml:Handle");	
+		
+		cx = width/2;
+		cy = cx;
+		R = cx;
+		
+		pos = 90;
+		if (.SetType == "Rugged") {
+			for (i = 0; i < 9; ++i) {
+				PaintArc(w, cx, cy, R, pos, pos+20, 1, 6*bigF, :SLtGray);//Color(230, 230, 230));		
+				pos += 40;
+			}
+		} else if (.SetType == "Digit") {
+			dx = cx + 0.6*R*cos(ToRad(pos));
+			dy = cy - 0.6*R*sin(ToRad(pos));
+			dwidth = 25*bigF;
+			w.DrawImage(dx-dwidth, dy-dwidth, 2*dwidth, 2*dwidth, "Controls4U:Controls4U.iml:Digit");	
+		}
+	}
+}
+
+enum_property RollingType {
+	"Simple", 
+	"Rugged"
+};
+
+ctrl RollKnob {
+	group "Input fields";
+	GetMinSize() { return Size(50, 50); }
+	GetStdSize() { return Size(100, 100); }
+	
+	RollingType SetType = Rugged;
+	Text Tip;
+
+	Paint(w) {
+		r = GetRect();
+		width = min(r.right-r.left, r.bottom-r.top);
+		bigF = width/200;
+		//FillEllipse(w, r.left, r.top, r.left+width, r.top+width, :SWhite);
+
+		w.DrawImage(r.left, r.top, width, width, "Controls4U:Controls4U.iml:Handle");	
+		
+		cx = width/2;
+		cy = cx;
+		R = cx;
+		
+		pos = 90;
+		if (.SetType == "Rugged") {
+			for (i = 0; i < 9; ++i) {
+				PaintArc(w, cx, cy, R, pos, pos+20, 1, 6*bigF, :SLtGray);//Color(230, 230, 230));		
+				pos += 40;
+			}
+		} 
+		x0 = cx + 0.5*R*cos(ToRad(pos));
+		y0 = cy - 0.5*R*sin(ToRad(pos));
+		x1 = cx + 0.9*R*cos(ToRad(pos));
+		y1 = cy - 0.9*R*sin(ToRad(pos));
+		w.DrawLine(x0, y0, x1, y1, 12*bigF, :SGray); 		
+		w.DrawLine(x0, y0, x1, y1, 8*bigF, :SBlack); 
+	}
+}
+*/
