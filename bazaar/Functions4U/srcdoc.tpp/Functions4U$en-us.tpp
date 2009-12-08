@@ -33,6 +33,8 @@ ile Handling]&]
 tring functions]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#Sign`(T`)^ Math 
 functions]&]
+[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#Sign`(T`)^ Special 
+folders]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#FitInFrame`(const Size`_`<T`>`&`,const Size`_`<T`>`&`)^ G
 raphical functions]&]
 [s0; &]
