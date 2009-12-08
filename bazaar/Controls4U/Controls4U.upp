@@ -1,0 +1,21 @@
+description "Some additional controls\377B255,170,0";
+
+uses
+	CtrlLib,
+	Functions4U,
+	Painter;
+
+file
+	Controls4U.cpp,
+	Controls4U.h,
+	Controls4U.usc,
+	Controls4U.iml,
+	srcimp.tpp,
+	srcdoc.tpp,
+	src.tpp,
+	License.txt,
+	Credits.txt;
+
+mainconfig
+	"" = "GUI MT";
+

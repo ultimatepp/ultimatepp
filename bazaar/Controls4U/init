@@ -1,0 +1,6 @@
+#ifndef _Controls4U_icpp_init_stub
+#define _Controls4U_icpp_init_stub
+#include "CtrlLib/init"
+#include "Functions4U/init"
+#include "Painter/init"
+#endif
