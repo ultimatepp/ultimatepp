@@ -1,0 +1,463 @@
+SysInfo
+
+
+Running files and commands
+
+String GetExtExecutable(const String ext)
+Gets the program that will open by default the files with extension ext.
+
+	Example:
+	GetExtExecutable("html") -> "Firefox.exe"
+
+
+bool LaunchFile(const String file)
+Opens the file file with the adecuated program defined in the OS by default.
+
+	Example:
+	LaunchFile("c:\\My spreadsheet.txt"). It will open default program (probably Notepad) with document "My spreadsheet.txt".
+
+
+Obtaining special folders
+
+String GetDesktopFolder()
+Gets the default Desktop folder path.
+
+
+String GetProgramsFolder()
+Gets the default programs folder path.
+
+
+String GetAppDataFolder()
+Gets the default application data folder path.
+
+
+String GetMusicFolder()
+Gets the default music files folder path.
+
+
+String GetPicturesFolder()
+Gets the default picture files folder path.
+
+
+String GetVideoFolder()
+Gets the default video files folder path.
+
+
+String GetPersonalFolder()
+Gets the default personal files folder path.
+
+
+String GetTemplatesFolder()
+Gets the default templates files folder path.
+
+
+String GetDownloadFolder()
+Gets the default file download folder path.
+
+
+String GetRootFolder()
+Gets the default root folder path.
+
+
+String GetTempFolder()
+Gets the default temp files folder path.
+
+
+String GetOsFolder()
+Gets the default operating system files folder path.
+
+
+String GetSystemFolder()
+Gets the default system files folder path.
+
+
+Hardware, BIOS, OS and Distro info
+
+void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors)
+Returns hardware information including computer manufacturer,  productName,  version and numberOfProcessors.
+
+
+void GetBiosInfo(String &biosVersion, Date &biosReleaseDate)
+Returns bios information including biosVersion and biosReleaseDate.
+
+
+bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)
+Returns information about the different cpu cores.
+number is the core number to get the information
+vendor is the core vendor
+identifier is the core identifier
+architecture is the core architecture (32, 64)
+speed.is the core speed in MHz.
+
+
+int GetCpuSpeed()
+Gets the real time main CPU speed in MHz.
+	This data is directly calculated by the function.
+
+
+bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, Array <Value> &ram, Array <Value> &videoMode)
+If true gets information about video systems installed:
+name is the video system name
+description is the video description
+videoProcessor is the processor used
+ram is the available memory in the video hardware in Mb
+videoMode is the video mode actually selected including screen resolution and number of colors
+
+
+bool GetPackagesInfo(Array <Value> &name, Array <Value> &version, Array <Value> &vendor, Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, Array <Value> &state)
+If true gets information about installed software:
+name
+version
+vendor
+installDate
+caption is a summary of the software description
+description
+state is the status of the software. Values are:
+		- "Bad Configuration"
+		- "Invalid Argument"
+		- "Unknown Package"
+		- "Advertised"
+		- "Absent"
+		- "Ok"
+
+
+bool GetMemoryInfo(int &memoryLoad, uint64 &totalPhys, uint64 &freePhys, uint64 &totalPageFile, uint64 &freePageFile, uint64 &totalVirtual, uint64 &freeVirtual)
+Gets information about the system memory:
+memoryLoad is the percent of memory in use
+totalPhys is the total physical memory
+freePhys is the free physical memory
+totalPageFile is the total paging file
+freePageFile is the free paging file
+totalVirtual is the total virtual memory
+freeVirtual is the free virtual memory.
+
+
+bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, String &distro, String &distVersion, String &desktop, String &deskVersion)
+Gets many information to identify the operating system and Desktop where the application is being run. 
+kernel: Kernel name
+kerVersion: Kernel version
+kerArchitecture: Kernel architecture
+distro: Distro name
+distVersion: Distro version
+desktop: Desktop manager name
+deskVersion.: Desktop manager version
+
+
+String GetDesktopManagerNew()
+A more complete version of GetDesktopManager() based on GetOsInfo().
+
+
+Array<String> GetDriveList()
+Returns an array with the paths to all drives, internal or external, identified in the system.
+
+
+bool GetDriveSpace(String drive, uint64 &freeBytesUser, uint64 &totalBytesUser, uint64 &totalFreeBytes)
+Gets drive space.
+freeBytesUser: Amount of free bytes available to the user
+totalBytesUser: Size of drive visible for the user
+totalFreeBytes: Amount of free bytes.
+	Returns false if drive is not mounted or it is not accessible
+
+
+bool GetDriveInformation(String drive, String &type, String &volume, int &maxName, String &fileSystem)
+Gets drive information
+type: Gets the type of the drive.
+Available types are "Hard", "Network", "Optical", "RAM", "Removable".
+volume: Gets the name of the drive
+maxName: Gets the maximum length permitted for a file name
+fileSystem: Gets the drive formatting system.
+	Returns false if drive is not mounted or it is not accessible
+
+
+void GetCompilerInfo(String &name, int &version, String &date)
+Returns compiling information, like compiler name, compiler version and program compilation date.
+
+
+bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
+Gets battery information like if it is discharging or connected to the grid, percentage of charging where 100% means full charge, and number of expected computer running minutes in remainingMin.
+	Returns true if the values got are valid.
+
+
+bool GetBatteryInfo(bool &present )
+Gets if battery is present or not.
+	Returns true if the values got are valid.
+
+
+void OpenCDTray()
+Ejects CD/DVD tray.
+
+
+void CloseCDTray()
+Closes CD/DVD tray if possible
+
+Process handling
+
+void GetWindowsList(Array<long> &wid, Array<long> &pid, Array<String> &name, Array<String> &fileName, Array<String> &title)
+Gets arrays with handles to all the opened windows with additional info as:
+wid: Handle to the the window
+pid: Handle to the process that manages the window
+name: Window name
+fileName: Window process program file name
+title: Window title (caption)
+
+
+Array<long> GetWindowsList()
+Gets an array with handles to all the opened windows.
+
+
+bool GetProcessList(Array<long> &pid, Array<String> &pNames)
+Gets arrays with handles to all the opened processes pid and process names pNames.
+
+
+Array<long> GetProcessList()
+Gets an array with handles to all the opened processes
+
+
+String GetProcessName(long pid)
+Returns the process name for a process with handle pid.
+
+
+String GetProcessFileName(long processID)
+Gets the program file name of a process with handle processID.
+
+
+long GetProcessIdFromWindowCaption(String windowCaption, bool exactMatch = false)
+Gets the process handle of a program with a window with title windowCaption.
+If exactMatch.is true it only returns the process handle of a process with a window title that is equal to windowCaption. If it is false then the handle is returned if only part of the window title matches with windowCaption.
+
+
+long GetWindowIdFromCaption(String windowCaption, bool exactMatch = false)
+Gets the window handle of a program with a window with title windowCaption.
+If exactMatch.is true it only returns the process handle of a process with a window title that is equal to windowCaption. If it is false then the handle is returned if only part of the window title matches with windowCaption.
+
+
+long GetProcessIdFromWindowId(long wid)
+Returns the process handle of a program with window handle wid.
+
+
+long GetWindowIdFromProcessId(long pid)
+Returns the window handle of a program with process handle pid.
+
+
+bool ProcessTerminate(long pid, int timeout = 500)
+Ends the program with handle pid.
+If after asking the process to end timeout is over, it will kill the process by different means in order of increasing "aggressivity".
+	For example in Posix it will send the process first a SIGTERM, if the process does not stop it will send a SIGKILL, and if the process remains running it will simply call WindowKill() to do the dirty job.
+
+
+int GetProcessPriority(long pid)
+Gets the process priority of the process with handle pid as a number from 0 (minimum) to 10 (maximum), if possible.
+
+
+bool SetProcessPriority(long pid, int priority)
+Sets the process priority to priority of the process with handle pid as a number from 0 (minimum) to 10 (maximum), if possible.
+
+
+bool ProcessExists(long pid)
+Returns true if a process with handle pid exists.
+
+long GetProcessId()
+Gets actual running process handle.
+
+
+bool Shutdown(String action)
+Tries to logoff, reboot or shutdown the actual running session.
+	Actual valid action values are "logoff", "reboot" and "shutdown".
+
+
+Windows handling
+
+bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom)
+Giving this function the windowId, it returns the window location in the screen in left, top, right and bottom.
+	Returns true if the values got are valid.
+
+
+void Window_SetRect(long windowId, long left, long top, long right, long bottom)
+Giving this function the windowId, it sets the window location in the screen in left, top, right and bottom.
+	Returns true if the window is relocated correctly..
+
+Mouse and keyboard handling
+
+bool Mouse_GetPos(long &x, long &y)
+Gets the mouse position x, y.in screen pixels where upper left corner is (0, 0).
+	Returns true if the operation has been done successfully.
+
+
+bool Mouse_SetPos(long x, long y, long windowId)
+Sets the mouse position to x y referenced to the upper left vertex of window with window handle windowId.
+	Returns true if the operation has been done successfully.
+
+
+void Mouse_LeftClick()
+Simulates by software a mouse click with the left button as if it would have been done with the mouse.
+
+
+void Mouse_MiddleClick()
+Simulates by software a mouse click with the middle button as if it would have been done with the mouse.
+
+
+void Mouse_RightClick()
+Simulates by software a mouse click with the right button as if it would have been done with the mouse.
+
+
+void Mouse_LeftDblClick()
+Simulates by software a mouse double click with the left button as if it would have been done with the mouse.
+
+
+void Mouse_MiddleDblClick()
+Simulates by software a mouse double click with the middle button as if it would have been done with the mouse.
+
+
+void Mouse_RightDblClick()
+Simulates by software a mouse double click with the right button as if it would have been done with the mouse.
+
+
+void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 50)
+Simulates by software a text entered using the keyboard as if it would have been entered with the keyboard.
+To really simulate manual key typing the function lets to enter delays between keys and after entering the text.
+text: Is the text to be entered
+finalDelay: Is the delay in ms that is forced after entering text
+delayBetweenKeys: Is the delay in ms that is forced between text keys.
+
+
+void GetKeyLockStatus(bool &caps, bool &num, bool &scroll)
+Gets the status of keys caps lock,  num lock and scroll  lock.
+
+
+void SetKeyLockStatus(bool caps, bool num, bool scroll)
+Sets the status of keys caps lock,  num lock and scroll  lock.
+
+Screen recording
+
+bool Snap_Desktop(String fileName)
+Saves the desktop in fileName.as an image file.
+	Allowed formats are:
+		- Posix: .xwd
+		- Windows: .bmp
+
+
+bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int height)
+Saves a rectangle of the desktop defined by left, top, width and height.in fileName as an image file.
+	Allowed formats are:
+		- Posix: .xwd
+		- Windows: .bmp
+
+
+bool Snap_Window(String fileName, long handle)
+Saves a window defined by its handle in fileName as an image file.
+	Allowed formats are:
+		- Posix: .xwd
+		- Windows: .bmp
+
+
+bool Record_Desktop(String fileName, int duration, int secsFrame = 1, bool viewMouse = true)
+Records the desktop activity in fileName as a video file of duration in seconds with secsFrame seconds between frames and recording also mouse movement if viewMouse.is true.
+	Allowed formats are:
+		- Windows: Uncompressed .avi 
+
+
+bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, int secsFrame = 1, bool viewMouse = true)
+Records the desktop activity in the rectangle defined by left, top, width and height. in fileName as a video file of duration in seconds with secsFrame seconds between frames and recording also mouse movement if viewMouse.is true.
+	Allowed formats are:
+		- Windows: Uncompressed .avi
+
+
+bool Record_Window(String fileName, int duration, long handle, int secsFrame = 1, bool viewMouse = true)
+Records the activity of a window defined by its handle in fileName as a video file of duration in seconds with secsFrame seconds between frames and recording also mouse movement if viewMouse.is true.
+	Allowed formats are:
+		- Windows: Uncompressed .avi
+
+Miscellaneous functions
+
+String LoadFile_Safe(String fileName)
+Same as LoadFile(fileName) but it works in Posix for files automatically generated by the OS.
+
+U++ LoadFile() functions prior to loading the file into a String, get the length of the file to dimension the String that will get the file. This is not valid for OS generated virtual files where the file length returned by the OS is 0 (for example files under folder /proc)
+
+LoadFile_Safe() just get the file bytes returned by the OS until the file end.
+
+
+void FileToTrashBin(const char *path)
+Deletes file path.by sending it to the Trash Bin.
+
+
+int64 TrashBinGetCount()
+Returns the number of items (files and directories) located in the Trash Bin.
+
+
+void TrashBinClear()
+Removes all the items (files and directories) located in the Trash Bin.
+
+
+void SetDesktopWallPaper(const char *path)
+Sets path.file as desktop wallpaper. Supports Gnome, Kde v3 and Windows desktops.
+
+In Gnome, path has to be .png
+In Kde, path has to be .png, .gif or .jpg
+In Windows, path has to be .bmp
+
+If path.is empty, the desktop wallpaper is removed. 
+
+
+bool FileCat(const char *file, const char *appendFile)
+Appends at the end of file the contents of file appendFile. file will be modified and appendFile remains unchanged.
+	Returns true if the operations has been done succesfully.
+
+
+String Replace(String str, String find, String replace)
+Returns the resulting String obtained by replacing in str String find with replace all the times that find appears in str.
+
+
+int ReverseFind(const String& s, const String& toFind, int from = 0)
+Find in s the string toFind beginning in from in reverse order.
+Similar to Find() but searching to the beginning of the String.
+
+
+String FormatLong(long a)
+Returns the long number a converted into a String.
+
+
+template <class T> int Sign(T a)
+Returns
+ +1 if a. is positive
+0 if a is 0 and 
+-1 if a is negative.
+
+
+String GetUpperFolder(String folderName)
+Returns the name of the upper folder over folderName.
+
+
+bool CreateFolderDeep(const char *dir)
+Creates folder dir, creating intermediate folders if necessary
+
+
+String SecondsToString(double seconds, bool decimals = false)
+Converts an amount of seconds to a String formatted as HH:MM:SS.
+	If decimals it includes decimals in seconds
+	It is opposite to StringToSeconds()
+
+
+const char *StrToTime(struct Upp::Time& d, const char *s)
+Scans a string for a Time. Order of day, month and year is specified using SetDateScan. In place of month both number and text is accepted - text must match abbreviated or full name of month.
+	Similar to StrToDate() but including both date and time.
+d	Found time.
+s	String to scan.
+Return value	NULL if no time is found in s or pointer to character right after the date.
+
+
+double StringToSeconds(String str)
+It converts a String str formatted as HH:MM:SS to a returned amount of seconds.
+	It is opposite to SecondsToString()
+
+
+String BytesToString(uint64 bytes)
+Converts an amount of bytes to a short String.
+
+
+void DoEvents()
+A ProcessEvents just for old Visual Basic programmers.
+
+
+Array<String> SearchFile(String dir, String condFile, String text = "")
+Returns an Array of Strings containing the file names with full path of the files under folder dir that comply with condition (with wildcards) condFile and that contain inside the text text.
