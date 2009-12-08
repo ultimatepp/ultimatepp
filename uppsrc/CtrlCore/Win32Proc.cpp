@@ -69,6 +69,11 @@ void  SetWinceMouse(HWND hwnd, LPARAM lparam) {}
 
 #ifdef _DEBUG
 static String sPainting;
+
+void AvoidPaintingCheck__()
+{
+	sPainting = Null;
+}
 #endif
 
 bool PassWindowsKey(int wParam);
