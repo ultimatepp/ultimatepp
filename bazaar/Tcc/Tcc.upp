@@ -1,4 +1,4 @@
-description "Tiny C Compiler wrapper\377B255,42,0";
+description "Tiny C Compiler wrapper\377B255,170,0";
 
 uses
 	Core;
@@ -17,7 +17,7 @@ file
 	src.tpp\Tcc.t,
 	lib/libtcc.h,
 	lib/README,
-	Copying;
+	License.txt;
 
 mainconfig
 	"" = "";

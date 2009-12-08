@@ -21,7 +21,7 @@ public:
 	
 	void Compile(const char *my_program);
 	void AddSymbol(const char *funName, void *fun);
-	void *GetSymbol(const char *funName);
+	void *GetSymbol(const char *funName); 
 	void Link(const char *fileName = 0);
 	
 	String GetProgram() 

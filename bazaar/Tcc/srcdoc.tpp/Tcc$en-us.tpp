@@ -34,9 +34,8 @@ from the main program.&]
 e].&]
 [s0; Tcc class reference is included [^topic`:`/`/Tcc`/src`/Tcc`$en`-us^ here].&]
 [s0; &]
-[s0; Tcc wrapper is done by Koldo Ramirez and has BSD license as 
-Ultimate`+`+ project (see [^http`:`/`/www`.ultimatepp`.org`/app`$ide`$About`$en`-us`.html^ h
-ere]).&]
+[s0; Tcc wrapper is done by Koldo and has BSD license as Ultimate`+`+ 
+project.&]
 [s0; &]
 [s0; &]
 [s0; [* About TCC]&]

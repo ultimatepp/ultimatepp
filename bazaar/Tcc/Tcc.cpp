@@ -109,7 +109,7 @@ void Tcc::SetOutputExe()
 	outputMemory = false;
 };
 
-void Tcc::SetOutputMemory()		
+void Tcc::SetOutputMemory()		 
 {
 	T_tcc_set_output_type(stateTcc, TCC_OUTPUT_MEMORY);
 	outputMemory = true;
@@ -128,7 +128,7 @@ void Tcc::DefaultErrorHandler(void* opaque, const char* msg)
 	if (message.Left(linePos) == "Line ") {		// Fix the line number in the error message
 		int endLinePos = message.Find(':', linePos+1);
 		int line = atoi(message.Mid(linePos, endLinePos-linePos));
-		message = message.Left(linePos) + FormatInt(line-initialProgramLines) + message.Mid(endLinePos);
+		message = Format(t_("Line %d"), line-initialProgramLines) + ":" + message.Mid(endLinePos+1);
 	}
 	errorMsg.Cat(message);
 }
