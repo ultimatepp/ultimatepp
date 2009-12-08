@@ -1,0 +1,19 @@
+description "Controls4U Ctrls demo\377";
+
+uses
+	CtrlLib,
+	Controls4U,
+	plugin\gif,
+	plugin\jpg,
+	plugin\tif;
+
+file
+	main.cpp,
+	Controls4U_Demo.h,
+	Controls4U_Demo.lay,
+	Controls4U_Demo.iml,
+	Credits.txt;
+
+mainconfig
+	"" = "GUI MT";
+
