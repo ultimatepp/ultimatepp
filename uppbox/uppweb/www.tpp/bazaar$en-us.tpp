@@ -8,8 +8,8 @@ in Bazaar.]&]
 [s0;2 &]
 [s0; [2 Main Bazaar packages are:]&]
 [s0;2 &]
-[s0;i150;O0; [2 DockCtrl]&]
-[s0;i150;O0; [2 Docking]&]
+[s0;i150;O0; [^topic`:`/`/Docking`/src`/DockWindow`$en`-us^2 Docking:][2  
+Window Docking framework.]&]
 [s0;i150;O0; [2 ExpandFrame]&]
 [s0;i150;O0;%- [%%2 GoogleTranslator: ][2 HTTP Google Translator. Translate 
 text direct form internet, uses post method. Max length is 32kb]&]
