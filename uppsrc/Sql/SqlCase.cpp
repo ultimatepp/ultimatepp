@@ -144,21 +144,25 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 								r->Cat(((c >> 3) & 7) + '0');
 								r->Cat((c & 7) + '0');
 							}
+							else
+								r->Cat(c);
 						}
 						*r << "\'::bytea";
+						break;
 					}
 					case MSSQL:
 						*r << "0x" << HexString(s, l);
+						s += l;
 						break;
 					case SQLITE3:
 					case MY_SQL:
 						*r << "X";
 					default:
 						*r << "\'" << HexString(s, l) << "\'";
+						s += l;
 						break;
 					}
 			}
-			s += l;
 			break;
 		}
 		case SQLC_STRING: {
