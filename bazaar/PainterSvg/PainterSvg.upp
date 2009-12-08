@@ -4,5 +4,6 @@ uses
 
 file
 	PainterSvg.h,
-	ParseSvg.cpp;
+	ParseSvg.cpp,
+	License.txt;
 
