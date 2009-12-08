@@ -1,4 +1,4 @@
-description "Automation of Office suites OpenOffice and Microsoft\377BI28,170,255";
+description "Automation of Office suites OpenOffice and Microsoft\377B255,170,0";
 
 noblitz;
 
@@ -14,7 +14,8 @@ file
 	OfficeAutomation.cpp,
 	srcdoc.tpp,
 	src.tpp,
-	OfficeAutomation.t;
+	OfficeAutomation.t,
+	License.txt;
 
 mainconfig
 	"" = "MT";
