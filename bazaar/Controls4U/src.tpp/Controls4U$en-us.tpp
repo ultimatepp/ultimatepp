@@ -4914,7 +4914,7 @@ movement]}}&]
 ::= [s0;= Layout editor visual appearance]
 :: [s0;= Visual appearance]
 ::^ [s0; Short description]
-::@2 [s0; [^topic`:`/`/Controls4U`/src`/EditFile`$en`-us^ FileBrowser]]
+::@2 [s0; FileBrowser]
 ::= [s0;= 
 @@image:1010&843
 ˆƒâ€€€€€€€€€€ø×œíıŒ–ÇıÇŸªŠªÅ«•“ÖŠªµÕË£ÄÉ«ÈÕÕÚı«‘ª«ÖÅ¤“–ã¤ìÔˆÈö”ÀåãÅÂµ¹„´Ü
@@ -5014,7 +5014,7 @@ movement]}}&]
 ]
 :: [s0;= ]
 ::^ [s0; Folder and file browser with Drag`&Drop in a control]
-:: [s0; [^topic`:`/`/Controls4U`/src`/EditFolder`$en`-us^ Knob]]
+:: [s0; Knob]
 ::= [s0;= 
 @@image:388&383
 €ƒè€ç€€€€€€€€€€øŸœíé“”Ù•ÅıÓıÏâ™¦á˜éÖî ‡ÖÜÑÜœĞì¤µİ—Ü ÆÑÑ‰¢Ò“şõ¢§î½ïàåÖÕÖıšû

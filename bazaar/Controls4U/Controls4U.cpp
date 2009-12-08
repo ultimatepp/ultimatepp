@@ -761,20 +761,18 @@ void Meter::Paint(Draw& ww) {
 }
 
 void MeterThread(Meter *gui, double newValue) {
-	double delta = Sign(newValue-gui->value)*(gui->max - gui->min)/110.;
+	double delta = Sign(newValue-gui->value)*(gui->max - gui->min)/gui->sensibility;
+	long deltaT = labs((long)(1000*gui->speed/delta));
 	int maxi = (int)(fabs((newValue-gui->value)/delta));
-	long t0 = GetTickCount();
 	
+	long t0 = GetTickCount();
 	for (int i = 0; i < maxi; ++i, gui->value += delta) {
 		if (gui->kill) {
 			AtomicDec(gui->running);
 			return;		
 		}
 		PostCallback(callback(gui, &Meter::RefreshValue));
-		long t = i*1000/60 - (GetTickCount()-t0);
-		if (t < 10)
-			t = 10;
-		Sleep(t);
+		Sleep(deltaT);
 	}
 	gui->value = newValue;
 	PostCallback(callback(gui, &Meter::RefreshValue));
@@ -813,6 +811,8 @@ Meter::Meter() {
 	clockWise = false;
 	number = false;
 	colorType = WhiteType;
+	sensibility = 10;
+	speed = 1;
 	running = 0;
 	kill = 0;
 }

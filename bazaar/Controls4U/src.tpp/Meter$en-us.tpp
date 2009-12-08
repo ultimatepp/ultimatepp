@@ -433,66 +433,77 @@ topic "Meter";
 [s6;%- &]
 [s5;:Meter`:`:SetMin`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetMin]([@(0.0.255) doub
 le]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; Sets [%-*@3 v ]as the min display value.&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetMax`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetMax]([@(0.0.255) doub
 le]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; Sets [%-*@3 v ]as the max display value.&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetPeak`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetPeak]([@(0.0.255) do
 uble]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; Sets [%-*@3 v ]as the value that if overpassed the peak red light 
+is switched on. &]
+[s3; If peak `=`= max, no peak light will appear.&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetStep`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetStep]([@(0.0.255) do
 uble]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; Sets [%-*@3 v ]as the value between display steps.&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetAngleBegin`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetAngleBegin](
 [@(0.0.255) double]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; Sets [%-*@3 v ]as the angle in degrees for the min value. &]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetAngleEnd`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetAngleEnd]([@(0.0.255) d
 ouble]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; Sets [%-*@3 v ]as the angle in degrees for the max value. &]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetText`(String`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetText]([_^String^ Str
 ing]_[*@3 s])&]
-[s3;  [%-*@3 s].&]
+[s3; Sets [%-*@3 s ]as the text to appear in the meter background. 
+&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:ClockWise`(bool`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* ClockWise]([@(0.0.255) b
 ool]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; If [%-*@3 v ]is true the value increasing is clockwise, else is 
+counterclockwise.&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetNumber`(bool`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetNumber]([@(0.0.255) b
 ool]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; If [%-*@3 v ]is true numbers will appear every step mark.&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetColorType`(int`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetColorType]([@(0.0.255) i
 nt]_[*@3 c])&]
-[s3;  [%-*@3 c].&]
+[s3; Sets the color style.&]
+[s3; Valid [%-*@3 c ]color style values are ColorType`::WhiteType and 
+ColorType`::BlackType.&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetSpeed`(int`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetSpeed]([@(0.0.255) int
 ]_[*@3 s])&]
-[s3;  [%-*@3 s].&]
+[s3; Sets the handle movement speed [%-*@3 s ]as the time in seconds 
+the handle would moving from min to max value.&]
+[s3; Default is 1 second. &]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetSensibility`(int`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetSensibility]([@(0.0.255) i
 nt]_[*@3 s])&]
-[s3;  [%-*@3 s].&]
+[s3; Sets the handle movement sensibility [%-*@3 s].as the number of 
+handle movements between the min and the max values, so every 
+step the handle will move (max `- min)/sensibility. Default is 
+10.&]
 [s1; &]
 [s6;%- &]
 [s5;:Meter`:`:SetData`(const Value`&`):%- [@(0.0.255) void]_[* SetData]([@(0.0.255) const]_
 [_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
-[s3;  [%-*@3 v].&]
+[s3; Sets the value [%-*@3 v].&]
 [s1;%- &]
 [s0; ]
