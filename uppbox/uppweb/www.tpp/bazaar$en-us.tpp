@@ -73,8 +73,10 @@ tomation]&]
 [s0;l160; [2 Application for playing mp3.]&]
 [s0;l160; [2 Author: Daniel Kos (unodgs)]&]
 [s0;i150;O0; [2 UnitTest`+`+]&]
-[s0;l160; [2 UnitTest`+`+ wrapper. UnitTest`+`+ is a lightweight unit 
-testing framework for C`+`+]&]
+[s0;l160; [2 This package is an UnitTest`+`+ wrapper.]&]
+[s0;l160;%- [%%^http`:`/`/unittest`-cpp`.sourceforge`.net`/^2 UnitTest`+`+][%%2  
+is a lightweight unit testing framework for C`+`+][2 , created 
+by Noel Llopis and Charles Nicholson.]&]
 [s0;l160; [2 Author: Peter `"Ped`" Helcmanovsky (mr`_ped)]&]
 [s0;i150;O0; [2 Urr]&]
 [s0;l160; [2 Udp request`-response protocol.]&]
