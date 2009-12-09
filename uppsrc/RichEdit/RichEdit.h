@@ -589,6 +589,9 @@ private:
 		                   Color ink, Color paper, dword style) const;
 	};
 
+	void UserAction();
+	Callback User(Callback cb);
+
 	static bool   SpellWord(const wchar *wrd, int len, int lang);
 	static void   SpellerAdd(const WString& w, int lang);
 	static int    CompareStyle(const Value& a, const Value& b);

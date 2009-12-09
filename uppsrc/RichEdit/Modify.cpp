@@ -140,9 +140,10 @@ void RichEdit::Undo()
 		u.Apply(text);
 		c = u.cursor;
 		undo.DropTail();
+		modified = true;
 	}
 	ReadStyles();
-	Move(c);
+	Move(c);	
 }
 
 void RichEdit::Redo()
@@ -164,6 +165,7 @@ void RichEdit::Redo()
 		r.Apply(text);
 		c = r.cursor;
 		redo.Drop();
+		modified = true;
 	}
 	ReadStyles();
 	Move(c);

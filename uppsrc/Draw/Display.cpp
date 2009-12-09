@@ -265,7 +265,7 @@ public:
 		if(!IsNull(m)) {
 			Size sz = GetFitSize(m.GetSize(), r.Size());
 			Point p = r.CenterPos(sz);
-			w.DrawImage(p.x, p.y, m);
+			w.DrawImage(p.x, p.y, CachedRescale(m, sz));
 		}
 	}
 	virtual Size GetStdSize(const Value& q) const

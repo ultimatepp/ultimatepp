@@ -238,8 +238,11 @@ Image RichRawImage::ToImage(const Value& data, Size sz, void *) const
 	String s = data;
 	StringStream ss(s);
 	One<StreamRaster> r = StreamRaster::OpenAny(ss);
-	if(r)
-		return r->GetImage();
+	if(r) {
+		Image x = r->GetImage();
+		Size outsz(min(sz.cx, 4 * x.GetWidth()), min(sz.cy, 4 * x.GetHeight()));
+		return Rescale(x, sz);
+	}
 	return Null;
 }
 
