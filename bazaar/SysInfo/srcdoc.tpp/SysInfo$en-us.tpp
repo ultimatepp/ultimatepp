@@ -48,6 +48,9 @@ ellaneous functions]&]
 [s0; [^topic`:`/`/zLibs`/SysInfo`/srcimp`/SysInfo`$en`-us^ Implementation 
 details]&]
 [s0; &]
+[s0; [^topic`:`/`/SysInfo`/srcdoc`/SysInfoDemo`$en`-us^ SysInfo`_demo] 
+review&]
+[s0; &]
 [s0; [^topic`:`/`/zLibs`/SysInfo`/srcdoc`/ChangesLog`$en`-us^ Changes 
 log]&]
 [s0; ]
