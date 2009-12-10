@@ -39,6 +39,7 @@ folders]&]
 raphical functions]&]
 [s0; &]
 [s0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us^ Reference]&]
+[s0;^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us^ &]
 [s0; [^topic`:`/`/Functions4U`/srcdoc`/ChangesLog`$en`-us^ News and 
 changes Log]&]
 [s0; ]

@@ -1439,14 +1439,7 @@ lass]_[*@4 T]>_[_^Rect`_^ Rect`_]<[*@4 T]>_[* FitInFrame]([@(0.0.255) const]_[_^
 &]
 [s3; &]
 [s4;%- &]
-[s5;:ZoomProportional`(Rect`,Rect`,double`&`,double`&`,double`,double`):%- [_^Size^ Siz
-e]_[* ZoomProportional]([_^Rect^ Rect]_[*@3 frame], [_^Rect^ Rect]_[*@3 space], 
-[@(0.0.255) double]_`&[*@3 x], [@(0.0.255) double]_`&[*@3 y], [@(0.0.255) double]_[*@3 scale],
- [@(0.0.255) double]_[*@3 step])&]
-[s2;  [%-*@3 frame] [%-*@3 space] [%-*@3 x] [%-*@3 y] [%-*@3 scale] [%-*@3 step].&]
-[s3; &]
-[s4;%- &]
-[s5;:RandomColor`(`):%- [_^Color^ Color]_[* RandomColor]()&]
+[s2;l0;%- [_^Color^ Color]_[* RandomColor]()&]
 [s2; Returns a random color.&]
 [s3; &]
 [s4;%- &]
