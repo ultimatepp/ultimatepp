@@ -754,7 +754,7 @@ void InitRichTextZoom()
 	SetRichTextStdScreenZoom(Ctrl::HorzLayoutZoom(96), 600);
 }
 
-inline void Ctrl::Csizeinit()
+void Ctrl::Csizeinit()
 {
 	GuiLock __;
 	if(Csize.cx == 0 || Dsize.cx == 0) {
