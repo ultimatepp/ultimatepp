@@ -122,6 +122,12 @@ void Mouse_RightClick();
 void Mouse_LeftDblClick();
 void Mouse_MiddleDblClick();
 void Mouse_RightDblClick();
+void Mouse_LeftDown();
+void Mouse_LeftUp();
+void Mouse_RightDown();
+void Mouse_RightUp();
+void Mouse_MiddleDown();
+void Mouse_MiddleUp();
 
 void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 50);
 

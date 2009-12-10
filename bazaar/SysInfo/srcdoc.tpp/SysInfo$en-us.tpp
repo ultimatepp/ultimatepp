@@ -1,4 +1,4 @@
-topic "SysInfo general description";
+topic "General description";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -45,12 +45,11 @@ creen recording]&]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#LoadFile`_Safe`(String`)^ Misc
 ellaneous functions]&]
 [s0; &]
-[s0; [^topic`:`/`/zLibs`/SysInfo`/srcimp`/SysInfo`$en`-us^ Implementation 
+[s0; [^topic`:`/`/SysInfo`/srcimp`/SysInfo`$en`-us^ Implementation 
 details]&]
 [s0; &]
 [s0; [^topic`:`/`/SysInfo`/srcdoc`/SysInfoDemo`$en`-us^ SysInfo`_demo] 
 review&]
 [s0; &]
-[s0; [^topic`:`/`/zLibs`/SysInfo`/srcdoc`/ChangesLog`$en`-us^ Changes 
-log]&]
+[s0; [^topic`:`/`/SysInfo`/srcdoc`/ChangesLog`$en`-us^ Changes log]&]
 [s0; ]

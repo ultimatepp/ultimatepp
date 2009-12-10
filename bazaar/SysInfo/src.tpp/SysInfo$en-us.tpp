@@ -1,4 +1,4 @@
-topic "SysInfo function reference";
+topic "Function reference";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
@@ -361,6 +361,39 @@ as if it would have been done with the mouse.&]
 [s4;%- &]
 [s5;:Mouse`_RightDblClick`(`):%- [@(0.0.255) void]_[* Mouse`_RightDblClick]()&]
 [s2; Simulates by software a mouse double click with the right button 
+as if it would have been done with the mouse.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Mouse`_LeftDown`(`):%- [@(0.0.255) void]_[* Mouse`_LeftDown]()&]
+[s2; Simulates by software a mouse press with the left button as 
+if it would have been done with the mouse.&]
+[s2; [@6 Caution:] The button will remain pressed after this function.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Mouse`_LeftUp`(`):%- [@(0.0.255) void]_[* Mouse`_LeftUp]()&]
+[s2; Simulates by software a mouse release with the left button as 
+if it would have been done with the mouse.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Mouse`_RightDown`(`):%- [@(0.0.255) void]_[* Mouse`_RightDown]()&]
+[s2; Simulates by software a mouse press with the right button as 
+if it would have been done with the mouse.&]
+[s2; [@6 Caution:] The button will remain pressed after this function.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Mouse`_RightUp`(`):%- [@(0.0.255) void]_[* Mouse`_RightUp]()&]
+[s2; Simulates by software a mouse release with the right button 
+as if it would have been done with the mouse.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Mouse`_MiddleDown`(`):%- [@(0.0.255) void]_[* Mouse`_MiddleDown]()&]
+[s2; Simulates by software a mouse press with the middle button as 
+if it would have been done with the mouse.&]
+[s2; [@6 Caution:] The button will remain pressed after this function.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Mouse`_MiddleUp`(`):%- [@(0.0.255) void]_[* Mouse`_MiddleUp]()&]
+[s2; Simulates by software a mouse release with the middle button 
 as if it would have been done with the mouse.&]
 [s3;%- &]
 [s4;%- &]
