@@ -450,31 +450,6 @@ bool GetMemoryInfo(
 }
 #endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
-// This system files are like pipes: it is not possible to get the length to size the buffer
-String LoadFile_Safe(String fileName)
-{
-#ifdef PLATFORM_POSIX
-	int fid = open(fileName, O_RDONLY);
-#else
-	int fid = _wopen(fileName.ToWString(), O_RDONLY|O_BINARY);
-#endif
-	if (fid < 0) 
-		return String("");
-	const int size = 1024;
-	int nsize;
-	StringBuffer s;
-	char buf[size];
-	while((nsize = read(fid, buf, size)) == size) 
-		s.Cat(buf, size);
-	if (nsize > 1)
-		s.Cat(buf, nsize-1);
-	close(fid);
-	return s;
-}
 
 #ifdef PLATFORM_POSIX
 bool GetMemoryInfo(
@@ -2187,7 +2162,7 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 {
 	bool inKey = false;
 	String key = "";
-	WString wtext = text;
+	WString wtext(text);
 	for (int i = 0; i < text.GetCount(); ++i) {
 		bool vk = false;
 		Sleep(delayBetweenKeys);

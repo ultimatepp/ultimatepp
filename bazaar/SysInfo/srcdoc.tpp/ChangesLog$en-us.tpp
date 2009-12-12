@@ -5,6 +5,8 @@ topic "News and changes log";
 [s0; [*R6 SysInfo. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2009/12/12-|LoadFile`_Safe fixed bug... I forgot to move it 
+to Functions4U]&]
 [s0; [2 2009/12/11-|Keyb`_SendKeys and Snap`_`* functions in Windows 
 now support Unicode file names]&]
 [s0; [2 2009/12/02-|Some functions moved to new package Functions4U]&]
