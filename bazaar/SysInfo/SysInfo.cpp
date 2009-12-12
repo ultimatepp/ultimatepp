@@ -2111,7 +2111,7 @@ int GetKeyCode(String key)
 	return 0;
 }
 
-void PressKey(int key, bool hold = false, bool release = false)
+void PressKey(wchar key, bool hold = false, bool release = false)
 {
 	bool caps, num, scroll;
 	if (IsLetter(key)) {
@@ -2119,7 +2119,7 @@ void PressKey(int key, bool hold = false, bool release = false)
     	if (caps) 
     		SetKeyLockStatus(false, num, scroll);	
     }
-    long nVK = VkKeyScan(key);
+    long nVK = VkKeyScanW(key);
     
     if (nVK == 0) 
         return;
@@ -2187,10 +2187,11 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 {
 	bool inKey = false;
 	String key = "";
+	WString wtext = text;
 	for (int i = 0; i < text.GetCount(); ++i) {
 		bool vk = false;
 		Sleep(delayBetweenKeys);
-		int c = text[i];
+		wchar c = wtext[i];
 		if (c == '{')
 			inKey = true;
 		else if (c == '}') {
@@ -2278,7 +2279,7 @@ bool Window_SaveCapture(long windowId, String fileName, int left, int top, int w
    	LPVOID buf = cbuf;
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 	GetDIBits(hDC, hb, 0, bmpInfo.bmiHeader.biHeight, buf, &bmpInfo, DIB_RGB_COLORS);
-	if((file = fopen(fileName,"wb")) == NULL)
+	if((file = _wfopen(fileName.ToWString(),L"wb")) == NULL)
   		return false;
 	bmpFileHeader.bfReserved1 = 0;
 	bmpFileHeader.bfReserved2 = 0;
