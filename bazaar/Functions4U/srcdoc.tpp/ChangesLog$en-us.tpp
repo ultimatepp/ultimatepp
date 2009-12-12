@@ -5,6 +5,8 @@ topic "News and changes Log";
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2009/12/12-|LoadFile`_Safe fixed bug... I forgot to bring it 
+from SysInfo]&]
 [s0; [2 2009/12/02-|Deleted DoEvents()]&]
 [s0; [2 2009/12/02-|Created Functions4U]&]
 [s0; ]
