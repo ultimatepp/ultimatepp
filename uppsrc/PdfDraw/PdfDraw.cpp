@@ -532,6 +532,43 @@ void PdfDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	}
 }
 
+String GetMonoPdfImage(const Image& m, const Rect& sr)
+{
+	String data;
+	for(int y = sr.top; y < sr.bottom; y++) {
+		const RGBA *p = m[y] + sr.left;
+		const RGBA *e = m[y] + sr.right;
+		while(p < e) {
+			int bit = 0x80;
+			byte b = 0;
+			while(bit && p < e) {
+				if(!((p->r | p->g | p->b) == 0 || (p->r & p->g & p->b) == 255))
+					return Null;
+				b |= bit & p->r;
+				bit >>= 1;
+				p++;
+			}
+			data.Cat(b);
+		}
+	}
+	return data;
+}
+
+String GetGrayPdfImage(const Image& m, const Rect& sr)
+{
+	String data;
+	for(int y = sr.top; y < sr.bottom; y++) {
+		const RGBA *p = m[y] + sr.left;
+		const RGBA *e = m[y] + sr.right;
+		while(p < e)
+			if(p->r == p->g && p->g == p->b)
+				data.Cat((p++)->r);
+			else
+				return Null;
+	}
+	return data;
+}
+
 String PdfDraw::Finish()
 {
 	if(!IsNull(page))
@@ -544,6 +581,8 @@ String PdfDraw::Finish()
 		Size sz = image[i].GetSize();
 		Rect sr = sz & imagerect[i];
 		String data;
+		String wh;
+		wh << " /Width " << sr.Width() << " /Height " << sr.Height();
 		const Image& m = image[i];
 		int mask = -1;
 		int smask = -1;
@@ -564,9 +603,8 @@ String PdfDraw::Finish()
 				}
 			}
 			mask = PutStream(data, String().Cat()
-			                    << "/Type /XObject /Subtype /Image /Width " << sr.Width()
-				                << " /Height " << sr.Height()
-				                << " /BitsPerComponent 1 /ImageMask true /Decode [0 1]");
+			                    << "/Type /XObject /Subtype /Image" << wh
+				                << " /BitsPerComponent 1 /ImageMask true /Decode [0 1] ");
 		}
 		if(m.GetKind() == IMAGE_ALPHA) {
 			for(int y = sr.top; y < sr.bottom; y++) {
@@ -576,9 +614,8 @@ String PdfDraw::Finish()
 					data.Cat((p++)->a);
 			}
 			smask = PutStream(data, String().Cat()
-			                    << "/Type /XObject /Subtype /Image /Width " << sr.Width()
-				                << " /Height " << sr.Height()
-				                << " /BitsPerComponent 8 /ColorSpace /DeviceGray /Decode [0 1]");
+			                    << "/Type /XObject /Subtype /Image" << wh
+				                << " /BitsPerComponent 8 /ColorSpace /DeviceGray /Decode [0 1] ");
 		}
 		data.Clear();
 		for(int y = sr.top; y < sr.bottom; y++) {
@@ -592,8 +629,31 @@ String PdfDraw::Finish()
 			}
 		}
 		String imgobj;
-		imgobj << "/Type /XObject /Subtype /Image /Width " << sr.Width()
-		       << " /Height " << sr.Height() << " /BitsPerComponent 8 /ColorSpace /DeviceRGB";
+		data = GetMonoPdfImage(m, sr);
+		if(data.GetCount())
+			imgobj << "/Type /XObject /Subtype /Image" << wh
+			       << " /BitsPerComponent 1 /Decode [0 1] /ColorSpace /DeviceGray ";
+		else {
+			data = GetGrayPdfImage(m, sr);
+			if(data.GetCount())
+				imgobj << "/Type /XObject /Subtype /Image" << wh
+				       << " /BitsPerComponent 8 /ColorSpace /DeviceGray /Decode [0 1] ";
+			else {
+				data.Clear();
+				for(int y = sr.top; y < sr.bottom; y++) {
+					const RGBA *p = m[y] + sr.left;
+					const RGBA *e = m[y] + sr.right;
+					while(p < e) {
+						data.Cat(p->r);
+						data.Cat(p->g);
+						data.Cat(p->b);
+						p++;
+					}
+				}
+				imgobj << "/Type /XObject /Subtype /Image" << wh
+				       << " /BitsPerComponent 8 /ColorSpace /DeviceRGB";
+			}
+		}
 		if(mask >= 0)
 			imgobj << " /Mask " << mask << " 0 R";
 		if(smask >= 0)
@@ -788,27 +848,32 @@ String PdfDraw::Finish()
 		}
 	}
 
+	int fonts = BeginObj();
+	out << "<<\n";
+	for(int i = 0; i < pdffont.GetCount(); i++)
+		out << "/F" << i + 1 << ' ' << fontobj[i] << " 0 R \n";
+	out << ">>\n";
+	EndObj();
+	
+	int resources = BeginObj();
+	out << "<< /Font " << fonts << " 0 R /ProcSet [ /PDF /Text /ImageB /ImageC ]";
+	if(imageobj.GetCount()) {
+		out << " /XObject << ";
+		for(int i = 0; i < imageobj.GetCount(); i++)
+			out << "/Image" << i + 1 << ' ' << imageobj[i] << " 0 R ";
+		out << ">>\n";
+	}
+	out << ">>\n";
+	EndObj();
+
 	int pages = BeginObj();
 	out << "<< /Type /Pages\n"
 	    << "/Kids [";
 	for(int i = 0; i < pagecount; i++)
 		out << i + pages + 1 << " 0 R ";
 	out << "]\n"
-	    << "/Count " << pagecount << "\n"
-	    << "/Resources << /ProcSet [ /PDF /Text /ImageB /ImageC ]\n";
-	if(pdffont.GetCount()) {
-	    out << "/Font << ";
-		for(int i = 0; i < pdffont.GetCount(); i++)
-			out << "/F" << i + 1 << ' ' << fontobj[i] << " 0 R ";
-		out << ">>\n";
-	}
-	if(!imageobj.IsEmpty()) {
-		out << "/XObject << ";
-		for(int i = 0; i < imageobj.GetCount(); i++)
-			out << "/Image" << i + 1 << ' ' << imageobj[i] << " 0 R ";
-		out << ">>\n";
-	}
-	out << ">> >>\n";
+	    << "/Count " << pagecount << "\n";
+	out << ">>\n";
 	EndObj();
 	for(int i = 0; i < pagecount; i++) {
 		BeginObj();
@@ -816,7 +881,8 @@ String PdfDraw::Finish()
 		    << "/Parent " << pages << " 0 R\n"
 		    << "/MediaBox [0 0 " << Pt(pgsz.cx) << ' ' << Pt(pgsz.cy) << "]\n"
 		    << "/Contents " << i + 1 << " 0 R\n"
-		    << ">>\n";
+		    << "/Resources " << resources << " 0 R \n";
+		out << ">>\n";
 		EndObj();
 	}
 	int outlines = BeginObj();
@@ -840,6 +906,7 @@ String PdfDraw::Finish()
 	    << "trailer\n"
 	    << "<< /Size " << offset.GetCount() + 1 << "\n"
 	    << "/Root " << catalog << " 0 R\n"
+		<< "/ID [ <" << Uuid::Create() << "> <" << Uuid::Create() << "> ]\n"
 	    << ">>\n"
 	    << "startxref\r\n"
 	    << startxref << "\r\n"
