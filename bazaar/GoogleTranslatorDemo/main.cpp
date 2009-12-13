@@ -1,4 +1,5 @@
 #include "main.h"
+#include "GlobalShortCut.h"
 
 #define IMAGECLASS GoogleTranslatorDemoImg
 #define IMAGEFILE <GoogleTranslatorDemo/GoogleTranslatorDemo.iml>
@@ -29,48 +30,95 @@ GoogleTranslatorDemo::GoogleTranslatorDemo(){
 	CtrlLayout(outputwindow);
 	
 	// set languageslist
+	languageslist.Add("af", t_("Afrikaans"));
 	languageslist.Add("sq", t_("Albanian"));
+	languageslist.Add("am", t_("Amharic"));
 	languageslist.Add("ar", t_("Arabic"));
+	languageslist.Add("hy", t_("Armenian"));
+	languageslist.Add("az", t_("Azerbaijani"));
+	languageslist.Add("eu", t_("Basque"));
+	languageslist.Add("be", t_("Belarusian"));
+	languageslist.Add("bn", t_("Bengali"));
+	languageslist.Add("bh", t_("Bihari"));
 	languageslist.Add("bg", t_("Bulgarian"));
+	languageslist.Add("my", t_("Burmese"));
 	languageslist.Add("ca", t_("Catalan"));
+	languageslist.Add("chr", t_("CHEROKEE"));
+	languageslist.Add("zh", t_("CHINESE"));
 	languageslist.Add("zh-CN", t_("Chinese (Simplified)"));
 	languageslist.Add("zh-TW", t_("Chinese (Traditional)"));
 	languageslist.Add("hr", t_("Croatian"));
 	languageslist.Add("cs", t_("Czech"));
 	languageslist.Add("da", t_("Danish"));
+	languageslist.Add("dv", t_("Dhivehi"));
 	languageslist.Add("nl", t_("Dutch"));
 	languageslist.Add("en", t_("English"));
+	languageslist.Add("eo", t_("Esperanto"));
 	languageslist.Add("et", t_("Estonian"));
 	languageslist.Add("tl", t_("Filipino"));
 	languageslist.Add("fi", t_("Finnish"));
 	languageslist.Add("fr", t_("French"));
 	languageslist.Add("gl", t_("Galician"));
+	languageslist.Add("ka", t_("Georgian"));
 	languageslist.Add("de", t_("German"));
 	languageslist.Add("el", t_("Greek"));
+	languageslist.Add("gn", t_("Guarani"));
+	languageslist.Add("gu", t_("Gujarati"));
 	languageslist.Add("iw", t_("Hebrew"));
 	languageslist.Add("hi", t_("Hindi"));
 	languageslist.Add("hu", t_("Hungarian"));
+	languageslist.Add("is", t_("Icelandic"));
 	languageslist.Add("id", t_("Indonesian"));
+	languageslist.Add("iu", t_("Inuktitut"));
 	languageslist.Add("it", t_("Italian"));
 	languageslist.Add("ja", t_("Japanese"));
+	languageslist.Add("kn", t_("Kannada"));
+	languageslist.Add("kk", t_("Kazakh"));
+	languageslist.Add("km", t_("Khmer"));
 	languageslist.Add("ko", t_("Korean"));
+	languageslist.Add("ku", t_("Kurdish"));
+	languageslist.Add("ky", t_("Kyrgyz"));
+	languageslist.Add("lo", t_("Laothian"));
 	languageslist.Add("lv", t_("Latvian"));
 	languageslist.Add("lt", t_("Lithuanian"));
+	languageslist.Add("mk", t_("Macedonian"));
+	languageslist.Add("ms", t_("Malay"));
+	languageslist.Add("ml", t_("Malayalam"));
 	languageslist.Add("mt", t_("Maltese"));
+	languageslist.Add("mr", t_("Marathi"));
+	languageslist.Add("mn", t_("Mongolian"));
+	languageslist.Add("ne", t_("Nepali"));
 	languageslist.Add("no", t_("Norwegian"));
+	languageslist.Add("or", t_("Oriya"));
+	languageslist.Add("ps", t_("Pashto"));
+	languageslist.Add("fa", t_("Persian"));
 	languageslist.Add("pl", t_("Polish"));
-	languageslist.Add("pt", t_("Portuguese"));
+	languageslist.Add("pt-PT", t_("Portuguese"));
+	languageslist.Add("pa", t_("Punjabi"));
 	languageslist.Add("ro", t_("Romanian"));
 	languageslist.Add("ru", t_("Russian"));
+	languageslist.Add("sa", t_("Sanskrit"));
 	languageslist.Add("sr", t_("Serbian"));
+	languageslist.Add("sd", t_("Sindhi"));
+	languageslist.Add("si", t_("Sinhalese"));
 	languageslist.Add("sk", t_("Slovak"));
 	languageslist.Add("sl", t_("Slovenian"));
 	languageslist.Add("es", t_("Spanish"));
+	languageslist.Add("sw", t_("Swahili"));
 	languageslist.Add("sv", t_("Swedish"));
+	languageslist.Add("tg", t_("Tajik"));
+	languageslist.Add("ta", t_("Tamil"));
+	languageslist.Add("tl", t_("Tagalog"));
+	languageslist.Add("te", t_("Telugu"));
 	languageslist.Add("th", t_("Thai"));
+	languageslist.Add("bo", t_("Tibetan"));
 	languageslist.Add("tr", t_("Turkish"));
 	languageslist.Add("uk", t_("Ukrainian"));
+	languageslist.Add("ur", t_("Urdu"));
+	languageslist.Add("uz", t_("Uzbek"));
+	languageslist.Add("ug", t_("Uighur"));
 	languageslist.Add("vi", t_("Vietnamese"));
+	languageslist.Add("", t_("UNKNOWN"));
 	
 	for(int i = 0; i<languageslist.GetCount(); i++){
 		outputwindow.fromlanguagectrl.Add(languageslist.GetKey(i), languageslist[i]);
@@ -114,14 +162,15 @@ GoogleTranslatorDemo::GoogleTranslatorDemo(){
 	proxyHTTPPort = 808;
 	AskWhenCloseApplication = true;
 	refreshData();
-	SetTimeCallback(-70, THISBACK(GlobalShortCutHandle), TIMEID_KEYBOARD);
 	
-	//Ctrl::InstallKeyHook(&sGlobalGTranslateKeyHook);
-	// working only when the programm is active
+	SetTimeCallback(-70, THISBACK(GlobalShortCutHandle), TIMEID_KEYBOARD);
+	//TranslateHotKeyId = Ctrl::RegisterSystemHotKey(K_CTRL_C|K_C, THISBACK(GlobalShortCutHandle));
+	option_dlg_initialized = false;
 }
 
 GoogleTranslatorDemo::~GoogleTranslatorDemo(){
 	KillTimeCallback(TIMEID_KEYBOARD);
+	//Ctrl::UnregisterSystemHotKey(TranslateHotKeyId);
 }
 
 void GoogleTranslatorDemo::onClose(){
@@ -145,35 +194,47 @@ void GoogleTranslatorDemo::onMinimize(){
 
 void GoogleTranslatorDemo::Options(){
 	//...
-	TabDlg dlg;
-	WithOptionsGeneralLayout<ParentCtrl> tab_options_general;
-	WithOptionsConnectionLayout<ParentCtrl> tab_options_connection;
+	if(!option_dlg_initialized){
+		option_dlg_initialized = true;
 	
-	// tab_options_general
-	for(int i=0;i<suportedLanguagies.GetCount();i++){
-		tab_options_general.lang.Add(suportedLanguagies.GetKey(i), suportedLanguagies[i].ToString());
-	}
+		// tab_options_general
+		for(int i=0;i<suportedLanguagies.GetCount();i++){
+			tab_options_general.lang.Add(suportedLanguagies.GetKey(i), suportedLanguagies[i].ToString());
+		}
+		tab_options_general.OptionAlwaysShowTrayIcon = trayiconAlwaysShowTrayIcon;
+		tab_options_general.OptionHideInTrayIconOnMinimize = hideInTrayIconOnMinimize;
+		tab_options_general.OptionHideInTrayIconOnClose = hideInTrayIconOnClose;
+		tab_options_general.OptionAskWhenCloseApplication = AskWhenCloseApplication;
+		tab_options_general.OptionDoNotFormatText = doNotFormatText;
+			
+		tab_options_connection.useProxy = useProxy;
+		tab_options_connection.proxyHTTPAddress = proxyHTTPAddress;
+		tab_options_connection.proxyHTTPPort = proxyHTTPPort;
+		
+		tab_options_connection.useProxyAuth = useProxyAuth;
+		tab_options_connection.proxyHTTPUsername = proxyHTTPUsername;
+		tab_options_connection.proxyHTTPPassword = proxyHTTPPassword;
+		
+		tab_options_connection.proxyHTTPPassword.Password();
+		
+		tab_options_connection.useProxy<<THISBACK(useProxyOnChange);
+		tab_options_connection.useProxyAuth<<THISBACK(useProxyAuthOnChange);
+		
+		// Add
+		option_dlg.Add(tab_options_general, t_("General"));
+		option_dlg.Add(tab_options_connection, t_("Connection"));
+		option_dlg.OKCancel()
+			.Sizeable()
+			.Title(t_("Options"));
+	};
 	
 	int cur_index = tab_options_general.lang.FindKey(currentLanguage);
 	if(cur_index>=0)
 		tab_options_general.lang.SetIndex(cur_index);
-	tab_options_general.OptionAlwaysShowTrayIcon = trayiconAlwaysShowTrayIcon;
-	tab_options_general.OptionHideInTrayIconOnMinimize = hideInTrayIconOnMinimize;
-	tab_options_general.OptionHideInTrayIconOnClose = hideInTrayIconOnClose;
-	tab_options_general.OptionAskWhenCloseApplication = AskWhenCloseApplication;
 	
-	tab_options_connection.useProxy = useProxy;
-	tab_options_connection.proxyHTTPAddress = proxyHTTPAddress;
-	tab_options_connection.proxyHTTPPort = proxyHTTPPort;
-		
-	// Add
-	dlg.Add(tab_options_general, t_("General"));
-	dlg.Add(tab_options_connection, t_("Connection"));
-	dlg.OKCancel()
-		.Sizeable()
-		.Title(t_("Options"));
+	useProxyOnChange();
 	
-	if(dlg.Execute() != IDOK)
+	if(option_dlg.Execute() != IDOK)
 		return;
 	
 	currentLanguage = ~tab_options_general.lang;
@@ -183,12 +244,35 @@ void GoogleTranslatorDemo::Options(){
 	hideInTrayIconOnMinimize = ~tab_options_general.OptionHideInTrayIconOnMinimize;
 	hideInTrayIconOnClose = ~tab_options_general.OptionHideInTrayIconOnClose;
 	AskWhenCloseApplication = ~tab_options_general.OptionAskWhenCloseApplication;
+	doNotFormatText = ~tab_options_general.OptionDoNotFormatText;
 	
 	refreshData();
 	
 	useProxy = ~tab_options_connection.useProxy;
 	proxyHTTPAddress = ~tab_options_connection.proxyHTTPAddress;
 	proxyHTTPPort = ~tab_options_connection.proxyHTTPPort;
+	
+	useProxyAuth = ~tab_options_connection.useProxyAuth;
+	proxyHTTPUsername = ~tab_options_connection.proxyHTTPUsername;
+	proxyHTTPPassword = ~tab_options_connection.proxyHTTPPassword;
+};
+
+void GoogleTranslatorDemo::useProxyOnChange(){
+	bool l_flag = ~tab_options_connection.useProxy;
+	tab_options_connection.proxyHTTPAddress.Enable(l_flag);
+	tab_options_connection.proxyHTTPAddressLabel.Enable(l_flag);
+	tab_options_connection.proxyHTTPPort.Enable(l_flag);
+	tab_options_connection.proxyHTTPPortLabel.Enable(l_flag);
+	tab_options_connection.useProxyAuth.Enable(l_flag);
+	useProxyAuthOnChange();
+};
+
+void GoogleTranslatorDemo::useProxyAuthOnChange(){
+	bool l_flag = (~tab_options_connection.useProxy) && (~tab_options_connection.useProxyAuth);
+	tab_options_connection.proxyHTTPUsername.Enable(l_flag);
+	tab_options_connection.proxyHTTPUsernameLabel.Enable(l_flag);
+	tab_options_connection.proxyHTTPPassword.Enable(l_flag);
+	tab_options_connection.proxyHTTPPasswordLabel.Enable(l_flag);
 };
 
 void GoogleTranslatorDemo::refreshData(){
@@ -291,8 +375,18 @@ void GoogleTranslatorDemo::HttpThread(Gate2<int, int> _progress){
 	else
 		googletranslator.SetProxy(false);
 	
+	if(useProxyAuth){
+		googletranslator.SetProxyAuth(proxyHTTPUsername, proxyHTTPPassword);
+	}
+	else
+		googletranslator.SetProxyAuth(false);
+	
 	googletranslator.Translate(sourcetext, languagefrom, languageto, _progress);
-	result = googletranslator.GetFormatedText();
+	
+	if(!doNotFormatText)
+		result = googletranslator.GetFormatedText();
+	else
+		result = googletranslator.GetTranslatedText();
 	
 	AtomicWrite(translating, 0);
 }
@@ -355,23 +449,13 @@ void GoogleTranslatorDemo::Serialize(Stream &s)
 	s % languageto;
 	s % sourcetext;
 	s % AskWhenCloseApplication;
-	
+	s % useProxyAuth;
+	s % proxyHTTPUsername;
+	s % proxyHTTPPassword;
+	s % doNotFormatText;
 	refreshData();
 }
 
-/*
-static bool sGlobalGTranslateKeyHook(Ctrl *ctrl, dword key, int repcnt)
-{
-	if(key == K_CTRL_C){
-		PromptOK("Yes!");
-		return true;
-	}
-	else
-		PromptOK("NO!");
-	
-	return false;
-}
-*/
 void GoogleTranslatorDemo::GlobalShortCutHandle(){
 	if(!AtomicRead(test_test)){
 		//ProcessEvents();
@@ -467,6 +551,7 @@ void GoogleTranslatorDemo::About(){
 
 GUI_APP_MAIN
 {
+	
 #ifdef PLATFORM_WIN32
 	static const char unique_name[] = "GoogleTranslator_$_$_U++";
 	if(::FindWindow(NULL, unique_name)) {

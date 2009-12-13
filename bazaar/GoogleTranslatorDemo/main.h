@@ -8,8 +8,6 @@
 
 using namespace Upp;
 
-#include "GlobalShortCut.h"
-
 #define IMAGECLASS GoogleTranslatorDemoImg
 #define IMAGEFILE <GoogleTranslatorDemo/GoogleTranslatorDemo.iml>
 #include <Draw/iml_header.h>
@@ -44,9 +42,9 @@ public:
 	volatile Atomic translating, test_test;
 
 	enum {
-		TIMEID_PROGRESS = Ctrl::TIMEID_COUNT,
-		TIMEID_COUNT,
-		TIMEID_KEYBOARD
+		TIMEID_PROGRESS = Ctrl::TIMEID_COUNT
+		, TIMEID_COUNT
+		, TIMEID_KEYBOARD
 	};
 	
 	void HttpThread(Gate2<int, int> _progress = false);
@@ -54,12 +52,16 @@ public:
 	bool CheckCancel(int, int);
 	void swap();
 	void Serialize(Stream &s);
+	void OLD_GlobalShortCutHandle();
 	void GlobalShortCutHandle();
 	void SetLanguageFromToPos(String lang_from, String lang_to, bool& need_translate);
 	void SetLanguageFromToPos();
 	void SetLanguagePos(DropList& ctrl, String& lang_key, String& def_key);
 	void TranslateTextInBaloon();
 	GoogleTranslator googletranslator;
+	//callbacks
+	void useProxyOnChange();
+	void useProxyAuthOnChange();
 private:
 	enum { LAUNCH };
 	void refreshData();
@@ -79,6 +81,7 @@ private:
 	bool trayiconAlwaysShowTrayIcon;
 	bool hideInTrayIconOnMinimize;
 	bool hideInTrayIconOnClose;
+	bool doNotFormatText;
 	bool isHidden;
 	void onMinimize();
 	void onClose();
@@ -89,10 +92,18 @@ private:
 	bool useProxy;
 	String proxyHTTPAddress;
 	int proxyHTTPPort;
+	bool useProxyAuth;
+	String proxyHTTPUsername;
+	String proxyHTTPPassword;
 	TimeStop time_stop_shortcut;
 	int time_count_shortcut1, time_count_shortcut2, time_count_shortcut3, time_count_shortcut4;
 	int shortcut_stage;
 	bool AskWhenCloseApplication;
+	int TranslateHotKeyId;
+	TabDlg option_dlg;
+		bool option_dlg_initialized;
+		WithOptionsConnectionLayout<ParentCtrl> tab_options_connection;
+		WithOptionsGeneralLayout<ParentCtrl> tab_options_general;
 };
 
 #endif

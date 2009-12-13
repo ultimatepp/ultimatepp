@@ -5,7 +5,7 @@ LAYOUT(GoogleTranslatorDemoLayout, 440, 152)
 	ITEM(Label, dv___3, SetLabel(t_("From:")).LeftPosZ(4, 28).TopPosZ(0, 19))
 	ITEM(Button, correcttranslationbutton, SetLabel(t_("Correct translation")).LeftPosZ(340, 96).TopPosZ(0, 19))
 	ITEM(Button, translatebutton, SetLabel(t_("Translate")).LeftPosZ(280, 56).TopPosZ(0, 19))
-	ITEM(LineEdit, textedit, SetEditable(false).HSizePosZ(0, 0).VSizePosZ(40, 0))
+	ITEM(DocEdit, textedit, SetEditable(false).HSizePosZ(0, 0).VSizePosZ(40, 0))
 	ITEM(Button, swap, SetLabel(t_("Swap")).LeftPosZ(240, 32).TopPosZ(0, 19))
 	ITEM(Label, dv___8, SetLabel(t_("Translated text:")).SetFont(StdFont().Bold()).LeftPosZ(4, 112).TopPosZ(24, 13))
 END_LAYOUT
@@ -14,7 +14,7 @@ LAYOUT(MainWindow, 400, 200)
 END_LAYOUT
 
 LAYOUT(InputTextForm, 400, 200)
-	ITEM(LineEdit, textedit, HSizePosZ(0, 0).VSizePosZ(16, 0))
+	ITEM(DocEdit, textedit, HSizePosZ(0, 0).VSizePosZ(16, 0))
 	ITEM(Label, labeltxt, SetLabel(t_("Source text:")).SetFont(StdFont().Bold()).LeftPosZ(4, 104).TopPosZ(0, 13))
 END_LAYOUT
 
@@ -30,20 +30,26 @@ LAYOUT(AboutLayout, 464, 300)
 	ITEM(RichTextCtrl, text, HSizePosZ(8, 6).VSizePosZ(4, 33))
 END_LAYOUT
 
-LAYOUT(OptionsGeneralLayout, 304, 112)
+LAYOUT(OptionsGeneralLayout, 304, 128)
 	ITEM(StaticText, dv___0, SetText(t_("Language:")).LeftPosZ(4, 60).TopPosZ(4, 18))
 	ITEM(DropList, lang, LeftPosZ(68, 144).TopPosZ(4, 19))
 	ITEM(Option, OptionAlwaysShowTrayIcon, SetLabel(t_("Always show tray icon")).HSizePosZ(4, 8).TopPosZ(28, 16))
 	ITEM(Option, OptionHideInTrayIconOnMinimize, SetLabel(t_("Hide in tray icon when Minimize application (only win32)")).HSizePosZ(4, 8).TopPosZ(48, 16))
-	ITEM(Option, OptionAskWhenCloseApplication, SetLabel(t_("Show confirmation message when the program is closing")).HSizePosZ(4, 8).TopPosZ(88, 16))
+	ITEM(Option, OptionDoNotFormatText, SetLabel(t_("Do not parse translated text")).HSizePosZ(4, 8).TopPosZ(108, 16))
+	ITEM(Option, OptionAskWhenCloseApplication, SetLabel(t_("Show confirmation message when the program is closing")).HSizePosZ(4, 8).TopPosZ(87, 16))
 	ITEM(Option, OptionHideInTrayIconOnClose, SetLabel(t_("Hide in tray icon when Close application")).HSizePosZ(4, 8).TopPosZ(68, 16))
 END_LAYOUT
 
-LAYOUT(OptionsConnectionLayout, 284, 56)
+LAYOUT(OptionsConnectionLayout, 272, 116)
+	ITEM(Option, useProxyAuth, SetLabel(t_("Use HTTP proxy password:")).LeftPosZ(8, 156).TopPosZ(48, 16))
+	ITEM(EditString, proxyHTTPUsername, LeftPosZ(72, 196).TopPosZ(68, 19))
+	ITEM(Label, proxyHTTPUsernameLabel, SetLabel(t_("Username:")).LeftPosZ(8, 60).TopPosZ(68, 19))
+	ITEM(Label, proxyHTTPPasswordLabel, SetLabel(t_("Password:")).LeftPosZ(8, 60).TopPosZ(92, 19))
+	ITEM(EditString, proxyHTTPPassword, LeftPosZ(72, 196).TopPosZ(92, 19))
 	ITEM(Option, useProxy, SetLabel(t_("Use HTTP proxy:")).LeftPosZ(8, 104).TopPosZ(4, 16))
 	ITEM(EditString, proxyHTTPAddress, LeftPosZ(72, 96).TopPosZ(24, 19))
-	ITEM(Label, HTTPProxyAddress, SetLabel(t_("Address:")).LeftPosZ(8, 60).TopPosZ(24, 19))
-	ITEM(Label, dv___3, SetLabel(t_("port:")).LeftPosZ(172, 30).TopPosZ(24, 19))
+	ITEM(Label, proxyHTTPAddressLabel, SetLabel(t_("Address:")).LeftPosZ(8, 60).TopPosZ(24, 19))
+	ITEM(Label, proxyHTTPPortLabel, SetLabel(t_("port:")).LeftPosZ(172, 30).TopPosZ(24, 19))
 	ITEM(EditInt, proxyHTTPPort, LeftPosZ(204, 64).TopPosZ(24, 19))
 END_LAYOUT
 

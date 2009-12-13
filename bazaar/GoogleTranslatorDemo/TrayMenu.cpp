@@ -10,6 +10,8 @@ void GoogleTranslatorDemo::trayMenu(Bar& CurrentBar){
 	MenuTextManagement(CurrentBar, true);
 	CurrentBar.MenuSeparator();
 	
+	CurrentBar.Add(t_("Options"), THISBACK(Options));
+	
 	CurrentBar.Add(AsString(t_("About")) + "...", THISBACK(About));
 	CurrentBar.Add(t_("Exit"), GoogleTranslatorDemoImg::ExitImg(), THISBACK(Exit));
 }
