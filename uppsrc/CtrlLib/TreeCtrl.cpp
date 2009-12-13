@@ -471,7 +471,7 @@ bool TreeCtrl::IsOpen(int id) const
 
 void TreeCtrl::Dirty(int id)
 {
-	if(selectcount) SelClear(0);
+//	if(selectcount) SelClear(0);
 	Size sz = GetSize();
 	dirty = true;
 	while(id >= 0) {
@@ -499,6 +499,7 @@ void TreeCtrl::Open(int id, bool open)
 				break;
 			}
 		}
+		if(selectcount) SelClear(0);
 		Dirty(id);
 		if(open)
 			WhenOpen(id);
@@ -898,7 +899,7 @@ void TreeCtrl::RightDown(Point p, dword flags)
 		int i = FindLine(p.y + org.y);
 		if(i >= 0) {
 			SetWantFocus();
-			SetCursorLine(i);
+			SetCursorLine(i, true, !IsSel(line[i].itemi), true);
 		}
 	}
 	if(WhenBar)
@@ -1090,6 +1091,8 @@ bool TreeCtrl::Tab(int d)
 bool TreeCtrl::Key(dword key, int)
 {
 	SyncTree();
+	if(Bar::Scan(WhenBar, key))
+		return true;
 	Size sz = GetSize();
 	int cid = GetCursor();
 	bool shift = key & K_SHIFT;
