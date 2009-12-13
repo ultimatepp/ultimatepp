@@ -2,7 +2,8 @@ uses
 	Core;
 
 file
-	LangInfo.cpp;
+	LangInfo.h,
+	main.cpp;
 
 mainconfig
 	"" = "";

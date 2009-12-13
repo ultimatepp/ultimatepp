@@ -1,0 +1,4 @@
+#ifndef _DrawText697_icpp_init_stub
+#define _DrawText697_icpp_init_stub
+#include "CtrlLib/init"
+#endif

@@ -1,0 +1,4 @@
+#ifndef _PDF_icpp_init_stub
+#define _PDF_icpp_init_stub
+#include "PdfDraw/init"
+#endif
