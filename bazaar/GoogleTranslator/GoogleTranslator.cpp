@@ -15,6 +15,29 @@ GoogleTranslator::GoogleTranslator(){
 	correctedText = "";
 }
 
+bool GoogleTranslator::sendHttpGet(String& url, String& post, String& result_text, Gate2<int, int> _progress){
+	// Proxy
+	refreshProxy();
+	
+	httpClient.URL(url+"&"+post);
+	//httpClient.Agent("Mozilla/5.0");
+	httpClient.TimeoutMsecs(5000);
+	httpClient.Get();
+	
+	bool status = true;
+	
+	result_text = httpClient.ExecuteRedirect(HttpClient::DEFAULT_MAX_REDIRECT, 
+						HttpClient::DEFAULT_RETRIES, _progress);
+	if (!IsNull(httpClient.GetError())||httpClient.IsAborted()){
+		status = false;
+		result_text = String("Error:").Cat()<<Nvl(httpClient.GetError(), String(""))
+			<<String("\n, status: ")<<httpClient.GetStatusCode()<<String(", ")<<httpClient.GetStatusLine()
+			<<String("\n, header: ")<<httpClient.GetHeaders();
+	}
+	
+	return status;
+}
+
 bool GoogleTranslator::sendHttpPost(String& url, String& post, String& result_text, Gate2<int, int> _progress){
 	// Proxy
 	refreshProxy();
@@ -40,9 +63,11 @@ bool GoogleTranslator::sendHttpPost(String& url, String& post, String& result_te
 }
 
 bool GoogleTranslator::Translate(Gate2<int, int> _progress){
+	//String url = "http://translate.google.com/translate_a/t?client=t";
+	// till 18.11.2009 was:
 	String url = "www.google.com/translate_a/t?client=t";
 	//or
-	//String url = "http://translate.google.com/translate_t"
+	//String url = "http://translate.google.com/translate_t?";
 	
 	url << String("&sl=") << languageFrom << String("&tl=") << languageTo;
 	// or
@@ -53,6 +78,8 @@ bool GoogleTranslator::Translate(Gate2<int, int> _progress){
 	String post = String("text=") + UrlEncode(sourceText);
 	
 	isTranslated = sendHttpPost(url, post, translatedText, _progress);
+	// or
+	//isTranslated = sendHttpPost(url, post, translatedText, _progress);
 	
 	// Empty other properties
 	formatedText = "";
@@ -102,8 +129,8 @@ String GoogleTranslator::GetFormatedText(){
 		return formatedText;
 	
 	// Common formatting
-	translatedText = replace_string ( translatedText, String(" \\r\\n ").Cat(), String("\n").Cat());
-	translatedText = replace_string ( translatedText, String("\\r\\n ").Cat(), String("\n").Cat());
+	translatedText = replace_string ( translatedText, String("\\r\\n").Cat(), String("\n").Cat());
+	//translatedText = replace_string ( translatedText, String("\\r\\n ").Cat(), String("\n").Cat());
 	translatedText = replace_string ( translatedText, String("\\\"").Cat(), String("\"").Cat());
 	translatedText = replace_string ( translatedText, String("\\\\").Cat(), String("\\").Cat());
 	translatedText = replace_string ( translatedText, String("\\n").Cat(), String("\n").Cat());
@@ -155,7 +182,7 @@ String GoogleTranslator::GetFormatedText(){
 				
 				if(text_temp_pos,text_temp_pos1 - text_temp_pos >1){
 					formatedText<<text_lf;
-					formatedText<<t_(text_temp.Mid(text_temp_pos,text_temp_pos1 - text_temp_pos))<<String(":");
+					formatedText<<t_(text_temp.Mid(text_temp_pos,text_temp_pos1 - text_temp_pos))<<String(":").Cat();
 				}
 				text_temp_pos = text_temp_pos1+1;
 				
@@ -178,7 +205,91 @@ String GoogleTranslator::GetFormatedText(){
 		// For debug
 		//formatedText<<text_lf<<text_temp.Mid(text_temp_pos);
 		//formatedText<<text_lf<<original_text;
-	};
+	}else if (translatedText.StartsWith("{\"sentences\":[{\"trans\":\"")) {
+		String text_lf = String("\n"), text_tab = String("\t"), curr_tab;
+		int text_temp_pos, text_temp_pos1, text_temp_pos2;
+		text_temp_pos = 14;
+		
+		text_temp_pos1 = translatedText.Find("\"}],\"", text_temp_pos);
+		if (text_temp_pos1==-1)
+			text_temp_pos1 = translatedText.GetLength();
+		
+		String translit_text_temp;
+		
+		while(translatedText.Mid(text_temp_pos, 10).StartsWith("{\"trans\":\"")&&(text_temp_pos<text_temp_pos1)){
+			text_temp_pos += 10;
+			text_temp_pos2 = translatedText.Find("\",\"orig\":\"", text_temp_pos);
+			if ((text_temp_pos2==-1)||(text_temp_pos2>text_temp_pos1))
+				text_temp_pos2 = text_temp_pos1;
+			
+			formatedText<<translatedText.Mid(text_temp_pos, text_temp_pos2 - text_temp_pos);
+			
+			if(text_temp_pos2<text_temp_pos1)
+				text_temp_pos2+=3;
+			text_temp_pos = text_temp_pos2;
+		
+			// translit
+			text_temp_pos2 = translatedText.Find("\",\"translit\":\"", text_temp_pos);
+			if (text_temp_pos2==-1)
+				text_temp_pos2 = text_temp_pos1;
+			else
+				text_temp_pos2+=14;
+			text_temp_pos = text_temp_pos2;
+			
+			text_temp_pos2 = translatedText.Find("\"}", text_temp_pos);
+			if (text_temp_pos2==-1)
+				text_temp_pos2 = text_temp_pos1;
+			
+			if(text_temp_pos<text_temp_pos2)
+				translit_text_temp<<text_tab<<translatedText.Mid(text_temp_pos, text_temp_pos2 - text_temp_pos);
+			text_temp_pos = text_temp_pos2+3;
+		}
+				
+		// Set Correction text
+		correctionText = formatedText;
+		
+		if(translit_text_temp.GetLength()>0)
+			formatedText<<text_lf<<String("translit:").Cat()<<text_lf<<text_tab<<translit_text_temp;
+		
+		text_temp_pos = text_temp_pos1+5;
+		
+		if(translatedText.Mid(text_temp_pos, 4).StartsWith("dict")){
+			text_temp_pos+=7;//dict":[
+			while(translatedText.Mid(text_temp_pos, 8).StartsWith("{\"pos\":\"")){
+				text_temp_pos+=8;//{"pos":"
+				
+				text_temp_pos1 = translatedText.Find("\",\"terms\":[\"", text_temp_pos);
+				if (text_temp_pos1==-1)
+					text_temp_pos1 = translatedText.GetLength();
+				
+				curr_tab = "";
+				//Group name
+				if(text_temp_pos1>text_temp_pos){
+					curr_tab = text_tab;
+					formatedText<<text_lf<<translatedText.Mid(text_temp_pos, text_temp_pos1 - text_temp_pos)<<String(":").Cat();
+				}
+				text_temp_pos = text_temp_pos1+12;
+				
+				text_temp_pos2 = translatedText.Find("\"]}", text_temp_pos);
+				if (text_temp_pos2==-1)
+					text_temp_pos2 = translatedText.GetLength();
+				
+				while(text_temp_pos<text_temp_pos2){
+					text_temp_pos1 = translatedText.Find("\",\"", text_temp_pos);
+					if((text_temp_pos1>text_temp_pos2)||(text_temp_pos1==-1))
+						text_temp_pos1 = text_temp_pos2;
+					formatedText<<text_lf<<curr_tab<<translatedText.Mid(text_temp_pos, text_temp_pos1 - text_temp_pos);
+					text_temp_pos = text_temp_pos1+3;
+				}
+				text_temp_pos = text_temp_pos2+4;
+			}
+		}
+	}else{
+		formatedText = translatedText;
+				
+		// Set Correction text
+		correctionText = formatedText;
+	}
 	
 	return formatedText; 
 }
@@ -205,10 +316,14 @@ String replace_string(String& s1, String& find, String replace){
 
 // Private Methods
 //----------------------------------------------------------------------------
-
 void GoogleTranslator::refreshProxy(){
 	if(useProxy)
 		httpClient.Proxy(proxyHTTPAddress, proxyHTTPPort);
 	else
 		httpClient.Proxy(NULL, 0);
+	
+	if((useProxy)&&(useProxyAuth))
+		httpClient.ProxyAuth(proxyHTTPUsername, proxyHTTPPassword);
+	else
+		httpClient.ProxyAuth(NULL, NULL);
 }

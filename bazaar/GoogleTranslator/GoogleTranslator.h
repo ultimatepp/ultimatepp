@@ -28,8 +28,12 @@ public:
 	bool UseProxy()									{return useProxy;}
 	String GetProxyAddress()						{return proxyHTTPAddress;}
 	int GetproxyPort()								{return proxyHTTPPort;}
+	bool SetProxyAuth(bool use_proxy)				{return(useProxyAuth = use_proxy);};
+	void SetProxyAuth(String proxy_u, String proxy_p)	{useProxyAuth = true; proxyHTTPUsername = proxy_u; proxyHTTPPassword = proxy_p;};
+	bool UseProxyAuth()								{return (useProxyAuth&&useProxy);}
 private:
 	void refreshProxy();
+	bool sendHttpGet(String& url, String& post, String& result_text, Gate2<int, int> _progress = false);
 	bool sendHttpPost(String& url, String& post, String& result_text, Gate2<int, int> _progress = false);
 	
 	String sourceText;
@@ -44,6 +48,10 @@ private:
 	bool useProxy;
 	String proxyHTTPAddress;
 	int proxyHTTPPort;
+	
+	bool useProxyAuth;
+	String proxyHTTPUsername;
+	String proxyHTTPPassword;
 	
 	bool isTranslated;
 	HttpClient httpClient;
