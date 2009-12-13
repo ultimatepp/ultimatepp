@@ -1266,8 +1266,7 @@ FDECLP(find, SS, GroupString)
 
 static inline bool ClikeSS(WString s, WString m)
 {
-	One<LanguageInfo::WildcardCompare> wc = GetLanguageInfo().GetWildcardCompare(m);
-	return wc && wc->Matches(s);
+	return WildcardCompare(m).Matches(s);
 }
 
 FDECLP(like, SS, GroupString)

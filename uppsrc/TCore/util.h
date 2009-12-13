@@ -273,4 +273,16 @@ inline unsigned CalcGray(byte r, byte g, byte b) { return b * 26 + g * 153 + r *
 inline unsigned CalcGray(const byte *p)          { return p[0] * 26 + p[1] * 153 + p[2] * 77; }
 inline unsigned CalcGray(Color c)                { return c.GetB() * 26 + c.GetG() * 153 + c.GetR() * 77; }
 
+class WildcardCompare {
+	WString raw_templ;
+	WString cvt_templ;
+
+	bool RawMatches(const wchar *s, const wchar *templ) const;
+
+public:
+	WildcardCompare(const wchar *templ);
+
+	bool Matches(const wchar *s) const	{ return raw_templ.GetCount() == 0 || RawMatches(s, cvt_templ); }
+};
+
 END_UPP_NAMESPACE
