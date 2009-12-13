@@ -1305,4 +1305,36 @@ String GetRelativePath(String fn, String pathlist, String curdir)
 	return fn.Mid(GetRelativePathPos(fn, curdir));
 }
 
+WildcardCompare::WildcardCompare(const wchar *templ)
+{
+	raw_templ = templ;
+	cvt_templ = ToUpper(raw_templ);
+}
+
+bool WildcardCompare::RawMatches(const wchar *s, const wchar *templ) const
+{
+	for(;;)
+		switch(*templ++)
+		{
+		case 0: return true;
+		case '.': if(*templ == 0) return *s == 0; // force end of string
+		case '?': if(*s++ == 0) return false; break;
+		case '*':
+			do
+				if(RawMatches(s, templ))
+					return true;
+			while(*s++);
+			return false;
+		case '\\':
+			if(*templ == 0 || *templ++ != *s++)
+				return false;
+			break;
+		default:
+			if(templ[-1] != ToUpper(*s++))
+				return false;
+			break;
+		}
+	return true;
+}
+
 END_UPP_NAMESPACE

@@ -2090,11 +2090,11 @@ DataSet DataTableColumn::GetRange(Value min, Value max)
 DataSet DataTableColumn::GetLike(WString mask)
 {
 	Vector<int> done = row_index->GetIndex();
-	One<LanguageInfo::WildcardCompare> wcc = GetLanguageInfo().GetWildcardCompare(mask);
+	WildcardCompare wcc(mask);
 	int *d = done.Begin();
 	for(const int *s = done.Begin(), *e = done.End(); s < e; s++) {
 		WString value = Get(*s);
-		if(wcc->Matches(value))
+		if(wcc.Matches(value))
 			*d++ = *s;
 	}
 	done.SetCount(d - done.Begin());

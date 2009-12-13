@@ -71,9 +71,6 @@ void HelpTopicTouchSeq() { help_topic_seq++; }
 void HelpTopicInfo::Set(int lang, String tit_, String txt_, String tmo_)
 {
 	String tmo = tmo_, tit = tit_, txt = txt_;
-	int cs = GetLangCharset(lang);
-//	tit.SetCharset(cs);
-//	txt.SetCharset(cs);
 	int f = language.Find(lang);
 	if(IsNull(tit) && IsNull(txt))
 	{

@@ -30,7 +30,7 @@ const int                *GetAllLanguages();
 
 String                    GetLangName(int language);
 String                    GetNativeLangName(int language);
-byte                      GetLangCharset(int language);
+//byte                      GetLangCharset(int language);
 
 String                    txtGet(const char *id, int language = LNG_CURRENT);
 
@@ -42,65 +42,54 @@ String                    GetLocaleInfoA(LCID lcid, LCTYPE lctype);
 WString                   GetLocaleInfoW(LCID lcid, LCTYPE lctype);
 #endif
 
-class LanguageInfo
-{
-public:
-	LanguageInfo(int language);
-	virtual ~LanguageInfo() {}
+class LanguageInfo {
+	void Set(int language);
 
-	String          ToString() const;
-
-	virtual String  FormatInt(int value) const;
-	virtual String  FormatDouble(double value, int digits, int FD_flags = 0, int fill_exp = 0) const;
-	virtual String  FormatDate(Date date) const;
-	virtual String  FormatTime(Time time) const;
-
-//	virtual int     ScanInt(const char *text, const char **endptr) const;
-//	virtual double  ScanDouble(const char *text, const char **endptr) const;
-//	virtual Date    ScanDate(const char *text, const char **endptr, Date base_date = GetSysDate()) const;
-//	virtual Time    ScanTime(const char *text, const char **endptr, Time base_time = GetSysTime()) const;
-
-	virtual WString GetIndexLetter(const wchar *text) const;
-
-	virtual int     Compare(const wchar *a, const wchar *b, int a_length, int b_length) const;
-	int             Compare(const wchar *a, const wchar *b) const     { return Compare(a, b, wstrlen(a), wstrlen(b)); }
-	int             Compare(WString a, WString b) const               { return Compare(a, b, a.GetLength(), b.GetLength()); }
-	int             Compare(const char *a, const char *b) const       { return Compare(ToUnicode(a, CHARSET_DEFAULT), ToUnicode(b, CHARSET_DEFAULT)); }
-	int             Compare(String a, String b) const                 { return Compare(a.ToWString(), b.ToWString()); }
-
-	bool            operator () (const wchar *a, const wchar *b) const { return Compare(a, b) < 0; }
-	bool            operator () (WString a, WString b) const           { return Compare(a, b) < 0; }
-	bool            operator () (const char *a, const char *b) const   { return Compare(a, b) < 0; }
-	bool            operator () (String a, String b) const             { return Compare(a, b) < 0; }
-
-	struct WildcardCompare
-	{
-		virtual ~WildcardCompare() {}
-		virtual bool Matches(const wchar *s) const = 0;
-	};
-
-	virtual One<WildcardCompare> GetWildcardCompare(const wchar *wildcard_text) const;
-
-	static ArrayMap<int, LanguageInfo>& Map();
-	static void     Register(One<LanguageInfo> info);
+	friend const LanguageInfo& GetLanguageInfo(int lang);
 
 public:
 	int             language;
 	String          english_name;
-	WString         native_name;
-	byte            charset;
+	String          native_name;
 
-	String          thousand_separator;
-	String          decimal_point;
-	String          date_format;
-	String          time_format;
+	String          thousand_separator, decimal_point;
+	String          date_format, time_format; // (?)
+	
+	String          month[12], smonth[12], day[7], sday[7];
 
+	int     (*compare)(const wchar *a, int alen, const wchar *b, int blen, int lang);
+	WString (*getindexletter)(const wchar *text, int lang);
+
+	String          FormatInt(int value) const;
+	String          FormatDouble(double value, int digits, int FD_flags = 0, int fill_exp = 0) const;
+	String          FormatDate(Date date) const;
+	String          FormatTime(Time time) const;
+
+	WString         GetIndexLetter(const wchar *text) const                            { return (*getindexletter)(text, language); }
+	int             Compare(const wchar *a, int alen, const wchar *b, int blen) const  { return (*compare)(a, alen, b, blen, language); }
+
+	int             Compare(const wchar *a, const wchar *b) const    { return Compare(a, wstrlen(a), b, wstrlen(b)); }
+	int             Compare(WString a, WString b) const              { return Compare(a, a.GetLength(), b, b.GetLength()); }
+	int             Compare(const char *a, const char *b) const      { return Compare(ToUnicode(a, CHARSET_DEFAULT), ToUnicode(b, CHARSET_DEFAULT)); }
+	int             Compare(String a, String b) const                { return Compare(a.ToWString(), b.ToWString()); }
+
+	bool            operator()(const wchar *a, const wchar *b) const { return Compare(a, b) < 0; }
+	bool            operator()(WString a, WString b) const           { return Compare(a, b) < 0; }
+	bool            operator()(const char *a, const char *b) const   { return Compare(a, b) < 0; }
+	bool            operator()(String a, String b) const             { return Compare(a, b) < 0; }
+
+	String          ToString() const;
+
+//BWC
 	WString         month_names[12], short_month_names[12];
 	WString         day_names[7], short_day_names[7];
+	int             Compare(const wchar *a, const wchar *b, int alen, int blen) const { return Compare(a, alen, b, blen); }
 };
 
-const LanguageInfo&       GetLanguageInfo(int lcode);
-const LanguageInfo&       GetLanguageInfo();
+const LanguageInfo& GetLanguageInfo(int lang);
+const LanguageInfo& GetLanguageInfo();
+
+void  SetLanguageInfo(int lang, const LanguageInfo& lf);
 
 // ------ Language internals ----------------
 

@@ -107,6 +107,7 @@ file
 	t.h,
 	Lang.h,
 	Lang.cpp,
+	LangInfo.cpp,
 	lcid.txt,
 	"Other files" readonly separator,
 	Parser.h,
