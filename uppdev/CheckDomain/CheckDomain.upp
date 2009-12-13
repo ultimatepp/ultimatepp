@@ -1,9 +1,9 @@
 uses
-	PdfDraw;
+	Core,
+	Web;
 
 file
-	main.cpp,
-	app.iml;
+	CheckDomain.cpp;
 
 mainconfig
 	"" = "";

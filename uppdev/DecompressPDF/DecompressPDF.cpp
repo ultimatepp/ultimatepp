@@ -1,14 +1,16 @@
 #include <Core/Core.h>
 #include <plugin/z/z.h>
 
+using namespace Upp;
+
 CONSOLE_APP_MAIN
 {
-	FileIn in("D:/paper-600.pdf");
-	FileOut out("D:/paper-600a.pdf");
+	FileIn in("u:/Dokument-A.pdf");
+	FileOut out("u:/out.pdf");
 	while(!in.IsEof()) {
 		String s = in.GetLine();
 		int q = s.Find("stream");
-		if(q >= 0)
+		if(q < 0)
 			out << s << "\n";
 		else {
 			out << s.Mid(0, q + 6);
