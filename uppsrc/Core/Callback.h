@@ -388,7 +388,7 @@ class CallbackArgTarget
 public:
 	typedef CallbackArgTarget CLASSNAME;
 
-	operator const T&()                 { return result; }
+	operator const T&() const           { return result; }
 	bool IsNullInstance() const         { return IsNull(result); }
 
 	Callback operator[](const T& value) { return THISBACK1(SetResult, value); }
