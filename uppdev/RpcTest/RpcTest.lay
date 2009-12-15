@@ -42,3 +42,4 @@ LAYOUT(RpcTestMethodHelpLayout, 400, 228)
 	ITEM(DocEdit, text, LeftPosZ(4, 392).TopPosZ(8, 184))
 	ITEM(Button, ok, SetLabel(t_("ok")).LeftPosZ(328, 63).TopPosZ(204, 17))
 END_LAYOUT
+
