@@ -1,0 +1,13 @@
+uses
+	Core;
+
+file
+	XmlRpc.h,
+	Value.cpp,
+	XmlRpcParser.cpp,
+	main.cpp,
+	request.txt;
+
+mainconfig
+	"" = "";
+
