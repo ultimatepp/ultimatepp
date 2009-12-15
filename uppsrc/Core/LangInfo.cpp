@@ -268,6 +268,12 @@ LCID GetLanguageLCID(int language)
 }
 #endif
 
+LanguageInfo::LanguageInfo()
+{
+	getindexletter = DefaultGetIndexLetter;
+	compare = DefaultLanguageCompare;
+}
+
 void LanguageInfo::Set(int lang_)
 {
 	language = lang_;
@@ -496,6 +502,8 @@ StaticMutex sLanguageInfoMutex;
 const LanguageInfo& GetLanguageInfo(int lang)
 {
 	Mutex::Lock __(sLanguageInfoMutex);
+	if(!lang)
+		lang = GetCurrentLanguage();
 	ArrayMap<int, LanguageInfo>& m = LangMap();
 	int q = m.Find(lang);
 	if(q >= 0)
@@ -513,6 +521,8 @@ const LanguageInfo& GetLanguageInfo()
 void SetLanguageInfo(int lang, const LanguageInfo& lf)
 {
 	Mutex::Lock __(sLanguageInfoMutex);
+	if(!lang)
+		lang = GetCurrentLanguage();
 	ArrayMap<int, LanguageInfo>& m = LangMap();
 	m.GetAdd(lang) = lf;
 }

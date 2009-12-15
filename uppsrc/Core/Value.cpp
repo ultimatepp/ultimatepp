@@ -616,7 +616,7 @@ int StdValueCompare(const Value& a, const Value& b, int language)
 
 int StdValueCompare(const Value& a, const Value& b)
 {
-	return StdValueCompare(a, b, 0);
+	return StdValueCompare(a, b, GetCurrentLanguage());
 }
 
 int StdValueCompareDesc(const Value& a, const Value& b, int language)

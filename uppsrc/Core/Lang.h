@@ -16,8 +16,7 @@ int     SetLNGCharset(int lng, byte chrset);
 #define LNG_CZECH         0xF1CC7A // Deprecated, corresponds to CS-CZ windows-1250
 #define LNG_ENGLISH       0x2BAB3  // LNG_('E', 'N', 'U', 'S')
 
-#define LNG_CURRENT       -1
-#define LNG_MASTER        -2
+#define LNG_CURRENT       0
 
 void                      SetLanguage(int lang);
 int                       GetCurrentLanguage();
@@ -30,7 +29,6 @@ const int                *GetAllLanguages();
 
 String                    GetLangName(int language);
 String                    GetNativeLangName(int language);
-//byte                      GetLangCharset(int language);
 
 String                    txtGet(const char *id, int language = LNG_CURRENT);
 
@@ -79,6 +77,8 @@ public:
 	bool            operator()(String a, String b) const             { return Compare(a, b) < 0; }
 
 	String          ToString() const;
+	
+	LanguageInfo();
 
 //BWC
 	WString         month_names[12], short_month_names[12];
