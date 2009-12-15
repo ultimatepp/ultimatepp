@@ -210,16 +210,27 @@ void StaticLine::FramePaint(Draw& w, const Rect& rr) {
 	r.Offset(off, off);
 
 	sw.Clear(RGBAZero());
-	if (orientation == "|")
+	if (orientation == OrVert)
 		sw.DrawLine((r.right+r.left)/2, r.top, (r.right+r.left)/2, r.bottom, width, color);
-	else if (orientation == "-")
+	else if (orientation == OrHor)
 		sw.DrawLine(r.left, (r.bottom+r.top)/2, r.right, (r.bottom+r.top)/2, width, color);
-	else if (orientation == "/")
+	else if (orientation == OrSW_NE)
 		sw.DrawLine(r.left, r.bottom, r.right, r.top, width, color);
 	else 
 		sw.DrawLine(r.left, r.top, r.right, r.bottom, width, color);	
 	
 	w.DrawImage(-off, -off, ib);
+}
+
+StaticLine& StaticLine::SetOrientation(String o) {
+	if (o == "|")
+		return SetOrientation(OrVert);
+	else if (o == "-")
+		return SetOrientation(OrHor);
+	else if (o == "\\")
+		return SetOrientation(OrNW_SE);
+	else
+		return SetOrientation(OrSW_NE);
 }
 
 StaticLine::StaticLine() {
@@ -229,7 +240,7 @@ StaticLine::StaticLine() {
 
 	color = Black();
 	width = 1;
-	orientation = "|";
+	orientation = OrVert;
 }
 
 void PaintArrowEnd(Painter &sw, double x0, double y0, double x1, double y1, int width, Color &color, bool direction) {
@@ -277,55 +288,55 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 	
 	double x0, y0, x1, y1, middle;
 
-	if (orientation == "|") {
+	if (orientation == OrVert) {
 		x0 = x1 = (r.right+r.left)/2;
 		y0 = r.top;
 		y1 = r.bottom;
-	} else if (orientation == "-") {
+	} else if (orientation == OrHor) {
 		x0 = r.left;
 		y0 = y1 = (r.bottom+r.top)/2;
 		x1 = r.right;
-	} else if (orientation == "/") {
+	} else if (orientation == OrSW_NE) {
 		x0 = r.left;
 		y0 = r.bottom;
 		x1 = r.right;
 		y1 = r.top;
-	} else if (orientation == "┐_") {
+	} else if (orientation == OrNW_SE_HVH) {
 		x0 = r.left;
 		y0 = r.top + 2*width;
 		x1 = r.right;
 		y1 = r.bottom - 2*width;
 		middle = (r.left+r.right)/2;
-	} else if (orientation == "_┌") {
+	} else if (orientation == OrSW_NE_HVH) {
 		x0 = r.left;
 		y0 = r.bottom - 2*width;
 		x1 = r.right;
 		y1 = r.top + 2*width;
 		middle = (r.left + r.right)/2;
-	} else if (orientation == "└┐") {
+	} else if (orientation == OrNW_SE_VHV) {
 		x0 = r.left + 2*width;
 		y0 = r.top;
 		x1 = r.right - 2*width;
 		y1 = r.bottom;
 		middle = (r.top + r.bottom)/2;
-	} else if (orientation == "┌┘") {
+	} else if (orientation == OrSW_NE_VHV) {
 		x1 = r.left  + 2*width;
 		y1 = r.bottom;
 		x0 = r.right - 2*width;
 		y0 = r.top;
 		middle = (r.top + r.bottom)/2;
-	} else {
+	} else {	// OrNW_SE
 		x0 = r.left;
 		y0 = r.top;
 		x1 = r.right;
 		y1 = r.bottom;
 	}
 	// Arrow len is 9*width, but 8 joins better arrow end with line
-	if (ends == "<-" || ends == "<->") {
-		if (x0 == x1 || orientation == "|" || orientation == "└┐" || orientation == "┌┘") {
+	if (ends == EndLeft || ends == EndLeftRight) {
+		if (x0 == x1 || orientation == OrVert || orientation == OrNW_SE_VHV || orientation == OrSW_NE_VHV) {
 			PaintArrowEnd(sw, x0, y0, x0, y1, width, color, true);
 			y0 += 8*width;
-		} else if (y0 == y1 || orientation == "-" || orientation == "┐_" || orientation == "_┌") {
+		} else if (y0 == y1 || orientation == OrHor || orientation == OrNW_SE_HVH || orientation == OrSW_NE_HVH) {
 			PaintArrowEnd(sw, x0, y0, x1, y0, width, color, true);
 			x0 += 8*width;
 		} else { 
@@ -335,11 +346,11 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 			y0 += 8*width*sin(t);
 		}
 	}
-	if (ends == "->" || ends == "<->") {	// Same as other but swapping points
-		if (x0 == x1 || orientation == "|" || orientation == "└┐" || orientation == "┌┘") {
+	if (ends == EndRight || ends == EndLeftRight) {	// Same as other but swapping points
+		if (x0 == x1 || orientation == OrVert || orientation == OrNW_SE_VHV || orientation == OrSW_NE_VHV) {
 			PaintArrowEnd(sw, x1, y1, x1, y0, width, color, false);
 			y1 -= 8*width;
-		} else if (y0 == y1 || orientation == "-" || orientation == "┐_" || orientation == "_┌") {
+		} else if (y0 == y1 || orientation == OrHor || orientation == OrNW_SE_HVH || orientation == OrSW_NE_HVH) {
 			PaintArrowEnd(sw, x1, y1, x0, y1, width, color, false);
 			x1 -= 8*width;
 		} else { 
@@ -349,28 +360,28 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 			y1 -= 8*width*sin(t);			
 		}
 	}	
-	if (orientation == "|") 
+	if (orientation == OrVert) 
 		sw.DrawLine(x0, y0, x1, y1, width, color);
-	else if (orientation == "-") 
+	else if (orientation == OrHor) 
 		sw.DrawLine(x0, y0, x1, y1, width, color);
-	else if (orientation == "/") 
+	else if (orientation == OrSW_NE) 
 		sw.DrawLine(x0, y0, x1, y1, width, color);
-	else if (orientation == "┐_") {
+	else if (orientation == OrNW_SE_HVH) {
 		middle = (r.left+r.right)/2;
 		sw.DrawLine(x0, y0, middle, y0, width, color);
 		sw.DrawLine(middle, y0, middle, y1, width, color);
 		sw.DrawLine(middle, y1, x1,     y1, width, color);
-	} else if (orientation == "_┌") {
+	} else if (orientation == OrSW_NE_HVH) {
 		middle = (r.left + r.right)/2;
 		sw.DrawLine(x0,     y0, middle, y0, width, color);
 		sw.DrawLine(middle, y0, middle, y1, width, color);
 		sw.DrawLine(middle, y1, x1,     y1, width, color);
-	} else if (orientation == "└┐") {
+	} else if (orientation == OrNW_SE_VHV) {
 		middle = (r.top + r.bottom)/2;
 		sw.DrawLine(x0, y0,     x0, middle, width, color);
 		sw.DrawLine(x0, middle, x1, middle, width, color);
 		sw.DrawLine(x1, middle, x1, y1,     width, color);
-	} else if (orientation == "┌┘") {
+	} else if (orientation == OrSW_NE_VHV) {
 		middle = (r.top + r.bottom)/2;
 		sw.DrawLine(x0, y0,     x0, middle, width, color);
 		sw.DrawLine(x0, middle, x1, middle, width, color);
@@ -381,6 +392,36 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 	w.DrawImage(-off, -off, ib);
 }
 
+StaticArrow& StaticArrow::SetOrientation(String o) {
+	if (o == "|")
+		return SetOrientation(OrVert);
+	else if (o == "-")
+		return SetOrientation(OrHor);
+	else if (o == "\\")
+		return SetOrientation(OrNW_SE);
+	else if (o == "/")
+		return SetOrientation(OrSW_NE);
+	else if (o == "┐_") 
+		return SetOrientation(OrNW_SE_HVH);
+	else if (o == "_┌") 
+		return SetOrientation(OrSW_NE_HVH);
+	else if (o == "└┐") 
+		return SetOrientation(OrNW_SE_VHV);
+	else //if (o == "┌┘") {
+		return SetOrientation(OrSW_NE_VHV);
+}
+
+StaticArrow& StaticArrow::SetEnds(String e) {
+	if (e == "<-")
+		return SetEnds(EndLeft);
+	else if (e == "->")
+		return SetEnds(EndRight);
+	else if (e == "<->")
+		return SetEnds(EndLeftRight);
+	else
+		return SetEnds(NoEnd);	
+}
+	
 StaticArrow::StaticArrow() {
 	SetFrame(*this);	
 	Transparent();
@@ -388,8 +429,8 @@ StaticArrow::StaticArrow() {
 
 	color = Black();
 	width = 1;
-	orientation = "|";
-	ends = "<-";
+	orientation = OrVert;
+	ends = EndLeft;
 }
 
 void StaticClock::PaintPtr(MyBufferPainter &w, double cmx, double cmy, double pos, double m, double d, Color color, double cf) {

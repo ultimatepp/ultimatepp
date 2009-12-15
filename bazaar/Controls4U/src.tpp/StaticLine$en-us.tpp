@@ -66,8 +66,8 @@ or]([_^Color^ Color]_[*@3 c])&]
 [s6;%- &]
 [s5;:StaticLine`:`:SetOrientation`(String`):%- [_^StaticLine^ StaticLine][@(0.0.255) `&]_
 [* SetOrientation]([_^String^ String]_[*@3 o])&]
-[s3; Set the line orientation [%-*@3 o]. Valid orientation values are 
-`"`|`", `"`\`\`", `"`-`" and [* `"/`"]&]
+[s3; Sets the line orientation [%-*@3 o]. Valid orientation values 
+are `"`|`", `"`\`\`", `"`-`" and [* `"/`"]&]
 [s1; &]
 [s0;= 
 @@image:2177&669
@@ -89,4 +89,10 @@ or]([_^Color^ Color]_[*@3 c])&]
 ˆâü˜âÜÎÄ±¤˜×ÑŒìŸÓŒË©Æƒ°”ãñ‘‡íÒ¼èÑ·ò®éÃ‘‡í¼È±®ö¢½Ïüı³û¬ÃÚ‘çÁŠñ•é‘‡í¼Èò±®¢½ò°
 ”‡©ÆÕ¤Ç’øÖñ‰İ¸„èÒÈÂª®¡˜—ÉØÅ¥”€£€€€€€€ˆ€€€À“ÿ€‚óİ„º
 &]
+[s6;%- &]
+[s5;:StaticLine`:`:SetOrientation`(int`):%- [_^StaticLine^ StaticLine][@(0.0.255) `&]_[* Se
+tOrientation]([@(0.0.255) int]_[*@3 o])&]
+[s3; Sets the line orientation [%-*@3 o]. Valid orientation values 
+are OrVert, OrHor, OrNW`_SE, OrSW`_NE.&]
+[s1; &]
 [s0; ]

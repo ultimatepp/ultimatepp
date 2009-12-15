@@ -5,5 +5,7 @@ topic "News and changes log";
 [s0; [*R+184 Controls4U. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2009/12/15-|Added SetOrientation() and SetEnds() using enum 
+as suggested by andrei`_natanael]&]
 [s0; [2 2009/12/02-|Created Controls4U]&]
 [s0; ]

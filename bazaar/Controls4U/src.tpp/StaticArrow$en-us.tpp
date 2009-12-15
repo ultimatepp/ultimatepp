@@ -154,9 +154,16 @@ Color]([_^Color^ Color]_[*@3 c])&]
 [s3; Sets the arrow color [%-*@3 c].&]
 [s1; &]
 [s6;%- &]
+[s5;:StaticArrow`:`:SetOrientation`(int`):%- [_^StaticArrow^ StaticArrow][@(0.0.255) `&]_
+[* SetOrientation]([@(0.0.255) int]_[*@3 o])&]
+[s3; Sets the arrow orientation [%-*@3 o]. Valid orientation values 
+are OrVert, OrHor, OrNW`_SE, OrSW`_NE, OrNW`_SE`_HVH, OrSW`_NE`_HVH, 
+OrNW`_SE`_VHV, OrSW`_NE`_VHV.&]
+[s1; &]
+[s6;%- &]
 [s5;:StaticArrow`:`:SetOrientation`(String`):%- [_^StaticArrow^ StaticArrow][@(0.0.255) `&
 ]_[* SetOrientation]([_^String^ String]_[*@3 o])&]
-[s3; Set the arrow orientation [%-*@3 o]. Valid orientation values 
+[s3; Sets the arrow orientation [%-*@3 o]. Valid orientation values 
 are `"`|`", `"`\`\`", `"`-`", [* `"/`", `"β”`_`", `"`_β”`", `"β””β”`" 
 and `"β”β”`".]&]
 [s0; &]
@@ -235,6 +242,12 @@ and `"β”β”`".]&]
  α¦‡ΗΎ¬Λ‘Πά›ΐύ… •ƒΫ‘Θ“ΐέ†ΈΰέΖ„ζ‚ξ®π„­ψ•Δ„ξ²„λ²β¤΄—π²σ£θΕΐγΊ¤Ò¤άσ†ο
 ½χάκεΉοώ…΅ρϋ„±’€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€ΐ€€€€€€€ς”ύΊΆ²η
 &]
+[s1; &]
+[s6;%- &]
+[s5;:StaticArrow`:`:SetEnds`(int`):%- [_^StaticArrow^ StaticArrow][@(0.0.255) `&]_[* SetEnd
+s]([@(0.0.255) int]_[*@3 e])&]
+[s3; Sets the arrow ends [%-*@3 e]. Valid ends values are EndLeft, 
+EndRight, EndLeftRight, NoEnd.&]
 [s1; &]
 [s6;%- &]
 [s5;:StaticArrow`:`:SetEnds`(String`):%- [_^StaticArrow^ StaticArrow][@(0.0.255) `&]_[* Set

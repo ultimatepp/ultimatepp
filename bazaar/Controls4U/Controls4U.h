@@ -178,16 +178,19 @@ public:
 	virtual void FramePaint(Draw& w, const Rect& r);
 	virtual int OverPaint() const { return 20; }
 	
+	enum LineOrientation {OrVert, OrHor, OrNW_SE, OrSW_NE};
+	
 protected:
-	String orientation;
+	int orientation;
 	Color color;
 	int width;
 
 public:
 	StaticLine& SetWidth(int w) 			{width = w; Refresh(); return *this;}
 	StaticLine& SetColor(Color c) 			{color = c; Refresh(); return *this;}
-	StaticLine& SetOrientation(String o) 	{orientation = o; Refresh(); return *this;}
-
+	StaticLine& SetOrientation(String o);
+	StaticLine& SetOrientation(int o) 		{orientation = o; Refresh(); return *this;}
+	
 	StaticLine();
 };
 
@@ -198,17 +201,22 @@ public:
 	virtual void FramePaint(Draw& w, const Rect& r);
 	virtual int OverPaint() const { return 20; }
 	
+	enum LineOrientation {OrVert, OrHor, OrNW_SE, OrSW_NE, OrNW_SE_HVH, OrSW_NE_HVH, OrNW_SE_VHV, OrSW_NE_VHV};
+	enum ArrowEnds {EndLeft, EndRight, EndLeftRight, NoEnd};
+
 protected:
-	String orientation;
-	String ends;
+	int orientation;
+	int ends;
 	Color color;
 	int width;
 
 public:
 	StaticArrow& SetWidth(int w) 			{width = w; Refresh(); return *this;}
 	StaticArrow& SetColor(Color c) 			{color = c; Refresh(); return *this;}
-	StaticArrow& SetOrientation(String o) 	{orientation = o; Refresh(); return *this;}
-	StaticArrow& SetEnds(String e) 			{ends = e; Refresh(); return *this;}
+	StaticArrow& SetOrientation(int o) 		{orientation = o; Refresh(); return *this;}
+	StaticArrow& SetOrientation(String o);
+	StaticArrow& SetEnds(int e) 			{ends = e; Refresh(); return *this;}
+	StaticArrow& SetEnds(String e);
 
 	StaticArrow();
 };
