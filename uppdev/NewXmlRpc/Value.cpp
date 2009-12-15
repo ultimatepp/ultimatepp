@@ -24,6 +24,12 @@ void ValueGet(double& x, const Value& v)
 	x = v;
 }
 
+void ValueGet(bool& x, const Value& v)
+{
+	ValueCheck(IsNumber(x));
+	x = v;
+}
+
 void ValueGet(Date& x, const Value& v)
 {
 	ValueCheck(IsDateTime(v));
@@ -53,42 +59,52 @@ void ValueGet(ValueMap& vm, const Value& v)
 	vm = v;
 }
 
-void ValuePut(Value& v, int& n)
+void ValuePut(Value& v, int n)
 {
 	v = n;
 }
 
-void ValuePut(Value& v, String& s)
+void ValuePut(Value& v, const String& s)
 {
 	v = s;
 }
 
-void ValuePut(Value& v, double& x)
+void ValuePut(Value& v, const char *s)
+{
+	ValuePut(v, String(s));
+}
+
+void ValuePut(Value& v, double x)
 {
 	v = x;
 }
 
-void ValuePut(Value& v, Date& x)
+void ValuePut(Value& v, bool x)
 {
 	v = x;
 }
 
-void ValuePut(Value& v, Time& x)
+void ValuePut(Value& v, const Date& x)
 {
 	v = x;
 }
 
-void ValuePut(Value& v, Value& t)
+void ValuePut(Value& v, const Time& x)
+{
+	v = x;
+}
+
+void ValuePut(Value& v, const Value& t)
 {
 	v = t;
 }
 
-void ValuePut(Value& v, ValueArray& va)
+void ValuePut(Value& v, const ValueArray& va)
 {
 	v = va;
 }
 
-void ValuePut(Value& v, ValueMap& vm)
+void ValuePut(Value& v, const ValueMap& vm)
 {
 	v = vm;
 }

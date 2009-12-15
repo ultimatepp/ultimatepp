@@ -2,8 +2,8 @@
 
 using namespace Upp;
 
-/*
-void Method(XmlRpcIO& rpc)
+
+void Compute(XmlRpcData& rpc)
 {
 	int n1, n2;
 	String op;
@@ -20,7 +20,6 @@ void Method(XmlRpcIO& rpc)
 		break;
 	}
 }
-*/
 
 struct TestMap {
 	String a;
@@ -35,6 +34,23 @@ struct TestMap {
 
 CONSOLE_APP_MAIN
 {
+	Register("compute", callback(Compute));
+
+	String r = LoadFile(GetDataFile("request.txt"));
+	
+	DDUMP(XmlRpcExecute(r));
+	
+	XmlRpcData d;
+	d << 12 << "-" << 22;
+	DDUMP(XmlRpcCall("compute", d));
+	
+	int res;
+	d >> res;
+	DDUMP(res);
+	
+
+	DDUMP(FormatXmlRpcError(101, "error"));
+	
 	ValueArray va;
 	va.Add("Hello");
 	va.Add("world");
@@ -79,26 +95,32 @@ CONSOLE_APP_MAIN
 	DUMP(x);
 	DUMPC(tmm);
 */	
+
+	ValueArray param;
+
 	String result;
-	String r = LoadFile(GetDataFile("request.txt"));
-	XmlParser p(r);
-	try {
-		p.ReadPI();
-		p.PassTag("methodCall");
-			p.PassTag("methodName");
-			LOG("method name: " << p.ReadText());
-			p.PassEnd();
-			ValueArray param;
-			if(p.Tag("params")) {
-				while(!p.End()) {
-					param.Add(ParseXmlRpcParam(p));
-				}
-			}
-			DUMP(param);
-		p.PassEnd();
+
+	DUMP(param);
+	
+	XmlRpcData rpc;
+	rpc.in = param;
+	
+	if(0) {
+		int n1, n2;
+		String text;
+		Time d;
+		Vector<int> vi;
+		TestMap tm;
+		rpc >> n1 >> text >> n2;
+		DUMP(n1);
+		DUMP(text);
+		DUMP(n2);
+		rpc >> d >> vi >> tm;
+		DUMP(d);
+		DUMPC(vi);
+		DUMP(tm);
 	}
-	catch(XmlError e) {
-		LOG("XmlError " << e << ": " << p.GetPtr());
-	}
+	
+	DDUMP(FormatXmlRpcParams(param));
 	LOG("Result: " << result);
 }
