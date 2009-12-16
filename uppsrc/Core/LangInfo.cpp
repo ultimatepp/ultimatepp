@@ -247,6 +247,8 @@ WString GetLocaleInfoW(LCID lcid, LCTYPE lctype)
 static dword sGetLanguageDetails(int language, String *english_name, String *native_name)
 {
 	int q = 0;
+	byte cs = GetLNGCharset(language);
+	language &= ~LNGC_(0, 0, 0, 0, ~0);
 	for(const int *ptr = LanguageList; *ptr; ptr++, q++)
 		if(*ptr == language) {
 			const char *f = LanguageInfoList[q];
@@ -255,7 +257,7 @@ static dword sGetLanguageDetails(int language, String *english_name, String *nat
 			if(english_name)
 				*english_name = String(f, a);
 			if(native_name)
-				*native_name = ToCharset(CHARSET_DEFAULT, String(a + 1, b), CHARSET_UTF8);
+				*native_name = ToCharset(cs, String(a + 1, b), CHARSET_UTF8);
 			return MAKEWORD(b[2], b[1]);
 		}
 	return 0;
