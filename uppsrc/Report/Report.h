@@ -60,7 +60,7 @@ public:
 	Report&               SetPageSize(Size sz);
 	Report&               SetPageSize(int cx, int cy) { return SetPageSize(Size(cx, cy)); }
 	Report&               Landscape();
-	Report&               Margins(int top, int left)  { mg.x = top; mg.y = left; return *this; }
+	Report&               Margins(int top, int left)  { mg.y = top; mg.x = left; return *this; }
 	Report&               Header(const char *qtf, int spc = 150);
 	Report&               Footer(const char *qtf, int spc = 150);
 	Report&               NoHeader()                  { return Header(NULL, 0); }
