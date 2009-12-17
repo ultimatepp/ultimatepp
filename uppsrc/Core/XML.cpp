@@ -510,7 +510,7 @@ bool  XmlParser::IsText()
 String XmlParser::ReadText()
 {
 	if(!IsText())
-		throw XmlError("Character data expected");
+		return String();
 	String h = text;
 	Next();
 	return h;
