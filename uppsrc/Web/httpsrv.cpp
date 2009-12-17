@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // RLOG(x)
+#define LLOG(x)  // RLOG(x)
 
 #define SLOWWRITE 4 // KB/s, comment out to turn off
 

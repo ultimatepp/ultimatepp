@@ -192,9 +192,10 @@ void SqlSchema::SaveNormal(const char *dir, const char *name) const {
 SqlSchema::SqlSchema(int dialect_)
 {
 	dialect = dialect_;
+	maxidlen = 63;
 	if(dialect == MSSQL)
 		maxidlen = 128;
-	else
+	if(dialect == ORACLE)
 		maxidlen = 24;
 }
 

@@ -29,8 +29,8 @@ static bool LogSocketFlag = false;
 void LogSockets(bool ls) { LogSocketFlag = ls; }
 bool IsLogSockets()      { return LogSocketFlag; }
 
-#define SLOG(x) if(!LogSocketFlag) ; else RLOG("[" << GetSysTime() << " @ " << int(GetTickCount() % 10000u) << "] " << x)
-#define LLOG(x)
+#define SLOG(x)  if(!LogSocketFlag) ; else RLOG("[" << GetSysTime() << " @ " << int(GetTickCount() % 10000u) << "] " << x)
+#define LLOG(x)  // LOG(x)
 
 #ifdef PLATFORM_POSIX
 
@@ -615,7 +615,7 @@ String Socket::Read(int timeout, int maxlen)
 			return Null;
 	char buffer[SOCKBUFSIZE];
 	int count = data->Read(buffer, min<int>(maxlen, sizeof(buffer)));
-	SLOG("recv(" << GetNumber() << ") -> " << count);
+	SLOG("recv(" << GetNumber() << ") -> " << count << ": " << String(buffer, max(count, 64)));
 	if(data->IsError())
 		return String::GetVoid();
 	if(count <= 0) {
