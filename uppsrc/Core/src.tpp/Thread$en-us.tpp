@@ -42,7 +42,9 @@ instance.&]
 [s3; &]
 [s4; &]
 [s5;:Thread`:`:IsOpen`(`)const: [@(0.0.255) bool]_[* IsOpen]()_[@(0.0.255) const]&]
-[s2;%% Thread represents a running thread.&]
+[s2;%% Thread represents an existing thread. Note that the thread 
+can be already finished and not running anymore (calling to Wait 
+in that case returns immediately).&]
 [s3; &]
 [s4; &]
 [s5;:Thread`:`:GetHandle`(`)const: HANDLE_[* GetHandle]()_[@(0.0.255) const 
