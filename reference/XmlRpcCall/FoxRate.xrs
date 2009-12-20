@@ -1,0 +1,5 @@
+STRUCT(FoxResult2)
+	BOOL   (flerror)
+	DOUBLE (amount)
+	STRING (message)
+END_STRUCT

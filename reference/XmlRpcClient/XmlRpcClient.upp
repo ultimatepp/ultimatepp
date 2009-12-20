@@ -1,0 +1,12 @@
+description "Client for XmlRpcServer example\377";
+
+uses
+	Core,
+	XmlRpc;
+
+file
+	XmlRpcClient.cpp;
+
+mainconfig
+	"" = "";
+
