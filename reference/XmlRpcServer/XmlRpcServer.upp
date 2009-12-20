@@ -1,0 +1,12 @@
+description "XML-RPC simple server\377";
+
+uses
+	Core,
+	XmlRpc;
+
+file
+	XmlRpcSrvTst.cpp;
+
+mainconfig
+	"" = "";
+
