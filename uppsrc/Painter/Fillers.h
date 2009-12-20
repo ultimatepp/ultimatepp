@@ -1,3 +1,6 @@
+#ifndef S_PAINTER_FILLERS_H
+#define S_PAINTER_FILLERS_H
+
 NAMESPACE_UPP
 
 struct SolidFiller : Rasterizer::Filler {
@@ -91,3 +94,5 @@ struct NoAAFillerFilter : Rasterizer::Filler {
 };
 
 END_UPP_NAMESPACE
+
+#endif

@@ -82,9 +82,13 @@ void AutoSetup()
 		dlg.dovisualcpp8x64 = true;
 	}
 	dlg.visualcppmethod8x64 <<= "MSC8x64";
-	String  sdk9 = NormalizePathNN(GetWinRegString("InstallationFolder",
-	                                               "Software\\Microsoft\\Microsoft SDKs\\Windows\\v6.1",
-	                                                HKEY_CURRENT_USER));
+	String sdk9 = NormalizePathNN(GetWinRegString("InstallationFolder",
+		                                       "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows\\v7.0",
+		                                       HKEY_LOCAL_MACHINE));  
+	if(IsNull(sdk9))
+		sdk9 = NormalizePathNN(GetWinRegString("InstallationFolder",
+	                                           "Software\\Microsoft\\Microsoft SDKs\\Windows\\v6.1",
+	                                           HKEY_CURRENT_USER));
 	if(IsNull(sdk9))
 		sdk9 = NormalizePathNN(GetWinRegString("InstallationFolder",
 		                                       "Software\\Microsoft\\Microsoft SDKs\\Windows\\v6.0A",
@@ -99,9 +103,11 @@ void AutoSetup()
 	dlg.visualcpp9 <<= bin9;
 	dlg.visualcppmethod9 <<= "MSC9";
 	dlg.dovisualcpp9 <<= !IsNull(dlg.visualcpp9);
-	if(bin9.GetLength() && FileExists(AppendFileName(bin9, "VC\\Bin\\x64\\cl.exe"))) {
+	String vc9_64 = AppendFileName(bin9, "VC\\Bin\\x64");
+	if(!FileExists(AppendFileName(vc9_64, "cl.exe")))
+		vc9_64 = AppendFileName(bin9, "VC\\Bin\\amd64");
+	if(bin9.GetLength() && FileExists(AppendFileName(vc9_64, "cl.exe")))
 		dlg.dovisualcpp9x64 = true;
-	}
 	dlg.visualcppmethod9x64 <<= "MSC9x64";
 
 	dlg.mysql <<= NormalizePathNN(GetWinRegString("Location", "SOFTWARE\\MySQL AB\\MySQL Server 4.1"));
@@ -182,6 +188,9 @@ void AutoSetup()
 		String sdk = ~dlg.sdk9;
 		if(IsNull(sdk))
 			sdk = AppendFileName(vc, "PlatformSDK");
+		String vc_lib = AppendFileName(vc, "Lib\\x64");
+		if(!DirectoryExists(vc_lib))
+			vc_lib = AppendFileName(vc, "Lib\\amd64");
 		SaveFile(
 			AppendFileName(dir, m + ".bm"),
 			"BUILDER = \"MSC9X64\";\n"
@@ -200,7 +209,7 @@ void AutoSetup()
 			"REMOTE_MAP = \"\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs9, "Common7\\Ide") + ';' +
-							AppendFileName(vc, "Bin\\x64") + ';' +
+							vc9_64 + ';' +
 							AppendFileName(sdk, "Bin") +
 							exe
 						) + ";\n"
@@ -210,7 +219,7 @@ void AutoSetup()
 							include
 						   ) + ";\n"
 			"LIB = " + AsCString(
-							AppendFileName(vc, "Lib\\x64") + ';' +
+							vc_lib + ';' +
 							AppendFileName(sdk, "Lib\\x64") +
 							lib
 			           ) + ";\n"
