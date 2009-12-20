@@ -97,7 +97,7 @@ void Painter::DrawLineStroke(int width, Color color)
 		case PEN_DASHDOTDOT:
 			Dash("9 3 3 3 3 3");
 			break;
-	default: 
+	default:
 		Stroke(width, color);
 		End();
 		return;

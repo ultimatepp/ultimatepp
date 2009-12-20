@@ -1,3 +1,6 @@
+#ifndef SYSTEMDRAW_H
+#define SYSTEMDRAW_H
+
 #include <Draw/Draw.h>
 
 #ifdef PLATFORM_WIN32
@@ -114,3 +117,5 @@ void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point
 void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 
 END_UPP_NAMESPACE
+
+#endif
