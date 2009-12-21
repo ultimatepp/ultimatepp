@@ -235,7 +235,6 @@ void World::Step()
 			for(int i = 0; i < 8192; i++)
 				nc.gen[i] = (rand() & 1) ? c.gen[i] : pc.gen[i];
 			while((rand() & 5) == 0) {
-				LOG("...and mutating");
 				nc.color = Color(127 + (((rand() & 15) + c.color.GetR() - 7) & 127),
 				                 127 + (((rand() & 15) + c.color.GetG() - 7) & 127),
 				                 127 + (((rand() & 15) + c.color.GetB() - 7) & 127));
@@ -252,12 +251,12 @@ void World::Step()
 			born++;
 		}
 	}
-	for(int i = 0; i < 1024; i++) {
+/*	for(int i = 0; i < 1024; i++) {
 		spot[i][0].kind = TRAP;
 		spot[i][PMSK].kind = TRAP;
 		spot[0][i].kind = TRAP;
 		spot[PMSK][i].kind = TRAP;
-	}
+	}*/
 	Title(String().Cat() << "Step: " << step << " Gen: " << gen << ", pop: " << creature.GetCount()
 	      << ", born: " << born << ", died: " << died << " best: " << best);
 	Refresh();
@@ -278,10 +277,10 @@ World::World()
 				p.kind = GRASS;
 				p.energy = rand();
 			}
-			if(x == 0 || y == 0 || x == PMSK || y == PMSK) {
-				p.kind = TRAP;
-				p.energy = 0;
-			}
+//			if(x == 0 || y == 0 || x == PMSK || y == PMSK) {
+//				p.kind = TRAP;
+//				p.energy = 0;
+//			}
 			p.creature = NULL;
 		}
 	if(PromptYesNo("Restore creatures from the previous run?")) {
