@@ -41,7 +41,7 @@ CONSOLE_APP_MAIN
 	DDUMP(XmlRpcExecute(r));
 	
 	XmlRpcData d;
-	d << 12 << "-" << 22;
+	d << "12" << "-" << 22;
 	DDUMP(XmlRpcCall("compute", d));
 	
 	int res;

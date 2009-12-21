@@ -12,16 +12,17 @@ void Register(const char *name, Callback1<XmlRpcData&> cb)
 String XmlRpcExecute(const String& request)
 {
 	XmlParser p(request);
+	XmlRpcData data;
+	String methodname;
 	try {
 		String r = XmlHeader();
 		r << "<methodResponse>\r\n";
 		p.ReadPI();
 		p.PassTag("methodCall");
 		p.PassTag("methodName");
-		String methodname = p.ReadText();
+		methodname = p.ReadText();
 		LLOG("method name: " << methodname);
 		p.PassEnd();
-		XmlRpcData data;
 		data.in = ParseXmlRpcParams(p);
 		int q = xmlrpcmap.Find(methodname);
 		if(q >= 0) {
@@ -33,8 +34,13 @@ String XmlRpcExecute(const String& request)
 		p.PassEnd();
 		return r;
 	}
-	catch(XmlError e) { // Add error handling!
-		LOG("XmlError " << e << ": " << p.GetPtr());
+	catch(XmlError e) {
+		LLOG("XmlError " << e << ": " << p.GetPtr());
+		return FormatXmlRpcError(1, methodname + " XML Error: " + e);
+	}
+	catch(ValueTypeMismatch) {
+		LLOG("ValueTypeMismatch at parameter " << data.ii);
+		return FormatXmlRpcError(2, methodname + " Value type mismatch at parameter " + AsString(data.ii));
 	}
 	return Null;
 }
@@ -60,6 +66,7 @@ Value XmlRpcCall(const char *name, XmlRpcData& param)
 	}
 	catch(XmlError e) {
 		LOG("XmlError " << e << ": " << p.GetPtr());
+		return ErrorValue();
 	}
 	
 	return param.in.GetCount() ? param.in[0] : Null;
