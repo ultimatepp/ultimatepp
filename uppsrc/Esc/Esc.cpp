@@ -39,7 +39,7 @@ EscValue Esc::Get(const SRVal& val)
 			else
 			if(v.IsArray()) {
 				int count = v.GetCount();
-				if(ss.IsArray()) {
+				if(ss.IsArray() && ss.GetArray().GetCount() >= 2) {
 					EscValue v1 = ss.ArrayGet(0);
 					EscValue v2 = ss.ArrayGet(1);
 					int i = v1.IsInt() ? v1.GetInt() : 0;
@@ -112,7 +112,7 @@ void Esc::Assign(EscValue& val, const Vector<EscValue>& sbs, int si, const EscVa
 		else {
 			int count = val.GetCount();
 			if(ss.IsArray()) {
-				if(!src.IsArray())
+				if(!src.IsArray() || ss.GetArray().GetCount() < 2)
 					ThrowError("only array can be assigned to the slice");
 				EscValue v1 = ss.ArrayGet(0);
 				EscValue v2 = ss.ArrayGet(1);

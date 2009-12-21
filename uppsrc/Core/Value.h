@@ -694,8 +694,9 @@ public:
 	void Clear();
 
 	void Add(const Value& key, const Value& value);
-	void Add(const char *s, const Value& value) { Add(Value(s), value); }
-	void Add(Id id, const Value& value)       { Add(Value(id.ToString()), value); }
+	void Add(const String& s, const Value& value) { Add(Value(s), value); }
+	void Add(const char *s, const Value& value)   { Add(Value(s), value); }
+	void Add(Id id, const Value& value)           { Add(Value(id.ToString()), value); }
 
 	const Index<Value>& GetKeys() const       { return data->key; }
 	ValueArray GetValues() const              { return data->value; }
@@ -703,6 +704,7 @@ public:
 	operator ValueArray() const               { return GetValues(); }
 
 	Value operator[](const Value& k) const;
+	Value operator[](const String& s) const   { return operator[](Value(s)); }
 	Value operator[](const char *s) const     { return operator[](Value(s)); }
 	Value operator[](const Id& k) const       { return operator[](Value(k.ToString())); }
 

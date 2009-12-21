@@ -164,8 +164,19 @@ void ArrayCtrl::CellCtrl::LeftDown(Point, dword)
 		ctrl->SetFocus();
 }
 
+void ArrayCtrl::CellInfo::Free()
+{
+	if(ptr.GetBit()) {
+		CellCtrl *cc = (CellCtrl *)ptr.GetPtr();
+		if(cc->owned)
+			delete cc->ctrl;
+		delete cc;
+	}
+}
+
 void ArrayCtrl::CellInfo::Set(Ctrl *ctrl, bool owned, bool value)
 {
+	Free();
 	CellCtrl *cc = new CellCtrl;
 	cc->ctrl = ctrl;
 	cc->Add(*ctrl);
@@ -183,12 +194,7 @@ ArrayCtrl::CellInfo::CellInfo(pick_ CellInfo& s)
 
 ArrayCtrl::CellInfo::~CellInfo()
 {
-	if(ptr.GetBit()) {
-		CellCtrl *cc = (CellCtrl *)ptr.GetPtr();
-		if(cc->owned)
-			delete cc->ctrl;
-		delete cc;
-	}
+	Free();
 }
 
 Ctrl& ArrayCtrl::SetCtrl(int i, int j, Ctrl *newctrl, bool owned, bool value)
