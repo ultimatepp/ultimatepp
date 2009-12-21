@@ -270,7 +270,12 @@ Vector<String> OracleSchemaUsers(Sql& cursor)
 Vector<String> OracleSchemaTables(Sql& cursor, String database)
 {
 	Vector<String> out;
-	if(Select(SqlId("TABLE_NAME")).From(SqlId("ALL_TABLES")).Where(SqlId("OWNER") == database).Execute(cursor))
+	SqlSelect sel;
+	if(!IsNull(database))
+		sel = Select(SqlId("TABLE_NAME")).From(SqlId("ALL_TABLES")).Where(SqlId("OWNER") == database);
+	else
+		sel = Select(SqlId("TABLE_NAME")).From(SqlId("USER_TABLES"));
+	if(sel.Execute(cursor))
 		out = FetchList(cursor);
 	return out;
 }
