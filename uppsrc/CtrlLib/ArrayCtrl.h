@@ -137,6 +137,7 @@ private:
 	struct CellInfo : Moveable<CellInfo> {
 		BitAndPtr ptr;
 
+		void           Free();
 		void           Set(Ctrl *ctrl, bool owned, bool value);
 		bool           IsCtrl() const             { return ptr.GetBit(); }
 		CellCtrl&      GetCtrl() const            { ASSERT(IsCtrl()); return *(CellCtrl *)ptr.GetPtr(); }
