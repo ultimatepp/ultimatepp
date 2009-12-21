@@ -4,6 +4,7 @@ uses
 	Core;
 
 file
+	asmopt2.cpp,
 	asmopt.cpp;
 
 mainconfig
