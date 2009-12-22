@@ -195,10 +195,12 @@ PdfDraw::CharPos PdfDraw::GetCharPos(Font fnt, wchar chr)
 		return fc[q];
 	CharPos& p = fc.Add(chr);
 	q = pdffont.FindLast(fnt);
-	if(q < 0 || pdffont[q].GetCount() > 250) {
+	if(q < 0 || pdffont[q].GetCount() > 240) {
 		p.fi = pdffont.GetCount();
-		p.ci = 0;
-		pdffont.Add(fnt).Add(chr);
+		p.ci = 1; // PDF does not seem to like 0 character in text in some versions
+		Vector<wchar>& x = pdffont.Add(fnt);
+		x.Add(32);
+		x.Add(chr);
 	}
 	else {
 		p.fi = q;
