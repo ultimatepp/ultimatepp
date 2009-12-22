@@ -29,7 +29,7 @@ topic "Changelog";
 [s0; [*_4 1824]&]
 [s0; &]
 [s0; [* TheIde]&]
-[s0;i150;O0; .Autosetup now recognizes Win32 SDK 7.0.&]
+[s0;i150;O0; Autosetup now recognizes Win32 SDK 7.0.&]
 [s0; &]
 [s0; [* Library]&]
 [s0;* &]

@@ -775,9 +775,9 @@ for developing large C`+`+ applications.]&]
 ::@(255.255.235) [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-1824`.exe^+75 W
 in32 installer][+75  (15 MB) ]]
 :: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`_1824`_amd64`.deb^+75 L
-inux .deb installer][+75  (8 MB)]]
+inux .deb installer][+75  (15 MB)]]
 :: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-1824`.tar`.gz^+75 X
-11`-src][+75  (7 MB)]]}}&]
+11`-src][+75  (18 MB)]]}}&]
 [s0;l128;+92 &]
 [ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 U`+`+ News]]
 ::@(255.255.233) [s0; [*@5$2;1 2009`-12`-21]&]
