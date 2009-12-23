@@ -1,23 +1,25 @@
 #include "LayDes.h"
 
-static const char *s_fontname[] = {
-	"StdFont", "ScreenSans", "ScreenSerif", "ScreenFixed", "Roman", "Arial", "Courier"
-};
-
-static const char *s_fontnamez[] = {
-	"StdFontZ", "ScreenSansZ", "ScreenSerifZ", "ScreenFixedZ", "RomanZ", "ArialZ", "CourierZ"
-};
-
 String FormatFont(Font font)
 {
 	int q = font.GetFace();
 	String txt;
 	int h = font.GetHeight();
-	if(q >= 0 && q < __countof(s_fontname))
-		txt << (h ? s_fontnamez : s_fontname)[q] << "(";
-	else
-		txt << "Font(" << AsCString(font.GetFaceName()) << ", ";
-	txt << (h ? Format("%d)", h) : ")");
+	switch(q) {
+	case Font::SERIF:
+		txt << (h ? "SerifZ" : "Serif");
+		break;
+	case Font::SANSSERIF:
+		txt << (h ? "SansSerifZ" : "SansSerif");
+		break;
+	case Font::MONOSPACE:
+		txt << (h ? "MonospaceZ" : "Monospace");
+		break;
+	default:
+		txt << (h ? "StdFontZ" : "StdFont");
+		break;
+	}
+	txt << '(' << (h ? Format("%d)", h) : ")");
 	if(font.IsBold())
 		txt << ".Bold()";
 	if(font.IsItalic())
@@ -112,11 +114,20 @@ struct FontProperty : public EditorProperty<DataPusher> {
 
 void FontProperty::Read(CParser& p) {
 	Font f = StdFont();
-	for(int i = 0; i < __countof(s_fontname); i++)
-		if(p.Id(s_fontname[i]) || p.Id(s_fontnamez[i])) {
-			f.Face(i);
-			break;
-		}
+	if(p.Id("StdFont") || p.Id("StdFontZ"))
+		f.Face(Font::STDFONT);
+	else
+	if(p.Id("Serif") || p.Id("SerifZ") || p.Id("ScreenSerif") || p.Id("ScreenSerifZ") ||
+	   p.Id("Roman") || p.Id("RomanZ"))
+	   	f.Face(Font::SERIF);
+	else
+	if(p.Id("SansSerif") || p.Id("SansSerifZ") || p.Id("ScreenSans") || p.Id("ScreenSansZ") ||
+	   p.Id("Arial") || p.Id("ArialZ"))
+	   	f.Face(Font::SANSSERIF);
+	else
+	if(p.Id("Monospace") || p.Id("MonospaceZ") || p.Id("ScreenFixed") || p.Id("ScreenFixedZ") ||
+	   p.Id("Courier") || p.Id("CourierZ"))
+	   	f.Face(Font::MONOSPACE);
 	p.PassChar('(');
 	if(p.IsInt())
 		f.Height(p.ReadInt());

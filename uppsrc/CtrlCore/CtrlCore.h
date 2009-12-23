@@ -1392,7 +1392,12 @@ public:
 };
 
 Font FontZ(int face, int height = 0);
+
 Font StdFontZ(int height = 0);
+Font SansSerifZ(int height = 0);
+Font SerifZ(int height = 0);
+Font MonospaceZ(int height = 0);
+
 Font ScreenSansZ(int height = 0);
 Font ScreenSerifZ(int height = 0);
 Font ScreenFixedZ(int height = 0);

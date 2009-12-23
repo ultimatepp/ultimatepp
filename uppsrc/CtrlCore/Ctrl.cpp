@@ -817,7 +817,11 @@ Font FontZ(int face, int height)
 	return Font(face, Ctrl::VertLayoutZoom(height));
 }
 
-Font StdFontZ(int height) { return FontZ(Font::STDFONT, height); }
+Font StdFontZ(int height)   { return FontZ(Font::STDFONT, height); }
+Font SansSerifZ(int height) { return FontZ(Font::SANSSERIF, height); }
+Font SerifZ(int height)     { return FontZ(Font::SERIF, height); }
+Font MonospaceZ(int height) { return FontZ(Font::MONOSPACE, height); }
+
 Font ScreenSansZ(int height) { return FontZ(Font::SCREEN_SANS, height); }
 Font ScreenSerifZ(int height) { return FontZ(Font::SCREEN_SERIF, height); }
 Font ScreenFixedZ(int height) { return FontZ(Font::SCREEN_FIXED, height); }
