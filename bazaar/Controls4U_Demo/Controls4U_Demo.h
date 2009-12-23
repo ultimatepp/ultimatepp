@@ -6,7 +6,7 @@
 using namespace Upp;
 
 #include "Controls4U/Controls4U.h"
-#include "SysInfo/SysInfo.h"
+#include "Functions4U/Functions4U.h"
 
 #define LAYOUTFILE <Controls4U_Demo/Controls4U_Demo.lay>
 #include <CtrlCore/lay.h>
