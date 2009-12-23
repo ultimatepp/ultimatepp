@@ -588,6 +588,35 @@ void StaticClock::SetTime(int h, int n, int s) {
 	Refresh();
 }
 
+void StaticClockThread(StaticClock *gui) {
+	while (true) {
+		if (gui->kill) {
+			AtomicDec(gui->running);
+			return;		
+		}
+		gui->t = GetSysTime();
+		PostCallback(callback(gui, &StaticClock::RefreshValue));
+		Sleep(200);
+	}
+}
+
+StaticClock& StaticClock::SetAuto(bool mode) {
+	if (!mode) {
+		if (running) {	
+			AtomicInc(kill);	
+			while (running)
+				Sleep(10);
+			AtomicDec(kill);	
+		}
+	} else {
+		if (!running) {
+			AtomicInc(running);
+			Thread().Run(callback1(StaticClockThread, this));
+		}
+	}
+	return *this;
+}
+
 StaticClock::StaticClock() {
 	Transparent();
 	NoWantFocus();
@@ -599,6 +628,14 @@ StaticClock::StaticClock() {
 	seconds = true;
 	
 	t = GetSysTime();
+	running = 0;
+	kill = 0;
+}
+
+StaticClock::~StaticClock() {
+	AtomicInc(kill);
+	while (running)
+		Sleep(10);
 }
 
 void Meter::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double ang0, 

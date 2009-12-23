@@ -546,6 +546,7 @@ ctrl StaticClock {
 	NumberType SetNumberType = 1;
 	ColorType SetColorType = 0;
 	bool Seconds = true;	
+	bool SetAuto = false;	
 	Text Tip;
 	Frame SetFrame = BlackFrame();
 
