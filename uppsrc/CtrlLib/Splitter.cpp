@@ -106,12 +106,12 @@ Image Splitter::CursorImage(Point p, dword) {
 
 int Splitter::GetMins(int i) const
 {
-	int min1 = (i < mins.GetCount() ? mins[i] : 0);
-	int min2 = 0;
-	int cx = GetSize().cx;
-	if(cx)
-		min2 = (i < minpx.GetCount() ? minpx[i] : 0) * 10000 / cx;
-	return max(min1, min2);
+   int min1 = (i < mins.GetCount() ? mins[i] : 0);
+   int min2 = 0;
+   int cx = IsVert() ? GetSize().cy : GetSize().cx;
+   if(cx)
+       min2 = (i < minpx.GetCount() ? minpx[i] : 0) * 10000 / cx;
+   return max(min1, min2);
 }
 
 Splitter& Splitter::SetPos(int p, int i) {
