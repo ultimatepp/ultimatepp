@@ -173,15 +173,13 @@ void Test()
 			Puts(Format("Mouse pos is %d, %d", (int)x, (int)y));
 			Mouse_SetPos(200, 200, windowId);
 			
-#if defined(PLATFORM_WIN32)			
 			Mouse_LeftClick();
     		Keyb_SendKeys("{HOME}This text is added by Keyb_SendKeys.\n");
-    		
     		Keyb_SendKeys("And the window resized and moved by Window_SetRect.\n", 0, 0);
     		Keyb_SendKeys("And a window capture in c:\\Windowgrab.bmp.\n", 0, 0);
-    		Keyb_SendKeys("Some chars just for test: \\/:;,.ºª^[]{}´?¿~#@!¡\n", 0, 0);
+    		Keyb_SendKeys("Some chars just for test: \\/:;,.ºª^[]{}´?¿~#@!¡\n", 0, 0);  		
     		Window_SetRect(windowId, 10, 10, 800, 400);
-#endif
+
     		Window_SaveCapture(windowId, AppendFileName(GetDesktopFolder(), "Windowgrab"));
 		}
 	}
