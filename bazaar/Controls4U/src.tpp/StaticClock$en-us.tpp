@@ -834,10 +834,14 @@ ds]([@(0.0.255) bool]_[*@3 b])&]
 [s6;%- &]
 [s5;:StaticClock`:`:SetAuto`(bool`):%- [_^StaticClock^ StaticClock][@(0.0.255) `&]_[* SetAu
 to]([@(0.0.255) bool]_[*@3 mode]_`=_[@(0.0.255) true])&]
-[s3; If [%-*@3 mode].is true auto mode is activated, so that the clock 
-will run by itself without the need of refreshing it every second 
-or minute.&]
+[s3; If [%-*@3 mode].is true `"auto`" mode is activated, so that the 
+clock will run by itself without the need of refreshing it every 
+second or minute.&]
 [s1; &]
+[s6;%- &]
+[s5;:StaticClock`:`:IsAuto`(`):%- [@(0.0.255) bool]_[* IsAuto]()&]
+[s3; Returns true if StaticClock is in `"auto`" mode&]
+[s1;%- &]
 [s6;%- &]
 [s5;:StaticClock`:`:SetData`(const Value`&`):%- [@(0.0.255) void]_[* SetData]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]

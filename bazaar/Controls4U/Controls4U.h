@@ -228,8 +228,6 @@ public:
 	enum HourType 	{No, Square, Rectangle};
 	enum NumberType {NoNumber, Small, Big, BigSmall, Big4};
 	enum ColorType 	{WhiteType, BlackType};
-	
-	friend void StaticClockThread(StaticClock *gui);
 
 protected:
 	void PaintPtr(MyBufferPainter &w, double cmx, double cmy, double pos, double m, double d, 
@@ -239,7 +237,7 @@ protected:
 	Image image;
 	bool seconds;
 	int colorType;
-	volatile Atomic running, kill;
+	bool autoMode;
 
 	Time t;		
 
@@ -252,10 +250,12 @@ public:
 	StaticClock& SetColorType(int c)	{colorType = c; Refresh(); return *this;}
 	StaticClock& Seconds(bool b) 		{seconds = b; Refresh(); return *this;}	
 	StaticClock& SetAuto(bool mode = true);
+	bool IsAuto() 						{return autoMode;}
 	void RefreshValue() {Refresh();};
 	
 	void SetData(const Value& v);
 	void SetTime(const Time& tm = GetSysTime());
+	void SetTimeRefresh() {SetTime();};
 	void SetTime(int h, int n, int s);
 
 	StaticClock();	

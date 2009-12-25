@@ -5,6 +5,7 @@ topic "News and changes log";
 [s0; [*R+184 Controls4U. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2009/12/25-|StaticClock SetAuto mode uses less resources]&]
 [s0; [2 2009/12/23-|StaticClock as new SetAuto mode: the clock does not 
 need to be refreshed as it runs by -|-|itself]&]
 [s0; [2 2009/12/15-|Added SetOrientation() and SetEnds() using enum 

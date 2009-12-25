@@ -588,32 +588,70 @@ void StaticClock::SetTime(int h, int n, int s) {
 	Refresh();
 }
 
-void StaticClockThread(StaticClock *gui) {
-	while (true) {
-		if (gui->kill) {
-			AtomicDec(gui->running);
-			return;		
-		}
-		gui->t = GetSysTime();
-		PostCallback(callback(gui, &StaticClock::RefreshValue));
-		Sleep(200);
-	}
-}
+struct StaticClocks;
+void StaticClockThread(StaticClocks *gui);
 
-StaticClock& StaticClock::SetAuto(bool mode) {
-	if (!mode) {
-		if (running) {	
-			AtomicInc(kill);	
-			while (running)
-				Sleep(10);
-			AtomicDec(kill);	
-		}
-	} else {
+struct StaticClocks {
+	Array <StaticClock *> clocks;
+	volatile Atomic running, kill;
+	
+	friend void StaticClockThread(StaticClocks *gui);
+	
+	StaticClocks() {
+		running = kill = 0;
+	}
+	~StaticClocks() {
+		AtomicInc(kill);	
+		while (running)
+			Sleep(10);
+	}
+	void Add(StaticClock *clock) {
+		clocks.Add(clock);
 		if (!running) {
 			AtomicInc(running);
 			Thread().Run(callback1(StaticClockThread, this));
 		}
 	}
+	void Remove(StaticClock *clock) {
+		for (int i = 0; i < clocks.GetCount(); ++i) {
+			if (clocks[i] == clock) {
+				clocks.Remove(i);
+				break;
+			}
+		}
+		if (clocks.GetCount() == 0 && running) {	
+			AtomicInc(kill);	
+			while (running)
+				Sleep(10);
+			AtomicDec(kill);	
+		}
+	}
+	void SetTimeRefresh(int i) {
+		clocks[i]->SetTimeRefresh();
+	}
+	int GetCount() {return clocks.GetCount();}
+};
+
+StaticClocks clocks;
+
+void StaticClockThread(StaticClocks *gui) {
+	while (true) {
+		if (gui->kill) {
+			AtomicDec(gui->running);
+			return;		
+		}
+		for (int i = 0; i < gui->GetCount(); ++i) 
+			PostCallback(callback(gui->clocks[i], &StaticClock::SetTimeRefresh));
+		Sleep(200);
+	}
+}
+
+StaticClock& StaticClock::SetAuto(bool mode) {
+	autoMode = mode;
+	if (!mode) 
+		clocks.Remove(this);
+	else 
+		clocks.Add(this);
 	return *this;
 }
 
@@ -628,14 +666,10 @@ StaticClock::StaticClock() {
 	seconds = true;
 	
 	t = GetSysTime();
-	running = 0;
-	kill = 0;
+	autoMode = false;
 }
 
 StaticClock::~StaticClock() {
-	AtomicInc(kill);
-	while (running)
-		Sleep(10);
 }
 
 void Meter::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double ang0, 
