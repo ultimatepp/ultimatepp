@@ -63,7 +63,7 @@ StaticCtrlsTest_Demo::StaticCtrlsTest_Demo() {
 void StaticClock_Demo::Update() {	
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
 		if (StaticClock *c = dynamic_cast<StaticClock *>(q))
-			if (c != &clock10)
+			if (!c->IsAuto())
 				c->SetTime();
 	}
 }
