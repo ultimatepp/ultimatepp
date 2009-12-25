@@ -29,12 +29,15 @@
 	#include <time.h>
 	#include <signal.h>
 	#include <sys/reboot.h>
+//#include <linux/kd.h>
+//#include <sys/ioctl.h>
 	
 	#include <X11/Xlib.h>
 	#include <X11/Xos.h>
 	#include <X11/Xfuncs.h>
 	#include <X11/Xutil.h>
 	#include <X11/Xatom.h>
+	#include <X11/extensions/XTest.h>
 #endif
 
 using namespace Upp;
@@ -818,7 +821,7 @@ void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &na
             	if((ret == Success || ret > 0) && list != NULL) {
                 	String sret;
               		for(i = 0; i < count; i++)
-              			sret << list[i] << " ";
+              			sret << list[i]; // << " ";
               		XFreeStringList(list);
               		caption.Add(FromSystemCharset(sret));
           		} else 
@@ -933,6 +936,7 @@ long GetWindowIdFromCaption(String windowCaption, bool exactMatch)
 	GetWindowsList(wid, pid, name, fileName, caption);
 	for (int i = 0; i < wid.GetCount(); ++i) {
 		if (exactMatch) {
+			String s = caption[i];
 			if (caption[i] == windowCaption)
 				return wid[i];
 		} else {
@@ -1903,7 +1907,56 @@ bool CloseCDTray(String drive)
 
 #endif
 
+void Mouse_LeftClick()
+{
+    Mouse_LeftDown(); 
+    Mouse_LeftUp(); 
+}
+void Mouse_RightClick()
+{
+    Mouse_RightDown();
+    Mouse_RightUp();
+}
+void Mouse_MiddleClick()
+{
+    Mouse_MiddleDown();
+    Mouse_MiddleUp();
+}
+void Mouse_LeftDblClick()
+{
+	Mouse_LeftClick();
+	Mouse_LeftClick();
+}
+void Mouse_MiddleDblClick()
+{
+	Mouse_MiddleClick();
+	Mouse_MiddleClick();
+}
+void Mouse_RightDblClick()
+{
+	Mouse_RightClick();
+	Mouse_RightClick();
+}
+
+struct KeyCodes {
+	String key; 
+	int code;
+}; 
+
 #if defined(PLATFORM_WIN32)
+
+Array <String> GetWinRegSubkeys(const String& key, HKEY base) {
+	HKEY hkey;
+	Array <String> subkeys;
+	if(RegOpenKeyEx(base, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS)
+		return subkeys;
+	char temp[_MAX_PATH];
+	dword len;
+	for(dword dw = 0; len = sizeof(temp), RegEnumKeyEx(hkey, dw, temp, &len, 0, 0, 0, 0) == ERROR_SUCCESS; dw++)
+		subkeys.Add(temp);
+	RegCloseKey(hkey);
+	return subkeys;
+}
 
 void Mouse_LeftDown()
 {
@@ -1928,36 +1981,6 @@ void Mouse_RightDown()
 void Mouse_RightUp()
 {
     mouse_event (MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);
-}
-void Mouse_LeftClick()
-{
-    Mouse_LeftDown(); 
-    Mouse_LeftUp(); 
-}
-void Mouse_MiddleClick()
-{
-    Mouse_MiddleDown();
-    Mouse_MiddleUp();
-}
-void Mouse_RightClick()
-{
-    Mouse_RightDown();
-    Mouse_RightUp();
-}
-void Mouse_LeftDblClick()
-{
-	Mouse_LeftClick();
-	Mouse_LeftClick();
-}
-void Mouse_MiddleDblClick()
-{
-	Mouse_MiddleClick();
-	Mouse_MiddleClick();
-}
-void Mouse_RightDblClick()
-{
-	Mouse_RightClick();
-	Mouse_RightClick();
 }
 
 bool PutWindowPlacement(HWND hwnd, RECT rcNormalPosition, POINT ptMinPosition, POINT ptMaxPosition, long showcmd, long flags)
@@ -2040,11 +2063,6 @@ bool Mouse_GetPos(long &x, long &y)
     return true;
 }
 
-struct KeyCodes {
-	String key; 
-	int code;
-}; 
-
 KeyCodes keyCodes[60] = {
 	"NUMPAD7", 	VK_NUMPAD7, 	"BACK", 	VK_BACK, 
 	"NUMPAD8", 	VK_NUMPAD8,		"TAB", 		VK_TAB,
@@ -2075,17 +2093,52 @@ KeyCodes keyCodes[60] = {
 	"RCONTROL",	VK_RCONTROL, 	"NUMPAD4",	VK_NUMPAD4,
 	"LMENU",	VK_LMENU, 		"NUMPAD5",	VK_NUMPAD5,
 	"RMENU",	VK_RMENU, 		"NUMPAD6",	VK_NUMPAD6,
+	/*"PGUP", 	XK_Page_Up, 	"PGDOWN", 	XK_Page_Down
+	"CAPSLOCK", XK_Caps_Lock, 	"BACKSPACE",XK_BackSpace	*/
 	""
 };
 
-int GetKeyCode(String key)
-{
-	for (int i = 0; keyCodes[i].code != 0; ++i)
-		if (keyCodes[i].key == key)
-			return keyCodes[i].code;
-	return 0;
+void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compatible = false)
+{    
+    long nScan, nExtended;
+        
+    nScan = MapVirtualKey(keyVK, 2);
+    nExtended = 0;
+    if (nScan == 0)
+        nExtended = KEYEVENTF_EXTENDEDKEY;
+    nScan = MapVirtualKey(keyVK, 0);
+    
+    if (compatible)
+        nExtended = 0;
+    
+    if (!release)
+        keybd_event ((BYTE)keyVK, (BYTE)nScan, nExtended, 0);
+    
+    if (!hold)
+        keybd_event ((BYTE)keyVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
 }
 
+#if defined(__MINGW32__)
+	#define	MAPVK_VK_TO_VSC		0
+	#define	MAPVK_VSC_TO_VK   	1
+	#define	MAPVK_VK_TO_CHAR  	2
+	#define	MAPVK_VSC_TO_VK_EX 	3
+#endif
+#define	MAPVK_VK_TO_VSC_EX 	4
+
+// This is less nice but more compatible for Notepad and MSWord for example
+void PressKey(wchar key, bool hold = false, bool release = false)
+{
+	String numStr = FormatIntDec(key, 5, '0');
+	PressKeyVK(VK_LMENU, true);
+	PressKeyVK(VK_NUMPAD0 + numStr[0] - '0');
+	PressKeyVK(VK_NUMPAD0 + numStr[1] - '0');
+	PressKeyVK(VK_NUMPAD0 + numStr[2] - '0');
+	PressKeyVK(VK_NUMPAD0 + numStr[3] - '0');
+	PressKeyVK(VK_NUMPAD0 + numStr[4] - '0');
+	PressKeyVK(VK_LMENU, false, true);
+}
+/*
 void PressKey(wchar key, bool hold = false, bool release = false)
 {
 	bool caps, num, scroll;
@@ -2094,19 +2147,26 @@ void PressKey(wchar key, bool hold = false, bool release = false)
     	if (caps) 
     		SetKeyLockStatus(false, num, scroll);	
     }
-    long nVK = VkKeyScanW(key);
-    
-    if (nVK == 0) 
-        return;
-
-    long nScan, nExtended;
-        
-    nScan = MapVirtualKey(nVK, 2);
-    nExtended = 0;
+ 	char buff[120];
+	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
+	HKL hKeyboardLayout = ::LoadKeyboardLayout(buff, KLF_ACTIVATE);  
+    SHORT nVK = VkKeyScanExW(key, hKeyboardLayout);
+	if (nVK == -1) {	// Last resource !!
+		String numStr = FormatIntDec(key, 4, '0');
+		PressKeyVK(VK_LMENU, true);
+		PressKeyVK(VK_NUMPAD0 + numStr[0] - '0');
+		PressKeyVK(VK_NUMPAD0 + numStr[1] - '0');
+		PressKeyVK(VK_NUMPAD0 + numStr[2] - '0');
+		PressKeyVK(VK_NUMPAD0 + numStr[3] - '0');
+		PressKeyVK(VK_LMENU, false, true);
+    	return;
+	}
+    UINT nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_CHAR, hKeyboardLayout);
+    long nExtended = 0;
     if (nScan == 0)
         nExtended = KEYEVENTF_EXTENDEDKEY;
     
-    nScan = MapVirtualKey(nVK, 0);
+    nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_VSC, hKeyboardLayout);
     
     bool shift, ctrl, alt;
     
@@ -2138,66 +2198,16 @@ void PressKey(wchar key, bool hold = false, bool release = false)
     if (IsLetter(key) && caps) 
     	SetKeyLockStatus(true, num, scroll);	
 }
-void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compatible = false)
-{    
-    long nScan, nExtended;
-        
-    nScan = MapVirtualKey(keyVK, 2);
-    nExtended = 0;
-    if (nScan == 0)
-        nExtended = KEYEVENTF_EXTENDEDKEY;
-    nScan = MapVirtualKey(keyVK, 0);
-    
-    if (compatible)
-        nExtended = 0;
-    
-    if (!release)
-        keybd_event ((BYTE)keyVK, (BYTE)nScan, nExtended, 0);
-    
-    if (!hold)
-        keybd_event ((BYTE)keyVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
-}
+*/
 
-void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
-{
-	bool inKey = false;
-	String key = "";
-	WString wtext(text);
-	for (int i = 0; i < text.GetCount(); ++i) {
-		bool vk = false;
-		Sleep(delayBetweenKeys);
-		wchar c = wtext[i];
-		if (c == '{')
-			inKey = true;
-		else if (c == '}') {
-			if (key == "{") 
-				c = '{';
-			else {
-				c = GetKeyCode(key);
-				vk = true;
-			}
-			inKey = false;
-			key = "";
-		} else if (inKey == 1)
-			key.Cat(c);
-			 
-		if (inKey == false) {
-			if (!vk)
- 				PressKey(c);
-			else
-				PressKeyVK(c);
-		}
-	}
-	Sleep(finalDelay);
-}
-
-void GetKeyLockStatus(bool &caps, bool &num, bool &scroll)
+bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll)
 {
     caps = GetKeyState(VK_CAPITAL);
     num = GetKeyState(VK_NUMLOCK);
     scroll = GetKeyState(VK_SCROLL);
+    return true;
 }
-void SetKeyLockStatus(bool caps, bool num, bool scroll)
+bool SetKeyLockStatus(bool caps, bool num, bool scroll)
 {
 	bool capsnow, numnow, scrollnow;
 	
@@ -2208,6 +2218,7 @@ void SetKeyLockStatus(bool caps, bool num, bool scroll)
 		PressKeyVK(VK_NUMLOCK);
 	if (scrollnow != scroll)
 		PressKeyVK(VK_SCROLL);
+	return true;
 }
 
 #if defined(__MINGW32__) 
@@ -2650,7 +2661,7 @@ bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bot
 	}
 //	Window child; 		
 //		if (XTranslateCoordinates (dpy, windowId, rt, 0, 0, &rx, &ry, &child))  
-//			printf (" +%d+%d", rx - bw, ry - bw); 
+//			printf ("%d %d", rx - bw, ry - bw); 
 	
 	XCloseDisplay (dpy);
 	SetX11ErrorHandler();
@@ -2706,6 +2717,149 @@ bool Mouse_SetPos(long x, long y, long windowId)
 	return true;
 }
 
+// libxtst-dev
+void Mouse_FakeClick(int button, int press) {
+	Display *dpy = XOpenDisplay(NULL);
+	XTestFakeButtonEvent(dpy, button, press, CurrentTime);
+	XFlush(dpy);
+	XCloseDisplay(dpy);
+}
+
+void Mouse_LeftDown() {
+	Mouse_FakeClick(1, True);
+}
+void Mouse_LeftUp() {
+	Mouse_FakeClick(1, False);
+}
+void Mouse_MiddleDown() {
+	Mouse_FakeClick(2, True);
+}
+void Mouse_MiddleUp() {
+	Mouse_FakeClick(2, False);
+}
+void Mouse_RightDown() {
+	Mouse_FakeClick(3, True);
+}
+void Mouse_RightUp() {
+	Mouse_FakeClick(3, False);
+}
+
+void PressKeyVK(int key, Display *dpy = NULL) {
+	bool local = false;
+	if (!dpy) {
+		if (!(dpy = XOpenDisplay(NULL)))
+			return;
+		local = true;
+	}
+	XTestFakeKeyEvent(dpy, XKeysymToKeycode(dpy, key), True, CurrentTime);
+	XTestFakeKeyEvent(dpy, XKeysymToKeycode(dpy, key), False, CurrentTime);
+	if (local) {
+		XFlush(dpy);
+		XCloseDisplay(dpy);
+	}
+}
+
+void PressKey(wchar key, Display *dpy = NULL) {
+	bool local = false;
+	if (!dpy) {
+		if (!(dpy = XOpenDisplay(NULL)))
+			return;
+		local = true;
+	}
+	wchar k = key;
+	if (key > 0x00ff)
+    	key = key | 0x01000000;
+ 	
+ 	bool shift = false;
+	KeyCode code = XKeysymToKeycode(dpy, key);
+	if (code != 0) { 
+		if (XKeycodeToKeysym(dpy, code, 0) != key) {
+			if (XKeycodeToKeysym(dpy, code, 1) == key) 
+				shift = true;
+			else
+				code = 0;
+		}
+	} else {  
+		int firstKeycode, maxKeycode;
+		int keysymsPerKeycode;
+		
+		XDisplayKeycodes(dpy, &firstKeycode, &maxKeycode);
+		KeySym *keysyms = XGetKeyboardMapping(dpy, firstKeycode, maxKeycode-firstKeycode+1, &keysymsPerKeycode);
+      	int indx = (maxKeycode-firstKeycode-1)*keysymsPerKeycode;
+		keysyms[indx] = key;
+      	XChangeKeyboardMapping(dpy, firstKeycode, keysymsPerKeycode, keysyms, maxKeycode-firstKeycode);
+      	XSync(dpy, False);
+      	code = maxKeycode-1;
+      	if (XKeycodeToKeysym(dpy, code, 0) != key) {
+			if (XKeycodeToKeysym(dpy, code, 1) == key) 
+				shift = true;
+		}
+    }
+	if (code != 0) {
+		if (shift)
+			XTestFakeKeyEvent(dpy, XKeysymToKeycode(dpy, XK_Shift_L), True, CurrentTime);	
+		XTestFakeKeyEvent(dpy, code, True,  CurrentTime);
+		XTestFakeKeyEvent(dpy, code, False, CurrentTime);
+	 	if (shift)
+			XTestFakeKeyEvent(dpy, XKeysymToKeycode(dpy, XK_Shift_L), False, CurrentTime);	
+	} 	
+	if (local) {
+ 		XFlush(dpy);
+ 		XCloseDisplay(dpy);
+	}
+}
+
+bool GetKeyLockStatus0(bool &caps, bool &num, bool &scroll, Display *dpy) {
+	int x, y, xx, yy;
+	Window dm1, dm2;
+	unsigned int sKbdState;
+	
+	if(!XQueryPointer(dpy, DefaultRootWindow(dpy), &dm1, &dm2, &x, &y, &xx, &yy, &sKbdState))
+		return false;
+
+	caps   = sKbdState & LockMask;
+	num    = sKbdState & Mod2Mask;
+	scroll = sKbdState & Mod5Mask;
+	
+	return true;
+}
+
+bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll) {
+	Display *dpy;
+	if (!(dpy = XOpenDisplay(NULL)))
+		return false;
+
+	if (!GetKeyLockStatus0(caps, num, scroll, dpy)) {
+		XCloseDisplay(dpy);
+		return false;
+	}
+	XFlush(dpy);
+	XCloseDisplay(dpy);
+	return true;
+}
+
+bool SetKeyLockStatus(bool caps, bool num, bool scroll) {
+	Display *dpy;
+	if (!(dpy = XOpenDisplay(NULL)))
+		return false;
+			
+	bool oldcaps, oldnum, oldscroll; 
+	if (!GetKeyLockStatus0(oldcaps, oldnum, oldscroll, dpy)) {
+		XCloseDisplay(dpy);
+		return false;
+	}
+	if (caps != oldcaps) 
+		PressKeyVK(XK_Caps_Lock, dpy);
+	if (num != oldnum) 
+		PressKeyVK(XK_Num_Lock, dpy);
+	if (scroll != oldscroll) 
+		PressKeyVK(XK_Scroll_Lock, dpy);
+
+	XFlush(dpy);
+	XCloseDisplay(dpy);
+	return true;
+}
+
 bool Window_SaveCapture(long windowId, String fileName, int left, int top, int width, int height)
 {
 	if (GetFileExt(fileName) != ".xwd")
@@ -2721,7 +2875,85 @@ bool Window_SaveCapture(long windowId, String fileName, int left, int top, int w
 	return Sys(command, strret) >= 0;
 }
 
+KeyCodes keyCodes[] = {
+	"NUMPAD7", 	XK_KP_7,	 	"BACK", 	XK_BackSpace, 
+	"NUMPAD8", 	XK_KP_8,		"TAB", 		XK_Tab,
+	"NUMPAD9", 	XK_KP_9, 		"RETURN", 	XK_Return,
+	"MULTIPLY", XK_KP_Multiply,	"SHIFT",	XK_Shift_Lock,
+	"ADD",		XK_KP_Add, 	 	"CONTROL",	XK_Control_L,
+	"SEPARATOR", XK_KP_Separator,"MENU", 	XK_Super_L,
+	"SUBTRACT", XK_KP_Subtract,	"PAUSE", 	XK_Pause,
+	"DECIMAL",	XK_KP_Decimal,	/*"CAPITAL", 	VK_CAPITAL,*/
+	"DIVIDE",	XK_KP_Divide,	"ESCAPE",	XK_Escape,
+	"F1", 		XK_F1, 			"SPACE", 	XK_KP_Space,
+	"F2", 		XK_F2,	 		"END",		XK_End,
+	"F3",		XK_F3, 			"HOME",		XK_Home,
+	"F4",		XK_F4, 			"LEFT", 	XK_Left,
+	"F5",		XK_F5,		 	"UP", 		XK_Up,
+	"F6",		XK_F6,		 	"RIGHT",	XK_Right,
+	"F7",		XK_F7,		 	"DOWN",		XK_Down,
+	"F8",		XK_F8,		 	"PRINT",	XK_Sys_Req,
+	"F9",		XK_F9,		 	/*"SNAPSHOT",	VK_SNAPSHOT,*/
+	"F10",		XK_F10,		 	"INSERT",	XK_Insert,
+	"F11",		XK_F11,		 	"DELETE",	XK_Delete,
+	"F12",		XK_F12,		 	"LWIN",		XK_Meta_L,
+	"NUMLOCK",	XK_Num_Lock, 	"RWIN",		XK_Meta_R,
+	"SCROLL",	XK_Scroll_Lock,	"NUMPAD0",	XK_KP_0,
+	"LSHIFT",	XK_Shift_L,	 	"NUMPAD1", 	XK_KP_1,
+	"RSHIFT",	XK_Shift_R,	 	"NUMPAD2",	XK_KP_2,
+	"LCONTROL",	XK_Control_L, 	"NUMPAD3",	XK_KP_3,
+	"RCONTROL",	XK_Control_R, 	"NUMPAD4",	XK_KP_4,
+	"LMENU",	XK_Super_L,		"NUMPAD5",	XK_KP_5,
+	"RMENU",	XK_Super_R, 	"NUMPAD6",	XK_KP_6,
+	"PGUP", 	XK_Page_Up, 	"PGDOWN", 	XK_Page_Down,
+	"CAPSLOCK", XK_Caps_Lock, 	"BACKSPACE",XK_BackSpace,
+	""
+};
+
 #endif
+
+int GetKeyCode(String key) {
+	for (int i = 0; keyCodes[i].code != 0; ++i)
+		if (keyCodes[i].key == key)
+			return keyCodes[i].code;
+	return 0;
+}
+
+void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
+{
+	bool inKey = false;
+	String key = "";
+	WString wtext(text);
+	for (int i = 0; i < wtext.GetCount(); ++i) {
+		bool vk = false;
+		Sleep(delayBetweenKeys);
+		wchar c = wtext[i];
+		if (c == '{')
+			inKey = true;
+		else if (c == '}') {
+			if (key == "{") 
+				c = '{';
+			else {
+				c = GetKeyCode(key);
+				vk = true;
+			}
+			inKey = false;
+			key = "";
+		} else if (inKey == 1)
+			key.Cat(c);
+		else if (c == '\n') {
+			c = GetKeyCode("RETURN");
+			vk = true;
+		}
+ 		if (inKey == false) {
+			if (!vk) 
+ 				PressKey(c);
+			else
+				PressKeyVK(c);
+		}
+	}
+	Sleep(finalDelay);
+}
 
 bool Snap_Desktop(String fileName)
 {

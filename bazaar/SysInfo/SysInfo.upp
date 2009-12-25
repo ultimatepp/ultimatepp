@@ -1,14 +1,12 @@
 description "OS, hardware and Desktop handling functions\377B255,170,0";
 
-noblitz;
-
 uses
 	Core,
 	Functions4U;
 
 library(WIN32) "psapi gdi32 vfw32 oleaut32 wbemuuid";
 
-library(!WIN32) X11;
+library(!WIN32) "Xtst X11 ";
 
 file
 	SysInfo.cpp,

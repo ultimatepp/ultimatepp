@@ -415,13 +415,13 @@ text keys.&]
 [@(0.0.255) bool]_`&[*@3 caps], [@(0.0.255) bool]_`&[*@3 num], [@(0.0.255) bool]_`&[*@3 scrol
 l])&]
 [s2; Gets the status of keys [%-*@3 caps ]lock,  [%-*@3 num ]lock and 
-[%-*@3 scroll] [%-*@3  ]lock.&]
+[%-*@3 scroll] [%-*@3  ]lock. Not fully functional in Linux.&]
 [s3; &]
 [s4;%- &]
 [s5;:SetKeyLockStatus`(bool`,bool`,bool`):%- [@(0.0.255) void]_[* SetKeyLockStatus]([@(0.0.255) b
 ool]_[*@3 caps], [@(0.0.255) bool]_[*@3 num], [@(0.0.255) bool]_[*@3 scroll])&]
 [s2; Sets the status of keys [%-*@3 caps ]lock,  [%-*@3 num ]lock and 
-[%-*@3 scroll] [%-*@3  ]lock.&]
+[%-*@3 scroll] [%-*@3  ]lock. Not fully functional in Linux.&]
 [s3; &]
 [ {{10000@1 [s0; [* Screen recording]]}}&]
 [s3; &]

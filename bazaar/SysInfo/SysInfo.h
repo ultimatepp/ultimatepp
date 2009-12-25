@@ -103,10 +103,24 @@ bool CloseCDTray(String drive);
 // Key and mouse keys
 
 bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom);
-void Window_SetRect(long windowId, long left, long top, long right, long bottom);
 
 bool Mouse_GetPos(long &x, long &y);
 bool Mouse_SetPos(long x, long y, long windowId);
+
+void Mouse_LeftClick();
+void Mouse_LeftDown();
+void Mouse_LeftUp();
+void Mouse_MiddleClick(); 
+void Mouse_MiddleDown();
+void Mouse_MiddleUp();
+void Mouse_RightClick();
+void Mouse_RightDown();
+void Mouse_RightUp();
+void Mouse_LeftDblClick();
+void Mouse_MiddleDblClick();
+void Mouse_RightDblClick();
+
+void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 50);
 
 bool Window_SaveCapture(long windowId, String fileName, int left = -1, int top = -1, int width = -1, int height = -1);
 
@@ -114,25 +128,12 @@ bool Snap_Desktop(String fileName);
 bool Snap_DesktopRectangle(String fileName, int left, int top, int width, int height);
 bool Snap_Window(String fileName, long handle);
 
+bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll);
+bool SetKeyLockStatus(bool caps, bool num, bool scroll);
+
 #if defined(PLATFORM_WIN32)
 
-void Mouse_LeftClick();
-void Mouse_MiddleClick();
-void Mouse_RightClick(); 
-void Mouse_LeftDblClick();
-void Mouse_MiddleDblClick();
-void Mouse_RightDblClick();
-void Mouse_LeftDown();
-void Mouse_LeftUp();
-void Mouse_RightDown();
-void Mouse_RightUp();
-void Mouse_MiddleDown();
-void Mouse_MiddleUp();
-
-void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 50);
-
-void GetKeyLockStatus(bool &caps, bool &num, bool &scroll);
-void SetKeyLockStatus(bool caps, bool num, bool scroll);
+void Window_SetRect(long windowId, long left, long top, long right, long bottom);
 
 bool Record_Desktop(String fileName, int duration, int secsFrame = 1, bool viewMouse = true);
 bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, int secsFrame = 1, bool viewMouse = true);

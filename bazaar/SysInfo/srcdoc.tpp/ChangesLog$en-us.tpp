@@ -5,6 +5,9 @@ topic "News and changes log";
 [s0; [*R6 SysInfo. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2009/12/23-|Improved international support in Keyb`_SendKeys()]&]
+[s0; [2 2009/12/16-|Keyb`_SendKeys(), `*KeyLockStatus() and Mouse`_`*() 
+supported in Linux]&]
 [s0; [2 2009/12/12-|LoadFile`_Safe fixed bug... I forgot to move it 
 to Functions4U]&]
 [s0; [2 2009/12/11-|Keyb`_SendKeys and Snap`_`* functions in Windows 
