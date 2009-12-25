@@ -143,3 +143,23 @@ LAYOUT(ProcessList, 672, 120)
 	ITEM(Button, ButUpdate, SetLabel(t_("Update")).LeftPosZ(4, 88).BottomPosZ(5, 23))
 END_LAYOUT
 
+LAYOUT(MouseKeyboard, 688, 232)
+	ITEM(Option, numLock, LeftPosZ(40, 16).TopPosZ(40, 16))
+	ITEM(Option, scrollLock, LeftPosZ(188, 16).TopPosZ(40, 16))
+	ITEM(Option, capsLock, LeftPosZ(116, 16).TopPosZ(40, 16))
+	ITEM(Label, dv___3, SetLabel(t_("Num Lock")).LeftPosZ(20, 48).TopPosZ(20, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Scroll Lock")).LeftPosZ(168, 52).TopPosZ(20, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Caps Lock")).LeftPosZ(96, 52).TopPosZ(20, 19))
+	ITEM(LabelBox, dv___6, SetLabel(t_("Get/SetKeyLockStatus()")).LeftPosZ(12, 216).TopPosZ(4, 56))
+	ITEM(LabelBox, dv___7, SetLabel(t_("Mouse_SetPos & LeftDown/Up()")).LeftPosZ(12, 216).TopPosZ(164, 52))
+	ITEM(Button, butMouse, SetLabel(t_("Click here to shake the window")).LeftPosZ(20, 200).TopPosZ(188, 20))
+	ITEM(LabelBox, dv___9, SetLabel(t_("Keyb_SendKeys()")).LeftPosZ(12, 216).TopPosZ(68, 52))
+	ITEM(Button, butKey, SetLabel(t_("Click here to test")).LeftPosZ(20, 200).TopPosZ(88, 20))
+	ITEM(Label, dv___11, SetLabel(t_("Handle from your program the \nlock keys")).LeftPosZ(240, 156).TopPosZ(12, 48))
+	ITEM(Label, dv___12, SetLabel(t_("The program will fill a text\neditor with simulated\nkeystrokes.\nThese feature helps to handle \nexternal programs for disabled\npeople for example")).LeftPosZ(240, 156).TopPosZ(68, 88))
+	ITEM(Label, dv___13, SetLabel(t_("Please do not touch the mouse \nafter clicking. The program will \nmove and click it!")).LeftPosZ(240, 156).TopPosZ(168, 48))
+	ITEM(Label, labNoAccents, SetFrame(FieldFrame()).LeftPosZ(424, 176).TopPosZ(84, 36))
+	ITEM(Button, butRemoveAccents, SetLabel(t_("RemoveAccents()")).LeftPosZ(424, 176).TopPosZ(12, 24))
+	ITEM(LineEdit, editAccents, LeftPosZ(424, 176).TopPosZ(40, 40))
+END_LAYOUT
+

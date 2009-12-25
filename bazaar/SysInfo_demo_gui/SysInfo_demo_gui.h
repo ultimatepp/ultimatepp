@@ -61,6 +61,21 @@ struct ScreenGrabTab : WithScreenGrabTab<StaticRect> {
 	void ButSnap_Push();
 	void SwGrabMode_Action();
 };
+struct MouseKeyboard : WithMouseKeyboard<StaticRect> {
+
+	typedef MouseKeyboard CLASSNAME;
+
+	MouseKeyboard()
+	{
+		CtrlLayout(*this);
+	}
+	void Fill();
+	void OnButLock();
+	void OnButKey();
+	void OnButMouse();
+	void OnTimer();
+	void OnRemoveAccents();
+};
 
 class SysInfoDemo : public TopWindow {
 public:
@@ -77,11 +92,13 @@ public:
 	ProcessList		processList;
 	WindowsList_	windowsList;
 	ScreenGrabTab	screenGrab;
+	MouseKeyboard	mouseKeyboard;
 	
 	// Menus
 	void MainMenu(Bar& bar);
 	void FileMenu(Bar& bar);
 	void About();
+	void TimerFun();
 	
 	void Exit();
 };	

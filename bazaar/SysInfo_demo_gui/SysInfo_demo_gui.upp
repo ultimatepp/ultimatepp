@@ -2,7 +2,6 @@ description "Gui demo of SysInfo package\377";
 
 uses
 	CtrlLib,
-	DropGrid,
 	plugin\jpg,
 	plugin\jpg,
 	plugin\gif,
@@ -10,7 +9,8 @@ uses
 	Web,
 	plugin\png,
 	plugin\bmp,
-	SysInfo;
+	SysInfo,
+	RichText;
 
 library(WIN32) psapi;
 

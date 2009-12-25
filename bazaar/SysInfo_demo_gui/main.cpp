@@ -8,10 +8,9 @@
 #include <Draw/iml.h>
 #define LAYOUTFILE <SysInfo_demo_gui/SysInfo_demo_gui.lay>
 
-//using namespace Upp;
+using namespace Upp;
 
-GUI_APP_MAIN
-{
+GUI_APP_MAIN {
 	SysInfoDemo program;
 	
 	SetLanguage(LNGC_('E','N','U','S', CHARSET_UTF8));
@@ -19,10 +18,9 @@ GUI_APP_MAIN
 	program.Run();
 }
 
-void SpecialFolders::Fill()
-{
+void SpecialFolders::Fill() {
 	TextDesktop.SetText(GetDesktopFolder());
-	TextPrograms.SetText(GetProgramsFolder());
+	TextPrograms.SetText(GetProgramsFolder()); 
 	TextApplication.SetText(GetAppDataFolder());
 	TextMusic.SetText(GetMusicFolder());
 	TextPictures.SetText(GetPicturesFolder());
@@ -47,8 +45,8 @@ void SpecialFolders::Fill()
 	ButInstalledSoftware.Enable(false);
 #endif
 }
-void SpecialFolders::ButInstalledSoftware_Push()
-{
+
+void SpecialFolders::ButInstalledSoftware_Push() {
 #if defined(PLATFORM_WIN32) 	
 	ButInstalledSoftware.SetLabel("Getting list ...");
 	ButInstalledSoftware.ProcessEvents();
@@ -69,8 +67,7 @@ void SpecialFolders::ButInstalledSoftware_Push()
 #endif
 }
 
-void SystemInfo::Fill()
-{
+void SystemInfo::Fill() {
 	String manufacturer, productName, version;
 	Date releaseDate;
 	int numberOfProcessors;
@@ -195,13 +192,12 @@ void SystemInfo::Fill()
 	}
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
 }
-void SystemInfo::ButUpdate_Push()
-{
+
+void SystemInfo::ButUpdate_Push() {
 	Fill();
 }
 
-void WindowsList_::Fill()
-{
+void WindowsList_::Fill() {
 	Windows.Reset();
 	Windows.AddColumn("Title", 30);
 	Windows.AddColumn("Window handle", 6);
@@ -215,13 +211,12 @@ void WindowsList_::Fill()
 		Windows.Add(caption[i], FormatLong(widL[i]), FormatLong(pidL[i]), name[i], fileName[i]);
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
 }
-void WindowsList_::ButUpdate_Push()
-{
+
+void WindowsList_::ButUpdate_Push() {
 	Fill();
 }
 
-void ProcessList::Fill()
-{
+void ProcessList::Fill() {
 	Process.Reset();
 	Process.AddColumn("Id", 6);
 	Process.AddColumn("Priority", 6);
@@ -239,13 +234,11 @@ void ProcessList::Fill()
 	}
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
 }
-void ProcessList::ButUpdate_Push()
-{
+void ProcessList::ButUpdate_Push() {
 	Fill();
 }	
 	
-void ScreenGrabTab::Fill()
-{
+void ScreenGrabTab::Fill() {
 	EditFileNameGrab <<= AppendFileName(GetDesktopFolder(), "ScreenGrab.avi");
 	EditTime <<= 5;
 	EditFrameRate <<= 1; 
@@ -287,8 +280,7 @@ void ScreenGrabTab::Fill()
 	ButSnap.WhenPush = THISBACK(ButSnap_Push);
 }
 
-void ScreenGrabTab::SwGrabMode_Action()
-{
+void ScreenGrabTab::SwGrabMode_Action() {
 	switch((int)SwGrabMode.GetData()) {
 	case 0:
 		EditLeft.Enable(false);
@@ -314,8 +306,7 @@ void ScreenGrabTab::SwGrabMode_Action()
 	}
 }
 
-void ScreenGrabTab::ButGrab_Push()
-{
+void ScreenGrabTab::ButGrab_Push() {
 #if defined(PLATFORM_WIN32) 
 	FileDelete(EditFileNameGrab.GetData().ToString());
 
@@ -328,6 +319,96 @@ void ScreenGrabTab::ButGrab_Push()
 	else
 		throw Exc("Unexpected value");
 #endif
+}
+
+void MouseKeyboard::Fill() {
+	OnTimer();
+	capsLock.WhenAction = THISBACK(OnButLock);
+	numLock.WhenAction = THISBACK(OnButLock);
+	scrollLock.WhenAction = THISBACK(OnButLock);
+	butKey.WhenAction = THISBACK(OnButKey);
+	butMouse.WhenAction = THISBACK(OnButMouse);
+	editAccents <<= "Århus Ørsted Ñandú\ncrème brûlée";
+	editAccents.SetFont(Courier(12));
+	OnRemoveAccents();
+	butRemoveAccents.WhenAction = THISBACK(OnRemoveAccents);
+}
+
+void MouseKeyboard::OnTimer() {
+	bool caps, num, scroll;
+	
+	GetKeyLockStatus(caps, num, scroll);
+	capsLock <<= caps;
+	numLock <<= num;
+	scrollLock <<= scroll;
+}
+
+void MouseKeyboard::OnRemoveAccents() {
+	labNoAccents = RemoveAccents(~editAccents);
+}
+
+void MouseKeyboard::OnButLock() {
+	SetKeyLockStatus(~capsLock, ~numLock, ~scrollLock);	
+}
+
+void MouseKeyboard::OnButKey() {
+	String fileTest = AppendFileName(GetDesktopFolder(), "test.txt");
+	SaveFile(fileTest, "Please wait a second...");
+	LaunchFile(fileTest);
+	{
+		TimeStop t;
+		long windowId;
+		while(-1 == (windowId = GetWindowIdFromCaption("test.txt", false))) {
+			if (t.Elapsed() > 10000)
+				break;
+		}
+		if (windowId != -1) {
+			Sleep(1000);
+			Mouse_SetPos(200, 200, windowId);			
+			Mouse_LeftClick();
+    		Keyb_SendKeys("{HOME}This text is added by Keyb_SendKeys.\n");
+    		Keyb_SendKeys("Some chars just for test: \\/:;,.ºª^[]{}´?¿~#@!¡\n");
+    		Keyb_SendKeys("These are accented: äáéíóúñÄÁÉÍÓÚÑ\n");
+    		//Keyb_SendKeys("And these are not latin at all: 雅言 한국말 韓國말 조선어 朝鮮語\n");
+    		Keyb_SendKeys("And these are not latin at all: 韓于页\n");
+		}
+	}
+}
+
+void MouseKeyboard::OnButMouse()
+{
+	long wnd = GetWindowIdFromCaption("SysInfo", true);
+	
+	if (wnd == -1) {
+		Exclamation("Window not found");
+		return;
+	}
+	long left, top, right, bottom;
+	Window_GetRect(wnd, left, top, right, bottom);
+#ifdef PLATFORM_POSIX
+	top -= 10;	
+#endif
+	Mouse_SetPos(left+100, top+5, 0);
+	Sleep(100);
+	Mouse_LeftDown();
+	Sleep(100);
+	Mouse_SetPos(left+100, top+200, 0);
+	Sleep(100);
+	Mouse_LeftUp();
+	Ctrl::ProcessEvents();
+	Sleep(300);
+	Mouse_LeftDown();
+	Sleep(100);
+	Mouse_SetPos(left+300, top+200, 0);
+	Sleep(100);
+	Mouse_LeftUp();
+	Ctrl::ProcessEvents();
+	Sleep(300);
+	Mouse_LeftDown();
+	Sleep(100);
+	Mouse_SetPos(left+100, top+5, 0);
+	Sleep(100);
+	Mouse_LeftUp();
 }
 
 void ScreenGrabTab::ButSnap_Push()
@@ -360,6 +441,8 @@ SysInfoDemo::SysInfoDemo()
 	filesTab.Add(specialFolders.SizePos(), "Special Folders/Executables/Installed Software");	
 	screenGrab.Fill();
 	filesTab.Add(screenGrab.SizePos(), "Screen Grab");	
+	mouseKeyboard.Fill();
+	filesTab.Add(mouseKeyboard.SizePos(), "Mouse & Keyboard");	
 	
 	AddFrame(menu);
 	AddFrame(TopSeparatorFrame());
@@ -369,11 +452,16 @@ SysInfoDemo::SysInfoDemo()
 	menu.Set(THISBACK(MainMenu));
 	menu.WhenHelp = info;
 
+	SetTimeCallback(-500, THISBACK(TimerFun));
+
 	Sizeable().Zoomable();
 }
 
-void SysInfoDemo::MainMenu(Bar& bar)
-{
+void SysInfoDemo::TimerFun() {
+	mouseKeyboard.OnTimer();
+}
+
+void SysInfoDemo::MainMenu(Bar& bar) {
 	menu.Add("Menu", THISBACK(FileMenu));
 }
 

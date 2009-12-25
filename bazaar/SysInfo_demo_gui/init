@@ -1,11 +1,11 @@
 #ifndef _SysInfo_demo_gui_icpp_init_stub
 #define _SysInfo_demo_gui_icpp_init_stub
 #include "CtrlLib/init"
-#include "DropGrid/init"
 #include "plugin\jpg/init"
 #include "plugin\gif/init"
 #include "Web/init"
 #include "plugin\png/init"
 #include "plugin\bmp/init"
 #include "SysInfo/init"
+#include "RichText/init"
 #endif
