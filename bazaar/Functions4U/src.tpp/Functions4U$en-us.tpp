@@ -162,7 +162,7 @@ tring]_[*@3 durat], [@(0.0.255) int]_`&[*@3 hour], [@(0.0.255) int]_`&[*@3 min],
 [%-*@3 hour], [%-*@3 min ]and [%-*@3 seconds].&]
 [s0; -|It is opposite to HMSToString()&]
 [s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:BytesToString`(uint64`):%- [_^String^ String]_[* BytesToString]([_^uint64^ uint64]_[*@3 b
 ytes])&]
 [s2; Converts an amount of [%-*@3 bytes ]to a short String.&]
@@ -181,13 +181,29 @@ of month.&]
 [s2;%- Return value-|NULL if no time is found in [*@3 s] or pointer 
 to character right after the date.&]
 [s3;%- &]
-[s0;%- &]
+[s4;%- &]
+[s5;:RemoveAccents`(String`):%- [_^String^ String]_[* RemoveAccents]([_^String^ String]_[*@3 s
+tr])&]
+[s2; Returns [%-*@3 str ]with the accented characters substituted with 
+the most approximated ascii characters.&]
+[s0;l288; If the original letter is uppercase, begins a word and 
+the second letter is lowercase, the substituted first letter 
+will be uppercase and the second will be lowercase.&]
+[s0;l288; An accented letter can be substituted with one or some 
+characters.&]
+[s0;l288; For example `"Århus Ørsted Ñandú crème brûlée`" 
+is converted in `"Aarhus Oersted Nandu creme brulee`"&]
+[s3;%- &]
+[s4;%- &]
+[s5;:IsPunctuation`(wchar`):%- [@(0.0.255) bool]_[* IsPunctuation]([_^wchar^ wchar]_[*@3 c])&]
+[s2; Returns true if [%-*@3 c ]is a punctuation character.&]
+[s3;%- &]
 [ {{10000@1 [s0; [* Special folders]]}}&]
 [s0;%- &]
 [s5;:GetDesktopFolder`(`):%- [_^String^ String]_[* GetDesktopFolder]()&]
 [s2; Gets the default Desktop folder path.&]
 [s3;%- &]
-[s4;%- &]
+[s4; &]
 [s5;:GetProgramsFolder`(`):%- [_^String^ String]_[* GetProgramsFolder]()&]
 [s2; Gets the default programs folder path.&]
 [s3;%- &]

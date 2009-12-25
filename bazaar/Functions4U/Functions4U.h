@@ -150,6 +150,9 @@ String HMSToString(int hour, int min, double seconds, bool units = false);
 double StringToSeconds(String str);		// The opposite
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
+String RemoveAccents(String str);
+bool IsPunctuation(wchar c);
+	
 inline double ToRad(double angle)	{return angle*M_PI/180;}
 
 inline bool Odd(int val)	  	{return val%2;}
@@ -378,5 +381,6 @@ inline void DoEvents() {
 #endif
 }
 */
+
 
 #endif

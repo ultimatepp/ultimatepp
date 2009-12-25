@@ -528,8 +528,61 @@ String SecondsToString(double seconds, bool units) {
 	return HMSToString(hour, min, seconds, units);
 }
 
-int DayOfYear(Date d)
-{
+String RemoveAccent(wchar c) {
+	WString wsret;
+
+	if (IsAlNum(c) || IsSpace(c)) {
+		wsret.Cat(c);
+		return wsret.ToString();
+	}
+	const WString accented = "ÂÃÀÁÇÈÉÊËẼÌÍÎÏÑÒÓÔÕÙÚÛÝàáâãçèéêëẽìíîïñòóôõùúûýÿ";
+	const char *unaccented = "AAAACEEEEEIIIINOOOOUUUYaaaaceeeeeiiiinoooouuuyy";
+	
+	for (int i = 0; accented[i]; ++i) {
+		if (accented[i] == c) {
+			wsret.Cat(unaccented[i]);
+			return wsret.ToString();	
+		}
+	}
+	const WString maccented = "ÅåÆæØøþÞßÐðÄäÖöÜü";
+	const char *unmaccented[] = {"AA", "aa", "AE", "ae", "OE", "oe", "TH", "th", "SS", "ETH", 
+								 "eth", "AE", "ae", "OE", "oe", "UE", "ue"};
+	for (int i = 0; maccented[i]; ++i) {
+		if (maccented[i] == c) 
+			return unmaccented[i];
+	}
+	wsret.Cat(c);
+	return wsret.ToString();
+}
+
+bool IsPunctuation(wchar c) {
+	const WString punct = "\"’'()[]{}<>:;,‒–—―….,¡!¿?«»-‐"
+						  "‘’“”/\\&@*\\•^©¤฿¢$€ƒ£₦¥₩₪†‡〃"
+						  "#№ºª\%‰‱ ¶′®§℠℗~™_|¦=";
+	for (int i = 0; punct[i]; ++i) {
+		if (punct[i] == c) 
+			return true;
+	}
+	return false;	 
+}
+
+String RemoveAccents(String str) {
+	String ret;
+	WString wstr = str.ToWString();
+	for (int i = 0; i < wstr.GetCount(); ++i) {
+		String schar = RemoveAccent(wstr[i]);
+		if (i == 0 || ((i > 0) && ((IsSpace(wstr[i-1]) || IsPunctuation(wstr[i-1]))))) {
+			if (schar.GetCount() > 1) {
+				if (IsUpper(schar[0]) && IsLower(wstr[1]))
+				 	schar = schar[0] + ToLower(schar.Mid(1));
+			}
+		} 
+		ret += schar;
+	}
+	return ret;
+}
+
+int DayOfYear(Date d) {
 	return 1 + d - FirstDayOfYear(d);
 }
 
@@ -1168,3 +1221,4 @@ Value GetVARIANT(VARIANT &result)
 	return ret;
 }
 #endif
+
