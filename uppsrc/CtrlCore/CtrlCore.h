@@ -670,7 +670,7 @@ private:
 	static void DestroyClipboard();
 
 public:
-	static Event&    ExitLoopEvent();
+	static Event     ExitLoopEvent;
 	static bool&     EndSession();
 	static bool      IsEndSession()            { return EndSession(); }
 	static HINSTANCE hInstance;
