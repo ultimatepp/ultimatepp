@@ -11,7 +11,8 @@ NAMESPACE_UPP
 #define LOGMESSAGES 0
 #endif
 
-#define ELOG(x)  // RLOG(GetSysTime() << ": " << x)
+#define ELOGW(x)  // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
+#define ELOG(x)   // RLOG(GetSysTime() << ": " << x)
 
 template<>
 unsigned GetHashValue(const HWND& h)
@@ -87,7 +88,7 @@ HANDLE    Ctrl::OverwatchThread;
 HWND      Ctrl::OverwatchHWND;
 
 Event Ctrl::OverwatchEndSession;
-GLOBAL_VAR(Event, Ctrl::ExitLoopEvent)
+Event Ctrl::ExitLoopEvent;
 #endif
 #endif
 
@@ -98,16 +99,16 @@ GLOBAL_VAR(bool, Ctrl::EndSession)
 LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if(msg == WM_USER) {
-		ELOG("WM_USER");
+		ELOGW("WM_USER");
 		PostQuitMessage(0);
 	}
 	if(msg == WM_ENDSESSION) {
 		EndSession() = true;
-		ELOG("WM_ENDSESSION 1");
-		ExitLoopEvent().Set();
-		ELOG("WM_ENDSESSION 2");
+		ELOGW("WM_ENDSESSION 1");
+		ExitLoopEvent.Set();
+		ELOGW("WM_ENDSESSION 2");
 		OverwatchEndSession.Wait();
-		ELOG("WM_ENDSESSION 3");
+		ELOGW("WM_ENDSESSION 3");
 	}
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
@@ -127,18 +128,18 @@ DWORD WINAPI Ctrl::Win32OverwatchThread(LPVOID)
 	OverwatchHWND = CreateWindowEx(0, "UPP-OVERWATCH", "", WS_OVERLAPPEDWINDOW,
 	                               -1000, -1000, 50, 50, NULL, NULL, hInstance, NULL);
 
-	ELOG("OverWatch 1");
-	ExitLoopEvent().Set();
-	ELOG("OverWatch 2");
+	ELOGW("OverWatch 1");
+	ExitLoopEvent.Set();
+	ELOGW("OverWatch 2");
 	MSG Msg;
 	while(GetMessage(&Msg, NULL, 0, 0) > 0) {
         TranslateMessage(&Msg);
-	if(IsWindowUnicode(Msg.hwnd))
-		DispatchMessageW(&Msg);
-	else
-		DispatchMessage(&Msg);
+		if(IsWindowUnicode(Msg.hwnd))
+			DispatchMessageW(&Msg);
+		else
+			DispatchMessage(&Msg);
     }
-	ELOG("OverWatch 3");
+	ELOGW("OverWatch 3");
 	return 0;
 }
 #endif
@@ -825,10 +826,10 @@ void Ctrl::GuiSleep0(int ms)
 		DWORD dummy;
 		OverwatchThread = CreateThread(NULL, 0x100000, Win32OverwatchThread, NULL, 0, &dummy);
 		ELOG("ExitLoopEventWait 1");
-		ExitLoopEvent().Wait();
+		ExitLoopEvent.Wait();
 	}
 	HANDLE h[1];
-	*h = ExitLoopEvent().GetHandle();
+	*h = ExitLoopEvent.GetHandle();
 	ELOG("ExitLoopEventWait 2 " << (void *)*h);
 	MsgWaitForMultipleObjects(1, h, FALSE, ms, QS_ALLINPUT);
 #else
