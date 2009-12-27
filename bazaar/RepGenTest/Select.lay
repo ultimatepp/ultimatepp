@@ -1,0 +1,6 @@
+LAYOUT(SelectReport, 416, 240)
+	ITEM(Button, ok, SetLabel(t_("Select Report")).HSizePosZ(4, 128).BottomPosZ(4, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 116).BottomPosZ(4, 24))
+	ITEM(ArrayCtrl, arr, HSizePosZ(4, 4).VSizePosZ(4, 32))
+END_LAYOUT
+

@@ -1,0 +1,6 @@
+#ifndef _AddressBookXML2_icpp_init_stub
+#define _AddressBookXML2_icpp_init_stub
+#include "CtrlLib/init"
+#include "Report/init"
+#include "RepGen/init"
+#endif

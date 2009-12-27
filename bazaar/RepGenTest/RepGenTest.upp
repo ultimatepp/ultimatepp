@@ -1,0 +1,15 @@
+description "RepGen example\377";
+
+uses
+	CtrlLib,
+	Report,
+	plugin\pcre,
+	RepGen;
+
+file
+	main.cpp charset "UTF-8",
+	Select.lay;
+
+mainconfig
+	"" = "GUI";
+

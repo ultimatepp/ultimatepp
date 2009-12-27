@@ -1,0 +1,6 @@
+#ifndef _RepGen_icpp_init_stub
+#define _RepGen_icpp_init_stub
+#include "CtrlLib/init"
+#include "Report/init"
+#include "plugin\pcre/init"
+#endif
