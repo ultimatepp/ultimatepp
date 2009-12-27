@@ -1,0 +1,6 @@
+#ifndef _SplashSV_test_icpp_init_stub
+#define _SplashSV_test_icpp_init_stub
+#include "CtrlLib/init"
+#include "Report/init"
+#include "SplashSV/init"
+#endif

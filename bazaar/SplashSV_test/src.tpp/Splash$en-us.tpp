@@ -1,0 +1,23 @@
+topic "";
+[ $$0,0#00000000000000000000000000000000:Default]
+[{_}%RU-RU 
+[ {{5625:4375f0;g0;@(93.94.144)-1 [s0;=*@2 &]
+[s0;=%% [*@2 Program to storing addresses in XML format]&]
+[s0;=*@2%- &]
+[s0;=%% [*@(184.185.234)+184 AddressBook`-XML2]&]
+[s0;=*@(184.185.234)%- &]
+[s0;=%% [*@(235) (C) Copyright Ultimate`+`+ team]&]
+[s0;=*C@(184.185.234)4%- ]
+::@2 [s0;%- ]
+::@(194.194.239) [s0;*^http`:`/`/www`.svsoft`.ru`/^@(184.185.234)%- &]
+[s0;%% [*^http`:`/`/www`.svsoft`.ru`/^@(184.185.234) www.ultimatepp.org]&]
+[s0;=*^http`:`/`/www`.svsoft`.ru`/^@(184.185.234)%- ]
+:: [s0;>%% [*^mailto`:mail`@svsoft`.ru^@(184.185.234) mail`@gmail.com]]
+::@(93.94.144)-1 [s0;=*2%- &]
+[s0;=%% [*@2 This program uses][*  ][*@(255.255.192) Ultimate`+`+][*@2  technology]]
+::@2 [s0;%- ]
+::@(93.94.144)-1 [s0;=%% [@2 All rights reserved. Coping, distributing or using without 
+a valid license is deprecated][@2+117 .]&]
+[s0;=%- ]
+::@2 [s0;%- ]}}&]
+[s0; ]

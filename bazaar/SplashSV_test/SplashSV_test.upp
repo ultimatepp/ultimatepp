@@ -1,0 +1,16 @@
+description "Address book application, uses XML to store data (using DOM like U++ classes)\377";
+
+uses
+	CtrlLib,
+	Report,
+	SplashSV;
+
+file
+	AddressBook.cpp,
+	AddressBook.lay,
+	SVLogo.iml,
+	src.tpp;
+
+mainconfig
+	"" = "GUI";
+
