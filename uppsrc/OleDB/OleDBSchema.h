@@ -13,6 +13,11 @@
 #define INT_(x)                    COLUMN_("integer", int, x, 0, 0)
 #define INT_ARRAY_(x, items)       COLUMN_ARRAY_("integer", int, x, 0, 0, items)
 
+#define BIGINT(x)                  COLUMN("bigint", int64, x, 0, 0)
+#define BIGINT_ARRAY(x, items)     COLUMN_ARRAY("bigint", int64, x, 0, 0, items)
+#define BIGINT_(x)                 COLUMN_("bigint", int64, x, 0, 0)
+#define BIGINT_ARRAY_(x, items)    COLUMN_ARRAY_("bigint", int64, x, 0, 0, items)
+
 #define DOUBLE(x)                  COLUMN("double precision", double, x, 0, 0)
 #define DOUBLE_ARRAY(x, items)     COLUMN_ARRAY("double precision", double, x, 0, 0, items)
 #define DOUBLE_(x)                 COLUMN_("double precision", double, x, 0, 0)
@@ -66,6 +71,11 @@
 #undef INT_
 #undef INT_ARRAY_
 
+#undef BIGINT
+#undef BIGINT_ARRAY
+#undef BIGINT_
+#undef BIGINT_ARRAY_
+
 #undef DOUBLE
 #undef DOUBLE_ARRAY
 #undef DOUBLE_
@@ -76,10 +86,10 @@
 #undef DATE_
 #undef DATE_ARRAY_
 
-#undef DATETIME
-#undef DATETIME_ARRAY
-#undef DATETIME_
-#undef DATETIME_ARRAY_
+#undef TIME
+#undef TIME_ARRAY
+#undef TIME_
+#undef TIME_ARRAY_
 
 #undef STRING
 #undef STRING_ARRAY
