@@ -1,4 +1,5 @@
 #ifndef _Functions4U_icpp_init_stub
 #define _Functions4U_icpp_init_stub
 #include "Core/init"
+#include "plugin\bz2/init"
 #endif

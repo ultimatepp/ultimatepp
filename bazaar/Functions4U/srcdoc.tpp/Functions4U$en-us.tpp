@@ -29,6 +29,8 @@ topic "General description";
 [s0; &]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#FileCat`(const char`*`,const char`*`)^ F
 ile Handling]&]
+[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/bsdiff`$en`-us^ File binary 
+comparison (BSDiff)]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#Replace`(String`,String`,String`)^ S
 tring functions]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#Sign`(T`)^ Math 

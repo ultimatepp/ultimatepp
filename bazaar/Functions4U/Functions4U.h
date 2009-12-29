@@ -382,5 +382,8 @@ inline void DoEvents() {
 }
 */
 
+String BsGetLastError();
+bool BSPatch(String oldfile, String newfile, String patchfile);
+bool BSDiff(String oldfile, String newfile, String patchfile);
 
 #endif

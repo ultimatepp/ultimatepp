@@ -1,9 +1,10 @@
 description "Functions and classes for general use\377B255,170,0";
 
 uses
-	Core;
+	Core,
+	plugin\bz2;
 
-library(WIN32) "oleaut32 ";
+library(WIN32) oleaut32;
 
 file
 	Functions4U.cpp,
@@ -13,7 +14,13 @@ file
 	srcdoc.tpp,
 	src.tpp,
 	Functions4U.t,
-	License.txt;
+	License.txt,
+	bsdiffwrapper.h,
+	BSDiff readonly separator,
+	plugin/bsadditional.cpp,
+	plugin/bsdiff.cpp,
+	plugin/bspatch.cpp,
+	plugin/Credits.txt;
 
 mainconfig
 	"" = "";

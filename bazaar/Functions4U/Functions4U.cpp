@@ -1222,3 +1222,6 @@ Value GetVARIANT(VARIANT &result)
 }
 #endif
 
+
+
+
