@@ -5,13 +5,13 @@
 
 #ifdef PLATFORM_WIN32
 
+extern bool InitService(); // implemented by main program
+extern void RunService(); // implemented by main program
+
 NAMESPACE_UPP
 
 extern volatile bool service_stopped;
 extern volatile bool service_paused;
-
-extern bool InitService(); // implemented by main program
-extern void RunService(); // implemented by main program
 
 void InstallConsoleCtrlHandler();
 bool InstallService(String name, String display_name, String& cmdline, String& status);
