@@ -569,12 +569,15 @@ SqlVal Alias(const SqlVal& value, const SqlVal& alias)
 
 SqlVal SchemaAlias(const SqlVal& table, const SqlVal& alias)
 {
-	return SqlCol(~SchemaTable(table) + SqlCase(MSSQL, " as ")(" ") + ~alias);
+	SqlVal st = SchemaTable(table);
+	if(~st == ~alias)
+		return st;
+	return Alias(st, alias);
 }
 
 SqlVal SchemaAlias(const SqlVal& table)
 {
-	return SqlCol(~SchemaTable(table) + SqlCase(MSSQL, " as ")(" ") + ~table);
+	return SchemaAlias(table, table);
 }
 
 SqlId SchemaId(SqlId table_id)
