@@ -331,7 +331,6 @@ void BuildMethods::Load()
 	}
 	method.Sort(0, sCompare);
 	method.GoBegin();
-	NewBuilder();
 }
 
 bool BuildMethods::Save()
