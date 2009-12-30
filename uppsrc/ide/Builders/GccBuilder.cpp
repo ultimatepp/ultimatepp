@@ -290,6 +290,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
 	}
 
 	linkoptions << Gather(pkg.link, config.GetKeys());
+	if(linkoptions.GetCount())
+		linkoptions << ' ';
 
 	Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
 	linkfile.Append(libs);

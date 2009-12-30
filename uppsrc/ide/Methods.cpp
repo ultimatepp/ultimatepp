@@ -188,11 +188,13 @@ BuildMethods::BuildMethods()
 	method.AddCtrl("DEBUG_LINKMODE", debug_linkmode);
 	method.AddCtrl("DEBUG_OPTIONS", debug_options);
 	method.AddCtrl("DEBUG_FLAGS", debug_flags);
+	method.AddCtrl("DEBUG_LINK", debug_link);
 	method.AddCtrl("RELEASE_BLITZ", release_blitz);
 	method.AddCtrl("RELEASE_LINKMODE", release_linkmode);
 	method.AddCtrl("RELEASE_OPTIONS", speed_options);
 	method.AddCtrl("RELEASE_SIZE_OPTIONS", size_options);
 	method.AddCtrl("RELEASE_FLAGS", release_flags);
+	method.AddCtrl("RELEASE_LINK", release_link);
 	method.AddCtrl("DEBUGGER", debugger);
 	method.AddCtrl("PATH", path);
 	method.AddCtrl("INCLUDE", include);
@@ -276,43 +278,32 @@ static int sCompare(const Value& v1, const Value& v2)
 	return (String)v1 < (String)v2;
 }
 
-static bool IsGccBuilder(String b) { return b == "GCC" || b == "GCC32" || b == "GCC_ARM"; }
-
 void BuildMethods::NewBuilder()
 {
 	String b = ~builder;
-	if(IsNull(speed_options)) {
-		if(IsGccBuilder(b))
-		#ifdef PLATFORM_WIN32
-			speed_options <<= "-O3 -ffunction-sections";
-		#else
-			speed_options <<= "-O3";
-		#endif
+	bool gcc = b == "GCC" || b == "GCC32" || b == "GCC_ARM";
+	if(IsNull(speed_options))
+		if(gcc)
+			speed_options <<= "-O3 -ffunction-sections -fdata-sections";
 		else
 			speed_options <<= "-O2";
-	}
-	if(IsNull(size_options)) {
-		if(IsGccBuilder(b))
-		#ifdef PLATFORM_WIN32
-			size_options <<= "-Os -finline-limit=20 -ffunction-sections";
-		#else
-			size_options <<= "-Os -finline-limit=20";
-		#endif
+	if(IsNull(size_options))
+		if(gcc)
+			size_options <<= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
 		else
 			size_options <<= "-O1";
-	}
-	if(IsNull(debug_options)) {
-		if(IsGccBuilder(b))
+	if(IsNull(debug_options))
+		if(gcc)
 			debug_options <<= "-O0";
 		else
 			debug_options <<= "-Od";
-	}
-	if(IsNull(debugger)) {
-		if(IsGccBuilder(b))
+	if(IsNull(debugger))
+		if(gcc)
 			debugger <<= "gdb";
 		else
 			debugger <<= "msdev";
-	}
+	if(IsNull(release_link) && gcc)
+		release_link <<= "-Wl,--gc-sections";
 	ChangeMethod();
 }
 
