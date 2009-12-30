@@ -7,7 +7,7 @@ DEBUG_FLAGS = "";
 RELEASE_BLITZ = "0";
 RELEASE_LINKMODE = "1";
 RELEASE_OPTIONS = "-O3 -ffunction-sections -fdata-sections";
-RELEASE_SIZE_OPTIONS = "-Os -finline-limit=20";
+RELEASE_SIZE_OPTIONS = "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
 RELEASE_FLAGS = "";
 RELEASE_LINK = "-Wl,--gc-sections";
 DEBUGGER = "zero";
