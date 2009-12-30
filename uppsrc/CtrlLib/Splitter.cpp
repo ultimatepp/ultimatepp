@@ -20,11 +20,13 @@ int Splitter::GetChildCount() const
 	return count;
 }
 
-void   Splitter::Layout() {
+void Splitter::Layout() {
 	Size sz = GetSize();
 	int count = GetChildCount();
 	if(count == 0)
 		return;
+	mins.SetCount(count, 0);
+	minpx.SetCount(count, 0);
 	count--;
 	if(pos.GetCount() < count) {
 		pos.SetCount(count, 0);
@@ -191,15 +193,37 @@ void Splitter::Serialize(Stream& s) {
 	}
 }
 
+void Splitter::Remove(Ctrl& ctrl)
+{
+	int n = 0;
+	Ctrl *c = GetFirstChild();
+	while(c){
+		if(c == &ctrl){
+			if(c->GetNext())
+				pos.Remove(n);
+			else
+			if(n >= 1)
+				pos.Remove(n-1);
+			mins.Remove(n);
+			minpx.Remove(n);
+			RemoveChild(c);
+			break;
+		}
+		c = c->GetNext();
+		n++;
+	}
+}
+
 void Splitter::Clear() {
 	while(GetFirstChild())
 		RemoveChild(GetFirstChild());
+	pos.Clear();
+	mins.Clear();
+	minpx.Clear();
 }
 
 void Splitter::Reset() {
 	Clear();
-	pos.Clear();
-	mins.Clear();
 	style = -1;
 	width = 4;
 	vert = false;
