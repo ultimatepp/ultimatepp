@@ -6,9 +6,10 @@ DEBUG_OPTIONS = "-O0";
 DEBUG_FLAGS = "";
 RELEASE_BLITZ = "0";
 RELEASE_LINKMODE = "1";
-RELEASE_OPTIONS = "-O1 -ffunction-sections";
+RELEASE_OPTIONS = "-O3 -ffunction-sections -fdata-sections";
 RELEASE_SIZE_OPTIONS = "-Os -finline-limit=20";
 RELEASE_FLAGS = "";
+RELEASE_LINK = "-Wl,--gc-sections";
 DEBUGGER = "zero";
 PATH = "";
 INCLUDE = "/usr/include/freetype2;/usr/include/gtk-2.0;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/lib/gtk-2.0/include;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/atk-1.0;/usr/X11R6/include;/usr/X11R6/include/freetype2;/usr/X11R6/include/gtk-2.0;/usr/X11R6/include/glib-2.0;/usr/X11R6/lib/glib-2.0/include;/usr/X11R6/lib/gtk-2.0/include;/usr/X11R6/include/cairo;/usr/X11R6/include/pango-1.0;/usr/X11R6/include/atk-1.0"
