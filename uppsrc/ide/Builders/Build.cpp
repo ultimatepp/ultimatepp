@@ -537,7 +537,9 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 		}
 		String mainpackage = wspc[0];
 		Vector<String> linkfile;
-		String linkopt;
+		String linkopt = GetMethodVars(method).Get(targetmode ? "RELEASE_LINK" : "DEBUG_LINK", Null);
+		if(linkopt.GetCount())
+			linkopt << ' ';
 		ok = true;
 		int ms = msecs();
 		for(int i = 0; i < build_order.GetCount() && (ok || !stoponerrors); i++) {
