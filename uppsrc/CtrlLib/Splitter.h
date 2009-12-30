@@ -42,6 +42,8 @@ public:
 	void      Add(Ctrl& pane);
 	Splitter& operator<<(Ctrl& pane)               { Add(pane); return *this; }
 
+	void      Remove(Ctrl& ctrl);
+
 	Splitter& Vert(Ctrl& top, Ctrl& bottom);
 	Splitter& Horz(Ctrl& left, Ctrl& right);
 	Splitter& Vert()                               { vert = true; Layout(); return *this; }
