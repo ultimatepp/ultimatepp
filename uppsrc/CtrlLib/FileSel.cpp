@@ -401,8 +401,10 @@ String FileSel::GetDir() {
 }
 
 void FileSel::SetDir(const String& _dir) {
+#ifdef PLATFORM_WIN32
 	netstack.Clear();
 	netnode.Clear();
+#endif
 	dir <<= _dir;
 	Load();
 	Update();
@@ -490,11 +492,13 @@ void FileSel::SearchLoad()
 	list.EndEdit();
 	list.Clear();
 	String d = GetDir();
+#ifdef PLATFORM_WIN32
 	if(d == "\\") {
 		netnode = NetNode::EnumRoot();
 		LoadNet();
 		return;
 	}
+#endif
 	String emask = GetMask();
 	if(!UPP::Load(list, d, emask, mode == SELECTDIR, WhenIcon, *filesystem, ~search, ~hidden, ~hiddenfiles)) {
 		Exclamation(t_("[A3* Unable to read the directory !]&&") + DeQtf((String)~dir) + "&&" +
@@ -659,16 +663,20 @@ void FileSel::Finish() {
 
 bool FileSel::OpenItem() {
 	if(list.IsCursor()) {
+	#ifdef PLATFORM_WIN32
 		if(netnode.GetCount()) {
 			SelectNet();
 			return true;
 		}
+	#endif
 		const FileList::File& m = list.Get(list.GetCursor());
+	#ifdef PLATFORM_WIN32
 		if(IsNull(dir) && m.name == t_("Network")) {
 			netnode = NetNode::EnumRoot();
 			LoadNet();
 			return true;
 		}
+	#endif
 		if(m.isdir) {
 			SetDir(AppendFileName(~dir, m.name));
 			return true;
@@ -681,8 +689,10 @@ bool FileSel::OpenItem() {
 
 void FileSel::Open() {
 	if(mode == SELECTDIR) {
+	#ifdef PLATFORM_WIN32
 		if(netnode.GetCount())
 			return;
+	#endif
 		Finish();
 		return;
 	}
@@ -826,6 +836,7 @@ String DirectoryUp(String& dir, bool basedir)
 }
 
 void FileSel::DirUp() {
+#ifdef PLATFORM_WIN32
 	if(netstack.GetCount()) {
 		netstack.Drop();
 		if(netstack.GetCount()) {
@@ -840,6 +851,7 @@ void FileSel::DirUp() {
 		SetDir("");
 		return;
 	}
+#endif
 	String s = ~dir;
 	String name = DirectoryUp(s, !basedir.IsEmpty());
 #ifdef PLATFORM_WIN32
@@ -1320,10 +1332,12 @@ bool FileSel::ExecuteSelectDir(const char *title)
 }
 
 void FileSel::Serialize(Stream& s) {
+#ifdef PLATFORM_WIN32
 	if(s.IsLoading()) {
 		netnode.Clear();
 		netstack.Clear();
 	}
+#endif
 	int version = 7;
 	s / version;
 	String ad = ~dir;
