@@ -24,6 +24,6 @@ GUI_APP_MAIN
 	for(;;) {
 		if(!fs.ExecuteSaveAs())
 			break;
-		PromptOK(~fs);
+		PromptOK(DeQtf(~fs));
 	}
 }
