@@ -299,6 +299,10 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 					StdFont().Bold(), SColorText, true, -1, Null, SColorDisabled,
 					root[i].root_desc, StdFont()
 			);
+		#ifdef PLATFORM_WIN32
+			list.Add(t_("Network"), CtrlImg::Network(), StdFont().Bold(), SColorText,
+			         true, -1, Null, SColorDisabled, Null, StdFont());
+		#endif
 	}
 	else {
 		Array<FileSystemInfo::FileInfo> ffi =
@@ -397,6 +401,8 @@ String FileSel::GetDir() {
 }
 
 void FileSel::SetDir(const String& _dir) {
+	netstack.Clear();
+	netnode.Clear();
 	dir <<= _dir;
 	Load();
 	Update();
@@ -439,11 +445,56 @@ void FileSel::Load()
 	SearchLoad();
 }
 
+void FileSel::LoadNet()
+{
+#ifdef PLATFORM_WIN32
+	list.Clear();
+	for(int i = 0; i < netnode.GetCount(); i++) {
+		Image m = CtrlImg::Group();
+		switch(netnode[i].GetDisplayType()) {
+		case NetNode::NETWORK:
+			m = CtrlImg::Network();
+			break;
+		case NetNode::SHARE:
+			m = CtrlImg::Share();
+			break;
+		case NetNode::SERVER:
+			m = CtrlImg::Computer();
+			break;
+		}
+		list.Add(netnode[i].GetName(), m);
+	}
+#endif
+}
+
+void FileSel::SelectNet()
+{
+#ifdef PLATFORM_WIN32
+	int q = list.GetCursor();
+	if(q >= 0 && q < netnode.GetCount()) {
+		NetNode& n = netnode[q];
+		String p = n.GetPath();
+		if(p.GetCount())
+			SetDir(p);
+		else {
+			netstack.Add() = netnode[q];		
+			netnode = netstack.Top().Enum();
+			LoadNet();
+		}
+	}
+#endif
+}
+
 void FileSel::SearchLoad()
 {
 	list.EndEdit();
 	list.Clear();
 	String d = GetDir();
+	if(d == "\\") {
+		netnode = NetNode::EnumRoot();
+		LoadNet();
+		return;
+	}
 	String emask = GetMask();
 	if(!UPP::Load(list, d, emask, mode == SELECTDIR, WhenIcon, *filesystem, ~search, ~hidden, ~hiddenfiles)) {
 		Exclamation(t_("[A3* Unable to read the directory !]&&") + DeQtf((String)~dir) + "&&" +
@@ -482,11 +533,12 @@ void FileSel::SearchLoad()
 	if(filesystem->IsWin32())
 		if(!IsEmpty(basedir) && String(~dir).IsEmpty())
 			dirup.Disable();
-	if(sortext && mode != SELECTDIR)
-		SortByExt(list);
-	else
-		SortByName(list);
 	olddir = ~dir;
+	if(olddir.GetCount())
+		if(sortext && mode != SELECTDIR)
+			SortByExt(list);
+		else
+			SortByName(list);
 	Update();
 }
 
@@ -607,7 +659,16 @@ void FileSel::Finish() {
 
 bool FileSel::OpenItem() {
 	if(list.IsCursor()) {
+		if(netnode.GetCount()) {
+			SelectNet();
+			return true;
+		}
 		const FileList::File& m = list.Get(list.GetCursor());
+		if(IsNull(dir) && m.name == t_("Network")) {
+			netnode = NetNode::EnumRoot();
+			LoadNet();
+			return true;
+		}
 		if(m.isdir) {
 			SetDir(AppendFileName(~dir, m.name));
 			return true;
@@ -620,6 +681,8 @@ bool FileSel::OpenItem() {
 
 void FileSel::Open() {
 	if(mode == SELECTDIR) {
+		if(netnode.GetCount())
+			return;
 		Finish();
 		return;
 	}
@@ -635,6 +698,14 @@ void FileSel::Open() {
 	else
 	if(file.HasFocus()) {
 		String fn = file.GetText().ToString();
+	#ifdef PLATFORM_WIN32
+		if(fn[0] == '\\' && fn[1] == '\\') {
+			FindFile ff(AppendFileName(fn, "*.*"));
+			if(ff)
+				SetDir(TrimDot(fn));
+			return;
+		}
+	#endif
 		if(fn == "." || fn == "..") {
 			DirUp();
 			return;
@@ -755,8 +826,28 @@ String DirectoryUp(String& dir, bool basedir)
 }
 
 void FileSel::DirUp() {
+	if(netstack.GetCount()) {
+		netstack.Drop();
+		if(netstack.GetCount()) {
+			netnode = netstack.Top().Enum();
+			LoadNet();
+		}
+		netnode = NetNode::EnumRoot();
+		return;
+	}
+	if(netnode.GetCount()) {
+		netnode.Clear();
+		SetDir("");
+		return;
+	}
 	String s = ~dir;
 	String name = DirectoryUp(s, !basedir.IsEmpty());
+#ifdef PLATFORM_WIN32
+	if(s[0] == '\\' && s[1] == '\\' && s.Find('\\', 2) < 0) {
+		s.Clear();
+		name.Clear();
+	}
+#endif
 	SetDir(s);
 	if(list.HasFocus())
 		list.FindSetCursor(name);
@@ -969,7 +1060,6 @@ void FileSel::Rename(const String& on, const String& nn) {
 }
 
 void FileSel::Choice() {
-//	String s = ~dir;
 	Load();
 }
 
@@ -1012,10 +1102,16 @@ void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 {
 	String s = q;
 	w.DrawRect(r, paper);
+		
 #ifdef PLATFORM_X11
 	Image img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
 #else
-	Image img = s.GetCount() ? GetFileIcon(s, false, true, false) : CtrlImg::Computer();
+	Image img;
+	
+	if((byte)*s.Last() == 255)
+		img = CtrlImg::Network();
+	else
+		img = s.GetCount() ? GetFileIcon(s, false, true, false) : CtrlImg::Computer();
 #endif
 	if(IsNull(img))
 		img = CtrlImg::Dir();
@@ -1114,6 +1210,8 @@ bool FileSel::Execute(int _mode) {
 			ugly.Cat(root[i].root_style);
 			dir.Add(root[i].filename, ugly);
 		}
+		if(filesystem == &StdFileSystemInfo())
+			dir.Add("\\", String(t_("Network")) + String(0, 1) + "\xff");
 	#endif
 		if(filesystem->IsPosix() && String(~dir).IsEmpty())
 			dir <<= GetHomeDirectory();
@@ -1222,6 +1320,10 @@ bool FileSel::ExecuteSelectDir(const char *title)
 }
 
 void FileSel::Serialize(Stream& s) {
+	if(s.IsLoading()) {
+		netnode.Clear();
+		netstack.Clear();
+	}
 	int version = 7;
 	s / version;
 	String ad = ~dir;
