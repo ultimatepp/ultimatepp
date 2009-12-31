@@ -54,6 +54,7 @@ private:
 	void        UpdateSelect();
 	void        Update();
 	bool        FindChar(int from, int chr);
+	void        KillEdit();
 
 	struct FileOrder;
 
@@ -141,6 +142,11 @@ protected:
 	String         preselect;
 	Vector<String> fn;
 
+#ifdef PLATFORM_WIN32
+	Array<NetNode> netstack;
+	Array<NetNode> netnode;
+#endif
+
 	DisplayCtrl    preview_display;
 	Ctrl          *preview;
 	FileList       list;
@@ -156,6 +162,8 @@ protected:
 	bool        bidname;
 	bool        appmodal;
 
+	void        LoadNet();
+	void        SelectNet();
 	bool        PatternMatch(const char *fn);
 	bool        OpenItem();
 	void        OpenItem2()                                  { OpenItem(); }

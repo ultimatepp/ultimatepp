@@ -147,6 +147,7 @@ Size FileList::GetStdSize(const Value& q) const
 }
 
 void FileList::StartEdit() {
+	if(GetCursor() < 0) return;
 	Rect r = GetItemRect(GetCursor());
 	const File& cf = Get(GetCursor());
 	Font f = cf.font;
@@ -175,6 +176,11 @@ void FileList::OkEdit() {
 		WhenRename(Get(c).name, ~edit);
 }
 
+void FileList::KillEdit()
+{
+	KillTimeCallback(TIMEID_STARTEDIT);
+}
+
 void FileList::LeftDown(Point p, dword flags) {
 	int c = GetCursor();
 	if(IsEdit()) {
@@ -182,7 +188,7 @@ void FileList::LeftDown(Point p, dword flags) {
 		c = -1;
 	}
 	ColumnList::LeftDown(p, flags);
-	KillTimeCallback(TIMEID_STARTEDIT);
+	KillEdit();
 	if(c == GetCursor() && c >= 0 && !HasCapture() && renaming && !(flags & (K_SHIFT|K_CTRL)))
 		SetTimeCallback(750, THISBACK(StartEdit), TIMEID_STARTEDIT);
 }
@@ -239,6 +245,7 @@ void FileList::Insert(int ii,
 	m.data = data;
 	m.underline = uln;
 	ColumnList::Insert(ii, v, !m.isdir);
+	KillEdit();
 }
 
 void FileList::Set(int ii,
@@ -261,6 +268,7 @@ void FileList::Set(int ii,
 	m.data = data;
 	m.underline = uln;
 	ColumnList::Set(ii, v, !m.isdir);
+	KillEdit();
 }
 
 void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
@@ -318,6 +326,7 @@ struct FileList::FileOrder : public ValueOrder {
 
 void FileList::Sort(const Order& order)
 {
+	KillEdit();
 	FileOrder fo;
 	fo.order = &order;
 	int i = GetCursor();

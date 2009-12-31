@@ -277,8 +277,12 @@ class NetNode : Moveable<NetNode> {
 	void SetPtrs();
 
 public:
+	enum {
+		UNKNOWN, NETWORK, GROUP, SERVER, SHARE
+	};
 	String         GetName() const    { return name; }
 	String         GetPath() const    { return path; }
+	int            GetDisplayType() const;
 	Array<NetNode> Enum() const;
 
 	void           Serialize(Stream& s);
