@@ -28,5 +28,5 @@ void EnumNetwork(const Array<NetNode>& nn)
 
 CONSOLE_APP_MAIN
 {
-	EnumNetwork(NetNode::EnumRoot());
+	EnumNetwork(NetNode::EnumRemembered());
 }
