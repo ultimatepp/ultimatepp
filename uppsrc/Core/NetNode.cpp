@@ -66,6 +66,14 @@ Array<NetNode> NetNode::EnumRoot()
 	return Enum0(hEnum);
 }
 
+Array<NetNode> NetNode::EnumRemembered()
+{
+	HANDLE hEnum;
+	if(::WNetOpenEnum(RESOURCE_REMEMBERED, RESOURCETYPE_DISK, 0, NULL, &hEnum))
+		return Array<NetNode>();
+	return Enum0(hEnum);
+}
+
 Array<NetNode> NetNode::Enum0(HANDLE hEnum)
 {
 	Array<NetNode> r;

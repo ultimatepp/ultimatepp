@@ -495,6 +495,7 @@ void FileSel::SearchLoad()
 #ifdef PLATFORM_WIN32
 	if(d == "\\") {
 		netnode = NetNode::EnumRoot();
+		netnode.Append(NetNode::EnumRemembered());
 		LoadNet();
 		return;
 	}
@@ -673,6 +674,7 @@ bool FileSel::OpenItem() {
 	#ifdef PLATFORM_WIN32
 		if(IsNull(dir) && m.name == t_("Network")) {
 			netnode = NetNode::EnumRoot();
+			netnode.Append(NetNode::EnumRemembered());
 			LoadNet();
 			return true;
 		}

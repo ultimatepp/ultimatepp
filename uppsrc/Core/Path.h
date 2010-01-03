@@ -288,6 +288,7 @@ public:
 	void           Serialize(Stream& s);
 
 	static Array<NetNode> EnumRoot();
+	static Array<NetNode> EnumRemembered();
 
 	NetNode();
 	NetNode(const NetNode& s)         { *this = s; }
