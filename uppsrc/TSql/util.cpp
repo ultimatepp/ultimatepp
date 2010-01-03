@@ -564,15 +564,14 @@ SqlSet DeleteSchemaHint(const char *hint, const SqlVal& table)
 
 SqlVal Alias(const SqlVal& value, const SqlVal& alias)
 {
+	if(~value == ~alias)
+		return value;
 	return SqlCol(~value + SqlCase(MSSQL, " as ")(" ") + ~alias);
 }
 
 SqlVal SchemaAlias(const SqlVal& table, const SqlVal& alias)
 {
-	SqlVal st = SchemaTable(table);
-	if(~st == ~alias)
-		return st;
-	return Alias(st, alias);
+	return Alias(SchemaTable(table), alias);
 }
 
 SqlVal SchemaAlias(const SqlVal& table)
