@@ -34,9 +34,9 @@ E.g. <mytag></mytag>.&]
 onst]_[@(0.0.255) char]_`*[*@3 text])&]
 [s5;:XmlTag`:`:operator`(`)`(const String`&`): [_^String^ String]_[* operator()]([@(0.0.255) c
 onst]_[_^String^ String][@(0.0.255) `&]_[*@3 text])&]
-[s2; Returns the completed XML tag block with [*@3 text] content. E.g. 
-<mytag>mytext</mytag>. Note that the [*@3 text] here is not altertered 
-in output in any way `- it can contain other subtags.&]
+[s2;%% Returns the completed XML tag block with [*@3 text] content. 
+E.g. <mytag>mytext</mytag>. Note that the [*@3 text] here is not 
+altered in the output in any way `- it can contain other subtags.&]
 [s3;%% &]
 [s4; &]
 [s5;:XmlTag`:`:Text`(const char`*`,byte`): [_^String^ String]_[* Text]([@(0.0.255) const]_[@(0.0.255) c
