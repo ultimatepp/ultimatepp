@@ -227,11 +227,8 @@ void XmlParser::Next()
 				for(;;) {
 					if(term[0] == '-' && term[1] == '-' && term[2] == '>')
 						break;
-					if(*term == '\0') {
+					if(*term == '\0')
 						throw XmlError("Unterminated comment");
-						type = XML_EOF;
-						return;
-					}
 					if(*term == '\n')
 						line++;
 					text.Cat(*term++);
