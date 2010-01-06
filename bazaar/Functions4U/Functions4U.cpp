@@ -6,6 +6,81 @@
 
 #include "Functions4U.h"
 
+
+/////////////////////////////////////////////////////////////////////
+// LaunchFile
+
+#if defined(PLATFORM_WIN32)
+bool LaunchFileCreateProcess(const String file) {
+	STARTUPINFOW startInfo;
+    PROCESS_INFORMATION procInfo;
+
+    ZeroMemory(&startInfo, sizeof(startInfo));
+    startInfo.cb = sizeof(startInfo);
+    ZeroMemory(&procInfo, sizeof(procInfo));
+
+	WString wexec;
+	wexec = Format("\"%s\" \"%s\"", GetExtExecutable(GetFileExt(file)), file).ToWString();
+	WStringBuffer wsbexec(wexec);
+	
+    if(!CreateProcessW(NULL, wsbexec, NULL, NULL, FALSE, 0, NULL, NULL, &startInfo, &procInfo))  
+        return false;
+
+   	WaitForSingleObject(procInfo.hProcess, 0);
+
+    CloseHandle(procInfo.hProcess);
+    CloseHandle(procInfo.hThread);	
+	return true;
+}
+
+bool LaunchFileShellExecute(const String file) {
+	HINSTANCE ret;
+	WString fileName(file);
+	ret = ShellExecuteW(NULL, L"open", fileName, NULL, L".", SW_SHOWNORMAL);		
+
+	return (int)ret > 32;
+}
+
+bool LaunchFile(const String file) {
+	if (!LaunchFileShellExecute(file))			// First try
+	   	return LaunchFileCreateProcess(file);	// Second try
+	return true;
+}
+#endif
+#ifdef PLATFORM_POSIX
+
+String GetDesktopManagerNew() {
+	if(GetEnv("GNOME_DESKTOP_SESSION_ID").GetCount() || GetEnv("GNOME_KEYRING_SOCKET").GetCount()) 
+		return "gnome";
+	else if(GetEnv("KDE_FULL_SESSION").GetCount() || GetEnv("KDEDIR").GetCount() || GetEnv("KDE_MULTIHEAD").GetCount()) 
+        return "kde"; 
+	else {
+		StringParse desktopStr;
+		if (Sys("xprop -root _DT_SAVE_MODE").Find("xfce") >= 0)
+			return "xfce";
+		else if ((desktopStr = Sys("xprop -root")).Find("ENLIGHTENMENT") >= 0) 
+			return "enlightenment";
+		else
+			return GetEnv("DESKTOP_SESSION");
+	}
+}
+
+bool LaunchFile(const String file) {
+	int ret;
+	if (GetDesktopManagerNew() == "gnome") 
+		ret = system("gnome-open \"" + file + "\"");
+	else if (GetDesktopManagerNew() == "kde") 
+		ret = system("kfmclient exec \"" + file + "\" &"); 
+	else if (GetDesktopManagerNew() == "enlightenment") {
+		String mime = GetExtExecutable(GetFileExt(file));
+		String program = mime.Left(mime.Find("."));		// Left side of mime executable is the program to run
+		ret = system(program + " \"" + file + "\" &"); 
+	} else 
+		ret = system("xdg-open \"" + file + "\"");
+	return (ret >= 0);
+}
+#endif
+
 /////////////////////////////////////////////////////////////////////
 // General utilities
 
@@ -240,6 +315,57 @@ String GetExtExecutable(String ext)
 #endif
 	return exeFile;
 }
+
+
+#if defined(PLATFORM_WIN32)
+Array<String> GetDriveList() {
+	char drvStr[26*4+1];		// A, B, C, ...
+	Array<String> ret;
+	
+	int lenDrvStrs = ::GetLogicalDriveStrings(sizeof(drvStr), drvStr);
+	// To get the error call GetLastError()
+	if (lenDrvStrs == 0)
+		return ret;
+	
+	ret.Add(drvStr);
+	for (int i = 0; i < lenDrvStrs-1; ++i) {
+		if (drvStr[i] == '\0') 
+			ret.Add(drvStr + i + 1);
+	}
+	return ret;
+}
+#endif
+#if defined(PLATFORM_POSIX)
+Array<String> GetDriveList() {
+	Array<String> ret;
+	// Search for mountable file systems
+	String mountableFS;
+	StringParse sfileSystems(LoadFile_Safe("/proc/filesystems"));
+	String str;
+	while (true) {
+		str = sfileSystems.GetText();	
+		if (str == "")
+			break;
+		else if (str != "nodev")
+			mountableFS << str << ".";
+		else 
+			str = sfileSystems.GetText();
+	}
+	// Get mounted drives
+	StringParse smounts(LoadFile_Safe("/proc/mounts"));
+	StringParse smountLine(smounts.GetText("\r\n"));
+	do {
+		String devPath 	 = smountLine.GetText();
+		String mountPath = smountLine.GetText();
+		String fs        = smountLine.GetText();
+		if ((mountableFS.Find(fs) >= 0) && (mountPath.Find("/dev") < 0) && (mountPath.Find("/rofs") < 0))		// Is mountable
+			ret.Add(mountPath);
+		smountLine = smounts.GetText("\r\n");
+	} while (smountLine != "");
+	
+	return ret;
+}
+#endif
 
 String GetFirefoxDownloadFolder()
 {
@@ -526,6 +652,31 @@ String SecondsToString(double seconds, bool units) {
 	min = (int)(seconds/60.);
 	seconds -= min*60;	
 	return HMSToString(hour, min, seconds, units);
+}
+
+String BytesToString(uint64 _bytes)
+{
+	String ret;
+	uint64 bytes = _bytes;
+	
+	if (bytes >= 1024) {
+		bytes /= 1024;
+		if (bytes >= 1024) {
+			bytes /= 1024;
+			if (bytes >= 1024) {
+				bytes /= 1024;
+				if (bytes >= 1024) {
+					bytes /= 1024;
+					ret = Format("%.1f %s", _bytes/(1024*1024*1024*1024.), "Tb");
+				} else
+					ret = Format("%.1f %s", _bytes/(1024*1024*1024.), "Gb");
+			} else
+				ret = Format("%.1f %s", _bytes/(1024*1024.), "Mb");
+		} else
+			ret = Format("%.1f %s", _bytes/1024., "Kb");
+	} else
+		ret << _bytes << " b";
+	return ret;
 }
 
 String RemoveAccent(wchar c) {

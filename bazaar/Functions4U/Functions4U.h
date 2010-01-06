@@ -3,6 +3,9 @@
 
 using namespace Upp;
 
+
+bool LaunchFile(const String file);
+
 bool FileCat(const char *file, const char *appendFile);
 
 bool FileStrAppend(const char *file, const char *str);
@@ -30,6 +33,8 @@ int64 TrashBinGetCount();
 bool TrashBinClear();
 
 String GetExtExecutable(String ext);
+
+Array<String> GetDriveList();
 
 String GetDesktopFolder();
 String GetProgramsFolder();

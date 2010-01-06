@@ -14,6 +14,18 @@ topic "Functions4U. Reference";
 [s0; &]
 [s0; List of functions in package.&]
 [s0; &]
+[ {{10000@1 [s0; [* Running files and commands]]}}&]
+[s4;%- &]
+[s5;:LaunchFile`(const String`):%- [@(0.0.255) bool]_[* LaunchFile]([@(0.0.255) const]_[_^String^ S
+tring]_[*@3 file])&]
+[s2; Opens the file [%-*@3 file ]with the adecuated program defined 
+in the OS by default.&]
+[s0; &]
+[s0;l288; [/ Example:]&]
+[s0;l288; [/ LaunchFile(`"c:`\`\My spreadsheet.txt`"). It will open 
+default program (probably gedit or notepad) with document `"My 
+spreadsheet.txt`".]&]
+[s3; &]
 [ {{10000@1 [s0; [* File Handling]]}}&]
 [s4; &]
 [s5;:FileCat`(const char`*`,const char`*`):%- [@(0.0.255) bool]_[* FileCat]([@(0.0.255) con
@@ -22,13 +34,13 @@ st]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 
 [s2; Appends at the end of [%-*@3 file] the contents of file [%-*@3 appendFile]. 
 [%-*@3 file] will be modified and [%-*@3 appendFile ]will remain 
 unchanged.&]
-[s0; -|Returns true in case of success.&]
+[s0;l288; Returns true in case of success.&]
 [s3; &]
 [s4;%- &]
 [s5;:FileStrAppend`(const char`*`,const char`*`):%- [@(0.0.255) bool]_[* FileStrAppend]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 str])&]
 [s2; Appends at the end of [%-*@3 file] the text [%-*@3 str].&]
-[s0; -|Returns true in case of success.&]
+[s0;l288; Returns true in case of success.&]
 [s4;%- &]
 [s5;:GetUpperFolder`(String`):%- [_^String^ String]_[* GetUpperFolder]([_^String^ String]_[*@3 f
 olderName])&]
@@ -108,7 +120,21 @@ files under folder /proc in Linux)&]
 [s0;l288; LoadFile`_Safe() just get the file bytes returned by the 
 OS until the file end.&]
 [s3;%- &]
-[s0;%- &]
+[s4; &]
+[s5;:FileToTrashBin`(const char`*`):%- [@(0.0.255) void]_[* FileToTrashBin]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 path])&]
+[s2; Deletes file [%-*@3 path].by sending it to the Trash Bin.&]
+[s3; &]
+[s4;%- &]
+[s5;:TrashBinGetCount`(`):%- [_^int64^ int64]_[* TrashBinGetCount]()&]
+[s2; Returns the number of items (files and directories) located 
+in the Trash Bin.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:TrashBinClear`(`):%- [@(0.0.255) void]_[* TrashBinClear]()&]
+[s0; Removes all the items (files and directories) located in the 
+Trash Bin.ç&]
+[s3; &]
 [ {{10000@1 [s0; [* String functions]]}}&]
 [s4; &]
 [s5;:Replace`(String`,String`,String`):%- [_^String^ String]_[* Replace]([_^String^ String]_
@@ -1490,4 +1516,13 @@ g]_[*@3 ext])&]
 [s0; &]
 [s0; -|[/ Example:]&]
 [s0; [/ -|GetExtExecutable(`"html`") `-> `"Firefox.exe`"]&]
-[s0; ]
+[s3; &]
+[s4;%- &]
+[s5;:GetDriveList`(`):%- [_^Array^ Array]<[_^String^ String]>_[* GetDriveList]()&]
+[s2; Returns an array with the paths to all drives, internal or external, 
+identified in the system.&]
+[s3; &]
+[s4;%- &]
+[s5;:GetDesktopManagerNew`(`):%- [_^String^ String]_[* GetDesktopManagerNew]()&]
+[s2; A more complete version of GetDesktopManager() based on GetOsInfo().&]
+[s3; ]

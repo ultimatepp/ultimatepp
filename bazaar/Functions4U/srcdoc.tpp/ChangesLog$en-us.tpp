@@ -4,7 +4,8 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;2 &]
-[s0;2 &]
+[s0; [2 2010/01/05-|GetDesktopManagerNew moved from SysInfo]&]
+[s0; [2 2010/01/05-|Trash Bin documentation moved from SysInfo]&]
 [s0; [2 2009/12/28-|Added BSDiff functions to `"diff`" and `"patch`" 
 binary files]&]
 [s0; [2 2009/12/23-|Added RemoveAccents()]&]
