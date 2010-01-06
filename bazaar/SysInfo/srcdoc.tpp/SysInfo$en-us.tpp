@@ -28,8 +28,6 @@ internals.&]
 [s0; &]
 [s0; It includes functions for:&]
 [s0; &]
-[s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetExtExecutable`(const String`)^ R
-unning files and commands]&]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetDesktopFolder`(`)^ Obtainin
 g special folders]&]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetSystemInfo`(String`&`,String`&`,String`&`,int`&`)^ H

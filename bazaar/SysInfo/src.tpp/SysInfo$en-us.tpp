@@ -13,18 +13,6 @@ topic "Function reference";
 [s0;%- [*R6 SysInfo]&]
 [s0; &]
 [s0; &]
-[ {{10000@1 [s0; [* Running files and commands]]}}&]
-[s4;%- &]
-[s5;:LaunchFile`(const String`):%- [@(0.0.255) bool]_[* LaunchFile]([@(0.0.255) const]_[_^String^ S
-tring]_[*@3 file])&]
-[s2; Opens the file [%-*@3 file ]with the adecuated program defined 
-in the OS by default.&]
-[s0; &]
-[s0; [/ -|Example:]&]
-[s0; [/ -|LaunchFile(`"c:`\`\My spreadsheet.txt`"). It will open default 
-program (probably Notepad) with document `"My spreadsheet.txt`".]&]
-[s3; &]
-[s0; &]
 [ {{10000@1 [s0; [* Hardware, BIOS, OS and Distro info]]}}&]
 [s4;%- &]
 [s5;:GetSystemInfo`(String`&`,String`&`,String`&`,int`&`):%- [@(0.0.255) void]_[* GetSyst
@@ -119,15 +107,6 @@ where the application is being run. &]
 [s2; [%-*@3 distVersion]: Distro version&]
 [s2; [%-*@3 desktop]: Desktop manager name&]
 [s2; [%-*@3 deskVersion].: Desktop manager version&]
-[s3; &]
-[s4;%- &]
-[s5;:GetDesktopManagerNew`(`):%- [_^String^ String]_[* GetDesktopManagerNew]()&]
-[s2; A more complete version of GetDesktopManager() based on GetOsInfo().&]
-[s0; &]
-[s4;%- &]
-[s5;:GetDriveList`(`):%- [_^Array^ Array]<[_^String^ String]>_[* GetDriveList]()&]
-[s2; Returns an array with the paths to all drives, internal or external, 
-identified in the system.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:GetDriveSpace`(String`,uint64`&`,uint64`&`,uint64`&`):%- [@(0.0.255) bool]_[* GetDri
@@ -489,21 +468,6 @@ mouse movement if [%-*@3 viewMouse].is true.&]
 [s2; -|-|`- Windows: Uncompressed .avi&]
 [s3; &]
 [ {{10000@1 [s0; [* Miscellaneous functions]]}}&]
-[s4; &]
-[s5;:FileToTrashBin`(const char`*`):%- [@(0.0.255) void]_[* FileToTrashBin]([@(0.0.255) con
-st]_[@(0.0.255) char]_`*[*@3 path])&]
-[s2; Deletes file [%-*@3 path].by sending it to the Trash Bin.&]
-[s3; &]
-[s4;%- &]
-[s5;:TrashBinGetCount`(`):%- [_^int64^ int64]_[* TrashBinGetCount]()&]
-[s2; Returns the number of items (files and directories) located 
-in the Trash Bin.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:TrashBinClear`(`):%- [@(0.0.255) void]_[* TrashBinClear]()&]
-[s2; Removes all the items (files and directories) located in the 
-Trash Bin.&]
-[s3;%- &]
 [s4;%- &]
 [s5;:SetDesktopWallPaper`(const char`*`):%- [@(0.0.255) void]_[* SetDesktopWallPaper]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 path])&]

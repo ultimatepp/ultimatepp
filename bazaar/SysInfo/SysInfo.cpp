@@ -46,67 +46,6 @@ using namespace Upp;
 
 
 /////////////////////////////////////////////////////////////////////
-// LaunchFile
-
-#if defined(PLATFORM_WIN32)
-bool LaunchFileCreateProcess(const String file)
-{
-	STARTUPINFOW startInfo;
-    PROCESS_INFORMATION procInfo;
-
-    ZeroMemory(&startInfo, sizeof(startInfo));
-    startInfo.cb = sizeof(startInfo);
-    ZeroMemory(&procInfo, sizeof(procInfo));
-
-	WString wexec;
-	wexec = Format("\"%s\" \"%s\"", GetExtExecutable(GetFileExt(file)), file).ToWString();
-	WStringBuffer wsbexec(wexec);
-	
-    if(!CreateProcessW(NULL, wsbexec, NULL, NULL, FALSE, 0, NULL, NULL, &startInfo, &procInfo))  
-        return false;
-
-   	WaitForSingleObject(procInfo.hProcess, 0);
-
-    CloseHandle(procInfo.hProcess);
-    CloseHandle(procInfo.hThread);	
-	return true;
-}
-
-bool LaunchFileShellExecute(const String file)
-{
-	HINSTANCE ret;
-	WString fileName(file);
-	ret = ShellExecuteW(NULL, L"open", fileName, NULL, L".", SW_SHOWNORMAL);		
-
-	return (int)ret > 32;
-}
-#endif
-
-bool LaunchFile(const String file)
-{
-#if defined(PLATFORM_WIN32)
-	if (!LaunchFileShellExecute(file))			// First try
-	   	return LaunchFileCreateProcess(file);	// Second try
-	return true;
-#endif
-#ifdef PLATFORM_POSIX
-	int ret;
-	if (GetDesktopManagerNew() == "gnome") 
-		ret = system("gnome-open \"" + file + "\"");
-	else if (GetDesktopManagerNew() == "kde") 
-		ret = system("kfmclient exec \"" + file + "\" &"); 
-	else if (GetDesktopManagerNew() == "enlightenment") {
-		String mime = GetExtExecutable(GetFileExt(file));
-		String program = mime.Left(mime.Find("."));		// Left side of mime executable is the program to run
-		ret = system(program + " \"" + file + "\" &"); 
-	} else 
-		ret = system("xdg-open \"" + file + "\"");
-	return (ret >= 0);
-#endif
-}
-
-
-/////////////////////////////////////////////////////////////////////
 // Hardware Info
 #if defined(PLATFORM_WIN32) 
 		
@@ -1250,14 +1189,6 @@ bool GetOsInfo_CheckLsb(String &distro, String &distVersion)
 
 	return true;
 }
-String GetDesktopManagerNew()
-{
-	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
-	if (GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion))
-	    return desktop;
-	else
-		return String("");
-}
 bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, String &distro, String &distVersion, String &desktop, String &deskVersion)
 {
 	struct utsname buf;
@@ -1387,24 +1318,6 @@ long    GetProcessId()			{return getpid();}
 // Drives list
 #if defined(PLATFORM_WIN32)
 
-Array<String> GetDriveList()
-{
-	char drvStr[26*4+1];		// A, B, C, ...
-	Array<String> ret;
-	
-	int lenDrvStrs = ::GetLogicalDriveStrings(sizeof(drvStr), drvStr);
-	// To get the error call GetLastError()
-	if (lenDrvStrs == 0)
-		return ret;
-	
-	ret.Add(drvStr);
-	for (int i = 0; i < lenDrvStrs-1; ++i) {
-		if (drvStr[i] == '\0') 
-			ret.Add(drvStr + i + 1);
-	}
-	return ret;
-}
-
 bool GetDriveSpace(String drive, 
 	//uint64 &totalBytes,	// To determine the total number of bytes on a disk or volume, use IOCTL_DISK_GET_LENGTH_INFO.
 	uint64 &freeBytesUser, 	// Total number of free bytes on a disk that are available to the user who is associated with the calling thread.
@@ -1463,36 +1376,6 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
 
 #elif defined(PLATFORM_POSIX)
 
-Array<String> GetDriveList()
-{
-	Array<String> ret;
-	// Search for mountable file systems
-	String mountableFS;
-	StringParse sfileSystems(LoadFile_Safe("/proc/filesystems"));
-	String str;
-	while (true) {
-		str = sfileSystems.GetText();	
-		if (str == "")
-			break;
-		else if (str != "nodev")
-			mountableFS << str << ".";
-		else 
-			str = sfileSystems.GetText();
-	}
-	// Get mounted drives
-	StringParse smounts(LoadFile_Safe("/proc/mounts"));
-	StringParse smountLine(smounts.GetText("\r\n"));
-	do {
-		String devPath 	 = smountLine.GetText();
-		String mountPath = smountLine.GetText();
-		String fs        = smountLine.GetText();
-		if ((mountableFS.Find(fs) >= 0) && (mountPath.Find("/dev") < 0) && (mountPath.Find("/rofs") < 0))		// Is mountable
-			ret.Add(mountPath);
-		smountLine = smounts.GetText("\r\n");
-	} while (smountLine != "");
-	
-	return ret;
-}
 bool GetDriveSpace(String drive, 
 	//uint64 &totalBytes,	// To determine the total number of bytes on a disk or volume, use IOCTL_DISK_GET_LENGTH_INFO.
 	uint64 &freeBytesUser, 	// Total number of free bytes on a disk that are available to the user who is associated with the calling thread.
@@ -1712,31 +1595,6 @@ bool Shutdown(String action)
 	return true; 
 }
 #endif
-
-String BytesToString(uint64 _bytes)
-{
-	String ret;
-	uint64 bytes = _bytes;
-	
-	if (bytes >= 1024) {
-		bytes /= 1024;
-		if (bytes >= 1024) {
-			bytes /= 1024;
-			if (bytes >= 1024) {
-				bytes /= 1024;
-				if (bytes >= 1024) {
-					bytes /= 1024;
-					ret = Format("%.2f%s", _bytes/(1024*1024*1024*1024.), "Tb");
-				} else
-					ret = Format("%.2f%s", _bytes/(1024*1024*1024.), "Gb");
-			} else
-				ret = Format("%.2f%s", _bytes/(1024*1024.), "Mb");
-		} else
-			ret = Format("%.2f%s", _bytes/1024., "Kb");
-	} else
-		ret << _bytes << "b";
-	return ret;
-}
 
 void GetCompilerInfo(String &name, int &version, String &date)
 {

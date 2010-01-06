@@ -6,10 +6,6 @@
 using namespace Upp;
 
 
-// Open the file with the adecuated program defined in the OS by default
-bool LaunchFile(const String file);
-
-
 /////////////////////////////////////////////////////////////////////
 // Processor Info
 void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors);
@@ -72,9 +68,6 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 String GetDesktopManagerNew();
 
 /////////////////////////////////////////////////////////////////////
-// Drives list
-// Get the dirve path list
-Array<String> GetDriveList();
 // Get drives info
 // Return false if drive is not mounted or it is not accesible
 bool GetDriveSpace(String drive, uint64 &freeBytesUser, uint64 &totalBytesUser, uint64 &totalFreeBytes);
