@@ -506,6 +506,7 @@ const LanguageInfo& GetLanguageInfo(int lang)
 	Mutex::Lock __(sLanguageInfoMutex);
 	if(!lang)
 		lang = GetCurrentLanguage();
+	lang = SetLNGCharset(lang, 0);
 	ArrayMap<int, LanguageInfo>& m = LangMap();
 	int q = m.Find(lang);
 	if(q >= 0)
