@@ -433,6 +433,19 @@ void ExportPage(int i)
 		SaveFile(AppendFileName(targetdir, links[i]), content);
 }
 
+struct ProgramData {
+	String rootdir;
+	String targetdir;
+	String diffdir;
+	void Xmlize(XmlIO xml)	{
+		xml
+			("rootdir", rootdir)
+			("targetdir", targetdir)
+			("diffdir", diffdir)
+		;
+	}
+};
+	
 GUI_APP_MAIN
 {
 #ifdef PLATFORM_POSIX
@@ -442,11 +455,26 @@ GUI_APP_MAIN
 	diffdir   = GetHomeDirFile("wwwupp");
 #endif
 
+	ProgramData data;
+	
+	if (FileExists("c:\\uppweb.xml")) {
+		if (LoadFromXMLFile(data, "c:\\uppweb.xml")) {
+			rootdir   = data.rootdir;
+			targetdir = data.targetdir;
+			diffdir   = data.diffdir;	
+		}
+	}
 	uppbox =    AppendFileName(rootdir, "uppbox");
 	uppsrc =    AppendFileName(rootdir, "uppsrc");
 	reference = AppendFileName(rootdir, "reference");
 	examples =  AppendFileName(rootdir, "examples");
 	bazaar =  AppendFileName(rootdir, "bazaar");
+
+	data.rootdir   = rootdir;
+	data.targetdir = targetdir;
+	data.diffdir   = diffdir;
+
+	StoreAsXMLFile(data, NULL, "c:\\uppweb.xml");
 
 	RLOG("--- uppweb started at " << GetSysTime());
 
