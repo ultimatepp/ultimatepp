@@ -172,6 +172,16 @@ bool CheckLicense()
 	return true;
 }
 
+void BrowseField(EditField *f)
+{
+	FileSel fs;
+	String s = ~*f;
+	if(DirectoryExists(s))
+		fs.ActiveDir(s);
+	if(fs.ExecuteSelectDir("Select the directory for MyApps"))
+		*f <<= ~fs;
+}
+
 bool Install()
 {
 	{
@@ -185,7 +195,11 @@ bool Install()
 			return false;
 		WithInstallLayout<TopWindow> dlg;
 		CtrlLayoutOKCancel(dlg, "Ultimate++ user-code setup");
-		dlg.myapps <<= GetExeFilePath().Mid(0, 3) + "MyApps";
+		String h = GetExeFilePath().Mid(0, 3) + "MyApps";
+		dlg.myapps <<= h;
+		dlg.myapps.AddList(h);
+		dlg.myapps.AddList(GetHomeDirFile("MyApps"));
+		dlg.browse <<= callback1(BrowseField, &dlg.myapps);
 		dlg.ActiveFocus(dlg.myapps);
 		if(dlg.Run() != IDOK)
 			return false;

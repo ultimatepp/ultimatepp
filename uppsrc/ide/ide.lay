@@ -254,12 +254,13 @@ LAYOUT(OutputModeLayout, 616, 480)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).HCenterPosZ(64, 268).TopPosZ(448, 24))
 END_LAYOUT
 
-LAYOUT(InstallLayout, 312, 112)
-	ITEM(Label, dv___0, SetLabel(t_("MyApps directory")).LeftPosZ(8, 84).TopPosZ(4, 19))
-	ITEM(EditString, myapps, LeftPosZ(8, 296).TopPosZ(24, 19))
-	ITEM(Option, icon, SetLabel(t_("Create desktop icon")).LeftPosZ(8, 184).TopPosZ(48, 20))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(168, 64).TopPosZ(76, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(236, 64).TopPosZ(76, 24))
+LAYOUT(InstallLayout, 400, 88)
+	ITEM(Label, dv___0, SetLabel(t_("MyApps directory")).LeftPosZ(8, 84).TopPosZ(8, 19))
+	ITEM(WithDropChoice<EditString>, myapps, LeftPosZ(8, 316).TopPosZ(28, 19))
+	ITEM(Button, browse, SetLabel(t_("Browse..")).LeftPosZ(328, 64).TopPosZ(28, 20))
+	ITEM(Option, icon, SetLabel(t_("Create desktop icon")).LeftPosZ(8, 184).TopPosZ(56, 20))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(260, 64).TopPosZ(56, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(328, 64).TopPosZ(56, 24))
 END_LAYOUT
 
 LAYOUT(InfoLayout, 732, 556)
