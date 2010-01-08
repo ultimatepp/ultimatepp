@@ -14,6 +14,7 @@ String reference = rootdir + "reference";
 String examples =  rootdir + "examples";
 String targetdir = "u:\\uppwww";
 String diffdir   = "u:\\wwwupp";
+String pdfdir    = "u:\\pdf";
 #else
 String rootdir;
 String uppbox;
@@ -24,6 +25,7 @@ String targetdir;
 String diffdir;
 #endif
 String bazaar;
+bool ftpupload;
 
 String GetRcFile(const char *s)
 {
@@ -316,6 +318,14 @@ int CharFilterLbl(int c)
 	return IsAlNum(c) ? c : '.';
 }
 
+
+void QtfAsPdf(PdfDraw &pdf, const char *qtf)
+{
+	RichText txt = ParseQTF(qtf);
+	Size page = Size(3968, 6074); 
+	UPP::Print(pdf, txt, page);
+}
+
 VectorMap<String, String> links;
 VectorMap<String, String> labels;
 Htmls header, bar, lastUpdate;
@@ -329,6 +339,7 @@ void ExportPage(int i)
 		String text = GetText(path);
 		int h;
 		h = ParseQTF(tt[i].text).GetHeight(1000);
+		
 		String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
 		Color paper = SWhite;
 		if(path == "topic://uppweb/www/download$en-us")
@@ -437,15 +448,19 @@ struct ProgramData {
 	String rootdir;
 	String targetdir;
 	String diffdir;
+	String pdfdir;
+	bool ftpUpload;
 	void Xmlize(XmlIO xml)	{
 		xml
 			("rootdir", rootdir)
 			("targetdir", targetdir)
 			("diffdir", diffdir)
+			("pdfdir", pdfdir)
+			("ftpUpload", ftpUpload)
 		;
 	}
 };
-	
+
 GUI_APP_MAIN
 {
 #ifdef PLATFORM_POSIX
@@ -453,34 +468,51 @@ GUI_APP_MAIN
 	rootdir = GetHomeDirFile("upp.src");
 	targetdir = GetHomeDirFile("uppwww");
 	diffdir   = GetHomeDirFile("wwwupp");
+	pdfdir   = GetHomeDirFile("pdf");
 #endif
-
+	ftpupload = true;
+	
 	ProgramData data;
 	
-	if (FileExists("c:\\uppweb.xml")) {
-		if (LoadFromXMLFile(data, "c:\\uppweb.xml")) {
+	String configFile = GetHomeDirFile("uppweb.xml");
+	bool cfgloaded = false;
+	if (FileExists(configFile)) {
+		if (LoadFromXMLFile(data, configFile)) {
 			rootdir   = data.rootdir;
 			targetdir = data.targetdir;
-			diffdir   = data.diffdir;	
+			diffdir   = data.diffdir;
+			pdfdir    = data.pdfdir;	
+			ftpupload = data.ftpUpload;
+			cfgloaded = true;
 		}
 	}
+	if (!cfgloaded) {
+		data.rootdir   = rootdir;
+		data.targetdir = targetdir;
+		data.diffdir   = diffdir;
+		data.pdfdir    = pdfdir;
+		data.ftpUpload = ftpupload;
+		StoreAsXMLFile(data, NULL, configFile);
+	}
+	if (!DirectoryExists(rootdir)) {
+		Exclamation ("Directory " + DeQtf(rootdir) + " does not exist");
+		return;
+	}
+		
 	uppbox =    AppendFileName(rootdir, "uppbox");
 	uppsrc =    AppendFileName(rootdir, "uppsrc");
 	reference = AppendFileName(rootdir, "reference");
 	examples =  AppendFileName(rootdir, "examples");
-	bazaar =  AppendFileName(rootdir, "bazaar");
-
-	data.rootdir   = rootdir;
-	data.targetdir = targetdir;
-	data.diffdir   = diffdir;
-
-	StoreAsXMLFile(data, NULL, "c:\\uppweb.xml");
+	bazaar =    AppendFileName(rootdir, "bazaar");
 
 	RLOG("--- uppweb started at " << GetSysTime());
 
 	DeleteFolderDeep(targetdir);
 	DirectoryCreate(targetdir);
-
+	
+	DeleteFolderDeep(pdfdir);
+	DirectoryCreate(pdfdir);
+	
 	GatherRefLinks(uppsrc);
 	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
 
@@ -594,6 +626,11 @@ GUI_APP_MAIN
 
 //	Vector<String> amazon = Split(LoadFile(GetRcFile("amazon.txt")), '\n');//440
 
+	PdfDraw pdf;
+	for(int i = 0; i < tt.GetCount(); i++)
+		QtfAsPdf(pdf, tt[i]);
+	SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
+
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
 
@@ -619,6 +656,9 @@ GUI_APP_MAIN
 	);
 	BeepInformation();
 	
+	if (!ftpupload)
+		return;
+	
 	RLOG("uppweb Finished, now about to upload the content");
 	
 	Vector<String> upload;
@@ -637,6 +677,7 @@ GUI_APP_MAIN
 		}
 	}
 	DirectoryCreate(diffdir);
+	
 	if(upload.GetCount()) {
 		FtpClient ftp;
 		RLOG("Connecting ftp...");
