@@ -728,6 +728,9 @@ void AppMain___()
 	if(!CheckLicense())
 		return;
 	firstinstall = !IsNull(LoadFile(GetExeDirFile("install.upp")));
+#ifdef flagTESTINSTALL
+	firstinstall = true;
+#endif
 	if(firstinstall) {
 		if(!Install())
 			return;
