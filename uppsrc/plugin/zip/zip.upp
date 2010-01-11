@@ -1,4 +1,4 @@
-description "\3770,128,128";
+description ".zip files support\3770,128,128";
 
 file
 	zip.h,
