@@ -335,12 +335,12 @@ WString Join(const Vector<WString>& im, const WString& delim) {
 }
 // ---------------------------
 
-VectorMap<String, String> LoadIniFile(const char *filename) {
+VectorMap<String, String> LoadIniStream(Stream &sin) {
+	Stream *in = &sin;
+	FileIn fin;
 	VectorMap<String, String> key;
-	FileIn in(filename);
-	if(!in) return key;
 	int c;
-	if((c = in.Get()) < 0) return key;
+	if((c = in->Get()) < 0) return key;
 	for(;;) {
 		String k, v;
 		for(;;) {
@@ -348,29 +348,37 @@ VectorMap<String, String> LoadIniFile(const char *filename) {
 				k.Cat(c);
 			else
 				break;
-			if((c = in.Get()) < 0) return key;
+			if((c = in->Get()) < 0) return key;
 		}
 		for(;;) {
 			if(c != '=' && c != ' ') break;
-			if((c = in.Get()) < 0) return key;
+			if((c = in->Get()) < 0) return key;
 		}
 		for(;;) {
 			if(c < ' ') break;
 			v.Cat(c);
-			if((c = in.Get()) < 0) break;
+			if((c = in->Get()) < 0) break;
 		}
 		if(!k.IsEmpty())
 			key.Add(k, v);
 		if(k == "LINK") {
-			in.Close();
-			if(!in.Open(v) || (c = in.Get()) < 0) return key;
+			if(in == &fin)
+				fin.Close();
+			if(!fin.Open(v) || (c = in->Get()) < 0) return key;
+			in = &fin;
 		}
 		else
 			for(;;) {
 				if(IsAlNum(c) || c == '_') break;
-				if((c = in.Get()) < 0) return key;
+				if((c = in->Get()) < 0) return key;
 			}
 	}
+}
+
+VectorMap<String, String> LoadIniFile(const char *filename) {
+	FileIn in(filename);
+	if(!in) return VectorMap<String, String>();
+	return LoadIniStream(in);
 }
 
 static StaticMutex sMtx;
