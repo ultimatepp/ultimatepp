@@ -24,7 +24,6 @@ int                       GetCurrentLanguage();
 int                       GetSystemLNG();
 
 VectorMap<String, String> GetLanguage(int lang);//rename...
-Vector<int>               GetLanguages();
 const int                *GetAllLanguages();
 
 String                    GetLangName(int language);
