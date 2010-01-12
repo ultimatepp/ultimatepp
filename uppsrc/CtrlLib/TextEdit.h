@@ -102,7 +102,7 @@ public:
 	void   CachePos(int pos);
 
 	void   Load(Stream& s, byte charset = CHARSET_DEFAULT);
-	void   Save(Stream& s, byte charset = CHARSET_DEFAULT) const;
+	void   Save(Stream& s, byte charset = CHARSET_DEFAULT, bool crlf = false) const;
 
 	int    GetInvalidCharPos(byte charset = CHARSET_DEFAULT) const;
 	bool   CheckCharset(byte charset = CHARSET_DEFAULT) const { return GetInvalidCharPos(charset) < 0; }

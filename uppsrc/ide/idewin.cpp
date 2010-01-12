@@ -80,7 +80,7 @@ void Ide::ConsolePaste()
 }
 
 void Ide::Serialize(Stream& s) {
-	int version = 13;
+	int version = 15;
 	s.Magic(0x1234);
 	s / version;
 	s % main;
@@ -109,6 +109,9 @@ void Ide::Serialize(Stream& s) {
 	if(version >= 14) {
 		s % tabs_grouping;
 		s % tabs_serialize;
+	}
+	if(version >= 15) {
+		s % force_crlf;
 	}
 	s % no_parenthesis_indent;
 	s % hilite_scope;

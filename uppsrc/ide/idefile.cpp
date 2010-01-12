@@ -304,7 +304,7 @@ void Ide::SaveFile(bool always)
 				}
 			}
 			else
-				editor.Save(out, editor.GetCharset());		
+				editor.Save(out, editor.GetCharset(), force_crlf);		
 		out.Close();
 		if(out.IsError()) {
 			Exclamation(NFormat("Error writing temporary file [* \1%s\1].", tmpfile));

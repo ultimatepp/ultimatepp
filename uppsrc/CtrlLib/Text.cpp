@@ -114,10 +114,14 @@ void   TextCtrl::Load(Stream& s, byte charset) {
 	PlaceCaret(0);
 }
 
-void   TextCtrl::Save(Stream& s, byte charset) const {
+void   TextCtrl::Save(Stream& s, byte charset, bool crlf) const {
 	charset = ResolveCharset(charset);
 	for(int i = 0; i < line.GetCount(); i++) {
-		if(i) s.PutEol();
+		if(i)
+			if(crlf)
+				s.PutCrLf();
+			else
+				s.PutEol();
 		String txt = charset == CHARSET_UTF8 ? line[i].text
 		                                     : FromUnicode(line[i], charset);
 		const char *e = txt.End();
