@@ -239,7 +239,7 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 			f = sqlite3_column_double(current_stmt,i);
 			break;
 		case SQLITE_TEXT:
-			if(coltype == "date"){
+			if(coltype == "date" || f.GetType() == DATE_V){
 				const char *s = (const char *)sqlite3_column_text(current_stmt, i);
 				if(strlen(s) >= 10)
 					f = Value(Date(atoi(s), atoi(s + 5), atoi(s + 8)));
@@ -247,7 +247,7 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 					f = Null;
 			}
 			else
-			if(coltype == "datetime") {
+			if(coltype == "datetime" || f.GetType() == TIME_V) {
 				const char *s = (const char *)sqlite3_column_text(current_stmt, i);
 				if(strlen(s) >= 19)
 					f = Value(Time(atoi(s), atoi(s + 5), atoi(s + 8), atoi(s + 11), atoi(s + 14), atoi(s + 17)));

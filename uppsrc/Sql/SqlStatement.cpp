@@ -9,17 +9,18 @@ String SqlStatement::Get(int dialect) const {
 }
 
 SqlSelect& SqlSelect::operator|=(const SqlSelect& s2) {
-	text << " union (" << s2.text << ')';
+	text << " union " << SqlCase(SQLITE3, "")("(") << s2.text << SqlCase(SQLITE3, "")(")");
 	return *this;
 }
 
 SqlSelect& SqlSelect::operator&=(const SqlSelect& s2) {
-	text << " intersect (" << s2.text << ')';
+	text << " intersect " << SqlCase(SQLITE3, "")("(") << s2.text << SqlCase(SQLITE3, "")(")");
 	return *this;
 }
 
 SqlSelect& SqlSelect::operator-=(const SqlSelect& s2) {
-	text << SqlCase(MSSQL|PGSQL," except (")(" minus (") << s2.text << ')';
+	text << SqlCase(MSSQL|PGSQL," except ")(" minus ") << SqlCase(SQLITE3, "")("(")
+	<< s2.text << SqlCase(SQLITE3, "")(")");
 	return *this;
 }
 
