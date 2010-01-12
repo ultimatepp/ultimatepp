@@ -114,11 +114,13 @@ Unlikely to be used in the client code.&]
 [s2;%% Loads the text from the stream with defined [%-*@3 charset].&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:Save`(Stream`&`,byte`)const: [@(0.0.255) void]_[* Save]([_^Stream^ Stream][@(0.0.255) `&
-]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)_[@(0.0.255) const]&]
+[s5;:TextCtrl`:`:Save`(Stream`&`,byte`,bool`)const: [@(0.0.255) void]_[* Save]([_^Stream^ S
+tream][@(0.0.255) `&]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT, 
+bool [*@3 crlf])_[@(0.0.255) const]&]
 [s2;%% Saves the text to the stream with defined [%-*@3 charset]. Characters 
 that cannot be represented in suggested [%-*@3 charset] are saved 
-as `'?`'.&]
+as `'?`'. If [%-*@3 crlf] is true, line endings are forced to be 
+`"`\r`\n`" even on POSIX platforms.&]
 [s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:GetInvalidCharPos`(byte`)const: [@(0.0.255) int]_[* GetInvalidCharPos]([_^byte^ b

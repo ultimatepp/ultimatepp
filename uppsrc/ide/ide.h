@@ -601,6 +601,7 @@ public:
 	bool      show_status_bar;
 	bool      toolbar_in_row;
 	bool      show_tabs;
+	bool      force_crlf;
 	bool      tabs_icons;
 	bool      tabs_crosses;
 	bool      tabs_grouping;

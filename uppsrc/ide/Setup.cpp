@@ -350,6 +350,7 @@ void Ide::SetupFormat() {
 		(edt.tabs_grouping, tabs_grouping)
 		(edt.tabs_serialize, tabs_serialize)
 		(edt.filetabs, filetabs)
+		(edt.forcecrlf, force_crlf)
 		(edt.numbers, line_numbers)
 		(edt.bookmark_pos, bookmark_pos)
 		(edt.header_guards, header_guards)
