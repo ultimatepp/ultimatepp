@@ -541,7 +541,7 @@ void HttpQuery::Serialize(Stream& stream)
 	}
 }
 
-HttpQuery& HttpQuery::SetURL(String url)
+HttpQuery& HttpQuery::SetURL(const String& url)
 {
 	const char *p = url;
 	while(*p && *p != '\1' && *p != '?')
@@ -644,7 +644,7 @@ bool HttpQuery::IsInternal(int i) const
 	return key[0] == '$' && key[1] == '$';
 }
 
-void HttpQuery::Get(String key, Ref result) const
+void HttpQuery::Get(const String& key, Ref result) const
 {
 	switch(result.GetType())
 	{
@@ -658,43 +658,43 @@ void HttpQuery::Get(String key, Ref result) const
 	}
 }
 
-bool HttpQuery::GetBool(String key) const
+bool HttpQuery::GetBool(const String& key) const
 {
 	int i = Find(key);
 	return i >= 0 && data -> map[i] != "0";
 }
 
-int HttpQuery::GetInt(String key) const
+int HttpQuery::GetInt(const String& key) const
 {
 	int i = Find(key);
 	return i < 0 || data->map[i].IsEmpty() ? (int)Null : atoi(data->map[i]);
 }
 
-double HttpQuery::GetDouble(String key) const
+double HttpQuery::GetDouble(const String& key) const
 {
 	int i = Find(key);
 	return i < 0 || data->map[i].IsEmpty() ? (double)Null : atof(data->map[i]);
 }
 
-String HttpQuery::GetString(String key) const
+String HttpQuery::GetString(const String& key) const
 {
 	int i = Find(key);
 	return i >= 0 ? data -> map[i] : String::GetVoid();
 }
 
-Date HttpQuery::GetDate(String key) const
+Date HttpQuery::GetDate(const String& key) const
 {
 	int i = Find(key);
 	return i >= 0 ? Date(StdConvertDate().Scan(data -> map[i])) : Date(Null);
 }
 
-Time HttpQuery::GetTime(String key) const
+Time HttpQuery::GetTime(const String& key) const
 {
 	int i = Find(key);
 	return i >= 0 ? Time(StdConvertTime().Scan(data -> map[i])) : Time(Null);
 }
 
-Color HttpQuery::GetColor(String key) const
+Color HttpQuery::GetColor(const String& key) const
 {
 	String s = GetString(key);
 	if(s.GetLength() >= 6)
@@ -709,7 +709,7 @@ Color HttpQuery::GetColor(String key) const
 	return Null;
 }
 
-HttpQuery& HttpQuery::SetColor(String key, Color c)
+HttpQuery& HttpQuery::SetColor(const String& key, Color c)
 {
 	if(IsNull(c))
 		SetString(key, Null);
@@ -718,46 +718,46 @@ HttpQuery& HttpQuery::SetColor(String key, Color c)
 	return *this;
 }
 
-bool HttpQuery::GetBool(String key, bool dflt) const
+bool HttpQuery::GetBool(const String& key, bool dflt) const
 {
 	int i = Find(key);
 	return i >= 0 ? data -> map[i] != "0" : dflt;
 }
 
-int HttpQuery::GetInt(String key, int min, int max, int dflt) const
+int HttpQuery::GetInt(const String& key, int min, int max, int dflt) const
 {
 	int v = GetInt(key);
 	return !IsNull(v) ? minmax(v, min, max) : dflt;
 }
 
-double HttpQuery::GetDouble(String key, double min, double max, double dflt) const
+double HttpQuery::GetDouble(const String& key, double min, double max, double dflt) const
 {
 	double v = GetDouble(key);
 	return !IsNull(v) ? minmax(v, min, max) : dflt;
 }
 
-String HttpQuery::GetString(String key, String dflt) const
+String HttpQuery::GetString(const String& key, const String& dflt) const
 {
 	int i = Find(key);
 	return i >= 0 && !data -> map[i].IsEmpty() ? data -> map[i] : dflt;
 }
 
-HttpQuery& HttpQuery::SetBool(String key, bool b)
+HttpQuery& HttpQuery::SetBool(const String& key, bool b)
 {
 	return Set(key, b ? "1" : "");
 }
 
-HttpQuery& HttpQuery::SetInt(String key, int i)
+HttpQuery& HttpQuery::SetInt(const String& key, int i)
 {
 	return Set(key, IntStr(i));
 }
 
-HttpQuery& HttpQuery::SetDouble(String key, double f)
+HttpQuery& HttpQuery::SetDouble(const String& key, double f)
 {
 	return Set(key, DblStr(f));
 }
 
-HttpQuery& HttpQuery::Set(String key, String s)
+HttpQuery& HttpQuery::Set(const String& key, const String& s)
 {
 	int i = Find(key);
 	if(i < 0 || data -> map[i] != s)
@@ -771,17 +771,17 @@ HttpQuery& HttpQuery::Set(String key, String s)
 	return *this;
 }
 
-HttpQuery& HttpQuery::SetDate(String key, Date d)
+HttpQuery& HttpQuery::SetDate(const String& key, Date d)
 {
 	return Set(key, Format(d));
 }
 
-HttpQuery& HttpQuery::SetTime(String key, Time t)
+HttpQuery& HttpQuery::SetTime(const String& key, Time t)
 {
 	return Set(key, Format(t));
 }
 
-HttpQuery& HttpQuery::SetValue(String key, Value v)
+HttpQuery& HttpQuery::SetValue(const String& key, const Value& v)
 {
 	return Set(key, StdFormat(v));
 }
@@ -798,7 +798,7 @@ HttpQuery& HttpQuery::Set(HttpQuery query)
 	return *this;
 }
 
-HttpQuery& HttpQuery::Remove(String key)
+HttpQuery& HttpQuery::Remove(const String& key)
 {
 	int i = Find(key);
 	if(i < 0)

@@ -1,15 +1,19 @@
 String MIMECharsetName(byte charset);
 
-inline String HttpContentType(String type)                  { return "Content-Type: " + type + "\r\n"; }
+inline String HttpContentType(const String& type)           { return String().Cat() << "Content-Type: " << type << "\r\n"; }
+inline String HttpContentDisposition(const char *disp, const String& filename)
+{ return String().Cat() << "Content-Disposition: " << disp << "; filename=\"" << filename << "\"\r\n"; }
+inline String HttpContentInline(const String& fn)           { return HttpContentDisposition("inline", fn); }
+inline String HttpContentAttachment(const String& fn)       { return HttpContentDisposition("attachment", fn); }
 
-inline String HttpTextHtml(String encoding)                 { return "text/html; charset=" + encoding; }
+inline String HttpTextHtml(const String& encoding)          { return "text/html; charset=" + encoding; }
 inline String HttpTextHtml(byte charset = CHARSET_DEFAULT)  { return HttpTextHtml(MIMECharsetName(charset)); }
 //inline String HttpTextHtml1250()                          { return "text/html; charset=windows-1250"; }
-inline String HttpTextPlain(String encoding)                { return "text/plain; charset=" + encoding; }
+inline String HttpTextPlain(const String& encoding)         { return "text/plain; charset=" + encoding; }
 //inline String HttpTextPlain1250()                         { return "text/plain; charset=windows-1250"; }
 inline String HttpTextPlain(byte charset = CHARSET_DEFAULT) { return HttpTextPlain(MIMECharsetName(charset)); }
 inline String HttpTextXml()                                 { return "text/xml"; }
-inline String HttpImage(String format)                      { return "image/" + format; }
+inline String HttpImage(const String& format)               { return "image/" + format; }
 inline String HttpImageGif()                                { return "image/gif"; }
 inline String HttpImageJpg()                                { return "image/jpeg"; }
 inline String HttpImagePng()                                { return "image/png"; }

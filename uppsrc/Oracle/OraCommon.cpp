@@ -270,12 +270,10 @@ Vector<String> OracleSchemaUsers(Sql& cursor)
 Vector<String> OracleSchemaTables(Sql& cursor, String database)
 {
 	Vector<String> out;
-	SqlSelect sel;
-	if(!IsNull(database))
-		sel = Select(SqlId("TABLE_NAME")).From(SqlId("ALL_TABLES")).Where(SqlId("OWNER") == database);
-	else
-		sel = Select(SqlId("TABLE_NAME")).From(SqlId("USER_TABLES"));
-	if(sel.Execute(cursor))
+	if(Select(SqlId("TABLE_NAME"))
+	.From(SqlId("ALL_TABLES"))
+	.Where(SqlId("OWNER") == Nvl(database, cursor.GetUser()))
+	.Execute(cursor))
 		out = FetchList(cursor);
 	return out;
 }
@@ -283,7 +281,10 @@ Vector<String> OracleSchemaTables(Sql& cursor, String database)
 Vector<String> OracleSchemaViews(Sql& cursor, String database)
 {
 	Vector<String> out;
-	if(Select(SqlId("VIEW_NAME")).From(SqlId("ALL_VIEWS")).Where(SqlId("OWNER") == database).Execute(cursor))
+	if(Select(SqlId("VIEW_NAME"))
+	.From(SqlId("ALL_VIEWS"))
+	.Where(SqlId("OWNER") == Nvl(database, cursor.GetUser()))
+	.Execute(cursor))
 		out = FetchList(cursor);
 	return out;
 }
@@ -291,7 +292,10 @@ Vector<String> OracleSchemaViews(Sql& cursor, String database)
 Vector<String> OracleSchemaSequences(Sql& cursor, String database)
 {
 	Vector<String> out;
-	if(Select(SqlId("SEQUENCE_NAME")).From(SqlId("ALL_SEQUENCES")).Where(SqlId("SEQUENCE_OWNER") == database).Execute(cursor))
+	if(Select(SqlId("SEQUENCE_NAME"))
+	.From(SqlId("ALL_SEQUENCES"))
+	.Where(SqlId("SEQUENCE_OWNER") == Nvl(database, cursor.GetUser()))
+	.Execute(cursor))
 		out = FetchList(cursor);
 	return out;
 }
@@ -299,12 +303,13 @@ Vector<String> OracleSchemaSequences(Sql& cursor, String database)
 Vector<String> OracleSchemaPrimaryKey(Sql& cursor, String database, String table)
 {
 	Vector<String> out;
+	String udb = Nvl(database, cursor.GetUser());
 	if(Select(SqlId("COLUMN_NAME")).From(SqlId("ALL_CONS_COLUMNS"))
-		.Where(SqlId("OWNER") == database && SqlId("TABLE_NAME") == table
+		.Where(SqlId("OWNER") == udb && SqlId("TABLE_NAME") == table
 			&& SqlId("CONSTRAINT_NAME") ==
 				Select(SqlId("CONSTRAINT_NAME"))
 					.From(SqlId("ALL_CONSTRAINTS"))
-					.Where(SqlId("OWNER") == database && SqlId("TABLE_NAME") == table
+					.Where(SqlId("OWNER") == udb && SqlId("TABLE_NAME") == table
 						&& SqlId("CONSTRAINT_TYPE") == "P")
 		).OrderBy(SqlId("POSITION"))
 		.Execute(cursor))

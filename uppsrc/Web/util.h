@@ -233,44 +233,47 @@ public:
 	String                 GetKey(int i) const                                { return data -> map.GetKey(i); }
 	String                 GetValue(int i) const                              { return data -> map[i]; }
 	bool                   IsInternal(int i) const;
+	
+	String                 operator [] (int i) const                          { return GetValue(i); }
+	String                 operator [] (const String& key) const              { return GetString(key); }
 
-	void                   Get(String key, Ref p1) const;
-	HttpQuery&             SetValue(String key, Value v);
-	HttpQuery&             Set(String key, String value);
-	HttpQuery&             SetRaw(String key, String value);
+	void                   Get(const String& key, Ref p1) const;
+	HttpQuery&             SetValue(const String& key, const Value& v);
+	HttpQuery&             Set(const String& key, const String& value);
+	HttpQuery&             SetRaw(const String& key, const String& value);
 
-	bool                   GetBool(String key) const;
-	bool                   GetBool(String key, bool dflt) const;
-	HttpQuery&             SetBool(String key, bool b);
+	bool                   GetBool(const String& key) const;
+	bool                   GetBool(const String& key, bool dflt) const;
+	HttpQuery&             SetBool(const String& key, bool b);
 
-	int                    GetInt(String key) const;
-	int                    GetInt(String key, int min, int max, int dflt = 0) const;
-	HttpQuery&             SetInt(String key, int i);
+	int                    GetInt(const String& key) const;
+	int                    GetInt(const String& key, int min, int max, int dflt = 0) const;
+	HttpQuery&             SetInt(const String& key, int i);
 
-	double                 GetDouble(String key) const;
-	double                 GetDouble(String key, double min, double max, double dflt = Null) const;
-	HttpQuery&             SetDouble(String key, double f);
+	double                 GetDouble(const String& key) const;
+	double                 GetDouble(const String& key, double min, double max, double dflt = Null) const;
+	HttpQuery&             SetDouble(const String& key, double f);
 
-	String                 GetString(String key) const;
-	String                 GetString(String key, String dflt) const;
-	HttpQuery&             SetString(String key, String s)                    { return Set(key, s); }
+	String                 GetString(const String& key) const;
+	String                 GetString(const String& key, const String& dflt) const;
+	HttpQuery&             SetString(const String& key, const String& s)      { return Set(key, s); }
 
-	Date                   GetDate(String key) const;
-	Date                   GetDate(String key, Date dflt) const               { return Nvl(GetDate(key), dflt); }
-	HttpQuery&             SetDate(String key, Date d);
+	Date                   GetDate(const String& key) const;
+	Date                   GetDate(const String& key, Date dflt) const        { return Nvl(GetDate(key), dflt); }
+	HttpQuery&             SetDate(const String& key, Date d);
 
-	Time                   GetTime(String key) const;
-	Time                   GetTime(String key, Time dflt) const               { return Nvl(GetTime(key), dflt); }
-	HttpQuery&             SetTime(String key, Time t);
+	Time                   GetTime(const String& key) const;
+	Time                   GetTime(const String& key, Time dflt) const        { return Nvl(GetTime(key), dflt); }
+	HttpQuery&             SetTime(const String& key, Time t);
 
-	Color                  GetColor(String key) const;
-	Color                  GetColor(String key, Color dflt) const             { return Nvl(GetColor(key), dflt); }
-	HttpQuery&             SetColor(String key, Color c);
+	Color                  GetColor(const String& key) const;
+	Color                  GetColor(const String& key, Color dflt) const      { return Nvl(GetColor(key), dflt); }
+	HttpQuery&             SetColor(const String& key, Color c);
 
 	HttpQuery&             Set(HttpQuery query);
-	HttpQuery&             SetURL(String url);
+	HttpQuery&             SetURL(const String& url);
 
-	HttpQuery&             Remove(String key);
+	HttpQuery&             Remove(const String& key);
 	HttpQuery&             Remove(const Vector<String>& keys);
 	HttpQuery&             Remove(const Vector<Id>& keys);
 
