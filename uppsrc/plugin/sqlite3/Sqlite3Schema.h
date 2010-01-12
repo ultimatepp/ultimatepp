@@ -55,13 +55,13 @@
 
 #define DUAL_PRIMARY_KEY(k1, k2)   INLINE_ATTRIBUTE(", primary key (" #k1 ", " #k2 ")")
 
-#define DUAL_UNIQUE(k1, k2)        ATTRIBUTE("alter table @t add constraint DQ_@t unique "\
+#define DUAL_UNIQUE(k1, k2)        ATTRIBUTE("create unique index DQ_@t$" #k1 #k2 " on @t "\
                                              "(" #k1 ", " #k2 ");",\
-                                             "alter table @t drop constraint DQ_@t;")
+                                             "drop index DQ_@t$" #k1 #k2 ";")
 
-#define UNIQUE_LIST(u, l)          ATTRIBUTE("alter table @t add constraint UQ_@t$" #u " unique "\
+#define UNIQUE_LIST(u, l)          ATTRIBUTE("create unique index DQ_@t$" #u " on @t  "\
                                              "(" l ");",\
-                                             "alter table @t drop constraint UQ_@t$" #u ";")
+                                             "drop index UQ_@t$" #u ";")
 
 #define SQLCHECK(n, ct)            ATTRIBUTE("alter table @t add constraint CHK_@t$" #n " check "\
                                              "(" ct ");",\
