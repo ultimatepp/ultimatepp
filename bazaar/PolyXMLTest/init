@@ -1,0 +1,4 @@
+#ifndef _PolyXMLTest_icpp_init_stub
+#define _PolyXMLTest_icpp_init_stub
+#include "PolyXML/init"
+#endif

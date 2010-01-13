@@ -1,0 +1,9 @@
+uses
+	PolyXML;
+
+file
+	Main.cpp;
+
+mainconfig
+	"" = "";
+

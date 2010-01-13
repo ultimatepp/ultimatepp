@@ -1,0 +1,7 @@
+uses
+	Core;
+
+file
+	ClassFactory.h,
+	PolyXML.h;
+
