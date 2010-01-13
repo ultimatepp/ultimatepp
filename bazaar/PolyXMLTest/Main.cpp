@@ -19,7 +19,7 @@ class Derived : public Base
 class Another : public Derived
 {
 	public:
-		String AnotherData;
+		int AnotherData;
 		void Xmlize(XmlIO xml) { Derived::Xmlize(xml); xml("AnotherData", AnotherData); }
 };
 
@@ -29,9 +29,11 @@ REGISTERCLASS(Another, "you can add a description and also an index", 10);
 
 CONSOLE_APP_MAIN
 {
-	Cerr() << "You have registered " << Base::Classes().GetCount() << ":\n";
+	Cerr() << "You have registered " << Base::Classes().GetCount() << " classes:\n";
 	for(int i = 0; i < Base::Classes().GetCount(); i++)
-		Cerr() << "  Class#" << i << " is a '" << Base::Classes()[i] << "'  Description '" << Base::GetClassDescription(Base::Classes()[i]) << "'\n";
+		Cerr() << "  Class#" << i << " is a '" << Base::Classes()[i] 
+			<< "'  Description '" << Base::GetClassDescription(Base::Classes()[i]) 
+			<< "'  Index '" << Base::GetClassIndex(Base::Classes()[i]) << "'\n";
 
 	PolyXMLArray<Base> polyArray;
 	
@@ -43,6 +45,12 @@ CONSOLE_APP_MAIN
 	d->BaseData = "Sample data in derived class";
 	d->DerivedData = "Another sample data in derived class";
 	polyArray.Add(d);
+	
+	Another *a = dynamic_cast<Another *>(Base::CreatePtr("Another"));
+	a->BaseData = "Sample data in derived class";
+	a->DerivedData = "Another sample data in derived class";
+	a->AnotherData = 12345;
+	polyArray.Add(a);
 	
 	Cerr() << "\nArray content before streaming out: " << polyArray.GetCount() << " classes:\n";
 	for(int i = 0; i < polyArray.GetCount(); i++)

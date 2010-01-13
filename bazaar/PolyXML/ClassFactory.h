@@ -28,7 +28,7 @@ template<class T> class WithFactory
 		static T *CreatePtr(String const &className) { return classMap().Get(className)().Detach(); }
 		static Vector<String> const &Classes(void) { return classMap().GetKeys(); }
 		static String const &GetClassDescription(const String &className) { return descMap().Get(className); }
-		static String const &GetClassIndex(const String &className) { return indexMap().Get(className); }
+		static int const &GetClassIndex(const String &className) { return indexMap().Get(className); }
 		String const &IsA(void) { return typeMap().Get(typeid(*this).name()); }
 		virtual ~WithFactory() {}
 };
