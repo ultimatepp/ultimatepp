@@ -16,11 +16,23 @@ class Derived : public Base
 		void Xmlize(XmlIO xml) { Base::Xmlize(xml); xml("DerivedData", DerivedData); }
 };
 
+class Another : public Derived
+{
+	public:
+		String AnotherData;
+		void Xmlize(XmlIO xml) { Derived::Xmlize(xml); xml("AnotherData", AnotherData); }
+};
+
 REGISTERCLASS(Base);
-REGISTERCLASS(Derived);
+REGISTERCLASS(Derived, "you can add a description");
+REGISTERCLASS(Another, "you can add a description and also an index", 10);
 
 CONSOLE_APP_MAIN
 {
+	Cerr() << "You have registered " << Base::Classes().GetCount() << ":\n";
+	for(int i = 0; i < Base::Classes().GetCount(); i++)
+		Cerr() << "  Class#" << i << " is a '" << Base::Classes()[i] << "'  Description '" << Base::GetClassDescription(Base::Classes()[i]) << "'\n";
+
 	PolyXMLArray<Base> polyArray;
 	
 	Base *b = new Base;

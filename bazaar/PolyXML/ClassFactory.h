@@ -12,25 +12,38 @@ template<class T> class WithFactory
 		typedef VectorMap<String, CreateFunc>mapType;
 		static mapType &classMap() { static mapType cMap; return cMap; }
 		static VectorMap<String, String> &typeMap() { static VectorMap<String, String> tMap; return tMap; }
+		static VectorMap<String, String> &descMap() { static VectorMap<String, String> dMap; return dMap; }
+		static VectorMap<String, int> &indexMap() { static VectorMap<String, int> iMap; return iMap; }
 		template<class D> static One<T> __Create(void) { return One<T>((T *)new D); }
 	public:
 	
-		template<class D> static void Register(const String &name)
+		template<class D> static void Register(const String &name, const String &desc = "", int idx = 0)
 		{
 			classMap().Add(name, __Create<D>);
 			typeMap().Add(typeid(D).name(), name);
+			descMap().Add(name, desc);
+			indexMap().Add(name, idx);
 		}
 		static One<T> Create(const String &className) { return classMap().Get(className)(); }
 		static T *CreatePtr(String const &className) { return classMap().Get(className)().Detach(); }
 		static Vector<String> const &Classes(void) { return classMap().GetKeys(); }
+		static String const &GetClassDescription(const String &className) { return descMap().Get(className); }
+		static String const &GetClassIndex(const String &className) { return indexMap().Get(className); }
 		String const &IsA(void) { return typeMap().Get(typeid(*this).name()); }
 		virtual ~WithFactory() {}
 };
 
-#define REGISTERCLASS(type) \
+#ifdef COMPILER_MSC
+#define REGISTERCLASS(type, ...) \
 	INITBLOCK { \
-	type::Register<type>(#type); \
+		type::Register<type>(#type, __VA_ARGS__); \
 }
+#else
+#define REGISTERCLASS(type, ...) \
+	INITBLOCK { \
+		type::Register<type>(#type, ##__VA_ARGS__); \
+}
+#endif
 
 END_UPP_NAMESPACE;
 
