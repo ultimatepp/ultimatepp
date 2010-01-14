@@ -24,7 +24,7 @@ template<class T> class WithFactory
 			descMap().Add(name, desc);
 			indexMap().Add(name, idx);
 		}
-		static One<T> Create(const String &className) { return classMap().Get(className)(); }
+		static One<T> CreateInstance(const String &className) { return classMap().Get(className)(); }
 		static T *CreatePtr(String const &className) { return classMap().Get(className)().Detach(); }
 		static Vector<String> const &Classes(void) { return classMap().GetKeys(); }
 		static String const &GetClassDescription(const String &className) { return descMap().Get(className); }
