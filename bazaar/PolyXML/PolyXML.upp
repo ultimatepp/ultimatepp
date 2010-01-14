@@ -3,5 +3,6 @@ uses
 
 file
 	ClassFactory.h,
-	PolyXML.h;
+	PolyXML.h,
+	src.tpp;
 
