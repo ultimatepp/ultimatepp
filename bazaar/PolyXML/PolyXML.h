@@ -12,13 +12,13 @@ template<class T> class WithPolyXML : public WithFactory<T>
 		virtual void Xmlize(XmlIO xml) {};
 };
 
-template<class T> class PolyXMLArray : public Array<WithPolyXML<T> >
+template<class T> class PolyXMLArray : public Array<T>
 {
 	public:
 		// Xmlizer
 		void Xmlize(XmlIO xml);
-		void Add(const T &data) { Array<WithPolyXML<T> >::Add(data); }
-		void Add(T *data) { Array<WithPolyXML<T> >::Add(data); }
+		void Add(const T &data) { Array<T>::Add(data); }
+		void Add(T *data) { Array<T>::Add(data); }
 };
 
 template<class T> void PolyXMLArray<T>::Xmlize(XmlIO xml)
@@ -27,7 +27,7 @@ template<class T> void PolyXMLArray<T>::Xmlize(XmlIO xml)
 	{
 		for(int i = 0; i < PolyXMLArray::GetCount(); i++)
 		{
-			WithPolyXML<T> &data = PolyXMLArray::operator[](i);
+			T &data = PolyXMLArray::operator[](i);
 			String tag = data.IsA();
 			data.Xmlize(xml.Add(tag));
 		}
