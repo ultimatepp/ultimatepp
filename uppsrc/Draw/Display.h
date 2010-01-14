@@ -28,6 +28,12 @@ struct AttrText {
 	Image   img;
 	int     imgspc;
 
+	AttrText& Set(const char *s)                    { text = s; return *this; }
+	AttrText& Set(const wchar *s)                   { text = s; return *this; }
+	AttrText& Set(const WString& s)                 { text = s; return *this; }
+	AttrText& operator=(const char *s)              { text = s; return *this; }
+	AttrText& operator=(const wchar *s)             { text = s; return *this; }
+	AttrText& operator=(const WString& s)           { text = s; return *this; }
 	AttrText& Ink(Color c)                          { ink = c; return *this; }
 	AttrText& Paper(Color c)                        { paper = c; return *this; }
 	AttrText& SetFont(Font f)                       { font = f; return *this; }
@@ -42,6 +48,7 @@ struct AttrText {
 	AttrText(const char *text);
 	AttrText(const wchar *text);
 	AttrText(const WString& text);
+	AttrText()                                      { Init(); }
 
 private:
 	void Init();

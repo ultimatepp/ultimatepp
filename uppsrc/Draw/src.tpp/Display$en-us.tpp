@@ -132,6 +132,21 @@ ALIGN`_CENTER.&]
 [s2; Space between icon and text.&]
 [s7;%- &]
 [s8;%- &]
+[s5;:AttrText`:`:Set`(const char`*`):%- [_^AttrText^@0 AttrText][@(0.0.255) `&][@0 _Set(][@(0.0.255) c
+onst][@0 _][@(0.0.255) char][@0 _`*][@3 s][@0 )]&]
+[s5;:AttrText`:`:Set`(const wchar`*`):%- [_^AttrText^@0 AttrText][@(0.0.255) `&][@0 _Set(][@(0.0.255) c
+onst][@0 _][_^wchar^@0 wchar][@0 _`*][@3 s][@0 )]&]
+[s5;:AttrText`:`:Set`(const WString`&`):%- [_^AttrText^@0 AttrText][@(0.0.255) `&][@0 _Set(
+][@(0.0.255) const][@0 _][_^WString^@0 WString][@(0.0.255) `&][@0 _][@3 s][@0 )]&]
+[s5;:AttrText`:`:operator`=`(const char`*`):%- [_^AttrText^@0 AttrText][@(0.0.255) `&][@0 _
+operator`=(][@(0.0.255) const][@0 _][@(0.0.255) char][@0 _`*][@3 s][@0 )]&]
+[s5;:AttrText`:`:operator`=`(const wchar`*`):%- [_^AttrText^@0 AttrText][@(0.0.255) `&][@0 _
+operator`=(][@(0.0.255) const][@0 _][_^wchar^@0 wchar][@0 _`*][@3 s][@0 )]&]
+[s5;:AttrText`:`:operator`=`(const WString`&`):%- [_^AttrText^@0 AttrText][@(0.0.255) `&][@0 _
+operator`=(][@(0.0.255) const][@0 _][_^WString^@0 WString][@(0.0.255) `&][@0 _][@3 s][@0 )]&]
+[s2; Sets the text to [%-*@3 s].&]
+[s7; &]
+[s8;%- &]
 [s5;:AttrText`:`:Ink`(Color`):%- [_^AttrText^@0 AttrText][@(0.0.255) `&][@0 _Ink(][_^Color^@0 C
 olor][@0 _][@3 c][@0 )]&]
 [s2; Sets the text color.&]
@@ -197,6 +212,10 @@ attributes to zero.&]
 String][@(0.0.255) `&][@0 _][@3 text][@0 )]&]
 [s2; Constructs AttrText, assigning the text attribute and all other 
 attributes to zero.&]
+[s7; &]
+[s8;%- &]
+[s5;:AttrText`:`:AttrText`(`):%- [@0 AttrText()]&]
+[s2; Default constructor.&]
 [s0; &]
 [s0;%- &]
 [ {{10000t/25b/25@3 [s0;%- [*@(229)4 Standard displays]]}}&]
