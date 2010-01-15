@@ -17,7 +17,7 @@ SqlSet operator&(const SqlSet& s1, const SqlSet& s2) {
 SqlSet operator-(const SqlSet& s1, const SqlSet& s2) {
 	if(s1.IsEmpty() || s2.IsEmpty())
 		return s1;
-	return SqlSet(s1(SqlSet::SET) + SqlCase(MSSQL|PGSQL, " except ")(" minus ") + s2(SqlSet::SET), SqlSet::SETOP);
+	return SqlSet(s1(SqlSet::SET) + SqlCase(MSSQL|PGSQL|SQLITE3, " except ")(" minus ") + s2(SqlSet::SET), SqlSet::SETOP);
 }
 
 String SqlSet::operator~() const {
