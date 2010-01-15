@@ -393,6 +393,7 @@ public:
 	enum PRIORITY {
 		SETOP    =  50,
 		SET      = 100,
+		HIGH     = 200,
 	};
 
 	String           operator~() const;
@@ -498,7 +499,7 @@ public:
 	SqlSelect& Limit(int64 offset, int limit);
 	SqlSelect& Offset(int64 offset);
 
-	operator  SqlSet() const                           { return SqlSet(text, SqlSet::SET); }
+	operator  SqlSet() const                           { return SqlSet(text, SqlSet::SETOP); }
 	operator  SqlStatement() const                     { return SqlStatement(text); }
 	SqlVal    AsValue() const;
 	SqlSelect AsTable(SqlId tab) const;

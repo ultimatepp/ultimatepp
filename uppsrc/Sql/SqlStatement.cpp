@@ -19,7 +19,7 @@ SqlSelect& SqlSelect::operator&=(const SqlSelect& s2) {
 }
 
 SqlSelect& SqlSelect::operator-=(const SqlSelect& s2) {
-	text << SqlCase(MSSQL|PGSQL," except ")(" minus ") << SqlCase(SQLITE3, "")("(")
+	text << SqlCase(MSSQL|PGSQL|SQLITE3," except ")(" minus ") << SqlCase(SQLITE3, "")("(")
 	<< s2.text << SqlCase(SQLITE3, "")(")");
 	return *this;
 }
