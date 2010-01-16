@@ -6,8 +6,8 @@ topic "Bazaar support";
 [s0; [2 If you are using a Bazaar package and you have found problems, 
 bugs or you need new features, just follow these instructions.]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 1. CHECK THE FORUM]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 1. CHECK THE FORUM]]}}&]
 [s0;2 &]
 [s0; [2 Perhaps anybody has been in your situation before. Because 
 of it the first thing to do is review the Forum.]&]
@@ -52,8 +52,8 @@ problem or answer your question.]&]
 °¢≥ö£îù·≤òÜ·òÜπ¬ç¸á¿Ÿƒï
 ]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 2. BUGS REPORT]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 2. BUGS REPORT]]}}&]
 [s0;2 &]
 [s0; [2 To submit bug reports just post the problem to Forum/Bazaar. 
 ][*2 It is strongly advised to include simple sample code of the 
@@ -61,16 +61,16 @@ bug][2  so it will be easily reproduced by the package author.
 This advice can be the difference between a fast solved problem 
 or one forgotten.]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 3. PACKAGE HELP]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 3. PACKAGE HELP]]}}&]
 [s0;2 &]
 [s0; [2 You feel the package has certain feature but you are unable 
 to get it to work. Do not get crazy and post to Forum/Bazaar 
 to ask for help. As usual please be as simple as possible to 
 describe what yo want to get.]&]
 [s0;2 &]
-[s0;*2 &]
-[s0; [*2 4. FEATURE REQUESTS]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 4. FEATURE REQUESTS]]}}&]
 [s0;2 &]
 [s0; [2 And why do not this package could do this or that ?. Package 
 authors are always very busy but they are open to hear you.]&]
@@ -80,8 +80,8 @@ is important for you and the community. Perhaps you could be
 part of this improvement and may help more than you could expect 
 !]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 5. CODE SUBMISSION]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 5. CODE SUBMISSION]]}}&]
 [s0;2 &]
 [s0; [2 If you go further and you have found the way to solve a problem 
 or a new feature by yourself... thank you !.]&]
@@ -94,5 +94,6 @@ changes in original package files.]&]
 [s0; [2 To get this `"patch`" file you can use TheIDE feature in menu 
 `"Project/Compare with file`" and `"Project/Patch`-Diff`".]&]
 [s0;2 &]
-[s0;2 &]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [2 Last edit: 2010`-01`-16]]}}&]
 [s0; ]

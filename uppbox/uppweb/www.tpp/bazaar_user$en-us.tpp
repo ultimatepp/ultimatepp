@@ -7,7 +7,7 @@ topic "Bazaar user guide";
 do not how. Do not be worried: Bazaar use is very easy:]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*2 1. PACKAGE DOWNLOAD]&]
+[ {{10000@(190.255.220) [s0; [*2 1. PACKAGE DOWNLOAD]]}}&]
 [s0;2 &]
 [s0; [2 To get the package you will need nothing at all, as Bazaar 
 packages are downloaded by default.]&]
@@ -28,17 +28,18 @@ client is in PATH environment variable although this is usually
 done by installer.]&]
 [s0;l160;i150;O0; [2 Download to your Upp folder from here ]&]
 [s0;l160;2 &]
-[s0;l480; [C2 http://upp`-mirror.googlecode.com/svn/trunk/]&]
+[s0;l480; [C$7;2 http://upp`-mirror.googlecode.com/svn/trunk/]&]
 [s0;2 &]
 [s0;l288; [2 or run this command in a command window: ]&]
 [s0;2 &]
-[s0;l480; [C2 svn checkout http://upp`-mirror.googlecode.com/svn/trunk/ 
-my`-upp`-mirror]&]
+[s0;l480; [C$7;2 svn checkout http://upp`-mirror.googlecode.com/svn/trunk/ 
+my`-upp]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*2 2. BUGS SUBMISSION/FEATURE REQUESTS/HELP]&]
+[ {{10000@(190.255.220) [s0; [*2 2. BUGS SUBMISSION/FEATURE REQUESTS/HELP]]}}&]
 [s0;2 &]
 [s0; [2 Follow the instructions in the ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 S
 upport Page][2 .]&]
 [s0;2 &]
-[s0; ]
+[s0;2 &]
+[ {{10000@(190.255.220) [s0; [2 Last edit: 2010`-01`-16]]}}]
