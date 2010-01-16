@@ -26,6 +26,7 @@ String diffdir;
 #endif
 String bazaar;
 bool ftpupload;
+bool outPdf;
 
 String GetRcFile(const char *s)
 {
@@ -450,6 +451,7 @@ struct ProgramData {
 	String diffdir;
 	String pdfdir;
 	bool ftpUpload;
+	bool outPdf;
 	void Xmlize(XmlIO xml)	{
 		xml
 			("rootdir", rootdir)
@@ -457,6 +459,7 @@ struct ProgramData {
 			("diffdir", diffdir)
 			("pdfdir", pdfdir)
 			("ftpUpload", ftpUpload)
+			("outPdf", outPdf)			
 		;
 	}
 };
@@ -471,6 +474,7 @@ GUI_APP_MAIN
 	pdfdir   = GetHomeDirFile("pdf");
 #endif
 	ftpupload = true;
+	outPdf = true;
 	
 	ProgramData data;
 	
@@ -483,6 +487,7 @@ GUI_APP_MAIN
 			diffdir   = data.diffdir;
 			pdfdir    = data.pdfdir;	
 			ftpupload = data.ftpUpload;
+			outPdf    = data.outPdf;
 			cfgloaded = true;
 		}
 	}
@@ -492,6 +497,7 @@ GUI_APP_MAIN
 		data.diffdir   = diffdir;
 		data.pdfdir    = pdfdir;
 		data.ftpUpload = ftpupload;
+		data.outPdf    = outPdf;
 		StoreAsXMLFile(data, NULL, configFile);
 	}
 	if (!DirectoryExists(rootdir)) {
@@ -626,11 +632,12 @@ GUI_APP_MAIN
 
 //	Vector<String> amazon = Split(LoadFile(GetRcFile("amazon.txt")), '\n');//440
 
-	PdfDraw pdf;
-	for(int i = 0; i < tt.GetCount(); i++)
-		QtfAsPdf(pdf, tt[i]);
-	SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
-
+	if (outPdf) {
+		PdfDraw pdf;
+		for(int i = 0; i < tt.GetCount(); i++)
+			QtfAsPdf(pdf, tt[i]);
+		SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
+	}
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
 
