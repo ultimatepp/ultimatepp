@@ -10,6 +10,22 @@ TOPIC("bazaar$en-us")
 #include "bazaar$en-us.tppi"
 END_TOPIC
 
+TOPIC("bazaar_$en-us")
+#include "bazaar_$en-us.tppi"
+END_TOPIC
+
+TOPIC("bazaar_submission$en-us")
+#include "bazaar_submission$en-us.tppi"
+END_TOPIC
+
+TOPIC("bazaar_support$en-us")
+#include "bazaar_support$en-us.tppi"
+END_TOPIC
+
+TOPIC("bazaar_user$en-us")
+#include "bazaar_user$en-us.tppi"
+END_TOPIC
+
 TOPIC("baz_sysinfo$en-us")
 #include "baz_sysinfo$en-us.tppi"
 END_TOPIC
