@@ -1,4 +1,4 @@
-topic "Bazaar submission and maintenance guide";
+topic "Bazaar submission and maintenance";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%EN-US 
@@ -12,9 +12,9 @@ and follows Upp style.]&]
 [s0; [2 In this chapter you will find how to submit packages and do 
 its maintenance.]&]
 [s0;2 &]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 1. SUBVERSION INSTALL]]}}&]
 [s0;*2 &]
-[s0; [*2 1. SUBVERSION INSTALL]&]
-[s0;2 &]
 [s0; [2 Upp project and Bazaar packages are hosted in Upp hosting system 
 and latest releases are available through ][^http`:`/`/subversion`.tigris`.org`/^2 S
 ubversion][2 . This is an Open Source version control system.]&]
@@ -25,14 +25,14 @@ install subversion`" in Linux. Be sure that in Windows the svn
 client is in PATH environment variable although this is usually 
 done by installer.]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 2. UPLOAD PERMISSIONS]&]
-[s0;2 &]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 2. UPLOAD PERMISSIONS]]}}&]
+[s0;*2 &]
 [s0; [2 Well. You have svn installed so that you could get the latest 
 source code from Google Code mirror with just this command line: 
 ]&]
 [s0;2 &]
-[s0;l256; [C2 svn checkout http://upp`-mirror.googlecode.com/svn/trunk/ 
+[s0;l256; [C$7;2 svn checkout http://upp`-mirror.googlecode.com/svn/trunk/ 
 my`-upp`-mirror]&]
 [s0;2 &]
 [s0;2 &]
@@ -56,11 +56,12 @@ write access to them too).]&]
 [s0; [2 When you commit the changes do not forget to enter a comment 
 following this format:]&]
 [s0;2 &]
-[s0;l256;%- [%%C2 `"][C2 My`_Cool`_Package: First release`"]&]
+[s0;l256;%- [%%C$7;2 `"][C$7;2 My`_Cool`_Package: First release`"]&]
 [s0;2%- &]
 [s0;%- [2 or]&]
 [s0;2%- &]
-[s0;l256;%- [%%C2 `"][C2 My`_Cool`_Package: Added X an Y. Fixed bug Z`"]&]
+[s0;l256;%- [%%C$7;2 `"][C$7;2 My`_Cool`_Package: Added X an Y. Fixed 
+bug Z`"]&]
 [s0;2%- &]
 [s0;2%- &]
 [s0;%- [2 If in some hours you enter in ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/list^2 h
@@ -68,8 +69,8 @@ ttp://code.google.com/p/upp`-mirror/source/list][2  you will see
 your new release into Bazaar so, congratulations, your first 
 release is done!.]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 3. PACKAGE WEB PUBLICATION]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 3. PACKAGE WEB PUBLICATION]]}}&]
 [s0;2 &]
 [s0; [2 You are proud with your new package, you have informed all 
 in Forum/Bazaar and you have uploaded it to svn so that anybody 
@@ -109,8 +110,8 @@ ar introduction page][2  will be updated so your T`+`+ help will
 be available for the web. Upp hosting system will convert your 
 T`+`+ help system into .html web pages.]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 4. DOCUMENTATION AND EXAMPLES]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 4. DOCUMENTATION AND EXAMPLES]]}}&]
 [s0;2 &]
 [s0; [2 Usually we think we are good programmers and our code is just 
 crystal clear so with a quick read of .h and .c/.cpp files any 
@@ -128,18 +129,19 @@ code performance.]&]
 !. Remember that it will be available for everybody in this web 
 page.]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 5. PACKAGE RELEASES]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 5. PACKAGE RELEASES]]}}&]
 [s0;2 &]
 [s0; [2 Do not wait too much to do new releases. Do not wait to surpass 
 important landmarks to pass from 2.0 to 3.0 version... Follow 
 the advice in ][^http`:`/`/en`.wikipedia`.org`/wiki`/The`_Cathedral`_and`_the`_Bazaar^2 `"
 The Cathedral and the Bazaar`"][2  book:]&]
 [s0;2 &]
-[s0;l288; [/2 `"Release early. Release often. And listen to your customers`"]&]
+[s0;l288; [/$7;2 `"Release early. Release often. And listen to your 
+customers`"]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 6. PACKAGE LICENSE]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 6. PACKAGE LICENSE]]}}&]
 [s0;2 &]
 [s0; [2 All packages, documents and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 B
 SD license][2 .]&]
@@ -151,8 +153,8 @@ should have to follow the same or a similar license.]&]
 Creative Commons licenses are very easy to fulfill, but you will 
 have to do it.]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*2 7. DO NOT FORGET]&]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [*2 7. DO NOT FORGET]]}}&]
 [s0;2 &]
 [s0; [2 A good package has to be available and maintained, so if:]&]
 [s0;i150;O0; [2 You are not going to get package goals in finite time]&]
@@ -166,4 +168,5 @@ you or to get your relay run baton.]&]
 [s0;2 &]
 [s0; [2 And the community will acknowledge it.]&]
 [s0; &]
-[s0; ]
+[s0;%- &]
+[ {{10000@(190.255.220) [s0; [2 Last edit: 2010`-01`-16]]}}]
