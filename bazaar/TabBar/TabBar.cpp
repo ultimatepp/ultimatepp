@@ -1,5 +1,8 @@
 #include "TabBar.h"
 
+#define TFILE <TabBar/TabBar.t>
+#include <Core/t.h>
+
 #define IMAGECLASS TabBarImg
 #define IMAGEFILE <TabBar/TabBar.iml>
 #include <Draw/iml_source.h>
@@ -332,7 +335,7 @@ int TabBar::GetNextId()
 void TabBar::ContextMenu(Bar& bar)
 {
 	if (highlight >= 0) {
-		bar.Add(tabs.GetCount() > 1, "Close", THISBACK1(Close, highlight));
+		bar.Add(tabs.GetCount() > 1, t_("Close"), THISBACK1(Close, highlight));
 		bar.Separator();
 	}
 	int cnt = groups.GetCount();
@@ -348,13 +351,13 @@ void TabBar::ContextMenu(Bar& bar)
 	}
 	bar.Separator();
 
-	bar.Add("Close others", THISBACK1(CloseAll, highlight));
+	bar.Add(t_("Close others"), THISBACK1(CloseAll, highlight));
 }
 
 void TabBar::GroupMenu(Bar &bar, int n)
 {
-	bar.Add("Set active", THISBACK1(DoGrouping, n));
-	bar.Add("Close", THISBACK1(DoCloseGroup, n));
+	bar.Add(t_("Set active"), THISBACK1(DoGrouping, n));
+	bar.Add(t_("Close"), THISBACK1(DoCloseGroup, n));
 }
 
 bool TabBar::Tab::HasMouse(const Point& p) const
@@ -1214,7 +1217,7 @@ void TabBar::Clear()
 	stackcount = 0;
 	tabs.Clear();
 	groups.Clear();
-	NewGroup("All");
+	NewGroup(t_("TabBarGroupAll\aAll"));
 	group = 0;
 	Refresh();
 }
