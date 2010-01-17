@@ -1,0 +1,18 @@
+LAYOUT(TabBarTestLayout, 484, 340)
+END_LAYOUT
+
+LAYOUT(FirstLayout, 200, 116)
+	ITEM(Label, dv___0, SetLabel(t_("First tab")).SetAlign(ALIGN_CENTER).SetFont(StdFontZ(20)).HSizePosZ(4, 4).TopPosZ(4, 23))
+	ITEM(EditString, dv___1, RightPosZ(4, 64).TopPosZ(32, 19))
+END_LAYOUT
+
+LAYOUT(SecondLayout, 316, 164)
+	ITEM(Label, dv___0, SetLabel(t_("Second tab")).SetAlign(ALIGN_CENTER).SetFont(StdFontZ(20)).HSizePosZ(4, 4).TopPosZ(4, 23))
+	ITEM(EditString, dv___1, RightPosZ(8, 64).TopPosZ(108, 19))
+END_LAYOUT
+
+LAYOUT(BaseLayout, 400, 200)
+	ITEM(StaticText, txt, LeftPosZ(12, 212).TopPosZ(60, 128))
+	ITEM(LabelBox, dv___1, SetLabel(t_("Fixed Ctrl")).LeftPosZ(4, 232).TopPosZ(36, 160))
+END_LAYOUT
+

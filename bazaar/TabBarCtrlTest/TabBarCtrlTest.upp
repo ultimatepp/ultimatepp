@@ -1,0 +1,14 @@
+description "Test TabBarCtrl control\377";
+
+uses
+	CtrlLib,
+	TabBar;
+
+file
+	TabBarCtrlTest.lay,
+	TabBarCtrlTest.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
