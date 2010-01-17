@@ -32,6 +32,7 @@ class TabBarCtrl : public ParentCtrl
 		
 				Ctrl *GetSlave() { return slave; }
 				const Ctrl *GetSlave() const { return slave; }
+				~Item() { if(slave) slave->Remove(); }
 		
 				Item() { owner = NULL; slave = NULL; key = -1; tabKey = -1; }
 /* NOT AVAILABLE TabCtrl::Item members

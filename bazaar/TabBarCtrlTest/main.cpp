@@ -38,7 +38,13 @@ TabBarTest::TabBarTest()
 	
 	tabCtrl.Add(first, "First");
 	tabCtrl.Add(second, "Second");
+
+	tabCtrl.Remove(1);
+	tabCtrl.Remove(0);
+	tabCtrl.Add(first, "First");
+	tabCtrl.Add(second, "Second");
 	tabCtrl.Add("Third");
+
 	for(int i = 3; i < 7; i++)
 		tabCtrl.Add("Item#" + FormatInt(i));
 	

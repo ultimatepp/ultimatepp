@@ -5,13 +5,13 @@ NAMESPACE_UPP;
 /////////////////////////////////////////////////////////////////////////////////////////
 TabBarCtrl::Item& TabBarCtrl::Item::Text(const String& _text)
 {
-	owner->tabBar.Set(tabKey, _text);
+	owner->tabBar.Set(owner->tabBar.FindKey(tabKey), _text);
 	return *this;
 }
 
 TabBarCtrl::Item& TabBarCtrl::Item::SetImage(const UPP::Image& _im)
 {
-	owner->tabBar.SetIcon(owner->tabBar.Get(tabKey), _im);
+	owner->tabBar.SetIcon(owner->tabBar.FindKey(tabKey), _im);
 	return *this;
 }
 
