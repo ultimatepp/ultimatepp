@@ -307,8 +307,13 @@ TabBar::TabBar()
 
 void TabBar::CloseAll(int exception)
 {
-	if (CancelCloseAll()) return;
+	Vector<Value>vv;
+	for(int i = 0; i < tabs.GetCount(); i++)
+		if(i != exception)
+			vv.Add(tabs[i].key);
+	if (CancelCloseAll() || CancelCloseSome(Vector<Value>(vv,0))) return;
 	WhenCloseAll();
+	WhenCloseSome(vv);
 	for(int i = tabs.GetCount() - 1; i >= 0; i--)
 		if(i != exception)
 			tabs.Remove(i);
@@ -488,22 +493,74 @@ void TabBar::DoCloseGroup(int n)
 	int cnt = groups.GetCount();
 	if(cnt <= 0)
 		return;
-	if (cnt == n)
-		group--;
 
-	String group = groups[n].name;
+	String groupName = groups[n].name;
+	
+	/*
+		do WhenCloseSome()/CancelCloseSome() checking
+		before WhenClose()/CancelClose() stuff
+		(that code must be reviewed anyways...)
+		In order to leave existing code as it is, following
+		changes have effect *ONLY* if WhenCloseSome()/CancelCloseSome()
+		callbacks are used, otherwise previous path is taken.
+		I think we should anyways review some parts of it later
+	*/
+	
+	if(WhenCloseSome || CancelCloseSome)
+	{
+		Vector<Value>vv;
+		int nTabs = 0;
+		for(int i = 0; i < tabs.GetCount(); i++)
+			if(groupName == tabs[i].group) {
+				vv.Add(tabs[i].key);
+				nTabs++;
+			}
+		// at first, we check for CancelCloseSome()
+		if(vv.GetCount() && !CancelCloseSome(Vector<Value>(vv,0))) {
+			// we didn't cancel globally, now we check CancelClose()
+			// for each tab -- group gets removed ONLY if ALL of
+			// group tabs are closed
+			for(int i = 0; i < tabs.GetCount(); i++) {
+				if(groupName == tabs[i].group && tabs.GetCount() > 1) {
+					Value v = tabs[i].key;
+					if(!CancelClose(v))
+					{
+						nTabs--;
+						WhenClose(v);
+						tabs.Remove(i);
+					}
+				}
+				// remove group if all of its tabs get closed
+				if(!nTabs) {
+					if(cnt == n)
+						group--;
+					if(cnt > 1)
+						groups.Remove(n);
+				}
+				MakeGroups();
+				Repos();
+				SetCursor(-1);
+			}
+		}
+		return;
+	}
 
+	// previous code path, taken if WhenCancelSome()/WhenCloseSome()
 	for(int i = tabs.GetCount() - 1; i >= 0; i--)
 	{
-		if(group == tabs[i].group && tabs.GetCount() > 1) {
-			Value v = tabs[i].value;
+		if(groupName == tabs[i].group && tabs.GetCount() > 1) {
+			Value v = tabs[i].value; // should be key ??
 			if (!CancelClose(v)) {
 				WhenClose(v);
 				tabs.Remove(i);
 			}
 		}
 	}
-	if(cnt > 1)
+
+	if (cnt == n)
+		group--;
+
+	if(cnt > 1) // what if CancelClose suppressed some tab closing ?
 		groups.Remove(n);
 	MakeGroups();
 	Repos();
@@ -1415,10 +1472,13 @@ void TabBar::LeftDown(Point p, dword keyflags)
 
 	if(cross != -1) {
 		Value v = tabs[cross].key;
+		Vector<Value>vv;
+		vv.Add(v);
 		int ix = cross;
-		if (!CancelClose(v)) {		
+		if (!CancelClose(v) && !CancelCloseSome(Vector<Value>(vv, 0))) {
 			Close(ix);
 			WhenClose(v);
+			WhenCloseSome(vv);
 		}
 	}
 	else if(highlight >= 0) {
@@ -1450,11 +1510,17 @@ void TabBar::RightDown(Point p, dword keyflags)
 void TabBar::MiddleDown(Point p, dword keyflags)
 {
 	if (highlight >= 0)
-		if (!CancelClose(tabs[highlight].key)) {
+	{
+		Value v = tabs[highlight].key;
+		Vector<Value>vv;
+		vv.Add(v);
+		if (!CancelClose(v) && ! CancelCloseSome(Vector<Value>(vv, 0))) {
 			Value v = tabs[highlight].key;
 			Close(highlight);
 			WhenClose(v);
+			WhenCloseSome(vv);
 		}
+	}
 }
 
 void TabBar::MiddleUp(Point p, dword keyflags)

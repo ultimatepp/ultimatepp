@@ -8,6 +8,8 @@ file
 	TabBar.cpp,
 	FileTabs.h,
 	FileTabs.cpp,
+	TabBarCtrl.h,
+	TabBarCtrl.cpp,
 	TabBar.iml;
 
 mainconfig
