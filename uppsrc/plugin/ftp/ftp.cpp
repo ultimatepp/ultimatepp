@@ -62,7 +62,8 @@ bool FtpClient::Connect(const char *host, const char *user, const char *password
 
 int FtpClient::Callback(netbuf *nControl, int xfered, void *arg)
 {
-	return !((FtpClient *)arg)->WhenProgress(0,0);
+	FtpClient *ftp = (FtpClient *)arg;
+	return !ftp->WhenProgress(xfered, ftp->save_total);
 }
 
 void FtpClient::Close()
@@ -99,7 +100,7 @@ String FtpClient::Load(const char *path)
 	}
 	load_data = Null;
 	int p = 0;
-	while(!WhenProgress(0,0)) {
+	while(!WhenProgress(load_data.GetLength(), 0)) {
 		byte buffer[1024];
 		int ndata = FtpRead(buffer, sizeof(buffer), ftpdata);
 		LLOG("FtpRead -> " << ndata);
@@ -232,7 +233,7 @@ String FtpClient::List(const char *path)
 		return String::GetVoid();
 	}
 	int p = 0;
-	while(!WhenProgress(0,0)) {
+	while(!WhenProgress(load_data.GetLength(),0)) {
 		byte buffer[1024];
 		int ndata = FtpRead(buffer, sizeof(buffer), ftpdata);
 		LLOG("FtpRead -> " << ndata);
