@@ -586,7 +586,7 @@ struct stat& FindFile::Stat() const {
 	if(!statis) {
 		statis = true;
 		if(file)
-			stat(AppendFileName(path, name), &statf);
+			stat(ToSystemCharset(AppendFileName(path, name)), &statf);
 	}
 	return statf;
 }
