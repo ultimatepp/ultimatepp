@@ -47,6 +47,9 @@
 #include <ctype.h>
 
 #if defined(PLATFORM_POSIX)
+	#ifndef __USE_FILE_OFFSET64
+		#define __USE_FILE_OFFSET64
+	#endif
 	#define DIR_SEP  '/'
 	#define DIR_SEPS "/"
 	#define PLATFORM_PATH_HAS_CASE 1
