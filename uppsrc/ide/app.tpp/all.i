@@ -1,57 +1,29 @@
-TOPIC("About$en-us")
-#include "About$en-us.tppi"
-END_TOPIC
-
-TOPIC("Files$en-us")
-#include "Files$en-us.tppi"
-END_TOPIC
-
-TOPIC("Sponsor$en-us")
-#include "Sponsor$en-us.tppi"
+TOPIC("Flags$en-us")
+#include "Flags$en-us.tppi"
 END_TOPIC
 
 TOPIC("Assist$en-us")
 #include "Assist$en-us.tppi"
 END_TOPIC
 
-TOPIC("install$en-us")
-#include "install$en-us.tppi"
-END_TOPIC
-
 TOPIC("index$en-us")
 #include "index$en-us.tppi"
-END_TOPIC
-
-TOPIC("BSD$en-us")
-#include "BSD$en-us.tppi"
-END_TOPIC
-
-TOPIC("IntroductionToUPP$en-us")
-#include "IntroductionToUPP$en-us.tppi"
-END_TOPIC
-
-TOPIC("CrossComp$en-gb")
-#include "CrossComp$en-gb.tppi"
 END_TOPIC
 
 TOPIC("PackageTemplates$en-us")
 #include "PackageTemplates$en-us.tppi"
 END_TOPIC
 
+TOPIC("About$en-us")
+#include "About$en-us.tppi"
+END_TOPIC
+
 TOPIC("esc$en-us")
 #include "esc$en-us.tppi"
 END_TOPIC
 
-TOPIC("Keys$en-us")
-#include "Keys$en-us.tppi"
-END_TOPIC
-
-TOPIC("Topic$en-us")
-#include "Topic$en-us.tppi"
-END_TOPIC
-
-TOPIC("NewProject$en-us")
-#include "NewProject$en-us.tppi"
+TOPIC("cmdline$en-us")
+#include "cmdline$en-us.tppi"
 END_TOPIC
 
 TOPIC("ConfiguringPackagesAssemblies$en-us")
@@ -64,10 +36,6 @@ END_TOPIC
 
 TOPIC("IconDes$en-us")
 #include "IconDes$en-us.tppi"
-END_TOPIC
-
-TOPIC("Blitz$en-us")
-#include "Blitz$en-us.tppi"
 END_TOPIC
 
 TOPIC("macros$en-us")
@@ -86,11 +54,43 @@ TOPIC("Contact$en-us")
 #include "Contact$en-us.tppi"
 END_TOPIC
 
-TOPIC("Flags$en-us")
-#include "Flags$en-us.tppi"
+TOPIC("Files$en-us")
+#include "Files$en-us.tppi"
 END_TOPIC
 
-TOPIC("cmdline$en-us")
-#include "cmdline$en-us.tppi"
+TOPIC("Sponsor$en-us")
+#include "Sponsor$en-us.tppi"
+END_TOPIC
+
+TOPIC("install$en-us")
+#include "install$en-us.tppi"
+END_TOPIC
+
+TOPIC("BSD$en-us")
+#include "BSD$en-us.tppi"
+END_TOPIC
+
+TOPIC("IntroductionToUPP$en-us")
+#include "IntroductionToUPP$en-us.tppi"
+END_TOPIC
+
+TOPIC("CrossComp$en-gb")
+#include "CrossComp$en-gb.tppi"
+END_TOPIC
+
+TOPIC("Keys$en-us")
+#include "Keys$en-us.tppi"
+END_TOPIC
+
+TOPIC("Topic$en-us")
+#include "Topic$en-us.tppi"
+END_TOPIC
+
+TOPIC("NewProject$en-us")
+#include "NewProject$en-us.tppi"
+END_TOPIC
+
+TOPIC("Blitz$en-us")
+#include "Blitz$en-us.tppi"
 END_TOPIC
 

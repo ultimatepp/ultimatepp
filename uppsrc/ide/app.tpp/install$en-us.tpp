@@ -37,8 +37,8 @@ automate setup invoking Setup/Automated setup.&]
 developing native Windows applications&]
 [s0; &]
 [s0; [^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?FamilyID`=c17 ba869`-9671`-4330`-a63e`-1fd44e0e2505`&displaylang`=en^1 h
-ttp://www.microsoft.com/downloads/details.aspx?FamilyID`=c17ba869`-9671`-4330`-a63
-e`-1fd44e0e2505`&displaylang`=en]&]
+ttp://www.microsoft.com/downloads/details.aspx?FamilyID`=71DEB800`-C591`-4F97`-A90
+0`-BEA146E4FAE1`&displayLang`=en]&]
 [s0;^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?FamilyID`=4377F86D`-C913`-4B5C`-B87E`-EF72E5B4E065`&displaylang`=en^1 &]
 [s0; Note that this SDK requires .NET framework 2.0 to be installed 
 on your computer. U`+`+ requires only a fraction of options to 
