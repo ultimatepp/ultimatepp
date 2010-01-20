@@ -197,6 +197,7 @@ public:
 	void FinishTree();
 	void OpenDeep(int id = 0);
 	void CurrentOrHome();
+	void ClearCurrentLink()                       { current_link.Clear(); }
 
 	String GetCurrent() const                     { return topic; }
 	String GetCurrentLabel() const                { return label; }

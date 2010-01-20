@@ -293,27 +293,37 @@ Topic TopicCtrl::AcquireTopic(const String& t)
 	return Topic();
 }
 
+                 
+
 struct HighlightWords : RichText::Iterator {
-	Index<String> words;
+	Vector<String> words;
 	struct Pos : Moveable<Pos> { int pos, len; };
 	Vector<Pos>   pos;
+
+	int FindPattern(const String& x) {
+		for(int i = 0; i < words.GetCount(); i++)
+			if(x.StartsWith(words[i]))
+				return words[i].GetCount();
+		return -1;
+	}
 
 	virtual bool operator()(int tpos, const RichPara& para) {
 		WString text = para.GetText();
 		const wchar *s = text;
 		for(;;) {
-			while(!IsLetter(*s) && *s)
+			while(!IsAlpha(*s) && !IsDigit(*s) && *s)
 				s++;
 			if(*s == '\0')
 				break;
-			WStringBuffer wb;
+			String wb;
 			const wchar *b = s;
-			while(IsLetter(*s))
-				wb.Cat(ToLower(*s++));
-			if(words.Find(FromUnicode(wb)) >= 0) {
+			while(IsAlpha(*s) || IsDigit(*s))
+				wb.Cat(ToUpper(*s++));
+			int q = FindPattern(wb);
+			if(q >= 0) {
 				Pos& p = pos.Add();
 				p.pos = int(b - ~text) + tpos;
-				p.len = int(s - b);
+				p.len = q;
 			}
 		}
 		return false;
@@ -431,6 +441,7 @@ void TopicCtrl::SShow()
 void TopicCtrl::Search()
 {
 	int l, h;
+	ClearCurrentLink();
 	search.GetSelection(l, h);
 	SyncDocTree();
 	SetBar();
