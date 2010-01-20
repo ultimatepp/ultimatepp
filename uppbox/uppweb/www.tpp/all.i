@@ -26,18 +26,6 @@ TOPIC("bazaar_user$en-us")
 #include "bazaar_user$en-us.tppi"
 END_TOPIC
 
-TOPIC("baz_sysinfo$en-us")
-#include "baz_sysinfo$en-us.tppi"
-END_TOPIC
-
-TOPIC("baz_sys_implem$en-us")
-#include "baz_sys_implem$en-us.tppi"
-END_TOPIC
-
-TOPIC("baz_sys_reference$en-us")
-#include "baz_sys_reference$en-us.tppi"
-END_TOPIC
-
 TOPIC("chss$en-us")
 #include "chss$en-us.tppi"
 END_TOPIC
