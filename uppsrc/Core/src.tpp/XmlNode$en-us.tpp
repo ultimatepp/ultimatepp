@@ -1,4 +1,4 @@
-topic "";
+topic "XmlNode";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -235,12 +235,12 @@ ser][@(0.0.255) `&]_[*@3 p], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[
 [s2;%% Creates XmlNode parsing XML document supplied either as string 
 or XmlParser. [%-*@3 style] can be a combination of&]
 [s2;%% &]
-[ {{3581:6419<288; [s2;l32;%% XML`_IGNORE`_DECLS]
-:: [s2;l64;%% Declaration elements are ignored.]
-:: [s2;l32;%% XML`_IGNORE`_PIS]
-:: [s2;l64;%% Processing info elements are ignored.]
-:: [s2;l32;%% XML`_IGNORE`_COMMENTS]
-:: [s2;l64;%% Comments are ignored.]}}&]
+[ {{3581:6419<288;^ [s2;l32;%% XML`_IGNORE`_DECLS]
+::= [s2;l64;%% Declaration elements are ignored.]
+::^ [s2;l32;%% XML`_IGNORE`_PIS]
+::= [s2;l64;%% Processing info elements are ignored.]
+::^ [s2;l32;%% XML`_IGNORE`_COMMENTS]
+::= [s2;l64;%% Comments are ignored.]}}&]
 [s3;%% &]
 [s4; &]
 [s5;:AsXML`(const XmlNode`&`,dword`): [_^String^ String]_[* AsXML]([@(0.0.255) const]_[_^XmlNode^ X
@@ -249,11 +249,12 @@ ML`_DOCTYPE)&]
 [s2;%% Creates a XML document from XmlNode [%-*@3 n]. [%-*@3 style] can 
 be a combination &]
 [s2;%% &]
-[ {{3581:6419<288; [s2;l32; XML`_HEADER]
-:: [s2;l64;%% Adds standard XML header at the beginning of the document.]
-:: [s2;l32; XML`_DOCTYPE]
-:: [s2;l64;%% Adds DOCTYPE declaration at the beginning of the document 
-with type taken as id of first XML`_TAG sub`-node.]}}&]
+[ {{3581:6419<288;^ [s2;l32; XML`_HEADER]
+::= [s2;l64;%% Adds standard XML header at the beginning of the document.]
+::^ [s2;l32; XML`_DOCTYPE]
+::= [s2;l64;%% Adds DOCTYPE declaration at the beginning of the document 
+with type taken as id of first XML`_TAG sub`-node (which represents 
+the root element).]}}&]
 [s2;%% &]
 [s3;%% &]
 [s0; ]
