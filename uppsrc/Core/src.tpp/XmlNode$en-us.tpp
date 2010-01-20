@@ -222,4 +222,38 @@ is destroyed in operation).&]
 [s0;%% &]
 [s5;:XmlNode`:`:XmlNode`(`): [* XmlNode]()&]
 [s2;%% Construct an empty XmlNode.&]
+[s0; &]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 XmlNode `- parser and output functions]]}}&]
+[s4;H0; &]
+[s5;:ParseXML`(XmlParser`&`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML]([_^XmlParser^ XmlPar
+ser][@(0.0.255) `&]_[*@3 p], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|
+]XML`_IGNORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
+[s5;:ParseXML`(const char`*`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML]([@(0.0.255) const]_
+[@(0.0.255) char]_`*[*@3 s], [_^dword^ dword]_[*@3 style]_`=_XML`_IGNORE`_DECLS[@(0.0.255) `|
+]XML`_IGNORE`_PIS[@(0.0.255) `|]XML`_IGNORE`_COMMENTS)&]
+[s2;%% Creates XmlNode parsing XML document supplied either as string 
+or XmlParser. [%-*@3 style] can be a combination of&]
+[s2;%% &]
+[ {{3581:6419<288; [s2;l32;%% XML`_IGNORE`_DECLS]
+:: [s2;l64;%% Declaration elements are ignored.]
+:: [s2;l32;%% XML`_IGNORE`_PIS]
+:: [s2;l64;%% Processing info elements are ignored.]
+:: [s2;l32;%% XML`_IGNORE`_COMMENTS]
+:: [s2;l64;%% Comments are ignored.]}}&]
+[s3;%% &]
+[s4; &]
+[s5;:AsXML`(const XmlNode`&`,dword`): [_^String^ String]_[* AsXML]([@(0.0.255) const]_[_^XmlNode^ X
+mlNode][@(0.0.255) `&]_[*@3 n], [_^dword^ dword]_[*@3 style]_`=_XML`_HEADER[@(0.0.255) `|]X
+ML`_DOCTYPE)&]
+[s2;%% Creates a XML document from XmlNode [%-*@3 n]. [%-*@3 style] can 
+be a combination &]
+[s2;%% &]
+[ {{3581:6419<288; [s2;l32; XML`_HEADER]
+:: [s2;l64;%% Adds standard XML header at the beginning of the document.]
+:: [s2;l32; XML`_DOCTYPE]
+:: [s2;l64;%% Adds DOCTYPE declaration at the beginning of the document 
+with type taken as id of first XML`_TAG sub`-node.]}}&]
+[s2;%% &]
+[s3;%% &]
 [s0; ]
