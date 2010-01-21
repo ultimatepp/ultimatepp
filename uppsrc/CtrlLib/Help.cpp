@@ -171,12 +171,62 @@ void HelpWindow::SortTree(int id, int (*cmp)(const Value& k1, const Value& v1,
 
 void HelpWindow::FinishTree()
 {
-	tree.FindSetCursor(topic);
+	if(!tree.FindSetCursor(topic))
+		CurrentOrHome();
 }
 
 void HelpWindow::OpenDeep(int id)
 {
 	tree.OpenDeep(id);
+}
+
+void HelpWindow::Ids(int pid, Vector<int>& r)
+{
+	int n = tree.GetChildCount(pid);
+	for(int i = 0; i < n; i++) {
+		int id = tree.GetChild(pid, i);
+		if(!IsNull(tree.GetValue(id))) {
+			r.Add(id);
+			Ids(id, r);
+		}
+	}
+}
+
+Vector<int> HelpWindow::Ids()
+{
+	Vector<int> r;
+	Ids(0, r);
+	return r;
+}
+
+bool HelpWindow::PrevNext(int d, bool allowempty)
+{
+	Vector<int> r = Ids();
+	int id = tree.GetCursor();
+	if(id < 0)
+		return false;
+	int ii = FindIndex(r, id);
+	if(ii < 0)
+		return false;
+	for(;;) {
+		ii += d;
+		if(ii >= r.GetCount() || ii < 0)
+			return false;
+		if(!IsNull(tree.Get(r[ii])) || allowempty) {
+			tree.SetCursor(r[ii]);
+			return true;
+		}
+	}
+}
+
+bool HelpWindow::Next(bool allowempty)
+{
+	return PrevNext(1, allowempty);
+}
+
+bool HelpWindow::Prev(bool allowempty)
+{
+	return PrevNext(-1, allowempty);
 }
 
 void HelpWindow::Serialize(Stream& s)
@@ -195,8 +245,8 @@ void HelpWindow::TreeCursor()
 
 void HelpWindow::CurrentOrHome()
 {
-	if(~tree != current_link) {
-		if(tree.FindSetCursor(current_link))
+	if(~tree != current_link || IsNull(current_link)) {
+		if(!IsNull(current_link) && tree.FindSetCursor(current_link))
 			return;
 		for(int i = 0; i < tree.GetLineCount(); i++) {
 			Value k = tree.Get(tree.GetItemAtLine(i));
@@ -204,6 +254,42 @@ void HelpWindow::CurrentOrHome()
 				break;
 		}
 	}
+}
+
+Vector<int> HelpWindow::ScPositions(const Vector<int>& p)
+{
+	Vector<int> r;
+	for(int i = 0; i < p.GetCount(); i++) {
+		int y = max(0, view.GetZoom() * view.Get().GetCaret(p[i], view.GetPage()).top - GetSize().cy / 2);
+		int ii = FindLowerBound(r, y);
+		if(ii == r.GetCount() || r[ii] != y)
+			r.Insert(ii, y);
+	}
+	return r;
+}
+
+bool HelpWindow::Up(const Vector<int>& poslist)
+{
+	int q = view.GetSb();
+	Vector<int> p = ScPositions(poslist);
+	for(int i = p.GetCount() - 1; i >= 0; i--)
+		if(p[i] < q) {
+			view.SetSb(p[i]);
+			return view.GetSb() != q;
+		}
+	return false;
+}
+
+bool HelpWindow::Down(const Vector<int>& poslist)
+{
+	int q = view.GetSb();
+	Vector<int> p = ScPositions(poslist);
+	for(int i = 0; i < p.GetCount(); i++)
+		if(p[i] > q) {
+			view.SetSb(p[i]);
+			return view.GetSb() != q;
+		}
+	return false;
 }
 
 HelpWindow::HelpWindow()

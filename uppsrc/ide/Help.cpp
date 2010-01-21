@@ -332,9 +332,11 @@ struct HighlightWords : RichText::Iterator {
 
 void TopicCtrl::FinishText(RichText& text)
 {
+	spos.Clear();
 	if(!showwords)
 		return;
 	Vector<String> ss = Split((String)~search, ' ');
+	
 	if(ss.GetCount() == 0)
 		return;
 	HighlightWords hw;
@@ -345,8 +347,10 @@ void TopicCtrl::FinishText(RichText& text)
 	fi.paravalid = 0;
 	fi.paper = SColorHighlight();
 	fi.ink = SColorHighlightText();
-	for(int i = 0; i < hw.pos.GetCount(); i++)
+	for(int i = 0; i < hw.pos.GetCount(); i++) {
 		text.ApplyFormatInfo(hw.pos[i].pos, fi, hw.pos[i].len);
+		spos.Add(hw.pos[i].pos);
+	}
 }
 
 void TopicCtrl::OpenTopic()
@@ -489,6 +493,18 @@ void TopicCtrl::FocusSearch()
 	search.SetFocus();
 }
 
+void TopicCtrl::Prev()
+{
+	if(!Up(spos))
+		HelpWindow::Prev();
+}
+
+void TopicCtrl::Next()
+{
+	if(!Down(spos))
+		HelpWindow::Next();
+}
+
 void  TopicCtrl::BarEx(Bar& bar)
 {
 	bar.Gap();
@@ -497,6 +513,9 @@ void  TopicCtrl::BarEx(Bar& bar)
 	   .Check(all);
 	bar.Gap(HorzLayoutZoom(30));
 	bar.Add(search, HorzLayoutZoom(300));
+	bar.Add(search.GetLength(), "Prev", IdeImg::GoPrev(), THISBACK(Prev));
+	bar.Add(search.GetLength(), "Next", IdeImg::GoNext(), THISBACK(Next));
+	
 	bar.AddKey(K_CTRL_F, THISBACK(FocusSearch));
 /*	bar.Add("Highlight search keywords in topic", IdeImg::ShowWords(), THISBACK(ShowWords))
 	   .Check(showwords);*/
