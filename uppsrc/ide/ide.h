@@ -179,7 +179,8 @@ private:
 	bool       showwords, all;
 	
 	VectorMap<String, VectorMap<String, Index<String> > > map;
-	Index<String>                                         lang_list;
+	Index<String> lang_list;
+	Vector<int>   spos;
 	
 	static  Index<String> idelink;
 
@@ -193,6 +194,8 @@ private:
 	                   Index<String>& lang_list);
 	void LoadMap();
 	void FocusSearch();
+	void Prev();
+	void Next();
 
 public:
 	Callback WhenTopic;

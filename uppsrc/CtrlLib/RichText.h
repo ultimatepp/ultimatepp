@@ -31,11 +31,9 @@ private:
 	void          EndSizeTracking();
 	void          SetSb();
 	void          Scroll();
-	Zoom          GetZoom() const;
 	int           GetPageCx(bool reduced = false) const;
 	int           GetPointPos(Point p) const;
 	String        GetLink(int pos, Point p) const;
-	Rect          GetPage() const;
 	void          RefreshSel();
 	void          RefreshRange(int a, int b);
 
@@ -61,6 +59,8 @@ public:
 	int             GetSb() const                             { return sb; }
 	void            SetSb(int i)                              { sb = i; }
 	int             GetSbTotal() const                        { return sb.GetTotal(); }
+	Zoom            GetZoom() const;
+	Rect            GetPage() const;
 
 	void            GotoLabel(const String& lbl, bool highlight = false);
 	void            ClearHighlight()                          { highlight = Null; Refresh(); }
@@ -177,6 +177,10 @@ private:
 	void SetZoom();
 	void Print();
 	Pos  GetPos();
+	Vector<int> ScPositions(const Vector<int>& p);
+	void Ids(int pid, Vector<int>& r);
+	Vector<int> Ids();
+	bool PrevNext(int d, bool allowempty);
 
 public:
 	virtual Topic AcquireTopic(const String& topic);
@@ -198,6 +202,10 @@ public:
 	void OpenDeep(int id = 0);
 	void CurrentOrHome();
 	void ClearCurrentLink()                       { current_link.Clear(); }
+	bool Up(const Vector<int>& poslist);
+	bool Down(const Vector<int>& poslist);
+	bool Next(bool allowempty = false);
+	bool Prev(bool allowempty = false);
 
 	String GetCurrent() const                     { return topic; }
 	String GetCurrentLabel() const                { return label; }
