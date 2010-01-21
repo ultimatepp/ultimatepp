@@ -69,7 +69,7 @@ public:
 	void            Attach(One<Data> d)                      { data = d; }
 	void            Clear()                                  { data.Clear(); }
 
-	bool            IsOpen() const                           { return !!data; }
+	bool            IsOpen() const                           { return data && data->IsOpen(); }
 
 	bool            IsEof() const                            { return !data || data->IsEof(); }
 	bool            IsError() const                          { return data->IsError(); }
