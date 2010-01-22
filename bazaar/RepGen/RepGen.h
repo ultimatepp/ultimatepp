@@ -1,4 +1,4 @@
-#ifndef _Reports3_RepGen_h_
+#ifndef _Reports3_RepGen_h_ 
 #define _Reports3_RepGen_h_
 
 #include <Report/Report.h>
@@ -20,7 +20,7 @@ private:
 public:
 	typedef RepGen CLASSNAME;
 	RepGen() {};
-	void Perform();
+	void SetTemplate(String tpl0) { tpl=Join(Split(tpl0,'\n'),""); };
 	
 	Callback RepGenReportStart;
 	Callback RepGenReportVar;
@@ -35,11 +35,11 @@ public:
 		else
 			PCRE_Replace(tplbr, s_from, s_to);
 	};
-	
-	void SetTemplate(String tpl0) { tpl=Join(Split(tpl0,'\n'),""); };
-	void LoopDone(bool indicator=true) { ENDCALCULATE = indicator; };
 	void PlaceImage          (String s_from, Image im_to, Size rep_place = Size(0,0));
 	
+	void LoopDone(bool indicator=true) { ENDCALCULATE = indicator; };
+
+	void Perform();
 };
 
 #endif

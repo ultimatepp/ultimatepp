@@ -8,7 +8,8 @@ uses
 file
 	RepGen.h,
 	RepGen.cpp,
-	src.tpp;
+	src.tpp,
+	srcdoc.tpp;
 
 mainconfig
 	"" = "GUI";
