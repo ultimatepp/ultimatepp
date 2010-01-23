@@ -23,6 +23,7 @@ String reference;
 String examples;
 String targetdir;
 String diffdir;
+String pdfdir;
 #endif
 String bazaar;
 bool ftpupload;
