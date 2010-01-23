@@ -661,8 +661,22 @@ Ctrl *Ctrl::GetActiveCtrl()
 	return focusCtrl ? focusCtrl->GetTopCtrl() : NULL;
 }
 
-bool  Ctrl::IsAlphaSupported() { return false; }
-void  Ctrl::SetAlpha(byte alpha) {}
+bool  Ctrl::IsAlphaSupported()
+{
+	return IsCompositedGui();
+}
+
+void  Ctrl::SetAlpha(byte alpha)
+{
+	GuiLock __;
+	Window hwnd = GetWindow();
+	if (!IsAlphaSupported() || parent || !top || !hwnd)
+		return;
+	unsigned int opacity = (unsigned int) 16843009 * alpha;
+	Atom aw_opacity = XInternAtom(Xdisplay, "_NET_WM_WINDOW_OPACITY", XFalse);
+	XChangeProperty(Xdisplay, hwnd, aw_opacity, XA_CARDINAL, 32, PropModeReplace,
+					(unsigned char *) &opacity, 1);
+}
 
 bool Ctrl::IsCompositedGui()
 {
