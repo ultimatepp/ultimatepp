@@ -72,6 +72,8 @@ release is done!.]&]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 3. PACKAGE WEB PUBLICATION]]}}&]
 [s0;2 &]
+[s0; [*2 3.1 Introduction]&]
+[s0;2 &]
 [s0; [2 You are proud with your new package, you have informed all 
 in Forum/Bazaar and you have uploaded it to svn so that anybody 
 can make use of it.]&]
@@ -79,11 +81,44 @@ can make use of it.]&]
 [s0; [2 Now it is time to have your own page showing everybody what 
 is your package for, technology used, examples and reference.]&]
 [s0;2 &]
-[s0; [2 It is very simple. Just send a post (private or public) to 
-][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 Bazaa
-r page maintainer][2  including this information:]&]
+[s0; [2 It is very simple. Just follow the next instructions.]&]
 [s0;2 &]
-[s0;i150;O0; [2 Package name]&]
+[s0;2 &]
+[s0; [*2 3.2 Upp web editing]&]
+[s0;2 &]
+[s0;i150;O0; [2 First get the latest svn source. It is important as 
+you are going to edit the web page.]&]
+[s0;2 &]
+[s0;i150;O0; [2 Open uppbox/uppweb package, choose www.tpp and bazaar`$en`-us 
+document.]&]
+[s0;2 &]
+[s0;i150;O0; [2 There simply edit `"Maintained Packages List`" adding 
+or editing your project data.]&]
+[s0;2 &]
+[s0;i150;O0; [2 Update the `"Last Edit`" date at the end of the page.]&]
+[s0;2 &]
+[s0;i150;O0;%- [%%2 Finally upload changes to Upp by choosing ][2 Project/SVN/Synchronize
+ ...upp/uppbox/uppweb]&]
+[s0;2 &]
+[s0;2 &]
+[s0; [2 Do it carefully and fast. As this is an index page somebody 
+else could be editing it at the same time and some of the changes 
+could be lost.]&]
+[s0;2 &]
+[s0; [2 After that the day after you will see the web page updated. 
+The secret of this is that Upp hosting system will compile and 
+run uppweb package converting this index package and your T`+`+ 
+help system into .html web pages.]&]
+[s0;2 &]
+[s0;2 &]
+[s0; [*2 3.3 Bazaar project basic data]&]
+[s0;2 &]
+[s0; [2 The data to fill in `"Maintained Packages List`" is:]&]
+[s0;2 &]
+[s0;i150;O0; [2 Package name: As you like, but try not to include empty 
+spaces. Include as hyperlink your package T`+`+ Help main page. 
+This will be the first page to be linked from ][^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 B
+azaar introduction page]&]
 [s0;i150;O0; [2 Basic Description]&]
 [s0;i150;O0; [2 Authors]&]
 [s0;i150;O0; [2 Status]&]
@@ -92,23 +127,22 @@ r page maintainer][2  including this information:]&]
 [s0;l160;i150;O0; [2 Beta]&]
 [s0;l160;i150;O0; [2 Production]&]
 [s0;l160;i150;O0; [2 Not Maintained]&]
-[s0;i150;O0; [2 External Dependencies: Libraries required that are external 
-to Upp and Bazaar]&]
+[s0;i150;O0; [2 External Dependencies: Libraries or programs required 
+that are external to Upp and Bazaar]&]
 [s0;i150;O0; [2 Supported OS]&]
-[s0;i150;O0; [2 Image: A bitmap to put in ][^topic`:`/`/uppweb`/www`/bazaar`_`$en`-us^2 Ba
-zaar introduction page]&]
-[s0;i150;O0; [2 T`+`+ Help main page: This will be the first page to 
-be linked from ][^topic`:`/`/uppweb`/www`/bazaar`_`$en`-us^2 Bazaar 
-introduction page]&]
+[s0;i150;O0; [2 Image: A bitmap to put in.]&]
 [s0;2 &]
 [s0; [2 It is important to have a clear introduction page with links 
-to the documentation and that will be linked from ][^topic`:`/`/uppweb`/www`/bazaar`_`$en`-us^2 B
-azaar introduction page.]&]
+to the documentation and that will be linked from your `"Package 
+Name`" hyperlink.]&]
 [s0;2 &]
-[s0; [2 In few days (usually two), the ][^topic`:`/`/uppweb`/www`/bazaar`_`$en`-us^2 Baza
-ar introduction page][2  will be updated so your T`+`+ help will 
-be available for the web. Upp hosting system will convert your 
-T`+`+ help system into .html web pages.]&]
+[s0;2 &]
+[s0; [*2 3.4 If nothing works]&]
+[s0;2 &]
+[s0; [2 If nothing works or you do not feel comfortable in doing this 
+you can send a post to Bazaar Forum asking for help or just send 
+][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 me][2  
+a post. I will do it for you..]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 4. DOCUMENTATION AND EXAMPLES]]}}&]
@@ -117,8 +151,9 @@ T`+`+ help system into .html web pages.]&]
 crystal clear so with a quick read of .h and .c/.cpp files any 
 user will know how to use our precious libraries.]&]
 [s0;2 &]
-[s0; [2 However real world programmers will require a certain effort 
-to prepare simple and clear examples and documentation.]&]
+[s0; [2 However real world programmers that are potential users of 
+our libraries will require a certain effort to prepare simple 
+and clear examples and documentation.]&]
 [s0;2 &]
 [s0; [2 This is worthwhile. The examples let the user to fast test 
 your code and understand basic use. In the other side a classes 
@@ -140,18 +175,22 @@ The Cathedral and the Bazaar`"][2  book:]&]
 [s0;l288; [/$7;2 `"Release early. Release often. And listen to your 
 customers`"]&]
 [s0;2 &]
+[s0;2 &]
+[s0;# [2 And remember that if your package does not have an update 
+in one year it will be considered as `"Not Maintained`".]&]
+[s0;#2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 6. PACKAGE LICENSE]]}}&]
 [s0;2 &]
 [s0; [2 All packages, documents and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 B
 SD license][2 .]&]
 [s0;2 &]
-[s0; [2 All software, documents or other media submitted to svn package 
+[s0;# [2 All software, documents or other media submitted to svn package 
 should have to follow the same or a similar license.]&]
-[s0;2 &]
-[s0; [2 Do not forget to follow license requirements. Open Source and 
-Creative Commons licenses are very easy to fulfill, but you will 
-have to do it.]&]
+[s0;#2 &]
+[s0;# [2 Do not forget to follow license requirements. Open Source 
+and Creative Commons licenses are very easy to fulfill, but you 
+will have to do it.]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 7. DO NOT FORGET]]}}&]
@@ -169,6 +208,6 @@ you or to get your relay run baton.]&]
 [s0; [2 And the community will acknowledge it.]&]
 [s0; &]
 [s0;%- &]
-[ {{8837:1163@(190.255.220) [s0;~~~3584; [2 Last edit: 2010`-01`-16]]
+[ {{8837:1163@(190.255.220) [s0;~~~3584; [2 Last edit: 2010`-01`-24]]
 :: [s0;=~~~3584;%- [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^@(170.127.200)2 Bazaar 
 >>]]}}]
