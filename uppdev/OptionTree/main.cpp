@@ -1,41 +1,49 @@
-#include <CtrlLib/CtrlLib.h>
+#include "CtrlLib/CtrlLib.h"
 
-class AWindow : public TopWindow
-{
-public:
-	typedef AWindow CLASSNAME;
-	Option _optA, _optAA, _optAAA, _optAAB, _optAAC;
-	OptionTree _tree;
-	Button _btn;
+using namespace Upp;
 
-	AWindow()
-	{
-		_tree.SetRoot(_optA, "Root");
-		_tree.Add(0, _optAA, "Node");
-		_tree.Add(1, _optAAA, "Leaf 1");
-		_tree.Add(1, _optAAB, "Leaf 2");
-		_tree.Add(1, _optAAC, "Leaf 3");
+struct App : TopWindow {
+    OptionTree   tree;
 
+    typedef App CLASSNAME;
 
-		_tree.LeftPosZ(0, 140).TopPosZ(0, 164);
-		_btn.LeftPosZ(0, 140).TopPosZ(164, 20);
-		_btn <<= THISBACK(ButtonPush);
+    void OpenDir(int id) {
+        String path = tree.GetLabel(id);
 
-		Add(_tree);
-		Add(_btn);
+        for(FindFile ff(AppendFileName(path, "*.*")); ff; ff.Next()) {
+            String n = ff.GetName();
 
-		_tree.Set(3, 1); // Set through the TreeCtrl::Set - no call to SetOption
-	}
+            if(n != "." && n != ".." && ff.IsFolder()) {
+                int childId = tree.Add(id, AppendFileName(path, n));
+                tree.SetNode(childId, tree.GetNode(childId).CanOpen(true));
+            }
+        }
+    }
 
-	void ButtonPush()
-	{
-		_tree.Set(3, 1); // Set through the TreeCtrl::Set - no call to SetOption
-	}
+    void CloseDir(int id) {
+        tree.RemoveChildren(id);
+    }
+
+    App() {
+        Add(tree.SizePos());
+
+        tree.WhenOpen = THISBACK(OpenDir);
+        tree.WhenClose = THISBACK(CloseDir);
+
+    #ifdef PLATFORM_WIN32
+        String dir = String(GetExeFilePath()[0], 1) + ":\\";
+    #else
+        String dir = "/usr";
+    #endif
+
+        tree.SetRoot(dir);
+        tree.Set(0, dir);
+
+        Sizeable();
+    }
 };
 
 GUI_APP_MAIN
 {
-	AWindow w;
-
-	w.Run();
+    App().Run();
 }
