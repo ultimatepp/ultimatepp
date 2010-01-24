@@ -8,6 +8,23 @@ struct Vector_ {
 	int   alloc;
 };
 
+#ifdef _DEBUG
+
+void *break_when_picked;
+
+void BreakWhenPicked(void *ptr)
+{
+	if(ptr == break_when_picked)
+		__BREAK__;
+}
+
+void BREAK_WHEN_PICKED__(void *ptr)
+{
+	break_when_picked = ptr;
+}
+
+#endif
+
 void VectorReAlloc_(void *v_, int newalloc, int sizeofT)
 {
 	Vector_ *v = (Vector_*)v_;

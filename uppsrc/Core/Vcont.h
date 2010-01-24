@@ -1,3 +1,14 @@
+#ifdef _DEBUG
+void BreakWhenPicked(void *ptr);
+void BREAK_WHEN_PICKED__(void *ptr);
+
+template <class T>
+void BREAK_WHEN_PICKED(T& x)
+{
+	BREAK_WHEN_PICKED__(&x);
+}
+#endif
+
 template <class T>
 class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	T       *vector;
@@ -6,7 +17,12 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 
 	static void    RawFree(T *ptr)            { if(ptr) MemoryFree(ptr); }
 	static T      *RawAlloc(int& n);
+
+#ifdef _DEBUG
+	static Vector& SetPicked(pick_ Vector& v) { BreakWhenPicked(&v); Vector& p = (Vector&)(v); p.items = -1; p.vector = NULL; return p; }
+#else
 	static Vector& SetPicked(pick_ Vector& v) { Vector& p = (Vector&)(v); p.items = -1; p.vector = NULL; return p; }
+#endif
 
 	void     Pick(pick_ Vector<T>& v);
 

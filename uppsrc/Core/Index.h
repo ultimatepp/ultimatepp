@@ -164,6 +164,7 @@ public:
 
 	V        PickKeys() pick_                 { return key; }
 	const V& GetKeys() const                  { return key; }
+	bool     IsPicked(void) const             { return key.IsPicked(); }
 
 // Pick assignment & copy. Picked source can only Clear(), ~AIndex(), operator=, operator<<=
 
