@@ -10,10 +10,6 @@ TOPIC("bazaar$en-us")
 #include "bazaar$en-us.tppi"
 END_TOPIC
 
-TOPIC("bazaar_$en-us")
-#include "bazaar_$en-us.tppi"
-END_TOPIC
-
 TOPIC("bazaar_submission$en-us")
 #include "bazaar_submission$en-us.tppi"
 END_TOPIC
