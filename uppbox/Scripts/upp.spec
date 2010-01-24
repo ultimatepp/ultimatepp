@@ -18,7 +18,7 @@ URL:            http://www.ultimatepp.org
 Source0:        %{name}-x11-src-%{version}.tar.gz
 
 # Common Buildrequires
-Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel
+Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-dev
 
 # Mandriva specific Buildrequires
 %if "%?mdvver" != ""
@@ -36,7 +36,7 @@ Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel
 %endif
 
 # -----
-Requires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel
+Requires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-dev
 Requires:       valgrind
 
 # Mandriva specific Requires
