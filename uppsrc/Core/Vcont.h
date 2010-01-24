@@ -19,7 +19,7 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	static T      *RawAlloc(int& n);
 
 #ifdef _DEBUG
-	static Vector& SetPicked(pick_ Vector& v) { BreakWhenPicked(&v); Vector& p = (Vector&)(v); p.items = -1; p.vector = NULL; return p; }
+	static Vector& SetPicked(pick_ Vector& v) { BreakWhenPicked((void *)&v); Vector& p = (Vector&)(v); p.items = -1; p.vector = NULL; return p; }
 #else
 	static Vector& SetPicked(pick_ Vector& v) { Vector& p = (Vector&)(v); p.items = -1; p.vector = NULL; return p; }
 #endif

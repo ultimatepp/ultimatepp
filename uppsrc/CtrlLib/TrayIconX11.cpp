@@ -7,7 +7,9 @@ NAMESPACE_UPP
 #ifdef PLATFORM_X11
 
 #if !defined(flagNOGTK)
-	#include <glib.h>
+	#include <limits.h>
+	#include <gtk/gtk.h>
+	#include <gdk/gdkx.h>
 	#include <libnotify/notify.h>
 #endif
 
