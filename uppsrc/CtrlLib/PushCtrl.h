@@ -179,8 +179,8 @@ protected:
 	bool   showlabel;
 
 public:
-	void   Set(int b);
-	int    Get() const                            { return option; }
+	Option& Set(int b);
+	int     Get() const                           { return option; }
 
 	operator int() const                          { return option; }
 	void operator=(int b)                         { Set(b); }
