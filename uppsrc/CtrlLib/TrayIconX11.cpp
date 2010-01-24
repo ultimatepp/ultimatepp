@@ -7,9 +7,7 @@ NAMESPACE_UPP
 #ifdef PLATFORM_X11
 
 #if !defined(flagNOGTK)
-	#include <limits.h>
-	#include <gtk/gtk.h>
-	#include <gdk/gdkx.h>
+	#include <glib.h>
 	#include <libnotify/notify.h>
 #endif
 
@@ -73,7 +71,7 @@ void TrayIcon::AddToTray()
 	XFree(size_hints);
 }
 
-void TrayIcon::Message(const char *title, const char *text, int timeout)
+void TrayIcon::Message(int type, const char *title, const char *text, int timeout)
 {
 	if(!traywin)
 		return;
@@ -98,30 +96,18 @@ void TrayIcon::Message(const char *title, const char *text, int timeout)
 	}
 	UntrapX11Errors(x11trap);
 #else	
-	Size size = this->icon.GetSize();
-	GdkPixmap *pixmap = NULL;
-	GdkPixbuf *nicon = NULL;
-	GError* error = NULL;
+	if (!notify_init (title))
+		return;
 	NotifyNotification* notification;
-	ImageDraw iw(size);
-	iw.DrawRect(0, 0, size.cx, size.cy, Color(255, 0, 255)); // fuchsia color used for transparency
-	iw.DrawImage(0, 0, this->icon);
-	pixmap = gdk_pixmap_foreign_new(iw.GetDrawable());
-	if (!pixmap)
-		return;
-
-	nicon = gdk_pixbuf_get_from_drawable(NULL, pixmap, gdk_colormap_get_system(), 0, 0, 0, 0, icon.GetSize().cx, icon.GetSize().cy);
-	nicon = gdk_pixbuf_add_alpha(nicon, TRUE, 255, 0, 255);
-	if (!notify_init (GetAppName().Begin()))
-		return;
-	
-	notification = notify_notification_new (title, text, NULL , NULL);
-	if (nicon)
-		notify_notification_set_icon_from_pixbuf (notification, nicon);
+	GError* error = NULL;
+	 
+	notification = notify_notification_new (title, text
+					, type == 1 ? "gtk-dialog-info"
+					: type == 2 ? "gtk-dialog-warning"
+					: "gtk-dialog-error", NULL);
+	notify_notification_set_timeout(notification, timeout * 1000);
 	notify_notification_show (notification, &error);
 	notify_uninit ();
-	g_object_unref(pixmap);
-	g_object_unref(nicon);
 #endif
 }
 
