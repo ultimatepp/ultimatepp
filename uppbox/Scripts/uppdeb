@@ -380,7 +380,7 @@ Priority: optional
 EOF
 echo "Architecture: $architecture" >> $tmp/DEBIAN/control
 cat >> $tmp/DEBIAN/control << EOF
-Depends: g++, libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libexpat1-dev (>= 1.95.8), libgtk2.0-dev (>= 2.8.17)
+Depends: g++, libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libexpat1-dev (>= 1.95.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
 EOF
 echo "Installed-Size: $size" >> $tmp/DEBIAN/control 
 echo "Maintainer: $MAINTAINER <$EMAIL>" >> $tmp/DEBIAN/control 
