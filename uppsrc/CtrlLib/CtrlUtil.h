@@ -96,7 +96,7 @@ private:
 	Image  icon;
 	void DoMenu(Bar& bar);
 	void Call(int code, unsigned long d1, unsigned long d2, unsigned long d3);
-	void Message(const char *title, const char *text, int timeout);
+	void Message(int type, const char *title, const char *text, int timeout);
 
 public:
 	virtual void    LeftDown();
@@ -124,9 +124,9 @@ public:
 	void            Hide()                                 { Show(false); }
 	bool            IsVisible() const                      { return true; }
 
-	void            Info(const char *title, const char *text, int timeout = 10)    { Message(title, text, timeout); }
-	void            Warning(const char *title, const char *text, int timeout = 10) { Message(title, text, timeout); }
-	void            Error(const char *title, const char *text, int timeout = 10)   { Message(title, text, timeout); }
+	void            Info(const char *title, const char *text, int timeout = 10)    { Message(1, title, text, timeout); }
+	void            Warning(const char *title, const char *text, int timeout = 10) { Message(2, title, text, timeout); }
+	void            Error(const char *title, const char *text, int timeout = 10)   { Message(3, title, text, timeout); }
 
 	TrayIcon&  Icon(const Image &img)                      { icon = img; Refresh(); return *this; }
 	TrayIcon&  Tip(const char *text)                       { Ctrl::Tip(text); return *this; }
