@@ -596,12 +596,14 @@ void  Option::PerformAction() {
 	RefreshPush();
 }
 
-void  Option::Set(int b) {
+Option& Option::Set(int b)
+{
 	if(b != option) {
 		option = b;
 		Update();
 		RefreshPush();
 	}
+	return *this;
 }
 
 Option::Option() {

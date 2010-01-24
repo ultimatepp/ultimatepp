@@ -1612,14 +1612,21 @@ int OptionTree::Insert(int parentid, int i, const Image& img, Option& opt, const
 	return id;
 }
 
-int OptionTree::Add(int parentid, const Image& img, const char *text)
-{
-	return Insert(parentid, GetChildCount(parentid), img, text);
-}
 
 int OptionTree::Insert(int parentid, int i, const Image& img, const char *text)
 {
-	return Insert(parentid, i, img, aux.Add().NoNotNull(), text);
+	return Insert(parentid, i, img, aux.Add().NoNotNull().Set(Get(parentid)), text);
+}
+
+int OptionTree::Insert(int parentid, int i, const char *text)
+{
+	return Insert(parentid, i, aux.Add().NoNotNull().Set(Get(parentid)), text);
+}
+
+
+int OptionTree::Add(int parentid, const Image& img, const char *text)
+{
+	return Insert(parentid, GetChildCount(parentid), img, text);
 }
 
 int OptionTree::Add(int parentid, Option& opt, const char *text)
@@ -1635,11 +1642,6 @@ int OptionTree::Insert(int parentid, int i, Option& opt, const char *text)
 int OptionTree::Add(int parentid, const char *text)
 {
 	return Insert(parentid, GetChildCount(parentid), text);
-}
-
-int OptionTree::Insert(int parentid, int i, const char *text)
-{
-	return Insert(parentid, i, aux.Add().NoNotNull(), text);
 }
 
 void OptionTree::SetLabel(int id, const char *text)
