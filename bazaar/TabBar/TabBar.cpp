@@ -523,7 +523,7 @@ void TabBar::DoCloseGroup(int n)
 			// we didn't cancel globally, now we check CancelClose()
 			// for each tab -- group gets removed ONLY if ALL of
 			// group tabs are closed
-			for(int i = 0; i < tabs.GetCount(); i++) {
+			for(int i = tabs.GetCount() - 1; i >= 0; i--) {
 				if(groupName == tabs[i].group && tabs.GetCount() > 1) {
 					Value v = tabs[i].key;
 					if(!CancelClose(v))
