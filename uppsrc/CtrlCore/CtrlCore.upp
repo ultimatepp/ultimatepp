@@ -27,6 +27,8 @@ library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
 
 library(FREEBSD) xcb;
 
+library(POSIX !NOGTK) notify;
+
 file
 	SystemDraw readonly separator,
 	DrawWin32.h,

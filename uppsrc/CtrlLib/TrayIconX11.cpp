@@ -5,6 +5,12 @@
 NAMESPACE_UPP
 
 #ifdef PLATFORM_X11
+
+#if !defined(flagNOGTK)
+	#include <glib.h>
+	#include <libnotify/notify.h>
+#endif
+
 Atom TraySelection()
 {
 	return XAtom(Format("_NET_SYSTEM_TRAY_S%d", Xscreenno));
@@ -69,6 +75,7 @@ void TrayIcon::Message(const char *title, const char *text, int timeout)
 {
 	if(!traywin)
 		return;
+#if defined(flagNOGTK)
 	int len = strlen(text);
 	static int stamp;
 	Call(1, 1000 * timeout, len, ++stamp);
@@ -88,6 +95,32 @@ void TrayIcon::Message(const char *title, const char *text, int timeout)
 		XSync(Xdisplay, XFalse);
 	}
 	UntrapX11Errors(x11trap);
+#else	
+	Size size = this->icon.GetSize();
+	GdkPixmap *pixmap = NULL;
+	GdkPixbuf *nicon = NULL;
+	GError* error = NULL;
+	NotifyNotification* notification;
+	ImageDraw iw(size);
+	iw.DrawRect(0, 0, size.cx, size.cy, Color(255, 0, 255)); // fuchsia color used for transparency
+	iw.DrawImage(0, 0, this->icon);
+	pixmap = gdk_pixmap_foreign_new(iw.GetDrawable());
+	if (!pixmap)
+		return;
+
+	nicon = gdk_pixbuf_get_from_drawable(NULL, pixmap, gdk_colormap_get_system(), 0, 0, 0, 0, icon.GetSize().cx, icon.GetSize().cy);
+	nicon = gdk_pixbuf_add_alpha(nicon, TRUE, 255, 0, 255);
+	if (!notify_init (GetAppName().Begin()))
+		return;
+	
+	notification = notify_notification_new (title, text, NULL , NULL);
+	if (nicon)
+		notify_notification_set_icon_from_pixbuf (notification, nicon);
+	notify_notification_show (notification, &error);
+	notify_uninit ();
+	g_object_unref(pixmap);
+	g_object_unref(nicon);
+#endif
 }
 
 bool TrayIcon::HookProc(XEvent *event)
