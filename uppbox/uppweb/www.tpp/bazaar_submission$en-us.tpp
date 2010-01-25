@@ -53,8 +53,8 @@ y`_Cool`_Package`". ]&]
 should take care to not modify others packages (you may have 
 write access to them too).]&]
 [s0;2 &]
-[s0; [2 When you commit the changes do not forget to enter a comment 
-following this format:]&]
+[s0; [2 When you commit (upload to svn server) the changes do not forget 
+to enter a comment following this format:]&]
 [s0;2 &]
 [s0;l256;%- [%%C$7;2 `"][C$7;2 My`_Cool`_Package: First release`"]&]
 [s0;2%- &]
@@ -68,6 +68,9 @@ bug Z`"]&]
 ttp://code.google.com/p/upp`-mirror/source/list][2  you will see 
 your new release into Bazaar so, congratulations, your first 
 release is done!.]&]
+[s0;2 &]
+[s0; [2 And do not put many features at once. It is better to separate 
+separate them if they do different things ]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 3. PACKAGE WEB PUBLICATION]]}}&]
@@ -132,12 +135,30 @@ that are external to Upp and Bazaar]&]
 [s0;i150;O0; [2 Supported OS]&]
 [s0;i150;O0; [2 Image: A bitmap to put in.]&]
 [s0;2 &]
-[s0; [2 It is important to have a clear introduction page with links 
-to the documentation and that will be linked from your `"Package 
-Name`" hyperlink.]&]
+[s0;2 &]
+[s0; [*2 3.4 Your web page]&]
+[s0;2 &]
+[s0; [2 Now you have the opportunity to show everybody what your package 
+does. It is easy.]&]
+[s0;2 &]
+[s0; [2 Prepare in T`+`+ your help as usual: Reference, examples, implementation, 
+summary. ]&]
+[s0;2 &]
+[s0; [2 Be careful that all the pages are linked between them and from 
+T`+`+ Help main page. If a page is left alone it will not appear 
+in web.]&]
+[s0;2 &]
+[s0; [2 A good main page could be the Summary page. You will have to 
+care that this page is linked from ][^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Baza
+ar introduction page][2  in your Package name hyperlink.]&]
+[s0;2 &]
+[s0; [2 After that the day after you will see the web page updated. 
+The secret of this is that Upp hosting system will compile and 
+run uppweb package converting this index package and your T`+`+ 
+help system into .html web pages.]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*2 3.4 If nothing works]&]
+[s0; [*2 3.5 If nothing works]&]
 [s0;2 &]
 [s0; [2 If nothing works or you do not feel comfortable in doing this 
 you can send a post to Bazaar Forum asking for help or just send 
