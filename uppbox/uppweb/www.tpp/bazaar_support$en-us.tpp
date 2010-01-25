@@ -12,7 +12,7 @@ bugs or you need new features, just follow these instructions.]&]
 [s0; [2 Perhaps anybody has been in your situation before. Because 
 of it the first thing to do is review the Forum.]&]
 [s0;2 &]
-[s0; [2 So use your favourite browser or the `"Search on this site`" 
+[s0; [2 So use your favorite browser or the `"Search on this site`" 
 field in Upp web page to look for posts that could solve your 
 problem or answer your question.]&]
 [s0;2 &]
@@ -55,11 +55,16 @@ problem or answer your question.]&]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 2. BUGS REPORT]]}}&]
 [s0;2 &]
-[s0; [2 To submit bug reports just post the problem to Forum/Bazaar. 
-][*2 It is strongly advised to include simple sample code of the 
+[s0; [2 To submit bug reports just post the problem to Forum/Bazaar.]&]
+[s0;*2 &]
+[s0; [*2 It is strongly advised to include simple sample code of the 
 bug][2  so it will be easily reproduced by the package author. 
 This advice can be the difference between a fast solved problem 
 or one forgotten.]&]
+[s0;2 &]
+[s0; [2 Remove from your posts any archive or file that have a new 
+replacement in your new post: you will avoid misunderstandings 
+and help keeping storage space usage low.]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 3. PACKAGE HELP]]}}&]
@@ -72,8 +77,10 @@ describe what yo want to get.]&]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 4. FEATURE REQUESTS]]}}&]
 [s0;2 &]
-[s0; [2 And why do not this package could do this or that ?. Package 
-authors are always very busy but they are open to hear you.]&]
+[s0; [2 And why do not this package could do this or that ?]&]
+[s0;2 &]
+[s0; [2 Package authors are always very busy but they are open to hear 
+you.]&]
 [s0;2 &]
 [s0; [2 So do not be shy and convince the authors that this new feature 
 is important for you and the community. Perhaps you could be 
@@ -94,8 +101,16 @@ changes in original package files.]&]
 [s0; [2 To get this `"patch`" file you can use TheIDE feature in menu 
 `"Project/Compare with file`" and `"Project/Patch`-Diff`".]&]
 [s0;2 &]
+[s0; [2 If the code to submit is bigger or you feel more comfortable 
+you can pack the files in a .zip file.]&]
+[s0;2 &]
+[s0; [2 When you post a patch (no matter the file format) please make 
+sure you have your real name in the personal information. It 
+would save the package author one personal message as we want 
+to have all contributors listed in Authors `& License.]&]
+[s0;2 &]
 [s0;%- &]
-[ {{8829:1171@(190.255.220) [s0;~~~3584; [2 Last edit: 2010`-01`-16]]
+[ {{8829:1171@(190.255.220) [s0;~~~3584; [2 Last edit: 2010`-01`-25]]
 :: [s0;=~~~3584;%- [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^@(170.127.200)2 Bazaar 
 >>]]}}&]
 [s0; ]
