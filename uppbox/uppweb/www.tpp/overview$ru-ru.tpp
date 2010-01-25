@@ -1,34 +1,21 @@
-topic "overview";
+topic "Обзор";
 [ $$0,0#00000000000000000000000000000000:Default]
-[l288;i704;a17;O9;~~~.992; $$1,0#10431211400427159095818037425705:param]
-[a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;* $$3,5#07864147445237544204411237157677:title]
-[b167;a42;C $$4,6#40027414424643823182269349404212:item]
-[b42;a42; $$5,5#45413000475342174754091244180557:text]
-[l288;a17; $$6,6#27521748481378242620020725143825:desc]
-[l321;t246;C@5;1 $$7,7#20902679421464641399138805415013:code]
-[b2503; $$8,0#65142375456100023862071332075487:separator]
-[*@(0.0.255) $$9,0#83433469410354161042741608181528:base]
-[t4167;C+117 $$10,0#37138531426314131251341829483380:class]
-[l288;a17;*1 $$11,11#70004532496200323422659154056402:requirement]
-[i416;b42;a42;O9;~~~.416; $$12,12#10566046415157235020018451313112:tparam]
-[b167;C $$13,13#92430459443460461911108080531343:item1]
-[a42;C $$14,14#77422149456609303542238260500223:item2]
-[*@2$(0.128.128) $$15,15#34511555403152284025741354420178:NewsDate]
-[l321;*C$7 $$16,16#03451589433145915344929335295360:result]
-[l321;b83;a83;*C$7 $$17,17#07531550463529505371228428965313:result`-line]
-[l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
-[b117;*+117 $$19,20#27457433418004101424360058862402:Caption]
-[b50;2 $$20,20#03324558446220344731010354752573:Par]
-[i128;*C@(28.42.150)2 $$21,21#90519220486603166734501227306500:code]
+[b117;*+117 $$1,2#27457433418004101424360058862402:Caption]
+[b50;2 $$2,2#03324558446220344731010354752573:Par]
+[i128;*C@(28.42.150)2 $$3,3#90519220486603166734501227306500:code]
 [{_}%EN-US 
-[s0; [*R6 Overview]&]
-[s19; Whetting your appetite&]
-[s20; Ultimate`+`+ promises radical reduction of code complexity of 
-typical desktop applications. Let us start with a_simple example 
-`- an application that displays the number of days between two 
-dates. The number of days is refreshed as user types or edits 
-dates into the input fields:&]
+[s0; [*R6 Обзор ]&]
+[s0; [*R2 (сорри за неполный перевод `- тестирование 
+сайта)]&]
+[s1; Разогреем Ваш аппетит&]
+[s2; Ultimate`+`+ обещает  радикальное сокращение 
+сложности кода типовых декстоп`-приложений. 
+Начнем с простого примера `- приложения, 
+которое отображает количество дней 
+между двумя датами. Количество дней 
+обновляется по мере того, как рользователь 
+вводит или исправляет даты в полях 
+ввода:&]
 [s0; &]
 [s0;= 
 @@image:2037&600
@@ -101,8 +88,9 @@ dates into the input fields:&]
 ۩񲑻��Ӫ������������Ֆ���������ެ���ԇ���ɯ���㏓������Ő��������
 &]
 [s0; &]
-[s0; [2 The application window layout is created using Ultimate`+`+ 
-visual designer:]&]
+[s0; [2 Дизайн (Layout) `- (][*2 англ. ][2 `- размещение) 
+окна приложения, созданное с помощью 
+Ultimate`+`+ Visual Designer:]&]
 [s0; &]
 [s0;= 
 @@image:2968&1537
@@ -481,11 +469,12 @@ visual designer:]&]
 ������녚��޼��ې��ۡ��������������ϖ
 &]
 [s0;= &]
-[s0; [2 The actual code for the application is as complex as this:]&]
+[s0; [2 Оцените насколько сложен ][*2 Актуальный 
+код][2  для этого приложения:]&]
 [s0; &]
 [s0;i128; [*C@(28.42.150)2 #include <CtrlLib/CtrlLib.h>]&]
 [s0;i128;*C@(28.42.150)2 &]
-[s21; #define LAYOUTFILE <Days/Days.lay>&]
+[s3; #define LAYOUTFILE <Days/Days.lay>&]
 [s0;i128; [*C@(28.42.150)2 #include <CtrlCore/lay.h>]&]
 [s0;i128;*C@(28.42.150)2 &]
 [s0;i128; [*C@(28.42.150)2 class Days : public WithDaysLayout<TopWindow> 
@@ -519,51 +508,79 @@ Date(`~date2)), `~date1, `~date2);]&]
 [s0;i128; [*C@(28.42.150)2 -|Days().Run();]&]
 [s0;i128; [*C@(28.42.150)2 `}]&]
 [s0;i128;*C@(28.42.150) &]
-[s19; Everything belongs somewhere&]
-[s20; In Ultimate`+`+, most objects are bound to some logical scope. 
-As a result, you will not see many [*/ new ]operators in code using 
-Ultimate`+`+ and almost no [*/ delete ]operators outside the implementation 
-of containers.&]
-[s20; That of course does not mean you are not allowed to use pointers, 
-but it is good practice to use pointers just to point to things, 
-never to manage heap resources. This also avoids all confusion 
-regarding ownership of the underlying object, time of its deletion 
-etc. If you need to manage data sets of variable size or polymorphic 
-type, you should prefer using one of Ultimate`+`+ containers.&]
-[s20; Speaking about it, there are no shared smart pointers (like 
-boost`::shared`_ptr) in Ultimate`+`+ used to manage heap resources 
-at interface level. They are not needed and considered bad practice.&]
-[s20; In C`+`+, this approach proves to be equally good or better 
-than garbage collected languages like Java or C#. While those 
-languages are able to provide automatic management of heap resources, 
-U`+`+ approach provides very deterministic automatic management 
-of [/ all] resources.&]
-[s19; Ultimate`+`+ containers&]
-[s20; One aspect of Ultimate`+`+ is bringing a lot of criticism: [/ Ultimate`+`+ 
-is not using much of standard C`+`+ library]. There are, however, 
-serious reasons for this. STL, with its devastating requirement 
-that each element stored in container has to have copy`-constructor, 
-makes standard containers somewhat hard to use in GUI development.&]
-[s20; There is no such general requirement for Ultimate`+`+ containers. 
-Instead, Ultimate`+`+ containers come in two flavors.&]
-[s20; [/ Vector] flavor has Moveable requirement that allows very fast 
-implementation for certain types (e.g., element insertion at 
-arbitrary position of Ultimate`+`+ Vector<String> is more than 
-10 times faster than the same operation with typical implementation 
-of std`::vector<std`::string>).&]
-[s20; [/ Array] flavor has no requirements for element types at all, 
-at the price of somewhat lower performance.&]
-[s20; As a result, in Ultimate`+`+ you are for example allowed to 
-create container of .GUI widgets that edits integer numbers ( 
-[*C@(28.42.150) Array<EditInt> integer`_editors]) and even sort 
-it using standard Ultimate`+`+ [*C@(28.42.150) Sort] algorithm. 
-Doing something like this would require using pointers as elements 
-in STL ([*C@(28.42.150) std`::vector<EditInt `*>]) or alternatively 
-some sort of smart pointers (soon to be std`:: boost`::shared`_ptr), 
-but both increase code complexity and break the Ultimate`+`+ 
-rule according to which [/ everything belongs somewhere].&]
-[s19; Who owns widgets&]
-[s20; One of the things we discovered over our countless experiments 
+[s1; Всё где`-то лежит...&]
+[s2; В Ultimate`+`+, большинство объектов скрыты 
+из области видимости. В результате, 
+используя Ultimate`+`+, Вы не увидите множество 
+операторов [*/ new] в коде, и  также нет 
+операторов [*/ delete] вне внутренней реализации 
+контейнеров.&]
+[s2; Это, конечно, не означает, что Вам 
+не позволено использовать указатели, 
+но хорошая практика это `- использовать 
+указатели только для указания на 
+сущности, и никогда для управления 
+ресурсами.Это позволяет избежать 
+всякой путаницы в отношении права 
+собственности на объект, времени 
+его удаления и т.д. Если же Вам нужно 
+ управлять наборами данных переменного 
+размера или полиморфного типа, Вы 
+должны предпочесть использование 
+одного из  Ultimate`+`+ контейнеров.&]
+[s2; Говоря об этом, в Ultimate`+`+ нет никаких 
+общих умных указателей (типа boost`::shared`_ptr), 
+для управления ресурсами кучи на 
+интерфейсном уровне. Они не нужны 
+и считаются плохой практикой.&]
+[s2; В C`+`+ этот подход зарекомендовал 
+себя одинаково хорошо или даже лучше 
+чем языки  со сбором мусора типа Java 
+или C#. Хотя эти языки способны обеспечить 
+автоматическое управление ресурсами 
+кучи, подход U`+`+ обеспечивает  очень 
+детерминированное автоматическое 
+управление [/ всеми] ресурсами.&]
+[s1; Ultimate`+`+ контейнеры&]
+[s2; Один аспект Ultimate`+`+ порождает множество 
+критики: [/ Ultimate`+`+ не использует массы 
+стандартных C`+`+ библиотек]. Однако 
+для этого есть серьезные причины. 
+STL, с её разрущительным требованием 
+чтобы каждый элемент хранящийся контейнере 
+имел бы copy`-constructor, делает стандартные 
+контейнеры чем`-то  тяжелым для использовани
+я в разработке GUI программ.&]
+[s2; Для Ultimate`+`+ контейнеров такого требования 
+нет. Вместо этого, Ultimate`+`+ контейнеры 
+бывают двух видов.&]
+[s2; [/ Vector (Векторный)] вид с обязательным 
+требованием свойства Перещаемости 
+(Moveable) что делает возможной очень 
+быстрой реализацию операций определенного 
+вида (например, вставка элемента в 
+произвольной пизиции для Ultimate`+`+ типа 
+Vector<String> более чем в 10 раз быстрее 
+чем такая же операция с типовой реализацией 
+типа std`::vector<std`::string>).&]
+[s2; [/ Array (Массив)] вид не имеет требований 
+ к типу элементов, но цена этого `- 
+более низкая производительность.&]
+[s2; Как результат, в Ultimate`+`+ Вы можете, 
+например,создать контейнер GUI виджетов 
+который редактирует целые числа ( 
+[*C@(28.42.150) Array<EditInt> integer`_editors]) и даже сортировать
+ их используя стандартный алгоритм 
+[*@5 сортировки]  Ultimate`+`+. Делать что`-то 
+подобное как это требуется в STL используя 
+указатели как элементы ([*C@(28.42.150) std`::vector<EditInt 
+`*>]) или некоторые виды умных указателей 
+(такие как std`:: boost`::shared`_ptr), но эти оба 
+подхода увеличивают сложность кода 
+и разбивают правило Ultimate`+`+ в соответствии 
+с которым [/@5 Все где`-то лежит].&]
+[s1; Кто владеет виджетами&]
+[s2; One of the things we discovered over our countless experiments 
 with C`+`+ GUI is the fact that the GUI toolkit should not own 
 widget objects. GUI objects should be always owned by the client, 
 belonging to some scope of client code ([/ everything belongs somewhere]). 
@@ -573,97 +590,97 @@ context (like being visible in some window), but at the same
 time it is always a stand`-alone entity with its set of attributes 
 that can be modified or queried regardless of its current GUI 
 status.&]
-[s20; This has many serious implications. The most important is that 
+[s2; This has many serious implications. The most important is that 
 Ultimate`+`+ does not require widget objects to be allocated 
 on the heap. That in turn allows us to arrange GUI dialog structure 
 in a very effective way, instead of&]
-[s21; &]
-[s21; struct MyDialog `{&]
-[s21; -|Option `*option;&]
-[s21; -|EditField `*edit;&]
-[s21; -|Button `*ok;&]
-[s21; `};&]
-[s21; &]
-[s20; we are using:&]
-[s21; &]
-[s21; struct MyDialog `{&]
-[s21; -|Option option;&]
-[s21; -|EditField edit;&]
-[s21; -|Button ok;&]
-[s21; `};&]
-[s21; &]
-[s20; Even more important, lifetime of these widgets does not depend 
+[s3; &]
+[s3; struct MyDialog `{&]
+[s3; -|Option `*option;&]
+[s3; -|EditField `*edit;&]
+[s3; -|Button `*ok;&]
+[s3; `};&]
+[s3; &]
+[s2; we are using:&]
+[s3; &]
+[s3; struct MyDialog `{&]
+[s3; -|Option option;&]
+[s3; -|EditField edit;&]
+[s3; -|Button ok;&]
+[s3; `};&]
+[s3; &]
+[s2; Even more important, lifetime of these widgets does not depend 
 on the life cycle of MyDialog GUI `- MyDialog can be closed or 
 not yet open, but attributes of widgets are accessible all the 
 time.&]
-[s19; Dialog templates are C`+`+ templates&]
-[s20; Now that we have laid down the foundations, it is time to introduce 
+[s1; Dialog templates are C`+`+ templates&]
+[s2; Now that we have laid down the foundations, it is time to introduce 
 the coolest aspect of Ultimate`+`+ GUI programming `- layout 
 templates:&]
-[s20; If you visually design a layout (usually, but not limited to, 
+[s2; If you visually design a layout (usually, but not limited to, 
 the layout of a dialog box) using TheIDE`'s [/ Layout designer], 
 this layout is in in your code reflected as a C`+`+ template 
 that derives from a widget`-based class and declares all widgets 
 as its member variables, and a matching function ([*C@(28.42.150) InitLayout]) 
 that sets up the widget positions and their pre`-designed attribute 
 defaults.&]
-[s20; For example, such a template would look like this:&]
-[s21; &]
-[s21; template <class T>&]
-[s21; struct WithMyDialogLayout : public T `{&]
-[s21; -|Option option;&]
-[s21; -|EditField edit;&]
-[s21; -|Button ok;&]
-[s21; `};&]
-[s21; &]
-[s21; template <class T>&]
-[s21; void InitLayout(WithMyDialogLayout<T> `*layout, ...);&]
-[s21; // implementation details omitted&]
-[s21; &]
-[s20; The reason why it is provided as a template rather than a simple 
+[s2; For example, such a template would look like this:&]
+[s3; &]
+[s3; template <class T>&]
+[s3; struct WithMyDialogLayout : public T `{&]
+[s3; -|Option option;&]
+[s3; -|EditField edit;&]
+[s3; -|Button ok;&]
+[s3; `};&]
+[s3; &]
+[s3; template <class T>&]
+[s3; void InitLayout(WithMyDialogLayout<T> `*layout, ...);&]
+[s3; // implementation details omitted&]
+[s3; &]
+[s2; The reason why it is provided as a template rather than a simple 
 class or struct is that in this way you can use any widget type 
 as its base class, not just the one that represents dialog windows 
 (TopWindow).&]
-[s20; This approach provides radical reduction of complexity `- many 
+[s2; This approach provides radical reduction of complexity `- many 
 annoying things that seem to be necessary to identify widgets 
 in client code (like widget IDs or names) are simply gone for 
 good. All you have to deal with in Ultimate`+`+ are your instance 
 variables.&]
-[s19; Value and Null&]
-[s20; One aspect that makes development in Ultimate`+`+ very orthogonal 
+[s1; Value and Null&]
+[s2; One aspect that makes development in Ultimate`+`+ very orthogonal 
 is the existence of Value `- the polymorphic value type. Any 
 of Ultimate`+`+ basic types (int, double, String, Color, Rect, 
 Font, Image etc...) can be stored into and retrieved from a Value. 
 Value itself can be queried for the type of value it contains. 
 It is also very easy to make any custom types Value`-compatible.&]
-[s20; Related to Value is the general concept of `"empty value`". 
+[s2; Related to Value is the general concept of `"empty value`". 
 The Ultimate`+`+ special constant Null represents an empty value. 
 Most concrete types support Null. Null is also defined for fundamental 
 types `- int, double and int64 `- as a value that is lower than 
 any other value for specific type (for example, Null is equal 
 to INT`_MIN for int). To test whether a variable of a certain 
 type is Null, you can use the generic IsNull function.&]
-[s20; Value (and Null) have a remarkable effect on GUI flexibility. 
+[s2; Value (and Null) have a remarkable effect on GUI flexibility. 
 Many widgets logically have their `"natural`" values, (for integer 
 edit field it is the typed in number, for option widget it is 
 either true or false according to its state) and Ultimate`+`+ 
 provides uniform access to these values via Value and GetData 
 / SetData virtual methods. For example, clearing a dialog can 
 be usually done by assigning Null to all of its widgets.&]
-[s19; Display and Convert&]
-[s20; Display and Convert based classes further enhance Ultimate`+`+ 
+[s1; Display and Convert&]
+[s2; Display and Convert based classes further enhance Ultimate`+`+ 
 flexibility using Value.&]
-[s20; Convert classes act as bidirectional Value to Value converters. 
+[s2; Convert classes act as bidirectional Value to Value converters. 
 Usually, but not limited to, this conversion is between the value 
 of a logical type and its textual representation (conversion 
 of the textual representation to the logical type can be sometimes 
 omitted). Examples are ConvertInt or ConvertDate.&]
-[s20; Many Ultimate`+`+ widgets are able to use these Convert classes 
+[s2; Many Ultimate`+`+ widgets are able to use these Convert classes 
 as properties. An example is the EditField class, a generic input 
 field. By assigning specific Convert based class to EditField, 
 you can `"teach`" it to edit numbers, dates or anything that 
 has textual representation.&]
-[s20; Somewhat similar to Convert classes are Display based classes. 
+[s2; Somewhat similar to Convert classes are Display based classes. 
 These are classes that describe how Values should be displayed. 
 Once again, many Ultimate`+`+ widgets are using Display classes 
 as their properties. For example, to `"teach`" the DropList widget 
@@ -673,71 +690,71 @@ Display attribute to DisplayColor (remember, Color is Value compatible
 and DropList`'s list consists of Values). Meanwhile, you can 
 use the same DisplayColor as the property of many other widget 
 classes.&]
-[s19; Callbacks&]
-[s20; While virtual methods provide a great way to organize the [/ input] 
+[s1; Callbacks&]
+[s2; While virtual methods provide a great way to organize the [/ input] 
 interface of GUI widgets (like mouse or keyboard input), each 
 GUI toolkit has to provide effective means for [/ output] interfaces 
 as well (if you do not know what output interface is: when a button 
 widget is pressed, the output interface is responsible for delivering 
 this information to the client code).&]
-[s20; Our solution to these needs is called a Callback. You can think 
+[s2; Our solution to these needs is called a Callback. You can think 
 about Callbacks as a very generalized form of function pointers. 
 Each Callback represents some kind of action `- usually this 
 comprises calling a certain function or a certain object method 
 `- that can be invoked at any time.&]
-[s20; Callbacks are generic and can take some very interesting forms. 
+[s2; Callbacks are generic and can take some very interesting forms. 
 For example, a type of Callback does the simple task of calling 
 two other given Callbacks, providing a very simple tool for grouping. 
 There are Callbacks that take no argument, but call a function 
 or method with an argument when invoked `- this additional argument 
 is stored within Callback during its construction. To illustrate 
 this important feature, see the following code snippet:&]
-[s20; &]
-[s21;%- void MyDlg`::SetEditorValue(int x)&]
-[s21;%- `{&]
-[s21;%- -|editor <<`= x;&]
-[s21;%- `}&]
-[s21; &]
-[s21;%- MyDlg`::MyDlg()&]
-[s21;%- `{&]
-[s21;%- -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
-[s21;%- -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
-[s20; &]
-[s20; In this snippet, we have two buttons and one integer input field. 
+[s2; &]
+[s3;%- void MyDlg`::SetEditorValue(int x)&]
+[s3;%- `{&]
+[s3;%- -|editor <<`= x;&]
+[s3;%- `}&]
+[s3; &]
+[s3;%- MyDlg`::MyDlg()&]
+[s3;%- `{&]
+[s3;%- -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
+[s3;%- -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
+[s2; &]
+[s2; In this snippet, we have two buttons and one integer input field. 
 Pressing the first or second button sets the input field to the 
 value 1 or 2 respectively.&]
-[s20; It is also very important that Callbacks are completely decoupled 
+[s2; It is also very important that Callbacks are completely decoupled 
 from classes. While they can invoke specific methods of certain 
 object instances, there are no further requirements for the method 
 (beyond signature) or the class of the object.&]
-[s20; Just to make things clear for those familiar with boost libraries 
+[s2; Just to make things clear for those familiar with boost libraries 
 `- yes, Callback classes are in fact very similar to boost`::function, 
 with interface polished a little bit more toward the needs of 
 Ultimate`+`+ framework (they are Moveable `- can be stored in 
 Vector flavor of containers).&]
-[s19; Ultimate`+`+ set of widgets&]
-[s20; While the standard set of U`+`+ widgets is less important to 
+[s1; Ultimate`+`+ set of widgets&]
+[s2; While the standard set of U`+`+ widgets is less important to 
 us than the general principles, partly due to the fact that creating 
 new widget classes is often a trivial task in U`+`+, any description 
 of toolkit would be incomplete without it.&]
-[s20; So here follows an incomplete but representative list:&]
-[s20; [* Label], [* Button] and [* Option] are basic well known widgets.&]
-[s20; [* Switch] is something usually called `"a group of radio`-buttons`", 
+[s2; So here follows an incomplete but representative list:&]
+[s2; [* Label], [* Button] and [* Option] are basic well known widgets.&]
+[s2; [* Switch] is something usually called `"a group of radio`-buttons`", 
 anyway in the U`+`+ this is a single widget (this way, reading 
 the Value of a switch is much more consistent).&]
-[s20; [* EditField], [* EditInt], [* EditDouble], [* EditIntSpin], [* EditDate], 
+[s2; [* EditField], [* EditInt], [* EditDouble], [* EditIntSpin], [* EditDate], 
 [* EditString] are basic input fields. Note that U`+`+ provides 
 distinct types of input fields for specific value types.&]
-[s20; [* LineEdit] and [* DocEdit] are two kinds of plain text editors. 
+[s2; [* LineEdit] and [* DocEdit] are two kinds of plain text editors. 
 [* LineEdit] works with lines while [* DocEdit] works with paragraphs.&]
-[s20; [* ScrollBar] and [* ScrollBars. ]While their names are self`-explaining 
+[s2; [* ScrollBar] and [* ScrollBars. ]While their names are self`-explaining 
 (ScrollBars is just pair a consisting of a vertical and horizontal 
 ScrollBar), it is worth noting that the U`+`+ ScrollBar also 
 provides all calculations for position of view area.&]
-[s20; [* Slider] is an `"analog`" input widget whose value is determined 
+[s2; [* Slider] is an `"analog`" input widget whose value is determined 
 by position of `"thumb`".&]
-[s20; [* HeaderCtrl] represents headers of various tables, namely ArrayCtrl&]
-[s20; [* ArrayCtrl] is perhaps the most complex and complicated widget 
+[s2; [* HeaderCtrl] represents headers of various tables, namely ArrayCtrl&]
+[s2; [* ArrayCtrl] is perhaps the most complex and complicated widget 
 in Ultimate`+`+. It is basically a table widget used to operate 
 on Value matrices. It can combine Values to be displayed (using 
 Display class) as columns (yes, several Values in row can be 
@@ -746,7 +763,7 @@ them using slave Ctrls (those can be inside the table displayed
 on user `"edit`" action, inside the table always visible or outside 
 the table in the dialog box displaying Values of currently selected 
 line).&]
-[s20;= 
+[s2;= 
 @@image:1500&1394
 ����������������ߜ�ۋ��߽����È���쓿�����������������񬌱���Բ��������������
 �򑵲����������ه쮼����Ζ��������׭����������ٖ檻���ߟ�����ϒ�ӹ�ð��ð�ð��
@@ -840,18 +857,18 @@ line).&]
 ����������ކ����׆����®����������ȯ����������ى�������񪜆��ڂ�ĕ������ƍ��
 ����������������锣�������������ݜ��۔��ܜ�ƍ�Ɔ��α������͂Ҙ
 &]
-[s20;= [*1 Option, EditString, DropList, Switch and ArrayCtrl in action.]&]
-[s20; [* SqlArray] is derived from ArrayCtrl and adds abilities to act 
+[s2;= [*1 Option, EditString, DropList, Switch and ArrayCtrl in action.]&]
+[s2; [* SqlArray] is derived from ArrayCtrl and adds abilities to act 
 as SQL table editor, including master`-detail capabilities.&]
-[s20; [* Splitter] is used to implement split view widgets with an adjustable 
+[s2; [* Splitter] is used to implement split view widgets with an adjustable 
 bar.&]
-[s20; [* ProgressIndicator] can be used to indicate progress of lengthy 
+[s2; [* ProgressIndicator] can be used to indicate progress of lengthy 
 operations.&]
-[s20; [* TabCtrl] is used for dialogs with tabs.&]
-[s20; [* TreeCtrl] is used to display arbitrary tree hierarchies.&]
-[s20; [* ColorSelector], [* ColorPusher] and [* ColorButton] are widgets 
+[s2; [* TabCtrl] is used for dialogs with tabs.&]
+[s2; [* TreeCtrl] is used to display arbitrary tree hierarchies.&]
+[s2; [* ColorSelector], [* ColorPusher] and [* ColorButton] are widgets 
 for graphical user color selection.&]
-[s20;= 
+[s2;= 
 @@image:1509&1864
 ������������������������پ�������������罬�����������Ƌ�Ǟ�����������Ȑ٢ǡ��
 ����ȹ��ވ���������ꪮԢݹ�������͵̀�����٬����Կ���ݖ���Γ�Ó��ǎޢ���������
@@ -1546,26 +1563,26 @@ for graphical user color selection.&]
 �����Ǥ�������뎩�䭀�đ��Ԧ���ں���ϸ���࿢䥎���ռ��׎����徐����Ք����������
 ���������������
 &]
-[s20;= [*1 ColorButton]&]
-[s20; [* MenuBar] and [* ToolBar] handling is a little unorthodox in Ultimate`+`+, 
+[s2;= [*1 ColorButton]&]
+[s2; [* MenuBar] and [* ToolBar] handling is a little unorthodox in Ultimate`+`+, 
 as the menu actions, represented as Callbacks, are passed to 
 the methods constructing the corresponding Bar. This has some 
 serious advantages `- state and presence of individual buttons 
 or menu bar items can be easily adjusted according to the current 
 application state. It is also often possible to have a single 
 method for construction of both ToolBar and MenuBar.&]
-[s20; [* ColumnList] displays values in user`-adjustable number of columns.&]
-[s20; [* FileList] is variant of ColumnList for displaying lists of 
+[s2; [* ColumnList] displays values in user`-adjustable number of columns.&]
+[s2; [* FileList] is variant of ColumnList for displaying lists of 
 files.&]
-[s20; Finally, Ultimate`+`+ has tools to deal with advanced text formatting:&]
-[s20; [* RichText] is a class that provides storage of complex text 
+[s2; Finally, Ultimate`+`+ has tools to deal with advanced text formatting:&]
+[s2; [* RichText] is a class that provides storage of complex text 
 documents, including font and paragraph formatting and even nested 
 tables support.&]
-[s20; [* RichTextView] is a widget for viewing RichText texts.&]
-[s20; [* RichEdit] is a full`-featured RichText word`-processor (including 
+[s2; [* RichTextView] is a widget for viewing RichText texts.&]
+[s2; [* RichEdit] is a full`-featured RichText word`-processor (including 
 spell`-checker) in standard widget package, readily available 
 to any U`+`+ application.&]
-[s20;= 
+[s2;= 
 @@image:2415&2606
 ����������������콇����޶μ������̤ͤ������⏽���챒���������ސ�������������
 �҄����ݰ��������������������ʭ����ÿ�ܽ�����������Ղ�ڀ����Ѐ�������ʡ����
@@ -2732,109 +2749,109 @@ to any U`+`+ application.&]
 ���������Ͽ����쿧�ӽ�ϲ���݀�㪿ڃ�ґ����ܒ�ڍ튠�ꯂ�����񣢵ꦚ�Ȁ��և�����
 �����À�����ˡ����������ۛ�������¥�
 &]
-[s20;= [*1 RichEdit]&]
-[s20; &]
-[s20; You can find complete alphabetical list of basic U`+`+ widgets 
+[s2;= [*1 RichEdit]&]
+[s2; &]
+[s2; You can find complete alphabetical list of basic U`+`+ widgets 
 [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ here].&]
-[s19; SQL programming&]
-[s20; One of the motivations behind Ultimate`+`+ always used to be 
+[s1; SQL programming&]
+[s2; One of the motivations behind Ultimate`+`+ always used to be 
 the development of enterprise class client`-server SQL applications. 
 Using general Ultimate`+`+ philosophy we believe to have achieved 
 some extraordinary results, basically making Ultimate`+`+/SQL 
 development easier that using SQL dedicated development tools.&]
-[s20; Of course, SQL is an area where the Value abstraction hugely 
+[s2; Of course, SQL is an area where the Value abstraction hugely 
 pays off. Fetching database values and putting them to GUI widgets 
 never was as trivial as it is in Ultimate`+`+.&]
-[s20; An important tool related to SQL is idea of `"SQL expressions`". 
+[s2; An important tool related to SQL is idea of `"SQL expressions`". 
 SQL expression is entity that represents SQL command. Ultimate`+`+ 
 provides means to build SQL expression using C`+`+ overloading 
 mechanism. For example, Ultimate`+`+ SQL expression might look 
 like:&]
-[s21; &]
-[s21; Select(NAME, SURNAME).From(PERSON).Where(PERSONID `=`= personid);&]
-[s21; &]
-[s20; where NAME, SURNAME, PERSON and PERSON are special values of 
+[s3; &]
+[s3; Select(NAME, SURNAME).From(PERSON).Where(PERSONID `=`= personid);&]
+[s3; &]
+[s2; where NAME, SURNAME, PERSON and PERSON are special values of 
 SqlId type, while [/ personid] is an ordinary C`+`+ variable. The 
 important thing here is that SQL expressions can be built from 
 smaller subexpressions `- that is particulary important when 
 building Where conditions.&]
-[s21; &]
-[s21; SqlBool where;&]
-[s21; if(!IsNull(findname))&]
-[s21; -|where `= NAME `=`= findname;&]
-[s21; if(!IsNull(findsurname))&]
-[s21; -|where `= where `&`& SURNAME `=`= findsurname;&]
-[s21; SqlExp exp `= Select(PERSONID).From(PERSON).Where(where);&]
-[s21; &]
-[s20; When SQL expression is ready for execution, it can be executed 
+[s3; &]
+[s3; SqlBool where;&]
+[s3; if(!IsNull(findname))&]
+[s3; -|where `= NAME `=`= findname;&]
+[s3; if(!IsNull(findsurname))&]
+[s3; -|where `= where `&`& SURNAME `=`= findsurname;&]
+[s3; SqlExp exp `= Select(PERSONID).From(PERSON).Where(where);&]
+[s3; &]
+[s2; When SQL expression is ready for execution, it can be executed 
 on an Sql cursor object using the `* operator. After this, you 
 can Fetch the results.&]
-[s21; &]
-[s21; Sql sql;&]
-[s21; sql `* exp;&]
-[s21; while(sql.Fetch()) `{&]
-[s21; -|Sql sqlu;&]
-[s21; -|sqlu `* Update(PERSON)(SALARY, SALARY `+ 100).Where(PERSONID 
+[s3; &]
+[s3; Sql sql;&]
+[s3; sql `* exp;&]
+[s3; while(sql.Fetch()) `{&]
+[s3; -|Sql sqlu;&]
+[s3; -|sqlu `* Update(PERSON)(SALARY, SALARY `+ 100).Where(PERSONID 
 `=`= sql`[0`])&]
-[s21; `}&]
-[s21; &]
-[s20; Another effective tool is the concept of database schema description 
+[s3; `}&]
+[s3; &]
+[s2; Another effective tool is the concept of database schema description 
 files. These are files used to describe a database model using 
 specialized C`-macro constructions:&]
-[s21; &]
-[s21; TABLE`_(PERSON)&]
-[s21; -|INT`_     (PERSONID) PRIMARY`_KEY&]
-[s21; -|STRING`_  (NAME, 200)&]
-[s21; -|STRING`_  (SURNAME, 200)&]
-[s21; -|DOUBLE`_  (SALARY)&]
-[s21; END`_TABLE&]
-[s21; &]
-[s20; These description files are then used to synchronize the database 
+[s3; &]
+[s3; TABLE`_(PERSON)&]
+[s3; -|INT`_     (PERSONID) PRIMARY`_KEY&]
+[s3; -|STRING`_  (NAME, 200)&]
+[s3; -|STRING`_  (SURNAME, 200)&]
+[s3; -|DOUBLE`_  (SALARY)&]
+[s3; END`_TABLE&]
+[s3; &]
+[s2; These description files are then used to synchronize the database 
 model on the SQL server, to generate SqlId constants used in 
 SQL expressions, and, last but not least, to generate C`+`+ structures 
 (named after the tables with S`_ prefix) that can be used to 
 form SQL expressions and to fetch query results:&]
-[s21; &]
-[s21; S`_PERSON person;&]
-[s21; SQL `* Select(person).From(PERSON);&]
-[s21; while(SQL.Fetch(person))&]
-[s21; -|person`_table.Add(person.PERSONID, person.NAME, person.SURNAME);&]
-[s21; &]
-[s20; Thanks to the Value concept described above, most widgets couple 
+[s3; &]
+[s3; S`_PERSON person;&]
+[s3; SQL `* Select(person).From(PERSON);&]
+[s3; while(SQL.Fetch(person))&]
+[s3; -|person`_table.Add(person.PERSONID, person.NAME, person.SURNAME);&]
+[s3; &]
+[s2; Thanks to the Value concept described above, most widgets couple 
 seamlessly with SQL code out of box. One of the tools that exploit 
 these capabilities is the SqlCtrls class that orchestrates the 
 data interchange between dialog widgets and database records:&]
-[s21; &]
-[s21; void EditPerson(int persionid) `{&]
-[s21; -|WithPersonLayout<TopWindow> dlg;&]
-[s21; -|SqlCtrls ctrls;&]
-[s21; -|ctrls(PERSON, dlg.person)(NAME, dlg.name)(SURNAME, dlg.surname);&]
-[s21; -|SQL `* Select(ctrls).From(PERSON).Where(PERSONID `=`= personid);&]
-[s21; -|ctrls.Fetch(SQL);&]
-[s21; -|if(dlg.Run() `=`= IDOK)&]
-[s21; -|-|SQL `* ctrls.Update(PERSON).Where(PERSONID `=`= personid);&]
-[s21; `}&]
-[s21; &]
-[s19; Summary&]
-[s20; In this overview we have tried to summarize the most exciting 
+[s3; &]
+[s3; void EditPerson(int persionid) `{&]
+[s3; -|WithPersonLayout<TopWindow> dlg;&]
+[s3; -|SqlCtrls ctrls;&]
+[s3; -|ctrls(PERSON, dlg.person)(NAME, dlg.name)(SURNAME, dlg.surname);&]
+[s3; -|SQL `* Select(ctrls).From(PERSON).Where(PERSONID `=`= personid);&]
+[s3; -|ctrls.Fetch(SQL);&]
+[s3; -|if(dlg.Run() `=`= IDOK)&]
+[s3; -|-|SQL `* ctrls.Update(PERSON).Where(PERSONID `=`= personid);&]
+[s3; `}&]
+[s3; &]
+[s1; Summary&]
+[s2; In this overview we have tried to summarize the most exciting 
 features of Ultimate`+`+. There are of course many more important 
 features including certain interesting implementation techniques 
 like zero overhead memory allocator, perfect image rescaling 
 etc.&]
-[s20; Since the very beginning we have kept using Ultimate`+`+ ourselves 
+[s2; Since the very beginning we have kept using Ultimate`+`+ ourselves 
 to develop applications for our customers. Even so, in recent 
 years we never hesitated to compromise our entire code`-base 
 each time we felt that some major or minor aspect of library 
 interface or implementation needed to be improved. This enabled 
 us to slowly develop the library and perfect it into its current 
 state.&]
-[s20; Now, after some 7 years of development, Ultimate`+`+ is a mature 
+[s2; Now, after some 7 years of development, Ultimate`+`+ is a mature 
 platform that brings vast reductions of our development costs. 
 Most interfaces seem to be finished and optimal. There is of 
 course a lot of work ahead as well: Linux port implementation 
 is still not perfect and needs some further work, there is demand 
 for new features like advanced anti`-aliased and blended graphics.&]
-[s20; If you find our Ultimate`+`+ way of programming interesting, 
+[s2; If you find our Ultimate`+`+ way of programming interesting, 
 nothing stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloadin
 g] it. But be careful there: you should be prepared to throw away 
 some old habits and usual ways of thinking about how `"things 
@@ -2842,4 +2859,5 @@ are always done`", or they might maime your opportunity to receive
 a lot in the reward, together with a healthy disrespect to certain 
 honorable, well`-established development tools.&]
 [s0; &]
-[s0; [2 This article on ][^topic`:`/`/uppweb`/www`/overview`$ru`-ru^2 Russian]]
+[s0; [2 Эта статья на ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Англи
+йском]]
