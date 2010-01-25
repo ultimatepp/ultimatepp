@@ -86,9 +86,9 @@ words, for the creation of the final report like this type:&]
 the logic of this report and actually implement the substitution 
 of real data.&]
 [s0; &]
-[s0; Additionally you must provide an [* interface choose the right 
+[s0; Additionally you must provide an [* GUI interface choose the right 
 template]. But that is another story, as a result of choice in 
 RepGen object should get the content qtf`-template.&]
 [s0; &]
 [s0; &]
-[s0; ]
+[s0; This article in [^topic`:`/`/RepGen`/srcdoc`/RepGen`$ru`-ru^ Russian]]
