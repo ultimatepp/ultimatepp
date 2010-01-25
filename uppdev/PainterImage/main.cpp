@@ -10,40 +10,29 @@ Image DownScale(const Image& img, int nx, int ny);
 struct App : TopWindow {
 	void Paint(Draw& w) {
 		Size sz = GetSize();
-		ImageDraw idw(1200, 600);
-		idw.DrawRect(0, 0, 1200, 600, White);
-		idw.DrawText(0, 0, "(Hello)", Serif(400));
+		ImageDraw idw(200, 200);
+		idw.DrawRect(0, 0, 200, 200, White);
+		idw.DrawText(0, 0, "(Hi)", Serif(100));
 		
 
-#if 0		
 		Image m = idw;
-		Size isz = m.GetSize();
-		m = DownScale(m, isz.cx / sz.cx, isz.cy / sz.cy);
-		w.DrawRect(sz, White());
-		w.DrawImage(0, 0, m);
-#endif
 		
-		DrawPainter sw(w, GetSize());
-		sw.Clear(White());
-		sw.DrawImage(0, 0, sz.cx, sz.cy, idw);
+		{
+			DrawPainter sw(w, GetSize());
+			sw.Clear(White());
+			sw.DrawImage(100, 50, m, Rect(30, 30, 100, 100));
+			sw.DrawImage(100, 200, 20, 20, m, Rect(50, 50, 100, 100));
+			sw.DrawImage(0, 500, m);
+			sw.DrawImage(20, 20, 300, 30, CtrlImg::exclamation(), Blue());
+		}
+		
+		w.DrawImage(300, 50, m, Rect(30, 30, 100, 100));
+		w.DrawImage(300, 200, 20, 20, m, Rect(50, 50, 100, 100));
+		w.DrawImage(300, 500, m);
 	}
 };
 
 GUI_APP_MAIN
 {
-	ImageDraw idw(1200, 600);
-	idw.DrawRect(0, 0, 1200, 600, White);
-	idw.DrawText(0, 0, "(Hello)", Serif(400));
-	
-	DrawingDraw dw(350, 250);
-	dw.DrawImage(0, 0, 350, 250, idw); 
-	
-	QtfRichObject pict(CreateDrawingObject(dw.GetResult(), Size(350, 250), Size(350, 250)));
-	
-//	/**/	PNGEncoder png;	
-//	/**/	png.SaveFile("c:\\kk.png", pict.obj.ToImage(Size(350, 250)));
-	
-	PromptOK(String("[A5 Rendering problem: ") + pict.ToString());
-
 	App().Sizeable().Run();
 }
