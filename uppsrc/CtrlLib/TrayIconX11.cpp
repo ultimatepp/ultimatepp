@@ -2,14 +2,14 @@
 
 #define LLOG(x) // LOG(x)
 
+#ifdef PLATFORM_X11
+
 #if !defined(flagNOGTK)
 	#include <glib.h>
 	#include <libnotify/notify.h>
 #endif
 
 NAMESPACE_UPP
-
-#ifdef PLATFORM_X11
 
 Atom TraySelection()
 {
@@ -225,7 +225,6 @@ void TrayIcon::BalloonTimeout()
 {
 }
 
+END_UPP_NAMESPACE
 
 #endif
-
-END_UPP_NAMESPACE
