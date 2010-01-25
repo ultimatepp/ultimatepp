@@ -481,6 +481,7 @@ Image SetColorKeepAlpha(const Image& img, Color c)
 		*t = rgba;
 		(t++)->a = (s++)->a;
 	}
+	Premultiply(w);
 	w.SetHotSpot(img.GetHotSpot());
 	w.Set2ndSpot(img.Get2ndSpot());
 	return w;

@@ -64,14 +64,15 @@ void Painter::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	Fill(color);
 }
 
-void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
+void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& image, const Rect& src, Color color)
 {
-	// Color and src support!!!
+	Image img = IsNull(color) ? image : SetColorKeepAlpha(image, color);
 	RectPath(x, y, cx, cy);
 	Sizef sz = img.GetSize();
-	Fill(img, Xform2D::Scale(cx / sz.cx, cy / sz.cy) * Xform2D::Translation(x, y));
+	double sw = (double)cx / src.GetWidth();
+	double sh = (double)cy / src.GetHeight();
+	Fill(img, Xform2D::Scale(sw, sh) * Xform2D::Translation(x - sw * src.left, y - sh * src.top));
 }
-
 
 void Painter::DrawLineStroke(int width, Color color)
 {
