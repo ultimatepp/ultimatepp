@@ -2,102 +2,70 @@
 
 NAMESPACE_UPP
 
-#if 0 // does not seem to help...
+struct RGBAV {
+	dword r, g, b, a;
 
-Image MipMap(const Image& img)
-{
-	Size ssz = img.GetSize() / 2;
-	Size msz = (img.GetSize() + 1) / 2;
-	ImageBuffer ib(msz);
-	for(int y = 0; y < ssz.cy; y++) {
-		const RGBA *s1 = img[2 * y];
-		const RGBA *s2 = img[2 * y + 1];
-		const RGBA *e = s1 + 2 * ssz.cx;
-		RGBA *t = ib[y];
-		while(s1 < e) {
-			t->r = (s1[0].r + s1[1].r + s2[0].r + s2[1].r) >> 2;
-			t->g = (s1[0].g + s1[1].g + s2[0].g + s2[1].g) >> 2;
-			t->b = (s1[0].b + s1[1].b + s2[0].b + s2[1].b) >> 2;
-			t->a = (s1[0].a + s1[1].a + s2[0].a + s2[1].a) >> 2;
-			t++;
-			s1 += 2;
-			s2 += 2;
-		}
-		if(ssz.cx < msz.cx) {
-			t->r = (s1[0].r + s2[0].r) >> 2;
-			t->g = (s1[0].g + s2[0].g) >> 2;
-			t->b = (s1[0].b + s2[0].b) >> 2;
-			t->a = (s1[0].a + s2[0].a) >> 2;
-		}
+	void Set(dword v) { r = g = b = a = v; }
+	void Clear()      { Set(0); }
+	void Put(dword weight, const RGBA& src) {
+		r += weight * src.r;
+		g += weight * src.g;
+		b += weight * src.b;
+		a += weight * src.a;
 	}
-	if(ssz.cy < msz.cy) {
-		const RGBA *s1 = img[img.GetSize().cy - 1];
-		const RGBA *e = s1 + 2 * ssz.cx;
-		RGBA *t = ib[msz.cy - 1];
-		while(s1 < e) {
-			t->r = (s1[0].r + s1[1].r) >> 2;
-			t->g = (s1[0].g + s1[1].g) >> 2;
-			t->b = (s1[0].b + s1[1].b) >> 2;
-			t->a = (s1[0].a + s1[1].a) >> 2;
-			t++;
-			s1 += 2;
+	void Put(const RGBA& src) {
+		r += src.r;
+		g += src.g;
+		b += src.b;
+		a += src.a;
+	}
+	RGBA Get(int div) const {
+		RGBA c;
+		c.r = byte(r / div);
+		c.g = byte(g / div);
+		c.b = byte(b / div);
+		c.a = byte(a / div);
+		return c;
+	}
+};
+
+Image DownScale(const Image& img, int nx, int ny)
+{
+	ASSERT(nx > 0 && ny > 0);
+	Size ssz = img.GetSize();
+	Size tsz = Size((ssz.cx + nx - 1) / nx, (ssz.cy + ny - 1) / ny);
+	int div = nx * ny;
+	Buffer<RGBAV> b(tsz.cx);
+	ImageBuffer ib(tsz);
+	RGBA *it = ~ib;
+	int scx0 = ssz.cx / nx * nx;
+	for(int yy = 0; yy < ssz.cy; yy += ny) {
+		for(int i = 0; i < tsz.cx; i++)
+			b[i].Clear();
+		for(int yi = 0; yi < ny; yi++) {
+			int y = yy + yi;
+			if(y < ssz.cy) {
+				const RGBA *s = img[yy + yi];
+				const RGBA *e = s + scx0;
+				const RGBA *e2 = s + ssz.cx;
+				RGBAV *t = ~b;
+				while(s < e) {
+					for(int n = nx; n--;)
+						t->Put(*s++);
+					t++;
+				}
+				while(s < e2)
+					t->Put(*s++);
+			}
 		}
-		if(ssz.cx < msz.cx) {
-			t->r = s1[0].r >> 2;
-			t->g = s1[0].g >> 2;
-			t->b = s1[0].b >> 2;
-			t->a = s1[0].a >> 2;
-		}
+		const RGBAV *s = ~b;
+		for(int x = 0; x < tsz.cx; x++)
+			*it++ = (s++)->Get(div);
 	}
 	return ib;
 }
 
-Image MakeMipMap(const Image& m, int level);
-
-struct MipMapMaker : ImageMaker {
-	int   level;
-	Image image;
-
-	virtual String Key() const {
-		String h;
-		RawCat(h, image.GetSerialId());
-		RawCat(h, level);
-		return h;
-	}
-	virtual Image Make() const {
-		Size sz = image.GetSize();
-		if(sz.cx && sz.cx) {
-			if(level <= 0)
-				return image;
-			return MipMap(MakeMipMap(image, level - 1));
-		}
-		return Image();
-	}
-};
-
-Image MakeMipMap(const Image& img, int level)
-{
-	MipMapMaker m;
-	m.image = img;
-	m.level = level;
-	return MakeImage(m);
-}
-
-#endif
-
 struct PainterImageSpan : SpanSource {
-	struct RGBAV {
-		dword r, g, b, a;
-	
-		void Set(dword v) { r = g = b = a = v; }
-		void Put(dword weight, const RGBA& src) {
-			r += weight * src.r;
-			g += weight * src.g;
-			b += weight * src.b;
-			a += weight * src.a;
-		}
-    };
-
 	LinearInterpolator interpolator;
 	int         ax, ay, cx, cy, maxx, maxy;
 	byte        style;
@@ -108,26 +76,22 @@ struct PainterImageSpan : SpanSource {
 	
 	void Set(const Xform2D& m, const Image& img) {
 		int level = 0;
-#if 0 // no mipmap for now
-		double q = 1;
-		if(!fast) {
-			double q = 1;
-			Pointf sc = m.GetScaleXY();
-			if(sc.x >= 0.01 && sc.y >= 0.01)
-				while(sc.x < 0.5 && sc.y < 0.5) {
-					level++;
-					sc.x *= 2;
-					sc.y *= 2;
-					q /= 2;
-				}
-		}
-		if(q != 1)
-			interpolator.Set(Inverse(m) * Xform2D::Scale(q));
-		else
-#endif
-			interpolator.Set(Inverse(m));
 		image = img;
-//		image = MakeMipMap(img, level);
+		int nx = 1;
+		int ny = 1;
+		if(!fast) {
+			Pointf sc = m.GetScaleXY();
+			if(sc.x >= 0.01 && sc.y >= 0.01) {
+				nx = (int)max(1.0, 1.0 / sc.x);
+				ny = (int)max(1.0, 1.0 / sc.y);
+			}
+		}
+		if(nx == 1 && ny == 1)
+			interpolator.Set(Inverse(m));
+		else {
+			image = DownScale(image, nx, ny);
+			interpolator.Set(Inverse(m) * Xform2D::Scale(1.0 / nx, 1.0 / ny));			
+		}
 		cx = image.GetWidth();
 		cy = image.GetHeight();
 		maxx = cx - 1;
