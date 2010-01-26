@@ -767,20 +767,23 @@ for developing large C`+`+ applications.]&]
 ´¬Ù²äÉ’¥ÒË–¬Ù²äÉÉ’¥Ë–¬Ù²¦äÉ’¥Ë–¬šÙ²äÉ’¥Ë™–¬Ù®úßú…Šèı
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Current release: [* 1824]&]
+[s0;l128; Current release: [* 1952]&]
 [s0;l128; License: [* BSD]&]
 [s0;l128;+92 &]
 [s0;l128;+92 &]
-[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download U`+`+ 1824]]
-::@(255.255.235) [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-1824`.exe^+75 W
-in32 installer][+75  (15 MB) ]]
-:: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`_1824`_amd64`.deb^+75 L
-inux .deb installer][+75  (15 MB)]]
-:: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-1824`.tar`.gz^+75 X
+[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download U`+`+ 1952]]
+::@(255.255.235) [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-1952`.exe^+75 W
+in32 installer][+75  (16 MB) ]]
+:: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`_1952`_amd64`.deb^+75 L
+inux .deb installer][+75  (Not available yet)]]
+:: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-1952`.tar`.gz^+75 X
 11`-src][+75  (18 MB)]]}}&]
 [s0;l128;+92 &]
 [ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 U`+`+ News]]
-::@(255.255.233) [s0; [*@5$2;1 2009`-12`-21]&]
+::@(255.255.233) [s0; [*@5$2;1 2010`-01`-26]&]
+[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
+1952 released]]
+:: [s0; [*@5$2;1 2009`-12`-21]&]
 [s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
 1824 released]]
 :: [s0; [*@5$2;1 2009`-11`-25]&]
