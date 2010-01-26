@@ -6,22 +6,21 @@ topic "Bazaar";
 [s0; [2 Community contributed packages and code snippets are included 
 in Bazaar.]&]
 [s0;2 &]
-[s0; [2 If you have a package that consider to be interesting you can 
-enter in ][^topic`:`/`/uppweb`/www`/bazaar`_submission`$en`-us^2 Bazaar 
+[s0; [2 If you have a new package that you consider interesting, go 
+to ][^topic`:`/`/uppweb`/www`/bazaar`_submission`$en`-us^2 Bazaar 
 Submission and Maintenance][2 .]&]
 [s0;2 &]
-[s0; [2 If you want to use one of the packages listed here you can 
-enter in ][^topic`:`/`/uppweb`/www`/bazaar`_user`$en`-us^2 Bazaar 
-User Guide][2 .]&]
+[s0; [2 If you want to use one of the packages listed here, read the 
+][^topic`:`/`/uppweb`/www`/bazaar`_user`$en`-us^2 Bazaar User Guide][2 .]&]
 [s0;2 &]
 [s0; [2 All the code submitted to Bazaar is provided to be directly 
 used in good quality programs. If you find any bug or you would 
-like to get any additional feature or improvement please enter 
-in ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar 
+like to get any additional feature or improvement, please go 
+to ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar 
 Support][2 .]&]
 [s0;2 &]
 [s0; [2 All packages and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 B
-SD license][2 . ]&]
+SD license][2  or similar compatible license.]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 1. BAZAAR PAGES]]}}&]
@@ -306,9 +305,9 @@ Del Fedele (mdelfede)]]
 :: [s0;2 ]
 :: [s0; [^topic`:`/`/UnitTest`+`+`/srcdoc`/UnitTestpp`$en`-us^2 UnitTest`+`+]]
 :: [s0; [+75 UnitTest`+`+ wrapper]]
-:: [s0; [+75 Peter `"Ped`" Helcmanovsky (mr`_ped)]]
-:: [s0;= [2 TBD]]
-:: [s0;= [2 TBD]]
+:: [s0; [+75 Peter Helcmanovsky (mr`_ped)]]
+:: [s0;= [2 Production]]
+:: [s0;= [2 2008]]
 :: [s0;= [2 None]]
 :: [s0;= [2 All]]
 :: [s0;2 ]

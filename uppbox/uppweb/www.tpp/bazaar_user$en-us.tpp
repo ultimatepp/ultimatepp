@@ -4,7 +4,7 @@ topic "Bazaar user guide";
 [{_}%EN-US 
 [s1; Bazaar user guide&]
 [s0; [2 You are interested in using certain package in Bazaar and you 
-do not how. Do not be worried: Bazaar use is very easy:]&]
+do not how. Do not worry: using Bazaar is very easy.]&]
 [s0;2 &]
 [s0;2 &]
 [ {{10000@(190.255.220) [s0; [*2 1. PACKAGE DOWNLOAD]]}}&]

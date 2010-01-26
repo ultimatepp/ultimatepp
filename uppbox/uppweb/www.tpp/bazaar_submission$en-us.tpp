@@ -3,11 +3,11 @@ topic "Bazaar submission and maintenance";
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%EN-US 
 [s1; Bazaar submission and maintenance&]
-[s0; [2 You have a package that consider could be interesting for Upp 
-community. It has been made with your best skills. Code is clear 
-and follows Upp style.]&]
+[s0; [2 You have a package that could be interesting for Upp community. 
+It has been made with your best skills. Code is clear and follows 
+Upp style.]&]
 [s0;2 &]
-[s0; [2 So we can only answer ][/2 Thank you!][2 . ]&]
+[s0; [2 So we can only answer: ][/2 Thank you!]&]
 [s0;2 &]
 [s0; [2 In this chapter you will find how to submit packages and do 
 its maintenance.]&]
@@ -20,10 +20,10 @@ and latest releases are available through ][^http`:`/`/subversion`.tigris`.org`/
 ubversion][2 . This is an Open Source version control system.]&]
 [s0;2 &]
 [s0; [2 So first of all you will have to install a Subversion (Svn) 
-client like TortoiseSVN, SmartSVN, SlikSVN or just a `"apt`-get 
-install subversion`" in Linux. Be sure that in Windows the svn 
-client is in PATH environment variable although this is usually 
-done by installer.]&]
+client like TortoiseSVN, SmartSVN, SlikSVN, kdesvn or just a 
+`"apt`-get install subversion`" in Linux. Be sure that in Windows 
+the svn client is in PATH environment variable although this 
+is usually done by installer.]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 2. UPLOAD PERMISSIONS]]}}&]
@@ -45,9 +45,9 @@ pp administrator][2  will contact you and give you the address
 where you have to upload your new package, username (your Upp 
 Forum nick) and password.]&]
 [s0;2 &]
-[s0;%- [%%2 For example, if the svn base address is `"][2 svn://90.176.237.17/upp`", 
-you should have to upload your package to `"svn://90.176.237.17/upp/trunk/bazaar/M
-y`_Cool`_Package`". ]&]
+[s0;%- [%%2 For example, if the svn base address is `"][2 svn://192.168.0.1/upp`", 
+you should have to upload your package to `"svn://192.168.0.1/upp/trunk/bazaar/My`_
+Cool`_Package`". ]&]
 [s0;2%- &]
 [s0; [%-2 Please do not put spaces in your package name. ][2 You also 
 should take care to not modify others packages (you may have 
@@ -64,13 +64,13 @@ to enter a comment following this format:]&]
 bug Z`"]&]
 [s0;2%- &]
 [s0;2%- &]
-[s0;%- [2 If in some hours you enter in ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/list^2 h
-ttp://code.google.com/p/upp`-mirror/source/list][2  you will see 
-your new release into Bazaar so, congratulations, your first 
-release is done!.]&]
+[s0;%- [2 The ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/list^2 http://code.g
+oogle.com/p/upp`-mirror/source/list][2  will mirror it within an 
+hour. Then you will see your new release in Bazaar, congratulations, 
+your first release is done!]&]
 [s0;2 &]
-[s0; [2 And do not put many features at once. It is better to separate 
-separate them if they do different things ]&]
+[s0; [2 And do not put many different features into single commit. 
+It is better to separate them if they do different things.]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 3. PACKAGE WEB PUBLICATION]]}}&]
@@ -163,7 +163,7 @@ help system into .html web pages.]&]
 [s0; [2 If nothing works or you do not feel comfortable in doing this 
 you can send a post to Bazaar Forum asking for help or just send 
 ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 me][2  
-a post. I will do it for you..]&]
+a post. I will do it for you.]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 4. DOCUMENTATION AND EXAMPLES]]}}&]
