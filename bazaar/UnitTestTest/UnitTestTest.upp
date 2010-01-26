@@ -1,3 +1,5 @@
+description "Tests to test UnitTest++ (used by authors to develop the library itself)\377";
+
 uses
 	Core,
 	UnitTest++;

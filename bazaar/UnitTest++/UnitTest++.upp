@@ -1,3 +1,5 @@
+description "U++ wrapper for excellent unit testing library http://unittest-cpp.sourceforge.net/\377";
+
 optimize_speed;
 
 uses
