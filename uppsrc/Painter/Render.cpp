@@ -27,9 +27,9 @@ struct BufferPainter::OnPathTarget : LinearPathConsumer {
 	OnPathTarget() { len = 0; pos = Pointf(0, 0); }
 };
 
-Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
+Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, const RGBA& color)
 {
-	Buffer<ClipLine> newclip;
+	Buffer<ClippingLine> newclip;
 	if(width == 0) {
 		current = Null;
 		return newclip;
@@ -127,7 +127,7 @@ Buffer<ClipLine> BufferPainter::RenderPath(double width, SpanSource *ss, const R
 					span_filler.y = subpixel_filler.y = y;
 					Rasterizer::Filler *rf = rg;
 					if(clip.GetCount()) {
-						const ClipLine& s = clip.Top()[y];
+						const ClippingLine& s = clip.Top()[y];
 						if(s.IsEmpty()) goto empty;
 						if(!s.IsFull()) {
 							mf.Set(rg, s);
@@ -219,7 +219,7 @@ void BufferPainter::StrokeOp(double width, const RGBA& color)
 
 void BufferPainter::ClipOp()
 {
-	Buffer<ClipLine> newclip = RenderPath(CLIP, NULL, RGBAZero());
+	Buffer<ClippingLine> newclip = RenderPath(CLIP, NULL, RGBAZero());
 	if(attr.hasclip)
 		clip.Top() = newclip;
 	else {

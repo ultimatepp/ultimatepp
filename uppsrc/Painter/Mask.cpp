@@ -38,7 +38,7 @@ void BufferPainter::FinishMask()
 		attr.cliplevel = clip.GetCount();
 		creating = true;
 	}
-	Buffer<ClipLine>& cl = clip.Top();
+	Buffer<ClippingLine>& cl = clip.Top();
 	for(int y = 0; y < ib.GetHeight(); y++)
 		if(creating || !cl[y].IsEmpty()) {
 			bool full = true;
