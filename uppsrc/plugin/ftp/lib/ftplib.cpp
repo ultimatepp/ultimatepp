@@ -262,9 +262,8 @@ static int writeline(char *buf, int len, netbuf *nData)
 				if (!socket_wait(nData, 1))
 					return x;
 				w = net_write(nData->handle, nbp, FTPLIB_BUFSIZ);
-				if (w != FTPLIB_BUFSIZ)
-				{
-					printf("net_write(1) returned %d, errno = %d\n", w, errno);
+				if (w != FTPLIB_BUFSIZ) {
+					RLOG("net_write(1) returned " << w << ", errno = " << errno);
 					return(-1);
 				}
 				nb = 0;
@@ -276,9 +275,8 @@ static int writeline(char *buf, int len, netbuf *nData)
 			if (!socket_wait(nData, 1))
 				return x;
 			w = net_write(nData->handle, nbp, FTPLIB_BUFSIZ);
-			if (w != FTPLIB_BUFSIZ)
-			{
-				printf("net_write(2) returned %d, errno = %d\n", w, errno);
+			if (w != FTPLIB_BUFSIZ) {
+				RLOG("net_write(2) returned " << w << ", errno = " << errno);
 				return(-1);
 			}
 			nb = 0;
@@ -290,9 +288,8 @@ static int writeline(char *buf, int len, netbuf *nData)
 		if (!socket_wait(nData, 1))
 			return x;
 		w = net_write(nData->handle, nbp, nb);
-		if (w != nb)
-		{
-			printf("net_write(3) returned %d, errno = %d\n", w, errno);
+		if (w != nb) {
+			RLOG("net_write(3) returned " << w << ", errno = " << errno);
 			return(-1);
 		}
 	}
@@ -1253,7 +1250,7 @@ static int FtpXfer(const char *localfile, const char *path,
 		while ((l = fread(dbuf, 1, FTPLIB_BUFSIZ, local)) > 0)
 			if ((c = FtpWrite(dbuf, l, nData)) < l)
 			{
-				printf("short write: passed %d, wrote %d\n", l, c);
+				RLOG("short write: passed " << l << ", wrote " << c);
 				rv = 0;
 				break;
 			}
