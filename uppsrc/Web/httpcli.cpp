@@ -19,6 +19,7 @@ void HttpClient::Init()
 	max_header_size = DEFAULT_MAX_HEADER_SIZE;
 	max_content_size = DEFAULT_MAX_CONTENT_SIZE;
 	keepalive = false;
+	force_digest = false;
 	std_headers = true;
 	hasurlvar = false;
 	method = METHOD_GET;
@@ -78,6 +79,14 @@ String HttpClient::ExecuteRedirect(int max_redirect, int retries, Gate2<int, int
 			return String::GetVoid();
 		}
 		String data = Execute(progress);
+		if(status_code == 401 && !IsNull(username) && !IsNull(authenticate)) {
+			if(++nredir > max_redirect) {
+				error = NFormat("Maximum number of digest authentication attempts exceeded: %d", max_redirect);
+				return String::GetVoid();
+			}
+			Digest(CalculateDigest(authenticate));
+			continue;
+		}
 		if(status_code >= 400 && status_code < 500) {
 			error = status_line;
 			return String::GetVoid();
@@ -144,6 +153,81 @@ HttpClient& HttpClient::UrlVar(const char *id, const String& data)
 	path << id << '=' << UrlEncode(data);
 	hasurlvar = true;
 	return *this;
+}
+
+String HttpClient::CalculateDigest(String authenticate) const
+{
+	const char *p = authenticate;
+	String realm, qop, nonce, opaque;
+	while(*p) {
+		if(!IsAlNum(*p)) {
+			p++;
+			continue;
+		}
+		else {
+			const char *b = p;
+			while(IsAlNum(*p))
+				p++;
+			String var = ToLower(String(b, p));
+			String value;
+			while(*p && (byte)*p <= ' ')
+				p++;
+			if(*p == '=') {
+				p++;
+				while(*p && (byte)*p <= ' ')
+					p++;
+				if(*p == '\"') {
+					p++;
+					while(*p && *p != '\"')
+						if(*p != '\\' || *++p)
+							value.Cat(*p++);
+					if(*p == '\"')
+						p++;
+				}
+				else {
+					b = p;
+					while(*p && *p != ',' && (byte)*p > ' ')
+						p++;
+					value = String(b, p);
+				}
+			}
+			if(var == "realm")
+				realm = value;
+			else if(var == "qop")
+				qop = value;
+			else if(var == "nonce")
+				nonce = var;
+			else if(var == "opaque")
+				opaque = var;
+		}
+	}
+	String hv1, hv2;
+	hv1 << username << ':' << realm << ':' << password;
+	String ha1 = MD5String(hv1);
+	hv2 << (method == METHOD_GET ? "GET" : method == METHOD_POST ? "POST" : "READ")
+	<< ':' << path;
+	String ha2 = MD5String(hv2);
+	int nc = 1;
+	String cnonce = FormatIntHex(Random(), 8);
+	String hv;
+	hv << BinhexEncode(ha1)
+	<< ':' << nonce
+	<< ':' << FormatIntHex(nc, 8)
+	<< ':' << cnonce
+	<< ':' << qop << ':' << BinhexEncode(ha2);
+	String ha = MD5String(hv);
+	String auth;
+	auth << "Authorization: Digest "
+	"username=" << AsCString(username)
+	<< ", realm=" << AsCString(realm)
+	<< ", nonce=" << AsCString(nonce)
+	<< ", uri=" << AsCString(path)
+	<< ", qop=" << AsCString(qop)
+	<< ", nc=" << AsCString(FormatIntHex(nc, 8))
+	<< ", cnonce=" << cnonce
+	<< ", response=" << AsCString(BinhexEncode(ha))
+	<< ", opaque=" << AsCString(opaque);
+	return auth;
 }
 
 String HttpClient::Execute(Gate2<int, int> progress)
@@ -222,7 +306,9 @@ String HttpClient::Execute(Gate2<int, int> progress)
 	}
 	if(use_proxy && !IsNull(proxy_username))
 		 request << "Proxy-Authorization: basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
-	if(!IsNull(username) || !IsNull(password))
+	if(!IsNull(digest))
+		request << "Authorization: Digest " << digest << "\r\n";
+	else if(!force_digest && (!IsNull(username) || !IsNull(password)))
 		request << "Authorization: basic " << Base64Encode(username + ":" + password) << "\r\n";
 	request << client_headers << "\r\n" << postdata;
 	LLOG("host = " << host << ", port = " << port);
@@ -285,10 +371,12 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		static const char ce[] = "content-encoding:";
 		static const char te[] = "transfer-encoding:";
 		static const char lo[] = "location:";
+		static const char au[] = "www-authenticate:";
 		static const int CL_LENGTH = sizeof(cl) - 1;
 		static const int CE_LENGTH = sizeof(ce) - 1;
 		static const int TE_LENGTH = sizeof(te) - 1;
 		static const int LO_LENGTH = sizeof(lo) - 1;
+		static const int AU_LENGTH = sizeof(au) - 1;
 		if(!MemICmp(p, cl, CL_LENGTH)) {
 			for(p += CL_LENGTH; *p == ' '; p++)
 				;
@@ -322,6 +410,11 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			int p = path.Find('?');
 			if(p >= 0 && q < 0)
 				redirect_url.Cat(path.GetIter(p));
+		}
+		else if(!MemICmp(p, au, AU_LENGTH)) {
+			for(p += LO_LENGTH; *p == ' '; p++)
+				;
+			authenticate = String(p, e);
 		}
 		if(server_headers.GetLength() + (e - b) + 2 > max_header_size) {
 			error = NFormat(t_("%s:%d: maximum header length exceeded (%d B)"), host, port, max_header_size);

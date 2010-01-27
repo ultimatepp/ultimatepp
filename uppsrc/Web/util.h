@@ -12,6 +12,8 @@ String        OtpEncode(String password, String otp_key);
 String        EncryptString(String password, String otp_key);
 String        BinHexEncode(const char *b, const char *e);
 inline String BinHexEncode(String data)           { return BinHexEncode(data.Begin(), data.End()); }
+String        BinhexEncode(const char *b, const char *e);
+inline String BinhexEncode(String data)           { return BinhexEncode(data.Begin(), data.End()); }
 String        BinHexDecode(const char *b, const char *e);
 inline String BinHexDecode(String data)           { return BinHexDecode(data.Begin(), data.End()); }
 String        Base64Encode(const char *b, const char *e);

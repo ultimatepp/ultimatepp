@@ -217,6 +217,19 @@ String BinHexEncode(const char *s, const char *e)
 	return out;
 }
 
+String BinhexEncode(const char *s, const char *e)
+{
+	static const char bh[] = "0123456789abcdef";
+	int l = int(e - s);
+	StringBuffer out(2 * l);
+	char *p = out;
+	for(; s < e; s++) {
+		*p++ = bh[(*s >> 4) & 0xF];
+		*p++ = bh[*s & 0xF];
+	}
+	return out;
+}
+
 String BinHexDecode(const char *p, const char *e)
 {
 	StringBuffer out;
