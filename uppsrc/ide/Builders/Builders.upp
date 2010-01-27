@@ -9,6 +9,7 @@ uses
 file
 	Builders.h,
 	CppBuilder.cpp,
+	MakeFile.cpp,
 	GccBuilder.cpp,
 	MscBuilder.cpp,
 	JavaBuilder.cpp,
