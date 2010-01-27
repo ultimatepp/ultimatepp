@@ -675,10 +675,10 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				"OutFile = " << output << "\n"
 				"\n"
 				".PHONY: all\n"
-				"all: install $(OutFile)\n"
+				"all: prepare $(OutFile)\n"
 				"\n"
-				".PHONY: install\n"
-				"install:\n";
+				".PHONY: prepare\n"
+				"prepare:\n";
 		}
 		config << mf.config;
 		install << mf.install;
@@ -694,6 +694,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		<< "\n"
 		"$(OutFile): " << linkdep << "\n\t" << linkfiles << linkfileend << "\n"
 		<< rules
+		<< ".PHONY: clean\n"
 		<< "clean:\n"
 		<< "\tif [ -d $(UPPOUT) ]; then rm -rf $(UPPOUT); fi;\n";
 
