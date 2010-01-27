@@ -20,7 +20,7 @@ to ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar
 Support][2 .]&]
 [s0;2 &]
 [s0; [2 All packages and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 B
-SD license][2  or similar compatible license.]&]
+SD license][2 .]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 1. BAZAAR PAGES]]}}&]
