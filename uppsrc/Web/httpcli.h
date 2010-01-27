@@ -15,6 +15,8 @@ public:
 	HttpClient&  Port(int p)                      { port = p; return *this; }
 	HttpClient&  Path(String p)                   { path = p; return *this; }
 	HttpClient&  User(String u, String p)         { username = u; password = p; return *this; }
+	HttpClient&  Digest()                         { force_digest = true; return *this; }
+	HttpClient&  Digest(String d)                 { digest = d; return *this; }
 	HttpClient&  URL(const char *url);
 	HttpClient&  Url(const char *id, const String& data);
 	HttpClient&  KeepAlive(bool k)                { keepalive = k; return *this; }
@@ -60,6 +62,8 @@ public:
 	bool         IsRedirect() const               { return is_redirect; }
 	String       GetRedirectURL() const           { return redirect_url; }
 
+	String       CalculateDigest(String authenticate) const;
+
 	void         Close()                          { socket.Close(); }
 
 	static void  Trace(bool b = true);
@@ -68,6 +72,7 @@ public:
 	Socket       socket;
 	bool         keepalive;
 	bool         aborted;
+	bool         force_digest;
 	String       error;
 
 	int          timeout_msecs;
@@ -84,6 +89,7 @@ public:
 	String       path;
 	String       username;
 	String       password;
+	String       digest;
 	String       client_headers;
 	String       accept;
 	String       agent;
@@ -100,6 +106,7 @@ public:
 	String       server_headers;
 
 	String       redirect_url;
+	String       authenticate;
 
 	enum {
 		DEFAULT_PORT             = 80,
