@@ -165,7 +165,7 @@ struct SpanSource {
 	virtual void Get(RGBA *span, int x, int y, unsigned len) = 0;
 };
 
-class ClipLine : NoCopy {
+class ClippingLine : NoCopy {
 	byte *data;
 	
 public:
@@ -177,8 +177,8 @@ public:
 	bool IsFull() const              { return data == (byte *)1; }
 	operator const byte*() const     { return data; }
 	
-	ClipLine()                       { data = NULL; }
-	~ClipLine()                      { Clear(); }
+	ClippingLine()                       { data = NULL; }
+	~ClippingLine()                      { Clear(); }
 };
 
 Image MipMap(const Image& img);
@@ -313,7 +313,7 @@ private:
 	Attr                       attr;
 	Attr                       pathattr;
 	Array<Attr>                attrstack;
-	Vector< Buffer<ClipLine> > clip;
+	Vector< Buffer<ClippingLine> > clip;
 	Array< ImageBuffer >       mask;
 	Vector< Vector<PathLine> > onpathstack;
 	Vector<double>             pathlenstack;
@@ -344,7 +344,7 @@ private:
 	void             DoMove0();
 	void             ClearPath();
 	void             ApproximateChar(LinearPathConsumer& t, const CharData& ch, double tolerance);
-	Buffer<ClipLine> RenderPath(double width, SpanSource *ss, const RGBA& color);
+	Buffer<ClippingLine> RenderPath(double width, SpanSource *ss, const RGBA& color);
 	void             RenderImage(double width, const Image& image, const Xform2D& transsrc,
 	                             dword flags);
 	void             RenderRadial(double width, const Pointf& f, const RGBA& color1,

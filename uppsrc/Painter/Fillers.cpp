@@ -356,7 +356,7 @@ void ClipFiller::Render(int val)
 	Render(val, 1);
 }
 
-void ClipFiller::Finish(ClipLine& cl)
+void ClipFiller::Finish(ClippingLine& cl)
 {
 	if(empty)
 		return;

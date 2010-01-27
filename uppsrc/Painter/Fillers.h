@@ -63,7 +63,7 @@ struct ClipFiller : Rasterizer::Filler {
 	virtual void Start(int x, int len);
 
 	void   Clear();
-	void   Finish(ClipLine& cl);
+	void   Finish(ClippingLine& cl);
 	
 	ClipFiller(int cx);
 };
