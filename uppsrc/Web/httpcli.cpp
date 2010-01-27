@@ -196,9 +196,9 @@ String HttpClient::CalculateDigest(String authenticate) const
 			else if(var == "qop")
 				qop = value;
 			else if(var == "nonce")
-				nonce = var;
+				nonce = value;
 			else if(var == "opaque")
-				opaque = var;
+				opaque = value;
 		}
 	}
 	String hv1, hv2;
@@ -210,23 +210,24 @@ String HttpClient::CalculateDigest(String authenticate) const
 	int nc = 1;
 	String cnonce = FormatIntHex(Random(), 8);
 	String hv;
-	hv << BinhexEncode(ha1)
+	hv << ha1
 	<< ':' << nonce
 	<< ':' << FormatIntHex(nc, 8)
 	<< ':' << cnonce
-	<< ':' << qop << ':' << BinhexEncode(ha2);
+	<< ':' << qop << ':' << ha2;
 	String ha = MD5String(hv);
 	String auth;
-	auth << "Authorization: Digest "
-	"username=" << AsCString(username)
+	auth
+	<< "username=" << AsCString(username)
 	<< ", realm=" << AsCString(realm)
 	<< ", nonce=" << AsCString(nonce)
 	<< ", uri=" << AsCString(path)
 	<< ", qop=" << AsCString(qop)
 	<< ", nc=" << AsCString(FormatIntHex(nc, 8))
 	<< ", cnonce=" << cnonce
-	<< ", response=" << AsCString(BinhexEncode(ha))
-	<< ", opaque=" << AsCString(opaque);
+	<< ", response=" << AsCString(ha);
+	if(!IsNull(opaque))
+		auth << ", opaque=" << AsCString(opaque);
 	return auth;
 }
 
@@ -412,7 +413,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 				redirect_url.Cat(path.GetIter(p));
 		}
 		else if(!MemICmp(p, au, AU_LENGTH)) {
-			for(p += LO_LENGTH; *p == ' '; p++)
+			for(p += AU_LENGTH; *p == ' '; p++)
 				;
 			authenticate = String(p, e);
 		}
