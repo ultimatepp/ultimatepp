@@ -69,6 +69,11 @@ oogle.com/p/upp`-mirror/source/list][2  will mirror it within an
 hour. Then you will see your new release in Bazaar, congratulations, 
 your first release is done!]&]
 [s0;2 &]
+[s0; [2 All Bazaar folders are open so take care not modifying directly 
+contents in folders that you do not manage. If you want to change 
+something follow ][^topic`:`/`/uppweb`/www`/bazaar`_submission`$en`-us^2 Bazaar 
+Support][2  instructions.]&]
+[s0;2 &]
 [s0; [2 And do not put many different features into single commit. 
 It is better to separate them if they do different things.]&]
 [s0;2 &]
@@ -107,6 +112,9 @@ or editing your project data.]&]
 [s0; [2 Do it carefully and fast. As this is an index page somebody 
 else could be editing it at the same time and some of the changes 
 could be lost.]&]
+[s0;2 &]
+[s0; [2 Please do not modify contents made by other directly. It is 
+better first to recommend the changes and ask for permission.]&]
 [s0;2 &]
 [s0; [2 After that the day after you will see the web page updated. 
 The secret of this is that Upp hosting system will compile and 
@@ -206,8 +214,14 @@ in one year it will be considered as `"Not Maintained`".]&]
 [s0; [2 All packages, documents and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 B
 SD license][2 .]&]
 [s0;2 &]
-[s0;# [2 All software, documents or other media submitted to svn package 
-should have to follow the same or a similar license.]&]
+[s0;# [2 All software, documents or other media attached to the package 
+like plugins should have to follow the same or a similar license. 
+]&]
+[s0;#2 &]
+[s0;# [2 For example, Tcc package has BSD license, but attached libtcc 
+code and library has LGPL license.]&]
+[s0;# [2 As Tcc is a libtcc wrapper, to use libtcc it has to follow 
+LGPL license. However remember that Tcc package is BSD.]&]
 [s0;#2 &]
 [s0;# [2 Do not forget to follow license requirements. Open Source 
 and Creative Commons licenses are very easy to fulfill, but you 
