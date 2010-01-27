@@ -1,4 +1,4 @@
-topic "overview";
+topic "Overview Ultimate++";
 [ $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992; $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -22,7 +22,9 @@ topic "overview";
 [b50;2 $$20,20#03324558446220344731010354752573:Par]
 [i128;*C@(28.42.150)2 $$21,21#90519220486603166734501227306500:code]
 [{_}%EN-US 
-[s0; [*R6 Overview]&]
+[ {{6668:3332f0;g0; [s0; [*R6 Overview Ultimate`+`+]]
+:: [s0;> [*R^topic`:`/`/uppweb`/www`/overview`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 `[
+ru`]]]}}&]
 [s19; Whetting your appetite&]
 [s20; Ultimate`+`+ promises radical reduction of code complexity of 
 typical desktop applications. Let us start with a_simple example 
@@ -2842,4 +2844,4 @@ are always done`", or they might maime your opportunity to receive
 a lot in the reward, together with a healthy disrespect to certain 
 honorable, well`-established development tools.&]
 [s0; &]
-[s0; [2 This article on ][^topic`:`/`/uppweb`/www`/overview`$ru`-ru^2 Russian]]
+[s0; [2 This article in ][^topic`:`/`/uppweb`/www`/overview`$ru`-ru^2 Russian]]
