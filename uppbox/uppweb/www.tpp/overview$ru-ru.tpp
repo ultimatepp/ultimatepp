@@ -1,12 +1,14 @@
-topic "Обзор";
+topic "Обзор Ultimate++";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,2#27457433418004101424360058862402:Caption]
 [b50;2 $$2,2#03324558446220344731010354752573:Par]
 [i128;*C@(28.42.150)2 $$3,3#90519220486603166734501227306500:code]
 [{_}%EN-US 
-[s0; [*R6 Обзор ]&]
+[ {{7200:2800f0;g0; [s0; [*R6 Обзор Ultimate`+`+]&]
 [s0; [*R2 (сорри за неполный перевод `- тестирование 
-сайта)]&]
+сайта)]]
+:: [s0;> [*R^topic`:`/`/uppweb`/www`/overview`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 `[
+ru`]]]}}&]
 [s1; Разогреем Ваш аппетит&]
 [s2; Ultimate`+`+ обещает  радикальное сокращение 
 сложности кода типовых декстоп`-приложений. 
@@ -546,13 +548,14 @@ Date(`~date2)), `~date1, `~date2);]&]
 критики: [/ Ultimate`+`+ не использует массы 
 стандартных C`+`+ библиотек]. Однако 
 для этого есть серьезные причины. 
-STL, с её разрущительным требованием 
-чтобы каждый элемент хранящийся контейнере 
-имел бы copy`-constructor, делает стандартные 
-контейнеры чем`-то  тяжелым для использовани
-я в разработке GUI программ.&]
+STL, с её разрушительным требованием 
+чтобы каждый элемент хранящийся в 
+контейнере имел бы copy`-constructor, делает 
+стандартные контейнеры чем`-то  тяжелым 
+для использования в разработке GUI 
+программ.&]
 [s2; Для Ultimate`+`+ контейнеров такого требования 
-нет. Вместо этого, Ultimate`+`+ контейнеры 
+нет. Вместо этого, в Ultimate`+`+ контейнеры 
 бывают двух видов.&]
 [s2; [/ Vector (Векторный)] вид с обязательным 
 требованием свойства Перещаемости 
@@ -580,20 +583,29 @@ Vector<String> более чем в 10 раз быстрее
 и разбивают правило Ultimate`+`+ в соответствии 
 с которым [/@5 Все где`-то лежит].&]
 [s1; Кто владеет виджетами&]
-[s2; One of the things we discovered over our countless experiments 
-with C`+`+ GUI is the fact that the GUI toolkit should not own 
-widget objects. GUI objects should be always owned by the client, 
-belonging to some scope of client code ([/ everything belongs somewhere]). 
-GUI toolkit just references them, it neither creates them nor 
-destroys them. Each widget object can play its GUI role in some 
-context (like being visible in some window), but at the same 
-time it is always a stand`-alone entity with its set of attributes 
-that can be modified or queried regardless of its current GUI 
-status.&]
-[s2; This has many serious implications. The most important is that 
-Ultimate`+`+ does not require widget objects to be allocated 
-on the heap. That in turn allows us to arrange GUI dialog structure 
-in a very effective way, instead of&]
+[s2; Один из моментов, который мы открыли 
+в результате наших многочисленных 
+экспериментов с  C`+`+ GUI это факт, что 
+инструментарий GUI не должен владеть 
+GUI объектами (виджетами) . GUI объекты 
+всегда должны принадлежать клиенту, 
+лежащие в области видимости клиентского 
+кода ([/ Все где`-то лежит]). Инструментарий 
+GUI должен ссылаться на виджеты, он 
+никогда не создает и удаляет их. Каждый 
+виджет объекта может сыграть свою 
+GUI роль в определенном контексте (например, 
+быть видимым в другом окне), но в тоже 
+время он самостоятельная сущность 
+со своим набором атрибутов, которые 
+могут быть модифицированы или запрошены 
+независимо от их GUI статуса.&]
+[s2; Это имеет имеет серьезные последствия. 
+Наиболее важным является то, что Ultimate`+`+ 
+не требует чтобы виджеты были бы созданы 
+в куче (heap) . Это делает возможным организоват
+ь GUI диалог очень эффективным способом, 
+вместо&]
 [s3; &]
 [s3; struct MyDialog `{&]
 [s3; -|Option `*option;&]
@@ -601,7 +613,7 @@ in a very effective way, instead of&]
 [s3; -|Button `*ok;&]
 [s3; `};&]
 [s3; &]
-[s2; we are using:&]
+[s2; мы напишем:&]
 [s3; &]
 [s3; struct MyDialog `{&]
 [s3; -|Option option;&]
@@ -609,14 +621,16 @@ in a very effective way, instead of&]
 [s3; -|Button ok;&]
 [s3; `};&]
 [s3; &]
-[s2; Even more important, lifetime of these widgets does not depend 
-on the life cycle of MyDialog GUI `- MyDialog can be closed or 
-not yet open, but attributes of widgets are accessible all the 
-time.&]
-[s1; Dialog templates are C`+`+ templates&]
-[s2; Now that we have laid down the foundations, it is time to introduce 
-the coolest aspect of Ultimate`+`+ GUI programming `- layout 
-templates:&]
+[s2; Еще более важно, время жизни этих 
+виджетов не зависит от жизненного 
+цикла MyDialog `- структура MyDialog может 
+быть закрыта или еще не открыта, но 
+атрибуты виджетов доступны все время.&]
+[s1; Шаблоны диалогов это шаблоны C`+`+&]
+[s2; Теперь, когда мы заложили фундамент, 
+настало время для познакомиться с 
+мощнейшим аспектом  програмирования 
+GUI в Ultimate`+`+  `- диалоговые шаблоны:&]
 [s2; If you visually design a layout (usually, but not limited to, 
 the layout of a dialog box) using TheIDE`'s [/ Layout designer], 
 this layout is in in your code reflected as a C`+`+ template 
