@@ -182,7 +182,7 @@ void Ide::CreateMakefile()
 	mfout <<= AppendFileName(GetFileDirectory(PackagePath(wspc[0])), "Makefile");
 	if(!mfout.ExecuteSaveAs("Save makefile as"))
 		return;
-	SaveMakeFile(~mfout, false);
+	SaveMakeFile(~mfout, true);
 }
 
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_LINUX)

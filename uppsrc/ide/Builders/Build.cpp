@@ -693,7 +693,9 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		<< install
 		<< "\n"
 		"$(OutFile): " << linkdep << "\n\t" << linkfiles << linkfileend << "\n"
-		<< rules;
+		<< rules
+		<< "clean:\n"
+		<< "\tif [ -d $(UPPOUT) ]; then rm -rf $(UPPOUT); fi;\n";
 
 	bool sv = ::SaveFile(fn, makefile);
 	if(!exporting)
