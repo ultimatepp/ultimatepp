@@ -2261,10 +2261,15 @@ struct ArrayCtrl::RowOrder : public ArrayCtrl::Order {
 	}
 };
 
-void ArrayCtrl::Sort(int (*compare)(const Vector<Value>& v1, const Vector<Value>& v2)) {
+void ArrayCtrl::Sort(int from, int count, int (*compare)(const Vector<Value>& v1, const Vector<Value>& v2))
+{
 	RowOrder io;
 	io.compare = compare;
-	Sort(io);
+	Sort(from, count, io);
+}
+
+void ArrayCtrl::Sort(int (*compare)(const Vector<Value>& v1, const Vector<Value>& v2)) {
+	Sort(0, GetCount(), compare);
 }
 
 struct ArrayCtrl::ItemOrder : public ArrayCtrl::Order {

@@ -471,6 +471,8 @@ public:
 	void       Sort(const ArrayCtrl::Order& order);
 	void       Sort(int from, int count, const ArrayCtrl::Order& order);
 	void       Sort(int (*compare)(const Vector<Value>& v1, const Vector<Value>& v2));
+	void       Sort(int from, int count,
+	                int (*compare)(const Vector<Value>& v1, const Vector<Value>& v2));
 	void       Sort(int ii, int (*compare)(const Value& v1, const Value& v2)
 	                = StdValueCompare);
 	void       Sort(Id id, int (*compare)(const Value& v1, const Value& v2)
