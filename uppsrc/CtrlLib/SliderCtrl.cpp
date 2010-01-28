@@ -8,6 +8,7 @@ SliderCtrl::SliderCtrl()
 , max(100)
 , step(1)
 , round_step(true)
+, jump(false)
 {
 	Transparent();
 	NoWantFocus();
@@ -80,7 +81,13 @@ void SliderCtrl::LeftDown(Point pos, dword keyflags)
 	else
 	if(p >= thumb && p < thumb + HoVe(CtrlImg::hthumb().GetSize().cx, CtrlImg::vthumb().GetSize().cy))
 		SetCapture();
-	else {
+	else
+	if(jump) {
+		value = ClientToSlider(p);
+		WhenSlideFinish();
+		UpdateActionRefresh();		
+	}
+	else {		
 		if( ( ( p < thumb) && (min == Min() ) ) || ( (p > thumb) && ( min == Max() ) ) )
 			Dec();
 		else
