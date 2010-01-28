@@ -65,9 +65,5 @@ DbfView::DbfView()
 
 GUI_APP_MAIN
 {
-	SetDefaultCharset(CHARSET_WIN1250);
-	SetLanguage(LNG_CZECH);
-	Ctrl::NoLayoutZoom();
-
 	DbfView().Perform();
 }
