@@ -2,6 +2,7 @@ class SliderCtrl : public Ctrl {
 	int           value;
 	int           min, max, step;
 	bool          round_step;
+	bool		  jump;
 
 	int           SliderToClient(int value) const;
 	int           ClientToSlider(int x) const;
@@ -41,6 +42,7 @@ public:
 	int           GetMax() const                  { return max; }
 
 	bool          IsVert() const;
+	void		  Jump(bool v = true)			  { jump = v; }
 
 	SliderCtrl&   Step(int _step, bool _r = true) { step = _step; round_step = _r; return *this; }
 	int           GetStep() const                 { return step; }
