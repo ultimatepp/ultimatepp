@@ -18,7 +18,7 @@ URL:            http://www.ultimatepp.org
 Source0:        %{name}-x11-src-%{version}.tar.gz
 
 # Common Buildrequires
-Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-dev
+Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel
 
 # Mandriva specific Buildrequires
 %if "%?mdvver" != ""
