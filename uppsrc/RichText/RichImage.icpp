@@ -275,7 +275,7 @@ Image RichImlImage::Get(const Value& v) const
 
 String RichImlImage::GetTypeName(const Value& v) const
 {
-	return "IML";
+	return "iml";
 }
 
 bool RichImlImage::IsText() const
