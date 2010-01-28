@@ -1,0 +1,12 @@
+description "Using CoWork for loop parallelisation\377";
+
+uses
+	CtrlLib;
+
+file
+	Img.iml,
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+

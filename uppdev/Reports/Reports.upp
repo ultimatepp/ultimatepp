@@ -1,11 +1,13 @@
-description "Report example";
+description "Report example\377";
 
 uses
 	CtrlLib,
-	Report;
+	Report,
+	PdfDraw;
 
 file
 	main.cpp;
 
 mainconfig
 	"" = "GUI";
+
