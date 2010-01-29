@@ -14,10 +14,11 @@ topic "RWMutex";
 [s3; &]
 [s1;:RWMutex`:`:class: [@(0.0.255)3 class][3 _][*3 RWMutex][3 _:_][@(0.0.255)3 private][3 _][*@3;3 N
 oCopy]&]
-[s2;%% This class mediates reader`-writer sharing of global data. 
+[s9;%% This class mediates reader`-writer sharing of global data. 
 Only single thread can EnterWrite, but any number of threads 
 can EnterRead.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:RWMutex`:`:EnterWrite`(`): [@(0.0.255) void]_[* EnterWrite]()&]
@@ -40,14 +41,15 @@ until all reader threads leave using LeaveRead.&]
 [s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 StaticRWMutex]]}}&]
-[s4; &]
+[s3; &]
 [s1;:StaticRWMutex`:`:class: [@(0.0.255)3 class][3 _][*3 StaticRWMutex]&]
-[s2;%% Variant of RWMutex that can be used as static or global variable 
+[s9;%% Variant of RWMutex that can be used as static or global variable 
 without the need of initialization  `- it has no constructor 
 and correctly performs the first initialization when any of methods 
 is called. That avoids problems with initialization order or 
 multithreaded initialization issues.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:StaticRWMutex`:`:Get`(`): [_^RWMutex^ RWMutex][@(0.0.255) `&]_[* Get]()&]
@@ -63,13 +65,14 @@ multithreaded initialization issues.&]
 [s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 RWMutex`::ReadLock]]}}&]
-[s4; &]
+[s3; &]
 [s1;:RWMutex`:`:ReadLock`:`:class: [@(0.0.255)3 class][3 _][*3 ReadLock]&]
-[s2;%% This nested class automates calls to Mutex`::EnterRead / Mutex`::LeaveRead 
+[s9;%% This nested class automates calls to Mutex`::EnterRead / Mutex`::LeaveRead 
 for block of code using C`+`+ constructor / destructor rules. 
 Using [* operator StaticRWMutex`::RWMutex], it can be used with 
 StaticRWMutex as well.&]
-[s3; &]
+[s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor / Destructor detail]]}}&]
 [s3; &]
 [s5;:RWMutex`:`:ReadLock`:`:ReadLock`(RWMutex`&`): [* ReadLock]([_^RWMutex^ RWMutex][@(0.0.255) `&
@@ -84,11 +87,12 @@ StaticRWMutex as well.&]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 RWMutex`::WriteLock]]}}&]
 [s3; &]
 [s1;:RWMutex`:`:WriteLock`:`:class: [@(0.0.255)3 class][3 _][*3 WriteLock]&]
-[s0;l288; This nested class automates calls to Mutex`::EnterWrite 
-/ Mutex`::LeaveLeave for block of code using C`+`+ constructor 
-/ destructor rules. Using [* operator StaticRWMutex`::RWMutex], 
-it can be used with StaticRWMutex as well.&]
+[s9; This nested class automates calls to Mutex`::EnterWrite / Mutex`::LeaveLeave 
+for block of code using C`+`+ constructor / destructor rules. 
+Using [* operator StaticRWMutex`::RWMutex], it can be used with 
+StaticRWMutex as well.&]
 [s3; &]
+[s0; &]
 [ {{10000t/25b/25@1 [s0; [* Constructor / Destructor detail]]}}&]
 [s3; &]
 [s5;:RWMutex`:`:WriteLock`:`:WriteLock`(RWMutex`&`): [* WriteLock]([_^RWMutex^ RWMutex][@(0.0.255) `&
@@ -98,4 +102,5 @@ it can be used with StaticRWMutex as well.&]
 [s4;%% &]
 [s5;:RWMutex`:`:WriteLock`:`:`~WriteLock`(`): [@(0.0.255) `~][* WriteLock]()&]
 [s2;%% Calls [*@3 s].LeaveWrite() where [*@3 s] is the constructor parameter.&]
+[s3; &]
 [s0; ]

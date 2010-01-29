@@ -13,13 +13,14 @@ topic "Semaphore";
 [ {{10000@(113.42.0) [s0;%% [*@7;4 StaticSemaphore]]}}&]
 [s3; &]
 [s1;:Semaphore`:`:class: [@(0.0.255)3 class][3 _][*3 Semaphore]&]
-[s2;%% Well known multithreading synchronization tool. In U`+`+, 
+[s9;%% Well known multithreading synchronization tool. In U`+`+, 
 it is primarily used to block and release thread execution. Semaphore 
 has an internal counter, initially initialized to zero. Wait 
 operation blocks thread execution as long as counter is zero, 
 then decreases it by one. Release operation increases counter 
 by 1.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Semaphore`:`:Wait`(`): [@(0.0.255) void]_[* Wait]()&]
@@ -31,6 +32,7 @@ the Release method. Before returning, decreases counter by 1.&]
 [s5;:Semaphore`:`:Release`(`): [@(0.0.255) void]_[* Release]()&]
 [s2;%% Increases internal counter by 1.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s3; &]
 [s5;:Semaphore`:`:Semaphore`(`): [* Semaphore]()&]
@@ -38,14 +40,15 @@ the Release method. Before returning, decreases counter by 1.&]
 [s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 StaticSemaphore]]}}&]
-[s4; &]
+[s3; &]
 [s1;:StaticSemaphore`:`:class: [@(0.0.255)3 class][3 _][*3 StaticSemaphore]&]
-[s2;%% Variant of Semaphore that can be used as static or global 
+[s9;%% Variant of Semaphore that can be used as static or global 
 variable without the need of initialization  `- it has no constructor 
 and correctly performs the first initialization when any of methods 
 is called. That avoids problems with initialization order or 
 multithreaded initialization issues.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:StaticSemaphore`:`:Get`(`): [_^Semaphore^ Semaphore][@(0.0.255) `&]_[* Get]()&]
@@ -56,4 +59,5 @@ multithreaded initialization issues.&]
 [s5;:StaticSemaphore`:`:Wait`(`): [@(0.0.255) void]_[* Wait]()&]
 [s5;:StaticSemaphore`:`:Release`(`): [@(0.0.255) void]_[* Release]()&]
 [s2;%% Call respective methods of Semaphore instance.&]
+[s3; &]
 [s0; ]

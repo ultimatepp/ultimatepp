@@ -10,7 +10,8 @@ topic "Index";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;~~~64; [*@3;4 Index]&]
+[ {{10000@(113.42.0) [s0; [*@7;4 Index]]}}&]
+[s3; &]
 [s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 , 
 ][@(0.0.255)3 class][3 _][*@4;3 HashFn][3 _`=_StdHash][@(0.0.255)3 <][*@4;3 T][@(0.0.255)3 >][3 _
 >]&]
@@ -40,8 +41,8 @@ picked Index is logic error with exception of&]
 [s0; [C+75 void ][*C+75 Clear][C+75 ()]&]
 [s0; [C+75 bool ][*C+75 IsPicked][C+75 () const]&]
 [s9; Optional deep copy operator is inherited from AIndex class. 
-Pick operator is implicitly defined by composition&]
-[s0; .&]
+Pick operator is implicitly defined by composition.&]
+[s0; &]
 [s0; [* Base class]&]
 [s0; [^topic`:`/`/Core`/src`/AIndex`$en`-us`#AIndex`:`:class^ AIndex<T, 
 Vector<T>, HashFn>]&]

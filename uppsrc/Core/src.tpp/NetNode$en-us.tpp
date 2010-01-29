@@ -10,12 +10,12 @@ topic "NetNode";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s0; [*@3;4 NetNode]&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 NetNode]]}}&]
+[s3; &]
 [s1;:NetNode`:`:class: [@(0.0.255)3 class][3 _][*3 NetNode][3 _:_][@(0.0.255)3 private][3 _][*@3;3 M
 oveable][@(0.0.255)3 <][*3 NetNode][@(0.0.255)3 >][3 _]&]
 [s6;l0;%% WIN32 specific&]
-[s6;l0;%% &]
-[s0;%% This class represents single network node (network resource). 
+[s9;%% This class represents single network node (network resource). 
 It is [^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable] and 
 has deep copy.&]
 [s3;%% &]

@@ -94,7 +94,7 @@ onst]_[_^Ptr^ Ptr][@(0.0.255) `&]_[*@3 ptr])&]
 [s5;:Ptr`:`:ToString`(`)const:%- [_^String^ String]_[* ToString]()_[@(0.0.255) const]&]
 [s2; Converts all information to string for diagnostic purposes&]
 [s3; &]
-[s0;i448;a25;kKO9;:noref:@(0.0.255)%- &]
+[s0;i448;a25;kKO9;@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Global Operators]]}}&]
 [s3; &]
 [s5;K%- friend_[@(0.0.255) bool][@(64) _]operator`=`=[@(64) (][@(0.0.255) const][@(64) _][^`:`:Ptr^@(64) P

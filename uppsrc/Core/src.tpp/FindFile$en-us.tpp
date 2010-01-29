@@ -11,11 +11,12 @@ topic "FindFile";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 FindFile]]}}&]
-[s0;i448;a25;kKO9;@(0.0.255)%- &]
+[s3;%- &]
 [s1;:FindFile`:`:class:%- [@(0.0.255)3 class][3 _][*3 FindFile]&]
-[s2; This class serves as platform independent encapsulation of directory 
+[s9; This class serves as platform independent encapsulation of directory 
 enumeration.&]
-[s0;i448;a25;kKO9;@(0.0.255)%- &]
+[s3;%- &]
+[s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
 [s5;:FindFile`:`:Search`(const char`*`):%- [@(0.0.255) bool]_[* Search]([@(0.0.255) const]_
@@ -139,4 +140,5 @@ this is used as condition to the loop that enumerates directory.&]
 [s5;:FindFile`:`:FindFile`(const char`*`):%- [* FindFile]([@(0.0.255) const]_[@(0.0.255) ch
 ar]_`*[*@3 name])&]
 [s2; Initializes and performs Search([%-*@3 name]).&]
+[s3; &]
 [s0; ]

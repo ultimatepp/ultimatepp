@@ -14,10 +14,11 @@ topic "XML output";
 [s3;%% &]
 [s1;:XmlTag`:`:class: [@(0.0.255)3 class][3 _][*3 XmlTag][3 _:_][@(0.0.255)3 private][3 _][*@3;3 Mov
 eable][3 <][*3 XmlTag][3 >_]&]
-[s2;%% This class simplifies the task of creating XML output text. 
+[s9;%% This class simplifies the task of creating XML output text. 
 It provides means of formatting XML tags and attributes and outputs 
 String.&]
-[s0;i448;a25;kKO9;@(0.0.255) &]
+[s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4;H0; &]
 [s5;:XmlTag`:`:Tag`(const char`*`): [_^XmlTag^ XmlTag][@(0.0.255) `&]_[* Tag]([@(0.0.255) con
@@ -58,8 +59,9 @@ ator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 attr], [@(0.0.255) int]_[*@3
 perator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 attr], [@(0.0.255) double]_[*@3 q])&]
 [s2;%% These methods add XML tag attributes.&]
 [s3;%% &]
+[s0;%% &]
 [ {{10000t/25b/25@1 [s0; [* Constructor Detail]]}}&]
-[s4;H0;%% &]
+[s3;%% &]
 [s5;:XmlTag`:`:XmlTag`(`): [* XmlTag]()&]
 [s2; Empty constructor. You have to use Tag method to set the tag 
 name.&]
@@ -68,6 +70,7 @@ name.&]
 [s5;:XmlTag`:`:XmlTag`(const char`*`): [* XmlTag]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 t
 ag])&]
 [s2;%% Sets the tag name to [%-*@3 tag].&]
+[s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XML output functions]]}}&]
 [s0; &]

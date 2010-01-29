@@ -11,9 +11,10 @@ topic "Date formatting and scanning";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [s0;%- [*@3;4 Date formatting and scanning]&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Global functions]]}}&]
-[s0;%- &]
+[s3;%- &]
 [s5;:StrToDate`(Date`&`,const char`*`):%- [@(0.0.255) const]_[@(0.0.255) char]_`*[* StrToDa
 te]([_^Date^ Date][@(0.0.255) `&]_[*@3 d], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Scans a string for a Date. Order of day, month and year is specified 
@@ -73,4 +74,5 @@ up to next `"amend`" character or `'`\0`' are replaced by it.&]
 [s2; CharFilterDate would allow letters but not convert them to uppercase, 
 it will allow characters `'[* .]`' and `'/`' and it will convert 
 `'[*@5 ,]`' to `'[* .]`' and `'[*@5 :]`' or `'[*@5 ;]`' to `'[* /]`'.&]
+[s3; &]
 [s0; ]

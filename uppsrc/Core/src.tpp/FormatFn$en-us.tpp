@@ -11,9 +11,10 @@ topic "Formatting functions";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [s0; [*@3;4 Formatting functions]&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Global functions]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:FormatInt`(int`):%- [_^String^ String]_[* FormatInt]([@(0.0.255) int]_[*@3 i])&]
 [s2; Outputs decimally formatted signed integer [%-*@3 i] without `+ 
 or any paddings. Supposed to be quite fast. Equivalent to FormatIntBase(i, 
@@ -198,5 +199,5 @@ nt]_[*@3 i], [@(0.0.255) int]_[*@3 base], [@(0.0.255) int]_[*@3 width]_`=_[@3 0]
 [%-*@3 base] with left padding to given [%-*@3 width] with a given 
 [%-*@3 lpad] character. If [*@3 sign ]is `+1 `= always prepend `'`+`'/`-, 
 if 0 `= auto (`'`-`' only), if `-1, format as unsigned.&]
-[s1; &]
+[s3; &]
 [s0; ]

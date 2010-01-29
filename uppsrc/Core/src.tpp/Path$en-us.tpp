@@ -11,18 +11,21 @@ topic "File path utilities";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 File path utilities]]}}&]
-[s9; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* FileTime]]}}&]
+[s3; &]
+[s0; &]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 FileTime]]}}&]
 [s3; &]
 [s1;:FileTime`:`:struct: [@(0.0.255)3 struct][3 _][*3 FileTime][3 _:_][@(0.0.255)3 public][3 _][*@3;3 C
 ompareRelOps][@(0.0.255)3 <const][3 _][*3 FileTime][@(0.0.255)3 `&][3 , 
 `&Compare`_FileTime][@(0.0.255)3 >][3 _]&]
-[s2;%% FileTime is a structure that encapsulates host specific type 
+[s9;%% FileTime is a structure that encapsulates host specific type 
 used for file or directory timestamps.&]
-[s2;%% It has defined ordering and can be compared to Time. Time 
+[s9;%% It has defined ordering and can be compared to Time. Time 
 has conversion constructor from FileTime and AsFileTime method 
 for backwards conversion.&]
-[s9;%% &]
+[s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Function List]]}}&]
 [s3; &]
 [s5;:PatternMatch`(const char`*`,const char`*`): [@(0.0.255) bool]_[* PatternMatch]([@(0.0.255) c

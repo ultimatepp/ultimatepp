@@ -10,8 +10,8 @@ topic "Algorithms";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*@3;4 Algorithms]&]
-[s0; A number of generic algorithms.&]
+[ {{10000@(113.42.0) [s0; [*@7;4 Algorithms]]}}&]
+[s9; A number of generic algorithms.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Global Functions]]}}&]
@@ -24,16 +24,6 @@ effective variants.&]
 [s7; [*C@4 T]-|Type of values.&]
 [s7; [*C@3 a]-|First value to swap.&]
 [s7; [*C@3 b]-|Second value to swap.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:IterSwap`(I`,I`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 I][@(0.0.255) >]_[@(0.0.255) v
-oid]_[* IterSwap]([*@4 I]_[*@3 a], [*@4 I]_[*@3 b])&]
-[s2; Swaps values pointed to by iterators. Specific types might specialize 
-[* IterSwap] with more effective variants.&]
-[s6; Swap must be defined for type pointed to by I.&]
-[s7; [*C@4 I]-|Iterator type.&]
-[s7; [*C@3 a]-|Iterator pointing to first value.&]
-[s7; [*C@3 b]-|Iterator pointing to second value. xx&]
 [s3;%- &]
 [s4;%- &]
 [s5;:IterSwap`(I`,I`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 I][@(0.0.255) >]_[@(0.0.255) v

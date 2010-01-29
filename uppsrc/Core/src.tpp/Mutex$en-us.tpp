@@ -14,13 +14,14 @@ topic "Mutex";
 [s3; &]
 [s1;:Mutex`:`:class: [@(0.0.255)3 class][3 _][*3 Mutex][3 _:_][@(0.0.255)3 private][3 _][*@3;3 NoCop
 y]&]
-[s2;%% This well know synchronization primitive is usually used to 
+[s9;%% This well know synchronization primitive is usually used to 
 serialize access to shared data or other shared resources. Only 
 single thread can execute the code between calls to Enter and 
 Leave. If any other thread attempts to Enter the protected section 
 while other thread is performing it, it is blocked until performing 
 thread indicates leaving the section by invoking Leave.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Mutex`:`:Enter`(`): [@(0.0.255) void]_[* Enter]()&]
@@ -42,12 +43,13 @@ called Enter can invoke Leave.&]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 StaticMutex]]}}&]
 [s3; &]
 [s1;:StaticMutex`:`:class: [@(0.0.255)3 class][3 _][*3 StaticMutex]&]
-[s2;%% Variant of Mutex that can be used as static or global variable 
+[s9;%% Variant of Mutex that can be used as static or global variable 
 without the need of initialization  `- it has no constructor 
 and correctly performs the first initialization when any of methods 
 is called. That avoids problems with initialization order or 
 multithreaded initialization issues.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:StaticMutex`:`:Get`(`): [_^Mutex^ Mutex][@(0.0.255) `&]_[* Get]()&]
@@ -59,16 +61,17 @@ multithreaded initialization issues.&]
 [s5;:StaticMutex`:`:Enter`(`): [@(0.0.255) void]_[* Enter]()&]
 [s5;:StaticMutex`:`:Leave`(`): [@(0.0.255) void]_[* Leave]()&]
 [s2;%% Calls respective methods of Mutex instance.&]
-[s0;%% &]
+[s3;%% &]
 [s0; &]
 [ {{10000t/25b/25@(113.42.0) [s0; [*@7;4 Mutex`::Lock]]}}&]
 [s3; &]
 [s1;:Mutex`:`:Lock`:`:class: [@(0.0.255)3 class][3 _][*3 Mutex`::Lock]&]
-[s2;%% This nested class automates calls to Mutex`::Enter / Mutex`::Leave 
+[s9;%% This nested class automates calls to Mutex`::Enter / Mutex`::Leave 
 for block of code using C`+`+ constructor / destructor rules. 
 Using [* operator StaticMutex`::Mutex], it can be used with StaticMutex 
 as well.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor / Destructor detail]]}}&]
 [s3; &]
 [s5;:Mutex`:`:Lock`:`:Lock`(Mutex`&`): [* Lock]([_^Mutex^ Mutex][@(0.0.255) `&]_[*@3 s])&]
@@ -77,4 +80,5 @@ as well.&]
 [s4; &]
 [s5;:Mutex`:`:Lock`:`:`~Lock`(`): [@(0.0.255) `~][* Lock]()&]
 [s2; [%% Performs ][*@3 s].Enter() where [*@3 s] is the constructor parameter.&]
-[s3; ]
+[s3; &]
+[s0; ]

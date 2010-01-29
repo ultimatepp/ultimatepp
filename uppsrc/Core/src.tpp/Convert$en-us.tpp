@@ -20,9 +20,8 @@ direction is represented by the Scan method.&]
 [s9; If the conversion is not possible (e.g. due to invalid textual 
 representation), convert methods should return `"ErrorValue`" 
 to indicate the problem.&]
-[s0; &]
 [s3; &]
-[s0;%- &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3;%- &]
 [s5;:Convert`:`:Format`(const Value`&`)const:%- [@(0.0.255) virtual] 

@@ -10,12 +10,12 @@ topic "String and WString";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*@3;4 String]&]
+[ {{10000@(113.42.0) [s0; [*@7;4 String]]}}&]
+[s3; &]
 [s1;:String`:`:class:%- [@(0.0.255)3 class][3 _][*3 String][3 _:_][@(0.0.255)3 public][3 _][*@3;3 Mo
 veable][@(0.0.255)3 <][*3 String][3 , ][_^AString^3 AString][@(0.0.255)3 <][_^String0^3 Strin
 g0][@(0.0.255)3 >][3 _>_]&]
-[s0;3%- &]
-[s0; String is a value class that contains an array of characters 
+[s9; String is a value class that contains an array of characters 
 (or bytes). It is designed to have fast copy operations. The 
 array of characters is zero terminated. String provides non`-mutable 
 access to the array of characters. String can store 8 bit encoded 
@@ -24,10 +24,8 @@ String works with raw 8 bit values `- there are not automatic
 conversions performed e.g. in operator`[`]. If you need to access 
 individual UTF`-8 characters, the best practice in most cases 
 is to convert it to WString (and eventually back after processing).&]
-[s0; &]
-[s0; String is also often used to store raw binary data.&]
-[s0; &]
-[s0; WString is similar to String, but it uses 16 bit Ucs2 encoding. 
+[s9; String is also often used to store raw binary data.&]
+[s9; WString is similar to String, but it uses 16 bit Ucs2 encoding. 
 String and WString share a number of common functions through 
 the AString interface.&]
 [s3; &]
@@ -248,15 +246,16 @@ nt]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%- [%% Returns the character at position ][*@3 i.]&]
 [s3;%- &]
 [s0;%- &]
-[s0;%- &]
-[s0;%- &]
-[s0;%- &]
 [s0;@(0.0.255) &]
-[s0;@(0.0.255) &]
-[s0; [*@3;4 WString]&]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 WString]]}}&]
+[s3; &]
 [s1;:WString`:`:class:%- [@(0.0.255)3 class][3 _][*3 WString][3 _:_][@(0.0.255)3 public][3 _][*@3;3 M
 oveable][@(0.0.255)3 <][*3 WString][3 , ][_^AString^3 AString][@(0.0.255)3 <][_^WString0^3 WS
 tring0][@(0.0.255)3 >][3 _>_]&]
+[s9; WString is similar to String, but it uses 16 bit Ucs2 encoding. 
+String and WString share a number of common functions through 
+the AString interface.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
@@ -434,13 +433,69 @@ nt]_[*@3 pos], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[
 [s0;%- &]
 [s0;%- &]
 [s0;%- &]
-[s0;%- &]
-[s0;%- &]
-[s0; &]
-[s0; [@3;4 AString]&]
+[ {{10000@(113.42.0) [s0; [*@7;4 AString]]}}&]
+[s3; &]
 [s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@3;3 B][@(0.0.255)3 >]&]
 [s1;:AString`:`:class:%- [@(0.0.255) class]_[* AString]_:_[@(0.0.255) public]_[*@3 B]&]
 [s9; A class that implements behavior common to both String and WString.&]
 [s3; &]
-[s0; &]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s3;%- &]
+[s5;:AString`:`:Clear`(`):%- [@(0.0.255) void]_[* Clear]()&]
+[s2; Clears the content of the string.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AString`:`:GetLength`(`)const:%- [@(0.0.255) int]_[* GetLength]()_[@(0.0.255) const]&]
+[s2; Returns the length of the string.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AString`:`:IsEmpty`(`)const:%- [@(0.0.255) bool]_[* IsEmpty]()_[@(0.0.255) const]&]
+[s2; Return true if the length of the string is zero.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AString`:`:End`(`)const:%- [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[* End]()_
+[@(0.0.255) const]&]
+[s2; Returns a pointer to the end of the string.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AString`:`:Last`(`)const:%- [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[* Last](
+)_[@(0.0.255) const]&]
+[s2; Returns a pointer to the last character in the string.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AString`:`:GetIter`(int`)const:%- [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[* G
+etIter]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s2; Returns a pointer to character index [%-*@3 i] of the string.&]
+[s3; &]
+[s4;%- &]
+[s5;:AString`:`:operator`[`]`(int`)const:%- [@(0.0.255) int]_[* operator`[`]]([@(0.0.255) i
+nt]_[*@3 i])_[@(0.0.255) const]&]
+[s2; Returns the character with index [%-*@3 i].&]
+[s3; &]
+[s4;%- &]
+[s5;:AString`:`:operator const tchar`*`(`)const:%- [@(0.0.255) operator]_[@(0.0.255) cons
+t]_tchar_`*()_[@(0.0.255) const]&]
+[s5;:AString`:`:operator`~`(`)const:%- [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[* o
+perator`~]()_[@(0.0.255) const]&]
+[s5;:AString`:`:operator const void`*`(`)const:%- [@(0.0.255) operator]_[@(0.0.255) const
+]_[@(0.0.255) void]_`*()_[@(0.0.255) const]&]
+[s5;:AString`:`:operator const bchar`*`(`)const:%- [@(0.0.255) operator]_[@(0.0.255) cons
+t]_bchar_`*()_[@(0.0.255) const]&]
+[s2; Same as [* Begin()].&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AString`:`:Insert`(int`,int`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int]_[*@3 pos],
+ [@(0.0.255) int]_[*@3 c])&]
+[s5;:AString`:`:Insert`(int`,const AString`:`:tchar`*`,int`):%- [@(0.0.255) void]_[* Inse
+rt]([@(0.0.255) int]_[*@3 pos], [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 count])&]
+[s5;:AString`:`:Insert`(int`,const AString`:`:String`&`):%- [@(0.0.255) void]_[* Insert](
+[@(0.0.255) int]_[*@3 pos], [@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_
+[*@3 s])&]
+[s5;:AString`:`:Insert`(int`,const char`*`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int
+]_[*@3 pos], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s2; Inserts item [%-*@3 c]/[%-*@3 s] at position [%-*@3 pos] ([%-*@3 count] 
+times).&]
+[s3; &]
 [s0; ]

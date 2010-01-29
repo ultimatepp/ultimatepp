@@ -11,14 +11,14 @@ topic "XmlParser";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XmlParser]]}}&]
-[s1;@(0.0.255)3 &]
+[s3; &]
 [s1;:XmlParser`:`:class: [@(0.0.255)3 class][3 _][*3 XmlParser]&]
-[s2;%% This class is a `'lexical`' parser of XML. It is intended 
+[s9;%% This class is a `'lexical`' parser of XML. It is intended 
 for implementation of descent parsers of XML.&]
 [s3; &]
 [s0;i448;a25;kKO9;@(0.0.255) &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:XmlParser`:`:SkipWhites`(`): [@(0.0.255) void]_[* SkipWhites]()&]
 [s2;%% Skips any whitespaces in the input XML.&]
 [s3; &]
@@ -198,6 +198,7 @@ the next start`-tag is processed.&]
 mismatches of start`-tag and end`-tags. This mode was introduced 
 to deal with broken XML files.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s4;H0; &]
 [s5;:XmlParser`:`:XmlParser`(const char`*`): [* XmlParser]([@(0.0.255) const]_[@(0.0.255) c
@@ -205,4 +206,5 @@ har]_`*[*@3 s])&]
 [s2;%% Creates the parser for xml input text [%-*@3 s]. The pointed 
 text must be valid through the whole parsing process (XmlParser 
 does not make copy of the text).&]
+[s3; &]
 [s0; ]
