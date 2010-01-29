@@ -1771,7 +1771,7 @@ void GuiMainFn_();\
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdShow) \
 { \
 	UPP::Ctrl::InitWin32(hInstance); \
-	UPP::coreCmdLine__() = UPP::SplitCmdLine__(lpCmdLine); \
+	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine)); \
 	UPP::AppInitEnvironment__(); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
