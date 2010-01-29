@@ -224,25 +224,25 @@ bool Compose(Font font, int chr, ComposedGlyph& cg)
 	return true;
 }
 
-static const char *sFontReplacements[] = {
-	"sans-serif",
-	"Arial",
-	"Arial Unicode MS",
-	"Symbol",
-	"???????",
-	"?????",
-	"MS UI Gothic", 
-	"MS Mincho",
-	"Arial",
-	"AlArabiya"
-	"FreeSerif",
-	"Kochi Mincho",
-	"Kochi Gothic",
-	"Sazanami Mincho",
-	"Sazanami Gothic",
-	"Gulim",
-	"SimSun",
-	"PMingLiU",
+struct sRFace {
+	const char *name;
+	dword l, h;
+} sFontReplacements[] = {
+	"sans-serif", 0xffdc0008, 0xd8000007,
+	"Arial", 0xffdc0000, 0x98000007,
+	"Arial Unicode MS", 0xfffc3fef, 0xfa7ff7e7,
+	"MS UI Gothic", 0xffdc0008, 0xd8000007,
+	"MS Mincho", 0xffc00000, 0x9a7ff003,
+	"Arial", 0xffdc0000, 0x98000007,
+	"AlArabiyaFreeSerif", 0xffdc0008, 0xd8000007,
+	"Kochi Mincho", 0xffdc0008, 0xd8000007,
+	"Kochi Gothic", 0xffdc0008, 0xd8000007,
+	"Sazanami Mincho", 0xffdc0008, 0xd8000007,
+	"Sazanami Gothic", 0xffdc0008, 0xd8000007,
+	"Gulim", 0xffdc0008, 0xd8000007,
+	"SimSun", 0xffdc0008, 0xd8000007,
+	"PMingLiU", 0xffdc0008, 0xd8000007,
+	"Symbol", 0xffffffff, 0xffffffff,
 };
 
 struct sFontMetricsReplacement {
@@ -254,17 +254,23 @@ struct sFontMetricsReplacement {
 bool Replace(Font fnt, int chr, Font& rfnt)
 {
 	static Vector<int> rface;
+	static Vector<dword> l, h;
 	ONCELOCK {
 		for(int i = 0; i < __countof(sFontReplacements) && rface.GetCount() < 20; i++) {
-			int q = Font::FindFaceNameIndex(sFontReplacements[i]);
-			if(q > 0)
+			int q = Font::FindFaceNameIndex(sFontReplacements[i].name);
+			if(q > 0) {
 				rface.Add(q);
+				l.Add(sFontReplacements[i].l);
+				h.Add(sFontReplacements[i].h);
+			}
 		}
 	}
 
 	Font f = fnt;
+	dword tl = chr < 4096 ? 0x80000000 >> (chr >> 7) : 0;
+	dword th = 0x8000000 >> ((dword)chr >> 11);
 	for(int i = 0; i < rface.GetCount(); i++)
-		if(IsNormal(f.Face(rface[i]), chr)) {
+		if(((l[i] & tl) || (h[i] & th)) && IsNormal(f.Face(rface[i]), chr)) {
 			int a = fnt.GetAscent();
 			int d = fnt.GetDescent();
 			if(f.GetAscent() > a || f.GetDescent() > d) {
