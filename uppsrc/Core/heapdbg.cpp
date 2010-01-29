@@ -56,16 +56,7 @@ static void DbgHeapPanic(const char *text, DbgBlkHeader *p)
 static DbgBlkHeader dbg_live = { 0, &dbg_live, &dbg_live, 0 };
 
 static dword s_allocbreakpoint;
-
-static
-#ifdef flagMT
-#ifdef COMPILER_MSC
-__declspec(thread)
-#else
-__thread
-#endif
-#endif
-dword s_ignoreleaks;
+static thread__ dword s_ignoreleaks;
 
 void MemoryIgnoreLeaksBegin()
 {
