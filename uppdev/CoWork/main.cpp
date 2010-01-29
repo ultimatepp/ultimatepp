@@ -77,7 +77,6 @@ void App::TestTree() {
 
 void App::TestDropInsert(int parent, int ii, PasteClip& d)
 {
-	/*
 	if(AcceptInternal<TreeCtrl>(d, "mytreedrag")) {
 		tGroups2.InsertDrop(parent, ii, d);
 		tGroups2.SetFocus();
@@ -88,7 +87,6 @@ void App::TestDropInsert(int parent, int ii, PasteClip& d)
 		tGroups2.SetFocus();
 		return;
 	}
-	*/
 }
 
 void App::TestDrag()
