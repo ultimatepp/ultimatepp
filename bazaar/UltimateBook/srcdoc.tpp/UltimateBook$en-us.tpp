@@ -6,7 +6,7 @@ topic "General description";
 [s0;2 &]
 [ {{10000@(190.255.220) [s0; [*2 1. ABOUT ULTIMATE BOOK]]}}&]
 [s0;2 &]
-[ {{5665:4335f0;g0; [s0; [2 Ultimate documentation is growing and is available in TheIde 
+[ {{5665:4335f0;g0;^ [s0; [2 Ultimate documentation is growing and is available in TheIde 
 and Upp applications through Topic`+`+ help technology.]&]
 [s0;2 &]
 [s0; [2 However some of us think that there is a space for a well structured 
@@ -30,7 +30,7 @@ effort.]&]
 [s0;2 &]
 [s0; [2 Join to prepare the required software and redefine the actual 
 help pages to be compatible with the book.]]
-:: [s0;> [*R1 
+::= [s0;> [*R1 
 @@image:1693&2125
 ‚ƒßÙ‚€€€€€€€€€ø×œä½…—œÇ·’÷ýÁß¥û¶÷÷òµË¶ìƒÉ²¤Û–³ë»˜™™¥á™æÎææîžæéŸÈ¨ÊÉ®˜“ÍØþöŸóž
 ‡¿òäå××…ÃÔÿªª²¢¿ò¿ŸÌþ÷ùóô—§óšúÛñ³…í½Ÿ×Ô¹ßß¬þñò†‘ôÏ×Ë¤¾•®í†¢ÍþËœ¿¾›£©ŽÍÌøÉëƒè
@@ -7749,13 +7749,35 @@ help pages to be compatible with the book.]]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 2. ACTIONS]]}}&]
 [s0;2 &]
-[s0;i150;O0; [2 To make a new package based on uppweb, to get .pdf 
-from Upp T`+`+ help.]&]
+[s0; [*2 1. Define the book structure]&]
 [s0;2 &]
-[s0;i150;O0; [2 To standardize T`+`+ docs to have an homogeneous look.]&]
+[s0; [2 This structure has to match both:]&]
+[s0;i150;O0; [2 the reader point of view ]&]
+[s0;i150;O0; [2 the actual T`+`+ docs ]&]
 [s0;2 &]
-[s0;i150;O0; [2 To arrange T`+`+ docs to have a logical structure as 
-a real book.]&]
+[s0; [2 to get the book done with minimum additional effort and following 
+a logical structure as a real book.]&]
+[s0;2 &]
+[s0;2 &]
+[s0; [*2 2. Web standardization]&]
+[s0;2 &]
+[s0;i150;O0; [2 Analyze Upp web]&]
+[s0;i150;O0; [2 Agree with web page responsibles and community a standard 
+style in every web/T`+`+ area:]&]
+[s0; [2 -|`- Packages reference]&]
+[s0; [2 -|`- Implementation]&]
+[s0; [2 -|`- Examples]&]
+[s0; [2 -|`- Others]&]
+[s0;i150;O0; [2 Boost web site update to that standard]&]
+[s0;2 &]
+[s0; [2 to get the necessary homogeneous look.]&]
+[s0;2 &]
+[s0;2 &]
+[s0; [*2 3. Software development]&]
+[s0;2 &]
+[s0; [2 Based in uppweb package, to develop a package that following 
+defined book structure will parse web docs generating the Upp 
+book.]&]
 [s0;%- &]
 [s0;%- &]
 [ {{10000@(190.255.220) [s0; [*2 3. NEWS]]}}&]
@@ -7763,7 +7785,7 @@ a real book.]&]
 [s0; [2 2010`-01`-20. Project just launched. ][*@6;2 HELP REQUIRED]&]
 [s0;2 &]
 [s0;%- &]
-[ {{8829:1171@(190.255.220) [s0;~~~3584; [2 Last edit: 2010`-01`-20]]
+[ {{8829:1171@(190.255.220) [s0;~~~3584; [2 Last edit: 2010`-01`-29]]
 :: [s0;=~~~3584;%- [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^@(170.127.200)2 Bazaar 
 >>]]}}&]
 [s0; ]
