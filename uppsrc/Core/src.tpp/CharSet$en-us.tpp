@@ -11,8 +11,7 @@ topic "Character set support";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Character set support]]}}&]
-[s0;i448;a25;kKO9;@(0.0.255) &]
-[s0;%% While in ideal world every text resource would be encoded 
+[s9;%% While in ideal world every text resource would be encoded 
 in Unicode or UTF`-8, in practice we have to deal with many 8`-bit 
 encodings. U`+`+ has [^topic`:`/`/Core`/src`/CharSet`$en`-us`#AddCharSet`(const char`*`,const word`*`,byte`)^ e
 xtensible] support for various encoding (charsets). It directly 
@@ -45,8 +44,7 @@ defines following constants to express charset (names are self`-explanatory):&]
 [s0; [* CHARSET`_CP852]&]
 [s0; [* CHARSET`_MJK]&]
 [s0; [* CHARSET`_CP850]]}}&]
-[s5;* &]
-[s0; There are also some special charset values&]
+[s9; There are also some special charset values&]
 [s0; &]
 [s5;:CHARSET`_DEFAULT: [* CHARSET`_DEFAULT]&]
 [s2;%% Represents `"default`" charset. Default charset can be set 
@@ -68,6 +66,7 @@ value of parameter). Guaranteed to be equal to 0.&]
 [s2;%% This special value is used as result of conversion in place 
 of characters that do not exist in target charset.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Function List]]}}&]
 [s3;^byte^ &]
 [s5;:GetDefaultCharset`(`): [_^byte^ byte]_[* GetDefaultCharset]()&]
@@ -687,4 +686,5 @@ true on success.&]
 ]_[*@3 data])&]
 [s2; Saves 8`-bit string in default encoding to the file. Returns 
 true on success.&]
+[s3; &]
 [s0; ]

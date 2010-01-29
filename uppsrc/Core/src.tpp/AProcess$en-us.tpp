@@ -11,15 +11,16 @@ topic "AProcess and LocalProcess";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 AProcess]]}}&]
-[s4;H0; &]
+[s3; &]
 [s1;:AProcess`:`:struct: [@(0.0.255)3 struct][3 _][*3 AProcess][3 _:_][@(0.0.255)3 public][3 _][*@3;3 N
 oCopy]&]
-[s2;%% This is an abstract class that represent a controlled child 
+[s9;%% This is an abstract class that represent a controlled child 
 process. Client code can communicate with such process by supplying 
 standard input and reading standard output. Note that while LocalProcess 
 implements AProcess for host OS, some other derived class might 
 choose to e.g. represent a process on remote system.&]
-[s3; &]
+[s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4;H0; &]
 [s5;:AProcess`:`:Kill`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Kill]()_`=_[@3 0]&]
@@ -58,14 +59,14 @@ output of process. If anything went wrong, returns String`::GetVoid().&]
 [s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 LocalProcess]]}}&]
-[s4;H0; &]
+[s3; &]
 [s1;:LocalProcess`:`:class: [@(0.0.255)3 class][3 _][*3 LocalProcess][3 _:_][@(0.0.255)3 public][3 _
 ][*@3;3 AProcess]&]
-[s2;%% This class implements a child process of host operating system.&]
+[s9;%% This class implements a child process of host operating system.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3;%% &]
-[s4;H0; &]
 [s5;:LocalProcess`:`:Start`(const char`*`,const char`*`): [@(0.0.255) bool]_[* Start]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr
 ]_`=_NULL)&]
@@ -73,6 +74,7 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 ]can provide a new environment for the process, if NULL, then 
 the new process inherits caller`'s environment.&]
 [s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
 [s4;H0; &]
 [s5;:LocalProcess`:`:LocalProcess`(`): [* LocalProcess]()&]
@@ -87,7 +89,7 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 [s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Global functions related to LocalProcess]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:Sys`(const char`*`,String`&`): [@(0.0.255) int]_[* Sys]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 cmd], [_^String^ String][@(0.0.255) `&]_[*@3 output])&]
 [s2;%% Runs process defined by [%-*@3 cmd] command line, returns its 
@@ -100,4 +102,5 @@ md])&]
 [s2;%% Runs process defined by [%-*@3 cmd] command line. If [%-*@3 cmd] 
 was executed successfully and returned zero exit code, returns 
 its standard output, otherwise returns String`::GetVoid().&]
+[s3; &]
 [s0; ]

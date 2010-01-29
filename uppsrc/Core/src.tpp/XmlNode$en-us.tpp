@@ -11,16 +11,17 @@ topic "XmlNode";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XmlNode `- Hierarchical representation of XML]]}}&]
-[s0;i448;a25;kKO9;@(0.0.255) &]
+[s3; &]
 [s1;:XmlNode`:`:class: [@(0.0.255)3 class][3 _][*3 XmlNode]&]
-[s2;%% This class represent the whole XML document as recursive hierarchic 
+[s9;%% This class represent the whole XML document as recursive hierarchic 
 structure `- each XmlNode can contain any number of child XmlNodes. 
 XmlNode is mutable and U`+`+ provides function to parse XML and 
 store it to XmlNode and also to take XmlNode and create corresponding 
 XML document.&]
-[s2;%% &]
 [s3; &]
-[s4; &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s3; &]
 [s5;:XmlNode`:`:Void`(`): [@(0.0.255) static] [@(0.0.255) const]_[_^XmlNode^ XmlNode][@(0.0.255) `&
 ]_[* Void]()&]
 [s2;%% Returns a constant reference to XmlNode representing `"nothing`". 
@@ -217,12 +218,13 @@ r]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) int]_[*@3 val])&
 [_^String^ String]>`&_[*@3 a])&]
 [s2;%% Replaces all attributes to [%-*@3 a] using pick operation ([%-*@3 a] 
 is destroyed in operation).&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
-[s0;%% &]
-[s5;:XmlNode`:`:XmlNode`(`): [* XmlNode]()&]
+[s3;%% &]
+[s0; [* XmlNode]()&]
 [s2;%% Construct an empty XmlNode.&]
-[s0; &]
+[s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XmlNode `- parser and output functions]]}}&]
 [s4;H0; &]
@@ -255,6 +257,5 @@ be a combination &]
 ::= [s2;l64;%% Adds DOCTYPE declaration at the beginning of the document 
 with type taken as id of first XML`_TAG sub`-node (which represents 
 the root element).]}}&]
-[s2;%% &]
 [s3;%% &]
 [s0; ]

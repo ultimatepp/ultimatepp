@@ -10,7 +10,8 @@ topic "Rect";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s0;i448;a25;kKO9;:noref:%% [*@3;4 Rect`_]&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Rect`_]]}}&]
+[s3;%% &]
 [s0; [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
 [s1;:Rect`_`:`:struct: [@(0.0.255) struct]_[* Rect`_]_:_[@(0.0.255) public]_[*@3 Moveable][@(0.0.255) <
 ]_[* Rect`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
@@ -19,7 +20,8 @@ topic "Rect";
 area defined by the coordinates of the upper left corner, left 
 and top, and the coordinates of the bottom right corner, right 
 and bottom. All coordinates are of type ][*@4 T.]&]
-[s1; &]
+[s3; &]
+[s0; &]
 [s0;%% To get a specialized version of [* Size`_], use one of the following:&]
 [s0; &]
 [s0; [* Rect]&]
@@ -28,8 +30,8 @@ and bottom. All coordinates are of type ][*@4 T.]&]
 [s3; &]
 [s4; &]
 [s0; [* Rect16]&]
-[s5;:Rect16`:`:typedef: [@(0.0.255) typedef]_[_^Rect`_^ Rect`_][@(0.0.255) <][_^int16^ int16][@(0.0.255) >
-]_[* Rect16]&]
+[s5;:Rect16`:`:typedef:~~~128; [@(0.0.255) typedef]_[_^Rect`_^ Rect`_][@(0.0.255) <][_^int16^ i
+nt16][@(0.0.255) >]_[* Rect16]&]
 [s2;%% [* Rect`_] with [%-* int16] coordinates.&]
 [s3; &]
 [s4; &]

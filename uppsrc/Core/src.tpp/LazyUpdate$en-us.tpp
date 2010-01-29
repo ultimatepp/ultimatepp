@@ -12,8 +12,8 @@ topic "LazyUpdate";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 LazyUpdate]]}}&]
 [s3; &]
-[s1; [@(0.0.255)3 class][3 _][*3 LazyUpdate]&]
-[s2;%% LazyUpdate class provides thread`-safe means for lazy evaluation. 
+[s1;:LazyUpdate`:`:class: [@(0.0.255)3 class][3 _][*3 LazyUpdate]&]
+[s9;%% LazyUpdate class provides thread`-safe means for lazy evaluation. 
 Typically it is used in connection with mutable member variable 
 cache. Mutating operations on such class set LazyUpdate to `"invalid`" 
 state. When any method is called to obtain evaluated value, it 
@@ -21,13 +21,14 @@ first checks LazyUpdate whether cache is valid using BeginUpdate.(such
 method is usually const, that is why the cache needs to be mutable). 
 If BeginUpdate returns true, cache has to be updated. At the 
 end of update, EndUpdate has to be called.&]
-[s2;%% BeginUpdate also blocks any other thread once update is in 
+[s9;%% BeginUpdate also blocks any other thread once update is in 
 progress.&]
-[s2;%% That way, many threads are allowed to invoke read methods 
+[s9;%% That way, many threads are allowed to invoke read methods 
 simultaneously while updates are performed and serialized correctly. 
 Of course, client code of such class still needs to serialize 
 access to instance, just like for any other object.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:LazyUpdate`:`:Invalidate`(`): [@(0.0.255) void]_[* Invalidate]()&]
@@ -45,8 +46,10 @@ false, as cache is already updated).&]
 [s5;:LazyUpdate`:`:EndUpdate`(`)const: [@(0.0.255) void]_[* EndUpdate]()_[@(0.0.255) const]&]
 [s2;%% Signals that the cache was updated.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
 [s3; &]
 [s5;:LazyUpdate`:`:LazyUpdate`(`): [* LazyUpdate]()&]
 [s2;%% Sets LazyUpdate into invalid state.&]
+[s3; &]
 [s0; ]

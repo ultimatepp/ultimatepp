@@ -10,8 +10,8 @@ topic "Size";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*@3;4 Size`_]&]
-[s0;*@3 &]
+[ {{10000@(113.42.0) [s0; [*@7;4 Size`_]]}}&]
+[s3; &]
 [s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
 [s1;:Size`_`:`:struct:%- [@(0.0.255) struct]_[* Size`_]_:_[@(0.0.255) public]_[*@3 Moveable][@(0.0.255) <
 ]_[* Size`_][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
@@ -20,7 +20,8 @@ topic "Size";
 size object. The horizontal dimension is represented by [*@(154.0.0) cx][@(154.0.0)  
 ]and the vertical one by [*@(154.0.0) cy]. Both dimension are of 
 type [*@4 T]. &]
-[s1; &]
+[s3; &]
+[s0; &]
 [s0; To get a specialized version of [* Size`_], use one of the following:&]
 [s0; &]
 [s1;%- [* Size]&]
@@ -34,7 +35,7 @@ type [*@4 T]. &]
 [s2; Size`_ with with [* int16][@(0.0.255)  ]dimensions.&]
 [s3; &]
 [s4;*@(154.0.0) &]
-[s0;%- [* Size64]&]
+[s1;%- [* Size64]&]
 [s5;:Size64`:`:typedef:%- [@(0.0.255) typedef]_[_^Size`_^ Size`_][@(0.0.255) <][_^int64^ int6
 4][@(0.0.255) >]_[* Size64]&]
 [s2; Size`_ with with [* int64][@(0.0.255)  ]dimensions.&]

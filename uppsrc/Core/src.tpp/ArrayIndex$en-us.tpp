@@ -10,7 +10,8 @@ topic "ArrayIndex";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s1; [*@3;4 ArrayIndex]&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 ArrayIndex]]}}&]
+[s3; &]
 [s1;:noref: [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 HashFn]_
 `=_StdHash[@(0.0.255) <][*@4 T][@(0.0.255) >]_>&]
 [s1;:ArrayIndex`:`:class: [@(0.0.255) class]_[* ArrayIndex]_:_[@(0.0.255) private]_[*@3 Moveab

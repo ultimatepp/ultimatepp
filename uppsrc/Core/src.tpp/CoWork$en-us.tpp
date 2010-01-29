@@ -11,9 +11,9 @@ topic "CoWork";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CoWork]]}}&]
-[s4; &]
+[s3; &]
 [s1;:CoWork`:`:class: [@(0.0.255)3 class][3 _][*3 CoWork]&]
-[s2;%% This class is indented as loop`-parallelization tool. Whenever 
+[s9;%% This class is indented as loop`-parallelization tool. Whenever 
 loop iterations are independent (they do not share any data), 
 CoWork can be used to relatively easily spawn loop iterations 
 over thread and thus over CPU cores. CoWork works with fixed`-size 
@@ -23,9 +23,9 @@ or destroyed during normal work. Nesting of CoWork instances
 is also possible. Of course, not only loop iterations can be 
 parallelized, whenever there are two or more actions that can 
 run in parallel, you can use CoWork.&]
-[s2;%% &]
-[s2;%% Single`-threaded implementation simply performs all actions 
+[s9;%% Single`-threaded implementation simply performs all actions 
 submitted by Do in sequence.&]
+[s3;%% &]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4;H0; &]
@@ -42,10 +42,10 @@ allback]_[*@3 cb])&]
 [s2;%% Waits until all jobs submitted using Do (or operator`&) are 
 finished.&]
 [s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Destructor detail]]}}&]
 [s3; &]
 [s5;:CoWork`:`:`~CoWork`(`): [@(0.0.255) `~][* CoWork]()&]
 [s2;%% Invokes Finish().&]
 [s3; &]
-[s4;H0; &]
 [s0; ]

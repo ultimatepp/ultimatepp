@@ -13,11 +13,12 @@ topic "ConditionVariable";
 [ {{10000t/25b/25@(113.42.0) [s0; [*@7;4 ConditionVariable]]}}&]
 [s3; &]
 [s1;:ConditionVariable`:`:class: [@(0.0.255)3 class][3 _][*3 ConditionVariable]&]
-[s2;%% ConditionVariable allows threads to suspend execution (using 
+[s9;%% ConditionVariable allows threads to suspend execution (using 
 Wait) until they are awaken by another thread (using Signal or 
 Broadcast methods). ConditionVariable has associated Mutex to 
 avoid possible race conditions when entering suspended state.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:ConditionVariable`:`:Wait`(Mutex`&`): [@(0.0.255) void]_[* Wait]([_^Mutex^ Mutex][@(0.0.255) `&
@@ -34,17 +35,18 @@ and reacquires ][*@3 m].&]
 [s4;%% &]
 [s5;:ConditionVariable`:`:Broadcast`(`): [@(0.0.255) void]_[* Broadcast]()&]
 [s2;%% Resumes execution of all currently waiting threads.&]
-[s0;%% &]
+[s3;%% &]
 [s0;3 &]
 [ {{10000t/25b/25@(113.42.0) [s0; [*@7;4 StaticConditionVariable]]}}&]
 [s3;%% &]
 [s1;:StaticConditionVariable`:`:class: [@(0.0.255)3 class][3 _][*3 StaticConditionVariable]&]
-[s2; Variant of ConditionVariable that can be used as static or global 
+[s9; Variant of ConditionVariable that can be used as static or global 
 variable without the need of initialization  `- it has no constructor 
 and correctly performs the first initialization when any of methods 
 is called. That avoids problems with initialization order or 
 multithreaded initialization issues.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:StaticConditionVariable`:`:Get`(`): [_^ConditionVariable^ ConditionVariable][@(0.0.255) `&
@@ -59,4 +61,5 @@ Variable`&]()&]
 [s5;:StaticConditionVariable`:`:Signal`(`): [@(0.0.255) void]_[* Signal]()&]
 [s5;:StaticConditionVariable`:`:Broadcast`(`): [@(0.0.255) void]_[* Broadcast]()&]
 [s2;%% Calls respective ConditionVariable methods.&]
+[s3; &]
 [s0; ]

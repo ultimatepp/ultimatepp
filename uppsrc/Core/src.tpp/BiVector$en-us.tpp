@@ -10,7 +10,8 @@ topic "BiVector";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;~~~64; [*@3;4 BiVector]&]
+[ {{10000@(113.42.0) [s0; [*@7;4 BiVector]]}}&]
+[s3; &]
 [s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
 [s1;:BiVector`:`:class:%- [@(0.0.255) class]_[* BiVector]_:_[@(0.0.255) private]_[*@3 Moveable
 AndDeepCopyOption][@(0.0.255) <]_[* BiVector][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
@@ -57,7 +58,7 @@ Vector][@(0.0.255) `&]_[*@3 src], [@(0.0.255) int])&]
 [s2; Default destructor. Invokes the destructor of every element 
 in the BiVector.&]
 [s3;%- &]
-[s0;i448;a25;kKO9;:noref:@(0.0.255)%- &]
+[s0;i448;a25;kKO9;@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
 [s5;:BiVector`:`:AddHead`(`):%- [*@4 T][@(0.0.255) `&]_[* AddHead]()&]
@@ -252,7 +253,7 @@ is that [* pos] is range checked in debug mode.&]
 [s2; Specialization of the generic [* Swap] for BiVectors. Swaps BiVectors 
 in low constant time operation.&]
 [s3; &]
-[s0;i448;a25;kKO9;:noref:@(0.0.255)%- &]
+[s0;i448;a25;kKO9;@(0.0.255)%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Global Operators]]}}&]
 [s3; &]
 [s0;:friend BiVector`& operator`<`<`(BiVector`& b`, const T`& x`): friend 
