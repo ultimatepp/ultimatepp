@@ -4,7 +4,7 @@ NAMESPACE_UPP
 
 #ifdef PLATFORM_WIN32
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)  LOG(x)
 
 int  GetClipboardFormatCode(const char *format_id);
 

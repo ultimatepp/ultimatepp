@@ -746,6 +746,7 @@ bool Ctrl::IsWaitingEvent()
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
+	ASSERT(IsMainThread());
 	if(DoCall())
 		return false;
 	if(EndSession())
