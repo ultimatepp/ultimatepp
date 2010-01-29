@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)    // if(!IsMainThread()) DLOG((int)GetCurrentThreadId() << " " << x)
 
 NAMESPACE_UPP
 
@@ -11,26 +11,26 @@ static StaticMutex NonMainLock;
 
 void EnterGuiMutex()
 {
-	LLOG("Thread " << IsMainThread() << " trying to lock");
+	LLOG("Thread " << IsMainThread() << " trying to lock" << ", nonmain: " << NonMain);
 	bool nonmain = !IsMainThread();
 	if(nonmain)
 		NonMainLock.Enter();
 	EnterGMutex();
 	if(nonmain)
 		NonMain++;
-	LLOG("Thread " << IsMainThread() << " LOCK");
+	LLOG("Thread " << IsMainThread() << " LOCK" << ", nonmain: " << NonMain);
 }
 
 void LeaveGuiMutex()
 {
-	LLOG("Thread " << IsMainThread() << " trying to unlock");
+	LLOG("Thread " << IsMainThread() << " trying to unlock" << ", nonmain: " << NonMain);
 	bool nonmain = !IsMainThread();
 	if(nonmain)
 		NonMain--;
 	LeaveGMutex();
 	if(nonmain)
 		NonMainLock.Leave();
-	LLOG("Thread " << IsMainThread() << " UNLOCK");
+	LLOG("Thread " << IsMainThread() << " UNLOCK" << ", nonmain: " << NonMain);
 }
 
 struct Ctrl::CallBox {
@@ -46,14 +46,19 @@ void Ctrl::PerformCall(Ctrl::CallBox *cbox)
 }
 
 Callback    Ctrl::CtrlCall;
+static Mutex CtrlCallMutex;
 
 void WakeUpGuiThread();
 
 bool Ctrl::DoCall()
 {
 	LLOG("DoCall");
-	CtrlCall();
-	CtrlCall.Clear();
+	GuiLock __;
+	{
+		Mutex::Lock __(CtrlCallMutex);
+		CtrlCall();
+		CtrlCall.Clear();
+	}
 	LLOG("--- DoCall, nonmain: " << NonMain);
 	return NonMain;
 }
@@ -64,9 +69,13 @@ void Ctrl::ICall(Callback cb)
 	if(IsMainThread())
 		cb();
 	else {
+		GuiLock __;
 		CallBox cbox;
 		cbox.cb = cb;
-		CtrlCall = callback1(PerformCall, &cbox);
+		{
+			Mutex::Lock __(CtrlCallMutex);
+			CtrlCall = callback1(PerformCall, &cbox);
+		}
 		int level = LeaveGMutexAll();
 		WakeUpGuiThread();
 		LLOG("Waiting for semaphore");
@@ -82,6 +91,7 @@ void Ctrl::Call(Callback cb)
 	if(IsMainThread())
 		cb();
 	else {
+		GuiLock __;
 		CallBox cbox;
 		cbox.cb = cb;
 		UPP::PostCallback(callback1(PerformCall, &cbox));
