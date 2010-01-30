@@ -334,116 +334,118 @@ Htmls header, bar, lastUpdate;
 
 void ExportPage(int i)
 {
-		Index<String> css;
-		String path = links.GetKey(i);
-		RLOG("Exporting " << path);
-		Htmls html;
-		String text = GetText(path);
-		int h;
-		h = ParseQTF(tt[i].text).GetHeight(1000);
-		
-		String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
-		Color paper = SWhite;
-		if(path == "topic://uppweb/www/download$en-us")
-			page << LoadFile(GetRcFile("adsense3.txt"));
+	Index<String> css;
+	String path = links.GetKey(i);
+	RLOG("Exporting " << path);
+	Htmls html;
+	String text = GetText(path);
+	int h;
+	h = ParseQTF(tt[i].text).GetHeight(1000);
+	
+	String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
+	Color paper = SWhite;
+	if(path == "topic://uppweb/www/download$en-us")
+		page << LoadFile(GetRcFile("adsense3.txt"));
 /*		if(path == "topic://uppweb/www/index$en-us") {
-			for(int q = 0; q < news.GetCount(); q++) {
-				String n = GetText("uppweb/www_news/" + news[q]);
-				String h = news[q];
-				int i = h.Find('$');
-				if(i >= 0)
-					h = h.Mid(0, i);
-				if(h.GetLength() == 8)
-					h = h.Mid(0, 4) + '-' + h.Mid(4, 2) + '-' + h.Mid(6, 2);
-				page << "<br>";
-				page << "<div style='font-family:sans-serif; font-weight: bold; "
-				        "font-height: 12px; color: White; background: #2020d0'>&nbsp;&nbsp;"
-				     << h << "</div><br>";
-				page << QtfAsHtml(n, css, links, targetdir, FormatIntAlpha(q) + "_n");
-				page << "<br>";
-			}
-		}*/
-		Color bg = Color(210, 217, 210);
-		html <<
-			HtmlPackedTable().Width(-100) /
-			   	HtmlLine().ColSpan(3) / header +
-			HtmlPackedTable().Width(-100) / (
-				HtmlLine().ColSpan(3).BgColor(bg).Height(6) / "" +
-				HtmlRow() / (
-					HtmlTCell().Center() / BoxWidth(160).Center() / (
-						bar +
-						"<br>" +
+		for(int q = 0; q < news.GetCount(); q++) {
+			String n = GetText("uppweb/www_news/" + news[q]);
+			String h = news[q];
+			int i = h.Find('$');
+			if(i >= 0)
+				h = h.Mid(0, i);
+			if(h.GetLength() == 8)
+				h = h.Mid(0, 4) + '-' + h.Mid(4, 2) + '-' + h.Mid(6, 2);
+			page << "<br>";
+			page << "<div style='font-family:sans-serif; font-weight: bold; "
+			        "font-height: 12px; color: White; background: #2020d0'>&nbsp;&nbsp;"
+			     << h << "</div><br>";
+			page << QtfAsHtml(n, css, links, targetdir, FormatIntAlpha(q) + "_n");
+			page << "<br>";
+		}
+	}*/
+	Color bg = Color(210, 217, 210);
+	html <<
+		HtmlPackedTable().Width(-100) /
+		   	HtmlLine().ColSpan(3) / header +
+		HtmlPackedTable().Width(-100) / (
+			HtmlLine().ColSpan(3).BgColor(bg).Height(6) / "" +
+			HtmlRow() / (
+				HtmlTCell().Center() / BoxWidth(160).Center() / (
+					bar +
+					"<br>" +
 //						"<p align=\"center\">" +
-						LoadFile(GetRcFile("adsense2.txt")) +
-						"<br><br>" +
-						LoadFile(GetRcFile("adlinks.txt")) +
-						(h > 25000 ? "<br><br>" + LoadFile(GetRcFile("adsense2.txt"))
-						                                : "") +
-				       	"<br><br><br>" +
+					LoadFile(GetRcFile("adsense2.txt")) +
+					"<br><br>" +
+					LoadFile(GetRcFile("adlinks.txt")) +
+					(h > 25000 ? "<br><br>" + LoadFile(GetRcFile("adsense2.txt"))
+					                                : "") +
+			       	"<br><br><br>" +
 //						LoadFile(GetRcFile("referral.txt")) +
 //						LoadFile(GetRcFile("referral2.txt")) +
 //						LoadFile(GetRcFile("donations.txt")) +
 //						"<br><br>" +
 //						amazon[i % amazon.GetCount()] +
-				       	"<br><br><br>" +
-						HtmlLink("http://sourceforge.net/projects/upp/") /
-						  HtmlImg("http://sourceforge.net/sflogo.php?group_id=93970&type=2",
-						          "SourceForge.net Logo").Border(0).Width(125).Height(37) +
-				       	"<br><br>" +
-				       	HtmlLink("http://www.sdjournal.org/en/") /
-							HtmlImg(GetImageSrc(WWW::Sdj)).Border(0) +
-				       	"<br><br>" +
-				       	(links[i] == "index.html" ? lastUpdate : Htmls()) +
-				       	HtmlImg("http://www.vol.cz/cgi-bin/wc/upp").Width(1).Height(1)
-					) +
-					HtmlTCell().BgColor(bg) / BoxWidth(6) / "" +
-					HtmlTCell().Width(-100).BgColor(bg) /
-						RoundFrame(HtmlPadding(8) / page, "6E89AE;padding: 10px;", White)
-				)
-			);
-
-		String topicTitle = tt.GetKey(i);
-		String pageTitle = "Ultimate++";
-		if(StartsWith(topicTitle, "examples$"))
-		{
-			String referenceName = topicTitle.Mid( 9, topicTitle.GetLength()-14 );
-			pageTitle += " / Demos / " + referenceName;
-		}
-		else if(StartsWith(topicTitle, "reference$"))
-		{
-			String referenceName = topicTitle.Mid( 10, topicTitle.GetLength()-15 );
-			pageTitle += " / Examples / " + referenceName;
-		}
-
-		Htmls content =
-		    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
-			HtmlHeader(pageTitle, AsCss(css) +
-				"a.l1         { text-decoration:none; font-size: 8pt; font-family: sans-serif; "
-				              "font-weight: normal; }\n"
-				"a.l1:link    { color:#000000; }\n"
-				"a.l1:visited { color:#000080; }\n"
-				"a.l1:hover   { color:#9933CC; }\n"
-				"a.l1:active  { color:#000000; }\n"
-				"a.l2         { text-decoration:none; font-size: 12pt; font-family: sans-serif; "
-				              "font-variant: small-caps; }\n"
-				"a.l2:link    { color:#0066FF; }\n"
-				"a.l2:visited { color:#FF6600; }\n"
-				"a.l2:hover   { color:#BC0624; }\n"
-				"a.l2:active  { color:#BC0024; }\n",
-				"<META NAME=\"keywords\" "
-				"CONTENT=\""
-				"framework, toolkit, widget, c++, visual, studio, dev-cpp, builder, ide, class, component,"
-				"wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"
-				"\">"
-				"<meta name=\"robots\" content=\"index,follow\">"
-//				"<link rel=\"shortcut icon\" href=\"/favicon.ico\" />"
+			       	"<br><br><br>" +
+					HtmlLink("http://sourceforge.net/projects/upp/") /
+					  HtmlImg("http://sourceforge.net/sflogo.php?group_id=93970&type=2",
+					          "SourceForge.net Logo").Border(0).Width(125).Height(37) +
+			       	"<br><br>" +
+			       	HtmlLink("http://www.sdjournal.org/en/") /
+						HtmlImg(GetImageSrc(WWW::Sdj)).Border(0) +
+			       	"<br><br>" +
+			       	(links[i] == "index.html" ? lastUpdate : Htmls()) +
+			       	HtmlImg("http://www.vol.cz/cgi-bin/wc/upp").Width(1).Height(1)
+				) +
+				HtmlTCell().BgColor(bg) / BoxWidth(6) / "" +
+				HtmlTCell().Width(-100).BgColor(bg) /
+					RoundFrame(HtmlPadding(8) / page, "6E89AE;padding: 10px;", White)
 			)
+		);
+
+	String topicTitle = tt.GetKey(i);
+	String pageTitle = tt[i].title;
+	if(IsNull(pageTitle))
+		pageTitle = "Ultimate++";
+	if(StartsWith(topicTitle, "examples$"))
+	{
+		String referenceName = topicTitle.Mid( 9, topicTitle.GetLength()-14 );
+		pageTitle += " / Demos / " + referenceName;
+	}
+	else if(StartsWith(topicTitle, "reference$"))
+	{
+		String referenceName = topicTitle.Mid( 10, topicTitle.GetLength()-15 );
+		pageTitle += " / Examples / " + referenceName;
+	}
+
+	Htmls content =
+	    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
+		HtmlHeader(pageTitle, AsCss(css) +
+			"a.l1         { text-decoration:none; font-size: 8pt; font-family: sans-serif; "
+			              "font-weight: normal; }\n"
+			"a.l1:link    { color:#000000; }\n"
+			"a.l1:visited { color:#000080; }\n"
+			"a.l1:hover   { color:#9933CC; }\n"
+			"a.l1:active  { color:#000000; }\n"
+			"a.l2         { text-decoration:none; font-size: 12pt; font-family: sans-serif; "
+			              "font-variant: small-caps; }\n"
+			"a.l2:link    { color:#0066FF; }\n"
+			"a.l2:visited { color:#FF6600; }\n"
+			"a.l2:hover   { color:#BC0624; }\n"
+			"a.l2:active  { color:#BC0024; }\n",
+			"<META NAME=\"keywords\" "
+			"CONTENT=\""
+			"framework, toolkit, widget, c++, visual, studio, dev-cpp, builder, ide, class, component,"
+			"wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"
+			"\">"
+			"<meta name=\"robots\" content=\"index,follow\">"
+//				"<link rel=\"shortcut icon\" href=\"/favicon.ico\" />"
+		)
 
 
-		    .BgColor(bg)
-		    .Alink(Red).Link(Black).Vlink(Blue)
-		    / html;
-		SaveFile(AppendFileName(targetdir, links[i]), content);
+	    .BgColor(bg)
+	    .Alink(Red).Link(Black).Vlink(Blue)
+	    / html;
+	SaveFile(AppendFileName(targetdir, links[i]), content);
 }
 
 struct ProgramData {

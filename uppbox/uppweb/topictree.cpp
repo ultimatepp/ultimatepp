@@ -112,7 +112,7 @@ String TopicFileName(const char *topic)
 String TopicFileNameHtml(const char *topic)
 {
 	TopicLink tl = ParseTopicLink(topic);
-	return tl.group + "$" + tl.package+ "$" + tl.topic +  + ".html";
+	return tl.group + "$" + tl.package+ "$" + tl.topic + ".html";
 }
 
 static void sGatherTopics(VectorMap<String, Topic> *map, const char *topic)
