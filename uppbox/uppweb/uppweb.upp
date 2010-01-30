@@ -19,7 +19,7 @@ file
 	topictree.cpp,
 	cpp.cpp,
 	www.cpp,
-	www.tpp,
+	www.tpp charset "UTF-8",
 	article.tpp,
 	reference.tpp,
 	examples.tpp,
