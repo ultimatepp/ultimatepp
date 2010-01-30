@@ -77,7 +77,7 @@ void Ide::BuildAndExecute()
 		String cmdline;
 		if(!runexternal)
 			cmdline << '\"' << h->GetHostPath(target) << "\" ";
-		cmdline << runarg;
+		cmdline << ToSystemCharset(runarg);
 		switch(runmode) {
 		case RUN_WINDOW:
 			HideBottom();
