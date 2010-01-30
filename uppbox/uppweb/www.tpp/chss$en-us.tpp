@@ -1,4 +1,4 @@
-topic "Human";
+topic "Chameleon examples";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*+150 Chameleon in action]&]
