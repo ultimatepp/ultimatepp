@@ -10,10 +10,13 @@ topic "StringBuffer and WStringBuffer";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s1;%% [@3;4 StringBuffer]&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 StringBuffer]]}}&]
+[s3;%% &]
 [s1;:StringBuffer`:`:class: [@(0.0.255)3 class][3 _][*3 StringBuffer][3 _:_][@(0.0.255)3 private
 ][3 _][*@3;3 NoCopy]&]
-[s0;%% &]
+[s9;%% A class useful when working with code that expects a character 
+buffer, like C code. It supports constant time pick assignment 
+to and from [* String].&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
@@ -114,11 +117,14 @@ Clears [%-*@3 s].&]
 [s0; &]
 [s0; &]
 [s0; &]
-[s1;%% [@3;4 WStringBuffer]&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 WStringBuffer]]}}&]
+[s3; &]
 [s1;:WStringBuffer`:`:class: [@(0.0.255)3 class][3 _][*3 WStringBuffer][3 _:_][@(0.0.255)3 priva
 te][3 _][*@3;3 NoCopy]&]
-[s3;%% &]
-[s0; &]
+[s9;%% A class useful when working with code that expects a wide 
+character buffer, like C code. It supports constant time pick 
+assignment to and from W[* String].&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
 [s3; &]

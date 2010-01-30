@@ -11,7 +11,7 @@ topic "Font and Text Routines";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Font and Text Routines]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:GetTextSize`(const wchar`*`,Font`,int`): [_^Size^ Size]_[* GetTextSize]([@(0.0.255) co
 nst]_[_^wchar^ wchar]_`*[*@3 text], [_^Font^ Font]_[*@3 font], [@(0.0.255) int]_[*@3 n]_`=_`-
 [@3 1])&]

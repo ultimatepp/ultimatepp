@@ -14,7 +14,7 @@ topic "LineEdit";
 [s3; &]
 [s1;:LineEdit`:`:class: [@(0.0.255)3 class][3 _][*3 LineEdit][3 _:_][@(0.0.255)3 public][3 _][*@3;3 T
 extCtrl]&]
-[s9;%% &]
+[s9;%% A widget used to edit a line of a document one at a time.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Protected Method List]]}}&]

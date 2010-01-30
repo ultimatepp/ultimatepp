@@ -11,9 +11,9 @@ topic "Draw";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000t/25b/25@3 [s0; [*@(229)4 Draw]]}}&]
-[s0;3 &]
+[s3; &]
 [s1;:Draw`:`:class: [@(0.0.255)3 class][3 _][*3 Draw][3 _:_][@(0.0.255)3 private][3 _][*@3;3 NoCopy]&]
-[s2;%% The class provides an abstract interface to basic graphical 
+[s9;%% The class provides an abstract interface to basic graphical 
 output, possibly HW accelerated. Whenever you need to paint something 
 in a window, you need a Draw object for it. The standard Paint 
 method of the Ctrl class takes a Draw`& parameter as well. In 
@@ -25,29 +25,26 @@ Drawings (vector metafiles used for serialization of graphical
 operations) or to perform printer output. You can also use a 
 Draw to query some graphics`-related properties, like the size 
 of output area or native resolution.&]
-[s2;%% &]
-[s2;%% When Draw represents screen output, all metrics are always 
+[s9;%% When Draw represents screen output, all metrics are always 
 in pixels. If Draw represents any physical device (like printer), 
 it uses artificial unit, `"dot`", by default, which is equivalent 
 to 1/600 of inch. In other words, it is the same as pixels size 
 of 600dpi printer (standard printer resolution).&]
-[s2;%% &]
-[s2;%% However, it is also possible to switch to `"Native`" mode 
+[s9;%% However, it is also possible to switch to `"Native`" mode 
 in some cases. In that case, Draw works in `"native`" pixels, 
 for example 1/720 inch for some printers. Draw provides necessary 
 metrics information to adjust graphic output.&]
-[s2;%% &]
-[s2;%% Some methods have several overloaded variants, for example 
+[s9;%% Some methods have several overloaded variants, for example 
 DrawRect has variants that specify the rectangle using Rect type 
 or x, y, cx, cy coordinates. In that case, implementation is 
 provided by single abstract virtual backend method ending with 
 Op (DrawRectOp) and non`-virtual frontend methods are then used 
 to provide overloading (via parameter translation to backend 
 method parameters).&]
-[s2;%% &]
-[s2;%% Painting outside the output size is always legal `- necessary 
+[s9;%% Painting outside the output size is always legal `- necessary 
 clipping is performed in that case.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
 [s5;:Draw`:`:GetInfo`(`)const: [@(0.0.255) virtual] [_^dword^ dword]_[* GetInfo]()_[@(0.0.255) c
@@ -595,28 +592,23 @@ oid]_[* DrawPolyPolyline]([@(0.0.255) const]_[_^Point^ Point]_`*[*@3 vertices],
 [@(0.0.255) int]_[*@3 vertex`_count], [@(0.0.255) const]_[@(0.0.255) int]_`*[*@3 counts], 
 [@(0.0.255) int]_[*@3 count`_count], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 color]_`=_DefaultInk, [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 vertex`_count] [%-*@3 counts] [%-*@3 count`_count] 
-[%-*@3 width] [%-*@3 color] [%-*@3 doxor].&]
 [s5;:Draw`:`:DrawPolyPolyline`(const Vector`<Point`>`&`,const Vector`<int`>`&`,int`,Color`,Color`): [@(0.0.255) v
 oid]_[* DrawPolyPolyline]([@(0.0.255) const]_[_^Vector^ Vector]<[_^Point^ Point]>`&_[*@3 ve
 rtices], [@(0.0.255) const]_[_^Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 counts], 
 [@(0.0.255) int]_[*@3 width]_`=_[@3 0], [_^Color^ Color]_[*@3 color]_`=_DefaultInk, 
 [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 counts] [%-*@3 width] [%-*@3 color] [%-*@3 doxor].&]
+[s2;%% Draws multiple polylines (polygon without filling).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawPolyline`(const Point`*`,int`,int`,Color`,Color`): [@(0.0.255) void]_[* D
 rawPolyline]([@(0.0.255) const]_[_^Point^ Point]_`*[*@3 vertices], 
 [@(0.0.255) int]_[*@3 count], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], [_^Color^ Color]_[*@3 col
 or]_`=_DefaultInk, [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 count] [%-*@3 width] [%-*@3 color] [%-*@3 doxor].&]
-[s3;%% &]
-[s4;%% &]
 [s5;:Draw`:`:DrawPolyline`(const Vector`<Point`>`&`,int`,Color`,Color`): [@(0.0.255) vo
 id]_[* DrawPolyline]([@(0.0.255) const]_[_^Vector^ Vector]<[_^Point^ Point]>`&_[*@3 vertice
 s], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], [_^Color^ Color]_[*@3 color]_`=_DefaultInk, 
 [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 width] [%-*@3 color] [%-*@3 doxor].&]
+[s2;%% Draws a polyline (polygon without filling).&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawPolyPolyPolygon`(const Point`*`,int`,const int`*`,int`,const int`*`,int`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
@@ -627,10 +619,6 @@ nt]_`*[*@3 disjunct`_polygon`_counts], [@(0.0.255) int]_[*@3 disjunct`_polygon`_
 count], [_^Color^ Color]_[*@3 color]_`=_DefaultInk, [@(0.0.255) int]_[*@3 width]_`=_[@3 0],
  [_^Color^ Color]_[*@3 outline]_`=_Null, [_^uint64^ uint64]_[*@3 pattern]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 vertex`_count] [%-*@3 subpolygon`_counts] 
-[%-*@3 subpolygon`_count`_count] [%-*@3 disjunct`_polygon`_counts] 
-[%-*@3 disjunct`_polygon`_count`_count] [%-*@3 color] [%-*@3 width] 
-[%-*@3 outline] [%-*@3 pattern] [%-*@3 doxor].&]
 [s5;:Draw`:`:DrawPolyPolyPolygon`(const Vector`<Point`>`&`,const Vector`<int`>`&`,const Vector`<int`>`&`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
 oid]_[* DrawPolyPolyPolygon]([@(0.0.255) const]_[_^Vector^ Vector]<[_^Point^ Point]>`&_[*@3 v
 ertices], [@(0.0.255) const]_[_^Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 subpolygon`_coun
@@ -638,25 +626,22 @@ ts], [@(0.0.255) const]_[_^Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 disjunct`_po
 unts], [_^Color^ Color]_[*@3 color]_`=_DefaultInk, [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 outline]_`=_Null, [_^uint64^ uint64]_[*@3 pattern]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 subpolygon`_counts] [%-*@3 disjunct`_polygon`_counts] 
-[%-*@3 color] [%-*@3 width] [%-*@3 outline] [%-*@3 pattern] [%-*@3 doxor].&]
+[s2; Draws poly`-poly`-polygon.&]
+[s3; &]
+[s4; &]
 [s5;:Draw`:`:DrawPolyPolygon`(const Point`*`,int`,const int`*`,int`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
 oid]_[* DrawPolyPolygon]([@(0.0.255) const]_[_^Point^ Point]_`*[*@3 vertices], 
 [@(0.0.255) int]_[*@3 vertex`_count], [@(0.0.255) const]_[@(0.0.255) int]_`*[*@3 subpolygon
 `_counts], [@(0.0.255) int]_[*@3 subpolygon`_count`_count], [_^Color^ Color]_[*@3 color]_
 `=_DefaultInk, [@(0.0.255) int]_[*@3 width]_`=_[@3 0], [_^Color^ Color]_[*@3 outline]_`=_Nu
 ll, [_^uint64^ uint64]_[*@3 pattern]_`=_[@3 0], [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 vertex`_count] [%-*@3 subpolygon`_counts] 
-[%-*@3 subpolygon`_count`_count] [%-*@3 color] [%-*@3 width] [%-*@3 outline] 
-[%-*@3 pattern] [%-*@3 doxor].&]
 [s5;:Draw`:`:DrawPolyPolygon`(const Vector`<Point`>`&`,const Vector`<int`>`&`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
 oid]_[* DrawPolyPolygon]([@(0.0.255) const]_[_^Vector^ Vector]<[_^Point^ Point]>`&_[*@3 ver
 tices], [@(0.0.255) const]_[_^Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 subpolygon`_counts
 ], [_^Color^ Color]_[*@3 color]_`=_DefaultInk, [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 outline]_`=_Null, [_^uint64^ uint64]_[*@3 pattern]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 subpolygon`_counts] [%-*@3 color] [%-*@3 width] 
-[%-*@3 outline] [%-*@3 pattern] [%-*@3 doxor].&]
+[s2;%% Draws poly`-polygon.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawPolygons`(const Point`*`,int`,const int`*`,int`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
@@ -665,32 +650,26 @@ oid]_[* DrawPolygons]([@(0.0.255) const]_[_^Point^ Point]_`*[*@3 vertices],
 ounts], [@(0.0.255) int]_[*@3 polygon`_count`_count], [_^Color^ Color]_[*@3 color]_`=_Def
 aultInk, [@(0.0.255) int]_[*@3 width]_`=_[@3 0], [_^Color^ Color]_[*@3 outline]_`=_Null, 
 [_^uint64^ uint64]_[*@3 pattern]_`=_[@3 0], [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 vertex`_count] [%-*@3 polygon`_counts] 
-[%-*@3 polygon`_count`_count] [%-*@3 color] [%-*@3 width] [%-*@3 outline] 
-[%-*@3 pattern] [%-*@3 doxor].&]
 [s5;:Draw`:`:DrawPolygons`(const Vector`<Point`>`&`,const Vector`<int`>`&`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
 oid]_[* DrawPolygons]([@(0.0.255) const]_[_^Vector^ Vector]<[_^Point^ Point]>`&_[*@3 vertic
 es], [@(0.0.255) const]_[_^Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 polygon`_counts], 
 [_^Color^ Color]_[*@3 color]_`=_DefaultInk, [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 outline]_`=_Null, [_^uint64^ uint64]_[*@3 pattern]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 polygon`_counts] [%-*@3 color] [%-*@3 width] 
-[%-*@3 outline] [%-*@3 pattern] [%-*@3 doxor].&]
+[s2;%% Draws multiple polygons.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawPolygon`(const Point`*`,int`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
 oid]_[* DrawPolygon]([@(0.0.255) const]_[_^Point^ Point]_`*[*@3 vertices], 
 [@(0.0.255) int]_[*@3 vertex`_count], [_^Color^ Color]_[*@3 color]_`=_DefaultInk, 
 [@(0.0.255) int]_[*@3 width]_`=_[@3 0], [_^Color^ Color]_[*@3 outline]_`=_Null, 
 [_^uint64^ uint64]_[*@3 pattern]_`=_[@3 0], [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 vertex`_count] [%-*@3 color] [%-*@3 width] 
-[%-*@3 outline] [%-*@3 pattern] [%-*@3 doxor].&]
 [s5;:Draw`:`:DrawPolygon`(const Vector`<Point`>`&`,Color`,int`,Color`,uint64`,Color`): [@(0.0.255) v
 oid]_[* DrawPolygon]([@(0.0.255) const]_[_^Vector^ Vector]<[_^Point^ Point]>`&_[*@3 vertice
 s], [_^Color^ Color]_[*@3 color]_`=_DefaultInk, [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 outline]_`=_Null, [_^uint64^ uint64]_[*@3 pattern]_`=_[@3 0], 
 [_^Color^ Color]_[*@3 doxor]_`=_Null)&]
-[s2;%%  [%-*@3 vertices] [%-*@3 color] [%-*@3 width] [%-*@3 outline] [%-*@3 pattern] 
-[%-*@3 doxor].&]
+[s2;%% Draws a polygon.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:DrawDrawing`(const Rect`&`,const Drawing`&`): [@(0.0.255) void]_[* DrawDrawi
@@ -787,4 +766,5 @@ default charset is used. Implemented using DrawTextOp.&]
 [@(0.0.255) double`&]_[*@3 cosa])&]
 [s2;%% This simple utility function computes sin(angle) and cos(angle), 
 where the full angle (2[%- π) ]is 3600.&]
+[s3; &]
 [s0; ]

@@ -11,15 +11,15 @@ topic "StreamRasterEncoder";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 StreamRasterEncoder]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s1;:StreamRasterEncoder`:`:class:%- [@(0.0.255)3 class][3 _][*3 StreamRasterEncoder][3 _:_][@(0.0.255)3 p
 ublic][3 _][*@3;3 RasterEncoder]&]
-[s2; This class adds methods useful for working with image streams 
+[s9; This class adds methods useful for working with image streams 
 to RasterEncoder.&]
-[s2; &]
-[s3;%- &]
+[s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:StreamRasterEncoder`:`:SetStream`(Stream`&`):%- [@(0.0.255) void]_[* SetStream]([_^Stream^ S
 tream][@(0.0.255) `&]_[*@3 `_s])&]
 [s2; Sets the Stream to be used as source of image data. Derived 
@@ -64,4 +64,5 @@ mage][@(0.0.255) `&]_[*@3 img])&]
 ng]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 img])&]
 [s2; Stores [%-*@3 img] to memory and returns resulting binary data 
 as String.&]
+[s3; &]
 [s0; ]

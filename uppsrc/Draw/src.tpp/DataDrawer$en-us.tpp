@@ -11,23 +11,23 @@ topic "DataDrawer";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0;%- [*@7;4 DataDrawer]]}}&]
-[s0;i448;a25;kKO9;@(0.0.255)%- &]
+[s3;%- &]
 [s1;:DataDrawer`:`:class:%- [@(0.0.255)3 class][3 _][*3 DataDrawer]&]
-[s2; This abstract class provides the ability to render the binary 
+[s9; This abstract class provides the ability to render the binary 
 data of specific type into Draw output. Each type of binary data 
 has assigned id, which is used in the call to Draw`::DrawData 
 method, to this id there is corresponding registered (using DataDrawer`::Register)
  class of DataDrawer. Draw`::DrawData creates and instance of 
 this class and uses it to render the binary data as one or more 
 ImageBuffer pixel arrays.&]
-[s2; &]
-[s2; Draw package predefines DataDrawer registered with id `"image`_data`". 
+[s9; Draw package predefines DataDrawer registered with id `"image`_data`". 
 This represents Image binary encoded with any encoding supported 
 by actually included image format plugins like plugin/bmp or 
 plugin/jpg.&]
-[s2; &]
+[s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:DataDrawer`:`:Open`(const String`&`,int`,int`):%- [*@(0.0.255) virtual][*  
 ][*@(0.0.255) void][* _Open]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data],
  [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])_`=_[@3 0]&]

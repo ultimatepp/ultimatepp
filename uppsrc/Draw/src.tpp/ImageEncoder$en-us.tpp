@@ -11,15 +11,15 @@ topic "ImageEncoder";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 ImageEncoder]]}}&]
-[s4;H0; &]
-[s0;a25; [@(0.0.255)3 class][3 _][*3 ImageEncoder][3 _:_][@(0.0.255)3 public][3 _][*_^RasterEncoder^3 R
-asterEncoder]&]
-[s0;l288;%% This RasterEncoder derived class encodes scanlines to 
-produce regular Image as result.&]
-[s0;l288;%% &]
 [s3; &]
+[s1;:ImageEncoder`:`:class: [@(0.0.255)3 class][3 _][*3 ImageEncoder][3 _:_][@(0.0.255)3 public][3 _
+][*@3;3 RasterEncoder]&]
+[s9;%% This RasterEncoder derived class encodes scanlines to produce 
+regular Image as result.&]
+[s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:ImageEncoder`:`:operator const RGBA`*`(`): [@(0.0.255) operator]_[@(0.0.255) const]_
 [_^RGBA^ RGBA]_`*()&]
 [s2;%% Returns a pointer to the array of pixels of Image.&]
@@ -28,4 +28,5 @@ produce regular Image as result.&]
 [s5;:ImageEncoder`:`:operator Image`(`): [* operator_Image]()&]
 [s2;%% Returns the resulting Image. Should only be called after all 
 scanlines (according to requested Image size) are completed.&]
+[s3; &]
 [s0; ]

@@ -11,7 +11,6 @@ topic "Ptr and Pte";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Ptr and Pte]]}}&]
-[s3; &]
 [s9; Ptr and Pte class templates provide a smart pointer system that 
 cleared (assigned NULL) when pointed object is destructed. That 
 makes it useful in situations where life`-time of object cannot 
@@ -24,7 +23,10 @@ class bases, with the derived class as its parameter, e.g.:&]
 [s0; [C+75 struct Foo : Pte<Foo> `{....]&]
 [s3; &]
 [s0; &]
+[s0; &]
+[s0; &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Pte]]}}&]
+[s3;%- &]
 [s1;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]&]
 [s1;:Pte`:`:class:%- [@(0.0.255) class]_[* Pte]_:_[@(0.0.255) public]_[*@3 PteBase]&]
 [s0; &]
@@ -36,7 +38,10 @@ pointed object.  &]
 teBase]&]
 [s3; &]
 [s0;%- &]
+[s0;%- &]
+[s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Ptr and Pte]]}}&]
+[s3;%- &]
 [s1;:noref:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]&]
 [s1;:Ptr`:`:class:%- [@(0.0.255) class]_[* Ptr]_:_[@(0.0.255) public]_[*@3 PtrBase], 
 [@(0.0.255) private]_[*@3 Moveable][@(0.0.255) <]_[* Ptr][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_
