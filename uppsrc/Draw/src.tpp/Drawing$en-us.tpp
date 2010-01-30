@@ -15,17 +15,18 @@ topic "Drawing";
 [s1;:Drawing`:`:class: [@(0.0.255)3 class][3 _][*3 Drawing][3 _:_][@(0.0.255)3 private][3 _][*@3;3 A
 ssignValueTypeNo][3 <][*3 Drawing][3 , ][@3;3 49][3 , ][_^Moveable^3 Moveable][3 <][*3 Drawing][3 >
 _>_]&]
-[s2;%% This concrete class, with full value semantics (with fast 
+[s9;%% This concrete class, with full value semantics (with fast 
 deep copy) represents a record of Draw drawing operations that 
 can be replayed at any time. In other words, Drawing is a sort 
 of vector format. To create Drawing, use [^DrawingDraw^ DrawingDraw] 
 class.&]
-[s2;%% Drawing is Value compatible with `"rich`" feature set `- as 
+[s9;%% Drawing is Value compatible with `"rich`" feature set `- as 
 Value it supports equality comparisons, serialization, Null compatibility 
 and hash`-value support.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:Drawing`:`:operator bool`(`)const: [* operator_bool]()_[@(0.0.255) const]&]
 [s2;%% True if Drawing is non`-empty.&]
 [s3; &]
@@ -87,9 +88,10 @@ onst]&]
 [s5;:Drawing`:`:operator Value`(`)const: [* operator_Value]()_[@(0.0.255) const]&]
 [s2;%% Returns Drawing as Value `- Drawing is `"rich`" Value, supporting 
 operator`=`=, hashing, Null and serialization.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
-[s0; &]
+[s3; &]
 [s5;:Drawing`:`:Drawing`(const Value`&`): [* Drawing]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
 ]_[*@3 src])&]
 [s2;%% Deep copy constructor.&]
@@ -102,4 +104,5 @@ operator`=`=, hashing, Null and serialization.&]
 [s5;:Drawing`:`:Drawing`(const Nuller`&`): [* Drawing]([@(0.0.255) const]_[_^Nuller^ Nuller
 ][@(0.0.255) `&])&]
 [s2; Null constructor (provides Drawing Null).&]
+[s3; &]
 [s0; ]

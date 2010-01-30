@@ -81,7 +81,7 @@ _[@(0.0.255) false])&]
 XML entities (like `'[@(128.0.255) `&lt;]`') while converting it 
 to UTF`-8. If [*@3 escapelf].is true, `'`\n`' is escaped as `'[@(128.0.255) `&#x%0a;]`'
 .&]
-[s0;i448;a25;kKO9;_ &]
+[s3; &]
 [s4; &]
 [s5;:XmlHeader`(const char`*`,const char`*`,const char`*`): [_^String^ String]_[* XmlHead
 er]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 encoding]_`=_`"UTF[@(0.0.255) `-][@3 8]`", 

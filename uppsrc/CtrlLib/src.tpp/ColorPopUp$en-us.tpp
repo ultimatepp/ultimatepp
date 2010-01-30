@@ -12,6 +12,8 @@ topic "Color widgets";
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 ColorPopUp]]}}&]
 [s3;%- &]
+[s1;:ColorPopUp`:`:class:%- [@(0.0.255)3 class][3 _][*3 ColorPopUp][3 _:_][@(0.0.255)3 public][3 _
+][*@3;3 Ctrl]&]
 [s9; This class implements pop`-up window for color`-selection.&]
 [s0; &]
 [s2; 

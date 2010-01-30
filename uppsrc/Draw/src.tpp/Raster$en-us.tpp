@@ -11,19 +11,19 @@ topic "Raster";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Raster]]}}&]
-[s4;H0; &]
+[s3; &]
 [s1;:Raster`:`:class: [@(0.0.255)3 class][3 _][*3 Raster]&]
-[s2;%% Raster is an abstract class representing raster image. Example 
+[s9;%% Raster is an abstract class representing raster image. Example 
 of Raster derived classes is PngRaster, that serves as .png image 
 file decoder or MemoryRaster, that represent image in memory 
 that can be in specific format (not RGBA).&]
-[s2;%% &]
-[s2;%% Raster provides basic information about image (GetSize and 
+[s9;%% Raster provides basic information about image (GetSize and 
 GetInfo returning Raster`::Info) and is a source of image scanlines. 
 Scanlines are returned as Raster`::Line objects. If possible, 
 Raster derived classes should attempt to minimize memory requirements. 
 For example, PngRaster only fetches individual scanline from 
 the file at time, if possible.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Raster`::Line]]}}&]
 [s3; &]
@@ -41,8 +41,9 @@ exists.&]
 [s2;%% &]
 [s2;%% For convenience, this class is also typedefed as RasterLine.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Raster`::Line Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:Raster`:`:Line`:`:GetRGBA`(`)const: [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* GetRGBA]()_
 [@(0.0.255) const]&]
 [s2;%% Returns a pointer to array with scanline pixels. Conversion 
@@ -65,7 +66,7 @@ onst]_[_^RGBA^ RGBA]_`*()_[@(0.0.255) const]&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Raster`::Line Constructor detail]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:Raster`:`:Line`:`:Line`(const RGBA`*`,bool`): [* Line]([@(0.0.255) const]_[_^RGBA^ RGB
 A]_`*[*@3 data], [@(0.0.255) bool]_[*@3 free])&]
 [s2;%% Constructs Line from RGBA data. If [%-*@3 free] is true, Line 
@@ -96,13 +97,14 @@ or`=]([@(0.128.128) pick`_]_[_^Raster`:`:Line^ Line][@(0.0.255) `&]_[*@3 b])&]
 [s3;%% &]
 [s1;@(0.0.255)3 &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Raster`::Info]]}}&]
-[s4;H0; &]
+[s3; &]
 [s1;:Raster`:`:Info`:`:struct: [@(0.0.255)3 struct][3 _][*3 Raster`::Info]&]
 [s2;%% This structure is used to provide the information about Raster. 
 For convenience, this class is also typedefed as RasterInfo.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Raster`::Line Member Variables]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:Raster`:`:Info`:`:bpp: [@(0.0.255) int]_[* bpp]&]
 [s2;%% Number of bits per pixel. Default value is 24.&]
 [s3; &]
@@ -127,7 +129,7 @@ For convenience, this class is also typedefed as RasterInfo.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Raster public methods]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:Raster`:`:SeekPage`(int`): [@(0.0.255) virtual] [@(0.0.255) void]_[* SeekPage]([@(0.0.255) i
 nt]_[*@3 page])&]
 [s2;%% Provides Raster with ability to handle sources that contain 
@@ -209,4 +211,5 @@ the progress of operation (first int is current step, second
 is number of step to do) and also to cancel the operation (if 
 it returns true; empty Image is returned in that case). Default 
 value for the parameter means no progress feedback is provided.&]
+[s3; &]
 [s0; ]

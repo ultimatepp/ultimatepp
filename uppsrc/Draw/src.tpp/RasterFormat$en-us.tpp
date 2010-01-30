@@ -11,16 +11,16 @@ topic "RasterFormat";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 RasterFormat]]}}&]
-[s4;H0; &]
+[s3; &]
 [s1;:RasterFormat`:`:struct: [@(0.0.255)3 class][3 _][*3 RasterFormat]&]
-[s2;%% This class serves as description and converter of various 
+[s9;%% This class serves as description and converter of various 
 pixel formats. U`+`+ normally uses fixed 32`-bit RGBA format 
 for all processing, but special formats are required e.g. to 
 deal with image files or to reduce memory requirements.&]
 [s3; &]
 [s0;i448;a25;kKO9;@(0.0.255) &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Raster Types]]}}&]
-[s0;i448;a25;kKO9; &]
+[s3; &]
 [ {{3523:6477^ [s0; RASTER`_1]
 :: [s0; 1 bit per pixel (2 colors, with palette)]
 :: [s0; RASTER`_2]
@@ -56,9 +56,10 @@ with&]
 [s0;i448;a25;kKO9;@(0.0.255) &]
 [s0;i448;a25;kKO9; RASTER`_MSBFIRST-|-|Indicates that bytes or nibbles 
 are in reversed order (in big endian).&]
-[s0;i448;a25;kKO9;@(0.0.255) &]
+[s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:RasterFormat`:`:Set1lf`(`): [@(0.0.255) void]_[* Set1lf]()&]
 [s2; Sets 1 bit per pixel format (RASTER`_1).&]
 [s3; &]

@@ -89,4 +89,4 @@ wrap mode is active, 0 `- wrap is active for frame BarCtrl, `-1
 [s5;:BarCtrl`:`:NoWrap`(`): [_^BarCtrl^ BarCtrl][@(0.0.255) `&]_[* NoWrap]()&]
 [s2;%% Same as Wrap(`-1).&]
 [s3;%% &]
-[s0;%% ]
+[s0; ]

@@ -11,17 +11,17 @@ topic "ImageBuffer";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 ImageBuffer]]}}&]
-[s0;i448;a25;kKO9;@(0.0.255) &]
+[s3; &]
 [s1;:ImageBuffer`:`:class: [*@(0.0.255) class][* _ImageBuffer_:_][*@(0.0.255) private][* _][*@3 N
 oCopy]&]
-[s2;%% ImageBuffer represents a writable Image `- an array of RGBA 
+[s9;%% ImageBuffer represents a writable Image `- an array of RGBA 
 pixels. ImageBuffer can be converted to Image in low`-const constant 
 time while loosing its content and vice versa, Image can be converted 
 to ImageBuffer again loosing its content.&]
-[s2;%% Content of Image / ImageBuffer can be classified to optimize 
+[s9;%% Content of Image / ImageBuffer can be classified to optimize 
 drawing. Possible classifications are&]
 [s2;%% &]
-[ {{2913:7087<288;>640; [s0;%% [* IMAGE`_UNKNOWN]]
+[ {{2913:7087<288;>416; [s0;%% [* IMAGE`_UNKNOWN]]
 :: [s0;%% The image kind is unknown.]
 :: [s0;%% [* IMAGE`_EMPTY]]
 :: [s0;%% The image is empty (all alpha values are 0).]
@@ -32,16 +32,16 @@ drawing. Possible classifications are&]
 :: [s0;%% [* IMAGE`_OPAQUE]]
 :: [s0;%% The image has all alpha values 255.]}}&]
 [s2;%% &]
-[s2;%% Note that is the kind of image is unknown, painting routine 
+[s9;%% Note that is the kind of image is unknown, painting routine 
 determines it automatically by scanning pixels and stores the 
 result.&]
-[s2;%% &]
-[s2;%% Pixels of image are organized in simple continual POD array, 
+[s9;%% Pixels of image are organized in simple continual POD array, 
 first pixel being top`-left.&]
-[s2;%% U`+`+ expects pixels to be in premultiplied alpha format.&]
+[s9;%% U`+`+ expects pixels to be in premultiplied alpha format.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:ImageBuffer`:`:SetKind`(int`): [*@(0.0.255) void][* _SetKind(][*@(0.0.255) int][* _][*@3 k
 ][* )]&]
 [s2;%% Sets the kind of image. You can use this to avoid automatic 
@@ -155,8 +155,9 @@ mageBuffer][*@(0.0.255) `&][* _][*@3 img][* )]&]
 and empty after this operation, price paid for low`-cost constant 
 time operation.&]
 [s3; &]
+[s0; &]
 [ {{10000t/25b/25@1 [s0; [* Constructor Detail]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:ImageBuffer`:`:ImageBuffer`(`): [* ImageBuffer]()&]
 [s2;%% Constructs empty ImageBuffer.&]
 [s3; &]
@@ -175,4 +176,5 @@ is undefined.&]
 [s2;%% Assigns pixels of [%-*@3 img] to ImageBuffer. [%-*@3 img] is cleared 
 and empty after this operation, price paid for low`-cost constant 
 time operation.&]
+[s3; &]
 [s0; ]

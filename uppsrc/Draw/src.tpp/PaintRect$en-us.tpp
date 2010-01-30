@@ -11,15 +11,16 @@ topic "PaintRect";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 PaintRect]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s1;:PaintRect`:`:class:%- [@(0.0.255) class]_[* PaintRect]_:_[@(0.0.255) private]_[*@3 Moveab
 le]<[* PaintRect]>_&]
-[s2; PaintRect is a simple helper class that combines Value and a 
+[s9; PaintRect is a simple helper class that combines Value and a 
 reference to the Display to provide `"visual content`" of rectangle. 
 It is [%-*@(0.0.255) Moveable].&]
 [s3;%- &]
+[s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:PaintRect`:`:Paint`(Draw`&`,const Rect`&`,Color`,Color`,dword`)const:%- [@(0.0.255) v
 oid]_[* Paint]([_^Draw^ Draw][@(0.0.255) `&]_[*@3 w], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&
 ]_[*@3 r], [_^Color^ Color]_[*@3 ink]_`=_SColorText, [_^Color^ Color]_[*@3 paper]_`=_SColor
@@ -108,7 +109,7 @@ etValue]()_[@(0.0.255) const]&]
 [s3;%- &]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:PaintRect`:`:PaintRect`(`):%- [* PaintRect]()&]
 [s2; Constructs empty PaintRect, with no Display assigned.&]
 [s3;%- &]
@@ -125,4 +126,5 @@ onst]_[_^Display^ Display][@(0.0.255) `&]_[*@3 display], [@(0.0.255) const]_[_^V
 [s2; Constructs PaintRext with specified Display and Value.&]
 [s7; [%-*C@3 display]-|Display.&]
 [s7; [%-*C@3 val]-|Value.&]
+[s3; &]
 [s0; ]

@@ -11,9 +11,9 @@ topic "RasterEncoder";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 RasterEncoder]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s1;:RasterEncoder`:`:class:%- [@(0.0.255)3 class][3 _][*3 RasterEncoder]&]
-[s2; RasterEncoder serves as consumer of RGBA scanline data. Typical 
+[s9; RasterEncoder serves as consumer of RGBA scanline data. Typical 
 use is as encoder into one of common image file formats, like 
 PNG. RasterEncoder provides an output buffer for client code 
 (producer) to store the output RGBA scanline, when scanline is 
@@ -22,19 +22,20 @@ the RGBA scanline into specific format, according to [* format]
 protected member variable, then calls WriteLineRaw virtual method 
 which performs the final processing (e.g. PNGEncoder stores it 
 into PNG output stream).&]
-[s2; [*/ RGBA optimization: ]There is a specific need to avoid redundant 
+[s9; RGBA optimization: There is a specific need to avoid redundant 
 conversions and copies when the target is normal Image (with 
 ImageEncoder). SetLine method can replace the default scanline 
 buffer provided by RasterEncoder; that way it can use a pointer 
 to ImageBuffer data and data are then can be stored directly 
 into ImageBuffer (ImageEncoder calls SetLine in Start and WriteLineRaw 
-methods). WriteLineRaw can then check whether [%-*@3 data] points 
+methods). WriteLineRaw can then check whether [%-@3 data] points 
 to suggested buffer (it is not guaranteed, because producer can 
 provide yet another scanline buffer in WriteLine) and in that 
 case, copying into target scanline can be completely skipped.&]
+[s3; &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Protected Members List]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:RasterEncoder`:`:format:%- [_^RasterFormat^ RasterFormat]_[* format]&]
 [s2; Derived encoder should store the required conversion format 
 here in Start method.&]
@@ -45,8 +46,9 @@ line])&]
 [s2; Replaces the default scanline buffer to optimize storing RGBA 
 data to direct targets..&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:RasterEncoder`:`:GetPaletteCount`(`):%- [@(0.0.255) virtual] [@(0.0.255) int]_[* GetPa
 letteCount]()&]
 [s2; Returns the number of colors in the palette (or zero).&]
@@ -158,4 +160,5 @@ nt]_[*@3 cx], [@(0.0.255) int]_[*@3 cy], [_^Raster^ Raster][@(0.0.255) `&]_[*@3 
 &]
 [s2; Initializes encoder for output of image of specified size, optionally 
 setting the palette.&]
+[s3; &]
 [s0; ]

@@ -11,27 +11,31 @@ topic "Common Raster classes";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 ImageRaster]]}}&]
-[s4;H0; &]
+[s3; &]
 [s1;:ImageRaster`:`:class: [@(0.0.255)3 class][3 _][*3 ImageRaster][3 _:_][@(0.0.255)3 public][3 _
 ][*@3;3 Raster]&]
-[s2;%% This class provides the Raster interface to existing Image.&]
-[s3; &]
+[s9;%% This class provides the Raster interface to existing Image.&]
+[s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:ImageRaster`:`:ImageRaster`(const Image`&`): [* ImageRaster]([@(0.0.255) const]_[_^Image^ I
 mage][@(0.0.255) `&]_[*@3 img])&]
 [s2;%% Creates Raster of [%-*@3 img].&]
 [s3; &]
 [s0; &]
+[s0; &]
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 MemoryRaster]]}}&]
 [s3;%% &]
 [s1;:MemoryRaster`:`:class: [@(0.0.255)3 class][3 _][*3 MemoryRaster][3 _:_][@(0.0.255)3 public][3 _
 ][*@3;3 Raster]&]
-[s2;%% This class represents an image in specific format stored in 
+[s9;%% This class represents an image in specific format stored in 
 memory. It has implicit pick transfer.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:MemoryRaster`:`:Load`(Raster`&`): [@(0.0.255) void]_[* Load]([_^Raster^ Raster][@(0.0.255) `&
 ]_[*@3 raster])&]
 [s2;%% Loads [%-*@3 raster] into MemoryRaster. Keeps the format of 
@@ -42,8 +46,9 @@ source.&]
 ]&]
 [s2;%% Returns the number of bytes used to store scanlines of MemoryRaster.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:MemoryRaster`:`:MemoryRaster`(`): [* MemoryRaster]()&]
 [s2;%% Constructs empty MemoryRaster.&]
 [s3; &]
@@ -53,18 +58,22 @@ source.&]
 [s2;%% Loads [%-*@3 raster] into MemoryRaster. Keeps the format of 
 source.&]
 [s3;%% &]
+[s0;%% &]
+[s0;%% &]
+[s0;%% &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 StreamRaster]]}}&]
 [s3;%% &]
 [s1;:StreamRaster`:`:class: [@(0.0.255)3 class][3 _][*3 StreamRaster][3 _:_][@(0.0.255)3 public][3 _
 ][*@3;3 Raster]&]
-[s2;%% Represents an image stored in Stream, usually used as base`-class 
+[s9;%% Represents an image stored in Stream, usually used as base`-class 
 for image decoders, e.g. PNGRaster. StreamRaster derived classes 
 can be registered, in that case a class factory of such class 
 is stored in an array and attempted to load the file of unknown 
 format type.&]
-[s3; &]
+[s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:StreamRaster`:`:GetStream`(`): [_^Stream^ Stream][@(0.0.255) `&]_[* GetStream]()&]
 [s2;%% Returns the associated Stream.&]
 [s3; &]
@@ -101,6 +110,7 @@ alse])&]
 or string. [%-*@3 progress] can be used to track the progress and 
 to cancel loading (by returning true).&]
 [s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Registered Decoders and multi`-format support]]}}&]
 [s4;H0; &]
 [s5;:StreamRaster`:`:Register`(`): [@(0.0.255) static] [@(0.0.255) template]_<[@(0.0.255) c
@@ -134,6 +144,7 @@ alse])&]
 all registered decoders. [%-*@3 progress] can be used to track 
 progress of operation or to cancel it by returning true.&]
 [s3;%% &]
+[s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s4;H0; &]
 [s5;:StreamRaster`:`:StreamRaster`(`): [* StreamRaster]()&]

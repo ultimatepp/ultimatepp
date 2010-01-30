@@ -14,11 +14,12 @@ topic "DrawingDraw";
 [s3;%- &]
 [s1;:DrawingDraw`:`:class:%- [@(0.0.255)3 class][3 _][*3 DrawingDraw][3 _:_][@(0.0.255)3 public][3 _
 ][*@3;3 Draw]&]
-[s2; DrawingDraw is a Draw able to store drawing operations of Draw 
+[s9; DrawingDraw is a Draw able to store drawing operations of Draw 
 and to create Drawing value that can be replayed using Draw`::DrawDrawing.&]
 [s3;%- &]
+[s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s4;H0;%- &]
+[s3;%- &]
 [s5;:DrawingDraw`:`:Create`(int`,int`,bool`):%- [@(0.0.255) void]_[* Create]([@(0.0.255) in
 t]_[*@3 cx], [@(0.0.255) int]_[*@3 cy], [@(0.0.255) bool]_[*@3 dots]_`=_[@(0.0.255) true])&]
 [s5;:DrawingDraw`:`:Create`(Size`,bool`):%- [@(0.0.255) void]_[* Create]([_^Size^ Size]_[*@3 s
@@ -39,9 +40,10 @@ already any records stored in DrawingDraw, they are cleaned.&]
 [s4; &]
 [s5;:DrawingDraw`:`:operator Drawing`(`):%- [* operator_Drawing]()&]
 [s2; Returns GetResult().&]
+[s3;%- &]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
-[s4;H0; &]
+[s3; &]
 [s5;:DrawingDraw`:`:DrawingDraw`(`):%- [* DrawingDraw]()&]
 [s2; Default constructor. Create has to be explicitly called on default 
 constructed DrawingDraw.&]
@@ -52,4 +54,5 @@ x], [@(0.0.255) int]_[*@3 cy], [@(0.0.255) bool]_[*@3 dots]_`=_[@(0.0.255) true]
 [s5;:DrawingDraw`:`:DrawingDraw`(Size`,bool`):%- [* DrawingDraw]([_^Size^ Size]_[*@3 sz], 
 [@(0.0.255) bool]_[*@3 dots]_`=_[@(0.0.255) true])&]
 [s2; Calls Create to start a recording session.&]
+[s3; &]
 [s0; ]
