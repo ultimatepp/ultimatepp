@@ -520,7 +520,7 @@ void GoogleTranslatorDemo::GlobalShortCutHandle(){
 		}
 		
 		if(need_translate){
-			String cur_text = ReadClipboardText();
+			WString cur_text = ReadClipboardUnicodeText();
 			
 			if(cur_text.GetLength()){
 				inputwindow.textedit.Set(cur_text);
