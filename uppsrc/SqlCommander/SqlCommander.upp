@@ -4,9 +4,10 @@ uses
 	SqlCtrl,
 	Oracle,
 	OleDB,
-	MySql,
 	plugin\sqlite3,
 	PostgreSQL;
+
+uses(!NOMYSQL) MySql;
 
 link(WIN32 DEBUG MSC) /NODEFAULTLIB:libcmt;
 
