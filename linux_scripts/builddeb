@@ -5,9 +5,9 @@
 #		Settings - REPLACE VALUES WITH YOUR OWN					#
 #################################################################
 # Full path to the sources, preferably SVN
-SRC_PATH="/media/data/temp/uppsvn"
+SRC_PATH=".."
 # Destination path for generated deb package
-DEST_PATH="/media/data/temp/repository"
+DEST_PATH="."
 # Executable name
 #(note: script detects and uses suffixes svn,beta and dev 
 #       to change some filenames etc.)
@@ -30,11 +30,50 @@ BUILD_OPTS="brs"
 
 #=====Nothing should need any modification below this line=====#
 
+#little helper fuction to convert a path to absolute one
+rel2abs(){
+    # make sure file is specified
+    if [ -z "$1" ]
+    then
+       echo "$0 <path>"
+       return 1
+    fi
+    # already absolute case
+    if [ "${1:0:1}" = "/" ] || [ "$PWD" = "/" ]
+    then
+       ABS=""
+    else
+       ABS="$PWD"
+    fi
+    # loop thru path
+    IFS="/"
+    for DIR in $1
+    do
+       if [ -n "$DIR" ]
+       then
+          if [ "$DIR" = ".." ]
+          then
+             ABS="${ABS%/*}"
+          elif [ "$DIR" != "." ]
+          then
+             ABS="$ABS/$DIR"
+          fi
+       fi
+    done
+    IFS=":"
+    echo $ABS
+    return 0
+} 
+
 echo
 echo "UPP DEB PACKAGE BUILDER"
 echo "By Jan Dolinar, 2009"
-echo "Largely based on pevious work by Massimo Del Fedele, 2008"
+echo "Largely based on previous work by Massimo Del Fedele, 2008"
 echo
+
+# convert the paths to absolute
+SRC_PATH="`rel2abs \"$SRC_PATH\"`"
+DEST_PATH="`rel2abs \"$DEST_PATH\"`"
 
 #check the sources structure
 subfolders=( uppsrc examples tutorial reference bazaar )
@@ -405,9 +444,7 @@ mv $md5tmp/md5sums $tmp/DEBIAN
 rmdir $md5tmp
 
 #get the installed size (approx...)
-#sigh... probably still not the best way :-/
-set -- "`du -s $tmp/usr`"
-size=$1
+size=`du -s $tmp/usr |sed 's/[^0-9].*$//'`
 
 #create control file
 echo "Package: $packagename" > $tmp/DEBIAN/control 
