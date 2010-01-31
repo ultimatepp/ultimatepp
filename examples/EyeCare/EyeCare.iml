@@ -1,6 +1,7 @@
 PREMULTIPLIED
 IMAGE_ID(eye)
-IMAGE_ID(icon)
+IMAGE_ID(icon) IMAGE_META("exp", "")
+
 IMAGE_ID(off)
 
 IMAGE_BEGIN_DATA

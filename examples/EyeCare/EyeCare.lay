@@ -2,9 +2,9 @@ LAYOUT(EyeCareLayout, 270, 216)
 	ITEM(MenuBar, menu, LeftPosZ(0, 256).TopPosZ(0, 24))
 	ITEM(ImageCtrl, image, LeftPosZ(10, 253).TopPosZ(32, 40))
 	ITEM(LabelBox, dv___2, LeftPosZ(8, 257).TopPosZ(24, 162))
-	ITEM(Label, text1, SetLabel(t_("text1")).SetFont(Roman(16).Bold()).LeftPosZ(16, 241).TopPosZ(75, 25))
+	ITEM(Label, text1, SetLabel(t_("text1")).SetFont(SerifZ(16).Bold()).LeftPosZ(16, 241).TopPosZ(75, 25))
 	ITEM(Label, text2, LeftPosZ(16, 241).TopPosZ(105, 35))
-	ITEM(Button, hide, SetLabel(t_("HIDE")).SetFont(Arial(25).Bold()).LeftPosZ(15, 242).TopPosZ(143, 35))
+	ITEM(Button, hide, SetLabel(t_("HIDE")).SetFont(SansSerifZ(25).Bold()).LeftPosZ(15, 242).TopPosZ(143, 35))
 	ITEM(StatusBar, status, LeftPosZ(0, 256).TopPosZ(192, 24))
 END_LAYOUT
 
