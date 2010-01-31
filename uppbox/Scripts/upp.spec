@@ -36,7 +36,7 @@ Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel
 %endif
 
 # -----
-Requires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-dev
+Requires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel
 Requires:       valgrind
 
 # Mandriva specific Requires
@@ -119,12 +119,13 @@ DEBUG_INFO	= "2";
 DEBUG_BLITZ	= "1";
 DEBUG_LINKMODE	= "1";
 DEBUG_OPTIONS	= "-O0";
-DEBUG_FLAGS = "";
+DEBUG_FLAGS	= "";
 RELEASE_BLITZ		= "0";
 RELEASE_LINKMODE	= "1";
-RELEASE_OPTIONS		= "-O1 -ffunction-sections";
-RELEASE_SIZE_OPTIONS	= "-Os -finline-limit=20";
-RELEASE_FLAGS = "";
+RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
+RELEASE_SIZE_OPTIONS	= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
+RELEASE_FLAGS	= "";
+RELEASE_LINK	= "-Wl,--gc-sections";
 DEBUGGER	= "gdb";
 PATH		= "";
 INCLUDE		= "$INCLUDEDIR";
@@ -133,7 +134,7 @@ REMOTE_HOST	= "";
 REMOTE_OS	= "";
 REMOTE_TRANSFER	= "";
 REMOTE_MAP	= "";
-LINKMODE_LOCK = "0";
+LINKMODE_LOCK	= "0";
 EOF
 
 
@@ -160,4 +161,3 @@ rm -fr %{buildroot}
 
 * Fri Aug 15 2008 Amrein-Marie Christophe <camreinmarie@free.fr> 2008.1-1
 - First package
-
