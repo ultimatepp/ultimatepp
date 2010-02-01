@@ -30,6 +30,9 @@ Value ParseXmlRpcValue(XmlParser& p)
 	if(p.Tag("string") || p.Tag("base64"))
 		r = p.ReadText();
 	else
+	if(p.TagE("nil"))
+		;
+	else
 	if(p.Tag("dateTime.iso8601")) {
 		String s = TrimBoth(p.ReadText());
 		// 19980717T14:08:55
@@ -92,6 +95,9 @@ ValueArray ParseXmlRpcParams(XmlParser& p)
 String FormatXmlRpcValue(const Value& v)
 {
 	String r;
+	if(v.GetType() == VOID_V)
+		r = XmlTag("nil")();
+	else
 	if(v.GetType() == INT_V)
 		r = XmlTag("int")(Format("%d", (int)v));
 	else
