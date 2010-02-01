@@ -95,7 +95,7 @@ ValueArray ParseXmlRpcParams(XmlParser& p)
 String FormatXmlRpcValue(const Value& v)
 {
 	String r;
-	if(v.GetType() == VOID_V)
+	if(IsNull(v) && !IsString(v))
 		r = XmlTag("nil")();
 	else
 	if(v.GetType() == INT_V)
