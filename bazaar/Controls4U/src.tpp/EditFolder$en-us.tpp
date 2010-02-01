@@ -68,6 +68,6 @@ the used in the setup of a FileSel.&]
 [s0;~~~256;%- &]
 [ {{10000F(128)G(128)@1 [s0;~~~256; [* Public Member List]]}}&]
 [s3;~~~256;%- &]
-[s0;~~~256; There are inherited from [^topic`:`/`/Controls4U`/src`/EditFileFolder`$en`-us`#EditFileFolder`:`:class^ E
+[s0;~~~256; They are inherited from [^topic`:`/`/Controls4U`/src`/EditFileFolder`$en`-us`#EditFileFolder`:`:class^ E
 ditFileFolder]&]
-[s0;~~~256; ]
+[s0; ]

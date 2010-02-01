@@ -65,6 +65,6 @@ the setup of a FileSel.&]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Public Member List]]}}&]
 [s1;%- &]
-[s0; [2 There are inherited from ][^topic`:`/`/Controls4U`/src`/EditFileFolder`$en`-us`#EditFileFolder`:`:class^2 E
+[s0; [2 They are inherited from ][^topic`:`/`/Controls4U`/src`/EditFileFolder`$en`-us`#EditFileFolder`:`:class^2 E
 ditFileFolder]&]
 [s0; ]

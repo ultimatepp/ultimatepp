@@ -4500,7 +4500,9 @@ Angle`_180 and Angle`_270.&]
 [@(0.0.255) int]_[*@3 fit])&]
 [s2; Sets the image fit into the Ctrl frame.&]
 [s2; [%-*@3 fit ]parameter valid values are BestFit, FillFrame, NoScale, 
-RepeatToFill and Background.&]
+RepeatToFill.&]
+[s2; Background example is a combination of SetFit(RepeatToFill); 
+and UseAsBackground(true);&]
 [s2; &]
 [s2;= 
 @@image:2721&1139
@@ -5471,5 +5473,10 @@ RepeatToFill and Background.&]
 [* SetBackground]([_^Color^ Color]_[*@3 c])&]
 [s2; Sets [%-*@3 c].as image frame background color. Null is valid 
 as transparent color.&]
+[s4; &]
+[s6;%- &]
+[s5;:StaticImage`:`:UseAsBackground`(bool`):%- [_^StaticImage^ StaticImage][@(0.0.255) `&
+]_[* UseAsBackground]([@(0.0.255) bool]_[*@3 b])&]
+[s2; If [%-*@3 b].is true the image will be used as parent window background.&]
 [s4; &]
 [s0; ]
