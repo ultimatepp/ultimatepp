@@ -111,7 +111,7 @@ or editing your project data.]&]
 [s0;2 &]
 [s0; [2 Do it carefully and fast. As this is an index page somebody 
 else could be editing it at the same time and some of the changes 
-could be lost.]&]
+could get conflicts.]&]
 [s0;2 &]
 [s0; [2 Please do not modify contents made by other directly. It is 
 better first to recommend the changes and ask for permission.]&]
