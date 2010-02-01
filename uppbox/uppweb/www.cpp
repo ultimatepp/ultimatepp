@@ -407,15 +407,12 @@ void ExportPage(int i)
 	if(IsNull(pageTitle))
 		pageTitle = "Ultimate++";
 	if(StartsWith(topicTitle, "examples$"))
-	{
-		String referenceName = topicTitle.Mid( 9, topicTitle.GetLength()-14 );
-		pageTitle += " / Demos / " + referenceName;
-	}
+		pageTitle = "Demos / " + pageTitle;
 	else if(StartsWith(topicTitle, "reference$"))
-	{
-		String referenceName = topicTitle.Mid( 10, topicTitle.GetLength()-15 );
-		pageTitle += " / Examples / " + referenceName;
-	}
+		pageTitle = "Examples / " + pageTitle;
+
+	if(pageTitle != "Ultimate++")
+		pageTitle << " :: Ultimate++";
 
 	Htmls content =
 	    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
