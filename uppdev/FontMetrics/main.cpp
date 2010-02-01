@@ -2,62 +2,45 @@
 
 using namespace Upp;
 
-struct CharMetrics {
-	int16 width;
-	int16 lspc;
-	int16 rspc;
+const char *font[] = {
+	"sans-serif",
+	"Arial",
+	"Arial Unicode MS",
+	"MS UI Gothic", 
+	"MS Mincho",
+	"Arial",
+	"AlArabiya"
+	"FreeSerif",
+	"Kochi Mincho",
+	"Kochi Gothic",
+	"Sazanami Mincho",
+	"Sazanami Gothic",
+	"Gulim",
+	"SimSun",
+	"PMingLiU",
+	"Symbol",
 };
-
-struct FontMetrics {
-		int          refcount;
-		Font         font;
-		int          angle;
-		int          device;
-	#ifdef PLATFORM_WIN32
-		HFONT        hfont;
-	#endif
-	#ifdef PLATFORM_XFT
-		XftFont     *xftfont;
-		XftFont     *xftfont0;
-	#endif
-		int          ascent;
-		int          descent;
-		int          external;
-		int          internal;
-		int          height;
-		int          lineheight;
-		int          overhang;
-		Size         offset;
-		int          avewidth;
-		int          maxwidth;
-		int          firstchar;
-		int          charcount;
-		int          default_char;
-
-		CharMetrics *base[64];
-
-		Mutex         xmutex;
-		Vector<Kinfo> kinfo;
-		VectorMap<dword, CharMetrics> xx;
-
-		bool         fixedpitch;
-		bool         scaleable;
-		int          spacebefore;
-		int          spaceafter;
-	#ifdef PLATFORM_X11
-		int          underline_position;
-		int          underline_thickness;
-		double       sina;
-		double       cosa;
-		bool         twobyte;
-		String       filename;
-	#endif
-};
-
-FontMetrics GetFontMetrics(Font fnt);
-CharMetrics GetCharMetrics(Font fnt, int chr);
 
 GUI_APP_MAIN
 {
+	LOG("struct...");
+	for(int i = 0; i < __countof(font); i++) {
+		Font fnt;
+		fnt.FaceName(font[i]);
+		dword l = 0;
+		for(int ch = 32; ch < 4096; ch++) {
+			if(GetGlyphInfo(fnt, ch).IsNormal()) {
+				l |= (0x80000000 >> (ch / 128));
+				ch = (ch + 127) & ~127;
+			}
+		}
+		dword h = 0;
+		for(int ch = 32; ch < 65536; ch++) {
+			if(GetGlyphInfo(fnt, ch).IsNormal()) {
+				h |= (0x80000000 >> (ch / 2048));
+				ch = (ch + 2047) & ~2047;
+			}
+		}
+		LOG(AsCString(font[i]) << ", 0x" << FormatIntHex(l) << ", 0x" << FormatIntHex(h) << ',');
+	}
 }
-

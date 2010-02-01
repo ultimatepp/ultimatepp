@@ -11,6 +11,7 @@ GUI_APP_MAIN
 	String letters = "sSzZEeDNB12345679kKrRLCc";
 	Report r;
 	Size page = r.GetPageSize();
+#if 0
 //	r.DrawText(0, 0, letters, fnt);
 	for(int y = 0; y + isz.cy < page.cy; y += 3 * isz.cy / 2)
 		for(int x = 0; x < page.cx; x += 3 * isz.cx / 2) {
@@ -37,20 +38,39 @@ GUI_APP_MAIN
 			r.DrawText(x, y, String(ch, 1) + String(cl, 1), fnt);
 		}
 	r.NewPage();
-	for(int i = 0; i < 18; i++) {
-		int a, b;
-		do {
-			a = Random(200) + 1;
-			b = Random(200) + 1;
+#endif
+	for(int i = 0; i < 26; i++) {
+		for(int j = 0; j < 3; j++) {
+			int a, b, c;
+			do {
+				a = Random(50) + 1;
+				b = Random(50) - 25;
+				c = Random(50) - 25;
+			}
+			while(a + b + c < 1 || a + b + c > 50);
+			int q = Random(4);
+			String s;
+			if(q == 0)
+				s = "__";
+			else
+				s = AsString(a);
+			s << (b > 0 ? " + " : " - ");
+			if(q == 1)
+				s << "__";
+			else
+				s << AsString(abs(b));
+			s << (c > 0 ? " + " : " - ");
+			if(q == 2)
+				s << "__";
+			else
+				s << AsString(abs(c));
+			s << " = ";
+			if(q == 3)
+				s << "__";
+			else
+				s << a + b + c;
+			r.DrawText(10 + 1200 * j, 10 + 2 * isz.cy / 2  * i, s, Arial(120));
 		}
-		while(a + b < 90 || a + b > 400);
-		r.DrawText(10, 10 + 3 * isz.cy / 2  * i, Format("%d + %d =", a, b), fnt);
-		do {
-			a = Random(100) + 1;
-			b = Random(100) + 1;
-		}
-		while(a - b < 1);
-		r.DrawText(2000, 10 + 3 * isz.cy / 2 * i, Format("%d - %d =", a, b), fnt);
 	}
 	Perform(r);
 }
