@@ -263,7 +263,7 @@ void Thread::Sleep(int msec)
 
 static bool sSSE2 = false; //CPU_SSE2();
 
-inline void ReadMemoryBarrier()
+void ReadMemoryBarrier()
 {
 #ifdef CPU_AMD64
 	#ifdef COMPILER_MSC
