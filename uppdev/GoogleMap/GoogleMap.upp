@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	Web,
+	plugin\jpg;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
