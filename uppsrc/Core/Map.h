@@ -160,6 +160,7 @@ public:
 
 	void      Set(int i, T *ptr)                   { B::value.Set(i, ptr); }
 	T        *PopDetach()                          { B::key.Drop(); return B::value.PopDetach(); }
+	T        *Detach(int i)                        { B::key.Remove(i); return B::value.Detach(i); }
 
 	ArrayMap(const ArrayMap& s, int) : AMap<K, T, Array<T>, HashFn>(s, 1) {}
 	ArrayMap(pick_ Index<K, HashFn>& ndx, pick_ Array<T>& val) : AMap<K, T, Array<T>, HashFn>(ndx, val) {}

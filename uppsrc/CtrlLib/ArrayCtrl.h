@@ -25,6 +25,7 @@ public:
 	virtual void  LeftUp(Point p, dword flags);
 	virtual void  RightDown(Point p, dword);
 	virtual void  MouseMove(Point p, dword);
+	virtual void  MouseLeave();
 	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual Image CursorImage(Point p, dword);
 	virtual void  DragAndDrop(Point p, PasteClip& d);
@@ -244,6 +245,7 @@ private:
 
 	void   DoPoint(Point p, bool dosel = true);
 	void   DoClick(Point p, dword flags);
+	int    GetClickColumn(int ii, Point p);
 	void   ClickColumn(Point p);
 	void   ClickSel(dword flags);
 	Rect   GetCellRect(int i, int col) const;
@@ -307,6 +309,7 @@ protected:
 
 public:
 	Callback          WhenLeftDouble;
+	Callback1<Point>  WhenMouseMove;
 	Callback          WhenEnterKey;
 	Callback          WhenLeftClick;
 	Callback1<Bar&>   WhenBar;
@@ -317,6 +320,7 @@ public:
 	Callback          WhenAcceptEdit;
 	Callback          WhenCtrlsAction;
 	Callback          WhenSel;
+
 
 	Callback                        WhenDrag;
 	Callback3<int, int, PasteClip&> WhenDropCell;

@@ -134,4 +134,10 @@ Client is responsible for deletion of the element.&]
 [s6; Invalidates iterators to ArrayMap.&]
 [s7; [* Return value]-|Value.&]
 [s3; &]
+[s4;%- &]
+[s5;:ArrayMap`:`:Detach`(int`):%- [*@4 T]_`*[* Detach]([@(0.0.255) int]_[*@3 i])&]
+[s2; Removes element [%-*@3 i]. but does not destroy it `- the heap 
+pointer to the element is returned. Client is responsible for 
+deletion of the element.&]
+[s3; &]
 [s0; ]
