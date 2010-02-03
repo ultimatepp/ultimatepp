@@ -1410,15 +1410,19 @@ void ArrayCtrl::DoPoint(Point p, bool dosel) {
 		SetWantFocus();
 }
 
+int  ArrayCtrl::GetClickColumn(int ii, Point p)
+{
+	for(int i = 0; i < column.GetCount(); i++)
+		if(GetCellRect(ii, i).Contains(p))
+			return i;
+	return Null;
+}
+
 void ArrayCtrl::ClickColumn(Point p)
 {
 	clickpos.x = Null;
 	if(clickpos.y >= 0)
-		for(int i = 0; i < column.GetCount(); i++)
-			if(GetCellRect(clickpos.y, i).Contains(p)) {
-				clickpos.x = i;
-				break;
-			}
+		clickpos.x = GetClickColumn(clickpos.y, p);
 }
 
 void ArrayCtrl::ClickSel(dword flags)
@@ -1529,11 +1533,26 @@ void ArrayCtrl::SyncInfo()
 
 void ArrayCtrl::MouseMove(Point p, dword)
 {
+	int ii = Null;
+	if(WhenMouseMove) {
+		ii = GetLineAt(p.y + sb);
+		DDUMP(ii);
+		if(IsNull(ii))
+			WhenMouseMove(Null);
+		else
+			WhenMouseMove(Point(GetClickColumn(ii, p), ii));
+	}
 	if(mousemove && !IsReadOnly()) {
-		int i = GetLineAt(p.y + sb);
-		if(!IsNull(i)) SetCursor(i);
+		if(IsNull(ii))
+			ii = GetLineAt(p.y + sb);
+		if(!IsNull(ii)) SetCursor(ii);
 	}
 	SyncInfo();
+}
+
+void ArrayCtrl::MouseLeave()
+{
+	WhenMouseMove(Null);
 }
 
 Image ArrayCtrl::CursorImage(Point p, dword)

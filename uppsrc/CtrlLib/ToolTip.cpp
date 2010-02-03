@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  DLOG(x)
 
 ToolTip::ToolTip()
 {
@@ -87,23 +87,27 @@ void ShowToolTip()
 	SetTimeCallback(200, callback(EndShowMode), (void *)EndShowMode);
 }
 
+void SyncToolTip(Ctrl *ctrl)
+{
+	if(ctrl != tipctrl || ctrl && ctrl->GetTip() != AppToolTip().Get()) {
+		LLOG("ToolTipHook / ctrl change " << UPP::Name(ctrl) << " -> " << UPP::Name(ctrl));
+		tipctrl = ctrl;
+		KillTimeCallback((void *)SyncToolTip);
+		if(showmode)
+			ShowToolTip();
+		else {
+			LLOG("ToolTipHook -> SetTimeCallback");
+			SetTimeCallback(1000, callback(ShowToolTip), (void *)SyncToolTip);
+		}
+	}
+}
+
 bool ToolTipHook(Ctrl *ctrl, bool inframe, int event, Point p, int zdelta, dword keyflags)
 {
 	if(event == Ctrl::MOUSEMOVE && ctrl != &AppToolTip())
 	{
-		ctrl = Ctrl::GetVisibleChild(ctrl, p, inframe);
+		SyncToolTip(Ctrl::GetVisibleChild(ctrl, p, inframe));
 		LLOG("ToolTipHook MOUSEMOVE " << UPP::Name(ctrl) << " inframe: " << inframe);
-		if(ctrl != tipctrl || ctrl->GetTip() != AppToolTip().Get() && showmode) {
-			LLOG("ToolTipHook / ctrl change " << UPP::Name(ctrl) << " -> " << UPP::Name(ctrl));
-			tipctrl = ctrl;
-			KillTimeCallback((void *)ToolTipHook);
-			if(showmode)
-				ShowToolTip();
-			else {
-				LLOG("ToolTipHook -> SetTimeCallback");
-				SetTimeCallback(1000, callback(ShowToolTip), (void *)ToolTipHook);
-			}
-		}
 	}
 	if(event == Ctrl::MOUSELEAVE) {
 		LLOG("ToolTipHook MOUSELEAVE " << UPP::Name(ctrl));
