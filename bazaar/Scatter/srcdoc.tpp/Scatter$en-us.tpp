@@ -4,6 +4,8 @@ topic "Scatter";
 [{_}%EN-US 
 [s1; [+184 Scatter]&]
 [s0; [2 Versatile 2D graph control.]&]
+[s0;2 &]
+[s0; [2 Scatter control has been developed by Andrei Catalin (andrei`-catalin).]&]
 [s0;%- &]
 [ {{4916:5084f0;g0;^ [s0; [2 
 @@image:1845&1099
@@ -1169,4 +1171,5 @@ topic "Scatter";
 ]]}}&]
 [s0; &]
 [s0; [^topic`:`/`/Scatter`/srcdoc`/TestScatter2`$en`-us^2 TestScatter2][2  
-package does a visual review of class features.]]
+package does a visual review of class features.]&]
+[s0;2 ]
