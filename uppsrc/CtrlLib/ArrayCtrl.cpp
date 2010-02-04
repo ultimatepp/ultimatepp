@@ -1536,7 +1536,6 @@ void ArrayCtrl::MouseMove(Point p, dword)
 	int ii = Null;
 	if(WhenMouseMove) {
 		ii = GetLineAt(p.y + sb);
-		DDUMP(ii);
 		if(IsNull(ii))
 			WhenMouseMove(Null);
 		else
