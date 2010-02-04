@@ -1,4 +1,4 @@
-description "Bazaar: Scatter & Pie ctrls, by Andrei-Catalin";
+description "Bazaar: Scatter & Pie ctrls, by Andrei-Catalin\377";
 
 uses
 	CtrlLib;
@@ -11,5 +11,6 @@ file
 	Chart.usc,
 	Pie.h,
 	Pie.cpp,
-	Chart.iml;
+	Chart.iml,
+	srcdoc.tpp;
 
