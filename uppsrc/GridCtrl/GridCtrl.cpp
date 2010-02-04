@@ -1861,9 +1861,11 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 
 		if(!dragging)
 			return;
-
+		
 		if(!moving_body)
 		{
+			popup.Close();
+			
 			if(!top_click && valid_cursor &&
 			   p.x < total_width &&
 			   p.y < total_height &&
@@ -1978,13 +1980,15 @@ void GridCtrl::SyncPopup()
 					int y = vi.npos + p0.y - p.y - 1 - sby.Get() * int(!fr);
 					
 					GetItemAttrs(it, hi.id, hi, vi, popup.style, popup.gd, popup.fg, popup.bg, popup.fnt);
-					popup.gd->row = -1;
-					popup.gd->col = -1;
+					popup.gd->row = r < fixed_rows ? -1 : r;
+					popup.gd->col = c < fixed_cols ? -1 : c;
 					Size scrsz = GetScreenSize();
 					int margin = popup.gd->lm + popup.gd->rm;
 					int cx = min(600, min((int) (scrsz.cx * 0.4), max(it.rcx + margin + 2, hi.nsize + 1)));
 					int lines = popup.gd->GetLinesCount(cx - margin - 2, WString(val), StdFont(), true);
 					int cy = max(lines * Draw::GetStdFontCy() + popup.gd->tm + popup.gd->bm + 2, vi.nsize + 1);
+					if(fr && r == 0)
+						y++; cy--;
 					popup.PopUp(this, x, y, cx, cy);
 					if(!close)
 						popup.Refresh();					
@@ -2010,8 +2014,7 @@ void GridCtrl::SyncPopup()
 
 void GridCtrl::LeftDown(Point p, dword keyflags)
 {
-	LG("LeftDown");
-
+	//popup.Close();
 	SetCapture();
 	leftpnt = p;
 	just_clicked = true;
@@ -2148,7 +2151,6 @@ void GridCtrl::LeftUp(Point p, dword keyflags)
 
 		if(j >= fixed_cols && i == 0 && hitems[i].sortable)
 		{
-			LG("Sorting");
 			int newSortCol = hitems[j].id;
 
 			if(sorting_multicol && (keyflags & K_CTRL))
@@ -5436,6 +5438,7 @@ void GridCtrl::MouseLeave()
 	UpdateHighlighting(GS_BORDER, Point(0, 0));
 	oldSplitCol = -1;
 	oldSplitRow = -1;
+	popup.Close();
 }
 
 void GridCtrl::MouseWheel(Point p, int zdelta, dword keyflags)
@@ -5914,7 +5917,7 @@ bool GridCtrl::Go0(int jump, bool scroll, bool goleft, bool ctrlmode)
 			bool found = false;
 			int i;
 			for(i = c - 1; i >= fixed_rows; i--)
-				if(yn >= vitems[i].nTop() && yn < vitems[i].nBottom() && !vitems[i].hidden && !vitems[i].clickable)
+				if(yn >= vitems[i].nTop() && yn < vitems[i].nBottom())
 				{
 					found = true;
 					break;
@@ -5924,12 +5927,14 @@ bool GridCtrl::Go0(int jump, bool scroll, bool goleft, bool ctrlmode)
 
 			if(!SetCursor0(curpos.x < 0 ? firstVisCol : curpos.x, c, opt, 0, 1))
 				return false;
+			
+			c = curpos.y;
 
 			if(scroll && resize_row_mode == 0)
 			{
 				int yc = vitems[c].nTop();
-				int yt = vitems[curpos.y].nTop(sby);
-				int yb = vitems[curpos.y].nBottom(sby);
+				int yt = vitems[cp].nTop(sby);
+				int yb = vitems[cp].nBottom(sby);
 
 				if(yt < 0 || yb > sz.cy - 1)
 					sby.Set(yc - sz.cy + vitems[c].nHeight());
@@ -5950,7 +5955,7 @@ bool GridCtrl::Go0(int jump, bool scroll, bool goleft, bool ctrlmode)
 			bool found = false;
 			int i;
 			for(i = c + 1; i < total_rows; i++)
-				if(yn >= vitems[i].nTop() && yn < vitems[i].nBottom() && !vitems[i].hidden && !vitems[i].clickable)
+				if(yn >= vitems[i].nTop() && yn < vitems[i].nBottom())
 				{
 					found = true;
 					break;
@@ -5960,6 +5965,8 @@ bool GridCtrl::Go0(int jump, bool scroll, bool goleft, bool ctrlmode)
 
 			if(!SetCursor0(curpos.x < 0 ? firstVisCol : curpos.x, c, opt, 0, -1))
 				return false;
+
+			c = curpos.y;
 
 			if(scroll && resize_row_mode == 0)
 			{
@@ -7655,7 +7662,10 @@ void GridCtrl::JoinRow(int left, int right)
 void GridPopUp::Paint(Draw &w)
 {
 	Size sz = GetSize();
-	gd->Paint(w, 1, 1, sz.cx - 2, sz.cy - 2, val, style | GD::WRAP | GD::VCENTER, fg, bg, fnt);
+	if(gd->row < 0 || gd->col < 0)
+		gd->PaintFixed(w, false, false, 1, 1, sz.cx - 2, sz.cy - 2, val, style | GD::WRAP | GD::VCENTER, fnt);
+	else
+		gd->Paint(w, 1, 1, sz.cx - 2, sz.cy - 2, val, style | GD::WRAP | GD::VCENTER, fg, bg, fnt);
 	DrawBorder(w, sz, BlackBorder);
 }
 
