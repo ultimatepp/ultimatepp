@@ -137,9 +137,18 @@ bool GridCtrl::IsSorted()
 
 void GridCtrl::MarkSort(int col, int sort_mode, bool refresh)
 {
+	int mcol = InMultisort(col);
+
 	sortCol = col;
 	hitems[col].sortmode = sort_mode;
-	hitems[col].sortcol = sortOrder.GetCount();
+	
+	if(mcol < 0)
+	{
+		sortOrder.Add(col);
+		mcol = sortOrder.GetCount() - 1;
+	}
+
+	hitems[col].sortcol = mcol;
 	
 	if(refresh)
 		RefreshTop();
@@ -164,8 +173,6 @@ GridCtrl& GridCtrl::Sort(int sort_col, int sort_mode, bool multisort, bool repai
 	if(!multisort)
 		ClearMultisort();
 	
-	sortOrder.Add(col);
-
 	MarkSort(col, sort_mode, false);
 	GSort();
 
