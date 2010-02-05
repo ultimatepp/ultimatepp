@@ -296,7 +296,7 @@ static const MemDiagCls sMemDiagHelper__upp__;
 
 //some global definitions
 
-#ifndef STLPORT
+#if !defined(STLPORT)
 inline UPP::int64  abs(UPP::int64 x)          { return x < 0 ? -x : x; }
 #endif
 
