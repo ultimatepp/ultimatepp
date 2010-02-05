@@ -195,6 +195,8 @@ String  GetTempPath();
 String  GetTempFileName(const char *prefix = NULL);
 #endif
 
+String GetSymLinkPath(const char *linkpath);
+
 template <class T>
 class Array;
 

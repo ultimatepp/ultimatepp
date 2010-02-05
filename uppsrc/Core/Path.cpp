@@ -16,6 +16,21 @@
 #define DLIMODULE   UnicodeWin32Net
 #define DLIHEADER   <Core/Mpr32W.dli>
 #include <Core/dli_source.h>
+
+#define Ptr Ptr_
+#define byte byte_
+#define CY win32_CY_
+
+#include <winnls.h>
+#include <winnetwk.h>
+
+#include <wincon.h>
+#include <shlobj.h>
+
+#undef Ptr
+#undef byte
+#undef CY
+
 #endif
 
 NAMESPACE_UPP
@@ -973,6 +988,41 @@ bool DeleteFolderDeep(const char *dir)
 		}
 	}
 	return DirectoryDelete(dir);
+}
+
+String GetSymLinkPath(const char *linkpath)
+{
+#ifdef PLATFORM_WIN32
+	String path;
+	HRESULT hres;
+	IShellLink* psl;
+	IPersistFile* ppf;
+	CoInitialize(NULL);
+	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
+	                        (PVOID *) &psl);
+	if(SUCCEEDED(hres)) {
+		hres = psl->QueryInterface(IID_IPersistFile, (PVOID *) &ppf);
+		if(SUCCEEDED(hres)) {
+			hres = ppf->Load(ToSystemCharsetW(linkpath), STGM_READ);
+			if(SUCCEEDED(hres)) {
+				char fileW[_MAX_PATH] = {0};
+				psl->GetPath(fileW, _MAX_PATH, NULL, 0); 
+				path = FromSystemCharset(fileW);
+			}
+			ppf->Release();
+		}
+		psl->Release();
+	}
+	CoUninitialize();
+	return path;
+#else
+	char buff[_MAX_PATH + 1];
+	bool ret;
+	int len = readlink(linkpath, buff, _MAX_PATH);
+	if(len > 0 && len < _MAX_PATH)
+		return String(buff, len);
+	return Null;
+#endif
 }
 
 FileSystemInfo::FileInfo::FileInfo()
