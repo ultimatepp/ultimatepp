@@ -399,6 +399,7 @@ FindFile::FindFile(const char *name) {
 
 bool FindFile::Search(const char *name) {
 	pattern = GetFileName(name);
+	path = GetFileDirectory(name);
 	Close();
 	if(w)
 		handle = UnicodeWin32().FindFirstFileW(ToSystemCharsetW(name), w);
@@ -409,6 +410,14 @@ bool FindFile::Search(const char *name) {
 	if(!PatternMatch(pattern, GetName()))
 		return Next();
 	return true;
+}
+
+bool FindFile::IsSymLink() const
+{
+	String name = GetName();
+	if(GetFileExt(name) != ".lnk")
+		return false;
+	return !IsNull(GetSymLinkPath(AppendFileName(path, name)));
 }
 
 void FindFile::Close() {

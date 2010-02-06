@@ -55,6 +55,7 @@ class  FindFile {
 	WIN32_FIND_DATAW *w;
 	HANDLE            handle;
 	String            pattern;
+	String            path;
 
 	void        Init();
 	bool        Next0();
@@ -74,6 +75,7 @@ public:
 	bool        IsDirectory() const;
 	bool        IsFolder() const;
 	bool        IsFile() const           { return !IsDirectory(); }
+	bool        IsSymLink() const;
 
 	bool        IsArchive() const;
 	bool        IsCompressed() const;
@@ -129,10 +131,10 @@ public:
 	FileTime    GetLastWriteTime() const  { return Stat().st_mtime; }
 
 	bool        IsReadOnly() const        { return !(GetMode() & (S_IWUSR|S_IWGRP|S_IWOTH)); }
+
 	bool        IsHidden() const          { return *name == '.'; }
 	bool        IsDirectory() const       { return S_ISDIR(GetMode()); }
 	bool        IsFolder() const;
-
 	bool        IsFile() const            { return S_ISREG(GetMode()); }
 	bool        IsSymLink() const;
 
