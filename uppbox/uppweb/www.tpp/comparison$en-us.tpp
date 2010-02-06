@@ -22,7 +22,9 @@ topic "Comparison";
 [t4167;C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2; Comparisons&]
+[s2;a0; Comparisons&]
+[s5;>b0;a83; [*^topic`:`/`/uppweb`/www`/comparison`$en`-us^1 `[en`]][*1  
+][*^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 `[ru`]]&]
 [s0; In order to demonstrate advantages of Ultimate`+`+, we have 
 reimplemented some examples of other libraries.&]
 [s0; &]
@@ -46,4 +48,5 @@ which are quite specific stuff. Anyway, if you feel like we have
 harmed you favorite platform, nothing prevents you to implement 
 those applications in more optimal way or suggest improvements 
 `- we will be glad to use your version here.&]
-[s0; ]
+[s0; &]
+[s0; This article in [^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^ Russian]]

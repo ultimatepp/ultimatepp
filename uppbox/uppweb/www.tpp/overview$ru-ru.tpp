@@ -3,12 +3,12 @@ topic "Обзор Ultimate++";
 [b117;*+117 $$1,2#27457433418004101424360058862402:Caption]
 [b50;2 $$2,2#03324558446220344731010354752573:Par]
 [i128;*C@(28.42.150)2 $$3,3#90519220486603166734501227306500:code]
-[{_}%EN-US 
-[ {{7200:2800f0;g0; [s0; [*R6 Обзор Ultimate`+`+]&]
-[s0; [*R2 (сорри за неполный перевод `- тестирование 
-сайта)]]
-:: [s0;> [*R^topic`:`/`/uppweb`/www`/overview`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 `[
-ru`]]]}}&]
+[{_}%RU-RU 
+[s1;b0; [R6 Обзор Ultimate`+`+][R2  ]&]
+[s1;b0; [R2 (сорри за неполный перевод `- тестирование
+ сайта)]&]
+[s2;>b0; [*R^topic`:`/`/uppweb`/www`/overview`$en`-us^1 `[en`]][*R1  
+][*R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 `[ru`]]&]
 [s1; Разогреем Ваш аппетит&]
 [s2; Ultimate`+`+ обещает  радикальное сокращение 
 сложности кода типовых декстоп`-приложений. 
@@ -471,7 +471,7 @@ Ultimate`+`+ Visual Designer:]&]
 ������녚��޼��ې��ۡ��������������ϖ
 &]
 [s0;= &]
-[s0; [2 Оцените насколько сложен ][*2 Актуальный 
+[s0; [2 Оцените насколько `"сложен`" ][*2 Актуальный 
 код][2  для этого приложения:]&]
 [s0; &]
 [s0;i128; [*C@(28.42.150)2 #include <CtrlLib/CtrlLib.h>]&]
@@ -626,19 +626,25 @@ GUI роль в определенном контексте (например,
 цикла MyDialog `- структура MyDialog может 
 быть закрыта или еще не открыта, но 
 атрибуты виджетов доступны все время.&]
-[s1; Шаблоны диалогов это шаблоны C`+`+&]
+[s1; Шаблоны диалогов `- это шаблоны C`+`+&]
 [s2; Теперь, когда мы заложили фундамент, 
 настало время для познакомиться с 
 мощнейшим аспектом  програмирования 
 GUI в Ultimate`+`+  `- диалоговые шаблоны:&]
-[s2; If you visually design a layout (usually, but not limited to, 
-the layout of a dialog box) using TheIDE`'s [/ Layout designer], 
-this layout is in in your code reflected as a C`+`+ template 
-that derives from a widget`-based class and declares all widgets 
-as its member variables, and a matching function ([*C@(28.42.150) InitLayout]) 
-that sets up the widget positions and their pre`-designed attribute 
-defaults.&]
-[s2; For example, such a template would look like this:&]
+[s2; Если Вы разрабатываете визуальный 
+дизайн окна (обычно, но не только, 
+дизайн диалогового окна) используя 
+TheIDE`'s [/ Layout designer], этот дизайн будет 
+отражен в Вашем коде как шаблон C`+`+ 
+, который наследуется от базового 
+класса виджетов и декларирует все 
+виджеты, как его переменные`-члены, 
+и соответствующие функции ([*C@(28.42.150) InitLayout]) 
+, которые устанавливают пизиции виджетов 
+и их предварительно`-разработанные 
+атрибуты по умолчанию.&]
+[s2; Например, такой шаблон будет выглядеть 
+следующим образом:&]
 [s3; &]
 [s3; template <class T>&]
 [s3; struct WithMyDialogLayout : public T `{&]
@@ -651,53 +657,86 @@ defaults.&]
 [s3; void InitLayout(WithMyDialogLayout<T> `*layout, ...);&]
 [s3; // implementation details omitted&]
 [s3; &]
-[s2; The reason why it is provided as a template rather than a simple 
-class or struct is that in this way you can use any widget type 
-as its base class, not just the one that represents dialog windows 
-(TopWindow).&]
-[s2; This approach provides radical reduction of complexity `- many 
-annoying things that seem to be necessary to identify widgets 
-in client code (like widget IDs or names) are simply gone for 
-good. All you have to deal with in Ultimate`+`+ are your instance 
-variables.&]
-[s1; Value and Null&]
-[s2; One aspect that makes development in Ultimate`+`+ very orthogonal 
-is the existence of Value `- the polymorphic value type. Any 
-of Ultimate`+`+ basic types (int, double, String, Color, Rect, 
-Font, Image etc...) can be stored into and retrieved from a Value. 
-Value itself can be queried for the type of value it contains. 
-It is also very easy to make any custom types Value`-compatible.&]
-[s2; Related to Value is the general concept of `"empty value`". 
-The Ultimate`+`+ special constant Null represents an empty value. 
-Most concrete types support Null. Null is also defined for fundamental 
-types `- int, double and int64 `- as a value that is lower than 
-any other value for specific type (for example, Null is equal 
-to INT`_MIN for int). To test whether a variable of a certain 
-type is Null, you can use the generic IsNull function.&]
-[s2; Value (and Null) have a remarkable effect on GUI flexibility. 
-Many widgets logically have their `"natural`" values, (for integer 
-edit field it is the typed in number, for option widget it is 
-either true or false according to its state) and Ultimate`+`+ 
-provides uniform access to these values via Value and GetData 
-/ SetData virtual methods. For example, clearing a dialog can 
-be usually done by assigning Null to all of its widgets.&]
-[s1; Display and Convert&]
-[s2; Display and Convert based classes further enhance Ultimate`+`+ 
-flexibility using Value.&]
-[s2; Convert classes act as bidirectional Value to Value converters. 
-Usually, but not limited to, this conversion is between the value 
-of a logical type and its textual representation (conversion 
-of the textual representation to the logical type can be sometimes 
-omitted). Examples are ConvertInt or ConvertDate.&]
-[s2; Many Ultimate`+`+ widgets are able to use these Convert classes 
-as properties. An example is the EditField class, a generic input 
-field. By assigning specific Convert based class to EditField, 
-you can `"teach`" it to edit numbers, dates or anything that 
-has textual representation.&]
-[s2; Somewhat similar to Convert classes are Display based classes. 
-These are classes that describe how Values should be displayed. 
-Once again, many Ultimate`+`+ widgets are using Display classes 
-as their properties. For example, to `"teach`" the DropList widget 
+[s2; Причина, почему это сделано в виде 
+шаблона вместо просто класса или 
+структуры является то, что таки образом 
+Вы можете использовать любой тип 
+виджета как базовый класс, а не только 
+тот, который представляет собой диалоговое 
+окно (TopWindow).&]
+[s2; Такой подход обеспечивает радикальное 
+сокращение сложности `- множество 
+раздражающих вещей, которые представляются 
+необходимыми для идентификации виджетов 
+в клиентском коде, типа идентификаторов 
+(ID) виджетов или их имен, просто исчезли 
+навсегда. Все с чем Вам придется иметь 
+дело в Ultimate`+`+ `- локальные переменные 
+`- экземпляры классов.&]
+[s1; Тип Value и Null&]
+[s2; Один аспект, который делает разработку 
+в Ultimate`+`+ чем`-то ортогональным по 
+отношению к обычной C`+`+ практике, 
+`- это существование типа Value ([/ перев.]Значение
+) `- тип полиморфного значения. Любой 
+из базовых типов Ultimate`+`+  (int, double, String, 
+Color, Rect, Font, Image etc...) могут быть сохранены 
+в... и извлечены из... переменной типа 
+Value. Value сам может быть получен по типу 
+содержащегося в нем значения. Также 
+ очень легко сделать любые клиентские 
+типы Value`-совместимыми.&]
+[s2; Применительно к Value существует общее 
+понятие `"пустое значение`". Специальная 
+константа Ultimate`+`+ Null представляет 
+собой [/ пустое значение]. Большинство 
+основных типов поддерживают Null. Null 
+также определен длябазовых типов 
+ `- int, double and int64 `- как значение, которое 
+меньше любого другого значения данного 
+типа (например, Null равен INT`_MIN для int). 
+Чтобы проверить переменную основного 
+типа на Null,Вы можете использовать 
+общую функцию IsNull.&]
+[s2; Тип Value (и Null) производят поразительный 
+эффект по повышению гибкости GUI. Множество 
+виджетов логически имеют их `"естественные`" 
+значения, (для целочисленного поля 
+это введенные числа, для виджета option 
+это истина или ложь, согласно его 
+состоянию)  Ultimate`+`+ поддерживает унифицирова
+нный доступк этим значениям через 
+Value и виртуальные методы GetData / SetData. 
+Например, очистка диалогового окна 
+обычно может быть выполнена присваиванием 
+Null всем его виджетам.&]
+[s1; Display и Convert&]
+[s2; Классы, основанные на Display и Convert дополнитель
+но расширяют гибкость Ultimate`+`+ используя 
+Value.&]
+[s2; Классы Convert работают как двунаправленные 
+конвертеры Value `- Value. Обычно, но не 
+ограничиваясь этим, это преобразование 
+между значением логического типа 
+и его текстовым представлением (преобразова
+ние текстового рпедставления в логический 
+тип иногда могут быть опущены). Примеры 
+ConvertInt или ConvertDate.&]
+[s2; Множество виджетов Ultimate`+`+ могут 
+использовать эти классы Convert как свойства. 
+В качестве примера можно привести 
+класс EditField, универсальное поле ввода. 
+Присваивая определенные классы, созданные 
+на основе Convert, полю EditField, Выможете 
+`"научить`" его редактировать числа, 
+даты или что`-то, что имеет текстовое 
+представление.&]
+[s2; Что`-то похожее на классы Convert `- это 
+классы, основанные на классе Display. 
+Это классы, которые описывают как 
+должны отображаться Значения. Once 
+again, many Ultimate`+`+ widgets are using Display classes as 
+their properties. For example, to `"teach`" the DropList widget 
 (DropList is close to something called `"combo box`" on other 
 platforms) to display colors, all you need to do is to set its 
 Display attribute to DisplayColor (remember, Color is Value compatible 
@@ -724,15 +763,15 @@ or method with an argument when invoked `- this additional argument
 is stored within Callback during its construction. To illustrate 
 this important feature, see the following code snippet:&]
 [s2; &]
-[s3;%- void MyDlg`::SetEditorValue(int x)&]
-[s3;%- `{&]
-[s3;%- -|editor <<`= x;&]
-[s3;%- `}&]
+[s3; void MyDlg`::SetEditorValue(int x)&]
+[s3; `{&]
+[s3; -|editor <<`= x;&]
+[s3; `}&]
 [s3; &]
-[s3;%- MyDlg`::MyDlg()&]
-[s3;%- `{&]
-[s3;%- -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
-[s3;%- -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
+[s3; MyDlg`::MyDlg()&]
+[s3; `{&]
+[s3; -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
+[s3; -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
 [s2; &]
 [s2; In this snippet, we have two buttons and one integer input field. 
 Pressing the first or second button sets the input field to the 
