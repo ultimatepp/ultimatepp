@@ -1,7 +1,8 @@
 uses
 	CtrlLib,
 	Web,
-	plugin\jpg;
+	plugin\jpg,
+	Geom\Coords;
 
 file
 	main.cpp;
