@@ -123,7 +123,7 @@ Clears [%-*@3 s].&]
 te][3 _][*@3;3 NoCopy]&]
 [s9;%% A class useful when working with code that expects a wide 
 character buffer, like C code. It supports constant time pick 
-assignment to and from W[* String].&]
+assignment to and from [* WString].&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]

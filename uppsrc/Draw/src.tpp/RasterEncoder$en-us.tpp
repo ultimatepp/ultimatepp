@@ -33,7 +33,7 @@ to suggested buffer (it is not guaranteed, because producer can
 provide yet another scanline buffer in WriteLine) and in that 
 case, copying into target scanline can be completely skipped.&]
 [s3; &]
-[s3;%- &]
+[s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Protected Members List]]}}&]
 [s3;%- &]
 [s5;:RasterEncoder`:`:format:%- [_^RasterFormat^ RasterFormat]_[* format]&]

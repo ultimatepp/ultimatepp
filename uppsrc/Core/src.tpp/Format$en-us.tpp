@@ -339,7 +339,7 @@ width&]
 [s0; &]
 [s0; &]
 [s0; &]
-[s0;%- [*+117 Registering custom formatters]&]
+[s0;%- [*@3+117 Registering custom formatters]&]
 [s0; &]
 [s5;:Formatter`:`:typedef:%- typedef_[^String^ String]_(`*Formatter)([@(0.0.255) const][@(64) _
 ][^Formatting^@(64) Formatting][@(64) `&_fmt)]&]
