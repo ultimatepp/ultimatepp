@@ -96,7 +96,7 @@ keep aspect ratio with cx.&]
 [s0; &]
 [s0; &]
 [s0;%- &]
-[ {{10000t/25b/25@3 [s0;%- [*@(229)4 AttrText]]}}&]
+[ {{10000t/25b/25@(113.42.0) [s0;%- [*@(229)4 AttrText]]}}&]
 [s3; &]
 [s1;:AttrText`:`:struct:%- [@(0.0.255) struct]_AttrText&]
 [s9; Simple helper class convertible to the Value. StdDisplay, StdRightDisplay 
@@ -224,7 +224,7 @@ attributes to zero.&]
 [s0; &]
 [s0; &]
 [s0;%- &]
-[ {{10000t/25b/25@3 [s0;%- [*@(229)4 Standard displays]]}}&]
+[ {{10000t/25b/25@(85.42.0) [s0;%- [*@(229)4 Standard displays]]}}&]
 [s9; Standard Displays are implemented as `"functional globals`" 
 `- functions returning constant reference to single global Display 
 instance.&]

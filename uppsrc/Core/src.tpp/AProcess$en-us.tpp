@@ -58,6 +58,8 @@ Process continues to run while AProcess instance can be destructed.&]
 output of process. If anything went wrong, returns String`::GetVoid().&]
 [s3; &]
 [s0; &]
+[s0; &]
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 LocalProcess]]}}&]
 [s3; &]
 [s1;:LocalProcess`:`:class: [@(0.0.255)3 class][3 _][*3 LocalProcess][3 _:_][@(0.0.255)3 public][3 _
@@ -87,6 +89,8 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 [s2;%% Equivalent of default constructor and then invoking Start([%-*@3 cmdline][%- , 
 ][%-*@3 envptr]).&]
 [s3; &]
+[s0; &]
+[s0; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Global functions related to LocalProcess]]}}&]
 [s3; &]

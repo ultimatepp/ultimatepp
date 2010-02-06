@@ -11,7 +11,7 @@ topic "Thread synchronization primitives";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [*C1 $$10,10#39751211140134154172026758035355:code]
 [{_} 
-[ {{10000@(113.42.0) [s0;%% [*@7;4 Thread synchronization primitives]]}}&]
+[s0;%% [*@3;4 Thread synchronization primitives]&]
 [s3; &]
 [s0; &]
 [ {{10000t/25b/25@1 [s0; [* Function List]]}}&]

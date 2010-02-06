@@ -72,6 +72,8 @@ ag])&]
 [s2;%% Sets the tag name to [%-*@3 tag].&]
 [s3; &]
 [s0; &]
+[s0; &]
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XML output functions]]}}&]
 [s0; &]
 [s5;:DeXml`(const char`*`,byte`,bool`): String_[* DeXml]([@(0.0.255) const]_[@(0.0.255) cha

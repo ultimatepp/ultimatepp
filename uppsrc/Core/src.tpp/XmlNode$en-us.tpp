@@ -226,6 +226,8 @@ is destroyed in operation).&]
 [s2;%% Construct an empty XmlNode.&]
 [s3; &]
 [s0; &]
+[s0; &]
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XmlNode `- parser and output functions]]}}&]
 [s4;H0; &]
 [s5;:ParseXML`(XmlParser`&`,dword`): [_^XmlNode^ XmlNode]_[* ParseXML]([_^XmlParser^ XmlPar
