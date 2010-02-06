@@ -412,12 +412,41 @@ bool FindFile::Search(const char *name) {
 	return true;
 }
 
+static bool sGetSymLinkPath0(const char *linkpath, String *path)
+{
+	bool ret = false;
+	HRESULT hres;
+	IShellLink* psl;
+	IPersistFile* ppf;
+	CoInitialize(NULL);
+	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
+	                        (PVOID *) &psl);
+	if(SUCCEEDED(hres)) {
+		hres = psl->QueryInterface(IID_IPersistFile, (PVOID *) &ppf);
+		if(SUCCEEDED(hres)) {
+			hres = ppf->Load(ToSystemCharsetW(linkpath), STGM_READ);
+			if(SUCCEEDED(hres))
+				if(path) {
+					char fileW[_MAX_PATH] = {0};
+					psl->GetPath(fileW, _MAX_PATH, NULL, 0); 
+					*path = FromSystemCharset(fileW);
+				}
+				else
+					ret = true;
+			ppf->Release();
+		}
+		psl->Release();
+	}
+	CoUninitialize();
+	return ret;
+}
+
 bool FindFile::IsSymLink() const
 {
 	String name = GetName();
 	if(GetFileExt(name) != ".lnk")
 		return false;
-	return !IsNull(GetSymLinkPath(AppendFileName(path, name)));
+	return sGetSymLinkPath0(AppendFileName(path, name), NULL);
 }
 
 void FindFile::Close() {
@@ -1003,26 +1032,7 @@ String GetSymLinkPath(const char *linkpath)
 {
 #ifdef PLATFORM_WIN32
 	String path;
-	HRESULT hres;
-	IShellLink* psl;
-	IPersistFile* ppf;
-	CoInitialize(NULL);
-	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
-	                        (PVOID *) &psl);
-	if(SUCCEEDED(hres)) {
-		hres = psl->QueryInterface(IID_IPersistFile, (PVOID *) &ppf);
-		if(SUCCEEDED(hres)) {
-			hres = ppf->Load(ToSystemCharsetW(linkpath), STGM_READ);
-			if(SUCCEEDED(hres)) {
-				char fileW[_MAX_PATH] = {0};
-				psl->GetPath(fileW, _MAX_PATH, NULL, 0); 
-				path = FromSystemCharset(fileW);
-			}
-			ppf->Release();
-		}
-		psl->Release();
-	}
-	CoUninitialize();
+	sGetSymLinkPath0(linkpath, &path);
 	return path;
 #else
 	char buff[_MAX_PATH + 1];
