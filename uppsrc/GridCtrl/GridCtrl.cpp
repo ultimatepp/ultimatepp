@@ -1980,8 +1980,8 @@ void GridCtrl::SyncPopup()
 					int y = vi.npos + p0.y - p.y - 1 - sby.Get() * int(!fr);
 					
 					GetItemAttrs(it, hi.id, hi, vi, popup.style, popup.gd, popup.fg, popup.bg, popup.fnt);
-					popup.gd->row = r < fixed_rows ? -1 : r;
-					popup.gd->col = c < fixed_cols ? -1 : c;
+					popup.gd->row = r < fixed_rows ? -1 : r - fixed_rows;
+					popup.gd->col = c < fixed_cols ? -1 : c - fixed_cols;
 					Size scrsz = GetScreenSize();
 					int margin = popup.gd->lm + popup.gd->rm;
 					int cx = min(600, min((int) (scrsz.cx * 0.4), max(it.rcx + margin + 2, hi.nsize + 1)));
@@ -2925,10 +2925,7 @@ GridCtrl::Item& GridCtrl::GetCell(int n, Id id)
 int GridCtrl::GetMouseCol(Point &p, bool relative, bool fixed, bool full)
 {
 	if(!full && p.x < fixed_width)
-	{
-		LG("%d %d", fixed_width, p.x);
 		return -1;
-	}
 
 	int dx = 0;
 
