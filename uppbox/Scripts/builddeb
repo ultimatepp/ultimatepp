@@ -70,21 +70,7 @@ release=$( echo $release | tr -d '"\n' )
 #determine svn release
 if [ "$VERSION" = "SVN" ]
 then
-	if [ -e $SRC_PATH/.svn/entries ]
-	then
-		while read release
-		do
-			if [ "$release" = "dir" ]
-			then
-				read release
-				break
-			fi
-		done < $SRC_PATH/.svn/entries
-		echo "Using release $release, as found in .svn/entries"
-	else
-		echo "WARNING: Could not determine release from svn data!"
-		echo "using release $release, as found in ide/version.h"
-	fi
+	VERSION="`svnversion $SRC_PATH`"
 elif [ x$VERSION != x ]
 then
 	release=$VERSION
