@@ -14,4 +14,4 @@ else
 	make -C uppsrc
 fi
 
-cp uppsrc/ide.out ~/theide
+cp uppsrc/ide.out ./theide
