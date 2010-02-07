@@ -1,0 +1,7 @@
+LAYOUT(SwitchLayout, 288, 104)
+	ITEM(Switch, s1, SetLabel(t_("Case 1\nCase 2\nCase 3")).LeftPosZ(8, 72).TopPosZ(8, 56))
+	ITEM(Switch, s2, SetLabel(t_("Case 1\nCase 2\nCase 3")).LeftPosZ(84, 196).TopPosZ(48, 16))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(80, 8).BottomPosZ(6, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 80).BottomPosZ(6, 22))
+END_LAYOUT
+
