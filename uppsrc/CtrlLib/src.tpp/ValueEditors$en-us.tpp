@@ -10,9 +10,8 @@ topic "EditField derived classes";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*+150 EditField derived classes]&]
-[s3; &]
-[s0; Widgets editing values in text representation are based on EditField 
+[s0; [*@3+150 EditField derived classes]&]
+[s9; Widgets editing values in text representation are based on EditField 
 and appropriate [^`:`:Convert^ Convert] class. Majority of them 
 are defined using simple EditValue, EditMinMax and EditMinMaxNotNull 
 template classes:&]
