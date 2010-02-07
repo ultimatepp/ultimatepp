@@ -1,3 +1,5 @@
+cp ./theide ~/theide
+
 mkdir ~/upp
 mkdir ~/upp.out
 mkdir ~/MyApps
