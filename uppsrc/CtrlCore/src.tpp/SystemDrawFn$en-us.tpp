@@ -10,8 +10,9 @@ topic "SystemDraw utility functions";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[ {{10000@(113.42.0) [s0;%% [*@7;4 SystemDraw utility functions]]}}&]
-[s0;i448;a25;kKO9;@(0.0.255) &]
+[s0;%% [*@3;4 SystemDraw utility functions]&]
+[s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Function List]]}}&]
 [s4;H0; &]
 [s5;:SetSurface`(Draw`&`,const Rect`&`,const RGBA`*`,Size`,Point`): [@(0.0.255) void]_[* S
@@ -31,4 +32,5 @@ is the size of source [%-*@3 pixels] buffer, [%-*@3 poff].is offset
 in source buffer (means, only part of source buffer can be copied).&]
 [s2; [%% In the second variant, target area is ][*@3 x],[*@3 y],[*@3 cx],[*@3 cy] 
 and the source buffer has to have the same size as target.&]
+[s3; &]
 [s0; ]
