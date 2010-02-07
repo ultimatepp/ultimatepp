@@ -1,9 +1,8 @@
-description "DropTree example\377";
-
 uses
 	CtrlLib;
 
 file
+	switch.lay,
 	main.cpp;
 
 mainconfig
