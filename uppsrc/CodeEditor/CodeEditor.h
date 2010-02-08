@@ -152,6 +152,14 @@ inline bool islbrkt(int c)           { return c == '{' || c == '[' || c == '('; 
 inline bool isrbrkt(int c)           { return c == '}' || c == ']' || c == ')'; }
 inline bool isbrkt(int c)            { return islbrkt(c) || isrbrkt(c); }
 
+struct FindReplaceDlg : WithIDEFindReplaceLayout<TopWindow> {
+	WString itext;
+	bool    replacing;
+
+	virtual bool Key(dword key, int count);
+	void Setup(bool doreplace);
+};
+	
 class CodeEditor : public LineEdit {
 	friend class EditorBar;
 
@@ -278,10 +286,7 @@ protected:
 	bool    mark_lines;
 	bool    check_edited;
 
-	struct FindReplace : WithIDEFindReplaceLayout<TopWindow> {
-		WString itext;
-		virtual bool Key(dword key, int count);
-	} findreplace;
+	FindReplaceDlg findreplace;
 	
 	enum {
 		WILDANY = 16,
@@ -330,7 +335,7 @@ protected:
 	void   CheckLeftBracket(int pos);
 	void   CheckRightBracket(int pos);
 	void   CheckBrackets();
-	void   OpenNormalFindReplace();
+	void   OpenNormalFindReplace(bool replace);
 	void   FindReplaceAddHistory();
 	void   FindWildcard();
 	void   ReplaceWildcard();
@@ -411,7 +416,7 @@ public:
 	void           SetHlStyle(int i, Color c, bool bold = false, bool italic = false, bool underline = false);
 
 	void   CloseFindReplace();
-	void   FindReplace(bool pick_text);
+	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
 	bool   Find(bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards,
 	            bool block);
 	bool   Find(bool back = false, bool blockreplace = false);

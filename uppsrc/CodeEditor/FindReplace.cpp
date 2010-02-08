@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-bool CodeEditor::FindReplace::Key(dword key, int cnt) {
+bool FindReplaceDlg::Key(dword key, int cnt) {
 	if(key == K_CTRL_I) {
 		if(find.HasFocus()) {
 			find <<= itext;
@@ -16,6 +16,20 @@ bool CodeEditor::FindReplace::Key(dword key, int cnt) {
 	return TopWindow::Key(key, cnt);
 }
 
+void FindReplaceDlg::Setup(bool doreplace)
+{
+	replacing = doreplace;
+	replace_lbl.Show(replacing);
+	replace.Show(replacing);
+	amend.Show(replacing);
+//	amendall.Show(false); // not yet implemented
+	Size sz = GetLayoutSize();
+	if(!replacing)
+		sz.cy -= replace.GetRect().bottom - find.GetRect().bottom;
+	Rect r = GetRect();
+	r.SetSize(sz);
+	SetRect(r);
+}
 
 void CodeEditor::SetFound(int fi, int type, const WString& text)
 {
@@ -204,7 +218,7 @@ bool CodeEditor::Find(bool back, bool blockreplace)
 			findreplace.amend.Enable();
 			if(!findreplace.IsOpen()) {
 				findreplace.NoCenter();
-				OpenNormalFindReplace();
+				OpenNormalFindReplace(findreplace.replacing);
 			}
 			SetFocus();
 		}
@@ -291,6 +305,8 @@ WString CodeEditor::GetReplaceText(WString rs, bool wildcards)
 
 void CodeEditor::Replace()
 {
+	if(!findreplace.replacing)
+		return;
 	NextUndo();
 	FindReplaceAddHistory();
 	if(!found) return;
@@ -341,11 +357,12 @@ void CodeEditor::BlockReplace()
 */
 }
 
-void CodeEditor::OpenNormalFindReplace()
+void CodeEditor::OpenNormalFindReplace(bool replace)
 {
+	findreplace.Setup(replace);
+
 	findreplace.itext = GetI();
-	findreplace.Title("Find / Replace");
-	findreplace.amend.Show();
+	findreplace.Title(replace ? "Find and Replace" : "Find");
 	findreplace.findback.Show();
 	findreplace.ok.SetLabel("Find");
 	findreplace.ok <<= THISBACK(DoFind);
@@ -353,13 +370,16 @@ void CodeEditor::OpenNormalFindReplace()
 	findreplace.Open();
 }
 
-void CodeEditor::FindReplace(bool pick_text)
+void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 {
 	CloseFindReplace();
 	findreplace.CenterOwner();
 	WString find_text;
 	int find_pos = -1;
-	if(pick_text)
+	
+	if(!replace)
+	
+	if(pick_text || pick_selection)
 	{
 		WString s = GetSelection().ToWString();
 		if(!IsNull(s)) {
@@ -371,7 +391,8 @@ void CodeEditor::FindReplace(bool pick_text)
 				GetSelection(l, find_pos);
 			}
 		}
-		else { // pick identifier / number at cursor
+		else
+		if(pick_text) {
 			int l, h;
 			l = h = GetCursor();
 			while(l > 0 && CharFilterCIdent(GetChar(l - 1)))
@@ -383,23 +404,20 @@ void CodeEditor::FindReplace(bool pick_text)
 		}
 		findreplace.find <<= find_text;
 	}
-	if(IsSelection()) {
+	if(IsSelection() && replace) {
 		findreplace.itext = GetI();
 		findreplace.Title("Replace in selection");
 		findreplace.amend.Hide();
 		findreplace.findback.Hide();
 		findreplace.ok.SetLabel("Replace");
 		findreplace.ok <<= findreplace.Breaker(IDOK);
-		findreplace.cancel <<= findreplace.Breaker(IDCANCEL);
 		if(findreplace.Execute() == IDOK)
-		{
 			BlockReplace();
-		}
 	}
 	else {
 		if(find_pos >= 0)
 			SetCursor(find_pos);
-		OpenNormalFindReplace();
+		OpenNormalFindReplace(replace);
 		findreplace.find.SetWantFocus();
 	}
 }

@@ -103,7 +103,7 @@ bool Match(const char *f, const char *s, bool we, bool ignorecase) {
 }
 
 bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase,
-					   int& n) {
+                       int& n) {
 	FileIn in(fn);
 	if(!in) return true;
 	int ln = 1;
@@ -250,7 +250,7 @@ void Ide::FindFileName() {
 	}
 }
 
-void Ide::FindInFiles() {
+void Ide::FindInFiles(bool replace) {
 	StringStream ss;
 	editor.SerializeFind(ss);
 	ss.Open(ss.GetResult());
@@ -258,7 +258,10 @@ void Ide::FindInFiles() {
 	if(String(ff.folder).IsEmpty())
 		ff.folder <<= GetUppDir();
 	ff.style <<= STYLE_NO_REPLACE;
+	ff.Sync();
 	ff.itext = editor.GetI();
+	ff.Setup(replace);	
+	
 	int c = ff.Execute();
 	ss.Create();
 	SerializeFf(ss);
@@ -372,19 +375,44 @@ void Ide::FindFolder()
 }
 
 void Ide::ConstructFindInFiles() {
-	ff.find.AddButton().SetMonoImage(CtrlImg::smallright()) <<= THISBACK(FindWildcard);
+	ff.find.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard") <<= THISBACK(FindWildcard);
 	ff.files <<= String("*.cpp *.h *.hpp *.c *.C *.cxx *.cc");
 	ff.files.AddList((String)"*.cpp *.h *.hpp *.c *.C *.cxx *.cc *.icpp");
 	ff.files.AddList((String)"*.txt");
 	ff.files.AddList((String)"*.*");
-	ff.folder.AddButton().SetMonoImage(CtrlImg::smalldown()) <<= THISBACK(FindStdDir);
-	ff.folder.AddButton().SetMonoImage(CtrlImg::smallright()) <<= THISBACK(FindFolder);
+	ff.folder.AddButton().SetMonoImage(CtrlImg::smalldown()).Tip("Related folders") <<= THISBACK(FindStdDir);
+	ff.folder.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Select folder") <<= THISBACK(FindFolder);
 	editor.PutI(ff.find);
 	editor.PutI(ff.replace);
 	CtrlLayoutOKCancel(ff, "Find In Files");
 }
 
-bool Ide::FindInFiles::Key(dword key, int count)
+void FindInFiles::Sync()
+{
+	replace.Enable((int)~style);
+}
+
+FindInFiles::FindInFiles()
+{
+	style <<= THISBACK(Sync);
+}
+
+void FindInFiles::Setup(bool replacing)
+{
+	Title(replacing ? "Find and replace in files" : "Find in files");
+	replace_lbl.Show(replacing);
+	style.Show(replacing);
+	replace_lbl2.Show(replacing);
+	replace.Show(replacing);
+	Size sz = GetLayoutSize();
+	if(!replacing)
+		sz.cy -= replace.GetRect().bottom - folder.GetRect().bottom;
+	Rect r = GetRect();
+	r.SetSize(sz);
+	SetRect(r);
+}
+
+bool FindInFiles::Key(dword key, int count)
 {
 	if(key == K_CTRL_I) {
 		if(find.HasFocus()) {

@@ -406,6 +406,19 @@ void DirSel(EditField& f, FrameRight<Button>& b);
 bool CopyFolder(const char *dst, const char *src, Progress *pi);
 void SvnSyncDirs(const Vector<String>& working);
 
+struct FindInFiles : WithFindInFilesLayout<TopWindow> {
+	WString itext;
+
+	virtual bool Key(dword key, int count);
+	
+	void Setup(bool replace);
+	void Sync();
+
+	typedef FindInFiles CLASSNAME;
+	
+	FindInFiles();
+};
+
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
 public:
 	virtual   void   Paint(Draw& w);
@@ -618,6 +631,8 @@ public:
 	bool      filetabs;
 	bool      auto_enclose;
 	bool      mark_lines;
+	bool      find_pick_sel;
+	bool      find_pick_text;
 	int       insert_include;
 	int       bordercolumn;
 	Color     bordercolor;
@@ -669,11 +684,8 @@ public:
 
 	enum { STYLE_NO_REPLACE, STYLE_CONFIRM_REPLACE, STYLE_AUTO_REPLACE };
 
-	struct FindInFiles : WithFindInFilesLayout<TopWindow> {
-		WString itext;
-		virtual bool Key(dword key, int count);
-	} ff;
-	int                              iwc;
+	FindInFiles   ff;
+	int           iwc;
 
 	int           doc_serial;
 	TopicCtrl     doc;
@@ -777,18 +789,11 @@ public:
 	void      Edit(Bar& menu);
 		void  EditAsText();
 		void  EditUsingDesigner();
-		void  EditFindReplace()  { editor.FindReplace(false); }
-		void  EditFindReplacePickText() { editor.FindReplace(true); }
-		void  EditFindNext()     { editor.Find(false); }
-		void  EditFindPrevious() { editor.Find(true); }
-		void  EditPaste()        { editor.Paste(); }
 		void  EditMakeTabs()     { editor.MakeTabsOrSpaces(true); }
 		void  EditMakeSpaces()   { editor.MakeTabsOrSpaces(false); }
-		void  FindInFiles();
+		void  FindInFiles(bool replace);
 		void  FindFileName();
 		void  FindString(bool back);
-		void  FindNextError();
-		void  FindPrevError();
 		void  ClearEditedFile();
 		void  ClearEditedAll();
 	
@@ -799,6 +804,16 @@ public:
 		void  InsertMenu(Bar& bar);
 		void  EditorMenu(Bar& bar);
 
+	void SearchMenu(Bar& bar);
+		void  EditFind()                { editor.FindReplace(find_pick_sel, find_pick_text, false); }
+		void  EditReplace()             { editor.FindReplace(find_pick_sel, find_pick_text, true); }
+		void  EditFindReplacePickText() { editor.FindReplace(true, true, false); }
+		void  EditFindNext()     { editor.Find(false); }
+		void  EditFindPrevious() { editor.Find(true); }
+		void  EditPaste()        { editor.Paste(); }
+		void  FindNextError();
+		void  FindPrevError();
+	
 	void      EditSpecial(Bar& menu);
 		void  TranslateString();
 		void  SwapChars()        { editor.SwapChars(); }

@@ -626,6 +626,9 @@ Ide::Ide()
 	
 	editor.WhenTip = THISBACK(EditorTip);
 	editor.WhenCtrlClick = THISBACK(CtrlClick);
+	
+	find_pick_sel = true;
+	find_pick_text = false;
 }
 
 Ide::~Ide()

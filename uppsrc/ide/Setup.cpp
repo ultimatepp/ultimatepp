@@ -345,11 +345,11 @@ void Ide::SetupFormat() {
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
 		(edt.showtabs, show_tabs)
-		(edt.tabs_icons, tabs_icons)
-		(edt.tabs_crosses, tabs_crosses)
-		(edt.tabs_grouping, tabs_grouping)
-		(edt.tabs_serialize, tabs_serialize)
-		(edt.filetabs, filetabs)
+		(ide.tabs_icons, tabs_icons)
+		(ide.tabs_crosses, tabs_crosses)
+		(ide.tabs_grouping, tabs_grouping)
+		(ide.tabs_serialize, tabs_serialize)
+		(ide.filetabs, filetabs)
 		(edt.forcecrlf, force_crlf)
 		(edt.numbers, line_numbers)
 		(edt.bookmark_pos, bookmark_pos)
@@ -359,7 +359,9 @@ void Ide::SetupFormat() {
 		(edt.mark_lines, mark_lines)
 		(edt.bordercolumn, bordercolumn)
 		(edt.bordercolor, bordercolor)
-		(edt.showtime, showtime)
+		(ide.showtime, showtime)
+		(edt.findpicksel, find_pick_sel)
+		(edt.findpicktext, find_pick_text)
 		(ide.show_status_bar, show_status_bar)
 		(ide.toolbar_in_row, toolbar_in_row)
 		(ide.splash_screen, splash_screen)
@@ -407,8 +409,8 @@ void Ide::SetupFormat() {
 	edt.tabsize <<= rtvr <<=
 		hlt.hlstyle.WhenCtrlsAction = ed.WhenAction = tf.WhenAction =
 		con.WhenAction = f1.WhenAction = f2.WhenAction = dlg.Breaker(222);
-	edt.showtimeafter <<= Nvl((Date)FileGetTime(ConfigFile("version")), GetSysDate() - 1);
-	edt.today <<= dlg.Breaker(444);
+	ide.showtimeafter <<= Nvl((Date)FileGetTime(ConfigFile("version")), GetSysDate() - 1);
+	ide.today <<= dlg.Breaker(444);
 	hlt.hl_restore <<= dlg.Breaker(333);
 	ide.chstyle.Add(0, "Host platform");
 	ide.chstyle.Add(1, "Standard");
@@ -447,13 +449,13 @@ void Ide::SetupFormat() {
 			ReadHlStyles(hlt.hlstyle);
 		}
 		if(c == 444)
-			edt.showtimeafter = GetSysDate();
+			ide.showtimeafter = GetSysDate();
 	}
 	if(filelist.IsCursor()) {
 		FlushFile();
 		FileCursor();
 	}
-	FileSetTime(ConfigFile("version"), ToTime(~edt.showtimeafter));
+	FileSetTime(ConfigFile("version"), ToTime(~ide.showtimeafter));
 	SaveLoadPackage();
 	SyncCh();
 }

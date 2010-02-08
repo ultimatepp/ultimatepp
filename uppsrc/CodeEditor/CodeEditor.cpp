@@ -1062,9 +1062,10 @@ CodeEditor::CodeEditor() {
 	bar.SetEditor(this);
 	UndoSteps(10000);
 	SetFont(Courier(16));
-	findreplace.find.AddButton().SetMonoImage(CtrlImg::smallright())
+
+	findreplace.find.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard")
 		<<= THISBACK(FindWildcard);
-	findreplace.replace.AddButton().SetMonoImage(CtrlImg::smallright())
+	findreplace.replace.AddButton().SetMonoImage(CtrlImg::smallright()).Tip("Wildcard")
 		<<= THISBACK(ReplaceWildcard);
 	PutI(findreplace.find);
 	PutI(findreplace.replace);
@@ -1072,7 +1073,10 @@ CodeEditor::CodeEditor() {
 	findreplace.cancel.Cancel();
 	findreplace.ok.Ok();
 	findreplace.findback <<= THISBACK(DoFindBack);
+	findreplace.ToolWindow();
+	findreplace.replacing = false;
 	found = notfoundfw = notfoundbk = foundsel = false;
+
 	bar.WhenBreakpoint = THISBACK(ForwardWhenBreakpoint);
 	bar.WhenAnnotationMove = Proxy(WhenAnnotationMove);
 	bar.WhenAnnotationClick = Proxy(WhenAnnotationClick);
