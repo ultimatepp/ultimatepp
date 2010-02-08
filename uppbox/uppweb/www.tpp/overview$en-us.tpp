@@ -1,4 +1,4 @@
-topic "Overview Ultimate++";
+topic "Ultimate++ Overview";
 [ $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992; $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -666,7 +666,7 @@ field. By assigning specific Convert based class to EditField,
 you can `"teach`" it to edit numbers, dates or anything that 
 has textual representation.&]
 [s20; Somewhat similar to Convert classes are Display based classes. 
-These are classes that describe how Values should be displayed. 
+These are classes that describe [/ how Values should be displayed]. 
 Once again, many Ultimate`+`+ widgets are using Display classes 
 as their properties. For example, to `"teach`" the DropList widget 
 (DropList is close to something called `"combo box`" on other 
