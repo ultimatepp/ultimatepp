@@ -2094,7 +2094,7 @@ DataSet DataTableColumn::GetLike(WString mask)
 	int *d = done.Begin();
 	for(const int *s = done.Begin(), *e = done.End(); s < e; s++) {
 		WString value = Get(*s);
-		if(wcc.Matches(value))
+		if(!IsNull(value) && wcc.Matches(value))
 			*d++ = *s;
 	}
 	done.SetCount(d - done.Begin());
