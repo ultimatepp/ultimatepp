@@ -69,6 +69,9 @@ csCZ("přetečení při výpočtu v reálných číslech")
 
 // CalcNode.cpp
 
+T_("lambda-expression")
+csCZ("")
+
 T_("Expression evaluator")
 csCZ("Výrazový kalkulátor")
 
@@ -161,6 +164,9 @@ csCZ("nepárová levá závorka; začátek podvýrazu: %s")
 
 T_("constant or function expected, found: ")
 csCZ("očekávána konstanta nebo funkce, nalezeno: ")
+
+T_("')' (subexpression starts at: %s)")
+csCZ("")
 
 
 // CalcBasic.cpp
