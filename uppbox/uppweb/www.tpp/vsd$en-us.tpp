@@ -1,4 +1,4 @@
-topic "U++ vs D programming language";
+topic "Ultimate++ vs D programming language";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;*@(64)2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
