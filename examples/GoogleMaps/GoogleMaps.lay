@@ -1,0 +1,15 @@
+LAYOUT(MapDlgLayout, 428, 340)
+	UNTYPED(map, HSizePosZ(8, 136).VSizePosZ(8, 8))
+	ITEM(Button, zoomout, SetLabel(t_("-")).RightPosZ(104, 24).TopPosZ(8, 20))
+	ITEM(DropList, zoom, RightPosZ(40, 60).TopPosZ(8, 19))
+	ITEM(Button, zoomin, SetLabel(t_("+")).RightPosZ(8, 24).TopPosZ(8, 20))
+	ITEM(Button, up, RightPosZ(56, 24).TopPosZ(40, 40))
+	ITEM(Button, left, RightPosZ(88, 40).TopPosZ(80, 24))
+	ITEM(Button, right, RightPosZ(8, 40).TopPosZ(80, 24))
+	ITEM(Button, down, RightPosZ(56, 24).TopPosZ(104, 40))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(72, 56).BottomPosZ(8, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(8, 56).BottomPosZ(8, 24))
+	ITEM(Label, gpsy, SetFrame(BlackFrame()).RightPosZ(8, 120).TopPosZ(164, 24))
+	ITEM(Label, gpsx, SetFrame(BlackFrame()).RightPosZ(8, 120).TopPosZ(192, 24))
+END_LAYOUT
+

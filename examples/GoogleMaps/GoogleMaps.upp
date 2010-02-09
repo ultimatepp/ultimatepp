@@ -1,0 +1,15 @@
+uses
+	Geom\Coords,
+	CtrlLib;
+
+file
+	GoogleMaps.h,
+	GoogleMaps.cpp,
+	MapDlg.cpp,
+	GoogleMaps.lay,
+	GoogleMaps.iml,
+	Main.cpp;
+
+mainconfig
+	"" = "GUI";
+
