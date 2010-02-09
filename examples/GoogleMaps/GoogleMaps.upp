@@ -1,6 +1,8 @@
+description "Example using GoogleMaps static API to display the map of given location\377";
+
 uses
-	Geom\Coords,
-	CtrlLib;
+	CtrlLib,
+	Web;
 
 file
 	GoogleMaps.h,
