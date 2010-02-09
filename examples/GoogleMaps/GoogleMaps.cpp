@@ -1,9 +1,5 @@
 #include "GoogleMaps.h"
 
-#include <CtrlLib/CtrlLib.h>
-#include <Web/Web.h>
-#include <Geom/Coords/GeomCoords.h>
-
 using namespace Upp;
 
 #define LLOG(x) // LOG(x)
@@ -96,6 +92,28 @@ Pointf ScanGPS(const char *s)
 	if(!IsNull(r.y) && IsNull(r.x))
 		sFetch(r.x, x, ii);
 	return r;
+}
+
+String FormatDegree(double d, int decimals)
+{
+	if(IsNull(d))
+		return Null;
+	d = modulo(d + 180, 360) - 180;
+	char sign = (d < 0 ? '-' : '+');
+	if(d < 0) d = -d;
+	int deg = ffloor(d);
+	String cd = ToCharset(CHARSET_DEFAULT, "%c%d°", CHARSET_UTF8);
+	if(decimals <= -2)
+		return NFormat(cd, sign, deg);
+	d = (d - deg) * 60;
+	int min = ffloor(d);
+	if(decimals <= -1)
+		return NFormat(cd + " %02d\'", sign, deg, min);
+	d = (d - min) * 60;
+	String sec = FormatDoubleFix(d, decimals);
+	if(!IsDigit(sec[1]))
+		sec.Insert(0, '0');
+	return NFormat(cd + " %02d\' %s\"", sign, deg, min, sec);
 }
 
 String FormatGPSX(double x)

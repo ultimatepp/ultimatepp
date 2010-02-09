@@ -1,5 +1,5 @@
 #ifndef _GoogleMaps_icpp_init_stub
 #define _GoogleMaps_icpp_init_stub
-#include "Geom\Coords/init"
 #include "CtrlLib/init"
+#include "Web/init"
 #endif

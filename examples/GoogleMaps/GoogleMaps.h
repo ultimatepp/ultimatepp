@@ -2,6 +2,8 @@
 #define _GoogleMaps_GoogleMaps_h
 
 #include <CtrlLib/CtrlLib.h>
+#include <Web/Web.h>
+
 
 using namespace Upp;
 
