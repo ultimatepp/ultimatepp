@@ -5,7 +5,7 @@
 
 NAMESPACE_UPP
 
-#define LOG_UPP_SSL_MALLOC 0
+#define LOG_UPP_SSL_MALLOC 1
 
 #if LOG_UPP_SSL_MALLOC
 static int UPP_SSL_alloc = 0;
@@ -25,7 +25,7 @@ void *SSLAlloc(size_t size)
 	*aptr++ = alloc;
 #if LOG_UPP_SSL_MALLOC
 	UPP_SSL_alloc += alloc;
-	RLOG("UPP_SSL_MALLOC(" << (int)size << ", alloc " << alloc << ") -> " << aptr << ", total = " << UPP_SSL_alloc);
+	RLOG("UPP_SSL_MALLOC(" << (int)size << ", alloc " << alloc << ") -> " << FormatIntHex(aptr) << ", total = " << UPP_SSL_alloc);
 #endif
 	return aptr;
 }
@@ -67,13 +67,31 @@ void *SSLRealloc(void *ptr, size_t size)
 	memcpy(newaptr, ptr, min<int>(*aptr - sizeof(int), size));
 #if LOG_UPP_SSL_MALLOC
 	UPP_SSL_alloc += newalloc - *aptr;
-	RLOG("UPP_SSL_REALLOC(" << ptr << ", " << (int)size << ", alloc " << newalloc << ") -> " << newaptr
-		<< ", total = " << UPP_SSL_alloc);
+	RLOG("UPP_SSL_REALLOC(" << ptr << ", " << (int)size << ", alloc " << newalloc << ") -> "
+		<< FormatIntHex(newaptr) << ", total = " << UPP_SSL_alloc);
 #endif
 	MemoryFree(aptr);
 	return newaptr;
 }
 
+INITBLOCK {
+	Socket::Init();
+	CRYPTO_set_mem_functions(SSLAlloc, SSLRealloc, SSLFree);
+	SSL_load_error_strings();
+	SSL_library_init();
+}
+
+EXITBLOCK {
+	CONF_modules_unload(1);
+//	destroy_ui_method();
+	EVP_cleanup();
+//	ENGINE_cleanup();
+	CRYPTO_cleanup_all_ex_data();
+	ERR_remove_state(0);
+	ERR_free_strings();
+}
+
+/*
 void SSLInit()
 {
 	static bool inited = false;
@@ -86,6 +104,7 @@ void SSLInit()
 		SSL_library_init();
 	}
 }
+*/
 
 String SSLGetLastError()
 {
@@ -415,7 +434,7 @@ int SSLSocketData::Write(const void *buf, int amount)
 
 bool SSLSocketData::OpenClient(const char *host, int port, bool nodelay, dword *my_addr, int timeout, bool blocking)
 {
-	if(!Data::OpenClient(host, port, nodelay, my_addr, timeout, blocking))
+	if(!Data::OpenClient(host, port, nodelay, my_addr, timeout, /*blocking*/true))
 		return false;
 	if(!(ssl = SSL_new(ssl_context)))
 	{
@@ -479,8 +498,7 @@ bool SSLSocketData::Close(int timeout_msec)
 	if(ssl)
 		SSL_shutdown(ssl);
 	bool res = Data::Close(timeout_msec);
-	if(ssl)
-	{
+	if(ssl) {
 		SSL_free(ssl);
 		ssl = NULL;
 	}

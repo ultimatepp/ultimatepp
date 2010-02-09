@@ -67,7 +67,10 @@ public:
 	void         Close()                          { socket.Close(); }
 
 	static void  Trace(bool b = true);
+
 	
+	virtual bool CreateClientSocket();
+
 public:
 	Socket       socket;
 	bool         keepalive;
@@ -107,6 +110,9 @@ public:
 
 	String       redirect_url;
 	String       authenticate;
+	
+	String       socket_host;
+	int          socket_port;
 
 	enum {
 		DEFAULT_PORT             = 80,

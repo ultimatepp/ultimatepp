@@ -246,21 +246,16 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		Close();
 	error = Null;
 	bool use_proxy = !IsNull(proxy_host);
-	String sock_host = (use_proxy ? proxy_host : host);
-	int sock_port = (use_proxy ? proxy_port : port);
+	socket_host = (use_proxy ? proxy_host : host);
+	socket_port = (use_proxy ? proxy_port : port);
 
-	LLOG("socket host = " << sock_host << ":" << sock_port);
-	if(!socket.IsOpen()) {
-		if(!ClientSocket(socket, sock_host, sock_port, true, NULL, 0, false)) {
-			error = Socket::GetErrorText();
-			return String::GetVoid();
-		}
-		socket.Linger(0);
-	}
+	LLOG("socket host = " << socket_host << ":" << socket_port);
+	if(!socket.IsOpen() && !CreateClientSocket())
+		return String::GetVoid();
 	while(!socket.PeekWrite(1000)) {
 		int time = msecs();
 		if(time >= end_time) {
-			error = NFormat(t_("%s:%d: connecting to host timed out"), sock_host, sock_port);
+			error = NFormat(t_("%s:%d: connecting to host timed out"), socket_host, socket_port);
 			return String::GetVoid();
 		}
 		if(progress(time - start_time, end_time - start_time)) {
@@ -532,6 +527,16 @@ EXIT:
 	if(ce_gzip)
 		body = GZDecompress(body);
 	return body;
+}
+
+bool HttpClient::CreateClientSocket()
+{
+	if(!ClientSocket(socket, socket_host, socket_port, true, NULL, 0, false)) {
+		error = Socket::GetErrorText();
+		return false;
+	}
+	socket.Linger(0);
+	return true;
 }
 
 String HttpClientGet(String url, String proxy, String username, String password,
