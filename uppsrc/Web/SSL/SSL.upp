@@ -31,6 +31,7 @@ link(WIN32 MT MSC71) /nodefaultlib:libc;
 file
 	WebSSL.h,
 	util.cpp,
+	httpscli.cpp,
 	src.tpp,
 	srcimp.tpp,
 	srcdoc.tpp,

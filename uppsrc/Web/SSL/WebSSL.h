@@ -6,6 +6,7 @@
 #include <Web/Web.h>
 
 #include <openssl/ssl.h>
+#include <openssl/conf.h>
 #include <openssl/err.h>
 
 NAMESPACE_UPP
@@ -19,7 +20,7 @@ String SSLToString(X509_NAME *name);
 String ASN1ToString(ASN1_STRING *time);
 Date   ASN1ToDate(ASN1_STRING *time);
 
-void   SSLInit();
+//void   SSLInit();
 
 class SSLBuffer
 {
@@ -124,7 +125,7 @@ private:
 class SSLContext
 {
 public:
-	SSLContext(SSL_CTX *c = NULL) : ssl_ctx(c) { SSLInit(); }
+	SSLContext(SSL_CTX *c = NULL) : ssl_ctx(c) { /*SSLInit();*/ }
 	~SSLContext()                              { Clear(); }
 
 	bool     IsEmpty() const                   { return !ssl_ctx; }
@@ -158,6 +159,20 @@ inline String SSLInfoCertNotBefore()    { return "SSL_CERT_NOT_BEFORE"; }    // 
 inline String SSLInfoCertNotAfter()     { return "SSL_CERT_NOT_AFTER"; }     // Date
 inline String SSLInfoCertVersion()      { return "SSL_CERT_VERSION"; }       // int
 inline String SSLInfoCertSerialNumber() { return "SSL_CERT_SERIAL_NUMBER"; } // String
+
+class HttpsClient : public HttpClient {
+public:
+	HttpsClient();
+	
+	void            Secure(bool s) { secure = s; }
+	
+	virtual bool    CreateClientSocket();
+	
+public:
+	One<SSLContext> ssl_context;
+	
+	bool            secure;
+};
 
 END_UPP_NAMESPACE
 
