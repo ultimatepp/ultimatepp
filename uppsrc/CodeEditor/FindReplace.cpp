@@ -16,6 +16,14 @@ bool FindReplaceDlg::Key(dword key, int cnt) {
 	return TopWindow::Key(key, cnt);
 }
 
+Size FindReplaceDlg::GetAdjustedSize()
+{
+	Size sz = GetLayoutSize();
+	if(!replacing)
+		sz.cy -= replace.GetRect().bottom - find.GetRect().bottom;
+	return sz;
+}
+
 void FindReplaceDlg::Setup(bool doreplace)
 {
 	replacing = doreplace;
@@ -23,10 +31,9 @@ void FindReplaceDlg::Setup(bool doreplace)
 	replace.Show(replacing);
 	amend.Show(replacing);
 //	amendall.Show(false); // not yet implemented
-	Size sz = GetLayoutSize();
-	if(!replacing)
-		sz.cy -= replace.GetRect().bottom - find.GetRect().bottom;
 	Rect r = GetRect();
+	Size sz = GetAdjustedSize();
+	SetMinSize(sz);
 	r.SetSize(sz);
 	SetRect(r);
 }
@@ -144,8 +151,12 @@ bool CodeEditor::Find(bool back, const wchar *text, bool wholeword, bool ignorec
 	if(notfoundbk) MoveTextEnd();
 	bool wb = wholeword ? iscid(*ft) : false;
 	bool we = wholeword ? iscid(*ft.Last()) : false;
-	int cursor = GetCursor();
-	int pos = cursor;
+	int cursor, pos;
+	if(found)
+		GetSelection(pos, cursor);
+	else
+		GetSelection(cursor, pos);
+	pos = cursor;
 	int line = GetLinePos(pos);
 	int linecount = GetLineCount();
 	WString ln = GetWLine(line);
@@ -208,18 +219,18 @@ bool CodeEditor::Find(bool back, bool blockreplace)
 	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
 		    findreplace.ignorecase, findreplace.wildcards, blockreplace)) {
 		if(!blockreplace) {
+			if(!findreplace.IsOpen()) {
+				findreplace.NoCenter();
+				OpenNormalFindReplace(false);
+			}
 			Rect lr = GetLineScreenRect(GetLine(GetCursor()));
-			Size fsz = findreplace.GetRect().Size();
+			Size fsz = findreplace.GetAdjustedSize();
 			Rect r = GetTopCtrl()->GetRect();
 			int y = r.bottom - fsz.cy;
 			if(lr.bottom > y) y = r.top;
 			Rect wa = Ctrl::GetWorkArea();
 			findreplace.SetRect(RectC(wa.left + (wa.Width() - fsz.cx) / 2, y, fsz.cx, fsz.cy));
 			findreplace.amend.Enable();
-			if(!findreplace.IsOpen()) {
-				findreplace.NoCenter();
-				OpenNormalFindReplace(findreplace.replacing);
-			}
 			SetFocus();
 		}
 		return true;
@@ -364,7 +375,7 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 	findreplace.itext = GetI();
 	findreplace.Title(replace ? "Find and Replace" : "Find");
 	findreplace.findback.Show();
-	findreplace.ok.SetLabel("Find");
+	findreplace.ok.SetLabel("Find Next");
 	findreplace.ok <<= THISBACK(DoFind);
 	findreplace.cancel <<= findreplace.WhenClose = THISBACK(CloseFindReplace);
 	findreplace.Open();
@@ -377,19 +388,14 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 	WString find_text;
 	int find_pos = -1;
 	
-	if(!replace)
+	findreplace.Setup(replace);
 	
 	if(pick_text || pick_selection)
 	{
 		WString s = GetSelection().ToWString();
-		if(!IsNull(s)) {
-			if(s.Find('\n') >= 0)
-				BeepExclamation();
-			else {
+		if(IsSelection()) {
+			if(s.Find('\n') < 0)
 				find_text = s;
-				int l;
-				GetSelection(l, find_pos);
-			}
 		}
 		else
 		if(pick_text) {
