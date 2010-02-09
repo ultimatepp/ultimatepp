@@ -363,7 +363,7 @@ void MySqlConnection::GetColumn(int i, Ref f) const {
 			f = atoi(s);
 			break;
 		case DOUBLE_V:
-			f = atof(s);
+			f = ScanDouble(s, NULL, true);
 			break;
 		case DATE_V:
 			f = Value(sDate(s));
