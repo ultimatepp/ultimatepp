@@ -127,6 +127,7 @@ void Ide::UpdateFormat(CodeEditor& editor, QuickTabs& tabs)
 	editor.HiliteScope(hilite_scope);
 	editor.HiliteBracket(hilite_bracket);
 	editor.HiliteIfDef(hilite_ifdef);
+	editor.BarLine(barline);
 	editor.HiliteIfEndif(hilite_if_endif);
 	editor.LineNumbers(line_numbers);
 	editor.AutoEnclose(auto_enclose);
@@ -345,6 +346,7 @@ void Ide::SetupFormat() {
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
 		(edt.showtabs, show_tabs)
+		(edt.barline, barline)
 		(ide.tabs_icons, tabs_icons)
 		(ide.tabs_crosses, tabs_crosses)
 		(ide.tabs_grouping, tabs_grouping)

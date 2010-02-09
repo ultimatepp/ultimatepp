@@ -681,6 +681,7 @@ public:
 	byte      hilite_scope;
 	int       hilite_bracket;
 	int       hilite_ifdef;
+	bool      barline;
 
 	enum { STYLE_NO_REPLACE, STYLE_CONFIRM_REPLACE, STYLE_AUTO_REPLACE };
 
