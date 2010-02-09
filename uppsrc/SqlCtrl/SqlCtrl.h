@@ -107,6 +107,7 @@ public:
 	void      AppendQuery(SqlBool where);
 	void      Query(SqlBool where)                         { SetWhere(where); Query(); }
 	void      ReQuery();
+	void      ReQuery(SqlBool where)                       { SetWhere(where); ReQuery(); }
 
 	void      Limit(int _offset, int _count)               { offset = _offset; count = _count; }
 	void      Limit(int count)                             { Limit(0, count); }
