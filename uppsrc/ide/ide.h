@@ -406,7 +406,7 @@ void DirSel(EditField& f, FrameRight<Button>& b);
 bool CopyFolder(const char *dst, const char *src, Progress *pi);
 void SvnSyncDirs(const Vector<String>& working);
 
-struct FindInFiles : WithFindInFilesLayout<TopWindow> {
+struct FindInFilesDlg : WithFindInFilesLayout<TopWindow> {
 	WString itext;
 
 	virtual bool Key(dword key, int count);
@@ -414,9 +414,9 @@ struct FindInFiles : WithFindInFilesLayout<TopWindow> {
 	void Setup(bool replace);
 	void Sync();
 
-	typedef FindInFiles CLASSNAME;
+	typedef FindInFilesDlg CLASSNAME;
 	
-	FindInFiles();
+	FindInFilesDlg();
 };
 
 struct Ide : public TopWindow, public WorkspaceWork, public IdeContext, public MakeBuild {
@@ -685,8 +685,8 @@ public:
 
 	enum { STYLE_NO_REPLACE, STYLE_CONFIRM_REPLACE, STYLE_AUTO_REPLACE };
 
-	FindInFiles   ff;
-	int           iwc;
+	FindInFilesDlg ff;
+	int            iwc;
 
 	int           doc_serial;
 	TopicCtrl     doc;

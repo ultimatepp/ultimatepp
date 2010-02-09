@@ -387,17 +387,17 @@ void Ide::ConstructFindInFiles() {
 	CtrlLayoutOKCancel(ff, "Find In Files");
 }
 
-void FindInFiles::Sync()
+void FindInFilesDlg::Sync()
 {
 	replace.Enable((int)~style);
 }
 
-FindInFiles::FindInFiles()
+FindInFilesDlg::FindInFilesDlg()
 {
 	style <<= THISBACK(Sync);
 }
 
-void FindInFiles::Setup(bool replacing)
+void FindInFilesDlg::Setup(bool replacing)
 {
 	Title(replacing ? "Find and replace in files" : "Find in files");
 	replace_lbl.Show(replacing);
@@ -412,7 +412,7 @@ void FindInFiles::Setup(bool replacing)
 	SetRect(r);
 }
 
-bool FindInFiles::Key(dword key, int count)
+bool FindInFilesDlg::Key(dword key, int count)
 {
 	if(key == K_CTRL_I) {
 		if(find.HasFocus()) {
