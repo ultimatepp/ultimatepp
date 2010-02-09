@@ -577,7 +577,7 @@ void OCI8Connection::GetColumn(int i, double& n) const {
 	if(c.ind < 0)
 		n = DOUBLE_NULL;
 	else
-		n = c.type == SQLT_BLOB || c.type == SQLT_CLOB ? (int)c.lob : *(double *) c.Data();
+		n = c.type == SQLT_BLOB || c.type == SQLT_CLOB ? (int)(uintptr_t)c.lob : *(double *) c.Data();
 }
 
 void OCI8Connection::GetColumn(int i, int& n) const {

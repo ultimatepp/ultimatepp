@@ -6,7 +6,7 @@
 
 #ifndef flagNOSQLLITE
 	#define HAVE_SQLLITE
-	#include <plugin/sqlite3/sqlite3.h>
+	#include <plugin/sqlite3/Sqlite3.h>
 #endif
 
 #ifndef flagNOMYSQL
