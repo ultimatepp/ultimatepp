@@ -243,6 +243,7 @@ void CodeEditor::SelectionChanged()
 		findreplace.amend.Disable();
 	}
 	CheckBrackets();
+	bar.Refresh();
 }
 
 void CodeEditor::CheckBrackets()
@@ -1085,6 +1086,7 @@ CodeEditor::CodeEditor() {
 	hilite_scope = 0;
 	hilite_bracket = 1;
 	hilite_ifdef = 1;
+	barline = true;
 	indent_spaces = false;
 	indent_amount = GetTabSize();
 	no_parenthesis_indent = false;

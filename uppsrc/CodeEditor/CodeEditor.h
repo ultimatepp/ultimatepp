@@ -279,6 +279,7 @@ protected:
 	byte    hilite_ifdef;
 	bool    indent_spaces : 1;
 	bool    no_parenthesis_indent : 1;
+	bool    barline : 1;
 	int     indent_amount;
 	double  stat_edit_time;
 	Time    last_key_time;
@@ -502,6 +503,7 @@ public:
 	void     MarkLines(bool b)                        { mark_lines = b; }
 	bool     GetMarkLines()                           { return mark_lines; }
 	void     AutoEnclose(bool b)                      { auto_enclose = b; }
+	void     BarLine(bool b)                          { barline = b; }
 	
 	void     Annotations(int width)                   { bar.Annotations(width); }
 	void     SetAnnotation(int i, const Image& icon, const String& a) { bar.SetAnnotation(i, icon, a); }

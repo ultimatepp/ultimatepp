@@ -425,6 +425,7 @@ LAYOUT(SetupEditorLayout, 488, 280)
 	ITEM(Option, header_guards, SetLabel(t_("Insert guards to new headers")).LeftPosZ(284, 164).TopPosZ(4, 15))
 	ITEM(Option, auto_enclose, SetLabel(t_("[ { ( \" / * enclose selection")).LeftPosZ(12, 168).TopPosZ(176, 16))
 	ITEM(Option, mark_lines, SetLabel(t_("Mark lines with errors, warning and changes")).LeftPosZ(12, 256).TopPosZ(196, 16))
+	ITEM(Option, barline, SetLabel(t_("Highlight line in the left bar")).LeftPosZ(284, 180).TopPosZ(88, 16))
 END_LAYOUT
 
 LAYOUT(SetupIdeLayout, 520, 264)

@@ -80,7 +80,7 @@ void Ide::ConsolePaste()
 }
 
 void Ide::Serialize(Stream& s) {
-	int version = 15;
+	int version = 16;
 	s.Magic(0x1234);
 	s / version;
 	s % main;
@@ -110,14 +110,15 @@ void Ide::Serialize(Stream& s) {
 		s % tabs_grouping;
 		s % tabs_serialize;
 	}
-	if(version >= 15) {
+	if(version >= 15)
 		s % force_crlf;
-	}
 	s % no_parenthesis_indent;
 	s % hilite_scope;
 	s % hilite_if_endif;
 	s % hilite_bracket;
 	s % hilite_ifdef;
+	if(version >= 16)
+		s % barline;
 	s % wrap_console_text;
 	s % mute_sounds;
 	s % line_numbers;
@@ -575,6 +576,7 @@ Ide::Ide()
 	hilite_scope = 1;
 	hilite_bracket = 1;
 	hilite_ifdef = 1;
+	barline = true;
 	hilite_if_endif = false;
 	wrap_console_text = true;
 	mute_sounds = false;

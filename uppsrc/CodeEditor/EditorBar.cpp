@@ -89,6 +89,8 @@ void EditorBar::Paint(Draw& w)
 			icon = l.icon;
 			ann = l.annotation;
 		}
+		if(editor->GetCaret().top == y && editor->barline)
+			w.DrawRect(0, y, sz.cx, fy, Blend(SColorHighlight(), SColorLtFace(), 200));
 		if(line_numbers && i < editor->GetLineCount()) {
 			String n = AsString(i + 1);
 			for(int q = 0; q < 4 && q < n.GetLength(); q++) {
