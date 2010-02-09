@@ -13,10 +13,11 @@ dword rdtsc();
 class CallbackQueue : private NoCopy
 {
 public:
-	CallbackQueue(int _id = 0) 
+	CallbackQueue(int _maxQueueLength = 100000, int _id = 0) 
 		:shuttingDown(false)
 		,started(false)
 		,id(_id)
+		,maxQueueLength(_maxQueueLength)
 	{
 		Vector<CallbackQueue *> &q = queues.GetAdd(id);
 		q << this;
@@ -40,10 +41,17 @@ public:
 	}
 
 	#define LOCK_ADD_UNLOCK \
+		bool addSem = true; \
 		qMutex.Enter(); \
+		if (queue.GetCount() >= maxQueueLength) \
+		{ \
+			queue.DropHead(); \
+			addSem = false; \
+		} \
 		queue.AddTail(e); \
 		qMutex.Leave(); \
-		qSemaphore.Release(); 
+		if (addSem) \
+			qSemaphore.Release(); 
 
 	void ClearQueue()
 	{
@@ -169,6 +177,7 @@ public:
 		}
 	}
 
+	void SetMaxQueueLength(int mql) {qMutex.Enter(); maxQueueLength = mql; while (queue.GetCount() >= mql) queue.DropHead(); qMutex.Leave();}
 	int GetTasksCount() {qMutex.Enter(); int out=queue.GetCount(); qMutex.Leave(); return out;}
 
 	bool IsShutdown() {return shuttingDown;}
@@ -323,12 +332,13 @@ private:
 	bool             shuttingDown;
 	bool			 started;
 	int              id;
+	int              maxQueueLength;
 };
 
 class CallbackThread : public CallbackQueue, protected Thread
 {
 public:
-	CallbackThread(int id = 0)  :CallbackQueue(id) {}
+	CallbackThread(int maxQueueLength = 100000, int id = 0)  :CallbackQueue(maxQueueLength, id) {}
 	virtual ~CallbackThread() {Shutdown();}
 
 	virtual void Start()
