@@ -156,6 +156,7 @@ struct FindReplaceDlg : WithIDEFindReplaceLayout<TopWindow> {
 	WString itext;
 	bool    replacing;
 
+	Size    GetAdjustedSize();
 	virtual bool Key(dword key, int count);
 	void Setup(bool doreplace);
 };
