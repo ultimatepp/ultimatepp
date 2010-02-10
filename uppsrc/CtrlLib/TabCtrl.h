@@ -79,7 +79,7 @@ private:
 	Tabs        tabs;
 	Button      left, right;
 	ParentCtrl  pane;
-	bool        accept_current;
+	bool        accept_current, no_accept;
 
 	const Style *style;
 
@@ -130,6 +130,7 @@ public:
 
 	static const Style& StyleDefault();
 
+	TabCtrl& NoAccept(bool ac = true)            { no_accept = ac; return *this; }
 	TabCtrl& AcceptCurrent(bool ac = true)       { accept_current = ac; return *this; }
 	TabCtrl& AcceptAll()                         { return AcceptCurrent(false); }
 	TabCtrl& SetStyle(const Style& s)            { style = &s; Refresh(); return *this; }
