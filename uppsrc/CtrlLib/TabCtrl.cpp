@@ -461,7 +461,7 @@ bool TabCtrl::HotKey(dword key)
 
 bool TabCtrl::Accept()
 {
-	if(tab.GetCount() == 0)
+	if(tab.GetCount() == 0 || no_accept)
 		return true;
 	int ii = Get();
 	if(accept_current)
@@ -498,7 +498,7 @@ TabCtrl::TabCtrl()
 	hot = -1;
 	sel = -1;
 	x0 = 0;
-	accept_current = false;
+	no_accept = accept_current = false;
 	Ctrl::Add(tabs);
 	Ctrl::Add(pane);
 	tabs.BackPaint().IgnoreMouse();

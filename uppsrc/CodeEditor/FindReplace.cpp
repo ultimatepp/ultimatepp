@@ -408,7 +408,8 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 			find_text = Get(l, h - l).ToWString();
 			find_pos = h;
 		}
-		findreplace.find <<= find_text;
+		if(find_text.GetCount())
+			findreplace.find <<= find_text;
 	}
 	if(IsSelection() && replace) {
 		findreplace.itext = GetI();

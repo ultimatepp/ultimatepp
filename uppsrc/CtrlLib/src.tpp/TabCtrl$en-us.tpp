@@ -366,6 +366,11 @@ nt]_[*@3 i])&]
 [s2; Sets tab [*@3 i ]as active. You can also use SetData (or operator<<`=).&]
 [s3; &]
 [s4;%- &]
+[s5;:TabCtrl`:`:Set`(Ctrl`&`):%- [@(0.0.255) void]_[* Set]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 s
+lave])&]
+[s2; Sets tab with [%-*@3 slave] widget as active.&]
+[s3; &]
+[s4;%- &]
 [s5;:TabCtrl`:`:Get`(`)const:%- [@(0.0.255) int]_[* Get]()_[@(0.0.255) const]&]
 [s2; Returns the index of active tab. You can also use GetData (or 
 operator`~).&]
@@ -397,6 +402,12 @@ them.&]
 [s5;:TabCtrl`:`:operator`<`<`(Ctrl`&`):%- [_^TabCtrl^ TabCtrl][@(0.0.255) `&]_[* operator<<
 ]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 c])&]
 [s2; Same as Add([%-*@3 c]). Returns `*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:TabCtrl`:`:NoAccept`(bool`):%- [_^TabCtrl^ TabCtrl][@(0.0.255) `&]_[* NoAccept]([@(0.0.255) b
+ool]_[*@3 ac]_`=_[@(0.0.255) true])&]
+[s2; If active, TabCtrl Accept method does not call any of slave 
+widgets Accept.&]
 [s3; &]
 [s4;%- &]
 [s5;:TabCtrl`:`:AcceptCurrent`(bool`):%- [_^TabCtrl^ TabCtrl][@(0.0.255) `&]_[* AcceptCurre
