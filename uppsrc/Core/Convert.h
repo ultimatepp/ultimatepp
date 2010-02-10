@@ -124,12 +124,13 @@ const ConvertDouble& StdConvertDoubleNotNull();
 
 class ConvertDate : public Convert {
 public:
+	virtual Value Format(const Value& q) const;
 	virtual Value Scan(const Value& text) const;
 	virtual int   Filter(int chr) const;
 
 protected:
 	Date minval, maxval, defaultval;
-	bool notnull;
+	bool notnull, truncate;
 
 public:
 	ConvertDate& MinMax(Date _min, Date _max)      { minval = _min; maxval = _max; return *this; }
@@ -137,16 +138,19 @@ public:
 	ConvertDate& Max(Date _max)                    { maxval = _max; return *this; }
 	ConvertDate& NotNull(bool b = true)            { notnull = b; return *this; }
 	ConvertDate& NoNotNull()                       { return NotNull(false); }
+	ConvertDate& Truncate(bool b = true)           { truncate = b; return *this; }
 	ConvertDate& Default(Date d)                   { defaultval = d; return *this; }
 	Date         GetMin() const                    { return minval; }
 	Date         GetMax() const                    { return maxval; }
 	bool         IsNotNull() const                 { return notnull; }
+
 
 	ConvertDate(Date minval = Date::Low(), Date maxval = Date::High(), bool notnull = false);
 	virtual ~ConvertDate();
 };
 
 const ConvertDate& StdConvertDate();
+const ConvertDate& StdConvertDateTruncated();
 const ConvertDate& StdConvertDateNotNull();
 
 class ConvertTime : public Convert {
