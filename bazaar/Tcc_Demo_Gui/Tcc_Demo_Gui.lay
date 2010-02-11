@@ -8,7 +8,7 @@ LAYOUT(MainLayout, 584, 528)
 	ITEM(EditString, EditExeFile, SetFrame(ThinInsetFrame()).HSizePosZ(136, 8).TopPosZ(40, 19))
 	ITEM(EditString, EditIncludePath, SetFrame(ThinInsetFrame()).HSizePosZ(76, 8).TopPosZ(88, 19))
 	ITEM(Switch, OpGetExe, SetLabel(t_("Run in memory\nGet executable file in:")).LeftPosZ(8, 128).TopPosZ(28, 32))
-	ITEM(Label, dv___9, SetLabel(t_("Modify source code and push \"Compile + Run\"")).SetFont(StdFontZ(11).Bold()).HSizePosZ(8, 8).TopPosZ(132, 19))
+	ITEM(Label, dv___9, SetLabel(t_("Modify source code and press \"Compile + Run\"")).SetFont(StdFontZ(11).Bold()).HSizePosZ(8, 8).TopPosZ(132, 19))
 	ITEM(Label, dv___10, SetLabel(t_("Define the path of these folders (see proposal)")).SetFont(StdFontZ(11).Bold()).HSizePosZ(8, 8).TopPosZ(64, 19))
 END_LAYOUT
 
