@@ -4,7 +4,7 @@ noblitz;
 
 uses
 	Core,
-	zLibs\SysInfo;
+	Functions4U;
 
 library(WIN32) Oleaut32;
 
@@ -17,6 +17,4 @@ file
 	OfficeAutomation.t,
 	License.txt;
 
-mainconfig
-	"" = "MT";
 
