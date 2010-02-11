@@ -6,8 +6,10 @@ topic "OfficeSheet class reference";
 [H6;0 $$4,0#05600065144404261032431302351956:begin]
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:codeitem]
 [{_} 
+[ {{10000@(113.42.0) [s0;%% [*@7;4 OfficeSheet]]}}&]
+[s1;*4 &]
 [s1;:OfficeSheet`:`:class: [@(0.0.255)4 class][4 _][*4 OfficeSheet]&]
-[s2;* &]
+[s2;l0;* &]
 [s0; [2 OfficeSheet class serves to manage spreadsheets made with OpenOffice 
 Calc or Microsoft Office Excel.]&]
 [s0; [2 The class methods are designed to be as simple as possible 
@@ -16,12 +18,14 @@ and are exactly the same for both suites.]&]
 it requires either OpenOffice or Microsoft Office to be previosly 
 installed in the computer.]&]
 [s0;2 &]
+[s0;2 &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s3; &]
 [s5;:OfficeSheet`:`:OfficeSheet`(`): [* OfficeSheet]()&]
 [s2;%% OfficeSheet constructor. It has no arguments as in function 
 Init() it is defined which Office suite is going to be used.&]
 [s3; &]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:OfficeSheet`:`:`~OfficeSheet`(`): [@(0.0.255) `~][* OfficeSheet]()&]
@@ -167,9 +171,10 @@ nt]_[*@3 fromX], [@(0.0.255) int]_[*@3 fromY], [@(0.0.255) int]_[*@3 toX],
 g]_[*@3 fileName], [_^String^ String]_[*@3 type]_`=_`"xls`")&]
 [s2;%% Saves the opened [%-*@3 fileName] with format [%-*@3 type]. &]
 [s2;%% Formats admitted depend on the implementation but are basically:&]
-[s2;%% -|`- OpenOffice: -|`"xls`", `"pxl`", `"html`", `"txt`", `"pdf`" 
-and `"ods`".&]
-[s2;%% -|`- Microsoft: -|`"csv`", `"html`", `"txt`", `"xlsx`" and `"xls`"&]
+[s2;i150;O0;%% -|OpenOffice: -|`"xls`", `"pxl`", `"html`", `"txt`", 
+`"pdf`" and `"ods`".&]
+[s2;i150;O0;%% -|Microsoft: -|`"csv`", `"html`", `"txt`", `"xlsx`" and 
+`"xls`"&]
 [s4; &]
 [s5;:OfficeSheet`:`:Quit`(`): [@(0.0.255) bool]_[* Quit]()&]
 [s2;%% Closes the spreadsheet application.&]
@@ -208,8 +213,8 @@ ndex])&]
 [s5;:OfficeSheet`:`:GetType`(`): [_^String^ String]_[* GetType]()&]
 [s2;%% Returns the spreadsheet type.&]
 [s2;%% Valid values are:&]
-[s2;%% `- `"Open`"&]
-[s2;%% `- `"Microsoft`"&]
+[s2;i150;O0;%% `"Open`"&]
+[s2;i150;O0;%% `"Microsoft`"&]
 [s3; &]
 [s4; &]
 [s5;:OfficeSheet`:`:CellToColRow`(const char`*`,int`&`,int`&`): [@(0.0.255) static] 
