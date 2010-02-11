@@ -168,7 +168,7 @@ from the main program&]
 [s0;C@(0.0.255)+75%- &]
 [s0;%- [C@(0.0.255)+75 -|-|`} else `{]&]
 [s0;2%- &]
-[s0; [%-2 2.2.2 ]Link the C script to the executable file&]
+[s0; [%- 2.2.2 ]Link the C script to the executable file&]
 [s0;C@(0.0.255)+75 &]
 [s0;%- [C@(0.0.255)+75 -|-|-|tcc.Link(EditExeFile.GetData().ToString());]&]
 [s0;%- [C@(0.0.255)+75 -|-|-|PromptOK(`"Program compiled in `" `+ DeQtf(EditExeFile.GetDat
@@ -176,7 +176,7 @@ a().ToString()));]&]
 [s0;%- [C@(0.0.255)+75 -|-|`}]&]
 [s0; [C@(0.0.255)+75 -|`} catch(Exc err)`{]&]
 [s0;C+75 &]
-[s0; 6. Catch the compiling, linking and running (if run in memory) 
+[s0; 3. Catch the compiling, linking and running (if run in memory) 
 errors.&]
 [s0;C+75 &]
 [s0; [C@(28.42.255)+75 -|-|Exclamation(DeQtfLf(err));]&]

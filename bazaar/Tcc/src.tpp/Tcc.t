@@ -10,7 +10,7 @@ T_("Tcc function %s not found")
 esES("Función Tcc %s no encontrada")
 
 T_("Line %d")
-esES("Línea %d") 
+esES("Línea %d")
 
 T_("Not possible to add symbols if output to file is defined")
 esES("No es posible añadir símbolos se se ha definido salida a fichero")
