@@ -1629,18 +1629,17 @@ column.&]
 [s7; [*/ Return value]-|constant reference to the column Display&]
 [s3; &]
 [s4;%- &]
-[s5;:ArrayCtrl`:`:SetCtrl`(int`,int`,Ctrl`*`,bool`,bool`):%- [_^Ctrl^ Ctrl][@(0.0.255) `&
-]_[* SetCtrl]([@(0.0.255) int]_[*@3 i], [@(0.0.255) int]_[*@3 j], [_^Ctrl^ Ctrl]_`*[*@3 newctrl
-], [@(0.0.255) bool]_[*@3 owned], [@(0.0.255) bool]_[*@3 value])&]
+[s5;:ArrayCtrl`:`:SetCtrl`(int`,int`,Ctrl`&`,bool`):%- [@(0.0.255) void]_[* SetCtrl]([@(0.0.255) i
+nt]_[*@3 i], [@(0.0.255) int]_[*@3 col], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl], 
+[@(0.0.255) bool]_[*@3 value]_`=_[@(0.0.255) true])&]
 [s2; Sets an external control to use as the editor for a single array 
 cell. Naturally, the same Ctrl object cannot be used as the editor 
-for multiple array cells. &]
-[s7; [%-*C@3 i]-|zero`-based row index&]
-[s7; [%-*C@3 j]-|zero`-based column index&]
-[s7; [%-*C@3 newctrl]-|the control to bind to the given array cell&]
-[s7; [%-*C@3 value]-|the value of Ctrl is the value of column; if false, 
-value of ctrl is independent&]
-[s7; [*/ Return value]-|[* `*newctrl]&]
+for multiple array cells. If the position of Ctrl is equivalent 
+to `'SetRect(0, 0, 0, 0)`', which is the default value, Ctrl 
+is resized to fit the ArrayCtrl cell accurately, otherwise the 
+position represents the position within the cell. If [%-*@3 value] 
+is true, then the Ctrl represents the value of the cell, otherwise 
+it is independent of it.&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:GetTotalCy`(`)const:%- [@(0.0.255) int]_[* GetTotalCy]()_[@(0.0.255) cons
@@ -2643,7 +2642,10 @@ actory])&]
 to create new Ctrl`'s for editing a given column. The argument 
 of this function is a callback, which, upon execution, should 
 allocate (normally using the [* new] operator) the desired editor 
-object and set it to its argument.&]
+object and set it to its argument. If the position of Ctrl is 
+equivalent to `'SetRect(0, 0, 0, 0)`', which is the default value, 
+Ctrl is resized to fit the ArrayCtrl cell accurately, otherwise 
+the position represents the position within the cell.&]
 [s7; [%-*C@3 factory]-|callback used for new control creation&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -2653,7 +2655,14 @@ olumn][@(0.0.255) `&]_[* Ctrls]([@(0.0.255) void]_(`*[*@3 factory])(One<Ctrl>`&)
 [s2; This method sets up a factory which the ArrayCtrl uses as necessary 
 to create new Ctrl`'s for editing a given column. The argument, 
 a global function, is supposed to allocate a new editor control 
-(normally using the [* new] operator) and set it to its argument.&]
+(normally using the [* new] operator) and set it to its argument. 
+If the position of Ctrl is equivalent to `'SetRect(0, 0, 0, 0)`', 
+which is the default value, Ctrl is resized to fit the ArrayCtrl 
+cell accurately, otherwise the position represents the position 
+within the cell. If the position of Ctrl is equivalent to `'SetRect(0, 
+0, 0, 0)`', which is the default value, Ctrl is resized to fit 
+the ArrayCtrl cell accurately, otherwise the position represents 
+the position within the cell.&]
 [s7; [%-*C@3 factory]-|a global function used for editor control creation&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -2663,7 +2672,10 @@ _[_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* Ctrls]()&]
 [s2; This member template sets up a default factory for creating 
 editor controls of a given type. Every time the ArrayCtrl needs 
 to create a new editor control, an object of the type [* T] is 
-created automatically (using the [* new] operator).&]
+created automatically (using the [* new] operator). If the position 
+of Ctrl is equivalent to `'SetRect(0, 0, 0, 0)`', which is the 
+default value, Ctrl is resized to fit the ArrayCtrl cell accurately, 
+otherwise the position represents the position within the cell.&]
 [s7; [*C@4 T]-|the desired object editor type &]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
