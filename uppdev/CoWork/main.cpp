@@ -77,6 +77,7 @@ void App::TestTree() {
 
 void App::TestDropInsert(int parent, int ii, PasteClip& d)
 {
+	/*
 	if(AcceptInternal<TreeCtrl>(d, "mytreedrag")) {
 		tGroups2.InsertDrop(parent, ii, d);
 		tGroups2.SetFocus();
@@ -87,6 +88,7 @@ void App::TestDropInsert(int parent, int ii, PasteClip& d)
 		tGroups2.SetFocus();
 		return;
 	}
+	*/
 }
 
 void App::TestDrag()
@@ -123,7 +125,9 @@ App::App()
 	/* extra stuff */	
 	Add(tGroups2.LeftPos(0,100).VSizePos());
 	TestTree();
-	PostCallback(THISBACK(Start));
+//	PostCallback(THISBACK(Start));
+	
+	
 	/* ... */
 }
 
@@ -238,5 +242,7 @@ void App::Paint(Draw& w)
 
 GUI_APP_MAIN
 {
+	App app;
+	a
 	App().Run();
 }

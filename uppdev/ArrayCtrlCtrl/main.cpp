@@ -15,11 +15,16 @@ struct App : TopWindow {
 
 	bool CheckRow()
 	{
-		if((int)a.Get(0) <= 0) {
-			Exclamation("Chyba");
-			return false;
-		}
+	//	if((int)a.Get(0) <= 0) {
+	//		Exclamation("Chyba");
+	//		return false;
+	//	}
 		return true;
+	}
+	
+	void Enter()
+	{
+		PromptOK("Enter!");
 	}
 
 	typedef App CLASSNAME;
@@ -32,7 +37,9 @@ struct App : TopWindow {
 			option.Top() <<= i;
 //			option.Top() <<= THISBACK1(Do, i);
 		}
-		a.SetLineCy(Draw::GetStdFontCy() + 8);
+		a.SetLineCy(10, 40);
+		option[10].SizePos();
+		option[10].WhenEnter = THISBACK(Enter);
 		a.WhenAcceptRow = THISBACK(CheckRow);
 		Add(a.SizePos());
 		Sizeable();
