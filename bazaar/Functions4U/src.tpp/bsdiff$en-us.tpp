@@ -5,9 +5,7 @@ topic "Functions4U. BSDiff Reference";
 [l288;2 $$3,0#27521748481378242620020725143825:desc]
 [0 $$4,0#96390100711032703541132217272105:end]
 [{_}%EN-US 
-[s0; [*R+184 Functions4U. Reference]&]
-[s0;2 &]
-[s0; [* BSDiff functions]&]
+[s0; [*@3;4 Functions4U Reference. BSDiff]&]
 [s0;2 &]
 [s0; [2 BSDiff  functions permit to:]&]
 [s0; [2 `- Compare two binary or text files to get a new differences 
@@ -28,6 +26,7 @@ by Colin Percival (Copyright 2003`-2005 Colin Percival <cperciva`@freebsd.org>),
 ported to Win32 by Andreas John <dynacore`@tesla.inka.de>.]&]
 [s0;2 &]
 [s0; [2 BSDiff/BSPatch functions are a light wrapper to BSDiff utilities.]&]
+[s0;2 &]
 [s0;2 &]
 [ {{10000@1 [s0; [*2 BSDiff functions]]}}&]
 [s1;2%- &]

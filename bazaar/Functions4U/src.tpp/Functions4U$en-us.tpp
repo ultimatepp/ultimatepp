@@ -10,7 +10,7 @@ topic "Functions4U. Reference";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*R+184 Functions4U. Reference]&]
+[s0; [*@3;4 Functions4U Reference]&]
 [s0; &]
 [s0; List of functions in package.&]
 [s0; &]
@@ -23,9 +23,9 @@ in the OS by default.&]
 [s0; &]
 [s0;l288; [/ Example:]&]
 [s0;l288; [/ LaunchFile(`"c:`\`\My spreadsheet.txt`"). It will open 
-default program (probably gedit or notepad) with document `"My 
-spreadsheet.txt`".]&]
+default program (like gedit or notepad) with document `"My spreadsheet.txt`".]&]
 [s3; &]
+[s0; &]
 [ {{10000@1 [s0; [* File Handling]]}}&]
 [s4; &]
 [s5;:FileCat`(const char`*`,const char`*`):%- [@(0.0.255) bool]_[* FileCat]([@(0.0.255) con
@@ -47,9 +47,25 @@ olderName])&]
 [s2; Returns the name of the folder over [%-*@3 folderName].&]
 [s3; &]
 [s4;%- &]
+[s5;:GetRealName`(String`):%- [_^String^ String]_[* GetRealName]([_^String^ String]_[*@3 path
+])&]
+[s2; Returns the real name of [%-*@3 path].(directory or file) with 
+the right letter cases or `"`" if [%-*@3 path].does not exist.&]
+[s3; &]
+[s4;%- &]
+[s5;:GetNextFolder`(String`,String`):%- [_^String^ String]_[* GetNextFolder]([_^String^ Str
+ing]_[*@3 folder], [_^String^ String]_[*@3 lastFolder])&]
+[s2; Considering [%-*@3 folder ]as a parent folder of [%-*@3 lastFolder], 
+it returns the folder under [%-*@3 folder ]that is also parent 
+of [%-*@3 lastFolder].&]
+[s0;l288; For example: GetNextFolder(`"/home`", `"/home/user/documents`") 
+returns `"/home/user`".&]
+[s3; &]
+[s4;%- &]
 [s5;:CreateFolderDeep`(const char`*`):%- [@(0.0.255) bool]_[* CreateFolderDeep]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 dir])&]
-[s2; Creates folder [%-*@3 dir], creating intermediate folders if necessary&]
+onst]_[@(0.0.255) char]_`*[*@3 dir]) [*@6 DEPRECATED]&]
+[s2; Creates folder [%-*@3 dir], creating intermediate folders if necessary.&]
+[s0;l288; Superseded by Core RealizePath()&]
 [s3; &]
 [s4;%- &]
 [s5;:GetDirectoryLength`(String`):%- [_^int64^ int64]_[* GetDirectoryLength]([_^String^ Str
@@ -135,6 +151,7 @@ in the Trash Bin.&]
 [s0; Removes all the items (files and directories) located in the 
 Trash Bin.ç&]
 [s3; &]
+[s0; &]
 [ {{10000@1 [s0; [* String functions]]}}&]
 [s4; &]
 [s5;:Replace`(String`,String`,String`):%- [_^String^ String]_[* Replace]([_^String^ String]_
@@ -201,11 +218,11 @@ trToTime]([@(0.0.255) struct]_[_^Time^ Upp`::Time][@(0.0.255) `&]_[*@3 d],
 specified using SetDateScan. In place of month both number and 
 text is accepted `- text must match abbreviated or full name 
 of month.&]
-[s0;%- -|Similar to StrToDate() but including both date and time.&]
-[s2;%- [*@3 d]-|Found time.&]
-[s2;%- [*@3 s]-|String to scan.&]
-[s2;%- Return value-|NULL if no time is found in [*@3 s] or pointer 
-to character right after the date.&]
+[s2;%- -|Similar to StrToDate() but including both date and time.&]
+[s7;~~~.928;%- [*@3 s]-|String to scan.&]
+[s7;~~~.928;%- [*@3 d][%% -|]Found time.&]
+[s7;~~~.928;%- Return value-|NULL if no time is found in [*@3 s] or 
+pointer to character right after the date.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:RemoveAccents`(String`):%- [_^String^ String]_[* RemoveAccents]([_^String^ String]_[*@3 s
@@ -224,6 +241,7 @@ is converted in `"Aarhus Oersted Nandu creme brulee`"&]
 [s5;:IsPunctuation`(wchar`):%- [@(0.0.255) bool]_[* IsPunctuation]([_^wchar^ wchar]_[*@3 c])&]
 [s2; Returns true if [%-*@3 c ]is a punctuation character.&]
 [s3;%- &]
+[s0;%- &]
 [ {{10000@1 [s0; [* Special folders]]}}&]
 [s0;%- &]
 [s5;:GetDesktopFolder`(`):%- [_^String^ String]_[* GetDesktopFolder]()&]
@@ -283,7 +301,7 @@ is converted in `"Aarhus Oersted Nandu creme brulee`"&]
 [s5;:Sign`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) int]_[* Sign](
 [*@4 T]_[*@3 a])&]
 [s2;%- [%% Returns the sign of ][*@3 a:]&]
-[s2;i150;O0;  `+1 if [%-*@3 a]. is positive&]
+[s2;i150;O0; `+1 if [%-*@3 a]. is positive&]
 [s2;i150;O0; 0 if [%-*@3 a] is 0 and &]
 [s2;i150;O0; `-1 if [%-*@3 a] is negative.&]
 [s3; &]
@@ -304,6 +322,7 @@ if it is even.&]
 [s5;:ToRad`(double`):%- [@(0.0.255) double]_[* ToRad]([@(0.0.255) double]_[*@3 angle])&]
 [s2; Return [%-*@3 angle ]in degrees converted to radians.&]
 [s3; &]
+[s0; &]
 [ {{10000@1 [s0; [* Graphical functions]]}}&]
 [s4;%- &]
 [s5;:FitInFrame`(const Size`_`<T`>`&`,const Size`_`<T`>`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
@@ -1503,6 +1522,7 @@ mg], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
 ]_[*@3 img])&]
 [s2; Returns image [%-*@3 img].rotated 180º.&]
 [s3; &]
+[s0; &]
 [ {{10000@1 [s0; [* Other functions]]}}&]
 [s4;%- &]
 [s5;:DayOfYear`(Date`):%- [@(0.0.255) int]_[* DayOfYear]([_^Date^ Date]_[*@3 d])&]
@@ -1523,6 +1543,17 @@ g]_[*@3 ext])&]
 identified in the system.&]
 [s3; &]
 [s4;%- &]
+[s5;:Getcwd`(`):%- [_^String^ String]_[* Getcwd]()&]
+[s2; Returns an absolute file name representing the current process 
+working directory.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Chdir`(const String`&`):%- [@(0.0.255) bool]_[* Chdir]_([@(0.0.255) const]_[_^String^ St
+ring]_`&[*@3 folder])&]
+[s2; Sets the process`'s working directory to [%-*@3 folder].&]
+[s0;l288; Returns true if successful.&]
+[s3; &]
+[s4;%- &]
 [s5;:GetDesktopManagerNew`(`):%- [_^String^ String]_[* GetDesktopManagerNew]()&]
 [s2; A more complete version of GetDesktopManager() based on GetOsInfo().&]
-[s3; ]
+[s0; ]

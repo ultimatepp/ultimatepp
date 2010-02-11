@@ -22,7 +22,7 @@ topic "General description";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2; [+184 Functions4U]&]
+[s2; [@(113.42.0)4 Functions4U]&]
 [s0; Miscellaneous functions to be used in U`+`+.&]
 [s0; &]
 [s0; It includes functions for:&]
