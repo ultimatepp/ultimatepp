@@ -879,6 +879,12 @@ bool EditField::Key(dword key, int rep)
 		Remove(cursor, q - cursor);
 		Action();
 		break;
+	case K_ENTER:
+		if(WhenEnter) {
+			WhenEnter();
+			return true;
+		}
+		return false;
 	default:
 		if(key >= ' ' && key < 65536 || key == K_SHIFT_SPACE) {
 			if(!RemoveSelection()) SaveUndo();

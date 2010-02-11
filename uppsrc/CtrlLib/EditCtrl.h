@@ -148,6 +148,7 @@ protected:
 
 public:
 	Callback1<Bar&>   WhenBar;
+	Callback          WhenEnter;
 
 	static const Style& StyleDefault();
 	EditField&  SetStyle(const Style& s);
