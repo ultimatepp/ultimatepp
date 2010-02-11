@@ -5,6 +5,8 @@ topic "News and changes log";
 [s0; [*R+184 Controls4U. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2009/12/29-|StaticImage default background color is transparent]&]
+[s0; [2 -|-|StaticImage: Added UseAsBackground() and removed ImageFit`::Background.]&]
 [s0; [2 2009/12/25-|StaticClock SetAuto mode uses less resources]&]
 [s0; [2 2009/12/23-|StaticClock as new SetAuto mode: the clock does not 
 need to be refreshed as it runs by -|-|itself]&]

@@ -7,7 +7,7 @@ topic "Controls4U_Demo review";
 [s0; [2 Controls4U`_Demo package does a visual review of classes and 
 features. Here there are some screenshots:]&]
 [s0;2 &]
-[s0;i150;O0; [2 Meter demo]&]
+[s0;i150;O0; [*2 Meter demo]&]
 [s0;2 &]
 [s0; [2 Move SliderCtrl in the right to change Meters value and change 
 the properties of the main Meter in the right.]&]
@@ -848,7 +848,7 @@ by window moving or resizing.]&]
 ]&]
 [s0;2 &]
 [s0;2 &]
-[s0;i150;O0; [2 StaticClock demo]&]
+[s0;i150;O0; [*2 StaticClock demo]&]
 [s0;2 &]
 [s0; [2 Change StaticClock parameters and resize window to see the 
 control look.]&]
@@ -2270,7 +2270,7 @@ control look.]&]
 ]&]
 [s0;2 &]
 [s0;2 &]
-[s0;i150;O0; [2 StaticImage and EditFile demo. StaticImage appears 
+[s0;i150;O0; [*2 StaticImage and EditFile demo.][2  StaticImage appears 
 as horses picture and as paper like background]&]
 [s0;2 &]
 [s0; [2 Choose the image file to be opened and change some of its properties.]&]
@@ -5685,7 +5685,7 @@ as horses picture and as paper like background]&]
 ]&]
 [s0;2 &]
 [s0;2 &]
-[s0;i150;O0; [2 StaticLine, StaticArrow, StaticRectangle and StaticEllipse 
+[s0;i150;O0; [*2 StaticLine, StaticArrow, StaticRectangle and StaticEllipse 
 demo in a flowchart]&]
 [s0;2 &]
 [s0; [2 Some Bazaar packages and their organization.]&]
@@ -6550,7 +6550,7 @@ demo in a flowchart]&]
 ]&]
 [s0;2 &]
 [s0;2 &]
-[s0;i150;O0; [2 Test card for StaticLine, StaticArrow, StaticRectangle 
+[s0;i150;O0; [*2 Test card for StaticLine, StaticArrow, StaticRectangle 
 and StaticEllipse]&]
 [s0;2 &]
 [s0; [2 Just a test to see how static controls fit between themselves.]&]
