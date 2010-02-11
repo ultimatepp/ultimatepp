@@ -19,6 +19,4 @@ file
 	lib/README,
 	License.txt;
 
-mainconfig
-	"" = "";
 

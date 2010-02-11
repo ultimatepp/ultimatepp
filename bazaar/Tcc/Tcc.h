@@ -7,7 +7,7 @@ class Tcc
 {
 public:
 #if defined(PLATFORM_WIN32)
-	Tcc(const char *dllFile = "libtcc.dll");
+	Tcc(const char *dllFile = "libs.dll");
 #else
 	Tcc();
 #endif
