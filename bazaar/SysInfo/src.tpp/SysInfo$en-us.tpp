@@ -10,7 +10,7 @@ topic "Function reference";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;%- [*R6 SysInfo]&]
+[ {{10000@(113.42.0) [s0; [*@7;4 SysInfo]]}}&]
 [s0; &]
 [s0; &]
 [ {{10000@1 [s0; [* Hardware, BIOS, OS and Distro info]]}}&]
@@ -41,7 +41,7 @@ emInfo]([_^String^ String]_`&[*@3 manufacturer], [_^String^ String]_`&[*@3 produ
 [s4;%- &]
 [s5;:GetCpuSpeed`(`):%- [@(0.0.255) int]_[* GetCpuSpeed]()&]
 [s2; Gets the real time main CPU speed in MHz.&]
-[s0; -|This data is directly calculated by the function.&]
+[s0;l288; This data is directly calculated by the function.&]
 [s3; &]
 [s4;%- &]
 [s5;:GetVideoInfo`(Array`<Value`>`&`,Array`<Value`>`&`,Array`<Value`>`&`,Array`<Value`>`&`,Array`<Value`>`&`):%- [@(0.0.255) b
@@ -55,6 +55,7 @@ Array_<Value>_`&[*@3 ram], Array_<Value>_`&[*@3 videoMode])&]
 [s2; [%-*@3 ram ]is the available memory in the video hardware in Mb&]
 [s2; [%-*@3 videoMode] is the video mode actually selected including 
 screen resolution and number of colors&]
+[s6; Only available in Windows&]
 [s3; &]
 [s4;%- &]
 [s5;:GetPackagesInfo`(Array`<Value`>`&`,Array`<Value`>`&`,Array`<Value`>`&`,Array`<Value`>`&`,Array`<Value`>`&`,Array`<Value`>`&`,Array`<Value`>`&`):%- [@(0.0.255) b
@@ -70,12 +71,13 @@ Array_<Value>_`&[*@3 state])&]
 [s2; [%-*@3 caption] is a summary of the software description&]
 [s2;%- [*@3 description]&]
 [s2; [%-*@3 state] is the status of the software. Values are:&]
-[s0; -|-|`- `"Bad Configuration`"&]
-[s0; -|-|`- `"Invalid Argument`"&]
-[s0; -|-|`- `"Unknown Package`"&]
-[s0; -|-|`- `"Advertised`"&]
-[s0; -|-|`- `"Absent`"&]
-[s0; -|-|`- `"Ok`"&]
+[s0;l640; `- `"Bad Configuration`"&]
+[s0;l640; `- `"Invalid Argument`"&]
+[s0;l640; `- `"Unknown Package`"&]
+[s0;l640; `- `"Advertised`"&]
+[s0;l640; `- `"Absent`"&]
+[s0;l640; `- `"Ok`"&]
+[s6; Only available in Windows&]
 [s3; &]
 [s4;%- &]
 [s5;:GetMemoryInfo`(int`&`,uint64`&`,uint64`&`,uint64`&`,uint64`&`,uint64`&`,uint64`&`):%- [@(0.0.255) b
@@ -163,6 +165,7 @@ resent]_)&]
 [s5;:CloseCDTray`(`):%- [@(0.0.255) void]_[* CloseCDTray]()&]
 [s2; Closes CD/DVD tray if possible&]
 [s3;@(0.0.255)%- &]
+[s0;%- &]
 [ {{10000@1 [s0; [* Process handling]]}}&]
 [s3;%- &]
 [s5;:GetWindowsList`(Array`<long`>`&`,Array`<long`>`&`,Array`<String`>`&`,Array`<String`>`&`,Array`<String`>`&`):%- [@(0.0.255) v
@@ -244,7 +247,7 @@ ng]_[*@3 pid], [@(0.0.255) int]_[*@3 timeout]_`=_[@3 500])&]
 [s2; If after asking the process to end [%-*@3 timeout ]is over, it 
 will kill the process by different means in order of increasing 
 `"aggressivity`".&]
-[s0; -|For example in Posix it will send the process first a SIGTERM, 
+[s0;l288; For example in Posix it will send the process first a SIGTERM, 
 if the process does not stop it will send a SIGKILL, and if the 
 process remains running it will simply call WindowKill() to do 
 the dirty job.&]
@@ -296,6 +299,7 @@ ect]([@(0.0.255) long]_[*@3 windowId], [@(0.0.255) long]_[*@3 left],
 location in the screen in [%-*@3 left], [%-*@3 top], [%-*@3 right] 
 and [%-*@3 bottom].&]
 [s2; -|Returns true if the window is relocated correctly..&]
+[s0; &]
 [s0; &]
 [ {{10000@1 [s0; [* Mouse and keyboard handling]]}}&]
 [s3; &]
@@ -402,6 +406,7 @@ ool]_[*@3 caps], [@(0.0.255) bool]_[*@3 num], [@(0.0.255) bool]_[*@3 scroll])&]
 [s2; Sets the status of keys [%-*@3 caps ]lock,  [%-*@3 num ]lock and 
 [%-*@3 scroll] [%-*@3  ]lock. Not fully functional in Linux.&]
 [s3; &]
+[s0; &]
 [ {{10000@1 [s0; [* Screen recording]]}}&]
 [s3; &]
 [s5;:Snap`_Desktop`(String`):%- [@(0.0.255) bool]_[* Snap`_Desktop]([_^String^ String]_[*@3 f
@@ -438,8 +443,9 @@ _[@3 1], [@(0.0.255) bool]_[*@3 viewMouse]_`=_[@(0.0.255) true])&]
 of [%-*@3 duration] in seconds with [%-*@3 secsFrame] seconds between 
 frames and recording also mouse movement if [%-*@3 viewMouse].is 
 true.&]
-[s0; -|Allowed formats are:&]
-[s0; -|-|`- Windows: Uncompressed .avi &]
+[s0;l288; Allowed formats are:&]
+[s0;l288;i150;O0; Windows: Uncompressed .avi &]
+[s6; Only available in Windows&]
 [s3; &]
 [s4;%- &]
 [s5;:Record`_DesktopRectangle`(String`,int`,int`,int`,int`,int`,int`,bool`):%- [@(0.0.255) b
@@ -452,8 +458,9 @@ ool]_[* Record`_DesktopRectangle]([_^String^ String]_[*@3 fileName],
 a video file of [%-*@3 duration] in seconds with [%-*@3 secsFrame] 
 seconds between frames and recording also mouse movement if [%-*@3 viewMouse].is 
 true.&]
-[s0; -|Allowed formats are:&]
-[s2; -|-|`- Windows: Uncompressed .avi&]
+[s2; Allowed formats are:&]
+[s2;i150;O0; Windows: Uncompressed .avi&]
+[s6; Only available in Windows&]
 [s3; &]
 [s4;%- &]
 [s5;:Record`_Window`(String`,int`,long`,int`,bool`):%- [@(0.0.255) bool]_[* Record`_Windo
@@ -464,9 +471,11 @@ w]([_^String^ String]_[*@3 fileName], [@(0.0.255) int]_[*@3 duration],
 in [%-*@3 fileName] as a video file of [%-*@3 duration] in seconds 
 with [%-*@3 secsFrame] seconds between frames and recording also 
 mouse movement if [%-*@3 viewMouse].is true.&]
-[s0; -|Allowed formats are:&]
-[s2; -|-|`- Windows: Uncompressed .avi&]
+[s0;l288; Allowed formats are:&]
+[s2;i150;O0; Windows: Uncompressed .avi&]
+[s6; Only available in Windows&]
 [s3; &]
+[s0; &]
 [ {{10000@1 [s0; [* Miscellaneous functions]]}}&]
 [s4;%- &]
 [s5;:SetDesktopWallPaper`(const char`*`):%- [@(0.0.255) void]_[* SetDesktopWallPaper]([@(0.0.255) c
