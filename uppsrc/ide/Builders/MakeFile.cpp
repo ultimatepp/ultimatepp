@@ -72,29 +72,28 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 	makefile.output << (main ? String("$(OutDir)") : makefile.outdir) << makefile.outfile;
 
 	if(main) {
-		String cc = "c++ -c";
+		makefile.config << "CC = c++\n";
+		String flags;
 		if(HasFlag("DEBUG"))
-			cc << " -D_DEBUG " << debug_options;
+			flags << " -D_DEBUG " << debug_options;
 		else
-			cc << ' ' << release_options;
+			flags << ' ' << release_options;
 		if(HasFlag("DEBUG_MINIMAL"))
-			cc << " -ggdb -g1";
+			flags << " -ggdb -g1";
 		if(HasFlag("DEBUG_FULL"))
-			cc << " -ggdb -g2";
+			flags << " -ggdb -g2";
 		if(is_shared && !win32)
-			cc << " -fPIC ";
-		cc << ' ' << Gather(pkg.option, config.GetKeys());
-		makefile.config << "CC = " << cc << "\n"
-			"CFLAGS = $(CC) -x c\n"
-			"CPPFLAGS = $(CC) -x c++ \n"
-			"LIBPATH = ";
+			flags << " -fPIC ";
+		flags << ' ' << Gather(pkg.option, config.GetKeys());
+		makefile.config << "CFLAGS =" << flags << "\n"
+			"CXXFLAGS =" << flags << "\n"
+			"LDFLAGS = " << (HasFlag("DEBUG") ? debug_link : release_link) << " $(LINKOPTIONS)\n"
+			"LIBPATH =";
 		for(int i = 0; i < libpath.GetCount(); i++)
 			makefile.config << " -L" << GetMakePath(AdjustMakePath(GetHostPathQ(libpath[i])));
 		makefile.config << "\n"
-			"AR = ar -sr\n";
-
+			"AR = ar -sr\n\n";
 		makefile.install << "\t-mkdir -p $(OutDir)\n";
-
 		Vector<String> lib;
 		String lnk;
 		lnk << "c++";
@@ -113,8 +112,8 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 
 		lnk << " $(LIBPATH)";
 		if (!HasFlag("OSX11"))
-		  lnk << " -Wl,-O,2";
-		lnk << " $(LINKOPTIONS)";
+			lnk << " -Wl,-O,2";
+		lnk << " $(LDFLAGS)";
 
 		makefile.linkfiles = lnk;
 	}
@@ -165,7 +164,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 						makefile.rules << " \\\n\t" << GetMakePath(dfn);
 				}
 				makefile.rules << "\n"
-					"\t" << (isc ? "$(CFLAGS)" : "$(CPPFLAGS)") << " $(CINC) $(" << macros << ") "
+					"\t$(CC) -c " << (isc ? "-x c $(CFLAGS)" : "-x c++ $(CXXFLAGS)") << " $(CINC) $(" << macros << ") "
 						<< gop << " " << srcfile << " -o " << outfile << "\n\n";
 				if(!libout || isicpp) {
 					makefile.linkdep << " \\\n\t" << outfile;
