@@ -292,6 +292,8 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	b->debug_options = bm.Get("DEBUG_OPTIONS", "");
 	b->release_options = bm.Get("RELEASE_OPTIONS", "");
 	b->release_size_options = bm.Get("RELEASE_SIZE_OPTIONS", "");
+	b->debug_link = bm.Get("DEBUG_LINK", "");
+	b->release_link = bm.Get("RELEASE_LINK", "");
 	b->script = bm.Get("SCRIPT", "");
 	return b;
 }
