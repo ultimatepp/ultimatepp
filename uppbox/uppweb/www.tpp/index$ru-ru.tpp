@@ -31,7 +31,7 @@ ru`]]&]
 среду разработки.]&]
 [s0;2 &]
 [s0; [2 Скорость разработки достигнута 
-за счет ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 эффективного
+за счет ][^topic`:`/`/uppweb`/www`/overview`$ru`-ru^2 эффективного
  использования возможностей C`+`+][2 , 
 в отличие от генераторов кода. Благодаря 
 этому, U`+`+ успешно конкурирует с популярными
@@ -794,8 +794,6 @@ Ultimate`+`+ вы получите:]&]
 [ {{10000<133;f4;@(93.25.8) [s0;%% [%RU-RU*@2;2 Загрузить][*@2;2  U`+`+ 1952]]
 ::@(255.255.235) [s0;l32;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-1952`.exe^+75 W
 in32 installer][+75  (16 MB) ]]
-:: [s0;l32;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`_1952`_i386`.deb^+75 L
-inux .deb installer][+75  (22 Mb)]]
 :: [s0;l32;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-1952`.tar`.gz^+75 X
 11`-src][+75  (18 MB)]]}}&]
 [s0;l128;+92%% &]
