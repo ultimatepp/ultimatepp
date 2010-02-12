@@ -72,7 +72,8 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 	makefile.output << (main ? String("$(OutDir)") : makefile.outdir) << makefile.outfile;
 
 	if(main) {
-		makefile.config << "CC = c++\n";
+		makefile.config << "CC = c++\n"
+			"LINKER = $(CC)\n";
 		String flags;
 		if(HasFlag("DEBUG"))
 			flags << " -D_DEBUG " << debug_options;
@@ -96,7 +97,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		makefile.install << "\t-mkdir -p $(OutDir)\n";
 		Vector<String> lib;
 		String lnk;
-		lnk << "c++";
+		lnk << "$(LINKER)";
 		if(!HasFlag("SHARED"))
 			lnk << " -static";
 		if(HasFlag("WIN32")) {
