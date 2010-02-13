@@ -40,7 +40,8 @@ file
 	forum_f.txt,
 	forum_h.txt,
 	bench.txt,
-	2008.txt;
+	2008.txt,
+	www.t;
 
 mainconfig
 	"" = "GUI MT",

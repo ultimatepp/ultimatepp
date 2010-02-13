@@ -4,6 +4,9 @@
 #include <Draw/iml.h>
 #include <plugin/ftp/ftp.h>
 
+#define TFILE <uppweb/www.t>
+#include <Core/t.h>
+
 #define LLOG(x)  // LOG(x)
 
 #ifdef PLATFORM_WIN32
@@ -195,9 +198,13 @@ String GetText(const char *s)
 
 VectorMap<String, Topic> tt;
 
-String Www(const char *topic)
+String Www(const char *topic, int lang)
 {
-	return GatherTopics(tt, String().Cat() << "topic://uppweb/www/" << topic << "$en-us");
+	String strLang = ToLower(LNGAsText(lang));
+	String www = GatherTopics(tt, String().Cat() << "topic://uppweb/www/" << topic << "$" << strLang);
+	if (www != "index.html")
+		return www;
+	return GatherTopics(tt, String().Cat() << "topic://uppweb/www/" << topic << "$" << "en-us");
 }
 
 String FolderLinks(String package, String group)
@@ -235,7 +242,7 @@ struct Isort {
 	}
 };
 
-String MakeExamples(const char *dir, const char *www)
+String MakeExamples(const char *dir, const char *www, int language)
 {
 	String ttxt;
 	FindFile ff(AppendFileName(dir, "*.*"));
@@ -250,7 +257,7 @@ String MakeExamples(const char *dir, const char *www)
 	Sort(ls, Isort());
 	for(int i = 0; i < ls.GetCount(); i++) {
 		String name = ls[i];
-		String link = String().Cat() << www << '$' << name << ".html";
+		String link = String().Cat() << www << '$' << name << "$" << ToLower(LNGAsText(language)) << ".html";
 		Topic& topic = tt.Add(link);
 		topic.title = name;
 		String fn = AppendFileName(
@@ -258,7 +265,7 @@ String MakeExamples(const char *dir, const char *www)
 							AppendFileName(uppbox, "uppweb"),
 							String(www) + ".tpp"
 						),
-						topic.title + "$en-us.tpp"
+						topic.title + "$" + ToLower(LNGAsText(language))  + ".tpp"
 					);
 		String h = ReadTopic(LoadFile(fn)).text;
 		Package p;
@@ -330,7 +337,22 @@ void QtfAsPdf(PdfDraw &pdf, const char *qtf)
 
 VectorMap<String, String> links;
 VectorMap<String, String> labels;
-Htmls header, bar, lastUpdate;
+Htmls header, lastUpdate;
+
+Array <Htmls> bar;
+Array <int> languages;
+
+int GetLinkLanguage(const String &link) {
+	int pos = link.ReverseFind('$');
+	if (pos < 0)
+		return 0;
+	int lang = LNGFromText(ToUpper(link.Mid(pos+1)));
+	for (int i = 0; i < languages.GetCount(); ++i) {
+		if (languages[i] == lang)
+			return i;
+	}
+	return 0;
+}
 
 void ExportPage(int i)
 {
@@ -371,7 +393,7 @@ void ExportPage(int i)
 			HtmlLine().ColSpan(3).BgColor(bg).Height(6) / "" +
 			HtmlRow() / (
 				HtmlTCell().Center() / BoxWidth(160).Center() / (
-					bar +
+					bar[GetLinkLanguage(path)] +
 					"<br>" +
 //						"<p align=\"center\">" +
 					LoadFile(GetRcFile("adsense2.txt")) +
@@ -511,6 +533,9 @@ GUI_APP_MAIN
 	examples =  AppendFileName(rootdir, "examples");
 	bazaar =    AppendFileName(rootdir, "bazaar");
 
+	languages.Add(LNG_('E','N','U','S'));
+	languages.Add(LNG_('R','U','R','U'));
+	
 	RLOG("--- uppweb started at " << GetSysTime());
 
 	DeleteFolderDeep(targetdir);
@@ -542,67 +567,79 @@ GUI_APP_MAIN
 
 	GatherTopics(tt, "topic://uppweb/www/index$en-us");
 	
-	Htmls bi, bex, bdoc, bcom, bcon, bsearch;
+	bar.SetCount(languages.GetCount());
+	
+	int lang = GetCurrentLanguage();
+	for (int i = 0; i < languages.GetCount(); ++i) {
+		Htmls bi, bex, bdoc, bcom, bcon, bsearch;
 
-//	bi << BarLink("index.html", "Home", false);
-	bi << BarLink(Www("overview"), "Overview", false);
-	bi << BarLink(Www("examples"), "Examples");
-	int di = tt.GetCount() - 1;
-	tt[di].text << MakeExamples(examples, "examples");
-	tt[di].text << GetTopic("topic://uppweb/www/reference$en-us").text;
-	tt[di].text << MakeExamples(reference, "reference");
-	bi << BarLink(Www("ss"), "Screenshots");
-	bi << BarLink(Www("comparison"), "Comparisons");
-	bi << BarLink(Www("apps"), "Applications");
-	bi << BarLink(Www("download"), "Download");
+		SetLanguage(languages[i]);
+	
+	//	bi << BarLink("index.html", "Home", false);
+		bi << BarLink(Www("overview", languages[i]), t_("Overview"), false);
+		bi << BarLink(Www("examples", languages[i]), t_("Examples"));	
+		if (i == 0) {
+			int di = tt.GetCount() - 1;
+			tt[di].text << MakeExamples(examples, "examples", languages[i]);
+			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(languages[i]))).text;
+			tt[di].text << MakeExamples(reference, "reference", languages[i]);
+		}
 
-	di = tt.GetCount();
-	bi << BarLink(Www("documentation"), "Manual");
-	bi << BarLink(Www("bazaar"), "Bazaar");
-	bi << BarLink(Www("Roadmap"), "Status & Roadmap");
+		bi << BarLink(Www("ss", languages[i]), t_("Screenshots"));
+		bi << BarLink(Www("comparison", languages[i]), t_("Comparisons"));
+		bi << BarLink(Www("apps", languages[i]), t_("Applications"));
+		bi << BarLink(Www("download", languages[i]), t_("Download"));
 
-	String qtf;
-	FindFile ff(AppendFileName(uppsrc, "*.*"));
-	SrcDocs(qtf, "Core");
-	SrcDocs(qtf, "Draw");
-	SrcDocs(qtf, "CtrlCore");
-	SrcDocs(qtf, "CtrlLib");
-	SrcDocs(qtf, "RichText");
-	SrcDocs(qtf, "RichEdit");
-	while(ff) {
-		if(ff.IsFolder())
-			SrcDocs(qtf, ff.GetName());
-		ff.Next();
+		bi << BarLink(Www("documentation", languages[i]), t_("Manual"));
+		bi << BarLink(Www("bazaar", languages[i]), t_("Bazaar"));
+		bi << BarLink(Www("Roadmap", languages[i]), t_("Status & Roadmap"));
+	
+		if (i == 0) {
+			int di = tt.GetCount();
+			String qtf;
+			FindFile ff(AppendFileName(uppsrc, "*.*"));
+			SrcDocs(qtf, "Core");
+			SrcDocs(qtf, "Draw");
+			SrcDocs(qtf, "CtrlCore");
+			SrcDocs(qtf, "CtrlLib");
+			SrcDocs(qtf, "RichText");
+			SrcDocs(qtf, "RichEdit");
+			while(ff) {
+				if(ff.IsFolder())
+					SrcDocs(qtf, ff.GetName());
+				ff.Next();
+			}
+		
+			tt[di].text << qtf;
+		}
+		bi << BarLink(Www("FAQ", languages[i]), t_("FAQ"));
+		bi << BarLink(GatherTopics(tt, "topic://ide/app/About$en-us"), t_("Authors & License"));
+	
+		bi << BarLink("http://www.ultimatepp.org/forum", t_("Forums"));
+	//	bcom << BarLink(Www("mailing"), "Mailing lists");
+	//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
+		bi << BarLink(Www("Funding", languages[i]), t_("Funding Ultimate++"));
+	//	bcom << BarLink(Www("helpus"), "Getting involved");
+	//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
+	
+		bsearch << BarCaption(t_("Search on this site"));
+		bsearch << SearchBar("www.ultimatepp.org");
+	
+		HtmlTag bf = HtmlPackedTable()
+		       .Width(-100)
+		       .BgColor(White)
+		       .Attr("style", "border-style: solid; border-width: 1px; border-color: #6E89AE;"
+		                      "padding: 0px");
+		String div = HtmlTable().Border(0).Width(-100) / HtmlLine();
+		bar[i] = bf / bi + div +
+	//	      bf / bex + div +
+	//	      bf / bdoc + div +
+	//	      bf / bcom + div +
+	//	      bf / bcon + div +
+		      bf / bsearch;
 	}
-
-	tt[di].text << qtf;
-
-	bi << BarLink(Www("FAQ"), "FAQ");
-	bi << BarLink(GatherTopics(tt, "topic://ide/app/About$en-us"), "Authors & License");
-
-	bi << BarLink("http://www.ultimatepp.org/forum", "Forums");
-//	bcom << BarLink(Www("mailing"), "Mailing lists");
-//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
-	bi << BarLink(Www("Funding"), "Funding Ultimate++");
-//	bcom << BarLink(Www("helpus"), "Getting involved");
-//	bcom << BarLink("mailto: upp@ntllib.org", "Contact developers");
-
-	bsearch << BarCaption("Search on this site");
-	bsearch << SearchBar("www.ultimatepp.org");
-
-	HtmlTag bf = HtmlPackedTable()
-	       .Width(-100)
-	       .BgColor(White)
-	       .Attr("style", "border-style: solid; border-width: 1px; border-color: #6E89AE;"
-	                      "padding: 0px");
-	String div = HtmlTable().Border(0).Width(-100) / HtmlLine();
-	bar = bf / bi + div +
-//	      bf / bex + div +
-//	      bf / bdoc + div +
-//	      bf / bcom + div +
-//	      bf / bcon + div +
-	      bf / bsearch;
-
+	SetLanguage(lang);
+	
 	for(int i = 0; i < tt.GetCount(); i++) {
 		String topic = tt.GetKey(i);
 		links.Add(topic, topic == "topic://uppweb/www/index$en-us" ? "index.html" :
