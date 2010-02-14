@@ -18,7 +18,7 @@ BOOL BrowseFolder( HWND hwndOwner, LPTSTR lpszDir, LPCTSTR lpszTitle )
 	bi.pidlRoot = NULL;
 	bi.pszDisplayName = lpszDir;
 	bi.lpszTitle = lpszTitle;
-	bi.ulFlags = BIF_RETURNONLYFSDIRS; // new api for BIF_NEWDIALOGSTYLE
+	bi.ulFlags = BIF_NEWDIALOGSTYLE; 
 	bi.lpfn = NULL;
 	bi.lParam = 0;
 	
