@@ -198,13 +198,13 @@ String GetText(const char *s)
 
 VectorMap<String, Topic> tt;
 
-String Www(const char *topic, int lang)
+String Www(const char *topic, int lang, String topicLocation = "topic://uppweb/www/")
 {
 	String strLang = ToLower(LNGAsText(lang));
-	String www = GatherTopics(tt, String().Cat() << "topic://uppweb/www/" << topic << "$" << strLang);
+	String www = GatherTopics(tt, String().Cat() << topicLocation << topic << "$" << strLang);
 	if (www != "index.html")
 		return www;
-	return GatherTopics(tt, String().Cat() << "topic://uppweb/www/" << topic << "$" << "en-us");
+	return GatherTopics(tt, String().Cat() << topicLocation << topic << "$" << "en-us");
 }
 
 String FolderLinks(String package, String group)
@@ -613,7 +613,7 @@ GUI_APP_MAIN
 			tt[di].text << qtf;
 		}
 		bi << BarLink(Www("FAQ", languages[i]), t_("FAQ"));
-		bi << BarLink(GatherTopics(tt, "topic://ide/app/About$en-us"), t_("Authors & License"));
+		bi << BarLink(Www("About", languages[i], "topic://ide/app/"), t_("Authors & License"));
 	
 		bi << BarLink("http://www.ultimatepp.org/forum", t_("Forums"));
 	//	bcom << BarLink(Www("mailing"), "Mailing lists");
