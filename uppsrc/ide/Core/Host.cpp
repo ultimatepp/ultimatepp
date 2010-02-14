@@ -196,9 +196,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	STARTUPINFO si;
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
-	LOGHEXDUMP(environment, environment.GetCount());
 	String ev = ToSystemCharset(environment);
-	LOGHEXDUMP(ev, ev.GetCount());
 	Buffer<char> env(ev.GetCount() + 1);
 	memcpy(env, ev, ev.GetCount() + 1);
 	if(CreateProcess(NULL, cmd, &sa, &sa, TRUE,

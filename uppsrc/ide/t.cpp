@@ -486,10 +486,8 @@ void Ide::SyncT(int kind)
 			while(!p.IsEof()) {
 				p.PassId("LANGUAGE");
 				int lang = LNGFromText(p.ReadString());
-				if(!lang) {
-					PutConsole("Invalid language");
-					break;
-				}
+				if(!lang)
+					p.ThrowError("Invalid language");
 				p.PassChar(';');
 				byte cs = GetLNGCharset(lang);
 				lang &= LNGC_(255, 255, 255, 255, 0);
@@ -503,6 +501,7 @@ void Ide::SyncT(int kind)
 		}
 		catch(CParser::Error& e) {
 			PutConsole(e);
+			return;
 		}
 	}
 
@@ -524,8 +523,8 @@ void Ide::SyncT(int kind)
 		for(int i = 0; i < pk.file.GetCount(); i++) {
 			String file = SourcePath(n, pk.file[i]);
 			String ext = GetFileExt(file);
-			VectorMap<String, LngEntry> tmap(pmap, 0);
-			if(ext == ".t" || ext == ".jt")
+			if(ext == ".t" || ext == ".jt") {
+				VectorMap<String, LngEntry> tmap(pmap, 0);
 				if(LngParseTFile(file, tmap)) {
 					TFile& tf = tfile.Add();
 					tf.java = (ext == ".jt");
@@ -534,21 +533,22 @@ void Ide::SyncT(int kind)
 					tf.map = tmap;
 					tf.MakeLS();
 				}
-		}
-	}
-
-	for(int i = 0; i < tfile.GetCount(); i++) {
-		TFile& tf = tfile[i];
-		for(int ii = 0; ii < tf.map.GetCount(); ii++) {
-			LngEntry& tle = tf.map[ii];
-			LngEntry& rle = repository.map.GetAdd(tf.map.GetKey(ii));
-			for(int l = 0; l < tle.text.GetCount(); l++)
-				if(!IsNull(tle.text[l]))
-					rle.text.GetAdd(tle.text.GetKey(l)) = tle.text[l];
+			}
 		}
 	}
 
 	if(kind == 2) {
+		for(int i = 0; i < tfile.GetCount(); i++) {
+			TFile& tf = tfile[i];
+			for(int ii = 0; ii < tf.map.GetCount(); ii++) {
+				LngEntry& tle = tf.map[ii];
+				LngEntry& rle = repository.map.GetAdd(tf.map.GetKey(ii));
+				for(int l = 0; l < tle.text.GetCount(); l++)
+					if(!IsNull(tle.text[l]))
+						rle.text.GetAdd(tle.text.GetKey(l)) = tle.text[l];
+			}
+		}
+	
 		int cs;
 		String fn = ExportTr(tfile, cs);
 		if(!IsNull(fn)) {
@@ -592,12 +592,9 @@ void Ide::SyncT(int kind)
 				LngEntry& tle = tf.map[ii];
 				LngEntry& rle = repository.map[q];
 				for(int l = 0; l < tf.ls.GetCount(); l++) {
-					q = tle.text.Find(tf.ls[l]);
-					if(q < 0 || IsNull(tle.text[q])) {
-						q = rle.text.Find(tf.ls[l]);
-						if(q >= 0)
-							tle.text.GetAdd(tf.ls[l]) = rle.text[q];
-					}
+					q = rle.text.Find(tf.ls[l]);
+					if(q >= 0)
+						tle.text.GetAdd(tf.ls[l]) = rle.text[q];
 				}
 			}
 		}

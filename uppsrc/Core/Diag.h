@@ -1,6 +1,6 @@
 
-const char LOG_BEGIN = '\1';
-const char LOG_END = '\2';
+const char LOG_BEGIN = '\x1e';
+const char LOG_END = '\x1f';
 
 class LogStream : public Stream {
 #ifdef PLATFORM_WIN32
