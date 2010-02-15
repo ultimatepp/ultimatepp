@@ -1,0 +1,14 @@
+file
+	dopack-stub,
+	control,
+	theide.1,
+	theide.desktop,
+	svn2log.py,
+	qp_xml.py,
+	users.lst,
+	rules,
+	README,
+	prerm,
+	postinst,
+	lpbuild;
+

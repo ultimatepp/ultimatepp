@@ -1,0 +1,16 @@
+Source: upp
+Section: devel
+Priority: optional
+Maintainer: Jan Dolinar <dolik.rce@seznam.cz>
+Standards-Version: 3.8.3.0
+Build-Depends: rsync, libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
+
+Package: upp
+Architecture: any
+Depends: ${shlibs:Depends}, libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), g++, libgtk2.0-dev (>= 2.8.17), libnotify-dev
+Description: C++ library for cross-platform development with IDE
+ Ultimate++ is a radical and innovative GUI toolkit whose number one priority
+ is programmer productivity. C++ is a great programming language but
+ C++ programmers are sometimes hampered by the lack of effective libraries.
+ U++ libraries enable genuine productivity gains with shorter development
+ times and greatly reduced application source code size.
