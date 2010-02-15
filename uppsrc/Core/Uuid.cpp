@@ -26,6 +26,11 @@ String Format(const Uuid& id) {
 	return Sprintf("%08X%08X%08X%08X", id.a, id.b, id.c, id.d);
 }
 
+String FormatWithDashes(const Uuid& id) {
+	return Sprintf("%08X-%04X-%04X-%04X-%04X%08X", id.a, (id.b & 0xFFFF0000) >> 16, id.b & 0x0000FFFF,
+		(id.c & 0xFFFF0000) >> 16, id.c & 0x0000FFFF, id.d);
+}
+
 dword scanX(const char *s)
 {
 	dword r = 0;
@@ -59,6 +64,11 @@ Uuid ScanUuid(const char *s)
 String Uuid::ToString() const
 {
 	return Format(*this);
+}
+
+String Uuid::ToStringWithDashes() const
+{
+	return FormatWithDashes(*this);
 }
 
 String Dump(const Uuid& id) {

@@ -12,6 +12,7 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 
 	unsigned GetHashValue() const { return CombineHash(a, b, c, d); }
 	String   ToString() const;
+	String   ToStringWithDashes() const;
 	
 	void     New()                { *this = Create(); }
 
@@ -19,6 +20,7 @@ struct Uuid : AssignValueTypeNo<Uuid, 50, Moveable<Uuid> > {
 };
 
 String Format(const Uuid& id);
+String FormatWithDashes(const Uuid& id);
 Uuid   ScanUuid(const char *s);
 
 inline bool  operator==(const Uuid& u, const Uuid& w) {
