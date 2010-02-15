@@ -61,6 +61,10 @@ class XmlParser {
 	void                      Ent(StringBuffer& out);
 	void                      Next();
 	void                      ReadAttr(StringBuffer& b, int c);
+	String                    ReadText(bool next);
+	String                    ReadDecl(bool next);
+	String                    ReadPI(bool next);
+	String                    ReadComment(bool next);
 
 public:
 	void   SkipWhites();
@@ -88,17 +92,21 @@ public:
 	double Double(const char *id, double def = Null) const;
 
 	bool   IsText();
-	String ReadText();
+	String PeekText()                                         { return ReadText(false); }
+	String ReadText()                                         { return ReadText(true); }
 	String ReadTextE();
 
 	bool   IsDecl();
-	String ReadDecl();
+	String PeekDecl()                                         { return ReadDecl(false); }
+	String ReadDecl()                                         { return ReadDecl(true); }
 
 	bool   IsPI();
-	String ReadPI();
+	String PeekPI()                                           { return ReadPI(false); }
+	String ReadPI()                                           { return ReadPI(true); }
 
 	bool   IsComment();
-	String ReadComment();
+	String PeekComment()                                      { return ReadComment(false); } 
+	String ReadComment()                                      { return ReadComment(true); }
 
 	void   Skip();
 	void   SkipEnd();

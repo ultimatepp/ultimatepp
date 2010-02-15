@@ -504,12 +504,13 @@ bool  XmlParser::IsText()
 	return type == XML_TEXT;
 }
 
-String XmlParser::ReadText()
+String XmlParser::ReadText(bool next)
 {
 	if(!IsText())
 		return String();
 	String h = text;
-	Next();
+	if(next)
+		Next();
 	return h;
 }
 
@@ -530,12 +531,13 @@ bool   XmlParser::IsDecl()
 	return type == XML_DECL;
 }
 
-String XmlParser::ReadDecl()
+String XmlParser::ReadDecl(bool next)
 {
 	if(!IsDecl())
 		throw XmlError("Declaration expected");
 	String h = text;
-	Next();
+	if(next)
+		Next();
 	return h;
 }
 
@@ -544,12 +546,13 @@ bool   XmlParser::IsPI()
 	return type == XML_PI;
 }
 
-String XmlParser::ReadPI()
+String XmlParser::ReadPI(bool next)
 {
 	if(!IsPI())
 		throw XmlError("Processing info expected");
 	String h = text;
-	Next();
+	if(next)
+		Next();
 	return h;
 }
 
@@ -558,12 +561,13 @@ bool   XmlParser::IsComment()
 	return type == XML_COMMENT;
 }
 
-String XmlParser::ReadComment()
+String XmlParser::ReadComment(bool next)
 {
 	if(!IsComment())
 		throw XmlError("Comment expected");
 	String h = text;
-	Next();
+	if(next)
+		Next();
 	return h;
 }
 
