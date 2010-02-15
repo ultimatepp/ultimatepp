@@ -1,8 +1,0 @@
-#!/bin/bash
-# remove GCC*.bm files
-set -e
-
-if [ -e /usr/share/upp/GCC.bm ]
-then 
-	rm /usr/share/upp/GCC.bm
-fi
