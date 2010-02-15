@@ -32,6 +32,8 @@ public:
 //		void                    WriteTimeout(int msecs);
 //		void                    ReadTimeout(int msecs);
 		void                    StopWrite();
+		
+		String                  GetPeerName() const;
 
 		virtual int             GetKind() const        { return SOCKKIND_STD; }
 
@@ -80,6 +82,8 @@ public:
 
 	int             GetKind() const                          { return data->GetKind(); }
 	Value           GetInfo(String info) const               { return data->GetInfo(info); }
+	
+	String          GetPeerName() const                      { return data->GetPeerName(); }
 
 	bool            Accept(Socket& socket, dword *ipaddr = 0, bool nodelay = true, int timeout_msec = DEFAULT_CONNECT_TIMEOUT) { return data->Accept(socket, ipaddr, nodelay, timeout_msec); }
 	bool            Close(int msecs_timeout = 0);
