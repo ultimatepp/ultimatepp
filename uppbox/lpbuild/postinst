@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -e
+cver=
+sver=9
+	until [ $sver -lt 0 ]; do
+    	if [ $(which g++-4.$sver) ]; then
+    		if [ $sver = 2 ]; then # buggy compiler
+    			sver=$((sver - 1))
+    			continue
+    		fi
+    		cver="4.$sver"
+    		#creates GCC.bm file
+			cat > /usr/share/upp/GCC.bm <<- EOF
+				BUILDER = "GCC";
+				COMPILER = "g++-$cver";
+				DEBUG_INFO	= "2";
+				DEBUG_BLITZ	= "1";
+				DEBUG_LINKMODE	= "1";
+				DEBUG_OPTIONS	= "-O0";
+				DEBUG_FLAGS	= "";
+				RELEASE_BLITZ		= "0";
+				RELEASE_LINKMODE	= "1";
+				RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
+				RELEASE_SIZE_OPTIONS	= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
+				RELEASE_FLAGS	= "";
+				RELEASE_LINK	= "-Wl,--gc-sections";
+				DEBUGGER	= "gdb";
+				PATH		= "";
+				INCLUDE = "/usr/include/freetype2;/usr/include/gtk-2.0;/usr/include/glib-2.0;/usr/lib/glib-2.0/include;/usr/lib/gtk-2.0/include;/usr/include/cairo;/usr/include/pango-1.0;/usr/include/atk-1.0";
+				LIB = "/usr/X11R6/lib";
+				REMOTE_HOST	= "";
+				REMOTE_OS	= "";
+				REMOTE_TRANSFER	= "";
+				REMOTE_MAP	= "";
+				LINKMODE_LOCK	= "0";
+			EOF
+			chown $USER:$(id -g $USER) /usr/share/upp/GCC.bm
+			chmod 644 /usr/share/upp/GCC.bm
+			break
+    	fi
+    	sver=$((sver - 1))
+	done
+
