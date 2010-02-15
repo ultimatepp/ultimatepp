@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+clean:
+	$(MAKE) -C uppsrc clean
+	-rm -f debian/files
+	-rm -f debian/substvars
+	
+build:
+	$(MAKE) -C uppsrc -e OutFile=$(CURDIR)/debian/theide
+	dpkg-shlibdeps $(CURDIR)/debian/theide
+
+binary-indep:
+
+binary-arch: build clean
+	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/..
+	
+binary: binary-indep binary-arch 
+
+.PHONY: build binary-arch binary install
