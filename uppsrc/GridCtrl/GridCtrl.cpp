@@ -1988,7 +1988,10 @@ void GridCtrl::SyncPopup()
 					int lines = popup.gd->GetLinesCount(cx - margin - 2, WString(val), StdFont(), true);
 					int cy = max(lines * Draw::GetStdFontCy() + popup.gd->tm + popup.gd->bm + 2, vi.nsize + 1);
 					if(fr && r == 0)
-						y++; cy--;
+					{
+						y++;
+						cy--;
+					}
 					popup.PopUp(this, x, y, cx, cy);
 					if(!close)
 						popup.Refresh();					
@@ -5435,7 +5438,7 @@ void GridCtrl::MouseLeave()
 	UpdateHighlighting(GS_BORDER, Point(0, 0));
 	oldSplitCol = -1;
 	oldSplitRow = -1;
-	popup.Close();
+	//popup.Close();
 }
 
 void GridCtrl::MouseWheel(Point p, int zdelta, dword keyflags)
@@ -6283,8 +6286,7 @@ bool GridCtrl::StartEdit(bool mouse)
 	if(!valid_cursor || !IsRowEditable())
 		return false;
 
-	ctrls = true;
-	
+	//ctrls = true;	
 	WhenStartEdit();
 	
 	SetCtrlsData();
