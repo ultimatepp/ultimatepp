@@ -593,7 +593,7 @@ GUI_APP_MAIN
 		bi << BarLink(Www("documentation", languages[i]), t_("Manual"));
 		bi << BarLink(Www("bazaar", languages[i]), t_("Bazaar"));
 		bi << BarLink(Www("Roadmap", languages[i]), t_("Status & Roadmap"));
-	
+			
 		if (i == 0) {
 			int di = tt.GetCount();
 			String qtf;
