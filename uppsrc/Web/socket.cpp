@@ -34,6 +34,8 @@ bool IsLogSockets()      { return LogSocketFlag; }
 
 #ifdef PLATFORM_POSIX
 
+#include <arpa/inet.h>
+
 const char *SocketErrorDesc(int code)
 {
 	return strerror(code);
@@ -172,7 +174,7 @@ String Socket::Data::GetPeerName() const
 	if(!IsOpen())
 		return Null;
 	sockaddr_in addr;
-	int l = sizeof(addr);
+	socklen_t l = sizeof(addr);
 	getpeername(socket, (sockaddr *)&addr, &l);
 	if(l < sizeof(addr))
 		return Null;
@@ -180,7 +182,7 @@ String Socket::Data::GetPeerName() const
 	return inet_ntoa(addr.sin_addr);
 #else
 	char h[200];
-	return inet_ntop(AF_INET, addr->sin_addr, h, 200);
+	return inet_ntop(AF_INET, &addr.sin_addr, h, 200);
 #endif
 }
 

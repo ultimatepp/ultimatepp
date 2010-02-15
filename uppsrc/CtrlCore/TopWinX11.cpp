@@ -97,7 +97,7 @@ void TopWindow::SyncCaption0()
 		int n = 0;
 		Window w = GetWindow();
 		if(tool)
-			wina[n++] = XAtom("_NET_WM_WINDOW_TYPE_TOOLBAR");
+			wina[n++] = XAtom("_NET_WM_WINDOW_TYPE_UTILITY");
 		if(GetOwner())
 			wina[n++] = XAtom("_NET_WM_WINDOW_TYPE_DIALOG");
 		wina[n++] = XAtom("_NET_WM_WINDOW_TYPE_NORMAL");
