@@ -79,6 +79,8 @@ class GridDisplay
 		void SetVertMargin(int top = 0, int bottom = 0) { tm = top;  bm = bottom;      }
 		void SetTheme(int th = 6)                       { theme = th;                  }
 		int  GetThemeCount()                            { return 7;                    }
+		bool IsFixedRow()                               { return row < 0;              }
+		bool IsFixedCol()                               { return col < 0;              }
 
 		WString GetStdConvertedValue(const Value &v) const;
 		int GetLinesCount(int cx, const wchar* s, const Font& font, bool wrap);
