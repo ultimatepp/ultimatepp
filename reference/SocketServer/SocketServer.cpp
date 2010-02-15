@@ -15,7 +15,7 @@ CONSOLE_APP_MAIN
 		Socket s;
 		if(server.Accept(s)) {
 			String w = s.ReadUntil('\n');
-			Cout() << "Request: " << w << '\n';
+			Cout() << "Request: " << w << " from: " << s.GetPeerName() << '\n';
 			if(w == "time")
 				s.Write(AsString(GetSysTime()));
 			else
