@@ -2,7 +2,8 @@ uses
 	Core;
 
 file
-	Cout.cpp;
+	Cout.cpp charset "UTF-8";
 
 mainconfig
 	"" = "";
+

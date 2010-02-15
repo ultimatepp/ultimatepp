@@ -39,6 +39,7 @@ GUI_APP_MAIN
 		}
 	r.NewPage();
 #endif
+#if 0
 	for(int i = 0; i < 26; i++) {
 		for(int j = 0; j < 3; j++) {
 			int a, b, c;
@@ -70,6 +71,22 @@ GUI_APP_MAIN
 			else
 				s << a + b + c;
 			r.DrawText(10 + 1200 * j, 10 + 2 * isz.cy / 2  * i, s, Arial(120));
+		}
+	}
+#endif
+	for(int i = 0; i < 50; i++) {
+		for(int j = 0; j < 3; j++) {
+			int a, b, c;
+			a = Random(2) + 5;
+			b = Random(10) + 1;
+			if(Random(2))
+				Swap(a, b);
+			String s;
+			if(Random(2))
+				s << a << " x " << b << " = _____";
+			else
+				s << a << " x _____ = " << a * b;
+			r.DrawText(10 + 1200 * j, 120  * i, s, Arial(100));
 		}
 	}
 	Perform(r);
