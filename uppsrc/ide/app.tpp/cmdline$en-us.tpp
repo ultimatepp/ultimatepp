@@ -54,6 +54,8 @@ topic "TheIDE command-line & umk";
 :: [s0; [3 Release mode `- Size.]]
 :: [s0; [*C@4;3 2]]
 :: [s0; [3 Release mode `- Speed.]]
+:: [s0; [*C@4;3 d]]
+:: [s0; [3 Debug mode without debug symbols.]]
 :: [s0; [*C@4;3 s]]
 :: [s0; [3 Use shared libraries.]]
 :: [s0; [*C@4;3 S]]

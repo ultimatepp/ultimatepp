@@ -913,6 +913,9 @@ void AppMain___()
 							case 's':
 								ide.debug.linkmode = ide.release.linkmode = 1;
 								break;
+							case 'd':
+								ide.debug.def.debug = 0;
+								break;
 							case 'S':
 								ide.debug.linkmode = ide.release.linkmode = 2;
 								break;
