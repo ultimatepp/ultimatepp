@@ -130,6 +130,9 @@ void Add(MapConvert& convert, const VectorMap<Value, Value>& values);
 void Add(DropList& list, const MapConvert& convert);
 
 class DropChoice : public MultiButtonFrame {
+public:
+	virtual void       Serialize(Stream& s); //empty
+
 protected:
 	PopUpTable         list;
 	Ctrl              *owner;
@@ -153,7 +156,7 @@ public:
 
 	void        Clear();
 	void        Add(const Value& data);
-	void        Serialize(Stream& s);
+	void        SerializeList(Stream& s);
 	
 	int         GetCount() const                      { return list.GetCount(); }
 	Value       Get(int i) const                      { return list.Get(i, 0); }
@@ -210,7 +213,7 @@ public:
 
 	void            ClearList()                           { select.Clear(); }
 	void            AddList(const Value& data)            { select.Add(data); }
-	void            SerializeList(Stream& s)              { select.Serialize(s); }
+	void            SerializeList(Stream& s)              { select.SerializeList(s); }
 
 	int             GetCount() const                      { return select.GetCount(); }
 	Value           Get(int i) const                      { return select.Get(i); }
