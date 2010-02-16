@@ -1,7 +1,7 @@
 #include "XmlRpc.h"
 #include "XmlRpc.h"
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x) //  LOG(x)
 
 VectorMap< String, void (*)(XmlRpcData&) >& XmlRpcMap(const char *group)
 {
@@ -14,7 +14,7 @@ void Register(const char *name, void (*method)(XmlRpcData&), const char *group)
 	XmlRpcMap(group).Add(name, method);
 }
 
-String XmlRpcExecute(const String& request, const char *group)
+String XmlRpcExecute(const String& request, const char *group, const char *peeraddr)
 {
 	VectorMap< String, void (*)(XmlRpcData&) >& xmlrpcmap = XmlRpcMap(group);
 	XmlParser p(request);
@@ -29,6 +29,7 @@ String XmlRpcExecute(const String& request, const char *group)
 		methodname = p.ReadText();
 		LLOG("method name: " << methodname);
 		p.PassEnd();
+		data.peeraddr = peeraddr;
 		data.in = ParseXmlRpcParams(p);
 		int q = xmlrpcmap.Find(methodname);
 		if(q < 0)
@@ -89,7 +90,8 @@ bool XmlRpcServer(int port, const char *group)
 					hdr.GetAdd(s.Mid(0, q)) = TrimLeft(s.Mid(q + 1));
 			}
 			if(http.IsError()) continue;
-			String r = XmlRpcExecute(http.ReadCount(atoi(hdr.Get("Content-Length", "")), 90000), group);
+			String r = XmlRpcExecute(http.ReadCount(atoi(hdr.Get("Content-Length", "")), 90000),
+			                         group, http.GetPeerName());
 			LLOG("--------- Server response:\n" << r << "=============");
 			String response;
 			response <<

@@ -8,37 +8,37 @@ void ValueCheck(bool b)
 
 void ValueGet(int& n, const Value& v)
 {
-	ValueCheck(IsNumber(v));
+	ValueCheck(IsNull(v) || IsNumber(v));
 	n = v;
 }
 
 void ValueGet(String& s, const Value& v)
 {
-	ValueCheck(IsString(s));
+	ValueCheck(IsNull(v) || IsString(s));
 	s = v;
 }
 
 void ValueGet(double& x, const Value& v)
 {
-	ValueCheck(IsNumber(v));
+	ValueCheck(IsNull(v) || IsNumber(v));
 	x = v;
 }
 
 void ValueGet(bool& x, const Value& v)
 {
-	ValueCheck(IsNumber(x));
+	ValueCheck(IsNull(v) || IsNumber(x));
 	x = v;
 }
 
 void ValueGet(Date& x, const Value& v)
 {
-	ValueCheck(IsDateTime(v));
+	ValueCheck(IsNull(v) || IsDateTime(v));
 	x = v;
 }
 
 void ValueGet(Time& x, const Value& v)
 {
-	ValueCheck(IsDateTime(v));
+	ValueCheck(IsNull(v) || IsDateTime(v));
 	x = v;
 }
 
@@ -49,13 +49,13 @@ void ValueGet(Value& t, const Value& v)
 	
 void ValueGet(ValueArray& va, const Value& v)
 {
-	ValueCheck(IsValueArray(v));
+	ValueCheck(IsNull(v) || IsValueArray(v));
 	va = v;
 }
 
 void ValueGet(ValueMap& vm, const Value& v)
 {
-	ValueCheck(IsValueMap(v));
+	ValueCheck(IsNull(v) || IsValueMap(v));
 	vm = v;
 }
 

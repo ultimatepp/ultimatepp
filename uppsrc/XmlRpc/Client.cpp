@@ -1,6 +1,6 @@
 #include "XmlRpc.h"
 
-#define LLOG(x)  LOG(x)
+#define LLOG(x)  // LOG(x)
 
 Value XmlRpcCall::Execute()
 {
@@ -9,6 +9,7 @@ Value XmlRpcCall::Execute()
 	String response = server.Post(request).TimeoutMsecs(timeout).ExecuteRedirect();
 	LLOG("response: " << response);
 	if(IsNull(response)) {
+		LLOG("ERROR: " << server.GetError());
 		return ErrorValue("Http request failed: " + server.GetError());
 	}
 	XmlParser p(response);
@@ -35,7 +36,7 @@ Value XmlRpcCall::Execute()
 	catch(XmlError e) {
 		String s;
 		s << "XmlError " << e << ": " << p.GetPtr();
-		LOG(s);
+		LLOG(s);
 		error = s;
 		return ErrorValue(s);
 	}

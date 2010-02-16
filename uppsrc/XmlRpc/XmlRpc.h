@@ -86,6 +86,7 @@ Value      ParseXmlRpcParam(XmlParser& p);
 ValueArray ParseXmlRpcParams(XmlParser& p);
 
 struct XmlRpcData {
+	String     peeraddr;
 	ValueArray in;
 	int        ii;
 	ValueArray out;
