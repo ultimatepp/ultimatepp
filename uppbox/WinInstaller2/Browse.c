@@ -1,6 +1,6 @@
 #include <shlobj.h>  //link to shell32.lib
 #include <ole2.h>    //link to ole32.lib
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #pragma once
 
 BOOL BrowseFolder( HWND hwndOwner, LPTSTR lpszDir, LPCTSTR lpszTitle )
