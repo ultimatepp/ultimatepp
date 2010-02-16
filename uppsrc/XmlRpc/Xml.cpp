@@ -30,8 +30,10 @@ Value ParseXmlRpcValue(XmlParser& p)
 	if(p.Tag("string") || p.Tag("base64"))
 		r = p.ReadText();
 	else
-	if(p.TagE("nil"))
-		;
+	if(p.TagE("nil")) {
+		p.PassEnd();
+		return r;
+	}
 	else
 	if(p.Tag("dateTime.iso8601")) {
 		String s = TrimBoth(p.ReadText());

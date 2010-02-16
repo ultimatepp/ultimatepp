@@ -378,17 +378,19 @@ bool   XmlParser::IsTag()
 	return type == XML_TAG;
 }
 
-String XmlParser::ReadTag()
+String XmlParser::ReadTag(bool next)
 {
 	if(type != XML_TAG)
 		throw XmlError("Expected tag");
 	LLOG("ReadTag " << text);
 	String h = text;
-	stack.Add(Nesting(h, npreserve));
-	attr = nattr;
-	attr1 = nattr1;
-	attrval1 = nattrval1;
-	Next();
+	if(next) {
+		stack.Add(Nesting(h, npreserve));
+		attr = nattr;
+		attr1 = nattr1;
+		attrval1 = nattrval1;
+		Next();
+	}
 	return h;
 }
 

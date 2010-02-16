@@ -61,6 +61,7 @@ class XmlParser {
 	void                      Ent(StringBuffer& out);
 	void                      Next();
 	void                      ReadAttr(StringBuffer& b, int c);
+	String                    ReadTag(bool next);
 	String                    ReadText(bool next);
 	String                    ReadDecl(bool next);
 	String                    ReadPI(bool next);
@@ -73,7 +74,8 @@ public:
 	const char *GetPtr() const                                { return term; }
 
 	bool   IsTag();
-	String ReadTag();
+	String PeekTag()                                          { return ReadTag(false); }
+	String ReadTag()                                          { return ReadTag(true); }
 	bool   Tag(const char *tag);
 	bool   Tag(const String& tag);
 	void   PassTag(const char *tag);
