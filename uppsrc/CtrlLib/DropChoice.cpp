@@ -107,6 +107,20 @@ void DropChoice::Clear() {
 }
 
 void DropChoice::Serialize(Stream& s) {
+	// This is unfortunately a fix for bug and its consequences in existing .cfg files...
+	int version = 0x01;
+	s / version;
+	if(version < 0x01) {
+		int n = list.GetCount();
+		s / n;
+		Value v;
+		if(s.IsLoading())
+			for(int i = 0; i < n; i++)
+				s % v;
+	}
+}
+
+void DropChoice::SerializeList(Stream& s) {
 	int version = 0x00;
 	int n = list.GetCount();
 	s / version / n;
