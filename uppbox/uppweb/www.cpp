@@ -533,7 +533,7 @@ GUI_APP_MAIN
 	examples =  AppendFileName(rootdir, "examples");
 	bazaar =    AppendFileName(rootdir, "bazaar");
 
-	languages.Add(LNG_('E','N','U','S'));
+	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
 	languages.Add(LNG_('R','U','R','U'));
 	
 	RLOG("--- uppweb started at " << GetSysTime());
@@ -590,12 +590,9 @@ GUI_APP_MAIN
 		bi << BarLink(Www("apps", languages[i]), t_("Applications"));
 		bi << BarLink(Www("download", languages[i]), t_("Download"));
 
-		bi << BarLink(Www("documentation", languages[i]), t_("Manual"));
-		bi << BarLink(Www("bazaar", languages[i]), t_("Bazaar"));
-		bi << BarLink(Www("Roadmap", languages[i]), t_("Status & Roadmap"));
-			
+		bi << BarLink(Www("documentation", languages[i]), t_("Manual"));			
 		if (i == 0) {
-			int di = tt.GetCount();
+			int di = tt.Find("topic://uppweb/www/documentation$en-us");
 			String qtf;
 			FindFile ff(AppendFileName(uppsrc, "*.*"));
 			SrcDocs(qtf, "Core");
@@ -612,6 +609,8 @@ GUI_APP_MAIN
 		
 			tt[di].text << qtf;
 		}
+		bi << BarLink(Www("bazaar", languages[i]), t_("Bazaar"));
+		bi << BarLink(Www("Roadmap", languages[i]), t_("Status & Roadmap"));
 		bi << BarLink(Www("FAQ", languages[i]), t_("FAQ"));
 		bi << BarLink(Www("About", languages[i], "topic://ide/app/"), t_("Authors & License"));
 	
