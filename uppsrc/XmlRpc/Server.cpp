@@ -91,7 +91,7 @@ bool XmlRpcServer(int port, const char *group)
 			}
 			if(http.IsError()) continue;
 			String r = XmlRpcExecute(http.ReadCount(atoi(hdr.Get("Content-Length", "")), 90000),
-			                         group, http.GetPeerName());
+			                         group, http.GetPeerAddr());
 			LLOG("--------- Server response:\n" << r << "=============");
 			String response;
 			response <<

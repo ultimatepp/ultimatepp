@@ -169,7 +169,7 @@ Mutex& GetHostByNameMutex()
 	return m;
 }
 
-String Socket::Data::GetPeerName() const
+String Socket::Data::GetPeerAddr() const
 {
 	if(!IsOpen())
 		return Null;

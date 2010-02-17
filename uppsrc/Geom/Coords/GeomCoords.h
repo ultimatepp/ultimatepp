@@ -14,7 +14,7 @@ NAMESPACE_UPP
 double DegreeStep(double min_degrees);
 int    GisLengthDecimals(double pixel_len);
 int    DegreeDecimals(double pixel_angle);
-String FormatDegree(double degrees, int decimals);
+String FormatDegree(double degrees, int decimals, bool spaces = true);
 Value  ScanDegree(const char *p);
 int    DegreeMask(double start_angle, double end_angle);
 enum { AM_E0 = 1, AM_E1 = 2, AM_E2 = 4, AM_E3 = 8, AM_Q0 = 16, AM_Q1 = 32, AM_Q2 = 64, AM_Q3 = 128 };
