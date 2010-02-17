@@ -104,7 +104,7 @@ void RichTable::RemoveColumn0(int column)
 void RichTable::Normalize()
 {
 	Normalize0();
-	int i = 0;
+	int i = 1;
 	while(i < GetRows())
 		if(IsRowEmpty(i)) {
 			Array<RichCell> r(cell[i], 1);
@@ -118,7 +118,7 @@ void RichTable::Normalize()
 		}
 		else
 			i++;
-	int j = 0;
+	int j = 1;
 	while(j < GetColumns())
 		if(IsColumnEmpty(j)) {
 			Array<RichCell> r;
@@ -126,7 +126,7 @@ void RichTable::Normalize()
 				r.Add() <<= cell[i][j];
 			int c = format.column[j];
 			RemoveColumn0(j);
-			format.column[min(GetColumns() - 1, j)] += c;
+			format.column[min(GetColumns() - 1, j - 1)] += c;
 			for(int i = 0; i < GetRows(); i++)
 				if(ci[i][j].valid)
 					cell[i][j] <<= r[i];
