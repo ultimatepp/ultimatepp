@@ -10,3 +10,7 @@ TOPIC("SysInfoDemo$en-us")
 #include "SysInfoDemo$en-us.tppi"
 END_TOPIC
 
+TOPIC("ToDo$en-us")
+#include "ToDo$en-us.tppi"
+END_TOPIC
+
