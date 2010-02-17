@@ -90,6 +90,10 @@ TOPIC("reference$en-us")
 #include "reference$en-us.tppi"
 END_TOPIC
 
+TOPIC("reference$ru-ru")
+#include "reference$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("Roadmap$en-us")
 #include "Roadmap$en-us.tppi"
 END_TOPIC

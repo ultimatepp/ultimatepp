@@ -9,7 +9,7 @@
 
 #define LLOG(x)  // LOG(x)
 
-#ifdef PLATFORM_WIN32
+#ifdef PLATFORM_WIN32 
 String rootdir = "u:\\upp.src";
 String uppbox =    rootdir + "uppbox";
 String uppsrc =    rootdir + "uppsrc";
@@ -578,8 +578,8 @@ GUI_APP_MAIN
 	//	bi << BarLink("index.html", "Home", false);
 		bi << BarLink(Www("overview", languages[i]), t_("Overview"), false);
 		bi << BarLink(Www("examples", languages[i]), t_("Examples"));	
-		if (i == 0) {
-			int di = tt.GetCount() - 1;
+		{
+			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(languages[i])));
 			tt[di].text << MakeExamples(examples, "examples", languages[i]);
 			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(languages[i]))).text;
 			tt[di].text << MakeExamples(reference, "reference", languages[i]);
@@ -591,23 +591,24 @@ GUI_APP_MAIN
 		bi << BarLink(Www("download", languages[i]), t_("Download"));
 
 		bi << BarLink(Www("documentation", languages[i]), t_("Manual"));			
-		if (i == 0) {
-			int di = tt.Find("topic://uppweb/www/documentation$en-us");
-			String qtf;
-			FindFile ff(AppendFileName(uppsrc, "*.*"));
-			SrcDocs(qtf, "Core");
-			SrcDocs(qtf, "Draw");
-			SrcDocs(qtf, "CtrlCore");
-			SrcDocs(qtf, "CtrlLib");
-			SrcDocs(qtf, "RichText");
-			SrcDocs(qtf, "RichEdit");
-			while(ff) {
-				if(ff.IsFolder())
-					SrcDocs(qtf, ff.GetName());
-				ff.Next();
+		{
+			int di = tt.Find("topic://uppweb/www/documentation$" + ToLower(LNGAsText(languages[i])));
+			if (di >= 0) {
+				String qtf;
+				FindFile ff(AppendFileName(uppsrc, "*.*"));
+				SrcDocs(qtf, "Core");
+				SrcDocs(qtf, "Draw");
+				SrcDocs(qtf, "CtrlCore");
+				SrcDocs(qtf, "CtrlLib");
+				SrcDocs(qtf, "RichText");
+				SrcDocs(qtf, "RichEdit");
+				while(ff) {
+					if(ff.IsFolder())
+						SrcDocs(qtf, ff.GetName());
+					ff.Next();
+				}
+				tt[di].text << qtf;
 			}
-		
-			tt[di].text << qtf;
 		}
 		bi << BarLink(Www("bazaar", languages[i]), t_("Bazaar"));
 		bi << BarLink(Www("Roadmap", languages[i]), t_("Status & Roadmap"));
