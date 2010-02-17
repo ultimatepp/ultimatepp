@@ -129,7 +129,7 @@ int DegreeDecimals(double pixel_angle)
 	return minmax<int>(-ilog10(pixel_angle / (1 / 3600.0)), 0, 3);
 }
 
-String FormatDegree(double d, int decimals)
+String FormatDegree(double d, int decimals, bool spaces)
 {
 	if(IsNull(d))
 		return Null;
@@ -143,12 +143,12 @@ String FormatDegree(double d, int decimals)
 	d = (d - deg) * 60;
 	int min = ffloor(d);
 	if(decimals <= -1)
-		return NFormat(cd + " %02d\'", sign, deg, min);
+		return NFormat(cd + (spaces ? " %02d\'" : "%02d\'"), sign, deg, min);
 	d = (d - min) * 60;
 	String sec = FormatDoubleFix(d, decimals);
 	if(!IsDigit(sec[1]))
 		sec.Insert(0, '0');
-	return NFormat(cd + " %02d\' %s\"", sign, deg, min, sec);
+	return NFormat(cd + (spaces ? " %02d\' %s\"" : "%02d\'%s\""), sign, deg, min, sec);
 }
 
 Value ScanDegree(const char *p)
