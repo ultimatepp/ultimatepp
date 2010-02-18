@@ -35,15 +35,18 @@ void RichPara::Smh(Lines& lines, HeightInfo *th, int cx) const
 	l.cx -= lines.GetCount() == 1 ? lines.first_indent : lines.next_indent;
 }
 
-RichPara::Tab RichPara::GetNextTab(int pos) const
+RichPara::Tab RichPara::GetNextTab(int pos, int cx) const
 {
 	int tabi = -1;
 	int dist = INT_MAX;
 	for(int i = 0; i < format.tab.GetCount(); i++) {
 		const Tab& tab = format.tab[i];
-		if(tab.pos > pos && tab.pos - pos < dist) {
+		int tabpos = tab.pos;
+		if(tabpos & TAB_RIGHTPOS)
+			tabpos = cx - (tabpos & ~TAB_RIGHTPOS);
+		if(tabpos > pos && tabpos - pos < dist) {
 			tabi = i;
-			dist = tab.pos - pos;
+			dist = tabpos - pos;
 		}
 	}
 	if(format.bullet == BULLET_TEXT) {
@@ -61,7 +64,10 @@ RichPara::Tab RichPara::GetNextTab(int pos) const
 		tab.align = ALIGN_LEFT;
 		return tab;
 	}
-	return format.tab[tabi];
+	Tab tab = format.tab[tabi];
+	if(tab.pos & TAB_RIGHTPOS)
+		tab.pos = cx - (tab.pos & ~TAB_RIGHTPOS);
+	return tab;
 }
 
 struct RichPara::StorePart {
@@ -306,10 +312,12 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 		}
 		else {
 			if(*s == '\t') {
-				t = GetNextTab(cx + format.lm);
+				t = GetNextTab(cx + format.lm, rcx);
 				space = NULL;
 			}
-			if(cx + *w > rcx && s > text || *s == '\t' && t.pos - format.lm >= rcx) {
+			if(cx + *w > rcx && s > text ||
+			   *s == '\t' && (t.align == ALIGN_RIGHT ? t.pos - format.lm > rcx
+			                                         : t.pos - format.lm >= rcx)) {
 				Line& l = lines.line.Add();
 				l.withtabs = withtabs;
 				l.pos = (int)(text - lines.text);
@@ -329,7 +337,7 @@ RichPara::Lines RichPara::FormatLines(int acx) const
 				space = NULL;
 				rcx = lines.cx - format.lm - format.rm;
 				withtabs = false;
-				t = GetNextTab(cx + format.lm);
+				t = GetNextTab(cx + format.lm, acx);
 			}
 		}
 		if(*s == '\t') {

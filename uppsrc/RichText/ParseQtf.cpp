@@ -725,7 +725,8 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 									tab.fillchar = 2;
 								if(Key('_'))
 									tab.fillchar = 3;
-								tab.pos = ReadNumber();
+								int rightpos = Key('>') ? RichPara::TAB_RIGHTPOS : 0;
+								tab.pos = rightpos | ReadNumber();
 								format.tab.Add(tab);
 							}
 						}

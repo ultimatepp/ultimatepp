@@ -581,8 +581,10 @@ void operator*=(RichPara::Format& format, Zoom z)
 	format.rm *= z;
 	format.after *= z;
 	format.tabsize *= z;
-	for(int i = 0; i < format.tab.GetCount(); i++)
-		format.tab[i].pos *= z;
+	for(int i = 0; i < format.tab.GetCount(); i++) {
+		int& pos = format.tab[i].pos;
+		pos = ((pos & ~RichPara::TAB_RIGHTPOS) * z) | (pos & RichPara::TAB_RIGHTPOS);
+	}
 }
 
 void  RichPara::ApplyZoom(Zoom z)
