@@ -72,6 +72,10 @@ struct RichPara {
 		LSP15 = -1,
 		LSP20 = -2,
 	};
+	
+	enum TabSpecial {
+		TAB_RIGHTPOS = 0x8000000
+	};
 
 	struct CharFormat : public Font {
 		int     language;
@@ -278,7 +282,7 @@ struct RichPara {
 	~RichPara();
 
 private:
-	Tab         GetNextTab(int pos) const;
+	Tab         GetNextTab(int pos, int cx) const;
 	void        Smh(Lines& lines, HeightInfo *th, int cx) const;
 	Lines       Begin(const Rect& page, PageY& py, int nbefore, int nline) const;
 	bool        BreaksPage(PageY py, const Lines& pl, int i, const Rect& page) const;

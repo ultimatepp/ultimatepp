@@ -380,8 +380,9 @@ type of tabulation&]
 :: [s0; [C@(128.0.255) `-]]
 :: [s0; [C@(128.0.255) `_]]}}&]
 [s0; &]
-[s0; and must be followed by number specifying tabulator position 
-in dots.&]
+[s0; and is followed by number specifying tabulator position in dots. 
+The number can be preceded by [C@(128.0.255) >] `- in that case, 
+position is relative to the right side.&]
 [s0; &]
 [s0; When followed by [C@(128.0.255) `~] ([*C@3 `"`~`~`"]), clears all 
 current tab settings (including those inherited from paragraph 
@@ -536,9 +537,9 @@ to organize text.]
 :: [s0; Number of header rows. Header rows are repeated at the beginning 
 of every page.]
 :: [s0;%- [C@(128.0.255) `^]]
-:: [s0; Cell aligns to top. Default.]
+:: [s0; Cell aligns to top.]
 :: [s0;%- [C@(128.0.255) `=]]
-:: [s0; Cell aligns to center (vertical).]
+:: [s0; Cell aligns to center (vertical). Default.]
 :: [s0;%- [C@(128.0.255) v]]
 :: [s0; Cell aligns to bottom.]
 :: [s1; [%-C l][/C@(0.0.255) number/number]&]
