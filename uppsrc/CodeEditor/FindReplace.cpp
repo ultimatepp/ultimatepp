@@ -418,6 +418,7 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		findreplace.findback.Hide();
 		findreplace.ok.SetLabel("Replace");
 		findreplace.ok <<= findreplace.Breaker(IDOK);
+		findreplace.cancel <<= findreplace.Breaker(IDCANCEL);
 		if(findreplace.Execute() == IDOK)
 			BlockReplace();
 	}
