@@ -4,5 +4,5 @@ topic "ToDo list";
 [s0; [*R6 Functions4U. ToDo list]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [2 2009/12/01-|Linux Trash Bin functions advices.]&]
-[s0; [2 -|-|Kindly proposed by dolik.rce]]
+[s0;~~~608; [2 2009/12/01-|Linux Trash Bin functions advices.]&]
+[s0;~~~608; [2 -|Kindly proposed by dolik.rce]]
