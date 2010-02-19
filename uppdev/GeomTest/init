@@ -2,4 +2,5 @@
 #define _GeomTest_icpp_init_stub
 #include "CtrlLib/init"
 #include "Geom/init"
+#include "Geom/Coords/init"
 #endif
