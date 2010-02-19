@@ -1,0 +1,4 @@
+LAYOUT(Layout, 200, 100)
+	ITEM(DocEdit, info, LeftPosZ(20, 160).TopPosZ(16, 76))
+END_LAYOUT
+

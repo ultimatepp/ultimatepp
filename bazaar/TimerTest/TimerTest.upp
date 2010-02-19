@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	Timer;
+
+file
+	TimerTest.h,
+	main.cpp,
+	TimerTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

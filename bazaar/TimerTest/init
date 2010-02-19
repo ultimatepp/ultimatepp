@@ -1,0 +1,5 @@
+#ifndef _TimerTest_icpp_init_stub
+#define _TimerTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Timer/init"
+#endif
