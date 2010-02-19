@@ -3,6 +3,6 @@ uses
 
 file
 	Timer.h,
-	Timer.cpp;
-
+	Timer.cpp,
+	srcdoc.tpp;
 
