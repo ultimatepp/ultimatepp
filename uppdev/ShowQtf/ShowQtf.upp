@@ -3,7 +3,8 @@ uses
 
 file
 	ShowQtf.h,
-	main.cpp;
+	main.cpp,
+	app.tpp;
 
 mainconfig
 	"" = "GUI";

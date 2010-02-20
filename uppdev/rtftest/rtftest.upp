@@ -1,0 +1,9 @@
+uses
+	Report;
+
+file
+	rtftest.cpp;
+
+mainconfig
+	"" = "GUI";
+
