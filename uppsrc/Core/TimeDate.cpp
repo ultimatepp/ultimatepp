@@ -343,7 +343,8 @@ FileTime Time::AsFileTime() const {
 
 #ifdef PLATFORM_POSIX
 Time::Time(FileTime filetime) {
-	struct tm *time = localtime(&filetime.ft);
+	struct tm time_r;
+	struct tm *time = localtime_r(&filetime.ft, &time_r);
 	if(time)
 		*this = Time(time->tm_year + 1900, time->tm_mon + 1, time->tm_mday,
 	                 time->tm_hour, time->tm_min, time->tm_sec);
@@ -446,7 +447,8 @@ Time GetSysTime() {
 Time GetUtcTime()
 {
 	time_t gmt = time(NULL);
-	struct tm *utc = gmtime(&gmt);
+	struct tm timer;
+	struct tm *utc = gmtime_r(&gmt, &timer);
 	return Time(utc->tm_year + 1900, utc->tm_mon + 1, utc->tm_mday, 
 	            utc->tm_hour, utc->tm_min, utc->tm_sec);
 }
