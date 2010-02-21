@@ -734,34 +734,53 @@ ConvertInt или ConvertDate.&]
 [s2; Что`-то похожее на классы Convert `- это 
 классы, основанные на классе Display. 
 Это классы, которые описывают [/ как 
-должны отображаться Значения]. Once 
-again, many Ultimate`+`+ widgets are using Display classes as 
-their properties. For example, to `"teach`" the DropList widget 
-(DropList is close to something called `"combo box`" on other 
-platforms) to display colors, all you need to do is to set its 
-Display attribute to DisplayColor (remember, Color is Value compatible 
-and DropList`'s list consists of Values). Meanwhile, you can 
-use the same DisplayColor as the property of many other widget 
-classes.&]
-[s1; Callbacks&]
-[s2; While virtual methods provide a great way to organize the [/ input] 
-interface of GUI widgets (like mouse or keyboard input), each 
-GUI toolkit has to provide effective means for [/ output] interfaces 
-as well (if you do not know what output interface is: when a button 
-widget is pressed, the output interface is responsible for delivering 
-this information to the client code).&]
-[s2; Our solution to these needs is called a Callback. You can think 
-about Callbacks as a very generalized form of function pointers. 
-Each Callback represents some kind of action `- usually this 
-comprises calling a certain function or a certain object method 
-`- that can be invoked at any time.&]
-[s2; Callbacks are generic and can take some very interesting forms. 
-For example, a type of Callback does the simple task of calling 
-two other given Callbacks, providing a very simple tool for grouping. 
-There are Callbacks that take no argument, but call a function 
-or method with an argument when invoked `- this additional argument 
-is stored within Callback during its construction. To illustrate 
-this important feature, see the following code snippet:&]
+должны отображаться Значения]. Еще 
+раз, множество виджетов Ultimate`+`+ используют 
+классы Display как свои свойства. Например, 
+для того чтобы  `"обучить`" виджет DropList 
+ (DropList к так называемому `"combo box`" на 
+других платформах) отображать цвета,всё 
+что Вам надо сделать `- это установить 
+его атрибут  [/ Display] в [/ DisplayColor] (запомните, 
+Color это значение с типом, совместимым 
+с Value и список DropList состоит из значений 
+типа Value). Между тем, Вы можете использовать 
+этот DisplayColor как свойство многих других 
+классов виджетов.&]
+[s1; Callback (Обратные вызовы)&]
+[s2; Хотя виртуальные методы обеспечивают 
+отличный способ организовать интерфейс 
+[/ ввода] GUI виджетов (типа мыши или клавиатурно
+го ввода), каждый GUI toolkit также должен 
+обеспечивать эффективное средство 
+для интерфейсов [/ вывода]  (если Вы 
+не знаете что есть интерфейс вывода 
+: когда кнопка виджета нажата, интерфейс 
+вывода отвечает за доставку этой 
+информации до клиентского кода).&]
+[s2; Наше решение для этих целей называется 
+Обратный вызов (Callback). Вы можете считать 
+что обратные вызовы (callback) это очень 
+общая форма указателей на функции. 
+Каждый Callback представляет собой какое`-либо 
+действие `- обычно это включает вызов 
+определенных функций или определенных 
+методов объекта `- это  может быть 
+использовано в любое время.&]
+[s2; Обратные вызовы носят общий характер 
+и могут принимать очень интересные 
+формы. Например, иногда Обратный вызов 
+ решает простую задачу вызова двух 
+других Обратных вызовов, обеспечивая 
+очень простое средство группировки. 
+Существуют  Обратные вызовы, которые 
+не имеют аргументов, но вызываемая 
+ими функция или метод `- с аргументом 
+ `- этот дополнительный аргумент закладывает
+ся внутри функции Обратного вызова 
+во время создания. Чтобы проиллюстрировать 
+эту важную особенность, посмотрите 
+на следующий фрагмент кода:&]
 [s2; &]
 [s3; void MyDlg`::SetEditorValue(int x)&]
 [s3; `{&]
@@ -773,19 +792,26 @@ this important feature, see the following code snippet:&]
 [s3; -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
 [s3; -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
 [s2; &]
-[s2; In this snippet, we have two buttons and one integer input field. 
-Pressing the first or second button sets the input field to the 
-value 1 or 2 respectively.&]
-[s2; It is also very important that Callbacks are completely decoupled 
-from classes. While they can invoke specific methods of certain 
-object instances, there are no further requirements for the method 
-(beyond signature) or the class of the object.&]
-[s2; Just to make things clear for those familiar with boost libraries 
-`- yes, Callback classes are in fact very similar to boost`::function, 
-with interface polished a little bit more toward the needs of 
-Ultimate`+`+ framework (they are Moveable `- can be stored in 
-Vector flavor of containers).&]
-[s1; Ultimate`+`+ set of widgets&]
+[s2; В этом фрагменте, мы имеем две кнопки 
+и поле ввода целого типа. Нажатие 
+первой или второй кнопки устанавливает 
+поле ввода в значение 1 или 2 соответственно.&]
+[s2; Еще очень важно то, что Обратные вызовы 
+полностью отделены от классов. Хотя 
+они могут вызывать конкретные методы 
+некоторых экземпляров классов , нет 
+никакой необходимости чтобы быть 
+методом или классом объекта.&]
+[s2; Просто, чтобы внести ясность для 
+тех кто знаком с библиотекой [/ boost] 
+ `- да, классы Обратные вызовы  на самом 
+деле очень похожи на boost`::функции, 
+с немного более полированным интерфейсом 
+для соответствия нуждам среды Ultimate`+`+ 
+ (они являются перемещаемыми (Moveable) 
+`- могут храниться в контейнерах типа 
+Vector).&]
+[s1; Набор виджетов Ultimate`+`+&]
 [s2; While the standard set of U`+`+ widgets is less important to 
 us than the general principles, partly due to the fact that creating 
 new widget classes is often a trivial task in U`+`+, any description 
