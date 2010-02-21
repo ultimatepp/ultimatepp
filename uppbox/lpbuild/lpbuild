@@ -3,11 +3,11 @@
 #setup some variables, paths, etc. first:
 
 #upp server setting guesses:
-THEIDE="~/bin/theide"			# where is theide executable
+THEIDE="/home/upp/bin/theide"			# where is theide executable
 SRC_PATH="/home/upp/upp.tmp/u"	# where to look for sources
 BM="GCCMK"						# what build method to use
 ASEMBLY="uppsrc"				# just in case we wan't to build from different assembly
-VER="`svnversion ~/upp.src`"	# this is obvious, isn't it?
+VER="`svnversion /home/upp/upp.src`"	# this is obvious, isn't it?
 BUILD="1"						# increment this when building version which is already in launchpad (BUGGY! do not touch, please)
 SERIES=( hardy intrepid jaunty karmic lucid )
 
