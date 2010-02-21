@@ -12,3 +12,6 @@ file
 	postinst,
 	lpbuild;
 
+mainconfig
+	"" = "";
+
