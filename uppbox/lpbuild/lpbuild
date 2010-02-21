@@ -52,7 +52,7 @@ $THEIDE $ASEMBLY ide $BM ">GUI,MT" -srxM $tmp/uppsrc
 # get changelog from svn
 echo "Creating changelog ..."
 cd $SRC_PATH
-svn -l 100 --xml -v log |python $scriptdir/svn2log.py \
+svn --limit 100 --xml -v log |python $scriptdir/svn2log.py \
 -u $scriptdir/users.lst -P upp -L -d ultimatepp.org -S all -p /trunk/ \
 -i "`echo ${subfolders[@]} |tr \" \" ,`" -o $tmp/changelog
 
