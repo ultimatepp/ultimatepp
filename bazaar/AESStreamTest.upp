@@ -1,0 +1,11 @@
+uses
+	Core,
+	AESStream;
+
+file
+	AESStreamTest.cpp;
+
+mainconfig
+	"" = "MT",
+	"" = "";
+

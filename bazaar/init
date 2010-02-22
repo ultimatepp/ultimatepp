@@ -1,0 +1,6 @@
+#ifndef _AESStreamTest_icpp_init_stub
+#define _AESStreamTest_icpp_init_stub
+#include "Core/init"
+#include "Web\SSL/init"
+#include "AESStream/init"
+#endif
