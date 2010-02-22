@@ -125,6 +125,19 @@ Htmls BarCaption(const char *text)
 	         / HtmlBold() / HtmlArial(8) / text;
 }
 
+Htmls BarCaptionLang(const char *text)
+{
+	return HtmlLine()
+	         .Width(20)
+	         .VCenter()
+	         .Style("background-image: url('" + GetImageSrc(WWW::News2) + "'); "
+			        "border: 0px solid black;"
+	                "padding-left:12px; padding-right:0px; "
+	                "padding-top:1px; padding-bottom:1px;"
+	                "color:#FFFFFF;")
+	         / HtmlBold() / HtmlArial(8) / text;
+}
+
 Htmls BarItem(Htmls content, const char *style)
 {
 	String bgStyle = "background-image: url('" + GetImageSrc(WWW::Button) + "'); ";
@@ -571,7 +584,7 @@ GUI_APP_MAIN
 	
 	int lang = GetCurrentLanguage();
 	for (int i = 0; i < languages.GetCount(); ++i) {
-		Htmls bi, bex, bdoc, bcom, bcon, bsearch;
+		Htmls bi, bex, bdoc, bcom, bcon, bsearch, blang;
 
 		SetLanguage(languages[i]);
 	
@@ -625,6 +638,10 @@ GUI_APP_MAIN
 		bsearch << BarCaption(t_("Search on this site"));
 		bsearch << SearchBar("www.ultimatepp.org");
 	
+		//blang << BarCaptionLang(t_("Languages"));
+		//blang << BarLink(Www("English", languages[i]), t_("Bazaar"));
+		//blang << BarLink(Www("Russian", languages[i]), t_("Bazaar"));
+		
 		HtmlTag bf = HtmlPackedTable()
 		       .Width(-100)
 		       .BgColor(White)
@@ -636,7 +653,8 @@ GUI_APP_MAIN
 	//	      bf / bdoc + div +
 	//	      bf / bcom + div +
 	//	      bf / bcon + div +
-		      bf / bsearch;
+		      bf / bsearch + div;
+		      //bf / blang;
 	}
 	SetLanguage(lang);
 	
