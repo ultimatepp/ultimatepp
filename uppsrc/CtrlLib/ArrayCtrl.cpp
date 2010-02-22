@@ -62,7 +62,7 @@ ArrayCtrl::Column& ArrayCtrl::Column::SetDisplay(const Display& d)
 	return *this;
 }
 
-ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback1<One<Ctrl>&> _factory)
+ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback2<int, One<Ctrl>&> _factory)
 {
 	factory = _factory;
 	arrayctrl->hasctrls = arrayctrl->headerctrls = true;
@@ -70,6 +70,22 @@ ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback1<One<Ctrl>&> _factory)
 	arrayctrl->Refresh();
 	arrayctrl->SyncInfo();
 	return *this;
+}
+
+static void sPerformSimple(int, One<Ctrl>& x, Callback1<One<Ctrl>&> factory)
+{
+	factory(x);
+}
+
+void ArrayCtrl::Column::Factory1(int, One<Ctrl>& x)
+{
+	factory1(x);
+}
+
+ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback1<One<Ctrl>&> _factory)
+{
+	factory1 = _factory;
+	return Ctrls(THISBACK(Factory1));
 }
 
 void ArrayCtrl::Column::ClearCache() {
@@ -212,7 +228,7 @@ Ctrl& ArrayCtrl::SetCtrl(int i, int j, Ctrl *newctrl, bool owned, bool value)
 	for(;;) {
 		while(j >= 0) {
 			if(IsCtrl(i, j)) {
-				AddChild(&c, &GetCtrl(i, j));
+				AddChild(&c, &GetCellCtrl(i, j));
 				SyncInfo();
 				return c;
 			}
@@ -235,17 +251,25 @@ void  ArrayCtrl::SetCtrl(int i, int j, Ctrl& ctrl, bool value)
 	SyncCtrls(i);
 }
 
+Ctrl * ArrayCtrl::GetCtrl(int i, int col)
+{
+	SyncCtrls();
+	if(IsCtrl(i, col))
+		return GetCellCtrl(i, col).ctrl;
+	return NULL;
+}
+
 bool  ArrayCtrl::IsCtrl(int i, int j) const
 {
 	return i < cellinfo.GetCount() && j < cellinfo[i].GetCount() && cellinfo[i][j].IsCtrl();
 }
 
-ArrayCtrl::CellCtrl& ArrayCtrl::GetCtrl(int i, int j)
+ArrayCtrl::CellCtrl& ArrayCtrl::GetCellCtrl(int i, int j)
 {
 	return cellinfo[i][j].GetCtrl();
 }
 
-const ArrayCtrl::CellCtrl& ArrayCtrl::GetCtrl(int i, int j) const
+const ArrayCtrl::CellCtrl& ArrayCtrl::GetCellCtrl(int i, int j) const
 {
 	return cellinfo[i][j].GetCtrl();
 }
@@ -283,7 +307,7 @@ Value ArrayCtrl::Get0(int i, int ii) const {
 				const Column& m = column[j];
 				ASSERT(m.pos.GetCount() == 1);
 				if(Pos(m.pos[0]) == ii) {
-					const CellCtrl& c = GetCtrl(i, j);
+					const CellCtrl& c = GetCellCtrl(i, j);
 					if(c.value)
 						return c.ctrl->GetData();
 				}
@@ -384,7 +408,7 @@ void ArrayCtrl::SetCtrlValue(int i, int ii, const Value& v)
 				const Column& m = column[j];
 				ASSERT(m.pos.GetCount() == 1);
 				if(Pos(m.pos[0]) == ii) {
-					const CellCtrl& c = GetCtrl(i, j);
+					const CellCtrl& c = GetCellCtrl(i, j);
 					if(c.value)
 						c.ctrl->SetData(v);
 					return;
@@ -626,7 +650,7 @@ void  ArrayCtrl::SyncCtrls(int from)
 			bool ct = IsCtrl(i, j);
 			if(!ct && column[j].factory) {
 				One<Ctrl> newctrl;
-				column[j].factory(newctrl);
+				column[j].factory(i, newctrl);
 				newctrl->SetData(GetColumn(i, j));
 				newctrl->WhenAction << Proxy(WhenCtrlsAction);
 				if(newctrl->GetPos().x.GetAlign() == LEFT && newctrl->GetPos().x.GetB() == 0)
@@ -639,7 +663,7 @@ void  ArrayCtrl::SyncCtrls(int from)
 			}
 			if(ct) {
 				Rect r = GetCellRectM(i, j);
-				Ctrl& c = GetCtrl(i, j);
+				Ctrl& c = GetCellCtrl(i, j);
 				p = &c;
 				if(r.bottom < 0 || r.top > sz.cy)
 					c.SetRect(-1000, -1000, 1, 1);
@@ -658,7 +682,7 @@ Point ArrayCtrl::FindCellCtrl(Ctrl *ctrl)
 			Vector<CellInfo>& ci = cellinfo[i];
 			for(int j = 0; j < ci.GetCount(); j++)
 				if(IsCtrl(i, j)) {
-					CellCtrl& c = GetCtrl(i, j);
+					CellCtrl& c = GetCellCtrl(i, j);
 					if(&c == ctrl || c.ctrl == ctrl || c.ctrl->HasChildDeep(ctrl))
 						return Point(j, i);
 				}
@@ -716,7 +740,7 @@ const Display& ArrayCtrl::GetCellInfo(int i, int j, bool f0,
 		fg = hasfocus ? SColorHighlightText : SColorText;
 		bg = hasfocus ? SColorHighlight : Blend(SColorDisabled, SColorPaper);
 	}
-	v = IsCtrl(i, j) && GetCtrl(i, j).value ? Null : GetConvertedColumn(i, j);
+	v = IsCtrl(i, j) && GetCellCtrl(i, j).value ? Null : GetConvertedColumn(i, j);
 	return GetDisplay(i, j);
 }
 
@@ -1121,7 +1145,7 @@ bool ArrayCtrl::AcceptRow() {
 		if(m.edit && !m.edit->Accept())
 			return false;
 		if(IsCtrl(cursor, i)) {
-			Ctrl *c =  GetCtrl(cursor, i).ctrl;
+			Ctrl *c =  GetCellCtrl(cursor, i).ctrl;
 			acceptingrow++;
 			bool b = c->Accept();
 			acceptingrow--;
@@ -1203,7 +1227,7 @@ void ArrayCtrl::SetCursorEditFocus()
 {
 	if(!IsEdit() && cursor >= 0 && hasctrls)
 		for(int j = 0; j < column.GetCount(); j++)
-			if(IsCtrl(cursor, j) && GetCtrl(cursor, j).ctrl->SetWantFocus())
+			if(IsCtrl(cursor, j) && GetCellCtrl(cursor, j).ctrl->SetWantFocus())
 				break;
 }
 
@@ -1222,7 +1246,7 @@ bool ArrayCtrl::SetCursor0(int i, bool dosel) {
 		RefreshRow(cursor);
 		SetCtrls();
 		for(int j = 0; j < column.GetCount(); j++)
-			if(IsCtrl(cursor, j) && GetCtrl(cursor, j).ctrl->HasFocus())
+			if(IsCtrl(cursor, j) && GetCellCtrl(cursor, j).ctrl->HasFocus())
 				goto nosetfocus;
 		SetCursorEditFocus();
 	nosetfocus:
@@ -2125,7 +2149,7 @@ void ArrayCtrl::SortA()
 				if(IsCtrl(i, j)) {
 					const Column& m = column[j];
 					ASSERT(m.pos.GetCount() == 1);
-					array[i].line[m.pos[0]] = GetCtrl(i, j).ctrl->GetData();
+					array[i].line[m.pos[0]] = GetCellCtrl(i, j).ctrl->GetData();
 				}
 	}
 }

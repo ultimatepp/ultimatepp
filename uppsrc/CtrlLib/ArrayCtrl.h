@@ -59,7 +59,8 @@ public:
 		const Convert        *convert;
 		Ptr<Ctrl>             edit;
 		const Display        *display;
-		Callback1<One<Ctrl>&> factory;
+		Callback2<int, One<Ctrl>&> factory;
+		Callback1< One<Ctrl>& > factory1;
 		int                 (*accel)(int);
 		int                   margin;
 		bool                  cached;
@@ -74,6 +75,9 @@ public:
 		void   RemoveCache(int i);
 		void   ClearCache();
 		void   Sorts();
+		void   Factory1(int, One<Ctrl>& ctrl);
+		
+		typedef Column CLASSNAME;
 
 		friend class ArrayCtrl;
 
@@ -92,6 +96,8 @@ public:
 		Column& Ctrls(void (*factory)(One<Ctrl>&)) { return Ctrls(callback(factory)); }
 		template <class T>
 		Column& Ctrls()                            { return Ctrls(DefaultCtrlFactory<T>()); }
+		Column& Ctrls(Callback2<int, One<Ctrl>&> factory);
+		Column& Ctrls(void (*factory)(int, One<Ctrl>&)) { return Ctrls(callback(factory)); }
 		Column& InsertValue(const Value& v);
 		Column& InsertValue(ValueGen& g);
 		Column& NoClickEdit()                      { clickedit = false; return *this; }
@@ -254,8 +260,8 @@ private:
 	Point           FindCellCtrl(Ctrl *c);
 	void            SyncCtrls(int from = 0);
 	bool            IsCtrl(int i, int j) const;
-	const CellCtrl& GetCtrl(int i, int j) const;
-	CellCtrl&       GetCtrl(int i, int j);
+	const CellCtrl& GetCellCtrl(int i, int j) const;
+	CellCtrl&       GetCellCtrl(int i, int j);
 	void            SetCtrlValue(int i, int ii, const Value& v);
 
 	void   PlaceEdits();
@@ -500,6 +506,7 @@ public:
 	void       RefreshRow(int i);
 
 	void       SetCtrl(int i, int col, Ctrl& ctrl, bool value = true);
+	Ctrl      *GetCtrl(int i, int col);
 
 	ArrayCtrl& SetLineCy(int cy);
 	void       SetLineCy(int i, int cy);
