@@ -73,12 +73,9 @@ void Ide::InsertIml(const String& fn, String classname)
 	PromptOK("The .cpp part was saved to clipboard");
 }
 
-void Ide::InsertTpp(const String& fn)
+void Ide::InsertText(const String& text)
 {
-	String s;
-	s << "#define TOPICFILE <" << fn << "/all.i>\n"
-	  << "#include <Core/topic_group.h>\n";
-	editor.Paste(s.ToWString());
+	editor.Paste(text.ToWString());
 }
 
 void Ide::InsertMenu(Bar& bar)
@@ -107,9 +104,20 @@ void Ide::InsertMenu(Bar& bar)
 				n++;
 			}
 			if(ext == ".tpp") {
-				bar.Add(fn + " include", THISBACK1(InsertTpp, pp));
+				String s;
+				s << "#define TOPICFILE <" << pp << "/all.i>\n"
+	  			  << "#include <Core/topic_group.h>\n";
+				bar.Add(fn + " include", THISBACK1(InsertText, s));
 				n++;
 			}
+		}
+	}
+	if(editfile.GetCount()) {
+		Parser ctx;
+		editor.Context(ctx, editor.GetCursor());
+		if(!IsNull(ctx.current_scope) && ctx.current_scope != "::" && !ctx.IsInBody()) {
+			String s = "typedef " + ctx.current_scope + " CLASSNAME;";
+			bar.Add(s, THISBACK1(InsertText, s));
 		}
 	}
 }
