@@ -801,7 +801,7 @@ public:
 		void  InsertColor();
 		void  InsertLay(const String& fn);
 		void  InsertIml(const String& fn, String classname);
-		void  InsertTpp(const String& fn);
+		void  InsertText(const String& text);
 		void  InsertMenu(Bar& bar);
 		void  EditorMenu(Bar& bar);
 

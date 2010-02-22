@@ -424,6 +424,8 @@ void Ide::SetupBars()
 
 Ide::Ide()
 {
+	editor.theide = this;
+
 	start_time = GetSysTime();
 	stat_build_time = 0;
 	build_start_time = Null;
@@ -617,8 +619,6 @@ Ide::Ide()
 	bordercolor = SColorFace();
 
 	state_icon = -1;
-
-	editor.theide = this;
 
 	histi = 0;
 
