@@ -3,27 +3,28 @@ LAYOUT(TestScatter2Layout, 504, 392)
 	ITEM(Button, b1, SetLabel(t_("Print Preview")).LeftPosZ(12, 80).TopPosZ(12, 24))
 	ITEM(Button, b2, SetLabel(t_("Export as PNG")).LeftPosZ(100, 88).TopPosZ(12, 24))
 	ITEM(Button, b3, SetLabel(t_("Export as JPEG")).LeftPosZ(196, 84).TopPosZ(12, 24))
+	ITEM(Button, b5, SetLabel(t_("Copy to Clipboard")).LeftPosZ(376, 96).TopPosZ(12, 24))
 	ITEM(Button, b4, SetLabel(t_("Export as EMF")).LeftPosZ(288, 80).TopPosZ(12, 24))
 END_LAYOUT
 
 LAYOUT(Tab1, 380, 292)
-	ITEM(Scatter, scatter1, SetTitle(t_("Basic Test")).SetTitleFont(Arial(14).Bold()).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(Scatter, scatter1, SetTitle(t_("Basic Test")).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab2, 380, 292)
-	ITEM(Scatter, scatter2, SetTitle(t_("Functions")).SetTitleFont(Arial(14).Bold()).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(Scatter, scatter2, SetTitle(t_("Functions")).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab3, 384, 284)
-	ITEM(Scatter, scatter3, SetGridColor(Color(28, 127, 0)).SetColor(Black).SetPlotAreaColor(Black).SetTitle(t_("Parametric functions demo")).SetTitleFont(Arial(14).Bold()).SetTitleColor(White).SetLabelsColor(White).SetAxisColor(Color(28, 212, 0)).SetAxisWidth(12).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(Scatter, scatter3, SetGridColor(Color(28, 127, 0)).SetColor(Black).SetPlotAreaColor(Black).SetTitle(t_("Parametric functions demo")).SetTitleFont(SansSerifZ(14).Bold()).SetTitleColor(White).SetLabelsColor(White).SetAxisColor(Color(28, 212, 0)).SetAxisWidth(12).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab4, 400, 316)
-	ITEM(Scatter, scatter4, SetLegendWeight(200).H_Border(40).V_Border(35).SetTitle(t_("Temperature Average")).SetTitleFont(Arial(14).Bold()).SetLabelX(t_("Month")).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(Scatter, scatter4, SetLegendWeight(200).H_Border(40).V_Border(35).SetTitle(t_("Temperature Average")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelX(t_("Month")).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab5, 400, 288)
-	ITEM(Scatter, scatter5, H_Border(35).V_Border(35).SetTitle(t_("Dynamic")).SetTitleFont(StdFont(14).Bold()).SetLabelX(t_("time[s]")).HSizePosZ(16, 12).VSizePosZ(12, 32))
+	ITEM(Scatter, scatter5, H_Border(35).V_Border(35).SetTitle(t_("Dynamic")).SetTitleFont(StdFontZ(14).Bold()).SetLabelX(t_("time[s]")).HSizePosZ(16, 12).VSizePosZ(12, 32))
 	ITEM(Button, b1, SetLabel(t_("Start")).LeftPosZ(16, 42).BottomPosZ(9, 15))
 	ITEM(Button, b2, SetLabel(t_("Stop")).LeftPosZ(64, 42).BottomPosZ(9, 15))
 	ITEM(Button, b3, SetLabel(t_("Reset")).LeftPosZ(112, 42).BottomPosZ(9, 15))
@@ -34,11 +35,11 @@ LAYOUT(Tab5, 400, 288)
 END_LAYOUT
 
 LAYOUT(Tab6, 400, 276)
-	ITEM(Scatter, scatter6, SetTitle(t_("Logarithmic Scale")).SetTitleFont(StdFont(14).Bold()).HSizePosZ(12, 12).VSizePosZ(16, 12))
+	ITEM(Scatter, scatter6, SetTitle(t_("Logarithmic Scale")).SetTitleFont(StdFontZ(14).Bold()).HSizePosZ(12, 12).VSizePosZ(16, 12))
 END_LAYOUT
 
 LAYOUT(Tab7, 388, 304)
-	ITEM(Scatter, scatter7, SetTitle(t_("Operations")).SetTitleFont(Courier(16).Bold()).SetLabelX(t_("[x]")).SetLabelY(t_("[y]")).HSizePosZ(12, 12).VSizePosZ(12, 60))
+	ITEM(Scatter, scatter7, SetTitle(t_("Operations")).SetTitleFont(MonospaceZ(16).Bold()).SetLabelX(t_("[x]")).SetLabelY(t_("[y]")).HSizePosZ(12, 12).VSizePosZ(12, 60))
 	ITEM(Button, b1, SetLabel(t_("AddSeries")).LeftPosZ(12, 60).BottomPosZ(32, 20))
 	ITEM(Button, b2, SetLabel(t_("RemoveLastSeries")).LeftPosZ(76, 104).BottomPosZ(32, 20))
 	ITEM(Button, b3, SetLabel(t_("RemoveFirstSeries")).LeftPosZ(184, 100).BottomPosZ(32, 20))
@@ -47,5 +48,9 @@ LAYOUT(Tab7, 388, 304)
 	ITEM(Button, b6, SetLabel(t_("RemoveLastFunct")).LeftPosZ(76, 104).BottomPosZ(8, 20))
 	ITEM(Button, b7, SetLabel(t_("RemoveFirstFunct")).LeftPosZ(184, 100).BottomPosZ(8, 20))
 	ITEM(Button, b8, SetLabel(t_("RemoveAllFunct")).LeftPosZ(288, 88).BottomPosZ(8, 20))
+END_LAYOUT
+
+LAYOUT(Tab8, 400, 316)
+	ITEM(Scatter, scatter8, SetLegendWeight(200).H_Border(50).V_Border(35).SetTitle(t_("Temperature & Pressure Averages")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelX(t_("Month")).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 

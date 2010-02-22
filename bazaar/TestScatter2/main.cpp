@@ -26,12 +26,15 @@ TestScatter2::TestScatter2()
 	
 	tc1.Add(tab7, "Operations");	
 	
+	tc1.Add(tab8, "Secondary Y");
+	
 	b1 <<= THISBACK(Preview);
 	b2 <<= THISBACK(SavePNG);
 	b3 <<= THISBACK(SaveJPG);
 	#ifdef PLATFORM_WIN32
 	b4 <<= THISBACK(SaveEMF);
 	#endif
+	b5 <<= THISBACK(SaveClipboard);
 	Sizeable().Icon(MyImages::i1());
 }
 
@@ -63,6 +66,9 @@ void TestScatter2::Preview()
 		case 6:
 			r.DrawDrawing(300,300,tab7.scatter7.GetDrawing().GetSize().cx,tab7.scatter7.GetDrawing().GetSize().cy, tab7.scatter7.GetDrawing());
 			break;							
+		case 7:
+			r.DrawDrawing(300,300,tab8.scatter8.GetDrawing().GetSize().cx,tab8.scatter8.GetDrawing().GetSize().cy, tab8.scatter8.GetDrawing());
+			break;					
 	}
 	
 	Perform(r);
@@ -78,7 +84,7 @@ void TestScatter2::SavePNG()
 		case 0:
 			encoder.SaveFile("scatter1.png",tab1.scatter1.GetImage(3));
 			break;
-		case 1:
+		case 1:	
 			encoder.SaveFile("scatter2.png",tab2.scatter2.GetImage(3));
 			break;
 		case 2:
@@ -96,6 +102,9 @@ void TestScatter2::SavePNG()
 		case 6:
 			encoder.SaveFile("scatter7.png",tab7.scatter7.GetImage(3));
 			break;				
+		case 7:
+			encoder.SaveFile("scatter8.png",tab8.scatter8.GetImage(3));
+			break;
 	}			
 	
 }
@@ -128,6 +137,9 @@ void TestScatter2::SaveJPG()
 		case 6:
 			encoder.SaveFile("scatter7.jpg",tab7.scatter7.GetImage(3));
 			break;				
+		case 7:
+			encoder.SaveFile("scatter8.jpg",tab8.scatter8.GetImage(3));
+			break;		
 	}			
 	
 }
@@ -160,9 +172,45 @@ void TestScatter2::SaveEMF()
 		case 6:
 			tab7.scatter7.SaveAsMetafile("scatter7.emf");
 			break;				
+		case 7:
+			tab8.scatter8.SaveAsMetafile("scatter8.emf");
+			break;			
 	}	
 }
 #endif
+
+void TestScatter2::SaveClipboard()
+{
+	int ntab=tc1.Get();	
+	
+	switch (ntab)
+	{
+		case 0:
+			tab1.scatter1.SaveToClipboard();
+			break;
+		case 1:
+			tab2.scatter2.SaveToClipboard();
+			break;
+		case 2:
+			tab3.scatter3.SaveToClipboard();
+			break;
+		case 3:
+			tab4.scatter4.SaveToClipboard();
+			break;
+		case 4:
+			tab5.scatter5.SaveToClipboard();
+			break;
+		case 5:
+			tab6.scatter6.SaveToClipboard();
+			break;
+		case 6:
+			tab7.scatter7.SaveToClipboard();
+			break;				
+		case 7:
+			tab8.scatter8.SaveToClipboard();
+			break;
+	}		
+}
 
 GUI_APP_MAIN
 {

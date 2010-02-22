@@ -339,6 +339,41 @@ void Tab7::RemoveAllFSeries()
 	scatter7.RemoveAllFSeries();
 }
 
+//******************************************************************************************
+
+class Tab8 : public WithTab8<ParentCtrl> {
+public:
+
+	typedef Tab8 CLASSNAME;
+
+	Tab8();
+};
+
+Tab8::Tab8()
+{
+	CtrlLayout(*this);	
+	HSizePos().VSizePos();
+	scatter8.SetRange(13,50, 20);
+	scatter8.SetMajorUnits(1,10);
+	scatter8.SetXYMin(0,-20, 1000);
+	Vector<XY> s1,s2;
+	s1<<XY(1,-6)<<XY(2,-4)<<XY(3,2)<<XY(4,8)<<XY(5,8)<<XY(6,15)<<XY(7,20)<<XY(8,25)<<XY(9,14)<<XY(10,10)<<XY(11,3)<<XY(12,-11);;
+	scatter8.AddSeries(s1,"Temperature",true);
+	
+	s2<<XY(1,1010)<<XY(2,1012)<<XY(3,1015)<<XY(4,1013)<<XY(5,1017)<<XY(6,1018)<<XY(7,1010)<<XY(8,1007)<<XY(9,1003)<<XY(10,1001)<<XY(11,1000)<<XY(12,1002);
+	scatter8.AddSeries(s2,"Pressure",true,LtRed);
+	scatter8.SetDataPrimaryY(1, false);
+	scatter8.SetDrawY2Reticle();
+	
+	scatter8.Graduation_FormatX(Scatter::MON);
+	WString sl="Temperature [";
+	sl.Cat(176);
+	sl.Cat("C]");
+	scatter8.SetLabelY(sl);
+	scatter8.SetLabelY2("Pressure [mBar]");
+	scatter8.SetMarkStyle(1,Scatter::RECTANGLE);
+	scatter8.SetMarkWidth(1,24);
+}
 
 //******************************************************************************************
 
@@ -351,6 +386,7 @@ class TestScatter2 : public WithTestScatter2Layout<TopWindow> {
 	Tab5 tab5;
 	Tab6 tab6;
 	Tab7 tab7;
+	Tab8 tab8;
 		
 	typedef TestScatter2 CLASSNAME;
 	
@@ -363,7 +399,7 @@ public:
 	#ifdef PLATFORM_WIN32
 	void SaveEMF();
 	#endif
-
+	void SaveClipboard();
 };
 
 #endif

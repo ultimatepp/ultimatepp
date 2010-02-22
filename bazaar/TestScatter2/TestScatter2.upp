@@ -1,4 +1,4 @@
-description "Bazaar: ScatterChart control test&demo by Andrei-Catalin";
+description "Bazaar: ScatterChart control test&demo by Andrei-Catalin\377";
 
 uses
 	CtrlLib,
