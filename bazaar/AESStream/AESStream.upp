@@ -1,0 +1,18 @@
+uses
+	Core;
+
+library(MSC) out32/libeay32.lib;
+
+library(MSC WIN32) gdi32.lib;
+
+library(WIN32 !MSC) out32dll/libeay32.lib;
+
+file
+	AESStream.cpp,
+	AESStream.h,
+	src.tpp;
+
+mainconfig
+	"" = "MT",
+	"" = "";
+
