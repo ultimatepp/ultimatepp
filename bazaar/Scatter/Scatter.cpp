@@ -26,10 +26,11 @@ Scatter& Scatter::SetTitleColor(const class::Color& colorTitle)
 	titleColor=colorTitle;
 	return *this;
 }
-void Scatter::SetLabels(const WString& _xLabel, const WString& _yLabel)
+void Scatter::SetLabels(const WString& _xLabel, const WString& _yLabel, const WString& _yLabel2)
 {
 	xLabel=_xLabel;
 	yLabel=_yLabel;
+	yLabel2=_yLabel2;	
 }
 Scatter& Scatter::SetLabelX(const WString& _xLabel)
 {
@@ -39,6 +40,11 @@ Scatter& Scatter::SetLabelX(const WString& _xLabel)
 Scatter& Scatter::SetLabelY(const WString& _yLabel)
 {
 	yLabel=_yLabel;
+	return *this;
+}
+Scatter& Scatter::SetLabelY2(const WString& _yLabel)
+{
+	yLabel2=_yLabel;
 	return *this;
 }
 Scatter& Scatter::SetLabelsFont(const Font& fontLabels)
@@ -118,6 +124,18 @@ Scatter& Scatter::SetAntialiasing(const bool& aa)
 	antialiasing=aa;
 	return *this;
 }
+void Scatter::SetDrawXReticle(bool set) 
+{
+	drawXReticle = set;
+}
+void Scatter::SetDrawYReticle(bool set)
+{
+	drawYReticle = set;
+}
+void Scatter::SetDrawY2Reticle(bool set)
+{
+	drawY2Reticle = set;
+}
 void Scatter::DrawLegend(Draw& w,const int& scale) const
 {
 	Vector<String> L;
@@ -172,22 +190,26 @@ void Scatter::DrawLegend(Draw& w,const int& scale) const
 		
 }	
 
-void Scatter::SetRange(double rx, double ry)
+void Scatter::SetRange(double rx, double ry, double ry2)
 {
 	xRange=rx;
 	yRange=ry;
+	yRange2=ry2;
 	xMajorUnit=xRange/10;
 	yMajorUnit=yRange/10;   
+	yMajorUnit2=yRange2/10;   
 }
 void Scatter::SetMajorUnits(double ux, double uy)
 {
 	xMajorUnit=ux;
 	yMajorUnit=uy;
+	yMajorUnit2=yRange2*yMajorUnit/yRange;
 }
-void Scatter::SetXYMin(double xmin, double ymin)
+void Scatter::SetXYMin(double xmin, double ymin, double ymin2)
 {
 	xMin=xmin;
 	yMin=ymin;
+	yMin2=ymin2;
 }
 void Scatter::Graduation_FormatX(Formats fi)
 {
@@ -223,6 +245,7 @@ void Scatter::AddSeries(Vector<XY> & points,const String& legend,const bool& joi
 	vMarkColors.Add(pcolor);
 	vShowMark.Add(true);
 	vMarkStyles.Add(CIRCLE);	
+	vPPrimaryY.Add(true);
 	
 	Refresh();
 }
@@ -453,6 +476,38 @@ bool Scatter::IsSmooth(const int& j) const throw (Exc)
 	
 	return vSmooth[j];	
 }
+
+void Scatter::SetDataPrimaryY(const int& j, const bool& primary) 
+{
+	if(IsValid(j))
+	{
+		vPPrimaryY[j]=primary;
+		Refresh();
+	}
+}
+
+bool Scatter::IsDataPrimaryY(const int& j) const throw (Exc)
+{
+	if(!IsValid(j)) throw (Exc("Invalid series index!"));
+	
+	return vPPrimaryY[j];	
+}
+
+void Scatter::SetFunctPrimaryY(const int& j, const bool& primary) 
+{
+	if(IsValid(j))
+	{
+		vFPrimaryY[j]=primary;
+		Refresh();
+	}
+}
+
+bool Scatter::IsFunctPrimaryY(const int& j) const throw (Exc)
+{
+	if(!IsValid(j)) throw (Exc("Invalid series index!"));
+	
+	return vFPrimaryY[j];	
+}
    
 void Scatter::RemoveSeries(const int& j)
 {
@@ -468,6 +523,7 @@ void Scatter::RemoveSeries(const int& j)
 		vMarkColors.Remove(j);
 		vShowMark.Remove(j);
 		vMarkStyles.Remove(j);
+		vPPrimaryY.Remove(j);
 		
 		Refresh();
 	}
@@ -485,10 +541,10 @@ void Scatter::RemoveAllSeries()
 	vMarkColors.Clear();
 	vShowMark.Clear();
 	vMarkStyles.Clear();
+	vPPrimaryY.Clear();
 	
 	Refresh();
 }
-
 
 
 void Scatter::PlotFunction(double (*f)(double), const String& legend, const class::Color& fcolor, const int& weight)
@@ -501,6 +557,7 @@ void Scatter::PlotFunction(double (*f)(double), const String& legend, const clas
 	vFColors.Add(fcolor);
 	vFThickness.Add(weight);	
 	vFLegend.Add(legend);
+	vFPrimaryY.Add(true);
 	Refresh();  
 }
 void Scatter::PlotParaFunction(XY (*pf)(double), const String& legend, const class::Color& fcolor, const int& weight,const int& Np)
@@ -515,6 +572,7 @@ void Scatter::PlotParaFunction(XY (*pf)(double), const String& legend, const cla
 	vFColors.Add(fcolor);
 	vFThickness.Add(weight);
 	vFunctionData.AddPick(series);
+	vFPrimaryY.Add(true);
 	vFLegend.Add(legend);
 	Refresh();
 }	
@@ -537,6 +595,7 @@ void Scatter::RemoveFSeries(const int& j)
 		vFColors.Remove(j);
 		vFThickness.Remove(j);
 		vFLegend.Remove(j);
+		vFPrimaryY.Remove(j);
 			
 		Refresh();
 	}
@@ -549,6 +608,7 @@ void Scatter::RemoveAllFSeries()
 	vFColors.Clear();
 	vFThickness.Clear();
 	vFLegend.Clear();
+	vFPrimaryY.Clear();
 	
 	Refresh();
 }
@@ -580,7 +640,25 @@ void Scatter::SaveAsMetafile(const char* file) const
 	wmfd.Close();	
 }
 
+void Scatter::SaveToClipboard() 
+{
+	WinMetaFileDraw wmfd;	
+	wmfd.Create(6*GetSize().cx,6*GetSize().cy,"Scatter","chart");
+	SetDrawing (wmfd, 6);	
+	WinMetaFile wmf = wmfd.Close();	
+	wmf.WriteClipboard();
+}
+#else
+
+void Scatter::SaveToClipboard() 
+{
+	Image img = GetImage(3);
+	WriteClipboardImage(img);
+}
+
 #endif
+
+
 
 void Scatter::Paint(Draw& w) 
 {
@@ -594,18 +672,20 @@ void Scatter::ShowInfo(bool show)
 
 void Scatter::LeftDown(Point pt, dword)
 {
-	
 	if(paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
 	{
 		double x=(pt.x-px)*xRange/(GetSize().cx-2*px-1)+xMin;		
 		double y=(GetSize().cy-py-pt.y-1)*yRange/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin;
+		double y2=(GetSize().cy-py-pt.y-1)*yRange2/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin2;
 		if(logX) x=pow(10.0, x);
 		if(logY) y=pow(10.0, y);
+		if(logY2) y2=pow(10.0, y2);
 		String sx="x: "+VariableFormat(x);
 		String sy="y: "+VariableFormat(y);
+		String sy2="ysec: "+VariableFormat(y2);
 				
 		const Point p2=pt+offset;
-		popText.SetText(sx+'\n'+sy).Appear(this,p2.x,p2.y);
+		popText.SetText(sx+'\n'+sy+'\n'+sy2).Appear(this,p2.x,p2.y);
 	}	
 }
 void Scatter::LeftUp(Point, dword)
@@ -685,8 +765,10 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 {
 	double d1=xRange/xMajorUnit;
 	double d2=yRange/yMajorUnit;
+	double d22=yRange2/yMajorUnit2;
 	int nMajorX=(d1-int(d1*1.001)>0.05 ? int(d1*1.001) : int(d1*1.001)-1);
 	int nMajorY=(d2-int(d2*1.001)>0.05 ? int(d2*1.001) : int(d2*1.001)-1);
+	int nMajorY2=(d22-int(d22*1.001)>0.05 ? int(d22*1.001) : int(d22*1.001)-1);
 	w.DrawRect(1,1,l-2,h-2,plotAreaColor);	//grosimea liniei nu este scalata
 	int gW=int(gridWidth*scale/6);
 	if(gridWidth<0) gW=gridWidth;   
@@ -717,7 +799,10 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 		for (int i=0; i<vPointsData[j].GetCount(); i++)
 				{
 					ix=int((l-1)*(vPointsData[j][i].x-xMin)/xRange);
-					iy=int((h-1)*(vPointsData[j][i].y-yMin)/yRange);
+					if (vPPrimaryY[j])
+						iy=int((h-1)*(vPointsData[j][i].y-yMin)/yRange);
+					else
+						iy=int((h-1)*(vPointsData[j][i].y-yMin2)/yRange2);
 					p1<<Point(ix,h-iy-1);
 				}
 		if(vJoin[j])
@@ -729,7 +814,10 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 				for (int i=0; i<v.GetCount(); i++)
 				{
 					ix=int((l-1)*(v[i].x-xMin)/xRange);
-					iy=int((h-1)*(v[i].y-yMin)/yRange);
+					if (vPPrimaryY[j])
+						iy=int((h-1)*(v[i].y-yMin)/yRange);
+					else
+						iy=int((h-1)*(v[i].y-yMin2)/yRange2);
 					p2<<Point(ix,h-iy-1);
 				}
 				if(!p2.IsEmpty()) w.DrawPolyline(p2,int(scale*vPThickness[j]/6),vPColors[j],Null);
@@ -758,7 +846,10 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 			for (int i=0; i<vFunctionData[j].GetCount(); i++){
 							
 				ix=int((l-1)*(vFunctionData[j][i].x-xMin)/xRange);
-				iy=int((h-1)*(vFunctionData[j][i].y-yMin)/yRange);				
+				if (vFPrimaryY[j])
+					iy=int((h-1)*(vFunctionData[j][i].y-yMin)/yRange);				
+				else
+					iy=int((h-1)*(vFunctionData[j][i].y-yMin2)/yRange2);				
 					p1<<Point(ix,h-iy-1);				                        
 			}
 			w.DrawPolyline(p1,int(scale*vFThickness[j]/6),vFColors[j],Null);
@@ -769,7 +860,10 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 			for(int i=0; i<l; i++)
 			{
 				double x=xMin+i*(xRange/(l-1));
-				iy=int((h-1)*(vAdress[nf](x)-yMin)/yRange);
+				if (vFPrimaryY[j])
+					iy=int((h-1)*(vAdress[nf](x)-yMin)/yRange);
+				else
+					iy=int((h-1)*(vAdress[nf](x)-yMin2)/yRange2);
 				p1<<Point(i,h-iy-1);
 			}
 			w.DrawPolyline(p1,int(scale*vFThickness[j]/6),vFColors[j],Null);
@@ -872,8 +966,10 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 	
 	Size lx=GetTextSize(xLabel,FontLabel6);
 	Size ly=GetTextSize(yLabel,FontLabel6);
+	Size ly2=GetTextSize(yLabel2,FontLabel6);
 	w.DrawText(int((l-lx.cx)/2),h+scale*py-lx.cy-scale*2,xLabel,FontLabel6,labelsColor);
 	w.DrawText(scale*2-scale*px,int((h+ly.cx)/2),900,yLabel,FontLabel6,labelsColor);
+	w.DrawText(int(l+scale*px-ly2.cy-2*scale),int((h+ly2.cx)/2),900,yLabel2,FontLabel6,labelsColor);
 	
 	int nMajorX=int(1.001*xRange/xMajorUnit);
 	int nMajorY=int(1.001*yRange/yMajorUnit);
@@ -898,7 +994,6 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 			//w.DrawText(int x¸ int y¸ int angle¸ const WString& text¸ Font font = StdFont()¸ Color ink = DefaultInk¸ const int *dx = NULL)
 			//w.DrawText(int(i*l/(xRange/xMajorUnit))-dx,h+scale*4, 450, gridLabelX,Standard6,axisColor);  
 		}
-		
 	if (drawYReticle)
 		for(int i=0; i<=nMajorY;i++){
 			w.DrawLine(-(scale*4),
@@ -913,9 +1008,25 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 			int dx=scale*GetTextSize(gridLabelY,StdFont()).cx;
 			Font Standard6;
 			Standard6.Height(scale*StdFont().GetHeight());  
-			w.DrawText(-dx-scale*6,h-scale*6-int(i*h/(yRange/yMajorUnit)),gridLabelY,Standard6,axisColor);
+			w.DrawText(-dx-scale*6,h-scale*6-int(i*h/(yRange/yMajorUnit))-1,gridLabelY,Standard6,axisColor);
 		}	
-
+	if (drawY2Reticle)
+		for(int i=0; i<=nMajorY;i++){
+			w.DrawLine(l+(scale*4),
+				h-int(i*(h-1)/(yRange/yMajorUnit))-1,
+				l-1,
+				h-int(i*(h-1)/(yRange/yMajorUnit))-1,
+				int(scale/2),
+				axisColor);
+			double gridY=i*yMajorUnit2+yMin2;
+			String gridLabelY=AsString(gridY);
+			cbModifFormatY(gridLabelY, i, gridY); 	
+			//int dx=scale*GetTextSize(gridLabelY,StdFont()).cx;
+			Font Standard6;
+			Standard6.Height(scale*StdFont().GetHeight());  
+			w.DrawText(l+scale*10,h-int(i*(h-1)/(yRange/yMajorUnit))-scale*8,gridLabelY,Standard6,axisColor);
+		}	
+		
 	if(antialiasing && w.IsGui())
 	{
 		ImageDraw imdraw(3*l,3*h);	
@@ -944,16 +1055,18 @@ Scatter::Scatter():
 	py(30),
 	xRange(100.0),
 	yRange(100.0),
+	yRange2(100.0),
 	xMajorUnit(xRange/10),
 	yMajorUnit(yRange/5),
 	xMin(0.0),
 	yMin(0.0),
+	yMin2(0.0),
 	logX(false), logY(false),
 	cbModifFormatX(NULL),cbModifFormatY(NULL),
 	gridColor(Color::Color(102,102,102)),
 	gridWidth(-4),
 	paintInfo(false),
-	drawXReticle(true), drawYReticle(true),
+	drawXReticle(true), drawYReticle(true), drawY2Reticle(false),
 	drawVGrid(true), drawHGrid(true),
 	showLegend(true),legendWeight(80),
 	antialiasing(false),

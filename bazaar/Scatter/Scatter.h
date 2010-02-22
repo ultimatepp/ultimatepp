@@ -46,9 +46,10 @@ public:
 	Scatter& SetTitleFont(const Font& fontTitle);
 	Scatter& SetTitleColor(const class::Color& colorTitle);
 	
-	void SetLabels(const WString& _xLabel, const WString& _yLabel);
+	void SetLabels(const WString& _xLabel, const WString& _yLabel, const WString& _yLabel2 = "");
 	Scatter& SetLabelX(const WString& _xLabel);
 	Scatter& SetLabelY(const WString& _yLabel);
+	Scatter& SetLabelY2(const WString& _yLabel);
 	Scatter& SetLabelsFont(const Font& fontLabels);
 	Scatter& SetLabelsColor(const class::Color& colorLabels);
 	
@@ -70,19 +71,25 @@ public:
 	
 	Scatter& SetAntialiasing(const bool& aa=true);	
 	
-	void SetRange(double rx, double ry);
+	void SetRange(double rx, double ry, double ry2 = -1);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
+	double GetYRange2()const {return yRange2;}
 	void SetMajorUnits(double ux, double uy);
-	void SetXYMin(double xmin,double ymin);
+	void SetXYMin(double xmin,double ymin,double ymin2 = 0);
 	double GetXMin () const {return xMin;}
 	double GetYMin () const {return yMin;}	
+	double GetYMin2 () const {return yMin2;}	
 	void Graduation_FormatX(Formats fi);	
 	void Graduation_FormatY(Formats fi);
 	
 	void AddSeries (Vector<XY> & points,const String& legend="", const bool& join=false,const class::Color& pcolor=LtBlue,const int& width=30,const int& thickness=6);
 	
 	inline bool IsValid(const int& j) const {return (j>=0 && j<vPointsData.GetCount());}
+	
+	void SetDrawXReticle(bool set = true);
+	void SetDrawYReticle(bool set = true);
+	void SetDrawY2Reticle(bool set = true);
 	
 	void SetData(const int& nbSeries, const int& index, const XY & point);
 	void AddPoint(const int& nbSeries, const XY & point,const bool& refresh=true );
@@ -113,6 +120,11 @@ public:
 	void SetSmooth(const int& j, const bool& smooth=true);
 	bool IsSmooth(const int& j) const throw (Exc);	
 	
+	void SetDataPrimaryY(const int& j, const bool& primary=true);
+	bool IsDataPrimaryY(const int& j) const throw (Exc);	
+	void SetFunctPrimaryY(const int& j, const bool& primary=true);
+	bool IsFunctPrimaryY(const int& j) const throw (Exc);	
+	
 	void RemoveSeries(const int& j);
 	void RemoveAllSeries();
 	void SetData(const int& nbSeries, Vector<XY> & points);	
@@ -136,8 +148,11 @@ public:
 	void SaveAsMetafile(const char* file)const;
 	#endif
 	
+	void SaveToClipboard();
+	
 	Scatter& LogX(const bool& logx=true) {logX=logx; return *this;}
 	Scatter& LogY(const bool& logy=true) {logY=logy; return *this;}	
+	Scatter& LogY2(const bool& logy=true) {logY2=logy; return *this;}	
 
 private:
 	class ::Color graphColor;	
@@ -145,7 +160,7 @@ private:
 	Font titleFont;
 	class::Color titleColor;
 	
-	WString xLabel, yLabel;
+	WString xLabel, yLabel, yLabel2;
 	Font labelsFont;
 	class::Color labelsColor;
 	
@@ -160,18 +175,19 @@ private:
 	class::Color axisColor;
 	int axisWidth;
 	
-	double xRange,yRange;
-	double xMin,yMin;
-	double xMajorUnit,yMajorUnit;
-	bool drawXReticle, drawYReticle;	
+	double xRange,yRange,yRange2;
+	double xMin,yMin,yMin2;
+	double xMajorUnit,yMajorUnit,yMajorUnit2;
+	bool drawXReticle, drawYReticle, drawY2Reticle;	
 	
 	class::Color gridColor;
 	int gridWidth;
 	bool drawVGrid, drawHGrid;	
 	
-	bool logX, logY;	
+	bool logX, logY, logY2;	
 	
 	Vector<Vector<XY> > vPointsData,vFunctionData;
+	Vector<bool> vFPrimaryY, vPPrimaryY;
 	typedef double (*fAdress)(double);
 	Vector<fAdress> vAdress;
 	Vector<class::Color> vPColors,vFColors;
