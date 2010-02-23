@@ -37,7 +37,7 @@ echo "Debian source package builder"
 echo "written by Jan Dolinar (dolik.rce), 2010"
 
 # setup some variables for later
-tmpdir="`mktemp -t -d lpbuild.XXXXXXX`"
+tmpdir="/home/upp/lpbuild.tmp"
 tmp=$tmpdir/upp-$VER
 orig="$tmp/../upp_$VER.orig.tar.gz"
 scriptpath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")" #not from my head:-)
