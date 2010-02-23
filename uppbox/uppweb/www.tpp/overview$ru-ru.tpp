@@ -812,36 +812,51 @@ Color это значение с типом, совместимым
 `- могут храниться в контейнерах типа 
 Vector).&]
 [s1; Набор виджетов Ultimate`+`+&]
-[s2; While the standard set of U`+`+ widgets is less important to 
-us than the general principles, partly due to the fact that creating 
-new widget classes is often a trivial task in U`+`+, any description 
-of toolkit would be incomplete without it.&]
-[s2; So here follows an incomplete but representative list:&]
-[s2; [* Label], [* Button] and [* Option] are basic well known widgets.&]
-[s2; [* Switch] is something usually called `"a group of radio`-buttons`", 
-anyway in the U`+`+ this is a single widget (this way, reading 
-the Value of a switch is much more consistent).&]
+[s2; В то время как стандартный набор 
+виджетов  U`+`+ менее важен для нас, 
+чем общие принципы , частично благодаря 
+факту, что создание новых классов 
+виджетов часто тривиальная задача 
+в U`+`+, любое описание инструментария 
+было бы неполным без этого.&]
+[s2; Так, здесь следует не полный, но представите
+льный список:&]
+[s2; [* Label], [* Button] и [* Option] это основные, всем 
+известные виджеты.&]
+[s2; [* Switch] это то, что обычно называется 
+`"группа radio`-кнопок`", в любом случае 
+в U`+`+ это единый виджет (таким образом, 
+чтение Значения виджета switch более 
+логично).&]
 [s2; [* EditField], [* EditInt], [* EditDouble], [* EditIntSpin], [* EditDate], 
-[* EditString] are basic input fields. Note that U`+`+ provides 
-distinct types of input fields for specific value types.&]
-[s2; [* LineEdit] and [* DocEdit] are two kinds of plain text editors. 
-[* LineEdit] works with lines while [* DocEdit] works with paragraphs.&]
-[s2; [* ScrollBar] and [* ScrollBars. ]While their names are self`-explaining 
-(ScrollBars is just pair a consisting of a vertical and horizontal 
-ScrollBar), it is worth noting that the U`+`+ ScrollBar also 
-provides all calculations for position of view area.&]
-[s2; [* Slider] is an `"analog`" input widget whose value is determined 
-by position of `"thumb`".&]
-[s2; [* HeaderCtrl] represents headers of various tables, namely ArrayCtrl&]
-[s2; [* ArrayCtrl] is perhaps the most complex and complicated widget 
-in Ultimate`+`+. It is basically a table widget used to operate 
-on Value matrices. It can combine Values to be displayed (using 
-Display class) as columns (yes, several Values in row can be 
-combined into single a column using Convert if needed) and edit 
-them using slave Ctrls (those can be inside the table displayed 
-on user `"edit`" action, inside the table always visible or outside 
-the table in the dialog box displaying Values of currently selected 
-line).&]
+[* EditString] это основные поля ввода. Заметьте, 
+что  U`+`+ обеспечивает различные типы 
+полей ввода для разных типов значений.&]
+[s2; [* LineEdit] и [* DocEdit] `- два вида простого 
+текстового редактора. [* LineEdit] работает 
+со строками, в то время как [* DocEdit] работает 
+с абзацами.&]
+[s2; [* ScrollBar] и [* ScrollBars. ]Хотя их названия 
+говорят сами за себя (ScrollBars это просто 
+пара, состоящая из вертикального 
+и горизонтального ScrollBar`'а), также 
+нужно отметить что ScrollBar также поддерживает 
+все вычисления позиции и области 
+просмотра.&]
+[s2; [* Slider] это `"аналоговый`" виджет ввода, 
+его значение определяется позицией 
+ `"ползунка`".&]
+[s2; [* HeaderCtrl] представляет шапку различных 
+таблиц, а именно ArrayCtrl&]
+[s2; [* ArrayCtrl] это, возможно, наиболее сложный 
+и запутанный виджет в Ultimate`+`+. It is basically 
+a table widget used to operate on Value matrices. It can combine 
+Values to be displayed (using Display class) as columns (yes, 
+several Values in row can be combined into single a column using 
+Convert if needed) and edit them using slave Ctrls (those can 
+be inside the table displayed on user `"edit`" action, inside 
+the table always visible or outside the table in the dialog box 
+displaying Values of currently selected line).&]
 [s2;= 
 @@image:1500&1394
 ����������������ߜ�ۋ��߽����È���쓿�����������������񬌱���Բ��������������
