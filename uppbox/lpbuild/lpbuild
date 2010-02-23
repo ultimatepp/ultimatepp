@@ -44,6 +44,10 @@ scriptpath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")" #not from my he
 scriptdir=`dirname "$scriptpath"`
 subfolders=( uppsrc examples tutorial reference bazaar )
 
+# clean up temporary files
+echo "Cleaning up previous run..."
+rm -rf $tmpdir
+
 # create dir for sources
 mkdir $tmp
 
@@ -150,7 +154,4 @@ EOF
 	mv $tmpdir/version.h.backup $tmp/uppsrc/ide/version.h
 done
 
-# clean up temporary files
-echo "Cleaning up ..."
-rm -rf $tmpdir
 echo "FINISHED!"
