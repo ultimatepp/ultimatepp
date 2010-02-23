@@ -140,7 +140,7 @@ EOF
 	# call debuild to create the package
 	echo "Packaging upp $version ..."
 	cd $tmp
-	debuild --no-lintian -k0CE4194D -m'Jan Dolinar' -e'dolik.rce@seznam.cz' -sgpg -p/home/upp/bin/gpg-extpass -S
+	debuild --no-lintian -k0CE4194D -m'Jan Dolinar <dolik.rce@seznam.cz>' -sgpg -p/usr/bin/gpg-extpass -S
 	
 	# upload to launchpad ("-s"=simulate, use for debugging)
 	echo "Uploading upp $version ..."
