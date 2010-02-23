@@ -12,7 +12,4 @@ file
 	AESStream.h,
 	src.tpp;
 
-mainconfig
-	"" = "MT",
-	"" = "";
 
