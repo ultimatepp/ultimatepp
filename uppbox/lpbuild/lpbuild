@@ -49,6 +49,7 @@ echo "Cleaning up previous run..."
 rm -rf $tmpdir
 
 # create dir for sources
+mkdir $tmpdir
 mkdir $tmp
 
 # copy source files to tmp folder
