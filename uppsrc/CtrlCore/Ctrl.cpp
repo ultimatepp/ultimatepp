@@ -956,6 +956,7 @@ void Ctrl::ChSync()
 CH_INT(GUI_GlobalStyle, GUISTYLE_CLASSIC);
 CH_INT(GUI_DragFullWindow, 1);
 CH_INT(GUI_PopUpEffect, GUIEFFECT_SLIDE);
+CH_INT(GUI_ToolTipDelay, 1000);
 CH_INT(GUI_DropShadows, 1);
 CH_INT(GUI_AltAccessKeys, 1);
 CH_INT(GUI_AKD_Conservative, 0);

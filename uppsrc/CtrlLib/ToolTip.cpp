@@ -97,7 +97,7 @@ void SyncToolTip(Ctrl *ctrl)
 			ShowToolTip();
 		else {
 			LLOG("ToolTipHook -> SetTimeCallback");
-			SetTimeCallback(1000, callback(ShowToolTip), (void *)SyncToolTip);
+			SetTimeCallback(GUI_ToolTipDelay(), callback(ShowToolTip), (void *)SyncToolTip);
 		}
 	}
 }
