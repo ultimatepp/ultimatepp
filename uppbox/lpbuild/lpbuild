@@ -21,6 +21,18 @@ SERIES=( hardy intrepid jaunty karmic lucid )
 #~ BUILD="1"
 #~ SERIES=( karmic )
 
+echo "Checking whether gpg-agent is running..."
+if test -f $HOME/.gpg-agent-info &&
+   kill -0 'cut -d: -f 2 $HOME/.gpg-agent-info' 2>/dev/null; then
+     GPG_AGENT_INFO='cat $HOME/.gpg-agent-info'
+     export GPG_AGENT_INFO
+     echo "...it is"
+else
+     echo "Starting gpg-agent"
+     eval 'gpg-agent --daemon'
+     echo $GPG_AGENT_INFO >$HOME/.gpg-agent-info
+fi
+
 echo "Debian source package builder"
 echo "written by Jan Dolinar (dolik.rce), 2010"
 
