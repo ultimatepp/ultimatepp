@@ -321,7 +321,7 @@ void CodeEditor::InitKeywords()
 		};
 		static const char *upp_macros[] = {
 			"CLASSNAME", "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3", "THISBACK4",
-			"PTEBACK", "PTEBACK1", "PTEBACK2",  "PTEBACK3",  "PTEBACK", 
+			"PTEBACK", "PTEBACK1", "PTEBACK2",  "PTEBACK3",  "PTEBACK4", 
 			"QUOTE", "XASSERT", "NEVER", "XNEVER", "CHECK", "XCHECK", "ASSERT",
 			"NAMESPACE_UPP", "END_UPP_NAMESPACE",
 			NULL
