@@ -7,7 +7,7 @@
 		#define PLATFORM_WIN32
 	#endif
 
-	#if __unix || __unix__
+	#if __unix || __unix__ || __APPLE__
 		#define PLATFORM_POSIX 1
 		
 		#ifdef flagGUI
@@ -30,10 +30,10 @@
 				#endif
 			#elif __sun
 				#define PLATFORM_SOLARIS 1
-			#else
-				#error Unknown OS
 			#endif
 		#endif
+	#else
+		#error Unknown OS
 	#endif
 	
 	#if  __x86_64

@@ -188,6 +188,11 @@ _[@(0.0.255) const]&]
 [s2; Resets EditField to default state.&]
 [s3; &]
 [s4; &]
+[s5;:EditField`:`:Error`(bool`): [@(0.0.255) void]_[* Error]([@(0.0.255) bool]_[*@3 error])&]
+[s2;%% If [%-*@3 error] is true, paints the content as if it was invalid 
+(the same way as when assigned Convert returns ErrorValue).&]
+[s3;%% &]
+[s4; &]
 [s5;:EditField`:`:Password`(bool`): [_^EditField^ EditField][@(0.0.255) `&]_[* Password]([@(0.0.255) b
 ool]_[*@3 pwd]_`=_[@(0.0.255) true])&]
 [s2;%% Sets the password mode. In password mode all characters are 
@@ -255,6 +260,14 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 Returns `*this.&]
 [s3; &]
 [s4; &]
+[s5;:EditField`:`:NullText`(const Image`&`,const char`*`,Color`): [_^EditField^ EditFie
+ld][@(0.0.255) `&]_[* NullText]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon],
+ [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text]_`=_t`_(`"([@(0.0.255) default])`"), 
+[_^Color^ Color]_[*@3 ink]_`=_SColorDisabled)&]
+[s5;:EditField`:`:NullText`(const Image`&`,const char`*`,Font`,Color`): [_^EditField^ E
+ditField][@(0.0.255) `&]_[* NullText]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 i
+con], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [_^Font^ Font]_[*@3 fnt], 
+[_^Color^ Color]_[*@3 ink])&]
 [s5;:EditField`:`:NullText`(const char`*`,Color`): [_^EditField^ EditField][@(0.0.255) `&
 ]_[* NullText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text]_`=_t`_(`"([@(0.0.255) defa
 ult])`"), [_^Color^ Color]_[*@3 ink]_`=_SColorDisabled)&]
@@ -262,7 +275,8 @@ ult])`"), [_^Color^ Color]_[*@3 ink]_`=_SColorDisabled)&]
 ]_[* NullText]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [_^Font^ Font]_[*@3 fnt], 
 [_^Color^ Color]_[*@3 ink])&]
 [s2; In NullText mode, empty EditField displays[%%  ][*@3 text][%%  using 
-][*@3 ink][%%  color and ][%%*@3 fnt][%%  as a font.] Returns `*this.&]
+][*@3 ink][%%  color and ][%%*@3 fnt][%%  as a font, with ][*@3 icon][%% .] 
+Returns `*this.&]
 [s3; &]
 [s4; &]
 [s5;:EditField`:`:MaxChars`(int`): [_^EditField^ EditField][@(0.0.255) `&]_[* MaxChars]([@(0.0.255) i

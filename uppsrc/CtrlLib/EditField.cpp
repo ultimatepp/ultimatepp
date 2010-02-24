@@ -276,7 +276,7 @@ void EditField::Paint(Draw& w)
 	if(nobg)
 		paper = Null;
 	Color ink = enabled ? st->text : st->textdisabled;
-	if(convert && enabled && convert->Scan(text).IsError())
+	if(enabled && (convert && convert->Scan(text).IsError() || errorbg))
 		paper = st->invalid;
 	int fcy = font.Info().GetHeight();
 	int yy = GetTy();
@@ -956,7 +956,7 @@ void EditField::Reset()
 	maxlen = INT_MAX;
 	autosize = false;
 	keep_selection = false;
-	nobg = false;
+	errorbg = nobg = false;
 	charset = CHARSET_UNICODE;
 	alignright = false;
 	SetStyle(StyleDefault());
