@@ -86,6 +86,18 @@ GisCoords::Arg GisCoords::Arg::DropList(String& v, String ident, String name, St
 	return out;
 }
 
+struct GeomBoolRef : public RefManager
+{
+	virtual int        GetType()                         { return UNKNOWN_V; }
+	virtual Value      GetValue(const void *x)           { return *(const bool *)x ? 1 : 0; }
+	virtual void       SetValue(void *x, const Value& v) { *(bool *)x = !UPP::IsNull(v) && (double)v; }
+	virtual void       SetNull(void *x)                  { *(bool *)x = false; }
+
+	static RefManager *Manager()                         { static GeomBoolRef m; return &m; }
+};
+
+inline Ref GeomBoolAsRef(bool& b) { return Ref(&b, GeomBoolRef::Manager()); }
+
 GisCoords::Arg GisCoords::Arg::Option(bool& b, String ident, String name, String help_topic)
 {
 	Arg out;
@@ -95,7 +107,7 @@ GisCoords::Arg GisCoords::Arg::Option(bool& b, String ident, String name, String
 	out.help_topic = help_topic;
 	out.style = STYLE_OPTION;
 	out.not_null = true;
-	out.ref = BoolAsRef(b);
+	out.ref = GeomBoolAsRef(b);
 	return out;
 }
 

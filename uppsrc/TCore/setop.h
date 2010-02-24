@@ -13,7 +13,7 @@ enum SetOpCode
 	SET_OP2_XOR,   // symmetrical difference
 };
 
-template <> inline unsigned UPP::GetHashValue(const SetOpCode& c) { return c; }
+template <> inline unsigned GetHashValue(const SetOpCode& c) { return c; }
 
 NTL_MOVEABLE(SetOpCode);
 
