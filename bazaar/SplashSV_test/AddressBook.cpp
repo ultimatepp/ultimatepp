@@ -18,10 +18,10 @@ using namespace Upp;
 #define  IMAGEFILE <SplashSV_test/SVLogo.iml>		//
 #include <Draw/iml.h>								//
 
-#define TOPICFILE <SplashSV_test/src.tpp/all.i>		// Adding QTF for splash (and for other aims)
+#define TOPICFILE <SplashSV_test/app.tpp/all.i>		// Adding QTF for splash (and for other aims)
 #include <Core/topic_group.h>						//
 
-#define SPLASHQTF "SplashSV_test/src/Splash"		//
+#define SPLASHQTF "SplashSV_test/app/Splash"		//
 #define SPLASH_LOGO_NATIVE       SVLogo::logoENUS()	//
 #define SPLASH_LOGO_INTERNATIONAL SVLogo::logoENUS()//  this is Parameter set for Splash
 #define SPLASH_NATIVE_LANG "en-us"					//
@@ -242,7 +242,7 @@ GUI_APP_MAIN
 	AddressBook ab;
 	LoadFromFile(ab);
 	ShowSplashStatus(t_("Normal Running..."));		// Show message at bottom of splash screen
-	//SetSplashTimer(1000);							// Non standart splash-close timer set to 1 sec (maximum is 50 sec)
+	SetSplashTimer(1000);							// Non standart splash-close timer set to 1 sec (maximum is 50 sec)
 	ab.Run();
 	StoreToFile(ab);
 }

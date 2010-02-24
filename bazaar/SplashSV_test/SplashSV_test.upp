@@ -9,7 +9,7 @@ file
 	AddressBook.cpp,
 	AddressBook.lay,
 	SVLogo.iml,
-	src.tpp;
+	app.tpp;
 
 mainconfig
 	"" = "GUI";
