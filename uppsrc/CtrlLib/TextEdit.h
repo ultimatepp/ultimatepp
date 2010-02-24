@@ -77,7 +77,7 @@ protected:
 
 	Color            color[COLOR_COUNT];
 
-	bool             processtab;
+	bool             processtab, processenter;
 	bool             nobg;
 
 	void   IncDirty();
@@ -178,6 +178,8 @@ public:
 	TextCtrl& UndoSteps(int n)                 { undosteps = n; Undodo(); return *this; }
 	TextCtrl& ProcessTab(bool b = true)        { processtab = b; return *this; }
 	TextCtrl& NoProcessTab()                   { return ProcessTab(false); }
+	TextCtrl& ProcessEnter(bool b = true)      { processenter = b; return *this; }
+	TextCtrl& NoProcessEnter()                 { return ProcessEnter(false); }
 	TextCtrl& NoBackground(bool b = true)      { nobg = b; Transparent(); Refresh(); return *this; }
 	bool      IsProcessTab()                   { return processtab; }
 

@@ -532,7 +532,7 @@ bool LineEdit::InsertChar(dword key, int count, bool canow) {
 	if(filter && key >= 32 && key < 65535)
 		key = (*filter)(key);
 	if(!IsReadOnly() && (key >= 32 && key < 65536 || key == '\t' || key == '\n' ||
-	   key == K_ENTER || key == K_SHIFT_SPACE)) {
+	   key == K_ENTER && processenter || key == K_SHIFT_SPACE)) {
 		if(key >= 128 && key < 65536 && charset != CHARSET_UNICODE
 		   && FromUnicode((wchar)key, charset) == DEFAULTCHAR)
 			return true;
