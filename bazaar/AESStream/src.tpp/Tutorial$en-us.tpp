@@ -164,10 +164,10 @@ is 170 bytes. The encrypted data size is calculated as:&]
 [s2; 4. Known issues&]
 [s0;i150;O0; OpenSSL fails to compile with gcc/MSYS under Windows 
 as static library.&]
-[s0;i150;O0; [- Using this package along with Web/SSL causes heap leaks.]&]
 [s0; &]
 [s0; If you have any information on issues or any comments, please 
 feel free to write [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&th`=4640`&start`=0`&^ h
 ere].&]
 [s0; &]
-[s0; ]
+[s0; &]
+[s0; This page in Russian [^topic`:`/`/AESStream`/src`/Tutorial`$ru`-ru^ here]]
