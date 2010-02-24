@@ -19,6 +19,7 @@ TextCtrl::TextCtrl()
 	color[PAPER_READONLY] = SColorFace;
 	color[PAPER_SELECTED] = SColorHighlight;
 	processtab = true;
+	processenter = true;
 	nobg = false;
 }
 

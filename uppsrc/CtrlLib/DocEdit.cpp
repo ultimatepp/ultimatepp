@@ -428,6 +428,8 @@ bool DocEdit::Key(dword key, int cnt)
 			Remove(cursor, q - cursor);
 			break;
 		case K_ENTER:
+			if(!processenter)
+				return true;
 			key = '\n';
 		default:
 			if(filter && key >= 32 && key < 65535)
