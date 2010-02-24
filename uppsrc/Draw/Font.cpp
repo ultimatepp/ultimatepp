@@ -114,10 +114,15 @@ void Font::InitStdFont()
 		int    height = 0;
 		GetStdFontSys(name, height);
 		int q = FindFaceNameIndex(name);
-		if(q > 0) {
+		if(q <= 0)
+			q = FindFaceNameIndex("Tahoma");
+		if(q <= 0)
+			q = FindFaceNameIndex("Microsoft Sans Serif");
+		if(q <= 0)
+			q = FindFaceNameIndex("MS Sans Serif");
+		if(q > 0)
 			AStdFont = Font(q, max(height, 1));
-			SyncStdFont();
-		}
+		SyncStdFont();
 	}
 }
 
