@@ -130,6 +130,7 @@ protected:
 	bool       clickselect:1;
 	bool       nobg:1;
 	bool       alignright:1;
+	bool       errorbg:1;
 
 	bool    FrameIsEdge();
 	void    SetEdge(int i);
@@ -195,6 +196,8 @@ public:
 
 	void    Clear();
 	void    Reset();
+	
+	void    Error(bool error = true)         { errorbg = error; }
 
 	EditField& Password(bool pwd = true)     { password = pwd; Finish(); return *this; }
 	EditField& SetFilter(int (*f)(int))      { filter = f; return *this; }
