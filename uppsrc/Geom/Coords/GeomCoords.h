@@ -2,7 +2,7 @@
 #define _Geom_Coords_Coords_h_
 
 #include <Geom/Geom.h>
-#include <TCore/TCore.h>
+//#include <TCore/TCore.h>
 
 NAMESPACE_UPP
 
@@ -31,6 +31,118 @@ inline double Determinant(double a1, double a2, double a3, double b1, double b2,
 	return a1 * (b2 * c3 - b3 * c2) + a2 * (b3 * c1 - b1 * c3) + a3 * (b1 * c2 - b2 * c1);
 }
 
+class GeomRefBase
+{
+public:
+	GeomRefBase()
+	{
+		refcount = 0;
+#ifdef REF_DEBUG
+		allocindex = ++nextindex;
+#endif//REF_DEBUG
+	}
+
+	GeomRefBase(const GeomRefBase& rb)
+	{
+		refcount = 0;
+#ifdef REF_DEBUG
+		allocindex = ++nextindex;
+#endif//REF_DEBUG
+	}
+
+	virtual ~GeomRefBase()
+	{
+		ASSERT(refcount == 0);
+	}
+
+	void           AddRef() const      { if(this) AtomicInc(refcount); }
+	int            GetRefCount() const { return AtomicXAdd(refcount, 0); }
+	void           Release() const     { if(this && !AtomicDec(refcount)) delete this; }
+#ifdef REF_DEBUG
+	int            GetAllocIndex() const { return allocindex; }
+#endif//REF_DEBUG
+
+private:
+	mutable Atomic refcount;
+#ifdef REF_DEBUG
+	int            allocindex;
+	static int     nextindex;
+#endif//REF_DEBUG
+
+private:
+	GeomRefBase&    operator = (const GeomRefBase& rb) { NEVER(); return *this; }
+};
+
+template <class T>
+class GeomRefCon : Moveable< GeomRefCon<T> >
+{
+public:
+	GeomRefCon(const Nuller& = Null) : t(0) {}
+	GeomRefCon(const T *t);
+	GeomRefCon(const GeomRefCon<T>& rp);
+	~GeomRefCon();
+
+	void            Clear()                                { if(t) { t->Release(); t = NULL; } }
+	bool            IsNullInstance() const                 { return !t; }
+	dword           GetHashValue() const                   { return UPP::GetHashValue((unsigned)(uintptr_t)t); }
+
+	GeomRefCon<T>&      operator = (const GeomRefCon<T>& rp);
+
+	bool            operator ! () const                    { return !t; }
+	const T        *Get() const                            { return t; }
+	const T        *operator ~ () const                    { return t; }
+	const T        *operator -> () const                   { ASSERT(t); return t; }
+	const T&        operator * () const                    { ASSERT(t); return *t; }
+
+	String          ToString() const                       { return t ? AsString(*t) : String("NULL"); }
+
+	friend bool     operator == (GeomRefCon<T> a, GeomRefCon<T> b) { return a.t == b.t; }
+	friend bool     operator != (GeomRefCon<T> a, GeomRefCon<T> b) { return a.t != b.t; }
+
+protected:
+	const T        *t;
+};
+
+template <class T>
+GeomRefCon<T>::GeomRefCon(const T *t)
+: t(t)
+{
+	t->AddRef();
+#ifdef REF_DEBUG
+	if(t && t->GetRefCount() == 1)
+		RefMemStat::App().Add(typeid(*t).name(), t->GetAllocIndex());
+#endif//REF_DEBUG
+}
+
+template <class T>
+GeomRefCon<T>::GeomRefCon(const GeomRefCon<T>& rp)
+: t(rp.t)
+{ t->AddRef(); }
+
+template <class T>
+GeomRefCon<T>::~GeomRefCon()
+{
+#ifdef REF_DEBUG
+	if(t && t->GetRefCount() == 1)
+		RefMemStat::App().Remove(typeid(*t).name(), t->GetAllocIndex());
+#endif//REF_DEBUG
+	t->Release();
+}
+
+template <class T>
+GeomRefCon<T>& GeomRefCon<T>::operator = (const GeomRefCon<T>& rp)
+{
+	const T *old = t;
+	t = rp.t;
+	t->AddRef();
+#ifdef REF_DEBUG
+	if(old && old->GetRefCount() == 1)
+		RefMemStat::App().Remove(typeid(*old).name(), old->GetAllocIndex());
+#endif//REF_DEBUG
+	old->Release();
+	return *this;
+}
+
 class GisBSPTree
 {
 public:
@@ -56,7 +168,7 @@ public:
 		Node       plus; // np - c > 0
 	};
 
-	struct Tree : RefBase
+	struct Tree : GeomRefBase
 	{
 		Tree(pick_ Node& root) : root(root) {}
 
@@ -73,7 +185,23 @@ public:
 	const Node&  GetRoot() const   { return tree->root; }
 
 private:
-	RefCon<Tree> tree;
+	GeomRefCon<Tree> tree;
+};
+
+template <class T>
+class GeomRefPtr : public GeomRefCon<T>, public Moveable< GeomRefPtr<T> >
+{
+public:
+	GeomRefPtr(const Nuller& = Null)                 {}
+	GeomRefPtr(T *t) : GeomRefCon<T>(t)                  {}
+	GeomRefPtr(const GeomRefPtr<T>& rp) : GeomRefCon<T>(rp)  {}
+
+	GeomRefPtr<T>&  operator = (const GeomRefPtr<T>& rp) { GeomRefCon<T>::operator = (rp); return *this; }
+
+	T          *Get() const                      { return const_cast<T *>(this->t); }
+	T          *operator ~ () const              { return Get(); }
+	T          *operator -> () const             { ASSERT(this->t); return Get(); }
+	T&          operator * () const              { ASSERT(this->t); return *Get(); }
 };
 
 class ConvertDegree : public Convert
@@ -406,7 +534,7 @@ public:
 		String     help_topic;
 	};
 
-	class Data : public RefBase
+	class Data : public GeomRefBase
 	{
 	public:
 		Data();
@@ -447,7 +575,7 @@ public:
 	};
 
 	GisCoords(const Nuller& = Null) {}
-	GisCoords(RefPtr<Data> data) : data(data) {}
+	GisCoords(GeomRefPtr<Data> data) : data(data) {}
 	GisCoords(Data *data) : data(data) {}
 	GisCoords(const Value& v)                                                                  { if(IsTypeRaw<GisCoords>(v)) *this = ValueTo<GisCoords>(v); }
 
@@ -499,7 +627,7 @@ public:
 	static GisCoords      GetEPSG(int code);
 
 public:
-	RefPtr<Data>          data;
+	GeomRefPtr<Data>          data;
 };
 
 inline bool operator == (const GisCoords& a, const GisCoords& b) { return a.Equals(b); }
@@ -508,7 +636,7 @@ inline bool operator != (const GisCoords& a, const GisCoords& b) { return !a.Equ
 class GisTransform : Moveable<GisTransform>
 {
 public:
-	class Data : public RefBase
+	class Data : public GeomRefBase
 	{
 	public:
 		virtual ~Data() {}
@@ -541,7 +669,7 @@ public:
 
 public:
 	GisTransform(const Nuller& = Null);
-	GisTransform(RefPtr<Data> data) : data(data) {}
+	GisTransform(GeomRefPtr<Data> data) : data(data) {}
 	GisTransform(Data *data) : data(data) {}
 	GisTransform(GisCoords source, GisCoords target);
 
@@ -576,7 +704,7 @@ public:
 	bool         Equals(const GisTransform& t) const;
 
 public:
-	RefPtr<Data> data;
+	GeomRefPtr<Data> data;
 };
 
 inline bool   operator == (const GisTransform& a, const GisTransform& b) { return a.Equals(b); }

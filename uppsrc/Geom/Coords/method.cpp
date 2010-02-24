@@ -716,7 +716,7 @@ const Vector<int>& GisCoords::EnumEPSG()
 
 GisCoords GisCoords::GetEPSG(int code)
 {
-	RefPtr<GisCoords::Data> gc;
+	GeomRefPtr<GisCoords::Data> gc;
 	switch(code)
 	{
 	case 2065:

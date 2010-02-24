@@ -117,8 +117,8 @@ protected:
 
 public:
 	PtrValue(T *x) : Value(new Rep(x)) {}
-	T        *Get(const Value& v)       { return ::IsNull(v) ? 0 : Rep::Cast(v.GetVoidPtr())->Get(); }
-	static T *Extract(const Value& v)   { return ::IsNull(v) ? 0 : Rep::Cast(v.GetVoidPtr())->Get(); }
+	T        *Get(const Value& v)       { return UPP::IsNull(v) ? 0 : Rep::Cast(v.GetVoidPtr())->Get(); }
+	static T *Extract(const Value& v)   { return UPP::IsNull(v) ? 0 : Rep::Cast(v.GetVoidPtr())->Get(); }
 };
 
 template <class T>
