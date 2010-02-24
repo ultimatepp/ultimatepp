@@ -130,7 +130,7 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Edit(Ctrl &ctrl, bool b)
 	if(b)
 	{
 		ctrl.Hide();
-		ctrl.SetFrame(BlackFrame());
+		ctrl.SetFrame(NullFrame());
 		(*edits)[id].ctrl = &ctrl;
 		parent->holder.AddChild(&ctrl);
 	}
