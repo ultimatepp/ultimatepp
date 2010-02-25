@@ -36,5 +36,7 @@ void ToolBarAsCtrl::Layout() {
 
 GUI_APP_MAIN
 {
+	GUI_PopUpEffect_Write(GUIEFFECT_NONE);
+	GUI_ToolTipDelay_Write(10);
 	ToolBarAsCtrl().Run();
 }
