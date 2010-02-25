@@ -34,16 +34,21 @@ static void PaintLegend(Draw& draw, Rect& outer, const Vector<String>& linie, bo
 	fmt.Face(Font::ARIAL).Height(TEXT_HT);
 	for(int o = 0; o < order.GetCount(); o++) {
 		String l = linie[order[o]];
-		String ltext = l;
+		WString ltext = l.ToWString();
 
 		DrawingDraw ddraw(LINE_WD, TEXT_HT);
 		ddraw.DrawLine(0, TEXT_HT / 2, LINE_WD, TEXT_HT / 2, 5, LtGreen());
 
-		if(o)
-			legend_para.Cat("\xA0\xA0\xA0 ", fmt);
+		if(o) {
+			legend_para.Cat(WString(0xa0, 1), fmt);
+			legend_para.Cat(WString(0xa0, 1), fmt);
+			legend_para.Cat(WString(0xa0, 1), fmt);
+			legend_para.Cat(WString(' ', 1), fmt);
+		}
 
 		legend_para.Cat(CreateDrawingObject(ddraw, LINE_WD, TEXT_HT), fmt);
-		legend_para.Cat("\xA0\xA0", fmt);
+		legend_para.Cat(WString(0xa0, 1), fmt);
+		legend_para.Cat(WString(0xa0, 1), fmt);
 		for(int i = 0; i < ltext.GetLength(); i++)
 			if(ltext[i] == ' ')
 				ltext.Set(i, 0xA0);
@@ -52,6 +57,8 @@ static void PaintLegend(Draw& draw, Rect& outer, const Vector<String>& linie, bo
 	RichText rtext;
 	rtext.Cat(legend_para);
 	rtext.Normalize();
+
+	DDUMP(AsQTF(rtext));
 
 	int wd = min(rtext.GetWidth(), outer.Width() - 2 * LEG_INNER_GAP);
 	int ht = rtext.GetHeight(wd);
