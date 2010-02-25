@@ -17,7 +17,7 @@
 		#if __linux
 			#define PLATFORM_LINUX 1
 		#else
-			#if __FreeBSD__ || __OpenBSD__ || __NetBSD__
+			#if __FreeBSD__ || __OpenBSD__ || __NetBSD__ || __APPLE__
 				#define PLATFORM_BSD 1
 				#if __FreeBSD__
 					#define PLATFORM_FREEBSD 1
@@ -30,10 +30,10 @@
 				#endif
 			#elif __sun
 				#define PLATFORM_SOLARIS 1
+			#else
+				#error Unknown OS
 			#endif
 		#endif
-	#else
-		#error Unknown OS
 	#endif
 	
 	#if  __x86_64
