@@ -2,6 +2,13 @@
 
 NAMESPACE_UPP
 
+CH_STYLE(Splitter, Style, StyleDefault)
+{
+	vert[0] = horz[0] = SColorFace();
+	vert[1] = horz[1] = GUI_GlobalStyle() >= GUISTYLE_XP ? Blend(SColorHighlight, SColorFace)
+	                                                     : SColorShadow();
+}
+
 int Splitter::ClientToPos(Point p) const
 {
 	return minmax(vert ? 10000 * p.y / GetSize().cy : 10000 * p.x / GetSize().cx, 0, 9999);
@@ -60,16 +67,18 @@ void Splitter::Layout() {
 
 void   Splitter::Paint(Draw& w) {
 	Size sz = GetSize();
-	w.Begin();
-	if(HasCapture() && mouseindex >= 0 && mouseindex < pos.GetCount()) {
-		int p = PosToClient(pos[mouseindex]) - (width >> 1);
-		Rect r = vert ? RectC(0, p, sz.cx, width) : RectC(p, 0, width, sz.cy);
-		w.DrawRect(r, GUI_GlobalStyle() >= GUISTYLE_XP ? Blend(SColorHighlight, SColorFace) : SColorShadow);
-		w.ExcludeClip(r);
-	}
 	if(!IsTransparent())
-		w.DrawRect(sz, SColorFace());
-	w.End();
+		w.DrawRect(sz, SColorFace);
+	const Value *ch = vert ? chstyle->vert : chstyle->horz;
+	for(int i = 0; i < pos.GetCount(); i++) {
+		int p = PosToClient(pos[i]) - (width >> 1);
+		Rect r = vert ? RectC(0, p, sz.cx, width) : RectC(p, 0, width, sz.cy);
+		if(HasCapture() && i == mouseindex)
+			ChPaint(w, r, ch[1]);
+		else
+		if(!IsTransparent())
+			ChPaint(w, r, ch[0]);
+	}
 }
 
 void   Splitter::MouseMove(Point p, dword) {
@@ -229,6 +238,16 @@ void Splitter::Reset() {
 	vert = false;
 }
 
+Splitter& Splitter::SetStyle(const Style& s)
+{
+	if(chstyle != &s) {
+		chstyle = &s;
+		RefreshLayout();
+		Refresh();
+	}
+	return *this;
+}
+
 Splitter::Splitter() {
 	style = -1;
 	pos.Add(5000);
@@ -238,6 +257,7 @@ Splitter::Splitter() {
 	NoWantFocus();
 	VSizePos(0, 0).HSizePos(0, 0);
 	mouseindex = -1;
+	SetStyle(StyleDefault());
 }
 
 Splitter::~Splitter() {}

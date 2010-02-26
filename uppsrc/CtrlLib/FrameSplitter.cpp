@@ -51,11 +51,8 @@ void SplitterFrame::FrameLayout(Rect& r)
 
 void SplitterFrame::Paint(Draw& draw)
 {
-	draw.DrawRect(
-		Ctrl::GetSize(),
-		HasCapture() ? GUI_GlobalStyle() >= GUISTYLE_XP ? Blend(SColorHighlight, SColorFace) : SColorShadow
-		             : SColorFace()
-	);
+	const Value *ch = type == LEFT || type == RIGHT ? style->vert : style->horz;
+	ChPaint(draw, Ctrl::GetSize(), ch[HasCapture()]);
 }
 
 void SplitterFrame::LeftDown(Point p, dword)
@@ -121,12 +118,23 @@ void SplitterFrame::Serialize(Stream& s)
 	}
 }
 
+SplitterFrame& SplitterFrame::SetStyle(const Splitter::Style& s)
+{
+	if(style != &s) {
+		style = &s;
+		RefreshLayout();
+		Refresh();
+	}
+	return *this;
+}
+
 SplitterFrame::SplitterFrame()
 {
 	type = LEFT;
 	size = size0 = 4;
 	minsize = 0;
 	sizemin = 0;
+	SetStyle(Splitter::StyleDefault());
 }
 
 END_UPP_NAMESPACE
