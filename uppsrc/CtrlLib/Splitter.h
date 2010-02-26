@@ -8,6 +8,11 @@ public:
 	virtual Image  CursorImage(Point p, dword keyflags);
 	virtual void   Serialize(Stream& s);
 
+public:
+	struct Style : ChStyle<Style> {
+		Value vert[2], horz[2];
+	};
+
 protected:
 	Vector<int> pos;
 	Vector<int> mins;
@@ -17,6 +22,7 @@ protected:
 	int         mouseindex;
 	bool        vert;
 	int         inset;
+	const Style *chstyle;
 
 	int       ClientToPos(Point client) const;
 	int       PosToClient(int pos) const;
@@ -44,6 +50,8 @@ public:
 
 	void      Remove(Ctrl& ctrl);
 
+	static const Style& StyleDefault();
+
 	Splitter& Vert(Ctrl& top, Ctrl& bottom);
 	Splitter& Horz(Ctrl& left, Ctrl& right);
 	Splitter& Vert()                               { vert = true; Layout(); return *this; }
@@ -51,6 +59,7 @@ public:
 	Splitter& BarWidth(int w);
 	bool      IsHorz() const                       { return !vert; }
 	bool      IsVert() const                       { return vert; }
+	Splitter& SetStyle(const Style& s);
 
 	void      Clear();
 	void      Reset();
@@ -77,6 +86,7 @@ private:
 	Size  parentsize;
 	int   type, minsize, sizemin;
 	int   size, size0;
+	const Splitter::Style *style;
 
 	int   BoundSize();
 
@@ -93,6 +103,7 @@ public:
 
 	SplitterFrame& MinSize(int sz)            { minsize = sz; return *this; }
 	SplitterFrame& SizeMin(int sz)            { sizemin = sz; return *this; }
+	SplitterFrame& SetStyle(const Splitter::Style& s);
 
 	int  GetType() const                      { return type; }
 	int  GetSize() const                      { return size; }
