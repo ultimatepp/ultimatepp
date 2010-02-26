@@ -551,6 +551,7 @@ void MenuBar::Execute(Ctrl *owner, Point p)
 	if(IsEmpty()) return;
 	PopUp(owner, p);
 	EventLoop(this);
+	CloseMenu();
 }
 
 void MenuBar::Execute(Ctrl *owner, Callback1<Bar&> proc, Point p)
