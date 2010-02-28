@@ -13,4 +13,4 @@ bash ~/Scripts/win
 
 bash ~/Scripts/src
 
-bash ~/Scripts/deb64
+# bash ~/Scripts/deb64
