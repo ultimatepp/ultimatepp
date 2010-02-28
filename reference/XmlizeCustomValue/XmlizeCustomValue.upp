@@ -1,0 +1,11 @@
+description "Extending Xmlize to support custom Value type\377";
+
+uses
+	Core;
+
+file
+	XmlizeCustomValue.cpp;
+
+mainconfig
+	"" = "";
+
