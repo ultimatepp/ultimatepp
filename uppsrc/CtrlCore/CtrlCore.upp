@@ -62,6 +62,7 @@ file
 	CtrlTimer.cpp,
 	CtrlClip.cpp,
 	LocalLoop.cpp,
+	Xmlize.cpp,
 	CtrlCore.icpp,
 	Ctrl.iml,
 	CtrlCore.t,
