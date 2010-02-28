@@ -1387,6 +1387,8 @@ public:
 
 	static void GuiSleep(int ms);
 
+	void Xmlize(XmlIO xml);
+
 	Ctrl();
 	virtual ~Ctrl();
 };
