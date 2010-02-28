@@ -1506,6 +1506,10 @@ FileSel::FileSel() {
 	SyncSplitter();
 
 	BackPaintHint();
+
+#ifdef PLATFORM_WIN32
+	list.IconWidth(GetFileIcon(GetHomeDirectory(), true, false, false).GetSize().cx);
+#endif
 }
 
 FileSel::~FileSel() {}
