@@ -262,27 +262,30 @@ struct FnValuePairOrder : ValuePairOrder {
 };
 
 template <class T>
-inline dword ValueTypeNo(const T&)       { return StaticTypeNo<T>() + 0x8000000;; }
+inline dword ValueTypeNo(const T *)       { return StaticTypeNo<T>() + 0x8000000;; }
 
-template<> inline dword ValueTypeNo(const int&)     { return INT_V; }
-template<> inline dword ValueTypeNo(const int64&)   { return INT64_V; }
-template<> inline dword ValueTypeNo(const double&)  { return DOUBLE_V; }
-template<> inline dword ValueTypeNo(const bool&)    { return BOOL_V; }
-template<> inline dword ValueTypeNo(const String&)  { return STRING_V; }
-template<> inline dword ValueTypeNo(const WString&) { return WSTRING_V; }
-template<> inline dword ValueTypeNo(const Date&)    { return DATE_V; }
-template<> inline dword ValueTypeNo(const Time&)    { return TIME_V; }
+template<> inline dword ValueTypeNo(const int*)     { return INT_V; }
+template<> inline dword ValueTypeNo(const int64*)   { return INT64_V; }
+template<> inline dword ValueTypeNo(const double*)  { return DOUBLE_V; }
+template<> inline dword ValueTypeNo(const bool*)    { return BOOL_V; }
+template<> inline dword ValueTypeNo(const String*)  { return STRING_V; }
+template<> inline dword ValueTypeNo(const WString*) { return WSTRING_V; }
+template<> inline dword ValueTypeNo(const Date*)    { return DATE_V; }
+template<> inline dword ValueTypeNo(const Time*)    { return TIME_V; }
 
 template <class T, dword type, class B = EmptyClass>
 class AssignValueTypeNo : public B {
 public:
-	friend dword ValueTypeNo(const T&)                  { return type; }
+	friend dword ValueTypeNo(const T*)              { return type; }
 
 	void operator=(const AssignValueTypeNo&) {} // MSC 6.0 empty base class bug fix
 };
 
 template <class T>
-bool IsType(const Value& x, T* = 0)           { return ValueTypeNo(*(T *)NULL) == x.GetType(); }
+dword GetValueTypeNo() { return ValueTypeNo((T*)NULL); }
+
+template <class T>
+bool IsType(const Value& x, T* = 0)           { return GetValueTypeNo<T>() == x.GetType(); }
 
 template <class T>
 inline bool Value::Is() const
@@ -296,7 +299,7 @@ protected:
 	T v;
 
 public:
-	virtual dword GetType() const             { return ValueTypeNo(v); }
+	virtual dword GetType() const             { return GetValueTypeNo<T>(); }
 	virtual bool  IsNull() const              { return false; }
 
 	const T& Get() const                      { return v; }
@@ -484,7 +487,7 @@ public:
 		return Rep::Cast(v.GetVoidPtr())->Get();
 	}
 	static void Register() init_ {
-		Value::Register(ValueTypeNo(*(T *)NULL), Rep::Create);
+		Value::Register(GetValueTypeNo<T>(), Rep::Create);
 	}
 	static const T& Extract(const Value& v) {
 		if(v.IsNull()) return GetNull();
@@ -522,7 +525,7 @@ template <class T>
 struct RawRef : public RefManager {
 	virtual void  SetValue(void *p, const Value& v) { *(T *) p = RawValue<T>::Extract(v); }
 	virtual Value GetValue(const void *p)           { return RawValue<T>(*(const T *) p); }
-	virtual int   GetType()                         { return ValueTypeNo(*(T *)NULL); }
+	virtual int   GetType()                         { return GetValueTypeNo<T>(); }
 	virtual ~RawRef() {}
 };
 
@@ -566,7 +569,7 @@ public:
 
 template <class T>
 T& GetRef(Ref r, T *x = NULL) {
-	ASSERT(ValueTypeNo(*x) == r.GetType());
+	ASSERT(GetValueTypeNo<T>() == r.GetType());
 	return *(T *) r.GetVoidPtr();
 }
 

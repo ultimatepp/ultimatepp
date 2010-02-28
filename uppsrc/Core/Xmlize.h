@@ -22,6 +22,9 @@ public:
 
 	XmlNode *operator->()  { return &node; }
 
+	String GetAttr(const char *id)                    { return node.Attr(id); }
+	void   SetAttr(const char *id, const String& val) { node.SetAttr(id, val); }
+
 	template <class T> XmlIO operator()(const char *tag, T& var);
 
 	template <class T> XmlIO Attr(const char *id, T& var) {
@@ -65,6 +68,11 @@ template <class T> XmlIO XmlIO::operator()(const char *tag, T& var) {
 	return *this;
 }
 
+template<> inline void XmlAttrLoad(String& var, const String& text) { var = text; }
+template<> inline String XmlAttrStore(const String& var)            { return var; }
+
+template<> void XmlAttrLoad(WString& var, const String& text);
+template<> String XmlAttrStore(const WString& var);
 template<> void XmlAttrLoad(int& var, const String& text);
 template<> String XmlAttrStore(const int& var);
 template<> void XmlAttrLoad(dword& var, const String& text);
@@ -73,27 +81,47 @@ template<> void XmlAttrLoad(double& var, const String& text);
 template<> String XmlAttrStore(const double& var);
 template<> void XmlAttrLoad(bool& var, const String& text);
 template<> String XmlAttrStore(const bool& var);
-
-template<> inline void XmlAttrLoad(String& var, const String& text)
-{
-	var = text;
-}
-
-template<> inline String XmlAttrStore(const String& var)
-{
-	return var;
-}
+template <> void XmlAttrLoad(int16& var, const String& text);
+template <> String XmlAttrStore(const int16& var);
+template <> void XmlAttrLoad(int64& var, const String& text);
+template <> String XmlAttrStore(const int64& var);
+template <> void XmlAttrLoad(byte& var, const String& text);
+template <> String XmlAttrStore(const byte& var);
+template <> void XmlAttrLoad(Date& var, const String& text);
+template <> String XmlAttrStore(const Date& var);
+template <> void XmlAttrLoad(Time& var, const String& text);
+template <> String XmlAttrStore(const Time& var);
 
 template<> void Xmlize(XmlIO xml, String& var);
-
+template<> void Xmlize(XmlIO xml, WString& var);
 template<> void Xmlize(XmlIO xml, int& var);
 template<> void Xmlize(XmlIO xml, dword& var);
 template<> void Xmlize(XmlIO xml, double& var);
 template<> void Xmlize(XmlIO xml, bool& var);
+template<> void Xmlize(XmlIO xml, Date& var);
+template<> void Xmlize(XmlIO xml, Time& var);
+template<> void Xmlize(XmlIO xml, int16& var);
+template<> void Xmlize(XmlIO xml, int64& var);
+template<> void Xmlize(XmlIO xml, byte& var);
+
 template<> void Xmlize(XmlIO xml, Point& p);
+template<> void Xmlize(XmlIO xml, Point16& p);
+template<> void Xmlize(XmlIO xml, Point64& p);
+template<> void Xmlize(XmlIO xml, Pointf& p);
+
 template<> void Xmlize(XmlIO xml, Size& sz);
+template<> void Xmlize(XmlIO xml, Size16& sz);
+template<> void Xmlize(XmlIO xml, Size64& sz);
+template<> void Xmlize(XmlIO xml, Sizef& sz);
+
 template<> void Xmlize(XmlIO xml, Rect& r);
+template<> void Xmlize(XmlIO xml, Rect16& r);
+template<> void Xmlize(XmlIO xml, Rect64& r);
+template<> void Xmlize(XmlIO xml, Rectf& r);
+
 template<> void Xmlize(XmlIO xml, Color& c);
+
+template<> void Xmlize(XmlIO xml, Value& v);
 
 void XmlizeLangAttr(XmlIO xml, int& lang, const char *id = "lang");
 void XmlizeLang(XmlIO xml, const char *tag, int& lang, const char *id = "id");
@@ -162,6 +190,19 @@ void Xmlize(XmlIO xml, ArrayMap<K, V, H>& data)
 {
 	XmlizeMap<K, V>(xml, "key", "value", data);
 }
+
+void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO xml, Value& v), const char *name);
+
+template <class T>
+void ValueXmlize(XmlIO xml, Value& v)
+{
+	T x = v;
+	Xmlize(xml, x);
+	v = x;
+}
+
+#define REGISTER_VALUE_XMLIZE(T) \
+	INITBLOCK { RegisterValueXmlize(GetValueTypeNo<T>(), &ValueXmlize<T>, #T); }
 
 template <class T>
 struct ParamHelper__ {
