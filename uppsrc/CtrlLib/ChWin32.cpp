@@ -407,8 +407,8 @@ void ChHostSkin()
 				{
 					MultiButton::Style& s = MultiButton::StyleFrame().Write();
 					for(int i = 0; i < 4; i++) {
-						s.left[i] = Unglyph(XpImage(XP_COMBOBOX, 7, i + 1, Null, Size(20, 20)));
-						s.right[i] = Unglyph(XpImage(XP_COMBOBOX, 6, i + 1, Null, Size(20, 20)));
+						s.left[i] = Unglyph(XpImage(XP_COMBOBOX, 7, i + 1, Null, Size(40, 40)));
+						s.right[i] = Unglyph(XpImage(XP_COMBOBOX, 6, i + 1, Null, Size(40, 40)));
 						s.lmiddle[i] = s.rmiddle[i] = HorzBlend(s.right[i], s.left[i], 6, 14);
 						Win32Look(s.look[i], XP_COMBOBOX, 4, i + 1);
 					}
@@ -511,9 +511,8 @@ void ChHostSkin()
 			Color c;
 			double gf;
 			m = Unglyph(m, c, gf);
-			if(i == 0 && gf > 150)
+			if(i == 0 && (gf > 150 || vista_aero))
 				CtrlsImg::Set(CtrlsImg::I_DA, ClassicCtrlsImg::DA());
-
 			Button::StyleEdge().Write().look[i] = m;
 			if(cbs)
 				Button::StyleLeftEdge().Write().look[i] = m;
@@ -532,7 +531,7 @@ void ChHostSkin()
 			if(!vista_aero) {
 				MultiButton::Style& s = MultiButton::StyleDefault().Write();
 				MultiButton::Style& fs = MultiButton::StyleFrame().Write();
-				Image cm = Unglyph(XpImage(XP_COMBOBOX, CP_DROPDOWNBUTTON, i + 1, Null, Size(20, 20)));
+				Image cm = Unglyph(XpImage(XP_COMBOBOX, CP_DROPDOWNBUTTON, i + 1, Null, Size(40, 40)));
 				fs.right[i] = s.right[i] = cm;
 				fs.left[i] = s.left[i] = MirrorHorz(s.right[i]);
 				if(s.border == 0) {
@@ -547,13 +546,11 @@ void ChHostSkin()
 				fs.lmiddle[i] = s.lmiddle[i] = MirrorHorz(mm);
 			}
 
-			m = Unglyph(XpImage(XP_SCROLLBAR, SBP_ARROWBTN, i + ABS_UPNORMAL, paper));
-			Size msz = m.GetSize();
-
+			m = Unglyph(XpImage(XP_SCROLLBAR, SBP_ARROWBTN, i + ABS_UPNORMAL, paper, Size(40, 40)));
 			Button::StyleScroll().Write().look[i] =
 			      VertBlend(m, Unglyph(XpImage(XP_SCROLLBAR, SBP_ARROWBTN, i + ABS_DOWNNORMAL,
-			                                   paper)),
-			                msz.cy / 3, msz.cy * 2 / 3);
+			                                   paper, Size(40, 40))),
+			                14, 26);
 		}
 
 		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
