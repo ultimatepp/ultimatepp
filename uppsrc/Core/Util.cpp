@@ -543,7 +543,7 @@ String Decode64(const String& s)
 	}
 }
 
-String HexString(const byte *s, int count, int sep)
+String HexString(const byte *s, int count, int sep, int sepchr)
 {
 	StringBuffer b(2 * count + (count - 1) / sep);
 	static const char itoc[] = "0123456789abcdef";
@@ -559,13 +559,41 @@ String HexString(const byte *s, int count, int sep)
 		}
 		if(i >= count)
 			return b;
-		*t++ = ' ';
+		*t++ = sepchr;
 	}
 }
 
-String HexString(const String& s, int sep)
+String HexString(const String& s, int sep, int sepchr)
 {
-	return HexString(~s, s.GetCount(), sep);
+	return HexString(~s, s.GetCount(), sep, sepchr);
+}
+
+String ScanHexString(const char *s, const char *lim)
+{
+	String r;
+	r.Reserve((lim - s) / 2);
+	for(;;) {
+		byte b = 0;
+		while(!IsXDigit(*s)) {
+			if(s >= lim)
+				return r;
+			s++;
+		}
+		b = ctoi(*s++);
+		if(s >= lim)
+			return r;
+		while(!IsXDigit(*s)) {
+			if(s >= lim) {
+				r.Cat(b);
+				return r;
+			}
+			s++;
+		}
+		b = (b << 4) + ctoi(*s++);
+		r.Cat(b);
+		if(s >= lim)
+			return r;
+	}
 }
 
 String NormalizeSpaces(const char *s)

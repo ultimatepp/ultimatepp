@@ -555,30 +555,30 @@ const int SIZE16_V = 71;
 const int SIZEF_V  = 72;
 const int SIZE64_V = 79;
 
-template<> inline dword ValueTypeNo(const Size&)   { return SIZE_V; }
-template<> inline dword ValueTypeNo(const Size16&) { return SIZE16_V; }
-template<> inline dword ValueTypeNo(const Size64&) { return SIZE64_V; }
-template<> inline dword ValueTypeNo(const Sizef&)  { return SIZEF_V; }
+template<> inline dword ValueTypeNo(const Size*)   { return SIZE_V; }
+template<> inline dword ValueTypeNo(const Size16*) { return SIZE16_V; }
+template<> inline dword ValueTypeNo(const Size64*) { return SIZE64_V; }
+template<> inline dword ValueTypeNo(const Sizef*)  { return SIZEF_V; }
 
 const int POINT_V   = 73;
 const int POINT16_V = 74;
 const int POINTF_V  = 75;
 const int POINT64_V = 80;
 
-template<> inline dword ValueTypeNo(const Point&)   { return POINT_V; }
-template<> inline dword ValueTypeNo(const Point16&) { return POINT16_V; }
-template<> inline dword ValueTypeNo(const Point64&) { return POINT64_V; }
-template<> inline dword ValueTypeNo(const Pointf&)  { return POINTF_V; }
+template<> inline dword ValueTypeNo(const Point*)   { return POINT_V; }
+template<> inline dword ValueTypeNo(const Point16*) { return POINT16_V; }
+template<> inline dword ValueTypeNo(const Point64*) { return POINT64_V; }
+template<> inline dword ValueTypeNo(const Pointf*)  { return POINTF_V; }
 
 const int RECT_V   = 76;
 const int RECT16_V = 77;
 const int RECTF_V  = 78;
 const int RECT64_V = 81;
 
-template<> inline dword ValueTypeNo(const Rect&)   { return RECT_V; }
-template<> inline dword ValueTypeNo(const Rect16&) { return RECT16_V; }
-template<> inline dword ValueTypeNo(const Rect64&) { return RECT64_V; }
-template<> inline dword ValueTypeNo(const Rectf&)  { return RECTF_V; }
+template<> inline dword ValueTypeNo(const Rect*)   { return RECT_V; }
+template<> inline dword ValueTypeNo(const Rect16*) { return RECT16_V; }
+template<> inline dword ValueTypeNo(const Rect64*) { return RECT64_V; }
+template<> inline dword ValueTypeNo(const Rectf*)  { return RECTF_V; }
 
 Rect    RectC(int x, int y, int cx, int cy);
 Rect16  Rect16C(int16 x, int16 y, int16 cx, int16 cy);

@@ -32,8 +32,8 @@
 
 #define TABLE(n) void Build##n(DataTable& table) {
 #define TABLE_(n) TABLE(n)
-#define COLUMN(t, n, f)  if(table.FindColumn(n()) < 0) table.AddColumn(n(), ValueTypeNo(*(const t*)0), 0 f);
-#define COLUMN_(t, n, f) if(table.FindColumn(n()) < 0) table.AddColumn(n(), ValueTypeNo(*(const t*)0), 0 f);
+#define COLUMN(t, n, f)  if(table.FindColumn(n()) < 0) table.AddColumn(n(), ValueTypeNo((const t*)0), 0 f);
+#define COLUMN_(t, n, f) if(table.FindColumn(n()) < 0) table.AddColumn(n(), ValueTypeNo((const t*)0), 0 f);
 #define SCOLUMN(t, n) COLUMN(t, n, __EMP)
 #define SCOLUMN_(t, n) COLUMN(t, n, __EMP)
 #define NINDEX | DataTableColumn::NUMBER_INDEX

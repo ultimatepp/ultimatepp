@@ -814,8 +814,8 @@ private:
 	}
 };
 
-inline dword ValueTypeNo(const byte&)     { return DataTableColumn::BYTE_V; }
-inline dword ValueTypeNo(const short&)    { return DataTableColumn::SHORT_V; }
+inline dword ValueTypeNo(const byte*)     { return DataTableColumn::BYTE_V; }
+inline dword ValueTypeNo(const short*)    { return DataTableColumn::SHORT_V; }
 //inline dword ValueTypeNo(const bool&)     { return DataTableColumn::BOOL_V; }
 
 class DataTable : public DataClient

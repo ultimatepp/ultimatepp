@@ -37,10 +37,14 @@ String Garble(const String& s);
 String Encode64(const String& s);
 String Decode64(const String& s);
 
-String HexString(const byte *s, int count, int sep = INT_MAX);
-inline String HexString(const char *s, int count, int sep = INT_MAX) { return HexString((byte *)s, count, sep); }
-inline String HexString(const void *s, int count, int sep = INT_MAX) { return HexString((byte *)s, count, sep); }
-String HexString(const String& s, int sep = INT_MAX);
+String HexString(const byte *s, int count, int sep = INT_MAX, int sepchr = ' ');
+inline String HexString(const char *s, int count, int sep = INT_MAX, int sepchr = ' ') { return HexString((byte *)s, count, sep); }
+inline String HexString(const void *s, int count, int sep = INT_MAX, int sepchr = ' ') { return HexString((byte *)s, count, sep); }
+String HexString(const String& s, int sep = INT_MAX, int sepchr = ' ');
+
+String ScanHexString(const char *s, const char *lim);
+inline String ScanHexString(const char *s, int len) { return ScanHexString(s, s + len); }
+inline String ScanHexString(const String& s)        { return ScanHexString(~s, s.GetCount()); }
 
 #ifdef PLATFORM_WINCE
 WString ToSystemCharset(const String& src);
