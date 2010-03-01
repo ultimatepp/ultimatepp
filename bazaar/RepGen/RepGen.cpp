@@ -16,8 +16,10 @@ public:
 };
 
 void RepGen::PCRE_Replace(String& where, String s_from,String s_to) {
+	TIMING("PCRE_Replace");
 	RegExp r0("(.*)"+s_from+"(.*)",RegExp::MULTILINE);
 	while (r0.GlobalMatch(where)) {
+		TIMING("PCRE_Replace::Inside while");
 		if(r0.GetCount()==2) {
 			where = r0[0] + s_to + r0[1];
 		}
@@ -25,6 +27,7 @@ void RepGen::PCRE_Replace(String& where, String s_from,String s_to) {
 };
 
 void RepGen::PlaceImage(String s_from, Image im_to, Size rep_place ){
+	TIMING("PlaceImage");
 	String s;
 	if (!im_to.IsEmpty() ) {
 		if (rep_place.cy != 0) {
@@ -48,81 +51,71 @@ void RepGen::PlaceImage(String s_from, Image im_to, Size rep_place ){
 
 
 void RepGen::Perform() {
-	result = "";
 	Report r;
-	IN_BP_LOOP = false;
-
-	RegExp r_b("(.*)::([^:]*)##BT(.*)##ET([^:]*)::(.*)",RegExp::MULTILINE);
-	RegExp r_b1("(.*)::([^:]*)##BT(.*)##ET([^}:]*)}}(.*)",RegExp::MULTILINE);
-	RegExp r_bp("(.*)##BP(.*)##EP(.*)",RegExp::MULTILINE);
+	{
+		TIMING("Perform");
+		result = "";
+		
+		IN_BP_LOOP = false;
 	
-	RepGenReportVar.Execute();
-	IN_BP_LOOP = true;
-	while (r_b.GlobalMatch(tpl)) {
-		if (r_b.GetCount()==5) {
-			tplb = "::"+r_b[1]+r_b[2]+r_b[3];
-			resultb = "";
-			ENDCALCULATE = false;
-			RepGenCalculateStart.Execute();
-			while (ENDCALCULATE == false) {
-				tplbr = tplb;
-
-				RepGenCalculateBody.Execute();
-
-				resultb += tplbr;
+		RegExp r_b("(.*)::([^:]*)##BT(.*)##ET([^:}]*)(::|}})(.*)",RegExp::MULTILINE);
+		RegExp r_bp("(.*)##BP(.*)##EP(.*)",RegExp::MULTILINE);
+		RepGenReportStart.Execute();
+		RepGenReportVar.Execute();
+		if (RepGenCalculateBody) {
+			IN_BP_LOOP = true;
+			while (r_b.GlobalMatch(tpl)) {
+				TIMING("Perform::1-st loop");
+				if (r_b.GetCount()==6) {
+					tplb = "::"+r_b[1]+r_b[2]+r_b[3];
+					resultb = "";
+					ENDCALCULATE = false;
+					RepGenCalculateStart();
+					while (ENDCALCULATE == false) {
+						TIMING("Perform::1-st loop::inside detail loop");
+						tplbr = tplb;
+		
+						RepGenCalculateBody();
+		
+						resultb += tplbr;
+					}
+					RepGenCalculateFinish();
+					tpl = r_b[0] + resultb + r_b[4] + r_b[5];
+					DUMP(r_b[4]);
+				} else tplb = "";
 			}
-			RepGenCalculateFinish.Execute();
-			tpl = r_b[0] + resultb + "::" + r_b[4];
-		} else tplb = "";
-	}
-	IN_BP_LOOP = false;
+			IN_BP_LOOP = false;
 
-	IN_BP_LOOP = true;
-	while (r_b1.GlobalMatch(tpl)) {
-		if (r_b1.GetCount()==5) {
-			tplb = "::"+r_b1[1]+r_b1[2]+r_b1[3];
-			resultb = "";
-			ENDCALCULATE = false;
-			RepGenCalculateStart.Execute();
-			while (ENDCALCULATE == false) {
-				tplbr = tplb;
-
-				RepGenCalculateBody.Execute();
-
-				resultb += tplbr;
+			IN_BP_LOOP = true;
+			while (r_bp.GlobalMatch(tpl)) {
+				TIMING("Perform::3-d loop");
+				if (r_bp.GetCount()==3) {
+					tplb = r_bp[1];
+					resultb = "";
+					ENDCALCULATE = false;
+					RepGenCalculateStart();
+					while (ENDCALCULATE == false) {
+						TIMING("Perform::3-d loop::inside detail loop");
+						tplbr = tplb;
+		
+						RepGenCalculateBody();
+		
+						resultb += tplbr;
+					}
+					RepGenCalculateFinish.Execute();
+					tpl = r_bp[0] + resultb + r_bp[2];
+				} else tplb = "";
 			}
-			RepGenCalculateFinish.Execute();
-			tpl = r_b1[0] + resultb + "}}" + r_b1[4];
-		} else tplb = "";
+		}
+		IN_BP_LOOP = false;
+		RepGenReportFinish.Execute();
+		
+		result = tpl;
+		Size page = Size(4500, 6700);
+		r.SetPageSize(page);
+		r.Margins(200,200);
+		r.Put(result);
 	}
-	IN_BP_LOOP = false;
-
-	IN_BP_LOOP = true;
-	while (r_bp.GlobalMatch(tpl)) {
-		if (r_bp.GetCount()==3) {
-			tplb = r_bp[1];
-			resultb = "";
-			ENDCALCULATE = false;
-			RepGenCalculateStart.Execute();
-			while (ENDCALCULATE == false) {
-				tplbr = tplb;
-
-				RepGenCalculateBody.Execute();
-
-				resultb += tplbr;
-			}
-			RepGenCalculateFinish.Execute();
-			tpl = r_bp[0] + resultb + r_bp[2];
-		} else tplb = "";
-	}
-	IN_BP_LOOP = false;
-	RepGenReportFinish.Execute();
-	
-	result = tpl;
-	Size page = Size(4500, 6700);
-	r.SetPageSize(page);
-	r.Margins(200,200);
-	r.Put(result);
 	RepGenReportWindow().Perform(r);
 	//DefaultPrint(r,1);
 

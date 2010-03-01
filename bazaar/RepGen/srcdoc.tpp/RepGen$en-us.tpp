@@ -5,7 +5,8 @@ topic "RepGen - Short description and Tutorial";
 [0 $$3,0#96390100711032703541132217272105:end]
 [{_}%EN-US 
 [ {{10000f0;t/25b/25@(113.42.0) [s0;%- [*@2;4 RepGen `- Very simple Report Generator (Short description)]]}}&]
-[s0;%- &]
+[s0;>%- [*^topic`:`/`/RepGen`/srcdoc`/RepGen`$en`-us^1 `[en`]][*1  ][*^topic`:`/`/RepGen`/srcdoc`/RepGen`$ru`-ru^1 `[
+ru`]]&]
 [s1;%- [C class_][*C RepGen]&]
 [s2; [3 RepGen `- Simple Report Generation Class]&]
 [s0; &]
@@ -90,5 +91,8 @@ of real data.&]
 template]. But that is another story, as a result of choice in 
 RepGen object should get the content qtf`-template.&]
 [s0; &]
+[s0; Reference [^topic`:`/`/RepGen`/src`/RepGen`$en`-us`#RepGen`:`:class^ here]&]
+[s0; &]
+[s0; ChangeLog [^topic`:`/`/RepGen`/srcdoc`/changelog`$en`-us^ here]&]
 [s0; &]
 [s0; This article in [^topic`:`/`/RepGen`/srcdoc`/RepGen`$ru`-ru^ Russian]]

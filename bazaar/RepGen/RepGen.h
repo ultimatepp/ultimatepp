@@ -30,6 +30,7 @@ public:
 	Callback RepGenCalculateFinish;
 
 	void SubstVar(String s_from,String s_to) {
+		TIMING("SubstVar");
 		if (!IN_BP_LOOP)
 			PCRE_Replace(tpl, s_from, s_to);
 		else
