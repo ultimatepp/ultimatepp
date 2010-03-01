@@ -19,8 +19,9 @@ GUI_APP_MAIN
 	fs.DefaultExt("hhh");
 //	fs.NoMkDirOption();
 	fs.Multi();
+	fs.ActiveDir("/usr/include");
 //	fs.NoEditFileName();
-	fs.PreSelect("U:/file1.txt");
+//	fs.PreSelect("U:/file1.txt");
 	for(;;) {
 		if(!fs.ExecuteSaveAs())
 			break;
