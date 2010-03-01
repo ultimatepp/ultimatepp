@@ -237,7 +237,6 @@ UWord::UWord()
 	Title(Format("Document%d", ++doc));
 	Icon(CtrlImg::File());
 	editor.ClearModify();
-	editor <<= THISBACK(SetBar);
 	SetBar();
 	editor.WhenRefreshBar = THISBACK(SetBar);
 	OpenMain();
