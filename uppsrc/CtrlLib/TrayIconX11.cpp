@@ -96,7 +96,7 @@ void TrayIcon::Message(int type, const char *title, const char *text, int timeou
 	}
 	UntrapX11Errors(x11trap);
 #else	
-	if (!notify_init (title))
+	if (!notify_init(title))
 		return;
 	NotifyNotification* notification;
 	GError* error = NULL;

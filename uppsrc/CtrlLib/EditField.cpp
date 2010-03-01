@@ -961,6 +961,7 @@ void EditField::Reset()
 	alignright = false;
 	SetStyle(StyleDefault());
 	SetFrame(edge);
+	font = StdFont();
 }
 
 EditField& EditField::SetFont(Font _font)

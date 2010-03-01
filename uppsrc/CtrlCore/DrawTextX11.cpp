@@ -19,7 +19,7 @@ XftFont *CreateXftFont(Font font, int angle)
 	double sina, cosa;
 	Std(font);
 	int hg = abs(font.GetHeight());
-	if(hg == 0) hg = 10;
+	if(hg == 0) hg = max(GetStdFontCy(), 10);
 	String face = font.GetFaceName();
 	FcPattern *p = FcPatternCreate();
 	FcPatternAddString(p, FC_FAMILY, (FcChar8*)~face);

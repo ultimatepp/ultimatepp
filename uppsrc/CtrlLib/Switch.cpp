@@ -310,6 +310,7 @@ Switch::Switch() {
 	mincy = 0;
 	Transparent();
 	NoInitFocus();
+	font = StdFont();
 }
 
 Switch::~Switch() {}

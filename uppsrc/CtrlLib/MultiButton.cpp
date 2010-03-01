@@ -262,6 +262,16 @@ int MultiButton::ChState(int i)
 	               : CTRL_NORMAL;
 }
 
+Rect MultiButton::GetMargin()
+{
+	Rect m = style->margin;
+	int fcy = GetStdFontCy();
+	int cy = GetSize().cy;
+	if(m.top + m.bottom + fcy > cy)
+		m.top = m.bottom = max((cy - fcy) / 2, 0);
+	return m;
+}
+
 void MultiButton::Lay(Rect& r)
 {
 	int border, lx, rx;
@@ -280,7 +290,7 @@ void MultiButton::Lay(Rect& r)
 	}
 	else
 	if(frm) {
-		Rect m = style->margin;
+		Rect m = GetMargin();
 		r = Rect(r.left + max(lx, m.left), r.top + m.top, min(rx, r.right - m.right), r.bottom - m.bottom);
 	}
 	else {
@@ -387,7 +397,7 @@ void MultiButton::Paint(Draw& w)
 	}
 	else
 	if(frm) {
-		Rect m = style->margin;
+		Rect m = GetMargin();
 		r = Rect(max(lx, m.left), m.top, min(rx, sz.cx - m.right), sz.cy - m.bottom);
 		Color paper;
 		if(mst == CTRL_HOT && !IsTrivial())
