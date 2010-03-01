@@ -589,6 +589,28 @@ extern String gtk_rgba;
 
 extern void ClearFtFaceCache();
 
+void SetDefTrough(ScrollBar::Style& s)
+{
+	for(int i = 0; i < 4; i++) {
+		Image m = CtrlsImg::Get(CtrlsImg::I_SBVU + i);
+		ImageBuffer ib(m);
+		Size sz = ib.GetSize();
+		ib[0][sz.cx - 1] = ib[0][0] = SColorShadow();
+		ib.SetHotSpot(Point(0, 0));
+		ib.Set2ndSpot(Point(sz.cx - 1, 0));
+		m = ib;
+		s.vlower[i] = s.vupper[i] = m;
+		m = CtrlsImg::Get(CtrlsImg::I_SBHU + i);
+		ib = m;
+		sz = ib.GetSize();
+		ib[sz.cy - 1][0] = ib[0][0] = SColorShadow();
+		ib.SetHotSpot(Point(0, 0));
+		ib.Set2ndSpot(Point(0, sz.cy - 1));
+		m = ib;
+		s.hupper[i] = s.hlower[i] = m;
+	}
+}
+
 void ChHostSkin()
 {
 	MemoryIgnoreLeaksBlock __;
@@ -779,6 +801,7 @@ void ChHostSkin()
 
 	{
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
+		SetDefTrough(s);
 		s.through = true;
 		GtkObject *adj = gtk_adjustment_new(250, 0, 1000, 1, 1, 500);
 		static GtkWidget *vscrollbar = gtk_vscrollbar_new(GTK_ADJUSTMENT(adj));
@@ -791,9 +814,10 @@ void ChHostSkin()
 		s.isright2 = s.isdown2 = GtkInt("has-secondary-forward-stepper");
 		s.isleft2 = s.isup2 = GtkInt("has-secondary-backward-stepper");
 
+		for(int i = 0; i < 6; i++)
+			CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
+
 		if(engine == "Qt") {
-			for(int i = 0; i < 6; i++)
-				CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
 			int r = Null;
 			for(int i = 0; i < 4; i++) {
 				ImageDraw iw(64, 64);
@@ -859,24 +883,7 @@ void ChHostSkin()
 			GtkChSlider(s.vthumb);
 			s.barsize += 2;
 			s.arrowsize++;
-			for(int i = 0; i < 4; i++) {
-				Image m = CtrlsImg::Get(CtrlsImg::I_SBVU + i);
-				ImageBuffer ib(m);
-				Size sz = ib.GetSize();
-				ib[0][sz.cx - 1] = ib[0][0] = SColorShadow();
-				ib.SetHotSpot(Point(0, 0));
-				ib.Set2ndSpot(Point(sz.cx - 1, 0));
-				m = ib;
-				s.vlower[i] = s.vupper[i] = m;
-				m = CtrlsImg::Get(CtrlsImg::I_SBHU + i);
-				ib = m;
-				sz = ib.GetSize();
-				ib[sz.cy - 1][0] = ib[0][0] = SColorShadow();
-				ib.SetHotSpot(Point(0, 0));
-				ib.Set2ndSpot(Point(0, sz.cy - 1));
-				m = ib;
-				s.hupper[i] = s.hlower[i] = m;
-			}
+			SetDefTrough(s);
 			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
 			ChGtkNew(hscrollbar, "slider", GTK_SLIDER|GTK_MARGIN1|GTK_XMARGIN);
 			GtkChSlider(s.hthumb);
@@ -884,9 +891,11 @@ void ChHostSkin()
 		}
 		else {
 			GtkChSlider(s.vthumb);
-			ChGtkNew("trough", GTK_BGBOX);
-			GtkChTrough(s.vupper);
-			GtkChTrough(s.vlower);
+			if(engine != "Nodoka") {
+				ChGtkNew("trough", GTK_BGBOX);
+				GtkChTrough(s.vupper);
+				GtkChTrough(s.vlower);
+			}
 			bool atp = IsEmptyImage(GetGTK(ChGtkLast(), 2, 2, "vscrollbar", GTK_BOX|GTK_TOP|GTK_RANGEA, 16, 16));
 			Size asz(s.barsize / 2, s.arrowsize / 2);
 			if(engine == "Qt")
@@ -918,8 +927,10 @@ void ChHostSkin()
 				}
 			}
 			else {
-				GtkIml(CtrlsImg::I_UA, ChGtkLast(), 0, 0, "vscrollbar", GTK_ARROW|GTK_TOP|GTK_RANGEA, asz.cx, asz.cy);
-				GtkIml(CtrlsImg::I_DA, ChGtkLast(), 0, 0, "vscrollbar", GTK_ARROW|GTK_VAL1|GTK_BOTTOM|GTK_RANGED, asz.cx, asz.cy);
+				if(engine != "Nodoka") {
+					GtkIml(CtrlsImg::I_UA, ChGtkLast(), 0, 0, "vscrollbar", GTK_ARROW|GTK_TOP|GTK_RANGEA, asz.cx, asz.cy);
+					GtkIml(CtrlsImg::I_DA, ChGtkLast(), 0, 0, "vscrollbar", GTK_ARROW|GTK_VAL1|GTK_BOTTOM|GTK_RANGED, asz.cx, asz.cy);
+				}
 
 				ChGtkNew("vscrollbar", GTK_BGBOX|GTK_TOP|GTK_RANGEA);
 				GtkChArrow(s.up.look, CtrlsImg::UA(), po);
@@ -970,9 +981,11 @@ void ChHostSkin()
 			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
 			ChGtkNew(hscrollbar, "slider", GTK_SLIDER);
 			GtkChSlider(s.hthumb);
-			ChGtkNew("trough", GTK_BGBOX);
-			GtkChTrough(s.hupper);
-			GtkChTrough(s.hlower);
+			if(engine != "Nodoka") {
+				ChGtkNew("trough", GTK_BGBOX);
+				GtkChTrough(s.hupper);
+				GtkChTrough(s.hlower);
+			}
 			if(atp) {
 				ChGtkNew("hscrollbar", GTK_ARROW|GTK_VAL2);
 				GtkCh(s.left.look, "02141111");
@@ -982,8 +995,10 @@ void ChHostSkin()
 				GtkCh(s.right2.look, "02141111");
 			}
 			else {
-				GtkIml(CtrlsImg::I_LA, ChGtkLast(), 0, 0, "hscrollbar", GTK_ARROW|GTK_VAL2|GTK_LEFT|GTK_RANGEA, asz.cy, asz.cx);
-				GtkIml(CtrlsImg::I_RA, ChGtkLast(), 0, 0, "hscrollbar", GTK_ARROW|GTK_VAL3|GTK_RIGHT|GTK_RANGED, asz.cy, asz.cx);
+				if(engine != "Nodoka") {
+					GtkIml(CtrlsImg::I_LA, ChGtkLast(), 0, 0, "hscrollbar", GTK_ARROW|GTK_VAL2|GTK_LEFT|GTK_RANGEA, asz.cy, asz.cx);
+					GtkIml(CtrlsImg::I_RA, ChGtkLast(), 0, 0, "hscrollbar", GTK_ARROW|GTK_VAL3|GTK_RIGHT|GTK_RANGED, asz.cy, asz.cx);
+				}
 				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_LEFT|GTK_RANGEA);
 				GtkChArrow(s.left.look, CtrlsImg::LA(), po);
 				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_VCENTER|GTK_RANGEC);

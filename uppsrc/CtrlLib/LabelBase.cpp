@@ -122,6 +122,7 @@ DrawLabel::DrawLabel()
 	align = valign = ALIGN_CENTER;
 	accesskey = 0;
 	accesspos = -1;
+	font = StdFont();
 }
 
 Size DrawLabel::GetSize(int txtcx) const

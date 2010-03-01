@@ -105,6 +105,7 @@ private:
 	bool GetPos(SubButton& b,  int& lx, int& rx, int& x, int& cx, int px = -1);
 	void GetPos(int ii, int& x, int& cx);
 	int  ChState(int i);
+	Rect GetMargin();
 	void Lay(Rect& r);
 	bool ComplexFrame();
 	bool Metrics(int& border, int& lx, int &rx, const Rect& r);

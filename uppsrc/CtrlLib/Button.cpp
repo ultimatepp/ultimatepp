@@ -170,7 +170,7 @@ int Pusher::GetVisualState() const
 Pusher::Pusher() {
 	keypush = push = clickfocus = false;
 	accesskey = 0;
-	font = Null;
+	font = StdFont();
 	NoInitFocus();
 }
 
