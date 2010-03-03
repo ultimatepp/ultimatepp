@@ -307,14 +307,58 @@ void TabCtrl::Set(int i)
 	ScrollInto(sel);
 }
 
-void TabCtrl::Set(Ctrl& slave)
+int  TabCtrl::Find(const Ctrl& slave) const
 {
 	for(int i = 0; i < tab.GetCount(); i++)
-		if(tab[i].slave == &slave) {
-			Set(i);
-			return;
-		}
+		if(tab[i].slave == &slave)
+			return i;
 }
+
+void TabCtrl::Set(Ctrl& slave)
+{
+	int i = Find(slave);
+	if(i >= 0)
+		Set(i);
+}
+
+void TabCtrl::Remove(Ctrl& slave)
+{
+	int i = Find(slave);
+	if(i >= 0)
+		Remove(i);
+}
+
+int TabCtrl::FindInsert(Ctrl& slave)
+{
+	int i = Find(slave);
+	return i < 0 ? GetCount() : i;
+}
+
+TabCtrl::Item& TabCtrl::Insert(Ctrl& before_slave)
+{
+	return Insert(FindInsert(before_slave));
+}
+
+TabCtrl::Item& TabCtrl::Insert(Ctrl& before_slave, const char *text)
+{
+	return Insert(FindInsert(before_slave), text);
+}
+
+TabCtrl::Item& TabCtrl::Insert(Ctrl& before_slave, const Image& m, const char *text)
+{
+	return Insert(FindInsert(before_slave), m, text);
+}
+
+TabCtrl::Item& TabCtrl::Insert(Ctrl& before_slave, Ctrl& slave, const char *text)
+{
+	return Insert(FindInsert(before_slave), slave, text);
+}
+
+TabCtrl::Item& TabCtrl::Insert(Ctrl& before_slave, Ctrl& slave, const Image& m, const char *text)
+{
+	return Insert(FindInsert(before_slave), slave, m, text);
+}
+
 
 void TabCtrl::SetData(const Value& data)
 {

@@ -93,6 +93,7 @@ private:
 	void       SyncTabs();
 	int        TabsRight();
 	void       Go(int d);
+	int        FindInsert(Ctrl& slave);
 
 public:
 	Callback WhenSet;
@@ -118,8 +119,18 @@ public:
 	const Item& GetItem(int i) const             { return tab[i]; }
 
 	void Set(int i);
-	void Set(Ctrl& slave);
 	int  Get() const                             { return sel; }
+
+	int  Find(const Ctrl& slave) const;
+	void Set(Ctrl& slave);
+
+	TabCtrl::Item& Insert(Ctrl& before_slave);
+	TabCtrl::Item& Insert(Ctrl& before_slave, const char *text);
+	TabCtrl::Item& Insert(Ctrl& before_slave, const Image& m, const char *text);
+	TabCtrl::Item& Insert(Ctrl& before_slave, Ctrl& slave, const char *text);
+	TabCtrl::Item& Insert(Ctrl& before_slave, Ctrl& slave, const Image& m, const char *text);
+
+	void  Remove(Ctrl& slave);
 
 	void GoNext()                                { Go(1); }
 	void GoPrev()                                { Go(-1); }
