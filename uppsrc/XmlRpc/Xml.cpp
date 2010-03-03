@@ -104,7 +104,7 @@ String FormatXmlRpcValue(const Value& v)
 		r = XmlTag("int")(Format("%d", (int)v));
 	else
 	if(v.GetType() == BOOL_V)
-		r = XmlTag("boolean")(AsString(v));
+		r = XmlTag("boolean")(AsString((int)(bool)v));
 	else
 	if(IsNumber(v))
 		r = XmlTag("double")(Format("%d", (double)v));
