@@ -107,8 +107,9 @@ Tab4::Tab4()
 	scatter4.SetRange(13,50);
 	scatter4.SetMajorUnits(1,10);
 	scatter4.SetXYMin(0,-20);
+	scatter4.SetMouseHandling(true);
 	Vector<XY> s1,s2;
-	s1<<XY(1,-6)<<XY(2,-4)<<XY(3,2)<<XY(4,8)<<XY(5,8)<<XY(6,15)<<XY(7,20)<<XY(8,25)<<XY(9,14)<<XY(10,10)<<XY(11,3)<<XY(12,-11);;
+	s1<<XY(1,-6)<<XY(2,-4)<<XY(3,2)<<XY(4,8)<<XY(5,8)<<XY(6,15)<<XY(7,20)<<XY(8,25)<<XY(9,14)<<XY(10,10)<<XY(11,3)<<XY(12,-11);
 	scatter4.AddSeries(s1,"2005",true);
 	
 	s2<<XY(1,-12)<<XY(2,-7)<<XY(3,0)<<XY(4,2)<<XY(5,10)<<XY(6,18)<<XY(7,25)<<XY(8,26)<<XY(9,15)<<XY(10,12)<<XY(11,7)<<XY(12,-6);
@@ -353,9 +354,10 @@ Tab8::Tab8()
 {
 	CtrlLayout(*this);	
 	HSizePos().VSizePos();
-	scatter8.SetRange(13,50, 20);
+	scatter8.SetRange(13,50,20);
 	scatter8.SetMajorUnits(1,10);
 	scatter8.SetXYMin(0,-20, 1000);
+	scatter8.SetMouseHandling(true, true);
 	Vector<XY> s1,s2;
 	s1<<XY(1,-6)<<XY(2,-4)<<XY(3,2)<<XY(4,8)<<XY(5,8)<<XY(6,15)<<XY(7,20)<<XY(8,25)<<XY(9,14)<<XY(10,10)<<XY(11,3)<<XY(12,-11);;
 	scatter8.AddSeries(s1,"Temperature",true);
@@ -373,6 +375,7 @@ Tab8::Tab8()
 	scatter8.SetLabelY2("Pressure [mBar]");
 	scatter8.SetMarkStyle(1,Scatter::RECTANGLE);
 	scatter8.SetMarkWidth(1,24);
+	scatter8.ShowInfo();	
 }
 
 //******************************************************************************************
