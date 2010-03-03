@@ -321,8 +321,13 @@ void RichQtfParser::Error(const char *s) {
 	RichPara::CharFormat ef;
 	(Font&) ef = Arial(84).Bold().Underline();
 	ef.ink = Red;
-	paragraph.Cat(("ERROR: " + String(s) + ": " +
-	              Filter(String(term, min<int>((int)strlen(term), 20)), NoLow)).ToWString(), ef);
+	WString e;
+	e << "ERROR: " << s;
+	if(*term)
+		e << ": " << Filter(String(term, min<int>((int)strlen(term), 20)), NoLow).ToWString();
+	else
+		e << ".";
+	paragraph.Cat(e, ef);
 	target.Cat(paragraph);
 	FlushStyles();
 	throw Exc();
@@ -360,6 +365,9 @@ void RichQtfParser::TableFormat(bool bw)
 		if(bw && IsDigit(*term)) {
 			t.hspan = GetNumber();
 		}
+		else
+		if(*term == '\0')
+			Error("Unexpected end of text in cell format");
 		else
 		switch(*term++) {
 		case ' ': return;
