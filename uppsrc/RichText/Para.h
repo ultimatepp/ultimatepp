@@ -195,6 +195,7 @@ struct RichPara {
 		Buffer<const CharFormat *> format;
 		Array<Line>                line;
 		Array<CharFormat>          hformat;
+		Array<RichObject>          object;
 		int                        first_indent;
 		int                        next_indent;
 

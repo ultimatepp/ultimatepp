@@ -180,7 +180,7 @@ public:
 	static int    FindType(const String& name)   { return Map().Find(name); }
 	static RichObjectType& GetType(int i)        { return *Map()[i]; }
 	static String GetTypeName(int i)             { return Map().GetKey(i); }
-
+	
 	void   SetSize(int cx, int cy)               { size = Size(cx, cy); NewSerial(); }
 	void   SetSize(Size sz)                      { size = sz; NewSerial(); }
 	Size   GetSize() const                       { return size; }
