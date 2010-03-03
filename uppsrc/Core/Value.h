@@ -133,7 +133,7 @@ protected:
 
 public:
 	static  void Register(dword w, Void* (*c)(Stream& s)) init_;
-
+	
 	dword    GetType() const         { return ptr->GetType(); }
 	bool     IsError() const         { return GetType() == ERROR_V; }
 	bool     IsVoid() const          { return GetType() == VOID_V || IsError(); }

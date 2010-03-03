@@ -312,6 +312,7 @@ int  TabCtrl::Find(const Ctrl& slave) const
 	for(int i = 0; i < tab.GetCount(); i++)
 		if(tab[i].slave == &slave)
 			return i;
+	return -1;
 }
 
 void TabCtrl::Set(Ctrl& slave)
