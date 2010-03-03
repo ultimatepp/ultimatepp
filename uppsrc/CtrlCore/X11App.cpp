@@ -189,8 +189,10 @@ static void sPanicMessageBox(const char *title, const char *text)
 	GC gc = XCreateGC(display, win, 0, &values);
 	// New section
 	unsigned long wina[1];
-	wina[0] = XAtomRaw("_NET_WM_STATE_ABOVE");
-	XChangeProperty(display, win, XAtomRaw("_NET_WM_STATE"), XAtomRaw("ATOM"), 32,
+	wina[0] = XInternAtom(display, "_NET_WM_STATE_ABOVE", XFalse);
+	XChangeProperty(display, win,
+	                XInternAtom(display, "_NET_WM_STATE", XFalse),
+	                XInternAtom(display, "ATOM", XFalse), 32,
 	                PropModeReplace, (const unsigned char *)&wina, 1);
 	XMapWindow(display, win);
 	XSetInputFocus(display, win, RevertToParent, CurrentTime);
