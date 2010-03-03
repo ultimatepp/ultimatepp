@@ -5,6 +5,7 @@ uses
 
 file
 	Scatter.h,
+	Scatter.t,
 	Scatter.cpp,
 	PopUpText.h,
 	PopUpText.cpp,

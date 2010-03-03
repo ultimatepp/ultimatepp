@@ -35,11 +35,17 @@ public:
 		CUSTOM
 	};
 	
-	Callback3<String&, int, double> cbModifFormatX, cbModifFormatY;
+	Callback3<String&, int, double> cbModifFormatX, cbModifFormatY, cbModifFormatY2;
 			
 	virtual void  Paint(Draw& w);
 	virtual void  LeftDown(Point, dword);
 	virtual void  LeftUp(Point, dword);
+	virtual void  MiddleDown(Point, dword);
+	virtual void  MouseMove(Point, dword);
+	virtual void  MiddleUp(Point, dword);
+	virtual void  MouseWheel(Point, int zdelta, dword);
+	
+	Callback WhenZoomScroll;
 	
 	Scatter& SetColor(const class::Color& _color);
 	Scatter& SetTitle(const String& _title);
@@ -76,12 +82,16 @@ public:
 	double GetYRange()const {return yRange;}
 	double GetYRange2()const {return yRange2;}
 	void SetMajorUnits(double ux, double uy);
+	void SetMinUnits(double ux, double uy);
 	void SetXYMin(double xmin,double ymin,double ymin2 = 0);
 	double GetXMin () const {return xMin;}
 	double GetYMin () const {return yMin;}	
 	double GetYMin2 () const {return yMin2;}	
 	void Graduation_FormatX(Formats fi);	
 	void Graduation_FormatY(Formats fi);
+	void Graduation_FormatY2(Formats fi);
+	
+	void SetMouseHandling(bool valx = true, bool valy = false);
 	
 	void AddSeries (Vector<XY> & points,const String& legend="", const bool& join=false,const class::Color& pcolor=LtBlue,const int& width=30,const int& thickness=6);
 	
@@ -178,6 +188,7 @@ private:
 	double xRange,yRange,yRange2;
 	double xMin,yMin,yMin2;
 	double xMajorUnit,yMajorUnit,yMajorUnit2;
+	double xMinUnit,yMinUnit, yMinUnit2;
 	bool drawXReticle, drawYReticle, drawY2Reticle;	
 	
 	class::Color gridColor;
@@ -185,6 +196,9 @@ private:
 	bool drawVGrid, drawHGrid;	
 	
 	bool logX, logY, logY2;	
+	
+	int butDownX, butDownY;
+	bool isButDown;
 	
 	Vector<Vector<XY> > vPointsData,vFunctionData;
 	Vector<bool> vFPrimaryY, vPPrimaryY;
@@ -204,6 +218,7 @@ private:
 	bool showLegend;
 	int legendWeight;
 	bool antialiasing;
+	bool mouseHandlingX, mouseHandlingY;
 	
 	Vector<XY> Cubic (const Vector<XY>& DataSet, const int& fineness=10, double tension=0.4)const;
 	void DrawLegend(Draw& w,const int& scale) const;
@@ -233,19 +248,22 @@ private:
 		s=Format("%Dy",int(d));
 	}
 	
-	String VariableFormat(const double& d)
+	static String VariableFormat(double range, double d)
 	{
-		double dabs=d>0 ? d: -d;
-				
-		if (0.001<=dabs && dabs<0.01) return FormatDouble(d,5);
-		else if (0.01<=dabs && dabs<0.1) return FormatDouble(d,4);
-		else if (0.1<=dabs && dabs<1) return FormatDouble(d,3);
-		else if (1<=dabs && dabs<10) return FormatDouble(d,2);
-		else if (10<=dabs && dabs<100) return FormatDouble(d,1);
-		else if (100<=dabs && dabs<10000) return FormatDouble(d,0);
+		if (fabs(d) <= 1e-15)
+			d = 0;
+		if 		(0.001<=range && range<0.01) 	return FormatDouble(d,5);
+		else if (0.01<=range && range<0.1) 		return FormatDouble(d,4);
+		else if (0.1<=range && range<1) 		return FormatDouble(d,3);
+		else if (1<=range && range<10) 			return FormatDouble(d,2);
+		else if (10<=range && range<100) 		return FormatDouble(d,1);
+		else if (100<=range && range<100000) 	return FormatDouble(d,0);
 		else return FormatDoubleExp(d,2);
 		
 	}	
+	String VariableFormatX(const double& d) const  {return VariableFormat(xRange, d);}
+	String VariableFormatY(const double& d) const  {return VariableFormat(yRange, d);} 
+	String VariableFormatY2(const double& d) const {return VariableFormat(yRange2, d);}
 	
 	void Plot(Draw& w, const int& scale,const int& l,const int& h) const;		
 

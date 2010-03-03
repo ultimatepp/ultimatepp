@@ -1172,4 +1172,4 @@ topic "Scatter";
 [s0; &]
 [s0; [^topic`:`/`/Scatter`/srcdoc`/TestScatter2`$en`-us^2 TestScatter2][2  
 package does a visual review of class features.]&]
-[s0;2 ]
+[s0; ]
