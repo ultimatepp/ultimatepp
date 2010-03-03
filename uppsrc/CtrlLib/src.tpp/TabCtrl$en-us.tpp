@@ -366,14 +366,49 @@ nt]_[*@3 i])&]
 [s2; Sets tab [*@3 i ]as active. You can also use SetData (or operator<<`=).&]
 [s3; &]
 [s4;%- &]
-[s5;:TabCtrl`:`:Set`(Ctrl`&`):%- [@(0.0.255) void]_[* Set]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 s
-lave])&]
-[s2; Sets tab with [%-*@3 slave] widget as active.&]
-[s3; &]
-[s4;%- &]
 [s5;:TabCtrl`:`:Get`(`)const:%- [@(0.0.255) int]_[* Get]()_[@(0.0.255) const]&]
 [s2; Returns the index of active tab. You can also use GetData (or 
 operator`~).&]
+[s3; &]
+[s4;%- &]
+[s5;:TabCtrl`:`:Find`(const Ctrl`&`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) const]_[_^Ctrl^ C
+trl][@(0.0.255) `&]_[*@3 slave])_[@(0.0.255) const]&]
+[s2; Finds the tab index of [%-*@3 slave]. If [%-*@3 slave] is not present 
+in TabCtrl, returns `-1.&]
+[s3; &]
+[s4;%- &]
+[s5;:TabCtrl`:`:Set`(Ctrl`&`):%- [@(0.0.255) void]_[* Set]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 s
+lave])&]
+[s2;%- [%% Sets tab with ][*@3 slave][%%  widget as active. ]If [*@3 slave] 
+is not present in TabCtrl, nothing happens.&]
+[s3; &]
+[s4;%- &]
+[s5;:TabCtrl`:`:Insert`(Ctrl`&`):%- [_^TabCtrl`:`:Item^ TabCtrl`::Item][@(0.0.255) `&]_[* In
+sert]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 before`_slave])&]
+[s5;:TabCtrl`:`:Insert`(Ctrl`&`,const char`*`):%- [_^TabCtrl`:`:Item^ TabCtrl`::Item][@(0.0.255) `&
+]_[* Insert]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 before`_slave], [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 text])&]
+[s5;:TabCtrl`:`:Insert`(Ctrl`&`,const Image`&`,const char`*`):%- [_^TabCtrl`:`:Item^ Ta
+bCtrl`::Item][@(0.0.255) `&]_[* Insert]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 before`_slave], 
+[@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 m], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 text])&]
+[s5;:TabCtrl`:`:Insert`(Ctrl`&`,Ctrl`&`,const char`*`):%- [_^TabCtrl`:`:Item^ TabCtrl`:
+:Item][@(0.0.255) `&]_[* Insert]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 before`_slave], 
+[_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 slave], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text])
+&]
+[s5;:TabCtrl`:`:Insert`(Ctrl`&`,Ctrl`&`,const Image`&`,const char`*`):%- [_^TabCtrl`:`:Item^ T
+abCtrl`::Item][@(0.0.255) `&]_[* Insert]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 before`_slave], 
+[_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 slave], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_
+[*@3 m], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text])&]
+[s2; Inserts a new tab before tab that contains [%-*@3 before`_slave]. 
+If [%-*@3 before`_slave] is not present in TabCtrl, new tab is 
+appended at the end.&]
+[s3; &]
+[s4;%- &]
+[s5;:TabCtrl`:`:Remove`(Ctrl`&`):%- [@(0.0.255) void]_[* Remove]([_^Ctrl^ Ctrl][@(0.0.255) `&
+]_[*@3 slave])&]
+[s2;%- [%% Removes a tab with ][*@3 slave][%% . ]If [*@3 slave] is not present 
+in TabCtrl, nothing happens.&]
 [s3; &]
 [s4;%- &]
 [s5;:TabCtrl`:`:GoNext`(`):%- [@(0.0.255) void]_[* GoNext]()&]
