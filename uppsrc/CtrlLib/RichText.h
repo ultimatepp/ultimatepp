@@ -92,7 +92,7 @@ public:
 	RichTextView&   NoHyperlinkDecoration()                   { return HyperlinkDecoration(false); }
 	RichTextView&   Lazy(bool b = true)                       { lazy = b; return *this; }
 	RichTextView&   NoLazy()                                  { return Lazy(false); }
-	RichTextView&   ShrinkOversizedObjects(bool b = true)     { shrink_oversized_objects = b; return *this; }
+	RichTextView&   ShrinkOversizedObjects(bool b = true)     { shrink_oversized_objects = b; Refresh(); return *this; }
 	RichTextView&   NoShrinkOversizedObjects()                { return ShrinkOversizedObjects(false); }
 
 	void            operator=(const char *qtf)                { SetQTF(qtf); }
