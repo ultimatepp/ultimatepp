@@ -395,6 +395,7 @@ RichTextView::RichTextView()
 	AddFrame(sb);
 	NoWantFocus();
 	lazy = true;
+	shrink_oversized_objects = true;
 }
 
 RichTextView::~RichTextView() {}
@@ -411,7 +412,6 @@ RichTextCtrl::RichTextCtrl()
 	Background(Null);
 	SetFrame(NullFrame());
 	AutoHideSb();
-	shrink_oversized_objects = true;
 }
 
 #ifndef PLATFORM_PDA
