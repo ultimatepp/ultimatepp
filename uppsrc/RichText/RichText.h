@@ -271,6 +271,7 @@ struct PaintInfo {
 	bool    coloroverride;
 	void    *context;
 	bool    showlabels;
+	bool    shrink_oversized_objects;
 
 	PaintInfo();
 };

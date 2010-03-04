@@ -247,8 +247,11 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 					const RichObject& o = *hg->object;
 					if(o) {
 						Size sz = z * o.GetSize();
-						draw.DrawRect(z * x, z * py.y, sz.cx, z * linecy, (*i)->paper);
-						draw.Clipoff(z * x, z * (y0 - hg->ascent), sz.cx, sz.cy);
+						int ix = z * x;
+						if(pi.shrink_oversized_objects && sz.cx + ix > page.right)
+							sz.cx = page.right - ix;
+						draw.DrawRect(ix, z * py.y, sz.cx, z * linecy, (*i)->paper);
+						draw.Clipoff(ix, z * (y0 - hg->ascent), sz.cx, sz.cy);
 						if(pi.sizetracking)
 							draw.DrawRect(sz, SColorFace);
 						else

@@ -34,6 +34,7 @@ void  RichTextView::Paint(Draw& w)
 	pi.bottom = PageY(0, sb + sz.cy / pi.zoom);
 	pi.usecache = true;
 	pi.sizetracking = sizetracking;
+	pi.shrink_oversized_objects = shrink_oversized_objects;
 	int y = 0;
 	if(vcenter && sb.GetTotal() < sb.GetPage()) {
 		PageY py = text.GetHeight(GetPage());
@@ -410,6 +411,7 @@ RichTextCtrl::RichTextCtrl()
 	Background(Null);
 	SetFrame(NullFrame());
 	AutoHideSb();
+	shrink_oversized_objects = true;
 }
 
 #ifndef PLATFORM_PDA
