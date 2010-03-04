@@ -59,6 +59,7 @@ PaintInfo::PaintInfo()
 	coloroverride = false;
 	context = NULL;
 	showlabels = false;
+	shrink_oversized_objects = false;
 }
 
 String RichPara::Number::AsText(const RichPara::NumberFormat& format) const
