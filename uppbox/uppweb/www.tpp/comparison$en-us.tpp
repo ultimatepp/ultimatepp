@@ -23,8 +23,8 @@ topic "Comparison";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2;a0; Comparisons&]
-[s5;>b0;a83; [*^topic`:`/`/uppweb`/www`/comparison`$en`-us^1 `[en`]][*1  
-][*^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 `[ru`]]&]
+[s5;>b0;a83; [*R^topic`:`/`/uppweb`/www`/comparison`$en`-us^1 `[en`]][*R1  
+][*R^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 `[ru`]]&]
 [s0; In order to demonstrate advantages of Ultimate`+`+, we have 
 reimplemented some examples of other libraries.&]
 [s0; &]
