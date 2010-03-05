@@ -1,9 +1,11 @@
 topic "Chameleon examples";
 [ $$0,0#00000000000000000000000000000000:Default]
+[a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%EN-US 
 [s0; [*+150 Chameleon in action]&]
 [s0; [/1 (click on image to enlarge it)]&]
-[s0; &]
+[s0;> [*R^topic`:`/`/uppweb`/www`/chss`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/chss`$ru`-ru^1 `[
+ru`]]&]
 [s0; [2 Windows XP, standard theme]&]
 [s0; 
 @@image:1437&962
