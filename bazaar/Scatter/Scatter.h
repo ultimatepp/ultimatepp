@@ -80,7 +80,7 @@ public:
 	void SetRange(double rx, double ry, double ry2 = -1);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
-	double GetYRange2()const {return yRange2;}
+	double GetY2Range()const {return yRange2;}
 	void SetMajorUnits(double ux, double uy);
 	void SetMinUnits(double ux, double uy);
 	void SetXYMin(double xmin,double ymin,double ymin2 = 0);
