@@ -1,4 +1,4 @@
-topic "Applications developed using U++";
+topic "Программы, созданные с помощью Ultimate++";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -21,17 +21,21 @@ topic "Applications developed using U++";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
-[{_}%EN-US 
-[s2;a0; [+150 Examples of applications developed using U`+`+]&]
-[s2;> [^topic`:`/`/uppweb`/www`/apps`$en`-us^1 `[en`]][1  ][^topic`:`/`/uppweb`/www`/apps`$ru`-ru^1 `[
+[{_}%RU-RU 
+[s2;a0; [+150 Программы, созданные с помощью 
+Ultimate`+`+]&]
+[s2;>%% [^topic`:`/`/uppweb`/www`/apps`$en`-us^1 `[en`]][1  ][^topic`:`/`/uppweb`/www`/apps`$ru`-ru^1 `[
 ru`]]&]
-[s0;^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 &]
-[s0; One of the most complex systems developed using U`+`+ and in 
-fact the initial impulse do develop it is large municipal agenda 
-system [*_ IDIS]. being developed for more than 9 years. At the 
-moment it comprises more than 20 U`+`+/Oracle client server applications, 
-450 dialog layouts and database model with more than 250 tables 
-(maintained using .sch files).&]
+[s0;1 &]
+[s0; Одна из самых сложных систем, разработанных
+ с использованием U`+`+, `- это большая 
+муниципальная система [*_ IDIS]. Данная 
+система разрабатывается свыше 9 лет. 
+На данный момент она включает более 
+20 U`+`+/Oracle клиент/серверных приложений, 
+450 файлов дизайна окон и модель базы 
+данных с более чем 250 таблицами (хранимыми 
+в .sch файлах).&]
 [s0; &]
 [s0; 
 @@image:1040&781
@@ -798,12 +802,17 @@ moment it comprises more than 20 U`+`+/Oracle client server applications,
 [s0; &]
 [s0; &]
 [s0; [*^topic`:`/`/uppweb`/projects`/webmap`$en`-us^ WebMa][*^topic`:`/`/uppweb2`/www`/Funding`$en`-us^ p
-][*  ]is an integrated desktop GIS / map server system. You can 
-use the built`-in editor to design and assemble map presentations, 
-charts, descriptive web pages and other relevant information 
-into complex projects you can then serve over the internet using 
-Java and HTML`-based clients. (see more detailed description 
-[^topic`:`/`/uppweb`/projects`/webmap`$en`-us^ here]).&]
+][*  ]`- это интегрированное десктоп`-приложение
+, представляющее из себя GIS / map серверную 
+систему. Вы можете использовать встроенный 
+редактор для оформления и сборки 
+презентаций карт, графиков, описательных 
+веб`-страниц и прочей информации в 
+комплексные проекты, которые вы можете 
+в дальнейшем просматривать через 
+Интернет, используя основанные на 
+Java и HTML клиенты (более подробная информация 
+[^topic`:`/`/uppweb`/projects`/webmap`$en`-us^ здесь]).&]
 [s0; &]
 [s0; &]
 [s0; 
@@ -5362,13 +5371,16 @@ Java and HTML`-based clients. (see more detailed description
 [s0; &]
 [s0; &]
 [s0; &]
-[s0; [*_^topic`:`/`/uppweb`/projects`/winzpv`$en`-us^ WinZPV] is a 
-complex information system used by the [^http`:`/`/www`.chmi`.cz`/^ Czech 
-Hydrological Institut][^stats`.html^ e] to record river water measurements 
-(water levels and flow rates, temperatures and lots of other 
-silly things) and various additional information used to analyze 
-various aspects of the Czech river network system. (see more 
-detailed description [^topic`:`/`/uppweb`/projects`/winzpv`$en`-us^ here]).&]
+[s0; [*_^topic`:`/`/uppweb`/projects`/winzpv`$en`-us^ WinZPV] `- сложная 
+информационная система, используемая 
+[^http`:`/`/www`.chmi`.cz`/^ Чешским Гидрологическим 
+Институтом] для записи измерений 
+речных вод (уровень воды и скорость 
+потока, температуры и пр.), а также 
+дополнительные данные, используемые 
+для анализа различных аспектов чешской 
+речной системы (более подробная информация 
+[^topic`:`/`/uppweb`/projects`/winzpv`$en`-us^ здесь]).&]
 [s0; 
 @@image:1202&783
 ��󂀀����������읫�ܺ������ˋ���˃������������𧇖���؆�ܺ����������Ԭ���ϼ�
@@ -8531,11 +8543,15 @@ detailed description [^topic`:`/`/uppweb`/projects`/winzpv`$en`-us^ here]).&]
 [s0;3 &]
 [s0;3 &]
 [s0; [*^topic`:`/`/uppweb`/projects`/hydrocheck`$en`-us^ Hydrocheck] 
-is a specialized software for analyzing river flow. A built in 
-editor is used to define cross sections and other river parameters, 
-which can be afterwards subjected to a multitude of hydraulic 
-computations and for generation of various readouts. (see more 
-detailed description [^topic`:`/`/uppweb`/projects`/hydrocheck`$en`-us^ here]).&]
+`- специализированное программное 
+обеспечение для анализа речного стока. 
+С помощью встроенного редактора определяютс
+я сечения и пр. параметры реки, которые 
+в дальнейшем могут быть использованы 
+во множестве гидравлических расчетов, 
+а также для генераций различных видов 
+отчетов (более подробная информация 
+[^topic`:`/`/uppweb`/projects`/hydrocheck`$en`-us^ здесь]).&]
 [s0;3 &]
 [s0; 
 @@image:1202&904
@@ -9809,12 +9825,14 @@ detailed description [^topic`:`/`/uppweb`/projects`/hydrocheck`$en`-us^ here]).&
 [s0;3 &]
 [s0;3 &]
 [s0;3 &]
-[s0; In 1999`-2004 years, Ultimate Development Ltd developed several 
-versions of [^http`:`/`/www`.nbu`.cz`/bpo`/kestazeni`.php^ digital 
-security questionary] for Czech [^http`:`/`/www`.nbu`.cz`/^ National 
-Security Authority]. Interesting aspect of this job was that 
-this quite complex application had to fit on single 1.44`" floppy 
-including questionary data.&]
+[s0; В 1999`-2004 годах, Ultimate Development Ltd разрабатывали 
+несколько версий [^http`:`/`/www`.nbu`.cz`/bpo`/kestazeni`.php^ ан
+кет цифровой безопасности] для чешской 
+[^http`:`/`/www`.nbu`.cz`/^ Администрации Национальной 
+Безопасности]. Интересным аспектом 
+этой работы было то, что сложное приложение 
+должно было поместиться на единственной 
+1.44`" дискете, включая данные анкеты.&]
 [s0; &]
 [s0; 
 @@image:890&712
@@ -10424,9 +10442,10 @@ including questionary data.&]
 [s0; &]
 [s0;3 &]
 [s0;3 &]
-[s0; [*_ Indexelator] by Daniel Kos is a part of SIOZ system . The 
-main goal for this application is to gather, browse and distribute 
-data about animals and their owners.&]
+[s0; [*_ Indexelator] от Daniel Kos (Даниэля Кос) является 
+частью SIOZ системы. Основная цель данного 
+приложения `- сбор, просмотр и распространени
+е данных о животных и их владельцах.&]
 [s0; &]
 [s0; 
 @@image:1346&1007
@@ -11784,7 +11803,8 @@ data about animals and their owners.&]
 [s0; &]
 [s0; &]
 [s0; &]
-[s0; [*_ Natural 3D] by Daniel Kos is a 3D engine and associated tools.&]
+[s0; [*_ Natural 3D] от Daniel Kos (Даниэля Кос) `- 3D 
+движок и связанные с ним инструменты.&]
 [s0; &]
 [s0; 
 @@image:1414&913
@@ -14729,17 +14749,23 @@ data about animals and their owners.&]
 &]
 [s0; &]
 [s0;*3 &]
-[s0;%- &]
-[s0;%- [^topic`:`/`/uppweb`/projects`/imalyzer`$en`-us^ The Instrument 
-and Maintenance Analyzer (IMAlyzer)] is a management and information 
-system for all kinds of maintenance on large production plants 
-and their online and offline analyzing equipment. The application 
-is highly customizable and can be used in a wide range of production 
-processes and industries. The user interface is simple as possible, 
-which makes it easy for everyone to work with. The result is 
-best acceptance on users side.&]
-[s0;%- &]
-[s0;%- 
+[s0; &]
+[s0; [^topic`:`/`/uppweb`/projects`/imalyzer`$en`-us^ The Instrument 
+and Maintenance Analyzer (IMAlyzer)] `- это управляющая 
+информационная система для всех видов 
+обслуживания на крупных производственных 
+площадках и анализа подключенного/отключенн
+ого оборудования. Приложение имеет 
+множество настроек и может быть использован
+о в широком спектре производственных 
+процессов. Интерфейс пользователя 
+прост настолько, насколько это возможно, 
+что делает его легким в работе для 
+каждого. Как результат, улучшилось 
+восприятие и внимание со стороны 
+пользователей.&]
+[s0; &]
+[s0; 
 @@image:1360&1035
 ����������������ǜ읇���������˦��䔧�ǧر�����ؾ����ٸ����������Ի��������
 ���ԥ����������Մ���٬��հ��؀���������ͷ˂����������������������Ǚ�����������
@@ -16948,14 +16974,17 @@ best acceptance on users side.&]
 �������վ������������󨉶�܈������Ђ������ۻ�И��������ˑ��İ���������۫��
 ��̜�����Ŀ������ؘܢ�����������Կ���逵�������������������
 &]
-[s0;%- &]
+[s0; &]
 [s0;*3 &]
 [s0;*3 &]
-[s0; No list of U`+`+ applications would not be complete without 
-[*_ TheIDE] itself. TheIDE is not only the U`+`+ preferred development 
-environment, but also a [*/ proof of concept] of U`+`+ design principles. 
-TheIDE is being developed using TheIDE and U`+`+ (creating interesting 
-chicken`-egg problem...).&]
+[s0; Список U`+`+ приложений был бы незавершен 
+без [*_ TheIDE]. Интегрированная среда программиро
+вания TheIDE `- это не только предпочтительное 
+средство разработки U`+`+, но также 
+является [*/ доказательством концепта] 
+U`+`+ принципов дизайна. TheIDE разрабатывается 
+с помощью TheIDE and U`+`+ (создавая при этом 
+забавную проблему курицы и яйца...).&]
 [s0;3 &]
 [s0; 
 @@image:1202&904

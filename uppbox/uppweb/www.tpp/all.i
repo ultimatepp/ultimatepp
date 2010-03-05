@@ -6,6 +6,10 @@ TOPIC("apps$en-us")
 #include "apps$en-us.tppi"
 END_TOPIC
 
+TOPIC("apps$ru-ru")
+#include "apps$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("bazaar$en-us")
 #include "bazaar$en-us.tppi"
 END_TOPIC
