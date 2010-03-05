@@ -130,6 +130,10 @@ TOPIC("vsqt$en-us")
 #include "vsqt$en-us.tppi"
 END_TOPIC
 
+TOPIC("vsqt$ru-ru")
+#include "vsqt$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("vsstd$en-us")
 #include "vsstd$en-us.tppi"
 END_TOPIC

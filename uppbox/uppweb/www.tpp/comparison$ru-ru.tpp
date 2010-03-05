@@ -23,13 +23,13 @@ topic "Comparison";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%RU-RU 
 [s2;a0; Сравнения&]
-[s5;>b0;a83;%% [*^topic`:`/`/uppweb`/www`/comparison`$en`-us^1 `[en`]][*1  
-][*^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 `[ru`]]&]
+[s5;>b0;a83;%% [*R^topic`:`/`/uppweb`/www`/comparison`$en`-us^1 `[en`]][*R1  
+][*R^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 `[ru`]]&]
 [s0; Для демонстрации преимуществ Ultimate`+`+, 
 мы повторили некоторые примеры из 
 других библиотек.&]
 [s0; &]
-[s0; [^topic`:`/`/uppweb`/www`/vsqt`$en`-us^ Сравнение с 
+[s0; [^topic`:`/`/uppweb`/www`/vsqt`$ru`-ru^ Сравнение с 
 Qt]&]
 [s0; [^topic`:`/`/uppweb`/www`/vsswing`$en`-us^ Сравнение 
 Java/Swing]&]

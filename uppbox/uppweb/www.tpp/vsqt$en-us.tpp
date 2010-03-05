@@ -20,7 +20,9 @@ topic "Ultimate++ vs Qt";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%EN-US 
 [s0;= [7 Ultimate`+`+ vs Qt ][5 (R)]&]
-[s0;=2 &]
+[s0;> [*R^topic`:`/`/uppweb`/www`/vsqt`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/vsqt`$ru`-ru^1 `[
+ru`]]&]
+[s0;=*^topic`:`/`/uppweb`/www`/vsd`$ru`-ru^1 &]
 [s0; [2 To compare Ultimate`+`+ with Qt (R), we decided to reimplement 
 Qt demonstration example `"AddressBook`". On the left side is 
 U`+`+ code, on the right side original Qt example..]&]
@@ -1005,4 +1007,4 @@ toggleFirstName() ) );]&]
 [s0;C0 ]}}&]
 [s0;=2 &]
 [s0;=2 &]
-[s0; ]
+[s0; [2 This article in ][^topic`:`/`/uppweb`/www`/vsqt`$ru`-ru^2 Russian]]
