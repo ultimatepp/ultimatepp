@@ -30,6 +30,10 @@ TOPIC("chss$en-us")
 #include "chss$en-us.tppi"
 END_TOPIC
 
+TOPIC("chss$ru-ru")
+#include "chss$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("comparison$en-us")
 #include "comparison$en-us.tppi"
 END_TOPIC
