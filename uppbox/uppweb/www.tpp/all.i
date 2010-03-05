@@ -114,6 +114,10 @@ TOPIC("ss$en-us")
 #include "ss$en-us.tppi"
 END_TOPIC
 
+TOPIC("ss$ru-ru")
+#include "ss$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("vsd$en-us")
 #include "vsd$en-us.tppi"
 END_TOPIC
