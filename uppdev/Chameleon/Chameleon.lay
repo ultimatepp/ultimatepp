@@ -6,3 +6,4 @@ LAYOUT(ChameleonLayout, 228, 68)
 	ITEM(Button, img, SetLabel(t_("Image")).LeftPosZ(80, 68).TopPosZ(36, 24))
 	ITEM(Button, fn, SetLabel(t_("Function")).LeftPosZ(152, 68).TopPosZ(36, 24))
 END_LAYOUT
+

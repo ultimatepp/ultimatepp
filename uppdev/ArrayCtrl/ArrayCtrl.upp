@@ -1,8 +1,7 @@
 description "\377B";
 
 uses
-	CtrlLib,
-	Crypto;
+	CtrlLib;
 
 file
 	app.tpp,
