@@ -1,9 +1,9 @@
 topic "TheIDE screenshots";
 [ $$0,0#00000000000000000000000000000000:Default]
-[{_}%EN-US 
-[s0; [*+150 TheIDE screenshots]&]
-[s0; [/1 (click on image to enlarge it)]&]
-[s0;> [*R^topic`:`/`/uppweb`/www`/idess`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/idess`$ru`-ru^1 `[
+[{_}%RU-RU 
+[s0; [*+150 TheIDE скриншоты]&]
+[s0; [/1 (кликните по изображению для увеличения)]&]
+[s0;>%% [*R^topic`:`/`/uppweb`/www`/idess`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/idess`$ru`-ru^1 `[
 ru`]]&]
 [s0; &]
 [s0; 

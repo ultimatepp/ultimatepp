@@ -82,6 +82,10 @@ TOPIC("idess$en-us")
 #include "idess$en-us.tppi"
 END_TOPIC
 
+TOPIC("idess$ru-ru")
+#include "idess$ru-ru.tppi"
+END_TOPIC
+
 TOPIC("index$en-us")
 #include "index$en-us.tppi"
 END_TOPIC
