@@ -638,7 +638,7 @@ void ChHostSkin()
 		
 	///////
 	CtrlsImg::Reset();
-	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
+	ColoredOverride(CtrlsImg::Iml(), ClassicCtrlsImg::Iml());
 
 	ChLookFn(GtkLookFn);
 
@@ -902,11 +902,15 @@ void ChHostSkin()
 				atp = false;
 			if(atp) {
 				ChGtkNew("vscrollbar", GTK_ARROW);
-				GtkCh(s.up.look, "02141111");
-				GtkCh(s.up2.look, "02141111");
+				if(engine != "Human") {
+					GtkCh(s.up.look, "02141111");
+					GtkCh(s.up2.look, "02141111");
+				}
 				ChGtkNew("vscrollbar", GTK_ARROW|GTK_VAL1);
-				GtkCh(s.down.look, "02141111");
-				GtkCh(s.down2.look, "02141111");
+				if(engine != "Human") {
+					GtkCh(s.down.look, "02141111");
+					GtkCh(s.down2.look, "02141111");
+				}
 
 				static GtkWidget *btn = gtk_button_new();
 				ChGtkNew(btn, "button", GTK_BOX);
