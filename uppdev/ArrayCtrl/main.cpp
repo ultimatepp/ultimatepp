@@ -25,20 +25,14 @@ struct App : TopWindow {
 
 	void DnDInsertB(int line, PasteClip& d)
 	{
-		if(AcceptInternal()<ArrayCtrl>(d, "array"))
-			b.InsertDrop(line, d);
 	}
 
 	void Drag()
 	{
-		if(DoDragAndDrop(InternalClip(a, "array")) == DND_MOVE)
-			a.RemoveSelection();
 	}
 
 	void DragB()
 	{
-		if(DoDragAndDrop(InternalClip(b, "array")) == DND_MOVE)
-			b.RemoveSelection();
 	}
 
 	typedef App CLASSNAME;
