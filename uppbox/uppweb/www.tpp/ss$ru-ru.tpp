@@ -7,6 +7,6 @@ ru`]]&]
 [s0;/1 &]
 [s0; [^topic`:`/`/uppweb`/www`/idess`$en`-us^2 Интегрированная 
 среда разработки TheIDE]&]
-[s0; [^topic`:`/`/uppweb`/www`/chss`$en`-us^2 Chameleon в действии]&]
-[s0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 U`+`+ примеры]&]
+[s0; [^topic`:`/`/uppweb`/www`/chss`$ru`-ru^2 Chameleon в действии]&]
+[s0; [^topic`:`/`/uppweb`/www`/examples`$ru`-ru^2 U`+`+ примеры]&]
 [s0; ]
