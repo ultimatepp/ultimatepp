@@ -409,6 +409,8 @@ void Ctrl::InitX11(const char *display)
 	for(int i = 0; i < nets.GetCount(); i++)
 		_NET_Supported().Add(nets[i]);
 
+	SetStdFont(Arial(12));
+
 	ChSync();
 
 	GUI_GlobalStyle_Write(GUISTYLE_XP);

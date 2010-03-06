@@ -250,7 +250,6 @@ JPGRaster::Data::Data(JPGRaster& owner_)
 
 void JPGRaster::Data::Free()
 {
-	DLOG("JPGRaster::Data::Free");
 //	if(setjmp(jerr.jmpbuf))
 //		return;
 	try {
@@ -268,16 +267,12 @@ JPGRaster::Data::~Data()
 
 bool JPGRaster::Data::Create(Stream& stream_)
 {
-	DLOG("JPGRaster::Data::Create 1");
 	stream = &stream_;
 	stream_fpos = stream->GetPos();
-	DLOG("JPGRaster::Data::Create 2");
 	cinfo.err = jpeg_std_error(&jerr);
 	cinfo.err->output_message = &NoOutput;
 	cinfo.dct_method = JDCT_IFAST;
 	jerr.error_exit = error_exit;
-	DLOG("JPGRaster::Data::Create 3");
-
 	return Init();
 }
 
@@ -433,20 +428,16 @@ String JPGRaster::Data::GetThumbnail()
 
 bool JPGRaster::Data::Init()
 {
-	DLOG("JPGRaster::Data::Init 1");
 //	if(setjmp(jerr.jmpbuf))
 //		return false;
 
 	try {
-		DLOG("JPGRaster::Data::Init 2");
 		jpeg_stream_src(&cinfo, *stream);
 		jpeg_save_markers(&cinfo, JPEG_COM, 0xFFFF);
 		for(int i = 0; i <= 15; i++)
 			jpeg_save_markers(&cinfo, JPEG_APP0 + i, 0xFFFF);
 		jpeg_read_header(&cinfo, TRUE);
 		jpeg_start_decompress(&cinfo);
-	
-		DLOG("JPGRaster::Data::Init 3");
 	
 		switch(cinfo.output_components) {
 			case 1: {
@@ -545,9 +536,7 @@ JPGRaster::~JPGRaster()
 bool JPGRaster::Create()
 {
 	ASSERT(sizeof(JSAMPLE) == sizeof(byte));
-	DLOG("JPGRaster::Create 1");
 	data = new Data(*this);
-	DLOG("JPGRaster::Create 2");
 	return data->Create(GetStream());
 }
 
