@@ -63,6 +63,17 @@
 #include <openssl/ossl_typ.h>
 #include <openssl/e_os2.h>
 
+// Added to improve Upp supported systems detection
+#ifdef PLATFORM_WIN32
+	#undef OPENSSL_SYS_UNIX
+	#define OPENSSL_SYS_WINDOWS
+	#define OPENSSL_SYS_WIN32
+#else
+	#define OPENSSL_SYS_UNIX
+	#undef OPENSSL_SYS_WINDOWS
+	#undef OPENSSL_SYS_WIN32
+#endif
+
 #if defined(OPENSSL_SYS_WINDOWS)
 #include <windows.h>
 #endif

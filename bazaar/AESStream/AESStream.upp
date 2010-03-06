@@ -1,11 +1,11 @@
 uses
 	Core;
 
-library(MSC) out32\libeay32.lib;
+library(MSC) "out32\\libeay32.lib gdi32.lib";
 
-library(MSC WIN32) gdi32.lib;
+library(WIN32 !MSC) out32dll\libeay32.lib;
 
-library(WIN32 !MSC) out32dll/libeay32.lib;
+library(!WIN32) ssl;
 
 include
 	plugin\openssl\inc32;

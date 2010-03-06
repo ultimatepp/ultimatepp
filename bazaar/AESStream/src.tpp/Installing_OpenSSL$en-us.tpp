@@ -24,7 +24,7 @@ topic "Installing OpenSSL";
 [{_}%EN-US 
 [s2; Installing OpenSSL&]
 [s5; [* 1. In Linux]&]
-[s5; Just install libopenssl using your package manager.&]
+[s5; Just install libssl using your package manager.&]
 [s5;* &]
 [s5; [* 2. In Windows]&]
 [s5; These steps are valid for revision 0.9.8l. In other versions 
@@ -74,4 +74,4 @@ Files`\Microsoft Visual Studio 9.0`\VC`\vcvarsall.bat`"`" x86]&]
 [s5; [* Last steps]&]
 [s5; 2.6. Add in `"Setup/Build methods/Lib directories`" menu, the 
 directory where out32 and out32dll have been copied.&]
-[s5; ]
+[s0; ]

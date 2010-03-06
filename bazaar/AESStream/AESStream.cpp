@@ -1,4 +1,6 @@
 #include <Core/Core.h>
+
+#undef _WIN32
 #include <openssl/rand.h>
 #include "AESStream.h"
 
@@ -58,10 +60,10 @@ void AESInit()
 	if (aesInitDone)
 		return;
 	aesInitDone = true;
-	
+	 
 	if (RAND_status())
 		return;
-	
+	 
 	qword qw = (((qword) GetTickCount()) << 16) ^ ((qword) (GetSysTime().Get())) ^ Random();
 	RAND_seed(&qw, sizeof(qw));
 	
