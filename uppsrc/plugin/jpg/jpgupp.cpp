@@ -1,5 +1,5 @@
 #include <Draw/Draw.h>
-#include <setjmp.h>
+// #include <setjmp.h>
 #include "jpg.h"
 #define HAVE_BOOLEAN
 #define boolean int
@@ -165,15 +165,19 @@ static void jpeg_stream_src(j_decompress_ptr cinfo, Stream& stream)
 	src->stream                = &stream;
 }
 
+
 struct jpeg_longjmp_error_mgr : public jpeg_error_mgr {
-	jmp_buf jmpbuf;
+//	jmp_buf jmpbuf;
 };
+
+struct JpegErrorException {};
 
 static void error_exit(j_common_ptr cinfo)
 {
 	(*cinfo->err->output_message)(cinfo);
 	jpeg_longjmp_error_mgr *jlem = (jpeg_longjmp_error_mgr *)cinfo->err;
-	longjmp(jlem->jmpbuf, 1);
+	throw JpegErrorException();
+//	longjmp(jlem->jmpbuf, 1);
 }
 
 class JPGRaster::Data {
@@ -246,11 +250,15 @@ JPGRaster::Data::Data(JPGRaster& owner_)
 
 void JPGRaster::Data::Free()
 {
-	if(setjmp(jerr.jmpbuf))
-		return;
-	if(finish)
-		jpeg_abort_decompress(&cinfo);
-	jpeg_destroy_decompress(&cinfo);
+	DLOG("JPGRaster::Data::Free");
+//	if(setjmp(jerr.jmpbuf))
+//		return;
+	try {
+		if(finish)
+			jpeg_abort_decompress(&cinfo);
+		jpeg_destroy_decompress(&cinfo);
+	}
+	catch(JpegErrorException) {}
 }
 
 JPGRaster::Data::~Data()
@@ -260,12 +268,15 @@ JPGRaster::Data::~Data()
 
 bool JPGRaster::Data::Create(Stream& stream_)
 {
+	DLOG("JPGRaster::Data::Create 1");
 	stream = &stream_;
 	stream_fpos = stream->GetPos();
+	DLOG("JPGRaster::Data::Create 2");
 	cinfo.err = jpeg_std_error(&jerr);
 	cinfo.err->output_message = &NoOutput;
 	cinfo.dct_method = JDCT_IFAST;
 	jerr.error_exit = error_exit;
+	DLOG("JPGRaster::Data::Create 3");
 
 	return Init();
 }
@@ -422,51 +433,60 @@ String JPGRaster::Data::GetThumbnail()
 
 bool JPGRaster::Data::Init()
 {
-	if(setjmp(jerr.jmpbuf))
-		return false;
+	DLOG("JPGRaster::Data::Init 1");
+//	if(setjmp(jerr.jmpbuf))
+//		return false;
 
-	jpeg_stream_src(&cinfo, *stream);
-	jpeg_save_markers(&cinfo, JPEG_COM, 0xFFFF);
-	for(int i = 0; i <= 15; i++)
-		jpeg_save_markers(&cinfo, JPEG_APP0 + i, 0xFFFF);
-	jpeg_read_header(&cinfo, TRUE);
-	jpeg_start_decompress(&cinfo);
-
-	switch(cinfo.output_components) {
-		case 1: {
-			format.Set8();
-			for(int i = 0; i < 256; i++) {
-				RGBA rgba;
-				rgba.r = rgba.g = rgba.b = i;
-				rgba.a = 255;
-				palette[i] = rgba;
+	try {
+		DLOG("JPGRaster::Data::Init 2");
+		jpeg_stream_src(&cinfo, *stream);
+		jpeg_save_markers(&cinfo, JPEG_COM, 0xFFFF);
+		for(int i = 0; i <= 15; i++)
+			jpeg_save_markers(&cinfo, JPEG_APP0 + i, 0xFFFF);
+		jpeg_read_header(&cinfo, TRUE);
+		jpeg_start_decompress(&cinfo);
+	
+		DLOG("JPGRaster::Data::Init 3");
+	
+		switch(cinfo.output_components) {
+			case 1: {
+				format.Set8();
+				for(int i = 0; i < 256; i++) {
+					RGBA rgba;
+					rgba.r = rgba.g = rgba.b = i;
+					rgba.a = 255;
+					palette[i] = rgba;
+				}
+				break;
 			}
-			break;
+			case 3: {
+				format.Set24le(0xFF, 0xFF00, 0xFF0000);
+				break;
+			}
+			default: {
+				LLOG("JPGRaster: invalid number of components: " << (int)cinfo.output_components);
+				return false;
+			}
 		}
-		case 3: {
-			format.Set24le(0xFF, 0xFF00, 0xFF0000);
-			break;
+	
+		size.cx = cinfo.output_width;
+		size.cy = cinfo.output_height;
+	
+		row_bytes = cinfo.output_components * size.cx;
+		row_bytes_4 = (row_bytes + 3) & -4;
+	
+		double dot_scaling = (cinfo.density_unit == 1 ? 600 : cinfo.density_unit == 2 ? 600.0 / 2.54 : 0);
+		if(dot_scaling && cinfo.X_density > 0) {
+			dot_size.cx = fround(cinfo.image_width  * dot_scaling / cinfo.X_density);
+			dot_size.cy = fround(cinfo.image_height * dot_scaling / cinfo.Y_density);
 		}
-		default: {
-			LLOG("JPGRaster: invalid number of components: " << (int)cinfo.output_components);
-			return false;
-		}
+	
+		finish = true;
+		return true;
 	}
-
-	size.cx = cinfo.output_width;
-	size.cy = cinfo.output_height;
-
-	row_bytes = cinfo.output_components * size.cx;
-	row_bytes_4 = (row_bytes + 3) & -4;
-
-	double dot_scaling = (cinfo.density_unit == 1 ? 600 : cinfo.density_unit == 2 ? 600.0 / 2.54 : 0);
-	if(dot_scaling && cinfo.X_density > 0) {
-		dot_size.cx = fround(cinfo.image_width  * dot_scaling / cinfo.X_density);
-		dot_size.cy = fround(cinfo.image_height * dot_scaling / cinfo.Y_density);
+	catch(JpegErrorException) {
+		return false;
 	}
-
-	finish = true;
-	return true;
 }
 
 Raster::Info JPGRaster::Data::GetInfo()
@@ -488,24 +508,30 @@ Raster::Info JPGRaster::Data::GetInfo()
 Raster::Line JPGRaster::Data::GetLine(int line)
 {
 	byte *rowbuf = new byte[row_bytes_4];
-	if(setjmp(jerr.jmpbuf))
-		return Raster::Line(rowbuf, &owner, true);
 
-	ASSERT(line >= 0 && line < size.cy);
-	if(line < next_line) {
-		stream->Seek(stream_fpos);
-		Stream *s = stream;
-		Free();
-		Construct();
-		Create(*s);
-		next_line = 0;
-		LOG("Seek back");
-	}
-	JSAMPROW rowptr[] = { (JSAMPROW)rowbuf };
-	while(next_line++ < line)
+//	if(setjmp(jerr.jmpbuf))
+//		return Raster::Line(rowbuf, &owner, true);
+
+	try {
+		ASSERT(line >= 0 && line < size.cy);
+		if(line < next_line) {
+			stream->Seek(stream_fpos);
+			Stream *s = stream;
+			Free();
+			Construct();
+			Create(*s);
+			next_line = 0;
+			LOG("Seek back");
+		}
+		JSAMPROW rowptr[] = { (JSAMPROW)rowbuf };
+		while(next_line++ < line)
+			jpeg_read_scanlines(&cinfo, rowptr, 1);
 		jpeg_read_scanlines(&cinfo, rowptr, 1);
-	jpeg_read_scanlines(&cinfo, rowptr, 1);
-	return Raster::Line(rowbuf, &owner, true);
+		return Raster::Line(rowbuf, &owner, true);
+	}
+	catch(JpegErrorException) {
+		return Raster::Line(rowbuf, &owner, true);
+	}
 }
 
 JPGRaster::JPGRaster()
@@ -519,7 +545,9 @@ JPGRaster::~JPGRaster()
 bool JPGRaster::Create()
 {
 	ASSERT(sizeof(JSAMPLE) == sizeof(byte));
+	DLOG("JPGRaster::Create 1");
 	data = new Data(*this);
+	DLOG("JPGRaster::Create 2");
 	return data->Create(GetStream());
 }
 
