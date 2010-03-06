@@ -113,6 +113,7 @@ void Font::InitStdFont()
 		String name;
 		int    height = 0;
 		GetStdFontSys(name, height);
+#ifdef PLATFORM_WIN32
 		int q = FindFaceNameIndex(name);
 		if(q <= 0)
 			q = FindFaceNameIndex("Tahoma");
@@ -120,13 +121,8 @@ void Font::InitStdFont()
 			q = FindFaceNameIndex("Microsoft Sans Serif");
 		if(q <= 0)
 			q = FindFaceNameIndex("MS Sans Serif");
-		if(q > 0) {
+		if(q > 0)
 			AStdFont = Font(q, max(height, 1));
-#ifndef PLATFORM_WIN32
-			SyncStdFont();
-#endif
-		}
-#ifdef PLATFORM_WIN32
 		SyncStdFont();
 #endif
 	}
