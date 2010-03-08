@@ -473,6 +473,7 @@ String GetDownloadFolder()
 #endif
 
 #ifdef PLATFORM_POSIX
+
 String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
 {
 	String ret = "";
@@ -481,22 +482,39 @@ String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
   	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs"))) ;
   	return ret;
 }
+
 String GetPathDataXdg(String fileConfig, const char *folder) 
 {
-	StringParse fileData = LoadFile(fileConfig);
-	
-	if (!fileData.GoAfter(folder)) return "";
-	if (!fileData.GoAfter("=")) return "";
-	
-	String ret = "";
-	StringParse path = fileData.GetText();
-	if(path.GoAfter("$HOME/")) 
-		ret = AppendFileName(GetHomeDirectory(), path.Right());
-	else if (!FileExists(path))
-		ret = AppendFileName(GetHomeDirectory(), path);
-	
-	return ret;		
+	TextSettings settings;
+	settings.Load(fileConfig);
+	String v = settings.Get(folder);
+	if(*v == '\"')
+		v = v.Mid(1);
+	if(*v.Last() == '\"')
+		v.Trim(v.GetCount() - 1);
+	String r;
+	const char *s = v;
+	while(*s) {
+		if(*s == '$') {
+			CParser p(s + 1);
+			p.NoSkipSpaces();
+			p.Spaces();
+			if(p.IsId()) {
+				String id = p.ReadId();
+				r.Cat(GetEnv(id));
+				s = p.GetPtr();
+			}
+			else {
+				r.Cat('$');
+				s++;
+			}
+		}
+		else
+			r.Cat(*s++);
+	}
+	return r;
 }
+
 String GetShellFolder(const char *local, const char *users) 
 {
  	String xdgConfigHome = GetEnv("XDG_CONFIG_HOME");
@@ -512,7 +530,8 @@ String GetShellFolder(const char *local, const char *users)
   	else
   		return ret;
 }
-String GetDesktopFolder()	
+
+String GetDesktopFolder()
 {
 	String ret = GetShellFolder("XDG_DESKTOP_DIR", "DESKTOP");
 	if (ret.IsEmpty())
@@ -520,14 +539,15 @@ String GetDesktopFolder()
 	else
 		return ret;
 }
-String GetProgramsFolder()	{return String("/usr/bin");}
-String GetAppDataFolder()	{return GetHomeDirectory();};
-String GetMusicFolder()		{return GetShellFolder("XDG_MUSIC_DIR", "MUSIC");}
-String GetPicturesFolder()	{return GetShellFolder("XDG_PICTURES_DIR", "PICTURES");}
-String GetVideoFolder()		{return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS");}
-String GetDocumentsFolder()	{return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS");}
-String GetTemplatesFolder()	{return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR");}
-String GetDownloadFolder()	{return GetShellFolder("XDG_DOWNLOAD_DIR", "XDG_DOWNLOAD_DIR");
+
+String GetProgramsFolder()  { return String("/usr/bin"); }
+String GetAppDataFolder()   { return GetHomeDirectory(); }
+String GetMusicFolder()	    { return GetShellFolder("XDG_MUSIC_DIR", "MUSIC"); }
+String GetPicturesFolder()  { return GetShellFolder("XDG_PICTURES_DIR", "PICTURES"); }
+String GetVideoFolder()     { return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS"); }
+String GetDocumentsFolder() { return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS"); }
+String GetTemplatesFolder() { return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR"); }
+String GetDownloadFolder()  { return GetShellFolder("XDG_DOWNLOAD_DIR", "XDG_DOWNLOAD_DIR"); }
 
 #endif
 

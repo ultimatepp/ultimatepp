@@ -1455,7 +1455,7 @@ FileSel& FileSel::Preview(const Display& d)
 	return Preview(preview_display);
 }
 
-FileSel& FileSel::AddPlace(const String& path, Image& m, const String& name)
+FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& name)
 {
 	if(path.GetCount()) {
 		places.Add(NormalizePath(path), m, name);
