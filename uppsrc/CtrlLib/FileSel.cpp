@@ -1457,10 +1457,12 @@ FileSel& FileSel::Preview(const Display& d)
 
 FileSel& FileSel::AddPlace(const String& path, Image& m, const String& name)
 {
-	places.Add(NormalizePath(path), m, name);
-	places.SetLineCy(places.GetCount() - 1, max(m.GetSize().cy + 4, GetStdFontCy() + 4));
-	SyncSplitter();
-	InitSplitter();
+	if(path.GetCount()) {
+		places.Add(NormalizePath(path), m, name);
+		places.SetLineCy(places.GetCount() - 1, max(m.GetSize().cy + 4, GetStdFontCy() + 4));
+		SyncSplitter();
+		InitSplitter();
+	}
 	return *this;
 }
 
