@@ -456,13 +456,13 @@ MY_DEFINE_KNOWN_FOLDER(MY_FOLDERID_Downloads, 0x374de290, 0x123f, 0x4565, 0x91, 
 
 String GetDownloadFolder()	
 {
-	static HRESULT (STDAPICALLTYPE * SHGetKnownFolderPath)(REFKNOWNFOLDERID rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
+	static HRESULT (STDAPICALLTYPE * SHGetKnownFolderPath)(const void *rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
 	ONCELOCK {
 		DllFn(SHGetKnownFolderPath, "shell32.dll", "SHGetKnownFolderPath");
 	}
 	if(SHGetKnownFolderPath) {
 		PWSTR path = NULL;
-		if(SHGetKnownFolderPath(MY_FOLDERID_Downloads, 0, NULL, &path) == S_OK && path) {
+		if(SHGetKnownFolderPath(&MY_FOLDERID_Downloads, 0, NULL, &path) == S_OK && path) {
 			String s = FromUnicodeBuffer(path, wstrlen(path));
 			CoTaskMemFree(path);
 			return s;
