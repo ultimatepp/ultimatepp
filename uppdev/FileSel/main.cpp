@@ -17,9 +17,10 @@ GUI_APP_MAIN
 	  .Type( t_("national archive with Fixed Length (txt)"), "*.txt")   //type 3
 	  .Type( t_("archive FSI Italy (csv)"), "*.csv");  //type 4
 	fs.DefaultExt("hhh");
+	
 //	fs.NoMkDirOption();
 	fs.Multi();
-	fs.ActiveDir("/usr/include");
+//	fs.ActiveDir("/usr/include");
 //	fs.NoEditFileName();
 //	fs.PreSelect("U:/file1.txt");
 	for(;;) {
