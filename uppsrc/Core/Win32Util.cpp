@@ -166,6 +166,13 @@ String GetWindowsDirectory() {
 }
 #endif
 
+void *GetDllFn(const char *dll, const char *fn)
+{
+	if(HMODULE hDLL = LoadLibrary(dll))
+		return GetProcAddress(hDLL, fn);
+	return NULL;
+}
+
 String GetModuleFileName(HINSTANCE instance) {
 #ifdef PLATFORM_WINCE
 	wchar h[_MAX_PATH];

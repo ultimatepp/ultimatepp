@@ -39,7 +39,6 @@ void    Panic(const char *msg)
 		return;
 	PanicMode = true;
 	LOG(msg);
-	LOG(GetLastErrorMessage());
 	BugLog() << "PANIC: " << msg << "\n";
 	UsrLogT("===== PANIC ================================================");
 	UsrLogT(msg);
