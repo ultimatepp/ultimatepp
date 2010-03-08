@@ -1523,9 +1523,10 @@ FileSel& FileSel::AddStandardPlaces()
 			AddPlace(root[i].filename, desc);
 		}
 	}
+#ifdef PLATFORM_WIN32
 	AddPlaceSeparator();
 	AddPlaceRaw("\\", CtrlImg::Network(), t_("Network"));
-
+#endif
 	return *this;
 }
 

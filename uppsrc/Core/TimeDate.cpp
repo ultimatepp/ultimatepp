@@ -414,12 +414,8 @@ Time& operator-=(Time& a, int64 secs)           { a = a - secs; return a; }
 
 String Format(Time time, bool seconds) {
 	if(IsNull(time)) return String();
-	String s = Format(Date(time));
-	if(time.hour == 0 && time.minute == 0 && time.second == 0)
-		return s;
-	else
-		return s + (seconds ? Format(" %02d:%02d:%02d", time.hour, time.minute, time.second)
-	                        : Format(" %02d:%02d", time.hour, time.minute));
+	return Format(Date(time)) + (seconds ? Format(" %02d:%02d:%02d", time.hour, time.minute, time.second)
+	                                     : Format(" %02d:%02d", time.hour, time.minute));
 }
 
 #ifdef PLATFORM_WIN32
