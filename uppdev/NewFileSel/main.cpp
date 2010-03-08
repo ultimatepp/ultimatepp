@@ -2,6 +2,7 @@
 
 GUI_APP_MAIN
 {
+	DDUMP("Test");
 	SetDefaultCharset(CHARSET_UTF8);
 	FileSel fs;
 	String fn;
