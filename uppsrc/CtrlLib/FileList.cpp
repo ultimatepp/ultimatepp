@@ -160,6 +160,8 @@ void FileList::StartEdit() {
 	edit = cf.name.ToWString();
 	edit.Show();
 	edit.SetFocus();
+	int pos = GetFileExtPos(cf.name) - ~cf.name;
+	edit.SetSelection(0, pos);
 }
 
 void FileList::EndEdit() {

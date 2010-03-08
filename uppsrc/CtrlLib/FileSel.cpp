@@ -466,6 +466,7 @@ void FileSel::LoadNet()
 		}
 		list.Add(netnode[i].GetName(), m);
 	}
+	places.FindSetCursor("\\");
 #endif
 }
 
@@ -1170,7 +1171,7 @@ void FileSel::Set(const String& s)
 void FileSel::GoToPlace()
 {
 	if(places.IsCursor()) {
-		dir <<= NormalizePath((String)places.GetKey());
+		dir <<= places.GetKey();
 		Load();
 	}
 }
@@ -1455,14 +1456,19 @@ FileSel& FileSel::Preview(const Display& d)
 	return Preview(preview_display);
 }
 
-FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& name)
+void FileSel::AddPlaceRaw(const String& path, const Image& m, const String& name)
 {
 	if(path.GetCount()) {
-		places.Add(NormalizePath(path), m, name);
+		places.Add(path, m, name);
 		places.SetLineCy(places.GetCount() - 1, max(m.GetSize().cy + 4, GetStdFontCy() + 4));
 		SyncSplitter();
 		InitSplitter();
 	}
+}
+
+FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& name)
+{
+	AddPlaceRaw(NormalizePath(path), m, name);
 	return *this;
 }
 
@@ -1511,12 +1517,15 @@ FileSel& FileSel::AddStandardPlaces()
 				n.Trim(n.GetCount() - 1);
 		#endif
 			if(desc.GetCount())
-				desc << " (" << root[i].filename << ")";
+				desc << " (" << n << ")";
 			else
 				desc = n;
-			AddPlace(root[i].filename, n);
+			AddPlace(root[i].filename, desc);
 		}
 	}
+	AddPlaceSeparator();
+	AddPlaceRaw("\\", CtrlImg::Network(), t_("Network"));
+
 	return *this;
 }
 

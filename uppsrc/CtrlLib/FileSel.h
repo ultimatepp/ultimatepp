@@ -192,6 +192,7 @@ protected:
 	void        InitSplitter();
 	String      GetMask();
 	void        GoToPlace();
+	void        AddPlaceRaw(const String& path, const Image& m, const String& name);
 
 
 	using       WithFileSelectorLayout<TopWindow>::Title;
