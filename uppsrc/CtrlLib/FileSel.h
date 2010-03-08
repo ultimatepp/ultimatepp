@@ -252,7 +252,7 @@ public:
 	FileSel& Preview(Ctrl& ctrl);
 	FileSel& Preview(const Display& d);
 	FileSel& ClearPlaces();
-	FileSel& AddPlace(const String& path, Image& m, const String& name);
+	FileSel& AddPlace(const String& path, const Image& m, const String& name);
 	FileSel& AddPlace(const String& path, const String& name);
 	FileSel& AddPlace(const String& path);
 	FileSel& AddPlaceSeparator();
