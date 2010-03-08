@@ -56,6 +56,8 @@ void Splitter::Layout() {
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
 		int lo = i > 0 ? PosToClient(pos[i - 1]) + wd : 0;
 		int hi = i < count ? PosToClient(pos[i]) - wd : vert ? sz.cy : sz.cx;
+		DDUMP(lo);
+		DDUMP(hi);
 		q->Show();
 		if(vert)
 			q->SetRect(0, lo, sz.cx, hi - lo);
@@ -63,6 +65,7 @@ void Splitter::Layout() {
 			q->SetRect(lo, 0, hi - lo, sz.cy);
 		i++;
 	}
+	DLOG("-----------");
 }
 
 void   Splitter::Paint(Draw& w) {

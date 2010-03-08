@@ -23,10 +23,14 @@ struct FileIconMaker : ImageMaker {
 		#ifdef _DEBUG
 			AvoidPaintingCheck__();
 		#endif
+			DDUMP(dir);
+			DDUMP(file);
 			SHGetFileInfo(ToSystemCharset(file), dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
 			              &info, sizeof(info),
 			              SHGFI_ICON|(large ? SHGFI_LARGEICON : SHGFI_SMALLICON)|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
 			HICON icon = info.hIcon;
+			DDUMP(!!icon);
+			DLOG("-------------------");
 			ICONINFO iconinfo;
 			if(!icon || !GetIconInfo(icon, &iconinfo))
 				return Image();
@@ -49,6 +53,7 @@ struct FileIconMaker : ImageMaker {
 
 Image GetFileIcon(const char *path, bool dir, bool force, bool large)
 {
+	DDUMP(path);
 	FileIconMaker m;
 	String ext = GetFileExt(path);
 	m.exe = false;
@@ -59,8 +64,8 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large)
 		m.exe = true;
 	else
 	if(dir) {
-		m.dir = true;;
-		m.file.Clear();
+		m.dir = true;
+		m.exe = true;
 	}
 	else
 	if(ext == ".exe")
@@ -512,6 +517,10 @@ void FileSel::SearchLoad()
 		olddir = Null;
 		SearchLoad();
 	}
+	
+	places.KillCursor();
+	if(d.GetCount())
+		places.FindSetCursor(d);
 	hiddenfiles.Enable(!hidden);
 	if(d.IsEmpty()) {
 		if(filesystem->IsWin32()) {
@@ -1111,17 +1120,13 @@ struct FolderDisplay : public Display {
 	                   Color ink, Color paper, dword style) const;
 };
 
-void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
-	                   Color ink, Color paper, dword style) const
+Image GetDirIcon(const String& s)
 {
-	String s = q;
-	w.DrawRect(r, paper);
-		
+	DDUMP(s);
 #ifdef PLATFORM_X11
 	Image img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
 #else
 	Image img;
-	
 	if((byte)*s.Last() == 255)
 		img = CtrlImg::Network();
 	else
@@ -1129,6 +1134,15 @@ void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 #endif
 	if(IsNull(img))
 		img = CtrlImg::Dir();
+	return img;
+}
+
+void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
+	                   Color ink, Color paper, dword style) const
+{
+	String s = q;
+	w.DrawRect(r, paper);
+	Image img = GetDirIcon(s);
 	w.DrawImage(r.left, r.top + (r.Height() - img.GetSize().cx) / 2, img);
 	w.DrawText(r.left + 20,
 	           r.top + (r.Height() - StdFont().Bold().Info().GetHeight()) / 2,
@@ -1157,6 +1171,14 @@ void FileSel::Set(const String& s)
 	else
 		fn.Add(s);
 	bidname = true;
+}
+
+void FileSel::GoToPlace()
+{
+	if(places.IsCursor()) {
+		dir <<= NormalizePath((String)places.GetKey());
+		Load();
+	}
 }
 
 bool FileSel::Execute(int _mode) {
@@ -1216,7 +1238,7 @@ bool FileSel::Execute(int _mode) {
 		}
 	#else
 		const char *fs = "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders";
-		dir.Add(FromSystemCharset(GetWinRegString("Desktop", fs, HKEY_CURRENT_USER)));
+		dir.Add(GetDesktopFolder());
 		Array<FileSystemInfo::FileInfo> root = filesystem->Find(Null);
 		for(i = 0; i < root.GetCount(); i++) {
 			String ugly = root[i].filename;
@@ -1395,6 +1417,8 @@ String FileSel::GetFile(int i) const {
 void FileSel::SyncSplitter()
 {
 	splitter.Clear();
+	if(places.GetCount() && basedir.IsEmpty())
+		splitter.Add(places);
 	splitter.Add(list);
 	if(preview)
 		splitter.Add(*preview);
@@ -1407,19 +1431,25 @@ FileSel& FileSel::PreSelect(const String& path)
 	return *this;
 }
 
+void FileSel::InitSplitter()
+{
+	int n = splitter.GetCount();
+	int i = 0;
+	if(places.GetCount())
+		splitter.SetPos(2000, i++);
+	splitter.SetPos(10000 - 2000 * n, i);
+}
+
 FileSel& FileSel::Preview(Ctrl& ctrl)
 {
-	bool n = false;
 	if(!preview) {
 		Size sz = GetRect().GetSize();
 		sz.cx = 5 * sz.cx / 3;
 		SetRect(sz);
-		n = true;
 	}
 	preview = &ctrl;
 	SyncSplitter();
-	if(n)
-		splitter.SetPos(6666);
+	InitSplitter();
 	return *this;
 }
 
@@ -1428,6 +1458,89 @@ FileSel& FileSel::Preview(const Display& d)
 	preview_display.SetDisplay(d);
 	return Preview(preview_display);
 }
+
+FileSel& FileSel::AddPlace(const String& path, Image& m, const String& name)
+{
+	places.Add(NormalizePath(path), m, name);
+	places.SetLineCy(places.GetCount() - 1, max(m.GetSize().cy + 4, GetStdFontCy() + 4));
+	SyncSplitter();
+	InitSplitter();
+	return *this;
+}
+
+FileSel& FileSel::AddPlace(const String& path, const String& name)
+{
+	return AddPlace(path, GetDirIcon(NormalizePath(path)), name);
+}
+
+FileSel& FileSel::AddPlace(const String& path)
+{
+	return AddPlace(path, GetFileTitle(path));
+}
+
+FileSel& FileSel::AddPlaceSeparator()
+{
+	places.AddSeparator();
+	SyncSplitter();
+	InitSplitter();
+	return *this;
+}
+
+FileSel& FileSel::ClearPlaces()
+{
+	places.Clear();
+	SyncSplitter();
+	return *this;
+}
+
+FileSel& FileSel::AddStandardPlaces()
+{
+	AddPlace(GetHomeDirectory(), t_("Home"));
+	AddPlace(GetDesktopFolder(), t_("Desktop"));
+	AddPlace(GetMusicFolder(), t_("Music"));
+	AddPlace(GetPicturesFolder(), t_("Pictures"));
+	AddPlace(GetVideoFolder(), t_("Video"));
+	AddPlace(GetPersonalFolder(), t_("Documents"));
+//	AddPlace(GetDownloadFolder(), t_("Downloads"));
+	AddPlaceSeparator();
+	Array<FileSystemInfo::FileInfo> root = filesystem->Find(Null);
+	for(int i = 0; i < root.GetCount(); i++) {
+		String desc = root[i].root_desc;
+		String n = root[i].filename;
+	#ifdef PLATFORM_WIN32
+		if(*n.Last() == '\\')
+			n.Trim(n.GetCount() - 1);
+	#endif
+		if(desc.GetCount())
+			desc << " (" << root[i].filename << ")";
+		else
+			desc = n;
+		AddPlace(root[i].filename, n);
+	}
+	return *this;
+}
+
+struct DisplayPlace : Display {
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper,
+	                   dword style) const
+	{
+		w.DrawRect(r, paper);
+		ValueArray va = q;
+		Image m = va[0];
+		String txt = va[1];
+		Size isz = m.GetSize();
+		w.DrawImage(r.left, r.top + (r.Height() - isz.cy) / 2, m);
+		w.DrawText(r.left + isz.cx + 2, r.top + (r.Height() - GetStdFontCy()) / 2, txt,
+		           StdFont(), ink);
+	}
+	virtual Size GetStdSize(const Value& q) const {
+		ValueArray va = q;
+		Image m = va[0];
+		String txt = va[1];
+		Size isz = m.GetSize();
+		return Size(isz.cx + GetTextSize(txt, StdFont()).cx + 2, max(isz.cy, GetStdFontCy()));
+	}
+};
 
 FileSel::FileSel() {
 	filesystem = &StdFileSystemInfo();
@@ -1506,10 +1619,18 @@ FileSel::FileSel() {
 	SyncSplitter();
 
 	BackPaintHint();
+	
+	places.AddKey();
+	places.AddColumn().AddIndex().SetDisplay(Single<DisplayPlace>());
+	places.NoHeader().NoGrid();
+	places.WhenLeftClick = THISBACK(GoToPlace);
+	places.NoWantFocus();
 
 #ifdef PLATFORM_WIN32
 	list.IconWidth(GetFileIcon(GetHomeDirectory(), true, false, false).GetSize().cx);
 #endif
+
+	AddStandardPlaces();
 }
 
 FileSel::~FileSel() {}

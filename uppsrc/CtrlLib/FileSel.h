@@ -150,6 +150,7 @@ protected:
 	DisplayCtrl    preview_display;
 	Ctrl          *preview;
 	FileList       list;
+	ArrayCtrl      places;
 
 	enum {
 		OPEN, SAVEAS, SELECTDIR
@@ -188,12 +189,15 @@ protected:
 	bool        Execute(int mode);
 	bool        IsMulti()                                     { return multi && mode == OPEN; }
 	void        SyncSplitter();
+	void        InitSplitter();
 	String      GetMask();
+	void        GoToPlace();
+
 
 	using       WithFileSelectorLayout<TopWindow>::Title;
 
-public:
 	typedef FileSel CLASSNAME;
+public:
 
 	Callback3<bool, const String&, Image&> WhenIcon;
 
@@ -247,6 +251,12 @@ public:
 	FileSel& NoAppModal()                        { return AppModal(false); }
 	FileSel& Preview(Ctrl& ctrl);
 	FileSel& Preview(const Display& d);
+	FileSel& ClearPlaces();
+	FileSel& AddPlace(const String& path, Image& m, const String& name);
+	FileSel& AddPlace(const String& path, const String& name);
+	FileSel& AddPlace(const String& path);
+	FileSel& AddPlaceSeparator();
+	FileSel& AddStandardPlaces();
 
 	FileSel();
 	virtual ~FileSel();

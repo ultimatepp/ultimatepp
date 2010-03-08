@@ -1077,7 +1077,8 @@ Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count)
 		for(int c = 'A'; c <= 'Z'; c++) {
 			*drive = c;
 			int n = GetDriveType(drive);
-			if(n == DRIVE_NO_ROOT_DIR/* || IsWin32() && *drive == 'B'*/) continue;
+			if(n == DRIVE_NO_ROOT_DIR)
+				continue;
 			FileInfo& f = fi.Add();
 			f.filename = drive;
 			char name[256], system[256];
@@ -1086,10 +1087,9 @@ Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count)
 				bool b = GetVolumeInformation(drive, name, 256, &d, &d, &d, system, 256);
 				if(b) {
 				   	if(*name) f.root_desc << " " << FromSystemCharset(name);
-				   	if(*system) f.root_desc << " [ " << FromSystemCharset(system) << " ]";
 				}
 				else
-				if(n == DRIVE_REMOVABLE) {
+				if(n == DRIVE_REMOVABLE || n == DRIVE_CDROM) {
 					fi.Drop();
 					continue;
 				}

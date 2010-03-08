@@ -79,3 +79,15 @@ void    LaunchWebBrowser(const String& url);
 String GetComputerName();
 String GetUserName();
 String GetDesktopManager();
+
+String GetDesktopFolder();
+String GetProgramsFolder();
+String GetAppDataFolder();
+String GetMusicFolder();
+String GetPicturesFolder();
+String GetVideoFolder();
+String GetPersonalFolder();
+String GetTemplatesFolder();
+String GetDownloadFolder();
+String GetOsFolder();
+String GetSystemFolder();
