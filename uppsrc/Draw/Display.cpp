@@ -75,7 +75,7 @@ Size Display::RatioSize(const Value& q, int cx, int cy) const {
 
 Size Display::GetStdSize(const Value& q) const
 {
-	return Size(8, 8);
+	return Size(1, 1);
 }
 
 void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,

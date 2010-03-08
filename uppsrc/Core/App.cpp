@@ -420,4 +420,119 @@ String GetDesktopManager()
 #endif	
 }
 
+#if defined(PLATFORM_WIN32)
+String GetShellFolder(const char *local, const char *users) 
+{
+	String ret = FromSystemCharset(GetWinRegString(local, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", 
+									   HKEY_CURRENT_USER));
+	if (ret == "" && *users != '\0')
+		return FromSystemCharset(GetWinRegString(users, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", 
+									   HKEY_LOCAL_MACHINE));
+	return ret;
+}
+
+String GetDesktopFolder()	{return GetShellFolder("Desktop", "Common Desktop");}
+String GetProgramsFolder()	{return FromSystemCharset(GetWinRegString("ProgramFilesDir", "Software\\Microsoft\\Windows\\CurrentVersion", HKEY_LOCAL_MACHINE));}
+String GetAppDataFolder()	{return GetShellFolder("AppData", "Common AppData");}
+String GetMusicFolder()		{return GetShellFolder("My Music", "CommonMusic");}
+String GetPicturesFolder()	{return GetShellFolder("My Pictures", "CommonPictures");}
+String GetVideoFolder()		{return GetShellFolder("My Video", "CommonVideo");}
+String GetPersonalFolder()	{return GetShellFolder("Personal", 0);}
+String GetTemplatesFolder()	{return GetShellFolder("Templates", "Common Templates");}
+
+String GetDownloadFolder()	
+{
+	String ret = FromSystemCharset(GetWinRegString("Download Directory", "Software\\Microsoft\\Internet Explorer", HKEY_CURRENT_USER));
+	if (ret == "")
+		ret =  FromSystemCharset(GetWinRegString("Save Directory", "Software\\Microsoft\\Internet Explorer\\Main", HKEY_CURRENT_USER)); 
+	return ret;
+};
+
+String GetOsFolder()
+{
+	char ret[MAX_PATH];
+	::GetWindowsDirectory(ret, MAX_PATH);
+	return String(ret);
+}
+String GetSystemFolder()
+{
+	char ret[MAX_PATH];
+	::GetSystemDirectory(ret, MAX_PATH);
+	return String(ret);
+}
+#endif
+
+#ifdef PLATFORM_POSIX
+String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
+{
+	String ret = "";
+	if (FileExists(ret = AppendFileName(xdgConfigHome, "user-dirs.dirs"))) ;
+  	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.defaults"))) ;
+  	else if (FileExists(ret = AppendFileName(xdgConfigDirs, "user-dirs.dirs"))) ;
+  	return ret;
+}
+String GetPathDataXdg(String fileConfig, const char *folder) 
+{
+	StringParse fileData = LoadFile(fileConfig);
+	
+	if (!fileData.GoAfter(folder)) return "";
+	if (!fileData.GoAfter("=")) return "";
+	
+	String ret = "";
+	StringParse path = fileData.GetText();
+	if(path.GoAfter("$HOME/")) 
+		ret = AppendFileName(GetHomeDirectory(), path.Right());
+	else if (!FileExists(path))
+		ret = AppendFileName(GetHomeDirectory(), path);
+	
+	return ret;		
+}
+String GetShellFolder(const char *local, const char *users) 
+{
+ 	String xdgConfigHome = GetEnv("XDG_CONFIG_HOME");
+  	if (xdgConfigHome == "")		// By default
+  		xdgConfigHome = AppendFileName(GetHomeDirectory(), ".config");
+  	String xdgConfigDirs = GetEnv("XDG_CONFIG_DIRS");
+  	if (xdgConfigDirs == "")			// By default
+  		xdgConfigDirs = "/etc/xdg";
+  	String xdgFileConfigData = GetPathXdg(xdgConfigHome, xdgConfigDirs);
+  	String ret = GetPathDataXdg(xdgFileConfigData, local);
+  	if (ret == "" && *users != '\0')
+  		return GetPathDataXdg(xdgFileConfigData, users);
+  	else
+  		return ret;
+}
+String GetDesktopFolder()	
+{
+	String ret = GetShellFolder("XDG_DESKTOP_DIR", "DESKTOP");
+	if (ret.IsEmpty())
+		return AppendFileName(GetHomeDirectory(), "Desktop");
+	else
+		return ret;
+}
+String GetProgramsFolder()	{return String("/usr/bin");}
+String GetAppDataFolder()	{return GetHomeDirectory();};
+String GetMusicFolder()		{return GetShellFolder("XDG_MUSIC_DIR", "MUSIC");}
+String GetPicturesFolder()	{return GetShellFolder("XDG_PICTURES_DIR", "PICTURES");}
+String GetVideoFolder()		{return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS");}
+String GetPersonalFolder()	{return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS");}
+String GetTemplatesFolder()	{return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR");}
+String GetDownloadFolder()	
+{
+	return GetHomeDirFile("Downloads"); // wrong!
+};
+String GetTempFolder()
+{
+	return GetHomeDirectory();		
+}
+String GetOsFolder()
+{
+	return String("/bin");
+}
+String GetSystemFolder()
+{
+	return String("");
+}
+#endif
+
 END_UPP_NAMESPACE

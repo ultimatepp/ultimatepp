@@ -14,7 +14,6 @@ void AssistEditor::SyncCursor()
 	String k = "(" + GetKeyDesc(IdeKeys::AK_SEARCHCODE().key[0]) + ") ";
 	browser.search.NullText(String("Find ") + k);
 	browser.search.Tip(IsNull(browser.search) ? String() : "Clear " + k);
-//	browser.clear.Tip(String("Clear (") + k);
 	if(IsNavigator()) {
 		int ii = GetCursorLine();
 		String coderef;

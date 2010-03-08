@@ -443,6 +443,11 @@ nt]_[*@3 i])&]
 [s2;%% Sets the active file type.&]
 [s3; &]
 [s4; &]
+[s5;:FileSel`:`:PreSelect`(const String`&`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* PreSele
+ct]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 path])&]
+[s2;%% Preselects the file [%-*@3 path].&]
+[s3;%% &]
+[s4; &]
 [s5;:FileSel`:`:DefaultExt`(const char`*`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* DefaultE
 xt]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 ext])&]
 [s2;%% Sets the file extension to add for `"Save as`" dialog if none 
@@ -504,4 +509,19 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s5;:FileSel`:`:NoAppModal`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* NoAppModal]()&]
 [s2;%% If active (default), dialog is run as application modal.&]
 [s3; &]
+[s4; &]
+[s5;:FileSel`:`:Preview`(Ctrl`&`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* Preview]([_^Ctrl^ C
+trl][@(0.0.255) `&]_[*@3 ctrl])&]
+[s2;%% Sets [%-*@3 ctrl ]to be provide a preview of currently selected 
+file. This widget is placed into FileSel and receives the path 
+of file via SetData to be previewed or Null if there is nothing 
+to preview.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileSel`:`:Preview`(const Display`&`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* Preview](
+[@(0.0.255) const]_[_^Display^ Display][@(0.0.255) `&]_[*@3 d])&]
+[s2;%% Sets [%-*@3 d] to be provide a preview of currently selected 
+file. This Display is by FileSel to show the preview, the Value 
+in Paint method is either the path of file or Null if there is 
+nothing to preview.&]
 [s0; ]
