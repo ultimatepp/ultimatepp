@@ -23,14 +23,10 @@ struct FileIconMaker : ImageMaker {
 		#ifdef _DEBUG
 			AvoidPaintingCheck__();
 		#endif
-			DDUMP(dir);
-			DDUMP(file);
 			SHGetFileInfo(ToSystemCharset(file), dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
 			              &info, sizeof(info),
 			              SHGFI_ICON|(large ? SHGFI_LARGEICON : SHGFI_SMALLICON)|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
 			HICON icon = info.hIcon;
-			DDUMP(!!icon);
-			DLOG("-------------------");
 			ICONINFO iconinfo;
 			if(!icon || !GetIconInfo(icon, &iconinfo))
 				return Image();
@@ -53,7 +49,6 @@ struct FileIconMaker : ImageMaker {
 
 Image GetFileIcon(const char *path, bool dir, bool force, bool large)
 {
-	DDUMP(path);
 	FileIconMaker m;
 	String ext = GetFileExt(path);
 	m.exe = false;
@@ -1122,7 +1117,6 @@ struct FolderDisplay : public Display {
 
 Image GetDirIcon(const String& s)
 {
-	DDUMP(s);
 #ifdef PLATFORM_X11
 	Image img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
 #else
@@ -1138,7 +1132,7 @@ Image GetDirIcon(const String& s)
 }
 
 void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
-	                   Color ink, Color paper, dword style) const
+                          Color ink, Color paper, dword style) const
 {
 	String s = q;
 	w.DrawRect(r, paper);
