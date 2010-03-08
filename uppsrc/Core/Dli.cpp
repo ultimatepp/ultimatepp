@@ -163,7 +163,6 @@ void *CheckDll__(const char *fn, const char *const *names, UPP::Vector<void *>& 
 {
 	void *hmod = dlopen(fn, RTLD_LAZY | RTLD_GLOBAL);
 	if(!hmod) {
-		RLOG("prdel");
 		RLOG("Error loading library " << fn << ": " << dlerror());
 /*
 		for(int i = 0; i < 100; i++) {

@@ -2811,6 +2811,11 @@ String FromUnicodeBuffer(const wchar *src, int len, byte charset, int defchar)
 	return result;
 }
 
+String FromUnicodeBuffer(const wchar *src)
+{
+	return FromUnicodeBuffer(src, wstrlen(src));
+}
+
 String  FromUnicode(const WString& src, byte charset, int defchar)
 {
 	return FromUnicodeBuffer(~src, src.GetCount(), charset, defchar);

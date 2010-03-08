@@ -1,7 +1,17 @@
 #include "Core.h"
 
 #ifdef PLATFORM_WIN32
+#define Ptr Ptr_
+#define byte byte_
+#define CY win32_CY_
+
 #include <shellapi.h>
+#include <wincon.h>
+#include <shlobj.h>
+
+#undef Ptr
+#undef byte
+#undef CY
 #endif
 
 NAMESPACE_UPP
@@ -421,45 +431,45 @@ String GetDesktopManager()
 }
 
 #if defined(PLATFORM_WIN32)
-String GetShellFolder(const char *local, const char *users) 
+
+String GetShellFolder(int clsid) 
 {
-	String ret = FromSystemCharset(GetWinRegString(local, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", 
-									   HKEY_CURRENT_USER));
-	if (ret == "" && *users != '\0')
-		return FromSystemCharset(GetWinRegString(users, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", 
-									   HKEY_LOCAL_MACHINE));
-	return ret;
+	wchar path[MAX_PATH];
+	if(SHGetFolderPathW(NULL, clsid, NULL, SHGFP_TYPE_CURRENT, path) == S_OK)
+		return FromUnicodeBuffer(path);
+	return Null;
 }
 
-String GetDesktopFolder()	{return GetShellFolder("Desktop", "Common Desktop");}
-String GetProgramsFolder()	{return FromSystemCharset(GetWinRegString("ProgramFilesDir", "Software\\Microsoft\\Windows\\CurrentVersion", HKEY_LOCAL_MACHINE));}
-String GetAppDataFolder()	{return GetShellFolder("AppData", "Common AppData");}
-String GetMusicFolder()		{return GetShellFolder("My Music", "CommonMusic");}
-String GetPicturesFolder()	{return GetShellFolder("My Pictures", "CommonPictures");}
-String GetVideoFolder()		{return GetShellFolder("My Video", "CommonVideo");}
-String GetPersonalFolder()	{return GetShellFolder("Personal", 0);}
-String GetTemplatesFolder()	{return GetShellFolder("Templates", "Common Templates");}
+String GetDesktopFolder()	{ return GetShellFolder(CSIDL_DESKTOP); }
+String GetProgramsFolder()	{ return GetShellFolder(CSIDL_PROGRAM_FILES); }
+String GetAppDataFolder()	{ return GetShellFolder(CSIDL_APPDATA);}
+String GetMusicFolder()		{ return GetShellFolder(CSIDL_MYMUSIC);}
+String GetPicturesFolder()	{ return GetShellFolder(CSIDL_MYPICTURES);}
+String GetVideoFolder()		{ return GetShellFolder(CSIDL_MYVIDEO);}
+String GetDocumentsFolder()	{ return GetShellFolder(CSIDL_MYDOCUMENTS);}
+String GetTemplatesFolder()	{ return GetShellFolder(CSIDL_TEMPLATES);}
+
+#define MY_DEFINE_KNOWN_FOLDER(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
+static const GUID name = { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
+
+MY_DEFINE_KNOWN_FOLDER(MY_FOLDERID_Downloads, 0x374de290, 0x123f, 0x4565, 0x91, 0x64, 0x39, 0xc4, 0x92, 0x5e, 0x46, 0x7b);
 
 String GetDownloadFolder()	
 {
-	String ret = FromSystemCharset(GetWinRegString("Download Directory", "Software\\Microsoft\\Internet Explorer", HKEY_CURRENT_USER));
-	if (ret == "")
-		ret =  FromSystemCharset(GetWinRegString("Save Directory", "Software\\Microsoft\\Internet Explorer\\Main", HKEY_CURRENT_USER)); 
-	return ret;
+	static HRESULT (STDAPICALLTYPE * SHGetKnownFolderPath)(REFKNOWNFOLDERID rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath);
+	ONCELOCK {
+		DllFn(SHGetKnownFolderPath, "shell32.dll", "SHGetKnownFolderPath");
+	}
+	if(SHGetKnownFolderPath) {
+		PWSTR path = NULL;
+		if(SHGetKnownFolderPath(MY_FOLDERID_Downloads, 0, NULL, &path) == S_OK && path) {
+			String s = FromUnicodeBuffer(path, wstrlen(path));
+			CoTaskMemFree(path);
+			return s;
+		}
+	}
+	return Null;
 };
-
-String GetOsFolder()
-{
-	char ret[MAX_PATH];
-	::GetWindowsDirectory(ret, MAX_PATH);
-	return String(ret);
-}
-String GetSystemFolder()
-{
-	char ret[MAX_PATH];
-	::GetSystemDirectory(ret, MAX_PATH);
-	return String(ret);
-}
 #endif
 
 #ifdef PLATFORM_POSIX
@@ -515,24 +525,10 @@ String GetAppDataFolder()	{return GetHomeDirectory();};
 String GetMusicFolder()		{return GetShellFolder("XDG_MUSIC_DIR", "MUSIC");}
 String GetPicturesFolder()	{return GetShellFolder("XDG_PICTURES_DIR", "PICTURES");}
 String GetVideoFolder()		{return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS");}
-String GetPersonalFolder()	{return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS");}
+String GetDocumentsFolder()	{return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS");}
 String GetTemplatesFolder()	{return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR");}
-String GetDownloadFolder()	
-{
-	return GetHomeDirFile("Downloads"); // wrong!
-};
-String GetTempFolder()
-{
-	return GetHomeDirectory();		
-}
-String GetOsFolder()
-{
-	return String("/bin");
-}
-String GetSystemFolder()
-{
-	return String("");
-}
+String GetDownloadFolder()	{return GetShellFolder("XDG_DOWNLOAD_DIR", "XDG_DOWNLOAD_DIR");
+
 #endif
 
 END_UPP_NAMESPACE

@@ -328,7 +328,11 @@ String::String(StringBuffer& b)
 		chr[KIND] = min(b.GetAlloc(), 255);
 	}
 	b.Zero();
+
+//	char h[100];
+//	DLOG(sprintf(h, "String(StringBuffer) end %p (%p)", ptr, this));
 	Dsyn();
+//	DLOG(sprintf(h, "String(StringBuffer) end2 %p (%p)", ptr, this));
 }
 
 char *StringBuffer::Alloc(int count, int& alloc)

@@ -269,6 +269,7 @@ bool    CheckUtf8(const String& src);
 WString ToUnicode(const String& src, byte charset);
 WString ToUnicode(const char *src, int n, byte charset);
 String  FromUnicodeBuffer(const wchar *src, int len, byte charset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
+String  FromUnicodeBuffer(const wchar *src);
 String  FromUnicode(const WString& src, byte charset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
 
 String  ToCharset(byte charset, const String& s, byte scharset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);

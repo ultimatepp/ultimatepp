@@ -28,6 +28,15 @@ bool   SetWinRegExpandString(const String& string, const char *value, const char
 bool   SetWinRegInt(int data, const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE);
 void   DeleteWinReg(const String& key, HKEY base = HKEY_LOCAL_MACHINE);
 
+void  *GetDllFn(const char *dll, const char *fn);
+
+template <class T>
+void   DllFn(T& x, const char *dll, const char *fn)
+{
+	x = (T)GetDllFn(dll, fn);
+}
+
+
 #ifndef PLATFORM_WINCE
 String GetSystemDirectory();
 String GetWindowsDirectory();

@@ -1236,9 +1236,11 @@ bool FileSel::Execute(int _mode) {
 		Array<FileSystemInfo::FileInfo> root = filesystem->Find(Null);
 		for(i = 0; i < root.GetCount(); i++) {
 			String ugly = root[i].filename;
-			ugly.Cat('\0');
-			ugly.Cat(root[i].root_style);
-			dir.Add(root[i].filename, ugly);
+			if(ugly != "A:\\" && ugly != "B:\\") {
+				ugly.Cat('\0');
+				ugly.Cat(root[i].root_style);
+				dir.Add(root[i].filename, ugly);
+			}
 		}
 		if(filesystem == &StdFileSystemInfo())
 			dir.Add("\\", String(t_("Network")) + String(0, 1) + "\xff");
@@ -1494,22 +1496,24 @@ FileSel& FileSel::AddStandardPlaces()
 	AddPlace(GetMusicFolder(), t_("Music"));
 	AddPlace(GetPicturesFolder(), t_("Pictures"));
 	AddPlace(GetVideoFolder(), t_("Video"));
-	AddPlace(GetPersonalFolder(), t_("Documents"));
-//	AddPlace(GetDownloadFolder(), t_("Downloads"));
+	AddPlace(GetDocumentsFolder(), t_("Documents"));
+	AddPlace(GetDownloadFolder(), t_("Downloads"));
 	AddPlaceSeparator();
 	Array<FileSystemInfo::FileInfo> root = filesystem->Find(Null);
 	for(int i = 0; i < root.GetCount(); i++) {
 		String desc = root[i].root_desc;
 		String n = root[i].filename;
-	#ifdef PLATFORM_WIN32
-		if(*n.Last() == '\\')
-			n.Trim(n.GetCount() - 1);
-	#endif
-		if(desc.GetCount())
-			desc << " (" << root[i].filename << ")";
-		else
-			desc = n;
-		AddPlace(root[i].filename, n);
+		if(n != "A:\\" && n != "B:\\") {
+		#ifdef PLATFORM_WIN32
+			if(*n.Last() == '\\')
+				n.Trim(n.GetCount() - 1);
+		#endif
+			if(desc.GetCount())
+				desc << " (" << root[i].filename << ")";
+			else
+				desc = n;
+			AddPlace(root[i].filename, n);
+		}
 	}
 	return *this;
 }
