@@ -449,6 +449,11 @@ bool FindFile::IsSymLink() const
 	return sGetSymLinkPath0(AppendFileName(path, name), NULL);
 }
 
+bool FindFile::IsExecutable() const
+{
+	return !IsDirectory() && ToLower(GetName()).EndsWith(".exe"); }
+}
+
 void FindFile::Close() {
 	if(handle != INVALID_HANDLE_VALUE) FindClose(handle);
 	handle = INVALID_HANDLE_VALUE;
@@ -652,6 +657,11 @@ bool FindFile::IsSymLink() const
 		return S_ISLNK(stf.st_mode);
 	}
 	return false;
+}
+
+bool FindFile::IsExecutable() const
+{
+	return !IsDirectory() && ((S_IXUSR|S_IXGRP|S_IXOTH) & GetMode());
 }
 
 bool FindFile::Next() {
