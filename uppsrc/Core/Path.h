@@ -76,6 +76,7 @@ public:
 	bool        IsFolder() const;
 	bool        IsFile() const           { return !IsDirectory(); }
 	bool        IsSymLink() const;
+	bool        IsExecutable() const;
 
 	bool        IsArchive() const;
 	bool        IsCompressed() const;
@@ -137,6 +138,7 @@ public:
 	bool        IsFolder() const;
 	bool        IsFile() const            { return S_ISREG(GetMode()); }
 	bool        IsSymLink() const;
+	bool        IsExecutable() const;
 
 	operator    bool() const              { return file; }
 
