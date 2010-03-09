@@ -104,6 +104,8 @@ void DockPane::SmartReposDown(Vector<int>& p, int ix)
 		n++;
 	}
 	
+	totalsize = max(totalsize, 1);
+	
 	sparesize = p[ix];
 	p[ix] = 0;		
 	for (int i = 0; i < cnt; i++)

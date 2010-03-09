@@ -35,6 +35,7 @@ public:
 	virtual void Layout();
 	virtual void ChildRemoved(Ctrl *child);
 	virtual void ChildAdded(Ctrl *child);
+	virtual bool Key(dword key, int count);
 /*	virtual void ChildGotFocus() 						{ handle.RefreshFocus(true); TopWindow::ChildGotFocus(); }
 	virtual void ChildLostFocus() 						{ handle.RefreshFocus(HasFocusDeep()); TopWindow::ChildLostFocus(); }
 	virtual void GotFocus() 							{ handle.RefreshFocus(true); }
@@ -170,7 +171,7 @@ public:
 	
 	void			StateNotDocked(DockWindow *dock = NULL) 	{ if (dock) base = dock; dockstate = STATE_NONE; }
 	void			StateDocked(DockWindow& dock)				{ State(dock, STATE_DOCKED); }
-	void 			StateFloating(DockWindow& dock)				{ State(dock, STATE_FLOATING); }
+	void 			StateFloating(DockWindow& dock)				{ State(dock, STATE_FLOATING); Title(GetTitle()); }
 	void			StateAutoHide(DockWindow& dock)				{ State(dock, STATE_AUTOHIDE); Hide(); }
 	void			StateTabbed(DockWindow& dock)				{ State(dock, STATE_TABBED); Hide(); }	
 	void			StartMouseDrag();
@@ -182,7 +183,7 @@ public:
 	void			SyncTabs(int align, bool text);				
 	void 			Lock(bool lock);
 	void 			SyncFrames();
-	void 			SyncFrames(bool lock);
+	void 			SyncFrames(bool hidehandle);
 	void			SignalStateChange();	
 	
 	void 			Grouping(bool grouping)			{ tabbar.Grouping(grouping); GroupRefresh(); }
@@ -190,7 +191,7 @@ public:
 	void			GetGroups(Vector<String>& groups);
 	
 	void			WindowButtons(bool menu, bool hide, bool close);
-	
+
 	void			Highlight();
 	Image 			GetHighlightImage();
 	

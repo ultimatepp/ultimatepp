@@ -183,11 +183,11 @@ void DockCont::Handle::Paint(Draw& w)
 		if (!s.title_font.IsNull()) {		
 			Ctrl *c = GetLastChild();
 			while (c && !c->IsShown() && c->GetParent())
-				c = c->GetNext();
+				c = c->GetPrev();
 			if (s.handle_vert)
-				r.top = c ? c->GetRect().bottom + m.top : m.top;
+				r.top = c ? c->GetRect().bottom - m.top : r.top - m.top;
 			else
-				r.right = c ? c->GetRect().left + m.right : m.right;
+				r.right = c ? c->GetRect().left - m.right : r.right - m.right;
 			w.Clip(r);
 			WString text = IsNull(dc->GetGroup()) ? dc->GetTitle() : (WString)Format("%s (%s)", dc->GetTitle(), dc->GetGroup());
 			w.DrawText(p.x, p.y, s.handle_vert ? 900 : 0, text, s.title_font, s.title_ink[focus]);
@@ -246,6 +246,12 @@ void DockCont::ChildAdded(Ctrl *child)
 	child->SizePos();
 	TabSelected();	
 	if (GetCount() >= 2) RefreshLayout();
+}
+
+bool DockCont::Key(dword key, int count)
+{
+	PostCallback(callback1(base, &DockWindow::DoHotKeys, key));
+	return true;
 }
 
 // The use of Single<> here is bad form, but I am unable to declare it a 
@@ -368,8 +374,11 @@ void DockCont::TabContext(int ix)
 		menu.ContainerMenu(bar, ContCast(v), false);
 	else
 		tabmenu.WindowMenuNoClose(bar, DockCast(v));
-	bar.Separator();
-	tabbar.ContextMenu(bar);
+	if(base->HasCloseButtons())
+	{
+		bar.Separator();
+		tabbar.ContextMenu(bar);
+	}
 	bar.Execute();
 }
 
@@ -394,6 +403,7 @@ void DockCont::TabClosed(Value v)
 
 void DockCont::CloseAll()
 {
+	if(!base->HasCloseButtons()) return;
 	base->CloseContainer(*this);
 }
 
@@ -594,9 +604,12 @@ void DockCont::SetAllDockerPos()
 
 void DockCont::WindowButtons(bool menu, bool hide, bool _close)
 {
-	AddRemoveButton(windowpos, menu);
-	AddRemoveButton(autohide, hide);
-	AddRemoveButton(close, _close);
+	bool locked = base->IsLocked();
+	AddRemoveButton(windowpos, menu && !locked);
+	AddRemoveButton(autohide, hide && !locked);
+	AddRemoveButton(close, _close && !locked);
+	tabbar.Crosses(_close && !locked);
+	NoCloseBox((!_close) || locked);
 	SyncButtons();
 }
 
@@ -803,21 +816,21 @@ void DockCont::DockContMenu::MenuClose(DockableCtrl *dc)
 
 void DockCont::Lock(bool lock)
 {
-	tabbar.Crosses(!lock);
+	tabbar.Crosses(!lock && base && base->HasCloseButtons());
 	tabbar.WhenDrag 		= lock ? Callback1<int>() : THISBACK(TabDragged);
 	tabbar.WhenContext 		= lock ? Callback1<int>() : THISBACK(TabContext);	
-	SyncFrames(lock);
+	SyncFrames(lock && !base->IsShowingLockedHandles());
 	RefreshLayout();
 }
 
 void DockCont::SyncFrames()
 {
-	SyncFrames(base->IsLocked());
+	SyncFrames(base->IsLocked() && !base->IsShowingLockedHandles());
 }
 
-void DockCont::SyncFrames(bool lock)
+void DockCont::SyncFrames(bool hidehandle)
 {
-	bool frames = !lock && (IsDocked() || IsAutoHide());
+	bool frames = !hidehandle && (IsDocked() || IsAutoHide());
 	handle.Show(frames);
 	if (frames)
 		SetFrame(0, Single<DockCont::DockContFrame>());

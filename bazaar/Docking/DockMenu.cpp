@@ -69,8 +69,11 @@ void DockMenu::GroupMenu(Bar& bar, String group)
 	bar.Separator();
 	bar.Add(true, t_("Tabify and Dock") + text, THISBACK1(GroupTabDockMenu, group));
 	bar.Add(true, t_("Tabify and Float") + text, DOCKBACK1(TabFloatGroup, group));
-	bar.Separator();
-	bar.Add(true, t_("Close") + text, CtrlImg::Remove(), DOCKBACK1(CloseGroup, group));		
+	if(dock->HasCloseButtons())
+	{
+		bar.Separator();
+		bar.Add(true, t_("Close") + text, CtrlImg::Remove(), DOCKBACK1(CloseGroup, group));		
+	}
 }
 
 void DockMenu::GroupWindowsMenu(Bar& bar, String group)
@@ -83,8 +86,11 @@ void DockMenu::GroupWindowsMenu(Bar& bar, String group)
 void DockMenu::WindowMenu(Bar& bar, DockableCtrl *dc)
 {
 	WindowMenuNoClose(bar, dc);
-	bar.Separator();
-	bar.Add(true, t_("Close"), CtrlImg::Remove(), THISBACK1(MenuClose, dc));				
+	if(dock->HasCloseButtons())
+	{
+		bar.Separator();
+		bar.Add(true, t_("Close"), CtrlImg::Remove(), THISBACK1(MenuClose, dc));
+	}
 }
 
 void DockMenu::WindowMenuNoClose(Bar& bar, DockableCtrl *dc)

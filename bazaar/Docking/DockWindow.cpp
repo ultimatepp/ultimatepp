@@ -23,6 +23,21 @@ void DockWindow::State(int reason)
 	TopWindow::State(reason);
 }
 
+bool DockWindow::Key(dword key, int count)
+{
+	DoHotKeys(key);
+	return TopWindow::Key(key, count);
+}
+
+void DockWindow::DoHotKeys(dword key)
+{
+	if (!HasCloseButtons() || IsLocked()) return;
+	for (int i = 0; i < dockers.GetCount(); i++) {
+		if (dockers[i]->IsHotKey(key))
+			HideRestoreDocker(*dockers[i]);
+	}	
+}
+
 void DockWindow::Dock(int align, DockableCtrl& dc, int pos)
 {
 	ALIGN_ASSERT(align);
@@ -263,6 +278,14 @@ void DockWindow::RestoreDockerPos(DockableCtrl& dc, bool savefirst)
 		default:
 			NEVER();
 	}
+}
+
+void DockWindow::HideRestoreDocker(DockableCtrl& dc)
+{
+	if (dc.IsHidden())
+		DockWindow::RestoreDockerPos(dc);
+	else
+		DockWindow::Close(dc);		
 }
 
 void DockWindow::DockGroup(int align, String group, int pos)
@@ -1428,7 +1451,7 @@ void DockWindow::EnableFloating(bool enable)
 DockWindow::DockWindow()
 : init(false), tabbing(true), grouping(true), nestedtabs(false), nesttoggle(K_CTRL | K_SHIFT),
   locked(false), menubtn(true), closebtn(true), hidebtn(true), tabtext(true), tabalign(false),
-  frameorder(true), autohide(true), childtoolwindows(false)
+  frameorder(true), autohide(true), childtoolwindows(false), showlockedhandles(false)
 {
 	menu.Set(*this);
 

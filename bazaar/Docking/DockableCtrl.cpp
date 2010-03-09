@@ -17,6 +17,12 @@ DockableCtrl&  DockableCtrl::Set(const Image& _icon, const char *_title, String 
 	return SetGroup(_group).Title(_title).Icon(_icon);
 }
 
+bool DockableCtrl::IsHotKey(dword key)
+{
+	return (keycode == key || (keyinfo && 
+		(key == keyinfo().key[0] || key == keyinfo().key[1] || key == keyinfo().key[2] || key == keyinfo().key[3])));
+}
+
 DockableCtrl&  DockableCtrl::SizeHint(const Size& min, const Size& max, const Size& std)
 {
 	minsize = min; maxsize = max; stdsize = std; 
@@ -87,6 +93,8 @@ DockableCtrl::DockableCtrl()
 	maxsize = Null;
 	stdsize = Null;
 	minsize = Size(0, 0);
+	keycode = 0;
+	keyinfo = 0;
 	AllowDockAll();
 	Transparent(true);
 	BackPaint();

@@ -39,6 +39,8 @@ private:
 	WString 		title;
 	String 			group;
 	bool			dockable[4];
+	dword			keycode;
+	KeyInfo&(*		keyinfo)();
 
 	const Style    *style;
 	
@@ -52,11 +54,14 @@ public:
 	
 	const Image& 	GetIcon()						{ return icon; }
 	DockableCtrl& 	Icon(const Image& m)			{ icon = m; return *this; }
-	DockableCtrl& 	Title(const char *_title)		{ title = _title; if (GetParent()) GetParent()->Refresh(); return *this; }
-	DockableCtrl& 	Title(const WString& _title)	{ title = _title; if (GetParent()) GetParent()->Refresh(); return *this; }
+	DockableCtrl& 	Title(const char *_title)		{ title = _title; if (GetParent()) GetParent()->RefreshFrame(); return *this; }
+	DockableCtrl& 	Title(const WString& _title)	{ title = _title; if (GetParent()) GetParent()->RefreshFrame(); return *this; }
 	const WString&  GetTitle()						{ return title; }
 
 	DockableCtrl& 	Set(const Image& icon, const char *_title, String group = Null);
+	DockableCtrl&	SetHotKey(dword key)			{ keycode = key; return *this; }
+	DockableCtrl&	SetHotKey(KeyInfo&(*key)())		{ keyinfo = key; return *this; }
+	bool			IsHotKey(dword key);
 
 	DockableCtrl& 	SizeHint(const Size& min, const Size& max = Null, const Size& std = Null);
 	void       		SetMinSize(Size sz) 			{ minsize = sz; }

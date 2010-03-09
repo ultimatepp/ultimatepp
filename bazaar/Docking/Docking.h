@@ -23,6 +23,7 @@ public:
 	};
 
 	virtual void State(int reason);
+	virtual bool Key(dword key, int count);
 protected:
 	enum { TIMEID_ACTION_CHECK = Ctrl::TIMEID_COUNT,
 		TIMEID_ANIMATE,
@@ -95,6 +96,8 @@ protected:
 	bool            IsPaneAnimating(int align) const        { return dockpane[align].IsAnimating(); }
 	bool            CheckNesting() const                    { return (GetMouseFlags() & nesttoggle) ? !nestedtabs : nestedtabs; }
 
+	void			DoHotKeys(dword key);
+
 	void            SaveDockerPos(DockableCtrl& dc, PosInfo& pi);
 	void            SetDockerPosInfo(DockableCtrl& dc, const PosInfo& pi);
 
@@ -116,6 +119,7 @@ private:
 	bool tabtext;
 	bool tabalign;
 	bool frameorder;
+	bool showlockedhandles;
 	bool childtoolwindows;
 	dword nesttoggle;
 	String layoutbackup;
@@ -175,6 +179,7 @@ public:
 
 	void            SaveDockerPos(DockableCtrl& dc);
 	void            RestoreDockerPos(DockableCtrl& dc, bool savefirst = false);
+	void			HideRestoreDocker(DockableCtrl& dc);
 
 	void            DockGroup(int align, String group, int pos = -1);
 	void            FloatGroup(String group);
@@ -198,6 +203,8 @@ public:
 	void            LockLayout(bool lock = true);
 	void            UnlockLayout()                      { LockLayout(true); }
 	bool            IsLocked() const                    { return locked; }
+	DockWindow&		ShowLockedHandles(bool show = true)	{ showlockedhandles = show; SyncAll(); return *this; }
+	bool			IsShowingLockedHandles() const		{ return showlockedhandles; }
 
 	DockWindow&     TabAutoAlign(bool al = true);
 	DockWindow&     TabShowText(bool text = true);
