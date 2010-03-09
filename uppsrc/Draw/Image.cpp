@@ -445,37 +445,34 @@ void Iml::Set(int i, const Image& img)
 	map[i].loaded = true;
 }
 
-static StaticCriticalSection sImgImlLock;
-
 Image Iml::Get(int i)
 {
 	IImage& m = map[i];
 	if(!m.loaded) {
-		INTERLOCKED_(sImgImlLock) {
-			if(data.GetCount()) {
-				int ii = 0;
-				for(;;) {
-					const Data& d = data[ii];
-					if(i < d.count) {
-						static const char   *cached_data;
-						static Vector<Image> cached;
-						if(cached_data != d.data) {
-							cached_data = d.data;
-							cached = UnpackImlData(String(d.data, d.len));
-							if(premultiply)
-								for(int i = 0; i < cached.GetCount(); i++)
-									cached[i] = Premultiply(cached[i]);
-						}
-						m.image = cached[i];
-						break;
+		DrawLock __;
+		if(data.GetCount()) {
+			int ii = 0;
+			for(;;) {
+				const Data& d = data[ii];
+				if(i < d.count) {
+					static const char   *cached_data;
+					static Vector<Image> cached;
+					if(cached_data != d.data) {
+						cached_data = d.data;
+						cached = UnpackImlData(String(d.data, d.len));
+						if(premultiply)
+							for(int i = 0; i < cached.GetCount(); i++)
+								cached[i] = Premultiply(cached[i]);
 					}
-					i -= d.count;
-					ii++;
+					m.image = cached[i];
+					break;
 				}
+				i -= d.count;
+				ii++;
 			}
-			else
-				m.image = Premultiply(Image(img_init[i]));
 		}
+		else
+			m.image = Premultiply(Image(img_init[i]));
 		m.loaded = true;
 	}
 	return m.image;
@@ -545,30 +542,16 @@ Iml& GetIml(int i)
 	return *sImgMap()[i];
 }
 
-void Iml::Enter()
-{
-	sImgMapLock.Enter();
-}
-
-void Iml::Leave()
-{
-	sImgMapLock.Leave();
-}
-
 String GetImlName(int i)
 {
-	String x;
-	INTERLOCKED_(sImgMapLock)
-		x = sImgMap().GetKey(i);
-	return x;
+	DrawLock __;
+	return sImgMap().GetKey(i);
 }
 
 int FindIml(const char *name)
 {
-	int q;
-	INTERLOCKED_(sImgMapLock)
-		q = sImgMap().Find(name);
-	return q;
+	DrawLock __;
+	return sImgMap().Find(name);
 }
 
 Image GetImlImage(const char *name)
@@ -576,16 +559,15 @@ Image GetImlImage(const char *name)
 	Image m;
 	const char *w = strchr(name, ':');
 	if(w) {
+		DrawLock __;
 		int q = FindIml(String(name, w));
 		if(q >= 0) {
-			INTERLOCKED_(sImgMapLock) {
-				Iml& iml = *sImgMap()[q];
-				while(*w == ':')
-					w++;
-				q = iml.Find(w);
-				if(q >= 0)
-					m = iml.Get(q);
-			}
+			Iml& iml = *sImgMap()[q];
+			while(*w == ':')
+				w++;
+			q = iml.Find(w);
+			if(q >= 0)
+				m = iml.Get(q);
 		}
 	}
 	return m;
@@ -595,16 +577,15 @@ void SetImlImage(const char *name, const Image& m)
 {
 	const char *w = strchr(name, ':');
 	if(w) {
+		DrawLock __;
 		int q = FindIml(String(name, w));
 		if(q >= 0) {
-			INTERLOCKED_(sImgMapLock) {
-				Iml& iml = *sImgMap()[q];
-				while(*w == ':')
-					w++;
-				q = iml.Find(w);
-				if(q >= 0)
-					iml.Set(q, m);
-			}
+			Iml& iml = *sImgMap()[q];
+			while(*w == ':')
+				w++;
+			q = iml.Find(w);
+			if(q >= 0)
+				iml.Set(q, m);
 		}
 	}
 }

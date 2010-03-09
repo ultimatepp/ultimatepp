@@ -451,7 +451,7 @@ bool FindFile::IsSymLink() const
 
 bool FindFile::IsExecutable() const
 {
-	return !IsDirectory() && ToLower(GetName()).EndsWith(".exe"); }
+	return !IsDirectory() && ToLower(GetName()).EndsWith(".exe");
 }
 
 void FindFile::Close() {
