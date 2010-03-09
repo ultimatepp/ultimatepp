@@ -299,8 +299,6 @@ class Iml {
 	void  Init(int n);
 
 public:
-	void   Enter();
-	void   Leave();
 	void   Reset();
 	int    GetCount() const                  { return map.GetCount(); }
 	String GetId(int i)                      { return map.GetKey(i); }

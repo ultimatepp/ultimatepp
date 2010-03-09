@@ -124,6 +124,7 @@ INITBLOCK { Register(#x, xmlrpc##x, group); } \
 void xmlrpc##x(XmlRpcData& rpc)
 
 class XmlRpcCall {
+	bool       shorted;
 	HttpClient server;
 	XmlRpcData data;
 	String     method;
@@ -164,7 +165,7 @@ public:
 	String GetError() const                             { return error; }
 	XmlRpcCall& TimeOut(int msec)                       { timeout = msec; }
 
-	XmlRpcCall(const char *url) : server(url)           { server.ContentType("text/xml"); timeout = 30000; }
+	XmlRpcCall(const char *url);
 };
 
 #endif
