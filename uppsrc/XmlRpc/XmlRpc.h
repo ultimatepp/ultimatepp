@@ -142,6 +142,8 @@ public:
 	template <class T>
 	bool operator>>(T& x) { if(IsError(Execute())) return false; try { data >> x; } catch(ValueTypeMismatch) { return false; } return true; }
 
+	Value       Ret();
+
 	XmlRpcCall& operator()(const char *method)        { Method(method); return *this; }
 
 #define E__Templ(I)  class COMBINE(T, I)

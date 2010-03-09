@@ -59,3 +59,11 @@ Value XmlRpcCall::Execute()
 	}
 	return data.in.GetCount() ? data.in[0] : Null;
 }
+
+Value XmlRpcCall::Ret()
+{
+	Value v;
+	if(*this >> v)
+		return v;
+	return Value();
+}
