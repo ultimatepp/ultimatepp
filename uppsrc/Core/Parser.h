@@ -9,6 +9,7 @@ inline bool iscid(int c) {
 class CParser {
 protected:
 	const char *term;
+	const char *lineptr;
 	int         line;
 	String      fn;
 	bool        skipspaces;
@@ -62,8 +63,11 @@ public:
 
 	struct Pos {
 		const char *ptr;
+		const char *lineptr;
 		int         line;
 		String      fn;
+		
+		int GetColumn(int tabsize = 4) const;
 
 		Pos(const char *ptr = NULL, int line = 1, String fn = Null) : ptr(ptr), line(line), fn(fn) {}
 	};

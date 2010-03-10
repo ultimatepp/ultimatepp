@@ -8,7 +8,8 @@ NAMESPACE_UPP
 void CParser::ThrowError(const char *s) {
 	LLOG("CParser::Error: " << s);
 	LLOG(~String(term, min(strlen((const char *)term), 512U)));
-	Error err(fn + Format("(%d): ", line) + s);
+	Pos pos = GetPos();
+	Error err(fn + Format("(%d,%d): ", line, pos.GetColumn()) + s);
 //	err.term = (const char *)term;
 	throw err;
 }
@@ -38,7 +39,10 @@ bool CParser::Spaces0() {
 		}
 		if(!*term) break;
 		if(*term > ' ') break;
-		if(*term == '\n') line++;
+		if(*term == '\n') {
+			line++;
+			lineptr = term + 1;
+		}
 		term++;
 	}
 	return true;
@@ -342,8 +346,21 @@ CParser::Pos CParser::GetPos()
 	Pos p;
 	p.line = line;
 	p.fn = fn;
-	p.ptr = (const char *)term;
+	p.ptr = term;
+	p.lineptr = lineptr;
 	return p;
+}
+
+int CParser::Pos::GetColumn(int tabsize) const
+{
+	int pos = 1;
+	for(const char *s = lineptr; s < ptr; s++) {
+		if(*s == '\t')
+			pos = (pos + tabsize - 1) / tabsize * tabsize + 1;
+		else
+			pos++;
+	}
+	return pos;
 }
 
 void CParser::SetPos(const CParser::Pos& p)
@@ -351,11 +368,12 @@ void CParser::SetPos(const CParser::Pos& p)
 	line = p.line;
 	fn = p.fn;
 	term = p.ptr;
+	lineptr = p.lineptr;
 	DoSpaces();
 }
 
 CParser::CParser(const char *ptr)
-: term(ptr)
+: term(ptr), lineptr(ptr)
 {
 	line = 1;
 	skipspaces = true;
@@ -371,14 +389,14 @@ CParser::CParser(const char *ptr, const char *fn, int line)
 
 CParser::CParser()
 {
-	term = NULL;
+	term = lineptr = NULL;
 	line = 0;
 	skipspaces = true;
 }
 
 void CParser::Set(const char *_ptr, const char *_fn, int _line)
 {
-	term = _ptr;
+	term = lineptr = _ptr;
 	fn = _fn;
 	line = _line;
 	skipspaces = true;
