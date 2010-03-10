@@ -126,7 +126,7 @@ String FormatXmlRpcValue(const Value& v)
 		r << "</struct>";
 	}
 	else
-	if( v.GetType() == VALUEARRAY_V) {
+	if(v.GetType() == VALUEARRAY_V) {
 		r = "<array><data>";
 		ValueArray va = v;
 		for(int i = 0; i < va.GetCount(); i++)
