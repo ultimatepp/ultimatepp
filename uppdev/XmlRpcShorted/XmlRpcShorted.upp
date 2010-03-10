@@ -1,0 +1,10 @@
+uses
+	Core,
+	XmlRpc;
+
+file
+	XmlRpcShorted.cpp;
+
+mainconfig
+	"" = "";
+
