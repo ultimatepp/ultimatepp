@@ -2,18 +2,16 @@
 
 using namespace Upp;
 
-int compactcommandline()
-/**/{
-	int goo;
-	
-	go
-
-int i,j;
-}
-
-void MyTest() {}
-
 CONSOLE_APP_MAIN
 {
-	MyTes(*)
+	String s = LoadFile(GetDataFile("test.txt"));
+	CParser p(s);
+	while(!p.IsEof()) {
+		if(p.IsId()) {
+			CParser::Pos pos = p.GetPos();
+			DLOG(p.ReadId() << ": " << pos.line << ", " << pos.GetColumn());
+		}
+		else
+			p.SkipTerm();
+	}
 }
