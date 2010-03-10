@@ -468,7 +468,7 @@ void  XmlParser::PassEnd()
 bool  XmlParser::TagE(const char *tag)
 {
 	if(Tag(tag)) {
-		PassEnd();
+		SkipEnd();
 		return true;
 	}
 	return false;
@@ -477,7 +477,7 @@ bool  XmlParser::TagE(const char *tag)
 void  XmlParser::PassTagE(const char *tag)
 {
 	PassTag(tag);
-	PassEnd();
+	SkipEnd();
 }
 
 VectorMap<String, String> XmlParser::PickAttrs() pick_
