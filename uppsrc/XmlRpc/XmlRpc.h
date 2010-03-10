@@ -5,6 +5,16 @@
 
 using namespace Upp;
 
+enum {
+	XMLRPC_CLIENT_HTTP_ERROR = -1000000,
+	XMLRPC_CLIENT_XML_ERROR,
+	XMLRPC_CLIENT_RETTYPE_ERROR,
+	XMLRPC_SERVER_PARAM_ERROR,
+	XMLRPC_SERVER_XML_ERROR,
+	XMLRPC_SERVER_PROCESSING_ERROR,
+	XMLRPC_UNKNOWN_METHOD_ERROR,
+};
+
 struct ValueTypeMismatch {};
 
 void ValueCheck(bool b);
@@ -123,16 +133,21 @@ void xmlrpc##x(XmlRpcData& rpc); \
 INITBLOCK { Register(#x, xmlrpc##x, group); } \
 void xmlrpc##x(XmlRpcData& rpc)
 
+void ThrowXmlRpcError(int code, const char *s);
+
 class XmlRpcCall {
 	bool       shorted;
 	HttpClient server;
 	XmlRpcData data;
 	String     method;
 	String     error;
+	String     faultString;
+	int        faultCode;
 	int        timeout;
+	bool       shouldExecute;
 
 public:
-	XmlRpcCall& Method(const char *name)              { method = name; data.Reset(); error.Clear(); return *this; }
+	XmlRpcCall& Method(const char *name);
 
 	template <class T>
 	XmlRpcCall& operator<<(const T& x)                { data << x; return *this; }
@@ -140,10 +155,8 @@ public:
 	Value       Execute();
 
 	template <class T>
-	bool operator>>(T& x) { if(IsError(Execute())) return false; try { data >> x; } catch(ValueTypeMismatch) { return false; } return true; }
-
-	Value       Ret();
-
+	bool operator>>(T& x)                             { if(IsError(Execute())) return false;
+	                                                    try { data >> x; } catch(ValueTypeMismatch) { return false; } return true; }
 	XmlRpcCall& operator()(const char *method)        { Method(method); return *this; }
 
 #define E__Templ(I)  class COMBINE(T, I)
@@ -164,10 +177,16 @@ public:
 #undef E__Param
 #undef E__Body
 
+	String GetFaultString() const                       { return faultString; }
+	int    GetFaultCode() const                         { return faultCode; }
 	String GetError() const                             { return error; }
+	void   ClearError();
+
 	XmlRpcCall& TimeOut(int msec)                       { timeout = msec; }
+	XmlRpcCall& URL(const char *url);
 
 	XmlRpcCall(const char *url);
+	XmlRpcCall();
 };
 
 #endif

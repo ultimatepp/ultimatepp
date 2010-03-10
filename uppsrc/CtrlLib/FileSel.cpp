@@ -1223,7 +1223,7 @@ bool FileSel::Execute(int _mode) {
 		dir.Add(GetHomeDirectory());
 	#ifdef PLATFORM_POSIX
 		Array<FileSystemInfo::FileInfo> root = filesystem->Find("/media/*");
-		dir.Add(GetHomeDirFile("Desktop"));
+		dir.Add(GetDesktopFolder());
 		dir.Add("/");
 		for(i = 0; i < root.GetCount(); i++) {
 			String ugly = root[i].filename;
