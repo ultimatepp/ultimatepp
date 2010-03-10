@@ -1744,8 +1744,8 @@ RichText   ParseRTF(const char *rtf);
 
 #ifdef PLATFORM_WIN32
 
-Vector<String>& coreCmdLine__();
-Vector<String> SplitCmdLine__(const char *cmd);
+Vector<WString>& coreCmdLine__();
+Vector<WString> SplitCmdLine__(const char *cmd);
 
 #ifdef PLATFORM_WINCE
 

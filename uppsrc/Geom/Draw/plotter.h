@@ -179,6 +179,7 @@ public:
 	Rect                clip;
 	double              logdiag;
 	double              logprec;
+	double              signed_measure;
 	double              measure;
 	double              physical_scale;
 	bool                ortho;

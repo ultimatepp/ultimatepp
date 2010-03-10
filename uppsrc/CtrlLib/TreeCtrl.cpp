@@ -836,19 +836,21 @@ void TreeCtrl::SyncInfo()
 		Size sz = GetSize();
 		Point p = GetMouseViewPos();
 		Point org = sb;
-		if(p.y + org.y > sb.GetTotal().cy)
-			return;
+//		if(p.y + org.y > sb.GetTotal().cy)
+//			return;
 		int i = FindLine(p.y + org.y);
-		const Line& l = line[i];
-		const Item& m = item[l.itemi];
-		int x = levelcx + l.level * levelcx - org.x + m.image.GetSize().cx;
-		Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetSize(display).cy);
-		if(r.Contains(p)) {
-			Color fg, bg;
-			dword st;
-			const Display *d = GetStyle(i, fg, bg, st);
-			info.Set(this, r, m.value, d, fg, bg, st, m.margin);
-			return;
+		if(i < line.GetCount()) {
+			const Line& l = line[i];
+			const Item& m = item[l.itemi];
+			int x = levelcx + l.level * levelcx - org.x + m.image.GetSize().cx;
+			Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetSize(display).cy);
+			if(r.Contains(p)) {
+				Color fg, bg;
+				dword st;
+				const Display *d = GetStyle(i, fg, bg, st);
+				info.Set(this, r, m.value, d, fg, bg, st, m.margin);
+				return;
+			}
 		}
 	}
 	info.Cancel();

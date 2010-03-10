@@ -173,11 +173,25 @@ String  ConfigFile() {
 	return ConfigFile(GetExeTitle() + ".cfg");
 }
 
-GLOBAL_VAR(Vector<String>, coreCmdLine__)
+GLOBAL_VAR(Vector<WString>, coreCmdLine__)
 
 const Vector<String>& CommandLine()
 {
-	return coreCmdLine__();
+	Vector<String> *ptr;
+	INTERLOCKED { 
+		static ArrayMap< byte, Vector<String> > charset_cmd;
+		byte cs = GetDefaultCharset();
+		int f = charset_cmd.Find(cs);
+		if(f >= 0)
+			ptr = &charset_cmd[f];
+		else {
+			ptr = &charset_cmd.Add(cs);
+			const Vector<WString>& src = coreCmdLine__();
+			for(int i = 0; i < src.GetCount(); i++)
+				ptr->Add(src[i].ToString());
+		}
+	}
+	return *ptr;
 }
 
 VectorMap<WString, WString>& EnvMap()
@@ -188,16 +202,18 @@ VectorMap<WString, WString>& EnvMap()
 
 const VectorMap<String, String>& Environment()
 {
-	static VectorMap<String, String> *ptr = NULL;
+	VectorMap<String, String> *ptr;
 	INTERLOCKED {
-		static VectorMap<String, String> env;
-		static int echrset;
-		if(!ptr || GetDefaultCharset() != echrset) {
-			env.Clear();
-			echrset = GetDefaultCharset();
-			for(int i = 0; i < EnvMap().GetCount(); i++)
-				env.Add(EnvMap().GetKey(i).ToString(), EnvMap()[i].ToString());
-			ptr = &env;
+		static ArrayMap< byte, VectorMap<String, String> > charset_env;
+		byte cs = GetDefaultCharset();
+		int f = charset_env.Find(cs);
+		if(f >= 0)
+			ptr = &charset_env[f];
+		else {
+			ptr = &charset_env.Add(cs);
+			const VectorMap<WString, WString>& env_map = EnvMap();
+			for(int i = 0; i < env_map.GetCount(); i++)
+				ptr->Add(env_map.GetKey(i).ToString(), env_map[i].ToString());
 		}
 	}
 	return *ptr;
@@ -231,9 +247,12 @@ void CommonInit()
 	LoadLangFiles(GetHomeDirectory());
 #endif
 
-	Vector<String>& cmd = coreCmdLine__();
+	Vector<WString>& cmd = coreCmdLine__();
+	static WString exp_cmd = "--export-tr";
+	static WString brk_cmd = "--memory-breakpoint__";
+	
 	for(int i = 0; i < cmd.GetCount();) {
-		if(cmd[i] == "--export-tr") {
+		if(cmd[i] == exp_cmd) {
 			{
 				i++;
 				int lang = 0;
@@ -243,8 +262,8 @@ void CommonInit()
 					if(cmd[i].GetLength() != 4 && cmd[i].GetLength() != 5)
 						lang = 0;
 					else {
-						lang = LNGFromText(cmd[i]);
-						fn = cmd[i];
+						lang = LNGFromText(cmd[i].ToString());
+						fn = cmd[i].ToString();
 						int c = cmd[i][4];
 						if(c >= '0' && c <= '8')
 							charset = c - '0' + CHARSET_WIN1250;
@@ -268,8 +287,8 @@ void CommonInit()
 			exit(0);
 		}
 	#if defined(_DEBUG) && defined(UPP_HEAP)
-		if(cmd[i] == "--memory-breakpoint__" && i + 1 < cmd.GetCount()) {
-			MemoryBreakpoint(atoi(cmd[i + 1]));
+		if(cmd[i] == brk_cmd && i + 1 < cmd.GetCount()) {
+			MemoryBreakpoint(atoi(cmd[i + 1].ToString()));
 			cmd.Remove(i, 2);
 		}
 		else
@@ -312,9 +331,9 @@ void AppInit__(int argc, const char **argv, const char **envptr)
 			var++;
 		EnvMap().Add(varname.ToWString(), String(var).ToWString());
 	}
-	Vector<String>& cmd = coreCmdLine__();
+	Vector<WString>& cmd = coreCmdLine__();
 	for(int i = 1; i < argc; i++)
-		cmd.Add(argv[i]);
+		cmd.Add(FromSystemCharset(argv[i]));
 	CommonInit();
 	signal(SIGILL, s_ill_handler);
 	signal(SIGSEGV, s_segv_handler);
@@ -352,7 +371,7 @@ void AppInitEnvironment__()
 void AppInit__(int argc, const char **argv)
 {
 	SetLanguage(LNG_ENGLISH);
-	Vector<String>& cmd = coreCmdLine__();
+	Vector<WString>& cmd = coreCmdLine__();
 	for(int i = 1; i < argc; i++)
 		cmd.Add(argv[i]);
 	AppInitEnvironment__();
