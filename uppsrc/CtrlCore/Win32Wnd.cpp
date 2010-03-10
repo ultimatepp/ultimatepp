@@ -1251,25 +1251,23 @@ ViewDraw::~ViewDraw()
 	LeaveGuiMutex();
 }
 
-Vector<String> SplitCmdLine__(const char *cmd)
+Vector<WString> SplitCmdLine__(const char *cmd)
 {
-	Vector<String> out;
+	Vector<WString> out;
 	while(*cmd)
 		if((byte)*cmd <= ' ')
 			cmd++;
-		else if(*cmd == '\"')
-		{
-			String quoted;
+		else if(*cmd == '\"') {
+			WString quoted;
 			while(*++cmd && (*cmd != '\"' || *++cmd == '\"'))
-				quoted.Cat(*cmd);
+				quoted.Cat(FromSystemCharset(String(cmd, 1)).ToWString());
 			out.Add(quoted);
 		}
-		else
-		{
+		else {
 			const char *begin = cmd;
 			while((byte)*cmd > ' ')
 				cmd++;
-			out.Add(String(begin, cmd));
+			out.Add(String(begin, cmd).ToWString());
 		}
 	return out;
 }

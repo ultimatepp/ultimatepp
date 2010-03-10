@@ -618,7 +618,8 @@ void Plotter::Set(Draw& _draw, const Matrixf& _transform, const Rect& _clip, dou
 {
 	physical = _transform;
 	logical = MatrixfInverse(_transform);
-	measure = fabs(MatrixfMeasure(physical));
+	signed_measure = MatrixfMeasure(physical);
+	measure = fabs(signed_measure);
 	logprec = 1.0 / measure;
 	ortho = (physical.x.y == 0 && physical.y.x == 0);
 	ltop = (ortho ? &Plotter::LtoPOrtho : &Plotter::LtoPFull);
@@ -1210,7 +1211,8 @@ bool PathTool::ArcToRaw(Pointf pt, double bulge)
 		return true;
 	}
 	Pointf pt_phys = plotter.LtoP(pt);
-	pathdraw.Arc(PointfToPoint(last_phys), PointfToPoint(pt_phys), fround(bulge * fabs(plotter.measure)));
+	pathdraw.Arc(PointfToPoint(last_phys), PointfToPoint(pt_phys),
+		fround(bulge * plotter.signed_measure));
 	last_point = pt;
 	last_phys = pt_phys;
 	return true;
