@@ -2,13 +2,36 @@
 
 #define LLOG(x)  // LOG(x)
 
-XmlRpcCall::XmlRpcCall(const char *url)
+XmlRpcCall& XmlRpcCall::URL(const char *url)
 {
 	shorted = true;
 	if(url && *url) {
 		server.URL(url);
 		shorted = false;
 	}
+	shouldExecute = true;
+	return *this;
+}
+
+XmlRpcCall& XmlRpcCall::Method(const char *name)
+{
+	shouldExecute = true;
+	method = name;
+	data.Reset();
+	error.Clear();
+	return *this;
+}
+
+XmlRpcCall::XmlRpcCall(const char *url)
+{
+	URL(url);
+	server.ContentType("text/xml");
+	timeout = 30000;
+}
+
+XmlRpcCall::XmlRpcCall()
+{
+	URL(NULL);
 	server.ContentType("text/xml");
 	timeout = 30000;
 }
@@ -17,6 +40,9 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 
 Value XmlRpcCall::Execute()
 {
+	if(!shouldExecute)
+		return Value();
+	shouldExecute = false;
 	String request = XmlHeader();
 	request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out));
 	String response;
@@ -26,8 +52,11 @@ Value XmlRpcCall::Execute()
 		response = server.Post(request).TimeoutMsecs(timeout).ExecuteRedirect();
 	LLOG("response: " << response);
 	if(IsNull(response)) {
-		LLOG("ERROR: " << server.GetError());
-		return ErrorValue("Http request failed: " + server.GetError());
+		faultCode = XMLRPC_CLIENT_HTTP_ERROR;
+		faultString = server.GetError();
+		error = "Http request failed: " + faultString;
+		LLOG(error);
+		return ErrorValue(error);
 	}
 	XmlParser p(response);
 	try {	
@@ -37,11 +66,12 @@ Value XmlRpcCall::Execute()
 			Value m = ParseXmlRpcValue(p);
 			if(IsValueMap(m)) {
 				ValueMap mm = m;
-				String s;
-				s << "Failed '" << mm["faultString"] << "' (" << mm["faultCode"] << ')';
-				error = s;
+				faultString = mm["faultString"];
+				faultCode = mm["faultCode"];
+				error.Clear();
+				error << "Failed '" << faultString << "' (" << faultCode << ')';
 				LLOG(s);
-				return ErrorValue(s);
+				return ErrorValue(error);
 			}
 		}
 		else {
@@ -52,18 +82,19 @@ Value XmlRpcCall::Execute()
 	}
 	catch(XmlError e) {
 		String s;
-		s << "XmlError " << e << ": " << p.GetPtr();
-		LLOG(s);
-		error = s;
-		return ErrorValue(s);
+		faultString = e;
+		faultCode = XMLRPC_CLIENT_XML_ERROR;
+		error.Clear();
+		error << "XML Error: " << faultString;
+		LLOG(error << ": " << p.GetPtr());
+		return ErrorValue(error);
 	}
 	return data.in.GetCount() ? data.in[0] : Null;
 }
 
-Value XmlRpcCall::Ret()
+void XmlRpcCall::ClearError()
 {
-	Value v;
-	if(*this >> v)
-		return v;
-	return Value();
+	faultCode = 0;
+	faultString.Clear();
+	error.Clear();
 }

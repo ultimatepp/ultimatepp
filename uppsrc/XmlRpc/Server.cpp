@@ -14,6 +14,19 @@ void Register(const char *name, void (*method)(XmlRpcData&), const char *group)
 	XmlRpcMap(group).Add(name, method);
 }
 
+struct XmlRpcError {
+	int    code;
+	String text;
+};
+
+void ThrowXmlRpcError(int code, const char *s)
+{
+	XmlRpcError e;
+	e.code = code;
+	e.text = s;
+	throw e;
+}
+
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr)
 {
 	VectorMap< String, void (*)(XmlRpcData&) >& xmlrpcmap = XmlRpcMap(group);
@@ -33,13 +46,13 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 		data.in = ParseXmlRpcParams(p);
 		int q = xmlrpcmap.Find(methodname);
 		if(q < 0)
-			return FormatXmlRpcError(4, methodname + " method is unknown");
+			return FormatXmlRpcError(XMLRPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
 		else {
 			(*xmlrpcmap[q])(data);
 			if(IsValueArray(data.out)) {
 				if(IsError(data.out[0])) {
 					LLOG("ProcessingError");
-					return FormatXmlRpcError(3, methodname + " Processing error: " + GetErrorText(data.out[0]));
+					return FormatXmlRpcError(XMLRPC_SERVER_PROCESSING_ERROR, "Processing error: " + GetErrorText(data.out[0]));
 				}
 				r << FormatXmlRpcParams(data.out);
 			}
@@ -48,13 +61,17 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 		p.PassEnd();
 		return r;
 	}
+	catch(XmlRpcError e) {
+		LLOG("Client error: " << e.text);
+		return FormatXmlRpcError(e.code, e.text);
+	}
 	catch(XmlError e) {
 		LLOG("XmlError " << e << ": " << p.GetPtr());
-		return FormatXmlRpcError(1, methodname + " XML Error: " + e);
+		return FormatXmlRpcError(XMLRPC_SERVER_XML_ERROR, "XML Error: " + e);
 	}
 	catch(ValueTypeMismatch) {
 		LLOG("ValueTypeMismatch at parameter " << data.ii);
-		return FormatXmlRpcError(2, methodname + " Value type mismatch at parameter " + AsString(data.ii));
+		return FormatXmlRpcError(XMLRPC_SERVER_PARAM_ERROR, "Parameter mismatch at parameter " + AsString(data.ii));
 	}
 	return Null;
 }
