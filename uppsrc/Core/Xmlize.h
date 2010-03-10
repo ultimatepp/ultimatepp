@@ -196,9 +196,12 @@ void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO xml, Value& v), const 
 template <class T>
 void ValueXmlize(XmlIO xml, Value& v)
 {
-	T x = v;
+	T x;
+	if(xml.IsStoring())
+		x = v;
 	Xmlize(xml, x);
-	v = x;
+	if(xml.IsLoading())
+		v = x;
 }
 
 #define REGISTER_VALUE_XMLIZE(T) \
