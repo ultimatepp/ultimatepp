@@ -42,6 +42,10 @@ TOPIC("comparison$ru-ru")
 #include "comparison$ru-ru.tppi"
 END_TOPIC
 
+TOPIC("currenttopics$en-us")
+#include "currenttopics$en-us.tppi"
+END_TOPIC
+
 TOPIC("documentation$en-us")
 #include "documentation$en-us.tppi"
 END_TOPIC
