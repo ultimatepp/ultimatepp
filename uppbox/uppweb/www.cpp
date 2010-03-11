@@ -554,9 +554,10 @@ GUI_APP_MAIN
 	DeleteFolderDeep(targetdir);
 	DirectoryCreate(targetdir);
 	
-	DeleteFolderDeep(pdfdir);
-	DirectoryCreate(pdfdir);
-	
+	if (outPdf) {
+		DeleteFolderDeep(pdfdir);
+		DirectoryCreate(pdfdir);
+	}
 	GatherRefLinks(uppsrc);
 	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
 
