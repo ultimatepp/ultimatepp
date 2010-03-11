@@ -51,7 +51,6 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 			(*xmlrpcmap[q])(data);
 			if(IsValueArray(data.out)) {
 				ValueArray va = data.out;
-				DLOG(va);
 				if(va.GetCount() && IsError(va[0])) {
 					LLOG("ProcessingError");
 					return FormatXmlRpcError(XMLRPC_SERVER_PROCESSING_ERROR, "Processing error: " + GetErrorText(data.out[0]));
