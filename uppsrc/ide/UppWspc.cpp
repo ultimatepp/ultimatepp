@@ -545,7 +545,16 @@ void WorkspaceWork::RenameFile()
 	if(i < 0 || i >= fileindex.GetCount())
 		return;
 	int ii = fileindex[i];
-	if(!EditText(n, "Rename file", "New name")) return;
+	WithEditStringLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Rename file");
+	dlg.lbl = "New name";
+	dlg.text <<= n;
+	dlg.Open();
+	dlg.text.SetFocus();
+	dlg.text.SetSelection(0, GetFileExtPos(n) - ~n);
+	if(dlg.Run() != IDOK)
+		return;
+	n = ~dlg.text;
 	String spath = GetActiveFilePath();
 	String dpath = SourcePath(GetActivePackage(), n);
 	if(!filelist[i].isdir && GetFileLength(spath) >= 0) {
