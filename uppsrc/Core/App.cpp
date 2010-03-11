@@ -333,7 +333,7 @@ void AppInit__(int argc, const char **argv, const char **envptr)
 	}
 	Vector<WString>& cmd = coreCmdLine__();
 	for(int i = 1; i < argc; i++)
-		cmd.Add(FromSystemCharset(argv[i]));
+		cmd.Add(FromSystemCharset(argv[i]).ToWString());
 	CommonInit();
 	signal(SIGILL, s_ill_handler);
 	signal(SIGSEGV, s_segv_handler);
