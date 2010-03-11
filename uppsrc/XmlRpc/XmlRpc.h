@@ -30,7 +30,8 @@ void ValueGet(ValueArray& va, const Value& v);
 void ValueGet(ValueMap& vm, const Value& v);
 
 template <class T>
-void ValueGet(Array<T>& x, Value v) {
+void ValueGet(Array<T>& x, const Value& v)
+{
 	ValueCheck(IsValueArray(v));
 	ValueArray va = v;
 	x.SetCount(va.GetCount());
@@ -39,12 +40,61 @@ void ValueGet(Array<T>& x, Value v) {
 }
 
 template <class T>
-void ValueGet(Vector<T>& x, Value v) {
+void ValueGet(Vector<T>& x, const Value& v)
+{
 	ValueCheck(IsValueArray(v));
 	ValueArray va = v;
 	x.SetCount(va.GetCount());
 	for(int i = 0; i < va.GetCount(); i++)
 		ValueGet(x[i], va[i]);	
+}
+
+template <class T>
+void ValueGet(ArrayMap<String, T>& x, const Value& v)
+{
+	ValueCheck(IsValueMap(v));
+	ValueMap vm = v;
+	const Index<Value>& k = vm.GetKeys();
+	ValueArray va = vm.GetValues();
+	x.Clear();
+	for(int i = 0; i < vm.GetCount(); i++)
+		x.Add(k[i], va[i]);
+}
+
+template <class T>
+void ValueGet(VectorMap<String, T>& x, const Value& v)
+{
+	ValueCheck(IsValueMap(v));
+	ValueMap vm = v;
+	const Index<Value>& k = vm.GetKeys();
+	ValueArray va = vm.GetValues();
+	x.Clear();
+	for(int i = 0; i < vm.GetCount(); i++)
+		x.Add(k[i], va[i]);
+}
+
+template <class T>
+void ValueGet(ArrayMap<int, T>& x, const Value& v)
+{
+	ValueCheck(IsValueMap(v));
+	ValueMap vm = v;
+	const Index<Value>& k = vm.GetKeys();
+	ValueArray va = vm.GetValues();
+	x.Clear();
+	for(int i = 0; i < vm.GetCount(); i++)
+		x.Add(atoi(AsString(k[i])), va[i]);
+}
+
+template <class T>
+void ValueGet(VectorMap<int, T>& x, const Value& v)
+{
+	ValueCheck(IsValueMap(v));
+	ValueMap vm = v;
+	const Index<Value>& k = vm.GetKeys();
+	ValueArray va = vm.GetValues();
+	x.Clear();
+	for(int i = 0; i < k.GetCount(); i++)
+		x.Add(atoi(AsString(k[i])), va[i]);
 }
 
 void ValuePut(Value& v, int n);
@@ -57,6 +107,64 @@ void ValuePut(Value& v, const Time& x);
 void ValuePut(Value& v, const Value& t);
 void ValuePut(Value& v, const ValueArray& va);
 void ValuePut(Value& v, const ValueMap& vm);
+
+template <class T>
+void ValuePut(Value& v, const Array<T>& x)
+{
+	ValueArray va;
+	for(int i = 0; i < x.GetCount(); i++)
+		va.Add(x[i]);
+	v = va;
+}
+
+template <class T>
+void ValuePut(Value& v, const Vector<T>& x)
+{
+	ValueArray va;
+	for(int i = 0; i < x.GetCount(); i++)
+		va.Add(x[i]);
+	v = va;
+}
+
+template <class T>
+void ValuePut(Value& v, const ArrayMap<String, T>& x)
+{
+	ValueMap vm;
+	for(int i = 0; i < x.GetCount(); i++)
+		if(!x.IsUnlinked(i))
+			vm.Add(x.GetKey(i), x[i]);
+	v = vm;
+}
+
+template <class T>
+void ValuePut(Value& v, const VectorMap<String, T>& x)
+{
+	ValueMap vm;
+	for(int i = 0; i < x.GetCount(); i++)
+		if(!x.IsUnlinked(i))
+			vm.Add(x.GetKey(i), x[i]);
+	v = vm;
+}
+
+template <class T>
+void ValuePut(Value& v, const ArrayMap<int, T>& x)
+{
+	ValueMap vm;
+	for(int i = 0; i < x.GetCount(); i++)
+		if(!x.IsUnlinked(i))
+			vm.Add(AsString(x.GetKey(i)), x[i]);
+	v = vm;
+}
+
+template <class T>
+void ValuePut(Value& v, const VectorMap<int, T>& x)
+{
+	ValueMap vm;
+	for(int i = 0; i < x.GetCount(); i++)
+		if(!x.IsUnlinked(i))
+			vm.Add(AsString(x.GetKey(i)), x[i]);
+	v = vm;
+}
 
 struct ValueMapper {
 	ValueMap map;
@@ -76,7 +184,7 @@ struct ValueMapper {
 };
 
 template <class T>
-void ValueGet(T& x, const Value& v) {
+void ValueGetStruct_(T& x, const Value& v) {
 	ValueMapper m;
 	m.map = v;
 	m.get = true;
@@ -84,12 +192,22 @@ void ValueGet(T& x, const Value& v) {
 }
 
 template <class T>
-void ValuePut(Value& v, const T& x) {
+void ValuePutStruct_(Value& v, const T& x) {
 	ValueMapper m;
 	m.get = false;
 	const_cast<T&>(x).Map(m);
 	v = m.map;
 }
+
+template <class T>
+struct XmlRpcStruct {
+	friend void ValueGet(T& x, const Value& v) { ValueGetStruct_(x, v); }
+	friend void ValuePut(Value& v, const T& x) { ValuePutStruct_(v, x); }
+};
+
+#define XMLRPC_STRUCT(T) \
+inline void ValueGet(T& x, const Value& v) { ValueGetStruct_(x, v); } \
+inline void ValuePut(Value& v, const T& x) { ValuePutStruct_(v, x); }
 
 Value      ParseXmlRpcValue(XmlParser& p);
 Value      ParseXmlRpcParam(XmlParser& p);
@@ -188,5 +306,7 @@ public:
 	XmlRpcCall(const char *url);
 	XmlRpcCall();
 };
+
+void LogXmlRpcCalls(bool b = true);
 
 #endif

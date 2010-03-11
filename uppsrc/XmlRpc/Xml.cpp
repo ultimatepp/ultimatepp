@@ -153,7 +153,7 @@ String FormatXmlRpcParams(const ValueArray& params)
 	return r;
 }
 
-struct XmlRpcErrorStruct {
+struct XmlRpcErrorStruct : XmlRpcStruct<XmlRpcErrorStruct> {
 	int    code;
 	String text;
 	
