@@ -433,7 +433,9 @@ void ExportPage(int i)
 				) +
 				HtmlTCell().BgColor(bg) / BoxWidth(6) / "" +
 				HtmlTCell().Width(-100).BgColor(bg) /
-					RoundFrame(HtmlPadding(8) / page, "6E89AE;padding: 10px;", White)
+					RoundFrame(HtmlPadding(8) / page, "6E89AE;padding: 10px;", White) /*+
+					HtmlTable().Border(0).Width(-100) / HtmlLine() +
+					RoundFrame(HtmlPadding(8) / langs, "6E89AE;padding: 10px;", White)*/
 			)
 		);
 
