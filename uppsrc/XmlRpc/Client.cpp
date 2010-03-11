@@ -2,6 +2,13 @@
 
 #define LLOG(x)  // LOG(x)
 
+static bool sLogRpcCalls;
+
+void LogXmlRpcCalls(bool b)
+{
+	sLogRpcCalls = b;
+}
+
 XmlRpcCall& XmlRpcCall::URL(const char *url)
 {
 	shorted = true;
@@ -45,12 +52,15 @@ Value XmlRpcCall::Execute()
 	shouldExecute = false;
 	String request = XmlHeader();
 	request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out));
+	if(sLogRpcCalls)
+		RLOG("XmlRpc call request:\n" << request);
 	String response;
 	if(shorted)	
 		response = XmlRpcExecute(request, "", "127.0.0.1");
 	else
 		response = server.Post(request).TimeoutMsecs(timeout).ExecuteRedirect();
-	LLOG("response: " << response);
+	if(sLogRpcCalls)
+		RLOG("XmlRpc call response:\n" << response);
 	if(IsNull(response)) {
 		faultCode = XMLRPC_CLIENT_HTTP_ERROR;
 		faultString = server.GetError();
