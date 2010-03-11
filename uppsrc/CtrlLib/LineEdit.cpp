@@ -142,27 +142,33 @@ void   LineEdit::Paint0(Draw& w) {
 						else {
 							bool cjk = IsCJKIdeograph(txt[q]);
 							int p = q + 1;
-							while(p < len && h == hl[p] && txt[p] != '\t' && IsCJKIdeograph(txt[p]) == cjk)
+							while(p < len && h == hl[p] && txt[p] != '\t' && IsCJKIdeograph(txt[p]) == cjk && p - q < 128)
 								p++;
 							int l = p - q;
 							int ll = cjk ? 2 * l : l;
 							LLOG("Highlight -> paper[" << q << "] = " << h.paper);
-							if(pass == 0) {
-								w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * ll, fsz.cy, h.paper);
-								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + ll)
-									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
-							}
-							else {
-								if(cjk)
-									dx2.At(l, 2 * fsz.cx);
-								else
-									dx.At(l, fsz.cx);
-								w.DrawText(gp * fsz.cx - scx,
-								           y + fascent - h.font.Info().GetAscent(),
-								           ~txt + q, h.font, h.ink, l, cjk ? dx2 : dx);
+							int x = gp * fsz.cx - scx;
+							int xx = x + (gp + ll) * fsz.cx - scx;
+							if(max(x, 0) < min(xx, sz.cx)) {
+								if(pass == 0) {
+									w.DrawRect(x, y, fsz.cx * ll, fsz.cy, h.paper);
+									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + ll)
+										w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+								}
+								else {
+									if(cjk)
+										dx2.At(l, 2 * fsz.cx);
+									else
+										dx.At(l, fsz.cx);
+									w.DrawText(x,
+									           y + fascent - h.font.Info().GetAscent(),
+									           ~txt + q, h.font, h.ink, l, cjk ? dx2 : dx);
+								}
 							}
 							q = p;
 							gp += ll;
+							if(x > sz.cx)
+								break;
 						}
 					}
 				}
