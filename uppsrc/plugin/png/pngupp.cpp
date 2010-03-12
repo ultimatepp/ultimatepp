@@ -30,9 +30,12 @@ static void png_flush_stream(png_structp png_ptr)
 	stream.Flush();
 }
 
+struct PngErrorException {};
+
 static void png_user_error_fn(png_structp png_ptr, png_const_charp error_msg)
 {
 	LLOG("PNG error: " << error_msg);
+	throw PngErrorException();
 }
 
 static void png_user_warning_fn(png_structp png_ptr, png_const_charp warning_msg)
@@ -100,13 +103,16 @@ bool PNGRaster::Init()
 	if(!(data->png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
 	NULL, png_user_error_fn, png_user_warning_fn)))
 		return false;
-	if (setjmp(png_jmpbuf(data->png_ptr)))
+	try {
+		if(!(data->info_ptr = png_create_info_struct(data->png_ptr)))
+			return false;
+		png_set_read_fn(data->png_ptr, &GetStream(), png_read_stream);
+		png_read_info(data->png_ptr, data->info_ptr);
+		return true;
+	}
+	catch(PngErrorException) {
 		return false;
-	if(!(data->info_ptr = png_create_info_struct(data->png_ptr)))
-		return false;
-	png_set_read_fn(data->png_ptr, &GetStream(), png_read_stream);
-	png_read_info(data->png_ptr, data->info_ptr);
-	return true;
+	}
 }
 
 bool PNGRaster::Create()
@@ -118,119 +124,121 @@ bool PNGRaster::Create()
 		data.Clear();
 		return false;
 	}
-	if (setjmp(png_jmpbuf(data->png_ptr))) {
-		data.Clear();
+	
+	try {
+		png_uint_32 width, height;
+		int bit_depth, color_type, interlace_type;
+		png_get_IHDR(data->png_ptr, data->info_ptr, &width, &height, &bit_depth, &color_type,
+			&interlace_type, NULL, NULL);
+	
+		if(height <= 0 || width <= 0)
+			return false;
+		data->size.cx = width;
+		data->size.cy = height;
+	
+		png_uint_32 x_ppm = 0, y_ppm = 0;
+		int unit_type = 0;
+		png_get_pHYs(data->png_ptr, data->info_ptr, &x_ppm, &y_ppm, &unit_type);
+		data->info.bpp = bit_depth;
+		data->info.colors = (bit_depth < 8 ? 1 << bit_depth : 0);
+		data->info.dots = GetDotSize(data->size, x_ppm, y_ppm, unit_type);
+		data->info.hotspot = Point(0, 0);
+		data->info.kind = IMAGE_OPAQUE;
+	
+		data->out_bpp = bit_depth;
+	
+		data->strip16 = (bit_depth > 8);
+		if(data->strip16) {
+			png_set_strip_16(data->png_ptr);
+			data->out_bpp = 8;
+		}
+	
+		if(color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_RGB_ALPHA) {
+			ASSERT(bit_depth >= 8);
+			data->out_bpp = 24;
+			png_set_bgr(data->png_ptr);
+			if(color_type == PNG_COLOR_TYPE_RGB_ALPHA) {
+				data->out_bpp = 32;
+				data->info.kind = IMAGE_ALPHA;
+			}
+		}
+	
+		png_bytep trans_colors = 0;
+		png_color_16p trans_values = 0;
+		int num_trans = 0;
+	
+		png_get_tRNS(data->png_ptr, data->info_ptr, &trans_colors, &num_trans, &trans_values);
+	//	bool has_mask = (num_trans > 0);
+	
+	//	AlphaArray im(width, height, out_bpp, 4, NULL, Vector<Color>(), has_mask ? 8 : 0, 4);
+	//	im.SetDotSize(GetDotSize(im.GetSize(), x_ppm, y_ppm, unit_type));
+	//	ASSERT(im.GetRowBytes() >= png_get_rowbytes(png_ptr, info_ptr));
+	
+	//	if((color_type & PNG_COLOR_MASK_PALETTE) || !(color_type & PNG_COLOR_MASK_COLOR))
+		Fill(data->palette, RGBAZero(), 256);
+		if(color_type & PNG_COLOR_MASK_PALETTE) {
+			png_colorp ppal = 0;
+			int pal_count = 0;
+			png_get_PLTE(data->png_ptr, data->info_ptr, &ppal, &pal_count);
+			pal_count = min(pal_count, 1 << min(bit_depth, 8));
+			for(int i = 0; i < pal_count; i++) {
+				png_color c = ppal[i];
+				RGBA rgba;
+				rgba.r = c.red;
+				rgba.g = c.green;
+				rgba.b = c.blue;
+				rgba.a = 255;
+				data->palette[i] = rgba;
+			}
+			if(trans_colors) {
+				data->info.kind = IMAGE_MASK;
+				for(int i = 0; i < num_trans; i++)
+					data->palette[(int)trans_colors[i]] = RGBAZero();
+			}
+	
+		}
+		else if(!(color_type & PNG_COLOR_MASK_COLOR)) { // grayscale
+			int colors = 1 << min(bit_depth, 8);
+			for(int i = 0; i < colors; i++) {
+				int level = i * 255 / (colors - 1);
+				RGBA rgba;
+				rgba.r = rgba.g = rgba.b = (byte)level;
+				rgba.a = 255;
+				data->palette[i] = rgba;
+			}
+			if(trans_colors) {
+				data->info.kind = IMAGE_MASK;
+				for(int i = 0; i < num_trans; i++)
+					data->palette[(int)trans_colors[i]] = RGBAZero();
+			}
+		}
+	
+	/*
+		if (setjmp(png_jmpbuf(png_ptr))) {
+			png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+			return out;
+		}
+	*/
+	
+		data->row_bytes = png_get_rowbytes(data->png_ptr, data->info_ptr);
+		data->next_row = 0;
+		data->preload = (interlace_type != PNG_INTERLACE_NONE);
+		data->loaded = false;
+		switch(data->out_bpp) {
+			case 1:  data->fmt.Set1mf(); break;
+			case 2:  data->fmt.Set2mf(); break;
+			case 4:  data->fmt.Set4mf(); break;
+			case 8:  if(color_type & PNG_COLOR_MASK_ALPHA) data->fmt.Set8A(); else data->fmt.Set8(); break;
+			case 24: data->fmt.Set24le(0xFF0000, 0xFF00, 0xFF); break;
+			case 32: data->fmt.SetRGBAStraight(); break;
+			default: NEVER(); return false; // invalid bpp
+		}
+	
+		return true;
+	}
+	catch(PngErrorException) {
 		return false;
 	}
-	png_uint_32 width, height;
-	int bit_depth, color_type, interlace_type;
-	png_get_IHDR(data->png_ptr, data->info_ptr, &width, &height, &bit_depth, &color_type,
-		&interlace_type, NULL, NULL);
-
-	if(height <= 0 || width <= 0)
-		return false;
-	data->size.cx = width;
-	data->size.cy = height;
-
-	png_uint_32 x_ppm = 0, y_ppm = 0;
-	int unit_type = 0;
-	png_get_pHYs(data->png_ptr, data->info_ptr, &x_ppm, &y_ppm, &unit_type);
-	data->info.bpp = bit_depth;
-	data->info.colors = (bit_depth < 8 ? 1 << bit_depth : 0);
-	data->info.dots = GetDotSize(data->size, x_ppm, y_ppm, unit_type);
-	data->info.hotspot = Point(0, 0);
-	data->info.kind = IMAGE_OPAQUE;
-
-	data->out_bpp = bit_depth;
-
-	data->strip16 = (bit_depth > 8);
-	if(data->strip16) {
-		png_set_strip_16(data->png_ptr);
-		data->out_bpp = 8;
-	}
-
-	if(color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_RGB_ALPHA) {
-		ASSERT(bit_depth >= 8);
-		data->out_bpp = 24;
-		png_set_bgr(data->png_ptr);
-		if(color_type == PNG_COLOR_TYPE_RGB_ALPHA) {
-			data->out_bpp = 32;
-			data->info.kind = IMAGE_ALPHA;
-		}
-	}
-
-	png_bytep trans_colors = 0;
-	png_color_16p trans_values = 0;
-	int num_trans = 0;
-
-	png_get_tRNS(data->png_ptr, data->info_ptr, &trans_colors, &num_trans, &trans_values);
-//	bool has_mask = (num_trans > 0);
-
-//	AlphaArray im(width, height, out_bpp, 4, NULL, Vector<Color>(), has_mask ? 8 : 0, 4);
-//	im.SetDotSize(GetDotSize(im.GetSize(), x_ppm, y_ppm, unit_type));
-//	ASSERT(im.GetRowBytes() >= png_get_rowbytes(png_ptr, info_ptr));
-
-//	if((color_type & PNG_COLOR_MASK_PALETTE) || !(color_type & PNG_COLOR_MASK_COLOR))
-	Fill(data->palette, RGBAZero(), 256);
-	if(color_type & PNG_COLOR_MASK_PALETTE) {
-		png_colorp ppal = 0;
-		int pal_count = 0;
-		png_get_PLTE(data->png_ptr, data->info_ptr, &ppal, &pal_count);
-		pal_count = min(pal_count, 1 << min(bit_depth, 8));
-		for(int i = 0; i < pal_count; i++) {
-			png_color c = ppal[i];
-			RGBA rgba;
-			rgba.r = c.red;
-			rgba.g = c.green;
-			rgba.b = c.blue;
-			rgba.a = 255;
-			data->palette[i] = rgba;
-		}
-		if(trans_colors) {
-			data->info.kind = IMAGE_MASK;
-			for(int i = 0; i < num_trans; i++)
-				data->palette[(int)trans_colors[i]] = RGBAZero();
-		}
-
-	}
-	else if(!(color_type & PNG_COLOR_MASK_COLOR)) { // grayscale
-		int colors = 1 << min(bit_depth, 8);
-		for(int i = 0; i < colors; i++) {
-			int level = i * 255 / (colors - 1);
-			RGBA rgba;
-			rgba.r = rgba.g = rgba.b = (byte)level;
-			rgba.a = 255;
-			data->palette[i] = rgba;
-		}
-		if(trans_colors) {
-			data->info.kind = IMAGE_MASK;
-			for(int i = 0; i < num_trans; i++)
-				data->palette[(int)trans_colors[i]] = RGBAZero();
-		}
-	}
-
-/*
-	if (setjmp(png_jmpbuf(png_ptr))) {
-		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
-		return out;
-	}
-*/
-
-	data->row_bytes = png_get_rowbytes(data->png_ptr, data->info_ptr);
-	data->next_row = 0;
-	data->preload = (interlace_type != PNG_INTERLACE_NONE);
-	data->loaded = false;
-	switch(data->out_bpp) {
-		case 1:  data->fmt.Set1mf(); break;
-		case 2:  data->fmt.Set2mf(); break;
-		case 4:  data->fmt.Set4mf(); break;
-		case 8:  if(color_type & PNG_COLOR_MASK_ALPHA) data->fmt.Set8A(); else data->fmt.Set8(); break;
-		case 24: data->fmt.Set24le(0xFF0000, 0xFF00, 0xFF); break;
-		case 32: data->fmt.SetRGBAStraight(); break;
-		default: NEVER(); return false; // invalid bpp
-	}
-
-	return true;
 }
 
 Size PNGRaster::GetSize()
@@ -247,40 +255,43 @@ Raster::Line PNGRaster::GetLine(int line)
 {
 	ASSERT(data && line >= 0 && line < data->size.cy);
 	byte *scanline = new byte[data->row_bytes];
-	if(setjmp(png_jmpbuf(data->png_ptr)))
-		return Raster::Line(scanline, this, true);
-	if(data->preload) {
-		delete[] scanline;
-		if(!data->loaded) {
-			data->loaded = true;
-			data->preimage.SetCount(data->row_bytes * data->size.cy);
-			data->row_pointers.Alloc(data->size.cy);
-			for(int i = 0; i < data->size.cy; i++)
-				data->row_pointers[i] = &data->preimage[i * data->row_bytes];
-			png_read_image(data->png_ptr, data->row_pointers);
-		}
-		const byte *rowdata = &data->preimage[data->row_bytes * line];
-		return Raster::Line(rowdata, this, false);
-	}
-	else {
-		if(line < data->next_row) {
-			png_destroy_read_struct(&data->png_ptr, &data->info_ptr, NULL);
-			GetStream().Seek(data->soff);
-			if(!Init()) {
-				NEVER();
+	try {
+		if(data->preload) {
+			delete[] scanline;
+			if(!data->loaded) {
+				data->loaded = true;
+				data->preimage.SetCount(data->row_bytes * data->size.cy);
+				data->row_pointers.Alloc(data->size.cy);
+				for(int i = 0; i < data->size.cy; i++)
+					data->row_pointers[i] = &data->preimage[i * data->row_bytes];
+				png_read_image(data->png_ptr, data->row_pointers);
 			}
-			if(data->strip16)
-				png_set_strip_16(data->png_ptr);
-			if(data->out_bpp > 8)
-				png_set_bgr(data->png_ptr);
-			data->next_row = 0;
+			const byte *rowdata = &data->preimage[data->row_bytes * line];
+			return Raster::Line(rowdata, this, false);
 		}
-		while(data->next_row < line) {
+		else {
+			if(line < data->next_row) {
+				png_destroy_read_struct(&data->png_ptr, &data->info_ptr, NULL);
+				GetStream().Seek(data->soff);
+				if(!Init()) {
+					NEVER();
+				}
+				if(data->strip16)
+					png_set_strip_16(data->png_ptr);
+				if(data->out_bpp > 8)
+					png_set_bgr(data->png_ptr);
+				data->next_row = 0;
+			}
+			while(data->next_row < line) {
+				png_read_row(data->png_ptr, scanline, NULL);
+				data->next_row++;
+			}
 			png_read_row(data->png_ptr, scanline, NULL);
 			data->next_row++;
+			return Raster::Line(scanline, this, true);
 		}
-		png_read_row(data->png_ptr, scanline, NULL);
-		data->next_row++;
+	}
+	catch(PngErrorException) {
 		return Raster::Line(scanline, this, true);
 	}
 }
