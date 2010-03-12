@@ -24,10 +24,8 @@ class HomeBudget : public WithHomeBudgetLayout<TopWindow>
 		EditDouble defval, val;
 		EditStringNotNull eg, ec;
 		EditString es;
-		//FrameRight<Button> newcat;
 
 		int dtid;
-		bool dosummary;
 		int lang;
 
 		HomeBudget();
@@ -55,7 +53,7 @@ class HomeBudget : public WithHomeBudgetLayout<TopWindow>
 		void RemoveDate();
 		void ChangeDate();
 		void NewDate();
-		void AcceptDate();
+		void AcceptedDate();
 
 		void LoadDates();
 		void LoadGroups();

@@ -35,7 +35,7 @@ struct ConvMonth : Convert
 	Value Format(const Value &q) const
 	{
 		Date dt = (Date) q;
-		return q.IsNull() ? "" : ::Format("%Month %.4d", dt.month, dt.year);
+		return q.IsNull() ? "" : UPP::Format("%Month %.4d", dt.month, dt.year);
 	}
 };
 
@@ -43,7 +43,7 @@ struct ConvDouble : Convert
 {
 	Value Format(const Value &q) const
 	{
-		return q.IsNull() ? Null : ::Format("%.2f", q);
+		return q.IsNull() ? Null : UPP::Format("%.2f", q);
 	}
 };
 
@@ -102,7 +102,7 @@ void HomeBudget::Setup()
 	month.WhenUpdateRow = THISBACK(UpdateDate);
 	month.WhenRemoveRow = THISBACK(RemoveDate);
 	month.WhenChangeRow = THISBACK(ChangeDate);
-	month.WhenAcceptRow = THISBACK(AcceptDate);
+	month.WhenAcceptedRow = THISBACK(AcceptedDate);
 	month.WhenNewRow    = THISBACK(NewDate);
 	month.SetToolBar();
 
@@ -124,7 +124,7 @@ void HomeBudget::Setup()
 	categories.WhenInsertRow = THISBACK(InsertCategory);
 	categories.WhenUpdateRow = THISBACK(UpdateCategory);
 	categories.WhenRemoveRow = THISBACK(RemoveCategory);
-	categories.WhenAcceptRow = THISBACK(UpdateCategories);
+	categories.WhenAcceptedRow = THISBACK(UpdateCategories);
 	categories.Appending().Removing().Editing();
 	categories.RejectNullRow();
 	categories.SetToolBar();
@@ -167,8 +167,6 @@ void HomeBudget::Setup()
 
 	category.Resizeable(false).Header(false);
 	category.AddPlus(THISBACK(NewCategory));
-
-	dosummary = true;
 }
 
 void HomeBudget::Serialize(Stream &s)
@@ -352,7 +350,7 @@ struct AddNewCat : WithNewCategoryLayout<TopWindow>
 		{
 			try
 			{
-				SQL & ::Insert(GROUPS)(NAME, ~dlg.name);
+				SQL & Insert(GROUPS)(NAME, ~dlg.name);
 				int64 id = SQL.GetInsertedId();
 				groups.Add(id, ~dlg.name);
 				groups <<= id;
@@ -376,7 +374,7 @@ void HomeBudget::NewCategory()
 	{
 		try
 		{
-			SQL & ::Insert(CATEGORIES)
+			SQL & Insert(CATEGORIES)
 			    (GR_ID, ~dlg.groups)
 				(NAME, ~dlg.name)
 				(DEFVALUE, 0)
@@ -457,7 +455,7 @@ void HomeBudget::RemoveCategory()
 {
 	try
 	{
-		SQL * ::Select(CAT_ID, NAME)
+		SQL * Select(CAT_ID, NAME)
 			.From(MONEY, CATEGORIES)
 			.Where(CAT_ID == categories(ID) && ID.Of(CATEGORIES) == categories(ID))
 			.Limit(1);
@@ -468,7 +466,7 @@ void HomeBudget::RemoveCategory()
 			categories.CancelRemove();
 		}
 		else
-			SQL & ::Delete(CATEGORIES).Where(ID == categories(ID));
+			SQL & Delete(CATEGORIES).Where(ID == categories(ID));
 	}
 	catch(SqlExc &e)
 	{
@@ -481,7 +479,7 @@ void HomeBudget::InsertMoney()
 {
 	try
 	{
-		SQL & ::Insert(MONEY)
+		SQL & Insert(MONEY)
 			(DT_ID,  dtid)
 			(CAT_ID, money(CAT_ID))
 			(PM,     money(PM))
@@ -491,8 +489,7 @@ void HomeBudget::InsertMoney()
 
 		money(ID) = SQL.GetInsertedId();
 
-		if(dosummary)
-			UpdateSummary();
+		UpdateSummary();
 	}
 	catch(SqlExc &e)
 	{
@@ -527,7 +524,7 @@ void HomeBudget::RemoveMoney()
 {
 	try
 	{
-		SQL & ::Delete(MONEY).Where(ID == money(ID));
+		SQL & Delete(MONEY).Where(ID == money(ID));
 		UpdateSummary();
 	}
 	catch(SqlExc &e)
@@ -541,7 +538,7 @@ void HomeBudget::InsertDate()
 {
 	try
 	{
-		SQL & ::Insert(DATES)(DT, month(DT));
+		SQL & Insert(DATES)(DT, month(DT));
 		month(ID) = dtid = (int) SQL.GetInsertedId();
 		EnableMoney();
 	}
@@ -575,8 +572,8 @@ void HomeBudget::RemoveDate()
 	try
 	{
 		SQL.Begin();
-		SQL & ::Delete(MONEY).Where(DT_ID == month(ID));
-		SQL & ::Delete(DATES).Where(ID == month(ID));
+		SQL & Delete(MONEY).Where(DT_ID == month(ID));
+		SQL & Delete(DATES).Where(ID == month(ID));
 		SQL.Commit();
 		bool en = month.GetCount() <= 1 ? false : true;
 		EnableMoney(en);
@@ -585,6 +582,7 @@ void HomeBudget::RemoveDate()
 	}
 	catch(SqlExc &e)
 	{
+		SQL.Rollback();
 		month.CancelRemove();
 		Exclamation("[* " + DeQtfLf(e) + "]");
 	}
@@ -595,6 +593,7 @@ void HomeBudget::ChangeDate()
 {
 	dtid = month(ID);
 	LoadMoney(dtid);
+	EnableMoney();
 	UpdateSummary();
 	GenMonthList(((Date) month(DT)).year);
 }
@@ -602,15 +601,16 @@ void HomeBudget::ChangeDate()
 void HomeBudget::NewDate()
 {
 	money.Clear();
+	money.Disable();
 	UpdateSummary();
 }
 
-void HomeBudget::AcceptDate()
+void HomeBudget::AcceptedDate()
 {
 	if(!month.IsNewRow())
 		return;
 
-	dosummary = false;
+	Sql q;
 	SQL.Begin();
 	SQL * Select(ID, DEFVALUE, PM).From(CATEGORIES).Where(INNEWMONTH == 1);
 	while(SQL.Fetch())
@@ -619,11 +619,20 @@ void HomeBudget::AcceptDate()
 		money(CAT_ID) = SQL[ID];
 		money(VALUE) = SQL[DEFVALUE];
 		money(PM) = SQL[PM];
-		InsertMoney();
+
+		q * Insert(MONEY)
+			(DT_ID,  dtid)
+			(CAT_ID, money(CAT_ID))
+			(PM,     money(PM))
+			(VALUE,  money(VALUE))
+			(DT,     money(DT))
+			(DESC,   money(DESC));
+
+		money(ID) = SQL.GetInsertedId();
+
 		money.RefreshNewRow();
 	}
 	SQL.Commit();
-	dosummary = true;
 	UpdateSummary();
 }
 
@@ -641,7 +650,7 @@ void HomeBudget::UpdateSummary()
 
 	try
 	{
-		SQL & ::Select(PM, SqlSum(VALUE))
+		SQL & Select(PM, SqlSum(VALUE))
 			.From(MONEY, DATES)
 			.Where(DT.Of(DATES) < month(DT) && DT_ID == ID.Of(DATES) && NotNull(VALUE))
 			.GroupBy(PM);
@@ -658,7 +667,7 @@ void HomeBudget::UpdateSummary()
 
 		tr = tp - tm;
 
-		SQL & ::Select(PM, SqlSum(VALUE))
+		SQL & Select(PM, SqlSum(VALUE))
 			.From(MONEY)
 			.Where(DT_ID == dtid && NotNull(VALUE))
 			.GroupBy(PM);
@@ -673,7 +682,7 @@ void HomeBudget::UpdateSummary()
 				p = v;
 		}
 
-		SQL & ::Select(NAME, SqlId("sum(value) as val"))
+		SQL & Select(NAME, SqlId("sum(value) as val"))
 			.From(MONEY, CATEGORIES)
 			.Where(DT_ID == dtid && CAT_ID == ID.Of(CATEGORIES) && PM.Of(MONEY) < 0)
 			.GroupBy(CAT_ID)
@@ -682,7 +691,7 @@ void HomeBudget::UpdateSummary()
 		while(SQL.Fetch())
 			mostpr.Add(SQL);
 
-		SQL & ::Select(NAME.Of(GROUPS), SqlId("sum(value) as val"))
+		SQL & Select(NAME.Of(GROUPS), SqlId("sum(value) as val"))
 			.From(MONEY, GROUPS, CATEGORIES)
 			.Where(DT_ID == dtid && PM.Of(MONEY) < 0 && CAT_ID == ID.Of(CATEGORIES) && GR_ID == ID.Of(GROUPS))
 			.GroupBy(GR_ID)
@@ -764,10 +773,10 @@ void HomeBudget::ClearAll()
 {
 	try
 	{
-		SQL & ::Delete(CATEGORIES);
-		SQL & ::Delete(GROUPS);
-		SQL & ::Delete(MONEY);
-		SQL & ::Delete(DATES);
+		SQL & Delete(CATEGORIES);
+		SQL & Delete(GROUPS);
+		SQL & Delete(MONEY);
+		SQL & Delete(DATES);
 		//SQL.ExecuteX("VACUUM");
 
 		LoadDates();
