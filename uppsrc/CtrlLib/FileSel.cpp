@@ -1359,7 +1359,7 @@ void FileSel::Serialize(Stream& s) {
 		netstack.Clear();
 	}
 #endif
-	int version = 7;
+	int version = 9;
 	s / version;
 	String ad = ~dir;
 	s / activetype % ad;
@@ -1391,7 +1391,12 @@ void FileSel::Serialize(Stream& s) {
 		s % sortext;
 	}
 	if(version >= 6) {
-		s % splitter;
+		if(version >= 9)
+			s % splitter;
+		else {
+			Splitter dummy;
+			s % dummy;
+		}
 	}
 	if(version >= 7) {
 		s % hidden;
@@ -1523,6 +1528,14 @@ FileSel& FileSel::AddStandardPlaces()
 			AddPlace(root[i].filename, desc);
 		}
 	}
+#ifdef PLATFORM_POSIX
+	root = filesystem->Find("/media/*");
+	for(int i = 0; i < root.GetCount(); i++) {
+		String fn = root[i].filename;
+		if(*fn != '.' && fn.Find("floppy") < 0)
+			AddPlace("/media/" + fn, fn);
+	}
+#endif
 #ifdef PLATFORM_WIN32
 	AddPlaceSeparator();
 	AddPlaceRaw("\\", CtrlImg::Network(), t_("Network"));
