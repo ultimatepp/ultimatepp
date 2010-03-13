@@ -239,7 +239,10 @@ void JPGRaster::Data::Construct()
 	next_line = 0;
 	finish = false;
 
-	jpeg_create_decompress(&cinfo);
+	try {
+		jpeg_create_decompress(&cinfo);
+	}
+	catch(JpegErrorException) {}
 }
 
 JPGRaster::Data::Data(JPGRaster& owner_)
@@ -618,45 +621,54 @@ JPGEncoder::Data::Data()
 
 JPGEncoder::Data::~Data()
 {
-	jpeg_destroy_compress(&cinfo);
+	try {
+		jpeg_destroy_compress(&cinfo);
+	}
+	catch(JpegErrorException) {}
 }
 
 void JPGEncoder::Data::Start(Stream& stream, Size size_, int quality)
 {
-	size = size_;
-
-	jpeg_stream_dest(&cinfo, stream);
-
-	cinfo.image_width = size.cx;
-	cinfo.image_height = size.cy;
-	cinfo.input_components = 3; // # of color components per pixel
-	cinfo.in_color_space = JCS_RGB; // colorspace of input image
-
-	jpeg_set_defaults(&cinfo);
-
-/*
-	if(dot_size.cx || dot_size.cy)
-	{ // set up image density
-		cinfo.density_unit = 1; // dots per inch
-		cinfo.X_density = dot_size.cx ? fround(size.cx * 600.0 / dot_size.cx) : 0;
-		cinfo.Y_density = dot_size.cy ? fround(size.cy * 600.0 / dot_size.cy) : 0;
+	try {
+		size = size_;
+	
+		jpeg_stream_dest(&cinfo, stream);
+	
+		cinfo.image_width = size.cx;
+		cinfo.image_height = size.cy;
+		cinfo.input_components = 3; // # of color components per pixel
+		cinfo.in_color_space = JCS_RGB; // colorspace of input image
+	
+		jpeg_set_defaults(&cinfo);
+	
+	/*
+		if(dot_size.cx || dot_size.cy)
+		{ // set up image density
+			cinfo.density_unit = 1; // dots per inch
+			cinfo.X_density = dot_size.cx ? fround(size.cx * 600.0 / dot_size.cx) : 0;
+			cinfo.Y_density = dot_size.cy ? fround(size.cy * 600.0 / dot_size.cy) : 0;
+		}
+	*/
+	
+		jpeg_set_quality(&cinfo, quality, true); // limit to baseline-JPEG values
+		jpeg_start_compress(&cinfo, true);
+	
+		line = 0;
+	
+		ASSERT(sizeof(JSAMPLE) == sizeof(byte));
 	}
-*/
-
-	jpeg_set_quality(&cinfo, quality, true); // limit to baseline-JPEG values
-	jpeg_start_compress(&cinfo, true);
-
-	line = 0;
-
-	ASSERT(sizeof(JSAMPLE) == sizeof(byte));
+	catch(JpegErrorException) {}
 }
 
 void JPGEncoder::Data::WriteLineRaw(const byte *s)
 {
-	JSAMPROW rowptr[] = { (byte *)s };
-	jpeg_write_scanlines(&cinfo, rowptr, 1);
-	if(++line >= size.cy)
-		jpeg_finish_compress(&cinfo);
+	try {
+		JSAMPROW rowptr[] = { (byte *)s };
+		jpeg_write_scanlines(&cinfo, rowptr, 1);
+		if(++line >= size.cy)
+			jpeg_finish_compress(&cinfo);
+	}
+	catch(JpegErrorException) {}
 }
 
 JPGEncoder::JPGEncoder(int quality_)

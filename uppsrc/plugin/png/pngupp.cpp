@@ -87,7 +87,10 @@ PNGRaster::Data::Data()
 
 PNGRaster::Data::~Data()
 {
-	png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+	try {
+		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+	}
+	catch(PngErrorException) {}
 }
 
 PNGRaster::PNGRaster()
@@ -100,10 +103,10 @@ PNGRaster::~PNGRaster()
 
 bool PNGRaster::Init()
 {
-	if(!(data->png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
-	NULL, png_user_error_fn, png_user_warning_fn)))
-		return false;
 	try {
+		if(!(data->png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
+		                                            NULL, png_user_error_fn, png_user_warning_fn)))
+			return false;
 		if(!(data->info_ptr = png_create_info_struct(data->png_ptr)))
 			return false;
 		png_set_read_fn(data->png_ptr, &GetStream(), png_read_stream);
@@ -357,126 +360,128 @@ void PNGEncoder::Data::Start(Stream& stream, Size size_, int bpp, ImageKind kind
 	kind = kind_;
 	interlace = interlace_;
 
-	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_user_error_fn, png_user_warning_fn);
-	if(!png_ptr) {
-		stream.SetError();
-		return;
-	}
-
-	/* Allocate/initialize the image information data.  REQUIRED */
-	info_ptr = png_create_info_struct(png_ptr);
-	if(!info_ptr) {
-		stream.SetError();
-		return;
-	}
-
-/*
-	if (setjmp(png_jmpbuf(png_ptr))) {
-		png_destroy_write_struct(&png_ptr, &info_ptr);
-		sptr -> SetError();
-		return;
-	}
-*/
-	png_set_write_fn(png_ptr, (void *)&stream, png_write_stream, png_flush_stream);
-
-	int color_type, bit_depth;
-	Vector<png_color> palette;
-
-	do_alpha = (kind != IMAGE_OPAQUE && bpp != 1);
-	do_mask = (do_alpha && kind == IMAGE_MASK);
-	do_palette = (bpp <= 8);
-
-	if(do_palette) {
-		switch(bpp) {
-			case 1: format.Set1mf(); break;
-			case 2: format.Set2mf(); break;
-			case 4: format.Set4mf(); break;
-			default: NEVER();
-			case 8: format.Set8(); break;
+	try {
+		png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_user_error_fn, png_user_warning_fn);
+		if(!png_ptr) {
+			stream.SetError();
+			return;
 		}
-		bit_depth = bpp;
-		color_type = PNG_COLOR_TYPE_PALETTE;
-		palette.SetCount(1 << bpp);
-		for(int i = 0; i < palette.GetCount(); i++) {
-			png_color& c = palette[i];
-			c.red = imgpal[i].r;
-			c.green = imgpal[i].g;
-			c.blue = imgpal[i].b;
+	
+		/* Allocate/initialize the image information data.  REQUIRED */
+		info_ptr = png_create_info_struct(png_ptr);
+		if(!info_ptr) {
+			stream.SetError();
+			return;
 		}
-		rowbytes = (size.cx * bpp + 31) >> 5 << 2;
-	}
-	else {
-		color_type = (do_alpha ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB);
-		bit_depth = 8;
-		if(do_alpha) {
-			format.Set32leStraight(0xFF << 16, 0xFF << 8, 0xFF, 0xFF << 24);
-			rowbytes = 4 * size.cx;
+	
+		png_set_write_fn(png_ptr, (void *)&stream, png_write_stream, png_flush_stream);
+	
+		int color_type, bit_depth;
+		Vector<png_color> palette;
+	
+		do_alpha = (kind != IMAGE_OPAQUE && bpp != 1);
+		do_mask = (do_alpha && kind == IMAGE_MASK);
+		do_palette = (bpp <= 8);
+	
+		if(do_palette) {
+			switch(bpp) {
+				case 1: format.Set1mf(); break;
+				case 2: format.Set2mf(); break;
+				case 4: format.Set4mf(); break;
+				default: NEVER();
+				case 8: format.Set8(); break;
+			}
+			bit_depth = bpp;
+			color_type = PNG_COLOR_TYPE_PALETTE;
+			palette.SetCount(1 << bpp);
+			for(int i = 0; i < palette.GetCount(); i++) {
+				png_color& c = palette[i];
+				c.red = imgpal[i].r;
+				c.green = imgpal[i].g;
+				c.blue = imgpal[i].b;
+			}
+			rowbytes = (size.cx * bpp + 31) >> 5 << 2;
 		}
 		else {
-			format.Set24le(0xFF << 16, 0xFF << 8, 0xFF);
-			rowbytes = (3 * size.cx + 3) & -4;
+			color_type = (do_alpha ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB);
+			bit_depth = 8;
+			if(do_alpha) {
+				format.Set32leStraight(0xFF << 16, 0xFF << 8, 0xFF, 0xFF << 24);
+				rowbytes = 4 * size.cx;
+			}
+			else {
+				format.Set24le(0xFF << 16, 0xFF << 8, 0xFF);
+				rowbytes = (3 * size.cx + 3) & -4;
+			}
 		}
+	
+		png_set_IHDR(png_ptr, info_ptr, size.cx, size.cy, bit_depth, color_type,
+			interlace ? PNG_INTERLACE_ADAM7 : PNG_INTERLACE_NONE,
+			PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+	
+		if(!palette.IsEmpty())
+			png_set_PLTE(png_ptr, info_ptr, palette.Begin(), palette.GetCount());
+	
+		byte transpal = (1 << bpp) - 1;
+		if(do_mask && do_palette) {
+			png_color_16 transrgb = { 0, 0, 0 };
+			png_set_tRNS(png_ptr, info_ptr, &transpal, 1, &transrgb);
+		}
+	
+	//	png_set_gAMA(png_ptr, info_ptr, gamma);
+	
+		/* Optionally write comments into the image */
+	//	text_ptr[0].key = "Title";
+	//	text_ptr[0].text = "Mona Lisa";
+	//	text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
+		#ifdef PNG_iTXt_SUPPORTED
+		text_ptr[0].lang = NULL;
+		#endif
+	//	png_set_text(png_ptr, info_ptr, text_ptr, 1);
+	
+		/* other optional chunks like cHRM, bKGD, tRNS, tIME, oFFs, pHYs, */
+		/* note that if sRGB is present the gAMA and cHRM chunks must be ignored
+		* on read and must be written in accordance with the sRGB profile */
+	
+		/* Write the file header information.  REQUIRED */
+		png_write_info(png_ptr, info_ptr);
+	
+		png_set_bgr(png_ptr);
+	
+		passes = png_set_interlace_handling(png_ptr);
+		rowbuf.SetCount(rowbytes);
+		if(passes > 1)
+			imagebuf.SetCount(rowbytes * size.cy);
+	
+		line = 0;
+		linebytes = format.GetByteCount(size.cx);
 	}
-
-	png_set_IHDR(png_ptr, info_ptr, size.cx, size.cy, bit_depth, color_type,
-		interlace ? PNG_INTERLACE_ADAM7 : PNG_INTERLACE_NONE,
-		PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-
-	if(!palette.IsEmpty())
-		png_set_PLTE(png_ptr, info_ptr, palette.Begin(), palette.GetCount());
-
-	byte transpal = (1 << bpp) - 1;
-	if(do_mask && do_palette) {
-		png_color_16 transrgb = { 0, 0, 0 };
-		png_set_tRNS(png_ptr, info_ptr, &transpal, 1, &transrgb);
+	catch(PngErrorException) {
+		stream.SetError();
 	}
-
-//	png_set_gAMA(png_ptr, info_ptr, gamma);
-
-	/* Optionally write comments into the image */
-//	text_ptr[0].key = "Title";
-//	text_ptr[0].text = "Mona Lisa";
-//	text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
-	#ifdef PNG_iTXt_SUPPORTED
-	text_ptr[0].lang = NULL;
-	#endif
-//	png_set_text(png_ptr, info_ptr, text_ptr, 1);
-
-	/* other optional chunks like cHRM, bKGD, tRNS, tIME, oFFs, pHYs, */
-	/* note that if sRGB is present the gAMA and cHRM chunks must be ignored
-	* on read and must be written in accordance with the sRGB profile */
-
-	/* Write the file header information.  REQUIRED */
-	png_write_info(png_ptr, info_ptr);
-
-	png_set_bgr(png_ptr);
-
-	passes = png_set_interlace_handling(png_ptr);
-	rowbuf.SetCount(rowbytes);
-	if(passes > 1)
-		imagebuf.SetCount(rowbytes * size.cy);
-
-	line = 0;
-	linebytes = format.GetByteCount(size.cx);
 }
 
 void PNGEncoder::Data::WriteLineRaw(const byte *s)
 {
-	byte *dest = (passes > 1 ? &imagebuf[line * rowbytes] : rowbuf.Begin());
-	memcpy(dest, s, linebytes);
-	png_write_row(png_ptr, dest);
-	if(++line >= size.cy) {
-		for(int p = 1; p < passes; p++)
-			for(int y = 0; y < size.cy; y++)
-				png_write_row(png_ptr, &imagebuf[y * rowbytes]);
-
-		/* You can write optional chunks like tEXt, zTXt, and tIME at the end
-		* as well.  Shouldn't be necessary in 1.1.0 and up as all the public
-		* chunks are supported and you can use png_set_unknown_chunks() to
-		* register unknown chunks into the info structure to be written out.
-		*/
-
-		png_write_end(png_ptr, info_ptr);
+	try {
+		byte *dest = (passes > 1 ? &imagebuf[line * rowbytes] : rowbuf.Begin());
+		memcpy(dest, s, linebytes);
+		png_write_row(png_ptr, dest);
+		if(++line >= size.cy) {
+			for(int p = 1; p < passes; p++)
+				for(int y = 0; y < size.cy; y++)
+					png_write_row(png_ptr, &imagebuf[y * rowbytes]);
+	
+			/* You can write optional chunks like tEXt, zTXt, and tIME at the end
+			* as well.  Shouldn't be necessary in 1.1.0 and up as all the public
+			* chunks are supported and you can use png_set_unknown_chunks() to
+			* register unknown chunks into the info structure to be written out.
+			*/
+	
+			png_write_end(png_ptr, info_ptr);
+		}
+	}
+	catch(PngErrorException) {
 	}
 }
 
