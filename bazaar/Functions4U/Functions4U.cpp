@@ -6,12 +6,33 @@
 
 #include "Functions4U.h"
 
+/*
+Hi Koldo,
+
+I checked the functions in Functions4U. Here are some notes about trashing:
+
+    * On older systems, the trash folder was $HOME/.Trash
+    * Your implementation of disregards the folder $HOME/.local/share/trash/info. You should create there a .trashinfo file when moving something in trash and delete it when deleting corresponding file permanently.
+    * If you delete something on different partition than $HOME, you should also check if .Trash-XXXX exists in root of that partition (XXXX is id of user who deleted the files in it). 
+
+
+You might also be interested in following:
+
+    * Official trash specification from freedesktop.org
+    * Project implementing command line access to trash (unfortunately in python) according to the specification mentioned above 
+
+
+Hope this might help Smile It definitely learned me a lot of new things Very Happy
+
+Best regards, 
+Honza
+*/
 
 /////////////////////////////////////////////////////////////////////
 // LaunchFile
 
 #if defined(PLATFORM_WIN32)
-bool LaunchFileCreateProcess(const String file) {
+bool LaunchFileCreateProcess(const char *file) {
 	STARTUPINFOW startInfo;
     PROCESS_INFORMATION procInfo;
 
@@ -33,15 +54,14 @@ bool LaunchFileCreateProcess(const String file) {
 	return true;
 }
 
-bool LaunchFileShellExecute(const String file) {
+bool LaunchFileShellExecute(const char *file) {
 	HINSTANCE ret;
-	WString fileName(file);
-	ret = ShellExecuteW(NULL, L"open", fileName, NULL, L".", SW_SHOWNORMAL);		
+	ret = ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), NULL, L".", SW_SHOWNORMAL);		
 
 	return (int)ret > 32;
 }
 
-bool LaunchFile(const String file) {
+bool LaunchFile(const char *file) {
 	if (!LaunchFileShellExecute(file))			// First try
 	   	return LaunchFileCreateProcess(file);	// Second try
 	return true;
@@ -65,18 +85,18 @@ String GetDesktopManagerNew() {
 	}
 }
 
-bool LaunchFile(const String file) {
+bool LaunchFile(const char *file) {
 	int ret;
 	if (GetDesktopManagerNew() == "gnome") 
-		ret = system("gnome-open \"" + file + "\"");
+		ret = system("gnome-open \"" + String(file) + "\"");
 	else if (GetDesktopManagerNew() == "kde") 
-		ret = system("kfmclient exec \"" + file + "\" &"); 
+		ret = system("kfmclient exec \"" + String(file) + "\" &"); 
 	else if (GetDesktopManagerNew() == "enlightenment") {
 		String mime = GetExtExecutable(GetFileExt(file));
 		String program = mime.Left(mime.Find("."));		// Left side of mime executable is the program to run
-		ret = system(program + " \"" + file + "\" &"); 
+		ret = system(program + " \"" + String(file) + "\" &"); 
 	} else 
-		ret = system("xdg-open \"" + file + "\"");
+		ret = system("xdg-open \"" + String(file) + "\"");
 	return (ret >= 0);
 }
 #endif
@@ -111,6 +131,7 @@ bool FileStrAppend(const char *file, const char *str) {
 		return false;
 	return true;
 }
+bool AppendFile(const char *file, const char *str) {return FileStrAppend(file, str);};
 
 String FormatLong(long a) { 
 	return Sprintf("%ld", a);
@@ -132,45 +153,96 @@ String Replace(String str, String find, String replace) {
 	return ret;
 }
 
-bool FileSetReadOnly(String fileName, bool readOnly)
-{
+bool FileMoveX(const char *oldpath, const char *newpath, int flags) {
+	bool usr, grp, oth;
+	if (flags & DELETE_READ_ONLY) {
+		if (IsReadOnly(oldpath, usr, grp, oth))
+			FileSetReadOnly(oldpath, false, false, false);
+	}
+	bool ret = FileMove(oldpath, newpath);
+	if (flags & DELETE_READ_ONLY) 
+		FileSetReadOnly(newpath, usr, grp, oth);
+	return ret;
+}
+
+bool FileDeleteX(const char *path, int flags) {
+	if (flags & USE_TRASH_BIN)
+		return FileToTrashBin(path);
+	else
+		return FileDelete(path);
+}
+
+bool DirectoryExistsX(const char *path, int flags) {
+	if (!(flags & BROWSE_LINKS))
+		return DirectoryExists(path);
+	if (DirectoryExists(path))
+		return true;
+	if (!IsSymLink(path))
+		return false;
+	String filePath;
+	filePath = GetSymLinkPath(path);
+	if (filePath.IsEmpty())
+		return false;
+	return DirectoryExists(filePath);
+}
+
+bool FileSetReadOnly(String fileName, bool readOnly) {
+	return FileSetReadOnly(fileName, readOnly, readOnly, readOnly);
+}
+
+bool FileSetReadOnly(const char *fileName, bool usr, bool grp, bool oth) {
 #if defined(PLATFORM_WIN32) 
-	WString wfile = fileName.ToWString();
-	
-	DWORD attr = GetFileAttributesW(wfile); 
+	DWORD attr = GetFileAttributesW(ToSystemCharsetW(fileName)); 
 	
 	if (attr == INVALID_FILE_ATTRIBUTES) 
 		return false; 
 
 	DWORD newattr;
-	if (readOnly)
+	if (usr)
 		newattr = attr | FILE_ATTRIBUTE_READONLY;
 	else
 		newattr = attr & ~FILE_ATTRIBUTE_READONLY;
 	
 	if (attr != newattr)
-		return SetFileAttributesW(wfile, newattr); 
+		return SetFileAttributesW(ToSystemCharsetW(fileName), newattr); 
 	else
 		return true;
 #else
 	struct stat buffer;
 	int status;
 
-	if(0 != stat(fileName, &buffer))
+	if(0 != stat(ToSystemCharset(fileName), &buffer))
 		return false;
 	
-	mode_t newmode;
-	if (readOnly) {
-		newmode = buffer.st_mode | S_IRUSR | S_IRGRP | S_IROTH;  
-		newmode = newmode		 & ~S_IWUSR & ~S_IWGRP & ~S_IWOTH; 
-	} else {
-		newmode = buffer.st_mode | S_IRUSR | S_IRGRP | S_IROTH;  
-		newmode = newmode		 | S_IWUSR | S_IWGRP | S_IWOTH; 
-	}
+	mode_t newmode = (usr & S_IRUSR) | (grp & S_IRGRP) | (oth & S_IROTH);
+	
 	if (newmode != buffer.st_mode)
-		return 0 == chmod(fileName, newmode);
+		return 0 == chmod(ToSystemCharset(fileName), newmode);
 	else
 		return true;
+#endif
+}
+
+bool IsReadOnly(const char *fileName, bool &usr, bool &grp, bool &oth) {
+#if defined(PLATFORM_WIN32) 
+	DWORD attr = GetFileAttributesW(ToSystemCharsetW(fileName)); 
+	
+	if (attr == INVALID_FILE_ATTRIBUTES) 
+		return false; 
+
+	usr = grp = oth = attr & FILE_ATTRIBUTE_READONLY;
+	return true;
+#else
+	struct stat buffer;
+
+	if(0 != stat(ToSystemCharset(fileName), &buffer))
+		return false;
+	
+	usr = buffer.st_mode & S_IRUSR;
+	grp = buffer.st_mode & S_IRGRP;
+	oth = buffer.st_mode & S_IROTH;
+	
+	return true;
 #endif
 }
 
@@ -367,6 +439,38 @@ Array<String> GetDriveList() {
 }
 #endif
 
+#if defined(PLATFORM_WIN32)
+
+String Getcwd() {
+#if defined(PLATFORM_WIN32)
+	wchar ret[MAX_PATH];
+	if (_wgetcwd(ret, MAX_PATH))
+		return FromSystemCharsetW(ret);
+#else
+	char ret[MAX_PATH];
+	if (getcwd(ret, MAX_PATH))
+		return String(ret);
+#endif
+	return Null;
+}
+
+bool Chdir (const String &folder) {
+#if defined(PLATFORM_WIN32)
+	return 0 == _wchdir(ToSystemCharsetW(folder));
+#else
+	return 0 == chdir(folder);
+#endif
+}
+
+/*
+String Format(Time time, const char *fmt) {
+	String  s; 
+	if(IsNull(time))
+		return String();
+		
+	return Format(Date(time)) + Format(fmt, time.hour, time.minute, time.second);
+}
+
 String GetFirefoxDownloadFolder()
 {
 	String profilesPath = "mozilla/firefox";
@@ -386,8 +490,8 @@ String GetFirefoxDownloadFolder()
 	if (!prefs.GoAfter(",")) return "";
 	return prefs.GetText();
 }
+*/
 
-#if defined(PLATFORM_WIN32)
 String GetShellFolder(const char *local, const char *users) 
 {
 	String ret = FromSystemCharset(GetWinRegString(local, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", 
@@ -397,6 +501,7 @@ String GetShellFolder(const char *local, const char *users)
 									   HKEY_LOCAL_MACHINE));
 	return ret;
 }
+/*
 String GetIEDownloadFolder() 
 {
 	String ret = FromSystemCharset(GetWinRegString("Download Directory", "Software\\Microsoft\\Internet Explorer", HKEY_CURRENT_USER));
@@ -410,7 +515,6 @@ String GetAppDataFolder()	{return GetShellFolder("AppData", "Common AppData");}
 String GetMusicFolder()		{return GetShellFolder("My Music", "CommonMusic");}
 String GetPicturesFolder()	{return GetShellFolder("My Pictures", "CommonPictures");}
 String GetVideoFolder()		{return GetShellFolder("My Video", "CommonVideo");}
-String GetPersonalFolder()	{return GetShellFolder("Personal", 0);}
 String GetTemplatesFolder()	{return GetShellFolder("Templates", "Common Templates");}
 String GetDownloadFolder()	
 {
@@ -422,6 +526,9 @@ String GetDownloadFolder()
 		return GetFirefoxDownloadFolder();
 	return GetDesktopFolder();		// I do not know to do it in other browsers !!
 };
+*/
+String GetPersonalFolder()	{return GetShellFolder("Personal", 0);}
+
 String GetTempFolder()
 {
 	String ret;
@@ -429,6 +536,7 @@ String GetTempFolder()
 		ret = GetEnv("TMP");
 	return ret;
 }
+
 String GetOsFolder()
 {
 	char ret[MAX_PATH];
@@ -441,8 +549,10 @@ String GetSystemFolder()
 	::GetSystemDirectory(ret, MAX_PATH);
 	return String(ret);
 }
+
 #endif
 #ifdef PLATFORM_POSIX
+
 String GetPathXdg(String xdgConfigHome, String xdgConfigDirs)
 {
 	String ret = "";
@@ -467,6 +577,7 @@ String GetPathDataXdg(String fileConfig, const char *folder)
 	
 	return ret;		
 }
+
 String GetShellFolder(const char *local, const char *users) 
 {
  	String xdgConfigHome = GetEnv("XDG_CONFIG_HOME");
@@ -482,6 +593,7 @@ String GetShellFolder(const char *local, const char *users)
   	else
   		return ret;
 }
+/*
 String GetDesktopFolder()	
 {
 	String ret = GetShellFolder("XDG_DESKTOP_DIR", "DESKTOP");
@@ -495,7 +607,6 @@ String GetAppDataFolder()	{return GetHomeDirectory();};
 String GetMusicFolder()		{return GetShellFolder("XDG_MUSIC_DIR", "MUSIC");}
 String GetPicturesFolder()	{return GetShellFolder("XDG_PICTURES_DIR", "PICTURES");}
 String GetVideoFolder()		{return GetShellFolder("XDG_VIDEOS_DIR", "VIDEOS");}
-String GetPersonalFolder()	{return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS");}
 String GetTemplatesFolder()	{return GetShellFolder("XDG_TEMPLATES_DIR", "XDG_TEMPLATES_DIR");}
 String GetDownloadFolder()	
 {
@@ -505,6 +616,7 @@ String GetDownloadFolder()
 		return GetFirefoxDownloadFolder();
 	return GetShellFolder("XDG_DOWNLOAD_DIR", "DOWNLOAD");
 };
+*/
 String GetTempFolder()
 {
 	return GetHomeDirectory();		
@@ -517,6 +629,9 @@ String GetSystemFolder()
 {
 	return String("");
 }
+
+String GetPersonalFolder()	{return GetShellFolder("XDG_DOCUMENTS_DIR", "DOCUMENTS");}
+
 #endif
 
 struct StringNormalCompare__ {
@@ -580,6 +695,18 @@ const char *StrToTime(struct Upp::Time& d, const char *s) {
 		fmt++;
 	}
 	return d.IsValid() ? s : NULL;
+}
+
+Time StrToTime(const char *s) {
+	Time ret;
+	StrToTime(ret, s);
+	return ret;
+}
+
+Date StrToDate(const char *s) {
+	Time ret;
+	StrToDate(ret, s);
+	return ret;
 }
 
 void StringToHMS(String durat, int &hour, int &min, double &seconds) {
@@ -742,8 +869,137 @@ Color RandomColor() {
 	return Color(num&0xFF, (num&0xFF00)>>8, (num&0xFF0000)>>16);
 }
 
-String GetUpperFolder(String folderName)
+#ifdef PLATFORM_POSIX
+String GetRealName(String fileName) {
+	fileName = GetFullPath(fileName);
+	FindFile ff(fileName);
+	if (!ff)
+		return String(""); 
+	else
+		return fileName;
+}
+#endif
+#ifdef PLATFORM_WIN32
+bool GetRealName_Next(String &real, String file) {
+	bool ret;
+	String old;
+	int from = real.GetCount()+1;
+	int to = file.Find(DIR_SEP, from);
+	if (to >= 0) {
+		old = file.Mid(from, to-from);
+		ret = true;
+	} else {
+		old = file.Mid(from);
+		ret = false;
+	}
+	real += DIR_SEP;
+	FindFile ff(real + old);
+	real += ff.GetName();
+	return ret;
+}
+
+String GetRealName(String fileName) {
+	fileName = GetFullPath(fileName);
+	
+	if (fileName.GetCount() == 3) {
+		FindFile ff(fileName + "*");
+		if (!ff)
+			return String(""); 	
+		else
+			return fileName;
+	}
+	FindFile ff(fileName);
+	if (!ff)
+		return String(""); 
+	String ret;
+	
+	ret.Reserve(fileName.GetCount());
+	
+	ret = ToUpper(fileName.Left(1)) + ":";
+	
+	while (GetRealName_Next(ret, fileName)) ;
+	
+	return ret;
+}
+#endif
+
+#ifdef PLATFORM_WIN32	
+
+#define Ptr Ptr_
+#define byte byte_
+#define CY win32_CY_
+
+#include <winnls.h>
+#include <winnetwk.h>
+
+#include <wincon.h>
+#include <shlobj.h>
+
+#undef Ptr
+#undef byte
+#undef CY
+
+#endif
+/*
+bool GetSymLinkPath(const char *linkPath, String &filePath)
 {
+#ifdef PLATFORM_WIN32	
+	HRESULT hres;
+	IShellLink* psl;
+	IPersistFile* ppf;
+	CoInitialize(NULL);
+	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
+	                        (PVOID *) &psl);
+	if(SUCCEEDED(hres)) {
+		hres = psl->QueryInterface(IID_IPersistFile, (PVOID *) &ppf);
+		if(SUCCEEDED(hres)) {
+			hres = ppf->Load(ToSystemCharsetW(linkPath), STGM_READ);
+			if(SUCCEEDED(hres)) {
+				char fileW[_MAX_PATH] = {0};
+				psl->GetPath(fileW, _MAX_PATH, NULL, 0); 
+				filePath = FromSystemCharset(fileW);
+			} else
+				return false;
+			ppf->Release();
+		} else
+			return false;
+		psl->Release();
+	} else
+		return false;
+	CoUninitialize();
+	return true;
+#else
+	char buff[_MAX_PATH + 1];
+	bool ret;
+	int len = readlink(linkPath, buff, _MAX_PATH);
+	if (ret = (len > 0 && len < _MAX_PATH))
+		buff[len] = '\0';
+	else 
+		*buff = '\0';
+	filePath = buff;
+	return ret;
+#endif
+}				
+*/	
+bool IsSymLink(const char *path) {
+#ifdef PLATFORM_WIN32	
+	return GetFileExt(path) == ".lnk";
+#else
+	struct stat stf;
+	lstat(path, &stf);
+	return S_ISLNK(stf.st_mode);
+#endif
+}	
+
+String GetNextFolder(String folder, String lastFolder) {
+	int pos = lastFolder.Find(DIR_SEP, folder.GetCount()+1);
+	if (pos >= 0)
+		return lastFolder.Left(pos);
+	else
+		return lastFolder;
+}
+
+String GetUpperFolder(String folderName) {
 	if (folderName.IsEmpty())
 		return "";
 #ifdef PLATFORM_WIN32
@@ -767,16 +1023,17 @@ String GetUpperFolder(String folderName)
 
 bool CreateFolderDeep(const char *dir)
 {
-	if (DirectoryExists(dir))
+	return RealizePath(dir);
+/*	if (DirectoryExists(dir))
 		return true;
 	String upper = GetUpperFolder(dir);
 	if (CreateFolderDeep(upper))
 		return DirectoryCreate(dir);
 	else 
-		return false;
+		return false; */
 }
 
-bool DeleteFolderDeepWildcards(const char *path)
+bool DeleteFolderDeepWildcards(const char *path, int flags)
 {
 	FindFile ff(path);
 	String dir = GetFileDirectory(path);
@@ -784,10 +1041,10 @@ bool DeleteFolderDeepWildcards(const char *path)
 		String name = ff.GetName();
 		String p = AppendFileName(dir, name);
 		if(ff.IsFile())
-			FileDelete(p);
+			FileDeleteX(p, flags);
 		else
-		if(ff.IsFolder())
-			DeleteFolderDeep(p);
+			if(ff.IsFolder())
+				DeleteFolderDeep(p);
 		ff.Next();
 	}
 	return DirectoryDelete(dir);
@@ -811,7 +1068,7 @@ bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath)
 	return true;
 }
 
-bool DirectoryCopy(const char *dir, const char *newPlace)
+bool DirectoryCopyX(const char *dir, const char *newPlace)
 {
 	return DirectoryCopy_Each(dir, newPlace, "");
 }
@@ -886,12 +1143,13 @@ Array<String> SearchFile(String dir, String condFile, String text)
 bool fileDataSortAscending;
 char fileDataSortBy;
 
-FileDataArray::FileDataArray(bool use)
+FileDataArray::FileDataArray(bool use, int _fileFlags)
 {
 	Clear();
 	fileDataSortAscending = true;
 	fileDataSortBy = 'n';
 	useId = use;
+	fileFlags = _fileFlags;
 }
 
 bool FileDataArray::Init(String folder, FileDataArray &orig, FileDiffArray &diff)
@@ -953,7 +1211,13 @@ void FileDataArray::Clear()
 bool FileDataArray::Search(String dir, String condFile, bool recurse, String text)
 {
 	Clear();
-	basePath = dir;
+	if (fileFlags & BROWSE_LINKS) {
+		if (IsSymLink(dir)) 
+			dir = basePath = GetSymLinkPath(dir);
+		else
+			basePath = dir;
+	} else
+		basePath = dir;
 	Search_Each(dir, condFile, recurse, text);
 	return errorList.IsEmpty();
 }
@@ -965,10 +1229,18 @@ void FileDataArray::Search_Each(String dir, String condFile, bool recurse, Strin
 		do {
 			if(ff.IsFile()) {
 				String p = AppendFileName(dir, ff.GetName());
-				if (text.IsEmpty()) {
+				//if (ff.IsSymLink()) {
+				//	p = p;
+				//}	
+				/*
+					fileList.Add(FileData(true, ff.GetName(), GetRelativePath(dir), 0, ff.GetLastWriteTime(), 0));
+					folderCount++;
+					if (recurse)
+						Search_Each(p, condFile, recurse, text);
+				} else */ if (text.IsEmpty()) {
 					uint64 len = ff.GetLength();
 					fileList.Add(FileData(false, ff.GetName(), GetRelativePath(dir), len, ff.GetLastWriteTime(), 
-											(useId && ff.GetLength() > 0) ? GetFileId(p) : 0));
+											(useId && len > 0) ? GetFileId(p) : 0));
 					fileCount++;
 					fileSize += len;
 				} else {
@@ -1054,24 +1326,87 @@ bool operator<(const FileData& a, const FileData& b)
 {
 	if ((a.isFolder && b.isFolder) || (!a.isFolder && !b.isFolder)) {
 		switch (fileDataSortBy) {
-		case 'n':	return (ToLower(a.fileName) < ToLower(b.fileName))&fileDataSortAscending; 
+		case 'n':	{
+						bool ais = IsDigit(a.fileName[0]);
+						bool bis = IsDigit(b.fileName[0]);
+						if (ais && bis)
+							return atoi(a.fileName) < atoi(b.fileName);
+						if (ais)
+							return true;
+						if (bis)
+							return false;
+					}	
+#ifdef PLATFORM_POSIX				
+					return (a.fileName < b.fileName)&fileDataSortAscending; 
+#else
+					return (ToLower(a.fileName) < ToLower(b.fileName))&fileDataSortAscending; 
+#endif
 		case 'd':	return (a.t < b.t)&fileDataSortAscending; 
 		default:	return (a.length < b.length)&fileDataSortAscending; 
 		}
 	} else 
 		return a.isFolder;
 }
-int FileDataArray::Find(String &relFileName, String &fileName, bool isFolder)
-{
+
+bool CheckFileData(FileData &data, String &relFileName, String &fileName, String &lowrelFileName, String &lowfileName, bool isFolder) {
+	if (data.isFolder == isFolder) {
+		if (ToLower(data.fileName) == lowfileName) {
+			if (ToLower(data.relFilename) == lowrelFileName) 
+	    		return true;
+		}
+	}	
+	return false;
+}
+
+int FileDataArray::Find(String &relFileName, String &fileName, bool isFolder) {
+	String lowrelFileName = ToLower(relFileName);
+	String lowfileName = ToLower(fileName);
 	for (int i = 0; i < fileList.GetCount(); ++i) {
-		if ((ToLower(fileList[i].relFilename) == ToLower(relFileName)) && (ToLower(fileList[i].fileName) == ToLower(fileName)) && (fileList[i].isFolder == isFolder))
+		if (CheckFileData(fileList[i], relFileName, fileName, lowrelFileName, lowfileName, isFolder))
 		    return i;
 	}
 	return -1;
 }
 
-bool FileDataArray::SaveFile(const char *fileName)
-{
+/*
+int FileDataArray::Find(FileDataArray &data, int id) {
+	return Find(data[id].relFilename, data[id].fileName, data[id].isFolder);
+}
+*/
+
+int FileDataArray::Find(FileDataArray &data, int id) {
+	String lowrelFileName = ToLower(data[id].relFilename);
+	String lowfileName = ToLower(data[id].fileName);
+	bool isFolder = data[id].isFolder;
+	
+	int num = fileList.GetCount();
+	if (num == 0)
+		return -1;
+	if (num == 1) {
+		if (CheckFileData(fileList[0], data[id].relFilename, data[id].fileName, lowrelFileName, lowfileName, isFolder))
+			return 0;
+		else
+			return -1;
+	}
+	int down, up;
+	down = id < num-1 ? id : num-2;
+	up = down + 1; 
+	while (down >= 0 || up < num) {
+		if (down >= 0) {
+			if (CheckFileData(fileList[down], data[id].relFilename, data[id].fileName, lowrelFileName, lowfileName, isFolder))
+		    	return down;
+			down--;
+		}
+		if (up < num) {
+			if (CheckFileData(fileList[up], data[id].relFilename, data[id].fileName, lowrelFileName, lowfileName, isFolder))
+		    	return up;
+			up++;
+		}
+	}
+	return -1;
+}
+
+String FileDataArray::GetFileText() {
 	String ret;
 	
 	for (int i = 0; i < fileList.GetCount(); ++i) {
@@ -1083,7 +1418,15 @@ bool FileDataArray::SaveFile(const char *fileName)
 		ret << fileList[i].id << "; ";
 		ret << "\n";
 	}
-	return ::SaveFile(fileName, ret);
+	return ret;	
+}
+
+bool FileDataArray::SaveFile(const char *fileName) {
+	return ::SaveFile(fileName, GetFileText());
+}
+
+bool FileDataArray::AppendFile(const char *fileName) {
+	return ::AppendFile(fileName, GetFileText());
 }
 
 bool FileDataArray::LoadFile(const char *fileName)
@@ -1162,7 +1505,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary)
 	secReviewed.SetCount(secondary.GetCount(), false);
 	
 	for (int i = 0; i < master.GetCount(); ++i) {
-		int idSec = secondary.Find(master[i].relFilename, master[i].fileName, master[i].isFolder);
+		int idSec = secondary.Find(master, i);
 		if (idSec >= 0) {
 			bool useId = master.UseId() && secondary.UseId();
 			secReviewed[idSec] = true;
@@ -1222,7 +1565,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary)
 	return equal;
 }
 
-bool FileDiffArray::Apply(String toFolder, String fromFolder)
+bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 {
 	for (int i = 0; i < diffList.GetCount(); ++i) {
 		bool ok = true;
@@ -1231,10 +1574,14 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder)
 		switch (diffList[i].action) {
 		case 'n': case 'u': 	
 			if (diffList[i].isFolder) {
-				if (!DirectoryExists(dest))
+				if (!DirectoryExists(dest)) 
 					ok = DirectoryCreate(dest);
-			} else 
+			} else {
+				FileSetReadOnly(dest, false);
+				if (i == 73)
+					int k = 23;
 				ok = FileCopy(AppendFileName(fromFolder, FormatInt(i)), dest);
+			}
 			if (!ok) {
 				SetLastError(t_("Not possible to create") + String(" ") + dest);
 				return false;
@@ -1246,7 +1593,7 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder)
 					ok = DeleteFolderDeep(dest);
 			} else {
 				if (FileExists(dest))
-					ok = FileDelete(dest);
+					ok = FileDeleteX(dest, flags);
 			}
 			if (!ok) {
 				SetLastError(t_("Not possible to delete") + String(" ") + dest);
@@ -1254,8 +1601,9 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder)
 			}
 			break;		
 		case 'p': 
-			SetLastError(t_("There was a problem in the copy"));
-			return false;
+			//SetLastError(t_("There was a problem in the copy"));
+			//return false;
+			break;
 		}
 	}
 	return true;
@@ -1339,7 +1687,7 @@ Value GetVARIANT(VARIANT &result)
 	case VT_R8:
 		ret = AsString(result.dblVal);
 		break;
-	case VT_BSTR: 
+	case VT_BSTR:  
 		{
 		  	char dbcs[1024];
 	        char *pbstr = (char *)result.bstrVal;
@@ -1373,6 +1721,60 @@ Value GetVARIANT(VARIANT &result)
 }
 #endif
 
+#if defined(PLATFORM_WIN32) 
 
+Dll::Dll() {
+	hinstLib = 0;
+}
 
+Dll::~Dll() {
+	if (hinstLib) 
+		if (FreeLibrary(hinstLib) == 0)
+			throw Exc(t_("Dll cannot be released"));
+}
 
+bool Dll::Load(const String &fileDll) {
+	if (hinstLib) 
+		if (FreeLibrary(hinstLib) == 0)
+			throw Exc(t_("Dll cannot be released"));
+	
+	hinstLib = LoadLibraryEx(TEXT(fileDll), NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+	if (!hinstLib) 
+		return false;
+	return true;
+}
+
+void *Dll::GetFunction(const String &functionName) {
+	if (!hinstLib) 
+		return NULL;
+	return (void *)GetProcAddress(hinstLib, functionName);
+}
+#endif
+
+#ifdef flagAES
+
+static String sXMLFile(const char *file)
+{
+	return file ? String(file) : ConfigFile(GetExeTitle() + ".xml");
+}
+
+bool LoadFromXMLFileAES(Callback1<XmlIO> xmlize, const char *file, const char *key)
+{
+	AESDecoderStream aesDecoder(key);
+	aesDecoder << LoadFile(sXMLFile(file));
+	String sOut;
+	sOut << aesDecoder;
+	return LoadFromXML(xmlize, sOut); 
+}
+
+bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *file, const char *key)
+{
+	String xmlStr = StoreAsXML(xmlize, name ? (String)name : GetExeTitle());
+	AESEncoderStream aesEncoder(xmlStr.GetLength(), key);
+	aesEncoder << xmlStr;
+	String sOut;
+	sOut << aesEncoder;
+	return SaveFile(sXMLFile(file), sOut);
+}
+
+#endif

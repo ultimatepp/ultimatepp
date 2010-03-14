@@ -33,8 +33,11 @@ esES("No es posible crear")
 T_("Not possible to delete")
 esES("No es posible borrar")
 
-T_("There was a problem in the copy")
-esES("Hubo un problema al copiar")
+
+// Functions4U_Gui.cpp
+
+T_("Wrong param. in ReadCol")
+esES("")
 
 
 // bsdiff.cpp
@@ -43,7 +46,7 @@ T_("File %s does not exist")
 esES("Fichero %s no existe")
 
 T_("Patch file is empty")
-esES("Fichero de parche est\303\241 vacio")
+esES("Fichero de parche está vacio")
 
 T_("Error opening %s")
 esES("Error abriendo %s")
@@ -76,7 +79,7 @@ esES("")
 // bspatch.cpp
 
 T_("New file is empty")
-esES("Nuevo fichero est\303\241 vacio")
+esES("Nuevo fichero está vacio")
 
 T_("fopen(%s)")
 esES("")
@@ -98,3 +101,9 @@ esES("")
 
 T_("Impossible to open %s")
 esES("Imposible abrir %s")
+
+
+// Obsolete
+
+T_("There was a problem in the copy")
+esES("Hubo un problema al copiar")

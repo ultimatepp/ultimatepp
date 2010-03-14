@@ -4,6 +4,10 @@ uses
 	Core,
 	plugin\bz2;
 
+uses(AES) AESStream;
+
+uses(GUI) GridCtrl;
+
 library(WIN32) oleaut32;
 
 file
@@ -11,6 +15,7 @@ file
 	Functions4U.h,
 	Functions4U_Gui.cpp,
 	Functions4U_Gui.h,
+	QtfEquation.cpp,
 	srcdoc.tpp,
 	src.tpp,
 	Functions4U.t,
@@ -20,8 +25,8 @@ file
 	plugin/bsadditional.cpp,
 	plugin/bsdiff.cpp,
 	plugin/bspatch.cpp,
+	Xmlize2 readonly separator,
+	Xmlize2.cpp,
+	Xmlize2.h,
 	plugin/Credits.txt;
-
-mainconfig
-	"" = "";
 

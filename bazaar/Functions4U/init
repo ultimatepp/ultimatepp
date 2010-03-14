@@ -2,4 +2,6 @@
 #define _Functions4U_icpp_init_stub
 #include "Core/init"
 #include "plugin\bz2/init"
+#include "AESStream/init"
+#include "GridCtrl/init"
 #endif

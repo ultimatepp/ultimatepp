@@ -3,48 +3,72 @@
 
 using namespace Upp;
 
+enum EXT_FILE_FLAGS {USE_TRASH_BIN = 1,
+					 BROWSE_LINKS = 2,
+					 DELETE_READ_ONLY = 4
+};
 
-bool LaunchFile(const String file);
+bool LaunchFile(const char *file);
 
 bool FileCat(const char *file, const char *appendFile);
 
 bool FileStrAppend(const char *file, const char *str);
+bool AppendFile(const char *filename, const char *str);
 
-bool DeleteFolderDeepWildcards(const char *dir);
+/////////
+bool DirectoryExistsX(const char *path, int flags = 0);
+///////////////////////////////
+bool DirectoryDeleteX(const char *path, int flags = 0);
+bool DirectoryDeleteDeepX(const char *path, int flags = 0);
+bool DeleteFolderDeepX(const char *dir, int flags = 0);
+bool DirectoryCopyX(const char *dir, const char *newPlace);
+bool DeleteFolderDeepWildcards(const char *dir, int flags = 0);
+///////////////////////////////
 
 String GetUpperFolder(String folderName);
 
+String GetNextFolder(String folder, String lastFolder);
+
+String GetRealName(String fileName);
+
+//bool GetSymLinkPath(const char *linkPath, String &filePath);
+bool IsSymLink(const char *path);
+
 bool CreateFolderDeep(const char *dir);
 
-bool DirectoryCopy(const char *dir, const char *newPlace);
+/////////
+bool FileMoveX(const char *oldpath, const char *newpath, int flags = 0);
+bool FileDeleteX(const char *path, int flags = 0);
+/////////
 
-bool FileSetReadOnly(String fileName, bool readOnly);
+
+//bool FileSetReadOnly(const char *fileName, bool readOnly);
+bool FileSetReadOnly(const char *fileName, bool usr, bool grp = false, bool oth = false);
+bool IsReadOnly(const char *fileName, bool &usr, bool &grp, bool &oth);
 
 String LoadFile_Safe(String fileName);
 
 int64 GetLength(String fileDirName);
 int64 GetDirectoryLength(String directoryName);
 
-Array<String> SearchFile(String dir, String condFile, String text, Array<String> &errorList);
-Array<String> SearchFile(String dir, String condFile, String text = "");
+///////////////////////////////
+Array<String> SearchFile(String dir, String condFile, String text, Array<String> &errorList);//, int flags = 0);
+Array<String> SearchFile(String dir, String condFile, String text = "");//, int flags = 0);
+///////////////////////////////
 
 bool FileToTrashBin(const char *path);
 int64 TrashBinGetCount();
 bool TrashBinClear();
 
-String GetExtExecutable(String ext);
-
-Array<String> GetDriveList();
-
-String GetDesktopFolder();
-String GetProgramsFolder();
-String GetAppDataFolder();
-String GetMusicFolder();
-String GetPicturesFolder();
-String GetVideoFolder();
+//String GetDesktopFolder();
+//String GetProgramsFolder();
+//String GetAppDataFolder();
+//String GetMusicFolder();
+//String GetPicturesFolder();
+//String GetVideoFolder();
 String GetPersonalFolder();
-String GetTemplatesFolder();
-String GetDownloadFolder();
+//String GetTemplatesFolder();
+//String GetDownloadFolder();
 String GetRootFolder();
 String GetTempFolder();
 String GetOsFolder();
@@ -90,7 +114,7 @@ class FileDiffArray;
 class FileDataArray : public ErrorHandling
 {
 public:
-	FileDataArray(bool use = false);
+	FileDataArray(bool use = false, int fileFlags = 0);
 	bool Init(String folder, FileDataArray &orig, FileDiffArray &diff);
 	void Clear();
 	bool Search(String dir, String condFile, bool recurse = false, String text = "");
@@ -105,14 +129,17 @@ public:
 	void SortBySize(bool ascending = true);
 	Array<String> &GetLastError()	{return errorList;};
 	int Find(String &relFileName, String &fileName, bool isFolder);
+	int Find(FileDataArray &data, int id);
 	String FullFileName(int i)		{return AppendFileName(basePath, fileList[i].fileName);};
 	bool SaveFile(const char *fileName);
+	bool AppendFile(const char *fileName);
 	bool LoadFile(const char *fileName);
 
 private:
 	void Search_Each(String dir, String condFile, bool recurse, String text);
 	int64 GetFileId(String fileName);
 	String GetRelativePath(String fullPath);
+	String GetFileText();
 	
 	Array<FileData> fileList;
 	Array<String> errorList;
@@ -120,6 +147,7 @@ private:
 	long fileCount, folderCount;
 	int64 fileSize;
 	bool useId;
+	int fileFlags;
 };
 
 class FileDiffArray : public ErrorHandling
@@ -129,7 +157,7 @@ public:
 	void Clear();
 	FileDiff& operator[](long i)	{return diffList[i];}
 	bool Compare(FileDataArray &master, FileDataArray &secondary);
-	bool Apply(String toFolder, String fromFolder);
+	bool Apply(String toFolder, String fromFolder, int flags = 0);
 	long GetCount()				{return diffList.GetCount();};
 	bool SaveFile(const char *fileName);
 	bool LoadFile(const char *fileName);
@@ -147,6 +175,8 @@ int ReverseFind(const String& s, const String& toFind, int from = 0);
 String FormatLong(long a); 
 
 const char *StrToTime(struct Upp::Time& d, const char *s);
+::Time StrToTime(const char *s);
+Date StrToDate(const char *s);
 
 String BytesToString(uint64 bytes);
 
@@ -165,6 +195,8 @@ inline bool Even(int val) 	  	{return !Odd(val);}
 inline int RoundEven(int val) 	{return Even(val) ? val : val+1;}
 template<class T>
 inline int Sign(T a) 			{return (a > 0) - (a < 0);}
+template<class T>
+inline T Average(T a, T b) 		{return T((a+b)/2);}
 
 int DayOfYear(Date d);
 
@@ -330,7 +362,7 @@ public:
 	{return atoll(GetText(separators));};
 #endif
 	
-	String Right() {return String::Right(GetLength()-pos);}
+	String Right() {return String::Mid(pos+1);}
 	int GetLastSeparator() {return lastSeparator;}
 	void MoveRel(int val)
 	{
@@ -387,8 +419,56 @@ inline void DoEvents() {
 }
 */
 
+String GetExtExecutable(String ext);
+
+Array<String> GetDriveList();
+
+String Getcwd();
+bool Chdir (const String &folder);
+
+//String Format(Time time, const char*fmt = "%2d:%2d");
+
+#if defined(PLATFORM_WIN32) 
+class Dll {
+public:
+	Dll();
+	~Dll();
+	bool Load(const String &fileDll);
+	void *GetFunction(const String &functionName);
+	
+private:
+	HINSTANCE hinstLib;	
+};
+#endif
+
 String BsGetLastError();
 bool BSPatch(String oldfile, String newfile, String patchfile);
 bool BSDiff(String oldfile, String newfile, String patchfile);
+
+bool LoadFromXMLFileAES(Callback1<XmlIO> xmlize, const char *file, const char *key);
+template <class T>
+bool LoadFromXMLFileAES(T& data, const char *file, const char *key)
+{
+	ParamHelper__<T> p(data);
+	return LoadFromXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), file, key);
+}
+
+bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *file, const char *key);
+template <class T>
+bool StoreAsXMLFileAES(T& data, const char *name, const char *file, const char *key)
+{
+	ParamHelper__<T> p(data);
+	return StoreAsXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), name, file, key);
+}
+
+#ifdef flagAES
+
+#include <openssl/aes.h>
+#include <AESStream/AESStream.h>
+
+bool LoadFromXMLFileAES(Callback1<XmlIO> xmlize, const char *file, const char *key);
+bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *file, const char *key);
+
+#endif
 
 #endif

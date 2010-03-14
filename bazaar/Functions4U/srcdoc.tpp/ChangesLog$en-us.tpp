@@ -4,6 +4,9 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;2 &]
+[s0; [2 2010/03/09-|Added Dll class for basic dll handling in Windows]&]
+[s0; [2 2010/03/08-|Get folder functions moved to Core]&]
+[s0; [2 2010/02/25-|Added new Xmlize functions]&]
 [s0; [2 2010/02/09-|Added Getcwd() and Chdir()]&]
 [s0; [2 2010/01/05-|GetDesktopManagerNew moved from SysInfo]&]
 [s0; [2 2010/01/05-|Trash Bin documentation moved from SysInfo]&]
