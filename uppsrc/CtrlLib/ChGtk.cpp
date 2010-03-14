@@ -121,7 +121,8 @@ struct GtkRangeLayout_ {
   GdkRectangle stepper_d;
 };
 
-void (*chgtkspy__)(const char *name, int state, int shadow, const char *detail, int type, int cx, int cy, const Value& look);
+void (*chgtkspy__)(const char *name, int state, int shadow, const char *detail, int type, int cx, int cy,
+                   const Value& look);
 
 void SetChGtkSpy_(void (*spy)(const char *name, int state, int shadow, const char *detail, int type, int cx, int cy, const Value& look))
 {
@@ -398,10 +399,12 @@ Value GtkMakeCh(int shadow, int state, const Rect& r, const Rect& m)
 	e.state = state;
 	e.reduce = r;
 	e.margins = m;
-//	if(chgtkspy__) {
-//		chgtkspy__
-//	}
-	return RawToValue(e);
+	Value v = RawToValue(e);
+	if(chgtkspy__) {
+		ChGtkI& q = ChGtkIs().Top();
+		chgtkspy__(String("Look: ") + G_OBJECT_TYPE_NAME(q.widget), state, shadow, q.detail, q.type, Null, Null, v);
+	}
+	return v;
 }
 
 Value GtkMakeCh(int shadow, int state, const Rect& r)
@@ -913,19 +916,19 @@ void ChHostSkin()
 			}
 			bool atp = IsEmptyImage(GetGTK(ChGtkLast(), 2, 2, "vscrollbar", GTK_BOX|GTK_TOP|GTK_RANGEA, 16, 16));
 			Size asz(s.barsize / 2, s.arrowsize / 2);
-			if(engine == "Qt")
+			if(engine == "Qt" || engine == "Human")
 				atp = false;
 			if(atp) {
 				ChGtkNew("vscrollbar", GTK_ARROW);
-				if(engine != "Human") {
+//				if(engine != "Human") {
 					GtkCh(s.up.look, "02141111");
 					GtkCh(s.up2.look, "02141111");
-				}
+//				}
 				ChGtkNew("vscrollbar", GTK_ARROW|GTK_VAL1);
-				if(engine != "Human") {
+//				if(engine != "Human") {
 					GtkCh(s.down.look, "02141111");
 					GtkCh(s.down2.look, "02141111");
-				}
+//				}
 
 				static GtkWidget *btn = gtk_button_new();
 				ChGtkNew(btn, "button", GTK_BOX);
@@ -946,10 +949,10 @@ void ChHostSkin()
 				}
 			}
 			else {
-				if(engine != "Nodoka") {
+			//	if(engine != "Nodoka") {
 					GtkIml(CtrlsImg::I_UA, ChGtkLast(), 0, 0, "vscrollbar", GTK_ARROW|GTK_TOP|GTK_RANGEA, asz.cx, asz.cy);
 					GtkIml(CtrlsImg::I_DA, ChGtkLast(), 0, 0, "vscrollbar", GTK_ARROW|GTK_VAL1|GTK_BOTTOM|GTK_RANGED, asz.cx, asz.cy);
-				}
+			//	}
 
 				ChGtkNew("vscrollbar", GTK_BGBOX|GTK_TOP|GTK_RANGEA);
 				GtkChArrow(s.up.look, CtrlsImg::UA(), po);
@@ -1000,11 +1003,11 @@ void ChHostSkin()
 			static GtkWidget *hscrollbar = gtk_hscrollbar_new(GTK_ADJUSTMENT(adj));
 			ChGtkNew(hscrollbar, "slider", GTK_SLIDER);
 			GtkChSlider(s.hthumb);
-			if(engine != "Nodoka") {
+//			if(engine != "Nodoka") {
 				ChGtkNew("trough", GTK_BGBOX);
 				GtkChTrough(s.hupper);
 				GtkChTrough(s.hlower);
-			}
+//			}
 			if(atp) {
 				ChGtkNew("hscrollbar", GTK_ARROW|GTK_VAL2);
 				GtkCh(s.left.look, "02141111");
@@ -1014,10 +1017,10 @@ void ChHostSkin()
 				GtkCh(s.right2.look, "02141111");
 			}
 			else {
-				if(engine != "Nodoka") {
+//				if(engine != "Nodoka") {
 					GtkIml(CtrlsImg::I_LA, ChGtkLast(), 0, 0, "hscrollbar", GTK_ARROW|GTK_VAL2|GTK_LEFT|GTK_RANGEA, asz.cy, asz.cx);
 					GtkIml(CtrlsImg::I_RA, ChGtkLast(), 0, 0, "hscrollbar", GTK_ARROW|GTK_VAL3|GTK_RIGHT|GTK_RANGED, asz.cy, asz.cx);
-				}
+//				}
 				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_LEFT|GTK_RANGEA);
 				GtkChArrow(s.left.look, CtrlsImg::LA(), po);
 				ChGtkNew("hscrollbar", GTK_BGBOX|GTK_VCENTER|GTK_RANGEC);
