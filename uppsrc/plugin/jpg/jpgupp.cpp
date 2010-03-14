@@ -1,5 +1,5 @@
 #include <Draw/Draw.h>
-#include <setjmpex.h>
+#include <setjmp.h>
 #include "jpg.h"
 #define HAVE_BOOLEAN
 #define boolean int
@@ -424,12 +424,8 @@ String JPGRaster::Data::GetThumbnail()
 
 bool JPGRaster::Data::Init()
 {
-	DLOG("A!");
-	DLOG((void *)&jerr->jmpbuf);
 	if(setjmp(jerr->jmpbuf))
 		return false;
-	DLOG("B!");
-
 	jpeg_stream_src(&cinfo, *stream);
 	jpeg_save_markers(&cinfo, JPEG_COM, 0xFFFF);
 	for(int i = 0; i <= 15; i++)

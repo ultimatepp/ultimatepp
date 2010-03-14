@@ -398,9 +398,9 @@ Value GtkMakeCh(int shadow, int state, const Rect& r, const Rect& m)
 	e.state = state;
 	e.reduce = r;
 	e.margins = m;
-	if(chgtkspy__) {
-		chgtkspy__
-	}
+//	if(chgtkspy__) {
+//		chgtkspy__
+//	}
 	return RawToValue(e);
 }
 
