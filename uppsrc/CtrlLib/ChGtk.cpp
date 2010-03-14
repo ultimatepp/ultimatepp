@@ -121,6 +121,13 @@ struct GtkRangeLayout_ {
   GdkRectangle stepper_d;
 };
 
+void (*chgtkspy__)(const char *name, int state, int shadow, const char *detail, int type, int cx, int cy, const Value& look);
+
+void SetChGtkSpy_(void (*spy)(const char *name, int state, int shadow, const char *detail, int type, int cx, int cy, const Value& look))
+{
+	chgtkspy__ = spy;
+}
+
 Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy)
 {
 	MemoryIgnoreLeaksBlock __;
@@ -255,6 +262,8 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 	if(type == GTK_ICON)
 		g_object_unref(icon);
 	sLastImage = RecreateAlpha(m[0], m[1]);
+	if(chgtkspy__)
+		chgtkspy__(G_OBJECT_TYPE_NAME(widget), state, shadow, detail, type, cx, cy, sLastImage);
 	return sLastImage;
 }
 
@@ -389,6 +398,9 @@ Value GtkMakeCh(int shadow, int state, const Rect& r, const Rect& m)
 	e.state = state;
 	e.reduce = r;
 	e.margins = m;
+	if(chgtkspy__) {
+		chgtkspy__
+	}
 	return RawToValue(e);
 }
 
@@ -643,6 +655,9 @@ void ChHostSkin()
 	ChLookFn(GtkLookFn);
 
 	String engine = GtkStyleString("gtk-theme-name");
+	
+	if(chgtkspy__)
+		engine.Clear();
 
 	int fontname = Font::ARIAL;
 	int fontheight = 13;
