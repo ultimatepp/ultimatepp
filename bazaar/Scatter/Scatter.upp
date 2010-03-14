@@ -13,5 +13,6 @@ file
 	Pie.h,
 	Pie.cpp,
 	Chart.iml,
-	srcdoc.tpp;
+	srcdoc.tpp,
+	src.tpp;
 

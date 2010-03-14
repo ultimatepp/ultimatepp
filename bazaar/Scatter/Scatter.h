@@ -77,13 +77,17 @@ public:
 	
 	Scatter& SetAntialiasing(const bool& aa=true);	
 	
-	void SetRange(double rx, double ry, double ry2 = -1);
+	void FitToData(bool Y = false);
+	
+	Scatter& SetRange(double rx, double ry, double ry2 = -1);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
 	double GetY2Range()const {return yRange2;}
-	void SetMajorUnits(double ux, double uy);
-	void SetMinUnits(double ux, double uy);
-	void SetXYMin(double xmin,double ymin,double ymin2 = 0);
+	Scatter& SetMajorUnits(double ux, double uy);
+	double GetMajorUnitsX() {return xMajorUnit;}
+	double GetMajorUnitsY() {return yMajorUnit;}
+	Scatter& SetMinUnits(double ux, double uy);
+	Scatter& SetXYMin(double xmin,double ymin,double ymin2 = 0);
 	double GetXMin () const {return xMin;}
 	double GetYMin () const {return yMin;}	
 	double GetYMin2 () const {return yMin2;}	
@@ -91,15 +95,15 @@ public:
 	void Graduation_FormatY(Formats fi);
 	void Graduation_FormatY2(Formats fi);
 	
-	void SetMouseHandling(bool valx = true, bool valy = false);
+	Scatter& SetMouseHandling(bool valx = true, bool valy = false);
 	
-	void AddSeries (Vector<XY> & points,const String& legend="", const bool& join=false,const class::Color& pcolor=LtBlue,const int& width=30,const int& thickness=6);
+	Scatter &AddSeries (Vector<XY> & points,const String& legend="", const bool& join=false,const class::Color& pcolor=LtBlue,const int& width=30,const int& thickness=6);
 	
 	inline bool IsValid(const int& j) const {return (j>=0 && j<vPointsData.GetCount());}
 	
-	void SetDrawXReticle(bool set = true);
-	void SetDrawYReticle(bool set = true);
-	void SetDrawY2Reticle(bool set = true);
+	Scatter& SetDrawXReticle(bool set = true);
+	Scatter& SetDrawYReticle(bool set = true);
+	Scatter& SetDrawY2Reticle(bool set = true);
 	
 	void SetData(const int& nbSeries, const int& index, const XY & point);
 	void AddPoint(const int& nbSeries, const XY & point,const bool& refresh=true );
@@ -131,8 +135,10 @@ public:
 	bool IsSmooth(const int& j) const throw (Exc);	
 	
 	void SetDataPrimaryY(const int& j, const bool& primary=true);
+	void SetDataPrimaryY(const bool& primary); 	
 	bool IsDataPrimaryY(const int& j) const throw (Exc);	
 	void SetFunctPrimaryY(const int& j, const bool& primary=true);
+	void SetFunctPrimaryY(const bool& primary);
 	bool IsFunctPrimaryY(const int& j) const throw (Exc);	
 	
 	void RemoveSeries(const int& j);

@@ -126,17 +126,20 @@ Scatter& Scatter::SetAntialiasing(const bool& aa)
 	antialiasing=aa;
 	return *this;
 }
-void Scatter::SetDrawXReticle(bool set) 
+Scatter &Scatter::SetDrawXReticle(bool set) 
 {
 	drawXReticle = set;
+	return *this;
 }
-void Scatter::SetDrawYReticle(bool set)
+Scatter &Scatter::SetDrawYReticle(bool set)
 {
 	drawYReticle = set;
+	return *this;
 }
-void Scatter::SetDrawY2Reticle(bool set)
+Scatter &Scatter::SetDrawY2Reticle(bool set)
 {
 	drawY2Reticle = set;
+	return *this;
 }
 void Scatter::DrawLegend(Draw& w,const int& scale) const
 {
@@ -188,39 +191,150 @@ void Scatter::DrawLegend(Draw& w,const int& scale) const
 							scaledFont,LC.At(i));                   
 			}
 		}
-	}
-		
+	}		
 }	
 
-void Scatter::SetRange(double rx, double ry, double ry2)
+Scatter &Scatter::SetRange(double rx, double ry, double ry2)
 {
 	xRange=rx;
 	yRange=ry;
 	yRange2=ry2;
 	xMajorUnit=xRange/10;
+	while (xMinUnit > xMajorUnit)
+		xMinUnit -= xMajorUnit;	
 	yMajorUnit=yRange/10;   
+	while (yMinUnit > yMajorUnit)
+		yMinUnit -= yMajorUnit;
 	yMajorUnit2=yRange2/10;   
+	while (yMinUnit2 > yMajorUnit2)
+		yMinUnit2 -= yMajorUnit2;
+	return *this;
 }
-void Scatter::SetMajorUnits(double ux, double uy) 
+Scatter &Scatter::SetMajorUnits(double ux, double uy) 
 {
-	if (ux > xRange)	throw (Exc(t_("Invalid X major units!")));
-	if (uy > yRange)	throw (Exc(t_("Invalid Y major units!")));
+	//if (ux > xRange)	throw (Exc(t_("Invalid X major units!")));
+	//if (uy > yRange)	throw (Exc(t_("Invalid Y major units!")));
 	xMajorUnit=ux;
 	yMajorUnit=uy;
 	yMajorUnit2=yRange2*yMajorUnit/yRange;
+	while (xMinUnit > xMajorUnit)
+		xMinUnit -= xMajorUnit;	
+	while (yMinUnit > yMajorUnit)
+		yMinUnit -= yMajorUnit;
+	while (yMinUnit2 > yMajorUnit2)
+		yMinUnit2 -= yMajorUnit2;
+	return *this;
 }
-void Scatter::SetMinUnits(double ux, double uy)
+Scatter &Scatter::SetMinUnits(double ux, double uy)
 {
 	xMinUnit=ux;
 	yMinUnit=uy;
 	yMinUnit2=yRange2*yMinUnit/yRange;
+	return *this;
 }
-void Scatter::SetXYMin(double xmin, double ymin, double ymin2)
+Scatter &Scatter::SetXYMin(double xmin, double ymin, double ymin2)
 {
 	xMin=xmin;
 	yMin=ymin;
 	yMin2=ymin2;
+	return *this;
 }
+
+void Scatter::FitToData(bool Y) {
+	double minx, maxx, miny, miny2, maxy, maxy2;
+	minx = miny = miny2 = -DOUBLE_NULL;
+	maxx = maxy = maxy2 = DOUBLE_NULL;
+	
+	for (int j=0; j<vPointsData.GetCount(); j++) {
+		for (int i=0; i<vPointsData[j].GetCount(); i++) {
+			if (vPointsData[j][i].x < minx)
+				minx = vPointsData[j][i].x;
+			if (vPointsData[j][i].x > maxx)
+				maxx = vPointsData[j][i].x;
+		}
+	}
+	for (int j=0; j<vFunctionData.GetCount(); j++) {
+		if(!vFunctionData[j].IsEmpty()) {
+			for (int i=0; i<vFunctionData[j].GetCount(); i++) {
+				if (vFunctionData[j][i].x < minx)
+					minx = vFunctionData[j][i].x;
+				if (vFunctionData[j][i].x < maxx)
+					maxx = vFunctionData[j][i].x;
+			}
+		}
+	}
+	if (Y) {
+		for (int j=0; j<vPointsData.GetCount(); j++) {
+			for (int i=0; i<vPointsData[j].GetCount(); i++) {
+				if (vPPrimaryY[j]) {
+					if (vPointsData[j][i].y < miny)
+						miny = vPointsData[j][i].y;
+					if (vPointsData[j][i].y > maxy)
+						maxy = vPointsData[j][i].y;
+				} else {
+					if (vPointsData[j][i].y < miny2)
+						miny2 = vPointsData[j][i].y;
+					if (vPointsData[j][i].y > maxy2)
+						maxy2 = vPointsData[j][i].y;
+				}
+			}
+		}		
+		for (int j=0; j<vFunctionData.GetCount(); j++) {
+			if(!vFunctionData[j].IsEmpty()) {
+				for (int i=0; i<vFunctionData[j].GetCount(); i++) {
+					if (vFPrimaryY[j]) {
+						if (vFunctionData[j][i].y < miny)
+							miny = vFunctionData[j][i].y;
+						if (vFunctionData[j][i].y < maxy)
+							maxy = vFunctionData[j][i].y;
+					} else {
+						if (vFunctionData[j][i].y < miny2)
+							miny2 = vFunctionData[j][i].y;
+						if (vFunctionData[j][i].y < maxy2)
+							maxy2 = vFunctionData[j][i].y;
+					}
+				}
+			}
+		}
+	}
+	double deltaX = xMin - minx;
+	xMin -= deltaX;
+	xMinUnit += deltaX;
+	while (xMinUnit < 0)
+		xMinUnit += xMajorUnit;	
+	while (xMinUnit > xMajorUnit)
+		xMinUnit -= xMajorUnit;
+	xRange = maxx - minx;
+
+	if (Y) {
+		miny = min((miny-yMin)/yRange, (miny2-yMin2)/yRange2);
+		maxy = max((maxy-yMin-yRange)/yRange, (maxy2-yMin2-yRange2)/yRange2);
+		miny = miny*yRange + yMin;
+		maxy = maxy*yRange + yMin + yRange;
+		
+		double fact = yRange2/yRange;
+		double deltaY = yMin - miny;
+		double deltaY2 = deltaY*fact;
+		
+		yMin -= deltaY;
+		yMinUnit += deltaY;
+		while (yMinUnit < 0)
+			yMinUnit += yMajorUnit;	
+		while (yMinUnit > yMajorUnit)
+			yMinUnit -= yMajorUnit;
+		yRange = maxy - miny;	
+		
+		yMin2 -= deltaY2;
+		yMinUnit2 += deltaY2;
+		while (yMinUnit2 < 0)
+			yMinUnit2 += yMajorUnit2;	
+		while (yMinUnit2 > yMajorUnit2)
+			yMinUnit2 -= yMajorUnit2;		
+		yRange2 = yRange*fact;
+	}	
+	Refresh();
+}
+
 void Scatter::Graduation_FormatX(Formats fi)
 {
 	switch (fi)
@@ -254,7 +368,7 @@ void Scatter::Graduation_FormatY2(Formats fi)
 	}
 }
 
-void Scatter::AddSeries(Vector<XY> & points,const String& legend,const bool& join, const class::Color& pcolor, const int& width, const int& thickness)
+Scatter &Scatter::AddSeries(Vector<XY> & points,const String& legend,const bool& join, const class::Color& pcolor, const int& width, const int& thickness)
 {
 	vPointsData.AddPick(points);
 	vJoin.Add(join);
@@ -269,6 +383,7 @@ void Scatter::AddSeries(Vector<XY> & points,const String& legend,const bool& joi
 	vPPrimaryY.Add(true);
 	
 	Refresh();
+	return *this;
 }
 
 void Scatter::AddPoint(const int& j, const XY & point, const bool& refresh)
@@ -500,6 +615,11 @@ void Scatter::SetDataPrimaryY(const int& j, const bool& primary)
 	}
 }
 
+void Scatter::SetDataPrimaryY(const bool& primary) 
+{
+	SetDataPrimaryY(vPPrimaryY.GetCount()-1, primary);
+}
+
 bool Scatter::IsDataPrimaryY(const int& j) const throw (Exc)
 {
 	if(!IsValid(j)) throw (Exc(t_("Invalid series index!")));
@@ -514,6 +634,11 @@ void Scatter::SetFunctPrimaryY(const int& j, const bool& primary)
 		vFPrimaryY[j]=primary;
 		Refresh();
 	}
+}
+
+void Scatter::SetFunctPrimaryY(const bool& primary) 
+{
+	SetFunctPrimaryY(vFPrimaryY.GetCount()-1, primary);
 }
 
 bool Scatter::IsFunctPrimaryY(const int& j) const throw (Exc)
@@ -772,6 +897,7 @@ void Scatter::MouseMove(Point pt, dword)
 		}
 	}
 }
+
 void Scatter::MiddleUp(Point pt, dword d)
 {
 	if (isButDown) {
@@ -780,10 +906,17 @@ void Scatter::MiddleUp(Point pt, dword d)
 	}
 }
 
-void Scatter::MouseWheel(Point, int zdelta, dword) {
+void Scatter::MouseWheel(Point, int zdelta, dword) 
+{
 	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
-	if (mouseHandlingX) {
+	if (mouseHandlingX && 10*xRange*scale > xMajorUnit) {
+		double oldXMin = xMin;
 		xMin += xRange*(1-scale)/2.;
+		xMinUnit = oldXMin + xMinUnit - xMin;
+		while (xMinUnit < 0)
+			xMinUnit += xMajorUnit;	
+		while (xMinUnit > xMajorUnit)
+			xMinUnit -= xMajorUnit;
 		xRange *= scale;
 	}
 	if (mouseHandlingY) {
@@ -865,38 +998,41 @@ inline void Scatter::DrawMark(const int& style, Draw& w, const int& scale, const
 	(*this.*ptMark)(w,scale,cp,size,markColor);	
 }
 
-void Scatter::SetMouseHandling(bool valx, bool valy) 
+Scatter &Scatter::SetMouseHandling(bool valx, bool valy) 
 {
 	mouseHandlingX = valx;
 	mouseHandlingY = valy;
+	return *this;
+}
+
+void DrawPolylineX(Draw& w, const Vector<Point> &p, int thick, const Color &color) {
+	//String type = "o..";
+	for (int i = 1; i < p.GetCount(); ++i)
+		w.DrawLine(p[i-1], p[i], thick, color);
 }
 
 void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 {
 	double d1=xRange/xMajorUnit;
 	double d2=yRange/yMajorUnit;
-	double d22=yRange2/yMajorUnit2;
+	//double d22=yRange2/yMajorUnit2;
 	int nMajorX=(d1-int(d1*1.001)>0.05 ? int(d1*1.001) : int(d1*1.001)-1);
 	int nMajorY=(d2-int(d2*1.001)>0.05 ? int(d2*1.001) : int(d2*1.001)-1);
-	int nMajorY2=(d22-int(d22*1.001)>0.05 ? int(d22*1.001) : int(d22*1.001)-1);
+	//int nMajorY2=(d22-int(d22*1.001)>0.05 ? int(d22*1.001) : int(d22*1.001)-1);
 	w.DrawRect(1,1,l-2,h-2,plotAreaColor);	//grosimea liniei nu este scalata
 	int gW=int(gridWidth*scale/6);
 	if(gridWidth<0) gW=gridWidth;   
 	if (drawVGrid)       
 		for(int i=0; xMinUnit+i*xMajorUnit < xRange;i++){
-			w.DrawLine(int(scale*l*xMinUnit/xRange+i*l/d1),
-					   0,
-					   int(scale*l*xMinUnit/xRange+i*l/d1),
-				       h,
+			w.DrawLine(int(scale*l*xMinUnit/xRange+i*l/d1), 0,
+					   int(scale*l*xMinUnit/xRange+i*l/d1), h,
 					   gW,gridColor);
 		}
 		
 	if (drawHGrid)
 		for(int i=0; yMinUnit+i*yMajorUnit < yRange;i++){
-			w.DrawLine(0,
-					   int(-scale*h*yMinUnit/yRange + h-i*(h-1)/d2)-1,
-					   l,
-					   int(-scale*h*yMinUnit/yRange + h-i*(h-1)/d2)-1,
+			w.DrawLine(0, int(-scale*h*yMinUnit/yRange + h-i*(h-1)/d2)-1, 
+					   l, int(-scale*h*yMinUnit/yRange + h-i*(h-1)/d2)-1, 
 					   gW,gridColor);
 		}
 		
@@ -907,14 +1043,14 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 	for (int j=0; j<vPointsData.GetCount(); j++){
 		Vector<Point> p1;
 		for (int i=0; i<vPointsData[j].GetCount(); i++)
-				{
-					ix=int((l-1)*(vPointsData[j][i].x-xMin)/xRange);
-					if (vPPrimaryY[j])
-						iy=int((h-1)*(vPointsData[j][i].y-yMin)/yRange);
-					else
-						iy=int((h-1)*(vPointsData[j][i].y-yMin2)/yRange2);
-					p1<<Point(ix,h-iy-1);
-				}
+		{
+			ix=int((l-1)*(vPointsData[j][i].x-xMin)/xRange);
+			if (vPPrimaryY[j])
+				iy=int((h-1)*(vPointsData[j][i].y-yMin)/yRange);
+			else
+				iy=int((h-1)*(vPointsData[j][i].y-yMin2)/yRange2);
+			p1<<Point(ix,h-iy-1);
+		}
 		if(vJoin[j])
 		{
 			if(vSmooth[j]&&vPointsData[j].GetCount()>2)
@@ -930,10 +1066,10 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 						iy=int((h-1)*(v[i].y-yMin2)/yRange2);
 					p2<<Point(ix,h-iy-1);
 				}
-				if(!p2.IsEmpty()) w.DrawPolyline(p2,int(scale*vPThickness[j]/6),vPColors[j],Null);
+				if(!p2.IsEmpty()) DrawPolylineX(w, p2,int(scale*vPThickness[j]/6),vPColors[j]);
 			}
 			
-			else if (!p1.IsEmpty()) w.DrawPolyline(p1,int(scale*vPThickness[j]/6),vPColors[j],Null);
+			else if (!p1.IsEmpty()) DrawPolylineX(w, p1,int(scale*vPThickness[j]/6),vPColors[j]);
 		}
 			
 		if(vShowMark[j])
@@ -960,7 +1096,7 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 					iy=int((h-1)*(vFunctionData[j][i].y-yMin2)/yRange2);				
 					p1<<Point(ix,h-iy-1);				                        
 			}
-			w.DrawPolyline(p1,int(scale*vFThickness[j]/6),vFColors[j],Null);
+			DrawPolylineX(w, p1,int(scale*vFThickness[j]/6),vFColors[j]);
 		}
 		else
 		{
@@ -974,7 +1110,7 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 					iy=int((h-1)*(vAdress[nf](x)-yMin2)/yRange2);
 				p1<<Point(i,h-iy-1);
 			}
-			w.DrawPolyline(p1,int(scale*vFThickness[j]/6),vFColors[j],Null);
+			DrawPolylineX(w, p1,int(scale*vFThickness[j]/6),vFColors[j]);
 			nf++;
 		}
 			
@@ -1046,6 +1182,33 @@ Vector<XY> Scatter::Cubic(const Vector<XY>& DataSet, const int& fineness,double 
 	return Vector<XY>(OutSet);
 	
 }
+
+void ParseTextMultiline(const String &text, Font fnt, Array <String> &texts, Array <Size> &sizes) {
+	Size ret(0, 0);
+	int npos = 0;
+	for (int pos = 0; npos != -1; pos = npos+1) {
+		npos = text.Find('\n', pos);
+		String &t = texts.Add();
+		if (npos != -1)
+			t = text.Mid(pos, npos-pos);
+		else
+			t = text.Mid(pos);
+		Size &s = sizes.Add();
+		s.cx = GetTextSize(t, fnt).cx;
+		s.cy = GetTextSize(t, fnt).cy;
+	}
+}
+
+Size GetTextSizeMultiline(Array <Size> &sizes) {
+	Size ret(0, 0);
+	for (int i = 0; i < sizes.GetCount(); ++i) {
+		if (sizes[i].cx > ret.cx)
+			ret.cx = sizes[i].cx;
+		ret.cy += sizes[i].cy;
+	}
+	return ret;
+}
+			
 void Scatter::SetDrawing(Draw& w, const int& scale) const
 {
 	w.DrawRect(scale*GetSize(),graphColor);
@@ -1100,8 +1263,15 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 				cbModifFormatX(gridLabelX, i, gridX);
 			else
 				gridLabelX = VariableFormatX(gridX);
-			int dx=scale*int(GetTextSize(gridLabelX,StdFont()).cx/2);  
-			w.DrawText(int(scale*l*xMinUnit/xRange+i*l/(xRange/xMajorUnit))-dx, h+scale*4, gridLabelX, Standard6, axisColor);
+			
+			Array <String> texts;
+			Array <Size> sizes;
+			ParseTextMultiline(gridLabelX, StdFont(), texts, sizes);
+			for (int ii = 0; ii < texts.GetCount(); ++ii) {
+				int cy = ii == 0 ? 0 : sizes[ii-1].cy;
+				w.DrawText(int(scale*l*xMinUnit/xRange+i*l/(xRange/xMajorUnit))-int(sizes[ii].cx/2), h+scale*(4+ii*cy), texts[ii], Standard6, axisColor);
+			}
+			//w.DrawText(int(scale*l*xMinUnit/xRange+i*l/(xRange/xMajorUnit))-dx, h+scale*4, gridLabelX, Standard6, axisColor);
 			//w.DrawText(int x¸ int y¸ int angle¸ const WString& text¸ Font font = StdFont()¸ Color ink = DefaultInk¸ const int *dx = NULL)
 			//w.DrawText(int(i*l/(xRange/xMajorUnit))-dx,h+scale*4, 450, gridLabelX,Standard6,axisColor);  
 		}
