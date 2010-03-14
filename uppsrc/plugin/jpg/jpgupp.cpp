@@ -1,5 +1,5 @@
 #include <Draw/Draw.h>
-// #include <setjmp.h>
+#include <setjmpex.h>
 #include "jpg.h"
 #define HAVE_BOOLEAN
 #define boolean int
@@ -59,7 +59,7 @@ static void term_destination(j_compress_ptr cinfo)
 	stream_dest_ptr dest = (stream_dest_ptr)cinfo->dest;
 	size_t done = STREAM_BUF_SIZE - dest->pub.free_in_buffer;
 	if(done > 0)
-		dest->stream->Put(dest->buffer, done * sizeof(JOCTET));
+		dest->stream->Put(dest->buffer, (dword)(done * sizeof(JOCTET)));
 }
 
 static void jpeg_stream_dest(j_compress_ptr cinfo, Stream& stream)
@@ -120,7 +120,7 @@ static boolean fill_input_buffer(j_decompress_ptr cinfo)
 static void skip_input_data(j_decompress_ptr cinfo, long num_bytes)
 {
 	stream_src_ptr src = (stream_src_ptr)cinfo->src;
-	int above = num_bytes - src->pub.bytes_in_buffer;
+	int above = (int)(num_bytes - src->pub.bytes_in_buffer);
 	if(above < 0)
 	{ // we're still within the input buffer
 		src->pub.next_input_byte += num_bytes;
@@ -165,19 +165,15 @@ static void jpeg_stream_src(j_decompress_ptr cinfo, Stream& stream)
 	src->stream                = &stream;
 }
 
-
 struct jpeg_longjmp_error_mgr : public jpeg_error_mgr {
-//	jmp_buf jmpbuf;
+	jmp_buf jmpbuf;
 };
-
-struct JpegErrorException {};
 
 static void error_exit(j_common_ptr cinfo)
 {
 	(*cinfo->err->output_message)(cinfo);
 	jpeg_longjmp_error_mgr *jlem = (jpeg_longjmp_error_mgr *)cinfo->err;
-	throw JpegErrorException();
-//	longjmp(jlem->jmpbuf, 1);
+	longjmp(jlem->jmpbuf, 1);
 }
 
 class JPGRaster::Data {
@@ -219,8 +215,8 @@ private:
 	VectorMap<String, Value> metadata;
 	int                      thumboffset, thumblen;
 
-	struct jpeg_decompress_struct cinfo;
-	struct jpeg_longjmp_error_mgr jerr;
+	jpeg_decompress_struct   cinfo;
+	jpeg_longjmp_error_mgr  *jerr;
 
 	Size size;
 	Size dot_size;
@@ -239,43 +235,40 @@ void JPGRaster::Data::Construct()
 	next_line = 0;
 	finish = false;
 
-	try {
-		jpeg_create_decompress(&cinfo);
-	}
-	catch(JpegErrorException) {}
+	jpeg_create_decompress(&cinfo);
 }
 
 JPGRaster::Data::Data(JPGRaster& owner_)
 : owner(owner_)
 {
+	jerr = (jpeg_longjmp_error_mgr *)malloc(sizeof(jpeg_longjmp_error_mgr));
 	Construct();
 }
 
 void JPGRaster::Data::Free()
 {
-//	if(setjmp(jerr.jmpbuf))
-//		return;
-	try {
-		if(finish)
-			jpeg_abort_decompress(&cinfo);
-		jpeg_destroy_decompress(&cinfo);
-	}
-	catch(JpegErrorException) {}
+	if(setjmp(jerr->jmpbuf))
+		return;
+	if(finish)
+		jpeg_abort_decompress(&cinfo);
+	jpeg_destroy_decompress(&cinfo);
 }
 
 JPGRaster::Data::~Data()
 {
 	Free();
+	free(jerr);
 }
 
 bool JPGRaster::Data::Create(Stream& stream_)
 {
 	stream = &stream_;
 	stream_fpos = stream->GetPos();
-	cinfo.err = jpeg_std_error(&jerr);
+	cinfo.err = jpeg_std_error(jerr);
 	cinfo.err->output_message = &NoOutput;
 	cinfo.dct_method = JDCT_IFAST;
-	jerr.error_exit = error_exit;
+	jerr->error_exit = error_exit;
+
 	return Init();
 }
 
@@ -431,56 +424,54 @@ String JPGRaster::Data::GetThumbnail()
 
 bool JPGRaster::Data::Init()
 {
-//	if(setjmp(jerr.jmpbuf))
-//		return false;
-
-	try {
-		jpeg_stream_src(&cinfo, *stream);
-		jpeg_save_markers(&cinfo, JPEG_COM, 0xFFFF);
-		for(int i = 0; i <= 15; i++)
-			jpeg_save_markers(&cinfo, JPEG_APP0 + i, 0xFFFF);
-		jpeg_read_header(&cinfo, TRUE);
-		jpeg_start_decompress(&cinfo);
-	
-		switch(cinfo.output_components) {
-			case 1: {
-				format.Set8();
-				for(int i = 0; i < 256; i++) {
-					RGBA rgba;
-					rgba.r = rgba.g = rgba.b = i;
-					rgba.a = 255;
-					palette[i] = rgba;
-				}
-				break;
-			}
-			case 3: {
-				format.Set24le(0xFF, 0xFF00, 0xFF0000);
-				break;
-			}
-			default: {
-				LLOG("JPGRaster: invalid number of components: " << (int)cinfo.output_components);
-				return false;
-			}
-		}
-	
-		size.cx = cinfo.output_width;
-		size.cy = cinfo.output_height;
-	
-		row_bytes = cinfo.output_components * size.cx;
-		row_bytes_4 = (row_bytes + 3) & -4;
-	
-		double dot_scaling = (cinfo.density_unit == 1 ? 600 : cinfo.density_unit == 2 ? 600.0 / 2.54 : 0);
-		if(dot_scaling && cinfo.X_density > 0) {
-			dot_size.cx = fround(cinfo.image_width  * dot_scaling / cinfo.X_density);
-			dot_size.cy = fround(cinfo.image_height * dot_scaling / cinfo.Y_density);
-		}
-	
-		finish = true;
-		return true;
-	}
-	catch(JpegErrorException) {
+	DLOG("A!");
+	DLOG((void *)&jerr->jmpbuf);
+	if(setjmp(jerr->jmpbuf))
 		return false;
+	DLOG("B!");
+
+	jpeg_stream_src(&cinfo, *stream);
+	jpeg_save_markers(&cinfo, JPEG_COM, 0xFFFF);
+	for(int i = 0; i <= 15; i++)
+		jpeg_save_markers(&cinfo, JPEG_APP0 + i, 0xFFFF);
+	jpeg_read_header(&cinfo, TRUE);
+	jpeg_start_decompress(&cinfo);
+
+	switch(cinfo.output_components) {
+		case 1: {
+			format.Set8();
+			for(int i = 0; i < 256; i++) {
+				RGBA rgba;
+				rgba.r = rgba.g = rgba.b = i;
+				rgba.a = 255;
+				palette[i] = rgba;
+			}
+			break;
+		}
+		case 3: {
+			format.Set24le(0xFF, 0xFF00, 0xFF0000);
+			break;
+		}
+		default: {
+			LLOG("JPGRaster: invalid number of components: " << (int)cinfo.output_components);
+			return false;
+		}
 	}
+
+	size.cx = cinfo.output_width;
+	size.cy = cinfo.output_height;
+
+	row_bytes = cinfo.output_components * size.cx;
+	row_bytes_4 = (row_bytes + 3) & -4;
+
+	double dot_scaling = (cinfo.density_unit == 1 ? 600 : cinfo.density_unit == 2 ? 600.0 / 2.54 : 0);
+	if(dot_scaling && cinfo.X_density > 0) {
+		dot_size.cx = fround(cinfo.image_width  * dot_scaling / cinfo.X_density);
+		dot_size.cy = fround(cinfo.image_height * dot_scaling / cinfo.Y_density);
+	}
+
+	finish = true;
+	return true;
 }
 
 Raster::Info JPGRaster::Data::GetInfo()
@@ -502,30 +493,24 @@ Raster::Info JPGRaster::Data::GetInfo()
 Raster::Line JPGRaster::Data::GetLine(int line)
 {
 	byte *rowbuf = new byte[row_bytes_4];
+	if(setjmp(jerr->jmpbuf))
+		return Raster::Line(rowbuf, &owner, true);
 
-//	if(setjmp(jerr.jmpbuf))
-//		return Raster::Line(rowbuf, &owner, true);
-
-	try {
-		ASSERT(line >= 0 && line < size.cy);
-		if(line < next_line) {
-			stream->Seek(stream_fpos);
-			Stream *s = stream;
-			Free();
-			Construct();
-			Create(*s);
-			next_line = 0;
-			LOG("Seek back");
-		}
-		JSAMPROW rowptr[] = { (JSAMPROW)rowbuf };
-		while(next_line++ < line)
-			jpeg_read_scanlines(&cinfo, rowptr, 1);
+	ASSERT(line >= 0 && line < size.cy);
+	if(line < next_line) {
+		stream->Seek(stream_fpos);
+		Stream *s = stream;
+		Free();
+		Construct();
+		Create(*s);
+		next_line = 0;
+		LOG("Seek back");
+	}
+	JSAMPROW rowptr[] = { (JSAMPROW)rowbuf };
+	while(next_line++ < line)
 		jpeg_read_scanlines(&cinfo, rowptr, 1);
-		return Raster::Line(rowbuf, &owner, true);
-	}
-	catch(JpegErrorException) {
-		return Raster::Line(rowbuf, &owner, true);
-	}
+	jpeg_read_scanlines(&cinfo, rowptr, 1);
+	return Raster::Line(rowbuf, &owner, true);
 }
 
 JPGRaster::JPGRaster()
@@ -621,54 +606,45 @@ JPGEncoder::Data::Data()
 
 JPGEncoder::Data::~Data()
 {
-	try {
-		jpeg_destroy_compress(&cinfo);
-	}
-	catch(JpegErrorException) {}
+	jpeg_destroy_compress(&cinfo);
 }
 
 void JPGEncoder::Data::Start(Stream& stream, Size size_, int quality)
 {
-	try {
-		size = size_;
-	
-		jpeg_stream_dest(&cinfo, stream);
-	
-		cinfo.image_width = size.cx;
-		cinfo.image_height = size.cy;
-		cinfo.input_components = 3; // # of color components per pixel
-		cinfo.in_color_space = JCS_RGB; // colorspace of input image
-	
-		jpeg_set_defaults(&cinfo);
-	
-	/*
-		if(dot_size.cx || dot_size.cy)
-		{ // set up image density
-			cinfo.density_unit = 1; // dots per inch
-			cinfo.X_density = dot_size.cx ? fround(size.cx * 600.0 / dot_size.cx) : 0;
-			cinfo.Y_density = dot_size.cy ? fround(size.cy * 600.0 / dot_size.cy) : 0;
-		}
-	*/
-	
-		jpeg_set_quality(&cinfo, quality, true); // limit to baseline-JPEG values
-		jpeg_start_compress(&cinfo, true);
-	
-		line = 0;
-	
-		ASSERT(sizeof(JSAMPLE) == sizeof(byte));
+	size = size_;
+
+	jpeg_stream_dest(&cinfo, stream);
+
+	cinfo.image_width = size.cx;
+	cinfo.image_height = size.cy;
+	cinfo.input_components = 3; // # of color components per pixel
+	cinfo.in_color_space = JCS_RGB; // colorspace of input image
+
+	jpeg_set_defaults(&cinfo);
+
+/*
+	if(dot_size.cx || dot_size.cy)
+	{ // set up image density
+		cinfo.density_unit = 1; // dots per inch
+		cinfo.X_density = dot_size.cx ? fround(size.cx * 600.0 / dot_size.cx) : 0;
+		cinfo.Y_density = dot_size.cy ? fround(size.cy * 600.0 / dot_size.cy) : 0;
 	}
-	catch(JpegErrorException) {}
+*/
+
+	jpeg_set_quality(&cinfo, quality, true); // limit to baseline-JPEG values
+	jpeg_start_compress(&cinfo, true);
+
+	line = 0;
+
+	ASSERT(sizeof(JSAMPLE) == sizeof(byte));
 }
 
 void JPGEncoder::Data::WriteLineRaw(const byte *s)
 {
-	try {
-		JSAMPROW rowptr[] = { (byte *)s };
-		jpeg_write_scanlines(&cinfo, rowptr, 1);
-		if(++line >= size.cy)
-			jpeg_finish_compress(&cinfo);
-	}
-	catch(JpegErrorException) {}
+	JSAMPROW rowptr[] = { (byte *)s };
+	jpeg_write_scanlines(&cinfo, rowptr, 1);
+	if(++line >= size.cy)
+		jpeg_finish_compress(&cinfo);
 }
 
 JPGEncoder::JPGEncoder(int quality_)

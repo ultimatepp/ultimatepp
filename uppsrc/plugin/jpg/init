@@ -1,7 +1,7 @@
 #ifndef _plugin_jpg_icpp_init_stub
 #define _plugin_jpg_icpp_init_stub
 #include "Draw/init"
-#define BLITZ_INDEX__ F6C2A6C6E2A707C9DA951CEB742219A6F
+#define BLITZ_INDEX__ FC44201A2838BFD94785AB137FF5C3318
 #include "jpgreg.icpp"
 #undef BLITZ_INDEX__
 #endif
