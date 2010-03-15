@@ -34,6 +34,26 @@ String WorkspaceWork::PackagePathA(const String& pn) {
 	return PackagePath(pn);
 }
 
+struct PackageOrder {
+	String mainpath;
+	
+	int GetMatchLen(const String& x) const {
+		if(*x == '<')
+			return 0;
+		String h = PackagePath(x);
+		for(int i = 0; i < mainpath.GetCount(); i++)
+			if(mainpath[i] != h[i])
+				return i;
+		return mainpath.GetCount();
+	}
+	
+	bool operator()(const String& p1, const String& p2) const {
+		int l1 = GetMatchLen(p1);
+		int l2 = GetMatchLen(p2);
+		return l1 != l2 ? l1 > l2 : p1 < p2;
+	}
+};
+
 void WorkspaceWork::ScanWorkspace() {
 	Workspace wspc;
 	wspc.Scan(main);
@@ -47,8 +67,11 @@ void WorkspaceWork::ScanWorkspace() {
 		pks.Add(wspc.package.GetKey(i));
 		speed.Add(wspc.GetPackage(i).optimize_speed);
 	}
-	if(sort)
-		IndexSort(pks.Begin() + 1, pks.End(), speed.Begin() + 1, StdLess<String>());
+	if(sort && wspc.GetCount()) {
+		PackageOrder po;
+		po.mainpath = PackagePath(pks[0]);
+		IndexSort(pks.Begin() + 1, pks.End(), speed.Begin() + 1, po);
+	}
 	for(int i = 0; i < wspc.package.GetCount(); i++) {
 		String pk = pks[i];
 		Font fnt = ListFont();
