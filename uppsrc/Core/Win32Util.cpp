@@ -169,7 +169,7 @@ String GetWindowsDirectory() {
 void *GetDllFn(const char *dll, const char *fn)
 {
 	if(HMODULE hDLL = LoadLibrary(dll))
-		return GetProcAddress(hDLL, fn);
+		return (void *)GetProcAddress(hDLL, fn);
 	return NULL;
 }
 
