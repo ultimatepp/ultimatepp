@@ -789,20 +789,21 @@ Ultimate`+`+ вы получите:]&]
 ��ٲ�ɒ��˖�ٲ��ɒ�˖�ٲ��ɒ�˖��ٲ�ɒ�˙��ٮ�������
 ]&]
 [s0;>/@(0.0.255)0%% &]
-[s0;l128;%% [%RU-RU Текущий релиз:] [* 2070]&]
+[s0;l128;%% [%RU-RU Текущий релиз:] [* 2232]&]
 [s0;l128;%% [%RU-RU Лицензия:] [* BSD]&]
 [s0;l128;+92%% &]
 [s0;l128;+92%% &]
-[ {{10000<133;f4;@(93.25.8) [s0;%% [%RU-RU*@2;2 Загрузить][*@2;2  U`+`+ 2070]]
-::@(255.255.235) [s0;l32;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2083`.exe^+75 W
-in32 installer][+75  (17.9 MB) ]]
-:: [s0;l32;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`_2070`_amd64`.deb^+75 L
-inux amd64.deb][+75  (24 MB) ]]
-:: [s0;l32;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2070`.tar`.gz^+75 X
-11`-src][+75  (20.9 MB)]]}}&]
+[ {{10000<133;f4;@(93.25.8) [s0;%% [%RU-RU*@2;2 Загрузить][*@2;2  U`+`+ 2232]]
+::@(255.255.235) [s0;l32;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2232`.exe^+75 W
+in32 installer][+75  (18.1 MB) ]]
+:: [s0;l32;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2232`.tar`.gz^+75 X
+11`-src][+75  (20.2 MB)]]}}&]
 [s0;l128;+92%% &]
 [ {{10000<133;f4;@(93.25.8) [s0;%% [%RU-RU*@2;2 Новости][*@2;2  U`+`+]]
-::@(255.255.233) [s0;%% [*@5$2;1 2010`-02`-15]&]
+::@(255.255.233) [s0;%% [*@5$2;1 2010`-03`-16]&]
+[s0;%% [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
+2232 released]]
+:: [s0;%% [*@5$2;1 2010`-02`-15]&]
 [s0;%% [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
 2070 released]]
 :: [s0;%% [*@5$2;1 2010`-01`-26]&]

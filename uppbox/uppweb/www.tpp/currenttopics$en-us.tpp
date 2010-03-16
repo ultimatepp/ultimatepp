@@ -49,5 +49,40 @@ hread][2 .]&]
 [s0;2 &]
 [s0;# [* Distributed computing]&]
 [s0;#2 &]
-[s0; [2 TBD]&]
-[s0;2 ]
+[s0; [2 Support for interprocess and inter`-computer communication. 
+Services or objects or whatever can reside on different computers 
+and still form the single program. ]&]
+[s0; [2 It is well defined what Distributed Computing is. However one 
+of the main efforts is to design how to integrate distributed 
+computing with U`+`+ design philosophy.]&]
+[s0; &]
+[s0; &]
+[s0; [* Documentation]&]
+[s0; &]
+[s0; [2 Documentation is by definition a work`-in`-process as coding. 
+Areas to be improved would be:]&]
+[s0;2 &]
+[s0;i150;O0; [2 Classes and functions documentation]&]
+[s0;i150;O0; [2 Look standardization and improvement]&]
+[s0;l160; [2 U`+`+ web pages look could be more standard and sometimes 
+it seems old fashioned. Upp web could be benefited with a style 
+refurbishing thus maintaining the actual structure and being 
+compatible with U`+`+ `"T`+`+ help system to html`" technology.]&]
+[s0;i150;O0; [2 Translation]&]
+[s0;l160; [2 Functions and classes reference translation is not a priority. 
+However to translate the main project pages where U`+`+ advantages 
+are described could help to spread the project to a wider audience.]&]
+[s0;i150;O0; [2 Controls in Layout Designer]&]
+[s0;l160;~~~32; [2 Sometimes the best documentation is to have the 
+right control in front of you. Most of controls are accessible 
+in Layout Designer but some controls not. And a control that 
+is not in the Layout Designer is like it would not exist.]&]
+[s0;2 &]
+[s0;2 &]
+[s0; [* Improving TheIDE usability for new users]&]
+[s0;* &]
+[s0; [2 U`+`+ is a new paradigm in programming and TheIDE is the standard 
+bearer. However U`+`+ new users sometimes found difficulties 
+in using this powerful tool. Because it TheIDE usability has 
+to be studied and improved.]&]
+[s0; ]

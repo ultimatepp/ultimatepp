@@ -15,8 +15,8 @@ organization. ]&]
 effective programming we would be happy if you come with us.]&]
 [s0;2 &]
 [s0; [2 Here we will describe you our proposals. We hope you will like 
-them !. However you can ask for additional information and we 
-would also like to hear your ideas.]&]
+them! However you can ask for additional information and we would 
+also like to hear your ideas.]&]
 [s0;2 &]
 [s0; [2 You can introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Fo
 rum][2 , discuss with the community these ideas and your proposals 
@@ -54,7 +54,7 @@ widgets.]&]
 [s0;#2 &]
 [s0;# [*2 We propose you this roadmap]&]
 [s0;#i150;O0; [2 Learning to work in GNU/Linux U`+`+]&]
-[s0;#i150;O0; [2 Analizing Gtk`+ theming in U`+`+]&]
+[s0;#i150;O0; [2 Analyzing Gtk`+ theming in U`+`+]&]
 [s0;#i150;O0; [2 Applying the right patches to use Qt properly in KDE 
 environments]&]
 [s0;#2 &]
