@@ -32,7 +32,7 @@ template<class T> class WithFactory
 		static One<T> CreateInstance(const String &className) { return classMap().Get(className)(); }
 		static T *CreatePtr(String const &className) { return classMap().Get(className)().Detach(); }
 		static Vector<String> const &Classes(void) { return classMap().GetKeys(); }
-		static String const &GetClassDescription(const String &className) { return descMap().Get(className); }
+		static String GetClassDescription(const String &className) { return GetLngString(descMap().Get(className)); }
 		static dword const &GetClassIndex(const String &className) { return indexMap().Get(className); }
 		static Image const &GetClassImage(const String &className) { return imageMap().Get(className); }
 		String const &IsA(void) { return typeMap().Get(typeid(*this).name()); }
@@ -52,7 +52,7 @@ template<class T> class WithFactory
 		{
 			int idx = groupDescMap().Find(gMask);
 			if(idx != -1)
-				return groupDescMap().operator[](idx);
+				return GetLngString(groupDescMap().operator[](idx));
 			else
 				return "";
 		}
