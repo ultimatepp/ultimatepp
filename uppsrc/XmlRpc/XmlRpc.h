@@ -57,7 +57,7 @@ void ValueGet(ArrayMap<String, T>& x, const Value& v)
 	const Index<Value>& k = vm.GetKeys();
 	ValueArray va = vm.GetValues();
 	x.Clear();
-	for(int i = 0; i < vm.GetCount(); i++)
+	for(int i = 0; i < k.GetCount(); i++)
 		x.Add(k[i], va[i]);
 }
 
@@ -69,7 +69,7 @@ void ValueGet(VectorMap<String, T>& x, const Value& v)
 	const Index<Value>& k = vm.GetKeys();
 	ValueArray va = vm.GetValues();
 	x.Clear();
-	for(int i = 0; i < vm.GetCount(); i++)
+	for(int i = 0; i < k.GetCount(); i++)
 		x.Add(k[i], va[i]);
 }
 
@@ -81,7 +81,7 @@ void ValueGet(ArrayMap<int, T>& x, const Value& v)
 	const Index<Value>& k = vm.GetKeys();
 	ValueArray va = vm.GetValues();
 	x.Clear();
-	for(int i = 0; i < vm.GetCount(); i++)
+	for(int i = 0; i < k.GetCount(); i++)
 		x.Add(atoi(AsString(k[i])), va[i]);
 }
 
