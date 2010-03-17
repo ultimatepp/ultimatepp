@@ -66,6 +66,7 @@ private:
 
 public:
 	bool                  Open(const char *connect);
+	bool                  ConnectionOK();
 	bool                  ReOpen();
 	void                  Close();
 	
@@ -73,7 +74,7 @@ public:
 
 	String                GetUser()                       { return PQuser(conn); }
 	operator PGconn *     ()                              { return conn; }
-
+	
 	virtual void          Begin();
 	virtual void          Commit();
 	virtual void          Rollback();

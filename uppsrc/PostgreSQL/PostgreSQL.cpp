@@ -348,6 +348,11 @@ bool PostgreSQLSession::Open(const char *connect)
 	return true;
 }
 
+bool PostgreSQLSession::ConnectionOK()
+{
+	return conn && PQstatus(conn) == CONNECTION_OK;
+}
+
 bool PostgreSQLSession::ReOpen()
 {
 	PQreset(conn);
