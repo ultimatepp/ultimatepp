@@ -607,6 +607,7 @@ SqlSession::SqlSession()
 	dialect = 255;
 	errorcode_number = Null;
 	errorclass = Sql::ERROR_UNSPECIFIED;
+	error_handler = NULL;
 }
 
 SqlSession::~SqlSession()
@@ -663,12 +664,19 @@ void   SqlSession::SetError(String error, String stmt, int code, const char *sco
 	errorcode_number = code;
 	errorcode_string = scode;
 	errorclass = clss;
+	if(error_handler && (*error_handler)(error, stmt, code, scode, clss))
+		return;
 	String err;
 	err << "ERROR " << error << "(" << code << "): " << stmt << '\n';
 	if(logerrors)
 		BugLog() << err;
 	if(GetTrace())
 		*GetTrace() << err;
+}
+
+void SqlSession::InstallErrorHandler(bool (*handler)(String error, String stmt, int code, const char *scode, Sql::ERRORCLASS clss))
+{
+	error_handler = handler;
 }
 
 void   SqlSession::ClearError()

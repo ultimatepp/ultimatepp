@@ -290,6 +290,7 @@ protected:
 	int                           errorcode_number;
 	String                        errorcode_string;
 	Sql::ERRORCLASS               errorclass;
+	bool                        (*error_handler)(String error, String stmt, int code, const char *scode, Sql::ERRORCLASS clss);
 
 	int                           status;
 
@@ -339,6 +340,7 @@ public:
 	String                        GetErrorCodeString() const              { return errorcode_string; }
 	Sql::ERRORCLASS               GetErrorClass() const                   { return errorclass; }
 	void                          ClearError();
+	void                          InstallErrorHandler(bool (*handler)(String error, String stmt, int code, const char *scode, Sql::ERRORCLASS clss));
 
 	String                        GetStatement() const                    { return statement; }
 	void                          SetStatement(const String& s)           { statement = s; }
