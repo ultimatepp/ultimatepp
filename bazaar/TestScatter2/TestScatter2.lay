@@ -51,6 +51,6 @@ LAYOUT(Tab7, 388, 304)
 END_LAYOUT
 
 LAYOUT(Tab8, 400, 316)
-	ITEM(Scatter, scatter8, SetLegendWeight(200).H_Border(50).V_Border(35).SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelX(t_("Month")).SetLabelsFont(SansSerifZ(11)).HSizePosZ(16, 16).VSizePosZ(16, 16))
+	ITEM(Scatter, scatter8, SetLegendWeight(200).H_Border(50).V_Border(50).SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelX(t_("Month")).SetLabelsFont(SansSerifZ(11)).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 

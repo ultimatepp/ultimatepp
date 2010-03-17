@@ -348,6 +348,12 @@ public:
 	typedef Tab8 CLASSNAME;
 
 	Tab8();
+	void MyFormat(String& s, int i, double d)
+	{
+		s=Format("%Mon",fround(d)); 
+		if (!s.IsEmpty())
+			s << "\n2011";
+	}
 };
 
 Tab8::Tab8()
@@ -358,16 +364,19 @@ Tab8::Tab8()
 	scatter8.SetMajorUnits(1,10);
 	scatter8.SetXYMin(0,-20, 1000);
 	scatter8.SetMouseHandling(true, true);
-	Vector<XY> s1,s2;
+	Vector<XY> s1,s2, s3;
 	s1<<XY(1,-6)<<XY(2,-4)<<XY(3,2)<<XY(4,8)<<XY(5,8)<<XY(6,15)<<XY(7,20)<<XY(8,25)<<XY(9,14)<<XY(10,10)<<XY(11,3)<<XY(12,-11);;
-	scatter8.AddSeries(s1,"Temperature",true);
+	scatter8.AddSeries(s1,"Temperature",true,LtGreen,10,15).SetPattern(LINE_DASHED);
 	
 	s2<<XY(1,1010)<<XY(2,1012)<<XY(3,1015)<<XY(4,1013)<<XY(5,1017)<<XY(6,1018)<<XY(7,1010)<<XY(8,1007)<<XY(9,1003)<<XY(10,1001)<<XY(11,1000)<<XY(12,1002);
-	scatter8.AddSeries(s2,"Pressure",true,LtRed);
-	scatter8.SetDataPrimaryY(1, false);
+	scatter8.AddSeries(s2,"Pressure",true,LtRed,10,15).SetPattern("oooooo...ooo...o...ooo...").SetDataPrimaryY(1, false);
 	scatter8.SetDrawY2Reticle();
 	
-	scatter8.Graduation_FormatX(Scatter::MON);
+	s3<<XY(1,-20)<<XY(2,-20)<<XY(2,-10)<<XY(3,-10)<<XY(3,0)<<XY(4,0)<<XY(4,10)<<XY(5,10)<<XY(5,20)<<XY(6,20)<<XY(6,30)<<XY(7,30)<<XY(7,20)<<XY(8,20)<<XY(8,10);
+	scatter8.AddSeries(s3,"Device 1",true,LtBlue,1,1);
+	
+	scatter8.cbModifFormatX = THISBACK(MyFormat);
+	scatter8.SetMaxZoom(40).SetMinZoom(2, 20);
 	WString sl="Temperature [";
 	sl.Cat(176);
 	sl.Cat("C]");

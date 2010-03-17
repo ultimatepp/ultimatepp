@@ -35,7 +35,7 @@ TestScatter2::TestScatter2()
 	b4 <<= THISBACK(SaveEMF);
 	#endif
 	b5 <<= THISBACK(SaveClipboard);
-	Sizeable().Icon(MyImages::i1());
+	Sizeable().Zoomable().Icon(MyImages::i1());
 }
 
 void TestScatter2::Preview()
