@@ -191,7 +191,7 @@ protected:
 };
 
 template <class T, class HashFn = StdHash<T> >
-class Index : MoveableAndDeepCopyOption< Index<T, HashFn > >,
+class Index : Moveable< Index<T, HashFn > >,
               public AIndex<T, Vector<T>, HashFn> {
 	typedef AIndex< T, Vector<T>, HashFn > B;
 public:
@@ -204,6 +204,8 @@ public:
 	Index(const Vector<T>& s, int) : B(s, 1) {}
 
 	Index& operator=(pick_ Vector<T>& x)     { B::operator=(x); return *this; }
+
+	Index& operator<<=(const Index& x)       { B::operator<<=(x.GetKeys()); return *this; }
 
 	friend void Swap(Index& a, Index& b)     { a.B::Swap(b); }
 
@@ -233,6 +235,8 @@ public:
 	ArrayIndex(const Array<T>& s, int) : B(s, 1)    {}
 
 	ArrayIndex& operator=(pick_ Array<T>& x)        { B::operator=(x); return *this; }
+
+	ArrayIndex& operator<<=(const ArrayIndex& x)    { B::operator<<=(x.GetKeys()); return *this; }
 
 	friend void Swap(ArrayIndex& a, ArrayIndex& b)  { a.B::Swap(b); }
 
