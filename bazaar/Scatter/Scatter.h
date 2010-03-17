@@ -34,6 +34,11 @@ public:
 		DY,		
 		CUSTOM
 	};
+	#define LINE_DOTTED 	"o..."
+	#define LINE_DOTTED_SEP	"o..........."
+	#define LINE_DASHED 	"oooooo......"
+	#define LINE_DASH_DOT 	"ooooo...o..."
+	#define LINE_SOLID 		"oooooooooooo"
 	
 	Callback3<String&, int, double> cbModifFormatX, cbModifFormatY, cbModifFormatY2;
 			
@@ -78,7 +83,7 @@ public:
 	Scatter& SetAntialiasing(const bool& aa=true);	
 	
 	void FitToData(bool Y = false);
-	
+
 	Scatter& SetRange(double rx, double ry, double ry2 = -1);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
@@ -98,6 +103,8 @@ public:
 	Scatter& SetMouseHandling(bool valx = true, bool valy = false);
 	
 	Scatter &AddSeries (Vector<XY> & points,const String& legend="", const bool& join=false,const class::Color& pcolor=LtBlue,const int& width=30,const int& thickness=6);
+	
+	Scatter &SetPattern(const String pattern);
 	
 	inline bool IsValid(const int& j) const {return (j>=0 && j<vPointsData.GetCount());}
 	
@@ -135,10 +142,10 @@ public:
 	bool IsSmooth(const int& j) const throw (Exc);	
 	
 	void SetDataPrimaryY(const int& j, const bool& primary=true);
-	void SetDataPrimaryY(const bool& primary); 	
+	Scatter &SetDataPrimaryY(const bool& primary); 	
 	bool IsDataPrimaryY(const int& j) const throw (Exc);	
 	void SetFunctPrimaryY(const int& j, const bool& primary=true);
-	void SetFunctPrimaryY(const bool& primary);
+	Scatter &SetFunctPrimaryY(const bool& primary);
 	bool IsFunctPrimaryY(const int& j) const throw (Exc);	
 	
 	void RemoveSeries(const int& j);
@@ -152,6 +159,9 @@ public:
 	
 	void PlotFunction(double (*f)(double),const String& legend="", const class::Color& fcolor=Green,const int& weight=6);
 	void PlotParaFunction(XY (*pf)(double),const String& legend="", const class::Color& fcolor=Green,const int& weight=6,const int& Np=100);
+	
+	Scatter &SetFunctPattern(const String pattern); 
+	
 	void RemoveFSeries(const int& j);
 	void RemoveAllFSeries();
 	
@@ -169,6 +179,9 @@ public:
 	Scatter& LogX(const bool& logx=true) {logX=logx; return *this;}
 	Scatter& LogY(const bool& logy=true) {logY=logy; return *this;}	
 	Scatter& LogY2(const bool& logy=true) {logY2=logy; return *this;}	
+	
+	Scatter& SetMinZoom(double x, double y = -1) {minXZoom = x; minYZoom = y; return *this;}; 
+	Scatter& SetMaxZoom(double x, double y = -1) {maxXZoom = x; maxYZoom = y; return *this;};
 
 private:
 	class ::Color graphColor;	
@@ -195,6 +208,7 @@ private:
 	double xMin,yMin,yMin2;
 	double xMajorUnit,yMajorUnit,yMajorUnit2;
 	double xMinUnit,yMinUnit, yMinUnit2;
+	double minXZoom, maxXZoom, minYZoom, maxYZoom;
 	bool drawXReticle, drawYReticle, drawY2Reticle;	
 	
 	class::Color gridColor;
@@ -208,6 +222,7 @@ private:
 	
 	Vector<Vector<XY> > vPointsData,vFunctionData;
 	Vector<bool> vFPrimaryY, vPPrimaryY;
+	Vector<String> vFPattern, vPPattern;
 	typedef double (*fAdress)(double);
 	Vector<fAdress> vAdress;
 	Vector<class::Color> vPColors,vFColors;
@@ -238,6 +253,11 @@ private:
 	void XFunct(Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const;
 	void Rhomb(Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const;
 	inline void DrawMark(const int& style, Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const;
+	
+	static void DrawPolylineX(Draw& w, const Vector<Point> &p, int thick, const class::Color &color, String pattern, const int& scale);
+	void AdjustMinUnitX();
+	void AdjustMinUnitY();
+	void AdjustMinUnitY2();
 	
 	virtual Image  CursorImage(Point p, dword keyflags);
 	
