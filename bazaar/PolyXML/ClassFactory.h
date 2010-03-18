@@ -14,14 +14,14 @@ template<class T> class WithFactory
 		static VectorMap<String, String> &typeMap() { static VectorMap<String, String> tMap; return tMap; }
 		static VectorMap<String, String> &descMap() { static VectorMap<String, String> dMap; return dMap; }
 		static VectorMap<String, dword> &indexMap() { static VectorMap<String, dword> iMap; return iMap; }
-		static VectorMap<String, Image> &imageMap() { static VectorMap<String, Image> imgMap; return imgMap; }
+		static VectorMap<String, String> &imageMap() { static VectorMap<String, String> imgMap; return imgMap; }
 
 		static VectorMap<dword, String> &groupDescMap() { static VectorMap<dword, String> grpDescMap; return grpDescMap; }
-		static VectorMap<dword, Image> &groupIconMap() { static VectorMap<dword, Image> grpIcnMap; return grpIcnMap; }
+		static VectorMap<dword, String> &groupIconMap() { static VectorMap<dword, String> grpIcnMap; return grpIcnMap; }
 		template<class D> static One<T> __Create(void) { return One<T>((T *)new D); }
 	public:
 	
-		template<class D> static void Register(const String &name, const String &desc = "", dword idx = 0, Image const &img = Null)
+		template<class D> static void Register(const String &name, const String &desc = "", dword idx = 0, String const &img = "")
 		{
 			classMap().Add(name, __Create<D>);
 			typeMap().Add(typeid(D).name(), name);
@@ -34,19 +34,31 @@ template<class T> class WithFactory
 		static Vector<String> const &Classes(void) { return classMap().GetKeys(); }
 		static String GetClassDescription(const String &className) { return GetLngString(descMap().Get(className)); }
 		static dword const &GetClassIndex(const String &className) { return indexMap().Get(className); }
-		static Image const &GetClassImage(const String &className) { return imageMap().Get(className); }
+		static Image GetClassImage(const String &className)
+		{
+			String const &imlName = imageMap().Get(className);
+			if(imlName == "")
+				return Null;
+			else
+				return GetImlImage(imlName);
+		}
 		String const &IsA(void) { return typeMap().Get(typeid(*this).name()); }
 		
 		// class groups handling
-		static void RegisterClassGroupIcon(dword gMask, String const &desc, Image const &img) { groupIconMap().FindAdd(gMask, img); groupDescMap().FindAdd(gMask, desc); }
-		static Image const &GetGroupIcon(dword gMask)
+		static void RegisterClassGroupIcon(dword gMask, String const &desc, String const &img) { groupIconMap().FindAdd(gMask, img); groupDescMap().FindAdd(gMask, desc); }
+		static Image GetGroupIcon(dword gMask)
 		{
-			static Image nullImage;
 			int idx = groupIconMap().Find(gMask);
 			if(idx != -1)
-				return groupIconMap().operator[](idx);
+			{
+				String const &imlName = groupIconMap().operator[](idx);
+				if(imlName == "")
+					return Null;
+				else
+					return GetImlImage(imlName);
+			}
 			else
-				return nullImage;
+				return Null;
 		}
 		static String GetGroupDesc(dword gMask)
 		{
