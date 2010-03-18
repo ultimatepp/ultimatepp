@@ -1381,7 +1381,7 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 			ParseTextMultiline(gridLabelX, StdFont(), texts, sizes);
 			for (int ii = 0; ii < texts.GetCount(); ++ii) {
 				int cy = ii == 0 ? 0 : sizes[ii-1].cy;
-				w.DrawText(fround(l*xMinUnit/xRange+i*l/(xRange/xMajorUnit))-fround(sizes[ii].cx/2), h+scale*(4+ii*cy), texts[ii], Standard6, axisColor);
+				w.DrawText(fround(l*xMinUnit/xRange+i*l/(xRange/xMajorUnit) - scale*sizes[ii].cx/2), h+scale*(4+ii*cy), texts[ii], Standard6, axisColor);
 			}
 			//w.DrawText(int(scale*l*xMinUnit/xRange+i*l/(xRange/xMajorUnit))-dx, h+scale*4, gridLabelX, Standard6, axisColor);
 			//w.DrawText(int x¸ int y¸ int angle¸ const WString& text¸ Font font = StdFont()¸ Color ink = DefaultInk¸ const int *dx = NULL)
