@@ -670,7 +670,10 @@ void  OCI8Connection::GetColumn(int i, Ref f) const {
 				case SQLT_DAT: {
 					Time m;
 					GetColumn(i, m);
-					f.SetValue(m);
+					if(m.hour || m.minute || m.second)
+						f = Value(m);
+					else
+						f = Value(Date(m));
 					break;
 				}
 				default: {
