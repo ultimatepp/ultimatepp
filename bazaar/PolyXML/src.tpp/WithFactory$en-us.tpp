@@ -43,12 +43,14 @@ that`'s done inserting in a .cpp file (or in separate ones if
 you like, but NOT inside include files, the following statement 
 :&]
 [s5; &]
-[s2; [* REGISTERCLASS(MyBaseClass `[, `"a class description`" `[, anIndex`]`])]&]
+[s2; [* REGISTERCLASS(MyBaseClass `[, `"a class description`" `[, anIndex 
+`[, `"an Iml image name`"`]`]`])]&]
 [s2; [* REGISTERCLASS(MyDerivedClass `[, `"a class description`" `[, 
-anIndex`]`])]&]
+anIndex `[, `"an Iml image name`"`]`]`])]&]
 [s5; &]
-[s5; where you can insert an optional class description string an 
-an index; their usage will be clarified later on.&]
+[s5; where you can insert an optional class description string, an 
+index and and icon in Iml format; their usage will be clarified 
+later on.&]
 [s5; Class creation can be done by following ways :&]
 [s5; &]
 [s2; As a pointer by classic new operator:&]
@@ -99,7 +101,6 @@ member :&]
 is the presentation of class lists on menus and or dialogs when 
 creating classes at runtime.&]
 [s3; &]
-[s6; &]
 [s7;:REGISTERCLASS`(type`, `.`.`.`):%- [* REGISTERCLASS]([*@3 type], 
 [*@3 description, index])&]
 [s2; Registers a class by its [%-*@3 type] giving an optional [%-*@3 description 
@@ -107,6 +108,16 @@ creating classes at runtime.&]
 Main purpose of [%-*@3 index] is to give the ability to sort at 
 runtime the class list by importance. [%-*@3 Index] can be any 
 integer number &]
+[s6; &]
+[s7;:REGISTERCLASS`(type`, `.`.`.`):%- [* REGISTERCLASS]([*@3 type], 
+[*@3 description, index, icon])&]
+[s2; Registers a class by its [%-*@3 type] giving an optional [%-*@3 description], 
+an integer [%-*@3 index] and an [%-*@3 icon ]which can be queried 
+later on. Main purpose of [%-*@3 index] is to give the ability 
+to sort at runtime the class list by importance or to have sort 
+of class grouping. [%-*@3 Index] can be any integer number [%-*@3 icon 
+]should be a String containing a full Iml icon name, as `"MyIml`::MyImage`" 
+&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0; [* Detailed member list]]}}&]
 [s3;%- &]
@@ -144,6 +155,13 @@ g]_`&[*@3 className])&]
 [s2; Return an integer index assigned to class type identified by 
 [%-*@3 className].&]
 [s2; If no index was given when registering the class, returns 0.&]
+[s3; &]
+[s6;%- &]
+[s7;:WithFactory`:`:GetClassIndex`(const String`&`):%- [@(0.0.255) static] 
+Image_[* GetClassImage]([@(0.0.255) const]_[_^String^ String]_`&[*@3 className])&]
+[s2; Return the Image object assigned to class type identified by 
+[%-*@3 className].&]
+[s2; If no image was given when registering the class, returns Null.&]
 [s3; &]
 [s6;%- &]
 [s7;:WithFactory`:`:IsA`(void`):%- [_^String^ String]_[@(0.0.255) const]_`&[* IsA]([@(0.0.255) v
