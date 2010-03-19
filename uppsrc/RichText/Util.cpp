@@ -57,6 +57,7 @@ Size QTFDisplayCls::RatioSize(const Value& q, int cx, int cy) const
 {
 	if(cy == 0 && cx > 0) {
 		RichText txt = ParseQTF((String)q);
+		txt.ApplyZoom(GetRichTextStdScreenZoom());
 		return Size(cx, txt.GetHeight(Zoom(1, 1), cx));
 	}
 	return GetStdSize(q);

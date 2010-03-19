@@ -500,6 +500,7 @@ Ide::Ide()
 	mainconfiglist.WhenClick = THISBACK(MainConfig);
 	mainconfiglist <<= THISBACK(OnMainConfigList);
 	mainconfiglist.NoDropFocus();
+	mainconfiglist.NoWantFocus();
 
 	buildmode.WhenClick = THISBACK(SetupOutputMode);
 	buildmode.NoWantFocus();
