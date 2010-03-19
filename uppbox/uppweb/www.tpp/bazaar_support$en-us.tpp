@@ -108,9 +108,5 @@ you can pack the files in a .zip file.]&]
 sure you have your real name in the personal information. It 
 would save the package author one personal message as we want 
 to have all contributors listed in Authors `& License.]&]
-[s0;2 &]
 [s0;%- &]
-[ {{8829:1171@(190.255.220) [s0;~~~3584; [2 Last edit: 2010`-01`-25]]
-:: [s0;=~~~3584;%- [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^@(170.127.200)2 Bazaar 
->>]]}}&]
 [s0; ]
