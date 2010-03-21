@@ -427,7 +427,7 @@ void ParseSvn(VectorMap<String, SvnRev> &data, String &out, const String path) {
 		rev.time.second = ScanInt(time.Mid(17));		
 	}
 }
-void GetSvnFolder(VectorMap<String, SvnRev> &data, String &tppfolder) {
+void GetSvnFolder(VectorMap<String, SvnRev> &data, String tppfolder) {
 	tppfolder = UnixPath(tppfolder);
 	String out = Sys("svn list \"" + tppfolder + "\" --xml --recursive --non-interactive");
 	int posp = tppfolder.ReverseFind('.');
