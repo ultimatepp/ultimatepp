@@ -15,7 +15,8 @@ String DeXml(const char *s, byte charset, bool escapelf)
 		else if(*s == '&')  result.Cat("&amp;");
 		else if(*s == '\'') result.Cat("&apos;");
 		else if(*s == '\"') result.Cat("&quot;");
-		else if((byte)*s < ' ' && (escapelf || *s != '\n')) result.Cat(NFormat("&#x%02x;", (byte)*s));
+		else if((byte)*s < ' ' && (escapelf || *s != '\n' || *s != '\t'))
+			result.Cat(NFormat("&#x%02x;", (byte)*s));
 		else if(!(*s & 0x80) || charset == CHARSET_UTF8) result.Cat(*s);
 		else result.Cat(ToUtf8(ToUnicode(*s, charset)));
 	return result;
@@ -103,6 +104,12 @@ String  XmlTag::Text(const char *text, byte charset)
 {
 	StringBuffer r;
 	return r << tag << '>' << DeXml(text, charset) << end;
+}
+
+String XmlTag::PreservedText(const char *text, byte charset)
+{
+	StringBuffer r;
+	return r << tag << " xml:spaces=\"preserve\">" << DeXml(text, charset, true) << end;
 }
 
 XmlTag& XmlTag::operator()(const char *attr, const char *val)
@@ -346,8 +353,12 @@ void XmlParser::Next()
 	else {
 		StringBuffer raw_text;
 		while(*term != '<' && *term) {
-			if(*term == '\n')
+			if(*term == '\n') {
 				line++;
+				if(!npreserve)
+					while(*term == '\t')
+						term++;
+			}
 			if(*term == '&')
 				Ent(raw_text);
 			else {
@@ -746,6 +757,20 @@ XmlNode ParseXML(const char *s, dword style)
 	return ParseXML(p, style);
 }
 
+bool ShouldPreserve(const String& s)
+{
+	if(*s == ' ' || *s == '\t' || *s == 'n')
+		return true;
+	const char *l = s.Last();
+	if(*l == ' ' || *l == '\t' || *l == 'n')
+		return true;
+	l = s.End();
+	for(const char *x = s; x < l; x++)
+		if(*x == '\t' || *x == '\n' || *x == ' ' && x[1] == ' ')
+			return true;
+	return false;
+}
+
 String AsXML(const XmlNode& node, dword style)
 {
 	StringBuffer r;
@@ -781,10 +806,25 @@ String AsXML(const XmlNode& node, dword style)
 		XmlTag tag(node.GetText());
 		for(int i = 0; i < node.GetAttrCount(); i++)
 			tag(node.AttrId(i), node.Attr(i));
+		bool preserve = false;
 		if(node.GetCount()) {
 			StringBuffer body;
-			for(int i = 0; i < node.GetCount(); i++)
-				body << AsXML(node.Node(i), style);
+			for(int i = 0; i < node.GetCount(); i++) {
+				const XmlNode& n = node.Node(i);
+				if(n.IsText()) {
+					String s = n.GetText();
+					if(ShouldPreserve(s)) {
+						body << DeXml(s, CHARSET_DEFAULT, true);
+						preserve = true;
+					}
+					else
+						body << DeXml(s);
+				}
+				else
+					body << AsXML(node.Node(i), style);
+			}
+			if(preserve)
+				tag("xml:spaces", "preserve");
 			r << tag(~body);
 		}
 		else

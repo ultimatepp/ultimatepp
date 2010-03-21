@@ -19,6 +19,8 @@ public:
 	String  operator()(const String& text)                        { return operator()(~text); }
 	String  Text(const char *s, byte charset = CHARSET_DEFAULT);
 	String  Text(const String& s, byte charset = CHARSET_DEFAULT) { return Text(~s, charset); }
+	String  PreservedText(const char *s, byte charset = CHARSET_DEFAULT);
+	String  PreservedText(const String& s, byte charset = CHARSET_DEFAULT) { return PreservedText(~s, charset); }
 
 	XmlTag& operator()(const char *attr, const char *val);
 	XmlTag& operator()(const char *attr, int q);
@@ -52,6 +54,7 @@ class XmlParser {
 	String                    nattr1, nattrval1;
 	VectorMap<String, String> nattr;
 	String                    text;
+	String                    lftext;
 	bool                      empty_tag;
 	bool                      npreserve;
 	bool                      relaxed;
@@ -96,7 +99,7 @@ public:
 	bool   IsText();
 	String PeekText()                                         { return ReadText(false); }
 	String ReadText()                                         { return ReadText(true); }
-	String ReadTextE();
+	String ReadTextE();	
 
 	bool   IsDecl();
 	String PeekDecl()                                         { return ReadDecl(false); }
