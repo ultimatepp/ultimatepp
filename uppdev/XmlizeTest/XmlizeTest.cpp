@@ -1,25 +1,4 @@
 #include <Core/Core.h>
-
-using namespace Upp;
-
-template <class T>
-struct MyVector : public Vector<T> {
-	void Foo() {}
-	
-	void Xmlize(XmlIO xml) {
-		Upp::Xmlize(xml, *this);
-	}
-};
-
-void CONSOLE_APP_MAIN0()
-{
-	MyVector<int> x;
-	x.Add(10);
-	DDUMP(StoreAsXML(x, "test"));
-	LOG("XXX");
-}
-
-#include <Core/Core.h>
 using namespace Upp;
 
 struct A
@@ -32,8 +11,10 @@ struct A
 CONSOLE_APP_MAIN
 {
 	A a;
-	a.v = "test";
+	a.v = "test\ntest";
 	StoreAsXMLFile(a, "XmlizeTest", "xmlizeTtest");
+	DDUMP(a.v);
 	a.v = 0;
 	LoadFromXMLFile(a, "xmlizeTtest");
+	DDUMP(a.v);
 }
