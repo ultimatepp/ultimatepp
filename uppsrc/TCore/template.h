@@ -358,8 +358,7 @@ private:
 #define REF_DEBUG
 #endif//flagREFDEBUG
 
-class RefMemStat
-{
+class RefMemStat : DeepCopyOption<RefMemStat> {
 public:
 	RefMemStat() {}
 	RefMemStat(const RefMemStat& rms, int deep) : alloc_map(rms.alloc_map, 0) {}
@@ -375,7 +374,6 @@ public:
 private:
 	VectorMap<String, Index<int> > alloc_map;
 };
-template class DeepCopyOption<RefMemStat>;
 
 //////////////////////////////////////////////////////////////////////
 // RefBase: base for refcounted objects.
