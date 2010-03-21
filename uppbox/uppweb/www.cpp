@@ -367,16 +367,132 @@ int GetLinkLanguage(const String &link) {
 	return 0;
 }
 
+String ChangeTopicLanguage(const String &topic, int lang) {
+	int pos = topic.ReverseFind('$');
+	if (pos < 0)
+		return "";					
+	return topic.Left(pos+1) + ToLower(LNGAsText(lang));
+}
+
+struct SvnRev : Moveable <SvnRev> {
+	String author;
+	int revision;
+	Time time;
+};
+
+VectorMap<String, SvnRev> svndata;
+
+void ParseSvn(VectorMap<String, SvnRev> &data, String &out, const String path) {
+	String topicFolder;
+	
+	String line;
+	int pos = 0;
+	int newpos;
+	while (true) {
+		int linepos;
+		if((linepos = out.Find("kind=\"file\"", pos)) == -1)
+			return;
+		if((newpos = out.Find("<name>", linepos)) == -1)
+			return;
+		pos = newpos + strlen("<name>");
+		if((newpos = out.Find("<", pos)) == -1)
+			return;
+		String name = out.Mid(pos, newpos-pos);
+		if((newpos = name.Find('.')) != -1)
+			name = name.Mid(0, newpos);
+		SvnRev &rev = data.Add(path + name);
+		if((newpos = out.Find("revision=\"", linepos)) == -1)
+			return;
+		pos = newpos + strlen("revision=\"");
+		if((newpos = out.Find('\"', pos)) == -1)
+			return;
+		rev.revision = ScanInt(out.Mid(pos, newpos-pos));
+		if((newpos = out.Find("<author>", linepos)) == -1)
+			return;
+		pos = newpos + strlen("<author>");
+		if((newpos = out.Find("<", pos)) == -1)
+			return;
+		rev.author = out.Mid(pos, newpos-pos);
+		if((newpos = out.Find("<date>", linepos)) == -1)
+			return;
+		pos = newpos + strlen("<date>");
+		if((newpos = out.Find("<", pos)) == -1)
+			return;
+		String time = out.Mid(pos, newpos-pos);		
+		rev.time.year = ScanInt(time.Left(4));
+		rev.time.month = ScanInt(time.Mid(5, 2));
+		rev.time.day = ScanInt(time.Mid(8, 2));
+		rev.time.hour = ScanInt(time.Mid(11, 2));
+		rev.time.minute = ScanInt(time.Mid(14, 2));
+		rev.time.second = ScanInt(time.Mid(17));		
+	}
+}
+void GetSvnFolder(VectorMap<String, SvnRev> &data, String &tppfolder) {
+	tppfolder = UnixPath(tppfolder);
+	String out = Sys("svn list \"" + tppfolder + "\" --xml --recursive --non-interactive");
+	int posp = tppfolder.ReverseFind('.');
+	int pos = tppfolder.ReverseFind('/', posp-1);
+	pos = tppfolder.ReverseFind('/', pos-1);
+	String topic = "topic:/" + tppfolder.Mid(pos, posp-pos) + "/";
+	ParseSvn(data, out, topic);	
+}
+void GetSvnFolderDeep(VectorMap<String, SvnRev> &data, const String &tppfolder) {
+	FindFile fftpp(AppendFileName(tppfolder, "*.tpp"));
+	while(fftpp) {
+		String name = fftpp.GetName();
+		String p = AppendFileName(tppfolder, name);
+		if(fftpp.IsFolder())
+			GetSvnFolder(data, p);
+		fftpp.Next();
+	}
+	FindFile ff(AppendFileName(tppfolder, "*.*"));
+	while(ff) {
+		String name = ff.GetName();
+		String p = AppendFileName(tppfolder, name);
+		if(ff.IsFolder())
+			GetSvnFolderDeep(data, p);
+		ff.Next();
+	}
+}
+void GetSvn(VectorMap<String, SvnRev> &data) {
+	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb/www.tpp"));
+	GetSvnFolderDeep(data, AppendFileName(rootdir, "uppsrc"));
+	GetSvnFolderDeep(data, AppendFileName(rootdir, "bazaar"));
+}
+
 void ExportPage(int i)
 {
 	Index<String> css;
 	String path = links.GetKey(i);
 	RLOG("Exporting " << path);
-	Htmls html;
+	
+	int ilang = GetLinkLanguage(path); 
+	SetLanguage(languages[ilang]);
 	String text = GetText(path);
 	int h;
 	h = ParseQTF(tt[i].text).GetHeight(1000);
 	
+	int isvn = svndata.Find(tt.GetKey(i));
+	String qtflangs = String("[2 ") + t_("Made with UppWeb") + "]";
+	if (isvn > -1) {   				// Add "How to contribute?"
+		String txt = String("[2 ") + t_("Last edit by %s on %s") + "]";	
+		qtflangs += ". " + Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
+		String strlang;
+		for (int i = 0; i < languages.GetCount(); ++i) {
+			if (i != ilang) {
+				String topic = ChangeTopicLanguage(path, languages[i]);
+				int itopic;
+				if ((itopic = tt.Find(topic)) >= 0) {
+					if (!strlang.IsEmpty())
+						strlang << ", ";
+					strlang << "[^" + links[itopic] + "^ [2 " + GetNativeLangName(languages[i]) + "]]";
+				}
+			}
+		}
+		if (!strlang.IsEmpty())
+			qtflangs += Format(String("[2 . ") + t_("This page is also in %s") + ".]", strlang);
+	}
+	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
 	String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
 	Color paper = SWhite;
 	if(path == "topic://uppweb/www/download$en-us")
@@ -399,6 +515,10 @@ void ExportPage(int i)
 		}
 	}*/
 	Color bg = Color(210, 217, 210);
+	Htmls footer;
+	footer << HtmlTable().Border(0).Width(-100) / HtmlLine() +
+				RoundFrame(HtmlPadding(8) / langs , "6E89AE;padding: 10px;", White);
+	Htmls html;
 	html <<
 		HtmlPackedTable().Width(-100) /
 		   	HtmlLine().ColSpan(3) / header +
@@ -432,10 +552,10 @@ void ExportPage(int i)
 			       	HtmlImg("http://www.vol.cz/cgi-bin/wc/upp").Width(1).Height(1)
 				) +
 				HtmlTCell().BgColor(bg) / BoxWidth(6) / "" +
-				HtmlTCell().Width(-100).BgColor(bg) /
-					RoundFrame(HtmlPadding(8) / page, "6E89AE;padding: 10px;", White) /*+
-					HtmlTable().Border(0).Width(-100) / HtmlLine() +
-					RoundFrame(HtmlPadding(8) / langs, "6E89AE;padding: 10px;", White)*/
+				HtmlTCell().Width(-100).BgColor(bg) / (
+					RoundFrame(HtmlPadding(8) / page , "6E89AE;padding: 10px;", White) +
+					footer
+				)
 			)
 		);
 
@@ -696,8 +816,11 @@ GUI_APP_MAIN
 			QtfAsPdf(pdf, tt[i]);
 		SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
 	}
+	GetSvn(svndata);
+	
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
+	SetLanguage(lang);
 
 //	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
 	SaveFile(AppendFileName(targetdir, "stats.html"),
