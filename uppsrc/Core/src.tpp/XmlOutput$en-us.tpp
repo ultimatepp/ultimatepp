@@ -50,6 +50,19 @@ In this case, text is converted from ][*@3 charset] to UTF`-8 encoding
 and escaped with entities.&]
 [s3;%% &]
 [s4; &]
+[s5;:XmlTag`:`:PreservedText`(const char`*`,byte`): [_^String^ String]_[* PreservedText](
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DE
+FAULT)&]
+[s5;:XmlTag`:`:PreservedText`(const String`&`,byte`): [_^String^ String]_[* PreservedText
+]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [_^byte^ byte]_[*@3 charset]_
+`=_CHARSET`_DEFAULT)&]
+[s2; Returns the completed XML tag block with [*@3 text] content. In 
+this case, text is converted from [*@3 charset] to UTF`-8 encoding 
+and escaped with entities. Unlike [* Text], this variant adds [C xml:space`=`"preserve
+d`"] attribute and escapes `'`\t`' and `'`\n`' with entities 
+too.&]
+[s3;%% &]
+[s4; &]
 [s5;:XmlTag`:`:operator`(`)`(const char`*`,const char`*`): [_^XmlTag^ XmlTag][@(0.0.255) `&
 ]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 attr], [@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 val])&]
