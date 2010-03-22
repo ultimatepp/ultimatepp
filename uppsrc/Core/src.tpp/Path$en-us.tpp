@@ -132,12 +132,12 @@ purpose of this operation is to maintain correct path separator.
 [s4; &]
 [s5;:WinPath`(const char`*`): [_^String^ String]_[* WinPath]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 path])&]
-[s2;%% Converts `'`\`\`' in [%-*@3 path] to `'/`'.&]
+[s2;%% Converts `'/`' in [%-*@3 path] to `'`\`\`'.&]
 [s3;%% &]
 [s4; &]
 [s5;:UnixPath`(const char`*`): [_^String^ String]_[* UnixPath]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 path])&]
-[s2;%% Converts `'/`' in [%-*@3 path] to `'`\`\`'.&]
+[s2;%% Converts `'`\`\`' in [%-*@3 path] to `'/`'.&]
 [s3;%% &]
 [s4; &]
 [s5;:NativePath`(const char`*`): [_^String^ String]_[* NativePath]([@(0.0.255) const]_[@(0.0.255) c

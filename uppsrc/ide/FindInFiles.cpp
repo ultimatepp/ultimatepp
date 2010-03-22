@@ -136,7 +136,7 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 		{
 			editor.SetCursor(0);
 			editor.Find(false, true);
-			switch(PromptYesNoCancel(NFormat("Replace %d lines in %s?", infile, fn)))
+			switch(PromptYesNoCancel(NFormat("Replace %d lines in [* \1%s\1]?", infile, fn)))
 			{
 			case 1:  break;
 			case 0:  doit = false; break;
