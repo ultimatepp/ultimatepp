@@ -1,0 +1,13 @@
+description "Testing character coverage...\377";
+
+uses
+	CtrlLib;
+
+file
+	Fonts.h,
+	main.cpp,
+	Fonts.lay;
+
+mainconfig
+	"" = "GUI";
+

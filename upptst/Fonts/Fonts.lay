@@ -1,0 +1,5 @@
+LAYOUT(FontsLayout, 432, 316)
+	ITEM(EditString, text, LeftPosZ(8, 416).TopPosZ(4, 19))
+	ITEM(ArrayCtrl, list, LeftPosZ(8, 416).TopPosZ(32, 276))
+END_LAYOUT
+
