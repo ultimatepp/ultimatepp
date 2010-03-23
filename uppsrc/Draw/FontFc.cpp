@@ -174,8 +174,6 @@ GlyphInfo (*GetGlyphInfoSysXft)(Font font, int chr);
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	LTIMING("GetGlyphInfoSys");
-	if(GetGlyphInfoSysXft)
-		return (*GetGlyphInfoSysXft)(font, chr);
 	GlyphInfo gi;
 	FT_Face face = FTFace(font, NULL);
 	gi.lspc = gi.rspc = 0;
@@ -183,15 +181,18 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	if(face) {
 		LTIMING("GetGlyphInfoSys 2");
 		int glyph_index = FT_Get_Char_Index(face, chr);
-		if(glyph_index &&
-			(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT|FT_LOAD_NO_BITMAP) == 0 ||
-			 FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0)) {
+		if(glyph_index) {
+			if(GetGlyphInfoSysXft)
+				return (*GetGlyphInfoSysXft)(font, chr);
+			if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT|FT_LOAD_NO_BITMAP) == 0 ||
+			   FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0) {
 				FT_Glyph_Metrics& m = face->glyph->metrics;
 				int left  = FLOOR(m.horiBearingX);
 				int width = TRUNC(CEIL(m.horiBearingX + m.width) - left);				
 				gi.width = TRUNC(ROUND(face->glyph->advance.x));
 				gi.lspc = TRUNC(left);
 				gi.rspc = gi.width - width - gi.lspc;
+			}
 		}
 	}
 	return gi;

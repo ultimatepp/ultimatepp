@@ -264,12 +264,12 @@ String GetString(PasteClip& clip)
 WString GetWString(PasteClip& clip)
 {
 	GuiLock __; 
-	if(clip.Accept("STRING") || clip.Accept("text/plain"))
-		return (~clip).ToWString();
 	if(clip.Accept("UTF8_STRING"))
 		return FromUtf8(~clip);
 	if(clip.Accept("text/unicode"))
 		return Unicode__(~clip);
+	if(clip.Accept("STRING") || clip.Accept("text/plain"))
+		return ToUnicode(~clip, CHARSET_ISO8859_1);
 	return Null;
 }
 
