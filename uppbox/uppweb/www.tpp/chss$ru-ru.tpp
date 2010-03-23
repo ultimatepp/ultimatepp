@@ -3,8 +3,7 @@ topic "Chameleon examples";
 [{_}%RU-RU 
 [s0; [*+150 Chameleon в действии]&]
 [s0; [/1 (кликните по изображению для увеличения)]&]
-[s0;>%% [*R^topic`:`/`/uppweb`/www`/chss`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/chss`$ru`-ru^1 `[
-ru`]]&]
+[s0;>*R^topic`:`/`/uppweb`/www`/chss`$ru`-ru^1%% &]
 [s0; [2 Windows XP, стандартный стиль]&]
 [s0; 
 @@image:1437&962
@@ -6252,7 +6251,4 @@ ru`]]&]
 �����ꐯԀ����������띧��Ȅͼ�Ӓ��ҷ��ё��������ׯܓ���읙����՜�������Ù�׽��
 ����޲Խ����������ΰ�����㞄���ӆ�Ǻ���������ଽ��������׀�������ġ�
 &]
-[s0; &]
-[s0; &]
-[s0; [2 Эта статья на ][^topic`:`/`/uppweb`/www`/chss`$en`-us^2 Английс
-ком]]
+[s0;2 ]

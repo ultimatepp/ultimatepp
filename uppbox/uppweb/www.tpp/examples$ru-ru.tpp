@@ -20,5 +20,4 @@ topic "Examples";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%EN-US 
 [s0; [*R6 Демонстрационные примеры]&]
-[s0;> [*R^topic`:`/`/uppweb`/www`/examples`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/examples`$ru`-ru^1 `[
-ru`]]]
+[s0;>*R^topic`:`/`/uppweb`/www`/examples`$ru`-ru^1 ]

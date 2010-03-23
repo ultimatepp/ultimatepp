@@ -3,8 +3,7 @@ topic "TheIDE screenshots";
 [{_}%RU-RU 
 [s0; [*+150 TheIDE скриншоты]&]
 [s0; [/1 (кликните по изображению для увеличения)]&]
-[s0;>%% [*R^topic`:`/`/uppweb`/www`/idess`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/idess`$ru`-ru^1 `[
-ru`]]&]
+[s0;>*R^topic`:`/`/uppweb`/www`/idess`$ru`-ru^1%% &]
 [s0; &]
 [s0; 
 @@image:1544&1164

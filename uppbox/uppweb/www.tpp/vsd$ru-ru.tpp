@@ -10,8 +10,7 @@ topic "Сравнение Ultimate++ и  языка программирован
 [{_}%EN-US 
 [s0; [*R6 Сравнение производительности библиотек:]&]
 [s0; [*R6 U`+`+ Core и D]&]
-[s0;> [*^topic`:`/`/uppweb`/www`/vsd`$en`-us^1 `[en`]][*1  ][*^topic`:`/`/uppweb`/www`/vsd`$ru`-ru^1 `[
-ru`]]&]
+[s0;>*^topic`:`/`/uppweb`/www`/vsd`$ru`-ru^1 &]
 [s0;^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^ &]
 [s0; Авторы языка программирования предоставили
  отличный пример строк (string) и карт 
@@ -104,6 +103,4 @@ total`_bytes);]&]
 [s0; [*C@5 -|return 0;]&]
 [s0; [*C@5 `}]&]
 [s0;*C@5 ]}}&]
-[s0; &]
-[s0;%RU-RU Эта статья на [^topic`:`/`/uppweb`/www`/vsd`$en`-us^ Англий
-ском]]
+[s0;%RU-RU ]

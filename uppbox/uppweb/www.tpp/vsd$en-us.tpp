@@ -10,8 +10,7 @@ topic "Ultimate++ vs D programming language";
 [b42;a42;2 $$8,8#45413000475342174754091244180557:text]
 [{_}%EN-US 
 [s0; [*R6 U`+`+ Core vs D programming language]&]
-[s0;> [*^topic`:`/`/uppweb`/www`/vsd`$en`-us^1 `[en`]][*1  ][*^topic`:`/`/uppweb`/www`/vsd`$ru`-ru^1 `[
-ru`]]&]
+[s0;>*^topic`:`/`/uppweb`/www`/vsd`$ru`-ru^1 &]
 [s0;^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^ &]
 [s0; D programming language authors give a nice example of D language 
 string and map here:&]
@@ -96,5 +95,4 @@ total`_bytes);]&]
 [s0; [*C@5 -|return 0;]&]
 [s0; [*C@5 `}]&]
 [s0;*C@5 ]}}&]
-[s0; &]
-[s0; This article in [^topic`:`/`/uppweb`/www`/vsd`$ru`-ru^ Russian]]
+[s0; ]
