@@ -320,10 +320,8 @@ void RichPara::PackParts(Stream& out, const RichPara::CharFormat& chrstyle,
 			obj.Add(p.object);
 			out.Put(OBJECT);
 		}
-		else {
-			String x = ToUtf8(p.text);
-			out.Put(x);
-		}
+		else
+			out.Put(ToUtf8(p.text));
 	}
 }
 
@@ -546,11 +544,11 @@ void RichPara::UnpackParts(Stream& in, const RichPara::CharFormat& chrstyle,
 			in.Get();
 		}
 		else {
-			WStringBuffer wb(part.Top().text);
-			wb.Reserve(512);
+			StringBuffer b;
+			b.Reserve(512);
 			while(in.Term() >= 32 || in.Term() == 9)
-				wb.Cat(in.GetUtf8());
-			part.Top().text = wb;
+				b.Cat(in.Get());
+			part.Top().text.Cat(FromUtf8(~b));
 		}
 	if(part.Top().text.GetLength() == 0 && part.Top().IsText())
 		part.Drop();
