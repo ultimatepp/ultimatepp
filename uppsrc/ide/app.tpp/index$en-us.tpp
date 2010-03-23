@@ -51,7 +51,8 @@ a Cross Development Tool]&]
 chess], Marcelo Santos, Daniel Jesús Pérez Burgos, yeohhs, 
 Matt Ezell, Herbert Danler, Garry Everard, Jay Krell, mobilehunter, 
 Michael Bzdega, Reza Fatahilah Shah, Keith Willis, Brian Rich, 
-Alex Nicolson, Jean`-François GUCHENS, Daryl Warder, Jeff Humphreys&]
+Alex Nicolson, Jean`-François GUCHENS, Daryl Warder, Jeff Humphreys, 
+Neil Neilson&]
 [s0; &]
 [s0; [2 Ultimate`+`+ project is sponsored by]&]
 [s0;= [^http`:`/`/www`.centrum`.cz^ 
