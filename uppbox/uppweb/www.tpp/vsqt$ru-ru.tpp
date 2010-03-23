@@ -20,8 +20,7 @@ topic "Ultimate++ vs Qt";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%RU-RU 
 [s0;= [7 Ultimate`+`+ против Qt ][5 (R)]&]
-[s0;>%% [*R^topic`:`/`/uppweb`/www`/vsqt`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/vsqt`$ru`-ru^1 `[
-ru`]]&]
+[s0;>*R^topic`:`/`/uppweb`/www`/vsqt`$ru`-ru^1%% &]
 [s0;=*R^topic`:`/`/uppweb`/www`/vsqt`$ru`-ru^1%% &]
 [s0; [2 Для сравнения Ultimate`+`+ с Qt (R), мы решили 
 воспроизвести демонстрационный пример 
@@ -1010,6 +1009,4 @@ toggleFirstName() ) );]&]
 [s0; [C0 `}]&]
 [s0;C0 ]}}&]
 [s0;=2 &]
-[s0;=2 &]
-[s0; [2 Эта статья на ][^topic`:`/`/uppweb`/www`/vsqt`$en`-us^2 Английс
-ком]]
+[s0;2 ]

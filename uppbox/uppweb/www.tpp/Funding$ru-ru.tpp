@@ -2,8 +2,7 @@ topic "Финансовая поддержка в разработке U++";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0;=%RU-RU [*R+217 Финансирование Ultimate`+`+]&]
-[s0;> [*R^topic`:`/`/uppweb`/www`/Funding`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/Funding`$ru`-ru^1 `[
-ru`]]&]
+[s0;>*R^topic`:`/`/uppweb`/www`/Funding`$ru`-ru^1 &]
 [s0;=*1 &]
 [s0;%RU-RU [2 Если вам нравится Ultimate`+`+, и вы 
 хотите видеть дальнейшее развитие 

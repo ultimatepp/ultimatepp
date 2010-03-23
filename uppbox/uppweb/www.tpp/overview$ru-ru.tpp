@@ -7,8 +7,7 @@ topic "Обзор Ultimate++";
 [s1;b0; [R6 Обзор Ultimate`+`+][R2  ]&]
 [s1;b0; [R2 (сорри за неполный перевод `- тестирование
  сайта)]&]
-[s2;>b0; [*R^topic`:`/`/uppweb`/www`/overview`$en`-us^1 `[en`]][*R1  
-][*R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 `[ru`]]&]
+[s2;>b0;*R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 &]
 [s1; Разогреем Ваш аппетит&]
 [s2; Ultimate`+`+ обещает  радикальное сокращение 
 сложности кода типовых десктоп`-приложений. 
@@ -2952,6 +2951,4 @@ some old habits and usual ways of thinking about how `"things
 are always done`", or they might maime your opportunity to receive 
 a lot in the reward, together with a healthy disrespect to certain 
 honorable, well`-established development tools.&]
-[s0; &]
-[s0; [2 Эта статья на ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Англи
-йском]]
+[s0;2 ]

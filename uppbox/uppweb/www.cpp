@@ -473,10 +473,10 @@ void ExportPage(int i)
 	h = ParseQTF(tt[i].text).GetHeight(1000);
 	
 	int isvn = svndata.Find(tt.GetKey(i));
-	String qtflangs = String("[2 ") + t_("Made with UppWeb") + "]";
+	String qtflangs;	// = String("[2 ") + t_("Made with UppWeb") + "]";
 	if (isvn > -1) {   				// Add "How to contribute?"
 		String txt = String("[2 ") + t_("Last edit by %s on %s") + "]";	
-		qtflangs += ". " + Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
+		qtflangs += /*". " + */ Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
 		String strlang;
 		for (int i = 0; i < languages.GetCount(); ++i) {
 			if (i != ilang) {

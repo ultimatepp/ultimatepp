@@ -21,8 +21,7 @@ topic "Ultimate++ is a C++ cross-platform rapid application development framewor
 [{_}%EN-US 
 [s0; [*R6 Ultimate`+`+ is a C`+`+ cross`-platform rapid application 
 development framework]&]
-[s0;> [*R^topic`:`/`/uppweb`/www`/index`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1 `[
-ru`]]&]
+[s0;>*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1 &]
 [ {{6292:3708f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  is a C`+`+ cross`-platform rapid application development 
 framework focused on programmers productivity. It includes a 
 set of libraries (GUI, SQL, etc..), and an integrated development 

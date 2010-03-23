@@ -4,8 +4,7 @@ topic "Chameleon examples";
 [{_}%EN-US 
 [s0; [*+150 Chameleon in action]&]
 [s0; [/1 (click on image to enlarge it)]&]
-[s0;> [*R^topic`:`/`/uppweb`/www`/chss`$en`-us^1 `[en`]][*R1  ][*R^topic`:`/`/uppweb`/www`/chss`$ru`-ru^1 `[
-ru`]]&]
+[s0;>*R^topic`:`/`/uppweb`/www`/chss`$ru`-ru^1 &]
 [s0; [2 Windows XP, standard theme]&]
 [s0; 
 @@image:1437&962
@@ -6252,6 +6251,4 @@ ru`]]&]
 ¯€Àê¯Ô€ÀêøñòŞí½Úôë§·óÈ„Í¼­Ó’ óÒ·€€Ñ‘¿åúØïŠñúí×¯Ü“œºîì™¨‡û­Õœçƒö«ºí¸Ã™¯×½õÚ
 Üì™ÏëŞ²Ô½åû¦¬—«¾ËÊûÎ°ßìÛÄşã„í¨ÕÓ†ÔÇºşÊËêøıûã÷à¬½÷»ñúçİñî×€€ÒãÿƒüÄ¡…
 &]
-[s0; &]
-[s0;2 &]
-[s0; [2 This article in ][^topic`:`/`/uppweb`/www`/chss`$ru`-ru^2 Russian]]
+[s0;2 ]

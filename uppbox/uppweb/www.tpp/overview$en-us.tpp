@@ -23,8 +23,7 @@ topic "Ultimate++ Overview";
 [i128;*C@(28.42.150)2 $$21,21#90519220486603166734501227306500:code]
 [{_}%EN-US 
 [s19;b0; [R6 Overview Ultimate`+`+]&]
-[s19;>b0; [R^topic`:`/`/uppweb`/www`/overview`$en`-us^1 `[en`]][R1  ][R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 `[
-ru`]]&]
+[s19;>b0;R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 &]
 [s19; Whetting your appetite&]
 [s20; Ultimate`+`+ promises radical reduction of code complexity of 
 typical desktop applications. Let us start with a_simple example 
@@ -2843,5 +2842,4 @@ some old habits and usual ways of thinking about how `"things
 are always done`", or they might maime your opportunity to receive 
 a lot in the reward, together with a healthy disrespect to certain 
 honorable, well`-established development tools.&]
-[s0; &]
-[s0; [2 This article in ][^topic`:`/`/uppweb`/www`/overview`$ru`-ru^2 Russian]]
+[s0;2 ]
