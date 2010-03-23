@@ -15,7 +15,7 @@ enum {
 #endif
 
 enum {
-	IDEXIT = IDYES
+	IDEXIT = 9999
 };
 
 class TopWindow : public Ctrl {

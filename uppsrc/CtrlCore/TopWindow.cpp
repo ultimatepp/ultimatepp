@@ -81,6 +81,9 @@ void TopWindow::Close()
 		if(FindAction(IDCANCEL))
 			RejectBreak(IDCANCEL);
 		else
+		if(FindAction(IDEXIT))
+			AcceptBreak(IDEXIT);
+		else
 		if(FindAction(IDYES))
 			AcceptBreak(IDYES);
 		else
