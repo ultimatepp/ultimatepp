@@ -265,6 +265,9 @@ separate pages switched by clicking header tabs.&]
 widget (usually slave dialog pane).&]
 [s9; Value of TabCtrl (accessed by GetData() / SetData() or respective 
 shortcut operators) is the index of active tab.&]
+[s9; TabCtrl responds to SetReadOnly / SetEditable method calls by 
+locking / unlocking itself in currently active tab w.r.t. user 
+actions.&]
 [s3; &]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
