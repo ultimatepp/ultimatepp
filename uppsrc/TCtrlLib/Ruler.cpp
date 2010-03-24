@@ -238,7 +238,7 @@ void RulerCtrl::Paint(Draw& draw)
 		rep_count = ceil(pos2 / small_repeat) - floor(pos1 / small_repeat);
 	}
 	if(!small_step.IsEmpty() && rep_count > 0
-	&& rep_count * small_step.GetCount() * 3 <= cli2 - cli1) {
+	&& rep_count * small_step.GetCount() <= cli2 - cli1) {
 		int ix = BinFindIndex(small_step, pos1 - rep_delta);
 		int ppos = (is_right ? 0 : cheight - SMALL_SIZE);
 		for(int c = fround(rep_count); --c >= 0; ix = 0, rep_delta += small_repeat) {
