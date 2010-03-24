@@ -229,6 +229,8 @@ void TabCtrl::SyncHot()
 		hot = h;
 		tabs.Refresh();
 	}
+	if(IsReadOnly())
+		hot = -1;
 }
 
 void TabCtrl::MouseMove(Point p, dword keyflags)

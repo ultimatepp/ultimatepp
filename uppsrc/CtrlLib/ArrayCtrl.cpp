@@ -589,6 +589,7 @@ ArrayCtrl& ArrayCtrl::SetLineCy(int cy)
 	linecy = cy;
 	Reline(0, 0);
 	sb.SetLine(cy);
+	Refresh();
 	return *this;
 }
 
