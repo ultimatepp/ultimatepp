@@ -154,6 +154,8 @@ void Scatter::DrawLegend(Draw& w,const int& scale) const
 	LC.Append(vFColors);
 	Vector<int> LW;
 	LW.Append(vPWidth);
+	Vector<bool>VJ;
+	VJ.Append(vJoin);
 	Vector<int> MS;
 	MS.Append(vMarkStyles);
 	Vector<class::Color> MC;
@@ -186,7 +188,8 @@ void Scatter::DrawLegend(Draw& w,const int& scale) const
 								LC.At(i));*/
 				Vector <Point> vp;
 				vp << Point(scale*(i-start)*legendWeight, scale*(4-12*(j+1))) << Point(scale*(i-start)*legendWeight+scale*23, scale*(4-12*(j+1)));
-				DrawPolylineX(w, vp, scale*Thick.At(i)/6, LC.At(i), Patt.At(i), scale);
+				if (VJ.At(i))
+					DrawPolylineX(w, vp, scale*Thick.At(i)/6, LC.At(i), Patt.At(i), scale);
 				Point p(scale*((i-start)*legendWeight+7),scale*(4-12*(j+1))+scale*Thick.At(i)/12);
 				DrawMark(MS.At(i),w,scale,p,LW.At(i,0),MC.At(i));                                           
 				Font scaledFont;
@@ -819,7 +822,7 @@ void Scatter::SaveToClipboard()
 	WinMetaFileDraw wmfd;	
 	wmfd.Create(6*GetSize().cx,6*GetSize().cy,"Scatter","chart");
 	SetDrawing (wmfd, 6);	
-	WinMetaFile wmf = wmfd.Close();	
+	WinMetaFile wmf = wmfd.Close();	 
 	wmf.WriteClipboard();
 }
 #else

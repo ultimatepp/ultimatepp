@@ -62,6 +62,7 @@ public:
 	Scatter& SetLabelY(const WString& _yLabel);
 	Scatter& SetLabelY2(const WString& _yLabel);
 	Scatter& SetLabelsFont(const Font& fontLabels);
+	Font GetLabelsFont() {return labelsFont;};
 	Scatter& SetLabelsColor(const class::Color& colorLabels);
 	
 	Scatter& SetPlotAreaPoz(const int& poz_x,const int& poz_y);
