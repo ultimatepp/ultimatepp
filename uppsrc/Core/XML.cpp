@@ -759,10 +759,10 @@ XmlNode ParseXML(const char *s, dword style)
 
 bool ShouldPreserve(const String& s)
 {
-	if(*s == ' ' || *s == '\t' || *s == 'n')
+	if(*s == ' ' || *s == '\t' || *s == '\n')
 		return true;
 	const char *l = s.Last();
-	if(*l == ' ' || *l == '\t' || *l == 'n')
+	if(*l == ' ' || *l == '\t' || *l == '\n')
 		return true;
 	l = s.End();
 	for(const char *x = s; x < l; x++)
