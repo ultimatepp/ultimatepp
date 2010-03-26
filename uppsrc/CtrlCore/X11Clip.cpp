@@ -342,6 +342,12 @@ bool AcceptFiles(PasteClip& clip)
 	return clip.Accept("text/uri-list");
 }
 
+bool IsAvailableFiles(PasteClip& clip)
+{
+	GuiLock __; 
+	return clip.IsAvailable("text/uri-list");
+}
+
 int JustLf(int c)
 {
 	return (byte)c >= 32 || c == '\n' ? c : 0;

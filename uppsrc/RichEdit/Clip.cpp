@@ -42,6 +42,25 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 			return true;
 		}
 	}
+	if(AcceptFiles(d)) {
+		Vector<String> s = GetFiles(d);
+		if(s.GetCount()) {
+			String fn = s[0];
+			String ext = ToUpper(GetFileExt(fn));
+			if(ext == ".PNG" || ext == ".JPG" || ext == ".JPEG" || ext == ".GIF" || ext == ".TIF" || ext == ".TIFF") {
+				if(d.Accept()) {
+					if(StreamRaster::LoadFileAny(fn)) {
+						RichPara p;
+						p.Cat(CreateRawImageObject(LoadFile(fn)), formatinfo);
+						clip.Cat(p);
+					}
+					return true;
+				}
+				return false;
+			}
+		}
+		d.Reject();
+	}
 	if(d.Accept("text/QTF"))
 		clip = ParseQTF(~d, 0, context);
 	else

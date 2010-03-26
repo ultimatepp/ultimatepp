@@ -392,6 +392,10 @@ bool AcceptFiles(PasteClip& clip)
 	return false;
 }
 
+bool IsAvailableFiles(PasteClip& clip)
+{
+	return clip.IsAvailable("files");
+}
 
 struct sDROPFILES {
     DWORD offset;

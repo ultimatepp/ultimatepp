@@ -262,6 +262,7 @@ Image       GetImage(PasteClip& clip);
 String      GetImageClip(const Image& m, const String& fmt);
 void        Append(VectorMap<String, ClipData>& data, const Image& img);
 
+bool            IsAvailableFiles(PasteClip& clip);
 bool            AcceptFiles(PasteClip& clip);
 Vector<String>  GetFiles(PasteClip& clip);
 
