@@ -5,7 +5,7 @@
 
 NAMESPACE_UPP
 
-#define LOG_UPP_SSL_MALLOC 1
+#define LOG_UPP_SSL_MALLOC 0
 
 #if LOG_UPP_SSL_MALLOC
 static int UPP_SSL_alloc = 0;
