@@ -1,5 +1,6 @@
 uses
-	RichEdit;
+	RichEdit,
+	plugin\jpg;
 
 file
 	main.cpp,
