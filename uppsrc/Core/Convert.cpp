@@ -382,7 +382,6 @@ ConvertDouble::~ConvertDouble() {}
 ConvertDate::ConvertDate(Date minval, Date maxval, bool notnull)
 : minval(minval), maxval(maxval), notnull(notnull) {
 	defaultval = Null;
-	truncate = false;
 }
 
 ConvertDate::~ConvertDate()
@@ -391,7 +390,7 @@ ConvertDate::~ConvertDate()
 
 Value ConvertDate::Format(const Value& q) const
 {
-	if(truncate && IsDateTime(q))
+	if(IsDateTime(q))
 		return Convert::Format((Date)q);
 	return Convert::Format(q);
 }
@@ -481,17 +480,6 @@ GLOBAL_VAR_INIT(const ConvertTime, StdConvertTime)
 GLOBAL_VARP_INIT(const ConvertTime, StdConvertTimeNotNull, (Null, Null, true))
 GLOBAL_VAR_INIT(const ConvertString, StdConvertString);
 GLOBAL_VARP_INIT(const ConvertString, StdConvertStringNotNull, (INT_MAX, true))
-
-const ConvertDate& StdConvertDateTruncated()
-{
-	static ConvertDate *cv;
-	ONCELOCK {
-		static ConvertDate cvd;
-		cvd.Truncate();
-		cv = &cvd;
-	}
-	return *cv;
-}
 
 Value  MapConvert::Format(const Value& q) const {
 	return map.Get(q, Null);
