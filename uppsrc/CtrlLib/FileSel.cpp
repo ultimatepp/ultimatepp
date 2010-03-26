@@ -1508,7 +1508,7 @@ FileSel& FileSel::AddStandardPlaces()
 	AddPlace(GetDesktopFolder(), t_("Desktop"));
 	AddPlace(GetMusicFolder(), t_("Music"));
 	AddPlace(GetPicturesFolder(), t_("Pictures"));
-	AddPlace(GetVideoFolder(), t_("Video"));
+	AddPlace(GetVideoFolder(), t_("Videos"));
 	AddPlace(GetDocumentsFolder(), t_("Documents"));
 	AddPlace(GetDownloadFolder(), t_("Downloads"));
 	AddPlaceSeparator();
@@ -1654,6 +1654,8 @@ FileSel::FileSel() {
 #endif
 
 	AddStandardPlaces();
+	
+	list.AutoHideSb();
 }
 
 FileSel::~FileSel() {}
