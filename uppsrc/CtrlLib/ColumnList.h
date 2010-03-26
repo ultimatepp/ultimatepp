@@ -198,6 +198,8 @@ public:
 	bool         IsMultiSelect() const                { return multi; }
 	ColumnList&  PopUpEx(bool b = true)               { popupex = b; return *this; }
 	ColumnList&  NoPopUpEx()                          { return PopUpEx(false); }
+	ColumnList&  AutoHideSb(bool b = true)            { sb.AutoHide(b); return *this; }
+	ColumnList&  NoAutoHideSb()                       { return AutoHideSb(false); }
 
 	ColumnList&  SetScrollBarStyle(const ScrollBar::Style& s) { sb.SetStyle(s); return *this; }
 
