@@ -361,9 +361,18 @@ Theme& Theme::Load(const String& path) {
 	}
 	
 	if (FileExists(path)) {
-		//String outdir = GetTempFileName("UppTheme");
-		String outdir = "c:\\Windows\\Temp\\" + Uuid::Create().ToString();
+#ifdef PLATFORM_WIN32
+		WString temp = FromUtf8(GetTempPath());
+		WStringBuffer b(MAX_PATH);
+		GetLongPathNameW(temp, b, MAX_PATH);
+		b.Strlen();
+		String outdir = ToUtf8((WString)b);
+#else
+		String outdir = GetTempPath();
+#endif
+		outdir = AppendFileName(outdir, "UppTheme" + Uuid::Create().ToString() + "\\");
 		RealizeDirectory(outdir);
+		
 		FileUnZip unzip(path);
 		while(unzip) {
 			String fn = AppendFileName(outdir, unzip.GetPath());
