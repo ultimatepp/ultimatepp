@@ -16,6 +16,7 @@ options(GCC) -DNOWSTRING;
 file
 	ntl_license.txt,
 	www.h,
+	svn.cpp,
 	topictree.cpp,
 	cpp.cpp,
 	www.cpp,

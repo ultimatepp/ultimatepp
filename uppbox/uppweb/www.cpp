@@ -374,90 +374,52 @@ String ChangeTopicLanguage(const String &topic, int lang) {
 	return topic.Left(pos+1) + ToLower(LNGAsText(lang));
 }
 
-struct SvnRev : Moveable <SvnRev> {
-	String author;
-	int revision;
-	Time time;
-};
+String FormatDateRFC822(const FileTime& t) {
+	char date[40];
+	tm* time=localtime(&(t.ft));
+	strftime(date,40,"\%a, \%d \%b \%Y \%H:\%M:\%S \%z",time);
+	return date;
+}
 
-VectorMap<String, SvnRev> svndata;
-
-void ParseSvn(VectorMap<String, SvnRev> &data, String &out, const String path) {
-	String topicFolder;
+void CreateRssFeed() {
+	FileTime now=time(NULL);
 	
-	String line;
-	int pos = 0;
-	int newpos;
-	while (true) {
-		int linepos;
-		if((linepos = out.Find("kind=\"file\"", pos)) == -1)
-			return;
-		if((newpos = out.Find("<name>", linepos)) == -1)
-			return;
-		pos = newpos + strlen("<name>");
-		if((newpos = out.Find("<", pos)) == -1)
-			return;
-		String name = out.Mid(pos, newpos-pos);
-		if((newpos = name.Find('.')) != -1)
-			name = name.Mid(0, newpos);
-		SvnRev &rev = data.Add(path + name);
-		if((newpos = out.Find("revision=\"", linepos)) == -1)
-			return;
-		pos = newpos + strlen("revision=\"");
-		if((newpos = out.Find('\"', pos)) == -1)
-			return;
-		rev.revision = ScanInt(out.Mid(pos, newpos-pos));
-		if((newpos = out.Find("<author>", linepos)) == -1)
-			return;
-		pos = newpos + strlen("<author>");
-		if((newpos = out.Find("<", pos)) == -1)
-			return;
-		rev.author = out.Mid(pos, newpos-pos);
-		if((newpos = out.Find("<date>", linepos)) == -1)
-			return;
-		pos = newpos + strlen("<date>");
-		if((newpos = out.Find("<", pos)) == -1)
-			return;
-		String time = out.Mid(pos, newpos-pos);		
-		rev.time.year = ScanInt(time.Left(4));
-		rev.time.month = ScanInt(time.Mid(5, 2));
-		rev.time.day = ScanInt(time.Mid(8, 2));
-		rev.time.hour = ScanInt(time.Mid(11, 2));
-		rev.time.minute = ScanInt(time.Mid(14, 2));
-		rev.time.second = ScanInt(time.Mid(17));		
+	String header="<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" 
+	"<channel>\n"
+	"<title>Ultimate++ svn changes</title>\n" 
+	"<link>http://ultimatepp.org/</link>\n"
+	"<description>This feed offers list of commits to Ultimate++ framework svn repository</description>\n"
+	"<lastBuildDate>"+ FormatDateRFC822(now) + "</lastBuildDate>\n"
+	"<language>en-us</language>\n"
+	"<atom:link href=\"http://ultimatepp.org/svnchanges.xml\" rel=\"self\" type=\"application/rss+xml\" />\n\n";
+	
+	String items;
+	for(int i = 0; i < svnlog.GetCount(); i++){
+		FileTime pubdate=svnlog[i].time.AsFileTime();
+		items+="<item>\n"
+		"<title>Revision " + svnlog[i].revision + "</title>\n" 
+		"<link>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</link>\n"
+		"<guid>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</guid>\n"
+		"<pubDate>" + FormatDateRFC822(pubdate) + "</pubDate>\n"
+		"<description><![CDATA[\n"
+		"	<table style=\"font-size:small;\">\n" 
+		"		<tr><td>Revision:</td><td><b>" + svnlog[i].revision + "</b></td></tr>\n"
+		"		<tr><td>Description:</td><td><code>" + svnlog[i].msg + "</code></td></tr>\n"
+		"		<tr><td>Submitted:</td><td><i>" + FormatDateRFC822(pubdate) + "</i> by <i>" + svnlog[i].author + "</i></td></tr>\n"
+		"		<tr><td>Affected files:</td><td>&nbsp;</td></tr>\n"
+		"		<tr><td colspan=\"2\">\n"
+		"			<div style=\"margin-left:20px;\">\n";
+		for(int j = 0; j < svnlog[i].changes.GetCount(); j++)
+			items+="<a href=\"http://code.google.com/p/upp-mirror/source/diff?spec=svn" + svnlog[i].revision + "&amp;r=" + svnlog[i].revision + "&amp;format=side&amp;path=" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].action + "</a> "
+			       "<a href=\"http://code.google.com/p/upp-mirror/source/browse" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].path + "</a><br>\n";
+		items+=
+		"			</div>\n"
+		"		</td></tr>\n"
+		"	</table>\n"
+		"]]></description>\n" 
+		"</item>\n\n";
 	}
-}
-void GetSvnFolder(VectorMap<String, SvnRev> &data, String tppfolder) {
-	tppfolder = UnixPath(tppfolder);
-	String out = Sys("svn list \"" + tppfolder + "\" --xml --recursive --non-interactive");
-	int posp = tppfolder.ReverseFind('.');
-	int pos = tppfolder.ReverseFind('/', posp-1);
-	pos = tppfolder.ReverseFind('/', pos-1);
-	String topic = "topic:/" + tppfolder.Mid(pos, posp-pos) + "/";
-	ParseSvn(data, out, topic);	
-}
-void GetSvnFolderDeep(VectorMap<String, SvnRev> &data, const String &tppfolder) {
-	FindFile fftpp(AppendFileName(tppfolder, "*.tpp"));
-	while(fftpp) {
-		String name = fftpp.GetName();
-		String p = AppendFileName(tppfolder, name);
-		if(fftpp.IsFolder())
-			GetSvnFolder(data, p);
-		fftpp.Next();
-	}
-	FindFile ff(AppendFileName(tppfolder, "*.*"));
-	while(ff) {
-		String name = ff.GetName();
-		String p = AppendFileName(tppfolder, name);
-		if(ff.IsFolder())
-			GetSvnFolderDeep(data, p);
-		ff.Next();
-	}
-}
-void GetSvn(VectorMap<String, SvnRev> &data) {
-	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb/www.tpp"));
-	GetSvnFolderDeep(data, AppendFileName(rootdir, "uppsrc"));
-	GetSvnFolderDeep(data, AppendFileName(rootdir, "bazaar"));
+	SaveFile(AppendFileName(targetdir, "svnchanges.xml"), header + items + "</channel>\n</rss>\n");
 }
 
 void ExportPage(int i)
@@ -590,8 +552,9 @@ void ExportPage(int i)
 			"CONTENT=\""
 			"framework, toolkit, widget, c++, visual, studio, dev-cpp, builder, ide, class, component,"
 			"wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"
-			"\">"
-			"<meta name=\"robots\" content=\"index,follow\">"
+			"\">\n"
+			"<META name=\"robots\" content=\"index,follow\">\n"
+			"<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">"
 //				"<link rel=\"shortcut icon\" href=\"/favicon.ico\" />"
 		)
 
@@ -816,7 +779,10 @@ GUI_APP_MAIN
 			QtfAsPdf(pdf, tt[i]);
 		SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
 	}
-	GetSvn(svndata);
+	
+	GetSvnList(svndata);
+	GetSvnLog(svnlog);
+	CreateRssFeed();
 	
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
