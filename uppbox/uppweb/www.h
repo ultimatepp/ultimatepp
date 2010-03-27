@@ -13,10 +13,32 @@ using namespace Upp;
 #define MTC
 #endif
 
+struct SvnListRev : Moveable <SvnListRev> {
+	String author;
+	int revision;
+	Time time;
+};
+
+struct SvnLogRev : Moveable <SvnLogRev> {
+	String revision;
+	String author;
+	Time time;
+	struct SvnChange : Moveable <SvnChange> {
+		String kind;
+		String action;
+		String path;
+	};
+	Vector<SvnChange> changes;
+	String msg;
+};
+
 extern String uppsrc;
 extern String uppbox;
 extern String bazaar;
+extern String rootdir;
 extern VectorMap<String, String> reflink;
+extern VectorMap<String, SvnListRev> svndata;
+extern Vector<SvnLogRev> svnlog;
 
 String TopicFileName(const char *dir, const char *topic);
 String TopicFileNameHtml(const char *topic);
@@ -27,5 +49,7 @@ String CppAsQtf(const String& s);
 
 void GatherRefLinks(const char *upp);
 
+void GetSvnList(VectorMap<String, SvnListRev> &data);
+void GetSvnLog(Vector<SvnLogRev> &log);
 
 #endif
