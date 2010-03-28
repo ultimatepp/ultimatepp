@@ -41,6 +41,10 @@ private:
 	String current_dbname;
 	Link<Sqlite3Connection> clink;
 	
+	int busy_timeout;
+	
+	int SqlExecRetry(const char *sql);
+	
 	void Reset();
 	void Cancel();
 
@@ -53,6 +57,8 @@ public:
 	virtual void   Begin();
 	virtual void   Commit();
 	virtual void   Rollback();
+	
+	void SetBusyTimeout(int ms)   { busy_timeout = ms; } //infinite if less than 0
 
 	Sqlite3Session();
 	~Sqlite3Session();
