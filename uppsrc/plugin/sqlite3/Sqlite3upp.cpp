@@ -150,7 +150,22 @@ bool Sqlite3Connection::Execute() {
 	param.Clear();
 	// Make sure that compiling the statement never fails.
 	ASSERT(NULL != current_stmt);
-	int retcode = sqlite3_step(current_stmt);
+	int retcode;
+	dword ticks_start = ::GetTickCount();
+	int sleep_ms = 1;
+	do{
+		retcode = sqlite3_step(current_stmt);
+		if(retcode!=SQLITE_BUSY && retcode!=SQLITE_LOCKED) break;
+		if(session.busy_timeout == 0) break;
+		if(session.busy_timeout>0){
+			if((int)(GetTickCount()-ticks_start)>session.busy_timeout){
+				break;
+			}
+		}//else infinite retry
+		if(retcode==SQLITE_LOCKED) sqlite3_reset(current_stmt);
+		::Sleep(sleep_ms);
+		if(sleep_ms<128) sleep_ms += sleep_ms;
+	}while(1);
 	if ((retcode != SQLITE_DONE) && (retcode != SQLITE_ROW)) {
 		session.SetError(sqlite3_errmsg(db), current_stmt_string);
 		return false;
@@ -316,6 +331,26 @@ SqlConnection *Sqlite3Session::CreateConnection() {
 	return new Sqlite3Connection(*this, db);
 }
 
+int Sqlite3Session::SqlExecRetry(const char *sql)
+{
+	ASSERT(NULL != sql);
+	ASSERT(0 != *sql);
+	int retcode;
+	dword ticks_start = ::GetTickCount();
+	int sleep_ms = 1;
+	do{
+		retcode = sqlite3_exec(db,sql,NULL,NULL,NULL);
+		if(retcode!=SQLITE_BUSY && retcode!=SQLITE_LOCKED) break;
+		if(busy_timeout == 0) break;
+		if(busy_timeout>0){
+			if((int)(GetTickCount()-ticks_start)>busy_timeout) break;
+		}//else infinite retry
+		::Sleep(sleep_ms);
+		if(sleep_ms<128) sleep_ms += sleep_ms;
+	}while(1);
+	return retcode;
+}
+
 void Sqlite3Session::Reset()
 {
 	for(Sqlite3Connection *s = clink.GetNext(); s != &clink; s = s->GetNext())
@@ -332,6 +367,7 @@ Sqlite3Session::Sqlite3Session()
 {
 	db = NULL;
 	Dialect(SQLITE3);
+	busy_timeout = 0;
 }
 
 Sqlite3Session::~Sqlite3Session()
@@ -344,7 +380,7 @@ void Sqlite3Session::Begin() {
 	if(trace)
 		*trace << begin << "\n";
 	Reset();
-	if(SQLITE_OK != sqlite3_exec(db,begin,NULL,NULL,NULL))
+	if(SQLITE_OK != SqlExecRetry(begin))
 		SetError(sqlite3_errmsg(db), begin);
 }
 
@@ -354,7 +390,7 @@ void Sqlite3Session::Commit() {
 	if(trace)
 		*trace << commit << "\n";
 	Reset();
-	if(SQLITE_OK != sqlite3_exec(db,commit,NULL,NULL,NULL))
+	if(SQLITE_OK != SqlExecRetry(commit))
 		SetError(sqlite3_errmsg(db), commit);
 }
 
@@ -363,7 +399,7 @@ void Sqlite3Session::Rollback() {
 	static const char rollback[] = "ROLLBACK;";
 	if(trace)
 		*trace << rollback << "\n";
-	if(SQLITE_OK != sqlite3_exec(db,rollback,NULL,NULL,NULL))
+	if(SQLITE_OK != SqlExecRetry(rollback))
 		SetError(sqlite3_errmsg(db), rollback);
 }
 Vector<String> Sqlite3Session::EnumDatabases() {
