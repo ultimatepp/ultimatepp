@@ -66,7 +66,7 @@ void  Ctrl::AddChild(Ctrl *q, Ctrl *p)
 		q->UpdateRect();
 	ChildAdded(q);
 	q->ParentChange();
-	if(GetTopCtrl()->IsOpen())
+	if(updaterect && GetTopCtrl()->IsOpen())
 		q->StateH(OPEN);
 	if(dynamic_cast<DHCtrl *>(q))
 		SyncDHCtrl();

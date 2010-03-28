@@ -645,7 +645,6 @@ void  ArrayCtrl::SyncCtrls(int from)
 		return;
 	Ptr<Ctrl> restorefocus = GetFocusChildDeep();
 	Size sz = GetSize();
-	Ctrl *p = NULL;
 	for(int i = from; i < array.GetCount(); i++)
 		for(int j = 0; j < column.GetCount(); j++) {
 			bool ct = IsCtrl(i, j);
@@ -658,17 +657,12 @@ void  ArrayCtrl::SyncCtrls(int from)
 					newctrl->HSizePos().VCenterPos(STDSIZE);
 				CellInfo& ci = cellinfo.At(i).At(j);
 				ci.Set(newctrl.Detach(), true, true);
-				Ctrl& c = ci.GetCtrl();
-				if(p)
-					AddChild(&c, p);
-				else
-					AddChild(&c);
 				ct = true;
 			}
 			if(ct) {
 				Rect r = GetCellRectM(i, j);
 				Ctrl& c = GetCellCtrl(i, j);
-				p = &c;
+				AddChild(&c);
 				if(r.bottom < 0 || r.top > sz.cy)
 					c.SetRect(-1000, -1000, 1, 1);
 				else
