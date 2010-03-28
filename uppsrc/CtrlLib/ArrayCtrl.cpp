@@ -659,7 +659,10 @@ void  ArrayCtrl::SyncCtrls(int from)
 				CellInfo& ci = cellinfo.At(i).At(j);
 				ci.Set(newctrl.Detach(), true, true);
 				Ctrl& c = ci.GetCtrl();
-				AddChild(&c, p);
+				if(p)
+					AddChild(&c, p);
+				else
+					AddChild(&c);
 				ct = true;
 			}
 			if(ct) {
