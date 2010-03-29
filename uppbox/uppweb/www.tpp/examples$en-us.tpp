@@ -21,4 +21,4 @@ topic "Examples";
 [b117;*+117 $$19,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
 [s0; [*R6 Demonstration Examples]&]
-[s0;>*R^topic`:`/`/uppweb`/www`/examples`$ru`-ru^1 ]
+[s0; ]

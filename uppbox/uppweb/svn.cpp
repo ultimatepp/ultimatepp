@@ -75,7 +75,7 @@ void GetSvnFolderDeep(VectorMap<String, SvnListRev> &data, const String &tppfold
 		ff.Next();
 	}
 }
-void GetSvnList(VectorMap<String, SvnListRev> &data) {
+void GetSvnList(VectorMap<String, SvnListRev> &data, const String &rootdir) {
 	RLOG("Querying svn for documentation metadata ...");
 	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb/www.tpp"));
 	GetSvnFolderDeep(data, AppendFileName(rootdir, "uppsrc"));
@@ -86,13 +86,12 @@ void ParseSvnLog(Vector<SvnLogRev> &log,String& out){
 	int pos = 0;
 	int newpos;
 	while (true) {
-		int linepos;
-		SvnLogRev &rev = log.Add();
 		if((newpos = out.Find("revision=\"", pos)) == -1)
 			return;
 		pos = newpos + strlen("revision=\"");
 		if((newpos = out.Find('\"', pos)) == -1)
 			return;
+		SvnLogRev &rev = log.Add();
 		rev.revision = out.Mid(pos, newpos-pos);
 		if((newpos = out.Find("<author>", pos)) == -1)
 			return;

@@ -21,6 +21,7 @@ file
 	cpp.cpp,
 	www.cpp,
 	www.tpp charset "UTF-8",
+	testing.tpp,
 	article.tpp,
 	reference.tpp,
 	examples.tpp,

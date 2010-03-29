@@ -31,6 +31,7 @@ String pdfdir;
 String bazaar;
 bool ftpupload;
 bool outPdf;
+bool doSvn;
 
 String GetRcFile(const char *s)
 {
@@ -209,6 +210,68 @@ String GetText(const char *s)
 	return GetTopic(s).text;
 }
 
+String ChangeTopicLanguage(const String &topic, int lang) {
+	int pos = topic.ReverseFind('$');
+	if (pos < 0)
+		return "";			
+	String langtxt = ToLower(LNGAsText(lang));		
+	return topic.Left(pos+1) + langtxt + topic.Mid(pos+1+langtxt.GetCount()); 
+}
+
+String GetTopicLanguage(const String &topic) {
+	int pos = topic.ReverseFind('$');
+	if (pos < 0)
+		return "";			
+	return topic.Mid(pos+1, 5); 
+}
+
+String FormatDateRFC822(const Time& t) {
+	int tz = int((GetSysTime()-GetUtcTime())/60);
+	return Format("%s, %d %Mon %d %02d:%02d:%02d %s%04d",
+	              DayName(DayOfWeek(t)).Left(3),
+	              t.day,t.month,t.year,
+	              t.hour,t.minute,t.second,
+	              tz>0?"+":"",tz/60*100+(tz+1440)%60);
+}
+
+void CreateRssFeed() {
+	String header="<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" 
+	"<channel>\n"
+	"<title>Ultimate++ svn changes</title>\n" 
+	"<link>http://ultimatepp.org/</link>\n"
+	"<description>This feed offers list of commits to Ultimate++ framework svn repository</description>\n"
+	"<lastBuildDate>"+ FormatDateRFC822(GetSysTime()) + "</lastBuildDate>\n"
+	"<language>en-us</language>\n"
+	"<atom:link href=\"http://ultimatepp.org/svnchanges.xml\" rel=\"self\" type=\"application/rss+xml\" />\n\n";
+	
+	String items;
+	for(int i = 0; i < svnlog.GetCount(); i++){
+		items+="<item>\n"
+		"<title>Revision " + svnlog[i].revision + "</title>\n" 
+		"<link>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</link>\n"
+		"<guid>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</guid>\n"
+		"<pubDate>" + FormatDateRFC822(svnlog[i].time) + "</pubDate>\n"
+		"<description><![CDATA[\n"
+		"	<table style=\"font-size:small;\">\n" 
+		"		<tr><td>Revision:</td><td><b>" + svnlog[i].revision + "</b></td></tr>\n"
+		"		<tr><td>Description:</td><td><code>" + svnlog[i].msg + "</code></td></tr>\n"
+		"		<tr><td>Submitted:</td><td><i>" + FormatDateRFC822(svnlog[i].time) + "</i> by <i>" + svnlog[i].author + "</i></td></tr>\n"
+		"		<tr><td>Affected files:</td><td>&nbsp;</td></tr>\n"
+		"		<tr><td colspan=\"2\">\n"
+		"			<div style=\"margin-left:20px;\">\n";
+		for(int j = 0; j < svnlog[i].changes.GetCount(); j++)
+			items+="<a href=\"http://code.google.com/p/upp-mirror/source/diff?spec=svn" + svnlog[i].revision + "&amp;r=" + svnlog[i].revision + "&amp;format=side&amp;path=" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].action + "</a> "
+			       "<a href=\"http://code.google.com/p/upp-mirror/source/browse" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].path + "</a><br>\n";
+		items+=
+		"			</div>\n"
+		"		</td></tr>\n"
+		"	</table>\n"
+		"]]></description>\n" 
+		"</item>\n\n";
+	}
+	SaveFile(AppendFileName(targetdir, "svnchanges.xml"), header + items + "</channel>\n</rss>\n");
+}
+
 VectorMap<String, Topic> tt;
 
 String Www(const char *topic, int lang, String topicLocation = "topic://uppweb/www/")
@@ -220,16 +283,19 @@ String Www(const char *topic, int lang, String topicLocation = "topic://uppweb/w
 	return GatherTopics(tt, String().Cat() << topicLocation << topic << "$" << "en-us");
 }
 
-String FolderLinks(String package, String group)
+String FolderLinks(String package, String group, int lang)
 {
 	String qtf;
 	FindFile ff(AppendFileName(AppendFileName(AppendFileName(uppsrc, package), group + ".tpp"), "*.tpp"));
 	while(ff) {
 		if(ff.IsFile()) {
-			String title;
-			String tl = "topic://" + package + '/' + group + '/' + GetFileTitle(ff.GetName());
-			GatherTopics(tt, tl, title);
-			qtf << "________[^" << tl << "^ " << DeQtf(Nvl(title, tl)) << "]&";
+			if (ff.GetName().Find("en-us") >= 0) {
+				String title;
+				String tl = "topic://" + package + '/' + group + '/' + GetFileTitle(ff.GetName());
+				tl =  ChangeTopicLanguage(tl, lang);
+				GatherTopics(tt, tl, title);
+				qtf << "________[^" << tl << "^ " << DeQtf(Nvl(title, tl)) << "]&";
+			}
 		}
 		ff.Next();
 	}
@@ -310,14 +376,13 @@ String MakeExamples(const char *dir, const char *www, int language)
 	return ttxt;
 }
 
-void SrcDocs(String& qtf, const char *folder)
+void SrcDocs(Index<String> &x, String& qtf, const char *folder, int lang)
 {
-	static Index<String> x;
 	if(x.Find(folder) >= 0)
 		return;
 	x.Add(folder);
-	String srcdoc = FolderLinks(folder, "srcdoc");
-	String src = FolderLinks(folder, "src");
+	String srcdoc = FolderLinks(folder, "srcdoc", lang);
+	String src = FolderLinks(folder, "src", lang);
 	Package p;
 	p.Load(AppendFileName(uppsrc, AppendFileName(folder, GetFileName(folder) + ".upp")));
 	if(srcdoc.GetLength() || src.GetLength()) {
@@ -325,11 +390,11 @@ void SrcDocs(String& qtf, const char *folder)
 		if(!IsNull(p.description))
 			qtf << "[2 " << p.description << "]&";
 		if(srcdoc.GetCount()) {
-			qtf << "&[3/* Using " << folder << "]&";
+			qtf << "&[3/* " + Format(t_("Using %s"), folder) << "]&";
 			qtf << srcdoc;
 		}
 		if(src.GetCount()) {
-			qtf << "&[3/* " << folder << " reference]&";
+			qtf << "&[3/* " << Format(t_("%s reference"), folder) << "]&";
 			qtf << src;
 		}
 	}
@@ -367,61 +432,6 @@ int GetLinkLanguage(const String &link) {
 	return 0;
 }
 
-String ChangeTopicLanguage(const String &topic, int lang) {
-	int pos = topic.ReverseFind('$');
-	if (pos < 0)
-		return "";					
-	return topic.Left(pos+1) + ToLower(LNGAsText(lang));
-}
-
-String FormatDateRFC822(const FileTime& t) {
-	char date[40];
-	tm* time=localtime(&(t.ft));
-	strftime(date,40,"\%a, \%d \%b \%Y \%H:\%M:\%S \%z",time);
-	return date;
-}
-
-void CreateRssFeed() {
-	FileTime now=time(NULL);
-	
-	String header="<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" 
-	"<channel>\n"
-	"<title>Ultimate++ svn changes</title>\n" 
-	"<link>http://ultimatepp.org/</link>\n"
-	"<description>This feed offers list of commits to Ultimate++ framework svn repository</description>\n"
-	"<lastBuildDate>"+ FormatDateRFC822(now) + "</lastBuildDate>\n"
-	"<language>en-us</language>\n"
-	"<atom:link href=\"http://ultimatepp.org/svnchanges.xml\" rel=\"self\" type=\"application/rss+xml\" />\n\n";
-	
-	String items;
-	for(int i = 0; i < svnlog.GetCount(); i++){
-		FileTime pubdate=svnlog[i].time.AsFileTime();
-		items+="<item>\n"
-		"<title>Revision " + svnlog[i].revision + "</title>\n" 
-		"<link>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</link>\n"
-		"<guid>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</guid>\n"
-		"<pubDate>" + FormatDateRFC822(pubdate) + "</pubDate>\n"
-		"<description><![CDATA[\n"
-		"	<table style=\"font-size:small;\">\n" 
-		"		<tr><td>Revision:</td><td><b>" + svnlog[i].revision + "</b></td></tr>\n"
-		"		<tr><td>Description:</td><td><code>" + svnlog[i].msg + "</code></td></tr>\n"
-		"		<tr><td>Submitted:</td><td><i>" + FormatDateRFC822(pubdate) + "</i> by <i>" + svnlog[i].author + "</i></td></tr>\n"
-		"		<tr><td>Affected files:</td><td>&nbsp;</td></tr>\n"
-		"		<tr><td colspan=\"2\">\n"
-		"			<div style=\"margin-left:20px;\">\n";
-		for(int j = 0; j < svnlog[i].changes.GetCount(); j++)
-			items+="<a href=\"http://code.google.com/p/upp-mirror/source/diff?spec=svn" + svnlog[i].revision + "&amp;r=" + svnlog[i].revision + "&amp;format=side&amp;path=" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].action + "</a> "
-			       "<a href=\"http://code.google.com/p/upp-mirror/source/browse" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].path + "</a><br>\n";
-		items+=
-		"			</div>\n"
-		"		</td></tr>\n"
-		"	</table>\n"
-		"]]></description>\n" 
-		"</item>\n\n";
-	}
-	SaveFile(AppendFileName(targetdir, "svnchanges.xml"), header + items + "</channel>\n</rss>\n");
-}
-
 void ExportPage(int i)
 {
 	Index<String> css;
@@ -435,25 +445,29 @@ void ExportPage(int i)
 	h = ParseQTF(tt[i].text).GetHeight(1000);
 	
 	int isvn = svndata.Find(tt.GetKey(i));
-	String qtflangs;	// = String("[2 ") + t_("Made with UppWeb") + "]";
+	String qtflangs;	
 	if (isvn > -1) {   				// Add "How to contribute?"
-		String txt = String("[2 ") + t_("Last edit by %s on %s") + "]";	
-		qtflangs += /*". " + */ Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
-		String strlang;
-		for (int i = 0; i < languages.GetCount(); ++i) {
-			if (i != ilang) {
-				String topic = ChangeTopicLanguage(path, languages[i]);
-				int itopic;
-				if ((itopic = tt.Find(topic)) >= 0) {
+		String txt = String("[2 ") + t_("Last edit by %s on %s") + ".]";	
+		qtflangs += Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
+	}
+	String strlang;
+	for (int il = 0; il < languages.GetCount(); ++il) {
+		if (il != ilang) {
+			String topic = ChangeTopicLanguage(path, languages[il]);
+			int itopic;
+			if ((itopic = tt.Find(topic)) >= 0) {
+				if (tt[itopic].title.Find(" (translated)") < 0) {
 					if (!strlang.IsEmpty())
 						strlang << ", ";
-					strlang << "[^" + links[itopic] + "^ [2 " + GetNativeLangName(languages[i]) + "]]";
+					strlang << "[^" + links[itopic] + "^ [2 " + GetNativeLangName(languages[il]) + "]]";
 				}
 			}
 		}
-		if (!strlang.IsEmpty())
-			qtflangs += Format(String("[2 . ") + t_("This page is also in %s") + ".]", strlang);
 	}
+	if (!strlang.IsEmpty())
+		qtflangs += Format(String("[2 ") + t_("This page is also in %s") + ".]", strlang);
+	String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
+	qtflangs += String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
 	String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
 	Color paper = SWhite;
@@ -552,9 +566,9 @@ void ExportPage(int i)
 			"CONTENT=\""
 			"framework, toolkit, widget, c++, visual, studio, dev-cpp, builder, ide, class, component,"
 			"wxwidgets, qt, rapid, application, development, rad, mfc, linux, gui, sdl, directx, desktop"
-			"\">\n"
-			"<META name=\"robots\" content=\"index,follow\">\n"
-			"<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">"
+			"\">"
+	        "<META name=\"robots\" content=\"index,follow\">\n"
+            "<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">"
 //				"<link rel=\"shortcut icon\" href=\"/favicon.ico\" />"
 		)
 
@@ -572,6 +586,7 @@ struct ProgramData {
 	String pdfdir;
 	bool ftpUpload;
 	bool outPdf;
+	bool doSvn;
 	void Xmlize(XmlIO xml)	{
 		xml
 			("rootdir", rootdir)
@@ -580,6 +595,7 @@ struct ProgramData {
 			("pdfdir", pdfdir)
 			("ftpUpload", ftpUpload)
 			("outPdf", outPdf)			
+			("doSvn", doSvn)
 		;
 	}
 };
@@ -595,6 +611,7 @@ GUI_APP_MAIN
 #endif
 	ftpupload = true;
 	outPdf = true;
+	doSvn = true;
 	
 	ProgramData data;
 	
@@ -608,9 +625,12 @@ GUI_APP_MAIN
 			pdfdir    = data.pdfdir;	
 			ftpupload = data.ftpUpload;
 			outPdf    = data.outPdf;
+			doSvn     = data.doSvn;
 			cfgloaded = true;
 		}
 	}
+	doSvn = true;
+	cfgloaded = false;
 	if (!cfgloaded) {
 		data.rootdir   = rootdir;
 		data.targetdir = targetdir;
@@ -618,8 +638,9 @@ GUI_APP_MAIN
 		data.pdfdir    = pdfdir;
 		data.ftpUpload = ftpupload;
 		data.outPdf    = outPdf;
+		data.doSvn	   = doSvn;
 		StoreAsXMLFile(data, NULL, configFile);
-	}
+	}	
 	if (!DirectoryExists(rootdir)) {
 		Exclamation ("Directory " + DeQtf(rootdir) + " does not exist");
 		return;
@@ -663,8 +684,6 @@ GUI_APP_MAIN
 			                     "background-image: url('" + GetImageSrc(WWW::HB) + "')")
 			    / HtmlArial(14) / (LoadFile(GetRcFile("adsense.txt")) + "&nbsp;&nbsp;"/* + "<br>..harnessing the real power of C++&nbsp;&nbsp;"*/)
 			);
-
-	GatherTopics(tt, "topic://uppweb/www/index$en-us");
 	
 	bar.SetCount(languages.GetCount());
 	
@@ -674,6 +693,8 @@ GUI_APP_MAIN
 
 		SetLanguage(languages[i]);
 	
+		Www("index", languages[i]);
+		Www("contribweb", languages[i]);
 	//	bi << BarLink("index.html", "Home", false);
 		bi << BarLink(Www("overview", languages[i]), t_("Overview"), false);
 		bi << BarLink(Www("examples", languages[i]), t_("Examples"));	
@@ -693,17 +714,19 @@ GUI_APP_MAIN
 		{
 			int di = tt.Find("topic://uppweb/www/documentation$" + ToLower(LNGAsText(languages[i])));
 			if (di >= 0) {
+				Index<String> x;
+				x.Clear();
 				String qtf;
 				FindFile ff(AppendFileName(uppsrc, "*.*"));
-				SrcDocs(qtf, "Core");
-				SrcDocs(qtf, "Draw");
-				SrcDocs(qtf, "CtrlCore");
-				SrcDocs(qtf, "CtrlLib");
-				SrcDocs(qtf, "RichText");
-				SrcDocs(qtf, "RichEdit");
+				SrcDocs(x, qtf, "Core", languages[i]);
+				SrcDocs(x, qtf, "Draw", languages[i]);
+				SrcDocs(x, qtf, "CtrlCore", languages[i]);
+				SrcDocs(x, qtf, "CtrlLib", languages[i]);
+				SrcDocs(x, qtf, "RichText", languages[i]);
+				SrcDocs(x, qtf, "RichEdit", languages[i]);
 				while(ff) {
 					if(ff.IsFolder())
-						SrcDocs(qtf, ff.GetName());
+						SrcDocs(x, qtf, ff.GetName(), languages[i]);
 					ff.Next();
 				}
 				tt[di].text << qtf;
@@ -780,10 +803,11 @@ GUI_APP_MAIN
 		SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
 	}
 	
-	GetSvnList(svndata);
-	GetSvnLog(svnlog);
-	CreateRssFeed();
-	
+	if (doSvn) {
+		GetSvnList(svndata, rootdir);
+		GetSvnLog(svnlog);
+		CreateRssFeed();
+	}
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
 	SetLanguage(lang);

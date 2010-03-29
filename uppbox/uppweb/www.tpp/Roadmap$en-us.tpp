@@ -26,7 +26,7 @@ topic "Changelog";
 [s0;4 &]
 [s0; [*_3 Development]&]
 [s0; &]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/gsoc`$en`-us^ Google Summer 
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/gsoc2010`$en`-us^ Google Summer 
 of Code Ideas]&]
 [s0;i150;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^ More 
 current topics]&]
