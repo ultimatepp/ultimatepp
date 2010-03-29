@@ -7,11 +7,10 @@ clean:
 	
 build:
 	$(MAKE) -C uppsrc -e OutFile=$(CURDIR)/debian/theide
-	dpkg-shlibdeps $(CURDIR)/debian/theide
 
 binary-indep:
 
-binary-arch: build clean
+binary-arch: clean build
 	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/..
 	
 binary: binary-indep binary-arch 
