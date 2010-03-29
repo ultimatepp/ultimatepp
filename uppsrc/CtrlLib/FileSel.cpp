@@ -1656,6 +1656,7 @@ FileSel::FileSel() {
 	AddStandardPlaces();
 	
 	list.AutoHideSb();
+	places.AutoHideSb();
 }
 
 FileSel::~FileSel() {}

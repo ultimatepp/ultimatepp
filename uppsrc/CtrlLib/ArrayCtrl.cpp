@@ -643,8 +643,8 @@ void  ArrayCtrl::SyncCtrls(int from)
 	LTIMING("SyncCtrls");
 	if(!hasctrls)
 		return;
-	Ptr<Ctrl> restorefocus = GetFocusChildDeep();
 	Size sz = GetSize();
+	Ctrl *p = NULL;
 	for(int i = from; i < array.GetCount(); i++)
 		for(int j = 0; j < column.GetCount(); j++) {
 			bool ct = IsCtrl(i, j);
@@ -662,15 +662,15 @@ void  ArrayCtrl::SyncCtrls(int from)
 			if(ct) {
 				Rect r = GetCellRectM(i, j);
 				Ctrl& c = GetCellCtrl(i, j);
-				AddChild(&c);
+				if(!c.HasFocusDeep() || c.GetParent() != this)
+					AddChild(&c, p);
+				p = &c;
 				if(r.bottom < 0 || r.top > sz.cy)
 					c.SetRect(-1000, -1000, 1, 1);
 				else
 					c.SetRect(r);
 			}
 		}
-	if(restorefocus)
-		restorefocus->SetFocus();
 }
 
 Point ArrayCtrl::FindCellCtrl(Ctrl *ctrl)
