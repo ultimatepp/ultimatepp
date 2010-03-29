@@ -248,7 +248,7 @@ Ctrl& ArrayCtrl::SetCtrl(int i, int j, Ctrl *newctrl, bool owned, bool value)
 void  ArrayCtrl::SetCtrl(int i, int j, Ctrl& ctrl, bool value)
 {
 	SetCtrl(i, j, &ctrl, false, value);
-	SyncCtrls(i);
+	SyncCtrls();
 }
 
 Ctrl * ArrayCtrl::GetCtrl(int i, int col)
@@ -457,7 +457,7 @@ void ArrayCtrl::AfterSet(int i)
 	SetSb();
 	Refresh();
 	SyncInfo();
-	SyncCtrls(i);
+	SyncCtrls();
 	InvalidateCache(cursor);
 }
 
@@ -638,14 +638,14 @@ int  ArrayCtrl::GetLineAt(int y) const {
 	return l > 0 ? l - 1 : l;
 }
 
-void  ArrayCtrl::SyncCtrls(int from)
+void  ArrayCtrl::SyncCtrls()
 {
 	LTIMING("SyncCtrls");
 	if(!hasctrls)
 		return;
 	Size sz = GetSize();
 	Ctrl *p = NULL;
-	for(int i = from; i < array.GetCount(); i++)
+	for(int i = 0; i < array.GetCount(); i++)
 		for(int j = 0; j < column.GetCount(); j++) {
 			bool ct = IsCtrl(i, j);
 			if(!ct && column[j].factory) {
@@ -2178,7 +2178,7 @@ void ArrayCtrl::SortB(const Vector<int>& o)
 					ASSERT(m.pos.GetCount() == 1);
 					array[i].line[m.pos[0]] = Null;
 				}
-		SyncCtrls(0);
+		SyncCtrls();
 		ChildGotFocus();
 	}
 }

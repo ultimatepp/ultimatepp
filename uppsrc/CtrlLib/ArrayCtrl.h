@@ -258,7 +258,7 @@ private:
 	Rect   GetCellRectM(int i, int col) const;
 
 	Point           FindCellCtrl(Ctrl *c);
-	void            SyncCtrls(int from = 0);
+	void            SyncCtrls();
 	bool            IsCtrl(int i, int j) const;
 	const CellCtrl& GetCellCtrl(int i, int j) const;
 	CellCtrl&       GetCellCtrl(int i, int j);
