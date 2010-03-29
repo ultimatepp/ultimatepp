@@ -120,6 +120,9 @@ static void sGatherTopics(VectorMap<String, Topic> *map, const char *topic)
 	GatherTopics(*map, topic);
 }
 
+String ChangeTopicLanguage(const String &topic, int lang);
+String GetTopicLanguage(const String &topic);
+
 String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& title)
 {
 	static StaticCriticalSection mapl;
@@ -132,8 +135,18 @@ String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& ti
 		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
 		title = p.title;
 		String t = p;
-		if(IsNull(t))
-			return "index.html";
+		if(IsNull(t)) {
+			String topicEng = ChangeTopicLanguage(topic, LNG_('E','N','U','S'));		
+			p = ReadTopic(LoadFile(TopicFileName(topicEng)));
+			String tt = p;
+			if(IsNull(tt)) 
+				return "index.html";
+			title = p.title;
+			p.title += " (translated)";			
+			String help = "topic://uppweb/www/contribweb$" + GetTopicLanguage(topic);
+			p.text = String("{{1f1t0/50b0/50@(240.240.240) [<A2 ") + t_("This page has not been translated yet") + 
+					"]. " + "[^" + help + "^ [<A2 " + t_("Do you want to translate it?") + "]]}}&&" + p.text;
+		}
 		INTERLOCKED_(mapl)
 			map.Add(topic) = p;
 		GatherLinkIterator ti;

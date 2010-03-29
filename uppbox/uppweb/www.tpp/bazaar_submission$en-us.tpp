@@ -241,4 +241,4 @@ Maintained`". This will let other people the opportunity to help
 you or to get your relay run baton.]&]
 [s0;2 &]
 [s0; [2 And the community will acknowledge it.]&]
-[s0;%- ]
+[s0; ]
