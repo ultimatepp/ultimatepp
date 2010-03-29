@@ -39,9 +39,6 @@ then
 	exit 1
 fi
 
-# strip symbols from executable
-strip --strip-all --remove-section=.comment --remove-section=.note $tmp/usr/bin/theide
-
 # copy source files to tmp folder
 # (copying is done by rsync, because it allows to exclude svn and also 
 #  to change permissions on the files)
@@ -209,6 +206,13 @@ cp $SRC_PATH/debian/copyright $tmp/usr/share/doc/$PKG
 cat $SRC_PATH/debian/theide.1 |gzip -9 > $tmp/usr/share/man/man1/theide.1.gz
 cat $SRC_PATH/changelog |gzip -9 > $tmp/usr/share/doc/$PKG/changelog.gz
 
+# generate dependencies
+cd $SRC_PATH
+dpkg-shlibdeps $tmp/usr/bin/theide
+
+# strip symbols from executable
+strip --strip-all --remove-section=.comment --remove-section=.note $tmp/usr/bin/theide
+
 #get the installed size (approx...)
 size=`du -s $tmp/usr |sed 's/[^0-9].*$//'`
 
@@ -217,11 +221,8 @@ cd $tmp
 find ./ -type f -exec md5sum {} \; | sed s/.[/]// >> $outtmp/md5sums
 mv $outtmp/md5sums $tmp/DEBIAN/md5sums
 
-# generate dependencies
-cd $SRC_PATH
-dpkg-shlibdeps $tmp/usr/bin/theide
-
 # create control file
+cd $SRC_PATH
 dpkg-gencontrol -P$tmp
 
 # copy maintainer scripts
@@ -235,9 +236,6 @@ chmod 0755 $tmp/DEBIAN/{postinst,prerm} $tmp/usr/bin/theide
 
 # creates final .deb package
 dpkg-deb -b $tmp $DEST_PATH
-
-#~ # create debian/files
-#~ echo "upp_"$release"_"$arch".deb devel optional" > $SRC_PATH/debian/files
 
 # delete tmp directory
 rm -r $outtmp
