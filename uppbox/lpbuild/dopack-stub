@@ -1,6 +1,6 @@
 #!/bin/bash
 # This file is a stub of packaging script. It won't work alone,
-# you has to preset some variables first (see archdep).
+# some variables has to be set prior to execution (see lpbuild).
 
 PKG="upp"
 SRC_PATH=$1
@@ -43,7 +43,7 @@ fi
 strip --strip-all --remove-section=.comment --remove-section=.note $tmp/usr/bin/theide
 
 # copy source files to tmp folder
-# (coping is done by rsync, because it allows to exclude svn and also 
+# (copying is done by rsync, because it allows to exclude svn and also 
 #  to change permissions on the files)
 subfolders=( uppsrc examples tutorial reference bazaar )
 echo -n "copying sources:"
@@ -217,24 +217,11 @@ cd $tmp
 find ./ -type f -exec md5sum {} \; | sed s/.[/]// >> $outtmp/md5sums
 mv $outtmp/md5sums $tmp/DEBIAN/md5sums
 
-#~ #create control file
-#~ cat > $tmp/DEBIAN/control << EOF
-#~ Package: $PKG
-#~ Version: $release
-#~ Section: devel
-#~ Priority: optional
-#~ Architecture: $arch
-#~ Depends: ${shlibs:Depends}, libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), g++, libgtk2.0-dev (>= 2.8.17), libnotify
-#~ Installed-Size: $size
-#~ Maintainer: $MAINTAINER <$EMAIL>
-#~ Description: C++ library for cross-platform development with IDE
- #~ Ultimate++ is a radical and innovative GUI toolkit whose number one priority
- #~ is programmer productivity. C++ is a great programming language but
- #~ C++ programmers are sometimes hampered by the lack of effective libraries.
- #~ U++ libraries enable genuine productivity gains with shorter development
- #~ times and greatly reduced application source code size.
-#~ EOF
+# generate dependencies
 cd $SRC_PATH
+dpkg-shlibdeps $tmp/usr/bin/theide
+
+# create control file
 dpkg-gencontrol -P$tmp
 
 # copy maintainer scripts
