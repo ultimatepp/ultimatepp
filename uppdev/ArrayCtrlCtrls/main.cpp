@@ -15,10 +15,11 @@ GUI_APP_MAIN
 	ArrayCtrl a;
 	a.Appending().Removing();
 	a.AddColumn("Text").Ctrls(WidgetFactory);
-	for(int i = 0; i < 300; i++)
+	a.AddColumn("Text");
+	for(int i = 0; i < 30; i++)
 		a.Add(AsString(i));
-	for(int i = 0; i < 300; i += 3)
-		a.GetCtrl(i, 0)->Disable();
+//	for(int i = 0; i < 300; i += 3)
+//		a.GetCtrl(i, 0)->Disable();
 
 	a.SetLineCy(Draw::GetStdFontCy() + 8);
 
