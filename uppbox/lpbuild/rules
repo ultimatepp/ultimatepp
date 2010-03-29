@@ -10,7 +10,7 @@ build:
 
 binary-indep:
 
-binary-arch: clean build
+binary-arch: build clean
 	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/..
 	
 binary: binary-indep binary-arch 
