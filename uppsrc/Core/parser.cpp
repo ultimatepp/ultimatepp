@@ -381,7 +381,7 @@ CParser::CParser(const char *ptr)
 }
 
 CParser::CParser(const char *ptr, const char *fn, int line)
-: term(ptr), line(line), fn(fn)
+: term(ptr), line(line), fn(fn), lineptr(ptr)
 {
 	skipspaces = true;
 	Spaces();
