@@ -341,6 +341,8 @@ void Button::Paint(Draw& w)
 	dl.limg = img;
 	dl.disabled = ds;
 	dl.lspc = !label.IsEmpty() && !img.IsEmpty() ? 4 : 0;
+	if(*label == '\1')
+		dl.align = ALIGN_LEFT;
 	if(VisibleAccessKeys())
 		dl.accesskey = accesskey;
 	if(monoimg)
@@ -652,6 +654,8 @@ void  ButtonOption::Paint(Draw& w) {
 	dl.limg = DisabledImage((option && !IsNull(image1)) ? image1 : image, !IsEnabled());
 	dl.disabled = ds;
 	dl.lspc = !label.IsEmpty() && !image.IsEmpty() ? 4 : 0;
+	if(*label == '\1')
+		dl.align = ALIGN_LEFT;
 	if(VisibleAccessKeys() && IsEnabled())
 		dl.accesskey = accesskey;
 	int i = !IsShowEnabled() ? CTRL_DISABLED :
