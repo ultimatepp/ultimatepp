@@ -26,7 +26,7 @@ echo "Destination path of package is '$DEST_PATH'"
 
 #create package tree
 tmp=$outtmp/deb
-mkdir $tmp{,/DEBIAN,/usr{,/bin,/share}}
+mkdir $tmp{,/usr{,/bin,/share}}
 mkdir $tmp/usr/share/{applications,doc{,/$PKG},man{,/man1},pixmaps,$PKG}
 
 # move theide executable into the package directory structure
@@ -213,11 +213,9 @@ dpkg-shlibdeps $tmp/usr/bin/theide
 # strip symbols from executable
 strip --strip-all --remove-section=.comment --remove-section=.note $tmp/usr/bin/theide
 
-#get the installed size (approx...)
-size=`du -s $tmp/usr |sed 's/[^0-9].*$//'`
-
 #create md5sums file
 cd $tmp
+mkdir $tmp/DEBIAN
 find ./ -type f -exec md5sum {} \; | sed s/.[/]// >> $outtmp/md5sums
 mv $outtmp/md5sums $tmp/DEBIAN/md5sums
 

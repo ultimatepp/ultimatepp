@@ -7,19 +7,27 @@ THEIDE="/home/upp/bin/theide"			# where is theide executable
 SRC_PATH="/home/upp/upp.tmp/u"	# where to look for sources
 BM="GCCMK"						# what build method to use
 ASEMBLY="uppsrc"				# just in case we wan't to build from different assembly
-VER="`svnversion /home/upp/upp.src`"	# this is obvious, isn't it?
+SVN_PATH="/home/upp/upp.src"	# path to svn working copy
+VER="`svnversion $SVN_PATH`"	# this is obvious, isn't it?
 BUILD="1"						# increment this when building version which is already in launchpad (BUGGY! do not touch, please)
+GPG_PROG="/home/upp/bin/gpg-extpass"	# what program to use for signing (in this case a wrapper that supplies passphrase)
+GPG_KEY="0CE4194D"				# gpg key fingerprint to use
+TMPDIR="/home/upp/lpbuild.tmp"	# directory for temporary files (defaults to /tmp/lpbuild.tmp)
 SERIES=( hardy intrepid jaunty karmic lucid )
 
 # my local setup (for debuging)
-#~ THEIDE="/tmp/theide" 
-#~ SRC_PATH="/media/data/temp/uppsvn"
-#~ BM="GCC"
-#~ ASEMBLY="uppsrc-svn"
-#~ VER="`svnversion $SRC_PATH`"
-#~ VER="2050"
-#~ BUILD="1"
-#~ SERIES=( karmic )
+#THEIDE="/usr/bin/theide" 
+#SRC_PATH="/media/data/temp/uppsvn"
+#SVN_PATH="$SRC_PATH"
+#BM="GCC"
+#ASEMBLY="uppsrc-svn"
+#VER="`svnversion $SVN_PATH`"
+#VER="2285"
+#BUILD="1"
+#GPG_PROG="/usr/bin/gpg-extpass"
+#GPG_KEY="E0962C7A"
+#TMPDIR=""	# use default
+#SERIES=( karmic )
 
 echo "Checking whether gpg-agent is running..."
 if test -f $HOME/.gpg-agent-info &&
@@ -37,16 +45,24 @@ echo "Debian source package builder"
 echo "written by Jan Dolinar (dolik.rce), 2010"
 
 # setup some variables for later
-tmpdir="/home/upp/lpbuild.tmp"
+if [ -z "$TMPDIR" ]
+then
+	tmpdir="/tmp/lpbuild.tmp"
+else
+	tmpdir="$TMPDIR"
+fi
 tmp=$tmpdir/upp-$VER
-orig="$tmp/../upp_$VER.orig.tar.gz"
+orig="$tmpdir/upp_$VER.orig.tar.gz"
 scriptpath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")" #not from my head:-)
 scriptdir=`dirname "$scriptpath"`
 subfolders=( uppsrc examples tutorial reference bazaar )
 
 # clean up temporary files
-echo "Cleaning up previous run..."
-rm -rf $tmpdir
+if [ -d $tmpdir ]
+then
+	echo "Cleaning up previous run..."
+	rm -rf $tmpdir
+fi
 
 # create dir for sources
 mkdir $tmpdir
@@ -69,22 +85,17 @@ $THEIDE $ASEMBLY ide $BM ">GUI,MT" -srxM $tmp/uppsrc
 # get changelog from svn
 echo "Creating changelog ..."
 cd $SRC_PATH
-svn --limit 100 --xml -v log ~/upp.src|python $scriptdir/svn2log.py \
+svn --limit 100 --xml -v log $SVN_PATH|python $scriptdir/svn2log.py \
 -u $scriptdir/users.lst -P upp -L -d ultimatepp.org -S all -p /trunk/ \
 -i "`echo ${subfolders[@]} |tr \" \" ,`" -o $tmp/changelog
 
-# Patch the version.h for original tarball
-mv $tmp/uppsrc/ide/version.h $tmpdir/version.h.backup
+# Patch the version.h for curent version
 echo "#define IDE_VERSION \"$VER\"" > $tmp/uppsrc/ide/version.h
 
 # compress the sources and Makefile to get orig.tar.gz
 echo "Compressing original source tarball ..."
 cd $tmp
 tar -czf $orig ${subfolders[@]} #Makefile 
-
-# restore backed-up ide/version.h
-rm $tmp/uppsrc/ide/version.h
-mv $tmpdir/version.h.backup $tmp/uppsrc/ide/version.h
 
 # prepare architecture independent part of debian directory:
 echo "Debianizing source tree ..."
@@ -105,14 +116,12 @@ Authors: Mirek Fidler, Tomas Rylek, Daniel Kos
 License: BSD (please see /usr/share/common-licenses/BSD).
 EOF
 
-# cycle through series to build and call archdep to prepare the
-# architecture depedent stuff
+# cycle through $SERIES and prepare the architecture depedent files
 for dist in ${SERIES[@]}
 do
 	version=$VER"~ppa"$BUILD"~"$dist"1"
 
 	# save complete version string to ide/version.h
-	mv $tmp/uppsrc/ide/version.h $tmpdir/version.h.backup
 	echo "#define IDE_VERSION \"$version\"" > $tmp/uppsrc/ide/version.h
 
 	# generate changelog (with changes in packaging, not in sources!)
@@ -140,7 +149,7 @@ EOF
 	# call debuild to create the package
 	echo "Packaging upp $version ..."
 	cd $tmp
-	debuild --no-lintian -k0CE4194D -m'Jan Dolinar <dolik.rce@seznam.cz>' -sgpg -p/home/upp/bin/gpg-extpass -S
+	debuild --no-lintian -k$GPG_KEY -m'Jan Dolinar <dolik.rce@seznam.cz>' -sgpg -p$GPG_PROG -S
 	
 	# upload to launchpad ("-s"=simulate, use for debugging)
 	echo "Uploading upp $version ..."
@@ -149,10 +158,6 @@ EOF
 
 	# remove architecture dependent files
 	rm $tmp/debian/{dopack,changelog}
-
-	#restore backed-up ide/version.h
-	rm $tmp/uppsrc/ide/version.h
-	mv $tmpdir/version.h.backup $tmp/uppsrc/ide/version.h
 done
 
 echo "FINISHED!"

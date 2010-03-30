@@ -1,4 +1,5 @@
 file
+	srcdoc.tpp,
 	dopack-stub,
 	control,
 	theide.1,
@@ -7,7 +8,6 @@ file
 	qp_xml.py,
 	users.lst,
 	rules,
-	README,
 	prerm,
 	postinst,
 	lpbuild;
