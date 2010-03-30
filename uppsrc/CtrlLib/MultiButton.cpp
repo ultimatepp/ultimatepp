@@ -255,7 +255,7 @@ int MultiButton::ChState(int i)
 	}
 	if(IsTrivial() && !Frame())
 		i = 0;
-	if(!IsEnabled() || i >= 0 && !button[i].enabled)
+	if(!IsShowEnabled() || i >= 0 && !button[i].enabled)
 		return CTRL_DISABLED;
 	return hl == i ? push ? CTRL_PRESSED
 	                      : CTRL_HOT
