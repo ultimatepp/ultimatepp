@@ -465,9 +465,11 @@ void ExportPage(int i)
 		}
 	}
 	if (!strlang.IsEmpty())
-		qtflangs += Format(String("[2 ") + t_("This page is also in %s") + ".]", strlang);
-	String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
-	qtflangs += String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
+		qtflangs += Format(String("[2  ") + t_("This page is also in %s") + ".]", strlang);
+	if (tt[i].title.Find("How to contribute. Web page") < 0) {
+		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
+		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
+	}
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
 	String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
 	Color paper = SWhite;
@@ -629,8 +631,6 @@ GUI_APP_MAIN
 			cfgloaded = true;
 		}
 	}
-	doSvn = true;
-	cfgloaded = false;
 	if (!cfgloaded) {
 		data.rootdir   = rootdir;
 		data.targetdir = targetdir;
@@ -640,7 +640,7 @@ GUI_APP_MAIN
 		data.outPdf    = outPdf;
 		data.doSvn	   = doSvn;
 		StoreAsXMLFile(data, NULL, configFile);
-	}	
+	}
 	if (!DirectoryExists(rootdir)) {
 		Exclamation ("Directory " + DeQtf(rootdir) + " does not exist");
 		return;
