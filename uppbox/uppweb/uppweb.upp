@@ -20,6 +20,7 @@ file
 	topictree.cpp,
 	cpp.cpp,
 	www.cpp,
+	gsoc.tpp,
 	www.tpp charset "UTF-8",
 	testing.tpp,
 	article.tpp,
