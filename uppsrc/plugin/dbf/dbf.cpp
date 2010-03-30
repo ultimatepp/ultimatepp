@@ -721,6 +721,13 @@ void DbfStream::WriteRow(const Vector<Value>& values)
 	Seek(row_index + 1);
 }
 
+void DbfStream::WriteRow()
+{
+	row_index = next_row_index;
+	FlushRow();
+	next_row_index = ++row_index;
+}
+
 String DbfStream::ToString() const
 {
 	String result;

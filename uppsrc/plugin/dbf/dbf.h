@@ -85,6 +85,7 @@ public:
 	Vector<Value>   FetchRow();
 	void            WriteRow(int row, const Vector<Value>& values);
 	void            WriteRow(const Vector<Value>& values);
+	void            WriteRow();
 
 	Value           operator [] (int i) const                { return GetItem(i); }
 	Value           operator [] (String column) const        { return GetItem(column); }
