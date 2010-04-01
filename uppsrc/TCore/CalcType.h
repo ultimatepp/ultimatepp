@@ -3,18 +3,18 @@ NAMESPACE_UPP
 class CalcTypeNameConvert
 {
 public:
-	CalcTypeNameConvert(const type_info& tinfo, String (*outfn)()) { Get().Add(tinfo.name(), outfn); }
+	CalcTypeNameConvert(const char *name, String (*outfn)()) { Get().Add(name, outfn); }
 
 	static VectorMap<String, String (*)()>& Get();
 	static String                           Format(const char *raw_name);
 };
 
-#define RegisterCalcTypeName(type, name) \
-static String COMBINE(ctn, MK__s)() { return name; } \
-static CalcTypeNameConvert COMBINE(tn, MK__s)(typeid(type), &COMBINE(ctn, MK__s));
+#define RegisterCalcTypeName(type, ctname) \
+static String COMBINE(ctn, MK__s)() { return ctname; } \
+static CalcTypeNameConvert COMBINE(tn, MK__s)(typeid(type).name(), &COMBINE(ctn, MK__s));
 
 #define RegisterStdCalcTypeName(type) \
-static CalcTypeNameConvert COMBINE(tn, MK__s)(typeid(type), &CalcType<type>::Describe);
+static CalcTypeNameConvert COMBINE(tn, MK__s)(typeid(type).name(), &CalcType<type>::Describe);
 
 template <class T>
 struct CalcRawType
@@ -150,5 +150,18 @@ struct CalcType<Nuller>
 	static bool        IsType(Value v)                   { return IsNull(v); }
 	static String      Describe();
 };
+
+template <class T>
+struct CalcPtrType
+{
+	static Value    ToValue(T *t)           { return t ? PtrToValue(t) : Value(); }
+	static T       *ValueTo(const Value& v) { return IsNull(v) ? NULL : PtrValue<T>::Extract(v); }
+	static bool     IsType(const Value& v)  { return IsNull(v) || IsTypeRaw<T *>(v); }
+	static String   Describe()              { return CalcTypeNameConvert::Format(typeid(T *).name()); }
+};
+
+#define CALC_PTR_TYPE(t) \
+	template <> struct CalcType<t *> : public CalcPtrType<t> {}; \
+	template <> struct CalcType<const t *> : public CalcPtrType<const t> {};
 
 END_UPP_NAMESPACE
