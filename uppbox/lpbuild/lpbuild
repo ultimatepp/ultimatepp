@@ -67,6 +67,7 @@ fi
 # create dir for sources
 mkdir $tmpdir
 mkdir $tmp
+cd $tmp
 
 # copy source files to tmp folder
 #    rsync takes care about .svn subdirs 
