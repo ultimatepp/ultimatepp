@@ -3,32 +3,32 @@ topic "General description";
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%EN-US 
 [s1; Ultimate Book&]
-[s0;2 &]
-[ {{10000@(190.255.220) [s0; [*2 1. ABOUT ULTIMATE BOOK]]}}&]
-[s0;2 &]
-[ {{5665:4335f0;g0;^ [s0; [2 Ultimate documentation is growing and is available in TheIde 
-and Upp applications through Topic`+`+ help technology.]&]
-[s0;2 &]
-[s0; [2 However some of us think that there is a space for a well structured 
-book including the documentation from the beginners side to the 
-reference guide and appendixes with Bazaar projects. ]&]
-[s0;2 &]
-[s0; [2 Easy to read in the introduction areas, but complete in the 
-reference areas, with many examples and following Upp design 
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 1. About Ultimate Book]]}}&]
+[s0;2%- &]
+[ {{5665:4335f0;g0;^ [s0;# [2 Ultimate documentation is growing and is available in TheIde 
+and U`+`+ applications through Topic`+`+ help technology.]&]
+[s0;#2 &]
+[s0;# [2 However some of us think that there is a space for a well 
+structured book including the documentation from the beginners 
+side to the reference guide and appendixes with Bazaar projects. 
+]&]
+[s0;#2 &]
+[s0;# [2 Easy to read in the introduction areas, but complete in the 
+reference areas, with many examples and following U`+`+ design 
 style. ]&]
-[s0;2 &]
-[s0; [2 All the docs in one place instead of in different help pages, 
+[s0;#2 &]
+[s0;# [2 All the docs in one place instead of in different help pages, 
 so easier to be distributed.]&]
-[s0;2 &]
-[s0; [2 To do it from the scratch would be an astonishing job. Now 
+[s0;#2 &]
+[s0;# [2 To do it from the scratch would be an astonishing job. Now 
 there are hundreds of pages already in T`+`+ documentation. And 
 they have to be periodically updated.]&]
-[s0;2 &]
-[s0; [2 So why not have both things at the same time ?: Based in Upp 
+[s0;#2 &]
+[s0;# [2 So why not have both things at the same time ?: Based in U`+`+ 
 technology we can have a help system and a book with only one 
 effort.]&]
-[s0;2 &]
-[s0; [2 Join to prepare the required software and redefine the actual 
+[s0;#2 &]
+[s0;# [2 Join to prepare the required software and redefine the actual 
 help pages to be compatible with the book.]]
 ::= [s0;> [*R1 
 @@image:1693&2125
@@ -7746,9 +7746,9 @@ help pages to be compatible with the book.]]
 
 ]]}}&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 2. ACTIONS]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 2. Actions]]}}&]
+[s0;2%- &]
 [s0; [*2 1. Define the book structure]&]
 [s0;2 &]
 [s0; [2 This structure has to match both:]&]
@@ -7761,7 +7761,7 @@ a logical structure as a real book.]&]
 [s0;2 &]
 [s0; [*2 2. Web standardization]&]
 [s0;2 &]
-[s0;i150;O0; [2 Analyze Upp web]&]
+[s0;i150;O0; [2 Analyze U`+`+ web]&]
 [s0;i150;O0; [2 Agree with web page responsibles and community a standard 
 style in every web/T`+`+ area:]&]
 [s0; [2 -|`- Packages reference]&]
@@ -7779,13 +7779,18 @@ style in every web/T`+`+ area:]&]
 defined book structure will parse web docs generating the Upp 
 book.]&]
 [s0;%- &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 3. NEWS]]}}&]
-[s0;%- &]
-[s0; [2 2010`-01`-20. Project just launched. ][*@6;2 HELP REQUIRED]&]
-[s0;2 &]
-[s0;%- &]
-[ {{8829:1171@(190.255.220) [s0;~~~3584; [2 Last edit: 2010`-01`-29]]
-:: [s0;=~~~3584;%- [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^@(170.127.200)2 Bazaar 
->>]]}}&]
-[s0; ]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 3. News]]}}&]
+[s0;2%- &]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/04/01]]
+:: [s0;# [2 Work done improving uppweb. It is a good investment as U`+`+ 
+book will be based on that technology.]&]
+[s0;# [2 Better and more homogeneous web look seem not to be possible 
+so here we should have to find the better one.]&]
+[s0;# [2 Probably we should have to think in a `"help editor`", like 
+a devoted resource editor, valid for book and for web. This way 
+the editing will be easier than using TheIDE as it would have 
+only T`+`+ and not code or other elements.]]
+:: [s0;# [2 2010/01/20]]
+:: [s0;# [2 Project just launched.]]}}&]
+[s0;2 ]
