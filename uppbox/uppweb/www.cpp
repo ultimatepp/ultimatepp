@@ -446,7 +446,7 @@ void ExportPage(int i)
 	
 	int isvn = svndata.Find(tt.GetKey(i));
 	String qtflangs;	
-	if (isvn > -1) {   				// Add "How to contribute?"
+	if (isvn > -1) {   				
 		String txt = String("[2 ") + t_("Last edit by %s on %s") + ".]";	
 		qtflangs += Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
 	}
@@ -645,7 +645,6 @@ GUI_APP_MAIN
 		Exclamation ("Directory " + DeQtf(rootdir) + " does not exist");
 		return;
 	}
-		
 	uppbox =    AppendFileName(rootdir, "uppbox");
 	uppsrc =    AppendFileName(rootdir, "uppsrc");
 	reference = AppendFileName(rootdir, "reference");

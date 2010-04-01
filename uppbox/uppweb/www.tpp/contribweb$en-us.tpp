@@ -1,4 +1,4 @@
-topic "How to contribute. Web translation";
+topic "How to contribute. Web page";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*R6 How to contribute. Web page]&]
@@ -42,7 +42,7 @@ you are going to edit the web page.]&]
 [s0;l160;i150;O0; [2 uppsrc/Core]&]
 [s0;l160;i150;O0; [2 ...]&]
 [s0;2 &]
-[s0;i150;O0; [2 Edit .tpp files using T`+`+]&]
+[s0;i150;O0; [2 Edit .tpp files using ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 T`+`+]&]
 [s0;2 &]
 [s0;i150;O0; [2 Finally upload (commit) changes to Upp]&]
 [s0;2%- &]
