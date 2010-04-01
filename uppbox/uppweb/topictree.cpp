@@ -159,10 +159,10 @@ String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& ti
 		for(int i = 0; i < ti.link.GetCount(); i++)
 			sGatherTopics(&map, ti.link[i]);
 #endif
-	}
-	else
+	} else {
 		INTERLOCKED_(mapl)
 			title = map[q].title;
+	}
 	return TopicFileNameHtml(topic);
 }
 

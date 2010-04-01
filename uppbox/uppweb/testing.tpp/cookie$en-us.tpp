@@ -2,10 +2,27 @@ topic "Cookie Prize";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*R6 Cookie Prize]&]
-[s0; &]
-[ {{10000@9 [s0; This page is in construction.]}}&]
-[s0; 
-@@image:1350&1220
+[s0;%- &]
+[ {{7263:2737f0;g0;t/25b/25R2 [s0;# [2 Cookie prize rewards yearly an U`+`+ project contributor who 
+have distinguished for their involvement. S/He has been helpful 
+to the community kindly asking questions, supporting the newbies 
+and giving good new ideas.]&]
+[s0;#2 &]
+[s0;# [2 In addition they have gone further and have got into action 
+launching their ideas. Because of it they had spent many hours 
+of their time offering his/her colleagues useful new tools.]&]
+[s0;#2 &]
+[s0;# [2 The idea of a `"cookie`" as a prize came from our GSoC 2010 
+application. If we would got it it would be as a big chocolate 
+cake gift for all of us. As we did not get it a consolation prize 
+would be like a cookie :`-), without economical stipend but with 
+a gift as a reward and all community appreciation.]&]
+[s0;2 &]
+[s0;# [2 This gift is a gesture contributed anonymously and chosen 
+arbitrarily, not having any relationship with the manufacturer 
+of the product delivered.]]
+:: [s0;= [* 
+@@image:1075&981
 Šƒ¨€€€€€€€€€€ø§œì‡Ü“ç¿¿şÓÚ¾­¦öØ·Ãí­õ´ªÎ”‘…ˆÅ„Ù›ÄÖ‘Øû¦„æ¨ˆ«áï½Â®ûï½÷Æ¶ 
 ¹‚¸ğ’ÿïÉ¯”¢µ¾ıÏû¿Îÿœóü¾Ï×çî§Ï’¦§±ùòİ÷ıä¿ÏèôÖ±ŠÒÕ¬â•«ØÅ¬ªÖ±ŠÕ¬âÊ•«ØÅªÖ±¥ŠÕ¬â•«Ø
 ÙÅªÖ±ŠÕ¬”â•«ØÅªÖË±ŠÕ¬â•«²ØÅªÖ±ŠÕ©¬â•«ØÅª¶Ö±ŠÕÿú³±¡õæÑé›¯Ú¼Ï«»ÿĞ¿¯ïúúÓçªøçî¯¿„ù
@@ -4289,4 +4306,14 @@ topic "Cookie Prize";
 ¥Î¼àı†Î°ËêŸÔ’ËÔöĞ’Æ˜áÿ÷öÍ’†àá„ö‘ößêï÷Ì›ü­íª¿•İË¾ÏÉÂˆ£Œ×°ß«ı€ûÿ ”ıÈ˜á„‘½öûµ¿Î«÷
 Ôú±ıÿ±‘ÿÄéŠ„‘Æ—Ø¿Ùˆî‘Æô˜áÿëöÏÜÏÿë»Í€ó†ïèŞÉä½ˆÎ£Œ°ÿË£¸ˆÇ˜á„‘Æ˜Âá„‘Æ˜á„‘Æ˜á„‘Æ
 „˜á„‘Æ˜á¡„‘Æ˜á„‘øÆ˜á„ıªı¿ÂŞ˜Ö
-]
+]]}}&]
+[s0; &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
+[s0;*2 &]
+[ {{1184:8816f0;g0;^t/25b/25 [s0;# [2 2010/03/23]]
+:: [s0;# [2 First Cookie prize has been won by ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 d
+olik.rce][2 .because of his efforts launching ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/^2 L
+aunchPad for U`+`+][2 . This year gift has been a Prince Hubert 
+de Polignac XO Royal Cognac bottle. The award was presented on 
+2010/03/23 IRC meeting.]]}}&]
+[s0; ]

@@ -24,14 +24,6 @@ topic "Changelog";
 [{_}%EN-US 
 [s0; [*R6 Roadmap]&]
 [s0;4 &]
-[s0; [*_3 Development]&]
-[s0; &]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/gsoc2010`$en`-us^ Google Summer 
-of Code Ideas]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^ More 
-current topics]&]
-[s0; &]
-[s0; &]
 [s0; [*_3 Current release]&]
 [s0; &]
 [s0; [*_4 2232]&]
