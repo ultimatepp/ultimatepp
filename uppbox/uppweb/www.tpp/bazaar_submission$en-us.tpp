@@ -11,10 +11,10 @@ Upp style.]&]
 [s0;2 &]
 [s0; [2 In this chapter you will find how to submit packages and do 
 its maintenance.]&]
-[s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 1. SUBVERSION INSTALL]]}}&]
-[s0;*2 &]
+[s0;2%- &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 1. Subversion Install]]}}&]
+[s0;2%- &]
 [s0; [2 Upp project and Bazaar packages are hosted in Upp hosting system 
 and latest releases are available through ][^http`:`/`/subversion`.tigris`.org`/^2 S
 ubversion][2 . This is an Open Source version control system.]&]
@@ -25,9 +25,9 @@ client like TortoiseSVN, SmartSVN, SlikSVN, kdesvn or just a
 the svn client is in PATH environment variable although this 
 is usually done by installer.]&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 2. UPLOAD PERMISSIONS]]}}&]
-[s0;*2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 2. Upload Permissions]]}}&]
+[s0;2%- &]
 [s0; [2 Well. You have svn installed so that you could get the latest 
 source code from Google Code mirror with just this command line: 
 ]&]
@@ -77,9 +77,9 @@ Support][2  instructions.]&]
 [s0; [2 And do not put many different features into single commit. 
 It is better to separate them if they do different things.]&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 3. PACKAGE WEB PUBLICATION]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 3. Package Web Publication]]}}&]
+[s0;2%- &]
 [s0; [*2 3.1 Introduction]&]
 [s0;2 &]
 [s0; [2 You are proud with your new package, you have informed all 
@@ -173,9 +173,9 @@ you can send a post to Bazaar Forum asking for help or just send
 ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 me][2  
 a post. I will do it for you.]&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 4. DOCUMENTATION AND EXAMPLES]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 4. Documentation and Examples]]}}&]
+[s0;2%- &]
 [s0; [2 Usually we think we are good programmers and our code is just 
 crystal clear so with a quick read of .h and .c/.cpp files any 
 user will know how to use our precious libraries.]&]
@@ -193,24 +193,22 @@ code performance.]&]
 !. Remember that it will be available for everybody in this web 
 page.]&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 5. PACKAGE RELEASES]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 5. Package Releases]]}}&]
+[s0;2%- &]
 [s0; [2 Do not wait too much to do new releases. Do not wait to surpass 
 important landmarks to pass from 2.0 to 3.0 version... Follow 
 the advice in ][^http`:`/`/en`.wikipedia`.org`/wiki`/The`_Cathedral`_and`_the`_Bazaar^2 `"
 The Cathedral and the Bazaar`"][2  book:]&]
 [s0;2 &]
-[s0;l288; [/$7;2 `"Release early. Release often. And listen to your 
-customers`"]&]
-[s0;2 &]
-[s0;2 &]
+[ {{10000<576;>768;f0;g0;^t/25b4/25@(229) [s0;= [/2 `"Release early. Release often. And listen to your customers`"]]}}&]
+[s0;l288;/$7;2 &]
 [s0;# [2 And remember that if your package does not have an update 
 in one year it will be considered as `"Not Maintained`".]&]
 [s0;#2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 6. PACKAGE LICENSE]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 6. Package License]]}}&]
+[s0;2%- &]
 [s0; [2 All packages, documents and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 B
 SD license][2 .]&]
 [s0;2 &]
@@ -227,9 +225,9 @@ LGPL license. However remember that Tcc package is BSD.]&]
 and Creative Commons licenses are very easy to fulfill, but you 
 will have to do it.]&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 7. DO NOT FORGET]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 7. Do not Forget]]}}&]
+[s0;2%- &]
 [s0; [2 A good package has to be available and maintained, so if:]&]
 [s0;i150;O0; [2 You are not going to get package goals in finite time]&]
 [s0;i150;O0; [2 You are tired]&]

@@ -6,9 +6,9 @@ topic "Bazaar user guide";
 [s0; [2 You are interested in using certain package in Bazaar and you 
 do not how. Do not worry: using Bazaar is very easy.]&]
 [s0;2 &]
-[s0;2 &]
-[ {{10000@(190.255.220) [s0; [*2 1. PACKAGE DOWNLOAD]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 1. Package Download]]}}&]
+[s0;2%- &]
 [s0; [2 To get the package you will need nothing at all, as Bazaar 
 packages are downloaded by default.]&]
 [s0;2 &]
@@ -36,8 +36,8 @@ done by installer.]&]
 my`-upp]&]
 [s0;2 &]
 [s0;2 &]
-[ {{10000@(190.255.220) [s0; [*2 2. BUGS SUBMISSION/FEATURE REQUESTS/HELP]]}}&]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 2. Bugs Submission/Feature Requests/Help]]}}&]
 [s0;2 &]
 [s0; [2 Follow the instructions in the ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 S
 upport Page][2 .]&]
-[s0;%- ]
+[s0;2 ]
