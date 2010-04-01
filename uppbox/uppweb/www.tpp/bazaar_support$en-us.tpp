@@ -7,8 +7,8 @@ topic "Bazaar support";
 bugs or you need new features, just follow these instructions.]&]
 [s0;2 &]
 [s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 1. CHECK THE FORUM]]}}&]
-[s0;2 &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 1. Check the Forum]]}}&]
+[s0;2%- &]
 [s0; [2 Perhaps anybody has been in your situation before. Because 
 of it the first thing to do is review the Forum.]&]
 [s0;2 &]
@@ -53,8 +53,8 @@ problem or answer your question.]&]
 ]&]
 [s0;2 &]
 [s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 2. BUGS REPORT]]}}&]
-[s0;2 &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 2. Bugs Report]]}}&]
+[s0;2%- &]
 [s0; [2 To submit bug reports just post the problem to Forum/Bazaar.]&]
 [s0;*2 &]
 [s0; [*2 It is strongly advised to include simple sample code of the 
@@ -66,17 +66,17 @@ or one forgotten.]&]
 replacement in your new post: you will avoid misunderstandings 
 and help keeping storage space usage low.]&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 3. PACKAGE HELP]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 3. Package Help]]}}&]
+[s0;2%- &]
 [s0; [2 You feel the package has certain feature but you are unable 
 to get it to work. Do not get crazy and post to Forum/Bazaar 
 to ask for help. As usual please be as simple as possible to 
 describe what yo want to get.]&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 4. FEATURE REQUESTS]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 4. Feature Requests]]}}&]
+[s0;2%- &]
 [s0; [2 And why do not this package could do this or that ?]&]
 [s0;2 &]
 [s0; [2 Package authors are always very busy but they are open to hear 
@@ -87,9 +87,9 @@ is important for you and the community. Perhaps you could be
 part of this improvement and may help more than you could expect 
 !]&]
 [s0;2 &]
-[s0;%- &]
-[ {{10000@(190.255.220) [s0; [*2 5. CODE SUBMISSION]]}}&]
-[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 5. Code Submission]]}}&]
+[s0;2%- &]
 [s0; [2 If you go further and you have found the way to solve a problem 
 or a new feature by yourself... thank you !.]&]
 [s0;2 &]
@@ -108,5 +108,4 @@ you can pack the files in a .zip file.]&]
 sure you have your real name in the personal information. It 
 would save the package author one personal message as we want 
 to have all contributors listed in Authors `& License.]&]
-[s0;%- &]
-[s0; ]
+[s0;2%- ]
