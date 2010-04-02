@@ -450,14 +450,15 @@ RGBA sEtchFilter::operator()(const RGBA **mx)
 {
 	RGBA t;
 	RGBA s = mx[1][1];
-	if(s.a == 255 && s.r + s.g + s.b < 400) {
+	if(s.a & 0x80 && s.r + s.g + s.b < 400) {
 		t.r = t.g = t.b = 128;
-		t.a = 255;
+		t.a = s.a;
 		return t;
 	}
 	s = mx[0][0];
-	if(s.a == 255 && s.r + s.g + s.b < 400) {
-		t.r = t.g = t.b = t.a = 255;
+	if(s.a & 0x80 && s.r + s.g + s.b < 400) {
+		t.r = t.g = t.b = 255;
+		t.a = s.a;
 		return t;
 	}
 	Zero(t);
