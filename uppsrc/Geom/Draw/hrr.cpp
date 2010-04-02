@@ -765,8 +765,10 @@ bool HRR::Open(const char *path, bool read_only)
 void HRR::Close()
 {
 	stream.Close();
-	pixel_directory.Clear();
-	mask_directory.Clear();
+	pixel_directory_offset.Clear();
+	mask_directory_offset.Clear();
+//	pixel_directory.Clear();
+//	mask_directory.Clear();
 	image_cache.Clear();
 	directory_sizeof = 0;
 	cache_sizeof = 0;
@@ -935,23 +937,27 @@ HRR::Cursor::Cursor(HRR& owner_, const Rectf& extent_, double measure_,
 bool HRR::Cursor::Fetch(Rectf& part)
 {
 	for(;;) {
+		cimg = -1;
 		if(++block.x >= rc.right) {
 			block.x = rc.left;
 			if(++block.y >= rc.bottom)
 				return false;
 		}
 		LLOG("[" << StopMsec(ticks) << "] block = [" << x << ", " << y << "]");
-		int pixel_offset = owner.pixel_directory[level][block.x + block.y * total];
-		int mask_offset = owner.mask_directory[level][block.x + block.y * total];
-		int coff;
-		if(pixel_offset)
-			coff = pixel_offset;
-		else if(mask_offset)
-			coff = -mask_offset;
-		else
+		int layer_offset = 4 * (block.x + block.y * total);
+		int pixel_offset = 0, mask_offset = 0;
+		if(level >= 0 && level < owner.pixel_directory_offset.GetCount()) {
+			owner.stream.Seek(owner.pixel_directory_offset[level] + layer_offset);
+			pixel_offset = owner.stream.Get32le();
+		}
+		if(level >= 0 && level < owner.mask_directory_offset.GetCount()) {
+			owner.stream.Seek(owner.mask_directory_offset[level] + layer_offset);
+			mask_offset = owner.stream.Get32le();
+		}
+		Point pixel_mask(pixel_offset, mask_offset);
+		if(!pixel_offset && !mask_offset)
 			continue;
-		int cimg = -1;
-		if((cimg = owner.image_cache.Find(coff)) < 0) {
+		if((cimg = owner.image_cache.Find(pixel_mask)) < 0) {
 			ImageBuffer new_image;
 			if(pixel_offset) {
 				owner.stream.Seek(Unpack64(pixel_offset));
@@ -1000,7 +1006,7 @@ bool HRR::Cursor::Fetch(Rectf& part)
 			owner.FlushCache(owner.cache_sizeof_limit - new_len);
 			owner.cache_sizeof += new_len;
 			cimg = owner.image_cache.GetCount();
-			owner.image_cache.Add(coff, new_image);
+			owner.image_cache.Add(pixel_mask) = new_image;
 		}
 		if(cimg >= 0) {
 			part = owner.GetLogBlockRect(level, RectC(block.x, block.y, 1, 1));
@@ -1159,51 +1165,45 @@ void HRR::Paint(Draw& draw, const Matrixf& trg_pix, GisTransform transform,
 //			Rect src = (clip - dest.TopLeft()) * SUNIT / dest.Size();
 //			src.Inflate(2);
 //			src &= RUNIT;
-			int pixel_offset = pixel_directory[level][x + y * total];
-			int cimg = -1;
-			bool newimg = false;
-			if(pixel_offset && use_pixel && (cimg = image_cache.Find(pixel_offset)) < 0) {
-				newimg = true;
-//				Stream64Stream pixel_stream(stream, Unpack64(pixel_offset));
-				stream.Seek(Unpack64(pixel_offset));
-				Image ni = decoder->Load(stream);
-				if(ni.IsEmpty()) {
-					String warn = NFormat("Failed to load block [%d, %d].", x, y);
-					Size sz = GetTextSize(warn, err_font);
-					draw.DrawRect(Rect(dest.CenterPoint(), Size(1, 1)).Inflated(sz + 2), Color(255, 192, 192));
-					draw.DrawText((dest.left + dest.right - sz.cx) >> 1, (dest.top + dest.bottom - sz.cy) >> 1,
-						warn, StdFont(), Black);
-					continue;
-				}
-				cimg = image_cache.GetCount();
-				FlushCache(cache_sizeof_limit - GetImageSize(ni));
-				cache_sizeof += GetImageSize(ni);
-				cimg = image_cache.GetCount();
-				image_cache.Add(pixel_offset) = ni;
-#ifdef _DEBUG
-//				static int part_id = 0;
-//				JpgEncoder().SaveArrayFile(Format("h:\\temp\\part%d.jpg", ++part_id), new_image);
-#endif
-//				if(!out_blend.IsEmpty())
-//					PixelSetConvert(new_image.pixel, -3);
+			int layer_offset = 4 * (x + y * total);
+			stream.Seek(pixel_directory_offset[level] + layer_offset);
+			int pixel_offset = stream.Get32le();
+			int mask_offset = 0;
+			if(!mask_directory_offset.IsEmpty()) {
+				stream.Seek(mask_directory_offset[level] + layer_offset);
+				mask_offset = stream.Get32le();
 			}
-			if(newimg) {
-				int mask_offset = mask_directory[level][x + y * total];
-				int cmask = -1;
-				if(mask_offset && use_alpha && (cmask = image_cache.Find(-mask_offset)) < 0) {
-					Size sz(0, 0);
+//			int pixel_offset = pixel_directory[level][x + y * total];
+			Point pixel_mask(pixel_offset, mask_offset);
+			if(!pixel_offset && !mask_offset)
+				continue;
+			bool newimg = false;
+			if(image_cache.Find(pixel_mask) < 0) {
+//				Stream64Stream pixel_stream(stream, Unpack64(pixel_offset));
+				ImageBuffer new_image;
+				if(pixel_offset) {
+					stream.Seek(Unpack64(pixel_offset));
+					new_image = decoder->Load(stream);
+					if(new_image.IsEmpty()) {
+						String warn = NFormat("Failed to load block [%d, %d].", x, y);
+						Size sz = GetTextSize(warn, err_font);
+						draw.DrawRect(Rect(dest.CenterPoint(), Size(1, 1)).Inflated(sz + 2), Color(255, 192, 192));
+						draw.DrawText((dest.left + dest.right - sz.cx) >> 1, (dest.top + dest.bottom - sz.cy) >> 1,
+							warn, StdFont(), Black);
+						continue;
+					}
+				}
+				if(mask_offset && use_alpha) {
 					stream.Seek(Unpack64(mask_offset));
 					int len = stream.GetIL();
-					ASSERT(len >= 0 && len < HRRInfo::UNIT * (HRRInfo::UNIT + 1) + 1);
 					StringBuffer data(len);
+					ASSERT(len >= 0 && len < HRRInfo::UNIT * (HRRInfo::UNIT + 1) + 1);
 					stream.Get(data, len);
-//					String s = data;
 					if(version < 5) {
-						if(cimg >= 0)
-							sz = image_cache[cimg].GetSize();
+						Size sz(0, 0);
+						if(pixel_offset)
+							sz = new_image.GetSize();
 						else {
-							if(!pixel_offset)
-								continue;
 							int csize = size_cache.Find(pixel_offset);
 							if(csize < 0) {
 								if(size_cache.GetCount() >= 10000)
@@ -1222,27 +1222,19 @@ void HRR::Paint(Draw& draw, const Matrixf& trg_pix, GisTransform transform,
 							}
 							sz = size_cache[csize];
 						}
-					}
-					if(sz.cx > 0 && sz.cy > 0) {
-						if(cimg < 0) {
-							FlushCache(cache_sizeof_limit - GetImageSize(sz));
-							cmask = image_cache.GetCount();
-							cache_sizeof += GetImageSize(sz);
-							ImageBuffer ibuf(sz);
-							Fill(~ibuf, RGBAZero(), ibuf.GetLength());
-							DecodeMask(ibuf, data, version >= 5);
-							image_cache.Add(-mask_offset) = Image(ibuf);
-						}
-						else {
-							ImageBuffer ibuf(image_cache[cimg]);
-							DecodeMask(ibuf, data, version >= 5);
-							image_cache[cimg] = ibuf;
-						}
+						if(sz.cx <= 0 || sz.cy <= 0)
+							continue;
+						DecodeMask(new_image, data, version >= 5);
 					}
 				}
-				if(cimg < 0)
-					cimg = cmask;
+				FlushCache(cache_sizeof_limit - GetImageSize(new_image.GetSize()));
+				cache_sizeof += GetImageSize(new_image.GetSize());
+				image_cache.Add(pixel_mask) = new_image;
 			}
+			int cimg = image_cache.Find(pixel_mask);
+			if(cimg < 0)
+				continue;
+/*
 			if(cimg < 0) {
 				LLOG("[" << StopMsec(ticks) << "] pixel off, mask off");
 				if(!is_straight && !IsNull(info.background))
@@ -1250,7 +1242,9 @@ void HRR::Paint(Draw& draw, const Matrixf& trg_pix, GisTransform transform,
 				else if(use_pixel)
 					draw.DrawRect(dest, info.background);
 			}
-			else {
+			else 
+*/
+			{
 				const Image& img = image_cache[cimg];
 				if(!use_bg) {
 					LLOG("[" << StopMsec(ticks) << "] !use_bg -> direct mask blend");
@@ -1346,32 +1340,36 @@ void HRR::Serialize()
 		stream % map_offset;
 	else
 		map_offset = 0;
-	if(version >= 1)
-	{
-		if(stream.IsLoading() || pixel_directory.IsEmpty() || mask_directory.IsEmpty())
-		{
-			directory_sizeof = 0;
-			pixel_directory.Clear();
-			pixel_directory.SetCount(info.levels);
-			for(int i = 0; i < info.levels; i++)
-			{
-				int c = 1 << (2 * i);
-				pixel_directory[i].SetCount(c, 0);
-				directory_sizeof += c * 2 * sizeof(int);
-			}
-			mask_directory <<= pixel_directory;
-		}
+	pixel_directory_offset.SetCount(info.levels);
+	if(version >= 1) {
 		if(version <= 3 || !info.mono)
-			for(int l = 0; l < info.levels; l++)
-				stream.SerializeRaw((byte *)pixel_directory[l].Begin(),
-					sizeof(pixel_directory[0][0]) * pixel_directory[l].GetCount());
-		if(version >= 3 && (IsNull(info.background) || info.mono))
-			for(int m = 0; m < info.levels; m++)
-				stream.SerializeRaw((byte *)mask_directory[m].Begin(),
-					sizeof(mask_directory[0][0]) * mask_directory[m].GetCount());
+			for(int l = 0; l < info.levels; l++) {
+				int c = 1 << (2 * l);
+				int byte_size = 4 * c;
+				pixel_directory_offset[l] = stream.GetPos();
+				if(stream.IsStoring() && stream.GetLeft() < byte_size)
+					stream.Put(0, byte_size);
+				else
+					stream.SeekCur(byte_size);
+//				stream.SerializeRaw((byte *)pixel_directory[l].Begin(),
+//					sizeof(pixel_directory[0][0]) * pixel_directory[l].GetCount());
+			}
+		if(version >= 3 && (IsNull(info.background) || info.mono)) {
+			mask_directory_offset.SetCount(info.levels);
+			for(int m = 0; m < info.levels; m++) {
+				int c = 1 << (2 * m);
+				int byte_size = 4 * c;
+				mask_directory_offset[m] = stream.GetPos();
+				if(stream.IsStoring() && stream.GetLeft() < byte_size)
+					stream.Put(0, byte_size);
+				else
+					stream.SeekCur(byte_size);
+//				stream.SerializeRaw((byte *)mask_directory[m].Begin(),
+//					sizeof(mask_directory[0][0]) * mask_directory[m].GetCount());
+			}
+		}
 	}
-	if(map_offset && version > 3)
-	{
+	if(map_offset && version > 3) {
 		int64 mappos = Unpack64(map_offset);
 		if(stream.IsStoring() && stream.GetSize() < mappos) {
 			stream.Seek(stream.GetSize());
@@ -1496,7 +1494,9 @@ bool HRR::Write(Writeback drawback, bool downscale, int level, int px, int py,
 						int kind = GetMaskInfo(~part, part.GetLength());
 						if(kind && !info.mono) {
 							int pixoff = CeilPack64(stream.GetPos());
-							pixel_directory[level + count][lin] = pixoff;
+							stream.Seek(pixel_directory_offset[level + count] + 4 * lin);
+							stream.Put32le(pixoff);
+							stream.SeekEnd();
 							int64 pixpos = Unpack64(pixoff);
 							if(stream.GetSize() < pixpos)
 								stream.Put(0, (int)(pixpos - stream.GetSize()));
@@ -1508,7 +1508,10 @@ bool HRR::Write(Writeback drawback, bool downscale, int level, int px, int py,
 							String s = EncodeMask(part, version >= 5);
 							ASSERT(s.GetLength() >= 4);
 							int maskoff = CeilPack64(stream.GetPos());
-							mask_directory[level + count][lin] = maskoff;
+							stream.Seek(mask_directory_offset[level + count] + 4 * lin);
+							stream.Put32le(maskoff);
+							stream.SeekEnd();
+//							mask_directory[level + count][lin] = maskoff;
 							int64 maskpos = Unpack64(maskoff);
 							if(stream.GetSize() < maskpos)
 								stream.Put(0, (int)(maskpos - stream.GetSize()));
@@ -1517,10 +1520,12 @@ bool HRR::Write(Writeback drawback, bool downscale, int level, int px, int py,
 							stream.Put(s, s.GetLength());
 						}
 					}
-					else
-					{
+					else {
 						int pixoff = CeilPack64(stream.GetPos());
-						pixel_directory[level + count][lin] = pixoff;
+						stream.Seek(pixel_directory_offset[level + count] + 4 * lin);
+						stream.Put32le(pixoff);
+						stream.SeekEnd();
+//						pixel_directory[level + count][lin] = pixoff;
 						int64 pixpos = Unpack64(pixoff);
 						if(stream.GetSize() < pixpos)
 							stream.Put(0, (int)(pixpos - stream.GetSize()));
@@ -1574,7 +1579,10 @@ bool HRR::Write(Writeback drawback, bool downscale, int level, int px, int py,
 			int kind = GetMaskInfo(block.block, block.block.GetLength());
 			if(kind && !info.mono) {
 				int pixoff = CeilPack64(stream.GetPos());
-				pixel_directory[level][lin] = pixoff;
+				stream.Seek(pixel_directory_offset[level] + 4 * lin);
+				stream.Put32le(pixoff);
+				stream.SeekEnd();
+//				pixel_directory[level][lin] = pixoff;
 				int64 pixpos = Unpack64(pixoff);
 				if(stream.GetSize() < pixpos)
 					stream.Put(0, (int)(pixpos - stream.GetSize()));
@@ -1586,7 +1594,10 @@ bool HRR::Write(Writeback drawback, bool downscale, int level, int px, int py,
 				String s = EncodeMask(block.block, version >= 5);
 				ASSERT(s.GetLength() >= 4);
 				int maskoff = CeilPack64(stream.GetPos());
-				mask_directory[level][lin] = maskoff;
+				stream.Seek(mask_directory_offset[level] + 4 * lin);
+				stream.Put32le(maskoff);
+				stream.SeekEnd();
+//				mask_directory[level][lin] = maskoff;
 				int64 maskpos = Unpack64(maskoff);
 				if(stream.GetSize() < maskpos)
 					stream.Put(0, (int)(maskpos - stream.GetSize()));
@@ -1595,10 +1606,12 @@ bool HRR::Write(Writeback drawback, bool downscale, int level, int px, int py,
 				stream.Put(s, s.GetLength());
 			}
 		}
-		else
-		{
+		else {
 			int pixoff = CeilPack64(stream.GetPos());
-			pixel_directory[level][lin] = pixoff;
+			stream.Seek(pixel_directory_offset[level] + 4 * lin);
+			stream.Put32le(pixoff);
+			stream.SeekEnd();
+//			pixel_directory[level][lin] = pixoff;
 			int64 pixpos = Unpack64(pixoff);
 			while(stream.GetSize() < pixpos)
 				stream.Put(0, (int)min<int64>(pixpos - stream.GetSize(), 1 << 24));

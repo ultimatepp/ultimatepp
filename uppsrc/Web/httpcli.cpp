@@ -301,11 +301,11 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			request << "Content-Type: " << ctype << "\r\n";
 	}
 	if(use_proxy && !IsNull(proxy_username))
-		 request << "Proxy-Authorization: basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
+		 request << "Proxy-Authorization: Basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
 	if(!IsNull(digest))
 		request << "Authorization: Digest " << digest << "\r\n";
 	else if(!force_digest && (!IsNull(username) || !IsNull(password)))
-		request << "Authorization: basic " << Base64Encode(username + ":" + password) << "\r\n";
+		request << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
 	request << client_headers << "\r\n" << postdata;
 	LLOG("host = " << host << ", port = " << port);
 	LLOG("request: " << request);
