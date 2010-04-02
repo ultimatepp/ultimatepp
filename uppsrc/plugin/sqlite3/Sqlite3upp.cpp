@@ -336,7 +336,7 @@ int Sqlite3Session::SqlExecRetry(const char *sql)
 	ASSERT(NULL != sql);
 	ASSERT(0 != *sql);
 	int retcode;
-	dword ticks_start = ::GetTickCount();
+	dword ticks_start = GetTickCount();
 	int sleep_ms = 1;
 	do{
 		retcode = sqlite3_exec(db,sql,NULL,NULL,NULL);
