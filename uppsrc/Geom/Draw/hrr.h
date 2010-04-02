@@ -220,10 +220,12 @@ private:
 	HRRInfo                    info;
 	FileStream                 stream;
 	int                        version;
-	Vector< Vector<int> >      pixel_directory;
-	Vector< Vector<int> >      mask_directory;
+	Vector<int64>              pixel_directory_offset;
+	Vector<int64>              mask_directory_offset;
+//	Vector< Vector<int> >      pixel_directory;
+//	Vector< Vector<int> >      mask_directory;
 	int                        directory_sizeof;
-	ArrayMap<int, Image>       image_cache;
+	ArrayMap<Point, Image>     image_cache;
 	VectorMap<int, Size>       size_cache;
 	int                        cache_sizeof;
 	int                        cache_sizeof_limit;
