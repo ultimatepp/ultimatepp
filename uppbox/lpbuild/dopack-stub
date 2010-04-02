@@ -30,7 +30,7 @@ mkdir $tmp{,/usr{,/bin,/share}}
 mkdir $tmp/usr/share/{applications,doc{,/$PKG},man{,/man1},pixmaps,$PKG}
 
 # move theide executable into the package directory structure
-mv $SRC_PATH/debian/theide $tmp/usr/bin/theide
+mv $SRC_PATH/debian/ide $tmp/usr/bin/theide
 
 # check if we really have the executable there, just in case
 if [ ! -e $tmp/usr/bin/theide ]
