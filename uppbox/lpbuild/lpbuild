@@ -28,6 +28,7 @@ SERIES=( hardy intrepid jaunty karmic lucid )
 #GPG_KEY="E0962C7A"
 #TMPDIR=""	# use default
 #SERIES=( karmic )
+#SIMULATE="-s"
 
 echo "Checking whether gpg-agent is running..."
 if test -f $HOME/.gpg-agent-info &&
@@ -69,14 +70,17 @@ fi
 mkdir $tmpdir
 mkdir $tmp
 cd $tmp
+
 # copy source files to tmp folder
 #    rsync takes care about .svn subdirs 
 echo "copying sources:"
 for folder in ${subfolders[@]}
 do
 	echo "  $folder"
-	rsync -rl --exclude '.svn' $SRC_PATH/$folder $tmp > /dev/null
+	#rsync -rl --exclude '.svn' $SRC_PATH/$folder $tmp
+	cp -r $SRC_PATH/$folder $tmp/$folder
 done
+find $tmp -name ".svn" -exec rm -rf {} \; -prune
 
 # export Makefile for theide
 echo "Creating makefile ..."
@@ -152,10 +156,10 @@ EOF
 	cd $tmp
 	debuild --no-lintian -k$GPG_KEY -m'Jan Dolinar <dolik.rce@seznam.cz>' -sgpg -p$GPG_PROG -S
 	
-	# upload to launchpad ("-s"=simulate, use for debugging)
+	# upload to launchpad (set SIMULATE="-s" for debugging)
 	echo "Uploading upp $version ..."
 	cd $tmpdir
-	dput "upp-$dist" "upp_"$version"_source.changes"
+	dput $SIMULATE "upp-$dist" "upp_"$version"_source.changes"
 
 	# remove architecture dependent files
 	rm $tmp/debian/{dopack,changelog}
