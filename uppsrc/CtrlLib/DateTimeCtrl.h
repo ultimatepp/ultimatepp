@@ -217,7 +217,7 @@ public:
 	int	 DayOfWeek(int day, int month, int year, int zelleroffset = 2);
 	int  WeekOfYear(int day, int month, int year);
 
-	virtual Value GetData() const			{ return time_mode ? sel : (Date) sel; }
+	virtual Value GetData() const			{ return time_mode ? (Time) sel : (Date) sel; }
 	virtual void  SetData(const Value& v)   { time_mode ? SetTime((Time) v) : SetDate((Date) v); }
 
 	Date GetDate() const;
