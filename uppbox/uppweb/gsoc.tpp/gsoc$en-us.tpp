@@ -12,7 +12,7 @@ Summer of Code (GSoC).]&]
 ::t/50b/50@2 [s0;#b17;a17;ph [*2 1. ][*^topic`:`/`/uppweb`/gsoc`/manual`$en`-us^2 Manual][2 . 
 All you need if you want to know about GSoC]&]
 [s0;#b17;a17;ph [*2 2. Student page.][2  If you are a student and want 
-to stay with us this will interest you. To come ...]&]
+to stay with us this will interest you. ][/@(153)2 To come ...]&]
 [s0;#b17;a17;ph [*2 3. Participation][2 . U`+`+ participation in previous 
 years]&]
 [s0;#i150;b17;a17;phO0; [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 GSoC 

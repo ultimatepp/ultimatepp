@@ -46,6 +46,10 @@ TOPIC("contribweb$en-us")
 #include "contribweb$en-us.tppi"
 END_TOPIC
 
+TOPIC("cookie$en-us")
+#include "cookie$en-us.tppi"
+END_TOPIC
+
 TOPIC("currenttopics$en-us")
 #include "currenttopics$en-us.tppi"
 END_TOPIC
@@ -64,6 +68,10 @@ END_TOPIC
 
 TOPIC("examples$ru-ru")
 #include "examples$ru-ru.tppi"
+END_TOPIC
+
+TOPIC("extlinks$en-us")
+#include "extlinks$en-us.tppi"
 END_TOPIC
 
 TOPIC("FAQ$en-us")

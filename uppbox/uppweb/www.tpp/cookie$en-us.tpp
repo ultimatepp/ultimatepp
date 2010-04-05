@@ -4,13 +4,13 @@ topic "Cookie Prize";
 [s0; [*R6 Cookie Prize]&]
 [s0;%- &]
 [ {{7263:2737f0;g0;t/25b/25R2 [s0;# [2 Cookie prize rewards yearly an U`+`+ project contributor who 
-have distinguished for their involvement. S/He has been helpful 
+have distinguished for her/his involvement. S/He has been helpful 
 to the community kindly asking questions, supporting the newbies 
 and giving good new ideas.]&]
 [s0;#2 &]
-[s0;# [2 In addition they have gone further and have got into action 
-launching their ideas. Because of it they had spent many hours 
-of their time offering his/her colleagues useful new tools.]&]
+[s0;# [2 In addition s/he have gone further and have got into action 
+launching her/his ideas. Because of it s/he have spent many hours 
+of her/his time offering her/his colleagues useful new tools.]&]
 [s0;#2 &]
 [s0;# [2 The idea of a `"cookie`" as a prize came from our GSoC 2010 
 application. If we would got it it would be as a big chocolate 

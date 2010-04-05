@@ -1,38 +1,21 @@
 topic "Ultimate++ is a C++ cross-platform rapid application development framework";
 [ $$0,0#00000000000000000000000000000000:Default]
-[l288;i704;a17;O9;~~~.992; $$1,0#10431211400427159095818037425705:param]
-[a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;* $$3,5#07864147445237544204411237157677:title]
-[b167;a42;C $$4,6#40027414424643823182269349404212:item]
-[b42;a42; $$5,5#45413000475342174754091244180557:text]
-[l288;a17; $$6,6#27521748481378242620020725143825:desc]
-[l321;t246;C@5;1 $$7,7#20902679421464641399138805415013:code]
-[b2503; $$8,0#65142375456100023862071332075487:separator]
-[*@(0.0.255) $$9,0#83433469410354161042741608181528:base]
-[t4167;C+117 $$10,0#37138531426314131251341829483380:class]
-[l288;a17;*1 $$11,11#70004532496200323422659154056402:requirement]
-[i416;b42;a42;O9;~~~.416; $$12,12#10566046415157235020018451313112:tparam]
-[b167;C $$13,13#92430459443460461911108080531343:item1]
-[a42;C $$14,14#77422149456609303542238260500223:item2]
-[*@2$(0.128.128) $$15,15#34511555403152284025741354420178:NewsDate]
-[l321;*C$7 $$16,16#03451589433145915344929335295360:result]
-[l321;b83;a83;*C$7 $$17,17#07531550463529505371228428965313:result`-line]
-[l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
-[{_}%EN-US 
-[s0; [*R6 Ultimate`+`+ is a C`+`+ cross`-platform rapid application 
+[a83;*R6 $$1,0#31310162474203024125188417583966:caption]
+[{_} 
+[s0;%% [*R6 Ultimate`+`+ is a C`+`+ cross`-platform rapid application 
 development framework]&]
-[s0;>*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1 &]
-[ {{6292:3708f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  is a C`+`+ cross`-platform rapid application development 
+[s0;>*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1%% &]
+[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0;%% [*2 U`+`+][2  is a C`+`+ cross`-platform rapid application development 
 framework focused on programmers productivity. It includes a 
 set of libraries (GUI, SQL, etc..), and an integrated development 
 environment.]&]
-[s0;2 &]
-[s0; [2 Rapid development is achieved by the ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 s
+[s0;2%% &]
+[s0;%% [2 Rapid development is achieved by the ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 s
 mart and aggressive use of C`+`+][2  rather than through fancy 
 code generators. In this respect, U`+`+ competes with popular 
 scripting languages while preserving C/C`+`+ runtime characteristics.]&]
-[s0;2 &]
-[s0; [2 The U`+`+ integrated development environment, TheIDE, introduces 
+[s0;2%% &]
+[s0;%% [2 The U`+`+ integrated development environment, TheIDE, introduces 
 modular concepts to C`+`+ programming. It features BLITZ`-build 
 technology to speedup C`+`+ rebuilds up to 4 times, Visual designers 
 for U`+`+ libraries, ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  
@@ -40,24 +23,22 @@ system for documenting code and creating rich text resources
 for applications (like help and code documentation) and ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 A
 ssist`+`+][2  `- a powerful C`+`+ code analyzer that provides features 
 like code completion, navigation and transformation.]&]
-[s0;2 &]
-[s0; [2 TheIDE can work with GCC, MinGW and Visual C`+`+ 9.0 as contained 
+[s0;2%% &]
+[s0;%% [2 TheIDE can work with GCC, MinGW and Visual C`+`+ 9.0 as contained 
 in free ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 W
 indows Vista SDK][2  and contains a full featured debugger. TheIDE 
 can also be used to develop non`-U`+`+ applications.]&]
-[s0;2 &]
-[s0; [*2 What you can get with the Ultimate`+`+ download in plain English]&]
-[s0; &]
-[s0;i150;O2; [2 Very effective C`+`+ library for cross`-platform development 
-in source form.]&]
-[s0;i150;O2; [2 A good integrated development environment, designed 
+[s0;2%% &]
+[s0;%% [*2 What you can get with the Ultimate`+`+ download in plain 
+English]&]
+[s0;%% &]
+[s0;i150;O2;%% [2 Very effective C`+`+ library for cross`-platform 
+development in source form.]&]
+[s0;i150;O2;%% [2 A good integrated development environment, designed 
 for developing large C`+`+ applications.]&]
-[s0;2 &]
-[s0; [2 You can use both, or you can use whichever you need.]&]
-[s0;2 &]
-[s0;2 ]
-:: [s2;>/@(0.0.255)0 &]
-[s2;> [/@(0.0.255)0 
+[s0;2%% &]
+[s0;%% [2 You can use both, or you can use whichever you need.]]
+:: [s1;>%% [/@(0.0.255)0 
 @@image:1271&1092
 ˆƒ ø€€€€€€€€€€ø‡œì…ü”×××ÿ§­®‰îÎÒÜƒ»„§„»¸»û€ õ¾Ù…ÒœŠ»ÃˆÂÂ ‚ÁŠÁ”¢­Òœ‚ñŸ¬ïØùŸ»÷
 ú³Ù„èû¼ï¥ÿùªû¾÷³ÐÌææ§Ëæ¾­û»çÜóï…Æ°™ÉÌæ²“ã™Ìä¦³™É¸Ìæ²“™ÌäŒ¦³™ÉÌæ²Ç“™Ìä¦³™ñÉÌæ²“™Ì
@@ -771,99 +752,110 @@ for developing large C`+`+ applications.]&]
 Öþó«˜¸ÿ»ÿïù—Ü¿îêÒ¿ƒ¬Ù²äÉÉ’¥Ë–¬Ù²¦äÉ’¥Ë–¬šÙ²äÉ’¥Ëé–¬Ù²äÉ’¤¥Ë–¬Ù²ä“É’¥Ë–¬ÙÍ²äÉ’¥Ë–
 ´¬Ù²äÉ’¥ÒË–¬Ù²äÉÉ’¥Ë–¬Ù²¦äÉ’¥Ë–¬šÙ²äÉ’¥Ë™–¬Ù®úßú…Šèý
 ]&]
-[s0;>/@(0.0.255)0 &]
-[s0;l128; Current release: [* 2232]&]
-[s0;l128; License: [* BSD]&]
-[s0;l128;+92 &]
-[s0;l128;+92 &]
-[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 Download U`+`+ 2232]]
-::@(255.255.235) [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2232`.exe^+75 W
-in32 installer][+75  (18.1 MB) ]]
-:: [s0;l32; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2232`.tar`.gz^+75 X
-11`-src][+75  (20.2 MB)]]}}&]
-[s0;l128;+92 &]
-[ {{10000<133;f4;@(93.25.8) [s0; [*@2;2 U`+`+ News]]
-::@(255.255.233) [s0; [*@5$2;1 2010`-03`-16]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-2232 released]]
-:: [s0; [*@5$2;1 2010`-02`-15]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-2070 released]]
-:: [s0; [*@5$2;1 2010`-01`-26]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-1952 released]]
-:: [s0; [*@5$2;1 2009`-12`-21]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-1824 released]]
-:: [s0; [*@5$2;1 2009`-11`-25]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-1713 released]]
-:: [s0; [*@5$2;1 2009`-10`-26]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-1659 released]]
-:: [s0; [*@5$2;1 2009`-10`-05]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-1607 released]]
-:: [s0; [*@5$2;1 2009`-09`-22]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-1579 released]]
-:: [s0; [*@5$2;1 2009`-08`-18]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-1517 released]]
-:: [s0; [*@5$2;1 2009`-06`-17]&]
-[s0; [*@5$2;1 __][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-1314 released]]
-:: [s0; [*@5$2;1 2009`-06`-01]&]
-[s0; [*@5$2;1 __][*$2+75 U`+`+ 1254 released]]
-:: [s0; [*@5$2;1 2009`-05`-18]&]
-[s0; [*@5$2;1 __][*$2+75 U`+`+ 1205 released]]
-:: [s0; [*@5$2;1 2009`-05`-04]&]
-[s0; [*@5$2;1 __][*$2+75 U`+`+ 1124 released]]
-:: [s0; [*@5$2;1 2009`-04`-26]&]
-[s0; [*@5$2;1 __][*$2+75 U`+`+ 1096 released]]
-:: [s0; [*@5$2;1 2008`-08`-06]&]
-[s0; __[*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^+75 U`+`+ 2008.1 
-released]]
-:: [s0; [*@5$2;1 2008`-03`-24]&]
-[s0; __[^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^+75 U`+`+ 2008.1beta2 
-released]]
-:: [s0; [*@5$2;1 2007`-04`-11]&]
-[s0; [*$2+75 __][^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 2007.1][^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75  
-released]]
-:: [s0; [*@5$2;1 2007`-04`-09]&]
-[s0; [*$2+75 __][^http`:`/`/www`.ultimatepp`.org`/wiki^$2+75 Wiki installed]]
-:: [s0; [*@5$2;1 2007`-04`-06]&]
-[s0; [*$2+75 __][^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 2007.1rc5][^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75  
-released][$2+75 .]]
-:: [s0; [*@5$2;1 2007`-01`-24]&]
-[s0; [*$2+75 __][^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 U`+`+ 
-][*^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75 2007.1beta2][^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^$2+75  
-released][$2+75 .]]
-:: [s0; [*@5$2;1 2006`-06`-01]&]
-[s0; [$2+75 __U`+`+ ][*$2+75 605][$2+75  released]]
-:: [s0; [*@5$2;1 2006`-03`-01]&]
-[s0; [*$2+75 __][$2+75 U`+`+ ][*$2+75 602][$2+75  released.]]
-:: [s0; [*@5$2;1 2006`-02`-27]&]
-[s0; [*$2+75 __][$2+75 U`+`+][*$2+75  602 RC][$2+75  available]]
-:: [s0; [*@5$2;1 2006`-02`-22]&]
-[s0; [*$2+75 __][$2+75 U`+`+][*$2+75  602beta4][$2+75  available]]
-:: [s0; [*@5$2;1 2006`-02`-20]&]
-[s0; [*$2+75 __][$2+75 U`+`+][*$2+75  602beta3][$2+75  available]]
-:: [s0; [*@5$2;1 2006`-02`-13]&]
-[s0; [*$2+75 __][$2+75 U`+`+][*$2+75  602beta2][$2+75  available]]
-:: [s0; [*@5$2;1 2006`-02`-06]&]
-[s0; [*$2+75 __][$2+75 U`+`+][*$2+75  602beta][$2+75  available]]
-:: [s0; [*@5$2;1 2005`-11`-20]&]
-[s0; [*$2+75 __][$2+75 U`+`+ ][*$2+75 511][$2+75  released.]]
-:: [s0; [*@5$2;1 2005`-11`-20]&]
-[s0; [*@5$2;1 __][$2+75 New ][*^http`:`/`/www`.ultimatepp`.org`/forum^$2+75 forums][$2+75  
-launched.]]
-:: [s0; [*@5$2;1 2005`-11`-14]&]
-[s0; [/$2+75 __][$2+75 U`+`+ ][*$2+75 511 RC][$2+75  available.]]
-:: [s0; [*@5$2;1 2005`-11`-01]&]
-[s0; [*@3$2;1 __][$2+75 U`+`+ ][*$2+75 511 beta][$2+75  available.]]
-:: [s0; [*@5$2;1 2005`-08`-08]&]
-[s0; [/$2+75 __][$2+75 U`+`+ ][*$2+75 0.98.7][$2+75  released.]]}}]}}&]
-[s0;> [^topic`:`/`/uppweb`/testing`/newindex`$en`-us^ .]]
+[s0;>/@(0.0.255)0%% &]
+[s0;l128;%% Current release: [* 2232]&]
+[s0;l128;%% License: [* BSD]&]
+[s0;*%% ]}}&]
+[s0; &]
+[ {{10000f0;g0;l8/25r8/25t8/25b8/25@(240)R(165) [s0;=%% [* U`+`+ Resources]]}}&]
+[s0;0 &]
+[ {{1229:1995:161:1612:1612:161:1309:1921f0;g0;l8/25t8/25b8/25@(240)R(165) [s0; [*2 Getting Started]]
+::l0/25r8/25 [s0;>%% [@(114)2 5 minutes to learn the basics]]
+::r0/25t0/25b0/25@2 [s0;>@(114)2%% ]
+::l8/25t8/25b8/25@(240) [s0;%% [2 Users]]
+::l0/25r8/25-3 [s0;>@(114)2%% ]
+::r0/25t0/15b0/15@2R0-2 [s0; ]
+::-1 [s0; ]
+:: [s0; ]
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 GUI 
+Tutorial]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparisons]&]
+[s0;i150;O0;%% [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Overview]]
+::l0/25r0/25t0/15b0/15R0 [s0; ]
+::r8/25t/25b/25R(165) [s0;>@(114)2%% ]
+::t8/25b8/25-2 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Overview]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentation]&]
+[s0;i150;O0;%% [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Examples]&]
+[s0;i150;O0;%% [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparisons]]
+::r0/25t0/15b0/15R0-1 [s0; ]
+:: [s0; ]
+::l8/25r/0t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Applications]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 FAQ]&]
+[s0;i150;O0;%% [^http`:`/`/www`.ultimatepp`.org`/forum^2 Forums]]
+::l0/25r/25t0/15b0/15R0 [s0; ]
+::t8/25b8/25R(165)-1 [s0;*+34 ]
+::t0/15b0/15R0 [s0; ]
+::t/25b/25R(165) [s0;>@(114)+34%% ]
+::t8/25b8/25-1 [s0;*+34 ]
+::t0/15b0/15R0 [s0; ]
+::t8/25b/25R(165)|5 [s0;*+34 ]
+::b8/25-1 [s0;*+34 ]
+::t0/15b0/15R0 [s0; ]
+::l8/25t8/25b8/25@(240)R(165) [s0;%% [*2 Developers]]
+::l0/25r8/25-3 [s0;>%% [@(114)2 If you fill like contributing web or code this is 
+your place]]
+::r0/25t0/15b0/15@2R0-2 [s0; ]
+::-1 [s0; ]
+:: [s0; ]
+:: [s0; ]
+::l8/25r/0t8/25b8/25@(240)R(165) [s0;%% [*2 Download U`+`+]]
+::l0/25r8/25 [s0;>%% [@(114)2 Let`'s go!]]
+::^l8/25@2-2 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 SVN 
+install and permissions]&]
+[s0;i150;a17;O0;%% [2 Bug report. Submitting a patch. ][/@(153)2 To Be 
+Done ...]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Web 
+page]&]
+[s0;i150;a17;O0;%% [2 New development ideas]&]
+[s0;l160;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Current 
+topics]&]
+[s0;l160;i150;a17;O0;%% [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 GSoC 
+ideas]]
+::=l0/25r0/25t0/15b0/15R0-1 [s0; ]
+:: [s0; ]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Bazaar]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/ide`/app`/About`$en`-us^2 Authors `& 
+License]]
+::=l0/25r0/25t0/15b0/15R0 [s0; ]
+:: [s0; ]
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Download]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Current 
+release: 2232]&]
+[s0;l160;i150;a17;O0;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2232`.exe^+75 W
+in32 installer][+75  (18.1 MB)]&]
+[s0;l160;i150;a17;O0;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2232`.tar`.gz^+75 X
+11`-src][+75  (20.2 MB)]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/testing`/svn`$en`-us^2 Latest 
+svn: 2303][2 . ][/@(153)2 To Be Done ...]]
+::l0/25r0/25t0/15b0/15R0 [s0; ]
+::r/0t8/25b8/25R(165)-1 [s0;*+34%% ]
+::r/25t0/15b0/15R0 [s0; ]
+::r/0t8/25b/25R(165)|2 [s0;*+34%% ]
+::b8/25-1 [s0;*+34%% ]
+::r/25t0/15b0/15R0 [s0; ]
+:: [s0; ]
+::r/0t8/25b8/25R(165)-1 [s0;*+34%% ]
+::r/25t0/15b0/15R0 [s0; ]
+::l8/25r/0t8/25b8/25@(240)R(165) [s0;%% [*2 Students]]
+::l0/25r8/0 [s0;=@(114)2%% ]
+::r0/25t0/15b0/15@2R0 [s0; ]
+::l8/25r/0t8/0b8/0@(240)R(165) [s0;%% [*2 Other]]
+::l0/0r8/0 [s0;=*2%% ]
+::l/25r0/25t0/15b0/15@2R0 [s0; ]
+::l8/25t8/25b8/25@(240)R(165) [s0;%% [*2 Supporting U`+`+]]
+::l0/25r8/25 [s0;>%% [@(114)2 Sometimes more than code is needed...]]
+::l8/25@2-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/gsoc`/gsoc`$en`-us^2 Google 
+Summer of Code resources]]
+::l0/25r0/25t0/15b0/15R0 [s0; ]
+:: [s0; ]
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/extlinks`$en`-us^2 External 
+links]&]
+[s0;i150;O0;%% [2 Web index. ][/@(153)2 To Be Done...]]
+::l0/25r0/25t0/15b0/15R0 [s0; ]
+:: [s0; ]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 Funding 
+U`+`+]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Cookie 
+prize]]
+::=l0/25r0/25t0/15b0/15R0 [s0; ]}}&]
+[s0; ]

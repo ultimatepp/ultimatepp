@@ -152,6 +152,6 @@ void ParseSvnLog(Vector<SvnLogRev> &log,String& out){
 
 void GetSvnLog(Vector<SvnLogRev> &log){
 	RLOG("Querying svn for revisions log ...");
-	String out = Sys("svn log \"" + rootdir + "\" --xml --verbose --non-interactive --limit 30");
+	String out = Sys("svn log \"" + rootdir + "\" --xml --verbose --non-interactive");  // It is fast to get it all, and it will serve // --limit 30");
 	ParseSvnLog(log,out);
 }
