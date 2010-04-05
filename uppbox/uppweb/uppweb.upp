@@ -18,6 +18,7 @@ file
 	www.h,
 	svn.cpp,
 	topictree.cpp,
+	svn.tpp,
 	cpp.cpp,
 	www.cpp,
 	gsoc.tpp,
