@@ -134,7 +134,7 @@ String FormatXmlRpcValue(const Value& v)
 		r << "</data></array>";
 	}
 	else
-		r = XmlTag("string")(AsString(v));
+		r = XmlTag("string")(DeXml(AsString(v)));
 	return XmlTag("value")(r);
 }
 
