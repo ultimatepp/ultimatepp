@@ -1,4 +1,4 @@
-description "Experimental (sometimes obsolete) non-GUI code";
+description "Experimental (sometimes obsolete) non-GUI code\377";
 
 charset "windows-1250";
 

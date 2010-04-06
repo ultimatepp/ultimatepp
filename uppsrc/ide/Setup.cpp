@@ -316,7 +316,7 @@ void Ide::SetupFormat() {
 	dlg.Add(edt, "Editor");
 	dlg.Add(ide, "IDE");
 	dlg.Add(ast, "Code formatting");
-	dlg.WhenClose = dlg.Acceptor(IDYES);
+	dlg.WhenClose = dlg.Acceptor(IDEXIT);
 	FontSelectManager ed, vf, con, f1, f2, tf;
 	ed.Set(fnt.face, fnt.height, fnt.bold, fnt.italic, fnt.naa);
 	vf.Set(fnt.vface, fnt.vheight, fnt.vbold, fnt.vitalic, fnt.vnaa);
@@ -444,7 +444,7 @@ void Ide::SetupFormat() {
 			editor.SetHlStyle(i, hlt.hlstyle.Get(i, 1), hlt.hlstyle.Get(i, 2),
 			                     hlt.hlstyle.Get(i, 3), hlt.hlstyle.Get(i, 4));
 		UpdateFormat();
-		if(c == IDYES)
+		if(c == IDEXIT)
 			break;
 		if(c == 333 && PromptYesNo("Restore default highlighting colors?")) {
 			editor.DefaultHlStyles();
