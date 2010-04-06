@@ -1,4 +1,4 @@
-description "Experimental (sometimes obsolete) SQL code";
+description "Experimental (sometimes obsolete) SQL code\377";
 
 uses
 	Sql,
