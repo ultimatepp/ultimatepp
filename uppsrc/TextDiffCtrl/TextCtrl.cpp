@@ -163,6 +163,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 	int lcy = lcnt * letter.cy - offset.cy;
 	draw.DrawRect(0, lcy, sz.cx, sz.cy - lcy, SGray());
 	draw.End();
+	draw.DrawRect(0, lcy, number_width, sz.cy - lcy, number_bg);
 }
 
 void TextCompareCtrl::TabSize(int t)
