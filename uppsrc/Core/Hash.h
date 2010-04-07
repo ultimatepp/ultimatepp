@@ -6,10 +6,10 @@ typedef struct {
 	dword state[4];                                   /* state (ABCD) */
 	dword count[2];        /* number of bits, modulo 2^64 (lsb first) */
 	unsigned char buffer[64];                         /* input buffer */
-} MD5_CTX;
+} UPP_MD5_CTX;
 
 class Md5Stream : public OutStream {
-	MD5_CTX context;
+	UPP_MD5_CTX context;
 
 	virtual  void  Out(const void *data, dword size);
 

@@ -1337,4 +1337,29 @@ bool WildcardCompare::RawMatches(const wchar *s, const wchar *templ) const
 	return true;
 }
 
+void StringXml(StringBuffer& xml, const char *tag, const String& str)
+{
+	xml << '<' << tag << '>' << DeXml(str) << "</" << tag << ">\n";
+}
+
+void IntXml(StringBuffer& xml, const char *tag, int value)
+{
+	xml << '<' << tag << '>' << value << "</" << tag << ">\n";
+}
+
+void BoolXml(StringBuffer& xml, const char *tag, bool b)
+{
+	xml << '<' << tag << '>' << (b ? "1" : "0") << "</" << tag << ">\n";
+}
+
+bool XmlBool(XmlParser& xml)
+{
+	return (xml.ReadTextE() != "0");
+}
+
+int XmlInt(XmlParser& xml)
+{
+	return ScanInt(xml.ReadTextE());
+}
+
 END_UPP_NAMESPACE
