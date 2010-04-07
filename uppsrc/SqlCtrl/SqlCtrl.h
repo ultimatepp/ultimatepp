@@ -89,8 +89,9 @@ private:
 	void      Inserting();
 
 public:
-	Callback  WhenPreQuery;
-	Callback  WhenPostQuery;
+	Callback                           WhenPreQuery;
+	Callback                           WhenPostQuery;
+	Gate1<const VectorMap<Id, Value>&> WhenFilter;
 
 	void      StdBar(Bar& menu);
 	bool      CanInsert() const;
