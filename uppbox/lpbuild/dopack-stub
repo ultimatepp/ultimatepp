@@ -1,7 +1,7 @@
 #!/bin/bash
-# This file is a stub of packaging script. It won't work alone,
-# some variables has to be set prior to execution (see lpbuild).
 
+MAINTAINER="Jan Dolinar"
+EMAIL="dolik.rce@seznam.cz"
 PKG="upp"
 SRC_PATH=$1
 DEST_PATH=$2
