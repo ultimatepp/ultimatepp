@@ -2,7 +2,7 @@
 
 #setup some variables, paths, etc. first:
 
-#upp server setting guesses:
+#upp server settings:
 #THEIDE="/home/upp/bin/theide"			# where is theide executable
 SRC_PATH="/home/upp/upp.tmp/u"	# where to look for sources
 #BM="GCCMK"						# what build method to use
@@ -13,6 +13,7 @@ BUILD="1"						# increment this when building version which is already in launch
 GPG_PROG="/home/upp/bin/gpg-extpass"	# what program to use for signing (in this case a wrapper that supplies passphrase)
 GPG_KEY="0CE4194D"				# gpg key fingerprint to use
 TMPDIR="/home/upp/lpbuild.tmp"	# directory for temporary files (defaults to /tmp/lpbuild.tmp)
+PPA="upp"
 SERIES=( hardy intrepid jaunty karmic lucid )
 
 # my local setup (for debuging)
@@ -27,7 +28,8 @@ SERIES=( hardy intrepid jaunty karmic lucid )
 #GPG_PROG="/usr/bin/gpg-extpass"
 #GPG_KEY="E0962C7A"
 #TMPDIR=""	# use default
-#SERIES=( karmic )
+#PPA="upp-testing"
+#SERIES=( hardy intrepid )
 #SIMULATE="-s"
 
 echo "Checking whether gpg-agent is running..."
@@ -56,7 +58,7 @@ tmp=$tmpdir/upp-$VER
 orig="$tmpdir/upp_$VER.orig.tar.gz"
 scriptpath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")" #not from my head:-)
 scriptdir=`dirname "$scriptpath"`
-subfolders=( uppsrc examples tutorial reference bazaar )
+nests=( uppsrc examples tutorial reference bazaar )
 
 # clean up temporary files
 cd $SRC_PATH
@@ -74,7 +76,7 @@ cd $tmp
 # copy source files to tmp folder
 #    rsync takes care about .svn subdirs 
 echo "copying sources:"
-for folder in ${subfolders[@]}
+for folder in ${nests[@]}
 do
 	echo "  $folder"
 	#rsync -rl --exclude '.svn' $SRC_PATH/$folder $tmp
@@ -92,7 +94,7 @@ echo "Creating changelog ..."
 cd $SRC_PATH
 svn --limit 100 --xml -v log $SVN_PATH|python $scriptdir/svn2log.py \
 -u $scriptdir/users.lst -P upp -L -d ultimatepp.org -S all -p /trunk/ \
--i "`echo ${subfolders[@]} |tr \" \" ,`" -o $tmp/changelog
+-i "`echo ${nests[@]} |tr \" \" ,`" -o $tmp/changelog
 
 # Patch the version.h for curent version
 echo "#define IDE_VERSION \"$VER\"" > $tmp/uppsrc/ide/version.h
@@ -100,7 +102,7 @@ echo "#define IDE_VERSION \"$VER\"" > $tmp/uppsrc/ide/version.h
 # compress the sources and Makefile to get orig.tar.gz
 echo "Compressing original source tarball ..."
 cd $tmp
-tar -czf $orig ${subfolders[@]} Makefile 
+tar -czf $orig ${nests[@]} Makefile 
 
 # prepare architecture independent part of debian directory:
 echo "Debianizing source tree ..."
@@ -121,10 +123,12 @@ Authors: Mirek Fidler, Tomas Rylek, Daniel Kos
 License: BSD (please see /usr/share/common-licenses/BSD).
 EOF
 
+skiporig=""
+
 # cycle through $SERIES and prepare the architecture depedent files
 for dist in ${SERIES[@]}
 do
-	version=$VER"~ppa"$BUILD"~"$dist"1"
+	version=$VER-$BUILD~$dist"0"
 
 	# save complete version string to ide/version.h
 	echo "#define IDE_VERSION \"$version\"" > $tmp/uppsrc/ide/version.h
@@ -138,29 +142,21 @@ upp ($version) $dist; urgency=low
  -- Jan Dolinar <dolik.rce@seznam.cz>  `date -R`
 EOF
 
-	# generate debian/dopack script
-	cat > "$tmp/debian/dopack" << EOF
-#!/bin/bash
-
-VERSION="$VER"
-MAINTAINER="Jan Dolinar"
-EMAIL="dolik.rce@seznam.cz"
-SERIES="$dist"
-BUILD="$BUILD"
-release="$version"
-EOF
-	cat "$scriptdir/dopack-stub" >> $tmp/debian/dopack
+	# copy debian/dopack script
+	cp "$scriptdir/dopack-stub" $tmp/debian/dopack
 
 	# call debuild to create the package
 	echo "Packaging upp $version ..."
 	cd $tmp
-	debuild --no-lintian -k$GPG_KEY -m'Jan Dolinar <dolik.rce@seznam.cz>' -sgpg -p$GPG_PROG -S
+	debuild --no-lintian -k$GPG_KEY -m'Jan Dolinar <dolik.rce@seznam.cz>' -sgpg -p$GPG_PROG -S $skiporig
 	
 	# upload to launchpad (set SIMULATE="-s" for debugging)
 	echo "Uploading upp $version ..."
 	cd $tmpdir
-	dput $SIMULATE "upp-$dist" "upp_"$version"_source.changes"
-
+	dput $SIMULATE "$PPA-$dist" "upp_"$version"_source.changes"
+	
+	skiporig="-sd"
+	
 	# remove architecture dependent files
 	rm $tmp/debian/{dopack,changelog}
 done
