@@ -396,4 +396,25 @@ Vector<Image> UnpackImlData(const String& d)
 	return UnpackImlData(~d, d.GetLength());
 }
 
+void TransformComponents(RGBA *t, const RGBA *s, int len,
+	const byte r[], const byte g[], const byte b[], const byte a[])
+{
+	while(--len >= 0) {
+		t->r = r[s->r];
+		t->g = g[s->g];
+		t->b = b[s->b];
+		t->a = a[s->a];
+		s++;
+		t++;
+	}
+}
+
+void MultiplyComponents(RGBA *t, const RGBA *s, int len, int num, int den)
+{
+	byte trans[256];
+	for(int i = 0; i < 256; i++)
+		trans[i] = (byte)minmax((2 * i + 1) * num / (2 * den), 0, 255);
+	TransformComponents(t, s, len, trans, trans, trans, trans);
+}
+
 END_UPP_NAMESPACE
