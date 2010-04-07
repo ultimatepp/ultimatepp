@@ -171,27 +171,32 @@ void SqlArray::AppendQuery(SqlBool where)
 	WhenPreQuery();
 	if(fk.IsNull() || !IsNull(fkv)) {
 		SqlSet cols;
-		for(int i = 0; i < GetIndexCount(); i++)
-			if(!GetId(i).IsNull())
-				cols.Cat(SqlId(GetId(i)));
+		VectorMap<Id, Value> fm;
+		for(int i = 0; i < GetIndexCount(); i++) {
+			if(!GetId(i).IsNull()) {
+				Id id(GetId(i));
+				cols.Cat(SqlId(id));
+				fm.Add(id);
+			}
+		}
 		SqlBool wh = where;
 		if(!fk.IsNull())
 			wh = wh && fk == fkv;
 		Sql sql(Session());
 		Session().ClearError();
-//		AutoWaitCursor awc(querytime); // todo: Fidler -> WaitCursor
 		if(IsNull(count))
 			sql * UPP::Select(cols).From(table).Where(wh).OrderBy(orderby);
 		else
 			sql * UPP::Select(cols).From(table).Where(wh).OrderBy(orderby).Limit(count).Offset(offset);
-		if(ShowError(sql)) {
-//			awc.Cancel(); // todo: Fidler -> WaitCursor
+		if(ShowError(sql))
 			return;
-		}
 		for(;;) {
 			Vector<Value> row;
 			if(!sql.Fetch(row)) break;
-			Add(row);
+			for(int i = 0; i < min(row.GetCount(), fm.GetCount()); i++)
+				fm[i] = row[i];
+			if(WhenFilter(fm))
+				Add(row);
 		}
 		if(GetCount())
 			if(goendpostquery)
@@ -229,6 +234,7 @@ SqlArray::SqlArray() {
 	RowName(t_("record"));
 	offset = 0;
 	count = Null;
+	WhenFilter = true;
 }
 
 END_UPP_NAMESPACE
