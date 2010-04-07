@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#define MD5_CTX UPP_MD5_CTX
+
 /* MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm
 */
 
