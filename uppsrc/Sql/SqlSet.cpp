@@ -5,13 +5,13 @@ NAMESPACE_UPP
 SqlSet operator|(const SqlSet& s1, const SqlSet& s2) {
 	if(s1.IsEmpty()) return s2;
 	if(s2.IsEmpty()) return s1;
-	return SqlSet(s1(SqlSet::SET) + " union " + s2(SqlSet::SET), SqlSet::SETOP);
+	return SqlSet(s1(SqlSet::SET, ~SQLITE3) + " union " + s2(SqlSet::SET, ~SQLITE3), SqlSet::SETOP);
 }
 
 SqlSet operator&(const SqlSet& s1, const SqlSet& s2) {
 	if(s1.IsEmpty()) return s2;
 	if(s2.IsEmpty()) return s1;
-	return SqlSet(s1(SqlSet::SET) + " intersect " + s2(SqlSet::SET), SqlSet::SETOP);
+	return SqlSet(s1(SqlSet::SET, ~SQLITE3) + " intersect " + s2(SqlSet::SET, ~SQLITE3), SqlSet::SETOP);
 }
 
 SqlSet operator-(const SqlSet& s1, const SqlSet& s2) {
@@ -33,6 +33,15 @@ String SqlSet::operator()() const {
 String SqlSet::operator()(int at) const {
 	if(IsEmpty()) return "null";
 	return at > priority ? '(' + text + ')' : text;
+}
+
+String SqlSet::operator()(int at, byte cond) const {
+	if(IsEmpty()) return "null";
+	if(at <= priority)
+		return text;
+	StringBuffer out;
+	out << SqlCase(cond, "(")() << text << SqlCase(cond, ")")();
+	return out;
 }
 
 SqlSet& SqlSet::Cat(const SqlVal& val) {

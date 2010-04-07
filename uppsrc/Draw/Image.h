@@ -28,6 +28,10 @@ void Copy(RGBA *t, const RGBA *s, int n);
 int  Premultiply(RGBA *t, const RGBA *s, int len);
 int  Unmultiply(RGBA *t, const RGBA *s, int len);
 
+void TransformComponents(RGBA *t, const RGBA *s, int len,
+	const byte r[], const byte g[], const byte b[], const byte a[]);
+void MultiplyComponents(RGBA *t, const RGBA *s, int len, int num, int den = 256);
+
 void AlphaBlend(RGBA *t, const RGBA *s, int len);
 void AlphaBlend(RGBA *t, const RGBA *s, int len, Color color);
 

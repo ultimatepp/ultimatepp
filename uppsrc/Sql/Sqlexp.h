@@ -150,6 +150,7 @@ public:
 
 	String        operator()() const;
 	String        operator()(int at) const;
+	String        operator()(int at, byte cond) const;
 	const String& operator~() const         { return text; }
 	bool          IsEmpty() const           { return priority == EMPTY; }
 
@@ -399,6 +400,7 @@ public:
 	String           operator~() const;
 	String           operator()() const;
 	String           operator()(int at) const;
+	String           operator()(int at, byte cond) const;
 	bool             IsEmpty() const                { return text.IsEmpty(); }
 
 	SqlSet&          Cat(const SqlVal& val); // adding a member

@@ -47,6 +47,15 @@ String SqlS::operator()(int at) const
 	return at > priority ? operator()() : text;
 }
 
+String SqlS::operator()(int at, byte cond) const
+{
+	if(at <= priority)
+		return text;
+	StringBuffer out;
+	out << SqlCase(cond, "(")() << text << SqlCase(cond, ")")();
+	return out;
+}
+
 SqlS::SqlS(const SqlS& a, const char *o, const SqlS& b, int pr, int prb) {
 	text = a(pr) + o + b(prb);
 	priority = pr;
