@@ -250,8 +250,9 @@ void DockCont::ChildAdded(Ctrl *child)
 
 bool DockCont::Key(dword key, int count)
 {
-	PostCallback(callback1(base, &DockWindow::DoHotKeys, key));
-	return true;
+	if (!IsDocked())
+		PostCallback(callback1(base, &DockWindow::DoHotKeys, key));
+	return !IsDocked();
 }
 
 // The use of Single<> here is bad form, but I am unable to declare it a 
