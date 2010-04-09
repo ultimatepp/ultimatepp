@@ -239,6 +239,7 @@ String FormatXmlRpcParams(const ValueArray& params);
 String FormatXmlRpcError(int code, const char *text);
 
 void   Register(const char *name, void (*method)(XmlRpcData&), const char *group = NULL);
+bool   XmlRpcPerform(Socket& http, const char *group);
 bool   XmlRpcServer(int port = 80, const char *group = NULL);
 
 #define XMLRPC_METHOD(x) \
