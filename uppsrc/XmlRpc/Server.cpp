@@ -87,6 +87,38 @@ String ReadLine(Socket& s)
 	return Filter(s.ReadUntil('\n'), CharFilterNoCr);
 }
 
+bool XmlRpcPerform(Socket& http, const char *group)
+{
+	LLOG("=== Accepted connection ===================================================");
+	String request = ReadLine(http);
+	if(http.IsError()) return false;
+	VectorMap<String, String> hdr;
+	for(;;) {
+		String s = ReadLine(http);
+		if(s.IsEmpty()) break;
+		LLOG(s);
+		int q = s.Find(':');
+		if(q >= 0)
+			hdr.GetAdd(s.Mid(0, q)) = TrimLeft(s.Mid(q + 1));
+	}
+	if(http.IsError()) return false;
+	String r = XmlRpcExecute(http.ReadCount(atoi(hdr.Get("Content-Length", "")), 90000),
+	                         group, http.GetPeerAddr());
+	LLOG("--------- Server response:\n" << r << "=============");
+	String response;
+	response <<
+		"HTTP/1.1 200 OK\r\n"
+		"Date: Mon, 23 May 2005 22:38:34 GMT\r\n"
+		"Server: U++\r\n"
+		"Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT\r\n"
+		"Accept-Ranges: bytes\r\n"
+		"Content-Length: " << r.GetCount() << "\r\n"
+		"Connection: close\r\n"
+		"Content-Type: application/soap+xml; charset=utf-8\r\n\r\n" << r;
+	http.Write(response);
+	return true;
+}
+
 bool XmlRpcServer(int port, const char *group)
 {
 	Socket rpc;
@@ -94,34 +126,7 @@ bool XmlRpcServer(int port, const char *group)
 		return false;
 	for(;;) {
 		Socket http;
-		if(rpc.Accept(http)) {
-			LLOG("=== Accepted connection ===================================================");
-			String request = ReadLine(http);
-			if(http.IsError()) continue;
-			VectorMap<String, String> hdr;
-			for(;;) {
-				String s = ReadLine(http);
-				if(s.IsEmpty()) break;
-				LLOG(s);
-				int q = s.Find(':');
-				if(q >= 0)
-					hdr.GetAdd(s.Mid(0, q)) = TrimLeft(s.Mid(q + 1));
-			}
-			if(http.IsError()) continue;
-			String r = XmlRpcExecute(http.ReadCount(atoi(hdr.Get("Content-Length", "")), 90000),
-			                         group, http.GetPeerAddr());
-			LLOG("--------- Server response:\n" << r << "=============");
-			String response;
-			response <<
-				"HTTP/1.1 200 OK\r\n"
-				"Date: Mon, 23 May 2005 22:38:34 GMT\r\n"
-				"Server: U++\r\n"
-				"Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT\r\n"
-				"Accept-Ranges: bytes\r\n"
-				"Content-Length: " << r.GetCount() << "\r\n"
-				"Connection: close\r\n"
-				"Content-Type: application/soap+xml; charset=utf-8\r\n\r\n" << r;
-			http.Write(response);
-		}
+		if(rpc.Accept(http))
+			XmlRpcPerform(http, group);
 	}
 }
