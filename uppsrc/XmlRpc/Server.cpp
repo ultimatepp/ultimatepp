@@ -3,7 +3,11 @@
 
 #define LLOG(x) //  LOG(x)
 
-VectorMap< String, void (*)(XmlRpcData&) >& XmlRpcMap(const char *group)
+typedef void (*XmlRpcFnPtr)(XmlRpcData&);
+
+static StaticMutex XmlRpcMapMutex;
+
+VectorMap<String, XmlRpcFnPtr>& XmlRpcMap(const char *group)
 {
 	static VectorMap<String, VectorMap< String, void (*)(XmlRpcData&) > > mm;
 	return mm.GetAdd(group);
@@ -11,7 +15,14 @@ VectorMap< String, void (*)(XmlRpcData&) >& XmlRpcMap(const char *group)
 
 void Register(const char *name, void (*method)(XmlRpcData&), const char *group)
 {
+	Mutex::Lock __(XmlRpcMapMutex);
 	XmlRpcMap(group).Add(name, method);
+}
+
+XmlRpcFnPtr XmlRpcMapGet(const char *group, const char *name)
+{
+	Mutex::Lock __(XmlRpcMapMutex);
+	return XmlRpcMap(group).Get(name, NULL);
 }
 
 struct XmlRpcError {
@@ -29,7 +40,6 @@ void ThrowXmlRpcError(int code, const char *s)
 
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr)
 {
-	VectorMap< String, void (*)(XmlRpcData&) >& xmlrpcmap = XmlRpcMap(group);
 	XmlParser p(request);
 	XmlRpcData data;
 	String methodname;
@@ -44,11 +54,10 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 		p.PassEnd();
 		data.peeraddr = peeraddr;
 		data.in = ParseXmlRpcParams(p);
-		int q = xmlrpcmap.Find(methodname);
-		if(q < 0)
-			return FormatXmlRpcError(XMLRPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
-		else {
-			(*xmlrpcmap[q])(data);
+		XmlRpcMapMutex.Enter();
+		void (*fn)(XmlRpcData&) = XmlRpcMapGet(group, methodname);
+		if(fn) {
+			(*fn)(data);
 			if(IsValueArray(data.out)) {
 				ValueArray va = data.out;
 				if(va.GetCount() && IsError(va[0])) {
@@ -58,6 +67,10 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 				r << FormatXmlRpcParams(data.out);
 			}
 			r << "\r\n</methodResponse>\r\n";
+		}
+		else {
+			XmlRpcMapMutex.Leave();
+			return FormatXmlRpcError(XMLRPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
 		}
 		p.PassEnd();
 		return r;
