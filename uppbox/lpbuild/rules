@@ -12,7 +12,7 @@ clean:
 	-rm -f debian/substvars
 	
 build:
-	$(MAKE) $(JOBS) PKG=ide "DIRS=uppsrc" "FLAGS=GUI MT" VERBOSE=y BINEXT= "BINDIR=debian/"
+	$(MAKE) $(JOBS) PKG=ide "DIRS=uppsrc" "FLAGS=GUI MT GCC SHARED" VERBOSE=y BINEXT= "BINDIR=debian/"
 
 binary-indep:
 

@@ -43,6 +43,7 @@ DIRS=bazaar examples reference tutorial uppsrc
 # Flags as in TheIDE.
 # The only difference is, that if you use SPEED or SIZE flag, then     #
 # the application will be optimized for Speed or Size, respectively.   #
+# Flags STATIC and ALLSHARED will determine the linking mode.          #
 FLAGS=GCC
 # Additional include paths for compiler (without  leading "-I")        #
 INCPATHS:=
@@ -72,7 +73,7 @@ SPEEDFLAGS:=-O3 -ffunction-sections -fdata-sections
 # Additional options for size optimization                             #
 SIZEFLAGS:=-Os -finline-limit=20 -ffunction-sections -fdata-sections
 # Platform flag, added to FLAGS                                        #
-PLATFORM:=$(shell uname | tr a-z A-Z)
+PLATFORM:=$(shell uname | tr a-z A-Z) POSIX
 # Suppress all messagges                                               #
 SILENT:=
 # Print each executed command                                          #
@@ -398,7 +399,7 @@ prep-dirs:
 
 $(BINDIR)$1$(BINEXT): $(ARCHIVES)
 	$(call echo,"  Linking $$@ ...")
-	$M$(CXX) -o $$@ $(if $(call has-flag,SHARED,$1),-shared,$(if $(call has-flag,STATIC,$1),-static,)) $(LIBPATH) $(LDFLAGS) -Wl,--start-group $(ARCHIVES) $(ALLLIBS) -Wl,--end-group
+	$M$(CXX) -o $$@ $(if $(call has-flag,ALLSHARED,$1),-shared,$(if $(call has-flag,STATIC,$1),-static,)) $(LIBPATH) $(LDFLAGS) -Wl,--start-group $(ARCHIVES) $(ALLLIBS) -Wl,--end-group
 endef
 
 # Recursively parse all necessary packages
@@ -451,7 +452,7 @@ endef
 define additional-targets
 .PHONY: help clean
 help:
-	@head -n 101 $(filename)
+	@head -n 104 $(filename)
 
 clean:
 	$(call echo,Deleting $(OBJDIR))
