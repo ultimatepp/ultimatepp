@@ -10,6 +10,7 @@ file
 	rules,
 	prerm,
 	postinst,
+	Makefile,
 	lpbuild;
 
 mainconfig
