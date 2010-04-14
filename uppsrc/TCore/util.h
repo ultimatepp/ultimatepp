@@ -285,6 +285,8 @@ public:
 	bool Matches(const wchar *s) const	{ return raw_templ.GetCount() == 0 || RawMatches(s, cvt_templ); }
 };
 
+void   TagXml(StringBuffer& xml, const char *tag);
+void   EndTagXml(StringBuffer& xml, const char *tag);
 void   StringXml(StringBuffer& xml, const char *tag, const String& str);
 void   IntXml(StringBuffer& xml, const char *tag, int v);
 void   BoolXml(StringBuffer& xml, const char *tag, bool b);
