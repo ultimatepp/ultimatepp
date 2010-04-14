@@ -659,6 +659,8 @@ Vector<SqlColumnInfo> SqlSession::EnumColumns(String database, String table)
 }
 
 void   SqlSession::SetError(String error, String stmt, int code, const char *scode, Sql::ERRORCLASS clss) {
+	if(errorstatement.GetCount())
+		return;
 	lasterror = error;
 	errorstatement = stmt;
 	errorcode_number = code;
