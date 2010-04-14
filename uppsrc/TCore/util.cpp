@@ -1337,6 +1337,16 @@ bool WildcardCompare::RawMatches(const wchar *s, const wchar *templ) const
 	return true;
 }
 
+void TagXml(StringBuffer& xml, const char *tag)
+{
+	xml << '<' << tag << ">\n";
+}
+
+void EndTagXml(StringBuffer& xml, const char *tag)
+{
+	xml << "</" << tag << ">\n";
+}
+
 void StringXml(StringBuffer& xml, const char *tag, const String& str)
 {
 	xml << '<' << tag << '>' << DeXml(str) << "</" << tag << ">\n";
