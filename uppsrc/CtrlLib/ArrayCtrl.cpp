@@ -1324,7 +1324,7 @@ int ArrayCtrl::GetSelectCount() const
 
 void ArrayCtrl::Select(int i, bool sel)
 {
-	array[i].select = sel;
+	array.At(i).select = sel;
 	selectiondirty = true;
 	RefreshRow(i);
 	WhenSelection();
