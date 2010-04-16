@@ -849,6 +849,7 @@ void ArrayCtrl::Scroll() {
 	PlaceEdits();
 	scroller.Scroll(*this, GetSize(), Point(header.GetScroll(), sb)); //TODO
 	info.Cancel();
+	WhenScroll();
 }
 
 void ArrayCtrl::HeaderLayout() {
