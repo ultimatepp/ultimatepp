@@ -326,7 +326,7 @@ public:
 	Callback          WhenAcceptEdit;
 	Callback          WhenCtrlsAction;
 	Callback          WhenSel;
-
+	Callback          WhenScroll;
 
 	Callback                        WhenDrag;
 	Callback3<int, int, PasteClip&> WhenDropCell;
