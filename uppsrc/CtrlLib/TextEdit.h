@@ -387,7 +387,7 @@ protected:
 	CharFilter   filter;
 	ScrollBar    sb;
 	int          cx;
-	bool         updownleave;
+	bool         updownleave, eofline;
 
 	struct Fmt {
 		FontInfo      fi;
@@ -424,6 +424,8 @@ public:
 	DocEdit&  NoUpDownLeave()                                { return UpDownLeave(false); }
 	bool      IsUpDownLeave() const                          { return updownleave; }
 	DocEdit&  SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); return *this; }
+	DocEdit&  EofLine(bool b = true)                         { eofline = b; return *this; }
+	DocEdit&  NoEofLine()                                    { return EofLine(false); }
 
 	typedef DocEdit CLASSNAME;
 

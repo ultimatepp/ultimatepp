@@ -66,7 +66,8 @@ void Display::PaintBackground(Draw& w, const Rect& r, const Value& q,
 
 void Display::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 {
-	StdDisplay().Paint(w, r, q, ink, paper, style);
+	PaintBackground(w, r, q, ink, paper, style);
+	Single<StdDisplayClass>().Paint0(w, r, q, ink, paper, style);
 }
 
 Size Display::RatioSize(const Value& q, int cx, int cy) const {
@@ -80,7 +81,7 @@ Size Display::GetStdSize(const Value& q) const
 
 void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
                              Color ink, Color paper, dword s) const {
-	LLOG("Display::Paint0: " << q << " ink:" << ink << " paper:" << paper);
+	LLOG("StdDisplay::Paint0: " << q << " ink:" << ink << " paper:" << paper);
 	WString txt;
 	Font font = StdFont();
 	int a = align;
@@ -126,7 +127,7 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 
 void StdDisplayClass::Paint(Draw& w, const Rect& r, const Value& q,
                     Color ink, Color paper, dword s) const {
-	LLOG("Display::Paint: " << q << " ink:" << ink << " paper:" << paper);
+	LLOG("StdDisplay::Paint: " << q << " ink:" << ink << " paper:" << paper);
 	PaintBackground(w, r, q, ink, paper, s);
 	Paint0(w, r, q, ink, paper, s);
 }
@@ -158,7 +159,11 @@ Display::Display() {}
 
 Display::~Display() {}
 
-const Display& GLOBAL_V_INIT(StdDisplayClass, StdDisplay)
+const Display& StdDisplay()
+{
+	return Single<StdDisplayClass>();
+}
+
 const Display& GLOBAL_VP_INIT(StdDisplayClass, StdCenterDisplay, (ALIGN_CENTER))
 const Display& GLOBAL_VP_INIT(StdDisplayClass, StdRightDisplay, (ALIGN_RIGHT))
 

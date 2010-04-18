@@ -152,7 +152,8 @@ void DocEdit::Paint(Draw& w) {
 	w.DrawRect(0, -sb, sz.cx, 1, bg);
 	w.DrawRect(0, 0, 1, sz.cy, bg);
 	w.DrawRect(sz.cx - 1, 0, 1, sz.cy, bg);
-	w.DrawRect(1, y++, cx, 1, SColorShadow);
+	if(eofline)
+		w.DrawRect(1, y++, cx, 1, SColorShadow);
 	if(y < sz.cy)
 		w.DrawRect(1, y, cx, sz.cy - y, bg);
 	DrawTiles(w, DropCaret(), CtrlImg::checkers());
@@ -499,6 +500,7 @@ DocEdit::DocEdit()
 	sb.SetLine(8);
 	sb.WhenScroll = THISBACK(Scroll);
 	InsertLines(0, 1);
+	eofline = true;
 }
 
 DocEdit::~DocEdit() {}
