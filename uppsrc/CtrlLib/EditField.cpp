@@ -828,7 +828,7 @@ bool EditField::Key(dword key, int rep)
 		return true;
 	}
 	if(!IsEditable())
-		return false;
+		return MenuBar::Scan(WhenBar, key);
 	switch(key) {
 	case K_BACKSPACE:
 	case K_SHIFT|K_BACKSPACE:
