@@ -556,10 +556,10 @@ void RTFEncoder::PutTxt(const RichTxt& txt, int nesting, int dot_width)
 		else {
 			const RichPara& para = txt.Get(i, richtext.GetStyles());
 			Uuid pstyle = txt.GetParaStyle(i);
-			int para_ht = GetParaHeight(para.part);
+			int new_para_ht = GetParaHeight(para.part);
 			int first_part = 0, first_ind = 0;
 			bool hdiff = (para.format.bullet != RichPara::BULLET_NONE
-				&& para.format.bullet != RichPara::BULLET_TEXT && para_ht != para_ht);
+				&& para.format.bullet != RichPara::BULLET_TEXT && new_para_ht != para_ht);
 			if(pstyle != oldstyle
 			|| para.format.bullet != parafmt.bullet || para.format.bullet == RichPara::BULLET_TEXT
 			|| hdiff || para.format.tab != parafmt.tab || para.format.newpage || parafmt.newpage) {
@@ -620,7 +620,7 @@ void RTFEncoder::PutTxt(const RichTxt& txt, int nesting, int dot_width)
 	//					Command("tx", DotTwips(para.format.indent));
 	//					Command("qr");
 					Command("f", sym_face);
-					Command("fs", DotPoints(2 * para_ht));
+					Command("fs", DotPoints(2 * new_para_ht));
 					Space();
 					stream.Put(sym_char);
 					stream.Put('\t');
@@ -629,7 +629,7 @@ void RTFEncoder::PutTxt(const RichTxt& txt, int nesting, int dot_width)
 				Begin("*\\pn");
 					Command("pnlvlblt");
 					Command("pnf", sym_face);
-					Command("pnfs", DotPoints(2 * para_ht));
+					Command("pnfs", DotPoints(2 * new_para_ht));
 					Command("pnql");
 					Begin("pntxtb");
 						Space();
@@ -641,7 +641,7 @@ void RTFEncoder::PutTxt(const RichTxt& txt, int nesting, int dot_width)
 				End();
 			}
 			PutParaFormat(para.format, parafmt);
-			para_ht  = para_ht;
+			para_ht = new_para_ht;
 			parafmt = para.format;
 			PutParts(para.part, charfmt, first_part, first_ind, para.part.GetCount(), 0);
 			if(i + 1 < txt.GetPartCount())
