@@ -267,8 +267,11 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			LLOG(msgdump);
 #endif
 			dword keycode = 0;
-			if(message == WM_KEYDOWN)
+			if(message == WM_KEYDOWN) {
 				keycode = KEYtoK((dword)wParam);
+				if(keycode == K_SPACE)
+					keycode = 0;
+			}
 			else
 			if(message == WM_KEYUP)
 				keycode = KEYtoK((dword)wParam) | K_KEYUP;
@@ -279,7 +282,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			if(message == WM_SYSKEYUP /*&& ((lParam & 0x20000000) || wParam == VK_F10)*/)
 				keycode = KEYtoK((dword)wParam) | K_KEYUP;
 			else
-			if(message == WM_CHAR && wParam != 127 && wParam > 32) {
+			if(message == WM_CHAR && wParam != 127 && wParam > 32 || wParam == 32 && KEYtoK(VK_SPACE) == K_SPACE) {
 #ifdef PLATFORM_WINCE
 				keycode = wParam;
 #else
