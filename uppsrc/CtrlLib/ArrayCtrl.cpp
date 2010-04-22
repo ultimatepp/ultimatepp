@@ -1346,7 +1346,7 @@ bool ArrayCtrl::IsLineEnabled(int i) const
 void ArrayCtrl::Select(int i, int count, bool sel)
 {
 	while(count--) {
-		array[i].select = sel;
+		array.At(i).select = sel;
 		RefreshRow(i++);
 	}
 	selectiondirty = true;
