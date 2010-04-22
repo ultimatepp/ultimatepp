@@ -2106,7 +2106,7 @@ int ArrayCtrl::Find(const Value& v, int ii, int i) const {
 	ASSERT(ii >= 0);
 	int n = GetCount();
 	while(i < n) {
-		if(Get(i, ii) == v) return i;
+		if(IsLineEnabled(i) && Get(i, ii) == v) return i;
 		i++;
 	}
 	return -1;
@@ -2120,7 +2120,6 @@ bool ArrayCtrl::FindSetCursor(const Value& val, int ii, int i) {
 	i = Find(val, ii, i);
 	if(i < 0) return false;
 	if(!SetCursor(i)) return false;
-//	CenterCursor(); //cxl: 2008-10-06: not what is expected...
 	return true;
 }
 
