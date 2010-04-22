@@ -31,6 +31,8 @@ struct SvnLogRev : Moveable <SvnLogRev> {
         };
         Vector<SvnChange> changes;
         String msg;
+        Index<String> tags;
+        bool major;
 };
 
 extern String uppsrc;
@@ -52,6 +54,6 @@ void GatherRefLinks(const char *upp);
 
 void GetSvnList(VectorMap<String, SvnListRev> &data, const String &);
 void GetSvnLog(Vector<SvnLogRev> &log);
-
+String SvnChanges(Vector<SvnLogRev> &log, int limit, String filter, bool major = false);
 
 #endif

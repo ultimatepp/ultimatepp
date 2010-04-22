@@ -28,7 +28,7 @@ String CppAsQtf(const String& str)
 		NULL
 	};
 	static Index<String> keyword;
-	if(keyword.GetCount() == 0)
+	if(keyword.GetCount() == 0) 
 		for(const char **q = cpp; *q; q++)
 			keyword.Add(*q);
 

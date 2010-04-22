@@ -245,7 +245,7 @@ void CreateRssFeed() {
 	"<atom:link href=\"http://ultimatepp.org/svnchanges.xml\" rel=\"self\" type=\"application/rss+xml\" />\n\n";
 	
 	String items;
-	for(int i = 0; i < svnlog.GetCount(); i++){
+	for(int i = 0; i < min(30,svnlog.GetCount()); i++){
 		items+="<item>\n"
 		"<title>Revision " + svnlog[i].revision + "</title>\n" 
 		"<link>http://code.google.com/p/upp-mirror/source/detail?r=" + svnlog[i].revision + "</link>\n"
@@ -260,7 +260,7 @@ void CreateRssFeed() {
 		"		<tr><td colspan=\"2\">\n"
 		"			<div style=\"margin-left:20px;\">\n";
 		for(int j = 0; j < svnlog[i].changes.GetCount(); j++)
-			items+="<a href=\"http://code.google.com/p/upp-mirror/source/diff?spec=svn" + svnlog[i].revision + "&amp;r=" + svnlog[i].revision + "&amp;format=side&amp;path=" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].action + "</a> "
+			items+="<a href=\"http://code.google.com/p/upp-mirror/source/diff?spec=svn" + svnlog[i].revision + "&amp;r=" + svnlog[i].revision + "&amp;format=side&amp;path=" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].action + "</a>&nbsp;"
 			       "<a href=\"http://code.google.com/p/upp-mirror/source/browse" + svnlog[i].changes[j].path + "\" target=\"gcode\">" + svnlog[i].changes[j].path + "</a><br>\n";
 		items+=
 		"			</div>\n"
@@ -470,6 +470,7 @@ void ExportPage(int i)
 		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
 		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
 	}
+
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
 	String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
 	Color paper = SWhite;
@@ -581,6 +582,14 @@ void ExportPage(int i)
 	SaveFile(AppendFileName(targetdir, links[i]), content);
 }
 
+String Replace(const String &str, const String find, const String &replace) {
+	int pos = str.Find(find);
+	if (pos >= 0) 
+		return str.Left(pos) + replace + str.Mid(pos + find.GetCount());
+	else
+		return str;
+}
+
 struct ProgramData {
 	String rootdir;
 	String targetdir;
@@ -667,6 +676,18 @@ GUI_APP_MAIN
 	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
 
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
+
+	if (doSvn) {
+		GetSvnList(svndata, rootdir);
+		GetSvnLog(svnlog);
+		CreateRssFeed();
+		if (svnlog.GetCount() > 0) {
+			escape.Add("LATESTSVN", svnlog[0].revision);
+			//Index<String> css;
+			//escape.Add("SVNTABLE", QtfAsHtml(SvnChanges(svnlog, "", 100), css, links, labels, targetdir));
+			//escape.Add("ANCHOR", "<span id=\"svnTableAnchor\"></span>");
+		}
+	}
 
 	escape.Add("PAYPAL", LoadFile(GetRcFile("donations.txt")));
 
@@ -771,6 +792,26 @@ GUI_APP_MAIN
 		links.Add(topic, topic == "topic://uppweb/www/index$en-us" ? "index.html" :
 		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
 	}
+	
+	for(int i = 0; i < tt.GetCount(); i++) {
+		if (tt[i].title == "Svn releases") 
+			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 300, ""));
+		else if (tt[i].title == "Svn Web releases") 
+			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "uppweb"));
+		else if (tt[i].title == "Svn Bazaar releases") 
+			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "bazaar"));
+		else if (tt[i].title == "Svn Upp releases") 
+			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "uppsrc"));		
+		else if (tt[i].title == "Svn major releases") 
+			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 300, "", true));
+		else if (tt[i].title == "Svn Web major releases") 
+			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "uppweb", true));
+		else if (tt[i].title == "Svn Bazaar major releases") 
+			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "bazaar", true));
+		else if (tt[i].title == "Svn Upp major releases") 
+			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "uppsrc", true));		
+		
+	}
 
 	DUMPC(reflink.GetKeys());
 
@@ -802,11 +843,6 @@ GUI_APP_MAIN
 		SaveFile(AppendFileName(pdfdir, "Upp.pdf"), pdf.Finish());
 	}
 	
-	if (doSvn) {
-		GetSvnList(svndata, rootdir);
-		GetSvnLog(svnlog);
-		CreateRssFeed();
-	}
 	for(int i = 0; i < tt.GetCount(); i++)
 		ExportPage(i);
 	SetLanguage(lang);
