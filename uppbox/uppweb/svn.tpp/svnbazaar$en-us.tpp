@@ -1,9 +1,9 @@
-topic "Svn Web releases";
+topic "Svn Bazaar releases";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0; [*R+217 Svn Web releases]&]
+[s0; [*R+217 Svn Bazaar releases]&]
 [s0;2 &]
-[s0; [2 The table below shows the list of the latest svn web releases. 
+[s0; [2 The table below shows the list of the latest svn Bazaar releases. 
 The list is refreshed daily. Times are in UTC. Files column includes 
 links to diff and change type: A (added), D (deleted), M (modified) 
 and R (replaced).]&]

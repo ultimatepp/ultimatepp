@@ -82,7 +82,7 @@ void GetSvnList(VectorMap<String, SvnListRev> &data, const String &rootdir) {
 	GetSvnFolderDeep(data, AppendFileName(rootdir, "bazaar"));
 }
 
-void ParseSvnLog(Vector<SvnLogRev> &log,String& out){
+void ParseSvnLog(Vector<SvnLogRev> &log, String& out){
 	int pos = 0;
 	int newpos;
 	while (true) {
@@ -118,20 +118,14 @@ void ParseSvnLog(Vector<SvnLogRev> &log,String& out){
 		if((maxpos = out.Find("</paths>", pos)) == -1)
 			return;
 		while(true) {
-			if((newpos = out.Find("kind=\"", pos)) == -1)
-				break;
-			if(newpos>maxpos)
-				break;
-			pos = newpos + strlen("kind=\"");
-			if((newpos = out.Find('\"', pos)) == -1)
-				break;
-			SvnLogRev::SvnChange &chng = rev.changes.Add();
-			chng.kind = out.Mid(pos, newpos-pos);
 			if((newpos = out.Find("action=\"", pos)) == -1)
+				break;
+			if(newpos > maxpos)
 				break;
 			pos = newpos + strlen("action=\"");
 			if((newpos = out.Find('\"', pos)) == -1)
 				break;
+			SvnLogRev::SvnChange &chng = rev.changes.Add();
 			chng.action = out.Mid(pos, newpos-pos);
 			if((newpos = out.Find(">", pos)) == -1)
 				break;
@@ -139,19 +133,53 @@ void ParseSvnLog(Vector<SvnLogRev> &log,String& out){
 			if((newpos = out.Find('<', pos)) == -1)
 				break;
 			chng.path = out.Mid(pos, newpos-pos);
+			String p = chng.path.Mid(7);//skip "/trunk/"
+			int t = rev.tags.FindAdd(p.Left(p.FindFirstOf("/")));
+			p = p.Mid(rev.tags[t].GetCount()+1);
+			rev.tags.FindAdd(p.Left(p.FindFirstOf("/")));
 		}
 		if((newpos = out.Find("<msg>", pos)) == -1)
 			return;
 		pos = newpos + strlen("<msg>");
 		if((newpos = out.Find("<", pos)) == -1)
 			return;
-		rev.msg = out.Mid(pos, newpos-pos);
-		pos=newpos;
+		rev.msg = out.Mid(pos,newpos-pos);
+		if (rev.msg[0] == '.') 
+			rev.major = false;
+		else 
+			rev.major = true;
+		pos = newpos;
 	}
 }
 
-void GetSvnLog(Vector<SvnLogRev> &log){
+void GetSvnLog(Vector<SvnLogRev> &log) {
 	RLOG("Querying svn for revisions log ...");
-	String out = Sys("svn log \"" + rootdir + "\" --xml --verbose --non-interactive");  // It is fast to get it all, and it will serve // --limit 30");
+	String out = Sys("svn log \"" + rootdir + "\" --xml --verbose --non-interactive --limit 500");  
 	ParseSvnLog(log,out);
+}
+
+String SvnChanges(Vector<SvnLogRev> &log, int limit, String filter, bool major){
+	String table = "{{700:800:800:2850:4232f0;g0;^t/25b4/25@(240) [s0;# [*2 Revision]]"
+		":: [s0;# [*2 Date]]"
+		":: [s0;# [*2 Author]]"
+		":: [s0;# [*2 Description]]"
+		":: [s0;# [*2 Files]]";
+	for(int i = 0, c = 0; (c < limit) && (i < log.GetCount()); i++) {
+		if(filter != "" && svnlog[i].tags.Find(filter) < 0) 
+			continue; 
+		if(major && !svnlog[i].major) 
+			continue; 
+		c++;
+		table += "::t8/8b0/8@2 [s0; [^http`:`/`/code`.google`.com`/p/upp`-mirror`/source`/detail`?r`=" + svnlog[i].revision + "^2 " + svnlog[i].revision + "]]"
+				":: [s0; [2 " + DeQtf(Format(svnlog[i].time, false)) + " ]]"
+				":: [s0; [2 " + DeQtf(svnlog[i].author) + " ]]"
+				":: [s0; [2 " + DeQtf(svnlog[i].msg) + " ]]"
+				":: [s0; ";
+		for(int j = 0; j < log[i].changes.GetCount(); j++)
+			table += "[^http`:`/`/code`.google`.com`/p/upp`-mirror`/source`/diff`?r`=" + svnlog[i].revision + DeQtf("&amp;format=side&amp;path=") + DeQtf(svnlog[i].changes[j].path) + "^2 diff][2  " + svnlog[i].changes[j].action + " ]"
+					 "[^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/browse" + DeQtf(svnlog[i].changes[j].path) + "^2 " + DeQtf(svnlog[i].changes[j].path) + "]" + String(j == svnlog[i].changes.GetCount()-1 ? " " : "&");
+		table+=" ]";
+	}
+	table += " }}";
+	return table;
 }

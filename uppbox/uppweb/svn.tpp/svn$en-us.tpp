@@ -3,21 +3,22 @@ topic "Svn releases";
 [{_}%EN-US 
 [s0; [*R+217 Svn releases]&]
 [s0;2 &]
-[s0; [2 This is the place for the latest svn releases. They are refreshed 
-daily.]&]
+[s0; [2 The table below shows the list of the latest svn releases. 
+The list is refreshed daily. Times are in UTC. Files column includes 
+links to diff and change type: A (added), D (deleted), M (modified) 
+and R (replaced).]&]
 [s0;2 &]
-[s0; [2 You can use also some filters:]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/testing`/svnmain`$en`-us^2 Only main 
-library releases]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/testing`/svnweb`$en`-us^2 Only web 
-releases]&]
-[s0;%- &]
-[ {{950:1192:3347:4511f0;g0;^t/25b4/25@(240) [s0;# [*2 Date]]
-:: [s0;# [*2 Author]]
-:: [s0;# [*2 Text]]
-:: [s0;# [*2 Files]]
-::b0/25@2 [s0;# [2 TBD]]
-:: [s0;#2 ]
-:: [s0;#2 ]
-:: [s0;#2 ]}}&]
+[s0; [2 You can also use some filters:]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/svn`/svnmajor`$en`-us^2 Major changes]&]
+[s0;i150;O0; [2 All changes in ][^topic`:`/`/uppweb`/svn`/svnmain`$en`-us^2 U`+`+][2 , 
+][^topic`:`/`/uppweb`/svn`/svnbazaar`$en`-us^2 Bazaar][2  and ][^topic`:`/`/uppweb`/svn`/svnweb`$en`-us^2 U
+ppweb]&]
+[s0;i150;O0; [2 Major changes in ][^topic`:`/`/uppweb`/svn`/svnmajormain`$en`-us^2 U`+`+][2 ,
+ ][^topic`:`/`/uppweb`/svn`/svnmajorbazaar`$en`-us^2 Bazaar][2  and 
+][^topic`:`/`/uppweb`/svn`/svnmajorweb`$en`-us^2 Uppweb]&]
+[s0;2 &]
+[s0;%- [ISVNTABLE;2 `[svntable`]]&]
+[s0;2 &]
+[s0; [2 Full history can be found at ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/list^2 h
+ttp://code.google.com/p/upp`-mirror/source/list][2 .]&]
 [s0; ]
