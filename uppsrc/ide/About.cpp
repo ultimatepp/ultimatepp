@@ -17,11 +17,10 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy + 80);
 	v = IDE_VERSION;
-	v.LeftPos(300, 100).TopPos(90, 40);
 	if(sizeof(void *) == 8) {
 		v = IDE_VERSION " (64 bit)";
-		v.RightPos(3, Ctrl::MINSIZE).TopPos(90, 40);
 	}
+	v.RightPos(10, Ctrl::MINSIZE).TopPos(70, 40);
 	l.Add(v);
 	v.SetFont(Arial(20));
 	v.SetInk(Blend(Gray, Blue));
