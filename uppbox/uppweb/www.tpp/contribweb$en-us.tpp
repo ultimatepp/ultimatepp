@@ -25,7 +25,7 @@ for you.]&]
 [s0; [2 These are the steps to upload your changes.]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*2 Access to U`+`+ svn version control system]&]
+[s0; [*2 Access to U`+`+ SVN version control system]&]
 [s0;2 &]
 [s0; [2 To begin you will need the latest sources and permission to 
 upload your web changes. It is explained ][^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 h
@@ -44,16 +44,16 @@ you are going to edit the web page.]&]
 [s0;2 &]
 [s0;i150;O0; [2 Edit .tpp files using ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 T`+`+]&]
 [s0;2 &]
-[s0;i150;O0; [2 Finally upload (commit) changes to Upp]&]
+[s0;i150;O0; [2 Finally upload (commit) changes to U`+`+]&]
 [s0;2%- &]
 [s0;2 &]
 [s0; [2 Please do not modify contents made by other directly. It is 
 better first to recommend the changes and ask for permission.]&]
 [s0;2 &]
 [s0; [2 After that the day after you will see the web page updated. 
-The secret of this is that Upp hosting system will compile and 
-run uppweb package converting this index package and your T`+`+ 
-help system into .html web pages.]&]
+The secret of this is that U`+`+ hosting system will compile 
+and run uppweb package converting this index package and your 
+T`+`+ help system into .html web pages.]&]
 [s0;2 &]
 [s0;2 &]
 [s0; [*2 If nothing works]&]
@@ -62,5 +62,4 @@ help system into .html web pages.]&]
 you can send a post to ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2  
 asking for help or just send ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 m
 e][2  a post. I will do it for you.]&]
-[s0;2 &]
 [s0; ]
