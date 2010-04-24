@@ -661,6 +661,8 @@ GUI_APP_MAIN
 	bazaar =    AppendFileName(rootdir, "bazaar");
 
 	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
+	languages.Add(LNG_('C','A','E','S'));
+	languages.Add(LNG_('E','S','E','S'));
 	languages.Add(LNG_('R','U','R','U'));
 	
 	RLOG("--- uppweb started at " << GetSysTime());
