@@ -792,8 +792,8 @@ Tutorial]&]
 ::b8/25-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0; ]
 ::l8/25t8/25b8/25@(240)R(165) [s0;%% [*2 Developers]]
-::l0/25r8/25-3 [s0;>%% [@(114)2 If you feel like contributing web or code this is 
-your place]]
+::l0/25r8/25-3 [s0;>%% [@(114)2 If you feel like contributing to web or code this 
+is your place]]
 ::r0/25t0/15b0/15@2R0-2 [s0; ]
 ::-1 [s0; ]
 :: [s0; ]
@@ -802,8 +802,8 @@ your place]]
 ::l0/25r8/25 [s0;>%% [@(114)2 Let`'s go!]]
 ::^l8/25@2-2 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 SVN 
 install and permissions]&]
-[s0;i150;a17;O0;%% [2 Bug report. Submitting a patch. ][/@(153)2 To Be 
-Done ...]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^2 Bug 
+report. Submitting a patch]&]
 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Web 
 page]&]
 [s0;i150;a17;O0;%% [2 New development ideas]&]

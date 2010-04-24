@@ -114,6 +114,10 @@ TOPIC("documentation$en-us")
 #include "documentation$en-us.tppi"
 END_TOPIC
 
+TOPIC("bugreports$en-us")
+#include "bugreports$en-us.tppi"
+END_TOPIC
+
 TOPIC("comparison$en-us")
 #include "comparison$en-us.tppi"
 END_TOPIC
