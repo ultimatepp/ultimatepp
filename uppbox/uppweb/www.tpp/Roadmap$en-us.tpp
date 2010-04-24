@@ -79,6 +79,32 @@ added.&]
 [s0; Draw:&]
 [s0;i150;O0; The search for missing glyphs (i18n issue) was optimized.&]
 [s0;4 &]
+[s0; [*_4 1952][*3  (27 January 2010)]&]
+[s0; &]
+[s0; [* TheIde]&]
+[s0;i150;O0; Improved installation in Win32 with support for the 
+latest Win32 SDK. &]
+[s0;i150;O0; Helpsystem has vastly improved searching capabilities.&]
+[s0;i150;O0; Build process now supports new link options `- Posix 
+releases now use `"gc`-sections`" linker option to dramatically 
+reduce the size of resulting binaries (up to 40%). &]
+[s0; &]
+[s0; [* Library]&]
+[s0;* &]
+[s0; CtrlLib:&]
+[s0;i150;O0; File selector (FileSel class) got networking support 
+in Win32.&]
+[s0;i150;O0; TrayIcon in X11 now supports notifications. &]
+[s0;i150;O0; TopWindow in X11 now supports SetAlphs. &]
+[s0; &]
+[s0; Painter:&]
+[s0;i150;O0; Image rescaling algorithm was improved for better downscaling. 
+&]
+[s0; &]
+[s0; Core: &]
+[s0;i150;O0; Containers now have a new debugging utility to resolve 
+pick semantic errors.&]
+[s0;4 &]
 [s0; [*_4 1824][*3  (21 December 2009)]&]
 [s0; &]
 [s0; [* TheIDE]&]
