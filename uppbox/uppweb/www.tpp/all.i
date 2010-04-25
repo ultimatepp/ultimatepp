@@ -142,6 +142,10 @@ TOPIC("index$es-es")
 #include "index$es-es.tppi"
 END_TOPIC
 
+TOPIC("index$fr-fr")
+#include "index$fr-fr.tppi"
+END_TOPIC
+
 TOPIC("index$ru-ru")
 #include "index$ru-ru.tppi"
 END_TOPIC

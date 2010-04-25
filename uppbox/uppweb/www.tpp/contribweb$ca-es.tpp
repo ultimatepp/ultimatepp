@@ -1,4 +1,4 @@
-topic "How to contribute. Web page";
+topic "Com contribuir. Pàgina Web";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%CA-ES 
 [s0; [*R6 Com contribuir. Pàgina Web]&]

@@ -451,6 +451,7 @@ void ExportPage(int i)
 		qtflangs += Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
 	}
 	String strlang;
+	Array <String> arrLangs;
 	for (int il = 0; il < languages.GetCount(); ++il) {
 		if (il != ilang) {
 			String topic = ChangeTopicLanguage(path, languages[il]);
@@ -459,11 +460,20 @@ void ExportPage(int i)
 				if (tt[itopic].title.Find(" (translated)") < 0) {
 					if (!strlang.IsEmpty())
 						strlang << ", ";
-					strlang << "[^" + links[itopic] + "^ [2 " + GetNativeLangName(languages[il]) + "]]";
+					arrLangs.Add("[^" + links[itopic] + "^ [2 " + ToLower(GetNativeLangName(languages[il])) + "]]");
 				}
 			}
 		}
 	}
+	if (arrLangs.GetCount() > 1) {
+		for (int i = 0; i < arrLangs.GetCount(); ++i) {
+			if (i == arrLangs.GetCount()-1)
+				strlang << String(" ") + t_("and") + " ";
+			else if (i > 0)
+				strlang << ", ";
+			strlang << arrLangs[i];
+		}
+	}	
 	if (!strlang.IsEmpty())
 		qtflangs += Format(String("[2  ") + t_("This page is also in %s") + ".]", strlang);
 	if (tt[i].title.Find("How to contribute. Web page") < 0) {
@@ -663,6 +673,7 @@ GUI_APP_MAIN
 	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
 	languages.Add(LNG_('C','A','E','S'));
 	languages.Add(LNG_('E','S','E','S'));
+	languages.Add(LNG_('F','R','F','R'));
 	languages.Add(LNG_('R','U','R','U'));
 	
 	RLOG("--- uppweb started at " << GetSysTime());
