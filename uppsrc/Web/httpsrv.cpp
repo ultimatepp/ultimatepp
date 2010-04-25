@@ -850,6 +850,8 @@ String GetHttpURI(HttpQuery query)
 
 void GetHttpPostData(HttpQuery& query, String buffer)
 {
+	query.Set("$$POSTDATA", buffer);
+	
 	const char *p = buffer;
 	while(p[0] != '-' || p[1] != '-') {
 		while(*p != '\n')
