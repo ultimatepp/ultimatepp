@@ -1,44 +1,43 @@
-topic "U++ és un entorn de desenvolupament ràpid multiplataforma per C++";
+topic "U++ est un environnement multi-plateforme de développement rapide pour le C++";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
-[{_}%CA-ES 
-[s0; [%ES-ES*R6 U`+][*R6 `+ és un entorn de desenvolupament ràpid multiplataforma 
-per C`+`+]&]
+[{_}%FR-FR 
+[s0; [*R6 U`+`+ est un environnement multi`-plateforme de développement 
+rapide pour le C`+`+]&]
 [s0;>*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1 &]
-[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0; [2 U `+`+ és un entorn per al desenvolupament ràpid d`'aplicacions 
-en C`+`+ multiplataforma enfocat a la productivitat del programador. 
-Inclou un conjunt de biblioteques d`'usuari (GUI, SQL, ...), 
-i un entorn de desenvolupament integrat (IDE).]&]
+[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0; [2 U`+`+ est un environnement de développement rapide d`'applications 
+en C`+`+ multi`-plateforme axée sur la productivité des développeurs. 
+Comprend un ensemble de bibliothèques (GUI, SQL, ...), et un 
+environnement de développement intégré (IDE).]&]
 [s0;2 &]
-[s0; [2 La rapidesa en el desenvolupament s`'aconsegueix mitjançant 
-][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 un ús intel ligent 
-i agressiu de C`+`+][2  en comptes de a través de sofisticats 
-generadors de codi. En aquest sentit, U`+`+ competeix amb coneguts 
-llenguatges de scripting, preservant característiques de temps 
-d`'execució de C / C `+ `+.]&]
+[s0; [2 Le développement rapide est assurée par ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 u
+ne utilisation intelligente et agressive du C `+ `+][2  plutôt 
+que par des générateurs de code sophistiqué. À cet égard, 
+U `+ `+ est en concurrence avec des langages de script, tout 
+en préservant les caractéristiques d`'exécution de C/C`+`+.]&]
 [s0;2 &]
-[s0; [2 L`'entorn de desenvolupament integrat de U`+`+, TheIDE, introdueix 
-conceptes modulars per a programació en C`+`+. Compta amb tecnologia 
-de compilació BLITZ per accelerar les recompilacions de C`+`+ 
-fins a 4 vegades, dissenyador visual per a les llibreries U`+`+, 
-sistema ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  per 
-a documentar el codi i crear recursos en text enriquit per a 
-aplicacions (com la documentació d`'ajuda i codi) i ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 A
-ssist`+`+][2  `- un poderós analitzador de codi C`+`+ que ofereix 
-característiques com el autocompletat de codi, navegació i 
-transformació.]&]
+[s0; [2 L`'environnement de développement intégré U`+`+, TheIDE, 
+introduit des concepts modulaires de programmation C`+`+. Il 
+dispose d`'une technologie de compilateur BLITZ pour accélérer 
+les compilations de C`+`+ à 4 fois, concepteur visuel pour les 
+bibliothèques U`+`+, système ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  
+pour documenter le code et créer des ressources dans les applications 
+de texte enrichi (tels que la documentation d`'aide et le code) 
+et ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 Assist`+`+][2  `- une 
+analyseur puissant code C`+`+ qui fournit des fonctionnalités 
+comme la complétion de code, de navigation et de transformation.]&]
 [s0;2 &]
-[s0; [2 TheIDE pot treballar amb GCC, MinGW i Visual C `+ `+ 9.0 tal 
-com es troba en el ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 S
-DK gratuït de Windows Vista][2  i conté un depurador complet. 
-TheIDE també pot ser utilitzat per a desenvolupar aplicacions 
-no U`+`+.]&]
+[s0; [2 TheIDE peuvent travailler avec GCC, MinGW et Visual C `+ `+ 
+9.0 que l`'on trouve dans le ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 S
+DK Windows Vista gratuit][2  et contient un débogueur complet. 
+TheIDE peut également être utilisé pour développer des non`-U 
+`+ `+ applications.]&]
 [s0;2 &]
-[s0; [*2 En poques paraules què pots obtenir amb U`+`+]&]
+[s0; [*2 En bref ce que vous obtenez avec U`+`+]&]
 [s0; &]
-[s0;i150;O2; [2 Una llibreria multiplataforma en C`+`+ molt efectiva]&]
-[s0;i150;O2; [2 Un bon entorn per a desenvolupament d`'aplicacions, 
-dissenyat per a realitzar grans projectes en C`+`+]&]
+[s0;i150;O2; [2 Une bibliothèque multiplateforme en C`+`+ très efficace]&]
+[s0;i150;O2; [2 Un bon environnement de développement d`'applications, 
+conçues pour les grands projets en C`+`+]&]
 [s0;2 ]
 :: [s1;> [/@(0.0.255)0 
 @@image:1271&1092
@@ -755,37 +754,36 @@ dissenyat per a realitzar grans projectes en C`+`+]&]
 ��ٲ�ɒ��˖�ٲ��ɒ�˖�ٲ��ɒ�˖��ٲ�ɒ�˙��ٮ�������
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Revisió actual: [* 2232]&]
-[s0;l128; Llicència: [* BSD]&]
+[s0;l128; Version actuelle: [* 2232]&]
+[s0;l128; Licence: [* BSD]&]
 [s0;* ]}}&]
 [s0; &]
-[ {{10000f0;g0;l8/25r8/25t8/25b8/25@(240)R(165) [s0;= [* Recursos U`+`+]]}}&]
-[s0;0%- &]
-[ {{1229:1995:161:1612:1612:161:1309:1921f0;g0;l8/25t8/25b8/25@(240)R(165) [s0; [*2 Començant]]
-::l0/25r8/25 [s0;> [@(114)2 5 minuts per començar]]
+[ {{10000f0;g0;l8/25r8/25t8/25b8/25@(240)R(165) [s0;= [* U`+`+ Ressources]]}}&]
+[s0;0 &]
+[ {{1229:1995:161:1612:1612:161:1309:1921f0;g0;l8/25t8/25b8/25@(240)R(165) [s0; [*2 Début]]
+::l0/25r8/25 [s0;> [@(114)2 5 minutes pour commencer]]
 ::r0/25t0/25b0/25@2 [s0;>@(114)2 ]
-::l8/25t8/25b8/25@(240) [s0; [2 Usuaris]]
+::l8/25t8/25b8/25@(240) [s0; [2 Utilisateurs]]
 ::l0/25r8/25-3 [s0;>@(114)2 ]
 ::r0/25t0/15b0/15@2R0-2 [s0;%- ]
 ::-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 Tutorial 
-GUI]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Compariciones]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Visió general]]
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 GUI 
+Tutoriel]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparaisons]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Vue d`'ensemble]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r8/25t/25b/25R(165) [s0;>@(114)2 ]
-::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Visió 
-General]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentació]&]
+::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Vue d`'ensemble]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentation]&]
 [s0;i150;O0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Exemples]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparicions]]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparaisons]]
 ::r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Aplicacions]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 Preguntes 
-més freqüents (FAQ)]&]
-[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Fòrums]]
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Applications]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 Foire aux 
+questions (FAQ)]&]
+[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Forums]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::t8/25b8/25R(165)-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0;%- ]
@@ -795,43 +793,44 @@ més freqüents (FAQ)]&]
 ::t8/25b/25R(165)|5 [s0;*+34 ]
 ::b8/25-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0;%- ]
-::l8/25t8/25b8/25@(240)R(165) [s0; [*2 Desarrolladors]]
-::l0/25r8/25-3 [s0;> [@(114)2 Si vols aportar a la web o en el codi font aquest és 
-el teu lloc]]
+::l8/25t8/25b8/25@(240)R(165) [s0; [*2 Les développeurs]]
+::l0/25r8/25-3 [s0;> [@(114)2 Si vous souhaitez offrir sur le Web ou dans le code 
+source c`'est votre place]]
 ::r0/25t0/15b0/15@2R0-2 [s0;%- ]
 ::-1 [s0;%- ]
 :: [s0;%- ]
 :: [s0;%- ]
-::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 Descarregar U`+`+]]
-::l0/25r8/25 [s0;> [@(114)2 ¡A començar!]]
-::^l8/25@2-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 Instalació 
-SVN y permís]&]
-[s0;i150;a17;O0; [2 Informació d`'errors. Enviant un pegat. ][/@(153)2 A 
-realitzar ...]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Página 
+::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 Télécharger U`+`+]]
+::l0/25r8/25 [s0;> [@(114)2 A commencer!]]
+::^l8/25@2-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 Installation 
+de SVN et autorisations]&]
+[s0;i150;a17;O0; [2 Informations sur erreurs. Envoi d`'un patch. ][/@(153)2 Pour 
+faire ...]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Site 
 Web]&]
-[s0;i150;a17;O0; [2 Noves idees a desenvolupar]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Temes 
-actuals]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 Idees 
-GSoC]]
+[s0;i150;a17;O0; [2 De nouvelles idées pour développer]&]
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Questions 
+d`'actualité]&]
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 GSoC 
+Ideas]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 `"El Mercat`"]&]
-[s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$en`-us^2 Autors i Llicència]]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Bazaar]&]
+[s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$en`-us^2 Auteurs `& 
+licence]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Descarregar]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Revisió 
-actual: 2232]&]
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Télécharger]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Version 
+actuelle: 2232]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2232`.exe^+75 I
-nstal lació Win32][+75  (18.1 MB)]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2232`.tar`.gz^+75 F
-onts X11][+75  (20.2 MB)]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Paqu
-ets Ubuntu]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 Darrera svn][2 : 
-][ILATESTSVN;2 latestsvn]]
+nstallateur Win32][+75  (18.1 Mo)]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2232`.tar`.gz^+75 X
+11 sources][+75  (20.2 Mo)]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
+tu paquets]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 Dernière 
+svn][2 : ][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
 ::r/25t0/15b0/15R0 [s0;%- ]
@@ -841,25 +840,25 @@ ets Ubuntu]&]
 :: [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
 ::r/25t0/15b0/15R0 [s0;%- ]
-::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 Estudiants]]
+::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 Les étudiants]]
 ::l0/25r8/0 [s0;=@(114)2 ]
 ::r0/25t0/15b0/15@2R0 [s0;%- ]
-::l8/25r/0t8/0b8/0@(240)R(165) [s0; [*2 Altres]]
+::l8/25r/0t8/0b8/0@(240)R(165) [s0; [*2 D`'autres]]
 ::l0/0r8/0 [s0;=*2 ]
 ::l/25r0/25t0/15b0/15@2R0 [s0;%- ]
-::l8/25t8/25b8/25@(240)R(165) [s0; [*2 Suportant U`+`+]]
-::l0/25r8/25 [s0;> [@(114)2 De vegades es necessita alguna cosa més que codi...]]
-::l8/25@2-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/gsoc`$en`-us^2 Recursos 
-Google Summer of Code]]
+::l8/25t8/25b8/25@(240)R(165) [s0; [*2 Soutenir U`+`+]]
+::l0/25r8/25 [s0;> [@(114)2 Parfois, il faut plus de code...]]
+::l8/25@2-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/gsoc`$en`-us^2 Google Summer 
+of Code Ressources]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/extlinks`$en`-us^2 Enllaços 
-externs]&]
-[s0;i150;O0; [2 Index Web. ][/@(153)2 A realitzar...]]
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/extlinks`$en`-us^2 Liens 
+externes]&]
+[s0;i150;O0; [2 Index Web. ][/@(153)2 Pour faire ...]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 Finançant 
-U`+`+]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Premi `"Galeteta`"]]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 U `+ `+ 
+Financement]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Prix `"Cookie`"]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
 [s0; ]
