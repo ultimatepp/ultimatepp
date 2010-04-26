@@ -226,6 +226,9 @@ public:
 	void     Set(int i, T *newt, unsigned _hash);
 	void     Set(int i, T *newt);
 
+	T       *PopDetach()                            { B::hash.Drop(1); return B::key.PopDetach(); }
+	T       *Detach(int i)                          { B::hash.Remove(i); return B::key.Detach(i); }
+
 	ArrayIndex() {}
 	ArrayIndex(pick_ ArrayIndex& s) : B(s)          {}
 	ArrayIndex(const ArrayIndex& s, int) : B(s, 1)  {}
