@@ -142,9 +142,9 @@ Speller *sGetSpeller(int lang)
 			dir = d;
 		}
 		pp << spell_path << ';' << getenv("LIB") << ';' << getenv("PATH") << ';';
-		String path = GetFileOnPath(LNGAsText(lang) + ".udc", pp);
+		String path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".udc", pp);
 		if(IsNull(path))
-			path = GetFileOnPath(LNGAsText(lang) + ".scd", pp);
+			path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".scd", pp);
 		if(IsNull(path))
 			return false;
 		FileIn in(path);
