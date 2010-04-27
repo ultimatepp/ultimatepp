@@ -31,6 +31,8 @@ struct DrawLabel {
 	bool      push;
 	bool      focus;
 	bool      disabled;
+	bool      limg_never_hide;
+	bool      rimg_never_hide;
 
 	PaintRect paintrect;
 	Image     limg;
@@ -65,15 +67,16 @@ protected:
 	DrawLabel   lbl;
 
 public:
-	LabelBase&  SetLeftImage(const Image& bmp1, int spc = 0);
+	LabelBase&  SetLeftImage(const Image& bmp1, int spc = 0, bool never_hide = false);
 	LabelBase&  SetPaintRect(const PaintRect& pr);
 	LabelBase&  SetText(const char *text);
 	LabelBase&  SetFont(Font font);
 	LabelBase&  SetInk(Color color);
-	LabelBase&  SetRightImage(const Image& bmp2, int spc = 0);
+	LabelBase&  SetRightImage(const Image& bmp2, int spc = 0, bool never_hide = false);
 	LabelBase&  SetAlign(int align);
 	LabelBase&  SetVAlign(int align);
-	LabelBase&  SetImage(const Image& bmp, int spc = 0)      { SetLeftImage(bmp, spc); return *this; }
+	LabelBase&  SetImage(const Image& bmp, int spc = 0, bool never_hide = false)
+	{ SetLeftImage(bmp, spc, never_hide); return *this; }
 
 	int         GetAlign() const                             { return lbl.align; }
 	int         GetVAlign() const                            { return lbl.valign; }
