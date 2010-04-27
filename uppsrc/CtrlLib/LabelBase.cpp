@@ -118,6 +118,8 @@ DrawLabel::DrawLabel()
 {
 	push = focus = disabled = false;
 	lspc = rspc = 0;
+	limg_never_hide = false;
+	rimg_never_hide = false;
 	ink = Null;
 	align = valign = ALIGN_CENTER;
 	accesskey = 0;
@@ -180,11 +182,11 @@ Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
 	int txtcx = r.GetWidth() - sz1.cx - Nvl(lspc, 0) - sz2.cx - Nvl(rspc, 0);
 	Size txtsz = *text ? GetSmartTextSize(text, font, txtcx) : paintrect.GetStdSize();
 	if(txtsz.cx) {
-		if(txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
+		if(!rimg_never_hide && txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
 			sz2.cx = 0;
 			rspc = 0;
 		}
-		if(txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
+		if(!limg_never_hide && txtsz.cx + sz1.cx + sz2.cx + Nvl(lspc, 0) + Nvl(rspc, 0) > r.GetWidth()) {
 			sz1.cx = 0;
 			lspc = 0;
 		}
@@ -254,16 +256,18 @@ Size DrawLabel::Paint(Draw& w, int x, int y, int cx, int cy, bool vak) const
 
 void LabelBase::LabelUpdate() {}
 
-LabelBase& LabelBase::SetLeftImage(const Image& img, int spc) {
+LabelBase& LabelBase::SetLeftImage(const Image& img, int spc, bool never_hide) {
 	lbl.limg = img;
 	lbl.lspc = spc;
+	lbl.limg_never_hide = never_hide;
 	LabelUpdate();
 	return *this;
 }
 
-LabelBase& LabelBase::SetRightImage(const Image& img, int spc) {
+LabelBase& LabelBase::SetRightImage(const Image& img, int spc, bool never_hide) {
 	lbl.rimg = img;
 	lbl.rspc = spc;
+	lbl.rimg_never_hide = never_hide;
 	LabelUpdate();
 	return *this;
 }
