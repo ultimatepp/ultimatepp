@@ -6,19 +6,37 @@ else
 	JOBS= 
 endif
 
+ARCH="`dpkg-architecture -qDEB_HOST_ARCH`"
+SERIES=
+
+ifeq ($(SERIES),"hardy")
+	compiler= "CC=g++-4.1" "CXX=g++-4.1" 
+else
+	compiler= "CC=c++" "CXX=c++" 
+endif
+
 clean:
 	$(MAKE) clean
 	-rm -f debian/files
 	-rm -f debian/substvars
 	
-build:
-	$(MAKE) $(JOBS) PKG=ide "DIRS=uppsrc" "FLAGS=GUI MT GCC SHARED" VERBOSE=y BINEXT= "BINDIR=debian/"
+$(CURDIR)/debian/ide:
+	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'"/' $(CURDIR)/uppsrc/ide/version.h
+	$(MAKE) $(JOBS) PKG=ide $(compiler) "DIRS=uppsrc" "FLAGS=GUI MT GCC SHARED" VERBOSE=y BINEXT= "BINDIR=debian/"
+
+$(CURDIR)/debian/ide-nogtk:
+	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'-nogtk"/' $(CURDIR)/uppsrc/ide/version.h
+	$(MAKE) $(JOBS) PKG=ide $(compiler) "DIRS=uppsrc" "FLAGS=GUI MT NOGTK GCC SHARED" VERBOSE=y BINEXT=-nogtk "BINDIR=debian/"
+
+build: $(CURDIR)/debian/ide $(CURDIR)/debian/ide-nogtk
 
 binary-indep:
+	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/.. upp
 
-binary-arch: build clean
-	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/..
+binary-arch: build
+	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/.. theide
+	bash -x $(CURDIR)/debian/dopack $(CURDIR) $(CURDIR)/.. theide-nogtk
 	
-binary: binary-indep binary-arch 
+binary: binary-indep binary-arch
 
 .PHONY: build binary-arch binary install

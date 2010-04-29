@@ -3,14 +3,44 @@ Section: devel
 Priority: optional
 Maintainer: Jan Dolinar <dolik.rce@seznam.cz>
 Standards-Version: 3.8.4
-Build-Depends: g++ (= 4.1) | g++ (>= 4.3), rsync, libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
+Build-Depends: g++ (= 4.1) | g++ (>= 4.3), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
+Homepage: http://www.ultimatepp.org
 
 Package: upp
-Architecture: any
-Depends: ${shlibs:Depends}, libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), g++ (= 4.1) | g++ (>= 4.3), libgtk2.0-dev (>= 2.8.17), libnotify-dev
-Description: C++ library for cross-platform development with IDE
+Architecture: all
+Depends: theide, g++ (= 4.1) | g++ (>= 4.3), libx11-dev (>= 1.0.0), libxft-dev (>= 2.1.8), libpng12-dev (>= 1.2.8), libgtk2.0-dev (>= 2.8.17), libnotify-dev
+Description: C++ library for cross-platform development
  Ultimate++ is a radical and innovative GUI toolkit whose number one priority
  is programmer productivity. C++ is a great programming language but
  C++ programmers are sometimes hampered by the lack of effective libraries.
  U++ libraries enable genuine productivity gains with shorter development
  times and greatly reduced application source code size.
+
+Package: theide
+Architecture: any
+Depends: ${shlibs:Depends}
+Replaces: upp (<= 2332)
+Description: IDE (not only) for Ultimate++ framework
+ TheIDE introduces modular concepts to C++ programming. It features 
+ BLITZ-build technology to speedup C++ rebuilds up to 4 times, Visual 
+ designers for U++ libraries, Topic++ system for documenting code 
+ and creating rich text resources for applications (like help and code 
+ documentation) and Assist++ - a powerful C++ code analyzer that provides 
+ features like code completion, navigation and transformation.
+
+Package: theide-nogtk
+Architecture: any
+Depends: ${shlibs:Depends}
+Provides: theide
+Replaces: theide, upp (<=2332)
+Conflicts: theide
+Description: IDE (not only) for Ultimate++ framework [nogtk build]
+ TheIDE introduces modular concepts to C++ programming. It features 
+ BLITZ-build technology to speedup C++ rebuilds up to 4 times, Visual 
+ designers for Ultimate++ libraries, Topic++ system for documenting code 
+ and creating rich text resources for applications (like help and code 
+ documentation) and Assist++ - a powerful C++ code analyzer that provides 
+ features like code completion, navigation and transformation.
+ .
+ This package contains TheIDE built with simpler look to reduce
+ package dependencies.
