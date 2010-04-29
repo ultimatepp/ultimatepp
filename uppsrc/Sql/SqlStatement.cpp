@@ -370,6 +370,8 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 		}
 		else
 		if(c == ';' && level == 0) {
+			if(session.GetDialect() == ORACLE)
+				stmt.Cat(";\n");
 			Sql sql(session);
 			session.ClearError();
 			if(!sql.Execute(stmt)) {
@@ -385,7 +387,9 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 				level++;
 			if(c == ')')
 				level--;
-			stmt.Cat(script.Get());
+			if(session.GetDialect() != ORACLE || c != '\r')
+				stmt.Cat(c);
+			script.Get();
 		}
 	}
 	return ok;

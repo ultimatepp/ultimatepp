@@ -251,12 +251,16 @@ void Picture::Paint(Draw& w) {
 	if(ratio) {
 		Size sr = picture.GetSize();
 		if(sr.cy * sz.cx < sz.cy * sr.cx) {
-			rz.cy = sr.cy * sz.cx / sr.cx;
-			dy = (sz.cy - rz.cy) / 2;
+			if(sr.cx) {
+				rz.cy = sr.cy * sz.cx / sr.cx;
+				dy = (sz.cy - rz.cy) / 2;
+			}
 		}
 		else {
-			rz.cx = sr.cx * sz.cy / sr.cy;
-			dx = (sz.cx - rz.cx) / 2;
+			if(sr.cy) {
+				rz.cx = sr.cx * sz.cy / sr.cy;
+				dx = (sz.cx - rz.cx) / 2;
+			}
 		}
 	}
 	w.Clipoff(dx, dy, rz.cx, rz.cy);
