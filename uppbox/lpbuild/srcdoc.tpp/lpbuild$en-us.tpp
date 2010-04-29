@@ -72,7 +72,9 @@ etc.) and SHA sums of the two previously mentioned files&]
 [s0;i150;O1; Add debian directory in the unpacked source tree&]
 [s0;i150;O1; Create following files in debian directory:&]
 [s0;l256;i150;O0; [_ debian/rules]:&]
-[s0;l480; Basically a makefile. Following structure is minimal required:&]
+[s0;l480; Basically a makefile that includes all the instuctions 
+to build deb packages from dsc. Following structure is the minimal 
+required:&]
 [s7;l480; #!/usr/bin/make `-f&]
 [s7;l480; &]
 [s7;l480; clean:&]
@@ -80,9 +82,10 @@ etc.) and SHA sums of the two previously mentioned files&]
 [s7;l480; build:&]
 [s7;l480; -|&]
 [s7;l480; binary`-indep:&]
+[s7;l480; -|#architecture independent debs are produced here&]
 [s7;l480; &]
 [s7;l480; binary`-arch: &]
-[s7;l480; -|#here we must produce .deb in `$(CURDIR)/..&]
+[s7;l480; -|#here we must produce architecture dependent debs&]
 [s7;l480; &]
 [s7;l480; binary: binary`-indep binary`-arch &]
 [s7;l480; &]
@@ -91,7 +94,9 @@ etc.) and SHA sums of the two previously mentioned files&]
 [s0;l256;i150;O0; [_ debian/control]:&]
 [s0;l480; Information about package. example follows. There can be 
 multiple binary sections if package produces more packages from 
-the same sources.&]
+the same sources. Sections with [C@5;1 Architecture: all] will be 
+built as architecture independent debs, [C@5;1 Architecture: any] 
+makes packages for all available platforms.&]
 [s7;l480; Source: upp&]
 [s7;l480; Section: devel&]
 [s7;l480; Priority: optional&]
@@ -119,7 +124,7 @@ shorter development&]
 [s7;l480;  times and greatly reduced application source code size.&]
 [s0;l480; &]
 [s0;l256;i150;O0; [_ debian/copyright]:&]
-[s0;l480; This will later became /usr/share/doc/package/copyright-|in 
+[s0;l480; This will later became /usr/share/doc/<package>/copyright-|in 
 final users machine. The format should be like this:&]
 [s7;l480; This package was debianized by Jan Dolinar <dolik.rce`@seznam.cz> 
 on&]
@@ -134,7 +139,8 @@ on&]
 [s0;l480; Info about packaging process, not the original source. 
 The build scripts read distribution info from here! Exact format 
 decribed in [^http`:`/`/www`.debian`.org`/doc`/debian`-policy`/ch`-source`.html`#s`-dpkgchangelog^ h
-ttp://www.debian.org/doc/debian`-policy/ch`-source.html].&]
+ttp://www.debian.org/doc/debian`-policy/ch`-source.html]. This 
+file should end up in /usr/share/doc/<package>/changelog.Debian.gz&]
 [s0;l480; &]
 [s0;i150;O1; Run debuild `-S inside this directory structure&]
 [s0; &]

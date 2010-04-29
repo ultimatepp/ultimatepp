@@ -3,10 +3,7 @@
 #setup some variables, paths, etc. first:
 
 #upp server settings:
-#THEIDE="/home/upp/bin/theide"			# where is theide executable
 SRC_PATH="/home/upp/upp.tmp/u"	# where to look for sources
-#BM="GCCMK"						# what build method to use
-#ASEMBLY="uppsrc"				# just in case we wan't to build from different assembly
 SVN_PATH="/home/upp/upp.src"	# path to svn working copy
 VER="`svnversion $SVN_PATH`"	# this is obvious, isn't it?
 BUILD="1"						# increment this when building version which is already in launchpad (BUGGY! do not touch, please)
@@ -17,11 +14,8 @@ PPA="upp"
 SERIES=( hardy intrepid jaunty karmic lucid )
 
 # my local setup (for debuging)
-#THEIDE="/usr/bin/theide" 
 #SRC_PATH="/media/data/temp/uppsvn"
 #SVN_PATH="$SRC_PATH"
-#BM="GCC"
-#ASEMBLY="uppsrc-svn"
 #VER="`svnversion $SVN_PATH`"
 #VER="2285"
 #BUILD="1"
@@ -29,20 +23,8 @@ SERIES=( hardy intrepid jaunty karmic lucid )
 #GPG_KEY="E0962C7A"
 #TMPDIR=""	# use default
 #PPA="upp-testing"
-#SERIES=( hardy intrepid )
+#SERIES=( hardy )
 #SIMULATE="-s"
-
-echo "Checking whether gpg-agent is running..."
-if test -f $HOME/.gpg-agent-info &&
-   kill -0 'cut -d: -f 2 $HOME/.gpg-agent-info' 2>/dev/null; then
-     GPG_AGENT_INFO='cat $HOME/.gpg-agent-info'
-     export GPG_AGENT_INFO
-     echo "...it is"
-else
-     echo "Starting gpg-agent"
-     eval 'gpg-agent --daemon'
-     echo $GPG_AGENT_INFO >$HOME/.gpg-agent-info
-fi
 
 echo "Debian source package builder"
 echo "written by Jan Dolinar (dolik.rce), 2010"
@@ -64,6 +46,14 @@ nests=( uppsrc examples tutorial reference bazaar )
 cd $SRC_PATH
 if [ -d $tmpdir ]
 then
+	# ensure we are not building the same version as last time
+	if [ -d $tmp ]
+	then
+		echo "Version $VER was already built once!"
+		echo " (If you are trying to build it again on purpose,"
+		echo "  delete directory $tmp manually)"
+		exit 1
+	fi
 	echo "Cleaning up previous run..."
 	rm -rf $tmpdir
 fi
@@ -74,27 +64,25 @@ mkdir $tmp
 cd $tmp
 
 # copy source files to tmp folder
-#    rsync takes care about .svn subdirs 
 echo "copying sources:"
 for folder in ${nests[@]}
 do
 	echo "  $folder"
-	#rsync -rl --exclude '.svn' $SRC_PATH/$folder $tmp
 	cp -r $SRC_PATH/$folder $tmp/$folder
 done
+# remove .svn directories if they exist
 find $tmp -name ".svn" -exec rm -rf {} \; -prune
 
 # export Makefile for theide
 echo "Creating makefile ..."
 cp $scriptdir/Makefile $tmp
-#$THEIDE $ASEMBLY ide $BM ">GUI,MT" -srxM $tmp/uppsrc
 
 # get changelog from svn
 echo "Creating changelog ..."
 cd $SRC_PATH
 svn --limit 100 --xml -v log $SVN_PATH|python $scriptdir/svn2log.py \
--u $scriptdir/users.lst -P upp -L -d ultimatepp.org -S all -p /trunk/ \
--i "`echo ${nests[@]} |tr \" \" ,`" -o $tmp/changelog
+ -u $scriptdir/users.lst -P upp -L -d ultimatepp.org -S all -p /trunk/ \
+ -i "`echo ${nests[@]} |tr \" \" ,`" -o $tmp/changelog
 
 # Patch the version.h for curent version
 echo "#define IDE_VERSION \"$VER\"" > $tmp/uppsrc/ide/version.h
@@ -102,15 +90,17 @@ echo "#define IDE_VERSION \"$VER\"" > $tmp/uppsrc/ide/version.h
 # compress the sources and Makefile to get orig.tar.gz
 echo "Compressing original source tarball ..."
 cd $tmp
-tar -czf $orig ${nests[@]} Makefile 
+tar -czf $orig ${nests[@]} Makefile changelog
 
 # prepare architecture independent part of debian directory:
 echo "Debianizing source tree ..."
 mkdir $tmp/debian
 
-# copy maintainer scripts and control file
-cp $scriptdir/{postinst,prerm,control,rules,theide.desktop,theide.1} $tmp/debian
+# copy maintainer scripts, control file, launcher and manual
+cp $scriptdir/{postinst,prerm,control,theide.desktop,theide.1} $tmp/debian
 chmod +x $scriptdir/{postinst,prerm,rules}
+# copy debian/dopack script
+cp "$scriptdir/dopack-stub" $tmp/debian/dopack
 
 # generate copyrightfile
 cat > $tmp/debian/copyright << EOF
@@ -130,10 +120,17 @@ for dist in ${SERIES[@]}
 do
 	version=$VER-$BUILD~$dist"0"
 
-	# save complete version string to ide/version.h
-	echo "#define IDE_VERSION \"$version\"" > $tmp/uppsrc/ide/version.h
+	# copy rules file and put in the distro info
+	sed -e 's/^SERIES=.*/SERIES="'$dist'"/' $scriptdir/rules > $tmp/debian/rules
 
-	# generate changelog (with changes in packaging, not in sources!)
+	# on hardy g++-4.2 is default, but it builds malfunctioning theide
+	# so we enforce using g++-4.1
+	if [ $dist = "hardy" ]
+	then
+		sed -e 's/Build-Depends: g++ (= 4.1) | g++ (>= 4.3)/Build-Depends: g++-4.1/;' $scriptdir/control > $tmp/debian/control
+	fi
+
+	# generate changelogs (with changes in packaging, not in sources!)
 	cat > "$tmp/debian/changelog" << EOF
 upp ($version) $dist; urgency=low
 
@@ -141,24 +138,26 @@ upp ($version) $dist; urgency=low
 
  -- Jan Dolinar <dolik.rce@seznam.cz>  `date -R`
 EOF
-
-	# copy debian/dopack script
-	cp "$scriptdir/dopack-stub" $tmp/debian/dopack
-
+	
 	# call debuild to create the package
 	echo "Packaging upp $version ..."
 	cd $tmp
 	debuild --no-lintian -k$GPG_KEY -m'Jan Dolinar <dolik.rce@seznam.cz>' -sgpg -p$GPG_PROG -S $skiporig
-	
+
 	# upload to launchpad (set SIMULATE="-s" for debugging)
 	echo "Uploading upp $version ..."
 	cd $tmpdir
 	dput $SIMULATE "$PPA-$dist" "upp_"$version"_source.changes"
-	
+
+	# next series does not have to send orig.tar.gz again
 	skiporig="-sd"
-	
-	# remove architecture dependent files
-	rm $tmp/debian/{dopack,changelog}
+
+	# if we are preparing package for hardy, restore the files we altered
+	if [ $dist = "hardy" ]
+	then
+		cp $scriptdir/control $tmp/debian
+		cp $scriptdir/dopack-stub $tmp/debian/dopack
+	fi
 done
 
 echo "FINISHED!"
