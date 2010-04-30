@@ -395,7 +395,7 @@ void PostgreSQLSession::Commit()
 void PostgreSQLSession::Rollback()
 {
 	ExecTrans("rollback");
-	level--;
+	if(level > 0) level--;
 }
 
 int PostgreSQLSession::GetTransactionLevel() const
