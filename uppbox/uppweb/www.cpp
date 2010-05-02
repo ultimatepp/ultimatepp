@@ -33,6 +33,14 @@ bool ftpupload;
 bool outPdf;
 bool doSvn;
 
+String Replace(const String &str, const String find, const String &replace) {
+	int pos = str.Find(find);
+	if (pos >= 0) 
+		return str.Left(pos) + replace + str.Mid(pos + find.GetCount());
+	else
+		return str;
+}
+
 String GetRcFile(const char *s)
 {
 	String f = GetDataFile(s);
@@ -465,9 +473,9 @@ void ExportPage(int i)
 			}
 		}
 	}
-	if (arrLangs.GetCount() > 1) {
+	if (arrLangs.GetCount() > 0) {
 		for (int i = 0; i < arrLangs.GetCount(); ++i) {
-			if (i == arrLangs.GetCount()-1)
+			if (i == arrLangs.GetCount()-1 && i != 0)
 				strlang << String(" ") + t_("and") + " ";
 			else if (i > 0)
 				strlang << ", ";
@@ -482,7 +490,35 @@ void ExportPage(int i)
 	}
 
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
-	String page = QtfAsHtml(tt[i], css, links, labels, targetdir, links[i]);
+	String page = tt[i];
+	
+	Array<String> htmlrep;
+	int posB = 0;
+	while (true) {
+		posB = page.Find("<`@", posB);
+		if (posB < 0)
+			break; 
+		int posBB = page.Find("<i>", posB);
+		if (posBB < 0)
+			break;
+		int posEE = page.Find("</i>", posBB);
+		int posE = page.Find("`@>", posEE);
+		int posHt = posBB + strlen("<i>");
+		String html0 = page.Mid(posHt, posEE-posHt);
+		String html1;
+		while (true) { 
+			html1 = Replace(html0, "`", "");
+			if (html1 == html0)
+				break;
+			html0 = html1; 
+		}
+		htmlrep.Add(html1);
+		page = page.Left(posB) + "QTFHTMLTEXT" + page.Mid(posE+3);
+	}
+	page = QtfAsHtml(page, css, links, labels, targetdir, links[i]);
+	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml) 
+		page = Replace(page, "QTFHTMLTEXT", htmlrep[iHtml]);
+	
 	Color paper = SWhite;
 	if(path == "topic://uppweb/www/download$en-us")
 		page << LoadFile(GetRcFile("adsense3.txt"));
@@ -592,13 +628,6 @@ void ExportPage(int i)
 	SaveFile(AppendFileName(targetdir, links[i]), content);
 }
 
-String Replace(const String &str, const String find, const String &replace) {
-	int pos = str.Find(find);
-	if (pos >= 0) 
-		return str.Left(pos) + replace + str.Mid(pos + find.GetCount());
-	else
-		return str;
-}
 
 struct ProgramData {
 	String rootdir;
