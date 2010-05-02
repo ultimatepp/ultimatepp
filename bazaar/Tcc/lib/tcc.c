@@ -10166,6 +10166,7 @@ TCCState *tcc_new(void)
     /* XXX: currently the PE linker is not ready to support that */
     s->leading_underscore = 1;
 #endif
+	s->nostdlib = 1;
     return s;
 }
 

@@ -1,3 +1,3 @@
 #ifdef __unix__
-#include "lib/Tcc.c"
+#include "lib/tcc.c"
 #endif

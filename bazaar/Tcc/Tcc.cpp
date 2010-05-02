@@ -198,7 +198,7 @@ void *Tcc::GetSymbol(const char *funName)
 {
 	if (!outputMemory) 
 		throw Exc(t_("Not possible to get symbols if output to file is defined"));
-	unsigned long val;
+	unsigned long val = 0;
 	T_tcc_get_symbol(stateTcc, (unsigned long *)&val, funName);
 	if (!errorMsg.IsEmpty())
     	throw Exc(errorMsg);
