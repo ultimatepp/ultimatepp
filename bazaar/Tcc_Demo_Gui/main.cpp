@@ -72,8 +72,11 @@ char my_program_in_file[] =
 void Tcc_Demo::RunProgram()
 {
 	try {
-		Tcc tcc;
-		
+		Tcc tcc(EditTccLibPath.GetData().ToString());
+#if !defined(PLATFORM_WIN32)		
+		if (OpNoStdlib)
+			tcc.NoStdlib();
+#endif		
 		if (OpGetExe)
 			tcc.SetOutputExe();
 		else
@@ -124,8 +127,11 @@ Tcc_Demo::Tcc_Demo()
 	OpGetExe_Action();
 #if defined(PLATFORM_WIN32)
 	EditExeFile.SetData(AppendFileName(GetHomeDirectory(), "tccdemo.exe")); 
+	OpNoStdlib.Disable();
+	EditTccLibPath <<= "libtcc";
 #else
 	EditExeFile.SetData(AppendFileName(GetHomeDirectory(), "tccdemo")); 
+	OpNoStdlib = true;
 #endif
 	EditIncludePath <<= "...put here right path.../Tcc/lib/include";		
 	EditLibsPath <<= "...put here right path.../Tcc/lib/lib";
