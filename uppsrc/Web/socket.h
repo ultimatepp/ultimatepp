@@ -28,7 +28,6 @@ public:
 		void                    NoDelay();
 		void                    Linger(int msecs);
 		void                    Block(bool b = true);
-		void                    Reuse();
 //		void                    WriteTimeout(int msecs);
 //		void                    ReadTimeout(int msecs);
 		void                    StopWrite();
@@ -93,7 +92,6 @@ public:
 	void            NoLinger()                               { data->Linger(Null); }
 	void            Block(bool b = true)                     { data->Block(b); }
 	void            NoBlock()                                { data->Block(false); }
-	void            Reuse()                                  { data->Reuse(); }
 
 	static bool     Wait(const Vector<SOCKET>& read, const Vector<SOCKET>& write, int timeout_msec);
 	static bool     Wait(const Vector<Socket *>& read, const Vector<Socket *>& write, int timeout_msec);
