@@ -82,13 +82,13 @@ HFONT GetWin32Font(Font fnt, int angle)
 	cache[0] = be;
 	return be.hfont;
 }
-
+/*
 int sGetCW(HDC hdc, wchar *h, int n)
 {
 	SIZE sz;
 	return GetTextExtentPoint32W(hdc, h, n, &sz) ? sz.cx : 0;
 }
-
+*/
 static void Win32_GetGlyphIndices(HDC hdc, LPCWSTR s, int n, LPWORD r, DWORD flag)
 {
 	typedef DWORD (WINAPI *GGIW)(HDC, LPCWSTR, int, LPWORD, DWORD);
@@ -266,7 +266,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
 		int from = page << 8;
 		GlyphInfo *t = li[q];
-		if(page >= 32) {
+/*		if(page >= 32) {
 			wchar h[3];
 			h[0] = 'x';
 			h[1] = 'x';
@@ -278,7 +278,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 				t[i].lspc = t[i].rspc = 0;
 			}
 		}
-		else {
+		else */{
 			bool abca = false, abcw = false;
 			Buffer<ABC> abc(256);
 			abcw = ::GetCharABCWidthsW(hdc, from, from + 256 - 1, abc);
