@@ -1,0 +1,11 @@
+description "Testing corectness of character metrics\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
