@@ -122,7 +122,7 @@ FT_Face FTFace(Font fnt, String *rpath = NULL)
 	}
 	LTIMING("FTFace2");
 	if(be.face) {
-		LOG("Removing " << be.font << " - " << (void *)be.face);
+		LLOG("Removing " << be.font << " - " << (void *)be.face);
 		FT_Done_Face(be.face);
 	}
 	be.font = fnt;
