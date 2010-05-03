@@ -8,7 +8,7 @@ más completa y traducida.]&]
 [s0;2 &]
 [s0; [2 Aquí te mostraremos las maneras de las que puedes ayudar.]&]
 [s0;2 &]
-[s0;2 &]
+[s0; &]
 [s0; [*+117 Ayuda inicial]&]
 [s0;2 &]
 [s0; [2 Si eres nuevo en U`+`+ y no sabes cómo utilizar T`+`+ todavía 

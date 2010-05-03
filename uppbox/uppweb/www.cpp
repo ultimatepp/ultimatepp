@@ -507,7 +507,7 @@ void ExportPage(int i)
 		String html0 = page.Mid(posHt, posEE-posHt);
 		String html1;
 		while (true) { 
-			html1 = Replace(html0, "`", "");
+			html1 = Replace(html0, "`", "")	;
 			if (html1 == html0)
 				break;
 			html0 = html1; 

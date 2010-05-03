@@ -8,7 +8,7 @@ complete and translated.]&]
 [s0;2 &]
 [s0; [2 Here we show you the ways you can help.]&]
 [s0;2 &]
-[s0;2 &]
+[s0;%ES-ES &]
 [s0; [*+117 Basic help]&]
 [s0;2 &]
 [s0; [2 If you are new in U`+`+ and do not know how to use T`+`+ you 

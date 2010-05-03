@@ -32,9 +32,8 @@ builds at Launchpad PPA ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/u
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp`-nightly][2 .]&]
 [s1;#b0; &]
 [s0; [2 Note that latest builds are generally considered the most stable. 
-That means that nightly builds are ussually more stable than 
-stable releases, because bugfixes are not backported to stable 
-releases.]&]
+That means that nightly builds are usually more stable than stable 
+releases, because bugfixes are not backported to stable releases.]&]
 [s0;2 &]
 [s0;2 &]
 [s1;#b0; Stable releases&]
