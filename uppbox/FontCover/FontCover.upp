@@ -1,0 +1,11 @@
+description "Font character coverage generator\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
