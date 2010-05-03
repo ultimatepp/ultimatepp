@@ -281,7 +281,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		else {
 			bool abca = false, abcw = false;
 			Buffer<ABC> abc(256);
-			abcw = ::GetCharABCWidths(hdc, from, from + 256 - 1, abc);
+			abcw = ::GetCharABCWidthsW(hdc, from, from + 256 - 1, abc);
 	#ifndef PLATFORM_WINCE
 			if(!abcw)
 				abca = ::GetCharABCWidthsA(hdc, from, from + 256 - 1, abc);
