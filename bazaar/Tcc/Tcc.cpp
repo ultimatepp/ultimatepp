@@ -21,7 +21,7 @@ using namespace Upp;
 #if defined(PLATFORM_WIN32)
 Tcc::Tcc(const char *dllName)
 #else
-Tcc::Tcc()
+Tcc::Tcc(const char *libPath)
 #endif
 {
 #if defined(PLATFORM_WIN32)
@@ -96,7 +96,12 @@ Tcc::Tcc()
     stateTcc = T_tcc_new();
     if (!stateTcc) 
         throw Exc("Tcc can not initialize");
-    
+#if !defined(PLATFORM_WIN32)
+	if (libPath != NULL)
+		if (*libPath != '\0')
+			SetLibPath(libPath);
+#endif
+
 	T_tcc_set_error_func(stateTcc, NULL, Tcc::DefaultErrorHandler);
     errorMsg = "";
     

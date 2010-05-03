@@ -427,7 +427,8 @@ static const char **rt_bound_error_msg;
 static struct TCCState *tcc_state;
 
 /* give the path of the tcc libraries */
-static const char *tcc_lib_path = CONFIG_TCCDIR;
+//static const char *tcc_lib_path = CONFIG_TCCDIR;
+static char tcc_lib_path[1024];
 
 struct TCCState {
     int output_type;
@@ -10166,8 +10167,16 @@ TCCState *tcc_new(void)
     /* XXX: currently the PE linker is not ready to support that */
     s->leading_underscore = 1;
 #endif
-	s->nostdlib = 1;
+	strcpy(tcc_lib_path, CONFIG_TCCDIR);
     return s;
+}
+
+void SetLibPath(const char *path) {
+	strcpy(tcc_lib_path, path);
+}
+
+void NoStdlib(TCCState *s) {
+	s->nostdlib = 1;
 }
 
 void tcc_delete(TCCState *s1)

@@ -9,9 +9,11 @@ public:
 #if defined(PLATFORM_WIN32)
 	Tcc(const char *dllFile = "libtcc.dll");
 #else
-	Tcc();
+	Tcc(const char *libPath = NULL);
 #endif
 	~Tcc();
+
+	void NoStdlib() {::NoStdlib(stateTcc);}
 
 	bool AddIncludePath(const char *path);
 	bool AddLibraryPath(const char *path);
@@ -24,8 +26,7 @@ public:
 	void *GetSymbol(const char *funName); 
 	void Link(const char *fileName = 0);
 	
-	String GetProgram() 
-	{
+	String GetProgram() {
 		String ret;
 		ret <<= program;
 		return ret;

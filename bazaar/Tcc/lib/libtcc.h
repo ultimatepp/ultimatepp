@@ -12,6 +12,9 @@ typedef struct TCCState TCCState;
 /* create a new TCC compilation context */
 TCCState *tcc_new(void);
 
+void SetLibPath(const char *path);	// Sets the library path in unix where libtcc1.a is located
+void NoStdlib(TCCState *s);			// Does not use libtcc1.a in unix
+	
 /* free a TCC compilation context */
 void tcc_delete(TCCState *s);
 
