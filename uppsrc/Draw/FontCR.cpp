@@ -228,25 +228,24 @@ struct sRFace {
 	const char *name;
 	dword l, h;
 } sFontReplacements[] = {
-	"sans-serif", 0xffdc0008, 0xd8000007,
-	"Arial", 0xffdc0000, 0x98000007,
+	"sans-serif", 0xffee0008, 0xdc000801,
+	"Arial", 0xfffe0000, 0x09c00080,
 	"Arial Unicode MS", 0xfffc3fef, 0xfa7ff7e7,
-	"MS UI Gothic", 0xffdc0008, 0xd8000007,
-	"MS Mincho", 0xffc00000, 0x9a7ff003,
+	"MS UI Gothic", 0xffc01008, 0x0fffff00,
+	"MS Mincho", 0xffc01008, 0x0fffff00,
 	"WenQuanYi Zen Hei Mono", 0xfd800000, 0xae7ff7e1,
 	"VL Gothic", 0xfd800000, 0x9a7ff801,
 	"VL PGothic", 0xffe00008, 0xde7ff801,
 	"UnDotum", 0xe5800000, 0xaa7ff7e1,
-	"Arial", 0xffdc0000, 0x98000007,
 	"AlArabiyaFreeSerif", 0xffdc0008, 0xd8000007,
 	"Kochi Mincho", 0xffdc0008, 0xd8000007,
 	"Kochi Gothic", 0xffdc0008, 0xd8000007,
 	"Sazanami Mincho", 0xffdc0008, 0xd8000007,
 	"Sazanami Gothic", 0xffdc0008, 0xd8000007,
-	"Gulim", 0xffdc0008, 0xd8000007,
-	"SimSun", 0xffdc0008, 0xd8000007,
-	"PMingLiU", 0xffdc0008, 0xd8000007,
-	"Symbol", 0xffffffff, 0xffffffff,
+	"Gulim", 0xf7c00000, 0x0ba7ff7e,
+	"SimSun", 0xfd800000, 0x09ffff00,
+	"PMingLiU", 0xff800000, 0x09ffff00,
+	"Symbol", 0xe4000000, 0x88000002,
 };
 
 struct sFontMetricsReplacement {
@@ -273,7 +272,12 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 	Font f = fnt;
 	dword tl = chr < 4096 ? 0x80000000 >> (chr >> 7) : 0;
 	dword th = 0x8000000 >> ((dword)chr >> 11);
-	for(int i = 0; i < rface.GetCount(); i++)
+//	DDUMP(FormatIntHex(chr));
+//	DDUMP(FormatIntHex(th));
+	for(int i = 0; i < rface.GetCount(); i++) {
+//		DDUMP(Font(rface[i], 10));
+//		DDUMP(FormatIntHex(h[i]));
+//		DDUMP(FormatIntHex(h[i] & th));
 		if(((l[i] & tl) || (h[i] & th)) && IsNormal(f.Face(rface[i]), chr)) {
 			int a = fnt.GetAscent();
 			int d = fnt.GetDescent();
@@ -294,6 +298,7 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 			rfnt = f;
 			return true;
 		}
+	}
 	return false;
 }
 
