@@ -731,6 +731,7 @@ private:
 	static bool      WndCaretVisible;
 	static int       Xbuttons;
 	static int       Xbuttontime;
+	static Point     Xbuttonpos;
 	static Window    grabWindow, focusWindow;
 	static Point     mousePos;
 	static int       PopupGrab;

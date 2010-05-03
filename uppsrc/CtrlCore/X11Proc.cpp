@@ -43,7 +43,8 @@ bool GetMouseLeft() { GuiLock __; return sModState & Button1Mask; }
 bool GetMouseRight() { GuiLock __; return sModState & (Ctrl::Xbuttons >= 3 ? Button3Mask : Button2Mask); }
 bool GetMouseMiddle() { GuiLock __; return sModState & (Ctrl::Xbuttons >= 3 ? Button2Mask : 0); }
 
-int  Ctrl::Xbuttontime;
+int   Ctrl::Xbuttontime;
+Point Ctrl::Xbuttonpos;
 
 dword Ctrl::KEYtoK(dword key)
 {
@@ -299,9 +300,14 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			if(ignoreclick) break;
 			Point p = Point(e.x, e.y);
 			dword action = DOWN;
-			if((dword)e.time - (dword)Xbuttontime < 800)
+			if((dword)e.time - (dword)Xbuttontime < 800) {
 				action = DOUBLE;
-			Xbuttontime = e.time;
+				Xbuttontime = Xeventtime - 0x80000000;
+			}
+			else {
+				Xbuttontime = e.time;
+				Xbuttonpos = mousePos;
+			}
 			switch(e.button) {
 			case Button1:
 				sModState |= Button1Mask;
@@ -370,7 +376,9 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 		EndIgnore();
 		mousePos = Point(event->xmotion.x_root, event->xmotion.y_root);
 		Xeventtime = event->xmotion.time;
-		Xbuttontime = Xeventtime - 0x80000000;
+		Point p = mousePos - Xbuttonpos;
+		if(max(abs(p.x), abs(p.y)) > 4)
+			Xbuttontime = Xeventtime - 0x80000000;
 		sModState = event->xmotion.state;
 		DispatchMouse(MOUSEMOVE, Point(event->xmotion.x, event->xmotion.y));
 		DoCursorShape();
