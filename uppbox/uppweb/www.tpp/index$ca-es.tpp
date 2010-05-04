@@ -755,7 +755,7 @@ dissenyat per a realitzar grans projectes en C`+`+]&]
 ¥¨Ÿ≤‰…í•“Àñ¨Ÿ≤‰……í•Àñ¨Ÿ≤¶‰…í•Àñ¨öŸ≤‰…í•Àôñ¨ŸÆ˙ﬂ˙ÖäË˝
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Revisi√≥ actual: [* 2232]&]
+[s0;l128; Revisi√≥ actual: [* 2361]&]
 [s0;l128; Llic√®ncia: [* BSD]&]
 [s0;* ]}}&]
 [s0; &]
@@ -823,10 +823,10 @@ GSoC]]
 :: [s0;%- ]
 ::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Descarregar]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Revisi√≥ 
-actual: 2232]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2232`.exe^+75 I
+actual: 2361]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2361`.exe^+75 I
 nstal laci√≥ Win32][+75  (18.1 MB)]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2232`.tar`.gz^+75 F
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2361`.tar`.gz^+75 F
 onts X11][+75  (20.2 MB)]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Paqu
 ets Ubuntu]&]

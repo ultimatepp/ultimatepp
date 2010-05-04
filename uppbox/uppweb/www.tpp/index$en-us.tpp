@@ -753,7 +753,7 @@ for developing large C`+`+ applications.]&]
 ´¬Ù²äÉ’¥ÒË–¬Ù²äÉÉ’¥Ë–¬Ù²¦äÉ’¥Ë–¬šÙ²äÉ’¥Ë™–¬Ù®úßú…Šèý
 ]&]
 [s0;>/@(0.0.255)0%% &]
-[s0;l128;%% Current release: [* 2232]&]
+[s0;l128;%% Current release: [* 2361]&]
 [s0;l128;%% License: [* BSD]&]
 [s0;*%% ]}}&]
 [s0; &]
@@ -820,10 +820,10 @@ License]]
 :: [s0; ]
 ::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Download]&]
 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Current 
-release: 2232]&]
-[s0;l160;i150;a17;O0;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2232`.exe^+75 W
+release: 2361]&]
+[s0;l160;i150;a17;O0;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2361`.exe^+75 W
 in32 installer][+75  (18.1 MB)]&]
-[s0;l160;i150;a17;O0;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2232`.tar`.gz^+75 X
+[s0;l160;i150;a17;O0;%% [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2361`.tar`.gz^+75 X
 11`-src][+75  (20.2 MB)]&]
 [s0;l160;i150;a17;O0;%% [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ub
 untu packages]&]
