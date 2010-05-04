@@ -1072,6 +1072,7 @@ static bool CwithVSRC(CalcPacket& packet)
 		packet.args.Add(CalcType<String>::Describe());
 		packet.args.Add("...");
 		packet.args.Add(CalcType<const CalcNode *>::Describe());
+		packet.result = CalcType<Value>::Describe();
 		return true;
 	}
 	int nargs = packet.args.GetCount();

@@ -508,14 +508,26 @@ inline bool CalcCastPacket(CalcPacket& packet, R (*fn)(CalcPacket& packet), BTA 
 template <class BTA, class O, class M, class R>
 inline bool CalcCastMember(CalcPacket& packet, O *clss, R (M::*fn)(), BTA * = 0)
 {
-	if(packet.help)
-	{ // generate help info
+	if(packet.help) { // generate help info
 		packet.result = CalcType<R>::Describe();
 		return true;
 	}
 	if(packet.args.GetCount() != 0)
 		return false;
 	packet.result = CalcType<R>::ToValue((clss ->* fn)());
+	return true;
+}
+
+template <class BTA, class O, class M, class R>
+inline bool CalcCastMemberPacket(CalcPacket& packet, O *clss, R (M::*fn)(), BTA * = 0)
+{
+	if(packet.help) { // generate help info
+		packet.result = CalcType<R>::Describe();
+		return true;
+	}
+	if(packet.args.GetCount() != 0)
+		return false;
+	packet.result = CalcType<R>::ToValue((clss ->* fn)(packet));
 	return true;
 }
 
@@ -556,12 +568,11 @@ inline bool NM(CalcPacket& packet, R (*fn)(CP_ARG_PREFIX __List##I(E__Arg)), BTA
 	return true; \
 }
 
-#define CalcCastMemberTemplate(I) \
+#define CalcCastMemberTemplate(NM, I) \
 template <class BTA, class O, class M, class R, __List##I(E__Class)> \
-inline bool CalcCastMember(CalcPacket& packet, O *clss, R (M::*fn)(__List##I(E__Arg)), BTA * = 0) \
+inline bool NM(CalcPacket& packet, O *clss, R (M::*fn)(CP_ARG_PREFIX __List##I(E__Arg)), BTA * = 0) \
 { \
-	if(packet.help) \
-	{ \
+	if(packet.help) { \
 		packet.result = CalcType<R>::Describe();  \
 		__List##I(E__Descr); \
 		return true; \
@@ -570,44 +581,54 @@ inline bool CalcCastMember(CalcPacket& packet, O *clss, R (M::*fn)(__List##I(E__
 		return false; \
 	bool null = false; \
 	__Expand##I(E__ChkArg) \
-	if(BTA::NIL && null) \
-	{ \
+	if(BTA::NIL && null) { \
 		packet.result = Value(); \
 		return true; \
 	} \
-	packet.result = CalcType<R>::ToValue((clss ->* fn)( \
+	packet.result = CalcType<R>::ToValue((clss ->* fn)(CP_PREFIX \
 		__List##I(E__CvArg))); \
 	return true; \
 } \
 
 #define CP_ARG_PREFIX
 #define CP_PREFIX
+
 CalcCastTemplate(CalcCast, 1)
 CalcCastTemplate(CalcCast, 2)
 CalcCastTemplate(CalcCast, 3)
 CalcCastTemplate(CalcCast, 4)
 CalcCastTemplate(CalcCast, 5)
 CalcCastTemplate(CalcCast, 6)
+
+CalcCastMemberTemplate(CalcCastMember, 1)
+CalcCastMemberTemplate(CalcCastMember, 2)
+CalcCastMemberTemplate(CalcCastMember, 3)
+CalcCastMemberTemplate(CalcCastMember, 4)
+CalcCastMemberTemplate(CalcCastMember, 5)
+CalcCastMemberTemplate(CalcCastMember, 6)
+
 #undef  CP_ARG_PREFIX
 #undef  CP_PREFIX
 
 #define CP_ARG_PREFIX CalcPacket& packet,
 #define CP_PREFIX packet,
+
 CalcCastTemplate(CalcCastPacket, 1)
 CalcCastTemplate(CalcCastPacket, 2)
 CalcCastTemplate(CalcCastPacket, 3)
 CalcCastTemplate(CalcCastPacket, 4)
 CalcCastTemplate(CalcCastPacket, 5)
 CalcCastTemplate(CalcCastPacket, 6)
+
+CalcCastMemberTemplate(CalcCastMemberPacket, 1)
+CalcCastMemberTemplate(CalcCastMemberPacket, 2)
+CalcCastMemberTemplate(CalcCastMemberPacket, 3)
+CalcCastMemberTemplate(CalcCastMemberPacket, 4)
+CalcCastMemberTemplate(CalcCastMemberPacket, 5)
+CalcCastMemberTemplate(CalcCastMemberPacket, 6)
+
 #undef  CP_ARG_PREFIX
 #undef  CP_PREFIX
-
-CalcCastMemberTemplate(1)
-CalcCastMemberTemplate(2)
-CalcCastMemberTemplate(3)
-CalcCastMemberTemplate(4)
-CalcCastMemberTemplate(5)
-CalcCastMemberTemplate(6)
 
 #define FGENID2(tag, lnum) __##tag##lnum##__
 #define FGENID1(tag, lnum) FGENID2(tag, lnum)
@@ -667,9 +688,28 @@ INITBLOCK_(FGENID(mblk, tag)) { \
 static void FGENID(chlt, dflt)(String& out) { out.Cat(FGENID(chlp, dflt)().GetTitle()); } \
 RegisterHelpTopicInfo("Calc$" topic, __FILE__, callback(&FGENID(chlt, dflt)), CNULL)
 
+#define MDECLTA(null, topic, id, group, call) \
+struct FGENID(clcp, dflt) : public BASECLASS \
+{ FGENID(clcp, dflt)(); bool CalcIt(CalcPacket& packet) { return CalcCastMemberPacket<null>(packet, this, &BASECLASS::call); } }; \
+static GLOBAL_VARP(HelpCalc, FGENID(chlp, dflt), (callback(static_cast<BASECLASS *>(0), \
+		brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, dflt)::CalcIt)), \
+		id, "Calc$" topic, group)); \
+INITBLOCK_(FGENID(mblk, tag)) { \
+	FGENID(chlp, dflt)(); \
+	static CalcLocalItem<BASECLASS> FGENID(clci, dflt)(BASECLASS::GetLocalMap(), id, \
+			brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, dflt)::CalcIt)); \
+} \
+static void FGENID(chlt, dflt)(String& out) { out.Cat(FGENID(chlp, dflt)().GetTitle()); } \
+RegisterHelpTopicInfo("Calc$" topic, __FILE__, callback(&FGENID(chlt, dflt)), CNULL)
+
 #define MDECL(id, x, group)   MDECLT(BTA0, ASSTRING(call),               id,           group, call)
 #define MDECL0(id, x, group)  MDECLT(BTA1, ASSTRING(id),                 id,           group, COMBINE3(C, id, x))
 #define MDECLP(id, x, group)  MDECLT(BTA0, "C" ASSTRING(id) ASSTRING(x), ASSTRING(id), group, COMBINE3(C, id, x))
 #define MDECLP0(id, x, group) MDECLT(BTA1, "C" ASSTRING(id) ASSTRING(x), ASSTRING(id), group, COMBINE3(C, id, x))
+
+#define MDECLA(id, x, group)   MDECLTA(BTA0, ASSTRING(call),               id,           group, call)
+#define MDECLA0(id, x, group)  MDECLTA(BTA1, ASSTRING(id),                 id,           group, COMBINE3(C, id, x))
+#define MDECLAP(id, x, group)  MDECLTA(BTA0, "C" ASSTRING(id) ASSTRING(x), ASSTRING(id), group, COMBINE3(C, id, x))
+#define MDECLAP0(id, x, group) MDECLTA(BTA1, "C" ASSTRING(id) ASSTRING(x), ASSTRING(id), group, COMBINE3(C, id, x))
 
 END_UPP_NAMESPACE
