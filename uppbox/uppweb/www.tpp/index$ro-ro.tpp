@@ -756,7 +756,7 @@ ai nevoie.]]
 ´¬Ù²äÉ’¥ÒË–¬Ù²äÉÉ’¥Ë–¬Ù²¦äÉ’¥Ë–¬šÙ²äÉ’¥Ë™–¬Ù®úßú…Šèý
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Versiune stabilÄƒ: [* 2361]&]
+[s0;l128; Versiune stabilÄƒ: [*IRELEASET; release]&]
 [s0;l128; LicenÈ›Äƒ: [* BSD]&]
 [s0;* ]}}&]
 [s0;%- &]
@@ -825,7 +825,7 @@ LicenÈ›e]]
 :: [s0;%- ]
 ::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 DescarcÄƒ]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Versiune 
-curentÄƒ: 2361]&]
+curentÄƒ][2 : ][IRELEASE;2 release]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2361`.exe^+75 W
 in32 installer][+75  (18.1 MB)]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2361`.tar`.gz^+75 X
