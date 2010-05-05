@@ -701,8 +701,10 @@ GUI_APP_MAIN
 
 	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
 	languages.Add(LNG_('C','A','E','S'));
+	languages.Add(LNG_('C','S','C','Z'));
 	languages.Add(LNG_('E','S','E','S'));
 	languages.Add(LNG_('F','R','F','R'));
+	languages.Add(LNG_('R','O','R','O'));
 	languages.Add(LNG_('R','U','R','U'));
 	
 	RLOG("--- uppweb started at " << GetSysTime());
@@ -716,9 +718,13 @@ GUI_APP_MAIN
 	}
 	GatherRefLinks(uppsrc);
 	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
-
+	
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
-
+	
+	String release = "2361";
+	escape.Add("RELEASE", release);
+	escape.Add("RELEASET", release);
+	
 	if (doSvn) {
 		GetSvnList(svndata, rootdir);
 		GetSvnLog(svnlog);

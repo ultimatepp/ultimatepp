@@ -787,7 +787,7 @@ Ultimate`+`+ вы получите:]&]
 ��ٲ�ɒ��˖�ٲ��ɒ�˖�ٲ��ɒ�˖��ٲ�ɒ�˙��ٮ�������
 ]&]
 [s0;>/@(0.0.255)0 &]
-[s0;l128; Текущий релиз: [* 2361]&]
+[s0;l128; Текущий релиз: [*IRELEASET; release]&]
 [s0;l128; Лицензия: [* BSD]&]
 [s0;* ]}}&]
 [s0; &]
@@ -858,15 +858,15 @@ Ultimate`+`+ вы получите:]&]
 ::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Страница 
 загрузки]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Текущий 
-релиз: 2361]&]
+релиз][2 : ][IRELEASE;2 release]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2361`.exe^+75 W
 in32 installer][+75  (18.1 MB)]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2361`.tar`.gz^+75 X
 11`-src][+75  (20.2 MB)]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
 tu packages]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 SVN][2 : текущий 
-релиз в SVN]]
+[s0;i150;a17;O0;%% [%RU-RU^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 SVN][%RU-RU2 : 
+][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
 ::r/25t0/15b0/15R0 [s0;%- ]
