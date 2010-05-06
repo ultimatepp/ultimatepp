@@ -30,60 +30,36 @@ TOPIC("bugreports$en-us")
 #include "bugreports$en-us.tppi"
 END_TOPIC
 
-TOPIC("IDEoverview$en-us")
-#include "IDEoverview$en-us.tppi"
+TOPIC("chss$en-us")
+#include "chss$en-us.tppi"
 END_TOPIC
 
-TOPIC("idess$en-us")
-#include "idess$en-us.tppi"
+TOPIC("chss$ru-ru")
+#include "chss$ru-ru.tppi"
 END_TOPIC
 
-TOPIC("idess$ru-ru")
-#include "idess$ru-ru.tppi"
+TOPIC("comparison$en-us")
+#include "comparison$en-us.tppi"
 END_TOPIC
 
-TOPIC("index$ca-es")
-#include "index$ca-es.tppi"
+TOPIC("comparison$ru-ru")
+#include "comparison$ru-ru.tppi"
 END_TOPIC
 
-TOPIC("index$cs-cz")
-#include "index$cs-cz.tppi"
+TOPIC("contribweb$ca-es")
+#include "contribweb$ca-es.tppi"
 END_TOPIC
 
-TOPIC("index$en-us")
-#include "index$en-us.tppi"
+TOPIC("contribweb$en-us")
+#include "contribweb$en-us.tppi"
 END_TOPIC
 
-TOPIC("index$es-es")
-#include "index$es-es.tppi"
+TOPIC("contribweb$es-es")
+#include "contribweb$es-es.tppi"
 END_TOPIC
 
-TOPIC("index$fr-fr")
-#include "index$fr-fr.tppi"
-END_TOPIC
-
-TOPIC("index$ro-ro")
-#include "index$ro-ro.tppi"
-END_TOPIC
-
-TOPIC("index$ru-ru")
-#include "index$ru-ru.tppi"
-END_TOPIC
-
-TOPIC("overview$en-us")
-#include "overview$en-us.tppi"
-END_TOPIC
-
-TOPIC("overview$ru-ru")
-#include "overview$ru-ru.tppi"
-END_TOPIC
-
-TOPIC("reference$ca-es")
-#include "reference$ca-es.tppi"
-END_TOPIC
-
-TOPIC("reference$en-us")
-#include "reference$en-us.tppi"
+TOPIC("cookie$en-us")
+#include "cookie$en-us.tppi"
 END_TOPIC
 
 TOPIC("currenttopics$en-us")
@@ -142,6 +118,66 @@ TOPIC("helpus$en-us")
 #include "helpus$en-us.tppi"
 END_TOPIC
 
+TOPIC("IDEoverview$en-us")
+#include "IDEoverview$en-us.tppi"
+END_TOPIC
+
+TOPIC("idess$en-us")
+#include "idess$en-us.tppi"
+END_TOPIC
+
+TOPIC("idess$ru-ru")
+#include "idess$ru-ru.tppi"
+END_TOPIC
+
+TOPIC("index$ca-es")
+#include "index$ca-es.tppi"
+END_TOPIC
+
+TOPIC("index$cs-cz")
+#include "index$cs-cz.tppi"
+END_TOPIC
+
+TOPIC("index$en-us")
+#include "index$en-us.tppi"
+END_TOPIC
+
+TOPIC("index$es-es")
+#include "index$es-es.tppi"
+END_TOPIC
+
+TOPIC("index$fr-fr")
+#include "index$fr-fr.tppi"
+END_TOPIC
+
+TOPIC("index$ro-ro")
+#include "index$ro-ro.tppi"
+END_TOPIC
+
+TOPIC("index$ru-ru")
+#include "index$ru-ru.tppi"
+END_TOPIC
+
+TOPIC("overview$en-us")
+#include "overview$en-us.tppi"
+END_TOPIC
+
+TOPIC("overview$ru-ru")
+#include "overview$ru-ru.tppi"
+END_TOPIC
+
+TOPIC("reference$ca-es")
+#include "reference$ca-es.tppi"
+END_TOPIC
+
+TOPIC("reference$en-us")
+#include "reference$en-us.tppi"
+END_TOPIC
+
+TOPIC("reference$es-es")
+#include "reference$es-es.tppi"
+END_TOPIC
+
 TOPIC("reference$ru-ru")
 #include "reference$ru-ru.tppi"
 END_TOPIC
@@ -192,41 +228,5 @@ END_TOPIC
 
 TOPIC("vswx$en-us")
 #include "vswx$en-us.tppi"
-END_TOPIC
-
-TOPIC("reference$es-es")
-#include "reference$es-es.tppi"
-END_TOPIC
-
-TOPIC("chss$en-us")
-#include "chss$en-us.tppi"
-END_TOPIC
-
-TOPIC("chss$ru-ru")
-#include "chss$ru-ru.tppi"
-END_TOPIC
-
-TOPIC("comparison$en-us")
-#include "comparison$en-us.tppi"
-END_TOPIC
-
-TOPIC("comparison$ru-ru")
-#include "comparison$ru-ru.tppi"
-END_TOPIC
-
-TOPIC("contribweb$ca-es")
-#include "contribweb$ca-es.tppi"
-END_TOPIC
-
-TOPIC("contribweb$en-us")
-#include "contribweb$en-us.tppi"
-END_TOPIC
-
-TOPIC("contribweb$es-es")
-#include "contribweb$es-es.tppi"
-END_TOPIC
-
-TOPIC("cookie$en-us")
-#include "cookie$en-us.tppi"
 END_TOPIC
 
