@@ -5,6 +5,10 @@ topic "News and changes log";
 [s0; [*R6 SysInfo. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2010/05/06-|Added GetMacAddress() and GetHDSerial() for Windows. 
+Fixed GetBiosInfo() date bug]&]
+[s0; [2 2010/04/14-|Added biosSerial to GetBiosInfo() and motherboard 
+serial to GetSystemInfo()]&]
 [s0; [2 2010/01/05-|GetDesktopManagerNew moved to Functions4U]&]
 [s0; [2 2010/01/05-|Trash Bin documentation moved to Functions4U]&]
 [s0; [2 2009/12/29-|LaunchFile() and GetDriveList() moved to Functions4U]&]

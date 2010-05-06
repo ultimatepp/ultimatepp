@@ -15,16 +15,20 @@ topic "Function reference";
 [s0; &]
 [ {{10000@1 [s0; [* Hardware, BIOS, OS and Distro info]]}}&]
 [s4;%- &]
-[s5;:GetSystemInfo`(String`&`,String`&`,String`&`,int`&`):%- [@(0.0.255) void]_[* GetSyst
-emInfo]([_^String^ String]_`&[*@3 manufacturer], [_^String^ String]_`&[*@3 productName], 
-[_^String^ String]_`&[*@3 version], [@(0.0.255) int]_`&[*@3 numberOfProcessors])&]
+[s5;:GetSystemInfo`(String`&`,String`&`,String`&`,int`&`,String`&`):%- [@(0.0.255) void
+]_[* GetSystemInfo]([_^String^ String]_`&[*@3 manufacturer], [_^String^ String]_`&[*@3 prod
+uctName], [_^String^ String]_`&[*@3 version], [@(0.0.255) int]_`&[*@3 numberOfProcessors],
+ [_^String^ String]_`&[*@3 mbSerial])&]
 [s2; Returns hardware information including computer [%-*@3 manufacturer, 
-] [%-*@3 productName, ] [%-*@3 version ]and [%-*@3 numberOfProcessors].&]
+] [%-*@3 productName, ] [%-*@3 version], [%-*@3 numberOfProcessors 
+]and [%-*@3 mbSerial ](motherboard serial number).&]
 [s3; &]
 [s4;%- &]
-[s5;:GetBiosInfo`(String`&`,Date`&`):%- [@(0.0.255) void]_[* GetBiosInfo]([_^String^ String
-]_`&[*@3 biosVersion], [_^Date^ Date]_`&[*@3 biosReleaseDate])&]
-[s2; Returns bios information including [%-*@3 biosVersion] and [%-*@3 biosReleaseDate].&]
+[s5;:GetBiosInfo`(String`&`,Date`&`,String`&`):%- [@(0.0.255) void]_[* GetBiosInfo]([_^String^ S
+tring]_`&[*@3 biosVersion], [_^Date^ Date]_`&[*@3 biosReleaseDate][_^String^ , 
+String]_`&[*@3 biosSerial])&]
+[s2;%- [%% Returns bios information including ][*@3 biosVersion][%% , ][*@3 biosReleaseDate][%% .
+and ][*@3 biosSerial.]&]
 [s3; &]
 [s4;%- &]
 [s5;:GetProcessorInfo`(int`,String`&`,String`&`,String`&`,int`&`):%- [@(0.0.255) bool]_
@@ -37,7 +41,7 @@ emInfo]([_^String^ String]_`&[*@3 manufacturer], [_^String^ String]_`&[*@3 produ
 [s2; [%-*@3 identifier] is the core identifier&]
 [s2; [%-*@3 architecture] is the core architecture (32, 64)&]
 [s2; [%-*@3 speed].is the core speed in MHz.&]
-[s0; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:GetCpuSpeed`(`):%- [@(0.0.255) int]_[* GetCpuSpeed]()&]
 [s2; Gets the real time main CPU speed in MHz.&]
@@ -77,6 +81,19 @@ Array_<Value>_`&[*@3 state])&]
 [s0;l640; `- `"Advertised`"&]
 [s0;l640; `- `"Absent`"&]
 [s0;l640; `- `"Ok`"&]
+[s6; Only available in Windows&]
+[s3; &]
+[s4;%- &]
+[s5;:GetMacAddress`(String`&`):%- [@(0.0.255) bool]_[* GetMacAddress]([_^String^ String]_`&
+[*@3 mac])&]
+[s2; If true returns the [%-*@3 mac ]address.&]
+[s6; Only available in Windows&]
+[s3; &]
+[s4;%- &]
+[s5;:GetHDSerial`(String`&`):%- [@(0.0.255) bool]_[* GetHDSerial]([_^String^ String]_`&[*@3 s
+erial])&]
+[s2; If true returns the hard disk physical [%-*@3 serial ]number. 
+This code is not affected by disk formatting.&]
 [s6; Only available in Windows&]
 [s3; &]
 [s4;%- &]

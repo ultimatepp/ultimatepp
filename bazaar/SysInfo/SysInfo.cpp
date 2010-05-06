@@ -145,21 +145,19 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[])
 	
 	return true;
 }
-bool GetWMIInfo(String system, String data, Value &res)
-{
+bool GetWMIInfo(String system, String data, Value &res) {
 	Array <Value> arrRes;
 	Array <Value> *arrResP[1];
 	arrResP[0] = &arrRes;
 	Array <String> arrData;
 	arrData.Add(data);
-	bool ret = GetWMIInfo("Win32_ComputerSystem", arrData, arrResP);
+	bool ret = GetWMIInfo(system, arrData, arrResP);
 	if (ret)
 		res = arrRes[0];
 	return ret;
 }
 	
-void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors)
-{ 
+void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors, String &mbSerial) { 
 	manufacturer = "";
 	Value vmanufacturer;
 	if (GetWMIInfo("Win32_ComputerSystem", "manufacturer", vmanufacturer)) 
@@ -182,9 +180,11 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 	
 	version = FromSystemCharset(GetWinRegString("SystemVersion", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
 	numberOfProcessors = atoi(GetEnv("NUMBER_OF_PROCESSORS"));
+	Value vmbSerial;
+	if (GetWMIInfo("Win32_BaseBoard", "SerialNumber", vmbSerial)) 
+		mbSerial = TrimBoth(vmbSerial);	
 }
-void GetBiosInfo(String &biosVersion, Date &biosReleaseDate)
-{ 
+void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial) { 
 	// Alternative is "wmic bios get name" and "wmic bios get releasedate"
 	String strBios = FromSystemCharset(GetWinRegString("BIOSVersion", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));	
 	if (strBios.IsEmpty())
@@ -198,20 +198,40 @@ void GetBiosInfo(String &biosVersion, Date &biosReleaseDate)
 	String strDate = FromSystemCharset(GetWinRegString("BIOSReleaseDate", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
 	if (strDate.IsEmpty())
 		strDate = FromSystemCharset(GetWinRegString("SystemBiosDate", "HARDWARE\\DESCRIPTION\\System", HKEY_LOCAL_MACHINE));
-	StrToDate(biosReleaseDate, strDate);
+	int lang = GetCurrentLanguage();
+	SetLanguage(LNG_ENGLISH);
+	if (!StrToDate(biosReleaseDate, strDate))
+		biosReleaseDate = Null;
+	SetLanguage(lang);
+	Value vmbSerial;
+	if (GetWMIInfo("Win32_BIOS", "SerialNumber", vmbSerial)) 
+		biosSerial = TrimBoth(vmbSerial);	
 }
-bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)		
-{
+bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)	{
 	String strReg = Format("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\%d", number);
 	vendor = FromSystemCharset(GetWinRegString("VendorIdentifier", strReg, HKEY_LOCAL_MACHINE));	
 	identifier = FromSystemCharset(GetWinRegString("ProcessorNameString", strReg, HKEY_LOCAL_MACHINE));	
 	architecture = FromSystemCharset(GetWinRegString("Identifier", strReg, HKEY_LOCAL_MACHINE));	
 	speed = GetWinRegInt("~MHz", strReg, HKEY_LOCAL_MACHINE);
+	
 	return true;
-}	
+}
+bool GetMacAddress(String &mac) {
+	Value vmac;
+	if (!GetWMIInfo("Win32_NetworkAdapterConfiguration", "MacAddress", vmac)) 
+		return false;
+	mac = TrimBoth(vmac);	
+	return true;
+}
+bool GetHDSerial(String &serial) {
+	Value vmbSerial;
+	if (!GetWMIInfo("Win32_PhysicalMedia", "SerialNumber", vmbSerial)) 
+		return false;
+	serial = TrimBoth(vmbSerial);	
+	return true;
+}
 
-bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, Array <Value> &ram, Array <Value> &videoMode)
-{
+bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, Array <Value> &ram, Array <Value> &videoMode) {
 	Array <Value> *res[5];
 	res[0] = &name;
 	res[1] = &description;
@@ -273,12 +293,15 @@ Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, 
 }
 #endif
 #if defined (PLATFORM_POSIX)
-void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors)
+void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors, String &mbSerial)
 {
 	manufacturer = LoadFile_Safe("/sys/devices/virtual/dmi/id/board_vendor");
 	productName = LoadFile_Safe("/sys/devices/virtual/dmi/id/board_name");
 	version = LoadFile_Safe("/sys/devices/virtual/dmi/id/product_version");
-	
+	mbSerial = LoadFile_Safe("/sys/devices/virtual/dmi/id/board_serial");
+	if (mbSerial.IsEmpty()) 
+		mbSerial = FormatInt(gethostid());	
+
 	StringParse cpu(LoadFile_Safe("/proc/cpuinfo"));	
 	numberOfProcessors = 1;
 	while (cpu.GoAfter("processor")) {
@@ -286,11 +309,12 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 		numberOfProcessors = atoi(cpu.GetText()) + 1;
 	} 
 }
-void GetBiosInfo(String &biosVersion, Date &biosReleaseDate)
+void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial)
 {
 	String biosVendor = LoadFile_Safe("/sys/devices/virtual/dmi/id/bios_vendor");
 	biosVersion = LoadFile_Safe("/sys/devices/virtual/dmi/id/bios_version");
 	StrToDate(biosReleaseDate, LoadFile_Safe("/sys/devices/virtual/dmi/id/bios_date"));
+	biosSerial = LoadFile_Safe("/sys/devices/virtual/dmi/id/chassis_serial");
 }
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)	
 {

@@ -8,8 +8,8 @@ using namespace Upp;
 
 /////////////////////////////////////////////////////////////////////
 // Processor Info
-void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors);
-void GetBiosInfo(String &biosVersion, Date &biosReleaseDate);
+void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors, String &mbSerial);
+void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial);
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed);		
 // Gets the real CPU speed in MHz
 int GetCpuSpeed();
@@ -19,6 +19,8 @@ bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value>
 												Array <Value> &ram, Array <Value> &videoMode);
 bool GetPackagesInfo(Array <Value> &name, Array <Value> &version, Array <Value> &vendor, 
 			Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, Array <Value> &state);
+bool GetMacAddress(String &mac);
+bool GetHDSerial(String &serial);
 #endif
 
 /////////////////////////////////////////////////////////////////////
