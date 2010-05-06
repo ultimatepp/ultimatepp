@@ -693,17 +693,23 @@ CH_STYLE(ButtonOption, Style, StyleFlat)
 }
 	
 void  ButtonOption::LeftDown(Point, dword) {
+	if(IsReadOnly())
+		return;
 	push = true;
 	Refresh();
 }
 
 void  ButtonOption::LeftUp(Point, dword) {
+	if(IsReadOnly())
+		return;
 	option = !option;
 	push = false;
 	UpdateActionRefresh();
 }
 
 void  ButtonOption::MouseMove(Point, dword flags) {
+	if(IsReadOnly())
+		return;
 	bool p = !!(flags & K_MOUSELEFT);
 	if(push != p) {
 		push = p;
@@ -716,6 +722,8 @@ void  ButtonOption::MouseEnter(Point, dword) {
 }
 
 void  ButtonOption::MouseLeave() {
+	if(IsReadOnly())
+		return;
 	if(push)
 		push = false;
 	Refresh();
