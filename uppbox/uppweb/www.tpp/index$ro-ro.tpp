@@ -785,7 +785,8 @@ de ansamblu]&]
 ::r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
 ::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Aplicații]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 FAQ]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 Întrebări 
+frecvente]&]
 [s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Forumuri]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::t8/25b8/25R(165)-1 [s0;*+34%- ]
@@ -818,7 +819,7 @@ curente]&]
 GSoC]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Bazaar]&]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Bazar]&]
 [s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$en`-us^2 Autori și 
 Licențe]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]
@@ -860,7 +861,7 @@ externe]&]
 [s0;i150;O0; [2 Index web. ][/@(153)2 De făcut...]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 Finanțiază 
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 Finanțează 
 U`+`+]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Premiu 
 fursec]]
