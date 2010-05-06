@@ -5,7 +5,7 @@ topic "Ultimate++ - multiplatformní framework pro rychlý vývoj C++ aplikací"
 [s0; [*R6 Ultimate`+`+ `- multiplatformní framework pro rychlý vývoj 
 C`+`+ aplikací]&]
 [s0;>*R^topic`:`/`/uppweb`/www`/index`$ru`-ru^1 &]
-[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  multiplatformní framework pro rychlý vývoj C`+`+ 
+[ {{6760:3240f0;g0;^l/0r/0t/0b/0 [s0; [*2 U`+`+][2  je multiplatformní framework pro rychlý vývoj C`+`+ 
 aplikací, zaměřený na produktivitu programátora. Skládá 
 se ze sady knihoven (GUI, SQL, atd...) a vývojového prostředí.]&]
 [s0;2 &]
@@ -16,8 +16,8 @@ jazyky, zatímco si zachovává běhové vlastnosti C/C`+`+.]&]
 [s0;2 &]
 [s0; [2 Integrované vývojové prostředí TheIDE přináší do programování 
 v C`+`+ modularitu. Nabízí technologii BLITZ, která až 4x 
-urychluje překlad C`+`+ kódu, grafické editory pro tvorbu 
-grafického rozhraní, ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  
+urychluje překlad, grafické editory pro tvorbu grafického 
+rozhraní, ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 Topic`+`+][2  
 systém pro documentaci kódu i pro tvorbu formátovaných textů 
 pro aplikace (např nápověda a pod.) a ][^topic`:`/`/ide`/app`/Assist`$en`-us^2 A
 ssist`+`+][2 , což je výkoný analyzátor kódu poskytující 
@@ -26,8 +26,8 @@ funkce jako jsou doplňování kódu, navigace či transformace.]&]
 [s0; [2 TheIDE umí pracovat s překladači GCC, MinGW i Visual C`+`+ 
 9.0 (obsaženém ve volně dostupném ][^http`:`/`/www`.microsoft`.com`/downloads`/details`.aspx`?familyid`=ff6467e6`-5bba`-4bf5`-b562`-9199be864d29`&displaylang`=en^2 W
 indows Vista SDK][2 ) a obsahuje plnohodnotný debugger. TheIDE 
-can není závislé na U`+`+ a může být použito pro vývoj 
-jakékoliv C/C`+`+ aplikace.]&]
+není závislé na U`+`+ a může být použito pro vývoj jakékoliv 
+C/C`+`+ aplikace.]&]
 [s0;2 &]
 [s0; [*2 Co získáte, když si stáhnete Ultimate`+`+, v kostce:]&]
 [s0; &]
@@ -772,14 +772,12 @@ Tutoriál]&]
 [s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Seznámení]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r8/25t/25b/25R(165) [s0;>@(114)2 ]
-::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Overview]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Dokumentace]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Příklady]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparisons]]
+::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Dokumentace]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Příklady]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Aplikace]]
 ::r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Aplikace]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 FAQ `- Často 
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 FAQ `- Často 
 kladené dotazy]&]
 [s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Forum]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
