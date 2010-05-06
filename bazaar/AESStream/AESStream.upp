@@ -12,6 +12,7 @@ include
 
 file
 	AESStream.cpp,
+	Sha.cpp,
 	AESStream.h,
 	src.tpp;
 
