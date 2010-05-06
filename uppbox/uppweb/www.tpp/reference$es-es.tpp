@@ -6,8 +6,8 @@ topic "";
 [s1; &]
 [s1; &]
 [s2; Ejemplos de referencia&]
-[s0; Los ejemplos de referencia están diseñados para documentar 
+[s0; [2 Los ejemplos de referencia están diseñados para documentar 
 U`+`+ a través de sencillos ejemplos, demostrando cada uno un 
-simple aspecto de la librería U`+`+.&]
-[s0; &]
+simple aspecto de la librería U`+`+.]&]
+[s0;2 &]
 [s0; ]

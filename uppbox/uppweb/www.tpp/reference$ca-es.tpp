@@ -6,8 +6,8 @@ topic "";
 [s1; &]
 [s1; &]
 [s2; Exemples de referència&]
-[s0; Els exemples de referència estan dissenyats per documentar 
+[s0; [2 Els exemples de referència estan dissenyats per documentar 
 U `+ `+ a través de senzills exemples, demostrant cadascun un 
-simple aspecte de la llibreria U `+ `+.&]
-[s0; &]
-[s0;%ES-ES ]
+simple aspecte de la llibreria U `+ `+.]&]
+[s0;2 &]
+[s0; ]
