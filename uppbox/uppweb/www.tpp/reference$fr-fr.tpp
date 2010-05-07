@@ -21,7 +21,7 @@ topic "Exemples de référence";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [t4167;C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
-[{_}%EN-US 
+[{_}%FR-FR 
 [s5; &]
 [s5; &]
 [s2; Exemples de référence&]
@@ -29,4 +29,4 @@ topic "Exemples de référence";
 à travers un ensemble d`'exemples très simples, chacun d`'entre 
 eux présentant un aspect précis de la bibliothèque U`+`+.&]
 [s0; &]
-[s0; ]
+[s0;%% ]
