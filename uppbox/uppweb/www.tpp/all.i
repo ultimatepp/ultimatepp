@@ -178,6 +178,10 @@ TOPIC("reference$es-es")
 #include "reference$es-es.tppi"
 END_TOPIC
 
+TOPIC("reference$fr-fr")
+#include "reference$fr-fr.tppi"
+END_TOPIC
+
 TOPIC("reference$ru-ru")
 #include "reference$ru-ru.tppi"
 END_TOPIC
