@@ -228,7 +228,9 @@ struct sReadFields : public FieldOperator {
 	int  pi;
 	Sql *sql;
 
-	void Field(Ref r)       { sql->GetColumn(pi++, r); }
+	void Field(const char *name, Ref f) {
+		f = (*sql)[SqlId(name)];
+	}
 };
 
 void Sql::Get(Fields fo)
