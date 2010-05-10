@@ -196,11 +196,17 @@ bool Sql::Fetch() {
 		session.SetTime(total);
 		session.SetStatus(SqlSession::END_FETCHING_MANY);
 	}
-	if(total > session.traceslow)
+	Stream *s = session.GetTrace();
+	if(total > session.traceslow) {
 		BugLog() << total << " ms: " << cn->statement << '\n';
-	else if(fetch > session.traceslow)
+		if(s)
+			*s << total << " ms: " << cn->statement << '\n';
+	}
+	else if(fetch > session.traceslow) {
 		BugLog() << fetch << " ms further fetch: " << cn->statement << '\n';
-
+		if(s)
+			*s << fetch << " ms further fetch: " << cn->statement << '\n';
+	}
 	cn->starttime = INT_MAX;
 	return b;
 }
