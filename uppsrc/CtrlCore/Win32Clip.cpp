@@ -48,26 +48,49 @@ int  GetClipboardFormatCode(const char *format_id)
 	return format_map[f];
 }
 
+void ClipboardLog(const char *txt)
+{
+#ifdef flagCHECKCLIPBOARD
+	FileAppend f(GetExeDirFile("clip.log"));
+	f << txt << ": " << GetLastErrorMessage() << "\n";
+#endif
+}
+
 void ClearClipboard()
 {
 	GuiLock __;
 	sClipMap().Clear();
+#ifdef flagCHECKCLIPBOARD
+	DeleteFile(GetExeDirFile("clip.log"));
+#endif
+	ClipboardLog("* ClearClipboard");
 	if(OpenClipboard(utilityHWND)) {
-		EmptyClipboard();
-		CloseClipboard();
+		if(!EmptyClipboard())
+			ClipboardLog("EmptyClipboard ERROR");
+		if(!CloseClipboard())
+			ClipboardLog("CloseClipboard ERROR");
 	}
+#ifdef flagCHECKCLIPBOARD
+	else {
+		ClipboardLog("OpenClipboard ERROR");
+	}
+#endif
 }
 
 void SetClipboardRaw(int format, const byte *data, int length)
 {
 	GuiLock __;
 	HANDLE handle = NULL;
+	ClipboardLog("* SetClipboardRaw");
 	if(data) {
 		handle = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, length + 2);
 		byte *ptr;
-		if(!handle)
+		if(!handle) {
+			ClipboardLog("GlobalAlloc ERROR");
 			return;
+		}
 		if(!(ptr = (byte *)GlobalLock(handle))) {
+			ClipboardLog("GlobalLock ERROR");
 			GlobalFree(handle);
 			return;
 		}
@@ -77,6 +100,7 @@ void SetClipboardRaw(int format, const byte *data, int length)
 		GlobalUnlock(handle);
 	}
 	if(!SetClipboardData(format, handle)) {
+		ClipboardLog("SetClipboardData ERROR");
 		LLOG("SetClipboardData error: " << GetLastErrorMessage());
 		GlobalFree(handle);
 	}
@@ -85,10 +109,14 @@ void SetClipboardRaw(int format, const byte *data, int length)
 void AppendClipboard(int format, const byte *data, int length)
 {
 	GuiLock __;
+	ClipboardLog("* AppendClipboard");
 	if(OpenClipboard(utilityHWND)) {
 		SetClipboardRaw(format, data, length);
-		CloseClipboard();
+		if(!CloseClipboard())
+			ClipboardLog("CloseClipboard ERROR");
 	}
+	else
+		ClipboardLog("OpenClipboard ERROR");
 }
 
 void AppendClipboard(const char *format, const byte *data, int length)

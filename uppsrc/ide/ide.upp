@@ -86,7 +86,8 @@ mainconfig
 	"" = "GUI .USEMALLOC",
 	"" = ".NOGTK GUI",
 	"" = "GUI HEAPDBG CHECKINIT",
-	"" = "GUI TESTINSTALL";
+	"" = "GUI TESTINSTALL",
+	"" = "GUI CHECKCLIPBOARD";
 
 custom() "",
 	"",
