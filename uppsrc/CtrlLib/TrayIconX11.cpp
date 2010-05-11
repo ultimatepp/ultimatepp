@@ -96,20 +96,28 @@ void TrayIcon::Message(int type, const char *title, const char *text, int timeou
 	}
 	UntrapX11Errors(x11trap);
 #else	
-	if (!notify_init(title))
-		return;
-	NotifyNotification* notification;
-	GError* error = NULL;
+	if (!notify_is_initted()) {
+		if (!notify_init(title)) {
+			return;
+		}
+	}
+	GError *error = NULL;
 	 
-	notification = notify_notification_new (title, text
+	NotifyNotification *notification = notify_notification_new (title, text
 					, type == 1 ? "gtk-dialog-info"
 					: type == 2 ? "gtk-dialog-warning"
 					: "gtk-dialog-error", NULL);
 	notify_notification_set_timeout(notification, timeout * 1000);
 	notify_notification_show (notification, &error);
-	notify_uninit ();
 #endif
 }
+
+#if !defined(flagNOGTK)
+EXITBLOCK {
+	if (notify_is_initted())
+		notify_uninit ();
+}
+#endif
 
 bool TrayIcon::HookProc(XEvent *event)
 {
