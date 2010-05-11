@@ -84,6 +84,8 @@ public:
 	Scatter& SetAntialiasing(const bool& aa=true);	
 	
 	void FitToData(bool Y = false);
+	void Zoom(double scale); 
+	void Scroll(double factorX, double factorY);
 
 	Scatter& SetRange(double rx, double ry, double ry2 = -1);
 	double GetXRange()const {return xRange;}
@@ -167,6 +169,7 @@ public:
 	void RemoveAllFSeries();
 	
 	void ShowInfo(bool show=true);	
+	void ProcessPopUp(const Point & pt);
 	
 	Drawing GetDrawing()const;
 	Image GetImage(const int& scale=1);
@@ -219,7 +222,7 @@ private:
 	bool logX, logY, logY2;	
 	
 	int butDownX, butDownY;
-	bool isButDown;
+	bool isMidDown, isLeftDown;
 	
 	Vector<Vector<XY> > vPointsData,vFunctionData;
 	Vector<bool> vFPrimaryY, vPPrimaryY;

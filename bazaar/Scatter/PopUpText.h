@@ -24,8 +24,16 @@ public:
 	
 	inline void Appear(Ctrl *owner, const int& x, const int& y, const int& gx=0, const int& gy=0) 
 	{
+		AppearOnly(owner);
+		Move(owner, x, y, gx, gy);	 
+	}
+	inline void AppearOnly(Ctrl * owner)
+	{
 		if(IsOpen()) Close();
-		Ctrl::PopUp(owner);		 
+		Ctrl::PopUp(owner);
+	}
+	inline void Move(Ctrl *owner, const int& x, const int& y, const int& gx=0, const int& gy=0)
+	{
 		SetRect(owner->GetScreenRect().left+x,owner->GetScreenRect().top+y,GetMinSize().cx+8+gx,GetMinSize().cy+4+gy);
 	}	
 };

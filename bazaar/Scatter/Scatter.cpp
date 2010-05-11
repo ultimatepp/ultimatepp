@@ -847,41 +847,52 @@ void Scatter::ShowInfo(bool show)
 	paintInfo=show;
 }
 
+void Scatter::ProcessPopUp(const Point & pt)
+{
+	double x=(pt.x-px)*xRange/(GetSize().cx-2*px-1)+xMin;		
+	double y=(GetSize().cy-py-pt.y-1)*yRange/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin;
+	double y2=(GetSize().cy-py-pt.y-1)*yRange2/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin2;
+	if(logX) x=pow(10.0, x);
+	if(logY) y=pow(10.0, y);
+	if(logY2) y2=pow(10.0, y2);
+	String strx, stry;
+	if (cbModifFormatX)
+		cbModifFormatX(strx, 0, x); 
+	else
+		strx = VariableFormatX(x);
+	if (cbModifFormatY)
+		cbModifFormatY(stry, 0, y);
+	else
+		stry = VariableFormatY(y);
+	String str="x: "+strx+"\ny: "+stry;
+	if (drawY2Reticle) {
+		String stry2;
+		if (cbModifFormatY2)
+			cbModifFormatY2(stry2, 0, y2);
+		else
+			stry2 = VariableFormatY2(y2);
+		str << "\ny2: "+stry2;
+	}
+	const Point p2=pt+offset;
+	popText.SetText(str).Move(this,p2.x,p2.y);
+}
+
 void Scatter::LeftDown(Point pt, dword)
 {
 	if(paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
 	{
-		double x=(pt.x-px)*xRange/(GetSize().cx-2*px-1)+xMin;		
-		double y=(GetSize().cy-py-pt.y-1)*yRange/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin;
-		double y2=(GetSize().cy-py-pt.y-1)*yRange2/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin2;
-		if(logX) x=pow(10.0, x);
-		if(logY) y=pow(10.0, y);
-		if(logY2) y2=pow(10.0, y2);
-		String strx, stry;
-		if (cbModifFormatX)
-			cbModifFormatX(strx, 0, x); 
-		else
-			strx = VariableFormatX(x);
-		if (cbModifFormatY)
-			cbModifFormatY(stry, 0, y);
-		else
-			stry = VariableFormatY(y);
-		String str="x: "+strx+"\ny: "+stry;
-		if (drawY2Reticle) {
-			String stry2;
-			if (cbModifFormatY2)
-				cbModifFormatY2(stry2, 0, y2);
-			else
-				stry2 = VariableFormatY2(y2);
-			str << "\ny2: "+stry2;
-		}
-		const Point p2=pt+offset;
-		popText.SetText(str).Appear(this,p2.x,p2.y);
+		popText.AppearOnly(this);
+		ProcessPopUp(pt);		
+		isLeftDown = true;
 	}	
 }
 void Scatter::LeftUp(Point, dword)
 {
-	if(paintInfo) popText.Close();
+	if(paintInfo && isLeftDown) 
+	{
+		popText.Close();
+		isLeftDown = false;
+	}
 }
 
 void Scatter::MiddleDown(Point pt, dword)
@@ -890,12 +901,13 @@ void Scatter::MiddleDown(Point pt, dword)
 	{
 		butDownX = pt.x;
 		butDownY = pt.y;	
-		isButDown = true;
+		isMidDown = true;
 	}
 }
 void Scatter::MouseMove(Point pt, dword)
 {
-	if (isButDown) {
+	if (isMidDown) 
+	{
 		int shiftX = pt.x - butDownX;
 		if (mouseHandlingX && shiftX != 0) {
 			double deltaX = shiftX*xRange/(GetSize().cx - 2*px - 1);
@@ -922,20 +934,25 @@ void Scatter::MouseMove(Point pt, dword)
 			Refresh();
 			WhenZoomScroll();
 		}
-	}
+	} 
+	if(isLeftDown) {
+		if (paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py) 
+		{
+			ProcessPopUp(pt);
+		}
+	}	
 }
 
 void Scatter::MiddleUp(Point pt, dword d)
 {
-	if (isButDown) {
+	if (isMidDown) {
 		MouseMove(pt, d);
-		isButDown = false;
+		isMidDown = false;
 	}
 }
 
-void Scatter::MouseWheel(Point, int zdelta, dword) 
+void Scatter::Zoom(double scale) 
 {
-	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
 	bool mouseX = mouseHandlingX;
 	mouseX = mouseX && ((minXZoom > 0 && xRange*scale > minXZoom) || (minXZoom < 0));
 	mouseX = mouseX && ((maxXZoom > 0 && xRange*scale < maxXZoom) || (maxXZoom < 0));
@@ -962,6 +979,38 @@ void Scatter::MouseWheel(Point, int zdelta, dword)
 		Refresh();
 		WhenZoomScroll();
 	}
+}
+
+void Scatter::Scroll(double factorX, double factorY)
+{
+	if (factorX != 0) {
+		double deltaX = factorX*xRange;
+		xMin -= deltaX;
+		xMinUnit += deltaX;
+		AdjustMinUnitX();
+	}
+	if (factorY != 0) {
+		double deltaY = -factorY*yRange;
+		yMin -= deltaY;
+		yMinUnit += deltaY;
+		AdjustMinUnitY();
+		if (drawY2Reticle) {
+			double deltaY2 = -factorY*yRange2;
+			yMin2 -= deltaY2;
+			yMinUnit2 += deltaY2;
+			AdjustMinUnitY2();
+		}
+	}
+	if (factorX != 0 || factorY != 0) {		
+		Refresh();
+		WhenZoomScroll();
+	}
+}
+
+void Scatter::MouseWheel(Point, int zdelta, dword) 
+{
+	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
+	Zoom(scale);
 }
 
 Image Scatter::CursorImage(Point p, dword keyflags)
@@ -1190,11 +1239,9 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 		}
 			
 		if(vShowMark[j])
-				for (int i=0; i<vPointsData[j].GetCount(); i++){
-				
-					DrawMark(vMarkStyles[j],w,scale,p1[i],vPWidth[j],vMarkColors[j]);              
-										
-				}
+			for (int i=0; i<vPointsData[j].GetCount(); i++) {
+				DrawMark(vMarkStyles[j],w,scale,p1[i],vPWidth[j],vMarkColors[j]);              
+			}
 		}
 	}
 	
@@ -1467,12 +1514,12 @@ Scatter::Scatter():
 	gridColor(Color::Color(102,102,102)),
 	gridWidth(-4),
 	paintInfo(false),
-	mouseHandlingX(false), mouseHandlingY(false), isButDown(false),       
+	mouseHandlingX(false), mouseHandlingY(false), isMidDown(false), isLeftDown(false),      
 	drawXReticle(true), drawYReticle(true), drawY2Reticle(false),
 	drawVGrid(true), drawHGrid(true),
 	showLegend(true),legendWeight(80),
 	antialiasing(false),
-	offset(-10,12),
+	offset(10,12),
 	minXZoom(-1), maxXZoom(-1), minYZoom(-1), maxYZoom(-1)
 {
 	Color(graphColor);	
