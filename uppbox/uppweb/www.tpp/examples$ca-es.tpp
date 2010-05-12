@@ -3,4 +3,4 @@ topic "Ejemplos de demonstración";
 [{_}%CA-ES 
 [s0; [*R6 Exemples de demostració]&]
 [s0; &]
-[s0;%ES-ES ]
+[s0; ]

@@ -9,7 +9,7 @@ C`+`+ aplikací]&]
 aplikací, zaměřený na produktivitu programátora. Skládá 
 se ze sady knihoven (GUI, SQL, atd...) a vývojového prostředí.]&]
 [s0;2 &]
-[s0; [2 Rychlou a efektivní práci umožňuje ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 c
+[s0; [2 Rychlou a efektivní práci umožňuje ][^topic`:`/`/uppweb`/www`/overview`$cs`-cz^2 c
 hytré a agresivní použití C`+`+][2  namísto luxusních generátorů 
 kódu. V tomto ohledu soutěží U`+`+ s populárními skriptovacími 
 jazyky, zatímco si zachovává běhové vlastnosti C/C`+`+.]&]
@@ -766,18 +766,18 @@ rozsáhlých aplikací v C`+`+.]&]
 ::r0/25t0/15b0/15@2R0-2 [s0;%- ]
 ::-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 GUI 
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$cs`-cz^2 GUI 
 Tutoriál]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Srovnání]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Seznámení]]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$cs`-cz^2 Srovnání]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$cs`-cz^2 Seznámení]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r8/25t/25b/25R(165) [s0;>@(114)2 ]
-::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Dokumentace]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Příklady]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Aplikace]]
+::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$cs`-cz^2 Dokumentace]&]
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/examples`$cs`-cz^2 Příklady]&]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/apps`$cs`-cz^2 Aplikace]]
 ::r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 FAQ `- Často 
+::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$cs`-cz^2 FAQ `- Často 
 kladené dotazy]&]
 [s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Forum]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
@@ -798,25 +798,25 @@ jste tu správně]]
 :: [s0;%- ]
 ::l8/25r/0t8/25b8/25@(240)R(165) [s0; [*2 Stažení U`+`+]]
 ::l0/25r8/25 [s0;> [@(114)2 Jdem na to!]]
-::^l8/25@2-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^2 Instalace 
+::^l8/25@2-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/svnInstall`$cs`-cz^2 Instalace 
 SVN a oprávnění]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^2 Hlášení 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bugreports`$cs`-cz^2 Hlášení 
 chyb. Zasílání patchů]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Webové 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$cs`-cz^2 Webové 
 stránky]&]
 [s0;i150;a17;O0; [2 New development ideas]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Současná 
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$cs`-cz^2 Současná 
 témata]&]
 [s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 Nápady 
 pro GSoC]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Bazar]&]
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/bazaar`$cs`-cz^2 Bazar]&]
 [s0;i150;a17;O0; [^topic`:`/`/ide`/app`/About`$en`-us^2 Autoři `& 
 Licence]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Stáhnout]&]
+::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$cs`-cz^2 Stáhnout]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Současná 
 verze][2 : ][IRELEASE;2 release]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2232`.exe^+75 W
@@ -825,7 +825,7 @@ in32 instalátor][+75  (18.1 MB)]&]
 11`-src][+75  (20.2 MB)]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
 tu balíčky]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 Poslední 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$cs`-cz^2 Poslední 
 svn][2 : ][ILATESTSVN;2 latestsvn]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r/0t8/25b8/25R(165)-1 [s0;*+34 ]
@@ -853,9 +853,9 @@ jinam]&]
 [s0;i150;O0; [2 Mapa webu. ][/@(153)2 Připravuje se...]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 Financování 
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$cs`-cz^2 Financování 
 U`+`+]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Sušenková 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$cs`-cz^2 Sušenková 
 cena]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
 [s0; ]
