@@ -111,6 +111,11 @@ then
 	cp $SRC_PATH/debian/{postinst,prerm} $tmp/DEBIAN
 	# set permissions for executable files
 	chmod 0755 $tmp/DEBIAN/{postinst,prerm} $tmp/usr/bin/theide
+else
+	# copy maintainer scripts
+	cp $SRC_PATH/debian/{postinst,prerm} $tmp/DEBIAN
+	# set permissions for executable files
+	chmod 0755 $tmp/DEBIAN/{postinst,prerm}
 fi
 
 # create .deb package
