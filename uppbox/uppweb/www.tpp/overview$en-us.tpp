@@ -2829,12 +2829,11 @@ each time we felt that some major or minor aspect of library
 interface or implementation needed to be improved. This enabled 
 us to slowly develop the library and perfect it into its current 
 state.&]
-[s20; Now, after some 7 years of development, Ultimate`+`+ is a mature 
+[s20; Now, after some 11 years of development, Ultimate`+`+ is a mature 
 platform that brings vast reductions of our development costs. 
 Most interfaces seem to be finished and optimal. There is of 
-course a lot of work ahead as well: Linux port implementation 
-is still not perfect and needs some further work, there is demand 
-for new features like advanced anti`-aliased and blended graphics.&]
+course still some work ahead, mostly in documentation an IDE 
+department.&]
 [s20; If you find our Ultimate`+`+ way of programming interesting, 
 nothing stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloadin
 g] it. But be careful there: you should be prepared to throw away 
