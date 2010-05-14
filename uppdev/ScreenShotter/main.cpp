@@ -43,4 +43,3 @@ GUI_APP_MAIN
 	Image m = ScreenShot(100, 100, 300, 300);
 	PNGEncoder().SaveFile("u:/test.png", m);
 }
-Um2%+63FwV

@@ -14,3 +14,5 @@ GUI_APP_MAIN
 	Ctrl::EventLoop();
 	SaveFile(ConfigFile("data.txt"), ~edit);
 }
+
+// 156 0x9c ""
