@@ -421,7 +421,7 @@ public:
 	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
 	bool   Find(bool back, const wchar *text, bool wholeword, bool ignorecase, bool wildcards,
 	            bool block);
-	bool   Find(bool back = false, bool blockreplace = false);
+	bool   Find(bool back = false, bool blockreplace = false, bool replace = false);
 	bool   GetStringRange(int cursor, int& b, int &e) const;
 	bool   GetStringRange(int& b, int &e) const { return GetStringRange(GetCursor(), b, e); }
 	bool   FindString(bool back);
