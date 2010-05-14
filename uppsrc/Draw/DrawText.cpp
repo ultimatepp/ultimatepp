@@ -45,7 +45,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 			else {
 				int c = 1;
 				int dd = 0;
-				while(c < n) {
+				while(i + c < n) {
 					GlyphInfo gi2 = GetGlyphInfo(font, text[i + c]);
 					if(!gi2.IsNormal())
 						break;
