@@ -213,7 +213,7 @@ void CodeEditor::FindReplaceAddHistory()
 		findreplace.replace.AddHistory();
 }
 
-bool CodeEditor::Find(bool back, bool blockreplace)
+bool CodeEditor::Find(bool back, bool blockreplace, bool replace)
 {
 	FindReplaceAddHistory();
 	if(Find(back, (WString)~findreplace.find, findreplace.wholeword,
@@ -221,7 +221,7 @@ bool CodeEditor::Find(bool back, bool blockreplace)
 		if(!blockreplace) {
 			if(!findreplace.IsOpen()) {
 				findreplace.NoCenter();
-				OpenNormalFindReplace(false);
+				OpenNormalFindReplace(replace);
 			}
 			Rect lr = GetLineScreenRect(GetLine(GetCursor()));
 			Size fsz = findreplace.GetAdjustedSize();
@@ -323,7 +323,7 @@ void CodeEditor::Replace()
 	if(!found) return;
 	if(RemoveSelection()) {
 		Paste(GetReplaceText());
-		Find();
+		Find(false, false, true);
 	}
 }
 
