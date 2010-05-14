@@ -129,7 +129,7 @@ public:
 
 #if defined(PLATFORM_WIN32)
 	static int      GetErrorCode()                           { return WSAGetLastError(); }
-#define SOCKERR(x) COMBINE(WSA, x)
+#define SOCKERR(x) WSA##x
 #elif defined(PLATFORM_POSIX)
 	static int      GetErrorCode()                           { return errno; }
 #define SOCKERR(x) x

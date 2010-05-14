@@ -296,7 +296,7 @@ static const MemDiagCls sMemDiagHelper__upp__;
 
 //some global definitions
 
-#if !defined(STLPORT)
+#if !defined(STLPORT) && _MSC_VER < 1600
 inline UPP::int64  abs(UPP::int64 x)          { return x < 0 ? -x : x; }
 #endif
 
