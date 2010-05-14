@@ -3,6 +3,7 @@
 void EditFieldApp::Set()
 {
 	ef1 <<= "Just a test!";
+	ef1.SetReadOnly();
 }
 
 EditFieldApp::EditFieldApp()

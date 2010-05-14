@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Debug.cpp;
+
+mainconfig
+	"" = "";
+
