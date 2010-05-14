@@ -2,6 +2,18 @@
 
 #ifdef COMPILER_MSC
 
+#define LLOG(x)  // DLOG(x)
+
+#ifdef _DEBUG
+String Pdb::Val::ToString() const
+{
+	String r;
+	r << "Pdb::Val type: " << type << ", ref: " << ref << ", array: " << array
+	  << ", rvalue: " << rvalue;
+	return r;
+}
+#endif
+
 void Pdb::ThrowError(const char *s)
 {
 	throw CParser::Error(s);
@@ -135,7 +147,10 @@ double Pdb::GetFlt(Pdb::Val v)
 
 Pdb::Val Pdb::Compute(Pdb::Val v1, Pdb::Val v2, int oper)
 {
-	if(v1.ref) {
+	LLOG("Compute " << char(oper));
+	LLOG("v1: " << v1);
+	LLOG("v2: " << v2);
+	if(v1.ref || v1.array) {
 		int q = (int)GetInt(v2) * (v1.ref > 1 ? 4 : SizeOfType(v1.type));
 		v1 = GetRVal(v1);
 		switch(oper) {
@@ -145,7 +160,7 @@ Pdb::Val Pdb::Compute(Pdb::Val v1, Pdb::Val v2, int oper)
 		}
 		return v1;
 	}
-	if(v2.ref) {
+	if(v2.ref || v2.array) {
 		int q = (int)GetInt(v1) * (v2.ref ? 4 : SizeOfType(v2.type));
 		v2 = GetRVal(v2);
 		if(oper == '+')
@@ -347,6 +362,7 @@ String ReadType(CParser& p)
 Pdb::Val Pdb::Post(CParser& p)
 {
 	Val v = Term(p);
+	LLOG("Post: " << v);
 	for(;;) {
 		if(p.Char(':'))
 			v = Field(v.ref ? DeRef(v) : v, ReadType(p));
@@ -413,6 +429,7 @@ Pdb::Val Pdb::Additive(CParser& p)
 
 Pdb::Val Pdb::Exp0(CParser& p)
 {
+	LLOG("Evaluating Expression: " << p.GetPtr());
 	return Additive(p);
 }
 
