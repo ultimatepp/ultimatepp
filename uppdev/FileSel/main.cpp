@@ -22,7 +22,8 @@ GUI_APP_MAIN
 	fs.Multi();
 //	fs.ActiveDir("/usr/include");
 //	fs.NoEditFileName();
-//	fs.PreSelect("U:/file1.txt");
+	fs.ActiveDir("c:/");
+	fs.PreSelect("U:/log.txt");
 	for(;;) {
 		if(!fs.ExecuteSaveAs())
 			break;
