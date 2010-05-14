@@ -77,6 +77,10 @@ struct Pdb : Debugger, ParentCtrl {
 			int64  ival;
 			double fval;
 		};
+		
+#ifdef _DEBUG
+		String ToString() const;
+#endif
 
 		Val() { rvalue = false; ref = 0; array = false; bitcnt = 0; address = 0; }
 	};

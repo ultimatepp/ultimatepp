@@ -345,7 +345,6 @@ const Pdb::Type& Pdb::GetType(int ti)
 					}
 					else
 					if(tag == SymTagBaseClass) {
-						DUMP(kind);
 						Val& v = t.base.Add();
 						TypeVal(v, GetSymInfo(t.modbase, ch, TI_GET_TYPEID), t.modbase);
 						v.address = GetSymInfo(t.modbase, ch, TI_GET_OFFSET);

@@ -1232,7 +1232,6 @@ bool FileSel::Execute(int _mode) {
 			}
 		}
 	#else
-		const char *fs = "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders";
 		dir.Add(GetDesktopFolder());
 		Array<FileSystemInfo::FileInfo> root = filesystem->Find(Null);
 		for(i = 0; i < root.GetCount(); i++) {
