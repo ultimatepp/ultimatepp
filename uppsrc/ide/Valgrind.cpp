@@ -22,8 +22,9 @@ void Ide::Valgrind()
 		   ValgrindLogFile = "--log-file-exactly=";
 		else
 		   ValgrindLogFile = "--log-file=";
+		if(txt.Find("--xml-file") > 0)
+		   ValgrindLogFile = "--xml-file=";
 	}
-
 	if(!Build())
 		return;
 	One<Host> h = CreateHostRunDir();
