@@ -185,6 +185,7 @@ public:
 	void 			SyncFrames();
 	void 			SyncFrames(bool hidehandle);
 	void			SignalStateChange();	
+	void			SignalStateChange(int from, int to);	
 	
 	void 			Grouping(bool grouping)			{ tabbar.Grouping(grouping); GroupRefresh(); }
 	void			GroupRefresh();	
@@ -203,6 +204,7 @@ public:
 	void			SyncUserSize(bool h, bool v);		
 
 	WString 		GetTitle(bool force_count = false) const; 
+	void			ChildTitleChanged();
 	
 	bool			IsDockAllowed(int align, int dc_ix = -1) const;
 		

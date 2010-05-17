@@ -444,14 +444,16 @@ void DockCont::RestoreCurrent()
 void DockCont::AddFrom(DockCont& cont, int except)
 {
 	bool all = except < 0 || except >= cont.GetCount();
+	int ix = GetCount();
 	for (int i = cont.GetCount() - 1; i >= 0; i--)
 		if (i != except) {
 			Ctrl *c = cont.GetCtrl(i);
 			c->Remove();
 			Add(*c);				
-		}
+		}		
 	if (all)
 		cont.tabbar.Clear();
+	SignalStateChange(ix, GetCount()-1);
 }
 
 void DockCont::Clear()
@@ -494,7 +496,12 @@ void DockCont::State(DockWindow& dock, DockCont::DockState state)
 
 void DockCont::SignalStateChange()
 {
-	for (int i = tabbar.GetCount()-1; i >= 0; i--) {
+	SignalStateChange(GetCount()-1, 0);
+}
+
+void DockCont::SignalStateChange(int from, int to)
+{
+	for (int i = to; i >= from; i--) {
 		if (IsDockCont(tabbar.GetKey(i)))
 			ContCast(tabbar.GetKey(i))->SignalStateChange();
 		else
@@ -714,6 +721,14 @@ WString DockCont::GetTitle(bool force_count) const
 	if ((IsTabbed() || force_count) && tabbar.GetCount() > 1) 
 		return (WString)Format("%s (%d/%d)", GetCurrent().GetTitle(), tabbar.GetCursor()+1, tabbar.GetCount()); 
 	return GetCurrent().GetTitle();	
+}
+
+void DockCont::ChildTitleChanged()
+{
+	tabbar.SyncRepos(); 
+	if (!GetParent()) 
+		Title(GetTitle());
+	RefreshFrame();
 }
 
 void DockCont::Serialize(Stream& s)

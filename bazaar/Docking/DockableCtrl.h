@@ -54,8 +54,8 @@ public:
 	
 	const Image& 	GetIcon()						{ return icon; }
 	DockableCtrl& 	Icon(const Image& m)			{ icon = m; return *this; }
-	DockableCtrl& 	Title(const char *_title)		{ title = _title; if (GetParent()) GetParent()->RefreshFrame(); return *this; }
-	DockableCtrl& 	Title(const WString& _title)	{ title = _title; if (GetParent()) GetParent()->RefreshFrame(); return *this; }
+	DockableCtrl& 	Title(const char *_title)		{ return Title((WString)_title); }
+	DockableCtrl& 	Title(const WString& _title);
 	const WString&  GetTitle()						{ return title; }
 
 	DockableCtrl& 	Set(const Image& icon, const char *_title, String group = Null);
