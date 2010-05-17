@@ -293,12 +293,18 @@ void PostgreSQLSession::ExecTrans(const char * statement)
 {
 	if(trace)
 		*trace << statement << "\n";
-	result = PQexec(conn, statement);
-	if(PQresultStatus(result) == PGRES_COMMAND_OK)
-	{
-		PQclear(result);
-		return;
+	
+	int itry = 0;
+
+	do {
+		result = PQexec(conn, statement);
+		if(PQresultStatus(result) == PGRES_COMMAND_OK) {
+			PQclear(result);
+			return;
+		}
 	}
+	while(level == 0 && !ConnectionOK() && WhenReconnect(itry++));
+	
 	if(trace)
 		*trace << statement << " failed: " << ErrorMessage() << "\n";
 	SetError(ErrorMessage(), statement, 0, ErrorCode());
@@ -492,13 +498,20 @@ bool PostgreSQLConnection::Execute()
 	if(session.IsTraceTime())
 		time = GetTickCount();
 
-	result = PQexecParams(conn, query, 0, NULL, NULL, NULL, NULL, 0);
+	int itry = 0;
+	int stat;
+	do {
+		result = PQexecParams(conn, query, 0, NULL, NULL, NULL, NULL, 0);
+		stat = PQresultStatus(result);
+	}
+	while(stat != PGRES_TUPLES_OK && stat != PGRES_COMMAND_OK && session.level == 0 &&
+	      !session.ConnectionOK() && session.WhenReconnect(itry++));
 
 	if(trace) {
 		if(session.IsTraceTime())
 			*trace << Format("--------------\nexec %d ms:\n", msecs(time));
 	}
-	if(PQresultStatus(result) == PGRES_TUPLES_OK) //result set
+	if(stat == PGRES_TUPLES_OK) //result set
 	{
 		rows = PQntuples(result);
 		int fields = PQnfields(result);
@@ -521,7 +534,7 @@ bool PostgreSQLConnection::Execute()
 		}
 		return true;
 	}
-	if(PQresultStatus(result) == PGRES_COMMAND_OK) //command executed OK
+	if(stat == PGRES_COMMAND_OK) //command executed OK
 	{
 		rows = atoi(PQcmdTuples(result));
 		return true;
