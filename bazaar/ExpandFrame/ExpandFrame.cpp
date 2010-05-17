@@ -37,13 +37,18 @@ void ExpandFrame::ImgButton::Paint(Draw &w)
 		{
 			if (p->hasarrow)
 				w.DrawImage(sz.cx - isz.cx + dx - 5, (sz.cy - isz.cy) / 2 + dy, img);
-			w.DrawText(4, 1, p->GetTitle());
+			w.DrawText(4, 1, p->GetTitle(), st->font);
 		}
 		else
 		{
 			if (p->hasarrow)
-				w.DrawImage((sz.cx - isz.cx) / 2, sz.cy - isz.cy + dy - 5, img);
-			w.DrawText(p->TitleSz() - 1, 4, 2700, p->GetTitle());
+				w.DrawImage((sz.cx - isz.cx) / 2, 5, img);
+			if (p->type == RIGHT)
+				w.DrawText(p->TitleSz() - 1, 4 + isz.cy + 5, 2700, p->GetTitle(), st->font);
+			else {
+				const WString &s = p->GetTitle();
+				w.DrawText(1, 4 + GetTextSize(s, st->font).cx + isz.cy + 5, 900, s, st->font);
+			}
 		}
 	}
 }

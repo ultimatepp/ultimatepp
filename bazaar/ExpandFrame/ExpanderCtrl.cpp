@@ -37,9 +37,17 @@ ExpandFrame & ExpanderCtrl::AddExpander(Ctrl &c, bool expand, int size)
 
 ExpanderCtrl & ExpanderCtrl::Horz(bool v)
 {
-	ASSERT(!GetCount()); // Don't call unless empty!
+	if (v == horz) return *this;
+
 	horz = v;
 	scroll.Horz(v);
+	if (horz)
+		for (int i = 0; i < exp.GetCount(); i++)
+			exp[i].Left(*exp[i].GetLastChild());
+	else
+		for (int i = 0; i < exp.GetCount(); i++)
+			exp[i].Top(*exp[i].GetLastChild());
+	Repos();
 	return *this;
 }
 
