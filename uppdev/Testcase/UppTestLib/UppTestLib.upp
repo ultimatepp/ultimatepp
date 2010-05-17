@@ -1,0 +1,17 @@
+target
+	libtest.so;
+
+library
+	"QtCore QtGui";
+
+options
+	"-DQT_SHARED -I/usr/include/qt4 -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtCore  -lQtGui -lQtCore";
+
+options(GCC) -fPIC;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "DLL";
+
