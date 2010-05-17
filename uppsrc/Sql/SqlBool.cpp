@@ -50,9 +50,9 @@ SqlBool operator!=(const SqlVal& a, const SqlVal& b) {
 }
 
 SqlBool operator&&(const SqlBool& a, const SqlBool& b) {
-	if(a.IsFalse() || b.IsFalse()) return false;
 	if(a.IsEmpty() || a.IsTrue())  return b;
 	if(b.IsEmpty() || b.IsTrue())  return a;
+	if(a.IsFalse() || b.IsFalse()) return false;
 	return SqlBool(a, " and ", b, SqlS::LAND);
 }
 
@@ -63,9 +63,9 @@ SqlBool operator- (const SqlBool& a, const SqlBool& b) {
 }
 
 SqlBool operator||(const SqlBool& a, const SqlBool& b) {
-	if(a.IsTrue() || a.IsEmpty() || b.IsTrue() || b.IsEmpty()) return true;
-	if(a.IsFalse()) return b;
-	if(b.IsFalse()) return a;
+	if(a.IsEmpty() || a.IsFalse()) return b;
+	if(b.IsEmpty() || b.IsFalse()) return a;
+	if(a.IsTrue() || b.IsTrue())   return true;
 	return SqlBool(a, " or ", b, SqlS::LOR);
 }
 

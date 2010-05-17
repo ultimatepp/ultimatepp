@@ -65,6 +65,8 @@ private:
 	friend class PostgreSQLConnection;
 
 public:
+	Gate1<int>            WhenReconnect;
+
 	bool                  Open(const char *connect);
 	bool                  ConnectionOK();
 	bool                  ReOpen();
