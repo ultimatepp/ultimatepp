@@ -54,3 +54,9 @@ LAYOUT(Tab8, 400, 316)
 	ITEM(Scatter, scatter8, SetLegendWeight(200).H_Border(50).V_Border(50).SetTitle(t_("Temperature & Pressure Averages. X-Y Axis mouse zoom + scroll")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelX(t_("Month")).SetLabelsFont(SansSerifZ(11)).HSizePosZ(16, 16).VSizePosZ(16, 16))
 END_LAYOUT
 
+LAYOUT(Tab9, 380, 304)
+	ITEM(Scatter, scatter9, SetTitle(t_("Big dataset")).SetTitleFont(SansSerifZ(14).Bold()).SetLabelsFont(StdFontZ(11)).HSizePosZ(16, 12).VSizePosZ(16, 28))
+	ITEM(Option, sequentialX, SetLabel(t_("SetSequentialX")).LeftPosZ(112, 92).BottomPosZ(8, 16))
+	ITEM(Option, fastView, SetLabel(t_("SetFastView")).LeftPosZ(16, 84).BottomPosZ(8, 16))
+END_LAYOUT
+

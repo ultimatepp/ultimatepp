@@ -28,6 +28,8 @@ TestScatter2::TestScatter2()
 	
 	tc1.Add(tab8, "Secondary Y");
 	
+	tc1.Add(tab9, "Big dataset");
+	
 	b1 <<= THISBACK(Preview);
 	b2 <<= THISBACK(SavePNG);
 	b3 <<= THISBACK(SaveJPG);
@@ -69,6 +71,9 @@ void TestScatter2::Preview()
 		case 7:
 			r.DrawDrawing(300,300,tab8.scatter8.GetDrawing().GetSize().cx,tab8.scatter8.GetDrawing().GetSize().cy, tab8.scatter8.GetDrawing());
 			break;					
+		case 8:
+			r.DrawDrawing(300,300,tab9.scatter9.GetDrawing().GetSize().cx,tab9.scatter9.GetDrawing().GetSize().cy, tab9.scatter9.GetDrawing());
+			break;					
 	}
 	
 	Perform(r);
@@ -105,6 +110,9 @@ void TestScatter2::SavePNG()
 		case 7:
 			encoder.SaveFile("scatter8.png",tab8.scatter8.GetImage(3));
 			break;
+		case 8:
+			encoder.SaveFile("scatter9.png",tab9.scatter9.GetImage(3));
+			break;
 	}			
 	
 }
@@ -139,6 +147,9 @@ void TestScatter2::SaveJPG()
 			break;				
 		case 7:
 			encoder.SaveFile("scatter8.jpg",tab8.scatter8.GetImage(3));
+			break;		
+		case 8:
+			encoder.SaveFile("scatter9.jpg",tab9.scatter9.GetImage(3));
 			break;		
 	}			
 	
@@ -175,6 +186,9 @@ void TestScatter2::SaveEMF()
 		case 7:
 			tab8.scatter8.SaveAsMetafile("scatter8.emf");
 			break;			
+		case 8:
+			tab9.scatter9.SaveAsMetafile("scatter9.emf");
+			break;			
 	}	
 }
 #endif
@@ -209,6 +223,9 @@ void TestScatter2::SaveClipboard()
 		case 7:
 			tab8.scatter8.SaveToClipboard();
 			break;
+		case 8:
+			tab9.scatter9.SaveToClipboard();
+			break;			
 	}		
 }
 

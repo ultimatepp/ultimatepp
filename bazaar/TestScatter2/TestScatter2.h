@@ -369,7 +369,7 @@ Tab8::Tab8()
 	scatter8.AddSeries(s1,"Temperature",true).SetPattern(LINE_DASHED);
 	
 	s2<<XY(1,1010)<<XY(2,1012)<<XY(3,1015)<<XY(4,1013)<<XY(5,1017)<<XY(6,1018)<<XY(7,1010)<<XY(8,1007)<<XY(9,1003)<<XY(10,1001)<<XY(11,1000)<<XY(12,1002);
-	scatter8.AddSeries(s2,"Pressure",true,LtRed).SetPattern("oooooo...ooo...o...ooo...").SetDataPrimaryY(1, false);
+	scatter8.AddSeries(s2,"Pressure",true,LtRed).SetPattern("oooooo...ooo...o...ooo...").SetDataPrimaryY(false);
 	scatter8.SetDrawY2Reticle();
 	
 	s3<<XY(1,-20)<<XY(2,-20)<<XY(2,-10)<<XY(3,-10)<<XY(3,0)<<XY(4,0)<<XY(4,10)<<XY(5,10)<<XY(5,20)<<XY(6,20)<<XY(6,30)<<XY(7,30)<<XY(7,20)<<XY(8,20)<<XY(8,10);
@@ -389,6 +389,47 @@ Tab8::Tab8()
 
 //******************************************************************************************
 
+class Tab9 : public WithTab9<ParentCtrl> {
+public:
+
+	typedef Tab9 CLASSNAME;
+
+	Tab9();
+	void OnFastView();
+	void OnSequentialX();
+};
+
+
+void Tab9::OnFastView() 
+{
+	scatter9.SetFastViewX(fastView);
+}
+
+void Tab9::OnSequentialX()
+{
+	scatter9.SetSequentialXAll(sequentialX);
+}
+
+Tab9::Tab9()
+{
+	CtrlLayout(*this);	
+	HSizePos().VSizePos();
+	scatter9.SetRange(100000,40).SetXYMin(0, -20);
+	scatter9.SetMouseHandling(true).SetMaxZoom(500000).SetMinZoom(2);
+	Vector<XY> s1,s2;
+	for (int t = 0; t < 100000; ++t) {
+		s1<<XY(t,20*sin(2*M_PI*t/100000));
+		s2<<XY(t,15*cos(2*M_PI*t/100000));
+	}
+	scatter9.AddSeries(s1,"series1",true,LtBlue);
+	scatter9.AddSeries(s2,"series2",true,LtRed);
+	scatter9.ShowInfo();	
+	fastView.WhenAction = THISBACK(OnFastView);
+	sequentialX.WhenAction = THISBACK(OnSequentialX);
+}
+
+//******************************************************************************************
+
 class TestScatter2 : public WithTestScatter2Layout<TopWindow> {
 	
 	Tab1 tab1;
@@ -399,6 +440,7 @@ class TestScatter2 : public WithTestScatter2Layout<TopWindow> {
 	Tab6 tab6;
 	Tab7 tab7;
 	Tab8 tab8;
+	Tab9 tab9;
 		
 	typedef TestScatter2 CLASSNAME;
 	
