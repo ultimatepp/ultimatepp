@@ -145,53 +145,85 @@ private:
 	};
 	FrameAnim                   frameanim[4];
 	int                         animdelay;  
-public: 
-	void        DockLayout(bool tb_precedence = true);
-
+public:
+	// If you are attaching DockableCtrls programmatically it must be done in an overloaded DockInit.
+	//	It is called after Ctrl::OPEN in order so that docking can be done with the correct window size.
 	virtual void DockInit() { }
-
+	// Attaches all the required frames to the DockWindow. 
+	//	It is called internally on Ctrl::Open so should not usually be needed
+	void         DockLayout(bool tb_precedence = true);
+	
+	// Functions for registering/deregistering externally owned DockableCtrls
+	//  NOTE: Registering is automatically done when using Dock/Float etc functions, but Register
+	// 	also be called before DockInit (eg in constructor), and are prefered if you are only going
+	//  to be serializing the DockWindow layout
+	DockableCtrl&   Register(DockableCtrl& dc); 
+	void            Deregister(const DockableCtrl& dc);
+	
+	// Creates an internal DockableCtrl for you to allow simple wrapping of GUI elements
 	DockableCtrl&   Dockable(Ctrl& ctrl, WString title);
 	DockableCtrl&   Dockable(Ctrl& ctrl, const char *title = 0)         { return Dockable(ctrl, (WString)title); }
-
+	// More flexible methods for creating internally stored DockableCtrl derived classes
 	template<class T>
 	T&   CreateDockable(WString title);
 	template<class T>
 	T&   CreateDockable(const char *title = 0)         					{ return CreateDockable<T>((WString)title); }
-
 	
+	// Get a list of all registered DockableCtrls (including externally owned ones
+	const Vector<DockableCtrl *>& GetDockableCtrls() const 				{ return dockers; }
+	
+	// Simple docking control
 	void            DockLeft(DockableCtrl& dc, int pos = -1)            { Dock(DOCK_LEFT, dc, pos); }
 	void            DockTop(DockableCtrl& dc, int pos = -1)             { Dock(DOCK_TOP, dc, pos); }
 	void            DockRight(DockableCtrl& dc, int pos = -1)           { Dock(DOCK_RIGHT, dc, pos); }
 	void            DockBottom(DockableCtrl& dc, int pos = -1)          { Dock(DOCK_BOTTOM, dc, pos); }
 	void            Dock(int align, DockableCtrl& dc, int pos = -1);
+	// Attaches 'dc' as a tab to 'target', wherever it may be
 	void            Tabify(DockableCtrl& target, DockableCtrl& dc);
-		
+	// Detaches the passed ctrl as a floating window
 	void            Float(DockableCtrl& dc, Point p = Null);
 	void            Float(DockableCtrl& dc, const char *title, Point p = Null);
-	
+	// Attaches the passed ctrl to the autohide frames on the window edges
+	//  If no alignment is given the ctrl will be autohidden where it is docked or to the top bar if not docked
 	void            AutoHide(DockableCtrl& dc);
 	void            AutoHide(int align, DockableCtrl& dc);  
-	
+	// Closes the window, detaching it from and docking panes or autohide frames.
+	//	This just 'hides' the window, it can be opened again at any time.
 	void            Close(DockableCtrl& dc);
 
+	// Activate the passed ctrl. If open this will make sure it's the active tab, if
+	//   closed the ctrls last known position will be restored (see RestoreDockerPos)
 	void            ActivateDockable(Ctrl& c);
+	// As above, but you can pass any child ctrl of the DockableCtrl (useful with the Dockable functions)
 	void            ActivateDockableChild(Ctrl& c);
 
+	// When DockableCtrls change state a record of their last position is stored internally.
+	//  These functions can restore the previous DockableCtrl's postion of force a save of the current one
 	void            SaveDockerPos(DockableCtrl& dc);
 	void            RestoreDockerPos(DockableCtrl& dc, bool savefirst = false);
+	// Toggle window visibility. If the window is open it is hidden, if it is hidden it is restored
 	void			HideRestoreDocker(DockableCtrl& dc);
 
+	// Group docking ctrl. These work the same way as for single DockableCtrls but apply to the passed group
+	//  TabDockGroup and DockGroup will respect the DockAllowed settings for DockableCtrls
 	void            DockGroup(int align, String group, int pos = -1);
 	void            FloatGroup(String group);
 	void            AutoHideGroup(int align, String group);
 	void            AutoHideGroup(String group);
-	void            TabDockGroup(int align, String group, int pos = -1);
 	void            TabFloatGroup(String group);    
 	void            CloseGroup(String group);
+	void            TabDockGroup(int align, String group, int pos = -1);
+	//  These variants of DockGroup and DockTabGroup ignore the DockAllowed settings
+	void            ForceDockGroup(int align, String group, int pos = -1);
+	void            ForceTabDockGroup(int align, String group, int pos = -1);
 			
+	// Check docking frame visibility. If there are no docked ctrls it will be invisibly
 	bool            IsDockVisible(int align) const      { ASSERT(align >= 0 && align <= 4); return dockpane[align].IsVisible(); }
+	// Manually sets the size of a docking frame
 	void            SetFrameSize(int align, int size);
 				
+	// Animation settings. Disabling various forms of animation can improve performance when
+	//  you have complex displays/GUIs in either DockableCtrls of the DockWindow client area
 	DockWindow&     AnimateDelay(int ms)                { animdelay = max(ms, 0); return *this; }
 	DockWindow&     Animate(bool highlight = true, bool frames = true, bool windows = true, int ticks = 10, int interval = 20);
 	DockWindow&     NoAnimate()                         { return Animate(false, false); }
@@ -200,32 +232,46 @@ public:
 	bool            IsAnimatedFrames() const            { return animatefrm; }
 	bool            IsAnimatedWindows() const           { return animatewnd; }
 	
+	// Lock control. When the layout is locked the user cannot use the drag-drop functionality, the 
+	//  title bar buttons or the titlebar context menus. ShowLockedHandles determines whether the 
+	//  title bar is shown on docked ctrls when the layout is locked.
 	void            LockLayout(bool lock = true);
 	void            UnlockLayout()                      { LockLayout(true); }
 	bool            IsLocked() const                    { return locked; }
 	DockWindow&		ShowLockedHandles(bool show = true)	{ showlockedhandles = show; SyncAll(); return *this; }
 	bool			IsShowingLockedHandles() const		{ return showlockedhandles; }
 
+	// Enableing TabAutoAlign will move docked tab bars depending on where their contained is docked.
+	//  For instance, a collection of controls docked one the left edge will have it's tab bar moved 
+	//	to its ;left hand side
 	DockWindow&     TabAutoAlign(bool al = true);
+	// If this is disabled only icons will be shown when windows are tabbed (in containers of autohidden)
 	DockWindow&     TabShowText(bool text = true);
 	
+	// Enable/Disable tabbing support
 	DockWindow&     Tabbing(bool _tabbing = true)       { tabbing = _tabbing; return *this; }
 	DockWindow&     NoTabbing()                         { return Tabbing(false); }
 	bool            IsTabbing() const                   { return tabbing; }
-
+	// Enable/Disable multi-layer tab support (groups of tabs stored as a tab in another group)
+	//  When enabled the user can use this function by holding NestedToggleKey during a drag-drop
 	DockWindow&     NestedTabs(bool _nestedtabs = true) { nestedtabs = _nestedtabs; return *this; }
 	DockWindow&     NoNestedTabs()                      { return NestedTabs(false); }
 	bool            IsNestedTabs() const                { return nestedtabs; }
-	
+	dword           NestedToggleKey()               	{ return nesttoggle; }
+	DockWindow&     SetNestedToggleKey(dword key)   	{ nesttoggle = key; return *this; }
+	// Enable/Disable grouping support
 	DockWindow&     Grouping(bool grouping = true);
 	DockWindow&     NoGrouping()                        { return Grouping(false); }
 	bool            IsGrouping() const                  { return grouping; }    
-	
+	// Allows the user to change docking frame precedence/ordering. By default the left and right 
+	//  frames take precedence over the top/bottom frames (meaning they occupy the entire height of the window)
+	//  When this option is enabled the user chan change this by dragging to the appropriate corner of the frame
 	DockWindow&     FrameReordering(bool reorder = true){ frameorder = reorder; return *this;}
 	DockWindow&     NoFrameReordering()                 { return FrameReordering(false); }
 	bool            IsFrameReordering() const           { return frameorder; }      
 	DockWindow&     SetFrameOrder(int first, int second = DOCK_NONE, int third = DOCK_NONE, int fourth = DOCK_NONE);                        
-	
+	// Allow/Block docking to particular sides of the DockWindow. This works in conjunction with
+	//  the settings in the DockableCtrl class.
 	DockWindow&     AllowDockAll();                 
 	DockWindow&     AllowDockNone();                
 	DockWindow&     AllowDockLeft(bool v = true)    { dockable[DOCK_LEFT] = v; return *this; }
@@ -233,36 +279,39 @@ public:
 	DockWindow&     AllowDockRight(bool v = true)   { dockable[DOCK_RIGHT] = v; return *this; }
 	DockWindow&     AllowDockBottom(bool v = true)  { dockable[DOCK_BOTTOM] = v; return *this; }
 	DockWindow&     AllowDock(int a, bool v = true) { ASSERT(a >= 0 && a < 4); dockable[a] = v; return *this; } 
-	bool            IsDockAllowed(int align)        { ASSERT(align >= 0 && align < 4); return dockable[align]; }
-	bool            IsDockAllowed(int align, DockableCtrl& dc);
-	
+	bool            IsDockAllowed(int align) const  { ASSERT(align >= 0 && align < 4); return dockable[align]; }
+	bool            IsDockAllowed(int align, DockableCtrl& dc) const;
+	bool            IsDockAllowedLeft() const  		{ return dockable[DOCK_LEFT]; }
+	bool            IsDockAllowedTop() const  		{ return dockable[DOCK_TOP]; }
+	bool            IsDockAllowedRight() const  	{ return dockable[DOCK_RIGHT]; }
+	bool            IsDockAllowedBottom() const  	{ return dockable[DOCK_BOTTOM]; }
+	bool            IsDockAllowedAny() const  		{ return dockable[DOCK_LEFT] || dockable[DOCK_TOP] 
+																	|| dockable[DOCK_RIGHT] || dockable[DOCK_BOTTOM]; }
+	bool            IsDockAllowedNone() const  		{ return !IsDockAllowedAny(); } 
+	// Enable/Disable the AutoHide functions
 	DockWindow&     AutoHide(bool v = true);
 	bool            IsAutoHide()                    { return autohide; }
-	
-	dword           NestedToggleKey()               { return nesttoggle; }
-	DockWindow&     SetNestedToggleKey(dword key)   { nesttoggle = key; return *this; }
-	
+	// Determines which buttons are visible on docked/autohidden DockableCtrl title bars
 	DockWindow&     WindowButtons(bool menu, bool hide, bool close);
 	bool            HasMenuButtons() const          { return menubtn; } 
 	bool            HasHideButtons() const          { return hidebtn; }
 	bool            HasCloseButtons() const         { return closebtn; }
-	
+	// When enabled (default) floating DockableCtrl windows are set to be tool windows 
+	//  (exactly what this means varies between OSs)
 	void			ChildToolWindows(bool v = true)	{ childtoolwindows = v; SyncAll(); }
 	bool			HasToolWindows() const			{ return childtoolwindows; }
 	
-	DockableCtrl&   Register(DockableCtrl& dc); 
-	void            Deregister(const DockableCtrl& dc);
-	const Vector<DockableCtrl *>& GetDockableCtrls() const { return dockers; }
-
+	// Opens the standard Docking Configuration dialog (see DockConfig)
 	void            DockManager();
+	// Returns the standard Docking menu so that an application can add it to it's main menu bar
 	void            DockWindowMenu(Bar& bar);
 	
+	// SerializeWindow serialized both the DockWindow layout and the window position/state (using TopWindow::SerializePlacement)
 	void            SerializeWindow(Stream& s);
+	// SerializeLayout only serializes the DockQWindow layout
 	void            SerializeLayout(Stream& s, bool withsavedlayouts = true);
-	
-	void            BackupLayout();
-	void            RestoreLayout();
-	
+	// Saves/Load/Manage dockwindow layouts. Theese are handy for saving different 
+	//  GUI configurations for different application states (like editing/debugging)
 	int             SaveLayout(String name);
 	void            LoadLayout(int ix);
 	void            LoadLayout(String name);
@@ -270,12 +319,17 @@ public:
 	String          GetLayoutName(int ix) const     { return layouts.GetKey(ix); }
 	int             LayoutCount() const             { return layouts.GetCount(); }
 	const ArrayMap<String, String>&  GetLayouts() const { return layouts; }
-	
+	// Serializes/Loads layout to/from an internal buffer (used for cancelling changes in the DockConfig window)
+	// The difference between this and Save/LoadLayout is that it also backs-up the saved layouts
+	void            BackupLayout();
+	void            RestoreLayout();
+	// This enables/disables all floating windows. This can be used to prevent the user 
+	//  moving windows when a dialog is visible (like DockConfig)
 	void            DisableFloating()               { EnableFloating(false); }
 	void            EnableFloating(bool enable = true);
-
+	// Changes the Chameleon style for the highlight ctrl
 	void            SetHighlightStyle(DockableCtrl::Style& s)   { GetHighlightCtrl().SetStyle(s); }
-	
+	// Constructer
 	DockWindow();       
 private:
 	// Container management

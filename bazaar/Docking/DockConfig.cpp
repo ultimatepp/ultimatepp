@@ -46,8 +46,10 @@ DockConfigDlg::DockConfigDlg(DockWindow& dockwindow)
 	WhenClose 	=   THISBACK(OnCancel);
 	locked		<<= THISBACK(OnLock);
 	
+	animatehighlight	<<= dock.IsAnimatedHighlight();
+	animateframes 		<<= dock.IsAnimatedFrames();
+	animatewindows 		<<= dock.IsAnimatedWindows();
 	locked		<<= dock.IsLocked();
-	animate 	<<= dock.IsAnimated();
 	tabbing 	<<= dock.IsTabbing();
 	tabnesting 	<<= dock.IsNestedTabs();
 	autohide 	<<= dock.IsAutoHide();
@@ -218,7 +220,7 @@ void DockConfigDlg::DeleteGroup(int id)
 
 void DockConfigDlg::OnOK()
 {
-	dock.Animate(~animate);
+	dock.Animate(~animatehighlight, ~animateframes, ~animatewindows);
 	dock.Tabbing(~tabbing);
 	dock.NestedTabs(~tabnesting);
 	dock.AutoHide(~autohide);

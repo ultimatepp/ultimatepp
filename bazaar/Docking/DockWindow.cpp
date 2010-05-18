@@ -297,6 +297,15 @@ void DockWindow::DockGroup(int align, String group, int pos)
 			Dock(align, *dockers[i], pos);
 }
 
+void DockWindow::ForceDockGroup(int align, String group, int pos)
+{
+	ALIGN_ASSERT(align);
+	bool all = group == "All"; 
+	for (int i = 0; i < dockers.GetCount(); i++)
+		if (all || dockers[i]->GetGroup() == group)
+			Dock(align, *dockers[i], pos);
+}
+
 void DockWindow::FloatGroup(String group)
 {
 	bool all = group == "All"; 	
@@ -334,6 +343,12 @@ void DockWindow::TabDockGroup(int align, String group, int pos)
 		else
 			FloatContainer(*c);
 	}
+}
+
+void DockWindow::ForceTabDockGroup(int align, String group, int pos)
+{
+	if (DockCont *c = TabifyGroup(group))
+		DockContainer(align, *c, pos);
 }
 
 void DockWindow::TabFloatGroup(String group)
@@ -1152,7 +1167,7 @@ DockWindow&  DockWindow::AllowDockNone()
 	return AllowDockLeft(false).AllowDockRight(false).AllowDockTop(false).AllowDockBottom(false);
 }
 
-bool DockWindow::IsDockAllowed(int align, DockableCtrl& dc)
+bool DockWindow::IsDockAllowed(int align, DockableCtrl& dc) const
 {
 	ALIGN_ASSERT(align);
 	return dockable[align] && dc.IsDockAllowed(align);

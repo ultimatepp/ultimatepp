@@ -104,7 +104,7 @@ void DockMenu::WindowMenuNoClose(Bar& bar, DockableCtrl *dc)
 void DockMenu::GroupAlignMenu(Bar& bar, String group, int mode)
 {
 	for (int i = 0; i < 4; i++)
-		bar.Add(AlignText(i), 	GROUPMACRO(i, group, mode));
+		bar.Add(AlignText(i), GROUPMACRO(i, group, mode));
 }
 
 void DockMenu::WindowAlignMenu(Bar& bar, DockableCtrl *dc, bool dodock)

@@ -356,7 +356,7 @@ void DockCont::TabDragged(int ix)
 		}
 		else {
 			DockableCtrl *c = DockCast(v);
-			base->SaveDockerPos(*c); // TODO: Elliminate by calling base->Close(*c)
+			base->SaveDockerPos(*c);
 			c->Remove();
 			base->FloatFromTab(*this, *c);
 		}
