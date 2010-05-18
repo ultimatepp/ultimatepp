@@ -491,20 +491,18 @@ void ExportPage(int i)
 
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
 	String page = tt[i];
-	
+		
 	Array<String> htmlrep;
 	int posB = 0;
 	while (true) {
-		posB = page.Find("<`@", posB);
+		posB = page.Find("[IHTMLTEXT", posB);
 		if (posB < 0)
 			break; 
-		int posBB = page.Find("<i>", posB);
-		if (posBB < 0)
-			break;
-		int posEE = page.Find("</i>", posBB);
-		int posE = page.Find("`@>", posEE);
-		int posHt = posBB + strlen("<i>");
-		String html0 = page.Mid(posHt, posEE-posHt);
+		int pos0 = page.ReverseFind('[', posB);
+		int posBB = posB + strlen("[IHTMLTEXT");
+		int posE = page.Find("<`/object`>", posBB);
+		int posEE = page.Find("]", posE);
+		String html0 = page.Mid(posBB, posE + strlen("<`/object`>") - posBB);
 		String html1;
 		while (true) { 
 			html1 = Replace(html0, "`", "")	;
@@ -513,8 +511,9 @@ void ExportPage(int i)
 			html0 = html1; 
 		}
 		htmlrep.Add(html1);
-		page = page.Left(posB) + "QTFHTMLTEXT" + page.Mid(posE+3);
+		page = page.Left(pos0) + "QTFHTMLTEXT" + page.Mid(posEE+1);
 	}
+	
 	page = QtfAsHtml(page, css, links, labels, targetdir, links[i]);
 	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml) 
 		page = Replace(page, "QTFHTMLTEXT", htmlrep[iHtml]);

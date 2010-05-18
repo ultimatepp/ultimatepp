@@ -123,13 +123,13 @@ static void sGatherTopics(VectorMap<String, Topic> *map, const char *topic)
 String ChangeTopicLanguage(const String &topic, int lang);
 String GetTopicLanguage(const String &topic);
 
-String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& title)
+String GatherTopics(VectorMap<String, Topic>& tt, const char *topic, String& title)
 {
 	static StaticCriticalSection mapl;
 	LLOG("Gather topics: " << topic);
 	int q;
 	INTERLOCKED_(mapl)
-		q = map.Find(topic);
+		q = tt.Find(topic);
 	if(q < 0) {
 		LLOG("GatherTopics " << topic);
 		Topic p = ReadTopic(LoadFile(TopicFileName(topic)));
@@ -148,7 +148,7 @@ String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& ti
 					"]. " + "[^" + help + "^ [<A2 " + t_("Do you want to translate it?") + "]]}}&&" + p.text;
 		}
 		INTERLOCKED_(mapl)
-			map.Add(topic) = p;
+			tt.Add(topic) = p;
 		GatherLinkIterator ti;
 		ParseQTF(t).Iterate(ti);
 #ifdef MTC
@@ -157,11 +157,11 @@ String GatherTopics(VectorMap<String, Topic>& map, const char *topic, String& ti
 			work & callback2(sGatherTopics, &map, ti.link[i]);
 #else
 		for(int i = 0; i < ti.link.GetCount(); i++)
-			sGatherTopics(&map, ti.link[i]);
+			sGatherTopics(&tt, ti.link[i]);
 #endif
 	} else {
 		INTERLOCKED_(mapl)
-			title = map[q].title;
+			title = tt[q].title;
 	}
 	return TopicFileNameHtml(topic);
 }

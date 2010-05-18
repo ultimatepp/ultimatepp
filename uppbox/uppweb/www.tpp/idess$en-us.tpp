@@ -3,7 +3,7 @@ topic "TheIDE screenshots";
 [{_}%EN-US 
 [s0; [*+150 TheIDE screenshots]&]
 [s0; [/1 (click on image to enlarge it)]&]
-[s0;>*R^topic`:`/`/uppweb`/www`/idess`$ru`-ru^1 &]
+[s0;>*R1 &]
 [s0; &]
 [s0; 
 @@image:1544&1164
