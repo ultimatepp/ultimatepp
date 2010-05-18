@@ -24,6 +24,8 @@ ctrl Scatter {
 	bool ShowVGrid=true;
 	bool ShowLegend=true;
 	int SetLegendWeight=80;	
+	bool SetFastViewX=false;
+	bool SetSequentialXAll=false;
 
 	Paint(w) {          
 		r = GetRect();

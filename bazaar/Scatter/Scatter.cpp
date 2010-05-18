@@ -398,6 +398,7 @@ Scatter &Scatter::AddSeries(Vector<XY> & points,const String& legend,const bool&
 	vShowMark.Add(true);
 	vMarkStyles.Add(CIRCLE);	
 	vPPrimaryY.Add(true);
+	vPSequential.Add(sequentialXAll);
 	vPPattern.Add(LINE_SOLID);	
 	
 	Refresh();
@@ -652,6 +653,29 @@ bool Scatter::IsDataPrimaryY(const int& j) const throw (Exc)
 	return vPPrimaryY[j];	
 }
 
+void Scatter::SetSequentialX(const int& j, const bool& sequential) 
+{
+	if(IsValid(j))
+	{
+		vPSequential[j]=sequential;
+		Refresh();
+	}
+}
+
+Scatter &Scatter::SetSequentialX(const bool& sequential) 
+{
+	SetSequentialX(vPSequential.GetCount()-1, sequential);
+	return *this;
+}
+
+Scatter &Scatter::SetSequentialXAll(const bool& sequential) 
+{
+	for (int i = 0; i < vPSequential.GetCount(); ++i)
+		SetSequentialX(i, sequential);
+	sequentialXAll = sequential;
+	return *this;
+}
+
 void Scatter::SetFunctPrimaryY(const int& j, const bool& primary) 
 {
 	if(IsValid(j))
@@ -690,6 +714,7 @@ void Scatter::RemoveSeries(const int& j)
 		vMarkStyles.Remove(j);
 		vPPrimaryY.Remove(j);
 		vPPattern.Remove(j);
+		vPSequential.Remove(j);
 		
 		Refresh();
 	}
@@ -708,6 +733,7 @@ void Scatter::RemoveAllSeries()
 	vShowMark.Clear();
 	vMarkStyles.Clear();
 	vPPrimaryY.Clear();
+	vPSequential.Clear();
 	vPPattern.Clear();
 	
 	Refresh();
@@ -1206,42 +1232,81 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 	int ix;//int x points coordinates
 	int iy;//int y points coordinates
 	if (!vPointsData.IsEmpty()){
-	for (int j=0; j<vPointsData.GetCount(); j++){
-		Vector<Point> p1;
-		for (int i=0; i<vPointsData[j].GetCount(); i++)
-		{
-			ix=fround(l*(vPointsData[j][i].x-xMin)/xRange);
-			if (vPPrimaryY[j])
-				iy=fround(h*(vPointsData[j][i].y-yMin)/yRange);
-			else
-				iy=fround(h*(vPointsData[j][i].y-yMin2)/yRange2);
-			p1<<Point(ix,h-iy);
-		}
-		if(vJoin[j])
-		{
-			if(vSmooth[j]&&vPointsData[j].GetCount()>2)
-			{
-				Vector<Point> p2;
-				Vector<XY> v(Cubic(vPointsData[j]));         
-				for (int i=0; i<v.GetCount(); i++)
-				{
-					ix=fround(l*(v[i].x-xMin)/xRange);
-					if (vPPrimaryY[j])
-						iy=fround(h*(v[i].y-yMin)/yRange);
-					else
-						iy=fround(h*(v[i].y-yMin2)/yRange2);
-					p2<<Point(ix,h-iy);
+		for (int j=0; j<vPointsData.GetCount(); j++){
+			Vector<Point> p1;
+			int imin, imax;
+			if (vPSequential[j]) {
+				imin = imax = Null;
+				for (int i = 1; i<vPointsData[j].GetCount()-1; ++i) {
+					if (IsNull(imin)) {
+						if (vPointsData[j][i].x >= xMin)
+							imin = i-1;
+					} else if (IsNull(imax)) {
+						if (vPointsData[j][i].x >= xMin+xRange)
+							imax = i+1;
+					}
 				}
-				if(!p2.IsEmpty()) DrawPolylineX(w, p2,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
+				if (IsNull(imin))
+				    imin = 0;
+				if (IsNull(imax))
+				    imax = vPointsData[j].GetCount();
+			} else {
+			    imin = 0;
+			    imax = vPointsData[j].GetCount();
 			}
-			
-			else if (!p1.IsEmpty()) DrawPolylineX(w, p1,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
-		}
-			
-		if(vShowMark[j])
-			for (int i=0; i<vPointsData[j].GetCount(); i++) {
-				DrawMark(vMarkStyles[j],w,scale,p1[i],vPWidth[j],vMarkColors[j]);              
+			int numV;
+			if (fastViewX)
+				numV = 1+(imax - imin)/h;
+			else
+				numV = 1;
+			for (int i=imin; i<imax; i+=numV)
+			{
+				double xx, yy;
+				if (fastViewX) {
+					xx = yy = 0;
+					int ii;
+					for (ii = 0; ii < numV && i+ii < imax; ++ii) {
+						yy += vPointsData[j][i+ii].y;
+						xx += vPointsData[j][i+ii].x;
+					}
+					yy /= double(ii);
+					xx /= double(ii);
+				} else {
+					xx = vPointsData[j][i].x;
+					yy = vPointsData[j][i].y;
+				}
+				ix=fround(l*(xx-xMin)/xRange);
+				if (vPPrimaryY[j])
+					iy=fround(h*(yy-yMin)/yRange);
+				else
+					iy=fround(h*(yy-yMin2)/yRange2);
+				p1<<Point(ix,h-iy);
 			}
+			if(vJoin[j])
+			{
+				if(vSmooth[j]&&vPointsData[j].GetCount()>2)
+				{
+					Vector<Point> p2;
+					Vector<XY> v(Cubic(vPointsData[j]));         
+					for (int i=0; i<v.GetCount(); i++)
+					{
+						ix=fround(l*(v[i].x-xMin)/xRange);
+						if (vPPrimaryY[j])
+							iy=fround(h*(v[i].y-yMin)/yRange);
+						else
+							iy=fround(h*(v[i].y-yMin2)/yRange2);
+						p2<<Point(ix,h-iy);
+					}
+					if(!p2.IsEmpty()) DrawPolylineX(w, p2,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
+				}
+				
+				else if (!p1.IsEmpty()) DrawPolylineX(w, p1,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
+			}
+				
+			if(vShowMark[j])
+				for (int i=0; i<(imax-imin)/numV; i++) {
+					DrawMark(vMarkStyles[j],w,scale,p1[i],vPWidth[j],vMarkColors[j]);              
+				}
 		}
 	}
 	
@@ -1520,7 +1585,7 @@ Scatter::Scatter():
 	showLegend(true),legendWeight(80),
 	antialiasing(false),
 	offset(10,12),
-	minXZoom(-1), maxXZoom(-1), minYZoom(-1), maxYZoom(-1)
+	minXZoom(-1), maxXZoom(-1), minYZoom(-1), maxYZoom(-1), fastViewX(false), sequentialXAll(false)
 {
 	Color(graphColor);	
 	BackPaint();

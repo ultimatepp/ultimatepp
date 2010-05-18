@@ -151,6 +151,10 @@ public:
 	Scatter &SetFunctPrimaryY(const bool& primary);
 	bool IsFunctPrimaryY(const int& j) const throw (Exc);	
 	
+	void SetSequentialX(const int& j, const bool& sequential = true);
+	Scatter &SetSequentialX(const bool& sequential = true);
+	Scatter &SetSequentialXAll(const bool& sequential = true);
+
 	void RemoveSeries(const int& j);
 	void RemoveAllSeries();
 	void SetData(const int& nbSeries, Vector<XY> & points);	
@@ -187,6 +191,8 @@ public:
 	Scatter& SetMinZoom(double x, double y = -1) {minXZoom = x; minYZoom = y; return *this;}; 
 	Scatter& SetMaxZoom(double x, double y = -1) {maxXZoom = x; maxYZoom = y; return *this;};
 
+	Scatter& SetFastViewX(bool set = true) {fastViewX = set;	return *this;};
+
 private:
 	class ::Color graphColor;	
 	String title;
@@ -199,6 +205,8 @@ private:
 	
 	int px, py;
 	class ::Color plotAreaColor;
+	
+	bool fastViewX, sequentialXAll;
 	
 	bool paintInfo;
 	Point clickPoint;
@@ -226,6 +234,7 @@ private:
 	
 	Vector<Vector<XY> > vPointsData,vFunctionData;
 	Vector<bool> vFPrimaryY, vPPrimaryY;
+	Vector<bool> /*vFSequential, */vPSequential;
 	Vector<String> vFPattern, vPPattern;
 	typedef double (*fAdress)(double);
 	Vector<fAdress> vAdress;
