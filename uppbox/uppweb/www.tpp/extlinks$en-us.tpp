@@ -1,7 +1,7 @@
 topic "External links";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0; [*R+217 External links]&]
+[s0; [*R6 External links]&]
 [s0;*R2 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 These are some external references about U`+`+ project]]}}&]
 [s0;2 &]

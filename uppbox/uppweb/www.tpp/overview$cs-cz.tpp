@@ -23,9 +23,9 @@ topic "Overview Ultimate++";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [b117;*+117 $$22,21#27457433418004101424360058862402:Caption]
 [i128;*C@(28.42.150)2 $$23,23#90519220486603166734501227306500:code]
-[{_}%EN-US 
+[{_}%CS-CZ 
 [s22;b0; [R6 Seznámení s Ultimate`+`+]&]
-[s22;>b0;R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1%- &]
+[s22;>b0;R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 &]
 [s22; Malý předkrm&]
 [s21; Ultimate`+`+ slibuje radikální zjednodušení kódu typických 
 aplikací. Začněme jednoduchým příkladem `- aplikací, která 
@@ -698,15 +698,15 @@ argument navíc je uložen uvnitř Callbacku když je vytvořen.
 Abychom ilustrovali tento důležitý koncept, předkládáme 
 následující ukázku kódu:&]
 [s21; &]
-[s23;%- void MyDlg`::SetEditorValue(int x)&]
-[s23;%- `{&]
-[s23;%- -|editor <<`= x;&]
-[s23;%- `}&]
+[s23; void MyDlg`::SetEditorValue(int x)&]
+[s23; `{&]
+[s23; -|editor <<`= x;&]
+[s23; `}&]
 [s23; &]
-[s23;%- MyDlg`::MyDlg()&]
-[s23;%- `{&]
-[s23;%- -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
-[s23;%- -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
+[s23; MyDlg`::MyDlg()&]
+[s23; `{&]
+[s23; -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
+[s23; -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
 [s21; &]
 [s21; V této ukázce máme dvě tlačítka a celočíselné vstupní 
 pole. Stisknutí prvního resp. druhého tlačítka nastaví 

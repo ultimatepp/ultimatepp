@@ -74,6 +74,10 @@ TOPIC("currenttopics$en-us")
 #include "currenttopics$en-us.tppi"
 END_TOPIC
 
+TOPIC("devmovie$en-us")
+#include "devmovie$en-us.tppi"
+END_TOPIC
+
 TOPIC("documentation$en-us")
 #include "documentation$en-us.tppi"
 END_TOPIC
