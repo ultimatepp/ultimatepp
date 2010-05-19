@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE form>
+<form>
+	<layouts>
+		<item>
+			<content>
+				<item x="10" y="10" cx="380" cy="280" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Field frame"/>
+						<property name="Type" value="GridCtrl"/>
+						<property name="Font.Height" value="0"/>
+						<property name="Grid.Columns" value="[Columns];0 = Left, Left, Left;1 = Center, Center, Center;2 = Right, Right, Right;"/>
+						<property name="OutlineDraw" value="0"/>
+					</properties>
+				</item>
+			</content>
+			<name></name>
+			<properties>
+				<property name="Form.Width" value="400"/>
+				<property name="Form.Height" value="300"/>
+				<property name="Form.MaximizeBox" value="false"/>
+				<property name="Form.MinimizeBox" value="false"/>
+				<property name="Form.Sizeable" value="false"/>
+				<property name="Form.ToolWindow" value="true"/>
+				<property name="Form.Name" value="Default"/>
+				<property name="Form.Title" value="Test of GridCtrl"/>
+			</properties>
+		</item>
+	</layouts>
+</form>

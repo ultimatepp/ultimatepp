@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE form>
+<form>
+	<layouts>
+		<item>
+			<content>
+				<item x="10" y="10" cx="380" cy="280" align="3" valign="3">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="TabCtrl"/>
+						<property name="Font.Height" value="0"/>
+						<property name="Tab.Content" value="[Tabs];0 = Calc-Buttons.form, Default, First;1 = TestDialog.form, Default, Second;2 = FullFormTest.fz, Default, Hard;3 = &quot;Current form&quot;, Second, Local;"/>
+						<property name="OutlineDraw" value="0"/>
+						<property name="Tab.Active" value="0"/>
+						<property name="Tab.Count" value="4"/>
+					</properties>
+				</item>
+			</content>
+			<name></name>
+			<properties>
+				<property name="Form.Width" value="400"/>
+				<property name="Form.Height" value="300"/>
+				<property name="Form.MaximizeBox" value="true"/>
+				<property name="Form.MinimizeBox" value="true"/>
+				<property name="Form.Sizeable" value="true"/>
+				<property name="Form.ToolWindow" value="false"/>
+				<property name="Form.Name" value="Default"/>
+				<property name="Form.Title" value="Tabs"/>
+			</properties>
+		</item>
+		<item>
+			<content>
+				<item x="10" y="10" cx="100" cy="30" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="11"/>
+						<property name="OutlineDraw" value="0"/>
+					</properties>
+				</item>
+			</content>
+			<name></name>
+			<properties>
+				<property name="Form.Width" value="270"/>
+				<property name="Form.Height" value="200"/>
+				<property name="Form.MaximizeBox" value="false"/>
+				<property name="Form.MinimizeBox" value="false"/>
+				<property name="Form.Sizeable" value="false"/>
+				<property name="Form.ToolWindow" value="false"/>
+				<property name="Form.Name" value="Second"/>
+			</properties>
+		</item>
+	</layouts>
+</form>

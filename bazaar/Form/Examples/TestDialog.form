@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE form>
+<form>
+	<layouts>
+		<item>
+			<content>
+				<item x="150" y="70" cx="70" cy="30" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="Cancel"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Label" value="Cancel"/>
+						<property name="Type" value="Button"/>
+						<property name="Action" value="Cancel"/>
+						<property name="Tip" value="Cancel and exit"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+					</properties>
+				</item>
+				<item x="10" y="10" cx="210" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="User"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Label" value="Test"/>
+						<property name="Type" value="EditField"/>
+						<property name="Style" value="Text Field"/>
+						<property name="Tip" value="Login"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="NotNull" value="0"/>
+						<property name="TextAlign" value="Left"/>
+					</properties>
+				</item>
+				<item x="10" y="40" cx="210" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="Pass"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Label" value="Test"/>
+						<property name="Type" value="EditField"/>
+						<property name="Style" value="Password"/>
+						<property name="Tip" value="Password"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="NotNull" value="0"/>
+						<property name="TextAlign" value="Left"/>
+					</properties>
+				</item>
+				<item x="70" y="70" cx="70" cy="30" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="OK"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Label" value="OK"/>
+						<property name="Type" value="Button"/>
+						<property name="Action" value="OK"/>
+						<property name="Tip" value="Enter program..."/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+					</properties>
+				</item>
+			</content>
+			<name></name>
+			<properties>
+				<property name="Form.Width" value="230"/>
+				<property name="Form.Height" value="110"/>
+				<property name="Form.MaximizeBox" value="false"/>
+				<property name="Form.MinimizeBox" value="false"/>
+				<property name="Form.Sizeable" value="false"/>
+				<property name="Form.ToolWindow" value="true"/>
+				<property name="Form.Name" value="Default"/>
+				<property name="Form.Title" value="Authorization"/>
+			</properties>
+		</item>
+	</layouts>
+</form>

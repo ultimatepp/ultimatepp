@@ -1,0 +1,34 @@
+uses
+	CtrlLib,
+	Docking,
+	GridCtrl,
+	Form;
+
+file
+	FormView.iml,
+	TODO.list,
+	FormViewGeneral.cpp,
+	FormViewActions.cpp,
+	FormViewInput.cpp,
+	FormViewDraw.cpp,
+	FormViewPos.cpp,
+	FormViewBar.cpp,
+	FormView.hpp,
+	FormEdit.lay,
+	FormEdit.t,
+	ExGridCtrl.cpp,
+	ExGridCtrl.hpp,
+	EditTabs.hpp,
+	EditColumns.hpp,
+	StaticImage.hpp,
+	FormProperties.cpp,
+	FormProperties.hpp,
+	ScrollContainer.hpp,
+	FormEdit.iml,
+	FormEdit.cpp,
+	FormEdit.hpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

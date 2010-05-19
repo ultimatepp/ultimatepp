@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE form>
+<form>
+	<layouts>
+		<item>
+			<content>
+				<item x="10" y="10" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="1"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="1"/>
+						<property name="Action" value="1"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="60" y="10" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="2"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="2"/>
+						<property name="Action" value="2"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="110" y="10" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="3"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="3"/>
+						<property name="Action" value="3"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="10" y="60" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="4"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="4"/>
+						<property name="Action" value="4"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="60" y="60" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="5"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="5"/>
+						<property name="Action" value="5"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="110" y="60" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="6"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="6"/>
+						<property name="Action" value="6"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="10" y="110" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="7"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="7"/>
+						<property name="Action" value="7"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="60" y="110" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="8"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="8"/>
+						<property name="Action" value="8"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="110" y="110" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="9"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="9"/>
+						<property name="Action" value="9"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="10" y="160" cx="90" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="0"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="0"/>
+						<property name="Action" value="0"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="110" y="160" cx="40" cy="40" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="."/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Button"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="."/>
+						<property name="Action" value="."/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+			</content>
+			<name></name>
+			<properties>
+				<property name="Form.Width" value="160"/>
+				<property name="Form.Height" value="210"/>
+				<property name="Form.MaximizeBox" value="false"/>
+				<property name="Form.MinimizeBox" value="false"/>
+				<property name="Form.Sizeable" value="false"/>
+				<property name="Form.ToolWindow" value="false"/>
+				<property name="Form.Name" value="Default"/>
+				<property name="Form.Title" value=""/>
+			</properties>
+		</item>
+	</layouts>
+</form>

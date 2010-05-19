@@ -1,0 +1,7 @@
+#ifndef _FormEditor_icpp_init_stub
+#define _FormEditor_icpp_init_stub
+#include "CtrlLib/init"
+#include "Docking/init"
+#include "GridCtrl/init"
+#include "Form/init"
+#endif

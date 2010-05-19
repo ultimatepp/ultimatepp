@@ -1,0 +1,17 @@
+LAYOUT(FormProperties, 436, 164)
+	ITEM(Label, dv___0, SetLabel(t_("Height:")).LeftPosZ(284, 60).TopPosZ(80, 19))
+	ITEM(Label, dv___1, SetLabel(t_("Title:")).LeftPosZ(12, 76).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Width:")).LeftPosZ(284, 60).TopPosZ(56, 19))
+	ITEM(LabelBox, dv___3, SetLabel(t_("Options")).LeftPosZ(8, 252).TopPosZ(36, 120))
+	ITEM(LabelBox, dv___4, SetLabel(t_("Size")).LeftPosZ(268, 160).TopPosZ(36, 76))
+	ITEM(Option, SizeableOption, SetLabel(t_("Sizeable window")).HCenterPosZ(220, -84).TopPosZ(56, 16))
+	ITEM(Option, MinimizeOption, SetLabel(t_("Button \"Minimize\"")).LeftPosZ(24, 220).TopPosZ(80, 16))
+	ITEM(Option, MaximizeOption, SetLabel(t_("Button \"Maximize\"")).LeftPosZ(24, 220).TopPosZ(104, 16))
+	ITEM(Option, ToolOption, SetLabel(t_("ToolWindow style")).LeftPosZ(24, 220).TopPosZ(128, 16))
+	ITEM(EditIntSpin, Width, LeftPosZ(344, 68).TopPosZ(56, 19))
+	ITEM(EditIntSpin, Height, LeftPosZ(344, 68).TopPosZ(80, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(80, 68).BottomPosZ(8, 28))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 68).BottomPosZ(8, 28))
+	ITEM(EditField, TitleEdit, LeftPosZ(88, 340).TopPosZ(8, 19))
+END_LAYOUT
+

@@ -1,0 +1,10 @@
+uses
+	Core,
+	Form;
+
+file
+	FormExample.cpp;
+
+mainconfig
+	"" = "GUI";
+

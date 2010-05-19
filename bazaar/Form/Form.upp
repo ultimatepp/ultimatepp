@@ -1,0 +1,21 @@
+uses
+	CtrlLib,
+	GridCtrl;
+
+file
+	XMLConfig.cpp,
+	XMLConfig.h,
+	IniConfig.cpp,
+	IniConfig.hpp,
+	Form.cpp,
+	Form.hpp,
+	FormLayout.cpp,
+	FormLayout.hpp,
+	FormObject.cpp,
+	FormObject.hpp,
+	Container.hpp,
+	Macro.hpp;
+
+mainconfig
+	"" = "GUI";
+

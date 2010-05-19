@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE form>
+<form>
+	<layouts>
+		<item>
+			<content>
+				<item x="830" y="10" cx="390" cy="220" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Form"/>
+						<property name="Form.PathType" value="Relative"/>
+						<property name="Form.Path" value="ComplexFormTest.form"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+						<property name="Form.Layout" value="Default"/>
+					</properties>
+				</item>
+				<item x="840" y="244" cx="90" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="DropDate"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+					</properties>
+				</item>
+				<item x="940" y="244" cx="90" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="DropDate"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+					</properties>
+				</item>
+				<item x="840" y="274" cx="190" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="EditField"/>
+						<property name="TextAlign" value="Left"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+						<property name="NotNull" value="0"/>
+						<property name="Style" value="Text Field"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="840" y="304" cx="190" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="EditField"/>
+						<property name="TextAlign" value="Left"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+						<property name="NotNull" value="0"/>
+						<property name="Style" value="Text Field"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="840" y="334" cx="190" cy="120" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="GridCtrl"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+					</properties>
+				</item>
+				<item x="1040" y="244" cx="80" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="DropDate"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+					</properties>
+				</item>
+				<item x="1130" y="244" cx="80" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="DropDate"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+					</properties>
+				</item>
+				<item x="1040" y="274" cx="170" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="EditField"/>
+						<property name="TextAlign" value="Left"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+						<property name="NotNull" value="0"/>
+						<property name="Style" value="Text Field"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="1040" y="304" cx="170" cy="20" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="EditField"/>
+						<property name="TextAlign" value="Left"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+						<property name="NotNull" value="0"/>
+						<property name="Style" value="Text Field"/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+				<item x="1040" y="334" cx="170" cy="120" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="GridCtrl"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+					</properties>
+				</item>
+				<item x="5" y="0" cx="820" cy="700" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Form"/>
+						<property name="Form.PathType" value="Relative"/>
+						<property name="Form.Path" value="Hard.form"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+						<property name="Form.Layout" value="Default"/>
+					</properties>
+				</item>
+				<item x="830" y="480" cx="390" cy="220" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Form"/>
+						<property name="Form.PathType" value="Relative"/>
+						<property name="Form.Path" value="ComplexFormTest.form"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Font.Height" value="0"/>
+						<property name="Form.Layout" value="Default"/>
+					</properties>
+				</item>
+			</content>
+			<name></name>
+			<properties>
+				<property name="Form.Width" value="1220"/>
+				<property name="Form.Height" value="700"/>
+				<property name="Form.MaximizeBox" value="false"/>
+				<property name="Form.MinimizeBox" value="false"/>
+				<property name="Form.Sizeable" value="false"/>
+				<property name="Form.ToolWindow" value="false"/>
+				<property name="Form.Name" value="Default"/>
+			</properties>
+		</item>
+	</layouts>
+</form>

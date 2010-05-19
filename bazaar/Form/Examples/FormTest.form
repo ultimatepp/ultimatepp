@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE form>
+<form>
+	<layouts>
+		<item>
+			<content>
+				<item x="0" y="0" cx="160" cy="220" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Thin outset frame"/>
+						<property name="Type" value="Form"/>
+						<property name="Form.PathType" value="Relative"/>
+						<property name="Form.Path" value="Calc-Buttons.form"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Form.Layout" value="Default"/>
+					</properties>
+				</item>
+				<item x="160" y="0" cx="230" cy="110" align="1" valign="1">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Thin outset frame"/>
+						<property name="Type" value="Form"/>
+						<property name="Form.PathType" value="Relative"/>
+						<property name="Form.Path" value="TestDialog.form"/>
+						<property name="Font.Height" value="0"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Form.Layout" value="Default"/>
+					</properties>
+				</item>
+			</content>
+			<name></name>
+			<properties>
+				<property name="Form.Width" value="390"/>
+				<property name="Form.Height" value="220"/>
+				<property name="Form.MaximizeBox" value="false"/>
+				<property name="Form.MinimizeBox" value="false"/>
+				<property name="Form.Sizeable" value="false"/>
+				<property name="Form.ToolWindow" value="false"/>
+				<property name="Form.Name" value="Default"/>
+			</properties>
+		</item>
+	</layouts>
+</form>

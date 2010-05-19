@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE form>
+<form>
+	<layouts>
+		<item>
+			<content>
+				<item x="20" y="20" cx="410" cy="120" align="0" valign="0">
+					<name>Noname</name>
+					<properties>
+						<property name="Variable" value="None"/>
+						<property name="Frame" value="Default frame"/>
+						<property name="Type" value="Label"/>
+						<property name="Font.Height" value="70"/>
+						<property name="Font.Color" value="16::&apos;&amp;U99V6FA&quot;F&lt;G1!$!!!!!!!"/>
+						<property name="OutlineDraw" value="false"/>
+						<property name="Label" value="Hello world!"/>
+						<property name="Text.Align" value="Center"/>
+						<property name="Action" value=""/>
+						<property name="Tip" value=""/>
+					</properties>
+				</item>
+			</content>
+			<name></name>
+			<properties>
+				<property name="Form.Width" value="450"/>
+				<property name="Form.Height" value="160"/>
+				<property name="Form.MaximizeBox" value="true"/>
+				<property name="Form.MinimizeBox" value="true"/>
+				<property name="Form.Sizeable" value="true"/>
+				<property name="Form.ToolWindow" value="false"/>
+				<property name="Form.Name" value="Default"/>
+				<property name="Form.Title" value=""/>
+			</properties>
+		</item>
+	</layouts>
+</form>
