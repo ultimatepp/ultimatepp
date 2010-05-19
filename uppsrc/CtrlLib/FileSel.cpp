@@ -1096,6 +1096,8 @@ FileSel& FileSel::Types(const char *d) {
 		Vector<String> h = Split(s[i], '\t');
 		if(h.GetCount() == 2)
 			Type(h[0], h[1]);
+		if(h.GetCount() == 1)
+			Type(h[0], h[0]);
 	}
 	return *this;
 }

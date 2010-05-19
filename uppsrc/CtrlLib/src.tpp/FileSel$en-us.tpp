@@ -419,7 +419,8 @@ files`", `"`*.c `*.h`").&]
 onst]_[@(0.0.255) char]_`*[*@3 d])&]
 [s2;%% Adds a number of file types using simple text format: `'`\n`' 
 is used to separate types, `'`\t`' is used to separate file type 
-description and file mask.&]
+description and file mask. If there is no `'`\t`', text is used 
+for both file description and the file mask.&]
 [s2;%% Examples: Types(`"All files`\t`*.`*`\nText files`\t`*.txt`\nImage 
 files`\t`*.bmp `*.png `*.jpg `*.gif`")).&]
 [s3;%% &]
