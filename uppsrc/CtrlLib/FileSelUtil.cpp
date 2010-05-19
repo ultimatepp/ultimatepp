@@ -50,7 +50,7 @@ SelectFileIn::SelectFileIn(const char *types)
 SelectFileOut::SelectFileOut(const char *types)
 {
 	for(;;) {
-		String p = SelectFileOpen(types);
+		String p = SelectFileSaveAs(types);
 		if(p.GetCount() == 0 || Open(p))
 			return;
 		Exclamation(t_("Unable to open [* \1") + p + t_("\1] for writing!"));
