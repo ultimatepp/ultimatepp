@@ -154,7 +154,7 @@ String GatherTopics(VectorMap<String, Topic>& tt, const char *topic, String& tit
 #ifdef MTC
 		CoWork work;
 		for(int i = 0; i < ti.link.GetCount(); i++)
-			work & callback2(sGatherTopics, &map, ti.link[i]);
+			work & callback2(sGatherTopics, &tt, ti.link[i]);
 #else
 		for(int i = 0; i < ti.link.GetCount(); i++)
 			sGatherTopics(&tt, ti.link[i]);
