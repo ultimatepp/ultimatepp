@@ -395,7 +395,10 @@ Scatter &Scatter::AddSeries(Vector<XY> & points,const String& legend,const bool&
 	vPThickness.Add(thickness);
 	vLegend.Add(legend);
 	vMarkColors.Add(pcolor);
-	vShowMark.Add(true);
+	if (width <= 1)
+		vShowMark.Add(false);
+	else
+		vShowMark.Add(true);
 	vMarkStyles.Add(CIRCLE);	
 	vPPrimaryY.Add(true);
 	vPSequential.Add(sequentialXAll);
@@ -1035,6 +1038,8 @@ void Scatter::Scroll(double factorX, double factorY)
 
 void Scatter::MouseWheel(Point, int zdelta, dword) 
 {
+	if (zdelta == 0)
+		return;
 	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
 	Zoom(scale);
 }
