@@ -659,7 +659,7 @@ SqlBool GetTextRange(const String& s1, const String& s2, const SqlVal& exp)
 	if(IsNull(s1) || IsNull(s2)) // just one - use as template
 		return LikeSmartWild(exp, s1 + s2);
 //	return Between(GetCsAsciiVal(exp), GetCsAsciiVal(s1), GetCsAsciiVal(s2 + "ŽŽ"));
-	return Between(Upper(exp), Upper(s1), Upper(s2 + "ŽŽ"));
+	return Between(UpperAscii(exp), Upper(s1), Upper(s2 + "ZZ"));
 }
 
 static const double above = 1 + 1e-9, below = 1 - 1e-9;
