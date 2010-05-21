@@ -1261,21 +1261,18 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 			}
 			int numV;
 			if (fastViewX)
-				numV = 1+(imax - imin)/h;
+				numV = 1+(imax-imin)/l;
 			else
 				numV = 1;
-			for (int i=imin; i<imax; i+=numV)
-			{
+			for (int i=imin; i<imax; i+=numV) {
 				double xx, yy;
-				if (fastViewX) {
-					xx = yy = 0;
+				if (fastViewX && numV > 1) {
+					yy = 0;
 					int ii;
-					for (ii = 0; ii < numV && i+ii < imax; ++ii) {
+					for (ii = 0; ii < numV && i+ii < imax; ++ii) 
 						yy += vPointsData[j][i+ii].y;
-						xx += vPointsData[j][i+ii].x;
-					}
 					yy /= double(ii);
-					xx /= double(ii);
+					xx = (vPointsData[j][i].x + vPointsData[j][i+ii-1].x)/2;
 				} else {
 					xx = vPointsData[j][i].x;
 					yy = vPointsData[j][i].y;
@@ -1303,9 +1300,8 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 						p2<<Point(ix,h-iy);
 					}
 					if(!p2.IsEmpty()) DrawPolylineX(w, p2,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
-				}
-				
-				else if (!p1.IsEmpty()) DrawPolylineX(w, p1,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
+				} else if (!p1.IsEmpty()) 
+					DrawPolylineX(w, p1,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
 			}
 				
 			if(vShowMark[j])
