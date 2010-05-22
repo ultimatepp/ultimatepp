@@ -161,6 +161,34 @@ public:
 		LOCK_ADD_UNLOCK;
 	}
 	
+	template<class OBJECT, class P1, class P2, class P3, class P4, class P5>
+	void Request(void (OBJECT::*m)(pick_ P1 &, pick_ P2 &, pick_ P3 &, pick_ P4 &, pick_ P5 &), pick_ P1 &p1, pick_ P2 &p2, pick_ P3 &p3, pick_ P4 &p4, pick_ P5 &p5)
+	{
+		Element5<OBJECT, P1, P2, P3, P4, P5> *e = new Element5<OBJECT, P1, P2, P3, P4, P5>;
+		e->caller = static_cast<OBJECT *>(this);
+		e->m  = m;
+		e->p1 = p1;
+		e->p2 = p2;
+		e->p3 = p3;
+		e->p4 = p4;
+		e->p5 = p5;
+		LOCK_ADD_UNLOCK;
+	}
+	
+	template<class OBJECT, class P1, class P2, class P3, class P4, class P5>
+	void Request(void (OBJECT::*m)(P1,P2,P3,P4,P5), P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
+	{
+		Element5c<OBJECT, P1, P2, P3, P4, P5> *e = new Element5c<OBJECT, P1, P2, P3, P4, P5>;
+		e->caller = static_cast<OBJECT *>(this);
+		e->m  = m;
+		e->p1 = p1;
+		e->p2 = p2;
+		e->p3 = p3;
+		e->p4 = p4;
+		e->p5 = p5;
+		LOCK_ADD_UNLOCK;
+	}
+	
 	void DoTasks()
 	{
 		while (!IsShutdown())
@@ -322,6 +350,32 @@ private:
 		P2 p2;
 		P3 p3;
 		P4 p4;
+	};
+	
+	template<class OBJECT, class P1, class P2, class P3, class P4, class P5>
+	struct Element5 : public Element
+	{
+		virtual ~Element5() {}
+		virtual void Execute() {((static_cast<OBJECT *>(caller))->*m)(p1,p2,p3,p4,p5);}
+		void (OBJECT::*m)(pick_ P1 &p1, pick_ P2 &p2, pick_ P3 &p3, pick_ P4 &p4, pick_ P5 &p5);
+		P1 p1;
+		P2 p2;
+		P3 p3;
+		P4 p4;
+		P5 p5;
+	};
+	
+	template<class OBJECT, class P1, class P2, class P3, class P4, class P5>
+	struct Element5c : public Element
+	{
+		virtual ~Element5c() {}
+		virtual void Execute() {((static_cast<OBJECT *>(caller))->*m)(p1,p2,p3,p4,p5);}
+		void (OBJECT::*m)(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5);
+		P1 p1;
+		P2 p2;
+		P3 p3;
+		P4 p4;
+		P5 p5;
 	};
 	
 	void DoNothingJustAwake(){}
