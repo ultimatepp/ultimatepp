@@ -170,7 +170,7 @@ typedef VectorMap<String, CalcGate> CalcGateMap;
 class HelpCalc
 {
 public:
-	HelpCalc(CalcGate proc, const char *ident, const char *topic, String (*groupfn)());
+	HelpCalc(CalcGate proc, const char *ident, const char *topic, String (*groupfn)(), const char *function);
 
 	class Compare
 	{
@@ -193,9 +193,10 @@ public:
 	String       (*groupfn)();
 	String         ident;
 	String         topic;
+	String         function;
 
 private:
-	void Init(CalcGate proc, const char *ident, const char *topic, String (*groupfn)());
+	void Init(CalcGate proc, const char *ident, const char *topic, String (*groupfn)(), const char *function);
 };
 
 typedef Vector<const HelpCalc *> HelpCalcMap;
@@ -636,7 +637,7 @@ CalcCastMemberTemplate(CalcCastMemberPacket, 6)
 
 #ifndef NOHELP
 #define FDECLTH(tag, topic, id, group, proc) \
-static GLOBAL_VARP(HelpCalc, FGENID(chlp, tag), (callback(proc), id, "Calc$" topic, group)); \
+static GLOBAL_VARP(HelpCalc, FGENID(chlp, tag), (callback(proc), id, "Calc$" topic, group, ASSTRING(proc))); \
 INITBLOCK_(FGENID(hblk, tag)) { FGENID(chlp, tag)(); } \
 static void FGENID(chlt, tag)(String& out) { out.Cat(FGENID(chlp, tag)().GetTitle()); } \
 RegisterHelpTopicInfoTag(COMBINE(tag, __LINE__), "Calc$" topic, __FILE__, callback(&FGENID(chlt, tag)), CNULL)
@@ -679,7 +680,7 @@ struct FGENID(clcp, dflt) : public BASECLASS \
 { FGENID(clcp, dflt)(); bool CalcIt(CalcPacket& packet) { return CalcCastMember<null>(packet, this, &BASECLASS::call); } }; \
 static GLOBAL_VARP(HelpCalc, FGENID(chlp, dflt), (callback(static_cast<BASECLASS *>(0), \
 		brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, dflt)::CalcIt)), \
-		id, "Calc$" topic, group)); \
+		id, "Calc$" topic, group, ASSTRING(call))); \
 INITBLOCK_(FGENID(mblk, tag)) { \
 	FGENID(chlp, dflt)(); \
 	static CalcLocalItem<BASECLASS> FGENID(clci, dflt)(BASECLASS::GetLocalMap(), id, \
@@ -693,7 +694,7 @@ struct FGENID(clcp, dflt) : public BASECLASS \
 { FGENID(clcp, dflt)(); bool CalcIt(CalcPacket& packet) { return CalcCastMemberPacket<null>(packet, this, &BASECLASS::call); } }; \
 static GLOBAL_VARP(HelpCalc, FGENID(chlp, dflt), (callback(static_cast<BASECLASS *>(0), \
 		brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, dflt)::CalcIt)), \
-		id, "Calc$" topic, group)); \
+		id, "Calc$" topic, group, ASSTRING(call))); \
 INITBLOCK_(FGENID(mblk, tag)) { \
 	FGENID(chlp, dflt)(); \
 	static CalcLocalItem<BASECLASS> FGENID(clci, dflt)(BASECLASS::GetLocalMap(), id, \
