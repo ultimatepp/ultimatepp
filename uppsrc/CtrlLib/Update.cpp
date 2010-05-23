@@ -5,6 +5,26 @@ NAMESPACE_UPP
 #ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE
 
+#define LLOG(x)
+
+static String s_updatedir;
+static String s_updater;
+
+void UpdateSetDir(const char *path)
+{
+	s_updatedir = path;
+}
+
+void UpdateSetUpdater(const char *exename)
+{
+	s_updater = exename;
+}
+
+String UpdateGetDir()
+{
+	return Nvl(s_updatedir, GetIniKey("UPDATE"));
+}
+
 Time FileTimeToTime(const FILETIME& time) {
 	SYSTEMTIME t;
 	FileTimeToSystemTime(&time, &t);
@@ -89,7 +109,7 @@ void UpdateFile(String dst, String src)
 void UpdateFile(const char *filename)
 {
 	String dst = GetExeDirFile(filename);
-	String src = GetIniKey("UPDATE");
+	String src = UpdateGetDir();
 	if(IsNull(src))
 		return;
 	UpdateFile(dst, AppendFileName(src, filename));
@@ -112,10 +132,10 @@ static String FixArg(String s)
 
 void SelfUpdate() {
 	char dst[512];
-	UpdateFile("UPDATER.EXE");
+	UpdateFile(Nvl(s_updater, String("UPDATER.EXE")));
 	::GetModuleFileName(NULL, dst, 512);
 	{
-		String src = GetIniKey("UPDATE");
+		String src = UpdateGetDir();
 		if(src.IsEmpty()) return;
 		src = AppendFileName(src, GetFileNamePos(dst));
 		int dummy;
@@ -147,7 +167,7 @@ bool SelfUpdateSelf()
 		return true;
 	}
 
-	String src = GetIniKey("UPDATE");
+	String src = UpdateGetDir();
 	if(src.IsEmpty()) return false;
 	src = AppendFileName(src, GetFileNamePos(exe));
 	int dummy;
@@ -157,7 +177,7 @@ bool SelfUpdateSelf()
 	commandline << src << " -update " << FixArg(exe);
 	for(int i = 0; i < cmdline.GetCount(); i++)
 		commandline << ' ' << FixArg(cmdline[i]);
-	RLOG("SelfUpdateSelf (running updater): " << commandline);
+	LLOG("SelfUpdateSelf (running updater): " << commandline);
 	return WinExec(commandline, SW_SHOWNORMAL) >= 32;
 }
 
