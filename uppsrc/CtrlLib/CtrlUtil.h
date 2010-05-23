@@ -345,6 +345,10 @@ public:
 void Set(ArrayCtrl& array, int ii, IdCtrls& m);
 void Get(ArrayCtrl& array, int ii, IdCtrls& m);
 
+void   UpdateSetDir(const char *path);
+void   UpdateSetUpdater(const char *exename);
+String UpdateGetDir();
+
 void UpdateFile(String dst, String src);
 
 void MemoryProfileInfo();
