@@ -23,20 +23,23 @@ enum
 	MAX_NESTING_DEPTH = 1000,
 };
 
-HelpCalc::HelpCalc(CalcGate proc, const char *ident_, const char *topic_, String (*groupfn_)())
+HelpCalc::HelpCalc(CalcGate proc, const char *ident_, const char *topic_,
+	String (*groupfn_)(), const char *function_)
 //: generator(gen)
 {
-	Init(proc, ident_, topic_, groupfn_);
+	Init(proc, ident_, topic_, groupfn_, function_);
 	AddHelpCalc(*this);
 //	ord = HelpCalcIndex::Get().Add(*this);
 }
 
-void HelpCalc::Init(CalcGate proc_, const char *ident_, const char *topic_, String (*groupfn_)())
+void HelpCalc::Init(CalcGate proc_, const char *ident_, const char *topic_,
+	String (*groupfn_)(), const char *function_)
 {
 	proc = proc_;
 	ident = ident_;
 	topic = topic_;
 	groupfn = groupfn_;
+	function = function_;
 /*
 	sortname = id = _id;
 
