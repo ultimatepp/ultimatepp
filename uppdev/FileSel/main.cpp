@@ -4,10 +4,6 @@ using namespace Upp;
 
 GUI_APP_MAIN
 {
-	DUMP(StdFont().Info().GetHeight());
-	DUMP(StdFont().Info().GetDescent());
-	DUMP(StdFont().Bold().Info().GetHeight());
-	DUMP(StdFont().Bold().Info().GetDescent());
 	SetDefaultCharset(CHARSET_UTF8);
 	FileSel fs;
 	String fn;
@@ -24,6 +20,7 @@ GUI_APP_MAIN
 //	fs.NoEditFileName();
 	fs.ActiveDir("c:/");
 	fs.PreSelect("U:/log.txt");
+	fs.ActiveType(3);
 	for(;;) {
 		if(!fs.ExecuteSaveAs())
 			break;
