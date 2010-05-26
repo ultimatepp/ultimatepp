@@ -137,7 +137,7 @@ protected:
 
 	String         olddir;
 	String         basedir;
-	int            activetype;
+	String         activetype;
 	String         defext;
 	String         preselect;
 	Vector<String> fn;
@@ -226,7 +226,7 @@ public:
 
 	bool   GetReadOnly() const                   { return readonly; }
 	String GetActiveDir() const                  { return dir.GetData(); }
-	int    GetActiveType() const                 { return activetype; }
+	int    GetActiveType() const                 { return type.GetIndex(); }
 
 	void   Filesystem(FileSystemInfo& fsys)      { filesystem = &fsys;}
 	FileSystemInfo& GetFilesystem() const        { return *filesystem; }
@@ -236,7 +236,7 @@ public:
 	FileSel& AllFilesType();
 	FileSel& ClearTypes();
 	FileSel& ActiveDir(const String& d)          { dir <<= d; return *this; }
-	FileSel& ActiveType(int i)                   { activetype = i; return *this;  }
+	FileSel& ActiveType(int i);
 	FileSel& PreSelect(const String& path);
 	FileSel& DefaultExt(const char *ext)         { defext = ext; return *this; }
 	FileSel& Multi(bool b = true)                { multi = b; return *this; }

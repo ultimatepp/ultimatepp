@@ -1109,6 +1109,14 @@ FileSel& FileSel::ClearTypes()
 	return *this;
 }
 
+FileSel& FileSel::ActiveType(int i)
+{
+	activetype.Clear();
+	if(i >= 0 && i < type.GetCount())
+		activetype = type.GetValue(i);
+	return *this;
+}
+
 FileSel& FileSel::AllFilesType() {
 	return Type(t_("All files"), "*.*");
 }
@@ -1291,8 +1299,12 @@ bool FileSel::Execute(int _mode) {
 		px += dp;
 	}
 	dir.HSizePos(dr.left, px + 4);
-	if(activetype >= 0 && activetype < type.GetCount())
-		type.SetIndex(activetype);
+	int q = type.FindValue(activetype);
+	if(q >= 0)
+		type <<= q;
+	else
+	if(type.GetCount())
+		type.SetIndex(0);
 	int dlc = type.GetCount();
 	Load();
 	ActiveFocus(file.IsEditable() ? (Ctrl&)file : (Ctrl&)list);
@@ -1319,10 +1331,10 @@ bool FileSel::Execute(int _mode) {
 	int c = TopWindow::Run(appmodal);
 	TopWindow::Close();
 	lastsby = list.GetSbPos();
+	int ti = ~type;
 	type.Trim(dlc);
-	activetype = type.GetIndex();
-	if(activetype >= dlc || activetype < 0)
-		activetype = 0;
+	if(ti >= 0 && ti < type.GetCount())
+		activetype = type.GetValue(ti);
 	if(c == IDOK) {
 		String d = ~dir;
 		if(filesystem->IsWin32())
@@ -1360,10 +1372,15 @@ void FileSel::Serialize(Stream& s) {
 		netstack.Clear();
 	}
 #endif
-	int version = 9;
+	int version = 10;
 	s / version;
 	String ad = ~dir;
-	s / activetype % ad;
+	int dummy;
+	if(version < 10)
+		s / dummy;
+	else
+		s % activetype;
+	s % ad;
 	dir <<= ad;
 	if(version < 1) {
 		String n = fn.At(0);
@@ -1624,7 +1641,6 @@ FileSel::FileSel() {
 	dir.DisplayAll();
 	dir.SetDropLines(24);
 
-	activetype = 0;
 	readonly.Hide();
 
 	lastsby = 0;
