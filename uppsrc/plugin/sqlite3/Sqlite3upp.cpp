@@ -245,7 +245,9 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 	}
 
 	ASSERT(got_row_data);
-	String coltype = ToLower(sqlite3_column_decltype(current_stmt,i));
+	String coltype;
+	const char *s = sqlite3_column_decltype(current_stmt,i);
+	if(s) coltype = ToLower(s);
 	switch (sqlite3_column_type(current_stmt,i)) {
 		case SQLITE_INTEGER:
 			f = sqlite3_column_int64(current_stmt,i);
