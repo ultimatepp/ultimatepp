@@ -80,6 +80,7 @@ bool PassWindowsKey(int wParam);
 
 LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	GuiLock __;
+	eventid++;
 	ASSERT_(IsNull(sPainting), "WindowProc invoked while in Paint routine");
 //	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	Ptr<Ctrl> _this = this;

@@ -475,6 +475,7 @@ private:
 	static  bool      globalbackpaint;
 	static  int       LoopLevel;
 	static  Ctrl     *LoopCtrl;
+	static  int64     eventid;
 
 	static  Ptr<Ctrl>           defferedSetFocus;
 	static  Vector< Ptr<Ctrl> > defferedChildLostFocus;
@@ -1388,6 +1389,8 @@ public:
 #endif
 
 	static void GuiSleep(int ms);
+	
+	static int64 GetEventId()                           { return eventid; }
 
 	void Xmlize(XmlIO xml);
 

@@ -69,6 +69,7 @@ void Ctrl::SetLastActive(XWindow *w, Ctrl *la)
 void Ctrl::EventProc(XWindow& w, XEvent *event)
 {
 	GuiLock __; 
+	eventid++;
 	Ptr<Ctrl> _this = this;
 	bool pressed = false;
 	int  count = 1;
