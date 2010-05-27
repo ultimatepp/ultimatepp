@@ -1,11 +1,8 @@
 #include "Scatter.h"
 
-#include <Painter/Painter.h>
-
 #define IMAGECLASS ChartImg
 #define IMAGEFILE <Scatter/Chart.iml>
 #include <Draw/iml.h>
-
 
 Scatter& Scatter::SetColor(const class::Color& _color)
 {
@@ -1209,10 +1206,7 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 {
 	double d1=xRange/xMajorUnit;
 	double d2=yRange/yMajorUnit;
-	//double d22=yRange2/yMajorUnit2;
-	//int nMajorX=(d1-int(d1*1.001)>0.05 ? int(d1*1.001) : int(d1*1.001)-1);
-	//int nMajorY=(d2-int(d2*1.001)>0.05 ? int(d2*1.001) : int(d2*1.001)-1);
-	//int nMajorY2=(d22-int(d22*1.001)>0.05 ? int(d22*1.001) : int(d22*1.001)-1);
+
 	w.DrawRect(1,1,l-2,h-1,plotAreaColor);	//grosimea liniei nu este scalata
 	int gW=fround(gridWidth*scale/6);
 	if(gridWidth<0) gW=gridWidth;   
@@ -1350,66 +1344,62 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 Vector<XY> Scatter::Cubic(const Vector<XY>& DataSet, const int& fineness,double tension) const
 {
 	Vector<XY> OutSet;
-	if(DataSet.GetCount()>2){   
-	OutSet<<DataSet[0];
-	double t;
-	double a0,a1,a2,a3;
-	double b0,b1,b2,b3;
-	a2=tension*(DataSet[1].y-DataSet[0].y); 
-	a0=a2+tension*(DataSet[2].y-DataSet[0].y)+2*DataSet[0].y-2*DataSet[1].y;
-	a1=-2*a2- tension*(DataSet[2].y-DataSet[0].y)-3*DataSet[0].y+3*DataSet[1].y;        
-	a3=DataSet[0].y;
-	
-	b2=tension*(DataSet[1].x-DataSet[0].x);
-	b0=b2+tension*(DataSet[2].x-DataSet[0].x)+2*DataSet[0].x-2*DataSet[1].x;
-	b1=-2*b2- tension*(DataSet[2].x-DataSet[0].x)-3*DataSet[0].x+3*DataSet[1].x;    
-	b3=DataSet[0].x;
-	
-	for (int n=1; n<=fineness; n++)
-	{
-		t=(double)n/fineness;
-		OutSet<<XY(b0*t*t*t+b1*t*t+b2*t+b3, a0*t*t*t+a1*t*t+a2*t+a3);
-	}
+	if(DataSet.GetCount()>2) {   
+		OutSet<<DataSet[0];
+		double t;
+		double a0,a1,a2,a3;
+		double b0,b1,b2,b3;
+		a2=tension*(DataSet[1].y-DataSet[0].y); 
+		a0=a2+tension*(DataSet[2].y-DataSet[0].y)+2*DataSet[0].y-2*DataSet[1].y;
+		a1=-2*a2- tension*(DataSet[2].y-DataSet[0].y)-3*DataSet[0].y+3*DataSet[1].y;        
+		a3=DataSet[0].y;
 		
-	for (int i=3; i<DataSet.GetCount(); i++)
-	{
-		a2=tension*(DataSet[i-1].y-DataSet[i-3].y);
-		a0=a2+tension*(DataSet[i].y-DataSet[i-2].y)+2*DataSet[i-2].y-2*DataSet[i-1].y;
-		a1=-2*a2- tension*(DataSet[i].y-DataSet[i-2].y)-3*DataSet[i-2].y+3*DataSet[i-1].y;      
-		a3=DataSet[i-2].y;
+		b2=tension*(DataSet[1].x-DataSet[0].x);
+		b0=b2+tension*(DataSet[2].x-DataSet[0].x)+2*DataSet[0].x-2*DataSet[1].x;
+		b1=-2*b2- tension*(DataSet[2].x-DataSet[0].x)-3*DataSet[0].x+3*DataSet[1].x;    
+		b3=DataSet[0].x;
 		
-		b2=tension*(DataSet[i-1].x-DataSet[i-3].x);
-		b0=b2+tension*(DataSet[i].x-DataSet[i-2].x)+2*DataSet[i-2].x-2*DataSet[i-1].x;
-		b1=-2*b2- tension*(DataSet[i].x-DataSet[i-2].x)-3*DataSet[i-2].x+3*DataSet[i-1].x;      
-		b3=DataSet[i-2].x;
+		for (int n=1; n<=fineness; n++)
+		{
+			t=(double)n/fineness;
+			OutSet<<XY(b0*t*t*t+b1*t*t+b2*t+b3, a0*t*t*t+a1*t*t+a2*t+a3);
+		}	
+		for (int i=3; i<DataSet.GetCount(); i++)
+		{
+			a2=tension*(DataSet[i-1].y-DataSet[i-3].y);
+			a0=a2+tension*(DataSet[i].y-DataSet[i-2].y)+2*DataSet[i-2].y-2*DataSet[i-1].y;
+			a1=-2*a2- tension*(DataSet[i].y-DataSet[i-2].y)-3*DataSet[i-2].y+3*DataSet[i-1].y;      
+			a3=DataSet[i-2].y;
+			
+			b2=tension*(DataSet[i-1].x-DataSet[i-3].x);
+			b0=b2+tension*(DataSet[i].x-DataSet[i-2].x)+2*DataSet[i-2].x-2*DataSet[i-1].x;
+			b1=-2*b2- tension*(DataSet[i].x-DataSet[i-2].x)-3*DataSet[i-2].x+3*DataSet[i-1].x;      
+			b3=DataSet[i-2].x;
+			
+			for (int n=1; n<=fineness; n++)
+			{
+				t=(double)n/fineness;
+				OutSet<<XY(b0*t*t*t+b1*t*t+b2*t+b3, a0*t*t*t+a1*t*t+a2*t+a3);
+			}
+		}
+		int nd=DataSet.GetCount()-1;
+		a2=tension*(DataSet[nd].y-DataSet[nd-2].y); 
+		a0=a2+tension*(DataSet[nd].y-DataSet[nd-1].y)+2*DataSet[nd-1].y-2*DataSet[nd].y;
+		a1=-2*a2- tension*(DataSet[nd].y-DataSet[nd-1].y)-3*DataSet[nd-1].y+3*DataSet[nd].y;        
+		a3=DataSet[nd-1].y;
+			
+		b2=tension*(DataSet[nd].x-DataSet[nd-2].x);
+		b0=b2+tension*(DataSet[nd].x-DataSet[nd-1].x)+2*DataSet[nd-1].x-2*DataSet[nd].x;
+		b1=-2*b2- tension*(DataSet[nd].x-DataSet[nd-1].x)-3*DataSet[nd-1].x+3*DataSet[nd].x;        
+		b3=DataSet[nd-1].x;
 		
 		for (int n=1; n<=fineness; n++)
 		{
 			t=(double)n/fineness;
 			OutSet<<XY(b0*t*t*t+b1*t*t+b2*t+b3, a0*t*t*t+a1*t*t+a2*t+a3);
 		}
-	}
-	
-	int nd=DataSet.GetCount()-1;
-	a2=tension*(DataSet[nd].y-DataSet[nd-2].y); 
-	a0=a2+tension*(DataSet[nd].y-DataSet[nd-1].y)+2*DataSet[nd-1].y-2*DataSet[nd].y;
-	a1=-2*a2- tension*(DataSet[nd].y-DataSet[nd-1].y)-3*DataSet[nd-1].y+3*DataSet[nd].y;        
-	a3=DataSet[nd-1].y;
-		
-	b2=tension*(DataSet[nd].x-DataSet[nd-2].x);
-	b0=b2+tension*(DataSet[nd].x-DataSet[nd-1].x)+2*DataSet[nd-1].x-2*DataSet[nd].x;
-	b1=-2*b2- tension*(DataSet[nd].x-DataSet[nd-1].x)-3*DataSet[nd-1].x+3*DataSet[nd].x;        
-	b3=DataSet[nd-1].x;
-		
-		for (int n=1; n<=fineness; n++)
-		{
-			t=(double)n/fineness;
-			OutSet<<XY(b0*t*t*t+b1*t*t+b2*t+b3, a0*t*t*t+a1*t*t+a2*t+a3);
-		}
-		
 	}
 	return Vector<XY>(OutSet);
-	
 }
 
 void ParseTextMultiline(const String &text, Font fnt, Array <String> &texts, Array <Size> &sizes) {
@@ -1458,7 +1448,7 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 	if(showLegend) DrawLegend(w,scale);
 	int l=scale*GetSize().cx-2*scale*px;
 	int h=scale*GetSize().cy-2*scale*py-scale*titleFont.GetHeight();
-	//w.DrawRect(0,0,l,h+1,Gray);
+
 	Font FontLabel6;
 	FontLabel6=labelsFont;
 	FontLabel6.Height(scale*labelsFont.GetHeight());
@@ -1469,11 +1459,6 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 	w.DrawText(fround((l-lx.cx)/2),h+scale*py-lx.cy-scale*2,xLabel,FontLabel6,labelsColor);
 	w.DrawText(scale*2-scale*px,fround((h+ly.cx)/2),900,yLabel,FontLabel6,labelsColor);
 	w.DrawText(fround(l+scale*px-ly2.cy-2*scale),fround((h+ly2.cx)/2),900,yLabel2,FontLabel6,labelsColor);
-	
-	//int nMajorX=int(1.001*xRange/xMajorUnit);
-	//int nMajorY=int(1.001*yRange/yMajorUnit);
-	//int nrX=int(l/nMajorX);
-	//int nrY=int(h/nMajorY);		
 	
 	if (drawXReticle)
 		for(int i=0; xMinUnit+i*xMajorUnit<=xRange;i++){
@@ -1499,9 +1484,6 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 				int cy = ii == 0 ? 0 : sizes[ii-1].cy;
 				w.DrawText(fround(l*xMinUnit/xRange+i*l/(xRange/xMajorUnit) - scale*sizes[ii].cx/2), h+scale*(4+ii*cy), texts[ii], Standard6, axisColor);
 			}
-			//w.DrawText(int(scale*l*xMinUnit/xRange+i*l/(xRange/xMajorUnit))-dx, h+scale*4, gridLabelX, Standard6, axisColor);
-			//w.DrawText(int x¸ int y¸ int angle¸ const WString& text¸ Font font = StdFont()¸ Color ink = DefaultInk¸ const int *dx = NULL)
-			//w.DrawText(int(i*l/(xRange/xMajorUnit))-dx,h+scale*4, 450, gridLabelX,Standard6,axisColor);  
 		}
 	if (drawYReticle)
 		for(int i=0; yMinUnit+i*yMajorUnit<=yRange;i++){
@@ -1536,7 +1518,6 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 				cbModifFormatY2(gridLabelY2, i, gridY2);
 			else
 				gridLabelY2 = VariableFormatY2(gridY2);
-			//int dx=scale*GetTextSize(gridLabelY,StdFont()).cx;
 			Font Standard6;
 			Standard6.Height(scale*StdFont().GetHeight());  
 			w.DrawText(l+scale*10,fround(-h*yMinUnit2/yRange2+h-i*h/(yRange/yMajorUnit))-scale*8,gridLabelY2,Standard6,axisColor);
@@ -1550,8 +1531,6 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 	}	
 	else Plot(w,scale,l,h);		
 
-	//w.DrawRect(0,h-int(axisWidth*scale/6),l,int(axisWidth*scale/6),axisColor);
-	//w.DrawRect(0,0,int(axisWidth*scale/6),h,axisColor);
 	w.End();
 }
 	
@@ -1563,7 +1542,7 @@ Scatter::Scatter():
 	xLabel(""),yLabel(""),
 	labelsFont(StdFont()),
 	labelsColor(Black),
-	plotAreaColor(Color::Color(245,245,248)),
+	plotAreaColor(::Color(245,245,248)),
 	axisColor(Black),
 	axisWidth(6),
 	px(30),
@@ -1577,7 +1556,7 @@ Scatter::Scatter():
 	xMinUnit(0.0), yMinUnit(0.0), yMinUnit2(0.0),
 	logX(false), logY(false), logY2(false),
 	cbModifFormatX(NULL),cbModifFormatY(NULL),cbModifFormatY2(NULL),
-	gridColor(Color::Color(102,102,102)),
+	gridColor(::Color(102,102,102)),
 	gridWidth(-4),
 	paintInfo(false),
 	mouseHandlingX(false), mouseHandlingY(false), isMidDown(false), isLeftDown(false),      

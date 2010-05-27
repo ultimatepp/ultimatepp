@@ -4,20 +4,12 @@
 // Scatter.cpp
 
 T_("Invalid series index!")
-caES("¡Sèrie amb índex incorrecte!")
-esES("¡Serie con índice incorrecto!")
+caES("\302\241S\303\250rie amb \303\255ndex incorrecte!")
+esES("\302\241Serie con \303\255ndice incorrecto!")
 
 T_("Invalid function index!")
-caES("¡Funció amb índex incorrecte!")
-esES("¡Función con índice incorrecto!")
+caES("\302\241Funci\303\263 amb \303\255ndex incorrecte!")
+esES("\302\241Funci\303\263n con \303\255ndice incorrecto!")
 
 
-// Obsolete
 
-T_("Invalid X major units!")
-caES("¡Eix X amb distància entre valors incorrecte!")
-esES("¡Eje X con distancia entre valores incorrecto!")
-
-T_("Invalid Y major units!")
-caES("¡Eix Y amb distància entre valors incorrecte!")
-esES("¡Eje Y con distancia entre valores incorrecto!")
