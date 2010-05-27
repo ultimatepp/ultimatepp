@@ -94,6 +94,7 @@ void Ctrl::TimerProc(dword time)
 		e->Unlink();
 		if(e->delay < 0)
 			sTimeCallback(time - e->delay, e->delay, e->cb, e->id);
+		eventid++;
 		sTimerLock.Leave();
 		e->cb();
 		sTimerLock.Enter();
