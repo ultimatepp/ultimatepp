@@ -21,7 +21,9 @@ Didier Quenouillere, Anthony Paul, Kovalev Sergey, Martin Schut,
 Ion Lupascu]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
-Luis Ramirez, Gabriel Schmotzer]&]
+Koldo Ramirez, Gabriel Schmotzer, Andrei Catalin, Massimo Del 
+Fedele, Jan Dolinár, Zsolt Debre, Anton Aleshkevich, Lionel 
+Orry, kasome, phirox, Didier.]&]
 [s0;i704;O9; PR `& SEO:-|[* Pavel_Stratil]&]
 [s0;i704;O9; U`+`+ Logo:[+117 -|][* Pavel Ostapenko], [* Robert_Vroemisse, 
 ]&]
