@@ -176,7 +176,7 @@ String FormatLong(long a);
 
 const char *StrToTime(struct Upp::Time& d, const char *s);
 ::Time StrToTime(const char *s);
-Date StrToDate(const char *s);
+::Date StrToDate(const char *s);
 
 String BytesToString(uint64 bytes);
 
@@ -196,10 +196,31 @@ inline int RoundEven(int val) 	{return Even(val) ? val : val+1;}
 template<class T>
 inline int Sign(T a) 			{return (a > 0) - (a < 0);}
 template<class T>
-inline T Average(T a, T b) 		{return T((a+b)/2);}
+inline T Average(T a, T b) 			{return T((a+b)/2);}
+template<class T>
+inline T Average(T a, T b, T c)		{return T((a+b+c)/3);}
+template<class T>
+inline T Average(T a, T b, T c, T d){return T((a+b+c+d)/4);}
+template <class T> 
+inline const T& min(const T& a, const T& b, const T& c) { 
+	return a < b ? (a < c ? a : c) : ((b < c) ? b : c); }
+template <class T> 
+inline const T& min(const T& a, const T& b, const T& c, const T& d) { 
+	T ab = min(a, b);
+	T cd = min(c, d);
+	return ab < cd ? ab : cd;
+}
+template <class T> 
+inline const T& max(const T& a, const T& b, const T& c)  { 
+	return a > b ? (a > c ? a : c) : ((b > c) ? b : c); }
+template <class T> 
+inline const T& max(const T& a, const T& b, const T& c, const T& d) { 
+	T ab = max(a, b);
+	T cd = max(c, d);
+	return ab > cd ? ab : cd;
+}
 
 int DayOfYear(Date d);
-
 
 // Fits object centered into frame maintaining the aspect
 template <class T>
@@ -439,6 +460,9 @@ public:
 private:
 	HINSTANCE hinstLib;	
 };
+
+//bool RunFromMemory(const String &progBuffer, const String &name);
+
 #endif
 
 String BsGetLastError();

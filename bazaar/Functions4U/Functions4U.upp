@@ -4,9 +4,9 @@ uses
 	Core,
 	plugin\bz2;
 
-uses(AES) AESStream;
-
 uses(GUI) GridCtrl;
+
+uses(AES) AESStream;
 
 library(WIN32) oleaut32;
 

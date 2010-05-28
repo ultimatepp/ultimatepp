@@ -66,6 +66,7 @@ Image NativePathIconX(const char *path, bool folder, int flags)
 	return drw;
 }
 
+
 Vector<Value> ReadCol(GridCtrl& grid, int col, int begin, int end) 
 {
 	if (begin < 0 || end >= grid.GetRowCount() || col < 0 || col >= grid.GetColumnCount())

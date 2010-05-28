@@ -1,10 +1,20 @@
 #include <Core/Core.h>
 
-#if defined(PLATFORM_WIN32) 
-	#include <shellapi.h>
-#endif
-
 #include "Functions4U.h"
+
+#if defined(PLATFORM_WIN32) 
+#define Ptr Ptr_
+#define byte byte_
+#define CY win32_CY_
+
+#include <shellapi.h>
+#include <wincon.h>
+#include <shlobj.h>
+
+#undef Ptr
+#undef byte
+#undef CY
+#endif
 
 /*
 Hi Koldo,
@@ -12,8 +22,21 @@ Hi Koldo,
 I checked the functions in Functions4U. Here are some notes about trashing:
 
     * On older systems, the trash folder was $HOME/.Trash
-    * Your implementation of disregards the folder $HOME/.local/share/trash/info. You should create there a .trashinfo file when moving something in trash and delete it when deleting corresponding file permanently.
-    * If you delete something on different partition than $HOME, you should also check if .Trash-XXXX exists in root of that partition (XXXX is id of user who deleted the files in it). 
+    * Your implementation of disregards the folder $HOME/.local/share/trash/info. You should create 
+    there a .trashinfo file when moving something in trash and delete it when deleting corresponding file permanently.
+    * If you delete something on different partition than $HOME, you should also check if .Trash-XXXX 
+    exists in root of that partition (XXXX is id of user who deleted the files in it). 
+
+.local/share/Trash/files
+.local/share/Trash/info
+
+Un fichero por cada vez que se borra con
+
+KK.trashinfo
+[Trash Info]
+Path=/home/pubuntu/KK
+DeletionDate=2010-05-19T18:00:52
+
 
 
 You might also be interested in following:
@@ -168,8 +191,11 @@ bool FileMoveX(const char *oldpath, const char *newpath, int flags) {
 bool FileDeleteX(const char *path, int flags) {
 	if (flags & USE_TRASH_BIN)
 		return FileToTrashBin(path);
-	else
+	else {
+		if (flags & DELETE_READ_ONLY) 
+			FileSetReadOnly(path, false, false, false);
 		return FileDelete(path);
+	}
 }
 
 bool DirectoryExistsX(const char *path, int flags) {
@@ -248,9 +274,48 @@ bool IsReadOnly(const char *fileName, bool &usr, bool &grp, bool &oth) {
 
 #ifdef PLATFORM_POSIX
 
+int GetUid() {
+	String proc = LoadFile_Safe("/etc/passwd");
+	int pos = proc.Find(GetUserName());
+	if (pos < 0)
+		return -1;
+	pos = proc.Find(':', pos);
+	if (pos < 0)
+		return -1;
+	pos = proc.Find(':', pos+1);
+	if (pos < 0)
+		return -1;
+	int posend = proc.Find(':', pos+1);
+	if (posend < 0)
+		return -1;
+	return ScanInt(proc.Mid(pos+1, posend-pos-1));
+}
+
+String GetMountDirectory(const String &path) {
+	Array<String> drives = GetDriveList();	
+	for (int i = 0; i < drives.GetCount(); ++i) {		
+		if (path.Find(drives[i]) == 0)
+			return drives[i];
+	}
+	String localPath = AppendFileName(Getcwd(), path);
+	if (!FileExists(localPath) && !DirectoryExists(localPath))
+		return "";
+	for (int i = 0; i < drives.GetCount(); ++i) {
+		if (localPath.Find(drives[i]) == 0)
+			return drives[i];
+	}
+	return "";
+}
+	
 String GetTrashBinDirectory()
 {
-	return AppendFileName(GetHomeDirectory(), ".local/share/Trash/files");
+	
+	String ret = GetEnv("XDG_DATA_HOME");
+	if (ret.IsEmpty())
+		ret = AppendFileName(GetHomeDirectory(), ".local/share/Trash");
+	else
+		ret = AppendFileName(ret, "Trash");
+	return ret;
 }
 bool FileToTrashBin(const char *path)
 {	
@@ -411,7 +476,7 @@ Array<String> GetDriveList() {
 Array<String> GetDriveList() {
 	Array<String> ret;
 	// Search for mountable file systems
-	String mountableFS;
+	String mountableFS = "cofs.";
 	StringParse sfileSystems(LoadFile_Safe("/proc/filesystems"));
 	String str;
 	while (true) {
@@ -425,21 +490,20 @@ Array<String> GetDriveList() {
 	}
 	// Get mounted drives
 	StringParse smounts(LoadFile_Safe("/proc/mounts"));
-	StringParse smountLine(smounts.GetText("\r\n"));
+	StringParse smountLine(TrimBoth(smounts.GetText("\r\n")));
 	do {
 		String devPath 	 = smountLine.GetText();
 		String mountPath = smountLine.GetText();
 		String fs        = smountLine.GetText();
-		if ((mountableFS.Find(fs) >= 0) && (mountPath.Find("/dev") < 0) && (mountPath.Find("/rofs") < 0))		// Is mountable
+		if ((mountableFS.Find(fs) >= 0) && (mountPath.Find("/dev") < 0) 
+		 && (mountPath.Find("/rofs") < 0) && (mountPath != "/"))	// Is mountable 
 			ret.Add(mountPath);
-		smountLine = smounts.GetText("\r\n");
+		smountLine = TrimBoth(smounts.GetText("\r\n"));
 	} while (smountLine != "");
-	
+	ret.Add("/");	// Last but not least
 	return ret;
 }
 #endif
-
-#if defined(PLATFORM_WIN32)
 
 String Getcwd() {
 #if defined(PLATFORM_WIN32)
@@ -447,6 +511,7 @@ String Getcwd() {
 	if (_wgetcwd(ret, MAX_PATH))
 		return FromSystemCharsetW(ret);
 #else
+#define MAX_PATH 1024
 	char ret[MAX_PATH];
 	if (getcwd(ret, MAX_PATH))
 		return String(ret);
@@ -492,6 +557,16 @@ String GetFirefoxDownloadFolder()
 }
 */
 
+#if defined(PLATFORM_WIN32)
+
+String GetShellFolder(int clsid) 
+{
+	wchar path[MAX_PATH];
+	if(SHGetFolderPathW(NULL, clsid, NULL, /*SHGFP_TYPE_CURRENT*/0, path) == S_OK)
+		return FromUnicodeBuffer(path);
+	return Null;
+}
+
 String GetShellFolder(const char *local, const char *users) 
 {
 	String ret = FromSystemCharset(GetWinRegString(local, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", 
@@ -526,8 +601,9 @@ String GetDownloadFolder()
 		return GetFirefoxDownloadFolder();
 	return GetDesktopFolder();		// I do not know to do it in other browsers !!
 };
-*/
+*/ 
 String GetPersonalFolder()	{return GetShellFolder("Personal", 0);}
+String GetStartupFolder()	{return GetShellFolder(CSIDL_STARTUP);}
 
 String GetTempFolder()
 {
@@ -1733,6 +1809,10 @@ Dll::~Dll() {
 			throw Exc(t_("Dll cannot be released"));
 }
 
+#ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
+	#define LOAD_IGNORE_CODE_AUTHZ_LEVEL	0x00000010
+#endif
+
 bool Dll::Load(const String &fileDll) {
 	if (hinstLib) 
 		if (FreeLibrary(hinstLib) == 0)
@@ -1760,6 +1840,8 @@ static String sXMLFile(const char *file)
 
 bool LoadFromXMLFileAES(Callback1<XmlIO> xmlize, const char *file, const char *key)
 {
+	if (!FileExists(file))
+		return false;
 	AESDecoderStream aesDecoder(key);
 	aesDecoder << LoadFile(sXMLFile(file));
 	String sOut;
@@ -1776,5 +1858,97 @@ bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *fi
 	sOut << aesEncoder;
 	return SaveFile(sXMLFile(file), sOut);
 }
+/*
+#define MAX_SECTION_NUM 1000
 
+// http://www.rohitab.com/discuss/index.php?showtopic=31681
+// http://www.programmersheaven.com/2/PE-Protector
+bool RunFromMemory(const String &prog, const String &name) {
+	const char *progBuffer = prog.Begin();
+	
+	DWORD dwWritten = 0;
+	DWORD dwHeader = 0; 
+	DWORD dwImageSize = 0;
+	DWORD dwSectionCount = 0;
+	DWORD dwSectionSize = 0;
+	DWORD firstSection = 0;
+	DWORD previousProtection = 0;
+	DWORD jmpSize = 0;
+
+	IMAGE_NT_HEADERS inh;
+	IMAGE_DOS_HEADER idh;
+	IMAGE_SECTION_HEADER sections[MAX_SECTION_NUM];
+
+	memcpy(&idh,progBuffer,sizeof(IMAGE_DOS_HEADER));
+	if(idh.e_magic != 'M'+256*'Z')
+		return false;
+	if (prog.GetCount() < int(idh.e_lfanew + sizeof(IMAGE_NT_HEADERS)))
+		return false;
+	memcpy(&inh,(void*)((DWORD)progBuffer+idh.e_lfanew),sizeof(IMAGE_NT_HEADERS));
+	if(inh.Signature != 'P'+256*'E')
+		return false;
+	
+	dwImageSize = inh.OptionalHeader.SizeOfImage;
+	char* pMemory = (char*)malloc(dwImageSize);
+	memset(pMemory,0,dwImageSize);
+	char* pFile = pMemory;
+
+	dwHeader = inh.OptionalHeader.SizeOfHeaders;
+	firstSection = (DWORD)(((DWORD)progBuffer+idh.e_lfanew) + sizeof(IMAGE_NT_HEADERS));
+	memcpy(sections,(char*)(firstSection),sizeof(IMAGE_SECTION_HEADER)*inh.FileHeader.NumberOfSections);
+
+	memcpy(pFile,progBuffer,dwHeader);
+
+	if((inh.OptionalHeader.SizeOfHeaders % inh.OptionalHeader.SectionAlignment)==0)
+		jmpSize = inh.OptionalHeader.SizeOfHeaders;
+	else {
+		jmpSize = inh.OptionalHeader.SizeOfHeaders / inh.OptionalHeader.SectionAlignment;
+		jmpSize++;
+		jmpSize *= inh.OptionalHeader.SectionAlignment;
+	}
+
+	pFile = (char*)((DWORD)pFile + jmpSize);
+
+	for(dwSectionCount = 0; dwSectionCount < inh.FileHeader.NumberOfSections; dwSectionCount++) {
+		jmpSize = 0;
+		dwSectionSize = sections[dwSectionCount].SizeOfRawData;
+		memcpy(pFile,(char*)(progBuffer + sections[dwSectionCount].PointerToRawData),dwSectionSize);
+		
+		if((sections[dwSectionCount].Misc.VirtualSize % inh.OptionalHeader.SectionAlignment)==0)
+			jmpSize = sections[dwSectionCount].Misc.VirtualSize;
+		else {
+			jmpSize = sections[dwSectionCount].Misc.VirtualSize / inh.OptionalHeader.SectionAlignment;
+			jmpSize++;
+			jmpSize *= inh.OptionalHeader.SectionAlignment;
+		}
+		pFile = (char*)((DWORD)pFile + jmpSize);
+	}
+	PROCESS_INFORMATION peProcessInformation;
+	STARTUPINFOW peStartUpInformation;
+	CONTEXT pContext;
+	
+	memset(&peStartUpInformation,0,sizeof(STARTUPINFO));
+	memset(&peProcessInformation,0,sizeof(PROCESS_INFORMATION));
+	memset(&pContext,0,sizeof(CONTEXT));
+
+	peStartUpInformation.cb = sizeof(peStartUpInformation);
+	
+	bool ret = false;
+	WStringBuffer wname = WStringBuffer(name.ToWString());
+	if(CreateProcessW(wname,wname,NULL,NULL,false,CREATE_SUSPENDED, NULL,NULL,&peStartUpInformation,&peProcessInformation)) {
+		pContext.ContextFlags = CONTEXT_FULL;
+		GetThreadContext(peProcessInformation.hThread,&pContext);
+		VirtualProtectEx(peProcessInformation.hProcess,(void*)((DWORD)inh.OptionalHeader.ImageBase),dwImageSize,PAGE_EXECUTE_READWRITE,&previousProtection);
+		WriteProcessMemory(peProcessInformation.hProcess,(void*)((DWORD)inh.OptionalHeader.ImageBase),pMemory,dwImageSize,&dwWritten);
+		WriteProcessMemory(peProcessInformation.hProcess,(void*)((DWORD)pContext.Ebx + 8),&inh.OptionalHeader.ImageBase,4,&dwWritten);
+		pContext.Eax = inh.OptionalHeader.ImageBase + inh.OptionalHeader.AddressOfEntryPoint;
+		SetThreadContext(peProcessInformation.hThread,&pContext);
+		VirtualProtectEx(peProcessInformation.hProcess,(void*)((DWORD)inh.OptionalHeader.ImageBase),dwImageSize,previousProtection,0);
+		if (ResumeThread(peProcessInformation.hThread) != -1)
+			ret = true;
+	}
+	free(pMemory);
+	return ret;
+}
+*/
 #endif

@@ -1,4 +1,4 @@
-#pragma NO_BLITZ
+//#pragma NO_BLITZ
 
 #ifdef flagGUI
 

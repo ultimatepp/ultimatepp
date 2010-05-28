@@ -33,6 +33,9 @@ esES("No es posible crear")
 T_("Not possible to delete")
 esES("No es posible borrar")
 
+T_("Dll cannot be released")
+esES("")
+
 
 // Functions4U_Gui.cpp
 

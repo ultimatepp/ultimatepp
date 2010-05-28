@@ -3,6 +3,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <GridCtrl/GridCtrl.h>
 #include <Functions4U/Functions4U.h>
+#include <Functions4U/Functions4U_Gui.h>
 
 //#include "Xmlize2.h"
 
