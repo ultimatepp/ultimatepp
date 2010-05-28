@@ -1,6 +1,6 @@
 #include <Core/Core.h>
-#include <SysInfo/SysInfo.h>
 
+#include <Functions4U/Functions4U.h>
 #include <OfficeAutomation/OfficeAutomation.h>
 
 using namespace Upp;
