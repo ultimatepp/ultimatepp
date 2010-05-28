@@ -79,7 +79,7 @@ lic][3 _][*@3;3 Ctrl]&]
 [s4; StaticEllipse shows an ellipse. All the ellipse, including border 
 width, is inside Ctrl limits.&]
 [s4; &]
-[s0;2 &]
+[s1; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
 [s6;%- &]
 [s5;:StaticEllipse`:`:StaticEllipse`(`):%- [* StaticEllipse]()&]

@@ -559,7 +559,7 @@ topic "StaticClock";
 [s0;2 &]
 [s4; StaticClock shows a clock.&]
 [s4; &]
-[s0;2 &]
+[s1; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
 [s6;%- &]
 [s5;:StaticClock`:`:StaticClock`(`):%- [* StaticClock]()&]

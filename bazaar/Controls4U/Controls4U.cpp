@@ -4,22 +4,79 @@ using namespace Upp;
 
 #include "Controls4U/Controls4U.h"
 
+#define TFILE <Controls4U/Controls4U.t>
+#include <Core/t.h>
+
 #define IMAGECLASS Controls4UImg
 #define IMAGEFILE <Controls4U/Controls4U.iml>
 #include <Draw/iml.h>
 
 void EditFileFolder::Init() {
-	EditString::AddFrame(ButBrowse);
-	ButBrowse.SetImage(CtrlImg::right_arrow());
-	ButBrowse <<= THISBACK(DoBrowse);
-	EditString::AddFrame(ButGo);
-	ButGo.SetImage(CtrlImg::SmallRight());
-	ButGo <<= THISBACK(DoGo);
+	//EditString::AddFrame(butLeft);
+	//EditString::AddFrame(butRight);
+	//EditString::AddFrame(butUp);
+	EditString::AddFrame(butBrowse);
+	butBrowse.SetImage(CtrlImg::right_arrow());
+	butBrowse <<= THISBACK(DoBrowse);
+	butLeft.SetImage(CtrlImg::SmallLeft());
+	butLeft <<= THISBACK(DoLeft);
+	butRight.SetImage(CtrlImg::SmallRight());
+	butRight <<= THISBACK(DoRight);
+	butUp.SetImage(CtrlImg::SmallUp());
+	butUp <<= THISBACK(DoUp);
+	EditString::AddFrame(butGo);
+	butGo.SetImage(CtrlImg::SmallRight()); 
+	butGo <<= THISBACK(DoGo); 
 	isFile = isLoad = true;
 	fs.Asking(!isLoad);
 }
 
+EditFileFolder &EditFileFolder::UseHistory(bool use) {
+	if (use) {
+		if (EditString::FindFrame(butLeft) == -1) {
+			EditString::InsertFrame(0, butRight);
+			EditString::InsertFrame(0, butLeft);
+		}
+	} else {
+		EditString::RemoveFrame(butLeft);
+		EditString::RemoveFrame(butRight);
+	}
+	return *this;
+}
+
+EditFileFolder &EditFileFolder::UseUp(bool use) {
+	if (use) {
+		if (EditString::FindFrame(butUp) == -1) {
+			int pos = EditString::FindFrame(butRight);
+			EditString::InsertFrame(pos+1, butUp);
+		}
+	} else 
+		EditString::RemoveFrame(butUp);
+	return *this;
+}
+
+EditFileFolder &EditFileFolder::UseBrowse(bool use) {
+	if (use) {
+		if (EditString::FindFrame(butBrowse) == -1) {
+			int pos = EditString::FindFrame(butUp);
+			if (pos == -1) 
+				pos = EditString::FindFrame(butRight);
+			EditString::InsertFrame(pos+1, butBrowse);
+		}
+	} else 
+		EditString::RemoveFrame(butBrowse);	
+	return *this;
+}
+
 void EditFileFolder::DoBrowse() {
+	String s = GetData();
+	//fs.Set(s);
+	if (DirectoryExists(s))
+		fs.dir <<= s;
+	else {
+		fs.PreSelect(GetFileName(s));
+		fs.dir <<= GetFileDirectory(s);
+	}
 	if (isFile && isLoad) {
 		if (fs.ExecuteOpen(title)) {
 			SetData(~fs);
@@ -38,9 +95,20 @@ void EditFileFolder::DoBrowse() {
 	}
 }
 
-void EditFileFolder::DoGo()
-{
+void EditFileFolder::DoGo() {
 	Set(GetData());			// Write Edit to FileSel
+	WhenChange();
+}
+
+void EditFileFolder::DoLeft() {
+}
+void EditFileFolder::DoRight() {
+}
+void EditFileFolder::DoUp() { 
+	String folder = GetData();
+	folder = GetUpperFolder(folder);
+	Set(folder);
+	SetData(folder);
 	WhenChange();
 }
 
@@ -51,6 +119,42 @@ bool EditFileFolder::Key(dword key, int rep) {
 	} else
 		return EditField::Key(key, rep);
 }
+
+EditFile::EditFile() {
+	isFile = true;		
+	title = t_("Select file");	
+	EditFileFolder();
+};
+
+EditFolder::EditFolder() {
+	isFile = false;	
+	title = t_("Select directory");	
+	EditFileFolder();
+};
+
+bool SetFirstChild(Ctrl *ctrl) {
+	if (Ctrl *p = ctrl->GetParent()) {
+		if (p->GetFirstChild() != ctrl) {
+			p->RemoveChild(ctrl);
+			p->AddChildBefore(ctrl, p->GetFirstChild());
+		}
+		return true;
+	} else
+		return false;
+}
+
+ void StaticImage::Layout() {
+   	if (useAsBackground) {
+  		Ctrl *q = GetFirstChild(); 
+		//if (StaticImage *c = dynamic_cast<StaticImage *>(q)) {
+		//	if (!c->useAsBackground) {
+				SetFirstChild((Ctrl *)this);
+				SizePos();
+		//	}
+		//}
+	}
+	Ctrl::Layout();
+} 
 
 void StaticImage::Paint(Draw& w) {
 	Size sz = GetSize();
@@ -81,15 +185,6 @@ void StaticImage::Paint(Draw& w) {
 	case NoScale:
 		w.DrawImage(0, 0, *imageView);
 		break;		
-	case Background:
-		{
-			Ctrl *p = GetParent();
-			if (p->GetFirstChild() != this) {
-				p->RemoveChild(this);
-				p->AddChildBefore(this, p->GetFirstChild());
-			}
-		}
-		SizePos();
 	case RepeatToFill:
 		for (int left = 0; left < sz.cx; left += imagesize.cx) 
 			for (int top = 0; top < sz.cy; top += imagesize.cy) 
@@ -142,6 +237,7 @@ StaticImage::StaticImage() {
 	background = Null;
 	angle = Angle_0;
 	fit = BestFit;
+	useAsBackground = false;
 }
 
 void StaticRectangle::Paint(Draw& w) {
@@ -202,7 +298,7 @@ StaticFrame::StaticFrame() {
 }
 
 void StaticLine::FramePaint(Draw& w, const Rect& rr) {
-	int off = (int)(0.25*max(rr.GetWidth(), rr.GetHeight()));
+	int off = int(0.25*max(rr.GetWidth(), rr.GetHeight()));
 	
 	ImageBuffer ib(rr.GetWidth()+2*off, rr.GetHeight()+2*off);
 	MyBufferPainter sw(ib);	
@@ -210,6 +306,8 @@ void StaticLine::FramePaint(Draw& w, const Rect& rr) {
 	r.Offset(off, off);
 
 	sw.Clear(RGBAZero());
+	sw.LineCap(LINECAP_BUTT);
+	
 	if (orientation == OrVert)
 		sw.DrawLine((r.right+r.left)/2, r.top, (r.right+r.left)/2, r.bottom, width, color);
 	else if (orientation == OrHor)
@@ -274,7 +372,7 @@ void PaintArrowEnd(Painter &sw, double x0, double y0, double x1, double y1, int 
 }
 
 void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
-	int off = (int)(0.25*max(rr.GetWidth(), rr.GetHeight()));
+	int off = int(0.25*max(rr.GetWidth(), rr.GetHeight()));
 	
 	ImageBuffer ib(rr.GetWidth()+2*off, rr.GetHeight()+2*off);
 	MyBufferPainter sw(ib);	
@@ -927,4 +1025,290 @@ Meter::Meter() {
 	speed = 1;
 	running = 0;
 	kill = 0;
+}
+
+struct DisplayNameIcon : Display {
+	Font fnt;
+
+	virtual Size GetStdSize(const Value& q) const {
+		ValueArray va = q;
+		String fileName = GetFileName(String(va[0]));
+		Size sz = GetTextSize(fileName, fnt);
+		sz.cx += 20;
+		sz.cy = max(sz.cy, 16);
+		return sz;
+	}
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const {
+		ValueArray va = q;
+		String fileName = GetFileName(String(va[0]));
+		Image icon = va[1];
+		w.DrawRect(r, paper);
+		w.DrawImage(r.left, r.top + (r.Height() - 16) / 2, IsNull(icon) ? Null : icon);
+		w.DrawText(r.left + 20, r.top + (r.Height() - Draw::GetStdFontCy()) / 2, fileName, fnt, ink);
+		if (GetTextSize(fileName, fnt).cx + 5 > (r.GetWidth() - (int)(0.8*EditString::GetStdHeight()))) {
+			Image rightIcon = CtrlImg::right_arrow();
+			w.DrawRect(r.right - 6, r.top, r.right, r.bottom, paper);			
+			w.DrawImage(r.right - 10, r.top + rightIcon.GetHeight()/2, rightIcon);	
+		}
+	}
+	DisplayNameIcon() { fnt = StdFont(); }
+};
+
+void FileBrowser::AddMyFolder(String folder, String &myFolders, TreeCtrl &folders, int id) {
+	if (!folder.IsEmpty())
+		if (myFolders.Find(folder + ";") < 0) {
+			folders.Add(id, NativePathIconX(folder, true, fileFlags), folder, GetFileName(folder), true);	
+			myFolders << folder << ";";		
+		}
+}
+
+FileBrowser::FileBrowser() {
+	pack.Horz(foldersRect, files); 
+	pack.SetPos(3000);
+	int height = folder.GetStdHeight();
+	foldersRect.Add(foldersLabel.HSizePos().TopPos(0, height));
+	foldersRect.Add(folders.HSizePos().VSizePos(height + 1));
+	
+	Add(folder.HSizePos().TopPos(0, height));
+	Add(pack.HSizePos().VSizePos(height + 1));
+//	label.array = &files;
+//	Add(label);		
+	
+	Transparent();
+	Background(Null);
+	pack.Transparent();
+	foldersRect.Transparent();
+	foldersRect.Background(Null);
+	
+	folder.UseBrowse(false).UseUp(true).UseHistory(true);
+	folder.WhenChange = THISBACK(FolderChanged);
+	foldersLabel.SetText(t_("Folders"));
+	
+	folders.NoRoot();
+	//folders.MultiSelect();
+	folders.WhenOpen 	   = THISBACK(OpenDir);
+	folders.WhenSel	 	   = THISBACK(FileSelectedTree);
+	//folders.WhenLeftClick  = THISBACK(FileSelectedTree);
+	folders.WhenClose 	   = THISBACK(CloseDir);
+	//folders.WhenCursor     = THISBACK(FileSelectedTree);
+	//folders.WhenLeftClick  = THISBACK(OpenFileTreeFolder);
+	Array<String> ds = GetDriveList();
+	String desktopFolder = GetDesktopFolder();	
+	if (!desktopFolder.IsEmpty())
+		folders.Add(0, NativePathIconX(desktopFolder, true, fileFlags), desktopFolder, 
+															GetFileName(desktopFolder), true);
+	int id = folders.Add(0, NativePathIconX(desktopFolder, true, fileFlags), 
+													t_("My Folders"), t_("My Folders"), true);
+	
+	String myFolders = desktopFolder + ";";
+	
+	AddMyFolder(GetPersonalFolder(), myFolders, folders, id);
+	AddMyFolder(GetMusicFolder(), myFolders, folders, id);
+	AddMyFolder(GetPicturesFolder(), myFolders, folders, id);
+	AddMyFolder(GetVideoFolder(), myFolders, folders, id);
+	AddMyFolder(GetDownloadFolder(), myFolders, folders, id);
+	AddMyFolder(GetAppDataFolder(), myFolders, folders, id);
+	AddMyFolder(GetTemplatesFolder(), myFolders, folders, id);
+	
+	for (int i = 0; i < ds.GetCount(); ++i) 
+		folders.Add(0, NativePathIconX(ds[i], true, fileFlags), ds[i], ds[i], true);	//+ " " + DriveSystem::Description(drive);
+	noDoOpen = true;
+	folders.Open(0);
+	//folders.SelectOne(0, true);
+
+	files.Reset();
+	files.AddColumn(t_("Name")).Add(3).Margin(2).Edit(textFileName)./*SetDisplay(Single<DisplayNameIcon>()).*/HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 0);
+	files.AddColumn(t_("Size")).HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 1);
+	files.AddColumn(t_("Date")).HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 2);
+	files.MultiSelect().HeaderObject().Absolute().Clipboard();
+	files.BackPaintHint();
+	files.AddIndex();
+	files.VertGrid(false).HorzGrid(false);
+	files.SetLineCy((int)(0.85*EditString::GetStdHeight()));
+	files.HeaderTab(0).SetRatio(10);
+	files.ColumnWidths("200 50 110");
+	files.EvenRowColor(Blend(SColorMark, SColorPaper, 240));
+//	files.SetLabel(&label);
+
+	//files.WhenCursor = THISBACK(FilesEnterRow);
+//	files.WhenDropInsert = 	THISBACK(DropInsertFilelist);
+//	files.WhenDrag = 		THISBACK(DragFilelist);
+//	files.WhenDrop = 		THISBACK(DropFilelist);
+	//files.WhenSel = 		THISBACK(FileSelectedFilesList);
+	files.WhenLeftDouble = THISBACK(OpenFileFilesList);
+	files.WhenEnterKey   = THISBACK(OpenFileFilesList);
+	foldersInFileList = true;
+	fileFlags = 0;
+}
+
+void FileBrowser::OpenDir(int id) {
+	if (noDoOpen) {
+		noDoOpen = false;
+		return;
+	}
+	folder.SetData(folders[id]);
+	forceOpenTree = true;
+	FolderChanged();
+	forceOpenTree = false;
+}
+	
+void FileBrowser::CloseDir(int id) { 
+	if (folders[id] != t_("File System") && folders[id] != t_("My Folders"))
+		folders.RemoveChildren(id);  
+}
+
+void FileBrowser::FileSelectedTree()  { 
+	folder.SetData(~folders);
+	FolderChanged();
+}
+
+void FileBrowser::OpenFileFilesList() {
+	if (files.GetCursor() < 0)
+		return;
+	ValueArray va = files.GetColumn(files.GetCursor(), 0);
+	String fileName = va[0];
+	if (IsSymLink(fileName)) {
+		String newPath = GetSymLinkPath(fileName);
+		if (!newPath.IsEmpty())
+			fileName = newPath;
+	}
+	if (FileExists(fileName)) {
+		if (!LaunchFile(fileName))
+			Exclamation(Format(t_("Sorry. It is not possible to open %s"), DeQtf(fileName)));
+	} else if (DirectoryExistsX(fileName, fileFlags)) {
+		folder.SetData(fileName);
+		FolderChanged();
+	}
+}
+
+void FileBrowser::ListFiles(String folderName, bool &thereIsAFolder) {
+	static DisplayNameIcon pd;
+	
+	files.Clear(); 
+	FileDataArray fileData(false, fileFlags);
+	fileData.Search(folderName, "*.*", false);
+	if (fileData.GetCount() == 0) {
+		int cy = files.GetLineCy();
+		Image img = Rescale(CtrlImg::information(), cy, cy);
+		files.Add(t_("No files or access not permitted"), "", "", img);		
+		files.SetDisplay(0, 0, pd);
+		return;
+	}
+	fileData.SortByName();
+	
+	thereIsAFolder = false;
+	for(int i = 0; i < fileData.GetCount(); i++) {
+		String fullFilename = fileData.FullFileName(i);
+		String fileName 	= fileData[i].fileName;
+		bool isFolder 		= fileData[i].isFolder;
+		
+		if (isFolder)
+			thereIsAFolder = true;
+		files.Add(fullFilename, isFolder ? 0 : fileData[i].length, fileData[i].t, 
+					NativePathIconX(fullFilename, DirectoryExistsX(fullFilename, fileFlags), fileFlags));
+		files.SetDisplay(files.GetCount() - 1, 0, pd);
+	}
+}
+
+bool HasSubfolders(String folder, int flags) {
+	FindFile ff(AppendFileName(folder, "*.*"));
+	while(ff) {
+		if (DirectoryExistsX(AppendFileName(folder, ff.GetName())))
+			return true;
+		ff.Next();
+	}
+	return false;
+}
+
+void FileBrowser::FolderChanged() {
+	int id;
+	
+	if (~folder == "" || ~folder == t_("My Folders")) {
+		id = folders.Find(~folder);
+		folders.Open(id, true);		
+		return;
+	}
+	String folderName = GetRealName(~folder);
+	if (folderName.IsEmpty()) {
+		Exclamation(Format(t_("Folder %s does not exist or is not available"), ~folder));
+		return;
+	}
+	if (folderName != ~folder)
+		folder.SetData(folderName);
+	
+	String folderNameAux = folderName;
+	
+	while ((id = folders.Find(folderNameAux)) == -1) {
+		String upper = GetUpperFolder(folderNameAux);
+		if (upper == folderNameAux)
+			return;
+		folderNameAux = upper;
+	}
+	bool thereIsAFolder;
+	ListFiles(folderName, thereIsAFolder);
+	
+	if (folderNameAux != folderName || !folders.IsOpen(id) || forceOpenTree) {
+		while (folderNameAux != folderName) {
+			String newFolderNameAux = GetNextFolder(folderNameAux, folderName);
+			noDoOpen = true;
+			folders.Open(id, true);
+				
+			FileDataArray fileData;
+			fileData.Search(folderNameAux, "*.*", false);
+			fileData.SortByName();
+			int newid = -1;
+			folders.RemoveChildren(id);  
+			for (int i = 0; i < fileData.GetCount(); ++i) {
+				String fullName = fileData.FullFileName(i);
+				int auxid = folders.Add(id, NativePathIconX(fullName, true, fileFlags), 
+									fullName, fileData[i].fileName, HasSubfolders(fullName, fileFlags));
+				if (fullName == newFolderNameAux)
+					newid = auxid;
+			}
+			if (newid == -1) {
+				Exclamation(Format(t_("Folder %s not found"), DeQtf(folderNameAux)));
+				return;
+			}
+			id = newid;
+			folderNameAux = newFolderNameAux;
+		}
+		FileDataArray fileData;
+		fileData.Search(folderName, "*.*", false);
+		fileData.SortByName();
+		folders.RemoveChildren(id);  
+		for (int i = 0; i < fileData.GetCount(); ++i) {
+			String fullName = fileData.FullFileName(i);
+			if (DirectoryExistsX(fullName, fileFlags)) 
+				folders.Add(id, NativePathIconX(fullName, true, fileFlags), fullName, 
+											fileData[i].fileName, HasSubfolders(fullName, fileFlags));
+		}
+		//noDoOpen = true;
+		folders.Open(id, true);
+	}
+	folders.SetCursor(id);
+}
+
+void FileBrowser::FilesEnterRow() {
+	int i = 1;
+}
+
+void FileBrowser::SortByColumn(int col) {
+	static bool order[] = {true, true, true};
+	
+	if (col < 0 || col > 2)
+		return;
+	
+	if (order[col]) 
+		files.Sort(col, StdValueCompare);
+	else
+		files.Sort(col, StdValueCompareDesc);
+	order[col] = !order[col];
+}
+
+String FileBrowser::GetFile() {
+	return "";
+}
+
+String FileBrowser::GetFolder() {
+	return "";
 }

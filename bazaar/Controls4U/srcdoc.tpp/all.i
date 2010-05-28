@@ -10,3 +10,7 @@ TOPIC("Controls4UDemo$en-us")
 #include "Controls4UDemo$en-us.tppi"
 END_TOPIC
 
+TOPIC("Credits$en-us")
+#include "Credits$en-us.tppi"
+END_TOPIC
+

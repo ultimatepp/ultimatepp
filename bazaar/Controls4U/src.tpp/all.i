@@ -22,6 +22,14 @@ TOPIC("EditFolder$en-us")
 #include "EditFolder$en-us.tppi"
 END_TOPIC
 
+TOPIC("FirefoxBrowser$en-us")
+#include "FirefoxBrowser$en-us.tppi"
+END_TOPIC
+
+TOPIC("IExplorerBrowser$en-us")
+#include "IExplorerBrowser$en-us.tppi"
+END_TOPIC
+
 TOPIC("Meter$en-us")
 #include "Meter$en-us.tppi"
 END_TOPIC
@@ -52,5 +60,9 @@ END_TOPIC
 
 TOPIC("StaticRectangle$en-us")
 #include "StaticRectangle$en-us.tppi"
+END_TOPIC
+
+TOPIC("VLCPlayer$en-us")
+#include "VLCPlayer$en-us.tppi"
 END_TOPIC
 

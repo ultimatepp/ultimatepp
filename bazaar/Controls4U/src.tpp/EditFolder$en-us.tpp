@@ -59,7 +59,7 @@ ditFileFolder]&]
 a folder. The options to setup the EditFolder are similar to 
 the used in the setup of a FileSel.&]
 [s3;~~~256; &]
-[s0;~~~256; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;~~~256; [* Constructor Detail]]}}&]
 [s3;~~~256;%- &]
 [s5;:EditFolder`:`:EditFolder`(`):~~~256;%- [* EditFolder]()&]

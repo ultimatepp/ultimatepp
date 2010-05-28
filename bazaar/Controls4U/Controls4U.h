@@ -3,7 +3,11 @@
 
 #include <Painter/Painter.h>
 #include "Functions4U/Functions4U.h"
+#if defined(PLATFORM_WIN32) 
+#include "Controls4U/ActiveX.h"
+#endif
 
+#ifndef flagNOPAINTER
 class MyBufferPainter : public BufferPainter {
 public:
 	MyBufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED) : BufferPainter(ib, mode) {};
@@ -61,12 +65,13 @@ public:
 		}
 	}
 };
+#endif
 
 class EditFileFolder : public EditString {
 typedef EditFileFolder CLASSNAME;
 protected:
-	FrameLeft<Button> ButBrowse;
-	FrameRight<Button> ButGo;
+	FrameLeft<Button> butBrowse, butLeft, butRight, butUp;
+	FrameRight<Button> butGo;
 	bool Key(dword key, int rep);
 	
 	FileSel fs;
@@ -76,47 +81,58 @@ protected:
 public:
 	EditFileFolder() 								{Init();};
 	void Init();
+	void DoLeft(), DoRight(), DoUp();
 	void DoBrowse();
 	void DoGo();
 	void Type(const char *name, const char *ext)	{fs.Type(name, ext);};
 	void AllFilesType()								{fs.AllFilesType();};
 	void ActiveDir(const String& d) 				{fs.ActiveDir(d);};
 	void MkDirOption(bool b)						{fs.MkDirOption(b);};
-	String Get() const                           	{return fs.Get();};	
+	String Get() const                           	{return GetData();};	
 	String operator~() const                     	{return Get();};
 	operator String() const                      	{return Get();}
 	void Set(const String& s)						{fs.Set(s); SetData(s);};
 	void operator<<=(const String& s)            	{Set(s);};
 	void operator=(const String& s)              	{Set(s);};
+	bool IsEmpty()									{return GetData().IsNull();};
 	EditFileFolder &NotNull(bool b)					{EditString::NotNull(b);  return *this;};
 	EditFileFolder &SelLoad(bool load) 				{isLoad = load; return *this;};
 	EditFileFolder &SetTitle(const char *_title)	{title = _title; return *this;};
+	EditFileFolder &UseHistory(bool use);
+	EditFileFolder &UseUp(bool use);
+	EditFileFolder &UseBrowse(bool use);
+	//void Xmlize(XmlIO xml);
 	
 	Callback WhenChange;
 };
 
 class EditFile : public EditFileFolder {
+typedef EditFile CLASSNAME;		
 public:
-	EditFile() {isFile = true;		EditFileFolder();};
+	EditFile();
 };
 
 class EditFolder : public EditFileFolder {
+typedef EditFolder CLASSNAME;		
 public:
-	EditFolder() {isFile = false;	EditFileFolder();};
+	EditFolder();
 };
 
 class StaticImage : public Ctrl {
+typedef StaticImage CLASSNAME;		
 public:
-	virtual void   Paint(Draw& draw);
-	
 	enum ImageAngle {Angle_0, Angle_90, Angle_180, Angle_270};
-	enum ImageFit   {BestFit, FillFrame, NoScale, RepeatToFill, Background};
+	enum ImageFit   {BestFit, FillFrame, NoScale, RepeatToFill};
 
 protected:
+	virtual void Paint(Draw& draw);
+	virtual void Layout();
+	
 	String fileName;
 	Image image, origImage;
 	Color background;
 	int angle, fit;
+	bool useAsBackground;
 
 public:
 	bool  Set(String fileName);
@@ -126,15 +142,22 @@ public:
 	void  operator=(Image image)       		{Set(image);}	
 
 	StaticImage& SetAngle(int _angle);
-	StaticImage& SetFit(int _fit)			{fit = _fit; Refresh(); return *this;}
-	StaticImage& SetBackground(Color c) 	{background = c; Refresh(); return *this;}
-
+	StaticImage& SetFit(int _fit)				{fit = _fit; 		  Refresh(); return *this;}
+	StaticImage& SetBackground(Color c) 		{background = c; 	  Refresh(); return *this;}
+	StaticImage& UseAsBackground(bool b = true)	{useAsBackground = b; Refresh(); return *this;}
 	StaticImage();
 };
 
+#ifndef flagNOPAINTER
+
 class StaticRectangle : public Ctrl {
+typedef StaticRectangle CLASSNAME;	
 public:
-	virtual void   Paint(Draw& draw);
+	virtual void Paint(Draw& draw);
+	virtual void MouseEnter(Point p, dword keyflags) {WhenMouseEnter(p, keyflags);};
+	virtual void MouseLeave() {	WhenMouseLeave();};
+	virtual void LeftDown(Point p, dword keyflags) {WhenLeftDown(p, keyflags);};
+	virtual void LeftUp(Point p, dword keyflags) {WhenLeftUp(p, keyflags);};
 	
 protected:
 	Color background;
@@ -145,11 +168,16 @@ public:
 	StaticRectangle& SetWidth(int w) 		{width = w; Refresh(); return *this;}
 	StaticRectangle& SetColor(Color c) 		{color = c; Refresh(); return *this;}
 	StaticRectangle& SetBackground(Color c) {background = c; Refresh(); return *this;}
-
+	Callback2<Point, dword> WhenMouseEnter; 
+	Callback WhenMouseLeave;
+	Callback2<Point, dword> WhenLeftDown; 
+	Callback2<Point, dword> WhenLeftUp; 
+	
 	StaticRectangle();
 };
 
 class StaticEllipse : public Ctrl {
+typedef StaticEllipse CLASSNAME;	
 public:
 	virtual void   Paint(Draw& draw);
 	
@@ -167,11 +195,13 @@ public:
 };
 
 class StaticFrame : public Ctrl {
+typedef StaticFrame CLASSNAME;	
 public:
 	StaticFrame();
 };
 
 class StaticLine : public Ctrl, public CtrlFrame {
+typedef StaticLine CLASSNAME;	
 public:
 	virtual void FrameAddSize(Size& sz) {}
 	virtual void FrameLayout(Rect& r) {}
@@ -195,6 +225,7 @@ public:
 };
 
 class StaticArrow : public Ctrl, public CtrlFrame  {
+typedef StaticArrow CLASSNAME;	
 public:
 	virtual void FrameAddSize(Size& sz) {}
 	virtual void FrameLayout(Rect& r) {}
@@ -222,6 +253,7 @@ public:
 };
 
 class StaticClock : public Ctrl {
+typedef StaticClock CLASSNAME;	
 public:
 	virtual void   Paint(Draw& draw);
 	
@@ -263,6 +295,7 @@ public:
 };
 
 class Meter : public Ctrl {
+typedef Meter CLASSNAME;		
 public:
 	virtual void   Paint(Draw& draw);
 	
@@ -316,12 +349,124 @@ public:
 	~Meter();
 };
 
-/*
+#endif
+
 class FileBrowser : public StaticRect {
+typedef FileBrowser CLASSNAME;	
+protected:
+	EditFolder folder;
+	
+	void OpenSelExt(bool forceOpen);
+	void OpenSel();	
+private:
+	struct TreeCtrlPlus : public TreeCtrl {
+		virtual bool Key(dword key, int count) {
+			if (key == K_F5) {
+				Ctrl *q = Ctrl::GetParent()->GetParent()->GetParent();
+				FileBrowser *f = dynamic_cast<FileBrowser *>(q);
+				f->folder.DoGo();
+				return true;
+			} else if (key == K_ENTER) {
+				Vector<int> sel = GetSel();
+				if (sel.GetCount() > 0) 
+					Open(sel[0], true);
+				return true;
+			} else
+				return TreeCtrl::Key(key, count);
+		}
+	};
+	struct ArrayCtrlExternDrop : public ArrayCtrl {
+		virtual bool Key(dword key, int count) {
+			if (key == K_DELETE) {
+				if (GetSelectCount() > 1) {
+					if(PromptYesNo(Format(t_("Do you want to send the %d files to the trash bin?"), 
+								GetSelectCount()))) {
+						for (int i = 0; i < GetCount(); ++i) {			
+							if (IsSelected(i)) {
+								ValueArray va = GetColumn(i, 0);
+								String fileName = va[0];
+								bool isFolder = DirectoryExists(fileName);
+							    if (!FileToTrashBin(fileName))
+									Exclamation(Format(t_("%s \"%s\" cannot be sent to the trash bin"), 
+										isFolder ? t_("Folder") : t_("File"), DeQtf(fileName)));
+							}
+						}
+					}
+				} else {
+					ValueArray va = GetColumn(GetCursor(), 0);
+					String fileName = va[0];
+					bool isFolder = DirectoryExists(fileName);
+					if(PromptYesNo(Format(t_("Do you want to send %s \"%s\" to the trash bin?"), 
+								isFolder ? t_("folder") : t_("file"), DeQtf(fileName))))
+						if (!FileToTrashBin(fileName))
+							Exclamation(Format(t_("%s \"%s\" cannot be sent to the trash bin"), 
+								isFolder ? t_("Folder") : t_("File"), DeQtf(fileName)));
+				}
+				Ctrl *q = GetParent()->GetParent();
+				FileBrowser *f = dynamic_cast<FileBrowser *>(q);
+				f->folder.DoGo();
+				return true;
+			} else if (key == K_F5) {
+				Ctrl *q = GetParent()->GetParent();
+				FileBrowser *f = dynamic_cast<FileBrowser *>(q);
+				f->folder.DoGo();
+				return true;
+			} else
+				return ArrayCtrl::Key(key, count);
+		}
+		virtual void DragAndDrop(Point p, PasteClip& d) {
+			Vector<String> files;
+			
+			if (AcceptFiles(d)) {
+				files = GetFiles(d);
+				Refresh();
+				PromptOK(DeQtf(files[0]));
+			} else
+				ArrayCtrl::DragAndDrop(p, d);
+		}
+		typedef ArrayCtrlExternDrop CLASSNAME;
+	};
+	friend struct ArrayCtrlExternDrop;
+private:
+	EditString textFileName;
+	Splitter pack;
+	StaticRect foldersRect;
+	Label foldersLabel;
+	TreeCtrlPlus folders;
+	ArrayCtrlExternDrop files;
+	bool browseFiles;
+	bool noDoOpen;
+	bool forceOpenTree;
+	int fileFlags;
+	
+	void SortByColumn(int col);
+	
+	void OpenDir(int id); 
+	void CloseDir(int id); 
+	void FileSelectedTree(); 
+	void FileSelected(String &fileName);
+	void OpenFileFilesList();
+	void FolderChanged();
+	void FilesEnterRow();
+	
+	void ListFiles(String folderName, bool &thereIsAFolder);
+	void AddMyFolder(String folder, String &myFolders, TreeCtrl &folders, int id);
+	
 public: 
- 	bool  SetBrowseFiles(bool files);
+	FileBrowser();
+	
+	FileBrowser &SetBrowseFiles(bool b);
+ 	String GetFile();
+ 	String GetFolder();
+ 	String operator~()    {return GetFile();}
+	void SetFlags(int flags) {fileFlags = flags;};
+	int GetFlags() {return fileFlags;}; 	
+ 	
+////////////////////////
+	// Parameters
+	
+	bool foldersInFileList; 	
  	
 };
-*/
 
 #endif

@@ -109,6 +109,9 @@ ctrl EditFile {
 	bool  SelLoad = false @2;
 	Font  SetFont = StdFont() @3;
 	bool  SetEditable = true @4 ? "Editable";
+	bool  UseUp = false;
+	bool  UseBrowse = true;
+	bool  UseHistory = false;
 	Frame SetFrame = InsetFrame() @5;
 	Text  Tip @6;
 	bool  WantFocus = true @7;
@@ -119,11 +122,28 @@ ctrl EditFile {
 		DrawCtrlFrame(w, r, .SetFrame);
 		w.DrawRect(r, :SWhite);
 		n = r.bottom - r.top;
-		DrawEdgeButton(w, RectC(r.left, r.top, n, n));
-		w.DrawImage((n - 7) / 2 + r.left, (n - 6) / 2 + r.top, "ClassicCtrlsImg::RA");
+		leftPos = r.left;
+		if (.UseHistory) {
+			DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
+			w.DrawImage((n - 7) / 2 + leftPos, (n - 8) / 2 + r.top, "CtrlImg::SmallLeft");	
+			leftPos += n;
+			DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
+			w.DrawImage((n - 7) / 2 + leftPos, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");	
+			leftPos += n;
+		}
+		if (.UseUp) {
+			DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
+			w.DrawImage((n - 8) / 2 + leftPos, (n - 6) / 2 + r.top, "CtrlImg::SmallUp");	
+			leftPos += n;
+		}
+		if (.UseBrowse) {
+			DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
+			w.DrawImage((n - 7) / 2 + leftPos, (n - 6) / 2 + r.top, "ClassicCtrlsImg::RA");
+			leftPos += n;
+		}
 		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
 		w.DrawImage((n - 7) / 2 + r.right - n, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");
-		w.DrawText(n + 3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
+		w.DrawText(leftPos + 3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
 			(.SetEditable ? "" : "R/O ")+ (.NotNull ? "!" : "") + TextToShow(), Arial(10), :SMagenta);
 	}
 	TextToShow() {
@@ -143,8 +163,7 @@ enum_property ImageFit {
 	"0" : "BestFit",
 	"1" : "FillFrame",
 	"2" : "NoScale",
-	"3" : "RepeatToFill",
-	"4" : "Background"
+	"3" : "RepeatToFill"
 };
 
 enum_property ImageAngle {
@@ -163,7 +182,8 @@ ctrl StaticImage {
 	Frame      SetFrame @1;
 	ImageFit   SetFit;
 	ImageAngle SetAngle;
-	Color      SetBackground = :SWhite;
+	Color      SetBackground;
+	bool 	   UseAsBackground = false;
 
 	Paint(w) {
 		r = GetRect();
@@ -201,14 +221,14 @@ ctrl StaticImage {
 			w.DrawImage(r.left, r.top, sz.cx, sz.cy, img);
 		} else if (.SetFit == "2") {
 			w.DrawImage(r.left, r.top, img);
-		} else if (.SetFit == "3" || .SetFit == "4") {
+		} else if (.SetFit == "3") {
 			imagesize = GetImageSize(img);
 			top = r.top;
 			for (left = r.left; left < r.right; left += imagesize.cx) 
 				for (top = r.top; top < r.bottom; top += imagesize.cy) 
 					w.DrawImage(left, top, img);
 		}
-		if (.SetFit == "4") { 
+		if (.UseAsBackground) { 
 			PaintCenterText(w, (r.right+r.left)/2,   (r.top+r.bottom)/2,   "Background", Arial(11), :SBlack);
 			PaintCenterText(w, 1+(r.right+r.left)/2, 1+(r.top+r.bottom)/2, "Background", Arial(11), :SWhite);
 		}
@@ -843,7 +863,6 @@ ctrl Meter {
 	}
 }
 
-/*
 
 ctrl FileBrowser {
 	group "Complex";
@@ -872,6 +891,78 @@ ctrl FileBrowser {
 		DrawCtrlFrame(w, outer, .SetFrame);
 	}
 }
+
+
+ctrl FirefoxBrowser {
+	group "Complex";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame      SetFrame @1;
+
+	Paint(w) {
+		r = GetRect();
+
+		DrawCtrlFrame(w, r, .SetFrame);
+
+		sz = Size(r.right - r.left, r.bottom - r.top);
+
+		DeflateRect(r);
+		sz = Size(r.right - r.left, r.bottom - r.top);
+		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SWhite);
+		img = "Controls4U:Controls4U.iml:Icon_Firefox";
+		w.DrawImage(r.left, r.top, img);
+	}
+}
+
+ctrl IExplorerBrowser {
+	group "Complex";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame      SetFrame @1;
+
+	Paint(w) {
+		r = GetRect();
+
+		DrawCtrlFrame(w, r, .SetFrame);
+
+		sz = Size(r.right - r.left, r.bottom - r.top);
+
+		DeflateRect(r);
+		sz = Size(r.right - r.left, r.bottom - r.top);
+		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SWhite);
+		img = "Controls4U:Controls4U.iml:Icon_IExplorer";
+		w.DrawImage(r.left, r.top, img);
+	}
+}
+
+ctrl VLCPlayer {
+	group "Complex";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(64, 24); }
+
+	Frame      SetFrame @1;
+
+	Paint(w) {
+		r = GetRect();
+
+		DrawCtrlFrame(w, r, .SetFrame);
+
+		sz = Size(r.right - r.left, r.bottom - r.top);
+
+		DeflateRect(r);
+		sz = Size(r.right - r.left, r.bottom - r.top);
+		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SWhite);
+		img = "Controls4U:Controls4U.iml:Icon_VLC";
+		w.DrawImage(r.left, r.top, img);
+	}
+}
+
+/*
 
 enum_property HandleType {
 	"Simple", 

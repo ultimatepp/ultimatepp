@@ -3646,7 +3646,7 @@ topic "StaticImage";
 [s3; StaticImage is a field to visualize an image inside Ctrl frame 
 or filling window background.&]
 [s3; &]
-[s0;2 &]
+[s4; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
 [s6;%- &]
 [s5;:StaticImage`:`:StaticImage`(`):%- [* StaticImage]()&]

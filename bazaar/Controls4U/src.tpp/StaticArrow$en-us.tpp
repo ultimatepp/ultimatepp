@@ -134,7 +134,7 @@ topic "StaticArrow";
 [s0;2 &]
 [s4; StaticArrow shows an arrow.&]
 [s4; &]
-[s0;2 &]
+[s1; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
 [s6;%- &]
 [s5;:StaticArrow`:`:StaticArrow`(`):%- [* StaticArrow]()&]

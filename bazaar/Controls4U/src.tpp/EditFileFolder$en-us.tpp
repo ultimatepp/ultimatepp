@@ -55,7 +55,7 @@ ublic][3 _][*@3;3 EditString]&]
 used indirectly through subclasses [^topic`:`/`/Controls4U`/src`/EditFile`$en`-us^ E
 ditFile] and [^topic`:`/`/Controls4U`/src`/EditFolder`$en`-us^ EditFolder].&]
 [s3; &]
-[s0; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
 [s3;%- &]
 [s5;:EditFileFolder`:`:EditFileFolder`(`):%- [* EditFileFolder]()&]

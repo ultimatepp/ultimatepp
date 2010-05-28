@@ -2,20 +2,27 @@ description "Some additional controls\377B255,170,0";
 
 uses
 	CtrlLib,
-	Functions4U,
-	Painter;
+	Functions4U;
+
+uses(!NOPAINTER) Painter;
 
 file
 	Controls4U.cpp,
 	Controls4U.h,
 	Controls4U.usc,
 	Controls4U.iml,
-	srcimp.tpp,
+	Controls4U.t,
 	srcdoc.tpp,
 	src.tpp,
-	License.txt,
-	Credits.txt;
-
-mainconfig
-	"" = "GUI MT";
+	ActiveX readonly separator,
+	ActiveX.cpp,
+	ActiveX_base.h,
+	ActiveX.h,
+	IExplorerBrowser.cpp,
+	FirefoxBrowser.cpp,
+	VLCPlayer.cpp,
+	vlc readonly separator,
+	plugin\vlc\axvlc_idl.c,
+	plugin\vlc\axvlc_idl.h,
+	License.txt;
 

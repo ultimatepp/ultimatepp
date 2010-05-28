@@ -853,5 +853,8 @@ package does a visual review of classes and features.&]
 [s0; There is also a [^topic`:`/`/Controls4U`/srcdoc`/ChangesLog`$en`-us^ News 
 and changes log.]&]
 [s0; &]
+[s0; In [^topic`:`/`/Controls4U`/srcdoc`/Credits`$en`-us^ credits page] 
+are included all the acknowledges.&]
+[s0; &]
 [s0; To improve visual quality Painter library has been used.&]
 [s0; ]
