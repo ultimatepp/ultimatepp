@@ -2,17 +2,10 @@ description "Gui demo of SysInfo package\377";
 
 uses
 	CtrlLib,
-	plugin\jpg,
-	plugin\jpg,
-	plugin\gif,
-	plugin\gif,
-	Web,
 	plugin\png,
 	plugin\bmp,
 	SysInfo,
 	RichText;
-
-library(WIN32) psapi;
 
 file
 	main.cpp,

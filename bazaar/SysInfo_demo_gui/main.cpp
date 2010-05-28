@@ -10,7 +10,7 @@
 
 using namespace Upp;
 
-GUI_APP_MAIN {
+GUI_APP_MAIN { 
 	SysInfoDemo program;
 	
 	SetLanguage(LNGC_('E','N','U','S', CHARSET_UTF8));
@@ -19,18 +19,18 @@ GUI_APP_MAIN {
 }
 
 void SpecialFolders::Fill() {
-	TextDesktop.SetText(GetDesktopFolder());
-	TextPrograms.SetText(GetProgramsFolder()); 
-	TextApplication.SetText(GetAppDataFolder());
-	TextMusic.SetText(GetMusicFolder());
-	TextPictures.SetText(GetPicturesFolder());
-	TextVideo.SetText(GetVideoFolder());
-	TextPersonal.SetText(GetPersonalFolder());
-	TextTemplates.SetText(GetTemplatesFolder());
-	TextDownload.SetText(GetDownloadFolder());
-	TextTemp.SetText(GetTempFolder());
-	TextOs.SetText(GetOsFolder());
-	TextSystem.SetText(GetSystemFolder());
+	TextDesktop = GetDesktopFolder();
+	TextPrograms = GetProgramsFolder(); 
+	TextApplication = GetAppDataFolder();
+	TextMusic = GetMusicFolder();
+	TextPictures = GetPicturesFolder();
+	TextVideo = GetVideoFolder();
+	TextPersonal = GetPersonalFolder();
+	TextTemplates = GetTemplatesFolder();
+	TextDownload = GetDownloadFolder();
+	TextTemp = GetTempFolder();
+	TextOs = GetOsFolder();
+	TextSystem = GetSystemFolder();
 	
 	DefaultExes.Reset();	
 	DefaultExes.AddColumn("Extension", 5);
@@ -68,57 +68,59 @@ void SpecialFolders::ButInstalledSoftware_Push() {
 }
 
 void SystemInfo::Fill() {
-	String manufacturer, productName, version;
+	String manufacturer, productName, version, mbSerial;
 	Date releaseDate;
 	int numberOfProcessors;
-	GetSystemInfo(manufacturer, productName, version, numberOfProcessors);
+	GetSystemInfo(manufacturer, productName, version, numberOfProcessors, mbSerial);
 	
-	TextManufacturer.SetText(manufacturer);
-	TextProductName.SetText(productName);
-	TextVersion.SetText(version);
-	TextNumber.SetText(AsString(numberOfProcessors));
-	TextSpeed.SetText(Format("%.3f GHz", GetCpuSpeed()/1000.));
+	TextManufacturer = manufacturer;
+	TextProductName = productName;
+	TextVersion = version;
+	TextNumber = FormatInt(numberOfProcessors);
+	TextSpeed = Format("%.3f GHz", GetCpuSpeed()/1000.);
+	TextMotherboardSerial = mbSerial;
 
- 	String biosVersion;
+ 	String biosVersion, biosSerial;
  	Date biosReleaseDate;
-	GetBiosInfo(biosVersion, biosReleaseDate);
-	TextBiosVersion.SetText(biosVersion);
-	TextBiosRelease.SetText(AsString(biosReleaseDate));
+	GetBiosInfo(biosVersion, biosReleaseDate, biosSerial);
+	TextBiosVersion = biosVersion;
+	TextBiosRelease = AsString(biosReleaseDate);
+	TextBiosSerial = biosSerial;
 	
 	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
 	if (GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion)) {
-		TextKernel.SetText(kernel);
-		TextKerVersion.SetText(kerVersion);
-		TextKerArchitecture.SetText(kerArchitecture);
-		TextDistro.SetText(distro);
-		TextDistVersion.SetText(distVersion);
-		TextDesktop.SetText(desktop);
-		TextDeskVersion.SetText(deskVersion);
+		TextKernel = kernel;
+		TextKerVersion = kerVersion;
+		TextKerArchitecture = kerArchitecture;
+		TextDistro = distro;
+		TextDistVersion = distVersion;
+		TextDesktop = desktop;
+		TextDeskVersion = deskVersion;
 	}
 
 	int memoryLoad;
 	uint64 totalPhys, freePhys, totalPageFile, freePageFile, totalVirtual, freeVirtual;
 	if (GetMemoryInfo(memoryLoad, totalPhys, freePhys, totalPageFile, freePageFile, totalVirtual, freeVirtual)) {
-		TextMemPercentage.SetText(FormatInt(memoryLoad));
-		TextMemTotPhysicalbytes.SetText(Format64(totalPhys));
-		TextMemTotPhysical.SetText(BytesToString(totalPhys));
-		TextMemFreePhysicalbytes.SetText(Format64(freePhys));
-		TextMemFreePhysical.SetText(BytesToString(freePhys));			
-		TextMemTotPagingbytes.SetText(Format64(totalPageFile));
-		TextMemTotPaging.SetText(BytesToString(totalPageFile));
-		TextMemFreePagingbytes.SetText(Format64(freePageFile));
-		TextMemFreePaging.SetText(BytesToString(freePageFile));
-		TextMemTotVirtualbytes.SetText(Format64(totalVirtual));
-		TextMemTotVirtual.SetText(BytesToString(totalVirtual));
-		TextMemFreeVirtualbytes.SetText(Format64(freeVirtual));
-		TextMemFreeVirtual.SetText(BytesToString(freeVirtual));
+		TextMemPercentage = FormatInt(memoryLoad);
+		TextMemTotPhysicalbytes = Format64(totalPhys);
+		TextMemTotPhysical = BytesToString(totalPhys);
+		TextMemFreePhysicalbytes = Format64(freePhys);
+		TextMemFreePhysical = BytesToString(freePhys);			
+		TextMemTotPagingbytes = Format64(totalPageFile);
+		TextMemTotPaging = BytesToString(totalPageFile);
+		TextMemFreePagingbytes = Format64(freePageFile);
+		TextMemFreePaging = BytesToString(freePageFile);
+		TextMemTotVirtualbytes = Format64(totalVirtual);
+		TextMemTotVirtual = BytesToString(totalVirtual);
+		TextMemFreeVirtualbytes = Format64(freeVirtual);
+		TextMemFreeVirtual = BytesToString(freeVirtual);
 	}
 	String compiler, date;
 	int compilerVersion;
 	GetCompilerInfo(compiler, compilerVersion, date);
-	TextCompiler.SetText(compiler);
-	TextCompilerVersion.SetText(FormatInt(compilerVersion));
-	TextCompilationDate.SetText(date);	
+	TextCompiler = compiler;
+	TextCompilerVersion = FormatInt(compilerVersion);
+	TextCompilationDate = date;	
 	
 	Processors.Reset();
 	Processors.AddColumn("Processor", 6);

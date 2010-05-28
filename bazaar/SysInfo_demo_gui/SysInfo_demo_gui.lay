@@ -31,10 +31,10 @@ LAYOUT(SpecialFolders, 672, 436)
 END_LAYOUT
 
 LAYOUT(SystemInfo, 744, 520)
-	ITEM(Label, dv___0, SetLabel(t_("Bios release")).LeftPosZ(204, 88).TopPosZ(16, 16))
+	ITEM(Label, dv___0, SetLabel(t_("MotherBoard serial")).LeftPosZ(372, 96).TopPosZ(32, 16))
 	ITEM(Label, dv___1, SetLabel(t_("Drives")).SetFrame(ThinOutsetFrame()).HSizePosZ(0, 4).TopPosZ(412, 16))
 	ITEM(Label, TextSpeed, SetFrame(ThinInsetFrame()).LeftPosZ(292, 116).TopPosZ(52, 16))
-	ITEM(Label, TextBiosRelease, SetFrame(ThinInsetFrame()).LeftPosZ(292, 80).TopPosZ(16, 16))
+	ITEM(Label, TextMotherboardSerial, SetFrame(ThinInsetFrame()).LeftPosZ(468, 188).TopPosZ(32, 16))
 	ITEM(Label, TextManufacturer, SetFrame(ThinInsetFrame()).LeftPosZ(88, 116).TopPosZ(0, 16))
 	ITEM(Label, TextProductName, SetFrame(ThinInsetFrame()).LeftPosZ(88, 116).TopPosZ(16, 16))
 	ITEM(Label, dv___6, SetLabel(t_("Bios version")).LeftPosZ(204, 88).TopPosZ(0, 16))
@@ -99,6 +99,10 @@ LAYOUT(SystemInfo, 744, 520)
 	ITEM(Label, dv___65, SetLabel(t_("Processors")).SetFrame(ThinOutsetFrame()).HSizePosZ(0, 4).TopPosZ(196, 16))
 	ITEM(ArrayCtrl, Processors, HSizePosZ(0, 4).TopPosZ(212, 120))
 	ITEM(Button, ButUpdate, SetLabel(t_("Update")).LeftPosZ(4, 88).BottomPosZ(5, 23))
+	ITEM(Label, dv___68, SetLabel(t_("Bios serial")).LeftPosZ(204, 88).TopPosZ(32, 16))
+	ITEM(Label, TextBiosSerial, SetFrame(ThinInsetFrame()).LeftPosZ(292, 80).TopPosZ(32, 16))
+	ITEM(Label, dv___70, SetLabel(t_("Bios release")).LeftPosZ(204, 88).TopPosZ(16, 16))
+	ITEM(Label, TextBiosRelease, SetFrame(ThinInsetFrame()).LeftPosZ(292, 80).TopPosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(ScreenGrabTab, 468, 204)
