@@ -40,7 +40,7 @@ extern "C"{
 #define MIDL_DEFINE_GUID(type,name,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) \
         DEFINE_GUID(name,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8)
 
-#else // !_MIDL_USE_GUIDDEF_
+#else
 
 #ifndef __IID_DEFINED__
 #define __IID_DEFINED__
@@ -53,17 +53,17 @@ typedef struct _IID
     unsigned char  c[8];
 } IID;
 
-#endif // __IID_DEFINED__
+#endif
 
 #ifndef CLSID_DEFINED
 #define CLSID_DEFINED
 typedef IID CLSID;
-#endif // CLSID_DEFINED
+#endif
 
 #define MIDL_DEFINE_GUID(type,name,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8) \
         const type name = {l,w1,w2,{b1,b2,b3,b4,b5,b6,b7,b8}}
 
-#endif !_MIDL_USE_GUIDDEF_
+#endif
 
 MIDL_DEFINE_GUID(IID, LIBID_AXVLC,0xDF2BBE39,0x40A8,0x433b,0xA2,0x79,0x07,0x3F,0x48,0xDA,0x94,0xB6);
 
