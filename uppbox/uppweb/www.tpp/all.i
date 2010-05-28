@@ -154,6 +154,10 @@ TOPIC("idess$ru-ru")
 #include "idess$ru-ru.tppi"
 END_TOPIC
 
+TOPIC("idess$zh-tw")
+#include "idess$zh-tw.tppi"
+END_TOPIC
+
 TOPIC("index$ca-es")
 #include "index$ca-es.tppi"
 END_TOPIC
@@ -180,6 +184,10 @@ END_TOPIC
 
 TOPIC("index$ru-ru")
 #include "index$ru-ru.tppi"
+END_TOPIC
+
+TOPIC("index$zh-tw")
+#include "index$zh-tw.tppi"
 END_TOPIC
 
 TOPIC("overview$cs-cz")
@@ -218,6 +226,10 @@ TOPIC("reference$ru-ru")
 #include "reference$ru-ru.tppi"
 END_TOPIC
 
+TOPIC("reference$zh-tw")
+#include "reference$zh-tw.tppi"
+END_TOPIC
+
 TOPIC("Roadmap$en-us")
 #include "Roadmap$en-us.tppi"
 END_TOPIC
@@ -232,6 +244,10 @@ END_TOPIC
 
 TOPIC("ss$ru-ru")
 #include "ss$ru-ru.tppi"
+END_TOPIC
+
+TOPIC("ss$zh-tw")
+#include "ss$zh-tw.tppi"
 END_TOPIC
 
 TOPIC("svnInstall$en-us")
@@ -262,11 +278,23 @@ TOPIC("vsstd2$en-us")
 #include "vsstd2$en-us.tppi"
 END_TOPIC
 
+TOPIC("vsstd2$zh-tw")
+#include "vsstd2$zh-tw.tppi"
+END_TOPIC
+
 TOPIC("vsswing$en-us")
 #include "vsswing$en-us.tppi"
 END_TOPIC
 
+TOPIC("vsswing$zh-tw")
+#include "vsswing$zh-tw.tppi"
+END_TOPIC
+
 TOPIC("vswx$en-us")
 #include "vswx$en-us.tppi"
+END_TOPIC
+
+TOPIC("vswx$zh-tw")
+#include "vswx$zh-tw.tppi"
 END_TOPIC
 

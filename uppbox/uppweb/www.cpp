@@ -705,6 +705,7 @@ GUI_APP_MAIN
 	languages.Add(LNG_('F','R','F','R'));
 	languages.Add(LNG_('R','O','R','O'));
 	languages.Add(LNG_('R','U','R','U'));
+	languages.Add(LNG_('Z','H','T','W'));
 	
 	RLOG("--- uppweb started at " << GetSysTime());
 
