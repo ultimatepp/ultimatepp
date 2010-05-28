@@ -23,7 +23,7 @@ Ion Lupascu]&]
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Koldo Ramirez, Gabriel Schmotzer, Andrei Catalin, Massimo Del 
 Fedele, Jan Dolinár, Zsolt Debre, Anton Aleshkevich, Lionel 
-Orry, kasome, phirox, Didier.]&]
+Orry,  黃俊達 (Kasome), phirox, Didier.]&]
 [s0;i704;O9; PR `& SEO:-|[* Pavel_Stratil]&]
 [s0;i704;O9; U`+`+ Logo:[+117 -|][* Pavel Ostapenko], [* Robert_Vroemisse, 
 ]&]
