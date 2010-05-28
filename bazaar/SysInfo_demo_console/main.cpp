@@ -36,11 +36,12 @@ void Test()
 	Puts(Format("System:           %s", GetSystemFolder()));
 	
 	Puts("\nSystem info:");		
-	String manufacturer, productName, version;
+	String manufacturer, productName, version, mbSerial;
 	Date releaseDate;
 	int numberOfProcessors;
-	GetSystemInfo(manufacturer, productName, version, numberOfProcessors);
-	Puts(Format("System manufacturer '%s', product name '%s',\n version '%s', number of processors: %d", manufacturer, productName, version, numberOfProcessors));
+	GetSystemInfo(manufacturer, productName, version, numberOfProcessors, mbSerial);
+	Puts(Format("System manufacturer '%s', product name '%s',\n version '%s', number of processors: %d"
+		", motherboard serial: '%s'", manufacturer, productName, version, numberOfProcessors, mbSerial));
  	
  	Puts(Format("Real CPU Speed: %.3f GHz", GetCpuSpeed()/1000.));
  	
@@ -62,10 +63,10 @@ void Test()
 			Puts(Format("Working with battery: %s, Percentage: %d%%, Remaining: %d min", discharging ? "yes": "no", percentage, remainingMin));
 		}
 	}
- 	String biosVersion;
+ 	String biosVersion, biosSerial;
  	Date biosReleaseDate;
-	GetBiosInfo(biosVersion, biosReleaseDate);
-	Puts(Format("Bios version '%s',\n release date '%s'", biosVersion, AsString(biosReleaseDate)));
+	GetBiosInfo(biosVersion, biosReleaseDate, biosSerial);
+	Puts(Format("Bios version '%s',\n release date '%s', serial: '%s'", biosVersion, AsString(biosReleaseDate), biosSerial));
 	String vendor, identifier, architecture; 
 	int speed;
 	for (int i = 0; i < numberOfProcessors; ++i) {
@@ -178,8 +179,9 @@ void Test()
     		Keyb_SendKeys("And the window resized and moved by Window_SetRect.\n", 0, 0);
     		Keyb_SendKeys("And a window capture in c:\\Windowgrab.bmp.\n", 0, 0);
     		Keyb_SendKeys("Some chars just for test: \\/:;,.ºª^[]{}´?¿~#@!¡\n", 0, 0);  		
+#if defined(PLATFORM_WIN32)			
     		Window_SetRect(windowId, 10, 10, 800, 400);
-
+#endif    	
     		Window_SaveCapture(windowId, AppendFileName(GetDesktopFolder(), "Windowgrab"));
 		}
 	}
@@ -230,8 +232,18 @@ void Test()
 	Puts("\nPress enter to end...");	TestGetchar();
 } 
 
+#include <windows.h>
+#include <mmsystem.h>
+
 CONSOLE_APP_MAIN
 {
+	mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
+	mciSendString("play recsound", "", 0, 0);
+	Sleep(10000);
+	//mciSendString("save recsound c:\\record.wav", "", 0, 0);
+	mciSendString("close recsound", "", 0, 0);
+	
+	return;
 	FileDelete(AppendFileName(GetDesktopFolder(), "log"));
 	Puts("Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown");
 	char str[50];
