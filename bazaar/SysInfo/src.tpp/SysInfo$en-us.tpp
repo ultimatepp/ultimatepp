@@ -317,7 +317,7 @@ location in the screen in [%-*@3 left], [%-*@3 top], [%-*@3 right]
 and [%-*@3 bottom].&]
 [s2; -|Returns true if the window is relocated correctly..&]
 [s0; &]
-[s0; &]
+[s3; &]
 [ {{10000@1 [s0; [* Mouse and keyboard handling]]}}&]
 [s3; &]
 [s5;:Mouse`_GetPos`(long`&`,long`&`):%- [@(0.0.255) bool]_[* Mouse`_GetPos]([@(0.0.255) lon

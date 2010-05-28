@@ -98,6 +98,7 @@ bool CloseCDTray(String drive);
 // Key and mouse keys
 
 bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom);
+void Window_SetRect(long windowId, long left, long top, long right, long bottom);
 
 bool Mouse_GetPos(long &x, long &y);
 bool Mouse_SetPos(long x, long y, long windowId);
@@ -127,8 +128,6 @@ bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll);
 bool SetKeyLockStatus(bool caps, bool num, bool scroll);
 
 #if defined(PLATFORM_WIN32)
-
-void Window_SetRect(long windowId, long left, long top, long right, long bottom);
 
 bool Record_Desktop(String fileName, int duration, int secsFrame = 1, bool viewMouse = true);
 bool Record_DesktopRectangle(String fileName, int duration, int left, int top, int width, int height, int secsFrame = 1, bool viewMouse = true);

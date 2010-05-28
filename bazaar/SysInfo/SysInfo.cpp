@@ -2550,6 +2550,27 @@ bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bot
 	return ret; 
 }
 
+void Window_SetRect(long windowId, long left, long top, long right, long bottom)
+{
+	SetSysInfoX11ErrorHandler();
+	Display *dpy = XOpenDisplay (NULL);
+	if (!dpy) {
+		SetX11ErrorHandler();
+		return false;
+	}
+	bool ret = false;
+
+	if (XMoveWindow(dpy, windowId, left, top)) {
+		if (!XResizeWindow(dpy, windowId, right-left, bottom-top))
+			ret = false;
+		else
+			ret = true;
+	}
+	XCloseDisplay (dpy);
+	SetX11ErrorHandler();
+	return ret; 
+}
+
 bool Mouse_GetPos(long &x, long &y)
 {
 	SetSysInfoX11ErrorHandler();
