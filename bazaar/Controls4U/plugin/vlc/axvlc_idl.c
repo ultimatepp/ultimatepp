@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 /* this ALWAYS GENERATED file contains the IIDs and CLSIDs */
 
 /* link this file in with the server and any clients */
@@ -115,5 +117,6 @@ MIDL_DEFINE_GUID(CLSID, CLSID_VLCPlugin2,0x9BE31822,0xFDAD,0x461B,0xAD,0x51,0xBE
 }
 #endif
 
+#endif
 
 

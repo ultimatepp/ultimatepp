@@ -1,0 +1,11 @@
+LAYOUT(MediaControl, 368, 56)
+	ITEM(SliderCtrl, dv___0, RightPosZ(4, 80).TopPosZ(4, 24))
+	ITEM(SliderCtrl, dv___1, HSizePosZ(4, 4).BottomPosZ(4, 24))
+	ITEM(Button, dv___2, LeftPosZ(32, 24).TopPosZ(4, 20))
+	ITEM(Button, dv___3, LeftPosZ(60, 24).TopPosZ(4, 20))
+	ITEM(Button, dv___4, LeftPosZ(4, 24).TopPosZ(4, 20))
+	ITEM(Button, dv___5, LeftPosZ(4, 24).TopPosZ(4, 20))
+	ITEM(EditString, dv___6, SetFrame(ThinInsetFrame()).LeftPosZ(88, 52).TopPosZ(4, 19))
+	ITEM(Label, dv___7, SetFrame(ThinInsetFrame()).LeftPosZ(144, 52).TopPosZ(4, 19))
+END_LAYOUT
+

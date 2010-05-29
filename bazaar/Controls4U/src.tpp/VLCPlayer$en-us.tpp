@@ -5656,8 +5656,8 @@ HCtrlActiveX]&]
 [s0;2 &]
 [s3; VLCPlayer is a control to play video and audio files. Audio 
 and video are handled by member functions.&]
-[s3; To run properly VLCPlayer requires to install previously VLC 
-in the system.&]
+[s3; To run properly VLCPlayer requires to install previously [^http`:`/`/www`.videolan`.org`/^ V
+ideoLAN ]in the system.&]
 [s3; As this control is based in DHCtrlActiveX it can only work in 
 Windows.&]
 [s3; &]

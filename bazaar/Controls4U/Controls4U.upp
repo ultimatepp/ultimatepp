@@ -10,6 +10,7 @@ file
 	Controls4U.cpp,
 	Controls4U.h,
 	Controls4U.usc,
+	Controls4U.lay,
 	Controls4U.iml,
 	Controls4U.t,
 	srcdoc.tpp,

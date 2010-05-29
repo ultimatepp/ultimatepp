@@ -748,7 +748,8 @@ ublic][3 _][*@3;3 DHCtrlActiveX]&]
 [s3; IExplorerBrowser is a control to render internet web pages and 
 html code&]
 [s3; To run properly IExplorerBrowser requires to install previously 
-Microsoft Internet Explorer.in the system.&]
+[^http`:`/`/www`.microsoft`.com^ Microsoft Internet Explorer].in 
+the system.&]
 [s3; As this control is based in DHCtrlActiveX it can only work in 
 Windows.&]
 [s3; &]

@@ -839,8 +839,8 @@ ublic][3 _][*@3;3 DHCtrlActiveX]&]
 [s3; FirefoxBrowser is a control to render internet web pages and 
 html code&]
 [s3; To run properly FirefoxBrowser requires to install previously 
-Mozilla Firefox and [^http`:`/`/www`.iol`.ie`/`~locka`/mozilla`/control`.htm^ Mozil
-la ActiveX] control in the system.&]
+[^http`:`/`/www`.mozilla`.com^ Mozilla Firefox] and [^http`:`/`/www`.iol`.ie`/`~locka`/mozilla`/control`.htm^ M
+ozilla ActiveX] control in the system.&]
 [s3; As this control is based in DHCtrlActiveX it can only work in 
 Windows.&]
 [s3; &]

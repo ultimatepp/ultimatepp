@@ -747,7 +747,7 @@ fn PaintHand(w, cx, cy, R, val, bigF, colorType)
 ctrl Meter {
 	group "Progress";
 	GetMinSize() { return Size(50, 50); }
-	GetStdSize() { return Size(150, 150); }
+	GetStdSize() { return Size(150, 80); }
 	
 	double SetMin = 0;
 	double SetMax = 100;
@@ -897,7 +897,7 @@ ctrl FirefoxBrowser {
 	group "Complex";
 
 	GetMinSize() { return Size(0, 0); }
-	GetStdSize() { return Size(64, 24); }
+	GetStdSize() { return Size(140, 140); }
 
 	Frame      SetFrame @1;
 
@@ -920,7 +920,7 @@ ctrl IExplorerBrowser {
 	group "Complex";
 
 	GetMinSize() { return Size(0, 0); }
-	GetStdSize() { return Size(64, 24); }
+	GetStdSize() { return Size(130, 130); }
 
 	Frame      SetFrame @1;
 
@@ -943,7 +943,7 @@ ctrl VLCPlayer {
 	group "Complex";
 
 	GetMinSize() { return Size(0, 0); }
-	GetStdSize() { return Size(64, 24); }
+	GetStdSize() { return Size(120, 120); }
 
 	Frame      SetFrame @1;
 
