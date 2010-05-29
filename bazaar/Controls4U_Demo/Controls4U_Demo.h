@@ -1,13 +1,6 @@
 #ifndef _Controls4U_Demo_Controls4U_Demo_h
 #define _Controls4U_Demo_Controls4U_Demo_h
 
-#include <CtrlLib/CtrlLib.h>
-
-using namespace Upp;
-
-#include "Controls4U/Controls4U.h"
-#include "Functions4U/Functions4U.h"
-
 #define LAYOUTFILE <Controls4U_Demo/Controls4U_Demo.lay>
 #include <CtrlCore/lay.h>
 
@@ -64,47 +57,6 @@ public:
 	void OnPatch();
 };
 
-class Firefox_Demo : public WithFirefox<StaticRect> {
-public:
-	typedef Firefox_Demo CLASSNAME;
-	Firefox_Demo();
-
-	void Browse();
-	void ShowHTML();
-	void Forward();
-	void Backward();
-	void UpdateInfo();
-	void Home();
-	void Stop();
-	void RefreshPage();
-};
-
-class IExplorer_Demo : public WithIExplorer<StaticRect> {
-public:
-	typedef IExplorer_Demo CLASSNAME;
-	IExplorer_Demo();
-	
-	void Browse();
-	void ShowHTML();
-	void Forward();
-	void Backward();
-	void UpdateInfo();
-	void Home();
-	void Stop();
-	void RefreshPage();
-};
-
-class VLC_Demo : public WithVLC<StaticRect> {
-public:
-	typedef VLC_Demo CLASSNAME;
-	VLC_Demo();
-	
-	void Load();
-	void Play();
-	void Pause();
-	void Stop();
-	void UpdateInfo();
-};
 
 class Controls4U_Demo : public WithMain<TopWindow> {
 public:
