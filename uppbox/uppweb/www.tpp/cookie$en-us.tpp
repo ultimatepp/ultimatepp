@@ -5,7 +5,7 @@ topic "Cookie Prize";
 [s0;%- &]
 [ {{7263:2737f0;g0;t/25b/25R2 [s0;# [2 Cookie prize rewards yearly an U`+`+ project contributor who 
 have distinguished for her/his involvement. S/He has been helpful 
-to the community kindly asking questions, supporting the newbies 
+to the community kindly answering questions, supporting the newbies 
 and giving good new ideas.]&]
 [s0;#2 &]
 [s0;# [2 In addition s/he have gone further and have got into action 
