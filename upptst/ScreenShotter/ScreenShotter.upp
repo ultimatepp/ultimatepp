@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	plugin\jpg,
+	plugin\gif,
+	plugin\tif;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI DLL";
+

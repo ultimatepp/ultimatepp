@@ -38,4 +38,3 @@ GUI_APP_MAIN
 {
 	Fonts().Run();
 }
-
