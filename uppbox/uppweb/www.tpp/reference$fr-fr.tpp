@@ -25,8 +25,8 @@ topic "Exemples de référence";
 [s5; &]
 [s5; &]
 [s2; Exemples de référence&]
-[s0; Les exemples de référence sont concus pour documenter U`+`+ 
+[s0; Les exemples de référence sont conçus pour documenter U`+`+ 
 à travers un ensemble d`'exemples très simples, chacun d`'entre 
 eux présentant un aspect précis de la bibliothèque U`+`+.&]
 [s0; &]
-[s0;%% ]
+[s0; ]

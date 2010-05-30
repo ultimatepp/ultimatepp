@@ -38,6 +38,10 @@ TOPIC("chss$en-us")
 #include "chss$en-us.tppi"
 END_TOPIC
 
+TOPIC("chss$fr-fr")
+#include "chss$fr-fr.tppi"
+END_TOPIC
+
 TOPIC("chss$ru-ru")
 #include "chss$ru-ru.tppi"
 END_TOPIC
@@ -48,6 +52,10 @@ END_TOPIC
 
 TOPIC("comparison$en-us")
 #include "comparison$en-us.tppi"
+END_TOPIC
+
+TOPIC("comparison$fr-fr")
+#include "comparison$fr-fr.tppi"
 END_TOPIC
 
 TOPIC("comparison$ru-ru")
@@ -64,6 +72,10 @@ END_TOPIC
 
 TOPIC("contribweb$es-es")
 #include "contribweb$es-es.tppi"
+END_TOPIC
+
+TOPIC("contribweb$fr-fr")
+#include "contribweb$fr-fr.tppi"
 END_TOPIC
 
 TOPIC("cookie$en-us")
@@ -102,6 +114,10 @@ TOPIC("examples$es-es")
 #include "examples$es-es.tppi"
 END_TOPIC
 
+TOPIC("examples$fr-fr")
+#include "examples$fr-fr.tppi"
+END_TOPIC
+
 TOPIC("examples$ru-ru")
 #include "examples$ru-ru.tppi"
 END_TOPIC
@@ -120,6 +136,10 @@ END_TOPIC
 
 TOPIC("Funding$en-us")
 #include "Funding$en-us.tppi"
+END_TOPIC
+
+TOPIC("Funding$fr-fr")
+#include "Funding$fr-fr.tppi"
 END_TOPIC
 
 TOPIC("Funding$ru-ru")
@@ -148,6 +168,10 @@ END_TOPIC
 
 TOPIC("idess$en-us")
 #include "idess$en-us.tppi"
+END_TOPIC
+
+TOPIC("idess$fr-fr")
+#include "idess$fr-fr.tppi"
 END_TOPIC
 
 TOPIC("idess$ru-ru")
@@ -242,6 +266,10 @@ TOPIC("ss$en-us")
 #include "ss$en-us.tppi"
 END_TOPIC
 
+TOPIC("ss$fr-fr")
+#include "ss$fr-fr.tppi"
+END_TOPIC
+
 TOPIC("ss$ru-ru")
 #include "ss$ru-ru.tppi"
 END_TOPIC
@@ -264,6 +292,10 @@ END_TOPIC
 
 TOPIC("vsqt$en-us")
 #include "vsqt$en-us.tppi"
+END_TOPIC
+
+TOPIC("vsqt$fr-fr")
+#include "vsqt$fr-fr.tppi"
 END_TOPIC
 
 TOPIC("vsqt$ru-ru")

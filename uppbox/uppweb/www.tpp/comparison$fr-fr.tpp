@@ -21,10 +21,10 @@ topic "Comparaisons";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [t4167;C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
-[{_}%EN-US 
+[{_}%FR-FR 
 [s2;a0; Comparaisons&]
 [s5;>b0;a83;*R^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 &]
-[s0; Afin de démontrer les avantages d`'Ultimate`+`+, nouv avons 
+[s0; Afin de démontrer les avantages d`'Ultimate`+`+, nous avons 
 réimplémenté certains exemples d`'autres bibliothèques.&]
 [s0; &]
 [s0; [^topic`:`/`/uppweb`/www`/vsqt`$en`-us^ Comparaison avec Qt]&]
