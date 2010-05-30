@@ -1,0 +1,14 @@
+description "Demonstrates .dll in Win32 with single capture_screen function\377";
+
+uses
+	CtrlLib,
+	plugin\jpg,
+	plugin\gif,
+	plugin\tif;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI DLL";
+
