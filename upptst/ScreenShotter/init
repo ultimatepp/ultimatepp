@@ -1,0 +1,8 @@
+#ifndef _ScreenShotter_icpp_init_stub
+#define _ScreenShotter_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\jpg/init"
+#include "plugin\gif/init"
+#include "plugin\tif/init"
+#include "plugin\pcx/init"
+#endif
