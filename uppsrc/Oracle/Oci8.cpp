@@ -69,7 +69,7 @@ protected:
 	struct Item {
 		T_OCI8&        oci8;
 		int            type;
-		int16          len;
+		int            len;
 		sb2            ind;
 		ub2            rl;
 		ub2            rc;
@@ -142,6 +142,7 @@ protected:
 	void      SetParam(int i, Date d);
 	void      SetParam(int i, Time d);
 	void      SetParam(int i, Sql& refcursor);
+	void      SetRawParam(int i, const String& s);
 
 	void      AddColumn(int type, int len);
 	void      GetColumn(int i, String& s) const;
@@ -296,6 +297,13 @@ void OCI8Connection::SetParam(int i, OracleRef r) {
 	PrepareParam(i, r.GetOraType(), r.GetMaxLen(), 0, r.GetType());
 }
 
+void OCI8Connection::SetRawParam(int i, const String& s) {
+	int l = s.GetLength();
+	Item& p = PrepareParam(i, SQLT_LBI, l, 0, VOID_V);
+	memcpy(p.Data(), s, l);
+	p.ind = l ? 0 : -1;
+}
+
 class Oracle8RefCursorStub : public SqlSource {
 public:
 	Oracle8RefCursorStub(SqlConnection *cn) : cn(cn) {}
@@ -320,6 +328,9 @@ void  OCI8Connection::SetParam(int i, const Value& q) {
 		SetParam(i, String());
 	else
 		switch(q.GetType()) {
+		case SQLRAW_V:
+			SetRawParam(i, SqlRaw(q));
+			break;
 		case STRING_V:
 		case WSTRING_V:
 			SetParam(i, String(q));
@@ -842,20 +853,33 @@ bool Oracle8::Login(const char *name, const char *pwd, const char *db, bool use_
 		| OCI_THREADED
 #endif
 	;
-	if(oci8.OCIEnvCreate) {
-		if(oci8.OCIEnvCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0)) {
-			OCIInitError(*this, "OCIEnvCreate");
-			return false;
-		}
-	}
-	else {
-		if(oci8.OCIInitialize(accessmode, 0, 0, 0, 0)) {
-			OCIInitError(*this, "OCIInitialize");
-			return false;
-		}
-		if(oci8.OCIEnvInit(&envhp, OCI_DEFAULT, 0, 0)) {
-			OCIInitError(*this, "OCIEnvInit");
-			return false;
+	
+	bool v_without_NLS = true;
+	if(oci8.OCIEnvNlsCreate) {
+		if((v_without_NLS)&&(oci8.OCIEnvNlsCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0, OCI_NLS_NCHARSET_ID_AL32UT8, OCI_NLS_NCHARSET_ID_AL32UT8))){
+			LLOG("OCI8: error on initialization utf8 NLS");
+			v_without_NLS = true;
+		}else v_without_NLS = false;
+		if((v_without_NLS)&&(oci8.OCIEnvNlsCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0, OCI_NLS_NCHARSET_ID_UT8, OCI_NLS_NCHARSET_ID_UT8))){
+			LLOG("OCI8: error on initialization utf8 NLS");
+			v_without_NLS = true;
+		}else v_without_NLS = false;
+	}	
+	if(v_without_NLS){
+		if(oci8.OCIEnvCreate){
+			if(oci8.OCIEnvCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0)) {
+				OCIInitError(*this, "OCIEnvCreate");
+				return false;
+			}
+		} else {
+			if(oci8.OCIInitialize(accessmode, 0, 0, 0, 0)) {
+				OCIInitError(*this, "OCIInitialize");
+				return false;
+			}
+			if(oci8.OCIEnvInit(&envhp, OCI_DEFAULT, 0, 0)) {
+				OCIInitError(*this, "OCIEnvInit");
+				return false;
+			}
 		}
 	}
 	if(!AllocOciHandle(&errhp, OCI_HTYPE_ERROR)) {

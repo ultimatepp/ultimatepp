@@ -18,6 +18,19 @@ FN(sword,   OCIDescriptorFree, (dvoid *descp, ub4 type))
 
 FN(sword,   OCIEnvInit, (UPP::OCIEnv **envp, ub4 mode, size_t xtramem_sz, dvoid **usrmempp))
 
+FN0(sword, OCIEnvNlsCreate, (OCIEnv **envp, ub4 mode, const dvoid *ctxp, \
+	const dvoid *(*malocfp)(dvoid *ctxp, size_t size), \
+	const dvoid *(*ralocfp)(dvoid *ctxp, dvoid *memptr, size_t newsize), \
+	const void (*mfreexp)(dvoid *ctxp, dvoid *memptr), \
+	size_t xtramem_sz, dvoid **usrmempp, ub2 charset, ub2 ncharset))
+
+FN0(sword, OCINlsEnvironmentVariableGet, (dvoid *val, size_t size, ub2 item,\
+	ub2 charset, size_t *rsize))
+                                     
+FN0(ub2, OCINlsCharSetNameToId, (dvoid *hndl, const OraText *name))
+                            
+FN0(sword, OCINlsCharSetIdToName, (dvoid *hndl, OraText *buf, size_t buflen, ub2 id))
+                              
 FN0(sword,   OCIEnvCreate, (OCIEnv **envp, ub4 mode, const dvoid *ctxp, \
 	const dvoid *(*malocfp)(dvoid *ctxp, size_t size), \
 	const dvoid *(*ralocfp)(dvoid *ctxp, dvoid *memptr, size_t newsize), \
