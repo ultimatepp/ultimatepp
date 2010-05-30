@@ -36,6 +36,9 @@ enum
 		// The following *TWO* are only valid for OCICreateEnvironment call
 	OCI_NO_UCB     = 0x40,  // No user callback called during init
 	OCI_NO_MUTEX   = 0x80,  // the environment handle will not be
+		// NLS
+	OCI_NLS_NCHARSET_ID_UT8 = 871,                   /* AL32UTF8 charset id */
+	OCI_NLS_NCHARSET_ID_AL32UT8 = 873,               /* AL32UTF8 charset id */
 		// protected by a mutex internally
 	OCI_SHARED_EXT = 0x100, // Used for shared forms
 	OCI_CACHE      = 0x200, // used by iCache

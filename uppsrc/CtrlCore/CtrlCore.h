@@ -1794,6 +1794,25 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 \
 void GuiMainFn_()
 
+#define DLL_APP_MAIN \
+void _DllMainAppInit(); \
+\
+BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, LPVOID lpReserved) \
+{ \
+	if(fdwReason == DLL_PROCESS_ATTACH) { \
+		Ctrl::InitWin32(AppGetHandle()); \
+		AppInitEnvironment__(); \
+		_DllMainAppInit(); \
+	} \
+	else \
+	if(fdwReason == DLL_PROCESS_DETACH) { \
+		Ctrl::ExitWin32(); \
+	} \
+	return true; \
+} \
+\
+void _DllMainAppInit()
+
 #endif
 #endif
 
