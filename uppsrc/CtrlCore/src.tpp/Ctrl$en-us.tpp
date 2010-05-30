@@ -2285,7 +2285,12 @@ to run) for at least [*@3 ms] milliseconds or until new input event
 is available.&]
 [s7;i1120;a17; [%-*@3 ms]-|Time to sleep.&]
 [s3; &]
-[s0;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetEventId`(`):%- [@(0.0.255) static] [_^int64^ int64]_[* GetEventId]()&]
+[s2; This function is guaranteed to return the same number while 
+single input event (mouse event or keyboard event) is processed. 
+This is helpful in certain caching situations `- e.g. if you 
+want to lazy fetch some data, but only once per input event.&]
 [s0;%- &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Ctrl`::Logc]]}}&]
@@ -2303,7 +2308,7 @@ of logical position.&]
 parameters mean. &]
 [s7;l352;i1120;a17; [%-*C@3 a]-|First value.&]
 [s7;l352;i1120;a17; [%-*C@3 b]-|Second value.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:Logc`:`:Logc`(`):%- [* Logc]()&]
 [s2; Default constructor. Sets Logc to the empty state.&]
