@@ -120,15 +120,21 @@ void Sqlite3Connection::BindParam(int i, const Value& r) {
 
 int ParseForArgs(const char* sqlcmd)
 {
-	int numargs = 0;
-	const char* ptr = sqlcmd;
-	while (*ptr)
-		if(*ptr == '\'')
-			while(*++ptr && (*ptr != '\'' || *++ptr && *ptr == '\''))
-				;
-		else if(*ptr++ == '?')
-			++numargs;
-	return numargs;
+   int numargs = 0;
+   const char* ptr = sqlcmd;
+   while (*ptr)
+      if(*ptr == '\'')
+         while(*++ptr && (*ptr != '\'' || *++ptr && *ptr == '\''))
+            ;
+      else if(*ptr == '-' && *++ptr && *ptr == '-')
+         while(*++ptr && *ptr != '\n' && *ptr != '\r')
+            ;
+      else if(*ptr == '/' && *++ptr && *ptr == '*')
+         while(*++ptr && *ptr != '*' && *++ptr && *ptr != '/')
+            ;
+      else if(*ptr++ == '?')
+         ++numargs;
+   return numargs;
 }
 
 bool Sqlite3Connection::Execute() {
