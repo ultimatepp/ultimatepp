@@ -126,12 +126,15 @@ int ParseForArgs(const char* sqlcmd)
       if(*ptr == '\'')
          while(*++ptr && (*ptr != '\'' || *++ptr && *ptr == '\''))
             ;
-      else if(*ptr == '-' && *++ptr && *ptr == '-')
+      else if(*ptr == '-' && *(ptr+1) == '-')
          while(*++ptr && *ptr != '\n' && *ptr != '\r')
             ;
-      else if(*ptr == '/' && *++ptr && *ptr == '*')
-         while(*++ptr && *ptr != '*' && *++ptr && *ptr != '/')
+      else if(*ptr == '/' && *(ptr+1) == '*')
+      {
+         ptr++;
+         while(*++ptr && (*ptr != '*' || (*(ptr+1) && *(ptr+1) != '/')))
             ;
+      }
       else if(*ptr++ == '?')
          ++numargs;
    return numargs;
@@ -201,7 +204,22 @@ bool Sqlite3Connection::Execute() {
 						field.type = WSTRING_V;
 					break;
 				case SQLITE_NULL:
-					field.type = VOID_V;
+					if(coltype == "date")
+						field.type = DATE_V;
+					else
+					if(coltype == "datetime")
+						field.type = TIME_V;
+					else
+					if(coltype.Find("char") >= 0 || coltype.Find("text") >= 0 )
+						field.type = WSTRING_V;
+					else
+					if(coltype.Find("integer") >= 0)
+						field.type = INT_V;
+					else
+					if(coltype.Find("real") >= 0)
+						field.type = DOUBLE_V;
+					else
+						field.type = VOID_V;
 					break;
 				case SQLITE_BLOB:
 					field.type = STRING_V;
