@@ -705,10 +705,12 @@ struct StaticClocks {
 	}
 	void Add(StaticClock *clock) {
 		clocks.Add(clock);
+#ifdef _MULTITHREADED
 		if (!running) {
 			AtomicInc(running);
 			Thread().Run(callback1(StaticClockThread, this));
 		}
+#endif
 	}
 	void Remove(StaticClock *clock) {
 		for (int i = 0; i < clocks.GetCount(); ++i) {
@@ -970,9 +972,10 @@ void Meter::Paint(Draw& ww) {
 	ww.DrawImage(0, 0, ib);
 }
 
+#ifdef _MULTITHREADED
 void MeterThread(Meter *gui, double newValue) {
 	double delta = Sign(newValue-gui->value)*(gui->max - gui->min)/gui->sensibility;
-	long deltaT = labs((long)(1000*gui->speed/delta));
+	long deltaT = labs(long(1000.*delta*gui->speed/(gui->max - gui->min)));
 	int maxi = (int)(fabs((newValue-gui->value)/delta));
 	
 	long t0 = GetTickCount();
@@ -988,8 +991,10 @@ void MeterThread(Meter *gui, double newValue) {
 	PostCallback(callback(gui, &Meter::RefreshValue));
 	AtomicDec(gui->running);
 }
+#endif
 
 void Meter::SetData(const Value& v)	{
+#ifdef _MULTITHREADED
 	double val = v;
 	if (running) {	// Stop movement before changing value
 		AtomicInc(kill);	
@@ -999,6 +1004,10 @@ void Meter::SetData(const Value& v)	{
 	}
 	AtomicInc(running);
 	Thread().Run(callback2(MeterThread, this, val));
+#else
+	value = v;
+	RefreshValue();
+#endif
 }
 
 Meter::~Meter()
@@ -1021,7 +1030,7 @@ Meter::Meter() {
 	clockWise = false;
 	number = false;
 	colorType = WhiteType;
-	sensibility = 10;
+	sensibility = 30;
 	speed = 1;
 	running = 0;
 	kill = 0;

@@ -315,7 +315,7 @@ protected:
 	bool clockWise;
 	bool number;
 	int colorType;
-	int speed;
+	double speed;
 	int sensibility;
 	volatile Atomic running, kill;
 	
@@ -340,7 +340,7 @@ public:
 	Meter& ClockWise(bool v)		{clockWise = v; Refresh(); return *this;}
 	Meter& SetNumber(bool v)		{number = v; Refresh(); return *this;}
 	Meter& SetColorType(int c)		{colorType = c; Refresh(); return *this;}
-	Meter& SetSpeed(int s)			{speed = s; Refresh(); return *this;} 
+	Meter& SetSpeed(double s)		{speed = s; Refresh(); return *this;} 
 	Meter& SetSensibility(int s)	{sensibility = s; Refresh(); return *this;}
 
 	void SetData(const Value& v);

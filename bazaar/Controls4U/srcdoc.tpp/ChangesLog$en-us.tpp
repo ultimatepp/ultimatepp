@@ -5,6 +5,10 @@ topic "News and changes log";
 [s0; [*R+184 Controls4U. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2010/05/31-|New mode single threaded in addition to multi threaded 
+(MT).]&]
+[s0;l576; [2 In this case Meter handle has not sensitivity and StaticClock 
+SetAuto mode is not activated.]&]
 [s0; [2 2010/05/24-|Added ActiveX classes]&]
 [s0; [2 2009/12/29-|StaticImage default background color is transparent]&]
 [s0; [2 -|-|StaticImage: Added UseAsBackground() and removed ImageFit`::Background.]&]

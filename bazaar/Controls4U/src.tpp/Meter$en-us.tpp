@@ -487,8 +487,8 @@ nt]_[*@3 c])&]
 ColorType`::BlackType.&]
 [s1; &]
 [s6;%- &]
-[s5;:Meter`:`:SetSpeed`(int`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetSpeed]([@(0.0.255) int
-]_[*@3 s])&]
+[s5;:Meter`:`:SetSpeed`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetSpeed]([@(0.0.255) d
+ouble]_[*@3 s])&]
 [s3; Sets the handle movement speed [%-*@3 s ]as the time in seconds 
 the handle would moving from min to max value.&]
 [s3; Default is 1 second. &]
