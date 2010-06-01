@@ -20,6 +20,13 @@ topic "Scatter Reference";
 [s0;l288;i448;a25;kKO9;%% If [%-*@3 Y ]is true, Y axis zoom is also 
 changed to fit the data.&]
 [s4; &]
+[s5;:Scatter`:`:SaveToClipboard`(bool`): [@(0.0.255) void]_[* SaveToClipboard]([@(0.0.255) b
+ool]_[*@3 saveAsMetafile]_`=_[@(0.0.255) false])&]
+[s2;%% Saves Scatter to clipboard as a bitmap.&]
+[s2;%% In windows if [%-*@3 saveAsMetafile ]is true, a metafile is 
+sent to clipboard.&]
+[s3;%% &]
+[s4; &]
 [s5;:Scatter`:`:SetRange`(double`,double`,double`): [_^Scatter^ Scatter][@(0.0.255) `&]_[* S
 etRange]([@(0.0.255) double]_[*@3 rx], [@(0.0.255) double]_[*@3 ry], 
 [@(0.0.255) double]_[*@3 ry2]_`=_`-[@3 1])&]

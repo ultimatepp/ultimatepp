@@ -182,7 +182,7 @@ public:
 	void SaveAsMetafile(const char* file)const;
 	#endif
 	
-	void SaveToClipboard();
+	void SaveToClipboard(bool saveAsMetafile = false);
 	
 	Scatter& LogX(const bool& logx=true) {logX=logx; return *this;}
 	Scatter& LogY(const bool& logy=true) {logY=logy; return *this;}	

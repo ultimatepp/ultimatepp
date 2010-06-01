@@ -843,17 +843,22 @@ void Scatter::SaveAsMetafile(const char* file) const
 	wmfd.Close();	
 }
 
-void Scatter::SaveToClipboard() 
+void Scatter::SaveToClipboard(bool saveAsMetafile) 
 {
-	WinMetaFileDraw wmfd;	
-	wmfd.Create(6*GetSize().cx,6*GetSize().cy,"Scatter","chart");
-	SetDrawing (wmfd, 6);	
-	WinMetaFile wmf = wmfd.Close();	 
-	wmf.WriteClipboard();
+	if (saveAsMetafile) {
+		WinMetaFileDraw wmfd;	
+		wmfd.Create(6*GetSize().cx,6*GetSize().cy,"Scatter","chart");
+		SetDrawing (wmfd, 6);	
+		WinMetaFile wmf = wmfd.Close();	 
+		wmf.WriteClipboard();
+	} else {
+		Image img = GetImage(3);
+		WriteClipboardImage(img);	
+	}
 }
 #else
 
-void Scatter::SaveToClipboard() 
+void Scatter::SaveToClipboard(bool) 
 {
 	Image img = GetImage(3);
 	WriteClipboardImage(img);
