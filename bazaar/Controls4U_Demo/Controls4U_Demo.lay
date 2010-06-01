@@ -49,7 +49,7 @@ LAYOUT(Meter, 540, 276)
 	ITEM(Label, dv___10, SetLabel(t_("SetColorType")).LeftPosZ(272, 80).BottomPosZ(41, 19))
 	ITEM(Label, dv___11, SetLabel(t_("SetNumber")).LeftPosZ(380, 80).BottomPosZ(41, 19))
 	ITEM(LabelBox, dv___12, HSizePosZ(268, 8).VSizePosZ(4, 8))
-	ITEM(Label, dv___13, SetLabel(t_("Move SliderCtrl in the right to change Meters\nvalue and change the properties of main Meter.\nMeter handle is moved using multitasking  so it is\nnot affected by window moving or resizing.")).LeftPosZ(8, 252).TopPosZ(204, 56))
+	ITEM(Label, dv___13, SetLabel(t_("Move SliderCtrl in the right to change Meters\nvalue and change the properties of main Meter.\nMeter handle is moved using multitasking and it is\nnot affected by window moving or resizing.")).LeftPosZ(8, 252).TopPosZ(204, 56))
 	ITEM(Label, dv___14, SetLabel(t_("Meter")).SetFont(StdFont().Bold()).LeftPosZ(8, 252).TopPosZ(184, 19))
 	ITEM(StaticImage, back, SetFit(3).UseAsBackground(true).LeftPosZ(468, 64).TopPosZ(228, 40))
 END_LAYOUT
@@ -117,7 +117,7 @@ LAYOUT(StaticClock, 620, 424)
 	ITEM(Label, dv___19, SetLabel(t_("Seconds")).LeftPosZ(468, 48).BottomPosZ(37, 19))
 	ITEM(Label, dv___20, SetLabel(t_("SetHourType")).LeftPosZ(316, 80).BottomPosZ(81, 19))
 	ITEM(LabelBox, dv___21, HSizePosZ(308, 8).VSizePosZ(4, 4))
-	ITEM(Label, dv___22, SetLabel(t_("Change StaticClock parameters and resize window to see\nthe control look.")).LeftPosZ(8, 292).TopPosZ(340, 28))
+	ITEM(Label, dv___22, SetLabel(t_("Change StaticClock parameters and resize window to see\nthe control look.\nWhen compiled with multithread (MT) clocks updates\nautomatically.")).LeftPosZ(8, 292).TopPosZ(340, 56))
 	ITEM(Label, dv___23, SetLabel(t_("StaticClock")).SetFont(StdFont().Bold()).LeftPosZ(8, 292).TopPosZ(320, 19))
 END_LAYOUT
 
