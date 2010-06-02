@@ -31,6 +31,8 @@ protected:
 	int       GetMins(int i) const;
 
 public:
+	Callback  WhenSplitFinish;
+
 	void      Set(Ctrl& l, Ctrl& r);
 
 	Splitter& SetPos(int newpos, int index = 0);
