@@ -192,6 +192,10 @@ public:
 	Scatter& SetMaxZoom(double x, double y = -1) {maxXZoom = x; maxYZoom = y; return *this;};
 
 	Scatter& SetFastViewX(bool set = true) {fastViewX = set;	return *this;};
+	
+	Font& GetTitleFont() {return titleFont;};
+	int GetH_Border() {return px;};
+	int GetV_Border() {return py;};
 
 private:
 	class ::Color graphColor;	
