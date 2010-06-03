@@ -61,6 +61,29 @@ int AString<B>::ReverseFind(int chr, int from) const
 }
 
 template <class B>
+int AString<B>::ReverseFind(int len, const tchar *s, int from) const
+{
+	ASSERT(from >= 0 && from <= GetLength());
+	if(from < GetLength()) {
+		const tchar *ptr = B::Begin();
+		const tchar *p = ptr + from - len + 1;
+		len *= sizeof(tchar);
+		while(p >= ptr) {
+			if(memcmp(s, p, len) == 0)
+				return (int)(p - ptr);
+			p--;
+		}
+	}
+	return -1;
+}
+
+template <class B>
+int AString<B>::ReverseFind(const tchar *s, int from) const
+{
+	return ReverseFind(strlen__(s), s, from);
+}
+
+template <class B>
 int AString<B>::ReverseFind(int chr) const
 {
 	return B::GetCount() ? ReverseFind(chr, B::GetCount() - 1) : -1;
