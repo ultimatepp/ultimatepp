@@ -132,6 +132,7 @@ static void sRegisterStd()
 	ONCELOCK {
 		RichValue<int>::Register();
 		RichValue<int64>::Register();
+		RichValue<bool>::Register();
 		RichValue<double>::Register();
 		RichValue<String>::Register();
 		RichValue<WString>::Register();
