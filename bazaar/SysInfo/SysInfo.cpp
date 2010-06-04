@@ -49,7 +49,7 @@ using namespace Upp;
 // Hardware Info
 #if defined(PLATFORM_WIN32) 
 		
-bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[])
+bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], String nameSpace = "root\\cimv2")
 {
 	HRESULT hRes;
 	
@@ -70,7 +70,7 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[])
 		return false;
 	}
 	
-	BSTR bstrNamespace = SysAllocString(L"root\\cimv2");
+	BSTR bstrNamespace = SysAllocString(nameSpace.ToWString());
 	IWbemServices* pWbemServices = NULL;
 	if (pIWbemLocator->ConnectServer(bstrNamespace, NULL, NULL, NULL, 0, NULL, NULL,
 		&pWbemServices) != S_OK) {
@@ -108,10 +108,20 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[])
     IWbemClassObject *pClassObject;
     ULONG uReturn = 0;
     int row = 0;
+    bool rt = false;
 	while (pEnumerator) {
         hRes = pEnumerator->Next(WBEM_INFINITE, 1, &pClassObject, &uReturn);
-       	if(0 == uReturn)
-            break;
+       	if(0 == uReturn) {
+       		if (rt)
+       			break;
+       		else {
+	   			pIWbemLocator->Release();
+				pWbemServices->Release();
+				pEnumerator->Release();
+				CoUninitialize(); 
+	            return false;
+       		}
+       	}
 		if(hRes != S_OK) {
 	        pWbemServices->Release();
 	        pIWbemLocator->Release(); 
@@ -134,6 +144,7 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[])
 		    }
 			SysFreeString(strClassProp);        
 			ret[col]->Add(GetVARIANT(vProp));
+			rt = true;
 		}
 		row++;
     }
@@ -145,13 +156,13 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[])
 	
 	return true;
 }
-bool GetWMIInfo(String system, String data, Value &res) {
+bool GetWMIInfo(String system, String data, Value &res, String nameSpace = "root\\cimv2") {
 	Array <Value> arrRes;
 	Array <Value> *arrResP[1];
 	arrResP[0] = &arrRes;
 	Array <String> arrData;
 	arrData.Add(data);
-	bool ret = GetWMIInfo(system, arrData, arrResP);
+	bool ret = GetWMIInfo(system, arrData, arrResP, nameSpace);
 	if (ret)
 		res = arrRes[0];
 	return ret;
@@ -291,6 +302,14 @@ Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, 
 	}
 	return true;
 }
+double GetCpuTemperature() {
+	Value data;
+	if (GetWMIInfo("MSAcpi_ThermalZoneTemperature", "CurrentTemperature", data, "root\\wmi"))
+		return (double(data) - 2732.) / 10.;
+	if (GetWMIInfo("Win32_TemperatureProbe", "CurrentReading", data))
+		return data;
+	return Null;
+}
 #endif
 #if defined (PLATFORM_POSIX)
 void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors, String &mbSerial)
@@ -344,6 +363,11 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 	architecture << " Family " << family << " Model " << model << " Stepping " << stepping;		// And 64 bits ?? uname -m
 	cpu.GoAfter_Init("cpu MHz", ":");
 	speed = cpu.GetInt();
+}
+double GetCpuTemperature() {
+	StringParse data = Sys("acpi -V");	
+	data.GoAfter("Thermal", ",");
+	return data.GetDouble();
 }
 #endif
 
@@ -1653,6 +1677,26 @@ void GetCompilerInfo(String &name, int &version, String &date)
 #ifdef PLATFORM_POSIX
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 {
+	StringParse data = Sys("acpi -V");
+	
+	data.GoAfter("AC Adapter", ":");
+	String sacStatus = data.GetText();
+	discharging = sacStatus != "on-line";
+	data.GoInit();
+	data.GoAfter("Battery", ":");
+	data.GoAfter(",");
+	percentage = data.GetInt("%");
+	data.GoAfter(",");
+	String remaining;
+	if (discharging) {
+		remaining = data.GetText(" ");
+		int hour, min;
+		double secs;
+		StringToHMS(remaining, hour, min, secs);	// It is really days:hour:min in this case
+		remainingMin = int(secs) + min*60 + hour*24*60;
+	} else
+		remainingMin = Null;
+/*	
 	percentage = 100;
 	Array<String> files = SearchFile("/proc/acpi/battery", "state");
 	if (files.GetCount() == 0)
@@ -1677,8 +1721,9 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 	
 	int designCapacity,lastFullCapacity;
 	String vendor, type, model, serial;
-	if (!GetBatteryInfo(present/*, designCapacity, lastFullCapacity, vendor, type, model, serial*/))
+	if (!GetBatteryInfo(present//, designCapacity, lastFullCapacity, vendor, type, model, serial//))
 		percentage = (int)((100.*remainingCapacity)/lastFullCapacity);
+*/
 	return true;
 }
 bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/)
@@ -1726,8 +1771,10 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 	else
 		discharging = true;
 	percentage = power.BatteryLifePercent;
-	remainingMin = (int)(power.BatteryLifeTime/60);
-	
+	if (discharging)
+		remainingMin = (int)(power.BatteryLifeTime/60);
+	else
+		remainingMin = Null;
 	return true;
 }
 bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/)	
@@ -1906,19 +1953,20 @@ bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bot
 	
 	return true;
 }
-void Window_SetRect(long windowId, long left, long top, long right, long bottom)
+bool Window_SetRect(long windowId, long left, long top, long right, long bottom)
 {
 	RECT rcNormalPosition;
     POINT ptMinPosition, ptMaxPosition;
     long showcmd;	
     
-	TakeWindowPlacement((HWND)windowId, rcNormalPosition, ptMinPosition, ptMaxPosition, showcmd);
+	if (!TakeWindowPlacement((HWND)windowId, rcNormalPosition, ptMinPosition, ptMaxPosition, showcmd))
+		return false;
 	
 	rcNormalPosition.left = left;
 	rcNormalPosition.top = top;
 	rcNormalPosition.right = right;
 	rcNormalPosition.bottom = bottom;
-	PutWindowPlacement((HWND)windowId, rcNormalPosition, ptMinPosition, ptMaxPosition, showcmd, 0);
+	return PutWindowPlacement((HWND)windowId, rcNormalPosition, ptMinPosition, ptMaxPosition, showcmd, 0);
 }
 bool Mouse_SetPos(long xMove, long yMove, long windowId)
 {
@@ -2550,7 +2598,7 @@ bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bot
 	return ret; 
 }
 
-void Window_SetRect(long windowId, long left, long top, long right, long bottom)
+bool Window_SetRect(long windowId, long left, long top, long right, long bottom)
 {
 	SetSysInfoX11ErrorHandler();
 	Display *dpy = XOpenDisplay (NULL);

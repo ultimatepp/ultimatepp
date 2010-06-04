@@ -13,6 +13,7 @@ void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial)
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed);		
 // Gets the real CPU speed in MHz
 int GetCpuSpeed();
+double GetCpuTemperature();
 
 #if defined(PLATFORM_WIN32) 
 bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, 
@@ -98,7 +99,7 @@ bool CloseCDTray(String drive);
 // Key and mouse keys
 
 bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom);
-void Window_SetRect(long windowId, long left, long top, long right, long bottom);
+bool Window_SetRect(long windowId, long left, long top, long right, long bottom);
 
 bool Mouse_GetPos(long &x, long &y);
 bool Mouse_SetPos(long x, long y, long windowId);
