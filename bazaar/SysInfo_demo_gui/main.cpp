@@ -10,6 +10,8 @@
 
 using namespace Upp;
 
+bool GetWMIInfo(String system, String data, Value &res, String name = "root\\cimv2");
+	
 GUI_APP_MAIN { 
 	SysInfoDemo program;
 	
@@ -78,6 +80,16 @@ void SystemInfo::Fill() {
 	TextVersion = version;
 	TextNumber = FormatInt(numberOfProcessors);
 	TextSpeed = Format("%.3f GHz", GetCpuSpeed()/1000.);
+	TextTemperature = FormatDouble(GetCpuTemperature());
+	bool discharging;
+	int percentage, remainingMin;
+	if (GetBatteryStatus(discharging, percentage, remainingMin)) {
+		TextAC = discharging ? "Off" : "On";
+		if (!IsNull(remainingMin))
+			TextRemaining = FormatInt(remainingMin) + " min";
+		else
+			TextRemaining = "";
+	}
 	TextMotherboardSerial = mbSerial;
 
  	String biosVersion, biosSerial;
