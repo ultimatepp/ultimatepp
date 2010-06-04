@@ -48,6 +48,7 @@ public:
 	virtual void  MiddleDown(Point, dword);
 	virtual void  MouseMove(Point, dword);
 	virtual void  MiddleUp(Point, dword);
+	virtual void  MouseLeave();
 	virtual void  MouseWheel(Point, int zdelta, dword);
 	
 	Callback WhenZoomScroll;

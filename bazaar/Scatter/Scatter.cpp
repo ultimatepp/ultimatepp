@@ -982,6 +982,11 @@ void Scatter::MiddleUp(Point pt, dword d)
 	}
 }
 
+void Scatter::MouseLeave()
+{
+	isMidDown = false;
+}
+
 void Scatter::Zoom(double scale) 
 {
 	bool mouseX = mouseHandlingX;
