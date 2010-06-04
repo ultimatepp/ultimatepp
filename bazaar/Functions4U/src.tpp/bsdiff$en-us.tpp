@@ -5,8 +5,8 @@ topic "Functions4U. BSDiff Reference";
 [l288;2 $$3,0#27521748481378242620020725143825:desc]
 [0 $$4,0#96390100711032703541132217272105:end]
 [{_}%EN-US 
-[s0; [*@3;4 Functions4U Reference. BSDiff]&]
-[s0;2 &]
+[ {{10000@(113.42.0) [s0; [*@7;4 Functions4U Reference. BSDiff]]}}&]
+[s0;*@3;4 &]
 [s0; [2 BSDiff  functions permit to:]&]
 [s0; [2 `- Compare two binary or text files to get a new differences 
 file (patch)]&]

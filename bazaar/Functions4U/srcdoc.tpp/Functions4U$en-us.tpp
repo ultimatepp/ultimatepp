@@ -39,6 +39,8 @@ functions]&]
 folders]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#FitInFrame`(const Size`_`<T`>`&`,const Size`_`<T`>`&`)^ G
 raphical functions]&]
+[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/SvgColors`$en`-us^ SVG 
+colors]&]
 [s0; &]
 [s0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us^ Reference]&]
 [s0;^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us^ &]

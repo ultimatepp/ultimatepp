@@ -4,6 +4,7 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;2 &]
+[s0; [2 2010/06/03-|Added Svg colors]&]
 [s0; [2 2010/05/10-|Added max(), min and Average() with more arguments]&]
 [s0; [2 2010/03/09-|Added Dll class for basic dll handling in Windows]&]
 [s0; [2 2010/03/08-|Get folder functions moved to Core]&]

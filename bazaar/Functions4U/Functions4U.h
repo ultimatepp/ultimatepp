@@ -3,6 +3,8 @@
 
 using namespace Upp;
 
+#include "SvgColors.h"
+
 enum EXT_FILE_FLAGS {USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,
 					 DELETE_READ_ONLY = 4

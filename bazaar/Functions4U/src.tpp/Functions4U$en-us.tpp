@@ -10,8 +10,8 @@ topic "Functions4U. Reference";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*@3;4 Functions4U Reference]&]
-[s0; &]
+[ {{10000@(113.42.0) [s0; [*@7;4 Functions4U. Reference]]}}&]
+[s0;*@3;4 &]
 [s0; List of functions in package.&]
 [s0; &]
 [ {{10000@1 [s0; [* Running files and commands]]}}&]

@@ -16,6 +16,8 @@ file
 	Functions4U_Gui.cpp,
 	Functions4U_Gui.h,
 	QtfEquation.cpp,
+	SvgColors.cpp,
+	SvgColors.h,
 	srcdoc.tpp,
 	src.tpp,
 	Functions4U.t,
