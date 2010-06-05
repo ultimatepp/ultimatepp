@@ -49,8 +49,10 @@
 #define  CHARSET_CP437             46
 #define  CHARSET_CP737             47
 #define  CHARSET_CP775             48
-// 49
-// 50
+
+#define  CHARSET_TCVN              49
+#define  CHARSET_TIS_620           50
+
 #define  CHARSET_CP853             51
 #define  CHARSET_CP855             52
 #define  CHARSET_CP856             53
@@ -84,7 +86,9 @@
 #define  CHARSET_ISO_8859_8        81
 #define  CHARSET_ISO_8859_9        82
 #define  CHARSET_JIS_X0201         83
-// 84
+
+#define  CHARSET_VISCII            84
+
 #define  CHARSET_KOI8_RU           85
 #define  CHARSET_KOI8_T            86
 #define  CHARSET_KOI8_U            87
@@ -103,9 +107,6 @@
 #define  CHARSET_MULELAO_1         100
 #define  CHARSET_NEXTSTEP          101
 #define  CHARSET_RISCOS_LATIN1     102
-#define  CHARSET_TCVN              103
-#define  CHARSET_TIS_620           104
-#define  CHARSET_VISCII            105
 
 #define  CHARSET_TOASCII      253
 #define  CHARSET_UTF8         255
