@@ -15,7 +15,7 @@ bool HttpsClient::CreateClientSocket()
 		return HttpClient::CreateClientSocket();
 	if(!ssl_context) {
 		ssl_context = new SSLContext;
-		if(!ssl_context->Create(SSLv3_client_method())) {
+		if(!ssl_context->Create(const_cast<SSL_METHOD *>(SSLv3_client_method()))) {
 			error = t_("Error creating SSL context.");
 			return false;
 		}
