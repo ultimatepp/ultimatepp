@@ -89,8 +89,10 @@ public:
 	int    Find(const String& s, int from = 0) const          { return Find(s.GetCount(), ~s, from); }
 	
 	int    ReverseFind(int len, const tchar *s, int from) const;
-	int    ReverseFind(const tchar *s, int from = 0) const;
-	int    ReverseFind(const String& s, int from = 0) const          { return ReverseFind(s.GetCount(), ~s, from); }
+	int    ReverseFind(const tchar *s, int from) const;
+	int    ReverseFind(const String& s, int from) const       { return ReverseFind(s.GetCount(), ~s, from); }
+	int    ReverseFind(const tchar *s) const                  { return ReverseFind(s, GetLength()-1);}
+	int    ReverseFind(const String& s) const                 { return ReverseFind(s, GetLength()-1);}
 	
 	bool   StartsWith(const tchar *s, int len) const;
 	bool   StartsWith(const tchar *s) const                   { return StartsWith(s, strlen__(s)); }
