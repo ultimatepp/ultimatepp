@@ -365,9 +365,25 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 	speed = cpu.GetInt();
 }
 double GetCpuTemperature() {
+/* This is only if acpi package is present
 	StringParse data = Sys("acpi -V");	
 	data.GoAfter("Thermal", ",");
 	return data.GetDouble();
+*/
+	FindFile ff;
+	if(ff.Search("/proc/acpi/thermal_zone/*")) {
+		do {
+			if (ff.IsDirectory()) {
+				String name = ff.GetName();
+				if (name != "." && name != "..") {
+					StringParse str = LoadFile_Safe(AppendFileName(AppendFileName("/proc/acpi/thermal_zone", name), "temperature"));			
+					str.GoAfter("temperature:");
+					return str.GetDouble();
+				}
+			}
+		} while(ff.Next());
+	}
+	return Null;
 }
 #endif
 
@@ -1677,6 +1693,7 @@ void GetCompilerInfo(String &name, int &version, String &date)
 #ifdef PLATFORM_POSIX
 bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 {
+/* This is only if acpi package is present
 	StringParse data = Sys("acpi -V");
 	
 	data.GoAfter("AC Adapter", ":");
@@ -1696,7 +1713,7 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 		remainingMin = int(secs) + min*60 + hour*24*60;
 	} else
 		remainingMin = Null;
-/*	
+*/
 	percentage = 100;
 	Array<String> files = SearchFile("/proc/acpi/battery", "state");
 	if (files.GetCount() == 0)
@@ -1715,15 +1732,15 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 	state.GoAfter_Init("present rate", ":");		presentRate = state.GetInt();
 	state.GoAfter_Init("remaining capacity", ":");	remainingCapacity = state.GetInt();
 	if (presentRate == 0 || !discharging)
-		remainingMin = 10000;
+		remainingMin = Null;
 	else
 		remainingMin = (int)((60.*remainingCapacity)/presentRate);
 	
 	int designCapacity,lastFullCapacity;
 	String vendor, type, model, serial;
-	if (!GetBatteryInfo(present//, designCapacity, lastFullCapacity, vendor, type, model, serial//))
+	if (!GetBatteryInfo(present/*, designCapacity, lastFullCapacity, vendor, type, model, serial*/))
 		percentage = (int)((100.*remainingCapacity)/lastFullCapacity);
-*/
+
 	return true;
 }
 bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/)
@@ -1763,16 +1780,19 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 {
 	SYSTEM_POWER_STATUS power;
 	
-	if(::GetSystemPowerStatus(&power) == 0)
+	if(::GetSystemPowerStatus(&power) != 1)
 		return false;
 	
 	if (power.ACLineStatus == 1)
 		discharging = false;
 	else
 		discharging = true;
-	percentage = power.BatteryLifePercent;
-	if (discharging)
-		remainingMin = (int)(power.BatteryLifeTime/60);
+	if (power.BatteryLifePercent <= 100)
+		percentage = power.BatteryLifePercent;
+	else
+		percentage = Null;
+	if (discharging && power.BatteryLifeTime != -1) 
+		remainingMin = int(power.BatteryLifeTime/60);
 	else
 		remainingMin = Null;
 	return true;
