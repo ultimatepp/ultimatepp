@@ -29,8 +29,8 @@ topic "Implementation details";
 [s0; A goal in the design of these functions has been to avoid accessing 
 external software not included internally in the OS by default.&]
 [s5;i150;O0; Windows implementation use internal DLL and wmi.&]
-[s0;i150;O0; Posix implementation uses X11 libraries and OS related 
-utilities like mount and xdg.&]
+[s0;i150;O0; Posix implementation uses X11 libraries, XTest and OS 
+related utilities like mount and xdg.&]
 [s0; &]
 [s0; Another goal is to provide the running program information about 
 the environment including hardware and software to adapt itself 
@@ -38,7 +38,7 @@ after program compiling. This way for example a program compiled
 in Ubuntu can run properly in Fedora without recompiling.&]
 [s0; &]
 [s0; &]
-[s0; [*+92 2. Compiler support]&]
+[s0; [*+92 2. Compiler support and Requirements]&]
 [s0; &]
 [s0; SysInfo has been tested in Linux using Gcc and in Windows using 
 MinGW and MSC 9.&]
@@ -46,13 +46,16 @@ MinGW and MSC 9.&]
 [s0;~~~2048; [*@6 IMPORTANT][* :] To compile using MinGW it is required 
 to copy the next files from the MSC install or from other sources:&]
 [s0;i150;O0; To Upp`\MinGW`\include: &]
-[s0; -|`- Files Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
-WbemProv.h and WbemTran.h&]
-[s0;  -|`- They can be taken from: `\Microsoft SDKs`\Windows`\v6.1`\Include&]
+[s0;l96; `- Files [* Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
+WbemProv.h and WbemTran.h]&]
+[s0;l96; `- They can be taken from: `\Microsoft SDKs`\Windows`\v6.1`\Include&]
 [s0; &]
 [s0;i150;O0;%- To `\Upp`\MinGW`\lib: &]
-[s0; -|`- File wbemuuid.lib&]
-[s0; -|`- It can be taken from `\Microsoft SDKs`\Windows`\v6.1`\Lib&]
+[s0;l96; `- File [* wbemuuid.lib]&]
+[s0;l96; `- It can be taken from `\Microsoft SDKs`\Windows`\v6.1`\Lib&]
+[s0; &]
+[s0; To compile it in Linux it is necessary to include package XTest. 
+In Ubuntu the aptitude package name is [* libxtst`-dev].&]
 [s0; &]
 [s0; &]
 [s0; [*+92 3. OS and Desktop implementation]&]

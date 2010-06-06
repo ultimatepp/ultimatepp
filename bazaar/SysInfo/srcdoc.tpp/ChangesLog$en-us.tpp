@@ -5,6 +5,7 @@ topic "News and changes log";
 [s0; [*R6 SysInfo. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2010/06/05-|Added GetCPUTemperature() and improved ACPI support]&]
 [s0; [2 2010/05/06-|Added GetMacAddress() and GetHDSerial() for Windows. 
 Fixed GetBiosInfo() date bug]&]
 [s0; [2 2010/04/14-|Added biosSerial to GetBiosInfo() and motherboard 
