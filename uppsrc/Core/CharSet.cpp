@@ -1954,7 +1954,6 @@ struct CharSetData {
 	static byte           undef[128];
 	byte                 *line[16];
 	VectorMap<int, byte>  map;
-	byte                  system;
 
 	void Gen();
 
@@ -2058,125 +2057,11 @@ CharSetData::~CharSetData()
 
 static void sInit()
 {
-#ifdef PLATFORM_WIN32
-	AddCharSetE("NONE"     ,   CHRTAB_ISO8859_1,  CHARSET_WIN1252);
-	AddCharSetE("iso8859-1",   CHRTAB_ISO8859_1,  CHARSET_WIN1252);
-	AddCharSetE("iso8859-2",   CHRTAB_ISO8859_2,  CHARSET_WIN1250); //??
-	AddCharSetE("iso8859-3",   CHRTAB_ISO8859_3,  CHARSET_WIN1254); //??
-	AddCharSetE("iso8859-4",   CHRTAB_ISO8859_4,  CHARSET_WIN1257); //??
-	AddCharSetE("iso8859-5",   CHRTAB_ISO8859_5,  CHARSET_WIN1251);
-	AddCharSetE("iso8859-6",   CHRTAB_ISO8859_6,  CHARSET_WIN1256);
-	AddCharSetE("iso8859-7",   CHRTAB_ISO8859_7,  CHARSET_WIN1253);
-	AddCharSetE("iso8859-8",   CHRTAB_ISO8859_8,  CHARSET_WIN1255); //??
-	AddCharSetE("iso8859-9",   CHRTAB_ISO8859_9,  CHARSET_WIN1254);
-	AddCharSetE("iso8859-10",  CHRTAB_ISO8859_10, CHARSET_WIN1257); //??
-	AddCharSetE("iso8859-13",  CHRTAB_ISO8859_13, CHARSET_WIN1257);
-	AddCharSetE("iso8859-14",  CHRTAB_ISO8859_14, CHARSET_WIN1252); //??
-	AddCharSetE("iso8859-15",  CHRTAB_ISO8859_15, CHARSET_WIN1252); //??
-	AddCharSetE("iso8859-16",  CHRTAB_ISO8859_16, CHARSET_WIN1250); //??
-	AddCharSetE("windows-1250",CHRTAB_WIN1250,    CHARSET_WIN1250);
-	AddCharSetE("windows-1251",CHRTAB_WIN1251,    CHARSET_WIN1251);
-	AddCharSetE("windows-1252",CHRTAB_WIN1252,    CHARSET_WIN1252);
-	AddCharSetE("windows-1253",CHRTAB_WIN1253,    CHARSET_WIN1253);
-	AddCharSetE("windows-1254",CHRTAB_WIN1254,    CHARSET_WIN1254);
-	AddCharSetE("windows-1255",CHRTAB_WIN1255,    CHARSET_WIN1255);
-	AddCharSetE("windows-1256",CHRTAB_WIN1256,    CHARSET_WIN1256);
-	AddCharSetE("windows-1257",CHRTAB_WIN1257,    CHARSET_WIN1257);
-	AddCharSetE("windows-1258",CHRTAB_WIN1258,    CHARSET_WIN1258);
-	AddCharSetE("koi8-r",      CHRTAB_KOI8_R,     CHARSET_WIN1251);
-	AddCharSetE("cp852",       CHRTAB_CP852,      CHARSET_WIN1250);
-	AddCharSetE("mjk",         CHRTAB_MJK,        CHARSET_WIN1250);
-	AddCharSetE("cp850",       CHRTAB_CP850,      CHARSET_WIN1252);
-#else
-	AddCharSetE("NONE"     ,   CHRTAB_ISO8859_1,   CHARSET_ISO8859_1);
-	AddCharSetE("iso8859-1",   CHRTAB_ISO8859_1,   CHARSET_ISO8859_1);
-	AddCharSetE("iso8859-2",   CHRTAB_ISO8859_2,   CHARSET_ISO8859_2);
-	AddCharSetE("iso8859-3",   CHRTAB_ISO8859_3,   CHARSET_ISO8859_3);
-	AddCharSetE("iso8859-4",   CHRTAB_ISO8859_4,   CHARSET_ISO8859_4);
-	AddCharSetE("iso8859-5",   CHRTAB_ISO8859_5,   CHARSET_ISO8859_5);
-	AddCharSetE("iso8859-6",   CHRTAB_ISO8859_6,   CHARSET_ISO8859_6);
-	AddCharSetE("iso8859-7",   CHRTAB_ISO8859_7,   CHARSET_ISO8859_7);
-	AddCharSetE("iso8859-8",   CHRTAB_ISO8859_8,   CHARSET_ISO8859_8);
-	AddCharSetE("iso8859-9",   CHRTAB_ISO8859_9,   CHARSET_ISO8859_9);
-	AddCharSetE("iso8859-10",  CHRTAB_ISO8859_10,  CHARSET_ISO8859_10);
-	AddCharSetE("iso8859-13",  CHRTAB_ISO8859_13,  CHARSET_ISO8859_13);
-	AddCharSetE("iso8859-14",  CHRTAB_ISO8859_14,  CHARSET_ISO8859_14);
-	AddCharSetE("iso8859-15",  CHRTAB_ISO8859_15,  CHARSET_ISO8859_15);
-	AddCharSetE("iso8859-16",  CHRTAB_ISO8859_16,  CHARSET_ISO8859_16);
-	AddCharSetE("windows-1250",CHRTAB_WIN1250,     CHARSET_ISO8859_2);
-	AddCharSetE("windows-1251",CHRTAB_WIN1251,     CHARSET_ISO8859_5);
-	AddCharSetE("windows-1252",CHRTAB_WIN1252,     CHARSET_ISO8859_1);
-	AddCharSetE("windows-1253",CHRTAB_WIN1253,     CHARSET_ISO8859_7);
-	AddCharSetE("windows-1254",CHRTAB_WIN1254,     CHARSET_ISO8859_9);
-	AddCharSetE("windows-1255",CHRTAB_WIN1255,     CHARSET_ISO8859_8);
-	AddCharSetE("windows-1256",CHRTAB_WIN1256,     CHARSET_ISO8859_6);
-	AddCharSetE("windows-1257",CHRTAB_WIN1257,     CHARSET_ISO8859_13);
-	AddCharSetE("windows-1258",CHRTAB_WIN1258,     CHARSET_ISO8859_9);
-	AddCharSetE("koi8-r",      CHRTAB_KOI8_R,      CHARSET_ISO8859_5);
-	AddCharSetE("cp852",       CHRTAB_CP852,       CHARSET_ISO8859_2);
-	AddCharSetE("mjk",         CHRTAB_MJK,         CHARSET_ISO8859_2);
-	AddCharSetE("cp850",       CHRTAB_CP850,       CHARSET_ISO8859_1);
-#endif
-	AddCharSetE("ARMSCII-8",             CHRTAB_ARMSCII_8         ,CHARSET_ARMSCII_8        );
-	AddCharSetE("CP1046",                CHRTAB_CP1046            ,CHARSET_CP1046           );
-	AddCharSetE("CP1124",                CHRTAB_CP1124            ,CHARSET_CP1124           );
-	AddCharSetE("CP1125",                CHRTAB_CP1125            ,CHARSET_CP1125           );
-	AddCharSetE("CP1129",                CHRTAB_CP1129            ,CHARSET_CP1129           );
-	AddCharSetE("CP1133",                CHRTAB_CP1133            ,CHARSET_CP1133           );
-	AddCharSetE("CP1161",                CHRTAB_CP1161            ,CHARSET_CP1161           );
-	AddCharSetE("CP1162",                CHRTAB_CP1162            ,CHARSET_CP1162           );
-	AddCharSetE("CP1163",                CHRTAB_CP1163            ,CHARSET_CP1163           );
-	AddCharSetE("CP1250",                CHRTAB_CP1250            ,CHARSET_CP1250           );
-	AddCharSetE("CP1251",                CHRTAB_CP1251            ,CHARSET_CP1251           );
-	AddCharSetE("CP1252",                CHRTAB_CP1252            ,CHARSET_CP1252           );
-	AddCharSetE("CP1253",                CHRTAB_CP1253            ,CHARSET_CP1253           );
-	AddCharSetE("CP1254",                CHRTAB_CP1254            ,CHARSET_CP1254           );
-	AddCharSetE("CP1255",                CHRTAB_CP1255            ,CHARSET_CP1255           );
-	AddCharSetE("CP1256",                CHRTAB_CP1256            ,CHARSET_CP1256           );
-	AddCharSetE("CP1257",                CHRTAB_CP1257            ,CHARSET_CP1257           );
-	AddCharSetE("CP1258",                CHRTAB_CP1258            ,CHARSET_CP1258           );
-	AddCharSetE("CP437",                 CHRTAB_CP437             ,CHARSET_CP437            );
-	AddCharSetE("CP737",                 CHRTAB_CP737             ,CHARSET_CP737            );
-	AddCharSetE("CP775",                 CHRTAB_CP775             ,CHARSET_CP775            );
-	AddCharSetE("CP853",                 CHRTAB_CP853             ,CHARSET_CP853            );
-	AddCharSetE("CP855",                 CHRTAB_CP855             ,CHARSET_CP855            );
-	AddCharSetE("CP856",                 CHRTAB_CP856             ,CHARSET_CP856            );
-	AddCharSetE("CP857",                 CHRTAB_CP857             ,CHARSET_CP857            );
-	AddCharSetE("CP858",                 CHRTAB_CP858             ,CHARSET_CP858            );
-	AddCharSetE("CP860",                 CHRTAB_CP860             ,CHARSET_CP860            );
-	AddCharSetE("CP861",                 CHRTAB_CP861             ,CHARSET_CP861            );
-	AddCharSetE("CP862",                 CHRTAB_CP862             ,CHARSET_CP862            );
-	AddCharSetE("CP863",                 CHRTAB_CP863             ,CHARSET_CP863            );
-	AddCharSetE("CP864",                 CHRTAB_CP864             ,CHARSET_CP864            );
-	AddCharSetE("CP865",                 CHRTAB_CP865             ,CHARSET_CP865            );
-	AddCharSetE("CP866",                 CHRTAB_CP866             ,CHARSET_CP866            );
-	AddCharSetE("CP869",                 CHRTAB_CP869             ,CHARSET_CP869            );
-	AddCharSetE("CP874",                 CHRTAB_CP874             ,CHARSET_CP874            );
-	AddCharSetE("CP922",                 CHRTAB_CP922             ,CHARSET_CP922            );
-	AddCharSetE("Georgian-Academy",      CHRTAB_GEORGIAN_ACADEMY  ,CHARSET_GEORGIAN_ACADEMY );
-	AddCharSetE("Georgian-PS",           CHRTAB_GEORGIAN_PS       ,CHARSET_GEORGIAN_PS      );
-	AddCharSetE("HP-ROMAN8",             CHRTAB_HP_ROMAN8         ,CHARSET_HP_ROMAN8        );
-	AddCharSetE("KOI8-RU",               CHRTAB_KOI8_RU           ,CHARSET_KOI8_RU          );
-	AddCharSetE("KOI8-T",                CHRTAB_KOI8_T            ,CHARSET_KOI8_T           );
-	AddCharSetE("KOI8-U",                CHRTAB_KOI8_U            ,CHARSET_KOI8_U           );
-	AddCharSetE("MacArabic",             CHRTAB_MACARABIC         ,CHARSET_MACARABIC        );
-	AddCharSetE("MacCentralEurope",      CHRTAB_MACCENTRALEUROPE  ,CHARSET_MACCENTRALEUROPE );
-	AddCharSetE("MacCroatian",           CHRTAB_MACCROATIAN       ,CHARSET_MACCROATIAN      );
-	AddCharSetE("MacCyrillic",           CHRTAB_MACCYRILLIC       ,CHARSET_MACCYRILLIC      );
-	AddCharSetE("MacGreek",              CHRTAB_MACGREEK          ,CHARSET_MACGREEK         );
-	AddCharSetE("MacHebrew",             CHRTAB_MACHEBREW         ,CHARSET_MACHEBREW        );
-	AddCharSetE("MacIceland",            CHRTAB_MACICELAND        ,CHARSET_MACICELAND       );
-	AddCharSetE("MacRoman",              CHRTAB_MACROMAN          ,CHARSET_MACROMAN         );
-	AddCharSetE("MacRomania",            CHRTAB_MACROMANIA        ,CHARSET_MACROMANIA       );
-	AddCharSetE("MacThai",               CHRTAB_MACTHAI           ,CHARSET_MACTHAI          );
-	AddCharSetE("MacTurkish",            CHRTAB_MACTURKISH        ,CHARSET_MACTURKISH       );
-	AddCharSetE("MacUkraine",            CHRTAB_MACUKRAINE        ,CHARSET_MACUKRAINE       );
-	AddCharSetE("MuleLao-1",             CHRTAB_MULELAO_1         ,CHARSET_MULELAO_1        );
-	AddCharSetE("NEXTSTEP",              CHRTAB_NEXTSTEP          ,CHARSET_NEXTSTEP         );
-	AddCharSetE("RISCOS-LATIN1",         CHRTAB_RISCOS_LATIN1     ,CHARSET_RISCOS_LATIN1    );
-	AddCharSetE("TCVN",                  CHRTAB_TCVN              ,CHARSET_TCVN             );
-	AddCharSetE("TIS-620",               CHRTAB_TIS_620           ,CHARSET_TIS_620          );
-	AddCharSetE("VISCII",                CHRTAB_VISCII            ,CHARSET_VISCII           );
+	AddCharSetE("NONE", CHRTAB_ISO8859_1);
+
+#define CHRSET_(id, s) AddCharSetE(s, CHRTAB_##id);
+#include "CharSet.i"	
+#undef  CHRSET
 }
 
 static ArrayMap<String, CharSetData>& s_map()
@@ -2190,7 +2075,7 @@ static ArrayMap<String, CharSetData>& s_map()
 	return Single< ArrayMap<String, CharSetData> >();
 }
 
-byte AddCharSet(const char *name, const word *table, byte systemcharset)
+byte AddCharSet(const char *name, const word *table)
 {
 /*
 #ifdef _DEBUG
@@ -2205,16 +2090,15 @@ byte AddCharSet(const char *name, const word *table, byte systemcharset)
 	int q = s_map().GetCount();
 	CharSetData& m = s_map().Add(name);
 	m.table = table;
-	m.system = systemcharset;
 	return q;
 }
 
-byte AddCharSetE(const char *name, word *table, byte systemcharset)
+byte AddCharSetE(const char *name, word *table)
 {
 	for(int i = 0; i < 128; i++)
 		if(table[i] == CUNDEF)
 			table[i] = i + 0xEE80;
-	return AddCharSet(name, table, systemcharset);
+	return AddCharSet(name, table);
 }
 
 const char *CharsetName(byte charset)
@@ -2258,11 +2142,6 @@ inline
 static CharSetData& s_cset(byte charset)
 {
 	return s_map()[ResolveCharset(charset)];
-}
-
-byte SystemCharset(byte charset)
-{
-	return s_cset(charset).system;
 }
 
 int ToUnicode(int chr, byte charset)
