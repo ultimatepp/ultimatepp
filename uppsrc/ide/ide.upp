@@ -62,6 +62,7 @@ file
 	Calc.cpp,
 	FormatCode.cpp,
 	Abbr.cpp,
+	Qtf.cpp,
 	Compile readonly separator,
 	Methods.cpp,
 	AutoSetup.cpp,

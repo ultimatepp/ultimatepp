@@ -602,3 +602,12 @@ LAYOUT(ImportLayout, 400, 92)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(328, 64).TopPosZ(60, 24))
 END_LAYOUT
 
+LAYOUT(QtfLayout, 964, 584)
+	ITEM(DocEdit, text, HSizePosZ(4, 612).TopPosZ(28, 204))
+	ITEM(RichTextCtrl, qtf, HSizePosZ(4, 612).VSizePosZ(236, 8))
+	ITEM(RichTextView, help, RightPosZ(4, 604).VSizePosZ(4, 8))
+	ITEM(Button, editor, SetLabel(t_("Editor")).RightPosZ(612, 56).TopPosZ(4, 20))
+	ITEM(Button, clear, SetLabel(t_("Clear")).RightPosZ(676, 56).TopPosZ(4, 20))
+	ITEM(Button, copy, SetLabel(t_("Copy and close")).RightPosZ(736, 100).TopPosZ(4, 20))
+END_LAYOUT
+

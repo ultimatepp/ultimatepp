@@ -899,6 +899,7 @@ public:
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
 		void  CtrlClick(int pos);
+		void  Qtf();
 
 
 	void      ConsoleMenu(Bar& menu);
