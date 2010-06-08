@@ -98,6 +98,7 @@ void SystemInfo::Fill() {
 	TextBiosVersion = biosVersion;
 	TextBiosRelease = AsString(biosReleaseDate);
 	TextBiosSerial = biosSerial;
+	TextMACAddress = GetMacAddress();
 	
 	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
 	if (GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion)) {

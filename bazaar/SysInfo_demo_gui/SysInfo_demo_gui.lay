@@ -108,7 +108,9 @@ LAYOUT(SystemInfo, 744, 468)
 	ITEM(Button, ButUpdate, SetLabel(t_("Update")).LeftPosZ(4, 88).BottomPosZ(9, 23))
 	ITEM(Label, dv___75, SetLabel(t_("Bios serial")).LeftPosZ(204, 88).TopPosZ(32, 16))
 	ITEM(Label, TextBiosSerial, SetFrame(ThinInsetFrame()).LeftPosZ(292, 80).TopPosZ(32, 16))
-	ITEM(Label, dv___77, SetLabel(t_("Bios release")).LeftPosZ(204, 88).TopPosZ(16, 16))
+	ITEM(Label, dv___77, SetLabel(t_("MAC address")).LeftPosZ(372, 68).TopPosZ(16, 16))
+	ITEM(Label, TextMACAddress, SetFrame(ThinInsetFrame()).LeftPosZ(440, 104).TopPosZ(16, 16))
+	ITEM(Label, dv___79, SetLabel(t_("Bios release")).LeftPosZ(204, 88).TopPosZ(16, 16))
 	ITEM(Label, TextBiosRelease, SetFrame(ThinInsetFrame()).LeftPosZ(292, 80).TopPosZ(16, 16))
 END_LAYOUT
 
