@@ -88,15 +88,12 @@ Array_<Value>_`&[*@3 state])&]
 [s2; Returns CPU temperature in degrees Celsius.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:GetMacAddress`(String`&`):%- [@(0.0.255) bool]_[* GetMacAddress]([_^String^ String]_`&
-[*@3 mac])&]
-[s2; If true returns the [%-*@3 mac ]address.&]
-[s6; Only available in Windows&]
+[s5;:GetMacAddress`(`):%- [@(0.0.255) String]_[* GetMacAddress]()&]
+[s2; Returns the [%-@3 MAC ]address or Null.&]
 [s3; &]
 [s4;%- &]
-[s5;:GetHDSerial`(String`&`):%- [@(0.0.255) bool]_[* GetHDSerial]([_^String^ String]_`&[*@3 s
-erial])&]
-[s2; If true returns the hard disk physical [%-*@3 serial ]number. 
+[s5;:GetHDSerial`(`):%- [@(0.0.255) String]_[* GetHDSerial]()&]
+[s2; Returns the hard disk physical [%-*@3 serial ]number or Null. 
 This code is not affected by disk formatting.&]
 [s6; Only available in Windows&]
 [s3; &]

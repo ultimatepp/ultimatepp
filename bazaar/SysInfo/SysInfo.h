@@ -14,14 +14,14 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 // Gets the real CPU speed in MHz
 int GetCpuSpeed();
 double GetCpuTemperature();
+String GetMacAddress();
 
 #if defined(PLATFORM_WIN32) 
 bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, 
 												Array <Value> &ram, Array <Value> &videoMode);
 bool GetPackagesInfo(Array <Value> &name, Array <Value> &version, Array <Value> &vendor, 
 			Array <Value> &installDate, Array <Value> &caption, Array <Value> &description, Array <Value> &state);
-bool GetMacAddress(String &mac);
-bool GetHDSerial(String &serial);
+String GetHDSerial();
 #endif
 
 /////////////////////////////////////////////////////////////////////

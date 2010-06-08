@@ -26,6 +26,10 @@ topic "General description";
 [s0; Functions to get information and handle Desktop, OS and hardware 
 internals.&]
 [s0; &]
+[s0; [@6 IMPORTANT]: Before compiling please check [*/ 2. Compiler support 
+and Requirements] in [^topic`:`/`/SysInfo`/srcimp`/SysInfo`$en`-us^ Implementation 
+details.]&]
+[s0; &]
 [s0; It includes functions for:&]
 [s0; &]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#GetDesktopFolder`(`)^ Obtainin
@@ -43,13 +47,11 @@ creen recording]&]
 [s0;i150;O0; [^topic`:`/`/SysInfo`/src`/SysInfo`$en`-us`#LoadFile`_Safe`(String`)^ Misc
 ellaneous functions]&]
 [s0; &]
-[s0; [^topic`:`/`/SysInfo`/srcimp`/SysInfo`$en`-us^ Implementation 
-details]&]
+[s0; Other pages if interest are:&]
 [s0; &]
-[s0; [^topic`:`/`/SysInfo`/srcdoc`/SysInfoDemo`$en`-us^ SysInfo`_demo] 
-review&]
-[s0; &]
-[s0; [^topic`:`/`/SysInfo`/srcdoc`/ChangesLog`$en`-us^ Changes log]&]
-[s0; &]
-[s0; [^topic`:`/`/SysInfo`/srcdoc`/ToDo`$en`-us^ ToDo list]&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/srcdoc`/SysInfoDemo`$en`-us^ SysInfo`_demo] 
+reviews the demo package&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/srcdoc`/ChangesLog`$en`-us^ Changes 
+log]&]
+[s0;i150;O0; [^topic`:`/`/SysInfo`/srcdoc`/ToDo`$en`-us^ ToDo list]&]
 [s0; ]

@@ -7,8 +7,8 @@
 	#include <Winioctl.h>
 	#define CY tagCY
 	// To compile in MinGW copy files Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
-	// WbemProv.h and WbemTran.h from \Microsoft SDKs\Windows\v6.1\Include to MinGW/include and 
-	// wbemuuid.lib from \Microsoft SDKs\Windows\v6.1\Lib to MinGW/lib
+	// WbemProv.h and WbemTran.h from /plugin to MinGW/include and 
+	// wbemuuid.lib from /plugin to MinGW/lib
 	#include <rpcsal.h>	
 	#include <Wbemidl.h>
 	#include <winnls.h> 
@@ -227,19 +227,23 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 	
 	return true;
 }
-bool GetMacAddress(String &mac) {
+String GetMacAddress() {
 	Value vmac;
 	if (!GetWMIInfo("Win32_NetworkAdapterConfiguration", "MacAddress", vmac)) 
 		return false;
-	mac = TrimBoth(vmac);	
-	return true;
+	String mac = TrimBoth(vmac);	
+	if (mac.GetCount() == 17)
+		return mac;
+	return Null;
 }
-bool GetHDSerial(String &serial) {
+String GetHDSerial() {
 	Value vmbSerial;
 	if (!GetWMIInfo("Win32_PhysicalMedia", "SerialNumber", vmbSerial)) 
 		return false;
-	serial = TrimBoth(vmbSerial);	
-	return true;
+	String serial = TrimBoth(vmbSerial);	
+	if (serial.GetCount() > 0)
+		return serial;
+	return Null;
 }
 
 bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, Array <Value> &ram, Array <Value> &videoMode) {
@@ -383,6 +387,16 @@ double GetCpuTemperature() {
 			}
 		} while(ff.Next());
 	}
+	return Null;
+}
+String GetMacAddress() {
+	StringParse data = Sys("ifconfig -a");
+	
+	data.GoAfter("eth0");
+	data.GoAfter("HWaddr");
+	String ret = data.GetText(" ");
+	if (ret.GetCount() == 17)
+		return ret;
 	return Null;
 }
 #endif

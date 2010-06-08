@@ -41,21 +41,19 @@ in Ubuntu can run properly in Fedora without recompiling.&]
 [s0; [*+92 2. Compiler support and Requirements]&]
 [s0; &]
 [s0; SysInfo has been tested in Linux using Gcc and in Windows using 
-MinGW and MSC 9.&]
+MinGW and MSC.&]
 [s0; &]
 [s0;~~~2048; [*@6 IMPORTANT][* :] To compile using MinGW it is required 
-to copy the next files from the MSC install or from other sources:&]
-[s0;i150;O0; To Upp`\MinGW`\include: &]
-[s0;l96; `- Files [* Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
-WbemProv.h and WbemTran.h]&]
-[s0;l96; `- They can be taken from: `\Microsoft SDKs`\Windows`\v6.1`\Include&]
+to copy the next files from SysInfo/plugin:&]
+[s0;i150;O0; To `\MinGW`\include: &]
+[s0;l96; Files [* Rpcsal.h, DispEx.h, WbemCli.h, WbemDisp.h, Wbemidl.h, 
+WbemProv.h and WbemTran.h.]&]
 [s0; &]
-[s0;i150;O0;%- To `\Upp`\MinGW`\lib: &]
-[s0;l96; `- File [* wbemuuid.lib]&]
-[s0;l96; `- It can be taken from `\Microsoft SDKs`\Windows`\v6.1`\Lib&]
+[s0;i150;O0;%- To `\MinGW`\lib: &]
+[s0;l96; File [* wbemuuid.lib]&]
 [s0; &]
-[s0; To compile it in Linux it is necessary to include package XTest. 
-In Ubuntu the aptitude package name is [* libxtst`-dev].&]
+[s0; [*@6 IMPORTANT][* :] To compile it in Linux it is necessary to include 
+package XTest. In Ubuntu the aptitude package name is [* libxtst`-dev].&]
 [s0; &]
 [s0; &]
 [s0; [*+92 3. OS and Desktop implementation]&]
