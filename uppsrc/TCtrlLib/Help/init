@@ -1,0 +1,5 @@
+#ifndef _TCtrlLib_Help_icpp_init_stub
+#define _TCtrlLib_Help_icpp_init_stub
+#include "TCtrlLib/init"
+#include "RichText/init"
+#endif
