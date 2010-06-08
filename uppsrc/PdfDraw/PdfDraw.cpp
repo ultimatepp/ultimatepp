@@ -5,7 +5,7 @@ NAMESPACE_UPP
 #define LDUMP(x) // DUMP(x)
 #define LLOG(x) // LOG(x)
 
-#define PDF_COMPRESS
+//#define PDF_COMPRESS
 #define USE_TTF
 
 dword PdfDraw::GetInfo() const
@@ -25,6 +25,7 @@ void PdfDraw::Init(int pagecx, int pagecy, int _margin)
 	pgsz.cx = pagecx;
 	pgsz.cy = pagecy;
 	pgsz += margin;
+	StartPage();
 }
 
 void  PdfDraw::Clear()
@@ -78,10 +79,23 @@ int PdfDraw::PutStream(const String& data, const String& keys)
 	return offset.GetCount();
 }
 
-void PdfDraw::PutrgColor(Color rg)
+void PdfDraw::PutrgColor(Color rg, uint64 pattern)
 {
-	if(IsNull(rgcolor) || rg != rgcolor)
-		page << PdfColor(rgcolor = rg) << " rg\n";
+	if(IsNull(rgcolor) || rg != rgcolor || pattern != patternid) {
+		if(!pattern) {
+			page << PdfColor(rg) << " rg\n";
+		}
+		else {
+			int f = patterns.FindAdd(pattern);
+			if(!patternid)
+				page << "/Cspat cs\n";
+			page << PdfColor(rg) <<
+			" /Pat" << (f + 1) << " scn\n";
+		}
+
+	}
+	rgcolor = rg;
+	patternid = pattern;
 }
 
 void PdfDraw::PutRGColor(Color RG)
@@ -101,6 +115,7 @@ void PdfDraw::StartPage()
 {
 	rgcolor = RGcolor = Null;
 	fontid = -1;
+	patternid = 0;
 	textht = Null;
 	linewidth = -1;
 	if(margin)
@@ -123,6 +138,7 @@ void PdfDraw::BeginOp()
 void PdfDraw::EndOp()
 {
 	fontid = -1;
+	patternid = 0;
 	textht = Null;
 	rgcolor = RGcolor = Null;
 	linewidth = -1;
@@ -514,8 +530,8 @@ void PdfDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 	const int *disjunct_polygon_counts, int disjunct_polygon_count_count,
 	Color color, int width, Color outline, uint64 pattern, Color doxor)
 {
-	bool fill = !IsNull(color), stroke = !IsNull(outline) && !IsNull(width);
-	if(fill)   PutrgColor(color);
+	bool fill = !IsNull(color) && ~pattern, stroke = !IsNull(outline) && !IsNull(width);
+	if(fill)   PutrgColor(color, pattern);
 	if(stroke) { PutRGColor(outline); PutLineWidth(width); }
 	if(!fill && !stroke) return;
 	const char *closeop = (fill & stroke ? "B*" : fill ? "f*" : "S");
@@ -573,7 +589,7 @@ String GetGrayPdfImage(const Image& m, const Rect& sr)
 
 String PdfDraw::Finish()
 {
-	if(!IsNull(page))
+	if(page.GetLength())
 		PutStream(page);
 
 	int pagecount = offset.GetCount();
@@ -661,6 +677,98 @@ String PdfDraw::Finish()
 		if(smask >= 0)
 			imgobj << " /SMask " << smask << " 0 R";
 		imageobj << PutStream(data, imgobj);
+	}
+
+	int patcsobj = -1;
+	int patresobj = -1;
+	if(!patterns.IsEmpty()) {
+		patcsobj = BeginObj();
+		out << "[/Pattern /DeviceRGB]\n";
+		EndObj();
+		patresobj = BeginObj();
+		out << "<< >>\n";
+		EndObj();
+	}
+	
+	Vector<int> patternobj;
+	patternobj.SetCount(patterns.GetCount(), -1);
+	for(int i = 0; i < patterns.GetCount(); i++) {
+		uint64 pat = patterns[i];
+		StringBuffer ptk;
+		ptk << 
+		"/Type /Pattern\n"
+		"/PatternType 1\n"
+		"/PaintType 2\n"
+		"/TilingType 3\n"
+		"/BBox [-1 -1 9 9]\n"
+		"/XStep 8\n"
+		"/YStep 8\n"
+		"/Resources " << patresobj << " 0 R\n"
+		"/Matrix [0.75 0.0 0.0 0.75 0.0 0.0]\n" // pattern pixels -> dots
+		;
+		StringBuffer ptd;
+		for(int y = 0; y < 8; y++) {
+			for(int x = 0; x < 8; x++) {
+				int b = 8 * y + x, e, lim;
+				if(!((pat >> b) & 1)) {
+					e = 0;
+					lim = 8 - x;
+					while(++e < lim && !((pat >> (b + e)) & 1))
+						pat |= (uint64(1) << (b + e));
+					if(e > 1)
+						ptd << x << ' ' << (7 - y) << ' ' << e << " 1 re f\n";
+					else {
+						e = 0;
+						lim = 8 - y;
+						while(++e < lim && !((pat >> (b + 8 * e)) & 1))
+							pat |= (uint64(1) << (b + 8 * e));
+						if(e - y > 1)
+							ptd << x << ' ' << (7 - y - e) << " 1 " << e << " re f\n";
+						else {
+							e = 0;
+							lim = 8 - max(x, y);
+							while(++e < lim && !((pat >> (b + 9 * e)) & 1))
+								pat |= (uint64(1) << (b + 9 * e));
+							if(e > 1) {
+								ptd
+								<< FormatDouble(x - 0.25, 2) << " "
+								<< FormatDouble(7.75 - y, 2) << " m\n"
+								<< FormatDouble(x + 0.25, 2) << " "
+								<< FormatDouble(8.25 - y, 2) << " l\n"
+								<< FormatDouble(x + e + 0.25, 2) << " "
+								<< FormatDouble(8.25 - y - e, 2) << " l\n"
+								<< FormatDouble(x + e - 0.25, 2) << " "
+								<< FormatDouble(7.75 - y - e, 2) << " l\n"
+								<< "f\n";
+							}
+							else {
+								e = 0;
+								lim = 8 - max(7 - x, y);
+								while(++e < lim && !((pat >> (b + 7 * e)) & 1))
+									pat |= (uint64(1) << (b + 7 * e));
+								if(e > 1) {
+									ptd
+									<< FormatDouble(x + 1.25, 2) << " "
+									<< FormatDouble(7.75 - y, 2) << " m\n"
+									<< FormatDouble(x + 0.75, 2) << " "
+									<< FormatDouble(8.25 - y, 2) << " l\n"
+									<< FormatDouble(x - e + 0.75, 2) << " "
+									<< FormatDouble(8.25 - y - e, 2) << " l\n"
+									<< FormatDouble(x - e + 1.25, 2) << " "
+									<< FormatDouble(7.75 - y - e, 2) << " l\n"
+									<< "f\n";
+								}
+								else {
+									ptd << x << ' ' << (7 - y) << " 1 1 re f\n";
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		patternobj[i] = PutStream(ptd, ptk);
+		
 	}
 
 /*
@@ -858,11 +966,20 @@ String PdfDraw::Finish()
 	EndObj();
 	
 	int resources = BeginObj();
-	out << "<< /Font " << fonts << " 0 R /ProcSet [ /PDF /Text /ImageB /ImageC ]";
+	out << "<< /Font " << fonts << " 0 R\n"
+	"/ProcSet [ /PDF /Text /ImageB /ImageC ]\n";
 	if(imageobj.GetCount()) {
-		out << " /XObject << ";
+		out << "/XObject << ";
 		for(int i = 0; i < imageobj.GetCount(); i++)
-			out << "/Image" << i + 1 << ' ' << imageobj[i] << " 0 R ";
+			out << "/Image" << (i + 1) << ' ' << imageobj[i] << " 0 R ";
+		out << ">>\n";
+	}
+	if(!patternobj.IsEmpty()) {
+		out << 
+		"/ColorSpace << /Cspat " << patcsobj << " 0 R >>\n"
+		"/Pattern << ";
+		for(int i = 0; i < patterns.GetCount(); i++) 
+			out << "/Pat" << (i + 1) << ' ' << patternobj[i] << " 0 R ";
 		out << ">>\n";
 	}
 	out << ">>\n";

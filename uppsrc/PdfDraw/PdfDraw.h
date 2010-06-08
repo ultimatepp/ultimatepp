@@ -271,10 +271,11 @@ private:
 	VectorMap<Font, VectorMap<wchar, CharPos> > fontchars;
 	Vector<Image>                               image;
 	Vector<Rect>                                imagerect;
+	Index<uint64>                               patterns;
 	
-	Vector<int> offset;
-	String      out;
-	String      page;
+	Vector<int>  offset;
+	StringBuffer out;
+	StringBuffer page;
 	Size        pgsz;
 	Color       rgcolor;
 	Color       RGcolor;
@@ -282,6 +283,7 @@ private:
 	double      textht;
 	double      linewidth;
 	int         margin;
+	uint64      patternid;
 
 	inline double Pt(double dot)        { return 0.12 * dot; }
 
@@ -291,7 +293,7 @@ private:
 	int    PutStream(const String& data, const String& keys = Null);
 
 	void    PutRect(const Rect& rc);
-	void    PutrgColor(Color rg);
+	void    PutrgColor(Color rg, uint64 pattern = 0);
 	void    PutRGColor(Color RG);
 	void    PutFontHeight(int fi, double ht);
 	void    PutLineWidth(int lw);
