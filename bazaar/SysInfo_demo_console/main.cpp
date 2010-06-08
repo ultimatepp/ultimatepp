@@ -237,13 +237,6 @@ void Test()
 
 CONSOLE_APP_MAIN
 {
-	mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
-	mciSendString("play recsound", "", 0, 0);
-	Sleep(10000);
-	//mciSendString("save recsound c:\\record.wav", "", 0, 0);
-	mciSendString("close recsound", "", 0, 0);
-	
-	return;
 	FileDelete(AppendFileName(GetDesktopFolder(), "log"));
 	Puts("Introduce enter or (l) to log off, (r) to reboot or (s) to shutdown");
 	char str[50];
