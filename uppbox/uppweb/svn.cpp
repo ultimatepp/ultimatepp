@@ -3,7 +3,7 @@
 VectorMap<String, SvnListRev> svndata;
 Vector<SvnLogRev> svnlog;
 
-void ParseSvnList(VectorMap<String, SvnListRev> &data, String &out, const String path) {
+void ParseSvnList(VectorMap<String, SvnListRev> &data, String &out, const String path, const String folder) {
 	String topicFolder;
 	
 	String line;
@@ -19,6 +19,7 @@ void ParseSvnList(VectorMap<String, SvnListRev> &data, String &out, const String
 		if((newpos = out.Find("<", pos)) == -1)
 			return;
 		String name = out.Mid(pos, newpos-pos);
+		String fullPath = AppendFileName(folder, name);
 		if((newpos = name.Find('.')) != -1)
 			name = name.Mid(0, newpos);
 		SvnListRev &rev = data.Add(path + name);
@@ -46,6 +47,7 @@ void ParseSvnList(VectorMap<String, SvnListRev> &data, String &out, const String
 		rev.time.hour = ScanInt(time.Mid(11, 2));
 		rev.time.minute = ScanInt(time.Mid(14, 2));
 		rev.time.second = ScanInt(time.Mid(17));		
+		rev.fullPath = fullPath;
 	}
 }
 void GetSvnFolder(VectorMap<String, SvnListRev> &data, String tppfolder) {
@@ -55,7 +57,7 @@ void GetSvnFolder(VectorMap<String, SvnListRev> &data, String tppfolder) {
 	int pos = tppfolder.ReverseFind('/', posp-1);
 	pos = tppfolder.ReverseFind('/', pos-1);
 	String topic = "topic:/" + tppfolder.Mid(pos, posp-pos) + "/";
-	ParseSvnList(data, out, topic);
+	ParseSvnList(data, out, topic, tppfolder);
 }
 void GetSvnFolderDeep(VectorMap<String, SvnListRev> &data, const String &tppfolder) {
 	FindFile fftpp(AppendFileName(tppfolder, "*.tpp"));
