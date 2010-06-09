@@ -1482,6 +1482,7 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
 	StringParse info = Sys("mount -l");
 	if (info  == "")
 		return false;
+	
 	String straux;
 	while (drive != (straux = info.GetText()))
 		if (straux == "")
@@ -1503,33 +1504,33 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
 		type = "Hard";
 		
 	struct statfs buf;
-	if (0 == statfs(drive, &buf)) {
+	if (0 == statfs(drive, &buf)) 
 		//puts(Format("%x", buf.f_type)); // Filesystem type
 		maxName = buf.f_namelen; 	
-	} else {
+	else 
 		maxName = 0;
-	}	
+	
+	return true;	
 }
 
 #endif
 
 #if defined (PLATFORM_WIN32)
-unsigned __int64 spstart, spstop;
-unsigned __int64 nCtr, nFreq, nCtrStop;
+unsigned long start, end;
+unsigned long nCtr, nFreq, nCtrStop;
 
 #if defined(__MINGW32__)
 int GetCpuSpeed()
 {
     if(!QueryPerformanceFrequency((LARGE_INTEGER *) &nFreq)) 
     	return 0;
-
     QueryPerformanceCounter((LARGE_INTEGER *)&nCtrStop);
     nCtrStop += nFreq/10000;
     
     __asm__(".byte 0x0F");
     __asm__(".byte 0x31");
-    __asm__("mov %eax,_spstart");
-    __asm__("mov %edx,4+(_spstart)");
+    __asm__("mov %eax,_start");
+    __asm__("mov %edx,4+(_start)");
 	
     do
         QueryPerformanceCounter((LARGE_INTEGER *)&nCtr);
@@ -1537,10 +1538,10 @@ int GetCpuSpeed()
 
     __asm__(".byte 0x0F");
     __asm__(".byte 0x31");
-    __asm__("mov %eax,_spstop");
-    __asm__("mov %edx,4+(_spstop)");
+    __asm__("mov %eax,_end");
+    __asm__("mov %edx,4+(_end)");
 
-    return (int)((spstop-spstart)/100); 
+    return int((end-start)/100); 
 }
 #elif defined(_MSC_VER)
 int GetCpuSpeed()
@@ -1553,8 +1554,8 @@ int GetCpuSpeed()
     _asm {
      	__asm _emit 0x0f 
      	__asm _emit 0x31
-    	mov DWORD PTR spstart, eax
-   		mov DWORD PTR [spstart + 4], edx
+    	mov DWORD PTR start, eax
+   		mov DWORD PTR [start + 4], edx
     }
     do 
          QueryPerformanceCounter((LARGE_INTEGER *) &nCtr);
@@ -1562,10 +1563,10 @@ int GetCpuSpeed()
     _asm {
         __asm _emit 0x0f 
         __asm _emit 0x31
-        mov DWORD PTR spstop, eax
-        mov DWORD PTR [spstop + 4], edx
+        mov DWORD PTR end, eax
+        mov DWORD PTR [end + 4], edx
  	}
-	return (int)((spstop-spstart)/100);
+	return int((end-start)/100);
 }
 #endif 
 #endif
@@ -1577,8 +1578,8 @@ int GetCpuSpeed()
 int GetCpuSpeed()
 {
 	struct timeval tv;
-  	double cnt1,cnt2;
-  	unsigned long start,end;
+  	double cnt1, cnt2;
+  	unsigned long start, end;
 
   	RDTSC_READ(start);
   	gettimeofday(&tv, 0);
@@ -1591,7 +1592,7 @@ int GetCpuSpeed()
 
   	RDTSC_READ(end);
 
-  	return (int)((end-start)/10000);
+  	return int((end-start)/10000);
 }
 #endif
 #if defined(PLATFORM_WIN32)
