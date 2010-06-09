@@ -458,6 +458,11 @@ void ExportPage(int i)
 		String txt = String("[2 ") + t_("Last edit by %s on %s") + ".]";	
 		qtflangs += Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
 	}
+	String googleFile = svndata[isvn].fullPath;
+	if (googleFile.GetCount() > rootdir.GetCount())
+		googleFile = UnixPath(googleFile.Mid(rootdir.GetCount()));
+	else
+		googleFile = "";
 	String strlang;
 	Array <String> arrLangs;
 	for (int il = 0; il < languages.GetCount(); ++il) {
@@ -487,7 +492,9 @@ void ExportPage(int i)
 	if (tt[i].title.Find("How to contribute. Web page") < 0) {
 		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
 		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
-	}
+		if (googleFile != "")
+			qtflangs += ". [^http`:`/`/upp`-mirror.googlecode.com`/svn`/trunk" + DeQtf(googleFile) + "^/1 Page Source]";
+	}	
 
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
 	String page = tt[i];
@@ -692,6 +699,7 @@ GUI_APP_MAIN
 		Exclamation ("Directory " + DeQtf(rootdir) + " does not exist");
 		return;
 	}
+
 	uppbox =    AppendFileName(rootdir, "uppbox");
 	uppsrc =    AppendFileName(rootdir, "uppsrc");
 	reference = AppendFileName(rootdir, "reference");
@@ -705,6 +713,7 @@ GUI_APP_MAIN
 	languages.Add(LNG_('F','R','F','R'));
 	languages.Add(LNG_('R','O','R','O'));
 	languages.Add(LNG_('R','U','R','U'));
+	languages.Add(LNG_('Z','H','C','N'));
 	languages.Add(LNG_('Z','H','T','W'));
 	
 	RLOG("--- uppweb started at " << GetSysTime());
@@ -721,7 +730,7 @@ GUI_APP_MAIN
 	
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
-	String release = "2361";
+	String release = "2467";
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	
@@ -869,8 +878,8 @@ GUI_APP_MAIN
 		String f = links.Get(reflink[i], Null) + '#' + lbl;
 		links.Add(l, f);
 		static const char *x[] = { "::struct", "::class", "::union" };
-		for(int i = 0; i < 3; i++) {
-			String e = x[i];
+		for(int ii = 0; ii < 3; ii++) {
+			String e = x[ii];
 			if(EndsWith(l, e)) {
 				links.Add(l.Mid(0, l.GetLength() - e.GetLength()), f);
 			}

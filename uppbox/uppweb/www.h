@@ -18,6 +18,7 @@ struct SvnListRev : Moveable <SvnListRev> {
         String author;
         int revision;
         Time time;
+        String fullPath;
 };
 
 struct SvnLogRev : Moveable <SvnLogRev> {

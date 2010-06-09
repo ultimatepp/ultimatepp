@@ -119,7 +119,7 @@ static void sGatherTopics(VectorMap<String, Topic> *map, const char *topic)
 {
 	GatherTopics(*map, topic);
 }
-
+	
 String ChangeTopicLanguage(const String &topic, int lang);
 String GetTopicLanguage(const String &topic);
 

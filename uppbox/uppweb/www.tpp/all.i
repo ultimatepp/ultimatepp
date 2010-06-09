@@ -210,6 +210,10 @@ TOPIC("index$ru-ru")
 #include "index$ru-ru.tppi"
 END_TOPIC
 
+TOPIC("index$zh-cn")
+#include "index$zh-cn.tppi"
+END_TOPIC
+
 TOPIC("index$zh-tw")
 #include "index$zh-tw.tppi"
 END_TOPIC
