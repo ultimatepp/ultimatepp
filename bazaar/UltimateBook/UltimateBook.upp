@@ -1,3 +1,27 @@
+description "Ultimate++ website generation and export.\377";
+
+uses
+	Web,
+	RichText,
+	plugin\gif,
+	CtrlLib,
+	CtrlLib,
+	plugin\png,
+	plugin\ftp,
+	Sql,
+	Controls4U,
+	GridCtrl,
+	ide;
+
+options(GCC) -DNOWSTRING;
+
 file
+	MakeExamples.cpp,
+	SrcDocs.cpp,
+	www.cpp,
+	book.lay,
 	srcdoc.tpp;
+
+mainconfig
+	"" = "GUI";
 

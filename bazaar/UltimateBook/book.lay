@@ -1,0 +1,12 @@
+LAYOUT(main, 412, 156)
+	ITEM(Option, doPdf, SetLabel(t_("Do .pdf")).LeftPosZ(8, 64).BottomPosZ(105, 19))
+	ITEM(Option, doHtml, SetLabel(t_("Do .html")).LeftPosZ(8, 64).BottomPosZ(125, 19))
+	ITEM(EditFile, pdfFile, HSizePosZ(140, 8).BottomPosZ(105, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Html folder:")).LeftPosZ(80, 60).BottomPosZ(125, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Pdf file:")).LeftPosZ(80, 60).BottomPosZ(105, 19))
+	ITEM(EditFolder, htmlFolder, HSizePosZ(140, 8).BottomPosZ(125, 19))
+	ITEM(Button, go, SetLabel(t_("Go")).RightPosZ(8, 72).BottomPosZ(8, 24))
+	ITEM(Label, action, HSizePosZ(4, 8).TopPosZ(64, 19))
+	ITEM(ProgressIndicator, progress, LeftPosZ(4, 400).TopPosZ(88, 24))
+END_LAYOUT
+
