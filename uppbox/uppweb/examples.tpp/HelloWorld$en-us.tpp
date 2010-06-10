@@ -22,8 +22,7 @@ topic "Slicing HelloWorld U++ example";
 [t4167;C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s0;> [*^topic`:`/`/uppweb`/examples`/HelloWorld`$en`-us^1 `[en`]][*1  
-][*^topic`:`/`/uppweb`/examples`/HelloWorld`$ru`-ru^1 `[ru`]]&]
+[s0; &]
 [s0; Historically almost every program language or framework have 
 some kind of `"Hello world!`" example and Ultimate`+`+ framework 
 is not exception:). So in this short tutorial I will try to explain 
