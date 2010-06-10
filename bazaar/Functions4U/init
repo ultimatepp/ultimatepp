@@ -2,6 +2,8 @@
 #define _Functions4U_icpp_init_stub
 #include "Core/init"
 #include "plugin\bz2/init"
+#include "ide\Browser/init"
 #include "GridCtrl/init"
 #include "AESStream/init"
+#include "Web/init"
 #endif

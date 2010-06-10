@@ -2,7 +2,9 @@ description "Functions and classes for general use\377B255,170,0";
 
 uses
 	Core,
-	plugin\bz2;
+	plugin\bz2,
+	ide\Browser,
+	Web;
 
 uses(GUI) GridCtrl;
 
@@ -16,19 +18,23 @@ file
 	Functions4U_Gui.cpp,
 	Functions4U_Gui.h,
 	QtfEquation.cpp,
-	SvgColors.cpp,
-	SvgColors.h,
 	srcdoc.tpp,
 	src.tpp,
 	Functions4U.t,
 	License.txt,
-	bsdiffwrapper.h,
+	GatherTpp readonly separator,
+	GatherTpp.cpp,
+	GatherTpp.h,
+	SvgColors readonly separator,
+	SvgColors.cpp,
+	SvgColors.h,
 	BSDiff readonly separator,
+	bsdiffwrapper.h,
 	plugin/bsadditional.cpp,
 	plugin/bsdiff.cpp,
 	plugin/bspatch.cpp,
+	plugin/Credits.txt,
 	Xmlize2 readonly separator,
 	Xmlize2.cpp,
-	Xmlize2.h,
-	plugin/Credits.txt;
+	Xmlize2.h;
 

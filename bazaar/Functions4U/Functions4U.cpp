@@ -1077,7 +1077,7 @@ String GetNextFolder(String folder, String lastFolder) {
 
 String GetUpperFolder(String folderName) {
 	if (folderName.IsEmpty())
-		return "";
+		return Null;
 #ifdef PLATFORM_WIN32
 	if (folderName.GetCount() == 3)
 #else
