@@ -19,8 +19,7 @@ topic "addressbook";
 [l321;b83;a83;*C$7 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%EN-US 
-[s0;> [*^topic`:`/`/uppweb`/examples`/AddressBook`$en`-us^1 `[en`]][*1  
-][*^topic`:`/`/uppweb`/examples`/AddressBook`$ru`-ru^1 `[ru`]]&]
+[s0;2 &]
 [s0; [2 Этот пример демонстрирует использование 
 шаблонов диалогов, TabCtrl и ArrayCtrl.]&]
 [s0;2 &]

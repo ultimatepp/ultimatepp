@@ -1,8 +1,7 @@
 topic "AnimatedHello";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0;> [*^topic`:`/`/uppweb`/examples`/AnimatedHello`$en`-us^1 `[en`]][*1  
-][*^topic`:`/`/uppweb`/examples`/AnimatedHello`$ru`-ru^1 `[ru`]]&]
+[s0;2 &]
 [s0; [2 This is `"enhanced version`" of Hello world example `- text 
 is colored and animated.]&]
 [s0; &]

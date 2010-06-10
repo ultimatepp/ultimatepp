@@ -453,16 +453,17 @@ void ExportPage(int i)
 	h = ParseQTF(tt[i].text).GetHeight(1000);
 	
 	int isvn = svndata.Find(tt.GetKey(i));
-	String qtflangs;	
+	String qtflangs;
+	String googleFile;	
 	if (isvn > -1) {   				
 		String txt = String("[2 ") + t_("Last edit by %s on %s") + ".]";	
 		qtflangs += Format(txt, svndata[isvn].author, Format(Date(svndata[isvn].time)));
+		googleFile = svndata[isvn].fullPath;
+		if (googleFile.GetCount() > rootdir.GetCount())
+			googleFile = UnixPath(googleFile.Mid(rootdir.GetCount()));
+		else
+			googleFile = "";
 	}
-	String googleFile = svndata[isvn].fullPath;
-	if (googleFile.GetCount() > rootdir.GetCount())
-		googleFile = UnixPath(googleFile.Mid(rootdir.GetCount()));
-	else
-		googleFile = "";
 	String strlang;
 	Array <String> arrLangs;
 	for (int il = 0; il < languages.GetCount(); ++il) {
@@ -493,7 +494,7 @@ void ExportPage(int i)
 		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
 		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
 		if (googleFile != "")
-			qtflangs += ". [^http`:`/`/upp`-mirror.googlecode.com`/svn`/trunk" + DeQtf(googleFile) + "^/1 Page Source]";
+			qtflangs += ". [^http`:`/`/upp`-mirror.googlecode.com`/svn`/trunk" + DeQtf(googleFile) + "^/1 " + "T`+`+" + "]";
 	}	
 
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);

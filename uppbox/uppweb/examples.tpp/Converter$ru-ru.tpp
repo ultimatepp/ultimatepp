@@ -19,8 +19,7 @@ topic "converter";
 [l321;b83;a83;*C$7 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%EN-US 
-[s0;> [*^topic`:`/`/uppweb`/examples`/Converter`$en`-us^1 `[en`]][*1  
-][*^topic`:`/`/uppweb`/examples`/Converter`$ru`-ru^1 `[ru`]]&]
+[s0;2 &]
 [s0; [2 На создание данного примера вдохновил 
 Swing урок, оригинальная Java`-версия здесь:]&]
 [s0; [^http`:`/`/www`.ictp`.trieste`.it`/`~manuals`/programming`/Java`/tutorial`/uiswing`/overview`/anatomy`.html^2 h
