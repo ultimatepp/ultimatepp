@@ -10,7 +10,6 @@
 
 using namespace Upp;
 
-bool GetWMIInfo(String system, String data, Value &res, String name = "root\\cimv2");
 	
 GUI_APP_MAIN { 
 	SysInfoDemo program;
