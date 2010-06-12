@@ -20,7 +20,7 @@ static const CLSID CLSID_MozillaBrowser = {0x1339B54C, 0x3453, 0x11D2, {0x93, 0x
 
 class FirefoxBrowser : public DHCtrlActiveX {
 public:
-	FirefoxBrowser() : DHCtrlActiveX(CLSID_MozillaBrowser, "Firefox") {};
+	FirefoxBrowser(bool status = true) : DHCtrlActiveX(CLSID_MozillaBrowser, "Firefox", status) {};
 
 	bool Browse(const String &url);
 	bool ShowHTML(const String &html);
@@ -38,10 +38,14 @@ private:
 	class IIWebBrowser {
 	public:
 		IIWebBrowser(FirefoxBrowser *obj) {
-			web = (IWebBrowser2 *)obj->QueryInterface(IID_IWebBrowser2);
+			if (obj->GetStatus())
+				web = (IWebBrowser2 *)obj->QueryInterface(IID_IWebBrowser2);
+			else
+				web = 0;
 		}
 		~IIWebBrowser() {
-			web->Release();
+			if (web)
+				web->Release();
 		}
 		operator IWebBrowser2 *() {return web;}
 		IWebBrowser2 * operator ->() {return web;}
@@ -52,7 +56,7 @@ private:
 
 class IExplorerBrowser : public DHCtrlActiveX {
 public:
-	IExplorerBrowser() : DHCtrlActiveX(CLSID_WebBrowser, "IExplorer") {};
+	IExplorerBrowser(bool status = true) : DHCtrlActiveX(CLSID_WebBrowser, "IExplorer", status) {};
 
 	bool Browse(const String &url);
 	bool ShowHTML(const String &html);
@@ -70,10 +74,14 @@ private:
 	class IIWebBrowser {
 	public:
 		IIWebBrowser(IExplorerBrowser *obj) {
-			web = (IWebBrowser2 *)obj->QueryInterface(IID_IWebBrowser2);
+			if (obj->GetStatus())
+				web = (IWebBrowser2 *)obj->QueryInterface(IID_IWebBrowser2);
+			else
+				web = 0;
 		}
 		~IIWebBrowser() {
-			web->Release();
+			if (web)
+				web->Release();
 		}
 		operator IWebBrowser2 *() {return web;}
 		IWebBrowser2 * operator ->() {return web;}
@@ -87,7 +95,7 @@ static const CLSID CLSID_VLCPLayer = {0x9BE31822, 0xFDAD, 0x461B, {0xAD, 0x51, 0
 
 class VLCPlayer : public DHCtrlActiveX {
 public:
-	VLCPlayer() : DHCtrlActiveX(CLSID_VLCPLayer, "VLCPlayer") {};
+	VLCPlayer(bool status = true) : DHCtrlActiveX(CLSID_VLCPLayer, "VLCPlayer", status) {};
 
 	bool AddTarget(const String movie);
 	bool Play();
@@ -109,10 +117,14 @@ private:
 	class IIVLC {
 	public:
 		IIVLC(VLCPlayer *obj) {
-			vlc = (IVLCControl *)obj->QueryInterface(IID_IVLCControl);
+			if (obj->GetStatus())
+				vlc = (IVLCControl *)obj->QueryInterface(IID_IVLCControl);
+			else
+				vlc = 0;
 		}
 		~IIVLC() {
-			vlc->Release();
+			if (vlc)
+				vlc->Release();
 		}
 		operator IVLCControl *() {return vlc;}
 		IVLCControl * operator ->() {return vlc;}

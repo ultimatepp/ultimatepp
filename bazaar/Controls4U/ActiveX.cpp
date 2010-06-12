@@ -42,26 +42,42 @@ bool CBSTR::Set(const String str) {
 	return BSTRSet(str, bstr);
 }
 
-DHCtrlActiveX::DHCtrlActiveX(CLSID clsid, const String name) : oleObj(0), pClientSite(0), clsid(clsid), name(name) {}
+DHCtrlActiveX::DHCtrlActiveX(CLSID clsid, const String name, bool status) : 
+						oleObj(0), pClientSite(0), clsid(clsid), name(name), status(status) {}
 
 DHCtrlActiveX::~DHCtrlActiveX(void) {
 	Detach();
 }
-                 
+
+DHCtrlActiveX &DHCtrlActiveX::SetStatus(bool _status) {
+	status = _status; 
+	if (status) {
+		Attach(GetHWND());
+		EnableWindow(GetHWND(), true);
+		BackPaint(NOBACKPAINT);
+	} else {
+		Detach();
+		BackPaint(FULLBACKPAINT);
+	}
+	return *this;
+};
+          
 LRESULT DHCtrlActiveX::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
-	switch (message) {
-	case WM_SIZE: 	DoResize();
-					break;
-	case WM_CREATE:	Attach(GetHWND());
-					EnableWindow(GetHWND(), true);
-					break;
+	if (status) {
+		switch (message) {
+		case WM_SIZE: 	DoResize();
+						break;
+		case WM_CREATE:	Attach(GetHWND());
+						EnableWindow(GetHWND(), true);
+						break;
+		}
 	}
 	return DHCtrl::WindowProc(message, wParam, lParam);
 }
 
 void *DHCtrlActiveX::QueryInterface(const IID iid) {
 	void *ret;
-	if (!oleObj)
+	if (!oleObj || !status)
 		return NULL;
 	if (S_OK != oleObj->QueryInterface(iid, &ret)) 
 		return NULL;
@@ -76,12 +92,13 @@ void DHCtrlActiveX::Detach() {
 	
 	oleObj->Close(OLECLOSE_NOSAVE);
 	oleObj->Release();
+	oleObj = 0;
 }
 
 void DHCtrlActiveX::DoResize() {
 	if(!pClientSite.hwnd) 
 		return;
-	if (!oleObj)
+	if (!oleObj || !status)
 		return;
 	
 	RECT rect;
@@ -95,7 +112,7 @@ void DHCtrlActiveX::DoResize() {
 }
 
 bool DHCtrlActiveX::Attach(HWND hwnd) {
-	if (hwnd == (HWND)-1 || hwnd == 0)
+	if (hwnd == (HWND)-1 || hwnd == 0 || !status)
 		return false;
 	if(pClientSite.hwnd && pClientSite.hwnd != hwnd) 
 		Detach();

@@ -92,12 +92,14 @@ public:
 
 class DHCtrlActiveX : public DHCtrl {
 public:
-	DHCtrlActiveX(CLSID, const String);
+	DHCtrlActiveX(CLSID, const String, bool status = true);
 	~DHCtrlActiveX(void);
 	
 	bool Attach(HWND hwnd);
 	void *QueryInterface(const IID iid);
 	bool IsLoaded() {return oleObj != NULL;}
+	DHCtrlActiveX &SetStatus(bool _status);
+	bool GetStatus() {return status;};
 	
 protected:
 	void Detach();
@@ -111,6 +113,7 @@ private:
 	CLSID clsid;
 	String name;
 	IOleObject *oleObj;	
+	bool status;
 };
 
 

@@ -1129,13 +1129,17 @@ FileBrowser::FileBrowser() {
 	files.AddColumn(t_("Name")).Add(3).Margin(2).Edit(textFileName)./*SetDisplay(Single<DisplayNameIcon>()).*/HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 0);
 	files.AddColumn(t_("Size")).HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 1);
 	files.AddColumn(t_("Date")).HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 2);
+	files.AddColumn("IsFolder");
+	files.AddColumn("RealSize");
+	files.HeaderObject().ShowTab(3, false);
+	//files.HeaderObject().ShowTab(4, false);
 	files.MultiSelect().HeaderObject().Absolute().Clipboard();
 	files.BackPaintHint();
 	files.AddIndex();
 	files.VertGrid(false).HorzGrid(false);
 	files.SetLineCy((int)(0.85*EditString::GetStdHeight()));
 	files.HeaderTab(0).SetRatio(10);
-	files.ColumnWidths("200 50 110");
+	files.ColumnWidths("200 60 120");
 	files.EvenRowColor(Blend(SColorMark, SColorPaper, 240));
 //	files.SetLabel(&label);
 
@@ -1199,7 +1203,7 @@ void FileBrowser::ListFiles(String folderName, bool &thereIsAFolder) {
 	if (fileData.GetCount() == 0) {
 		int cy = files.GetLineCy();
 		Image img = Rescale(CtrlImg::information(), cy, cy);
-		files.Add(t_("No files or access not permitted"), "", "", img);		
+		files.Add(t_("No files or access not permitted"), "", "", img, false, 0);		
 		files.SetDisplay(0, 0, pd);
 		return;
 	}
@@ -1212,9 +1216,12 @@ void FileBrowser::ListFiles(String folderName, bool &thereIsAFolder) {
 		bool isFolder 		= fileData[i].isFolder;
 		
 		if (isFolder)
-			thereIsAFolder = true;
-		files.Add(fullFilename, isFolder ? 0 : fileData[i].length, fileData[i].t, 
-					NativePathIconX(fullFilename, DirectoryExistsX(fullFilename, fileFlags), fileFlags));
+			thereIsAFolder = true; 
+		files.Add(fullFilename, 
+				  isFolder ? "" : BytesToString(fileData[i].length), 
+				  fileData[i].t, 
+				  NativePathIconX(fullFilename, DirectoryExistsX(fullFilename, fileFlags), fileFlags), 
+				  isFolder ? fileName : "ZZZZZ" + fileName, fileData[i].length);
 		files.SetDisplay(files.GetCount() - 1, 0, pd);
 	}
 }
@@ -1300,17 +1307,44 @@ void FileBrowser::FolderChanged() {
 void FileBrowser::FilesEnterRow() {
 	int i = 1;
 }
+/*
+int StdValueCompare(const Value& a, const Value& b, int language)
+{
+	LTIMING("StdValueCompare");
 
+	bool na = IsNull(a), nb = IsNull(b);
+	if(na || nb)
+		return !na ? 1 : !nb ? -1 : 0;
+	dword ta = a.GetType(), tb = b.GetType();
+	if((ta == INT_V || ta == BOOL_V) && (tb == INT_V || tb == BOOL_V))
+		return cmp<int>(a, b);
+	if((ta == BOOL_V || ta == INT_V || ta == INT64_V || ta == DOUBLE_V)
+	&& (tb == BOOL_V || tb == INT_V || tb == INT64_V || tb == DOUBLE_V))
+		return cmp<double>(a, b);
+	if(ta == DATE_V && tb == DATE_V)
+		return cmp<Date>(a, b);
+	if((ta == DATE_V || ta == TIME_V) && (tb == DATE_V || tb == TIME_V))
+		return cmp<Time>(a, b);
+	if((ta == STRING_V || ta == WSTRING_V) && (tb == STRING_V || tb == WSTRING_V))
+		return GetLanguageInfo(language).Compare(WString(a), WString(b));
+	return cmp<int>(ta, tb);
+}
+*/
 void FileBrowser::SortByColumn(int col) {
 	static bool order[] = {true, true, true};
 	
 	if (col < 0 || col > 2)
 		return;
-	
+
+	int ordercol = col;
+	if (col == 0)
+		ordercol = 4;
+	else if (col == 1)
+		ordercol = 5;	
 	if (order[col]) 
-		files.Sort(col, StdValueCompare);
+		files.Sort(ordercol, StdValueCompare);
 	else
-		files.Sort(col, StdValueCompareDesc);
+		files.Sort(ordercol, StdValueCompareDesc);
 	order[col] = !order[col];
 }
 
