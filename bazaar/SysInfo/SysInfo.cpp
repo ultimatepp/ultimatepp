@@ -40,8 +40,6 @@
 	#include <X11/extensions/XTest.h>
 #endif
 
-using namespace Upp;
-
 #include "SysInfo.h"
 
 
@@ -393,8 +391,12 @@ String GetMacAddress() {
 	StringParse data = Sys("ifconfig -a");
 	
 	data.GoAfter("eth0");
-	data.GoAfter("HWaddr");
-	String ret = data.GetText(" ");
+	String line = TrimBoth(data.GetLine());
+	int pos = line.ReverseFind(' ');
+	if (pos == -1)
+		return Null;
+	
+	String ret = line.Mid(pos+1);
 	if (ret.GetCount() == 17)
 		return ret;
 	return Null;
