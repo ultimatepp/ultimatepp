@@ -18,7 +18,7 @@ options(GCC) -DNOWSTRING;
 file
 	MakeExamples.cpp,
 	SrcDocs.cpp,
-	www.cpp,
+	main.cpp,
 	book.lay,
 	srcdoc.tpp;
 

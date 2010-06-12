@@ -1,5 +1,6 @@
 #include <Core/Core.h>
-#include "Functions4U/Functions4U.h"
+#include <ide/Browser/Browser.h>
+#include <Functions4U/Functions4U.h>
 
 using namespace Upp;
 
