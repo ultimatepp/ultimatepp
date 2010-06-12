@@ -21,9 +21,20 @@ Firefox_Demo::Firefox_Demo() {
 	home.WhenPush = THISBACK(Home);
 	stop.WhenPush = THISBACK(Stop);
 	refresh.WhenPush = THISBACK(RefreshPage);
+	switchOn.WhenPush = THISBACK(SwitchOn);
 	
 	url  <<= "http://www.ultimatepp.org/";
 	html <<= "<H2><CENTER>HTML string test</CENTER></H2><P><FONT COLOR=RED>This is a <U>HTML string</U> in memory.</FONT>";
+}
+
+void Firefox_Demo::SwitchOn() {
+	if (switchOn.GetLabel() == "Switch the control on") {
+		iexplorer.SetStatus(true);
+		switchOn.SetLabel("Switch the control off");
+	} else {
+		iexplorer.SetStatus(false);
+		switchOn.SetLabel("Switch the control on");
+	}
 }
 
 void Firefox_Demo::Browse() {
@@ -36,7 +47,7 @@ void Firefox_Demo::ShowHTML() {
 	if (!iexplorer.IsLoaded())
 		Exclamation("Sorry. ActiveX or program not available");	
 	iexplorer.ShowHTML(html);
-	title.SetText("");
+	title = "";
 }
 
 void Firefox_Demo::Forward() {
@@ -70,8 +81,11 @@ void Firefox_Demo::RefreshPage() {
 }
 
 void Firefox_Demo::UpdateInfo() {
-	if (!iexplorer.IsLoaded())
-		Exclamation("Sorry. ActiveX or program not available");	
+	if (!iexplorer.IsLoaded()) {
+		offline = "ActiveX or program not available";	
+		status = "";
+		return;
+	}
 	static String location;
 	String newLocation = iexplorer.GetLocation();
 	if (newLocation != "")
@@ -79,11 +93,11 @@ void Firefox_Demo::UpdateInfo() {
 			url <<= newLocation;
 			location = newLocation;
 		}
-	title.SetText(iexplorer.GetTitle());
+	title = iexplorer.GetTitle();
 	bool off;
 	iexplorer.GetOffline(off);
-	offline.SetText(off ? "Offline" : "Online");
-	status.SetText(iexplorer.GetReadyState());
+	offline = off ? "Offline" : "Online";
+	status = iexplorer.GetReadyState();
 }
 
 IExplorer_Demo::IExplorer_Demo() {
@@ -96,9 +110,20 @@ IExplorer_Demo::IExplorer_Demo() {
 	home.WhenPush = THISBACK(Home);
 	stop.WhenPush = THISBACK(Stop);
 	refresh.WhenPush = THISBACK(RefreshPage);
+	switchOn.WhenPush = THISBACK(SwitchOn);
 	
 	url  <<= "http://www.ultimatepp.org/";
 	html <<= "<H2><CENTER>HTML string test</CENTER></H2><P><FONT COLOR=RED>This is a <U>HTML string</U> in memory.</FONT>";
+}
+
+void IExplorer_Demo::SwitchOn() {
+	if (switchOn.GetLabel() == "Switch the control on") {
+		iexplorer.SetStatus(true);
+		switchOn.SetLabel("Switch the control off");
+	} else {
+		iexplorer.SetStatus(false);
+		switchOn.SetLabel("Switch the control on");
+	}
 }
 
 void IExplorer_Demo::Browse() {
@@ -111,7 +136,7 @@ void IExplorer_Demo::ShowHTML() {
 	if (!iexplorer.IsLoaded())
 		Exclamation("Sorry. ActiveX or program not available");	
 	iexplorer.ShowHTML(html);
-	title.SetText("");
+	title = "";
 }
 
 void IExplorer_Demo::Forward() {
@@ -145,8 +170,11 @@ void IExplorer_Demo::RefreshPage() {
 }
 
 void IExplorer_Demo::UpdateInfo() {
-	if (!iexplorer.IsLoaded())
-		Exclamation("Sorry. ActiveX or program not available");	
+	if (!iexplorer.IsLoaded()) {
+		offline = "ActiveX or program not available";	
+		status = "";
+		return;
+	}
 	static String location;
 	String newLocation = iexplorer.GetLocation();
 	if (newLocation != "")
@@ -154,11 +182,11 @@ void IExplorer_Demo::UpdateInfo() {
 			url <<= newLocation;
 			location = newLocation;
 		}
-	title.SetText(iexplorer.GetTitle());
+	title = iexplorer.GetTitle();
 	bool off;
 	iexplorer.GetOffline(off);
-	offline.SetText(off ? "Offline" : "Online");
-	status.SetText(iexplorer.GetReadyState());
+	offline = off ? "Offline" : "Online";
+	status = iexplorer.GetReadyState();
 }
 
 VLC_Demo::VLC_Demo() {
@@ -168,6 +196,18 @@ VLC_Demo::VLC_Demo() {
 	play.WhenPush = THISBACK(Play);
 	pause.WhenPush = THISBACK(Pause);	
 	stop.WhenPush = THISBACK(Stop);
+	switchOn.WhenPush = THISBACK(SwitchOn);
+}
+
+void VLC_Demo::SwitchOn() {
+	if (switchOn.GetLabel() == "Switch the control on") {
+		player.SetStatus(true);
+		switchOn.SetLabel("Switch the control off");
+	} else {
+		player.SetStatus(false);
+		switchOn.SetLabel("Switch the control on");
+		file <<= "";
+	}
 }
 
 void VLC_Demo::Load() {
@@ -201,8 +241,10 @@ void VLC_Demo::Stop() {
 }
 
 void VLC_Demo::UpdateInfo() {
-	if (!player.IsLoaded())
+	if (!player.IsLoaded()) {
+		offline = "ActiveX or program not available";	
 		return;
+	}
 	int t = player.GetTime();
 	if (t == -1)
 		time <<= "-";	
@@ -210,9 +252,9 @@ void VLC_Demo::UpdateInfo() {
 		time <<= FormatDouble(t/1000., 2, FD_ZERO);
 	int l = player.GetLength();
 	if (l == -1)
-		length.SetText("-");	
+		length = "-";	
 	else
-		length.SetText(FormatDouble(l/1000., 2, FD_ZERO));
+		length = FormatDouble(l/1000., 2, FD_ZERO);
 }
 
 #endif

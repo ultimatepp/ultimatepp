@@ -17,6 +17,7 @@ public:
 	void Home();
 	void Stop();
 	void RefreshPage();
+	void SwitchOn();	
 };
 
 class IExplorer_Demo : public WithIExplorer<StaticRect> {
@@ -32,6 +33,7 @@ public:
 	void Home();
 	void Stop();
 	void RefreshPage();
+	void SwitchOn();
 };
 
 class VLC_Demo : public WithVLC<StaticRect> {
@@ -44,6 +46,7 @@ public:
 	void Pause();
 	void Stop();
 	void UpdateInfo();
+	void SwitchOn();
 };
 
 
