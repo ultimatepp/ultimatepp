@@ -3,8 +3,13 @@
 
 #ifdef CTRLLIB_H
 
-const RGBA *GetPixel(Image &img, int x, int y);
-RGBA *GetPixel(ImageBuffer &img, int x, int y);
+inline const RGBA *GetPixel(Image &img, int x, int y) {
+	return img + x + y*img.GetWidth();
+}
+
+inline RGBA *GetPixel(ImageBuffer &img, int x, int y) {
+	return img + x + y*img.GetWidth();
+}
 
 Image Rotate180(const Image& img);
 

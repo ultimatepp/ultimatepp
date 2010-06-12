@@ -3,9 +3,9 @@
 
 using namespace Upp;
 
-#include "SvgColors.h"
-#include <ide/Browser/Browser.h>
+#include <Web/html.h>
 #include "GatherTpp.h"
+#include "SvgColors.h"
 
 enum EXT_FILE_FLAGS {USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,

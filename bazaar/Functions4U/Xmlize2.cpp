@@ -1,3 +1,4 @@
+//#BLITZ_APPROVE
 #ifdef flagGUI
 
 #include <CtrlLib/CtrlLib.h>

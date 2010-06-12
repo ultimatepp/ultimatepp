@@ -1,5 +1,8 @@
-#include <Core/Core.h>
+#include <CtrlLib/CtrlLib.h>
+#include <ide/Browser/Browser.h>
+
 #include "Functions4U/Functions4U.h"
+#include "GatherTpp.h"
 
 using namespace Upp;
 

@@ -1,5 +1,5 @@
 #ifndef _GatherTpp_h_
-#define _uppweb_www_h_
+#define _GatherTpp_h_
 
 class GatherTpp {
 public:

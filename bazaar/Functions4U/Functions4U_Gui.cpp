@@ -5,14 +5,6 @@
 
 #include "Functions4U.h"
 
-inline const RGBA *GetPixel(Image &img, int x, int y) {
-	return img + x + y*img.GetWidth();
-}
-
-inline RGBA *GetPixel(ImageBuffer &img, int x, int y) {
-	return img + x + y*img.GetWidth();
-}
-
 Image Rotate180(const Image& orig) {
 	Size sz = orig.GetSize();
 	ImageBuffer dest(sz);
