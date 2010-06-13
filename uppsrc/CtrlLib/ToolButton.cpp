@@ -46,6 +46,7 @@ ToolButton::ToolButton()
 	checked = false;
 	paint_checked = false;
 	Transparent();
+	kind = NOLABEL;
 }
 
 ToolButton::~ToolButton() {}
@@ -115,11 +116,17 @@ Bar::Item& ToolButton::Repeat(bool r)
 
 ToolButton& ToolButton::Label(const char *text, int _kind)
 {
-	if(!(kind & FORCE)) {
+	if(kind != _kind) {
 		kind = _kind;
 		Refresh();
 	}
 	Text(text);
+	return *this;
+}
+
+ToolButton& ToolButton::Label(const char *text)
+{
+	Label(text, kind == NOLABEL ? RIGHTLABEL : kind);
 	return *this;
 }
 

@@ -419,7 +419,7 @@ private:
 	UPP::Image GetImage() const;
 
 public:
-	enum Kind { NOLABEL, RIGHTLABEL, BOTTOMLABEL, FORCE = 0x80 };
+	enum Kind { NOLABEL, RIGHTLABEL, BOTTOMLABEL };
 
 	void  Reset();
 
@@ -432,7 +432,8 @@ public:
 	ToolButton& MinSize(Size sz)         { minsize = sz; return *this; }
 	ToolButton& MaxIconSize(Size sz)     { maxiconsize = sz; return *this; }
 	ToolButton& Kind(int _kind)          { kind = _kind; Refresh(); return *this; }
-	ToolButton& Label(const char *text, int kind = ToolButton::RIGHTLABEL);
+	ToolButton& Label(const char *text, int kind);
+	ToolButton& Label(const char *text);
 
 	ToolButton();
 	virtual ~ToolButton();
