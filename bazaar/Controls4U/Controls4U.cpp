@@ -1307,29 +1307,7 @@ void FileBrowser::FolderChanged() {
 void FileBrowser::FilesEnterRow() {
 	int i = 1;
 }
-/*
-int StdValueCompare(const Value& a, const Value& b, int language)
-{
-	LTIMING("StdValueCompare");
 
-	bool na = IsNull(a), nb = IsNull(b);
-	if(na || nb)
-		return !na ? 1 : !nb ? -1 : 0;
-	dword ta = a.GetType(), tb = b.GetType();
-	if((ta == INT_V || ta == BOOL_V) && (tb == INT_V || tb == BOOL_V))
-		return cmp<int>(a, b);
-	if((ta == BOOL_V || ta == INT_V || ta == INT64_V || ta == DOUBLE_V)
-	&& (tb == BOOL_V || tb == INT_V || tb == INT64_V || tb == DOUBLE_V))
-		return cmp<double>(a, b);
-	if(ta == DATE_V && tb == DATE_V)
-		return cmp<Date>(a, b);
-	if((ta == DATE_V || ta == TIME_V) && (tb == DATE_V || tb == TIME_V))
-		return cmp<Time>(a, b);
-	if((ta == STRING_V || ta == WSTRING_V) && (tb == STRING_V || tb == WSTRING_V))
-		return GetLanguageInfo(language).Compare(WString(a), WString(b));
-	return cmp<int>(ta, tb);
-}
-*/
 void FileBrowser::SortByColumn(int col) {
 	static bool order[] = {true, true, true};
 	
