@@ -1,9 +1,8 @@
 #ifndef _Functions4U_Functions4U_h
 #define _Functions4U_Functions4U_h
 
-using namespace Upp;
-
-#include <Web/html.h>
+#include <ide/Browser/Browser.h>
+#include <Web/Web.h>
 #include "GatherTpp.h"
 #include "SvgColors.h"
 

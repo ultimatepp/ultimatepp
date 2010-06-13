@@ -1,10 +1,10 @@
 #include <CtrlLib/CtrlLib.h>
 #include <ide/Browser/Browser.h>
 
+using namespace Upp;
+
 #include "Functions4U/Functions4U.h"
 #include "GatherTpp.h"
-
-using namespace Upp;
 
 struct ScanTopicIterator : RichText::Iterator {
 	VectorMap<String, String> *reflink;

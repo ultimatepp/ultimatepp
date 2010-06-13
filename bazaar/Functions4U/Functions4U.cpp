@@ -1,5 +1,7 @@
 #include <Core/Core.h>
 
+using namespace Upp;
+
 #include "Functions4U.h"
 
 #if defined(PLATFORM_WIN32) 
