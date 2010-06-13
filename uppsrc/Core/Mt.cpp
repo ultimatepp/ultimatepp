@@ -170,19 +170,19 @@ int Thread::GetCount()
 	return ReadWithBarrier(sThreadCount);
 }
 
-static Atomic  sShutdown;
+static volatile Atomic sShutdown = 0;
 
 void Thread::ShutdownThreads()
 {
 	AtomicInc(sShutdown);
-	while(sThreadCount)
+	while(AtomicRead(sThreadCount))
 		Sleep(100);
 	AtomicDec(sShutdown);
 }
 
 bool Thread::IsShutdownThreads()
 {
-	return sShutdown;
+	return AtomicRead(sShutdown);
 }
 
 int Thread::Wait()
