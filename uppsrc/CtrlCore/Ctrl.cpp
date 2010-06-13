@@ -194,10 +194,7 @@ void Ctrl::StateH(int reason)
 	for(int i = 0; i < statehook().GetCount(); i++)
 		if((*statehook()[i])(this, reason))
 			return;
-	if(reason == POSITION)
-		State(reason);
-	else
-		StateDeep(reason);
+	StateDeep(reason);
 }
 
 bool   Ctrl::Accept()
