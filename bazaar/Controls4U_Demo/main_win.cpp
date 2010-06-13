@@ -244,7 +244,8 @@ void VLC_Demo::UpdateInfo() {
 	if (!player.IsLoaded()) {
 		offline = "ActiveX or program not available";	
 		return;
-	}
+	} else
+		offline = "";
 	int t = player.GetTime();
 	if (t == -1)
 		time <<= "-";	
