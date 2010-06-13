@@ -40,6 +40,9 @@
 	#include <X11/extensions/XTest.h>
 #endif
 
+using namespace Upp;
+
+#define _Browser_Browser_h
 #include "SysInfo.h"
 
 
