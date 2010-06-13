@@ -72,7 +72,7 @@ void GLCtrl::GLPane::State(int reason)
 	if (reason == CLOSE)
 		Destroy();
 	
-	if (reason == LAYOUTPOS && hDC != NULL && hRC != NULL)
+	if ((reason == LAYOUTPOS || reason == POSITION) && hDC != NULL && hRC != NULL)
 	{
 		ActivateContext();
 		ctrl->GLResize(GetSize().cx, GetSize().cy);

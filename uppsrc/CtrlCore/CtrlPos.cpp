@@ -212,6 +212,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 				m.to = to;
 				LLOG("SetPos Add " << UPP::Name(this) << from << " -> " << to);
 			}
+			StateH(POSITION);
 			return;
 		}
 		RefreshFrame();
@@ -219,6 +220,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 	pos = p;
 	inframe = _inframe;
 	UpdateRect();
+	StateH(POSITION);
 }
 
 void Ctrl::UpdateRect0()
@@ -252,8 +254,8 @@ Ctrl& Ctrl::SetPos(LogPos p, bool _inframe)
 		else {
 			Rect wa = GetWorkArea();
 			WndSetPos(CalcRect(p, wa, wa));
+			StateH(POSITION);
 		}
-		StateH(POSITION);
 	}
 	return *this;
 }
@@ -297,7 +299,6 @@ void  Ctrl::SetWndRect(const Rect& r)
 {
 	LLOG("SetWndRect " << Name() << " rect: " << r << " (Ctrl::GetRect = " << GetRect() << ")");
 	SetPos0(LogPos(PosLeft(r.left, r.Width()), PosTop(r.top, r.Height())), false);
-	StateH(POSITION);
 }
 
 void Ctrl::SetRect(const Rect& r)
