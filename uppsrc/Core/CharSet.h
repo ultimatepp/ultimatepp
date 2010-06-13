@@ -21,6 +21,8 @@ enum {
 
 #include "CharSet.i"
 
+#undef CHRSET_
+
 #endif
 
 void  SetDefaultCharset(byte charset);
