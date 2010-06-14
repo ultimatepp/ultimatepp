@@ -1,4 +1,6 @@
 String DeXml(const char *s, byte charset = CHARSET_DEFAULT, bool escapelf = false);
+String DeXml(const char *s, const char *end, byte charset = CHARSET_DEFAULT, bool escapelf = false);
+String DeXml(const String& s, byte charset = CHARSET_DEFAULT, bool escapelf = false);
 String XmlPI(const char *text);
 String XmlHeader(const char *encoding = "UTF-8", const char *version = "1.0", const char *standalone = "yes");
 String XmlDecl(const char *text);
