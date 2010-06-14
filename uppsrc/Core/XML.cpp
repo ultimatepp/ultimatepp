@@ -4,22 +4,42 @@ NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x);
 
+static inline void sDeXmlChar(StringBuffer& result, char chr, byte charset, bool escapelf)
+{
+	/**/ if(chr == '<')  result.Cat("&lt;");
+	else if(chr == '>')  result.Cat("&gt;");
+	else if(chr == '&')  result.Cat("&amp;");
+	else if(chr == '\'') result.Cat("&apos;");
+	else if(chr == '\"') result.Cat("&quot;");
+	else if((byte)chr < ' ' && (escapelf || chr != '\n' || chr != '\t'))
+		result.Cat(NFormat("&#x%02x;", (byte)chr));
+	else if(!(chr & 0x80) || charset == CHARSET_UTF8) result.Cat(chr);
+	else result.Cat(ToUtf8(ToUnicode(chr, charset)));
+}
+
 String DeXml(const char *s, byte charset, bool escapelf)
 {
 	if(charset == CHARSET_DEFAULT)
 		charset = GetDefaultCharset();
 	StringBuffer result;
 	for(; *s; s++)
-		/**/ if(*s == '<')  result.Cat("&lt;");
-		else if(*s == '>')  result.Cat("&gt;");
-		else if(*s == '&')  result.Cat("&amp;");
-		else if(*s == '\'') result.Cat("&apos;");
-		else if(*s == '\"') result.Cat("&quot;");
-		else if((byte)*s < ' ' && (escapelf || *s != '\n' || *s != '\t'))
-			result.Cat(NFormat("&#x%02x;", (byte)*s));
-		else if(!(*s & 0x80) || charset == CHARSET_UTF8) result.Cat(*s);
-		else result.Cat(ToUtf8(ToUnicode(*s, charset)));
+		sDeXmlChar(result, *s, charset, escapelf);
 	return result;
+}
+
+String DeXml(const char *s, const char *end, byte charset, bool escapelf)
+{
+	if(charset == CHARSET_DEFAULT)
+		charset = GetDefaultCharset();
+	StringBuffer result;
+	for(; s < end; s++)
+		sDeXmlChar(result, *s, charset, escapelf);
+	return result;
+}
+
+String DeXml(const String& s, byte charset, bool escapelf)
+{
+	return DeXml(~s, s.End(), charset, escapelf);
 }
 
 String XmlHeader(const char *encoding, const char *version, const char *standalone)
