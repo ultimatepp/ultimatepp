@@ -2339,7 +2339,7 @@ void ArrayCtrl::Clear() {
 		cursor = -1;
 		WhenCursor();
 		WhenSel();
-		SyncInfo();
+		info.Cancel();
 	}
 	array.Clear();
 	cellinfo.Clear();
