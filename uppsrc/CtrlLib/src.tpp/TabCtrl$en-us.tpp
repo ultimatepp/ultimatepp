@@ -386,6 +386,11 @@ lave])&]
 is not present in TabCtrl, nothing happens.&]
 [s3; &]
 [s4;%- &]
+[s5;:TabCtrl`:`:IsAt`(Ctrl`&`):%- [@(0.0.255) bool]_[* IsAt]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 s
+lave])&]
+[s2; Returns true if [%-*@3 slave] represents the active tab.&]
+[s3; &]
+[s4;%- &]
 [s5;:TabCtrl`:`:Insert`(Ctrl`&`):%- [_^TabCtrl`:`:Item^ TabCtrl`::Item][@(0.0.255) `&]_[* In
 sert]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 before`_slave])&]
 [s5;:TabCtrl`:`:Insert`(Ctrl`&`,const char`*`):%- [_^TabCtrl`:`:Item^ TabCtrl`::Item][@(0.0.255) `&

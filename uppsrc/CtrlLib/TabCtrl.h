@@ -123,6 +123,7 @@ public:
 
 	int  Find(const Ctrl& slave) const;
 	void Set(Ctrl& slave);
+	bool IsAt(Ctrl& slave)                       { return Get() == Find(slave); }
 
 	TabCtrl::Item& Insert(Ctrl& before_slave);
 	TabCtrl::Item& Insert(Ctrl& before_slave, const char *text);
