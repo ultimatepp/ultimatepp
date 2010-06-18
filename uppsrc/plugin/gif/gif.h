@@ -22,6 +22,12 @@ public:
 	virtual const RasterFormat *GetFormat();
 	virtual int                GetPaletteCount();
 	virtual RGBA               *GetPalette();
+	
+	virtual int                GetPageCount();
+	virtual int                GetActivePage() const;
+	virtual void               SeekPage(int n);
+	virtual int                GetPageAspect(int n);
+	virtual int                GetPageDelay(int n);
 
 private:
 	bool                       Init();

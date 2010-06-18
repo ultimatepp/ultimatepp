@@ -31,6 +31,16 @@ int Raster::GetPageCount()
 	return 1;
 }
 
+int Raster::GetPageAspect(int page)
+{
+	return 0;
+}
+
+int Raster::GetPageDelay(int page)
+{
+	return 0;
+}
+	
 void Raster::Line::Pick(pick_ Line& b)
 {
 	data = b.data;

@@ -118,6 +118,8 @@ public:
 	virtual void    SeekPage(int page);
 	virtual int     GetActivePage() const;
 	virtual int     GetPageCount();
+	virtual int  	GetPageAspect(int n);
+	virtual int  	GetPageDelay(int n);
 
 	virtual bool    Create();
 	virtual Size    GetSize() = 0;

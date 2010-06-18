@@ -84,6 +84,8 @@ struct GifLocalInfo // subimage info
 	int64   loc_fpos;    // file address of this structure
 	int64   lct_fpos;    // file address of LCT
 	int64   dat_fpos;    // data position (1st byte after LCT)
+	
+	int 	delay;		 // delay time
 };
 
 bool GifLocalInfo::Load(Stream& stream)
@@ -92,6 +94,7 @@ bool GifLocalInfo::Load(Stream& stream)
 	int  c1;
 
 	transparent = -1;
+	delay = 0;
 
 	while((c1 = stream.Get()) != 0x2C)
 		if(c1 == 0x00)
@@ -102,7 +105,7 @@ bool GifLocalInfo::Load(Stream& stream)
 			int64 next = stream.GetPos() + len;
 			if(code == 0xF9) { // read transparent color index
 				byte flags = stream.Get(); // packed fields
-				stream.Get16le(); // delay time
+				delay = stream.Get16le();  // delay time in 1/100 sec
 				transparent = stream.Get();
 				if(!(flags & 1))
 					transparent = -1;
@@ -829,6 +832,8 @@ public:
 
 	bool               Create();
 	Raster::Line       GetLine(int line);
+	bool               SeekPage(int page);
+	void               GetPagesData();
 	const RasterFormat *GetFormat() const  { return &format; }
 	int                GetPaletteCount()   { return 256; }
 	RGBA               *GetPalette()       { return palette; }
@@ -836,13 +841,21 @@ public:
 public:
 	Size size;
 	Raster::Info info;
-
+	struct Page {
+		int64 beginPos; 
+		int delay;
+	};
+	Array<Page>     pages;
+	int             page_index;
+	int 			aspect;   	// aspect ratio * 1000, 0 = undefined
+	
 private:
 	void ClearTable();
-	bool LoadSubimage(int& transparent_index);
+	bool LoadSubimage(int64 &beginPos, int &delay);
+	bool GotoSubimage(int& transparent_index);
 	bool FetchDataBlock();
 	bool Fetch(byte *&cptr, const byte *cend);
-
+	
 private:
 	GIFRaster& owner;
 	Stream& stream;
@@ -851,7 +864,7 @@ private:
 	GifGlobalInfo ggi;
 	Vector<byte> temp;
 	bool first_row;
-
+	
 	static const int MAX_BITS = 12;
 	static const int MAX_COUNT = 1 << MAX_BITS;
 	static const int HASH_COUNT = 5331;
@@ -883,6 +896,7 @@ private:
 GIFRaster::Data::Data(GIFRaster& owner, Stream& stream)
 : owner(owner), stream(stream)
 {
+	page_index = 0;
 }
 
 GIFRaster::Data::~Data()
@@ -1071,16 +1085,73 @@ bool GIFRaster::Data::Fetch(byte *&cptr, const byte *cend)
 	return true;
 }
 
-bool GIFRaster::Data::LoadSubimage(int& transparent_index)
+bool GIFRaster::Data::GotoSubimage(int& transparent_index)
 {
-//	TIMING("GifEncoder::LoadSubimage");
+	stream.Seek(pages[page_index].beginPos);
+	
 	GifLocalInfo l;
 	if(!l.Load(stream))
 		return false;
-
+	
 	if(l.transparent >= 0)
 		transparent_index = l.transparent;
 
+	if(l.x + l.width > size.cx || l.y + l.height > size.cy)
+		return false; // out of bitmap rectangle
+
+	// ignore LCT
+	stream.Seek(l.dat_fpos);
+
+	if((start_bpp = stream.Get()) <= 0 || start_bpp > 12)
+		return false;
+
+	data_ptr = data_end = data_block; // empty data block
+	old_shift = 8;
+	old_byte = 0;
+	ClearTable();
+
+	int cache = max(size.cx, 1000);
+	Buffer<byte> data(cache + MAX_COUNT);
+	bool more = true;
+	byte *data_ptr = data, *data_end = data;
+	int pass = 0;
+	for(int y = 0; y < size.cy;) {
+		if(more && data_ptr + size.cx > data_end) { // fetch more data
+			if(data_end > data_ptr)
+				Copy((byte *)data, data_ptr, data_end);
+			data_end -= (data_ptr - data);
+			data_ptr = data;
+			more = Fetch(data_end, data + cache);
+		}
+		int avail = min(size.cx, (int)intptr_t(data_end - data_ptr));
+		if(avail == 0)
+			break;
+		byte *wrt = &temp[y * size.cx];
+		memcpy(wrt, data_ptr, avail);
+		data_ptr += avail;
+		if(l.interlace)
+			switch(pass) {
+			case 0: if((y += 8) < size.cy) break; y = 4 - 8; pass++;
+			case 1: if((y += 8) < size.cy) break; y = 2 - 4; pass++;
+			case 2: if((y += 4) < size.cy) break; y = 1 - 2; pass++;
+			case 3: y += 2; break;
+			}
+		else
+			y++;
+	}
+	return true;
+}
+
+bool GIFRaster::Data::LoadSubimage(int64 &beginPos, int &delay)
+{
+	beginPos = stream.GetPos();
+	delay = 0;
+	GifLocalInfo l;
+	if(!l.Load(stream))
+		return false;
+	
+	delay = l.delay;
+	
 	if(l.x + l.width > size.cx || l.y + l.height > size.cy)
 		return false; // out of bitmap rectangle
 
@@ -1153,26 +1224,45 @@ bool GIFRaster::Data::Create()
 		palette[i].a = 255;
 	}
 	format.Set8();
+	GetPagesData();
+	
+	SeekPage(1);
 	return true;
 }
 
 Raster::Line GIFRaster::Data::GetLine(int line)
 {
-	if(first_row) {
-		first_row = false;
-		temp.SetCount(size.cx * size.cy, 0);
-
-		stream.Seek(ggi.loc_fpos);
-		int transparent_index = -1;
-		while(LoadSubimage(transparent_index))
-			;
-		if(stream.Term() == 0x3B)
-			stream.Get();
-
-		if(transparent_index >= 0 && transparent_index < 256)
-			palette[transparent_index] = RGBAZero();
-	}
 	return Raster::Line(&temp[size.cx * line], &owner, false);
+}
+
+bool GIFRaster::Data::SeekPage(int npage) {
+	page_index = npage;
+
+	stream.Seek(ggi.loc_fpos);
+	int transparent_index = -1;
+	if(!GotoSubimage(transparent_index))
+		return false;
+
+	if(transparent_index >= 0 && transparent_index < 256)
+		palette[transparent_index] = RGBAZero();	
+	
+	return true;
+}
+
+void GIFRaster::Data::GetPagesData() {
+	temp.SetCount(size.cx * size.cy, 0);
+
+	stream.Seek(ggi.loc_fpos);
+	while(true) {
+		int64 beginPos;
+		int delay;
+		if(!LoadSubimage(beginPos, delay)) {
+			return;
+		}
+		Page &page = pages.Add();
+		page.beginPos = beginPos;
+		page.delay = delay;
+	}	
 }
 
 GIFRaster::GIFRaster()
@@ -1219,6 +1309,31 @@ RGBA *GIFRaster::GetPalette()
 	return data->GetPalette();
 }
 
+int GIFRaster::GetPageCount()
+{
+	return data->pages.GetCount();
+}
+
+int GIFRaster::GetActivePage() const
+{
+	return data->page_index;
+}
+
+void GIFRaster::SeekPage(int n)
+{
+	data->SeekPage(n);
+}
+
+int GIFRaster::GetPageAspect(int n) 
+{
+	return data->aspect;
+}
+
+int GIFRaster::GetPageDelay(int n) 
+{
+	return data->pages[n].delay;	
+}
+	
 class GIFEncoder::Data {
 public:
 	Data(Stream& stream, RasterFormat& format);
