@@ -1,0 +1,14 @@
+LAYOUT(RasterMultiPageLayout, 384, 376)
+	ITEM(ImageControl, image, SetFrame(InsetFrame()).HSizePosZ(8, 8).VSizePosZ(88, 8))
+	ITEM(Label, openedPage, SetLabel(t_("0")).LeftPosZ(204, 24).TopPosZ(60, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Opened Page:")).LeftPosZ(132, 68).TopPosZ(60, 19))
+	ITEM(Label, numberPages, SetLabel(t_("1")).LeftPosZ(100, 24).TopPosZ(60, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Number of Pages:")).LeftPosZ(8, 88).TopPosZ(60, 19))
+	ITEM(EditString, fileName, HSizePosZ(68, 76).TopPosZ(32, 19))
+	ITEM(Button, openNext, SetLabel(t_("Open Next")).RightPosZ(92, 64).TopPosZ(60, 20))
+	ITEM(Button, play, SetLabel(t_("Play")).RightPosZ(8, 64).TopPosZ(60, 20))
+	ITEM(Button, browse, SetLabel(t_("Browse")).RightPosZ(8, 64).TopPosZ(32, 20))
+	ITEM(Label, dv___9, SetLabel(t_("Load and animate GIF and TIFF files")).HSizePosZ(8, 8).TopPosZ(8, 19))
+	ITEM(Label, dv___10, SetLabel(t_("Image file:")).LeftPosZ(8, 56).TopPosZ(32, 19))
+END_LAYOUT
+
