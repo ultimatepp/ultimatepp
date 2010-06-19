@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	plugin\tif,
+	plugin\gif;
+
+file
+	RasterMultiPage.h,
+	main.cpp,
+	RasterMultiPage.lay;
+
+mainconfig
+	"" = "GUI";
+

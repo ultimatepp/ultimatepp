@@ -1,0 +1,6 @@
+#ifndef _RasterMultiPage_icpp_init_stub
+#define _RasterMultiPage_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\tif/init"
+#include "plugin\gif/init"
+#endif
