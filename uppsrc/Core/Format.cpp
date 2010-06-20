@@ -551,6 +551,14 @@ String IntFormatter(const Formatting& f)
 	return q;
 }
 
+String Int64Formatter(const Formatting& f)
+{
+	StringBuffer q;
+	q.SetLength(1000);
+	q.SetLength(sprintf(q, '%' + f.format + f.id, (int64)f.arg));
+	return q;
+}
+
 String IntLowerAlphaFormatter(const Formatting& f)
 {
 	return FormatIntAlpha(f.arg, false);
@@ -803,6 +811,12 @@ void IntDoubleRegister(int type)
 	RegisterFormatter(type, "lo", &IntFormatter);
 	RegisterFormatter(type, "lx", &IntFormatter);
 	RegisterFormatter(type, "lX", &IntFormatter);
+
+	RegisterFormatter(type, "lld", &Int64Formatter);
+	RegisterFormatter(type, "lli", &Int64Formatter);
+	RegisterFormatter(type, "llo", &Int64Formatter);
+	RegisterFormatter(type, "llx", &Int64Formatter);
+	RegisterFormatter(type, "llX", &Int64Formatter);
 
 	RegisterFormatter(type, "e", &FloatFormatter);
 	RegisterFormatter(type, "E", &FloatFormatter);
