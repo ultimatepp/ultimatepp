@@ -1226,7 +1226,7 @@ bool GIFRaster::Data::Create()
 	format.Set8();
 	GetPagesData();
 	
-	SeekPage(1);
+	SeekPage(0);
 	return true;
 }
 
