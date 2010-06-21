@@ -26,7 +26,7 @@ struct ImageControl : public Ctrl {
 	ImageControl& SetImage(const Image& _img) {img = _img; Refresh(); return *this;}
 	ImageControl() {Transparent(); NoWantFocus();}
 	
-	Image img;
+	Image img; 
 };
 
 #define LAYOUTFILE <RasterMultiPage/RasterMultiPage.lay>
