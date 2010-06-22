@@ -5,7 +5,7 @@ NAMESPACE_UPP
 #define LDUMP(x) // DUMP(x)
 #define LLOG(x) // LOG(x)
 
-//#define PDF_COMPRESS
+#define PDF_COMPRESS
 #define USE_TTF
 
 dword PdfDraw::GetInfo() const
