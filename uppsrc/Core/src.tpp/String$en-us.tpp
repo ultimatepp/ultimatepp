@@ -498,4 +498,13 @@ rt]([@(0.0.255) int]_[*@3 pos], [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`
 [s2; Inserts item [%-*@3 c]/[%-*@3 s] at position [%-*@3 pos] ([%-*@3 count] 
 times).&]
 [s3; &]
+[s4;%- &]
+[s5;:AString`:`:Find`(const AString`:`:tchar`*`,int`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) c
+onst]_[_^AString`:`:tchar^ tchar]_`*[*@3 s], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) c
+onst]&]
+[s5;:AString`:`:Find`(const AString`:`:String`&`,int`)const:%- [@(0.0.255) int]_[* Find](
+[@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 s], 
+[@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) const]&]
+[s2; Returns first position of substring [%-*@3 s] tested from [%-*@3 from] 
+position, or `-1 if [%-*@3 s] is not found.&]
 [s0; ]
