@@ -173,4 +173,4 @@ in OSX.]&]
 [s0;# [2 Ultimate`+`+ project is proud of its BSD license so we would 
 really prefer that all external libraries to be linked with U`+`+ 
 code would be BSD licensed or similar.]&]
-[s0; ]
+[s0; [^topic`:`/`/uppweb`/www`/tutoring`$en`-us^ . ]]

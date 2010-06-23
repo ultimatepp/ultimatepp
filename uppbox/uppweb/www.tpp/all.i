@@ -286,6 +286,14 @@ TOPIC("svnInstall$en-us")
 #include "svnInstall$en-us.tppi"
 END_TOPIC
 
+TOPIC("tutoring$en-us")
+#include "tutoring$en-us.tppi"
+END_TOPIC
+
+TOPIC("tutoringtutor$en-us")
+#include "tutoringtutor$en-us.tppi"
+END_TOPIC
+
 TOPIC("vsd$en-us")
 #include "vsd$en-us.tppi"
 END_TOPIC
