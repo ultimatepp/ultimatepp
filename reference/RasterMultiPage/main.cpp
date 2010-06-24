@@ -1,5 +1,23 @@
 #include "RasterMultiPage.h"
 
+Image GetRect(const Image& orig, const Rect &r) 
+{
+	if(r.IsEmpty())
+		return Image();
+	ImageBuffer ib(r.GetSize());
+	for(int y = r.top; y < r.bottom; y++) {
+		const RGBA *s = orig[y] + r.left;
+		const RGBA *e = orig[y] + r.right;
+		RGBA *t = ib[y - r.top];
+		while(s < e) {
+			*t = *s;
+			t++;
+			s++;
+		}
+	}
+	return ib;
+}
+
 RasterMultiPage::RasterMultiPage()
 {
 	CtrlLayout(*this, "Multi page raster demo");
@@ -31,14 +49,23 @@ void RasterMultiPage::Browse()
 	delays.Clear();	
 	Size sz = raster->GetSize();
 	ImageDraw iw(sz); 
+	Image previous;
+	Rect r;
 	for (int i = 0; i < raster->GetPageCount(); ++i) {
+		if (previous) {
+			iw.DrawImage(r, previous);
+			previous = Null;
+		}
 		raster->SeekPage(i);
-		Rect r = raster->GetPageRect(i);
+		r = raster->GetPageRect(i);
 		switch (raster->GetPageDisposal(i)) {
 		case 1:	iw.DrawRect(r, White());
 				break;
-		case 2: 
-		case 4:	iw.DrawRect(sz, White());
+		case 2: iw.DrawRect(sz, White());
+				break;
+		case 4:	if (i > 0) 
+					previous = ::GetRect(images[i-1], r);
+				iw.DrawRect(sz, White());
 				break;
 		}
 		iw.DrawImage(r.left, r.top, raster->GetImage(0, 0, r.right-r.left, r.bottom-r.top));
