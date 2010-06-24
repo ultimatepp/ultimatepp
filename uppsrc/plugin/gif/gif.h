@@ -28,8 +28,10 @@ public:
 	virtual void               SeekPage(int n);
 	virtual int                GetPageAspect(int n);
 	virtual int                GetPageDelay(int n);
+	virtual Rect               GetPageRect(int n);
+	virtual int				   GetPageDisposal(int n);
 
-private:
+private: 
 	bool                       Init();
 };
 

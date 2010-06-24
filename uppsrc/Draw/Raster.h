@@ -120,6 +120,8 @@ public:
 	virtual int     GetPageCount();
 	virtual int  	GetPageAspect(int n);
 	virtual int  	GetPageDelay(int n);
+	virtual Rect   	GetPageRect(int n);
+	virtual int		GetPageDisposal(int n);
 
 	virtual bool    Create();
 	virtual Size    GetSize() = 0;
