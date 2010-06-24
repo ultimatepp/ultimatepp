@@ -290,6 +290,7 @@ bool MySqlConnection::Execute() {
 				f.type = DATE_V;
 				break;
 			case FIELD_TYPE_DATETIME:
+			case FIELD_TYPE_TIMESTAMP:
 				f.type = TIME_V;
 				break;
 			case FIELD_TYPE_VAR_STRING:
