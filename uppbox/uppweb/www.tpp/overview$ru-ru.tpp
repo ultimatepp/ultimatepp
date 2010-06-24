@@ -5,8 +5,6 @@ topic "Обзор Ultimate++";
 [i128;*C@(28.42.150)2 $$3,3#90519220486603166734501227306500:code]
 [{_}%RU-RU 
 [s1;b0; [R6 Обзор Ultimate`+`+][R2  ]&]
-[s1;b0; [R2 (сорри за неполный перевод `- тестирование
- сайта)]&]
 [s2;>b0;*R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 &]
 [s1; Разогреем Ваш аппетит&]
 [s2; Ultimate`+`+ обещает  радикальное сокращение 
@@ -848,14 +846,21 @@ Vector).&]
 [s2; [* HeaderCtrl] представляет шапку различных 
 таблиц, а именно ArrayCtrl&]
 [s2; [* ArrayCtrl] это, возможно, наиболее сложный 
-и запутанный виджет в Ultimate`+`+. It is basically 
-a table widget used to operate on Value matrices. It can combine 
-Values to be displayed (using Display class) as columns (yes, 
-several Values in row can be combined into single a column using 
-Convert if needed) and edit them using slave Ctrls (those can 
-be inside the table displayed on user `"edit`" action, inside 
-the table always visible or outside the table in the dialog box 
-displaying Values of currently selected line).&]
+и запутанный виджет в Ultimate`+`+. Это 
+в основном табличный виджет, используемый 
+для оперирования матрицей значений 
+типа Value . Он может комбинировать значения 
+типа Value для отображения (используя 
+класс Display) как колонку (да, несколько 
+значений в строке могут быть скомбинированы
+ в одну колонку, если нужно) и редактировать 
+их используя подчиненные Ctrl`'ы (они 
+могут быть внутри таблицы показанные 
+при действии пользователя `"редактирование`"
+ внутри таблицы, всегда видимые, или 
+снаружи таблицы в диалоговом окне, 
+отображая значения текущей выбраной 
+строки таблицы).&]
 [s2;= 
 @@image:1500&1394
 ����������������ߜ�ۋ��߽����È���쓿�����������������񬌱���Բ��������������
@@ -951,16 +956,27 @@ displaying Values of currently selected line).&]
 ����������������锣�������������ݜ��۔��ܜ�ƍ�Ɔ��α������͂Ҙ
 &]
 [s2;= [*1 Option, EditString, DropList, Switch and ArrayCtrl in action.]&]
-[s2; [* SqlArray] is derived from ArrayCtrl and adds abilities to act 
-as SQL table editor, including master`-detail capabilities.&]
-[s2; [* Splitter] is used to implement split view widgets with an adjustable 
-bar.&]
-[s2; [* ProgressIndicator] can be used to indicate progress of lengthy 
-operations.&]
-[s2; [* TabCtrl] is used for dialogs with tabs.&]
-[s2; [* TreeCtrl] is used to display arbitrary tree hierarchies.&]
-[s2; [* ColorSelector], [* ColorPusher] and [* ColorButton] are widgets 
-for graphical user color selection.&]
+[s2; [* SqlArray] происходит от  ArrayCtrl и добавляет 
+возможности выступать в качестве 
+SQL редактора табличных данных, включая 
+возможности типа мастер`-деталь.&]
+[s2; [* Splitter] представляет собой виджет, 
+который содержит другие виджеты. 
+Виджеты в сплиттере отделены друг 
+от друга разделительными линиями. 
+Пользователи могут изменять размеры 
+дочерних виджетов разделителя посредством 
+перемещения разделительных линий.&]
+[s2; [* ProgressIndicator] может быть использован 
+для индикации прогресса в длинных 
+операциях.&]
+[s2; [* TabCtrl ]используется для диалогов с 
+закладками ([* Таб]ами).&]
+[s2; [* TreeCtrl] используется для отображения 
+произвольной древовидной иерархии.&]
+[s2; [* ColorSelector], [* ColorPusher] и [* ColorButton] это виджеты 
+для графического выбора цвета пользователем
+.&]
 [s2;= 
 @@image:1509&1864
 ������������������������پ�������������罬�����������Ƌ�Ǟ�����������Ȑ٢ǡ��
@@ -1657,24 +1673,39 @@ for graphical user color selection.&]
 ���������������
 &]
 [s2;= [*1 ColorButton]&]
-[s2; [* MenuBar] and [* ToolBar] handling is a little unorthodox in Ultimate`+`+, 
-as the menu actions, represented as Callbacks, are passed to 
-the methods constructing the corresponding Bar. This has some 
-serious advantages `- state and presence of individual buttons 
-or menu bar items can be easily adjusted according to the current 
-application state. It is also often possible to have a single 
-method for construction of both ToolBar and MenuBar.&]
-[s2; [* ColumnList] displays values in user`-adjustable number of columns.&]
-[s2; [* FileList] is variant of ColumnList for displaying lists of 
-files.&]
-[s2; Finally, Ultimate`+`+ has tools to deal with advanced text formatting:&]
-[s2; [* RichText] is a class that provides storage of complex text 
-documents, including font and paragraph formatting and even nested 
-tables support.&]
-[s2; [* RichTextView] is a widget for viewing RichText texts.&]
-[s2; [* RichEdit] is a full`-featured RichText word`-processor (including 
-spell`-checker) in standard widget package, readily available 
-to any U`+`+ application.&]
+[s2; [* MenuBar] и [* ToolBar] управляются немного 
+неортодоксадьно для Ultimate`+`+, поскольку 
+действия меню, представленые как 
+обратные вызовы (Callback), передают действие 
+к методам, создавшим соответствующий 
+пункт меню или тулбар. Это дает некоторые 
+серьезные преимущества `- положение 
+и присутствие индивидуальных кнопок 
+или пунктов меню можно легко настроить 
+в соответствии с текущим состоянием 
+приложения. Также часто возможно 
+иметь единый метод для создания и 
+обработки и тулбара и меню.&]
+[s2; [* ColumnList] отображает значения в колонках, 
+количество которых может выбирать 
+пользователь.&]
+[s2; [* FileList] это вариант ColumnList для отображения 
+списка файлов.&]
+[s2; В заключении, Ultimate`+`+ имеет инструменты 
+для использования расширенного форматирова
+ния текста:&]
+[s2; [* RichText] это класс который  обеспечивает 
+хранение комплексных текстовых документов, 
+включая форматирование шрифтов и 
+абзацев и даже многократно вложенных 
+таблиц.&]
+[s2; [* RichTextView] это виджет для просмотра 
+RichText текстов.&]
+[s2; [* RichEdit] Это полнофункциональный RichText 
+редактор текста (включая проверку 
+правописания) в виде стандартного 
+пакета/виджета, готовый для включения 
+в любое U`+`+ приложение.&]
 [s2;= 
 @@image:2415&2606
 ����������������콇����޶μ������̤ͤ������⏽���챒���������ސ�������������
@@ -2844,30 +2875,43 @@ to any U`+`+ application.&]
 &]
 [s2;= [*1 RichEdit]&]
 [s2; &]
-[s2; You can find complete alphabetical list of basic U`+`+ widgets 
-[^topic`:`/`/CtrlLib`/src`/index`$en`-us^ here].&]
-[s1; SQL programming&]
-[s2; One of the motivations behind Ultimate`+`+ always used to be 
-the development of enterprise class client`-server SQL applications. 
-Using general Ultimate`+`+ philosophy we believe to have achieved 
-some extraordinary results, basically making Ultimate`+`+/SQL 
-development easier that using SQL dedicated development tools.&]
-[s2; Of course, SQL is an area where the Value abstraction hugely 
-pays off. Fetching database values and putting them to GUI widgets 
-never was as trivial as it is in Ultimate`+`+.&]
-[s2; An important tool related to SQL is idea of `"SQL expressions`". 
-SQL expression is entity that represents SQL command. Ultimate`+`+ 
-provides means to build SQL expression using C`+`+ overloading 
-mechanism. For example, Ultimate`+`+ SQL expression might look 
-like:&]
+[s2; Вы можете найти полный алфавитный 
+список основных  U`+`+ виджетов [^topic`:`/`/CtrlLib`/src`/index`$ru`-ru^ з
+десь].&]
+[s1; SQL программирование&]
+[s2; Один из мотивов `"за`" Ultimate`+`+ всегда 
+было использование в разработке клиент`-серв
+ерных SQL приложений энтерпрайз класса. 
+Используя общую Ultimate`+`+ философию 
+мы верим, что достигли некоторых экстраордин
+арных результатов, в основном делая 
+Ultimate`+`+/SQL разработку легче чем использование
+  специальных средств SQL разработки 
+.&]
+[s2; Конечно, SQL это область, где использование 
+абстракции типов Value чрезвычайно 
+окупается. Задача чтения значений 
+базы данных и запись их в GUI виджеты 
+никогда не была такой тривиальной 
+как в Ultimate`+`+.&]
+[s2; Одним из важных инструментов, связанных 
+с SQL `- идея `"SQL выражений`". SQL выражение 
+это конструкция представляющая  собой 
+SQL команду. Ultimate`+`+ поддерживает способ 
+для построения SQL выражений используя 
+механизм перегрузки C`+`+. Например, 
+в Ultimate`+`+ SQL выражение  может выглядеть 
+так:&]
 [s3; &]
 [s3; Select(NAME, SURNAME).From(PERSON).Where(PERSONID `=`= personid);&]
 [s3; &]
-[s2; where NAME, SURNAME, PERSON and PERSON are special values of 
-SqlId type, while [/ personid] is an ordinary C`+`+ variable. The 
-important thing here is that SQL expressions can be built from 
-smaller subexpressions `- that is particulary important when 
-building Where conditions.&]
+[s2; где NAME, SURNAME, PERSON и PERSON это специальные 
+значения типа SqlId , в то время как [/ personid] 
+это обычная C`+`+ переменная. Важная 
+деталь здесь `-это то, что SQL выражения 
+могут быть построены из маленьких 
+подвыражений `- что особенно важно 
+во время построения условий [/ Where].&]
 [s3; &]
 [s3; SqlBool where;&]
 [s3; if(!IsNull(findname))&]
@@ -2876,9 +2920,11 @@ building Where conditions.&]
 [s3; -|where `= where `&`& SURNAME `=`= findsurname;&]
 [s3; SqlExp exp `= Select(PERSONID).From(PERSON).Where(where);&]
 [s3; &]
-[s2; When SQL expression is ready for execution, it can be executed 
-on an Sql cursor object using the `* operator. After this, you 
-can Fetch the results.&]
+[s2; Когда SQL выражение готово к исполнению, 
+оно может быть исполнено на  Sql курсоре 
+используя оператор `*. После этого, 
+Вы можете забирать результат командой 
+Fetch.&]
 [s3; &]
 [s3; Sql sql;&]
 [s3; sql `* exp;&]
@@ -2888,9 +2934,11 @@ can Fetch the results.&]
 `=`= sql`[0`])&]
 [s3; `}&]
 [s3; &]
-[s2; Another effective tool is the concept of database schema description 
-files. These are files used to describe a database model using 
-specialized C`-macro constructions:&]
+[s2; Другой эффективный инструмент `- 
+это концепция файла схемы описания 
+базы данных. Эти файлы используются 
+для описания модели базы данных, используя 
+специализированные C`-macro конструкции:&]
 [s3; &]
 [s3; TABLE`_(PERSON)&]
 [s3; -|INT`_     (PERSONID) PRIMARY`_KEY&]
@@ -2899,21 +2947,29 @@ specialized C`-macro constructions:&]
 [s3; -|DOUBLE`_  (SALARY)&]
 [s3; END`_TABLE&]
 [s3; &]
-[s2; These description files are then used to synchronize the database 
-model on the SQL server, to generate SqlId constants used in 
-SQL expressions, and, last but not least, to generate C`+`+ structures 
-(named after the tables with S`_ prefix) that can be used to 
-form SQL expressions and to fetch query results:&]
+[s2; Эти файлы описания затем используются 
+для синхронизации модели базы данных 
+на SQL сервере, для генерации SqlId констант, 
+ используемых в SQL выражениях, и, последнее, 
+но не менее важное, для генерации 
+C`+`+ структур (по имени таблицы с  S`_ 
+префиксом), которые могут быть использованы 
+для формы SQL выражений и для получения 
+результатов запроса:&]
 [s3; &]
 [s3; S`_PERSON person;&]
 [s3; SQL `* Select(person).From(PERSON);&]
 [s3; while(SQL.Fetch(person))&]
 [s3; -|person`_table.Add(person.PERSONID, person.NAME, person.SURNAME);&]
 [s3; &]
-[s2; Thanks to the Value concept described above, most widgets couple 
-seamlessly with SQL code out of box. One of the tools that exploit 
-these capabilities is the SqlCtrls class that orchestrates the 
-data interchange between dialog widgets and database records:&]
+[s2; Благодаря концепции Value, описанной 
+выше, большинство виджетов бесшовно 
+соединяются с  SQL кодом `"прямо из коробки`". 
+Один из инструментов, которые используют 
+эти возможности, является класс SqlCtrls, 
+который дирижирует обменом данных 
+между диалоговыми виджетами и записями 
+базы данных:&]
 [s3; &]
 [s3; void EditPerson(int persionid) `{&]
 [s3; -|WithPersonLayout<TopWindow> dlg;&]
@@ -2925,30 +2981,47 @@ data interchange between dialog widgets and database records:&]
 [s3; -|-|SQL `* ctrls.Update(PERSON).Where(PERSONID `=`= personid);&]
 [s3; `}&]
 [s3; &]
-[s1; Summary&]
-[s2; In this overview we have tried to summarize the most exciting 
-features of Ultimate`+`+. There are of course many more important 
-features including certain interesting implementation techniques 
-like zero overhead memory allocator, perfect image rescaling 
-etc.&]
-[s2; Since the very beginning we have kept using Ultimate`+`+ ourselves 
-to develop applications for our customers. Even so, in recent 
-years we never hesitated to compromise our entire code`-base 
-each time we felt that some major or minor aspect of library 
-interface or implementation needed to be improved. This enabled 
-us to slowly develop the library and perfect it into its current 
-state.&]
-[s2; Now, after some 7 years of development, Ultimate`+`+ is a mature 
-platform that brings vast reductions of our development costs. 
-Most interfaces seem to be finished and optimal. There is of 
-course a lot of work ahead as well: Linux port implementation 
-is still not perfect and needs some further work, there is demand 
-for new features like advanced anti`-aliased and blended graphics.&]
-[s2; If you find our Ultimate`+`+ way of programming interesting, 
-nothing stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloadin
-g] it. But be careful there: you should be prepared to throw away 
-some old habits and usual ways of thinking about how `"things 
-are always done`", or they might maime your opportunity to receive 
-a lot in the reward, together with a healthy disrespect to certain 
-honorable, well`-established development tools.&]
-[s0;2 ]
+[s1; Резюме&]
+[s2; В этом обзоре мы попытались объединить 
+наиболее интересные возможности 
+Ultimate`+`+. Есть еще много болееважных 
+особенностей, включая интересные 
+реализации технологий таких, как 
+нулевой перерасход при выделении 
+памяти, совершенный метод масштабирования 
+изображений и т.д.&]
+[s2; С самого начала мы продолжаем использовать 
+Ultimate`+`+ самостоятельно, для разработки 
+приложений для наших клиентов. Даже 
+в этом случае, в последние годы мы 
+никогда не смущались ставить под 
+удар всю нашу кодовую базу каждый 
+раз, когда мы чувствовали, что некоторые 
+крупные или незначительные аспекты 
+библиотечного интерфейса или реализации 
+необходимо усовершенствовать. Это 
+дало нам возможность постепенно развивать 
+библиотеки и совершенствовать ее 
+в ее текущем состоянии.&]
+[s2; Теперь, приблизительно после 7 лет 
+разработки, Ultimate`+`+ `- зрелая платформа, 
+которая приносит огромные сокращения 
+наших затрат на разработку. Большинство 
+интерфейсов, кажется, закончено и 
+оптимально. Впереди еще много работы 
+например: реализация порта Linux все 
+еще не совершенна и нуждается в некоторой 
+дальнейшей работе, есть запрос на 
+новые особенности, такие как продвинутую 
+anti`-aliased и сглаженную графику.&]
+[s2; Если Вы находите наш Ultimate`+`+ способ 
+программирования интересным, ничто 
+не стоит на Вашем пути к его [^topic`:`/`/uppweb`/www`/download`$ru`-ru^ з
+агрузке] . Но будьте осторожны: Вы должны 
+быть готовывыбросить старые привычки 
+и обычный способ мышления о том, как 
+`"вещи всегда делаются`", и это приведет 
+Вас к вознаграждению, вместе со здоровой 
+непочтительностью к почетным, известным 
+средствам разработки.&]
+[s0; ]
