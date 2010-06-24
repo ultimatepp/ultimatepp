@@ -40,7 +40,18 @@ int Raster::GetPageDelay(int page)
 {
 	return 0;
 }
-	
+
+Rect Raster::GetPageRect(int n)
+{
+	Size sz = GetSize();
+	return Rect(0, 0, sz.cx, sz.cy);
+}
+
+int Raster::GetPageDisposal(int n)
+{
+	return 0;	
+}
+
 void Raster::Line::Pick(pick_ Line& b)
 {
 	data = b.data;
