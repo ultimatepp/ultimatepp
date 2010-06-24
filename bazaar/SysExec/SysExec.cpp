@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 
 #define DEFAULT_PATH 	"/bin:/usr/bin:."
+#if 0
 static int execvpe(const char *file, char * const *argv, char * const *envp)
 {
 	char path[PATH_MAX];
@@ -60,6 +61,7 @@ static int execvpe(const char *file, char * const *argv, char * const *envp)
 
 	return -1;
 }
+#endif
 #else
 #include <process.h>
 #endif
