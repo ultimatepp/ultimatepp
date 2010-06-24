@@ -1,10 +1,9 @@
-topic "Tutoring Plan beta";
+topic "Tutoring Plan beta Tutors page";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
 [s0; [*R6 Tutoring Plan ][*/R@(0.0.255)6 beta][*R6 . Tutors page]&]
-[s0;2 &]
-[s0;%- &]
+[s0;+117 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Advantages of being a Tutor]]}}&]
 [s0;2 &]
 [s0;# [2 If you think you could give support during a couple of weeks 
@@ -20,7 +19,7 @@ of flame over her/him.]&]
 and to be trained to be a Mentor if next year we get into Google 
 Summer of Code.]&]
 [s0;#2 &]
-[s0;#%- &]
+[s0;#2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 How to join]]}}&]
 [s0;#2 &]
 [s0;# [2 To join in U`+`+ Tutoring Plan as Tutor send an email to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
@@ -50,7 +49,7 @@ anonymous (but to the tutors and tutored person :`-))]&]
 [s0; [2 When approved you will get an invitation to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
 pp`-tutoring`-plan][2  in google groups.]&]
 [s0;2 &]
-[s0;%- &]
+[s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 I am a Tutor. What to do next?]]}}&]
 [s0;2 &]
 [s0; [2 Any people asking for tutoring will send an email to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
@@ -63,9 +62,10 @@ know that you will be the tutor of that person.]&]
 [s0;2 &]
 [s0; [2 And the tutoring begins...]&]
 [s0;2 &]
-[s0;%- &]
+[s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 How to tutor]]}}&]
 [s0;2 &]
-[s0; [2 To be done very soon...]&]
+[s0; [2 We have prepared a ][^topic`:`/`/uppweb`/www`/tutoringmanual`$en`-us^2 manual][2  
+for you.]&]
 [s0;2 &]
 [s0; ]
