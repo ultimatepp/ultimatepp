@@ -1,33 +1,15 @@
-topic "Ultimate++ vs Qt";
+topic "Ultimate++ vs Qt (R)";
 [ $$0,0#00000000000000000000000000000000:Default]
-[l288;i704;a17;O9;~~~.992; $$1,0#10431211400427159095818037425705:param]
-[a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;* $$3,5#07864147445237544204411237157677:title]
-[b167;a42;C $$4,6#40027414424643823182269349404212:item]
-[b42;a42; $$5,5#45413000475342174754091244180557:text]
-[l288;a17; $$6,6#27521748481378242620020725143825:desc]
-[l321;t246;C@5;1 $$7,7#20902679421464641399138805415013:code]
-[b2503; $$8,0#65142375456100023862071332075487:separator]
-[*@(0.0.255) $$9,0#83433469410354161042741608181528:base]
-[t4167;C+117 $$10,0#37138531426314131251341829483380:class]
-[l288;a17;*1 $$11,11#70004532496200323422659154056402:requirement]
-[i416;b42;a42;O9;~~~.416; $$12,12#10566046415157235020018451313112:tparam]
-[b167;C $$13,13#92430459443460461911108080531343:item1]
-[a42;C $$14,14#77422149456609303542238260500223:item2]
-[*@2$(0.128.128) $$15,15#34511555403152284025741354420178:NewsDate]
-[l321;*C$7 $$16,16#03451589433145915344929335295360:result]
-[l321;b83;a83;*C$7 $$17,17#07531550463529505371228428965313:result`-line]
-[l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%EN-US 
 [s0;= [7 Ultimate`+`+ vs Qt ][5 (R)]&]
 [s0;>*R^topic`:`/`/uppweb`/www`/vsqt`$ru`-ru^1 &]
 [s0;=*^topic`:`/`/uppweb`/www`/vsd`$ru`-ru^1 &]
-[s0; [2 To compare Ultimate`+`+ with Qt (R), we decided to reimplement 
-Qt demonstration example `"AddressBook`". On the left side is 
-U`+`+ code, on the right side original Qt example..]&]
+[s0; [2 Abychom porovnali U`+`+ s Qt (R), rozhodli jsme se přepsat 
+ukázkovou aplikaci Qt `- `"AddressBook`". Na levé straně je 
+kód v U`+`+, na pravo je originální příklad v Qt.]&]
 [s0;/2 &]
-[s0; [/0 Qt and the Qt logo are trademarks of Trolltech in Norway, 
-the United States and other countries.]&]
+[s0; [/0 Qt a logo Qt jsou registrované značky Trolltech v Norsku, 
+Spojených státech a dalších zemích.]&]
 [s0;2 &]
 [s0;= [2 
 @@image:1778&1704
@@ -132,8 +114,8 @@ the United States and other countries.]&]
 
 ]&]
 [s0;=2 &]
-[ {{5000:5000^@7 [s0; [*2 Ultimate`+`+ version]]
-:: [s0; [*2 Qt version]]
+[ {{5000:5000^@7 [s0; [*2 U`+`+ verze]]
+:: [s0; [*2 Qt verze]]
 ::@2 [s0; [*C2 AddressBook.cpp]&]
 [s0;C0 &]
 [s0; [C0 #include <TCtrlLib/TCtrlLib.h>]&]
@@ -824,12 +806,12 @@ quit() ) );]&]
 [s0; [C0 `}]&]
 [s0;=2 ]}}&]
 [s0;=2 &]
-[ {{5000:5000@(255.255.200)-1 [s0; [/2 To make this comparison more fair, we have omitted following 
-parts that are designed by layout designer in Ultimate`+`+ and 
-could be designed by Qt designer]]
+[ {{5000:5000@(255.255.200)-1 [s0; [/2 Aby bylo toto srovnání férovější, vynechali jsme následující 
+části které jsou vytvořeny pomocí Layout Designeru v U`+`+, 
+a které mohou být obdobně vytvořeny pomocí Qt Designeru.]]
 ::@2 [s0;%- ]
-::^@7 [s0; [*2 Ultimate`+`+ version]]
-:: [s0; [*2 Qt version]]
+::^@7 [s0; [*2 U`+`+ verze]]
+:: [s0; [*2 Qt verze]]
 ::@2 [s0; [*C2 AddressBook.lay]&]
 [s0; [/C2 (designed using layout designer)]&]
 [s0;/C2 &]
@@ -1005,4 +987,4 @@ toggleFirstName() ) );]&]
 [s0; [C0 `}]&]
 [s0;C0 ]}}&]
 [s0;=2 &]
-[s0; ]
+[s0;%CS-CZ ]
