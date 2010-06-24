@@ -226,10 +226,10 @@ void ReportWindow::Pdf()
 	static FileSel fs;
 	static bool b;
 	if(!b) {
-		fs.Type("PDF file", "*.pdf");
+		fs.Type(t_("PDF file"), "*.pdf");
 		fs.AllFilesType();
 	}
-	if(!fs.ExecuteSaveAs("Output PDF file"))
+	if(!fs.ExecuteSaveAs(t_("Output PDF file")))
 		return;
 	SaveFile(~fs, UPP::Pdf(*report));
 }
