@@ -27,17 +27,16 @@ topic "Srovnání";
 [s0; Abychom demonstrovali výhody Ultimate`+`+, přepsali jsme do 
 něj několik ukázkových aplikací z jiných knihoven.&]
 [s0; &]
-[s0; [^topic`:`/`/uppweb`/www`/vsqt`$en`-us^ Srovnání s Qt]&]
-[s0; [^topic`:`/`/uppweb`/www`/vsswing`$en`-us^ Srovnání s Java/Swing]&]
-[s0; [^topic`:`/`/uppweb`/www`/vswx`$en`-us^ Srovnání s wxWidget][^topic`:`/`/uppweb2`/www`/vsstd`$en`-us^ s
-]&]
+[s0; [^topic`:`/`/uppweb`/www`/vsqt`$cs`-cz^ Srovnání s Qt]&]
+[s0; [^topic`:`/`/uppweb`/www`/vsswing`$cs`-cz^ Srovnání s Java/Swing]&]
+[s0; [^topic`:`/`/uppweb`/www`/vswx`$cs`-cz^ Srovnání s wxWidgets]&]
 [s0; &]
 [s0; Abychom ukázali jak nepoužívání standartních C`+`+ knihoven 
 ovlivní výkonost aplikací, poskytujeme následující srovnání:&]
 [s0; &]
-[s0; [^topic`:`/`/uppweb`/www`/vsstd`$en`-us^ U`+`+ Core vs benchmarky 
+[s0; [^topic`:`/`/uppweb`/www`/vsstd`$cs`-cz^ U`+`+ Core vs benchmarky 
 standartní C`+`+ knihovny]&]
-[s0; [^topic`:`/`/uppweb`/www`/vsd`$en`-us^ U`+`+ Core vs programovací 
+[s0; [^topic`:`/`/uppweb`/www`/vsd`$cs`-cz^ U`+`+ Core vs programovací 
 jazyk D]&]
 [s0;3 &]
 [s0; Před tím než kliknete na tyto odkazy, uvědomte si prosím, 

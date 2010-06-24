@@ -817,7 +817,7 @@ Licence]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
 ::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$cs`-cz^2 Stáhnout]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Současná 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$cs`-cz^2 Současná 
 verze][2 : ][IRELEASE;2 release]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2232`.exe^+75 W
 in32 instalátor][+75  (18.1 MB)]&]
