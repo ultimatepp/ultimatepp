@@ -120,7 +120,6 @@ protected:
 		String group;
 		
 		String  stackid;
-		unsigned sort_order;
 		int 	stack;
 
 		bool visible;
@@ -135,8 +134,7 @@ protected:
 		Point tab_pos;
 		Size  tab_size;
 		
-		Tab() : visible(true), id(-1), stack(-1), sort_order(0)
-		{}
+		Tab() : visible(true), id(-1), stack(-1) { }
 		bool HasMouse(const Point& p) const;
 		bool HasMouseCross(const Point& p) const;
 		bool HasIcon() const	{ return !img.IsEmpty(); }
@@ -150,12 +148,23 @@ protected:
 		int first;
 		int last;
 	};
-	struct TabGroupSort {
-		bool operator()(const Tab &a, const Tab &b) const { return a.group < b.group; }
+	// Tab sorting structures
+	struct TabSort {
+		virtual bool operator()(const Tab &a, const Tab &b) const = 0;
 	};	
-	struct TabStackSort {
-		bool operator()(const Tab &a, const Tab &b) const { return a.sort_order < b.sort_order || (a.stackid == b.stackid && a.sort_order < b.sort_order); }
+	struct TabGroupSort : public TabSort {
+		virtual bool operator()(const Tab &a, const Tab &b) const { return a.group < b.group; }
 	};
+protected:
+	struct TabValueSort : public TabSort {
+		virtual bool operator()(const Tab &a, const Tab &b) const { return (*vo)(a.value, b.value); }
+		const ValueOrder *vo;
+	};
+	struct TabKeySort : public TabSort {
+		virtual bool operator()(const Tab &a, const Tab &b) const { return (*vo)(a.key, b.key); }
+		const ValueOrder *vo;
+	};	
+	
 protected:
 	TabScrollBar 	sc;
 	
@@ -178,8 +187,10 @@ private:
 	bool nohl:1;
 	bool inactivedisabled:1;
 	bool stacking:1;
+	bool stacksort:1;
 	bool groupsort:1;
 	bool groupseps:1;
+	bool tabsort:1;
 	bool allownullcursor:1;
 	bool icons:1;
 	int mintabcount;
@@ -188,10 +199,19 @@ private:
 	const Display *display;
 	Image dragtab;
 	int stackcount;	
-	
+	Value group_sep_vert;
+	Value group_sep_horz;
+
+	TabSort *tabsorter;
+	TabSort *groupsorter;
+	TabSort *stacksorter;
+	TabValueSort valuesorter_inst;
+	TabKeySort 	 keysorter_inst;
+	TabValueSort stacksorter_inst;
+
 	static Style leftstyle, rightstyle, bottomstyle;
 	const Style *style[4];
-	
+private:
 	void PaintTab(Draw &w, const Style &s, const Size &sz, int i, bool enable, bool dragsample = false);
 	
 	int  TabPos(const String &g, bool &first, int i, int j, bool inactive);	
@@ -259,6 +279,10 @@ protected:
 	void DoGrouping(int n);
 	void DoCloseGroup(int n);
 	void NewGroup(const String &name);
+	void DoTabSort(TabSort &sort);
+	void SortTabs0();
+	void SortStack(int stackix);
+	void SortStack(int stackix, int head, int tail);
 	
 	// Insertion without repos/refresh - for batch actions
 	int InsertKey0(int ix, const Value &key, const Value &value, Image icon = Null, String group = Null);
@@ -285,8 +309,7 @@ protected:
 	virtual void ContextMenu(Bar& bar);
 	virtual void GroupMenu(Bar &bar, int n);
 	// Sorting/Stacking overriddes
-	virtual String GetStackId(const Tab &a)				{ NEVER(); return false; }
-	virtual unsigned GetStackSortOrder(const Tab &a) 	{ return 0; }
+	virtual String 		GetStackId(const Tab &a)			{ return a.group; }
 public:
 	typedef TabBar CLASSNAME;
 
@@ -312,18 +335,36 @@ public:
 	void 	Clear();
 
 	TabBar& Crosses(bool b = true);
-	TabBar& Grouping(bool b = true);
-	TabBar& GroupSort(bool b = true);
-	TabBar& GroupSeparators(bool b = true);
 	TabBar& Stacking(bool b = true);
+	TabBar& Grouping(bool b = true);
+	TabBar& GroupSeparators(bool b = true);
 	TabBar& AutoScrollHide(bool b = true);
 	TabBar& InactiveDisabled(bool b = true);
 	TabBar& AllowNullCursor(bool b = true);
 	TabBar& Icons(bool v = true);
+
+	TabBar& SortTabs(bool b = true);
+	TabBar& SortTabsOnce();
+	TabBar& SortTabsOnce(TabSort &sort);
+	TabBar& SortTabs(TabSort &sort);
+
+	TabBar& SortTabValues(ValueOrder &sort);
+	TabBar& SortTabValuesOnce(ValueOrder &sort);
+	TabBar& SortTabKeys(ValueOrder &sort);
+	TabBar& SortTabKeysOnce(ValueOrder &sort);
+	
+	TabBar& SortGroups(bool b = true);
+	TabBar& SortGroups(TabSort &sort);
+	TabBar& SortStacks(bool b = true);
+	TabBar& SortStacks(TabSort &sort);
+	TabBar& SortStacks(ValueOrder &sort);
+
+	bool	IsValueSort() const				{ return tabsort; }
+	bool	IsGroupSort() const				{ return groupsort; }
+	bool	IsStackSort() const				{ return stacksort; }
 	
 	bool	IsGrouping() const				{ return grouping; }
-	bool	IsGroupSort() const				{ return grouping; }
-	bool	HasGroupSeparators() const		{ return grouping; }
+	bool	HasGroupSeparators() const		{ return separators; }
 	bool	IsStacking() const				{ return stacking; }
 	bool	IsShowInactive() const			{ return inactivedisabled; }
 	
@@ -343,6 +384,7 @@ public:
 	void	Set(int n, const Value &newvalue, Image icon = Null);
 	void	SetIcon(int n, Image icon);
 	void 	SetTabGroup(int n, const String &group);
+	TabBar &SetGroupSeparators(Value horz, Value vert);	
 	
 	virtual Value 	GetData() const			{ return (HasCursor() && active < GetCount()) ? GetKey(active) : Value(); }
 	virtual void 	SetData(const Value &key);
@@ -374,7 +416,7 @@ public:
 	Vector<Value> GetKeys() const;
 	Vector<Image> GetIcons() const;
 	int			  GetScrollPos() const	{ return sc.GetPos(); }
-	TabBar&	CopySettings(const TabBar &src);
+	TabBar&		  CopySettings(const TabBar &src);
 
 	TabBar& SetStyle(int align, const Style& s)  	{ ASSERT(align >= 0 && align < 4); style[align] = &s; Refresh(); return *this; }
 	static const Style& StyleDefault();

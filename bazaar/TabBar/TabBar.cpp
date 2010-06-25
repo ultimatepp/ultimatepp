@@ -289,6 +289,7 @@ TabBar::Style TabBar::bottomstyle;
 TabBar::TabBar()
 {
 	Clear();
+
 	display = NULL;
 	crosses = true;
 	grouping = true;
@@ -297,12 +298,26 @@ TabBar::TabBar()
 	inactivedisabled = false;
 	autoscrollhide = true;
 	stacking = false;
-	groupsort = false;
 	groupseps = false;
 	allownullcursor = false;
 	icons = true;
 	mintabcount = 1;
 	style[0] = style[1] = style[2] = style[3] = NULL;
+
+	group_sep_horz = TabBarImg::SEP();
+	group_sep_vert = TabBarImg::SEPV();
+
+	// Init sorting
+	groupsort = false;
+	tabsort = false;
+	stacksort = true;
+	keysorter_inst.vo = &Single<StdValueOrder>();
+	valuesorter_inst.vo = &Single<StdValueOrder>();
+	stacksorter_inst.vo = &Single<StdValueOrder>();
+	tabsorter = &keysorter_inst;
+	groupsorter = &Single<TabGroupSort>();
+	stacksorter = &stacksorter_inst;
+
 	SetAlign(TOP);
 	SetFrameSize(GetHeight(false));
 	BackPaint();
@@ -392,7 +407,6 @@ void TabBar::DoStacking()
 		Tab &t = tabs[i];
 		t.stack = -1;
 		t.stackid = GetStackId(t);
-		t.sort_order = GetStackSortOrder(t);
 	}
 	// Create stacks
 	Vector<Vector<Tab> > tstack;
@@ -415,7 +429,8 @@ void TabBar::DoStacking()
 	// Recombine
 	tabs.SetCount(0);
 	for (int i = 0; i < tstack.GetCount(); i++) {
-		Sort(tstack[i], TabStackSort());
+		if (stacksort)
+			StableSort(tstack[i], *stacksorter);
 		tabs.AppendPick(tstack[i]);
 	}
 	highlight = -1;
@@ -438,6 +453,27 @@ void TabBar::DoUnstacking()
 		Refresh();
 }
 
+void TabBar::SortStack(int stackix)
+{
+	if (!stacksort) return;	
+	
+	int head = FindStackHead(stackix);
+	int tail = head;
+	while (tail < tabs.GetCount() && tabs[tail].stack == stackix)
+		++tail;	
+	SortStack(stackix, head, tail-1);
+}
+
+void TabBar::SortStack(int stackix, int head, int tail)
+{
+	if (!stacksort) return;
+	
+	int headid = tabs[head].id;
+	StableSort(tabs.GetIter(head), tabs.GetIter(tail), *stacksorter);
+	while (tabs[head].id != headid)
+		CycleTabStack(head, stackix);
+}
+
 void TabBar::MakeGroups()
 {
 	groups[0].count = tabs.GetCount();
@@ -445,7 +481,7 @@ void TabBar::MakeGroups()
 	groups[0].last = tabs.GetCount() - 1;
 
 	if (groupsort)
-		StableSort(tabs, TabGroupSort());
+		StableSort(tabs, *groupsorter);
 
 	for(int i = 1; i < groups.GetCount(); i++)
 	{
@@ -626,8 +662,10 @@ void TabBar::PaintStackedTab(Draw& w, const Rect &r, const Tab& tab, const Font 
 {
 	if (!IsNull(tab.img))
 		w.DrawImage(r.left, r.top, tab.img);
-	else
-		w.DrawText(r.left, r.top, "...", font, ink);	
+	else {
+		Point p = GetTextPosition(r, GetTextSize("|...", font, 1).cy, 0);
+		w.DrawText(p.x, p.y, GetTextAngle(), "|...", font, ink, 4);	
+	}
 }
 
 void TabBar::PaintTab(Draw& w, const Rect& r, const Tab& tab, const Font &font, Color ink, dword style)
@@ -808,14 +846,7 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 
 void TabBar::PaintSeparator(Draw &w, const Rect r)
 {
-	if (IsVert()) {
-		int cy = TabBarImg::SEP().GetSize().cy;
-		ChPaint(w, 0, r.top + (r.GetHeight() - cy)/2, r.GetWidth(), cy, TabBarImg::SEPV());			
-	}
-	else {
-		int cx = TabBarImg::SEP().GetSize().cx;
-		ChPaint(w, r.left + (r.GetWidth() - cx)/2, 0, cx, r.GetHeight(), TabBarImg::SEP());			
-	}
+	ChPaint(w, r, IsVert() ? group_sep_vert : group_sep_horz);			
 }
 
 void TabBar::Paint(Draw &w)
@@ -879,7 +910,7 @@ void TabBar::Paint(Draw &w)
 		PaintTab(w, st, sz, active, true);
 	
 	// Separators
-	if (groupseps) {
+	if (grouping && groupseps) {
 		int cy = IsVert() ? sz.cx : sz.cy;
 		for (int i = 0; i < separators.GetCount(); i++) {
 			int x = separators[i];
@@ -1012,6 +1043,7 @@ TabBar& TabBar::InsertKey(int ix, const Value &key, const Value &value, Image ic
 {
 	int id = InsertKey0(ix, key, value, icon, group);
 	
+	SortTabs0();
 	MakeGroups();	
 	Repos();
 	active = -1;
@@ -1041,13 +1073,15 @@ int TabBar::InsertKey0(int ix, const Value &key, const Value &value, Image icon,
 	t.group = group;	
 	if (stacking) {
 		t.stackid = GetStackId(t);
-		t.sort_order = GetStackSortOrder(t);
 		
 		// Override index
 		int tail = -1;
-		for (int i = 0; i < tabs.GetCount(); i++)
-			if (tabs[i].stackid == t.stackid && (!grouping || tabs[i].group == t.group))
+		for (int i = 0; i < tabs.GetCount(); i++) {
+			if (tabs[i].stackid == t.stackid && (!grouping || tabs[i].group == t.group)) {
 				tail = FindStackTail(tabs[i].stack);
+				break;
+			}
+		}
 		if (tail >= 0) {
 			ix = tail+1;
 			t.stack = tabs[tail].stack;
@@ -1058,13 +1092,9 @@ int TabBar::InsertKey0(int ix, const Value &key, const Value &value, Image icon,
 			t.stack = stackcount++;
 		}
 		tabs.Insert(ix, t);
-		if (tail >= 0) {
-			int head = FindStackHead(t.stack);
-			int headid = tabs[head].id;			
-			Sort(tabs.GetIter(head), tabs.GetIter(tail+1), TabStackSort());
-			while (tabs[head].id != headid)
-				CycleTabStack(head, t.stack);
-		}
+		if (tail >= 0)
+			SortStack(t.stack, FindStackHead(t.stack), ix);	
+			
 	}
 	else
 		tabs.Insert(ix, t);
@@ -1130,11 +1160,10 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 		// Normal visible or inactive but greyed out tabs
 		t.pos.x = first ? 0 : tabs[j].Right();
 		// Separators
-		if (groupseps && !first && t.group != tabs[j].group) {
+		if (groupseps && grouping && !first && t.group != tabs[j].group) {
 			separators.Add(t.pos.x);
 			t.pos.x += TB_SPACE;
 		}
-		
 		
 		int cx = GetStdSize(t).cx;
 		t.stdcx = cx;
@@ -1230,23 +1259,119 @@ TabBar& TabBar::Crosses(bool b)
 	return *this;
 }
 
-TabBar& TabBar::Grouping(bool b)
+TabBar& TabBar::SortTabs(bool b)
 {
-	grouping = b;
+	tabsort = b;
+	if (b)
+		DoTabSort(*tabsorter);	
 	return *this;
 }
 
-TabBar& TabBar::GroupSort(bool b)
+TabBar& TabBar::SortTabsOnce()
 {
-	Value v;
-	if (b && HasCursor())
-		v = GetData();
+	DoTabSort(*tabsorter);
+	return *this;	
+}
+
+TabBar& TabBar::SortTabsOnce(TabSort &sort)
+{
+	DoTabSort(sort);
+	return *this;	
+}
+
+TabBar& TabBar::SortTabs(TabSort &sort)
+{
+	tabsorter = &sort;
+	return SortTabs(true);	
+}
+
+TabBar& TabBar::SortTabValues(ValueOrder &sort)
+{
+	valuesorter_inst.vo = &sort;
+	tabsorter = &valuesorter_inst;
+	return SortTabs(true);	
+}
+
+TabBar& TabBar::SortTabValuesOnce(ValueOrder &sort)
+{
+	TabValueSort q;
+	q.vo = &sort;
+	DoTabSort(q);
+	return *this;	
+}
+
+TabBar& TabBar::SortTabKeys(ValueOrder &sort)
+{
+	keysorter_inst.vo = &sort;
+	tabsorter = &keysorter_inst;
+	return SortTabs(true);	
+}
+
+TabBar& TabBar::SortTabKeysOnce(ValueOrder &sort)
+{
+	TabKeySort q;
+	q.vo = &sort;
+	DoTabSort(q);
+	return *this;		
+}
+
+TabBar& TabBar::SortGroups(bool b)
+{
 	groupsort = b;
+	if (!b) return *this;;
+	
+	Value v = GetData();
 	MakeGroups();
 	Repos();
-	if (b && HasCursor())
+	if (!IsNull(v))
 		SetData(v);
 	Refresh();
+	return *this;	
+}
+
+TabBar& TabBar::SortGroups(TabSort &sort)
+{
+	groupsorter = &sort;
+	return SortGroups(true);	
+}
+
+TabBar& TabBar::SortStacks(bool b)
+{
+	stacksort = true;
+	if (stacking) {
+		DoStacking();
+		Refresh();
+	}
+	return *this;
+}
+
+TabBar& TabBar::SortStacks(TabSort &sort)
+{
+	stacksorter = &sort;
+	return SortStacks(true);	
+}
+
+void TabBar::DoTabSort(TabSort &sort)
+{
+	Value v = GetData();
+	StableSort(tabs, sort);
+	Repos();
+	if (!IsNull(v))
+		SetData(v);
+	Refresh();
+}
+
+void TabBar::SortTabs0()
+{
+	if (tabsort)
+		StableSort(tabs, *tabsorter);
+}
+
+TabBar& TabBar::Grouping(bool b)
+{
+	grouping = b;
+	Repos(); 
+	Refresh();	
 	return *this;
 }
 
@@ -1427,12 +1552,11 @@ void TabBar::Set(int n, const Value &newkey, const Value &newvalue, Image icon)
 	if (IsNull(icon))
 		tabs[n].img = icon;
 	if (stacking) {
-		Tab t = tabs[n];
+		String id = tabs[n].stackid;
 		tabs[n].stackid = GetStackId(tabs[n]);
-		tabs[n].sort_order = GetStackSortOrder(tabs[n]);
-		if (t.stackid != tabs[n].stackid || t.sort_order != tabs[n].sort_order) {
+		if (tabs[n].stackid != id) {
 			tabs.Remove(n);
-			InsertKey0(GetCount(), t.key, t.value, t.img, t.group);
+			InsertKey0(GetCount(), newkey, newvalue, tabs[n].img, tabs[n].group);
 		}
 	}
 	Repos();
@@ -1640,7 +1764,7 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 	int c = GetTargetTab(p);
 	int tab = isctrl ? highlight : active;
 
-	if (&GetInternal<TabBar>(d) != this) return;
+	if (&GetInternal<TabBar>(d) != this || tabsort || c < 0) return;
 
 	if (stacking) {
 		tab = FindStackHead(tabs[tab].stack);
@@ -1809,6 +1933,15 @@ void TabBar::SetTabGroup(int n, const String &group)
 	Repos();
 }
 
+TabBar & TabBar::SetGroupSeparators(Value horz, Value vert)
+{
+	group_sep_horz = horz;
+	group_sep_vert = vert;
+	if (grouping && groupseps)
+		Refresh();
+	return *this;
+}
+
 void TabBar::Close(int n)
 {
 	if(tabs.GetCount() <= mintabcount)
@@ -1911,6 +2044,7 @@ TabBar& TabBar::CopySettings(const TabBar &src)
 	stacking = src.stacking;
 	groupsort = src.groupsort;
 	groupseps = src.groupseps;
+	tabsort = src.tabsort;
 	allownullcursor = src.allownullcursor;
 	icons = src.icons;
 	mintabcount = src.mintabcount;

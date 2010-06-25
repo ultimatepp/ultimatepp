@@ -157,7 +157,7 @@ FileTabs& FileTabs::operator<<(const FileTabs &src)
 {
 	Clear();
 	Stacking(false);
-	GroupSort(false);
+	SortGroups(false);
 	Grouping(false);
 	AddFiles(src.GetFiles(), src.GetIcons(), false);
 	CopySettings(src);	
