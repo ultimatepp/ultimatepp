@@ -270,14 +270,14 @@ void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 void EditField::Paint(Draw& w)
 {
 	Size sz = GetSize();
-	const EditField::Style *st = style ? style : &StyleDefault();
+	const EditField::Style& st = StyleDefault();
 	bool enabled = IsShowEnabled();
-	Color paper = enabled && !IsReadOnly() ? (HasFocus() ? st->focus : st->paper) : st->disabled;
+	Color paper = enabled && !IsReadOnly() ? (HasFocus() ? st.focus : st.paper) : st.disabled;
 	if(nobg)
 		paper = Null;
-	Color ink = enabled ? st->text : st->textdisabled;
+	Color ink = enabled ? st.text : st.textdisabled;
 	if(enabled && (convert && convert->Scan(text).IsError() || errorbg))
-		paper = st->invalid;
+		paper = st.invalid;
 	int fcy = font.Info().GetHeight();
 	int yy = GetTy();
 	w.DrawRect(0, 0, 2, sz.cy, paper);
@@ -306,8 +306,8 @@ void EditField::Paint(Draw& w)
 		int l, h;
 		if(GetSelection(l, h)) {
 			Paints(w, x, fcy, txt, ink, paper, l, password, font);
-			Paints(w, x, fcy, txt, enabled ? st->selectedtext : paper,
-			                       enabled ? st->selected : ink, h - l, password, font);
+			Paints(w, x, fcy, txt, enabled ? st.selectedtext : paper,
+			                       enabled ? st.selected : ink, h - l, password, font);
 			Paints(w, x, fcy, txt, ink, paper, text.GetLength() - h, password, font);
 		}
 		else

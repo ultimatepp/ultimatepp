@@ -64,7 +64,7 @@ Calendar::Calendar()
 	first_day = MONDAY;
 	selall = true;
 	bs = 5;
-	style = NULL;
+	style = &StyleDefault();
 
 	Reset();
 }
@@ -376,7 +376,7 @@ Point Calendar::GetDay(Point p)
 
 Size Calendar::ComputeSize()
 {
-	const Style &st = style ? *style : StyleDefault();
+	const Style &st = *style;
 	Font fnt = st.font;
 	spin_all.SetFont(fnt);
 	spin_month.SetFont(fnt);
@@ -427,7 +427,7 @@ Size Calendar::ComputeSize()
 
 void Calendar::Paint(Draw &w)
 {
-	const Style &st = style ? *style : StyleDefault();
+	const Style &st = *style;
 	Font fnt = st.font;
 
 	Size sz = GetSize();
@@ -833,7 +833,7 @@ void Clock::CalcSizes()
 
 void Clock::Paint(Draw& w)
 {
-	const Style &st = style ? *style : StyleDefault();
+	const Style &st = *style;
 
 	CalcSizes();
 
@@ -1144,7 +1144,7 @@ void Clock::UpdateTime()
 
 Size Clock::ComputeSize()
 {
-	const Style &st = style ? *style : StyleDefault();
+	const Style &st = *style;
 	spin_hour.SetFont(st.font);
 	spin_minute.SetFont(st.font);
 	Font fnt = st.font;
@@ -1238,7 +1238,7 @@ Clock::Clock()
 	prv_point = -1;
 	cur_point = -1;
 
-	style = NULL;
+	style = &StyleDefault();
 	seconds = true;
 	colon = false;
 	accept_time = false;
