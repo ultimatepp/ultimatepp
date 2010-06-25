@@ -1331,10 +1331,14 @@ bool FileSel::Execute(int _mode) {
 	int c = TopWindow::Run(appmodal);
 	TopWindow::Close();
 	lastsby = list.GetSbPos();
-	int ti = ~type;
-	type.Trim(dlc);
-	if(ti >= 0 && ti < type.GetCount())
-		activetype = type.GetValue(ti);
+	if(IsNumber(~type)) {
+		int ti = ~type;
+		type.Trim(dlc);
+		if(ti >= 0 && ti < type.GetCount())
+			activetype = type.GetValue(ti);
+	}
+	else
+		type.Trim(dlc);
 	if(c == IDOK) {
 		String d = ~dir;
 		if(filesystem->IsWin32())
