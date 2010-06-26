@@ -625,7 +625,7 @@ Option::~Option() {}
 ButtonOption::ButtonOption()
 {
 	option = push = false;
-	style = NULL;
+	style = &StyleDefault();
 	Transparent();
 }
 
@@ -640,12 +640,6 @@ void ButtonOption::Serialize(Stream& s) {
 }
 
 void  ButtonOption::Paint(Draw& w) {
-	const Style *st;
-	if (style)
-		st = style;
-	else
-		st = &StyleDefault();
-	
 	Size sz = GetSize();
 	bool ds = !IsShowEnabled();
 	DrawLabel dl;
@@ -663,10 +657,10 @@ void  ButtonOption::Paint(Draw& w) {
 	         HasMouse() || HasFocus() ? CTRL_HOT :
 	         CTRL_NORMAL;
 	if(option) i = CTRL_PRESSED;
-	ChPaint(w, sz, st->look[i]);
-	dl.ink = st->textcolor[i];
+	ChPaint(w, sz, style->look[i]);
+	dl.ink = style->textcolor[i];
 	dl.Paint(w, 3, 3, sz.cx - 6, sz.cy - 6, true);
-	if(HasFocus() && st->drawfocus)
+	if(HasFocus() && style->drawfocus)
 		DrawFocus(w, Rect(sz).Deflated(3));
 }
 
