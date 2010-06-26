@@ -1,7 +1,7 @@
-topic "Tutoring Plan beta Manual";
+topic "Tutoring Plan Manual";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_} 
-[s0;%% [*R6 Tutoring Plan ][*/R@(0.0.255)6 beta][*R6 . Manual]&]
+[s0;%% [*R6 Tutoring Plan. Manual]&]
 [s0;+117 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;#%% [*+117 License]]}}&]
 [s0;2%% &]
@@ -141,5 +141,4 @@ Many individuals contribute their time and energy without any
 expectation of compensation or even a simple thank you in return.]&]
 [s0;2 &]
 [s0; [2 This culture may be unfamiliar to beginners, and require explanation.]&]
-[s0;2 &]
-[s0;+92 ]
+[s0; ]

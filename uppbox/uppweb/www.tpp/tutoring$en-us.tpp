@@ -1,8 +1,8 @@
-topic "Tutoring Plan beta";
+topic "Tutoring Plan";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
-[s1;#b0; [R6 Tutoring Plan ][/R@(0.0.255)6 beta]&]
+[s1;#b0; [R6 Tutoring Plan]&]
 [s0;#+117 &]
 [s0; [2 If you find that U`+`+ is a nice tool but you have problems 
 using it or you do not feel comfortable with ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 F
@@ -28,7 +28,7 @@ be answered. When someone is available, the tutoring will begin.]&]
 [s0;2 &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 What help can you expect from a Tutor]]}}&]
-[s0;%- &]
+[s0;2%- &]
 [s0; [2 The Tutor will give you:]&]
 [s0;2 &]
 [s0;i150;O0; [2 Reasonable support using mail, IRC, ICQ, Google Talk 
@@ -49,4 +49,10 @@ utoring manual][2 .]&]
 [s0;2%- &]
 [s0;%- [2 U`+`+ Tutoring Plan is inspired in Google Summer of Code 
 mentoring.]&]
-[s0; ]
+[s0;2 &]
+[s0;%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
+[s0;2%- &]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/06/26]]
+:: [s0; [2 Infrastructure is prepared and we are ready to begin.]]}}&]
+[s0;2 ]

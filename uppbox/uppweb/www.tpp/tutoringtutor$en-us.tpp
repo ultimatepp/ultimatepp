@@ -1,8 +1,8 @@
-topic "Tutoring Plan beta Tutors page";
+topic "Tutoring Plan Tutors page";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
-[s0; [*R6 Tutoring Plan ][*/R@(0.0.255)6 beta][*R6 . Tutors page]&]
+[s0; [*R6 Tutoring Plan. Tutors page]&]
 [s0;+117 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Advantages of being a Tutor]]}}&]
 [s0;2 &]
@@ -67,5 +67,4 @@ know that you will be the tutor of that person.]&]
 [s0;2 &]
 [s0; [2 We have prepared a ][^topic`:`/`/uppweb`/www`/tutoringmanual`$en`-us^2 manual][2  
 for you.]&]
-[s0;2 &]
 [s0; ]
