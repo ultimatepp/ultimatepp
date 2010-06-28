@@ -78,6 +78,7 @@ void Ide::BuildAndExecute()
 		if(!runexternal)
 			cmdline << '\"' << h->GetHostPath(target) << "\" ";
 		cmdline << ToSystemCharset(runarg);
+		int exitcode;
 		switch(runmode) {
 		case RUN_WINDOW:
 			HideBottom();
@@ -87,8 +88,8 @@ void Ide::BuildAndExecute()
 			ShowConsole();
 			PutConsole(String().Cat() << "Executing: " << cmdline);
 			console.Sync();
-			h->ExecuteWithInput(cmdline);
-			PutConsole("Finished in " + GetPrintTime(time));
+			exitcode = h->ExecuteWithInput(cmdline);
+			PutConsole("Finished in " + GetPrintTime(time) + ", exit code: " + AsString(exitcode));
 			break;
 		case RUN_FILE: {
 				HideBottom();
