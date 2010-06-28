@@ -302,6 +302,10 @@ TOPIC("tutoringtutor$en-us")
 #include "tutoringtutor$en-us.tppi"
 END_TOPIC
 
+TOPIC("videotutorials$en-us")
+#include "videotutorials$en-us.tppi"
+END_TOPIC
+
 TOPIC("vsd$cs-cz")
 #include "vsd$cs-cz.tppi"
 END_TOPIC

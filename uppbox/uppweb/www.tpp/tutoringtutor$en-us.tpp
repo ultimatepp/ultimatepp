@@ -52,15 +52,19 @@ pp`-tutoring`-plan][2  in google groups.]&]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 I am a Tutor. What to do next?]]}}&]
 [s0;2 &]
-[s0; [2 Any people asking for tutoring will send an email to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
+[s0;# [2 Applicants will send an email to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
 pp`-tutoring`-plan`@googlegroups.com][2 . You can periodically 
 check this for emails.]&]
-[s0;2 &]
-[s0; [2 If you are available and the user skills and needs match with 
+[s0;#2 &]
+[s0;# [2 All applicants has to be answered. If no tutor is immediately 
+available, the answer will be the next available tutoring date. 
+Tutors have an applicants list to follow this properly.]&]
+[s0;#2 &]
+[s0;# [2 If you are available and the user skills and needs match with 
 your abilities, you can answer her/him and let the rest of tutors 
 know that you will be the tutor of that person.]&]
-[s0;2 &]
-[s0; [2 And the tutoring begins...]&]
+[s0;#2 &]
+[s0;# [2 And the tutoring begins...]&]
 [s0;2 &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 How to tutor]]}}&]
