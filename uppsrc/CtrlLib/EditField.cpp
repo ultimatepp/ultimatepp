@@ -290,7 +290,7 @@ void EditField::Paint(Draw& w)
 		const wchar *txt = nulltext;
 		if(!IsNull(nullicon)) {
 			int icx = nullicon.GetWidth();
-			w.DrawRect(x, 0, icx, fcy, paper);
+			w.DrawRect(x, 0, icx + 4, fcy, paper);
 			w.DrawImage(x, (fcy - nullicon.GetHeight()) / 2, nullicon);
 			x += icx + 4;
 		}
