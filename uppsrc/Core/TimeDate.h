@@ -85,6 +85,8 @@ struct Time : Date, RelOps< Time, Moveable<Time> > {
 	void   Set(int64 scalar);
 	int64  Get() const;
 
+	int    Compare(Time b) const;
+
 	Time()                   { hour = minute = second = 0; }
 	Time(const Nuller&)      { hour = minute = second = 0; }
 	Time(int y, int m, int d, int h = 0, int n = 0, int s = 0)

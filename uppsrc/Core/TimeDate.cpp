@@ -368,18 +368,19 @@ bool operator==(Time a, Time b) {
 		   a.hour == b.hour && a.minute == b.minute && a.second == b.second;
 }
 
+int Time::Compare(Time b) const
+{
+	int q = Date::Compare(b);
+	if(q) return q;
+	q = SgnCompare(hour, b.hour);
+	if(q) return q;
+	q = SgnCompare(minute, b.minute);
+	if(q) return q;
+	return SgnCompare(second, b.second);
+}
+
 bool operator<(Time a, Time b) {
-	if(a.year < b.year) return true;
-	if(a.year > b.year) return false;
-	if(a.month < b.month) return true;
-	if(a.month > b.month) return false;
-	if(a.day < b.day) return true;
-	if(a.day > b.day) return false;
-	if(a.hour < b.hour) return true;
-	if(a.hour > b.hour) return false;
-	if(a.minute < b.minute) return true;
-	if(a.minute > b.minute) return false;
-	return a.second < b.second;
+	return a.Compare(b) < 0;
 }
 
 void Time::Set(int64 scalar)
