@@ -119,6 +119,11 @@ nst]&]
 [s2; POSIX: Returns true if entry is POSIX symlink. Win32: Returns 
 true if entry is Shell link file (.lnk with proper content).&]
 [s3; &]
+[s4;%- &]
+[s5;:FindFile`:`:IsExecutable`(`)const:%- [@(0.0.255) bool]_[* IsExecutable]()_[@(0.0.255) c
+onst]&]
+[s2; Returns true if target file is executable binary.&]
+[s3;%- &]
 [s4; &]
 [s5;:FindFile`:`:GetMode`(`)const:%- [_^dword^ dword]_[* GetMode]()_[@(0.0.255) const]&]
 [s6; `[POSIX`]&]
