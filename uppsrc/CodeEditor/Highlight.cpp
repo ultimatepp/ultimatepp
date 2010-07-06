@@ -327,7 +327,7 @@ void CodeEditor::InitKeywords()
 			NULL
 		};
 		static const char *upp_logs[] = {
-			"LOG", "LOGF", "DUMP", "DUMPC", "DUMPCC", "DUMPCCC",
+			"LOG", "LOGF", "DUMP", "DUMPC", "DUMPCC", "DUMPCCC", "DUMPM",
 			"LLOG", "LLOGF", "LDUMP", "LDUMPC", "LDUMPCC", "LDUMPCCC",
 			"DLOG", "DLOGF", "DDUMP", "DDUMPC", "DDUMPCC", "DDUMPCCC",
 			"RLOG", "RLOGF", "RDUMP", "RDUMPC", "RDUMPCC", "RDUMPCCC",

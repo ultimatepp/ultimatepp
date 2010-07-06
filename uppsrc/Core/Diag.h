@@ -108,6 +108,7 @@ inline void UnlockLog() {}
 #define DUMPC(c)         UPP::LockLog(), UPP::DumpContainer(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define DUMPCC(c)        UPP::LockLog(), UPP::DumpContainer2(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define DUMPCCC(c)       UPP::LockLog(), UPP::DumpContainer3(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
+#define DUMPM(c)         UPP::LockLog(), UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 #define XASSERT(c, d)    if(!bool(c)) { LOG("XASSERT failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
 #define NEVER()          ASSERT(0)
 #define NEVER_(msg)      ASSERT_(0, msg)
@@ -123,6 +124,7 @@ inline void UnlockLog() {}
 #define DLOG(x)          LOG(x)
 #define DDUMP(x)         DUMP(x)
 #define DDUMPC(x)        DUMPC(x)
+#define DDUMPM(x)        DDUMPM(x)
 #define DTIMING(x)       TIMING(x)
 
 #else
@@ -130,6 +132,7 @@ inline void UnlockLog() {}
 #define DLOG(x)          @ // To clean logs after debugging, this produces error in release mode
 #define DDUMP(x)         @
 #define DDUMPC(x)        @
+#define DDUMPM(x)        @
 #define DTIMING(x)       @
 
 #define ASSERT(x)
@@ -149,6 +152,7 @@ inline void LOGF(const char *format, ...) {}
 #define DUMPC(a)
 #define DUMPCC(a)
 #define DUMPCCC(a)
+#define DUMPM(a)
 #define XASSERT(c, d)
 #define NEVER()
 #define NEVER_(msg)
@@ -233,6 +237,14 @@ void DumpContainer3(Stream& s, T ptr, T end) {
 template <class C>
 void DumpContainer3(Stream& s, const C& c) {
 	DumpContainer3(s, c.Begin(), c.End());
+}
+
+template <class T>
+void DumpMap(Stream& s, const T& t) {
+	s << LOG_BEGIN;
+	for(int i = 0; i < t.GetCount(); i++)
+		s << '[' << i << "] = ("<< t.GetKey(i) << ") " << t[i] << EOL;
+	s << LOG_END;
 }
 
 String AsString(MemoryProfile& mem);
