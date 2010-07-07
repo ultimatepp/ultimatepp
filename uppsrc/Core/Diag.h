@@ -124,7 +124,7 @@ inline void UnlockLog() {}
 #define DLOG(x)          LOG(x)
 #define DDUMP(x)         DUMP(x)
 #define DDUMPC(x)        DUMPC(x)
-#define DDUMPM(x)        DDUMPM(x)
+#define DDUMPM(x)        DUMPM(x)
 #define DTIMING(x)       TIMING(x)
 
 #else
@@ -183,6 +183,7 @@ struct DebugLogBlock
 #define RLOGSRCPOS()      UPP::LockLog(), UPP::VppLog() << __FILE__ << '#' << __LINE__ << UPP::EOL
 #define RDUMP(a)          UPP::LockLog(), UPP::VppLog() << #a << " = " << (a) << UPP::EOL, UPP::UnlockLog()
 #define RDUMPC(c)         UPP::LockLog(), UPP::DumpContainer(UPP::VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
+#define RDUMPM(c)         UPP::LockLog(), UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c)), UPP::UnlockLog()
 
 // Crash support
 
