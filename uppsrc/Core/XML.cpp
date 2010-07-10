@@ -241,8 +241,7 @@ void XmlParser::Next()
 	}
 	text.Clear();
 	type = XML_EOF;
-	if(!npreserve)
-		SkipWhites();
+	SkipWhites();
 	if(*term == '<') {
 		term++;
 		if(*term == '!') {
@@ -372,10 +371,11 @@ void XmlParser::Next()
 		type = XML_EOF;
 	else {
 		StringBuffer raw_text;
+		bool trimws = !(npreserve || preserveall);
 		while(*term != '<' && *term) {
 			if(*term == '\n') {
 				line++;
-				if(!npreserve)
+				if(trimws)
 					while(*term == '\t')
 						term++;
 			}
@@ -390,10 +390,9 @@ void XmlParser::Next()
 			}
 		}
 		const char *re = raw_text.End();
-		if(!npreserve) {
+		if(trimws)
 			while(re > raw_text.Begin() && (byte)re[-1] <= ' ')
 				re--;
-		}
 		text = FromUtf8(~raw_text, (int)(re - ~raw_text)).ToString();
 		type = XML_TEXT;
 	}
@@ -644,6 +643,7 @@ XmlParser::XmlParser(const char *s)
 	npreserve = false;
 	begin = term = s;
 	line = 1;
+	preserveall = false;
 	Next();
 }
 

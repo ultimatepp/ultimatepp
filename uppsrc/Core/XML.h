@@ -58,7 +58,7 @@ class XmlParser {
 	String                    text;
 	String                    lftext;
 	bool                      empty_tag;
-	bool                      npreserve;
+	bool                      npreserve, preserveall;
 	bool                      relaxed;
 
 	int                       line;
@@ -124,6 +124,7 @@ public:
 	int    GetColumn() const;
 
 	void   Relaxed(bool b)                                    { relaxed = b; }
+	void   PreserveAllWhiteSpaces(bool b = true)              { preserveall = b; }
 
 	XmlParser(const char *s);
 };
