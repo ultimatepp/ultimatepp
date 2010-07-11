@@ -296,12 +296,16 @@ public:
 #undef E__Param
 #undef E__Body
 
-	String GetFaultString() const                       { return faultString; }
-	int    GetFaultCode() const                         { return faultCode; }
-	String GetError() const                             { return error; }
+	String GetFaultString() const                               { return faultString; }
+	int    GetFaultCode() const                                 { return faultCode; }
+	String GetError() const                                     { return error; }
 	void   ClearError();
+	
+	XmlRpcCall& Proxy(const String& host, int port)             { server.Proxy(host, port); return *this; }
+	XmlRpcCall& Proxy(const char *url)                          { server.Proxy(url); return *this; }
+	XmlRpcCall& ProxyAuth(const String& usr, const String& pwd) { server.ProxyAuth(usr, pwd); return *this; }
 
-	XmlRpcCall& TimeOut(int msec)                       { timeout = msec; }
+	XmlRpcCall& TimeOut(int msec)                               { timeout = msec; }
 	XmlRpcCall& URL(const char *url);
 
 	XmlRpcCall(const char *url);

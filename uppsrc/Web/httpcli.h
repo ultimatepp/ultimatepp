@@ -20,9 +20,9 @@ public:
 	HttpClient&  URL(const char *url);
 	HttpClient&  Url(const char *id, const String& data);
 	HttpClient&  KeepAlive(bool k)                { keepalive = k; return *this; }
-	HttpClient&  Proxy(String h, int p)           { proxy_host = h; proxy_port = p; return *this; }
+	HttpClient&  Proxy(String host, int port)     { proxy_host = host; proxy_port = port; return *this; }
 	HttpClient&  Proxy(const char *url);
-	HttpClient&  ProxyAuth(String u, String p)    { proxy_username = u; proxy_password = p; return *this; }
+	HttpClient&  ProxyAuth(String usr, String pwd){  proxy_username = usr; proxy_password = pwd; return *this; }
 
 	HttpClient&  Headers(String h)                { client_headers = h; return *this; }
 	HttpClient&  ClearHeaders()                   { return Headers(Null); }
