@@ -110,6 +110,27 @@ void AutoSetup()
 		dlg.dovisualcpp9x64 = true;
 	dlg.visualcppmethod9x64 <<= "MSC9x64";
 
+
+	String sdk10 = NormalizePathNN(GetWinRegString("InstallationFolder",
+		                                       "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows\\v7.1",
+		                                       HKEY_LOCAL_MACHINE));  
+	String bin10;
+	if(!IsNull(sdk10) && FileExists(AppendFileName(sdk10, "VC\\Bin\\cl.exe")))
+		bin10 = sdk10;
+	else
+		ExistProgram(bin10, "Program Files (x86)\\Microsoft Visual Studio 10.0", "VC\\Bin\\cl.exe")
+		|| ExistProgram(bin10, "Program Files\\Microsoft Visual Studio 10.0", "VC\\Bin\\cl.exe");
+	dlg.sdk10 <<= sdk10;
+	dlg.visualcpp10 <<= bin10;
+	dlg.visualcppmethod10 <<= "MSC10";
+	dlg.dovisualcpp10 <<= !IsNull(dlg.visualcpp10);
+	String vc10_64 = AppendFileName(bin10, "VC\\Bin\\x64");
+	if(!FileExists(AppendFileName(vc10_64, "cl.exe")))
+		vc10_64 = AppendFileName(bin10, "VC\\Bin\\amd64");
+	if(bin10.GetLength() && FileExists(AppendFileName(vc10_64, "cl.exe")))
+		dlg.dovisualcpp10x64 = true;
+	dlg.visualcppmethod10x64 <<= "MSC10x64";
+
 	dlg.mysql <<= NormalizePathNN(GetWinRegString("Location", "SOFTWARE\\MySQL AB\\MySQL Server 4.1"));
 
 	String sdl = NormalizePathNN(ConfigFile("sdl"));
@@ -180,6 +201,93 @@ void AutoSetup()
 		lib << ";" << AppendFileName(mysql, "lib");
 	}
 
+	String vs10 = ~dlg.visualcpp10;
+	if(!IsNull(vs10) && dlg.dovisualcpp10x64) {
+		String vc = AppendFileName(vs10, "Vc");
+		String m = ~dlg.visualcppmethod10x64;
+		String sdk = ~dlg.sdk10;
+		if(IsNull(sdk))
+			sdk = AppendFileName(vc, "PlatformSDK");
+		String vc_lib = AppendFileName(vc, "Lib\\x64");
+		if(!DirectoryExists(vc_lib))
+			vc_lib = AppendFileName(vc, "Lib\\amd64");
+		SaveFile(
+			AppendFileName(dir, m + ".bm"),
+			"BUILDER = \"MSC10X64\";\n"
+			"DEBUG_INFO = \"2\";\n"
+			"DEBUG_BLITZ = \"1\";\n"
+			"DEBUG_LINKMODE = \"0\";\n"
+			"DEBUG_OPTIONS = \"-Od\";\n"
+			"RELEASE_BLITZ = \"0\";\n"
+			"RELEASE_LINKMODE = \"0\";\n"
+			"RELEASE_OPTIONS = \"-O2 -GS-\";\n"
+			"RELEASE_SIZE_OPTIONS = \"-O1 -GS-\";\n"
+			"DEBUGGER = \"\";\n"
+			"REMOTE_HOST = \"\";\n"
+			"REMOTE_OS = \"\";\n"
+			"REMOTE_TRANSFER = \"\";\n"
+			"REMOTE_MAP = \"\";\n"
+			"PATH = " + AsCString(
+			                AppendFileName(vs10, "Common7\\Ide") + ';' +
+							vc10_64 + ';' +
+							AppendFileName(sdk, "Bin") +
+							exe
+						) + ";\n"
+			"INCLUDE = " + AsCString(
+							AppendFileName(vc, "Include") + ';' +
+							AppendFileName(sdk, "Include") +
+							include
+						   ) + ";\n"
+			"LIB = " + AsCString(
+							vc_lib + ';' +
+							AppendFileName(sdk, "Lib\\x64") +
+							lib
+			           ) + ";\n"
+		);
+		SaveFile(AppendFileName(dir, "default_method"), m);
+	}
+
+	if(!IsNull(vs10) && dlg.dovisualcpp10) {
+		String vc = AppendFileName(vs10, "Vc");
+		String m = ~dlg.visualcppmethod10;
+		String sdk = ~dlg.sdk10;
+		if(IsNull(sdk))
+			sdk = AppendFileName(vc, "PlatformSDK");
+		SaveFile(
+			AppendFileName(dir, m + ".bm"),
+			"BUILDER = \"MSC10\";\n"
+			"DEBUG_INFO = \"2\";\n"
+			"DEBUG_BLITZ = \"1\";\n"
+			"DEBUG_LINKMODE = \"0\";\n"
+			"DEBUG_OPTIONS = \"-Od\";\n"
+			"RELEASE_BLITZ = \"0\";\n"
+			"RELEASE_LINKMODE = \"0\";\n"
+			"RELEASE_OPTIONS = \"-O2 -GS-\";\n"
+			"RELEASE_SIZE_OPTIONS = \"-O1 -GS-\";\n"
+			"DEBUGGER = \"\";\n"
+			"REMOTE_HOST = \"\";\n"
+			"REMOTE_OS = \"\";\n"
+			"REMOTE_TRANSFER = \"\";\n"
+			"REMOTE_MAP = \"\";\n"
+			"PATH = " + AsCString(
+			                AppendFileName(vs10, "Common7\\Ide") + ';' +
+							AppendFileName(vc, "Bin") + ';' +
+							AppendFileName(sdk, "Bin") +
+							exe
+						) + ";\n"
+			"INCLUDE = " + AsCString(
+							AppendFileName(vc, "Include") + ';' +
+							AppendFileName(sdk, "Include") +
+							include
+						   ) + ";\n"
+			"LIB = " + AsCString(
+							AppendFileName(vc, "Lib") + ';' +
+							AppendFileName(sdk, "Lib") +
+							lib
+			           ) + ";\n"
+		);
+		SaveFile(AppendFileName(dir, "default_method"), m);
+	}
 
 	String vs9 = ~dlg.visualcpp9;
 	if(!IsNull(vs9) && dlg.dovisualcpp9x64) {

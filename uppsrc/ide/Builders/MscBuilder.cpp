@@ -102,7 +102,7 @@ bool MscBuilder::IsMsc89() const
 
 bool MscBuilder::IsMsc86() const
 {
-	return HasFlag("MSC8") || HasFlag("MSC9");
+	return HasFlag("MSC8") || HasFlag("MSC9") || HasFlag("MSC10");
 }
 
 bool MscBuilder::IsMscArm() const
@@ -112,7 +112,7 @@ bool MscBuilder::IsMscArm() const
 
 bool MscBuilder::IsMsc64() const
 {
-	return HasFlag("MSC8X64") || HasFlag("MSC9X64");
+	return HasFlag("MSC8X64") || HasFlag("MSC9X64") || HasFlag("MSC10X64");
 }
 
 String MscBuilder::LinkerName() const
@@ -367,8 +367,9 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 				if(is_shared) {
 					lib << LinkerName() << " -dll -nologo -machine:" << MachineName()
 						<< " -pdb:" << GetHostPathQ(ForceExt(product, ".pdb"))
-						<< " -out:" << GetHostPathQ(product)
-						<< " -incremental:no";
+						<< " -out:" << GetHostPathQ(product);
+					if(!HasFlag("MSC10") && !HasFlag("MSC10X64"))
+						lib << " -incremental:no";
 					if(HasFlag("FORCE_SIZE")){
 						if(sContainsPchOptions(release_size_options))
 							lib << " -ltcg";
@@ -482,10 +483,16 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(HasFlag("FORCE_SPEED"))
 				if(sContainsPchOptions(release_options))
 					link << " -ltcg";
-			if(HasAnyDebug())
-				link << " -incremental:yes -debug -OPT:NOREF";
+			if(!HasFlag("MSC10") && !HasFlag("MSC10X64"))
+				if(HasAnyDebug())
+					link << " -incremental:yes -debug -OPT:NOREF";
+				else
+					link << " -incremental:no -release -OPT:REF,ICF";
 			else
-				link << " -incremental:no -release -OPT:REF,ICF";
+				if(HasAnyDebug())
+					link << " -debug -OPT:NOREF";
+				else
+					link << " -release -OPT:REF,ICF";
 			if(IsMscArm())
 				link << " -subsystem:windowsce,4.20 /ARMPADCODE -NODEFAULTLIB:\"oldnames.lib\" ";
 			else
@@ -548,6 +555,8 @@ void RegisterMscBuilder()
 	RegisterBuilder("MSC8ARM", CreateMscBuilder);
 	RegisterBuilder("MSC9", CreateMscBuilder);
 	RegisterBuilder("MSC9X64", CreateMscBuilder);
+	RegisterBuilder("MSC10", CreateMscBuilder);
+	RegisterBuilder("MSC10X64", CreateMscBuilder);
 	RegisterBuilder("MSC9ARM", CreateMscBuilder);
 	RegisterBuilder("EVC_ARM", CreateMscBuilder);
 	RegisterBuilder("EVC_MIPS", CreateMscBuilder);
