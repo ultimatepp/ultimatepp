@@ -123,6 +123,11 @@ HRESULT               CheckReturnString(BSTR *bstr, String s);
 void                  ReturnWString(BSTR *dest, WString s);
 HRESULT               CheckReturnWString(BSTR *bstr, WString s);
 
+ValueArray            SAFEARRAYToValueArray(SAFEARRAY *array);
+SAFEARRAY            *ValueArrayToSAFEARRAY(const ValueArray& varray);
+void                  ReturnValueArray(SAFEARRAY *dest, const ValueArray& array);
+HRESULT               CheckReturnString(BSTR *bstr, String s);
+
 class OleBstr
 {
 public:

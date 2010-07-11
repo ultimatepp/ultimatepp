@@ -214,6 +214,54 @@ HRESULT CheckReturnWString(BSTR *bstr, WString s)
 	return S_OK;
 }
 
+static ValueArray SAFEARRAYToValueArrayPart(SAFEARRAY *array, long *indices, int dim_index)
+{
+	Vector<Value> dim_array;
+	int nelem = array->rgsabound[dim_index].cElements;
+	dim_array.SetCount(nelem);
+	for(int e = 0; e < nelem; e++) {
+		indices[dim_index] = e;
+		if(dim_index > 0)
+			dim_array[e] = SAFEARRAYToValueArrayPart(array, indices, dim_index - 1);
+		else {
+			OleVariant var;
+			HRESULT hr = SafeArrayGetElement(array, indices, &var);
+			if(SUCCEEDED(hr))
+				dim_array[e] = AsValue(var);
+			else {
+				String dims;
+				for(int i = 0; i < dim_index; i++)
+					dims << (i ? ", " : "") << indices[i];
+				dim_array[e] = ErrorValue(NFormat("SafeArrayGetElement(%s): error %08lx", dims, hr));
+			}
+		}
+	}
+	return ValueArray(dim_array);
+}
+
+ValueArray SAFEARRAYToValueArray(SAFEARRAY *array)
+{
+	int ndims = array->cDims;
+	Vector<long> indices;
+	indices.SetCount(ndims, -1);
+	return SAFEARRAYToValueArrayPart(array, indices.Begin(), ndims - 1);
+}
+
+SAFEARRAY * ValueArrayToSAFEARRAY(const ValueArray& varray)
+{
+	SAFEARRAYBOUND rgsabound;
+	rgsabound.lLbound = 0;
+	rgsabound.cElements = varray.GetCount();
+	SAFEARRAY *a = SafeArrayCreate(VT_VARIANT, 1, &rgsabound);
+	if(!a)
+		return NULL;
+	for(long index = 0; index < varray.GetCount(); index++) {
+		OleVariant var = AsVariant(varray[(int)index]);
+		SafeArrayPutElement(a, &index, &var);
+	}
+	return a;
+}
+
 //////////////////////////////////////////////////////////////////////
 // special types
 
