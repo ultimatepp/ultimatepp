@@ -509,6 +509,12 @@ struct OcxInit { OcxInit(void (*fn)()) { OcxTypeLib::Get().AddInit(fn); } };
 	OCX_OBJECT(type) \
 	static IRef<type> COMBINE(OcxNew_, type)() { return new OcxObjectWrapper<type>(MK__s); }
 
+#ifndef _USRDLL
+bool ExeRegisterServer();
+bool ExeUnregisterServer();
+void ExeRunServer();
+#endif
+
 Size ToHiMetric(Size pixel_size);
 Size FromHiMetric(Size himetric_size);
 Rect GetWindow(HDC hdc);

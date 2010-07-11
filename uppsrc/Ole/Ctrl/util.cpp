@@ -557,7 +557,6 @@ HRESULT OcxTypeLib::Unregister()
 	return hr;
 }
 
-/*
 #ifndef _USRDLL
 HRESULT OcxTypeLib::RegisterObjects()
 {
@@ -586,7 +585,6 @@ void OcxTypeLib::RevokeObjects()
 	}
 }
 #endif
-*/
 
 HRESULT OcxTypeLib::GetFactory(REFCLSID rclsid, REFIID iid, void **ppv)
 {
@@ -686,7 +684,6 @@ STDAPI DllUnregisterServer()
 }
 #endif
 
-/*
 #ifndef _USRDLL
 bool ExeRegisterServer()
 {
@@ -697,9 +694,7 @@ bool ExeRegisterServer()
 	return SUCCEEDED(hr);
 }
 #endif
-*/
 
-/*
 #ifndef _USRDLL
 bool ExeUnregisterServer()
 {
@@ -710,9 +705,7 @@ bool ExeUnregisterServer()
 	return SUCCEEDED(hr);
 }
 #endif
-*/
 
-/*
 #ifndef _USRDLL
 void ExeRunServer()
 {
@@ -731,9 +724,9 @@ void ExeRunServer()
 		DispatchMessage(&msg);
 	}
 	LOGSYSOCX("end of message loop");
+	OcxTypeLib::Get().RevokeObjects();
 }
 #endif
-*/
 
 END_UPP_NAMESPACE
 
