@@ -4,8 +4,6 @@ topic "Tutoring Plan";
 [{_}%EN-US 
 [s1;#b0; [R6 Tutoring Plan]&]
 [s0; &]
-[ {{10000f0;g0;^l17/25r17/25t17/25b17/25@(198.255.150) [s0;= [*/+117 Start date will be July 12]]}}&]
-[s0;#+117 &]
 [s0; [2 If you find that U`+`+ is a nice tool but you have problems 
 using it or you do not feel comfortable with ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 F
 orum][2 , ][/2 Tutoring Plan is for you][2 .]&]
@@ -55,8 +53,10 @@ mentoring.]&]
 [s0;%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
 [s0;2%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/06/28]]
-:: [s0; [2 Begin date will be 2010/06/12]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/07/12]]
+:: [s0; [2 Today is out.]]
+:: [s0;# [2 2010/06/28]]
+:: [s0; [2 Begin date will be 2010/07/12.]]
 :: [s0;# [2 2010/06/26]]
 :: [s0; [2 Infrastructure is prepared and we are ready to begin.]]}}&]
 [s0; ]
