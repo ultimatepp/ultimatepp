@@ -77,6 +77,8 @@ private:
 	Link<OCI8Connection> clink;
 	bool                 in_server;
 	bool                 in_session;
+	bool                 utf8_session;
+	bool                 disable_utf8_mode;
 	String               user;
 	int                  level;
 	int                  tmode;
@@ -96,6 +98,8 @@ public:
 	};
 
 	void    SetTransactionMode(int mode)            { tmode = mode; }
+	void    DisableUtf8Mode(bool dutf8 = true)      { disable_utf8_mode = dutf8; }
+	
 	Oracle8(T_OCI8& oci8 = OCI8_());
 	~Oracle8();
 };
