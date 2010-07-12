@@ -1,4 +1,4 @@
-description "Disassembler (GPL license - used in TheIDE)\3770,128,128";
+description "Disassembler\3770,128,128";
 
 uses
 	Core;
