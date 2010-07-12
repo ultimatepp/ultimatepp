@@ -85,10 +85,10 @@ JPEG Group]]
 ::^ [s0; [+75 ndisasm]]
 ::= [s0; [+75 Julian Hall, Simon Tatham, Nelson Rush, Frank Kotler, Stephen 
 Silver, John Coffman, Yuri Zaporogets, H. Peter Anvin, John Fine, 
-Kendall Bennet, Gary Clark, Andrew Crabtree, Rafael R. Sevilla,, 
-Jaime Tejedor Gómez, James Seter, Edward J. Beroset, Stanislav 
-Karchebny, Debbie Wiles, Trevor Woerner, Michael K. Ter Louw, 
-Martin Wawro, Alexei Frounze]]
+Kendall Bennet, Gary Clark, Andrew Crabtree, Rafael R. Sevilla, 
+Jaime Tejedor, James Seter, Edward J. Beroset, Stanislav Karchebny, 
+Debbie Wiles, Trevor Woerner, Michael K. Ter Louw, Martin Wawro, 
+Alexei Frounze]]
 ::^ [s0; [+75 PNG]]
 ::= [s0; [+75 Glenn Randers`-Pehrson, Andreas Dilger, Guy Eric Schalnat]]
 ::^ [s0; [+75 Sqlite]]
