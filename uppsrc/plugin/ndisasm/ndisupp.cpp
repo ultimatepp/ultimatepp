@@ -3,23 +3,21 @@
 #include "ndisasm.h"
 
 extern "C" {
+#include "lib/compiler.h"
+#include "lib/inttypes.h"
 #include "lib/disasm.h"
 }
 
 NAMESPACE_UPP
-#ifdef CPU_32
-int NDisassemble(char *output, const byte *data, long offset)// returns instruction length
-#else
-int NDisassemble(char *output, const byte *data, int64 offset)// returns instruction length
-#endif
+
+int NDisassemble(char *output, const byte *data, long offset, bool x64)// returns instruction length
 {
-	unsigned preferences = 0; // see lib/insns.h(84)
-	long len = (long)disasm(const_cast<unsigned char *>(data), output, 32, offset, false, preferences);
+	int len = disasm(const_cast<unsigned char *>(data), output, 256, x64 ? 64 : 32, offset, false, 0);
 	if(len <= 0) {
-		eatbyte(const_cast<unsigned char *>(data), output);
+		eatbyte(const_cast<unsigned char *>(data), output, 256, x64 ? 64 : 32);
 		len = 1;
 	}
-	return (int)len;
+	return len;
 }
 
 #ifdef flagMAIN

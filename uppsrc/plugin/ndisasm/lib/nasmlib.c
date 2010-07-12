@@ -1,1038 +1,613 @@
-/* nasmlib.c	library routines for the Netwide Assembler
+/* ----------------------------------------------------------------------- *
+ *   
+ *   Copyright 1996-2009 The NASM Authors - All Rights Reserved
+ *   See the file AUTHORS included with the NASM distribution for
+ *   the specific copyright holders.
  *
- * The Netwide Assembler is copyright (C) 1996 Simon Tatham and
- * Julian Hall. All rights reserved. The software is
- * redistributable under the licence given in the file "Licence"
- * distributed in the NASM archive.
+ *   Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following
+ *   conditions are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *     
+ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * ----------------------------------------------------------------------- */
+
+/*
+ * nasmlib.c	library routines for the Netwide Assembler
  */
 
-#define _CRT_SECURE_NO_DEPRECATE
+#include "compiler.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
+#include "inttypes.h"
 #include "nasm.h"
 #include "nasmlib.h"
-#include "insns.h"		/* For MAX_KEYWORD */
+#include "insns.h"
 
-static efunc nasm_malloc_error;
+int globalbits = 0;    /* defined in nasm.h, works better here for ASM+DISASM */
+static vefunc nasm_verror;	/* Global error handling function */
 
 #ifdef LOGALLOC
 static FILE *logfp;
 #endif
 
-void nasm_set_malloc_error (efunc error)
+/* Uninitialized -> all zero by C spec */
+const uint8_t zero_buffer[ZERO_BUF_SIZE];
+
+/*
+ * Prepare a table of tolower() results.  This avoids function calls
+ * on some platforms.
+ */
+
+unsigned char nasm_tolower_tab[256];
+
+void tolower_init(void)
 {
-    nasm_malloc_error = error;
+    int i;
+
+    for (i = 0; i < 256; i++)
+	nasm_tolower_tab[i] = tolower(i);
+}
+
+void nasm_set_verror(vefunc ve)
+{
+    nasm_verror = ve;
+}
+
+void nasm_error(int severity, const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    nasm_verror(severity, fmt, ap);
+    va_end(ap);
+}
+
+void nasm_init_malloc_error(void)
+{
 #ifdef LOGALLOC
-    logfp = fopen ("malloc.log", "w");
-    setvbuf (logfp, NULL, _IOLBF, BUFSIZ);
-    fprintf (logfp, "null pointer is %p\n", NULL);
+    logfp = fopen("malloc.log", "w");
+    setvbuf(logfp, NULL, _IOLBF, BUFSIZ);
+    fprintf(logfp, "null pointer is %p\n", NULL);
 #endif
 }
 
 #ifdef LOGALLOC
-void *nasm_malloc_log (char *file, int line, size_t size)
+void *nasm_malloc_log(const char *file, int line, size_t size)
 #else
-void *nasm_malloc (size_t size)
+void *nasm_malloc(size_t size)
 #endif
 {
     void *p = malloc(size);
     if (!p)
-	nasm_malloc_error (ERR_FATAL | ERR_NOFILE, "out of memory");
+        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
 #ifdef LOGALLOC
     else
-	fprintf(logfp, "%s %d malloc(%ld) returns %p\n",
-		file, line, (long)size, p);
+        fprintf(logfp, "%s %d malloc(%ld) returns %p\n",
+                file, line, (long)size, p);
 #endif
     return p;
 }
 
 #ifdef LOGALLOC
-void *nasm_realloc_log (char *file, int line, void *q, size_t size)
+void *nasm_zalloc_log(const char *file, int line, size_t size)
 #else
-void *nasm_realloc (void *q, size_t size)
+void *nasm_zalloc(size_t size)
+#endif
+{
+    void *p = calloc(size, 1);
+    if (!p)
+        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
+#ifdef LOGALLOC
+    else
+        fprintf(logfp, "%s %d calloc(%ld, 1) returns %p\n",
+                file, line, (long)size, p);
+#endif
+    return p;
+}
+
+#ifdef LOGALLOC
+void *nasm_realloc_log(const char *file, int line, void *q, size_t size)
+#else
+void *nasm_realloc(void *q, size_t size)
 #endif
 {
     void *p = q ? realloc(q, size) : malloc(size);
     if (!p)
-	nasm_malloc_error (ERR_FATAL | ERR_NOFILE, "out of memory");
+        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
 #ifdef LOGALLOC
     else if (q)
-	fprintf(logfp, "%s %d realloc(%p,%ld) returns %p\n",
-		file, line, q, (long)size, p);
+        fprintf(logfp, "%s %d realloc(%p,%ld) returns %p\n",
+                file, line, q, (long)size, p);
     else
-	fprintf(logfp, "%s %d malloc(%ld) returns %p\n",
-		file, line, (long)size, p);
+        fprintf(logfp, "%s %d malloc(%ld) returns %p\n",
+                file, line, (long)size, p);
 #endif
     return p;
 }
 
 #ifdef LOGALLOC
-void nasm_free_log (char *file, int line, void *q)
+void nasm_free_log(const char *file, int line, void *q)
 #else
-void nasm_free (void *q)
+void nasm_free(void *q)
 #endif
 {
     if (q) {
-	free (q);
 #ifdef LOGALLOC
-	fprintf(logfp, "%s %d free(%p)\n",
-		file, line, q);
+        fprintf(logfp, "%s %d free(%p)\n", file, line, q);
 #endif
+        free(q);
     }
 }
 
 #ifdef LOGALLOC
-char *nasm_strdup_log (char *file, int line, const char *s)
+char *nasm_strdup_log(const char *file, int line, const char *s)
 #else
-char *nasm_strdup (const char *s)
+char *nasm_strdup(const char *s)
 #endif
 {
     char *p;
-    int size = strlen(s)+1;
+    int size = strlen(s) + 1;
 
     p = malloc(size);
     if (!p)
-	nasm_malloc_error (ERR_FATAL | ERR_NOFILE, "out of memory");
+        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
 #ifdef LOGALLOC
     else
-	fprintf(logfp, "%s %d strdup(%ld) returns %p\n",
-		file, line, (long)size, p);
+        fprintf(logfp, "%s %d strdup(%ld) returns %p\n",
+                file, line, (long)size, p);
 #endif
-    strcpy (p, s);
+    strcpy(p, s);
     return p;
 }
 
 #ifdef LOGALLOC
-char *nasm_strndup_log (char *file, int line, char *s, size_t len)
+char *nasm_strndup_log(const char *file, int line, const char *s, size_t len)
 #else
-char *nasm_strndup (char *s, size_t len)
+char *nasm_strndup(const char *s, size_t len)
 #endif
 {
     char *p;
-    int size = len+1;
+    int size = len + 1;
 
     p = malloc(size);
     if (!p)
-	nasm_malloc_error (ERR_FATAL | ERR_NOFILE, "out of memory");
+        nasm_error(ERR_FATAL | ERR_NOFILE, "out of memory");
 #ifdef LOGALLOC
     else
-	fprintf(logfp, "%s %d strndup(%ld) returns %p\n",
-		file, line, (long)size, p);
+        fprintf(logfp, "%s %d strndup(%ld) returns %p\n",
+                file, line, (long)size, p);
 #endif
-    strncpy (p, s, len);
+    strncpy(p, s, len);
     p[len] = '\0';
     return p;
 }
 
-#if !defined(stricmp) && !defined(strcasecmp)
-int nasm_stricmp (const char *s1, const char *s2)
+no_return nasm_assert_failed(const char *file, int line, const char *msg)
 {
-    while (*s1 && tolower(*s1) == tolower(*s2))
-	s1++, s2++;
-    if (!*s1 && !*s2)
-	return 0;
-    else if (tolower(*s1) < tolower(*s2))
-	return -1;
-    else
-	return 1;
+    nasm_error(ERR_FATAL, "assertion %s failed at %s:%d", msg, file, line);
+    exit(1);
+}
+
+#ifndef nasm_stricmp
+int nasm_stricmp(const char *s1, const char *s2)
+{
+    unsigned char c1, c2;
+    int d;
+
+    while (1) {
+	c1 = nasm_tolower(*s1++);
+	c2 = nasm_tolower(*s2++);
+	d = c1-c2;
+
+	if (d)
+	    return d;
+	if (!c1)
+	    break;
+    }
+    return 0;
 }
 #endif
 
-#if !defined(strnicmp) && !defined(strncasecmp)
-int nasm_strnicmp (const char *s1, const char *s2, int n)
+#ifndef nasm_strnicmp
+int nasm_strnicmp(const char *s1, const char *s2, size_t n)
 {
-    while (n > 0 && *s1 && tolower(*s1) == tolower(*s2))
-	s1++, s2++, n--;
-    if ((!*s1 && !*s2) || n==0)
-	return 0;
-    else if (tolower(*s1) < tolower(*s2))
-	return -1;
-    else
-	return 1;
+    unsigned char c1, c2;
+    int d;
+
+    while (n--) {
+	c1 = nasm_tolower(*s1++);
+	c2 = nasm_tolower(*s2++);
+	d = c1-c2;
+
+	if (d)
+	    return d;
+	if (!c1)
+	    break;
+    }
+    return 0;
 }
 #endif
 
-#define lib_isnumchar(c)   ( isalnum(c) || (c) == '$')
+int nasm_memicmp(const char *s1, const char *s2, size_t n)
+{
+    unsigned char c1, c2;
+    int d;
+
+    while (n--) {
+	c1 = nasm_tolower(*s1++);
+	c2 = nasm_tolower(*s2++);
+	d = c1-c2;
+	if (d)
+	    return d;
+    }
+    return 0;
+}
+
+#ifndef nasm_strsep
+char *nasm_strsep(char **stringp, const char *delim)
+{
+        char *s = *stringp;
+        char *e;
+
+        if (!s)
+                return NULL;
+
+        e = strpbrk(s, delim);
+        if (e)
+                *e++ = '\0';
+
+        *stringp = e;
+        return s;
+}
+#endif
+
+
+#define lib_isnumchar(c)   (nasm_isalnum(c) || (c) == '$' || (c) == '_')
 #define numvalue(c)  ((c)>='a' ? (c)-'a'+10 : (c)>='A' ? (c)-'A'+10 : (c)-'0')
 
-long readnum (char *str, int *error)
+static int radix_letter(char c)
+{
+    switch (c) {
+    case 'b': case 'B':
+    case 'y': case 'Y':
+	return 2;		/* Binary */
+    case 'o': case 'O':
+    case 'q': case 'Q':
+	return 8;		/* Octal */
+    case 'h': case 'H':
+    case 'x': case 'X':
+	return 16;		/* Hexadecimal */
+    case 'd': case 'D':
+    case 't': case 'T':
+	return 10;		/* Decimal */
+    default:
+	return 0;		/* Not a known radix letter */
+    }
+}
+
+int64_t readnum(char *str, bool *error)
 {
     char *r = str, *q;
-    long radix;
-    unsigned long result, checklimit;
+    int32_t pradix, sradix, radix;
+    int plen, slen, len;
+    uint64_t result, checklimit;
     int digit, last;
-    int warn = FALSE;
+    bool warn = false;
     int sign = 1;
 
-    *error = FALSE;
+    *error = false;
 
-    while (isspace(*r)) r++;	       /* find start of number */
+    while (nasm_isspace(*r))
+        r++;                    /* find start of number */
 
     /*
      * If the number came from make_tok_num (as a result of an %assign), it
      * might have a '-' built into it (rather than in a preceeding token).
      */
-    if (*r == '-')
-    {
-	r++;
-	sign = -1;
+    if (*r == '-') {
+        r++;
+        sign = -1;
     }
 
     q = r;
 
-    while (lib_isnumchar(*q)) q++;     /* find end of number */
+    while (lib_isnumchar(*q))
+        q++;                    /* find end of number */
 
-    /*
-     * If it begins 0x, 0X or $, or ends in H, it's in hex. if it
-     * ends in Q, it's octal. if it ends in B, it's binary.
-     * Otherwise, it's ordinary decimal.
-     */
-    if (*r=='0' && (r[1]=='x' || r[1]=='X'))
-	radix = 16, r += 2;
-    else if (*r=='$')
-	radix = 16, r++;
-    else if (q[-1]=='H' || q[-1]=='h')
-	radix = 16 , q--;
-    else if (q[-1]=='Q' || q[-1]=='q' || q[-1]=='O' || q[-1]=='o')
-	radix = 8 , q--;
-    else if (q[-1]=='B' || q[-1]=='b')
-	radix = 2 , q--;
-    else
-	radix = 10;
-
-    /*
-     * If this number has been found for us by something other than
-     * the ordinary scanners, then it might be malformed by having
-     * nothing between the prefix and the suffix. Check this case
-     * now.
-     */
-    if (r >= q) {
-	*error = TRUE;
+    len = q-r;
+    if (!len) {
+	/* Not numeric */
+	*error = true;
 	return 0;
     }
 
     /*
-     * `checklimit' must be 2**32 / radix. We can't do that in
-     * 32-bit arithmetic, which we're (probably) using, so we
-     * cheat: since we know that all radices we use are even, we
-     * can divide 2**31 by radix/2 instead.
+     * Handle radix formats:
+     *
+     * 0<radix-letter><string>
+     * $<string>		(hexadecimal)
+     * <string><radix-letter>
      */
-    checklimit = 0x80000000UL / (radix>>1);
+    pradix = sradix = 0;
+    plen = slen = 0;
+
+    if (len > 2 && *r == '0' && (pradix = radix_letter(r[1])) != 0)
+	plen = 2;
+    else if (len > 1 && *r == '$')
+	pradix = 16, plen = 1;
+
+    if (len > 1 && (sradix = radix_letter(q[-1])) != 0)
+	slen = 1;
+
+    if (pradix > sradix) {
+	radix = pradix;
+	r += plen;
+    } else if (sradix > pradix) {
+	radix = sradix;
+	q -= slen;
+    } else {
+	/* Either decimal, or invalid -- if invalid, we'll trip up
+	   further down. */
+	radix = 10;
+    }
 
     /*
-     * Calculate the highest allowable value for the last digit
-     * of a 32 bit constant... in radix 10, it is 6, otherwise it is 0
+     * `checklimit' must be 2**64 / radix. We can't do that in
+     * 64-bit arithmetic, which we're (probably) using, so we
+     * cheat: since we know that all radices we use are even, we
+     * can divide 2**63 by radix/2 instead.
+     */
+    checklimit = UINT64_C(0x8000000000000000) / (radix >> 1);
+
+    /*
+     * Calculate the highest allowable value for the last digit of a
+     * 64-bit constant... in radix 10, it is 6, otherwise it is 0
      */
     last = (radix == 10 ? 6 : 0);
 
     result = 0;
     while (*r && r < q) {
-	if (*r<'0' || (*r>'9' && *r<'A') || (digit = numvalue(*r)) >= radix)
-	{
-	    *error = TRUE;
-	    return 0;
-	}
-	if (result > checklimit ||
-	    (result == checklimit && digit >= last))
-	{
-	    warn = TRUE;
-	}
+	if (*r != '_') {
+	    if (*r < '0' || (*r > '9' && *r < 'A')
+		|| (digit = numvalue(*r)) >= radix) {
+		*error = true;
+		return 0;
+	    }
+	    if (result > checklimit ||
+		(result == checklimit && digit >= last)) {
+		warn = true;
+	    }
 
-	result = radix * result + digit;
-	r++;
+	    result = radix * result + digit;
+	}
+        r++;
     }
 
     if (warn)
-	nasm_malloc_error (ERR_WARNING | ERR_PASS1 | ERR_WARN_NOV,
-			   "numeric constant %s does not fit in 32 bits",
-			   str);
+        nasm_error(ERR_WARNING | ERR_PASS1 | ERR_WARN_NOV,
+		   "numeric constant %s does not fit in 64 bits",
+		   str);
 
-    return result*sign;
+    return result * sign;
 }
 
-long readstrnum (char *str, int length, int *warn)
+int64_t readstrnum(char *str, int length, bool *warn)
 {
-    long charconst = 0;
+    int64_t charconst = 0;
     int i;
 
-    *warn = FALSE;
+    *warn = false;
 
     str += length;
-    for (i=0; i<length; i++) {
-	if (charconst & 0xff000000UL) {
-	    *warn = TRUE;
-	}
-	charconst = (charconst<<8) + (unsigned char) *--str;
+    if (globalbits == 64) {
+        for (i = 0; i < length; i++) {
+            if (charconst & UINT64_C(0xFF00000000000000))
+                *warn = true;
+            charconst = (charconst << 8) + (uint8_t)*--str;
+        }
+    } else {
+        for (i = 0; i < length; i++) {
+            if (charconst & 0xFF000000UL)
+                *warn = true;
+            charconst = (charconst << 8) + (uint8_t)*--str;
+        }
     }
     return charconst;
 }
 
-static long next_seg;
+static int32_t next_seg;
 
 void seg_init(void)
 {
     next_seg = 0;
 }
 
-long seg_alloc(void)
+int32_t seg_alloc(void)
 {
     return (next_seg += 2) - 2;
 }
 
-void fwriteshort (int data, FILE *fp)
+#ifdef WORDS_LITTLEENDIAN
+
+void fwriteint16_t(uint16_t data, FILE * fp)
 {
-    fputc ((int) (data & 255), fp);
-    fputc ((int) ((data >> 8) & 255), fp);
+    fwrite(&data, 1, 2, fp);
 }
 
-void fwritelong (long data, FILE *fp)
+void fwriteint32_t(uint32_t data, FILE * fp)
 {
-    fputc ((int) (data & 255), fp);
-    fputc ((int) ((data >> 8) & 255), fp);
-    fputc ((int) ((data >> 16) & 255), fp);
-    fputc ((int) ((data >> 24) & 255), fp);
+    fwrite(&data, 1, 4, fp);
 }
 
-void standard_extension (char *inname, char *outname, char *extension,
-			 efunc error)
+void fwriteint64_t(uint64_t data, FILE * fp)
+{
+    fwrite(&data, 1, 8, fp);
+}
+
+void fwriteaddr(uint64_t data, int size, FILE * fp)
+{
+    fwrite(&data, 1, size, fp);
+}
+
+#else /* not WORDS_LITTLEENDIAN */
+
+void fwriteint16_t(uint16_t data, FILE * fp)
+{
+    char buffer[2], *p = buffer;
+    WRITESHORT(p, data);
+    fwrite(buffer, 1, 2, fp);
+}
+
+void fwriteint32_t(uint32_t data, FILE * fp)
+{
+    char buffer[4], *p = buffer;
+    WRITELONG(p, data);
+    fwrite(buffer, 1, 4, fp);
+}
+
+void fwriteint64_t(uint64_t data, FILE * fp)
+{
+    char buffer[8], *p = buffer;
+    WRITEDLONG(p, data);
+    fwrite(buffer, 1, 8, fp);
+}
+
+void fwriteaddr(uint64_t data, int size, FILE * fp)
+{
+    char buffer[8], *p = buffer;
+    WRITEADDR(p, data, size);
+    fwrite(buffer, 1, size, fp);
+}
+
+#endif
+
+size_t fwritezero(size_t bytes, FILE *fp)
+{
+    size_t count = 0;
+    size_t blksize;
+    size_t rv;
+
+    while (bytes) {
+	blksize = (bytes < ZERO_BUF_SIZE) ? bytes : ZERO_BUF_SIZE;
+
+	rv = fwrite(zero_buffer, 1, blksize, fp);
+	if (!rv)
+	    break;
+
+	count += rv;
+	bytes -= rv;
+    }
+
+    return count;
+}
+
+void standard_extension(char *inname, char *outname, char *extension)
 {
     char *p, *q;
 
-    if (*outname)		       /* file name already exists, */
-	return;			       /* so do nothing */
+    if (*outname)               /* file name already exists, */
+        return;                 /* so do nothing */
     q = inname;
     p = outname;
-    while (*q) *p++ = *q++;	       /* copy, and find end of string */
-    *p = '\0';			       /* terminate it */
-    while (p > outname && *--p != '.');/* find final period (or whatever) */
-    if (*p != '.') while (*p) p++;     /* go back to end if none found */
-    if (!strcmp(p, extension)) {       /* is the extension already there? */
-	if (*extension)
-	    error(ERR_WARNING | ERR_NOFILE,
-		  "file name already ends in `%s': "
-		  "output will be in `nasm.out'",
-		  extension);
-	else
-	    error(ERR_WARNING | ERR_NOFILE,
-		  "file name already has no extension: "
-		  "output will be in `nasm.out'");
-	strcpy(outname, "nasm.out");
+    while (*q)
+        *p++ = *q++;            /* copy, and find end of string */
+    *p = '\0';                  /* terminate it */
+    while (p > outname && *--p != '.') ;        /* find final period (or whatever) */
+    if (*p != '.')
+        while (*p)
+            p++;                /* go back to end if none found */
+    if (!strcmp(p, extension)) {        /* is the extension already there? */
+        if (*extension)
+            nasm_error(ERR_WARNING | ERR_NOFILE,
+		       "file name already ends in `%s': "
+		       "output will be in `nasm.out'", extension);
+        else
+            nasm_error(ERR_WARNING | ERR_NOFILE,
+		       "file name already has no extension: "
+		       "output will be in `nasm.out'");
+        strcpy(outname, "nasm.out");
     } else
-	strcpy(p, extension);
-}
-
-#define LEAFSIZ (sizeof(RAA)-sizeof(RAA_UNION)+sizeof(RAA_LEAF))
-#define BRANCHSIZ (sizeof(RAA)-sizeof(RAA_UNION)+sizeof(RAA_BRANCH))
-
-#define LAYERSIZ(r) ( (r)->layers==0 ? RAA_BLKSIZE : RAA_LAYERSIZE )
-
-static struct RAA *real_raa_init (int layers)
-{
-    struct RAA *r;
-    int i;
-
-    if (layers == 0) {
-	r = nasm_malloc (LEAFSIZ);
-	r->layers = 0;
-	memset (r->u.l.data, 0, sizeof(r->u.l.data));
-	r->stepsize = 1L;
-    } else {
-	r = nasm_malloc (BRANCHSIZ);
-	r->layers = layers;
-	for ( i = 0 ; i < RAA_LAYERSIZE ; i++ )
-	  r->u.b.data[i] = NULL;
-	r->stepsize = RAA_BLKSIZE;
-	while (--layers)
-	    r->stepsize *= RAA_LAYERSIZE;
-    }
-    return r;
-}
-
-struct RAA *raa_init (void)
-{
-    return real_raa_init (0);
-}
-
-void raa_free (struct RAA *r)
-{
-    if (r->layers == 0)
-	nasm_free (r);
-    else {
-	struct RAA **p;
-	for (p = r->u.b.data; p - r->u.b.data < RAA_LAYERSIZE; p++)
-	    if (*p)
-		raa_free (*p);
-    }
-}
-
-long raa_read (struct RAA *r, long posn)
-{
-    if (posn >= r->stepsize * LAYERSIZ(r))
-	return 0;		/* Return 0 for undefined entries */
-    while (r->layers > 0) {
-	ldiv_t l;
-	l = ldiv (posn, r->stepsize);
-	r = r->u.b.data[l.quot];
-	posn = l.rem;
-	if (!r)
-	    return 0;		/* Return 0 for undefined entries */
-    }
-    return r->u.l.data[posn];
-}
-
-struct RAA *raa_write (struct RAA *r, long posn, long value)
-{
-    struct RAA *result;
-
-    if (posn < 0)
-	nasm_malloc_error (ERR_PANIC, "negative position in raa_write");
-
-    while (r->stepsize * LAYERSIZ(r) <= posn) {
-	/*
-	 * Must add a layer.
-	 */
-	struct RAA *s;
-	int i;
-
-	s = nasm_malloc (BRANCHSIZ);
-	for ( i = 0 ; i < RAA_LAYERSIZE ; i++ )
-	    s->u.b.data[i] = NULL;
-	s->layers = r->layers + 1;
-	s->stepsize = LAYERSIZ(r) * r->stepsize;
-	s->u.b.data[0] = r;
-	r = s;
-    }
-
-    result = r;
-
-    while (r->layers > 0) {
-	ldiv_t l;
-	struct RAA **s;
-	l = ldiv (posn, r->stepsize);
-	s = &r->u.b.data[l.quot];
-	if (!*s)
-	    *s = real_raa_init (r->layers - 1);
-	r = *s;
-	posn = l.rem;
-    }
-
-    r->u.l.data[posn] = value;
-
-    return result;
-}
-
-#define SAA_MAXLEN 8192
-
-struct SAA *saa_init (long elem_len)
-{
-    struct SAA *s;
-
-    if (elem_len > SAA_MAXLEN)
-	nasm_malloc_error (ERR_PANIC | ERR_NOFILE, "SAA with huge elements");
-
-    s = nasm_malloc (sizeof(struct SAA));
-    s->posn = s->start = 0L;
-    s->elem_len = elem_len;
-    s->length = SAA_MAXLEN - (SAA_MAXLEN % elem_len);
-    s->data = nasm_malloc (s->length);
-    s->next = NULL;
-    s->end = s;
-
-    return s;
-}
-
-void saa_free (struct SAA *s)
-{
-    struct SAA *t;
-
-    while (s) {
-	t = s->next;
-	nasm_free (s->data);
-	nasm_free (s);
-	s = t;
-    }
-}
-
-void *saa_wstruct (struct SAA *s)
-{
-    void *p;
-
-    if (s->end->length - s->end->posn < s->elem_len) {
-	s->end->next = nasm_malloc (sizeof(struct SAA));
-	s->end->next->start = s->end->start + s->end->posn;
-	s->end = s->end->next;
-	s->end->length = s->length;
-	s->end->next = NULL;
-	s->end->posn = 0L;
-	s->end->data = nasm_malloc (s->length);
-    }
-
-    p = s->end->data + s->end->posn;
-    s->end->posn += s->elem_len;
-    return p;
-}
-
-void saa_wbytes (struct SAA *s, const void *data, long len)
-{
-    const char *d = data;
-
-    while (len > 0) {
-	long l = s->end->length - s->end->posn;
-	if (l > len)
-	    l = len;
-	if (l > 0) {
-	    if (d) {
-		memcpy (s->end->data + s->end->posn, d, l);
-		d += l;
-	    } else
-		memset (s->end->data + s->end->posn, 0, l);
-	    s->end->posn += l;
-	    len -= l;
-	}
-	if (len > 0) {
-	    s->end->next = nasm_malloc (sizeof(struct SAA));
-	    s->end->next->start = s->end->start + s->end->posn;
-	    s->end = s->end->next;
-	    s->end->length = s->length;
-	    s->end->next = NULL;
-	    s->end->posn = 0L;
-	    s->end->data = nasm_malloc (s->length);
-	}
-    }
-}
-
-void saa_rewind (struct SAA *s)
-{
-    s->rptr = s;
-    s->rpos = 0L;
-}
-
-void *saa_rstruct (struct SAA *s)
-{
-    void *p;
-
-    if (!s->rptr)
-	return NULL;
-
-    if (s->rptr->posn - s->rpos < s->elem_len) {
-	s->rptr = s->rptr->next;
-	if (!s->rptr)
-	    return NULL;	       /* end of array */
-	s->rpos = 0L;
-    }
-
-    p = s->rptr->data + s->rpos;
-    s->rpos += s->elem_len;
-    return p;
-}
-
-void *saa_rbytes (struct SAA *s, long *len)
-{
-    void *p;
-
-    if (!s->rptr)
-	return NULL;
-
-    p = s->rptr->data + s->rpos;
-    *len = s->rptr->posn - s->rpos;
-    s->rptr = s->rptr->next;
-    s->rpos = 0L;
-    return p;
-}
-
-void saa_rnbytes (struct SAA *s, void *data, long len)
-{
-    char *d = data;
-
-    while (len > 0) {
-	long l;
-
-	if (!s->rptr)
-	    return;
-
-	l = s->rptr->posn - s->rpos;
-	if (l > len)
-	    l = len;
-	if (l > 0) {
-	    memcpy (d, s->rptr->data + s->rpos, l);
-	    d += l;
-	    s->rpos += l;
-	    len -= l;
-	}
-	if (len > 0) {
-	    s->rptr = s->rptr->next;
-	    s->rpos = 0L;
-	}
-    }
-}
-
-void saa_fread (struct SAA *s, long posn, void *data, long len)
-{
-    struct SAA *p;
-    long pos;
-    char *cdata = data;
-
-    if (!s->rptr || posn < s->rptr->start)
-	saa_rewind (s);
-    p = s->rptr;
-    while (posn >= p->start + p->posn) {
-	p = p->next;
-	if (!p)
-	    return;		       /* what else can we do?! */
-    }
-
-    pos = posn - p->start;
-    while (len) {
-	long l = p->posn - pos;
-	if (l > len)
-	    l = len;
-	memcpy (cdata, p->data+pos, l);
-	len -= l;
-	cdata += l;
-	p = p->next;
-	if (!p)
-	    return;
-	pos = 0L;
-    }
-    s->rptr = p;
-}
-
-void saa_fwrite (struct SAA *s, long posn, void *data, long len)
-{
-    struct SAA *p;
-    long pos;
-    char *cdata = data;
-
-    if (!s->rptr || posn < s->rptr->start)
-	saa_rewind (s);
-    p = s->rptr;
-    while (posn >= p->start + p->posn) {
-	p = p->next;
-	if (!p)
-	    return;		       /* what else can we do?! */
-    }
-
-    pos = posn - p->start;
-    while (len) {
-	long l = p->posn - pos;
-	if (l > len)
-	    l = len;
-	memcpy (p->data+pos, cdata, l);
-	len -= l;
-	cdata += l;
-	p = p->next;
-	if (!p)
-	    return;
-	pos = 0L;
-    }
-    s->rptr = p;
-}
-
-void saa_fpwrite (struct SAA *s, FILE *fp)
-{
-    char *data;
-    long len;
-
-    saa_rewind (s);
-    while ( (data = saa_rbytes (s, &len)) )
-	fwrite (data, 1, len, fp);
+        strcpy(p, extension);
 }
 
 /*
- * Register, instruction, condition-code and prefix keywords used
- * by the scanner.
+ * Common list of prefix names
  */
-#include "names.c"
-static const char *special_names[] = {
-    "byte", "dword", "far", "long", "near", "nosplit", "qword",
-    "short", "strict", "to", "tword", "word"
-};
 static const char *prefix_names[] = {
-    "a16", "a32", "lock", "o16", "o32", "rep", "repe", "repne",
-    "repnz", "repz", "times"
+    "a16", "a32", "a64", "asp", "lock", "o16", "o32", "o64", "osp",
+    "rep", "repe", "repne", "repnz", "repz", "times", "wait"
 };
 
-
-/*
- * Standard scanner routine used by parser.c and some output
- * formats. It keeps a succession of temporary-storage strings in
- * stdscan_tempstorage, which can be cleared using stdscan_reset.
- */
-static char **stdscan_tempstorage = NULL;
-static int stdscan_tempsize = 0, stdscan_templen = 0;
-#define STDSCAN_TEMP_DELTA 256
-
-static void stdscan_pop(void)
+const char *prefix_name(int token)
 {
-    nasm_free (stdscan_tempstorage[--stdscan_templen]);
-}
+    unsigned int prefix = token-PREFIX_ENUM_START;
+    if (prefix > elements(prefix_names))
+	return NULL;
 
-void stdscan_reset(void)
-{
-    while (stdscan_templen > 0)
-	stdscan_pop();
-}
-
-/*
- * Unimportant cleanup is done to avoid confusing people who are trying
- * to debug real memory leaks
- */
-void nasmlib_cleanup (void)
-{
-    stdscan_reset();
-    nasm_free (stdscan_tempstorage);
-}
-
-static char *stdscan_copy(char *p, int len)
-{
-    char *text;
-
-    text = nasm_malloc(len+1);
-    strncpy (text, p, len);
-    text[len] = '\0';
-
-    if (stdscan_templen >= stdscan_tempsize) {
-	stdscan_tempsize += STDSCAN_TEMP_DELTA;
-	stdscan_tempstorage = nasm_realloc(stdscan_tempstorage,
-					   stdscan_tempsize*sizeof(char *));
-    }
-    stdscan_tempstorage[stdscan_templen++] = text;
-
-    return text;
-}
-
-char *stdscan_bufptr = NULL;
-int stdscan (void *private_data, struct tokenval *tv)
-{
-    char ourcopy[MAX_KEYWORD+1], *r, *s;
-
-    (void) private_data;  /* Don't warn that this parameter is unused */
-
-    while (isspace(*stdscan_bufptr)) stdscan_bufptr++;
-    if (!*stdscan_bufptr)
-	return tv->t_type = 0;
-
-    /* we have a token; either an id, a number or a char */
-    if (isidstart(*stdscan_bufptr) ||
-	(*stdscan_bufptr == '$' && isidstart(stdscan_bufptr[1]))) {
-	/* now we've got an identifier */
-	int i;
-	int is_sym = FALSE;
-
-	if (*stdscan_bufptr == '$') {
-	    is_sym = TRUE;
-	    stdscan_bufptr++;
-	}
-
- 	r = stdscan_bufptr++;
-	/* read the entire buffer to advance the buffer pointer but... */
-	while (isidchar(*stdscan_bufptr)) stdscan_bufptr++;
-
-	/* ... copy only up to IDLEN_MAX-1 characters */
-	tv->t_charptr = stdscan_copy(r, stdscan_bufptr - r < IDLEN_MAX ?
-		stdscan_bufptr - r : IDLEN_MAX - 1);
-
-	if (is_sym || stdscan_bufptr-r > MAX_KEYWORD)
-	    return tv->t_type = TOKEN_ID;/* bypass all other checks */
-
-	for (s=tv->t_charptr, r=ourcopy; *s; s++)
-	    *r++ = tolower (*s);
-	*r = '\0';
-	/* right, so we have an identifier sitting in temp storage. now,
-	 * is it actually a register or instruction name, or what? */
-	if ((tv->t_integer=bsi(ourcopy, reg_names,
-			       elements(reg_names)))>=0) {
-	    tv->t_integer += EXPR_REG_START;
-	    return tv->t_type = TOKEN_REG;
-	} else if ((tv->t_integer=bsi(ourcopy, insn_names,
-				      elements(insn_names)))>=0) {
-	    return tv->t_type = TOKEN_INSN;
-	}
-	for (i=0; i<elements(icn); i++)
-	    if (!strncmp(ourcopy, icn[i], strlen(icn[i]))) {
-		char *p = ourcopy + strlen(icn[i]);
-		tv->t_integer = ico[i];
-		if ((tv->t_inttwo=bsi(p, conditions,
-					 elements(conditions)))>=0)
-		    return tv->t_type = TOKEN_INSN;
-	    }
-	if ((tv->t_integer=bsi(ourcopy, prefix_names,
-				  elements(prefix_names)))>=0) {
-	    tv->t_integer += PREFIX_ENUM_START;
-	    return tv->t_type = TOKEN_PREFIX;
-	}
-	if ((tv->t_integer=bsi(ourcopy, special_names,
-				  elements(special_names)))>=0)
-	    return tv->t_type = TOKEN_SPECIAL;
-	if (!nasm_stricmp(ourcopy, "seg"))
-	    return tv->t_type = TOKEN_SEG;
-	if (!nasm_stricmp(ourcopy, "wrt"))
-	    return tv->t_type = TOKEN_WRT;
-	return tv->t_type = TOKEN_ID;
-    } else if (*stdscan_bufptr == '$' && !isnumchar(stdscan_bufptr[1])) {
-	/*
-	 * It's a $ sign with no following hex number; this must
-	 * mean it's a Here token ($), evaluating to the current
-	 * assembly location, or a Base token ($$), evaluating to
-	 * the base of the current segment.
-	 */
-	stdscan_bufptr++;
-	if (*stdscan_bufptr == '$') {
-	    stdscan_bufptr++;
-	    return tv->t_type = TOKEN_BASE;
-	}
-	return tv->t_type = TOKEN_HERE;
-    } else if (isnumstart(*stdscan_bufptr)) {  /* now we've got a number */
-	int rn_error;
-
-	r = stdscan_bufptr++;
-	while (isnumchar(*stdscan_bufptr))
-	    stdscan_bufptr++;
-
-	if (*stdscan_bufptr == '.') {
-	    /*
-	     * a floating point constant
-	     */
-	    stdscan_bufptr++;
-	    while (isnumchar(*stdscan_bufptr) ||
-		   ((stdscan_bufptr[-1] == 'e' || stdscan_bufptr[-1] == 'E')
-		    && (*stdscan_bufptr == '-' || *stdscan_bufptr == '+')) )
-	    {
-		stdscan_bufptr++;
-	    }
-	    tv->t_charptr = stdscan_copy(r, stdscan_bufptr - r);
-	    return tv->t_type = TOKEN_FLOAT;
-	}
-	r = stdscan_copy(r, stdscan_bufptr - r);
-	tv->t_integer = readnum(r, &rn_error);
-	stdscan_pop();
-	if (rn_error)
-	    return tv->t_type = TOKEN_ERRNUM;/* some malformation occurred */
-	tv->t_charptr = NULL;
-	return tv->t_type = TOKEN_NUM;
-    } else if (*stdscan_bufptr == '\'' ||
-	       *stdscan_bufptr == '"') {/* a char constant */
-    	char quote = *stdscan_bufptr++, *r;
-	int rn_warn;
-	r = tv->t_charptr = stdscan_bufptr;
-	while (*stdscan_bufptr && *stdscan_bufptr != quote) stdscan_bufptr++;
-	tv->t_inttwo = stdscan_bufptr - r;      /* store full version */
-	if (!*stdscan_bufptr)
-	    return tv->t_type = TOKEN_ERRNUM;       /* unmatched quotes */
-	stdscan_bufptr++;			/* skip over final quote */
-	tv->t_integer = readstrnum(r, tv->t_inttwo, &rn_warn);
-	/* FIXME: rn_warn is not checked! */
-	return tv->t_type = TOKEN_NUM;
-    } else if (*stdscan_bufptr == ';') {  /* a comment has happened - stay */
-	return tv->t_type = 0;
-    } else if (stdscan_bufptr[0] == '>' && stdscan_bufptr[1] == '>') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_SHR;
-    } else if (stdscan_bufptr[0] == '<' && stdscan_bufptr[1] == '<') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_SHL;
-    } else if (stdscan_bufptr[0] == '/' && stdscan_bufptr[1] == '/') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_SDIV;
-    } else if (stdscan_bufptr[0] == '%' && stdscan_bufptr[1] == '%') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_SMOD;
-    } else if (stdscan_bufptr[0] == '=' && stdscan_bufptr[1] == '=') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_EQ;
-    } else if (stdscan_bufptr[0] == '<' && stdscan_bufptr[1] == '>') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_NE;
-    } else if (stdscan_bufptr[0] == '!' && stdscan_bufptr[1] == '=') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_NE;
-    } else if (stdscan_bufptr[0] == '<' && stdscan_bufptr[1] == '=') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_LE;
-    } else if (stdscan_bufptr[0] == '>' && stdscan_bufptr[1] == '=') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_GE;
-    } else if (stdscan_bufptr[0] == '&' && stdscan_bufptr[1] == '&') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_DBL_AND;
-    } else if (stdscan_bufptr[0] == '^' && stdscan_bufptr[1] == '^') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_DBL_XOR;
-    } else if (stdscan_bufptr[0] == '|' && stdscan_bufptr[1] == '|') {
-	stdscan_bufptr += 2;
-	return tv->t_type = TOKEN_DBL_OR;
-    } else			       /* just an ordinary char */
-    	return tv->t_type = (unsigned char) (*stdscan_bufptr++);
-}
-
-/*
- * Return TRUE if the argument is a simple scalar. (Or a far-
- * absolute, which counts.)
- */
-int is_simple (expr *vect)
-{
-    while (vect->type && !vect->value)
-    	vect++;
-    if (!vect->type)
-	return 1;
-    if (vect->type != EXPR_SIMPLE)
-	return 0;
-    do {
-	vect++;
-    } while (vect->type && !vect->value);
-    if (vect->type && vect->type < EXPR_SEGBASE+SEG_ABS) return 0;
-    return 1;
-}
-
-/*
- * Return TRUE if the argument is a simple scalar, _NOT_ a far-
- * absolute.
- */
-int is_really_simple (expr *vect)
-{
-    while (vect->type && !vect->value)
-    	vect++;
-    if (!vect->type)
-	return 1;
-    if (vect->type != EXPR_SIMPLE)
-	return 0;
-    do {
-	vect++;
-    } while (vect->type && !vect->value);
-    if (vect->type) return 0;
-    return 1;
-}
-
-/*
- * Return TRUE if the argument is relocatable (i.e. a simple
- * scalar, plus at most one segment-base, plus possibly a WRT).
- */
-int is_reloc (expr *vect)
-{
-    while (vect->type && !vect->value) /* skip initial value-0 terms */
-    	vect++;
-    if (!vect->type)		       /* trivially return TRUE if nothing */
-	return 1;		       /* is present apart from value-0s */
-    if (vect->type < EXPR_SIMPLE)      /* FALSE if a register is present */
-	return 0;
-    if (vect->type == EXPR_SIMPLE) {   /* skip over a pure number term... */
-	do {
-	    vect++;
-	} while (vect->type && !vect->value);
-	if (!vect->type)	       /* ...returning TRUE if that's all */
-	    return 1;
-    }
-    if (vect->type == EXPR_WRT) {      /* skip over a WRT term... */
-	do {
-	    vect++;
-	} while (vect->type && !vect->value);
-	if (!vect->type)	       /* ...returning TRUE if that's all */
-	    return 1;
-    }
-    if (vect->value != 0 && vect->value != 1)
-	return 0;		       /* segment base multiplier non-unity */
-    do {			       /* skip over _one_ seg-base term... */
-	vect++;
-    } while (vect->type && !vect->value);
-    if (!vect->type)		       /* ...returning TRUE if that's all */
-	return 1;
-    return 0;			       /* And return FALSE if there's more */
-}
-
-/*
- * Return TRUE if the argument contains an `unknown' part.
- */
-int is_unknown(expr *vect)
-{
-    while (vect->type && vect->type < EXPR_UNKNOWN)
-	vect++;
-    return (vect->type == EXPR_UNKNOWN);
-}
-
-/*
- * Return TRUE if the argument contains nothing but an `unknown'
- * part.
- */
-int is_just_unknown(expr *vect)
-{
-    while (vect->type && !vect->value)
-	vect++;
-    return (vect->type == EXPR_UNKNOWN);
-}
-
-/*
- * Return the scalar part of a relocatable vector. (Including
- * simple scalar vectors - those qualify as relocatable.)
- */
-long reloc_value (expr *vect)
-{
-    while (vect->type && !vect->value)
-    	vect++;
-    if (!vect->type) return 0;
-    if (vect->type == EXPR_SIMPLE)
-	return vect->value;
-    else
-	return 0;
-}
-
-/*
- * Return the segment number of a relocatable vector, or NO_SEG for
- * simple scalars.
- */
-long reloc_seg (expr *vect)
-{
-    while (vect->type && (vect->type == EXPR_WRT || !vect->value))
-    	vect++;
-    if (vect->type == EXPR_SIMPLE) {
-	do {
-	    vect++;
-	} while (vect->type && (vect->type == EXPR_WRT || !vect->value));
-    }
-    if (!vect->type)
-	return NO_SEG;
-    else
-	return vect->type - EXPR_SEGBASE;
-}
-
-/*
- * Return the WRT segment number of a relocatable vector, or NO_SEG
- * if no WRT part is present.
- */
-long reloc_wrt (expr *vect)
-{
-    while (vect->type && vect->type < EXPR_WRT)
-    	vect++;
-    if (vect->type == EXPR_WRT) {
-	return vect->value;
-    } else
-	return NO_SEG;
+    return prefix_names[prefix];
 }
 
 /*
  * Binary search.
  */
-int bsi (char *string, const char **array, int size)
+int bsi(const char *string, const char **array, int size)
 {
-    int i = -1, j = size;	       /* always, i < index < j */
-    while (j-i >= 2) {
-	int k = (i+j)/2;
-	int l = strcmp(string, array[k]);
-	if (l<0)		       /* it's in the first half */
-	    j = k;
-	else if (l>0)		       /* it's in the second half */
-	    i = k;
-	else			       /* we've got it :) */
-	    return k;
+    int i = -1, j = size;       /* always, i < index < j */
+    while (j - i >= 2) {
+        int k = (i + j) / 2;
+        int l = strcmp(string, array[k]);
+        if (l < 0)              /* it's in the first half */
+            j = k;
+        else if (l > 0)         /* it's in the second half */
+            i = k;
+        else                    /* we've got it :) */
+            return k;
     }
-    return -1;			       /* we haven't got it :( */
+    return -1;                  /* we haven't got it :( */
+}
+
+int bsii(const char *string, const char **array, int size)
+{
+    int i = -1, j = size;       /* always, i < index < j */
+    while (j - i >= 2) {
+        int k = (i + j) / 2;
+        int l = nasm_stricmp(string, array[k]);
+        if (l < 0)              /* it's in the first half */
+            j = k;
+        else if (l > 0)         /* it's in the second half */
+            i = k;
+        else                    /* we've got it :) */
+            return k;
+    }
+    return -1;                  /* we haven't got it :( */
 }
 
 static char *file_name = NULL;
-static long line_number = 0;
+static int32_t line_number = 0;
 
 char *src_set_fname(char *newname)
 {
@@ -1041,82 +616,114 @@ char *src_set_fname(char *newname)
     return oldname;
 }
 
-long src_set_linnum(long newline)
+int32_t src_set_linnum(int32_t newline)
 {
-    long oldline = line_number;
+    int32_t oldline = line_number;
     line_number = newline;
     return oldline;
 }
 
-long src_get_linnum(void)
+int32_t src_get_linnum(void)
 {
     return line_number;
 }
 
-int src_get(long *xline, char **xname)
+int src_get(int32_t *xline, char **xname)
 {
-    if (!file_name || !*xname || strcmp(*xname, file_name))
-    {
-	nasm_free(*xname);
-	*xname = file_name ? nasm_strdup(file_name) : NULL;
-	*xline = line_number;
-	return -2;
+    if (!file_name || !*xname || strcmp(*xname, file_name)) {
+        nasm_free(*xname);
+        *xname = file_name ? nasm_strdup(file_name) : NULL;
+        *xline = line_number;
+        return -2;
     }
-    if (*xline != line_number)
-    {
-	long tmp = line_number - *xline;
-	*xline = line_number;
-	return tmp;
+    if (*xline != line_number) {
+        int32_t tmp = line_number - *xline;
+        *xline = line_number;
+        return tmp;
     }
     return 0;
 }
 
-void nasm_quote(char **str)
-{
-    int ln=strlen(*str);
-    char q=(*str)[0];
-    char *p;
-    if (ln>1 && (*str)[ln-1]==q && (q=='"' || q=='\''))
-	return;
-    q = '"';
-    if (strchr(*str,q))
-	q = '\'';
-    p = nasm_malloc(ln+3);
-    strcpy(p+1, *str);
-    nasm_free(*str);
-    p[ln+1] = p[0] = q;
-    p[ln+2] = 0;
-    *str = p;
-}
-
-char *nasm_strcat(char *one, char *two)
+char *nasm_strcat(const char *one, const char *two)
 {
     char *rslt;
-    int l1=strlen(one);
-    rslt = nasm_malloc(l1+strlen(two)+1);
+    int l1 = strlen(one);
+    rslt = nasm_malloc(l1 + strlen(two) + 1);
     strcpy(rslt, one);
-    strcpy(rslt+l1, two);
+    strcpy(rslt + l1, two);
     return rslt;
 }
 
-void null_debug_init(struct ofmt *of, void *id, FILE *fp, efunc error ) {}
-void null_debug_linenum(const char *filename, long linenumber, long segto) {}
-void null_debug_deflabel(char *name, long segment, long offset, int is_global, char *special) {}
-void null_debug_routine(const char *directive, const char *params) {}
-void null_debug_typevalue(long type) {}
-void null_debug_output(int type, void *param) {}
-void null_debug_cleanup(void){}
+/* skip leading spaces */
+char *nasm_skip_spaces(const char *p)
+{
+    if (p)
+        while (*p && nasm_isspace(*p))
+            p++;
+    return (char *)p;
+}
 
-struct dfmt null_debug_form = {
-    "Null debug format",
-    "null",
-    null_debug_init,
-    null_debug_linenum,
-    null_debug_deflabel,
-    null_debug_routine,
-    null_debug_typevalue,
-    null_debug_output,
-    null_debug_cleanup
-};
+/* skip leading non-spaces */
+char *nasm_skip_word(const char *p)
+{
+    if (p)
+        while (*p && !nasm_isspace(*p))
+            p++;
+    return (char *)p;
+}
 
-struct dfmt *null_debug_arr[2] = { &null_debug_form, NULL };
+/* zap leading spaces with zero */
+char *nasm_zap_spaces_fwd(char *p)
+{
+    if (p)
+        while (*p && nasm_isspace(*p))
+            *p++ = 0x0;
+    return p;
+}
+
+/* zap spaces with zero in reverse order */
+char *nasm_zap_spaces_rev(char *p)
+{
+    if (p)
+        while (*p && nasm_isspace(*p))
+            *p-- = 0x0;
+    return p;
+}
+
+/*
+ * initialized data bytes length from opcode
+ */
+int idata_bytes(int opcode)
+{
+    int ret;
+    switch (opcode) {
+    case I_DB:
+        ret = 1;
+        break;
+    case I_DW:
+        ret = 2;
+        break;
+    case I_DD:
+        ret = 4;
+        break;
+    case I_DQ:
+        ret = 8;
+        break;
+    case I_DT:
+        ret = 10;
+        break;
+    case I_DO:
+        ret = 16;
+        break;
+    case I_DY:
+        ret = 32;
+        break;
+    case I_none:
+        ret = -1;
+        break;
+    default:
+        ret = 0;
+        break;
+    }
+    return ret;
+}

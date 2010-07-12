@@ -106,7 +106,7 @@ void ResolveTParam(Vector<String>& type, const Vector<String>& tparam)
 
 void AssistScanError(int line, const String& text)
 {
-#ifdef _DEBUG
+#ifdef _DEBUG_X_0
 	PutVerbose(String().Cat() << "(" << line << "): " << text);
 #endif
 }
@@ -120,7 +120,7 @@ void AssistEditor::Context(Parser& parser, int pos)
 	parser.Do(ss, IgnoreList(), CodeBase(), Null, callback(AssistScanError));
 	QualifyTypes(CodeBase(), parser.current_scope, parser.current);
 	inbody = parser.IsInBody();
-#ifdef _DEBUG
+#ifdef _DEBUG_X_0
 	PutVerbose("body: " + AsString(inbody));
 	PutVerbose("scope: " + AsString(parser.current_scope));
 #endif
