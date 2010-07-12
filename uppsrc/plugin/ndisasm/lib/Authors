@@ -1,5 +1,5 @@
 This is the AUTHORS file for the NASM project located at:
-http://nasm.2y.net/
+http://nasm.sourceforge.net/
 
 Names should be inserted as follows:
 
@@ -7,6 +7,7 @@ N: Name Here
 E: Email Here
 D: Description Here
 D: Additional Description Here.... and so on
+C: Copyright information
 
 Such is life.
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -24,7 +25,7 @@ E: palisade@users.sourceforge.net
 D: Some guy.
 
 N: Frank Kotler
-E: fbkotler@nettaxi.com
+E: fbkotler@users.sf.net
 D: Bug smashing.
 D: Documentation - "KATMAI" and "3DNow!" instructions supported by 0.98
 D: General coordination and moral support.
@@ -35,7 +36,7 @@ D: Documentation - "3dNow!" instructions and misc.
 D: insns.dat fixes and new instructions.
 
 N: AMD Inc. (names of developers here?)
-E:
+E: 
 D: 3DNow instructions
 D: New Athlon instructions
 D: Makefile.vc fix
@@ -51,7 +52,8 @@ D: RDOFF support
 
 N: H. Peter Anvin
 E: hpa@zytor.com
-D: Organized 0.98 release and Linux binaries; new CVS tree.
+D: Primary maintainer for the 0.98, late 0.98.x and 2.x releases.
+C: Contributions since 2008-12-15 are Copyright Intel Corporation.
 
 N: John Fine
 E: johnfine@earthlink.net
@@ -59,24 +61,24 @@ D: Preprocessor and OBJ (OMF) output format driver
 D: Organized DOS versions of 0.98 release
 
 N: Kendall Bennet
-E: KendallB@scitechsoft.com
+E: KendallB@scitechsoft.com 
 D: NASM enhancements
 D: macros
 D: Syntax modifications
 
 N: Gary Clark
-E:
+E: 
 D: AMD 3DNow! instructions
 
 N: Andrew Crabtree
-E:
+E: 
 D: Debugging support
 
 N: Rafael R. Sevilla
 E: dido@pacific.net.ph
 D: RDF2HEX utility
 
-N: Jaime Tejedor Gómez, aka Metalbrain
+N: Jaime Tejedor GÃ³mez, aka Metalbrain
 E: metalbrain_coder@gmx.net
 D: jecxz bug fix
 
@@ -117,3 +119,19 @@ N: Alexei Frounze
 E: alexfru@users.sourceforge.net
 D: "-I" paths searched for "incbined" files
 D: bugswatting
+
+N: Keith Kanios, aka SpooK
+E: keith@kanios.net
+D: c99 Compliance
+D: General x64 Support
+D: win64 (x86-64 COFF) output format
+D: __BITS__ Standard Macro
+D: Website Maintenance @ http://nasm.sourceforge.net/
+
+N: Chuck Crayne
+E: ccrayne@users.sourceforge.net
+D: elf64 (x86_64) output format
+
+N: Cyrill Gorcunov
+E: gorcunov@gmail.com
+D: AMD XOP/FMA4/CVT16 instructions

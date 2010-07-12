@@ -735,8 +735,7 @@ public:
 	void            SetPage(const Size& sz)               { pagesz = sz; Finish(); }
 	Size            GetPage()                             { return pagesz; }
 
-	void            NoRuler()                             { RemoveFrame(ruler); }
-
+	RichEdit&       NoRuler()                             { RemoveFrame(ruler); return *this; }
 	RichEdit&       FontFaces(const Vector<int>& face);
 	RichEdit&       ViewBorder(int cx)                    { viewborder = cx; Refresh(); return *this; }
 	RichEdit&       ShowCodes(Color c)                    { showcodes = c; Refresh(); return *this; }
