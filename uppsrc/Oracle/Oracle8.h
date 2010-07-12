@@ -100,6 +100,8 @@ public:
 	void    SetTransactionMode(int mode)            { tmode = mode; }
 	void    DisableUtf8Mode(bool dutf8 = true)      { disable_utf8_mode = dutf8; }
 	
+	bool    IsUtf8Session() const                   { return utf8_session; }
+	
 	Oracle8(T_OCI8& oci8 = OCI8_());
 	~Oracle8();
 };
