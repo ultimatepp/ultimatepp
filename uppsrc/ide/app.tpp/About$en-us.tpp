@@ -98,7 +98,7 @@ Alexei Frounze]]
 [s0;+92 &]
 [s0; [+92 All those sources are contained in `"plugin`" directory. 
 Refer there for licenses, however all libraries have BSD`-compatible 
-license with exception of LGPL licensed ndisasm.]&]
+license.]&]
 [s0;+92 &]
 [s0;+92 &]
 [ {{10000@(191) [s0; [*+92 MinGW][+92  compiler system (included with upp`-mingw releases)]]
