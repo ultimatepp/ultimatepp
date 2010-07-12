@@ -21,7 +21,7 @@ void OCI8SetDllPath(String oci8_path, T_OCI8& oci8)
 		oci8.SetLibName(Nvl(oci8_path, dflt_name));
 }
 
-static String OciError(T_OCI8& oci8, OCIError *errhp, int *code)
+static String OciError(T_OCI8& oci8, OCIError *errhp, int *code, bool utf8_session)
 {
 	if(code) *code = Null;
 	if(!oci8) return t_("Error running OCI8 Oracle connection dynamic library.");
@@ -31,7 +31,10 @@ static String OciError(T_OCI8& oci8, OCIError *errhp, int *code)
 	sb4 errcode;
 	oci8.OCIErrorGet(errhp, 1, NULL, &errcode, errbuf, sizeof(errbuf), OCI_HTYPE_ERROR);
 	if(code) *code = errcode;
-	return (const char *) errbuf;
+	String out = (const char *) errbuf;
+	if(utf8_session)
+		out = ToCharset(CHARSET_DEFAULT, out, CHARSET_UTF8);
+	return out;
 }
 
 bool Oracle8::AllocOciHandle(void *hp, int type) {
@@ -48,7 +51,7 @@ void Oracle8::FreeOciHandle(void *hp, int type) {
 void Oracle8::SetOciError(String text, OCIError *from_errhp)
 {
 	int errcode;
-	String msg = OciError(oci8, from_errhp, &errcode);
+	String msg = OciError(oci8, from_errhp, &errcode, utf8_session);
 	SetError(msg, text, errcode, NULL, OciErrorClass(errcode));
 }
 
@@ -137,6 +140,7 @@ protected:
 
 	Item&     PrepareParam(int i, int type, int len, int reserve, int dynamic_vtype);
 	void      SetParam(int i, const String& s);
+	void      SetParam(int i, const WString& s);
 	void      SetParam(int i, int integer);
 	void      SetParam(int i, double d);
 	void      SetParam(int i, Date d);
@@ -146,6 +150,7 @@ protected:
 
 	void      AddColumn(int type, int len);
 	void      GetColumn(int i, String& s) const;
+	void      GetColumn(int i, WString& s) const;
 	void      GetColumn(int i, int& n) const;
 	void      GetColumn(int i, double& d) const;
 	void      GetColumn(int i, Date& d) const;
@@ -265,9 +270,18 @@ OCI8Connection::Item& OCI8Connection::PrepareParam(int i, int type, int len, int
 }
 
 void OCI8Connection::SetParam(int i, const String& s) {
-	int l = s.GetLength();
+	String rs = (session->utf8_session ? ToCharset(CHARSET_UTF8, s) : s);
+	int l = rs.GetLength();
 	Item& p = PrepareParam(i, SQLT_STR, l + 1, 100, VOID_V);
-	memcpy(p.Data(), s, l + 1);
+	memcpy(p.Data(), rs, l + 1);
+	p.ind = l ? 0 : -1;
+}
+
+void OCI8Connection::SetParam(int i, const WString& s) {
+	String rs = (session->utf8_session ? ToUtf8(s) : s.ToString());
+	int l = rs.GetLength();
+	Item& p = PrepareParam(i, SQLT_STR, l + 1, 100, VOID_V);
+	memcpy(p.Data(), rs, l + 1);
 	p.ind = l ? 0 : -1;
 }
 
@@ -328,36 +342,40 @@ void  OCI8Connection::SetParam(int i, const Value& q) {
 		SetParam(i, String());
 	else
 		switch(q.GetType()) {
-		case SQLRAW_V:
-			SetRawParam(i, SqlRaw(q));
-			break;
-		case STRING_V:
-		case WSTRING_V:
-			SetParam(i, String(q));
-			break;
-		case INT_V:
-			SetParam(i, int(q));
-			break;
-		case DOUBLE_V:
-			SetParam(i, double(q));
-			break;
-		case DATE_V:
-			SetParam(i, Date(q));
-			break;
-		case TIME_V:
-			SetParam(i, (Time)q);
-			break;
-		case UNKNOWN_V:
-			if(IsTypeRaw<Sql *>(q)) {
-				SetParam(i, *ValueTo<Sql *>(q));
+			case SQLRAW_V:
+				SetRawParam(i, SqlRaw(q));
 				break;
-			}
-			if(OracleRef::IsValue(q)) {
-				SetParam(i, OracleRef(q));
+			case STRING_V:
+				SetParam(i, WString(q));
 				break;
-			}
-		default:
-			NEVER();
+			case WSTRING_V:
+				SetParam(i, String(q));
+				break;
+			case BOOL_V:
+			case INT_V:
+				SetParam(i, int(q));
+				break;
+			case INT64_V:
+			case DOUBLE_V:
+				SetParam(i, double(q));
+				break;
+			case DATE_V:
+				SetParam(i, Date(q));
+				break;
+			case TIME_V:
+				SetParam(i, (Time)q);
+				break;
+			case UNKNOWN_V:
+				if(IsTypeRaw<Sql *>(q)) {
+					SetParam(i, *ValueTo<Sql *>(q));
+					break;
+				}
+				if(OracleRef::IsValue(q)) {
+					SetParam(i, OracleRef(q));
+					break;
+				}
+			default:
+				NEVER();
 		}
 }
 
@@ -371,7 +389,9 @@ bool OCI8Connection::Execute() {
 	int args = 0;
 	if(parse) {
 //		Cancel();
-		if((args = OciParse(statement, parsed_cmd, this, session)) < 0)
+		String cvt_stmt = ToCharset(session->utf8_session
+			? CHARSET_UTF8 : CHARSET_DEFAULT, statement, CHARSET_DEFAULT);
+		if((args = OciParse(cvt_stmt, parsed_cmd, this, session)) < 0)
 			return false;
 		ub4 fr = fetchrows;
 
@@ -562,10 +582,11 @@ void OCI8Connection::GetColumn(int i, String& s) const {
 	if(c.type == SQLT_BLOB || c.type == SQLT_CLOB) {
 		int handle;
 		GetColumn(i, handle);
-		if(!IsNull(handle))
-		{
+		if(!IsNull(handle)) {
 			OracleBlob blob(*session, handle);
 			s = LoadStream(blob);
+			if(session->utf8_session && c.type == SQLT_CLOB)
+				s = ToCharset(CHARSET_DEFAULT, s, CHARSET_UTF8);
 		}
 		else
 			s = Null;
@@ -574,8 +595,44 @@ void OCI8Connection::GetColumn(int i, String& s) const {
 	ASSERT(c.type == SQLT_STR);
 	if(c.ind < 0)
 		s = Null;
+	else {
+		s = (char *) c.Data();
+		if(session->utf8_session)
+			s = ToCharset(CHARSET_DEFAULT, s, CHARSET_UTF8);
+	}
+}
+
+void OCI8Connection::GetColumn(int i, WString& ws) const {
+	if(!dynamic_param.IsEmpty()) {
+		ws = param[dynamic_param[i]].dynamic[dynamic_pos];
+		return;
+	}
+	const Item& c = column[i];
+	if(c.type == SQLT_BLOB || c.type == SQLT_CLOB) {
+		int handle;
+		GetColumn(i, handle);
+		if(!IsNull(handle)) {
+			OracleBlob blob(*session, handle);
+			String s = LoadStream(blob);
+			if(session->utf8_session && c.type == SQLT_CLOB)
+				ws = FromUtf8(s);
+			else
+				ws = s.ToWString();
+		}
+		else
+			ws = Null;
+		return;
+	}
+	ASSERT(c.type == SQLT_STR);
+	String s;
+	if(c.ind < 0)
+		s = Null;
 	else
 		s = (char *) c.Data();
+	if(session->utf8_session)
+		ws = FromUtf8(s);
+	else
+		ws = s.ToWString();
 }
 
 void OCI8Connection::GetColumn(int i, double& n) const {
@@ -631,18 +688,26 @@ void  OCI8Connection::GetColumn(int i, Ref f) const {
 		return;
 	}
 	switch(f.GetType()) {
+		case WSTRING_V: {
+			WString ws;
+			GetColumn(i, ws);
+			f.SetValue(ws);
+			break;
+		}
 		case STRING_V: {
 			String s;
 			GetColumn(i, s);
 			f.SetValue(s);
 			break;
 		}
+		case BOOL_V:
 		case INT_V: {
 			int d;
 			GetColumn(i, d);
 			f.SetValue(d);
 			break;
 		}
+		case INT64_V:
 		case DOUBLE_V: {
 			double d;
 			GetColumn(i, d);
@@ -779,7 +844,7 @@ void OCI8Connection::Clear() {
 			OCIStmt *aux = 0;
 			if(!session -> AllocOciHandle(&aux, OCI_HTYPE_STMT)) {
 				int errcode;
-				String err = OciError(oci8, errhp, &errcode);
+				String err = OciError(oci8, errhp, &errcode, session->utf8_session);
 				session->SetError(err, t_("Closing reference cursor"), errcode, NULL, OciErrorClass(errcode));
 			}
 			static char close[] = "begin close :1; end;";
@@ -854,19 +919,19 @@ bool Oracle8::Login(const char *name, const char *pwd, const char *db, bool use_
 #endif
 	;
 	
-	bool v_without_NLS = true;
-	if(oci8.OCIEnvNlsCreate) {
-		if((v_without_NLS)&&(oci8.OCIEnvNlsCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0, OCI_NLS_NCHARSET_ID_AL32UT8, OCI_NLS_NCHARSET_ID_AL32UT8))){
+	utf8_session = false;
+	if(!disable_utf8_mode
+	&& oci8.OCIEnvNlsCreate) {
+		if(oci8.OCIEnvNlsCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0,
+		OCI_NLS_NCHARSET_ID_AL32UT8, OCI_NLS_NCHARSET_ID_AL32UT8)
+		&& oci8.OCIEnvNlsCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0,
+		OCI_NLS_NCHARSET_ID_UT8, OCI_NLS_NCHARSET_ID_UT8))
 			LLOG("OCI8: error on initialization utf8 NLS");
-			v_without_NLS = true;
-		}else v_without_NLS = false;
-		if((v_without_NLS)&&(oci8.OCIEnvNlsCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0, OCI_NLS_NCHARSET_ID_UT8, OCI_NLS_NCHARSET_ID_UT8))){
-			LLOG("OCI8: error on initialization utf8 NLS");
-			v_without_NLS = true;
-		}else v_without_NLS = false;
-	}	
-	if(v_without_NLS){
-		if(oci8.OCIEnvCreate){
+		else
+			utf8_session = true;
+	}
+	if(!utf8_session) {
+		if(oci8.OCIEnvCreate) {
 			if(oci8.OCIEnvCreate(&envhp, accessmode, 0, 0, 0, 0, 0, 0)) {
 				OCIInitError(*this, "OCIEnvCreate");
 				return false;
@@ -919,7 +984,7 @@ bool Oracle8::Login(const char *name, const char *pwd, const char *db, bool use_
 	}
 	if(retcode == OCI_SUCCESS_WITH_INFO && warn) {
 		int errcode;
-		*warn = OciError(oci8, errhp, &errcode);
+		*warn = OciError(oci8, errhp, &errcode, utf8_session);
 	}
 	LLOG("Session attached, user = " + GetUser());
 	in_session = true;
@@ -1032,7 +1097,8 @@ Oracle8::Oracle8(T_OCI8& oci8_)
 	seshp = NULL;
 	svchp = NULL;
 	tmode = NORMAL;
-	in_session = in_server = false;
+	disable_utf8_mode = false;
+	in_session = in_server = utf8_session = false;
 	Dialect(ORACLE);
 }
 
