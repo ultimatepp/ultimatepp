@@ -346,10 +346,10 @@ void  OCI8Connection::SetParam(int i, const Value& q) {
 				SetRawParam(i, SqlRaw(q));
 				break;
 			case STRING_V:
-				SetParam(i, WString(q));
+				SetParam(i, String(q));
 				break;
 			case WSTRING_V:
-				SetParam(i, String(q));
+				SetParam(i, WString(q));
 				break;
 			case BOOL_V:
 			case INT_V:
