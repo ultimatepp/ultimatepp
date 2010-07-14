@@ -47,7 +47,8 @@ anonymous (but to the tutors and tutored person :`-))]&]
 [s0; [2 Your proposal will be reviewed by U`+`+ tutors and main developers.]&]
 [s0;2 &]
 [s0; [2 When approved you will get an invitation to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
-pp`-tutoring`-plan][2  in google groups.]&]
+pp`-tutoring`-plan][2  in Google groups. You will need a Google 
+account.]&]
 [s0;2 &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 I am a Tutor. What to do next?]]}}&]
