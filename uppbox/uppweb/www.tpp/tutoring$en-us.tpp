@@ -4,8 +4,8 @@ topic "Tutoring Plan";
 [{_}%EN-US 
 [s1;#b0; [R6 Tutoring Plan]&]
 [s0; &]
-[s0; [2 If you find that U`+`+ is a nice tool but you have problems 
-using it or you do not feel comfortable with ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 F
+[s0;# [2 If you find that U`+`+ is a nice tool but you have problems 
+beginning to use it and you do not feel comfortable with ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 F
 orum][2 , ][/2 Tutoring Plan is for you][2 .]&]
 [s0;2%- &]
 [s0;2%- &]
@@ -18,6 +18,7 @@ will not be known]&]
 [s0;#2 &]
 [s0;# [2 To enter, send an email to ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
 pp`-tutoring`-plan`@googlegroups.com][2  indicating:]&]
+[s0;#2 &]
 [s0;#i150;O0; [2 Forum name]&]
 [s0;#i150;O0; [2 Areas where you expect to use U`+`+]&]
 [s0;#i150;O0; [2 Tutoring timetable. Hours where you are more available 
@@ -32,11 +33,11 @@ be answered. When someone is available, the tutoring will begin.]&]
 [s0; [2 The Tutor will give you:]&]
 [s0;2 &]
 [s0;i150;O0; [2 Reasonable support using mail, IRC, ICQ, Google Talk 
-or other available means]&]
+or other available means.]&]
+[s0;i150;O0; [2 About U`+`+ programming: GUI, database, image, ...]&]
 [s0;i150;O0; [2 Letting you to know different U`+`+ resources like 
-documentation and Forum]&]
-[s0;i150;O0; [2 Answering your questions or looking for the right expert 
-and ]&]
+documentation and Forum.]&]
+[s0;i150;O0; [2 Answering your questions or looking for the right expert.]&]
 [s0;i150;O0; [2 Introducing you in U`+`+ world to be self`-sufficient.]&]
 [s0;i150;O0; [2 All for free.]&]
 [s0;2%- &]
@@ -54,7 +55,7 @@ mentoring.]&]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
 [s0;2%- &]
 [ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/07/12]]
-:: [s0; [2 Today is out.]]
+:: [s0; [2 Tutoring Plan is out.]]
 :: [s0;# [2 2010/06/28]]
 :: [s0; [2 Begin date will be 2010/07/12.]]
 :: [s0;# [2 2010/06/26]]
