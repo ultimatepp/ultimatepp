@@ -1,18 +1,42 @@
-#include "TabBarCtrlTest.h"
+#include <CtrlLib/CtrlLib.h>
+#include <TabBar/TabBar.h>
+using namespace Upp;
+
+#define LAYOUTFILE <TabBarCtrlTest/TabBarCtrlTest.lay>
+#include <CtrlCore/lay.h>
 
 class TabBarTest : public WithTabBarTestLayout<TopWindow>
 {
+	struct ReverseValueOrder : public StdValueOrder
+	{
+		virtual bool operator()(const Value& a, const Value& b) const 
+			{ return StdValueCompare(b, a, language) < 0; }	
+	};
+	
 	private:
-		TabBarCtrl tabCtrl;
-		WithFirstLayout<ParentCtrl> first;
-		WithSecondLayout<ParentCtrl> second;
-		WithBaseLayout<ParentCtrl> base;
+		TabBarCtrl tabs;
+		StdValueOrder forward;
+		ReverseValueOrder backward;
 		
-		void actionCb(void);
+		WithLayout1<ParentCtrl> layout1;
+		WithLayout2<ParentCtrl> layout2;
+		WithLayout3<ParentCtrl> layout3;
 		
-		bool cancelCloseCb(Vector<int>tabs);
-		void closeCb(Vector<int>tabs);
+		void OnTabsSortOnce();
+		void OnTabSort();
+		void OnGrouping();
+		void OnGroupSort();
+		void OnStacking();
+		void OnStackSort();
+		void OnTabCursor();
+		void OnAdd();
+		void OnSBThickness();
+		void OnGroupSeps();
 		
+		void OnChooseCrosses();
+		void OnEmptySeps();
+		
+		ValueOrder &GetSortOrder();
 	public:
 		typedef TabBarTest CLASSNAME;
 
@@ -21,59 +45,141 @@ class TabBarTest : public WithTabBarTestLayout<TopWindow>
 
 TabBarTest::TabBarTest()
 {
-	CtrlLayout(*this, "Window title");
-	CtrlLayout(first);
-	CtrlLayout(second);
-	CtrlLayout(base);
-	Add(tabCtrl.SizePos());
+	CtrlLayout(*this, "TabBarCtrl Test");
+	CtrlLayout(layout1);
+	CtrlLayout(layout2);
+	CtrlLayout(layout3);
 	Sizeable().Zoomable();
-
-	// add a fixed control to TabBarCtrl
-	tabCtrl.Add(base);
 	
-	// setup actions
-	tabCtrl.WhenSet = THISBACK(actionCb);
-	tabCtrl.WhenClose = THISBACK(closeCb);
-	tabCtrl.CancelClose = THISBACK(cancelCloseCb);
-	
-	tabCtrl.Add(first, "First");
-	tabCtrl.Add(second, "Second");
+	tabs <<= THISBACK(OnTabCursor);
+	layout2.add <<= THISBACK(OnAdd);
+	layout3.grouping <<= THISBACK(OnGrouping);
+	layout3.groupsort <<= THISBACK(OnGroupSort);
+	layout3.stacking <<= THISBACK(OnStacking);
+	layout3.stacksort <<= THISBACK(OnStackSort);
+	layout3.sortonce <<= THISBACK(OnTabsSortOnce);
+	layout3.sortorder <<= THISBACK(OnTabsSortOnce);
+	layout3.keepsorted <<= THISBACK(OnTabSort);
+	layout3.sb_thickness <<= THISBACK(OnSBThickness);
+	layout3.groupseps <<= THISBACK(OnGroupSeps);
+	layout3.variantcrosses <<= THISBACK(OnChooseCrosses);
+	layout3.emptyseps <<= THISBACK(OnEmptySeps);
 
-	tabCtrl.Remove(1);
-	tabCtrl.Remove(0);
-	tabCtrl.Add(first, "First");
-	tabCtrl.Add(second, "Second");
-	tabCtrl.Add("Third");
+	layout2.newvalue <<= "New Item";
+	layout2.newkey <<= "A Key";
+	layout2.newgroup <<= "Group 4";
+	layout3.stacksort <<= true;
+	layout3.grouping <<= true;
+	for(int i = 1; i < 11; i++)
+		layout3.sb_thickness.Add(i, i);	
+	layout3.sb_thickness <<= 2;
 
-	for(int i = 3; i < 7; i++)
-		tabCtrl.Add("Item#" + FormatInt(i));
+	layout3.sortorder.Add("Forwards");
+	layout3.sortorder.Add("Backwards");
+	layout3.sortorder.SetIndex(0);
+
+	for(int i = 6; i < 9; i++)
+		tabs.AddKey(i, "Item " + FormatInt(i), Null, "Group 2");
+	for(int i = 9; i < 11; i++)
+		tabs.AddKey(i, "Item " + FormatInt(i), Null, "Group 3");
+
+	Add(tabs.SizePos());
+	tabs.AddCtrl(layout1, 1, "Layout 1", Null, "Group 1");
+	tabs.AddCtrl(layout2, 2, "Layout 2", Null, "Group 1");
+	tabs.AddCtrl(layout3, 3, "Layout 3", Null, "Group 2");
 	
+	tabs.AllowReorder(false);
 }
 
-void TabBarTest::actionCb(void)
+void TabBarTest::OnGroupSeps()
 {
-	int i = tabCtrl.Get();
-	base.txt.SetText(base.txt.GetText() + Format("Pressed tab %d\n", i));
+	tabs.GroupSeparators(layout3.groupseps);
 }
 
-bool TabBarTest::cancelCloseCb(Vector<int>tabs)
+void TabBarTest::OnChooseCrosses()
 {
-	String s = "Close item(s) ";
-	for(int i = 0; i < tabs.GetCount(); i++)
-		s += FormatInt(tabs[i]) + ", ";
-	s = s.Left(s.GetCount() - 2) + " ?";
-	if(PromptYesNo(s))
-		return false;
-	return true;
+	if (layout3.variantcrosses)
+		TabBar::StyleDefault().Write().Variant1Crosses();
+	else
+		TabBar::StyleDefault().Write().DefaultCrosses();		
+	tabs.Refresh();
 }
 
-void TabBarTest::closeCb(Vector<int>tabs)
+void TabBarTest::OnEmptySeps()
 {
-	String s = "Closing item(s) ";
-	for(int i = 0; i < tabs.GetCount(); i++)
-		s += FormatInt(tabs[i]) + ", ";
-	s = s.Left(s.GetCount() - 2);
-	PromptOK(s);
+	if (layout3.emptyseps)
+		TabBar::StyleDefault().Write().NoGroupSeparators();
+	else
+		TabBar::StyleDefault().Write().DefaultGroupSeparators();
+	tabs.Refresh();
+}
+
+void TabBarTest::OnSBThickness()
+{
+	tabs.SetScrollThickness(~layout3.sb_thickness);
+}
+
+void TabBarTest::OnTabsSortOnce()
+{
+	tabs.SortTabValuesOnce(GetSortOrder());
+}
+
+void TabBarTest::OnTabSort()
+{
+	if (layout3.keepsorted)
+		tabs.SortTabValues(GetSortOrder());
+	else
+		tabs.SortTabs(false);
+}
+
+void TabBarTest::OnGrouping()
+{
+	tabs.Grouping(layout3.grouping);
+}
+
+void TabBarTest::OnGroupSort()
+{
+	tabs.SortGroups(layout3.groupsort);
+}
+
+void TabBarTest::OnStacking()
+{
+	tabs.Stacking(layout3.stacking);
+}
+
+void TabBarTest::OnStackSort()
+{
+	tabs.SortStacks(layout3.stacksort);
+}
+
+void TabBarTest::OnTabCursor()
+{
+	Value v = tabs.GetData();
+	if (!IsNull(v)) {
+		layout1.selected_key = (String)StdConvert().Format(tabs.GetData());
+		layout1.selected_value = (String)StdConvert().Format(tabs.GetValue(tabs.GetCursor()));
+	}
+	else {
+		layout1.selected_key = "";
+		layout1.selected_value = "";
+	}
+	layout1.selected_index.SetLabel(AsString(tabs.GetCursor()));
+}
+
+void TabBarTest::OnAdd()
+{
+	if (layout2.newvalue.GetLength() == 0)
+		PromptOK("You must supply a value");
+	tabs.AddKey(Nvl(~layout2.newkey, ~layout2.newvalue), ~layout2.newvalue, Null, ~layout2.newgroup);
+}
+
+ValueOrder & TabBarTest::GetSortOrder()
+{
+	switch (layout3.sortorder.GetIndex()) {
+	case 1:
+		return backward;
+	}
+	return forward;
 }
 
 GUI_APP_MAIN

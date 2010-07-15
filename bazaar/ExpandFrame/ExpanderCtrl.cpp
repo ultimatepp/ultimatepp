@@ -2,6 +2,7 @@
 
 void ExpanderCtrl::Layout()
 {
+	Repos();
 	scroll.SetPage(Hv(GetSize()));
 	UpdateScrollBar();
 }
@@ -18,7 +19,7 @@ ExpandFrame & ExpanderCtrl::AddExpander(Ctrl &c, bool expand, int size)
 	int sz = (size < 0) ? Hv(c.GetMinSize()) 
 					    : (IsHorz() ? HorzLayoutZoom(size) : VertLayoutZoom(size));
 	ExpandFrame &e = exp.Add();
-	e.Set(c, sz, IsHorz() ? ExpandFrame::LEFT : ExpandFrame::TOP).SetStyle(*style);
+	e.Set(c, sz, IsHorz() ? ExpandFrame::LEFT : ExpandFrame::TOP);
 	if (IsHorz()) {
 		e.VSizePos();
 		e.LeftPos(0, 0);
@@ -97,7 +98,6 @@ void ExpanderCtrl::Repos()
 
 ExpanderCtrl::ExpanderCtrl()
 {
-	style = &ExpandFrame::StyleDefault();
 	Vert();
 	AddFrame(scroll);
 	scroll <<= THISBACK(OnScroll);

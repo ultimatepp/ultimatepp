@@ -15,83 +15,83 @@ public:
 	
 	void PaintBorder(Draw& w);
 	
-	virtual void ChildGotFocus() 	{ if (!childfocus) { childfocus = true; if (!expand) Expand(true); Refresh(); } }
+	virtual void ChildGotFocus() 	{ if (!childfocus) { childfocus = true; if (!IsExpanded()) Expand(true); Refresh(); } }
 	virtual void ChildLostFocus() 	{ if (childfocus) { childfocus = false; Refresh(); } }
 public:	
 	struct Style : ChStyle<Style> {
-		Image	btnimage[4]; // Left, Up, Right, Down
-		Value	background[2];
-		Color	text[2];	
-		Color	border[2];
-		Font	font;
-		bool 	buttoncenter;
-		int		buttonstyle;
-		int		borderwidth;
+		Value	handle_look[4]; // NORMAL, HIGHLIGHT, OPEN (PRESSED), DISABLED
+		int     handle_margin[4];
+		Rect 	handle_border[4];
+		int		handle_size; 
+		Font	font[4];
+		Color	textcolor[4];
+		int		textalign;
+		Image	image[2]; // Normal/Expanded
+		int 	imagealign;
+		const ColorF *border[4];
+		Rect 	border_inset;
+		Rect 	border_outset;
 	};	
 	static const Style& StyleDefault();	
-	static const Style& StylePlain();
-	static const Style& StyleButton();		
-		
+	static const Style& StyleFlat();		
+
+	enum { LEFT, TOP, RIGHT, BOTTOM };		
 private:
-	friend struct ImgButton;
-	struct ImgButton : public FlatButton
+	struct ExpandButton : public FlatButton
 	{
-		enum { LEFT, TOP, RIGHT, BOTTOM };
-		virtual void Paint(Draw &w);
+		bool 	expand;
+		int 	align;
+		const ExpandFrame::Style *style;
+		
+		virtual void Paint(Draw& w);
+		int GetVisualState() const;
+		ExpandButton() { Transparent(); }
 	};
 	
-	ImgButton 		btn;
+	ExpandButton	handle;
 	Image 			img;
-	WString 		title;
-	int 			type;
 	int				child_size;
-	bool 			expand:1;
 	bool			childfocus:1;
 	bool			ignorefocus:1;
 	bool			hasarrow:1;
 	
-	const Style *	style;	
-	const Style *	St() const					{ return style ? style : &StyleDefault(); }		
-	
-	int 			TitleSz() const				{ return St()->font.GetHeight()+4; }
-	int				ExpandSz() const			{ return expand ? child_size+1 : 0; }
+	int				ExpandSz() const;
+	Rect			BorderSz() const;
+	int				HandleSz() const				{ return handle.style->handle_size + handle.style->handle_border[0].top + handle.style->handle_border[0].bottom; }
 	
 	void			UpdateButton();
 	void			SetChildPos();
-	bool			IsSet()	const				{ return GetLastChild() != &btn; }
-	void 			Expand0(bool _expand)		{ if (_expand != expand) { Expand(_expand); Action(); } }
+	bool			IsSet()	const					{ return GetLastChild() != &handle; }
+	void 			Expand0(bool _expand)			{ if (_expand != handle.expand) { Expand(_expand); Action(); } }
 public:
-	enum { LEFT, TOP, RIGHT, BOTTOM };
 
-	ExpandFrame & 	SetStyle(const Style &s)		{ style = &s; UpdateButton(); Refresh(); return *this; }
+	ExpandFrame&  	SetStyle(const Style& s)		{ handle.style = &s; UpdateButton(); Refresh(); return *this; }
 
-	ExpandFrame & 	SetTitle(const char *_title) 	{ return SetTitle((WString)_title); }
-	ExpandFrame & 	SetTitle(const WString &_title) { title = _title; Refresh(); return *this; }
-	const WString &	GetTitle() const				{ return title; }
+	ExpandFrame&  	SetTitle(const char *_title) 	{ handle.SetLabel(_title); return *this; }
+	String 			GetTitle() const				{ return handle.GetLabel(); }
 
-	ExpandFrame &	SetImage(const Image &image)	{ img = image; Refresh(); return *this; }
-	const Image &	GetImage() const				{ return img; }
+	ExpandFrame& 	SetImage(const Image& image)	{ img = image; Refresh(); return *this; }
+	const Image& 	GetImage() const				{ return img; }
 
 	ExpandFrame& Set(Ctrl& c, int size, int _type);
-	ExpandFrame& Left(Ctrl& c, int size = -1)   { return Set(c, (size < 0) ? c.GetMinSize().cx : HorzLayoutZoom(size), LEFT); }
-	ExpandFrame& Top(Ctrl& c, int size = -1)    { return Set(c, (size < 0) ? c.GetMinSize().cy : VertLayoutZoom(size), TOP); }
-	ExpandFrame& Right(Ctrl& c, int size = -1)  { return Set(c, (size < 0) ? c.GetMinSize().cx : HorzLayoutZoom(size), RIGHT); }
-	ExpandFrame& Bottom(Ctrl& c, int size = -1) { return Set(c, (size < 0) ? c.GetMinSize().cy : VertLayoutZoom(size), BOTTOM); }
-	ExpandFrame& SetStyle(const Style *_style) 	{ style = _style; SetChildPos(); UpdateButton(); RefreshParentLayout(); return *this; }
-	ExpandFrame& IgnoreFocus(bool ignore = true) { ignorefocus = ignore; if (!childfocus) Refresh(); }
+	ExpandFrame& Left(Ctrl& c, int size = -1)   	{ return Set(c, (size < 0) ? c.GetMinSize().cx : HorzLayoutZoom(size), LEFT); }
+	ExpandFrame& Top(Ctrl& c, int size = -1)    	{ return Set(c, (size < 0) ? c.GetMinSize().cy : VertLayoutZoom(size), TOP); }
+	ExpandFrame& Right(Ctrl& c, int size = -1)  	{ return Set(c, (size < 0) ? c.GetMinSize().cx : HorzLayoutZoom(size), RIGHT); }
+	ExpandFrame& Bottom(Ctrl& c, int size = -1) 	{ return Set(c, (size < 0) ? c.GetMinSize().cy : VertLayoutZoom(size), BOTTOM); }
+	ExpandFrame& SetStyle(const Style *_style) 		{ handle.style = _style; SetChildPos(); UpdateButton(); RefreshParentLayout(); return *this; }
+	ExpandFrame& IgnoreFocus(bool ignore = true) 	{ ignorefocus = ignore; if (!childfocus) Refresh(); }
 
 	ExpandFrame& Expand(bool _expand = true);
-	ExpandFrame& Collapse()						{ return Expand(false); }
-	bool 		 IsExpanded() const				{ return expand; }
+	ExpandFrame& Collapse()							{ return Expand(false); }
+	void		 Toggle()							{ Expand(!IsExpanded()); }
+	bool 		 IsExpanded() const					{ return handle.expand; }
 	
 	virtual Size GetMinSize() const;
 	virtual Size GetStdSize() const;
 	
-	ExpandFrame& Arrow(bool _arrow = true)		{ hasarrow = _arrow; btn.Refresh(); }
-	
-	void Show(bool show = true)				  	{ Ctrl::Show(show); }
-	void Hide()								  	{ Ctrl::Hide(); }
-	bool IsShown() const					  	{ return Ctrl::IsShown(); }
+	void 		Show(bool show = true)				{ Ctrl::Show(show); }
+	void 		Hide()								{ Ctrl::Hide(); }
+	bool 		IsShown() const					  	{ return Ctrl::IsShown(); }
 
 	ExpandFrame();
 };
@@ -108,10 +108,9 @@ private:
 	ScrollBar 				scroll;
 	Scroller				scroller;
 	bool 					horz;
-	const ExpandFrame::Style *style;
 	
 	bool 	IsHorz() const					{ return horz; }
-	int		Hv(const Size &sz) const		{ return IsHorz() ? sz.cx : sz.cy; }
+	int		Hv(const Size& sz) const		{ return IsHorz() ? sz.cx : sz.cy; }
 	void	UpdateScrollBar();
 	void 	OnScroll();
 	void 	OnExpand();
@@ -119,14 +118,13 @@ private:
 public:
 	typedef ExpanderCtrl CLASSNAME;
 	
-	ExpandFrame &	AddExpander(Ctrl &c, int size = -1)		{ return AddExpander(c, true); }
-	ExpandFrame &	AddExpander(Ctrl &c, bool expand, int size = -1);
+	ExpandFrame& 	AddExpander(Ctrl& c, int size = -1)		{ return AddExpander(c, true); }
+	ExpandFrame& 	AddExpander(Ctrl& c, bool expand, int size = -1);
 	
-	ExpanderCtrl &	SetStyle(const ExpandFrame::Style &s)	{ style = &s; return *this; }
-
-	ExpandFrame & 	Get(int i)								{ return exp[i]; }
-	ExpanderCtrl &	Horz(bool v = true);
-	ExpanderCtrl &	Vert(bool v = true)						{ return Horz(!v); }
+	ExpandFrame&  	Get(int i)								{ return exp[i]; }
+	const ExpandFrame&  Get(int i) const					{ return exp[i]; }
+	ExpanderCtrl& 	Horz(bool v = true);
+	ExpanderCtrl& 	Vert(bool v = true)						{ return Horz(!v); }
 	
 	void 			Clear()									{ exp.Clear(); scroller.Clear(); }
 	int	 			GetCount()								{ return exp.GetCount(); }

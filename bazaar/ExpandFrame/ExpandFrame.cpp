@@ -1,56 +1,58 @@
 #include "ExpandFrame.h"
 
-void ExpandFrame::ImgButton::Paint(Draw &w)
+void ExpandFrame::ExpandButton::Paint(Draw &w)
 {
 	Size sz = GetSize();
-	Size isz = img.GetSize();
+	int state = GetVisualState();
+	bool lr = (align == ExpandFrame::LEFT || align == ExpandFrame::RIGHT);
+	int margin = style->handle_margin[state];
+	int x = margin;
+	// BG
+	ChPaint(w, sz, style->handle_look[state]);
+
+	if (lr) 
+		Swap(sz.cx, sz.cy);
 	
-	const ExpandFrame* p = (ExpandFrame*)GetParent();
-	const Style* st = p->St();
-	if (HasMouse() || st->buttonstyle == 1)
-		w.DrawRect(sz, hl); 
-	
-	if (st->buttonstyle == 0 || st->buttonstyle == 1)
-		UPP::DrawFrame(w, sz, fg);
-	
-	if (st->buttonstyle == 2)
-	{
-		Rect r = sz;
-		int i = !IsShowEnabled() ? CTRL_DISABLED :
-	         IsPush() ? CTRL_PRESSED :
-	         HasMouse() || HasFocus() ? CTRL_HOT :
-	         CTRL_NORMAL;
-		if(p->IsExpanded()) i = CTRL_PRESSED;
-		ChPaint(w, sz, Button::StyleNormal().look[i]);
-	}
-	
-	int dx = IsPush() * (left ? -1 : 1);
-	int dy = IsPush();
-	if (st->buttonstyle == 0)
-	{
-		if (p->hasarrow)
-			w.DrawImage((sz.cx - isz.cx) / 2 + dx, (sz.cy - isz.cy) / 2 + dy, img);
-	}
-	else if (st->buttonstyle == 1 || st->buttonstyle == 2)
-	{
-		if (p->type == TOP || p->type == BOTTOM)
-		{
-			if (p->hasarrow)
-				w.DrawImage(sz.cx - isz.cx + dx - 5, (sz.cy - isz.cy) / 2 + dy, img);
-			w.DrawText(4, 1, p->GetTitle(), st->font);
+	// Image
+	Image img = style->image[expand ? 1 : 0];
+	if (!IsNull(img)) {
+		Size isz = img.GetSize();
+		if (lr)
+			Swap(isz.cx, isz.cy);
+		Point p(x, (sz.cy - isz.cy)/2);
+
+		if (style->imagealign == ExpandFrame::RIGHT) {
+			sz.cx -= isz.cx + margin;
+			p.x = sz.cx;			
 		}
 		else
-		{
-			if (p->hasarrow)
-				w.DrawImage((sz.cx - isz.cx) / 2, 5, img);
-			if (p->type == RIGHT)
-				w.DrawText(p->TitleSz() - 1, 4 + isz.cy + 5, 2700, p->GetTitle(), st->font);
-			else {
-				const WString &s = p->GetTitle();
-				w.DrawText(1, 4 + GetTextSize(s, st->font).cx + isz.cy + 5, 900, s, st->font);
-			}
-		}
+			x += isz.cx+margin;
+		if (lr)
+			w.DrawImage(p.y, p.x, img);
+		else
+			w.DrawImage(p.x, p.y, img);
 	}
+	// Text
+	if (label.GetLength()) {
+		Size tsz = GetTextSize(label, style->font[state]);
+		if (lr)
+			Swap(tsz.cx, tsz.cy);
+		Point p(x, (sz.cy - tsz.cy)/2);
+
+		if (style->textalign == ExpandFrame::RIGHT)
+			p.x = sz.cx - margin - tsz.cx;
+		
+		if (lr)
+			w.DrawText(sz.cy + p.y, p.x, 2700, label, style->font[state], style->textcolor[state]);
+		else
+			w.DrawText(p.x, p.y, label, style->font[state], style->textcolor[state]);
+	}
+}
+
+int ExpandFrame::ExpandButton::GetVisualState() const
+{
+	int i = FlatButton::GetVisualState();
+	return (i == CTRL_NORMAL && expand) ? CTRL_PRESSED : i;
 }
 
 void ExpandFrame::FrameAdd(Ctrl& parent)
@@ -66,26 +68,26 @@ void ExpandFrame::FrameRemove()
 void ExpandFrame::FrameAddSize(Size& sz)
 {
 	if (!IsSet() || !IsShown()) return;
-	bool lr = (type == LEFT || type == RIGHT);
-	sz.cx += lr ? TitleSz()+ExpandSz() : 0;
-	sz.cy += lr ? 0 : TitleSz()+ExpandSz();
+	bool lr = (handle.align == LEFT || handle.align == RIGHT);
+	sz.cx += lr ? ExpandSz() : 0;
+	sz.cy += lr ? 0 : ExpandSz();
 }
 
 void ExpandFrame::FrameLayout(Rect& r)
 {
 	if (!IsSet()) return;
-	switch (type) {
+	switch (handle.align) {
 	case LEFT:
-		LayoutFrameLeft(r, this, TitleSz() + ExpandSz());
+		LayoutFrameLeft(r, this, ExpandSz());
 		break;
 	case RIGHT:
-		LayoutFrameRight(r, this, TitleSz() + ExpandSz());
+		LayoutFrameRight(r, this, ExpandSz());
 		break;
 	case TOP:
-		LayoutFrameTop(r, this, TitleSz() + ExpandSz());
+		LayoutFrameTop(r, this, ExpandSz());
 		break;
 	case BOTTOM:
-		LayoutFrameBottom(r, this, TitleSz() + ExpandSz());
+		LayoutFrameBottom(r, this, ExpandSz());
 		break;
 	}
 }
@@ -93,163 +95,55 @@ void ExpandFrame::FrameLayout(Rect& r)
 void ExpandFrame::Paint(Draw& w)
 {
 	if (!IsSet() || !IsShown()) return;
-	const Style *st = St();
-	Rect r = GetSize();	
-	int focus = (childfocus || ignorefocus) ? 1 : 0;
-	bool lr = (type == LEFT || type == RIGHT);
 	
-	if (expand) {
-		Rect rr = r;
-		switch (type) {
-		case LEFT:
-			r.right = TitleSz();
-			rr.left = r.right;
-			break;
-		case RIGHT:
-			r.left = r.right - TitleSz();
-			rr.right = r.left;
-			break;
-		case TOP:
-			r.bottom = TitleSz();
-			rr.top = r.bottom;
-			break;
-		case BOTTOM:
-			r.top = r.bottom - TitleSz();
-			rr.bottom = r.top;
-			break;
-		}
-		w.DrawRect(rr, SColorFace());
-	}
+	if (!IsTransparent())
+		w.DrawRect(GetSize(), SColorFace());
 	
-	ChPaint(w, r, st->background[focus]);
-	
-	PaintBorder(w);
-	
-	if (st->buttonstyle == 0)
-	{
-		if (!lr) w.Clip(0, 0, r.right - TitleSz() + 2, r.bottom);
-	
-		Point pt;
-		if (lr) {
-			pt = Point(r.right - 1, r.top + TitleSz());
-			if (img) {
-				w.DrawImage(r.left + (r.Width() - img.GetWidth())/2, pt.y, img);	
-				pt.y += img.GetHeight() + 2;	
-			}
-		}
-		else {
-			pt = Point(r.left + 2, r.top + 1);
-			if (img) {
-				w.DrawImage(pt.x, pt.y + (r.Height() - img.GetHeight())/2, img);	
-				pt.x += img.GetWidth() + 2;					
-			}
-		}	
-		w.DrawText(pt.x, pt.y, lr ? 2700 : 0, title, st->font, st->text[focus]);
-		if (!lr) w.End();
+	// Paint Border
+	int state = handle.GetVisualState();
+	if (handle.style->border[state]) {
+		Rect r = GetSize();
+		r.Deflate(handle.style->border_inset);
+		DrawBorder(w, r, handle.style->border[state]);
 	}
 }
 
-void ExpandFrame::PaintBorder(Draw& w)
-{
-	const Style *st = St();
-	int focus = (childfocus || ignorefocus) ? 1 : 0;
-		
-	if (st->buttonstyle == 0)
-	{
-		if (expand) 
-			DrawFrame(w, GetSize(), st->border[focus]);
-		else
-			DrawFrame(w, GetSize(), st->border[focus], Null, st->border[focus], st->border[focus]);
-	}
-	else
-	{
-		const int d = 5;
-		
-		Rect r = GetSize();
-		r.left++;
-		r.top++;
-		if (type == TOP)
-		{
-			r.top += d;
-			if (!expand)
-				r.bottom -= d - 2;
-		}
-		else if (type == BOTTOM)
-		{
-			r.bottom -= d - 1;
-			if (!expand)
-				r.top += d - 1;
-		}
-		else if (type == LEFT)
-		{
-			r.left += d;
-			if (!expand)
-				r.right -= d - 2;
-		}
-		else if (type == RIGHT)
-		{
-			r.right -= d - 2;
-			if (!expand)
-				r.left += d;
-		}
-		DrawFrame(w, r, SColorLight);
-		r.Offset(-1, -1);
-		DrawFrame(w, r, SColorShadow);
-	}
-}
-	
 void ExpandFrame::UpdateButton()
 {
-	Image image;
-	const Style *st = St();
-	
-	switch (type) {
-	case LEFT:
-		image = expand ? st->btnimage[0] : st->btnimage[2];
-		break;
-	case RIGHT:
-		image = expand ? st->btnimage[2] : st->btnimage[0];
-		break;
+	Rect r = handle.style->handle_border[0];
+	switch (handle.align) {
 	case TOP:
-		image = expand ? st->btnimage[1] : st->btnimage[3];
+		handle.HSizePosZ(r.left, r.right).TopPosZ(r.top, handle.style->handle_size);
+		break;
+	case LEFT:
+		handle.VSizePosZ(r.right, r.left).LeftPosZ(r.top, handle.style->handle_size);
 		break;
 	case BOTTOM:
-		image = expand ? st->btnimage[3] : st->btnimage[1];
+		handle.HSizePosZ(r.right, r.left).BottomPosZ(r.top, handle.style->handle_size);
+		break;
+	case RIGHT:
+		handle.VSizePosZ(r.left, r.right).RightPosZ(r.top, handle.style->handle_size);
 		break;
 	}
-	btn.SetImage(image) <<= THISBACK1(Expand0, !expand);
-	if (st->buttoncenter == 0)
-	{
-		int sz = TitleSz() - 2;
-		if (type == LEFT || type == RIGHT) {
-			btn.TopPos(1, sz);
-			(type == LEFT) ? btn.LeftPos(1, sz) : btn.RightPos(1, sz); 
-		}
-		else {
-			btn.RightPos(1, sz);
-			(type == TOP) ? btn.TopPos(1, sz) : btn.BottomPos(1, sz); 
-		}
+}
+
+int ExpandFrame::ExpandSz() const
+{
+	if (IsExpanded()) {
+		Rect r = BorderSz();
+		return max(r.top, HandleSz()) + r.bottom + child_size;
 	}
 	else
-	{
-		int sz = TitleSz();
-		if (type == LEFT) {
-			btn.LeftPos(0, sz);
-			btn.VSizePos(5, 5);
-		}
-		else if (type == RIGHT) {
-			btn.RightPos(0, sz);
-			btn.VSizePos(5, 5);
-		}
-		else if (type == TOP) {
-			btn.TopPos(0, sz);
-			btn.HSizePos(5, 5);
-		}
-		else if (type == BOTTOM) {
-			btn.BottomPos(0, sz);
-			btn.HSizePos(5, 5);
-		}
-	}
+		return HandleSz();
+}
+
+Rect ExpandFrame::BorderSz() const
+{
+	int sz = (int)(uintptr_t)(handle.style->border[0][0]);
+	const Rect &in = handle.style->border_inset;
+	const Rect &out = handle.style->border_outset;
+	return Rect(in.left + out.left + sz, in.top + out.top + sz,
+		in.right + out.right + sz, in.bottom + out.bottom + sz);
 }
 
 void ExpandFrame::SetChildPos()
@@ -257,134 +151,129 @@ void ExpandFrame::SetChildPos()
 	if (!IsSet()) return;
 	Ctrl *c = GetLastChild();
 	
-	const Style *st = St();
-	int d = st->borderwidth;
+	Rect r = BorderSz();
+	r.top = max(r.top, HandleSz());
 		
-	switch (type) {
-	case LEFT:
-		c->VSizePos(d, d).HSizePos(TitleSz(), d);
-		break;
-	case RIGHT:
-		c->VSizePos(d, d).HSizePos(d, TitleSz());
-		break;
+	switch (handle.align) {
 	case TOP:
-		c->HSizePos(d, d).VSizePos(TitleSz(), d);
+		c->VSizePos(r.top, r.bottom).HSizePos(r.left, r.right);
+		break;
+	case LEFT:
+		c->HSizePos(r.top, r.bottom).VSizePos(r.right, r.left);
 		break;
 	case BOTTOM:
-		c->HSizePos(d, d).VSizePos(d, TitleSz());
+		c->VSizePos(r.bottom, r.top).HSizePos(r.left, r.right);
+		break;
+	case RIGHT:
+		c->HSizePos(r.top, r.bottom).VSizePos(r.left, r.right);
 		break;
 	}
 }
 
 ExpandFrame& ExpandFrame::Set(Ctrl& c, int size, int _type)
 {
-	ASSERT(type >= LEFT && type <= BOTTOM);
+	ASSERT(handle.align >= LEFT && handle.align <= BOTTOM);
 	ASSERT(size > 0);
-	type = _type;
-	bool lr = (type == LEFT || type == RIGHT);
+	handle.align = _type;
+	bool lr = (handle.align == LEFT || handle.align == RIGHT);
 	if (IsSet())
 		GetLastChild()->Remove();
 	child_size = size;
 	UpdateButton();
 	Add(c);
 	SetChildPos();
-	c.Show(expand);
+	c.Show(IsExpanded());
 	RefreshParentLayout();
 	return *this; 
 }
 
 ExpandFrame& ExpandFrame::Expand(bool _expand)
 {
-	expand = _expand;
+	handle.expand = _expand;
 	UpdateButton();
 	if (!IsSet()) return *this;
 	bool hasfocus = HasFocusDeep();
-	GetLastChild()->Show(expand);
+	GetLastChild()->Show(_expand);
 /*	if (!expand && childfocus)
 		Ctrl::IterateFocusForward(GetFocusCtrl(), GetParent());		
 	else*/
-	if (expand && childfocus)
+	if (_expand && childfocus)
 		GetLastChild()->SetFocus();
-	childfocus = expand;
+	childfocus = _expand;
 	RefreshParentLayout();
 	return *this; 
 }
 
 Size ExpandFrame::GetMinSize() const
 {
-	int t = TitleSz();
-	return IsSet() ? Size(t, t) : Ctrl::GetMinSize();	
+	return IsSet() ? Size(handle.style->handle_size, handle.style->handle_size) : Ctrl::GetMinSize();	
 }
 
 Size ExpandFrame::GetStdSize() const
 {
-	int t = TitleSz() + ExpandSz();
-	return IsSet() ? Size(t, t) : Ctrl::GetMinSize();	
+	int t = ExpandSz();
+	return IsSet() ? Size(t, t) : Ctrl::GetStdSize();	
 }
 
 ExpandFrame::ExpandFrame()
 {
-	style = NULL;
+	handle.style = &StyleDefault();
 	child_size = 0;
 	childfocus = false;
 	ignorefocus = false;
-	expand = false;
-	type = 0;
+	handle.expand = false;
+	handle.align = 0;
+	handle <<= THISBACK(Toggle);
 	hasarrow = true;
-	btn.Transparent();
-	Add(btn);
+	Add(handle);
+}
+
+const ColorF *LabelBoxBorder()
+{
+	static ColorF data[] = {
+		(ColorF)2,
+		&LabelBoxColor, &LabelBoxColor, &LabelBoxColor, &LabelBoxColor,
+		&LabelBoxColor, &LabelBoxColor, &LabelBoxColor, &LabelBoxColor,
+	};
+	return data;
 }
 
 CH_STYLE(ExpandFrame, Style, StyleDefault)
 {
-	btnimage[3] = CtrlsImg::DA(); // DOWN
-	btnimage[0] = RotateClockwise(btnimage[3]); // LEFT
-	btnimage[1] = RotateClockwise(btnimage[0]); // UP
-	btnimage[2] = RotateClockwise(btnimage[1]); // RIGHT
-	background[0] = SColorFace(); // No focus
-	background[1] = SColorFace(); // Focus
-	text[0]	= Black(); // No focus
-	text[1]	= Black(); // Focus
-	border[0] = Gray(); // No focus
-	border[1] = LtBlue(); // Focus
-	font = StdFont(12);
-	buttonstyle = 1;
-	buttoncenter = 1;
-	borderwidth = 2;
+	handle_size = 20;
+	for (int i =0; i < 4; i++) {
+		handle_look[i] = Button::StyleNormal().look[i];
+		handle_margin[i] = 5;
+		handle_border[i] = Rect(10, 0, 10, 0);
+		font[i] = StdFont();
+		textcolor[i] = Button::StyleNormal().textcolor[i];
+	}
+	textalign = ExpandFrame::LEFT;
+	image[0] = CtrlsImg::kDA(); // DOWN
+	image[1] = CtrlsImg::kUA(); // UP
+	imagealign = ExpandFrame::RIGHT;
+	for (int i =0; i < 4; i++)
+		border[i] = LabelBoxBorder();
+	border_inset = Rect(1, handle_size/3, 1, handle_size/3);
+	border_outset = Rect(1, 2, 2, 1);
 }
 
-CH_STYLE(ExpandFrame, Style, StylePlain)
+CH_STYLE(ExpandFrame, Style, StyleFlat)
 {
-	btnimage[3] = CtrlsImg::DA(); // DOWN
-	btnimage[0] = RotateClockwise(btnimage[3]); // LEFT
-	btnimage[1] = RotateClockwise(btnimage[0]); // UP
-	btnimage[2] = RotateClockwise(btnimage[1]); // RIGHT
-	background[0] = LtGray(); // No focus
-	background[1] = Blend(LtBlue(), White(), 60); // Focus
-	text[0]	= Black(); // No focus
-	text[1]	= White(); // Focus
-	border[0] = Gray(); // No focus
-	border[1] = LtBlue(); // Focus
-	font = StdFont(12);
-	buttonstyle = 0;
-	buttoncenter = 0;
-	borderwidth = 1;
-}
-
-CH_STYLE(ExpandFrame, Style, StyleButton)
-{
-	btnimage[3] = CtrlsImg::DA(); // DOWN
-	btnimage[0] = RotateClockwise(btnimage[3]); // LEFT
-	btnimage[1] = RotateClockwise(btnimage[0]); // UP
-	btnimage[2] = RotateClockwise(btnimage[1]); // RIGHT
-	background[0] = SColorFace(); // No focus
-	background[1] = SColorFace(); // Focus
-	text[0]	= Black(); // No focus
-	text[1]	= Black(); // Focus
-	border[0] = Gray(); // No focus
-	border[1] = LtBlue(); // Focus
-	font = StdFont(12);
-	buttonstyle = 2;
-	buttoncenter = 1;
-	borderwidth = 2;
+	handle_size = 20;
+	for (int i =0; i < 4; i++) {
+		handle_look[i] = ButtonOption::StyleFlat().look[i];
+		handle_margin[i] = 3;
+		handle_border[i] = Rect(10, 0, 10, 0);
+		font[i] = StdFont();
+		textcolor[i] = ButtonOption::StyleFlat().textcolor[i];
+	}
+	textalign = ExpandFrame::LEFT;
+	image[0] = CtrlsImg::DA(); // DOWN
+	image[1] = CtrlsImg::UA(); // UP
+	imagealign = ExpandFrame::RIGHT;
+	for (int i =0; i < 4; i++)
+		border[i] = NULL;
+	border_inset = Rect(1, handle_size/2, 1, 1);
+	border_outset = Rect(2, 2, 2, 2);
 }
