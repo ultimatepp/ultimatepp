@@ -84,6 +84,7 @@ Bar::Item& ToolButton::Text(const char *txt)
 {
 	ExtractAccessKey(txt, text);
 	UpdateTip();
+	Refresh();
 	return *this;
 }
 
