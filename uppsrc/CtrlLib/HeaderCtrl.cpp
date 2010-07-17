@@ -756,6 +756,7 @@ void HeaderCtrl::Serialize(Stream& s) {
 		}
 	}
 	if(s.IsLoading()) {
+		ReCompute();
 		Refresh();
 		WhenLayout();
 	}
