@@ -129,6 +129,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	clipboard           = false;
 	extra_paste         = true;
 	fixed_paste         = false;
+	copy_column_names   = false;
 	draw_focus          = false;
 	cancel_all          = false;
 	ask_remove          = false;
@@ -662,6 +663,16 @@ void GridCtrl::SetClipboard(bool all, bool silent)
 	for(int i = fixed_rows; i < total_rows; i++)
 	{
 		bool row_selected = select_row && IsSelected(i, false);
+		
+		if(i == fixed_rows && copy_column_names)
+		{
+			for(int j = fixed_cols; j < total_cols; j++)
+				if(all || IsSelected(i, j, false))
+					tc += hitems[j].GetName() + '\t';
+				
+			tc += "\r\n";			
+		}
+
 		for(int j = fixed_cols; j < total_cols; j++)
 			if(all || row_selected || IsSelected(i, j, false))
 			{
@@ -2849,11 +2860,24 @@ bool GridCtrl::IsModified(Id id)
 	return items[vitems[rowidx].id][aliases.Get(id)].modified;
 }
 
-Vector<Value> GridCtrl::ReadRow(int n) const
+Vector<Value> GridCtrl::ReadCol(int n, int start_row, int end_row) const
+{
+	Vector<Value> v;
+	int idx = hitems[n < 0 ? colidx : n].id;
+	if(start_row < 0) start_row = fixed_rows;
+	if(end_row < 0) end_row = total_rows - 1;
+	for(int i = start_row; i <= end_row; i++)
+		v.Add(items[i][idx].val);
+	return v;
+}
+
+Vector<Value> GridCtrl::ReadRow(int n, int start_col, int end_col) const
 {
 	Vector<Value> v;
 	int idy = vitems[n < 0 ? rowidx : n].id;
-	for(int i = fixed_cols; i < total_cols; i++)
+	if(start_col < 0) start_col = fixed_cols;
+	if(end_col < 0) end_col = total_cols - 1;
+	for(int i = start_col; i <= end_col; i++)
 		v.Add(items[idy][i].val);
 	return v;
 }
@@ -5750,6 +5774,14 @@ int GridCtrl::FindCol(int id) const
 	id += fixed_cols;
 	for(int i = fixed_cols; i < total_cols; i++)
 		if(hitems[i].id == id)
+			return i - fixed_cols;
+	return -1;
+}
+
+int GridCtrl::FindCol(const String& s) const
+{
+	for(int i = fixed_cols; i < total_cols; i++)
+		if(hitems[i].GetName() == s)
 			return i - fixed_cols;
 	return -1;
 }

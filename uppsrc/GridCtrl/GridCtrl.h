@@ -839,6 +839,7 @@ class GridCtrl : public Ctrl
 		bool clipboard:1;
 		bool extra_paste:1;
 		bool fixed_paste:1;
+		bool copy_column_names:1;
 		bool draw_focus:1;
 		bool cancel_all:1;
 		bool ask_remove:1;
@@ -1091,6 +1092,7 @@ class GridCtrl : public Ctrl
 		GridCtrl& Clipboard(bool b = true)        { clipboard         = b;  return *this; }
 		GridCtrl& ExtraPaste(bool b = true)       { extra_paste       = b;  return *this; }
 		GridCtrl& FixedPaste(bool b = true)       { fixed_paste       = b;  return *this; }
+		GridCtrl& CopyColumnNames(bool b = true)  { copy_column_names = b;  return *this; }
 		GridCtrl& AskRemove(bool b = true)        { ask_remove        = b;  return *this; }
 		GridCtrl& RowChanging(bool b = true)      { row_changing      = b;  return *this; }
 
@@ -1277,7 +1279,8 @@ class GridCtrl : public Ctrl
 		bool IsVersionedRow()   { return vitems[rowidx].operation.GetVersion() > 0;         }
 		int  GetRowOperation()  { return vitems[rowidx].operation;                          }
 
-		Vector<Value> ReadRow(int n = -1) const;
+		Vector<Value> ReadCol(int n = -1, int start_row = -1, int end_row = -1) const;
+		Vector<Value> ReadRow(int n = -1, int start_col = -1, int end_col = -1) const;
 		GridCtrl& Add(const Vector<Value> &v, int offset = 0, int count = -1, bool hidden = false);
 
 		void SetFixedRows(int n = 1);
@@ -1383,6 +1386,7 @@ class GridCtrl : public Ctrl
 		int  GetColUId() const;
 		int  GetRowUId() const;
 		int  FindCol(int id) const;
+		int  FindCol(const String& s) const;
 		int  FindRow(int id) const;
 
 		int  GetNextRow(int n);
