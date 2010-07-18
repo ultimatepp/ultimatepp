@@ -25,7 +25,7 @@
 #include "lib/pcre_study.c"
 #include "lib/pcre_tables.c"
 #include "lib/pcre_try_flipped.c"
-#include "lib/pcre_ucp_searchfuncs.c"
+#include "lib/pcre_ucd.c"
 #include "lib/pcre_valid_utf8.c"
 #include "lib/pcre_version.c"
 #include "lib/pcre_xclass.c"
