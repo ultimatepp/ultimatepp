@@ -241,7 +241,7 @@ void XmlParser::Next()
 	}
 	text.Clear();
 	type = XML_EOF;
-	if(!(npreserve || preserveall))
+	if(!npreserve)
 		SkipWhites();
 	if(*term == '<') {
 		term++;
