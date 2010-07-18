@@ -291,7 +291,7 @@ void GridCtrl::StdToolBar(Bar &bar)
 		bar.Add(d && !ctrls, t_("Duplicate"), GridImg::Duplicate(), StdDuplicate);
 
 	if(removing)
-		bar.Add(d/* && !IsNewRow()*/, t_("Delete "), GridImg::Delete(), StdRemove);
+		bar.Add(d && (keep_last_row ? GetCount() > 1 : true), t_("Delete "), GridImg::Delete(), StdRemove);
 
 	if(editing)
 	{
