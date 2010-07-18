@@ -2882,6 +2882,56 @@ Vector<Value> GridCtrl::ReadRow(int n, int start_col, int end_col) const
 	return v;
 }
 
+Vector< Vector<Value> > GridCtrl::GetValues()
+{
+	Vector< Vector<Value> > v;
+	
+	int rows_cnt = total_rows - fixed_rows;
+	int cols_cnt = total_cols - fixed_cols;
+	
+	v.SetCount(rows_cnt);
+	
+	for(int i = 0; i < rows_cnt; i++)
+	{
+		v[i].SetCount(cols_cnt);
+		
+		for(int j = 0; j < cols_cnt; j++)
+			v[i][j] = items[i + fixed_rows][j + fixed_cols].val;
+	}
+	
+	return v;
+}
+
+void GridCtrl::SetValues(const Vector< Vector<Value> >& v)
+{
+	int rows_cnt = v.GetCount();
+	
+	if(rows_cnt <= 0)
+		return;
+	
+	int cols_cnt = v[0].GetCount();
+	
+	int tc = total_cols - fixed_cols;
+	if(cols_cnt > tc)
+		cols_cnt = tc;
+	
+	SetRowCount(rows_cnt);
+	
+	for(int i = 0; i < rows_cnt; i++)
+		for(int j = 0; j < cols_cnt; j++)
+		{
+			int r = i + fixed_rows;
+			int c = j + fixed_cols;
+			Ctrl * ctrl = items[r][c].ctrl;
+			if(ctrl)
+				ctrl->SetData(v[i][j]);
+			items[r][c].val = v[i][j];
+		}
+
+	SyncSummary();
+	Refresh();
+}
+
 GridCtrl& GridCtrl::Add(const Vector<Value> &v, int offset, int count, bool hidden)
 {
 	Append0(1, hidden ? 0 : GD_ROW_HEIGHT);
@@ -8087,6 +8137,18 @@ void GridResizePanel::MouseMove(Point p, dword flags)
 }
 
 /*----------------------------------------------------------------------------------------*/
+
+template<> void Xmlize(XmlIO xml, GridCtrl& g) {
+	Vector<Vector<Value> > v;
+	
+	if(xml.IsLoading()) {
+		xml("data", v);
+		g.SetValues(v);
+	} else {
+		v = g.GetValues();
+		xml("data", v);
+	}
+}
 
 /* after this assist++ sees nothing */
 

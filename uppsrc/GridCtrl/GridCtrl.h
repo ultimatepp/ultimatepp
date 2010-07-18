@@ -1256,6 +1256,9 @@ class GridCtrl : public Ctrl
 		void   SetSummary(Id id, const Value& val);
 		Value  GetSummary(int c);
 		Value  GetSummary(Id id);
+		
+		Vector< Vector<Value> > GetValues();
+		void SetValues(const Vector< Vector<Value> >& v);
 
 		using Ctrl::IsModified;
 
@@ -1781,6 +1784,8 @@ class GridText : Ctrl
 		void SetFont(Font f) { fnt = f; }
 		void Column(const Id& c) { column = &c; }
 };
+
+template<> void Xmlize(XmlIO xml, GridCtrl& g);
 
 END_UPP_NAMESPACE
 
