@@ -1260,16 +1260,33 @@ Value CalcParser::GetNumberOrDate()
 String CalcParser::GetString()
 {
 	CParser parser(pos);
-	try
-	{
+	try {
 		String result = parser.ReadOneString();
 		pos = parser.GetPtr();
 		return result;
 	}
-	catch(CParser::Error e)
-	{
+	catch(CParser::Error e) {
 		throw Exc(e);
 	}
+}
+
+String CalcParser::GetSqlString()
+{
+	ASSERT(*pos == '\'');
+	pos++;
+	StringBuffer out;
+	for(;;) {
+		if(*pos == '\'') {
+			if(*++pos != '\'')
+				break;
+			out.Cat(*pos++);
+		}
+		else if(*pos)
+			out.Cat(*pos++);
+		else
+			throw Exc(t_("Unterminated string constant")); 
+	}
+	return out;
 }
 
 CalcNodePtr CalcParser::Scan(const char *t)
@@ -1537,9 +1554,9 @@ CalcNodePtr CalcParser::ScanPrefix()
 		}
 	}
 	if(*pos == '\"')
-	{
 		return ScanPostfix(new CalcConstNode(GetString()));
-	}
+	if(sql_style && *pos == '\'')
+		return ScanPostfix(new CalcConstNode(GetSqlString()));
 	if(IsDigit(*pos)) // numeric or date constant
 		return ScanPostfix(new CalcConstNode(GetNumberOrDate()));
 	if(IsIdent(*pos))
@@ -1666,7 +1683,7 @@ int CalcParser::GetOperator()
 			if(sql_style && IsAlpha(*op_end)) {
 				const char *b = op_end;
 				while(IsAlNum(*++op_end) || *op_end == '_')
-					op_end++;
+					;
 				int len = (int)(op_end - b);
 				if(len == 3 && !MemICmp(b, "and", 3))
 					op_last = OP_LOG_AND;
