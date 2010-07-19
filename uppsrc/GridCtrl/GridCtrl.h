@@ -342,6 +342,13 @@ class GridCtrl : public Ctrl
 			GE_ROW  = 0,
 			GE_CELL = 1
 		};
+		
+		enum GridItemCtrl
+		{
+			IC_INIT = BIT(1),
+			IC_MANUAL = BIT(2),
+			IC_FACTORY = BIT(3)
+		};
 
 		struct CurState
 		{
@@ -372,49 +379,56 @@ class GridCtrl : public Ctrl
 			Ptr<Ctrl> ctrl;
 			Convert * convert;
 			Callback1<One<Ctrl>&> factory;
-			bool nofactory;
 
 			Edit()
 			{
 				ctrl = NULL;
 				convert = NULL;
-				nofactory = false;
 			}
 		};
 
-		struct Item : Moveable<Item>
+		class Item : Moveable<Item>
 		{
-			friend class ItemRect;
-			friend class GridCtrl;
-
-			Item()
-			{
-				ctrl    = NULL;
-				convert = NULL;
-				display = NULL;
-
-				fs = fe = 0;
-				style = 0;
-				editable = true;
-				clickable = true;
-				idx = 0;
-				idy = 0;
-				cx = 0;
-				cy = 0;
-				group = -1;
-				isjoined = false;
+			public:
+				friend class ItemRect;
+				friend class GridCtrl;
+	
+				Item()
+				{
+					ctrl    = NULL;
+					convert = NULL;
+					display = NULL;
+	
+					fs = fe = 0;
+					style = 0;
+					editable = true;
+					clickable = true;
+					idx = 0;
+					idy = 0;
+					cx = 0;
+					cy = 0;
+					group = -1;
+					isjoined = false;
+					
+					rcx = 0;
+					rcy = 0;
+	
+					modified = false;
+					sync_flag = -1;
+					paint_flag = -1;
+					ctrl_flag = 0;
+				}
+				~Item()
+				{
+					if(!(ctrl_flag & IC_MANUAL))
+						delete ctrl;
+				}
 				
-				rcx = 0;
-				rcy = 0;
-
-				modified = false;
-				sync_flag = -1;
-				paint_flag = -1;
-			}
-			~Item()
-			{
-				delete ctrl;
-			}
+				void SetCtrl(Ctrl& ctrl);
+				void ClearCtrl();
+				
+				void SetDisplay(GridDisplay& display);
+				void NoDisplay();
 
 			private:
 
@@ -441,18 +455,12 @@ class GridCtrl : public Ctrl
 				bool modified:1;
 				int sync_flag;
 				int paint_flag;
+				int ctrl_flag;
 
 				Ptr<Ctrl> ctrl;
 
 				Convert     *convert;
 				GridDisplay *display;
-
-				void SetCtrl(Ctrl& ctrl);
-				void NoCtrl();
-				
-				void SetDisplay(GridDisplay& display);
-				void NoDisplay();
-				
 
 			public:
 				Value val;
@@ -718,10 +726,10 @@ class GridCtrl : public Ctrl
 				ItemRect& Fg(Color c)                            { fg = c;  return *this; }
 				ItemRect& SetImage(const Image& i)               { img = i; return *this; }
 				ItemRect& ClearImage()                           { img = Null; return *this;}
-				ItemRect& Ctrls(Callback1<One<Ctrl>&> _factory)	 { (*edits)[id].factory = _factory; return *this; }
+				ItemRect& Ctrls(Callback1<One<Ctrl>&> _factory);
 				ItemRect& Ctrls(void (*factory)(One<Ctrl>&))     { return Ctrls(callback(factory)); }
 				template<class T> ItemRect&  Ctrls()             { return Ctrls(DefaultCtrlFactory<T>()); }
-				ItemRect& NoCtrls()                              { (*edits)[id].nofactory = true; return *this; }
+				ItemRect& NoCtrls();
 				ItemRect& Option();
 
 				ItemRect& Editable(bool b);
@@ -885,7 +893,7 @@ class GridCtrl : public Ctrl
 		bool doscroll:1;
 		bool ready:1;
 		bool ctrls:1;
-		bool genr_ctrls:1;
+		int  genr_ctrls;
 		bool edit_ctrls:1;
 		bool shiftmode:1;
 		bool recalc_cols;
@@ -1229,6 +1237,8 @@ class GridCtrl : public Ctrl
 		void Set(int r, const Vector<Value> &v, int data_offset = 0, int column_offset = 0);
 		void Set(const Vector<Value> &v, int data_offset = 0, int column_offset = 0);
 
+		void SetCtrl(int r, int c, Ctrl& ctrl);
+		void ClearCtrl(int r, int c);
 		void SetCtrlValue(int r, int c, const Value &val);
 		void SetCtrlValue(int c, const Value &val);
 
@@ -1618,7 +1628,7 @@ class GridCtrl : public Ctrl
 
 		void DrawLine(bool iniLine, bool delLine);
 
-		Rect GetItemRect(int r, int c, bool hgrid = false, bool vgrid = false, bool ctrlmode = false);
+		Rect GetItemRect(int r, int c, bool hgrid = false, bool vgrid = false, bool relw = false, bool relh = false);
 
 		bool Match(const WString &f, const WString &s, int &fs, int &fe);
 		int  ShowMatchedRows(const WString &f);
@@ -1631,7 +1641,6 @@ class GridCtrl : public Ctrl
 		void SelectInverse(int from, int to);
 		int  GetMinRowSelected();
 		int  GetMaxRowSelected();
-
 
 		void CloseGrid();
 		String RowFormat(const char *s);

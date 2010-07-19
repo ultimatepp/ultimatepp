@@ -11,11 +11,12 @@ void GridCtrl::Item::SetCtrl(Ctrl& c)
 {
 	ctrl = &c;
 	ctrl->Hide();
+	ctrl->SetFrame(NullFrame());
 	ctrl->WantFocus();
-//	(*edits)[id].ctrl = &ctrl;
+	ctrl_flag = IC_MANUAL | IC_INIT;
 }
 
-void GridCtrl::Item::NoCtrl()
+void GridCtrl::Item::ClearCtrl()
 {
 	ctrl = NULL;
 }
@@ -238,16 +239,29 @@ static void MakeOption(One<Ctrl>& ctrl)
 	ctrl->WantFocus();
 }
 
+GridCtrl::ItemRect& GridCtrl::ItemRect::Ctrls(Callback1<One<Ctrl>&> _factory)
+{
+	if(!(*edits)[id].factory)
+		++parent->genr_ctrls;
+	(*edits)[id].factory = _factory;
+	return *this;
+}
+
+GridCtrl::ItemRect& GridCtrl::ItemRect::NoCtrls()
+{
+	(*edits)[id].factory.Clear();
+	--parent->genr_ctrls;
+	return *this;
+}
+
 GridCtrl::ItemRect& GridCtrl::ItemRect::Option()
 {
-//	return Ctrls(MakeOption).CtrlAlignHorzCenter(CtrlsImg::O0().GetSize().cx);
 	return Ctrls(MakeOption).CtrlAlignHorzPos().CtrlAlignVertPos();
 }
 
 GridCtrl::Item& GridCtrl::Item::Editable(bool b)
 {
 	editable = b;
-	//SyncCtrls(id);
 	return *this;
 }
 
@@ -259,7 +273,6 @@ GridCtrl::Item& GridCtrl::Item::NoEditable()
 GridCtrl::ItemRect& GridCtrl::ItemRect::Editable(bool b)
 {
 	editable = b;
-	parent->SyncCtrls(id);
 	return *this;
 }
 
