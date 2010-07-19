@@ -402,6 +402,33 @@ void DockCont::TabClosed(Value v)
 		RefreshLayout();
 }
 
+DockCont& DockCont::SortTabs(bool b)
+{
+	tabbar.SortTabs(b);
+	return *this;
+}
+
+DockCont& DockCont::SortTabs(TabBar::TabSort &sort)
+{
+	tabbar.SortTabs(sort);
+	return *this;
+}
+
+DockCont& DockCont::SortTabValues(ValueOrder &sort)
+{
+	tabsorter_inst.vo = &sort;
+	tabbar.SortTabs(tabsorter_inst);
+	return *this;	
+}
+
+DockCont& DockCont::SortTabValuesOnce(ValueOrder &sort)
+{
+	DockValueSort q;
+	q.vo = &sort;
+	tabbar.SortTabsOnce(tabsorter_inst);
+	return *this;	
+}
+
 void DockCont::CloseAll()
 {
 	if(!base->HasCloseButtons()) return;
@@ -864,6 +891,8 @@ DockCont::DockCont()
 	usersize.cx = usersize.cy = Null;
 	BackPaint();
 	NoCenter().Sizeable(true).MaximizeBox(false).MinimizeBox(false);
+
+	tabsorter_inst.vo = &Single<StdValueOrder>();
 
 	tabbar.AutoHideMin(1);
 	tabbar<<= THISBACK(TabSelected);

@@ -84,7 +84,7 @@ public:
 	DockableCtrl& 	AllowDockRight(bool v = true)	{ dockable[2] = v; return *this; }
 	DockableCtrl& 	AllowDockBottom(bool v = true)	{ dockable[3] = v; return *this; }
 	DockableCtrl& 	AllowDock(int a, bool v = true)	{ ASSERT(a >= 0 && a < 4); dockable[a] = v; return *this; }	
-	bool			IsDockAllowed(int a)			{ ASSERT(a >= 0 && a < 4); return dockable[a]; }
+	bool			IsDockAllowed(int a) const		{ ASSERT(a >= 0 && a < 4); return dockable[a]; }
 	bool            IsDockAllowedLeft() const  		{ return dockable[0]; }
 	bool            IsDockAllowedTop() const  		{ return dockable[1]; }
 	bool            IsDockAllowedRight() const  	{ return dockable[2]; }

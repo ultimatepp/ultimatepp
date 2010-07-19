@@ -102,6 +102,24 @@ private:
 	int 		dragging;
 	DockState	dockstate;	
 	DockTabBar 	tabbar;
+
+	struct DockValueSort 
+		: public TabBar::TabSort
+	{
+		virtual bool operator()(const TabBar::Tab &a, const TabBar::Tab &b) const
+		{
+			DockableCtrl* dca = DockCast(a.value);
+			DockableCtrl* dcb = DockCast(b.value);
+			if(dca && dcb)
+				return (*vo)(dca->GetTitle(), dcb->GetTitle());
+			else
+				return false;
+		}
+		const ValueOrder *vo;
+	};
+	
+	DockValueSort tabsorter_inst;
+
 	Handle 		handle;
 	ImgButton 	close, autohide, windowpos;	
 	Size 		usersize;
@@ -135,13 +153,13 @@ private:
 
 	void			State(DockWindow& dock, DockCont::DockState state);	
 
-	Ctrl           *CtrlCast(const Value& v) const		{ return IsDockCont(v) ? (Ctrl *)ContCast(v) : (Ctrl *)DockCast(v); }
-	DockCont       *ContCast(const Value& v) const 		{ return ValueTo<DockCont *>(v); } 
-	DockableCtrl   *DockCast(const Value& v) const 		{ return ValueTo<DockableCtrl *>(v); }
-	bool			IsDockCont(const Value& v) const	{ return IsType<DockCont *>(v); }
-	Ctrl           *GetCtrl(int ix) const				{ return CtrlCast(tabbar.GetKey(ix)); }
-	Value 			ValueCast(DockableCtrl *dc) const 	{ return RawToValue<DockableCtrl *>(dc); }
-	Value 			ValueCast(DockCont *dc) const 		{ return RawToValue<DockCont *>(dc); }
+	static Ctrl            *CtrlCast(const Value& v)  	{ return IsDockCont(v) ? (Ctrl *)ContCast(v) : (Ctrl *)DockCast(v); }
+	static DockCont        *ContCast(const Value& v)  	{ return ValueTo<DockCont *>(v); } 
+	static DockableCtrl    *DockCast(const Value& v)  	{ return ValueTo<DockableCtrl *>(v); }
+	static bool			    IsDockCont(const Value& v) 	{ return IsType<DockCont *>(v); }
+	Ctrl                   *GetCtrl(int ix) const 		{ return CtrlCast(tabbar.GetKey(ix)); }
+	static Value 			ValueCast(DockableCtrl *dc) { return RawToValue<DockableCtrl *>(dc); }
+	static Value 			ValueCast(DockCont *dc)  	{ return RawToValue<DockCont *>(dc); }
 public:
 	void 			SetCursor(int ix)					{ tabbar.SetCursor(ix); TabSelected(); }	
 	void 			SetCursor(Ctrl& c);
@@ -151,7 +169,14 @@ public:
 	void 			AddFrom(DockCont& cont, int except = -1);
 	int				GetCount() const					{ return tabbar.GetCount(); }
 	void 			Clear();	
-	
+
+	DockCont& 		SortTabs(bool b);
+	DockCont& 		SortTabs(TabBar::TabSort &sort);
+	DockCont& 		SortTabValues(ValueOrder &sort);
+	DockCont& 		SortTabValuesOnce(ValueOrder &sort);
+
+	DockCont& 		SortTitles() { StdValueOrder svo; return SortTabValuesOnce(svo); }
+
 	virtual void 	MoveBegin();
 	virtual void 	Moving();
 	virtual void 	MoveEnd();		
