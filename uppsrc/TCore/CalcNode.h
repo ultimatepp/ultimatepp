@@ -440,6 +440,7 @@ protected:
 	String                GetIdent();
 	Value                 GetNumberOrDate();
 	String                GetString();
+	String                GetSqlString();
 
 	enum OPERATOR
 	{
