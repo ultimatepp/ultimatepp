@@ -26,8 +26,11 @@ public:
 	// Options
 	void OnGrouping();
 	void OnGroupSort();
+	void OnValueSort();
+	void OnKeySort();
 	void OnSeparators();
-	void OnStacking();	
+	void OnStacking();
+	void OnStackSort();	
 	void OnIcons();
 	void OnPrompt();
 	void OnAllAlign();
@@ -35,6 +38,14 @@ public:
 	// Ctrl overloads
 	virtual bool Key(dword key, int count);
 	virtual void DragAndDrop(Point p, PasteClip& d);
+	
+	struct MyValueOrder : public ValueOrder
+	{
+		virtual bool operator()(const Value& a, const Value& b) const { return (Random()%2); }
+	};
+
+	StdValueOrder vo;
+	MyValueOrder myvo;
 };
 
 #endif

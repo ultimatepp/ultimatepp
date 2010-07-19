@@ -6,7 +6,7 @@
 FileTabsExample::FileTabsExample()
 {
 	CtrlLayout(*this, "FileTabs Example");
-	Sizeable();
+	Sizeable().Zoomable();
 
 	for (int i = 0; i < 4; i++)
 		bar[i].SetAlign((i+1) % 4);
@@ -25,6 +25,8 @@ FileTabsExample::FileTabsExample()
 	stackedicons <<= THISBACK(OnIcons);
 	prompt 		<<= THISBACK(OnPrompt);
 	allalign 	<<= THISBACK(OnAllAlign);
+	valuesort 	<<= THISBACK(OnValueSort);
+	keysort 	<<= THISBACK(OnKeySort);
 	
 	grouping <<= true;
 	inactive <<= true;
@@ -101,8 +103,12 @@ void FileTabsExample::OnGrouping()
 
 void FileTabsExample::OnGroupSort()
 {
+	if(~groupsort)
 	for (int i = 0; i < 4; i++)
-		bar[i].GroupSort(~groupsort);	
+		bar[i].SortGroups(true); //or specify own TabSort
+	else	
+	for (int i = 0; i < 4; i++)
+		bar[i].SortGroups(false);
 }
 
 void FileTabsExample::OnSeparators()
@@ -115,6 +121,16 @@ void FileTabsExample::OnStacking()
 {
 	for (int i = 0; i < 4; i++)
 		bar[i].Stacking(~stacking);	
+}
+
+void FileTabsExample::OnStackSort()
+{
+	if(~stacksort)
+	for (int i = 0; i < 4; i++)
+		bar[i].SortStacks(true); //or specify own TabSort
+	else	
+	for (int i = 0; i < 4; i++)
+		bar[i].SortStacks(false);
 }
 
 void FileTabsExample::OnIcons()
@@ -153,6 +169,28 @@ void FileTabsExample::OnInactive()
 {
 	for (int i = 1; i < 4; i++)
 		bar[i].InactiveDisabled(~inactive);				
+}
+
+void FileTabsExample::OnValueSort()
+{
+	keysort = false;
+	if(~valuesort)
+	for (int i = 0; i < 4; i++)
+		bar[i].SortTabValues(vo);
+	else
+	for (int i = 0; i < 4; i++)
+		bar[i].SortTabs(false);
+}
+
+void FileTabsExample::OnKeySort()
+{
+	valuesort = false;
+	if(~keysort)
+	for (int i = 0; i < 4; i++)
+		bar[i].SortTabKeys(vo);
+	else
+	for (int i = 0; i < 4; i++)
+		bar[i].SortTabs(false);
 }
 
 bool FileTabsExample::Key(dword key, int count)

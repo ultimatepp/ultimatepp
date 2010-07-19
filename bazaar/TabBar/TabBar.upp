@@ -9,7 +9,9 @@ file
 	TabBar.cpp,
 	FileTabs.h,
 	FileTabs.cpp,
-	TabBar.iml;
+	TabBar.iml,
+	TabBarCtrl.h,
+	TabBarCtrl.cpp;
 
 mainconfig
 	"" = "GUI";
