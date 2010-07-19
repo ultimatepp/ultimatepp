@@ -234,6 +234,7 @@ Scatter &Scatter::SetRange(double rx, double ry, double ry2)
 	AdjustMinUnitY();
 	yMajorUnit2=yRange2/10;   
 	AdjustMinUnitY2();
+	WhenSetRange();
 	return *this;
 }
 Scatter &Scatter::SetMajorUnits(double ux, double uy) 
@@ -260,6 +261,7 @@ Scatter &Scatter::SetXYMin(double xmin, double ymin, double ymin2)
 	xMin=xmin;
 	yMin=ymin;
 	yMin2=ymin2;
+	WhenSetXYMin();
 	return *this;
 }
 
@@ -346,6 +348,8 @@ void Scatter::FitToData(bool Y) {
 		AdjustMinUnitY2();
 		yRange2 = yRange*fact;
 	}	
+	WhenSetRange();
+	WhenSetXYMin();
 	Refresh();
 }
 
@@ -962,6 +966,7 @@ void Scatter::MouseMove(Point pt, dword)
 			butDownY = pt.y;
 		}		
 		if ((mouseHandlingX && shiftX != 0) || (mouseHandlingY && shiftY != 0)) {
+			WhenSetXYMin();
 			Refresh();
 			WhenZoomScroll();
 		}
@@ -1012,6 +1017,7 @@ void Scatter::Zoom(double scale)
 		yRange2 *= scale;		
 	}
 	if (mouseX || mouseY) {
+		WhenSetRange();
 		Refresh();
 		WhenZoomScroll();
 	}

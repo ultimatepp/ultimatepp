@@ -52,6 +52,8 @@ public:
 	virtual void  MouseWheel(Point, int zdelta, dword);
 	
 	Callback WhenZoomScroll;
+	Callback WhenSetRange;
+	Callback WhenSetXYMin;
 	
 	Scatter& SetColor(const class::Color& _color);
 	Scatter& SetTitle(const String& _title);
@@ -96,10 +98,14 @@ public:
 	double GetMajorUnitsX() {return xMajorUnit;}
 	double GetMajorUnitsY() {return yMajorUnit;}
 	Scatter& SetMinUnits(double ux, double uy);
+	double GetXMinUnit () const {return xMinUnit;}
+	double GetYMinUnit () const {return yMinUnit;}	
+	
 	Scatter& SetXYMin(double xmin,double ymin,double ymin2 = 0);
 	double GetXMin () const {return xMin;}
 	double GetYMin () const {return yMin;}	
-	double GetYMin2 () const {return yMin2;}	
+	double GetYMin2 () const {return yMin2;}
+		
 	void Graduation_FormatX(Formats fi);	
 	void Graduation_FormatY(Formats fi);
 	void Graduation_FormatY2(Formats fi);
