@@ -4,7 +4,7 @@
 
 Timer::Timer()
 {
-	granularity = 2;
+	granularity = 10;
 	run = true;
 	t.Run(THISBACK(TimerThread));
 }
@@ -73,7 +73,7 @@ void Timer::KillTimeCallback(void *id) {
 	KillTimeCallbacks(id);
 }
 
-void Timer::TimerProc(dword time)
+void Timer::TimerProc(dword time, int & leftsleep)
 {
 	if(IsPanicMode())
 		return;
@@ -87,7 +87,7 @@ void Timer::TimerProc(dword time)
 //	sTimerLock.Leave();
 //	//***
 //	sTimerLock.Enter();
-	while(list->GetNext() != list && list->GetNext()->time < time) {
+	while(list->GetNext() != list && ((leftsleep = (list->GetNext()->time - time)) <= 0)) {
 		TimeEvent *e = list->GetNext();
 		e->Unlink();
 		if(e->delay < 0)
@@ -98,6 +98,7 @@ void Timer::TimerProc(dword time)
 		delete e;
 	}
 	sTimerLock.Leave();
+	if(leftsleep < 0) leftsleep = granularity; //if last done has been processed and no more in queue, ensure good sleep
 }
 
 //SAME API AS IN Ctrl
@@ -145,9 +146,11 @@ void Timer::SetTimerGranularity(int ms)
 
 void Timer::TimerThread()
 {
+	int leftsleep;
 	while(run)
 	{
-		TimerProc(GetTickCount());
-		Sleep(granularity); //granularity
+		leftsleep = granularity;
+		TimerProc(GetTickCount(), leftsleep);
+		Sleep(min(granularity, leftsleep));
 	}
 }

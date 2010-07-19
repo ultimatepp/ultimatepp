@@ -39,7 +39,7 @@ private:
 	void KillTimeCallbacks(void *id, void *idlim);
 	bool ExistsTimeCallback(void *id);
 	void KillTimeCallback(void *id);
-	void TimerProc(dword time);
+	void TimerProc(dword time, int & leftsleep);
 
 	void KillTimeCallbacks(void *id);
 

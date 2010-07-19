@@ -14,11 +14,16 @@ class TimerTest : public WithLayout<TopWindow> {
 public:
 	typedef TimerTest CLASSNAME;
 	TimerTest();
+	~TimerTest();
+	
+	void Close0();
+	virtual void Close();
 	
 	void Info(const String & s);	
 	void Test();
 private:
 	Timer t;
+	Atomic demo;
 };
 
 #endif

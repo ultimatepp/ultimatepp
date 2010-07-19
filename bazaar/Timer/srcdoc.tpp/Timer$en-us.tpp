@@ -18,12 +18,14 @@ things wont get to execution, until a current task is finished,
 and the timer queue can check whether time has come for the next 
 task.]&]
 [s0;2 &]
-[s0;i150;O0; [2 Because of it, the timing is not as accurate as maybe 
-desired and can have `"timer glitches/jitter`", depending on 
-work load..]&]
+[s0;i150;O0; [2 Thus, the timing is not as accurate as maybe desired 
+and can have `"timer glitches/jitter`", depending on work load..]&]
 [s0;2 &]
 [s0;i150;O0; [2 Favorite use is to schedule some `*non`*`-timing`-critical 
-work for `"somewhere`-around`-in`-the`-future`".]&]
+work for `"somewhere`-around`-in`-the`-future`", like i.e. observe 
+some not too strict timing constraints in custom communication 
+protocols (answer needs to come in within X time, keep alive 
+messages..)]&]
 [s0;2 &]
 [s0;i150;O0; [2 For timing critical stuff, consider using OS native 
 timer means, for WIN32 SetTimer (in windowing environment, using 
