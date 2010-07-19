@@ -1108,9 +1108,10 @@ void CalcFunctionNode::ScanArgs(CalcPacket& packet) const
 //////////////////////////////////////////////////////////////////////
 // CalcParser::
 
-CalcParser::CalcParser()
+CalcParser::CalcParser(bool sql_style_)
 : start(0), pos(0)
 , op_begin(0), op_end(0), op_last(OP_NONE)
+, sql_style(sql_style_)
 {
 }
 
@@ -1322,8 +1323,7 @@ CalcNodePtr CalcParser::ScanSequence()
 CalcNodePtr CalcParser::ScanSelect()
 {
 	CalcNodePtr node = ScanLogOr();
-	if(Check(OP_QUESTION))
-	{ // ?:
+	if(Check(OP_QUESTION)) { // ?:
 		CalcNodePtr when1 = ScanSelect();
 		Force(OP_COLON, ":");
 		CalcNodePtr when0 = ScanSelect();
@@ -1372,8 +1372,52 @@ CalcNodePtr CalcParser::ScanCompare()
 			node = new CalcFunctionNode("<", node, ScanBitOr());
 		else if(Check(OP_GT))
 			node = new CalcFunctionNode(">", node, ScanBitOr());
-		else
-			return node;
+		else {
+			bool isnot = Check(OP_SQL_NOT);
+			bool isbtw = Check(OP_SQL_BETWEEN);
+			bool isin = !isbtw && Check(OP_SQL_IN);
+			bool islike = !isbtw && !isin && Check(OP_SQL_LIKE);
+			bool isis = !isbtw && !isin && Check(OP_SQL_IS);
+
+			CalcNodePtr out_node;
+			if(isbtw) {
+				CalcNodePtr lbound = ScanBitOr();
+				Force(OP_LOG_AND, "and");
+				CalcNodePtr ubound = ScanBitOr();
+				out_node = new CalcLogAndNode(
+					new CalcFunctionNode(">=", node, lbound),
+					new CalcFunctionNode("<=", node, ubound));
+			}
+			else if(isin) {
+				Vector<CalcNodePtr> lov;
+				if(Check(OP_LPAR)) {
+					do
+						lov.Add() = ScanSelect();
+					while(Check(OP_COMMA));
+					Force(OP_RPAR, ")");
+					out_node = new CalcFunctionNode("in", node,
+						new CalcFunctionNode("[,,]", lov));
+				}
+				else
+					out_node = new CalcConstNode(Value());
+			}
+			else if(islike) {
+				CalcNodePtr lexpr = ScanSelect();
+				out_node = new CalcFunctionNode("like", node, lexpr);
+			}
+			else if(isis) {
+				Force(OP_SQL_NULL, "NULL");
+				out_node = new CalcFunctionNode("is_null", node);
+			}
+			else if(isnot)
+				throw Exc(t_("expected 'between', 'in' or 'like'"));
+			else
+				return node;
+			
+			if(!isnot)
+				return out_node;
+			return new CalcFunctionNode("!", out_node);
+		}
 }
 
 CalcNodePtr CalcParser::ScanBitOr()
@@ -1562,34 +1606,87 @@ int CalcParser::GetOperator()
 		return op_last;
 	Skip();
 	op_begin = op_end = pos;
-	switch(*op_end++)
-	{
-	case '?': op_last = OP_QUESTION; break;
-	case ':': op_last = OP_COLON; break;
-	case ';': op_last = OP_SEMICOLON; break;
-	case '&': op_last = (*op_end == '&' ? op_end++, OP_LOG_AND : OP_BIT_AND); break;
-	case '|': op_last = (*op_end == '|' ? op_end++, OP_LOG_OR  : OP_BIT_OR); break;
-	case '^': op_last = OP_BIT_XOR; break;
-	case '<': op_last = (*op_end == '=' ? op_end++, OP_LE : *op_end == '<' ? op_end++, OP_LSHIFT : OP_LT); break;
-	case '>': op_last = (*op_end == '=' ? op_end++, OP_GE : *op_end == '>' ? op_end++, OP_RSHIFT : OP_GT); break;
-	case '!': op_last = (*op_end == '=' ? op_end++, OP_NE : OP_LOG_NOT); break;
-	case '=': op_last = (*op_end == '=' ? op_end++, OP_EQ : (op_end--, OP_NONE)); break;
-	case '+': op_last = OP_ADD; break;
-	case '-': op_last = OP_SUB; break;
-	case '*': op_last = (*op_end == '*' ? op_end++, OP_POW : OP_MUL); break;
-	case '/': op_last = OP_DIV; break;
-	case '%': op_last = OP_MOD; break;
-	case '~': op_last = OP_BIT_NOT; break;
-	case '#': op_last = OP_LAMBDA; break;
-	case '(': op_last = OP_LPAR; break;
-	case ')': op_last = OP_RPAR; break;
-	case '[': op_last = OP_LBRACKET; break;
-	case ']': op_last = OP_RBRACKET; break;
-	case '{': op_last = OP_LBRACE; break;
-	case '}': op_last = OP_RBRACE; break;
-	case ',': op_last = OP_COMMA; break;
-	case '.': op_last = (*op_end == '.' ? op_end++, OP_DOTS : OP_DOT); break;
-	default: op_end--; op_last = OP_NONE; break;
+	switch(*op_end++) {
+		case '?': op_last = OP_QUESTION; break;
+		case ':': op_last = OP_COLON; break;
+		case ';': op_last = OP_SEMICOLON; break;
+		case '&': op_last = (*op_end == '&' ? op_end++, OP_LOG_AND : OP_BIT_AND); break;
+		case '|': op_last = (*op_end == '|' ? op_end++, OP_LOG_OR  : OP_BIT_OR); break;
+		case '^': op_last = OP_BIT_XOR; break;
+		case '<': {
+			if(*op_end == '=') {
+				op_end++;
+				op_last = OP_LE;
+			}
+			else if(*op_end == '<') {
+				op_end++;
+				op_last = OP_LSHIFT;
+			}
+			else if(sql_style && *op_end == '>') {
+				op_end++;
+				op_last = OP_NE;
+			}
+			else
+				op_last = OP_LT;
+			break;
+		}
+		case '>': op_last = (*op_end == '=' ? op_end++, OP_GE : *op_end == '>' ? op_end++, OP_RSHIFT : OP_GT); break;
+		case '!': op_last = (*op_end == '=' ? op_end++, OP_NE : OP_LOG_NOT); break;
+		case '=': {
+			if(*op_end == '=') {
+				op_end++;
+				op_last = OP_EQ;
+			}
+			else if(sql_style)
+				op_last = OP_EQ;
+			else {
+				op_end--;
+				op_last = OP_NONE;
+			}
+			break;
+		}
+		case '+': op_last = OP_ADD; break;
+		case '-': op_last = OP_SUB; break;
+		case '*': op_last = (*op_end == '*' ? op_end++, OP_POW : OP_MUL); break;
+		case '/': op_last = OP_DIV; break;
+		case '%': op_last = OP_MOD; break;
+		case '~': op_last = OP_BIT_NOT; break;
+		case '#': op_last = OP_LAMBDA; break;
+		case '(': op_last = OP_LPAR; break;
+		case ')': op_last = OP_RPAR; break;
+		case '[': op_last = OP_LBRACKET; break;
+		case ']': op_last = OP_RBRACKET; break;
+		case '{': op_last = OP_LBRACE; break;
+		case '}': op_last = OP_RBRACE; break;
+		case ',': op_last = OP_COMMA; break;
+		case '.': op_last = (*op_end == '.' ? op_end++, OP_DOTS : OP_DOT); break;
+		default: {
+			op_end--;
+			op_last = OP_NONE;
+			if(sql_style && IsAlpha(*op_end)) {
+				const char *b = op_end;
+				while(IsAlNum(*++op_end) || *op_end == '_')
+					op_end++;
+				int len = (int)(op_end - b);
+				if(len == 3 && !MemICmp(b, "and", 3))
+					op_last = OP_LOG_AND;
+				else if(len == 2 && !MemICmp(b, "or", 2))
+					op_last = OP_LOG_OR;
+				else if(len == 7 && !MemICmp(b, "between", 7))
+					op_last = OP_SQL_BETWEEN;
+				else if(len == 2 && !MemICmp(b, "in", 2))
+					op_last = OP_SQL_IN;
+				else if(len == 4 && !MemICmp(b, "like", 4))
+					op_last = OP_SQL_LIKE;
+				else if(len == 3 && !MemICmp(b, "not", 3))
+					op_last = OP_SQL_NOT;
+				else if(len == 2 && !MemICmp(b, "is", 2))
+					op_last = OP_SQL_IS;
+				else
+					op_end = b;
+			}
+			break;
+		}
 	}
 	return op_last;
 }

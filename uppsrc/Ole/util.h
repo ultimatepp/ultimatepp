@@ -84,6 +84,24 @@ inline String   AsString(const Guid& guid) { return Format(~guid); }
 inline bool     operator == (const Guid& a, const Guid& b) { return ~a == ~b; }
 inline bool     operator != (const Guid& a, const Guid& b) { return ~a != ~b; }
 
+class OleExc : public Exc
+{
+public:
+	OleExc(HRESULT hresult);
+	OleExc(HRESULT hresult, const char *text);
+
+public:
+	HRESULT hresult;
+};
+
+HRESULT    LogResult(HRESULT hr);
+HRESULT    LogError(HRESULT hr);
+
+inline void OleVerify(HRESULT hr) { if(FAILED(hr)) throw OleExc(hr); }
+inline void OleVerify(HRESULT hr, const char *text) { if(FAILED(hr)) throw OleExc(hr, text); }
+
+#define OLE_VERIFY(c) OleVerify(c, #c)
+
 class OleVariant : public VARIANT
 {
 public:
@@ -124,9 +142,29 @@ void                  ReturnWString(BSTR *dest, WString s);
 HRESULT               CheckReturnWString(BSTR *bstr, WString s);
 
 ValueArray            SAFEARRAYToValueArray(SAFEARRAY *array);
-SAFEARRAY            *ValueArrayToSAFEARRAY(const ValueArray& varray);
-void                  ReturnValueArray(SAFEARRAY *dest, const ValueArray& array);
-HRESULT               CheckReturnString(BSTR *bstr, String s);
+Vector<WString>       SAFEARRAYToWStringVector(SAFEARRAY *array);
+SAFEARRAY            *ToSAFEARRAY(const ValueArray& varray);
+SAFEARRAY            *ToSAFEARRAY(const Vector<WString>& varray);
+void                  ReturnSAFEARRAY(SAFEARRAY *dest, const ValueArray& array);
+void                  ReturnSAFEARRAY(SAFEARRAY *dest, const Vector<WString>& array);
+HRESULT               CheckReturnSAFEARRAY(SAFEARRAY *dest, const ValueArray& array);
+HRESULT               CheckReturnSAFEARRAY(SAFEARRAY *dest, const Vector<WString>& array);
+
+class OleSafeArray {
+public:
+	OleSafeArray() : array(NULL)            {}
+	OleSafeArray(const ValueArray& va)      { array = ToSAFEARRAY(va); }
+	OleSafeArray(const Vector<WString>& vs) { array = ToSAFEARRAY(vs); }
+	OleSafeArray(const OleSafeArray& a)     { array = NULL; if(a.array) OleVerify(SafeArrayCopy(a.array, &array)); }
+	~OleSafeArray()                         { if(array) SafeArrayDestroy(array); }
+	
+	operator ValueArray () const            { return SAFEARRAYToValueArray(array); }
+	operator Vector<WString> () const       { return SAFEARRAYToWStringVector(array); }
+	SAFEARRAY *operator ~ () const          { return array; }
+	
+private:
+	SAFEARRAY *array;
+};
 
 class OleBstr
 {
@@ -156,24 +194,6 @@ inline const Rect&    ToRect(const RECTL& rc) { return reinterpret_cast<const Re
 Color                 PackColor(long rgb);
 long                  UnpackColor(Color c);
 HRESULT               CheckReturnColor(long *ptr, Color c);
-
-class OleExc : public Exc
-{
-public:
-	OleExc(HRESULT hresult);
-	OleExc(HRESULT hresult, const char *text);
-
-public:
-	HRESULT hresult;
-};
-
-HRESULT    LogResult(HRESULT hr);
-HRESULT    LogError(HRESULT hr);
-
-inline void OleVerify(HRESULT hr) { if(FAILED(hr)) throw OleExc(hr); }
-inline void OleVerify(HRESULT hr, const char *text) { if(FAILED(hr)) throw OleExc(hr, text); }
-
-#define OLE_VERIFY(c) OleVerify(c, #c)
 
 template <class T>
 class IRefBase : Moveable< IRefBase<T> >

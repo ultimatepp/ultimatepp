@@ -258,7 +258,7 @@ bool OcxTypeInfo::CanUnload() const
 	RDUMP(object_count);
 	RDUMP(refcount);
 	RDUMP(lock_count);
-	return object_count == 0 && refcount <= 1 && lock_count <= 0;
+	return object_count == 0 && refcount <= 2 && lock_count <= 0;
 }
 
 int OcxTypeInfo::IncRef()
@@ -718,10 +718,16 @@ void ExeRunServer()
 	}
 	LOGSYSOCX("-> registration OK");
 
-	MSG msg;
-	while(GetMessage(&msg, 0, 0, 0)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+	int ms = msecs();
+	bool quit = false;
+	while(!quit) {
+		if(msecs(ms) >= 2000) {
+			if(OcxTypeLib::Get().CanUnload())
+				break;
+			ms = msecs();
+		}
+		if(!Ctrl::ProcessEvent(&quit))
+			Sleep(10);
 	}
 	LOGSYSOCX("end of message loop");
 	OcxTypeLib::Get().RevokeObjects();
