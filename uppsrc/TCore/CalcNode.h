@@ -407,7 +407,7 @@ struct CalcType<CalcNodePtr> : public CalcRawType<CalcNodePtr>
 class CalcParser
 {
 public:
-	CalcParser();
+	CalcParser(bool sql_style = false);
 
 	virtual CalcNodePtr   Scan(const char *text);
 	virtual CalcNodePtr   ScanVoid(const char *text);
@@ -460,6 +460,8 @@ protected:
 		OP_LBRACE, OP_RBRACE,
 		OP_COMMA,
 		OP_DOT, OP_DOTS,
+		OP_SQL_BETWEEN, OP_SQL_IN, OP_SQL_LIKE,
+		OP_SQL_IS, OP_SQL_NOT, OP_SQL_NULL,
 
 		OP_LAST,
 	};
@@ -470,6 +472,8 @@ protected:
 	bool                  Force(int op, const char *expect);
 
 protected:
+	bool                  sql_style;
+
 	const char           *start;
 	const char           *pos;
 

@@ -247,17 +247,41 @@ ValueArray SAFEARRAYToValueArray(SAFEARRAY *array)
 	return SAFEARRAYToValueArrayPart(array, indices.Begin(), ndims - 1);
 }
 
-SAFEARRAY * ValueArrayToSAFEARRAY(const ValueArray& varray)
+Vector<WString> SAFEARRAYToWStringVector(SAFEARRAY *array)
 {
-	SAFEARRAYBOUND rgsabound;
-	rgsabound.lLbound = 0;
-	rgsabound.cElements = varray.GetCount();
-	SAFEARRAY *a = SafeArrayCreate(VT_VARIANT, 1, &rgsabound);
+	Vector<WString> out;
+	out.SetCount(array->rgsabound[0].cElements);
+	Vector<long> indices;
+	indices.SetCount(array->cDims, 0);
+	for(int i = 0; i < out.GetCount(); i++) {
+		OleBstr s;
+		indices[0] = i;
+		HRESULT hr = SafeArrayGetElement(array, indices.Begin(), s.Set());
+		out[i] = s;
+	}
+	return out;
+}
+
+SAFEARRAY *ToSAFEARRAY(const ValueArray& varray)
+{
+	SAFEARRAY *a = SafeArrayCreateVector(VT_VARIANT, 0, varray.GetCount());
 	if(!a)
 		return NULL;
 	for(long index = 0; index < varray.GetCount(); index++) {
 		OleVariant var = AsVariant(varray[(int)index]);
 		SafeArrayPutElement(a, &index, &var);
+	}
+	return a;
+}
+
+SAFEARRAY *ToSAFEARRAY(const Vector<WString>& vstr)
+{
+	SAFEARRAY *a = SafeArrayCreateVector(VT_BSTR, 0, vstr.GetCount());
+	if(!a)
+		return NULL;
+	for(long index = 0; index < vstr.GetCount(); index++) {
+		OleBstr var = vstr[(int)index];
+		SafeArrayPutElement(a, &index, ~var);
 	}
 	return a;
 }
