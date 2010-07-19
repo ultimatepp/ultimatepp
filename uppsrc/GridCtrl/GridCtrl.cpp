@@ -99,7 +99,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	one_click_edit      = false;
 	coloringMode        = 0;
 	ctrls               = false;
-	genr_ctrls          = false;
+	genr_ctrls          = 0;
 	edit_ctrls          = false;
 	sorting             = true;
 	sorting_multicol    = true;
@@ -2421,10 +2421,10 @@ void GridCtrl::DragAndDrop(Point p, PasteClip& d)
 	*/
 }
 
-Rect GridCtrl::GetItemRect(int r, int c, bool hgrid, bool vgrid, bool ctrlmode)
+Rect GridCtrl::GetItemRect(int r, int c, bool hgrid, bool vgrid, bool relw, bool relh)
 {
-	int dx = sbx + (ctrlmode ? fixed_width : 0);
-	int dy = sby + (ctrlmode ? fixed_height : 0);
+	int dx = sbx + (relw ? fixed_width : 0);
+	int dy = sby + (relh ? fixed_height : 0);
 
 	int idx = hitems[c].id;
 	int idy = vitems[r].id;
@@ -2675,6 +2675,22 @@ void GridCtrl::Set(const Vector<Value> &v, int data_offset /* = 0*/, int column_
 {
 	int r = rowidx - fixed_rows;
 	Set(r, v, data_offset, column_offset);
+}
+
+void GridCtrl::SetCtrl(int r, int c, Ctrl& ctrl)
+{
+	GetItem(r + fixed_rows, c + fixed_cols).SetCtrl(ctrl);
+	++genr_ctrls;
+}
+
+void GridCtrl::ClearCtrl(int r, int c)
+{
+	GridCtrl::Item& item = GetItem(r + fixed_rows, c + fixed_cols);
+	if(item.ctrl)
+	{
+		item.ClearCtrl();
+		--genr_ctrls;
+	}
 }
 
 void GridCtrl::SetCtrlValue(int r, int c, const Value &val)
@@ -4548,7 +4564,8 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 		bool dorect = false;
 		bool dofocus = false;
 
-		bool factory = edits[id].factory;
+		bool factory_ctrl = edits[id].factory;
+		bool manual_ctrl = items[vitems[cp.y].id][id].ctrl_flag & IC_MANUAL;
 
 		if(show)
 		{
@@ -4559,12 +4576,12 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 		}
 		if(dorect)
 		{
-			Rect r = GetItemRect(ctrlpos.y, i, horz_grid, vert_grid, true);
+			Rect r = GetItemRect(ctrlpos.y, i, horz_grid, vert_grid, true, true);
 
 			if(!r.Intersects(sz))
 				r.Set(0, 0, 0, 0);
 
-			if(!factory)
+			if(!factory_ctrl && !manual_ctrl)
 			{
 				ctrl->SetRect(AlignRect(r, i));
 				ctrl->Show();
@@ -4572,7 +4589,7 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 			}
 
 		}
-		else if(!factory)
+		else if(!factory_ctrl && !manual_ctrl)
 		{
 			ctrl->SetRect(0, 0, 0, 0);
 			ctrl->Hide();
@@ -4612,26 +4629,10 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 
 void GridCtrl::SyncCtrls(int row)
 {
-	//if(!HasCtrls())
-	//	return;
-	
-	Size sz = GetSize();
-	genr_ctrls = false;
-
-	
-	Vector<int> cols;
-
-	for(int i = 1; i < total_cols; i++)
-		if(edits[hitems[i].id].factory && hitems[i].editable)
-			cols.Add(i);
-
-	if(cols.IsEmpty())
+	if(!genr_ctrls)
 		return;
 	
-
-	int dy = sby + fixed_height;
-	int dx = sbx + fixed_width;
-	Rect r;
+	Size sz = GetSize();
 
 	int js = row < 0 ? 0 : row;
 	int je = row < 0 ? total_rows : row + 1;
@@ -4639,31 +4640,40 @@ void GridCtrl::SyncCtrls(int row)
 	for(int j = js; j < je; j++)
 	{
 		int idy = vitems[j].id;
-		bool fixed = j < fixed_rows;
-		bool create = !fixed && vitems[j].editable;
+		bool fixed_row = j < fixed_rows;
+		bool create_row = !fixed_row && vitems[j].editable;
 
-		for(int i = 0; i < cols.GetCount(); i++)
+		for(int i = 1; i < total_cols; i++)
 		{
-			int c = cols[i];
-			int idx = hitems[c].id;
-			int oid = idx;
+			bool fixed_col = i < fixed_cols;
+			bool create_col = !fixed_col && hitems[i].editable;
+						
+			int idx = hitems[i].id;
 
 			Item *it = &items[idy][idx];
-
+			
 			if(it->isjoined)
 			{
 				it = &items[it->idy][it->idx];
 				idx = it->idx;
 			}
 
-			if(!it->ctrl && create && it->editable && edits[idx].factory && !edits[idx].nofactory)
+			bool manual_ctrl = it->ctrl_flag & IC_MANUAL;
+
+			if(!it->ctrl && create_row && create_col && it->editable && edits[idx].factory)
 			{
 				One<Ctrl> newctrl;
 				edits[idx].factory(newctrl);
-				newctrl->SetData(it->val);
-				newctrl->WhenAction << Proxy(WhenCtrlsAction);
 				it->ctrl = newctrl.Detach();
-				holder.AddChild(it->ctrl);
+				it->ctrl_flag = IC_FACTORY | IC_INIT;
+			}
+			
+			if(it->ctrl && (it->ctrl_flag & IC_INIT))
+			{
+				it->ctrl->SetData(it->val);
+				it->ctrl->WhenAction << Proxy(WhenCtrlsAction);
+				holder.AddChild(it->ctrl);				
+				it->ctrl_flag &= ~IC_INIT;
 			}
 
 			if(it->ctrl)
@@ -4671,10 +4681,10 @@ void GridCtrl::SyncCtrls(int row)
 				if(it->isjoined && it->sync_flag == sync_flag)
 					continue;
 
-				r = GetItemRect(j, c, horz_grid, vert_grid, true);
-				AlignRect(r, c);
-
-				if(r.Intersects(sz) && !fixed && !vitems[j].hidden && !hitems[c].hidden)
+				Rect r = GetItemRect(j, i, horz_grid, vert_grid, true, true);
+				AlignRect(r, i);
+				
+				if(r.Intersects(sz) && !fixed_col && !fixed_row && !vitems[j].hidden && !hitems[i].hidden)
 				{
 					it->ctrl->SetRect(r);
 					it->ctrl->Show();
@@ -4684,13 +4694,10 @@ void GridCtrl::SyncCtrls(int row)
 					it->ctrl->SetRect(0, 0, 0, 0);
 					it->ctrl->Hide();
 				}
-
-				genr_ctrls = true;
 			}
 
 			if(it->isjoined)
 				it->sync_flag = sync_flag;
-
 		}
 	}
 	sync_flag = 1 - sync_flag;
