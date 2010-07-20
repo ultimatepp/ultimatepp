@@ -1628,7 +1628,7 @@ class GridCtrl : public Ctrl
 
 		void DrawLine(bool iniLine, bool delLine);
 
-		Rect GetItemRect(int r, int c, bool hgrid = false, bool vgrid = false, bool relw = false, bool relh = false);
+		Rect GetItemRect(int r, int c, bool hgrid = false, bool vgrid = false, bool hrel = false, bool vrel = false);
 
 		bool Match(const WString &f, const WString &s, int &fs, int &fe);
 		int  ShowMatchedRows(const WString &f);
@@ -1685,8 +1685,8 @@ class GridCtrl : public Ctrl
 		void Nothing();
 		void Init();
 
-		Ctrl * GetCtrl(int x, int y, bool check_visibility, bool relative = false, bool check_edits = true);
-		Ctrl * GetCtrl(const Point &p, bool check_visibility, bool relative = false, bool check_edits = true);
+		Ctrl * GetCtrl(int x, int y, bool check_visibility, bool hrel = false, bool vrel = false, bool check_edits = true);
+		Ctrl * GetCtrl(const Point &p, bool check_visibility, bool hrel = false, bool vrel = false, bool check_edits = true);
 		bool IsCtrl(Point &p);
 
 		GridClipboard GetClipboard();

@@ -1962,7 +1962,7 @@ void GridCtrl::SyncPopup()
 		
 		bool valid_pos = c >= 0 && r >= 0;
 		
-		Ctrl* ctrl = valid_pos ? GetCtrl(r, c, true, false, false) : NULL;
+		Ctrl* ctrl = valid_pos ? GetCtrl(r, c, true, false, false, false) : NULL;
 		
 		bool close = popup.IsOpen();
 
@@ -2421,10 +2421,10 @@ void GridCtrl::DragAndDrop(Point p, PasteClip& d)
 	*/
 }
 
-Rect GridCtrl::GetItemRect(int r, int c, bool hgrid, bool vgrid, bool relw, bool relh)
+Rect GridCtrl::GetItemRect(int r, int c, bool hgrid, bool vgrid, bool hrel, bool vrel)
 {
-	int dx = sbx + (relw ? fixed_width : 0);
-	int dy = sby + (relh ? fixed_height : 0);
+	int dx = sbx + (hrel ? fixed_width : 0);
+	int dy = sby + (vrel ? fixed_height : 0);
 
 	int idx = hitems[c].id;
 	int idy = vitems[r].id;
@@ -4379,7 +4379,7 @@ bool GridCtrl::GetCtrlsData(bool samerow, bool doall, bool updates)
 			for(int i = fixed_cols; i < total_cols; ++i)
 			{
 				int idx = hitems[i].id;
-				Ctrl * ctrl = GetCtrl(rowidx, i, true, false);
+				Ctrl * ctrl = GetCtrl(rowidx, i, true, false, false);
 				if(ctrl && !ctrl->Accept())
 				{
 					focused_ctrl = ctrl;
@@ -4530,7 +4530,7 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 
 	bool gofirst = opt & UC_GOFIRST && select_row && !ctrls && !draw_focus;
 	if(opt & UC_MOUSE)
-		 gofirst = gofirst && !GetCtrl(cp, false, false);
+		 gofirst = gofirst && !GetCtrl(cp, false, false, false);
 
 	for(int i = 1; i < total_cols; i++)
 	{
@@ -6153,15 +6153,15 @@ bool GridCtrl::GoRight(bool scroll, bool ctrlmode) { return Go0(GO_RIGHT, scroll
 bool GridCtrl::GoPageUp(bool scroll)               { return Go0(GO_PAGEUP, scroll);                 }
 bool GridCtrl::GoPageDn(bool scroll)               { return Go0(GO_PAGEDN, scroll);                 }
 
-Ctrl * GridCtrl::GetCtrl(const Point &p, bool check_visibility, bool relative, bool check_edits)
+Ctrl * GridCtrl::GetCtrl(const Point &p, bool check_visibility, bool hrel, bool vrel, bool check_edits)
 {
-	return GetCtrl(p.y, p.x, check_visibility, relative, check_edits);
+	return GetCtrl(p.y, p.x, check_visibility, hrel, vrel, check_edits);
 }
 
-Ctrl * GridCtrl::GetCtrl(int r, int c, bool check_visibility, bool relative, bool check_edits)
+Ctrl * GridCtrl::GetCtrl(int r, int c, bool check_visibility, bool hrel, bool vrel, bool check_edits)
 {
-	int idx = relative ? fixed_cols + c : hitems[c].id;
-	int idy = vitems[r].id;
+	int idx = hrel ? fixed_cols + c : hitems[c].id;
+	int idy = vrel ? fixed_rows + r : vitems[r].id;
 	Ctrl * ctrl = items[idy][idx].ctrl;
 	if(check_edits && !ctrl)
 		ctrl = edits[idx].ctrl;
@@ -6172,17 +6172,17 @@ Ctrl * GridCtrl::GetCtrl(int r, int c, bool check_visibility, bool relative, boo
 
 Ctrl * GridCtrl::GetCtrl(int r, int c)
 {
-	return GetCtrl(r, c, true, true);
+	return GetCtrl(r, c, true, true, true);
 }
 
 Ctrl * GridCtrl::GetCtrl(int c)
 {
-	return GetCtrl(curpos.y, c, true, true);
+	return GetCtrl(curpos.y, c, true, true, false);
 }
 
 bool GridCtrl::IsCtrl(Point &p)
 {
-	return GetCtrl(p, true);
+	return GetCtrl(p, true, false, false);
 }
 
 void GridCtrl::GoTo(int r, bool setcursor, bool scroll)
