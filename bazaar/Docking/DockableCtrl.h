@@ -53,7 +53,7 @@ public:
 	virtual void WindowMenu(Bar& bar) 				{ WhenMenuBar(bar); }
 	
 	const Image& 	GetIcon()						{ return icon; }
-	DockableCtrl& 	Icon(const Image& m)			{ icon = m; return *this; }
+	DockableCtrl& 	Icon(const Image& m);
 	DockableCtrl& 	Title(const char *_title)		{ return Title((WString)_title); }
 	DockableCtrl& 	Title(const WString& _title);
 	const WString&  GetTitle()						{ return title; }
@@ -102,6 +102,8 @@ public:
 	void			Highlight();
 	void			TimedHighlight(int ms);
 	
+	virtual Value 	GetSortValue() { return GetTitle(); }	
+
 	DockableCtrl();
 };
 

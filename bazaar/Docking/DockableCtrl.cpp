@@ -31,7 +31,18 @@ DockableCtrl&  DockableCtrl::SizeHint(const Size& min, const Size& max, const Si
 
 DockableCtrl& DockableCtrl::Title(const WString& _title)
 {
-	title = _title; if (GetContainer()) GetContainer()->ChildTitleChanged(); return *this;
+	title = _title; 
+	if (GetContainer()) 
+		GetContainer()->ChildTitleChanged(*this); 
+	return *this;
+}
+
+DockableCtrl& DockableCtrl::Icon(const Image& m)
+{
+	icon = m;
+	if (GetContainer()) 
+		GetContainer()->ChildTitleChanged(*this); 
+	return *this;	
 }
 
 bool DockableCtrl::IsFloating() const

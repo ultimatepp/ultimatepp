@@ -22,47 +22,10 @@ void DockTabBar::FrameAddSize(Size& sz)
 		TabBar::FrameAddSize(sz);
 }
 
-void DockTabBar::PaintTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
-{
-	DockableCtrl *d;
-	WString txt;
-	const Value &q = tab.value;
-	
-	ink = (style == CTRL_DISABLED) ? SColorDisabled : ink;
-	
-	if (IsTypeRaw<DockCont *>(q)) {
-		DockCont *c = ValueTo<DockCont *>(q);
-		d = &c->GetCurrent();
-		txt = c->GetTitle();
-	}
-	else {
-		ASSERT(IsTypeRaw<DockableCtrl *>(q));
-		d = ValueTo<DockableCtrl *>(q);
-		txt = d->GetTitle();
-	}
-
-	Size isz(0, 0);
-	
-	if(icons)
-	{
-		const Image& icon = (style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon();
-		if (!icon.IsEmpty()) {
-			isz = icon.GetSize();
-			Point ip = GetImagePosition(r, isz.cx, isz.cy, TB_SPACEICON, LEFT);
-			w.DrawImage(ip.x, ip.y, icon);
-		}
-	}
-	if (showtext)
-	{
-		Point p = GetTextPosition(r, GetTextSize(txt, font).cy, isz.cx > 0 ? isz.cx + TB_SPACEICON + TB_MARGIN : TB_MARGIN);
-		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
-	}
-}
-
 Size DockTabBar::GetStdSize(const Tab &t)
 {
 	DockableCtrl *d;
-	const Value &q = t.value;
+	const Value &q = t.key;
 	Value v;
 	if (IsTypeRaw<DockCont *>(q)) {
 		DockCont *c = ValueTo<DockCont *>(q);
@@ -288,6 +251,43 @@ int AutoHideBar::FindCtrl(const DockCont& c) const
 void AutoHideBar::TabDrag(int ix)
 {
 	GetCtrl(ix)->MoveBegin(); 
+}
+
+void AutoHideBar::PaintTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
+{
+	DockableCtrl *d;
+	WString txt;
+	const Value &q = tab.value;
+	
+	ink = (style == CTRL_DISABLED) ? SColorDisabled : ink;
+	
+	if (IsTypeRaw<DockCont *>(q)) {
+		DockCont *c = ValueTo<DockCont *>(q);
+		d = &c->GetCurrent();
+		txt = c->GetTitle();
+	}
+	else {
+		ASSERT(IsTypeRaw<DockableCtrl *>(q));
+		d = ValueTo<DockableCtrl *>(q);
+		txt = d->GetTitle();
+	}
+
+	Size isz(0, 0);
+	
+	if(icons)
+	{
+		const Image& icon = (style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon();
+		if (!icon.IsEmpty()) {
+			isz = icon.GetSize();
+			Point ip = GetImagePosition(r, isz.cx, isz.cy, TB_SPACEICON, LEFT);
+			w.DrawImage(ip.x, ip.y, icon);
+		}
+	}
+	if (showtext)
+	{
+		Point p = GetTextPosition(r, GetTextSize(txt, font).cy, isz.cx > 0 ? isz.cx + TB_SPACEICON + TB_MARGIN : TB_MARGIN);
+		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
+	}
 }
 
 AutoHideBar::AutoHideBar()

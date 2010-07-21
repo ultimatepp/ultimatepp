@@ -39,7 +39,7 @@ public:
 /*	virtual void ChildGotFocus() 						{ handle.RefreshFocus(true); TopWindow::ChildGotFocus(); }
 	virtual void ChildLostFocus() 						{ handle.RefreshFocus(HasFocusDeep()); TopWindow::ChildLostFocus(); }
 	virtual void GotFocus() 							{ handle.RefreshFocus(true); }
-	virtual void LostFocus() 							{ handle.RefreshFocus(HasFocusDeep()); }*/
+	virtual void LostFocus() 							{ handle.RefreshFocus(HasFocusDeep()); } */
 public:
 #if defined(PLATFORM_WIN32)
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
@@ -132,6 +132,7 @@ private:
 	bool 	IsDockAllowed0(int align, const Value& v) const;
 	void	SyncButtons(DockableCtrl& dc);
 	Ctrl   *FindFirstChild() const;
+	void	ChildTitleChanged(Ctrl *child, WString title, Image icon);
 
 	void	State(DockWindow& dock, DockCont::DockState state);	
 
@@ -209,7 +210,8 @@ public:
 	void			SyncUserSize(bool h, bool v);		
 
 	WString 		GetTitle(bool force_count = false) const; 
-	void			ChildTitleChanged();
+	void			ChildTitleChanged(DockableCtrl &dc);
+	void			ChildTitleChanged(DockCont &dc);
 	
 	bool			IsDockAllowed(int align, int dc_ix = -1) const;
 		

@@ -235,11 +235,11 @@ void DockCont::ChildAdded(Ctrl *child)
 		return;
 	else if (DockableCtrl *dc = dynamic_cast<DockableCtrl *>(child)) {
 		Value v = ValueCast(dc);
-		tabbar.Insert(0, v, Null, dc->GetGroup(), true);
+		tabbar.InsertKey(0, v, dc->GetTitle(), Null, dc->GetGroup(), true);
 	}	
 	else if (DockCont *dc = dynamic_cast<DockCont *>(child)) {
 		Value v = ValueCast(dc);
-		tabbar.Insert(0, v, Null, Null, true);
+		tabbar.InsertKey(0, v, dc->GetTitle(), Null, Null, true);
 	}	
 	else 
 		return;	
@@ -332,9 +332,8 @@ void DockCont::TabSelected()
 
 		if (IsTabbed()) {
 			DockCont *c = static_cast<DockCont *>(GetParent());
-			c->tabbar.SyncRepos();
+			c->ChildTitleChanged(*this);
 			c->TabSelected();
-			c->RefreshFrame();
 		}
 		else
 			handle.Refresh();
@@ -516,7 +515,8 @@ void DockCont::State(DockWindow& dock, DockCont::DockState state)
 
 void DockCont::SignalStateChange()
 {
-	SignalStateChange(GetCount()-1, 0);
+	if (GetCount())
+		SignalStateChange(GetCount()-1, 0);
 }
 
 void DockCont::SignalStateChange(int from, int to)
@@ -743,11 +743,25 @@ WString DockCont::GetTitle(bool force_count) const
 	return GetCurrent().GetTitle();	
 }
 
-void DockCont::ChildTitleChanged()
+void DockCont::ChildTitleChanged(DockableCtrl &dc)
 {
-	tabbar.SyncRepos(); 
+	ChildTitleChanged(&dc, dc.GetTitle(), dc.GetIcon());
+}
+
+void DockCont::ChildTitleChanged(DockCont &dc)
+{
+	ChildTitleChanged(&dc, dc.GetTitle(), Null);
+}
+
+void DockCont::ChildTitleChanged(Ctrl *child, WString title, Image icon)
+{
+	for (int i = 0; i < tabbar.GetCount(); i++)
+		if (CtrlCast(tabbar.GetKey(i)) == child) {
+		    tabbar.Set(i, tabbar.GetKey(i), title, icon);
+		    break;
+		}
 	if (!GetParent()) 
-		Title(GetTitle());
+		Title(GetTitle());	
 	RefreshFrame();
 }
 

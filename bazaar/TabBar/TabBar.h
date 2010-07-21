@@ -403,9 +403,11 @@ public:
 	Value  	GetKey(int n) const				{ ASSERT(n >= 0 && n < tabs.GetCount()); return tabs[n].key;}
 	Value  	GetValue(int n) const			{ ASSERT(n >= 0 && n < tabs.GetCount()); return tabs[n].value;}
 	Value  	Get(const Value& key) const		{ return GetValue(FindKey(key)); }
-	void	Set(int n, const Value& newkey, const Value& newvalue, Image icon = Null);
-	void	Set(const Value	&key, const Value& newvalue, Image icon = Null);
-	void	Set(int n, const Value& newvalue, Image icon = Null);
+	void	Set(int n, const Value& newkey, const Value& newvalue);
+	void	Set(int n, const Value& newkey, const Value& newvalue, Image icon);
+	void 	SetValue(const Value &key, const Value &newvalue);
+	void 	SetValue(int n, const Value &newvalue);
+	void 	SetKey(int n, const Value &newkey);
 	void	SetIcon(int n, Image icon);
 	void 	SetTabGroup(int n, const String& group);
 	

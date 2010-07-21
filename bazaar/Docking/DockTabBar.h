@@ -31,8 +31,6 @@ protected:
 	bool icons:1;
 	bool showtext:1;
 
-	virtual void PaintTab(Draw& w, const Rect &r, const Tab& tab, 
-					const Font &font, Color ink, dword style);
 	virtual Size GetStdSize(const Tab &t);
 
 	virtual void RightDown(Point p, dword keyflags);
@@ -63,6 +61,9 @@ public:
 	static void SetTimeout(int delay_ms)	  		{ ASSERT(delay_ms > 0); autohide_timeout = delay_ms; }
 	
 	AutoHideBar();
+
+	virtual void PaintTab(Draw& w, const Rect &r, const Tab& tab, 
+					const Font &font, Color ink, dword style);
 	
 private:
 	static int autohide_timeout;
@@ -85,6 +86,11 @@ private:
 	void	TabClose(Value v);				
 	void	HideAnimate(Ctrl *c);
 	void 	AdjustSize(Rect& r, const Size& sz);
+};
+
+struct DockTabable
+{
+	virtual Value GetSortValue() = 0;
 };
 
 END_UPP_NAMESPACE

@@ -1632,13 +1632,17 @@ void TabBar::SetData(const Value &key)
 	}
 }
 
+void TabBar::Set(int n, const Value &newkey, const Value &newvalue)
+{
+	Set(n, newkey, newvalue, tabs[n].img);
+}
+
 void TabBar::Set(int n, const Value &newkey, const Value &newvalue, Image icon)
 {
 	ASSERT(n >= 0 && n < tabs.GetCount());
 	tabs[n].key = newkey;
 	tabs[n].value = newvalue;
-	if (IsNull(icon))
-		tabs[n].img = icon;
+	tabs[n].img = icon;
 	if (stacking) {
 		String id = tabs[n].stackid;
 		tabs[n].stackid = GetStackId(tabs[n]);
@@ -1651,14 +1655,19 @@ void TabBar::Set(int n, const Value &newkey, const Value &newvalue, Image icon)
 	Refresh();
 }
 
-void TabBar::Set(const Value &key, const Value &newvalue, Image icon)
+void TabBar::SetValue(const Value &key, const Value &newvalue)
 {
 	Set(FindKey(key), key, newvalue);
 }
 
-void TabBar::Set(int n, const Value &newvalue, Image icon)
+void TabBar::SetValue(int n, const Value &newvalue)
 {
 	Set(n, tabs[n].key, newvalue);
+}
+
+void TabBar::SetKey(int n, const Value &newkey)
+{
+	Set(n, newkey, tabs[n].value);	
 }
 
 void TabBar::SetIcon(int n, Image icon)
