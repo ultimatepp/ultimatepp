@@ -332,8 +332,8 @@ inline SqlBool IsNull(const SqlId& a)  { return SqlIsNull(a); }
 inline SqlBool IsNull(const SqlVal& a) { return SqlIsNull(a); }
 inline SqlBool IsNull(const SqlCol& a) { return SqlIsNull(a); }
 
-SqlBool        Like(const SqlVal& a, const SqlVal& b, bool cs = false);
-SqlBool        NotLike(const SqlVal& a, const SqlVal& b, bool cs = false);
+SqlBool        Like(const SqlVal& a, const SqlVal& b, bool casesensitive = true);
+SqlBool        NotLike(const SqlVal& a, const SqlVal& b, bool casesensitive = true);
 
 SqlBool        Between(const SqlVal& a, const SqlVal& low, const SqlVal& high);
 SqlBool        NotBetween(const SqlVal&a, const SqlVal& low, const SqlVal& high);
