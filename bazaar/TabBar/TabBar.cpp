@@ -310,6 +310,7 @@ TabBar::TabBar()
 	groupsort = false;
 	tabsort = false;
 	stacksort = true;
+	contextmenu = true;
 	keysorter_inst.vo = &Single<StdValueOrder>();
 	valuesorter_inst.vo = &Single<StdValueOrder>();
 	stacksorter_inst.vo = &Single<StdValueOrder>();
