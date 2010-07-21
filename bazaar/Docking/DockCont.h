@@ -80,11 +80,11 @@ private:
 		virtual void FrameAddSize(Size& sz) { sz += 4; }
 	};		
 		
-	struct Handle : public FrameCtrl<Ctrl> {
+	struct DockContHandle : public FrameCtrl<Ctrl> {
 		Callback WhenContext;
 		Callback WhenLeftDrag;
 		Callback WhenLeftDouble;
-		Handle() 										{ dc = NULL; focus = false; }
+		DockContHandle() 										{ dc = NULL; focus = false; }
 		DockableCtrl *dc;
 		bool focus;
 		virtual void FrameLayout(Rect& r);
@@ -99,33 +99,15 @@ private:
 		int		GetHandleSize(const DockableCtrl::Style& s) const;
 	};
 		
-	int 		dragging;
-	DockState	dockstate;	
-	DockTabBar 	tabbar;
-
-	struct DockValueSort 
-		: public TabBar::TabSort
-	{
-		virtual bool operator()(const TabBar::Tab &a, const TabBar::Tab &b) const
-		{
-			DockableCtrl* dca = DockCast(a.value);
-			DockableCtrl* dcb = DockCast(b.value);
-			if(dca && dcb)
-				return (*vo)(dca->GetTitle(), dcb->GetTitle());
-			else
-				return false;
-		}
-		const ValueOrder *vo;
-	};
-	
-	DockValueSort tabsorter_inst;
-
-	Handle 		handle;
-	ImgButton 	close, autohide, windowpos;	
-	Size 		usersize;
-	bool 		waitsync:1;	
-	bool		animating:1;
-	DockWindow *base;
+	int 			dragging;
+	DockState		dockstate;	
+	DockTabBar 		tabbar;
+	DockContHandle 	handle;
+	ImgButton 		close, autohide, windowpos;	
+	Size 			usersize;
+	bool 			waitsync:1;	
+	bool			animating:1;
+	DockWindow *	base;
 	const DockableCtrl::Style *style;
 
 	// Callbacks
@@ -151,7 +133,7 @@ private:
 	void	SyncButtons(DockableCtrl& dc);
 	Ctrl   *FindFirstChild() const;
 
-	void			State(DockWindow& dock, DockCont::DockState state);	
+	void	State(DockWindow& dock, DockCont::DockState state);	
 
 	static Ctrl            *CtrlCast(const Value& v)  	{ return IsDockCont(v) ? (Ctrl *)ContCast(v) : (Ctrl *)DockCast(v); }
 	static DockCont        *ContCast(const Value& v)  	{ return ValueTo<DockCont *>(v); } 
@@ -170,12 +152,10 @@ public:
 	int				GetCount() const					{ return tabbar.GetCount(); }
 	void 			Clear();	
 
-	DockCont& 		SortTabs(bool b);
-	DockCont& 		SortTabs(TabBar::TabSort &sort);
-	DockCont& 		SortTabValues(ValueOrder &sort);
-	DockCont& 		SortTabValuesOnce(ValueOrder &sort);
-
-	DockCont& 		SortTitles() { StdValueOrder svo; return SortTabValuesOnce(svo); }
+	void 			SortTabs(bool b);
+	void 			SortTabs(ValueOrder &sorter);
+	void 			SortTabsOnce();
+	void 			SortTabsOnce(ValueOrder &sorter);
 
 	virtual void 	MoveBegin();
 	virtual void 	Moving();

@@ -116,20 +116,20 @@ void ImgButton::Paint(Draw &w)
 	}
 }
 
-// Handle frame
-int DockCont::Handle::GetHandleSize(const DockableCtrl::Style &s) const
+// DockContHandle frame
+int DockCont::DockContHandle::GetHandleSize(const DockableCtrl::Style &s) const
 {
 	return 	(s.title_font.IsNull() ? 12 : s.title_font.GetHeight()+4)
 			 + (s.handle_vert ? s.handle_margins.GetWidth() : s.handle_margins.GetHeight()); 
 }
 /*
-void DockCont::Handle::RefreshFocus(bool _focus)
+void DockCont::DockContHandle::RefreshFocus(bool _focus)
 {
 	if (focus != _focus) 	
 		{ focus = _focus; Refresh(); }
 }
 */
-void DockCont::Handle::FrameLayout(Rect& r)
+void DockCont::DockContHandle::FrameLayout(Rect& r)
 {
 	if (!dc || !IsShown()) return;
 	const DockableCtrl::Style &s = dc->GetStyle();
@@ -139,7 +139,7 @@ void DockCont::Handle::FrameLayout(Rect& r)
 		LayoutFrameTop(r, this, GetHandleSize(s));
 }
 
-void DockCont::Handle::FrameAddSize(Size& sz)
+void DockCont::DockContHandle::FrameAddSize(Size& sz)
 {
 	if (!dc || !IsShown()) return;
 	const DockableCtrl::Style &s = dc->GetStyle();
@@ -149,7 +149,7 @@ void DockCont::Handle::FrameAddSize(Size& sz)
 		sz.cy += GetHandleSize(s);	
 }
 
-void DockCont::Handle::Paint(Draw& w)
+void DockCont::DockContHandle::Paint(Draw& w)
 {
 	if (IsShown() && dc) {
 		const DockableCtrl::Style &s = dc->GetStyle();
@@ -402,31 +402,24 @@ void DockCont::TabClosed(Value v)
 		RefreshLayout();
 }
 
-DockCont& DockCont::SortTabs(bool b)
+void DockCont::SortTabs(bool b)
 {
 	tabbar.SortTabs(b);
-	return *this;
 }
 
-DockCont& DockCont::SortTabs(TabBar::TabSort &sort)
+void DockCont::SortTabs(ValueOrder &sorter)
 {
-	tabbar.SortTabs(sort);
-	return *this;
+	tabbar.SortTabValues(sorter);
 }
 
-DockCont& DockCont::SortTabValues(ValueOrder &sort)
+void DockCont::SortTabsOnce()
 {
-	tabsorter_inst.vo = &sort;
-	tabbar.SortTabs(tabsorter_inst);
-	return *this;	
+	tabbar.SortTabsOnce();
 }
 
-DockCont& DockCont::SortTabValuesOnce(ValueOrder &sort)
+void DockCont::SortTabsOnce(ValueOrder &sorter)
 {
-	DockValueSort q;
-	q.vo = &sort;
-	tabbar.SortTabsOnce(tabsorter_inst);
-	return *this;	
+	tabbar.SortTabValuesOnce(sorter);
 }
 
 void DockCont::CloseAll()
@@ -892,7 +885,8 @@ DockCont::DockCont()
 	BackPaint();
 	NoCenter().Sizeable(true).MaximizeBox(false).MinimizeBox(false);
 
-	tabsorter_inst.vo = &Single<StdValueOrder>();
+	tabbar.SortTabValues(StdValueOrder());
+	tabbar.SortTabs(false);
 
 	tabbar.AutoHideMin(1);
 	tabbar<<= THISBACK(TabSelected);

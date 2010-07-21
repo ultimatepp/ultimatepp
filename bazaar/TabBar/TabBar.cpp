@@ -350,7 +350,7 @@ int TabBar::GetNextId()
 void TabBar::ContextMenu(Bar& bar)
 {
 	if (highlight >= 0) {
-		bar.Add(tabs.GetCount() > 1, t_("Close"), THISBACK1(Close, highlight));
+		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), THISBACK1(Close, highlight));
 		bar.Separator();
 	}
 	int cnt = groups.GetCount();
@@ -1446,6 +1446,12 @@ TabBar& TabBar::Grouping(bool b)
 	return *this;
 }
 
+TabBar& TabBar::ContextMenu(bool b)
+{
+	contextmenu = b;
+	return *this;
+}
+
 TabBar& TabBar::GroupSeparators(bool b)
 {
 	groupseps = b;
@@ -1713,7 +1719,8 @@ void TabBar::LeftDouble(Point p, dword keysflags)
 
 void TabBar::RightDown(Point p, dword keyflags)
 {
-	MenuBar::Execute(THISBACK(ContextMenu), GetMousePos());
+	if (contextmenu)
+		MenuBar::Execute(THISBACK(ContextMenu), GetMousePos());
 }
 
 void TabBar::MiddleDown(Point p, dword keyflags)
@@ -2145,6 +2152,7 @@ TabBar& TabBar::CopySettings(const TabBar &src)
 {
 	crosses = src.crosses;
 	grouping = src.grouping;
+	contextmenu = src.contextmenu;
 	autoscrollhide = src.autoscrollhide;		
 	nosel = src.nosel;
 	nohl = src.nohl;

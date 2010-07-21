@@ -207,6 +207,7 @@ private:
 	bool tabsort:1;
 	bool allownullcursor:1;
 	bool icons:1;
+	bool contextmenu:1;
 	int mintabcount;
 	Point mouse, oldp;
 	int group;
@@ -319,7 +320,6 @@ protected:
 	bool	PaintIcons() 									{ return icons; }
 		
 	// Sub-class menu overrides
-	virtual void ContextMenu(Bar& bar);
 	virtual void GroupMenu(Bar& bar, int n);
 	// Sorting/Stacking overriddes
 	virtual String 		GetStackId(const Tab& a)			{ return a.group; }
@@ -352,6 +352,7 @@ public:
 	TabBar& Crosses(bool b = true);
 	TabBar& Stacking(bool b = true);
 	TabBar& Grouping(bool b = true);
+	TabBar& ContextMenu(bool b = true);
 	TabBar& GroupSeparators(bool b = true);
 	TabBar& AutoScrollHide(bool b = true);
 	TabBar& InactiveDisabled(bool b = true);
@@ -444,6 +445,8 @@ public:
 	
 	const Style& 	GetStyle() 						{ return *style[GetAlign()]; }	
 	const Style&	GetStyle(int align) 			{ ASSERT(align >= 0 && align < 4); return *style[align]; }
+
+	virtual void 	ContextMenu(Bar& bar);
 	
 	TabBar& SetStyle(int align, const Style& s)  	{ ASSERT(align >= 0 && align < 4); style[align] = &s; Refresh(); return *this; }
 	static const Style& StyleDefault();

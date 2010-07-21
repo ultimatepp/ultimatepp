@@ -403,7 +403,6 @@ public:
 
 };
 
-
 #define LAYOUTFILE <Docking/Docking.lay>
 #include <CtrlCore/lay.h>
 
