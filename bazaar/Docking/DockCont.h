@@ -115,7 +115,9 @@ private:
 	void 	TabSelected();
 	void	TabDragged(int ix);
 	void	TabContext(int ix);
+	void	TabClosed0(Value v);								
 	void	TabClosed(Value v);								
+	void	TabsClosed(Vector<Value> vv);
 	// Menus/Buttons
 	void 	Float();
 	void 	Dock(int align);

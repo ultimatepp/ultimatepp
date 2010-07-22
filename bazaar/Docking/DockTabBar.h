@@ -13,8 +13,6 @@ public:
 	Callback1<int> 	WhenContext;
 	Callback1<int>  WhenDrag;
 	
-	virtual void 	ContextMenu(Bar& bar)			{ TabBar::ContextMenu(bar); }
-	
 	virtual void 	FrameAddSize(Size& sz);
 	virtual void	FrameLayout(Rect& r);	
 	bool 			IsAutoHide() const				{ return GetCount() <= autohide; }

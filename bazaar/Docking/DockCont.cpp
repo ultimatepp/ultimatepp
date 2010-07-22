@@ -235,7 +235,7 @@ void DockCont::ChildAdded(Ctrl *child)
 		return;
 	else if (DockableCtrl *dc = dynamic_cast<DockableCtrl *>(child)) {
 		Value v = ValueCast(dc);
-		tabbar.InsertKey(0, v, dc->GetTitle(), Null, dc->GetGroup(), true);
+		tabbar.InsertKey(0, v, dc->GetTitle(), dc->GetIcon(), dc->GetGroup(), true);
 	}	
 	else if (DockCont *dc = dynamic_cast<DockCont *>(child)) {
 		Value v = ValueCast(dc);
@@ -369,20 +369,22 @@ void DockCont::TabContext(int ix)
 	MenuBar 		bar;
 	DockContMenu 	menu(base);
 	DockMenu 		tabmenu(base);
-	Value v = tabbar.GetKey(ix);
-	if (IsDockCont(v))
-		menu.ContainerMenu(bar, ContCast(v), false);
-	else
-		tabmenu.WindowMenuNoClose(bar, DockCast(v));
-	if(base->HasCloseButtons())
-	{
-		bar.Separator();
+	if (ix >= 0) {
+		Value v = tabbar.GetKey(ix);
+		if (IsDockCont(v))
+			menu.ContainerMenu(bar, ContCast(v), false);
+		else
+			tabmenu.WindowMenuNoClose(bar, DockCast(v));
+	}
+	if(base->HasCloseButtons()) {
+		if (!bar.IsEmpty())
+			bar.Separator();
 		tabbar.ContextMenu(bar);
 	}
 	bar.Execute();
 }
 
-void DockCont::TabClosed(Value v)
+void DockCont::TabClosed0(Value v)
 {
 	if (IsDockCont(v)) {
 		DockCont *c = ContCast(v);
@@ -396,9 +398,23 @@ void DockCont::TabClosed(Value v)
 		c->WhenState();		
 	}
 	waitsync = true;
+}
+
+void DockCont::TabClosed(Value v)
+{
+	TabClosed0(v);
 	Layout();
 	if (tabbar.GetCount() == 1) 
 		RefreshLayout();
+}
+
+void DockCont::TabsClosed(Vector<Value> vv)
+{
+	for (int i = vv.GetCount()-1; i >= 0 ; --i)
+		TabClosed0(vv[i]);
+	Layout();
+	if (tabbar.GetCount() == 1) 
+		RefreshLayout();	
 }
 
 void DockCont::SortTabs(bool b)
@@ -905,7 +921,7 @@ DockCont::DockCont()
 	tabbar.AutoHideMin(1);
 	tabbar<<= THISBACK(TabSelected);
 	tabbar.WhenClose 		= THISBACK(TabClosed);
-	tabbar.WhenCloseAll		= THISBACK(RefreshLayout);
+	tabbar.WhenCloseSome	= THISBACK(TabsClosed);
 	tabbar.SetBottom();	
 
 	WhenClose 				= THISBACK(CloseAll);

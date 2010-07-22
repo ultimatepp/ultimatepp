@@ -43,10 +43,7 @@ Size DockTabBar::GetStdSize(const Tab &t)
 
 void DockTabBar::RightDown(Point p, dword keyflags)
 {
-	if (GetHighlight() >= 0) 
-		WhenContext(GetHighlight());	
-	else 
-		TabBar::RightDown(p, keyflags);
+	WhenContext(GetHighlight());	
 }
 
 void DockTabBar::LeftDrag(Point p, dword keyflags)

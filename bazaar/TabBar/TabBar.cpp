@@ -325,20 +325,28 @@ TabBar::TabBar()
 
 void TabBar::CloseAll(int exception)
 {
-	Vector<Value>vv;
+	Vector<Value> vv;
 	for(int i = 0; i < tabs.GetCount(); i++)
 		if(i != exception)
 			vv.Add(tabs[i].key);
-	if (CancelCloseAll() || CancelCloseSome(Vector<Value>(vv,0))) return;
-	WhenCloseAll();
-	WhenCloseSome(vv);
+		
+	if (exception < 0 && CancelCloseAll())
+		return;
+	else if (exception >= 0 && CancelCloseSome(Vector<Value>(vv,0))) 
+		return;
+	
 	for(int i = tabs.GetCount() - 1; i >= 0; i--)
 		if(i != exception)
 			tabs.Remove(i);
 
+	SetCursor(0);
+	if (exception >= 0)
+		WhenCloseSome(vv);
+	else
+		WhenCloseAll();
+
 	MakeGroups();
 	Repos();
-	SetCursor(0);
 	Refresh();
 }
 
@@ -365,9 +373,16 @@ void TabBar::ContextMenu(Bar& bar)
 		if(i == 0 && cnt > 1)
 			bar.Separator();
 	}
-	bar.Separator();
-
-	bar.Add(t_("Close others"), THISBACK1(CloseAll, highlight));
+	bool sep = true;
+	if (highlight >= 0) {
+		bar.Separator();
+		sep = false;
+		bar.Add(t_("Close others"), THISBACK1(CloseAll, highlight));
+	}
+	if (mintabcount <= 0) {
+		if (sep) bar.Separator();
+		bar.Add(t_("Close all"), THISBACK1(CloseAll, -1));
+	}
 }
 
 void TabBar::GroupMenu(Bar &bar, int n)
@@ -1070,7 +1085,7 @@ int TabBar::InsertKey0(int ix, const Value &key, const Value &value, Image icon,
 	t.key = key;
 	t.img = icon;
 	t.id = GetNextId();
-	t.group = group;	
+	t.group = Nvl(TrimBoth(group), "Unnamed Group");	
 	if (stacking) {
 		t.stackid = GetStackId(t);
 		
