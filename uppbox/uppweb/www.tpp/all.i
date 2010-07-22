@@ -294,6 +294,10 @@ TOPIC("tutoring$en-us")
 #include "tutoring$en-us.tppi"
 END_TOPIC
 
+TOPIC("tutoring$es-es")
+#include "tutoring$es-es.tppi"
+END_TOPIC
+
 TOPIC("tutoringmanual$en-us")
 #include "tutoringmanual$en-us.tppi"
 END_TOPIC
