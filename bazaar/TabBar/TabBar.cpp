@@ -374,10 +374,10 @@ void TabBar::ContextMenu(Bar& bar)
 			bar.Separator();
 	}
 	bool sep = true;
-	if (highlight >= 0) {
+	if (GetCursor() >= 0) {
 		bar.Separator();
 		sep = false;
-		bar.Add(t_("Close others"), THISBACK1(CloseAll, highlight));
+		bar.Add(t_("Close others"), THISBACK1(CloseAll, GetCursor()));
 	}
 	if (mintabcount <= 0) {
 		if (sep) bar.Separator();
