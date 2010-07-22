@@ -771,12 +771,12 @@ para realizar grandes proyectos en C`+`+]&]
 ::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 Tutorial 
 GUI]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparaciones]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Visión general]]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Visión general]&]
+[s0;i150;O0;%% [^topic`:`/`/uppweb`/www`/tutoring`$es`-es^2 Plan de 
+Tutoría ][*/^topic`:`/`/uppweb`/www`/tutoring`$es`-es^2 (Nuevo)]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r8/25t/25b/25R(165) [s0;>@(114)2 ]
-::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Visión 
-General]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentación]&]
+::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentación]&]
 [s0;i150;O0; [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Ejemplos]&]
 [s0;i150;O0; [^topic`:`/`/uppweb`/www`/comparison`$en`-us^2 Comparaciones]]
 ::r0/25t0/15b0/15R0-1 [s0;%- ]
