@@ -33,8 +33,5 @@ file
 	plugin/bsadditional.cpp,
 	plugin/bsdiff.cpp,
 	plugin/bspatch.cpp,
-	plugin/Credits.txt,
-	Xmlize2 readonly separator,
-	Xmlize2.cpp,
-	Xmlize2.h;
+	plugin/Credits.txt;
 

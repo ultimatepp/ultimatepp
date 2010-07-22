@@ -158,6 +158,17 @@ bool FileStrAppend(const char *file, const char *str) {
 }
 bool AppendFile(const char *file, const char *str) {return FileStrAppend(file, str);};
 
+String AppendFileName(const String& path1, const char *path2, const char *path3) {
+	String result = path1;
+	if(result.GetLength() && *result.Last() != DIR_SEP && *path2 != DIR_SEP)
+		result += DIR_SEP;
+	result += path2;
+	if(result.GetLength() && *result.Last() != DIR_SEP && *path3 != DIR_SEP)
+		result += DIR_SEP;
+	result += path3; 
+	return result;
+}
+
 String FormatLong(long a) { 
 	return Sprintf("%ld", a);
 }
@@ -734,9 +745,7 @@ int ReverseFind(const String& s, const String& toFind, int from) {
 const char *StrToTime(struct Upp::Time& d, const char *s) {
 	s = StrToDate(d, s);
 
-	d.hour = 0;
-	d.minute = 0;
-	d.second = 0;
+	d.hour = d.minute = d.second = 0;
 
 	const char *fmt = "hms";
 
@@ -1567,7 +1576,7 @@ void FileDiffArray::Clear()
 }
 
 // True if equal
-bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary)
+bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom, Array<String> &excepFolders, Array<String> &excepFiles)
 {
 	if (master.GetCount() == 0) {
 		if (secondary.GetCount() == 0)
@@ -1583,61 +1592,107 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary)
 	secReviewed.SetCount(secondary.GetCount(), false);
 	
 	for (int i = 0; i < master.GetCount(); ++i) {
-		int idSec = secondary.Find(master, i);
-		if (idSec >= 0) {
-			bool useId = master.UseId() && secondary.UseId();
-			secReviewed[idSec] = true;
-			if (master[i].isFolder) 
-				;
-			else if ((useId && (master[i].id == secondary[idSec].id)) ||
-					 (!useId && (master[i].length == secondary[idSec].length) && (master[i].t == secondary[idSec].t)))
-				;
-			else {
+		bool cont = true;
+		if (master[i].isFolder) {
+			String fullfolder = AppendFileName(AppendFileName(folderFrom, master[i].relFilename), master[i].fileName);
+			for (int iex = 0; iex < excepFolders.GetCount(); ++iex)
+				if (PatternMatch(excepFolders[iex], fullfolder)) {
+					cont = false;
+					break;
+				}
+		} else {
+			String fullfolder = AppendFileName(folderFrom, master[i].relFilename);
+			for (int iex = 0; iex < excepFolders.GetCount(); ++iex)
+				if (PatternMatch(excepFolders[iex], fullfolder)) {
+					cont = false;
+					break;
+				}
+			for (int iex = 0; iex < excepFiles.GetCount(); ++iex)
+				if (PatternMatch(excepFiles[iex], master[i].fileName)) {
+					cont = false;
+					break;
+				}
+		}		
+		if (cont) {		
+			int idSec = secondary.Find(master, i);
+			if (idSec >= 0) {
+				bool useId = master.UseId() && secondary.UseId();
+				secReviewed[idSec] = true;
+				if (master[i].isFolder) 
+					;
+				else if ((useId && (master[i].id == secondary[idSec].id)) ||
+						 (!useId && (master[i].length == secondary[idSec].length) && (master[i].t == secondary[idSec].t)))
+					;
+				else {
+					equal = false;
+					FileDiff &f = diffList.Add();
+					bool isf = f.isFolder = master[i].isFolder;
+					f.relPath = master[i].relFilename;
+					String name = f.fileName = master[i].fileName;
+					f.idMaster = master[i].id;
+					f.idSecondary = secondary[idSec].id;
+					f.tMaster = master[i].t;
+					f.tSecondary = secondary[idSec].t;
+					f.lengthMaster = master[i].length;
+					f.lengthSecondary = secondary[idSec].length;
+					if (master[i].t >= secondary[idSec].t)
+						f.action = 'u';
+					else
+						f.action = 'p';
+				}
+			} else {
 				equal = false;
 				FileDiff &f = diffList.Add();
-				bool isf = f.isFolder = master[i].isFolder;
+				f.isFolder = master[i].isFolder;
 				f.relPath = master[i].relFilename;
-				String name = f.fileName = master[i].fileName;
+				f.fileName = master[i].fileName;
 				f.idMaster = master[i].id;
-				f.idSecondary = secondary[idSec].id;
+				f.idSecondary = 0;
 				f.tMaster = master[i].t;
-				f.tSecondary = secondary[idSec].t;
+				f.tSecondary = Null;
 				f.lengthMaster = master[i].length;
-				f.lengthSecondary = secondary[idSec].length;
-				if (master[i].t >= secondary[idSec].t)
-					f.action = 'u';
-				else
-					f.action = 'p';
-			}
-		} else {
-			equal = false;
-			FileDiff &f = diffList.Add();
-			f.isFolder = master[i].isFolder;
-			f.relPath = master[i].relFilename;
-			f.fileName = master[i].fileName;
-			f.idMaster = master[i].id;
-			f.idSecondary = 0;
-			f.tMaster = master[i].t;
-			f.tSecondary = Null;
-			f.lengthMaster = master[i].length;
-			f.lengthSecondary = 0;
-			f.action = 'n';
-		}	
+				f.lengthSecondary = 0;
+				f.action = 'n';
+			}	
+		}
 	}
 	for (int i = 0; i < secReviewed.GetCount(); ++i) {
 		if (!secReviewed[i]) {
-			equal = false;
-			FileDiff &f = diffList.Add();
-			f.isFolder = secondary[i].isFolder;
-			f.relPath = secondary[i].relFilename;
-			f.fileName = secondary[i].fileName;
-			f.idMaster = 0;
-			f.idSecondary = secondary[i].id;
-			f.tMaster = Null;
-			f.tSecondary = secondary[i].t;
-			f.lengthMaster = 0;
-			f.lengthSecondary = secondary[i].length;
-			f.action = 'd';
+			bool cont = true;
+			if (secondary[i].isFolder) {
+				String fullfolder = AppendFileName(AppendFileName(folderFrom, secondary[i].relFilename), secondary[i].fileName);
+				for (int iex = 0; iex < excepFolders.GetCount(); ++iex)
+					if (PatternMatch(excepFolders[iex], fullfolder)) {
+						cont = false;
+						break;
+					}
+			} else {
+				String fullfolder = AppendFileName(folderFrom, secondary[i].relFilename);
+				for (int iex = 0; iex < excepFolders.GetCount(); ++iex)
+					if (PatternMatch(excepFolders[iex], fullfolder)) {
+						cont = false;
+						break;
+					}
+				for (int iex = 0; iex < excepFiles.GetCount(); ++iex)
+					if (PatternMatch(excepFiles[iex], secondary[i].fileName)) {
+						cont = false;
+						break;
+					}
+			}
+			if (cont) {
+				equal = false;
+				FileDiff &f = diffList.Add();
+				f.isFolder = secondary[i].isFolder;
+				f.relPath = secondary[i].relFilename;
+				f.fileName = secondary[i].fileName;
+				f.idMaster = 0;
+				f.idSecondary = secondary[i].id;
+				f.tMaster = Null;
+				f.tSecondary = secondary[i].t;
+				f.lengthMaster = 0;
+				f.lengthSecondary = secondary[i].length;
+				f.action = 'd';
+			}
 		}
 	}
 	return equal;
@@ -1656,8 +1711,6 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 					ok = DirectoryCreate(dest);
 			} else {
 				FileSetReadOnly(dest, false);
-				if (i == 73)
-					int k = 23;
 				ok = FileCopy(AppendFileName(fromFolder, FormatInt(i)), dest);
 			}
 			if (!ok) {

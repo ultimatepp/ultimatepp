@@ -8,7 +8,8 @@
 
 enum EXT_FILE_FLAGS {USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,
-					 DELETE_READ_ONLY = 4
+					 DELETE_READ_ONLY = 4,
+					 ASK_BEFORE_DELETE = 8
 };
 
 bool LaunchFile(const char *file);
@@ -18,8 +19,10 @@ bool FileCat(const char *file, const char *appendFile);
 bool FileStrAppend(const char *file, const char *str);
 bool AppendFile(const char *filename, const char *str);
 
+String AppendFileName(const String& path1, const char *path2, const char *path3);
+	
 /////////
-bool DirectoryExistsX(const char *path, int flags = 0);
+bool DirectoryExistsX(const char *path, int flags = 0); 
 ///////////////////////////////
 bool DirectoryDeleteX(const char *path, int flags = 0);
 bool DirectoryDeleteDeepX(const char *path, int flags = 0);
@@ -159,7 +162,7 @@ public:
 	FileDiffArray();
 	void Clear();
 	FileDiff& operator[](long i)	{return diffList[i];}
-	bool Compare(FileDataArray &master, FileDataArray &secondary);
+	bool Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom, Array<String> &excepFolders, Array<String> &excepFiles);
 	bool Apply(String toFolder, String fromFolder, int flags = 0);
 	long GetCount()				{return diffList.GetCount();};
 	bool SaveFile(const char *fileName);

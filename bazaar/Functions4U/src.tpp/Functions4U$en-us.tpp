@@ -42,6 +42,13 @@ onst]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@
 [s2; Appends at the end of [%-*@3 file] the text [%-*@3 str].&]
 [s0;l288; Returns true in case of success.&]
 [s4;%- &]
+[s5;:AppendFileName`(const String`&`,const char`*`,const char`*`):%- [_^String^ String]_
+[* AppendFileName]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 path1], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path2], [@(0.0.255) const]_[@(0.0.255) char]_`*
+[*@3 path3])&]
+[s2; Like AppendFileName() but joining three paths. &]
+[s3; &]
+[s4;%- &]
 [s5;:GetUpperFolder`(String`):%- [_^String^ String]_[* GetUpperFolder]([_^String^ String]_[*@3 f
 olderName])&]
 [s2; Returns the name of the folder over [%-*@3 folderName].&]
@@ -1479,9 +1486,13 @@ mg], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
 ]_[*@3 img])&]
 [s2; Returns image [%-*@3 img].rotated 180º.&]
 [s3; &]
-[s0; &]
+[s4; &]
+[s5;:GetRect`(const Image`&`,const Rect`&`):%- [_^Image^ Image]_[* GetRect]([@(0.0.255) con
+st]_[_^Image^ Image][@(0.0.255) `&]_[*@3 orig], [@(0.0.255) const]_[_^Rect^ Rect]_`&[*@3 r])&]
+[s2; Returns a subimage inside [%-*@3 orig] defined by rectangle [%-*@3 r].&]
+[s3; &]
 [ {{10000@1 [s0; [* Other functions]]}}&]
-[s4;%- &]
+[s4; &]
 [s5;:DayOfYear`(Date`):%- [@(0.0.255) int]_[* DayOfYear]([_^Date^ Date]_[*@3 d])&]
 [s2; Returns the number of days from 1st of January to [%-*@3 d].&]
 [s3; &]

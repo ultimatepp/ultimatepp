@@ -12,6 +12,7 @@ inline RGBA *GetPixel(ImageBuffer &img, int x, int y) {
 }
 
 Image Rotate180(const Image& img);
+Image GetRect(const Image& orig, const Rect &r);
 
 Drawing DrawEquation(String str);
 QtfRichObject QtfEquation(String str);

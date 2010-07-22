@@ -14,6 +14,23 @@ Image Rotate180(const Image& orig) {
 	return dest;
 }
 
+Image GetRect(const Image& orig, const Rect &r) {
+	if(r.IsEmpty())
+		return Image();
+	ImageBuffer ib(r.GetSize());
+	for(int y = r.top; y < r.bottom; y++) {
+		const RGBA *s = orig[y] + r.left;
+		const RGBA *e = orig[y] + r.right;
+		RGBA *t = ib[y - r.top];
+		while(s < e) {
+			*t = *s;
+			t++;
+			s++;
+		}
+	}
+	return ib;
+}
+
 Image NativePathIconX(const char *path, bool folder, int flags)
 {
 	if (!(flags & BROWSE_LINKS))

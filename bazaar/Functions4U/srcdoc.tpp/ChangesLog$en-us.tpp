@@ -4,7 +4,10 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/06/10]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/06/22]]
+:: [s0;# [2 Added AppendFileName (with more than two args) and GetRect 
+to get a subimage inside an Image.]]
+:: [s0;# [2 2010/06/10]]
 :: [s0;# [2 Added GatherTpp class to convert tpp into pdf and html.]]
 :: [s0;# [2 2010/06/03]]
 :: [s0;# [2 Added Svg colors.]]
