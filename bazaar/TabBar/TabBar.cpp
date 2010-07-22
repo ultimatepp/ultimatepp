@@ -358,7 +358,7 @@ int TabBar::GetNextId()
 
 void TabBar::ContextMenu(Bar& bar)
 {
-	if (highlight >= 0) {
+	if (highlight >= 0 && crosses) {
 		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), THISBACK1(Close, highlight));
 		bar.Separator();
 	}
@@ -374,12 +374,12 @@ void TabBar::ContextMenu(Bar& bar)
 			bar.Separator();
 	}
 	bool sep = true;
-	if (GetCursor() >= 0) {
+	if (GetCursor() >= 0 && crosses) {
 		bar.Separator();
 		sep = false;
 		bar.Add(t_("Close others"), THISBACK1(CloseAll, GetCursor()));
 	}
-	if (mintabcount <= 0) {
+	if (mintabcount <= 0 && crosses) {
 		if (sep) bar.Separator();
 		bar.Add(t_("Close all"), THISBACK1(CloseAll, -1));
 	}
