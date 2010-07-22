@@ -44,8 +44,9 @@ private:
 
 	const Style    *style;
 	
-	DockCont       *GetContainer() const;
 	void			StopHighlight() 				{ Refresh(); }
+protected:
+	DockCont       *GetContainer() const;
 public:
 	Callback1<Bar&> WhenMenuBar;
 	Callback		WhenState;
