@@ -899,7 +899,7 @@ DockCont::DockCont()
 	BackPaint();
 	NoCenter().Sizeable(true).MaximizeBox(false).MinimizeBox(false);
 
-	tabbar.SortTabValues(StdValueOrder());
+	tabbar.SortTabValues(Single<StdValueOrder>());
 	tabbar.SortTabs(false);
 
 	tabbar.AutoHideMin(1);
