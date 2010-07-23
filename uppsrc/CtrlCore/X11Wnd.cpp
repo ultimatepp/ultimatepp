@@ -141,17 +141,15 @@ Ctrl *Ctrl::GetParentWindowCtrl(void) const
 Rect Ctrl::GetRectInParentWindow(void) const
 {
 	GuiLock __;
-	Rect r = GetRect();
+	Rect r = GetScreenRect();
 	Ctrl *q = parent;
-	while(q)
-  	{
-		if(q->top)
-			break;
-		r += q->GetRect().TopLeft() + q->GetView().TopLeft();
+	while(q && !q->top)
 		q = q->parent;
-	}
 	if(q)
-		r += q->GetView().TopLeft();
+	{
+		Rect pr = q->GetScreenRect();
+		r -= pr.TopLeft();
+	}
 	return r;
 }
 // 01/12/2007 - END
