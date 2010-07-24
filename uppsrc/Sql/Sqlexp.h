@@ -319,6 +319,8 @@ SqlBool        operator>(const SqlVal& a, const SqlVal& b);
 SqlBool        operator==(const SqlVal& a, const SqlVal& b);
 SqlBool        operator!=(const SqlVal& a, const SqlVal& b);
 
+SqlBool        IsSame(const SqlVal& a, const SqlVal& b);
+
 SqlBool        operator||(const SqlBool& a, const SqlBool& b);
 SqlBool        operator&&(const SqlBool& a, const SqlBool& b);
 SqlBool        operator- (const SqlBool& a, const SqlBool& b);

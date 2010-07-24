@@ -49,6 +49,11 @@ SqlBool operator!=(const SqlVal& a, const SqlVal& b) {
 
 }
 
+SqlBool IsSame(const SqlVal& a, const SqlVal& b)
+{
+	return SqlBool(a, SqlCase(MY_SQL, "<=>")(" is not distinct from "), b, SqlS::COMP);
+}
+
 SqlBool operator&&(const SqlBool& a, const SqlBool& b) {
 	if(a.IsEmpty() || a.IsTrue())  return b;
 	if(b.IsEmpty() || b.IsTrue())  return a;
@@ -86,7 +91,6 @@ SqlBool SqlFirstRow() {
 }
 
 SqlBool Like(const SqlVal& a, const SqlVal& b, bool cs) {
-
 	return SqlBool(a, SqlCase
 			(MY_SQL, " like binary ")
 			(PGSQL, cs ? " like " : " ilike ")

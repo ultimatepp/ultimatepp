@@ -2369,6 +2369,9 @@ void ArrayCtrl::SerializeSettings(Stream& s)
 		DoColumnSort();
 }
 
+void ArrayCtrl::Serialize(Stream& s)
+{
+}
 
 void ArrayCtrl::Reset() {
 	header.Reset();

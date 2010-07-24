@@ -35,6 +35,7 @@ public:
 	virtual void  LostFocus();
 	virtual void  ChildGotFocus();
 	virtual void  ChildLostFocus();
+	virtual void  Serialize(Stream& s);
 
 public:
 	struct IdInfo {

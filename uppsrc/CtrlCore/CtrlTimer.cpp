@@ -80,16 +80,12 @@ void Ctrl::TimerProc(dword time)
 		return;
 	sTimerLock.Enter();
 	TimeEvent *list = tevents();
-	if(sTClick > time)
-		for(TimeEvent *e = list->GetNext(); e != list; e = e->GetNext())
-			if(e->time > 0x80000000)
-				e->time = 0;
 	sTClick = time;
 	sTimerLock.Leave();
 	Ctrl::CheckMouseCtrl();
 	Ctrl::SyncCaret();
 	sTimerLock.Enter();
-	while(list->GetNext() != list && list->GetNext()->time < time) {
+	while(list->GetNext() != list && ((int)(time - list->GetNext()->time)) > 0) {
 		TimeEvent *e = list->GetNext();
 		e->Unlink();
 		if(e->delay < 0)
