@@ -124,8 +124,8 @@ bool ToolTipHook(Ctrl *ctrl, bool inframe, int event, Point p, int zdelta, dword
 
 bool ToolTipStateHook(Ctrl *ctrl, int reason)
 {
-	if((reason == Ctrl::CLOSE || reason == Ctrl::ENABLE) && ctrl != &AppToolTip() &&
-	   AppToolTip().IsOpen()) {
+	if((reason == Ctrl::CLOSE || reason == Ctrl::ENABLE || reason == Ctrl::DEACTIVATE)
+	   && ctrl != &AppToolTip() && AppToolTip().IsOpen()) {
 		LLOG("ToolTipStateHook -> close, reason: " << reason);
 		CloseToolTip();
 		EndShowMode();

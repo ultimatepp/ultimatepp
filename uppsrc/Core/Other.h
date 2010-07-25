@@ -245,33 +245,33 @@ void Mitor<T>::Shrink()
 template <class T, int N = 1>
 class Link {
 protected:
-	T *prev[N];
-	T *next[N];
+	T *link_prev[N];
+	T *link_next[N];
 
-	void LPN(int i)                      { prev[i]->next[i] = next[i]->prev[i] = (T *)this; }
+	void LPN(int i)                      { link_prev[i]->link_next[i] = link_next[i]->link_prev[i] = (T *)this; }
 
 public:
 	T       *GetPtr()                    { return (T *) this; }
 	const T *GetPtr() const              { return (const T *) this; }
-	T       *GetNext(int i = 0)          { return next[i]; }
-	T       *GetPrev(int i = 0)          { return prev[i]; }
-	const T *GetNext(int i = 0) const    { return next[i]; }
-	const T *GetPrev(int i = 0) const    { return prev[i]; }
+	T       *GetNext(int i = 0)          { return link_next[i]; }
+	T       *GetPrev(int i = 0)          { return link_prev[i]; }
+	const T *GetNext(int i = 0) const    { return link_next[i]; }
+	const T *GetPrev(int i = 0) const    { return link_prev[i]; }
 
-	void LinkSelf(int i = 0)             { next[i] = prev[i] = (T *)this; }
+	void LinkSelf(int i = 0)             { link_next[i] = link_prev[i] = (T *)this; }
 	void LinkSelfAll()                   { for(int i = 0; i < N; i++) LinkSelf(i); }
-	void Unlink(int i = 0)               { next[i]->prev[i] = prev[i]; prev[i]->next[i] = next[i];
+	void Unlink(int i = 0)               { link_next[i]->link_prev[i] = link_prev[i]; link_prev[i]->link_next[i] = link_next[i];
 	                                       LinkSelf(i); }
 	void UnlinkAll()                     { for(int i = 0; i < N; i++) Unlink(i); }
-	void LinkBefore(Link *n, int i = 0)  { next[i] = (T *)n; prev[i] = next[i]->prev[i]; LPN(i); }
-	void LinkAfter(Link *p, int i = 0)   { prev[i] = (T *)p; next[i] = prev[i]->next[i]; LPN(i); }
+	void LinkBefore(Link *n, int i = 0)  { link_next[i] = (T *)n; link_prev[i] = link_next[i]->link_prev[i]; LPN(i); }
+	void LinkAfter(Link *p, int i = 0)   { link_prev[i] = (T *)p; link_next[i] = link_prev[i]->link_next[i]; LPN(i); }
 
 	T   *InsertNext(int i = 0)           { T *x = new T; x->LinkAfter(this, i); return x; }
 	T   *InsertPrev(int i = 0)           { T *x = new T; x->LinkBefore(this, i); return x; }
 
-	void DeleteList(int i = 0)           { while(next[i] != GetPtr()) delete next[i]; }
+	void DeleteList(int i = 0)           { while(link_next[i] != GetPtr()) delete link_next[i]; }
 
-	bool InList(int i = 0) const         { return next[i] != GetPtr(); }
+	bool InList(int i = 0) const         { return link_next[i] != GetPtr(); }
 	bool IsEmpty(int i = 0) const        { return !InList(i); }
 
 	Link()                               { LinkSelfAll(); }

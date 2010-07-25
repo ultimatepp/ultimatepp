@@ -283,6 +283,7 @@ struct AssistEditor : CodeEditor {
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void SelectionChanged();
 	virtual void DirtyFrom(int line);
+	virtual void State(int reason);
 
 	struct IndexItem : Moveable<IndexItem> {
 		String text;
