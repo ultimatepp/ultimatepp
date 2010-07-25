@@ -3,37 +3,40 @@
 void AssistEditor::SyncParamInfo()
 {
 	String qtf;
+	Ctrl *p = GetTopCtrl();
 	int mpar = INT_MAX;
 	int pos = 0;
-	for(int q = 0; q < PARAMN; q++) {
-		ParamInfo& m = param[q];
-		int i = GetCursorLine();
-		if(m.line >= 0 && m.line < GetLineCount() && i >= m.line && i < m.line + 10
-		   && m.editfile == theide->editfile && GetWLine(m.line).StartsWith(m.test)) {
-			int c = GetCursor();
-			i = GetPos(m.line) + m.test.GetCount();
-			if(c >= i) {
-				int par = 0;
-				int pari = 0;
-				for(;;) {
-					int ch = Ch(i++);
-					if(i > c) {
-						if(par < mpar) {
-							qtf = "[A1  " + DecoratedItem(m.item.name, m.item, m.item.natural, pari);
-							mpar = par;
-							pos = m.pos;
-						}
-						break;
-					}
-					if(ch == ')') {
-						if(par <= 0)
+	if(p && p->HasFocusDeep()) {
+		for(int q = 0; q < PARAMN; q++) {
+			ParamInfo& m = param[q];
+			int i = GetCursorLine();
+			if(m.line >= 0 && m.line < GetLineCount() && i >= m.line && i < m.line + 10
+			   && m.editfile == theide->editfile && GetWLine(m.line).StartsWith(m.test)) {
+				int c = GetCursor();
+				i = GetPos(m.line) + m.test.GetCount();
+				if(c >= i) {
+					int par = 0;
+					int pari = 0;
+					for(;;) {
+						int ch = Ch(i++);
+						if(i > c) {
+							if(par < mpar) {
+								qtf = "[A1  " + DecoratedItem(m.item.name, m.item, m.item.natural, pari);
+								mpar = par;
+								pos = m.pos;
+							}
 							break;
-						par--;
+						}
+						if(ch == ')') {
+							if(par <= 0)
+								break;
+							par--;
+						}
+						if(ch == '(')
+							par++;
+						if(ch == ',' && par == 0)
+							pari++;
 					}
-					if(ch == '(')
-						par++;
-					if(ch == ',' && par == 0)
-						pari++;
 				}
 			}
 		}
@@ -75,4 +78,11 @@ void AssistEditor::StartParamInfo(const CppItem& m, int pos)
 	f.pos = pos;
 	SyncParamInfo();
 	parami = (parami + 1) % PARAMN;
+}
+
+void AssistEditor::State(int reason)
+{
+	if(reason == FOCUS)
+		SyncParamInfo();
+	CodeEditor::State(reason);
 }

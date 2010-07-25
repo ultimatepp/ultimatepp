@@ -94,7 +94,7 @@ public:
 	virtual ~LabelBase();
 };
 
-class DisplayPopup : Ctrl {
+class DisplayPopup : public Ctrl, public Link<DisplayPopup> {
 	virtual void  Paint(Draw& w);
 	virtual void  LeftDown(Point p, dword);
 	virtual void  LeftDrag(Point p, dword);
@@ -119,6 +119,9 @@ private:
 	Point   Op(Point p);
 	void    Sync();
 
+	static Link<DisplayPopup> all[1];
+	static bool StateHook(Ctrl *, int reason);
+
 public:
 	void Set(Ctrl *ctrl, const Rect& item, const Value& v, const Display *display,
 	         Color ink, Color paper, dword style, int margin = 0);
@@ -127,4 +130,5 @@ public:
 	bool HasMouse();
 
 	DisplayPopup();
+	~DisplayPopup();
 };

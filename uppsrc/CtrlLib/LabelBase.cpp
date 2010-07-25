@@ -470,29 +470,52 @@ DisplayPopup::DisplayPopup()
 	style = 0;
 	item = slim = Null;
 	margin = 0;
+	ONCELOCK {
+		InstallStateHook(StateHook);
+	}
+	LinkBefore(all);
+}
+
+DisplayPopup::~DisplayPopup()
+{
+	Unlink();
 }
 
 void DisplayPopup::Sync()
 {
-	Refresh();
 	if(display && ctrl && !ctrl->IsDragAndDropTarget() && !IsDragAndDropTarget()) {
-		Size sz = display->GetStdSize(value);
-		if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
-			Rect wa = GetWorkArea();
-			slim = item + ctrl->GetScreenView().TopLeft();
-			Rect r = item;
-			r.right = max(r.right, r.left + sz.cx + 2 * margin);
-			r.bottom = max(r.bottom, r.top + sz.cy);
-			r.Inflate(1, 1);
-			r.Offset(ctrl->GetScreenView().TopLeft());
-			SetRect(r);
-			if(!IsOpen())
-				Ctrl::PopUp(ctrl, true, false, false);
-			return;
+		Ctrl *top = ctrl->GetTopCtrl();
+		if(top && top->HasFocusDeep()) {
+			Size sz = display->GetStdSize(value);
+			Ctrl *top = ctrl->GetTopWindow();
+			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
+				Rect wa = GetWorkArea();
+				slim = item + ctrl->GetScreenView().TopLeft();
+				Rect r = item;
+				r.right = max(r.right, r.left + sz.cx + 2 * margin);
+				r.bottom = max(r.bottom, r.top + sz.cy);
+				r.Inflate(1, 1);
+				r.Offset(ctrl->GetScreenView().TopLeft());
+				SetRect(r);
+				if(!IsOpen())
+					Ctrl::PopUp(ctrl, true, false, false);
+				Refresh();
+				return;
+			}
 		}
 	}
 	if(IsOpen())
 		Close();
+}
+
+Link<DisplayPopup> DisplayPopup::all[1];
+
+bool DisplayPopup::StateHook(Ctrl *, int reason)
+{
+	if(reason == FOCUS)
+		for(DisplayPopup *p = all->Link<DisplayPopup>::GetNext(); p != all; p = p->Link<DisplayPopup>::GetNext())
+			p->Sync();
+	return false;
 }
 
 void DisplayPopup::Cancel()
