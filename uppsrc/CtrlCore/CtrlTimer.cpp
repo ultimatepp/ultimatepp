@@ -28,7 +28,7 @@ static TimeEvent *tevents() {
 static void sTimeCallback(dword time, int delay, Callback cb, void *id) {
 	TimeEvent *list = tevents();
 	TimeEvent *e;
-	for(e = list->GetNext(); e != list && time >= e->time; e = e->GetNext());
+	for(e = list->GetNext(); e != list && ((int)(time - e->time) >= 0); e = e->GetNext());
 	TimeEvent *ne = e->InsertPrev();
 	ne->time = time;
 	ne->cb = cb;
