@@ -57,7 +57,7 @@ private:
 private:
 	VectorMap<String, String> symbols;
 };
-
+/*
 #ifdef _GridCtrl_GridCtrl_h_
 Vector<Value> ReadCol(GridCtrl& grid, int col, int begin, int end);
 Vector<Vector<Value> > GetGridData(GridCtrl& grid);
@@ -68,6 +68,6 @@ template <> void Xmlize(XmlIO xml, GridCtrl& r);
 END_UPP_NAMESPACE
 
 #endif
-
+*/
 #endif
 #endif
