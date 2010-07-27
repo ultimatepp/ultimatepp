@@ -236,7 +236,7 @@ struct sReadFields : public FieldOperator {
 	Sql *sql;
 
 	void Field(const char *name, Ref f) {
-		f = (*sql)[SqlId(name)];
+		sql->GetColumn(SqlId(name), f);
 	}
 };
 
@@ -260,6 +260,17 @@ int  Sql::GetColumns() const {
 
 void Sql::GetColumn(int i, Ref r) const {
 	cn->GetColumn(i, r);
+}
+
+void Sql::GetColumn(SqlId colid, Ref r) const
+{
+	String s = ~colid;
+	for(int i = 0; i < cn->info.GetCount(); i++)
+		if(cn->info[i].name == s) {
+			GetColumn(i, r);
+			return;
+		}
+	r.SetNull();
 }
 
 Value Sql::operator[](int i) const {

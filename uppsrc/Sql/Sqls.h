@@ -134,6 +134,7 @@ public:
 	int    GetColumns() const;
 
 	void   GetColumn(int i, Ref r) const;
+	void   GetColumn(SqlId colid, Ref r) const;
 	Value  operator[](int i) const;
 	Value  operator[](SqlId colid) const;
 	const SqlColumnInfo& GetColumnInfo(int i) const    { return cn->info[i]; }

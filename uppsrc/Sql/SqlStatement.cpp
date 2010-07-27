@@ -295,6 +295,11 @@ void SqlUpdate::Column(SqlId column, SqlVal val) {
 	set.Cat(SqlVal(SqlVal(column), " = ", val, SqlS::COMP));
 }
 
+void SqlUpdate::Column(const SqlSet& cols, const SqlSet& val)
+{
+	set.Cat(SqlVal(SqlS(cols(), SqlS::HIGH), " = ", SqlS(val(), SqlS::HIGH), SqlS::COMP));
+}
+
 // ------------------------------------
 // deprecated
 
