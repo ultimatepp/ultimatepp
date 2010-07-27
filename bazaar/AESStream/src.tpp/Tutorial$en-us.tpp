@@ -37,6 +37,8 @@ were chosen.&]
 and installed] under TheIDE (please [^topic`:`/`/AESStream`/src`/Installing`_OpenSSL`$en`-us^ l
 ook here] to see how to do it).&]
 [s0; &]
+[s0; SHA`-2 functions reference are also included [^topic`:`/`/AESStream`/src`/Sha`$en`-us^ h
+ere].&]
 [s2; &]
 [s2; 1. Encryption&]
 [s5;#i150;O1; Creating cryptographically stable encryption key. Key 
@@ -168,6 +170,4 @@ as static library.&]
 [s0; If you have any information on issues or any comments, please 
 feel free to write [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&th`=4640`&start`=0`&^ h
 ere].&]
-[s0; &]
-[s0; &]
-[s0; This page in Russian [^topic`:`/`/AESStream`/src`/Tutorial`$ru`-ru^ here]]
+[s0; ]

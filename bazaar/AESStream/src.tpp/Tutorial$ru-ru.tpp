@@ -224,8 +224,4 @@ AESEncoderStream. Шифрованные байты точно
 по их решению, либо о других проблемах 
 в пакете, пожалуйста, пишите [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&th`=4640`&start`=0`&^ с
 юда].&]
-[s0; &]
-[s0; &]
-[s0; Эта страница на английском [^topic`:`/`/AESStream`/src`/Tutorial`$en`-us^ с
-юда]&]
 [s0; ]
