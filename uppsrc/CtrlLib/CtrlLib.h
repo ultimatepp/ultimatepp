@@ -3,6 +3,10 @@
 
 #include <CtrlCore/CtrlCore.h>
 
+#ifdef Status //X11 defines this, likely name clash...
+#undef Status 
+#endif
+
 NAMESPACE_UPP
 
 #define IMAGECLASS CtrlImg
