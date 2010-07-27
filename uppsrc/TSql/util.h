@@ -61,12 +61,16 @@ void                  ForceInsert(Fields nf, Sql& cursor APPSQLCURSOR);
 void                  ForceInsert(SqlId table, Fields nf, Sql& cursor APPSQLCURSOR);
 void                  ForceUpdate(Fields nf, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
 void                  ForceUpdate(SqlId table, Fields nf, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
+void                  ForceUpdate(Fields nf, Fields of, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
+void                  ForceUpdate(SqlId table, Fields nf, Fields of, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
 void                  ForceDelete(SqlId table, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
 void                  ForceExecute(const String& s, Sql& cursor APPSQLCURSOR);
 void                  ForceSchemaInsert(Fields nf, Sql& cursor APPSQLCURSOR);
 void                  ForceSchemaInsert(SqlId table, Fields nf, Sql& cursor APPSQLCURSOR);
 void                  ForceSchemaUpdate(Fields nf, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
 void                  ForceSchemaUpdate(SqlId table, Fields nf, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
+void                  ForceSchemaUpdate(Fields nf, Fields of, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
+void                  ForceSchemaUpdate(SqlId table, Fields nf, Fields of, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
 void                  ForceSchemaDelete(SqlId table, SqlId key, const Value& keyval, Sql& cursor APPSQLCURSOR);
 
 bool                  IsNotEmpty(const SqlSelect& select, Sql& cursor APPSQLCURSOR);

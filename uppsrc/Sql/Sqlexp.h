@@ -613,7 +613,9 @@ class SqlUpdate {
 
 public:
 	void Column(SqlId column, SqlVal val);
+	void Column(const SqlSet& cols, const SqlSet& val);
 	SqlUpdate& operator()(SqlId column, SqlVal val)  { Column(column, val); return *this; }
+	SqlUpdate& operator()(const SqlSet& cols, const SqlSet& val) { Column(cols, val); return *this; }
 	SqlUpdate& operator()(Fields f);
 	SqlUpdate& Where(SqlBool w)                      { where = w; return *this; }
 

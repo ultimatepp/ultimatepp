@@ -377,6 +377,24 @@ void ForceUpdate(SqlId table, Fields nf, SqlId key, const Value& keyval, Sql& cu
 	cursor & helper.Get(table).Where(key == keyval);
 }
 
+void ForceUpdate(Fields nf, Fields of, SqlId key, const Value& keyval, Sql& cursor)
+{
+	ForceUpdate(SqlId(), nf, of, key, keyval, cursor);
+}
+
+void ForceUpdate(SqlId table, Fields nf, Fields of, SqlId key, const Value& keyval, Sql& cursor)
+{
+	String tbl;
+	VectorMap<Id, Value> nmap = GetValueMap(nf, &tbl);
+	VectorMap<Id, Value> omap = GetValueMap(of);
+	SqlUpdate update(SqlId(Nvl(~table, tbl)));
+	for(int i = 0; i < nmap.GetCount(); i++)
+		if(nmap[i] != omap.Get(nmap.GetKey(i), Value()))
+			update(SqlId(nmap.GetKey(i)), nmap[i]);
+	if(update)
+		update.Where(key == keyval).Force(cursor);
+}
+
 void ForceDelete(SqlId table, SqlId key, const Value& keyval, Sql& cursor)
 {
 	if(!cursor.Delete(table, key, keyval))
@@ -411,6 +429,24 @@ void ForceSchemaUpdate(SqlId table, Fields nf, SqlId key, const Value& keyval, S
 	SqlUtil::UpdateColumns helper;
 	nf(helper);
 	helper.GetSchema(table).Where(key == keyval).Force(cursor);
+}
+
+void ForceSchemaUpdate(Fields nf, Fields of, SqlId key, const Value& keyval, Sql& cursor)
+{
+	ForceSchemaUpdate(SqlId(), nf, of, key, keyval, cursor);
+}
+
+void ForceSchemaUpdate(SqlId table, Fields nf, Fields of, SqlId key, const Value& keyval, Sql& cursor)
+{
+	String tbl;
+	VectorMap<Id, Value> nmap = GetValueMap(nf, &tbl);
+	VectorMap<Id, Value> omap = GetValueMap(of);
+	SqlUpdate update(SqlId(SchemaTableName(Nvl(~table, tbl))));
+	for(int i = 0; i < nmap.GetCount(); i++)
+		if(nmap[i] != omap.Get(nmap.GetKey(i), Value()))
+			update(SqlId(nmap.GetKey(i)), nmap[i]);
+	if(update)
+		update.Where(key == keyval).Force(cursor);
 }
 
 void ForceSchemaDelete(SqlId table, SqlId key, const Value& keyval, Sql& cursor)
