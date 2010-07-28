@@ -1585,7 +1585,17 @@ Value GridCtrl::GetConvertedColumn(int col, const Value &v) const
 Value GridCtrl::GetStdConvertedColumn(int col, const Value &v) const
 {
 	Value val = GetConvertedColumn(col, v);
-	return IsString(val) ? val : StdConvert().Format(val);//GetStdConvertedValue(val);
+	if(IsString(val))
+	{
+		return val;
+	}
+	else if(IsType<AttrText>(val))
+	{
+		const AttrText& t = ValueTo<AttrText>(val);
+		return t.text;
+	}
+	else
+		return StdConvert().Format(val);//GetStdConvertedValue(val);
 }
 
 String GridCtrl::GetString(Id id) const
