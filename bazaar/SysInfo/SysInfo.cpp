@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0xFFFF		// Required by MinGW
 #include "Core/Core.h"
 
 #if defined(PLATFORM_WIN32) 
@@ -228,19 +229,54 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 	
 	return true;
 }
-String GetMacAddress() {
+
+String GetMacAddressWMI() {
 	Value vmac;
 	if (!GetWMIInfo("Win32_NetworkAdapterConfiguration", "MacAddress", vmac)) 
-		return false;
+		return Null;
 	String mac = TrimBoth(vmac);	
-	if (mac.GetCount() == 17)
+	if (mac.GetCount() > 0)
 		return mac;
-	return Null;
 }
+
+#include <iphlpapi.h>
+
+String GetMacAddressIphlpapi() {
+	PIP_ADAPTER_ADDRESSES pAddresses = NULL;
+	ULONG family = AF_UNSPEC;
+	DWORD flags = GAA_FLAG_INCLUDE_PREFIX;
+	ULONG outBufLen = 0;
+	Buffer<BYTE> pBuffer;
+
+	switch (GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen)) {
+	case ERROR_BUFFER_OVERFLOW:
+		pBuffer.Alloc(outBufLen);
+		pAddresses = (PIP_ADAPTER_ADDRESSES)~pBuffer;
+		break;
+	case ERROR_NO_DATA:
+	case ERROR_INVALID_FUNCTION:
+	default:
+		return Null;
+	}
+	if (NO_ERROR != GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen)) 
+		return Null;
+	
+	int len = min((DWORD)6, pAddresses->PhysicalAddressLength);
+	return ToUpper(HexString(pAddresses->PhysicalAddress, len, 1, ':'));
+}
+
+String GetMacAddress() {
+	String ret = GetMacAddressWMI();	// Faster but less reliable
+	if (IsNull(ret))
+		return GetMacAddressIphlpapi();
+	else
+		return ret;
+}
+
 String GetHDSerial() {
 	Value vmbSerial;
 	if (!GetWMIInfo("Win32_PhysicalMedia", "SerialNumber", vmbSerial)) 
-		return false;
+		return Null;
 	String serial = TrimBoth(vmbSerial);	
 	if (serial.GetCount() > 0)
 		return serial;
@@ -409,47 +445,6 @@ String GetMacAddress() {
 /////////////////////////////////////////////////////////////////////
 // Memory Info
 
-#if defined(__MINGW32__)
-typedef struct _MEMORYSTATUSEX {
-	DWORD dwLength;
-	DWORD dwMemoryLoad;
-	DWORDLONG ullTotalPhys;
-	DWORDLONG ullAvailPhys;
-	DWORDLONG ullTotalPageFile;
-	DWORDLONG ullAvailPageFile;
-	DWORDLONG ullTotalVirtual;
-	DWORDLONG ullAvailVirtual;
-	DWORDLONG ullAvailExtendedVirtual;
-} MEMORYSTATUSEX,*LPMEMORYSTATUSEX;
-
-WINBASEAPI BOOL WINAPI GlobalMemoryStatusEx(LPMEMORYSTATUSEX);
-
-bool GetMemoryInfo(
-	int &memoryLoad, 			// percent of memory in use		
-	uint64 &totalPhys, 			// physical memory				
-	uint64 &freePhys, 			// free physical memory			
-	uint64 &totalPageFile,		// total paging file			
-	uint64 &freePageFile,		// free paging file				
-	uint64 &totalVirtual,		// total virtual memory			
-	uint64 &freeVirtual)		// free virtual memory			
-{
-	MEMORYSTATUS status;	
-	status.dwLength = sizeof (status);
-	GlobalMemoryStatus(&status);
-
-	memoryLoad          = status.dwMemoryLoad;
-	totalPhys			= status.dwTotalPhys;
-	freePhys			= status.dwAvailPhys;
-	totalPageFile		= status.dwTotalPageFile;
-	freePageFile		= status.dwAvailPageFile;
-	totalVirtual		= status.dwTotalVirtual;
-	freeVirtual	    	= status.dwAvailVirtual;
-	
-	return true;
-}
-#endif
-#ifdef COMPILER_MSC
-
 bool GetMemoryInfo(
 	int &memoryLoad, 			// percent of memory in use		
 	uint64 &totalPhys, 			// physical memory				
@@ -473,7 +468,6 @@ bool GetMemoryInfo(
 	
 	return true;
 }
-#endif
 
 
 #ifdef PLATFORM_POSIX
