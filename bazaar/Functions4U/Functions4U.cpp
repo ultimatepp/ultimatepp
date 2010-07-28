@@ -189,6 +189,15 @@ String Replace(String str, String find, String replace) {
 	return ret;
 }
 
+String Replace(String str, char find, char replace) {
+	StringBuffer ret(str);
+	for (int i = 0; i < ret.GetCount(); ++i) {
+		if (ret[i] == find)
+			ret[i] = replace;
+	}
+	return ret;
+}
+
 bool FileMoveX(const char *oldpath, const char *newpath, int flags) {
 	bool usr, grp, oth;
 	if (flags & DELETE_READ_ONLY) {

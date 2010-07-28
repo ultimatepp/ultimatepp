@@ -175,6 +175,7 @@ private:
 
 
 String Replace(String str, String find, String replace);
+String Replace(String str, char find, char replace);
 
 int ReverseFind(const String& s, const String& toFind, int from = 0);
 

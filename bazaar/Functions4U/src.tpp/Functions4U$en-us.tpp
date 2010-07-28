@@ -168,6 +168,13 @@ String [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find
 ]appears in [%-*@3 str].&]
 [s0; &]
 [s4;%- &]
+[s5;:Replace`(String`,char`,char`):%- [_^String^ String]_[* Replace]([_^String^ String]_[*@3 s
+tr], [@(0.0.255) char]_[*@3 find], [@(0.0.255) char]_[*@3 replace])&]
+[s2; Returns the resulting String obtained by replacing in [%-*@3 str] 
+char [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find 
+]appears in [%-*@3 str].&]
+[s3; &]
+[s4;%- &]
 [s5;:ReverseFind`(const String`&`,const String`&`,int`):%- [@(0.0.255) int]_[* ReverseFin
 d]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 toFind], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
