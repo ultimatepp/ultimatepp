@@ -2889,22 +2889,42 @@ bool GridCtrl::IsModified(Id id)
 Vector<Value> GridCtrl::ReadCol(int n, int start_row, int end_row) const
 {
 	Vector<Value> v;
-	int idx = hitems[n < 0 ? colidx : n].id;
-	if(start_row < 0) start_row = fixed_rows;
-	if(end_row < 0) end_row = total_rows - 1;
+	int idx = hitems[n < 0 ? colidx : n + fixed_cols].id;
+	
+	if(start_row < 0)
+		start_row = fixed_rows;
+	else
+		start_row += fixed_rows;
+	
+	if(end_row < 0)
+		end_row = total_rows - 1;
+	else
+		end_row += fixed_rows;
+	
 	for(int i = start_row; i <= end_row; i++)
 		v.Add(items[i][idx].val);
+	
 	return v;
 }
 
 Vector<Value> GridCtrl::ReadRow(int n, int start_col, int end_col) const
 {
 	Vector<Value> v;
-	int idy = vitems[n < 0 ? rowidx : n].id;
-	if(start_col < 0) start_col = fixed_cols;
-	if(end_col < 0) end_col = total_cols - 1;
+	int idy = vitems[n < 0 ? rowidx : n + fixed_rows].id;
+	
+	if(start_col < 0)
+		start_col = fixed_cols;
+	else
+		start_col += fixed_cols;
+	
+	if(end_col < 0)
+		end_col = total_cols - 1;
+	else
+		end_col += fixed_cols;
+	
 	for(int i = start_col; i <= end_col; i++)
 		v.Add(items[idy][i].val);
+	
 	return v;
 }
 
