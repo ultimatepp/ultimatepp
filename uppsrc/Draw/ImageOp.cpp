@@ -19,12 +19,16 @@ Image WithHotSpot(const Image& m, int x1, int y1)
 	return b;
 }
 
-Image CreateImage(Size sz, Color color)
+Image CreateImage(Size sz, const RGBA& rgba)
 {
 	ImageBuffer ib(sz);
-	RGBA rgba = color;
-	memsetex(ib, &rgba, sizeof(RGBA), ib.GetLength());
+	Fill(~ib, rgba, ib.GetLength());
 	return ib;
+}
+
+Image CreateImage(Size sz, Color color)
+{
+	return CreateImage(sz, (RGBA)color);
 }
 
 Size DstSrc(ImageBuffer& dest, Point& p, const Image& src, Rect& sr)
