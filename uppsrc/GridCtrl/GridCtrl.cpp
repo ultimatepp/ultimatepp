@@ -110,6 +110,7 @@ GridCtrl::GridCtrl() : holder(*this)
 	cancel_insert       = false;
 	cancel_remove       = false;
 	cancel_accept       = false;
+	cancel_duplicate    = false;
 	cancel_cursor       = false;
 	cancel_move         = false;
 
@@ -6609,7 +6610,7 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 			oldcur.x = oldcur.y = -1;
 		}
 		
-		if(removed)
+		if(whens && removed)
 			WhenRemovedRow();
 	}
 
@@ -6704,7 +6705,7 @@ int GridCtrl::Append0(int cnt, int size, bool refresh)
 	return total_rows - fixed_rows;
 }
 
-void GridCtrl::Duplicate0(int row, int cnt, bool recalc, bool refresh)
+bool GridCtrl::Duplicate0(int row, int cnt, bool recalc, bool refresh)
 {
 	int id;
 	int nrow = row + cnt;
@@ -6724,6 +6725,8 @@ void GridCtrl::Duplicate0(int row, int cnt, bool recalc, bool refresh)
 	ItemRect ir;
 	vitems.Insert(nrow, ir, cnt);
 	items.InsertN(id, cnt);
+	
+	int duplicated = 0;
 
 	for(int i = 0; i < cnt; i++)
 	{
@@ -6742,6 +6745,16 @@ void GridCtrl::Duplicate0(int row, int cnt, bool recalc, bool refresh)
 		rowidx = r;
 		total_rows++;
 		WhenCreateRow();
+		
+		duplicated++;
+		WhenDuplicateRow();		
+		if(cancel_duplicate)
+		{
+			duplicated--;
+			Remove0(r, 1, false, false, false);
+			cancel_duplicate = false;
+		}
+		
 	}
 
 	firstRow = -1;
@@ -6760,8 +6773,13 @@ void GridCtrl::Duplicate0(int row, int cnt, bool recalc, bool refresh)
 		}
 	}
 
-	row_order = true;
-	SetModify();
+	if(duplicated > 0)
+	{
+		row_order = true;
+		SetModify();
+	}
+	
+	return duplicated > 0;
 }
 
 int GridCtrl::Append(int cnt, bool refresh, int height)
@@ -7126,19 +7144,22 @@ void GridCtrl::DoDuplicate0()
 	{
 		if(!valid_cursor)
 			return;
-		cy = curpos.y + 1;
-		Duplicate0(curpos.y);
+		cy = curpos.y + 1;		
+		if(!Duplicate0(curpos.y, 1, false, false))
+			cy = 0;
 	}
 	else if(!multi_select)
 	{
 		cy = GetMinRowSelected() + selected_rows * 2 - 1;
-		Duplicate0(GetMinRowSelected(), selected_rows);
+		if(!Duplicate0(GetMinRowSelected(), selected_rows, false, false))
+			cy = 0;
 	}
-
-	WhenDuplicateRow();
-
+	
 	if(cy > 0)
-		SetCursor0(curpos.x < 0 ? firstVisCol : curpos.x, max(fixed_rows, min(total_rows - 1, cy)));	
+	{
+		Repaint(false, true);
+		SetCursor0(curpos.x < 0 ? firstVisCol : curpos.x, max(fixed_rows, min(total_rows - 1, cy)));
+	}
 }
 
 void GridCtrl::DoRemove()
