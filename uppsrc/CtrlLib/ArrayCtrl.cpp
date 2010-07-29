@@ -1272,7 +1272,6 @@ bool ArrayCtrl::SetCursor(int i)
 	return SetCursor0(i);
 }
 
-
 void ArrayCtrl::ShowAppendLine() {
 	sb.ScrollInto(GetTotalCy(), GetLineCy());
 }

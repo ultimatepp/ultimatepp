@@ -1,3 +1,4 @@
+Image CreateImage(Size sz, const RGBA& rgba);
 Image CreateImage(Size sz, Color color);
 Image SetColorKeepAlpha(const Image& img, Color c);
 
