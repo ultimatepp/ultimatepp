@@ -903,6 +903,7 @@ class GridCtrl : public Ctrl
 		bool cancel_insert:1;
 		bool cancel_remove:1;
 		bool cancel_accept:1;
+		bool cancel_duplicate:1;
 		bool cancel_cursor:1;
 		bool cancel_move:1;
 		bool mouse_move:1;
@@ -1351,6 +1352,7 @@ class GridCtrl : public Ctrl
 		void CancelInsert()     { cancel_insert      = true; }
 		void CancelUpdateCell() { cancel_update_cell = true; }
 		void CancelAccept()     { cancel_accept      = true; }
+		void CancelDuplicate()  { cancel_duplicate   = true; }
 		void CancelCursor()     { cancel_cursor      = true; }
 		void CancelMove()       { cancel_move        = true; }
 
@@ -1587,7 +1589,7 @@ class GridCtrl : public Ctrl
 
 		void Insert0(int row, int cnt = 1, bool recalc = true, bool refresh = true, int size = -1);
 		bool Remove0(int row, int cnt = 1, bool recalc = true, bool refresh = true, bool whens = true);
-		void Duplicate0(int row, int cnt = 1, bool recalc = true, bool refresh = true);
+		bool Duplicate0(int row, int cnt = 1, bool recalc = true, bool refresh = true);
 		int  Append0(int cnt = 1, int size = -1, bool refresh = true);
 
 		void GoCursorLeftRight();
