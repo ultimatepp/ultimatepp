@@ -237,6 +237,7 @@ String GetMacAddressWMI() {
 	String mac = TrimBoth(vmac);	
 	if (mac.GetCount() > 0)
 		return mac;
+	return Null;
 }
 
 #include <iphlpapi.h>
