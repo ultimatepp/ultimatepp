@@ -1,0 +1,12 @@
+description "Box2D \"Bridge\" example \377";
+
+uses
+	CtrlLib,
+	plugin\box2d;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
