@@ -29,7 +29,7 @@ topic "General description";
 [s0; &]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#FileCat`(const char`*`,const char`*`)^ F
 ile Handling]&]
-[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/bsdiff`$en`-us^ File binary 
+[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Bsdiff`$en`-us^ File binary 
 comparison (BSDiff)]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us`#Replace`(String`,String`,String`)^ S
 tring functions]&]
@@ -41,6 +41,8 @@ folders]&]
 raphical functions]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/SvgColors`$en`-us^ SVG 
 colors]&]
+[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/Dll`$en`-us^ Dll handling 
+][/^topic`:`/`/Functions4U`/src`/Dll`$en`-us^ (Windows)]&]
 [s0; &]
 [s0; [^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us^ Reference]&]
 [s0;^topic`:`/`/Functions4U`/src`/Functions4U`$en`-us^ &]

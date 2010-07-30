@@ -1,5 +1,9 @@
-TOPIC("bsdiff$en-us")
-#include "bsdiff$en-us.tppi"
+TOPIC("Bsdiff$en-us")
+#include "Bsdiff$en-us.tppi"
+END_TOPIC
+
+TOPIC("Dll$en-us")
+#include "Dll$en-us.tppi"
 END_TOPIC
 
 TOPIC("Functions4U$en-us")

@@ -89,6 +89,11 @@ e])&]
 of the sum of all file sizes under [%-*@3 fileDirName].&]
 [s3; &]
 [s4;%- &]
+[s5;:Dll`:`:Load`(const String`&`):%- [@(0.0.255) bool]_[* Load]([@(0.0.255) const]_[_^String^ S
+tring]_`&[*@3 fileDll])&]
+[s2;  [%-*@3 fileDll].&]
+[s3; &]
+[s4;%- &]
 [s5;:DirectoryCopy`(const char`*`,const char`*`):%- [@(0.0.255) bool]_[* DirectoryCopy]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 dir], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 newPlace])
 &]
@@ -173,6 +178,12 @@ tr], [@(0.0.255) char]_[*@3 find], [@(0.0.255) char]_[*@3 replace])&]
 [s2; Returns the resulting String obtained by replacing in [%-*@3 str] 
 char [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find 
 ]appears in [%-*@3 str].&]
+[s3; &]
+[s4; &]
+[s5;:Trim`(const String`&`):%- [_^String^ String]_[* Trim]([@(0.0.255) const]_[_^String^ Stri
+ng][@(0.0.255) `&]_[*@3 s])&]
+[s2; Like TrimBoth(), it removes left and right spaces in [%-*@3 s]. 
+Spaces are chars like, `' `', `'`\t`', `'`\n`', ...&]
 [s3; &]
 [s4;%- &]
 [s5;:ReverseFind`(const String`&`,const String`&`,int`):%- [@(0.0.255) int]_[* ReverseFin
@@ -1497,7 +1508,12 @@ mg], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
 [s5;:GetRect`(const Image`&`,const Rect`&`):%- [_^Image^ Image]_[* GetRect]([@(0.0.255) con
 st]_[_^Image^ Image][@(0.0.255) `&]_[*@3 orig], [@(0.0.255) const]_[_^Rect^ Rect]_`&[*@3 r])&]
 [s2; Returns a subimage inside [%-*@3 orig] defined by rectangle [%-*@3 r].&]
-[s3; &]
+[s3;%- &]
+[ {{10000@1 [s0; [* DLL handling]&]
+[s6; Windows]}}&]
+[s0; &]
+[s0; &]
+[s0; &]
 [ {{10000@1 [s0; [* Other functions]]}}&]
 [s4; &]
 [s5;:DayOfYear`(Date`):%- [@(0.0.255) int]_[* DayOfYear]([_^Date^ Date]_[*@3 d])&]

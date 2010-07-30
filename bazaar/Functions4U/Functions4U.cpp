@@ -512,7 +512,7 @@ Array<String> GetDriveList() {
 	}
 	// Get mounted drives
 	StringParse smounts(LoadFile_Safe("/proc/mounts"));
-	StringParse smountLine(TrimBoth(smounts.GetText("\r\n")));
+	StringParse smountLine(Trim(smounts.GetText("\r\n")));
 	do {
 		String devPath 	 = smountLine.GetText();
 		String mountPath = smountLine.GetText();
@@ -520,7 +520,7 @@ Array<String> GetDriveList() {
 		if ((mountableFS.Find(fs) >= 0) && (mountPath.Find("/dev") < 0) 
 		 && (mountPath.Find("/rofs") < 0) && (mountPath != "/"))	// Is mountable 
 			ret.Add(mountPath);
-		smountLine = TrimBoth(smounts.GetText("\r\n"));
+		smountLine = Trim(smounts.GetText("\r\n"));
 	} while (smountLine != "");
 	ret.Add("/");	// Last but not least
 	return ret;
@@ -1880,7 +1880,7 @@ Dll::~Dll() {
 bool Dll::Load(const String &fileDll) {
 	if (hinstLib) 
 		if (FreeLibrary(hinstLib) == 0)
-			throw Exc(t_("Dll cannot be released"));
+			return false;
 	
 	hinstLib = LoadLibraryEx(TEXT(fileDll), NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
 	if (!hinstLib) 
