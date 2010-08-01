@@ -39,6 +39,8 @@ int   Ctrl::LoopLevel;
 
 bool Ctrl::MemoryCheck;
 
+bool Ctrl::Painting;
+
 void   Ctrl::SetData(const Value&) {}
 Value  Ctrl::GetData() const       { return Value(); }
 

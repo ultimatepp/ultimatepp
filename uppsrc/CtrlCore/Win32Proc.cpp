@@ -67,21 +67,17 @@ void  SetWinceMouse(HWND hwnd, LPARAM lparam)
 void  SetWinceMouse(HWND hwnd, LPARAM lparam) {}
 #endif
 
-#ifdef _DEBUG
-static String sPainting;
-
 void AvoidPaintingCheck__()
 {
-	sPainting = Null;
+	Ctrl::Painting = false;
 }
-#endif
 
 bool PassWindowsKey(int wParam);
 
 LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	GuiLock __;
 	eventid++;
-	ASSERT_(IsNull(sPainting), "WindowProc invoked while in Paint routine");
+	ASSERT_(!Painting, "WindowProc invoked while in Paint routine");
 //	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	Ptr<Ctrl> _this = this;
 	HWND hwnd = GetHWND();
@@ -121,11 +117,11 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			}
 #endif
 #ifdef _DEBUG
-			sPainting = Name();
+			Painting = true;
 #endif
 			UpdateArea(draw, Rect(ps.rcPaint));
 #ifdef _DEBUG
-			sPainting = Null;
+			Painting = false;
 #endif
 #ifndef PLATFORM_WINCE
 			if(draw.PaletteMode() && SystemDraw::AutoPalette())
