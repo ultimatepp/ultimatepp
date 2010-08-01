@@ -1,0 +1,13 @@
+description "LED control static, blinking and sliding by cb31_fr\377";
+
+uses
+	CtrlLib;
+
+file
+	LEDCtrl.cpp,
+	LEDCtrl.h,
+	LEDCtrl.usc;
+
+mainconfig
+	"" = "GUI";
+

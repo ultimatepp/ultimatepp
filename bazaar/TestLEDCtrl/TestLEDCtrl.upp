@@ -1,0 +1,14 @@
+description "LEDCtrl package test\377";
+
+uses
+	CtrlLib,
+	LEDCtrl;
+
+file
+	TestLEDCtrl.cpp,
+	TestLEDCtrl.h,
+	TestLEDCtrl.lay;
+
+mainconfig
+	"" = "GUI";
+

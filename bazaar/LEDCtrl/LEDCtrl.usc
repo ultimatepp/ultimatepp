@@ -1,0 +1,43 @@
+
+
+ctrl LEDCtrl {
+	group "LEDCtrl";
+
+	GetMinSize() { sz = GetTextSize("X"); sz.cy = GetHeight( .SetLEDSize ) ; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx = GetWidth( .SetLEDSize, .SetStringSize ) ; return sz; }
+
+	Frame  SetFrame = NullFrame() @2;
+	Text   SetString ;
+	Color  SetFgLightOnColor = :LtRed;
+	Color  SetFgLightOffColor = :Black;
+	Color  SetBgColor = :Black;
+	int    SetStringSize = 20;
+	int    SetLEDSize = 2;
+
+	Paint(w) {
+		r = GetRect();
+		r.right = r.left + GetWidth( .SetLEDSize, .SetStringSize ) ;
+		r.bottom = r.top + GetHeight( .SetLEDSize ) ;
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, .SetBgColor);
+	}
+};
+
+
+fn GetWidth( LEDSize, MaxChar )
+{
+	if( ( LEDSize <= 0 ) || ( MaxChar <= 0 ) )
+		return 0 ;
+	else
+		return ( ( LEDSize * 5 ) + 2 ) * MaxChar + 8 ;
+}
+
+
+fn GetHeight( LEDSize )
+{
+	if( LEDSize <= 0 )
+		return 0 ;
+	else
+		return LEDSize * 7 + 8 ;
+}
+

@@ -1,0 +1,4 @@
+LAYOUT(TestLEDCtrlLayout, 748, 160)
+	ITEM(LEDCtrl, W_LED, SetString(t_("One simple example")).LeftPosZ(250, 247).TopPosZ(128, 22))
+END_LAYOUT
+

@@ -1,0 +1,5 @@
+#ifndef _TestLEDCtrl_icpp_init_stub
+#define _TestLEDCtrl_icpp_init_stub
+#include "CtrlLib/init"
+#include "LEDCtrl/init"
+#endif
