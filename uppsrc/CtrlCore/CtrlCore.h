@@ -473,6 +473,7 @@ private:
 	static  bool      mouseinview;
 	static  bool      mouseinframe;
 	static  bool      globalbackpaint;
+	static  bool      Painting;
 	static  int       LoopLevel;
 	static  Ctrl     *LoopCtrl;
 	static  int64     eventid;
@@ -654,6 +655,7 @@ private:
 
 	static  void ICall(Callback cb);
 
+	friend void  AvoidPaintingCheck__();
 	friend void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
 	friend class DHCtrl;
 	friend class ViewDraw;
@@ -1132,6 +1134,8 @@ public:
 	void        RefreshFrame(const Rect& r);
 	void        RefreshFrame(int x, int y, int cx, int cy);
 	void        RefreshFrame();
+	
+	static bool IsPainting()                             { return Painting; }
 
 	void        ScrollView(const Rect& r, int dx, int dy);
 	void        ScrollView(int x, int y, int cx, int cy, int dx, int dy);

@@ -169,7 +169,8 @@ Progress::Progress(Ctrl *owner, const char *s, int total) {
 Progress::~Progress() {}
 
 void Progress::Create() {
-	if(IsOpen() || cancel) return;
+	if(IsPainting() || IsOpen() || cancel)
+		return;
 	stop.Hide();
 	if(owner)
 		Open(owner);
@@ -193,8 +194,10 @@ void Progress::Process()
 			show_time = t;
 		}
 	}
-	GuiSleep(0);
-	ProcessEvents();
+	if(IsOpen()) {
+		GuiSleep(0);
+		ProcessEvents();
+	}
 }
 
 void Progress::Setxt()

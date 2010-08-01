@@ -20,9 +20,7 @@ struct FileIconMaker : ImageMaker {
 		Image m[2];
 		for(int i = 0; i < 2; i++) {
 			SHFILEINFO info;
-		#ifdef _DEBUG
 			AvoidPaintingCheck__();
-		#endif
 			SHGetFileInfo(ToSystemCharset(file), dir ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL,
 			              &info, sizeof(info),
 			              SHGFI_ICON|(large ? SHGFI_LARGEICON : SHGFI_SMALLICON)|(exe ? 0 : SHGFI_USEFILEATTRIBUTES));
