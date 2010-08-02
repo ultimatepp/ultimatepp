@@ -105,6 +105,14 @@ SqlSelect& SqlSelect::Offset(int64 offset) {
 	return *this;
 }
 
+SqlSelect& SqlSelect::operator()(const SqlVal& val)
+{
+	if(text.GetCount())
+		text << ", ";
+	text << ~val;
+	return *this;
+}
+
 SqlSelect& SqlSelect::Hint(const char *hint)
 {
 	text = "/*+ " + String(hint) + " */ " + text;
