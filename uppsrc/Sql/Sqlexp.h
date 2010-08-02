@@ -462,6 +462,8 @@ class SqlSelect {
 	SqlSelect& FullJoin0(const String& table);
 
 public:
+	SqlSelect& operator()(const SqlVal& val);
+
 	operator bool() const                             { return text.GetCount(); }
 
 	SqlSelect& Hint(const char *hint);
