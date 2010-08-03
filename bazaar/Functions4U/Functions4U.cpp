@@ -753,6 +753,8 @@ int ReverseFind(const String& s, const String& toFind, int from) {
 // Like StrToDate but using Time
 const char *StrToTime(struct Upp::Time& d, const char *s) {
 	s = StrToDate(d, s);
+	if (!s)
+		return NULL;
 
 	d.hour = d.minute = d.second = 0;
 
@@ -795,14 +797,18 @@ const char *StrToTime(struct Upp::Time& d, const char *s) {
 
 Time StrToTime(const char *s) {
 	Time ret;
-	StrToTime(ret, s);
-	return ret;
+	if (StrToTime(ret, s))
+		return ret;
+	else
+		return Null;
 }
 
 Date StrToDate(const char *s) {
 	Time ret;
-	StrToDate(ret, s);
-	return ret;
+	if (StrToDate(ret, s))
+		return ret;
+	else
+		return Null;
 }
 
 void StringToHMS(String durat, int &hour, int &min, double &seconds) {
