@@ -46,6 +46,10 @@ TOPIC("chss$ru-ru")
 #include "chss$ru-ru.tppi"
 END_TOPIC
 
+TOPIC("codestyle$en-us")
+#include "codestyle$en-us.tppi"
+END_TOPIC
+
 TOPIC("comparison$cs-cz")
 #include "comparison$cs-cz.tppi"
 END_TOPIC
