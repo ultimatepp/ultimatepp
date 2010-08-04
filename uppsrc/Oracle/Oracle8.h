@@ -54,6 +54,9 @@ public:
 	virtual String                EnumRowID(String database, String table);
 	virtual Vector<String>        EnumReservedWords();
 
+	bool                          BulkExecute(const char *stmt, const Vector< Vector<Value> >& param_rows);
+	bool                          BulkExecute(const SqlStatement& stmt, const Vector< Vector<Value> >& param_rows);
+
 public:
 	T_OCI8&              oci8;
 

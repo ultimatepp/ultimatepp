@@ -69,12 +69,15 @@ protected:
 	virtual String      ToString() const;
 	virtual            ~OCI8Connection();
 
+	bool                BulkExecute(const char *stmt, const Vector< Vector<Value> >& param_rows);
+
 	struct Item {
 		T_OCI8&        oci8;
 		int            type;
-		int            len;
-		sb2            ind;
-		ub2            rl;
+		int            total_len;
+		Buffer<ub2>    len;
+		Buffer<sb2>    ind;
+//		ub2            rl;
 		ub2            rc;
 		Vector<Value>  dynamic;
 		bool           is_dynamic;
@@ -82,6 +85,7 @@ protected:
 		int            dyna_vtype;
 		ub4            dyna_width;
 		ub4            dyna_len;
+		int            array_count;
 		OCILobLocator *lob;
 		OCIBind       *bind;
 		OCIDefine     *define;
@@ -91,10 +95,10 @@ protected:
 			byte           buffer[8];
 		};
 
-		byte *Data()                 { return len > sizeof(buffer) ? ptr : buffer; }
-		const byte *Data() const     { return len > sizeof(buffer) ? ptr : buffer; }
-		bool  IsNull() const         { return ind < 0; }
-		bool  Alloc(OCIEnv *envhp, int type, int len, int res = 0);
+		byte *Data()                 { return total_len > sizeof(buffer) ? ptr : buffer; }
+		const byte *Data() const     { return total_len > sizeof(buffer) ? ptr : buffer; }
+		bool  IsNull() const         { return ind[0] < 0; }
+		bool  Alloc(int count, OCIEnv *envhp, int type, int len, int res = 0);
 		void  Clear();
 		void  DynaFlush();
 
@@ -167,12 +171,14 @@ protected:
 };
 
 void OCI8Connection::Item::Clear() {
+	ind.Clear();
+	len.Clear();
 	if(type == SQLT_BLOB || type == SQLT_CLOB)
 		oci8.OCIDescriptorFree((dvoid *)lob, OCI_DTYPE_LOB);
 	else
-	if(len > sizeof(buffer))
+	if(total_len > sizeof(buffer))
 		delete[] ptr;
-	len = 0;
+	total_len = 0;
 	lob = NULL;
 	dynamic.Clear();
 	dyna_full = false;
@@ -183,10 +189,10 @@ void OCI8Connection::Item::Clear() {
 OCI8Connection::Item::Item(T_OCI8& oci8_)
 : oci8(oci8_)
 {
-	len = 0;
 	lob = NULL;
 	bind = NULL;
 	define = NULL;
+	total_len = 0;
 	refcursor = 0;
 	dyna_full = false;
 	is_dynamic = false;
@@ -196,15 +202,20 @@ OCI8Connection::Item::~Item() {
 	Clear();
 }
 
-bool OCI8Connection::Item::Alloc(OCIEnv *envhp, int _type, int _len, int res) {
-	if(_type == type && len >= _len) return false;
+bool OCI8Connection::Item::Alloc(int _count, OCIEnv *envhp, int _type, int _len, int res) {
+	if(_type == type && total_len >= _len && array_count >= _count) return false;
 	Clear();
 	type = _type;
-	len = _len + res;
+	total_len = _len + res;
+	array_count = _count;
 	if(type == SQLT_BLOB || type == SQLT_CLOB)
 		oci8.OCIDescriptorAlloc(envhp, (dvoid **) &lob, OCI_DTYPE_LOB, 0, NULL);
-	if(len > sizeof(buffer))
-		ptr = new byte[len];
+	if(total_len > sizeof(buffer))
+		ptr = new byte[total_len];
+	ind.Alloc(_count);
+	ind[0] = -1;
+	len.Alloc(_count);
+	len[0] = _len;
 	return true;
 }
 
@@ -248,10 +259,11 @@ sb4 OCI8Connection::Item::Out(ub4 iter, ub4 index, dvoid **bufpp, ub4 **alenp, u
 	DynaFlush();
 	*bufpp = Data();
 	*alenp = &dyna_len;
-	dyna_len = len;
+	dyna_len = total_len;
 	*piecep = OCI_ONE_PIECE;
-	ind = 0;
-	*indp = &ind;
+	ind.Alloc(1);
+	ind[0] = 0;
+	*indp = ind;
 	rc = 0;
 	*rcodep = &rc;
 	dyna_full = true;
@@ -262,7 +274,7 @@ OCI8Connection::Item& OCI8Connection::PrepareParam(int i, int type, int len, int
 	while(param.GetCount() <= i)
 		param.Add(new Item(oci8));
 	Item& p = param[i];
-	if(p.Alloc(session -> envhp, type, len, res))
+	if(p.Alloc(1, session -> envhp, type, len, res))
 		parse = true;
 	p.dyna_vtype = dynamic_vtype;
 	p.is_dynamic = (dynamic_vtype != VOID_V);
@@ -274,7 +286,7 @@ void OCI8Connection::SetParam(int i, const String& s) {
 	int l = rs.GetLength();
 	Item& p = PrepareParam(i, SQLT_STR, l + 1, 100, VOID_V);
 	memcpy(p.Data(), rs, l + 1);
-	p.ind = l ? 0 : -1;
+	p.ind[0] = l ? 0 : -1;
 }
 
 void OCI8Connection::SetParam(int i, const WString& s) {
@@ -282,29 +294,29 @@ void OCI8Connection::SetParam(int i, const WString& s) {
 	int l = rs.GetLength();
 	Item& p = PrepareParam(i, SQLT_STR, l + 1, 100, VOID_V);
 	memcpy(p.Data(), rs, l + 1);
-	p.ind = l ? 0 : -1;
+	p.ind[0] = l ? 0 : -1;
 }
 
 void OCI8Connection::SetParam(int i, int integer) {
 	Item& p = PrepareParam(i, SQLT_INT, sizeof(int), 0, VOID_V);
 	*(int *) p.Data() = integer;
-	p.ind = IsNull(integer) ? -1 : 0;
+	p.ind[0] = IsNull(integer) ? -1 : 0;
 }
 
 void OCI8Connection::SetParam(int i, double d) {
 	Item& p = PrepareParam(i, SQLT_FLT, sizeof(double), 0, VOID_V);
 	*(double *) p.Data() = d;
-	p.ind = IsNull(d) ? -1 : 0;
+	p.ind[0] = IsNull(d) ? -1 : 0;
 }
 
 void OCI8Connection::SetParam(int i, Date d) {
 	Item& w = PrepareParam(i, SQLT_DAT, 7, 0, VOID_V);
-	w.ind = (OciEncodeDate(w.Data(), d) ? 0 : -1);
+	w.ind[0] = (OciEncodeDate(w.Data(), d) ? 0 : -1);
 }
 
 void OCI8Connection::SetParam(int i, Time t) {
 	Item& w = PrepareParam(i, SQLT_DAT, 7, 0, VOID_V);
-	w.ind = (OciEncodeTime(w.Data(), t) ? 0 : -1);
+	w.ind[0] = (OciEncodeTime(w.Data(), t) ? 0 : -1);
 }
 
 void OCI8Connection::SetParam(int i, OracleRef r) {
@@ -315,7 +327,7 @@ void OCI8Connection::SetRawParam(int i, const String& s) {
 	int l = s.GetLength();
 	Item& p = PrepareParam(i, SQLT_LBI, l, 0, VOID_V);
 	memcpy(p.Data(), s, l);
-	p.ind = l ? 0 : -1;
+	p.ind[0] = l ? 0 : -1;
 }
 
 class Oracle8RefCursorStub : public SqlSource {
@@ -332,7 +344,7 @@ void OCI8Connection::SetParam(int i, Sql& rc) {
 	w.refcursor = new OCI8Connection(*session);
 	w.refcursor -> refcursor = true;
 	*(OCIStmt **)w.Data() = w.refcursor -> stmthp;
-	w.ind = 0;
+	w.ind[0] = 0;
 	Oracle8RefCursorStub stub(w.refcursor);
 	rc = stub;
 }
@@ -380,7 +392,202 @@ void  OCI8Connection::SetParam(int i, const Value& q) {
 }
 
 void OCI8Connection::AddColumn(int type, int len) {
-	column.Add(new Item(oci8)).Alloc(session -> envhp, type, len);
+	column.Add(new Item(oci8)).Alloc(1, session -> envhp, type, len);
+}
+
+bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >& param_rows)
+{
+	ASSERT(session);
+
+	int time = msecs();
+	int args = 0;
+	String cvt_stmt = ToCharset(session->utf8_session
+		? CHARSET_UTF8 : CHARSET_DEFAULT, stmt, CHARSET_DEFAULT);
+	if((args = OciParse(cvt_stmt, parsed_cmd, this, session)) < 0)
+		return false;
+
+	session->statement = parsed_cmd;
+	int nrows = param_rows.GetCount();
+
+	if(Stream *s = session->GetTrace()) {
+		*s << "BulkExecute(#" << nrows << " rows)\n";
+		for(int r = 0; r < nrows; r++) {
+			const Vector<Value>& row = param_rows[r];
+			*s << "[row #" << r << "] ";
+			bool quotes = false;
+			int argn = 0;
+			for(const char *q = cvt_stmt; *q; q++) {
+				if(*q== '\'' && q[1] != '\'')
+					quotes = !quotes;
+				if(!quotes && *q == '?') {
+					if(argn < row.GetCount())
+						*s << SqlCompile(ORACLE, SqlFormat(row[argn++]));
+					else
+						*s << t_("<not supplied>");
+				}
+				else
+					*s << *q;
+			}
+			*s << "\n";
+		}
+		*s << "//BulkExecute\n";
+	}
+
+	if(oci8.OCIStmtPrepare(stmthp, errhp, (byte *)~parsed_cmd, parsed_cmd.GetLength(), OCI_NTV_SYNTAX,
+		OCI_DEFAULT)) {
+		SetError();
+		return false;
+	}
+
+	for(int a = 0; a < args; a++) {
+		int max_row_len = 1;
+		unsigned sum_len = 0;
+		int sql_type = 0;
+		for(int r = 0; r < nrows; r++) {
+			Value v = (a < param_rows[r].GetCount() ? param_rows[r][a] : Value());
+			int len = 0;
+			if(!IsNull(v)) {
+				if(IsNumber(v)) {
+					if((v.GetType() == INT_V || v.GetType() == BOOL_V)
+					&& (!sql_type || sql_type == SQLT_INT)) {
+						sql_type = SQLT_INT;
+						len = sizeof(int);
+					}
+					else if(!sql_type || sql_type == SQLT_INT || sql_type == SQLT_FLT) {
+						sql_type = SQLT_FLT;
+						len = sizeof(double);
+					}
+					else {
+						RLOG("invalid type combination in BulkExecute: " << sql_type << " <- number");
+					}
+				}
+				else if(IsDateTime(v)) {
+					if(!sql_type || sql_type == SQLT_DAT) {
+						sql_type = SQLT_DAT;
+						len = 7;
+					}
+					else {
+						RLOG("invalid type combination in BulkExecute: " << sql_type << " <- date/time");
+					}
+				}
+				else if(IsString(v)) {
+					if(!sql_type || sql_type == SQLT_STR) {
+						sql_type = SQLT_STR;
+						if(session->utf8_session) {
+							WString wstr(v);
+							len = 1 + lenAsUtf8(wstr, wstr.GetLength());
+						}
+						else
+							len = 1 + String(v).GetLength();
+					}
+					else {
+						RLOG("invalid type combination in BulkExecute: " << sql_type << " <- string");
+					}
+				}
+				else {
+					RLOG("invalid data type: " << v.GetType());
+				}
+			}
+			if(len > max_row_len)
+				max_row_len = len;
+			sum_len += len;
+		}
+
+		if(sql_type == 0) {
+			sql_type = SQLT_STR;
+			sum_len = nrows;
+		}
+		if(sql_type != SQLT_STR)
+			sum_len = nrows * max_row_len;
+		Item& p = param.Add(new Item(oci8));
+		p.Alloc(nrows, session->envhp, sql_type, sum_len, 0);
+		p.dyna_vtype = VOID_V;
+		p.is_dynamic = false;
+		sb2 *indp = p.ind;
+		ub2 *lenp = p.len;
+
+		switch(sql_type) {
+			case SQLT_INT: {
+				ASSERT(sum_len >= nrows * sizeof(int));
+				int *datp = (int *)p.Data();
+				for(int r = 0; r < nrows; r++) {
+					int i = (param_rows[r].GetCount() > a ? (int)param_rows[r][a] : (int)Null);
+					*datp++ = i;
+					*indp++ = IsNull(i) ? -1 : 0;
+					*lenp++ = sizeof(int);
+				}
+				break;
+			}
+			case SQLT_FLT: {
+				ASSERT(sum_len >= nrows * sizeof(double));
+				double *datp = (double *)p.Data();
+				for(int r = 0; r < nrows; r++) {
+					double d = (param_rows[r].GetCount() > a ? (double)param_rows[r][a] : (double)Null);
+					*datp++ = d;
+					*indp++ = IsNull(d) ? -1 : 0;
+					*lenp++ = sizeof(double);
+				}
+				break;
+			}
+			case SQLT_DAT: {
+				ASSERT(sum_len >= nrows * 7u);
+				byte *datp = p.Data();
+				for(int r = 0; r < nrows; r++) {
+					Time d = (param_rows[r].GetCount() > a ? (Time)param_rows[r][a] : (Time)Null);
+					*indp++ = OciEncodeTime(datp, d) ? 0 : -1;
+					datp += 7;
+					*lenp++ = 7;
+				}
+				break;
+			}
+			case SQLT_STR: {
+				byte *datp = p.Data();
+				for(int r = 0; r < nrows; r++) {
+					String s;
+					if(session->utf8_session)
+						s = ToUtf8(param_rows[r].GetCount() > a ? (WString)param_rows[r][a] : WString());
+					else
+						s = (param_rows[r].GetCount() > a ? (String)param_rows[r][a] : String());
+					*indp++ = IsNull(s) ? -1 : 0;
+					int rawlen = s.GetLength() + 1;
+					*lenp++ = rawlen;
+					memcpy(datp, s, rawlen);
+					datp += rawlen;
+				}
+				ASSERT((unsigned)(datp - (byte *)p.Data()) <= sum_len);
+				break;
+			}
+			default: {
+				RLOG("unsupported SQL type: " << sql_type);
+			}
+		}
+
+		if(oci8.OCIBindByPos(stmthp, &p.bind, errhp, a + 1, p.Data(), max_row_len, p.type,
+			p.ind, p.len, NULL, nrows, NULL, OCI_DEFAULT)) {
+			SetError();
+			return false;
+		}
+	}
+
+	if(oci8.OCIStmtExecute(SvcCtx(), stmthp, errhp, nrows, 0, NULL, NULL,
+		session->StdMode() && session->level == 0 ? OCI_COMMIT_ON_SUCCESS : OCI_DEFAULT)) {
+		SetError();
+		session->PostError();
+		return false;
+	}
+
+	if(Stream *s = session->GetTrace()) {
+		if(session->IsTraceTime())
+			*s << Format("----- exec %d ms\n", msecs(time));
+	}
+	return true;
+}
+
+bool Oracle8::BulkExecute(const SqlStatement& stmt, const Vector< Vector<Value> >& param_rows)
+{
+	if(param_rows.IsEmpty())
+		return true;
+	return BulkExecute(stmt.Get(ORACLE), param_rows);
 }
 
 bool OCI8Connection::Execute() {
@@ -408,8 +615,8 @@ bool OCI8Connection::Execute() {
 		dynamic_param.Clear();
 		for(int i = 0; i < args; i++) {
 			Item& p = param[i];
-			if(oci8.OCIBindByPos(stmthp, &p.bind, errhp, i + 1, p.Data(), p.len, p.type,
-				            &p.ind, NULL, NULL, 0, NULL, p.is_dynamic ? OCI_DATA_AT_EXEC : OCI_DEFAULT)) {
+			if(oci8.OCIBindByPos(stmthp, &p.bind, errhp, i + 1, p.Data(), p.total_len, p.type,
+			p.ind, NULL, NULL, 0, NULL, p.is_dynamic ? OCI_DATA_AT_EXEC : OCI_DEFAULT)) {
 				SetError();
 				return false;
 			}
@@ -532,8 +739,8 @@ bool OCI8Connection::GetColumnInfo() {
 		}
 		Item& c = column.Top();
 		oci8.OCIDefineByPos(stmthp, &c.define, errhp, i,
-			blob ? (void *)&c.lob : (void *)c.Data(), blob ? -1 : c.len,
-			c.type, &c.ind, NULL, NULL, OCI_DEFAULT);
+			blob ? (void *)&c.lob : (void *)c.Data(), blob ? -1 : c.total_len,
+			c.type, c.ind, c.len, NULL, OCI_DEFAULT);
 	}
 	parse = false;
 	return true;
@@ -593,7 +800,7 @@ void OCI8Connection::GetColumn(int i, String& s) const {
 		return;
 	}
 	ASSERT(c.type == SQLT_STR);
-	if(c.ind < 0)
+	if(c.ind[0] < 0)
 		s = Null;
 	else {
 		s = (char *) c.Data();
@@ -625,7 +832,7 @@ void OCI8Connection::GetColumn(int i, WString& ws) const {
 	}
 	ASSERT(c.type == SQLT_STR);
 	String s;
-	if(c.ind < 0)
+	if(c.ind[0] < 0)
 		s = Null;
 	else
 		s = (char *) c.Data();
@@ -642,7 +849,7 @@ void OCI8Connection::GetColumn(int i, double& n) const {
 	}
 	const Item& c = column[i];
 	ASSERT(c.type == SQLT_FLT || c.type == SQLT_BLOB || c.type == SQLT_CLOB);
-	if(c.ind < 0)
+	if(c.ind[0] < 0)
 		n = DOUBLE_NULL;
 	else
 		n = c.type == SQLT_BLOB || c.type == SQLT_CLOB ? (int)(uintptr_t)c.lob : *(double *) c.Data();
@@ -662,7 +869,7 @@ void OCI8Connection::GetColumn(int i, Date& d) const {
 	const Item& c = column[i];
 	const byte *data = c.Data();
 	ASSERT(c.type == SQLT_DAT);
-	if(c.ind < 0)
+	if(c.ind[0] < 0)
 		d = Null; // d.year = d.month = d.day = 0;
 	else
 		d = OciDecodeDate(data);
@@ -676,7 +883,7 @@ void OCI8Connection::GetColumn(int i, Time& t) const {
 	const Item& c = column[i];
 	const byte *data = c.Data();
 	ASSERT(c.type == SQLT_DAT);
-	if(c.ind < 0)
+	if(c.ind[0] < 0)
 		t = Null; // t.year = t.month = t.day = 0;
 	else
 		t = OciDecodeTime(data);
@@ -1151,6 +1358,13 @@ String Oracle8::EnumRowID(String database, String table)
 Vector<String> Oracle8::EnumReservedWords()
 {
 	return OracleSchemaReservedWords();
+}
+
+bool Oracle8::BulkExecute(const char *stmt, const Vector< Vector<Value> >& param_rows)
+{
+	if(!*stmt || param_rows.IsEmpty())
+		return true;
+	return OCI8Connection(*this).BulkExecute(stmt, param_rows);
 }
 
 void OracleBlob::SetStreamSize(int64 pos) {
