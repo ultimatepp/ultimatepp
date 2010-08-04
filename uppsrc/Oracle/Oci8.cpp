@@ -441,7 +441,6 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 
 	for(int a = 0; a < args; a++) {
 		int max_row_len = 1;
-		unsigned sum_len = 0;
 		int sql_type = 0;
 		for(int r = 0; r < nrows; r++) {
 			Value v = (a < param_rows[r].GetCount() ? param_rows[r][a] : Value());
@@ -490,15 +489,11 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 			}
 			if(len > max_row_len)
 				max_row_len = len;
-			sum_len += len;
 		}
 
-		if(sql_type == 0) {
+		if(sql_type == 0)
 			sql_type = SQLT_STR;
-			sum_len = nrows;
-		}
-		if(sql_type != SQLT_STR)
-			sum_len = nrows * max_row_len;
+		int sum_len = nrows * max_row_len;
 		Item& p = param.Add(new Item(oci8));
 		p.Alloc(nrows, session->envhp, sql_type, sum_len, 0);
 		p.dyna_vtype = VOID_V;
@@ -548,11 +543,11 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 						s = ToUtf8(param_rows[r].GetCount() > a ? (WString)param_rows[r][a] : WString());
 					else
 						s = (param_rows[r].GetCount() > a ? (String)param_rows[r][a] : String());
-					*indp++ = IsNull(s) ? -1 : 0;
+					*indp++ = (IsNull(s) ? -1 : 0);
 					int rawlen = s.GetLength() + 1;
 					*lenp++ = rawlen;
 					memcpy(datp, s, rawlen);
-					datp += rawlen;
+					datp += max_row_len;
 				}
 				ASSERT((unsigned)(datp - (byte *)p.Data()) <= sum_len);
 				break;
