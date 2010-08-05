@@ -1,0 +1,5 @@
+#ifndef _DeEncrypter_icpp_init_stub
+#define _DeEncrypter_icpp_init_stub
+#include "CtrlLib/init"
+#include "AESStream/init"
+#endif

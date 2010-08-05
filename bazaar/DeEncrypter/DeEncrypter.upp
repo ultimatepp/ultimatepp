@@ -1,0 +1,15 @@
+description "a simple little gui that makes it possible to decrypt or encrypt stuff, using AESStream\377";
+
+uses
+	CtrlLib,
+	AESStream;
+
+file
+	DeEncrypter.h,
+	main.cpp,
+	DeEncrypter.lay,
+	src.tpp;
+
+mainconfig
+	"" = "GUI MT";
+
