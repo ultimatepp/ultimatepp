@@ -76,7 +76,7 @@
 /* --------------------------------------------*/
 
 #include <setjmp.h>
-#include "jpeglib.h"
+#include <plugin/jpg/lib/jpeglib.h>
 
 static void jpeg_error_do_not_exit(j_common_ptr cinfo);
 static l_uint8 jpeg_getc(j_decompress_ptr cinfo);
