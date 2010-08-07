@@ -19,4 +19,23 @@ Pix Pix::CombineMasked(Pix &aPix, Pix &maskPix)
 
 } // END Pix::CombineMasked()
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// extracts a rectangular area from PIX
+Pix Pix::ClipRectangle(Rect r)
+{
+	if(IsEmpty())
+		return Pix();
+
+	BOX box;
+	box.x = r.left;
+	box.y = r.top;
+	box.w = r.right - r.left;
+	box.h = r.bottom - r.top;
+
+	PIX *dPix = pixClipRectangle(pix, &box, NULL);
+	if(!dPix)
+		return Pix();
+	return Pix(&dPix);
+}
+
 END_UPP_NAMESPACE

@@ -146,6 +146,12 @@ class Pix : public PixBase
 		// bring-in color modes
 		enum BringInModes { PIXRASTER_BRING_IN_WHITE = L_BRING_IN_WHITE, PIXRASTER_BRING_IN_BLACK = L_BRING_IN_BLACK };
 		
+		// rotate modes
+		enum RotateModes { PIXRASTER_ROTATE_AREA_MAP = L_ROTATE_AREA_MAP, PIXRASTER_ROTATE_SHEAR = L_ROTATE_SHEAR, PIXRASTER_ROTATE_SAMPLING = L_ROTATE_SAMPLING };
+
+		// scan direction modes
+		enum ScanModes { PIXRASTER_FROM_LEFT = L_FROM_LEFT, PIXRASTER_FROM_RIGHT = L_FROM_RIGHT, PIXRASTER_FROM_TOP = L_FROM_TOP, PIXRASTER_FROM_BOTTOM = L_FROM_BOTTOM };
+
 		// loads Pix from another raster object
 		void Load(Raster& raster, bool deepCopy = false, int page = PIXRASTER_CURPAGE);
 		
@@ -268,6 +274,7 @@ class Pix : public PixBase
 		Pix RotateAM(double angle, BringInModes incolor = PIXRASTER_BRING_IN_WHITE);
 		Pix RotateAMColor(double angle, int colorval);
 		Pix RotateAMGray(double angle, int grayval);
+		Pix Rotate(double angle, int type = PIXRASTER_ROTATE_SHEAR, int incolor = PIXRASTER_BRING_IN_WHITE, int width = 0, int height = 0);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// MORPHING FUNCTIONS 
@@ -276,6 +283,11 @@ class Pix : public PixBase
 		Pix DilateGray(int hsize, int vsize);
 		Pix OpenGray(int hsize, int vsize);
 		Pix CloseGray(int hsize, int vsize);
+		
+		Pix ErodeBrick(int hsize, int vsize);
+		Pix DilateBrick(int hsize, int vsize);
+		Pix OpenBrick(int hsize, int vsize);
+		Pix CloseBrick(int hsize, int vsize);
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// ARITHMETIC AND ALIKE FUNCTIONS
@@ -290,6 +302,9 @@ class Pix : public PixBase
 		// BLENDING/COMBINING FUNCTIONS
 
 		Pix CombineMasked(Pix &aPix, Pix &maskPix);
+
+		// extracts a rectangular area from PIX
+		Pix ClipRectangle(Rect r);
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// DOCUMENT PAGE SEGMENTING FUNCTIONS
@@ -299,6 +314,13 @@ class Pix : public PixBase
 
 		// text baseline finding routine
 		Array<int> FindBaselines();
+
+		// foreground bounding box locating routine
+		// scans from a given border through image center to locate
+		// first non-background pixel.
+		// scanFlag is one of PIXRASTER_FROM_LEFT, PIXRASTER_FROM_RIGHT, PIXRASTER_FROM_TOP, PIXRASTER_FROM_BOTTOM
+		// returns true on success, false otherwise
+		bool ScanForForeground(int &loc, enum ScanModes scanMode);
 
 }; // END Class Pix 
 

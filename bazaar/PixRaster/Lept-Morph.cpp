@@ -50,4 +50,54 @@ Pix Pix::CloseGray(int hsize, int vsize)
 	
 } // END Pix::CloseGray()
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::ErodeBrick(int hsize, int vsize)
+{
+	if(IsEmpty())
+		return Pix();
+	PIX *dPix = pixErodeBrick(NULL, pix, hsize, vsize);
+	if(!dPix)
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::ErodeBrick()
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::DilateBrick(int hsize, int vsize)
+{
+	if(IsEmpty())
+		return Pix();
+	PIX *dPix = pixDilateBrick(NULL, pix, hsize, vsize);
+	if(!dPix)
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::DilateBrick()
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::OpenBrick(int hsize, int vsize)
+{
+	if(IsEmpty())
+		return Pix();
+	PIX *dPix = pixOpenBrick(NULL, pix, hsize, vsize);
+	if(!dPix)
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::OpenBrick()
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Pix Pix::CloseBrick(int hsize, int vsize)
+{
+	if(IsEmpty())
+		return Pix();
+	PIX *dPix = pixCloseBrick(NULL, pix, hsize, vsize);
+	if(!dPix)
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::CloseBrick()
+
 END_UPP_NAMESPACE

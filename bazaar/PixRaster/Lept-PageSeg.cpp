@@ -59,4 +59,17 @@ Array<int> Pix::FindBaselines()
 
 } // END Pix::FindBaseLines()
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// foreground bounding box locating routine
+// scans from a given border through image center to locate
+// first non-background pixel.
+// scanFlag is one of L_FROM_LEFT, L_FROM_RIGHT, L_FROM_TOP, L_FROM_BOTTOM
+// returns true on success, false otherwise
+bool Pix::ScanForForeground(int &loc, enum ScanModes scanMode)
+{
+	int res = pixScanForForeground(pix, NULL, (l_int32)scanMode, (l_int32 *)&loc);
+	return (res == 0);
+}
+
 END_UPP_NAMESPACE

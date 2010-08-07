@@ -39,4 +39,17 @@ Pix Pix::RotateAMGray(double angle, int incolor)
 	
 } // END Pix::RotateAMGray()
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Rotates image (any kind) about center.
+Pix Pix::Rotate(double angle, int type, int incolor, int width, int height)
+{
+	if(IsEmpty())
+		return Pix();
+	PIX *dPix = pixRotate(pix, angle, type, incolor, width, height);
+	if(!dPix)
+		return Pix();
+	return Pix(&dPix);
+	
+} // END Pix::Rotate()
+
 END_UPP_NAMESPACE
