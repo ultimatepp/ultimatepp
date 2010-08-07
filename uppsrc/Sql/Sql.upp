@@ -18,6 +18,7 @@ file
 	SqlStatement.cpp,
 	Sqls.h,
 	Sql.cpp,
+	MassInsert.cpp,
 	Schema readonly separator,
 	SqlSchema.h,
 	SqlSchema.cpp,

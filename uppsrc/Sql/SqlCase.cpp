@@ -94,6 +94,8 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 			case ORACLE:
 				*r << Format("to_date('%d/%d/%d', 'SYYYY/MM/DD')", x.year, x.month, x.day);
 				break;
+			case PGSQL:
+				*r << "date ";
 			default:
 				*r << Format("\'%04d-%02d-%02d\'", x.year, x.month, x.day);
 			}
@@ -119,6 +121,8 @@ void SqlCompile(const char *&s, StringBuffer *r, byte dialect)
 				*r << Format("to_date('%d/%d/%d/%d', 'SYYYY/MM/DD/SSSSS')",
 				             x.year, x.month, x.day, x.second + 60 * (x.minute + 60 * x.hour));
 				break;
+			case PGSQL:
+				*r << "timestamp ";
 			default:
 				*r << Format("\'%04d-%02d-%02d %02d:%02d:%02d\'",
 				             x.year, x.month, x.day, x.hour, x.minute, x.second);
