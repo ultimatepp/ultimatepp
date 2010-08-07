@@ -183,6 +183,7 @@ class Pix : public PixBase
 		
 		// assignment -- increment reference of underlying PIX
 		Pix &operator=(Pix &pix);
+		Pix const &operator=(Pix const &pix) { return operator=((Pix &)pix); }
 		
 		// deep copy -- deep copies underlying PIX
 		Pix &operator <<=(Pix &pix);
@@ -210,7 +211,7 @@ class Pix : public PixBase
 		// file I/O
 		bool Load(FileIn &fs, int page = 0);
 		bool Load(String fileName, int page = 0);
-		bool Save(String fileName); // @@ to do - add compression and type handling
+		bool Save(String fileName, int quality = 75, bool progressive = false);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////// LEPTONICA OPERATIONS //////////////////////////////////////////
@@ -227,8 +228,8 @@ class Pix : public PixBase
 
 		Pix VarThresholdToBinary(Pix &thresholdPix);
 		Pix DitherToBinaryLUT(int lowerclip, int upperclip);
-		Pix GenerateMaskByValue(int val);
-		Pix GenerateMaskByBand(int lower, int upper, int inband);
+		Pix GenerateMaskByValue(int val, bool useCMap = false);
+		Pix GenerateMaskByBand(int lower, int upper, int inband, bool useCMap = false);
 		Pix DitherTo2bpp(int cmapflag);
 		Pix DitherTo2bppSpec(int lowerclip, int upperclip, int cmapflag);
 		Pix ThresholdTo2bpp(int nlevels, int cmapflag);
@@ -242,6 +243,12 @@ class Pix : public PixBase
 		Pix GrayQuantFromHisto(Pix &mPix, double minfract, int maxsize);
 
 		Pix ThresholdToValue(int threshval, int setval);
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// COLOR CONVERSION //
+
+		// converts pix to monochrome 1bpp
+		Pix ConvertTo1(int threshold);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// SKEW REMOVAL //
@@ -306,6 +313,13 @@ class Pix : public PixBase
 		// extracts a rectangular area from PIX
 		Pix ClipRectangle(Rect r);
 		
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// SCALE/RESIZE FUNCTIONS
+
+		// toplevel scale function
+		Pix Scale(double scalex, double scaley);
+		Pix Fit(int width, int height, bool keepRatio = true);
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// DOCUMENT PAGE SEGMENTING FUNCTIONS
 		

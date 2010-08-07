@@ -17,11 +17,10 @@
 /*
  *  utils.c
  *
- *       error, warning and info procs; all invoked by macros
+ *       Error, warning and info procs; all invoked by macros
  *           l_int32    returnErrorInt()
  *           l_float32  returnErrorFloat()
  *           void      *returnErrorPtr()
- *           void       returnErrorVoid()
  *           void       l_error()
  *           void       l_errorString()
  *           void       l_errorInt()
@@ -29,7 +28,9 @@
  *           void       l_warning()
  *           void       l_warningString()
  *           void       l_warningInt()
+ *           void       l_warningInt2()
  *           void       l_warningFloat()
+ *           void       l_warningFloat2()
  *           void       l_info()
  *           void       l_infoString()
  *           void       l_infoInt()
@@ -37,7 +38,7 @@
  *           void       l_infoFloat()
  *           void       l_infoFloat2()
  *
- *       safe string procs
+ *       Safe string procs
  *           char      *stringNew()
  *           l_int32    stringReplace()
  *           char      *stringJoin()
@@ -45,42 +46,54 @@
  *           char      *strtokSafe()
  *           l_int32    stringSplitOnToken()
  *
- *       find and replace procs
+ *       Find and replace string procs
  *           char      *stringRemoveChars()
  *           l_int32    stringFindSubstr()
  *           char      *stringReplaceSubstr()
  *           char      *stringReplaceEachSubstr()
  *           l_int32    arrayFindSequence()
  *
- *       safe realloc
+ *       Safe realloc
  *           void      *reallocNew()
  *
- *       read file to memory
+ *       Read and write between file and memory
  *           l_uint8   *arrayRead()
  *           l_uint8   *arrayReadStream()
  *           l_int32    nbytesInFile()
  *           l_int32    fnbytesInFile()
- *
- *       write memory to file
  *           l_int32    arrayWrite()
  *
- *       byte-swapping data conversion
+ *       Copy in memory
+ *           l_uint8   *arrayCopy()
+ *
+ *       File copy operations
+ *           l_int32    fileCopy()
+ *           l_int32    fileConcatenate()
+ *           l_int32    fileAppendString()
+ *
+ *       Test files for equivalence
+ *           l_int32    filesAreIdentical()
+ *
+ *       Byte-swapping data conversion
  *           l_uint16   convertOnBigEnd16()
  *           l_uint32   convertOnBigEnd32()
  *           l_uint16   convertOnLittleEnd16()
  *           l_uint32   convertOnLittleEnd32()
  *
- *       file opening
+ *       File opening
  *           FILE      *fopenReadStream()
  *
- *       file name operations
+ *       File name operations
  *           l_int32    splitPathAtDirectory()
  *           l_int32    splitPathAtExtension()
  *           char      *genPathname()
  *           char      *genTempFilename()
  *           l_int32    extractNumberFromFilename()
  *
- *       timing
+ *       Version number
+ *           char      *getLeptonlibVersion()
+ *
+ *       Timing
  *           void       startTimer()
  *           l_float32  stopTimer()
  */
@@ -88,7 +101,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#if COMPILER_MSVC
+#include <windows.h>
+#else
 #include <unistd.h>
+#endif
 #include "allheaders.h"
 
 #if COMPILER_MSVC
@@ -165,21 +182,6 @@ returnErrorPtr(const char  *msg,
 
 
 /*!
- *  returnErrorVoid()
- *
- *      Input: msg (error message)
- *             procname
- */
-void
-returnErrorVoid(const char  *msg, 
-                const char  *procname)
-{
-    fprintf(stderr, "Error in %s: %s\n", procname, msg);
-    return;
-}
-
-
-/*!
  *  l_error()
  *
  *      Input: msg (error message)
@@ -210,14 +212,14 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname || !str) {
-        ERROR_VOID("msg, procname or str not defined in l_errorString()",
-                   procname);
+        L_ERROR("msg, procname or str not defined in l_errorString()",
+                procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_errorString()", procname);
+        L_ERROR("charbuf not made in l_errorString()", procname);
         return;
     }
 
@@ -245,13 +247,13 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname) {
-        ERROR_VOID("msg or procname not defined in l_errorInt()", procname);
+        L_ERROR("msg or procname not defined in l_errorInt()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_errorInt()", procname);
+        L_ERROR("charbuf not made in l_errorInt()", procname);
         return;
     }
 
@@ -279,13 +281,13 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname) {
-        ERROR_VOID("msg or procname not defined in l_errorFloat()", procname);
+        L_ERROR("msg or procname not defined in l_errorFloat()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_errorFloat()", procname);
+        L_ERROR("charbuf not made in l_errorFloat()", procname);
         return;
     }
 
@@ -328,14 +330,14 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname || !str) {
-        ERROR_VOID("msg, procname or str not defined in l_warningString()",
-                   procname);
+        L_ERROR("msg, procname or str not defined in l_warningString()",
+                procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_warningString()", procname);
+        L_ERROR("charbuf not made in l_warningString()", procname);
         return;
     }
 
@@ -363,18 +365,53 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname) {
-        ERROR_VOID("msg or procname not defined in l_warningInt()", procname);
+        L_ERROR("msg or procname not defined in l_warningInt()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_warningInt()", procname);
+        L_ERROR("charbuf not made in l_warningInt()", procname);
         return;
     }
 
     sprintf(charbuf, "Warning in %s: %s\n", procname, msg);
     fprintf(stderr, charbuf, ival);
+
+    FREE(charbuf);
+    return;
+}
+
+
+/*!
+ *  l_warningInt2()
+ *
+ *      Input: msg (warning message; must include '%d')
+ *             procname
+ *             ival1, ival2 (two args, embedded in message via %d)
+ */
+void
+l_warningInt2(const char  *msg,
+              const char  *procname,
+              l_int32      ival1,
+              l_int32      ival2)
+{
+l_int32  bufsize;
+char    *charbuf;
+
+    if (!msg || !procname) {
+        L_ERROR("msg or procname not defined in l_warningInt2()", procname);
+        return;
+    }
+
+    bufsize = strlen(msg) + strlen(procname) + 128;
+    if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
+        L_ERROR("charbuf not made in l_warningInt()", procname);
+        return;
+    }
+
+    sprintf(charbuf, "Warning in %s: %s\n", procname, msg);
+    fprintf(stderr, charbuf, ival1, ival2);
 
     FREE(charbuf);
     return;
@@ -397,18 +434,53 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname) {
-        ERROR_VOID("msg or procname not defined in l_warningFloat()", procname);
+        L_ERROR("msg or procname not defined in l_warningFloat()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_warningFloat()", procname);
+        L_ERROR("charbuf not made in l_warningFloat()", procname);
         return;
     }
 
     sprintf(charbuf, "Warning in %s: %s\n", procname, msg);
     fprintf(stderr, charbuf, fval);
+
+    FREE(charbuf);
+    return;
+}
+
+
+/*!
+ *  l_warningFloat2()
+ *
+ *      Input: msg (warning message; must include '%f')
+ *             procname
+ *             fval1, fval2 (two args, embedded in message via %f)
+ */
+void
+l_warningFloat2(const char  *msg,
+                const char  *procname,
+                l_float32    fval1,
+                l_float32    fval2)
+{
+l_int32  bufsize;
+char    *charbuf;
+
+    if (!msg || !procname) {
+        L_ERROR("msg or procname not defined in l_warningFloat2()", procname);
+        return;
+    }
+
+    bufsize = strlen(msg) + strlen(procname) + 128;
+    if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
+        L_ERROR("charbuf not made in l_warningFloat()", procname);
+        return;
+    }
+
+    sprintf(charbuf, "Warning in %s: %s\n", procname, msg);
+    fprintf(stderr, charbuf, fval1, fval2);
 
     FREE(charbuf);
     return;
@@ -446,14 +518,13 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname || !str) {
-        ERROR_VOID("msg, procname or str not defined in l_infoString()",
-                   procname);
+        L_ERROR("msg, procname or str not defined in l_infoString()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_infoString()", procname);
+        L_ERROR("charbuf not made in l_infoString()", procname);
         return;
     }
 
@@ -481,13 +552,13 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname) {
-        ERROR_VOID("msg or procname not defined in l_infoInt()", procname);
+        L_ERROR("msg or procname not defined in l_infoInt()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_infoInt()", procname);
+        L_ERROR("charbuf not made in l_infoInt()", procname);
         return;
     }
 
@@ -516,13 +587,13 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname) {
-        ERROR_VOID("msg or procname not defined in l_infoInt2()", procname);
+        L_ERROR("msg or procname not defined in l_infoInt2()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_infoInt2()", procname);
+        L_ERROR("charbuf not made in l_infoInt2()", procname);
         return;
     }
 
@@ -550,13 +621,13 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname) {
-        ERROR_VOID("msg or procname not defined in l_infoFloat()", procname);
+        L_ERROR("msg or procname not defined in l_infoFloat()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_infoFloat()", procname);
+        L_ERROR("charbuf not made in l_infoFloat()", procname);
         return;
     }
 
@@ -585,13 +656,13 @@ l_int32  bufsize;
 char    *charbuf;
 
     if (!msg || !procname) {
-        ERROR_VOID("msg or procname not defined in l_infoFloat2()", procname);
+        L_ERROR("msg or procname not defined in l_infoFloat2()", procname);
         return;
     }
 
     bufsize = strlen(msg) + strlen(procname) + 128;
     if ((charbuf = (char *)CALLOC(bufsize, sizeof(char))) == NULL) {
-        ERROR_VOID("charbuf not made in l_infoFloat()", procname);
+        L_ERROR("charbuf not made in l_infoFloat()", procname);
         return;
     }
 
@@ -704,7 +775,7 @@ l_int32  srclen1, srclen2, destlen;
     if (src1)
         strcpy(dest, src1);
     if (src2)
-        strcat(dest, src2);
+        strncat(dest, src2, srclen2);
     return dest;
 }
 
@@ -957,7 +1028,7 @@ char  *ptr;
     if ((ptr = (char *)strstr(src, sub)) == NULL)  /* not found */
         return 0;
 
-    if (*ploc)
+    if (ploc)
         *ploc = ptr - src;
     return 1;
 }
@@ -1245,7 +1316,7 @@ FILE     *fp;
         return (l_uint8 *)ERROR_PTR("pnbytes not defined", procName, NULL);
     *pnbytes = 0;
 
-    if ((fp = fopen(fname, "r")) == NULL)
+    if ((fp = fopen(fname, "rb")) == NULL)
         return (l_uint8 *)ERROR_PTR("file stream not opened", procName, NULL);
 
     data = arrayReadStream(fp, pnbytes);
@@ -1306,7 +1377,8 @@ FILE    *fp;
 
     if (!filename)
         return ERROR_INT("filename not defined", procName, 0);
-    fp = fopen(filename, "r");
+    if ((fp = fopen(filename, "rb")) == NULL)
+        return ERROR_INT("stream not opened", procName, 0);
     nbytes = fnbytesInFile(fp);
     fclose(fp);
     return nbytes;
@@ -1337,10 +1409,6 @@ l_int32  nbytes, pos;
 }
 
 
-
-/*--------------------------------------------------------------------*
- *                          Writing bytes to file                     *
- *--------------------------------------------------------------------*/
 /*!
  *  arrayWrite()
  *
@@ -1357,6 +1425,7 @@ arrayWrite(const char  *filename,
            l_int32      nbytes)
 {
 FILE  *fp;
+char   actualOperation[20];
 
     PROCNAME("arrayWrite");
 
@@ -1372,10 +1441,174 @@ FILE  *fp;
     if (!strcmp(operation, "w") && !strcmp(operation, "a"))
         return ERROR_INT("operation not one of {'w','a'}", procName, 1);
 
-    if ((fp = fopen(filename, operation)) == NULL)
+    strncpy(actualOperation, operation, 2);
+    strncat(actualOperation, "b", 2);  /* for windows */
+    if ((fp = fopen(filename, actualOperation)) == NULL)
         return ERROR_INT("stream not opened", procName, 1);
     fwrite(data, 1, nbytes, fp);
     fclose(fp);
+
+    return 0;
+}
+
+
+/*--------------------------------------------------------------------*
+ *                            Copy in memory                          *
+ *--------------------------------------------------------------------*/
+/*!
+ *  arrayCopy()
+ *
+ *      Input:  datas
+ *              size (of data array)
+ *      Return: datad (on heap), or null on error
+ */
+l_uint8 *
+arrayCopy(l_uint8  *datas,
+          size_t    size)
+{
+l_uint8  *datad;
+
+    PROCNAME("arrayCopy");
+
+    if (!datas)
+        return (l_uint8 *)ERROR_PTR("datas not defined", procName, NULL);
+
+    if ((datad = (l_uint8 *)CALLOC(size, sizeof(l_uint8))) == NULL)
+        return (l_uint8 *)ERROR_PTR("datad not made", procName, NULL);
+    memcpy(datad, datas, size);
+    return datad;
+}
+
+
+/*--------------------------------------------------------------------*
+ *                         File copy operations                       *
+ *--------------------------------------------------------------------*/
+/*!
+ *  fileCopy()
+ *
+ *      Input:  filename1 (copy this file)
+ *              filename2 (to this file)
+ *      Return: 0 if OK, 1 on error
+ */
+l_int32
+fileCopy(const char  *filename1,
+         const char  *filename2)
+{
+l_uint8  *data;
+l_int32   nbytes, ret;
+
+    PROCNAME("fileCopy");
+
+    if ((data = arrayRead(filename1, &nbytes)) == NULL)
+        return ERROR_INT("data not returned", procName, 1);
+    ret = arrayWrite(filename2, "w", data, nbytes);
+    FREE(data);
+    return ret;
+}
+
+
+/*!
+ *  fileConcatenate()
+ *
+ *      Input:  filename1
+ *              filename2 (file to add to filename1)
+ *      Return: 0 if OK, 1 on error
+ */
+l_int32
+fileConcatenate(const char  *filename1,
+                const char  *filename2)
+{
+l_uint8  *data;
+l_int32   nbytes;
+
+    PROCNAME("fileConcatenate");
+
+    if (!filename1)
+        return ERROR_INT("filename1 not defined", procName, 1);
+    if (!filename2)
+        return ERROR_INT("filename2 not defined", procName, 1);
+
+    data = arrayRead(filename2, &nbytes);
+    arrayWrite(filename1, "a", data, nbytes);
+    FREE(data);
+    return 0;
+}
+
+
+/*!
+ *  fileAppendString()
+ *
+ *      Input:  filename
+ *              str (string to append to file)
+ *      Return: 0 if OK, 1 on error
+ */
+l_int32
+fileAppendString(const char  *filename,
+                 const char  *str)
+{
+FILE  *fp;
+
+    PROCNAME("fileAppendString");
+
+    if (!filename)
+        return ERROR_INT("filename not defined", procName, 1);
+    if (!str)
+        return ERROR_INT("str not defined", procName, 1);
+
+    if ((fp = fopen(filename, "a")) == NULL)
+        return ERROR_INT("stream not opened", procName, 1);
+    fprintf(fp, str);
+    fclose(fp);
+    return 0;
+}
+
+
+/*--------------------------------------------------------------------*
+ *                      Test files for equivalence                    *
+ *--------------------------------------------------------------------*/
+/*!
+ *  filesAreIdentical()
+ *
+ *      Input:  fname1
+ *              fname2
+ *              &same (<return> 1 if identical; 0 if different)
+ *      Return: 0 if OK, 1 on error
+ */
+l_int32
+filesAreIdentical(const char  *fname1,
+                  const char  *fname2,
+                  l_int32     *psame)
+{
+l_int32   i, same, nbytes1, nbytes2;
+l_uint8  *array1, *array2;
+
+    PROCNAME("filesAreIdentical");
+
+    if (!psame)
+        return ERROR_INT("&same not defined", procName, 1);
+    *psame = 0;
+    if (!fname1 || !fname2)
+        return ERROR_INT("both names not defined", procName, 1);
+
+    nbytes1 = nbytesInFile(fname1);
+    nbytes2 = nbytesInFile(fname2);
+    if (nbytes1 != nbytes2)
+        return 0;
+
+    if ((array1 = arrayRead(fname1, &nbytes1)) == NULL)
+        return ERROR_INT("array1 not read", procName, 1);
+    if ((array2 = arrayRead(fname2, &nbytes2)) == NULL)
+        return ERROR_INT("array2 not read", procName, 1);
+    same = 1;
+    for (i = 0; i < nbytes1; i++) {
+        if (array1[i] != array2[i]) {
+            same = 0;
+            break;
+        }
+    }
+    FREE(array1);
+    FREE(array2);
+    *psame = same;
 
     return 0;
 }
@@ -1537,7 +1770,7 @@ char  *cpathname, *lastslash;
         return ERROR_INT("pathname not defined", procName, 1);
 
     cpathname = stringNew(pathname);
-    if ((lastslash = strrchr(cpathname, '/'))) {
+    if ((lastslash = strrchr(cpathname, sepchar))) {
         if (ptail)
             *ptail = stringNew(lastslash + 1);
         if (pdir) {
@@ -1636,7 +1869,7 @@ genPathname(const char  *dir,
             const char  *fname)
 {
 char    *charbuf;
-l_int32  dirlen, namelen;
+l_int32  dirlen, namelen, totlen;
     
     PROCNAME("genPathname");
 
@@ -1647,19 +1880,28 @@ l_int32  dirlen, namelen;
 
     dirlen = strlen(dir);
     namelen = strlen(fname);
-    if ((charbuf = (char *)CALLOC(dirlen + namelen + 10, sizeof(char)))
-            == NULL)
+    totlen = dirlen + namelen + 20;
+    if ((charbuf = (char *)CALLOC(totlen, sizeof(char))) == NULL)
         return (char *)ERROR_PTR("charbuf not made", procName, NULL);
 
-    if (dir[dirlen - 1] != sepchar)
 #if COMPILER_MSVC
-        sprintf(charbuf, "%s\\", dir);
+    if (stringFindSubstr(dir, "/", NULL) > 0) {
+        char *tempname;
+        tempname = stringReplaceEachSubstr(dir, "/", "\\", NULL);
+        strncpy(charbuf, tempname, strlen(tempname));
+        FREE(tempname);
+    }
+    else {
+        strncpy(charbuf, dir, dirlen);
+    }
 #else
-        sprintf(charbuf, "%s/", dir);
-#endif
-    else
-        strcpy(charbuf, dir);
-    strcat(charbuf, fname);
+    strncpy(charbuf, dir, dirlen);
+#endif  /* COMPILER_MSVC */
+
+    dirlen = strlen(charbuf);
+    if (charbuf[dirlen - 1] != sepchar)  /* append sepchar */
+        charbuf[dirlen] = sepchar;
+    strncat(charbuf, fname, namelen);
     return charbuf;
 }
 
@@ -1668,7 +1910,8 @@ l_int32  dirlen, namelen;
  *  genTempFilename()
  *
  *      Input:  dir (directory name; use '.' for local dir; no trailing '/')
- *              extension (<optional> filename extention with '.'; can be null)
+ *              segment (an additional part of the name; can be null)
+ *              extension (<optional> filename extension with '.'; can be null)
  *      Return: tempname (with pid embedded in file name), or null on error
  *
  *  Notes:
@@ -1682,30 +1925,41 @@ l_int32  dirlen, namelen;
  */
 char *
 genTempFilename(const char  *dir,
+                const char  *segment,
                 const char  *extension)
 {
 char     buf[256];
-char    *tempname;
-l_int32  pid, nchars;
+char    *name, *outname;
+l_int32  pid, nseg, next;
     
     PROCNAME("genTempFilename");
 
     if (!dir)
         return (char *)ERROR_PTR("dir not defined", procName, NULL);
+#if COMPILER_MSVC
+    pid=GetCurrentProcessId();
+#else
     pid = getpid();
-    if (extension)
-        nchars = strlen(extension);
+#endif
+    if (segment)
+        nseg = strlen(segment);
     else
-        nchars = 0;
+        nseg = 0;
+    if (extension)
+        next = strlen(extension);
+    else
+        next = 0;
 
 #if COMPILER_MSVC
-    snprintf(buf, 255 - nchars, "%s\\%d", dir, pid);
+    snprintf(buf, 255 - nseg - next, "%s\\%d_", dir, pid);
 #else
-    snprintf(buf, 25 - nchars, "%s/%d", dir, pid);
+    snprintf(buf, 255 - nseg - next, "%s/%d_", dir, pid);
 #endif
 
-    tempname = stringJoin(buf, extension);
-    return tempname;
+    name = stringJoin(buf, segment);
+    outname = stringJoin(name, extension);
+    FREE(name);
+    return outname;
 }
 
 
@@ -1717,6 +1971,13 @@ l_int32  pid, nchars;
  *              numpost (number of characters after the digits to be found)
  *      Return: num (number embedded in the filename); -1 on error or if
  *                   not found
+ *
+ *  Notes:
+ *      (1) The number is to be found in the basename, which is the
+ *          filename without either the directory or the last extension.
+ *      (2) When a number is found, it is non-negative.  If no number
+ *          is found, this returns -1, without an error message.  The
+ *          caller needs to check.
  */
 l_int32
 extractNumberFromFilename(const char  *fname,
@@ -1741,16 +2002,63 @@ l_int32  len, nret, num;
         return ERROR_INT("numpre + numpost too big", procName, -1);
     }
 
-    basename[len - numpost] = '\n';
+    basename[len - numpost] = '\0';
     nret = sscanf(basename + numpre, "%d", &num);
     FREE(basename);
 
     if (nret == 1)
         return num;
     else
-        return ERROR_INT("no number found", procName, -1);
+        return -1;  /* not found */
 }
 
+
+/*---------------------------------------------------------------------*
+ *                          Version number                             *
+ *---------------------------------------------------------------------*/
+/*! 
+ *  getLeptonlibVersion()
+ *
+ *      Return: string of version number (e.g., 'leptonlib-1.65')
+ *
+ *  Notes:
+ *      (1) The caller has responsibility to free the memory.
+ */
+char *
+getLeptonlibVersion()
+{
+    char *version = (char *)CALLOC(100, sizeof(char));
+
+#if COMPILER_MSVC
+  #ifdef _DLL
+    char dllStr[] = "DLL";
+  #else
+    char dllStr[] = "LIB";
+  #endif
+  #ifdef _DEBUG
+    char debugStr[] = "Debug";
+  #else
+    char debugStr[] = "Release";
+  #endif
+  #ifdef _M_IX86
+    char bitStr[] = " 32 bit";
+  #elif _M_X64
+    char bitStr[] = " 64 bit";
+  #else
+    char bitStr[] = ""
+  #endif
+    snprintf(version, 100, "leptonlib-%d.%d (%s, %s) [MSC v.%d %s %s%s]",
+             LIBLEPT_MAJOR_VERSION, LIBLEPT_MINOR_VERSION,
+             __DATE__, __TIME__, _MSC_VER, dllStr, debugStr, bitStr);
+
+#else
+
+    snprintf(version, 100, "leptonlib-%d.%d", LIBLEPT_MAJOR_VERSION,
+             LIBLEPT_MINOR_VERSION);
+
+#endif   /* COMPILER_MSVC */
+    return version;
+}
 
 
 /*---------------------------------------------------------------------*
@@ -1763,7 +2071,7 @@ l_int32  len, nret, num;
  *      ....
  *      fprintf(stderr, "Elapsed time = %7.3f sec\n", stopTimer());
  */
-#if !defined(__MINGW32__) && !defined(_WIN32)
+#if !defined(__MINGW32__) && !defined(COMPILER_MSVC)
 
 #include <sys/time.h>
 #include <sys/resource.h>

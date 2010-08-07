@@ -793,7 +793,11 @@ bool Pix::Load(FileIn &fs, int page)
 	if(!fp)
 		return false;
 
-	format = findFileFormat(fp);
+	if(findFileFormat(fp, &format))
+	{
+		fclose(fp);
+		return false;
+	}
 	switch (format)
 	{
 		case IFF_BMP:
@@ -874,9 +878,35 @@ bool Pix::Load(String fileName, int page)
 	
 } // END Pix::Load()
 
-bool Pix::Save(String fileName) // @@ to do - add compression and type handling
+bool Pix::Save(String fileName, int quality, bool progressive) // @@ to do - add compression and fine control
 {
-	
+	// gets file extension
+	String fileExt = ToUpper(fileName.Right(4));
+	int format;
+	if(fileExt == ".JPG")
+		format = IFF_JFIF_JPEG;
+	else if(fileExt == ".PNG")
+		format = IFF_PNG;
+	else if(fileExt == ".TIF")
+		format = IFF_TIFF;
+	else if(fileExt == ".BMP")
+		format = IFF_BMP;
+	else if(fileExt == ".PNM")
+		format = IFF_PNM;
+	else if(fileExt == ".PS")
+		format = IFF_PS;
+	else if(fileExt == ".GIF")
+		format = IFF_GIF;
+	else // still unsupported formats
+	{
+		format = IFF_UNKNOWN;
+		return false;
+	}
+	if(format == IFF_JFIF_JPEG)
+		return pixWriteJpeg(fileName, pix, quality, progressive ? 1 : 0) == 0;
+	else
+		return pixWrite(fileName, pix, format) == 0;
+
 } // END Pix::Save()
 
 

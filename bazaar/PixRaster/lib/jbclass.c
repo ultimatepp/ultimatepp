@@ -968,7 +968,7 @@ PIX     *pixt;
     pixRasterop(pixt, 0, 0, wi, hi, PIX_SRC, pix1, 0, 0);
     pixRasterop(pixt, idelx, idely, wi, hi, PIX_DST & PIX_NOT(PIX_SRC),
                 pix4, 0, 0);
-    pixThresholdPixels(pixt, thresh1, &boolmatch, tab8);
+    pixThresholdPixelSum(pixt, thresh1, &boolmatch, tab8);
     if (boolmatch == 1) { /* above thresh1 */
         pixDestroy(&pixt);
         return FALSE;
@@ -981,7 +981,7 @@ PIX     *pixt;
          *  where pixt has no ON pixels. */
     pixRasterop(pixt, idelx, idely, wt, ht, PIX_SRC, pix3, 0, 0);
     pixRasterop(pixt, 0, 0, wt, ht, PIX_DST & PIX_NOT(PIX_SRC), pix2, 0, 0);
-    pixThresholdPixels(pixt, thresh3, &boolmatch, tab8);
+    pixThresholdPixelSum(pixt, thresh3, &boolmatch, tab8);
     pixDestroy(&pixt);
     if (boolmatch == 1)  /* above thresh3 */
         return FALSE;
@@ -1834,7 +1834,7 @@ FILE    *fp;
     pixWrite(buf, pixt, IFF_PNG);
 
     snprintf(buf, L_BUF_SIZE, "%s%s", rootout, JB_DATA_EXT); 
-    if ((fp = fopen(buf, "w")) == NULL)
+    if ((fp = fopen(buf, "wb")) == NULL)
         return ERROR_INT("stream not opened", procName, 1);
     ncomp = ptaGetCount(ptaul);
     fprintf(fp, "jb data file\n");

@@ -277,7 +277,8 @@ PIX     *pix, *pixt;
         fname = sarrayGetString(sa, i, L_NOCOPY);
         if ((fp = fopen(fname, "r")) == NULL)
             continue;
-        format = findFileFormat(fp);
+        if(findFileFormat(fp, &format))
+            continue;
         fclose(fp);
 
             /* Convert to tiffg4 or jpeg if necessary */
@@ -422,7 +423,8 @@ PIX     *pix, *pixt;
         fname = sarrayGetString(sa, i, L_NOCOPY);
         if ((fp = fopen(fname, "r")) == NULL)
             continue;
-        format = findFileFormat(fp);
+        if(findFileFormat(fp, &format))
+            continue;
         pix = pixReadStream(fp, 0);
         fclose(fp);
         if (!pix)
@@ -518,6 +520,7 @@ l_int32  retval;
                 *pfirstfile = FALSE;
                 (*pindex)++;
             }
+
         }
         else {
             retval = convertTiffG4ToPS(filein, fileout, "a", 0, 0,
@@ -568,7 +571,8 @@ l_int32  retval;
  *      (4) The resolution is automatically set to fit to a
  *          letter-size (8.5 x 11 inch) page.
  *      (5) Both the DCT and the G4 encoding are PostScript level 2.
- *      (6) It is assumed that the page number is contained within
+ *      (6) It is assumed that the pa/home/massimo/sources/upp-svn/MyApps/Kindler/main.cpp:33: error: invalid use of ‘class Upp::Pix’
+ge number is contained within
  *          the basename (the filename without directory or extension).
  *          @numpre is the number of characters in the basename
  *          preceeding the actual page numer; @numpost is the number
@@ -828,7 +832,7 @@ l_int32      resb, resc, endpage, maskop, ret;
 
         /* Write the jpeg image first */
     if (pixc) {
-        tnamec = genTempFilename("/tmp", ".jpg");
+        tnamec = genTempFilename("/tmp", NULL, ".jpg");
         pixWrite(tnamec, pixc, IFF_JFIF_JPEG);
         endpage = (pixb) ? FALSE : TRUE;
         op = (pageno <= 1) ? "w" : "a";
@@ -842,7 +846,7 @@ l_int32      resb, resc, endpage, maskop, ret;
         /* Write the binary data, either directly or, if there is
          * a jpeg image on the page, through the mask. */
     if (pixb) {
-        tnameb = genTempFilename("/tmp", ".tif");
+        tnameb = genTempFilename("/tmp", NULL, ".tif");
         pixWrite(tnameb, pixb, IFF_TIFF_G4);
         op = (pageno <= 1 && !pixc) ? "w" : "a";
         maskop = (pixc) ? 1 : 0;

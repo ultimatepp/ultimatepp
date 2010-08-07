@@ -66,11 +66,11 @@ Pix Pix::DitherToBinaryLUT(int lowerclip, int upperclip)
 } // END Pix::DitherToBinaryLUT()
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Pix Pix::GenerateMaskByValue(int val)
+Pix Pix::GenerateMaskByValue(int val, bool useCMap)
 {
 	if(IsEmpty())
 		return Pix();
-	PIX *dPix = pixGenerateMaskByValue(pix, val);
+	PIX *dPix = pixGenerateMaskByValue(pix, val, useCMap ? 1 : 0);
 	if(!dPix)
 		return Pix();
 	return Pix(&dPix);
@@ -78,11 +78,11 @@ Pix Pix::GenerateMaskByValue(int val)
 } // END Pix::GenerateMaskByValue()
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Pix Pix::GenerateMaskByBand(int lower, int upper, int inband)
+Pix Pix::GenerateMaskByBand(int lower, int upper, int inband, bool useCMap)
 {
 	if(IsEmpty())
 		return Pix();
-	PIX *dPix = pixGenerateMaskByBand(pix, lower, upper, inband);
+	PIX *dPix = pixGenerateMaskByBand(pix, lower, upper, inband, useCMap ? 1 : 0);
 	if(!dPix)
 		return Pix();
 	return Pix(&dPix);

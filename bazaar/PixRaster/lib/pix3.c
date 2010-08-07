@@ -32,6 +32,8 @@
  *           l_int32     pixCombineMaskedGeneral()
  *           l_int32     pixPaintThroughMask()
  *           PIX        *pixPaintSelfThroughMask()
+ *           PIX        *pixMakeMaskFromLUT()
+ *           PIX        *pixSetUnderTransparency()
  *
  *    One and two-image boolean operations on arbitrary depth images
  *           PIX        *pixInvert()
@@ -46,7 +48,10 @@
  *           NUMA       *pixaCountPixels()
  *           l_int32     pixCountPixelsInRow()
  *           NUMA       *pixCountPixelsByRow()
- *           l_int32     pixThresholdPixels()
+ *           NUMA       *pixCountPixelsByColumn()
+ *           NUMA       *pixSumPixelsByRow()
+ *           NUMA       *pixSumPixelsByColumn()
+ *           l_int32     pixThresholdPixelSum()
  *           l_int32    *makePixelSumTab8()
  *           l_int32    *makePixelCentroidTab8()
  *
@@ -735,7 +740,7 @@ PIXA     *pixa;
         pixRasterop(pixf, x, y, wm, hm, PIX_SRC, pixm, 0, 0);
     }
     else
-        pixf = pixClone(pixm);
+        pixf = pixCopy(NULL, pixm);
 
         /* Get connected components of mask */
     boxa = pixConnComp(pixf, &pixa, 8);
@@ -794,6 +799,178 @@ PIXA     *pixa;
     pixaDestroy(&pixa);
     boxaDestroy(&boxa);
     return retval;
+}
+
+
+/*!
+ *  pixMakeMaskFromLUT()
+ *
+ *      Input:  pixs (2, 4 or 8 bpp; can be colormapped)
+ *              tab (256-entry LUT; 1 means to write to mask)
+ *      Return: pixd (1 bpp mask), or null on error
+ *
+ *  Notes:
+ *      (1) This generates a 1 bpp mask image, where a 1 is written in
+ *          the mask for each pixel in pixs that has a value corresponding
+ *          to a 1 in the LUT.
+ *      (2) The LUT should be of size 256.
+ */
+PIX *
+pixMakeMaskFromLUT(PIX      *pixs,
+                   l_int32  *tab)
+{
+l_int32    w, h, d, i, j, val, wpls, wpld;
+l_uint32  *datas, *datad, *lines, *lined;
+PIX       *pixd;
+
+    PROCNAME("pixMakeMaskFromLUT");
+
+    if (!pixs)
+        return (PIX *)ERROR_PTR("pixs not defined", procName, NULL);
+    if (!tab)
+        return (PIX *)ERROR_PTR("tab not defined", procName, NULL);
+    pixGetDimensions(pixs, &w, &h, &d);
+    if (d != 2 && d != 4 && d != 8)
+        return (PIX *)ERROR_PTR("pix not 2, 4 or 8 bpp", procName, NULL);
+
+    pixd = pixCreate(w, h, 1);
+    datas = pixGetData(pixs);
+    datad = pixGetData(pixd);
+    wpls = pixGetWpl(pixs);
+    wpld = pixGetWpl(pixd);
+    for (i = 0; i < h; i++) {
+        lines = datas + i * wpls;
+        lined = datad + i * wpld;
+        for (j = 0; j < w; j++) {
+            if (d == 2)
+                val = GET_DATA_DIBIT(lines, j);
+            else if (d == 4)
+                val = GET_DATA_QBIT(lines, j);
+            else  /* d == 8 */
+                val = GET_DATA_BYTE(lines, j);
+            if (tab[val] == 1)
+                SET_DATA_BIT(lined, j);
+        }
+    }
+
+    return pixd;
+}
+
+
+/*!
+ *  pixSetUnderTransparency()
+ *
+ *      Input:  pixs (32 bpp rgba)
+ *              val (32 bit unsigned color to use where alpha == 0)
+ *              debugflag (generates intermediate images)
+ *      Return: pixd (32 bpp rgba), or null on error
+ *
+ *  Notes:
+ *      (1) This is one of the few operations in leptonica that uses
+ *          the alpha blending component in rgba images.  It sets
+ *          the r, g and b components under every fully transparent alpha
+ *          component to @val.
+ *      (2) Full transparency is denoted by alpha == 0.  By setting
+ *          all pixels to @val where alpha == 0, this can improve
+ *          compressibility by reducing the entropy.
+ *      (3) The visual result depends on how the image is displayed.
+ *          (a) For display devices that respect the use of the alpha
+ *              layer, this will not affect the appearance.
+ *          (b) For typical leptonica operations, alpha is ignored,
+ *              so there will be a change in appearance because this
+ *              resets the rgb values in the fully transparent region.
+ *      (4) For reading and writing rgba pix in png format, use
+ *          pixReadRGBAPng() and pixWriteRGBAPng().
+ *      (5) For example, if you want to rewrite all fully transparent
+ *          pixels in a png file to white:
+ *              pixs = pixReadRGBAPng(<infile>);  // special read
+ *              pixd = pixSetUnderTransparency(pixs, 0xffffff00, 0);
+ *          Then either use a normal write if you won't be using transparency:
+ *              pixWrite(<outfile>, pixd, IFF_PNG);
+ *          or an RGBA write if you want to preserve the transparency layer
+ *              pixWriteRGBAPng(<outfile>, pixd);  // special write
+ *      (6) Caution.  Because rgb images in leptonica typically
+ *          have value 0 in the alpha channel, this function would
+ *          interpret the entire image as fully transparent, and set
+ *          every pixel to @val.  Because this is not desirable, instead
+ *          we issue a warning and return a copy of the input pix.
+ *          If you really want to set every pixel to the same value,
+ *          use pixSetAllArbitrary().
+ */
+PIX *
+pixSetUnderTransparency(PIX      *pixs,
+                        l_uint32  val,
+                        l_int32   debugflag)
+{
+l_int32   isblack, rval, gval, bval;
+PIX      *pixr, *pixg, *pixb, *pixalpha, *pixm, *pixt, *pixd;
+PIXA     *pixa;
+
+    PROCNAME("pixSetUnderTransparency");
+
+    if (!pixs || pixGetDepth(pixs) != 32)
+        return (PIX *)ERROR_PTR("pixs not defined or not 32 bpp",
+                                procName, NULL);
+
+    pixalpha = pixGetRGBComponent(pixs, L_ALPHA_CHANNEL);
+    pixZero(pixalpha, &isblack);
+    if (isblack) {
+        L_WARNING(
+            "alpha channel is fully transparent; likely invalid; ignoring",
+            procName);
+        pixDestroy(&pixalpha);
+        return pixCopy(NULL, pixs);
+    }
+    pixr = pixGetRGBComponent(pixs, COLOR_RED);
+    pixg = pixGetRGBComponent(pixs, COLOR_GREEN);
+    pixb = pixGetRGBComponent(pixs, COLOR_BLUE);
+
+        /* Make a mask from the alpha component with ON pixels
+         * wherever the alpha component is fully transparent (0).
+         * One can do this:
+         *     l_int32 *lut = (l_int32 *)CALLOC(256, sizeof(l_int32));
+         *     lut[0] = 1;
+         *     pixm = pixMakeMaskFromLUT(pixalpha, lut);
+         *     FREE(lut);
+         * But there's an easier way to set pixels in a mask where
+         * the alpha component is 0 ...  */
+    pixm = pixThresholdToBinary(pixalpha, 1);
+
+    if (debugflag) {
+        pixa = pixaCreate(0);
+        pixSaveTiled(pixs, pixa, 1, 1, 20, 32);
+        pixSaveTiled(pixm, pixa, 1, 0, 20, 0);
+        pixSaveTiled(pixr, pixa, 1, 1, 20, 0);
+        pixSaveTiled(pixg, pixa, 1, 0, 20, 0);
+        pixSaveTiled(pixb, pixa, 1, 0, 20, 0);
+        pixSaveTiled(pixalpha, pixa, 1, 0, 20, 0);
+    }
+
+        /* Clean each component and reassemble */
+    extractRGBValues(val, &rval, &gval, &bval);
+    pixSetMasked(pixr, pixm, rval);
+    pixSetMasked(pixg, pixm, gval);
+    pixSetMasked(pixb, pixm, bval);
+    pixd = pixCreateRGBImage(pixr, pixg, pixb);
+    pixSetRGBComponent(pixd, pixalpha, L_ALPHA_CHANNEL);
+
+    if (debugflag) {
+        pixSaveTiled(pixr, pixa, 1, 1, 20, 0);
+        pixSaveTiled(pixg, pixa, 1, 0, 20, 0);
+        pixSaveTiled(pixb, pixa, 1, 0, 20, 0);
+        pixSaveTiled(pixd, pixa, 1, 1, 20, 0);
+        pixt = pixaDisplay(pixa, 0, 0);
+        pixWrite("/tmp/junkrgb.png", pixt, IFF_PNG);
+        pixDestroy(&pixt);
+        pixaDestroy(&pixa);
+    }
+
+    pixDestroy(&pixr);
+    pixDestroy(&pixg);
+    pixDestroy(&pixb);
+    pixDestroy(&pixm);
+    pixDestroy(&pixalpha);
+    return pixd;
 }
 
 
@@ -1106,7 +1283,7 @@ l_int32  w, h;
 /*!
  *  pixZero()
  *
- *      Input:  pix
+ *      Input:  pix (all depths; not colormapped)
  *              &empty  (<return> 1 if all bits in image are 0; 0 otherwise)
  *      Return: 0 if OK; 1 on error
  *
@@ -1131,6 +1308,8 @@ l_uint32  *data, *line;
     *pempty = 1;
     if (!pix)
         return ERROR_INT("pix not defined", procName, 1);
+    if (pixGetColormap(pix) != NULL)
+        return ERROR_INT("pix is colormapped", procName, 1);
 
     w = pixGetWidth(pix) * pixGetDepth(pix);
     h = pixGetHeight(pix);
@@ -1162,7 +1341,7 @@ l_uint32  *data, *line;
 /*!
  *  pixCountPixels()
  *
- *      Input:  binary pix
+ *      Input:  pix (1 bpp)
  *              &count (<return> count of ON pixels)
  *              tab8  (<optional> 8-bit pixel lookup table)
  *      Return: 0 if OK; 1 on error
@@ -1230,7 +1409,7 @@ l_uint32  *data;
 /*!
  *  pixaCountPixels()
  *
- *      Input:  pixa (array of binary pix)
+ *      Input:  pixa (array of 1 bpp pix)
  *      Return: na of ON pixels in each pix, or null on error
  */
 NUMA *
@@ -1273,7 +1452,7 @@ PIX      *pix;
 /*!
  *  pixCountPixelsInRow()
  *
- *      Input:  binary pix
+ *      Input:  pix (1 bpp)
  *              row number
  *              &count (<return> sum of ON pixels in raster line)
  *              tab8  (<optional> 8-bit pixel lookup table)
@@ -1343,7 +1522,7 @@ l_uint32  *line;
 /*!
  *  pixCountPixelsByRow()
  *
- *      Input:  binary pix
+ *      Input:  pix (1 bpp)
  *              tab8  (<optional> 8-bit pixel lookup table)
  *      Return: na of counts, or null on error
  */
@@ -1365,10 +1544,9 @@ NUMA     *na;
     else
         tab = tab8;
 
+    h = pixGetHeight(pix);
     if ((na = numaCreate(h)) == NULL)
         return (NUMA *)ERROR_PTR("na not made", procName, NULL);
-
-    h = pixGetHeight(pix);
     for (i = 0; i < h; i++) {
         pixCountPixelsInRow(pix, i, &count, tab);
         numaAddNumber(na, count);
@@ -1382,9 +1560,157 @@ NUMA     *na;
 
 
 /*!
- *  pixThresholdPixels()
+ *  pixCountPixelsByColumn()
  *
- *      Input:  binary pix
+ *      Input:  pix (1 bpp)
+ *      Return: na of counts in each column, or null on error
+ */
+NUMA *
+pixCountPixelsByColumn(PIX  *pix)
+{
+l_int32     i, j, w, h, wpl;
+l_uint32   *line, *data;
+l_float32  *array;
+NUMA       *na;
+
+    PROCNAME("pixCountPixelsByColumn");
+
+    if (!pix || pixGetDepth(pix) != 1)
+        return (NUMA *)ERROR_PTR("pix undefined or not 1 bpp", procName, NULL);
+
+    pixGetDimensions(pix, &w, &h, NULL);
+    if ((na = numaCreate(w)) == NULL)
+        return (NUMA *)ERROR_PTR("na not made", procName, NULL);
+    numaSetCount(na, w);
+    array = numaGetFArray(na, L_NOCOPY);
+    data = pixGetData(pix);
+    wpl = pixGetWpl(pix);
+    for (i = 0; i < h; i++) {
+        line = data + wpl * i;
+        for (j = 0; j < w; j++) {
+            if (GET_DATA_BIT(line, j))
+                array[j] += 1.0;
+        }
+    }
+
+    return na;
+}
+
+
+/*!
+ *  pixSumPixelsByRow()
+ *
+ *      Input:  pix (1, 8 or 16 bpp; no colormap)
+ *              tab8  (<optional> lookup table for 1 bpp; use null for 8 bpp)
+ *      Return: na of pixel sums by row, or null on error
+ *
+ *  Notes:
+ *      (1) To resample for a bin size different from 1, use
+ *          numaUniformSampling() on the result of this function.
+ */
+NUMA *
+pixSumPixelsByRow(PIX      *pix,
+                  l_int32  *tab8)
+{
+l_int32    i, j, w, h, d, wpl;
+l_uint32  *line, *data;
+l_float32  sum;
+NUMA      *na;
+
+    PROCNAME("pixSumPixelsByRow");
+
+    if (!pix)
+        return (NUMA *)ERROR_PTR("pix not defined", procName, NULL);
+    pixGetDimensions(pix, &w, &h, &d);
+    if (d != 1 && d != 8 && d != 16)
+        return (NUMA *)ERROR_PTR("pix not 1, 8 or 16 bpp", procName, NULL);
+    if (pixGetColormap(pix) != NULL)
+        return (NUMA *)ERROR_PTR("pix colormapped", procName, NULL);
+
+    if (d == 1)
+        return pixCountPixelsByRow(pix, tab8);
+
+    if ((na = numaCreate(h)) == NULL)
+        return (NUMA *)ERROR_PTR("na not made", procName, NULL);
+    data = pixGetData(pix);
+    wpl = pixGetWpl(pix);
+    for (i = 0; i < h; i++) {
+        sum = 0.0;
+        line = data + i * wpl;
+        if (d == 8) {
+            sum += w * 255;
+            for (j = 0; j < w; j++)
+                sum -= GET_DATA_BYTE(line, j);
+        }
+        else {  /* d == 16 */
+            sum += w * 0xffff;
+            for (j = 0; j < w; j++)
+                sum -= GET_DATA_TWO_BYTES(line, j);
+        }
+        numaAddNumber(na, sum);
+    }
+
+    return na;
+}
+
+
+/*!
+ *  pixSumPixelsByColumn()
+ *
+ *      Input:  pix (1, 8 or 16 bpp; no colormap)
+ *      Return: na of pixel sums by column, or null on error
+ *
+ *  Notes:
+ *      (1) To resample for a bin size different from 1, use
+ *          numaUniformSampling() on the result of this function.
+ */
+NUMA *
+pixSumPixelsByColumn(PIX  *pix)
+{
+l_int32     i, j, w, h, d, wpl;
+l_uint32   *line, *data;
+l_float32  *array;
+NUMA       *na;
+
+    PROCNAME("pixSumPixelsByColumn");
+
+    if (!pix)
+        return (NUMA *)ERROR_PTR("pix not defined", procName, NULL);
+    pixGetDimensions(pix, &w, &h, &d);
+    if (d != 1 && d != 8 && d != 16)
+        return (NUMA *)ERROR_PTR("pix not 1, 8 or 16 bpp", procName, NULL);
+    if (pixGetColormap(pix) != NULL)
+        return (NUMA *)ERROR_PTR("pix colormapped", procName, NULL);
+
+    if (d == 1)
+        return pixCountPixelsByColumn(pix);
+
+    if ((na = numaCreate(w)) == NULL)
+        return (NUMA *)ERROR_PTR("na not made", procName, NULL);
+    numaSetCount(na, w);
+    array = numaGetFArray(na, L_NOCOPY);
+    data = pixGetData(pix);
+    wpl = pixGetWpl(pix);
+    for (i = 0; i < h; i++) {
+        line = data + wpl * i;
+        if (d == 8) {
+            for (j = 0; j < w; j++)
+                array[j] += 255 - GET_DATA_BYTE(line, j);
+        }
+        else {  /* d == 16 */
+            for (j = 0; j < w; j++)
+                array[j] += 0xffff - GET_DATA_TWO_BYTES(line, j);
+        }
+    }
+
+    return na;
+}
+
+
+/*!
+ *  pixThresholdPixelSum()
+ *
+ *      Input:  pix (1 bpp)
  *              threshold
  *              &above (<return> 1 if above threshold;
  *                               0 if equal to or less than threshold)
@@ -1399,10 +1725,10 @@ NUMA     *na;
  *          pixels before returning.
  */
 l_int32
-pixThresholdPixels(PIX      *pix,
-                   l_int32   thresh,
-                   l_int32  *pabove,
-                   l_int32  *tab8)
+pixThresholdPixelSum(PIX      *pix,
+                     l_int32   thresh,
+                     l_int32  *pabove,
+                     l_int32  *tab8)
 {
 l_uint32   word, endmask;
 l_int32   *tab;
@@ -1410,7 +1736,7 @@ l_int32    w, h, wpl, i, j;
 l_int32    fullwords, endbits, sum;
 l_uint32  *line, *data;
 
-    PROCNAME("pixThresholdPixels");
+    PROCNAME("pixThresholdPixelSum");
 
     if (!pabove)
         return ERROR_INT("pabove not defined", procName, 1);
@@ -1725,6 +2051,9 @@ PIX      *pixd, *pixsfx, *pixsfy, *pixsfxy, *pix;
  *      (4) It is assured that a square centered at (xc, yc) and of
  *          size 'dist' will not intersect with the fg of the binary
  *          mask that was used to generate pixs.
+ *      (5) We search away from the component, in approximately
+ *          the center 1/3 of its dimension.  This gives a better chance
+ *          of finding patches that are close to the component.
  */
 static l_int32
 findTilePatchCenter(PIX       *pixs,
@@ -1736,6 +2065,7 @@ findTilePatchCenter(PIX       *pixs,
                     l_int32   *pyc)
 {
 l_int32   w, h, bx, by, bw, bh, left, right, top, bot, i, j;
+l_int32   xstart, xend, ystart, yend;
 l_uint32  val, maxval;
 
     PROCNAME("findTilePatchCenter");
@@ -1754,10 +2084,12 @@ l_uint32  val, maxval;
     if (searchdir == L_HORIZ) {
         left = bx;   /* distance to left of box */
         right = w - bx - bw + 1;   /* distance to right of box */
+        ystart = by + bh / 3;
+        yend = by + 2 * bh / 3;
         maxval = 0;
         if (left > right) {  /* search to left */
             for (j = bx - 1; j >= 0; j--) {
-                for (i = by; i < by + bh; i++) {
+                for (i = ystart; i <= yend; i++) {
                     pixGetPixel(pixs, j, i, &val);
                     if (val > maxval) {
                         maxval = val;
@@ -1772,7 +2104,7 @@ l_uint32  val, maxval;
         }
         else {  /* search to right */
             for (j = bx + bw; j < w; j++) {
-                for (i = by; i < by + bh; i++) {
+                for (i = ystart; i <= yend; i++) {
                     pixGetPixel(pixs, j, i, &val);
                     if (val > maxval) {
                         maxval = val;
@@ -1789,10 +2121,12 @@ l_uint32  val, maxval;
     else {  /* searchdir == L_VERT */
         top = by;    /* distance above box */
         bot = h - by - bh + 1;   /* distance below box */
+        xstart = bx + bw / 3;
+        xend = bx + 2 * bw / 3;
         maxval = 0;
         if (top > bot) {  /* search above */
             for (i = by - 1; i >= 0; i--) {
-                for (j = bx; j < bx + bw; j++) {
+                for (j = xstart; j <=xend; j++) {
                     pixGetPixel(pixs, j, i, &val);
                     if (val > maxval) {
                         maxval = val;
@@ -1807,7 +2141,7 @@ l_uint32  val, maxval;
         }
         else {  /* search below */
             for (i = by + bh; i < h; i++) {
-                for (j = bx; j < bx + bw; j++) {
+                for (j = xstart; j <=xend; j++) {
                     pixGetPixel(pixs, j, i, &val);
                     if (val > maxval) {
                         maxval = val;

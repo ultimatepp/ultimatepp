@@ -24,6 +24,9 @@
  *     General rotation by sampling
  *              PIX     *pixRotateBySampling()
  *
+ *     Nice (slow) rotation of 1 bpp image
+ *              PIX     *pixRotateBinaryNice()
+ *
  *     Rotations are measured in radians; clockwise is positive.
  *
  *     The general rotation pixRotate() does the best job for
@@ -192,14 +195,20 @@ PIXCMAP   *cmap;
  *          and height allows the expansion to stop at the maximum
  *          required size, which is a square with side equal to
  *          sqrt(w*w + h*h).
- *      (5) Let theta be atan(w/h).  Then the height after rotation 
- *          cannot increase by a factor more than
- *               cos(theta - |angle|)
- *          whereas the width after rotation cannot increase by a
- *          factor more than 
- *               sin(theta + |angle|)
- *          These must be clipped to the maximal side, and additionally,
- *          we don't allow either the width or height to decrease.
+ *      (5) For an arbitrary angle, the expansion can be found by
+ *          considering the UL and UR corners.  As the image is
+ *          rotated, these move in an arc centered at the center of
+ *          the image.  Normalize to a unit circle by dividing by half
+ *          the image diagonal.  After a rotation of T radians, the UL
+ *          and UR corners are at points T radians along the unit
+ *          circle.  Compute the x and y coordinates of both these
+ *          points and take the max of absolute values; these represent
+ *          the half width and half height of the containing rectangle.
+ *          The arithmetic is done using formulas for sin(a+b) and cos(a+b),
+ *          where b = T.  For the UR corner, sin(a) = h/d and cos(a) = w/d.
+ *          For the UL corner, replace a by (pi - a), and you have
+ *          sin(pi - a) = h/d, cos(pi - a) = -w/d.  The equations
+ *          given below follow directly.
  */
 PIX *
 pixEmbedForRotation(PIX       *pixs,
@@ -208,18 +217,20 @@ pixEmbedForRotation(PIX       *pixs,
                     l_int32    width,
                     l_int32    height)
 {
-l_int32    w, h, d, maxside, wnew, hnew, xoff, yoff;
-l_float64  pi, theta, absangle, alpha, beta, diag;
+l_int32    w, h, d, w1, h1, w2, h2, maxside, wnew, hnew, xoff, yoff;
+l_float64  sina, cosa, fw, fh;
 PIX       *pixd;
 
     PROCNAME("pixEmbedForRotation");
 
     if (!pixs)
         return (PIX *)ERROR_PTR("pixs not defined", procName, NULL);
+    if (incolor != L_BRING_IN_WHITE && incolor != L_BRING_IN_BLACK)
+        return (PIX *)ERROR_PTR("invalid incolor", procName, NULL);
     if (L_ABS(angle) < VERY_SMALL_ANGLE)
         return pixClone(pixs);
 
-        /* Test if big enough to hold any rotation */
+        /* Test if big enough to hold any rotation of the original image */
     pixGetDimensions(pixs, &w, &h, &d);
     maxside = (l_int32)(sqrt((l_float64)(width * width) +
                              (l_float64)(height * height)) + 0.5);
@@ -227,20 +238,16 @@ PIX       *pixd;
         return pixClone(pixs);
     
         /* Find the new sizes required to hold the image after rotation */
-    pi = 3.1415926535;
-    theta = atan((l_float64)w / (l_float64)h);
-    absangle = (l_float64)(L_ABS(angle));
-    alpha = theta - absangle;
-    beta = theta + absangle;
-    diag = sqrt((l_float64)(w * w) + (l_float64)(h * h));
-    wnew = (l_int32)(diag * sin(beta) + 0.5);
-    hnew = (l_int32)(diag * cos(alpha) + 0.5);
-    wnew = L_MAX(w, wnew);  /* don't let it get smaller */
-    hnew = L_MAX(h, hnew);  /* don't let it get smaller */
-    if (wnew >= maxside)  /* clip */
-        wnew = maxside;
-    if (hnew >= maxside)  /* clip */
-        hnew = maxside;
+    cosa = cos(angle);
+    sina = sin(angle);
+    fw = (l_float64)w;
+    fh = (l_float64)h;
+    w1 = (l_int32)L_ABS(fw * cosa - fh * sina);
+    w2 = (l_int32)L_ABS(-fw * cosa - fh * sina);
+    h1 = (l_int32)L_ABS(fw * sina + fh * cosa);
+    h2 = (l_int32)L_ABS(-fw * sina + fh * cosa);
+    wnew = L_MAX(w1, w2);
+    hnew = L_MAX(h1, h2);
 
     if ((pixd = pixCreate(wnew, hnew, d)) == NULL)
         return (PIX *)ERROR_PTR("pixd not made", procName, NULL);
@@ -382,4 +389,57 @@ PIX       *pixd;
     return pixd;
 }
 
+
+/*------------------------------------------------------------------*
+ *                 Nice (slow) rotation of 1 bpp image              *
+ *------------------------------------------------------------------*/
+/*!
+ *  pixRotateBinaryNice()
+ *
+ *      Input:  pixs (1 bpp)
+ *              angle (radians; clockwise is positive; about the center)
+ *              incolor (L_BRING_IN_WHITE, L_BRING_IN_BLACK)
+ *      Return: pixd, or null on error
+ *
+ *  Notes:
+ *      (1) For very small rotations, just return a clone.
+ *      (2) This does a computationally expensive rotation of 1 bpp images.
+ *          The fastest rotators (using shears or subsampling) leave
+ *          visible horizontal and vertical shear lines across which
+ *          the image shear changes by one pixel.  To ameliorate the
+ *          visual effect one can introduce random dithering.  One
+ *          way to do this in a not-too-random fashion is given here.
+ *          We convert to 8 bpp, do a very small blur, rotate using
+ *          linear interpolation (same as area mapping), do a
+ *          small amount of sharpening to compensate for the initial
+ *          blur, and threshold back to binary.  The shear lines
+ *          are magically removed.
+ *      (3) This operation is about 5x slower than rotation by sampling.
+ */
+PIX *
+pixRotateBinaryNice(PIX       *pixs,
+                    l_float32  angle,
+                    l_int32    incolor)
+{
+PIX  *pixt1, *pixt2, *pixt3, *pixt4, *pixd;
+
+    PROCNAME("pixRotateBinaryNice");
+
+    if (!pixs || pixGetDepth(pixs) != 1)
+        return (PIX *)ERROR_PTR("pixs undefined or not 1 bpp", procName, NULL);
+    if (incolor != L_BRING_IN_WHITE && incolor != L_BRING_IN_BLACK)
+        return (PIX *)ERROR_PTR("invalid incolor", procName, NULL);
+
+    pixt1 = pixConvertTo8(pixs, 0);
+    pixt2 = pixBlockconv(pixt1, 1, 1);  /* smallest blur allowed */
+    pixt3 = pixRotateAM(pixt2, angle, incolor);
+    pixt4 = pixUnsharpMasking(pixt3, 1, 1.0);  /* sharpen a bit */
+    pixd = pixThresholdToBinary(pixt4, 128);
+    pixDestroy(&pixt1);
+    pixDestroy(&pixt2);
+    pixDestroy(&pixt3);
+    pixDestroy(&pixt4);
+    return pixd;
+}
+    
 

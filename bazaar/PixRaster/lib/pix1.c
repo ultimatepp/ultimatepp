@@ -211,11 +211,13 @@ static void
 pix_free(void  *ptr)
 {
 #ifndef COMPILER_MSVC
-    return (*pix_mem_manager.deallocator)(ptr);
+    (*pix_mem_manager.deallocator)(ptr);
+    return;
 #else  /* COMPILER_MSVC */
     /* Under MSVC++, pix_mem_manager is initialized after a call
      * to pix_malloc.  Just ignore the custom allocator feature. */
-    return free(ptr);
+    free(ptr);
+    return;
 #endif  /* COMPILER_MSVC */
 }
 
@@ -733,7 +735,8 @@ pixSizesEqual(PIX  *pix1,
  *              to return the new Pix in the input Pix struct:
  *                  void function-inplace(PIX *pix, ...) {
  *                      PIX *pixt = function-makenew(pix);
- *                      pixTransferAllData(pix, &pixt);  // pixt is destroyed
+ *                      pixTransferAllData(pix, &pixt, 0, 0);
+ *                               // pixDestroy() is called on pixt
  *                      return;
  *                  }
  *              Here, the input and returned pix are the same, as viewed
@@ -1488,6 +1491,34 @@ l_uint32  *data;
  *              val = GET_DATA_BYTE(lineg8[i], j);  // fast access; BYTE, 8
  *              ...
  *              FREE(lineg8);  // don't forget this
+ *      (5) These are convenient for accessing bytes sequentially in an
+ *          8 bpp grayscale image.  People who write image processing code
+ *          on 8 bpp images are accustomed to grabbing pixels directly out
+ *          of the raster array.  Note that for little endians, you first
+ *          need to reverse the byte order in each 32-bit word.
+ *          Here's a typical usage pattern:
+ *              pixEndianByteSwap(pix);   // always safe; no-op on big-endians
+ *              l_uint8 **lineptrs = (l_uint8 **)pixGetLinePtrs(pix);
+ *              pixGetDimensions(pix, &w, &h, NULL);
+ *              for (i = 0; i < h; i++) {
+ *                  l_uint8 *line = lineptrs[i];
+ *                  for (j = 0; j < w; j++) {
+ *                      val = line[j];
+ *                      ...
+ *                  }
+ *              }
+ *              pixEndianByteSwap(pix);  // restore big-endian order
+ *              FREE(lineptrs);
+ *          This can be done even more simply as follows:
+ *              l_uint8 **lineptrs = pixSetupByteProcessing(pix, &w, &h);
+ *              for (i = 0; i < h; i++) {
+ *                  l_uint8 *line = lineptrs[i];
+ *                  for (j = 0; j < w; j++) {
+ *                      val = line[j];
+ *                      ...
+ *                  }
+ *              }
+ *              pixCleanupByteProcessing(pix, lineptrs);
  */
 void **
 pixGetLinePtrs(PIX      *pix,
@@ -1517,6 +1548,8 @@ void     **lines;
 /*--------------------------------------------------------------------*
  *                    Print output for debugging                      *
  *--------------------------------------------------------------------*/
+extern const char *ImageFileFormatExtensions[];
+
 /*!
  *  pixPrintStreamInfo()
  *
@@ -1530,6 +1563,7 @@ pixPrintStreamInfo(FILE        *fp,
                    PIX         *pix,
                    const char  *text)
 {
+l_int32   informat;
 PIXCMAP  *cmap;
 
     PROCNAME("pixPrintStreamInfo");
@@ -1549,6 +1583,9 @@ PIXCMAP  *cmap;
         pixcmapWriteStream(fp, cmap);
     else
         fprintf(fp, "    no colormap\n");
+    informat = pixGetInputFormat(pix);
+    fprintf(fp, "    input format: %d (%s)\n", informat,
+            ImageFileFormatExtensions[informat]);
 
     return 0;
 }

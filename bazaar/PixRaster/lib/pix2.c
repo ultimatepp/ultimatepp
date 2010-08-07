@@ -22,6 +22,7 @@
  *          pad pixels, border pixels, and color components for RGB
  *      (2) Add and remove border pixels
  *      (3) Endian byte swaps
+ *      (4) Fast serialization and special processing
  *
  *      Pixel poking
  *           l_int32     pixGetPixel()
@@ -71,6 +72,7 @@
  *           PIX        *pixGetRGBComponentCmap()
  *           l_int32     composeRGBPixel()
  *           void        extractRGBValues()
+ *           l_int32     extractMinMaxComponent()
  *           l_int32     pixGetRGBLine()
  *
  *      Conversion between big and little endians
@@ -79,6 +81,17 @@
  *           l_int32     lineEndianByteSwap()
  *           PIX        *pixEndianTwoByteSwapNew()
  *           l_int32     pixEndianTwoByteSwap()
+ *
+ *      Extract raster data as binary string
+ *           l_int32     pixGetRasterData()
+ *
+ *      Serialization of pix to/from memory (uncompressed)
+ *           l_int32     pixSerializeToMemory()
+ *           PIX        *pixDeserializeFromMemory()
+ *
+ *      Setup helpers for 8 bpp byte processing
+ *           l_uint8   **pixSetupByteProcessing()
+ *           l_int32     pixCleanupByteProcessing()
  *
  *      *** indicates implicit assumption about RGB component ordering
  */
@@ -99,6 +112,10 @@ static const l_uint32 rmask32[] = {0x0,
     0x01ffffff, 0x03ffffff, 0x07ffffff, 0x0fffffff,
     0x1fffffff, 0x3fffffff, 0x7fffffff, 0xffffffff};
 
+
+#ifndef  NO_CONSOLE_IO
+#define  DEBUG_SERIALIZE        0
+#endif  /* ~NO_CONSOLE_IO */
 
 
 /*-------------------------------------------------------------*
@@ -1406,12 +1423,15 @@ pixAddBorder(PIX      *pixs,
  *      (1) For binary images:
  *             white:  val = 0
  *             black:  val = 1
- *      (2) For grayscale images:
+ *          For grayscale images:
  *             white:  val = 2 ** d - 1
  *             black:  val = 0
- *      (3) For rgb color images:
+ *          For rgb color images:
  *             white:  val = 0xffffff00
  *             black:  val = 0
+ *          For colormapped images, use 'index' found this way:
+ *             white: pixcmapGetRankIntensity(cmap, 1.0, &index);
+ *             black: pixcmapGetRankIntensity(cmap, 0.0, &index);
  */
 PIX *
 pixAddBorderGeneral(PIX      *pixs,
@@ -1445,7 +1465,7 @@ PIX     *pixd;
         op = PIX_CLR;
     else if ((d == 1 && val == 1) || (d == 2 && val == 3) ||
              (d == 4 && val == 0xf) || (d == 8 && val == 0xff) || 
-             (d == 32 && (val >> 8) == 0xffffff))
+             (d == 16 && val == 0xffff) || (d == 32 && (val >> 8) == 0xffffff))
         op = PIX_SET;
     if (op == UNDEF)
         pixSetAllArbitrary(pixd, val);   /* a little extra writing ! */
@@ -2004,6 +2024,32 @@ extractRGBValues(l_uint32  pixel,
 
 
 /*!
+ *  extractMinMaxComponent()
+ *
+ *      Input:  pixel (32 bpp RGB)
+ *              type (L_CHOOSE_MIN or L_CHOOSE_MAX)
+ *      Return: componet (in range [0 ... 255], or null on error
+ */
+l_int32
+extractMinMaxComponent(l_uint32  pixel,
+                       l_int32   type)
+{
+l_int32  rval, gval, bval, val;
+
+    extractRGBValues(pixel, &rval, &gval, &bval);
+    if (type == L_CHOOSE_MIN) {
+        val = L_MIN(rval, gval);
+        val = L_MIN(val, bval);
+    }
+    else {  /* type == L_CHOOSE_MAX */
+        val = L_MAX(rval, gval);
+        val = L_MAX(val, bval);
+    }
+    return val;
+}
+
+
+/*!
  *  pixGetRGBLine()
  *
  *      Input:  pixs  (32 bpp)
@@ -2331,4 +2377,303 @@ l_uint32   word;
 
 }
 
+
+/*-------------------------------------------------------------*
+ *             Extract raster data as binary string            *
+ *-------------------------------------------------------------*/
+/*!
+ *  pixGetRasterData()
+ *
+ *      Input:  pixs (1, 8, 32 bpp)
+ *              &data (<return> raster data in memory)
+ *              &nbytes (<return> number of bytes in data string)
+ *      Return: 0 if OK, 1 on error
+ *
+ *  Notes:
+ *      (1) This returns the raster data as a byte string, padded to the
+ *          byte.  For 1 bpp, the first pixel is the MSbit in the first byte.
+ *          For rgb, the bytes are in (rgb) order.  This is the format
+ *          required for flate encoding of pixels in a PostScript file.
+ */
+l_int32
+pixGetRasterData(PIX       *pixs,
+                 l_uint8  **pdata,
+                 l_int32   *pnbytes)
+{
+l_int32    w, h, d, wpl, i, j, rval, gval, bval;
+l_int32    databpl;  /* bytes for each raster line in returned data */
+l_uint8   *line, *data;  /* packed data in returned array */
+l_uint32  *rline, *rdata;  /* data in pix raster */
+
+    PROCNAME("pixGetRasterData");
+
+    if (!pdata || !pnbytes)
+        return ERROR_INT("&data and &nbytes not both defined", procName, 1);
+    *pdata = NULL;
+    *pnbytes = 0;
+    if (!pixs)
+        return ERROR_INT("pixs not defined", procName, 1);
+    pixGetDimensions(pixs, &w, &h, &d);
+    if (d != 1 && d != 2 && d != 4 && d != 8 && d != 16 && d != 32)
+        return ERROR_INT("depth not in {1,2,4,8,16,32}", procName, 1);
+    rdata = pixGetData(pixs);
+    wpl = pixGetWpl(pixs);
+    if (d == 1)
+        databpl = (w + 7) / 8;
+    else if (d == 2)
+        databpl = (w + 3) / 4;
+    else if (d == 4)
+        databpl = (w + 1) / 2;
+    else if (d == 8 || d == 16)
+        databpl = w * (d / 8);
+    else  /* d == 32 bpp rgb */
+        databpl = 3 * w;
+    if ((data = (l_uint8 *)CALLOC(databpl * h, sizeof(l_uint8))) == NULL)
+        return ERROR_INT("data not allocated", procName, 1);
+    *pdata = data;
+    *pnbytes = databpl * h;
+
+    for (i = 0; i < h; i++) {
+         rline = rdata + i * wpl;
+         line = data + i * databpl;
+         if (d <= 8) {
+             for (j = 0; j < databpl; j++)
+                  line[j] = GET_DATA_BYTE(rline, j);
+         }
+         else if (d == 16) {
+             for (j = 0; j < w; j++)
+                  line[2 * j] = GET_DATA_TWO_BYTES(rline, j);
+         }
+         else {  /* d == 32 bpp rgb */
+             for (j = 0; j < w; j++) {
+                  extractRGBValues(rline[j], &rval, &gval, &bval);
+                  *(line + 3 * j) = rval;
+                  *(line + 3 * j + 1) = gval;
+                  *(line + 3 * j + 2) = bval;
+             }
+         }
+    }
+
+    return 0;
+}
+
+
+/*-------------------------------------------------------------*
+ *       Serialization of pix to/from memory (uncompressed)    *
+ *-------------------------------------------------------------*/
+/*!
+ *  pixSerializeToMemory()
+ *
+ *      Input:  pixs (1, 8, 32 bpp)
+ *              &data (<return> serialized data in memory)
+ *              &nbytes (<return> number of bytes in data string)
+ *      Return: 0 if OK, 1 on error
+ *
+ *  Notes:
+ *      (1) This does a fast serialization of the principal elements
+ *          of the pix, as follows:
+ *            w         (4 bytes)
+ *            h         (4 bytes)
+ *            d         (4 bytes)
+ *            wpl       (4 bytes)
+ *            ncolors   (4 bytes) -- in colormap; 0 if there is no colormap
+ *            cdatasize (4 bytes) -- size of serialized colormap
+ *                                   = 4 * (num colors)
+ *            cdata     (cdatasize)
+ *            rdatasize (4 bytes) -- size of serialized raster data
+ *                                   = 4 * wpl * h
+ *            rdata     (rdatasize)
+ */
+l_int32
+pixSerializeToMemory(PIX        *pixs,
+                     l_uint32  **pdata,
+                     l_int32    *pnbytes)
+{
+l_int32    w, h, d, wpl, rdatasize, cdatasize, ncolors, nbytes, index;
+l_uint8   *cdata;  /* data in colormap (4 bytes/color table entry) */
+l_uint32  *data;
+l_uint32  *rdata;  /* data in pix raster */
+PIXCMAP   *cmap;
+
+    PROCNAME("pixSerializeToMemory");
+
+    if (!pdata || !pnbytes)
+        return ERROR_INT("&data and &nbytes not both defined", procName, 1);
+    *pdata = NULL;
+    *pnbytes = 0;
+    if (!pixs)
+        return ERROR_INT("pixs not defined", procName, 1);
+
+    pixGetDimensions(pixs, &w, &h, &d);
+    wpl = pixGetWpl(pixs);
+    rdata = pixGetData(pixs);
+    rdatasize = 4 * wpl * h;
+    cdatasize = 0;
+    ncolors = 0;
+    cdata = NULL;
+    if ((cmap = pixGetColormap(pixs)) != NULL)
+        pixcmapSerializeToMemory(cmap, 4, &ncolors, &cdata, &cdatasize);
+
+    nbytes = 28 + cdatasize + rdatasize;
+    if ((data = (l_uint32 *)CALLOC(nbytes / 4, sizeof(l_uint32))) == NULL)
+        return ERROR_INT("data not made", procName, 1);
+    *pdata = data;
+    *pnbytes = nbytes;
+    data[0] = w;
+    data[1] = h;
+    data[2] = d;
+    data[3] = wpl;
+    data[4] = ncolors;
+    data[5] = cdatasize;
+    if (cdatasize > 0)
+        memcpy((char *)(data + 6), (char *)cdata, cdatasize);
+    index = 6 + cdatasize / 4;
+    data[index] = rdatasize;
+    memcpy((char *)(data + index + 1), (char *)rdata, rdatasize);
+
+#if  DEBUG_SERIALIZE
+    fprintf(stderr, "Serialize:   "
+            "raster size = %d, ncolors in cmap = %d, total bytes = %d\n",
+            rdatasize, ncolors, nbytes);
+#endif  /* DEBUG_SERIALIZE */
+
+    FREE(cdata);
+    return 0;
+}
+
+
+/*!
+ *  pixDeserializeFromMemory()
+ *
+ *      Input:  data (serialized data in memory)
+ *              nbytes (number of bytes in data string)
+ *      Return: pix, or NULL on error
+ *
+ *  Notes:
+ *      (1) See pixSerializeToMemory() for the binary format.
+ */
+PIX *
+pixDeserializeFromMemory(l_uint32  *data,
+                         l_int32    nbytes)
+{
+l_int32    w, h, d, wpl, imdatasize, cdatasize, ncolors;
+l_uint32  *imdata;  /* data in pix raster */
+PIX       *pixd;
+PIXCMAP   *cmap;
+
+    PROCNAME("pixDeserializeFromMemory");
+
+    if (!data)
+        return (PIX *)ERROR_PTR("data not defined", procName, NULL);
+    if (nbytes < 28)
+        return (PIX *)ERROR_PTR("invalid data", procName, NULL);
+
+    w = data[0];
+    h = data[1];
+    d = data[2];
+    if ((pixd = pixCreate(w, h, d)) == NULL)
+        return (PIX *)ERROR_PTR("pix not made", procName, NULL);
+
+    wpl = data[3];
+    ncolors = data[4];
+    if ((cdatasize = data[5]) > 0) {
+        cmap = pixcmapDeserializeFromMemory((l_uint8 *)(&data[6]), ncolors,
+                                            cdatasize);
+        if (!cmap)
+            return (PIX *)ERROR_PTR("cmap not made", procName, NULL);
+        pixSetColormap(pixd, cmap);
+    }
+
+    imdata = pixGetData(pixd);
+    imdatasize = nbytes - 28 - cdatasize;
+    memcpy((char *)imdata, (char *)(data + 7 + cdatasize / 4), imdatasize);
+
+#if  DEBUG_SERIALIZE
+    fprintf(stderr, "Deserialize: "
+            "raster size = %d, ncolors in cmap = %d, total bytes = %d\n",
+            imdatasize, ncolors, nbytes);
+#endif  /* DEBUG_SERIALIZE */
+
+    return pixd;
+}
+
+
+/*-------------------------------------------------------------*
+ *             Setup helpers for 8 bpp byte processing         *
+ *-------------------------------------------------------------*/
+/*!
+ *  pixSetupByteProcessing()
+ *
+ *      Input:  pix (8 bpp, no colormap)
+ *              &w (<optional return> width)
+ *              &h (<optional return> height)
+ *      Return: line ptr array, or null on error
+ *
+ *  Notes:
+ *      (1) This is a simple helper for processing 8 bpp images with
+ *          direct byte access.  It can swap byte order within each word.
+ *      (2) After processing, you must call pixCleanupByteProcessing(),
+ *          which frees the lineptr array and restores byte order.
+ *      (3) Usage:
+ *              l_uint8 **lineptrs = pixSetupByteProcessing(pix, &w, &h);
+ *              for (i = 0; i < h; i++) {
+ *                  l_uint8 *line = lineptrs[i];
+ *                  for (j = 0; j < w; j++) {
+ *                      val = line[j];
+ *                      ...
+ *                  }
+ *              }
+ *              pixCleanupByteProcessing(pix, lineptrs);
+ */
+l_uint8 **
+pixSetupByteProcessing(PIX      *pix,
+                       l_int32  *pw,
+                       l_int32  *ph)
+{
+l_int32  w, h;
+
+    PROCNAME("pixSetupByteProcessing");
+
+    if (pw) *pw = 0;
+    if (ph) *ph = 0;
+    if (!pix || pixGetDepth(pix) != 8)
+        return (l_uint8 **)ERROR_PTR("pix not defined or not 8 bpp",
+                                     procName, NULL);
+    if (pixGetColormap(pix))
+        return (l_uint8 **)ERROR_PTR("pix has colormap", procName, NULL);
+
+    pixGetDimensions(pix, &w, &h, NULL);
+    if (pw) *pw = w;
+    if (ph) *ph = h;
+    pixEndianByteSwap(pix);
+    return (l_uint8 **)pixGetLinePtrs(pix, NULL);
+}
+
+
+/*!
+ *  pixCleanupByteProcessing()
+ *
+ *      Input:  pix (8 bpp, no colormap)
+ *              lineptrs (ptrs to the beginning of each raster line of data)
+ *      Return: 0 if OK, 1 on error
+ *
+ *  Notes:
+ *      (1) This must be called after processing that was initiated
+ *          by pixSetupByteProcessing() has finished.
+ */
+l_int32
+pixCleanupByteProcessing(PIX      *pix,
+                         l_uint8 **lineptrs)
+{
+    PROCNAME("pixCleanupByteProcessing");
+
+    if (!pix)
+        return ERROR_INT("pix not defined", procName, 1);
+    if (!lineptrs)
+        return ERROR_INT("lineptrs not defined", procName, 1);
+
+    pixEndianByteSwap(pix);
+    FREE(lineptrs);
+    return 0;
+}
 

@@ -29,9 +29,9 @@ liblept_a_SOURCES = adaptmap.c \
  convolve.c convolvelow.c \
  correlscore.c dwacomb.2.c \
  dwacomblow.2.c edge.c \
- endiantest.c \
  enhance.c fhmtauto.c \
  fhmtgen.1.c fhmtgenlow.1.c \
+ finditalic.c \
  flipdetect.c fliphmtgen.c \
  fmorphauto.c fmorphgen.1.c \
  fmorphgenlow.1.c fpix1.c fpix2.c \
@@ -51,13 +51,14 @@ liblept_a_SOURCES = adaptmap.c \
  pixabasic.c pixacc.c \
  pixafunc1.c pixafunc2.c \
  pixalloc.c pixarith.c \
- pixconv.c pixtiling.c \
+ pixcomp.c pixconv.c pixtiling.c \
  pngio.c pngiostub.c \
  pnmio.c pnmiostub.c \
- projective.c psio.c psiostub.c \
+ projective.c psio1.c psio1stub.c \
+ psio2.c psio2stub.c \
  ptra.c pts.c queue.c \
  rank.c readbarcode.c readfile.c \
- rop.c ropiplow.c \
+ regutils.c rop.c ropiplow.c \
  roplow.c rotateam.c \
  rotateamlow.c rotate.c \
  rotateorth.c rotateorthlow.c \
@@ -76,10 +77,11 @@ liblept_a_SOURCES = adaptmap.c \
 include_HEADERS = allheaders.h alltypes.h arrayaccess.h \
  array.h bbuffer.h bmf.h bmp.h ccbord.h environ.h \
  gplot.h heap.h imageio.h jbclass.h jmorecfg.h jpeglib.h leptprotos.h list.h \
- morph.h pix.h ptra.h queue.h readbarcode.h stack.h watershed.h
+ morph.h pix.h ptra.h queue.h readbarcode.h regutils.h \
+ stack.h watershed.h
 
 EXTRA_DIST = Makefile.mingw arrayaccess.h.vc arrayaccess.h.vc60 \
- hmttemplate1.txt hmttemplate2.txt leptonica-license.txt \
- leptonlib.sln leptonlib.vcproj leptonlib.dsp leptonlib.dsw \
- morphtemplate1.txt morphtemplate2.txt xtractprotos.c
+ endiantest.c hmttemplate1.txt hmttemplate2.txt leptonica-license.txt \
+ ../leptonlib.dsp ../leptonlib.dsw morphtemplate1.txt \
+ morphtemplate2.txt xtractprotos.c
 

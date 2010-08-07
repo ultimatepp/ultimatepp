@@ -24,6 +24,9 @@
  *          l_int32          pixWriteJpeg()  [ special top level ]
  *          l_int32          pixWriteStreamJpeg()
  *
+ *    Setting special flag(s)
+ *          void             l_jpegSetNoChromaSampling()
+ *
  *    Extraction of jpeg header information
  *          l_int32          extractJpegDataFromFile()
  *          l_int32          extractJpegDataFromArray()
@@ -60,6 +63,13 @@
  *    does not exit, and set up the cinfo structure so that the
  *    low-level jpeg library will call this error handler instead
  *    of the default function error_exit().
+ *
+ *    There is a special flag for not subsampling the U,V (chroma)
+ *    channels.  This gives higher quality for the color, which is
+ *    important for some situations.  The standard subsampling is
+ *    2x2 on both channels.
+ *      var_JPEG_NO_CHROMA_SAMPLING: default is 0 (false)
+ *    This is set with l_jpegSetNoChromaSampling().
  */
 
 #include <stdio.h>
@@ -76,6 +86,7 @@
 /* --------------------------------------------*/
 
 #include <setjmp.h>
+//#include "jpeglib.h"
 #include <plugin/jpg/lib/jpeglib.h>
 
 static void jpeg_error_do_not_exit(j_common_ptr cinfo);
@@ -92,6 +103,10 @@ static boolean jpeg_comment_callback(j_decompress_ptr cinfo);
 static l_int32  locateJpegImageParameters(l_uint8 *, l_int32, l_int32 *);
 static l_int32  getNextJpegMarker(l_uint8 *, l_int32, l_int32 *);
 static l_int32  getTwoByteParameter(l_uint8 *, l_int32);
+
+/* ----------------Set default for write option ----------------- */
+    /* Do not subsample the chroma channels; default is 2x2 subsampling */
+static l_int32   var_JPEG_NO_CHROMA_SAMPLING = 0;
 
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_INFO      0
@@ -166,7 +181,7 @@ PIX   *pix;
  *                               palette image if color)
  *              reduction (scaling factor: 1, 2, 4 or 8)
  *              &pnwarn (<optional return> number of warnings)
- *              hint: a bitwise OR of L_HINT_* values
+ *              hint: (a bitwise OR of L_HINT_* values); use 0 for no hints
  *      Return: pix, or null on error
  *
  *  Usage: see pixReadJpeg()
@@ -225,6 +240,7 @@ l_uint8                       *comment = NULL;
     jpeg_stdio_src(&cinfo, fp);
     jpeg_read_header(&cinfo, TRUE);
     cinfo.scale_denom = reduction;
+    cinfo.scale_num = 1;
     if (hint & L_HINT_GRAY)
         cinfo.out_color_space = JCS_GRAYSCALE;
     jpeg_calc_output_dimensions(&cinfo);
@@ -362,7 +378,6 @@ l_uint8                       *comment = NULL;
 }
 
 
-
 /*---------------------------------------------------------------------*
  *                             Writing Jpeg                            *
  *---------------------------------------------------------------------*/
@@ -420,14 +435,17 @@ FILE  *fp;
  *          for luminosity and a lower resolution one for the chromas.
  *      (2) Progressive encoding gives better compression, at the
  *          expense of slower encoding and decoding.
- *      (3) There are three possibilities:
+ *      (3) Standard chroma subsampling is 2x2 on both the U and V
+ *          channels.  For highest quality, use no subsampling.  This
+ *          option is set by l_jpegSetNoChromaSampling(1).
+ *      (4) There are three possibilities:
  *          * Grayscale image, no colormap: compress as 8 bpp image.
  *          * rgb full color image: copy each line into the color
  *            line buffer, and compress as three 8 bpp images.
  *          * 8 bpp colormapped image: convert each line to three
  *            8 bpp line images in the color line buffer, and
  *            compress as three 8 bpp images.
- *      (4) The only valid pixel depths in leptonica are 1, 2, 4, 8, 16
+ *      (5) The only valid pixel depths in leptonica are 1, 2, 4, 8, 16
  *          and 32 bpp.  However, it is possible, and in some cases desirable,
  *          to write out a jpeg file using an rgb pix that has 24 bpp.
  *          This can be created by appending the raster data for a 24 bpp
@@ -475,9 +493,7 @@ const char                  *text;
     rmap = NULL;
     gmap = NULL;
     bmap = NULL;
-    w = pixGetWidth(pix);
-    h = pixGetHeight(pix);
-    d = pixGetDepth(pix);
+    pixGetDimensions(pix, &w, &h, &d);
     if (d != 8 && d != 24 && d != 32)
         return ERROR_INT("bpp must be 8, 24 or 32", procName, 1);
 
@@ -525,9 +541,27 @@ const char                  *text;
         cinfo.Y_density = yres;
     }
 
+        /* Set the quality and progressive parameters */
     jpeg_set_quality(&cinfo, quality, TRUE);
     if (progressive) {
         jpeg_simple_progression(&cinfo);
+    }
+
+        /* Set the chroma subsampling parameters.  This is done in
+         * YUV color space.  The Y (intensity) channel is never subsampled.
+         * The standard subsampling is 2x2 on both the U and V channels.
+         * Notation on this is confusing.  For a nice illustrations, see
+         *   http://en.wikipedia.org/wiki/Chroma_subsampling
+         * The standard subsampling is written as 4:2:0.
+         * We allow high quality where there is no subsampling on the
+         * chroma channels: denoted as 4:4:4.  */
+    if (var_JPEG_NO_CHROMA_SAMPLING == 1) {
+        cinfo.comp_info[0].h_samp_factor = 1;
+        cinfo.comp_info[0].v_samp_factor = 1;
+        cinfo.comp_info[1].h_samp_factor = 1;
+        cinfo.comp_info[1].v_samp_factor = 1;
+        cinfo.comp_info[2].h_samp_factor = 1;
+        cinfo.comp_info[2].v_samp_factor = 1;
     }
 
     jpeg_start_compress(&cinfo, TRUE);
@@ -591,6 +625,23 @@ const char                  *text;
 
 
 /*---------------------------------------------------------------------*
+ *                     Setting special write flag                      *
+ *---------------------------------------------------------------------*/
+/*!
+ *  l_jpegSetNoChromaSampling()
+ *
+ *      Input:  flag (0 for standard 2x2 chroma subsampling)
+ *                    1 for no chroma subsampling (high quality))
+ *      Return: void
+ */
+void
+l_jpegSetNoChromaSampling(l_int32  flag)
+{
+    var_JPEG_NO_CHROMA_SAMPLING = flag;
+}
+
+
+/*---------------------------------------------------------------------*
  *                Extraction of jpeg header information                *
  *---------------------------------------------------------------------*/
 /*!
@@ -631,9 +682,9 @@ FILE     *fpin;
     *pdata = NULL;
     *pnbytes = 0;
 
-    if ((fpin = fopen(filein, "r")) == NULL)
+    if ((fpin = fopen(filein, "rb")) == NULL)
         return ERROR_INT("filein not defined", procName, 1);
-    format = findFileFormat(fpin);
+    findFileFormat(fpin, &format);
     fclose(fpin);
     if (format != IFF_JFIF_JPEG)
         return ERROR_INT("filein not jfif jpeg", procName, 1);
