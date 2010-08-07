@@ -389,3 +389,30 @@ StatementExecutor& SQLStatementExecutor();
 	typedef Sql        QSql;
 	typedef SqlSession QSession;
 #endif
+
+class SqlMassInsert {
+	struct Row : Moveable<Row> {
+		dword          nulls;
+		Vector <Value> value;
+	};
+
+	Sql&            sql;
+	String          table;
+	Vector<String>  column;
+	Vector<Row>     cache;
+	int             pos;
+	
+	void            NewRow();
+	
+
+public:
+	SqlMassInsert& operator()(SqlId col, const Value& val);
+	SqlMassInsert& EndRow();
+	void           Flush();
+	
+	SqlMassInsert(Sql& sql, SqlId table) : sql(sql), table(~table) { pos = 0; }
+#ifndef NOAPPSQL
+	SqlMassInsert(SqlId table) : sql(SQL), table(~table) { pos = 0; }
+#endif
+	~SqlMassInsert();
+};
