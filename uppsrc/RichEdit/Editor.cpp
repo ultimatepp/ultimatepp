@@ -105,13 +105,13 @@ void RichEdit::Paint(Draw& w)
 		if(pagesz.cy == INT_MAX) {
 			pw.size.cy = INT_MAX;
 			if(viewborder)
-				DrawFrame(w, tr.left, (int)sb ? -1 : 0, pw.size.cx + 2, 9999, SColorShadow);
+				DrawFrame(w, tr.left - 1, (int)sb ? -1 : 0, pw.size.cx + 4, 9999, SColorShadow);
 		}
 		else
 		if(viewborder)
 			for(int i = 0; i <= py.page; i++)
-				DrawFrame(w, tr.left, i * (pw.size.cy + 3) + 1 - sb,
-				          pw.size.cx + 2, pw.size.cy + 2, SColorShadow);
+				DrawFrame(w, tr.left - 1, i * (pw.size.cy + 3) + 1 - sb,
+				          pw.size.cx + 4, pw.size.cy + 2, SColorShadow);
 		PaintInfo pi;
 		pi.context = context;
 		pi.zoom = zoom;
