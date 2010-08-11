@@ -29,13 +29,17 @@ public:
 		queue.Clear();
 		qMutex.Leave();
 		
-		Vector<CallbackQueue *> &q = queues.Get(id);
-		for (int i=0; i<q.GetCount(); ++i)
+		int qi = queues.Find(id);
+		if (qi >= 0)
 		{
-			if (q[i] == this)
+			Vector<CallbackQueue *> &q = queues[qi];
+			for (int i=0; i<q.GetCount(); ++i)
 			{
-				q.Remove(i);
-				break;
+				if (q[i] == this)
+				{
+					q.Remove(i);
+					break;
+				}
 			}
 		}
 	}
@@ -47,6 +51,7 @@ public:
 		{ \
 			queue.DropHead(); \
 			addSem = false; \
+			LOG(Format("MtAlt: queue is too big (this:%08X)", (int) this)); \
 		} \
 		queue.AddTail(e); \
 		qMutex.Leave(); \
@@ -239,13 +244,10 @@ private:
 	
 	bool Execute()
 	{
-		qMutex.Enter();
 		if (queue.IsEmpty())
-		{
-			qMutex.Leave();
 			return false;
-		}
 		
+		qMutex.Enter();
 		Element *e = queue.DetachHead();
 		qMutex.Leave();
 		e->Execute();
