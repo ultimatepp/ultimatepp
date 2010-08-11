@@ -7401,7 +7401,11 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 	int s, e;
 	for(int i = fixed_rows; i < total_rows; i++)
 	{
+		if(!vitems[i].clickable)
+			continue;
+		
 		int idv = vitems[i].id;
+		
 		for(int j = fixed_cols; j < total_cols; j++)
 		{
 			int idh = hitems[j].id;
@@ -7409,7 +7413,7 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 			it.Found(false);
 			it.fs = it.fe = 0;
 
-			if(hitems[j].hidden)
+			if(hitems[j].hidden || !hitems[j].clickable)
 				continue;
 
 			if(Match(f, (WString) GetStdConvertedColumn(idh, it.val), s, e))
@@ -7431,6 +7435,9 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 	int rows = 0;
 	for(int i = fixed_rows; i < total_rows; i++)
 	{
+		if(!vitems[i].clickable)
+			continue;
+
 		bool match = false;
 		int idv = vitems[i].id;
 		for(int j = fixed_cols; j < total_cols; j++)
@@ -7440,7 +7447,7 @@ int GridCtrl::ShowMatchedRows(const WString &f)
 			it.Found(false);
 			it.fs = it.fe = 0;
 
-			if(hitems[j].hidden)
+			if(hitems[j].hidden || !hitems[j].clickable)
 				continue;
 
 			if(Match(f, (WString) GetStdConvertedColumn(idh, it.val), s, e))
