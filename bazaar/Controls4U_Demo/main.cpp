@@ -19,13 +19,13 @@ Controls4U_Demo::Controls4U_Demo() {
 	CtrlLayout(*this, "Controls4U Demo");
 	Sizeable().Zoomable();
 
+	tab.Add(fileBrowser_Demo.SizePos(), "FileBrowser Text");	
 #if defined(PLATFORM_WIN32) 	
 	tab.Add(vlc_Demo.SizePos(), "VLC ActiveX");
 	tab.Add(firefox_Demo.SizePos(), "Firefox ActiveX");
 	tab.Add(iexplorer_Demo.SizePos(), "Internet Explorer ActiveX");
 #endif
-//tab.Add(fileBrowser_Demo.SizePos(), "FileBrowser Text");	
-	tab.Add(meter_Demo.SizePos(), "Meter");
+	tab.Add(meter_Demo.SizePos(), "Meter & Knob");
 	tab.Add(staticClock_Demo.SizePos(), "StaticClock");
 	tab.Add(editFileFolder_Demo.SizePos(), "StaticImage & EditFile/Folder");
 	tab.Add(staticCtrls_Demo.SizePos(), "Static Controls");
@@ -60,7 +60,7 @@ EditFileFolder_Demo::EditFileFolder_Demo() {
 	CtrlLayout(*this);
 
 	FileName.ActiveDir(GetDesktopFolder());
-	FileName.Type("Image files", "*.png, *.jpg, *.jpeg, *.tiff, *.bmp, *.gif");
+	FileName.Type("Image files", "*.png, *.jpg, *.jpeg, *.tif*, *.bmp, *.gif");
 	FileName.AllFilesType();
 	FileName.WhenChange = THISBACK(OnNewFile);
 	angleList.Add(0, "0º").Add(1, "90º").Add(2, "180º").Add(3, "270º").SetData(0);
@@ -122,11 +122,19 @@ StaticClock_Demo::StaticClock_Demo() {
 	back.Set(Images::cream2());
 };
 
-void Meter_Demo::ChangeValue() {
-	int val = slider.GetData();
+void Meter_Demo::ChangeValueKnob1() {
+	int val = knob1.GetData();
 	meter1.SetData(val);
+}
+
+void Meter_Demo::ChangeValueKnob2() {
+	int val = knob2.GetData();
 	meter2.SetData(val);
 	meter3.SetData(val);
+}
+
+void Meter_Demo::ChangeValueKnob3() {
+	int val = knob3.GetData();
 	meter4.SetData(val);
 	meter5.SetData(val);		
 }
@@ -136,28 +144,63 @@ void Meter_Demo::ChangeProperties() {
 	meter1.SetNumber(checkNumber);
 }
 
+void Meter_Demo::ChangePropertiesKnob() {
+	knob1.SetColorType(~knobColorType);
+	knob1.SetNumber(knobCheckNumber);
+	knob1.SetInterlocking(knobCheckInterlocking);
+	knob1.SetMark(~knobSetMark);
+}
+
 Meter_Demo::Meter_Demo() {
 	CtrlLayout(*this);
-	slider.MinMax(100, 0);
-	slider.SetData(0);
-	slider.WhenSlideFinish = THISBACK(ChangeValue);
-	colorType.Add(0, "WhiteType").Add(1, "BlackType").SetData(1);
+	knob1.SetMin(0).SetMax(100).SetStep(25).SetAngleBegin(225).SetAngleEnd(315).ClockWise(true);
+	knob1.SetData(0);
+	knob1.WhenSlideFinish = THISBACK(ChangeValueKnob1);
+	knob2.SetMin(0).SetMax(100).SetStep(10).SetAngleBegin(180).SetAngleEnd(0).ClockWise(true)
+		 .SetColorType(Knob::SimpleWhiteType).SetNumber(false);
+	knob2.SetData(0);
+	knob2.WhenSlideFinish = THISBACK(ChangeValueKnob2);
+	knob3.SetMin(0).SetMax(100).SetStep(20).SetAngleBegin(180).SetAngleEnd(0).ClockWise(false)
+		 .SetColorType(Knob::SimpleWhiteType).SetMark(Knob::Circle).SetInterlocking();
+	knob3.SetData(0);
+	knob3.WhenSlideFinish = THISBACK(ChangeValueKnob3);
+	colorType.Add(Meter::WhiteType, "WhiteType").Add(Meter::BlackType, "BlackType")
+			 .SetData(Meter::BlackType);
 	colorType.WhenAction = THISBACK(ChangeProperties);	
 	checkNumber.WhenAction = THISBACK(ChangeProperties);
 	checkNumber = true;
+	knobColorType.Add(Knob::SimpleWhiteType, "SimpleWhiteType")
+				 .Add(Knob::SimpleBlackType, "SimpleBlackType")
+				 .Add(Knob::WhiteType, "WhiteType")
+				 .Add(Knob::BlackType, "BlackType").SetData(Knob::SimpleWhiteType);
+	knobColorType.WhenAction = THISBACK(ChangePropertiesKnob);	
+	knobCheckNumber = true;
+	knobCheckNumber.WhenAction = THISBACK(ChangePropertiesKnob);	
+	knobCheckInterlocking.WhenAction = THISBACK(ChangePropertiesKnob);	
+	knobSetMark.Add(Knob::NoMark, "NoMark")
+			   .Add(Knob::Line, "Line")
+			   .Add(Knob::Circle, "Circle").SetData(Knob::Line);
+	knobSetMark.WhenAction = THISBACK(ChangePropertiesKnob);	
 	back.Set(Images::cream2());
 }
 
 FileBrowser_Demo::FileBrowser_Demo() {
 	CtrlLayout(*this);
 
-	browser.SetFlags(USE_TRASH_BIN | BROWSE_LINKS | DELETE_READ_ONLY);
+	browser.SetReadOnly().SetUseTrashBin().SetBrowseLinks().SetDeleteReadOnly().SetAskBeforeDelete().SetDragAndDrop();
+	
+	browser.WhenAction = THISBACK(FileOpened);
+	browser.WhenSelected = THISBACK(FileSelected);
 	back.Set(Images::paper());
 }
 
-void FileBrowser_Demo::OnNewFile() {
-	if (!clipImage.Set(~browser))
-		Exclamation("File not found");
+void FileBrowser_Demo::FileSelected() {
+	fileSelected = ~browser;
+}
+
+void FileBrowser_Demo::FileOpened() {
+	if (!LaunchFile(~browser))
+		Exclamation(Format(t_("Sorry. It is not possible to open %s"), DeQtf(~browser)));
 }
 
 void FileBrowser_Demo::ChangeProperties() {

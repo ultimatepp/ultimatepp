@@ -36,8 +36,11 @@ class Meter_Demo : public WithMeter<StaticRect> {
 public:
 	typedef Meter_Demo CLASSNAME;
 	Meter_Demo();
-	void ChangeValue();
+	void ChangeValueKnob1();
+	void ChangeValueKnob2();
+	void ChangeValueKnob3();
 	void ChangeProperties();
+	void ChangePropertiesKnob();
 };
 
 class FileBrowser_Demo : public WithFileBrowser<StaticRect> {
@@ -45,7 +48,8 @@ public:
 	typedef FileBrowser_Demo CLASSNAME;
 	FileBrowser_Demo();
 	
-	void OnNewFile();
+	void FileSelected();
+	void FileOpened();
 	void ChangeProperties();
 };
 
