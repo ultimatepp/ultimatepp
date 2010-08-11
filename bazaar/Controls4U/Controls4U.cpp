@@ -197,6 +197,7 @@ bool StaticImage::Set(String _fileName) {
 	fileName = _fileName;
     origImage.Clear();	
 	origImage = StreamRaster::LoadFileAny(_fileName);
+	
 	if (angle != Angle_0)
 		SetAngle(angle);
 	Refresh();
@@ -791,7 +792,7 @@ void Meter::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, doubl
 	}
 }
 
-double Meter::AngAdd(double ang, double val)
+double AngAdd(double ang, double val)
 {
 	ang += val;
 	while (ang >= 360)
@@ -1027,8 +1028,8 @@ Meter::Meter() {
 	step = 20;	
 	angleBegin = 120;
 	angleEnd = 40;
-	clockWise = false;
-	number = false;
+	clockWise = true;
+	number = true;
 	colorType = WhiteType;
 	sensibility = 30;
 	speed = 1;
@@ -1036,7 +1037,304 @@ Meter::Meter() {
 	kill = 0;
 }
 
-struct DisplayNameIcon : Display {
+Knob::Knob() : value(0), minv(0), maxv(100), step(20), fineStep(1), angleBegin(225), angleEnd(315), 
+			   colorType(SimpleWhiteType), clockWise(true), number(true), mark(Line), 
+			   interlocking (false)  {
+	Transparent();
+}
+
+void Knob::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double begin, double end, 
+		double ang0, double ang1, int direction, double step, double bigF, Color color) {
+	if (direction == -1) 
+		Swap(ang0, ang1);
+	ang0 = ToRad(ang0);
+	ang1 = ToRad(ang1);
+	step = ToRad(step);
+	if (ang0 > ang1)
+		ang1 += 2*M_PI;
+	double width = bigF;
+	for (double i = ang0; i <= ang1+0.1; i += step) {
+		double x0 = cx + end*R*cos(i);
+		double y0 = cy - end*R*sin(i);
+		double x1 = cx + begin*R*cos(i);
+		double y1 = cy - begin*R*sin(i);
+		w.DrawLine(x0, y0, x1, y1, width, color);
+	}
+}
+
+void Knob::PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
+	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color)
+{
+	a0 = ToRad(a0);
+	step = ToRad(step);
+	Font fnt = Arial((int)(7.5*bigF));
+	while (minv <= maxv) {
+		double x = cx + 0.8*R*cos(a0);
+		double y = cy - 0.8*R*sin(a0);
+		w.DrawCenterText(x, y, FormatDouble(minv), fnt, color);
+		a0 += step*direction;
+		minv += stepv;
+	}
+}
+
+void Knob::Paint(Draw& w) {
+	Size sz = GetSize();
+	double maxgrad = fabs(angleEnd - angleBegin);
+	if (clockWise)
+		maxgrad = 360 - maxgrad;
+	double angle = (value - minv)*maxgrad/(maxv - minv);
+	if (clockWise)
+		angle = angleBegin - angle;
+	else
+		angle = angleBegin + angle;
+	angle = ToRad(angle);
+	double r = min(GetSize().cx/2., GetSize().cy/2.);
+	double cx = r;
+	double cy = r;
+	
+	ImageBuffer ib(sz);
+	MyBufferPainter sw(ib);	
+	sw.Clear(RGBAZero());
+	
+	int direction;
+	if (clockWise)
+		direction = -1;
+	else
+		direction = 1;
+	double stepa = step*maxgrad/(maxv - minv);	
+	
+	if (number) {
+		PaintNumbers(sw, cx, cy, r, angleBegin, stepa, direction, minv, maxv, step, r/40, Black());
+		PaintMarks(sw, cx, cy, r, 0.6, 0.7, angleBegin, angleEnd, direction, stepa, r/40., Black());
+		r *= 0.6;
+	} else {
+		PaintMarks(sw, cx, cy, r, 0.9, 1, angleBegin, angleEnd, direction, stepa, r/40., Black());
+		r *= 0.9;
+	}
+	
+	if (colorType == SimpleWhiteType || colorType == SimpleBlackType) {
+		Color fill = (colorType == SimpleWhiteType) ? White() : Black();
+		double lineW = 1;
+		double capt = 0;
+		if (HasFocus())
+			lineW *= r/25.;
+		if (HasCapture()) 
+			capt = 1;
+
+		sw.Circle(cx, cy, r-capt-lineW).Stroke(lineW, Black()).Fill(fill);
+		
+		Color lineColor = (colorType == SimpleWhiteType) ? Black() : White();
+		if (mark == Line)
+			sw.DrawLine(cx+(r-capt-lineW)*cos(angle), cy-(r-capt-lineW)*sin(angle), 
+					    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
+		else if (mark == Circle)
+			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Stroke(lineW, lineColor).Fill(fill);
+	} else if (colorType == WhiteType || colorType == BlackType) {
+		Color fill = (colorType == WhiteType) ? White() : Black();
+		double lineW = 1;
+		double capt = 0;
+		if (HasFocus())
+			lineW *= r/25.;
+		if (HasCapture()) 
+			capt = 1;
+
+		sw.Circle(cx, cy, r-capt-lineW).Fill(fill);
+		
+		int wm = GetSize().cx;
+		if (colorType == WhiteType) {
+			sw.Begin();
+				sw.BeginMask();
+					sw.Move(0, 0).Line(wm, 0)
+					  .Line(wm, wm).Line(0, wm)
+					  .Fill(wm/4, wm/4, Black(), 2*wm, Color(220, 220, 220));
+				sw.End();
+				sw.Circle(cx, cy, r-capt-lineW).Fill(Black());
+			sw.End();
+		} else {
+			sw.Begin();
+				sw.BeginMask();
+					sw.Ellipse(cx, cy, r-capt-lineW, r-capt-lineW).Fill(Color(60, 60, 60));
+				sw.End();
+				sw.Ellipse(cx, 0.5*cy, r-capt-lineW, (r-capt-lineW)/2).Fill(White());
+			sw.End();		
+		}		
+		Color lineColor = (colorType == WhiteType) ? Black() : White();
+		Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
+		if (mark == Line)
+			sw.DrawLine(cx+(r-capt-lineW)*cos(angle), cy-(r-capt-lineW)*sin(angle), 
+					    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
+		else if (mark == Circle) {
+			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Fill(fill);
+			
+			if (colorType == WhiteType) {
+				sw.Begin();
+					sw.BeginMask();
+						sw.Move(0, 0).Line(wm, 0)
+						  .Line(wm, wm).Line(0, wm)
+						  .Fill(wm/4, wm/4, Black(), 2*wm, almostColor);
+					sw.End();
+					sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Fill(Black());
+				sw.End();
+			} else {
+				sw.Begin();
+					sw.BeginMask();
+						sw.Ellipse(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r, 0.15*r).Fill(almostColor);
+					sw.End();
+					sw.Ellipse(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle)+0.15*r/2, 0.15*r, 0.15*r/2).Fill(lineColor);
+					sw.Ellipse(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle)-0.15*r*0.9, 0.15*r, 0.15*r/2).Fill(lineColor);
+				sw.End();					
+			}
+		}
+	}
+	w.DrawImage(0, 0, ib);
+}
+
+bool Knob::Key(dword key, int repcnt) {
+	double fs = fineStep;
+	if (interlocking)
+		fs = step;
+	
+	if(IsEditable())
+		switch(key) {
+		case K_RIGHT:
+		case K_UP:
+			Inc(fs);
+			return true;
+		case K_PAGEUP:
+			Inc(step);
+			return true;
+		case K_LEFT:
+		case K_DOWN:
+			Dec(fs);
+			return true;
+		case K_PAGEDOWN:
+			Dec(step);
+			return true;
+		}
+	return Ctrl::Key(key, repcnt);
+}
+
+double Knob::SliderToClient(Point pos) {
+	double r = min(GetSize().cx/2., GetSize().cy/2.);
+	double rx = r-pos.x;
+	double ry = r-pos.y;
+	if (rx*rx + ry*ry > r*r)
+		return Null;
+	double angle = atan(fabs(ry/rx))*180/M_PI;
+	if (pos.x > r) {
+		if (pos.y > r)
+			angle = 360 - angle;
+	} else {
+		if (pos.y > r)
+			angle += 180;
+		else
+			angle = 180 - angle;
+	}
+	return angle;
+}	
+
+void Knob::LeftDown(Point pos, dword keyflags) {
+	if(!IsEditable())
+		return;
+	SetWantFocus();
+	angleClick = SliderToClient(pos);
+	if (IsNull(angleClick))
+		return;
+	SetCapture();
+	Refresh();
+}
+	
+void Knob::LeftRepeat(Point p, dword f) {
+	if(!HasCapture())
+		LeftDown(p, f);
+}
+
+void Knob::LeftUp(Point pos, dword keyflags) {
+	if (HasCapture()) {
+		if (interlocking)
+			value = step*fround((value-minv)/step);
+		WhenSlideFinish();
+	}
+	Refresh();
+}
+
+void Knob::MouseMove(Point pos, dword keyflags) {
+	if(!HasCapture()) 
+		return;
+	double angle = SliderToClient(pos);
+	if (IsNull(angle)) {
+		angleClick = Null;
+		return;
+	}
+	if (IsNull(angleClick)) {
+		angleClick = angle;
+		return;
+	}
+	double deltaAngle = angleClick - angle;
+	deltaAngle *= clockWise ? 1 : -1;
+	if (fabs(deltaAngle) > 180)
+		deltaAngle = -Sign(deltaAngle)*(360 - fabs(deltaAngle));
+	double maxgrad = fabs(angleEnd - angleBegin);
+	if (clockWise)
+		maxgrad = 360 - maxgrad;
+	double deltaValue = deltaAngle*(maxv - minv)/maxgrad;
+	double n = minmax(value + deltaValue, minv, maxv);
+	angleClick = angle;
+	if (n != value) {
+		value = n;
+		WhenSlideFinish();
+		UpdateActionRefresh();
+	}
+}
+
+void Knob::SetData(const Value& v) {
+	double n = minmax(double(v), minv, maxv);
+	if(n != value) {
+		value = n;
+		UpdateRefresh();
+	}
+}
+
+Value Knob::GetData() const {
+	return value;
+}
+
+void Knob::Dec(double st) {
+	double n = max(value - st, minv);
+	if(n != value) {
+		value = n;
+		WhenSlideFinish();
+		Refresh();
+	}
+}
+
+void Knob::Inc(double st) {
+	double n = min(value + st, maxv);
+	if(n != value) {
+		value = n;
+		WhenSlideFinish();
+		Refresh();
+	}
+}
+
+void Knob::GotFocus() {
+	Refresh();
+}
+
+void Knob::LostFocus() {
+	Refresh();
+}
+
+
+void FileBrowser::AddFolder(String folder, String &myFolders, TreeCtrl &folders, int id) {
+	if (!folder.IsEmpty() && DirectoryExists(folder))
+		if (myFolders.Find(folder + ";") < 0) {
+			folders.Add(id, NativePathIconX(folder, true, flags), folder, GetFileName(folder), true);	
+			myFolders << folder << ";";		
+		}
+}
+
+struct DisplayNameIcon : public Display {
 	Font fnt;
 
 	virtual Size GetStdSize(const Value& q) const {
@@ -1063,15 +1361,35 @@ struct DisplayNameIcon : Display {
 	DisplayNameIcon() { fnt = StdFont(); }
 };
 
-void FileBrowser::AddMyFolder(String folder, String &myFolders, TreeCtrl &folders, int id) {
-	if (!folder.IsEmpty())
-		if (myFolders.Find(folder + ";") < 0) {
-			folders.Add(id, NativePathIconX(folder, true, fileFlags), folder, GetFileName(folder), true);	
-			myFolders << folder << ";";		
-		}
-}
+struct FileNameConvert : public Convert {
+	static ValueArray values;
+	Value Format(const Value& v) const {
+		values = v;
+		ValueArray va = v;		
+		return GetFileName(String(va[0]));
+	}
+	Value Scan(const Value& text) const {
+		values.Set(0, AppendFileName(GetFileDirectory(String(values[0])), String(text)));
+		return values;
+	}
+};
+
+ValueArray FileNameConvert::values;
+
+struct FileLenConvert : public Convert {
+	Value Format(const Value& v) const {
+		if (v == -1)
+			return "";
+		else
+			return BytesToString(int64(v));
+	}
+};
 
 FileBrowser::FileBrowser() {
+	flags = USE_TRASH_BIN | BROWSE_LINKS | ASK_BEFORE_DELETE;
+	readOnly = false;
+	acceptDragAndDrop = true;	
+	
 	pack.Horz(foldersRect, files); 
 	pack.SetPos(3000);
 	int height = folder.GetStdHeight();
@@ -1079,9 +1397,7 @@ FileBrowser::FileBrowser() {
 	foldersRect.Add(folders.HSizePos().VSizePos(height + 1));
 	
 	Add(folder.HSizePos().TopPos(0, height));
-	Add(pack.HSizePos().VSizePos(height + 1));
-//	label.array = &files;
-//	Add(label);		
+	Add(pack.HSizePos().VSizePos(height + 1));	
 	
 	Transparent();
 	Background(Null);
@@ -1090,49 +1406,46 @@ FileBrowser::FileBrowser() {
 	foldersRect.Background(Null);
 	
 	folder.UseBrowse(false).UseUp(true).UseHistory(true);
-	folder.WhenChange = THISBACK(FolderChanged);
+	folder.WhenChange = THISBACK(FolderWhenChange);
 	foldersLabel.SetText(t_("Folders"));
 	
 	folders.NoRoot();
-	//folders.MultiSelect();
-	folders.WhenOpen 	   = THISBACK(OpenDir);
-	folders.WhenSel	 	   = THISBACK(FileSelectedTree);
-	//folders.WhenLeftClick  = THISBACK(FileSelectedTree);
-	folders.WhenClose 	   = THISBACK(CloseDir);
-	//folders.WhenCursor     = THISBACK(FileSelectedTree);
-	//folders.WhenLeftClick  = THISBACK(OpenFileTreeFolder);
+	folders.WhenOpen 	   = THISBACK(FoldersWhenOpen);
+	folders.WhenSel	 	   = THISBACK(FoldersWhenSel);
+	folders.WhenLeftDouble = THISBACK(FoldersWhenLeftDouble);
+	folders.WhenClose 	   = THISBACK(FoldersWhenClose);
+
 	Array<String> ds = GetDriveList();
 	String desktopFolder = GetDesktopFolder();	
 	if (!desktopFolder.IsEmpty())
-		folders.Add(0, NativePathIconX(desktopFolder, true, fileFlags), desktopFolder, 
+		folders.Add(0, NativePathIconX(desktopFolder, true, flags), desktopFolder, 
 															GetFileName(desktopFolder), true);
-	int id = folders.Add(0, NativePathIconX(desktopFolder, true, fileFlags), 
+	int id = folders.Add(0, NativePathIconX(desktopFolder, true, flags), 
 													t_("My Folders"), t_("My Folders"), true);
 	
 	String myFolders = desktopFolder + ";";
 	
-	AddMyFolder(GetPersonalFolder(), myFolders, folders, id);
-	AddMyFolder(GetMusicFolder(), myFolders, folders, id);
-	AddMyFolder(GetPicturesFolder(), myFolders, folders, id);
-	AddMyFolder(GetVideoFolder(), myFolders, folders, id);
-	AddMyFolder(GetDownloadFolder(), myFolders, folders, id);
-	AddMyFolder(GetAppDataFolder(), myFolders, folders, id);
-	AddMyFolder(GetTemplatesFolder(), myFolders, folders, id);
+	AddFolder(GetPersonalFolder(), myFolders, folders, id);
+	AddFolder(GetMusicFolder(), myFolders, folders, id);
+	AddFolder(GetPicturesFolder(), myFolders, folders, id);
+	AddFolder(GetVideoFolder(), myFolders, folders, id);
+	AddFolder(GetDownloadFolder(), myFolders, folders, id);
+	AddFolder(GetAppDataFolder(), myFolders, folders, id);
+	AddFolder(GetTemplatesFolder(), myFolders, folders, id);
 	
 	for (int i = 0; i < ds.GetCount(); ++i) 
-		folders.Add(0, NativePathIconX(ds[i], true, fileFlags), ds[i], ds[i], true);	//+ " " + DriveSystem::Description(drive);
+		folders.Add(0, NativePathIconX(ds[i], true, flags), ds[i], ds[i], true);
 	noDoOpen = true;
 	folders.Open(0);
-	//folders.SelectOne(0, true);
 
 	files.Reset();
-	files.AddColumn(t_("Name")).Add(3).Margin(2).Edit(textFileName)./*SetDisplay(Single<DisplayNameIcon>()).*/HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 0);
-	files.AddColumn(t_("Size")).HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 1);
+	files.AddColumn(t_("Name")).SetDisplay(Single<DisplayNameIcon>()).Add(3).Margin(2)
+				.Edit(textFileName).HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 0);
+	files.AddColumn(t_("Size")).SetConvert(Single<FileLenConvert>()).HeaderTab()
+				.Min(50).WhenAction = THISBACK1(SortByColumn, 1);
 	files.AddColumn(t_("Date")).HeaderTab().Min(50).WhenAction = THISBACK1(SortByColumn, 2);
 	files.AddColumn("IsFolder");
-	files.AddColumn("RealSize");
-	files.HeaderObject().ShowTab(3, false);
-	//files.HeaderObject().ShowTab(4, false);
+	
 	files.MultiSelect().HeaderObject().Absolute().Clipboard();
 	files.BackPaintHint();
 	files.AddIndex();
@@ -1141,70 +1454,87 @@ FileBrowser::FileBrowser() {
 	files.HeaderTab(0).SetRatio(10);
 	files.ColumnWidths("200 60 120");
 	files.EvenRowColor(Blend(SColorMark, SColorPaper, 240));
-//	files.SetLabel(&label);
+	files.textFileName = &textFileName;
 
-	//files.WhenCursor = THISBACK(FilesEnterRow);
-//	files.WhenDropInsert = 	THISBACK(DropInsertFilelist);
-//	files.WhenDrag = 		THISBACK(DragFilelist);
-//	files.WhenDrop = 		THISBACK(DropFilelist);
-	//files.WhenSel = 		THISBACK(FileSelectedFilesList);
-	files.WhenLeftDouble = THISBACK(OpenFileFilesList);
-	files.WhenEnterKey   = THISBACK(OpenFileFilesList);
-	foldersInFileList = true;
-	fileFlags = 0;
+	files.WhenSel        = THISBACK(FilesWhenSel);
+	files.WhenLeftDouble = THISBACK(FilesWhenLeftDouble);
+	files.WhenEnterKey   = THISBACK(FilesWhenLeftDouble);
+	
+	textFileName.SetConvert(Single<FileNameConvert>());
+	textFileName.WhenChange = THISBACK(FileNameWhenChanged);
 }
 
-void FileBrowser::OpenDir(int id) {
+void FileBrowser::FilesWhenSel() {
+	if (files.GetCursor() < 0)
+		return;
+	ValueArray va = files.GetColumn(files.GetCursor(), 0);
+	if (t_("No files or access not permitted") == va[0]) 
+		fileNameSelected = "";
+	else
+		fileNameSelected = va[0];
+	if (WhenSelected)
+		WhenSelected();
+}
+
+void FileBrowser::FileNameWhenChanged() {
+	String kk = fileNameSelected;		// Nombre viejo path completo
+	String koko = textFileName;			// Nombre nuevo (solo nombre)
+	int de = 34;
+}
+
+void FileBrowser::FoldersWhenOpen(int id) {
 	if (noDoOpen) {
 		noDoOpen = false;
 		return;
 	}
 	folder.SetData(folders[id]);
 	forceOpenTree = true;
-	FolderChanged();
+	FolderWhenChange();
 	forceOpenTree = false;
 }
 	
-void FileBrowser::CloseDir(int id) { 
+void FileBrowser::FoldersWhenClose(int id) { 
 	if (folders[id] != t_("File System") && folders[id] != t_("My Folders"))
 		folders.RemoveChildren(id);  
 }
 
-void FileBrowser::FileSelectedTree()  { 
+void FileBrowser::FoldersWhenSel()  { 
 	folder.SetData(~folders);
-	FolderChanged();
+	FolderWhenChange();
+	if (WhenTreeSelected)
+		WhenTreeSelected();
 }
 
-void FileBrowser::OpenFileFilesList() {
-	if (files.GetCursor() < 0)
-		return;
-	ValueArray va = files.GetColumn(files.GetCursor(), 0);
-	String fileName = va[0];
-	if (IsSymLink(fileName)) {
-		String newPath = GetSymLinkPath(fileName);
-		if (!newPath.IsEmpty())
-			fileName = newPath;
-	}
-	if (FileExists(fileName)) {
-		if (!LaunchFile(fileName))
-			Exclamation(Format(t_("Sorry. It is not possible to open %s"), DeQtf(fileName)));
-	} else if (DirectoryExistsX(fileName, fileFlags)) {
-		folder.SetData(fileName);
-		FolderChanged();
-	}
+void FileBrowser::FoldersWhenLeftDouble() {
+	if (WhenTreeDblClick)
+		WhenTreeDblClick();
 }
 
-void FileBrowser::ListFiles(String folderName, bool &thereIsAFolder) {
-	static DisplayNameIcon pd;
+void FileBrowser::FilesWhenLeftDouble() {
+	FilesWhenSel();
 	
+	if (IsSymLink(fileNameSelected)) {
+		String newPath = GetSymLinkPath(fileNameSelected);
+		if (!newPath.IsEmpty())
+			fileNameSelected = newPath;
+	}
+	if (FileExists(fileNameSelected)) {
+		if(WhenAction)
+			WhenAction();
+	} else if (DirectoryExistsX(fileNameSelected, flags)) {
+		folder.SetData(fileNameSelected);
+		FolderWhenChange();
+	}
+}
+
+void FileBrowser::FilesList(String folderName, bool &thereIsAFolder) {
 	files.Clear(); 
-	FileDataArray fileData(false, fileFlags);
+	FileDataArray fileData(false, flags);
 	fileData.Search(folderName, "*.*", false);
 	if (fileData.GetCount() == 0) {
 		int cy = files.GetLineCy();
 		Image img = Rescale(CtrlImg::information(), cy, cy);
-		files.Add(t_("No files or access not permitted"), "", "", img, false, 0);		
-		files.SetDisplay(0, 0, pd);
+		files.Add(t_("No files or access not permitted"), -1, "", img, false, 0);		
 		return;
 	}
 	fileData.SortByName();
@@ -1218,11 +1548,10 @@ void FileBrowser::ListFiles(String folderName, bool &thereIsAFolder) {
 		if (isFolder)
 			thereIsAFolder = true; 
 		files.Add(fullFilename, 
-				  isFolder ? "" : BytesToString(fileData[i].length), 
+				  isFolder ? -1 : fileData[i].length, 
 				  fileData[i].t, 
-				  NativePathIconX(fullFilename, DirectoryExistsX(fullFilename, fileFlags), fileFlags), 
-				  isFolder ? fileName : "ZZZZZ" + fileName, fileData[i].length);
-		files.SetDisplay(files.GetCount() - 1, 0, pd);
+				  NativePathIconX(fullFilename, DirectoryExistsX(fullFilename, flags), flags), 
+				  isFolder ? fileName : "ZZZZZZZ" + fileName);
 	}
 }
 
@@ -1236,12 +1565,13 @@ bool HasSubfolders(String folder, int flags) {
 	return false;
 }
 
-void FileBrowser::FolderChanged() {
+void FileBrowser::FolderWhenChange() {
 	int id;
 	
 	if (~folder == "" || ~folder == t_("My Folders")) {
 		id = folders.Find(~folder);
 		folders.Open(id, true);		
+		files.Clear();
 		return;
 	}
 	String folderName = GetRealName(~folder);
@@ -1261,7 +1591,7 @@ void FileBrowser::FolderChanged() {
 		folderNameAux = upper;
 	}
 	bool thereIsAFolder;
-	ListFiles(folderName, thereIsAFolder);
+	FilesList(folderName, thereIsAFolder);
 	
 	if (folderNameAux != folderName || !folders.IsOpen(id) || forceOpenTree) {
 		while (folderNameAux != folderName) {
@@ -1276,8 +1606,8 @@ void FileBrowser::FolderChanged() {
 			folders.RemoveChildren(id);  
 			for (int i = 0; i < fileData.GetCount(); ++i) {
 				String fullName = fileData.FullFileName(i);
-				int auxid = folders.Add(id, NativePathIconX(fullName, true, fileFlags), 
-									fullName, fileData[i].fileName, HasSubfolders(fullName, fileFlags));
+				int auxid = folders.Add(id, NativePathIconX(fullName, true, flags), 
+									fullName, fileData[i].fileName, HasSubfolders(fullName, flags));
 				if (fullName == newFolderNameAux)
 					newid = auxid;
 			}
@@ -1294,17 +1624,17 @@ void FileBrowser::FolderChanged() {
 		folders.RemoveChildren(id);  
 		for (int i = 0; i < fileData.GetCount(); ++i) {
 			String fullName = fileData.FullFileName(i);
-			if (DirectoryExistsX(fullName, fileFlags)) 
-				folders.Add(id, NativePathIconX(fullName, true, fileFlags), fullName, 
-											fileData[i].fileName, HasSubfolders(fullName, fileFlags));
+			if (DirectoryExistsX(fullName, flags)) 
+				folders.Add(id, NativePathIconX(fullName, true, flags), fullName, 
+											fileData[i].fileName, HasSubfolders(fullName, flags));
 		}
-		//noDoOpen = true;
+		noDoOpen = true;
 		folders.Open(id, true);
 	}
-	folders.SetCursor(id);
 }
 
 void FileBrowser::FilesEnterRow() {
+	Exclamation("DELETE");
 	int i = 1;
 }
 
@@ -1316,9 +1646,7 @@ void FileBrowser::SortByColumn(int col) {
 
 	int ordercol = col;
 	if (col == 0)
-		ordercol = 4;
-	else if (col == 1)
-		ordercol = 5;	
+		ordercol = 4;	
 	if (order[col]) 
 		files.Sort(ordercol, StdValueCompare);
 	else
@@ -1327,9 +1655,10 @@ void FileBrowser::SortByColumn(int col) {
 }
 
 String FileBrowser::GetFile() {
-	return "";
+	return fileNameSelected;
 }
 
 String FileBrowser::GetFolder() {
-	return "";
+	return ~folders;
 }
+

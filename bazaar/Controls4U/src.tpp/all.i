@@ -30,6 +30,10 @@ TOPIC("IExplorerBrowser$en-us")
 #include "IExplorerBrowser$en-us.tppi"
 END_TOPIC
 
+TOPIC("Knob$en-us")
+#include "Knob$en-us.tppi"
+END_TOPIC
+
 TOPIC("Meter$en-us")
 #include "Meter$en-us.tppi"
 END_TOPIC

@@ -4,7 +4,9 @@ topic "News and changes log";
 [{_}%EN-US 
 [s0; [*R+184 Controls4U. News and changes log]&]
 [s0;%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/06/11]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/08/11]]
+:: [s0; [2 Added Knob control]]
+:: [s0;# [2 2010/06/11]]
 :: [s0; [2 Added SetStatus to ActiveX controls.]]
 :: [s0;# [2 2010/05/31]]
 :: [s0; [2 New mode single threaded in addition to multi threaded (MT).]&]

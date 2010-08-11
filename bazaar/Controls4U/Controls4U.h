@@ -7,6 +7,8 @@
 #include "Controls4U/ActiveX.h"
 #endif
 
+double AngAdd(double ang, double val);
+
 #ifndef flagNOPAINTER
 class MyBufferPainter : public BufferPainter {
 public:
@@ -321,7 +323,6 @@ protected:
 	
 	void PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double ang0, 
 					double ang1, int direction, double step, double bigF, Color color);
-	double AngAdd(double ang, double val);
 	void PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
 			double step, int direction, double minv, double maxv, double stepv, double bigF, 
 			Color color);
@@ -349,15 +350,99 @@ public:
 	~Meter();
 };
 
+class Knob : public Ctrl {
+private:
+	double value;
+	double minv, maxv, step, fineStep;
+	double angleBegin, angleEnd;
+	double angleClick;
+	int  colorType;
+	bool clockWise;
+	bool number;
+	int mark;
+	bool interlocking;
+
+	double SliderToClient(Point pos);
+	void PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double begin, double end, double ang0, 
+			double ang1, int direction, double step, double bigF, Color color);
+	void PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
+		double step, int direction, double minv, double maxv, double stepv, double bigF, Color color);			
+
+public:
+	typedef Knob CLASSNAME;
+
+	Callback WhenSlideFinish;
+	
+	Knob();
+
+	virtual void  Paint(Draw& draw);
+	virtual bool  Key(dword key, int repcnt);
+	virtual void  LeftDown(Point pos, dword keyflags);
+	virtual void  LeftRepeat(Point pos, dword keyflags);
+	virtual void  LeftUp(Point pos, dword keyflags);
+	virtual void  MouseMove(Point pos, dword keyflags);
+	virtual void  GotFocus();
+	virtual void  LostFocus();
+
+	virtual void  SetData(const Value& value);
+	virtual Value GetData() const;
+
+	void Inc(double st);
+	void Dec(double st);
+
+	Knob& ClockWise(bool v)			{clockWise = v; Refresh(); return *this;}	
+
+	Knob& SetMin(double v)			{minv = v; value = max(value, minv); Refresh(); return *this;}
+	Knob& SetMax(double v)			{maxv = v; value = min(value, maxv); Refresh(); return *this;}
+	Knob& SetStep(double s) 		{step = s; Refresh(); return *this;}	
+	Knob& SetFineStep(double fs = 1) 	{fineStep = fs; Refresh(); return *this;}	
+	Knob& SetAngleBegin(double v) 	{angleBegin = v; Refresh(); return *this;}
+	Knob& SetAngleEnd(double v)		{angleEnd = v; Refresh(); return *this;}
+	Knob& SetNumber(bool b)			{number = b; Refresh(); return *this;}
+	Knob& SetInterlocking(bool b = true)	{interlocking = b; Refresh(); return *this;}
+
+	enum ColorType {SimpleWhiteType, SimpleBlackType, WhiteType, BlackType};
+	Knob& SetColorType(int c)	{colorType = c; Refresh(); return *this;}
+	enum Mark {NoMark, Line, Circle};
+	Knob& SetMark(int c)		{mark = c; Refresh(); return *this;}
+};
+
 #endif
 
 class FileBrowser : public StaticRect {
-typedef FileBrowser CLASSNAME;	
+	typedef FileBrowser CLASSNAME;	
+public:
+	struct EditStringLostFocus : public EditString {
+		String file;
+		Callback WhenChange;
+		
+		virtual void LostFocus() {
+			ValueArray values = GetData();
+			if (!IsNull(file))
+				if (file != values[0]) {
+					if(WhenChange)
+						WhenChange();
+				}
+			EditString::LostFocus();
+		}
+		virtual void SetData(const Value& data) {
+			ValueArray values = data;
+			file = values[0];
+			EditString::SetData(data);
+		}
+		virtual bool Key(dword key, int rep) {
+			if (key == K_ESCAPE)
+				file = Null;
+			return EditString::Key(key, rep);
+		}
+	};
+	
 protected:
 	EditFolder folder;
 	
 	void OpenSelExt(bool forceOpen);
 	void OpenSel();	
+	
 private:
 	struct TreeCtrlPlus : public TreeCtrl {
 		virtual bool Key(dword key, int count) {
@@ -376,6 +461,9 @@ private:
 		}
 	};
 	struct ArrayCtrlExternDrop : public ArrayCtrl {
+	public:
+		EditStringLostFocus *textFileName;
+	private:
 		virtual bool Key(dword key, int count) {
 			if (key == K_DELETE) {
 				if (GetSelectCount() > 1) {
@@ -411,6 +499,11 @@ private:
 				FileBrowser *f = dynamic_cast<FileBrowser *>(q);
 				f->folder.DoGo();
 				return true;
+			} else if ((key == K_UP || key == K_DOWN) && textFileName->HasFocus())
+				return ArrayCtrl::Key(K_ENTER, count);
+			else if (key == K_F2) {
+				DoEdit();
+				return true;
 			} else
 				return ArrayCtrl::Key(key, count);
 		}
@@ -427,8 +520,9 @@ private:
 		typedef ArrayCtrlExternDrop CLASSNAME;
 	};
 	friend struct ArrayCtrlExternDrop;
+
 private:
-	EditString textFileName;
+	EditStringLostFocus textFileName;
 	Splitter pack;
 	StaticRect foldersRect;
 	Label foldersLabel;
@@ -437,36 +531,46 @@ private:
 	bool browseFiles;
 	bool noDoOpen;
 	bool forceOpenTree;
-	int fileFlags;
+	String fileNameSelected;
+	bool readOnly;
+	int flags;
+	bool acceptDragAndDrop;
 	
 	void SortByColumn(int col);
 	
-	void OpenDir(int id); 
-	void CloseDir(int id); 
-	void FileSelectedTree(); 
-	void FileSelected(String &fileName);
-	void OpenFileFilesList();
-	void FolderChanged();
-	void FilesEnterRow();
+	void FoldersWhenOpen(int id); 
+	void FoldersWhenClose(int id); 
+	void FoldersWhenSel(); 
+	void FoldersWhenLeftDouble();
 	
-	void ListFiles(String folderName, bool &thereIsAFolder);
-	void AddMyFolder(String folder, String &myFolders, TreeCtrl &folders, int id);
+	void FilesEnterRow();
+	void FilesWhenLeftDouble();
+	void FilesWhenSel();
+	void FilesList(String folderName, bool &thereIsAFolder);
+	
+	void FolderWhenChange();
+	
+	void FileNameWhenChanged();
+	
+	void AddFolder(String folder, String &myFolders, TreeCtrl &folders, int id);
 	
 public: 
 	FileBrowser();
-	
-	FileBrowser &SetBrowseFiles(bool b);
  	String GetFile();
+ 	String operator~()    {return GetFile();}	
  	String GetFolder();
- 	String operator~()    {return GetFile();}
-	void SetFlags(int flags) {fileFlags = flags;};
-	int GetFlags() {return fileFlags;}; 	
- 	
-////////////////////////
-	// Parameters
+	FileBrowser &SetReadOnly(bool set = true) {readOnly = set; return *this;};
+	FileBrowser &SetUseTrashBin(bool set = true) {set ? flags |= USE_TRASH_BIN : flags &= ~USE_TRASH_BIN; return *this;};
+	FileBrowser &SetBrowseLinks(bool set = true) {set ? flags |= BROWSE_LINKS : flags &= ~BROWSE_LINKS;	return *this;};
+	FileBrowser &SetDeleteReadOnly(bool set = true) {set ? flags |= DELETE_READ_ONLY : flags &= ~DELETE_READ_ONLY; return *this;};
+	FileBrowser &SetAskBeforeDelete(bool set = true) {set ? flags |= ASK_BEFORE_DELETE : flags &= ~ASK_BEFORE_DELETE; return *this;};
+	FileBrowser &SetDragAndDrop(bool set = true) {acceptDragAndDrop = set; return *this;};
+	FileBrowser &SetBrowseFiles(bool set = true) {browseFiles = set; return *this;};
 	
-	bool foldersInFileList; 	
- 	
+	//Callback WhenOpened;	
+	Callback WhenTreeSelected;
+	Callback WhenTreeDblClick;
+	Callback WhenSelected;
 };
 
 #endif

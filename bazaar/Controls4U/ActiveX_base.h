@@ -2,6 +2,7 @@
 #define _hdIE_ActiveX_Support_h_
 
 bool BSTRSet(const String str, BSTR &bstr);
+String BSTRGet(BSTR &bstr);
 	
 class OleStr {
 public: 

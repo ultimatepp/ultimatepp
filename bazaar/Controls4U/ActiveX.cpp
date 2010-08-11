@@ -7,7 +7,7 @@ using namespace Upp;
 #include "ActiveX.h"
 
 bool BSTRSet(const String str, BSTR &bstr) {
-	wchar_t  *buffer;
+	wchar_t *buffer;
 	DWORD size = MultiByteToWideChar(CP_UTF8, 0, str, -1, 0, 0);
 	if (!(buffer = (wchar_t *)GlobalAlloc(GMEM_FIXED, sizeof(wchar_t) * size)))
 		return false;
@@ -18,6 +18,23 @@ bool BSTRSet(const String str, BSTR &bstr) {
 	if (!bstr)
 		return false;
 	return true;
+}
+
+String BSTRGet(BSTR &bstr) {
+	if (!bstr)
+		return Null;
+	
+	char *buffer;
+	DWORD size = SysStringLen(bstr);
+	if (!(buffer = (char *)GlobalAlloc(GMEM_FIXED, sizeof(wchar_t) * size)))
+		return Null;
+	
+	int i = wcstombs(buffer, bstr, size);
+	buffer[i] = 0;
+	
+	String ret = buffer;
+	GlobalFree(buffer);
+	return ret;
 }
 
 OleStr::OleStr() {

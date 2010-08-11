@@ -98,6 +98,35 @@ fn FillEllipse(w, left, top, right, bottom, background)
 	PaintEllipse(w, left, top, right, bottom, width, background);
 }
 
+fn DrawEditField(w, &r, cy, text, SetFrame, UseHistory, UseUp, UseBrowse, SetEditable, NotNull)
+{
+	DrawCtrlFrame(w, r, SetFrame);
+	w.DrawRect(r, :SWhite);
+	n = r.bottom - r.top;
+	leftPos = r.left;
+	if (UseHistory) {
+		DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
+		w.DrawImage((n - 7) / 2 + leftPos, (n - 8) / 2 + r.top, "CtrlImg::SmallLeft");	
+		leftPos += n;
+		DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
+		w.DrawImage((n - 7) / 2 + leftPos, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");	
+		leftPos += n;
+	}
+	if (UseUp) {
+		DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
+		w.DrawImage((n - 8) / 2 + leftPos, (n - 6) / 2 + r.top, "CtrlImg::SmallUp");	
+		leftPos += n;
+	}
+	if (UseBrowse) {
+		DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
+		w.DrawImage((n - 7) / 2 + leftPos, (n - 6) / 2 + r.top, "ClassicCtrlsImg::RA");
+		leftPos += n;
+	}
+	DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
+	w.DrawImage((n - 7) / 2 + r.right - n, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");
+	w.DrawText(leftPos + 3, (cy - GetTextSize("", Arial(10)).cy) / 2,
+		(SetEditable ? "" : "R/O ")+ (NotNull ? "!" : "") + text, Arial(10), :SMagenta);	
+}
 
 ctrl EditFile {
 	group "Input fields";
@@ -119,43 +148,31 @@ ctrl EditFile {
 
 	Paint(w) {
 		r = GetRect();
-		DrawCtrlFrame(w, r, .SetFrame);
-		w.DrawRect(r, :SWhite);
-		n = r.bottom - r.top;
-		leftPos = r.left;
-		if (.UseHistory) {
-			DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
-			w.DrawImage((n - 7) / 2 + leftPos, (n - 8) / 2 + r.top, "CtrlImg::SmallLeft");	
-			leftPos += n;
-			DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
-			w.DrawImage((n - 7) / 2 + leftPos, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");	
-			leftPos += n;
-		}
-		if (.UseUp) {
-			DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
-			w.DrawImage((n - 8) / 2 + leftPos, (n - 6) / 2 + r.top, "CtrlImg::SmallUp");	
-			leftPos += n;
-		}
-		if (.UseBrowse) {
-			DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
-			w.DrawImage((n - 7) / 2 + leftPos, (n - 6) / 2 + r.top, "ClassicCtrlsImg::RA");
-			leftPos += n;
-		}
-		DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
-		w.DrawImage((n - 7) / 2 + r.right - n, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");
-		w.DrawText(leftPos + 3, (GetSize().cy - GetTextSize("", Arial(10)).cy) / 2,
-			(.SetEditable ? "" : "R/O ")+ (.NotNull ? "!" : "") + TextToShow(), Arial(10), :SMagenta);
-	}
-	TextToShow() {
-		return "File name";
+		DrawEditField(w, r, GetSize().cy, "File name", .SetFrame, .UseHistory, .UseUp, .UseBrowse, .SetEditable, .NotNull);
 	}
 }
 
 ctrl EditFolder {
-	>EditFile;
+	group "Input fields";
+
+	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 10; return sz; }
 	
-	TextToShow() {
-		return "Folder name";
+	Text  SetTitle @1;
+	bool  SelLoad = false @2;
+	Font  SetFont = StdFont() @3;
+	bool  SetEditable = true @4 ? "Editable";
+	bool  UseUp = false;
+	bool  UseBrowse = true;
+	bool  UseHistory = false;
+	Frame SetFrame = InsetFrame() @5;
+	Text  Tip @6;
+	bool  WantFocus = true @7;
+	bool  NotNull = false;
+
+	Paint(w) {
+		r = GetRect();
+		DrawEditField(w, r, GetSize().cy, "Folder name", .SetFrame, .UseHistory, .UseUp, .UseBrowse, .SetEditable, .NotNull);
 	}
 }
 
@@ -747,17 +764,17 @@ fn PaintHand(w, cx, cy, R, val, bigF, colorType)
 ctrl Meter {
 	group "Progress";
 	GetMinSize() { return Size(50, 50); }
-	GetStdSize() { return Size(150, 80); }
+	GetStdSize() { return Size(150, 100); }
 	
 	double SetMin = 0;
 	double SetMax = 100;
 	double SetPeak = 80;
 	double SetStep = 20;	
-	double SetAngleBegin = 120;
-	double SetAngleEnd = 40;
-	Text SetText;
-	bool ClockWise = false;
-	bool SetNumber = false;
+	double SetAngleBegin = 130;
+	double SetAngleEnd = 50;
+	Text SetText = "";
+	bool ClockWise = true;
+	bool SetNumber = true;
 	ColorType SetColorType = 0;
 	Text Tip;
 	Frame SetFrame = BlackFrame();
@@ -868,19 +885,31 @@ ctrl FileBrowser {
 	group "Complex";
 
 	GetMinSize() { return Size(0, 0); }
-	GetStdSize() { return Size(64, 24); }
+	GetStdSize() { return Size(200, 100); }
 
 	Frame SetFrame @1;
-	bool  SetBrowseFiles = true @2 ? "Editable";
+	bool SetBrowseFiles = true @2 ? "Editable";	
+	bool SetReadOnly = false;
+	bool SetUseTrashBin = true;
+	bool SetBrowseLinks = true;
+	bool SetDeleteReadOnly = false;
+	bool SetAskBeforeDelete = true;
+	bool SetDragAndDrop = true;
 
 	Paint(w) {
 		outer = GetRect();
 		r = outer;
 		DeflateRect(r);
+		
+		re = RectC(r.left, r.top, r.right, r.top+20);
+		DrawEditField(w, re, 20, "Folder name", 1, 1, 1, 0, 1, 1);
+		
+		r.top += 24;
 		sz = Size(r.right - r.left, r.bottom - r.top);
 		
-		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SWhite);		
-		w.DrawImage(r.left, r.top, "Controls4U:Controls4U.iml:FileBrowser_Folders");
+		w.DrawSmartText(r.left, r.top, "Folders", StdFont(), :SBlack);
+		w.DrawRect(r.left, r.top+18, r.right, r.bottom, :SWhite);
+		w.DrawImage(r.left, r.top+18, "Controls4U:Controls4U.iml:FileBrowser_Folders");
 		if (.SetBrowseFiles) {
 			middle = r.left + (r.right-r.left)/2;
 			w.DrawLine(middle-4, r.top, middle-3, r.bottom, 2, :SWhiteGray);
@@ -891,7 +920,6 @@ ctrl FileBrowser {
 		DrawCtrlFrame(w, outer, .SetFrame);
 	}
 }
-
 
 ctrl FirefoxBrowser {
 	group "Complex";
@@ -965,12 +993,17 @@ ctrl VLCPlayer {
 	}
 }
 
-/*
+enum_property ColorTypeKnob {	
+	"0" : "SimpleWhiteType",
+	"1" : "SimpleBlackType",
+	"2" : "WhiteType",
+	"3" : "BlackType"
+};
 
-enum_property HandleType {
-	"Simple", 
-	"Digit",
-	"Rugged"
+enum_property Mark {
+	"0" : "NoMark",
+	"1" : "Line",
+	"2" : "Circle"
 };
 
 ctrl Knob {
@@ -978,7 +1011,18 @@ ctrl Knob {
 	GetMinSize() { return Size(50, 50); }
 	GetStdSize() { return Size(100, 100); }
 	
-	HandleType SetType = Rugged;
+	ColorTypeKnob SetColorType = 0;
+	Mark SetMark = 1;
+	bool SetNumber = true;
+	bool SetInterlocking = false;
+	double SetMin = 0;
+	double SetMax = 100;
+	double SetStep = 20;
+	double SetAngleBegin = 225;
+	double SetAngleEnd = 315;
+	double SetFineStep = 1;
+	
+	bool ClockWise = true;
 	Text Tip;
 
 	Paint(w) {
@@ -994,12 +1038,12 @@ ctrl Knob {
 		R = cx;
 		
 		pos = 90;
-		if (.SetType == "Rugged") {
+		if (.SetColorType == "0") {
 			for (i = 0; i < 9; ++i) {
 				PaintArc(w, cx, cy, R, pos, pos+20, 1, 6*bigF, :SLtGray);//Color(230, 230, 230));		
 				pos += 40;
 			}
-		} else if (.SetType == "Digit") {
+		} else if (.SetColorType == "1") {
 			dx = cx + 0.6*R*cos(ToRad(pos));
 			dy = cy - 0.6*R*sin(ToRad(pos));
 			dwidth = 25*bigF;
@@ -1008,44 +1052,3 @@ ctrl Knob {
 	}
 }
 
-enum_property RollingType {
-	"Simple", 
-	"Rugged"
-};
-
-ctrl RollKnob {
-	group "Input fields";
-	GetMinSize() { return Size(50, 50); }
-	GetStdSize() { return Size(100, 100); }
-	
-	RollingType SetType = Rugged;
-	Text Tip;
-
-	Paint(w) {
-		r = GetRect();
-		width = min(r.right-r.left, r.bottom-r.top);
-		bigF = width/200;
-		//FillEllipse(w, r.left, r.top, r.left+width, r.top+width, :SWhite);
-
-		w.DrawImage(r.left, r.top, width, width, "Controls4U:Controls4U.iml:Handle");	
-		
-		cx = width/2;
-		cy = cx;
-		R = cx;
-		
-		pos = 90;
-		if (.SetType == "Rugged") {
-			for (i = 0; i < 9; ++i) {
-				PaintArc(w, cx, cy, R, pos, pos+20, 1, 6*bigF, :SLtGray);//Color(230, 230, 230));		
-				pos += 40;
-			}
-		} 
-		x0 = cx + 0.5*R*cos(ToRad(pos));
-		y0 = cy - 0.5*R*sin(ToRad(pos));
-		x1 = cx + 0.9*R*cos(ToRad(pos));
-		y1 = cy - 0.9*R*sin(ToRad(pos));
-		w.DrawLine(x0, y0, x1, y1, 12*bigF, :SGray); 		
-		w.DrawLine(x0, y0, x1, y1, 8*bigF, :SBlack); 
-	}
-}
-*/

@@ -24,14 +24,11 @@ esES("Tamaño")
 T_("Date")
 esES("Fecha")
 
-T_("File System")
-esES("Sistema de ficheros")
-
-T_("Sorry. It is not possible to open %s")
-esES("Lo siento. No es posible abrir %s")
-
 T_("No files or access not permitted")
 esES("No hay ficheros o no está permitido el acceso")
+
+T_("File System")
+esES("Sistema de ficheros")
 
 T_("Folder %s does not exist or is not available")
 esES("Carpeta %s no existe o no está disponible")
@@ -68,3 +65,9 @@ esES("fichero")
 
 T_("Function not implemented")
 esES("Función no implementada")
+
+
+// Obsolete
+
+T_("Sorry. It is not possible to open %s")
+esES("Lo siento. No es posible abrir %s")
