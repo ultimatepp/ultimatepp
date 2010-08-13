@@ -37,6 +37,16 @@ String SelectFileSaveAs(const char *types)
 	return b ? ~fs : String::GetVoid();
 }
 
+String SelectDirectory()
+{
+	FileSel fs;
+	fs.ActiveDir(GetHomeDirectory());
+	LoadFromGlobal(fs, "GlobalDirSelector");
+	bool b = fs.ExecuteSelectDir();
+	StoreToGlobal(fs, "GlobalDirSelector");
+	return b ? ~fs : String::GetVoid();
+}
+
 SelectFileIn::SelectFileIn(const char *types)
 {
 	for(;;) {

@@ -265,6 +265,7 @@ public:
 
 String SelectFileOpen(const char *types);
 String SelectFileSaveAs(const char *types);
+String SelectDirectory();
 String SelectLoadFile(const char *types);
 bool   SelectSaveFile(const char *types, const String& data);
 
