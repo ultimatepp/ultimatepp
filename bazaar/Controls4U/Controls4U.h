@@ -353,7 +353,8 @@ public:
 class Knob : public Ctrl {
 private:
 	double value;
-	double minv, maxv, step, fineStep;
+	double minv, maxv, nminor, nmajor, keyStep;
+	double minorstep, majorstep;
 	double angleBegin, angleEnd;
 	double angleClick;
 	int  colorType;
@@ -364,7 +365,7 @@ private:
 
 	double SliderToClient(Point pos);
 	void PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double begin, double end, double ang0, 
-			double ang1, int direction, double step, double bigF, Color color);
+			double ang1, int direction, double minorstep, double majorstep, double bigF, Color color);
 	void PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
 		double step, int direction, double minv, double maxv, double stepv, double bigF, Color color);			
 
@@ -394,8 +395,9 @@ public:
 
 	Knob& SetMin(double v)			{minv = v; value = max(value, minv); Refresh(); return *this;}
 	Knob& SetMax(double v)			{maxv = v; value = min(value, maxv); Refresh(); return *this;}
-	Knob& SetStep(double s) 		{step = s; Refresh(); return *this;}	
-	Knob& SetFineStep(double fs = 1) 	{fineStep = fs; Refresh(); return *this;}	
+	Knob& SetMinorMarks(int n) 		{nminor = n; Refresh(); return *this;}	
+	Knob& SetMajorMarks(int n) 		{nmajor = n; Refresh(); return *this;}	
+	Knob& SetKeyStep(double fs = 1) {keyStep = fs; Refresh(); return *this;}	
 	Knob& SetAngleBegin(double v) 	{angleBegin = v; Refresh(); return *this;}
 	Knob& SetAngleEnd(double v)		{angleEnd = v; Refresh(); return *this;}
 	Knob& SetNumber(bool b)			{number = b; Refresh(); return *this;}

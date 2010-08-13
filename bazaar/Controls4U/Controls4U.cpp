@@ -1037,41 +1037,56 @@ Meter::Meter() {
 	kill = 0;
 }
 
-Knob::Knob() : value(0), minv(0), maxv(100), step(20), fineStep(1), angleBegin(225), angleEnd(315), 
+Knob::Knob() : value(0), minv(0), maxv(100), nminor(1), nmajor(5), keyStep(1), 
+			   angleBegin(225), angleEnd(315), 
 			   colorType(SimpleWhiteType), clockWise(true), number(true), mark(Line), 
 			   interlocking (false)  {
 	Transparent();
 }
 
 void Knob::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double begin, double end, 
-		double ang0, double ang1, int direction, double step, double bigF, Color color) {
+		double ang0, double ang1, int direction, double minorstep, double majorstep, double bigF, Color color) {
 	if (direction == -1) 
 		Swap(ang0, ang1);
 	ang0 = ToRad(ang0);
 	ang1 = ToRad(ang1);
-	step = ToRad(step);
+	minorstep = ToRad(minorstep);
+	majorstep = ToRad(majorstep);
 	if (ang0 > ang1)
 		ang1 += 2*M_PI;
 	double width = bigF;
-	for (double i = ang0; i <= ang1+0.1; i += step) {
-		double x0 = cx + end*R*cos(i);
-		double y0 = cy - end*R*sin(i);
-		double x1 = cx + begin*R*cos(i);
-		double y1 = cy - begin*R*sin(i);
-		w.DrawLine(x0, y0, x1, y1, width, color);
+	double maj = majorstep-minorstep;
+	for (double i = ang0; i <= ang1+0.1; i += minorstep) {
+		if (maj+minorstep == majorstep) {
+			maj = 0;
+			double x0 = cx + end*R*cos(i);
+			double y0 = cy - end*R*sin(i);
+			double x1 = cx + begin*R*cos(i);
+			double y1 = cy - begin*R*sin(i);
+			w.DrawLine(x0, y0, x1, y1, width, color);
+		} else {
+			maj += minorstep;
+			double x0 = cx + (begin+end)*R*cos(i)/2;
+			double y0 = cy - (begin+end)*R*sin(i)/2;
+			w.DrawCircle(x0, y0, 0.2*(begin-end)*R, color);
+		}
 	}
 }
 
 void Knob::PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
 	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color)
 {
+	double range = maxv - minv;
 	a0 = ToRad(a0);
 	step = ToRad(step);
 	Font fnt = Arial((int)(7.5*bigF));
-	while (minv <= maxv) {
+	String strminv;
+	String strmaxv = FormatDoubleAdjust(maxv, range);
+	while (strminv != strmaxv) {
 		double x = cx + 0.8*R*cos(a0);
 		double y = cy - 0.8*R*sin(a0);
-		w.DrawCenterText(x, y, FormatDouble(minv), fnt, color);
+		strminv = FormatDoubleAdjust(minv, range);
+		w.DrawCenterText(x, y, strminv, fnt, color);
 		a0 += step*direction;
 		minv += stepv;
 	}
@@ -1101,25 +1116,33 @@ void Knob::Paint(Draw& w) {
 		direction = -1;
 	else
 		direction = 1;
-	double stepa = step*maxgrad/(maxv - minv);	
+	minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
+	majorstep = (maxv-minv)/(nmajor+1);
+	double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
+	double majorstepa = majorstep*maxgrad/(maxv - minv);	
+	
+	if (HasFocus()) {
+		if (number)
+			sw.Circle(cx, cy, 0.6*r+2.5).Stroke(5, GrayColor(240));
+		else
+			sw.Circle(cx, cy, 0.9*r+2.5).Stroke(5, GrayColor(240));
+	}
 	
 	if (number) {
-		PaintNumbers(sw, cx, cy, r, angleBegin, stepa, direction, minv, maxv, step, r/40, Black());
-		PaintMarks(sw, cx, cy, r, 0.6, 0.7, angleBegin, angleEnd, direction, stepa, r/40., Black());
+		PaintNumbers(sw, cx, cy, r, angleBegin, majorstepa, direction, minv, maxv, majorstep, r/40, Black());
+		PaintMarks(sw, cx, cy, r, 0.6, 0.7, angleBegin, angleEnd, direction, minorstepa, majorstepa, r/40., Black());
 		r *= 0.6;
 	} else {
-		PaintMarks(sw, cx, cy, r, 0.9, 1, angleBegin, angleEnd, direction, stepa, r/40., Black());
+		PaintMarks(sw, cx, cy, r, 0.9, 1, angleBegin, angleEnd, direction, minorstepa, majorstepa, r/40., Black());
 		r *= 0.9;
 	}
+	double lineW = 1;
+	double capt = 0;
+	if (HasCapture()) 
+		capt = 1;
 	
 	if (colorType == SimpleWhiteType || colorType == SimpleBlackType) {
 		Color fill = (colorType == SimpleWhiteType) ? White() : Black();
-		double lineW = 1;
-		double capt = 0;
-		if (HasFocus())
-			lineW *= r/25.;
-		if (HasCapture()) 
-			capt = 1;
 
 		sw.Circle(cx, cy, r-capt-lineW).Stroke(lineW, Black()).Fill(fill);
 		
@@ -1131,12 +1154,6 @@ void Knob::Paint(Draw& w) {
 			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Stroke(lineW, lineColor).Fill(fill);
 	} else if (colorType == WhiteType || colorType == BlackType) {
 		Color fill = (colorType == WhiteType) ? White() : Black();
-		double lineW = 1;
-		double capt = 0;
-		if (HasFocus())
-			lineW *= r/25.;
-		if (HasCapture()) 
-			capt = 1;
 
 		sw.Circle(cx, cy, r-capt-lineW).Fill(fill);
 		
@@ -1151,7 +1168,7 @@ void Knob::Paint(Draw& w) {
 				sw.Circle(cx, cy, r-capt-lineW).Fill(Black());
 			sw.End();
 		} else {
-			sw.Begin();
+			sw.Begin(); 
 				sw.BeginMask();
 					sw.Ellipse(cx, cy, r-capt-lineW, r-capt-lineW).Fill(Color(60, 60, 60));
 				sw.End();
@@ -1190,9 +1207,9 @@ void Knob::Paint(Draw& w) {
 }
 
 bool Knob::Key(dword key, int repcnt) {
-	double fs = fineStep;
+	double fs = keyStep;
 	if (interlocking)
-		fs = step;
+		fs = minorstep;
 	
 	if(IsEditable())
 		switch(key) {
@@ -1201,14 +1218,14 @@ bool Knob::Key(dword key, int repcnt) {
 			Inc(fs);
 			return true;
 		case K_PAGEUP:
-			Inc(step);
+			Inc(minorstep);
 			return true;
 		case K_LEFT:
 		case K_DOWN:
 			Dec(fs);
 			return true;
 		case K_PAGEDOWN:
-			Dec(step);
+			Dec(minorstep);
 			return true;
 		}
 	return Ctrl::Key(key, repcnt);
@@ -1252,7 +1269,7 @@ void Knob::LeftRepeat(Point p, dword f) {
 void Knob::LeftUp(Point pos, dword keyflags) {
 	if (HasCapture()) {
 		if (interlocking)
-			value = step*fround((value-minv)/step);
+			value = minorstep*fround((value-minv)/minorstep);
 		WhenSlideFinish();
 	}
 	Refresh();
@@ -1301,6 +1318,8 @@ Value Knob::GetData() const {
 
 void Knob::Dec(double st) {
 	double n = max(value - st, minv);
+	if (interlocking)
+		n = minorstep*fround((n-minv)/minorstep);
 	if(n != value) {
 		value = n;
 		WhenSlideFinish();
@@ -1310,6 +1329,8 @@ void Knob::Dec(double st) {
 
 void Knob::Inc(double st) {
 	double n = min(value + st, maxv);
+	if (interlocking)
+		n = minorstep*fround((n-minv)/minorstep);
 	if(n != value) {
 		value = n;
 		WhenSlideFinish();
