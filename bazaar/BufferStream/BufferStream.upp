@@ -1,0 +1,11 @@
+uses
+	Core;
+
+file
+	BufferStream.h,
+	BufferStream.cpp,
+	src.tpp;
+
+mainconfig
+	"" = "";
+

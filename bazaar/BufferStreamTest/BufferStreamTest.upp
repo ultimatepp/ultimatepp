@@ -1,0 +1,11 @@
+uses
+	Core,
+	BufferStream;
+
+file
+	BufferStreamTest.h,
+	BufferStreamTest.cpp;
+
+mainconfig
+	"" = "MT";
+
