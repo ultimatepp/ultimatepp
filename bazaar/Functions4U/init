@@ -4,6 +4,5 @@
 #include "plugin\bz2/init"
 #include "ide/Browser/init"
 #include "Web/init"
-#include "GridCtrl/init"
 #include "AESStream/init"
 #endif

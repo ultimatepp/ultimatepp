@@ -194,10 +194,13 @@ String HMSToString(int hour, int min, double seconds, bool units = false);
 double StringToSeconds(String str);		// The opposite
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
+String FormatDoubleAdjust(double d, double range);
+
 String RemoveAccents(String str);
 bool IsPunctuation(wchar c);
 	
 inline double ToRad(double angle)	{return angle*M_PI/180;}
+inline double ToDeg(double angle)	{return angle*180/M_PI;}
 
 inline bool Odd(int val)	  	{return val%2;}
 inline bool Even(int val) 	  	{return !Odd(val);}

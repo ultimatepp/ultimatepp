@@ -6,8 +6,6 @@ uses
 	ide/Browser,
 	Web;
 
-uses(GUI) GridCtrl;
-
 uses(AES) AESStream;
 
 library(WIN32) oleaut32;

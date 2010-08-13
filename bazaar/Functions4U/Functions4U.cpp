@@ -908,6 +908,18 @@ String BytesToString(uint64 _bytes)
 	return ret;
 }
 
+String FormatDoubleAdjust(double d, double range) {
+	if (fabs(d) <= 1e-15)
+		d = 0;
+	if 		(0.001 <= range && range < 0.01) 	return FormatDouble(d,5);
+	else if (0.01  <= range && range < 0.1) 	return FormatDouble(d,4);
+	else if (0.1   <= range && range < 1) 		return FormatDouble(d,3);
+	else if (1     <= range && range < 10) 		return FormatDouble(d,2);
+	else if (10	   <= range && range < 100) 	return FormatDouble(d,1);
+	else if (100   <= range && range < 100000) 	return FormatDouble(d,0);
+	else return FormatDoubleExp(d,2);	
+}
+
 String RemoveAccent(wchar c) {
 	WString wsret;
 
