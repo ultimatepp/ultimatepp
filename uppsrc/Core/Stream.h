@@ -82,6 +82,9 @@ public:
 	int       Term()                 { return ptr < rdlim ? *ptr : _Term(); }
 	int       Get()                  { return ptr < rdlim ? *ptr++ : _Get(); }
 
+	const byte *Peek(int size = 1)   { ASSERT(size > 0); return ptr + size <= rdlim ? ptr : NULL; }
+	byte       *PutPtr(int size = 1) { ASSERT(size > 0); if(ptr + size <= wrlim) { byte *p = ptr; ptr += size; return p; }; return NULL; }
+
 	void      Put(const void *data, dword size)  { if(ptr + size <= wrlim) { memcpy(ptr, data, size); ptr += size; } else _Put(data, size); }
 	dword     Get(void *data, dword size)        { if(ptr + size <= rdlim) { memcpy(data, ptr, size); ptr += size; return size; } return _Get(data, size); }
 
