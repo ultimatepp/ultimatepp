@@ -377,6 +377,22 @@ negative value is returned.&]
 [s7; [*/ Return value]-|Byte read from input stream.&]
 [s3; &]
 [s4;%- &]
+[s5;:Stream`:`:Peek`(int`):%- [@(0.0.255) const]_[_^byte^ byte]_`*[* Peek]([@(0.0.255) int]_[*@3 s
+ize]_`=_[@3 1])&]
+[s2; This is a special optimization method; it might return a pointer 
+to data of [%-*@3 size] bytes at current position in the stream, 
+but it is allowed to return NULL `- in that case you need to 
+load data into buffer using Get.&]
+[s3; &]
+[s4;%- &]
+[s5;:Stream`:`:PutPtr`(int`):%- [_^byte^ byte]_`*[* PutPtr]([@(0.0.255) int]_[*@3 size]_`=_[@3 1
+])&]
+[s2; This is a special optimization method; it might return a writable 
+pointer where you can write output data of [%-*@3 size] bytes, 
+but it is allowed to return NULL `- in that case you need to 
+output data using Put. Advances stream by [%-*@3 size].&]
+[s3; &]
+[s4;%- &]
 [s5;:Stream`:`:Put`(const void`*`,dword`):%- [@(0.0.255) void]_[* Put]([@(0.0.255) const]_[@(0.0.255) v
 oid]_`*[*@3 data], [_^dword^ dword]_[*@3 size])&]
 [s2; Writes a block of raw binary data to the output stream.&]
