@@ -1,0 +1,47 @@
+topic "template <class T>";
+[ $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9; $$1,0#37138531426314131252341829483380:structitem]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:codeitem]
+[{_} 
+[s1;:noref: [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>&]
+[s1;:Tree`:`:class: [@(0.0.255) class]_[* Tree]_:_[@(0.0.255) protected]_[*@3 Array]<[*@4 T]>_&]
+[s2;%% a template class that can be used in the same manner as Link<T>, 
+to see how to use it, check out the manual&]
+[s3; &]
+[s4; &]
+[s5;:Tree`:`:GetPtr`(`): [*@4 T]_`*[* GetPtr]()&]
+[s2;%% returns a pointer to self. caution on using it on Tree<T> 
+elements only, which are not T themselves.&]
+[s3; &]
+[s4; &]
+[s5;:Tree`:`:GetParent`(`): [*@4 T]_`*[* GetParent]()&]
+[s2;%% GetParent reference if any&]
+[s3; &]
+[s4; &]
+[s5;:Tree`:`:GetRoot`(`): [*@4 T]_`*[* GetRoot]()&]
+[s2;%% GetRoot reference, if NULL, element is root itself&]
+[s3; &]
+[s4; &]
+[s5;:Tree`:`:SetAsRoot`(`): [@(0.0.255) void]_[* SetAsRoot]()&]
+[s2;%% a VERY important function. To be called for the root element 
+to set up the root reference which is forwarded to each child 
+later. call only once on root element only.&]
+[s3; &]
+[s4; &]
+[s5;:Tree`:`:Link`(T`&`): [@(0.0.255) void]_[* Link]([*@4 T]_`&_[*@3 t])&]
+[s2;%% provides a shallow linking of [%-*@3 t].only, this means that 
+it does `*NOT`* change pertenance of object, but simply links 
+the root and parent reference.&]
+[s3;%% &]
+[s4; &]
+[s5;:Tree`:`:Unlink`(T`&`): [@(0.0.255) void]_[* Unlink]([*@4 T]_`&_[*@3 t])&]
+[s2;%% does the opposite of Link to object [%-*@3 t].&]
+[s3;%% &]
+[s4; &]
+[s5;:Tree`:`:Relink`(`): [@(0.0.255) void]_[* Relink]()&]
+[s2;%% `'repairs`' linkage of a tree recursively&]
+[s3; &]
+[s0; ]

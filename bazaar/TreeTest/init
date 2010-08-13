@@ -1,0 +1,5 @@
+#ifndef _TreeTest_icpp_init_stub
+#define _TreeTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Tree/init"
+#endif

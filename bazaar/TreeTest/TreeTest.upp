@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	Tree;
+
+file
+	TreeTest.h,
+	main.cpp,
+	TreeTest.lay;
+
+mainconfig
+	"" = "GUI";
+
