@@ -153,16 +153,15 @@ void Meter_Demo::ChangePropertiesKnob() {
 
 Meter_Demo::Meter_Demo() {
 	CtrlLayout(*this);
-	knob1.SetMin(0).SetMax(100).SetStep(25).SetAngleBegin(225).SetAngleEnd(315).ClockWise(true);
-	knob1.SetData(0);
+	knob1.SetMin(0).SetMax(100).SetAngleBegin(225).SetAngleEnd(315).ClockWise(true)
+		 .SetMajorMarks(5).SetMinorMarks(2);
 	knob1.WhenSlideFinish = THISBACK(ChangeValueKnob1);
-	knob2.SetMin(0).SetMax(100).SetStep(10).SetAngleBegin(180).SetAngleEnd(0).ClockWise(true)
-		 .SetColorType(Knob::SimpleWhiteType).SetNumber(false);
-	knob2.SetData(0);
+	knob2.SetMin(0).SetMax(100).SetAngleBegin(180).SetAngleEnd(0).ClockWise(true)
+		 .SetMajorMarks(5).SetMinorMarks(1).SetColorType(Knob::SimpleWhiteType).SetNumber(false);
 	knob2.WhenSlideFinish = THISBACK(ChangeValueKnob2);
-	knob3.SetMin(0).SetMax(100).SetStep(20).SetAngleBegin(180).SetAngleEnd(0).ClockWise(false)
-		 .SetColorType(Knob::SimpleWhiteType).SetMark(Knob::Circle).SetInterlocking();
-	knob3.SetData(0);
+	knob3.SetMin(0).SetMax(100).SetAngleBegin(180).SetAngleEnd(0).ClockWise(false)
+		 .SetMajorMarks(5).SetMinorMarks(1).SetColorType(Knob::SimpleWhiteType).SetMark(Knob::Circle)
+		 .SetInterlocking();
 	knob3.WhenSlideFinish = THISBACK(ChangeValueKnob3);
 	colorType.Add(Meter::WhiteType, "WhiteType").Add(Meter::BlackType, "BlackType")
 			 .SetData(Meter::BlackType);
