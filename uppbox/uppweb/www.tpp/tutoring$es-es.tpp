@@ -16,12 +16,12 @@ orum][2 , ][/2 el Plan de Tutoría es para tí][2 .]&]
 [s0;# [2 El plan es anónimo. Si el alumn`@ lo desea su nombre no será 
 conocido.]&]
 [s0;#2 &]
-[s0;# [2 Para entrar, envia un correo a ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
+[s0;# [2 Para entrar, envía un correo a ][^mailto`:`/`/upp`-tutoring`-plan`@googlegroups`.com^2 u
 pp`-tutoring`-plan`@googlegroups.com][2  indicando:]&]
 [s0;#2 &]
 [s0;#i150;O0; [2 Tú nombre en el Forum]&]
 [s0;#i150;O0; [2 Areas donde esperas usar U`+`+]&]
-[s0;#i150;O0; [2 Horario de tutoria. Horario donde estas disponible 
+[s0;#i150;O0; [2 Horario de tutoría. Horario donde estas disponible 
 para la tutoría.]&]
 [s0;#l160;2 &]
 [s0;# [2 Los posibles tutores recibirán el correo. Todas las peticiones 
@@ -36,12 +36,12 @@ podrá comenzar.]&]
 [s0;i150;O0; [2 Un soporte razonable a través de correo, IRC, ICQ, 
 Google Talk u otros medios disponibles.]&]
 [s0;i150;O0; [2 Sobre programación en U`+`+: Interfaz de usuario, bases 
-de datos, imagenes, ...]&]
-[s0;i150;O0; [2 Permitiendote conocer diferentes recursos de U`+`+ 
+de datos, imágenes, ...]&]
+[s0;i150;O0; [2 Permitiéndote conocer diferentes recursos de U`+`+ 
 como su documentación y el Forum.]&]
 [s0;i150;O0; [2 Respondiendo a tus preguntas o buscando el experto 
 adecuado.]&]
-[s0;i150;O0; [2 Introduciendote en el mundo de U`+`+ para que seas 
+[s0;i150;O0; [2 Introduciéndote en el mundo de U`+`+ para que seas 
 autosuficiente.]&]
 [s0;i150;O0; [2 Y todo esto gratis.]&]
 [s0;2 &]

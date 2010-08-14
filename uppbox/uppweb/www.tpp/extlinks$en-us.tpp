@@ -31,6 +31,8 @@ programistyczne TheIDE]&]
 etting Started With Ultimate`+`+]&]
 [s0;i150;a17;O0; [^http`:`/`/www`.trumphurst`.com`/cpplibs5`.html^2 Available 
 C`+`+ libraries FAQ]&]
+[s0;i150;a17;O0; [^http`:`/`/cpp`.developpez`.com`/outils`/^2 Developpez.com. 
+Les meilleurs outils C`+`+]&]
 [s0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Interesting discussions]]}}&]
 [s0;2 &]
