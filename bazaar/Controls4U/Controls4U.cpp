@@ -1142,32 +1142,24 @@ void Knob::Paint(Draw& w) {
 		capt = 1;
 	
 	if (colorType == SimpleWhiteType || colorType == SimpleBlackType) {
-		Color fill = (colorType == SimpleWhiteType) ? White() : Black();
+		Color fill = (colorType == SimpleWhiteType) ? White() : Color(20, 20, 20);
 
 		sw.Circle(cx, cy, r-capt-lineW).Stroke(lineW, Black()).Fill(fill);
 		
-		Color lineColor = (colorType == SimpleWhiteType) ? Black() : White();
+		Color lineColor = (colorType == SimpleWhiteType) ? Color(20, 20, 20) : White();
 		if (mark == Line)
 			sw.DrawLine(cx+(r-capt-lineW)*cos(angle), cy-(r-capt-lineW)*sin(angle), 
 					    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
 		else if (mark == Circle)
 			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Stroke(lineW, lineColor).Fill(fill);
 	} else if (colorType == WhiteType || colorType == BlackType) {
-		Color fill = (colorType == WhiteType) ? White() : Black();
-
-		sw.Circle(cx, cy, r-capt-lineW).Fill(fill);
+		Color fill = (colorType == WhiteType) ? White() : Color(20, 20, 20);
 		
 		int wm = GetSize().cx;
-		if (colorType == WhiteType) {
-			sw.Begin();
-				sw.BeginMask();
-					sw.Move(0, 0).Line(wm, 0)
-					  .Line(wm, wm).Line(0, wm)
-					  .Fill(wm/4, wm/4, Black(), 2*wm, Color(220, 220, 220));
-				sw.End();
-				sw.Circle(cx, cy, r-capt-lineW).Fill(Black());
-			sw.End();
-		} else {
+		if (colorType == WhiteType)
+			sw.Circle(cx, cy, r-capt-lineW).Fill(cx/2, cy/2, White(), cx, cy, r, LtGray());
+		else {
+			sw.Circle(cx, cy, r-capt-lineW).Fill(fill);
 			sw.Begin(); 
 				sw.BeginMask();
 					sw.Ellipse(cx, cy, r-capt-lineW, r-capt-lineW).Fill(Color(60, 60, 60));
@@ -1181,18 +1173,12 @@ void Knob::Paint(Draw& w) {
 			sw.DrawLine(cx+(r-capt-lineW)*cos(angle), cy-(r-capt-lineW)*sin(angle), 
 					    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
 		else if (mark == Circle) {
-			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Fill(fill);
-			
 			if (colorType == WhiteType) {
-				sw.Begin();
-					sw.BeginMask();
-						sw.Move(0, 0).Line(wm, 0)
-						  .Line(wm, wm).Line(0, wm)
-						  .Fill(wm/4, wm/4, Black(), 2*wm, almostColor);
-					sw.End();
-					sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Fill(Black());
-				sw.End();
+				double ccx = cx+0.7*r*cos(angle);
+				double ccy = cy-0.7*r*sin(angle);
+				sw.Circle(ccx, ccy, 0.15*r).Fill(1.1*ccx, 1.1*ccy, White(), ccx, ccy, 0.15*r, LtGray());
 			} else {
+				sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Fill(fill);	
 				sw.Begin();
 					sw.BeginMask();
 						sw.Ellipse(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r, 0.15*r).Fill(almostColor);

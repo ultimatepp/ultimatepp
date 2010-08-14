@@ -1017,7 +1017,8 @@ ctrl Knob {
 	bool SetInterlocking = false;
 	double SetMin = 0;
 	double SetMax = 100;
-	double SetStep = 20;
+	double SetMajorMarks = 5;
+	double SetMinorMarks = 1;
 	double SetAngleBegin = 225;
 	double SetAngleEnd = 315;
 	double SetFineStep = 1;
