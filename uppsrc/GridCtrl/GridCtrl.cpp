@@ -5634,9 +5634,9 @@ void GridCtrl::Clear(bool columns)
 
 	UpdateCtrls(UC_HIDE | UC_CTRLS | UC_FOCUS);
 
-	int nrow = columns ? 1 : fixed_rows;
-	items.Remove(nrow, items.GetCount() - 1);
-	vitems.Remove(nrow, vitems.GetCount() - 1);
+	int nrows = columns ? 1 : fixed_rows;
+	items.Remove(nrows, items.GetCount() - nrows);
+	vitems.Remove(nrows, vitems.GetCount() - nrows);
 
 	if(columns)
 	{
@@ -5668,8 +5668,8 @@ void GridCtrl::Clear(bool columns)
 
 	valid_cursor = false;
 
-	total_rows = 1;
-	fixed_rows = 1;
+	total_rows = nrows;
+	fixed_rows = nrows;
 
 	firstRow = -1;
 	lastRow = -1;
