@@ -5634,8 +5634,9 @@ void GridCtrl::Clear(bool columns)
 
 	UpdateCtrls(UC_HIDE | UC_CTRLS | UC_FOCUS);
 
-	items.Remove(1, items.GetCount() - 1);
-	vitems.Remove(1, vitems.GetCount() - 1);
+	int nrow = columns ? 1 : fixed_rows;
+	items.Remove(nrow, items.GetCount() - 1);
+	vitems.Remove(nrow, vitems.GetCount() - 1);
 
 	if(columns)
 	{
