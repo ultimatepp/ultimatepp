@@ -1040,46 +1040,43 @@ Meter::Meter() {
 Knob::Knob() : value(0), minv(0), maxv(100), nminor(1), nmajor(5), keyStep(1), 
 			   angleBegin(225), angleEnd(315), 
 			   colorType(SimpleWhiteType), clockWise(true), number(true), mark(Line), 
-			   interlocking (false)  {
+			   interlocking (false), style(Simple)  {
 	Transparent();
 }
 
 void Knob::PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double begin, double end, 
-		double ang0, double ang1, int direction, double minorstep, double majorstep, double bigF, Color color) {
+		double ang0, double ang1, int direction, double minorstep, double bigF, Color color) {
 	if (direction == -1) 
 		Swap(ang0, ang1);
 	ang0 = ToRad(ang0);
-	ang1 = ToRad(ang1);
 	minorstep = ToRad(minorstep);
-	majorstep = ToRad(majorstep);
-	if (ang0 > ang1)
-		ang1 += 2*M_PI;
 	double width = bigF;
-	double maj = majorstep-minorstep;
-	for (double i = ang0; i <= ang1+0.1; i += minorstep) {
-		if (maj+minorstep == majorstep) {
-			maj = 0;
-			double x0 = cx + end*R*cos(i);
-			double y0 = cy - end*R*sin(i);
-			double x1 = cx + begin*R*cos(i);
-			double y1 = cy - begin*R*sin(i);
+	int inum = 0;
+	int imin = nminor;
+	for (double iang = ang0; inum < nmajor+2; iang += minorstep) {
+		if (imin >= nminor) {
+			imin = 0;
+			double x0 = cx + end*R*cos(iang);
+			double y0 = cy - end*R*sin(iang);
+			double x1 = cx + begin*R*cos(iang);
+			double y1 = cy - begin*R*sin(iang);
 			w.DrawLine(x0, y0, x1, y1, width, color);
+			inum++;
 		} else {
-			maj += minorstep;
-			double x0 = cx + (begin+end)*R*cos(i)/2;
-			double y0 = cy - (begin+end)*R*sin(i)/2;
+			double x0 = cx + (begin+end)*R*cos(iang)/2;
+			double y0 = cy - (begin+end)*R*sin(iang)/2;
 			w.DrawCircle(x0, y0, 0.2*(begin-end)*R, color);
+			imin++;
 		}
 	}
 }
 
 void Knob::PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
-	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color)
-{
+	double step, int direction, double minv, double maxv, double stepv, double bigF, Color color) {
 	double range = maxv - minv;
 	a0 = ToRad(a0);
 	step = ToRad(step);
-	Font fnt = Arial((int)(7.5*bigF));
+	Font fnt = Arial(3+(int)(4*bigF));
 	String strminv;
 	String strmaxv = FormatDoubleAdjust(maxv, range);
 	while (strminv != strmaxv) {
@@ -1092,17 +1089,120 @@ void Knob::PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, doub
 	}
 }
 
+void Knob::PaintRugged(MyBufferPainter &sw, double cx, double cy, double angle, double r, double rugg, int numRug, Color &color) {
+	double deltaAngle = 360./numRug;
+	
+	double iang = angle;
+	for (int i = 0; i <= numRug; iang += deltaAngle, i++) {
+		if (deltaAngle > 360)
+			deltaAngle -= 360;
+		
+		sw.DrawArc(cx, cy, r-rugg/2-1, iang, iang+0.6*deltaAngle, 1, rugg, color);
+		sw.DrawArc(cx, cy, r, 		   iang, iang+0.6*deltaAngle, 1, 1,    Gray());
+		double riang = ToRad(iang);
+		sw.DrawLine(cx+r*cos(riang), cx-r*sin(riang), cx+(r-rugg)*cos(riang), cx-(r-rugg)*sin(riang), 1, Gray());
+	}
+}
+
+void Knob::Layout() {
+	double R = min(GetSize().cx/2., GetSize().cy/2.);
+	double dx = R;
+	double maxgrad = fabs(angleEnd - angleBegin);
+	if (clockWise)
+		maxgrad = 360 - maxgrad;
+	double dangle = (value - minv)*maxgrad/(maxv - minv);
+	if (clockWise)
+		dangle = angleBegin - dangle;
+	else
+		dangle = angleBegin + dangle;
+	double angle = ToRad(dangle);
+	ImageBuffer ib(int(2*R), int(2*R));
+	MyBufferPainter sw(ib);	
+	sw.Clear(RGBAZero());
+	int direction;
+	if (clockWise)
+		direction = -1;
+	else
+		direction = 1;
+	minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
+	majorstep = (maxv-minv)/(nmajor+1);
+	double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
+	double majorstepa = majorstep*maxgrad/(maxv - minv);
+	if (number) {
+		PaintNumbers(sw, R, R, R, angleBegin, majorstepa, direction, minv, maxv, majorstep, R/40., Black());
+		PaintMarks(sw, R, R, R, 0.65, 0.73, angleBegin, angleEnd, direction, minorstepa, R/40., Black());
+		R *= 0.65;
+	} else {
+		PaintMarks(sw, R, R, R, 0.9, 1, angleBegin, angleEnd, direction, minorstepa, R/40., Black());
+		R *= 0.9;
+	}
+	dx = dx - R;
+	
+	double rugg = 0;
+	if (style == Rugged) 
+		rugg = 0.5+0.054*R;
+
+	double r = 0.15*R;
+	R = R-rugg;
+	
+	if (colorType == WhiteType || colorType == BlackType) {
+		Color fill = (colorType == SimpleWhiteType || colorType == WhiteType) ? White() : Color(20, 20, 20);
+		{
+			if (colorType == WhiteType) {
+				sw.Circle(dx+rugg+R, dx+rugg+R, R).Fill(dx+R/2, dx+R/2, White(), dx+R, dx+R, R, LtGray());
+			} else if (colorType == BlackType) {
+				Color lineColor = (colorType == WhiteType) ? Black() : White();
+				Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
+				sw.Circle(dx+rugg+R, dx+rugg+R, R).Fill(fill);	
+				sw.Begin();
+					sw.BeginMask();
+						sw.Circle(dx+rugg+R, dx+rugg+R, R).Fill(White());
+					sw.End();
+					sw.Ellipse(dx+rugg+R, dx+rugg+0.5*R, 0.89*R, 0.5*R).Fill(dx, dx, White(), dx, dx+0.9*R, Color(20, 20, 20));
+					sw.Ellipse(dx+rugg+R, dx+rugg+1.7*R, 0.8*R, 0.5*R).Fill(dx, dx+2*R, White(), dx, dx+1.4*R, Color(20, 20, 20));
+				sw.End();						
+			}
+		}
+		{
+			ImageBuffer ib(int(2*r)+1, int(2*r)+1);
+			MyBufferPainter sw(ib);	
+			sw.Clear(RGBAZero());
+			
+			if (colorType == WhiteType) {
+				if (mark == Circle) 
+					sw.Circle(r, r, r).Fill(1.5*r, 1.5*r, White(), r, r, r, LtGray());
+			} else if (colorType == BlackType) {
+				if (mark == Circle) {
+					Color lineColor = (colorType == WhiteType) ? Black() : White();
+					Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
+					sw.Circle(r, r, r).Fill(fill);	
+					sw.Begin();
+						sw.BeginMask();
+							sw.Circle(r, r, r).Fill(almostColor);
+						sw.End();
+						sw.Ellipse(r, r + r/2,   r, r/2).Fill(lineColor);
+						sw.Ellipse(r, r - r*0.9, r, r/2).Fill(lineColor);
+					sw.End();		
+				}
+			}
+			imgMark = ib;
+		}
+	}
+	img = ib;
+	Ctrl::Layout();
+}
+
 void Knob::Paint(Draw& w) {
 	Size sz = GetSize();
 	double maxgrad = fabs(angleEnd - angleBegin);
 	if (clockWise)
 		maxgrad = 360 - maxgrad;
-	double angle = (value - minv)*maxgrad/(maxv - minv);
+	double dangle = (value - minv)*maxgrad/(maxv - minv);
 	if (clockWise)
-		angle = angleBegin - angle;
+		dangle = angleBegin - dangle;
 	else
-		angle = angleBegin + angle;
-	angle = ToRad(angle);
+		dangle = angleBegin + dangle;
+	double angle = ToRad(dangle);
 	double r = min(GetSize().cx/2., GetSize().cy/2.);
 	double cx = r;
 	double cy = r;
@@ -1120,73 +1220,59 @@ void Knob::Paint(Draw& w) {
 	majorstep = (maxv-minv)/(nmajor+1);
 	double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
 	double majorstepa = majorstep*maxgrad/(maxv - minv);	
-	
+
 	if (HasFocus()) {
 		if (number)
-			sw.Circle(cx, cy, 0.6*r+2.5).Stroke(5, GrayColor(240));
+			sw.Circle(cx, cy, 0.65*r+2.5).Stroke(5, GrayColor(240));
 		else
 			sw.Circle(cx, cy, 0.9*r+2.5).Stroke(5, GrayColor(240));
 	}
 	
-	if (number) {
-		PaintNumbers(sw, cx, cy, r, angleBegin, majorstepa, direction, minv, maxv, majorstep, r/40, Black());
-		PaintMarks(sw, cx, cy, r, 0.6, 0.7, angleBegin, angleEnd, direction, minorstepa, majorstepa, r/40., Black());
-		r *= 0.6;
-	} else {
-		PaintMarks(sw, cx, cy, r, 0.9, 1, angleBegin, angleEnd, direction, minorstepa, majorstepa, r/40., Black());
+	if (number) 
+		r *= 0.65;
+	else 
 		r *= 0.9;
-	}
-	double lineW = 1;
+	
 	double capt = 0;
 	if (HasCapture()) 
 		capt = 1;
 	
+	Color fill = (colorType == SimpleWhiteType || colorType == WhiteType) ? White() : Color(20, 20, 20);
+	double rugg = 0;
+	if (style == Rugged) 
+		rugg = 0.5+0.05*r;
+	sw.Circle(cx, cy, r-capt-rugg).Stroke(1, Gray());
+	Color ruggColor = fill;
+	if (colorType == WhiteType)
+		ruggColor = LtGray();
+	if (style == Rugged) 
+		PaintRugged(sw, cx, cy, dangle, r-capt, rugg, 4+int(r/6), ruggColor);
+	
+	if (IsNull(img))
+		Layout();
+	double realR = r-capt;
+	sw.DrawImage(int(capt), int(capt), int(2*(cx-capt)), int(2*(cx-capt)), img);
 	if (colorType == SimpleWhiteType || colorType == SimpleBlackType) {
-		Color fill = (colorType == SimpleWhiteType) ? White() : Color(20, 20, 20);
-
-		sw.Circle(cx, cy, r-capt-lineW).Stroke(lineW, Black()).Fill(fill);
-		
+		sw.Circle(cx, cy, realR-rugg).Fill(fill);
+				
 		Color lineColor = (colorType == SimpleWhiteType) ? Color(20, 20, 20) : White();
 		if (mark == Line)
-			sw.DrawLine(cx+(r-capt-lineW)*cos(angle), cy-(r-capt-lineW)*sin(angle), 
+			sw.DrawLine(cx+(r-capt)*cos(angle), cy-(r-capt)*sin(angle), 
 					    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
 		else if (mark == Circle)
-			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Stroke(lineW, lineColor).Fill(fill);
+			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Stroke(1, lineColor).Fill(fill);
 	} else if (colorType == WhiteType || colorType == BlackType) {
-		Color fill = (colorType == WhiteType) ? White() : Color(20, 20, 20);
-		
-		int wm = GetSize().cx;
-		if (colorType == WhiteType)
-			sw.Circle(cx, cy, r-capt-lineW).Fill(cx/2, cy/2, White(), cx, cy, r, LtGray());
-		else {
-			sw.Circle(cx, cy, r-capt-lineW).Fill(fill);
-			sw.Begin(); 
-				sw.BeginMask();
-					sw.Ellipse(cx, cy, r-capt-lineW, r-capt-lineW).Fill(Color(60, 60, 60));
-				sw.End();
-				sw.Ellipse(cx, 0.5*cy, r-capt-lineW, (r-capt-lineW)/2).Fill(White());
-			sw.End();		
-		}		
 		Color lineColor = (colorType == WhiteType) ? Black() : White();
 		Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
 		if (mark == Line)
-			sw.DrawLine(cx+(r-capt-lineW)*cos(angle), cy-(r-capt-lineW)*sin(angle), 
+			sw.DrawLine(cx+realR*cos(angle), cy-realR*sin(angle), 
 					    cx+0.5*r*cos(angle), cy-0.5*r*sin(angle), r/25., lineColor);
 		else if (mark == Circle) {
-			if (colorType == WhiteType) {
-				double ccx = cx+0.7*r*cos(angle);
-				double ccy = cy-0.7*r*sin(angle);
-				sw.Circle(ccx, ccy, 0.15*r).Fill(1.1*ccx, 1.1*ccy, White(), ccx, ccy, 0.15*r, LtGray());
-			} else {
-				sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Fill(fill);	
-				sw.Begin();
-					sw.BeginMask();
-						sw.Ellipse(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r, 0.15*r).Fill(almostColor);
-					sw.End();
-					sw.Ellipse(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle)+0.15*r/2, 0.15*r, 0.15*r/2).Fill(lineColor);
-					sw.Ellipse(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle)-0.15*r*0.9, 0.15*r, 0.15*r/2).Fill(lineColor);
-				sw.End();					
-			}
+			double ccx = cx+0.7*r*cos(angle);
+			double ccy = cy-0.7*r*sin(angle);
+			if (IsNull(imgMark))
+				Layout();
+			sw.DrawImage(int(ccx-0.15*r), int(ccy-0.15*r), imgMark);
 		}
 	}
 	w.DrawImage(0, 0, ib);

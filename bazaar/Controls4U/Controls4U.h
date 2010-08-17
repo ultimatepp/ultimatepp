@@ -49,23 +49,16 @@ public:
 		}
 		ang0 = ToRad(ang0);
 		ang1 = ToRad(ang1);
-		double delta = ToRad(1);
+		double delta = ToRad(0.5);
 		if (ang0 > ang1)
 			ang1 += 2*M_PI;
-		double x0, y0, x1, y1;
-		for (double i = ang0; i < ang1; i += delta) {
-			if (i == ang0) {
-				x0 = cx + R*cos(i);
-				y0 = cy - R*sin(i);
-			} else {
-				x0 = x1;
-				y0 = y1;
-			}
-			x1 = cx + R*cos(i + delta);
-			y1 = cy - R*sin(i + delta);
-			DrawLine(x0, y0, x1, y1, width, color);
-		}
+		
+		double x1, y1;
+		x1 = cx + R*cos(ang0 + delta);
+		y1 = cy - R*sin(ang0 + delta);
+		Move(x1, y1).Arc(cx, cy, R, R, -ang0, ang0-ang1).Stroke(width, color);
 	}
+	
 };
 #endif
 
@@ -353,7 +346,8 @@ public:
 class Knob : public Ctrl {
 private:
 	double value;
-	double minv, maxv, nminor, nmajor, keyStep;
+	double minv, maxv, keyStep;
+	int nminor, nmajor;
 	double minorstep, majorstep;
 	double angleBegin, angleEnd;
 	double angleClick;
@@ -362,20 +356,16 @@ private:
 	bool number;
 	int mark;
 	bool interlocking;
+	int style;
 
 	double SliderToClient(Point pos);
 	void PaintMarks(MyBufferPainter &w, double cx, double cy, double R, double begin, double end, double ang0, 
-			double ang1, int direction, double minorstep, double majorstep, double bigF, Color color);
+		double ang1, int direction, double minorstep, double bigF, Color color);
 	void PaintNumbers(MyBufferPainter &w, double cx, double cy, double R, double a0, 
-		double step, int direction, double minv, double maxv, double stepv, double bigF, Color color);			
-
-public:
-	typedef Knob CLASSNAME;
-
-	Callback WhenSlideFinish;
+		double step, int direction, double minv, double maxv, double stepv, double bigF, Color color);	
+	void PaintRugged(MyBufferPainter &w, double cx, double cy, double angle, double r, 
+		double rugg, int numRug, Color &color);
 	
-	Knob();
-
 	virtual void  Paint(Draw& draw);
 	virtual bool  Key(dword key, int repcnt);
 	virtual void  LeftDown(Point pos, dword keyflags);
@@ -384,6 +374,15 @@ public:
 	virtual void  MouseMove(Point pos, dword keyflags);
 	virtual void  GotFocus();
 	virtual void  LostFocus();
+	virtual void  Layout();
+	Image img, imgMark;
+	
+public:
+	typedef Knob CLASSNAME;
+
+	Callback WhenSlideFinish;
+	
+	Knob();
 
 	virtual void  SetData(const Value& value);
 	virtual Value GetData() const;
@@ -400,13 +399,15 @@ public:
 	Knob& SetKeyStep(double fs = 1) {keyStep = fs; Refresh(); return *this;}	
 	Knob& SetAngleBegin(double v) 	{angleBegin = v; Refresh(); return *this;}
 	Knob& SetAngleEnd(double v)		{angleEnd = v; Refresh(); return *this;}
-	Knob& SetNumber(bool b)			{number = b; Refresh(); return *this;}
+	Knob& SetNumber(bool b)			{number = b; Layout(); Refresh(); return *this;}
 	Knob& SetInterlocking(bool b = true)	{interlocking = b; Refresh(); return *this;}
 
 	enum ColorType {SimpleWhiteType, SimpleBlackType, WhiteType, BlackType};
-	Knob& SetColorType(int c)	{colorType = c; Refresh(); return *this;}
+	Knob& SetColorType(int c)	{colorType = c; Layout(); Refresh(); return *this;}
 	enum Mark {NoMark, Line, Circle};
-	Knob& SetMark(int c)		{mark = c; Refresh(); return *this;}
+	Knob& SetMark(int c)		{mark = c; Layout(); Refresh(); return *this;}
+	enum Style {Simple, Rugged};
+	Knob& SetStyle(int c)		{style = c; Layout(); Refresh(); return *this;}	
 };
 
 #endif
