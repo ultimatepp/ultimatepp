@@ -1,0 +1,5 @@
+#ifndef _CMeterTest_icpp_init_stub
+#define _CMeterTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "CMeter/init"
+#endif

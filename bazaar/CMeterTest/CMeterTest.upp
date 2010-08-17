@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	CMeter;
+
+file
+	CMeterTest.h,
+	main.cpp,
+	CMeterTest.lay;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,11 @@
+description "a Meter Drawing control, more versatile than the Upp progress stuff\377";
+
+uses
+	CtrlLib,
+	Painter;
+
+file
+	CMeter.h,
+	CMeter.cpp,
+	src.tpp;
+
