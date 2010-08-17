@@ -1,0 +1,15 @@
+description "WorkQueue derived from custom CoWork\377";
+
+uses
+	CtrlLib,
+	CoWork;
+
+file
+	WorkQueueTest.h,
+	main.cpp,
+	WorkQueueTest.lay,
+	WorkQueueTest.iml;
+
+mainconfig
+	"" = "GUI MT";
+

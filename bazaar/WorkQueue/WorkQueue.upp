@@ -1,0 +1,9 @@
+description "a thread WorkQueue implementation for serializeing off main thread work\377";
+
+uses
+	Core;
+
+file
+	WorkQueue.h,
+	WorkQueue.cpp;
+

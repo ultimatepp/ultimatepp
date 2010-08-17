@@ -1,0 +1,4 @@
+LAYOUT(WorkQueueTestLayout, 412, 100)
+	ITEM(SliderCtrl, sl, LeftPosZ(0, 412).TopPosZ(76, 24))
+END_LAYOUT
+

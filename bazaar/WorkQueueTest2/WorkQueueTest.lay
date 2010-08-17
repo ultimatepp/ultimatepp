@@ -1,0 +1,7 @@
+LAYOUT(WorkQueueTestLayout, 372, 320)
+	ITEM(DocEdit, inf, HSizePosZ(4, 4).VSizePosZ(4, 24))
+	ITEM(Button, workq, SetLabel(t_("WorkQ")).RightPosZ(0, 92).BottomPosZ(0, 20))
+	ITEM(Button, self, SetLabel(t_("Self")).RightPosZ(92, 100).BottomPosZ(0, 20))
+	ITEM(SliderCtrl, sl, LeftPosZ(4, 172).TopPosZ(296, 24))
+END_LAYOUT
+

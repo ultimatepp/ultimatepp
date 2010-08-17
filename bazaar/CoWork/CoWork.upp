@@ -1,0 +1,9 @@
+description "the custom CoWork which lets specify thread count of a new pool and a WorkQueue\377";
+
+uses
+	Core;
+
+file
+	CoWork.h,
+	CoWork.cpp;
+
