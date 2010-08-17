@@ -19,7 +19,7 @@ Controls4U_Demo::Controls4U_Demo() {
 	CtrlLayout(*this, "Controls4U Demo");
 	Sizeable().Zoomable();
 
-	tab.Add(fileBrowser_Demo.SizePos(), "FileBrowser Text");	
+	tab.Add(fileBrowser_Demo.SizePos(), "FileBrowser (experimental)");	
 #if defined(PLATFORM_WIN32) 	
 	tab.Add(vlc_Demo.SizePos(), "VLC ActiveX");
 	tab.Add(firefox_Demo.SizePos(), "Firefox ActiveX");
@@ -48,7 +48,7 @@ void Controls4U_Demo::Timer() {
 #endif	
 }
 
-String GetTrashBinDirectory();
+//String GetTrashBinDirectory();
 
 GUI_APP_MAIN {
 	/*GetTrashBinDirectory();
@@ -122,21 +122,8 @@ StaticClock_Demo::StaticClock_Demo() {
 	back.Set(Images::cream2());
 };
 
-void Meter_Demo::ChangeValueKnob1() {
-	int val = knob1.GetData();
-	meter1.SetData(val);
-}
-
-void Meter_Demo::ChangeValueKnob2() {
-	int val = knob2.GetData();
-	meter2.SetData(val);
-	meter3.SetData(val);
-}
-
-void Meter_Demo::ChangeValueKnob3() {
-	int val = knob3.GetData();
-	meter4.SetData(val);
-	meter5.SetData(val);		
+void Meter_Demo::ChangeValueKnob(Knob *knob, Meter *meter) {
+	*meter <<= ~*knob;
 }
 
 void Meter_Demo::ChangeProperties() {
@@ -149,20 +136,17 @@ void Meter_Demo::ChangePropertiesKnob() {
 	knob1.SetNumber(knobCheckNumber);
 	knob1.SetInterlocking(knobCheckInterlocking);
 	knob1.SetMark(~knobSetMark);
+	knob1.ClockWise(~knobCheckClockWise);
+	knob1.SetStyle(~knobSetStyle);
 }
 
 Meter_Demo::Meter_Demo() {
 	CtrlLayout(*this);
-	knob1.SetMin(0).SetMax(100).SetAngleBegin(225).SetAngleEnd(315).ClockWise(true)
-		 .SetMajorMarks(5).SetMinorMarks(2);
-	knob1.WhenSlideFinish = THISBACK(ChangeValueKnob1);
-	knob2.SetMin(0).SetMax(100).SetAngleBegin(180).SetAngleEnd(0).ClockWise(true)
-		 .SetMajorMarks(5).SetMinorMarks(1).SetColorType(Knob::SimpleWhiteType).SetNumber(false);
-	knob2.WhenSlideFinish = THISBACK(ChangeValueKnob2);
-	knob3.SetMin(0).SetMax(100).SetAngleBegin(180).SetAngleEnd(0).ClockWise(false)
-		 .SetMajorMarks(5).SetMinorMarks(1).SetColorType(Knob::SimpleWhiteType).SetMark(Knob::Circle)
-		 .SetInterlocking();
-	knob3.WhenSlideFinish = THISBACK(ChangeValueKnob3);
+	knob1.WhenSlideFinish = THISBACK2(ChangeValueKnob, &knob1, &meter1);
+	knob2.WhenSlideFinish = THISBACK2(ChangeValueKnob, &knob2, &meter2);
+	knob3.WhenSlideFinish = THISBACK2(ChangeValueKnob, &knob3, &meter3);
+	knob4.WhenSlideFinish = THISBACK2(ChangeValueKnob, &knob4, &meter4);
+	knob5.WhenSlideFinish = THISBACK2(ChangeValueKnob, &knob5, &meter5);	
 	colorType.Add(Meter::WhiteType, "WhiteType").Add(Meter::BlackType, "BlackType")
 			 .SetData(Meter::BlackType);
 	colorType.WhenAction = THISBACK(ChangeProperties);	
@@ -171,15 +155,20 @@ Meter_Demo::Meter_Demo() {
 	knobColorType.Add(Knob::SimpleWhiteType, "SimpleWhiteType")
 				 .Add(Knob::SimpleBlackType, "SimpleBlackType")
 				 .Add(Knob::WhiteType, "WhiteType")
-				 .Add(Knob::BlackType, "BlackType").SetData(Knob::SimpleWhiteType);
+				 .Add(Knob::BlackType, "BlackType").SetData(Knob::BlackType);
 	knobColorType.WhenAction = THISBACK(ChangePropertiesKnob);	
 	knobCheckNumber = true;
 	knobCheckNumber.WhenAction = THISBACK(ChangePropertiesKnob);	
 	knobCheckInterlocking.WhenAction = THISBACK(ChangePropertiesKnob);	
+	knobCheckClockWise = true;
+	knobCheckClockWise.WhenAction = THISBACK(ChangePropertiesKnob);	
 	knobSetMark.Add(Knob::NoMark, "NoMark")
 			   .Add(Knob::Line, "Line")
-			   .Add(Knob::Circle, "Circle").SetData(Knob::Line);
+			   .Add(Knob::Circle, "Circle").SetData(Knob::Circle);
 	knobSetMark.WhenAction = THISBACK(ChangePropertiesKnob);	
+	knobSetStyle.Add(Knob::Simple, "Simple")
+			    .Add(Knob::Rugged, "Rugged").SetData(Knob::Simple);
+	knobSetStyle.WhenAction = THISBACK(ChangePropertiesKnob);	
 	back.Set(Images::cream2());
 }
 

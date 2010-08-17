@@ -36,9 +36,7 @@ class Meter_Demo : public WithMeter<StaticRect> {
 public:
 	typedef Meter_Demo CLASSNAME;
 	Meter_Demo();
-	void ChangeValueKnob1();
-	void ChangeValueKnob2();
-	void ChangeValueKnob3();
+	void ChangeValueKnob(Knob *knob, Meter *meter);
 	void ChangeProperties();
 	void ChangePropertiesKnob();
 };
