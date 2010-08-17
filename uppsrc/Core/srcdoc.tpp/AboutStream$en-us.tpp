@@ -17,42 +17,45 @@ Hartwich)]&]
 [s0;i150;O0; Stream represents only a logical `'cut out piece`' or 
 a finite snapshot of a per definition concurrent, infinite data 
 stream, beeing processed, handled or available to some extent. 
-hence the pos variable, indicating the current offset or pos`'ition 
-of the data chunk represented by your Stream instance, from the 
-logical start or beginning of stream.&]
+hence the pos variable, it it is indicating the current offset 
+or pos`'ition of the data chunk represented by your Stream instance, 
+from the logical start or beginning of stream.&]
 [s0; &]
 [s0;i150;O0; Stream is basicly only an interface class with some 
-pointers to ref some memory somewhere. it usually does not contain 
-the data itself. Thats why it may have MemStream, StringStream, 
-FileStream etc.. `'they`' access or even contain (StringBuffer) 
-the buffer and are using the pointers from Stream base to handle 
-it. The buffer is a current chunk of data, `*entirely`* accessable 
-in your stream.&]
+pointers to ref some memory space somewhere. it usually does 
+not contain (own in U`+`+ terms) the data itself. Thats why it 
+may have MemStream, StringStream, FileStream etc.. `'they`' access 
+or even contain (StringBuffer) the buffer and are using the pointers 
+from Stream base to handle it. The buffer referenced by Stream 
+is a current chunk of data, `*entirely`* accessable in your stream.&]
 [s0; &]
 [s0;i150;O0; Stream is unidirectional per definition and should be 
-used as such. In Contrast to other Stream implementations, Upp 
+used as such. In contrast to other Stream implementations, Upp 
 Stream brings in all to be used both as Input or as Output stream. 
 these 2 modes are supported in one single instance, but should`'t 
-be used at same time. Mevertheless, it does not produce ASSERT, 
-Exception or sth. if one tries to Put and Get stuff from same 
-Stream, it simply might not be logical or what you expect, because 
-Stream uses only one ptr to represent current `'head`' position 
-for reading or writing. (thus it is not intrinsically possible 
-to use a MemStream as a Circular Buffer, which would be nice. 
-btw, how about implementing such one Rolling Eyes . These 2 Modes 
-can be differed using the API functions IsStoring() / IsLoading(). 
-The Modes are set using SetStoring() / SetLoading() and are normally 
-set automatically, depending on how you created the stream instance.&]
+be used at same time. Nevertheless, it does not produce ASSERT, 
+Exception or errror messages if one tries to Put and Get stuff 
+from same Stream, it simply might not be logical or what you 
+expect or want, because Stream uses only one ptr to represent 
+current `'head`' position for reading or writing. (thus it is 
+not intrinsically possible to use a MemStream as a Circular Buffer, 
+which would be nice. (btw, how about implementing such one?) 
+These 2 Modes can be differed using the API functions IsStoring() 
+/ IsLoading(). The Modes are set using SetStoring() / SetLoading() 
+and are normally set automatically, depending on how you created 
+the stream instance.&]
 [s0; &]
 [s0;i150;O0; in both modes, the extension of the buffer marks the 
-accessible space for reading or writing. for reading, it means 
-the current available, `*already read`* data chunk, from buffer 
-to rdlim. ptr meaning the read position currently processing 
-it. the space from ptr till rdlim meaning the still to read data. 
-For writing, it means the `*already allocated`* data for beeing 
-able to write to. buffer to wrlimit is its extension. buffer 
-till ptr meaning the data, already written to the space, ptr 
-till wrlim the space free to fill.&]
+accessible space for `*entire`* reading or writing, using rdlim 
+and wrlim pointers. for reading, it means the current available, 
+readable data chunk. For writing, it means the `*already allocated`* 
+data for beeing able to write to. When reading, ptr meaning the 
+curent read position. buffer to ptr is data already processed 
+by read. the space from ptr till rdlim meaning the still to read 
+data. When writing, buffer till ptr meaning the data, already 
+written to the space, ptr till wrlim the space free to fill (before 
+a Flush should be triggered, if supported, or is triggered automatically, 
+ie. FileStream)&]
 [s0; &]
 [s0;i150;O0; Serializing stuff to Stream is quite cool. in other 
 implementations, Stream has a split interface for serializing 
@@ -104,18 +107,21 @@ having written all). then it will claim some `'upper level`'
 action to either provide more data, done by advanceing the snapshot 
 position in the read case, or writing out stored data and mark 
 it as free again. this is done invoking `_Get(..) or `_Put(..). 
-in other words... `_Put normally takes care of processing the 
-full buffer by flushing it somehow, and rewinding the ptr and 
+in other words... `_Put normally should take care of processing 
+the full buffer by flushing it somehow, process the data provided, 
+that didnt fit in the full buffer, and rewinding the ptr and 
 adjusting wrlim, declaring buffer empty. `_Get typically claims 
 some more data to be made available inside the Stream, maybe 
-by copying some data in buffer and again rewinding the ptr and 
-adjusting rdlim. this behaviour is to be defined somehow, and 
-is special for any kind of stream.&]
+by copying some data in provided empty buffer first, then remainder 
+in buffer and again rewinding the ptr and adjusting rdlim. this 
+behaviour is to be defined somehow, and is special for any kind 
+of stream.&]
 [s0; &]
-[s0;i150;O0; Flushing behavior is not invoked by generic Stream implementation 
-by default. but higher level Streams use it in to do exacely 
-this. either providing more data or flushing it to the underying 
-destination.&]
+[s0;i150;O0; Flushing behavior is only used for write side, or out 
+buffers. it is not invoked by generic Stream implementation by 
+default. but higher level Streams use it in to do exacely this. 
+flushing queued data to the underying destination (File Streams 
+only so far).&]
 [s0; &]
 [s0;i150;O0; there are several helper functions around handling Streams, 
 even copying, which is normally not possible just like that, 
