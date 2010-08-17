@@ -67,59 +67,132 @@ void DeEncrypter::Crypt(bool encrypt)
 	
 	for(int i = 0; i < fs.GetCount(); i++)
 	{
+		String fileinfo;
+		fileinfo << "(" << (i+1) << "/" << fs.GetCount() <<") ";
 		String filename = fs.GetFile(i);
-		ToInfo("\n\nProcessing: " + filename);
+		String file = GetFileName(filename);
+		String dfilename = dir + DIR_SEP + file + "$";
+		
+		ToInfo("\n\nProcessing: " + fileinfo + filename);
 
-		String sIn;
-
-		sIn = LoadFile(filename);
-		if(sIn.IsEmpty())
+		FileIn in(filename);
+		if(!in.IsOpen() || !in.IsOK())
 		{
-			ToInfo("!!! ERR: Could not load: " + filename);
+			ToInfo("ERR: Could not source open file: " + filename);
 			continue;
 		}
 		else
-			ToInfo("File loaded: " + filename);
+			ToInfo("File source opened: " + filename);
+
+		FileOut out(dfilename);
+		if(!out.IsOpen() || !out.IsOK())
+		{
+			ToInfo("ERR: Could not open dest file: " + dfilename);
+			continue;
+		}
+		else
+			ToInfo("File destination opened: " + dfilename);
 		
+		String sIn;
 		String sOut;
+		int64 filesize = in.GetStreamSize();
+		
+		pi.Set(0, filesize);
+
 		if(0)
-			sOut = sIn;
+		{
+			String msg = "Copying: " + fileinfo + file;
+			pi.SetText(msg);
+			int time = msecs();
+			int size = 0;
+			while(in.GetLeft()>0)
+			{
+				sIn = in.Get(in.GetBufferSize());
+
+				sOut = sIn; //copy :)
+
+				out.Put(~sOut, sOut.GetCount());
+				pi.Step(sIn.GetCount());
+
+				int tt = msecs();
+				int dt = tt - time;
+				if(dt > 1000)
+				{
+					time = tt;
+					int dsize = in.GetPos() - size;
+					size = in.GetPos();
+					double rate = (double)dsize/(double)dt;
+					pi.SetText(msg + " (" + FormatDoubleFix(rate, 1) + " kB/s)");
+				}
+			}
+		}
 		else
 		{
-			int total = (sIn.GetLength()/BUFFSIZE) + 1;
-			pi.SetTotal(total);
-			
 			if(encrypt)
 			{
-				pi.SetText("Encrypting: " + filename);
-				AESEncoderStream aesEncoder(sIn.GetLength(), key); 
-				for(int i = 0; i < sIn.GetLength();)
+				String msg = "Encrypting: " + fileinfo + file;
+				pi.SetText(msg);
+				AESEncoderStream aesEncoder(filesize, key); 
+				int time = msecs();
+				int size = 0;
+				while(in.GetLeft()>0)
 				{
-					aesEncoder << sIn.Mid(i, BUFFSIZE);
-					sOut << aesEncoder;
-					i+=BUFFSIZE;
-					pi.Step();
+					sIn = in.Get(in.GetBufferSize());
+
+					aesEncoder << sIn;     //more data can be << too, before retrieving the data
+					//sOut << aesEncoder;  //we dont accumulate data in a String,
+					sOut = aesEncoder.GetEncryptedData(); //but get what is inside and put it in file, where it is accumulated
+
+					out.Put(~sOut, sOut.GetCount());
+					pi.Step(sIn.GetCount());
+
+					int tt = msecs();
+					int dt = tt - time;
+					if(dt > 1000)
+					{
+						time = tt;
+						int dsize = in.GetPos() - size;
+						size = in.GetPos();
+						double rate = (double)dsize/(double)dt;
+						pi.SetText(msg + " (" + FormatDoubleFix(rate, 1) + " kB/s)");
+					}
 				}
 			}
 			else
 			{
-				pi.SetText("Decrypting: " + filename);
-				AESDecoderStream aesDecoder(key); 
-				for(int i = 0; i < sIn.GetLength();)
+				String msg = "Decrypting: " + fileinfo + file;
+				pi.SetText(msg);
+				AESDecoderStream aesDecoder(key);
+				int time = msecs();
+				int size = 0;
+				while(in.GetLeft()>0)
 				{
-					aesDecoder << sIn.Mid(i, BUFFSIZE);
-					sOut << aesDecoder;
-					i+=BUFFSIZE;
-					pi.Step();
+					sIn = in.Get(in.GetBufferSize());
+
+					aesDecoder << sIn;     //more data can be << too, before retrieving the data
+					//sOut << aesDecoder;  //we dont accumulate data in a String,
+					sOut = aesDecoder.GetDecryptedData(); //but get what is inside and put it in file, where it is accumulated
+					
+					out.Put(~sOut, sOut.GetCount());
+					pi.Step(sIn.GetCount());
+
+					int tt = msecs();
+					int dt = tt - time;
+					if(dt > 1000)
+					{
+						time = tt;
+						int dsize = in.GetPos() - size;
+						size = in.GetPos();
+						double rate = (double)dsize/(double)dt;
+						pi.SetText(msg + " (" + FormatDoubleFix(rate, 1) + " kB/s)");
+					}
 				}
 			}
 		}
 
-		filename = dir + DIR_SEP + GetFileName(filename);
-		if(!SaveFile(filename, sOut))
-			ToInfo("!!! ERR: Could not save: " + filename);
-		else
-			ToInfo(">> saved to " + filename);
+		in.Close();
+		out.Close();
+		ToInfo(">> dest saved to " + dfilename);
 	}
 
 	pi.Close();
