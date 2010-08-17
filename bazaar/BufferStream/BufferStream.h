@@ -21,6 +21,7 @@ public:
 	void           Open(Vector<byte> & d);
 	void           Create();
 	void           Reserve(int n)            { SetSize((int)GetSize() + n); }
+	void           Crop()                    { SetSize(GetPos()); }
 
 	Vector<byte>   GetResult();
 	operator    Vector<byte>()               { return GetResult(); }

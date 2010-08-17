@@ -33,6 +33,11 @@ rewinds current ptr to beginning.&]
 mode.can speed up things if you know how much is to come.&]
 [s3;%% &]
 [s4; &]
+[s5;:BufferStream`:`:Trim`(`): [@(0.0.255) void]_[* Crop]()&]
+[s2;%% crops the internal buffer to currently used size. if storing 
+buffer, means crop&]
+[s3; &]
+[s4; &]
 [s5;:BufferStream`:`:GetResult`(`): [_^Vector^ Vector]<[_^byte^ byte]>_[* GetResult]()&]
 [s2;%% picks internal Vector, leaving an initialized Vector for new 
 operations.&]

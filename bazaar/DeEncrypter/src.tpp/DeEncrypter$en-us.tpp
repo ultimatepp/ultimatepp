@@ -9,4 +9,7 @@ random aes keys.&]
 [s0; it uses default key size 32 byte (256 bit).&]
 [s0; &]
 [s0; known issue: files > 200 MB produce an `'Out of Memory`'...maybe 
-because of the heap allocator in Upp.]
+because of the heap allocator in Upp.&]
+[s0; &]
+[s0; The implementation is not yet stable, and does not use streaming 
+of files in the intended way. this is TBD]

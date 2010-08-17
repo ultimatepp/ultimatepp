@@ -6,6 +6,3 @@ file
 	BufferStream.cpp,
 	src.tpp;
 
-mainconfig
-	"" = "";
-
