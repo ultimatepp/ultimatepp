@@ -1,0 +1,14 @@
+LAYOUT(DispatcherTestLayout, 388, 240)
+	ITEM(SliderCtrl, sl, LeftPosZ(48, 144).TopPosZ(8, 24))
+	ITEM(StaticText, dv___1, SetText(t_("Value")).LeftPosZ(8, 40).TopPosZ(8, 24))
+	ITEM(SliderCtrl, sli, RightPosZ(48, 148).TopPosZ(8, 24))
+	ITEM(StaticText, dv___3, SetText(t_("int")).RightPosZ(8, 40).TopPosZ(8, 24))
+END_LAYOUT
+
+LAYOUT(Pane, 200, 64)
+	ITEM(StaticText, st, LeftPosZ(8, 88).TopPosZ(8, 19))
+	ITEM(DropList, dl, RightPosZ(8, 88).TopPosZ(8, 19))
+	ITEM(EditInt, ei, LeftPosZ(8, 88).BottomPosZ(9, 19))
+	ITEM(ProgressIndicator, pi, RightPosZ(8, 88).BottomPosZ(8, 24))
+END_LAYOUT
+

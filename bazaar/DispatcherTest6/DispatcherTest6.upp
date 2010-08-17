@@ -1,0 +1,14 @@
+description "functional demo for DispatcherCB, how to use multiple Ctrl's on a Callback Dispatcher\377";
+
+uses
+	CtrlLib,
+	Dispatcher;
+
+file
+	DispatcherTest.h,
+	main.cpp,
+	DispatcherTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

@@ -1,0 +1,4 @@
+#ifndef _Dispatcher_icpp_init_stub
+#define _Dispatcher_icpp_init_stub
+#include "Core/init"
+#endif

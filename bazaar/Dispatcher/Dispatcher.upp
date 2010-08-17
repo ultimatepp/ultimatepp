@@ -1,0 +1,10 @@
+description "a templateable object dispatcher class\377";
+
+uses
+	Core;
+
+file
+	Dispatcher.h,
+	Dispatcher.hpp,
+	Dispatcher.cpp;
+

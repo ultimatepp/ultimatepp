@@ -1,0 +1,14 @@
+description "functional demo for GenDispatcher, how to use multiple Ctrl's with multiple Dispatchable interfaces on a generic Dispatcher\377";
+
+uses
+	CtrlLib,
+	Dispatcher;
+
+file
+	DispatcherTest.h,
+	main.cpp,
+	DispatcherTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

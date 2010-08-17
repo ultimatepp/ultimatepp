@@ -1,0 +1,14 @@
+description "functional demo for Dispatcher. how to extend an application with Dispatchable interface\377";
+
+uses
+	CtrlLib,
+	Dispatcher;
+
+file
+	DispatcherTest.h,
+	main.cpp,
+	DispatcherTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+
