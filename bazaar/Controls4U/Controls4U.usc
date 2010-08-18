@@ -27,15 +27,21 @@ fn abs(a) {
 	else
 		return -a;
 }
+fn to_double(n) {
+	n += 1.1;
+	n -= 1.1;
+	return n;
+}
 
 fn PaintEllipse(w, left, top, right, bottom, width, color)
 {
+	if (width < 1)
+		width = 1;
 	a = (right-left)/2.;
 	b = (bottom-top)/2.;
-	width_2 = width/2;
-	delta = Pi()/20;
-	maxi = 2*Pi();
-	
+	width_2 = width/2.;
+	delta = Pi()/20.;
+	maxi = 2.*Pi();
 	for (i = 0; i < maxi; i += delta) {
 		if (i == 0) {
 			x0 = left + a + (a - width_2);
@@ -84,7 +90,11 @@ fn FillEllipse(w, left, top, right, bottom, background)
 {
 	a = (right-left)/2.;
 	b = (bottom-top)/2.;
-	delta = Pi()/10;
+	if (a <= 0.5 || b <= 0.5) {
+		w.DrawLine(left, top, right, bottom, 1, background);
+		return;
+	}
+	delta = Pi()/10.;
 	x0 = left + a;
 	y0 = top  + b;
 	
@@ -94,7 +104,8 @@ fn FillEllipse(w, left, top, right, bottom, background)
 		w.DrawRect(x0-x1 , y0-y1, 2*x1 , 2*y1, background);
 	}
 	width = min(a, b)/4.;
-	PaintEllipse(w, left, top, right, bottom, width, background);
+	if (width > 1)
+		PaintEllipse(w, left, top, right, bottom, width, background);
 }
 
 fn FillCircle(w, cx, cy, R, color) {
@@ -996,33 +1007,31 @@ ctrl VLCPlayer {
 	}
 }
 
-fn PaintMarksK(w, cx, cy, R, begin, end, ang0, ang1, direction, minorstep, majorstep, bigF, color) {
+fn PaintMarksK(w, cx, cy, R, begin, end, ang0, ang1, direction, minorstep, nminor, nmajor, bigF, color) {
 	if (direction == -1) {
 		c = ang1;
 		ang1 = ang0;
 		ang0 = c;
 	}
 	ang0 = ToRad(ang0);
-	ang1 = ToRad(ang1);
 	minorstep = ToRad(minorstep);
-	majorstep = ToRad(majorstep);
-	if (ang0 > ang1)
-		ang1 += 2*Pi();
 	width = bigF;
-	maj = majorstep-minorstep;
-	for (iang = ang0; iang <= ang1; iang += minorstep) {
-		if (maj+minorstep >= majorstep) {
-			maj = 0;
+	inum = 0;
+	imin = nminor;
+	for (iang = ang0; inum < nmajor+2; iang += minorstep) {
+		if (imin >= nminor) {
+			imin = 0;
 			x0 = cx + end*R*cos(iang);
 			y0 = cy - end*R*sin(iang);
 			x1 = cx + begin*R*cos(iang);
 			y1 = cy - begin*R*sin(iang);
 			w.DrawLine(x0, y0, x1, y1, width, color);
+			inum++;			
 		} else {
-			maj += minorstep;
-			x0 = cx + (begin+end)*R*cos(iang)/2;
-			y0 = cy - (begin+end)*R*sin(iang)/2;
-			FillCircle(w, x0, y0, 0.2*(begin-end)*R, color);
+			x0 = cx + (begin+end)*R*cos(iang)/2.;
+			y0 = cy - (begin+end)*R*sin(iang)/2.;
+			FillCircle(w, x0, y0, 0.2*(end-begin)*R, color);
+			imin++;			
 		}
 	}
 }
@@ -1047,7 +1056,6 @@ fn PaintNumbersK(w, cx, cy, R, a0, step, direction, minv, maxv, stepv, bigF, col
 }
 
 fn PaintRugged(w, cx, cy, angle, r, rugg, numRug, color) {
-	//numRug = 20;
 	angle = 0;
 	deltaAngle = 360./numRug;
 	
@@ -1124,15 +1132,15 @@ ctrl Knob {
 			direction = 1;
 		minorstep = (.SetMax-.SetMin)/((.SetMajorMarks+1)*(.SetMinorMarks+1));
 		majorstep = (.SetMax-.SetMin)/(.SetMajorMarks+1);
-		minorstepa = minorstep*maxgrad/(.SetMax-.SetMin);	// Step in angle
-		majorstepa = majorstep*maxgrad/(.SetMax-.SetMin);	
+		minorstepa = minorstep*maxgrad/to_double(.SetMax-.SetMin);	// Step in angle
+		majorstepa = majorstep*maxgrad/to_double(.SetMax-.SetMin);	
 	
 		if (.SetNumber) {
 			PaintNumbersK(w, cx, cy, r, .SetAngleBegin, majorstepa, direction, .SetMin, .SetMax, majorstep, r/40., :SBlack);
-			PaintMarksK(w, cx, cy, r, 0.65, 0.73, .SetAngleBegin, .SetAngleEnd, direction, minorstepa, majorstepa, r/40., :SBlack);
+			PaintMarksK(w, cx, cy, r, 0.65, 0.73, .SetAngleBegin, .SetAngleEnd, direction, minorstepa, .SetMinorMarks, .SetMajorMarks, r/40., :SBlack);
 			r *= 0.65;
 		} else {
-			PaintMarksK(w, cx, cy, r, 0.9, 1, .SetAngleBegin, .SetAngleEnd, direction, minorstepa, majorstepa, r/40., :SBlack);
+			PaintMarksK(w, cx, cy, r, 0.9, 1, .SetAngleBegin, .SetAngleEnd, direction, minorstepa, .SetMinorMarks, .SetMajorMarks, r/40., :SBlack);
 			r *= 0.9;
 		}		
 		capt = 0;
