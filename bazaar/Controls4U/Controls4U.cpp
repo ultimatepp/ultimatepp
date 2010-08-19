@@ -1037,7 +1037,7 @@ Meter::Meter() {
 	kill = 0;
 }
 
-Knob::Knob() : value(0), minv(0), maxv(100), nminor(1), nmajor(5), keyStep(1), 
+Knob::Knob() : value(0), minv(0), maxv(100), minorstep(10), majorstep(20), keyStep(1), 
 			   angleBegin(225), angleEnd(315), 
 			   colorType(SimpleWhiteType), clockWise(true), number(true), mark(Line), 
 			   interlocking (false), style(Simple)  {
@@ -1124,8 +1124,13 @@ void Knob::Layout() {
 		direction = -1;
 	else
 		direction = 1;
-	minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
-	majorstep = (maxv-minv)/(nmajor+1);
+	
+	minorstep = majorstep/int(majorstep/minorstep);
+	//minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
+	nminor = int(majorstep/minorstep) - 1;
+	//majorstep = (maxv-minv)/(nmajor+1);
+	nmajor = int((maxv-minv)/majorstep) - 1;
+	
 	double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
 	double majorstepa = majorstep*maxgrad/(maxv - minv);
 	if (number) {
@@ -1216,8 +1221,13 @@ void Knob::Paint(Draw& w) {
 		direction = -1;
 	else
 		direction = 1;
-	minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
-	majorstep = (maxv-minv)/(nmajor+1);
+	
+	minorstep = majorstep/int(majorstep/minorstep);
+	//minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
+	nminor = int(majorstep/minorstep) - 1;
+	//majorstep = (maxv-minv)/(nmajor+1);
+	nmajor = int((maxv-minv)/majorstep) - 1;
+	
 	double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
 	double majorstepa = majorstep*maxgrad/(maxv - minv);	
 
@@ -1668,6 +1678,7 @@ void FileBrowser::FolderWhenChange() {
 		return;
 	}
 	String folderName = GetRealName(~folder);
+	fileNameSelected = folderName;
 	if (folderName.IsEmpty()) {
 		Exclamation(Format(t_("Folder %s does not exist or is not available"), ~folder));
 		return;
@@ -1724,6 +1735,8 @@ void FileBrowser::FolderWhenChange() {
 		noDoOpen = true;
 		folders.Open(id, true);
 	}
+	if (WhenSelected)
+		WhenSelected();
 }
 
 void FileBrowser::FilesEnterRow() {

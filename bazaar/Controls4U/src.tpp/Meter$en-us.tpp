@@ -446,9 +446,9 @@ is switched on. &]
 [s6;%- &]
 [s5;:Meter`:`:SetStep`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetStep]([@(0.0.255) do
 uble]_[*@3 v])&]
-[s3; Sets [%-*@3 v ]as the value between display steps.&]
+[s3; Sets [%-*@3 v ]as the value between display ticks.&]
 [s1; &]
-[s6;%- &]
+[s6;^Meter^%- &]
 [s5;:Meter`:`:SetAngleBegin`(double`):%- [_^Meter^ Meter][@(0.0.255) `&]_[* SetAngleBegin](
 [@(0.0.255) double]_[*@3 v])&]
 [s3; Sets [%-*@3 v ]as the angle in degrees for the min value. &]

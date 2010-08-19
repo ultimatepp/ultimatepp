@@ -27,7 +27,7 @@ fn abs(a) {
 	else
 		return -a;
 }
-fn to_double(n) {
+fn double(n) {
 	n += 1.1;
 	n -= 1.1;
 	return n;
@@ -1102,8 +1102,8 @@ ctrl Knob {
 	bool SetInterlocking = false;
 	double SetMin = 0;
 	double SetMax = 100;
-	double SetMajorMarks = 5;
-	double SetMinorMarks = 1;
+	double SetMajorStep = 20;
+	double SetMinorStep = 10;
 	double SetAngleBegin = 225;
 	double SetAngleEnd = 315;
 	double SetKeyStep = 1;
@@ -1130,17 +1130,25 @@ ctrl Knob {
 			direction = -1;
 		else
 			direction = 1;
-		minorstep = (.SetMax-.SetMin)/((.SetMajorMarks+1)*(.SetMinorMarks+1));
-		majorstep = (.SetMax-.SetMin)/(.SetMajorMarks+1);
-		minorstepa = minorstep*maxgrad/to_double(.SetMax-.SetMin);	// Step in angle
-		majorstepa = majorstep*maxgrad/to_double(.SetMax-.SetMin);	
+
+		.SetMinorStep = .SetMajorStep/int(.SetMajorStep/.SetMinorStep);
+				
+		//minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
+		nminor = int(.SetMajorStep/.SetMinorStep) - 1;
+		//majorstep = (maxv-minv)/(nmajor+1);
+		nmajor = int((.SetMax-.SetMin)/.SetMajorStep) - 1;
+		
+		//minorstep = (.SetMax-.SetMin)/((.SetMajorMarks+1)*(.SetMinorMarks+1));
+		//majorstep = (.SetMax-.SetMin)/(.SetMajorMarks+1);
+		minorstepa = .SetMinorStep*maxgrad/double(.SetMax-.SetMin);	// Step in angle
+		majorstepa = .SetMajorStep*maxgrad/double(.SetMax-.SetMin);	
 	
 		if (.SetNumber) {
-			PaintNumbersK(w, cx, cy, r, .SetAngleBegin, majorstepa, direction, .SetMin, .SetMax, majorstep, r/40., :SBlack);
-			PaintMarksK(w, cx, cy, r, 0.65, 0.73, .SetAngleBegin, .SetAngleEnd, direction, minorstepa, .SetMinorMarks, .SetMajorMarks, r/40., :SBlack);
+			PaintNumbersK(w, cx, cy, r, .SetAngleBegin, majorstepa, direction, .SetMin, .SetMax, .SetMajorStep, r/40., :SBlack);
+			PaintMarksK(w, cx, cy, r, 0.65, 0.73, .SetAngleBegin, .SetAngleEnd, direction, minorstepa, nminor, nmajor, r/40., :SBlack);
 			r *= 0.65;
 		} else {
-			PaintMarksK(w, cx, cy, r, 0.9, 1, .SetAngleBegin, .SetAngleEnd, direction, minorstepa, .SetMinorMarks, .SetMajorMarks, r/40., :SBlack);
+			PaintMarksK(w, cx, cy, r, 0.9, 1, .SetAngleBegin, .SetAngleEnd, direction, minorstepa, nminor, nmajor, r/40., :SBlack);
 			r *= 0.9;
 		}		
 		capt = 0;
