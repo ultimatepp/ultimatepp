@@ -32,6 +32,8 @@ Controls4U_Demo::Controls4U_Demo() {
 	tab.Add(staticCtrlsTest_Demo.SizePos(), "Static Controls Test");
 	tab.Add(miscellaneous_Demo.SizePos(), "Miscellaneous functions");
 
+	tab.Set(tab.Find(meter_Demo));	// The last
+	
 	timerOn = false;
 	SetTimeCallback(-100, THISBACK(Timer));
 }
