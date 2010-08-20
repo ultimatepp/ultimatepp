@@ -15,17 +15,18 @@ public:
 	typedef CMeterTest CLASSNAME;
 	CMeterTest();
 
-	void metersl_CB();
 	void meterrev_CB();
 	void metervert_CB();
 	void meterstep_CB();
 	void meterperc_CB();
 	void metersteplin_CB();
-
-	void meterCB();
 	void metermodeCB();
 
-	CMeter meter;
+	void meterCB(const CMeter * m);
+	void metersl_CB();
+	void editCB();
+
+	CMeter meter, meter2;
 };
 
 #endif

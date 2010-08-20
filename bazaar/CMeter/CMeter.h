@@ -35,13 +35,13 @@ public:
 	public:
 		typedef CVMark CLASSNAME;
 		
-		CVMark(float v = 0.0f, String name = "", Color col = LtRed() );
+		CVMark(double v = 0.0, String name = "", Color col = LtRed() );
 
 	public:
 	
 		Color			col;
-		String			name; //place some name here to display
-		float			v;
+		String			name;
+		double			v;
 	};
 
 	enum
@@ -52,38 +52,38 @@ public:
 		DYNGRADIENT,	
 	};
 
-	CMeter(float min = 0.0f, float max = 1.0f, bool vertical = false, bool reverse = false);
+	CMeter(double min = 0.0, double max = 1.0, bool vertical = false, bool reverse = false);
 	virtual ~CMeter() {}
 	
 public:
 
 	void CreateBack();
 
-	virtual Value GetData() const { return (double)val; }
-	virtual void SetData(const Value& data) { Set((float)(double)data); }
-	Value GetMin() const { return (double)min; }
-	Value GetMax() const { return (double)max; }
-	CMeter & MinMax(const Value& min = 0.0, const Value& max = 1.0) { return MinMax((float)(double)min, (float)(double)max); }
+	virtual Value GetData() const { return Get(); }
+	virtual void SetData(const Value& data) { Set(data); }
+	Value GetMin() const { return Min(); }
+	Value GetMax() const { return Max(); }
+	CMeter & MinMax(const Value& min = 0.0, const Value& max = 1.0) { return MinMax(min, max); }
 
-	CMeter & Set(float val);
-	float Get() const { return val; }
+	CMeter & Set(double val);
+	double Get() const { return val; }
 
-	CMeter & Val(float val) { return Set(val); }
-	float Val() const { return val; }
+	CMeter & Val(double val) { return Set(val); }
+	double Val() const { return val; }
 
-	CMeter & Percent(float percent) { Set(min + percent * (max-min) / 100.0f); }
-	float Percent() const { return 100.0f * (val-min)/(max-min); }
+	CMeter & Percent(double percent) { Set(min + percent * (max-min) / 100.0); }
+	double Percent() const { return 100.0 * (val-min)/(max-min); }
 
-	CMeter & Min(float min);
-	float Min() const { return min; }
+	CMeter & Min(double min);
+	double Min() const { return min; }
 
-	CMeter & Max(float max);
-	float Max() const { return max; }
+	CMeter & Max(double max);
+	double Max() const { return max; }
 
-	CMeter & MinMax(float min = 0.0f, float max = 1.0f);
+	CMeter & MinMax(double min = 0.0, double max = 1.0);
 
 	CMeter & Reverse(bool reverse = true);
-	float IsReverse() const { return reverse; }
+	bool IsReverse() const { return reverse; }
 
 	CMeter & Vertical(bool vertical = true);
 	bool IsVertical() const { return vertical; }
@@ -97,10 +97,8 @@ public:
 	CMeter & IncDecToStep(bool b = true) { incdectostep = b; return *this; }
 	bool IsIncDecToStep() { return incdectostep; }
 
-	CMeter & Steps(const Vector<float> & vsteps, bool reverse = false);
-	void GetSteps(Vector<float> & vstep) { vsteps <<= this->vsteps; }
-
-	int FindStep(float v) const;
+	CMeter & Steps(const Vector<double> & vsteps, bool reverse = false);
+	void GetSteps(Vector<double> & vstep) { vsteps <<= this->vsteps; }
 
 	CMeter & ShowValue(bool showvalue = true);
 	CMeter & HideValue() { return ShowValue(false); }
@@ -115,11 +113,19 @@ public:
 	void Inc();
 	void Dec();
 
-	CMeter& SetInc(float _inc = 0.1) { inc = _inc; return *this; }
+	CMeter& SetInc(double _inc = 0.1) { inc = _inc; return *this; }
 	double GetInc() const { return inc; }
 
 	CMeter& SetStyle(const Style& s);
 	static const Style& StyleDefault();
+
+	CMeter& SetFont(Font f) {
+		font = f;
+		Update();
+		Layout();
+		return *this;
+	}
+	Font GetFont() const { return font; }
 
 protected:
 	const Style *style;
@@ -132,21 +138,23 @@ protected:
 	virtual void LeftDown(Point p, dword keyflags);			
 	virtual void LeftUp(Point p, dword keyflags) ;	
 	virtual void MouseMove(Point p, dword keyflags);
-	virtual void   MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 
 	virtual void GotFocus();
 	virtual void LostFocus();
 
 	virtual bool Key(dword key, int rep);
 	bool Key0(dword key, int rep);
-	
-	virtual int ValToPix(float _val);
-	virtual float PointToVal(Point & p);
 
-	bool SetFollow(float _val);
+	int FindStep(double v) const;
+	
+	virtual int ValToPix(double _val);
+	virtual double PointToVal(Point & p);
+
+	bool SetFollow(double _val);
 	bool SetFollow(Point p, dword keyflags);
 	bool SetDirect(Point p, dword keyflags);
-	float CalcIncV();
+	double CalcIncV();
 
 	void PaintBarGradient(Painter & sw, bool staticgradient = true);
 	void PaintBarStatic(Painter & sw);
@@ -171,13 +179,13 @@ protected:
 	int _px; //some helpers to draw cvmarks, are extension of the cvmarks
 	int _py;
 	
-	float pp; //cached [0:1] of drawn size
+	double pp; //cached [0:1] of drawn size
 	int dx, lx, dy, ly; //some cache for painting, d barsize, l emtpy size
 
 	int increment; //a state helper for repeating counts
-	float incv; //for value following if not stepping
+	double incv; //for value following if not stepping
 	int inci; //for value following if stepping
-	float __val; //cached desired value for inc compare against oszillation when stepping
+	double __val; //cached desired value for inc compare against oszillation when stepping
 	int __ii; //cached current step index
 
 	String s; //the printed value
@@ -185,11 +193,11 @@ protected:
 
 	//vital data
 
-	float min;
-	float max;
-	float val;
+	double min;
+	double max;
+	double val;
 
-	float inc; //for keys
+	double inc; //for keys
 	
 	bool vertical:1;
 	bool reverse:1;
@@ -205,7 +213,7 @@ protected:
 
 	Font font;
 	Image draw;
-	Vector<float> vsteps;
+	Vector<double> vsteps;
 };
 
 #endif
