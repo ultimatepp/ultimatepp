@@ -74,7 +74,7 @@ done
 find $tmp -name ".svn" -exec rm -rf {} \; -prune
 
 # export Makefile for theide
-echo "Creating makefile ..."
+echo "Copying makefile ..."
 cp $scriptdir/Makefile $tmp
 
 # get changelog from svn
