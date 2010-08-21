@@ -360,9 +360,9 @@ ifeq ($(single-package),y)
 $(if $S,,$(info Using $(JOBS) parallel jobs ...))
 $(if $S,,$(info Parsing package files needed for $(PKG) ...))
 ifeq ($(PARSER),)
-$(eval $(shell sed -n 's/^#://p;' $(filename) | sh -s '$(PKG)' '$(NESTS)' '$(flags)'))
+$(eval $(shell sed -n 's/^#://p;' $(filename) | dash -s '$(PKG)' '$(NESTS)' '$(flags)'))
 else
-$(eval $(shell sh $(PARSER) '$(PKG)' '$(NESTS)' '$(flags)'))
+$(eval $(shell dash $(PARSER) '$(PKG)' '$(NESTS)' '$(flags)'))
 endif
 $(eval $(PKG)_FLAGS+=MAIN)
 $(eval ALLDEPS:=$(call get-deps,$(PKG)))
@@ -393,7 +393,7 @@ endif
 #:
 #:# GENERAL FUNCTIONS
 #:FindUpp(){
-#:	pkg=`echo "$1" | sed -e 's|.*/||;'`
+#:	pkg=`/bin/echo "$1" | sed -e 's|.*/||;'`
 #:	for n in $NESTS
 #:	do
 #:		if [ -f "$n/$1/$pkg.upp" ]
@@ -413,14 +413,14 @@ endif
 #:		s=$s"/[.]"$2"\$/ {s/[.]"$2"\$/."$3"/;s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval "$PKG"_"$1"+=&)|p;};"
 #:		shift 3
 #:	done
-#:	echo "$files" | sed -n -e "$s"
+#:	/bin/echo "$files" | sed -n -e "$s"
 #:}
 #:Pop(){
-#:	echo "$1"
+#:	/bin/echo "$1"
 #:}
 #:Shift(){
 #:	shift
-#:	echo "$@"
+#:	/bin/echo "$@"
 #:}
 #:
 #:# SED PARSERS
@@ -482,7 +482,7 @@ endif
 #:# Simple sections parser
 #:# note: charset and blitz are ignored
 #:Simples() {
-#:	echo "$2" | sed -n -e '
+#:	/bin/echo "$2" | sed -n -e '
 #:	/^library[ ]*/ {s/^library[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"LIBS+=&)|;p;};"'
 #:	/^link[ ]*/ {s/^link[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"LINK+=&)|;p;};"'
 #:	/^acceptflags[ ]*/ {s/^acceptflags[ ]*//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval $1"_"ACCEPT+=&)|;p;};"'
@@ -497,18 +497,18 @@ endif
 #:Parse(){
 #:	PKG="$1"
 #:	FindUpp "$PKG"
-#:	echo '$(eval '$package'_NEST:='$NEST')'
-#:	echo '$(eval '$package'_FLAGS+='$FLAGS')'
+#:	/bin/echo '$(eval '$package'_NEST:='$NEST')'
+#:	/bin/echo '$(eval '$package'_FLAGS+='$FLAGS')'
 #:
 #:	if [ -z "$FILE" ]
 #:	then
-#:		echo "ERROR: Package $PKG not found!"
+#:		/bin/echo "ERROR: Package $PKG not found!"
 #:		exit 1
 #:	fi
 #:	# get the .upp contents, parse the boolean expresions and translate them to the language of make
 #:	UPP=`cat $FILE | tr "\n\r;" "  \n" | sed -e "s/^[ 	]*//g;s/[ 	]*\$//g;s/[ 	][ 	]*/ /g; $p"`
 #:# FILE SECTION PARSER
-#:	FILES=`echo "$UPP" | sed -n -e '/^'file'[ ]*/ {s/^'file'[ ]*//;s/.*/, & ,/;'"$f}" | tr "," "\n";`
+#:	FILES=`/bin/echo "$UPP" | sed -n -e '/^'file'[ ]*/ {s/^'file'[ ]*//;s/.*/, & ,/;'"$f}" | tr "," "\n";`
 #:	PrintFiles "$FILES" \
 #:		FILES_CPP        cpp        cpp \
 #:		FILES_CPP_SPEED  cpp_speed  cpp \
@@ -520,12 +520,12 @@ endif
 #:		FILES_C_SPEED    c_speed    c   \
 #:		FILES_C_SIZE     c_size     c
 #:# DESCRIPTION SECTION PARSER
-#:	echo "$UPP" | sed -n -e '/^'description'[ ]*/{s/^'description'[ ]*//;s/^"\(.*\)"$/\1/;s/\\[^ ]*$//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval "$PKG"_DESC=&)|p;}"
+#:	/bin/echo "$UPP" | sed -n -e '/^'description'[ ]*/{s/^'description'[ ]*//;s/^"\(.*\)"$/\1/;s/\\[^ ]*$//;'"s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval "$PKG"_DESC=&)|p;}"
 #:# USES SECTION PARSER
-#:	USES=$( echo "$UPP" | sed -n -e '/^'uses'[ ]*/{s/^'uses'[ ]*//;s/\\/\//g;/^\$/!s/[ ]*,[ ]*/ /g;p;}' )
-#:	echo "$USES" | sed -e "s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval "$PKG"_USES+=&)|;"
+#:	USES=$( /bin/echo "$UPP" | sed -n -e '/^'uses'[ ]*/{s/^'uses'[ ]*//;s/\\/\//g;/^\$/!s/[ ]*,[ ]*/ /g;p;}' )
+#:	/bin/echo "$USES" | sed -e "s|\"||g;s|^[ ]*||g;s|[ ]*\$||g;s|.*|\$(eval "$PKG"_USES+=&)|;"
 #:# GLOBAL OPTIMIZATION FLAGS PARSER
-#:	echo "$UPP" | sed -n -e 's|^optimize_speed[ ]*|$(eval '"$PKG"'_SPEED=T)|p;
+#:	/bin/echo "$UPP" | sed -n -e 's|^optimize_speed[ ]*|$(eval '"$PKG"'_SPEED=T)|p;
 #:	s|^optimize_size[ ]*|$(eval '"$PKG"'_SIZE=T)|p;'
 #:# SIMPLE SECTIONS PARSERS
 #:	Simples "$PKG" "$UPP"
@@ -540,14 +540,14 @@ endif
 #:	NEEDED=`Shift $NEEDED`
 #:	Parse $package;
 #:	PARSED="$PARSED $package"
-#:	uses=$( echo "$USES" | sed -e 's/\\/\//g;/^\$(/{s/.*, \([^, ]*\),[)]*$/\1/;}' )
+#:	uses=$( /bin/echo "$USES" | sed -e 's/\\/\//g;/^\$(/{s/.*, \([^, ]*\),[)]*$/\1/;}' )
 #:	for dep in $uses
 #:	do
-#:		if [ -z "`echo " $NEEDED $PARSED " | grep " $dep "`" ]
+#:		if [ -z "`/bin/echo " $NEEDED $PARSED " | grep " $dep "`" ]
 #:		then
 #:			NEEDED="$NEEDED $dep"
 #:		fi
 #:	done
 #:done;
 #:#
-#:echo '$(eval PARSED:='"$PARSED"')'
+#:/bin/echo '$(eval PARSED:='"$PARSED"')'
