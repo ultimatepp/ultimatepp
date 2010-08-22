@@ -107,7 +107,7 @@ String FormatXmlRpcValue(const Value& v)
 		r = XmlTag("boolean")(AsString((int)(bool)v));
 	else
 	if(IsNumber(v))
-		r = XmlTag("double")(Format("%d", (double)v));
+		r = XmlTag("double")(Format("%g", (double)v));
 	else
 	if(IsDateTime(v)) {
 		Time t = v;

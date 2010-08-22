@@ -263,7 +263,7 @@ void Vector<T>::InsertN(int q, int count) {
 template <class T>
 void Vector<T>::Insert(int q, const T& x, int count) {
 	if(!count) return;
-	ASSERT(&x < vector || &x > vector + items);
+	ASSERT(!(&x >= vector && &x < vector + items));
 	RawInsert(q, count);
 	DeepCopyConstructFill(vector + q, vector + q + count, x);
 }
