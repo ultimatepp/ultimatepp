@@ -2,9 +2,9 @@ topic "Copyright © 1999-2009 Ultimate++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0;*IGetLocalDir;+117 &]
-[s0; [*+117 Copyright © 1999`-2008 Ultimate`+`+ team]&]
-[s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler,][+117  ][*+117 Tomáš_Rylek, 
-][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos]&]
+[s0; [*+117 Copyright © 1999`-2010 Ultimate`+`+ team]&]
+[s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Koldo_Ramirez,][+117  
+][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos]&]
 [s0;i704;O9; Contributors:[+117 -|][* Sandor_Hojtsy, Zsolt_Debre, Guido_Schimmels, 
 Augusto_Roman, Arijus Bernotas, Michael_Albert , Marcus_Mauhart, 
 ][*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans][* , Graeme_Prentice, Victor_Berchet, 
@@ -15,10 +15,10 @@ James Thomas, ][*^http`:`/`/h4xz`.blogspot`.com^ Sritharan Sivaguru,][*
 Artur Bać, Ralf Schneider, Pavel Ostapenko, Raul Ionitoiu, Norbert 
 Hofer, Tomasz Pajak, Benoit Cousson, Trey Van Riper, Peter Berger, 
 Sergey Nikitin, Massimo Del Fedele, Irenkov Alexander, Gabriel 
-Schmotzer, Domingo Alvarez Duarte, Andrei Cosma, Koldo Ramirez, 
-Tom Olá, George Brink, Zbigniew Czapiga, Konstantin Hartwich, 
-Didier Quenouillere, Anthony Paul, Kovalev Sergey, Martin Schut, 
-Ion Lupascu, Frank De prins]&]
+Schmotzer, Domingo Alvarez Duarte, Andrei Cosma, Tom Olá, George 
+Brink, Zbigniew Czapiga, Konstantin Hartwich, Didier Quenouillere, 
+Anthony Paul, Kovalev Sergey, Martin Schut, Ion Lupascu, Frank 
+De prins]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Koldo Ramirez, Gabriel Schmotzer, Andrei Catalin, Massimo Del 
