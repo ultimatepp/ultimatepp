@@ -3,4 +3,5 @@
 #include "CtrlLib/init"
 #include "plugin\tif/init"
 #include "plugin\gif/init"
+#include "AnimatedClip/init"
 #endif
