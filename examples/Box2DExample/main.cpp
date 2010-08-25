@@ -1,11 +1,11 @@
 #include <CtrlLib/CtrlLib.h>
+#include <Painter/Painter.h>
 #include <plugin/box2d/Box2D.h>
 
 using namespace Upp;
 
 struct QueryCallback : b2QueryCallback
 {
-
 	QueryCallback(const b2Vec2& point)
 	{
 		this->point = point;
@@ -40,22 +40,49 @@ struct DebugDraw : b2DebugDraw
 	float aspect;
 	float zoom;
 	
+	DebugDraw()
+	{}
+	
+	void Init(Draw& d, Size s)
+	{
+		w = &d;
+		sz = s;
+		zoom = 15.0f;
+		cx = float(sz.cx / 2.0f);
+		cy = float(sz.cy / 2.0f + 150.0f);
+		aspect = float(sz.cx / sz.cy);
+		aspect *= zoom;
+	}
+	
+	Point conv(const b2Vec2& v)
+	{
+		return Point(int(v.x * aspect + cx), int(cy - v.y * aspect));
+	}
+
+	b2Vec2 conv(const Point& p)
+	{
+		b2Vec2 v;
+
+		v.x = (p.x - cx) / aspect;
+		v.y = (cy - p.y) / aspect;
+		
+		return v;
+	}
+
+	Color conv(const b2Color& c, double f = 255.0)
+	{
+		return Color(int(c.r * f), int(c.g * f), int(c.b * f));
+	}	
+	
 	void DrawPolygon(const b2Vec2* v, int vertexCount, const b2Color& color)
 	{
 		Vector<Point> p;
 		p.SetCount(vertexCount + 1);
 		for(int i = 0; i < vertexCount; ++i)
-		{
-			p[i].x = int(v[i].x * aspect + cx);
-			p[i].y = int(cy - v[i].y * aspect);
-		}
-		p[vertexCount - 1].x = int(v[0].x);
-		p[vertexCount - 1].y = int(v[0].x);
+			p[i] = conv(v[i]);
+		p[vertexCount] = p[0];
 		
-		Color bg(int(color.r * 255.0), int(color.g * 255.0), int(color.b * 255.0));
-		Color fg(int(color.r * 150.0), int(color.g * 150.0), int(color.b * 150.0));
-		
-		w->DrawPolyline(p, vertexCount, 1, fg);
+		w->DrawPolyline(p, vertexCount + 1, 1, conv(color, 150.0));
 	}
 	
 	void DrawSolidPolygon(const b2Vec2* v, int vertexCount, const b2Color& color)
@@ -63,60 +90,60 @@ struct DebugDraw : b2DebugDraw
 		Vector<Point> p;
 		p.SetCount(vertexCount);
 		for(int i = 0; i < vertexCount; ++i)
-		{
-			p[i].x = int(v[i].x * aspect + cx);
-			p[i].y = int(cy - v[i].y * aspect);
-		}
+			p[i] = conv(v[i]);
 		
-		Color bg(int(color.r * 255.0), int(color.g * 255.0), int(color.b * 255.0));
-		Color fg(int(color.r * 150.0), int(color.g * 150.0), int(color.b * 150.0));
-		
-		w->DrawPolygon(p, bg, 1, fg);		
+		w->DrawPolygon(p, conv(color, 255.0), 1, conv(color, 150));		
 	}
 	
 	void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
 	{
-		float r = aspect * radius * 2.0f;
-		int x = int((center.x - radius) * aspect + cx);
-		int y = int(cy - (center.y + radius) * aspect);
-		Color fg(int(color.r * 150.0), int(color.g * 150.0), int(color.b * 150.0));
-		w->DrawEllipse(x, y, int(r), int(r), fg);
+		int r = int(aspect * radius * 2.0f);
+		Point p = conv(b2Vec2(center.x - radius, center.y + radius));
+		w->DrawEllipse(p.x, p.y, r, r, conv(color, 150.0));
 	}
 	
 	void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
 	{
-		float r = aspect * radius * 2.0f;
-		int x = int((center.x - radius) * aspect + cx);
-		int y = int(cy - (center.y + radius) * aspect);
-		Color bg(int(color.r * 255.0), int(color.g * 255.0), int(color.b * 255.0));
-		Color fg(int(color.r * 150.0), int(color.g * 150.0), int(color.b * 150.0));
-		w->DrawEllipse(x, y, int(r), int(r), bg, 1, fg);
+		int r = int(aspect * radius * 2.0f);
+		Point p = conv(b2Vec2(center.x - radius, center.y + radius));
+		w->DrawEllipse(p.x, p.y, r, r, conv(color, 255.0), PEN_SOLID, conv(color, 150.0));
 	}
 	
 	void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 	{
-		Color fg(int(color.r * 150.0), int(color.g * 150.0), int(color.b * 150.0));
-		int x0 = int(p1.x * aspect + cx);
-		int y0 = int(cy - p1.y * aspect);
-		int x1 = int(p2.x * aspect + cx);
-		int y1 = int(cy - p2.y * aspect);
-		w->DrawLine(x0, y0, x1, y1, 1, fg);
+		w->DrawLine(conv(p1), conv(p2), 1, conv(color, 150.0));
 	}
 	
 	void DrawTransform(const b2Transform& xf)
 	{
 	}
 	
-	void DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
+	void DrawPoint(const b2Vec2& p0, float32 size, const b2Color& color)
 	{
+		Point p = conv(p0);
+		int s = int(size * aspect);
+		w->DrawRect(p.x, p.y, s, s, conv(color, 255.0));
 	}
 	
 	void DrawString(int x, int y, const char* string, ...)
 	{
+		char buffer[256];
+	
+		va_list arg;
+		va_start(arg, string);
+		vsprintf(buffer, string, arg);
+		va_end(arg);
+		
+		w->DrawText(x, y, buffer);
 	}
 	
 	void DrawAABB(b2AABB* aabb, const b2Color& color)
 	{
+		Point lb = conv(aabb->lowerBound);
+		Point ub = conv(aabb->upperBound);
+		Color fg = conv(color, 150.0);
+				
+		w->DrawRect(lb.x, lb.y, ub.x, ub.y, fg);
 	}
 };
 
@@ -124,9 +151,11 @@ struct App : TopWindow
 {
 	b2World world;
 	b2MouseJoint* mouseJoint;
-	DebugDraw debugDraw;
 	b2Vec2 mouseWorld;
 	b2Body* groundBody;
+	Option showBoxes;
+	DropList drawMode;
+	DebugDraw debugDraw;
 	
 	typedef App CLASSNAME;
 	
@@ -137,7 +166,7 @@ struct App : TopWindow
 		SetRectY(0, 480);
 		Sizeable().Zoomable();
 		BackPaint();
-		SetTimeCallback(-10, THISBACK(Render));
+		SetTimeCallback(-1, THISBACK(Render));
 		mouseJoint = NULL;
 		b2Vec2 gravity;
 		gravity.Set(0.0f, -10.0f);
@@ -145,7 +174,18 @@ struct App : TopWindow
 		world.SetDebugDraw(&debugDraw);
 		b2BodyDef bodyDef;
 		groundBody = world.CreateBody(&bodyDef);
-		debugDraw.zoom = 15.0f;
+		showBoxes.SetLabel("AABBs");
+		
+		drawMode
+			.Add(0, "Draw")
+			.Add(1, "Painter - No aa")
+			.Add(2, "Painter - Antialiased")
+			.Add(3, "Painter - Subpixel");
+			
+		drawMode <<= 2;
+				
+		Add(showBoxes.LeftPosZ(5, 55).TopPosZ(5, 19));
+		Add(drawMode.LeftPosZ(5, 130).TopPosZ(28, 19));
 		Bridge();
 	}
 	
@@ -226,50 +266,72 @@ struct App : TopWindow
 			body->CreateFixture(&fd);
 		}		
 	}
-
-	b2Vec2 ConvertScreenToWorld(int x, int y)
-	{
-		b2Vec2 p;
-		p.x = (x - debugDraw.cx) / debugDraw.aspect;
-		p.y = (debugDraw.cy - y) / debugDraw.aspect;		
-		return p;
-	}
 	
 	void Render() { Refresh(); }
 	
 	virtual void Paint(Draw& w)
 	{
-		Size sz = GetSize();
-		w.DrawRect(sz, White);
-
-		debugDraw.w = &w;
-		debugDraw.sz = sz;
-		debugDraw.cx = sz.cx / 2.0f;
-		debugDraw.cy = sz.cy / 2.0f + 150.0f;
-		debugDraw.aspect = sz.cx / (float) sz.cy;
-		debugDraw.aspect *= debugDraw.zoom;
+		int m = ~drawMode;
 
 		float hz = 60;
 		int velocityIterations = 8;
-		int positionIterations = 3;
+		int positionIterations = 10;
 
 		float32 timeStep = 1.0f / hz;
 		
-		debugDraw.SetFlags(b2DebugDraw::e_shapeBit);
+		int flags = b2DebugDraw::e_shapeBit | b2DebugDraw::e_jointBit;
+		if(showBoxes)
+			flags |= b2DebugDraw::e_aabbBit;
+		
+		debugDraw.SetFlags(flags);
 	
 		world.SetWarmStarting(1);
 		world.SetContinuousPhysics(1);	
 		world.Step(timeStep, velocityIterations, positionIterations);	
-		world.DrawDebugData();	
 
-		int px = int(mouseWorld.x * debugDraw.aspect + debugDraw.cx);
-		int py = int(debugDraw.cy - mouseWorld.y * debugDraw.aspect);
-		w.DrawEllipse(px - 3, py - 3, 6, 6, Green);
+		Point p1, p2;
+		if(mouseJoint)
+		{
+			p1 = debugDraw.conv(mouseJoint->GetAnchorB());
+			p2 = debugDraw.conv(mouseJoint->GetTarget());
+		}
+
+		Size sz = GetSize();
+						
+		if(m > 0)
+		{
+			ImageBuffer ib(sz);
+			BufferPainter bp(ib, m == 1 ? MODE_NOAA : m == 2 ? MODE_ANTIALIASED : MODE_SUBPIXEL);
+			RGBA bg;
+			bg.r = bg.g = bg.b = bg.a = 255;
+			bp.Clear(bg);
+			debugDraw.Init(bp, sz);
+	
+			world.DrawDebugData();	
+			if(mouseJoint)
+			{
+				bp.DrawLine(p1, p2, 2, LtGreen);
+				bp.DrawEllipse(p2.x - 3, p2.y - 3, 6, 6, Green, PEN_SOLID, Black);
+			}
+	
+			w.DrawImage(0, 0, ib);
+		}
+		else
+		{
+			w.DrawRect(sz, White);
+			debugDraw.Init(w, sz);
+			world.DrawDebugData();	
+			if(mouseJoint)
+			{
+				w.DrawLine(p1, p2, 2, LtGreen);
+				w.DrawEllipse(p2.x - 3, p2.y - 3, 6, 6, Green, PEN_SOLID, Black);
+			}
+		}
 	}
 	
 	virtual void LeftDown(Point p0, dword keyflags)
 	{
-		b2Vec2 p = ConvertScreenToWorld(p0.x, p0.y);
+		b2Vec2 p = debugDraw.conv(p0);
 		mouseWorld = p;
 		
 		if(mouseJoint != NULL)
@@ -308,7 +370,7 @@ struct App : TopWindow
 
 	virtual void MouseMove(Point p, dword keyflags)
 	{
-		mouseWorld = ConvertScreenToWorld(p.x, p.y);
+		mouseWorld = debugDraw.conv(p);
 		
 		if(mouseJoint)
 			mouseJoint->SetTarget(mouseWorld);
