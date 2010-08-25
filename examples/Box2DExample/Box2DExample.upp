@@ -2,7 +2,8 @@ description "Box2D \"Bridge\" example \377";
 
 uses
 	CtrlLib,
-	plugin\box2d;
+	plugin\box2d,
+	Painter;
 
 file
 	main.cpp;
