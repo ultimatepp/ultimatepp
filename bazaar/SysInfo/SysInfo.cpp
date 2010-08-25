@@ -445,7 +445,7 @@ String GetMacAddress() {
 
 /////////////////////////////////////////////////////////////////////
 // Memory Info
-
+#if defined(PLATFORM_WIN32) 
 bool GetMemoryInfo(
 	int &memoryLoad, 			// percent of memory in use		
 	uint64 &totalPhys, 			// physical memory				
@@ -469,7 +469,7 @@ bool GetMemoryInfo(
 	
 	return true;
 }
-
+#endif
 
 #ifdef PLATFORM_POSIX
 bool GetMemoryInfo(
