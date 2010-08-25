@@ -2453,8 +2453,11 @@ void ArrayCtrl::SwapDown() {
 ArrayCtrl& ArrayCtrl::ColumnWidths(const char *s)
 {
 	Vector<String> w = Split(s, ' ');
-	for(int i = 0; i < min(w.GetCount(), header.GetCount()); i++)
-		header.SetTabRatio(header.FindIndex(i), atoi(w[i]));
+	for(int i = 0; i < min(w.GetCount(), header.GetCount()); i++) {
+		int q = header.FindIndex(i);
+		if(q >= 0)
+			header.SetTabRatio(q, atoi(w[i]));
+	}
 	return *this;
 }
 
