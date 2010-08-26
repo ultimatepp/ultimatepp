@@ -74,10 +74,13 @@ void TestSheetDetail(OfficeSheet &sheet)
 	sheet.FillSelectionMatrix();		// Fill selected range with matrix values
 */
 
-	sheet.SetValue(2, 2, "=A7*B5");
-	sheet.SetValue(3, 21, "Hello");				Puts("Cell(3, 21) = " + sheet.GetValue(3, 21).ToString());
-	sheet.SetValue("BD25", 23242.343);			Puts("Cell(BD25) = " + sheet.GetValue("BD25").ToString());
-	sheet.SetValue(1, 2, "'123456789123456789");
+	sheet.SetValue(2, 2, "=A7*B6");
+	sheet.SetValue(3, 21, "Hello");					Puts("Cell(3, 21) = " + sheet.GetValue(3, 21).ToString());
+	sheet.SetValue("BD25", 23242.343);				Puts("Cell(BD25) = " + sheet.GetValue("BD25").ToString());
+	sheet.SetValue(1, 2, "'123456789123456789");	Puts("Cell(1, 2) = " + sheet.GetValue(1, 2).ToString());
+	sheet.SetValue(2, 4, "Он читает и пишет в разных алфавитов");
+	String alphabet = sheet.GetValue(2, 4).ToString();
+	sheet.SetValue(2, 5, alphabet);
 	sheet.SetValue("BE25", OfficeSheet::ColRowToCell(30, 12));
 	sheet.SetValue("B26", GetSysTime());		Puts("Cell(B26) = " + sheet.GetValue("B26").ToString());
 	
