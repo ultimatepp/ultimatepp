@@ -86,7 +86,8 @@ bool LaunchFileShellExecute(const char *file) {
 	return (int)ret > 32;
 }
 
-bool LaunchFile(const char *file) {
+bool LaunchFile(const char *_file) {
+	String file = WinPath(_file);
 	if (!LaunchFileShellExecute(file))			// First try
 	   	return LaunchFileCreateProcess(file);	// Second try
 	return true;
@@ -110,7 +111,8 @@ String GetDesktopManagerNew() {
 	}
 }
 
-bool LaunchFile(const char *file) {
+bool LaunchFile(const char *_file) {
+	String file = UnixPath(_file);
 	int ret;
 	if (GetDesktopManagerNew() == "gnome") 
 		ret = system("gnome-open \"" + String(file) + "\"");
@@ -1113,14 +1115,20 @@ String GetNextFolder(String folder, String lastFolder) {
 		return lastFolder;
 }
 
-String GetUpperFolder(String folderName) {
+bool ThereIsUpperFolder(String folderName) {
 	if (folderName.IsEmpty())
-		return Null;
+		return false;
 #ifdef PLATFORM_WIN32
 	if (folderName.GetCount() == 3)
 #else
 	if (folderName.GetCount() == 1)
 #endif
+		return false;
+	return true;
+}
+
+String GetUpperFolder(String folderName) {
+	if (!ThereIsUpperFolder(folderName))
 		return folderName;
 	int len = folderName.GetCount();
 	if (folderName[len-1] == DIR_SEP)
@@ -1846,14 +1854,22 @@ Value GetVARIANT(VARIANT &result)
 		ret = AsString(result.dblVal);
 		break;
 	case VT_BSTR:  
-		{
-		  	char dbcs[1024];
+			/* 	char dbcs[1024];		// Old version failed with cyrillic and other alphabets
 	        char *pbstr = (char *)result.bstrVal;
 	      	int i = wcstombs(dbcs, result.bstrVal, *((DWORD *)(pbstr-4)));
 	      	dbcs[i] = 0;
 			ret = dbcs;
+			*/
+		{
+			int len = WideCharToMultiByte(CP_UTF8, 0, result.bstrVal, -1, NULL, 0, NULL, NULL);	
+			if (len == 0)
+				return Null;
+			Buffer<char> w;
+			w.Alloc(len);
+			WideCharToMultiByte(CP_UTF8, 0, result.bstrVal, -1, w, len, NULL, NULL);
+			ret = ~w;
+			break;
 		}
-		break;
 	case VT_LPSTR:
          //ret = result.pszVal;
          ret = "Unknown VT_LPSTR";
@@ -1881,21 +1897,21 @@ Value GetVARIANT(VARIANT &result)
 
 #if defined(PLATFORM_WIN32) 
 
-Dll::Dll() {
+Dl::Dl() {
 	hinstLib = 0;
 }
 
-Dll::~Dll() {
+Dl::~Dl() {
 	if (hinstLib) 
 		if (FreeLibrary(hinstLib) == 0)
-			throw Exc(t_("Dll cannot be released"));
+			throw Exc(t_("Dl cannot be released"));
 }
 
 #ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 	#define LOAD_IGNORE_CODE_AUTHZ_LEVEL	0x00000010
 #endif
 
-bool Dll::Load(const String &fileDll) {
+bool Dl::Load(const String &fileDll) {
 	if (hinstLib) 
 		if (FreeLibrary(hinstLib) == 0)
 			return false;
@@ -1906,11 +1922,43 @@ bool Dll::Load(const String &fileDll) {
 	return true;
 }
 
-void *Dll::GetFunction(const String &functionName) {
+void *Dl::GetFunction(const String &functionName) {
 	if (!hinstLib) 
 		return NULL;
 	return (void *)GetProcAddress(hinstLib, functionName);
 }
+
+#else
+
+#include <dlfcn.h>
+
+Dl::Dl() {
+	hinstLib = 0;
+}
+
+Dl::~Dl() {
+	if (hinstLib) 
+		if (dlclose(hinstLib) == 0)
+			throw Exc(t_("Dl cannot be released"));
+}
+
+bool Dl::Load(const String &fileDll) {
+	if (hinstLib) 
+		if (dlclose(hinstLib) == 0)
+			return false;
+	
+	hinstLib = dlopen(fileDll, RTLD_LAZY);
+	if (!hinstLib) 
+		return false;
+	return true;
+}
+
+void *Dl::GetFunction(const String &functionName) {
+	if (!hinstLib) 
+		return NULL;
+	return dlsym(hinstLib, functionName);
+}	
+
 #endif
 
 #ifdef flagAES

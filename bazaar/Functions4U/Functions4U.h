@@ -33,10 +33,9 @@ bool DirectoryCopyX(const char *dir, const char *newPlace);
 bool DeleteFolderDeepWildcards(const char *dir, int flags = 0);
 ///////////////////////////////
 
+bool ThereIsUpperFolder(String folderName);
 String GetUpperFolder(String folderName);
-
 String GetNextFolder(String folder, String lastFolder);
-
 String GetRealName(String fileName);
 
 //bool GetSymLinkPath(const char *linkPath, String &filePath);
@@ -461,21 +460,25 @@ bool Chdir (const String &folder);
 
 //String Format(Time time, const char*fmt = "%2d:%2d");
 
-#if defined(PLATFORM_WIN32) 
-class Dll {
+class Dl {
 public:
-	Dll();
-	~Dll();
+	Dl();
+	~Dl();
 	bool Load(const String &fileDll);
 	void *GetFunction(const String &functionName);
 	
 private:
+#if defined(PLATFORM_WIN32) 
 	HINSTANCE hinstLib;	
+#else
+	void *hinstLib;
+#endif
 };
+
+typedef Dl Dll;
 
 //bool RunFromMemory(const String &progBuffer, const String &name);
 
-#endif
 
 String BsGetLastError();
 bool BSPatch(String oldfile, String newfile, String patchfile);
