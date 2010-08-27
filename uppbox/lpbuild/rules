@@ -22,11 +22,11 @@ clean:
 	
 $(CURDIR)/debian/ide:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'"/' $(CURDIR)/uppsrc/ide/version.h
-	$(MAKE) $(JOBS) PKG=ide $(compiler) "NESTS=uppsrc" "FLAGS=GUI MT GCC SHARED" VERBOSE=y BINEXT= "BINPREFIX=debian/"
+	$(MAKE) $(JOBS) PKG=ide $(compiler) "NESTS=uppsrc" "FLAGS=GUI MT GCC SHARED" VERBOSE=Y BINEXT= "BINPREFIX=debian/"
 
 $(CURDIR)/debian/ide-nogtk:
 	sed -i -e 's/IDE_VERSION[ \t]*"\([0-9]*\)[^"]*"/IDE_VERSION    "\1-'$(SERIES)-$(ARCH)'-nogtk"/' $(CURDIR)/uppsrc/ide/version.h
-	$(MAKE) $(JOBS) PKG=ide $(compiler) "NESTS=uppsrc" "FLAGS=GUI MT NOGTK GCC SHARED" BINEXT=-nogtk "BINPREFIX=debian/"
+	$(MAKE) $(JOBS) PKG=ide $(compiler) "NESTS=uppsrc" "FLAGS=GUI MT NOGTK GCC SHARED" VERBOSE=Y BINEXT=-nogtk "BINPREFIX=debian/"
 
 build: $(CURDIR)/debian/ide $(CURDIR)/debian/ide-nogtk
 

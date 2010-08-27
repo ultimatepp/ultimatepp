@@ -360,9 +360,9 @@ ifeq ($(single-package),y)
 $(if $S,,$(info Using $(JOBS) parallel jobs ...))
 $(if $S,,$(info Parsing package files needed for $(PKG) ...))
 ifeq ($(PARSER),)
-$(eval $(shell sed -n 's/^#://p;' $(filename) | dash -s '$(PKG)' '$(NESTS)' '$(flags)'))
+$(eval $(shell sed -n 's/^#://p;' $(filename) | sh -s '$(PKG)' '$(NESTS)' '$(flags)'))
 else
-$(eval $(shell dash $(PARSER) '$(PKG)' '$(NESTS)' '$(flags)'))
+$(eval $(shell sh $(PARSER) '$(PKG)' '$(NESTS)' '$(flags)'))
 endif
 $(eval $(PKG)_FLAGS+=MAIN)
 $(eval ALLDEPS:=$(call get-deps,$(PKG)))
