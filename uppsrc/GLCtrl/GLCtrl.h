@@ -3,26 +3,27 @@
 
 #include <CtrlCore/CtrlCore.h>
 
+#ifdef PLATFORM_X11
 #define Time    XTime
 #define Font    XFont
 #define Display XDisplay
 #define Picture XPicture
-
 #define Status  int
+#endif
 
 #include <GL/gl.h>
 #include <GL/glu.h>
 
 #ifdef PLATFORM_X11
-	#include <GL/glx.h>
-#endif
+
+#include <GL/glx.h>
 
 #undef  Status
-
 #undef  Picture
 #undef  Time
 #undef  Font
 #undef  Display
+#endif
 
 NAMESPACE_UPP
 
