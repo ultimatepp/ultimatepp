@@ -12,7 +12,7 @@ GLCtrl::GLPane::~GLPane()
 	// That can happen on unclean exit
 	if(WindowContext)
 	{
-		glXDestroyContext( (Display *)Xdisplay, WindowContext );
+		glXDestroyContext( (XDisplay *)Xdisplay, WindowContext );
 		WindowContext = NULL;
 	}
 } // END Destructor class GLCtrl::GLPane
@@ -39,7 +39,7 @@ XVisualInfo *GLCtrl::GLPane::CreateVisual(void)
 
 	// Try to find a visual
 	XVisualInfo *visualInfo = NULL;
-	visualInfo = glXChooseVisual( (Display*)Xdisplay, DefaultScreen(Xdisplay), visual );
+	visualInfo = glXChooseVisual( (XDisplay*)Xdisplay, DefaultScreen(Xdisplay), visual );
 
 	if( visualInfo == NULL )
 	{
@@ -70,7 +70,7 @@ void GLCtrl::GLPane::SetAttributes(unsigned long &ValueMask, XSetWindowAttribute
 void GLCtrl::GLPane::ActivateContext()
 {
 	if (WindowContext != NULL && glXGetCurrentContext() != WindowContext)
-		glXMakeCurrent( (Display*)Xdisplay, GetWindow(), WindowContext );
+		glXMakeCurrent( (XDisplay*)Xdisplay, GetWindow(), WindowContext );
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ void GLCtrl::GLPane::AfterInit(bool Error)
 	// Create an OpenGL rendering context
 	WindowContext = glXCreateContext
 	(
-		(Display *)Xdisplay,
+		(XDisplay *)Xdisplay,
 		&visualInfo,
 		NULL,		// No sharing of display lists
 		GL_TRUE		// Direct rendering if possible
@@ -96,7 +96,7 @@ void GLCtrl::GLPane::AfterInit(bool Error)
 	}
 	
 	// Activate the created glxwindow
-	glXMakeCurrent( (Display*)Xdisplay, GetWindow(), WindowContext );
+	glXMakeCurrent( (XDisplay*)Xdisplay, GetWindow(), WindowContext );
 	
 	// Call user init function
 	ctrl->GLInit();
@@ -114,8 +114,8 @@ void GLCtrl::GLPane::BeforeTerminate(void)
 	ctrl->GLDone();
 	
 	// Resets context and destroys it
-	glXMakeCurrent( (Display*)Xdisplay, None, NULL );
-	glXDestroyContext( (Display *)Xdisplay, WindowContext );
+	glXMakeCurrent( (XDisplay*)Xdisplay, None, NULL );
+	glXDestroyContext( (XDisplay *)Xdisplay, WindowContext );
 	WindowContext = NULL;
 } // END GLCtrl::GLPane::BeforeTerminate()
 
@@ -145,7 +145,7 @@ void GLCtrl::GLPane::Paint(Draw &draw)
 
 	// Swap buffers or flush as needed
 	if( ctrl->doubleBuffering )
-		glXSwapBuffers( (Display*)Xdisplay, GetWindow() ); // Buffer swap does implicit glFlush
+		glXSwapBuffers( (XDisplay*)Xdisplay, GetWindow() ); // Buffer swap does implicit glFlush
 	else
 		glFlush();
 } // END GLCtrl::GLPane::Paint()

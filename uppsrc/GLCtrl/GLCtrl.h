@@ -1,18 +1,28 @@
 #ifndef _GLCtrl_GLCtrl_h
 #define _GLCtrl_GLCtrl_h
 
-#include <CtrlLib/CtrlLib.h>
+#include <CtrlCore/CtrlCore.h>
+
+#define Time    XTime
+#define Font    XFont
+#define Display XDisplay
+#define Picture XPicture
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-
-NAMESPACE_UPP
 
 #ifdef PLATFORM_X11
 	#include <GL/glx.h>
 #endif
 
-class GLCtrl : public ParentCtrl {
+#undef  Picture
+#undef  Time
+#undef  Font
+#undef  Display
+
+NAMESPACE_UPP
+
+class GLCtrl : public Ctrl {
 	typedef GLCtrl CLASSNAME;
 	
 private:
@@ -125,6 +135,8 @@ public:
 		  multiSampleBuffering(multisamplebuffering), 
 		  numberOfSamples(numberofsamples)
 	{
+		NoWantFocus();
+		Transparent();
 		pane.ctrl = this;
 		Add(pane.SizePos());
 	}
