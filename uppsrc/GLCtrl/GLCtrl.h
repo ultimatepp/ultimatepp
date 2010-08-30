@@ -8,12 +8,16 @@
 #define Display XDisplay
 #define Picture XPicture
 
+#define Status  int
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 
 #ifdef PLATFORM_X11
 	#include <GL/glx.h>
 #endif
+
+#undef  Status
 
 #undef  Picture
 #undef  Time
