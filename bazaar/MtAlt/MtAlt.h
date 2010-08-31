@@ -68,8 +68,11 @@ public:
 	template<class OBJECT>
 	void Request(void (OBJECT::*m)())
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element0<OBJECT> *e = new Element0<OBJECT>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		LOCK_ADD_UNLOCK;
 	}
@@ -77,8 +80,11 @@ public:
 	template<class OBJECT, class P1>
 	void Request(void (OBJECT::*m)(pick_ P1 &), pick_ P1 &p1)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element1<OBJECT, P1> *e = new Element1<OBJECT, P1>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		LOCK_ADD_UNLOCK;
@@ -87,8 +93,11 @@ public:
 	template<class OBJECT, class P1>
 	void Request(void (OBJECT::*m)(P1), P1 p1)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element1c<OBJECT, P1> *e = new Element1c<OBJECT, P1>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		LOCK_ADD_UNLOCK;
@@ -97,8 +106,11 @@ public:
 	template<class OBJECT, class P1, class P2>
 	void Request(void (OBJECT::*m)(pick_ P1 &,pick_ P2 &), pick_ P1 &p1, pick_ P2 &p2)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element2<OBJECT, P1, P2> *e = new Element2<OBJECT, P1, P2>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		e->p2 = p2;
@@ -108,8 +120,11 @@ public:
 	template<class OBJECT, class P1, class P2>
 	void Request(void (OBJECT::*m)(P1,P2), P1 p1, P2 p2)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element2c<OBJECT, P1, P2> *e = new Element2c<OBJECT, P1, P2>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		e->p2 = p2;
@@ -119,8 +134,11 @@ public:
 	template<class OBJECT, class P1, class P2, class P3>
 	void Request(void (OBJECT::*m)(pick_ P1 &, pick_ P2 &, pick_ P3 &), pick_ P1 &p1, pick_ P2 &p2, pick_ P3 &p3)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element3<OBJECT, P1, P2, P3> *e = new Element3<OBJECT, P1, P2, P3>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		e->p2 = p2;
@@ -131,8 +149,11 @@ public:
 	template<class OBJECT, class P1, class P2, class P3>
 	void Request(void (OBJECT::*m)(P1,P2,P3), P1 p1, P2 p2, P3 p3)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element3c<OBJECT, P1, P2, P3> *e = new Element3c<OBJECT, P1, P2, P3>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		e->p2 = p2;
@@ -143,8 +164,11 @@ public:
 	template<class OBJECT, class P1, class P2, class P3, class P4>
 	void Request(void (OBJECT::*m)(pick_ P1 &, pick_ P2 &, pick_ P3 &, pick_ P4 &), pick_ P1 &p1, pick_ P2 &p2, pick_ P3 &p3, pick_ P4 &p4)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element4<OBJECT, P1, P2, P3, P4> *e = new Element4<OBJECT, P1, P2, P3, P4>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		e->p2 = p2;
@@ -156,8 +180,11 @@ public:
 	template<class OBJECT, class P1, class P2, class P3, class P4>
 	void Request(void (OBJECT::*m)(P1,P2,P3,P4), P1 p1, P2 p2, P3 p3, P4 p4)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element4c<OBJECT, P1, P2, P3, P4> *e = new Element4c<OBJECT, P1, P2, P3, P4>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		e->p2 = p2;
@@ -169,8 +196,11 @@ public:
 	template<class OBJECT, class P1, class P2, class P3, class P4, class P5>
 	void Request(void (OBJECT::*m)(pick_ P1 &, pick_ P2 &, pick_ P3 &, pick_ P4 &, pick_ P5 &), pick_ P1 &p1, pick_ P2 &p2, pick_ P3 &p3, pick_ P4 &p4, pick_ P5 &p5)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element5<OBJECT, P1, P2, P3, P4, P5> *e = new Element5<OBJECT, P1, P2, P3, P4, P5>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		e->p2 = p2;
@@ -183,8 +213,11 @@ public:
 	template<class OBJECT, class P1, class P2, class P3, class P4, class P5>
 	void Request(void (OBJECT::*m)(P1,P2,P3,P4,P5), P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
 	{
+		static OBJECT *castedThis = NULL;
+		if (!castedThis) castedThis = dynamic_cast<OBJECT *>(this); ASSERT(castedThis);
+		
 		Element5c<OBJECT, P1, P2, P3, P4, P5> *e = new Element5c<OBJECT, P1, P2, P3, P4, P5>;
-		e->caller = static_cast<OBJECT *>(this);
+		e->caller = castedThis;
 		e->m  = m;
 		e->p1 = p1;
 		e->p2 = p2;
@@ -241,7 +274,6 @@ public:
 	
 private:
 	static VectorMap<int, Vector<CallbackQueue *> > queues;
-	
 	bool Execute()
 	{
 		if (queue.IsEmpty())
