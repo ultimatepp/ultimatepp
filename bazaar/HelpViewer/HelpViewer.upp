@@ -1,0 +1,10 @@
+description "Help viewer with index and search\377";
+
+uses
+	CtrlLib;
+
+file
+	HelpViewer.h,
+	HelpViewer.cpp,
+	HelpViewer.iml;
+
