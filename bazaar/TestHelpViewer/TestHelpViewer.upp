@@ -1,0 +1,13 @@
+description "Test for HelpViewer class\377";
+
+uses
+	CtrlLib,
+	HelpViewer;
+
+file
+	app.tpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
