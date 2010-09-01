@@ -19,8 +19,8 @@ public:
 	typedef MyPane CLASSNAME;
 	MyPane();
 
-	virtual void Dispatch(const Value & o, unsigned param);
-	virtual void Dispatch(const int & o, unsigned param);
+	virtual void Dispatch(const Value & o);
+	virtual void Dispatch(const int & o);
 };
 
 class DispatcherTest : public WithDispatcherTestLayout<TopWindow> 

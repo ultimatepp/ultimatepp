@@ -18,11 +18,11 @@ class MyEditInt
 public:
 	typedef MyEditInt CLASSNAME;
 
-	virtual void Dispatch(const Value & o, unsigned param)
+	virtual void Dispatch(const Value & o)
 	{
 		SetData(o);
 	}	
-	virtual void Dispatch(const int & o, unsigned param)
+	virtual void Dispatch(const int & o)
 	{
 		SetData(o);
 	}	
@@ -36,11 +36,11 @@ class MyProgressIndicator
 public:
 	typedef MyProgressIndicator CLASSNAME;
 
-	virtual void Dispatch(const Value & o, unsigned param)
+	virtual void Dispatch(const Value & o)
 	{
 		Set(o);
 	}	
-	virtual void Dispatch(const int & o, unsigned param)
+	virtual void Dispatch(const int & o)
 	{
 		Set(o);
 	}	

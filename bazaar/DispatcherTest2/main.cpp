@@ -10,7 +10,7 @@ MyPane::MyPane()
 		dl.Add(i);
 }
 
-void MyPane::Dispatch(const Value & o, unsigned param)
+void MyPane::Dispatch(const Value & o)
 {
 	ei.SetData(o);
 	//pi.SetData(o);
@@ -19,7 +19,7 @@ void MyPane::Dispatch(const Value & o, unsigned param)
 	st.SetText(String().Cat() << o);
 }
 
-void MyPane::Dispatch(const int & o, unsigned param)
+void MyPane::Dispatch(const int & o)
 {
 	ei.SetData(o);
 	//pi.SetData(o);
@@ -33,13 +33,13 @@ void MyPane::Dispatch(const int & o, unsigned param)
 void DispatcherTest::sliderCB()
 {
 	Value o = sl.GetData();
-	disp.DoDispatch(o, 123);
+	disp.DoDispatch(o);
 }
 
 void DispatcherTest::slideriCB()
 {
 	int o = sli.GetData();
-	dispi.DoDispatch(o, 125);
+	dispi.DoDispatch(o);
 }
 
 DispatcherTest::DispatcherTest()

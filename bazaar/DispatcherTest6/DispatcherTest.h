@@ -16,11 +16,11 @@ class MyEditInt
 public:
 	typedef MyEditInt CLASSNAME;
 
-	virtual void DispatchV(const Value & o, unsigned param)
+	virtual void DispatchV(const Value & o)
 	{
 		SetData(o);
 	}	
-	virtual void DispatchI(const int & o, unsigned param)
+	virtual void DispatchI(const int & o)
 	{
 		SetData(o);
 	}	
@@ -32,11 +32,11 @@ class MyProgressIndicator
 public:
 	typedef MyProgressIndicator CLASSNAME;
 
-	virtual void DispatchV(const Value & o, unsigned param)
+	virtual void DispatchV(const Value & o)
 	{
 		Set(o);
 	}	
-	virtual void DispatchI(const int & o, unsigned param)
+	virtual void DispatchI(const int & o)
 	{
 		Set(o);
 	}	
@@ -51,7 +51,7 @@ public:
 	
 	void sliderCB();
 	void slideriCB();
-	virtual void Dispatch(const Value & o, unsigned param);
+	virtual void Dispatch(const Value & o);
 
 	DispatcherCBGen disp;
 

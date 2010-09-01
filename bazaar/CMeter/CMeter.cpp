@@ -402,10 +402,6 @@ void CMeter::PaintCVMarks(Painter & sw)
 	if(cvmarks.GetCount()<=0) return;
 	Size size = GetSize();
 	Vector<Point> p;
-	if(cvmarks.GetCount() > 2)
-	{
-		int a = 0;	
-	}
 	if(vertical)
 	{
 		sw.DrawRect(0,0,px,size.cy,style->backcol);

@@ -21,7 +21,7 @@ public:
 	virtual ~Dispatchable();
 
 public:
-	virtual void Dispatch(const T & o, unsigned param = 0) = 0;
+	virtual void Dispatch(const T & o) = 0;
 
 	void Unregister(const Any & _src);
 	void UnregisterAll();
@@ -43,7 +43,7 @@ public:
 	Dispatcher();
 	virtual ~Dispatcher();
 
-	void DoDispatch(const T & o, unsigned param = 0) const;
+	void DoDispatch(const T & o) const;
 
 	void Register(Dispatchable<T> & d, unsigned key = 0);
 	void Unregister(Dispatchable<T> & d, unsigned key = 0);
@@ -63,7 +63,7 @@ public:
 	virtual ~DispatcherGen();
 
 	template<class T>
-	void DoDispatch(const T & o, unsigned param = 0) const;
+	void DoDispatch(const T & o) const;
 
 	template<class T>
 	void Register(Dispatchable<T> & d, unsigned key = 0);
@@ -88,15 +88,15 @@ public:
 	DispatcherCB();
 	virtual ~DispatcherCB();
 
-	void DoDispatch(const T & o, unsigned param = 0) const;
+	void DoDispatch(const T & o) const;
 
-	void Register(Callback2<const T &, unsigned> d, unsigned key);
+	void Register(Callback1<const T &> d, unsigned key);
 	void Unregister(unsigned key);
-	Callback2<const T &, unsigned> GetDispatchable(unsigned key);
-	const VectorMap<unsigned, Callback2<const T &, unsigned> > & GetDests() const { return dests; }
+	Callback1<const T &> GetDispatchable(unsigned key);
+	const VectorMap<unsigned, Callback1<const T &> > & GetDests() const { return dests; }
 
 private:
-	VectorMap<unsigned, Callback2<const T &, unsigned> > dests;	
+	VectorMap<unsigned, Callback1<const T &> > dests;	
 };
 
 //a generic version that accepts any Callback<cons T &, unsigned>
@@ -108,10 +108,10 @@ public:
 	virtual ~DispatcherCBGen();
 
 	template<class T>
-	void DoDispatch(const T & o, unsigned param = 0) const;
+	void DoDispatch(const T & o) const;
 
 	template<class T>
-	void Register(Callback2<const T &, unsigned> d, unsigned key);
+	void Register(Callback1<const T &> d, unsigned key);
 	template<class T>
 	void Unregister(unsigned key);
 	template<class T>

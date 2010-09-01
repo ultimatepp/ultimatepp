@@ -10,7 +10,7 @@ MyPane::MyPane()
 		dl.Add(i);
 }
 
-void MyPane::Dispatch(const Value & o, unsigned param)
+void MyPane::Dispatch(const Value & o)
 {
 	ei.SetData(o);
 	//pi.SetData(o);
@@ -24,7 +24,7 @@ void MyPane::Dispatch(const Value & o, unsigned param)
 void DispatcherTest::sliderCB()
 {
 	Value o = sl.GetData();
-	disp.DoDispatch(o, 123);
+	disp.DoDispatch(o);
 }
 
 DispatcherTest::DispatcherTest()

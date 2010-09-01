@@ -3,13 +3,13 @@
 void DispatcherTest::sliderCB()
 {
 	Value o = sl.GetData();
-	disp.DoDispatch(o, 123);
+	disp.DoDispatch(o);
 }
 
 void DispatcherTest::slideriCB()
 {
 	int o = sli.GetData();
-	disp.DoDispatch(o, 125);
+	disp.DoDispatch(o);
 }
 
 
