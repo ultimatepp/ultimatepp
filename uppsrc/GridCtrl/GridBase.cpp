@@ -7,13 +7,15 @@ int GridCtrl::ItemRect::sortMode;
 
 /*---------------------------------------------------*/
 
-void GridCtrl::Item::SetCtrl(Ctrl& c)
+void GridCtrl::Item::SetCtrl(Ctrl& c, bool owned)
 {
 	ctrl = &c;
 	ctrl->Hide();
 	ctrl->SetFrame(NullFrame());
 	ctrl->WantFocus();
-	ctrl_flag = IC_MANUAL | IC_INIT;
+	ctrl_flag = IC_INIT | IC_MANUAL;
+	if(owned)
+		ctrl_flag |= IC_OWNED;
 }
 
 void GridCtrl::Item::ClearCtrl()
