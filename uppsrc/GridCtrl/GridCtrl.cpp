@@ -2690,8 +2690,36 @@ void GridCtrl::Set(const Vector<Value> &v, int data_offset /* = 0*/, int column_
 
 void GridCtrl::SetCtrl(int r, int c, Ctrl& ctrl)
 {
-	GetItem(r + fixed_rows, c + fixed_cols).SetCtrl(ctrl);
+	r += fixed_rows;
+	c += fixed_cols;
+	GetItem(r, c).SetCtrl(ctrl, false);
 	++genr_ctrls;
+	SyncCtrls(r, c);
+}
+
+void GridCtrl::SetCtrl(int r, int c, Ctrl* ctrl)
+{
+	r += fixed_rows;
+	c += fixed_cols;
+	GetItem(r, c).SetCtrl(*ctrl, true);
+	++genr_ctrls;	
+	SyncCtrls(r, c);
+}
+
+void GridCtrl::SetCtrl(int c, Ctrl& ctrl)
+{
+	c += fixed_cols;
+	GetItem(rowidx, c).SetCtrl(ctrl, false);
+	++genr_ctrls;
+	SyncCtrls(rowidx, c);
+}
+
+void GridCtrl::SetCtrl(int c, Ctrl* ctrl)
+{
+	c += fixed_cols;
+	GetItem(rowidx, c).SetCtrl(*ctrl, true);
+	++genr_ctrls;
+	SyncCtrls(rowidx, c);
 }
 
 void GridCtrl::ClearCtrl(int r, int c)
@@ -4658,15 +4686,18 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_F
 		popup.Close();
 }
 
-void GridCtrl::SyncCtrls(int row)
+void GridCtrl::SyncCtrls(int row, int col)
 {
-	if(!genr_ctrls)
+	if(!genr_ctrls || !ready)
 		return;
 	
 	Size sz = GetSize();
 
 	int js = row < 0 ? 0 : row;
 	int je = row < 0 ? total_rows : row + 1;
+	
+	int is = col < 0 ? 1 : col;
+	int ie = col < 0 ? total_cols : col + 1;
 
 	for(int j = js; j < je; j++)
 	{
@@ -4674,7 +4705,7 @@ void GridCtrl::SyncCtrls(int row)
 		bool fixed_row = j < fixed_rows;
 		bool create_row = !fixed_row && vitems[j].editable;
 
-		for(int i = 1; i < total_cols; i++)
+		for(int i = is; i < ie; i++)
 		{
 			bool fixed_col = i < fixed_cols;
 			bool create_col = !fixed_col && hitems[i].editable;
@@ -4696,7 +4727,7 @@ void GridCtrl::SyncCtrls(int row)
 				One<Ctrl> newctrl;
 				edits[idx].factory(newctrl);
 				it->ctrl = newctrl.Detach();
-				it->ctrl_flag = IC_FACTORY | IC_INIT;
+				it->ctrl_flag = IC_FACTORY | IC_INIT | IC_OWNED;
 			}
 			
 			if(it->ctrl && (it->ctrl_flag & IC_INIT))

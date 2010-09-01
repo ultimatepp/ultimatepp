@@ -347,7 +347,8 @@ class GridCtrl : public Ctrl
 		{
 			IC_INIT = BIT(1),
 			IC_MANUAL = BIT(2),
-			IC_FACTORY = BIT(3)
+			IC_FACTORY = BIT(3),
+			IC_OWNED = BIT(4)
 		};
 
 		struct CurState
@@ -420,11 +421,11 @@ class GridCtrl : public Ctrl
 				}
 				~Item()
 				{
-					if(!(ctrl_flag & IC_MANUAL))
+					if(ctrl_flag & IC_OWNED)
 						delete ctrl;
 				}
 				
-				void SetCtrl(Ctrl& ctrl);
+				void SetCtrl(Ctrl& ctrl, bool owned);
 				void ClearCtrl();
 				
 				void SetDisplay(GridDisplay& display);
@@ -1239,6 +1240,10 @@ class GridCtrl : public Ctrl
 		void Set(const Vector<Value> &v, int data_offset = 0, int column_offset = 0);
 
 		void SetCtrl(int r, int c, Ctrl& ctrl);
+		void SetCtrl(int r, int c, Ctrl* ctrl);
+		void SetCtrl(int c, Ctrl& ctrl);
+		void SetCtrl(int c, Ctrl* ctrl);
+		
 		void ClearCtrl(int r, int c);
 		void SetCtrlValue(int r, int c, const Value &val);
 		void SetCtrlValue(int c, const Value &val);
@@ -1606,7 +1611,7 @@ class GridCtrl : public Ctrl
 		bool ShowNextCtrl();
 		bool ShowPrevCtrl();
 		public:
-		void SyncCtrls(int r = -1);
+		void SyncCtrls(int r = -1, int c = -1);
 		private:
 		void UpdateCtrls(int opt = UC_CHECK_VIS | UC_SHOW | UC_CURSOR | UC_FOCUS);
 		void SyncSummary();
