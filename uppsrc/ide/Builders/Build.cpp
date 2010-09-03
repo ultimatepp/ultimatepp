@@ -603,8 +603,6 @@ void MakeBuild::RebuildAll()
 
 void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 {
-	const Workspace& wspc = GetIdeWorkspace();
-
 	BeginBuilding(false, true);
 
 	VectorMap<String, String> bm = GetMethodVars(method);
@@ -618,8 +616,11 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	String uppout = exporting ? host->GetHostPath(GetVar("OUTPUT")) : "_out/";
 	String inclist;
 
-	Index<String> allconfig = PackageConfig(wspc, 0, bm, mainconfigparam, *host, *b);
+	Index<String> allconfig = PackageConfig(GetIdeWorkspace(), 0, bm, mainconfigparam, *host, *b);
 	bool win32 = allconfig.Find("WIN32") >= 0;
+
+	Workspace wspc;
+	wspc.Scan(GetMain(), allconfig.GetKeys());
 
 	for(int i = 1; i < wspc.GetCount(); i++) {
 		Index<String> modconfig = PackageConfig(wspc, i, bm, mainconfigparam, *host, *b);
