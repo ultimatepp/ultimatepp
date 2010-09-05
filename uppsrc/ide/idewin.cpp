@@ -854,10 +854,10 @@ void AppMain___()
 				SetExitCode(2);
 				return;
 			}
-			ide.SetMain(arg[1]);
-			clset = true;
-			bool stoponerror = false;
 			if(build) {
+				ide.SetMain(arg[1]);
+				clset = true;
+				bool stoponerror = false;
 				const Workspace& wspc = ide.IdeWorkspace();
 				if(!wspc.GetCount())
 					return;
@@ -977,6 +977,11 @@ void AppMain___()
 		}
 
 		LoadFromFile(ide);
+		if(arg.GetCount()==2){
+			LoadVars(arg[0]);
+			ide.SetMain(arg[1]);
+			clset=true;
+		}
 		ide.LoadAbbr();
 
 		ide.SyncCh();
