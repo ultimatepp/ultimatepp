@@ -796,12 +796,12 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 
 	if (align == BOTTOM || align == RIGHT)
 	{
-		pa.y -= s.sel.bottom - sep;
-		pn.y -= s.sel.top - sep;
+//		pa.y += (align == BOTTOM ? sz.cy : sz.cx) - (sa.cy + pa.y); 
+//		pn.y += (align == BOTTOM ? sz.cy : sz.cx) - (sn.cy + pn.y); 
 		dy = -dy;
 		sel = s.sel.bottom;
 	}
-			
+
 	Rect ra(Fixed(pa), Fixed(sa));
 	Rect rn(Fixed(pn), Fixed(sn));
 
@@ -862,20 +862,20 @@ void TabBar::Paint(Draw &w)
 {
 	int align = GetAlign();
 	const Style &st = *style[align];
-	Size sz = GetBarSize();
+	Size ctrlsz = GetSize();
+	Size sz = GetBarSize(ctrlsz);
+	
+	if (align == BOTTOM || align == RIGHT)
+		w.Offset(ctrlsz.cx - sz.cx, ctrlsz.cy - sz.cy);
 	
 	#ifdef TABBAR_DEBUG
 	w.DrawRect(sz, Yellow);
 	#else
 	w.DrawRect(sz, SColorFace());
 	#endif
-	
-//	if(sc.IsShown())
-//	{
-		IsVert() ? 
-			w.DrawRect(align == LEFT ? sz.cx - 1 : 0, 0, 1, sz.cy, Color(128, 128, 128)):
-			w.DrawRect(0, align == TOP ? sz.cy - 1 : 0, sz.cx, 1, Color(128, 128, 128));	
-//	}
+
+	IsVert() ? w.DrawRect(align == LEFT ? sz.cx - 1 : 0, 0, 1, sz.cy, Blend(SColorDkShadow, SColorShadow)):
+		w.DrawRect(0, align == TOP ? sz.cy - 1 : 0, sz.cx, 1, Blend(SColorDkShadow, SColorShadow));	
 
 	if (!tabs.GetCount()) return;
 	
@@ -971,6 +971,9 @@ void TabBar::Paint(Draw &w)
 	// If not in a frame fill any spare area
 	if (!InFrame())
 		w.DrawRect(GetClientArea(), SColorFace());
+	
+	if (align == BOTTOM || align == RIGHT)
+		w.EndOp();	
 }
 
 Image TabBar::GetDragSample()
@@ -1160,10 +1163,10 @@ void TabBar::Repos()
 	SyncScrollBar();
 }
 
-Size TabBar::GetBarSize() const
+Size TabBar::GetBarSize(Size ctrlsz) const
 {
-	return IsVert() ? Size(GetFrameSize() - scrollbar_sz * int(sc.IsShown()), GetSize().cy) 
-			: Size(GetSize().cx, GetFrameSize() - scrollbar_sz * int(sc.IsShown()));
+	return IsVert() ? Size(GetFrameSize() - scrollbar_sz * int(sc.IsShown()), ctrlsz.cy) 
+			: Size(ctrlsz.cx, GetFrameSize() - scrollbar_sz * int(sc.IsShown()));
 }
 
 Rect TabBar::GetClientArea() const
@@ -1230,7 +1233,7 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 	}
 	else if (!(v || inactive)) {
 		t.visible = false;
-		t.pos.x = sc.GetTotal() + GetBarSize().cx;
+		t.pos.x = sc.GetTotal() + GetBarSize(GetSize()).cx;
 	}
 	return j;	
 }

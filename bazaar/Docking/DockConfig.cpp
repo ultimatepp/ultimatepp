@@ -247,9 +247,8 @@ void DockConfigDlg::OnTreeDrag()
 {
 	if (tree.GetCursor() >= 0 && tree.GetParent(tree.GetCursor()) == 0)
 		return;
-	if(tree.DoDragAndDrop(InternalClip(tree, "dockwindowdrag"),
-	                       tree.GetDragSample(), DND_MOVE) == DND_MOVE)
-		tree.RemoveSelection();
+	tree.DoDragAndDrop(InternalClip(tree, "dockwindowdrag"),
+	                       tree.GetDragSample(), DND_MOVE) == DND_MOVE;
 }
 
 void DockConfigDlg::OnTreeDrop(int parent, int ii, PasteClip& d)

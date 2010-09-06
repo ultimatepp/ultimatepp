@@ -286,7 +286,7 @@ protected:
 	void SetHighlight(int n);
 	int  GetTargetTab(Point p);	
 	void Repos();
-	Size GetBarSize() const;
+	Size GetBarSize(Size ctrlsz) const;
 	Rect GetClientArea() const;
 	
 	// Grouping
