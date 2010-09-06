@@ -16,6 +16,9 @@ public:
 	typedef Element CLASSNAME;
 	String name;
 	Value value;
+
+	void Xmlize(XmlIO xml) { xml("name", name)("value", value); }
+	void Serialize(Stream& s) { s % name % value; }
 };
 
 ///
@@ -27,6 +30,9 @@ public:
 	
 	Node<One<Element> > root;
 	Node<Element> roota;
+	
+	Leaf<Element> rootb;
+	Leaf<One<Element> > rootc;
 };
 
 #endif

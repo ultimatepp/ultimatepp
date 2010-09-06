@@ -43,6 +43,9 @@ public:
 	void     SetCountR(int n)           { B::SetCountR(n); for(int i = 0; i < B::GetCount(); i++) Link(B::operator[](i)); }
 	using B::Clear;
 
+	T&       At(int i)                  { if(i >= GetCount()) SetCountR(i + 1); return B::Get(i); }
+	T&       At(int i, const T& x)      { if(i >= GetCount()) SetCountR(i + 1, x); return B::Get(i); }
+
 	using B::Remove;
 	T&       Insert(int i)              { T & t = B::Insert(i); Link(t); return t; }
 	void     InsertPick(int i, pick_ T& x) { Link(x); B::InsertPick(i, x); }
@@ -66,6 +69,11 @@ public:
 	Tree& operator<<(T *newt)           { Add(newt); return *this; }
 	Tree& operator|(pick_ T& x)         { AddPick(x); return *this; }
 
+#ifdef UPP
+	//void     Serialize(Stream& s)       { B::Serialize(); }
+	using B::Serialize;
+#endif
+
 // Array Interface end
 
 	Tree()
@@ -87,6 +95,12 @@ public:
 #endif
 };
 
+template<class T>
+void Xmlize(XmlIO xml, Tree<T>& data)
+{
+	XmlizeContainer(xml, "item", data);
+}
+
 //Tree Node helper class
 
 template<class T>
@@ -95,13 +109,24 @@ class Node
 {
 public:
 	typedef Node CLASSNAME;
+	Node() {}
+	Node(const T& leaf) : leaf(leaf) {}
+
+	void Xmlize(XmlIO xml) { xml("leaf", leaf); XmlizeContainer(xml, "item", (Tree<Node<T> >&)*this); }
+	void Serialize(Stream& s) { s % leaf % (Tree<Node<T> >&)*this; }
+
 	T leaf;
 };
 
-template<class T, class B = EmptyClass>
+template<class BB> //B conflicts with Tree::B
 class Leaf
-	: public Tree<Leaf<T, B> >
-	, public B
-	{};
+	: public Tree<Leaf<BB> >
+	, public BB
+{
+public:
+	typedef Leaf<BB> CLASSNAME;
+	void Xmlize(XmlIO xml) { xml("leaf", (BB&)*this); XmlizeContainer(xml, "item", (Tree<Leaf<BB> >&)*this); }
+	void Serialize(Stream& s) { s % (BB&)*this % (Tree<Leaf<BB> >&)*this; }
+};
 
 #endif
