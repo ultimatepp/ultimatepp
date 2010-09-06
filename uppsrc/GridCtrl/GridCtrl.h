@@ -821,10 +821,8 @@ class GridCtrl : public Ctrl
 		bool sorting_multicol:1;
 		bool header:1;
 		bool live_cursor:1;
-		bool ctrlRowMode:1;
-		bool ctrlColMode:1;
 		bool row_changing:1;
-		int  coloringMode;
+		int  coloring_mode;
 
 		int  resize_paint_mode;
 		int  resize_col_mode;
@@ -867,6 +865,7 @@ class GridCtrl : public Ctrl
 		bool summary_row:1;
 		bool update_summary:1;
 		bool popups:1;
+		bool focus_lost_accepting:1;
 
 		bool search_hide:1;
 		bool search_highlight:1;
@@ -893,7 +892,7 @@ class GridCtrl : public Ctrl
 		bool scrollLeftRight:1;
 		bool doscroll:1;
 		bool ready:1;
-		bool ctrls:1;
+		bool isedit:1;
 		int  genr_ctrls;
 		bool edit_ctrls:1;
 		bool shiftmode:1;
@@ -1086,46 +1085,47 @@ class GridCtrl : public Ctrl
 
 		int GetDefaultRowHeight() { return GD_ROW_HEIGHT; }
 
-		GridCtrl& Inserting(bool b = true)        { inserting         = b;  return *this; }
-		GridCtrl& Appending(bool b = true)        { appending         = b;  return *this; }
-		GridCtrl& Duplicating(bool b = true)      { duplicating       = b;  return *this; }
-		GridCtrl& Moving(bool b = true)           { moving            = b;  return *this; }
-		GridCtrl& Removing(bool b = true)         { removing          = b;  return *this; }
-		GridCtrl& Accepting(bool b = true)        { accepting         = b;  return *this; }
-		GridCtrl& Canceling(bool b = true)        { canceling         = b;  return *this; }
-		GridCtrl& Navigating(bool b = true)       { navigating        = b;  return *this; }
-		GridCtrl& Searching(bool b = true)        { searching         = b;  return *this; }
-		GridCtrl& Closing(bool b = true)          { closing           = b;  return *this; }
-		GridCtrl& Editing(bool b = true)          { editing           = b;  return *this; }
-		GridCtrl& EditsInNewRow(bool b = true)    { edits_in_new_row  = b;  return *this; }
-		GridCtrl& Hiding(bool b = true)           { hiding            = b;  return *this; }
-		GridCtrl& Clipboard(bool b = true)        { clipboard         = b;  return *this; }
-		GridCtrl& ExtraPaste(bool b = true)       { extra_paste       = b;  return *this; }
-		GridCtrl& FixedPaste(bool b = true)       { fixed_paste       = b;  return *this; }
-		GridCtrl& CopyColumnNames(bool b = true)  { copy_column_names = b;  return *this; }
-		GridCtrl& AskRemove(bool b = true)        { ask_remove        = b;  return *this; }
-		GridCtrl& RowChanging(bool b = true)      { row_changing      = b;  return *this; }
+		GridCtrl& Inserting(bool b = true)          { inserting            = b;  return *this; }
+		GridCtrl& Appending(bool b = true)          { appending            = b;  return *this; }
+		GridCtrl& Duplicating(bool b = true)        { duplicating          = b;  return *this; }
+		GridCtrl& Moving(bool b = true)             { moving               = b;  return *this; }
+		GridCtrl& Removing(bool b = true)           { removing             = b;  return *this; }
+		GridCtrl& Accepting(bool b = true)          { accepting            = b;  return *this; }
+		GridCtrl& Canceling(bool b = true)          { canceling            = b;  return *this; }
+		GridCtrl& Navigating(bool b = true)         { navigating           = b;  return *this; }
+		GridCtrl& Searching(bool b = true)          { searching            = b;  return *this; }
+		GridCtrl& Closing(bool b = true)            { closing              = b;  return *this; }
+		GridCtrl& Editing(bool b = true)            { editing              = b;  return *this; }
+		GridCtrl& EditsInNewRow(bool b = true)      { edits_in_new_row     = b;  return *this; }
+		GridCtrl& Hiding(bool b = true)             { hiding               = b;  return *this; }
+		GridCtrl& Clipboard(bool b = true)          { clipboard            = b;  return *this; }
+		GridCtrl& ExtraPaste(bool b = true)         { extra_paste          = b;  return *this; }
+		GridCtrl& FixedPaste(bool b = true)         { fixed_paste          = b;  return *this; }
+		GridCtrl& CopyColumnNames(bool b = true)    { copy_column_names    = b;  return *this; }
+		GridCtrl& AskRemove(bool b = true)          { ask_remove           = b;  return *this; }
+		GridCtrl& RowChanging(bool b = true)        { row_changing         = b;  return *this; }
 
-		GridCtrl& DrawFocus(bool b = true)        { draw_focus        = b;  return *this; }
-		GridCtrl& CancelAll(bool b = true)        { cancel_all        = b;  return *this; }
+		GridCtrl& DrawFocus(bool b = true)          { draw_focus           = b;  return *this; }
+		GridCtrl& CancelAll(bool b = true)          { cancel_all           = b;  return *this; }
 
-		GridCtrl& RejectNullRow(bool b = true)    { reject_null_row   = b;  return *this; }
-		GridCtrl& KeepLastRow(bool b = true)      { keep_last_row     = b;  return *this; }
-		GridCtrl& RemoveHides(bool b = true)      { remove_hides      = b;  return *this; }
-		GridCtrl& TabChangesRow(bool b = true)    { tab_changes_row   = b;  return *this; }
-		GridCtrl& TabAddsRow(bool b = true)       { tab_adds_row      = b;  return *this; }
-		GridCtrl& EnterLikeTab(bool b = true)     { enter_like_tab    = b;  return *this; }
-		GridCtrl& FullColResizing(bool b = true)  { full_col_resizing = b;  return *this; }
-		GridCtrl& FullRowResizing(bool b = true)  { full_row_resizing = b;  return *this; }
-		GridCtrl& Chameleon(bool b = true)        { chameleon         = b;  return *this; }
-		GridCtrl& SummaryRow(bool b = true)       { summary_row       = b;  return *this; }
-		GridCtrl& Popups(bool b = true)           { popups            = b;  return *this; }
+		GridCtrl& RejectNullRow(bool b = true)      { reject_null_row      = b;  return *this; }
+		GridCtrl& KeepLastRow(bool b = true)        { keep_last_row        = b;  return *this; }
+		GridCtrl& RemoveHides(bool b = true)        { remove_hides         = b;  return *this; }
+		GridCtrl& TabChangesRow(bool b = true)      { tab_changes_row      = b;  return *this; }
+		GridCtrl& TabAddsRow(bool b = true)         { tab_adds_row         = b;  return *this; }
+		GridCtrl& EnterLikeTab(bool b = true)       { enter_like_tab       = b;  return *this; }
+		GridCtrl& FullColResizing(bool b = true)    { full_col_resizing    = b;  return *this; }
+		GridCtrl& FullRowResizing(bool b = true)    { full_row_resizing    = b;  return *this; }
+		GridCtrl& Chameleon(bool b = true)          { chameleon            = b;  return *this; }
+		GridCtrl& SummaryRow(bool b = true)         { summary_row          = b;  return *this; }
+		GridCtrl& Popups(bool b = true)             { popups               = b;  return *this; }
+		GridCtrl& FocusLostAccepting(bool b = true) { focus_lost_accepting = b;  return *this; }
 		
-		GridCtrl& SearchOffset(int offset)        { find_offset = offset;   return *this; }
-		GridCtrl& SearchMoveCursor(bool b = true) { search_move_cursor = b; return *this; }
-		GridCtrl& SearchImmediate(bool b = true)  { search_immediate = b;   return *this; }
-		GridCtrl& SearchHideRows(bool b = true)   { search_hide = b;        return *this; }
-		GridCtrl& SearchDisplay(bool b = true)    { search_display = b;     return *this; }
+		GridCtrl& SearchOffset(int offset)          { find_offset     = offset;  return *this; }
+		GridCtrl& SearchMoveCursor(bool b = true)   { search_move_cursor   = b;  return *this; }
+		GridCtrl& SearchImmediate(bool b = true)    { search_immediate     = b;  return *this; }
+		GridCtrl& SearchHideRows(bool b = true)     { search_hide          = b;  return *this; }
+		GridCtrl& SearchDisplay(bool b = true)      { search_display       = b;  return *this; }
 
 		GridCtrl& SetToolBar(bool b = true, int align = BarCtrl::BAR_BOTTOM, int frame = 1);
 		ToolBar&  GetToolBar() { return bar; }
@@ -1339,8 +1339,8 @@ class GridCtrl : public Ctrl
 		
 		void SetDisplay(int r, int c, GridDisplay& gd);
 
-		bool IsEdit()  { return ctrls; }
-		bool StartEdit(bool mouse = false);
+		bool IsEdit()  { return isedit; }
+		bool StartEdit();
 		bool SwitchEdit();
 		bool EndEdit(bool accept = true, bool doall = false, bool remove_row = true);
 		bool CancelEdit(bool remove_row = true) { return EndEdit(false, false, remove_row); }
@@ -1694,7 +1694,7 @@ class GridCtrl : public Ctrl
 
 		Ctrl * GetCtrl(int x, int y, bool check_visibility, bool hrel = false, bool vrel = false, bool check_edits = true);
 		Ctrl * GetCtrl(const Point &p, bool check_visibility, bool hrel = false, bool vrel = false, bool check_edits = true);
-		bool IsCtrl(Point &p);
+		bool IsCtrl(Point &p, bool check_visibility = true);
 
 		GridClipboard GetClipboard();
 		void SetClipboard(bool all = false, bool silent = false);
