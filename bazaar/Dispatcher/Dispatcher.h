@@ -5,18 +5,20 @@
 
 using namespace Upp;
 
+#include <Gen/Gen.h>
+
 template<class T>
 class Dispatcher;
 
 class DispatcherGen;
 
-template<class T>
+template<class T, class B = EmptyClass>
 class  Dispatchable
 {
 	friend class Dispatcher<T>;
 	friend class DispatcherGen;
 public:
-	typedef Dispatchable<T> CLASSNAME;
+	typedef Dispatchable<T,B> CLASSNAME;
 	Dispatchable();
 	virtual ~Dispatchable();
 
@@ -37,6 +39,7 @@ private:
 
 template<class T>
 class Dispatcher
+	: public EnableOption<>
 {
 public:
 	typedef Dispatcher<T> CLASSNAME;
@@ -49,6 +52,7 @@ public:
 	void Unregister(Dispatchable<T> & d, unsigned key = 0);
 	Dispatchable<T> * GetDispatchable(unsigned key) const;
 	const VectorMap<unsigned, Dispatchable<T> * > & GetDests() const { return dests; }
+	void Clear() { while(dests.GetCount()>0) dests[0].Unregister(); }
 
 private:
 	VectorMap<unsigned, Dispatchable<T> * > dests;	
@@ -82,6 +86,7 @@ private:
 
 template<class T>
 class DispatcherCB
+	: public EnableOption<>
 {
 public:
 	typedef DispatcherCB<T> CLASSNAME;
@@ -94,6 +99,7 @@ public:
 	void Unregister(unsigned key);
 	Callback1<const T &> GetDispatchable(unsigned key);
 	const VectorMap<unsigned, Callback1<const T &> > & GetDests() const { return dests; }
+	void Clear() { while(dests.GetCount()>0) dests[0].Unregister(); }
 
 private:
 	VectorMap<unsigned, Callback1<const T &> > dests;	

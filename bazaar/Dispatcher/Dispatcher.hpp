@@ -1,19 +1,19 @@
 #include "Dispatcher.h"
 
-template<class T>
-Dispatchable<T>::Dispatchable()
+template<class T, class B>
+Dispatchable<T, B>::Dispatchable()
 {
 	
 }
 
-template<class T>
-Dispatchable<T>::~Dispatchable()
+template<class T, class B>
+Dispatchable<T, B>::~Dispatchable()
 {
 	UnregisterAll();
 }
 
-template<class T>
-void Dispatchable<T>::Unregister(const Any & _src)
+template<class T, class B>
+void Dispatchable<T, B>::Unregister(const Any & _src)
 {
 	if(_src.Is<Dispatcher<T> * >())
 	{
@@ -28,8 +28,8 @@ void Dispatchable<T>::Unregister(const Any & _src)
 	}
 }
 
-template<class T>
-void Dispatchable<T>::UnregisterAll()
+template<class T, class B>
+void Dispatchable<T, B>::UnregisterAll()
 {
 	while(src.GetCount()>0)
 	{
@@ -52,6 +52,7 @@ Dispatcher<T>::~Dispatcher()
 template<class T>
 void Dispatcher<T>::DoDispatch(const T & o) const
 {
+	if(!EnableOption<>::IsEnabled()) return;
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
 		Dispatchable<T> * dest = dests.operator[](i);
@@ -163,6 +164,7 @@ DispatcherCB<T>::~DispatcherCB()
 template<class T>
 void DispatcherCB<T>::DoDispatch(const T & o) const
 {
+	if(!EnableOption<>::IsEnabled()) return;
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
 		const Callback1<const T &> & dest = dests.operator[](i);

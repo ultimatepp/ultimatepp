@@ -1,7 +1,8 @@
 description "a templateable object dispatcher class\377";
 
 uses
-	Core;
+	Core,
+	Gen;
 
 file
 	Dispatcher.h,
