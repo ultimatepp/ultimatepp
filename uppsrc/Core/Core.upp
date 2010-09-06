@@ -83,6 +83,7 @@ file
 	Index.h,
 	Map.h,
 	Index.hpp,
+	Tuple.h,
 	Other.h,
 	Hash.cpp optimize_speed,
 	Concretes readonly separator,
