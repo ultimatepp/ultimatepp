@@ -1,0 +1,27 @@
+LAYOUT(GridPanel, 896, 540)
+	ITEM(TabCtrl, tab, HSizePosZ(4, 412).VSizePosZ(4, 28))
+	ITEM(Button, resort, SetLabel(t_("Resort")).LeftPosZ(4, 104).BottomPosZ(4, 20))
+	ITEM(Button, toxml, SetLabel(t_("To XML")).LeftPosZ(112, 56).BottomPosZ(4, 20))
+	ITEM(Button, fromxml, SetLabel(t_("From XML")).LeftPosZ(172, 56).BottomPosZ(4, 20))
+	ITEM(Panel, panel, RightPosZ(4, 404).VSizePosZ(4, 0))
+END_LAYOUT
+
+LAYOUT(Test, 564, 356)
+	ITEM(GridCtrl, dv___0, Indicator(true).MovingCols(true).MovingRows(true).LiveCursor(true).LeftPosZ(112, 312).TopPosZ(48, 202))
+END_LAYOUT
+
+LAYOUT(DynamicLayout, 380, 216)
+	ITEM(Button, create, SetLabel(t_("Create Grid")).LeftPosZ(4, 72).TopPosZ(4, 24))
+	ITEM(Button, remove, SetLabel(t_("Remove Grid")).LeftPosZ(80, 72).TopPosZ(4, 24))
+	ITEM(Splitter, spl, HSizePosZ(4, 4).VSizePosZ(32, 4))
+END_LAYOUT
+
+LAYOUT(DisplayLayout, 400, 200)
+	ITEM(LabelBox, dv___0, HSizePosZ(4, 8).VSizePosZ(12, 16))
+	ITEM(Button, dv___1, SetLabel(t_("Button")).RightPosZ(32, 76).TopPosZ(72, 32))
+	ITEM(DocEdit, dv___2, LeftPosZ(20, 168).TopPosZ(48, 104))
+END_LAYOUT
+
+LAYOUT(GridTestMain, 628, 520)
+END_LAYOUT
+

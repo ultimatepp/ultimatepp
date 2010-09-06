@@ -1,0 +1,34 @@
+description "Application for testing GridCtrl control\377";
+
+charset "windows-1250";
+
+uses
+	CtrlLib,
+	GridCtrl;
+
+library
+	;
+
+options
+	;
+
+file
+	GridCtrlTest.h,
+	GridCtrlTest.cpp charset "UTF-8",
+	GridCtrlTest.lay,
+	TestMain.cpp,
+	TestExcelGrid.cpp,
+	TestPropertyGrid.cpp,
+	TestArrayCtrl.cpp,
+	TestFocusLost.cpp,
+	Panel.h,
+	Panel.cpp,
+	Panel.lay;
+
+mainconfig
+	"" = "GUI";
+
+custom() "",
+	"",
+	"";
+
