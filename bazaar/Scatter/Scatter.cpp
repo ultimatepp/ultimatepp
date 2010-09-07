@@ -254,6 +254,9 @@ Scatter &Scatter::SetMinUnits(double ux, double uy)
 	xMinUnit=ux;
 	yMinUnit=uy;
 	yMinUnit2=yRange2*yMinUnit/yRange;
+	AdjustMinUnitX();
+	AdjustMinUnitY();
+	AdjustMinUnitY2();	
 	return *this;
 }
 Scatter &Scatter::SetXYMin(double xmin, double ymin, double ymin2)
