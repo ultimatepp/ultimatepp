@@ -33,7 +33,7 @@ bool DirectoryCopyX(const char *dir, const char *newPlace);
 bool DeleteFolderDeepWildcards(const char *dir, int flags = 0);
 ///////////////////////////////
 
-bool ThereIsUpperFolder(String folderName);
+bool UpperFolder(String folderName);
 String GetUpperFolder(String folderName);
 String GetNextFolder(String folder, String lastFolder);
 String GetRealName(String fileName);
@@ -436,6 +436,7 @@ private:
 
 #if defined(PLATFORM_WIN32) 
 Value GetVARIANT(VARIANT &result);
+String WideToString(LPCWSTR wcs, int len = -1);
 #endif
  
 #ifdef CTRLLIB_H

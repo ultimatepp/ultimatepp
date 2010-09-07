@@ -4,7 +4,10 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/07/27]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/09/07]]
+:: [s0;# [2 Some improvements in LaunchFile, added UpperFolder and Dl 
+(DLL) now in Linux too.]]
+:: [s0;# [2 2010/07/27]]
 :: [s0;# [2 Added String Replace(String str, char find, char replace).]]
 :: [s0;# [2 2010/07/19]]
 :: [s0;# [2 Removed las Xmlize and GridCtrl function. Now all are in Core 

@@ -54,8 +54,8 @@ olderName])&]
 [s2; Returns the name of the folder over [%-*@3 folderName].&]
 [s3; &]
 [s4;%- &]
-[s5;:ThereIsUpperFolder`(String`):%- [@(0.0.255) bool]_[* ThereIsUpperFolder]([_^String^ St
-ring]_[*@3 folderName])&]
+[s5;:UpperFolder`(String`):%- [@(0.0.255) bool]_[* UpperFolder]([_^String^ String]_[*@3 folde
+rName])&]
 [s0;l288; Returns true if there is a folder over [%-*@3 folderName].&]
 [s3; &]
 [s4;%- &]
@@ -70,7 +70,7 @@ ing]_[*@3 folder], [_^String^ String]_[*@3 lastFolder])&]
 [s2; Considering [%-*@3 folder ]as a parent folder of [%-*@3 lastFolder], 
 it returns the folder under [%-*@3 folder ]that is also parent 
 of [%-*@3 lastFolder].&]
-[s0;l288; For example: GetNextFolder(`"/home`", `"/home/user/documents`") 
+[s2; For example: GetNextFolder(`"/home`", `"/home/user/documents`") 
 returns `"/home/user`".&]
 [s3; &]
 [s4;%- &]

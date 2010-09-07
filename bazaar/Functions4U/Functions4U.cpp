@@ -1115,7 +1115,7 @@ String GetNextFolder(String folder, String lastFolder) {
 		return lastFolder;
 }
 
-bool ThereIsUpperFolder(String folderName) {
+bool UpperFolder(String folderName) {
 	if (folderName.IsEmpty())
 		return false;
 #ifdef PLATFORM_WIN32
@@ -1128,7 +1128,7 @@ bool ThereIsUpperFolder(String folderName) {
 }
 
 String GetUpperFolder(String folderName) {
-	if (!ThereIsUpperFolder(folderName))
+	if (!UpperFolder(folderName))
 		return folderName;
 	int len = folderName.GetCount();
 	if (folderName[len-1] == DIR_SEP)
@@ -1861,13 +1861,7 @@ Value GetVARIANT(VARIANT &result)
 			ret = dbcs;
 			*/
 		{
-			int len = WideCharToMultiByte(CP_UTF8, 0, result.bstrVal, -1, NULL, 0, NULL, NULL);	
-			if (len == 0)
-				return Null;
-			Buffer<char> w;
-			w.Alloc(len);
-			WideCharToMultiByte(CP_UTF8, 0, result.bstrVal, -1, w, len, NULL, NULL);
-			ret = ~w;
+			ret = WideToString(result.bstrVal);
 			break;
 		}
 	case VT_LPSTR:
@@ -1893,6 +1887,18 @@ Value GetVARIANT(VARIANT &result)
 	}
 	return ret;
 }
+
+String WideToString(LPCWSTR wcs, int len) {
+	if (len == -1) {
+		len = WideCharToMultiByte(CP_UTF8, 0, wcs, len, NULL, 0, NULL, NULL);	
+		if (len == 0)
+			return Null;
+	}
+	Buffer<char> w(len);
+	WideCharToMultiByte(CP_UTF8, 0, wcs, len, w, len, NULL, NULL);
+	return ~w;	
+}
+
 #endif
 
 #if defined(PLATFORM_WIN32) 
