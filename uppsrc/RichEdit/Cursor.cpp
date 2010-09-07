@@ -362,7 +362,7 @@ void RichEdit::AddUserDict()
 	if(IsSelection()) return;
 	WString w = GetWordAtCursor();
 	if(w.IsEmpty()) return;
-	SpellerAdd(w, formatinfo.language);
+	SpellerAdd(w, fixedlang ? fixedlang : formatinfo.language);
 	text.ClearSpelling();
 	Refresh();
 }
