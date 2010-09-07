@@ -338,7 +338,7 @@ bool LocalProcess::Read(String& res) {
 	char buffer[1024];
 	if(!ReadFile(hOutputRead, buffer, sizeof(buffer), &n, NULL))
 		return false;
-	res.Cat(buffer, n);
+	res = FromSystemCharset(String(buffer, n));
 	return true;
 #endif
 #ifdef PLATFORM_POSIX
