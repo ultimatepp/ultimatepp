@@ -97,7 +97,6 @@ void SystemInfo::Fill() {
 	TextBiosVersion = biosVersion;
 	TextBiosRelease = AsString(biosReleaseDate);
 	TextBiosSerial = biosSerial;
-	TextMACAddress = GetMacAddress();
 	
 	String kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion;
 	if (GetOsInfo(kernel, kerVersion, kerArchitecture, distro, distVersion, desktop, deskVersion)) {
@@ -204,6 +203,15 @@ void SystemInfo::Fill() {
 		
 		Drives.Add(row);
 	}
+	Adapters.Reset();
+	Adapters.AddColumn("Type", 10);
+	Adapters.AddColumn("Description", 20);
+	Adapters.AddColumn("Fullname", 20);
+	Adapters.AddColumn("MAC", 10);
+	Array <NetAdapter> adapters = GetAdapterInfo();	
+	for (int i = 0; i < adapters.GetCount(); ++i) 
+		Adapters.Add(adapters[i].type, adapters[i].description, adapters[i].fullname, 
+				   adapters[i].mac);
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
 }
 
