@@ -5,6 +5,7 @@ topic "News and changes log";
 [s0; [*R6 SysInfo. News and changes log]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [2 2010/09/07-|Added GetAdapterInfo(). It substitutes GetMacAddress().]&]
 [s0; [2 2010/07/28-|GetMacAddress() in Windows now uses also iphlpapi 
 because of WMI reliability.]&]
 [s0; [2 2010/06/07-|Added GetMacAddress() for Linux]&]

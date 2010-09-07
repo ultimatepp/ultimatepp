@@ -174,7 +174,7 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 	manufacturer = "";
 	Value vmanufacturer;
 	if (GetWMIInfo("Win32_ComputerSystem", "manufacturer", vmanufacturer)) 
-		manufacturer = TrimBoth(vmanufacturer);
+		manufacturer = Trim(vmanufacturer);
 	if (manufacturer.IsEmpty()) 
 		manufacturer = FromSystemCharset(GetWinRegString("SystemManufacturer", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
 	if (manufacturer.IsEmpty()) {
@@ -185,7 +185,7 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 	productName = "";
 	Value vproductName;
 	if (GetWMIInfo("Win32_ComputerSystem", "model", vproductName)) 
-		productName = TrimBoth(vproductName);
+		productName = Trim(vproductName);
 	if (productName.IsEmpty())
 		productName = FromSystemCharset(GetWinRegString("SystemProductName", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
 	if (productName.IsEmpty())
@@ -195,7 +195,7 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 	numberOfProcessors = atoi(GetEnv("NUMBER_OF_PROCESSORS"));
 	Value vmbSerial;
 	if (GetWMIInfo("Win32_BaseBoard", "SerialNumber", vmbSerial)) 
-		mbSerial = TrimBoth(vmbSerial);	
+		mbSerial = Trim(vmbSerial);	
 }
 void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial) { 
 	// Alternative is "wmic bios get name" and "wmic bios get releasedate"
@@ -218,7 +218,7 @@ void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial)
 	SetLanguage(lang);
 	Value vmbSerial;
 	if (GetWMIInfo("Win32_BIOS", "SerialNumber", vmbSerial)) 
-		biosSerial = TrimBoth(vmbSerial);	
+		biosSerial = Trim(vmbSerial);	
 }
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)	{
 	String strReg = Format("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\%d", number);
@@ -229,26 +229,27 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 	
 	return true;
 }
-
+/*
 String GetMacAddressWMI() {
 	Value vmac;
 	if (!GetWMIInfo("Win32_NetworkAdapterConfiguration", "MacAddress", vmac)) 
 		return Null;
-	String mac = TrimBoth(vmac);	
+	String mac = Trim(vmac);	
 	if (mac.GetCount() > 0)
 		return mac;
 	return Null;
 }
-
+*/
 #include <iphlpapi.h>
 
-String GetMacAddressIphlpapi() {
+Array <NetAdapter> GetAdapterInfo() {
 	PIP_ADAPTER_ADDRESSES pAddresses = NULL;
 	ULONG family = AF_UNSPEC;
 	DWORD flags = GAA_FLAG_INCLUDE_PREFIX;
 	ULONG outBufLen = 0;
 	Buffer<BYTE> pBuffer;
-
+	Array <NetAdapter> ret;
+	
 	switch (GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen)) {
 	case ERROR_BUFFER_OVERFLOW:
 		pBuffer.Alloc(outBufLen);
@@ -257,28 +258,40 @@ String GetMacAddressIphlpapi() {
 	case ERROR_NO_DATA:
 	case ERROR_INVALID_FUNCTION:
 	default:
-		return Null;
+		return ret;
 	}
 	if (NO_ERROR != GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen)) 
-		return Null;
-	
-	int len = min((DWORD)6, pAddresses->PhysicalAddressLength);
-	return ToUpper(HexString(pAddresses->PhysicalAddress, len, 1, ':'));
-}
-
-String GetMacAddress() {
-	String ret = GetMacAddressWMI();	// Faster but less reliable
-	if (IsNull(ret))
-		return GetMacAddressIphlpapi();
-	else
 		return ret;
+	
+	for (PIP_ADAPTER_ADDRESSES pAdd = pAddresses; pAdd; pAdd = pAdd->Next) {
+		NetAdapter &adapter = ret.Add();
+		int len = min((DWORD)6, pAdd->PhysicalAddressLength);
+		if (len > 0)
+			adapter.mac = ToUpper(HexString(pAdd->PhysicalAddress, len, 1, ':'));
+		adapter.description = WideToString(pAdd->Description);
+		adapter.fullname = WideToString(pAdd->FriendlyName);
+		switch (pAdd->IfType) {
+		case IF_TYPE_ETHERNET_CSMACD: 		adapter.type = "ETHERNET";	break;
+		case IF_TYPE_ISO88025_TOKENRING: 	adapter.type = "TOKENRING";	break;
+		case IF_TYPE_PPP: 					adapter.type = "PPP";		break;
+		case IF_TYPE_SOFTWARE_LOOPBACK: 	adapter.type = "SOFTWARE_LOOPBACK";		break;
+		case IF_TYPE_ATM: 					adapter.type = "ATM";		break;
+		case IF_TYPE_IEEE80211: 			adapter.type = "IEEE80211";	break;
+		case IF_TYPE_TUNNEL: 				adapter.type = "TUNNEL";	break;
+		case IF_TYPE_IEEE1394: 				adapter.type = "IEEE1394";	break;
+		default: 							adapter.type = "OTHER";
+		}
+		if (adapter.type == "ETHERNET" && ToLower(adapter.description).Find("wireless") >= 0)
+			adapter.type = "IEEE80211";
+	}
+	return ret;
 }
 
 String GetHDSerial() {
 	Value vmbSerial;
 	if (!GetWMIInfo("Win32_PhysicalMedia", "SerialNumber", vmbSerial)) 
 		return Null;
-	String serial = TrimBoth(vmbSerial);	
+	String serial = Trim(vmbSerial);	
 	if (serial.GetCount() > 0)
 		return serial;
 	return Null;
@@ -353,6 +366,15 @@ double GetCpuTemperature() {
 	return Null;
 }
 #endif
+
+String GetMacAddress() {
+	Array <NetAdapter> ret = GetAdapterInfo();	
+	if (!ret.IsEmpty())
+		return ret[0].mac;
+	else
+		return Null;
+}
+
 #if defined (PLATFORM_POSIX)
 void GetSystemInfo(String &manufacturer, String &productName, String &version, int &numberOfProcessors, String &mbSerial)
 {
@@ -427,25 +449,47 @@ double GetCpuTemperature() {
 	}
 	return Null;
 }
-String GetMacAddress() {
+
+Array <NetAdapter> GetAdapterInfo() {
+	Array <NetAdapter> ret;
+	
 	StringParse data = Sys("ifconfig -a");
-	
-	data.GoAfter("eth0");
-	String line = TrimBoth(data.GetLine());
-	int pos = line.ReverseFind(' ');
-	if (pos == -1)
-		return Null;
-	
-	String ret = line.Mid(pos+1);
-	if (ret.GetCount() == 17)
-		return ret;
-	return Null;
+	for (StringParse line = data.GetLine(); !data.Eof(); line = data.GetLine()) {
+		NetAdapter &adapter = ret.Add();
+		String str = line.GetText();				
+		if (str.Find("eth") >= 0)
+			adapter.type = "ETHERNET";
+		else if (str.Find("lo") >= 0)
+			adapter.type = "SOFTWARE_LOOPBACK";
+		else if (str.Find("vbox") >= 0)
+			adapter.type = "VIRTUALBOX";
+		else if (str.Find("wlan") >= 0)
+			adapter.type = "IEEE80211";
+		else			
+			adapter.type = "OTHER";
+		line.GoAfter(":");
+		int pos = line.GetPos();
+		int npos = line.Find("  ", pos);
+		if (npos >= 0) {
+		 	adapter.fullname = line.Mid(pos, npos-pos);
+		 	line.SetPos(npos+1);
+		}
+		if (line.GetText() != "") 
+			adapter.mac = ToUpper(Trim(line.GetText()));
+		do {
+			data.GoAfter("\n");
+		} while (data[data.GetPos()] == ' ');
+	}
+	return ret;
 }
+
 #endif
 
 /////////////////////////////////////////////////////////////////////
 // Memory Info
-#if defined(PLATFORM_WIN32) 
+
+#if defined(PLATFORM_WIN32)
+
 bool GetMemoryInfo(
 	int &memoryLoad, 			// percent of memory in use		
 	uint64 &totalPhys, 			// physical memory				
@@ -469,9 +513,9 @@ bool GetMemoryInfo(
 	
 	return true;
 }
-#endif
 
-#ifdef PLATFORM_POSIX
+#else
+
 bool GetMemoryInfo(
 int &memoryLoad, 			// percent of memory in use		
 uint64 &totalPhys, 			// physical memory				

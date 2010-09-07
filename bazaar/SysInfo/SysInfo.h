@@ -12,7 +12,16 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 // Gets the real CPU speed in MHz
 int GetCpuSpeed();
 double GetCpuTemperature();
-String GetMacAddress();
+
+struct NetAdapter {
+	String description;
+	String fullname;
+	String mac;
+	String type;
+};
+
+Array <NetAdapter> GetAdapterInfo();
+String GetMacAddress();		// Deprecated
 
 #if defined(PLATFORM_WIN32) 
 bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, 
