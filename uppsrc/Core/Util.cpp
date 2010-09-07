@@ -544,6 +544,9 @@ String Decode64(const String& s)
 
 String HexString(const byte *s, int count, int sep, int sepchr)
 {
+	ASSERT(count >= 0);
+	if(count == 0)
+		return String();
 	StringBuffer b(2 * count + (count - 1) / sep);
 	static const char itoc[] = "0123456789abcdef";
 	int i = 0;
