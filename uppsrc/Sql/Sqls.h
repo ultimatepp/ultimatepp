@@ -23,7 +23,9 @@ class SqlRaw : public String, AssignValueTypeNo<SqlRaw, SQLRAW_V> {
 public:
 	operator Value() const              { return RawValue<SqlRaw>(*this); }
 	SqlRaw(const Value& q)
-		: String(IsString(q) ? String(q) : String(RawValue<SqlRaw>::Extract(q))) {}
+		: String(IsNull(q) ? NULL : 
+		         IsString(q) ? String(q) :
+		         String(RawValue<SqlRaw>::Extract(q))) {}
 	SqlRaw(const String& s) : String(s) {}
 	SqlRaw() {}
 };
