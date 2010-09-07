@@ -1,4 +1,4 @@
-description "a Meter Drawing control, more versatile than the Upp progress stuff\377";
+description "A ProgressBar/Slider/Meter like Control\377";
 
 uses
 	CtrlLib,

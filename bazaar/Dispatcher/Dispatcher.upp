@@ -1,4 +1,4 @@
-description "a templateable object dispatcher class\377";
+description "a generic object dispatcher class\377";
 
 uses
 	Core,
@@ -7,5 +7,6 @@ uses
 file
 	Dispatcher.h,
 	Dispatcher.hpp,
-	Dispatcher.cpp;
+	Dispatcher.cpp,
+	src.tpp;
 

@@ -1,3 +1,5 @@
+description "A small Test for BufferStream, a Vector<byte> based Stream\377";
+
 uses
 	Core,
 	BufferStream;

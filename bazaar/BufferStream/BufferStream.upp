@@ -1,3 +1,5 @@
+description "A Vector<byte> based selfgrowing Stream\377";
+
 uses
 	Core;
 

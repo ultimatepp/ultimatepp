@@ -30,6 +30,14 @@ found&]
 [s3;%% a fancy bar gradient with 2 colors, actually generated and 
 stored in an Image&]
 [s4; &]
+[s5;:CMeter`:`:class: [@(0.0.255) class]_[* CMeter]_:_[@(0.0.255) public]_[*@3 Ctrl]&]
+[s3;%% drawing a user manipulatable bar, can be used as meter, slider, 
+progressbar, in every direction and orientation. additional behaviour: 
+provide steps on which the bar should be changed only. specify 
+some value marks to be drawn aside, with some values/ text. Linear 
+stepping is also available, when provided steps, so you can specify 
+own advancing behaviour. different styles supported.&]
+[s4; &]
 [s1; &]
 [s2;:CMeter`:`:DYNGRADIENT: [@(0.0.255) enum]_[* DYNGRADIENT]&]
 [s3;%% a gradient drawn over currently applied bar&]

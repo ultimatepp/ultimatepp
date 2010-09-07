@@ -1,4 +1,4 @@
-description "Test for Timer package\377";
+description "Test for Timer package, a Timer queue, usable without CtrlCore\377";
 
 uses
 	CtrlLib,

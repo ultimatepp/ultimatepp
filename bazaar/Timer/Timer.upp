@@ -1,3 +1,5 @@
+description "Timer queue, usable without CtrlCore\377";
+
 uses
 	Core;
 

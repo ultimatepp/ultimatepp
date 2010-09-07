@@ -1,3 +1,5 @@
+description "Test Package for the CMeter, a ProgressBar/Slider/Meter like Control\377";
+
 uses
 	CtrlLib,
 	CMeter;

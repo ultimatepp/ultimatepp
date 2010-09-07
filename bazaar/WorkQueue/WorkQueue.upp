@@ -1,4 +1,4 @@
-description "a thread WorkQueue implementation for serializeing off main thread work\377";
+description "A WorkQueue, a single additional Thread, to serially process work in background\377";
 
 uses
 	Core;
