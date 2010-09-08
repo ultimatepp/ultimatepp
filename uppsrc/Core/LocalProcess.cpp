@@ -50,6 +50,7 @@ void LocalProcess::Free() {
 	pid = 0;
 	output_read = false;
 #endif
+	exit_code = Null;
 }
 
 bool LocalProcess::Start(const char *command, const char *envptr)
