@@ -112,7 +112,7 @@ double RulerCtrl::GetRawDelta() const
 void RulerCtrl::FrameLayout(Rect& rc)
 {
 	Rect pos = rc;
-	int wd = (IsVisible() ? width : 0);
+	int wd = (IsShown() ? width : 0);
 	if(IsVert()) {
 		if(IsBottomRight())
 			rc.right = max(rc.left, pos.left = rc.right - wd);
@@ -130,7 +130,7 @@ void RulerCtrl::FrameLayout(Rect& rc)
 
 void RulerCtrl::FrameAddSize(Size& sz)
 {
-	if(IsVisible()) {
+	if(IsShown()) {
 		if(IsVert())
 			sz.cx += width;
 		else
