@@ -754,8 +754,7 @@ bool OCI8Connection::Fetch() {
 	if(parse) return false;
 	if(!dynamic_param.IsEmpty()) // dynamic pseudo-fetch
 		return (dynamic_pos < dynamic_rows && ++dynamic_pos < dynamic_rows);
-	bool tt = session->IsTraceTime();
-	int fstart = tt ? msecs() : 0;
+	int fstart = msecs();
 	sword status = oci8.OCIStmtFetch(stmthp, errhp, 1, OCI_FETCH_NEXT, OCI_DEFAULT);
 	bool ok = false;
 	if(status == OCI_SUCCESS || status == OCI_SUCCESS_WITH_INFO) {
