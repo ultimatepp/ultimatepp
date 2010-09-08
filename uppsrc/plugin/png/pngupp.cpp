@@ -427,9 +427,9 @@ void PNGEncoder::Data::Start(Stream& stream, Size size_, int bpp, ImageKind kind
 //	text_ptr[0].key = "Title";
 //	text_ptr[0].text = "Mona Lisa";
 //	text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
-	#ifdef PNG_iTXt_SUPPORTED
-	text_ptr[0].lang = NULL;
-	#endif
+//	#ifdef PNG_iTXt_SUPPORTED
+//	text_ptr[0].lang = NULL;
+//	#endif
 //	png_set_text(png_ptr, info_ptr, text_ptr, 1);
 
 	/* other optional chunks like cHRM, bKGD, tRNS, tIME, oFFs, pHYs, */

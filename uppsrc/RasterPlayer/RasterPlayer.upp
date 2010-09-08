@@ -1,0 +1,13 @@
+description "Control to show animated .gif and .tiff files\377";
+
+uses
+	plugin\gif,
+	plugin\tif;
+
+file
+	RasterPlayer.h,
+	RasterPlayer.cpp,
+	RasterPlayer.iml,
+	RasterPlayer.usc,
+	Credits.txt;
+
