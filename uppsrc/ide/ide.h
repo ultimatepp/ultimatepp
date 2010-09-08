@@ -683,6 +683,7 @@ public:
 	int       hilite_bracket;
 	int       hilite_ifdef;
 	bool      barline;
+	bool      qtfsel;
 
 	enum { STYLE_NO_REPLACE, STYLE_CONFIRM_REPLACE, STYLE_AUTO_REPLACE };
 

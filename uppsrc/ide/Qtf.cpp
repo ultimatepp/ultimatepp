@@ -104,6 +104,18 @@ void Ide::Qtf()
 {
 	QtfDlg dlg;
 	LoadFromGlobal(dlg, "QTF-designer");
-	dlg.Run();
+	int l,h;
+	bool sel=editor.GetSelection(l,h);
+	if(qtfsel && sel){
+		dlg.text<<=(~editor).ToString().Mid(l,h-l);
+		dlg.copy.SetLabel("Apply and close");
+		dlg.Run();
+		editor.Remove(l,h-l);
+		editor.Insert(l,(~dlg.text).ToString());
+	}
+	else{
+		dlg.copy.SetLabel("Copy and close");
+		dlg.Run();
+	}
 	StoreToGlobal(dlg, "QTF-designer");
 }

@@ -80,7 +80,7 @@ void Ide::ConsolePaste()
 }
 
 void Ide::Serialize(Stream& s) {
-	int version = 16;
+	int version = 17;
 	s.Magic(0x1234);
 	s / version;
 	s % main;
@@ -119,6 +119,8 @@ void Ide::Serialize(Stream& s) {
 	s % hilite_ifdef;
 	if(version >= 16)
 		s % barline;
+	if(version >= 17)
+		s % qtfsel;
 	s % wrap_console_text;
 	s % mute_sounds;
 	s % line_numbers;
@@ -580,6 +582,7 @@ Ide::Ide()
 	hilite_bracket = 1;
 	hilite_ifdef = 1;
 	barline = true;
+	qtfsel = true;
 	hilite_if_endif = false;
 	wrap_console_text = true;
 	mute_sounds = false;
