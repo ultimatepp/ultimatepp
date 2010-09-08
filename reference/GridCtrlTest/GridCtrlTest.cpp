@@ -18,14 +18,6 @@ App::App()
 {
 	CtrlLayout(*this, "Grid Test Panel");
 	
-	testMain.Init();
-	testExcelGrid.Init();
-	testPropertyGrid.Init();
-	testFocusLost.Init();
-	testArrayCtrl.Init();
-
-	panel.Init(testMain.grid);
-	
 	tab.Add(testMain.SizePos(), "Main");
 	tab.Add(testExcelGrid.SizePos(), "Excel grid");
 	tab.Add(testPropertyGrid.SizePos(), "Property grid");
@@ -33,12 +25,22 @@ App::App()
 	tab.Add(testFocusLost.SizePos(), "Focus lost");
 	
 	tab <<= THISBACK(TabChange);
-
 	resort <<= THISBACK(Resort);
 	toxml <<= THISBACK(ToXml);
 	fromxml <<= THISBACK(FromXml);
 	
 	Sizeable().Zoomable();//.BackPaint(!false);	
+}
+
+void App::Init()
+{
+	testMain.Init();
+	testExcelGrid.Init();
+	testPropertyGrid.Init();
+	testFocusLost.Init();
+	testArrayCtrl.Init();
+
+	panel.Init(testMain.grid);	
 }
 
 void App::TabChange()
@@ -60,6 +62,8 @@ void App::Serialize(Stream &s)
 {
 	SerializePlacement(s);
 	s % panel.level;
+	if(s.IsLoading())
+		dlev = ~panel.level;		
 }
 
 void App::Resort()
@@ -83,9 +87,10 @@ void App::FromXml()
 
 GUI_APP_MAIN
 {
+	SetLanguage(LNGC_('E','N','E','N', CHARSET_UTF8));
 	App app;
 	LoadFromFile(app);
-	SetLanguage(LNGC_('E','N','E','N', CHARSET_UTF8));
+	app.Init();
 	app.Run();
 	StoreToFile(app);
 }

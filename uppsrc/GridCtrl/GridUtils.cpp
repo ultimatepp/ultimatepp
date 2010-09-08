@@ -29,7 +29,7 @@ void LogCon(int level, const char *fmt, ...)
 
 void LogGui(const char *fmt, ...)
 {
-	if(!dlog || dlev > 0)
+	if(!dlog)
 		return;
 
 	pos = dlog->GetLength();
