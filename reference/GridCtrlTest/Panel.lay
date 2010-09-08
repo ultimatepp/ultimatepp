@@ -34,13 +34,13 @@ LAYOUT(LookOptionsLayout, 180, 468)
 END_LAYOUT
 
 LAYOUT(NumberLayout, 180, 272)
-	ITEM(EditIntSpin, total_cols, LeftPosZ(4, 44).TopPosZ(4, 20))
+	ITEM(EditIntSpin, total_cols, Min(1).NotNull(true).LeftPosZ(4, 44).TopPosZ(4, 20))
 	ITEM(Label, dv___1, SetLabel(t_("Number of columns")).LeftPosZ(52, 124).TopPosZ(4, 19))
-	ITEM(EditIntSpin, total_rows, LeftPosZ(4, 44).TopPosZ(28, 20))
+	ITEM(EditIntSpin, total_rows, Min(1).NotNull(true).LeftPosZ(4, 44).TopPosZ(28, 20))
 	ITEM(Label, dv___3, SetLabel(t_("Number of rows")).LeftPosZ(52, 124).TopPosZ(28, 19))
-	ITEM(EditIntSpin, fixed_cols, LeftPosZ(4, 44).TopPosZ(52, 20))
+	ITEM(EditIntSpin, fixed_cols, Min(0).NotNull(true).LeftPosZ(4, 44).TopPosZ(52, 20))
 	ITEM(Label, dv___5, SetLabel(t_("Number of fixed columns")).LeftPosZ(52, 124).TopPosZ(52, 19))
-	ITEM(EditIntSpin, fixed_rows, LeftPosZ(4, 44).TopPosZ(76, 20))
+	ITEM(EditIntSpin, fixed_rows, Min(0).NotNull(true).LeftPosZ(4, 44).TopPosZ(76, 20))
 	ITEM(Label, dv___7, SetLabel(t_("Number of fixed rows")).LeftPosZ(52, 124).TopPosZ(76, 19))
 END_LAYOUT
 

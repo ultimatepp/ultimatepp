@@ -79,7 +79,7 @@ struct App : public WithGridPanel<TopWindow>
 	TestArrayCtrl testArrayCtrl;
 	
 	void TabChange();
-			
+	void Init();
 	void Serialize(Stream &s);
 	void Resort();
 	void ToXml();

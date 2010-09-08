@@ -93,7 +93,6 @@ void TestMain::Init()
 	grid.SetToolBar();
 	grid.Dragging();
 	grid.SetCursor(0);
-	grid.RemoveHides();
 	grid.DrawFocus();
 	grid.AddColumn().WrapText();	
 	grid.SetCtrl(0, 0, ei);

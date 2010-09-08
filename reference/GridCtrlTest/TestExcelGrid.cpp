@@ -12,7 +12,7 @@ void TestExcelGrid::Init()
 	
 	grid.SelectRow(false);
 	grid.SetRowCount(200);
-	grid.ResizeColMode(1);
+	grid.ResizePaintMode(1);
 	grid.Absolute();
 	grid.Clipboard();
 }

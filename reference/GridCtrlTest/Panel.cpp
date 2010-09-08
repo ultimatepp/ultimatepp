@@ -95,12 +95,12 @@ Panel::Panel()
 		
 	level.Add(0, "All")
 	     .Add(1, "1")
-	     .Add(2, "2");
+	     .Add(2, "2")
+	     .Add(3, "3");
 	     
 	level <<= 0;
 	
 	dlog = &log0;
-	//dlev = &level;	
 }
 
 void Panel::Init(GridCtrl& g)
@@ -117,10 +117,12 @@ void Panel::Init(GridCtrl& g)
 	lookopt.vgrid             <<= grid->vert_grid;
 	lookopt.resizing_cols     <<= grid->resizing_cols;
 	lookopt.resizing_rows     <<= grid->resizing_rows;
+	lookopt.live_cursor       <<= grid->live_cursor;
 	lookopt.moving_cols       <<= grid->moving_cols;
 	lookopt.moving_rows       <<= grid->moving_rows;
 	lookopt.full_col_resizing <<= grid->full_col_resizing;
 	lookopt.full_row_resizing <<= grid->full_row_resizing;
+	lookopt.disable           <<= !grid->IsEnabled();
 	lookopt.chameleon         <<= grid->chameleon;
 	lookopt.draw_focus        <<= grid->draw_focus;
 	
@@ -226,9 +228,9 @@ void Panel::Actions(int n)
 		}
 		case 1:
 		{
-			int cnt = grid->GetTotalCount();
+			int cnt = grid->total_rows;
 			if(cnt < numsopt.total_rows)
-				grid->Append(numsopt.total_rows - cnt + 1);
+				grid->Append(numsopt.total_rows - cnt);
 			else
 				grid->RemoveLast(cnt - numsopt.total_rows);
 			break;
