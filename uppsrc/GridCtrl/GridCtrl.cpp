@@ -1919,6 +1919,13 @@ void GridCtrl::MouseMove(Point p, dword keyflags)
 			int px = pt.x + 15;
 			int py = pt.y + GD_ROW_HEIGHT;
 
+			popup.gd = display;
+			popup.gd->row = 0;
+			popup.gd->col = 0;
+			popup.fg = SColorText;
+			popup.bg = SColorPaper;
+			popup.fnt = StdFont();
+			popup.style = 0;
 			popup.PopUp(this, px, py, GetTextSize((String) popup.val, StdFont()).cx + 10, GD_ROW_HEIGHT);
 			SetFocus();
 
