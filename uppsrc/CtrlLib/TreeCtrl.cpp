@@ -830,7 +830,7 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 
 void TreeCtrl::SyncInfo()
 {
-	if(IsShutdown())
+	if(IsShutdown() || IsPainting())
 		return;
 	if((HasMouse() || info.HasMouse()) && popupex) {
 		Size sz = GetSize();
