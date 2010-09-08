@@ -347,6 +347,7 @@ void Ide::SetupFormat() {
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
 		(edt.showtabs, show_tabs)
 		(edt.barline, barline)
+		(edt.qtfsel, qtfsel)
 		(ide.tabs_icons, tabs_icons)
 		(ide.tabs_crosses, tabs_crosses)
 		(ide.tabs_grouping, tabs_grouping)
