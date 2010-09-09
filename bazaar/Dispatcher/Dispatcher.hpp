@@ -192,7 +192,7 @@ template<class T>
 Callback1<const T &> DispatcherCB<T>::GetDispatchable(unsigned key)
 {
 	int i = dests.Find(key);
-	if(i<0) return;
+	if(i<0) return Callback1<const T &>();
 	Callback1<const T &> & dest = dests.operator[](i);
 	return dest;
 }

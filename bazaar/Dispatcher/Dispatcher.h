@@ -99,7 +99,7 @@ public:
 	void Unregister(unsigned key);
 	Callback1<const T &> GetDispatchable(unsigned key);
 	const VectorMap<unsigned, Callback1<const T &> > & GetDests() const { return dests; }
-	void Clear() { while(dests.GetCount()>0) dests[0].Unregister(); }
+	void Clear() { dests.Clear(); }
 
 private:
 	VectorMap<unsigned, Callback1<const T &> > dests;	
@@ -125,6 +125,27 @@ public:
 
 private:
 	Vector<Any> dests;	//now does store the different DispatcherCB<T>
+};
+
+
+class Dispatcher0
+	: public EnableOption<>
+{
+public:
+	typedef Dispatcher0 CLASSNAME;
+	Dispatcher0();
+	virtual ~Dispatcher0();
+
+	void DoDispatch() const;
+
+	void Register(Callback d, unsigned key);
+	void Unregister(unsigned key);
+	Callback GetDispatchable(unsigned key);
+	const VectorMap<unsigned, Callback> & GetDests() const { return dests; }
+	void Clear() { dests.Clear(); }
+
+private:
+	VectorMap<unsigned, Callback> dests;	
 };
 
 #endif
