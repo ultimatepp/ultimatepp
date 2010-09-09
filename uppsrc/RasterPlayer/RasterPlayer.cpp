@@ -38,6 +38,7 @@ RasterPlayer::RasterPlayer() {
 	running = 0;
 	kill = 1;
 	speed = 1;
+	mt = false;
 }
 
 void RasterPlayer::Paint(Draw& w) {
@@ -78,7 +79,7 @@ bool RasterPlayer::LoadBuffer(const String &buffer) {
 		case 1:
 		case 2:	iw.DrawRect(r, White());
 				break;
-		//case 2: iw.DrawRect(sz, White());		// It seems files do no comply with standard
+		//case 2: iw.DrawRect(sz, White());	  // It seems gif files do not comply with standard
 		//		break;
 		case 4:	if (i > 0) 
 					previous = ::GetRect(images[i-1], r);
@@ -98,6 +99,7 @@ bool RasterPlayer::Load(const String &fileName) {
 	return LoadBuffer(LoadStream(in));
 }
 
+#ifdef _MULTITHREADED
 void RasterPlayerThread(RasterPlayer *animatedClip) {
 	TimeStop t;
 	dword tFrame = 0;
@@ -108,13 +110,27 @@ void RasterPlayerThread(RasterPlayer *animatedClip) {
 				ind = 0;
 			tFrame += dword(animatedClip->delays[ind]/animatedClip->speed);
 		}
-		while (t.Elapsed() < tFrame)
+		while (t.Elapsed() < tFrame && !animatedClip->kill)
 			Sleep(10);
 		PostCallback(callback(animatedClip, &RasterPlayer::NextFrame));
 	}
 	INTERLOCKED_(mutex) {
 		animatedClip->running = false;
 	}
+}
+#endif
+
+void RasterPlayer::TimerFun() {
+	if (kill || !running)
+		return;
+
+	if (tTime.Elapsed() < tFrame)
+		return;	 
+	int iFrame = ind+1;
+	if (iFrame > GetPageCount()-1)
+		iFrame = 0;
+	tFrame += dword(delays[iFrame]/speed);
+	NextFrame();
 }
 
 void RasterPlayer::Play() {
@@ -124,15 +140,44 @@ void RasterPlayer::Play() {
 		running = true;
 		kill = false;
 	}
-	Thread().Run(callback1(RasterPlayerThread, this));
+#ifdef _MULTITHREADED
+	if (mt)
+		Thread().Run(callback1(RasterPlayerThread, this));
+	else
+#endif
+	{
+		tFrame = 0;
+		tTime.Reset();
+		SetTimeCallback(-50, callback(this, &RasterPlayer::TimerFun), 1);
+	}
 }
 
 void RasterPlayer::Stop() {
 	INTERLOCKED_(mutex) {
         kill = true;
     }
-	while (running)
-		Sleep(10);	
+#ifdef _MULTITHREADED
+	if (mt) {
+		while (running)
+			Sleep(10);	
+	} else 
+#endif
+	{
+		KillTimeCallback(1);
+		running = false;
+	}
+}
+
+RasterPlayer& RasterPlayer::SetMT(bool _mt)	{
+	bool wasrunning;
+	INTERLOCKED_(mutex) {
+		wasrunning = running;
+	}
+	Stop(); 
+	mt = _mt; 
+	if (wasrunning)
+		Play();
+	return *this;
 }
 
 RasterPlayer::~RasterPlayer() {

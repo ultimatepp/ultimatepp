@@ -1,5 +1,5 @@
-#ifndef _AnimatedClip_AnimatedClip_h_
-#define _AnimatedClip_AnimatedClip_h_
+#ifndef _RasterPlayer_RasterPlayer_h_
+#define _RasterPlayer_RasterPlayer_h_
 
 #include <CtrlLib/CtrlLib.h>
 
@@ -14,7 +14,12 @@ private:
 	int ind;
 	Color background;
 	double speed;
-	
+	bool mt;
+		
+	TimeStop tTime;
+	dword tFrame;
+
+
 public:
 	RasterPlayer();
 	~RasterPlayer();
@@ -28,6 +33,7 @@ public:
 	inline void NextPage() {NextFrame();};
 	RasterPlayer& SetBackground(Color c)	{background = c; Refresh(); return *this;}
 	RasterPlayer& SetSpeed(double s = 1)	{speed = s; Refresh(); return *this;}
+	RasterPlayer& SetMT(bool _mt = false);
 	
 	Callback WhenShown;
 	
@@ -35,9 +41,12 @@ public:
 	int GetFrameCount() {return images.GetCount();};	
 	int GetPage() 		{return ind;};
 	void SetPage(int i) {ind = minmax(i, 0, images.GetCount());};
-
+	
+#ifdef _MULTITHREADED	
 	friend void RasterPlayerThread(RasterPlayer *animatedClip);
-
+#endif	
+	void TimerFun();
+	
 protected:
 	volatile Atomic running, kill;
 };

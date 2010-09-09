@@ -5,8 +5,8 @@ uses
 	plugin\tif;
 
 file
-	RasterPlayer.h,
 	RasterPlayer.cpp,
+	RasterPlayer.h,
 	RasterPlayer.iml,
 	RasterPlayer.usc,
 	Credits.txt;
