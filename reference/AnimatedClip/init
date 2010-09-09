@@ -1,0 +1,7 @@
+#ifndef _AnimatedClip_icpp_init_stub
+#define _AnimatedClip_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\tif/init"
+#include "plugin\gif/init"
+#include "RasterPlayer/init"
+#endif

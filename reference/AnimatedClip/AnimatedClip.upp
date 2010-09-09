@@ -1,0 +1,19 @@
+description "Multi image formats (GIF and TIFF) demo using RasterPlayer\377";
+
+uses
+	CtrlLib,
+	plugin\tif,
+	plugin\gif,
+	RasterPlayer;
+
+file
+	AnimatedClip.h,
+	main.cpp,
+	AnimatedClip.lay,
+	AnimatedClip.brc,
+	Credits.txt;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI MT";
+
