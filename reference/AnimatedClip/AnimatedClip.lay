@@ -1,0 +1,18 @@
+LAYOUT(AnimatedClipLayout, 540, 280)
+	ITEM(RasterPlayer, clip, SetFrame(InsetFrame()).HSizePosZ(8, 8).VSizePosZ(96, 32))
+	ITEM(Label, openedPage, SetLabel(t_("0")).LeftPosZ(204, 24).TopPosZ(68, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Opened Page:")).LeftPosZ(132, 68).TopPosZ(68, 19))
+	ITEM(Label, numberPages, SetLabel(t_("1")).LeftPosZ(100, 24).TopPosZ(68, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Number of Pages:")).LeftPosZ(8, 88).TopPosZ(68, 19))
+	ITEM(EditString, fileName, HSizePosZ(68, 232).TopPosZ(40, 19))
+	ITEM(Button, openNext, SetLabel(t_("Open Next")).RightPosZ(164, 64).TopPosZ(68, 20))
+	ITEM(Button, stop, SetLabel(t_("Stop")).RightPosZ(232, 36).TopPosZ(68, 20))
+	ITEM(Button, play, SetLabel(t_("Play")).RightPosZ(272, 36).TopPosZ(68, 20))
+	ITEM(Button, browse, SetLabel(t_("Browse")).RightPosZ(164, 64).TopPosZ(40, 20))
+	ITEM(Label, dv___10, SetLabel(t_("Load and animate GIF and TIFF files")).HSizePosZ(8, 84).TopPosZ(8, 19))
+	ITEM(Label, dv___11, SetLabel(t_("Image file:")).LeftPosZ(8, 56).TopPosZ(40, 19))
+	ITEM(RasterPlayer, earth, RightPosZ(12, 52).TopPosZ(8, 52))
+	ITEM(RasterPlayer, arrows, SetSpeed(2).HSizePosZ(8, 8).BottomPosZ(8, 20))
+	ITEM(Switch, numThreads, SetLabel(t_("Single thread\nMultithreaded")).RightPosZ(68, 88).VSizePosZ(56, 192))
+END_LAYOUT
+
