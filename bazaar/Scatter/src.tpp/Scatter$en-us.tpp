@@ -27,6 +27,36 @@ ool]_[*@3 saveAsMetafile]_`=_[@(0.0.255) false])&]
 sent to clipboard.&]
 [s3;%% &]
 [s4; &]
+[s5;:Scatter`:`:GetXByPoint`(const int`): [@(0.0.255) double]_[* GetXByPoint]([@(0.0.255) c
+onst]_[@(0.0.255) int]_[*@3 x])&]
+[s2;%% Gets the X coordinate in data units from value [%-*@3 x ]in 
+screen pixels inside Ctrl.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:GetYByPoint`(const int`): [@(0.0.255) double]_[* GetYByPoint]([@(0.0.255) c
+onst]_[@(0.0.255) int]_[*@3 y])&]
+[s2;%% Gets the Y coordinate in data units from value [%-*@3 y ]in 
+screen pixels inside Ctrl.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:GetY2ByPoint`(const int`): [@(0.0.255) double]_[* GetY2ByPoint]([@(0.0.255) c
+onst]_[@(0.0.255) int]_[*@3 y])&]
+[s2;%% Gets the Y2 coordinate in data units from value [%-*@3 y ]in 
+screen pixels inside Ctrl.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:GetXPointByValue`(const double`): [@(0.0.255) double]_[* GetXPointByValue
+]([@(0.0.255) const]_[@(0.0.255) double]_[*@3 x])&]
+[s2;%% Gets the horizontal position in pixels  inside Ctrl for a 
+value [%-*@3 x ]in data units.&]
+[s3;%% &]
+[s4; &]
+[s5;:Scatter`:`:GetYPointByValue`(const double`): [@(0.0.255) double]_[* GetYPointByValue
+]([@(0.0.255) const]_[@(0.0.255) double]_[*@3 y])&]
+[s2;%% Gets the vertical position in pixels inside Ctrl for a value 
+[%-*@3 y ]in data units.&]
+[s3;%% &]
+[s4; &]
 [s5;:Scatter`:`:SetRange`(double`,double`,double`): [_^Scatter^ Scatter][@(0.0.255) `&]_[* S
 etRange]([@(0.0.255) double]_[*@3 rx], [@(0.0.255) double]_[*@3 ry], 
 [@(0.0.255) double]_[*@3 ry2]_`=_`-[@3 1])&]

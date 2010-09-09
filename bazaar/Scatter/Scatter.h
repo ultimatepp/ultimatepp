@@ -203,7 +203,13 @@ public:
 	Font& GetTitleFont() {return titleFont;};
 	int GetH_Border() {return px;};
 	int GetV_Border() {return py;};
-
+	
+	double GetXByPoint(const int x);
+	double GetYByPoint(const int y);
+	double GetY2ByPoint(const int y);
+	double GetXPointByValue(const double x);
+	double GetYPointByValue(const double y);
+		
 private:
 	class ::Color graphColor;	
 	String title;

@@ -873,7 +873,30 @@ void Scatter::SaveToClipboard(bool)
 
 #endif
 
+double Scatter::GetXByPoint(const int x) 
+{
+	return (x-GetH_Border())*GetXRange()/(GetSize().cx-2*GetH_Border()-1)+GetXMin();		
+}
 
+double Scatter::GetYByPoint(const int y) 
+{
+	return (GetSize().cy-GetV_Border()-y-1)*GetYRange()/(GetSize().cy-2*GetV_Border()-GetTitleFont().GetHeight()-1)+GetYMin();
+}
+
+double Scatter::GetY2ByPoint(const int y) 
+{
+	return (GetSize().cy-GetV_Border()-y-1)*GetY2Range()/(GetSize().cy-2*GetV_Border()-GetTitleFont().GetHeight()-1)+GetYMin2();
+}
+
+double Scatter::GetXPointByValue(const double x) 
+{
+	return (x-GetXMin())/GetXRange()*(GetSize().cx-2*GetH_Border()-1)+GetH_Border();
+}
+
+double Scatter::GetYPointByValue(const double y) 
+{
+	return (GetSize().cy-GetV_Border()-1)-(y-GetYMin())/GetYRange()*(GetSize().cy-2*GetV_Border()-GetTitleFont().GetHeight()-1);
+}
 
 void Scatter::Paint(Draw& w) 
 {
