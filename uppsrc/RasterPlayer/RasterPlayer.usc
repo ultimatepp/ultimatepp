@@ -7,6 +7,7 @@ ctrl RasterPlayer {
 	Frame 	SetFrame @1;
 	Color	SetBackground;
 	int		SetSpeed = 1;
+	bool	SetMT = 0;
 
 	Paint(w) {
 		r = GetRect();
@@ -21,6 +22,6 @@ ctrl RasterPlayer {
 		img = "RasterPlayer:RasterPlayer.iml:clip";
 
 		s = min(min(r.right-r.left, r.bottom-r.top)-1, 150);
-		w.DrawImage(r.left, r.top, r.left+s, r.top+s, img);
+		w.DrawImage(r.left+(sz.cx-s)/2, r.top+(sz.cy-s)/2, r.left+s, r.top+s, img);
 	}
 }

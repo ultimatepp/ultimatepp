@@ -169,6 +169,9 @@ void RasterPlayer::Stop() {
 }
 
 RasterPlayer& RasterPlayer::SetMT(bool _mt)	{
+#ifndef _MULTITHREADED
+	return *this;
+#endif
 	bool wasrunning;
 	INTERLOCKED_(mutex) {
 		wasrunning = running;
