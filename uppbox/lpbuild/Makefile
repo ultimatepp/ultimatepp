@@ -167,8 +167,14 @@ ifneq ($(skip-parse),y)
 flags:=$(sort $(FLAGS) $(PLATFORM))
 CINC:=$(foreach d,$(NESTS) $(INCPATHS), -I$d) -I/usr/include/freetype2 -I/usr/include/gtk-2.0 -I/usr/local/include/gtk-2.0 -I/usr/include/glib-2.0 -I/usr/local/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/local/lib/glib-2.0/include -I/usr/lib/gtk-2.0/include -I/usr/local/lib/gtk-2.0/include -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/X11R6/include -I/usr/X11R6/include/freetype2 -I/usr/X11R6/include/gtk-2.0 -I/usr/X11R6/include/glib-2.0 -I/usr/X11R6/lib/glib-2.0/include -I/usr/X11R6/lib/gtk-2.0/include -I/usr/X11R6/include/cairo -I/usr/X11R6/include/pango-1.0 -I/usr/X11R6/include/atk-1.0 -I/usr/local/include/cairo -I/usr/local/include/pango-1.0 -I/usr/local/include/atk-1.0 -I/usr/local/include -I/usr/local/include/libpng
 LIBPATH:=$(foreach d,$(LIBPATHS), -L$d) -L/usr/X11R6/lib -L/usr/lib -L/usr/local/lib
-needed-dirs:=$(dir $(BINPREFIX))
-
+needed-dirs:=
+begin-group:=-Wl,--start-group
+end-group:=-Wl,--end-group
+# MacOsX specific things
+ifeq ($(filter $(PLATFORM),DARWIN),DARWIN)
+begin-group:=
+end-group:=
+endif
 # Return true, if package $2 is to be compiled with flag $1
 has-flag=$(filter $1,$2)
 #Join array with "_"
@@ -176,8 +182,14 @@ concatenate=$(strip $(if $1,$(if $(filter $(words $1),1),$1,\
      $(firstword $1)_$(call concatenate,$(wordlist 2,$(words $1),$1)))))
 # Return output directory for .o files, based on pkg name and flags
 objdir=$(OBJDIR)/$1/$(call concatenate,$($1_FLAGS))
-# add directory of file $2 to the list of required directories
-needs-dir=needed-dirs+= $(dir $2)
+# prepare output directories targets
+define create-dir
+needed-dirs+= $1
+$1:
+	$(call echo,"  Creating directory $1 ...")
+	$Mmkdir -p $1
+endef
+needs-dir=$(if $(filter $(needed-dirs),$1),,$(eval $(call create-dir,$1))) $1
 # get dependencies recursively
 get-deps=$(sort $1 $(foreach p,$($1_USES),$(call get-deps,$p)))
 
@@ -188,11 +200,16 @@ analyze-info=$(if $S,,  Analyzing $1 dependencies ...)
 includes-fetcher-c=$(info $(analyze-info))$(CC) -M -x c $(CXXFLAGS)
 includes-fetcher-cpp=$(info $(analyze-info))$(CC) -M -x c++ $(CFLAGS)
 
-# general target scheme (args:{deps,target,pkg,lang,flags})
+# file counting utilities for progress reports
+C:=$(OBJDIR)/.make_counter
+incrementor:=while ! ln -s -T '$C' '$C_lock' 2>/dev/null;do true; done; echo -n $$$$(($$$$(cat '$C')+1))>'$C';cat '$C'; rm $C_lock;
+counter-beg:=c=0; for f in 
+counter-end:=; do [ -e $$f ] && c=$$(($$c+1)); done; echo $$c;
+
+# general target scheme (args:{deps,target,pkg,lang,flags}
 define compile
-$(eval $(needs-dir))
-$(if $F,$2: $($3_NEST)/$1,$(dir $2)$(shell $(includes-fetcher-$4) $(CINC) $($3_MACRO) $($3_NEST)/$1 |tr -d '\\\\'))
-	$(call echo,"    Compiling $1 $Lflags $(strip $($3_FLAGS))$R ...") 
+$2: $(if $F,$($3_NEST)/$1,$(dir $2)$(shell $(includes-fetcher-$4) $5 $(CINC) $($3_MACRO) $($3_NEST)/$1 |tr -d '\\\\' | sed 's/^[^:]*://')) $(call needs-dir,$(dir $2))
+	$(call echo,"    Compiling $1 $Lflags $(strip $($3_FLAGS))$R ["`$(incrementor)`"/$(file-num)] ...") 
 	$M$(compiler-$4) $5 $(CINC) $($3_MACRO) $($3_NEST)/$1 -o $2
 $(EMPTYLINE)
 endef
@@ -247,7 +264,7 @@ define build
 $(eval $1_OBJFILES:=$(foreach f,$($1_FILES_CPP) $($1_FILES_CPP_SPEED) $($1_FILES_CPP_SIZE) $($1_FILES_C) $($1_FILES_C_SPEED) $($1_FILES_C_SIZE),$($1_OBJDIR)/$(basename $f).o))
 $(eval $1_IOBJFILES:=$(foreach f,$($1_FILES_ICPP) $($1_FILES_ICPP_SPEED) $($1_FILES_ICPP_SIZE),$($1_OBJDIR)/$(basename $f).io))
 
-$($1_OBJDIR)/$(notdir $1.a): $($1_IOBJFILES) $($1_OBJFILES)
+$($1_OBJDIR)/$(notdir $1.a): $($1_OBJFILES)
 	$(call echo,"    Creating archive $$@ ...")
 	$M$(AR) $$@ $($1_OBJFILES)
 
@@ -258,15 +275,11 @@ endef
 define link
 $(eval ARCHIVES:=$(strip $(foreach u,$(ALLDEPS),$($u_IOBJFILES)) $(foreach u,$(ALLDEPS),$($u_OBJDIR)/$(notdir $u.a))))
 $(eval ALLLIBS:=$(sort $(foreach u,$(ALLDEPS),$(foreach l,$($u_LIBS), -l$l))))
-$(eval file-num=$(words $(foreach d,$(ALLDEPS), $($d_OBJFILES) $(IOBJFILES))))
+$(shell mkdir -p $(OBJDIR);rm -f $C_lock; echo -n `$(counter-beg) $(sort $(IOBJFILES) $(foreach u,$(ALLDEPS),$($u_OBJFILES))) $(counter-end)` > '$C')
 
-prep-dirs:
-	$(call echo,"  Preparing output directory structure ...")
-	$Mmkdir -p $(sort $(needed-dirs))
-
-$(BINPREFIX)$1$(BINEXT): $(ARCHIVES)
+$(BINPREFIX)$1$(BINEXT): $(ARCHIVES) $(call needs-dir,$(dir $(BINPREFIX)))
 	$(call echo,"  Linking $$@ ...")
-	$M$(CXX) -o $$@ $(if $(call has-flag,ALLSHARED,$($1_FLAGS)),-shared,$(if $(call has-flag,STATIC,$1),-static,)) $(LIBPATH) $(LDFLAGS) -Wl,--start-group $(ARCHIVES) $(ALLLIBS) -Wl,--end-group
+	$M$(CXX) -o $$@ $(if $(call has-flag,ALLSHARED,$($1_FLAGS)),-shared,$(if $(call has-flag,STATIC,$1),-static,)) $(LIBPATH) $(LDFLAGS) $(begin-group) $(ARCHIVES) $(ALLLIBS) $(end-group)
 endef
 
 endif # single-package
@@ -277,7 +290,7 @@ define make-pkg
 $1:
 	$(if $(call confirm,$(SIMULATE)),@echo -n "SIMULATE: ";,)
 	$(if $(call confirm,$(SIMULATE)),,$M)+-\
-      $(MAKE) -f $(filename) $(if $(JOBS),-j$(JOBS) ,)--no-p PKG=$1 single-package=y $(foreach v,$(cmdline-vars),$(call pass-var,$v))
+      $(MAKE) -Rrf $(filename) $(if $(JOBS),-j$(JOBS) ,)--no-p PKG=$1 single-package=y $(foreach v,$(cmdline-vars),$(call pass-var,$v))
 endef
 
 .PHONY: default
@@ -285,12 +298,12 @@ default: all
 
 # create targets for the main tasks
 define main-targets
-.PHONY: all start prep-dirs export
+.PHONY: all start export
 
 all: $(if $(single-package),start $(BINPREFIX)$(PKG)$(BINEXT),$(PKG))
 	$(call echo,"$(if $(single-package),  Package $(PKG),Everything) done.")
 
-start: prep-dirs
+start:
 	$(call echo,"  Building package $(PKG)$(if $($(PKG)_DESC), [$($(PKG)_DESC)],) ($(file-num) files in $(words $(ALLDEPS)) packages, flags: $($(PKG)_FLAGS))")
 endef
 
@@ -301,7 +314,7 @@ define export-pkg
 export_$1:
 	$(if $(call confirm,$(SIMULATE)),@echo -n "SIMULATE: ";,)
 	$(if $(call confirm,$(SIMULATE)),,$M)+-\
-      $(MAKE) -f $(filename) --no-p -r single-package=y "EXPORT=$(EXPORT).$(subst /,_,$1)" PKG=$1 $(foreach v,$(cmdline-vars),$(call pass-var,$v)) export
+      $(MAKE) -rRf $(filename) --no-p single-package=y "EXPORT=$(EXPORT).$(subst /,_,$1)" PKG=$1 $(foreach v,$(cmdline-vars),$(call pass-var,$v)) export
 endef
 
 # create targets for help, clean up, export and developper targets
@@ -334,18 +347,21 @@ endef
 ifeq ($(words $(strip $(PKG))),1)
 define export-targets
 export:
-	$(call echo,"  Exporting makefile to $(EXPORT) ...")
-	$M$(MAKE) -f $(filename) -p -q -B -r "PKG=$(PKG)" exporting=y $(foreach v,$(cmdline-vars),$(call export-var,$v)) \
-                |$(AWK) 'BEGIN{c=0;print ".PHONY:default";print "default: all";}{if(c==1&&substr($$$$0,0,1)!="#"){print $$$$0;}if(c==0&&$$$$0!="# Files"){next;}else{c=1;}}' \
-                |sed -n '1h;1!H;$$$${g;:d;s/[^\x0A\x0D]*:[\x0A\x0D][\x0A\x0D]*\([^\t]\)/\1/;t d;p;}'\
-                > '$(EXPORT)'
+	$(call echo,"  Exporting makefile for package $(PKG) to $(EXPORT) ...")
+	$Mecho ".PHONY:default" > $(EXPORT)
+	$Mecho "default: all" >>  $(EXPORT)
+	$M$(MAKE) -RrpqBf $(filename) default "PKG=$(PKG)" single-package=y exporting=y $(foreach v,$(cmdline-vars),$(call export-var,$v)) \
+        |sed -n '/^. Files/,$$$${/^[\x23]/!{/.c[p]*:$$$$/!H}};$$$${g;p;}'\
+        >> '$(EXPORT)'
+#        |sed -n '/^. Files/,$$$${/^[\x23]/!{/:$$$$/!H}};$$$${g;p;}'\
+
 endef
 else
 define export-targets
 export: $(foreach p,$(PKG),$(eval $(call export-pkg,$p)) export_$p)
 	$(call echo,"Exporting control makefile to $(EXPORT)")
-	$Mecho all:>'$(EXPORT)'
-	$Mecho "	$M+-$(foreach p,$(PKG),make --no-p -f $(EXPORT).$(subst /,_,$p); )">>'$(EXPORT)'
+	$Mecho -n all:>'$(EXPORT)'
+	$Mecho -n "$(foreach p,$(PKG),\n	$M+-$(MAKE) --no-p -f $(EXPORT).$(subst /,_,$p);)">>'$(EXPORT)'
 endef
 endif
 
@@ -357,7 +373,12 @@ ifneq ($(skip-parse),y)
 ifeq ($(single-package),y)
 
 # Parse the upp files
+JOBS:=$(strip $(JOBS))
+ifeq ($(JOBS),1)
+$(if $S,,$(info Using 1 parallel job ...))
+else
 $(if $S,,$(info Using $(JOBS) parallel jobs ...))
+endif
 $(if $S,,$(info Parsing package files needed for $(PKG) ...))
 ifeq ($(PARSER),)
 $(eval $(shell sed -n 's/^#://p;' $(filename) | sh -s '$(PKG)' '$(NESTS)' '$(flags)'))
@@ -366,6 +387,7 @@ $(eval $(shell sh $(PARSER) '$(PKG)' '$(NESTS)' '$(flags)'))
 endif
 $(eval $(PKG)_FLAGS+=MAIN)
 $(eval ALLDEPS:=$(call get-deps,$(PKG)))
+$(eval file-num:=$(words $(foreach p,$(ALLDEPS),$($p_FILES_CPP) $($p_FILES_ICPP) $($p_FILES_C) $($p_FILES_CPP_SPEED) $($p_FILES_ICPP_SPEED) $($p_FILES_C_SPEED) $($p_FILES_CPP_SIZE) $($p_FILES_ICPP_SIZE) $($p_FILES_C_SIZE))))
 $(foreach p,$(ALLDEPS),$(eval $(call prep,$p)))
 
 endif # single-package
@@ -387,7 +409,7 @@ $(eval $(additional-targets))
 $(eval $(export-targets))
 endif
 
-# Everything below this line is shell script used to parse .upp files
+# Everything marked with '#:' is a shell script used to parse .upp files
 #:NESTS="$2"
 #:FLAGS="$3"
 #:
