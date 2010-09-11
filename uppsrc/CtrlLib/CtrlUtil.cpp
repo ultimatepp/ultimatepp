@@ -18,7 +18,7 @@ void Animate(Ctrl& c, const Rect& target, int type)
 	int anitime = 150;
 	if(type)
 		for(;;) {
-			dword t = (GetTickCount() - time0);
+			int t = int(GetTickCount() - time0);
 			if(t > anitime)
 				break;
 			if(type == GUIEFFECT_SLIDE) {
@@ -35,29 +35,11 @@ void Animate(Ctrl& c, const Rect& target, int type)
 				   r.right = (r.left + ((r.GetWidth() - target.GetWidth()) * t) / anitime);
 				if(r.GetHeight() > target.GetHeight())
 				   r.bottom = (r.top + ((r.GetHeight() - target.GetHeight()) * t) / anitime);
-#if 0
-				int q = 25 * t / 200;
-				q *= max(q - 10, 1);
-				if(r.left > target.left)
-					r.left = max(r.left - q, target.left);
-				if(r.top > target.top)
-					r.top = max(r.top - q, target.top);
-				if(r.right < target.right)
-					r.right = min(r.right + q, target.right);
-				if(r.bottom < target.bottom)
-					r.bottom = min(r.bottom + q, target.bottom);
-				if(r.GetWidth() > target.GetWidth())
-					r.right = r.left + target.GetWidth();
-				if(r.GetHeight() > target.GetHeight())
-					r.bottom = r.top + target.GetHeight();
-				if(r == target)
-					break;
-#endif
 				c.SetRect(r);
 			}
 			else
 			if(type == GUIEFFECT_FADE)
-				c.SetAlpha((byte)(255 * t / 120));
+				c.SetAlpha((byte)(255 * t / anitime));
 			else
 				break;
 			c.Sync();

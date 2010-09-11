@@ -352,3 +352,11 @@ String UpdateGetDir();
 void UpdateFile(String dst, String src);
 
 void MemoryProfileInfo();
+
+struct sPaintRedirectCtrl : Ctrl {
+	Ctrl *ctrl;
+	
+	virtual void Paint(Draw& w) {
+		ctrl->Paint(w);
+	}
+};
