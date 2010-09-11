@@ -3,7 +3,7 @@
 
 using namespace Upp;
 
-Image GetRect(const Image& orig, const Rect &r) {
+Image GetRect_(const Image& orig, const Rect &r) {
 	if(r.IsEmpty())
 		return Image();
 	ImageBuffer ib(r.GetSize());
@@ -82,7 +82,7 @@ bool RasterPlayer::LoadBuffer(const String &buffer) {
 		//case 2: iw.DrawRect(sz, White());	  // It seems gif files do not comply with standard
 		//		break;
 		case 4:	if (i > 0) 
-					previous = ::GetRect(images[i-1], r);
+					previous = ::GetRect_(images[i-1], r);
 				iw.DrawRect(sz, White());
 				break;
 		}
