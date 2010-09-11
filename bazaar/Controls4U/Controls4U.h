@@ -67,18 +67,20 @@ typedef EditFileFolder CLASSNAME;
 protected:
 	FrameLeft<Button> butBrowse, butLeft, butRight, butUp;
 	FrameRight<Button> butGo;
-	bool Key(dword key, int rep);
 	
 	FileSel fs;
 	bool isFile, isLoad;
 	String title;
+	
+	Vector <String> history;
+	int histInd;
 	
 public:
 	EditFileFolder() 								{Init();};
 	void Init();
 	void DoLeft(), DoRight(), DoUp();
 	void DoBrowse();
-	void DoGo();
+	void DoGo(bool add = true);
 	void Type(const char *name, const char *ext)	{fs.Type(name, ext);};
 	void AllFilesType()								{fs.AllFilesType();};
 	void ActiveDir(const String& d) 				{fs.ActiveDir(d);};
@@ -86,7 +88,7 @@ public:
 	String Get() const                           	{return GetData();};	
 	String operator~() const                     	{return Get();};
 	operator String() const                      	{return Get();}
-	void Set(const String& s)						{fs.Set(s); SetData(s);};
+	void Set(const String& s)						{fs.Set(s); /*SetData(s);*/};
 	void operator<<=(const String& s)            	{Set(s);};
 	void operator=(const String& s)              	{Set(s);};
 	bool IsEmpty()									{return GetData().IsNull();};
@@ -96,6 +98,7 @@ public:
 	EditFileFolder &UseHistory(bool use);
 	EditFileFolder &UseUp(bool use);
 	EditFileFolder &UseBrowse(bool use);
+	virtual void SetData(const Value& data);
 	//void Xmlize(XmlIO xml);
 	
 	Callback WhenChange;

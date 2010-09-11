@@ -16,18 +16,23 @@ void EditFileFolder::Init() {
 	//EditString::AddFrame(butRight);
 	//EditString::AddFrame(butUp);
 	EditString::AddFrame(butBrowse);
-	butBrowse.SetImage(CtrlImg::right_arrow());
+	WhenEnter = THISBACK1(DoGo, true);
+	butBrowse.SetImage(CtrlImg::Dir());//right_arrow());
 	butBrowse <<= THISBACK(DoBrowse);
 	butLeft.SetImage(CtrlImg::SmallLeft());
 	butLeft <<= THISBACK(DoLeft);
+	butLeft.Enable(false);
 	butRight.SetImage(CtrlImg::SmallRight());
 	butRight <<= THISBACK(DoRight);
-	butUp.SetImage(CtrlImg::SmallUp());
+	butRight.Enable(false);
+	butUp.SetImage(CtrlImg::DirUp());//SmallUp());
 	butUp <<= THISBACK(DoUp);
+	butUp.Enable(false);
 	EditString::AddFrame(butGo);
 	butGo.SetImage(CtrlImg::SmallRight()); 
-	butGo <<= THISBACK(DoGo); 
+	butGo <<= THISBACK1(DoGo, true); 
 	isFile = isLoad = true;
+	histInd = -1;
 	fs.Asking(!isLoad);
 }
 
@@ -80,44 +85,70 @@ void EditFileFolder::DoBrowse() {
 	if (isFile && isLoad) {
 		if (fs.ExecuteOpen(title)) {
 			SetData(~fs);
-			WhenChange();
+			//DoGo();//WhenChange();
 		}
 	} else if (isFile && !isLoad)  {
 		if (fs.ExecuteSaveAs(title)) {
 			SetData(~fs);
-			WhenChange();
+			//DoGo();//WhenChange();
 		}
 	} else if (!isFile) {
 		if (fs.ExecuteSelectDir(title)) {
 			SetData(~fs);
-			WhenChange();
+			//DoGo();//WhenChange();
 		}
 	}
 }
 
-void EditFileFolder::DoGo() {
+void EditFileFolder::SetData(const Value& data) {
+	EditString::SetData(data);
+	DoGo();
+}
+
+
+void EditFileFolder::DoGo(bool add) {
 	Set(GetData());			// Write Edit to FileSel
+	if (UpperFolder(GetData()))
+		butUp.Enable(true);
+	else
+		butUp.Enable(false);
+	if (add) {
+		histInd++;
+		history.SetCount(histInd);
+		history.Add(GetData());
+		if (histInd > 0)
+			butLeft.Enable(true);
+		if (histInd >= history.GetCount()-1)
+			butRight.Enable(false);
+	}
 	WhenChange();
 }
 
 void EditFileFolder::DoLeft() {
+	histInd--;
+	if (histInd < 0) {
+		histInd = 0;
+		return;
+	} else if (histInd == 0)
+		butLeft.Enable(false);
+	butRight.Enable(true);
+	EditString::SetData(history[histInd]);
+	DoGo(false);
 }
+
 void EditFileFolder::DoRight() {
+	histInd++;
+	if (histInd >= history.GetCount()-1) 
+		butRight.Enable(false);
+	butLeft.Enable(true);
+	EditString::SetData(history[histInd]);
+	DoGo(false);
 }
+
 void EditFileFolder::DoUp() { 
 	String folder = GetData();
 	folder = GetUpperFolder(folder);
-	Set(folder);
 	SetData(folder);
-	WhenChange();
-}
-
-bool EditFileFolder::Key(dword key, int rep) {
-	if (key == K_ENTER) {	// Catch the ENTER
-		DoGo();
-		return false;
-	} else
-		return EditField::Key(key, rep);
 }
 
 EditFile::EditFile() {
@@ -1011,8 +1042,7 @@ void Meter::SetData(const Value& v)	{
 #endif
 }
 
-Meter::~Meter()
-{
+Meter::~Meter() {
 	AtomicInc(kill);
 	while (running)
 		Sleep(10);
@@ -1125,9 +1155,20 @@ void Knob::Layout() {
 	else
 		direction = 1;
 	
-	minorstep = majorstep/int(majorstep/minorstep);
+	if (majorstep == 0)
+		majorstep = maxv - minv;
+	majorstep = (maxv-minv)/int((maxv-minv)/majorstep);
+		
+	if (minorstep > majorstep || minorstep == 0)
+		minorstep = majorstep;
+		
+	if (minorstep == 0) {
+		nminor = 0;
+	} else {
+		nminor = int(majorstep/minorstep) - 1;
+		minorstep = majorstep/int(majorstep/minorstep);
+	}
 	//minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
-	nminor = int(majorstep/minorstep) - 1;
 	//majorstep = (maxv-minv)/(nmajor+1);
 	nmajor = int((maxv-minv)/majorstep) - 1;
 	
@@ -1221,10 +1262,21 @@ void Knob::Paint(Draw& w) {
 		direction = -1;
 	else
 		direction = 1;
-	
-	minorstep = majorstep/int(majorstep/minorstep);
+
+	if (majorstep == 0)
+		majorstep = maxv - minv;
+	majorstep = (maxv-minv)/int((maxv-minv)/majorstep);
+		
+	if (minorstep > majorstep || minorstep == 0)
+		minorstep = majorstep;
+		
+	if (minorstep == 0) {
+		nminor = 0;
+	} else {
+		nminor = int(majorstep/minorstep) - 1;
+		minorstep = majorstep/int(majorstep/minorstep);
+	}
 	//minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
-	nminor = int(majorstep/minorstep) - 1;
 	//majorstep = (maxv-minv)/(nmajor+1);
 	nmajor = int((maxv-minv)/majorstep) - 1;
 	

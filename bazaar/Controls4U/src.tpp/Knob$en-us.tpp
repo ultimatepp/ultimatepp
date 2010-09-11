@@ -280,13 +280,18 @@ is counterclockwise.&]
 [s5;:Knob`:`:SetMinorStep`(double`): [_^Knob^ Knob][@(0.0.255) `&]_[* SetMinorStep]([@(0.0.255) d
 ouble]_[*@3 v])&]
 [s2;%% Sets [%-*@3 v ]as the value between minor display ticks.&]
-[s2;%% If this value is not multiple of the major step between clicks, 
-is rounded.&]
+[s2;%% If this value:&]
+[s2;i150;O0;%% is not multiple of the major step between clicks, 
+it is rounded.&]
+[s2;i150;O0;%% is bigger than the major step between clicks, it is 
+equaled to it.&]
 [s3;%% &]
 [s4; &]
 [s5;:Knob`:`:SetMajorStep`(double`): [_^Knob^ Knob][@(0.0.255) `&]_[* SetMajorStep]([@(0.0.255) d
 ouble]_[*@3 v])&]
 [s2;%% Sets [%-*@3 v ]as the value between major display ticks.&]
+[s2;%% If this value is not multiple of the difference between max 
+and min values, it is rounded.&]
 [s3;^Knob^ &]
 [s4; &]
 [s5;:Knob`:`:SetMinorMarks`(int`): [_^Knob^ Knob][@(0.0.255) `&]_[* SetMinorMarks]([@(0.0.255) i

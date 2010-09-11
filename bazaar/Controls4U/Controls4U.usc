@@ -1092,6 +1092,7 @@ enum_property Style {
 
 ctrl Knob {
 	group "Input fields";
+	
 	GetMinSize() { return Size(50, 50); }
 	GetStdSize() { return Size(100, 100); }
 	
@@ -1130,11 +1131,23 @@ ctrl Knob {
 			direction = -1;
 		else
 			direction = 1;
-
-		.SetMinorStep = .SetMajorStep/int(.SetMajorStep/.SetMinorStep);
-				
+		
+		if (.SetMajorStep == 0)
+			.SetMajorStep = .SetMax-.SetMin;
+		
+		.SetMajorStep = (.SetMax-.SetMin)/int((.SetMax-.SetMin)/.SetMajorStep);
+		
+		if (.SetMinorStep > .SetMajorStep || .SetMinorStep == 0)
+			.SetMinorStep = .SetMajorStep;
+		
 		//minorstep = (maxv-minv)/((nmajor+1)*(nminor+1));
-		nminor = int(.SetMajorStep/.SetMinorStep) - 1;
+		if (.SetMinorStep == 0) {
+			nminor = 0;
+			//.SetMinorStep = 0;
+		} else {
+			nminor = int(.SetMajorStep/.SetMinorStep) - 1;
+			.SetMinorStep = .SetMajorStep/int(.SetMajorStep/.SetMinorStep);
+		}
 		//majorstep = (maxv-minv)/(nmajor+1);
 		nmajor = int((.SetMax-.SetMin)/.SetMajorStep) - 1;
 		
