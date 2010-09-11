@@ -1,9 +1,12 @@
 #ifndef _Functions4U_Functions4U_h
 #define _Functions4U_Functions4U_h
 
+#include <Draw/Draw.h>
+#ifdef flagGUI
 #include <ide/Browser/Browser.h>
 #include <Web/Web.h>
 #include "GatherTpp.h"
+#endif
 #include "SvgColors.h"
 
 enum EXT_FILE_FLAGS {USE_TRASH_BIN = 1,
@@ -500,6 +503,9 @@ bool StoreAsXMLFileAES(T& data, const char *name, const char *file, const char *
 	ParamHelper__<T> p(data);
 	return StoreAsXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), name, file, key);
 }
+
+Image Rotate180(const Image& img);
+Image GetRect(const Image& orig, const Rect &r);
 
 #ifdef flagAES
 

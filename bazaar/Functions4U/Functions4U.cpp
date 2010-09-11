@@ -1967,6 +1967,33 @@ void *Dl::GetFunction(const String &functionName) {
 
 #endif
 
+
+Image Rotate180(const Image& orig) {
+	Size sz = orig.GetSize();
+	ImageBuffer dest(sz);
+	for(int rw = 0; rw < sz.cy; rw++)
+		for(int cl = 0; cl < sz.cx; cl++)
+			dest[rw][cl] = orig[sz.cy - rw - 1][sz.cx - cl - 1];
+	return dest;
+}
+
+Image GetRect(const Image& orig, const Rect &r) {
+	if(r.IsEmpty())
+		return Image();
+	ImageBuffer ib(r.GetSize());
+	for(int y = r.top; y < r.bottom; y++) {
+		const RGBA *s = orig[y] + r.left;
+		const RGBA *e = orig[y] + r.right;
+		RGBA *t = ib[y - r.top];
+		while(s < e) {
+			*t = *s;
+			t++;
+			s++;
+		}
+	}
+	return ib;
+}
+
 #ifdef flagAES
 
 static String sXMLFile(const char *file)

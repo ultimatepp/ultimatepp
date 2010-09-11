@@ -3,8 +3,10 @@ description "Functions and classes for general use\377B255,170,0";
 uses
 	Core,
 	plugin\bz2,
-	ide/Browser,
-	Web;
+	Web,
+	Draw;
+
+uses(GUI) ide/Browser;
 
 uses(AES) AESStream;
 

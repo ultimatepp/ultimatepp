@@ -1,3 +1,4 @@
+#ifdef flagGUI
 #include <CtrlLib/CtrlLib.h>
 #include <ide/Browser/Browser.h>
 
@@ -339,3 +340,4 @@ Topic &GatherTpp::AddTopic(const String name) {
 	return tt.Add(name);
 }
 
+#endif
