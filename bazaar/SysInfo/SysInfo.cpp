@@ -240,6 +240,7 @@ String GetMacAddressWMI() {
 	return Null;
 }
 */
+#include <winsock2.h>
 #include <iphlpapi.h>
 
 Array <NetAdapter> GetAdapterInfo() {
@@ -818,12 +819,12 @@ String GetProcessFileName(long pid)
 	#define SetSysInfoX11ErrorHandler()	{}
 #else
 	#define SetX11ErrorHandler() {}
-	int SysInfoX11ErrorHandler(Display *, XErrorEvent *)	{return 0;}
+	int SysInfoX11ErrorHandler(_XDisplay *, XErrorEvent *)	{return 0;}
 	void SetSysInfoX11ErrorHandler()						{XSetErrorHandler(SysInfoX11ErrorHandler);}
 #endif
 #endif
 
-void GetWindowsList_Rec (Display *dpy, Window w, int depth, Array<long> &wid) 
+void GetWindowsList_Rec (_XDisplay *dpy, Window w, int depth, Array<long> &wid) 
 { 
 	if (depth > 3) // 1 is enough for Gnome. 2 is necessary for Xfce and Kde
 		return; 
@@ -850,7 +851,7 @@ Array<long> GetWindowsList()
 	Array<long> ret;	
 	SetSysInfoX11ErrorHandler();
 	
-	Display *dpy = XOpenDisplay (NULL);
+	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
 		SetX11ErrorHandler();
 		return ret;
@@ -863,7 +864,7 @@ Array<long> GetWindowsList()
 void GetWindowsList(Array<long> &hWnd, Array<long> &processId, Array<String> &nameL, Array<String> &fileName, Array<String> &caption)
 {
 	SetSysInfoX11ErrorHandler();
-	Display *dpy = XOpenDisplay (NULL);
+	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
 		SetX11ErrorHandler();
 		return;
@@ -941,7 +942,7 @@ bool WindowKill(long wid)
 	if (wid == 0)
 		return false;
 	
-	Display *dpy = XOpenDisplay (NULL);
+	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) 
 		return false;
 
@@ -2652,7 +2653,7 @@ bool ScreenGrab::GrabSnapshot()
 bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bottom)
 {
 	SetSysInfoX11ErrorHandler();
-	Display *dpy = XOpenDisplay (NULL);
+	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
 		SetX11ErrorHandler();
 		return false;
@@ -2680,7 +2681,7 @@ bool Window_GetRect(long windowId, long &left, long &top, long &right, long &bot
 bool Window_SetRect(long windowId, long left, long top, long right, long bottom)
 {
 	SetSysInfoX11ErrorHandler();
-	Display *dpy = XOpenDisplay (NULL);
+	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
 		SetX11ErrorHandler();
 		return false;
@@ -2701,7 +2702,7 @@ bool Window_SetRect(long windowId, long left, long top, long right, long bottom)
 bool Mouse_GetPos(long &x, long &y)
 {
 	SetSysInfoX11ErrorHandler();
-	Display *dpy = XOpenDisplay (NULL);
+	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
 		SetX11ErrorHandler();
 		return false;
@@ -2728,7 +2729,7 @@ bool Mouse_GetPos(long &x, long &y)
 bool Mouse_SetPos(long x, long y, long windowId)
 {
 	SetSysInfoX11ErrorHandler();
-	Display *dpy = XOpenDisplay (NULL);
+	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
 		SetX11ErrorHandler();
 		return false;
@@ -2749,7 +2750,7 @@ bool Mouse_SetPos(long x, long y, long windowId)
 
 // libxtst-dev
 void Mouse_FakeClick(int button, int press) {
-	Display *dpy = XOpenDisplay(NULL);
+	_XDisplay *dpy = XOpenDisplay(NULL);
 	XTestFakeButtonEvent(dpy, button, press, CurrentTime);
 	XFlush(dpy);
 	XCloseDisplay(dpy);
@@ -2774,7 +2775,7 @@ void Mouse_RightUp() {
 	Mouse_FakeClick(3, False);
 }
 
-void PressKeyVK(int key, Display *dpy = NULL) {
+void PressKeyVK(int key, _XDisplay *dpy = NULL) {
 	bool local = false;
 	if (!dpy) {
 		if (!(dpy = XOpenDisplay(NULL)))
@@ -2789,7 +2790,7 @@ void PressKeyVK(int key, Display *dpy = NULL) {
 	}
 }
 
-void PressKey(wchar key, Display *dpy = NULL) {
+void PressKey(wchar key, _XDisplay *dpy = NULL) {
 	bool local = false;
 	if (!dpy) {
 		if (!(dpy = XOpenDisplay(NULL)))
@@ -2839,7 +2840,7 @@ void PressKey(wchar key, Display *dpy = NULL) {
 	}
 }
 
-bool GetKeyLockStatus0(bool &caps, bool &num, bool &scroll, Display *dpy) {
+bool GetKeyLockStatus0(bool &caps, bool &num, bool &scroll, _XDisplay *dpy) {
 	int x, y, xx, yy;
 	Window dm1, dm2;
 	unsigned int sKbdState;
@@ -2855,7 +2856,7 @@ bool GetKeyLockStatus0(bool &caps, bool &num, bool &scroll, Display *dpy) {
 }
 
 bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll) {
-	Display *dpy;
+	_XDisplay *dpy;
 	if (!(dpy = XOpenDisplay(NULL)))
 		return false;
 
@@ -2869,7 +2870,7 @@ bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll) {
 }
 
 bool SetKeyLockStatus(bool caps, bool num, bool scroll) {
-	Display *dpy;
+	_XDisplay *dpy;
 	if (!(dpy = XOpenDisplay(NULL)))
 		return false;
 			
