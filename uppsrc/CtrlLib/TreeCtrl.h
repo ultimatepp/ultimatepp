@@ -158,6 +158,8 @@ protected:
 	virtual void SetOption(int id);
 	void         SyncTree();
 	virtual void Select();
+	
+	friend class PopUpTree;
 
 public:
 	Callback1<int>  WhenOpen;

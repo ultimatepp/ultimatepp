@@ -80,28 +80,40 @@ void PopUpTree::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		showpos.y = top;
 	}
 	open = false;
-	Ctrl popup;
+
 	int ht = AddFrameSize(width, min(mh, autosize ? GetTreeSize().cy : INT_MAX)).cy;
 	Rect rt = RectC(showpos.x, showpos.y - (up ? ht : 0), showwidth, ht);
 	if(GUI_PopUpEffect()) {
+		bool vis = sb.x.IsShown();
+		bool ah = sb.x.IsAutoHide();
+		sb.AutoHide(false);
+		sb.Hide();
+		sPaintRedirectCtrl pb;
+		pb.ctrl = this;
 		if(up) {
-			popup.SetRect(Rect(rt.left, rt.bottom - 1, rt.right, rt.bottom));
-			popup.Add(TopPos(0, rt.Height()).LeftPos(0, rt.Width()));
+			SetRect(Rect(rt.left, rt.bottom - 1, rt.right, rt.bottom));
+			Ctrl::Add(pb.TopPos(0, rt.Height()).LeftPos(0, rt.Width()));
 		}
 		else {
-			popup.SetRect(Rect(rt.left, rt.top, rt.right, rt.top + 1));
-			popup.Add(BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
+			SetRect(Rect(rt.left, rt.top, rt.right, rt.top + 1));
+			Ctrl::Add(pb.BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
 		}
 		CenterCursor();
-		popup.PopUp(owner, true, true, GUI_DropShadows());
+		Ctrl::PopUp(owner, true, true, GUI_DropShadows());
 		SetFocus();
 		Ctrl::ProcessEvents();
-		Animate(popup, rt, GUIEFFECT_SLIDE);
+		Animate(*this, rt, GUIEFFECT_SLIDE);
 		Ctrl::Remove();
+		sb.Show(vis);
+		sb.AutoHide(ah);
+		pb.Remove();
+		open = true;
 	}
+
 	CenterCursor();
 	SetRect(rt);
-	Ctrl::PopUp(owner, true, true, GUI_DropShadows());
+	if(!open)
+		Ctrl::PopUp(owner, true, true, GUI_DropShadows());
 	SetFocus();
 	open = true;
 }

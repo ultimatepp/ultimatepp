@@ -282,17 +282,21 @@ void ColorPopUp::PopUp(Ctrl *owner, Color c)
 
 	Rect rt = RectC(x, y, sz.cx, sz.cy);
 	if(GUI_PopUpEffect()) {
-		Ctrl popup;
-		popup.Add(BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
-		popup.SetRect(RectC(rt.left, rt.top, 3, 3));
-		popup.PopUp(owner, true, true, GUI_GlobalStyle() >= GUISTYLE_XP);
+		sPaintRedirectCtrl pb;
+		pb.ctrl = this;
+		Add(pb.BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
+		SetRect(RectC(rt.left, rt.top, 1, 1));
+		Ctrl::PopUp(owner, true, true, GUI_GlobalStyle() >= GUISTYLE_XP);
 		SetFocus();
 		Ctrl::ProcessEvents();
-		Animate(popup, rt, GUIEFFECT_SLIDE);
+		Animate(*this, rt, GUIEFFECT_SLIDE);
+		pb.Remove();
+	}
+	else {
+		SetRect(rt);
+		Ctrl::PopUp(owner, true, true, true);
 	}
 
-	SetRect(rt);
-	Ctrl::PopUp(owner, true, true, true);
 	SetFocus();
 
 	if(!norampwheel) {
