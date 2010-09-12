@@ -132,7 +132,6 @@ GridCtrl::GridCtrl() : holder(*this)
 	fixed_paste            = false;
 	copy_column_names      = false;
 	draw_focus             = false;
-	cancel_all             = false;
 	ask_remove             = false;
 
 	search_hide            = true;
@@ -4393,8 +4392,10 @@ bool GridCtrl::GetCtrlsData(bool samerow, bool doall, bool updates)
 
 		bool was_modified = it.modified;
 
-		it.modified = edit_mode == GE_CELL ? it.val != v 
-		                                   : rowbkp[focused_ctrl_id] != v;
+		it.modified = edit_mode == GE_CELL 
+			? it.val != v 
+			: rowbkp[focused_ctrl_id] != v;
+			
 		it.val = v;
 		
 		if(it.modified)
@@ -4522,19 +4523,14 @@ bool GridCtrl::CancelCtrlsData(bool all)
 {
 	cancel_update = false;
 
-	if(!row_modified)
-		return false;
-
 	int ie = total_cols;
 	int is = 1;
 
-	if(!cancel_all && edit_mode == GE_CELL && !all)
+	if(!all && edit_mode == GE_CELL)
 	{
 		is = curpos.x;
 		ie = is + 1;
 	}
-
-	vitems[curid.y].operation = GridOperation::NONE;
 
 	for(int i = is; i < ie; i++)
 	{
@@ -4547,15 +4543,20 @@ bool GridCtrl::CancelCtrlsData(bool all)
 		if(ctrl)
 		{
 			ctrl->Reject();
+			ctrl->SetData(rowbkp[id]);
+			
 			if(it.modified)
 			{
 				it.modified = false;
 				row_modified--;
-				ctrl->SetData(rowbkp[id]); // dla ctrls
 				it.val = rowbkp[id];
 			}
 		}
 	}
+
+	if(!row_modified)
+		vitems[curid.y].operation = GridOperation::NONE;
+
 	return true;
 }
 
@@ -6411,7 +6412,7 @@ bool GridCtrl::SwitchEdit()
 		if(ctrl->HasFocusDeep())
 			EndEdit(true, true);
 		SetFocus();
-		//rowbkp[curid.x] = ctrl->GetData();
+		rowbkp[curid.x] = ctrl->GetData();
 		//items[curid.y][curid.x].val = ctrl->GetData();
 		focused_ctrl = ctrl;
 		focused_ctrl_id = curid.x;
@@ -6448,7 +6449,7 @@ bool GridCtrl::EndEdit(bool accept, bool doall, bool remove_row)
 	if(accept && !GetCtrlsData(false, doall, accept))
 		return false;
 
-	UpdateCtrls(UC_HIDE | UC_CTRLS);
+	UpdateCtrls(UC_CTRLS);
 
 	if(!accept)
 	{
