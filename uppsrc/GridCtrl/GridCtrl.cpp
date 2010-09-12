@@ -3462,6 +3462,12 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 	if(!newvalid)
 		return cs;
 
+	if(isnewrow)
+		WhenBeforeChangeRow();
+	
+	if(isnewcol)
+		WhenBeforeChangeCol();
+	
 	cs.newx = isnewcol;
 	cs.newy = isnewrow;
 
@@ -3480,6 +3486,7 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 	curid.y = vitems[curpos.y].id;
 
 	WhenCursor();
+	
 	if(cancel_cursor)
 	{
 		cancel_cursor = false;
@@ -6288,7 +6295,7 @@ GridCtrl& GridCtrl::SetColsMax(int size)
 
 void GridCtrl::GotFocus()
 {
-	LG(0, "GotFocus");
+	LG(3, "GotFocus");
 	RestoreFocus();
 	if(valid_cursor)
 		RefreshRow(curpos.y, 0, 0);
@@ -6296,19 +6303,15 @@ void GridCtrl::GotFocus()
 
 void GridCtrl::LostFocus()
 {
-	LG(0, "LostFocus");
+	LG(3, "LostFocus");
 	if(valid_cursor)
-	{
-		if(focus_lost_accepting && !HasFocusDeep())
-			EndEdit();
 		RefreshRow(curpos.y, 0, 0);
-	}
 	popup.Close();
 }
 
 void GridCtrl::ChildGotFocus()
 {
-	LG(0, "ChildGotFocus");
+	LG(3, "ChildGotFocus");
 	if(valid_cursor)
 		RefreshRow(curpos.y, 0, 0);
 	Ctrl::ChildGotFocus();
@@ -6316,9 +6319,13 @@ void GridCtrl::ChildGotFocus()
 
 void GridCtrl::ChildLostFocus()
 {
-	LG(0, "ChildLostFocus");
+	LG(3, "ChildLostFocus");
 	if(valid_cursor)
+	{
+		//if(focus_lost_accepting && !HasFocusDeep())
+		//	EndEdit();
 		RefreshRow(curpos.y, 0, 0);
+	}
 	Ctrl::ChildLostFocus();
 }
 

@@ -1751,7 +1751,9 @@ class GridCtrl : public Ctrl
 
 		Callback WhenNewRow;
 		Callback WhenChangeCol;
+		Callback WhenBeforeChangeCol;
 		Callback WhenChangeRow;
+		Callback WhenBeforeChangeRow;
 		Callback WhenCursor;
 		Callback WhenEmpty;
 
