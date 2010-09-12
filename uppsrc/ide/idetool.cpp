@@ -298,9 +298,6 @@ void Ide::Times()
 Vector<String> Ide::SvnDirs()
 {
 	Vector<String> d = GetUppDirs();
-	String p = GetFileFolder(PackagePath(actualpackage));
-	if(IsSvnDir(p))
-		d.Insert(0, p);
 	Vector<String> r;
 	for(int i = 0; i < d.GetCount(); i++)
 		if(IsSvnDir(d[i]))
