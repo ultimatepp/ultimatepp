@@ -1106,7 +1106,6 @@ class GridCtrl : public Ctrl
 		GridCtrl& RowChanging(bool b = true)        { row_changing         = b;  return *this; }
 
 		GridCtrl& DrawFocus(bool b = true)          { draw_focus           = b;  return *this; }
-		GridCtrl& CancelAll(bool b = true)          { cancel_all           = b;  return *this; }
 
 		GridCtrl& RejectNullRow(bool b = true)      { reject_null_row      = b;  return *this; }
 		GridCtrl& KeepLastRow(bool b = true)        { keep_last_row        = b;  return *this; }
