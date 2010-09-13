@@ -1026,8 +1026,8 @@ void MeterThread(Meter *gui, double newValue) {
 #endif
 
 void Meter::SetData(const Value& v)	{
+	double val = minmax(double(v), min, max) ;
 #ifdef _MULTITHREADED
-	double val = v;
 	if (running) {	// Stop movement before changing value
 		AtomicInc(kill);	
 		while (running)
@@ -1037,7 +1037,7 @@ void Meter::SetData(const Value& v)	{
 	AtomicInc(running);
 	Thread().Run(callback2(MeterThread, this, val));
 #else
-	value = v;
+	value = val;
 	RefreshValue();
 #endif
 }
