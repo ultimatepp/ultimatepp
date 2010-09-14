@@ -7,8 +7,8 @@ NAMESPACE_UPP
 #define IMAGEFILE  <Geom/Ctrl/PlotterCtrl.iml>
 #include           <Draw/iml.h>
 
-#define LLOG(x) // LOG(x)
-#define LLOGBLOCK(x) // LOGBLOCK(x)
+#define LLOG(x) RLOG(x)
+#define LLOGBLOCK(x) RLOGBLOCK(x)
 
 PlotterCtrl::ViewPlot::ViewPlot(PlotterCtrl& ctrl, int extra_gap)
 : viewdraw(&ctrl)
@@ -526,7 +526,7 @@ ImageDraw& PlotterCtrl::BeginBufferPaint()
 	paint_buffer = Null;
 	Size sz = max(GetSize(), Size(1, 1));
 //	paint_buffer = Image(max(GetSize(), Size(1, 1)));
-	LLOG("-> size = " << paint_buffer.GetSize());
+	LLOG("-> size = " << sz);
 	paint_draw = new ImageDraw(sz);
 	paint_draw->DrawRect(sz, background);
 	is_painting = true;
@@ -559,53 +559,69 @@ void PlotterCtrl::PostRefresh()
 
 void PlotterCtrl::Paint(Draw& draw)
 {
-	LLOGBLOCK("PlotterCtrl::Paint");
-	LLOG("PlotterCtrl::Paint @ " << GetSysTime());
-	bool shown = IsDragging();
-	DragHide();
-	Rect clip = draw.GetPaintRect();
-	if(is_painting) {
-#ifdef PLATFORM_WIN32
-		if(!paint_buffer.IsEmpty()) {
-			LLOG("-> blit paint_buffer");
-			SystemDraw *sdraw = dynamic_cast<SystemDraw *>(&draw);
-			if(!sdraw || !BitBlt(*sdraw, pan_offset, *paint_draw, paint_buffer.GetSize())) {
-				LLOG("-> blit error");
+	int level = draw.GetCloffLevel();
+	try {
+		LLOGBLOCK("PlotterCtrl::Paint");
+		LLOG("PlotterCtrl::Paint @ " << GetSysTime() << ": level = " << level);
+		bool shown = IsDragging();
+		DragHide();
+		Rect clip = draw.GetPaintRect();
+		if(is_painting) {
+	#ifdef PLATFORM_WIN32
+			if(!paint_buffer.IsEmpty()) {
+				LLOG("-> blit paint_buffer");
+				SystemDraw *sdraw = dynamic_cast<SystemDraw *>(&draw);
+				if(!sdraw || !BitBlt(*sdraw, pan_offset, *paint_draw, paint_buffer.GetSize())) {
+					LLOG("-> blit error");
+				}
 			}
-		}
-#endif
-	}
-	else {
-		if(buffer_paint && !draw.Dots()) {
-			Size size = GetSize();
-			if(paint_buffer.IsEmpty() || paint_buffer.GetSize() != size) {
-				LLOG("-> refresh paint buffer");
-				Draw& idraw = BeginBufferPaint();
-				Plotter plotter(idraw, scale, delta);
-				plotter.PathMap(&PathStyleMap::App());
-				Plot(plotter);
-				EndBufferPaint();
-			}
-			else {
-				LLOG("-> DrawImage paint_buffer");
-				draw.DrawImage(pan_offset.x, pan_offset.y, paint_buffer);
-			}
+	#endif
 		}
 		else {
-			LLOG("-> Plot (direct)");
-			draw.DrawRect(clip, background);
-			Plotter plotter(draw, scale, delta + Pointf(pan_offset));
-			plotter.PathMap(&PathStyleMap::App());
-			Plot(plotter);
-			if(drag_drop) {
-				lock_drag_drop = true;
-				drag_drop->Plot(plotter);
-				lock_drag_drop = false;
+			if(buffer_paint && !draw.Dots()) {
+				Size size = GetSize();
+				if(paint_buffer.IsEmpty() || paint_buffer.GetSize() != size) {
+					LLOG("-> refresh paint buffer");
+					Draw& idraw = BeginBufferPaint();
+					try {
+						Plotter plotter(idraw, scale, delta);
+						plotter.PathMap(&PathStyleMap::App());
+						Plot(plotter);
+					}
+					catch(Exc e) {
+						RLOG("PlotterCtrl::Paint: exception in Plot: " << e);
+					}
+					catch(...) {
+						RLOG("PlotterCtrl::Paint: unknown exception in Plot");
+					}
+					EndBufferPaint();
+				}
+				else {
+					LLOG("-> DrawImage paint_buffer");
+					draw.DrawImage(pan_offset.x, pan_offset.y, paint_buffer);
+				}
+			}
+			else {
+				LLOG("-> Plot (direct)");
+				draw.DrawRect(clip, background);
+				Plotter plotter(draw, scale, delta + Pointf(pan_offset));
+				plotter.PathMap(&PathStyleMap::App());
+				Plot(plotter);
+				if(drag_drop) {
+					lock_drag_drop = true;
+					drag_drop->Plot(plotter);
+					lock_drag_drop = false;
+				}
 			}
 		}
+		if(shown)
+			DragShow();
 	}
-	if(shown)
-		DragShow();
+	catch(Exc e) {
+		RLOG("PlotterCtrl::Paint: exception: " << e);
+	}
+	RLOG("//PlotterCtrl::Paint: level = " << draw.GetCloffLevel());
+	ASSERT(level == draw.GetCloffLevel());
 }
 
 /*
