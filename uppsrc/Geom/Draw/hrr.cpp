@@ -14,6 +14,349 @@ NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x)
 
+void CalcBitMasks(int bpp, const dword *in_cmasks, dword cmask[], int cshift24[], int cbits[])
+{
+	static const dword cmasks16[] = { 0xF800, 0x07E0, 0x001F };
+	static const dword cmasks32[] = { 0xFF0000, 0x00FF00, 0x0000FF };
+	if(!in_cmasks)
+		in_cmasks = (bpp <= 16 ? cmasks16 : cmasks32);
+	else if((in_cmasks[0] | in_cmasks[1] | in_cmasks[2]) == 0) {
+		in_cmasks = (bpp <= 16 ? cmasks16 : cmasks32);
+	}
+	for(int i = 0; i < 3; i++) {
+		dword cm = in_cmasks[i];
+		cmask[i] = cm;
+		int shift = 0;
+		if(!(cm & 0xFFFF0000)) {
+			cm <<= 16;
+			shift += 16;
+		}
+		if(!(cm & 0xFF000000)) {
+			cm <<= 8;
+			shift += 8;
+		}
+		if(!(cm & 0xF0000000)) {
+			cm <<= 4;
+			shift += 4;
+		}
+		if(!(cm & 0xC0000000)) {
+			cm <<= 2;
+			shift += 2;
+		}
+		if(!(cm & 0x80000000)) {
+			cm <<= 1;
+			shift += 1;
+		}
+		int width = 0;
+		dword mask = 0x80000000;
+		while((cm & mask) && width < 8) {
+			mask >>= 1;
+			width++;
+		}
+		cshift24[i] = shift;
+		cbits[i] = width;
+	}
+}
+
+static void PixelZStreamInfo(Stream& stream, Size& size, Size& dot_size, Point& hotspot, int& raw_bpp, bool& mono)
+{
+	enum { VERSION = 1 };
+	int version = VERSION;
+	stream.Magic(('P' << 24) | ('X' << 16) | ('A' << 8) | 'R');
+	stream / version;
+	if(version > VERSION) {
+		stream.SetError();
+		return;
+	}
+	Pack16(stream, raw_bpp, size.cx, size.cy, hotspot.x, hotspot.y);
+	stream % mono % dot_size;
+}
+
+struct ZImageDirItem
+{
+	Size  size;
+	Size  dot_size;
+	Point hotspot;
+	int   raw_bpp;
+	bool  mono;
+	int   alpha_bpp;
+
+	void  Serialize(Stream& stream)
+	{
+		PixelZStreamInfo(stream, size, dot_size, hotspot, raw_bpp, mono);
+		Pack16(stream, alpha_bpp);
+	}
+};
+
+class ZImageRaster : public StreamRaster {
+public:
+	ZImageRaster() {}
+
+	virtual bool    Create();
+	virtual Size    GetSize();
+	virtual Info    GetInfo();
+	virtual Line    GetLine(int line);
+	virtual const RGBA *GetPalette();
+	virtual const RasterFormat *GetFormat();
+
+private:
+	ZImageDirItem   item;
+	Vector<Color>   palette;
+	dword           cmask[3];
+	int             cshift24[3];
+	int             cbits[3];
+	int             pixel_row_bytes;
+	int             alpha_row_bytes;
+	int             pixel_block_size;
+	int             alpha_block_size;
+	int             line_number;
+	String          block;
+	int             block_offset;
+	Vector<byte>    pixel;
+	Vector<byte>    alpha;
+	Vector<RGBA>    rgba_palette;
+	RasterFormat    format;
+};
+
+bool ZImageRaster::Create()
+{
+	static const unsigned MAGIC_TAG = 'Z' * 0x1000000 + 'I' * 0x10000 + 'M' * 0x100 + 'G';
+	static const int VERSION = 1;
+	
+	format.SetRGBA();
+	
+	Stream& stream = GetStream();
+	
+	stream.Magic(MAGIC_TAG);
+	if(stream.IsError())
+		return false;
+	int version = VERSION;
+	stream / version;
+	if(version > VERSION) {
+		LLOG("ImageZStreamInfo: version error: " << version);
+		stream.SetError();
+		return false;
+	}
+	Array<ZImageDirItem> dir;
+	int count = 0;
+	stream % count;
+	enum { MAX_COUNT = 1000 };
+	if(count < 0 || count > MAX_COUNT) {
+		LLOG("ImageZStreamInfo: image count error: " << count);
+		stream.SetError();
+		return false;
+	}
+	if(stream.IsLoading())
+		dir.SetCount(count);
+	for(int i = 0; i < count && !stream.IsError(); i++)
+		stream % dir[i];
+	if(stream.IsError() || dir.IsEmpty())
+		return false;
+	item = dir[0];
+	
+	Buffer<int> offsets(dir.GetCount() + 1);
+	for(int i = 0; i <= dir.GetCount(); i++)
+		stream % offsets[i];
+	int64 base = stream.GetPos();
+	stream.Seek(base + offsets[0]);
+	
+	if(item.size.cx <= 0 || item.size.cy <= 0)
+		return false;
+
+	version = VERSION;
+	stream / version;
+	if(version > VERSION) {
+		LLOG("PixelZStreamData -> version error: " << version);
+		stream.SetError();
+		return false;
+	}
+	if(item.raw_bpp) {
+		int bpp = (item.raw_bpp < 0 ? 24 : item.raw_bpp);
+		if(bpp <= 8) {
+			stream % palette;
+			rgba_palette.SetCount(1 << bpp, RGBAZero());
+			for(int i = 0; i < palette.GetCount() && i < rgba_palette.GetCount(); i++)
+				rgba_palette[i] = (RGBA)palette[i];
+		}
+		else if(bpp == 16 || bpp == 32) {
+			stream % cmask[0] % cmask[1] % cmask[2];
+			CalcBitMasks(bpp, cmask, cmask, cshift24, cbits);
+		}
+		pixel_block_size = 0;
+		Pack16(stream, pixel_block_size);
+		if(pixel_block_size <= 0) {
+			LLOG("ZImageRaster::Create -> block size error: " << pixel_block_size);
+			stream.SetError();
+			return false;
+		}
+		pixel_row_bytes = ((item.size.cx * bpp + 31) >> 5) << 2;
+		pixel.SetCount(item.size.cy * pixel_row_bytes, 0);
+		for(int i = 0; i < item.size.cy;) {
+			int e = min(item.size.cy, i + pixel_block_size);
+			String part;
+			stream % part;
+			String dpart = ZDecompress(part);
+			if(dpart.IsVoid()) {
+				LLOG("PixelZStreamData -> decompress error @ row " << i << " (source size = " << part.GetLength() << ")");
+				stream.SetError();
+				return false;
+			}
+			int x = 0;
+			memcpy(pixel.GetIter(i * pixel_row_bytes), dpart, min(pixel_row_bytes * (e - i), dpart.GetLength()));
+			i = e;
+		}
+	}
+
+	version = VERSION;
+	stream / version;
+	if(version > VERSION) {
+		LLOG("PixelZStreamData -> version error: " << version);
+		stream.SetError();
+		return false;
+	}
+/*
+	if(item.alpha_bpp) {
+		alpha_row_bytes = ((item.size.cx + 31) >> 5) << 2;
+		alpha.SetCount(item.size.cy * alpha_row_bytes, 0);
+		Vector<Color> mask_palette;
+		stream % mask_palette;
+		Pack16(stream, alpha_block_size);
+		if(alpha_block_size <= 0) {
+			LLOG("PixelZStreamData -> block size error: " << alpha_block_size);
+			stream.SetError();
+			return false;
+		}
+	
+		for(int i = 0; i < item.size.cy;) {
+			int e = min(item.size.cy, i + alpha_block_size);
+			String part;
+			stream % part;
+			String dpart = ZDecompress(part);
+			if(dpart.IsVoid()) {
+				LLOG("PixelZStreamData -> decompress error @ row " << i << " (source size = " << part.GetLength() << ")");
+				stream.SetError();
+				return false;
+			}
+			memcpy(alpha.GetIter(i * alpha_row_bytes), dpart, min((e - i) * alpha_row_bytes, dpart.GetLength()));
+			i = e;
+		}
+	}
+*/	
+	return true;
+}
+
+Size ZImageRaster::GetSize()
+{
+	return item.size;
+}
+
+Raster::Info ZImageRaster::GetInfo()
+{
+	Info info;
+	if(item.raw_bpp > 0 && item.raw_bpp <= 8)
+		info.colors = 1 << item.raw_bpp;
+	info.bpp = (item.raw_bpp < 0 ? 24 : item.raw_bpp);
+	info.dots = item.dot_size;
+	return info;
+}
+
+Raster::Line ZImageRaster::GetLine(int ln)
+{
+	RGBA *line = new RGBA[item.size.cx];
+/*
+	if(item.alpha_bpp) {
+		const byte *ao = alpha.GetIter(ln * alpha_row_bytes);
+		byte active = *ao++;
+		byte avail = 8;
+		RGBA *out = line;
+		for(int width = item.size.cx; --width >= 0; out++) {
+			if(!avail) {
+				active = *ao++;
+				avail = 8;
+			}
+			--avail;
+			out->a = (active & 0x80 ? 0 : 255);
+			active <<= 1;
+		}
+	}
+	else */ {
+		RGBA bg;
+		bg.r = bg.g = bg.b = 0;
+		bg.a = 255;
+		Fill(line, bg, item.size.cx);
+	}
+	if(item.raw_bpp) {
+		const byte *po = pixel.GetIter(ln * pixel_row_bytes);
+		RGBA *out = line;
+		if(item.raw_bpp == -3) {
+			for(int width = item.size.cx; --width >= 0; out++, po += 3) {
+				out->b = po[0];
+				out->g = po[1];
+				out->r = po[2];
+			}
+		}
+		else if(item.raw_bpp <= 8) {
+			byte shift = item.raw_bpp;
+			byte per_byte = 8 / item.raw_bpp;
+			byte active = 0;
+			byte avail = 0;
+			RGBA zero = RGBAZero();
+			for(int width = item.size.cx; --width >= 0; out++) {
+				if(!avail) {
+					active = *po++;
+					avail = per_byte;
+				}
+				--avail;
+				int index = (active << shift) >> 8;
+				active <<= shift;
+				RGBA value = (index < rgba_palette.GetCount() ? rgba_palette[index] : zero);
+				out->r = value.r;
+				out->g = value.g;
+				out->b = value.b;
+			}
+		}
+		else if(item.raw_bpp == 16 || item.raw_bpp == 24 || item.raw_bpp == 32) {
+			byte bshift = cshift24[2];
+			byte bmask = (-256 >> cbits[2]) & 0xFF;
+			byte gshift = cshift24[1];
+			byte gmask = (-256 >> cbits[1]) & 0xFF;
+			byte rshift = cshift24[0];
+			byte rmask = (-256 >> cbits[0]) & 0xFF;
+
+			if(item.raw_bpp == 16) {
+				for(int width = item.size.cx; --width >= 0; out++, po += 2) {
+					uint16 w = Peek16le(po);
+					out->r = byte((w << rshift) >> 24) & rmask;
+					out->g = byte((w << gshift) >> 24) & gmask;
+					out->b = byte((w << bshift) >> 24) & bmask;
+				}
+			}
+			else {
+				for(int width = item.size.cx; --width >= 0; out++, po += 4) {
+					uint32 w = Peek32le(po);
+					out->r = byte((w << rshift) >> 24) & rmask;
+					out->g = byte((w << gshift) >> 24) & gmask;
+					out->b = byte((w << bshift) >> 24) & bmask;
+				}
+			}
+		}
+		else {
+			RLOG("ZImageRaster::GetLine: invalid pixel BPP = " << item.raw_bpp);
+		}
+	}
+	return Raster::Line(line, true);
+}
+
+const RGBA * ZImageRaster::GetPalette()
+{
+	return NULL;
+}
+
+const RasterFormat * ZImageRaster::GetFormat()
+{
+	return &format;
+}
+
 void RasterCopy(RasterEncoder& dest, Raster& src, const Rect& src_rc)
 {
 	dest.Start(src_rc.Size());
@@ -123,6 +466,7 @@ One<StreamRaster> HRRInfo::GetDecoder() const
 	case METHOD_JPG: return new JPGRaster;
 	case METHOD_GIF: return new GIFRaster;
 	case METHOD_PNG: return new PNGRaster;
+	case METHOD_ZIM: return new ZImageRaster;
 	default:              return 0;
 	}
 }
@@ -730,6 +1074,7 @@ One<StreamRaster> HRR::StdCreateDecoder(const HRRInfo& info)
 		case HRRInfo::METHOD_GIF: return new GIFRaster;
 		case HRRInfo::METHOD_PNG: return new PNGRaster;
 		case HRRInfo::METHOD_JPG: return new JPGRaster;
+		case HRRInfo::METHOD_ZIM: return new ZImageRaster;
 //		case HRRInfo::METHOD_BMP: return new BMPRaster;
 	}
 	return NULL;

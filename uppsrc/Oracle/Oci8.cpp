@@ -223,7 +223,7 @@ void OCI8Connection::Item::DynaFlush() {
 	if(dyna_full) {
 		dyna_full = false;
 		Value v;
-		if(ind == 0) {
+		if(ind[0] == 0) {
 			if(dyna_len > dyna_width)
 				dyna_width = dyna_len;
 			const byte *p = Data();
