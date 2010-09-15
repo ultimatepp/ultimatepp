@@ -94,9 +94,15 @@ ValueArray ParseXmlRpcParams(XmlParser& p)
 	return va;
 }
 
-String FormatXmlRpcValue(const Value& v)
+String FormatXmlRpcValue(const Value& _v)
 {
 	String r;
+	Value v = _v;
+	if(v.GetType() == INT64_V) {
+		int64 x = v;
+		if((int)x == x)
+			v = (int)x;
+	}
 	if(IsNull(v) && !IsString(v) && !IsValueArray(v))
 		r = XmlTag("nil")();
 	else
@@ -107,7 +113,7 @@ String FormatXmlRpcValue(const Value& v)
 		r = XmlTag("boolean")(AsString((int)(bool)v));
 	else
 	if(IsNumber(v))
-		r = XmlTag("double")(Format("%.12g", (double)v));
+		r = XmlTag("double")(Format("%.16g", (double)v));
 	else
 	if(IsDateTime(v)) {
 		Time t = v;
