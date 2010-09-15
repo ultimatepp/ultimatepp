@@ -303,7 +303,8 @@ void PostgreSQLSession::ExecTrans(const char * statement)
 			return;
 		}
 	}
-	while(level == 0 && !ConnectionOK() && WhenReconnect(itry++));
+	while(level == 0 && (!ConnectionOK() || ErrorMessage().Find("connection") >= 0 && itry == 0)
+	      && WhenReconnect(itry++));
 	
 	if(trace)
 		*trace << statement << " failed: " << ErrorMessage() << "\n";
