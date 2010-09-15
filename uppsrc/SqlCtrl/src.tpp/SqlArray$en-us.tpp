@@ -19,6 +19,14 @@ of SQL tables.&]
 [s2;%% Invoked [/ after][*/  ]SQL query to fills SqlArray.&]
 [s3; &]
 [s4; &]
+[s5;:SqlArray`:`:WhenFilter: [_^Gate1^ Gate1]<[@(0.0.255) const]_VectorMap<[_^Id^ Id], 
+[_^Value^ Value]>`&>_[* WhenFilter]&]
+[s2;%% This callback adds additional filtering of records fetched 
+from the database. Only records for whose it returns true are 
+add to the list. The VectorMap parameter contains database column 
+`- record value pairs.&]
+[s3; &]
+[s4; &]
 [s5;:SqlArray`:`:StdBar`(Bar`&`): [@(0.0.255) void]_[* StdBar]([_^Bar^ Bar][@(0.0.255) `&]_[*@3 m
 enu])&]
 [s2;%% Implements standard menu`-bar of SqlArray. This menu contains 
