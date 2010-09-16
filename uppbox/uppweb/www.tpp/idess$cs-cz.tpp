@@ -25,7 +25,7 @@ topic "TheIDE screenshots";
 [s0; [*+150 Screenshoty TheIDE]&]
 [s0; [/1 (kliknÄ›te na obrÃ¡zek pro jeho zvÄ›tÅ¡enÃ­)]&]
 [s0;>*R1 &]
-[s0; &]
+[s0;  &]
 [s0; 
 @@image:1544&1164
 ˆƒê‚Ò€€€€€€€€€ø—œí½‰œÕá™¶Þ¡èü×œÏ‘™þº²‰ˆ‚¢‚Ã•§€ìˆ„Ù‚¸Æ ¬Ê¾É¢´ˆ¢ ŒŸûüä®¸â²ƒˆÎ
@@ -432,7 +432,10 @@ topic "TheIDE screenshots";
 ¼ëüŠµ÷ãýŽúîñ´³Ñã§ÃÇ‡ÒãÍ£¡™¦³û¥¥ÉÔ‰›ÆÔÛ‡îé£¡˜Ñú€‹•Æ´™¬î˜Ó¦¹‹Æªž˜æÌêÌ†ûô¦¾ Ó
 ãê¹‡Ÿûƒ¯£žÿü»ç¯òˆ‚ ˆ‚Úü‰ÿÿ¶…í
 &]
-[s0;3 &]
+[s0; &]
+[s0; [^HTMLTEXT `<object style`=`"height`: 344px`; width`: 425px`"`>`<param name`=`"movie`" value`=`"http`:`/`/www`.youtube`.com`/v`/V7CbPKn`-R4g`"`>`<param name`=`"allowFullScreen`" value`=`"true`"`>`<param name`=`"allowScriptAccess`" value`=`"always`"`>`<embed src`=`"http`:`/`/www`.youtube`.com`/v`/V7CbPKn`-R4g`" type`=`"application`/x`-shockwave`-flash`" allowfullscreen`=`"true`" allowScriptAccess`=`"always`" width`=`"425`" height`=`"344`"`>`<`/object`>^ .
+.]&]
+[s0; &]
 [s0; 
 @@image:1857&1484
 ‚ƒç‚Ò‚€€€€€€€€€ø—œì½‰˜œÕ§¡·ßÙô¾ú©ÜËß¿ÙŒ®¨ˆˆÞÙÔ„„‚²£ä‹Ö°¨û¦‹ï ˆ òñÁí¶Þ½â§¨÷“

@@ -31,7 +31,7 @@ topic "Overview Ultimate++";
 aplikacÃ­. ZaÄnÄ›me jednoduchÃ½m pÅ™Ã­kladem `- aplikacÃ­, kterÃ¡ 
 zobrazÃ­ poÄet dnÃ­ mezi dvÄ›ma daty. PoÄet dnÃ­ se obnovuje 
 kdykoliv uÅ¾ivatel vloÅ¾Ã­ nebo zmÄ›nÃ­ datum ve vstupnÃ­ch polÃ­ch:&]
-[s0; &]
+[s0; [3  ]&]
 [s0;= 
 @@image:2037&600
 €ƒÆà€€€ƒ ÿ€€€€ø‡œí‹Ğ”ç£ÀûÀ™ÈÖÎò›¸šß‹ÑøŠ¾Öğ­â‹£Œòš„ŠÁÄ‡ Âü©ìæÍ²ÉåÒ˜©¯¦©Š±û
@@ -102,10 +102,10 @@ kdykoliv uÅ¾ivatel vloÅ¾Ã­ nebo zmÄ›nÃ­ datum ve vstupnÃ­ch polÃ­ch:&]
 ‘€µšÇİˆ’²†àù´‚„“¬è´‚„“ÄèÑ¼çŒÁÂ…Ö èæÌƒÈıÄËú­ÜçæÍ…ÙÓ‹ Èì‚ºÏúŸ›Ñí£Î’á·áÈàĞÆ–Ç„¿
 Û©ñ²‘»¡ÓªÊİŞğû‹ğãÉë‰ÕÕ–¦²«ª—€ü°Ş¬’¬£Ô‡÷½ìÉ¯üÌğ²ã“£ŸüÀ—²Å¤¬øÿ¸¨ì
 &]
-[s0; &]
+[s0;3 &]
 [s0; RozloÅ¾enÃ­ jednotlivÃ½ch prvkÅ¯ v oknÄ› je vytvoÅ™eno pomocÃ­ 
 vizuÃ¡lnÃ­ho designÃ©ru pÅ™Ã­mo v TheIDE:&]
-[s0; &]
+[s0;3 &]
 [s0;= 
 @@image:2968&1537
 Šƒ¶ƒì€€‚”ş€€€€ø—œí½‰œ¤ÅóïßƒÂ û¿Ñ§²ëÊ“ÃÀĞ‘ÔÑÁ’‘Óàëª„†ÃîãÃğÀÅéÑ×õÚ÷§ëî“Åİ…

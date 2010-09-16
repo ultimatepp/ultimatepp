@@ -18,7 +18,7 @@ topic "Jak pomoci - webové stránky";
 [s0; V následujícím textu najdete návod jak nám pomoci.&]
 [s0; &]
 [s0;%ES-ES &]
-[s0; [*+117 Základní pomoc]&]
+[s0; [*+117 Základní pomoc ]&]
 [s0; &]
 [s0; Pokud jste v U`+`+ noví a neumíte ještě používat T`+`+, 
 pořád můžete pomoci.&]
