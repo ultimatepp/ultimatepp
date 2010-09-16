@@ -105,6 +105,17 @@ ImageBuffer::ImageBuffer(ImageBuffer& b)
 	spot2 = b.spot2;
 }
 
+void ImageBuffer::SetDPI(Size dpi) 
+{
+	dots.cx = int(600.*size.cx/dpi.cx);
+	dots.cy = int(600.*size.cy/dpi.cy);
+}
+
+Size ImageBuffer::GetDPI() 
+{
+	return Size(dots.cx ? int(600.*size.cx/dots.cx) : 0, dots.cy ? int(600.*size.cy/dots.cy) : 0);
+}
+
 void  (Image::Data::*Image::Data::sSysInit)();
 void  (Image::Data::*Image::Data::sSysRelease)();
 int   (Image::Data::*Image::Data::sGetResCount)() const;
@@ -221,6 +232,13 @@ Point Image::Get2ndSpot() const
 Size Image::GetDots() const
 {
 	return data ? data->buffer.GetDots() : Size(0, 0);
+}
+
+Size Image::GetDPI() 
+{
+	Size size = GetSize();
+	Size dots = GetDots();
+	return data ?  Size(int(600.*size.cx/dots.cx), int(600.*size.cy/dots.cy)): Size(0, 0);
 }
 
 int Image::GetKindNoScan() const
