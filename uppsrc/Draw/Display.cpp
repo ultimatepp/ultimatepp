@@ -16,6 +16,7 @@ AttrText::operator Value() const
 void AttrText::Init()
 {
 	ink = Null;
+	normalink = Null;
 	paper = Null;
 	font = Null;
 	align = Null;
@@ -94,6 +95,8 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 			paper = t.paper;
 		if(!IsNull(t.ink))
 			ink = t.ink;
+		if(!IsNull(t.normalink) && (s & (CURSOR|FOCUS)) != (CURSOR|FOCUS))
+			ink = t.normalink;
 		if(!IsNull(t.font))
 			font = t.font;
 		if(!IsNull(t.align))
