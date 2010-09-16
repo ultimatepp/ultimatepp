@@ -2,7 +2,7 @@ topic "TheIDE screenshots";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0; [*+150 TheIDE screenshots]&]
-[s0; [/1 (click on image to enlarge it)]&]
+[s0; [/1 (click on image to enlarge it) ]&]
 [s0;>*R1 &]
 [s0; &]
 [s0; 
