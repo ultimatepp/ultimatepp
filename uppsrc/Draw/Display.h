@@ -23,6 +23,7 @@ struct AttrText {
 	WString text;
 	Font    font;
 	Color   ink;
+	Color   normalink;
 	Color   paper;
 	int     align;
 	Image   img;
@@ -35,6 +36,7 @@ struct AttrText {
 	AttrText& operator=(const wchar *s)             { text = s; return *this; }
 	AttrText& operator=(const WString& s)           { text = s; return *this; }
 	AttrText& Ink(Color c)                          { ink = c; return *this; }
+	AttrText& NormalInk(Color c)                    { normalink = c; return *this; }
 	AttrText& Paper(Color c)                        { paper = c; return *this; }
 	AttrText& SetFont(Font f)                       { font = f; return *this; }
 	AttrText& Align(int a)                          { align = a; return *this; }
