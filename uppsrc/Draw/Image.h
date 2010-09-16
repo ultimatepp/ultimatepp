@@ -85,6 +85,8 @@ public:
 
 	void  SetDots(Size sz)              { dots = sz; }
 	Size  GetDots() const               { return dots; }
+	void  SetDPI(Size sz);
+	Size  GetDPI();
 
 	Size  GetSize() const               { return size; }
 	int   GetWidth() const              { return size.cx; }
@@ -219,6 +221,7 @@ public:
 	Point GetHotSpot() const;
 	Point Get2ndSpot() const;
 	Size  GetDots() const;
+	Size  GetDPI();	
 	int   GetKindNoScan() const;
 	int   GetKind() const;
 

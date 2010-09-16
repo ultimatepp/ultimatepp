@@ -133,8 +133,8 @@ inline void Copy(unsigned char *dst, const unsigned char *src, const unsigned ch
 { memcpy(dst, src, size_t((byte *)lim - (byte *)src)); }
 
 template <class T>
-inline void DeepCopyConstruct(void *p, const T& x) {
-	::new(p) T(x);
+inline T& DeepCopyConstruct(void *p, const T& x) {
+	return *(::new(p) T(x));
 }
 
 template <class T>
@@ -233,8 +233,8 @@ class DeepCopyOption : public B {
 public:
 	friend T& operator<<=(T& dest, const T& src)
 	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
-	friend void DeepCopyConstruct(void *dest, const T& src)
-	{ ::new (dest) T(src, 0); }
+	friend T& DeepCopyConstruct(void *dest, const T& src)
+	{ return *(::new (dest) T(src, 0)); }
 	friend T *DeepCopyNew(const T& src)
 	{ return ::new T(src, 0); }
 };

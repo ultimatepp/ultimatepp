@@ -36,14 +36,14 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	void     ReAllocF(int alloc);
 	void     Grow();
 	void     GrowF();
-	void     GrowAdd(const T& x);
-	void     GrowAddPick(pick_ T& x);
+	T&       GrowAdd(const T& x);
+	T&       GrowAddPick(pick_ T& x);
 	void     RawInsert(int q, int count);
 
 public:
 	T&       Add()                   { Chk(); if(items >= alloc) GrowF(); return *(::new(vector + items++) T); }
-	void     Add(const T& x)         { Chk(); if(items < alloc) DeepCopyConstruct(Rdd(), x); else GrowAdd(x); }
-	void     AddPick(pick_ T& x)     { Chk(); if(items < alloc) ::new(Rdd()) T(x); else GrowAddPick(x); }
+	T&       Add(const T& x)         { Chk(); return items < alloc ? DeepCopyConstruct(Rdd(), x) : GrowAdd(x); }
+	T&       AddPick(pick_ T& x)     { Chk(); return items < alloc ? *(::new(Rdd()) T(x)) : GrowAddPick(x); }
 	void     AddN(int n);
 	const T& operator[](int i) const { return Get(i); }
 	T&       operator[](int i)       { return Get(i); }
@@ -152,8 +152,8 @@ protected:
 
 public:
 	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }
-	void     Add(const T& x)            { vector.Add(DeepCopyNew(x)); }
-	void     AddPick(pick_ T& x)        { vector.Add(new T(x)); }
+	T&       Add(const T& x)            { T *q = DeepCopyNew(x); vector.Add(q); return *q; }
+	T&       AddPick(pick_ T& x)        { T *q = new T(x); vector.Add(q); return *q; }
 	T&       Add(T *newt)               { vector.Add(newt); return *newt; }
 	template<class TT> TT& Create()     { TT *q = new TT; Add(q); return *q; }
 	const T& operator[](int i) const    { return Get(i); }
@@ -352,8 +352,8 @@ protected:
 
 public:
 	T&       Add()                          { return *::new(Add0()) T; }
-	void     Add(const T& x)                { DeepCopyConstruct(Add0(), x); }
-	void     AddPick(pick_ T& x)            { ::new(Add0()) T; }
+	T&       Add(const T& x)                { return DeepCopyConstruct(Add0(), x); }
+	T&       AddPick(pick_ T& x)            { return *(::new(Add0()) T(x)); }
 	T&       operator[](int i)              { return Get(i); }
 	const T& operator[](int i) const        { return Get(i); }
 	int      GetCount() const               { return items; }

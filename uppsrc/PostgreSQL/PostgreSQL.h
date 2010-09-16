@@ -51,6 +51,8 @@ protected:
 private:
 	PGconn               *conn;
 	PGresult             *result;
+	
+	String                conns;
 
 	void                  ExecTrans(const char * statement);
 	Vector<String>        EnumData(char type, const char *schema = NULL);

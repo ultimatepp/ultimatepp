@@ -89,19 +89,23 @@ void Vector<T>::__DeepCopy(const Vector& src) {
 }
 
 template <class T>
-void Vector<T>::GrowAdd(const T& x) {
+T& Vector<T>::GrowAdd(const T& x) {
 	T *prev = vector;
 	Grow();
-	DeepCopyConstruct(Rdd(), x);
+	T *q = Rdd();
+	DeepCopyConstruct(q, x);
 	RawFree(prev);
+	return *q;
 }
 
 template <class T>
-void Vector<T>::GrowAddPick(pick_ T& x) {
+T& Vector<T>::GrowAddPick(pick_ T& x) {
 	T *prev = vector;
 	Grow();
-	::new(Rdd()) T(x);
+	T *q = Rdd();
+	::new(q) T(x);
 	RawFree(prev);
+	return *q;
 }
 
 template <class T> inline

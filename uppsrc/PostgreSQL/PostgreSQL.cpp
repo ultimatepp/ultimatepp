@@ -331,6 +331,7 @@ String PostgreSQLSession::ToCharset(const String& s) const
 bool PostgreSQLSession::Open(const char *connect)
 {
 	Close();
+	conns = connect;
 	conn = PQconnectdb(connect);
 	if(PQstatus(conn) != CONNECTION_OK)
 	{	
@@ -362,6 +363,8 @@ bool PostgreSQLSession::ConnectionOK()
 
 bool PostgreSQLSession::ReOpen()
 {
+	DLOG("Reopen!");
+//	Open(conns);
 	PQreset(conn);
 	if(PQstatus(conn) != CONNECTION_OK)
 	{
@@ -369,7 +372,6 @@ bool PostgreSQLSession::ReOpen()
 		return false;
 	}
 	level = 0;
-	
 	return true;	
 }
 
@@ -506,7 +508,7 @@ bool PostgreSQLConnection::Execute()
 		stat = PQresultStatus(result);
 	}
 	while(stat != PGRES_TUPLES_OK && stat != PGRES_COMMAND_OK && session.level == 0 &&
-	      !session.ConnectionOK() && session.WhenReconnect(itry++));
+	      (!session.ConnectionOK() || ErrorMessage().Find("connection") >= 0 && itry == 0) && session.WhenReconnect(itry++));
 
 	if(trace) {
 		if(session.IsTraceTime())
