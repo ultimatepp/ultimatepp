@@ -91,21 +91,23 @@ of type derived from T.&]
 element.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:Add`(const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+[s5;:Array`:`:Add`(const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x])&]
 [s2; Adds a new element with specified value to the Array.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to the Array.&]
 [s7; [*C@3 x]-|The value that is copied to newly created element.&]
+[s7; [*/ Return value]-|Reference to new element in Array.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:AddPick`(pick`_ T`&`):%- [@(0.0.255) void]_[* AddPick]([@(0.128.128) pick`_]_
-[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Array`:`:AddPick`(pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.128.128) pick`_
+]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Adds new element to the Array and picks value of parameter to 
 it. &]
 [s6; Requires T to have pick constructor.&]
 [s6; Invalidates iterators to the Array.&]
 [s7; [*C@3 x]-|Source instance of T that is to be picked.&]
+[s7; [*/ Return value]-|Reference to new element in Array.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Add`(T`*`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T]_`*[*@3 newt])&]

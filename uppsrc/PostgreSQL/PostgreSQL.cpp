@@ -363,8 +363,6 @@ bool PostgreSQLSession::ConnectionOK()
 
 bool PostgreSQLSession::ReOpen()
 {
-	DLOG("Reopen!");
-//	Open(conns);
 	PQreset(conn);
 	if(PQstatus(conn) != CONNECTION_OK)
 	{
