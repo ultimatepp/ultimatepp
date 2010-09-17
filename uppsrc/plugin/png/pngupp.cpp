@@ -53,6 +53,17 @@ static Size GetDotSize(Size pixel_size, png_uint_32 x_ppm, png_uint_32 y_ppm, in
 		fround(pixel_size.cy * (DOTS_PER_METER / y_ppm)));
 }
 
+static void SetDotSize(Size pixel_size, Size dots_size, png_uint_32 &x_ppm, png_uint_32 &y_ppm, int unit_type)
+{
+	if(unit_type != 1 || !pixel_size.cx || !pixel_size.cy || !dots_size.cx || !dots_size.cy) {
+		x_ppm = y_ppm = 0;
+		return;
+	}
+	static const double DOTS_PER_METER = 6e5 / 25.4;
+	x_ppm = fround(pixel_size.cx * (DOTS_PER_METER / dots_size.cx));
+	y_ppm =	fround(pixel_size.cy * (DOTS_PER_METER / dots_size.cy));
+}
+
 class PNGRaster::Data {
 public:
 	Data();
@@ -106,7 +117,9 @@ bool PNGRaster::Init()
 	if(!(data->info_ptr = png_create_info_struct(data->png_ptr)))
 		return false;
 	png_set_read_fn(data->png_ptr, &GetStream(), png_read_stream);
+	
 	png_read_info(data->png_ptr, data->info_ptr);
+	
 	return true;
 }
 
@@ -131,16 +144,19 @@ bool PNGRaster::Create()
 	if(height <= 0 || width <= 0)
 		return false;
 	data->size.cx = width;
-	data->size.cy = height;
-
-	png_uint_32 x_ppm = 0, y_ppm = 0;
-	int unit_type = 0;
-	png_get_pHYs(data->png_ptr, data->info_ptr, &x_ppm, &y_ppm, &unit_type);
+	data->size.cy = height;	
 	data->info.bpp = bit_depth;
 	data->info.colors = (bit_depth < 8 ? 1 << bit_depth : 0);
-	data->info.dots = GetDotSize(data->size, x_ppm, y_ppm, unit_type);
 	data->info.hotspot = Point(0, 0);
 	data->info.kind = IMAGE_OPAQUE;
+
+	if (png_get_valid(data->png_ptr, data->info_ptr, PNG_INFO_pHYs)) {
+		png_uint_32 x_ppm, y_ppm;
+		int unit_type = 0;
+		png_get_pHYs(data->png_ptr, data->info_ptr, &x_ppm, &y_ppm, &unit_type);
+		if (unit_type == PNG_RESOLUTION_METER)		// The only available option
+			data->info.dots = GetDotSize(data->size, x_ppm, y_ppm, unit_type);
+	}
 
 	data->out_bpp = bit_depth;
 
@@ -303,7 +319,7 @@ public:
 	Data(RasterFormat& format);
 	~Data();
 
-	void Start(Stream& stream, Size size, int bpp, ImageKind kind, bool interlace, const RGBA *palette);
+	void Start(Stream& stream, Size size, Size dots, int bpp, ImageKind kind, bool interlace, const RGBA *palette);
 	void WriteLineRaw(const byte *data);
 
 private:
@@ -321,6 +337,7 @@ private:
 	Vector<byte> imagebuf;
 	Vector<byte> rowbuf;
 	Size size;
+	Size dots;
 	int rowbytes;
 	int linebytes;
 	int passes;
@@ -340,10 +357,11 @@ PNGEncoder::Data::~Data()
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 }
 
-void PNGEncoder::Data::Start(Stream& stream, Size size_, int bpp, ImageKind kind_, bool interlace_,
+void PNGEncoder::Data::Start(Stream& stream, Size size_, Size dots_, int bpp, ImageKind kind_, bool interlace_,
 	const RGBA *imgpal)
 {
 	size = size_;
+	dots = dots_;
 	kind = kind_;
 	interlace = interlace_;
 
@@ -437,6 +455,9 @@ void PNGEncoder::Data::Start(Stream& stream, Size size_, int bpp, ImageKind kind
 	* on read and must be written in accordance with the sRGB profile */
 
 	/* Write the file header information.  REQUIRED */
+	png_uint_32 x_ppm, y_ppm;
+	SetDotSize(size, dots, x_ppm, y_ppm, PNG_RESOLUTION_METER);
+	png_set_pHYs(png_ptr, info_ptr, x_ppm, y_ppm, PNG_RESOLUTION_METER);
 	png_write_info(png_ptr, info_ptr);
 
 	png_set_bgr(png_ptr);
@@ -487,7 +508,7 @@ int PNGEncoder::GetPaletteCount()
 void PNGEncoder::Start(Size sz)
 {
 	data = new Data(format);
-	data->Start(GetStream(), sz, bpp, kind, interlace, bpp > 8 ? NULL : GetPalette());
+	data->Start(GetStream(), sz, GetDots(), bpp, kind, interlace, bpp > 8 ? NULL : GetPalette());
 }
 
 void PNGEncoder::WriteLineRaw(const byte *s)

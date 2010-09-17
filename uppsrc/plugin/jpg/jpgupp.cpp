@@ -20,7 +20,7 @@ static void NoOutput(j_common_ptr cinfo)
 {
 }
 
-enum
+enum 
 {
 	STREAM_BUF_SIZE = 16384,
 	ROW_BUF_SIZE    = 16384,
@@ -582,7 +582,7 @@ public:
 	Data();
 	~Data();
 
-	void Start(Stream& stream, Size size, int quality);
+	void Start(Stream& stream, Size size, Size dots, int quality);
 	void WriteLineRaw(const byte *rgba);
 
 private:
@@ -605,7 +605,7 @@ JPGEncoder::Data::~Data()
 	jpeg_destroy_compress(&cinfo);
 }
 
-void JPGEncoder::Data::Start(Stream& stream, Size size_, int quality)
+void JPGEncoder::Data::Start(Stream& stream, Size size_, Size dots, int quality)
 {
 	size = size_;
 
@@ -618,14 +618,12 @@ void JPGEncoder::Data::Start(Stream& stream, Size size_, int quality)
 
 	jpeg_set_defaults(&cinfo);
 
-/*
-	if(dot_size.cx || dot_size.cy)
+	if(dots.cx || dots.cy)
 	{ // set up image density
 		cinfo.density_unit = 1; // dots per inch
-		cinfo.X_density = dot_size.cx ? fround(size.cx * 600.0 / dot_size.cx) : 0;
-		cinfo.Y_density = dot_size.cy ? fround(size.cy * 600.0 / dot_size.cy) : 0;
+		cinfo.X_density = dots.cx ? fround(size.cx * 600.0 / dots.cx) : 0;
+		cinfo.Y_density = dots.cy ? fround(size.cy * 600.0 / dots.cy) : 0;
 	}
-*/
 
 	jpeg_set_quality(&cinfo, quality, true); // limit to baseline-JPEG values
 	jpeg_start_compress(&cinfo, true);
@@ -661,7 +659,7 @@ int JPGEncoder::GetPaletteCount()
 void JPGEncoder::Start(Size sz)
 {
 	data = new Data;
-	data->Start(GetStream(), sz, quality);
+	data->Start(GetStream(), sz, GetDots(), quality);
 }
 
 void JPGEncoder::WriteLineRaw(const byte *s)
