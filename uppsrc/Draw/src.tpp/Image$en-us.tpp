@@ -64,6 +64,10 @@ erator`[`]([@(0.0.255) int]_[@3 i])_[@(0.0.255) const]&]
 returns Size(0, 0).&]
 [s3; &]
 [s4; &]
+[s5;:Image`:`:GetDPI`(`): [_^Size^ Size]_GetDPI()&]
+[s2;%% Returns the image resolution in dpi (dots per inch).&]
+[s3; &]
+[s4; &]
 [s5;:Image`:`:GetKindNoScan`(`)const: [@(0.0.255) int]_GetKindNoScan()_[@(0.0.255) const]&]
 [s2;%% Returns the kind of image. Unlike GetKind(), it does not perform 
 the scan of image if the kind it not know, therefore it can return 
