@@ -1113,7 +1113,7 @@ public:
 	Data(Stream& stream, RasterFormat& format);
 	~Data();
 
-	void             Start(Size size, int bpp, const RGBA *palette);
+	void             Start(Size size, Size dots, int bpp, const RGBA *palette);
 	void             WriteLineRaw(const byte *line);
 
 private:
@@ -1205,7 +1205,7 @@ void TIFEncoder::Data::UnmapStream(thandle_t fd, tdata_t base, toff_t size)
 {
 }
 
-void TIFEncoder::Data::Start(Size sz, int bpp_, const RGBA *palette)
+void TIFEncoder::Data::Start(Size sz, Size dots, int bpp_, const RGBA *palette)
 {
 	size = sz;
 	bpp = bpp_;
@@ -1228,7 +1228,13 @@ void TIFEncoder::Data::Start(Size sz, int bpp_, const RGBA *palette)
 	}
 //	TIFFSetField(tiff, TIFFTAG_REFERENCEBLACKWHITE, refblackwhite);
 //	TIFFSetField(tiff, TIFFTAG_TRANSFERFUNCTION, gray);
-//	TIFFSetField(tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_NONE);
+	if (dots.cx && dots.cy) { 
+		TIFFSetField(tiff, TIFFTAG_RESOLUTIONUNIT, (uint16)RESUNIT_INCH);
+		float xres = float(sz.cx * 600.0 / dots.cx);
+		TIFFSetField(tiff, TIFFTAG_XRESOLUTION, xres);
+		float yres = float(sz.cy * 600.0 / dots.cy);
+		TIFFSetField(tiff, TIFFTAG_YRESOLUTION, yres);
+	}
 	switch(bpp) {
 		case 1: format.Set1mf(); break;
 		case 2: format.Set2mf(); break;
@@ -1283,7 +1289,7 @@ int TIFEncoder::GetPaletteCount()
 void TIFEncoder::Start(Size sz)
 {
 	data = new Data(GetStream(), format);
-	data->Start(sz, bpp, bpp <= 8 ? GetPalette() : NULL);
+	data->Start(sz, GetDots(), bpp, bpp <= 8 ? GetPalette() : NULL);
 }
 
 void TIFEncoder::WriteLineRaw(const byte *s)

@@ -136,9 +136,9 @@ void StreamRasterEncoder::Save(Stream& s, Raster& raster)
 {
 	SetStream(s);
 	Size sz = raster.GetSize();
-	Create(sz, raster);
 	SetDots(raster.GetInfo().dots);
 	SetHotSpot(raster.GetInfo().hotspot);
+	Create(sz, raster);
 	for(int i = 0; i < sz.cy; i++)
 		WriteLine(raster[i]);
 }
