@@ -31,16 +31,17 @@ String FormatWithDashes(const Uuid& id) {
 		(id.c & 0xFFFF0000) >> 16, id.c & 0x0000FFFF, id.d);
 }
 
+
 dword scanX(const char *s)
 {
-	dword r = 0;
-	for(int i = 0; i < 8; i++) {
-		r = (r << 4) | (*s >= '0' && *s <= '9' ? *s - '0' :
-		                *s >= 'A' && *s <= 'F' ? *s - 'A' :
-		                *s >= 'a' && *s <= 'f' ? *s - 'a' : 0);
-		s++;
-	}
-	return r;
+    dword r = 0;
+    for(int i = 0; i < 8; i++) {
+        r = (r << 4) | (*s >= '0' && *s <= '9' ?      *s - '0' :
+                        *s >= 'A' && *s <= 'F' ? 10 + *s - 'A' :
+                        *s >= 'a' && *s <= 'f' ? 10 + *s - 'a' : 0);
+        s++;
+    }
+    return r;
 }
 
 Uuid ScanUuid(const char *s)
