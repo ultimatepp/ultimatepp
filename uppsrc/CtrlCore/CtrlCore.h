@@ -473,7 +473,7 @@ private:
 	static  bool      mouseinview;
 	static  bool      mouseinframe;
 	static  bool      globalbackpaint;
-	static  bool      Painting;
+	static  bool      painting;
 	static  int       LoopLevel;
 	static  Ctrl     *LoopCtrl;
 	static  int64     eventid;
@@ -1135,7 +1135,7 @@ public:
 	void        RefreshFrame(int x, int y, int cx, int cy);
 	void        RefreshFrame();
 	
-	static bool IsPainting()                             { return Painting; }
+	static bool IsPainting()                             { return painting; }
 
 	void        ScrollView(const Rect& r, int dx, int dy);
 	void        ScrollView(int x, int y, int cx, int cy, int dx, int dy);
