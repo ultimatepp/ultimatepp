@@ -111,7 +111,7 @@ ctrl GridCtrl {
 	bool HorzGrid = true;
 	bool VertGrid = true;
 	Color GridColor = :SLtGray;
-	bool MultiSelect = true;
+	bool MultiSelect = false;
 	bool ResizingCols = true;
 	bool FullColResizing = true;
 	bool ResizingRows = false;

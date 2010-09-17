@@ -5834,7 +5834,7 @@ int GridCtrl::SetCursorId(int id)
 int GridCtrl::GetCursor(bool rel) const
 {
 	if(rel)
-		return valid_cursor ? vitems[curpos.y].id  - fixed_rows : -1;
+		return valid_cursor ? vitems[curpos.y].id - fixed_rows : -1;
 	else
 		return valid_cursor ? curpos.y - fixed_rows : -1;
 }
@@ -5842,7 +5842,7 @@ int GridCtrl::GetCursor(bool rel) const
 int GridCtrl::GetPrevCursor(bool rel) const
 {
 	if(rel)
-		return IsValidCursor(oldcur) ? vitems[oldcur.y].id  - fixed_rows : -1;
+		return IsValidCursor(oldcur) ? vitems[oldcur.y].id - fixed_rows : -1;
 	else
 		return IsValidCursor(oldcur) ? oldcur.y - fixed_rows : -1;
 }
