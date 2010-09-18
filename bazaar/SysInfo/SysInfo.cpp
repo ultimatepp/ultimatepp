@@ -274,7 +274,7 @@ Array <NetAdapter> GetAdapterInfo() {
 		switch (pAdd->IfType) {
 		case IF_TYPE_ETHERNET_CSMACD: 		adapter.type = "ETHERNET";	break;
 		case IF_TYPE_ISO88025_TOKENRING: 	adapter.type = "TOKENRING";	break;
-		case IF_TYPE_PPP: 					adapter.type = "PPP";		break;
+		case IF_TYPE_PPP: 					adapter.type = "MODEM";		break;
 		case IF_TYPE_SOFTWARE_LOOPBACK: 	adapter.type = "SOFTWARE_LOOPBACK";		break;
 		case IF_TYPE_ATM: 					adapter.type = "ATM";		break;
 		case IF_TYPE_IEEE80211: 			adapter.type = "IEEE80211";	break;
@@ -462,7 +462,13 @@ Array <NetAdapter> GetAdapterInfo() {
 			adapter.type = "ETHERNET";
 		else if (str.Find("lo") >= 0)
 			adapter.type = "SOFTWARE_LOOPBACK";
-		else if (str.Find("vbox") >= 0)
+		else if (str.Find("ppp") >= 0)
+			adapter.type = "MODEM";		
+		else if (str.Find("hci") >= 0)
+			adapter.type = "BLUETOOTH";
+		else if (str.Find("tr") >= 0)
+			adapter.type = "TOKENRING";
+		else if (str.Find("vbox") >= 0 || str.Find("wifi") >= 0 || str.Find("ath") >= 0)
 			adapter.type = "VIRTUALBOX";
 		else if (str.Find("wlan") >= 0)
 			adapter.type = "IEEE80211";
