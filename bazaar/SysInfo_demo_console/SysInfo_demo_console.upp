@@ -1,7 +1,5 @@
 description "Console demo of SysInfo package\377";
 
-noblitz;
-
 uses
 	Core,
 	SysInfo;

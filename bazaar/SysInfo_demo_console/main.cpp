@@ -1,9 +1,10 @@
 #include <Core/Core.h>
-#include <SysInfo/SysInfo.h>
 
 using namespace Upp;
 
-bool end = false;
+#include <SysInfo/SysInfo.h>
+
+static bool end = false;
 
 void TestGetchar()
 {
@@ -232,8 +233,8 @@ void Test()
 	Puts("\nPress enter to end...");	TestGetchar();
 } 
 
-#include <windows.h>
-#include <mmsystem.h>
+//#include <windows.h>
+//#include <mmsystem.h>
 
 CONSOLE_APP_MAIN
 {
