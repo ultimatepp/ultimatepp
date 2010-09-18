@@ -1190,76 +1190,167 @@ bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath)
 	return true;
 }
 
-bool DirectoryCopyX(const char *dir, const char *newPlace)
-{
+bool DirectoryCopyX(const char *dir, const char *newPlace) {
 	return DirectoryCopy_Each(dir, newPlace, "");
 }
 
-void SearchFile_Each(String dir, String condFile, String text, Array<String> &files, Array<String> &errorList)
-{
+#if defined(__MINGW32__)
+	#define _SH_DENYNO 0x40 
+#endif
+
+int FileCompare(const char *path1, const char *path2) {
+	int fp1;
+#ifdef PLATFORM_POSIX
+	fp1 = open(ToSystemCharset(path1), O_RDONLY, S_IWRITE|S_IREAD);
+#else
+	fp1 = _wsopen(ToSystemCharsetW(path1), O_RDONLY|O_BINARY, _SH_DENYNO, _S_IREAD|_S_IWRITE);
+#endif
+	if (fp1 == -1)
+		return -1;
+	int fp2;
+#ifdef PLATFORM_POSIX
+	fp2 = open(ToSystemCharset(path2), O_RDONLY, S_IWRITE|S_IREAD);
+#else
+	fp2 = _wsopen(ToSystemCharsetW(path2), O_RDONLY|O_BINARY, _SH_DENYNO, _S_IREAD|_S_IWRITE);
+#endif
+	if (fp2 == -1) {
+		close(fp1);
+		return -1;	
+	}
+	Buffer <byte> c1(8192), c2(8192);
+	int ret = 0;
+	while (true) {
+		int n1 = read(fp1, c1, 8192);
+		int n2 = read(fp2, c2, 8192);
+		if (n1 == -1 || n2 == -1) {
+			ret = -1;
+			break;
+		}
+		if (n1 != n2)
+			break;
+		if (memcmp(c1, c2, n1) != 0)
+			break;
+		if (n1 == 0) {
+			ret = 1;
+			break;
+		}
+	}
+#ifdef PLATFORM_POSIX	
+	if (-1 == close(fp1))
+		ret = -1;
+	if (-1 == close(fp2))
+		ret = -1;
+#else
+	if (-1 == _close(fp1))
+		ret = -1;
+	if (-1 == _close(fp2))
+		ret = -1;
+#endif
+	return ret;
+}
+
+int FindStringInFile(const char *file, const String text) {
+#ifdef PLATFORM_POSIX
+	FILE *fp = fopen(file, "rb");
+#else
+	FILE *fp = _wfopen(String(file).ToWString(), L"rb");
+#endif
+	if (fp != NULL) {
+		int i = 0, c;
+		while ((c = fgetc(fp)) != EOF) {
+			if (c == text[i]) {
+				++i;
+				if (i == text.GetCount()) 
+					return 1;
+			} else {
+				if (i != 0) 
+					fseek(fp, -(i-1), SEEK_CUR);
+				i = 0;
+			}
+		}
+		fclose(fp);
+	} else
+		return -1;
+	return 0;	
+}
+
+bool MatchPathName(const char *name, const Array<String> &cond, const Array<String> &ext) {
+	for (int i = 0; i < cond.GetCount(); ++i) {
+		if(!PatternMatch(cond[i], name))
+			return false;
+	}
+	for (int i = 0; i < ext.GetCount(); ++i) {
+		if(PatternMatch(ext[i], name))
+			return false;
+	}
+	return true;
+}
+
+void SearchFile_Each(String dir, const Array<String> &condFiles, const Array<String> &condFolders, 
+								 const Array<String> &extFiles,  const Array<String> &extFolders, 
+								 const String text, Array<String> &files, Array<String> &errorList) {
 	FindFile ff;
-	if (ff.Search(AppendFileName(dir, condFile))) {
+	if (ff.Search(AppendFileName(dir, "*"))) {
 		do {
 			if(ff.IsFile()) {
-				String p = AppendFileName(dir, ff.GetName());
-				if (text.IsEmpty())
-					files.Add(p);
-				else {
-#ifdef PLATFORM_POSIX
-					FILE *fp = fopen(p, "rb");
-#else
-					FILE *fp = _wfopen(p.ToWString(), L"rb");
-#endif
-					if (fp != NULL) {
-						int i = 0, c;
-						while ((c = fgetc(fp)) != EOF) {
-							if (c == text[i]) {
-								++i;
-								if (i == text.GetCount()) {
-									files.Add(p);
-									break;
-								}
-							} else {
-								if (i != 0) 
-									fseek(fp, -(i-1), SEEK_CUR);
-								i = 0;
-							}
+				String name = AppendFileName(dir, ff.GetName());
+				if (MatchPathName(ff.GetName(), condFiles, extFiles)) {
+					if (text.IsEmpty())
+						files.Add(name);
+					else {
+						switch(FindStringInFile(name, text)) {
+						case 1:	files.Add(name);
+								break;
+						case -1:errorList.Add(AppendFileName(dir, ff.GetName()) + String(": ") + 
+																	t_("Impossible to open file"));
+								break;
 						}
-						fclose(fp);
-					} else
-						errorList.Add(AppendFileName(dir, ff.GetName()) + String(": ") + t_("Impossible to open file"));
+					}
+				}
+			} else if(ff.IsDirectory()) {
+				String folder = ff.GetName();
+				if (folder != "." && folder != "..") {
+					String name = AppendFileName(dir, folder);
+					if (MatchPathName(name, condFolders, extFolders)) 
+						SearchFile_Each(name, condFiles, condFolders, extFiles, extFolders, text, files, errorList);
 				}
 			} 
 		} while (ff.Next());
 	}
-	ff.Search(AppendFileName(dir, "*"));
-	do {
-		String name = ff.GetName();
-		if(ff.IsDirectory() && name != "." && name != "..") {
-			String p = AppendFileName(dir, name);
-			SearchFile_Each(p, condFile, text, files, errorList);
-		}
-	} while (ff.Next()); 
+}
+
+Array<String> SearchFile(String dir, const Array<String> &condFiles, const Array<String> &condFolders, 
+								 const Array<String> &extFiles,  const Array<String> &extFolders, 
+								 const String &text, Array<String> &errorList) {
+	Array<String> files;								     
+	errorList.Clear();
+
+	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	
+	
+	
+	return files;
 }
 
 Array<String> SearchFile(String dir, String condFile, String text, Array<String> &errorList)
 {
-	Array<String> ret;
+	Array<String> condFiles, condFolders, extFiles, extFolders, files;
 	errorList.Clear();
 
-	SearchFile_Each(dir, condFile, text, ret, errorList);	
+	condFiles.Add(condFile);
+	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	
 
-	return ret;
+	return files;
 }
 
 Array<String> SearchFile(String dir, String condFile, String text)
 {
 	Array<String> errorList;
-	Array<String> ret;
+	Array<String> condFiles, condFolders, extFiles, extFolders, files;
 	
-	SearchFile_Each(dir, condFile, text, ret, errorList);	
+	condFiles.Add(condFile);
+	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	
 	
-	return ret;
+	return files;
 }
 
 bool fileDataSortAscending;

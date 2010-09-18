@@ -19,6 +19,10 @@ bool LaunchFile(const char *file);
 
 bool FileCat(const char *file, const char *appendFile);
 
+int FileCompare(const char *path1, const char *path2);
+
+int FindStringInFile(const char *file, const String text);
+
 bool FileStrAppend(const char *file, const char *str);
 bool AppendFile(const char *filename, const char *str);
 
@@ -62,6 +66,9 @@ int64 GetLength(String fileDirName);
 int64 GetDirectoryLength(String directoryName);
 
 ///////////////////////////////
+Array<String> SearchFile(String dir, const Array<String> &condFiles, const Array<String> &condFolders, 
+								 const Array<String> &extFiles,  const Array<String> &extFolders, 
+								 const String &text, Array<String> &errorList);
 Array<String> SearchFile(String dir, String condFile, String text, Array<String> &errorList);//, int flags = 0);
 Array<String> SearchFile(String dir, String condFile, String text = "");//, int flags = 0);
 ///////////////////////////////

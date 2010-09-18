@@ -189,7 +189,7 @@ static void offtout(off_t x,u_char *buf)
 
 	if(x<0) y=-x; else y=x;
 
-		buf[0]=y%256;y-=buf[0];
+	buf[0]=y%256;y-=buf[0];
 	y=y/256;buf[1]=y%256;y-=buf[1];
 	y=y/256;buf[2]=y%256;y-=buf[2];
 	y=y/256;buf[3]=y%256;y-=buf[3];

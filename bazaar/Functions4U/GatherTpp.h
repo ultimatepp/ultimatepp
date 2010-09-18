@@ -33,7 +33,7 @@ private:
 	String TopicFileName(const char *topic);
 	String GatherTopics(const char *topic);
 	void GatherRefLinks(const char *upp);
-	void ExportPage(int i, String htmlFolder);
+	void ExportPage(int i, String htmlFolder, String keywords = "");
 	String QtfAsHtml(const char *qtf, Index<String>& css, const VectorMap<String, String>& links,
     	const VectorMap<String, String>& labels, const String& outdir, const String& fn = Null);
 };

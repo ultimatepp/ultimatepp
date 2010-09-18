@@ -139,7 +139,7 @@ String GetText(const char *s)
 	return GetTopic(s).text;
 }
 
-void GatherTpp::ExportPage(int i, String htmlFolder)
+void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
 {
 	Index<String> css;
 	String path = links.GetKey(i);

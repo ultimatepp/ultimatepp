@@ -19,10 +19,9 @@ bool Err(String str);
 	#define write 	_write	
 	#define close 	_close		
 	typedef unsigned char u_char;
-	
-	#if defined(__MINGW32__)
-		#define _SH_DENYNO 0x40 
-	#else
+
+	#define _SH_DENYNO 0x40 	
+	#if !defined(__MINGW32__)
 		typedef long pid_t;
 		typedef signed int ssize_t;
 	#endif
