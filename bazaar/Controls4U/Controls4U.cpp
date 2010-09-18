@@ -17,7 +17,7 @@ void EditFileFolder::Init() {
 	//EditString::AddFrame(butUp);
 	EditString::AddFrame(butBrowse);
 	WhenEnter = THISBACK1(DoGo, true);
-	butBrowse.SetImage(CtrlImg::Dir());//right_arrow());
+	butBrowse.SetImage(Controls4UImg::Folder());
 	butBrowse <<= THISBACK(DoBrowse);
 	butLeft.SetImage(CtrlImg::SmallLeft());
 	butLeft <<= THISBACK(DoLeft);
@@ -76,10 +76,11 @@ EditFileFolder &EditFileFolder::UseBrowse(bool use) {
 void EditFileFolder::DoBrowse() {
 	String s = GetData();
 	//fs.Set(s);
-	if (DirectoryExists(s))
-		fs.dir <<= s;
+	if (DirectoryExists(s)) 
+		fs.PreSelect(s);
 	else {
 		fs.PreSelect(GetFileName(s));
+		//fs.BaseDir(s);
 		fs.dir <<= GetFileDirectory(s);
 	}
 	if (isFile && isLoad) {
@@ -93,6 +94,7 @@ void EditFileFolder::DoBrowse() {
 			//DoGo();//WhenChange();
 		}
 	} else if (!isFile) {
+		fs.ClearFiles();
 		if (fs.ExecuteSelectDir(title)) {
 			SetData(~fs);
 			//DoGo();//WhenChange();
