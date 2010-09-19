@@ -1,0 +1,18 @@
+description "Test software protection module\377";
+
+uses
+	CtrlLib,
+	Protect;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI PROTECT";
+
+custom(PROTECT) "post-link",
+	"/home/massimo/sources/upp-svn/out/GCC.Debug.Debug_full.Shared/ProtectE"
+	"ncrypt $(OUTPATH) AABBCCDDEEFF",
+	"";
+

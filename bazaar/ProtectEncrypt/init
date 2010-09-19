@@ -1,0 +1,5 @@
+#ifndef _ProtectEncrypt_icpp_init_stub
+#define _ProtectEncrypt_icpp_init_stub
+#include "Core/init"
+#include "Protect/init"
+#endif

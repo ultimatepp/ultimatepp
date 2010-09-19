@@ -1,0 +1,12 @@
+description "Entrypt functions inside executables by aid of Protect package\377";
+
+uses
+	Core,
+	Protect;
+
+file
+	ProtectEncrypt.cpp;
+
+mainconfig
+	"" = "";
+
