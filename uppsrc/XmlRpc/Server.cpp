@@ -38,6 +38,11 @@ void ThrowXmlRpcError(int code, const char *s)
 	throw e;
 }
 
+void ThrowXmlRpcError(const char *s)
+{
+	ThrowXmlRpcError(-1, s);
+}
+
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr)
 {
 	XmlParser p(request);
