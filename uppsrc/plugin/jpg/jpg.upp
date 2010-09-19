@@ -7,6 +7,7 @@ file
 	jpg.h,
 	jpgupp.cpp,
 	jpgreg.icpp,
+	src.tpp,
 	lib readonly separator,
 	lib\cderror.h,
 	lib\cdjpeg.c,

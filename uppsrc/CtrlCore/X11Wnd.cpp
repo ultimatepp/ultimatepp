@@ -64,9 +64,9 @@ void Ctrl::DoPaint(const Vector<Rect>& invalid)
 		XftDraw *xftdraw = XftDrawCreate(Xdisplay, (Drawable) top->window,
 		                                 DefaultVisual(Xdisplay, Xscreenno), Xcolormap);
 		SystemDraw draw(top->window, gc, xftdraw, invalid);
-		Painting = true;
+		painting = true;
 		UpdateArea(draw, draw.GetClip());
-		Painting = false;
+		painting = false;
 		XftDrawDestroy(xftdraw);
 		XFreeGC(Xdisplay, gc);
 	}
