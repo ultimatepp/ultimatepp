@@ -253,6 +253,7 @@ INITBLOCK { Register(#x, xmlrpc##x, group); } \
 void xmlrpc##x(XmlRpcData& rpc)
 
 void ThrowXmlRpcError(int code, const char *s);
+void ThrowXmlRpcError(const char *s);
 
 class XmlRpcCall {
 	bool       shorted;
