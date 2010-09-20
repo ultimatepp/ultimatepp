@@ -383,10 +383,12 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 		}
 		else
 		if(c == ';' && level == 0) {
-			if(session.GetDialect() == ORACLE)
-				stmt.Cat(";\n");
 			Sql sql(session);
 			session.ClearError();
+			int q = 0;
+			while(stmt[q] == '\r' || stmt[q] == '\n')
+				q++;
+			stmt = stmt.Mid(q);
 			if(!sql.Execute(stmt)) {
 				ok = false;
 				if(stoponerror)
@@ -400,8 +402,11 @@ bool SqlPerformScript(SqlSession& session, Stream& script,
 				level++;
 			if(c == ')')
 				level--;
-			if(session.GetDialect() != ORACLE || c != '\r')
+			if(c != '\r') {
+				if(session.GetDialect() == ORACLE && c == '\n')
+					stmt.Cat('\r');
 				stmt.Cat(c);
+			}
 			script.Get();
 		}
 	}

@@ -134,6 +134,8 @@ void ImageEncoder::WriteLineRaw(const byte *data)
 
 void StreamRasterEncoder::Save(Stream& s, Raster& raster)
 {
+	if(raster.GetWidth() == 0 || raster.GetHeight() == 0)
+		return;
 	SetStream(s);
 	Size sz = raster.GetSize();
 	SetDots(raster.GetInfo().dots);
