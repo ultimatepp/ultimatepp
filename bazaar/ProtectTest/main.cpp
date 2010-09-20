@@ -15,12 +15,15 @@ bool Decrypt(byte *start, size_t len)
 	return PROTECT_DECRYPT ( start, len, GetKey() );
 }
 
-void testfn1(void)
+double testfn1(double d, double e)
 {
 	PROTECT_START_FUNC(Decrypt);
+	
+	double f;
+	f = d * e;
 
 	PromptOK("testfn1 DECRYPTED SUCCESFULLY!!!");
-	return;
+	return 2 * f + e;
 
 	PROTECT_END_FUNC;
 }
@@ -37,7 +40,7 @@ void testfn2(void)
 
 GUI_APP_MAIN
 {
-	testfn1();
+	double d = testfn1(3, 4);
 	testfn2();
 }
 

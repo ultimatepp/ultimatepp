@@ -36,15 +36,18 @@ using namespace Upp;
 		"\t.ascii \""PROTECT_START_MARKER"\"\n" \
 		"1:\n" \
 	); \
-	__start:
+	__start: \
+	{ \
 
 #define PROTECT_END_FUNC \
-	return; \
+	}  \
 	__end: \
 	asm volatile ( \
+		"\tjmp 2f\n" \
 		"\t.ascii \""PROTECT_END_MARKER"\"\n" \
-	)
-
+		"2:\n" \
+	);
+	
 #else
 
 #define _PROTECT_START_MARKER	__asm _emit 0xba __asm _emit 0xad __asm _emit 0xde __asm _emit 0xad __asm _emit 0xfa __asm _emit 0xce
