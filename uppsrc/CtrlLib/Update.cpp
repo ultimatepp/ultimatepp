@@ -146,6 +146,8 @@ void SelfUpdate() {
 			commandline += ' ';
 			commandline += FixArg(cmd[i]);
 		}
+		Exclamation(dst);
+		Exclamation(src);
 		if(WinExec(GetExeDirFile("updater.exe") + " " + GetFileName(dst) + commandline, SW_SHOWNORMAL) <= 31)
 			return;
 	}
