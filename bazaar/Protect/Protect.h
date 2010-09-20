@@ -98,9 +98,11 @@ using namespace Upp;
 #define PROTECT_END_FUNC \
 	} \
 	__end: \
-	__asm { __asm jmp next2 } \
-	_PROTECT_END_MARKER; \
-	__asm next2:
+	__asm { \
+		__asm jmp next2 \
+		_PROTECT_END_MARKER \
+		__asm next2: \
+	};
 
 #endif
 
