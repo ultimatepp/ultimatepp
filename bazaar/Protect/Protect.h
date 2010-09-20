@@ -92,12 +92,15 @@ using namespace Upp;
 		_PROTECT_START_MARKER \
 		__asm next: \
 	} \
-	__start:
+	__start: \
+	{ \
 
 #define PROTECT_END_FUNC \
-	return; \
+	} \
 	__end: \
-	_PROTECT_END_MARKER;
+	__asm { __asm jmp next2 } \
+	_PROTECT_END_MARKER; \
+	__asm next2:
 
 #endif
 
