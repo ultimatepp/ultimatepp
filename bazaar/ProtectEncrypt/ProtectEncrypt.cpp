@@ -57,6 +57,45 @@ int CryptBuf(byte *buf, byte *bufEnd, String const &key)
 	return patches;
 }
 
+// obfuscates code inside buffer
+int ObfuscateBuf(byte *buf, byte *bufEnd)
+{
+	int patches = 0;
+	
+	byte *bStart = buf;
+	while( (bStart = ProtectSearchBuf(bStart, bufEnd, (const byte *)OBFUSCATE_START_MARKER, strlen(OBFUSCATE_START_MARKER))) != NULL)
+	{
+		// builds a random key, overwriting start pattern and following 10 bytes
+		String key;
+		for(unsigned i = 0; i < strlen(OBFUSCATE_START_MARKER) + 10; i++)
+		{
+			byte k = (byte)(Random() & 0xff);
+			*bStart++ = k;
+			key += (char)k;
+		}
+		
+		// locate end pattern
+		byte *bEnd = ProtectSearchBuf(bStart, bufEnd, (const byte *)OBFUSCATE_END_MARKER, strlen(OBFUSCATE_END_MARKER));
+		if(!bEnd)
+			return 0;
+		
+		// get size of chunk to patch
+		size_t size = bEnd - bStart;
+
+		// overwrite end pattern, just to fool a bit
+		// symple pattern search
+		for(unsigned i = 0; i < strlen(OBFUSCATE_END_MARKER); i++)
+			*bEnd++ = (byte)(Random() & 0xff);
+		
+		// obfuscate buffer
+		RC4 rc4(key);
+		rc4.Crypt(bStart, bStart, size);
+		patches++;
+	}
+	
+	return patches;
+}
+
 CONSOLE_APP_MAIN
 {
 	// setup exit code for errors
@@ -126,15 +165,27 @@ CONSOLE_APP_MAIN
 	Buffer<byte>buf(size);
 	f.GetAll(buf, size);
 	
+	// crypt part
 	int patches = CryptBuf(buf, buf + size, key);
 	if(patches)
 	{
-		Cerr() << "Successfully patched " << patches << " functions\n";
+		Cerr() << "Successfully encrypted " << patches << " functions\n";
 		FileOut f(fName);
 		f.Put(buf, size);
 	}
 	else
-		Cerr() << "No patchpoints found\n";
+		Cerr() << "No encrypt points found\n";
+
+	// obfuscation part
+	patches = ObfuscateBuf(buf, buf + size);
+	if(patches)
+	{
+		Cerr() << "Successfully obfuscated " << patches << " functions\n";
+		FileOut f(fName);
+		f.Put(buf, size);
+	}
+	else
+		Cerr() << "No obfuscate points found\n";
 
 	// sets up exit code
 	SetExitCode(0);
