@@ -18,7 +18,7 @@ bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access)
 }
 #else
 
-static bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access)
+bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access)
 {
 	dword oldProt;
 	bool res = VirtualProtect(start, size, access ? PAGE_EXECUTE_READWRITE : PAGE_EXECUTE_READ, &oldProt);
