@@ -4,7 +4,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-static bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access)
+bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access)
 {
 	// round start and size to page size -- needed for mprotect
 	long pSize = sysconf(_SC_PAGESIZE );
@@ -27,12 +27,21 @@ static bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access)
 }
 #endif
 
-bool PROTECT_DECRYPT(byte *start, size_t size, String const &key)
+void PROTECT_DECRYPT(byte *start, size_t size, String const &key)
 {
 	RC4 rc4(key);
 
-	if(!PROTECT_WRITE_ACCESS(start, size, true))
-		return false;
 	rc4.Crypt(start, start, size);
-	return PROTECT_WRITE_ACCESS(start, size, false);
+}
+
+void PROTECT_OBFUSCATE(byte *start, size_t len, byte *key, size_t keyLen)
+{
+	String k;
+	for(unsigned i = 0; i < keyLen; i++)
+		k += *key++;
+	if(!PROTECT_WRITE_ACCESS(start, len, true))
+		return;
+	RC4 rc4(k);
+	rc4.Crypt(start, start, len);
+	PROTECT_WRITE_ACCESS(start, len, false);
 }

@@ -18,6 +18,7 @@ class RC4
 		RC4(String const &key);
 		void SetKey(String const &key);
 		void Crypt(byte *src, byte *dst, size_t len);
+		String Crypt(String const &s);
 };
 
 #endif

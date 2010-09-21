@@ -49,3 +49,22 @@ void RC4::Crypt(byte *src, byte *dst, size_t len)
 		*dst++ = *src++ ^ sbox[swap];
 	}
 }
+
+String RC4::Crypt(String const &s)
+{
+	unsigned char swap;
+	int i = 0;
+	int len = s.GetCount();
+	String res;
+	
+	while (len--)
+	{
+		sj += sbox[++si];
+		swap = sbox[si];
+		sbox[si] = sbox[sj];
+		sbox[sj] = swap;
+		swap = sbox[si] + sbox[sj];
+		res += s[i++] ^ sbox[swap];
+	}
+	return res;
+}
