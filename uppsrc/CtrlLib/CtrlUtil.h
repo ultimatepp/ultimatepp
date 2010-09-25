@@ -334,6 +334,8 @@ class IdCtrls {
 	Array<Item> item;
 
 public:
+	void        Reset()                              { item.Clear(); }
+
 	void        Add(Id id, Ctrl& ctrl);
 	IdCtrls&    operator()(Id id, Ctrl& ctrl)        { Add(id, ctrl); return *this; }
 	int         GetCount() const                     { return item.GetCount(); }
