@@ -1405,6 +1405,7 @@ class GridCtrl : public Ctrl
 		int  GetColUId() const;
 		int  GetRowUId() const;
 		int  FindCol(int id) const;
+		int  FindCol(const Id& id) const;
 		int  FindCol(const String& s) const;
 		int  FindRow(int id) const;
 

@@ -58,7 +58,8 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Name(String &s)
 GridCtrl::ItemRect& GridCtrl::ItemRect::Hidden(bool b)
 {
 	hidden = b;
-	size = 0;
+	if(hidden)
+		size = 0;
 	return *this;
 }
 

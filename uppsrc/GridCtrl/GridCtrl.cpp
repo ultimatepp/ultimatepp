@@ -5892,6 +5892,14 @@ int GridCtrl::FindCol(int id) const
 	return -1;
 }
 
+int GridCtrl::FindCol(const Id& id) const
+{
+	for(int i = fixed_cols; i < total_cols; i++)
+		if(aliases.GetKey(i) == id)
+			return i - fixed_cols;
+	return -1;
+}
+
 int GridCtrl::FindCol(const String& s) const
 {
 	for(int i = fixed_cols; i < total_cols; i++)
