@@ -5885,7 +5885,6 @@ int GridCtrl::GetRowUId() const
 
 int GridCtrl::FindCol(int id) const
 {
-	id += fixed_cols;
 	for(int i = fixed_cols; i < total_cols; i++)
 		if(hitems[i].id == id)
 			return i - fixed_cols;
@@ -5910,7 +5909,6 @@ int GridCtrl::FindCol(const String& s) const
 
 int GridCtrl::FindRow(int id) const
 {
-	id += fixed_rows;
 	for(int i = fixed_rows; i < total_rows; i++)
 		if(vitems[i].id == id)
 			return i - fixed_rows;
