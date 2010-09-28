@@ -46,6 +46,7 @@ struct AttrText {
 	AttrText& SetImage(const Image& m, int spc = 4) { img = m; imgspc = spc; return *this; }
 
 	operator Value() const;
+	AttrText(const Value& v);
 
 	AttrText(const char *text);
 	AttrText(const wchar *text);
