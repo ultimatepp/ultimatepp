@@ -46,6 +46,12 @@ AttrText::AttrText(const WString& _text)
 	Init();
 }
 
+AttrText::AttrText(const String& _text)
+{
+	text = _text.ToWString();
+	Init();
+}
+
 class StdDisplayClass : public Display
 {
 public:
