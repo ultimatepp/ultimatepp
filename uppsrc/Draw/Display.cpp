@@ -13,6 +13,11 @@ AttrText::operator Value() const
 	return RawToValue(*this);
 }
 
+AttrText::AttrText(const Value& v)
+{
+	*this = ValueTo<AttrText>(v);
+}
+
 void AttrText::Init()
 {
 	ink = Null;
@@ -95,7 +100,7 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 			paper = t.paper;
 		if(!IsNull(t.ink))
 			ink = t.ink;
-		if(!IsNull(t.normalink) && (s & (CURSOR|FOCUS)) != (CURSOR|FOCUS))
+		if(!IsNull(t.normalink) && !(s & (CURSOR|SELECT|READONLY)))
 			ink = t.normalink;
 		if(!IsNull(t.font))
 			font = t.font;

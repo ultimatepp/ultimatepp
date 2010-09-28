@@ -158,6 +158,12 @@ perator`=([@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_[@3 s])&]
 [s7; [*/ Return value]-|`*this.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AttrText`:`:NormalInk`(Color`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* NormalInk](
+[_^Color^ Color]_[*@3 c])&]
+[s2; Sets the text color to be used if the item is not in selected 
+nor focused nor read`-only state.&]
+[s3; &]
+[s4;%- &]
 [s5;:AttrText`:`:Paper`(Color`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Paper([_^Color^ Co
 lor]_[@3 c])&]
 [s2; Sets the paper color.&]
@@ -199,6 +205,11 @@ SetImage([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[@3 m], [@(0.0.255) 
 [s5;:AttrText`:`:operator Value`(`)const:%- operator_Value()_[@(0.0.255) const]&]
 [s7; [*/ Return value]-|AttrText as raw Value.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:AttrText`:`:AttrText`(const Value`&`):%- [* AttrText]([@(0.0.255) const]_[_^Value^ Val
+ue][@(0.0.255) `&]_[*@3 v])&]
+[s2; Converts Value to AttrText.&]
+[s3; &]
 [s4;%- &]
 [s5;:AttrText`:`:AttrText`(const char`*`):%- AttrText([@(0.0.255) const]_[@(0.0.255) char
 ]_`*[@3 text])&]
