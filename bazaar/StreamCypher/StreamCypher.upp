@@ -1,0 +1,13 @@
+description "Encrypt/Decrypt routines using Snow2 OR RC4 stream cypher\377";
+
+uses
+	Core;
+
+file
+	StreamCypher.h,
+	Snow2.h,
+	Snow2.cpp,
+	RC4.h,
+	RC4.cpp,
+	srcdoc.tpp;
+

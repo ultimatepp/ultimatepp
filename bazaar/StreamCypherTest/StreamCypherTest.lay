@@ -1,0 +1,14 @@
+LAYOUT(StreamCypherTestLayout, 320, 268)
+	ITEM(EditFile, destEdit, LeftPosZ(4, 312).TopPosZ(180, 19))
+	ITEM(Label, dv___1, SetLabel(t_("Encoded/decoded file :")).LeftPosZ(4, 312).TopPosZ(160, 16))
+	ITEM(Label, keyLabel, SetLabel(t_("Key (16 or 32 bytes long, hex-ascii format - 0011223344) :")).LeftPosZ(4, 312).TopPosZ(72, 16))
+	ITEM(EditFile, sourceEdit, LeftPosZ(4, 312).TopPosZ(136, 19))
+	ITEM(Button, goBtn, SetLabel(t_("Go")).LeftPosZ(4, 56).TopPosZ(248, 15))
+	ITEM(Button, cancelBtn, SetLabel(t_("Cancel")).LeftPosZ(260, 56).TopPosZ(248, 15))
+	ITEM(Label, dv___6, SetLabel(t_("Snow2Cypher encryptor test")).SetAlign(ALIGN_CENTER).SetFont(StdFontZ(14).Bold()).LeftPosZ(4, 316).TopPosZ(4, 20))
+	ITEM(Label, dv___7, SetLabel(t_("File to encode/decode :")).LeftPosZ(4, 312).TopPosZ(116, 16))
+	ITEM(EditString, keyEdit, LeftPosZ(4, 312).TopPosZ(92, 19))
+	ITEM(Switch, splitSwitch, SetLabel(t_("Whole file at once\nSplit into random chunks (tests streaming behaviour)")).LeftPosZ(4, 312).TopPosZ(208, 32))
+	ITEM(Switch, cypherSwitch, SetLabel(t_("Snow2 (strong security)\nRC4 (weak security)")).LeftPosZ(4, 312).TopPosZ(32, 32))
+END_LAYOUT
+

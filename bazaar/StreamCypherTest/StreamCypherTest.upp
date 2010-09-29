@@ -1,0 +1,15 @@
+description "Test for Snow2Cypher package\377";
+
+uses
+	CtrlLib,
+	StreamCypher,
+	Controls4U;
+
+file
+	StreamCypherTest.lay,
+	StreamCypherTest.h,
+	StreamCypherTest.cpp;
+
+mainconfig
+	"" = "GUI";
+

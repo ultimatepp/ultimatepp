@@ -1,0 +1,6 @@
+#ifndef _StreamCypherTest_icpp_init_stub
+#define _StreamCypherTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "StreamCypher/init"
+#include "Controls4U/init"
+#endif
