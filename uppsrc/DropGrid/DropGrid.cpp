@@ -114,6 +114,8 @@ void DropGrid::Drop()
 {
 	if(!IsEditable())
 		return;
+	
+	WhenDrop();
 
 	GridDisplay &dsp = list.GetDisplay();
 	if(!header)
@@ -478,8 +480,13 @@ int DropGrid::GetCount() const
 
 Value DropGrid::GetData() const
 {
-	return valuekey ? value
-	                : rowid >= 0 ? list.Get(key_col) : notnull ? NotNullError() : Null;
+	return valuekey
+		? value
+	    : rowid >= 0
+	    	? list.Get(key_col)
+	    	: notnull 
+	    		? NotNullError()
+	    		: Null;
 }
 
 Value DropGrid::GetValue() const
@@ -998,7 +1005,7 @@ Value DropGrid::MakeValue(int r, bool columns) const
 
 Value DropGrid::Format0(const Value& q, int rowid) const
 {
-	int r = rowid >= 0 ? list.FindRow(rowid) : list.Find(q, key_col);
+	int r = rowid >= 0 ? list.FindRow(rowid + list.GetFixedCount()) : list.Find(q, key_col);
 	if(r < 0)
 		return Null;
 
