@@ -212,6 +212,7 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 		virtual Value Format(const Value& q) const;
 		
 		Callback WhenLeftDown;
+		Callback WhenDrop;
 
 		GridCtrl::ItemRect& AddRow(int n = 1, int size = -1);
 		DropGrid& Add() { AddRow(); return *this; }
