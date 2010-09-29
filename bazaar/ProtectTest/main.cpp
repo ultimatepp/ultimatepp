@@ -6,8 +6,12 @@ using namespace Upp;
 
 String GetKey(void)
 {
-	return "\xAA\xBB\xCC\xDD\xEE\xFF";
-
+	// WARNING -- TO PUT A NULL BYTE (0X00) INSIDE KEYSTRING
+	// REQUIRES SOME ADDITIONAL WORK !
+	String k = "\xAA\xBB\xCC\xDD\xEE\xFF";
+	k.Cat('\x00');
+	k += "\x11\x22\x33\x44\x55\x66\x77\x88\x99";
+	return k;
 }
 
 void Decrypt(byte *start, size_t len)

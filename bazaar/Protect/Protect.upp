@@ -1,12 +1,11 @@
 description "Software copy protection module\377";
 
 uses
-	Core;
+	Core,
+	StreamCypher;
 
 file
 	Protect.h,
 	Protect.cpp,
-	RC4.h,
-	RC4.cpp,
 	srcdoc.tpp;
 

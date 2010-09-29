@@ -2,4 +2,5 @@
 #define _ProtectTest_icpp_init_stub
 #include "CtrlLib/init"
 #include "Protect/init"
+#include "StreamCypher/init"
 #endif

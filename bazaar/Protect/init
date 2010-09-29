@@ -1,4 +1,5 @@
 #ifndef _Protect_icpp_init_stub
 #define _Protect_icpp_init_stub
 #include "Core/init"
+#include "StreamCypher/init"
 #endif

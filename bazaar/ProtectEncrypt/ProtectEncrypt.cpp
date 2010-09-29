@@ -49,8 +49,8 @@ int CryptBuf(byte *buf, byte *bufEnd, String const &key)
 			*bEnd++ = (byte)(Random() & 0xff);
 		
 		// crypt buffer
-		RC4 rc4(key);
-		rc4.Crypt(bStart, bStart, size);
+		Snow2 snow2(key);
+		snow2.Encode(bStart, bStart, size);
 		patches++;
 	}
 	
@@ -88,8 +88,8 @@ int ObfuscateBuf(byte *buf, byte *bufEnd)
 			*bEnd++ = (byte)(Random() & 0xff);
 		
 		// obfuscate buffer
-		RC4 rc4(key);
-		rc4.Crypt(bStart, bStart, size);
+		Snow2 snow2(key);
+		snow2.Encode(bStart, bStart, size);
 		patches++;
 	}
 	
@@ -115,14 +115,9 @@ CONSOLE_APP_MAIN
 	// string must contain an even number of digits
 	// and they must be hax ones (0-9, A-F)
 	String key0 = ToUpper(CommandLine()[1]);
-	if(!key0.GetCount())
+	if(key0.GetCount() != 32 && key0.GetCount() != 64)
 	{
-		Cerr() << "Error: null KEY\n";
-		return;
-	}
-	if(key0.GetCount() % 2)
-	{
-		Cerr() << "Error: KEY must contain an even number of digits\n";
+		Cerr() << "Error: key MUST be 32 or 64 chars (16 or 32 bytes) long, not " << key0.GetCount() << "\n";
 		return;
 	}
 	String key;

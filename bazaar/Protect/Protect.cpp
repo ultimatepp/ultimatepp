@@ -29,9 +29,9 @@ bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access)
 
 void PROTECT_DECRYPT(byte *start, size_t size, String const &key)
 {
-	RC4 rc4(key);
+	Snow2 snow2(key);
 
-	rc4.Crypt(start, start, size);
+	snow2.Encode(start, size);
 }
 
 void PROTECT_OBFUSCATE(byte *start, size_t len, byte *key, size_t keyLen)
@@ -41,7 +41,7 @@ void PROTECT_OBFUSCATE(byte *start, size_t len, byte *key, size_t keyLen)
 		k += *key++;
 	if(!PROTECT_WRITE_ACCESS(start, len, true))
 		return;
-	RC4 rc4(k);
-	rc4.Crypt(start, start, len);
+	Snow2 snow2(k);
+	snow2.Encode(start, len);
 	PROTECT_WRITE_ACCESS(start, len, false);
 }

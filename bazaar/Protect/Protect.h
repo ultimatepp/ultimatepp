@@ -2,7 +2,7 @@
 #define _Protect_h_
 
 #include <Core/Core.h>
-#include "RC4.h"
+#include <StreamCypher/StreamCypher.h>
 
 using namespace Upp;
 
