@@ -34,7 +34,7 @@ Dispatcher0::~Dispatcher0()
 
 void Dispatcher0::DoDispatch() const
 {
-	if(!EnableOption<>::IsEnabled()) return;
+	if(!R::IsEnabled()) return;
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
 		const Callback & dest = dests.operator[](i);

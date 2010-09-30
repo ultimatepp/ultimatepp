@@ -43,6 +43,7 @@ class Dispatcher
 {
 public:
 	typedef Dispatcher<T> CLASSNAME;
+	typedef EnableOption<> R;
 	Dispatcher();
 	virtual ~Dispatcher();
 
@@ -90,6 +91,7 @@ class DispatcherCB
 {
 public:
 	typedef DispatcherCB<T> CLASSNAME;
+	typedef EnableOption<> R;
 	DispatcherCB();
 	virtual ~DispatcherCB();
 
@@ -133,6 +135,7 @@ class Dispatcher0
 {
 public:
 	typedef Dispatcher0 CLASSNAME;
+	typedef EnableOption<> R;
 	Dispatcher0();
 	virtual ~Dispatcher0();
 

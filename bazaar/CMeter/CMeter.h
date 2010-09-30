@@ -63,7 +63,6 @@ public:
 	virtual void SetData(const Value& data) { Set(data); }
 	Value GetMin() const { return Min(); }
 	Value GetMax() const { return Max(); }
-	CMeter & MinMax(const Value& min = 0.0, const Value& max = 1.0) { return MinMax(min, max); }
 
 	CMeter & Set(double val);
 	double Get() const { return val; }

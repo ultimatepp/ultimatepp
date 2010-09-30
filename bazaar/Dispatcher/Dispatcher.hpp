@@ -52,7 +52,7 @@ Dispatcher<T>::~Dispatcher()
 template<class T>
 void Dispatcher<T>::DoDispatch(const T & o) const
 {
-	if(!EnableOption<>::IsEnabled()) return;
+	if(!R::IsEnabled()) return;
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
 		Dispatchable<T> * dest = dests.operator[](i);
@@ -164,7 +164,7 @@ DispatcherCB<T>::~DispatcherCB()
 template<class T>
 void DispatcherCB<T>::DoDispatch(const T & o) const
 {
-	if(!EnableOption<>::IsEnabled()) return;
+	if(!R::IsEnabled()) return;
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
 		const Callback1<const T &> & dest = dests.operator[](i);
