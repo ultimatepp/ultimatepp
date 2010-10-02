@@ -621,7 +621,7 @@ class GridCtrl : public Ctrl
 				int    nWidth()                { return nsize; 				   }
 				int    nHeight()               { return nsize;				   }
 
-				ItemRect& Size(int n);
+				ItemRect& Size(int n, bool hv = false);
 
 				bool IsMin()   { return ismin; }
 				bool IsMax()   { return ismax; }

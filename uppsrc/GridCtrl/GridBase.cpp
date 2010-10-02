@@ -69,11 +69,11 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Name(const char * s)
 	return *this;
 }
 
-GridCtrl::ItemRect& GridCtrl::ItemRect::Size(int n)
+GridCtrl::ItemRect& GridCtrl::ItemRect::Size(int n, bool hv)
 {
 	hidden = n == 0;
 	
-	n = Ctrl::VertLayoutZoom(n);
+	n = hv ? Ctrl::HorzLayoutZoom(n) : Ctrl::VertLayoutZoom(n);
 
 	if(!hidden)
 	{
@@ -89,12 +89,12 @@ GridCtrl::ItemRect& GridCtrl::ItemRect::Size(int n)
 
 GridCtrl::ItemRect& GridCtrl::ItemRect::Width(int n)
 {
-	return Size(n);
+	return Size(n, true);
 }
 
 GridCtrl::ItemRect& GridCtrl::ItemRect::Height(int n)
 {
-	return Size(n);
+	return Size(n, false);
 }
 
 GridCtrl::ItemRect& GridCtrl::ItemRect::Min(int n)
