@@ -1,0 +1,4 @@
+#ifndef _Cypher_icpp_init_stub
+#define _Cypher_icpp_init_stub
+#include "Core/init"
+#endif

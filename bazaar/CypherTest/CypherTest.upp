@@ -1,0 +1,15 @@
+description "Test for Cypher package\377";
+
+uses
+	CtrlLib,
+	Cypher,
+	Controls4U;
+
+file
+	CypherTest.lay,
+	CypherTest.h,
+	CypherTest.cpp;
+
+mainconfig
+	"" = "GUI";
+

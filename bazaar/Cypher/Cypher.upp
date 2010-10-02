@@ -1,0 +1,14 @@
+description "Multipurpose encryption/decryption package\377";
+
+uses
+	Core;
+
+file
+	Cypher.h,
+	CypherBase.h,
+	CypherBase.cpp,
+	Snow2.h,
+	Snow2.cpp,
+	RC4.h,
+	RC4.cpp;
+
