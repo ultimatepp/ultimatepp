@@ -99,7 +99,7 @@ void CypherTest::onGo()
 	String d;
 	
 	// sets Cypher's key
-	Cypher->SetKey(key);
+	Cypher->SetKey(key, "12345");
 	
 	if(streamSwitch == 0)
 	{

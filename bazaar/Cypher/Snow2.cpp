@@ -533,27 +533,25 @@ void Snow2::keystream(dword *keystream_block)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // constructors
-Snow2::Snow2() : CypherBase()
+Snow2::Snow2() : CypherBase(1 /* stream cypher */)
 {
+	// Snow2 fast algo works with keystream of 16 words
+	// so we must keep an index inside it
 	byteIndex = 0;
+	
 }
 
-Snow2::Snow2(String const &key, String const &nonce) : CypherBase()
+Snow2::Snow2(String const &key, String const &nonce) : CypherBase(1 /* stream cypher */)
 {
 	SetKey(key, nonce);
 }
 
-Snow2::Snow2(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen) : CypherBase()
+Snow2::Snow2(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen) : CypherBase(1 /* stream cypher */)
 {
 	SetKey(keyBuf, keyLen, nonce, nonceLen);
 }
 
 // key settings
-bool Snow2::SetKey(String const &key, String const &nonce)
-{
-	return SetKey((byte const *)~key, key.GetCount(), (byte const *)~nonce, nonce.GetCount());
-}
-
 static dword separateNonce(byte const *nonce, size_t nonceLen, size_t idx)
 {
 	size_t pos = idx << 2;
@@ -564,7 +562,7 @@ static dword separateNonce(byte const *nonce, size_t nonceLen, size_t idx)
 	return res;
 }
 
-bool Snow2::SetKey(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen)
+bool Snow2::CypherKey(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen)
 {
 	byteIndex = 0;
 	if(keyLen != 16 && keyLen != 32)
@@ -580,18 +578,12 @@ bool Snow2::SetKey(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t 
 	
 	// load first 16 dword of keystream into buffer
 	keystream(keyStream);
-}
-
-// encode/decode string
-String Snow2::operator()(String const &s)
-{
-	StringBuffer sb(s.GetCount());
-	operator()((const byte *)~s, (byte *)~sb, s.GetCount());
-	return sb;
+	
+	return true;
 }
 
 // encode/decode buffer, dest on different buffer
-void Snow2::operator()(byte const *sBuf, byte *dBuf, size_t bufLen)
+void Snow2::Cypher(byte const *sBuf, byte *dBuf, size_t bufLen)
 {
 	// code first partial chunk, if any
 	const byte *byteKeyStream = (const byte *)keyStream + byteIndex;
@@ -631,32 +623,5 @@ void Snow2::operator()(byte const *sBuf, byte *dBuf, size_t bufLen)
 		byteIndex++;
 	}
 }
-
-// encode/decode buffer in place
-void Snow2::operator()(byte *buf, size_t bufLen)
-{
-	operator()(buf, buf, bufLen);
-}
-
-// stream support
-String Snow2::StreamOut(void)
-{
-	// returns encoded buffer from FIFO
-	String res;
-	FIFO.Get(res);
-	return res;
-}
-
-void Snow2::StreamIn(String const &s)
-{
-	// en/decode string and put into FIFO
-	FIFO.Put(operator()(s));
-}
-
-void Snow2::Flush(void)
-{
-	// Snow2 is already a stream Cypher,
-	// no need to pad last block
-};
 
 END_UPP_NAMESPACE

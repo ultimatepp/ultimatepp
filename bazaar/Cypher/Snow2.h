@@ -55,10 +55,11 @@ class Snow2 : public CypherBase
 
 	protected:
 	
-		// stream support
-		virtual String StreamOut(void);
-		virtual void StreamIn(String const &s);
-		virtual void Flush(void);
+		// encode/decode buffer, dest on different buffer
+		virtual void Cypher(byte const *sBuf, byte *dBuf, size_t bufLen);
+		
+		// key settings
+		virtual bool CypherKey(byte const *keyBuf, size_t keyLen, byte const *nonce = NULL, size_t nonceLen = 0);
 		
 	public:
 	
@@ -67,19 +68,6 @@ class Snow2 : public CypherBase
 		Snow2(const String &key, String const &nonce = Null);
 		Snow2(byte const *keyBuf, size_t keyLen, byte const *nonce = NULL, size_t nonceLen = 0);
 		
-		// key settings
-		bool SetKey(String const &key, String const &nonce = Null);
-		bool SetKey(byte const *keyBuf, size_t keyLen, byte const *nonce = NULL, size_t nonceLen = 0);
-		
-		// encode/decode string
-		String operator()(String const &s);
-		
-		// encode/decode buffer, dest on different buffer
-		void operator()(byte const *sBuf, byte *dBuf, size_t bufLen);
-		
-		// encode/decode buffer in place
-		void operator()(byte *buf, size_t bufLen);
-	
 }; // END Class Snow2Cypher
 
 END_UPP_NAMESPACE
