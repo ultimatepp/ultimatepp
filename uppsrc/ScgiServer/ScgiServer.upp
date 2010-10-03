@@ -1,0 +1,9 @@
+description "Simple Common Gateway Interface\377";
+
+uses
+	Web;
+
+file
+	ScgiServer.cpp,
+	ScgiServer.h;
+
