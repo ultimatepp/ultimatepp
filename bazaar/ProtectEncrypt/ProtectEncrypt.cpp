@@ -31,7 +31,8 @@ int CryptBuf(byte *buf, byte *bufEnd, String const &key)
 	while( (bStart = ProtectSearchBuf(bStart, bufEnd, (const byte *)PROTECT_START_MARKER, strlen(PROTECT_START_MARKER))) != NULL)
 	{
 		// overwrite start pattern, just to fool a bit
-		// symple pattern search
+		// simple pattern search and use it as the encrypt init vector
+		byte *nonce = bStart;
 		for(unsigned i = 0; i < strlen(PROTECT_START_MARKER); i++)
 			*bStart++ = (byte)(Random() & 0xff);
 		
@@ -49,8 +50,8 @@ int CryptBuf(byte *buf, byte *bufEnd, String const &key)
 			*bEnd++ = (byte)(Random() & 0xff);
 		
 		// crypt buffer
-		Snow2 snow2(key);
-		snow2.Encode(bStart, bStart, size);
+		Snow2 snow2((byte const *)~key, key.GetCount(), nonce, strlen(PROTECT_START_MARKER));
+		snow2(bStart, size);
 		patches++;
 	}
 	
@@ -88,8 +89,8 @@ int ObfuscateBuf(byte *buf, byte *bufEnd)
 			*bEnd++ = (byte)(Random() & 0xff);
 		
 		// obfuscate buffer
-		Snow2 snow2(key);
-		snow2.Encode(bStart, bStart, size);
+		Snow2 snow2(key, "12345678");
+		snow2(bStart, size);
 		patches++;
 	}
 	

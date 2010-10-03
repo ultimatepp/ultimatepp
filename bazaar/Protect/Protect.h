@@ -2,7 +2,7 @@
 #define _Protect_h_
 
 #include <Core/Core.h>
-#include <StreamCypher/StreamCypher.h>
+#include <Cypher/Cypher.h>
 
 using namespace Upp;
 
@@ -21,7 +21,7 @@ using namespace Upp;
 	if(!__decrypted) \
 	{ \
 		PROTECT_WRITE_ACCESS((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, true); \
-		decrFunc((byte *)&&__start, (byte *)&&__end - (byte *)&&__start); \
+		decrFunc((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, (byte *)&&__init + 2, 6 /* sizeof(PROTECT_START_MARK) */); \
 		PROTECT_WRITE_ACCESS((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, false); \
 		__decrypted = true; \
 		asm volatile ( \
@@ -34,6 +34,7 @@ using namespace Upp;
 	} \
 	if(!__decrypted) \
 		goto __end; \
+	__init: \
 	asm volatile( \
 		"\tjmp 1f\n" \
 		"\t.ascii \""PROTECT_START_MARKER"\"\n" \
@@ -89,7 +90,7 @@ using namespace Upp;
 
 #define PROTECT_START_FUNC(decrFunc) \
 	static bool __decrypted = false; \
-	byte *__startPtr, *__endPtr; \
+	byte *__startPtr, *__endPtr, *__noncePtr; \
 	if(!__decrypted) \
 	{ \
 		__asm \
@@ -99,10 +100,14 @@ using namespace Upp;
 			__asm mov __startPtr, eax \
 			__asm lea eax, __end \
 			__asm mov __endPtr, eax \
+			__asm lea eax, __init \
+			__asm inc eax \
+			__asm inc eax \
+			__asm mov __noncePtr, eax \
 			__asm pop eax \
 		}; \
 		PROTECT_WRITE_ACCESS(__startPtr, __endPtr - __startPtr, true); \
-		decrFunc(__startPtr, __endPtr - __startPtr); \
+		decrFunc(__startPtr, __endPtr - __startPtr, __noncePtr, 6); \
 		PROTECT_WRITE_ACCESS(__startPtr, __endPtr - __startPtr, false); \
 		__decrypted = true; \
 		__asm \
@@ -121,6 +126,7 @@ using namespace Upp;
 	} \
 	if(!__decrypted) \
 		goto __end; \
+	__init: \
 	__asm { \
 		__asm jmp __next \
 		_PROTECT_START_MARKER \
@@ -195,8 +201,10 @@ using namespace Upp;
 		const char *crypted = PROTECT_START_MARKER "abracadabra" PROTECT_END_MARKER; \
 		const int len = strlen("abracadabra"); \
 		Buffer<byte>buf(len); \
+		Buffer<byte>nonce(6); \
 		memcpy(buf, crypted + 6 /* sizeof(PROTECT_START_MARKER)*/, len); \
-		decrFunc(buf, len); \
+		memcpy(nonce, crypted, 6); \
+		decrFunc(buf, len, nonce, 6); \
 		__keyOk = !memcmp(buf, "abracadabra", len); \
 	} \
 	if(!__keyOk)
@@ -212,7 +220,7 @@ using namespace Upp;
 #endif
 
 bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access);
-void PROTECT_DECRYPT(byte *start, size_t size, String const &key);
+void PROTECT_DECRYPT(byte *start, size_t size, String const &key, byte const *nonce, size_t nonceLen);
 void PROTECT_OBFUSCATE(byte *start, size_t len, byte *key, size_t keyLen);
 
 #endif

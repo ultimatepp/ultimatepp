@@ -27,11 +27,11 @@ bool PROTECT_WRITE_ACCESS(byte *start, size_t size, bool access)
 }
 #endif
 
-void PROTECT_DECRYPT(byte *start, size_t size, String const &key)
+void PROTECT_DECRYPT(byte *start, size_t size, String const &key, byte const *nonce, size_t nonceLen)
 {
-	Snow2 snow2(key);
+	Snow2 snow2((byte const *)~key, key.GetCount(), nonce, nonceLen);
 
-	snow2.Encode(start, size);
+	snow2(start, size);
 }
 
 void PROTECT_OBFUSCATE(byte *start, size_t len, byte *key, size_t keyLen)
@@ -41,7 +41,7 @@ void PROTECT_OBFUSCATE(byte *start, size_t len, byte *key, size_t keyLen)
 		k += *key++;
 	if(!PROTECT_WRITE_ACCESS(start, len, true))
 		return;
-	Snow2 snow2(k);
-	snow2.Encode(start, len);
+	Snow2 snow2(k, "12345678");
+	snow2(start, len);
 	PROTECT_WRITE_ACCESS(start, len, false);
 }

@@ -2,7 +2,7 @@ description "Software copy protection module\377";
 
 uses
 	Core,
-	StreamCypher;
+	Cypher;
 
 file
 	Protect.h,

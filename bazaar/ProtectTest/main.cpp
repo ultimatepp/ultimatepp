@@ -14,9 +14,9 @@ String GetKey(void)
 	return k;
 }
 
-void Decrypt(byte *start, size_t len)
+void Decrypt(byte *start, size_t len, byte const *nonce, size_t nonceLen)
 {
-	PROTECT_DECRYPT ( start, len, GetKey() );
+	PROTECT_DECRYPT ( start, len, GetKey(), nonce, nonceLen );
 }
 
 double CryptedTest(double d, double e)
