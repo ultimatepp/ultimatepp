@@ -23,7 +23,7 @@ DHCtrl::DHCtrl()
 	// No background painting
 	backpaint = NOBACKPAINT;
 //	transparent = true;
-
+	hwnd = 0;
 } // END Constructor class DHCtrl
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -138,20 +138,25 @@ bool DHCtrl::Init()
 
 	// Creates the X11 window
 	Rect r = GetRectInParentWindow();
-	Window WindowHandle = XCreateWindow
-	(
-		Xdisplay,									// display
-//		GetTopWindow()->GetWindow(), 				// parent
-		GetParentWindow(),
-
-		r.left, r.top, r.Width(), r.Height(),		// x, y, width, height
-		0,											// border width
-		Depth,										// depth
-		InputOutput,								// class
-		visual,										// visual
-		ValueMask,									// value mask
-		&winAttributes								// attributes
-	);
+	if (!hwnd) {
+		hwnd = XCreateWindow
+		(
+			Xdisplay,									// display
+	//		GetTopWindow()->GetWindow(), 				// parent
+			GetParentWindow(),
+	
+			r.left, r.top, r.Width(), r.Height(),		// x, y, width, height
+			0,											// border width
+			Depth,										// depth
+			InputOutput,								// class
+			visual,										// visual
+			ValueMask,									// value mask
+			&winAttributes								// attributes
+		);
+	} else {
+		XReparentWindow(Xdisplay, hwnd, GetParentWindow(), r.left, r.top);
+		XMoveResizeWindow(Xdisplay, hwnd, r.left, r.top, r.Width(), r.Height());
+	}
 
 	// Frees VisualInfo
     if (UserVisualInfo)
@@ -161,7 +166,7 @@ bool DHCtrl::Init()
     }
 
     // If problem creating window, error
-    if(!WindowHandle)
+    if(!hwnd)
     {
 		// Call AfterInit user func...
 		AfterInit(true);
@@ -175,7 +180,7 @@ bool DHCtrl::Init()
     }
 
 	// Adds window to UPP managed windows
-	XWindow *cw = AddXWindow(WindowHandle);
+	XWindow *cw = AddXWindow(hwnd);
 
 	cw->xic = xim ? XCreateIC
 					(
@@ -183,15 +188,15 @@ bool DHCtrl::Init()
 						XNInputStyle,
 						XIMPreeditNothing | XIMStatusNothing,
 						XNClientWindow,
-						WindowHandle,
+						hwnd,
 						XNFocusWindow,
-						WindowHandle,
+						hwnd,
 	    				NULL
 	    			)
 	    : NULL;
 
 	top = new Top;
-	top->window = WindowHandle;
+	top->window = hwnd;
 
 	long im_event_mask = 0;
 	if(cw->xic)
@@ -199,7 +204,7 @@ bool DHCtrl::Init()
 	XSelectInput
 	(
 		Xdisplay,
-		WindowHandle,
+		hwnd,
 		ExposureMask
 //		| StructureNotifyMask		// *very* important, flag MUST NOT be set
 		| KeyPressMask
@@ -218,7 +223,7 @@ bool DHCtrl::Init()
 	XChangeProperty
 	(
 		Xdisplay,
-		WindowHandle,
+		hwnd,
 		XAtom("XdndAware"),
 		XA_ATOM,
 		32,

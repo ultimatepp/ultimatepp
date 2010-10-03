@@ -1852,11 +1852,12 @@ public:
 	virtual void    NcDestroy();
 
 private:
-	HWND   hwnd;
-
-	void CloseHWND();
 	void OpenHWND();
 	void SyncHWND();
+	
+protected:
+	void CloseHWND();
+	HWND   hwnd;
 
 public:
 	HWND    GetHWND()                              { return hwnd; }
@@ -1872,7 +1873,6 @@ public:
 #ifdef PLATFORM_X11
 
 class DHCtrl : public Ctrl {
-	bool isInitialized;
 	int isError;
 	bool isMapped;
 	Size CurrentSize;
@@ -1882,8 +1882,6 @@ class DHCtrl : public Ctrl {
 	void MapWindow(bool map);
 	bool Init(void);
 	void Terminate(void);
-
-	virtual void State(int reason);
 
 protected:
 	Visual     *GetVisual(void);
@@ -1901,6 +1899,11 @@ protected:
 	void SetError(bool err) { isError = err; }
 	void SetErrorMessage(String const &msg) { ErrorMessage = msg; }
 
+	virtual void State(int reason);
+	
+	Window   hwnd;	
+	bool isInitialized;
+	
 public:
 	typedef DHCtrl CLASSNAME;
 
