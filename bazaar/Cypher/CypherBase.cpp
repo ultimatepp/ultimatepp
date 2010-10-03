@@ -145,12 +145,12 @@ void CypherBase::SetKey(byte const *keyBuf, size_t keyLen, byte const *_nonce, s
 	nonce.Clear();
 	if(!_nonce || !nonceLen)
 	{
-		for(int i = 0; i < 8; i++)
+		for(size_t i = 0; i < 8; i++)
 			nonce.Cat(Random() & 0xff);
 	}
 	else
 	{
-		for(int i = 0; i < nonceLen; i++)
+		for(size_t i = 0; i < nonceLen; i++)
 			nonce.Cat(_nonce[i]);
 	}
 	if(!CypherKey(keyBuf, keyLen, (const byte *)~nonce, nonce.GetCount()))
@@ -321,7 +321,7 @@ size_t CypherBase::Flush(void)
 	if(blockBytes)
 	{
 		for(size_t i = blockBytes; i < blockSize; i++)
-			blockBuffer[i] = Random() % 0xff;
+			blockBuffer[i] = (byte)(Random() & 0xff);
 
 		Cypher(blockBuffer, blockBuffer, blockSize);
 		FIFO.Put(blockBuffer, blockSize);
