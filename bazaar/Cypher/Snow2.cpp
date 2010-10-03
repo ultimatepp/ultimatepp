@@ -538,39 +538,45 @@ Snow2::Snow2() : CypherBase()
 	byteIndex = 0;
 }
 
-Snow2::Snow2(const String &key, qword nonce) : CypherBase()
+Snow2::Snow2(String const &key, String const &nonce) : CypherBase()
 {
 	SetKey(key, nonce);
 }
 
-Snow2::Snow2(byte const *keyBuf, size_t keyLen, qword nonce) : CypherBase()
+Snow2::Snow2(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen) : CypherBase()
 {
-	SetKey(keyBuf, keyLen, nonce);
+	SetKey(keyBuf, keyLen, nonce, nonceLen);
 }
 
 // key settings
-bool Snow2::SetKey(const String &key, qword nonce)
+bool Snow2::SetKey(String const &key, String const &nonce)
 {
-	return SetKey((byte const *)~key, key.GetCount(), nonce);
+	return SetKey((byte const *)~key, key.GetCount(), (byte const *)~nonce, nonce.GetCount());
 }
 
-bool Snow2::SetKey(byte const *keyBuf, size_t keyLen, qword nonce)
+static dword separateNonce(byte const *nonce, size_t nonceLen, size_t idx)
+{
+	size_t pos = idx << 2;
+	size_t endPos = min(pos + 4, nonceLen);
+	dword res = 0;
+	while(pos < endPos)
+		res = (res << 8) | *(nonce + pos++);
+	return res;
+}
+
+bool Snow2::SetKey(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen)
 {
 	byteIndex = 0;
 	if(keyLen != 16 && keyLen != 32)
 		return false;
 	
 	// initializes the encoder box with key
-	// should do with 4 dwords as nonce, we simplify with 4 words( 1 qword)
-	dword n1 = (nonce >> 48) & 0xFFFF;
-	dword n2 = (nonce >> 32) & 0xFFFF;
-	dword n3 = (nonce >> 16) & 0xFFFF;
-	dword n4 = (nonce      ) & 0xFFFF;
-	n1 |= n4 << 16;
-	n2 |= n3 << 16;
-	n3 |= n2 << 16;
-	n4 |= n1 << 16;
-	loadkey(keyBuf, keyLen, n1, n2, n3, n4);
+	loadkey(keyBuf, keyLen,
+		separateNonce(nonce, nonceLen, 0),
+		separateNonce(nonce, nonceLen, 1),
+		separateNonce(nonce, nonceLen, 2),
+		separateNonce(nonce, nonceLen, 3)
+	);
 	
 	// load first 16 dword of keystream into buffer
 	keystream(keyStream);
@@ -649,6 +655,8 @@ void Snow2::StreamIn(String const &s)
 
 void Snow2::Flush(void)
 {
+	// Snow2 is already a stream Cypher,
+	// no need to pad last block
 };
 
 END_UPP_NAMESPACE

@@ -68,8 +68,8 @@ class CypherBase
 		// key setting - rekeying
 		// return true on success, false otherwise
 		// rekeyng clears all stream states and buffers and sets state to idle
-		virtual bool SetKey(String const &key, qword nonce = 0) = 0;
-		virtual bool SetKey(byte const *keyBuf, size_t keyLen, qword nonce = 0) = 0;
+		virtual bool SetKey(String const &key, String const &nonce = Null) = 0;
+		virtual bool SetKey(byte const *keyBuf, size_t keyLen, byte const *nonce = NULL, size_t nonceLen = 0) = 0;
 		
 		// encrypt/decrypt functions
 		virtual String operator()(String const &s) = 0;

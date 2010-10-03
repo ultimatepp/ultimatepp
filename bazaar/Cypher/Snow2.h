@@ -64,12 +64,12 @@ class Snow2 : public CypherBase
 	
 		// constructors
 		Snow2();
-		Snow2(const String &key, qword nonce = 0);
-		Snow2(byte const *keyBuf, size_t keyLen, qword nonce = 0);
+		Snow2(const String &key, String const &nonce = Null);
+		Snow2(byte const *keyBuf, size_t keyLen, byte const *nonce = NULL, size_t nonceLen = 0);
 		
 		// key settings
-		bool SetKey(const String &key, qword nonce = 0);
-		bool SetKey(byte const *keyBuf, size_t keyLen, qword nonce = 0);
+		bool SetKey(String const &key, String const &nonce = Null);
+		bool SetKey(byte const *keyBuf, size_t keyLen, byte const *nonce = NULL, size_t nonceLen = 0);
 		
 		// encode/decode string
 		String operator()(String const &s);
