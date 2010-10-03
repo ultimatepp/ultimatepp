@@ -86,11 +86,11 @@ class CypherBase
 		// Initialization vector (IV or Nonce)
 		String nonce;
 		
-	protected:
 		// stream support
-		virtual String StreamOut(void);
-		virtual void StreamIn(String const &s);
+		String StreamOut(void);
+		void StreamIn(String const &s);
 		
+	protected:
 		// main encoding/decoding function
 		// must be redefined on each derived class
 		virtual void Cypher(byte const *sourceBuf,  byte *destBuf, size_t bufLen) = 0;
