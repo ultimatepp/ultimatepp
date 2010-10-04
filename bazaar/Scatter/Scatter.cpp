@@ -184,11 +184,13 @@ void Scatter::DrawLegend(Draw& w,const int& scale) const
 								scale*Thick.At(i)/6,
 								LC.At(i));*/
 				Vector <Point> vp;
-				vp << Point(scale*(i-start)*legendWeight, scale*(4-12*(j+1))) << Point(scale*(i-start)*legendWeight+scale*23, scale*(4-12*(j+1)));
+				vp << Point(scale*(i-start)*legendWeight, scale*(4-12*(j+1))) << 
+					  Point(scale*(i-start)*legendWeight+scale*23, scale*(4-12*(j+1)));
 				if (VJ.At(i))
 					DrawPolylineX(w, vp, scale*Thick.At(i)/6, LC.At(i), Patt.At(i), scale);
-				Point p(scale*((i-start)*legendWeight+7),scale*(4-12*(j+1))+scale*Thick.At(i)/12);
-				DrawMark(MS.At(i),w,scale,p,LW.At(i,0),MC.At(i));                                           
+				Point p(scale*((i-start)*legendWeight+7),scale*(4-12*(j+1))/*+scale*Thick.At(i)/12*/);
+				if (LW.At(i,0) > 1)
+					DrawMark(MS.At(i),w,scale,p,LW.At(i,0),MC.At(i));                                           
 				Font scaledFont;
 				scaledFont.Height(scale*StdFont().GetHeight());
 				w.DrawText(scale*(i-start)*legendWeight+scale*25,
@@ -1090,7 +1092,7 @@ Image Scatter::CursorImage(Point p, dword keyflags)
 
 void Scatter::Circle(Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const
 {
-	w.DrawLine(cp,cp,fround(scale*size/6),markColor);
+	w.DrawLine(cp.x,cp.y,cp.x+1,cp.y,fround(scale*size/6),markColor);
 }
 
 void Scatter::Square(Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const
@@ -1341,8 +1343,9 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 			}
 				
 			if(vShowMark[j])
-				for (int i=0; i<(imax-imin)/numV; i++) {
-					DrawMark(vMarkStyles[j],w,scale,p1[i],vPWidth[j],vMarkColors[j]);              
+				if (vPWidth[j] >= 1) {
+					for (int i=0; i<(imax-imin)/numV; i++) 
+						DrawMark(vMarkStyles[j],w,scale,p1[i],vPWidth[j],vMarkColors[j]);              
 				}
 		}
 	}
@@ -1506,7 +1509,7 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 		for(int i=0; xMinUnit+i*xMajorUnit<=xRange;i++){
 			w.DrawLine(fround(l*xMinUnit/xRange+i*l/(xRange/xMajorUnit)),
 					   h,   
-					   fround(l*xMinUnit/xRange+i*l/(xRange/xMajorUnit)),
+					   fround(l*xMinUnit/xRange+i*l/(xRange/xMajorUnit)), 
 					   h+scale*4, 
 				fround(scale/2),
 				axisColor);             

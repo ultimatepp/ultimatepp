@@ -1,4 +1,5 @@
 #ifndef _Scatter_icpp_init_stub
 #define _Scatter_icpp_init_stub
 #include "CtrlLib/init"
+#include "Painter/init"
 #endif
