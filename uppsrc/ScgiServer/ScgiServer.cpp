@@ -28,7 +28,7 @@ void ScgiServer::Run()
 	ServerSocket(serverSock, port);
 	while (run) {
 		if (serverSock.Accept(clientSock, &clientIP)) {
-			WhenAccepted();
+			OnAccepted();
 			
 			String sLen = clientSock.ReadUntil(':');
 			int len = atoi(sLen);
@@ -70,14 +70,14 @@ void ScgiServer::Run()
 				}
 			}
 			
-			WhenRequest();
+			OnRequest();
 
 			clientSock.Close();
 			serverVars.Clear();
 			query.Clear();
 			post.Clear();
 			
-			WhenClosed();
+			OnClosed();
 		}
 	}
 }

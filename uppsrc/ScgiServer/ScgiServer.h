@@ -7,13 +7,9 @@ using namespace Upp;
 
 class ScgiServer {
 public:
-	Callback WhenAccepted;
-	Callback WhenRequest;
-	Callback WhenClosed;
-	
 	HttpQuery query;
 	HttpQuery post;
-
+	
 	ScgiServer(int port = 7800);
 	
 	void Run();	
@@ -23,16 +19,16 @@ public:
 	
 	bool HasPostData()  { return hasPostData; }
 	
+	virtual void OnAccepted() {}
+	virtual void OnRequest() {}
+	virtual void OnClosed() {}
+	
 protected:
 	int port;
 	Socket serverSock, clientSock;
 	VectorMap<String,String> serverVars;
 	dword clientIP;
 	bool hasPostData;
-
-private:
-	typedef ScgiServer CLASSNAME;
 };
 
 #endif
-
