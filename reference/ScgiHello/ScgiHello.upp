@@ -5,6 +5,7 @@ uses
 	ScgiServer;
 
 file
+	nginx.conf,
 	htdocs/index.html,
 	lighttpd.conf,
 	ScgiHello.cpp;
