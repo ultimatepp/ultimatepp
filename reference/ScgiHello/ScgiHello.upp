@@ -2,7 +2,7 @@ description "Hello World as a SCGI Server\377";
 
 uses
 	Core,
-	ScgiServer;
+	Web;
 
 file
 	nginx.conf,
