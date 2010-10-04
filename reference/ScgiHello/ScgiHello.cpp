@@ -7,9 +7,7 @@ using namespace Upp;
 
 class App : public ScgiServer {
 private:
-	typedef App CLASSNAME;
-	
-	void OnAccept();
+	void OnAccepted();
 	void OnRequest();
 	void OnClosed();
 
@@ -17,17 +15,10 @@ private:
 	void HelloViaPost();
 
 public:
-	App(int port = 8787);
+	App(int port = 8787) : ScgiServer(port) {}
 };
 
-App::App(int port) : ScgiServer(port)
-{
-	WhenAccepted = THISBACK(OnAccept);
-	WhenRequest = THISBACK(OnRequest);
-	WhenClosed = THISBACK(OnClosed);
-}
-
-void App::OnAccept()
+void App::OnAccepted()
 {
 	Cout() << "Accepted connection from client " << FormatIP(clientIP) << "\n";
 }
@@ -48,7 +39,7 @@ void App::OnRequest()
 	clientSock.Write("Message:\r\n");
 
 	//
-	// Should look at the server variable 'SCRIPT_NAME' to see:
+	// In a real app one should look at the server variable 'SCRIPT_NAME' to see:
 	//   * /scgi/hello
 	//   * /scgi/hello-form
 	//
