@@ -140,7 +140,7 @@ String FormatXmlRpcValue(const Value& _v)
 		r << "</data></array>";
 	}
 	else
-		r = XmlTag("string")(DeXml(AsString(v)));
+		r = XmlTag("string").Text(v);
 	return XmlTag("value")(r);
 }
 

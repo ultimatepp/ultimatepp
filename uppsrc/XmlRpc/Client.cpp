@@ -69,7 +69,6 @@ Value XmlRpcCall::Execute()
 		return ErrorValue(error);
 	}
 	XmlParser p(response);
-	p.PreserveAllWhiteSpaces();
 	try {	
 		p.ReadPI();
 		p.PassTag("methodResponse");

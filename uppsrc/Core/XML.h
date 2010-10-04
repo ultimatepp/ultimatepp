@@ -55,8 +55,8 @@ class XmlParser {
 	int                       type;
 	String                    nattr1, nattrval1;
 	VectorMap<String, String> nattr;
-	String                    text;
-	String                    lftext;
+	String                    tagtext;
+	String                    cdata;
 	bool                      empty_tag;
 	bool                      npreserve, preserveall;
 	bool                      relaxed;
@@ -67,7 +67,6 @@ class XmlParser {
 	void                      Next();
 	void                      ReadAttr(StringBuffer& b, int c);
 	String                    ReadTag(bool next);
-	String                    ReadText(bool next);
 	String                    ReadDecl(bool next);
 	String                    ReadPI(bool next);
 	String                    ReadComment(bool next);
@@ -99,8 +98,8 @@ public:
 	double Double(const char *id, double def = Null) const;
 
 	bool   IsText();
-	String PeekText()                                         { return ReadText(false); }
-	String ReadText()                                         { return ReadText(true); }
+	String PeekText()                                         { return cdata; }
+	String ReadText();
 	String ReadTextE();	
 
 	bool   IsDecl();

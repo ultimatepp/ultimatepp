@@ -11,7 +11,7 @@ static inline void sDeXmlChar(StringBuffer& result, char chr, byte charset, bool
 	else if(chr == '&')  result.Cat("&amp;");
 	else if(chr == '\'') result.Cat("&apos;");
 	else if(chr == '\"') result.Cat("&quot;");
-	else if((byte)chr < ' ' && (escapelf || chr != '\n' || chr != '\t'))
+	else if((byte)chr < ' ' && (escapelf || chr != '\n' && chr != '\t' && chr != '\r'))
 		result.Cat(NFormat("&#x%02x;", (byte)chr));
 	else if(!(chr & 0x80) || charset == CHARSET_UTF8) result.Cat(chr);
 	else result.Cat(ToUtf8(ToUnicode(chr, charset)));
@@ -99,19 +99,29 @@ String  XmlTag::operator()(const char* text)
 {
 	StringBuffer r;
 	r << tag << '>';
-	if(strchr(text, '\n')) {
+	if(strchr(text, '\n') && strchr(text, '<')) {
 		r << "\r\n";
-		bool tab = true;
-		while(*text) {
-			if(tab)
-				r << '\t';
-			int c = (byte)*text++;
-			tab = c == '\n';
-			if(tab)
-				r << "\r\n";
+		bool was = true;
+		for(;;) {
+			const char *s = text;
+			while(*s == ' ' || *s == '\t')
+				s++;
+			if(*s == '<') {
+				if(was)
+					r.Cat('\t');
+				was = true;
+			}
 			else
-			if(c == '\t' || c >= 32)
-				r.Cat(c);
+				was = false;
+			r.Cat(text, s);
+			text = s;
+			while(*s && *s != '\n')
+				s++;
+			r.Cat(text, s);
+			if(*s == '\0')
+				break;
+			r.Cat('\n');
+			text = s + 1;
 		}
 	}
 	else
@@ -129,7 +139,7 @@ String  XmlTag::Text(const char *text, byte charset)
 String XmlTag::PreservedText(const char *text, byte charset)
 {
 	StringBuffer r;
-	return r << tag << " xml:spaces=\"preserve\">" << DeXml(text, charset, true) << end;
+	return r << tag << " xml:spaces=\"preserve\">" << DeXml(text, charset) << end;
 }
 
 XmlTag& XmlTag::operator()(const char *attr, const char *val)
@@ -239,163 +249,178 @@ void XmlParser::Next()
 		type = XML_END;
 		return;
 	}
-	text.Clear();
-	type = XML_EOF;
-	if(!npreserve)
-		SkipWhites();
-	if(*term == '<') {
-		term++;
-		if(*term == '!') {
-			type = XML_DECL;
-			term++;
-			if(term[0] == '-' && term[1] == '-') {
-				type = XML_COMMENT;
-				term += 2;
+
+	type = Null;
+	StringBuffer raw_text;
+	for(;;) {
+		if(*term == '\0') {
+			type = XML_EOF;
+			return;
+		}
+		if(*term == '<') {
+			if(term[1] == '!' && term[2] == '[' &&
+			   term[3] == 'C' && term[4] == 'D' && term[5] == 'A' && term[6] == 'T' && term[7] == 'A' &&
+			   term[8] == '[') { // ![CDATA[
+				term += 9;
 				for(;;) {
-					if(term[0] == '-' && term[1] == '-' && term[2] == '>')
-						break;
 					if(*term == '\0')
-						throw XmlError("Unterminated comment");
+						throw XmlError("Unterminated CDATA");
+					if(term[0] == ']' && term[1] == ']' && term[2] == '>') { // ]]>
+						term += 3;
+						break;
+					}
 					if(*term == '\n')
 						line++;
-					text.Cat(*term++);
+					raw_text.Cat(*term++);
 				}
-				term += 3;
-				return;
+				type = XML_TEXT;
+				continue;
 			}
-			bool intdt = false;
-			for(;;) {
-				if (*term == '[')
-					intdt = true;
-				if(*term == '>' && intdt == false) {
-					term++;
-					break;
-				}
-				if(intdt == true && term[0] == ']' && term[1] == '>') {
-					text.Cat(*term++);
-					term++;
-					break;
-				}
-				if(*term == '\0')
-					throw XmlError("Unterminated declaration");
-				if(*term == '\n')
-					line++;
-				text.Cat(*term++);
-			}
+			else
+				break;
 		}
-		else
-		if(*term == '?') {
-			type = XML_PI;
-			term++;
-			for(;;) {
-				if(term[0] == '?' && term[1] == '>') {
-					term += 2;
-					return;
-				}
-				if(*term == '\0')
-					throw XmlError("Unterminated processing info");
-				if(*term == '\n')
-					line++;
-				text.Cat(*term++);
-			}
-		}
-		else
-		if(*term == '/') {
-			type = XML_END;
-			term++;
-			const char *t = term;
-			while(IsXmlNameChar(*term))
-				term++;
-			text = String(t, term);
-			if(*term != '>')
-				throw XmlError("Unterminated end-tag");
-			term++;
+		if(*term == '\n')
+			line++;
+		if(*term == '&') {
+			Ent(raw_text);
+			type = XML_TEXT;
 		}
 		else {
-			type = XML_TAG;
-			const char *t = term;
-			while(IsXmlNameChar(*term))
-				term++;
-			text = String(t, term);
-			for(;;) {
-				SkipWhites();
-				if(*term == '>') {
-					term++;
-					break;
-				}
-				if(term[0] == '/' && term[1] == '>') {
-					empty_tag = true;
-					term += 2;
-					break;
-				}
-				if(*term == '\0')
-					throw XmlError("Unterminated tag");
-				const char *t = term++;
-				while((byte)*term > ' ' && *term != '=' && *term != '>')
-					term++;
-				String attr(t, term);
-				SkipWhites();
-				if(*term == '=') {
-					term++;
-					SkipWhites();
-					StringBuffer attrval;
-					if(*term == '\"')
-						ReadAttr(attrval, '\"');
-					else
-					if(*term == '\'')
-						ReadAttr(attrval, '\'');
-					else
-						while((byte)*term > ' ' && *term != '>' && *term != '/')
-							if(*term == '&')
-								Ent(attrval);
-							else {
-								const char *e = term;
-								while((byte)*++e > ' ' && *e != '>' && *e != '&')
-									;
-								attrval.Cat(term,(int) (e - term));
-								term = e;
-							}
-					if(attr == "xml:space" && attrval.GetLength() == 8 && !memcmp(~attrval, "preserve", 8))
-						npreserve = true;
-					String aval = FromUtf8(~attrval, attrval.GetLength()).ToString();
-					if(IsNull(nattr1)) {
-						nattr1 = attr;
-						nattrval1 = aval;
-					}
-					else
-						nattr.Add(attr, aval);
-				}
-			}
+			if((byte)*term > ' ')
+				type = XML_TEXT;
+			raw_text.Cat(*term++);
 		}
 	}
-	else if(*term == 0)
-		type = XML_EOF;
-	else {
-		StringBuffer raw_text;
-		bool trimws = !(npreserve || preserveall);
-		while(*term != '<' && *term) {
-			if(*term == '\n') {
-				line++;
-				if(trimws)
-					while(*term == '\t')
-						term++;
+	cdata = WString(raw_text).ToString();
+
+	if(cdata.GetCount() && (npreserve || preserveall))
+		type = XML_TEXT;
+	
+	if(type == XML_TEXT)
+		return;
+	
+	term++;
+	if(*term == '!') {
+		type = XML_DECL;
+		term++;
+		if(term[0] == '-' && term[1] == '-') {
+			type = XML_COMMENT;
+			term += 2;
+			for(;;) {
+				if(term[0] == '-' && term[1] == '-' && term[2] == '>')
+					break;
+				if(*term == '\0')
+					throw XmlError("Unterminated comment");
+				if(*term == '\n')
+					line++;
+				tagtext.Cat(*term++);
 			}
-			if(*term == '&')
-				Ent(raw_text);
-			else {
-				const char *e = term;
-				while(*++e && *e != '&' && *e != '<')
-					;
-				raw_text.Cat(term, (int)(e - term));
-				term = e;
+			term += 3;
+			return;
+		}
+		bool intdt = false;
+		for(;;) {
+			if (*term == '[')
+				intdt = true;
+			if(*term == '>' && intdt == false) {
+				term++;
+				break;
+			}
+			if(intdt == true && term[0] == ']' && term[1] == '>') {
+				tagtext.Cat(*term++);
+				term++;
+				break;
+			}
+			if(*term == '\0')
+				throw XmlError("Unterminated declaration");
+			if(*term == '\n')
+				line++;
+			tagtext.Cat(*term++);
+		}
+	}
+	else
+	if(*term == '?') {
+		type = XML_PI;
+		term++;
+		for(;;) {
+			if(term[0] == '?' && term[1] == '>') {
+				term += 2;
+				return;
+			}
+			if(*term == '\0')
+				throw XmlError("Unterminated processing info");
+			if(*term == '\n')
+				line++;
+			tagtext.Cat(*term++);
+		}
+	}
+	else
+	if(*term == '/') {
+		type = XML_END;
+		term++;
+		const char *t = term;
+		while(IsXmlNameChar(*term))
+			term++;
+		tagtext = String(t, term);
+		if(*term != '>')
+			throw XmlError("Unterminated end-tag");
+		term++;
+	}
+	else {
+		type = XML_TAG;
+		const char *t = term;
+		while(IsXmlNameChar(*term))
+			term++;
+		tagtext = String(t, term);
+		for(;;) {
+			SkipWhites();
+			if(*term == '>') {
+				term++;
+				break;
+			}
+			if(term[0] == '/' && term[1] == '>') {
+				empty_tag = true;
+				term += 2;
+				break;
+			}
+			if(*term == '\0')
+				throw XmlError("Unterminated tag");
+			const char *t = term++;
+			while((byte)*term > ' ' && *term != '=' && *term != '>')
+				term++;
+			String attr(t, term);
+			SkipWhites();
+			if(*term == '=') {
+				term++;
+				SkipWhites();
+				StringBuffer attrval;
+				if(*term == '\"')
+					ReadAttr(attrval, '\"');
+				else
+				if(*term == '\'')
+					ReadAttr(attrval, '\'');
+				else
+					while((byte)*term > ' ' && *term != '>' && *term != '/')
+						if(*term == '&')
+							Ent(attrval);
+						else {
+							const char *e = term;
+							while((byte)*++e > ' ' && *e != '>' && *e != '&')
+								;
+							attrval.Cat(term,(int) (e - term));
+							term = e;
+						}
+				if(attr == "xml:space" && attrval.GetLength() == 8 && !memcmp(~attrval, "preserve", 8))
+					npreserve = true;
+				String aval = FromUtf8(~attrval, attrval.GetLength()).ToString();
+				if(IsNull(nattr1)) {
+					nattr1 = attr;
+					nattrval1 = aval;
+				}
+				else
+					nattr.Add(attr, aval);
 			}
 		}
-		const char *re = raw_text.End();
-		if(trimws)
-			while(re > raw_text.Begin() && (byte)re[-1] <= ' ')
-				re--;
-		text = FromUtf8(~raw_text, (int)(re - ~raw_text)).ToString();
-		type = XML_TEXT;
 	}
 }
 
@@ -414,7 +439,7 @@ String XmlParser::ReadTag(bool next)
 	if(type != XML_TAG)
 		throw XmlError("Expected tag");
 	LLOG("ReadTag " << text);
-	String h = text;
+	String h = tagtext;
 	if(next) {
 		stack.Add(Nesting(h, npreserve));
 		attr = nattr;
@@ -427,9 +452,9 @@ String XmlParser::ReadTag(bool next)
 
 bool  XmlParser::Tag(const char *tag)
 {
-	if(IsTag() && text == tag) {
-		LLOG("Tag " << text);
-		stack.Add(Nesting(text, npreserve));
+	if(IsTag() && tagtext == tag) {
+		LLOG("Tag " << tagtext);
+		stack.Add(Nesting(tagtext, npreserve));
 		attr = nattr;
 		attr1 = nattr1;
 		attrval1 = nattrval1;
@@ -441,9 +466,9 @@ bool  XmlParser::Tag(const char *tag)
 
 bool  XmlParser::Tag(const String& tag)
 {
-	if(IsTag() && text == tag) {
-		LLOG("Tag " << text);
-		stack.Add(Nesting(text, npreserve));
+	if(IsTag() && tagtext == tag) {
+		LLOG("Tag " << tagtext);
+		stack.Add(Nesting(tagtext, npreserve));
 		attr = nattr;
 		attr1 = nattr1;
 		attrval1 = nattrval1;
@@ -477,10 +502,10 @@ bool  XmlParser::End()
 	if(IsEnd()) {
 		LLOG("EndTag " << text);
 		if(stack.IsEmpty())
-			throw XmlError(NFormat("Unexpected end-tag: </%s>", text));
-		if(stack.Top().tag != text && !relaxed) {
-			LLOG("Tag/end-tag mismatch: <" << stack.Top().tag << "> </" << text << ">");
-			throw XmlError(NFormat("Tag/end-tag mismatch: <%s> </%s>", stack.Top().tag, text));
+			throw XmlError(NFormat("Unexpected end-tag: </%s>", tagtext));
+		if(stack.Top().tag != tagtext && !relaxed) {
+			LLOG("Tag/end-tag mismatch: <" << stack.Top().tag << "> </" << tagtext << ">");
+			throw XmlError(NFormat("Tag/end-tag mismatch: <%s> </%s>", stack.Top().tag, tagtext));
 		}
 		stack.Drop();
 		npreserve = (!stack.IsEmpty() && stack.Top().preserve_blanks);
@@ -534,15 +559,20 @@ double XmlParser::Double(const char *id, double def) const
 
 bool  XmlParser::IsText()
 {
-	return type == XML_TEXT;
+	if(npreserve || preserveall)
+		return cdata.GetCount();
+	const char *e = cdata.End();
+	for(const char *s = cdata.Begin(); s < e; s++)
+		if((byte)*s > ' ')
+			return true;
+	return false;
 }
 
-String XmlParser::ReadText(bool next)
+String XmlParser::ReadText()
 {
-	if(!IsText())
-		return String();
-	String h = text;
-	if(next)
+	String h = cdata;
+	cdata.Clear();
+	if(type == XML_TEXT)
 		Next();
 	return h;
 }
@@ -568,7 +598,7 @@ String XmlParser::ReadDecl(bool next)
 {
 	if(!IsDecl())
 		throw XmlError("Declaration expected");
-	String h = text;
+	String h = tagtext;
 	if(next)
 		Next();
 	return h;
@@ -583,7 +613,7 @@ String XmlParser::ReadPI(bool next)
 {
 	if(!IsPI())
 		throw XmlError("Processing info expected");
-	String h = text;
+	String h = tagtext;
 	if(next)
 		Next();
 	return h;
@@ -598,7 +628,7 @@ String XmlParser::ReadComment(bool next)
 {
 	if(!IsComment())
 		throw XmlError("Comment expected");
-	String h = text;
+	String h = tagtext;
 	if(next)
 		Next();
 	return h;
@@ -608,6 +638,9 @@ void XmlParser::Skip()
 {
 	if(IsEof())
 		throw XmlError("Unexpected end of file");
+	if(cdata.GetCount() && type != XML_TEXT)
+		cdata.Clear();
+	else
 	if(IsTag()) {
 		String n = ReadTag();
 		while(!End()) {
@@ -735,16 +768,16 @@ bool Ignore(XmlParser& p, dword style)
 static XmlNode sReadXmlNode(XmlParser& p, dword style)
 {
 	XmlNode m;
+	if(p.IsText()) {
+		m.CreateText(p.ReadText());
+		return m;
+	}
 	if(p.IsTag()) {
 		m.CreateTag(p.ReadTag());
 		m.SetAttrsPick(p.PickAttrs());
 		while(!p.End())
 			if(!Ignore(p, style))
 				m.Add() = sReadXmlNode(p, style);
-		return m;
-	}
-	if(p.IsText()) {
-		m.CreateText(p.ReadText());
 		return m;
 	}
 	if(p.IsPI()) {
@@ -830,22 +863,8 @@ String AsXML(const XmlNode& node, dword style)
 		bool preserve = false;
 		if(node.GetCount()) {
 			StringBuffer body;
-			for(int i = 0; i < node.GetCount(); i++) {
-				const XmlNode& n = node.Node(i);
-				if(n.IsText()) {
-					String s = n.GetText();
-					if(ShouldPreserve(s)) {
-						body << DeXml(s, CHARSET_DEFAULT, true);
-						preserve = true;
-					}
-					else
-						body << DeXml(s);
-				}
-				else
-					body << AsXML(node.Node(i), style);
-			}
-			if(preserve)
-				tag("xml:spaces", "preserve");
+			for(int i = 0; i < node.GetCount(); i++)
+				body << AsXML(node.Node(i), style);
 			r << tag(~body);
 		}
 		else
