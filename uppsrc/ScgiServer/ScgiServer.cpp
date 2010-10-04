@@ -75,6 +75,7 @@ void ScgiServer::Run()
 			clientSock.Close();
 			serverVars.Clear();
 			query.Clear();
+			post.Clear();
 			
 			WhenClosed();
 		}
