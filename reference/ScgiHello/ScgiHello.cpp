@@ -1,7 +1,6 @@
 #include <Core/Core.h>
 #include <Web/Web.h>
-
-#include <ScgiServer/ScgiServer.h>
+#include <Web/ScgiServer.h>
 
 using namespace Upp;
 
