@@ -367,11 +367,12 @@ public:
 	void Clear()                    { Free(); Zero(); }
 	void Reserve(int r)             { int l = GetLength(); SetLength(l + r); SetLength(l); }
 
-	void Cat(int c)                 { if(end >= limit) Expand(); *end++ = c; }
+	void Cat(int c)                        { if(end >= limit) Expand(); *end++ = c; }
 	void Cat(int c, int count);
 	void Cat(const char *s, int l);
-	void Cat(const char *s)         { Cat(s, (int)strlen(s)); }
-	void Cat(const String& s)       { Cat(s, s.GetLength()); }
+	void Cat(const char *s, const char *e) { Cat(s, e - s); }
+	void Cat(const char *s)                { Cat(s, (int)strlen(s)); }
+	void Cat(const String& s)              { Cat(s, s.GetLength()); }
 
 	int  GetAlloc() const           { return (int)(limit - begin); }
 
@@ -730,12 +731,13 @@ public:
 	void  Clear()                    { Free(); Zero(); }
 	void  Reserve(int r)             { int l = GetLength(); SetLength(l + r); SetLength(l); }
 
-	void  Cat(int c)                 { if(end >= limit) Expand(); *end++ = c; }
+	void  Cat(int c)                          { if(end >= limit) Expand(); *end++ = c; }
 	void  Cat(int c, int count);
 	void  Cat(const wchar *s, int l);
-	void  Cat(const wchar *s)        { Cat(s, wstrlen(s)); }
-	void  Cat(const WString& s)      { Cat(s, s.GetLength()); }
-	void  Cat(const char *s)         { Cat(WString(s)); }
+	void  Cat(const wchar *s, const wchar *e) { Cat(s, e - s); }
+	void  Cat(const wchar *s)                 { Cat(s, wstrlen(s)); }
+	void  Cat(const WString& s)               { Cat(s, s.GetLength()); }
+	void  Cat(const char *s)                  { Cat(WString(s)); }
 
 	int   GetAlloc() const           { return (int)(limit - begin); }
 
