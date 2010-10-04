@@ -755,15 +755,24 @@ bool PlotterCtrl::Key(dword key, int repcnt)
 
 void PlotterCtrl::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	if(keyflags & K_SHIFT)
-	{
+	if(keyflags & K_SHIFT) {
 		hscroll.Wheel(zdelta, 3);
 		OnHScroll();
 	}
-	else
-	{
+	else if(keyflags && K_CTRL) {
 		vscroll.Wheel(zdelta, 3);
 		OnVScroll();
+	}
+	else {
+		if(!Rect(GetSize()).Contains(p))
+			p = GetSize() >> 1;
+		Pointf logpos = FromClient(p);
+		int zlim = minmax(zdelta, -1200, +1200);
+		double factor = exp(zlim * (M_LN2 / 120));
+		Sizef new_scale = GetScale() * factor;
+		Pointf new_delta = Pointf(p) - Sizef(logpos) * new_scale;
+		SetZoom(new_scale, new_delta);
+		WhenUserZoom();
 	}
 }
 
