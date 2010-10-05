@@ -234,6 +234,7 @@ private:
 	bool                    show_scroll;
 	bool                    lock_drag_drop;
 	bool                    lock_short_drag_drop;
+	bool                    custom_drag;
 };
 
 template <class T>
