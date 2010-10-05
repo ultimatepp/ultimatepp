@@ -291,7 +291,7 @@ void XmlParser::Next()
 			raw_text.Cat(*term++);
 		}
 	}
-	cdata = WString(raw_text).ToString();
+	cdata = FromUtf8(String(raw_text)).ToString();
 
 	if(cdata.GetCount() && (npreserve || preserveall))
 		type = XML_TEXT;
