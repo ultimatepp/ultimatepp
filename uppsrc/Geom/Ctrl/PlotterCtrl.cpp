@@ -666,7 +666,15 @@ void PlotterCtrl::RefreshBuffer(const Rect& rc)
 Image PlotterCtrl::CursorImage(Point pt, dword keyflags)
 {
 	Image out = Image::Arrow();
-	if(drag_drop) {
+	if(!custom_drag) {
+		if(keyflags & K_SHIFT)
+			out = PlotterImg::view_zoom_in();
+		else if(keyflags & K_CTRL)
+			out = PlotterImg::view_zoom_out();
+		else if(keyflags & K_MOUSELEFT)
+			out = PlotterImg::view_pan();
+	}
+	else if(drag_drop) {
 		lock_drag_drop = true;
 		out = drag_drop->Cursor(FromClient(pt), keyflags, IsDragging());
 		lock_drag_drop = false;
@@ -685,9 +693,8 @@ bool PlotterCtrl::Push(Point pt, dword keyflags)
 	bool push = false;
 	SyncPush();
 	drag_start = FromPushClient(pt);
-	if(drag_drop)
-		push = drag_drop->Push(drag_start, keyflags);
-	return push;
+	custom_drag = (drag_drop && drag_drop->Push(drag_start, keyflags));
+	return true;
 }
 
 void PlotterCtrl::Drag(Point start, Point prev, Point curr, dword keyflags)
@@ -696,7 +703,20 @@ void PlotterCtrl::Drag(Point start, Point prev, Point curr, dword keyflags)
 //	LLOG("PlotterCtrl::Drag, short = " << ~short_drag_drop << ", " << (~short_drag_drop
 //		? typeid(*short_drag_drop).name() : "NULL") << ", long = " << ~drag_drop << ", "
 //		<< (~drag_drop ? typeid(*drag_drop).name() : "NULL"));
-	if(drag_drop) {
+	if(!custom_drag) {
+		if(keyflags & (K_SHIFT | K_CTRL)) {
+			Rect rc_prev = Null, rc_curr = Null;
+			if(!IsNull(prev)) rc_prev = RectSort(start, prev);
+			if(!IsNull(curr)) rc_curr = RectSort(start, curr);
+			ViewDraw draw(this);
+			DrawDragDropRect(draw, rc_prev, rc_curr, 2);
+		}
+		else {
+			if(!IsNull(curr))
+				PanOffset(curr - start);
+		}
+	}
+	else if(drag_drop) {
 		lock_drag_drop = true;
 //		LLOG("PlotterCtrl::Drag->drag_drop::Drag");
 		drag_drop->Drag(drag_start, FromPushClientNull(prev), FromPushClientNull(curr), keyflags);
@@ -708,7 +728,31 @@ void PlotterCtrl::Drag(Point start, Point prev, Point curr, dword keyflags)
 
 void PlotterCtrl::Drop(Point start, Point end, dword keyflags)
 {
-	if(drag_drop)
+	if(!custom_drag) {
+		Rect rc = RectSort(start, end);
+		Rectf log = FromClient(rc);
+		Pointf log_center = log.CenterPoint();
+		Rectf view = GetViewRect();
+		double ratio = max(1e-10, fpabsmax(log.Size() / view.GetSize()));
+		if(keyflags & K_SHIFT) {
+			Sizef new_scale = GetScale() / ratio;
+			Pointf new_delta = Sizef(GetSize() >> 1) - Sizef(log_center) * new_scale;
+			SetZoom(new_scale, new_delta);
+			WhenUserZoom();
+		}
+		else if(keyflags & K_CTRL) {
+			Point scr_center = ToClient(log_center);
+			Sizef new_scale = GetScale() * ratio;
+			Pointf new_delta = Pointf(scr_center) - Sizef(view.CenterPoint()) * new_scale;
+			SetZoom(new_scale, new_delta);
+			WhenUserZoom();
+		}
+		else {
+			SetDelta(push_delta + Sizef(end - start));
+			PanOffset(Point(0, 0));
+		}
+	}
+	else if(drag_drop)
 		drag_drop->Drop(drag_start, FromPushClient(end), keyflags);
 }
 
@@ -720,6 +764,7 @@ void PlotterCtrl::Click(Point pt, dword keyflags)
 
 void PlotterCtrl::Cancel()
 {
+	PanOffset(Size(0, 0));
 	if(drag_drop) {
 		drag_drop->Cancel();
 	}

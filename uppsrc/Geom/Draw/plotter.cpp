@@ -1947,18 +1947,22 @@ One<MarkTool::Marker> MarkTool::Nabla(int size, Color color, Color outline, int 
 class CircleMarker : public AreaMarker
 {
 public:
-	CircleMarker(int size, Color color, Color outline, int outline_width)
-	: AreaMarker(size, color, outline, outline_width) {}
+	CircleMarker(int size, Color color, Color outline, int outline_width);
 
 	virtual void Paint(Draw& draw, const Vector<Point>& pt);
 };
+
+CircleMarker::CircleMarker(int size, Color color, Color outline, int outline_width)
+: AreaMarker(size, color, Nvl(outline, color), IsNull(outline) ? 0 : outline_width)
+{
+}
 
 void CircleMarker::Paint(Draw& draw, const Vector<Point>& pt)
 {
 	int half = size >> 1;
 	for(int t = 0; t < pt.GetCount(); t++)
 		draw.DrawEllipse(RectC(pt[t].x - half, pt[t].y - half, size, size),
-			color, outline_width, outline);
+			color, outline_width, Nvl(outline, color));
 }
 
 One<MarkTool::Marker> MarkTool::Circle(int size, Color color, Color outline, int outline_width)
