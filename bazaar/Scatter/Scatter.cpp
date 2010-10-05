@@ -1092,7 +1092,8 @@ Image Scatter::CursorImage(Point p, dword keyflags)
 
 void Scatter::Circle(Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const
 {
-	w.DrawLine(cp.x,cp.y,cp.x+1,cp.y,fround(scale*size/6),markColor);
+	int radius = fround(scale*size/6);		int radius2 = radius/2;
+	w.DrawEllipse(cp.x-radius2, cp.y-radius2, radius, radius, markColor, 1, markColor);
 }
 
 void Scatter::Square(Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const
@@ -1254,18 +1255,20 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 	w.DrawRect(1,1,l-2,h-1,plotAreaColor);	//grosimea liniei nu este scalata
 	int gW=fround(gridWidth*scale/6);
 	if(gridWidth<0) gW=gridWidth;   
-	if (drawVGrid)       
-		for(int i=0; xMinUnit+i*xMajorUnit < xRange;i++){
-			w.DrawLine(fround(l*xMinUnit/xRange+i*l/d1), 0,
-					   fround(l*xMinUnit/xRange+i*l/d1), h,
-					   gW,gridColor);
+	Vector<Point> p;
+	p.SetCount(2);       
+	if (drawVGrid) 
+		for(int i=0; xMinUnit+i*xMajorUnit < xRange;i++) {
+			p[0].x = fround(l*xMinUnit/xRange+i*l/d1);		p[0].y = 0;
+			p[1].x = fround(l*xMinUnit/xRange+i*l/d1);		p[1].y = h;
+			DrawPolylineX(w, p, gW, gridColor, "oo..", scale);
 		}
 		
 	if (drawHGrid)
-		for(int i=0; yMinUnit+i*yMajorUnit < yRange;i++){
-			w.DrawLine(0, fround(-h*yMinUnit/yRange + h-i*h/d2), 
-					   l, fround(-h*yMinUnit/yRange + h-i*h/d2), 
-					   gW,gridColor);
+		for(int i=0; yMinUnit+i*yMajorUnit < yRange;i++) {
+			p[0].x = 0;		p[0].y = fround(-h*yMinUnit/yRange + h-i*h/d2);
+			p[1].x = l;		p[1].y = fround(-h*yMinUnit/yRange + h-i*h/d2);
+			DrawPolylineX(w, p, gW, gridColor, "oo..", scale);
 		}
 	w.DrawLine(0, h, l, h, scale, Black);
 	w.DrawLine(0, 0, l, 0, scale, Black);
@@ -1602,7 +1605,7 @@ Scatter::Scatter():
 	logX(false), logY(false), logY2(false),
 	cbModifFormatX(NULL),cbModifFormatY(NULL),cbModifFormatY2(NULL),
 	gridColor(::Color(102,102,102)),
-	gridWidth(-4),
+	gridWidth(4),
 	paintInfo(false),
 	mouseHandlingX(false), mouseHandlingY(false), isMidDown(false), isLeftDown(false),      
 	drawXReticle(true), drawYReticle(true), drawY2Reticle(false),
