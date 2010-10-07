@@ -1419,7 +1419,7 @@ CalcNodePtr CalcParser::ScanCompare()
 					out_node = new CalcConstNode(Value());
 			}
 			else if(islike) {
-				CalcNodePtr lexpr = ScanSelect();
+				CalcNodePtr lexpr = ScanBitOr();
 				out_node = new CalcFunctionNode("like", node, lexpr);
 			}
 			else if(isis) {
