@@ -1357,6 +1357,11 @@ void IntXml(StringBuffer& xml, const char *tag, int value)
 	xml << '<' << tag << '>' << value << "</" << tag << ">\n";
 }
 
+void DoubleXml(StringBuffer& xml, const char *tag, double value)
+{
+	xml << '<' << tag << '>' << FormatDoubleExp(value, 16) << "</" << tag << ">\n";
+}
+
 void BoolXml(StringBuffer& xml, const char *tag, bool b)
 {
 	xml << '<' << tag << '>' << (b ? "1" : "0") << "</" << tag << ">\n";
@@ -1370,6 +1375,11 @@ bool XmlBool(XmlParser& xml)
 int XmlInt(XmlParser& xml)
 {
 	return ScanInt(xml.ReadTextE());
+}
+
+double XmlDouble(XmlParser& xml)
+{
+	return ScanDouble(xml.ReadTextE());
 }
 
 END_UPP_NAMESPACE
