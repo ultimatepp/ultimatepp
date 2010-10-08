@@ -30,6 +30,8 @@ file
 	smtp.cpp,
 	sproc.h,
 	sproc.cpp,
+	ScgiServer.h,
+	ScgiServer.cpp,
 	src.tpp,
 	srcdoc.tpp,
 	srcimp.tpp,
