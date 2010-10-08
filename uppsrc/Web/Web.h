@@ -41,6 +41,7 @@ NAMESPACE_UPP
 #include "auth.h"
 #include "smtp.h"
 #include "sproc.h"
+#include "ScgiServer.h"
 
 END_UPP_NAMESPACE
 
