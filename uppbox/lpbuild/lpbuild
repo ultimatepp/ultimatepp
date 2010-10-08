@@ -11,7 +11,7 @@ GPG_PROG="/home/upp/bin/gpg-extpass"	# what program to use for signing (in this 
 GPG_KEY="0CE4194D"				# gpg key fingerprint to use
 TMPDIR="/home/upp/lpbuild.tmp"	# directory for temporary files (defaults to /tmp/lpbuild.tmp)
 PPA="upp"
-SERIES=( hardy jaunty karmic lucid )
+SERIES=( hardy jaunty karmic lucid maverick )
 
 # my local setup (for debuging)
 #SRC_PATH="/media/data/temp/uppsvn"
@@ -147,7 +147,7 @@ EOF
 	# upload to launchpad (set SIMULATE="-s" for debugging)
 	echo "Uploading upp $version ..."
 	cd $tmpdir
-	dput $SIMULATE "$PPA-$dist" "upp_"$version"_source.changes"
+	dput -c "$scriptdir/dput.cfg" $SIMULATE "$PPA-$dist" "upp_"$version"_source.changes"
 
 	# next series does not have to send orig.tar.gz again
 	skiporig="-sd"
