@@ -5,11 +5,12 @@
 using namespace Upp;
 
 class App : public ScgiServer {
-private:
-	void OnAccepted();
-	void OnRequest();
-	void OnClosed();
+public:
+	virtual void OnAccepted();
+	virtual void OnRequest();
+	virtual void OnClosed();
 
+private:
 	void HelloViaGet();
 	void HelloViaPost();
 
@@ -24,18 +25,18 @@ void App::OnAccepted()
 
 void App::HelloViaGet()
 {
-	clientSock.Write(Format("Hello, %s!\r\n", query["NAME"]));
+	Write(Format("Hello, %s!\r\n", query["NAME"]));
 }
 
 void App::HelloViaPost()
 {
-	clientSock.Write(Format("Hello, %s!\r\n", post["NAME"]));
+	Write(Format("Hello, %s!\r\n", post["NAME"]));
 }
 
 void App::OnRequest()
 {
-	clientSock.Write("Content-Type: text/plain\r\n\r\n");
-	clientSock.Write("Message:\r\n");
+	Write("Content-Type: text/plain\r\n\r\n");
+	Write("Message:\r\n");
 
 	//
 	// In a real app one should look at the server variable 'SCRIPT_NAME' to see:
@@ -49,20 +50,20 @@ void App::OnRequest()
 	if (HasPostData()) {
 		HelloViaPost();
 
-		clientSock.Write("\r\nPost Data:\r\n");
+		Write("\r\nPost Data:\r\n");
 		for (int i=0; i < post.GetCount(); i++)
-			clientSock.Write(Format("%s = '%s'\r\n", post.GetKey(i), post.GetValue(i)));
+			Write(Format("%s = '%s'\r\n", post.GetKey(i), post.GetValue(i)));
 	} else
 		HelloViaGet();
 	
-	clientSock.Write("\r\nQuery String:\r\n");
+	Write("\r\nQuery String:\r\n");
 	for (int i=0; i < query.GetCount(); i++)
-		clientSock.Write(Format("%s = '%s'\r\n", query.GetKey(i), query.GetValue(i)));
+		Write(Format("%s = '%s'\r\n", query.GetKey(i), query.GetValue(i)));
 	
-	clientSock.Write("\r\nServer Variables:\r\n");
+	Write("\r\nServer Variables:\r\n");
 	const Vector<String> &keys = serverVars.GetKeys();
 	for (int i=0; i < serverVars.GetCount(); i++)
-		clientSock.Write(Format("'%s' = '%s'\r\n", keys[i], serverVars.Get(keys[i])));
+		Write(Format("'%s' = '%s'\r\n", keys[i], serverVars.Get(keys[i])));
 }
 
 void App::OnClosed()
