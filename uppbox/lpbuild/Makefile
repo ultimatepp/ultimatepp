@@ -165,7 +165,7 @@ echo=$(if $S,,@echo $1)
 ifneq ($(skip-parse),y)
 
 flags:=$(sort $(FLAGS) $(PLATFORM))
-CINC:=$(foreach d,$(NESTS) $(INCPATHS), -I$d) -I/usr/include/freetype2 -I/usr/include/gtk-2.0 -I/usr/local/include/gtk-2.0 -I/usr/include/glib-2.0 -I/usr/local/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/local/lib/glib-2.0/include -I/usr/lib/gtk-2.0/include -I/usr/local/lib/gtk-2.0/include -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/X11R6/include -I/usr/X11R6/include/freetype2 -I/usr/X11R6/include/gtk-2.0 -I/usr/X11R6/include/glib-2.0 -I/usr/X11R6/lib/glib-2.0/include -I/usr/X11R6/lib/gtk-2.0/include -I/usr/X11R6/include/cairo -I/usr/X11R6/include/pango-1.0 -I/usr/X11R6/include/atk-1.0 -I/usr/local/include/cairo -I/usr/local/include/pango-1.0 -I/usr/local/include/atk-1.0 -I/usr/local/include -I/usr/local/include/libpng
+CINC:=$(foreach d,$(NESTS) $(INCPATHS), -I$d) -I/usr/include/freetype2 -I/usr/include/gtk-2.0 -I/usr/local/include/gtk-2.0 -I/usr/include/glib-2.0 -I/usr/local/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/local/lib/glib-2.0/include -I/usr/lib/gtk-2.0/include -I/usr/local/lib/gtk-2.0/include -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/X11R6/include -I/usr/X11R6/include/freetype2 -I/usr/X11R6/include/gtk-2.0 -I/usr/X11R6/include/glib-2.0 -I/usr/X11R6/lib/glib-2.0/include -I/usr/X11R6/lib/gtk-2.0/include -I/usr/X11R6/include/cairo -I/usr/X11R6/include/pango-1.0 -I/usr/X11R6/include/atk-1.0 -I/usr/local/include/cairo -I/usr/local/include/pango-1.0 -I/usr/local/include/atk-1.0 -I/usr/local/include -I/usr/local/include/libpng -I/usr/include/gdk-pixbuf-2.0
 LIBPATH:=$(foreach d,$(LIBPATHS), -L$d) -L/usr/X11R6/lib -L/usr/lib -L/usr/local/lib
 needed-dirs:=
 begin-group:=-Wl,--start-group
@@ -186,7 +186,7 @@ objdir=$(OBJDIR)/$1/$(call concatenate,$($1_FLAGS))
 define create-dir
 needed-dirs+= $1
 $1:
-	$(call echo,"  Creating directory $1 ...")
+	$(call echo,"    Creating directory $1 ...")
 	$Mmkdir -p $1
 endef
 needs-dir=$(if $(filter $(needed-dirs),$1),,$(eval $(call create-dir,$1))) $1
@@ -196,7 +196,7 @@ get-deps=$(sort $1 $(foreach p,$($1_USES),$(call get-deps,$p)))
 # Compiler commands
 compiler-cpp=$(CXX) -c -x c++ $(CXXFLAGS)
 compiler-c=$(CC) -c -x c $(CFLAGS)
-analyze-info=$(if $S,,  Analyzing $1 dependencies ...)
+analyze-info=$(if $S,,    Analyzing $1 dependencies ...)
 includes-fetcher-c=$(info $(analyze-info))$(CC) -M -x c $(CXXFLAGS)
 includes-fetcher-cpp=$(info $(analyze-info))$(CC) -M -x c++ $(CFLAGS)
 
