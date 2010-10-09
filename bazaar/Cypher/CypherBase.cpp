@@ -56,11 +56,11 @@ bool CypherFifo::Get(byte &b)
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////
-//                                      CypherBase class                                  //
-////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+//                                      Cypher class                                  //
+////////////////////////////////////////////////////////////////////////////////////////
 
-CypherBase::CypherBase(size_t _blockSize)
+Cypher::Cypher(size_t _blockSize)
 {
 	// still no key present
 	keyOk = false;
@@ -82,7 +82,7 @@ CypherBase::CypherBase(size_t _blockSize)
 
 }
 
-void CypherBase::Reset()
+void Cypher::Reset()
 {
 	keyOk = false;
 	mode = IDLE;
@@ -92,7 +92,7 @@ void CypherBase::Reset()
 
 // set mode (either STREAM or BLOCK
 // throws an exception if another mode was already active
-void CypherBase::SetMode(Mode m)
+void Cypher::SetMode(Mode m)
 {
 	// checks if another mode already in progress, if so throws an exception
 	if(mode != m && mode != IDLE)
@@ -113,7 +113,7 @@ void CypherBase::SetMode(Mode m)
 }
 
 // checks if key was set, otherwise throws an exception
-void CypherBase::CheckKey(void)
+void Cypher::CheckKey(void)
 {
 	if(!keyOk)
 		throw "Missing key";
@@ -121,7 +121,7 @@ void CypherBase::CheckKey(void)
 		
 // checks buffer size if it must be multiple of block size
 // for Block-Cyphers. Throws an exception if not
-void CypherBase::CheckBufSize(size_t bufSize)
+void Cypher::CheckBufSize(size_t bufSize)
 {
 	if(blockSize == 1)
 		return;
@@ -130,7 +130,7 @@ void CypherBase::CheckBufSize(size_t bufSize)
 }
 
 // rounds buffer size to nearest bigger multiple of block size
-size_t CypherBase::RoundBufSize(size_t bufSize)
+size_t Cypher::RoundBufSize(size_t bufSize)
 {
 	size_t rem = bufSize % blockSize;
 	if(rem)
@@ -140,7 +140,7 @@ size_t CypherBase::RoundBufSize(size_t bufSize)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // key setting
-void CypherBase::SetKey(byte const *keyBuf, size_t keyLen, byte const *_nonce, size_t nonceLen)
+void Cypher::SetKey(byte const *keyBuf, size_t keyLen, byte const *_nonce, size_t nonceLen)
 {
 	nonce.Clear();
 	if(!_nonce || !nonceLen)
@@ -158,7 +158,7 @@ void CypherBase::SetKey(byte const *keyBuf, size_t keyLen, byte const *_nonce, s
 	keyOk = true;
 }
 
-void CypherBase::SetKey(String const &key, String const &nonce)
+void Cypher::SetKey(String const &key, String const &nonce)
 {
 	if(IsNull(nonce))
 		SetKey((byte const *)~key, key.GetCount(), NULL, 0);
@@ -168,7 +168,7 @@ void CypherBase::SetKey(String const &key, String const &nonce)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // encrypt/decrypt functions
-String CypherBase::operator()(String const &s)
+String Cypher::operator()(String const &s)
 {
 	// checks if KEY is ok, exception if not
 	CheckKey();
@@ -180,11 +180,11 @@ String CypherBase::operator()(String const &s)
 	CheckBufSize(s.GetCount());
 	
 	StringBuffer sb(s.GetCount());
-	Cypher((const byte *)~s, (byte *)~sb, s.GetCount());
+	CypherCypher((const byte *)~s, (byte *)~sb, s.GetCount());
 	return sb;
 }
 
-void CypherBase::operator()(byte const *sourceBuf,  byte *destBuf, size_t bufLen)
+void Cypher::operator()(byte const *sourceBuf,  byte *destBuf, size_t bufLen)
 {
 	// checks if KEY is ok, exception if not
 	CheckKey();
@@ -195,10 +195,10 @@ void CypherBase::operator()(byte const *sourceBuf,  byte *destBuf, size_t bufLen
 	// checks buffer size, exception if not multiple of block size
 	CheckBufSize(bufLen);
 	
-	Cypher(sourceBuf, destBuf, bufLen);
+	CypherCypher(sourceBuf, destBuf, bufLen);
 }
 
-void CypherBase::operator()(byte *buf, size_t bufLen)
+void Cypher::operator()(byte *buf, size_t bufLen)
 {
 	// checks if KEY is ok, exception if not
 	CheckKey();
@@ -209,12 +209,12 @@ void CypherBase::operator()(byte *buf, size_t bufLen)
 	// checks buffer size, exception if not multiple of block size
 	CheckBufSize(bufLen);
 	
-	Cypher(buf, buf, bufLen);
+	CypherCypher(buf, buf, bufLen);
 }
 		
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // streaming support
-String CypherBase::StreamOut(void)
+String Cypher::StreamOut(void)
 {
 	// checks if KEY is ok, exception if not
 	CheckKey();
@@ -239,7 +239,7 @@ String CypherBase::StreamOut(void)
 	return res;
 }
 
-void CypherBase::StreamIn(String const &s)
+void Cypher::StreamIn(String const &s)
 {
 	// checks if KEY is ok, exception if not
 	CheckKey();
@@ -252,7 +252,7 @@ void CypherBase::StreamIn(String const &s)
 	{
 		// en/decode string and put into FIFO
 		StringBuffer sb(s.GetCount());
-		Cypher((const byte *)~s, (byte *)~sb, s.GetCount());
+		CypherCypher((const byte *)~s, (byte *)~sb, s.GetCount());
 		FIFO.Put(sb);
 	}
 	else
@@ -270,7 +270,7 @@ void CypherBase::StreamIn(String const &s)
 			blockBytes += count;
 			if(blockBytes >= blockSize)
 			{
-				Cypher(blockBuffer, blockBuffer, blockSize);
+				CypherCypher(blockBuffer, blockBuffer, blockSize);
 				FIFO.Put(blockBuffer, blockSize);
 				blockBytes = 0;
 			}
@@ -285,7 +285,7 @@ void CypherBase::StreamIn(String const &s)
 			if(count)
 			{
 				Buffer<byte> buf(count);
-				Cypher((const byte *)~s + idx, buf, count);
+				CypherCypher((const byte *)~s + idx, buf, count);
 				FIFO.Put(buf, count);
 				len -= count;
 				idx += count;
@@ -304,7 +304,7 @@ void CypherBase::StreamIn(String const &s)
 	streamedIn += s.GetCount();
 }
 
-size_t CypherBase::Flush(void)
+size_t Cypher::Flush(void)
 {
 	// checks if KEY is ok, exception if not
 	CheckKey();
@@ -323,7 +323,7 @@ size_t CypherBase::Flush(void)
 		for(size_t i = blockBytes; i < blockSize; i++)
 			blockBuffer[i] = (byte)(Random() & 0xff);
 
-		Cypher(blockBuffer, blockBuffer, blockSize);
+		CypherCypher(blockBuffer, blockBuffer, blockSize);
 		FIFO.Put(blockBuffer, blockSize);
 		blockBytes = 0;
 	}

@@ -5,7 +5,7 @@
 
 NAMESPACE_UPP
 
-class Snow2 : public CypherBase
+class Snow2 : public Cypher
 {
 	private:
 	
@@ -56,7 +56,7 @@ class Snow2 : public CypherBase
 	protected:
 	
 		// encode/decode buffer, dest on different buffer
-		virtual void Cypher(byte const *sBuf, byte *dBuf, size_t bufLen);
+		virtual void CypherCypher(byte const *sBuf, byte *dBuf, size_t bufLen);
 		
 		// key settings
 		virtual bool CypherKey(byte const *keyBuf, size_t keyLen, byte const *nonce = NULL, size_t nonceLen = 0);

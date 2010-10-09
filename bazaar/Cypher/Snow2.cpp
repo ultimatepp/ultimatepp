@@ -533,7 +533,7 @@ void Snow2::keystream(dword *keystream_block)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // constructors
-Snow2::Snow2() : CypherBase(1 /* stream cypher */)
+Snow2::Snow2() : Cypher(1 /* stream cypher */)
 {
 	// Snow2 fast algo works with keystream of 16 words
 	// so we must keep an index inside it
@@ -541,12 +541,12 @@ Snow2::Snow2() : CypherBase(1 /* stream cypher */)
 	
 }
 
-Snow2::Snow2(String const &key, String const &nonce) : CypherBase(1 /* stream cypher */)
+Snow2::Snow2(String const &key, String const &nonce) : Cypher(1 /* stream cypher */)
 {
 	SetKey(key, nonce);
 }
 
-Snow2::Snow2(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen) : CypherBase(1 /* stream cypher */)
+Snow2::Snow2(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen) : Cypher(1 /* stream cypher */)
 {
 	SetKey(keyBuf, keyLen, nonce, nonceLen);
 }
@@ -583,7 +583,7 @@ bool Snow2::CypherKey(byte const *keyBuf, size_t keyLen, byte const *nonce, size
 }
 
 // encode/decode buffer, dest on different buffer
-void Snow2::Cypher(byte const *sBuf, byte *dBuf, size_t bufLen)
+void Snow2::CypherCypher(byte const *sBuf, byte *dBuf, size_t bufLen)
 {
 	// code first partial chunk, if any
 	const byte *byteKeyStream = (const byte *)keyStream + byteIndex;

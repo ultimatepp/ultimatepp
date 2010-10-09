@@ -5,7 +5,7 @@
 
 NAMESPACE_UPP
 
-class RC4 : public CypherBase
+class RC4 : public Cypher
 {
 	private:
 	
@@ -15,7 +15,7 @@ class RC4 : public CypherBase
 	protected:
 	
 		// encode/decode buffer, dest on different buffer
-		virtual void Cypher(const byte *src, byte *dst, size_t len);
+		virtual void CypherCypher(const byte *src, byte *dst, size_t len);
 
 		// key settings
 		virtual bool CypherKey(byte const *keyBuf, size_t keyLen, byte const *nonce = NULL, size_t nonceLen = 0);

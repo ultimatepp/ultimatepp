@@ -1,5 +1,5 @@
-#ifndef _CypherBase_h
-#define _CypherBase_h
+#ifndef _CypherBase_h_
+#define _CypherBase_h_
 
 #include <Core/Core.h>
 
@@ -34,7 +34,7 @@ class CypherFifo
 
 // Base class for all Cypher modules
 // provides the common interface
-class CypherBase
+class Cypher
 {
 	private:
 	
@@ -93,7 +93,7 @@ class CypherBase
 	protected:
 		// main encoding/decoding function
 		// must be redefined on each derived class
-		virtual void Cypher(byte const *sourceBuf,  byte *destBuf, size_t bufLen) = 0;
+		virtual void CypherCypher(byte const *sourceBuf,  byte *destBuf, size_t bufLen) = 0;
 		
 		// main key setting function
 		// must be redefined on each derived class
@@ -104,7 +104,7 @@ class CypherBase
 		// empty constructor -- sets state to NOKEY, and resets stream buffer
 		// blockSize is the size of encryption block for Block-Cyphers
 		// for Stream-Cyphers it must be 1
-		CypherBase(size_t blockSize);
+		Cypher(size_t blockSize);
 		
 		// key setting - rekeying
 		// throws an exception if invalid key
@@ -122,14 +122,14 @@ class CypherBase
 		
 		// streaming support
 		void SetStreamSize(size_t size) { streamSize = size; }
-		CypherBase & operator <<(String const &s) { StreamIn(s); return *this; }
-		CypherBase & operator >>(String &s) { s = StreamOut(); return *this; }
+		Cypher & operator <<(String const &s) { StreamIn(s); return *this; }
+		Cypher & operator >>(String &s) { s = StreamOut(); return *this; }
 		size_t Flush(void);
 		bool IsEof(void) { return !FIFO.GetCount(); }
 		bool operator!(void) { return IsEof(); }
 		operator bool() { return !IsEof(); }
 	
-}; // END Class CypherBase
+}; // END Class Cypher
 
 END_UPP_NAMESPACE
 

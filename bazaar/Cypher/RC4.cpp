@@ -2,18 +2,18 @@
 
 NAMESPACE_UPP
 
-RC4::RC4() : CypherBase(1 /* stream cypher */)
+RC4::RC4() : Cypher(1 /* stream cypher */)
 {
 	memset(sbox, 0, 256);
 	si = sj = 0;
 }
 
-RC4::RC4(String const &key, String const &nonce) : CypherBase(1 /* stream cypher */)
+RC4::RC4(String const &key, String const &nonce) : Cypher(1 /* stream cypher */)
 {
 	SetKey(key, nonce);
 }
 
-RC4::RC4(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen) : CypherBase(1 /* stream cypher */)
+RC4::RC4(byte const *keyBuf, size_t keyLen, byte const *nonce, size_t nonceLen) : Cypher(1 /* stream cypher */)
 {
 	SetKey(keyBuf, keyLen, nonce, nonceLen);
 }
@@ -58,7 +58,7 @@ bool RC4::CypherKey(byte const *kBuf, size_t keyLen, byte const *nonce, size_t n
 }
 
 // encode/decode buffer, dest on different buffer
-void RC4::Cypher(const byte *src, byte *dst, size_t len)
+void RC4::CypherCypher(const byte *src, byte *dst, size_t len)
 {
 	unsigned char swap;
 	
