@@ -44,6 +44,9 @@ void AutoSetup()
 		dlg.mingw <<=
 			NormalizePathNN(GetWinRegString("Inno Setup: App Path",
 		       "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MinGW_is1"));
+	if (IsNull(dlg.mingw))
+		dlg.mingw <<= NormalizePathNN(GetWinRegString("InstallLocation",
+						"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\TDM-GCC" ));
 	dlg.mingwmethod <<= "MINGW";
 	dlg.domingw <<= !IsNull(dlg.mingw);
 
@@ -113,7 +116,11 @@ void AutoSetup()
 
 	String sdk10 = NormalizePathNN(GetWinRegString("InstallationFolder",
 		                                       "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows\\v7.1",
-		                                       HKEY_LOCAL_MACHINE));  
+		                                       HKEY_LOCAL_MACHINE));
+	if (IsNull (sdk10))
+		sdk10 = NormalizePathNN(GetWinRegString("InstallationFolder",
+		                                        "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows\\v7.0A",
+		                                        HKEY_LOCAL_MACHINE));
 	String bin10;
 	if(!IsNull(sdk10) && FileExists(AppendFileName(sdk10, "VC\\Bin\\cl.exe")))
 		bin10 = sdk10;
@@ -142,9 +149,11 @@ void AutoSetup()
 	DirSel(dlg.visualcpp71, bd.Add());
 	DirSel(dlg.visualcpp8, bd.Add());
 	DirSel(dlg.visualcpp9, bd.Add());
+	DirSel(dlg.visualcpp10, bd.Add());
 	DirSel(dlg.sdk71, bd.Add());
 	DirSel(dlg.sdk8, bd.Add());
 	DirSel(dlg.sdk9, bd.Add());
+	DirSel(dlg.sdk10, bd.Add());
 	DirSel(dlg.sdl, bd.Add());
 	DirSel(dlg.mysql, bd.Add());
 	if(dlg.Run() != IDOK)
