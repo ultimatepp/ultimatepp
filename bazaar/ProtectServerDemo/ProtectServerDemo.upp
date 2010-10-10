@@ -1,0 +1,11 @@
+description "Protect server demo\377";
+
+uses
+	Protect;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+

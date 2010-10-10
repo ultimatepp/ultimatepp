@@ -1,0 +1,15 @@
+description "Web client for Protect web-authentication\377";
+
+uses
+	CtrlLib,
+	Web,
+	Protect;
+
+file
+	ProtectClientDemo.h,
+	ProtectClientDemo.cpp,
+	ProtectClientDemo.lay;
+
+mainconfig
+	"" = "GUI";
+
