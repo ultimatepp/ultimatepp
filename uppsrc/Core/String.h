@@ -94,6 +94,10 @@ public:
 	int    ReverseFind(const tchar *s) const                  { return ReverseFind(s, GetLength()-1);}
 	int    ReverseFind(const String& s) const                 { return ReverseFind(s, GetLength()-1);}
 	
+	void   Replace(const tchar *find, int findlen, const tchar *replace, int replacelen);
+	void   Replace(const String& find, const String& replace) { Replace(~find, find.GetCount(), ~replace, replace.GetCount()); }
+	void   Replace(const tchar *find, const tchar *replace)   { Replace(find, strlen(find), replace, strlen(replace)); }
+	
 	bool   StartsWith(const tchar *s, int len) const;
 	bool   StartsWith(const tchar *s) const                   { return StartsWith(s, strlen__(s)); }
 	bool   StartsWith(const String& s) const                  { return StartsWith(~s, s.GetLength()); }
