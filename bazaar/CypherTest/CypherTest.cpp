@@ -80,17 +80,17 @@ void CypherTest::onGo()
 	String s = LoadFile(~sourceEdit);
 	
 	// encode it choosing requested encoder
-	One<CypherBase>Cypher;
+	One<Cypher> cypher;
 	switch(cypherSwitch)
 	{
 		// snow2 Cypher
 		case 0:
-			Cypher = new Snow2;
+			cypher = new Snow2;
 			break;
 			
 		// RC4 Cypher
 		case 1:
-			Cypher = new RC4;
+			cypher = new RC4;
 			break;
 		default:
 			PromptOK("Unsupported Cypher");
@@ -99,14 +99,14 @@ void CypherTest::onGo()
 	String d;
 	
 	// sets Cypher's key
-	Cypher->SetKey(key, "12345");
+	cypher->SetKey(key, "12345");
 	
 	if(streamSwitch == 0)
 	{
 		// buffer mode
 		if(splitSwitch == 0)
 		{
-			d = (*Cypher)(s);
+			d = (*cypher)(s);
 		}
 		else
 		{
@@ -119,7 +119,7 @@ void CypherTest::onGo()
 				String ss = s.Left(rnd);
 				s = s.Right(len - rnd);
 				len = s.GetCount();
-				d += (*Cypher)(ss);
+				d += (*cypher)(ss);
 			}
 		}
 	}
@@ -128,8 +128,8 @@ void CypherTest::onGo()
 		// stream mode
 		if(splitSwitch == 0)
 		{
-			(*Cypher) << s;
-			(*Cypher) >> d;
+			(*cypher) << s;
+			(*cypher) >> d;
 		}
 		else
 		{
@@ -142,9 +142,9 @@ void CypherTest::onGo()
 				String ss = s.Left(rnd);
 				s = s.Right(len - rnd);
 				len = s.GetCount();
-				(*Cypher) << ss;
+				(*cypher) << ss;
 			}
-			(*Cypher) >> d;
+			(*cypher) >> d;
 		}
 	}
 	
