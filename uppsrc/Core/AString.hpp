@@ -78,6 +78,24 @@ int AString<B>::ReverseFind(int len, const tchar *s, int from) const
 }
 
 template <class B>
+void AString<B>::Replace(const tchar *find, int findlen, const tchar *replace, int replacelen)
+{
+	String r;
+	int i = 0;
+	const tchar *p = Begin();
+	for(;;) {
+		int j = Find(findlen, find, i);
+		if(j < 0)
+			break;
+		r.Cat(p + i, j - i);
+		r.Cat(replace, replacelen);
+		i = j + findlen;
+	}
+	r.Cat(p + i, GetCount() - i);
+	*this = r;
+}
+
+template <class B>
 int AString<B>::ReverseFind(const tchar *s, int from) const
 {
 	return ReverseFind(strlen__(s), s, from);
