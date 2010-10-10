@@ -48,7 +48,7 @@ class ProtectServer : public ScgiServer
 		// process client request
 		// takes a VectorMap<String, Value> on input from client
 		// produces a response VectorMap<String, Value> to be returned
-		virtual VectorMap<String, Value> ProcessRequest(VectorMap<String, Value> const &v);
+		virtual VectorMap<String, Value> ProcessRequest(int reason, VectorMap<String, Value> const &v);
 
 public:
 

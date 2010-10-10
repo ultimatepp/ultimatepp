@@ -103,7 +103,28 @@ void ProtectServer::OnRequest()
 	//		GETKEY			gets application key
 	//		REGISTER		registers app for timed demo
 	//		GETLICENSEINFO	gets info about license (name, expiration date, app version....)
-	VectorMap<String, Value> results = ProcessRequest(data);
+	if(data.Find("REASON") < 0 || data.Find("CLIENTID") < 0)
+	{
+		SendError(PROTECT_BAD_DATA);
+		return;
+	}
+	String ClientID = data.Get("CLIENTID");
+	int reason = ProtectReason(data.Get("REASON"));
+	if(reason < PROTECT_CONNECT || reason > PROTECT_GETLICENSEINFO)
+	{
+		SendError(PROTECT_BAD_DATA);
+		return;
+	}
+	if(reason != PROTECT_CONNECT && reason != PROTECT_REGISTER && !IsClientConnected(ClientID))
+	{
+		SendError(PROTECT_NOT_CONNECTED);
+		return;
+	}
+	VectorMap<String, Value> results = ProcessRequest(reason, data);
+	if(reason == PROTECT_CONNECT && results.Find("ERROR") < 0)
+		ConnectClient(ClientID);
+	else if(reason == PROTECT_DISCONNECT)
+		DisconnectClient(ClientID);
 
 	// encodes results and send back to client
 	cypher->SetKey(key);
@@ -120,10 +141,22 @@ void ProtectServer::OnClosed()
 // process client request
 // takes a VectorMap<String, Value> on input from client
 // produces a response VectorMap<String, Value> to be returned
-VectorMap<String, Value> ProtectServer::ProcessRequest(VectorMap<String, Value> const &v)
+VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<String, Value> const &v)
 {
-	// @@@@ TO DO - BY NOW JUST RETURN INPUT DATA
-	return VectorMap<String, Value>(v, 1);
+	VectorMap<String, Value> res;
+	switch(reason)
+	{
+		case PROTECT_REGISTER:
+			break;
+			
+		case PROTECT_GETKEY:
+			res.Add("KEY", "THIS IS A DUMMY KEY");
+			break;
+			
+		default:
+			break;
+	}
+	return res;
 }
 
 END_UPP_NAMESPACE

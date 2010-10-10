@@ -15,8 +15,8 @@ class ProtectClient
 		// the HTTP client
 		HttpClient client;
 		
-		// last HTTP answer
-		String lastContents;
+		// last error code for failed operations
+		int lastError;
 		
 		// the cypher -- can be changed between available
 		// in Cypher package
@@ -27,6 +27,23 @@ class ProtectClient
 	
 		// client id -- generated as random dword on creation
 		String clientID;
+		
+		// license ID -- got from server upon registration
+		String licenseID;
+		
+		// user data
+		String userEMail;
+		String userName;
+		String userAddress;
+		String userCountry;
+		String userZIP;
+		String userPhone;
+		String userFax;
+		String userCell;
+		
+		// license expire time and number of them
+		Time expireTime;
+		int numLicenses;
 		
 		// key and IV for encrypted communication
 		String key;
@@ -57,22 +74,41 @@ class ProtectClient
 		// sets communication key
 		ProtectClient &SetKey(String const &_key) { key = _key; return *this; }
 
-		// read last HTTP answer got from server
-		// useful mostly for debugging purposes
-		String const &GetLastContents(void) { return lastContents; }
-		String GetLastHeaders(void) { return client.GetHeaders(); }
-		String GetLastStatus(void) { return client.GetStatusLine(); }
-		String GetLastError(void) { return client.GetError(); }
-		int GetLastStatusCode(void) { return client.GetStatusCode(); }
+		// read last error code and message
+		int GetLastError(void) { return lastError; }
+		String GetLastErrorMsg(void) { return ProtectMessage(lastError); }
+		
+		// checks whether we're connected to server
+		bool IsConnected(void) { return connected; }
 		
 		// create a persistent link to server
-		bool Connect(int persistTime);
+		bool Connect(void);
 
 		// disconnect from server
 		bool Disconnect(void);
+		
+		// refresh server connection
+		bool Refresh(void);
+		
+		// get license key
+		String GetKey(void);
+		
+		// gets license info
+		bool GetLicenseInfo(void);
+		
+		// register app
+		bool Register(void);
 	
-		// sends data and get response data
-		VectorMap<String, Value> Send(VectorMap<String, Value> const &v);
+		// set user data -- for registration
+		// filled automatically by GETLICENSEINFO request
+		ProtectClient &SetUserEMail(String const &mail)			{ userEMail = mail; return *this; }
+		ProtectClient &SetUserName(String const &name)			{ userName = name; return *this; }
+		ProtectClient &SetUserAddress(String const &address)	{ userAddress = address; return *this; }
+		ProtectClient &SetUserCountry(String const &country)	{ userCountry = country; return *this; }
+		ProtectClient &SetUserZip(String const &zip)			{ userZIP = zip; return *this; }
+		ProtectClient &SetUserPhone(String const &phone)		{ userPhone = phone; return *this; }
+		ProtectClient &SetUserFax(String const &fax)			{ userFax = fax; return *this; }
+		ProtectClient &SetUserCell(String const &cell)			{ userCell = cell; return *this; }
 };
 
 END_UPP_NAMESPACE
