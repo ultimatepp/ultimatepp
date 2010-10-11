@@ -224,20 +224,25 @@ Size EditField::GetMinSize() const
 
 int  EditField::GetCursor(int posx)
 {
-	FontInfo fi = font.Info();
-	const wchar *s = text;
 	posx -= 2;
+	if(posx <= 0) return 0;
+
+	FontInfo fi = font.Info();
+	int count = text.GetLength();
+	if(password)
+		return min((posx + fi['*'] / 2) / fi['*'], count);
+
 	int x = 0;
-	int x0 = 0;
+	const wchar *s = text;
 	int i = 0;
-	for(i = 0; i < text.GetLength(); i++) {
-		x0 = x;
-		x += fi[*s];
-		if(posx < (x + x0) / 2)
-			return i;
-		s++;
+	while(i < count) {
+		int witdh = fi[*s];
+		if(posx < x + witdh / 2)
+			break;
+		x += witdh;
+		s++; i++;
 	}
-	return posx > (x + x0) / 2 ? i : max(i - 1, 0);
+	return i;
 }
 
 Image EditField::CursorImage(Point, dword)
@@ -688,6 +693,8 @@ void EditField::DragLeave()
 
 void EditField::LeftDrag(Point p, dword flags)
 {
+	if(password)
+		return;
 	int c = GetCursor(p.x + sc);
 	Size ssz = StdSampleSize();
 	int sell, selh;
