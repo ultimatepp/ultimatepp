@@ -23,8 +23,11 @@ LineEdit::LineEdit() {
 
 LineEdit::~LineEdit() {}
 
-void LineEdit::MouseWheel(Point, int zdelta, dword) {
-	sb.WheelY(zdelta);
+void LineEdit::MouseWheel(Point, int zdelta, dword keyflags) {
+	if(keyflags & K_SHIFT)
+		sb.WheelX(zdelta);
+	else
+		sb.WheelY(zdelta);
 }
 
 void   LineEdit::Clear() {
