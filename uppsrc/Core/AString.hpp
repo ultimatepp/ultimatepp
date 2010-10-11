@@ -82,7 +82,7 @@ void AString<B>::Replace(const tchar *find, int findlen, const tchar *replace, i
 {
 	String r;
 	int i = 0;
-	const tchar *p = Begin();
+	const tchar *p = B::Begin();
 	for(;;) {
 		int j = Find(findlen, find, i);
 		if(j < 0)
@@ -91,7 +91,7 @@ void AString<B>::Replace(const tchar *find, int findlen, const tchar *replace, i
 		r.Cat(replace, replacelen);
 		i = j + findlen;
 	}
-	r.Cat(p + i, GetCount() - i);
+	r.Cat(p + i, B::GetCount() - i);
 	*this = r;
 }
 
