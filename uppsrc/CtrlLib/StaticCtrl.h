@@ -123,6 +123,8 @@ protected:
 	bool    ratio;
 
 public:
+	Drawing  Get() const                         { return picture; }
+
 	Picture& Background(Color color)             { background = color; Refresh(); return *this; }
 	Picture& KeepRatio(bool keep = true)         { ratio = keep; Refresh(); return *this; }
 	Picture& NoKeepRatio()                       { return KeepRatio(false); }
