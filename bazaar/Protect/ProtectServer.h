@@ -6,6 +6,7 @@
 #include <Cypher/Cypher.h>
 
 #include "ProtectStatus.h"
+#include "ProtectDB.h"
 
 NAMESPACE_UPP
 
@@ -13,11 +14,28 @@ class ProtectServer : public ScgiServer
 {
 	private:
 	
+		struct TimeMail : Moveable<TimeMail>
+		{
+			Time time;
+			String eMail;
+			TimeMail(Time const &t, String const &m) : time(t), eMail(m) {};
+			TimeMail() {};
+		};
+	
+		// database for user auth
+		ProtectDB db;
+		
+		// mailer for activation mails
+		SmtpMail smtp;
+	
 		// clients timeout value -- defaults to 5 minutes (300 seconds)
 		int clientTimeout;
 	
-		// list of all connected clients with their expiration dates
-		VectorMap<String, Time> clients;
+		// list of all connected clients with their expiration dates and emails
+		VectorMap<dword, TimeMail> clientLinks;
+		
+		// number of succesful connections per registered email
+		VectorMap<String, int> registeredConnections;
 		
 		// encryption engine
 		One<Cypher> cypher;
@@ -34,21 +52,24 @@ class ProtectServer : public ScgiServer
 		
 		// checks client list to see if a client is connected
 		// as a side effect, refresh its connection time
-		bool IsClientConnected(String const &clientID);
+		bool IsClientConnected(dword clientID);
 		
-		// connects a client or refresh its expiration time
-		void ConnectClient(String const &clientID);
+		// connects a client -- return an ID
+		dword ConnectClient(String const &eMail);
 		
 		// disconnects a client or refresh its expiration time
-		void DisconnectClient(String const &clientID);
-		
-		// sends error message
-		void SendError(int msg);
+		void DisconnectClient(dword clientID);
 		
 		// process client request
 		// takes a VectorMap<String, Value> on input from client
 		// produces a response VectorMap<String, Value> to be returned
 		virtual VectorMap<String, Value> ProcessRequest(int reason, VectorMap<String, Value> const &v);
+		
+		// Application key to be returned on auth success
+		String appKey;
+		
+		// sends activation mail to user
+		bool SendActivationMail(VectorMap<String, Value> const &userData);
 
 public:
 
@@ -61,6 +82,19 @@ public:
 	
 	// sets encryption key
 	ProtectServer &SetKey(String const &_key) { key = _key; return *this; }
+	
+	// gets database
+	ProtectDB &GetDB(void) { return db; }
+	
+	// gets mailer
+	SmtpMail &GetSmtp(void) { return smtp; }
+	
+	// sets application key (to be returned on auth success)
+	ProtectServer &SetAppKey(String const &k) { appKey = k; return *this; }
+	String GetAppKey(void) { return appKey; }
+	
+	// runs the server
+	void Run(void);
 };
 
 END_UPP_NAMESPACE

@@ -34,11 +34,7 @@ ProtectClientDemo::ProtectClientDemo()
 	
 	quitButton <<= Breaker();
 	
-//	urlEdit				<<= "www.timberstruct.it/scgi/testing";
-	urlEdit			<<= "localhost/scgi/testing";
-	keyEdit			<<= "aabbccddeeff00112233445566778899";
-	emailEdit		<<= "demo@timberstruct.it";
-	licenseIDEdit	<<= "21309602655597975";
+	emailEdit		<<= "test@testme.net";
 }
 
 ProtectClientDemo::~ProtectClientDemo()
@@ -51,14 +47,19 @@ void ProtectClientDemo::onAction(int reason)
 	responseText <<= "";
 	
 	// setup client url and key
-	client.SetURL(urlEdit);
-	client.SetKey(ScanHexString(keyEdit));
+	client.SetURL("localhost/scgi/testing");
+//	client.SetURL("www.timberstruct.it/scgi/testing");
+	client.SetKey(ScanHexString("aabbccddeeff00112233445566778899"));
 
-	// builds data vector map
-	VectorMap<String, Value> userData;
-	
-	userData.Add("EMAIL", ~emailEdit);
-	userData.Add("LICENSEID", ~licenseIDEdit);
+	// sets user data
+	client.SetUserName(~nameEdit);
+	client.SetUserAddress(~addressEdit);
+	client.SetUserCountry(~countryEdit);
+	client.SetUserZip(~zipEdit);
+	client.SetUserPhone(~phoneEdit);
+	client.SetUserFax(~faxEdit);
+	client.SetUserCell(cellEdit);
+	client.SetUserEMail(~emailEdit);
 
 	String res;
 	String key;

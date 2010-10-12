@@ -22,14 +22,8 @@ class ProtectClient
 		// in Cypher package
 		One<Cypher>cypher;
 	
-		// flag stating a succesfull connection
-		bool connected;
-	
-		// client id -- generated as random dword on creation
-		String clientID;
-		
-		// license ID -- got from server upon registration
-		String licenseID;
+		// client id -- got from server upon connection
+		dword clientID;
 		
 		// user data
 		String userEMail;
@@ -77,9 +71,6 @@ class ProtectClient
 		// read last error code and message
 		int GetLastError(void) { return lastError; }
 		String GetLastErrorMsg(void) { return ProtectMessage(lastError); }
-		
-		// checks whether we're connected to server
-		bool IsConnected(void) { return connected; }
 		
 		// create a persistent link to server
 		bool Connect(void);

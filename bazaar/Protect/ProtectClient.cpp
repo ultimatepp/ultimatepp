@@ -4,12 +4,8 @@ NAMESPACE_UPP
 
 ProtectClient::ProtectClient()
 {
-	// unconnected at startup
-	connected = false;
-	
 	// generates client id
-	dword rnd = Random();
-	clientID = HexString((byte const *)&rnd, sizeof(dword));
+	clientID = -1;
 	
 	// defaults to Snow2 Cypher
 	cypher = new Snow2;
@@ -38,7 +34,6 @@ VectorMap<String, Value> ProtectClient::SendMap(VectorMap<String, Value> const &
 	// copy vectormap adding client id and a magic number
 	VectorMap<String, Value>dataMap(v, 1);
 	dataMap.Add("APPID", "ProtectClient");
-	dataMap.Add("CLIENTID", clientID);
 	
 	// sets cypher key (and create a random IV)
 	cypher->SetKey(key);
@@ -54,21 +49,8 @@ VectorMap<String, Value> ProtectClient::SendMap(VectorMap<String, Value> const &
 	// if contents start with "ERROR", just fetch the error desc
 	// and put it in result map
 	VectorMap<String, Value> resMap;
-	if(contents.StartsWith("ERROR="))
-	{
-		int i = contents.Find("\r");
-		String s;
-		if(i >= 0)
-			s = contents.Mid(6, i - 6);
-		else
-			s = contents.Mid(6);
-		int errCode = atoi(~s);
-		resMap.Add("ERROR", errCode);
-		resMap.Add("ERRORMSG", ProtectMessage(errCode));
-		return resMap;
-	}
-	// otherwise, if lastContents don't start with IV field
-	// signals it
+
+	// if contents don't start with IV field signals it
 	if(!contents.StartsWith("IV="))
 	{
 		resMap.Add("ERROR", PROTECT_MISSING_IV);
@@ -110,22 +92,27 @@ bool ProtectClient::Connect(void)
 	lastError = 0;
 	
 	// if already connected, disconnect first
-	if(!Disconnect())
-		return false;
+	Disconnect();
 	
 	// send a connect packet to server
 	VectorMap<String, Value>v;
-	v.Add("REASON", ProtectReasonStr(PROTECT_CONNECT));
+	v.Add("REASON", PROTECT_CONNECT);
+	v.Add("EMAIL", userEMail);
 	VectorMap<String, Value> res = SendMap(v);
 	
 	// check for errors
 	if(res.Find("ERROR") >= 0)
 	{
 		lastError = res.Get("ERROR");
+		clientID = -1;
 		return false;
 	}
 	
-	connected = true;
+	int i = res.Find("CLIENTID");
+	if(i < 0)
+		clientID = -1;
+	else
+		clientID = (int)res[i];
 	return true;
 }
 
@@ -134,13 +121,14 @@ bool ProtectClient::Disconnect(void)
 {
 	lastError = 0;
 	
-	if(!connected)
-		return true;
-	
 	// sends a disconnect packet to server
 	VectorMap<String, Value>v;
-	v.Add("REASON", ProtectReasonStr(PROTECT_DISCONNECT));
+	v.Add("REASON", PROTECT_DISCONNECT);
+	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
+
+	// we're probably disconnected anyways....
+	clientID = -1;
 
 	// check for errors
 	if(res.Find("ERROR") >= 0)
@@ -148,8 +136,7 @@ bool ProtectClient::Disconnect(void)
 		lastError = res.Get("ERROR");
 		return false;
 	}
-	
-	connected = false;
+
 	return true;
 }
 
@@ -160,13 +147,15 @@ bool ProtectClient::Refresh(void)
 
 	// sends a refresh packet to server
 	VectorMap<String, Value>v;
-	v.Add("REASON", ProtectReasonStr(PROTECT_REFRESH));
+	v.Add("REASON", PROTECT_REFRESH);
+	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 
 	// check for errors
 	if(res.Find("ERROR") >= 0)
 	{
 		lastError = res.Get("ERROR");
+		clientID = -1;
 		return false;
 	}
 	
@@ -180,7 +169,8 @@ String ProtectClient::GetKey(void)
 
 	// sends a getkey packet to server
 	VectorMap<String, Value>v;
-	v.Add("REASON", ProtectReasonStr(PROTECT_GETKEY));
+	v.Add("REASON", PROTECT_GETKEY);
+	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 
 	// check for errors
@@ -204,7 +194,8 @@ bool ProtectClient::GetLicenseInfo(void)
 
 	// sends a getinfo packet to server
 	VectorMap<String, Value>v;
-	v.Add("REASON", ProtectReasonStr(PROTECT_GETLICENSEINFO));
+	v.Add("REASON", PROTECT_GETLICENSEINFO);
+	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 
 	// check for errors
@@ -214,13 +205,14 @@ bool ProtectClient::GetLicenseInfo(void)
 		return false;
 	}
 	
-	if(res.Find("EMAIL") >= 0)			userEMail	= res.Get("USEREMAIL");
-	if(res.Find("USERNAME") >= 0)		userName	= res.Get("USERNAME");
-	if(res.Find("USERADDRESS") >= 0)	userAddress	= res.Get("USERADDRESS");
-	if(res.Find("USERCOUNTRY") >= 0)	userCountry	= res.Get("USERCOUNTRY");
-	if(res.Find("USERPHONE") >= 0)		userPhone	= res.Get("USERPHONE");
-	if(res.Find("USERFAX") >= 0)		userFax		= res.Get("USERFAX");
-	if(res.Find("USERCELL") >= 0)		userCell	= res.Get("USERCELL");
+	if(res.Find("EMAIL") >= 0)			userEMail	= res.Get("EMAIL");
+	if(res.Find("USERNAME") >= 0)		userName	= res.Get("NAME");
+	if(res.Find("ADDRESS") >= 0)		userAddress	= res.Get("ADDRESS");
+	if(res.Find("COUNTRY") >= 0)		userCountry	= res.Get("COUNTRY");
+	if(res.Find("ZIP") >= 0)			userZIP		= res.Get("ZIP");
+	if(res.Find("PHONE") >= 0)			userPhone	= res.Get("PHONE");
+	if(res.Find("FAX") >= 0)			userFax		= res.Get("FAX");
+	if(res.Find("CELL") >= 0)			userCell	= res.Get("CELL");
 	if(res.Find("EXPIRETIME") >= 0)		expireTime	= res.Get("EXPIRETIME");
 	if(res.Find("NUMLICENSES") >= 0)	numLicenses	= res.Get("NUMLICENSES");
 
@@ -234,14 +226,15 @@ bool ProtectClient::Register(void)
 
 	// sends a register packet to server
 	VectorMap<String, Value>v;
-	v.Add("REASON", ProtectReasonStr(PROTECT_REGISTER));
+	v.Add("REASON", PROTECT_REGISTER);
 	v.Add("EMAIL", userEMail);
-	v.Add("USERNAME", userName);
-	v.Add("USERADDRESS", userAddress);
-	v.Add("USERCOUNTRY", userCountry);
-	v.Add("USERPHONE", userPhone);
-	v.Add("USERFAX", userFax);
-	v.Add("USERCELL", userCell);
+	v.Add("NAME", userName);
+	v.Add("ADDRESS", userAddress);
+	v.Add("COUNTRY", userCountry);
+	v.Add("ZIP", userZIP);
+	v.Add("PHONE", userPhone);
+	v.Add("FAX", userFax);
+	v.Add("CELL", userCell);
 	VectorMap<String, Value> res = SendMap(v);
 
 	// check for errors
