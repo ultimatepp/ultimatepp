@@ -295,15 +295,14 @@ void HomeBudget::RemoveGroup()
 	if(categories.IsEmpty())
 	{
 		SQL & Delete(GROUPS).Where(ID == groups(ID));
+		if(groups.GetCount() == 1)
+			categories.Disable();
 	}
 	else
 	{
 		PromptOK(t_("You can't remove this group. It is not empty."));
 		groups.CancelRemove();
 	}
-
-	if(groups.GetCount() == 1)
-		categories.Disable();
 }
 
 struct AddNewCat : WithNewCategoryLayout<TopWindow>
@@ -745,6 +744,9 @@ void HomeBudget::SetRest(StaticText &rest, float r)
 
 void HomeBudget::UpdateValue()
 {
+	if(money.IsEmpty())
+		return;
+	
 	try
 	{
 		SQL & Select(DEFVALUE).From(CATEGORIES).Where(ID == money.Get(CAT_ID));
