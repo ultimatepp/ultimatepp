@@ -59,13 +59,17 @@
                                              "(" #k1 ", " #k2 ");",\
                                              "drop index DQ_@t$" #k1 #k2 ";")
 
-#define UNIQUE_LIST(u, l)          ATTRIBUTE("create unique index DQ_@t$" #u " on @t  "\
+#define UNIQUE_LIST(u, l)          ATTRIBUTE("create unique index UQ_@t$" #u " on @t  "\
                                              "(" l ");",\
                                              "drop index UQ_@t$" #u ";")
+#define INDEX_LIST(u, l)           ATTRIBUTE("create index IDXL_@t$" #u " on @t  "\
+                                             "(" l ");",\
+                                             "drop index IDXL_@t$" #u ";")
 
 #define SQLCHECK(n, ct)            ATTRIBUTE("alter table @t add constraint CHK_@t$" #n " check "\
                                              "(" ct ");",\
                                              "alter table @t drop constraint CHK_@t$" #n ";")
+
 
 #define SQLDEFAULT(v)              INLINE_ATTRIBUTE("default " #v)
 
@@ -76,11 +80,15 @@
 
 #include <Sql/sch_model.h>
 
-
 #undef INT
 #undef INT_ARRAY
 #undef INT_
 #undef INT_ARRAY_
+
+#undef INT64
+#undef INT64_ARRAY
+#undef INT64_
+#undef INT64_ARRAY_
 
 #undef DOUBLE
 #undef DOUBLE_ARRAY
@@ -92,15 +100,47 @@
 #undef STRING_
 #undef STRING_ARRAY_
 
+#undef DATE
+#undef DATE_ARRAY
+#undef DATE_
+#undef DATE_ARRAY_
+
+#undef TIME
+#undef TIME_ARRAY
+#undef TIME_
+#undef TIME_ARRAY_
+
+#undef BOOL
+#undef BOOL_ARRAY
+#undef BOOL_
+#undef BOOL_ARRAY_
+
 #undef BLOB
 #undef BLOB_
+
+#undef LONGRAW
+#undef LONGRAW_
 
 #undef PRIMARY_KEY
 #undef AUTO_INCREMENT
 #undef NOT_NULL
-
 #undef INDEX
 #undef UNIQUE
 
+#undef REFERENCES
+#undef REFERENCES_CASCADE
+#undef REFERENCES_
+#undef REFERENCES_CASCADE_
+
+#undef DUAL_PRIMARY_KEY
+
+#undef DUAL_UNIQUE
+
+#undef UNIQUE_LIST
+#undef INDEX_LIST
+
+#undef SQLCHECK
+
+#undef SQLDEFAULT
 #undef TIMESTAMP
 #undef COMMENT
