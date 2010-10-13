@@ -295,6 +295,7 @@ void HomeBudget::RemoveGroup()
 	if(categories.IsEmpty())
 	{
 		SQL & Delete(GROUPS).Where(ID == groups(ID));
+		
 		if(groups.GetCount() == 1)
 			categories.Disable();
 	}
@@ -465,7 +466,10 @@ void HomeBudget::RemoveCategory()
 			categories.CancelRemove();
 		}
 		else
+		{
 			SQL & Delete(CATEGORIES).Where(ID == categories(ID));
+			UpdateCategories();
+		}
 	}
 	catch(SqlExc &e)
 	{
@@ -746,13 +750,18 @@ void HomeBudget::UpdateValue()
 {
 	if(money.IsEmpty())
 		return;
-	
+		
 	try
 	{
-		SQL & Select(DEFVALUE).From(CATEGORIES).Where(ID == money.Get(CAT_ID));
+		SQL & Select(DEFVALUE, PM).From(CATEGORIES).Where(ID == money.Get(CAT_ID));
 		Value v = SQL.Fetch() ? SQL[0] : Value(0);
-		money.Set(VALUE, v);
-		money.Set(PM, GetCategorySign());
+		Value s = SQL.Fetch() ? SQL[1] : -1;
+		
+		if(IsNull(money.Get(VALUE)))
+			money.Set(VALUE, v);
+		
+		if(IsNull(money.Get(PM)))
+			money.Set(PM, s);
 	}
 	catch(SqlExc &e)
 	{
