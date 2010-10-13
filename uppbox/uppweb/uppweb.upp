@@ -19,7 +19,7 @@ file
 	svn.cpp,
 	topictree.cpp,
 	svn.tpp,
-	cpp.cpp,
+	cpp.cpp tabsize 4,
 	www.cpp,
 	gsoc.tpp,
 	www.tpp charset "UTF-8",
