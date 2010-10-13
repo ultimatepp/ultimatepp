@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)  // DLOG(x)
 
 ToolTip::ToolTip()
 {
