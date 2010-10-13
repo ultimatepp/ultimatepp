@@ -5,7 +5,7 @@
 
 #include "ScgiServer.h"
 
-using namespace Upp;
+namespace Upp {
 
 bool run = true;
 
@@ -81,3 +81,5 @@ void ScgiServer::Run()
 		}
 	}
 }
+
+};
