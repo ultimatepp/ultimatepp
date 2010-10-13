@@ -459,6 +459,11 @@ Vector<String> Sqlite3Session::EnumViews(String database) {
 	return out;
 }
 
+int Sqlite3Session::GetTransactionLevel() const
+{
+	int autocommit = sqlite3_get_autocommit(db);
+	return (autocommit ? 0 : 1);
+}
 
 //////////////////////////////////////////////////////////////////////////
 
