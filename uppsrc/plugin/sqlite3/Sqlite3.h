@@ -24,8 +24,9 @@ public:
 	virtual Vector<String> EnumDatabases();	
 	virtual Vector<String> EnumTables(String database);
 	virtual Vector<String> EnumViews(String database);
-        virtual Vector<SqlColumnInfo> EnumColumns(String database, String table);
-
+	virtual Vector<SqlColumnInfo> EnumColumns(String database, String table);
+	virtual int            GetTransactionLevel() const;
+	
 	// Some opaque structures used by the sqlite3 library
 	typedef struct sqlite3 sqlite3;
 	typedef struct sqlite3_stmt sqlite3_stmt;
