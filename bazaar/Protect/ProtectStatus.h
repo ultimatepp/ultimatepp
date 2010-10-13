@@ -11,11 +11,13 @@ typedef enum {
 	PROTECT_HTTP_ERROR,					// error on HTTP communication with server
 	PROTECT_BAD_REQUEST,				// missing POST data on request
 	PROTECT_MISSING_IV,					// missing Initialization Vector on POST data
+	PROTECT_MISSING_DATA,				// missing DATA field on POST data
 	PROTECT_MISSING_EMAIL,				// missing mandatory EMAIL field in POST DATA
 	PROTECT_INVALID_EMAIL,				// ill-formed email address
 	PROTECT_MISSING_REASON,				// missing connection's reason
 	PROTECT_UNKNOWN_REASON,				// unknown connection's reason
 	PROTECT_MISSING_CLIENTID,			// missing client connection ID in POST DATA
+	PROTECT_MISSING_ACTIVATIONKEY,		// missing activation key on activation request
 	PROTECT_BAD_DATA,					// missing mandatory fields in POST DATA
 	PROTECT_NOT_CONNECTED,				// not connected to server -- must connect first
 	PROTECT_CONNECTION_EXPIRED,			// server connection timeout -- should refresh more often
@@ -33,13 +35,15 @@ extern String ProtectMessage(int m);
 
 // server request reasons
 typedef enum {
-	PROTECT_BAD_REASON,		// internal error
-	PROTECT_CONNECT,		// establish connection to server
-	PROTECT_DISCONNECT,		// frees server connection
-	PROTECT_REFRESH,		// refreshes server connection (to restart timeout)
-	PROTECT_GETKEY,			// gets application key
-	PROTECT_REGISTER,		// registers app for timed demo
-	PROTECT_GETLICENSEINFO	// gets info about license (name, expiration date, app version....)
+	PROTECT_BAD_REASON,			// internal error
+	PROTECT_CONNECT,			// establish connection to server
+	PROTECT_DISCONNECT,			// frees server connection
+	PROTECT_REFRESH,			// refreshes server connection (to restart timeout)
+	PROTECT_GETKEY,				// gets application key
+	PROTECT_REGISTER,			// registers app for timed demo
+	PROTECT_ACTIVATE,			// activate registration by click on email link
+	PROTECT_GETLICENSEINFO,		// gets info about license (name, expiration date, app version....)
+	PROTECT_UPDATEUSERDATA		// update user-modifiable user data (name, address....)
 } ProtectReasons;
 
 // get reason in string format

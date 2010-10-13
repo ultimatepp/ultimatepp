@@ -1,7 +1,7 @@
 #ifndef _Protect_icpp_init_stub
 #define _Protect_icpp_init_stub
 #include "Core/init"
-#include "ScgiServer/init"
 #include "Cypher/init"
 #include "MySql/init"
+#include "Web/init"
 #endif

@@ -2,9 +2,9 @@ description "Software copy protection module\377";
 
 uses
 	Core,
-	ScgiServer,
 	Cypher,
-	MySql;
+	MySql,
+	Web;
 
 file
 	ProtectStatus.h,

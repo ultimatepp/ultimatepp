@@ -9,11 +9,13 @@ const char *__ProtectMessages[] =
 	tt_("HTTP SERVER ERROR"),
 	tt_("BAD REQUEST"),
 	tt_("MISSING INITIALIZATION VECTOR ON DATA"),
+	tt_("MISSING DATA FIELD"),
 	tt_("MISSING EMAIL ON DATA"),
 	tt_("ILL-FORMED EMAIL ADDRESS"),
 	tt_("MISSING CONNECTION REASON ON DATA"),
 	tt_("UNKNOWN CONNECTION REASON"),
 	tt_("MISSING CLIENT ID ON DATA"),
+	tt_("MISSING ACTIVATION KEY ON DATA"),
 	tt_("BAD REQUEST DATA"),
 	tt_("NOT CONNECTED TO SERVER"),
 	tt_("SERVER CONNECTION EXPIRED"),
@@ -43,6 +45,7 @@ const char *__ProtectReasons[] =
 	"REFRESH",			// refreshes server connection (to restart timeout)
 	"GETKEY",			// gets application key
 	"REGISTER",			// registers app for timed demo
+	"ACTIVATE",			// activate registration by click on email link
 	"GETLICENSEINFO"	// gets info about license (name, expiration date, app version....)
 };
 

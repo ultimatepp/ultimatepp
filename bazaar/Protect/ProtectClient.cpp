@@ -91,13 +91,14 @@ bool ProtectClient::Connect(void)
 {
 	lastError = 0;
 	
-	// if already connected, disconnect first
+	// disconnect first, im case we're already connected
 	Disconnect();
 	
 	// send a connect packet to server
 	VectorMap<String, Value>v;
 	v.Add("REASON", PROTECT_CONNECT);
 	v.Add("EMAIL", userEMail);
+	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 	
 	// check for errors
@@ -204,9 +205,8 @@ bool ProtectClient::GetLicenseInfo(void)
 		lastError = res.Get("ERROR");
 		return false;
 	}
-	
 	if(res.Find("EMAIL") >= 0)			userEMail	= res.Get("EMAIL");
-	if(res.Find("USERNAME") >= 0)		userName	= res.Get("NAME");
+	if(res.Find("NAME") >= 0)			userName	= res.Get("NAME");
 	if(res.Find("ADDRESS") >= 0)		userAddress	= res.Get("ADDRESS");
 	if(res.Find("COUNTRY") >= 0)		userCountry	= res.Get("COUNTRY");
 	if(res.Find("ZIP") >= 0)			userZIP		= res.Get("ZIP");
@@ -219,6 +219,34 @@ bool ProtectClient::GetLicenseInfo(void)
 	return true;
 }
 
+// updates user data on server
+bool ProtectClient::UpdateUserData(void)
+{
+	lastError = 0;
+
+	// sends a register packet to server
+	VectorMap<String, Value>v;
+	v.Add("REASON", PROTECT_UPDATEUSERDATA);
+	v.Add("CLIENTID", (int)clientID);
+	v.Add("EMAIL", userEMail);
+	v.Add("NAME", userName);
+	v.Add("ADDRESS", userAddress);
+	v.Add("COUNTRY", userCountry);
+	v.Add("ZIP", userZIP);
+	v.Add("PHONE", userPhone);
+	v.Add("FAX", userFax);
+	v.Add("CELL", userCell);
+	VectorMap<String, Value> res = SendMap(v);
+
+	// check for errors
+	if(res.Find("ERROR") >= 0)
+	{
+		lastError = res.Get("ERROR");
+		return false;
+	}
+	return true;
+}
+		
 // register app
 bool ProtectClient::Register(void)
 {

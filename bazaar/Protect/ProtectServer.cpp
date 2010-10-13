@@ -109,7 +109,7 @@ dword ProtectServer::ConnectClient(String const &eMail)
 	{
 		id = Random();
 	}
-	while(clientLinks.Find(id) >= 0);
+	while(id == 0 || id == -1 || clientLinks.Find(id) >= 0);
 	
 	// adds to clientLinks and to registered emails count
 	clientLinks.Add(id, TimeMail(GetSysTime() + clientTimeout, eMail));
@@ -151,34 +151,50 @@ void ProtectServer::OnRequest()
 	int err = 0;
 	VectorMap<String, Value> data;
 	VectorMap<String, Value> results;
+	String IV;
 	
-	clientSock.Write("Content-Type: text/plain\r\n\r\n");
-	
-	// ignore requests without post data
-	if(!HasPostData())
-		err = PROTECT_BAD_REQUEST;
-	// post data should contain at least an IV field and a DATA field
-	else if(post.Find("IV") < 0 || post.Find("DATA") < 0)
-		err = PROTECT_MISSING_IV;
-	else
+	// POST rwquest ?
+	if(HasPostData())
 	{
-		// gets IV and setup the cypher to decrypt DATA field
-		String IV = ScanHexString(post.GetString("IV"));
-		cypher->SetKey(key, IV);
-		
-		// decrypts DATA field and build its vectormap
-		String decoded;
-		try
+		// all requests besides PROTECT_ACTIVATE go through post
+		if(post.Find("IV") < 0)
+			err = PROTECT_MISSING_IV;
+		else
 		{
-			decoded = (*cypher)(ScanHexString(post.GetString("DATA")));
-			LoadFromXML(data, decoded);
-		}
-		catch(...)
-		{
-			err = PROTECT_BAD_DATA;
+			IV = ScanHexString(post.GetString("IV"));
+			if(post.Find("DATA") < 0)
+				err = PROTECT_MISSING_DATA;
+			else
+			{
+				cypher->SetKey(key, IV);
+				String decoded = (*cypher)(ScanHexString(post.GetString("DATA")));
+				LoadFromXML(data, decoded);
+			}
 		}
 	}
-		
+	// GET rwquest ?
+	else if(query.GetCount())
+	{
+		// here should come just PROTECT_ACTIVATE requests
+		if(query.Find("IV") < 0)
+			err = PROTECT_MISSING_IV;
+		else
+		{
+			IV = ScanHexString(query.GetString("IV"));
+			if(query.Find("DATA") < 0)
+				err = PROTECT_MISSING_DATA;
+			else
+			{
+				cypher->SetKey(key, IV);
+				String decoded = (*cypher)(ScanHexString(query.GetString("DATA")));
+				LoadFromXML(data, decoded);
+			}
+		}
+	}
+	else
+		err = PROTECT_BAD_REQUEST;
+
+
 	// Get request reason and process it
 	// supports following reasons :
 	//		CONNECT			establish connection to server
@@ -201,11 +217,28 @@ void ProtectServer::OnRequest()
 	else if(results.Find("ERROR") >= 0)
 		results.Add("ERRORMSG", ProtectMessage(results.Get("ERROR")));
 
-	// encodes results and send back to client
-	cypher->SetKey(key);
-	clientSock.Write("IV=" + HexString(cypher->GetNonce()) + "\r\n");
-	String encoded = HexString((*cypher)(StoreAsXML(results, "ProtectServer")));
-	clientSock.Write("DATA=" + encoded + "\r\n");
+	// if not ACTIVATION REQUEST encodes results and send back to client
+	if(data.Get("REASON") != PROTECT_ACTIVATE)
+	{
+		clientSock.Write("Content-Type: text/plain\r\n\r\n");
+		cypher->SetKey(key);
+		clientSock.Write("IV=" + HexString(cypher->GetNonce()) + "\r\n");
+		String encoded = HexString((*cypher)(StoreAsXML(results, "ProtectServer")));
+		clientSock.Write("DATA=" + encoded + "\r\n");
+	}
+	// otherwise send a fancy welcome html -- replacing %NAME% with user name
+	else
+	{
+		String w;
+		clientSock.Write("Content-Type: text/html\r\n\r\n");
+		if(results.Find("ERROR") >= 0)
+			w = welcome;
+		else
+			w = activationFailed;
+		data = db.Get(data.Get("EMAIL"));
+		w.Replace("%USER%", data.Get("NAME"));
+		clientSock.Write(w);
+	}
 }
 
 void ProtectServer::OnClosed()
@@ -222,6 +255,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 	dword clientID;
 	VectorMap<String, Value> userRec;
 	String eMail;
+	String activationKey;
 	int numConnections;
 	
 	switch(reason)
@@ -258,6 +292,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 				{
 					// new registration
 					db.Set(vs);
+					userRec = db.Get(eMail);
 					if(SendActivationMail(userRec))
 						res.Add("STATUS", "ACTIVATION RESENT");
 					else
@@ -285,6 +320,39 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 					res.Add("STATUS", "ALREADY REGISTERED");
 				}
 			}
+			break;
+		case PROTECT_ACTIVATE:
+			// we need email to activate
+			if(v.Find("EMAIL") < 0)
+			{
+				res.Add("ERROR", PROTECT_MISSING_EMAIL);
+				return res;
+			}
+			eMail = v.Get("EMAIL");
+
+			// we need ACTIVATIONKEY too
+			if(v.Find("ACTIVATIONKEY") < 0)
+			{
+				res.Add("ERROR", PROTECT_MISSING_ACTIVATIONKEY);
+				return res;
+			}
+			activationKey = v.Get("ACTIVATIONKEY");
+			
+			// get user record by email
+			userRec = db.Get(eMail);
+
+			// if no mail data, product is unregistered
+			if(!userRec.GetCount())
+			{
+				res.Add("ERROR", PROTECT_UNREGISTERED);
+				return res;
+			}
+			
+			// sets registered flag and update record
+			userRec.Get("ACTIVATED") = true;
+			db.Set(userRec);
+			
+			res.Add("STATUS", "ACTIVATION SUCCESSFUL");
 			break;
 		case PROTECT_CONNECT:
 			// we need email to connect
@@ -349,6 +417,21 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			DisconnectClient(clientID);
 			break;
 			
+		case PROTECT_REFRESH :
+			// we need the conneciton ID
+			if(v.Find("CLIENTID") < 0)
+			{
+				res.Add("ERROR", PROTECT_MISSING_CLIENTID);
+				return res;
+			}
+			clientID = (int)v.Get("CLIENTID");
+			if(!IsClientConnected(clientID))
+			{
+				res.Add("ERROR", PROTECT_NOT_CONNECTED);
+				return res;
+			}
+			break;
+			
 		case PROTECT_GETKEY:
 			// we need the conneciton ID
 			if(v.Find("CLIENTID") < 0)
@@ -367,7 +450,73 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			res.Add("KEY", appKey);
 			break;
 			
+		case PROTECT_GETLICENSEINFO :
+			// we need the conneciton ID
+			if(v.Find("CLIENTID") < 0)
+			{
+				res.Add("ERROR", PROTECT_MISSING_CLIENTID);
+				return res;
+			}
+			// we shall be connected
+			clientID = (int)v.Get("CLIENTID");
+			if(!IsClientConnected(clientID))
+			{
+				res.Add("ERROR", PROTECT_NOT_CONNECTED);
+				return res;
+			}
+			// get user data from database
+			res = db.Get(clientLinks.Get(clientID).eMail);
+			// remove unnecessary data
+			res.RemoveKey("ACTIVATIONKEY");
+			res.RemoveKey("ACTIVATIONSENT");
+			break;
+			
+		case PROTECT_UPDATEUSERDATA :
+			{
+				// we need the conneciton ID
+				if(v.Find("CLIENTID") < 0)
+				{
+					res.Add("ERROR", PROTECT_MISSING_CLIENTID);
+					return res;
+				}
+				// we shall be connected
+				clientID = (int)v.Get("CLIENTID");
+				if(!IsClientConnected(clientID))
+				{
+					res.Add("ERROR", PROTECT_NOT_CONNECTED);
+					return res;
+				}
+				// get user data from database
+				userRec = db.Get(clientLinks.Get(clientID).eMail);
+			
+				// avoid hacking of source packet stripping
+				// data non-updateable by user
+				VectorMap<String, Value>vs(v, 1);
+				vs.RemoveKey("LICENSES");
+				vs.RemoveKey("EXPIRATION");
+				vs.RemoveKey("ACTIVATIONKEY");
+				vs.RemoveKey("ACTIVATIONSENT");
+				vs.RemoveKey("ACTIVATED");
+				vs.RemoveKey("EMAIL");
+				
+				// update user record
+				for(int i = 0; i < vs.GetCount(); i++)
+				{
+					int j = userRec.Find(vs.GetKey(i));
+					if(j >= 0)
+						userRec[j] = vs[i];
+				}
+				db.Set(userRec);
+			}
+			break;
+
 		default:
+			// disconnect me anyways
+			if(v.Find("CLIENTID") >= 0)
+			{
+				clientID = (int)v.Get("CLIENTID");
+				DisconnectClient(clientID);
+			}
 			res.Add("ERROR", PROTECT_UNKNOWN_REASON);
 			break;
 	}
@@ -377,9 +526,25 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 // sends activation mail to user
 bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData)
 {
+	// build request map
+	VectorMap<String, Value>req;
+	req.Add("REASON", PROTECT_ACTIVATE);
+	req.Add("EMAIL", userData.Get("EMAIL"));
+	req.Add("ACTIVATIONKEY", userData.Get("ACTIVATIONKEY"));
+	
+	// builds activation link
+	String link = "http://" + serverVars.Get("SERVER_NAME") + serverVars.Get("REQUEST_URI") + "?";
+	
+	// encodes results and send back to client
+	cypher->SetKey(key);
+	link += "IV=" + HexString(cypher->GetNonce()) + "&";
+	String encoded = HexString((*cypher)(StoreAsXML(req, "ProtectServer")));
+	link += "DATA=" + encoded;
+
 	smtp.To(userData.Get("EMAIL"));
 	smtp.Subject("APPLICATION ACTIVATION");
-	smtp.Text("http://www.timberstruct.it?DATA=" + (String)userData.Get("ACTIVATIONKEY"));
+	smtp.From(serverVars.Get("SERVER_NAME"));
+	smtp.Text(link);
 	return smtp.Send();
 }
 

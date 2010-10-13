@@ -2,7 +2,7 @@
 #define _ProtectServer_h_
 
 #include <Core/Core.h>
-#include <ScgiServer/ScgiServer.h>
+#include <Web/Web.h>
 #include <Cypher/Cypher.h>
 
 #include "ProtectStatus.h"
@@ -42,6 +42,10 @@ class ProtectServer : public ScgiServer
 	
 		// key used to en/decrypt http data
 		String key;
+		
+		// welcome and activation failed messages sent on key activation
+		String welcome;
+		String activationFailed;
 	
 		void OnAccepted();
 		void OnRequest();
@@ -82,6 +86,10 @@ public:
 	
 	// sets encryption key
 	ProtectServer &SetKey(String const &_key) { key = _key; return *this; }
+	
+	// sets welcome and activation failed (HTML) messages
+	ProtectServer &SetWelcome(String const &w) { welcome = w; return *this; }
+	ProtectServer &SetActivationFailed(String const &a) { activationFailed = a; return *this; }
 	
 	// gets database
 	ProtectDB &GetDB(void) { return db; }

@@ -87,6 +87,9 @@ class ProtectClient
 		// gets license info
 		bool GetLicenseInfo(void);
 		
+		// updates user data on server
+		bool UpdateUserData(void);
+		
 		// register app
 		bool Register(void);
 	
@@ -100,6 +103,15 @@ class ProtectClient
 		ProtectClient &SetUserPhone(String const &phone)		{ userPhone = phone; return *this; }
 		ProtectClient &SetUserFax(String const &fax)			{ userFax = fax; return *this; }
 		ProtectClient &SetUserCell(String const &cell)			{ userCell = cell; return *this; }
+		
+		String GetUserEMail(void)		{ return userEMail; }
+		String GetUserName(void)		{ return userName; }
+		String GetUserAddress(void)		{ return userAddress; }
+		String GetUserCountry(void)		{ return userCountry; }
+		String GetUserZip(void)			{ return userZIP; }
+		String GetUserPhone(void)		{ return userPhone; }
+		String GetUserFax(void)			{ return userFax; }
+		String GetUserCell(void)		{ return userCell; }
 };
 
 END_UPP_NAMESPACE
