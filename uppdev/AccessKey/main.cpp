@@ -18,5 +18,5 @@ AccessKey::AccessKey()
 GUI_APP_MAIN
 {
 	Ctrl::AddFlags(Ctrl::AKD_CONSERVATIVE);
-	AccessKey().Run();
+	AccessKey().Run(Accept());
 }
