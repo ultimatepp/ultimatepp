@@ -112,6 +112,8 @@ void UpdateFile(const char *filename)
 	String src = UpdateGetDir();
 	if(IsNull(src))
 		return;
+	DDUMP(dst);
+	DDUMP(src);
 	UpdateFile(dst, AppendFileName(src, filename));
 }
 
