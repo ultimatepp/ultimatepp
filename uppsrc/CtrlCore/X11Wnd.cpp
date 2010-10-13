@@ -448,9 +448,9 @@ void Ctrl::SyncExpose()
 	GuiLock __;
 	if(!top) return;
 	XEvent event;
-	while(XCheckTypedWindowEvent(Xdisplay, top->window, Expose, &event))
+	while(top && XCheckTypedWindowEvent(Xdisplay, top->window, Expose, &event))
 		ProcessEvent(&event);
-	while(XCheckTypedWindowEvent(Xdisplay, top->window, GraphicsExpose, &event))
+	while(top && XCheckTypedWindowEvent(Xdisplay, top->window, GraphicsExpose, &event))
 		ProcessEvent(&event);
 }
 
@@ -598,6 +598,7 @@ void Ctrl::WndDestroy0()
 
 	delete top;
 	top = NULL;
+	FocusSync();
 }
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
@@ -718,6 +719,7 @@ void Ctrl::WndUpdate0()
 	LLOG("WNDUPDATE");
 	if(!top) return;
 	SyncExpose();
+	if(!top) return;
 	XWindow& xw = Xwindow().Get(top->window);
 	if(xw.exposed && xw.invalid.GetCount()) {
 		SyncScroll();
@@ -935,7 +937,7 @@ void Ctrl::FocusSync()
 						return;
 					}
 					KillFocus(focusWindow);
-					focusWindow = None;
+//					focusWindow = None; // 1010-10-13 cxl (SetWndFocus does not set this)
 					w.ctrl->SetFocusWnd();
 					AnimateCaret();
 					return;
