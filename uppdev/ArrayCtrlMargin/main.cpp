@@ -12,7 +12,8 @@ TestArrayMargin::TestArrayMargin()
 {
 	array.SetRect(0,0,500,100);
 	Add(array);
-	array.AddColumn("test").Margin(0).Edit(eString);
+	array.AddColumn("test");
+	for(int
 	array.Add("item 1");
 }
 

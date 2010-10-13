@@ -1,0 +1,14 @@
+description "Hello World as a SCGI Server\377";
+
+uses
+	Core,
+	ScgiServer;
+
+file
+	htdocs/index.html,
+	lighttpd.conf,
+	ScgiHello.cpp;
+
+mainconfig
+	"" = "";
+

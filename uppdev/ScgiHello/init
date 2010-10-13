@@ -1,0 +1,5 @@
+#ifndef _ScgiHello_icpp_init_stub
+#define _ScgiHello_icpp_init_stub
+#include "Core/init"
+#include "ScgiServer/init"
+#endif
