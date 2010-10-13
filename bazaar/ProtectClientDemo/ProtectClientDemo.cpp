@@ -31,6 +31,7 @@ ProtectClientDemo::ProtectClientDemo()
 	disconnectButton	<<= THISBACK1(onAction, PROTECT_DISCONNECT);
 	getKeyButton		<<= THISBACK1(onAction, PROTECT_GETKEY);
 	getInfoButton		<<= THISBACK1(onAction, PROTECT_GETLICENSEINFO);
+	setInfoButton		<<= THISBACK1(onAction, PROTECT_UPDATEUSERDATA);
 	
 	quitButton <<= Breaker();
 	
@@ -47,8 +48,8 @@ void ProtectClientDemo::onAction(int reason)
 	responseText <<= "";
 	
 	// setup client url and key
-	client.SetURL("localhost/scgi/testing");
-//	client.SetURL("www.timberstruct.it/scgi/testing");
+//	client.SetURL("localhost/scgi/testing");
+	client.SetURL("timberstruct.it/scgi/testing");
 	client.SetKey(ScanHexString("aabbccddeeff00112233445566778899"));
 
 	// sets user data
@@ -91,7 +92,21 @@ void ProtectClientDemo::onAction(int reason)
 		case PROTECT_GETLICENSEINFO :	// gets info about license (name, expiration date, app version....)
 			if(!client.GetLicenseInfo())
 				res += "GETLICENSEINFO ERROR\n";
+			else
+			{
+				nameEdit <<= client.GetUserName();
+				addressEdit <<= client.GetUserAddress();
+				countryEdit <<= client.GetUserCountry();
+				zipEdit <<= client.GetUserZip();
+				phoneEdit <<= client.GetUserPhone();
+				faxEdit <<= client.GetUserFax();
+				cellEdit <<= client.GetUserCell();
+				emailEdit <<= client.GetUserEMail();
+			}
 			break;
+		case PROTECT_UPDATEUSERDATA :
+			if(!client.UpdateUserData())
+				res += "UPDATEUSERDATA ERROR\n";
 		default:
 			break;
 	}
