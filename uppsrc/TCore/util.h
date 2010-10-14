@@ -289,8 +289,10 @@ void   TagXml(StringBuffer& xml, const char *tag);
 void   EndTagXml(StringBuffer& xml, const char *tag);
 void   StringXml(StringBuffer& xml, const char *tag, const String& str);
 void   IntXml(StringBuffer& xml, const char *tag, int v);
+void   DoubleXml(StringBuffer& xml, const char *tag, double value);
 void   BoolXml(StringBuffer& xml, const char *tag, bool b);
 bool   XmlBool(XmlParser& xml);
 int    XmlInt(XmlParser& xml);
+double XmlDouble(XmlParser& xml);
 
 END_UPP_NAMESPACE
