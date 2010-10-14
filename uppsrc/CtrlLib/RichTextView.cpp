@@ -219,8 +219,9 @@ void  RichTextView::LeftDown(Point p, dword keyflags)
 
 void RichTextView::MouseMove(Point p, dword keyflags)
 {
+	int pos = GetPointPos(p);
+	WhenMouseMove(pos);
 	if(HasCapture()) {
-		int pos = GetPointPos(p);
 		if(pos < 0)
 			return;
 		cursor = pos;
