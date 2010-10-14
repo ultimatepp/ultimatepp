@@ -46,6 +46,7 @@ protected:
 
 public:
 	Callback1<const String&> WhenLink;
+	Callback1<int>           WhenMouseMove;
 
 	void            Clear();
 	void            Pick(pick_ RichText& t);
