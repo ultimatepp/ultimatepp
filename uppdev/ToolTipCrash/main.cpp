@@ -31,6 +31,7 @@ struct Dlg : TopWindow{
 
 struct App : TopWindow {
 	ToolBar tool;
+	DropList test;
 
 	typedef App CLASSNAME;
 
@@ -38,6 +39,9 @@ struct App : TopWindow {
 		Title("My application with bars").Sizeable();
 		AddFrame(tool);
 		tool.Set(THISBACK(TBar));
+		Add(test.LeftPos(0, 200).TopPos(50, 20));
+		for(int i = 0; i < 100; i++)
+			test.Add(i);
 	}
 
 	void MenuFn() {
@@ -45,9 +49,11 @@ struct App : TopWindow {
 	}
 	void TBar(Bar& bar) {
 		bar.Add("Function", Imgs::open(), THISBACK(MenuFn));
+		bar.Add("Function", Imgs::open(), THISBACK(MenuFn));
 	}
 };
 
 GUI_APP_MAIN {
+	GUI_PopUpEffect_Write(GUIEFFECT_NONE);
 	App().Run();
 }
