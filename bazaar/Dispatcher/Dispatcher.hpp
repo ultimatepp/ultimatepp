@@ -2,6 +2,7 @@
 
 template<class T, class B>
 Dispatchable<T, B>::Dispatchable()
+	: act(true)
 {
 	
 }
@@ -56,7 +57,8 @@ void Dispatcher<T>::DoDispatch(const T & o) const
 	for(int i = 0; i < dests.GetCount(); i++)
 	{
 		Dispatchable<T> * dest = dests.operator[](i);
-		dest->Dispatch(o);
+		if(dest->IsEnabled())
+			dest->Dispatch(o);
 	}
 }
 
@@ -189,12 +191,12 @@ void DispatcherCB<T>::Unregister(unsigned key)
 }
 
 template<class T>
-Callback1<const T &> DispatcherCB<T>::GetDispatchable(unsigned key)
+Callback1<const T &>* DispatcherCB<T>::GetDispatchable(unsigned key)
 {
 	int i = dests.Find(key);
-	if(i<0) return Callback1<const T &>();
+	if(i<0) return NULL;
 	Callback1<const T &> & dest = dests.operator[](i);
-	return dest;
+	return &dest;
 }
 
 template<class T>

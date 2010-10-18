@@ -14,6 +14,7 @@ class DispatcherGen;
 
 template<class T, class B = EmptyClass>
 class  Dispatchable
+	: public EnableOption<>
 {
 	friend class Dispatcher<T>;
 	friend class DispatcherGen;
@@ -31,8 +32,9 @@ public:
 	void Unregister(DispatcherGen & from) { int i = src.Find(GetPtrHashValue(&from)); if(i<0) return; Unregister(src[i]); }
 
 	const VectorMap<unsigned, Any> & GetSrc() const { return src; }
-	
+
 private:
+	bool act;
 	VectorMap<unsigned, Any> src;
 	VectorMap<unsigned, unsigned> key; //cache under which key registered for removal
 };
@@ -99,7 +101,7 @@ public:
 
 	void Register(Callback1<const T &> d, unsigned key);
 	void Unregister(unsigned key);
-	Callback1<const T &> GetDispatchable(unsigned key);
+	Callback1<const T &>* GetDispatchable(unsigned key);
 	const VectorMap<unsigned, Callback1<const T &> > & GetDests() const { return dests; }
 	void Clear() { dests.Clear(); }
 
@@ -143,7 +145,7 @@ public:
 
 	void Register(Callback d, unsigned key);
 	void Unregister(unsigned key);
-	Callback GetDispatchable(unsigned key);
+	Callback* GetDispatchable(unsigned key);
 	const VectorMap<unsigned, Callback> & GetDests() const { return dests; }
 	void Clear() { dests.Clear(); }
 

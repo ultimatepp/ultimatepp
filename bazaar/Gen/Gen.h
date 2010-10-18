@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-using namespace Upp;
+NAMESPACE_UPP
 
 //some usefull interfaces
 
@@ -94,54 +94,43 @@ public:
 
 #if 1
 
+template<class T, class B = EmptyClass>
+class TypeHook : public B
+{
+public:
+	virtual const T& GetT() const              = 0;
+	virtual T& GetT()                          = 0;
+	
+	operator const T&() const                  { return GetT(); }
+	operator T&()                              { return GetT(); }
+};
+
 //copyable interface defining the common base class C, without implementing Copy
 
 template<class C, class B = EmptyClass>
-class CopyableC : public Copyable<CopyableC<C,B>, B>
+class PolyCopyableHook : public PolyDeepCopyNew<PolyCopyableHook<C,B>, TypeHook<C, Copyable<PolyCopyableHook<C,B>, B> > >
 {
-public:
-	virtual const C& GetC() const              = 0;
-	virtual C& GetC()                          = 0;
-	
-	operator const C&() const                  { return GetC(); }
-	operator C&()                              { return GetC(); }
 };
 
-//provides the implementation of Copy, which is used by PolyDeepNew
-//and implements the base class accessors. 
-//T is the derived type, i.e. EditInt, C is common base class, i.e. Ctrl
+// implements the base class accessors. 
+//B is the derived type, i.e. EditInt, C is common base class, i.e. Ctrl
 //forward another baseclass CB to extend CopyableC interface
 template<class T, class B, class C, class CB = EmptyClass>
-class PolyCopyableC : public PolyDeepCopyNew<T, B>, public CopyableC<C, CB>
+class PolyElement : public PolyDeepCopyNew<T, B>, public PolyCopyableHook<C, CB>
 {
 public:
-	//works
-	//virtual PolyCopyableC* PartialCopy() const  { return new T(); }
-	
-	//doesnt work, signature differences somehow..T is not yet part of derive hiearchy at this point..
-	//so compiler does not recognize it legitime override. thus it moves to derived
-	//virtual T* PartialCopy() const  { return new T(); }
-
-	using CopyableC<C,CB>::Copy;
-	using CopyableC<C,CB>::PartialCopy;
-
-	virtual const C& GetC() const              { return *this; }
-	virtual C& GetC()                          { return *this; }
+	virtual const C& GetT() const              { return *this; }
+	virtual C& GetT()                          { return *this; }
 };
-//USE:
-//PolyCopyingC<EditInt, Ctrl> a;
-//CopyableC<Ctrl>* p = a.Copy();
-//p->GetC().SizePos();
 
-//THIS ONE WORKS
 //by providing additional information about the common base class
 //with template specialization can be defined what is copied
 
 template<class B, class C, class CB = EmptyClass>
-class PolyCopyingC : public PolyCopyableC<PolyCopyingC<B,C,CB>,B,C,CB> 
+class PolyElementWrap : public PolyElement<PolyElementWrap<B,C,CB>,B,C,CB> 
 {
 public:
-	virtual PolyCopyingC* PartialCopy() const  { return new PolyCopyingC(); }
+	virtual PolyElementWrap* PartialCopy() const  { return new PolyElementWrap(); }
 };
 
 #endif
@@ -175,5 +164,46 @@ public:
 	virtual String ToXML()                     = 0;
 	virtual void   LoadXML(XmlParser& p)       = 0;
 };
+
+typedef void*(*GlobalInstancerType)();
+VectorMap<String, GlobalInstancerType>& GetGlobalInstancerMap();
+
+template<class B>
+class Instancer
+{
+public:
+	typedef B*(*InstancerType)();
+	template<class T = B>
+	class Typed
+	{
+	public:
+		static B* GetInstance() { return new T(); }
+		static InstancerType GetInstancer() { return &GetInstance; }
+		static GlobalInstancerType GetGlobalInstancer() { return (GlobalInstancerType)&GetInstance; }
+	};
+	static VectorMap<String, InstancerType>& Map() { static VectorMap<String, InstancerType> map; return map; }
+};
+
+class Typer0
+{
+public:
+	virtual ~Typer0() {}
+	virtual String TypeOf() const = 0;
+};
+
+class Typer :  public virtual Typer0 
+{
+public:
+//	virtual String TypeOf() const { return String(); } //makes ambiguity due to virtual
+};
+
+template<class T, class B = EmptyClass>
+class TyperT : public B, public virtual Typer0
+{
+public:
+	virtual String TypeOf() const { return T::TypeOfS(); }
+};
+
+END_UPP_NAMESPACE
 
 #endif

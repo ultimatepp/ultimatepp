@@ -56,12 +56,12 @@ void Dispatcher0::Unregister(unsigned key)
 	dests.Remove(i);
 }
 
-Callback Dispatcher0::GetDispatchable(unsigned key)
+Callback* Dispatcher0::GetDispatchable(unsigned key)
 {
 	int i = dests.Find(key);
-	if(i<0) return Callback();
+	if(i<0) return NULL;
 	Callback & dest = dests.operator[](i);
-	return dest;
+	return &dest;
 }
 
 #if 0 //for compile / debug only
