@@ -731,7 +731,7 @@ GUI_APP_MAIN
 	
 	SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
-	String release = "2467";
+	String release = "2791"; 
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	
