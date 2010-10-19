@@ -158,6 +158,11 @@ bool Gate3<P1, P2, P3>::Execute(P1 p1, P2 p2, P3 p3) const {
 	return (void *)action == (void *)1 ? true : action ? action->Execute(p1, p2, p3) : false;
 }
 
+template <class P1, class P2, class P3, class P4>
+bool Gate4<P1, P2, P3, P4>::Execute(P1 p1, P2 p2, P3 p3, P4 p4) const {
+	return (void *)action == (void *)1 ? true : action ? action->Execute(p1, p2, p3, p4) : false;
+}
+
 template <class OBJECT_, class METHOD_, class T1, class T2>
 struct CallbackMethodActionArg2Pte : public CallbackAction {
 	Ptr<OBJECT_>  object;
