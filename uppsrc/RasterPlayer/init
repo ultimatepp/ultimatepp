@@ -1,5 +1,5 @@
-#ifndef _AnimatedClip_icpp_init_stub
-#define _AnimatedClip_icpp_init_stub
+#ifndef _RasterPlayer_icpp_init_stub
+#define _RasterPlayer_icpp_init_stub
 #include "plugin\gif/init"
 #include "plugin\tif/init"
 #endif
