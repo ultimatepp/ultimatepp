@@ -1,5 +1,5 @@
 LAYOUT(AnimatedClipLayout, 540, 280)
-	ITEM(RasterPlayer, clip, SetFrame(InsetFrame()).HSizePosZ(8, 8).VSizePosZ(96, 32))
+	ITEM(RasterPlayer, clip, SetFrame(InsetFrame()).HSizePosZ(8, 8).VSizePosZ(92, 32))
 	ITEM(Label, openedPage, SetLabel(t_("0")).LeftPosZ(204, 24).TopPosZ(68, 19))
 	ITEM(Label, dv___2, SetLabel(t_("Opened Page:")).LeftPosZ(132, 68).TopPosZ(68, 19))
 	ITEM(Label, numberPages, SetLabel(t_("1")).LeftPosZ(100, 24).TopPosZ(68, 19))
