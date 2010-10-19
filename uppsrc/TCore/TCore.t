@@ -156,8 +156,14 @@ csCZ("konec řádky")
 T_("invalid day number (")
 csCZ("neplatné číslo dne (%d)")
 
+T_("Unterminated string constant")
+csCZ("")
+
 T_("illegal characters after expression: %s (expression: %s)")
 csCZ("neplatné znaky za výrazem: %s (začátek výrazu: %s)")
+
+T_("expected 'between', 'in' or 'like'")
+csCZ("")
 
 T_("left parenthesis not matched; subexpression starts at %s")
 csCZ("nepárová levá závorka; začátek podvýrazu: %s")
