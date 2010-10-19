@@ -17,6 +17,13 @@ struct Tuple2 {
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ')'; }
 };
 
+template<typename A, typename B>
+inline void AssertMoveable0(Tuple2<A, B> *)
+{
+	AssertMoveable<A>();
+	AssertMoveable<B>();
+}
+
 template <typename A, typename B>
 inline Tuple2<A, B> MakeTuple(const A& a, const B& b)
 {
@@ -45,6 +52,14 @@ struct Tuple3 {
 	
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ", " << c << ')'; }
 };
+
+template<typename A, typename B, typename C>
+inline void AssertMoveable0(Tuple3<A, B, C> *)
+{
+	AssertMoveable<A>();
+	AssertMoveable<B>();
+	AssertMoveable<C>();
+}
 
 template <typename A, typename B, typename C>
 inline Tuple3<A, B, C> MakeTuple(const A& a, const B& b, const C& c)
@@ -76,6 +91,15 @@ struct Tuple4 {
 
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ", " << c << ", " << d << ')'; }
 };
+
+template<typename A, typename B, typename C, typename D>
+inline void AssertMoveable0(Tuple4<A, B, C, D> *)
+{
+	AssertMoveable<A>();
+	AssertMoveable<B>();
+	AssertMoveable<C>();
+	AssertMoveable<D>();
+}
 
 template <typename A, typename B, typename C, typename D>
 inline Tuple4<A, B, C, D> MakeTuple(const A& a, const B& b, const C& c, const D& d)
