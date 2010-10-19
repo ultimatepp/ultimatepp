@@ -9,5 +9,6 @@ file
 	RasterPlayer.h,
 	RasterPlayer.iml,
 	RasterPlayer.usc,
-	Credits.txt;
+	Credits.txt,
+	src.tpp;
 
