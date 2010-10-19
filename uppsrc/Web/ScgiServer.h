@@ -1,10 +1,6 @@
 #ifndef _ScgiServer_ScgiServer_h
 #define _ScgiServer_ScgiServer_h
 
-#include <Web/Web.h>
-
-using namespace Upp;
-
 class ScgiServer {
 public:
 	HttpQuery query;
