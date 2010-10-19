@@ -2353,7 +2353,7 @@ WString FromUtf8(const char *_s, int len)
 		if(code < 0x80)
 			*t++ = code;
 		else
-		if(code < 0xC0)
+		if(code < 0xC2)
 			*t++ = 0xEE00 + code;
 		else
 		if(code < 0xE0) {
