@@ -1,11 +1,8 @@
 #include <signal.h>
 
-#include <Core/Core.h>
-#include <Web/Web.h>
+#include "Web.h"
 
-#include "ScgiServer.h"
-
-namespace Upp {
+NAMESPACE_UPP
 
 bool run = true;
 
@@ -82,4 +79,4 @@ void ScgiServer::Run()
 	}
 }
 
-};
+END_UPP_NAMESPACE
