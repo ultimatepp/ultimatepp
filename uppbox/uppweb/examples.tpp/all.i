@@ -6,18 +6,6 @@ TOPIC("AddressBook$ru-ru")
 #include "AddressBook$ru-ru.tppi"
 END_TOPIC
 
-TOPIC("AnimatedClip$ca-es")
-#include "AnimatedClip$ca-es.tppi"
-END_TOPIC
-
-TOPIC("AnimatedClip$en-us")
-#include "AnimatedClip$en-us.tppi"
-END_TOPIC
-
-TOPIC("AnimatedClip$es-es")
-#include "AnimatedClip$es-es.tppi"
-END_TOPIC
-
 TOPIC("AnimatedHello$en-us")
 #include "AnimatedHello$en-us.tppi"
 END_TOPIC
