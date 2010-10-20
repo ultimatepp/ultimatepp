@@ -245,9 +245,9 @@ public:
 	EditMinMax() {}
 	EditMinMax(DataType min, DataType max)            { Cv::MinMax(min, max); }
 
-	EditMinMax& Min(DataType min)                     { Cv::Min(min); return *this; }
-	EditMinMax& Max(DataType max)                     { Cv::Max(max); return *this; }
-	EditMinMax& NotNull(bool nn = true)               { Cv::NotNull(nn); return *this; }
+	EditMinMax& Min(DataType min)                     { Cv::Min(min); Refresh(); return *this; }
+	EditMinMax& Max(DataType max)                     { Cv::Max(max); Refresh(); return *this; }
+	EditMinMax& NotNull(bool nn = true)               { Cv::NotNull(nn); Refresh(); return *this; }
 };
 
 template <class DataType, class Cv>
@@ -258,9 +258,9 @@ public:
 	EditMinMaxNotNull()                               { Cv::NotNull(); }
 	EditMinMaxNotNull(DataType min, DataType max)     { Cv::NotNull(); Cv::MinMax(min, max); }
 
-	EditMinMaxNotNull& Min(DataType min)              { Cv::Min(min); return *this; }
-	EditMinMaxNotNull& Max(DataType max)              { Cv::Max(max); return *this; }
-	EditMinMaxNotNull& NotNull(bool nn = true)        { Cv::NotNull(nn); return *this; }
+	EditMinMaxNotNull& Min(DataType min)              { Cv::Min(min); Refresh(); return *this; }
+	EditMinMaxNotNull& Max(DataType max)              { Cv::Max(max); Refresh(); return *this; }
+	EditMinMaxNotNull& NotNull(bool nn = true)        { Cv::NotNull(nn); Refresh(); return *this; }
 };
 
 typedef EditMinMax<int, ConvertInt>              EditInt;
@@ -283,11 +283,11 @@ public:
 	EditString() {}
 	EditString(int maxlen)                           { MaxLen(maxlen); }
 
-	EditString& MaxLen(int maxlen)                   { ConvertString::MaxLen(maxlen); return *this; }
-	EditString& NotNull(bool nn = true)              { ConvertString::NotNull(nn); return *this; }
-	EditString& TrimLeft(bool b)                     { ConvertString::TrimLeft(b); return *this; }
-	EditString& TrimRight(bool b)                    { ConvertString::TrimRight(b); return *this; }
-	EditString& TrimBoth(bool b)                     { ConvertString::TrimBoth(b); return *this; }
+	EditString& MaxLen(int maxlen)                   { ConvertString::MaxLen(maxlen); Refresh(); return *this; }
+	EditString& NotNull(bool nn = true)              { ConvertString::NotNull(nn); Refresh(); return *this; }
+	EditString& TrimLeft(bool b)                     { ConvertString::TrimLeft(b); Refresh(); return *this; }
+	EditString& TrimRight(bool b)                    { ConvertString::TrimRight(b); Refresh(); return *this; }
+	EditString& TrimBoth(bool b)                     { ConvertString::TrimBoth(b); Refresh(); return *this; }
 };
 
 class EditStringNotNull : public EditString {
