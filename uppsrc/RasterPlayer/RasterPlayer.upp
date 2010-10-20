@@ -1,4 +1,4 @@
-description "Control to show animated .gif and .tiff files\377";
+description "Control to show animated GIF and multipage TIFF files\377";
 
 uses
 	plugin\gif,
