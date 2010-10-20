@@ -1,4 +1,4 @@
-topic "This example demonstrates how to use RasterPlayer class to show animated GIFs or multipage TIFFs.";
+topic "AnimatedClip";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%ES-ES 
 [s0;2 &]
@@ -559,4 +559,4 @@ uno nuevo. Esto puede ser definido con el mÃ©todo SetMT().]&]
 —šŠ·şÿ”ÍâÅÌÿ±£ß÷×Õ”üú¼ÿ–¦ÀŸ¿ÅÓ¡·ºûû¥ùİ¿ı¶¾—¿ ©úÿåô§¾øÎƒ´ê½ËÑê¿Ğ ĞĞĞĞĞŸÊ‘ÿ‡úå®Ä
 
 ]&]
-[s0;%% ]
+[s0; ]

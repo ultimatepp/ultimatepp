@@ -1,15 +1,15 @@
-topic "";
+topic "AnimatedClip";
 [ $$0,0#00000000000000000000000000000000:Default]
-[{_}%EN-US 
+[{_}%ES-ES 
 [s0;2 &]
-[s0; [2 This example demonstrates how to use RasterPlayer class to 
-show animated GIFs or multipage TIFFs.]&]
+[s0; [2 Aquest exemple demostra com utilitzar la classe RasterPlayer 
+per mostrar GIFs animats o TIFFs amb diverses pÃ gines.]&]
 [s0;2 &]
-[s0; [2 It can be compiled as `"GUI`" or `"GUI MT`". In the second 
-case RasterPlayer can work in the same thread or opening a new 
-thread. This can be defined with SetMT() method.]&]
-[s0;2 &]
-[s0;= [2 
+[s0; [2 Pot ser compilat com `"GUI`" o `"GUI MT`". En el segon cas 
+RasterPlayer pot treballar en el mateix `"thread`" o obrint un 
+de nou. AixÃ² pot ser definit amb el mÃ¨tode SetMT().]&]
+[s0;2%% &]
+[s0;=%% [2 
 @@image:2684&1784
 €ƒ©‚ñ€€€€€€€€€ø‡œì‡Ø”ÇãÿÇ¯±±Æ÷ùŸ·ïÊ›ò¦¢š£±¦±êÈÀ“ûÅ‘Å¥æˆ‚Â‚Ç“¢„  ˆ‘ûÛô••» –¨Ø
 ”‹ªŠú‚âÅèúïÇ¿Æİÿıì­ç•å¨Û‹ÇüŸÏóÏÿÜììÌìÌİïû³··×ŞÚÎ”ËÁÒÿø³Ş”ÇÖÄ—â¤“ß¶â˜Áú²Êä™ç°¬

@@ -795,18 +795,23 @@ GUI_APP_MAIN
 				Index<String> x;
 				x.Clear();
 				String qtf;
-				FindFile ff(AppendFileName(uppsrc, "*.*"));
 				SrcDocs(x, qtf, "Core", languages[i]);
 				SrcDocs(x, qtf, "Draw", languages[i]);
 				SrcDocs(x, qtf, "CtrlCore", languages[i]);
 				SrcDocs(x, qtf, "CtrlLib", languages[i]);
 				SrcDocs(x, qtf, "RichText", languages[i]);
 				SrcDocs(x, qtf, "RichEdit", languages[i]);
+				FindFile ff(AppendFileName(uppsrc, "*.*"));
+				Array <String> folders;
+				folders.Clear();
 				while(ff) {
 					if(ff.IsFolder())
-						SrcDocs(x, qtf, ff.GetName(), languages[i]);
+						folders.Add(ff.GetName());
 					ff.Next();
 				}
+				Sort(folders);
+				for (int ifold = 0; ifold < folders.GetCount(); ++ifold)
+					SrcDocs(x, qtf, folders[ifold], languages[i]);
 				tt[di].text << qtf;
 			}
 		}
