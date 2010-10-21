@@ -322,7 +322,6 @@ Vector<Value>& ValueArray::Clone() {
 
 ValueArray::ValueArray() {
 	data = &Single<NullData>();
-	DDUMPC(data->data);
 	data->Retain();
 }
 
@@ -493,7 +492,6 @@ void ValueMap::Init0()
 {
 	data = &Single<NullData>();
 	data->Retain();
-	DDUMP(data->value);
 }
 
 ValueMap::ValueMap(const ValueMap& v)
@@ -554,16 +552,12 @@ void ValueMap::Clear() {
 
 void ValueMap::Add(const Value& key, const Value& value) {
 	Data& d = Clone();
-	DDUMP(key);
-	DDUMP(value);
 	d.key.Add(key);
 	d.value.Add(value);
-	DDUMP(d.value);
 }
 
 Value ValueMap::operator[](const Value& key) const
 {
-	DDUMP(data->value);
 	int q = data->key.Find(key);
 	return q >= 0 ? data->value[q] : ErrorValue();
 }
