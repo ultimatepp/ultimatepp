@@ -616,6 +616,8 @@ class ValueArray : AssignValueTypeNo<ValueArray, VALUEARRAY_V, Moveable<ValueArr
 
 	Vector<Value>& Create();
 	Vector<Value>& Clone();
+	
+	friend Value::Void *ValueArrayDataCreate(Stream& s);
 
 public:
 	ValueArray();
@@ -680,6 +682,8 @@ class ValueMap : AssignValueTypeNo<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	Data& Create();
 	Data& Clone();
 	void  Init0();
+
+	friend Value::Void *ValueMapDataCreate(Stream& s);
 
 public:
 	ValueMap()                               { Init0(); }
