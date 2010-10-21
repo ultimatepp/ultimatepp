@@ -127,6 +127,20 @@ VectorMap<dword, Value::Void *(*)(Stream& s)>& Value::Typemap()
 	return x;
 }
 
+Value::Void *ValueArrayDataCreate(Stream& s)
+{
+	ValueArray::Data *a = new ValueArray::Data;
+	a->Serialize(s);
+	return a;
+}
+
+Value::Void *ValueMapDataCreate(Stream& s)
+{
+	ValueMap::Data *a = new ValueMap::Data;
+	a->Serialize(s);
+	return a;
+}
+
 static void sRegisterStd()
 {
 	ONCELOCK {
@@ -138,8 +152,8 @@ static void sRegisterStd()
 		RichValue<WString>::Register();
 		RichValue<Date>::Register();
 		RichValue<Time>::Register();
-		RichValue<ValueArray>::Register();
-		RichValue<ValueMap>::Register();		
+		Value::Register(VALUEARRAY_V, ValueArrayDataCreate);
+		Value::Register(VALUEMAP_V, ValueMapDataCreate);
 	};
 }
 
@@ -308,6 +322,7 @@ Vector<Value>& ValueArray::Clone() {
 
 ValueArray::ValueArray() {
 	data = &Single<NullData>();
+	DDUMPC(data->data);
 	data->Retain();
 }
 
@@ -478,6 +493,7 @@ void ValueMap::Init0()
 {
 	data = &Single<NullData>();
 	data->Retain();
+	DDUMP(data->value);
 }
 
 ValueMap::ValueMap(const ValueMap& v)
@@ -538,12 +554,16 @@ void ValueMap::Clear() {
 
 void ValueMap::Add(const Value& key, const Value& value) {
 	Data& d = Clone();
+	DDUMP(key);
+	DDUMP(value);
 	d.key.Add(key);
 	d.value.Add(value);
+	DDUMP(d.value);
 }
 
 Value ValueMap::operator[](const Value& key) const
 {
+	DDUMP(data->value);
 	int q = data->key.Find(key);
 	return q >= 0 ? data->value[q] : ErrorValue();
 }
