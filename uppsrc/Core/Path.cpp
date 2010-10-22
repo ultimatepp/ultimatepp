@@ -44,7 +44,7 @@ static bool strecmp0(const char *p, const char *s) {
 		if(*p == '*') {
 			while(*p == '*') p++;
 			do
-				if(*p == *s && strecmp0(p, s)) return true;
+				if(ToUpper(*p) == ToUpper(*s) && strecmp0(p, s)) return true;
 			while(*s++);
 			return false;
 		}

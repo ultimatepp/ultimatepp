@@ -52,7 +52,7 @@ String StringSample(const char *s, int limit)
 	return String(s, limit) + "...";
 }
 
-static String ToQuotedHtml(String s)
+static String ToQuotedHtml(const String& s)
 {
 	String out;
 	for(const char *p = s.Begin(), *e = s.End(); p < e; p++)
@@ -80,7 +80,7 @@ String FormatIP(dword _ip)
 
 static const char hex_digits[] = "0123456789ABCDEF";
 
-String UrlEncode(String s)
+String UrlEncode(const String& s)
 {
 	const char *p = s, *e = s.End();
 	String out;
@@ -102,7 +102,7 @@ String UrlEncode(String s)
 	return out;
 }
 
-String UrlEncode(String s, const char *specials)
+String UrlEncode(const String& s, const char *specials)
 {
 	int l = (int)strlen(specials);
 	const char *p = s, *e = s.End();
@@ -124,23 +124,22 @@ String UrlEncode(String s, const char *specials)
 	return out;
 }
 
-String UrlDecode(String s)
+String UrlDecode(const char *b, const char *e)
 {
-	const char *p = s, *e = p + s.GetLength();
-	String out;
-	for(; p < e; p++)
+	StringBuffer out;
+	byte d1, d2, d3, d4;
+	for(const char *p = b; p < e; p++)
 		if(*p == '+')
 			out.Cat(' ');
-		else if(*p == '%' && isxdigit(p[1]))
-		{
-			byte d1 = ctoi(*++p);
-			byte d2 = ctoi(p[1]);
-			if(d2 < 16)
-			{
-				p++;
-				d1 = (d1 << 4) | d2;
-			}
-			out.Cat(d1);
+		else if(*p == '%' && (d1 = ctoi(p[1])) < 16 && (d2 = ctoi(p[2])) < 16) {
+			out.Cat(d1 * 16 + d2);
+			p += 2;
+		}
+		else if(*p == '%' && (p[1] == 'u' || p[1] == 'U')
+		&& (d1 = ctoi(p[2])) < 16 && (d2 = ctoi(p[3])) < 16
+		&& (d3 = ctoi(p[4])) < 16 && (d4 = ctoi(p[5])) < 16) {
+			out.Cat(WString((d1 << 12) | (d2 << 8) | (d3 << 4) | d4, 1).ToString());
+			p += 5;
 		}
 		else
 			out.Cat(*p);
@@ -168,7 +167,7 @@ static unsigned AddCRC(unsigned old, byte next, unsigned crc)
 
 enum { CRC = 0x84030625 };
 
-String OtpEncode(String password, String otp_seed)
+String OtpEncode(const String& password, const String& otp_seed)
 {
 	if(IsNull(password))
 		return Null;
@@ -187,7 +186,7 @@ String OtpEncode(String password, String otp_seed)
 	return h;
 }
 
-String EncryptString(String password, String otp_key)
+String EncryptString(const String& password, const String& otp_key)
 {
 	unsigned crc = 0;
 	int i;
@@ -567,13 +566,13 @@ HttpQuery& HttpQuery::SetURL(const String& url)
 		const char *last = p;
 		while(*p && *p != '=' && *p != '&')
 			p++;
-		String key = ToUpper(UrlDecode(String(last, p)));
+		String key = ToUpper(UrlDecode(last, p));
 		if(*p == '=')
 			p++;
 		last = p;
 		while(*p && *p != '&')
 			p++;
-		Set(key, UrlDecode(String(last, p)));
+		Set(key, UrlDecode(last, p));
 		if(*p)
 			p++;
 	}
