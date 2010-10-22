@@ -4,30 +4,31 @@
 bool          IsSameTextFile(const char *p, const char *q);
 String        StringSample(const char *s, int limit);
 String        FormatIP(dword _ip);
-String        UrlEncode(String s);
-String        UrlEncode(String s, const char *specials);
-String        UrlDecode(String s);
+String        UrlEncode(const String& s);
+String        UrlEncode(const String& s, const char *specials);
+String        UrlDecode(const char *b, const char *e);
+inline String UrlDecode(const String& s)          { return UrlDecode(s.Begin(), s.End() ); }
 String        GetRandomIdent(int length);
-String        OtpEncode(String password, String otp_key);
-String        EncryptString(String password, String otp_key);
+String        OtpEncode(const String& password, const String& otp_key);
+String        EncryptString(const String& password, const String& otp_key);
 String        BinHexEncode(const char *b, const char *e);
-inline String BinHexEncode(String data)           { return BinHexEncode(data.Begin(), data.End()); }
+inline String BinHexEncode(const String& data)    { return BinHexEncode(data.Begin(), data.End()); }
 String        BinhexEncode(const char *b, const char *e);
-inline String BinhexEncode(String data)           { return BinhexEncode(data.Begin(), data.End()); }
+inline String BinhexEncode(const String& data)    { return BinhexEncode(data.Begin(), data.End()); }
 String        BinHexDecode(const char *b, const char *e);
-inline String BinHexDecode(String data)           { return BinHexDecode(data.Begin(), data.End()); }
+inline String BinHexDecode(const String& data)    { return BinHexDecode(data.Begin(), data.End()); }
 String        Base64Encode(const char *b, const char *e);
-inline String Base64Encode(String data)           { return Base64Encode(data.Begin(), data.End()); }
+inline String Base64Encode(const String& data)    { return Base64Encode(data.Begin(), data.End()); }
 String        Base64Decode(const char *b, const char *e);
-inline String Base64Decode(String data)           { return Base64Decode(data.Begin(), data.End()); }
+inline String Base64Decode(const String& data)    { return Base64Decode(data.Begin(), data.End()); }
 String        ASCII85Encode(const byte *p, int length);
-inline String ASCII85Encode(String s)             { return ASCII85Encode(s, s.GetLength()); }
+inline String ASCII85Encode(const String& s)      { return ASCII85Encode(s, s.GetLength()); }
 String        ASCII85Decode(const byte *p, int length);
-inline String ASCII85Decode(String s)             { return ASCII85Decode(s, s.GetLength()); }
+inline String ASCII85Decode(const String& s)      { return ASCII85Decode(s, s.GetLength()); }
 dword         AddCRC(dword crc, const byte *data, int count);
-inline dword  AddCRC(dword crc, String s)         { return AddCRC(crc, s, s.GetLength()); }
+inline dword  AddCRC(dword crc, const String& s)  { return AddCRC(crc, s, s.GetLength()); }
 inline dword  GetCRC(const byte *data, int count) { return AddCRC(0x80000000, data, count); }
-inline dword  GetCRC(String s)                    { return AddCRC(0x80000000, s, s.GetLength()); }
+inline dword  GetCRC(const String& s)             { return AddCRC(0x80000000, s, s.GetLength()); }
 int           LocateLine(String old_file, int old_line, String new_file);
 void          AppVersion(const char *ver);
 String        MD5Digest(const char *text, int length);
