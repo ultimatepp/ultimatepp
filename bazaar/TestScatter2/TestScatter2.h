@@ -84,7 +84,7 @@ Tab3::Tab3()
 	scatter3.SetXYMin(-2,-2);
 	scatter3.PlotParaFunction(para1,"Circle",Yellow,6,50);
 	scatter3.PlotParaFunction(para2,"Coil",White,6,100);
-	scatter3.PlotParaFunction(para3,"Spiral",Color::Color(56,170,255),6,150);
+	scatter3.PlotParaFunction(para3,"Spiral",::Color(56,170,255),6,150);
 	scatter3.PlotParaFunction(para4,"VLine",LtRed,6,2);
 	scatter3.PlotParaFunction(para5,"HLine",LtRed,6,2);	
 	scatter3.SetAntialiasing();
