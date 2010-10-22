@@ -4,6 +4,16 @@
 #define IMAGEFILE <Scatter/Chart.iml>
 #include <Draw/iml.h>
 
+Scatter::MouseBehaviour defaultMouse[] = {
+	{false, false, false, true , false, 0, false, Scatter::SHOW_INFO},
+	{false, false, false, false, true , 0, false, Scatter::SCROLL},
+	{false, false, false, false, false, 1, false, Scatter::ZOOM_H_RED},
+	{false, false, false, false, false, 1, false, Scatter::ZOOM_V_RED},
+	{false, false, false, false, false,-1, false, Scatter::ZOOM_H_ENL},
+	{false, false, false, false, false,-1, false, Scatter::ZOOM_V_ENL},
+	{false, false, false, false, false, 0, false, Scatter::NO_ACTION}};
+	
+
 Scatter& Scatter::SetColor(const class::Color& _color)
 {
 	graphColor=_color;
@@ -486,7 +496,7 @@ void Scatter::SetFunctColor(const int& j, const class::Color& fcolor)
 		Refresh();
 	}       
 }
-Acolor Scatter::GetDataColor(const int& j) const
+Color Scatter::GetDataColor(const int& j) const
 {
 	if(IsValid(j))
 	{
@@ -495,7 +505,7 @@ Acolor Scatter::GetDataColor(const int& j) const
 	throw (Exc(t_("Invalid series index!")));
 }
 
-Acolor Scatter::GetFunctColor(const int& j) const
+Color Scatter::GetFunctColor(const int& j) const
 {
 	if(IsValid(j))
 	{
@@ -575,7 +585,7 @@ int Scatter::GetMarkStyle(const int& j) const
 	throw (Exc(t_("Invalid series index!")));
 }
 
-void Scatter::SetMarkColor(const int& j, const Acolor& mcolor)
+void Scatter::SetMarkColor(const int& j, const ::Color& mcolor)
 {
 	if(IsValid(j))
 	{
@@ -584,7 +594,7 @@ void Scatter::SetMarkColor(const int& j, const Acolor& mcolor)
 	}
 }
 
-Acolor Scatter::GetMarkColor(const int& j) const
+Color Scatter::GetMarkColor(const int& j) const
 {
 	if(IsValid(j))
 	{
@@ -940,36 +950,135 @@ void Scatter::ProcessPopUp(const Point & pt)
 	popText.SetText(str).Move(this,p2.x,p2.y);
 }
 
-void Scatter::LeftDown(Point pt, dword)
+void Scatter::DoMouseAction(bool down, Point pt, MouseAction action, int value)
 {
-	if(paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
-	{
-		popText.AppearOnly(this);
-		ProcessPopUp(pt);		
-		isLeftDown = true;
-	}	
-}
-void Scatter::LeftUp(Point, dword)
-{
-	if(paintInfo && isLeftDown) 
-	{
-		popText.Close();
-		isLeftDown = false;
+	switch (action) {
+	case SCROLL: 		Scrolling(down, pt);
+						break;
+	case ZOOM_H_ENL:	 
+	case ZOOM_H_RED:	MouseZoom(value, true, false); 
+						break;
+	case ZOOM_V_ENL:
+	case ZOOM_V_RED:	MouseZoom(value, false, true); 
+						break;
+	case SHOW_INFO:		LabelPopUp(down, pt);
+						break;
 	}
 }
 
-void Scatter::MiddleDown(Point pt, dword)
+bool Scatter::SetMouseBehavior(MouseBehaviour *_mouseBehavior) 
 {
-	if((mouseHandlingX || mouseHandlingY) && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
-	{
-		butDownX = pt.x;
-		butDownY = pt.y;	
-		isMidDown = true;
+	if (!_mouseBehavior)
+		return false;
+	int i;
+	for (i = 0; _mouseBehavior[i].action != NO_ACTION && i < MAX_MOUSEBEHAVIOR; ++i) ;
+	if (i == MAX_MOUSEBEHAVIOR)
+		return false;
+	mouseBehavior = _mouseBehavior;
+	return true;
+}
+
+void Scatter::ProcessMouse(bool down, Point pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right) 
+{
+	int i;
+	for (i = 0; mouseBehavior[i].action != NO_ACTION && i < MAX_MOUSEBEHAVIOR; ++i) {
+		if (mouseBehavior[i].ctrl   == ctrl   && mouseBehavior[i].alt   == alt   &&
+		    mouseBehavior[i].shift  == shift  && mouseBehavior[i].left  == left  &&
+		    mouseBehavior[i].middle == middle && mouseBehavior[i].right == right &&
+		    ((mouseBehavior[i].middleWheel == 0) || mouseBehavior[i].middleWheel == ((middleWheel > 0) - (middleWheel < 0))))
+		    DoMouseAction(down, pt, mouseBehavior[i].action, middleWheel);
+	}	
+}
+
+void Scatter::LabelPopUp(bool down, Point pt) 
+{
+	if (down) {
+		if(paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
+		{
+			popText.AppearOnly(this);
+			ProcessPopUp(pt);		
+			isLabelPopUp = true;
+		}	
+	} else {
+		if(paintInfo && isLabelPopUp) 
+		{
+			popText.Close();
+			isLabelPopUp = false;
+		}		
 	}
 }
+
+#ifdef PLATFORM_LINUX
+	#include <X11/cursorfont.h>
+#endif
+
+void Scatter::Scrolling(bool down, Point pt)
+{
+	static Image mouseImg;
+	if (down) {
+		if((mouseHandlingX || mouseHandlingY) && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py)
+		{
+			butDownX = pt.x;
+			butDownY = pt.y;	
+			isScrolling = true;
+/*			INTERLOCKED { 
+#ifdef PLATFORM_WIN32
+				static Image img = Win32Cursor(IDC_SIZEALL);
+#else
+				static Image img = X11Cursor(XC_fleur);
+#endif
+				mouseImg = Ctrl::OverrideCursor(img);
+			}*/
+		}
+	} else {
+		if (isScrolling) {
+			MouseMove(pt, 0);
+			isScrolling = false;
+//			Ctrl::OverrideCursor(mouseImg);
+		}
+	}
+}
+
+void Scatter::LeftDown(Point pt, dword keyFlags) 
+{
+	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false);
+}
+
+void Scatter::LeftUp(Point pt, dword keyFlags)
+{
+	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false); 
+}
+
+void Scatter::MiddleDown(Point pt, dword keyFlags)
+{
+	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, true, 0, false);
+}
+
+void Scatter::MiddleUp(Point pt, dword keyFlags)
+{
+	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, true, 0, false);
+}
+
+void Scatter::RightDown(Point pt, dword keyFlags) 
+{
+	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, 0, true);
+}
+
+void Scatter::RightUp(Point pt, dword keyFlags)
+{
+	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, 0, true); 
+}
+
+void Scatter::MouseWheel(Point pt, int zdelta, dword keyFlags) 
+{
+	if (zdelta == 0)
+		return;
+	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, zdelta, false);
+}
+
 void Scatter::MouseMove(Point pt, dword)
 {
-	if (isMidDown) 
+	if (isScrolling) 
 	{
 		int shiftX = pt.x - butDownX;
 		if (mouseHandlingX && shiftX != 0) {
@@ -999,7 +1108,7 @@ void Scatter::MouseMove(Point pt, dword)
 			WhenZoomScroll();
 		}
 	} 
-	if(isLeftDown) {
+	if(isLabelPopUp) {
 		if (paintInfo && px <=pt.x && pt.x<= GetSize().cx-px && (py + titleFont.GetHeight())<=pt.y && pt.y<= GetSize().cy-py) 
 		{
 			ProcessPopUp(pt);
@@ -1007,25 +1116,23 @@ void Scatter::MouseMove(Point pt, dword)
 	}	
 }
 
-void Scatter::MiddleUp(Point pt, dword d)
-{
-	if (isMidDown) {
-		MouseMove(pt, d);
-		isMidDown = false;
-	}
-}
-
 void Scatter::MouseLeave()
 {
-	isMidDown = false;
+	isScrolling = false;
 }
 
-void Scatter::Zoom(double scale) 
+void Scatter::MouseZoom(int zdelta, bool hor, bool ver) 
 {
-	bool mouseX = mouseHandlingX;
+	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
+	Zoom(scale);
+}
+
+void Scatter::Zoom(double scale, bool hor, bool ver) 
+{
+	bool mouseX = mouseHandlingX && hor;
 	mouseX = mouseX && ((minXZoom > 0 && xRange*scale > minXZoom) || (minXZoom < 0));
 	mouseX = mouseX && ((maxXZoom > 0 && xRange*scale < maxXZoom) || (maxXZoom < 0));
-	bool mouseY = mouseHandlingY;
+	bool mouseY = mouseHandlingY && ver;
 	mouseY = mouseY && ((minYZoom > 0 && yRange*scale > minYZoom) || (minYZoom < 0));
 	mouseY = mouseY && ((maxYZoom > 0 && yRange*scale < maxYZoom) || (maxYZoom < 0));
 	mouseX = mouseX && (!mouseHandlingY || mouseY);	
@@ -1075,14 +1182,6 @@ void Scatter::Scroll(double factorX, double factorY)
 		Refresh();
 		WhenZoomScroll();
 	}
-}
-
-void Scatter::MouseWheel(Point, int zdelta, dword) 
-{
-	if (zdelta == 0)
-		return;
-	double scale = zdelta > 0 ? zdelta/100. : -100./zdelta;
-	Zoom(scale);
 }
 
 Image Scatter::CursorImage(Point p, dword keyflags)
@@ -1607,7 +1706,7 @@ Scatter::Scatter():
 	gridColor(::Color(102,102,102)),
 	gridWidth(4),
 	paintInfo(false),
-	mouseHandlingX(false), mouseHandlingY(false), isMidDown(false), isLeftDown(false),      
+	mouseHandlingX(false), mouseHandlingY(false), isScrolling(false), isLabelPopUp(false),      
 	drawXReticle(true), drawYReticle(true), drawY2Reticle(false),
 	drawVGrid(true), drawHGrid(true),
 	showLegend(true),legendWeight(80),
@@ -1618,6 +1717,7 @@ Scatter::Scatter():
 	Color(graphColor);	
 	BackPaint();
 	popText.SetColor(::Color(200,220,255));        
+	SetMouseBehavior(defaultMouse);
 }
 
 Scatter::~Scatter()

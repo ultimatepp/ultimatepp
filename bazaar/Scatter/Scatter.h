@@ -12,7 +12,6 @@ using namespace Upp;
 
 
 typedef Pointf XY;
-typedef class::Color Acolor;
 
 class Scatter : public StaticRect {
 public:
@@ -48,12 +47,31 @@ public:
 	virtual void  MiddleDown(Point, dword);
 	virtual void  MouseMove(Point, dword);
 	virtual void  MiddleUp(Point, dword);
+	virtual void  RightDown(Point, dword);
+	virtual void  RightUp(Point, dword);
 	virtual void  MouseLeave();
 	virtual void  MouseWheel(Point, int zdelta, dword);
 	
 	Callback WhenZoomScroll;
 	Callback WhenSetRange;
 	Callback WhenSetXYMin;
+	
+	enum MouseAction {NO_ACTION = 1111110, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_INFO};
+
+	struct MouseBehaviour {
+		bool ctrl;
+		bool alt;
+		bool shift;
+		bool left;
+		bool middle;
+		int middleWheel;
+		bool right;
+		MouseAction action;
+	};
+	
+	#define MAX_MOUSEBEHAVIOR 20
+	
+	bool SetMouseBehavior(MouseBehaviour *_mouseBehavior);
 	
 	Scatter& SetColor(const class::Color& _color);
 	Scatter& SetTitle(const String& _title);
@@ -87,7 +105,7 @@ public:
 	Scatter& SetAntialiasing(const bool& aa=true);	
 	
 	void FitToData(bool Y = false);
-	void Zoom(double scale); 
+	void Zoom(double scale, bool hor = true, bool ver = true); 
 	void Scroll(double factorX, double factorY);
 
 	Scatter& SetRange(double rx, double ry, double ry2 = -1);
@@ -141,7 +159,7 @@ public:
 	void SetMarkStyle(const int& j, MarkStyle noStyle);
 	int GetMarkStyle(const int& j) const;
 	void SetMarkColor(const int& j, const class::Color& pcolor);
-	Acolor GetMarkColor (const int& j) const;
+	::Color GetMarkColor (const int& j) const;
 	void SetShowMark(const int& j, const bool& show=true);
 	bool IsMarkShow(const int& j) const throw (Exc);
 	
@@ -247,7 +265,7 @@ private:
 	bool logX, logY, logY2;	
 	
 	int butDownX, butDownY;
-	bool isMidDown, isLeftDown;
+	bool isScrolling, isLabelPopUp;
 	
 	Vector<Vector<XY> > vPointsData,vFunctionData;
 	Vector<bool> vFPrimaryY, vPPrimaryY;
@@ -273,6 +291,14 @@ private:
 	
 	Vector<XY> Cubic (const Vector<XY>& DataSet, const int& fineness=10, double tension=0.4)const;
 	void DrawLegend(Draw& w,const int& scale) const;
+	
+	MouseBehaviour *mouseBehavior;
+	
+	void DoMouseAction(bool down, Point pt, MouseAction action, int value);
+	void ProcessMouse(bool down, Point pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right); 
+	void LabelPopUp(bool down, Point pt); 
+	void Scrolling(bool down, Point pt);
+	void MouseZoom(int zdelta, bool hor, bool ver);
 	
 	void SetDrawing(Draw& w, const int& scale)const;
 	void Circle(Draw& w, const int& scale, const Point& cp, const int& size, const class::Color& markColor)const;
