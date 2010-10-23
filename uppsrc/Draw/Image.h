@@ -205,8 +205,8 @@ private:
 #ifdef PLATFORM_X11
 	void         SetCursorCheat(int id);
 	int          GetCursorCheat() const;
-	friend       void *X11Cursor(const Image&);
-	friend       Image sX11Cursor__(int c);
+	friend       void *CursorX11(const Image&);
+	friend       Image X11Cursor(int c);
 #endif
 
 public:
