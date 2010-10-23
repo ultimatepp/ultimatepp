@@ -237,7 +237,8 @@ void PutQTF(DocReport& r, const char *qtf)
 
 	Size sz = r.GetPageSize();
 	Size pgsz = r.GetSize();
-	int lastpage = text.GetHeight(pgsz).page;
+	PageY end = text.GetHeight(pgsz);
+	int lastpage = end.page;
 	int x = (sz.cx - pgsz.cx) / 2;
 	int y = (sz.cy - pgsz.cy) / 2;
 	for(int i = 0; i <= lastpage; i++) {
@@ -250,6 +251,7 @@ void PutQTF(DocReport& r, const char *qtf)
 		paintinfo.bottom = PageY(i + 1, 0);
 		text.Paint(pw, Rect(Point(x, y), pgsz), paintinfo);
 	}
+	r.SetYPos(end.y);
 }
 
 END_UPP_NAMESPACE
