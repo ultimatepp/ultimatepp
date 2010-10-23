@@ -1021,20 +1021,20 @@ void Scatter::Scrolling(bool down, Point pt)
 			butDownX = pt.x;
 			butDownY = pt.y;	
 			isScrolling = true;
-/*			INTERLOCKED { 
+			INTERLOCKED { 
 #ifdef PLATFORM_WIN32
 				static Image img = Win32Cursor(IDC_SIZEALL);
 #else
 				static Image img = X11Cursor(XC_fleur);
 #endif
 				mouseImg = Ctrl::OverrideCursor(img);
-			}*/
+			}
 		}
 	} else {
 		if (isScrolling) {
 			MouseMove(pt, 0);
 			isScrolling = false;
-//			Ctrl::OverrideCursor(mouseImg);
+			Ctrl::OverrideCursor(mouseImg);
 		}
 	}
 }
