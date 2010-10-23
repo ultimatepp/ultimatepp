@@ -384,7 +384,7 @@ ImageDraw::~ImageDraw()
 	XFreeGC(Xdisplay, alpha.gc);
 }
 
-Image sX11Cursor__(int c)
+Image X11Cursor(int c)
 {
 	ImageBuffer b(32, 32);
 	Image m(b);
@@ -394,7 +394,7 @@ Image sX11Cursor__(int c)
 
 #include <X11/cursorfont.h>
 
-#define FCURSOR_(x) { Image h; INTERLOCKED { static Image m = sX11Cursor__(x); h = m; } return h; }
+#define FCURSOR_(x) { Image h; INTERLOCKED { static Image m = X11Cursor(x); h = m; } return h; }
 
 Image Image::Arrow() FCURSOR_(XC_left_ptr)
 Image Image::Wait() FCURSOR_(XC_watch)
@@ -414,7 +414,7 @@ Image Image::SizeBottomRight()  FCURSOR_(XC_bottom_right_corner)
 Image Image::Cross() FCURSOR_(XC_crosshair)
 Image Image::Hand() FCURSOR_(XC_hand1)
 
-void *X11Cursor(const Image& img)
+void *CursorX11(const Image& img)
 {
 	GuiLock __;
 	int q = img.GetCursorCheat();

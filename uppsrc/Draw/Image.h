@@ -353,5 +353,6 @@ Image Win32DllIcon(const char *dll, int ii, bool large);
 #endif
 
 #ifdef PLATFORM_X11
-void *X11Cursor(const Image& img);
+Image X11Cursor(int c);
+void *CursorX11(const Image& img);
 #endif
