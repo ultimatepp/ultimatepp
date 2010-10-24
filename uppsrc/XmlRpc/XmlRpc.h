@@ -226,8 +226,10 @@ struct XmlRpcData {
 	
 	template <class T>
 	XmlRpcData& operator<<(const T& x)   { Value v; ValuePut(v, x); out.Add(v); return *this; }
+	template <class T>
+	void        Set(int i, const T& x)   { Value v; ValuePut(v, x); out.Set(i, v); }
 	
-	void                         Reset() { in.Clear(); out.Clear(); ii = 0; }
+	void        Reset()                  { in.Clear(); out.Clear(); ii = 0; }
 
 	XmlRpcData() { ii = 0; }
 };
@@ -271,8 +273,11 @@ public:
 
 	template <class T>
 	XmlRpcCall& operator<<(const T& x)                { data << x; return *this; }
+	template <class T>
+	void        Set(int i, const T& x)                { data.Set(i, x); }
 
 	Value       Execute();
+	Value       Retry();
 
 	template <class T>
 	bool operator>>(T& x)                             { if(IsError(Execute())) return false;
@@ -308,7 +313,7 @@ public:
 
 	XmlRpcCall& TimeOut(int msec)                               { timeout = msec; }
 	XmlRpcCall& URL(const char *url);
-
+	
 	XmlRpcCall(const char *url);
 	XmlRpcCall();
 };
