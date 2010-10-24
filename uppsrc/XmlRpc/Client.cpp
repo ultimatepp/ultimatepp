@@ -45,6 +45,13 @@ XmlRpcCall::XmlRpcCall()
 
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr);
 
+Value XmlRpcCall::Retry()
+{
+	ClearError();
+	shouldExecute = true;
+	return Execute();
+}
+
 Value XmlRpcCall::Execute()
 {
 	if(!shouldExecute)
