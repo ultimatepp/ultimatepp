@@ -5,9 +5,9 @@ using namespace Upp;
 struct MyCustomValue : AssignValueTypeNo<MyCustomValue, 514> {
 	int    x, y, z;
 
-	int      operator==(const MyCustomValue& o) const { return false; }
+	bool      operator==(const MyCustomValue& o) const { return false; }
 	void     Serialize(Stream& s)                     {}
-	String   ToString() const                         { return ""; }
+	String   ToString() const                         { return "MyCustomValue"; }
 	unsigned GetHashValue() const                     { return 0; }
 	bool     IsNullInstance() const                   { return false; }
 
@@ -27,7 +27,7 @@ void Xmlize(XmlIO xml, MyCustomValue& v)
 }
 
 INITBLOCK {
-	RichValue<Color>::Register();
+	RichValue<MyCustomValue>::Register();
 }
 
 REGISTER_VALUE_XMLIZE(MyCustomValue);
