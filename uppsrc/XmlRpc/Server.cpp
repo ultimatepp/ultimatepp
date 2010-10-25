@@ -25,6 +25,13 @@ XmlRpcFnPtr XmlRpcMapGet(const char *group, const char *name)
 	return XmlRpcMap(group).Get(name, NULL);
 }
 
+String (*sXmlRpcMethodFilter)(const String& methodname);
+
+void SetXmlRpcMethodFilter(String (*filter)(const String& methodname))
+{
+	sXmlRpcMethodFilter = filter;
+}
+
 struct XmlRpcError {
 	int    code;
 	String text;
@@ -60,6 +67,8 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 		data.peeraddr = peeraddr;
 		data.in = ParseXmlRpcParams(p);
 		XmlRpcMapMutex.Enter();
+		if(sXmlRpcMethodFilter)
+			methodname = (*sXmlRpcMethodFilter)(methodname);
 		void (*fn)(XmlRpcData&) = XmlRpcMapGet(group, methodname);
 		if(fn) {
 			(*fn)(data);
