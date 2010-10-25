@@ -18,6 +18,7 @@ class DeEncrypter : public WithDeEncrypterLayout<TopWindow> {
 public:
 	typedef DeEncrypter CLASSNAME;
 	DeEncrypter();
+	~DeEncrypter();
 	
 	void ToInfo(const String & s)
 	{
@@ -28,8 +29,10 @@ public:
 	void Crypt(bool encrypt = true);
 	void Generate();
 	void OpenKey();
+	void Clear();
+	void Serialize(Stream& s);
 	
-	FileSel fs;
+	FileSel fsf, fsk;
 	FileSel dirs;
 	String key;
 };

@@ -1,23 +1,25 @@
 #include "DeEncrypter.h"
 
-
-
 DeEncrypter::DeEncrypter()
 {
 	CtrlLayout(*this, "Window title");
-	
-	String activedir = GetFileFolder(GetExeFilePath());
 
-	fs.ActiveDir(activedir);
-	dirs.ActiveDir(activedir);
-	
-	encrypt << THISBACK1(Crypt, true);
-	decrypt << THISBACK1(Crypt, false);
-	generate << THISBACK(Generate);
-	open << THISBACK(OpenKey);
+	if(!LoadFromFile(*this))
+	{
+		String activedir = GetFileFolder(GetExeFilePath());
+		fsk.ActiveDir(activedir);
+		fsf.ActiveDir(activedir);
+		dirs.ActiveDir(activedir);
+	}
+
+	encrypt <<= THISBACK1(Crypt, true);
+	decrypt <<= THISBACK1(Crypt, false);
+	generate <<= THISBACK(Generate);
+	open <<= THISBACK(OpenKey);
+	clear <<= THISBACK(Clear);
 
 	//try preload an existing key
-	String filename = activedir + DIR_SEP + DEFFILENAME;
+	String filename = fsk.GetActiveDir() + DIR_SEP + DEFFILENAME;
 	key = LoadFile(filename);
 	if(key.IsEmpty())
 	{
@@ -38,6 +40,29 @@ DeEncrypter::DeEncrypter()
 	}
 }
 
+DeEncrypter::~DeEncrypter()
+{
+	StoreToFile(*this);	
+}
+
+void DeEncrypter::Serialize(Stream& s)
+{
+	String a,b,c,d;
+	if(s.IsStoring())
+	{
+		a = fsk.GetActiveDir();	
+		b = fsf.GetActiveDir();	
+		c = dirs.GetActiveDir();	
+	}
+	s % a % b % c;
+	if(s.IsLoading())
+	{
+		fsk.ActiveDir(a);
+		fsf.ActiveDir(b);
+		dirs.ActiveDir(c);
+	}
+}
+
 void DeEncrypter::Crypt(bool encrypt)
 {
 	if(key.IsEmpty())
@@ -46,10 +71,10 @@ void DeEncrypter::Crypt(bool encrypt)
 		return;
 	}
 	
-	fs.Multi();
-	fs.ClearTypes();
+	fsf.Multi();
+	fsf.ClearTypes();
 	
-	if(!fs.ExecuteOpen(String().Cat() << "Select files to " << ((encrypt)?("ENcrypt"):("DEcrypt")) ))
+	if(!fsf.ExecuteOpen(String().Cat() << "Select files to " << ((encrypt)?("ENcrypt"):("DEcrypt")) ))
 	{
 		ToInfo("Canceled");
 		return;
@@ -65,13 +90,15 @@ void DeEncrypter::Crypt(bool encrypt)
 	Progress pi;
 	pi.Create();
 	
-	for(int i = 0; i < fs.GetCount(); i++)
+	for(int i = 0; i < fsf.GetCount(); i++)
 	{
 		String fileinfo;
-		fileinfo << "(" << (i+1) << "/" << fs.GetCount() <<") ";
-		String filename = fs.GetFile(i);
+		fileinfo << "(" << (i+1) << "/" << fsf.GetCount() <<") ";
+		String filename = fsf.GetFile(i);
 		String file = GetFileName(filename);
-		String dfilename = dir + DIR_SEP + file + "$";
+		String dfilename = dir + DIR_SEP + file;
+		if(!keepfname)
+			dfilename << "$";
 		
 		ToInfo("\n\nProcessing: " + fileinfo + filename);
 
@@ -97,14 +124,14 @@ void DeEncrypter::Crypt(bool encrypt)
 		String sOut;
 		int64 filesize = in.GetStreamSize();
 		
-		pi.Set(0, filesize);
+		pi.Set(0, (int)filesize);
 
 		if(0)
 		{
 			String msg = "Copying: " + fileinfo + file;
 			pi.SetText(msg);
 			int time = msecs();
-			int size = 0;
+			int64 size = 0;
 			while(in.GetLeft()>0)
 			{
 				sIn = in.Get(in.GetBufferSize());
@@ -119,7 +146,7 @@ void DeEncrypter::Crypt(bool encrypt)
 				if(dt > 1000)
 				{
 					time = tt;
-					int dsize = in.GetPos() - size;
+					int64 dsize = in.GetPos() - size;
 					size = in.GetPos();
 					double rate = (double)dsize/(double)dt;
 					pi.SetText(msg + " (" + FormatDoubleFix(rate, 1) + " kB/s)");
@@ -134,7 +161,7 @@ void DeEncrypter::Crypt(bool encrypt)
 				pi.SetText(msg);
 				AESEncoderStream aesEncoder(filesize, key); 
 				int time = msecs();
-				int size = 0;
+				int64 size = 0;
 				while(in.GetLeft()>0)
 				{
 					sIn = in.Get(in.GetBufferSize());
@@ -151,7 +178,7 @@ void DeEncrypter::Crypt(bool encrypt)
 					if(dt > 1000)
 					{
 						time = tt;
-						int dsize = in.GetPos() - size;
+						int64 dsize = in.GetPos() - size;
 						size = in.GetPos();
 						double rate = (double)dsize/(double)dt;
 						pi.SetText(msg + " (" + FormatDoubleFix(rate, 1) + " kB/s)");
@@ -164,7 +191,7 @@ void DeEncrypter::Crypt(bool encrypt)
 				pi.SetText(msg);
 				AESDecoderStream aesDecoder(key);
 				int time = msecs();
-				int size = 0;
+				int64 size = 0;
 				while(in.GetLeft()>0)
 				{
 					sIn = in.Get(in.GetBufferSize());
@@ -181,7 +208,7 @@ void DeEncrypter::Crypt(bool encrypt)
 					if(dt > 1000)
 					{
 						time = tt;
-						int dsize = in.GetPos() - size;
+						int64 dsize = in.GetPos() - size;
 						size = in.GetPos();
 						double rate = (double)dsize/(double)dt;
 						pi.SetText(msg + " (" + FormatDoubleFix(rate, 1) + " kB/s)");
@@ -200,12 +227,12 @@ void DeEncrypter::Crypt(bool encrypt)
 
 void DeEncrypter::Generate()
 {
-	fs.Multi(false);
-	fs.Types("All Files\t*\nKey Files\t*.key\nDat Files\t*.dat\n");
-	fs.Set(DEFFILENAME);
-	if(!fs.ExecuteSaveAs("Save new key to"))
+	fsk.Multi(false);
+	fsk.Types("All Files\t*\nKey Files\t*.key\nDat Files\t*.dat\n");
+	fsk.Set(DEFFILENAME);
+	if(!fsk.ExecuteSaveAs("Save new key to"))
 		return;
-	String filename = fs.Get();
+	String filename = fsk.Get();
 	
 	key = AESRandomString(DEFKEYSIZE);
 
@@ -223,12 +250,12 @@ void DeEncrypter::Generate()
 
 void DeEncrypter::OpenKey()
 {
-	fs.Multi(false);
-	fs.Types("All Files\t*\nKey Files\t*.key\nDat Files\t*.dat\n");
-	fs.Set("aes32");
-	if(!fs.ExecuteOpen("Open key from"))
+	fsk.Multi(false);
+	fsk.Types("All Files\t*\nKey Files\t*.key\nDat Files\t*.dat\n");
+	fsk.Set("aes32");
+	if(!fsk.ExecuteOpen("Open key from"))
 		return;
-	String filename = fs.Get();
+	String filename = fsk.Get();
 	
 	key = LoadFile(filename);
 	
@@ -244,6 +271,10 @@ void DeEncrypter::OpenKey()
 	keypath.SetData(filename);
 }
 
+void DeEncrypter::Clear()
+{
+	info.Clear();	
+}
 
 GUI_APP_MAIN
 {
