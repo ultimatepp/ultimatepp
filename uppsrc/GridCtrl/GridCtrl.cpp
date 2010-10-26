@@ -2565,6 +2565,7 @@ void GridCtrl::Scroll()
 		if(delta.cx != 0)
 		{
 			ScrollView(Rect(fixed_width, 0, sz.cx, fixed_height), delta.cx, 0);
+			ScrollView(Rect(fixed_width, sz.cy - summary_height, sz.cx, sz.cy), delta.cx, 0);
 			scrollLeftRight = true;
 		}
 		if(delta.cy != 0)
@@ -5555,7 +5556,7 @@ void GridCtrl::SwapDown(int cnt)
 		repaint = true;
 	}
 
-	int cy = GetSize().cy;
+	int cy = GetSize().cy - bar.GetSize().cy;
 	if(resize_row_mode == 0 && yp > cy)
 		sby.Set(sby + yp - cy);
 
