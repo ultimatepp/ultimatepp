@@ -156,6 +156,9 @@ public:
 	virtual void Xmlize(XmlIO xml)             = 0;
 };
 
+template<class B = EmptyClass>
+class Persistable : public Xmlizeable<Serializeable<B> > {};
+
 //a helper when using a class with XmlParser for DOM/SAX parsing
 template<class B = EmptyClass>
 class XmlParseable : public B

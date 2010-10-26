@@ -722,8 +722,8 @@ void CMeter::MouseWheel(Point p, int zdelta, dword keyflags)
 	if(increment != 0) return; //inc in progress, ignore
 
 	//if(!HasFocus()) SetFocus();
-	if(zdelta>0) Key(keyflags | K_UP, zdelta/120);
-	else Key(keyflags | K_DOWN, -zdelta/120);
+	if(zdelta>0) Key(keyflags | K_DOWN, zdelta/120);
+	else Key(keyflags | K_UP, -zdelta/120);
 }
 
 bool CMeter::Key0(dword key, int rep)

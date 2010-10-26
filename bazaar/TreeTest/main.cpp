@@ -36,18 +36,18 @@ TreeTest::TreeTest()
 	String & ssa = roota.leaf.name;
 	ASSERT(ssa.IsEqual(sa));
 
-#if 0
-	StoreAsXMLFile(roota, "check");
+#if 1
+	StoreAsXMLFile(roota, "MyTree", "check.xml");
 	Node<Element> roota_;
-	LoadFromXMLFile(roota_);
-	StoreAsXMLFile(roota_, "check1");
+	LoadFromXMLFile(roota_, "check.xml");
+	StoreAsXMLFile(roota_, "MyTree", "check1.xml");
 #endif
 
-#if 0
-	StoreToFile(roota);
+#if 1
+	StoreToFile(roota, "check.cfg");
 	Node<Element> roota__;
-	LoadFromFile(roota__);
-	StoreToFile(roota__);
+	LoadFromFile(roota__, "check.cfg");
+	StoreToFile(roota__, "check1.cfg");
 #endif
 
 	//Leaf<Element>

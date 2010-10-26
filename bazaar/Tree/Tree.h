@@ -70,7 +70,6 @@ public:
 	Tree& operator|(pick_ T& x)         { AddPick(x); return *this; }
 
 #ifdef UPP
-	//void     Serialize(Stream& s)       { B::Serialize(); }
 	using B::Serialize;
 #endif
 
@@ -95,11 +94,13 @@ public:
 #endif
 };
 
+NAMESPACE_UPP
 template<class T>
-void Xmlize(XmlIO xml, Tree<T>& data)
+inline void Xmlize(XmlIO xml, Tree<T>& data)
 {
-	XmlizeContainer(xml, "item", data);
+	::Xmlize(xml, (Array<T>&)data);
 }
+END_UPP_NAMESPACE
 
 //Tree Node helper class
 
@@ -109,14 +110,28 @@ class Node
 {
 public:
 	typedef Node CLASSNAME;
+	typedef Tree<Node<T> > R;
+
 	Node() {}
 	Node(const T& leaf) : leaf(leaf) {}
 
-	void Xmlize(XmlIO xml) { xml("leaf", leaf); XmlizeContainer(xml, "item", (Tree<Node<T> >&)*this); }
-	void Serialize(Stream& s) { s % leaf % (Tree<Node<T> >&)*this; }
-
 	T leaf;
 };
+
+NAMESPACE_UPP
+template <class T>
+inline Stream& operator%(Stream& s, Node<T>& x)
+{
+	s % x.leaf % (Tree<Node<T> >&)x;
+	return s;
+}
+
+template<class T>
+inline void Xmlize(XmlIO xml, Node<T>& data)
+{
+	xml("leaf", data.leaf); ::Xmlize(xml, (Tree<Node<T> >&)data);
+}
+END_UPP_NAMESPACE
 
 template<class BB> //B conflicts with Tree::B
 class Leaf
@@ -125,8 +140,22 @@ class Leaf
 {
 public:
 	typedef Leaf<BB> CLASSNAME;
-	void Xmlize(XmlIO xml) { xml("leaf", (BB&)*this); XmlizeContainer(xml, "item", (Tree<Leaf<BB> >&)*this); }
-	void Serialize(Stream& s) { s % (BB&)*this % (Tree<Leaf<BB> >&)*this; }
+	typedef Tree<Leaf<BB> > R;
 };
+
+NAMESPACE_UPP
+template <class BB>
+inline Stream& operator%(Stream& s, Leaf<BB>& x)
+{
+	s % (BB&)x % (Tree<Leaf<BB> >&)x;
+	return s;
+}
+
+template<class BB>
+inline void Xmlize(XmlIO xml, Leaf<BB>& data)
+{
+	xml("leaf", (BB&)data); ::Xmlize(xml, (Tree<Leaf<BB> >&)data);
+}
+END_UPP_NAMESPACE
 
 #endif
