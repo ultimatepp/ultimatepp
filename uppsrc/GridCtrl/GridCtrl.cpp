@@ -7145,6 +7145,7 @@ void GridCtrl::DoInsert0(bool edit, bool after)
 	Insert0(curpos.y, 1, true, true, GD_ROW_HEIGHT);
 	int y = curpos.y;
 	curpos.y = -1;
+	valid_cursor = false;
 	call_whenchangecol = false;
 	call_whenchangerow = false;
 	SetCursor0(curpos.x, y > total_rows - 1 ? total_rows - 1 : y);
@@ -7266,6 +7267,7 @@ void GridCtrl::DoRemove()
 		UpdateSb();
 		Refresh();
 		curpos.y = -1;
+		valid_cursor = false;
 		SetCursor0(curpos.x < 0 ? firstVisCol : curpos.x, max(fixed_rows, min(total_rows - 1, y)), 0, 0, -1);
 		shiftpos = curpos;
 	}
