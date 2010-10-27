@@ -6680,6 +6680,8 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 		WhenCursor();
 	}
 
+	row_order = true;
+	SetModify();
 	return cancel;
 }
 

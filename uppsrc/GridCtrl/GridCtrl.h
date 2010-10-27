@@ -1516,6 +1516,7 @@ class GridCtrl : public Ctrl
 		bool IsOrderChanged() { return row_order; }
 		bool IsDataChanged()  { return row_data; }
 		bool IsChanged()      { return row_order || row_data; }
+		void ClearChanged()   { row_order = row_data = false; ClearModify(); }
 
 		bool IsRowEditable(int r = -1);
 		bool IsRowClickable(int r = -1);
