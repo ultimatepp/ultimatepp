@@ -294,6 +294,35 @@ template<> void Xmlize(XmlIO xml, Value& v)
 	}
 }
 
+template<> void Xmlize(XmlIO xml, ValueArray& v)
+{
+	if(xml.IsStoring())
+		XmlizeStore(xml, v.Get());
+	else {
+		Vector<Value> vv;
+		Xmlize(xml, vv);
+		v = ValueArray(vv);
+	}
+}
+
+template<> void Xmlize(XmlIO xml, ValueMap& v)
+{
+	if(xml.IsStoring()) {
+		XmlizeStore(xml, v.GetKeys());
+		XmlizeStore(xml, v.GetValues());
+	}
+	else {
+		Index<Value> vv;
+		Xmlize(xml, vv);
+		ValueArray va;
+		Xmlize(xml, va);
+		ASSERT(vv.GetCount() == va.GetCount());
+		v.Clear();
+		for(int i = 0; i < vv.GetCount(); i++)
+			v.Add(vv[i], va[i]);
+	}
+}
+
 void XmlizeLangAttr(XmlIO xml, int& lang, const char *id)
 {
 	String l;
