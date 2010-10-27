@@ -75,6 +75,8 @@ public:
 	void     Reserve(int xtra)                     { value.Reserve(xtra); key.Reserve(xtra); }
 	int      GetAlloc() const                      { return value.GetAlloc(); }
 
+	unsigned GetHash(int i) const                  { return key.GetHash(i); }
+
 	void     Drop(int n = 1)                       { key.Drop(n); value.Drop(n); }
 	T&       Top()                                 { return value.Top(); }
 	const T& Top() const                           { return value.Top(); }

@@ -642,6 +642,12 @@ current capacity, capacity is increased to the required value.&]
 [s7; [*/ Return value]-|Capacity of Array.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AMap`:`:GetHash`(int`)const:%- [@(0.0.255) unsigned]_[* GetHash]([@(0.0.255) int]_[*@3 i
+])_[@(0.0.255) const]&]
+[s2; Returns a hash of element [%-*@3 i]. This is perhaps only useful 
+when making the exact copy of AMap, e.g. in the persistent storage.&]
+[s3; &]
+[s4;%- &]
 [s5;:AMap`:`:Drop`(int`):%- [@(0.0.255) void]_[* Drop]([@(0.0.255) int]_[*@3 n]_`=_[@3 1])&]
 [s2; Drops the specified number of elements at the end of the AMap.&]
 [s7; [*C@3 n]-|Number of elements.&]

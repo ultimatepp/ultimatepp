@@ -127,6 +127,8 @@ public:
 	const T& operator[](int i) const         { return key[i]; }
 	int      GetCount() const                { return key.GetCount(); }
 	bool     IsEmpty() const                 { return key.IsEmpty(); }
+	
+	unsigned GetHash(int i) const            { return hash[i]; }
 
 	void     Clear()                         { hash.Clear(); key.Clear(); }
 
