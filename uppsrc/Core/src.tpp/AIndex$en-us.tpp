@@ -308,6 +308,12 @@ tor`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Tests whether AIndex is empty. Same as GetCount() `=`= 0.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AIndex`:`:GetHash`(int`)const:%- [@(0.0.255) unsigned]_[* GetHash]([@(0.0.255) int]_[*@3 i
+])_[@(0.0.255) const]&]
+[s2; Returns a hash of element [%-*@3 i]. This is perhaps only useful 
+when making the exact copy of Index, e.g. in the persistent storage.&]
+[s3; &]
+[s4;%- &]
 [s5;:AIndex`:`:Clear`(`):%- [@(0.0.255) void]_[* Clear]()&]
 [s2; Removes all elements from AIndex.&]
 [s3;%- &]
