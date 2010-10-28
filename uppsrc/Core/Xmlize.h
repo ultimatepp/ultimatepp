@@ -196,20 +196,20 @@ void Xmlize(XmlIO xml, ArrayMap<K, V, H>& data)
 }
 
 template<class K, class T>
-void XmlizeIndex(XmlIO xml, const char *keytag, const char *valuetag, T& data)
+void XmlizeIndex(XmlIO xml, const char *keytag, T& data)
 {
 	if(xml.IsStoring()) {
 		for(int i = 0; i < data.GetCount(); i++)
 			if(!data.IsUnlinked(i)) {
 				//XmlizeStore(xml.Add(keytag), data.GetKey(i)); //FIXME xmlize with hashfn awareness
-				XmlizeStore(xml.Add(valuetag), data[i]);
+				XmlizeStore(xml.Add(keytag), data[i]);
 			}
 	}
 	else {
 		data.Clear();
 		int i = 0;
 		//while(i < xml->GetCount() - 1 && xml->Node(i).IsTag(keytag) && xml->Node(i + 1).IsTag(valuetag)) {
-		while(i < xml->GetCount() && xml->Node(i).IsTag(valuetag)) {
+		while(i < xml->GetCount() && xml->Node(i).IsTag(keytag)) {
 			//K key;
 			//Xmlize(xml.At(i++), key); //FIXME dexmlize with hashfn awareness
 			K k;
@@ -222,13 +222,13 @@ void XmlizeIndex(XmlIO xml, const char *keytag, const char *valuetag, T& data)
 template<class K, class H>
 void Xmlize(XmlIO xml, Index<K, H>& data)
 {
-	XmlizeIndex<K>(xml, "key", "value", data);
+	XmlizeIndex<K>(xml, "key", data);
 }
 
 template<class K, class H>
 void Xmlize(XmlIO xml, ArrayIndex<K, H>& data)
 {
-	XmlizeIndex<K>(xml, "key", "value", data);
+	XmlizeIndex<K>(xml, "key", data);
 }
 
 void RegisterValueXmlize(dword type, void (*xmlize)(XmlIO xml, Value& v), const char *name);

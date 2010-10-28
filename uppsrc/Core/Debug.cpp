@@ -82,7 +82,8 @@ LogStream& StdLogStream()
 		if(!s) {
 			static byte lb[sizeof(LogStream)];
 			LogStream *strm = new(lb) LogStream;
-			sOpenVppLog(strm);
+			if(!*__logfilename)
+				sOpenVppLog(strm);
 			WriteMemoryBarrier();
 			s = strm;
 		}
