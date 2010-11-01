@@ -2,6 +2,19 @@
 
 NAMESPACE_UPP
 
+String WwwFormat(Time tm)
+{
+	static const char *dayofweek[] =
+	{ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+	static const char *month[] =
+	{ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+	return String().Cat()
+		<< dayofweek[DayOfWeek(tm)] << ", "
+		<< (int)tm.day << ' ' << month[tm.month - 1]
+		<< ' ' << (int)tm.year
+		<< ' ' << Sprintf("%2d:%02d:%02d +0100", tm.hour, tm.minute, tm.second);
+}
+
 bool IsSameTextFile(const char *p, const char *q)
 {
 	for(;;)
