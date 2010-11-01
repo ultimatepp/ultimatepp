@@ -4,8 +4,8 @@ NAMESPACE_UPP
 
 bool HttpClient_Trace__;
 
-#define LLOG(x)       if(HttpClient_Trace__) RLOG(x); else;
-#define LLOGBLOCK(x)  // DLOGBLOCK(x)
+#define LLOG(x)      // DLOG(x) //if(HttpClient_Trace__) RLOG(x); else;
+#define LLOGBLOCK(x) // DLOG(x)
 
 void HttpClient::Trace(bool b)
 {
