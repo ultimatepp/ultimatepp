@@ -492,7 +492,7 @@ Vector<String> MakeBuild::GetAllLibraries(const Workspace& wspc, int index,
 	uses.Add(wspc[index]);
 	Index<String> libraries;
 	for(int i = 0; i < uses.GetCount(); i++) {
-		int f = wspc.package.Find(uses[i]);
+		int f = wspc.package.Find(UnixPath(uses[i]));
 		if(f >= 0) {
 			const Package& pk = wspc.package[f];
 			Index<String> config = PackageConfig(wspc, f, bm, mainparam, host, builder);
