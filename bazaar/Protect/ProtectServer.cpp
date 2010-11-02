@@ -231,7 +231,7 @@ void ProtectServer::OnRequest()
 	{
 		String w;
 		clientSock.Write("Content-Type: text/html\r\n\r\n");
-		if(results.Find("ERROR") >= 0)
+		if(results.Find("ERROR") < 0)
 			w = welcome;
 		else
 			w = activationFailed;
