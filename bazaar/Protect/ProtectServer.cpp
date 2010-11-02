@@ -235,8 +235,11 @@ void ProtectServer::OnRequest()
 			w = welcome;
 		else
 			w = activationFailed;
-		data = db.Get(data.Get("EMAIL"));
-		w.Replace("%USER%", data.Get("NAME"));
+		VectorMap<String, Value> userData = db.Get(data.Get("EMAIL"));
+		if(userData.GetCount())
+			w.Replace("%USER%", userData.Get("NAME"));
+		else
+			w.Replace("%USER%", data.Get("EMAIL"));
 		clientSock.Write(w);
 	}
 }
