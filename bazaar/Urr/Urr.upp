@@ -3,6 +3,8 @@ description "Udp request-response protocol\377";
 uses
 	Core;
 
+library(WIN32) ws2_32;
+
 file
 	Urr.h,
 	Urr.cpp,
