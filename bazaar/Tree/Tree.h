@@ -6,7 +6,7 @@ using namespace Upp;
 
 template <class T>
 class Tree 
-	: protected Array<T>
+	: protected Array<T>, Moveable<Tree<T> >
 {
 protected:
 	typedef Array<T> B;
@@ -62,6 +62,10 @@ public:
 	using B::Top;
 	
 	T       *PopDetach()                { T * t = B::PopDetach(); Unlink(*t); return t; }
+
+	using B::Begin;
+	using B::End;
+	using B::GetIter;
 
 	void     Swap(Tree& b)              { B::Swap(b); for(int i = 0; i < B::GetCount(); i++) Link(B::operator[](i)); for(int i = 0; i < b.GetCount(); i++) b.Link(b[i]); }
 
