@@ -50,6 +50,7 @@ public:
 	virtual ~Dispatcher();
 
 	void DoDispatch(const T & o) const;
+	int GetCount() const { return dests.GetCount(); }
 
 	void Register(Dispatchable<T> & d, unsigned key = 0);
 	void Unregister(Dispatchable<T> & d, unsigned key = 0);
@@ -98,6 +99,7 @@ public:
 	virtual ~DispatcherCB();
 
 	void DoDispatch(const T & o) const;
+	int GetCount() const { return dests.GetCount(); }
 
 	void Register(Callback1<const T &> d, unsigned key);
 	void Unregister(unsigned key);
@@ -142,6 +144,7 @@ public:
 	virtual ~Dispatcher0();
 
 	void DoDispatch() const;
+	int GetCount() const { return dests.GetCount(); }
 
 	void Register(Callback d, unsigned key);
 	void Unregister(unsigned key);

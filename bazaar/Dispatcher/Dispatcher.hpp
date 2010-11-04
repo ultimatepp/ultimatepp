@@ -1,3 +1,6 @@
+#ifndef _Dispatcher_Dispatcher_hpp
+#define _Dispatcher_Dispatcher_hpp
+
 #include "Dispatcher.h"
 
 template<class T, class B>
@@ -253,3 +256,5 @@ DispatcherCB<T> & DispatcherCBGen::GetDispatcherCB()
 	}
 	return dests.Add().Create<DispatcherCB<T> >();
 }
+
+#endif
