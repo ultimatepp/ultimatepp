@@ -1,10 +1,9 @@
 #include <Core/Core.h>
 #include <vector>
 
-using namespace Upp;
-using namespace std;
+namespace Upp {
 
-template<> void Upp::Xmlize(XmlIO xml, vector<int>& data) {
+template<> void Xmlize(XmlIO xml, std::vector<int>& data) {
 	if(xml.IsStoring())
 		for(int i = 0; i < (int)data.size(); i++)
 			Xmlize(xml.Add("item"), data[i]);
@@ -17,6 +16,11 @@ template<> void Upp::Xmlize(XmlIO xml, vector<int>& data) {
 			}
 	}
 }
+
+};
+
+using namespace Upp;
+using namespace std;
 
 CONSOLE_APP_MAIN
 {
