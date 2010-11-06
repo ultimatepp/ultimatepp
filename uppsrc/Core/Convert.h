@@ -28,6 +28,9 @@ public:
 	Convert();
 	virtual ~Convert();
 #else
+	#ifdef __clang__
+	Convert(){};
+	#endif
 	virtual ~Convert() {}
 #endif
 
@@ -214,6 +217,9 @@ const ConvertString& StdConvertStringNotNull();
 
 class NoConvertClass : public Convert {
 public:
+#ifdef __clang__
+	NoConvertClass(){};
+#endif
 	virtual Value  Format(const Value& q) const;
 };
 

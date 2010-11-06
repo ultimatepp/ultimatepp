@@ -231,8 +231,8 @@ public:
 template <class DataType, class Cv>
 class EditValue : public EditField, public Cv {
 public:
-	EditValue& operator=(const DataType& t)  { SetData(t); return *this; }
-	operator DataType() const                { return GetData(); }
+	EditValue& operator=(const DataType& t)  { EditField::SetData(t); return *this; }
+	operator DataType() const                { return EditField::GetData(); }
 
 	EditValue()                              { SetConvert(*this); }
 };
@@ -240,7 +240,7 @@ public:
 template <class DataType, class Cv>
 class EditMinMax : public EditValue<DataType, Cv> {
 public:
-	EditMinMax& operator=(const DataType& t)          { SetData(t); return *this; }
+	EditMinMax& operator=(const DataType& t)          { EditField::SetData(t); return *this; }
 
 	EditMinMax() {}
 	EditMinMax(DataType min, DataType max)            { Cv::MinMax(min, max); }
@@ -253,7 +253,7 @@ public:
 template <class DataType, class Cv>
 class EditMinMaxNotNull : public EditValue<DataType, Cv> {
 public:
-	EditMinMaxNotNull& operator=(const DataType& t)   { SetData(t); return *this; }
+	EditMinMaxNotNull& operator=(const DataType& t)   { EditField::SetData(t); return *this; }
 
 	EditMinMaxNotNull()                               { Cv::NotNull(); }
 	EditMinMaxNotNull(DataType min, DataType max)     { Cv::NotNull(); Cv::MinMax(min, max); }
