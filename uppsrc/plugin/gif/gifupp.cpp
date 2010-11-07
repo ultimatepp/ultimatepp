@@ -193,6 +193,7 @@ private:
 	GIFRaster& owner;
 	Stream& stream;
 	RasterFormat format;
+	RGBA gpalette[256];
 	RGBA palette[256];
 	GifGlobalInfo ggi;
 	Vector<byte> temp;
@@ -493,7 +494,18 @@ bool GIFRaster::Data::LoadSubimage(int64 &beginPos, int &delay, int &x, int &y, 
 	if(l.x + l.width > size.cx || l.y + l.height > size.cy)
 		return false; // out of bitmap rectangle
 
-	// ignore LCT
+	memcpy(palette, gpalette, 256 * sizeof(RGBA));
+
+	if(l.lct_flag) {
+		stream.Seek(l.lct_fpos);
+		for(int i = 0; i < l.lct_recs; i++) {
+			palette[i].r = stream.Get();
+			palette[i].g = stream.Get();
+			palette[i].b = stream.Get();
+			palette[i].a = 255;
+		}
+	}
+
 	stream.Seek(l.dat_fpos);
 
 	if((start_bpp = stream.Get()) <= 0 || start_bpp > 12)
@@ -523,10 +535,10 @@ bool GIFRaster::Data::Create()
 
 	stream.Seek(ggi.gct_fpos);
 	for(int i = 0; i < ggi.gct_recs; i++) {
-		palette[i].r = stream.Get();
-		palette[i].g = stream.Get();
-		palette[i].b = stream.Get();
-		palette[i].a = 255;
+		gpalette[i].r = stream.Get();
+		gpalette[i].g = stream.Get();
+		gpalette[i].b = stream.Get();
+		gpalette[i].a = 255;
 	}
 	format.Set8();
 	GetPagesData();

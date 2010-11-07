@@ -1139,7 +1139,7 @@ void OutStream::_Put(const void *data, dword size)
 void OutStream::Flush()
 {
 	if(ptr != buffer) {
-		Out(buffer, ptr - buffer);
+		Out(buffer, int(ptr - buffer));
 		ptr = h;
 	}
 }
