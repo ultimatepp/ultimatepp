@@ -374,7 +374,7 @@ public:
 	void Cat(int c)                        { if(end >= limit) Expand(); *end++ = c; }
 	void Cat(int c, int count);
 	void Cat(const char *s, int l);
-	void Cat(const char *s, const char *e) { Cat(s, e - s); }
+	void Cat(const char *s, const char *e) { Cat(s, int(e - s)); }
 	void Cat(const char *s)                { Cat(s, (int)strlen(s)); }
 	void Cat(const String& s)              { Cat(s, s.GetLength()); }
 
@@ -738,7 +738,7 @@ public:
 	void  Cat(int c)                          { if(end >= limit) Expand(); *end++ = c; }
 	void  Cat(int c, int count);
 	void  Cat(const wchar *s, int l);
-	void  Cat(const wchar *s, const wchar *e) { Cat(s, e - s); }
+	void  Cat(const wchar *s, const wchar *e) { Cat(s, int(e - s)); }
 	void  Cat(const wchar *s)                 { Cat(s, wstrlen(s)); }
 	void  Cat(const WString& s)               { Cat(s, s.GetLength()); }
 	void  Cat(const char *s)                  { Cat(WString(s)); }

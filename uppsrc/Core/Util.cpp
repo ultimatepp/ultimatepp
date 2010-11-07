@@ -22,7 +22,7 @@ void PanicMessageBox(const char *title, const char *text)
 	if(sPanicMessageBox)
 		(*sPanicMessageBox)(title, text);
 	else {
-		write(2, text, strlen(text));
+		write(2, text, (int)strlen(text));
 		write(2, "\n", 1);
 	}
 }
@@ -573,7 +573,7 @@ String HexString(const String& s, int sep, int sepchr)
 String ScanHexString(const char *s, const char *lim)
 {
 	String r;
-	r.Reserve((lim - s) / 2);
+	r.Reserve(int(lim - s) / 2);
 	for(;;) {
 		byte b = 0;
 		while(!IsXDigit(*s)) {
