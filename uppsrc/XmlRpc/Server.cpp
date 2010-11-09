@@ -51,15 +51,17 @@ void ThrowXmlRpcError(const char *s)
 }
 
 static Stream *xmlrpc_trace;
+static int xmlrpc_trace_level;
 
-void SetXmlRpcServerTrace(Stream& s)
+void SetXmlRpcServerTrace(Stream& s, int level)
 {
 	xmlrpc_trace = &s;
+	xmlrpc_trace_level = level;
 }
 
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr)
 {
-	if(xmlrpc_trace)
+	if(xmlrpc_trace && xmlrpc_trace_level == 1)
 		*xmlrpc_trace << "XmlRpcRequest:\n" << request << '\n';
 	XmlParser p(request);
 	XmlRpcData data;
@@ -72,6 +74,8 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 		p.PassTag("methodName");
 		methodname = p.ReadText();
 		LLOG("method name: " << methodname);
+		if(xmlrpc_trace && xmlrpc_trace_level == 0)
+			*xmlrpc_trace << "XmlRpcRequest method:\n" << methodname << '\n';
 		p.PassEnd();
 		data.peeraddr = peeraddr;
 		data.in = ParseXmlRpcParams(p);
@@ -97,7 +101,10 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 		}
 		p.PassEnd();
 		if(xmlrpc_trace)
-			*xmlrpc_trace << "Server response:\n" << r << '\n';
+			if(xmlrpc_trace_level == 0)
+				*xmlrpc_trace << "XmlRpc finished OK\n";
+			else
+				*xmlrpc_trace << "Server response:\n" << r << '\n';
 		return r;
 	}
 	catch(XmlRpcError e) {
