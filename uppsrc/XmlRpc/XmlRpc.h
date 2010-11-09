@@ -321,4 +321,6 @@ public:
 
 void LogXmlRpcCalls(bool b = true);
 
+void SetXmlRpcServerTrace(Stream& s);
+
 #endif

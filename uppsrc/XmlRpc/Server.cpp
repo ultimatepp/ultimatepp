@@ -50,8 +50,17 @@ void ThrowXmlRpcError(const char *s)
 	ThrowXmlRpcError(-1, s);
 }
 
+static Stream *xmlrpc_trace;
+
+void SetXmlRpcServerTrace(Stream& s)
+{
+	xmlrpc_trace = &s;
+}
+
 String XmlRpcExecute(const String& request, const char *group, const char *peeraddr)
 {
+	if(xmlrpc_trace)
+		*xmlrpc_trace << "XmlRpcRequest:\n" << request << '\n';
 	XmlParser p(request);
 	XmlRpcData data;
 	String methodname;
@@ -87,18 +96,26 @@ String XmlRpcExecute(const String& request, const char *group, const char *peera
 			return FormatXmlRpcError(XMLRPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
 		}
 		p.PassEnd();
+		if(xmlrpc_trace)
+			*xmlrpc_trace << "Server response:\n" << r << '\n';
 		return r;
 	}
 	catch(XmlRpcError e) {
 		LLOG("Client error: " << e.text);
+		if(xmlrpc_trace)
+			*xmlrpc_trace << "Client error: " << e.text << '\n';
 		return FormatXmlRpcError(e.code, e.text);
 	}
 	catch(XmlError e) {
 		LLOG("XmlError " << e << ": " << p.GetPtr());
+		if(xmlrpc_trace)
+			*xmlrpc_trace << "XmlError: " << e << '\n';
 		return FormatXmlRpcError(XMLRPC_SERVER_XML_ERROR, "XML Error: " + e);
 	}
 	catch(ValueTypeMismatch) {
 		LLOG("ValueTypeMismatch at parameter " << data.ii);
+		if(xmlrpc_trace)
+			*xmlrpc_trace << "ValueTypeMismatch at parameter " << data.ii << '\n';
 		return FormatXmlRpcError(XMLRPC_SERVER_PARAM_ERROR, "Parameter mismatch at parameter " + AsString(data.ii));
 	}
 	return Null;
