@@ -60,6 +60,7 @@ public:
 	const T&     operator<<=(const T& v)       { SetDataMulti(0, v); return v; }
 };
 
+//Min Max values
 template <class T, class B = EmptyClass>
 class MinMaxOption : public B
 {
@@ -81,19 +82,17 @@ protected:
 	bool nn;
 };
 
-//copyable interface, implementing the Copy function, used by PolyDeepCopyNew
-
+//copyable interface, implementing the Copy function, used i.e. by PolyDeepCopyNew
 template<class T, class B = EmptyClass>
 class Copyable : public B
 {
 public:
 	virtual ~Copyable() {}
 	virtual T* Copy() const                    { return PartialCopy(); }
-	virtual T* PartialCopy() const             = 0; //{ NEVER(); return NULL; }
+	virtual T* PartialCopy() const             = 0;
 };
 
-#if 1
-
+//when exporting an iterface at base lavel which is implemented/derived at top
 template<class T, class B = EmptyClass>
 class TypeHook : public B
 {
@@ -106,7 +105,7 @@ public:
 };
 
 //copyable interface defining the common base class C, without implementing Copy
-
+//makes possible to clone things and accessing some defined interface
 template<class C, class B = EmptyClass>
 class PolyCopyableHook : public PolyDeepCopyNew<PolyCopyableHook<C,B>, TypeHook<C, Copyable<PolyCopyableHook<C,B>, B> > >
 {
@@ -125,19 +124,17 @@ public:
 
 //by providing additional information about the common base class
 //with template specialization can be defined what is copied
-
 template<class B, class C, class CB = EmptyClass>
 class PolyElementWrap : public PolyElement<PolyElementWrap<B,C,CB>,B,C,CB> 
 {
 public:
-	virtual PolyElementWrap* PartialCopy() const  { return new PolyElementWrap(); }
+	virtual PolyElementWrap* PartialCopy() const { return new PolyElementWrap(); }
 };
 
-#endif
-
 //declares a class Serializable for Stream
-//maybe redundant because of global template for operator%(Stream%s, T&t)
+//maybe redundant because of global template for operator%(Stream& s, T& t)
 //which calls t.Serialize()
+//but to ensure implementation
 template<class B = EmptyClass>
 class Serializeable : public B
 {
@@ -156,6 +153,7 @@ public:
 	virtual void Xmlize(XmlIO xml)             = 0;
 };
 
+//most times it is a good idea to implement both
 template<class B = EmptyClass>
 class Persistable : public Xmlizeable<Serializeable<B> > {};
 
@@ -171,6 +169,10 @@ public:
 typedef void*(*GlobalInstancerType)();
 VectorMap<String, GlobalInstancerType>& GetGlobalInstancerMap();
 
+//Instancer help class, for maps of Instancers. the static Map should
+//somewhere be ONCELOCK initialized with the elements
+//B is the common base class, T should be the derived class, to ensure
+//proper pointer arithmetic
 template<class B>
 class Instancer
 {
@@ -187,6 +189,8 @@ public:
 	static VectorMap<String, InstancerType>& Map() { static VectorMap<String, InstancerType> map; return map; }
 };
 
+//in polymorph environment, type info is needed, i.e. when xmlizing/serializing elements
+//to know later which one to instantiate..best used with Instancer
 class Typer0
 {
 public:
@@ -194,18 +198,25 @@ public:
 	virtual String TypeOf() const = 0;
 };
 
+//ensures the access to Typer0 at base level
 class Typer :  public virtual Typer0 
 {
 public:
 //	virtual String TypeOf() const { return String(); } //makes ambiguity due to virtual
 };
 
+//topmost should derive from this, implementing the T::TypeOfS static
 template<class T, class B = EmptyClass>
 class TyperT : public B, public virtual Typer0
 {
 public:
 	virtual String TypeOf() const { return T::TypeOfS(); }
 };
+
+//to declare a class beeing partaker in Instanciating.
+//T is the interface / class that should be acessibl at base
+template<class T>
+class Instancing : public TypeHook<T, Typer> {};
 
 END_UPP_NAMESPACE
 
