@@ -4676,15 +4676,15 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR */)
 	if(!focused_ctrl)
 		SetFocus();
 
-	if(!(opt & UC_SCROLL))
-		RebuildToolBar();
-	
 	if(opt & UC_CTRLS)
 		isedit = edit_ctrls;
 	
 	if(opt & UC_CTRLS_OFF)
 		isedit = false;
-	
+
+	if(!(opt & UC_SCROLL))
+		RebuildToolBar();
+		
 	if(isedit)
 		popup.Close();
 }
