@@ -53,6 +53,7 @@ private:
 	PGresult             *result;
 	
 	String                conns;
+	bool                  keepalive;
 
 	void                  ExecTrans(const char * statement);
 	Vector<String>        EnumData(char type, const char *schema = NULL);
@@ -63,6 +64,8 @@ private:
 	
 	String                FromCharset(const String& s) const;
 	String                ToCharset(const String& s) const;
+	
+	void                  DoKeepAlive();
 
 	friend class PostgreSQLConnection;
 
@@ -73,18 +76,19 @@ public:
 	bool                  ConnectionOK();
 	bool                  ReOpen();
 	void                  Close();
-	
+
 	void                  SetCharset(byte chrset)         { charset = chrset; }
+	void                  KeepAlive(bool b = true)        { keepalive = b; DoKeepAlive(); }
 
 	String                GetUser()                       { return PQuser(conn); }
 	operator PGconn *     ()                              { return conn; }
-	
+
 	virtual void          Begin();
 	virtual void          Commit();
 	virtual void          Rollback();
 	virtual int           GetTransactionLevel() const;
 
-	PostgreSQLSession()                                   { conn = NULL; Dialect(PGSQL); level = 0; }
+	PostgreSQLSession()                                   { conn = NULL; Dialect(PGSQL); level = 0; keepalive = false; }
 	~PostgreSQLSession()                                  { Close(); }
 	PGconn * GetPGConn()                                  { return conn; }
 };

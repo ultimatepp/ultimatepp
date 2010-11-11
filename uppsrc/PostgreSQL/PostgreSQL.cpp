@@ -1,5 +1,13 @@
 #include "PostgreSQL.h"
 
+#ifdef PLATFORM_WIN32
+#include "Winsock2.h"
+#endif
+
+#ifdef PLATFORM_POSIX
+#include <sys/socket.h>
+#endif
+
 #define LLOG(x) // DLOG(x)
 
 #ifndef flagNOPOSTGRESQL
@@ -328,6 +336,14 @@ String PostgreSQLSession::ToCharset(const String& s) const
 	return r;
 }
 
+void PostgreSQLSession::DoKeepAlive()
+{
+	if(keepalive && conn) {
+		int optval = 1;
+		setsockopt(PQsocket(conn), SOL_SOCKET, SO_KEEPALIVE, (char *) &optval, sizeof(optval));
+	}
+}
+
 bool PostgreSQLSession::Open(const char *connect)
 {
 	Close();
@@ -350,6 +366,8 @@ bool PostgreSQLSession::Open(const char *connect)
 	}
 	else
 		charset = CHARSET_DEFAULT;
+	
+	DoKeepAlive();
 
 	LLOG( String("Postgresql client encoding: ") + pg_encoding_to_char( PQclientEncoding(conn) ) );
 	
@@ -369,6 +387,7 @@ bool PostgreSQLSession::ReOpen()
 		SetError(ErrorMessage(), "Opening database");
 		return false;
 	}
+	DoKeepAlive();
 	level = 0;
 	return true;	
 }
