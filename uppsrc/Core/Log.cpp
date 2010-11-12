@@ -162,6 +162,7 @@ void LogStream::Create(const char *path, bool append)
 	}
 	write(hfile, "\r\n", 2);
 #endif
+	bol = true;
 }
 
 void LogStream::Flush()
@@ -207,6 +208,15 @@ void LogStream::Put0(int w)
 			bol = false;
 			for(int q = depth; q--;)
 				Put0('\t');
+			if(options & LOG_TIMESTAMP) {
+				char h[60];
+				Time t = GetSysTime();
+				sprintf(h, "%02d.%02d.%04d %02d:%02d:%02d ",
+				        t.day, t.month, t.year, t.hour, t.minute, t.second);
+				const char *s = h;
+				while(*s)
+					Put0(*s++);
+			}
 		}
 		*p++ = w;
 		if(w == '\n') {
