@@ -60,7 +60,7 @@ void     DeactivateBugLog();
 
 Stream&  StdLog();
 enum LogOptions {
-	LOG_FILE = 1, LOG_COUT = 2, LOG_CERR = 4, LOG_DBG = 8
+	LOG_FILE = 1, LOG_COUT = 2, LOG_CERR = 4, LOG_DBG = 8, LOG_TIMESTAMP = 16
 };
 void     StdLogSetup(dword options);
 
