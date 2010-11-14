@@ -703,6 +703,8 @@ RichEdit::RichEdit()
 	Finish();
 	
 	imagefs.Type("Images (*.png *.gif *.jpg *.bmp)", "*.png *.gif *.jpg *.bmp");
+	
+	singleline = false;
 }
 
 RichEdit::~RichEdit() {}

@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+void RichEdit::Filter(RichText& txt) {}
+
 bool RichEdit::InvalidRange(int l, int h)
 {
 	return !InSameTxt(text.GetRichPos(min(l, h)), text.GetRichPos(max(l, h)));
