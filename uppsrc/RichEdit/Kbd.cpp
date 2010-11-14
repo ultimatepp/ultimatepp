@@ -62,7 +62,7 @@ bool RichEdit::Key(dword key, int count)
 		Redo();
 		return true;
 	case K_ENTER:
-		if(!RemoveSelection() && InsertLineSpecial())
+		if(singleline || !RemoveSelection() && InsertLineSpecial())
 			return true;
 		InsertLine();
 		ShowFormat();
@@ -159,6 +159,7 @@ bool RichEdit::Key(dword key, int count)
 				if(p.posinpara < p.paralen)
 					Remove(cursor, 1);
 			}
+			Filter(txt);
 			Insert(cursor, txt, true);
 			Move(cursor + count, false);
 			break;

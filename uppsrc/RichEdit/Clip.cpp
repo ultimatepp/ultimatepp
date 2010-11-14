@@ -76,6 +76,7 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 
 void RichEdit::ClipPaste(RichText& clip)
 {
+	Filter(clip);
 	NextUndo();
 	if(clip.GetPartCount() == 1 && clip.IsTable(0)) {
 		CancelSelection();

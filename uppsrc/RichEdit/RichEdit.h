@@ -259,6 +259,7 @@ private:
 	bool                     nolinks;
 	bool                     overwrite;
 	bool                     useraction, modified;
+	bool                     singleline;
 	static int               fixedlang;
 
 	WithRichFindReplaceLayout<TopWindow> findreplace;
@@ -607,6 +608,8 @@ protected:
 	};
 
 public:
+	virtual void  Filter(RichText& txt);
+
 	static double DotToPt(int dot);
 	static int    PtToDot(double pt);
 	static Bits   SpellParagraph(const RichPara& p);
@@ -736,6 +739,7 @@ public:
 	Size            GetPage()                             { return pagesz; }
 
 	RichEdit&       NoRuler()                             { RemoveFrame(ruler); return *this; }
+	RichEdit&       SingleLine(bool b = true)             { singleline = b; return *this; }
 	RichEdit&       FontFaces(const Vector<int>& face);
 	RichEdit&       ViewBorder(int cx)                    { viewborder = cx; Refresh(); return *this; }
 	RichEdit&       ShowCodes(Color c)                    { showcodes = c; Refresh(); return *this; }
