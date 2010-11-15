@@ -234,7 +234,8 @@ private:
 	bool                    show_scroll;
 	bool                    lock_drag_drop;
 	bool                    lock_short_drag_drop;
-	bool                    custom_drag;
+	int                     drag_mode;
+	enum { DRAG_NONE, DRAG_CUSTOM, DRAG_PAN, DRAG_ZOOM_IN, DRAG_ZOOM_OUT };
 };
 
 template <class T>

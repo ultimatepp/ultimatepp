@@ -57,6 +57,7 @@ PlotterCtrl::PlotterCtrl()
 , lock_short_drag_drop(false)
 , is_painting(false)
 , background(White())
+, drag_mode(DRAG_NONE)
 {
 	hscroll  .NoAutoHide().NoAutoDisable();
 	vscroll  .NoAutoHide().NoAutoDisable();
@@ -666,19 +667,36 @@ void PlotterCtrl::RefreshBuffer(const Rect& rc)
 Image PlotterCtrl::CursorImage(Point pt, dword keyflags)
 {
 	Image out = Image::Arrow();
-	if(!custom_drag) {
-		if(keyflags & K_SHIFT)
+	int dm = drag_mode;
+	if(!IsDragging()) {
+		dm = (drag_drop ? DRAG_CUSTOM
+		: keyflags & K_SHIFT ? DRAG_ZOOM_IN
+		: keyflags & K_CTRL ? DRAG_ZOOM_OUT
+		: DRAG_PAN);
+	}
+	
+	switch(dm) {
+		case DRAG_CUSTOM: {
+			lock_drag_drop = true;
+			out = drag_drop->Cursor(FromClient(pt), keyflags, IsDragging());
+			lock_drag_drop = false;
+			break;
+		}
+		case DRAG_ZOOM_IN: {
 			out = PlotterImg::view_zoom_in();
-		else if(keyflags & K_CTRL)
+			break;
+		}
+		case DRAG_ZOOM_OUT: {
 			out = PlotterImg::view_zoom_out();
-		else if(keyflags & K_MOUSELEFT)
-			out = PlotterImg::view_pan();
+			break;
+		}
+		case DRAG_PAN: {
+			if(IsDragging())
+				out = PlotterImg::view_pan();
+			break;
+		}
 	}
-	else if(drag_drop) {
-		lock_drag_drop = true;
-		out = drag_drop->Cursor(FromClient(pt), keyflags, IsDragging());
-		lock_drag_drop = false;
-	}
+
 	return out;
 }
 
@@ -693,7 +711,18 @@ bool PlotterCtrl::Push(Point pt, dword keyflags)
 	bool push = false;
 	SyncPush();
 	drag_start = FromPushClient(pt);
-	custom_drag = (drag_drop && drag_drop->Push(drag_start, keyflags));
+	if(drag_drop && drag_drop->Push(drag_start, keyflags))
+		drag_mode = DRAG_CUSTOM;
+	else if(keyflags & K_MOUSELEFT) {
+		if(keyflags & K_SHIFT)
+			drag_mode = DRAG_ZOOM_IN;
+		else if(keyflags & K_CTRL)
+			drag_mode = DRAG_ZOOM_OUT;
+		else
+			drag_mode = DRAG_PAN;
+	}
+	else
+		drag_mode = DRAG_NONE;
 	return true;
 }
 
@@ -703,57 +732,69 @@ void PlotterCtrl::Drag(Point start, Point prev, Point curr, dword keyflags)
 //	LLOG("PlotterCtrl::Drag, short = " << ~short_drag_drop << ", " << (~short_drag_drop
 //		? typeid(*short_drag_drop).name() : "NULL") << ", long = " << ~drag_drop << ", "
 //		<< (~drag_drop ? typeid(*drag_drop).name() : "NULL"));
-	if(!custom_drag) {
-		if(keyflags & (K_SHIFT | K_CTRL)) {
+	switch(drag_mode) {
+		case DRAG_ZOOM_IN:
+		case DRAG_ZOOM_OUT: {
 			Rect rc_prev = Null, rc_curr = Null;
 			if(!IsNull(prev)) rc_prev = RectSort(start, prev);
 			if(!IsNull(curr)) rc_curr = RectSort(start, curr);
 			ViewDraw draw(this);
 			DrawDragDropRect(draw, rc_prev, rc_curr, 2);
+			break;
 		}
-		else {
+		case DRAG_PAN: {
 			if(!IsNull(curr))
 				PanOffset(curr - start);
+			break;
 		}
-	}
-	else if(drag_drop) {
-		lock_drag_drop = true;
-//		LLOG("PlotterCtrl::Drag->drag_drop::Drag");
-		drag_drop->Drag(drag_start, FromPushClientNull(prev), FromPushClientNull(curr), keyflags);
-//		LLOG("//PlotterCtrl::Drag->drag_drop::Drag");
-		lock_drag_drop = false;
+		case DRAG_CUSTOM: {
+			lock_drag_drop = true;
+//			LLOG("PlotterCtrl::Drag->drag_drop::Drag");
+			drag_drop->Drag(drag_start, FromPushClientNull(prev), FromPushClientNull(curr), keyflags);
+//			LLOG("//PlotterCtrl::Drag->drag_drop::Drag");
+			lock_drag_drop = false;
+			break;
+		}
 	}
 //	LLOG("//PlotterCtrl::Drag");
 }
 
 void PlotterCtrl::Drop(Point start, Point end, dword keyflags)
 {
-	if(!custom_drag) {
+	if(drag_mode == DRAG_CUSTOM) {
+		if(drag_drop)
+			drag_drop->Drop(drag_start, FromPushClient(end), keyflags);
+	}
+	else {
 		Rect rc = RectSort(start, end);
 		Rectf log = FromClient(rc);
 		Pointf log_center = log.CenterPoint();
 		Rectf view = GetViewRect();
 		double ratio = max(1e-10, fpabsmax(log.Size() / view.GetSize()));
-		if(keyflags & K_SHIFT) {
-			Sizef new_scale = GetScale() / ratio;
-			Pointf new_delta = Sizef(GetSize() >> 1) - Sizef(log_center) * new_scale;
-			SetZoom(new_scale, new_delta);
-			WhenUserZoom();
-		}
-		else if(keyflags & K_CTRL) {
-			Point scr_center = ToClient(log_center);
-			Sizef new_scale = GetScale() * ratio;
-			Pointf new_delta = Pointf(scr_center) - Sizef(view.CenterPoint()) * new_scale;
-			SetZoom(new_scale, new_delta);
-			WhenUserZoom();
-		}
-		else {
-			SetDelta(push_delta + Sizef(end - start));
-			PanOffset(Point(0, 0));
+		switch(drag_mode) {
+			case DRAG_ZOOM_IN: {
+				Sizef new_scale = GetScale() / ratio;
+				Pointf new_delta = Sizef(GetSize() >> 1) - Sizef(log_center) * new_scale;
+				SetZoom(new_scale, new_delta);
+				WhenUserZoom();
+				break;
+			}
+			case DRAG_ZOOM_OUT: {
+				Point scr_center = ToClient(log_center);
+				Sizef new_scale = GetScale() * ratio;
+				Pointf new_delta = Pointf(scr_center) - Sizef(view.CenterPoint()) * new_scale;
+				SetZoom(new_scale, new_delta);
+				WhenUserZoom();
+				break;
+			}
+			case DRAG_PAN: {
+				SetDelta(push_delta + Sizef(end - start));
+				PanOffset(Point(0, 0));
+				break;
+			}
 		}
 	}
-	else if(drag_drop)
-		drag_drop->Drop(drag_start, FromPushClient(end), keyflags);
+	drag_mode = DRAG_NONE;
 }
 
 void PlotterCtrl::Click(Point pt, dword keyflags)
