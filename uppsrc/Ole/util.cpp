@@ -76,6 +76,7 @@ Value AsValue(const VARIANT& variant)
 		case VT_EMPTY: return Value(); // void
 		case VT_NULL:  return Null;
 
+		case VT_BOOL:
 		case VT_UI1:   return (int)variant.bVal;
 		case VT_I2:    return (int)variant.iVal;
 		case VT_I4:    return (int)variant.lVal;
@@ -114,12 +115,12 @@ OleVariant AsVariant(Value value) {
 	if(value.IsNull())
 		return out;
 	switch(value.GetType()) {
-	case BOOL_V:
+	case BOOL_V:    out.vt = VT_UI1; out.bVal = (byte)(int)value; break;
 	case INT_V:     out.vt = VT_I4; out.lVal = (int)value; break;
 	case DOUBLE_V:  out.vt = VT_R8; out.dblVal = value; break;
-	case STRING_V:
-	case WSTRING_V: out.vt = VT_BSTR; out.bstrVal = StringToBSTR(value); break;
-	case DATE_V:    out.vt = VT_BSTR; out.bstrVal = WStringToBSTR(value); break;
+	case STRING_V:  out.vt = VT_BSTR; out.bstrVal = StringToBSTR(value); break;
+	case WSTRING_V: out.vt = VT_BSTR; out.bstrVal = WStringToBSTR(value); break;
+	case DATE_V:    
 	case TIME_V:    out.vt = VT_DATE; out.date = ToDATE((Time)value);
 	// todo: VALUEARRAY_V ??
 	default:        break;
