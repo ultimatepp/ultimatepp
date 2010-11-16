@@ -1116,6 +1116,7 @@ Array<FileSystemInfo::FileInfo> FileSystemInfo::Find(String mask, int max_count)
 			case DRIVE_RAMDISK:     f.root_style = ROOT_RAMDISK; break;
 			}
 		}
+		
 #elif defined(PLATFORM_POSIX)
 		FileInfo& f = fi.Add();
 		f.filename = "/";

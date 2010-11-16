@@ -1548,6 +1548,15 @@ FileSel& FileSel::AddStandardPlaces()
 			AddPlace(root[i].filename, desc);
 		}
 	}
+
+#ifdef PLATFORM_WIN32
+	if(GetSystemMetrics(SM_REMOTESESSION))
+		for(int drive = 'A'; drive < 'Z'; drive++) {
+			String path = Format("\\\\tsclient\\%c", drive);
+			if(FindFile(path + "\\*.*"))
+				AddPlace(path, Format(t_("%c on client"), drive));
+		}
+#endif
 #ifdef PLATFORM_POSIX
 	root = filesystem->Find("/media/*");
 	for(int i = 0; i < root.GetCount(); i++) {
