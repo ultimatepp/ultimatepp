@@ -102,31 +102,30 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 #endif
 	case WM_PAINT:
 		ASSERT(hwnd);
-		if(IsVisible() && hwnd) {
+		if(hwnd) {
 			PAINTSTRUCT ps;
-			SyncScroll();
+			if(IsVisible())
+				SyncScroll();
 			HDC dc = BeginPaint(hwnd, &ps);
 			fullrefresh = false;
-			SystemDraw draw(dc);
-#ifndef PLATFORM_WINCE
-			HPALETTE hOldPal;
-			if(draw.PaletteMode() && SystemDraw::AutoPalette()) {
-				hOldPal = SelectPalette(dc, GetQlibPalette(), TRUE);
-				int n = RealizePalette(dc);
-				LLOG("In paint realized " << n << " colors");
+			if(IsVisible()) {
+				SystemDraw draw(dc);
+	#ifndef PLATFORM_WINCE
+				HPALETTE hOldPal;
+				if(draw.PaletteMode() && SystemDraw::AutoPalette()) {
+					hOldPal = SelectPalette(dc, GetQlibPalette(), TRUE);
+					int n = RealizePalette(dc);
+					LLOG("In paint realized " << n << " colors");
+				}
+	#endif
+				painting = true;
+				UpdateArea(draw, Rect(ps.rcPaint));
+				painting = false;
+	#ifndef PLATFORM_WINCE
+				if(draw.PaletteMode() && SystemDraw::AutoPalette())
+					SelectPalette(dc, hOldPal, TRUE);
+	#endif
 			}
-#endif
-#ifdef _DEBUG
-			painting = true;
-#endif
-			UpdateArea(draw, Rect(ps.rcPaint));
-#ifdef _DEBUG
-			painting = false;
-#endif
-#ifndef PLATFORM_WINCE
-			if(draw.PaletteMode() && SystemDraw::AutoPalette())
-				SelectPalette(dc, hOldPal, TRUE);
-#endif
 			EndPaint(hwnd, &ps);
 		}
 		return 0L;
