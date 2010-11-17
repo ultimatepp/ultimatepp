@@ -1,0 +1,63 @@
+uses
+	Core;
+
+library(MSC) SDL;
+
+library(GCC WIN32) SDL.dll;
+
+library(LINUX) SDL;
+
+library(FREEBSD) "SDL SDLmain X11 Xext Xrandr Xrender vga vgl aa usbhid ncurses";
+
+file
+	SDLCtrl.cpp,
+	SDLCtrl.h,
+	SDLSurface.cpp,
+	SDLWrapper.h,
+	"SDL Includes" readonly separator,
+	plugin\include\begin_code.h,
+	plugin\include\close_code.h,
+	plugin\include\SDL.h,
+	plugin\include\SDL_active.h,
+	plugin\include\SDL_audio.h,
+	plugin\include\SDL_byteorder.h,
+	plugin\include\SDL_cdrom.h,
+	plugin\include\SDL_config.h,
+	plugin\include\SDL_config_amiga.h,
+	plugin\include\SDL_config_dreamcast.h,
+	plugin\include\SDL_config_macos.h,
+	plugin\include\SDL_config_macosx.h,
+	plugin\include\SDL_config_minimal.h,
+	plugin\include\SDL_config_nds.h,
+	plugin\include\SDL_config_os2.h,
+	plugin\include\SDL_config_symbian.h,
+	plugin\include\SDL_config_win32.h,
+	plugin\include\SDL_copying.h,
+	plugin\include\SDL_cpuinfo.h,
+	plugin\include\SDL_endian.h,
+	plugin\include\SDL_error.h,
+	plugin\include\SDL_events.h,
+	plugin\include\SDL_getenv.h,
+	plugin\include\SDL_joystick.h,
+	plugin\include\SDL_keyboard.h,
+	plugin\include\SDL_keysym.h,
+	plugin\include\SDL_loadso.h,
+	plugin\include\SDL_main.h,
+	plugin\include\SDL_mouse.h,
+	plugin\include\SDL_mutex.h,
+	plugin\include\SDL_name.h,
+	plugin\include\SDL_opengl.h,
+	plugin\include\SDL_platform.h,
+	plugin\include\SDL_quit.h,
+	plugin\include\SDL_rwops.h,
+	plugin\include\SDL_stdinc.h,
+	plugin\include\SDL_syswm.h,
+	plugin\include\SDL_thread.h,
+	plugin\include\SDL_timer.h,
+	plugin\include\SDL_types.h,
+	plugin\include\SDL_version.h,
+	plugin\include\SDL_video.h;
+
+mainconfig
+	"" = "";
+
