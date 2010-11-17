@@ -1,0 +1,18 @@
+description "SDLCtrl demo example\377";
+
+noblitz;
+
+uses
+	Core,
+	CtrlLib,
+	SDL;
+
+file
+	main.cpp,
+	demo.lay,
+	demo.h,
+	demo.cpp;
+
+mainconfig
+	"" = "GUI";
+

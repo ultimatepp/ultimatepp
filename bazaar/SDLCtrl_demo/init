@@ -1,0 +1,6 @@
+#ifndef _SDLCtrl_demo_icpp_init_stub
+#define _SDLCtrl_demo_icpp_init_stub
+#include "Core/init"
+#include "CtrlLib/init"
+#include "SDL/init"
+#endif
