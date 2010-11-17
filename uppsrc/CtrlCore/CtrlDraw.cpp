@@ -619,9 +619,13 @@ void Ctrl::DrawCtrl(Draw& w, int x, int y)
 {
 	GuiLock __;
 	w.Offset(x, y);
+	
 	SystemDraw *ws = dynamic_cast<SystemDraw *>(&w);
 	if(ws)
 		UpdateArea(*ws, GetRect().GetSize());
+
+//	CtrlPaint(w, GetSize()); _DBG_
+		
 	w.End();
 }
 
