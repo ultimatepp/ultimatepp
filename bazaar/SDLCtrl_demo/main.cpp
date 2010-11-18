@@ -13,6 +13,7 @@ void DemoThread(SDLExample *sdlCtrl) {
 }
 
 struct SDLCtrl_Demo : public WithMain<TopWindow> {
+	bool isfullscreen;
 typedef SDLCtrl_Demo CLASSNAME;	
 	void Demo() {
 		butRun.Disable();
@@ -30,17 +31,58 @@ typedef SDLCtrl_Demo CLASSNAME;
 		sdl.done = true;
 		TopWindow::Close();
 	}
-	SDLCtrl_Demo() {
+	void SetFullScreen() {
+		isfullscreen = !isfullscreen;
+		Close();
+	}
+	virtual void MouseMove(Point p, dword flags) {
+		static bool fill = false;
+		if (isfullscreen) {
+			if (p.y < GetSize().cy-50) {
+				if (!fill) {
+					sdl.SetFrame(NullFrame()).SizePos();
+					fill = true;
+				}
+			} else {
+				if (fill) {
+					sdl.SetFrame(InsetFrame()).HSizePosZ(4, 4).VSizePosZ(4, 28);
+					fill = false;
+				}
+			}
+		}
+	}
+	SDLCtrl_Demo(bool fsc) {
 		CtrlLayout(*this, "SDLCtrl Example");
 		Zoomable().Sizeable();
 		
 		butRun.WhenAction = THISBACK(Demo);
 		butStop.WhenAction = THISBACK(Stop);
 		butStop.Disable();
+		butFullScreen.WhenAction = THISBACK(SetFullScreen);
+		if (fsc)
+			butFullScreen.SetLabel("Window");
+		else	
+			butFullScreen.SetLabel("Fullscreen");
+		isfullscreen = fsc;
 	}
 };
 
 GUI_APP_MAIN
 {
-	SDLCtrl_Demo().Run();
+	SDLCtrl_Demo *win;
+	bool fullscreen = false;
+	
+	for (;;) {
+		win = new SDLCtrl_Demo(fullscreen);	
+		if (!fullscreen)
+			win->Run();
+		else
+			win->FullScreen().Run();
+		bool isfullscreen = win->isfullscreen;
+		delete win;
+		if (isfullscreen == fullscreen)
+			break;
+		else
+			fullscreen = isfullscreen;
+	}
 }

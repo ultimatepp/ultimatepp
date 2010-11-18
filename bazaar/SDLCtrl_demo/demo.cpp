@@ -52,8 +52,6 @@ const int fntascii[96] =
 
 SDLExample::SDLExample() { 
 	done = false;
-	//surface = 0;
-	//fntbmp = 0;
 	demoInitialized = false;
 }
 
@@ -229,6 +227,8 @@ void SDLExample::SetupPalette(SDL_Surface * screen)
 
 void SDLExample::Layout() {
 	SDLCtrl::Layout();
+	if (!screen)
+		return;
 	
 	Rect r = GetRect();
 	for(int i = 0; i < r.GetWidth(); i++)
@@ -269,7 +269,7 @@ void SDLExample::Demo()
 {
 	fntbmp = SDL_LoadBMP(GetDataFile("font.bmp"));
 	if(!fntbmp) {
-		Cout() << Format("Error loading font.bmp : %s\n", SDL_GetError());
+		Exclamation(Format("Error loading font.bmp : %s\n", SDL_GetError()));
 		return;
 	}
 	Rect r = GetRect();
@@ -299,6 +299,10 @@ void SDLExample::Demo()
 		Ctrl::ProcessEvents();
 		if(SDL_PollEvent(&event))
 			switch (event.type) {
+				case SDL_MOUSEMOTION:
+					r = GetScreenView();
+					GetParent()->MouseMove(Point(r.left+event.motion.x, r.top+event.motion.y), 0);				
+					break;
 				case SDL_QUIT:
 					done = true;
 					break;
