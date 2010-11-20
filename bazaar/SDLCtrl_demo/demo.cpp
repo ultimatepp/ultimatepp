@@ -51,7 +51,7 @@ const int fntascii[96] =
 };
 
 SDLExample::SDLExample() { 
-	done = false;
+	done = true;
 	demoInitialized = false;
 }
 
@@ -107,7 +107,7 @@ void SDLExample::PutLetter(SDL_Surface * screen, int x, int y, int n, int col, d
 	}
 }
 
-void SDLExample::WriteStr(SDL_Surface * screen, int x, int y, const char *str, int col, double ampl)
+void SDLExample::WriteStr(SDL_Surface *screen, int x, int y, const char *str, int col, double ampl)
 {
 	if (screen->w == 0 || screen->h == 0)
 		return;
@@ -227,7 +227,7 @@ void SDLExample::SetupPalette(SDL_Surface * screen)
 
 void SDLExample::Layout() {
 	SDLCtrl::Layout();
-	if (!screen)
+	if (!surface)
 		return;
 	
 	Rect r = GetRect();
@@ -246,15 +246,15 @@ void SDLExample::Layout() {
 	if (!demoInitialized)
 		return;
 	
-	int width = screen->w;
-	int height = screen->h;
-	SDL_FreeSurface(surface);
-	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, bpp, 0, 0, 0, 0);
-	if(!surface)
+	int width = surface->w;
+	int height = surface->h;
+	SDL_FreeSurface(surf);
+	surf = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, bpp, 0, 0, 0, 0);
+	if(!surf)
 		return;
 	
+	SetupPalette(surf);
 	SetupPalette(surface);
-	SetupPalette(screen);
 	
 	j = 0;
 	k = 0;
@@ -276,14 +276,15 @@ void SDLExample::Demo()
 	int width = r.GetWidth();
 	int height = r.GetHeight();
 	
-	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, bpp, 0, 0, 0, 0);
-	if(!surface)
+	surf = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, bpp, 0, 0, 0, 0);
+	if(!surf)
 		return;
 
+	SetupPalette(surf);
 	SetupPalette(surface);
-	SetupPalette(screen);
 
 	demoInitialized = true;
+	done = false;
 	
 	j = 0;
 	k = 0;
@@ -310,20 +311,20 @@ void SDLExample::Demo()
 					break;
 			} else {
 				r = GetRect();
-				width = screen->w;
-				height = screen->h;
+				width = surface->w;
+				height = surface->h;
 			
-				SDL_LockSurface(surface);
+				SDL_LockSurface(surf);
 				
-				DrawPoints(surface, points);
-				Blur(surface, width, height);
+				DrawPoints(surf, points);
+				Blur(surf, width, height);
 				MovePoints(points, width, height);
 
 				if(x0 > -len0)
-					WriteStr(surface, x0 + 5, height - 195, scroll[k], 254, 50);
+					WriteStr(surf, x0 + 5, height - 195, scroll[k], 254, 50);
 
 				if(x1 <= xmax)
-					WriteStr(surface, x1, height - 260, scroll[j], 255, 50);
+					WriteStr(surf, x1, height - 260, scroll[j], 255, 50);
 
 				x0 -= 1;
 				x1 += 1;
@@ -343,12 +344,11 @@ void SDLExample::Demo()
 					x1 = -len1;
 				}
 
-				SDL_UnlockSurface(surface);
-				SDL_BlitSurface(surface, NULL, screen, NULL);
-				SDL_Flip(screen);
+				SDL_UnlockSurface(surf);
+				SDL_BlitSurface(surf, NULL, surface, NULL);
+				SDL_Flip(surface);
 			}
 	}
-	SDL_FreeSurface(surface);
+	SDL_FreeSurface(surf);
 	SDL_FreeSurface(fntbmp);
-	done = false;
 }

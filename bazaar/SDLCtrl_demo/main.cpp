@@ -37,7 +37,7 @@ typedef SDLCtrl_Demo CLASSNAME;
 	}
 	virtual void MouseMove(Point p, dword flags) {
 		static bool fill = false;
-		if (isfullscreen) {
+		if (isfullscreen && !sdl.done) {
 			if (p.y < GetSize().cy-50) {
 				if (!fill) {
 					sdl.SetFrame(NullFrame()).SizePos();

@@ -36,7 +36,7 @@ private:
 	double sintab[2048];
 	ScreenPoint points[MAXPOINT];
 	SDL_Surface *fntbmp;
-	SDL_Surface *surface;
+	SDL_Surface *surf;
 	
 	bool demoInitialized;
 	int j;
