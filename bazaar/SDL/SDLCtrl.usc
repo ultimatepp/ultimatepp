@@ -1,0 +1,22 @@
+ctrl SDLCtrl {
+	group "Complex";
+
+	GetMinSize() { return Size(0, 0); }
+	GetStdSize() { return Size(140, 140); }
+
+	Frame 	SetFrame @1;
+
+	Paint(w) {
+		r = GetRect();
+
+		DrawCtrlFrame(w, r, .SetFrame);
+
+		sz = Size(r.right - r.left, r.bottom - r.top);
+
+		DeflateRect(r);
+		sz = Size(r.right - r.left, r.bottom - r.top);
+		w.DrawRect(r.left, r.top, sz.cx, sz.cy, :SWhite);
+		img = "SDL:SDLCtrl.iml:Icon_SDL";
+		w.DrawImage(r.left, r.top, img);
+	}
+}

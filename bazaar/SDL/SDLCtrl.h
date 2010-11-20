@@ -3,8 +3,15 @@
 
 #include <SDL/SDLWrapper.h>
 
+inline bool Odd(int val)	  	{return val%2;}
+
+inline const RGBA *GetPixel(const Image &img, int x, int y) {
+	return img + x + y*img.GetWidth();
+}
+
 class SDLSurface {
 public:
+	SDLSurface();
 	SDLSurface(SDL_Surface *_surface, bool _del = false);
 	~SDLSurface();
 	void Lock();
@@ -25,12 +32,12 @@ public:
 	inline int GetHeight(){return surface->h;}
 	Uint32 GetColor(Color color);
 	
-private:
+protected:
 	SDL_Surface *surface;
 	bool del;
 };
 
-class SDLCtrl : public DHCtrl {
+class SDLCtrl : public DHCtrl, public SDLSurface {
 typedef SDLCtrl CLASSNAME;	
 public:
 	SDLCtrl();
@@ -47,7 +54,6 @@ protected:
 	//virtual void Paint(Draw& w);		
 	bool CreateScreen();
 		
-	SDL_Surface *screen;
 #ifdef PLATFORM_POSIX
 	XDisplay *display;
 #else

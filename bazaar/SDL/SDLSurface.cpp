@@ -3,7 +3,11 @@
 using namespace Upp;
 
 #include "SDLCtrl.h"
-#include <Functions4U/Functions4U.h>
+
+SDLSurface::SDLSurface() {
+	surface = 0;
+	del = false;
+}
 
 SDLSurface::SDLSurface(SDL_Surface *_surface, bool _del) {
 	surface = _surface;

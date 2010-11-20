@@ -11,7 +11,9 @@ library(FREEBSD) "SDL SDLmain X11 Xext Xrandr Xrender vga vgl aa usbhid ncurses"
 
 file
 	SDLCtrl.cpp,
+	SDLCtrl.usc,
 	SDLCtrl.h,
+	SDLCtrl.iml,
 	SDLSurface.cpp,
 	SDLWrapper.h,
 	"SDL Includes" readonly separator,

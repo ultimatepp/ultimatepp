@@ -2,7 +2,6 @@
 
 using namespace Upp;
 
-#include <Functions4U/Functions4U_Gui.h>
 #include <SDL/SDLCtrl.h>
 
 SDL_Cursor *CursorFromImage(const Image &image)
@@ -35,7 +34,8 @@ SDL_Cursor *CursorFromImage(const Image &image)
 }
 
 SDLCtrl::SDLCtrl() {
-	screen = 0;
+	surface = 0;
+	cursor = 0;
 	
 	int flags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER;
 #if !defined(PLATFORM_WIN32) && !defined(__APPLE__)
@@ -50,8 +50,10 @@ SDLCtrl::SDLCtrl() {
     SDL_EventState(SDL_SYSWMEVENT, SDL_IGNORE);
     SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
 
-	if (cursor = CursorFromImage(Image::Arrow()))
+#ifdef PLATFORM_WIN32			// I cannot get cursor colors now
+	if (cursor = CursorFromImage(Image::Arrow()))		// Restores normal arrow cursor
 		SDL_SetCursor(cursor);
+#endif
 	init = true;
 	
 	videoflags = SDL_NOFRAME | SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
@@ -61,7 +63,7 @@ SDLCtrl::SDLCtrl() {
 	SDL_VERSION(&wmInfo.version);
 
 	if(1 > SDL_GetWMInfo(&wmInfo)) {
-		SetError("SDLCtrl: WMInfo failure");
+		SetError("WMInfo failure");
 		return;
 	}
 #ifdef PLATFORM_WIN32
@@ -78,8 +80,8 @@ SDLCtrl::SDLCtrl() {
 SDLCtrl::~SDLCtrl() {
 	if (cursor)
 		SDL_FreeCursor(cursor);
-	if (screen)
-		SDL_FreeSurface(screen);
+	if (surface)
+		SDL_FreeSurface(surface);
 	if (init)
 		SDL_Quit();
 }
@@ -89,15 +91,15 @@ bool SDLCtrl::CreateScreen() {
 	if (!isInitialized)
 		return false;
 #endif
-	if (screen)
-		SDL_FreeSurface(screen);
+	if (surface)
+		SDL_FreeSurface(surface);
 	Rect r = GetRect();
 #ifndef __APPLE__
-	screen = SDL_SetVideoMode(r.GetWidth(), r.GetHeight(), 0, videoflags);
+	surface = SDL_SetVideoMode(r.GetWidth(), r.GetHeight(), 0, videoflags);
 #else
-	screen = SDL_SetVideoMode(r.GetWidth(), r.GetHeight(), bpp, videoflags);
+	surface = SDL_SetVideoMode(r.GetWidth(), r.GetHeight(), bpp, videoflags);
 #endif
-	if(!screen) {
+	if(!surface) {
 		SetError(SDL_GetError());
 		return false;
 	}
