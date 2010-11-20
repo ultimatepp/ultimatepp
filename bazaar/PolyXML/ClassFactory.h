@@ -1,7 +1,7 @@
 #ifndef _ClassFactory_h_
 #define _ClassFactory_h_
 
-#include <Core/Core.h>
+#include <Draw/Draw.h>
 
 NAMESPACE_UPP;
 
