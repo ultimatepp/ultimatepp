@@ -474,7 +474,7 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 			top->hwnd = CreateWindowExW(cr->exstyle,
 			                            cr->savebits ? cr->dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
 			                                         : cr->dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-			                            L"", cr->style, r.left, r.top, r.Width(), r.Height(),
+			                            L"", cr->style, 0, 0, 0, 0,
 			                            cr->parent, NULL, hInstance, this);
 		else
 			top->hwnd = CreateWindowW(L"UPP-CLASS-W",
@@ -485,13 +485,13 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 		top->hwnd = CreateWindowExW(cr->exstyle,
 		                            cr->savebits ? cr->dropshadow ? L"UPP-CLASS-SB-DS-W" : L"UPP-CLASS-SB-W"
 		                                         : cr->dropshadow ? L"UPP-CLASS-DS-W"    : L"UPP-CLASS-W",
-		                            L"", cr->style, r.left, r.top, r.Width(), r.Height(),
+		                            L"", cr->style, 0, 0, 0, 0,
 		                            cr->parent, NULL, hInstance, this);
 	else
 		top->hwnd = CreateWindowEx(cr->exstyle,
 		                           cr->savebits ? cr->dropshadow ? "UPP-CLASS-SB-DS-A" : "UPP-CLASS-SB-A"
 		                                        : cr->dropshadow ? "UPP-CLASS-DS-A"    : "UPP-CLASS-A",
-		                           "", cr->style, r.left, r.top, r.Width(), r.Height(),
+		                           "", cr->style, 0, 0, 0, 0,
 		                           cr->parent, NULL, hInstance, this);
 #endif
 
@@ -499,6 +499,7 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 
 	ASSERT(top->hwnd);
 
+	::MoveWindow(top->hwnd, r.left, r.top, r.Width(), r.Height(), false); // To avoid "black corners" artifact effect
 	::ShowWindow(top->hwnd, visible ? cr->show : SW_HIDE);
 //	::UpdateWindow(hwnd);
 	StateH(OPEN);
