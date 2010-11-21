@@ -29,8 +29,22 @@ template<class T> class WithFactory
 			indexMap().Add(name, idx);
 			imageMap().Add(name, img);
 		}
-		static One<T> CreateInstance(const String &className) { return classMap().Get(className)(); }
-		static T *CreatePtr(String const &className) { return classMap().Get(className)().Detach(); }
+		static One<T> CreateInstance(const String &className)
+		{
+			One<T> res;
+			int i = classMap().Find(className);
+			if(i >= 0)
+				res = classMap()[i]();
+			return res;
+		}
+		static T *CreatePtr(String const &className)
+		{
+			One<T> res = CreateInstance(className);
+			if(res.IsEmpty())
+				return NULL;
+			else
+				return res.Detach();
+		}
 		static Vector<String> const &Classes(void) { return classMap().GetKeys(); }
 		static String GetClassDescription(const String &className) { return GetLngString(descMap().Get(className)); }
 		static dword const &GetClassIndex(const String &className) { return indexMap().Get(className); }
@@ -102,6 +116,17 @@ template<class T> class WithFactory
 		}
 		
 		virtual ~WithFactory() {}
+		
+		// for debugging purposes, we allow to de-register all classes at once
+		// so we can run multiple tests in a single app
+		static void UnregisterAll(void)
+		{
+			classMap().Clear();
+			typeMap().Clear();
+			descMap().Clear();
+			indexMap().Clear();
+			imageMap().Clear();
+		}
 };
 
 #ifdef COMPILER_MSC
