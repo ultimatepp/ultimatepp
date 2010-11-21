@@ -5,11 +5,40 @@
 
 NAMESPACE_UPP;
 
+#define POLYXMLUNKNOWN "PolyXMLUnknown"
+
 template<class T> class WithPolyXML : public WithFactory<T>
 {
 	public:
 		// Xmlizer
 		virtual void Xmlize(XmlIO xml) {};
+};
+
+extern String PolyXML_Unknown_Class;
+template<class T> class PolyXMLUnknown : public WithPolyXML<T>
+{
+	private:
+		String tag;
+		String rawXML;
+	public:
+		PolyXMLUnknown(String const &_tag, String const &xml)
+		{
+			tag = _tag;
+			rawXML = xml;
+		}
+		
+		virtual String const &IsA(void) { return PolyXML_Unknown_Class; }
+		String const &GetUnknownClassName(void) { return tag; }
+		
+		virtual void Xmlize(XmlIO xml)
+		{
+			if(xml.IsStoring())
+			{
+				XmlNode node = ParseXML(rawXML);
+				xml.Add();
+				xml.Node() = node;
+			}
+		}
 };
 
 template<class T> class PolyXMLArray : public Array<T>
@@ -45,6 +74,17 @@ template<class T> void PolyXMLArray<T>::Xmlize(XmlIO xml)
 				{
 					data->Xmlize(xml.At(i));
 					Add(data);
+				}
+				else
+				{
+					// unknown class -- gather raw xml node
+					String rawXml = AsXML(xml.At(i).Node());
+					
+					// strips xml header, we don't need it
+//					rawXml = rawXml.Mid(rawXml.Find(xml->Node(i).GetTag()));
+					
+					// creates an unknown class and stores raw xml on it
+					Add((T *)new PolyXMLUnknown<T>(tag, rawXml));
 				}
 			}
 		}

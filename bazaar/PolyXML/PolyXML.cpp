@@ -1,1 +1,7 @@
 #include "PolyXML.h"
+
+NAMESPACE_UPP
+
+String PolyXML_Unknown_Class = POLYXMLUNKNOWN;
+
+END_UPP_NAMESPACE

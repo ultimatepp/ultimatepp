@@ -56,7 +56,7 @@ template<class T> class WithFactory
 			else
 				return GetImlImage(imlName);
 		}
-		String const &IsA(void) { return typeMap().Get(typeid(*this).name()); }
+		virtual String const &IsA(void) { return typeMap().Get(typeid(*this).name()); }
 		
 		// class groups handling
 		static void RegisterClassGroupIcon(dword gMask, String const &desc, String const &img) { groupIconMap().FindAdd(gMask, img); groupDescMap().FindAdd(gMask, desc); }
