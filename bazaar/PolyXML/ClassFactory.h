@@ -5,6 +5,8 @@
 
 NAMESPACE_UPP;
 
+extern String CLASSFACTORY_UNKNOWN;
+
 template<class T> class WithFactory
 {
 	private:
@@ -46,17 +48,44 @@ template<class T> class WithFactory
 				return res.Detach();
 		}
 		static Vector<String> const &Classes(void) { return classMap().GetKeys(); }
-		static String GetClassDescription(const String &className) { return GetLngString(descMap().Get(className)); }
-		static dword const &GetClassIndex(const String &className) { return indexMap().Get(className); }
+		static String GetClassDescription(const String &className)
+		{
+			int idx = descMap().Find(className);
+			if(idx >= 0)
+				return GetLngString(descMap()[idx]);
+			else
+				return "";
+		}
+		static dword GetClassIndex(const String &className)
+		{
+			int idx = indexMap().Find(className);
+			if(idx >= 0)
+				return indexMap()[idx];
+			else
+				return -1;
+		}
 		static Image GetClassImage(const String &className)
 		{
-			String const &imlName = imageMap().Get(className);
-			if(imlName == "")
-				return Null;
+			int idx = imageMap().Find(className);
+			if(idx >= 0)
+			{
+				String const &imlName = imageMap()[idx];
+				if(imlName == "")
+					return Null;
+				else
+					return GetImlImage(imlName);
+			}
 			else
-				return GetImlImage(imlName);
+				return Null;
 		}
-		virtual String const &IsA(void) { return typeMap().Get(typeid(*this).name()); }
+		virtual String const &IsA(void)
+		{
+			int idx = typeMap().Find(typeid(*this).name());
+			if(idx >= 0)
+				return typeMap()[idx];
+			else
+				return CLASSFACTORY_UNKNOWN;
+		}
 		
 		// class groups handling
 		static void RegisterClassGroupIcon(dword gMask, String const &desc, String const &img) { groupIconMap().FindAdd(gMask, img); groupDescMap().FindAdd(gMask, desc); }

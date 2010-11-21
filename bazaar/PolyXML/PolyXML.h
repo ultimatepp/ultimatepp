@@ -5,8 +5,6 @@
 
 NAMESPACE_UPP;
 
-#define POLYXMLUNKNOWN "PolyXMLUnknown"
-
 template<class T> class WithPolyXML : public WithFactory<T>
 {
 	public:
@@ -14,8 +12,7 @@ template<class T> class WithPolyXML : public WithFactory<T>
 		virtual void Xmlize(XmlIO xml) {};
 };
 
-extern String PolyXML_Unknown_Class;
-template<class T> class PolyXMLUnknown : public WithPolyXML<T>
+template<class T> class PolyXMLUnknown : public T
 {
 	private:
 		String tag;
@@ -27,7 +24,7 @@ template<class T> class PolyXMLUnknown : public WithPolyXML<T>
 			rawXML = xml;
 		}
 		
-		virtual String const &IsA(void) { return PolyXML_Unknown_Class; }
+		virtual String const &IsA(void) { return CLASSFACTORY_UNKNOWN; }
 		String const &GetUnknownClassName(void) { return tag; }
 		
 		virtual void Xmlize(XmlIO xml)

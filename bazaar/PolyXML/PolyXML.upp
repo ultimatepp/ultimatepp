@@ -3,7 +3,7 @@ uses
 
 file
 	ClassFactory.h,
+	ClassFactory.cpp,
 	PolyXML.h,
-	src.tpp,
-	PolyXML.cpp;
+	src.tpp;
 
