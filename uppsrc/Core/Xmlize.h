@@ -17,10 +17,13 @@ class XmlIO {
 	bool     loading;
 
 public:
-	bool IsLoading() const { return loading; }
-	bool IsStoring() const { return !loading; }
+	bool IsLoading() const            { return loading; }
+	bool IsStoring() const            { return !loading; }
 
-	XmlNode *operator->()  { return &node; }
+	XmlNode& Node()                   { return node; }
+	const XmlNode& Node() const       { return node; }
+
+	XmlNode *operator->()             { return &node; }
 
 	String GetAttr(const char *id)                    { return node.Attr(id); }
 	void   SetAttr(const char *id, const String& val) { node.SetAttr(id, val); }
