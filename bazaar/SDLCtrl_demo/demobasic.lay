@@ -1,0 +1,5 @@
+LAYOUT(Basic, 400, 220)
+	ITEM(SDLCtrl, sdlctrl, SetFrame(InsetFrame()).HSizePosZ(4, 4).VSizePosZ(4, 24))
+	ITEM(Option, usingBlit, SetLabel(t_("Using Blit()")).LeftPosZ(4, 92).BottomPosZ(4, 16))
+END_LAYOUT
+

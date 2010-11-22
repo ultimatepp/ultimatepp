@@ -3,7 +3,7 @@
 using namespace Upp;
 
 #include <SDL/SDLCtrl.h>
-#include <SDLCtrl_demo/demo.h>
+#include <SDLCtrl_demo/demo1.h>
 
 const char * scroll[]=
 {
@@ -339,7 +339,7 @@ void SDLExample::Demo()
 				if(x1 > xmax)
 				{
 					if(++j > MAXSCROLL - 1) j = 0;
-					len1 = LengthStr(scroll[j]);
+					len1 =LengthStr(scroll[j]);
 					xmax = (width - len1) / 2;
 					x1 = -len1;
 				}

@@ -1,0 +1,7 @@
+LAYOUT(Demo1, 400, 224)
+	ITEM(SDLExample, sdl, SetFrame(InsetFrame()).HSizePosZ(4, 4).VSizePosZ(4, 28))
+	ITEM(Button, butFullScreen, SetLabel(t_("Full screen")).RightPosZ(4, 64).BottomPosZ(4, 20))
+	ITEM(Button, butStop, SetLabel(t_("Stop")).LeftPosZ(72, 56).BottomPosZ(4, 20))
+	ITEM(Button, butRun, SetLabel(t_("Run")).LeftPosZ(8, 56).BottomPosZ(4, 20))
+END_LAYOUT
+

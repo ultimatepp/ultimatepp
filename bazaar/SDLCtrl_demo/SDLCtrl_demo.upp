@@ -10,8 +10,12 @@ uses
 file
 	main.cpp,
 	demo.lay,
-	demo.h,
-	demo.cpp;
+	demo1main.cpp,
+	demo1.cpp,
+	demo1.h,
+	demo1.lay,
+	demobasic.cpp,
+	demobasic.lay;
 
 mainconfig
 	"" = "GUI";

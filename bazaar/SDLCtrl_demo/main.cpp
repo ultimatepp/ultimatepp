@@ -2,87 +2,36 @@
 
 using namespace Upp;
 
-#include <SDL/SDLCtrl.h>
-#include <SDLCtrl_demo/demo.h>
-
 #define LAYOUTFILE <SDLCtrl_demo/demo.lay>
 #include <CtrlCore/lay.h>
 
-void DemoThread(SDLExample *sdlCtrl) {
-	sdlCtrl->Demo();
-}
+void Run_Demo1();
+void Run_Basic();
 
 struct SDLCtrl_Demo : public WithMain<TopWindow> {
-	bool isfullscreen;
 typedef SDLCtrl_Demo CLASSNAME;	
-	void Demo() {
-		butRun.Disable();
-		butStop.Enable();
-		
-		sdl.Demo();
-		
-		butRun.Enable();
-		butStop.Disable();
+	void OnRun() {
+		String demo = grid.Get(0);
+		if (demo == "demo1")
+			Run_Demo1();
+		else if (demo == "basic")
+			Run_Basic();
 	}
-	void Stop() {
-		sdl.done = true;
-	}
-	virtual void Close() {
-		sdl.done = true;
-		TopWindow::Close();
-	}
-	void SetFullScreen() {
-		isfullscreen = !isfullscreen;
-		Close();
-	}
-	virtual void MouseMove(Point p, dword flags) {
-		static bool fill = false;
-		if (isfullscreen && !sdl.done) {
-			if (p.y < GetSize().cy-50) {
-				if (!fill) {
-					sdl.SetFrame(NullFrame()).SizePos();
-					fill = true;
-				}
-			} else {
-				if (fill) {
-					sdl.SetFrame(InsetFrame()).HSizePosZ(4, 4).VSizePosZ(4, 28);
-					fill = false;
-				}
-			}
-		}
-	}
-	SDLCtrl_Demo(bool fsc) {
+	SDLCtrl_Demo() {
 		CtrlLayout(*this, "SDLCtrl Example");
-		Zoomable().Sizeable();
 		
-		butRun.WhenAction = THISBACK(Demo);
-		butStop.WhenAction = THISBACK(Stop);
-		butStop.Disable();
-		butFullScreen.WhenAction = THISBACK(SetFullScreen);
-		if (fsc)
-			butFullScreen.SetLabel("Window");
-		else	
-			butFullScreen.SetLabel("Fullscreen");
-		isfullscreen = fsc;
+		butRun.WhenAction = THISBACK(OnRun);
+		
+		grid.AddColumn("Demo", 10);
+		grid.AddColumn("Description", 60);
+		grid.Add("demo1", "Based in unodgs SDL demo, including SDLCtrl and fullscreen support");
+		grid.Add("basic", "Basic demo");
+		grid.SetLineCy(int(1.4*StdFont().GetCy()));
+		grid.WhenLeftDouble = THISBACK(OnRun);
 	}
 };
 
 GUI_APP_MAIN
 {
-	SDLCtrl_Demo *win;
-	bool fullscreen = false;
-	
-	for (;;) {
-		win = new SDLCtrl_Demo(fullscreen);	
-		if (!fullscreen)
-			win->Run();
-		else
-			win->FullScreen().Run();
-		bool isfullscreen = win->isfullscreen;
-		delete win;
-		if (isfullscreen == fullscreen)
-			break;
-		else
-			fullscreen = isfullscreen;
-	}
+	SDLCtrl_Demo().Run();
 }

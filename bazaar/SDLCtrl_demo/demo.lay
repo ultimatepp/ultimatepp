@@ -1,7 +1,6 @@
-LAYOUT(Main, 400, 224)
-	ITEM(SDLExample, sdl, SetFrame(InsetFrame()).HSizePosZ(4, 4).VSizePosZ(4, 28))
-	ITEM(Button, butFullScreen, SetLabel(t_("Full screen")).RightPosZ(4, 64).BottomPosZ(4, 20))
-	ITEM(Button, butStop, SetLabel(t_("Stop")).LeftPosZ(72, 56).BottomPosZ(4, 20))
-	ITEM(Button, butRun, SetLabel(t_("Run")).LeftPosZ(8, 56).BottomPosZ(4, 20))
+LAYOUT(Main, 400, 164)
+	ITEM(ArrayCtrl, grid, HSizePosZ(4, 4).VSizePosZ(32, 4))
+	ITEM(Label, dv___1, SetLabel(t_("Choose an SDLCtrl demo")).LeftPosZ(8, 128).TopPosZ(8, 19))
+	ITEM(Button, butRun, SetLabel(t_("Run")).RightPosZ(4, 76).TopPosZ(4, 24))
 END_LAYOUT
 
