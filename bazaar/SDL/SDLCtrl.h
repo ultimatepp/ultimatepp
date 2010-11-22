@@ -3,19 +3,17 @@
 
 #include <SDL/SDLWrapper.h>
 
-inline bool Odd(int val)	  	{return val%2;}
-
-inline const RGBA *GetPixel(const Image &img, int x, int y) {
-	return img + x + y*img.GetWidth();
-}
+inline bool Odd_(int val)	  	{return val%2;}
 
 class SDLSurface {
 public:
 	SDLSurface();
+	SDLSurface(int width, int height, int bpp = 0); 
 	SDLSurface(SDL_Surface *_surface, bool _del = false);
 	~SDLSurface();
 	void Lock();
 	void Unlock();
+	bool Blit(SDLSurface &surf, Rect source = Null, Rect dest = Null);
 	void DrawImage(Image img, int x, int y, Color transparent);
 	void DrawLine1(int x1, int y1, int x2, int y2, Color color);
 	void DrawLine(int x1, int y1, int x2, int y2, int thick, Color color);
@@ -28,9 +26,11 @@ public:
 	void DrawPixel(int x, int y, Uint32 scolor);
 	Color GetPixel(int x, int y);
 	byte *GetPixelPos(int x, int y);
-	inline int GetWidth() {return surface->w;}
-	inline int GetHeight(){return surface->h;}
 	Uint32 GetColor(Color color);
+	int GetBpp()			{return surface->format->BitsPerPixel;};	
+	int GetWidth()			{return surface->w;};
+	int GetHeight()			{return surface->h;};
+	const char *GetError() 	{return SDL_GetError();};
 	
 protected:
 	SDL_Surface *surface;
@@ -45,9 +45,17 @@ public:
 
 	SDLCtrl &SetBpp(int _bpp) {bpp = _bpp; return *this;};
 	SDLCtrl &SetVideoflags(int _vf) 	{videoflags = _vf; return *this;};
-	String GetError() 					{return strError;};
+	String GetError() 					{
+		const char *err = SDLSurface::GetError();
+		if (*err)
+			return err;
+		else
+			return strError;};
 	void SetError(String str);
 	void ResetError() 					{strError = "";};
+	bool IsReady()						{return surface;};
+	int GetWidth()						{return surface->w;};
+	int GetHeight()						{return surface->h;};
 	
 protected:
 	virtual void Layout();	
@@ -69,7 +77,6 @@ private:
 	virtual void State(int reason);
 #endif
 	SDL_Cursor *cursor;
-	
 	String strError;
 };
 

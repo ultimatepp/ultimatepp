@@ -22,7 +22,7 @@ SDL_Cursor *CursorFromImage(const Image &image)
         		++i;
         		data[i] = mask[i] = 0;
       		}
-      		const RGBA *rgba = GetPixel(image, col, row);
+      		const RGBA *rgba = &image[row][col];
       		if (*rgba == Black()) {
           		data[i] |= 0x01;
           		mask[i] |= 0x01;

@@ -14,6 +14,13 @@ SDLSurface::SDLSurface(SDL_Surface *_surface, bool _del) {
 	del = _del;
 }
 
+SDLSurface::SDLSurface(int width, int height, int bpp) {
+	if (surface = SDL_CreateRGBSurface(0, width, height, bpp, 0x0000FF, 0x00FF00, 0xFF0000, 0))
+		del = true;
+	else
+		del = false;
+}
+
 SDLSurface::~SDLSurface() {
 	if (del) 
 		SDL_FreeSurface(surface);
@@ -31,22 +38,60 @@ void SDLSurface::Unlock() {
 	SDL_UnlockSurface(surface);
 }
 
+void ToSDL_Rect(SDL_Rect &sdlrect, Rect &rect) {
+	sdlrect.x = rect.left;
+	sdlrect.y = rect.top;
+	sdlrect.w = rect.GetWidth();
+	sdlrect.h = rect.GetHeight();
+}
+
+bool SDLSurface::Blit(SDLSurface &surf, Rect source, Rect dest) {
+	SDL_Rect sdlsource, *psdlsource;
+	SDL_Rect sdldest, *psdldest;
+	if (!IsNull(source)) {
+		ToSDL_Rect(sdlsource, source);
+		psdlsource = &sdlsource;
+	} else 
+		psdlsource = 0;
+	if (!IsNull(dest)) {
+		ToSDL_Rect(sdldest, dest);
+		psdldest = &sdldest;
+	} else
+		psdldest = 0;
+	
+	if (0 != SDL_BlitSurface(surf.surface, psdlsource, surface, psdldest)) 
+		return false;
+  	if (0 != SDL_Flip(surface)) 
+  	    return false;
+
+    return true;
+}
+
 inline byte *SDLSurface::GetPixelPos(int x, int y) {
+	if (x < 0 || y < 0|| x >= surface->w || y >= surface->h)
+		return 0;
 	return (byte *)surface->pixels + surface->pitch*y + surface->format->BytesPerPixel*x;
 }
 
 void SDLSurface::DrawPixel(int x, int y, Color color) {
 	Uint32 scolor = GetColor(color);
-	memcpy(GetPixelPos(x, y), &scolor, surface->format->BytesPerPixel);
+	byte *pixelpos = GetPixelPos(x, y);
+	if (pixelpos)
+		memcpy(pixelpos, &scolor, surface->format->BytesPerPixel);
 }
 
 inline void SDLSurface::DrawPixel(int x, int y, Uint32 scolor) {
-	memcpy(GetPixelPos(x, y), &scolor, surface->format->BytesPerPixel);
+	byte *pixelpos = GetPixelPos(x, y);
+	if (pixelpos)
+		memcpy(pixelpos, &scolor, surface->format->BytesPerPixel);
 }
 
 Color SDLSurface::GetPixel(int x, int y) {
 	Uint32 scolor;
-	memcpy(&scolor, GetPixelPos(x, y), surface->format->BytesPerPixel);
+	byte *pixelpos = GetPixelPos(x, y);
+	if (!pixelpos)
+		return Null;
+	memcpy(&scolor, pixelpos, surface->format->BytesPerPixel);
 	Uint8 r, g, b;
 	SDL_GetRGB(scolor, surface->format, &r, &g, &b);
 	return Color(r, g, b);
@@ -111,11 +156,10 @@ void SDLSurface::DrawLine(int x0, int y0, int x1, int y1, int thick, Color color
 }
 
 void SDLSurface::DrawRect(int x, int y, int width, int height, int thick, Color color) {
-	int t = thick/2;
-	FillRect(x+t, y-t, width-thick, thick, color);
-	FillRect(x+t, y-t+height, width-thick, thick, color);
-	FillRect(x-t, y-t, thick, height+thick, color);
-	FillRect(x-t+width, y-t, thick, height+thick, color);
+	FillRect(x, y, width, thick, color);
+	FillRect(x, y+thick, thick, height-2*thick, color);
+	FillRect(x+width-thick, y+thick, thick, height-2*thick, color);
+	FillRect(x, y+height-thick, width, thick, color);
 }
 
 void SDLSurface::FillRect(int x, int y, int width, int height, Color color) {
@@ -161,16 +205,8 @@ void SDLSurface::DrawCircle1(int x0, int y0, int radius, Color color) {
 }
 
 void SDLSurface::DrawCircle(int x0, int y0, int radius, int thick, Color color) {
-	if (thick == 1)
-		DrawCircle1(x0, y0, radius, color);
-	else {
-		int max = thick/2;
-		for (int i = 0; i < max; ++i) {
-			DrawCircle1(x0, y0, radius + i, color);
-			if (Odd(i))
-				DrawCircle1(x0, y0, radius - i, color);
-		}
-	}
+	for (int i = 0; i < thick; ++i) 
+		DrawCircle1(x0, y0, radius - i, color);
 }
 
 void SDLSurface::FillCircle(int cx, int cy, int radius, Color color) {
@@ -191,4 +227,3 @@ void SDLSurface::FillCircle(int cx, int cy, int radius, Color color) {
         }
     }
 }
-
