@@ -456,6 +456,7 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	ICall(callback1(this, &Ctrl::Create0, &cr));
 }
 
+#if 1
 void Ctrl::Create0(Ctrl::CreateBox *cr)
 {
 	GuiLock __;
@@ -507,8 +508,8 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 	CancelMode();
 	RefreshLayoutDeep();
 }
-
-/* Fix to avoid black corners temorarily artifact, unfortunately it seems to introduce ugly artifact in TS
+#else
+// Fix to avoid black corners temorarily artifact, unfortunately it seems to introduce ugly artifact in TS
 void Ctrl::Create0(Ctrl::CreateBox *cr)
 {
 	GuiLock __;
@@ -561,7 +562,8 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 	CancelMode();
 	RefreshLayoutDeep();
 }
-*/
+
+#endif
 
 void ReleaseUDropTarget(UDropTarget *dt);
 
