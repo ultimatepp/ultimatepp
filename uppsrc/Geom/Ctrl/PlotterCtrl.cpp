@@ -156,6 +156,7 @@ void PlotterCtrl::FrameLayout(Rect& rc)
 	horz_out .Enable(sbx);
 	horz_full.SetFrameRect(rc.right - sbx, rc.bottom, sbx, box);
 	full     .SetFrameRect(rc.right, rc.bottom, box, box);
+	full     .SetImage(sbx ? PlotterImg::view_zoom_full_icon_old() : PlotterImg::view_zoom_full_icon());
 }
 
 void PlotterCtrl::FrameAddSize(Size& sz)

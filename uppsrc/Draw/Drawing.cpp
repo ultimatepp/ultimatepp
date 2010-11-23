@@ -114,6 +114,11 @@ Size DrawingDraw::GetPageSize() const
 	return size;
 }
 
+Rect DrawingDraw::GetPaintRect() const
+{
+	return Rect(size);
+}
+
 void DrawingDraw::BeginOp()
 {
 	DrawingOp(DRAWING_BEGIN);

@@ -672,6 +672,8 @@ class DrawingDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
 	virtual Size  GetPageSize() const;
+	virtual Rect  GetPaintRect() const;
+	
 	virtual void BeginOp();
 	virtual void EndOp();
 	virtual void OffsetOp(Point p);
