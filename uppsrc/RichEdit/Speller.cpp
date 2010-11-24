@@ -128,19 +128,24 @@ static String sZet(FileIn& in, int offset, int len)
 	return ZDecompress(in.Get(len));	
 }
 
+void DoSpellerPath(String& pp, String dir)
+{
+	for(;;) {
+		pp << dir << ';';
+		String d = GetFileFolder(dir);
+		if(d == dir) break;
+		dir = d;
+	}
+}
+
 Speller *sGetSpeller(int lang)
 {
 	static ArrayMap<int, Speller> speller;
 	int q = speller.Find(lang);
 	if(q < 0) {
-		String pp;
-		String dir = ConfigFile("scd");
-		for(;;) {
-			pp << dir << ';';
-			String d = GetFileFolder(dir);
-			if(d == dir) break;
-			dir = d;
-		}
+		String pp = spell_path;
+		DoSpellerPath(pp, GetExeDirFile("scd"));		
+		DoSpellerPath(pp, ConfigFile("scd"));
 		pp << spell_path << ';' << getenv("LIB") << ';' << getenv("PATH") << ';';
 		String path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".udc", pp);
 		if(IsNull(path))
