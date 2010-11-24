@@ -397,7 +397,9 @@ String GetIniKey(const char *id, const String& def) {
 		key = LoadIniFile(*sIniFile ? sIniFile : ~ConfigFile("q.ini"));
 	#ifdef PLATFORM_WIN32
 		if(key.GetCount() == 0)
-			key = LoadIniFile("C:\\Q.INI");
+			key = LoadIniFile(~GetExeDirFile("q.ini"));
+		if(key.GetCount() == 0)
+			key = LoadIniFile("c:\\q.ini");
 	#endif
 	#ifdef PLATFORM_POSIX
 		if(key.GetCount() == 0)
@@ -411,7 +413,6 @@ String GetIniKey(const char *id)
 {
 	return GetIniKey(id, String());
 }
-
 
 void TextSettings::Load(const char *filename)
 {
