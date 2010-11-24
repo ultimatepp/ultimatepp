@@ -456,7 +456,7 @@ void Ctrl::Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int sh
 	ICall(callback1(this, &Ctrl::Create0, &cr));
 }
 
-#if 1
+#if 0
 void Ctrl::Create0(Ctrl::CreateBox *cr)
 {
 	GuiLock __;
@@ -509,7 +509,7 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 	RefreshLayoutDeep();
 }
 #else
-// Fix to avoid black corners temorarily artifact, unfortunately it seems to introduce ugly artifact in TS
+// Fix to avoid black corners temorarily artifact
 void Ctrl::Create0(Ctrl::CreateBox *cr)
 {
 	GuiLock __;
@@ -521,6 +521,7 @@ void Ctrl::Create0(Ctrl::CreateBox *cr)
 	isopen = true;
 	top = new Top;
 	ASSERT(!cr->parent || IsWindow(cr->parent));
+	cr->style &= ~WS_VISIBLE;
 	if(!IsWinXP())
 		cr->dropshadow = false;
 #ifdef PLATFORM_WINCE
