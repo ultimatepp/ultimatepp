@@ -13,12 +13,12 @@ const char * scroll[]=
 	"THIS IS A SIMPLE",
 	"SDL DEMO",
 	"CODED BY UNO",
-	"ADAPTED TO SDLCTRL BY KOLDO",
+	"ADAPTED TO SDLCTRL",
+	"BY KOLDO",
 	"ENJOY THE SCROLL"
 };
 
-const ScreenFont fntdef[50] =
-{
+const ScreenFont fntdef[50] = {
 	0,0,32,51, 35,0,65,51, 71,0,101,52, 107,0,137,51, 143,0,167,51, 171,0,192,51,
 	197,0,227,52, 233,0,264,51, 270,0,283,51, 288,0,305,51, 311,0,343,51,
 	346,0,367,51, 371,0,412,51, 0,58,30,109, 36,58,66,110, 72,58,100,109,
@@ -36,8 +36,7 @@ const ScreenFont fntdef[50] =
 	378,177,392,231, 396,177,410,231
 };
 
-const int fntascii[96] =
-{
+const int fntascii[96] = {
 	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,
@@ -53,30 +52,28 @@ const int fntascii[96] =
 SDLExample::SDLExample() { 
 	done = true;
 	demoInitialized = false;
+	SetBpp(8);
 }
 
-void SDLExample::PutLetter(SDL_Surface * screen, int x, int y, int n, int col, double ampl)
-{
+void SDLExample::PutLetter(int x, int y, int n, int col, double ampl) {
 	int dx = fntdef[n].x1 - fntdef[n].x0;
 	int dy = fntdef[n].y1 - fntdef[n].y0;
 
 	int sx = fntdef[n].x0;
 	int sy = fntdef[n].y0;
 
-	int w = screen->w;
-	int h = screen->h;
+	int w = surf.GetWidth();
+	int h = surf.GetHeight();
 
 	if(x + dx < 0 || y + dy < 0 ||  x > w || y > h)
 		return;
 
-	if(x < 0)
-	{
+	if(x < 0) {
 		sx -= x;
 		dx += x;
 		x = 0;
 	}
-	if(y < 0)
-	{
+	if(y < 0) {
 		sy -= y;
 		dy += y;
 		y = 0;
@@ -87,50 +84,36 @@ void SDLExample::PutLetter(SDL_Surface * screen, int x, int y, int n, int col, d
 	if(y + dy > h)
 		dy = h - y;
 
-	Uint8 * b = (Uint8 *) screen->pixels;
-	Uint8 * f = (Uint8 *) fntbmp->pixels;
-
-	for(int j = 0; j < dx; j++)
-	{
-		int ads = (y + (int) (sintab[x + j] * ampl)) * screen->w + x;
-		int adf = sy * fntbmp->w + sx;
-		for(int i = 0; i < dy; i++)
-		{
-			char c = f[adf + j];
+	for(int j = 0; j < dx; j++) {
+		int ads = y + int(sintab[x + j] * ampl);
+		for(int i = 0; i < dy; i++) {
+			byte c = fntbmp.GetPixelByte(sx + j, sy + i);
 			if(c == 1)
-				b[ads + j] = col;
+				surf.DrawPixel(x + j, ads + i, col);
 			else if(c == 3)
-				b[ads + j] = 0;
-			ads += screen->w;
-			adf += fntbmp->w;
+				surf.DrawPixel(x + j, ads + i, 0);
 		}
 	}
 }
 
-void SDLExample::WriteStr(SDL_Surface *screen, int x, int y, const char *str, int col, double ampl)
-{
-	if (screen->w == 0 || screen->h == 0)
+void SDLExample::WriteStr(int x, int y, const char *str, int col, double ampl) {
+	if (surf.GetWidth() == 0 || surf.GetHeight() == 0)
 		return;
-	while(*str)
-	{
+	while(*str) {
 		int n = fntascii[*str];
-		if(*str != 32)
-		{
-			PutLetter(screen, x, y, n, col, ampl);
+		if(*str != 32){
+			PutLetter(x, y, n, col, ampl);
 			x += fntdef[n].x1 - fntdef[n].x0 + 2;
-		}
-		else
+		} else
 			x += 20;
 		str++;
 	}
 }
 
-int SDLExample::LengthStr(const char *str)
-{
+int SDLExample::LengthStr(const char *str) {
 	int l = 0, n;
 
-	while(*str)
-	{
+	while(*str) {
 		n = fntascii[*str];
 		if(*str != 32)
 			l += fntdef[n].x1 - fntdef[n].x0 + 2;
@@ -142,70 +125,56 @@ int SDLExample::LengthStr(const char *str)
 	return l;
 }
 
-void SDLExample::DrawPoints(SDL_Surface *screen, ScreenPoint *p)
-{
-	Uint8 * b = (Uint8 *) screen->pixels;
-
+void SDLExample::DrawPoints(ScreenPoint *p) {
 	for(int i = 0; i < MAXPOINT; i++)
-		b[p[i].y * screen->w + p[i].x] = 255;
+		surf.DrawPixel(p[i].x, p[i].y, 255);
 }
 
-
-void SDLExample::MovePoints(ScreenPoint *p, int width, int height)
-{
+void SDLExample::MovePoints(ScreenPoint *p, int width, int height) {
 	int w = width - 1;
 	int h = height - 1;
 
-	for(int i = 0; i < MAXPOINT; i++)
-	{
+	for(int i = 0; i < MAXPOINT; i++) {
 		p[i].x += p[i].sx;
 		p[i].y += p[i].sy;
 
-		if(p[i].x > w)
-		{
+		if(p[i].x > w) {
 			p[i].sx = -p[i].sx;
 			p[i].x = w;
 		}
-		if(p[i].x < 0)
-		{
+		if(p[i].x < 0) {
 			p[i].sx = -p[i].sx;
 			p[i].x = 0;
 		}
-		if(p[i].y > h)
-		{
+		if(p[i].y > h) {
 			p[i].sy = -p[i].sy;
 			p[i].y = h;
 		}
-		if(p[i].y < 0)
-		{
+		if(p[i].y < 0) {
 			p[i].sy = -p[i].sy;
 			p[i].y = 0;
 		}
 	}
 }
 
-void SDLExample::Blur(SDL_Surface *screen, int width, int height)
-{
-	Uint8 * b = (Uint8 *) screen->pixels;
-
-	int i = 0;
-	for(; i < width * (height - 1); i++)
-		b[i] = (b[i] + b[i + 1] + b[i + width - 1] + b[i + width + 2]) >> 2;
-
-	for(; i < width * height; i++)
-		b[i] = 0;
-
+void SDLExample::Blur(int width, int height) {
+	for (int x = 0; x < width; ++x) 
+		for (int y = 0; y < height-1; ++y) {
+			int pixel = (surf.GetPixelByte(x, y) + surf.GetPixelByte(x+1, y) + 
+						 surf.GetPixelByte(x-1, y+1) + surf.GetPixelByte(x+2, y+1)) >> 2;
+			surf.DrawPixel(x, y, pixel);
+		}
+	for (int x = 0; x < width; ++x) 
+		surf.DrawPixel(x, height-1, 0);
 }
 
-void SDLExample::SetupPalette(SDL_Surface * screen)
-{
+void SDLExample::SetupPalette(SDL_Surface * screen) {
 	SDL_Color pal[256];
 
 	double d = 20;
 	double dx = 63.0 / 256.0;
 
-	for(int i = 0; i < 254; i++)
-	{
+	for(int i = 0; i < 254; i++) {
 		pal[i].r = (Uint8) d;
 		pal[i].g = (Uint8) d;
 		pal[i].b = 0;
@@ -227,15 +196,14 @@ void SDLExample::SetupPalette(SDL_Surface * screen)
 
 void SDLExample::Layout() {
 	SDLCtrl::Layout();
-	if (!surface)
+	if (!IsReady())
 		return;
 	
 	Rect r = GetRect();
 	for(int i = 0; i < r.GetWidth(); i++)
 		sintab[i] = sin(i * M_PI / 180.0);
 
-	for(int i = 0; i < MAXPOINT; i++)
-	{
+	for(int i = 0; i < MAXPOINT; i++) {
 		points[i].x   = rand() % (r.GetWidth() - 1);
 		points[i].y   = rand() % (r.GetHeight() - 1);
 		points[i].sx  = (rand() & 1) + 1;
@@ -246,15 +214,13 @@ void SDLExample::Layout() {
 	if (!demoInitialized)
 		return;
 	
-	int width = surface->w;
-	int height = surface->h;
-	SDL_FreeSurface(surf);
-	surf = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, bpp, 0, 0, 0, 0);
-	if(!surf)
-		return;
+	int width = GetWidth();
+	int height = GetHeight();
 	
-	SetupPalette(surf);
-	SetupPalette(surface);
+	surf.Resize(width, height);
+	
+	SetupPalette(surf.GetSurface());
+	SetupPalette(GetSurface());
 	
 	j = 0;
 	k = 0;
@@ -265,23 +231,20 @@ void SDLExample::Layout() {
 	x1 = -len0;	
 }
 
-void SDLExample::Demo()
-{
-	fntbmp = SDL_LoadBMP(GetDataFile("font.bmp"));
-	if(!fntbmp) {
+void SDLExample::Demo() {
+	if(!fntbmp.LoadBMP(GetDataFile("font.bmp"))) {
 		Exclamation(Format("Error loading font.bmp : %s\n", SDL_GetError()));
 		return;
 	}
 	Rect r = GetRect();
 	int width = r.GetWidth();
 	int height = r.GetHeight();
-	
-	surf = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, bpp, 0, 0, 0, 0);
-	if(!surf)
+
+	if (!surf.CreateRGB(width, height, GetBpp()))
 		return;
 
-	SetupPalette(surf);
-	SetupPalette(surface);
+	SetupPalette(surf.GetSurface());
+	SetupPalette(GetSurface());
 
 	demoInitialized = true;
 	done = false;
@@ -311,44 +274,40 @@ void SDLExample::Demo()
 					break;
 			} else {
 				r = GetRect();
-				width = surface->w;
-				height = surface->h;
+				width = GetWidth();
+				height = GetHeight();
 			
-				SDL_LockSurface(surf);
+				surf.Lock();
 				
-				DrawPoints(surf, points);
-				Blur(surf, width, height);
+				DrawPoints(points);
+				Blur(width, height);
 				MovePoints(points, width, height);
 
 				if(x0 > -len0)
-					WriteStr(surf, x0 + 5, height - 195, scroll[k], 254, 50);
+					WriteStr(x0 + 5, height - 185, scroll[k], 254, 50);
 
 				if(x1 <= xmax)
-					WriteStr(surf, x1, height - 260, scroll[j], 255, 50);
+					WriteStr(x1, height - 250, scroll[j], 255, 50);
 
-				x0 -= 1;
-				x1 += 1;
+				x0 -= 2;
+				x1 += 2;
 
-				if(x0 < -len0)
-				{
-					if(++k > MAXSCROLL - 1) k = 0;
+				if(x0 < -len0) {
+					if(++k > MAXSCROLL - 1) 
+						k = 0;
 					len0 = LengthStr(scroll[k]);
 					x0 = width;
 				}
-
-				if(x1 > xmax)
-				{
-					if(++j > MAXSCROLL - 1) j = 0;
+				if(x1 > xmax) {
+					if(++j > MAXSCROLL - 1) 
+						j = 0;
 					len1 =LengthStr(scroll[j]);
 					xmax = (width - len1) / 2;
 					x1 = -len1;
 				}
-
-				SDL_UnlockSurface(surf);
-				SDL_BlitSurface(surf, NULL, surface, NULL);
-				SDL_Flip(surface);
+				surf.Unlock();
+				
+				Blit(surf);
 			}
 	}
-	SDL_FreeSurface(surf);
-	SDL_FreeSurface(fntbmp);
 }

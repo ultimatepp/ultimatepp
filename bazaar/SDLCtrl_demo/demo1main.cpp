@@ -65,7 +65,7 @@ typedef SDLCtrl_Demo1 CLASSNAME;
 
 void Run_Demo1() {
 	SDLCtrl_Demo1 *win;
-	bool fullscreen = false;
+	bool fullscreen = true;
 	
 	for (;;) {
 		win = new SDLCtrl_Demo1(fullscreen);	
