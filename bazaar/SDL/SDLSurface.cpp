@@ -6,23 +6,49 @@ using namespace Upp;
 
 SDLSurface::SDLSurface() {
 	surface = 0;
-	del = false;
+	delIn = true;
 }
 
 SDLSurface::SDLSurface(SDL_Surface *_surface, bool _del) {
 	surface = _surface;
-	del = _del;
+	delIn = _del;
 }
 
 SDLSurface::SDLSurface(int width, int height, int bpp) {
-	if (surface = SDL_CreateRGBSurface(0, width, height, bpp, 0x0000FF, 0x00FF00, 0xFF0000, 0))
-		del = true;
-	else
-		del = false;
+	surface = SDL_CreateRGBSurface(0, width, height, bpp, 0x0000FF, 0x00FF00, 0xFF0000, 0);
+	delIn = true;
+}
+
+bool SDLSurface::CreateRGB(int width, int height, int bpp) {
+	if (!delIn)
+		return false;
+	if (surface)
+		SDL_FreeSurface(surface);
+	return surface = SDL_CreateRGBSurface(0, width, height, bpp, 0x0000FF, 0x00FF00, 0xFF0000, 0);
+}
+
+bool SDLSurface::LoadBMP(const char *filename) {
+	if (!delIn)
+		return false;
+	if (surface)
+		SDL_FreeSurface(surface);
+	return surface = SDL_LoadBMP(filename);
+}
+
+bool SDLSurface::Resize(int width, int height) {
+	if (!delIn)
+		return false;
+	int bpp;
+	if (surface) {
+		bpp = GetBpp();
+		SDL_FreeSurface(surface);
+	} else
+		bpp = 0;
+	return surface = SDL_CreateRGBSurface(0, width, height, bpp, 0x0000FF, 0x00FF00, 0xFF0000, 0);
 }
 
 SDLSurface::~SDLSurface() {
-	if (del) 
+	if (delIn && surface) 
 		SDL_FreeSurface(surface);
 }
 
@@ -82,7 +108,11 @@ void SDLSurface::DrawPixel(int x, int y, Color color) {
 
 inline void SDLSurface::DrawPixel(int x, int y, Uint32 scolor) {
 	byte *pixelpos = GetPixelPos(x, y);
-	if (pixelpos)
+	if (!pixelpos)
+		return;
+	if (surface->format->BytesPerPixel == 1)
+		*pixelpos = (byte)scolor;
+	else
 		memcpy(pixelpos, &scolor, surface->format->BytesPerPixel);
 }
 
@@ -95,6 +125,13 @@ Color SDLSurface::GetPixel(int x, int y) {
 	Uint8 r, g, b;
 	SDL_GetRGB(scolor, surface->format, &r, &g, &b);
 	return Color(r, g, b);
+}
+
+byte SDLSurface::GetPixelByte(int x, int y) {
+	byte *pixelpos = GetPixelPos(x, y);
+	if (!pixelpos)
+		return 0;
+	return *pixelpos;
 }
 
 void SDLSurface::DrawImage(Image img, int x0, int y0, Color transparent) {

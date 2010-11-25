@@ -33,8 +33,9 @@ SDL_Cursor *CursorFromImage(const Image &image)
   	return SDL_CreateCursor(data, mask, width, height, image.GetHotSpot().x, image.GetHotSpot().y);
 }
 
-SDLCtrl::SDLCtrl() {
+SDLCtrl::SDLCtrlIn::SDLCtrlIn() {
 	surface = 0;
+	delIn = false;
 	cursor = 0;
 	
 	int flags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER;
@@ -57,7 +58,7 @@ SDLCtrl::SDLCtrl() {
 	init = true;
 	
 	videoflags = SDL_NOFRAME | SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
-	bpp = 8;
+	bpp = 24;
 	
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
@@ -77,7 +78,7 @@ SDLCtrl::SDLCtrl() {
 #endif
 }
 
-SDLCtrl::~SDLCtrl() {
+SDLCtrl::SDLCtrlIn::~SDLCtrlIn() {
 	if (cursor)
 		SDL_FreeCursor(cursor);
 	if (surface)
@@ -86,19 +87,15 @@ SDLCtrl::~SDLCtrl() {
 		SDL_Quit();
 }
 
-bool SDLCtrl::CreateScreen() {
+bool SDLCtrl::SDLCtrlIn::CreateScreen() {
 #ifdef PLATFORM_POSIX	
 	if (!isInitialized)
 		return false;
 #endif
 	if (surface)
 		SDL_FreeSurface(surface);
-	Rect r = GetRect();
-#ifndef __APPLE__
-	surface = SDL_SetVideoMode(r.GetWidth(), r.GetHeight(), 0, videoflags);
-#else
+	Rect r = GetView();
 	surface = SDL_SetVideoMode(r.GetWidth(), r.GetHeight(), bpp, videoflags);
-#endif
 	if(!surface) {
 		SetError(SDL_GetError());
 		return false;
@@ -106,14 +103,14 @@ bool SDLCtrl::CreateScreen() {
 	return true;
 }
 
-void SDLCtrl::Layout() {
+void SDLCtrl::SDLCtrlIn::Layout() {
 #ifdef PLATFORM_WIN32	
 	if (!hwndSDL || !hwnd) 
 		return;
 	GuiLock __;
 	HWND phwnd = GetTopCtrl()->GetHWND();
 	if(phwnd) {	
-		Rect r = GetScreenRect();
+		Rect r = GetScreenView();
 		SetWindowPos(hwnd, NULL, r.left, r.top, 
 					 r.GetWidth(), r.GetHeight(), SWP_NOACTIVATE|SWP_NOZORDER);
 	}
@@ -124,7 +121,7 @@ void SDLCtrl::Layout() {
 }
 
 #ifdef PLATFORM_WIN32	
-void SDLCtrl::State(int reason)
+void SDLCtrl::SDLCtrlIn::State(int reason)
 {
 	if (!hwndSDL)
 		return;
@@ -146,7 +143,7 @@ void SDLCtrl::State(int reason)
 }
 #endif
 
-void SDLCtrl::SetError(String str) {
+void SDLCtrl::SDLCtrlIn::SetError(String str) {
 	if (!strError.IsEmpty())
 		strError << "\n"; 
 	strError << ToUpper(str[0]) + DeQtfLf(str.Mid(1)); 
