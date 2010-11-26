@@ -4,8 +4,11 @@ NAMESPACE_UPP
 
 bool HttpClient_Trace__;
 
-#define LLOG(x)      // DLOG(x) //if(HttpClient_Trace__) RLOG(x); else;
-#define LLOGBLOCK(x) // DLOG(x)
+#ifdef _DEBUG
+#define LLOG(x)      if(HttpClient_Trace__) RLOG(x); else;
+#else
+#define LLOG(x)
+#endif
 
 void HttpClient::Trace(bool b)
 {
@@ -233,7 +236,6 @@ String HttpClient::CalculateDigest(String authenticate) const
 
 String HttpClient::Execute(Gate2<int, int> progress)
 {
-	LLOGBLOCK("HttpClient::Execute");
 	int start_time = msecs();
 	int end_time = start_time + timeout_msecs;
 	aborted = false;
