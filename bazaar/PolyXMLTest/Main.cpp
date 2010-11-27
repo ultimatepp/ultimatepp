@@ -72,7 +72,7 @@ void DumpArray(PolyXMLArray<Base> &polyArray)
 			Cerr() << "    AnotherData = '" << ((OneMore &)polyArray[i]).AnotherData << "'\n";
 			Cerr() << "    OneMoreData = '" << ((OneMore &)polyArray[i]).OneMoreData << "'\n";
 		}
-		else if(polyArray[i].IsA() == POLYXMLUNKNOWN)
+		else if(polyArray[i].IsA() == "*UNKNOWN*")
 			Cerr() << "    Original class is '" << ((PolyXMLUnknown<Base> &)polyArray[i]).GetUnknownClassName() << "' -- STREAMED IN AS RAW XML\n";
 		else
 			Cerr() << "oops... known class, but I don't know how to handle it\n";
