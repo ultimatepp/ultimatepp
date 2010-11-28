@@ -155,7 +155,8 @@ bool DHCtrl::Init()
 		);
 	} else {
 		XReparentWindow(Xdisplay, hwnd, GetParentWindow(), r.left, r.top);
-		XMoveResizeWindow(Xdisplay, hwnd, r.left, r.top, r.Width(), r.Height());
+		XResizeWindow(Xdisplay, hwnd, r.Width(), r.Height());
+		XChangeWindowAttributes(Xdisplay, hwnd, ValueMask, &winAttributes);
 	}
 
 	// Frees VisualInfo

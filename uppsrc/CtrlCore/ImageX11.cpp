@@ -287,6 +287,8 @@ ImageDraw::operator Image() const
 {
 	GuiLock __;
 	XImage *xim = XGetImage(Xdisplay, dw, 0, 0, max(size.cx, 1), max(size.cy, 1), AllPlanes, ZPixmap);
+	if(!xim)
+		return Null;
 	Visual *v = DefaultVisual(Xdisplay, Xscreenno);
 	RasterFormat fmt;
 
@@ -345,17 +347,19 @@ ImageDraw::operator Image() const
 	}
 	XDestroyImage(xim);
 	if(has_alpha) {
-		xim = XGetImage(Xdisplay, alpha.dw, 0, 0, size.cx, size.cy, AllPlanes, ZPixmap);
-		const byte *s = (const byte *)xim->data;
-		t = ib;
-		Buffer<RGBA> line(size.cx);
-		for(int y = 0; y < size.cy; y++) {
-			fmt.Read(line, s, size.cx, palette);
-			for(int x = 0; x < size.cx; x++)
-				(t++)->a = line[x].r;
-			s += xim->bytes_per_line;
+		xim = XGetImage(Xdisplay, alpha.dw, 0, 0, max(size.cx, 1), max(size.cy, 1), AllPlanes, ZPixmap);
+		if(xim) {
+			const byte *s = (const byte *)xim->data;
+			t = ib;
+			Buffer<RGBA> line(size.cx);
+			for(int y = 0; y < size.cy; y++) {
+				fmt.Read(line, s, size.cx, palette);
+				for(int x = 0; x < size.cx; x++)
+					(t++)->a = line[x].r;
+				s += xim->bytes_per_line;
+			}
+			XDestroyImage(xim);
 		}
-		XDestroyImage(xim);
 	}
 	Premultiply(ib);
 	return ib;
