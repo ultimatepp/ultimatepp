@@ -15,12 +15,12 @@ GUI_APP_MAIN
 	fs.DefaultExt("hhh");
 	
 //	fs.NoMkDirOption();
-	fs.Multi();
+//	fs.Multi();
 //	fs.ActiveDir("/usr/include");
 //	fs.NoEditFileName();
-	fs.ActiveDir("c:/");
-	fs.PreSelect("U:/log.txt");
-	fs.ActiveType(3);
+//	fs.ActiveDir("c:/");
+//	fs.PreSelect("U:/log.txt");
+//	fs.ActiveType(3);
 	for(;;) {
 		if(!fs.ExecuteSaveAs())
 			break;

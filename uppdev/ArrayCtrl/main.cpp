@@ -38,7 +38,7 @@ struct App : TopWindow {
 	typedef App CLASSNAME;
 
 	App() {
-		a.AddColumn("Text");
+		a.AddColumn("\1Text alsdfjla fdlajd flajd falsjkd fla fals fj");
 		a.MultiSelect();
 		a.NoGrid();
 		a.WhenDropInsert = THISBACK(DnDInsert);
