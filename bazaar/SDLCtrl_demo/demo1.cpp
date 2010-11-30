@@ -53,6 +53,7 @@ SDLExample::SDLExample() {
 	done = true;
 	demoInitialized = false;
 	SetBpp(8);
+	SetVideoFlags(GetVideoFlags() | SDL_HWPALETTE);
 }
 
 void SDLExample::PutLetter(int x, int y, int n, int col, double ampl) {
@@ -157,18 +158,24 @@ void SDLExample::MovePoints(ScreenPoint *p, int width, int height) {
 	}
 }
 
+// Included simpler options commented
 void SDLExample::Blur(int width, int height) {
-	for (int x = 0; x < width; ++x) 
-		for (int y = 0; y < height-1; ++y) {
-			int pixel = (surf.GetPixelByte(x, y) + surf.GetPixelByte(x+1, y) + 
+	byte *pos;
+	for (int y = 0; y < height-1; ++y) {
+		pos = surf.GetPixelPos(0, y);
+		for (int x = 0; x < width; ++x) {
+			int pixel = (*pos + *(pos+1) +
+						// Also possible surf.GetPixelByte(x, y) + surf.GetPixelByte(x+1, y) + 
 						 surf.GetPixelByte(x-1, y+1) + surf.GetPixelByte(x+2, y+1)) >> 2;
-			surf.DrawPixel(x, y, pixel);
+			*(pos++) = pixel;		// Also possible surf.DrawPixel(x, y, pixel);
 		}
+	}
+	pos = surf.GetPixelPos(0, height-1);
 	for (int x = 0; x < width; ++x) 
-		surf.DrawPixel(x, height-1, 0);
+		*(pos++) = 0;				// Also possible surf.DrawPixel(x, height-1, 0);
 }
 
-void SDLExample::SetupPalette(SDL_Surface * screen) {
+void SDLExample::SetupPalette(SDL_Surface *screen) {
 	SDL_Color pal[256];
 
 	double d = 20;

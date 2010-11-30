@@ -13,7 +13,8 @@ typedef SDLCtrl_Basic CLASSNAME;
 		if (!sdlctrl.IsReady())
 			return;
 		
-		ImageDraw iwLogo(500, 100);
+		ImageDraw iwLogo(200, 100);
+		iwLogo.DrawRect(0, 0, 200, 100, Black());
 		iwLogo.DrawEllipse(20, 20, 100, 40, LtGreen());
 		iwLogo.DrawText(50, 28, "U++", Arial(20).Bold(), Black()); 
 		Image imLogo = iwLogo;
