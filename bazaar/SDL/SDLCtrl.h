@@ -82,7 +82,8 @@ public:
 	}
 	SDLCtrl &SetBpp(int bpp) 		{ctrlIn.bpp = bpp; return *this;};
 	int GetBpp() 					{return ctrlIn.GetBpp();};	
-	SDLCtrl &SetVideoflags(int vf) 	{ctrlIn.videoflags = vf; return *this;};
+	SDLCtrl &SetVideoFlags(int vf) 	{ctrlIn.videoflags = vf; return *this;};
+	int GetVideoFlags()				{return ctrlIn.videoflags;};
 	bool IsReady()					{return ctrlIn.IsReady();};
 	int GetWidth()					{return ctrlIn.GetWidth();};
 	int GetHeight()					{return ctrlIn.GetHeight();};	
