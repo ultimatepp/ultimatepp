@@ -11,5 +11,7 @@ file
 	PlotSymbol.cpp,
 	PlotData.cpp,
 	Legend.cpp,
-	Plot.cpp optimize_speed;
+	Plot.cpp optimize_speed,
+	srcdoc.tpp,
+	src.tpp;
 

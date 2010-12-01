@@ -1,0 +1,45 @@
+topic "LegendCtrl";
+[2 $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
+[l288;2 $$2,2#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
+[l288;a4;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
+[l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
+[b42;2 $$9,9#13035079074754324216151401829390:normal]
+[{_} 
+[ {{10000@(113.42.0) [s0;%% [*@7;4 LegendCtrl]]}}&]
+[s1;@(0.0.255)3 &]
+[s1;:LegendCtrl`:`:class: [@(0.0.255)3 class][3 _][*3 LegendCtrl][3 _:_][@(0.0.255)3 public][3 _][*@3;3 C
+trl][3 , ][@(0.0.255)3 public][3 _][*@3;3 Legend]&]
+[s2;%% Widget that can be used to display legend for a Plot.&]
+[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
+[s5;_^Callback^ &]
+[s5;:LegendCtrl`:`:WhenSync: [_^Callback^ Callback]_[* WhenSync]&]
+[s2;%% Callback executed every time when the Legend changes. This 
+can be used to synchronize other controls to the changes in legends 
+size or even to indirectly track the changes in Plot.&]
+[s3; &]
+[s4; &]
+[s5;:LegendCtrl`:`:Paint`(Draw`&`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Paint]([_^Draw^ D
+raw][@(0.0.255) `&]_[*@3 w])&]
+[s2;%% Painting routine.&]
+[s3;%% &]
+[s4; &]
+[s5;:LegendCtrl`:`:SetSize`(const Size`&`): [@(0.0.255) void]_[* SetSize]([@(0.0.255) const
+]_[_^Size^ Size][@(0.0.255) `&]_[*@3 sz])&]
+[s2;%% Sets size of the Ctrl.&]
+[s3;%% &]
+[s4; &]
+[s5;:LegendCtrl`:`:GetSize`(`)const: [_^Size^ Size]_[* GetSize]()[@(0.0.255) const]&]
+[s2;%% Returns current size of the Ctrl.&]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
+[s5;* &]
+[s5;:LegendCtrl`:`:LegendCtrl`(Plot`&`): [* LegendCtrl]([_^Plot^ Plot][@(0.0.255) `&]_[*@3 p])
+&]
+[s2;%% Constructs legend associated with Plot [%-*@3 p].&]
+[s0; ]

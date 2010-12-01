@@ -33,6 +33,7 @@ public:
 	       PlotSymbol*    Copy()const;
 protected:
 	Callback1<Painter&> paint;
+	void DoPaint(Painter& sw)const;
 public:
 	PlotSymbol();
 	PlotSymbol(Sizef size,RGBA color,RGBA frame,double thickness);
@@ -41,7 +42,6 @@ public:
 	unsigned GetHashValue()const;
 	String ToString()const;
 	
-	void DoPaint(Painter& sw)const;
 	virtual void PaintOp(Painter& sw)const{}
 
 	PlotSymbol& SetSize(Sizef size)           {s=size;         return *this;}

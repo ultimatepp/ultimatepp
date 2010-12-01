@@ -29,7 +29,6 @@ public:
 	virtual void MouseWheel(Point pt, int zdelta, dword keyflags);
 	virtual Image CursorImage(Point p, dword keyflags);
 	Callback WhenSync;
-	void TrackerSync(Rect r);
 protected:
 	RectTracker tr;
 	Image img;
@@ -39,6 +38,7 @@ private:
 	enum{PC_CROSS,PC_ARROW,PC_PAN,PC_WAIT,PC_LOCAL};
 	int cursor;
 	Image cimg;
+	void TrackerSync(Rect r);
 };
 
 class LegendCtrl : public Ctrl, public Legend{

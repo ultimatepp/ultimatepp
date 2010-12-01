@@ -11,5 +11,7 @@ file
 	LegendCtrl.cpp,
 	PlotCtrl.lay,
 	cursors.iml,
-	icons.iml;
+	icons.iml,
+	srcdoc.tpp,
+	src.tpp;
 
