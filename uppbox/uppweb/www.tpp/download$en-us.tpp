@@ -10,16 +10,16 @@ topic "Ultimate++ download";
 :: [s0;= [+92 Nightly builds]]
 :: [s0;= [+92 Stable releases]]
 ::@2 [s0; [*2 Any]]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 SVN]]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 upp`-x11`-src`-N
-NNN.tar.gz]]
-:: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 upp`-x11`-src`-NNNN.t
-ar.gz]]
+:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 SVN]&]
+[s0;= [^http`:`/`/gitorious`.org`/upp`-mirror^2 git]]
+:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 tarball]]
+:: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 tarball]]
 :: [s0; [*2 MS Windows]]
 :: [s0;=2 ]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 upp`-win32`-NNNN
-.exe]]
-:: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 upp`-win32`-NNNN.exe]]
+:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 win32 
+installer]]
+:: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 win32 
+installer]]
 :: [s0; [*2 Ubuntu]]
 :: [s0;=2 ]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 PPA][2 , 
@@ -31,13 +31,16 @@ dsc]]
 :: [s0; [*2 Fedora, Mandriva, OpenSUSE]]
 :: [s0;=2 ]
 :: [s0;=2 ]
-:: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 upp`-NNNN`-1.DIST.ARC
-H.rpm]]
+:: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
 :: [s0; [*2 Gentoo]]
-:: [s0;= [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 ebuild
+::-2 [s0;= [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 ebuild
 ]]
-:: [s0;=2 ]
-:: [s0;=2 ]}}&]
+::l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
+:: [s0;%- ]
+::l8/25r8/25t8/15b8/15R(128) [s0; [*2 Arch Linux]]
+::-2 [s0;= [^http`:`/`/aur`.archlinux`.org`/packages`.php`?K`=u`%2B`%2B^2 PKGBUILDs]]
+::l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
+:: [s0;%- ]}}&]
 [s0; &]
 [s0; &]
 [s1;#b0; Source code&]
@@ -57,6 +60,11 @@ repository.]&]
 [s0; [2 For Gentoo users, an ebuild using subversion checkout is under 
 construction. Have a look at the corresponding ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 f
 orum thread][2  if you are interested.]&]
+[s0;2 &]
+[s0; [2 Arch Linux users can download source packages in ][^http`:`/`/aur`.archlinux`.org`/packages`.php`?K`=u`%2B`%2B^2 A
+UR][2  and build them using makepkg tool. Alternatively yaourt 
+(or some other AUR`-aware pacman frontend) allows to download, 
+build and install the packages automatically.]&]
 [s0; &]
 [s0; &]
 [s1;#b0; Nightly builds&]
