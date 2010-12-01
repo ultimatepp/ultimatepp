@@ -7,8 +7,8 @@ NAMESPACE_UPP
 #define IMAGEFILE  <Geom/Ctrl/PlotterCtrl.iml>
 #include           <Draw/iml.h>
 
-#define LLOG(x) RLOG(x)
-#define LLOGBLOCK(x) RLOGBLOCK(x)
+#define LLOG(x) // RLOG(x)
+#define LLOGBLOCK(x) // RLOGBLOCK(x)
 
 PlotterCtrl::ViewPlot::ViewPlot(PlotterCtrl& ctrl, int extra_gap)
 : viewdraw(&ctrl)
@@ -945,7 +945,7 @@ void PlotterCtrl::OnViewZoomOutX()
 
 void PlotterCtrl::ToolViewZoomFullX(Bar& bar)
 {
-	bar.AddMenu(t_("Zoom full horz."), PlotterImg::view_zoom_full(), THISBACK(OnViewZoomFullX))
+	bar.AddMenu(t_("Zoom full horz."), PlotterImg::view_zoom_horz_full(), THISBACK(OnViewZoomFullX))
 		.Help(t_("Display full x axis range in view"));
 }
 
@@ -978,7 +978,7 @@ void PlotterCtrl::OnViewZoomOutY()
 
 void PlotterCtrl::ToolViewZoomFullY(Bar& bar)
 {
-	bar.AddMenu(t_("Zoom full vert."), PlotterImg::view_zoom_full(), THISBACK(OnViewZoomFullY))
+	bar.AddMenu(t_("Zoom full vert."), PlotterImg::view_zoom_vert_full(), THISBACK(OnViewZoomFullY))
 		.Help(t_("Display full y axis range in view"));
 }
 
@@ -1004,7 +1004,9 @@ void PlotterCtrl::OnViewZoomOut()
 
 void PlotterCtrl::ToolViewZoomFull(Bar& bar)
 {
-	bar.Add(t_("Zoom full"), PlotterImg::view_zoom_full(), THISBACK(OnViewZoomFull))
+	bar.Add(t_("Zoom full"),
+		aspect ? PlotterImg::view_zoom_full() : PlotterImg::view_zoom_full_old(),
+		THISBACK(OnViewZoomFull))
 		.Help(t_("Zoom everything into view"));
 }
 

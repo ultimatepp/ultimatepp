@@ -344,6 +344,8 @@ public:
 	virtual ~CalcContext();
 
 	Value               Evaluate(String expr);
+	Value               TryEvaluate(String expr);
+
 	double              EvaluateDouble(String expr);
 	String              EvaluateString(String expr);
 	int                 EvaluateInt(String expr);
