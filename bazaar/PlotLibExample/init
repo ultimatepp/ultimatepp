@@ -1,0 +1,5 @@
+#ifndef _PlotLibExample_icpp_init_stub
+#define _PlotLibExample_icpp_init_stub
+#include "plugin\png/init"
+#include "PlotLib/init"
+#endif

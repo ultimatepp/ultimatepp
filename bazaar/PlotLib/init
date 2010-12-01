@@ -1,0 +1,4 @@
+#ifndef _PlotLib_icpp_init_stub
+#define _PlotLib_icpp_init_stub
+#include "Painter/init"
+#endif

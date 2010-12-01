@@ -1,0 +1,5 @@
+#ifndef _PlotCtrlExample_icpp_init_stub
+#define _PlotCtrlExample_icpp_init_stub
+#include "CtrlLib/init"
+#include "PlotCtrl/init"
+#endif

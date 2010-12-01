@@ -1,0 +1,15 @@
+description "General charting library\377";
+
+optimize_speed;
+
+uses
+	Painter;
+
+file
+	PlotLib.h,
+	PlotSymbol.h,
+	PlotSymbol.cpp,
+	PlotData.cpp,
+	Legend.cpp,
+	Plot.cpp optimize_speed;
+

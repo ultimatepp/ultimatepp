@@ -1,0 +1,15 @@
+description "Widget for plotting graphs\377";
+
+uses
+	Painter,
+	PlotLib;
+
+file
+	PlotCtrl.h,
+	PlotStyleDlg.cpp,
+	PlotCtrl.cpp,
+	LegendCtrl.cpp,
+	PlotCtrl.lay,
+	cursors.iml,
+	icons.iml;
+

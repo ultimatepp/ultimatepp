@@ -1,0 +1,13 @@
+description "Using PlotLib to create charts, even on head-less machines\377";
+
+uses
+	plugin\png,
+	PlotLib;
+
+file
+	main.cpp,
+	symbol.iml;
+
+mainconfig
+	"" = "";
+

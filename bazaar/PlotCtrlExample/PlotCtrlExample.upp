@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	PlotCtrl;
+
+file
+	main.cpp,
+	symbol.iml;
+
+mainconfig
+	"" = "GUI";
+
