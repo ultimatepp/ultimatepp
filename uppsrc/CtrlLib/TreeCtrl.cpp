@@ -166,6 +166,7 @@ int    TreeCtrl::Insert(int parentid, int i, const TreeCtrl::Node& n)
 	}
 	Item& m = item[id];
 	m.free = false;
+	m.isopen = false;
 	m.parent = parentid;
 	(TreeCtrl::Node&)m = n;
 	if(parentid >= 0) {
