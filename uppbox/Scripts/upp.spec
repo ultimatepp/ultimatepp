@@ -2,7 +2,7 @@
  
 %define		name upp
 #define		version 1314
-#define		$(LC_TIME=En date '+%a %b %d %Y')      
+#define		date $(LC_TIME=En date '+%a %b %d %Y')      
 %define		release 1
 
 %define		title     Ultimate++
@@ -29,7 +29,7 @@ Buildrequires:	X11-devel freetype2-devel expat-devel
 %if "%?suse_version" != ""
 Buildrequires:	patch make xorg-x11-devel freetype2-devel libexpat-devel
 
-# Fedora specific Buildrequires
+# Fedora based distro specific Buildrequires
 %else
 Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel
 %endif
@@ -37,7 +37,7 @@ Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel
 
 # -----
 Requires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel
-Requires:       valgrind
+Requires:       valgrind xterm
 
 # Mandriva specific Requires
 %if "%?mdvver" != ""
@@ -48,7 +48,7 @@ Requires:  X11-devel freetype2-devel expat-devel
 %if "%?suse_version" != ""
 Requires:	xorg-x11-devel freetype2-devel libexpat-devel
 
-# Fedora specific Requires
+# Fedora based distro specific Requires
 %else
 Requires:	xorg-x11-server-devel freetype-devel expat-devel
 %endif
@@ -81,7 +81,15 @@ make -C uppsrc \
      -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)     \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)" \
      -e UPPOUT="$PWD/out/" \
-     -e OutFile="$PWD/out/ide.out"
+     -e OutFile="$PWD/out/ide.out" \
+%if "%?fedora" != ""
+     -e LINKOPTIONS="$(pkg-config --libs libpng12 freetype2) "
+%endif
+
+# We remove WbemUuid.Lib to prevent strip application to crash at build time in Fedora
+%if "%?fedora" != ""
+rm -f bazaar/SysInfo/plugin/WbemUuid.Lib
+%endif
 
 #-------
 %install
@@ -109,8 +117,14 @@ cp -a tutorial %{buildroot}/%{_datadir}/%{name}/
 # We create our own GCC.bm
 # cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{name}/
 
-INCLUDEDIR=$( pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+INCLUDEDIR=$( pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 LIBDIR=$( pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+
+%if "%?fedora" != ""
+     LINK="$(pkg-config --libs libpng12 freetype2)"
+%else
+     LINK=""
+%endif
 
 cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
 BUILDER		= "GCC";
@@ -118,6 +132,7 @@ COMPILER	= "g++";
 DEBUG_INFO	= "2";
 DEBUG_BLITZ	= "1";
 DEBUG_LINKMODE	= "1";
+DEBUG_LINK	= "$LINK";
 DEBUG_OPTIONS	= "-O0";
 DEBUG_FLAGS	= "";
 RELEASE_BLITZ		= "0";
@@ -125,7 +140,7 @@ RELEASE_LINKMODE	= "1";
 RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
 RELEASE_SIZE_OPTIONS	= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
 RELEASE_FLAGS	= "";
-RELEASE_LINK	= "-Wl,--gc-sections";
+RELEASE_LINK	= "-Wl,--gc-sections $LINK";
 DEBUGGER	= "gdb";
 PATH		= "";
 INCLUDE		= "$INCLUDEDIR";
