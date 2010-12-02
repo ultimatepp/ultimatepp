@@ -402,7 +402,7 @@ public:
 	virtual Value GetData() const;
 
 private:
-	PopUpTree        tree;
+	PopUpTree          tree;
 	const Display     *valuedisplay;
 	DisplayWithIcon    icond;
 	int                dropwidth;

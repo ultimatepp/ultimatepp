@@ -1180,7 +1180,7 @@ public:
 	bool    SetWantFocus();
 	Ctrl&   InitFocus(bool ft = true)          { initfocus = ft; return *this; }
 	Ctrl&   NoInitFocus()                      { return InitFocus(false); }
-	bool    IsInitFocus()                      { return initfocus; }
+	bool    IsInitFocus() const                { return initfocus; }
 	Ctrl   *GetFocusChild() const              { return HasChild(FocusCtrl()) ? ~FocusCtrl() : NULL; }
 	Ctrl   *GetFocusChildDeep() const          { return HasChildDeep(FocusCtrl()) ? ~FocusCtrl() : NULL; }
 
@@ -1230,7 +1230,7 @@ public:
 	Ctrl&   TransparentBackPaint()             { backpaint = TRANSPARENTBACKPAINT; return *this; }
 	Ctrl&   NoBackPaint()                      { return BackPaint(NOBACKPAINT); }
 	Ctrl&   BackPaintHint();
-	int     GetBackPaint()                     { return backpaint; }
+	int     GetBackPaint() const               { return backpaint; }
 	Ctrl&   Transparent(bool bp = true)        { transparent = bp; return *this; }
 	Ctrl&   NoTransparent()                    { return Transparent(false); }
 	bool    IsTransparent() const              { return transparent; }
