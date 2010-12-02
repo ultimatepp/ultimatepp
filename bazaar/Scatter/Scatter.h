@@ -352,9 +352,9 @@ private:
 public:
 	typedef Scatter CLASSNAME;
 	Scatter();
-	~Scatter();
 };
 
+typedef Scatter Plot2D;
 
 #endif
 

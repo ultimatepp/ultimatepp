@@ -74,12 +74,14 @@ Scatter& Scatter::SetPlotAreaPoz(const int& poz_x, const int& poz_y)
 }
 Scatter& Scatter::H_Border(const int& poz_x)
 {
-	if(poz_x>=0) px=poz_x;
+	if(poz_x>=0) 
+		px=poz_x;
 	return *this;
 }
 Scatter& Scatter::V_Border(const int& poz_y)
 {
-	if(poz_y>=0) py=poz_y;
+	if(poz_y>=0) 
+		py=poz_y;
 	return *this;
 }
 
@@ -178,14 +180,18 @@ void Scatter::DrawLegend(Draw& w,const int& scale) const
 		int Nc;//number of complete rows
 		int LCR;//number of labels on complete row
 		int R;//number of remaining labels on incomplete row
-		if(NMR>N)           {Nc=0;      LCR=0;      R=N;}
-		else if (NMR==N)    {Nc=1;      LCR=N;      R=0;}
-		else                {Nc=N/NMR;  LCR=NMR;    R=N%NMR;}
+		if(NMR>N)           
+			{Nc=0;      LCR=0;      R=N;}
+		else if (NMR==N)    
+			{Nc=1;      LCR=N;      R=0;}
+		else                
+			{Nc=N/NMR;  LCR=NMR;    R=N%NMR;}
 		for(int j=0;j<=Nc;j++)          
 		{
 			int start=N-(j+1)*LCR;
 			int end=N-j*LCR;
-			if (j==Nc) {start=0; end=R;}
+			if (j==Nc) 
+				{start=0; end=R;}
 			for(int i=start;i<end;i++)
 			{
 				/*w.DrawRect(scale*(i-start)*legendWeight,
@@ -614,7 +620,8 @@ void Scatter::SetShowMark(const int& j, const bool& show)
 
 bool Scatter::IsMarkShow(const int& j) const throw (Exc)
 {
-	if(!IsValid(j)) throw (Exc(t_("Invalid series index!")));
+	if(!IsValid(j)) 
+		throw (Exc(t_("Invalid series index!")));
 	return vShowMark[j];
 }
 
@@ -629,7 +636,8 @@ void Scatter::SetJoin(const int& j, const bool& join)
 
 bool Scatter::IsJoined(const int& j) const throw (Exc)
 {
-	if(!IsValid(j)) throw (Exc(t_("Invalid series index!")));
+	if(!IsValid(j)) 
+		throw (Exc(t_("Invalid series index!")));
 	
 	return vJoin[j];	
 }
@@ -645,7 +653,8 @@ void Scatter::SetSmooth(const int& j, const bool& smooth)
 
 bool Scatter::IsSmooth(const int& j) const throw (Exc)
 {
-	if(!IsValid(j)) throw (Exc(t_("Invalid series index!")));
+	if(!IsValid(j)) 
+		throw (Exc(t_("Invalid series index!")));
 	
 	return vSmooth[j];	
 }
@@ -667,8 +676,8 @@ Scatter &Scatter::SetDataPrimaryY(const bool& primary)
 
 bool Scatter::IsDataPrimaryY(const int& j) const throw (Exc)
 {
-	if(!IsValid(j)) throw (Exc(t_("Invalid series index!")));
-	
+	if(!IsValid(j)) 
+		throw (Exc(t_("Invalid series index!")));
 	return vPPrimaryY[j];	
 }
 
@@ -712,8 +721,8 @@ Scatter &Scatter::SetFunctPrimaryY(const bool& primary)
 
 bool Scatter::IsFunctPrimaryY(const int& j) const throw (Exc)
 {
-	if(!IsValid(j)) throw (Exc(t_("Invalid series index!")));
-	
+	if(!IsValid(j)) 
+		throw (Exc(t_("Invalid series index!")));
 	return vFPrimaryY[j];	
 }
    
@@ -806,7 +815,8 @@ void Scatter::RemoveFSeries(const int& j)
 			int nf=-1;
 			for(int i=0; i<=j; i++)
 			{
-				if (vFunctionData[i].IsEmpty()) nf++;
+				if (vFunctionData[i].IsEmpty()) 
+					nf++;
 			}
 			vAdress.Remove(nf);
 		}
@@ -925,9 +935,12 @@ void Scatter::ProcessPopUp(const Point & pt)
 	double x=(pt.x-px)*xRange/(GetSize().cx-2*px-1)+xMin;		
 	double y=(GetSize().cy-py-pt.y-1)*yRange/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin;
 	double y2=(GetSize().cy-py-pt.y-1)*yRange2/(GetSize().cy-2*py-titleFont.GetHeight()-1)+yMin2;
-	if(logX) x=pow(10.0, x);
-	if(logY) y=pow(10.0, y);
-	if(logY2) y2=pow(10.0, y2);
+	if(logX) 
+		x=pow(10.0, x);
+	if(logY) 
+		y=pow(10.0, y);
+	if(logY2) 
+		y2=pow(10.0, y2);
 	String strx, stry;
 	if (cbModifFormatX)
 		cbModifFormatX(strx, 0, x); 
@@ -1353,7 +1366,8 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 
 	w.DrawRect(1,1,l-2,h-1,plotAreaColor);	//grosimea liniei nu este scalata
 	int gW=fround(gridWidth*scale/6);
-	if(gridWidth<0) gW=gridWidth;   
+	if(gridWidth<0) 
+		gW=gridWidth;   
 	Vector<Point> p;
 	p.SetCount(2);       
 	if (drawVGrid) 
@@ -1439,7 +1453,8 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 							iy=fround(h*(v[i].y-yMin2)/yRange2);
 						p2<<Point(ix,h-iy);
 					}
-					if(!p2.IsEmpty()) DrawPolylineX(w, p2,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
+					if(!p2.IsEmpty()) 
+						DrawPolylineX(w, p2,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
 				} else if (!p1.IsEmpty()) 
 					DrawPolylineX(w, p1,fround(scale*vPThickness[j]/6),vPColors[j],vPPattern[j], scale);
 			}
@@ -1459,13 +1474,12 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 		{
 			Vector<Point> p1;
 			for (int i=0; i<vFunctionData[j].GetCount(); i++){
-							
 				ix=fround(l*(vFunctionData[j][i].x-xMin)/xRange);
 				if (vFPrimaryY[j])
 					iy=fround(h*(vFunctionData[j][i].y-yMin)/yRange);				
 				else
 					iy=fround(h*(vFunctionData[j][i].y-yMin2)/yRange2);				
-					p1<<Point(ix,h-iy);				                        
+				p1<<Point(ix,h-iy);				                        
 			}
 			DrawPolylineX(w, p1,fround(scale*vFThickness[j]/6),vFColors[j],vFPattern[j], scale);
 		}
@@ -1486,8 +1500,8 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 		}
 	}
 	w.End();
-	
 }
+
 Vector<XY> Scatter::Cubic(const Vector<XY>& DataSet, const int& fineness,double tension) const
 {
 	Vector<XY> OutSet;
@@ -1592,7 +1606,8 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 	}
 	
 	w.Offset(Point(scale*px,scale*py+scale*titleFont.GetHeight()));
-	if(showLegend) DrawLegend(w,scale);
+	if(showLegend) 
+		DrawLegend(w,scale);
 	int l=scale*GetSize().cx-2*scale*px;
 	int h=scale*GetSize().cy-2*scale*py-scale*titleFont.GetHeight();
 
@@ -1675,8 +1690,8 @@ void Scatter::SetDrawing(Draw& w, const int& scale) const
 		ImageDraw imdraw(3*l,3*h);	
 		Plot (imdraw,3,3*l,3*h);
 		w.DrawImage(0,0,l,h,imdraw);
-	}	
-	else Plot(w,scale,l,h);		
+	} else 
+		Plot(w,scale,l,h);		
 
 	w.End();
 }
@@ -1718,9 +1733,5 @@ Scatter::Scatter():
 	BackPaint();
 	popText.SetColor(::Color(200,220,255));        
 	SetMouseBehavior(defaultMouse);
-}
-
-Scatter::~Scatter()
-{
 }
 

@@ -58,6 +58,9 @@ ctrl Scatter {
        
 	}
 };
+ctrl Plot2D {
+	> Scatter;
+};
 enum_property titlePosition {
 	"0" : "BOTTOM",
 	"1" : "TOP"

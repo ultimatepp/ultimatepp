@@ -2,7 +2,7 @@ topic "Scatter";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%EN-US 
-[s1; [+184 Scatter]&]
+[s1; [+184 Scatter (Plot2D)]&]
 [s0; [2 Versatile 2D graph control.]&]
 [s0;2 &]
 [s0; [2 Scatter control has been developed by Andrei Catalin (andrei`-catalin).]&]
