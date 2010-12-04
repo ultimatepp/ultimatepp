@@ -465,6 +465,7 @@ bool Print(const RichText& text, const Rect& page, int currentpage, const char *
 	PrinterJob pj(name);
 	pj.CurrentPage(currentpage);
 	pj.PageCount(text.GetHeight(page).page + 1);
+	pj.Landscape(page.GetWidth() > page.GetHeight());
 	if(pj.Execute()) {
 		Print(pj, text, page, pj.GetPages());
 		return true;
