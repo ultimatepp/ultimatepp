@@ -193,32 +193,7 @@ filename.&]
 [s5;:FileList`:`:OkEdit`(`): [@(0.0.255) void]_[* OkEdit]()&]
 [s2;%% Ends the editation and calls WhenRename to actually rename 
 the filename.&]
-[s3; &]
-[s4; &]
-[s5;:FileList`:`:Insert`(int`,const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`,bool`): [@(0.0.255) v
-oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
-]_[*@3 name], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon]_`=_Null, 
-[_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_SColorText(), 
-[@(0.0.255) bool]_[*@3 isdir]_`=_[@(0.0.255) false], [_^int64^ int64]_[*@3 length]_`=_[@3 0],
- [_^Time^ Time]_[*@3 time]_`=_Null, [_^Color^ Color]_[*@3 extink]_`=_Null, 
-[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 desc]_`=_Null, 
-[_^Font^ Font]_[*@3 descfont]_`=_Null, [_^Value^ Value]_[*@3 data]_`=_Null, 
-[_^Color^ Color]_[*@3 underline]_`=_Null, [@(0.0.255) bool]_[*@3 unixexe]_`=_[@(0.0.255) fa
-lse])&]
-[s2;%% Inserts a new file item at specified position.&]
-[s3;%% &]
-[s4; &]
-[s5;:FileList`:`:Set`(int`,const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`,bool`): [@(0.0.255) v
-oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_
-[*@3 name], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon]_`=_Null, 
-[_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_SColorText(), 
-[@(0.0.255) bool]_[*@3 isdir]_`=_[@(0.0.255) false], [_^int64^ int64]_[*@3 length]_`=_[@3 0],
- [_^Time^ Time]_[*@3 time]_`=_Null, [_^Color^ Color]_[*@3 extink]_`=_Null, 
-[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 desc]_`=_Null, 
-[_^Font^ Font]_[*@3 descfont]_`=_Null, [_^Value^ Value]_[*@3 data]_`=_Null, 
-[_^Color^ Color]_[*@3 underline]_`=_Null, [@(0.0.255) bool]_[*@3 unixexe]_`=_[@(0.0.255) fa
-lse])&]
-[s2;%% Replaces an information about a file item at specified position.&]
+[s2;%% &]
 [s3;%% &]
 [s4; &]
 [s5;:FileList`:`:SetIcon`(int`,const Image`&`): [@(0.0.255) void]_[* SetIcon]([@(0.0.255) i
@@ -248,6 +223,32 @@ lse])&]
 ]_[* operator`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2;%% Same as Get([%-*@3 i]).&]
 [s3; &]
+[s4; &]
+[s5;:FileList`:`:Insert`(int`,const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`,bool`,bool`): [@(0.0.255) v
+oid]_[* Insert]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
+]_[*@3 name], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon]_`=_Null, 
+[_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_SColorText(), 
+[@(0.0.255) bool]_[*@3 isdir]_`=_[@(0.0.255) false], [_^int64^ int64]_[*@3 length]_`=_[@3 0],
+ [_^Time^ Time]_[*@3 time]_`=_Null, [_^Color^ Color]_[*@3 extink]_`=_Null, 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 desc]_`=_Null, 
+[_^Font^ Font]_[*@3 descfont]_`=_Null, [_^Value^ Value]_[*@3 data]_`=_Null, 
+[_^Color^ Color]_[*@3 underline]_`=_Null, [@(0.0.255) bool]_[*@3 unixexe]_`=_[@(0.0.255) fa
+lse], [@(0.0.255) bool]_[*@3 hidden]_`=_[@(0.0.255) false])&]
+[s2;%% Inserts a new file item at specified position.&]
+[s3;%% &]
+[s4; &]
+[s5;:FileList`:`:Set`(int`,const String`&`,const Image`&`,Font`,Color`,bool`,int64`,Time`,Color`,const String`&`,Font`,Value`,Color`,bool`,bool`): [@(0.0.255) v
+oid]_[* Set]([@(0.0.255) int]_[*@3 ii], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_
+[*@3 name], [@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[*@3 icon]_`=_Null, 
+[_^Font^ Font]_[*@3 font]_`=_StdFont(), [_^Color^ Color]_[*@3 ink]_`=_SColorText(), 
+[@(0.0.255) bool]_[*@3 isdir]_`=_[@(0.0.255) false], [_^int64^ int64]_[*@3 length]_`=_[@3 0],
+ [_^Time^ Time]_[*@3 time]_`=_Null, [_^Color^ Color]_[*@3 extink]_`=_Null, 
+[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 desc]_`=_Null, 
+[_^Font^ Font]_[*@3 descfont]_`=_Null, [_^Value^ Value]_[*@3 data]_`=_Null, 
+[_^Color^ Color]_[*@3 underline]_`=_Null, [@(0.0.255) bool]_[*@3 unixexe]_`=_[@(0.0.255) fa
+lse], [@(0.0.255) bool]_[*@3 hidden]_`=_[@(0.0.255) false])&]
+[s2;%% Replaces an information about a file item at specified position.&]
+[s3;%% &]
 [s4; &]
 [s5;:FileList`:`:GetCurrentName`(`)const: [_^String^ String]_[* GetCurrentName]()_[@(0.0.255) c
 onst]&]
@@ -315,6 +316,10 @@ applications (e.g. file selectors).&]
 [s4; &]
 [s5;:FileList`:`:File`:`:unixexe: [@(0.0.255) bool]_[* unixexe]&]
 [s2;%% If true, item in POSIX has executable rights.&]
+[s3; &]
+[s4; &]
+[s5;:FileList`:`:File`:`:hidden: [@(0.0.255) bool]_[* hidden]&]
+[s2;%% If true, item is hidden.&]
 [s3; &]
 [s4; &]
 [s5;:FileList`:`:File`:`:icon: [_^Image^ Image]_[* icon]&]
