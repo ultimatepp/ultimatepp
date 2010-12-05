@@ -171,7 +171,7 @@ struct FileExtMaker : ImageMaker {
 		String minor;
 		if(!Single<ExtToMime>().GetMime(ext, major, minor))
 			return Null;
-		Image img = GnomeImage("mime-" + major + '-' + minor, large ? 48 : 16);
+		Image img = GnomeImage("mime-" + major + '-' + minor, large);
 		return IsNull(img) ? GnomeImage("mime-" + major) : img;
 	}
 };
@@ -327,8 +327,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			   MatchSearch(fi.filename, search) && show) {
 			#ifdef PLATFORM_X11
 				Image img = isdrive ? PosixGetDriveImage(fi.filename, false)
-				                    : lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
-				                                : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
+				                    : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#else
 //				Image img = lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
 //				                      : GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, fi.unix_mode & 0111, false);
@@ -569,7 +568,9 @@ void FileSel::SearchLoad()
 		SearchLoad();
 	}
 
+#ifdef PLATFORM_WIN32
 	lazyicons.Start(list, d, WhenIcon);
+#endif
 	places.KillCursor();
 	if(d.GetCount())
 		places.FindSetCursor(d);
