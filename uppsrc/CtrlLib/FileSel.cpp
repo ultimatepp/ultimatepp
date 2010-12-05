@@ -94,7 +94,7 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 }
 
 #else
-Image GtkThemeIcon(const char *name, int size);
+Image GtkThemeIcon(const char *name, bool large);
 
 Image GnomeImage(const char *s, bool large = false)
 {
