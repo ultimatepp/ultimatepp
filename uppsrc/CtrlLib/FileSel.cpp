@@ -330,14 +330,14 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 				                    : lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
 				                                : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#else
-				Image img = lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
-				                      : GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, fi.unix_mode & 0111, false);
-//				Image img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false, lazyicons);
+//				Image img = lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
+//				                      : GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, fi.unix_mode & 0111, false);
+				Image img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false, lazyicons);
 			#endif
 				if(IsNull(img))
 					img = fi.is_directory ? CtrlImg::Dir() : CtrlImg::File();
 				WhenIcon(fi.is_directory, fi.filename, img);
-				list.Add(fi.filename, fi.is_hidden && !lazyicons ? Contrast(img, 200) : img,
+				list.Add(fi.filename, fi.is_hidden ? Contrast(img, 200) : img,
 						 StdFont().Bold(fi.is_directory),
 						 nd ? SColorDisabled : fi.is_hidden ? Blend(SColorText, Gray, 200) : SColorText, fi.is_directory,
 						 fi.is_directory ? -1 : fi.length,
@@ -373,31 +373,32 @@ void LazyFileIcons::Do()
 			return;
 		}
 		const FileList::File& f = list->Get(pos);
-		if(f.icon.IsSame(CtrlImg::Dir()) || f.icon.IsSame(CtrlImg::File())) {
-			int t0 = GetTickCount();
-			String n = f.name;
+		int t0 = GetTickCount();
+		String n = f.name;
 #ifdef PLATFORM_WIN32
-			Image img = GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick);
+		Image img = GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick);
 #else
-			Image img = GetFileIcon(dir, f.name, f.isdir, f.unixexe, false);
+		Image img = GetFileIcon(dir, f.name, f.isdir, f.unixexe, false);
 #endif
-			if(f.hidden)
-				img = Contrast(img, 200);
-			list->SetIcon(pos, img);
-			if(GetTickCount() - t0 > 500)
-				quick = true;
-		}
+		WhenIcon(f.isdir, f.name, img);
+		if(f.hidden)
+			img = Contrast(img, 200);
+		list->SetIcon(pos, img);
+		if(GetTickCount() - t0 > 100 || GetTickCount() - start > 1500)
+			return;
 		pos++;
 	}
 }
 
-void LazyFileIcons::Start(FileList& list_, const String& dir_)
+void LazyFileIcons::Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_)
 {
 	list = &list_;
 	dir = dir_;
+	WhenIcon = WhenIcon_;
 	pos = 0;
 	quick = false;
 	ptime = 150;
+	start = GetTickCount();
 	Restart(0);
 }
 
@@ -568,7 +569,7 @@ void FileSel::SearchLoad()
 		SearchLoad();
 	}
 
-	lazyicons.Start(list, d);	
+	lazyicons.Start(list, d, WhenIcon);
 	places.KillCursor();
 	if(d.GetCount())
 		places.FindSetCursor(d);

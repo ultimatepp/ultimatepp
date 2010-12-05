@@ -127,12 +127,14 @@ class LazyFileIcons {
 	int          pos;
 	bool         quick;
 	int          ptime;
+	int          start;
+	Callback3<bool, const String&, Image&> WhenIcon;
 
 	void Do();
 	void Restart(int delay)                 { tm.KillSet(delay, callback(this, &LazyFileIcons::Do)); }
 
 public:
-	void Start(FileList& list_, const String& dir_);
+	void Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_);
 };
 
 String DirectoryUp(String& dir, bool basedir = false);
