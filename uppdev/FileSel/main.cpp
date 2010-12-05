@@ -18,7 +18,7 @@ GUI_APP_MAIN
 //	fs.Multi();
 //	fs.ActiveDir("/usr/include");
 //	fs.NoEditFileName();
-//	fs.ActiveDir("c:/");
+	fs.ActiveDir("u:\\");
 //	fs.PreSelect("U:/log.txt");
 //	fs.ActiveType(3);
 	for(;;) {
