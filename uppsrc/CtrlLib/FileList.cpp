@@ -231,12 +231,13 @@ void FileList::Insert(int ii,
                       const String& name, const Image& icon, Font font, Color ink,
 				      bool isdir, int64 length, Time time, Color extink,
 				      const String& desc, Font descfont, Value data, Color uln,
-				      bool unixexe)
+				      bool unixexe, bool hidden)
 {
 	Value v;
 	File& m = CreateRawValue<File>(v);
 	m.isdir = isdir;
 	m.unixexe = unixexe;
+	m.hidden = hidden;
 	m.icon = icon;
 	m.name = name;
 	m.font = font;
@@ -256,12 +257,13 @@ void FileList::Set(int ii,
                    const String& name, const Image& icon, Font font, Color ink,
 				   bool isdir, int64 length, Time time, Color extink,
 				   const String& desc, Font descfont, Value data, Color uln,
-				   bool unixexe)
+				   bool unixexe, bool hidden)
 {
 	Value v;
 	File& m = CreateRawValue<File>(v);
 	m.isdir = isdir;
 	m.unixexe = unixexe;
+	m.hidden = hidden;
 	m.icon = icon;
 	m.name = name;
 	m.font = font;
@@ -289,12 +291,14 @@ void FileList::SetIcon(int ii, const Image& icon)
 
 void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
 				   bool isdir, int64 length, Time time, Color extink,
-				   const String& desc, Font descfont, Value data, Color uln, bool unixexe)
+				   const String& desc, Font descfont, Value data, Color uln,
+				   bool unixexe, bool hidden)
 {
 	Value v;
 	File& m = CreateRawValue<File>(v);
 	m.isdir = isdir;
 	m.unixexe = unixexe;
+	m.hidden = hidden;
 	m.icon = icon;
 	m.name = name;
 	m.font = font;

@@ -337,17 +337,21 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 				if(IsNull(img))
 					img = fi.is_directory ? CtrlImg::Dir() : CtrlImg::File();
 				WhenIcon(fi.is_directory, fi.filename, img);
-				list.Add(fi.filename, fi.is_hidden ? Contrast(img, 200) :img,
+				list.Add(fi.filename, fi.is_hidden && !lazyicons ? Contrast(img, 200) : img,
 						 StdFont().Bold(fi.is_directory),
 						 nd ? SColorDisabled : fi.is_hidden ? Blend(SColorText, Gray, 200) : SColorText, fi.is_directory,
 						 fi.is_directory ? -1 : fi.length,
 						 Null, nd ? SColorDisabled
 						          : fi.is_directory ? SColorText
 						                            : fi.is_hidden ? Blend(SColorMark, Gray, 200)
-						                                           : SColorMark
-#ifdef PLATFORM_X11
-						 , fi.unix_mode & 0111
+						                                           : SColorMark,
+				         Null, Null, Null, Null,
+#ifdef PLATFORM_WIN32
+                         false,
+#else
+						 fi.unix_mode & 0111,
 #endif
+				         fi.is_hidden
 				);
 			}
 		}
@@ -373,10 +377,13 @@ void LazyFileIcons::Do()
 			int t0 = GetTickCount();
 			String n = f.name;
 #ifdef PLATFORM_WIN32
-			list->SetIcon(pos, GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick));
+			Image img = GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick);
 #else
-			list->SetIcon(pos, GetFileIcon(dir, f.name, f.isdir, f.unixexe, false));
+			Image img = GetFileIcon(dir, f.name, f.isdir, f.unixexe, false);
 #endif
+			if(f.hidden)
+				img = Contrast(img, 200);
+			list->SetIcon(pos, img);
 			if(GetTickCount() - t0 > 500)
 				quick = true;
 		}
