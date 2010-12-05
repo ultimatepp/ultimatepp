@@ -230,11 +230,13 @@ bool FileList::Key(dword key, int count) {
 void FileList::Insert(int ii,
                       const String& name, const Image& icon, Font font, Color ink,
 				      bool isdir, int64 length, Time time, Color extink,
-				      const String& desc, Font descfont, Value data, Color uln)
+				      const String& desc, Font descfont, Value data, Color uln,
+				      bool unixexe)
 {
 	Value v;
 	File& m = CreateRawValue<File>(v);
 	m.isdir = isdir;
+	m.unixexe = unixexe;
 	m.icon = icon;
 	m.name = name;
 	m.font = font;
@@ -253,11 +255,13 @@ void FileList::Insert(int ii,
 void FileList::Set(int ii,
                    const String& name, const Image& icon, Font font, Color ink,
 				   bool isdir, int64 length, Time time, Color extink,
-				   const String& desc, Font descfont, Value data, Color uln)
+				   const String& desc, Font descfont, Value data, Color uln,
+				   bool unixexe)
 {
 	Value v;
 	File& m = CreateRawValue<File>(v);
 	m.isdir = isdir;
+	m.unixexe = unixexe;
 	m.icon = icon;
 	m.name = name;
 	m.font = font;
@@ -273,13 +277,24 @@ void FileList::Set(int ii,
 	KillEdit();
 }
 
+void FileList::SetIcon(int ii, const Image& icon)
+{
+	Value v;
+	File& m = CreateRawValue<File>(v);
+	m = Get(ii);
+	m.icon = icon;
+	ColumnList::Set(ii, v, !m.isdir);
+	KillEdit();
+}
+
 void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
 				   bool isdir, int64 length, Time time, Color extink,
-				   const String& desc, Font descfont, Value data, Color uln)
+				   const String& desc, Font descfont, Value data, Color uln, bool unixexe)
 {
 	Value v;
 	File& m = CreateRawValue<File>(v);
 	m.isdir = isdir;
+	m.unixexe = unixexe;
 	m.icon = icon;
 	m.name = name;
 	m.font = font;

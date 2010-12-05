@@ -45,7 +45,7 @@ struct FileIconMaker : ImageMaker {
 };
 
 
-Image GetFileIcon(const char *path, bool dir, bool force, bool large)
+Image GetFileIcon(const char *path, bool dir, bool force, bool large, bool quick = false)
 {
 	FileIconMaker m;
 	String ext = GetFileExt(path);
@@ -65,6 +65,10 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large)
 		m.exe = true;
 	else
 		m.file = "x." + ext;
+	if(quick) {
+		m.exe = false;
+		m.file = "x." + ext;
+	}
 	return MakeImage(m);
 }
 
@@ -282,7 +286,7 @@ bool MatchSearch(const String& filename, const String& search)
 
 bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
           Callback3<bool, const String&, Image&> WhenIcon, FileSystemInfo& filesystem,
-          const String& search, bool hidden, bool hiddenfiles)
+          const String& search, bool hidden, bool hiddenfiles, bool lazyicons)
 {
 	if(dir.IsEmpty()) {
 		Array<FileSystemInfo::FileInfo> root = filesystem.Find(Null);
@@ -323,9 +327,12 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			   MatchSearch(fi.filename, search) && show) {
 			#ifdef PLATFORM_X11
 				Image img = isdrive ? PosixGetDriveImage(fi.filename, false)
-				                    : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
+				                    : lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
+				                                : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#else
-				Image img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false);
+				Image img = lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
+				                      : GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, fi.unix_mode & 0111, false);
+//				Image img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false, lazyicons);
 			#endif
 				if(IsNull(img))
 					img = fi.is_directory ? CtrlImg::Dir() : CtrlImg::File();
@@ -338,11 +345,53 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 						          : fi.is_directory ? SColorText
 						                            : fi.is_hidden ? Blend(SColorMark, Gray, 200)
 						                                           : SColorMark
+#ifdef PLATFORM_X11
+						 , fi.unix_mode & 0111
+#endif
 				);
 			}
 		}
 	}
 	return true;
+}
+
+void LazyFileIcons::Do()
+{
+	if(Ctrl::IsWaitingEvent()) {
+		Restart(5);
+		return;
+	}
+	int tm = GetTickCount();
+	while(pos < list->GetCount()) {
+		if(GetTickCount() - tm > ptime) {
+			ptime = 50;
+			Restart(0);
+			return;
+		}
+		const FileList::File& f = list->Get(pos);
+		if(f.icon.IsSame(CtrlImg::Dir()) || f.icon.IsSame(CtrlImg::File())) {
+			int t0 = GetTickCount();
+			String n = f.name;
+#ifdef PLATFORM_WIN32
+			list->SetIcon(pos, GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick));
+#else
+			list->SetIcon(pos, GetFileIcon(dir, f.name, f.isdir, f.unixexe, false));
+#endif
+			if(GetTickCount() - t0 > 500)
+				quick = true;
+		}
+		pos++;
+	}
+}
+
+void LazyFileIcons::Start(FileList& list_, const String& dir_)
+{
+	list = &list_;
+	dir = dir_;
+	pos = 0;
+	quick = false;
+	ptime = 150;
+	Restart(0);
 }
 
 class FileListSortName : public FileList::Order {
@@ -500,7 +549,7 @@ void FileSel::SearchLoad()
 	}
 #endif
 	String emask = GetMask();
-	if(!UPP::Load(list, d, emask, mode == SELECTDIR, WhenIcon, *filesystem, ~search, ~hidden, ~hiddenfiles)) {
+	if(!UPP::Load(list, d, emask, mode == SELECTDIR, WhenIcon, *filesystem, ~search, ~hidden, ~hiddenfiles, true)) {
 		Exclamation(t_("[A3* Unable to read the directory !]&&") + DeQtf((String)~dir) + "&&" +
 		            GetErrorMessage(GetLastError()));
 		if(!basedir.IsEmpty() && String(~dir).IsEmpty()) {
@@ -511,7 +560,8 @@ void FileSel::SearchLoad()
 		olddir = Null;
 		SearchLoad();
 	}
-	
+
+	lazyicons.Start(list, d);	
 	places.KillCursor();
 	if(d.GetCount())
 		places.FindSetCursor(d);
