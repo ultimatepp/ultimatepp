@@ -374,7 +374,6 @@ void LazyFileIcons::Do()
 		const FileList::File& f = list->Get(pos);
 		if(ToLower(GetFileExt(f.name)) == ".exe") {
 			int t0 = GetTickCount();
-			DDUMP(f.name);
 #ifdef PLATFORM_WIN32
 			Image img = GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick);
 #else
@@ -384,7 +383,6 @@ void LazyFileIcons::Do()
 			if(f.hidden)
 				img = Contrast(img, 200);
 			list->SetIcon(pos, img);
-			DDUMP(GetTickCount() - t0);
 			if(GetTickCount() - t0 > 500/* || GetTickCount() - start > 1500*/)
 				return;
 		}
