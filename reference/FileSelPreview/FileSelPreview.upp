@@ -1,0 +1,13 @@
+description "Demonstrates the file preview option of FileSel\377";
+
+uses
+	CtrlLib,
+	plugin\jpg,
+	plugin\gif;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
