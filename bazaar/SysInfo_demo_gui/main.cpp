@@ -331,15 +331,18 @@ void ScreenGrabTab::SwGrabMode_Action() {
 void ScreenGrabTab::ButGrab_Push() {
 #if defined(PLATFORM_WIN32) 
 	FileDelete(EditFileNameGrab.GetData().ToString());
-
+	
+	bool ret;
 	if (SwGrabMode.GetData() == 0) 
-		Record_Desktop(EditFileNameGrab, EditTime, EditFrameRate, OpGrabMouse);
+		ret = Record_Desktop(EditFileNameGrab, EditTime, EditFrameRate, OpGrabMouse);
 	else if (SwGrabMode.GetData() == 1) 
-		Record_Window(EditFileNameGrab, EditTime, GetWindowIdFromCaption(EditWindowTitle, false), EditFrameRate, OpGrabMouse);
+		ret = Record_Window(EditFileNameGrab, EditTime, GetWindowIdFromCaption(EditWindowTitle, false), EditFrameRate, OpGrabMouse);
 	else if (SwGrabMode.GetData() == 2) 
-		Record_DesktopRectangle(EditFileNameGrab, EditTime, EditLeft, EditTop, EditWidth, EditHeight, EditFrameRate, OpGrabMouse);
+		ret = Record_DesktopRectangle(EditFileNameGrab, EditTime, EditLeft, EditTop, EditWidth, EditHeight, EditFrameRate, OpGrabMouse);
 	else
 		throw Exc("Unexpected value");
+	if (!ret)
+		Exclamation("Error on grabbing");
 #endif
 }
 
