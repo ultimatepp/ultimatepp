@@ -1,0 +1,6 @@
+#ifndef _FileSelPreview_icpp_init_stub
+#define _FileSelPreview_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\jpg/init"
+#include "plugin\gif/init"
+#endif
