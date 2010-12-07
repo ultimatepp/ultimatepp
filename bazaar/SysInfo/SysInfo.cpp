@@ -269,8 +269,8 @@ Array <NetAdapter> GetAdapterInfo() {
 		int len = min((DWORD)6, pAdd->PhysicalAddressLength);
 		if (len > 0)
 			adapter.mac = ToUpper(HexString(pAdd->PhysicalAddress, len, 1, ':'));
-		adapter.description = WideToString(pAdd->Description);
-		adapter.fullname = WideToString(pAdd->FriendlyName);
+		adapter.description = Trim(WideToString(pAdd->Description));
+		adapter.fullname = Trim(WideToString(pAdd->FriendlyName));
 		switch (pAdd->IfType) {
 		case IF_TYPE_ETHERNET_CSMACD: 		adapter.type = "ETHERNET";	break;
 		case IF_TYPE_ISO88025_TOKENRING: 	adapter.type = "TOKENRING";	break;
@@ -2064,7 +2064,6 @@ bool Mouse_SetPos(long xMove, long yMove, long windowId)
         yMove = yMove + top;
     }
     SetCursorPos(xMove, yMove);
-    //DoEvents();
     
     return true;
 }
@@ -2145,14 +2144,26 @@ void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compati
 // This is less nice but more compatible for Notepad and MSWord for example
 void PressKey(wchar key, bool hold = false, bool release = false)
 {
-	String numStr = FormatIntDec(key, 5, '0');
-	PressKeyVK(VK_LMENU, true);
-	PressKeyVK(VK_NUMPAD0 + numStr[0] - '0');
-	PressKeyVK(VK_NUMPAD0 + numStr[1] - '0');
-	PressKeyVK(VK_NUMPAD0 + numStr[2] - '0');
-	PressKeyVK(VK_NUMPAD0 + numStr[3] - '0');
-	PressKeyVK(VK_NUMPAD0 + numStr[4] - '0');
-	PressKeyVK(VK_LMENU, false, true);
+	if ((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
+		char buff[120];
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_ILANGUAGE, buff, sizeof(buff));
+		HKL hKeyboardLayout = ::LoadKeyboardLayout(buff, KLF_ACTIVATE);  
+    	SHORT nVK = VkKeyScanExW(key, hKeyboardLayout);
+    	UINT nScan = MapVirtualKeyExW(nVK, MAPVK_VK_TO_CHAR, hKeyboardLayout);
+		if (!release) 
+        	keybd_event((BYTE)nVK, (BYTE)nScan, 0, 0);
+    	if (!hold) 
+        	keybd_event((BYTE)nVK, (BYTE)nScan, KEYEVENTF_KEYUP, 0);
+	} else {
+		String numStr = FormatIntDec(key, 5, '0');
+		PressKeyVK(VK_LMENU, true);
+		PressKeyVK(VK_NUMPAD0 + numStr[0] - '0');
+		PressKeyVK(VK_NUMPAD0 + numStr[1] - '0');
+		PressKeyVK(VK_NUMPAD0 + numStr[2] - '0');
+		PressKeyVK(VK_NUMPAD0 + numStr[3] - '0');
+		PressKeyVK(VK_NUMPAD0 + numStr[4] - '0');
+		PressKeyVK(VK_LMENU, false, true);
+	}
 }
 /*
 void PressKey(wchar key, bool hold = false, bool release = false)
@@ -2958,6 +2969,7 @@ int GetKeyCode(String key) {
 
 void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 {
+	Array <wchar> virt;
 	bool inKey = false;
 	String key = "";
 	WString wtext(text);
@@ -2985,10 +2997,14 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
  		if (inKey == false) {
 			if (!vk) 
  				PressKey(c);
-			else
-				PressKeyVK(c);
+			else {
+				PressKeyVK(c, true);
+				virt.Add(c);
+			}
 		}
 	}
+	for (int i = 0; i < virt.GetCount(); ++i)
+		PressKeyVK(virt[i], false, true);
 	Sleep(finalDelay);
 }
 

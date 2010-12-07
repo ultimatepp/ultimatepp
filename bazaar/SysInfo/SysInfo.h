@@ -21,7 +21,7 @@ struct NetAdapter {
 };
 
 Array <NetAdapter> GetAdapterInfo();
-String GetMacAddress();		// Deprecated
+//String GetMacAddress();		// Deprecated
 
 #if defined(PLATFORM_WIN32) 
 bool GetVideoInfo(Array <Value> &name, Array <Value> &description, Array <Value> &videoProcessor, 
