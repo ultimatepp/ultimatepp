@@ -87,7 +87,7 @@ public:
 	void MkDirOption(bool b)						{fs.MkDirOption(b);};
 	String Get() const                           	{return GetData();};	
 	String operator~() const                     	{return Get();};
-	operator String() const                      	{return Get();}
+	operator String() const                      	{return Get();};
 	void Set(const String& s)						{fs.Set(s); /*SetData(s);*/};
 	void operator<<=(const String& s)            	{Set(s);};
 	void operator=(const String& s)              	{Set(s);};

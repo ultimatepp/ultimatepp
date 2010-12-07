@@ -557,7 +557,7 @@ topic "StaticClock";
 ™¿Ÿïêøÿµƒ’ùæ
 ]&]
 [s0;2 &]
-[s4; StaticClock shows a clock.&]
+[s4; StaticClock shows a clock running at real time.&]
 [s4; &]
 [s1; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
