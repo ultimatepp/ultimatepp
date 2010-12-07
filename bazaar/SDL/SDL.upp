@@ -1,3 +1,5 @@
+description "SDL in an U++ control\377";
+
 uses
 	Core;
 
@@ -59,7 +61,4 @@ file
 	plugin\include\SDL_types.h,
 	plugin\include\SDL_version.h,
 	plugin\include\SDL_video.h;
-
-mainconfig
-	"" = "";
 
