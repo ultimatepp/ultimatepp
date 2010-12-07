@@ -1519,7 +1519,7 @@ void FileSel::InitSplitter()
 	int i = 0;
 	if(places.GetCount())
 		splitter.SetPos(2000, i++);
-	splitter.SetPos(10000 - 2000 * n, i);
+	splitter.SetPos(10000 - 2000 * (n - 1), i);
 }
 
 FileSel& FileSel::Preview(Ctrl& ctrl)
