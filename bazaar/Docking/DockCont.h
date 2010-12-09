@@ -45,6 +45,7 @@ public:
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 #elif defined(PLATFORM_X11)
 	virtual void EventProc(XWindow& w, XEvent *event);
+	void Notify();
 #endif
 
 	enum DockState {

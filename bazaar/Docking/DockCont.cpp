@@ -49,9 +49,11 @@ void DockCont::StartMouseDrag()
 	SendMessage(GetHWND(), WM_NCLBUTTONDOWN, 2, MAKELONG(GetMousePos().x, GetMousePos().y));	
 }
 #elif defined(PLATFORM_X11)
+static const int CB_ID = 10;
 void DockCont::EventProc(XWindow& w, XEvent *event)
 {
-	
+	static bool notify = true;
+	static bool composited = IsCompositedGui();
 	if (IsOpen() && !animating) {
 		switch(event->type) {
 		case ConfigureNotify:{
@@ -66,8 +68,20 @@ void DockCont::EventProc(XWindow& w, XEvent *event)
 			}
 			break;
 		case FocusIn: {
+				if (notify && composited) {
+					SetTimeCallback(-300, THISBACK(Notify), CB_ID);
+					notify = false;
+				}
 				XFocusChangeEvent &e = event->xfocus;
 				if (e.mode == NotifyUngrab && dragging) {
+					if (!notify && composited) {
+						KillTimeCallback(CB_ID);
+						notify = true;
+						Ctrl* owner = GetOwner();
+						if (owner)
+							owner->SetFocus();
+						SetFocus();
+					}
 					dragging = false;
 					MoveEnd();
 					return;
@@ -77,6 +91,16 @@ void DockCont::EventProc(XWindow& w, XEvent *event)
 		}
 	}
 	TopWindow::EventProc(w, event);	
+}
+
+void DockCont::Notify()
+{
+	Window window = GetWindow();
+	if (window) {
+		XWindowAttributes attr;
+		XGetWindowAttributes(Xdisplay, window, &attr);
+		XSetWindowBorderWidth(Xdisplay, window, attr.border_width);
+	}
 }
 
 void DockCont::StartMouseDrag()
