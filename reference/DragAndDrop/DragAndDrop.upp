@@ -1,0 +1,11 @@
+description "Demonstrates drag&drop between two instances of application\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
