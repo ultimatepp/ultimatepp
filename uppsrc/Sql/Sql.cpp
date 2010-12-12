@@ -284,6 +284,7 @@ Value Sql::operator[](SqlId id) const {
 	for(int i = 0; i < cn->info.GetCount(); i++)
 		if(cn->info[i].name == s)
 			return operator[](i);
+	NEVER();
 	return Value();
 }
 
