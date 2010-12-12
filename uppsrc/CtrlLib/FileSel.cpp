@@ -366,7 +366,7 @@ void LazyFileIcons::Do()
 	}
 	int tm = GetTickCount();
 	while(pos < list->GetCount()) {
-		if(GetTickCount() - tm > ptime) {
+		if((int)GetTickCount() - tm > ptime) {
 			ptime = 50;
 			Restart(0);
 			return;
