@@ -1535,8 +1535,14 @@ lay inside it.&]
 events.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Ctrl`:`:HasMouseInFrame`(const Rect`&`):%- [@(0.0.255) bool]_[* HasMouseInFrame]([@(0.0.255) c
-onst]_[_^`:`:Rect^ Rect][@(0.0.255) `&]_[*@3 r])&]
+[s5;:Ctrl`:`:HasMouseDeep`(`)const:%- [@(0.0.255) bool]_[* HasMouseDeep]()_[@(0.0.255) cons
+t]&]
+[s2; Returns true if Ctrl or any of its descendants is target for 
+mouse events.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:HasMouseInFrame`(const Rect`&`)const:%- [@(0.0.255) bool]_[* HasMouseInFrame
+]([@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 r])_[@(0.0.255) const]&]
 [s7;i1120;a17; [%-*C@3 r]-|rectangle in frame area.&]
 [s7;i1120;a17; [*/ Return value]-|true when Ctrl is target for mouse 
 events and mouse pointer is inside specified frame area rectangle.&]
