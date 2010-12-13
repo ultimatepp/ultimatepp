@@ -392,7 +392,7 @@ Ctrl   *Ctrl::GetMouseCtrl()
 	return mouseCtrl;
 }
 
-bool    Ctrl::HasMouseInFrame(const Rect& r)
+bool    Ctrl::HasMouseInFrame(const Rect& r) const
 {
 	GuiLock __;
 	if(!HasMouse())

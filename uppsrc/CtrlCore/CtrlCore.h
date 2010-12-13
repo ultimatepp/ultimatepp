@@ -1158,7 +1158,7 @@ public:
 	Ctrl&   NoIgnoreMouse()                              { return IgnoreMouse(false); }
 	bool    HasMouse() const;
 	bool    HasMouseDeep() const;
-	bool    HasMouseInFrame(const Rect& r);
+	bool    HasMouseInFrame(const Rect& r) const;
 	bool    HasMouseIn(const Rect& r) const;
 	Point   GetMouseViewPos() const;
 	static Ctrl *GetMouseCtrl();
