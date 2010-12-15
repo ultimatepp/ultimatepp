@@ -632,6 +632,21 @@ during modal dialog lifetime are displayed with enabled Ctrls.&]
 enabled.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:GetOpaqueRect`(`)const:%- [@(0.0.255) virtual] [_^Rect^ Rect]_[* GetOpaqueRect
+]()_[@(0.0.255) const]&]
+[s2; Returns the rectangle of view area that is opaque (is completely 
+filled when painting the widget). The default implementation 
+returns the whole view area if Transparent flag is set, empty 
+rectangle otherwise. Paint routine uses this information to optimize.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Ctrl`:`:GetVoidRect`(`)const:%- [@(0.0.255) virtual] [_^Rect^ Rect]_[* GetVoidRect]()_
+[@(0.0.255) const]&]
+[s2; Returns the rectangle of view area that is fully transparent 
+(nothing is painted in that rectangle). Paint routine uses this 
+information to optimize.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:OverPaint`(`)const:%- [@(0.0.255) virtual] [@(0.0.255) int]_[* OverPaint]()_[@(0.0.255) c
 onst]&]
 [s2;b17;a17; This method can returns non`-zero number that represents 
@@ -639,20 +654,6 @@ paint extension margin of view area `- Ctrl can paint inside
 this margin despite that fact that it does not belong to view. 
 This is useful to represent some specific skinning effect (like 
 glare around the button). Default implementation returns zero.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:GetOpaqueRect`(`):%- [@(0.0.255) virtual] [_^`:`:Rect^ Rect]_[* GetOpaqueRect](
-)&]
-[s2;b17;a17; Returns the rectangle of view area that is opaque (is 
-completely filled when painting the widget). The default implementation 
-returns the whole view area if Transparent flag is set, empty 
-rectangle otherwise. Paint routine uses this information to optimize.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:GetVoidRect`(`):%- [@(0.0.255) virtual] [_^`:`:Rect^ Rect]_[* GetVoidRect]()&]
-[s2;b17;a17; Returns the rectangle of view area that is fully transparent 
-(nothing is painted in that rectangle). Paint routine uses this 
-information to optimize.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:Close`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Close]()&]

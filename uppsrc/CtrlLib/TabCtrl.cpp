@@ -162,7 +162,7 @@ void TabCtrl::Tabs::Paint(Draw& w)
 	static_cast<TabCtrl *>(GetParent())->PaintTabs(w);
 }
 
-Rect TabCtrl::GetOpaqueRect()
+Rect TabCtrl::GetOpaqueRect() const
 {
 	return pane.GetRect();
 }
