@@ -217,12 +217,12 @@ void  Ctrl::SyncScroll()
 	}
 }
 
-Rect Ctrl::GetOpaqueRect()
+Rect Ctrl::GetOpaqueRect() const
 {
 	return IsTransparent() ? Rect(0, 0, 0, 0) : GetSize();
 }
 
-Rect Ctrl::GetVoidRect()
+Rect Ctrl::GetVoidRect() const
 {
 	return Rect(0, 0, 0, 0);
 }

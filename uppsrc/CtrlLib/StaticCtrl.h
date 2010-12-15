@@ -39,7 +39,7 @@ class LabelBox : public Label {
 public:
 	virtual void   Paint(Draw& w);
 	virtual void   AssignAccessKeys(dword used);
-	virtual Rect   GetVoidRect();
+	virtual Rect   GetVoidRect() const;
 
 public:
 	LabelBox();
@@ -57,7 +57,7 @@ class ParentCtrl : public Ctrl {
 	Size minsize;
 
 public:
-	virtual Rect   GetVoidRect();
+	virtual Rect   GetVoidRect() const;
 	virtual Size   GetStdSize() const;
 	virtual Size   GetMinSize() const;
 

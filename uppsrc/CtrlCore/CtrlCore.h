@@ -996,8 +996,8 @@ public:
 
 	virtual bool   IsShowEnabled() const;
 
-	virtual Rect   GetOpaqueRect();
-	virtual Rect   GetVoidRect();
+	virtual Rect   GetOpaqueRect() const;
+	virtual Rect   GetVoidRect() const ;
 
 	virtual void   Updated();
 

@@ -95,7 +95,7 @@ void  LabelBox::AssignAccessKeys(dword used)
 
 LabelBox::~LabelBox() {}
 
-Rect LabelBox::GetVoidRect()
+Rect LabelBox::GetVoidRect() const
 {
 	Rect r = GetSize();
 	r.left += 2;
@@ -180,7 +180,7 @@ void LabelBox::Paint(Draw& w)
 	w.End();
 }
 
-Rect ParentCtrl::GetVoidRect()
+Rect ParentCtrl::GetVoidRect() const
 {
 	return GetSize();
 }

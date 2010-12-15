@@ -9,7 +9,7 @@ public:
 	virtual bool  Key(dword key, int count);
 	virtual bool  HotKey(dword key);
 	virtual void  Layout();
-	virtual Rect  GetOpaqueRect();
+	virtual Rect  GetOpaqueRect() const;
 	virtual Value GetData() const;
 	virtual void  SetData(const Value& data);
 
