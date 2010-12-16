@@ -767,13 +767,13 @@ void Scatter::RemoveAllSeries()
 	Refresh();
 }
 
-
 void Scatter::PlotFunction(double (*f)(double), const String& legend, const class::Color& fcolor, const int& weight)
 {
 	Vector<XY> series;
 	vFunctionData.AddPick(series);
 	
 	vAdress.Add(f);
+	vAdressPF.Add(PlotFunc());
 	
 	vFColors.Add(fcolor);
 	vFThickness.Add(weight);	
@@ -782,6 +782,23 @@ void Scatter::PlotFunction(double (*f)(double), const String& legend, const clas
 	vFPattern.Add(LINE_SOLID);
 	Refresh();  
 }
+
+void Scatter::PlotFunction(PlotFunc f, const String& legend, const class::Color& fcolor, const int& weight)
+{
+	Vector<XY> series;
+	vFunctionData.AddPick(series);
+	
+	vAdressPF.Add(f);
+	vAdress.Add(fAdress());
+	
+	vFColors.Add(fcolor);
+	vFThickness.Add(weight);	
+	vFLegend.Add(legend);
+	vFPrimaryY.Add(true);
+	vFPattern.Add(LINE_SOLID);
+	Refresh();  
+}
+
 void Scatter::PlotParaFunction(XY (*pf)(double), const String& legend, const class::Color& fcolor, const int& weight,const int& Np)
 {
 	double t;//t must be choosed between [0,1]
@@ -799,6 +816,24 @@ void Scatter::PlotParaFunction(XY (*pf)(double), const String& legend, const cla
 	vFLegend.Add(legend);
 	Refresh();
 }	
+
+void Scatter::PlotParaFunction(PlotParamFunc pf, const String& legend, const class::Color& fcolor, const int& weight,const int& Np)
+{
+	double t;//t must be choosed between [0,1]
+	Vector<XY> series;
+	for (int i=0; i<=Np;i++)
+	{
+		t=(double)i/Np;
+		pf(series.Add(), t);
+	}
+	vFColors.Add(fcolor);
+	vFThickness.Add(weight);
+	vFunctionData.AddPick(series);
+	vFPrimaryY.Add(true);
+	vFPattern.Add(LINE_SOLID);
+	vFLegend.Add(legend);
+	Refresh();
+}
 
 Scatter &Scatter::SetFunctPattern(const String pattern)
 {
@@ -1490,7 +1525,13 @@ void Scatter::Plot(Draw& w, const int& scale,const int& l,const int& h)const
 			{
 				double x=xMin+i*(xRange/l);
 				if (vFPrimaryY[j])
-					iy=fround(h*(vAdress[nf](x)-yMin)/yRange);
+					if (vAdressPF[nf] == PlotFunc()) 
+						iy=fround(h*(vAdress[nf](x)-yMin)/yRange);
+					else {
+						double y;
+						vAdressPF[nf](y, x);
+						iy = fround(h*(y-yMin)/yRange);
+					}
 				else
 					iy=fround(h*(vAdress[nf](x)-yMin2)/yRange2);
 				p1<<Point(i,h-iy);

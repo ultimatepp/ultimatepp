@@ -188,7 +188,12 @@ public:
 	
 	const Vector<String> & GetPLegend() const {return vLegend;}
 	const Vector<String> & GetFLegend() const {return vFLegend;}		
+
+	typedef Callback2<double&, double> PlotFunc; //y = f(x)
+	typedef Callback2<XY&, double> PlotParamFunc;// (x,y) = f(t)
 	
+	void PlotFunction(PlotFunc, const String& legend="", const class::Color& fcolor=Green,const int& weight=6);
+	void PlotParaFunction(PlotParamFunc, const String& legend="", const class::Color& fcolor=Green,const int& weight=6,const int& Np=100);
 	void PlotFunction(double (*f)(double),const String& legend="", const class::Color& fcolor=Green,const int& weight=6);
 	void PlotParaFunction(XY (*pf)(double),const String& legend="", const class::Color& fcolor=Green,const int& weight=6,const int& Np=100);
 	
@@ -273,6 +278,7 @@ private:
 	Vector<String> vFPattern, vPPattern;
 	typedef double (*fAdress)(double);
 	Vector<fAdress> vAdress;
+	Vector<PlotFunc> vAdressPF;
 	Vector<class::Color> vPColors,vFColors;
 	Vector<int> vFThickness,vPThickness;
 	Vector<int> vPWidth;
