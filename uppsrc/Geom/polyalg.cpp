@@ -133,7 +133,7 @@ static Rectf SplitPoly(const Array<Pointf>& polygon, const Vector<int>& polyend,
 int ContainsPoints(const Array<Pointf>& polygon, const Vector<int>& polyend, const Array<Pointf>& points)
 {
 	if(points.IsEmpty() || polygon.GetCount() <= 1)
-		return false;
+		return CMP_OUT;
 	Array<PolyPart> parts;
 	Rectf prect = SplitPoly(polygon, polyend, true, parts);
 	bool is_in = false, is_out = false;
@@ -178,7 +178,7 @@ int ContainsPoints(const Array<Pointf>& polygon, const Vector<int>& polyend, con
 int ContainsPoints(const Array<Pointf>& polygon, const Array<Pointf>& points)
 {
 	if(points.IsEmpty() || polygon.GetCount() <= 1)
-		return false;
+		return CMP_OUT;
 	Vector<int> polyend;
 	polyend.SetCount(1);
 	polyend[0] = polygon.GetCount();

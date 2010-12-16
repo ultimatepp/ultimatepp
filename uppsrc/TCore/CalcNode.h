@@ -333,10 +333,9 @@ public:
 		CalcContext& context;
 	};
 
-		class Global
-	{
+	class Global {
 	public:
-		Global(const String& name, CalcProc proc) { GetGlobals().Add(name, proc); }
+		Global(const String& name, CalcProc proc);
 	};
 
 	CalcContext();

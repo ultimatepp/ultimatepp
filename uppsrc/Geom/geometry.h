@@ -471,11 +471,11 @@ public:
 	bool   Nothing() { count = 0; return false; }
 	void   Remove(int index);
 
-	bool   LL(Pointf P1, Pointf Q1, Pointf P2, Pointf Q2);
-	bool   LC(Pointf P1, Pointf Q1, Pointf C2, double r2);
-	bool   LA(Pointf P1, Pointf Q1, const VecArcInfo& a2);
-	bool   CC(Pointf C1, double r1, Pointf C2, double r2);
-	bool   CA(Pointf C1, double r1, const VecArcInfo& a2);
+	bool   LL(const Pointf& P1, const Pointf& Q1, const Pointf& P2, const Pointf& Q2);
+	bool   LC(const Pointf& P1, const Pointf& Q1, const Pointf& C2, double r2);
+	bool   LA(const Pointf& P1, const Pointf& Q1, const VecArcInfo& a2);
+	bool   CC(const Pointf& C1, double r1, const Pointf& C2, double r2);
+	bool   CA(const Pointf& C1, double r1, const VecArcInfo& a2);
 	bool   AA(const VecArcInfo& a1, const VecArcInfo& a2);
 
 	bool   IsEmpty() const  { return count == 0; }
