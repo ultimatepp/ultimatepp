@@ -550,6 +550,11 @@ void CalcSymbols::Remove(String name)
 	}
 }
 
+CalcContext::Global::Global(const String& name, CalcProc proc)
+{
+	GetGlobals().Add(name, proc); 
+}
+
 CalcContext::CalcContext()
 : nesting(0)
 , opt_const(false)

@@ -39,6 +39,7 @@ public:
 		bool           canselect;
 
 		Node& SetImage(const Image& img)          { image = img; return *this; }
+		Node& SetMargin(int m)                    { margin = m; return *this; }
 		Node& Set(const Value& v)                 { key = value = v; return *this; }
 		Node& Set(const Value& v, const Value& t) { key = v; value = t; return *this; }
 		Node& SetDisplay(const Display& d)        { display = &d; return *this; }

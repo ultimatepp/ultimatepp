@@ -982,7 +982,7 @@ void TreeCtrl::Paint(Draw& w)
 			if(i == 0)
 				dri.top++;
 		}
-		if(w.IsPainting(0, y, sz.cx, msz.cy)) {
+		if(w.IsPainting(0, y, sz.cx, msz.cy) && msz.cy > 0) {
 			w.DrawRect(op.x, op.y, levelcx2, 1, SColorShadow);
 			if(m.canopen || m.child.GetCount()) {
 				Image im = m.isopen ? CtrlImg::treeminus() : CtrlImg::treeplus();

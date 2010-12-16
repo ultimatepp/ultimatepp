@@ -1613,7 +1613,7 @@ void VecIntersection::CheckBearing(double *hints, const VecArcInfo &a)
 //////////////////////////////////////////////////////////////////////
 // LL: line vs line.
 
-bool VecIntersection::LL(Pointf P1, Pointf Q1, Pointf P2, Pointf Q2)
+bool VecIntersection::LL(const Pointf& P1, const Pointf& Q1, const Pointf& P2, const Pointf& Q2)
 {
 	if(min(P2.x, Q2.x) - max(P1.x, Q1.x) > Vec_tolerance
 	|| min(P2.y, Q2.y) - max(P1.y, Q1.y) > Vec_tolerance
@@ -1656,7 +1656,7 @@ bool VecIntersection::LL(Pointf P1, Pointf Q1, Pointf P2, Pointf Q2)
 //////////////////////////////////////////////////////////////////////
 // LC: line vs circle.
 
-bool VecIntersection::LC(Pointf P1, Pointf Q1, Pointf C2, double r2)
+bool VecIntersection::LC(const Pointf& P1, const Pointf& Q1, const Pointf& C2, double r2)
 {
 	Pointf PQ    = Q1 - P1;
 	Pointf CP    = P1 - C2;
@@ -1710,7 +1710,7 @@ bool VecIntersection::LC(Pointf P1, Pointf Q1, Pointf C2, double r2)
 //////////////////////////////////////////////////////////////////////
 // LA: line vs arc.
 
-bool VecIntersection::LA(Pointf P1, Pointf Q1, const VecArcInfo &a2)
+bool VecIntersection::LA(const Pointf& P1, const Pointf& Q1, const VecArcInfo &a2)
 {
 	if(!a2.IsCurved())
 		return LL(P1, Q1, a2.A, a2.B);
@@ -1723,7 +1723,7 @@ bool VecIntersection::LA(Pointf P1, Pointf Q1, const VecArcInfo &a2)
 //////////////////////////////////////////////////////////////////////
 // CC: circle vs circle.
 
-bool VecIntersection::CC(Pointf C1, double r1, Pointf C2, double r2)
+bool VecIntersection::CC(const Pointf& C1, double r1, const Pointf& C2, double r2)
 {
 	if(fabs(r1) <= Vec_tolerance || fabs(r2) <= Vec_tolerance
 		|| (C1 | C2) >= r1 + r2 + Vec_tolerance)
@@ -1763,7 +1763,7 @@ bool VecIntersection::CC(Pointf C1, double r1, Pointf C2, double r2)
 //////////////////////////////////////////////////////////////////////
 // CA: circle vs arc.
 
-bool VecIntersection::CA(Pointf C1, double r1, const VecArcInfo &a2)
+bool VecIntersection::CA(const Pointf& C1, double r1, const VecArcInfo &a2)
 {
 	if(!a2.IsCurved())
 	{

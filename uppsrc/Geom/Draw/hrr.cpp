@@ -1409,7 +1409,7 @@ void HRR::Paint(Draw& draw, const Matrixf& trg_pix, GisTransform transform,
 		<< ", is_bw = " << is_bw << ", out_pixel = " << out_pixel << ", out_alpha = " << out_alpha);
 
 	Matrixf pix_trg = MatrixfInverse(trg_pix);
-	Rect clip = draw.GetPageSize(); //draw.GetClip();
+	Rect clip = draw.GetPaintRect(); //draw.GetClip();
 	Rectf csrc = info.log_rect & transform.SourceExtent(Rectf(clip) * pix_trg);
 //	Pointf scale = Sizef(1, -1) * Sizef(dest.Size()) / Sizef(src.Size());
 //	Pointf delta = Pointf(dest.TopLeft()) - src.BottomLeft() * scale;
