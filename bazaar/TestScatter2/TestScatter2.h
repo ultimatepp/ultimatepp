@@ -41,8 +41,9 @@ double funct3(double x){return 0;}
 
 class Tab2 : public WithTab2<ParentCtrl> {
 public:
-
 	typedef Tab2 CLASSNAME;
+	
+	void funct1p(double &y, double x, double a, double c)	{y = a*(x*x)+c;}
 
 	Tab2();
 };
@@ -57,6 +58,8 @@ Tab2::Tab2()
 	scatter2.PlotFunction(&funct3,"X Axis",Green,18);
 	scatter2.PlotFunction(&funct1,"x^2", Color(28,85,255),6);	
 	scatter2.PlotFunction(&funct2,"-X^2",LtRed);		
+	for(int i = 0; i < 5; i++)
+		scatter2.PlotFunction(THISBACK2(funct1p, 2.0*double(i)/10.0, -10.0+double(i)),"a*x^2+c", Color(28,85,255),6);	
 }
 
 //*******************************************************************************************
@@ -69,8 +72,9 @@ XY para5(double t) {return XY(-0.25+0.5*t,0);}
 
 class Tab3 : public WithTab3<ParentCtrl> {
 public:
-
 	typedef Tab3 CLASSNAME;
+
+	void para1p(XY& xy, double t, double a, double b) {xy = XY(a*cos(2*M_PI*t),b*sin(2*M_PI*t));}
 
 	Tab3();
 };
@@ -87,6 +91,8 @@ Tab3::Tab3()
 	scatter3.PlotParaFunction(para3,"Spiral",::Color(56,170,255),6,150);
 	scatter3.PlotParaFunction(para4,"VLine",LtRed,6,2);
 	scatter3.PlotParaFunction(para5,"HLine",LtRed,6,2);	
+	scatter3.PlotParaFunction(THISBACK2(para1p, 2.0, 0.5),"Circle2",Yellow,6,50);
+	scatter3.PlotParaFunction(THISBACK2(para1p, 4.0, 0.25),"Circle3",Yellow,6,50);
 	scatter3.SetAntialiasing();
 }
 
