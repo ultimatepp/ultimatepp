@@ -128,12 +128,14 @@ class LazyFileIcons {
 	bool         quick;
 	int          ptime;
 	int          start;
+	Vector<int>  ndx;
 	Callback3<bool, const String&, Image&> WhenIcon;
 
 	void Do();
 	void Restart(int delay)                 { tm.KillSet(delay, callback(this, &LazyFileIcons::Do)); }
 
 public:
+	void ReOrder();
 	void Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_);
 };
 
