@@ -365,29 +365,45 @@ void LazyFileIcons::Do()
 		return;
 	}
 	int tm = GetTickCount();
-	while(pos < list->GetCount()) {
+	while(pos < ndx.GetCount()) {
 		if((int)GetTickCount() - tm > ptime) {
 			ptime = 50;
 			Restart(0);
 			return;
 		}
-		const FileList::File& f = list->Get(pos);
-		if(ToLower(GetFileExt(f.name)) == ".exe") {
-			int t0 = GetTickCount();
+		int ii = ndx[pos];
+		if(ii < 0 || ii >= list->GetCount())
+			return;
+		const FileList::File& f = list->Get(ii);
+		int t0 = GetTickCount();
 #ifdef PLATFORM_WIN32
-			Image img = GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick);
+		Image img = GetFileIcon(AppendFileName(dir, f.name), f.isdir, f.unixexe, false, quick);
 #else
-			Image img = GetFileIcon(dir, f.name, f.isdir, f.unixexe, false);
+		Image img = GetFileIcon(dir, f.name, f.isdir, f.unixexe, false);
 #endif
-			WhenIcon(f.isdir, f.name, img);
-			if(f.hidden)
-				img = Contrast(img, 200);
-			list->SetIcon(pos, img);
-			if(GetTickCount() - t0 > 500/* || GetTickCount() - start > 1500*/)
-				return;
-		}
+		WhenIcon(f.isdir, f.name, img);
+		if(f.hidden)
+			img = Contrast(img, 200);
+		list->SetIcon(ii, img);
+		if(GetTickCount() - t0 > 700)
+			return;
 		pos++;
 	}
+}
+
+void LazyFileIcons::ReOrder()
+{
+	ndx.Clear();
+	Vector<int> len;
+	for(int i = 0; i < list->GetCount(); i++) {
+		const FileList::File& f = list->Get(i);
+		if(ToLower(GetFileExt(f.name)) == ".exe" && !f.isdir) {
+			ndx.Add(i);
+			len.Add((int)min((int64)INT_MAX, f.length));
+		}
+	}
+	IndexSort(len, ndx);
+	Restart(0);
 }
 
 void LazyFileIcons::Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_)
@@ -399,7 +415,7 @@ void LazyFileIcons::Start(FileList& list_, const String& dir_, Callback3<bool, c
 	quick = false;
 	ptime = 150;
 	start = GetTickCount();
-	Restart(0);
+	ReOrder();
 }
 
 class FileListSortName : public FileList::Order {
@@ -569,9 +585,6 @@ void FileSel::SearchLoad()
 		SearchLoad();
 	}
 
-#ifdef PLATFORM_WIN32
-	lazyicons.Start(list, d, WhenIcon);
-#endif
 	places.KillCursor();
 	if(d.GetCount())
 		places.FindSetCursor(d);
@@ -608,6 +621,9 @@ void FileSel::SearchLoad()
 		else
 			SortByName(list);
 	Update();
+#ifdef PLATFORM_WIN32
+	lazyicons.Start(list, d, WhenIcon);
+#endif
 }
 
 String TrimDot(String f) {
