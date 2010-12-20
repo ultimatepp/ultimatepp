@@ -103,7 +103,7 @@ SqlBool LikeUpperAscii(const SqlVal& a, const SqlVal& b) {
 
 SqlBool NotLike(const SqlVal& a, const SqlVal& b, bool cs) {
 	return SqlBool(a, SqlCase
-			(PGSQL, cs ? "not like " : " not ilike ")
+			(PGSQL, cs ? " not like " : " not ilike ")
 			(" not like "), b, SqlS::COMP);
 }
 
