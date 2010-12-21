@@ -27,17 +27,18 @@ LAYOUT(BaseSetupLayout, 420, 112)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(348, 64).TopPosZ(80, 24))
 END_LAYOUT
 
-LAYOUT(ConfLayout, 344, 120)
+LAYOUT(ConfLayout, 344, 416)
 	ITEM(LabelBox, dv___0, SetLabel(t_("Target")).LeftPosZ(8, 104).TopPosZ(0, 52))
 	ITEM(Switch, dll, SetLabel(t_("Executable\nDynamic library")).LeftPosZ(16, 96).TopPosZ(16, 34))
 	ITEM(LabelBox, dv___2, SetLabel(t_("App style")).LeftPosZ(116, 82).TopPosZ(0, 52))
 	ITEM(Switch, gui, SetLabel(t_("Console\nGUI")).LeftPosZ(124, 70).TopPosZ(16, 34))
 	ITEM(LabelBox, dv___4, SetLabel(t_("Thread model")).LeftPosZ(204, 130).TopPosZ(0, 52))
 	ITEM(Switch, mt, SetLabel(t_("Singlethreaded\nMultithreaded")).LeftPosZ(212, 118).TopPosZ(16, 34))
-	ITEM(Label, dv___6, SetLabel(t_("&Other flags:")).LeftPosZ(8, 58).TopPosZ(60, 19))
-	ITEM(EditString, other, LeftPosZ(68, 268).TopPosZ(60, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(204, 64).TopPosZ(88, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(272, 64).TopPosZ(88, 24))
+	ITEM(ArrayCtrl, accepts, SetLineCy(20).HorzGrid(false).VertGrid(false).AutoHideSb(true).HSizePosZ(8, 10).VSizePosZ(58, 64))
+	ITEM(Label, dv___7, SetLabel(t_("&Other flags:")).LeftPosZ(8, 58).BottomPosZ(39, 19))
+	ITEM(EditString, other, LeftPosZ(68, 268).BottomPosZ(39, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
 LAYOUT(CustomLayout, 608, 410)

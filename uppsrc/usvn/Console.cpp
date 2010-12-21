@@ -46,7 +46,7 @@ int SysConsole::System(const char *cmd)
 	int code = p.GetExitCode();
 	if(code)
 		while(ii < list.GetCount()) {
-			list.Set(ii, 0, AttrText(list.Get(ii, 1)).SetFont(font).Ink(LtRed));
+			list.Set(ii, 0, AttrText((String)list.Get(ii, 1)).SetFont(font).Ink(LtRed));
 			ii++;
 		}
 	return code;

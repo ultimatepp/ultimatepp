@@ -259,6 +259,11 @@ void Ide::TextToLower()
 	AlterText(UPP::ToLower);
 }
 
+void Ide::TextToAscii()
+{
+	AlterText(UPP::ToAscii);
+}
+
 void Ide::TextInitCaps()
 {
 	AlterText(UPP::InitCaps);

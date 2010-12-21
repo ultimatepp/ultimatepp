@@ -108,6 +108,8 @@ void Ide::EditSpecial(Bar& menu)
 	    .Help("Convert letters in selection to uppercase"); 
 	menu.Add(AK_TOLOWER, THISBACK(TextToLower))
 	    .Help("Convert letters in selection to lowercase"); 
+	menu.Add(AK_TOASCII, THISBACK(TextToAscii))
+		.Help("Covert text to 7-bit ASCII removing all accents and special symbols");
 	menu.Add(AK_INITCAPS, THISBACK(TextInitCaps))
 	    .Help("Capitalize the first character of words in selection"); 
 	menu.Add(AK_SWAPCASE, THISBACK(SwapCase))
