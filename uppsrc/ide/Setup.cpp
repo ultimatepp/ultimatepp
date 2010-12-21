@@ -466,14 +466,15 @@ void Ide::SetupFormat() {
 struct MainConfigDlg : public WithConfigLayout<TopWindow> {
 	EditString ce, fe;
 	FrameRight<Button> cb;
-
+	const Workspace& wspc;
+	
 	void FlagDlg();
 
 	bool Perform(const String& startwith);
 
 	typedef MainConfigDlg CLASSNAME;
 
-	MainConfigDlg();
+	MainConfigDlg(const Workspace& wspc);
 };
 
 bool SetSw(const String& flag, Switch& sw, const char *flg) {
@@ -494,34 +495,61 @@ void MainConfigDlg::FlagDlg()
 {
 	WithConfLayout<TopWindow> cfg;
 	CtrlLayoutOKCancel(cfg, "Configuration flags");
+	cfg.Sizeable().MaximizeBox();
 	Vector<String> flg = SplitFlags0(String(fe));
+	Vector<String> accepts = wspc.GetAllAccepts(0);
+	Sort(accepts, GetLanguageInfo());
+	enum { CC_SET, CC_NAME, CC_PACKAGES, CC_COUNT };
+	cfg.accepts.AddColumn("Set").HeaderTab().Fixed(40);
+	cfg.accepts.AddColumn("Flag", 1);
+	cfg.accepts.AddColumn("Packages", 2);
+	cfg.accepts.SetCount(accepts.GetCount());
+	for(int i = 0; i < accepts.GetCount(); i++) {
+		String acc = accepts[i];
+		Vector<String> pkg;
+		for(int p = 0; p < wspc.GetCount(); p++)
+			if(FindIndex(wspc.package[p].accepts, acc) >= 0)
+				pkg.Add(wspc[p]);
+		Sort(pkg, GetLanguageInfo());
+		cfg.accepts.SetCtrl(i, CC_SET, new Option);
+		cfg.accepts.Set(i, CC_NAME, accepts[i]);
+		cfg.accepts.Set(i, CC_PACKAGES, Join(pkg, ","));
+	}
+	
 	cfg.other.SetFilter(FlagFilterM);
 	cfg.dll <<= cfg.gui <<= cfg.mt <<= 0;
+	String other;
 	for(int i = 0; i < flg.GetCount(); i++) {
 		String f = flg[i];
 		if(!SetSw(f, cfg.dll, "DLL")
 		   && !SetSw(f, cfg.gui, "GUI")
 		   && !SetSw(f, cfg.mt, "MT")) {
-			String s = cfg.other.GetText().ToString();
-			if(!s.IsEmpty())
-				s << ' ';
-			s << f;
-			cfg.other = s.ToWString();
+			int x = (*f == '.' ? cfg.accepts.Find(f.Mid(1), CC_NAME) : -1);
+			if(x >= 0)
+				cfg.accepts.Set(x, CC_SET, true);
+			else {
+				if(!other.IsEmpty())
+					other << ' ';
+				other << f;
+			}
 		}
 	}
+	cfg.other <<= other;
 	if(cfg.Run() == IDOK) {
 		String flags;
 		flags
 			<< GetSw(cfg.dll, "DLL")
 		    << GetSw(cfg.gui, "GUI")
-		    << GetSw(cfg.mt, "MT")
-			<< cfg.other.GetText().ToString();
-		;
+		    << GetSw(cfg.mt, "MT");
+		for(int i = 0; i < cfg.accepts.GetCount(); i++)
+			if(cfg.accepts.Get(i, CC_SET))
+				flags << '.' << cfg.accepts.Get(i, CC_NAME) << ' ';
+		flags << cfg.other.GetText().ToString();
 		fe = Join(SplitFlags0(flags), " ").ToWString();
 	}
 }
 
-MainConfigDlg::MainConfigDlg() {
+MainConfigDlg::MainConfigDlg(const Workspace& wspc_) : wspc(wspc_) {
 	CtrlLayoutOKCancel(*this, "Main package configuration(s)");
 	fe.AddFrame(cb);
 	fe.SetFilter(FlagFilterM);
@@ -541,7 +569,7 @@ bool MainConfigDlg::Perform(const String& startwith) {
 void Ide::MainConfig() {
 	package.SetCursor(0);
 	if(package.GetCursor() != 0) return;
-	MainConfigDlg dlg;
+	MainConfigDlg dlg(IdeWorkspace());
 	for(int i = 0; i < actual.config.GetCount(); i++) {
 		const Package::Config& f = actual.config[i];
 		dlg.list.Add(f.param, f.name);

@@ -18,7 +18,13 @@ int snprintf(char *str, size_t size, const char *format, ...)
     int rv;
 
     va_start(ap, format);
-    rv = vsnprintf(str, size, format, ap);
+    rv = 
+#ifdef flagMSC
+	_vsnprintf
+#else
+	vsnprintf
+#endif
+    (str, size, format, ap);
     va_end(ap);
 
     return rv;

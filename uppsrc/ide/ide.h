@@ -824,6 +824,7 @@ public:
 		void  AlterText(WString (*op)(const WString& in));
 		void  TextToUpper();
 		void  TextToLower();
+		void  TextToAscii();
 		void  TextInitCaps();
 		void  SwapCase();
 
