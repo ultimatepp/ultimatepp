@@ -30,7 +30,6 @@ template<> inline String AsString(const long& a)            { return FormatInt64
 template<> inline String AsString(const unsigned long& a)   { return Format64(a); }
 template<> inline String AsString(const double& a)          { return FormatDouble(a); }
 template<> inline String AsString(const float& a)           { return FormatDouble(a); }
-//template<> inline String AsString(const bool& a)            { return FormatBool(a); } // TRC: moved to String.h by CXL
 template<> inline String AsString(const int64& a)           { return FormatInt64(a); }
 template<> inline String AsString(const uint64& a)          { return Format64(a); }
 
