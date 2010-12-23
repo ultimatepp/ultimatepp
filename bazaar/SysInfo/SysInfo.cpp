@@ -2997,14 +2997,18 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
  		if (inKey == false) {
 			if (!vk) 
  				PressKey(c);
+#if defined(PLATFORM_WIN32)
 			else {
 				PressKeyVK(c, true);
 				virt.Add(c);
 			}
+#endif
 		}
 	}
+#if defined(PLATFORM_WIN32)
 	for (int i = 0; i < virt.GetCount(); ++i)
 		PressKeyVK(virt[i], false, true);
+#endif
 	Sleep(finalDelay);
 }
 
