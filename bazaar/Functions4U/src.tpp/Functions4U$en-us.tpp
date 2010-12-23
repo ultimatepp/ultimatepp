@@ -101,10 +101,10 @@ onst]_[@(0.0.255) char]_`*[*@3 dir], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3
 [s0;l288; Returns true in case of success.&]
 [s3; &]
 [s4;%- &]
-[s5;:FileSetReadOnly`(String`,bool`):%- [@(0.0.255) bool]_[* FileSetReadOnly]([_^String^ St
-ring]_[*@3 fileName], [@(0.0.255) bool]_[*@3 readOnly])&]
-[s2; Sets [%-*@3 fileName ]as read only or write permitted depending 
-on the value of[%-*@3  readOnly].&]
+[s5;:ReadOnly`(String`,bool`):%- [@(0.0.255) bool]_[* ReadOnly]([_^String^ String]_[*@3 path],
+ [@(0.0.255) bool]_[*@3 readOnly])&]
+[s2; Sets [%-*@3 path ](file or folder) as read only or write permitted 
+depending on the value of[%-*@3  readOnly].&]
 [s0;l288; In Linux the permissions are set for user, group and others.&]
 [s2; -|Returns true in case of success.&]
 [s3; &]
@@ -1498,8 +1498,8 @@ lass]_[*@4 T]>_[_^Rect`_^ Rect`_]<[*@4 T]>_[* FitInFrame]([@(0.0.255) const]_[_^
 [s2; Returns a random color.&]
 [s3; &]
 [s4;%- &]
-[s5;:GetPixel`(Image`&`,int`,int`):%- [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* GetPixel](Imag
-e_`&[*@3 img], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
+[s5;:GetPixel`(const Image`&`,int`,int`):%- [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* GetPixel
+](const Image_`&[*@3 img], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
 [s2; Gets the color of a pixel in image [%-*@3 img] in coordinates 
 [%-*@3 x], [%-*@3 y].&]
 [s2; This pixel is read`-only.&]

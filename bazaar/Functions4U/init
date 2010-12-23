@@ -3,7 +3,7 @@
 #include "Core/init"
 #include "plugin\bz2/init"
 #include "Web/init"
+#include "Draw/init"
 #include "ide/Browser/init"
 #include "AESStream/init"
-#include "Draw/init"
 #endif

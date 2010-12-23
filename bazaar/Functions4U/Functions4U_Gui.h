@@ -3,12 +3,12 @@
 
 #ifdef CTRLLIB_H
 
-inline const RGBA *GetPixel(Image &img, int x, int y) {
-	return img + x + y*img.GetWidth();
+inline const RGBA *GetPixel(const Image &img, int x, int y) {
+	return &img[y][x];
 }
 
 inline RGBA *GetPixel(ImageBuffer &img, int x, int y) {
-	return img + x + y*img.GetWidth();
+	return &img[y][x];
 }
 
 Drawing DrawEquation(String str);
@@ -54,17 +54,6 @@ private:
 private:
 	VectorMap<String, String> symbols;
 };
-/*
-#ifdef _GridCtrl_GridCtrl_h_
-Vector<Value> ReadCol(GridCtrl& grid, int col, int begin, int end);
-Vector<Vector<Value> > GetGridData(GridCtrl& grid);
-void SetGridData(GridCtrl& grid, Vector<Vector<Value> > &data);
 
-NAMESPACE_UPP
-template <> void Xmlize(XmlIO xml, GridCtrl& r);
-END_UPP_NAMESPACE
-
-#endif
-*/
 #endif
 #endif

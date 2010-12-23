@@ -56,9 +56,9 @@ bool FileDeleteX(const char *path, int flags = 0);
 /////////
 
 
-//bool FileSetReadOnly(const char *fileName, bool readOnly);
-bool FileSetReadOnly(const char *fileName, bool usr, bool grp = false, bool oth = false);
-bool IsReadOnly(const char *fileName, bool &usr, bool &grp, bool &oth);
+//bool ReadOnly(const char *path, bool readOnly);
+bool ReadOnly(const char *path, bool usr, bool grp = false, bool oth = false);
+bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth);
 
 String LoadFile_Safe(String fileName);
 
@@ -241,25 +241,11 @@ inline const T& max(const T& a, const T& b, const T& c, const T& d) {
 	return ab > cd ? ab : cd;
 }
 
+template <class T> 
+inline const T Abs(const T& a)  { 
+	return a > 0 ? a : -a;}
+
 int DayOfYear(Date d);
-
-// Fits object centered into frame maintaining the aspect
-template <class T>
-Rect_<T> FitInFrame(const Size_<T> &frame, const Size_<T> &object)
-{
-	double frameAspect  = frame.cx/(double)frame.cy; 
-	double objectAspect = object.cx/(double)object.cy;	
-	
-	if (frameAspect > objectAspect) {
-		double x = (frame.cx - objectAspect*frame.cy)/2.;
-		return Rect_<T>((T)x, 0, (T)(x + objectAspect*frame.cy), frame.cy);
-	} else {
-		double y = (frame.cy - frame.cx/objectAspect)/2.;
-		return Rect_<T>(0, (T)y, frame.cx, (T)(y + frame.cx/objectAspect));
-	}
-}
-
-Color RandomColor();
 
 // A String based class to parse into
 class StringParse :  public String {
@@ -510,6 +496,24 @@ bool StoreAsXMLFileAES(T& data, const char *name, const char *file, const char *
 	ParamHelper__<T> p(data);
 	return StoreAsXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), name, file, key);
 }
+
+// Fits object centered into frame maintaining the aspect
+template <class T>
+Rect_<T> FitInFrame(const Size_<T> &frame, const Size_<T> &object)
+{
+	double frameAspect  = frame.cx/(double)frame.cy; 
+	double objectAspect = object.cx/(double)object.cy;	
+	
+	if (frameAspect > objectAspect) {
+		double x = (frame.cx - objectAspect*frame.cy)/2.;
+		return Rect_<T>((T)x, 0, (T)(x + objectAspect*frame.cy), frame.cy);
+	} else {
+		double y = (frame.cy - frame.cx/objectAspect)/2.;
+		return Rect_<T>(0, (T)y, frame.cx, (T)(y + frame.cx/objectAspect));
+	}
+}
+
+Color RandomColor();
 
 Image Rotate180(const Image& img);
 Image GetRect(const Image& orig, const Rect &r);

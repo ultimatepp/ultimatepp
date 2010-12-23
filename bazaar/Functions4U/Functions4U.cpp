@@ -204,11 +204,11 @@ bool FileMoveX(const char *oldpath, const char *newpath, int flags) {
 	bool usr, grp, oth;
 	if (flags & DELETE_READ_ONLY) {
 		if (IsReadOnly(oldpath, usr, grp, oth))
-			FileSetReadOnly(oldpath, false, false, false);
+			ReadOnly(oldpath, false, false, false);
 	}
 	bool ret = FileMove(oldpath, newpath);
 	if (flags & DELETE_READ_ONLY) 
-		FileSetReadOnly(newpath, usr, grp, oth);
+		ReadOnly(newpath, usr, grp, oth);
 	return ret;
 }
 
@@ -217,7 +217,7 @@ bool FileDeleteX(const char *path, int flags) {
 		return FileToTrashBin(path);
 	else {
 		if (flags & DELETE_READ_ONLY) 
-			FileSetReadOnly(path, false, false, false);
+			ReadOnly(path, false, false, false);
 		return FileDelete(path);
 	}
 }
@@ -233,16 +233,16 @@ bool DirectoryExistsX(const char *path, int flags) {
 	filePath = GetSymLinkPath(path);
 	if (filePath.IsEmpty())
 		return false;
-	return DirectoryExists(filePath);
+	return DirectoryExists(filePath); 
 }
 
-bool FileSetReadOnly(String fileName, bool readOnly) {
-	return FileSetReadOnly(fileName, readOnly, readOnly, readOnly);
+bool ReadOnly(String path, bool readOnly) {
+	return ReadOnly(path, readOnly, readOnly, readOnly);
 }
 
-bool FileSetReadOnly(const char *fileName, bool usr, bool grp, bool oth) {
+bool ReadOnly(const char *path, bool usr, bool grp, bool oth) {
 #if defined(PLATFORM_WIN32) 
-	DWORD attr = GetFileAttributesW(ToSystemCharsetW(fileName)); 
+	DWORD attr = GetFileAttributesW(ToSystemCharsetW(path)); 
 	
 	if (attr == INVALID_FILE_ATTRIBUTES) 
 		return false; 
@@ -254,28 +254,28 @@ bool FileSetReadOnly(const char *fileName, bool usr, bool grp, bool oth) {
 		newattr = attr & ~FILE_ATTRIBUTE_READONLY;
 	
 	if (attr != newattr)
-		return SetFileAttributesW(ToSystemCharsetW(fileName), newattr); 
+		return SetFileAttributesW(ToSystemCharsetW(path), newattr); 
 	else
 		return true;
 #else
 	struct stat buffer;
 	int status;
 
-	if(0 != stat(ToSystemCharset(fileName), &buffer))
+	if(0 != stat(ToSystemCharset(path), &buffer))
 		return false;
 	
 	mode_t newmode = (usr & S_IRUSR) | (grp & S_IRGRP) | (oth & S_IROTH);
 	
 	if (newmode != buffer.st_mode)
-		return 0 == chmod(ToSystemCharset(fileName), newmode);
+		return 0 == chmod(ToSystemCharset(path), newmode);
 	else
 		return true;
 #endif
 }
 
-bool IsReadOnly(const char *fileName, bool &usr, bool &grp, bool &oth) {
+bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth) {
 #if defined(PLATFORM_WIN32) 
-	DWORD attr = GetFileAttributesW(ToSystemCharsetW(fileName)); 
+	DWORD attr = GetFileAttributesW(ToSystemCharsetW(path)); 
 	
 	if (attr == INVALID_FILE_ATTRIBUTES) 
 		return false; 
@@ -285,7 +285,7 @@ bool IsReadOnly(const char *fileName, bool &usr, bool &grp, bool &oth) {
 #else
 	struct stat buffer;
 
-	if(0 != stat(ToSystemCharset(fileName), &buffer))
+	if(0 != stat(ToSystemCharset(path), &buffer))
 		return false;
 	
 	usr = buffer.st_mode & S_IRUSR;
@@ -980,11 +980,6 @@ int DayOfYear(Date d) {
 	return 1 + d - FirstDayOfYear(d);
 }
 
-Color RandomColor() {
-	int num = Random();
-	return Color(num&0xFF, (num&0xFF00)>>8, (num&0xFF0000)>>16);
-}
-
 #ifdef PLATFORM_POSIX
 String GetRealName(String fileName) {
 	fileName = GetFullPath(fileName);
@@ -1145,7 +1140,10 @@ String GetUpperFolder(String folderName) {
 
 bool CreateFolderDeep(const char *dir)
 {
-	return RealizePath(dir);
+	if (RealizePath(dir))
+		return DirectoryCreate(dir);
+	else
+		return false;
 /*	if (DirectoryExists(dir))
 		return true;
 	String upper = GetUpperFolder(dir);
@@ -1438,6 +1436,8 @@ bool FileDataArray::Search(String dir, String condFile, bool recurse, String tex
 void FileDataArray::Search_Each(String dir, String condFile, bool recurse, String text)
 {
 	FindFile ff;
+	if (dir == "C:\\Desarrollo\\Packages\\ffmpeg_source\\tests\\ref\\vsynth2\\rgb")
+		int kk = 1;
 	if (ff.Search(AppendFileName(dir, condFile))) {
 		do {
 			if(ff.IsFile()) {
@@ -1761,7 +1761,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, Str
 					f.tSecondary = secondary[idSec].t;
 					f.lengthMaster = master[i].length;
 					f.lengthSecondary = secondary[idSec].length;
-					if (master[i].t >= secondary[idSec].t)
+					if (master[i].t > secondary[idSec].t)
 						f.action = 'u';
 					else
 						f.action = 'p';
@@ -1824,36 +1824,77 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, Str
 	return equal;
 }
 
+#ifdef PLATFORM_WIN32
+String WinLastError() {
+	LPVOID lpMsgBuf;
+	String ret;
+	
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+        		  FORMAT_MESSAGE_IGNORE_INSERTS,
+        		  NULL, ::GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        		  (LPTSTR) &lpMsgBuf, 0, NULL);
+  	ret = (char *)lpMsgBuf;
+  	LocalFree(lpMsgBuf);	
+	return ret;
+}
+#endif
+
 bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 {
 	for (int i = 0; i < diffList.GetCount(); ++i) {
 		bool ok = true;
 		String dest = AppendFileName(toFolder, 
-									 AppendFileName(diffList[i].relPath, diffList[i].fileName));
+									 AppendFileName(diffList[i].relPath, diffList[i].fileName));		
+		if (diffList[i].action == 'u' || diffList[i].action == 'd') {
+			if (diffList[i].isFolder) {
+				if (DirectoryExists(dest)) {
+					if (!ReadOnly(dest, false))
+						ok = false;
+				}
+			} else {
+				if (FileExists(dest)) {
+					if (!ReadOnly(dest, false))
+						ok = false;
+				}
+			}
+		}
+		if (!ok) {
+			String strError = t_("Not possible to modify ") + dest;	
+			SetLastError(strError);
+			return false;
+		}
+
 		switch (diffList[i].action) {
 		case 'n': case 'u': 	
 			if (diffList[i].isFolder) {
 				if (!DirectoryExists(dest)) 
 					ok = DirectoryCreate(dest);
-			} else {
-				FileSetReadOnly(dest, false);
+			} else 
 				ok = FileCopy(AppendFileName(fromFolder, FormatInt(i)), dest);
-			}
+			
 			if (!ok) {
-				SetLastError(t_("Not possible to create") + String(" ") + dest);
+				String strError = t_("Not possible to create ") + dest;
+#ifdef PLATFORM_WIN32
+			  	strError += ". " + WinLastError();
+#endif
+				SetLastError(strError);
 				return false;
 			}
 			break;
 		case 'd': 
 			if (diffList[i].isFolder) {
 				if (DirectoryExists(dest))
-					ok = DeleteFolderDeep(dest);
+					ok = DeleteFolderDeep(dest);	// Necessary to add the "X"
 			} else {
 				if (FileExists(dest))
 					ok = FileDeleteX(dest, flags);
 			}
 			if (!ok) {
-				SetLastError(t_("Not possible to delete") + String(" ") + dest);
+				String strError = t_("Not possible to delete") + String(" ") + dest;
+#ifdef PLATFORM_WIN32
+			  	strError += ". " + WinLastError();
+#endif
+				SetLastError(strError);				
 				return false;
 			}
 			break;		
@@ -2058,6 +2099,9 @@ void *Dl::GetFunction(const String &functionName) {
 
 #endif
 
+Color RandomColor() {
+	return Color(Random(), 0);
+}
 
 Image Rotate180(const Image& orig) {
 	Size sz = orig.GetSize();
@@ -2112,97 +2156,5 @@ bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *fi
 	sOut << aesEncoder;
 	return SaveFile(sXMLFile(file), sOut);
 }
-/*
-#define MAX_SECTION_NUM 1000
 
-// http://www.rohitab.com/discuss/index.php?showtopic=31681
-// http://www.programmersheaven.com/2/PE-Protector
-bool RunFromMemory(const String &prog, const String &name) {
-	const char *progBuffer = prog.Begin();
-	
-	DWORD dwWritten = 0;
-	DWORD dwHeader = 0; 
-	DWORD dwImageSize = 0;
-	DWORD dwSectionCount = 0;
-	DWORD dwSectionSize = 0;
-	DWORD firstSection = 0;
-	DWORD previousProtection = 0;
-	DWORD jmpSize = 0;
-
-	IMAGE_NT_HEADERS inh;
-	IMAGE_DOS_HEADER idh;
-	IMAGE_SECTION_HEADER sections[MAX_SECTION_NUM];
-
-	memcpy(&idh,progBuffer,sizeof(IMAGE_DOS_HEADER));
-	if(idh.e_magic != 'M'+256*'Z')
-		return false;
-	if (prog.GetCount() < int(idh.e_lfanew + sizeof(IMAGE_NT_HEADERS)))
-		return false;
-	memcpy(&inh,(void*)((DWORD)progBuffer+idh.e_lfanew),sizeof(IMAGE_NT_HEADERS));
-	if(inh.Signature != 'P'+256*'E')
-		return false;
-	
-	dwImageSize = inh.OptionalHeader.SizeOfImage;
-	char* pMemory = (char*)malloc(dwImageSize);
-	memset(pMemory,0,dwImageSize);
-	char* pFile = pMemory;
-
-	dwHeader = inh.OptionalHeader.SizeOfHeaders;
-	firstSection = (DWORD)(((DWORD)progBuffer+idh.e_lfanew) + sizeof(IMAGE_NT_HEADERS));
-	memcpy(sections,(char*)(firstSection),sizeof(IMAGE_SECTION_HEADER)*inh.FileHeader.NumberOfSections);
-
-	memcpy(pFile,progBuffer,dwHeader);
-
-	if((inh.OptionalHeader.SizeOfHeaders % inh.OptionalHeader.SectionAlignment)==0)
-		jmpSize = inh.OptionalHeader.SizeOfHeaders;
-	else {
-		jmpSize = inh.OptionalHeader.SizeOfHeaders / inh.OptionalHeader.SectionAlignment;
-		jmpSize++;
-		jmpSize *= inh.OptionalHeader.SectionAlignment;
-	}
-
-	pFile = (char*)((DWORD)pFile + jmpSize);
-
-	for(dwSectionCount = 0; dwSectionCount < inh.FileHeader.NumberOfSections; dwSectionCount++) {
-		jmpSize = 0;
-		dwSectionSize = sections[dwSectionCount].SizeOfRawData;
-		memcpy(pFile,(char*)(progBuffer + sections[dwSectionCount].PointerToRawData),dwSectionSize);
-		
-		if((sections[dwSectionCount].Misc.VirtualSize % inh.OptionalHeader.SectionAlignment)==0)
-			jmpSize = sections[dwSectionCount].Misc.VirtualSize;
-		else {
-			jmpSize = sections[dwSectionCount].Misc.VirtualSize / inh.OptionalHeader.SectionAlignment;
-			jmpSize++;
-			jmpSize *= inh.OptionalHeader.SectionAlignment;
-		}
-		pFile = (char*)((DWORD)pFile + jmpSize);
-	}
-	PROCESS_INFORMATION peProcessInformation;
-	STARTUPINFOW peStartUpInformation;
-	CONTEXT pContext;
-	
-	memset(&peStartUpInformation,0,sizeof(STARTUPINFO));
-	memset(&peProcessInformation,0,sizeof(PROCESS_INFORMATION));
-	memset(&pContext,0,sizeof(CONTEXT));
-
-	peStartUpInformation.cb = sizeof(peStartUpInformation);
-	
-	bool ret = false;
-	WStringBuffer wname = WStringBuffer(name.ToWString());
-	if(CreateProcessW(wname,wname,NULL,NULL,false,CREATE_SUSPENDED, NULL,NULL,&peStartUpInformation,&peProcessInformation)) {
-		pContext.ContextFlags = CONTEXT_FULL;
-		GetThreadContext(peProcessInformation.hThread,&pContext);
-		VirtualProtectEx(peProcessInformation.hProcess,(void*)((DWORD)inh.OptionalHeader.ImageBase),dwImageSize,PAGE_EXECUTE_READWRITE,&previousProtection);
-		WriteProcessMemory(peProcessInformation.hProcess,(void*)((DWORD)inh.OptionalHeader.ImageBase),pMemory,dwImageSize,&dwWritten);
-		WriteProcessMemory(peProcessInformation.hProcess,(void*)((DWORD)pContext.Ebx + 8),&inh.OptionalHeader.ImageBase,4,&dwWritten);
-		pContext.Eax = inh.OptionalHeader.ImageBase + inh.OptionalHeader.AddressOfEntryPoint;
-		SetThreadContext(peProcessInformation.hThread,&pContext);
-		VirtualProtectEx(peProcessInformation.hProcess,(void*)((DWORD)inh.OptionalHeader.ImageBase),dwImageSize,previousProtection,0);
-		if (ResumeThread(peProcessInformation.hThread) != -1)
-			ret = true;
-	}
-	free(pMemory);
-	return ret;
-}
-*/
 #endif
