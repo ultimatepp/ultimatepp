@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	Controls4U,
+	GridCtrl,
+	Media,
+	SliderCtrlX;
+
+file
+	main.cpp,
+	demo.lay;
+
+mainconfig
+	"" = "GUI MT";
+
