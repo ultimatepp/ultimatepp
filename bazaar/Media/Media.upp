@@ -1,0 +1,40 @@
+uses
+	CtrlLib,
+	SDL;
+
+library(MSC) "avcodec.lib avformat.lib avutil.lib swscale.lib avdevice.lib avcore.lib";
+
+library(GCC WIN32) "avcodec avformat avutil swscale avdevice avcore";
+
+library(GCC !WIN32) "avutil avcodec avformat avdevice swscale avcore";
+
+link(MSC) /FORCE:MULTIPLE;
+
+link(GCC WIN32) "-Wl,--allow-multiple-definition";
+
+file
+	MediaPlayer readonly separator,
+	MediaPlayer.cpp,
+	MediaPlayer.h,
+	threads.cpp,
+	mediaplayer_in.h,
+	MediaPlayer.usc,
+	MediaPlayer.iml,
+	MediaFile readonly separator,
+	MediaFile.cpp,
+	PacketQueue.cpp,
+	clock.cpp,
+	MediaFile.h,
+	"Utility functions" readonly separator,
+	utility_file.cpp,
+	srcdoc.tpp,
+	utility_stream.cpp,
+	utility_codec.cpp,
+	utility.h,
+	ffmpeg_base.h,
+	mt.h,
+	ubuntu.cpp;
+
+mainconfig
+	"" = "GUI";
+
