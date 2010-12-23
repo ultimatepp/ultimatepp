@@ -31,12 +31,12 @@ public:
 	byte GetPixelByte(int x, int y);
 	byte *GetPixelPos(int x, int y);
 	Uint32 GetColor(Color color);
-	int GetBpp()			{return surface->format->BitsPerPixel;};	
-	int GetWidth()			{return surface->w;};
-	int GetHeight()			{return surface->h;};
-	const char *GetError() 	{return SDL_GetError();};
-	bool IsReady()			{return surface;};
-	SDL_Surface *GetSurface() {return surface;};
+	int GetBpp()				{return surface->format->BitsPerPixel;};	
+	int GetWidth()				{return surface->w;};
+	int GetHeight()				{return surface->h;};
+	const char *GetError() 		{return SDL_GetError();};
+	bool IsReady()				{return surface;};
+	SDL_Surface *GetSurface() 	{return surface;};
 	
 protected:
 	SDL_Surface *surface;

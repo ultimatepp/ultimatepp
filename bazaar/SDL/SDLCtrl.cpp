@@ -4,8 +4,7 @@ using namespace Upp;
 
 #include <SDL/SDLCtrl.h>
 
-SDL_Cursor *CursorFromImage(const Image &image)
-{
+SDL_Cursor *CursorFromImage(const Image &image) {
 	int width = image.GetWidth();
 	int height = image.GetHeight();
 	int dim = width*height/8;
@@ -40,7 +39,7 @@ SDLCtrl::SDLCtrlIn::SDLCtrlIn() {
 	
 	int flags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER;
 #if !defined(PLATFORM_WIN32) && !defined(__APPLE__)
-    flags |= SDL_INIT_EVENTTHREAD; /* Not supported on Windows or Mac OS X */
+    flags |= SDL_INIT_EVENTTHREAD; // Not supported on Windows or Mac OS X 
 #endif
     if (SDL_Init (flags) < 0) {
 		SetError("Init failure");
@@ -121,8 +120,7 @@ void SDLCtrl::SDLCtrlIn::Layout() {
 }
 
 #ifdef PLATFORM_WIN32	
-void SDLCtrl::SDLCtrlIn::State(int reason)
-{
+void SDLCtrl::SDLCtrlIn::State(int reason) {
 	if (!hwndSDL)
 		return;
 	switch(reason) {
