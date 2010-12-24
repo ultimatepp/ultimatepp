@@ -49,6 +49,8 @@ Date LastDayOfMonth(Date d);
 Date FirstDayOfMonth(Date d);
 Date LastDayOfYear(Date d);
 Date FirstDayOfYear(Date d);
+int  DayOfYear(Date d);
+
 
 Date AddMonths(Date date, int months);
 Date AddYears(Date date, int years);
@@ -129,6 +131,7 @@ Time  GetSysTime();
 Time  GetUtcTime();
 
 String Format(Time time, bool seconds = true);
+const char *StrToTime(Time& d, const char *s);
 
 template<>
 inline String AsString(const Time& time) { return Format(time); }

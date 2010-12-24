@@ -294,6 +294,10 @@ Date FirstDayOfYear(Date d)
 	return d;
 }
 
+int DayOfYear(Date d) {
+	return 1 + d - FirstDayOfYear(d);
+}
+
 Date AddMonths(Date date, int months) {
 	months += date.month - 1;
 	int year = idivfloor(months, 12);
@@ -413,11 +417,36 @@ Time  operator-(Time a, int64 secs)             { return a + (-secs); }
 Time& operator+=(Time& a, int64 secs)           { a = a + secs; return a; }
 Time& operator-=(Time& a, int64 secs)           { a = a - secs; return a; }
 
-String Format(Time time, bool seconds) {
+String Format(Time time, bool seconds)
+{
 	if(IsNull(time)) return String();
 	return Format(Date(time)) + (seconds ? Format(" %02d:%02d:%02d", time.hour, time.minute, time.second)
 	                                     : Format(" %02d:%02d", time.hour, time.minute));
 }
+
+const char *StrToTime(Time& d, const char *s)
+{
+	s = StrToDate(d, s);
+	if(!s)
+		return NULL;
+	d.hour = d.minute = d.second = 0;
+	for(int i = 0; i < 3; i++) {
+		while(*s == ' ' || *s == ':')
+			s++;
+		int n;
+		if(IsDigit(*s)) {
+			char *q;
+			n = strtoul(s, &q, 10);
+			s = q;
+		} else
+			break;
+		if(n < 0 || n > (i ? 59 : 23))
+			return NULL;
+		(i == 0 ? d.hour : i == 1 ? d.minute : d.second) = n;
+	}
+	return s;
+}
+
 
 #ifdef PLATFORM_WIN32
 
