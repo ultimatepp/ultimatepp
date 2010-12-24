@@ -1510,16 +1510,7 @@ mg], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
 [s2; Gets the color of a pixel in image [%-*@3 img] in coordinates 
 [%-*@3 x], [%-*@3 y]. &]
 [s2; This pixel is modifiable.&]
-[s3; &]
-[s4;%- &]
-[s5;:Rotate180`(const Image`&`):%- Image_[* Rotate180]([@(0.0.255) const]_Image[@(0.0.255) `&
-]_[*@3 img])&]
-[s2; Returns image [%-*@3 img].rotated 180º.&]
-[s3; &]
-[s4; &]
-[s5;:GetRect`(const Image`&`,const Rect`&`):%- [_^Image^ Image]_[* GetRect]([@(0.0.255) con
-st]_[_^Image^ Image][@(0.0.255) `&]_[*@3 orig], [@(0.0.255) const]_[_^Rect^ Rect]_`&[*@3 r])&]
-[s2; Returns a subimage inside [%-*@3 orig] defined by rectangle [%-*@3 r].&]
+[s3;%- &]
 [s3; &]
 [ {{10000@1 [s0; [* Other functions]]}}&]
 [s4; &]

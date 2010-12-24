@@ -753,6 +753,7 @@ int ReverseFind(const String& s, const String& toFind, int from) {
 }
 
 // Like StrToDate but using Time
+/* Now include in TimeDate
 const char *StrToTime(struct Upp::Time& d, const char *s) {
 	s = StrToDate(d, s);
 	if (!s)
@@ -796,6 +797,7 @@ const char *StrToTime(struct Upp::Time& d, const char *s) {
 	}
 	return d.IsValid() ? s : NULL;
 }
+*/
 
 Time StrToTime(const char *s) {
 	Time ret;
@@ -2103,6 +2105,7 @@ Color RandomColor() {
 	return Color(Random(), 0);
 }
 
+/* Included in ImageOp
 Image Rotate180(const Image& orig) {
 	Size sz = orig.GetSize();
 	ImageBuffer dest(sz);
@@ -2111,7 +2114,7 @@ Image Rotate180(const Image& orig) {
 			dest[rw][cl] = orig[sz.cy - rw - 1][sz.cx - cl - 1];
 	return dest;
 }
-
+*/
 Image GetRect(const Image& orig, const Rect &r) {
 	if(r.IsEmpty())
 		return Image();

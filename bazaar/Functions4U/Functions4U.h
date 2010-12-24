@@ -192,7 +192,7 @@ int ReverseFind(const String& s, const String& toFind, int from = 0);
 
 String FormatLong(long a); 
 
-const char *StrToTime(struct Upp::Time& d, const char *s);
+// const char *StrToTime(struct Upp::Time& d, const char *s);	Now included in TimeDate
 ::Time StrToTime(const char *s);
 ::Date StrToDate(const char *s);
 
@@ -515,7 +515,7 @@ Rect_<T> FitInFrame(const Size_<T> &frame, const Size_<T> &object)
 
 Color RandomColor();
 
-Image Rotate180(const Image& img);
+// Image Rotate180(const Image& img); 		Included in ImageOp
 Image GetRect(const Image& orig, const Rect &r);
 
 #ifdef flagAES
