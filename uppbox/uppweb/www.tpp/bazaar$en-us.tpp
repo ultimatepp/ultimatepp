@@ -2446,7 +2446,7 @@ Guide]]
 :: [s0; [+75 Chart and Pie controls]]
 :: [s0; [+75 Andrei Catalin (andrei`-catalin)]]
 :: [s0;= [2 Production]]
-:: [s0;= [2 May 2010]]
+:: [s0;= [2 Dec 2010]]
 :: [s0;= [2 None]]
 :: [s0;= [2 All]]
 :: [s0;= [2 
