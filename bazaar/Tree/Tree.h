@@ -10,28 +10,28 @@ class Tree
 {
 protected:
 	typedef Array<T> B;
-	T * parent;
-	T * root;
+	T* parent;
+	T* root;
 
-	inline void Link(T & t)             { t.root = root; t.parent = (T *)this; }
-	inline void Unlink(T & t)           { t.root = NULL; t.parent = NULL; }
+	inline void Link(T& t)             { t.root = root; t.parent = (T *)this; }
+	inline void Unlink(T& t)           { t.root = NULL; t.parent = NULL; }
 
 	void Relink() { for(int i = 0; i < B::GetCount(); i++) { T & t = B::operator[](i); Link(t); t.Relink();} }
 
 public:
-	T       *GetPtr()                   { return (T *) this; }
-	const T *GetPtr() const             { return (const T *) this; }
-	T       *GetParent()                { return parent; }
-	const T *GetParent() const          { return parent; }
-	T       *GetRoot()                  { return root; }
-	const T *GetRoot() const            { return root; }
-	void SetAsRoot()                    { ASSERT(parent == NULL); root = (T *)this; Relink(); }
+	T*       GetPtr()                   { return (T*) this; }
+	const T* GetPtr() const             { return (const T *) this; }
+	T*       GetParent()                { return parent; }
+	const T* GetParent() const          { return parent; }
+	T*       GetRoot()                  { return root; }
+	const T* GetRoot() const            { return root; }
+	void SetAsRoot()                    { ASSERT(parent == NULL); root = (T*)this; Relink(); }
 
 // Array interface
 
-	T&       Add()                      { T & t = B::Add(); Link(t); return t; }
-	void     Add(const T& x)            { T & t = B::Add(DeepCopyNew(x)); Link(t); }// return t;  }
-	void     AddPick(pick_ T& x)        { T & t = B::Add(new T(x)); Link(t); }// return t; }
+	T&       Add()                      { T& t = B::Add(); Link(t); return t; }
+	void     Add(const T& x)            { T& t = B::Add(DeepCopyNew(x)); Link(t); }// return t;  }
+	void     AddPick(pick_ T& x)        { T& t = B::Add(new T(x)); Link(t); }// return t; }
 	T&       Add(T *newt)               { ASSERT(newt->parent == NULL); T & t = B::Add(newt); Link(t); return t; }
 
 	using B::operator[];
@@ -47,21 +47,21 @@ public:
 	T&       At(int i, const T& x)      { if(i >= GetCount()) SetCountR(i + 1, x); return B::Get(i); }
 
 	using B::Remove;
-	T&       Insert(int i)              { T & t = B::Insert(i); Link(t); return t; }
+	T&       Insert(int i)              { T& t = B::Insert(i); Link(t); return t; }
 	void     InsertPick(int i, pick_ T& x) { Link(x); B::InsertPick(i, x); }
 
 	using B::GetIndex;
 	using B::Swap;
 	using B::Move;
 
-	T       *Detach(int i)              { T *t = B::Detach(i); Unlink(t); }
+	T*       Detach(int i)              { T* t = B::Detach(i); Unlink(*t); return t;}
 	T&       Set(int i, T *newt)        { ASSERT(newt->parent == NULL); T & t = B::Set(i, newt); Link(t); return t; }
 	void     Insert(int i, T *newt)     { ASSERT(newt->parent == NULL); B::Insert(i, newt); Link(*newt); }
 
 	using B::Drop;
 	using B::Top;
 	
-	T       *PopDetach()                { T * t = B::PopDetach(); Unlink(*t); return t; }
+	T*       PopDetach()                { T* t = B::PopDetach(); Unlink(*t); return t; }
 
 	using B::Begin;
 	using B::End;

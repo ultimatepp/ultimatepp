@@ -167,7 +167,7 @@ public:
 };
 
 typedef void*(*GlobalInstancerType)();
-VectorMap<String, GlobalInstancerType>& GetGlobalInstancerMap();
+VectorMap<Value, GlobalInstancerType>& GetGlobalInstancerMap();
 
 //Instancer help class, for maps of Instancers. the static Map should
 //somewhere be ONCELOCK initialized with the elements
@@ -186,7 +186,7 @@ public:
 		static InstancerType GetInstancer() { return &GetInstance; }
 		static GlobalInstancerType GetGlobalInstancer() { return (GlobalInstancerType)&GetInstance; }
 	};
-	static VectorMap<String, InstancerType>& Map() { static VectorMap<String, InstancerType> map; return map; }
+	static VectorMap<Value, InstancerType>& Map() { static VectorMap<Value, InstancerType> map; return map; }
 };
 
 //in polymorph environment, type info is needed, i.e. when xmlizing/serializing elements

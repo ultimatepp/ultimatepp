@@ -2,9 +2,9 @@
 
 NAMESPACE_UPP
 
-VectorMap<String, GlobalInstancerType>& GetGlobalInstancerMap()
+VectorMap<Value, GlobalInstancerType>& GetGlobalInstancerMap()
 {
-	static VectorMap<String, GlobalInstancerType> map;
+	static VectorMap<Value, GlobalInstancerType> map;
 	return map;
 }
 
