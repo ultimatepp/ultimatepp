@@ -88,6 +88,7 @@ Image Sharpen(const Image& img, int amount = 100);
 
 Image RotateClockwise(const Image& img);
 Image RotateAntiClockwise(const Image& img);
+Image Rotate180(const Image& orig);
 Image MirrorHorz(const Image& img);
 Image MirrorVert(const Image& img);
 Image Rotate(const Image& m, int angle);
