@@ -1,0 +1,23 @@
+API        Platform  State            Tested      Requirements     
+-------------------------------------------------------------------
+jack       unix      compiles         not tested  libjack
+oss        unix      works            Arch Linux  none (?)
+alsa       unix      works            Arch Linux  libalsa
+asihpi     unix      implemented      not tested  ???
+asio       win&mac   not implemented  ---         ASIO SDK, ASIO Drivers, registration
+coreaudio  mac       not supported    ---         ---
+dsound     win       implemented      not tested  DirectX SDK
+wmme       win       works            wine 1.3.4  none (?)
+wasapi     win       probably works   wine 1.3.4  Vista SDK (only for MSVC)
+wdmks      win       implemented      not tested  DirectX SDK
+
+jack: http://jackaudio.org/
+oss: http://www.opensound.com/oss.html
+alsa: http://www.alsa-project.org/
+asihpi: http://www.audioscience.com/internet/download/linux_drivers.htm
+asio: http://www.steinberg.net/en/company/developer.html
+coreaudio: http://developer.apple.com/technologies/mac/audio-and-video.html
+dsound: http://en.wikipedia.org/wiki/DirectSound
+wmme: http://en.wikipedia.org/wiki/Windows_legacy_audio_components#Multimedia_Extensions_.28MME.29
+wasapi: http://msdn.microsoft.com/en-us/library/dd371455(VS.85).aspx
+wdmks: http://www.portaudio.com/trac/browser/portaudio/trunk/src/hostapi/wdmks/readme.txt

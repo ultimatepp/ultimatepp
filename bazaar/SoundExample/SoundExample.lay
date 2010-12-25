@@ -1,0 +1,57 @@
+LAYOUT(AudioLayout, 500, 260)
+	ITEM(TabCtrl, tabs, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(InfoLayout, 300, 208)
+	ITEM(TreeCtrl, tree, LeftPosZ(4, 144).VSizePosZ(4, 4))
+	ITEM(RichTextCtrl, info, HSizePosZ(152, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(WaveLayout, 484, 176)
+	ITEM(ButtonOption, button, HSizePosZ(344, 8).BottomPosZ(4, 40))
+	ITEM(Label, dv___1, SetLabel(t_("Channel 1:")).LeftPosZ(8, 68).TopPosZ(16, 21))
+	ITEM(Label, dv___2, SetLabel(t_("Amplitude:")).LeftPosZ(24, 64).TopPosZ(64, 21))
+	ITEM(Label, dv___3, SetLabel(t_("Frequency:")).LeftPosZ(24, 64).TopPosZ(40, 21))
+	ITEM(EditDoubleSpin, freq1, SetInc(100).Min(0).AlignRight(true).LeftPosZ(96, 64).TopPosZ(40, 20))
+	ITEM(EditDoubleSpin, amp1, Min(0).Max(1).AlignRight(true).LeftPosZ(96, 64).TopPosZ(64, 20))
+	ITEM(Label, dv___6, SetLabel(t_("Channel 2:")).LeftPosZ(8, 68).TopPosZ(96, 21))
+	ITEM(Label, dv___7, SetLabel(t_("Amplitude:")).LeftPosZ(24, 64).TopPosZ(144, 21))
+	ITEM(Label, dv___8, SetLabel(t_("Frequency:")).LeftPosZ(24, 64).TopPosZ(120, 21))
+	ITEM(EditDoubleSpin, freq2, SetInc(100).Min(0).AlignRight(true).LeftPosZ(96, 64).TopPosZ(120, 20))
+	ITEM(EditDoubleSpin, amp2, Min(0).Max(1).AlignRight(true).LeftPosZ(96, 64).TopPosZ(144, 20))
+	ITEM(LabelBox, dv___11, SetLabel(t_("Wave generator")).LeftPosZ(4, 164).VSizePosZ(4, 4))
+	ITEM(LabelBox, dv___12, SetLabel(t_("Device settings")).LeftPosZ(172, 164).VSizePosZ(4, 4))
+	ITEM(Label, dv___13, SetLabel(t_("Device:")).LeftPosZ(176, 52).TopPosZ(20, 18))
+	ITEM(DropList, device, LeftPosZ(248, 84).TopPosZ(20, 19))
+	ITEM(Label, dv___15, SetLabel(t_("Sample rate:")).LeftPosZ(176, 64).TopPosZ(44, 20))
+	ITEM(WithDropChoice<EditDouble>, samplerate, LeftPosZ(248, 84).TopPosZ(44, 19))
+	ITEM(Label, dv___17, SetLabel(t_("Frames per\nbuffer:")).LeftPosZ(176, 64).TopPosZ(68, 28))
+	ITEM(EditIntSpin, fpb, Min(1).NotNull(true).LeftPosZ(248, 84).TopPosZ(72, 19))
+	ITEM(RichTextCtrl, error, HSizePosZ(340, 4).VSizePosZ(32, 48))
+	ITEM(Label, cpu, SetLabel(t_("CPU usage: -")).LeftPosZ(340, 140).TopPosZ(12, 22))
+END_LAYOUT
+
+LAYOUT(RecordLayout, 440, 116)
+	ITEM(Button, rec, SetLabel(t_("Record")).Tip(t_("Record 5 seconds from your microphone")).LeftPosZ(8, 84).TopPosZ(8, 28))
+	ITEM(Button, play, SetLabel(t_("Play")).Tip(t_("Play the last recorded sample")).LeftPosZ(8, 84).TopPosZ(44, 28))
+	ITEM(Button, save, SetLabel(t_("Save")).Tip(t_("Save the recorded audio in raw binary file")).LeftPosZ(8, 84).TopPosZ(82, 28))
+	ITEM(Label, reclbl, SetLabel(t_("Recording 5 seconds \nfrom default input.")).LeftPosZ(108, 152).TopPosZ(8, 28))
+	ITEM(Label, playlbl, SetLabel(t_("Playing the recorded audio.")).LeftPosZ(108, 152).TopPosZ(44, 28))
+	ITEM(EditString, file, LeftPosZ(108, 152).TopPosZ(84, 24))
+	ITEM(RichTextCtrl, error, HSizePosZ(264, 8).VSizePosZ(8, 8))
+END_LAYOUT
+
+LAYOUT(WavLayout, 400, 200)
+	ITEM(EditString, fn, HSizePosZ(4, 52).TopPosZ(8, 19))
+	ITEM(Button, browse, RightPosZ(28, 20).TopPosZ(8, 20))
+	ITEM(Button, play, Tip(t_("Play")).RightPosZ(4, 20).TopPosZ(8, 19))
+	ITEM(RichTextCtrl, info, HSizePosZ(4, 4).VSizePosZ(32, 4))
+END_LAYOUT
+
+LAYOUT(PlayLayout, 276, 108)
+	ITEM(EditString, fn, HSizePosZ(8, 60).TopPosZ(8, 19))
+	ITEM(Button, browse, Tip(t_("Browse ...")).RightPosZ(32, 20).TopPosZ(8, 19))
+	ITEM(Button, play, Tip(t_("Play")).RightPosZ(4, 20).TopPosZ(8, 19))
+	ITEM(RichTextCtrl, error, HSizePosZ(8, 4).VSizePosZ(32, 4))
+END_LAYOUT
+

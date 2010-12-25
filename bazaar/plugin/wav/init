@@ -1,0 +1,4 @@
+#ifndef _plugin_wav_icpp_init_stub
+#define _plugin_wav_icpp_init_stub
+#include "Sound/init"
+#endif

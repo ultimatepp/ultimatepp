@@ -1,0 +1,6 @@
+#ifndef _SoundExample_icpp_init_stub
+#define _SoundExample_icpp_init_stub
+#include "Sound/init"
+#include "CtrlLib/init"
+#include "plugin/wav/init"
+#endif

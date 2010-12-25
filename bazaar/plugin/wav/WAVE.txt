@@ -1,0 +1,293 @@
+Documentation for module WAVE.
+Version 1.4.
+
+Copyright (c) 1996-2002 by Timothy J. Weber.
+Contact: tjweber@lightlink.com, http://www.lightlink.com/tjweber
+
+Requires:
+	RiffFile (also by the author)
+		ANSI strings
+	Standard Template Library
+
+Change history:
+	tjw 12 Nov 96: started
+	tjw 5 Feb 97: version 1.0, shipped with WavCat
+	tjw 20 May 97: added extra data reporting and RiffFile exporting, for use
+		in StripWav.
+	tjw 27 Sep 98: version 1.1, updated to support current versions of STL.
+	tjw 20 Dec 00: version 1.2, added more convenience functions and improved docs.
+		Tested with Borland C++Builder 3 and Visual C++ 6.
+	tjw 3 Feb 01: version 1.21, fixed a bug when using WriteSample() with
+		a stereo file.
+	tjw 15 Aug 01: Fixed a number of bugs with the sample-writing convenience functions.
+	tjw 28 Sep 02: Fixed a bug in ShowFormat() (affecting the test code only) that moved
+		the read pointer.
+
+
+-------------------------------------------------------------------------------
+SUMMARY
+
+A platform-independent way to read and write RIFF WAVE files.
+
+When a file is opened for reading, its attributes are set to correspond with
+the specified file.  Setting the attributes in this state has no effect.
+
+When it's opened for writing, the file pointer is positioned to the approprate
+point to start writing sample data.  When it's closed, any attribute settings
+that have been changed will be fixed in the file header.
+
+For 8- and 16-bit PCM formats, you can use the supplied methods to read and
+write samples.  If you know the sample width you're expecting, use the
+appropriate integral type (unsigned char or short) for speed; otherwise, use
+floats, or doubles if you really want the extra precision (probably not helpful).
+
+To read and write compressed formats (non-PCM), or other sample widths, you'll
+have to implement your own compression/decompression and use the C-style I/O
+functions (e.g., fopen, fread, fwrite) with the FILE* returned by GetFile().
+If you write samples using this FILE*, you must update the data length by
+calling SetDataLength(), or the file will not be written correctly.
+
+-------------------------------------------------------------------------------
+PERMISSION
+
+Copyright is retained by Timothy J. Weber.  License is granted to use this
+source code for any purpose.
+
+-------------------------------------------------------------------------------
+EXTERNAL INTERFACE
+
+
+class WaveFile:
+
+	bool OpenRead(const char* name)
+		Opens the named file for reading.  If it doesn't exist, can't be opened,
+		or isn't a valid WAVE file, returns false.  Otherwise, sets all the
+		attributes and positions the file at the start of the sample data chunk.
+
+	bool OpenWrite(const char* name)
+		Opens the named file for writing.  If it already exists, overwrites it.
+		Returns false if it can't be opened.
+
+	bool Close()
+		Closes the file.  If the file is open for output, also updates the
+		header.
+		The file is automatically closed when the object is destroyed.
+
+High-level access methods:
+
+	bool GetFirstExtraItem(string& type, string& value)
+	bool GetNextExtraItem(string& type, string& value)
+		Iterates through the list of additional data present in the file, from
+		LIST/INFO and DISP chunks.  Sets the two arguments on success;
+		returns false on failure.  After GetFirstExtraItem() returns
+		true, ResetToStart() should be called before attempting to read sample
+		data.
+
+	bool CopyFrom(WaveFile& other)
+		Copies all the sample data from the other wave file to this one,
+		starting at the start of the data chunk in the other file and at the
+		current file position in this file.  The DataLength attribute for this
+		file is incremented to reflect the bytes copied.  No format checking is
+		done.  Returns false on error, and sets the LastError flag if the
+		error was while writing to this file (as opposed to reading the other).
+		If either file pointer is invalid, returns false and sets LastError.
+
+	const char* GetError() const
+	void ClearError()
+		Inspects and clears the error description.  If no error has occurred,
+		HadError() returns 0; otherwise, it returns a description of the error.
+
+The following methods are for dealing with the format as an aggregate, instead
+of manipulating individual elements directly:
+
+	bool FormatMatches(const WaveFile& other)
+		Returns true if all the format attributes of the other wave file are
+		identical to this one's.
+
+	void CopyFormatFrom(const WaveFile& other)
+		Copies all the format attributes from the specified WaveFile.
+
+	void SetupFormat(int sampleRate = 44100, short bitsPerChannel = 16, short channels = 1)
+		Sets up the format attributes for uncompressed (PCM) audio with the
+		given attributes.  Computes the remaining attributes accordingly.
+
+The following methods are for reading and writing samples in common formats.
+
+	bool ReadSample(T& sample)
+	bool WriteSample(T sample)
+		Overloads for reading/writing individual samples from numeric types,
+		where T is unsigned char (for 8-bit), short (for 16-bit), float, or
+		double.
+
+		For float and double, the assumed sample range is from -1.0 to +1.0, and
+		samples are converted to the format appropriate for the current sample
+		width.
+
+		Updates the file pointer and the data length.
+
+		Returns false if the argument size doesn't match the sample size, or
+		if there aren't as many samples left to read as requested.
+
+		Note that samples are interleaved for files with multiple channels.
+		I.e., the first call will read or write the left sample, the second
+		will read or write the right channel, etc.
+
+	bool ReadSamples(T* samples, size_t count = 1)
+	bool WriteSamples(T* samples, size_t count = 1)
+		Overloads for reading/writing your own provided buffers of samples,
+		where T is unsigned char (for 8-bit) or short (for 16-bit).
+
+		Note that count is the number of cross-channel samples.  E.g., if you do:
+
+			ReadSamples(pShort, 1);
+
+		on a stereo file, pShort must be able to hold two integers, or four
+		bytes.  In a stereo file, samples for the left channel come first.
+
+		Updates the file pointer and the data length.
+
+		Returns false if the buffer unit size doesn't match the sample size, or
+		if there aren't as many samples left to read as requested.
+
+		Note that samples are interleaved for files with multiple channels.
+		I.e., samples[0] contains the first left sample, samples[1] the first
+		right sample, samples[2] the second left sample, etc.
+
+The following methods are for inspecting and changing individual aspects of the
+data format.  Use these if you're implementing a compressed format, or if you
+need more control over individual values than SetupFormat() affords.
+
+	unsigned short GetFormatType() const
+	void SetFormatType(unsigned short type)
+		Inspect and set the format type.
+		This should be 1 for PCM.
+
+	bool IsCompressed() const
+		Returns true if the sample format uses compression, false if it's PCM.
+
+	unsigned short GetNumChannels() const
+	void SetNumChannels(unsigned short numChannels)
+		Inspect and set the number of channels (e.g., 2 for stereo, 1 for mono).
+
+	unsigned long GetSampleRate() const
+	void SetSampleRate(unsigned long sampleRate)
+		Inspect and set the sample rate, in Hertz.
+
+	unsigned long GetBytesPerSecond() const
+	void SetBytesPerSecond(unsigned long bytesPerSecond)
+		Inspect and set the bytes per second.  For PCM formats, this is equal
+		to SampleRate * NumChannels * BytesPerSample; for compressed formats, it
+		may differ.
+
+	unsigned short GetBytesPerSample() const
+	void SetBytesPerSample(unsigned short bytesPerSample)
+		Inspect and set the bytes per sample.  This will typically be 1 or 2 for
+		mono, 2 or 4 for stereo.
+
+	unsigned short GetBitsPerChannel() const
+	void SetBitsPerChannel(unsigned short bitsPerChannel)
+		Inspect and set the bits per channel.  This is equal to BytesPerSample
+		* 8 / NumChannels.  Typically 8 or 16.
+
+	unsigned long GetNumSamples() const
+	void SetNumSamples(unsigned long numSamples)
+		Inspect and set the number of samples.  Note that this is really a
+		wrapper around the DataLength attribute, that factors in the sample
+		width.  The samples reported here are cross-channel samples; i.e., a
+		sample in the left channel of a stereo file and its corresponding right-
+		channel sample are counted as a single sample.
+
+	float GetNumSeconds() const
+		Inspect the length in seconds.  This is calculated from DataLength
+		and BytesPerSecond.
+
+	unsigned long GetDataLength() const
+	void SetDataLength(unsigned long numBytes)
+		Inspect and set the number of bytes in the data chunk.
+
+The following methods are for reading and writing to the underlying file:
+
+	bool ResetToStart()
+		Moves the file pointer to the start of the sample data.  This is
+		done automatically on OpenRead() or OpenWrite().
+
+	FILE* GetFile()
+		Returns a file pointer that can be used for reading or writing.  May
+		return 0.
+
+	RiffFile* GetRiffFile()
+		Returns a pointer to the currently opened RIFF file object.
+		Returns 0 if the file is not open for reading.
+
+	bool WriteHeaderToFile(FILE* fp)
+		Writes the RIFF/WAVE, fmt, and start of the data chunk in the canonical
+		format to the specified file.
+		You don't normally need to call this method, since it's automatically
+		called on close.  You might want to call it explicitly in certain
+		situations to streamline writes for performance.
+
+-------------------------------------------------------------------------------
+EXAMPLE USAGE
+
+Concatenating two WAVE files:
+
+	WaveFile in1;
+	in1.OpenRead("in1.wav");
+
+	WaveFile in2;
+	in2.OpenRead("in2.wav");
+
+	WaveFile out;
+	out.OpenWrite("out.wav");
+
+	out.CopyFormatFrom(in1);
+	out.CopyFrom(in1);
+	out.CopyFrom(in2);
+
+Adjusting the volume of a WAVE file:
+
+	WaveFile in;
+	in.OpenRead("in.wav");
+
+	WaveFile out;
+	out.CopyFormatFrom(in);
+	out.OpenWrite("out.wav");
+
+	for (size_t i = 0; i < in.GetNumSamples(); i++) {
+		float sample;
+		in.ReadSample(sample);
+
+		out.WriteSample(sample * 0.6);
+	}
+
+Mixing two WAVE files together to a third:
+
+	WaveFile in1;
+	in1.OpenRead("in1.wav");
+
+	WaveFile in2;
+	in2.OpenRead("in2.wav");
+
+	WaveFile out;
+	out.CopyFormatFrom(in1);
+	out.OpenWrite("out.wav");
+
+	for (size_t i = 0; i < in1.GetNumSamples() || i < in2.GetNumSamples(); i++) {
+		float sample1 = 0;
+		if (i < in1.GetNumSamples())
+			in1.ReadSample(sample1);
+
+		float sample2 = 0;
+		if (i < in2.GetNumSamples())
+			in2.ReadSample(sample2);
+
+		out.WriteSample(sample1 / 2 + sample2 / 2);
+	}
+
+
+-------------------------------------------------------------------------------
+IMPLEMENTATION NOTES
+
+-------------------------------------------------------------------------------
+WISH LIST
+

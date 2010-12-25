@@ -1,0 +1,108 @@
+description "Sound handling based on PortAudio\37718,134,118";
+
+acceptflags
+	ALSA,
+	JACK,
+	OSS,
+	ASIHPI,
+	DSOUND,
+	WMME,
+	WASAPI,
+	WDMKS;
+
+flags(POSIX & (!ALSA & !JACK & !OSS & !ASIHPI)) "ALSA OSS";
+
+flags(!POSIX & (!WMME & !DSOUND & !WASAPI & !WDMKS )) "WMME WASAPI";
+
+library(POSIX) "rt pthread m";
+
+library(POSIX & ALSA) asound;
+
+library(POSIX & JACK) jack;
+
+library(POSIX & !ALSA & !JACK & !OSS & !ASIHPI) "asound jack";
+
+library(!POSIX) winmm;
+
+library(!POSIX & WDMKS) setupapi;
+
+options
+	"-DPA_LOG_API_CALLS -DPA_ENABLE_DEBUG_OUTPUT";
+
+options(NEVER) "-DPIC -DPA_LITTLE_ENDIAN -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DHAVE_SYS_SOUNDCARD_H=1 -DHAVE_LINUX_SOUNDCARD_H=1 -DSIZEOF_SHORT=2 -DSIZEOF_INT=4 -DSIZEOF_LONG=4 -DHAVE_CLOCK_GETTIME=1 -DHAVE_NANOSLEEP=1";
+
+options(POSIX & ALSA) -DPA_USE_ALSA=1;
+
+options(POSIX & ASIHPI) -DPA_USE_ASIHPI=1;
+
+options(POSIX & JACK) -DPA_USE_JACK=1;
+
+options(POSIX & OSS) -DPA_USE_OSS=1;
+
+options(POSIX & (!ALSA & !JACK & !OSS & !ASIHPI)) "-DPA_USE_ALSA=1 -DPA_USE_OSS=1";
+
+options(!POSIX & !DSOUND & (WASAPI | WDMKS | WMME | DSOUND)) -DPA_NO_DS=1;
+
+options(!POSIX & !WASAPI & (WASAPI | WDMKS | WMME | DSOUND)) -DPA_NO_WASAPI=1;
+
+options(!POSIX & !WDMKS & (WASAPI | WDMKS | WMME | DSOUND)) -DPA_NO_WDMKS=1;
+
+options(!POSIX & !WMME & (WASAPI | WDMKS | WMME | DSOUND)) -DPA_NO_WMME=1;
+
+options(!POSIX & !ASIO) -DPA_NO_ASIO=1;
+
+options(!POSIX & (!DSOUND & !WASAPI & !WDMKS & !WMME)) "-DPA_NO_DS=1 -DPA_NO_WDMKS=1";
+
+include
+	../portaudio,
+	common,
+	os/unix,
+	os/win,
+	hostapi/wasapi/mingw-include;
+
+file
+	Upp readonly separator,
+	pa_upp.h,
+	pa_upp_platform.c,
+	pa_upp_alsa.c,
+	pa_upp_jack.c,
+	pa_upp_asihpi.c,
+	pa_upp_oss.c,
+	pa_upp_ds.c,
+	pa_upp_wasapi.c,
+	pa_upp_wdmks.c,
+	pa_upp_wmme.c,
+	PortAudio readonly separator,
+	portaudio.h,
+	common/pa_allocation.h,
+	common/pa_converters.h,
+	common/pa_cpuload.h,
+	common/pa_debugprint.h,
+	common/pa_dither.h,
+	common/pa_endianness.h,
+	common/pa_hostapi.h,
+	common/pa_memorybarrier.h,
+	common/pa_process.h,
+	common/pa_ringbuffer.h,
+	common/pa_stream.h,
+	common/pa_trace.h,
+	common/pa_types.h,
+	common/pa_util.h,
+	pa_linux_alsa.h,
+	pa_asio.h,
+	pa_win_wasapi.h,
+	pa_win_ds.h,
+	pa_jack.h,
+	pa_win_wmme.h,
+	pa_win_waveformat.h,
+	common/pa_allocation.c,
+	common/pa_converters.c,
+	common/pa_cpuload.c,
+	common/pa_debugprint.c,
+	common/pa_dither.c,
+	common/pa_front.c,
+	common/pa_process.c,
+	common/pa_ringbuffer.c,
+	common/pa_stream.c,
+	common/pa_trace.c;
+

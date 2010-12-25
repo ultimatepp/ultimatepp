@@ -1,0 +1,5 @@
+#ifndef _Sound_icpp_init_stub
+#define _Sound_icpp_init_stub
+#include "plugin/portaudio/init"
+#include "plugin/pcre/init"
+#endif
