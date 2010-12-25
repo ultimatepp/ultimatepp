@@ -727,6 +727,10 @@ bool OCI8Connection::GetColumnInfo() {
 			ii.type = STRING_V;
 			AddColumn(SQLT_STR, 64);
 			break;
+		case SQLT_TIMESTAMP: // type 187
+			ii.type = STRING_V;
+			AddColumn(SQLT_STR, 30); 
+			break;
 		default:
 			ii.type = STRING_V;
 			AddColumn(SQLT_STR, ii.width ? ii.width + 1 : longsize);

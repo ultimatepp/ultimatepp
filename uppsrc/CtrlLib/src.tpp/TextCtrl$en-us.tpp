@@ -430,6 +430,17 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Same as ProcessTab(false).&]
 [s3;%% &]
 [s4; &]
+[s5;:TextCtrl`:`:ProcessEnter`(bool`): [_^TextCtrl^ TextCtrl][@(0.0.255) `&]_[* ProcessEnte
+r]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% If active (non`-default), widget accepts K`_ENTER keystrokes 
+(inserts a new line).&]
+[s3;%% &]
+[s4; &]
+[s5;:TextCtrl`:`:NoProcessEnter`(`): [_^TextCtrl^ TextCtrl][@(0.0.255) `&]_[* NoProcessEnte
+r]()&]
+[s2;%% Same as ProcessEnter(false).&]
+[s3; &]
+[s4; &]
 [s5;:TextCtrl`:`:NoBackground`(bool`): [_^TextCtrl^ TextCtrl][@(0.0.255) `&]_[* NoBackgroun
 d]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Sets the widget into transparent mode `- background is not 
