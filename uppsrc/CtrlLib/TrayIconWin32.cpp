@@ -55,7 +55,7 @@ void TrayIcon::Notify(dword msg)
 			DestroyIcon(nid.icon);
 		nid.icon = IconWin32(icon);
 		String stip = ToSystemCharset(tip);
-		int len = min(stip.GetLength(), 60);
+		int len = min(stip.GetLength(), 125);
 		memcpy(nid.tip, stip, len);
 		nid.tip[len] = 0;
 		VERIFY(Shell_NotifyIcon(msg, (NOTIFYICONDATA *)&nid));
