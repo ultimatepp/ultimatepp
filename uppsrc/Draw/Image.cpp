@@ -23,6 +23,12 @@ int ImageBuffer::ScanKind() const
 	return a255 ? a0 ? IMAGE_MASK : IMAGE_OPAQUE : IMAGE_EMPTY;
 }
 
+void ImageBuffer::SetHotSpots(const Image& src)
+{
+	SetHotSpot(src.GetHotSpot());
+	Set2ndSpot(src.Get2ndSpot());
+}
+
 void ImageBuffer::Create(int cx, int cy)
 {
 	ASSERT(cx >= 0 && cy >= 0);

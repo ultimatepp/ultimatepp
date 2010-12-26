@@ -70,15 +70,16 @@ void   Splitter::Paint(Draw& w) {
 	if(!IsTransparent())
 		w.DrawRect(sz, SColorFace);
 	const Value *ch = vert ? chstyle->vert : chstyle->horz;
-	for(int i = 0; i < pos.GetCount(); i++) {
-		int p = PosToClient(pos[i]) - (width >> 1);
-		Rect r = vert ? RectC(0, p, sz.cx, width) : RectC(p, 0, width, sz.cy);
-		if(HasCapture() && i == mouseindex)
-			ChPaint(w, r, ch[1]);
-		else
-		if(!IsTransparent())
-			ChPaint(w, r, ch[0]);
-	}
+	if(style < 0)
+		for(int i = 0; i < pos.GetCount(); i++) {
+			int p = PosToClient(pos[i]) - (width >> 1);
+			Rect r = vert ? RectC(0, p, sz.cx, width) : RectC(p, 0, width, sz.cy);
+			if(HasCapture() && i == mouseindex)
+				ChPaint(w, r, ch[1]);
+			else
+			if(!IsTransparent())
+				ChPaint(w, r, ch[0]);
+		}
 }
 
 void   Splitter::MouseMove(Point p, dword) {
