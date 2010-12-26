@@ -182,6 +182,7 @@ Image AssignAlpha(const Image& img, const Image& alpha)
 			(t++)->a = (a++)->a;
 		}
 	}
+	ib.SetHotSpots(img);
 	return ib;
 }
 
@@ -224,6 +225,7 @@ Image Equalight(const Image& img, int thold)
 		s++;
 		t++;
 	}
+	w.SetHotSpots(img);
 	return w;
 }
 
@@ -242,6 +244,7 @@ Image Grayscale(const Image& img)
 		t++;
 		s++;
 	}
+	w.SetHotSpots(img);
 	return w;
 }
 
@@ -261,6 +264,7 @@ Image Grayscale(const Image& img, int amount)
 		t++;
 		s++;
 	}
+	w.SetHotSpots(img);
 	return w;
 }
 
@@ -286,6 +290,7 @@ Image Colorize(const Image& img, Color color, int alpha)
 		s++;
 	}
 	Premultiply(w);
+	w.SetHotSpots(img);
 	return w;
 }
 
@@ -311,6 +316,7 @@ Image Contrast(const Image& img, int amount)
 		s++;
 	}
 	Premultiply(w);
+	w.SetHotSpots(img);
 	return w;
 }
 
@@ -487,8 +493,7 @@ Image SetColorKeepAlpha(const Image& img, Color c)
 		(t++)->a = (s++)->a;
 	}
 	Premultiply(w);
-	w.SetHotSpot(img.GetHotSpot());
-	w.Set2ndSpot(img.Get2ndSpot());
+	w.SetHotSpots(img);
 	return w;
 }
 

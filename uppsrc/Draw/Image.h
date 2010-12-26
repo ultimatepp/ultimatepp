@@ -82,6 +82,8 @@ public:
 
 	void  Set2ndSpot(Point p)           { spot2 = p; }
 	Point Get2ndSpot() const            { return spot2; }
+	
+	void  SetHotSpots(const Image& src);
 
 	void  SetDots(Size sz)              { dots = sz; }
 	Size  GetDots() const               { return dots; }
