@@ -199,7 +199,7 @@ public:
 	TopWindow& TopMost(bool b = true, bool stay_top = true);
 	TopWindow& NoTopMost()                            { return TopMost(false); }
 	bool       IsTopMost() const;
-	TopWindow& FullScreen(bool b = true)              { fullscreen = b; return *this; }
+	TopWindow& FullScreen(bool b = true);
 	bool       IsFullScreen() const                   { return fullscreen; }
 	TopWindow& FrameLess(bool b = true)               { frameless = b; return *this; }
 	bool       IsFrameLess() const                    { return frameless; }

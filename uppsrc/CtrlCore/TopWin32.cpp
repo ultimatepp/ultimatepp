@@ -227,6 +227,12 @@ void TopWindow::Minimize(bool effect)
 #endif
 }
 
+TopWindow& TopWindow::FullScreen(bool b = true)
+{
+	fullscreen = b;
+	return *this;
+}
+
 void TopWindow::Maximize(bool effect)
 {
 	state = MAXIMIZED;
