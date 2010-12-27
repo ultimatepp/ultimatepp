@@ -1,0 +1,5 @@
+#ifndef _Utf8_icpp_init_stub
+#define _Utf8_icpp_init_stub
+#include "Core/init"
+#include "CtrlLib/init"
+#endif
