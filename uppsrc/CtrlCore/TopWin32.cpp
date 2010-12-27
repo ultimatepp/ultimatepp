@@ -232,6 +232,13 @@ void TopWindow::Minimize(bool effect)
 TopWindow& TopWindow::FullScreen(bool b)
 {
 	fullscreen = b;
+	HWND hwnd = GetOwnerHWND();
+	bool pinloop = inloop;
+	WndDestroy();
+	Overlap();
+	SetRect(GetDefaultWindowRect());
+	Open(hwnd);
+	inloop = pinloop;
 	return *this;
 }
 
