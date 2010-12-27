@@ -1,0 +1,17 @@
+uses
+	CtrlLib;
+
+target(!DEBUG) upp_exe;
+
+target(DEBUG) upp_debug_exe;
+
+file
+	UppTest.h,
+	main.cpp,
+	UppTest.dli,
+	UppTest.lay;
+
+mainconfig
+	"" = "GUI NOGTK",
+	"" = "GUI  USEMALLOC NOGTK";
+
