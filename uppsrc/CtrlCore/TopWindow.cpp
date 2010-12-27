@@ -476,6 +476,12 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 				break;
 			}
 	#endif
+	#ifdef PLATFORM_X11
+			if(state == MINIMIZED)
+				Minimize(false);
+			if(state == MAXIMIZED)
+				Maximize(false);
+	#endif
 		}
 	}
 #endif

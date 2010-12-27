@@ -54,6 +54,18 @@ void TopWindow::EventProc(XWindow& w, XEvent *event)
 				LLOG("Unknown WM_PROTOCOLS: " << XAtomName(a));
 			}
 	}
+	else
+	if(event->type == PropertyNotify && event->xproperty.atom == XAtom("_NET_WM_STATE")) {
+		Vector<int> p = GetPropertyInts(GetWindow(), XAtom("_NET_WM_STATE"));
+		if(FindIndex(p, XAtom("_NET_WM_STATE_HIDDEN")) >= 0)
+			state = MINIMIZED;
+		else
+		if(FindIndex(p, XAtom("_NET_WM_STATE_MAXIMIZED_HORZ")) >= 0 &&
+		   FindIndex(p, XAtom("_NET_WM_STATE_MAXIMIZED_VERT")) >= 0)
+			state = MAXIMIZED;
+		else
+			state = OVERLAPPED;
+	}
 	if(this_) Ctrl::EventProc(w, event);
 	if(this_) SyncSizeHints();
 }
@@ -87,6 +99,21 @@ void TopWindow::SyncTitle0()
 	LLOG("*SyncTitle: " << title);
 }
 
+void WmState(Window w, bool set, Atom a1, Atom a2 = 0)
+{
+	XEvent e;
+	memset(&e, 0, sizeof(e));
+	e.xclient.type = ClientMessage;
+	e.xclient.message_type = XAtom("_NET_WM_STATE");
+	e.xclient.display = Xdisplay;
+	e.xclient.window = w;
+	e.xclient.format = 32;
+	e.xclient.data.l[0] = set;
+	e.xclient.data.l[1] = a1;
+	e.xclient.data.l[2] = a2;
+	XSendEvent(Xdisplay, Xroot, false, SubstructureNotifyMask | SubstructureRedirectMask, &e);
+}
+
 void TopWindow::SyncCaption0()
 {
 	GuiLock __; 
@@ -94,6 +121,7 @@ void TopWindow::SyncCaption0()
 	SyncTitle();
 	if(IsOpen() && GetWindow()) {
 		unsigned long wina[6];
+		memset(wina, 0, sizeof(wina));
 		int n = 0;
 		Window w = GetWindow();
 		if(tool)
@@ -104,16 +132,18 @@ void TopWindow::SyncCaption0()
 		XChangeProperty(Xdisplay, GetWindow(), XAtom("_NET_WM_WINDOW_TYPE"), XAtom("ATOM"), 32,
 		                PropModeReplace, (const unsigned char *)wina, n);
 		n = 0;
-		if(topmost)
-			wina[n++] = XAtom("_NET_WM_STATE_ABOVE");
-		if(state == MAXIMIZED) {
-			wina[n++] = XAtom("_NET_WM_STATE_MAXIMIZED_HORZ");
-			wina[n++] = XAtom("_NET_WM_STATE_MAXIMIZED_VERT");
-		}
-		if(fullscreen)
-			wina[n++] = XAtom("_NET_WM_STATE_FULLSCREEN");
-		XChangeProperty(Xdisplay, GetWindow(), XAtom("_NET_WM_STATE"), XAtom("ATOM"), 32,
-		                PropModeReplace, (const unsigned char *)wina, n);
+		WmState(w, topmost, XAtom("_NET_WM_STATE_ABOVE"));
+		WmState(w, state == MAXIMIZED, XAtom("_NET_WM_STATE_MAXIMIZED_HORZ"), XAtom("_NET_WM_STATE_MAXIMIZED_VERT"));
+		if(state == MINIMIZED)
+			XIconifyWindow(Xdisplay, GetWindow(), Xscreenno);
+		else
+			XMapWindow(Xdisplay, GetWindow());
+
+		WmState(w, state == MINIMIZED, XAtom("_NET_WM_STATE_HIDDEN"));
+		WmState(w, fullscreen, XAtom("_NET_WM_STATE_FULLSCREEN"));
+
+//		XChangeProperty(Xdisplay, GetWindow(), XAtom("_NET_WM_STATE"), XAtom("ATOM"), 32,
+//		                PropModeReplace, (const unsigned char *)wina, n);
 		wm_hints->flags = InputHint|WindowGroupHint|StateHint;
 		wm_hints->initial_state = NormalState;
 		wm_hints->input = XTrue;
@@ -279,19 +309,29 @@ void TopWindow::Minimize(bool)
 {
 	GuiLock __; 
 	state = MINIMIZED;
-	XIconifyWindow(Xdisplay, GetWindow(), Xscreenno);
+	SyncCaption0();
 }
 
 void TopWindow::Maximize(bool effect)
 {
 	GuiLock __; 
 	state = MAXIMIZED;
+	SyncCaption0();
 }
 
 void TopWindow::Overlap(bool effect)
 {
 	GuiLock __; 
 	state = OVERLAPPED;
+	SyncCaption0();
+}
+
+TopWindow& TopWindow::FullScreen(bool b)
+{
+	GuiLock __; 
+	fullscreen = b;
+	SyncCaption0();
+	return *this;
 }
 
 TopWindow& TopWindow::TopMost(bool b, bool)

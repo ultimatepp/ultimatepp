@@ -395,7 +395,7 @@ template <class T>
 void Array<T>::Move(int i1, int i2) {
 	void *q = vector[i1];
 	vector.Remove(i1);
-	vector.Insert(i2 - (i2 > i1)) = q;
+	vector.Insert(i2 - (i2 > i1)) = (T*)q;
 }
 
 template <class T>
