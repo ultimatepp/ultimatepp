@@ -116,6 +116,8 @@ void TopWindow::SyncCaption0()
 		style |= WS_SYSMENU;
 	if(tool)
 		exstyle |= WS_EX_TOOLWINDOW;
+	if(fullscreen)
+		style = WS_POPUP;
 	if(hwnd) {
 		::SetWindowLong(hwnd, GWL_STYLE, style);
 		::SetWindowLong(hwnd, GWL_EXSTYLE, exstyle);
@@ -227,7 +229,7 @@ void TopWindow::Minimize(bool effect)
 #endif
 }
 
-TopWindow& TopWindow::FullScreen(bool b = true)
+TopWindow& TopWindow::FullScreen(bool b)
 {
 	fullscreen = b;
 	return *this;
@@ -236,16 +238,20 @@ TopWindow& TopWindow::FullScreen(bool b = true)
 void TopWindow::Maximize(bool effect)
 {
 	state = MAXIMIZED;
-	if(IsOpen())
+	if(IsOpen()) {
 		::ShowWindow(GetHWND(), effect ? SW_MAXIMIZE : SW_SHOWMAXIMIZED);
+		SyncCaption();
+	}
 }
 
 void TopWindow::Overlap(bool effect)
 {
 	GuiLock __;
 	state = OVERLAPPED;
-	if(IsOpen())
+	if(IsOpen()) {
 		::ShowWindow(GetHWND(), effect ? SW_SHOWNORMAL : SW_RESTORE);
+		SyncCaption();
+	}
 }
 
 TopWindow& TopWindow::Style(dword _style)
