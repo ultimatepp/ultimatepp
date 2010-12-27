@@ -40,7 +40,7 @@ struct DrawLabel {
 	int       lspc;
 	String    text;
 	Font      font;
-	Color     ink;
+	Color     ink, disabledink;
 	Image     rimg;
 	Color     rcolor;
 	int       rspc;
@@ -71,7 +71,8 @@ public:
 	LabelBase&  SetPaintRect(const PaintRect& pr);
 	LabelBase&  SetText(const char *text);
 	LabelBase&  SetFont(Font font);
-	LabelBase&  SetInk(Color color);
+	LabelBase&  SetInk(Color color, Color disabledink);
+	LabelBase&  SetInk(Color color)                          { return SetInk(color, color); }
 	LabelBase&  SetRightImage(const Image& bmp2, int spc = 0, bool never_hide = false);
 	LabelBase&  SetAlign(int align);
 	LabelBase&  SetVAlign(int align);
