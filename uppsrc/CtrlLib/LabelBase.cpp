@@ -120,7 +120,7 @@ DrawLabel::DrawLabel()
 	lspc = rspc = 0;
 	limg_never_hide = false;
 	rimg_never_hide = false;
-	ink = Null;
+	ink = disabledink = Null;
 	align = valign = ALIGN_CENTER;
 	accesskey = 0;
 	accesspos = -1;
@@ -209,7 +209,7 @@ Size DrawLabel::Paint(Draw& w, const Rect& r, bool visibleaccesskey) const
 	else
 	if(valign == ALIGN_CENTER)
 		p.y = (r.bottom + r.top - txtsz.cy) / 2;
-	Color color = ink;
+	Color color = disabled && !IsNull(disabledink) ? disabledink : ink;
 	if(IsNull(color))
 		color = disabled ? SColorDisabled : SColorLabel; /////////
 	int ix;
@@ -293,9 +293,10 @@ LabelBase& LabelBase::SetFont(Font font) {
 	return *this;
 }
 
-LabelBase& LabelBase::SetInk(Color ink) {
-	if(lbl.ink != ink) {
+LabelBase& LabelBase::SetInk(Color ink, Color disabledink) {
+	if(lbl.ink != ink || lbl.disabledink != disabledink) {
 		lbl.ink = ink;
+		lbl.disabledink = disabledink;
 		LabelUpdate();
 	}
 	return *this;

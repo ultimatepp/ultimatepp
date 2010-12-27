@@ -80,11 +80,12 @@ Label::Label() {
 Label::~Label() {}
 
 CH_COLOR(LabelBoxTextColor, LtBlue());
+CH_COLOR(LabelBoxDisabledTextColor, SColorDisabled());
 CH_COLOR(LabelBoxColor, SColorShadow());
 
 LabelBox::LabelBox()
 {
-	SetInk(LabelBoxTextColor);
+	LabelBase::SetInk(LabelBoxTextColor, LabelBoxDisabledTextColor);
 	SetVAlign(ALIGN_TOP);
 }
 
