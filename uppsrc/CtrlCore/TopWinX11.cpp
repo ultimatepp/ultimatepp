@@ -309,28 +309,28 @@ void TopWindow::Minimize(bool)
 {
 	GuiLock __; 
 	state = MINIMIZED;
-	SyncCaption0();
+	SyncCaption();
 }
 
 void TopWindow::Maximize(bool effect)
 {
 	GuiLock __; 
 	state = MAXIMIZED;
-	SyncCaption0();
+	SyncCaption();
 }
 
 void TopWindow::Overlap(bool effect)
 {
 	GuiLock __; 
 	state = OVERLAPPED;
-	SyncCaption0();
+	SyncCaption();
 }
 
 TopWindow& TopWindow::FullScreen(bool b)
 {
 	GuiLock __; 
 	fullscreen = b;
-	SyncCaption0();
+	SyncCaption();
 	return *this;
 }
 
