@@ -141,14 +141,24 @@ public:
 template <class T>
 class Array : public MoveableAndDeepCopyOption< Array<T> > {
 protected:
+#ifdef _DEBUG
+	Vector<T *> vector;
+#else
 	Vector<void *> vector;
+#endif
 
 	void     Free();
 	void     __DeepCopy(const Array& v);
 	T&       Get(int i) const                           { return *(T *)vector[i]; }
+#ifdef _DEBUG
+	void     Del(T **ptr, T **lim)                      { while(ptr < lim) delete (T *) *ptr++; }
+	void     Init(T **ptr, T **lim)                     { while(ptr < lim) *ptr++ = new T; }
+	void     Init(T **ptr, T **lim, const T& x)         { while(ptr < lim) *ptr++ = DeepCopyNew(x); }
+#else
 	void     Del(void **ptr, void **lim)                { while(ptr < lim) delete (T *) *ptr++; }
 	void     Init(void **ptr, void **lim)               { while(ptr < lim) *ptr++ = new T; }
 	void     Init(void **ptr, void **lim, const T& x)   { while(ptr < lim) *ptr++ = DeepCopyNew(x); }
+#endif
 
 public:
 	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }
