@@ -1,0 +1,14 @@
+description "RectCtrl Test package, Rect placement and editing\377";
+
+uses
+	CtrlLib,
+	RectCtrl;
+
+file
+	RectCtrlTest.h,
+	main.cpp,
+	RectCtrlTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

@@ -1,0 +1,15 @@
+description "Style changing playground\377";
+
+uses
+	CtrlLib,
+	Styler;
+
+file
+	StylerTest.h,
+	main.cpp,
+	StylerTest.lay,
+	StylerTest.iml;
+
+mainconfig
+	"" = "GUI MT";
+

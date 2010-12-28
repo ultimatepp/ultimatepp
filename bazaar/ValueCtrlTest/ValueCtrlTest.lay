@@ -1,0 +1,5 @@
+LAYOUT(ValueCtrlTestLayout, 380, 168)
+	ITEM(DocEdit, info, HSizePosZ(4, 4).VSizePosZ(4, 48))
+	ITEM(Button, clear, SetLabel(t_("Clear")).LeftPosZ(4, 56).BottomPosZ(28, 20))
+END_LAYOUT
+

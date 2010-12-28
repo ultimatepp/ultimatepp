@@ -1,0 +1,11 @@
+description "Editing Ctrl::LogPos\377";
+
+uses
+	CtrlLib,
+	PopUpC;
+
+file
+	LogPosPopUp.lay,
+	LogPosCtrl.h,
+	LogPosCtrl.cpp;
+

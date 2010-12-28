@@ -1,0 +1,20 @@
+description "Ctrl properties editing in a common interface, see CtrlPropTest\377";
+
+uses
+	CtrlLib,
+	LogPosCtrl,
+	ValueCtrl;
+
+file
+	CtrlProp.h,
+	CtrlProp.cpp,
+	CtrlPropEdit.cpp,
+	CtrlPropEdit.lay,
+	Props readonly separator,
+	Ctrl.cpp,
+	PushCtrl.cpp,
+	EditCtrl.cpp,
+	TextEdit.cpp,
+	StaticCtrl.cpp,
+	SliderCtrl.cpp;
+

@@ -1,0 +1,6 @@
+LAYOUT(ValuePopUpLayout, 400, 200)
+	ITEM(DropList, type, HSizePosZ(0, 112).TopPosZ(180, 20))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(56, 56).BottomPosZ(0, 20))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(0, 56).BottomPosZ(0, 20))
+END_LAYOUT
+

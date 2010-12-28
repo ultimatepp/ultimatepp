@@ -1,0 +1,14 @@
+description "Value editing and creating Ctrl, Test package\377";
+
+uses
+	CtrlLib,
+	ValueCtrl;
+
+file
+	ValueCtrlTest.h,
+	main.cpp,
+	ValueCtrlTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

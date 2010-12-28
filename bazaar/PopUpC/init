@@ -1,0 +1,4 @@
+#ifndef _PopUpC_icpp_init_stub
+#define _PopUpC_icpp_init_stub
+#include "CtrlLib/init"
+#endif

@@ -1,0 +1,5 @@
+#ifndef _Iter_icpp_init_stub
+#define _Iter_icpp_init_stub
+#include "Core/init"
+#include "Gen/init"
+#endif

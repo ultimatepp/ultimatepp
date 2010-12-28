@@ -1,0 +1,20 @@
+description "Ctrl Properties editor, grabber, resizer..\377";
+
+uses
+	CtrlLib,
+	CtrlProp,
+	CtrlFinder,
+	RectCtrl;
+
+file
+	CtrlPropTest.h,
+	main.cpp,
+	edit.cpp,
+	find.cpp,
+	hook.cpp,
+	misc.cpp,
+	CtrlPropTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

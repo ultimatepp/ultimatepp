@@ -1,0 +1,5 @@
+#ifndef _IterTest_icpp_init_stub
+#define _IterTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Iter/init"
+#endif

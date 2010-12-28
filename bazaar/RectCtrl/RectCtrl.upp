@@ -1,0 +1,10 @@
+description "Rect editing and placement\377";
+
+uses
+	CtrlLib;
+
+file
+	RectCtrl.h,
+	RectCtrl.cpp,
+	icons.iml;
+

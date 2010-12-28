@@ -1,0 +1,6 @@
+#ifndef _ValueCtrl_icpp_init_stub
+#define _ValueCtrl_icpp_init_stub
+#include "CtrlLib/init"
+#include "PopUpC/init"
+#include "LogPosCtrl/init"
+#endif

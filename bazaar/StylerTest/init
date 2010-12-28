@@ -1,0 +1,5 @@
+#ifndef _StylerTest_icpp_init_stub
+#define _StylerTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Styler/init"
+#endif

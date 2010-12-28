@@ -1,0 +1,14 @@
+description "PopUpC test package, common base class for PopUps\377";
+
+uses
+	CtrlLib,
+	PopUpC;
+
+file
+	PopUpTest.h,
+	main.cpp,
+	PopUpTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

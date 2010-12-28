@@ -1,0 +1,10 @@
+description "A templateable autoscrolling control container\377";
+
+uses
+	CtrlLib;
+
+file
+	AutoScroller.h,
+	AutoScroller.hpp,
+	AutoScroller.cpp;
+

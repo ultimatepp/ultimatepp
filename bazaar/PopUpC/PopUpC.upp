@@ -1,0 +1,9 @@
+description "PopUpC Ctrl, common class for using PopUps\377";
+
+uses
+	CtrlLib;
+
+file
+	PopUpC.h,
+	PopUpC.cpp;
+

@@ -1,0 +1,14 @@
+description "PointCtrl Test package, a Point placement Ctrl\377";
+
+uses
+	CtrlLib,
+	PointCtrl;
+
+file
+	PointCtrlTest.h,
+	main.cpp,
+	PointCtrlTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

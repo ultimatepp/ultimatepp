@@ -1,0 +1,5 @@
+#ifndef _PointCtrl_icpp_init_stub
+#define _PointCtrl_icpp_init_stub
+#include "CtrlLib/init"
+#include "Scaler/init"
+#endif

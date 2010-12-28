@@ -1,0 +1,14 @@
+description "Editing Ctrl::LogPos\377";
+
+uses
+	CtrlLib,
+	LogPosCtrl;
+
+file
+	LogPosCtrlTest.h,
+	main.cpp,
+	LogPosCtrlTest.lay;
+
+mainconfig
+	"" = "GUI";
+

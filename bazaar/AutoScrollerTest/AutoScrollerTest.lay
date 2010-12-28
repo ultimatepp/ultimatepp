@@ -1,0 +1,12 @@
+LAYOUT(AutoScrollerTestLayout, 200, 100)
+END_LAYOUT
+
+LAYOUT(TestLay, 640, 440)
+	ITEM(DocEdit, doc0, LeftPosZ(12, 68).TopPosZ(12, 44))
+	ITEM(DocEdit, doc1, LeftPosZ(12, 164).BottomPosZ(12, 176))
+	ITEM(DocEdit, doc3, RightPosZ(16, 176).TopPosZ(16, 92))
+	ITEM(DocEdit, doc2, RightPosZ(12, 176).BottomPosZ(12, 92))
+	ITEM(ProgressIndicator, dv___4, LeftPosZ(112, 440).TopPosZ(156, 24))
+	ITEM(Button, tg, SetLabel(t_("Toggle")).LeftPosZ(84, 56).TopPosZ(40, 15))
+END_LAYOUT
+

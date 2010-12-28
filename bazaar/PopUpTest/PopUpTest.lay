@@ -1,0 +1,10 @@
+LAYOUT(PopUpTestLayout, 200, 100)
+	ITEM(Button, drop, SetLabel(t_("Drop")).HSizePosZ(40, 36).BottomPosZ(5, 23))
+END_LAYOUT
+
+LAYOUT(PopUpLay, 400, 200)
+	ITEM(EditInt, ei, HSizePosZ(24, 20).TopPosZ(20, 20))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(56, 56).BottomPosZ(0, 20))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(0, 56).BottomPosZ(0, 20))
+END_LAYOUT
+

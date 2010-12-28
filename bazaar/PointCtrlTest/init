@@ -1,0 +1,5 @@
+#ifndef _PointCtrlTest_icpp_init_stub
+#define _PointCtrlTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "PointCtrl/init"
+#endif

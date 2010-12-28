@@ -1,0 +1,12 @@
+description "Style playground, template for editing own style\377";
+
+uses
+	CtrlLib;
+
+file
+	Styler.h,
+	Styler.cpp,
+	unused.cpp,
+	Styler.lay,
+	StylerCtrls.iml;
+

@@ -1,0 +1,10 @@
+description "Point placement Ctrl\377";
+
+uses
+	CtrlLib,
+	Scaler;
+
+file
+	PointCtrl.h,
+	PointCtrl.cpp;
+

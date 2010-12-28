@@ -1,0 +1,10 @@
+description "Iterator Interface for common containers\377";
+
+uses
+	Core,
+	Gen;
+
+file
+	Iter.h,
+	Iter.cpp;
+

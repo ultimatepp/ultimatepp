@@ -1,0 +1,7 @@
+LAYOUT(PointCtrlTestLayout, 600, 300)
+	ITEM(DocEdit, info, RightPosZ(0, 292).VSizePosZ(0, 0))
+	ITEM(SliderCtrl, slx, HSizePosZ(0, 328).BottomPosZ(0, 24))
+	ITEM(SliderCtrl, sly, RightPosZ(296, 28).VSizePosZ(0, 28))
+	ITEM(PointCtrl, pc, HSizePosZ(0, 324).VSizePosZ(0, 24))
+END_LAYOUT
+

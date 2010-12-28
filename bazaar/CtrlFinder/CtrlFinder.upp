@@ -1,0 +1,9 @@
+description "Find a Ctrl using a transparent Hook Ctrl, see CtrlPropTest\377";
+
+uses
+	CtrlLib;
+
+file
+	CtrlFinder.h,
+	CtrlFinder.cpp;
+

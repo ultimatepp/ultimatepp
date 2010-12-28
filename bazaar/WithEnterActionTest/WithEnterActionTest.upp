@@ -1,0 +1,14 @@
+description "Action only on Enter in Edit Ctrls, Test Package\377";
+
+uses
+	CtrlLib,
+	WithEnterAction;
+
+file
+	WithEnterActionTest.h,
+	main.cpp,
+	WithEnterActionTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

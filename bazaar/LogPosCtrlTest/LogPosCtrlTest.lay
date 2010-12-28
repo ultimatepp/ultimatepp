@@ -1,0 +1,8 @@
+LAYOUT(LogPosCtrlTestLayout, 492, 196)
+	ITEM(ArrayCtrl, ac, LeftPosZ(8, 190).TopPosZ(8, 96))
+END_LAYOUT
+
+LAYOUT(LogPosCtrlDlg, 400, 200)
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(56, 0).BottomPosZ(5, 19))
+END_LAYOUT
+

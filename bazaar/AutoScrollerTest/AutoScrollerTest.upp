@@ -1,0 +1,15 @@
+description "how to extend a control with automatic scroll bars\377";
+
+uses
+	CtrlLib,
+	AutoScroller;
+
+file
+	AutoScrollerTest.h,
+	main.cpp,
+	AutoScrollerTest.lay,
+	AutoScrollerTest.iml;
+
+mainconfig
+	"" = "GUI MT";
+

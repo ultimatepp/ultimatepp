@@ -1,0 +1,4 @@
+#ifndef _AutoScroller_icpp_init_stub
+#define _AutoScroller_icpp_init_stub
+#include "CtrlLib/init"
+#endif

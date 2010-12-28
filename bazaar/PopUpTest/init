@@ -1,0 +1,5 @@
+#ifndef _PopUpTest_icpp_init_stub
+#define _PopUpTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "PopUpC/init"
+#endif

@@ -1,0 +1,4 @@
+#ifndef _RectCtrl_icpp_init_stub
+#define _RectCtrl_icpp_init_stub
+#include "CtrlLib/init"
+#endif

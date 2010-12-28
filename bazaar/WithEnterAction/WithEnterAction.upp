@@ -1,0 +1,9 @@
+description "Action only on Enter in Edit Ctrls\377";
+
+uses
+	CtrlLib;
+
+file
+	WithEnterAction.h,
+	WithEnterAction.cpp;
+

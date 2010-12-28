@@ -1,0 +1,14 @@
+description "Test package for Iter Iterator interface\377";
+
+uses
+	CtrlLib,
+	Iter;
+
+file
+	IterTest.h,
+	main.cpp,
+	IterTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+
