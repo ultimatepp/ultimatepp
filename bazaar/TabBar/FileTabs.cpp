@@ -19,67 +19,53 @@ unsigned FileTabs::GetStackSortOrder(const Tab &a)
 	return GetFileExt(s).GetHashValue();
 }
 
-void FileTabs::PaintTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
+void FileTabs::ComposeTab(Tab& tab, const Font &font, Color ink, int style)
 {
-	const Value &q = tab.value;
-	WString txt = IsString(q) ? q : StdConvert().Format(q);
-
-	Point p;
-	int text_offset = TB_MARGIN;
-	if (PaintIcons() && tab.HasIcon()) {
-		Size isz = min(tab.img.GetSize(), Size(TB_ICON, TB_ICON));
-		p = GetImagePosition(r, isz.cx, isz.cy, text_offset, LEFT);
-		w.DrawImage(p.x, p.y, isz.cx, isz.cy, tab.img);
-		text_offset += TB_ICON + 2;
+	if(PaintIcons() && tab.HasIcon())
+	{
+		tab.AddImage(tab.img, RIGHT);
+		tab.AddSpace(TB_SPACEICON, RIGHT);
+		tab.AddImage(tab.img, RIGHT);
 	}
 
+	WString txt = IsString(tab.value) ? tab.value : StdConvert().Format(tab.value);
 	int extpos = txt.ReverseFind('.');
-	Size tsz = GetTextSize(txt, font, extpos);
-	int ang = GetTextAngle();
-	
-	p = GetTextPosition(r, tsz.cy, text_offset);
-	w.DrawText(p.x, p.y, ang, txt, font, filecolor, extpos);
+	tab.AddText(txt.Left(extpos), font, filecolor);
 
 	if (extpos >= 0) {
-		int extlen = txt.GetLength() - extpos;
-		p = GetTextPosition(r, tsz.cy, tsz.cx + text_offset);
-		w.DrawText(p.x, p.y, ang, txt.GetIter(extpos), font, extcolor, extlen);
+		tab.AddText(txt.Right(txt.GetLength() - extpos), font, extcolor);
 	}
 }
 
-void FileTabs::PaintStackedTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
+void FileTabs::ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font &font, Color ink, int style)
 {
-	Point p;
-	int ang = GetTextAngle();
-	int tcy = GetTextSize("|", font, 1).cy;
-	
-	p = GetTextPosition(r, tcy, 0);
-	w.DrawText(p.x, p.y, ang, "|", font, ink, 1);
+	tab.AddImage(TabBarImg::STSEP);
 
 	if (stackedicons && tab.HasIcon()) {
-		Size isz = min(tab.img.GetSize(), Size(TB_ICON, TB_ICON));
-		p = GetImagePosition(r, isz.cx, isz.cy, TB_SPACEICON, LEFT);
-		w.DrawImage(p.x, p.y, isz.cx, isz.cy, (style == CTRL_HOT) ? tab.img : (greyedicons ? DisabledImage(tab.img) : tab.img));
+		tab.AddImage(style == CTRL_HOT ? stacked_tab.img : (greyedicons ? DisabledImage(stacked_tab.img) : stacked_tab.img))
+			.Clickable();
 	}
 	else {
-		const Value &q = tab.value;
-		WString txt = IsString(q) ? q : StdConvert().Format(q);
+		WString txt = IsString(stacked_tab.value) ? stacked_tab.value : StdConvert().Format(stacked_tab.value);
 		int extpos = txt.ReverseFind('.');
+	
 		if (extpos >= 0) {
-			int extlen = txt.GetLength() - extpos;
-			p = GetTextPosition(r, tcy, TB_SPACEICON);
-			w.DrawText(p.x, p.y, ang, txt.GetIter(extpos), font, (style == CTRL_HOT) ? extcolor : SColorDisabled(), extlen);				
+			tab.AddText(
+				txt.Right(txt.GetLength() - extpos - 1),
+				font,
+				(style == CTRL_HOT) ? extcolor : SColorDisabled()
+			).Clickable();
 		}
-	}
+	}	
 }
 
 Size FileTabs::GetStackedSize(const Tab &t)
 {
 	if (stackedicons && t.HasIcon())
-		return min(t.img.GetSize(), Size(TB_ICON, TB_ICON)) + Size(TB_SPACEICON, 0);
+		return min(t.img.GetSize(), Size(TB_ICON, TB_ICON)) + Size(TB_SPACEICON, 0) + 5;
 	String s = t.value;
 	s = GetFileExt(s);
-	return GetTextSize(s.ToWString(), GetStyle().font) + Size(TB_SPACEICON, 0); 
+	return GetTextSize(s.ToWString(), GetStyle().font) + Size(TB_SPACEICON, 0);
 }
 
 void FileTabs::AddFile(const WString &file, bool make_active)

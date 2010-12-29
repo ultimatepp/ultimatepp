@@ -158,7 +158,7 @@ void DockWindow::Activate(DockableCtrl& dc)
 	if (c->IsHidden())
 		RestoreDockerPos(dc);
 	else if (c->IsAutoHide()) {
-		for (int i = 0; i < DOCK_BOTTOM; i++)
+		for (int i = 0; i <= DOCK_BOTTOM; i++)
 			if (hideframe[i].HasCtrl(*c))
 				hideframe[i].ShowAnimate(c);
 	}
@@ -1000,13 +1000,13 @@ bool DockWindow::NeedFrameReorder(int align)
 	if (!frameorder) return false;
 	switch (align) {
 	case DOCK_LEFT:
-		return GetMousePos().x < (GetHighlightCtrl().bounds.left + GetHighlightCtrl().bounds.Width()/FRAME_MOVE_DIV);
+		return GetMousePos().x < (GetHighlightCtrl().bounds.left + GetHighlightCtrl().bounds.Width() / FRAME_MOVE_DIV);
 	case DOCK_RIGHT:
-		return GetMousePos().x > (GetHighlightCtrl().bounds.right - GetHighlightCtrl().bounds.Width()/FRAME_MOVE_DIV);
+		return GetMousePos().x > (GetHighlightCtrl().bounds.right - GetHighlightCtrl().bounds.Width() / FRAME_MOVE_DIV);
 	case DOCK_TOP:
-		return GetMousePos().y < (GetHighlightCtrl().bounds.top + GetHighlightCtrl().bounds.Height()/FRAME_MOVE_DIV);	
+		return GetMousePos().y < (GetHighlightCtrl().bounds.top + GetHighlightCtrl().bounds.Height() / FRAME_MOVE_DIV);	
 	case DOCK_BOTTOM:
-		return GetMousePos().y > (GetHighlightCtrl().bounds.bottom - GetHighlightCtrl().bounds.Height()/FRAME_MOVE_DIV);		
+		return GetMousePos().y > (GetHighlightCtrl().bounds.bottom - GetHighlightCtrl().bounds.Height() / FRAME_MOVE_DIV);		
 	}	
 	return false;
 }

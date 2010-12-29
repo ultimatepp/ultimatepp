@@ -282,9 +282,6 @@ bool TabScrollBar::IsScrollable() const
 }
 
 // TabBar
-TabBar::Style TabBar::leftstyle;
-TabBar::Style TabBar::rightstyle;
-TabBar::Style TabBar::bottomstyle;
 
 TabBar::TabBar()
 {
@@ -292,6 +289,7 @@ TabBar::TabBar()
 
 	display = NULL;
 	crosses = true;
+	crosses_side = LEFT;
 	grouping = true;
 	isctrl = false;
 	isdrag = false;
@@ -302,8 +300,7 @@ TabBar::TabBar()
 	allownullcursor = false;
 	icons = true;
 	mintabcount = 1;
-	style[0] = style[1] = style[2] = style[3] = NULL;
-	scrollbar_sz = 4;
+	scrollbar_sz = TB_SBHEIGHT;
 	allowreorder = true;
 
 	// Init sorting
@@ -391,10 +388,39 @@ void TabBar::GroupMenu(Bar &bar, int n)
 	bar.Add(t_("Close"), THISBACK1(DoCloseGroup, n));
 }
 
+void TabBar::Tab::Set(const Tab& t)
+{
+	id = t.id;
+	
+	img = t.img;
+	key = t.key;
+	value = t.value;
+	group = t.group;
+	
+	stackid = t.stackid;
+	stack = t.stack;
+
+	visible = t.visible;
+
+	pos = t.pos;
+	size = t.size;
+	
+	cross_pos = t.cross_pos;
+	cross_size = t.cross_size;
+	
+	tab_pos = t.tab_pos;
+	tab_size = t.tab_size;
+	
+	items <<= t.items;
+}
+
 bool TabBar::Tab::HasMouse(const Point& p) const
 {
-	return visible && p.x >= tab_pos.x && p.x < tab_pos.x + tab_size.cx &&
-	                  p.y >= tab_pos.y && p.y < tab_pos.y + tab_size.cy;
+	if(!visible)
+		return false;
+	
+	return p.x >= tab_pos.x && p.x < tab_pos.x + tab_size.cx &&
+	       p.y >= tab_pos.y && p.y < tab_pos.y + tab_size.cy;
 }
 
 bool TabBar::Tab::HasMouseCross(const Point& p) const
@@ -425,14 +451,14 @@ void TabBar::DoStacking()
 		t.stackid = GetStackId(t);
 	}
 	// Create stacks
-	Vector<Vector<Tab> > tstack;
+	Vector< Vector<Tab> > tstack;
 	for (int i = 0; i < tabs.GetCount(); i++) {
 		Tab &ti = tabs[i];
 		if (ti.stack < 0) {
 			ti.stack = tstack.GetCount();
 			Vector<Tab> &ttabs = tstack.Add();
 			ttabs.Add(ti);
-			for (int j = i+1; j < tabs.GetCount(); j++)	{
+			for (int j = i + 1; j < tabs.GetCount(); j++)	{
 				Tab &tj = tabs[j];
 				if (tj.stack < 0 && tj.stackid == ti.stackid && (!grouping || tj.group == ti.group)) {
 					tj.stack = ti.stack;
@@ -632,91 +658,115 @@ void TabBar::NewGroup(const String &name)
 	g.active = -1;
 }
 
-Value TabBar::AlignValue(int align, const Value &v, const Size &isz)
+Image TabBar::AlignImage(int align, const Image& img)
 {
-	if (align == TOP) return v;
-	if (IsTypeRaw<Image>(v)) {
-		switch(align) {
-			case AlignedFrame::LEFT:   return RotateAntiClockwise((Image)v);
-			case AlignedFrame::RIGHT:  return RotateClockwise((Image)v);
-			case AlignedFrame::BOTTOM: return MirrorVert((Image)v);
-		}
-	}
-	else if (!IsTypeRaw<Color>(v)) {
-		ImageDraw w(isz.cx, isz.cy);
-		w.DrawRect(isz, SColorFace());
-		ChPaint(w, isz, v);
-		ImageBuffer img;
-		Image temp = (Image)w;
-		switch(align) {
-			case AlignedFrame::LEFT: 
-				temp = RotateAntiClockwise(temp);
-				img = temp; // GCC
-				img.SetHotSpot(Point(10, 10));
-				img.Set2ndSpot(Point(isz.cy / 2, isz.cx / 2));
-				break;
-			case AlignedFrame::RIGHT: 
-				temp = RotateClockwise(temp);
-				img = temp;
-				img.SetHotSpot(Point(isz.cy - 10, isz.cx - 10));
-				img.Set2ndSpot(Point(isz.cy / 2, isz.cx / 2));
-				break;
-			case AlignedFrame::BOTTOM:
-				temp = MirrorVert(temp);
-				img = temp;
-				img.SetHotSpot(Point(10, 10));
-				img.Set2ndSpot(Point(isz.cx / 2, isz.cy / 2));
-				break;
-
-		}
-		return (Image)img;
-	}	
-	return v;
-}
-
-void TabBar::PaintStackedTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
-{
-	if (!IsNull(tab.img))
-		w.DrawImage(r.left, r.top, tab.img);
-	else {
-		Point p = GetTextPosition(r, GetTextSize("|...", font, 1).cy, 0);
-		w.DrawText(p.x, p.y, GetTextAngle(), "|...", font, ink, 4);	
+	switch(align) {
+		case AlignedFrame::LEFT: 
+			return RotateAntiClockwise(img);
+		case AlignedFrame::RIGHT: 
+			return RotateClockwise(img);
+		case AlignedFrame::BOTTOM:
+			return MirrorVert(img);
+		default:
+			return img;
 	}
 }
 
-void TabBar::PaintTab(Draw& w, const Rect& r, const Tab& tab, const Font &font, Color ink, dword style)
+Value TabBar::AlignValue(int align, const Value &v, const Size &sz)
 {
-	WString txt;
-	Font f = font;
-	Color i = ink;
-	const Value &q = tab.value;
+	Size isz = sz;
+	if(align == AlignedFrame::LEFT || align == AlignedFrame::RIGHT)
+		Swap(isz.cx, isz.cy);
 
+	ImageDraw w(isz.cx, isz.cy);
+	w.DrawRect(isz, SColorFace());
+	ChPaint(w, isz, v);
+	ImageBuffer img;
+	return AlignImage(align, (Image)w);
+}
+
+void TabBar::Tab::Clear()
+{
+	items.Clear();
+}
+
+TabBar::TabItem& TabBar::Tab::AddImage(const Image& img, int side)
+{
+	TabItem& ti = items.Add();
+	ti.img = img;
+	ti.size = img.GetSize();
+	ti.side = side;
+	return ti;
+}
+
+TabBar::TabItem& TabBar::Tab::AddValue(const Value& q, const Font& font, const Color& ink)
+{
+	TabItem& ti = items.Add();
+	
+	ti.font = font;
+	ti.ink = ink;
+	
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
-		txt = t.text;
+		ti.text = t.text;
 		if(!IsNull(t.font))
-			f = t.font;
-		i = IsNull(t.ink) ? ink : t.ink;
+			ti.font = t.font;
+		
+		if(!IsNull(t.ink))
+			ti.ink = t.ink;
 	}
 	else
-		txt = IsString(q) ? q : StdConvert().Format(q);
-
-	Point p;
-	int text_offset = TB_MARGIN;
-	if (PaintIcons() && tab.HasIcon()) {
-		Size isz = min(tab.img.GetSize(), Size(TB_ICON, TB_ICON));
-		p = GetImagePosition(r, isz.cx, isz.cy, text_offset, LEFT);
-		w.DrawImage(p.x, p.y, isz.cx, isz.cy, tab.img);
-		text_offset += TB_ICON + 2;
-	}
-	p = GetTextPosition(r, GetTextSize(txt, f).cy, text_offset);
-	w.DrawText(p.x, p.y, GetTextAngle(), txt, f, i);
+		ti.text = IsString(q) ? q : StdConvert().Format(q);
+	
+	ti.size = GetTextSize(ti.text, ti.font);
+	return ti;
 }
 
-Point TabBar::GetTextPosition(const Rect& r, int cy, int space) const
+TabBar::TabItem& TabBar::Tab::AddText(const WString& s, const Font& font, const Color& ink)
+{
+	TabItem& ti = items.Add();
+
+	ti.font = font;
+	ti.ink = ink;
+	ti.text = s;
+	ti.size = GetTextSize(ti.text, ti.font);
+	return ti;
+}
+
+TabBar::TabItem& TabBar::Tab::AddSpace(int space, int side)
+{
+	TabItem& ti = items.Add();
+	
+	ti.size.cx = space;
+	ti.size.cy = 0;
+	ti.side = side;
+	return ti;
+}
+
+void TabBar::ComposeTab(Tab& tab, const Font &font, Color ink, int style)
+{
+	if(PaintIcons() && tab.HasIcon())
+	{
+		tab.AddImage(tab.img);
+		tab.AddSpace(TB_SPACEICON);
+	}
+	tab.AddValue(tab.value, font, ink).Clickable();
+}
+
+void TabBar::ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font& font, Color ink, int style)
+{
+	tab.AddImage(stacked_tab.img);
+	tab.AddText("|...", font, ink);	
+}
+
+int TabBar::GetTextAngle()
+{
+	return AlignedFrame::IsVert() ? (GetAlign() == LEFT ? 900 : 2700) : 0;
+}
+
+Point TabBar::GetTextPosition(int align, const Rect& r, int cy, int space) const
 {
 	Point 	p;
-	int align = GetAlign();
 	
 	if(align == LEFT)
 	{
@@ -736,38 +786,99 @@ Point TabBar::GetTextPosition(const Rect& r, int cy, int space) const
 	return p;
 }
 
-Point TabBar::GetImagePosition(const Rect& r, int cx, int cy, int space, int side) const
+Point TabBar::GetImagePosition(int align, const Rect& r, int cx, int cy, int space, int side) const
 {
 	Point p;
-	int align = GetAlign();
 
 	if (align == LEFT)
 	{
-		p.x = r.left + (r.GetWidth() - cy) / 2 + 2;
+		p.x = r.left + (r.GetWidth() - cy) / 2;
 		p.y = side == LEFT ? r.bottom - space - cx : r.top + space;
 	}
 	else if (align == RIGHT)
 	{
-		p.x = r.right - (r.GetWidth() + cy) / 2 - 2;
+		p.x = r.right - (r.GetWidth() + cy) / 2;
 		p.y = side == LEFT ? r.top + space : r.bottom - space - cx;
 	}
 	else if (align == TOP)
 	{
 		p.x = side == LEFT ? r.left + space : r.right - cx - space;
-		p.y = r.top + (r.GetHeight() - cy) / 2 + 2;
+		p.y = r.top + (r.GetHeight() - cy) / 2;
 	}
 	else if (align == BOTTOM)
 	{
 		p.x = side == LEFT ? r.left + space : r.right - cx - space;
-		p.y = r.bottom - (r.GetHeight() + cy) / 2 - 2;
+		p.y = r.bottom - (r.GetHeight() + cy) / 2;
 	}
 	return p;
 }
 
-void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enable, bool dragsample)
+void TabBar::PaintTabItems(Tab& t, Draw &w, const Rect& rn, int align)
+{
+	int pos_left = TB_MARGIN;
+	int pos_right = (IsVert() ? rn.GetHeight() : rn.GetWidth()) - TB_MARGIN;
+	
+	for(int i = 0; i < t.items.GetCount(); i++)
+	{
+		const TabItem& ti = t.items[i];
+		
+		Point p;
+		int pos = ti.side == LEFT ? pos_left : pos_right - ti.size.cx;
+		
+		if(!IsNull(ti.img))
+		{
+			p = GetImagePosition(align, rn, ti.size.cx, ti.size.cy, pos, LEFT);
+			w.DrawImage(p.x, p.y, IsVert() ? AlignImage(align, ti.img) : ti.img);
+		}
+		
+		if(!IsNull(ti.text))
+		{
+			p = GetTextPosition(align, rn, ti.size.cy, pos);
+			w.DrawText(p.x, p.y, GetTextAngle(), ti.text, ti.font, ti.ink);
+		}
+
+		if(ti.cross)
+		{
+			t.cross_size = ti.size;
+			t.cross_pos = p;
+		}
+		
+		if(ti.stacked_tab >= 0 && ti.clickable)
+		{
+			Tab& st = tabs[ti.stacked_tab];
+			
+			if(align == RIGHT)
+			{
+				st.tab_pos = Point(rn.left, rn.top + pos);
+				st.tab_size = Size(rn.GetWidth(), ti.size.cx);	
+			}
+			else if(align == LEFT)
+			{
+				st.tab_pos = Point(rn.left, rn.bottom - pos - ti.size.cx);
+				st.tab_size = Size(rn.GetWidth(), ti.size.cx);	
+			}
+			else
+			{
+				st.tab_pos = Point(rn.left + pos, rn.top);
+				st.tab_size = Size(ti.size.cx, rn.GetHeight());
+			}
+			
+			#ifdef TABBAR_DEBUG
+			DrawFrame(w, Rect(st.tab_pos, st.tab_size), Red);
+			#endif
+		}		
+				
+		if(ti.side == LEFT)
+			pos_left += ti.size.cx;
+		else
+			pos_right -= ti.size.cx;
+	}	
+}
+
+void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsample)
 {
 	TabBar::Tab &t = tabs[n];
-	
+	const Style& s = GetStyle();
 	int align = GetAlign();
 	int cnt = dragsample ? 1 : tabs.GetCount();
 	int sep = TB_SBSEPARATOR * sc.IsVisible();
@@ -780,88 +891,94 @@ void TabBar::PaintTab(Draw &w, const Style &s, const Size &sz, int n, bool enabl
 		       hl ? CTRL_HOT : CTRL_NORMAL;
 
 	int c = align == LEFT ? cnt - n : n;	
-	const Value& sv = (cnt == 1 ? s.both : c == 0 ? s.first : c == cnt - 1 ? s.last : s.normal)[ndx];
-
 	int lx = n > 0 ? s.extendleft : 0;
 	int x = t.pos.x - sc.GetPos() - lx + s.margin;
 	
-	Point pa = Point(x - s.sel.left, 0);
-	Size  sa = Size(t.size.cx + lx + s.sel.right + s.sel.left, t.size.cy + s.sel.bottom);
-
-	Point pn = Point(x, s.sel.top);
-	Size  sn = Size(t.size.cx + lx, t.size.cy - s.sel.top);
-
-	int dy = (-s.sel.top) * ac;
+	int dy = -s.sel.top * ac;
 	int sel = s.sel.top;
 
-	if (align == BOTTOM || align == RIGHT)
+	int df = 0;
+	
+	if (IsBR())
 	{
-//		pa.y += (align == BOTTOM ? sz.cy : sz.cx) - (sa.cy + pa.y); 
-//		pn.y += (align == BOTTOM ? sz.cy : sz.cx) - (sn.cy + pn.y); 
 		dy = -dy;
 		sel = s.sel.bottom;
+		df = Fixed(sz).cy;
 	}
+
+	Size  sa = Size(t.size.cx + lx + s.sel.right + s.sel.left, t.size.cy + s.sel.bottom);
+	Point pa = Point(x - s.sel.left, IsBR() ? df - sa.cy : 0);
+
+	Size  sn = Size(t.size.cx + lx, t.size.cy - s.sel.top);
+	Point pn = Point(x, IsBR() ? df - sn.cy - s.sel.top : s.sel.top);
 
 	Rect ra(Fixed(pa), Fixed(sa));
 	Rect rn(Fixed(pn), Fixed(sn));
-
+	
 	t.tab_pos = (ac ? ra : rn).TopLeft();
 	t.tab_size = (ac ? ra : rn).GetSize();
-		
+
+	const Value& sv = (cnt == 1 ? s.both : c == 0 ? s.first : c == cnt - 1 ? s.last : s.normal)[ndx];
+	
+	Image img = AlignValue(align, sv, t.tab_size);
+
 	if(dragsample)
 	{
-		ChPaint(w, Rect(Point(0, 0), t.tab_size), sv);							
+		w.DrawImage(Rect(Point(0, 0), t.tab_size), img);
 		rn = Rect(Fixed(Point(s.sel.left * ac, sel * ac + dy)), Fixed(sn));
 	}
 	else
 	{
-		ChPaint(w, Rect(t.tab_pos, t.tab_size), sv);		
+		w.DrawImage(Rect(t.tab_pos, t.tab_size), img);
 		rn = Rect(Fixed(Point(pn.x, pn.y + dy)), Fixed(sn));
 	}
 	
 	#ifdef TABBAR_DEBUG
 	DrawFrame(w, rn, Green);
 	#endif
-	
-	if(crosses && cnt > mintabcount && !dragsample) {
-		t.cross_size = s.crosses[0].GetSize();
-		t.cross_pos = GetImagePosition(rn, t.cross_size.cx, t.cross_size.cy, TB_MARGIN, RIGHT);
-		w.DrawImage(t.cross_pos.x, t.cross_pos.y, s.crosses[(cross == n) ? 2 : ((ac || hl) ? 1 : 0)]);
-	}
 		
 	if (display)
 		display->Paint(w, rn, t.value, s.text_color[ndx], SColorDisabled(), ndx);
-	else {
-		PaintTab(w, rn, t, s.font, s.text_color[ndx], ndx);	
-		if (stacking) {
-			int ix = n+1;
-			int lastcx = t.stdcx + TB_MARGIN;
-			while (ix < tabs.GetCount() && tabs[ix].stack == t.stack) {
-				Tab &q = tabs[ix];
-				
-				int ndx = !enable ? CTRL_DISABLED : 
-						   highlight == ix ? CTRL_HOT : CTRL_NORMAL;
-				
-				rn = (align == LEFT)  ? Rect(rn.BottomLeft() - Point(0, lastcx + q.size.cx), Size(sn.cy, q.size.cx)) :
-					 (align == RIGHT) ? Rect(rn.TopLeft() + Point(0, lastcx), Size(sn.cy, q.size.cx)) 
-					 				  : Rect(rn.TopLeft() + Point(lastcx, 0), Size(q.size.cx, sn.cy)); 
-				
-				PaintStackedTab(w, rn, q, s.font, s.text_color[ndx], ndx);
 
-				q.tab_pos = rn.TopLeft();
-				q.tab_size = rn.GetSize();
+	t.Clear();
+
+	if(crosses && cnt > mintabcount && !dragsample) {
+		TabItem& ti = t.items.Add();
+		ti.img = s.crosses[(cross == n) ? 2 : ((ac || hl) ? 1 : 0)];
+		ti.side = crosses_side;
+		ti.cross = true;
+		ti.size = s.crosses[0].GetSize();
+		t.AddSpace(3, crosses_side);		
+	}
 	
-				lastcx = q.size.cx;
-				ix++;					
-			}
+	ComposeTab(t, s.font, s.text_color[ndx], ndx);
+	
+	if (stacking) {
+		int ix = n + 1;
+
+		while (ix < tabs.GetCount() && tabs[ix].stack == t.stack) {
+			Tab &q = tabs[ix];			
+			int ndx = !enable ? CTRL_DISABLED : 
+					   highlight == ix ? CTRL_HOT : CTRL_NORMAL;
+
+			int sn = t.items.GetCount();
+			ComposeStackedTab(t, q, s.font, s.text_color[ndx], ndx);
+			if(t.items.GetCount() > sn)
+				for(; sn < t.items.GetCount(); sn++)
+					t.items[sn].stacked_tab = ix;
+			
+			ix++;					
 		}
 	}
+	
+	PaintTabItems(t, w, rn, align);
 }
 
 void TabBar::Paint(Draw &w)
 {
+	LOG("Paint");
 	int align = GetAlign();
-	const Style &st = *style[align];
+	const Style &st = StyleDefault();
 	Size ctrlsz = GetSize();
 	Size sz = GetBarSize(ctrlsz);
 	
@@ -881,7 +998,7 @@ void TabBar::Paint(Draw &w)
 	
 	int limt = sc.GetPos() + (IsVert() ? sz.cy : sz.cx);	
 	int first = 0;
-	int last = tabs.GetCount()-1;
+	int last = tabs.GetCount() - 1;
 	// Find first visible tab
 	for(int i = 0; i < tabs.GetCount(); i++) {
 		Tab &tab = tabs[i]; 
@@ -900,23 +1017,23 @@ void TabBar::Paint(Draw &w)
 	// Draw active group
 	for (int i = first; i <= last; i++) {
 		if(tabs[i].visible && i != active)
-			PaintTab(w, st, sz, i, IsEnabled());
+			PaintTab(w, sz, i, IsEnabled());
 	}
 	// Clear tab_size for non-visible tabs to prevent mouse handling bugs
 	for (int i = 0; i < first; i++)
 		tabs[i].tab_size = Size(0, 0);	
-	for (int i = last+1; i < tabs.GetCount(); i++)
+	for (int i = last + 1; i < tabs.GetCount(); i++)
 		tabs[i].tab_size = Size(0, 0);		
 	// Draw inactive groups
 	if (inactivedisabled)
 		for (int i = first; i <= last; i++) {
 			if(!tabs[i].visible && i != active && (!stacking || IsStackHead(i)))
-				PaintTab(w, st, sz, i, !IsEnabled());
+				PaintTab(w, sz, i, !IsEnabled());
 		}
 			
 	// Draw selected tab
 	if(active >= first && active <= last)
-		PaintTab(w, st, sz, active, true);
+		PaintTab(w, sz, active, true);
 	
 	// Separators
 	if (grouping && groupseps) {
@@ -990,7 +1107,7 @@ Image TabBar::GetDragSample(int n)
 	ImageDraw iw(tsz);
 	iw.DrawRect(tsz, SColorFace()); //this need to be fixed - if inactive tab is dragged gray edges are visible
 	
-	PaintTab(iw, *style[GetAlign()], tsz, n, true, true);
+	PaintTab(iw, tsz, n, true, true);
 	
 	Image img = iw;
 	ImageBuffer ib(img);
@@ -1123,23 +1240,25 @@ int TabBar::GetWidth() const
 {
 	if (!tabs.GetCount()) return 0;
 	int ix = GetLast();
+	const Style& s = StyleDefault();
 	if (IsStackHead(ix)) 
-		return tabs[ix].Right() + style[GetAlign()]->margin * 2;
+		return tabs[ix].Right() + s.margin * 2;
 	int stack = tabs[ix].stack;
 	ix--;
 	while (ix >= 0 && tabs[ix].stack == stack)
 		ix--;
-	return tabs[ix+1].Right() + style[GetAlign()]->margin * 2;
+	return tabs[ix+1].Right() + s.margin * 2;
 	
 }
 
 int TabBar::GetHeight(bool scrollbar) const
 {
-	return TabBar::GetStyleHeight(*style[GetAlign()]) + TB_SBSEPARATOR * int(scrollbar);
+	return TabBar::GetStyleHeight() + TB_SBSEPARATOR * int(scrollbar);
 }
 
-int TabBar::GetStyleHeight(const Style &s)
+int TabBar::GetStyleHeight()
 {
+	const Style& s = GetStyle();
 	return s.tabheight + s.sel.top;
 }
 
@@ -1199,10 +1318,11 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 	{
 		t.visible = v;
 		t.pos.y = 0;
-		t.size.cy = GetStyleHeight(*style[1]);
+		t.size.cy = GetStyleHeight();
 				
 		// Normal visible or inactive but greyed out tabs
 		t.pos.x = first ? 0 : tabs[j].Right();
+		
 		// Separators
 		if (groupseps && grouping && !first && t.group != tabs[j].group) {
 			separators.Add(t.pos.x);
@@ -1210,23 +1330,23 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 		}
 		
 		int cx = GetStdSize(t).cx;
-		t.stdcx = cx;
+
 		// Stacked/shortened tabs
 		if (stacking) {
-			int n = i+1;
-			while (n < tabs.GetCount() && tabs[n].stack == t.stack)	{
+			for(int n = i + 1; n < tabs.GetCount() && tabs[n].stack == t.stack; n++)
+				cx += GetStackedSize(tabs[n]).cx;	
+		}
+			
+		t.size.cx = cx + GetExtraWidth();
+
+		if (stacking) {
+			for(int n = i + 1; n < tabs.GetCount() && tabs[n].stack == t.stack; n++) {
 				Tab &q = tabs[n];
 				q.visible = false;
-				q.pos.x = t.pos.x + cx;
-				q.pos.y = 0;
-				q.size.cx = GetStackedSize(q).cx;
-				q.size.cy = t.size.cy;
-				cx += q.size.cx;	
-				n++;			
+				q.pos = t.pos;
+				q.size = t.size;
 			}
-			
-		}		
-		t.size.cx = cx + GetExtraWidth();
+		}
 		
 		j = i;
 		first = false;
@@ -1238,6 +1358,13 @@ int TabBar::TabPos(const String &g, bool &first, int i, int j, bool inactive)
 	return j;	
 }
 
+void TabBar::ShowScrollbarFrame(bool b)
+{
+	SetFrameSize((b ? sc.GetFrameSize() : TB_SBSEPARATOR) + GetHeight(b), false);
+	sc.Show(b);
+	RefreshParentLayout();
+}
+
 void TabBar::SyncScrollBar(bool synctotal)
 {
 	if (synctotal)
@@ -1245,9 +1372,7 @@ void TabBar::SyncScrollBar(bool synctotal)
 	if (autoscrollhide) {
 		bool v = sc.IsScrollable();
 		if (sc.IsShown() != v) {
-			SetFrameSize((v ? sc.GetFrameSize() : TB_SBSEPARATOR) + GetHeight(v), false);
-			sc.Show(v);	
-			PostCallback(THISBACK(RefreshParentLayout));
+			PostCallback(THISBACK1(ShowScrollbarFrame, v));
 		}
 	}
 	else {
@@ -1294,9 +1419,10 @@ void TabBar::Clear()
 	Refresh();
 }
 
-TabBar& TabBar::Crosses(bool b)
+TabBar& TabBar::Crosses(bool b, int side)
 {
 	crosses = b;
+	crosses_side = side;
 	Repos();
 	Refresh();
 	return *this;
@@ -1529,11 +1655,6 @@ void TabBar::FrameSet()
 	sc.SetFrameSize(scrollbar_sz).SetAlign((al >= 2) ? al - 2 : al + 2);
 	sc <<= THISBACK(Scroll);
 	sc.Hide();
-
-	style[0] = &StyleDefaultLeft(); 
-	style[1] = &StyleDefault(); 
-	style[2] = &StyleDefaultRight(); 
-	style[3] = &StyleDefaultBottom(); 	
 	
 	if (sc.IsChild()) sc.Remove();
 	switch (al) {
@@ -1556,10 +1677,10 @@ void TabBar::FrameSet()
 
 TabBar& TabBar::SetScrollThickness(int sz)
 {
- 		scrollbar_sz = max(sz+2, 3); 
- 		FrameSet(); 
- 		RefreshLayout();
- 		return *this;	
+	scrollbar_sz = max(sz + 2, 3);
+	FrameSet(); 
+	RefreshLayout();
+	return *this;	
 }
 
 void TabBar::Layout()
@@ -1586,12 +1707,16 @@ int TabBar::FindKey(const Value &v) const
 
 bool TabBar::IsStackHead(int n) const
 {
-	return tabs[n].stack < 0 || n == 0 || (n > 0 && tabs[n-1].stack != tabs[n].stack);
+	return tabs[n].stack < 0 
+		|| n == 0 
+		|| (n > 0 && tabs[n - 1].stack != tabs[n].stack);
 }
 
 bool TabBar::IsStackTail(int n) const
 {
-	return tabs[n].stack < 0 || n >= tabs.GetCount()-1 || (n < tabs.GetCount() && tabs[n+1].stack != tabs[n].stack);
+	return tabs[n].stack < 0
+		|| n >= tabs.GetCount() - 1
+		|| (n < tabs.GetCount() && tabs[n + 1].stack != tabs[n].stack);
 }
 
 int TabBar::FindStackHead(int stackix) const
@@ -1604,7 +1729,7 @@ int TabBar::FindStackHead(int stackix) const
 
 int TabBar::FindStackTail(int stackix) const
 {
-	int i = tabs.GetCount()-1;
+	int i = tabs.GetCount() - 1;
 	while (tabs[i].stack != stackix) 
 		i--;
 	return i;
@@ -1635,9 +1760,16 @@ void TabBar::CycleTabStack(int head, int n)
 	// Swap tab to end of stack
 	int ix = head;
 	while (!IsStackTail(ix)) {
-		tabs.Swap(ix, ix+1);
+		tabs.Swap(ix, ix + 1);
 		++ix;
 	}
+}
+
+Value TabBar::GetData() const
+{
+	return (HasCursor() && active < GetCount())
+		? GetKey(active)
+		: Value();
 }
 
 void TabBar::SetData(const Value &key)
@@ -1815,7 +1947,7 @@ bool TabBar::ProcessMouse(int i, const Point& p)
 
 bool TabBar::ProcessStackMouse(int i, const Point& p)
 {
-	int j = i+1;
+	int j = i + 1;
 	while (j < tabs.GetCount() && tabs[j].stack == tabs[i].stack) {
 		if (Rect(tabs[j].tab_pos, tabs[j].tab_size).Contains(p)) {
 			cross = -1;
@@ -1907,7 +2039,9 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 		// Copy tabs
 		Vector<Tab> stacktemp;
 		stacktemp.SetCount(count);
-		Copy(&stacktemp[0], &tabs[tab], count);
+		//Copy(&stacktemp[0], &tabs[tab], count);
+		for(int i = 0; i < count; i++)
+			stacktemp[i].Set(tabs[tab + i]);
 		// Remove
 		tabs.Remove(tab, count);
 		if (tab < c)
@@ -2095,16 +2229,6 @@ void TabBar::CloseKey(const Value &key)
 	Close(tabix);
 }
 
-const TabBar::Style& TabBar::AlignStyle(int align, Style &s)
-{
-	Size sz(30, GetStyleHeight(s));
-	for (int i = 0; i < 4; i++) s.first[i] =  	AlignValue(align, s.first[i], sz);
-	for (int i = 0; i < 4; i++) s.last[i] =  	AlignValue(align, s.last[i], sz);
-	for (int i = 0; i < 4; i++) s.normal[i] =  	AlignValue(align, s.normal[i], sz);
-	for (int i = 0; i < 4; i++) s.both[i] =  	AlignValue(align, s.both[i], sz);
-	return s;
-}
-
 TabBar::Style& TabBar::Style::DefaultCrosses()
 {
 	crosses[0] = TabBarImg::CR0();
@@ -2131,31 +2255,6 @@ TabBar::Style& TabBar::Style::GroupSeparators(Value horz, Value vert)
 TabBar::Style& TabBar::Style::DefaultGroupSeparators()
 {
 	return GroupSeparators(TabBarImg::SEP(), TabBarImg::SEPV());	
-}
-
-void TabBar::ResetStyles()
-{
-	StyleDefaultLeft();
-	StyleDefaultRight();
-	StyleDefaultBottom();
-}
-
-const TabBar::Style& TabBar::StyleDefaultLeft()
-{
-	leftstyle = StyleDefault();
-	return AlignStyle(AlignedFrame::LEFT, leftstyle);
-}
-
-const TabBar::Style& TabBar::StyleDefaultRight()
-{
-	rightstyle = StyleDefault();
-	return AlignStyle(AlignedFrame::RIGHT, rightstyle);
-}
-
-const TabBar::Style& TabBar::StyleDefaultBottom()
-{
-	bottomstyle = StyleDefault();
-	return AlignStyle(AlignedFrame::BOTTOM, bottomstyle);	
 }
 
 Vector<Value> TabBar::GetKeys() const
@@ -2207,7 +2306,6 @@ CH_STYLE(TabBar, Style, StyleDefault)
 {
 	Assign(TabCtrl::StyleDefault());
 	DefaultCrosses().DefaultGroupSeparators();
-	TabBar::ResetStyles();
 }
 
 END_UPP_NAMESPACE

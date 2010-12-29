@@ -100,7 +100,7 @@ class TabBar : public AlignedFrame
 {
 public:
 	struct Style : public TabCtrl::Style 
-	{ 
+	{
 		Image crosses[3];
 		Value group_separators[2];
 		
@@ -116,14 +116,35 @@ public:
 	
 protected:
 	enum {
-		TB_MARGIN = 6,
+		TB_MARGIN = 5,
 		TB_SPACE = 10,
 		TB_SBHEIGHT = 4,
 		TB_SBSEPARATOR = 1,
 		TB_ICON = 16,
-		TB_SPACEICON = 5
+		TB_SPACEICON = 3
 	};	
 public:
+	struct TabItem : Moveable<TabItem> {
+		int x;
+		int y;
+		Size size;
+		WString text;
+		Color ink;
+		Font font;
+		Image img;
+		int side;
+		bool clickable;
+		bool cross;
+		int stacked_tab;
+		
+		TabItem& Clickable(bool b = true) { clickable = b; return *this; }
+		
+		TabItem() : side(LEFT), clickable(false), cross(false), stacked_tab(-1) {}
+		String ToString() const {
+			return Format("%d, %d - %s", x, y, text);
+		}
+	};
+	
 	struct Tab : Moveable<Tab> {
 		int id;
 		
@@ -139,7 +160,6 @@ public:
 
 		Point pos;
 		Size  size;
-		int	  stdcx;
 		
 		Point cross_pos;
 		Size  cross_size;
@@ -147,11 +167,29 @@ public:
 		Point tab_pos;
 		Size  tab_size;
 		
-		Tab() : visible(true), id(-1), stack(-1) 	{ }
+		String ToString() const
+		{
+			return Format("Key: %`, Group: %`, StackId: %`, stack: %d", key, group, stackid, stack);
+		}
+		
+		Vector<TabItem> items;
+		
+		Tab() : visible(true), id(-1), stack(-1) { }
+		Tab(const Tab& t) { Set(t); }
+		
+		void Set(const Tab& t);
+		
 		bool HasMouse(const Point& p) const;
 		bool HasMouseCross(const Point& p) const;
 		bool HasIcon() const						{ return !img.IsEmpty(); }
-		int  Right() const 							{ return pos.x + size.cx; } 
+		int  Right() const 							{ return pos.x + size.cx; }
+		
+		void Clear();
+		TabItem& AddValue(const Value& q, const Font& font = StdFont(), const Color& ink = SColorText);
+		TabItem& AddText(const WString& s, const Font& font = StdFont(), const Color& ink = SColorText);
+		TabItem& AddImage(const Image& img, int side = LEFT);
+		TabItem& AddSpace(int space = 5, int side = LEFT);
+		
 	};
 	
 	// Tab sorting structures
@@ -193,6 +231,7 @@ private:
 	int target;
 	int cross;
 	bool crosses:1;
+	int crosses_side;
 	bool isctrl:1;
 	bool isdrag:1;
 	bool grouping:1;
@@ -224,12 +263,11 @@ private:
 	TabKeySort 	 keysorter_inst;
 	TabValueSort stacksorter_inst;
 
-	static Style leftstyle, rightstyle, bottomstyle;
-	const Style *style[4];
 private:
-	void PaintTab(Draw& w, const Style& s, const Size& sz, int i, bool enable, bool dragsample = false);
+	void PaintTab(Draw& w, const Size& sz, int i, bool enable, bool dragsample = false);
 	
 	int  	TabPos(const String& g, bool& first, int i, int j, bool inactive);	
+	void    ShowScrollbarFrame(bool b);
 	void 	SyncScrollBar(bool synctotal = true);
 	void 	Scroll();
 
@@ -258,7 +296,8 @@ private:
 	int   	GetNextId();
 	int   	GetScrollPos() 				{ return sc.GetPos(); }		
 	
-	static int GetStyleHeight(const Style& s);
+	static int GetStyleHeight();
+	static Image AlignImage(int align, const Image& img);
 	static Value AlignValue(int align, const Value& v, const Size& isz);
 protected:	
 	virtual void Paint(Draw& w);
@@ -305,18 +344,17 @@ protected:
 	int InsertKey0(int ix, const Value& key, const Value& value, Image icon = Null, String group = Null);
 	
 	// Sub-class Paint override
-	virtual void PaintTab(Draw& w, const Rect& r, const Tab& tab, const Font& font, 
-						Color ink, dword style);
-	virtual void PaintStackedTab(Draw& w, const Rect& r, const Tab& tab, const Font& font, 
-						Color ink, dword style);
+	void PaintTabItems(Tab& t, Draw &w, const Rect& rn, int align);
+	virtual void ComposeTab(Tab& tab, const Font &font, Color ink, int style);
+	virtual void ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font& font, Color ink, int style);
 	virtual Size GetStdSize(const Tab& t); 
 	virtual Size GetStackedSize(const Tab& t);
 	Size 		 GetStdSize(const Value& v); 
 	
 	// Paint helpers
-	int		GetTextAngle()									{ return AlignedFrame::IsVert() ? (GetAlign() == LEFT ? 900 : 2700) : 0; }	
-	Point	GetTextPosition(const Rect& r, int cy, int space) const;
-	Point   GetImagePosition(const Rect& r, int cx, int cy, int space, int side) const;
+	int		GetTextAngle();
+	Point	GetTextPosition(int align, const Rect& r, int cy, int space) const;
+	Point   GetImagePosition(int align, const Rect& r, int cx, int cy, int space, int side) const;
 	bool	PaintIcons() 									{ return icons; }
 		
 	// Sub-class menu overrides
@@ -349,7 +387,7 @@ public:
 	void 	CloseKey(const Value& key);
 	void 	Clear();
 
-	TabBar& Crosses(bool b = true);
+	TabBar& Crosses(bool b = true, int side = RIGHT);
 	TabBar& Stacking(bool b = true);
 	TabBar& Grouping(bool b = true);
 	TabBar& ContextMenu(bool b = true);
@@ -411,7 +449,7 @@ public:
 	void	SetIcon(int n, Image icon);
 	void 	SetTabGroup(int n, const String& group);
 	
-	virtual Value 	GetData() const			{ return (HasCursor() && active < GetCount()) ? GetKey(active) : Value(); }
+	virtual Value 	GetData() const;
 	virtual void 	SetData(const Value& key);
 	
 	String 	GetGroupName() const      		{ return (group == 0) ? Null : groups[group].name; }
@@ -445,18 +483,11 @@ public:
 	Vector<Image> 	GetIcons() const;
 	TabBar&		  	CopySettings(const TabBar& src);
 	
-	const Style& 	GetStyle() 						{ return *style[GetAlign()]; }	
-	const Style&	GetStyle(int align) 			{ ASSERT(align >= 0 && align < 4); return *style[align]; }
+	static const Style& 	GetStyle() 						{ return StyleDefault(); }	
 
 	virtual void 	ContextMenu(Bar& bar);
 	
-	TabBar& SetStyle(int align, const Style& s)  	{ ASSERT(align >= 0 && align < 4); style[align] = &s; Refresh(); return *this; }
 	static const Style& StyleDefault();
-	static const Style& StyleDefaultLeft();
-	static const Style& StyleDefaultRight();
-	static const Style& StyleDefaultBottom();
-	static const Style& AlignStyle(int align, Style& s);	
-	static void  ResetStyles();
 };
 
 #include "FileTabs.h"

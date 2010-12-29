@@ -250,7 +250,7 @@ void AutoHideBar::TabDrag(int ix)
 	GetCtrl(ix)->MoveBegin(); 
 }
 
-void AutoHideBar::PaintTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, Color ink, dword style)
+void AutoHideBar::ComposeTab(Tab& tab, const Font &font, Color ink, int style)
 {
 	DockableCtrl *d;
 	WString txt;
@@ -269,21 +269,13 @@ void AutoHideBar::PaintTab(Draw& w, const Rect &r, const Tab& tab, const Font &f
 		txt = d->GetTitle();
 	}
 
-	Size isz(0, 0);
-	
 	if(icons)
 	{
-		const Image& icon = (style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon();
-		if (!icon.IsEmpty()) {
-			isz = icon.GetSize();
-			Point ip = GetImagePosition(r, isz.cx, isz.cy, TB_SPACEICON, LEFT);
-			w.DrawImage(ip.x, ip.y, icon);
-		}
+		tab.AddImage((style == CTRL_DISABLED) ? DisabledImage(d->GetIcon()) : d->GetIcon());
 	}
 	if (showtext)
 	{
-		Point p = GetTextPosition(r, GetTextSize(txt, font).cy, isz.cx > 0 ? isz.cx + TB_SPACEICON + TB_MARGIN : TB_MARGIN);
-		w.DrawText(p.x, p.y, GetTextAngle(), txt, font, ink);
+		tab.AddText(txt, font, ink);
 	}
 }
 

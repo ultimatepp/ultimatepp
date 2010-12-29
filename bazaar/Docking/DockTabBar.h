@@ -60,8 +60,7 @@ public:
 	
 	AutoHideBar();
 
-	virtual void PaintTab(Draw& w, const Rect &r, const Tab& tab, 
-					const Font &font, Color ink, dword style);
+	virtual void ComposeTab(Tab& tab, const Font &font, Color ink, int style);
 	
 private:
 	static int autohide_timeout;

@@ -13,10 +13,8 @@ protected:
 	virtual String GetStackId(const Tab &a);
 	virtual unsigned GetStackSortOrder(const Tab &a);	
 	
-	virtual void PaintTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, 
-						Color ink, dword style);
-	virtual void PaintStackedTab(Draw& w, const Rect &r, const Tab& tab, const Font &font, 
-						Color ink, dword style);
+	virtual void ComposeTab(Tab& tab, const Font &font, Color ink, int style);
+	virtual void ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font &font, Color ink, int style);
 	virtual Size GetStackedSize(const Tab &t);
 public:
 	FileTabs();
