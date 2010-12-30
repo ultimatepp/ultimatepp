@@ -1109,7 +1109,10 @@ void TabBar::Paint(Draw &w)
 
 Image TabBar::GetDragSample()
 {
-	return GetDragSample(highlight);
+	int h = highlight;
+	if(stacking)
+		h = FindStackHead(tabs[h].stack);
+	return GetDragSample(h);
 }
 
 Image TabBar::GetDragSample(int n)
