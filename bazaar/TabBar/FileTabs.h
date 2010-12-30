@@ -29,7 +29,7 @@ public:
 	void  	InsertFiles(int ix, const Vector<String> &files, bool make_active = true);
 	void  	InsertFiles(int ix, const Vector<String> &files, const Vector<Image> &img, bool make_active = true);
 	
-	void 	RenameFile(WString &from, WString &to, Image icon = Null);
+	void 	RenameFile(const WString &from, const WString &to, Image icon = Null);
 	
 	FileTabs& FileColor(Color c) 	{ filecolor = c; Refresh(); return *this; }
 	FileTabs& ExtColor(Color c) 	{ extcolor = c; Refresh(); return *this; }

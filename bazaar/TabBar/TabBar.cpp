@@ -289,7 +289,7 @@ TabBar::TabBar()
 
 	display = NULL;
 	crosses = true;
-	crosses_side = LEFT;
+	crosses_side = RIGHT;
 	grouping = true;
 	isctrl = false;
 	isdrag = false;
@@ -318,6 +318,20 @@ TabBar::TabBar()
 	SetAlign(TOP);
 	SetFrameSize(GetHeight(false));
 	BackPaint();
+}
+
+void TabBar::Set(const TabBar& t)
+{
+	Stacking(t.IsStacking());
+	SortStacks(t.IsStackSort());
+	Grouping(t.IsGrouping());
+	SortGroups(t.IsGroupSort());
+	
+	tabs.Clear();
+	for(int i = 0; i < t.GetCount(); i++)
+		tabs.Add().Set(t[i]);
+	Repos();
+	Refresh();
 }
 
 void TabBar::CloseAll(int exception)

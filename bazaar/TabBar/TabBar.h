@@ -376,7 +376,7 @@ public:
 	Callback1<Vector<Value> >	WhenCloseSome;		// Executed before any 'Close' action (with list of closing tabs)
 
 	TabBar();
-
+	void Set(const TabBar& t);
 	TabBar& Add(const Value& value, Image icon = Null, String group = Null, bool make_active = false);
 	TabBar& Insert(int ix, const Value& value, Image icon = Null, String group = Null, bool make_active = false);
 	
@@ -448,6 +448,8 @@ public:
 	void 	SetKey(int n, const Value &newkey);
 	void	SetIcon(int n, Image icon);
 	void 	SetTabGroup(int n, const String& group);
+	
+	const Tab& operator[] (int n) const     { return tabs[n]; }
 	
 	virtual Value 	GetData() const;
 	virtual void 	SetData(const Value& key);

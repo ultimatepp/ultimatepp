@@ -23,9 +23,8 @@ void FileTabs::ComposeTab(Tab& tab, const Font &font, Color ink, int style)
 {
 	if(PaintIcons() && tab.HasIcon())
 	{
-		tab.AddImage(tab.img, RIGHT);
-		tab.AddSpace(TB_SPACEICON, RIGHT);
-		tab.AddImage(tab.img, RIGHT);
+		tab.AddImage(tab.img);
+		tab.AddSpace(TB_SPACEICON);
 	}
 
 	WString txt = IsString(tab.value) ? tab.value : StdConvert().Format(tab.value);
@@ -115,7 +114,7 @@ void FileTabs::InsertFiles(int ix, const Vector<String> &files, const Vector<Ima
 	InsertFile(ix, files[0].ToWString(), useimg ? img[0] : NativePathIcon(files[0]), make_active);
 }
 
-void FileTabs::RenameFile(WString &from, WString &to, Image icon)
+void FileTabs::RenameFile(const WString &from, const WString &to, Image icon)
 {
 	int n = FindKey(from);
 	if (n >= 0)
