@@ -272,8 +272,8 @@ private:
 	void 	Scroll();
 
 	int  	FindId(int id) const;
-	int  	GetNext(int n) const;
-	int  	GetPrev(int n) const;
+	int  	GetNext(int n, bool drag = false) const;
+	int  	GetPrev(int n, bool drag = false) const;
 
 	int 	GetWidth(int n);
 	int 	GetExtraWidth();

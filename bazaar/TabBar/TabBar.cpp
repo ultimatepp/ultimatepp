@@ -1068,7 +1068,7 @@ void TabBar::Paint(Draw &w)
 	{
 		// Draw target marker
 		int drag = isctrl ? highlight : active;
-		if(target != drag && target != drag + 1)
+		if(target != drag && target != GetNext(drag, true))
 		{
 			last = GetLast();
 			first = GetFirst();
@@ -1403,15 +1403,15 @@ int TabBar::FindId(int id) const
 	return -1;
 }
 
-int TabBar::GetNext(int n) const
+int TabBar::GetNext(int n, bool drag) const
 {
 	for(int i = n + 1; i < tabs.GetCount(); i++)
 		if(tabs[i].visible)
 			return i;
-	return -1;
+	return drag ? tabs.GetCount() : -1;
 }
 
-int TabBar::GetPrev(int n) const
+int TabBar::GetPrev(int n, bool drag) const
 {
 	for(int i = n - 1; i >= 0; i--)
 		if(tabs[i].visible)
@@ -1923,16 +1923,28 @@ int TabBar::GetTargetTab(Point p)
 
 	int f = GetFirst();
 	int l = GetLast();
-
+	
 	if(tabs[f].visible && p.x < tabs[f].pos.x + tabs[f].size.cx / 2)
 		return f;
 
+	int t = -1;
+	
 	for(int i = l; i >= f; i--)
 		if(tabs[i].visible && p.x >= tabs[i].pos.x + tabs[i].size.cx / 2)
-			return i == l ? i + 1 : GetNext(i);
-//		if(tabs[i].visible && p.x >= tabs[i].x && p.x <= tabs[i].x + tabs[i].cx)
-//			return i;
-	return -1;
+		{
+			t = i;
+			break;
+		}
+	
+	if(stacking)
+		l = FindStackHead(tabs[l].stack);
+		
+	if(t == l)
+		t = tabs.GetCount();
+	else
+	 	t = GetNext(t);
+
+	return t;
 }
 
 void TabBar::MouseWheel(Point p, int zdelta, dword keyflags)
@@ -2031,10 +2043,11 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 
 	if (stacking) {
 		tab = FindStackHead(tabs[tab].stack);
-		c = FindStackHead(tabs[c].stack);
+		if(c < tabs.GetCount())
+			c = FindStackHead(tabs[c].stack);
 	}
 
-	bool sametab = c == tab || c == tab + 1;
+	bool sametab = c == tab || c == GetNext(tab, true);
 	bool internal = AcceptInternal<TabBar>(d, "tabs");
 
 	if(!sametab && internal && d.IsAccepted())
