@@ -1096,7 +1096,7 @@ void TabBar::Paint(Draw &w)
 		if (IsHorz())
 			w.DrawImage(mouse.x - isz.cx / 2, p, isz.cx, isz.cy, dragtab);
 		else
-			w.DrawImage(p, mouse.y - isz.cy / 2, isz.cx, isz.cy, dragtab);		
+			w.DrawImage(p, mouse.y - isz.cy / 2, isz.cx, isz.cy, dragtab);
 	}
 	
 	// If not in a frame fill any spare area
@@ -2060,7 +2060,7 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 		// Count stack
 		int count = 1;
 		if (stacking) {
-			int ix = tab+1;
+			int ix = tab + 1;
 			int stack = tabs[tab].stack;
 			while (ix < tabs.GetCount() && tabs[ix].stack == stack)
 				ix++;
