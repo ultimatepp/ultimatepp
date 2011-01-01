@@ -281,6 +281,14 @@ bool TabScrollBar::IsScrollable() const
 	return total > sz.cx && sz.cx > 0;
 }
 
+// Group
+
+void TabBar::Group::Serialize(Stream& s)
+{
+	s % name % active % count % first % last;
+}
+
+
 // TabBar
 
 TabBar::TabBar()
@@ -322,16 +330,20 @@ TabBar::TabBar()
 
 void TabBar::Set(const TabBar& t)
 {
-	Stacking(t.IsStacking());
-	SortStacks(t.IsStackSort());
-	Grouping(t.IsGrouping());
-	SortGroups(t.IsGroupSort());
+	CopyBaseSettings(t);
 	
 	tabs.Clear();
-	for(int i = 0; i < t.GetCount(); i++)
-		tabs.Add().Set(t[i]);
-	Repos();
-	Refresh();
+	tabs <<= t.tabs;
+	groups.Clear();
+	groups <<= t.groups;
+	
+	active = t.active;
+	cross = -1;
+	highlight = -1;
+	target = -1;
+	
+	sc.Set(t.sc);
+	SetAlign(t.GetAlign());
 }
 
 void TabBar::CloseAll(int exception)
@@ -426,6 +438,11 @@ void TabBar::Tab::Set(const Tab& t)
 	tab_size = t.tab_size;
 	
 	items <<= t.items;
+}
+
+void TabBar::Tab::Serialize(Stream& s)
+{
+	s % id % key % value % group % stackid % stack % visible;
 }
 
 bool TabBar::Tab::HasMouse(const Point& p) const
@@ -2305,9 +2322,10 @@ Vector<Image> TabBar::GetIcons() const
 	return img;
 }
 
-TabBar& TabBar::CopySettings(const TabBar &src)
+TabBar& TabBar::CopyBaseSettings(const TabBar& src)
 {
 	crosses = src.crosses;
+	crosses_side = src.crosses_side;
 	grouping = src.grouping;
 	contextmenu = src.contextmenu;
 	autoscrollhide = src.autoscrollhide;		
@@ -2321,6 +2339,13 @@ TabBar& TabBar::CopySettings(const TabBar &src)
 	allownullcursor = src.allownullcursor;
 	icons = src.icons;
 	mintabcount = src.mintabcount;
+	return *this;
+}
+
+TabBar& TabBar::CopySettings(const TabBar &src)
+{
+	
+	CopyBaseSettings(src);
 	
 	if (stacking != src.stacking)
 		Stacking(src.stacking);
@@ -2330,6 +2355,51 @@ TabBar& TabBar::CopySettings(const TabBar &src)
 		Refresh();
 	}
 	return *this;
+}
+
+void TabBar::Serialize(Stream& s)
+{
+	int version = 1;
+	s / version;
+		
+	s % crosses;
+	s % crosses_side;
+	s % grouping;
+	s % autoscrollhide;
+	s % nosel;
+	s % nohl;
+	s % inactivedisabled;
+	s % stacking;
+	s % groupsort;
+	s % groupseps;
+	s % tabsort;
+	s % allownullcursor;
+	s % icons;
+	s % mintabcount;
+	s % active;
+	
+	cross = -1;
+	highlight = -1;
+	target = -1;
+	
+	int n = groups.GetCount();
+	s % n;
+	groups.SetCount(n);
+	
+	for(int i = 0; i < groups.GetCount(); i++)
+		s %  groups[i];
+	
+	n = tabs.GetCount();
+	s % n;
+	tabs.SetCount(n);
+	
+	for(int i = 0; i < tabs.GetCount(); i++)
+		s % tabs[i];
+	
+	int g = GetGroup();
+	s % g;
+	SetGroup(g);
+	Repos();
 }
 
 CH_STYLE(TabBar, Style, StyleDefault)

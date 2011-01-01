@@ -169,8 +169,10 @@ public:
 		
 		String ToString() const
 		{
-			return Format("Key: %`, Group: %`, StackId: %`, stack: %d", key, group, stackid, stack);
+			return Format("Key: %`, Group: %`, StackId: %`, Stack: %d", key, group, stackid, stack);
 		}
+		
+		virtual void Serialize(Stream& s);
 		
 		Vector<TabItem> items;
 		
@@ -207,6 +209,7 @@ protected:
 		int count;
 		int first;
 		int last;
+		virtual void Serialize(Stream& s);
 	};
 
 	struct TabValueSort : public TabSort {
@@ -230,23 +233,23 @@ private:
 	int highlight;
 	int target;
 	int cross;
-	bool crosses:1;
+	bool crosses;
 	int crosses_side;
-	bool isctrl:1;
-	bool isdrag:1;
-	bool grouping:1;
-	bool autoscrollhide:1;		
-	bool nosel:1;
-	bool nohl:1;
-	bool inactivedisabled:1;
-	bool stacking:1;
-	bool stacksort:1;
-	bool groupsort:1;
-	bool groupseps:1;
-	bool tabsort:1;
-	bool allownullcursor:1;
-	bool icons:1;
-	bool contextmenu:1;
+	bool isctrl;
+	bool isdrag;
+	bool grouping;
+	bool autoscrollhide;		
+	bool nosel;
+	bool nohl;
+	bool inactivedisabled;
+	bool stacking;
+	bool stacksort;
+	bool groupsort;
+	bool groupseps;
+	bool tabsort;
+	bool allownullcursor;
+	bool icons;
+	bool contextmenu;
 	int mintabcount;
 	Point mouse, oldp;
 	int group;
@@ -376,7 +379,8 @@ public:
 	Callback1<Vector<Value> >	WhenCloseSome;		// Executed before any 'Close' action (with list of closing tabs)
 
 	TabBar();
-	void Set(const TabBar& t);
+	TabBar& CopyBaseSettings(const TabBar& src);
+	void    Set(const TabBar& t);
 	TabBar& Add(const Value& value, Image icon = Null, String group = Null, bool make_active = false);
 	TabBar& Insert(int ix, const Value& value, Image icon = Null, String group = Null, bool make_active = false);
 	
@@ -484,6 +488,7 @@ public:
 	Vector<Value> 	GetKeys() const;
 	Vector<Image> 	GetIcons() const;
 	TabBar&		  	CopySettings(const TabBar& src);
+	virtual void    Serialize(Stream& s);
 	
 	static const Style& 	GetStyle() 						{ return StyleDefault(); }	
 
