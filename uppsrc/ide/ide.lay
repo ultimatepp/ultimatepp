@@ -449,7 +449,7 @@ LAYOUT(SetupAssistLayout, 520, 124)
 	ITEM(Option, barline, SetLabel(t_("Highlight line in the left bar")).LeftPosZ(4, 236).TopPosZ(84, 16))
 	ITEM(Option, qtfsel, SetLabel(t_("QTF designer edits selection")).LeftPosZ(4, 236).TopPosZ(104, 16))
 	ITEM(Option, header_guards, SetLabel(t_("Insert guards to new headers")).LeftPosZ(272, 164).TopPosZ(4, 16))
-	ITEM(Switch, insert_include, SetLabel(t_("No #include in new sources\n#include first\n#include previous")).LeftPosZ(272, 156).TopPosZ(24, 44))
+	ITEM(Switch, insert_include, SetLabel(t_("No #include in new sources\n#include first\n#include previous")).LeftPosZ(272, 156).TopPosZ(24, 52))
 END_LAYOUT
 
 LAYOUT(SetupIdeLayout, 512, 264)
