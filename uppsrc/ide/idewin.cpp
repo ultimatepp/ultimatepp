@@ -80,7 +80,7 @@ void Ide::ConsolePaste()
 }
 
 void Ide::Serialize(Stream& s) {
-	int version = 17;
+	int version = 18;
 	s.Magic(0x1234);
 	s / version;
 	s % main;
@@ -101,15 +101,33 @@ void Ide::Serialize(Stream& s) {
 	s % font2;
 	s % show_status_bar;
 	s % toolbar_in_row;
-	s % filetabs;
+	if(version >= 18) {
+		s % filetabs;
+	}
+	else {
+		bool b;
+		s % b;
+		filetabs = b ? AlignedFrame::TOP : -1;
+	}
 	s % auto_enclose;
 	s % show_tabs;
 	s % tabs_icons;
-	s % tabs_crosses;
+	if(version >= 18) {
+		s % tabs_crosses;
+	}
+	else {
+		bool b;
+		s % b;
+		tabs_crosses = b ? AlignedFrame::RIGHT : -1;
+	}
+		
 	if(version >= 14) {
 		s % tabs_grouping;
 		s % tabs_serialize;
 	}
+	if(version >= 18) {
+		s % tabs_stacking;
+	}	
 	if(version >= 15)
 		s % force_crlf;
 	s % no_parenthesis_indent;
@@ -443,7 +461,7 @@ Ide::Ide()
 	filelist.Columns(2);
 	package.Columns(2);
 
-	filetabs = true;
+	filetabs = AlignedFrame::TOP;
 	auto_enclose = false;
 	mark_lines = true;
 
@@ -486,10 +504,10 @@ Ide::Ide()
 	editor.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	tabs <<= THISBACK(TabFile);
-	tabs.WhenCloseRest = THISBACK1(CloseRest, &tabs);
+//	tabs.WhenCloseRest = THISBACK1(CloseRest, &tabs);
 	editor2.SetFrame(tabs2);
 	tabs2 <<= THISBACK(TabFile2);
-	tabs2.WhenCloseRest = THISBACK1(CloseRest, &tabs2);
+//	tabs2.WhenCloseRest = THISBACK1(CloseRest, &tabs2);
 	editor2.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor2.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	editor2.WhenLeftDown = THISBACK(SwapEditors);
@@ -538,8 +556,9 @@ Ide::Ide()
 	show_status_bar = false;
 	show_tabs = false;
 	tabs_icons = false;
-	tabs_crosses = true;
+	tabs_crosses = AlignedFrame::RIGHT;
 	tabs_grouping = true;
+	tabs_stacking = false;
 	tabs_serialize = true;
 	no_parenthesis_indent = false;
 

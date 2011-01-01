@@ -8,7 +8,7 @@
 #include <Web/Web.h>
 
 #include <ide/Browser/Browser.h>
-#include <ide/QuickTabs/QuickTabs.h>
+#include <TabBar/TabBar.h>
 #include <CodeEditor/CodeEditor.h>
 #include <usvn/usvn.h>
 #include <ide/IconDes/IconDes.h>
@@ -268,6 +268,18 @@ public:
 	RightTabs();
 };
 
+class EditorTabBar : public FileTabs
+{
+public:
+	EditorTabBar();
+	String GetFile(int n) const;
+	bool   FindSetFile(const String& fn);
+	void   SetAddFile(const String& fn);
+	void   RenameFile(const String& fn, const String& nn);
+
+	typedef EditorTabBar CLASSNAME;
+};
+
 int    memcmp_i(const char *s, const char *t, int n);
 String ParseTemplatedType(const String& type, Vector<String>& tparam);
 String ResolveTParam(const String& type, const Vector<String>& tparam);
@@ -513,7 +525,7 @@ public:
 	One<IdeDesigner> designer;
 	AssistEditor     editor;
 	CodeEditor       editor2;
-	QuickTabs        tabs, tabs2;
+	EditorTabBar     tabs, tabs2;
 	EscValue         macro_api;
 
 	RightTabs   btabs;
@@ -620,8 +632,9 @@ public:
 	bool      show_tabs;
 	bool      force_crlf;
 	bool      tabs_icons;
-	bool      tabs_crosses;
+	int       tabs_crosses;
 	bool      tabs_grouping;
+	bool      tabs_stacking;
 	bool      tabs_serialize;
 	bool      no_parenthesis_indent;
 	bool      hilite_if_endif;
@@ -629,7 +642,7 @@ public:
 	bool      mute_sounds;
 	bool      line_numbers;
 	bool      header_guards;
-	bool      filetabs;
+	int       filetabs;
 	bool      auto_enclose;
 	bool      mark_lines;
 	bool      find_pick_sel;
@@ -970,7 +983,7 @@ public:
 	void      TabFile2();
 	void      ClearTab();
 	void      ClearTabs();
-	void      CloseRest(QuickTabs *tabs);
+	void      CloseRest(EditorTabBar *tabs);
 	void      TabsLR(int d);
 
 	void      RefreshFrame(bool auto_disasm);
@@ -980,7 +993,7 @@ public:
 
 	void      SetBar();
 
-	void      UpdateFormat(CodeEditor& editor, QuickTabs& tabs);
+	void      UpdateFormat(CodeEditor& editor, EditorTabBar& tabs);
 	void      UpdateFormat();
 	void      ReadHlStyles(ArrayCtrl& hlstyle);
 

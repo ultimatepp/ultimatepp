@@ -17,7 +17,8 @@ uses
 	art\BlueBar,
 	plugin/astyle,
 	usvn,
-	TextDiffCtrl;
+	TextDiffCtrl,
+	TabBar;
 
 link(WIN32 MSC) /MAP;
 
@@ -36,6 +37,7 @@ file
 	Console.cpp,
 	ide.cpp,
 	idefile.cpp charset "iso8859-1",
+	EditorTabBar.cpp,
 	QuickTabs.cpp,
 	Bottom.cpp,
 	t.cpp,
@@ -72,8 +74,8 @@ file
 	Valgrind.cpp,
 	Export.cpp,
 	Resources readonly separator,
-	ide.iml,
 	ide.lay,
+	ide.iml,
 	app.tpp,
 	ide.rc
 		depends() xide.ico

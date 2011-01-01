@@ -111,15 +111,17 @@ Font FontSelectManager::Get() {
 	return f;
 }
 
-void Ide::UpdateFormat(CodeEditor& editor, QuickTabs& tabs)
+void Ide::UpdateFormat(CodeEditor& editor, EditorTabBar& tabs)
 {
 	if(!IsActiveFile() || ActiveFile().tabsize <= 0)
 		editor.TabSize(editortabsize);
 	if(!designer)
-		if(filetabs)
+		if(filetabs >=0) {
+			tabs.SetAlign(filetabs);
 			editor.SetFrame(tabs);
-		else
+		} else {
 			editor.SetFrame(ViewFrame());
+		}
 	editor.IndentSpaces(indent_spaces);
 	editor.IndentAmount(indent_amount);
 	editor.ShowTabs(show_tabs);
@@ -135,8 +137,9 @@ void Ide::UpdateFormat(CodeEditor& editor, QuickTabs& tabs)
 	editor.BorderColumn(bordercolumn, bordercolor);
 	editor.Refresh();
 	tabs.Grouping(tabs_grouping);
-	tabs.FileIcons(tabs_icons);
-	tabs.Crosses(tabs_crosses);
+	tabs.Stacking(tabs_stacking);
+	tabs.FileIcons(tabs_icons, false);
+	tabs.Crosses(tabs_crosses >= 0, tabs_crosses);
 }
 
 void Ide::UpdateFormat() {
@@ -300,6 +303,7 @@ void Ide::SetupFormat() {
 	WithSetupHlLayout<ParentCtrl> hlt;
 	WithSetupEditorLayout<ParentCtrl> edt;
 	WithSetupIdeLayout<ParentCtrl> ide;
+	WithSetupAssistLayout<ParentCtrl> assist;
 	AStyleSetupDialog ast(this);
 #ifdef PLATFORM_WIN32
 	ide.console_txt.Hide();
@@ -311,9 +315,23 @@ void Ide::SetupFormat() {
 	ide.kde <<= callback2(SetConsole, &ide.console, "/usr/bin/konsole -e");
 	ide.gnome <<= callback2(SetConsole, &ide.console, "/usr/bin/gnome-terminal -x");
 	ide.xterm <<= callback2(SetConsole, &ide.console, "/usr/bin/xterm -e");
+	
+	edt.filetabs
+		.Add(AlignedFrame::LEFT, "Left")
+		.Add(AlignedFrame::TOP, "Top")
+		.Add(AlignedFrame::RIGHT, "Right")
+		.Add(AlignedFrame::BOTTOM, "Bottom")
+		.Add(-1, "Off");
+		
+	edt.tabs_crosses
+		.Add(AlignedFrame::LEFT, "Left")
+		.Add(AlignedFrame::RIGHT, "Right")
+		.Add(-1, "Off");
+	
 	dlg.Add(fnt, "Fonts");
 	dlg.Add(hlt, "Syntax highlighting");
 	dlg.Add(edt, "Editor");
+	dlg.Add(assist, "Assist");
 	dlg.Add(ide, "IDE");
 	dlg.Add(ast, "Code formatting");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
@@ -343,39 +361,44 @@ void Ide::SetupFormat() {
 		(hlt.hilite_bracket, hilite_bracket)
 		(hlt.hilite_ifdef, hilite_ifdef)
 		(hlt.hilite_if_endif, hilite_if_endif)
+
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
 		(edt.showtabs, show_tabs)
-		(edt.barline, barline)
-		(edt.qtfsel, qtfsel)
-		(ide.tabs_icons, tabs_icons)
-		(ide.tabs_crosses, tabs_crosses)
-		(ide.tabs_grouping, tabs_grouping)
-		(ide.tabs_serialize, tabs_serialize)
-		(ide.filetabs, filetabs)
 		(edt.forcecrlf, force_crlf)
 		(edt.numbers, line_numbers)
 		(edt.bookmark_pos, bookmark_pos)
-		(edt.header_guards, header_guards)
-		(edt.insert_include, insert_include)
-		(edt.auto_enclose, auto_enclose)
-		(edt.mark_lines, mark_lines)
 		(edt.bordercolumn, bordercolumn)
 		(edt.bordercolor, bordercolor)
-		(ide.showtime, showtime)
 		(edt.findpicksel, find_pick_sel)
 		(edt.findpicktext, find_pick_text)
+		(edt.filetabs, filetabs)
+		(edt.tabs_icons, tabs_icons)
+		(edt.tabs_crosses, tabs_crosses)
+		(edt.tabs_grouping, tabs_grouping)
+		(edt.tabs_stacking, tabs_stacking)
+		(edt.tabs_serialize, tabs_serialize)
+
+		(assist.barline, barline)
+		(assist.auto_enclose, auto_enclose)
+		(assist.commentdp, editor.commentdp)
+		(assist.header_guards, header_guards)
+		(assist.insert_include, insert_include)
+		(assist.mark_lines, mark_lines)
+		(assist.qtfsel, qtfsel)
+		(assist.assist, editor.auto_assist)
+
+		(ide.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)
 		(ide.toolbar_in_row, toolbar_in_row)
 		(ide.splash_screen, splash_screen)
 		(ide.sort, sort)
 		(ide.mute_sounds, mute_sounds)
 		(ide.wrap_console_text, wrap_console_text)
-		(ide.assist, editor.auto_assist)
-		(ide.commentdp, editor.commentdp)
 		(ide.hydra1_threads, hydra1_threads)
 		(ide.chstyle, chstyle)
 		(ide.console, LinuxHostConsole)
+
 		(ast.BracketIndent,					astyle_BracketIndent)
 		(ast.NamespaceIndent,               astyle_NamespaceIndent)
 		(ast.BlockIndent,                   astyle_BlockIndent)
@@ -413,7 +436,6 @@ void Ide::SetupFormat() {
 		hlt.hlstyle.WhenCtrlsAction = ed.WhenAction = tf.WhenAction =
 		con.WhenAction = f1.WhenAction = f2.WhenAction = dlg.Breaker(222);
 	ide.showtimeafter <<= Nvl((Date)FileGetTime(ConfigFile("version")), GetSysDate() - 1);
-	ide.today <<= dlg.Breaker(444);
 	hlt.hl_restore <<= dlg.Breaker(333);
 	ide.chstyle.Add(0, "Host platform");
 	ide.chstyle.Add(1, "Standard");
@@ -451,8 +473,6 @@ void Ide::SetupFormat() {
 			editor.DefaultHlStyles();
 			ReadHlStyles(hlt.hlstyle);
 		}
-		if(c == 444)
-			ide.showtimeafter = GetSysDate();
 	}
 	if(filelist.IsCursor()) {
 		FlushFile();
