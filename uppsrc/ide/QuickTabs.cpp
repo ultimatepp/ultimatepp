@@ -31,7 +31,7 @@ void Ide::ClearTabs()
 	FileSelected();
 }
 
-void Ide::CloseRest(QuickTabs *tabs)
+void Ide::CloseRest(EditorTabBar *tabs)
 {
 	Index<String> fn;
 	const Workspace& wspc = IdeWorkspace();

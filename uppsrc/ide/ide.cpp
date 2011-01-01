@@ -746,8 +746,8 @@ void Ide::SerializeWorkspace(Stream& s) {
 	SerializeClosed(s);
 	if(version >= 9) {
 		if(tabs_serialize) {
-			tabs.SerializeTabs(s);
-			tabs2.SerializeTabs(s);
+			s % tabs;
+			s % tabs2;
 		}
 	}
 }

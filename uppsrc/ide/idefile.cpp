@@ -423,10 +423,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		}
 	}
 
-	if(filetabs)
-		editor.SetFrame(tabs);
-	else
-		editor.SetFrame(ViewFrame());
+	editor.SetFrame(filetabs >= 0 ? tabs :ViewFrame());
 	tabs.SetAddFile(editfile);
 	editor.Enable();
 	editpane.Add(editorsplit);
@@ -695,7 +692,7 @@ void Ide::PassEditor()
 	editor2.Set(editor.Get(charset), charset);
 	editor2.SetEditPosSb(editor.GetEditPos());
 	editor2.CheckEdited();
-	QuickTabs h;
+	EditorTabBar h;
 	h.Set(tabs);
 	tabs.Set(tabs2);
 	tabs2.Set(h);
