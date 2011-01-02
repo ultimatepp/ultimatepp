@@ -200,7 +200,9 @@ void Ide::Edit(Bar& menu) {
 	}
 
 	menu.MenuSeparator();
-	menu.Add("Find and Replace", THISBACK(SearchMenu));
+	
+	if(menu.IsMenuBar())
+		menu.Add("Find and Replace", THISBACK(SearchMenu));
 
 	if(!designer && menu.IsMenuBar()) {
 		menu.Add("Insert", THISBACK(InsertMenu));
