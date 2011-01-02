@@ -471,7 +471,7 @@ bool BarCtrl::IsEmpty() const
 
 void BarCtrl::Separator()
 {
-	AddNC(separator.DoIndex(sii++).Margin(lsepm, rsepm).SetStyle(*sepstyle).SetSize(ssize));
+	AddNC(separator.At(sii++).Margin(lsepm, rsepm).SetStyle(*sepstyle).SetSize(ssize));
 }
 
 void BarCtrl::AddCtrl(Ctrl *ctrl, Size sz)
