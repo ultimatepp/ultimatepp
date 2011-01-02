@@ -29,7 +29,7 @@ void FileTabs::ComposeTab(Tab& tab, const Font &font, Color ink, int style)
 
 	WString txt = IsString(tab.value) ? tab.value : StdConvert().Format(tab.value);
 	int extpos = txt.ReverseFind('.');
-	tab.AddText(txt.Left(extpos), font, filecolor);
+	tab.AddText(extpos >= 0 ? txt.Left(extpos) : txt, font, filecolor);
 
 	if (extpos >= 0) {
 		tab.AddText(txt.Right(txt.GetLength() - extpos), font, extcolor);
@@ -48,12 +48,16 @@ void FileTabs::ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font &f
 		WString txt = IsString(stacked_tab.value) ? stacked_tab.value : StdConvert().Format(stacked_tab.value);
 		int extpos = txt.ReverseFind('.');
 	
+		Color c = (style == CTRL_HOT) ? extcolor : SColorDisabled();
 		if (extpos >= 0) {
 			tab.AddText(
 				txt.Right(txt.GetLength() - extpos - 1),
 				font,
-				(style == CTRL_HOT) ? extcolor : SColorDisabled()
+				c
 			).Clickable();
+		}
+		else {
+			tab.AddText("-", font, c).Clickable();
 		}
 	}	
 }
@@ -107,7 +111,7 @@ void FileTabs::InsertFiles(int ix, const Vector<String> &files, const Vector<Ima
 {
 	if (!files.GetCount()) return;
 	bool useimg = img.GetCount() == files.GetCount();
-	for (int i = files.GetCount()-1; i > 0; i--) {
+	for (int i = files.GetCount() - 1; i > 0; i--) {
 		TabBar::InsertKey0(ix, files[i].ToWString(), GetFileName(files[i]), 
 			useimg ? img[i] : NativePathIcon(files[i]), GetFileGroup(files[i]));	
 	}
