@@ -228,6 +228,7 @@ protected:
 	Vector<Tab> 	tabs;
 	Vector<int>		separators;
 	int 			active;
+	int             id;
 
 private:
 	int highlight;

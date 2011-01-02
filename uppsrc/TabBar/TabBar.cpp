@@ -295,6 +295,7 @@ TabBar::TabBar()
 {
 	Clear();
 
+	id = 0;
 	display = NULL;
 	crosses = true;
 	crosses_side = RIGHT;
@@ -331,6 +332,8 @@ TabBar::TabBar()
 void TabBar::Set(const TabBar& t)
 {
 	CopyBaseSettings(t);
+	
+	id = t.id;
 	
 	tabs.Clear();
 	tabs <<= t.tabs;
@@ -375,8 +378,7 @@ void TabBar::CloseAll(int exception)
 
 int TabBar::GetNextId()
 {
-	static int id = 0;
-	return ++id;
+	return id++;
 }
 
 void TabBar::ContextMenu(Bar& bar)
@@ -2361,7 +2363,8 @@ void TabBar::Serialize(Stream& s)
 {
 	int version = 1;
 	s / version;
-		
+
+	s % id;		
 	s % crosses;
 	s % crosses_side;
 	s % grouping;
@@ -2387,7 +2390,7 @@ void TabBar::Serialize(Stream& s)
 	groups.SetCount(n);
 	
 	for(int i = 0; i < groups.GetCount(); i++)
-		s %  groups[i];
+		s % groups[i];
 	
 	n = tabs.GetCount();
 	s % n;
