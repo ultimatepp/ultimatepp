@@ -14,6 +14,9 @@ to install them are ][^topic`:`/`/Media`/srcdoc`/FfmpegInstall`$en`-us^2 here][2
 [s0;i150;O0; [2 ffmpeg gives audio and video decoding and encoding.]&]
 [s0;2 &]
 [s0;2 &]
+[s0; [^topic`:`/`/MediaPlayer`/srcdoc`/MediaPlayer`$en`-us^2 MediaPlayer 
+package][2  is a demo of MediaPlayer class capabilities.]&]
+[s0;2 &]
 [s0; [2 So in summary for playing:]&]
 [s0;2 &]
 [s0;i150;O0; [2 ffmpeg opens the file (.avi, .mp3, ...)]&]
