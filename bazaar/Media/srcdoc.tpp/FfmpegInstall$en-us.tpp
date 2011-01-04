@@ -82,7 +82,11 @@ Ffmpeg Builds`" by Ramiro Polla][2 .]&]
 labeled `"shared`" and `"shared`-dev`".]&]
 [s0;2 &]
 [s0; [2 You can set them in your own folder structure or just follow 
-the `"Safe way`" one.]&]
+the `"Safe way`" one. Do not forget to delete inttipes.h and 
+stdint.h when compiling with MinGW.]&]
+[s0;2 &]
+[s0; [2 Remember that these files are supplied `"as is`" and they do 
+not usually represent any `"stable`" version.]&]
 [s0;2 &]
 [s0;2 &]
 [s0; [*2 Hard way]&]

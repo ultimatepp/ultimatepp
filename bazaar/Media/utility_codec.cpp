@@ -30,9 +30,9 @@ int GetCodecBitRate(AVCodecContext *codec) {
 
 size_t av_get_codec_tag_string(char *buf, size_t buf_size, unsigned int codec_tag)
 {
-    int i, len, ret = 0;
+    size_t len, ret = 0;
 
-    for (i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         len = snprintf(buf, buf_size,
                        isprint(codec_tag&0xFF) ? "%c" : "[%d]", codec_tag&0xFF);
         buf      += len;

@@ -232,7 +232,7 @@ void sdl_audio_callback(void *data, Uint8 *stream, int len)
 {
     MediaFile &mf = *(MediaFile *)data;
 
-    mf.audio_callback_time = av_gettime();
+    mf.audio_callback_time = GetUSec();
 
     while (len > 0) {
         if (unsigned(mf.audio_buf_index) >= mf.audio_buf_size) {

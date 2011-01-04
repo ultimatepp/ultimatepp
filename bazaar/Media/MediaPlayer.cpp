@@ -230,68 +230,83 @@ static void free_subpicture(SubPicture *sp)
 void MediaPlayer::video_image_display()
 {
     VideoPicture &vp = pictq[pictq_rindex];
-    if (!vp.bmp) 
+    if (!vp.overlay && !vp.surface) 
         return;
     if (subtitleStream) {
         if (subpq_size > 0) {
             SubPicture *sp = &subpq[subpq_rindex];
 
             if (vp.pts >= sp->pts + (float(sp->sub.start_display_time)/1000.)) {
-                SDL_LockYUVOverlay (vp.bmp);
+                SDL_LockYUVOverlay(vp.overlay);
 				
 				AVPicture pict;
-                pict.data[0] = vp.bmp->pixels[0];
-                pict.data[1] = vp.bmp->pixels[2];
-                pict.data[2] = vp.bmp->pixels[1];
+                pict.data[0] = vp.overlay->pixels[0];
+                pict.data[1] = vp.overlay->pixels[2];
+                pict.data[2] = vp.overlay->pixels[1];
 
-                pict.linesize[0] = vp.bmp->pitches[0];
-                pict.linesize[1] = vp.bmp->pitches[2];
-                pict.linesize[2] = vp.bmp->pitches[1];
+                pict.linesize[0] = vp.overlay->pitches[0];
+                pict.linesize[1] = vp.overlay->pitches[2];
+                pict.linesize[2] = vp.overlay->pitches[1];
 
                 for (unsigned i = 0; i < sp->sub.num_rects; i++)
-                    blend_subrect(&pict, sp->sub.rects[i], vp.bmp->w, vp.bmp->h);
+                    blend_subrect(&pict, sp->sub.rects[i], vp.overlay->w, vp.overlay->h);
 
-                SDL_UnlockYUVOverlay (vp.bmp);
+                SDL_UnlockYUVOverlay(vp.overlay);
             }
         }
     }
     // We suppose the screen has a 1.0 pixel ratio 
 	SDL_Rect rect;
-	if (forceAspect) {			// Fit image to screen considering aspect ratio
-		int cx = screen->w;
-		int cy = screen->h;
-		double frameAspect  = cx/double(cy); 
-		if (frameAspect > aspect_ratio) {	
-			double x = (cx - aspect_ratio*cy)/2.;
-			rect.y = 0;
-			rect.h = cy;
-			rect.x = int(x);
-			rect.w = int(aspect_ratio*cy);
-		} else {
-			double y = (cy - cx/aspect_ratio)/2.;
-			rect.y = int(y);
-			rect.h = int(cx/aspect_ratio);
-			rect.x = 0;
-			rect.w = cx;
+	INTERLOCKED_(mtx) {
+		rect.x = imgRect.left;
+		rect.y = imgRect.top;
+		rect.w = imgRect.GetWidth();
+		rect.h = imgRect.GetHeight();
+	}	
+	if (vp.overlay)
+    	SDL_DisplayYUVOverlay(vp.overlay, &rect);
+	else if (vp.surface) {
+		if (WhenFrame) {
+			SDLSurface srf(vp.surface);
+			WhenFrame(srf);
 		}
-	} else {
-        rect.x = 0;
-        rect.y = 0;
-        rect.w = screen->w;
-        rect.h = screen->h;
+		SDL_BlitSurface(vp.surface, 0, screen, &rect);
+		SDL_Flip(screen);
 	}
-    SDL_DisplayYUVOverlay(vp.bmp, &rect);
 }
 
-/* allocate a picture (needs to do that in main thread to avoid
-   potential locking problems */
+void MediaPlayer::Layout() {
+	SDLCtrl::Layout();
+	
+	if (!screen)
+		return;
+	INTERLOCKED_(mtx) {
+		if (forceAspect) {			// Fit image to screen considering aspect ratio
+			int cx = screen->w;
+			int cy = screen->h;
+			double frameAspect  = cx/double(cy); 
+			if (frameAspect > aspect_ratio) {	
+				double x = (cx - aspect_ratio*cy)/2.;
+				imgRect.Set(int(x), 0, int(x + aspect_ratio*cy), cy);
+			} else {
+				double y = (cy - cx/aspect_ratio)/2.;
+				imgRect.Set(0, int(y), cx, int(y + cx/aspect_ratio));
+			}
+		} else 
+			imgRect.Set(0, 0, screen->w, screen->h);
+	}
+}
+
+// Allocate a picture (needs to do that in main thread to avoid potential locking problems)
 bool MediaPlayer::alloc_picture()
 {
     VideoPicture &vp = pictq[pictq_windex];
 
-    if (vp.bmp)
-        SDL_FreeYUVOverlay(vp.bmp);
-
+    if (vp.overlay)
+        SDL_FreeYUVOverlay(vp.overlay);
+    else if (vp.surface)
+		SDL_FreeSurface(vp.surface);
+    
 	if (videoStream) {
 	    vp.width   = videoStream->codec->width;
 	    vp.height  = videoStream->codec->height;
@@ -301,10 +316,16 @@ bool MediaPlayer::alloc_picture()
 	    vp.height  = screen->h;
 	    vp.pix_fmt = PIX_FMT_YUV420P;
 	}
-
-    vp.bmp = SDL_CreateYUVOverlay(vp.width, vp.height, SDL_YV12_OVERLAY, screen);
+	if (rgb) {
+		vp.surface = SDL_CreateRGBSurface(0, vp.width, vp.height, 24, 0x0000FF, 0x00FF00, 0xFF0000, 0);
+		vp.overlay = 0;
+	} else {
+    	vp.overlay = SDL_CreateYUVOverlay(vp.width, vp.height, SDL_YV12_OVERLAY, screen);
+    	vp.surface = 0;
+	}
  
-    if (!vp.bmp || vp.bmp->pitches[0] < vp.width) {	// Hardware unable to support requested size
+    if ((rgb && !vp.surface) ||
+    	(!rgb && (!vp.overlay || vp.overlay->pitches[0] < vp.width))) {	
         SDLCtrl::SetError(Format("Error: the video system does not support an image\n"
                         "size of %dx%d pixels.", vp.width, vp.height));
         return false;
@@ -339,7 +360,7 @@ void MediaPlayer::video_audioWaveform()
 
         // to be more precise, we take into account the time spent since the last buffer computation 
         if (audio_callback_time) {
-            time_diff = int16_t(av_gettime() - audio_callback_time);
+            time_diff = int16_t(GetUSec() - audio_callback_time);
             delay -= (time_diff * audioStream->codec->sample_rate) / 1000000;
         }
 
@@ -405,8 +426,7 @@ void MediaPlayer::video_audioWaveform()
 }
 
 // called to display each frame 
-void MediaPlayer::video_refresh()
-{
+void MediaPlayer::video_refresh() {
   	if (videoStream) {
         if (pictq_size > 0) {						// There is picture
             double masterClock = get_master_clock();
@@ -418,7 +438,7 @@ void MediaPlayer::video_refresh()
             // Update current video pts 
             VideoPicture &vp = pictq[pictq_rindex];	// Dequeue the picture 
             video_current_pts = vp.pts;
-            video_current_pts_time = av_gettime();
+            video_current_pts_time = GetUSec();
 			video_current_pos = vp.pos;
             
 			diff = video_current_pts - masterClock;		
@@ -496,20 +516,21 @@ void MediaPlayer::video_refresh()
     } 
 }
 
-void MediaPlayer::close()
-{
+void MediaPlayer::close() {
     // Free all pictures 
-    for(int i=0; i<VIDEO_PICTURE_QUEUE_SIZE; i++) {
-        VideoPicture *vp = &pictq[i];
-        if (vp->bmp) {
-            SDL_FreeYUVOverlay(vp->bmp);
-            vp->bmp = NULL;
+    for(int i = 0; i < VIDEO_PICTURE_QUEUE_SIZE; i++) {
+        VideoPicture &vp = pictq[i];
+        if (vp.overlay) {
+            SDL_FreeYUVOverlay(vp.overlay);
+            vp.overlay = 0;
+        } else if (vp.surface) {
+            SDL_FreeSurface(vp.surface);
+            vp.surface = 0;
         }
     }
 }
 
-bool MediaPlayer::Load0Failed() 
-{
+bool MediaPlayer::Load0Failed() {
     requestAbort = true;
 
     // Close each stream
@@ -593,9 +614,9 @@ bool MediaPlayer::Load(const char *_fileName) {
 				audioD.lang = GetStreamLanguage(st);
 				audioD.sampleRate = st->codec->sample_rate;
 				audioD.channels = st->codec->channels;
-				audioD.bitrate = GetCodecBitRate(st->codec);
-				audioD.bits   = GetStreamAudioBitFormat(st);
-				audioD.tags   = GetStreamTags(st);
+				audioD.bitrate 	= GetCodecBitRate(st->codec);
+				audioD.bits 	= GetStreamAudioBitFormat(st);
+				audioD.tags 	= GetStreamTags(st);
         	}
             if (!audio_disable)
             	idAudio = i;
@@ -740,8 +761,6 @@ MediaPlayer::MediaPlayer() {
 	SetBpp(24);
 		    
     Reset(0, 0);
-    
-    forceAspect = true;
 }
 
 bool MediaPlayer::Play() {
@@ -764,9 +783,9 @@ bool MediaPlayer::Play() {
 		return Load0Failed();
 	}
     
-    VideoPicture *vp = &pictq[pictq_rindex];
+    VideoPicture &vp = pictq[pictq_rindex];
     
-    if (vp->bmp) {
+    if (vp.overlay || vp.surface) {
         if (videoStream) {
 		   	if (videoStream->sample_aspect_ratio.num)
 		        aspect_ratio = float(av_q2d(videoStream->sample_aspect_ratio));
@@ -777,10 +796,12 @@ bool MediaPlayer::Play() {
 		
 		    if (aspect_ratio <= 0.0)
 		        aspect_ratio = 1.0;
-		    aspect_ratio *= float(vp->width) / float(vp->height);
+		    aspect_ratio *= float(vp.width) / float(vp.height);
         } else
             aspect_ratio = 1;
     }
+    Layout();	// After aspect_ratio setting
+    
     SetSecond(0);  
 	externalClock.Reset();
 	
@@ -798,7 +819,6 @@ bool MediaPlayer::Play() {
 
 void MediaPlayer::Stop() {
 	requestAbort = true;
-	//playing = false;
 };
 
 MediaPlayer::~MediaPlayer() {

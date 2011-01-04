@@ -4,7 +4,10 @@
 
 String GetTags(AVFormatContext *fileData);
 String GetAvError(int err);
-
+SwsContext *SWSGetContext(int width, int height, PixelFormat pix_fmt, 
+						  int d_width, int d_height, PixelFormat d_pix_fmt);
+void AvLogCallback(void* ptr, int level, const char* fmt, va_list vl);
+	
 const char *GetStreamAudioBitFormat(AVStream *stream);
 String GetStreamTags(AVStream *stream);
 String GetStreamLanguage(AVStream *stream);
@@ -21,4 +24,6 @@ inline int compute_mod(int a, int b)
         return a + b;
 }
 
+int64 GetUSec();
+	
 #endif

@@ -11,6 +11,8 @@ MediaFile::MediaFile() {
     avdevice_register_all();
     av_register_all();
     
+    av_log_set_callback(AvLogCallback);
+    
     videoq.SetMaxSize(MAX_VIDEOQ_SIZE);
     audioq.SetMaxSize(MAX_AUDIOQ_SIZE);
     subtitleq.SetMaxSize(MAX_SUBTITLEQ_SIZE);
@@ -22,6 +24,9 @@ MediaFile::MediaFile() {
     last_paused = seek_flags = 0;
     seek_pos = seek_rel = 0;
     showAudioFps = 25;
+    rgb = false;
+    forceAspect = true;
+    imgRect.Clear();
 }
 
 MediaFile::~MediaFile() {
@@ -253,8 +258,8 @@ bool MediaFile::StreamOpen(int stream_index)
         videoStream = fileData->streams[stream_index];
 
         //frame_last_delay = 40e-3;
-        frame_timer = (double)av_gettime() / 1000000.0;
-        video_current_pts_time = av_gettime();
+        frame_timer = (double)GetUSec() / 1000000.0;
+        video_current_pts_time = GetUSec();
 
     	videoq.Init(flush_pkt, &flush_pkt);
     	video_tid = SDL_CreateThread(VideoThread, this);
@@ -518,21 +523,8 @@ int MediaFile::synchronize_audio(short *samples, int samples_size1, double pts)
     return samples_size;
 }
 
-static int handle_jpeg(enum PixelFormat *format)
-{
-    switch (*format) {
-    case PIX_FMT_YUVJ420P: *format = PIX_FMT_YUV420P; return 1;
-    case PIX_FMT_YUVJ422P: *format = PIX_FMT_YUV422P; return 1;
-    case PIX_FMT_YUVJ444P: *format = PIX_FMT_YUV444P; return 1;
-    case PIX_FMT_YUVJ440P: *format = PIX_FMT_YUV440P; return 1;
-    default:                                          return 0;
-    }
-}
-
-
-// Called by VideoThread to store the just decoded src_frame
-bool MediaFile::queue_picture(AVFrame *src_frame, double pts)
-{
+// Called by VideoThread to store the just decoded frame
+bool MediaFile::queue_picture(AVFrame *frame, double pts) {
     // wait until we have space to put a new picture 
     SDL_LockMutex(pictq_mutex);
     while (pictq_size >= VIDEO_PICTURE_QUEUE_SIZE && !videoq.IsAbort()) 
@@ -546,7 +538,7 @@ bool MediaFile::queue_picture(AVFrame *src_frame, double pts)
     VideoPicture &vp = pictq[pictq_windex];
 
     // alloc or resize hardware picture buffer 
-    if (!vp.bmp || vp.width != videoStream->codec->width || 
+    if ((!vp.overlay && !rgb) || (!vp.surface && rgb) || vp.width != videoStream->codec->width || 
     			   vp.height != videoStream->codec->height) {
         SDL_Event event;
 
@@ -567,60 +559,68 @@ bool MediaFile::queue_picture(AVFrame *src_frame, double pts)
         if (videoq.IsAbort())
             return false;
     }
-
+    int dwidth, dheight;
+	INTERLOCKED_(mtx) {
+		dwidth = imgRect.GetWidth();
+		dheight = imgRect.GetHeight();
+	}    
+	
+	SwsContext *context = 0;
+	
     // if the frame is not skipped, then display it 
-    if (vp.bmp) {
-        AVPicture pict;
-        SwsContext *context;
-        
-        SDL_LockYUVOverlay (vp.bmp);
-
-        int dst_pix_fmt = PIX_FMT_YUV420P;
-        memset(&pict,0,sizeof(AVPicture));
-        pict.data[0] = vp.bmp->pixels[0];
-        pict.data[1] = vp.bmp->pixels[2];
-        pict.data[2] = vp.bmp->pixels[1];
-
-        pict.linesize[0] = vp.bmp->pitches[0];
-        pict.linesize[1] = vp.bmp->pitches[2];
-        pict.linesize[2] = vp.bmp->pitches[1];
-        
-#if 1		// Valid for old versions
-        context = sws_getContext(videoStream->codec->width, videoStream->codec->height,
-            							 videoStream->codec->pix_fmt,
-            							 videoStream->codec->width, videoStream->codec->height,
-            						(PixelFormat)dst_pix_fmt, SWS_BICUBIC, NULL, NULL, NULL);
-#else
-		context = sws_alloc_context();
-    	if (context) {
-	        av_set_int(context, "srcw", videoStream->codec->width);
-	        av_set_int(context, "srch", videoStream->codec->height);
-	        av_set_int(context, "src_format", videoStream->codec->pix_fmt);
-	        av_set_int(context, "src_range", handle_jpeg(&videoStream->codec->pix_fmt));
-	        av_set_int(context, "dstw", videoStream->codec->width);
-	        av_set_int(context, "dsth", videoStream->codec->height);
-	        av_set_int(context, "dst_format", (PixelFormat)dst_pix_fmt);
-	        av_set_int(context, "dst_range", handle_jpeg((PixelFormat*)&dst_pix_fmt));
-	        av_set_int(context, "sws_flags", SWS_BICUBIC);
-
-	        if (sws_init_context(context, NULL, NULL) < 0) {
-	            SetError("Cannot initialize resampling context");
-	            sws_freeContext(context);
-	            return false;
-	        }
-	    }
-#endif            			
+    if (vp.overlay) {			// Convertion to YUV420P
+        context = SWSGetContext(videoStream->codec->width, videoStream->codec->height,
+    							videoStream->codec->pix_fmt, 
+    							videoStream->codec->width, videoStream->codec->height, 
+    							PIX_FMT_YUV420P);	// Image transformed but not scaled
         if (!context) {
             SetError("Cannot initialize the conversion context");
             return false;
         }
-        sws_scale(context, src_frame->data, src_frame->linesize,
-                  0, videoStream->codec->height, pict.data, pict.linesize);
-     	sws_freeContext(context);         
-         
-        // update the bitmap content 
-        SDL_UnlockYUVOverlay(vp.bmp);
 
+    	SDL_LockYUVOverlay(vp.overlay);
+		
+		AVPicture pict;                
+        memset(&pict,0,sizeof(AVPicture));
+        pict.data[0] = vp.overlay->pixels[0];
+        pict.data[1] = vp.overlay->pixels[2];
+        pict.data[2] = vp.overlay->pixels[1];
+
+        pict.linesize[0] = vp.overlay->pitches[0];
+        pict.linesize[1] = vp.overlay->pitches[2];
+        pict.linesize[2] = vp.overlay->pitches[1];
+        
+        sws_scale(context, frame->data, frame->linesize,
+                  0, videoStream->codec->height, pict.data, pict.linesize);
+         
+        SDL_UnlockYUVOverlay(vp.overlay);
+    } else if (vp.surface) {		// Convertion to RGB
+        int pitch = vp.surface->pitch;
+        PixelFormat pix_fmt_dest;
+        switch (vp.surface->format->BitsPerPixel) {
+     	case 32:	pix_fmt_dest = PIX_FMT_RGB32;
+     				break;
+     	case 24:	pix_fmt_dest = PIX_FMT_RGB24;
+     				break;
+     	default:	return false;
+        }
+		context = SWSGetContext(videoStream->codec->width, videoStream->codec->height,
+    							videoStream->codec->pix_fmt, 
+    							dwidth, dheight, pix_fmt_dest);	// Image transformed and scaled           			
+        if (!context) {
+            SetError("Cannot initialize the conversion context");
+            return false;
+        }
+		SDL_LockSurface(vp.surface);
+		
+    	sws_scale(context, frame->data, frame->linesize,
+                  0, videoStream->codec->height, (uint8_t* const*)&(vp.surface->pixels), &pitch);
+         
+        SDL_UnlockSurface(vp.surface);        
+    }
+    if (context)
+        sws_freeContext(context);         
+	if (vp.overlay || vp.surface) {
         vp.pts = pts;
 
         // now we can update the picture count 
@@ -638,7 +638,7 @@ void MediaFile::stream_pause() {
     paused = !paused;
     if (!paused) {
         video_current_pts = get_video_clock();
-        frame_timer += (av_gettime() - video_current_pts_time) / 1000000.0;
+        frame_timer += (GetUSec() - video_current_pts_time) / 1000000.0;
     }
 }
 

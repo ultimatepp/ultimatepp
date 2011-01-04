@@ -26,7 +26,7 @@ double MediaFile::get_video_clock()
     if (paused) 
         delta = 0;
     else 
-        delta = (av_gettime() - video_current_pts_time) / 1000000.0;
+        delta = (GetUSec() - video_current_pts_time) / 1000000.0;
     
     return video_current_pts + delta;
 }

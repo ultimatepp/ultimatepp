@@ -27,13 +27,14 @@ file
 	MediaFile.h,
 	"Utility functions" readonly separator,
 	utility_file.cpp,
-	srcdoc.tpp,
 	utility_stream.cpp,
 	utility_codec.cpp,
+	utility.cpp,
 	utility.h,
 	ffmpeg_base.h,
 	mt.h,
-	ubuntu.cpp;
+	ubuntu.cpp,
+	srcdoc.tpp;
 
 mainconfig
 	"" = "GUI";

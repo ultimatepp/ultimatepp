@@ -76,14 +76,14 @@ static void flush_packet_queue(AVFormatContext *s)
 void ff_read_frame_flush(AVFormatContext *s)
 {
     AVStream *st;
-    int i, j;
+    int j;
 
     flush_packet_queue(s);
 
     s->cur_st = NULL;
 
     // for each stream, reset read state 
-    for(i = 0; i < s->nb_streams; i++) {
+    for(unsigned i = 0; i < s->nb_streams; i++) {
         st = s->streams[i];
 
         if (st->parser) {
@@ -122,16 +122,14 @@ int avformat_seek_file(AVFormatContext *s, int stream_index, int64_t min_ts, int
     //Fallback to old API if new is not implemented but old is
     //Note the old has somewat different sematics
     if(s->iformat->read_seek || 1)
-        return av_seek_frame(s, stream_index, ts, flags | (ts - min_ts > (uint64_t)(max_ts - ts) ? AVSEEK_FLAG_BACKWARD : 0));
+        return av_seek_frame(s, stream_index, ts, flags | (ts - min_ts > max_ts - ts ? AVSEEK_FLAG_BACKWARD : 0));
 
     // try some generic seek like av_seek_frame_generic() but with new ts semantics
 }
 
 void avsubtitle_free(AVSubtitle *sub)
 {
-    int i;
-
-    for (i = 0; i < sub->num_rects; i++)
+    for (unsigned i = 0; i < sub->num_rects; i++)
     {
         av_freep(&sub->rects[i]->pict.data[0]);
         av_freep(&sub->rects[i]->pict.data[1]);

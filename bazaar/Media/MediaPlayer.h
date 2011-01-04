@@ -20,11 +20,10 @@ public:
 	void Stop();
 	void Pause();
 	MediaPlayer &ForceAspect(bool f = true) {forceAspect = f; 	Layout(); return *this;};
-	MediaPlayer &SetRGB(bool isRgb = true)	{rgb = isRgb;		return *this;};
 	
 	bool IsPaused()							{return paused;};
 	
-	//Callback1<SDLSurface &> WhenFrame;
+	Callback1<SDLSurface &> WhenFrame;
 	Callback WhenSecond;
 	Callback WhenPause;	
 
@@ -48,6 +47,7 @@ private:
 	void step_to_next_frame();
 	void toggle_audio_display();
 	bool alloc_picture();
+	void Layout();
 
     AVInputFormat *iformat;
     int last_i_start;
@@ -55,10 +55,8 @@ private:
 	SDL_Surface *screen;
 	double aspect_ratio;
 	int videoFlags;
-	bool forceAspect;
+	//bool forceAspect;
 	uint64 msec;	
-	//bool playing;	
-	bool rgb;
 };
 
 #endif

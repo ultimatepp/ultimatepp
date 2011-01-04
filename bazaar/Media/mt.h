@@ -4,10 +4,10 @@
 // Classes thanks to U++ Forum supporters
 
 // Safe mutex
-template<class Mutex>
+template<class MUTEX>
 class ScopedLock {
 private:
-	Mutex& mutex;
+	MUTEX& mutex;
 
 private:
 	// The following constructor/operators are expilictly FORBIDDEN because they have no meaning
@@ -16,10 +16,33 @@ private:
 	ScopedLock& operator=(ScopedLock&) {return *this;};
 
 public:
-	inline ScopedLock(Mutex& mut) : mutex(mut) 	{mutex.lock();}
+	inline ScopedLock(MUTEX& mut) : mutex(mut) 	{mutex.lock();}
 	inline ~ScopedLock(void)					{mutex.unLock();}
 };
 
+/*
+class MyMutex {
+private:
+	Mutex &mutex;
+
+private:
+	// The following constructor/operators are expilictly FORBIDDEN because they have no meaning
+	//MyMutex(void) {};
+	MyMutex(const MyMutex&) {};
+	MyMutex& operator=(MyMutex&) {return *this;};
+
+public:
+	MyMutex(void) {
+		int kk = 33;
+	};
+	inline MyMutex(Mutex& mut) : mutex(mut) 	{
+			mutex.Enter();
+		}
+		inline ~MyMutex()					{
+			mutex.Leave();
+		}
+};
+*/
 // Safe atomic
 class AtomicVar {
 	private:

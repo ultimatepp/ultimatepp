@@ -42,9 +42,10 @@ enum {
 
 struct VideoPicture {
     double pts;          	// presentation time stamp for this picture
-    double target_clock; 	// av_gettime() time at which this should be displayed ideally
+    double target_clock; 	// GetUSec() time at which this should be displayed ideally
     int64_t pos;         	// byte position in file
-    SDL_Overlay *bmp;
+    SDL_Overlay *overlay;
+    SDL_Surface *surface;
     int width, height; 		// source height & width 
     bool allocated;
     enum PixelFormat pix_fmt;
@@ -139,6 +140,8 @@ public:
 	Array<VideoData> videoData;
 	int GetVideoId();
 	void SetVideoId(int id);
+	
+	inline MediaFile& SetRGB(bool v)	{rgb = v; return *this;};	
 		
 protected:	
 	void Reset();
@@ -233,7 +236,7 @@ protected:
    	AVPacket audio_pkt, audio_pkt_temp;
    	
   	double video_current_pts;    	//Current displayed pts (different from video_clock if frame fifos are used)
-    int64_t video_current_pts_time;	//Time (av_gettime) at which we updated video_current_pts - used to have running video pts
+    int64_t video_current_pts_time;	//Time (GetUSec) at which we updated video_current_pts - used to have running video pts
 	int64_t video_current_pos;    	//Current displayed file pos
 	
 	int av_sync_type;
@@ -247,6 +250,11 @@ protected:
 	String GetError() 				{return strError;};
 	void SetError(String str);
 	void ResetError()				{strError = "";};
+	
+	AtomicVar rgb;						// Is the image YUV or RGB
+	bool forceAspect;					// Force aspect ratio
+	Rect imgRect;						// Image size
+	Mutex mtx;
 };
 
 

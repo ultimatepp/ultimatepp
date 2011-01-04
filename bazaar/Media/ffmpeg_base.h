@@ -11,6 +11,7 @@ extern "C" {
 	#include <libavutil/colorspace.h>				
 	#include <libavutil/pixdesc.h>
 	#include <libavutil/opt.h>
+	#include <libavutil/error.h>
 	
 	#include <libavcore/imgutils.h>
 	#include <libavcore/parseutils.h>
