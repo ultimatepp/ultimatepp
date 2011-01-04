@@ -77,7 +77,7 @@ typedef MediaPlayerDemo CLASSNAME;
 		player.Stop();
 		TopWindow::Close();
 	}
-	/*void BWEffect(SDLSurface &surface) {
+	void BWEffect(SDLSurface &surface) {
 		static int x, y;
 		static bool left, up;
 		int width = int(surface.GetWidth()/3);
@@ -115,8 +115,8 @@ typedef MediaPlayerDemo CLASSNAME;
 			}
 		}
 		surface.DrawRect(x, y, width, height, 1, Black());
-	}*/
-	/*void MotionDetect(SDLSurface &surface) {
+	}
+	void MotionDetect(SDLSurface &surface) {
 		static Buffer <byte> img0;
 		static Buffer <byte> img1;
 		static bool which;
@@ -157,8 +157,8 @@ typedef MediaPlayerDemo CLASSNAME;
 					surface.FillRect(c, r, delta, delta, Blue());	
 			}
 		}
-	}*/
-	/*void OnFrame(SDLSurface &surface) {
+	}
+	void OnFrame(SDLSurface &surface) {
 		surface.Lock();
 		if (blackWhite)
 			BWEffect(surface); 
@@ -167,7 +167,7 @@ typedef MediaPlayerDemo CLASSNAME;
 		if (motionDetect)
 			MotionDetect(surface);
 		surface.Unlock();
-	}*/
+	}
 	void OnSecond() {
 		double sec = player.GetSecond();
 		secondsLabel.SetText(SecondsToString(int(sec), false));
@@ -187,9 +187,12 @@ typedef MediaPlayerDemo CLASSNAME;
 	void OnEditSeconds() {
 		player.SetSecond(StringToSeconds(seconds));
 	}
-	/*void OnRgb() {
+	void OnRgb() {
 		player.SetRGB(rgb);
-	}*/
+		motionDetect.Enable(rgb);
+		showLogo.Enable(rgb);
+		blackWhite.Enable(rgb);
+	}
 	void CheckOption(int ii, ArrayCtrl *arr) {
 		int num = 0;
 		for(int i = 0; i < arr->GetCount(); i++) {
@@ -330,8 +333,7 @@ typedef MediaPlayerDemo CLASSNAME;
 		//fullScreen.WhenAction = THISBACK(OnFullScreen);
 
 		player.ForceAspect(forceAspect);
-		//player.SetRGB();
-		//player.WhenFrame = THISBACK(OnFrame);
+		player.WhenFrame = THISBACK(OnFrame);
 		player.WhenSecond = THISBACK(OnSecond);
 		player.WhenPause = THISBACK(OnPause);
 		player.ShowAudio(true);
@@ -347,28 +349,27 @@ typedef MediaPlayerDemo CLASSNAME;
 		
 		secondsLabel.SetText("0");
 
-		rgb = true;
-		rgb.Disable();
-		//rgb.WhenAction = THISBACK(OnRgb);
+		rgb = false;
+		rgb.WhenAction = THISBACK(OnRgb);
 
 		motionDetect = false;
 		motionDetect.Disable();
 
 		showLogo = false;
 		showLogo.Disable();
-
+		
 		blackWhite = false;
 		blackWhite.Disable();
 		
-		/*ImageDraw iwLogo(500, 100);
-		iwLogo.DrawEllipse(20, 20, 100, 40, Green());
-		iwLogo.DrawText(50, 28, "U++", Arial(20).Bold(), Black()); 
-		imLogo = iwLogo;	*/	
+		ImageDraw iwLogo(500, 100);
+		iwLogo.DrawEllipse(20, 20, 100, 40, Brown());
+		iwLogo.DrawText(46, 26, "U++", Arial(25).Bold(), Black()); 
+		imLogo = iwLogo;	
 	}
 	void OnForceAspect() {
 		player.ForceAspect(forceAspect);
 	}
-	//Image imLogo;
+	Image imLogo;
 };
 
 GUI_APP_MAIN

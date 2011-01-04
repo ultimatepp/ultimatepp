@@ -7,7 +7,8 @@ uses
 
 file
 	main.cpp,
-	demo.lay;
+	demo.lay,
+	srcdoc.tpp;
 
 mainconfig
 	"" = "GUI MT";
