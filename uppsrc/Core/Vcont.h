@@ -142,10 +142,11 @@ template <class T>
 class Array : public MoveableAndDeepCopyOption< Array<T> > {
 protected:
 #ifdef _DEBUG
-	Vector<T *> vector;
+	typedef T *PointerType;
 #else
-	Vector<void *> vector;
+	typedef void *PointerType;
 #endif
+	Vector<PointerType> vector;
 
 	void     Free();
 	void     __DeepCopy(const Array& v);

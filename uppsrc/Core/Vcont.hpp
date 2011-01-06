@@ -386,14 +386,14 @@ void Array<T>::SetCountR(int n, const T& init) {
 
 template <class T>
 int  Array<T>::GetIndex(const T& item) const {
-	for(void * const *ptr = vector.Begin(); ptr < vector.End(); ptr++)
-		if(*ptr == (void *)&item) return (int)(ptr - vector.Begin());
+	for(PointerType const *ptr = vector.Begin(); ptr < vector.End(); ptr++)
+		if(*ptr == (PointerType)&item) return (int)(ptr - vector.Begin());
 	return -1;
 }
 
 template <class T>
 void Array<T>::Move(int i1, int i2) {
-	void *q = vector[i1];
+	PointerType q = vector[i1];
 	vector.Remove(i1);
 	vector.Insert(i2 - (i2 > i1)) = (T*)q;
 }
@@ -428,7 +428,7 @@ void Array<T>::Set(int i, const T& x, int count) {
 	ASSERT(i >= 0 && count >= 0);
 	if(i + count >= GetCount())
 		SetCountR(i + count);
-	for(void **ptr = vector.Begin() + i; ptr < vector.Begin() + i + count; ptr++) {
+	for(PointerType *ptr = vector.Begin() + i; ptr < vector.Begin() + i + count; ptr++) {
 		delete (T *) *ptr;
 		*ptr = new T(x);
 	}
