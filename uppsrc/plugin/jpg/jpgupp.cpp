@@ -394,7 +394,7 @@ String JPGRaster::Data::GetThumbnail()
 	dword offset = 0;
 	dword len = 0;
 	for(int n = 0; n < count; n++) {
-		if(p + 12 >= end) Null;
+		if(p + 12 >= end) return Null;
 		if(Exif32(p + 4) == 1) {
 			dword val = 0;
 			switch(Exif16(p + 2)) {
