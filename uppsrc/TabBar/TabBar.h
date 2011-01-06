@@ -25,7 +25,7 @@ public:
 		BOTTOM = 3
 	};
 	
-	AlignedFrame() : border(0), framesize(0), layout(TOP) {}
+	AlignedFrame() : layout(TOP), framesize(0), border(0) {}
 	
 	virtual void FrameAddSize(Size& sz);
 	virtual void FramePaint(Draw& w, const Rect& r);
@@ -176,7 +176,7 @@ public:
 		
 		Vector<TabItem> items;
 		
-		Tab() : visible(true), id(-1), stack(-1) { }
+		Tab() : id(-1), stack(-1), visible(true) { }
 		Tab(const Tab& t) { Set(t); }
 		
 		void Set(const Tab& t);
@@ -435,10 +435,10 @@ public:
 	bool	IsStacking() const				{ return stacking; }
 	bool	IsShowInactive() const			{ return inactivedisabled; }
 	
-	TabBar& NeverEmpty()					{ MinTabCount(1); }
+	TabBar& NeverEmpty()					{ return MinTabCount(1); }
 	TabBar& MinTabCount(int cnt)			{ mintabcount = max(cnt, 0); Refresh(); return *this; }
 	
-	TabBar& SetDisplay(const Display& d) 	{ display =& d; Refresh(); }
+	TabBar& SetDisplay(const Display& d) 	{ display =& d; Refresh(); return *this; }
 	TabBar& SetBorder(int border)           { AlignedFrame::SetBorder(border); return *this; }
 	int 	FindKey(const Value& v) const;
 	int 	FindValue(const Value& v) const;

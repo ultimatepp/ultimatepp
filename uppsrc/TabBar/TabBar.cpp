@@ -914,7 +914,6 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 	const Style& s = GetStyle();
 	int align = GetAlign();
 	int cnt = dragsample ? 1 : tabs.GetCount();
-	int sep = TB_SBSEPARATOR * sc.IsVisible();
 	
 	bool ac = (n == active && enable);
 	bool hl = (n == highlight && enable) || (stacking && highlight >= 0 && tabs[highlight].stack == t.stack);
