@@ -51,11 +51,14 @@ void Splitter::Layout() {
 		}
 		return;
 	}
-	int wd = width >> 1;
+
+	int lw = width >> 1;
+	int rw = width - lw;
+	
 	int i = 0;
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
-		int lo = i > 0 ? PosToClient(pos[i - 1]) + wd : 0;
-		int hi = i < count ? PosToClient(pos[i]) - wd : vert ? sz.cy : sz.cx;
+		int lo = i > 0 ? PosToClient(pos[i - 1]) + rw : 0;
+		int hi = i < count ? PosToClient(pos[i]) - lw : vert ? sz.cy : sz.cx;
 		q->Show();
 		if(vert)
 			q->SetRect(0, lo, sz.cx, hi - lo);
@@ -100,7 +103,7 @@ int Splitter::FindIndex(Point client) const {
 	int maxdist = width;
 	for(int i = 0; i < pos.GetCount(); i++) {
 		int dist = abs((vert ? client.y : client.x) - PosToClient(pos[i]));
-		if(dist < maxdist) {
+		if(dist <= maxdist) {
 			best = i;
 			maxdist = abs(dist);
 		}

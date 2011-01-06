@@ -11,6 +11,7 @@ public:
 public:
 	struct Style : ChStyle<Style> {
 		Value vert[2], horz[2];
+		int width;
 	};
 
 protected:
