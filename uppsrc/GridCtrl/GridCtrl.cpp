@@ -5668,6 +5668,7 @@ void GridCtrl::Clear(bool columns)
 		items[0].Remove(1, items[0].GetCount() - 1);
 		rowbkp.Remove(1, rowbkp.GetCount() - 1);
 		edits.Remove(1, edits.GetCount() - 1);
+		sortOrder.Clear();
 		total_cols = 1;
 		total_width = 0;
 		total_height = 0;
@@ -5681,7 +5682,6 @@ void GridCtrl::Clear(bool columns)
 		coluid = 0;
 		hcol = -1;
 		sortCol = -1;
-		ClearMultisort();
 	}
 	else
 	{
