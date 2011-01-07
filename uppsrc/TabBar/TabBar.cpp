@@ -339,6 +339,8 @@ void TabBar::Set(const TabBar& t)
 	tabs <<= t.tabs;
 	groups.Clear();
 	groups <<= t.groups;
+	separators.Clear();
+	separators <<= t.separators;
 	
 	group = t.group;
 	stackcount = t.stackcount;
@@ -2403,7 +2405,8 @@ void TabBar::Serialize(Stream& s)
 	
 	int g = GetGroup();
 	s % g;
-	SetGroup(g);
+	group = g;
+
 	Repos();
 }
 
