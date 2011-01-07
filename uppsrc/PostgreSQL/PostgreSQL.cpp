@@ -313,9 +313,9 @@ void PostgreSQLSession::ExecTrans(const char * statement)
 	}
 	while(level == 0 && (!ConnectionOK() || ErrorMessage().Find("connection") >= 0 && itry == 0)
 	      && WhenReconnect(itry++));
-	
+
 	if(trace)
-		*trace << statement << " failed: " << ErrorMessage() << "\n";
+		*trace << statement << " failed: " << ErrorMessage() << " (level " << level << ")\n";
 	SetError(ErrorMessage(), statement, 0, ErrorCode());
 	PQclear(result);
 }
