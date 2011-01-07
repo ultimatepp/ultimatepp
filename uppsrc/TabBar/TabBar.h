@@ -210,6 +210,7 @@ protected:
 		int first;
 		int last;
 		virtual void Serialize(Stream& s);
+		String ToString() const { return Format("%s - %d", name, count); }
 	};
 
 	struct TabValueSort : public TabSort {
@@ -256,7 +257,7 @@ private:
 	int group;
 	const Display *display;
 	Image dragtab;
-	int stackcount;	
+	int stackcount;
 	int scrollbar_sz;
 	bool allowreorder;
 

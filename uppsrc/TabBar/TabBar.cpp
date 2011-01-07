@@ -340,10 +340,16 @@ void TabBar::Set(const TabBar& t)
 	groups.Clear();
 	groups <<= t.groups;
 	
+	group = t.group;
+	stackcount = t.stackcount;
+	
 	active = t.active;
 	cross = -1;
 	highlight = -1;
 	target = -1;
+	
+	mouse.Clear();
+	oldp.Clear();
 	
 	sc.Set(t.sc);
 	SetAlign(t.GetAlign());
@@ -582,14 +588,12 @@ void TabBar::MakeGroups()
 				groups[n].last = i;
 		}
 	}
-
-	int removed = 0;
-	for(int i = 1; i < groups.GetCount(); i++)
+	
+	int cnt = groups.GetCount() - 1;
+	for(int i = cnt; i > 0; i--)
 		if(groups[i].count == 0)
-		{
-			groups.Remove(i - removed);
-			removed++;
-		}
+			groups.Remove(i);
+		
 	if(group > groups.GetCount() - 1 && group > 0)
 		group--;
 }
@@ -1008,7 +1012,6 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 
 void TabBar::Paint(Draw &w)
 {
-	LOG("Paint");
 	int align = GetAlign();
 	const Style &st = StyleDefault();
 	Size ctrlsz = GetSize();
@@ -1232,7 +1235,7 @@ int TabBar::InsertKey0(int ix, const Value &key, const Value &value, Image icon,
 			NewGroup(group);
 			g = groups.GetCount() - 1;
 		}
-	}	
+	}
 	
 	group = groups[g].name;
 	Tab t;
