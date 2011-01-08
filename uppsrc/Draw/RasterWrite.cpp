@@ -314,6 +314,7 @@ void RasterFormat::Write(byte *t, const RGBA *s, int cx, const PaletteCv *palcv)
 			t[rpos] = (alpha * s->r) >> 8;
 			t[gpos] = (alpha * s->g) >> 8;
 			t[bpos] = (alpha * s->b) >> 8;
+			t[apos] = alpha;
 			t += 4;
 			s++;
 		}
