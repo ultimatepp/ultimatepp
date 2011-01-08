@@ -8,7 +8,6 @@ uses
 	ide\Builders,
 	ide\Debuggers,
 	ide\Browser,
-	ide\QuickTabs,
 	CodeEditor,
 	CtrlLib,
 	Web,
