@@ -19,8 +19,6 @@ struct PainterRadialSpan : SpanSource {
 		fy = _fy;
 		fx -= cx;
 		fy -= cy;
-		double fx2 = double(fx) * double(fx);
-		double fy2 = double(fy) * double(fy);
 		C = fx * fx + fy * fy - r * r;
 	}
 

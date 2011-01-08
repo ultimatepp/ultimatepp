@@ -167,7 +167,6 @@ int XpInt(int widget, int part, int state, int type)
 	if(!theme)
 		return Null;
 	int n = Null;
-	int x = 0;
 	int r = XpTheme().GetThemeInt(theme, part, state, type, &n);
 	return r == S_OK ? n : Null;
 }
@@ -177,7 +176,6 @@ int XpBool(int widget, int part, int state, int type)
 	HANDLE theme = XpWidget(widget);
 	if(!theme)
 		return Null;
-	int x = 0;
 	BOOL flag = false;
 	int r = XpTheme().GetThemeBool(theme, part, state, type, &flag);
 	return r == S_OK ? flag : Null;

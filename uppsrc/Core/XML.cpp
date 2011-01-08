@@ -860,7 +860,6 @@ String AsXML(const XmlNode& node, dword style)
 		XmlTag tag(node.GetText());
 		for(int i = 0; i < node.GetAttrCount(); i++)
 			tag(node.AttrId(i), node.Attr(i));
-		bool preserve = false;
 		if(node.GetCount()) {
 			StringBuffer body;
 			for(int i = 0; i < node.GetCount(); i++)

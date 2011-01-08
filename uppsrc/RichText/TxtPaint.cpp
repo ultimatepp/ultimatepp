@@ -41,7 +41,6 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 }
 
 void RichTxt::Sync(int parti, const RichContext& rc) const {
-	int cx = rc.page.Width();
 	ASSERT(part[parti].Is<Para>());
 	const Para& pp = part[parti].Get<Para>();
 	if(rc.page.Width() != pp.ccx)

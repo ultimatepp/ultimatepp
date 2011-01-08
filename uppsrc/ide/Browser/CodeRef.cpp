@@ -271,7 +271,6 @@ String CreateQtf(const String& item, const String& name, const CppItem& m, bool 
 	d.Clear();
 	d = "[%% ";
 	Vector<String> p = Split(m.pname, ';');
-	bool was = false;
 	if(!str)
 		for(int i = 0; i < p.GetCount(); i++)
 			d << " [%-*@r " << DeQtf(p[i]) << "]";

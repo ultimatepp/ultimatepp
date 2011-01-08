@@ -186,7 +186,6 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
 	LLOG("Rasterizer::LineRaw " << x1 / 256.0 << ':' << y1 / 256.0
 	     << " - " << x2 / 256.0 << ':' << y2 / 256.0);
 	int ex1 = x1 >> 8;
-	int ex2 = x2 >> 8;
 	int ey1 = y1 >> 8;
 	int ey2 = y2 >> 8;
 
@@ -233,8 +232,7 @@ void Rasterizer::LineRaw(int x1, int y1, int x2, int y2)
     }
 	incr  = 1;
 	if(dx == 0) {
-		int ex = x1 >> 8;
-		int two_fx = (x1 - (ex << 8)) << 1;
+		int two_fx = (x1 - (ex1 << 8)) << 1;
 		int area;
 		first = 256;
 		if(dy < 0) {

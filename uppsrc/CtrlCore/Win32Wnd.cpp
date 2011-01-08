@@ -624,7 +624,7 @@ struct WinMsg {
 }
 sWinMsg[] = {
 #include "Win32Msg.i"
-	0, NULL
+	{0, NULL}
 };
 
 #endif

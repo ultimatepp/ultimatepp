@@ -35,7 +35,6 @@ bool SvnSel::Load(const String& path)
 		for(int i = 0; i < l.GetCount(); i++) {
 			String fn = l[i];
 			if(fn.GetLength()) {
-				bool isdir = false;
 				if(*fn.Last() == '/' || *fn.Last() == '\\') {
 					fn.Trim(fn.GetLength() - 1);
 					if(pass == 0)

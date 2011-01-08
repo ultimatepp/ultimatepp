@@ -75,7 +75,6 @@ struct PainterImageSpan : SpanSource {
 	Image       image;
 	
 	void Set(const Xform2D& m, const Image& img) {
-		int level = 0;
 		image = img;
 		int nx = 1;
 		int ny = 1;

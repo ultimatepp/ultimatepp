@@ -310,6 +310,7 @@ void WorkspaceWork::AddFile(ADDFILE af)
 	case HOME_FILE:    fs->ActiveDir(GetHomeDirectory()); break;
 #endif
 	case LOCAL_FILE:   fs->ActiveDir(GetLocalDir()); break;
+	default: ; // GCC warns otherwise
 	}
 	if(!fs->ExecuteOpen("Add files to package..")) return;
 	int fci = filelist.GetCursor();
@@ -426,7 +427,6 @@ void WorkspaceWork::Import()
 	Progress pi("Importing file %d");
 	int fci = filelist.GetCursor();
 	int cs = filelist.GetSbPos();
-	int ci = fci >= 0 && fci < fileindex.GetCount() ? fileindex[fci] : -1;
 	try {
 		DoImport(~dlg.folder, ~dlg.files, false, pi);
 	}

@@ -206,15 +206,15 @@ inline bool operator==(const wchar *x, const Value& v)  { return (WString)v == x
 inline bool operator!=(const Value& v, const wchar *x)  { return (WString)v != x; }
 inline bool operator!=(const wchar *x, const Value& v)  { return (WString)v != x; }
 
-inline bool IsVoidValueTypeNo(int q)     { return q == VOID_V; }
-inline bool IsErrorValueTypeNo(int q)    { return q == ERROR_V; }
-inline bool IsStringValueTypeNo(int q)   { return q == STRING_V || q == WSTRING_V; }
+inline bool IsVoidValueTypeNo(int q)     { return (dword)q == VOID_V; }
+inline bool IsErrorValueTypeNo(int q)    { return (dword)q == ERROR_V; }
+inline bool IsStringValueTypeNo(int q)   { return (dword)q == STRING_V || (dword)q == WSTRING_V; }
 
-inline bool IsIntegerValueTypeNo(int q)  { return q == INT_V || q == INT64_V || q == BOOL_V; }
-inline bool IsFloatValueTypeNo(int q)    { return q == DOUBLE_V; }
+inline bool IsIntegerValueTypeNo(int q)  { return (dword)q == INT_V || (dword)q == INT64_V || (dword)q == BOOL_V; }
+inline bool IsFloatValueTypeNo(int q)    { return (dword)q == DOUBLE_V; }
 
 inline bool IsNumberValueTypeNo(int q)   { return IsIntegerValueTypeNo(q) || IsFloatValueTypeNo(q); }
-inline bool IsDateTimeValueTypeNo(int q) { return q == DATE_V || q == TIME_V; }
+inline bool IsDateTimeValueTypeNo(int q) { return (dword)q == DATE_V || (dword)q == TIME_V; }
 
 inline bool IsVoid(const Value& v)     { return v.GetType() == VOID_V; }
 inline bool IsError(const Value& v)    { return v.GetType() == ERROR_V; }

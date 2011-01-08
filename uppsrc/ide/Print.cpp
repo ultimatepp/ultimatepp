@@ -112,7 +112,6 @@ void Ide::Print()
 	job.Landscape(dlg.orientation);
 	if(!job.Execute())
 		return;
-	Draw& w = job;
 	int l, h;
 	if(editor.GetSelection(l, h)) {
 		l = editor.GetLine(l);
