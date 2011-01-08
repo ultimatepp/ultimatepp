@@ -481,8 +481,8 @@ void Ide::DebugMenu(Bar& menu)
 	}
 	menu.Add(!editfile.IsEmpty() /*&& !debuglock*/, AK_BREAKPOINT, THISBACK(DebugToggleBreak))
 		.Help("Set / clear breakpoint on current line");
-//	menu.Add(!editfile.IsEmpty(), AK_CONDBREAKPOINT, THISBACK(ConditionalBreak))
-//		.Help("Edit conditional breakpoint");
+	menu.Add(!editfile.IsEmpty(), AK_CONDBREAKPOINT, THISBACK(ConditionalBreak))
+		.Help("Edit conditional breakpoint");
 	menu.Add(!editfile.IsEmpty() /*&& !debuglock*/, AK_CLEARBREAKPOINTS, THISBACK(DebugClearBreakpoints))
 		.Help("Clear all breakpoints");
 	menu.Separator();
