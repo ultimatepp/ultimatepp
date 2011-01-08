@@ -329,6 +329,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 				li[q][i].lspc = li[q][i].rspc = 0;
 			}
 #endif
+		::SelectObject(hdc, ohfont);
 	}
 	return li[q][chr & 255];
 }
