@@ -460,13 +460,13 @@ RGBA sEtchFilter::operator()(const RGBA **mx)
 {
 	RGBA t;
 	RGBA s = mx[1][1];
-	if(s.a & 0x80 && s.r + s.g + s.b < 400) {
+	if(s.a > 0x80 && s.r + s.g + s.b < 500) {
 		t.r = t.g = t.b = 128;
 		t.a = s.a;
 		return t;
 	}
 	s = mx[0][0];
-	if(s.a & 0x80 && s.r + s.g + s.b < 400) {
+	if(s.a > 0x80 && s.r + s.g + s.b < 500) {
 		t.r = t.g = t.b = 255;
 		t.a = s.a;
 		return t;
@@ -477,8 +477,8 @@ RGBA sEtchFilter::operator()(const RGBA **mx)
 
 Image Etched(const Image& img)
 {
-	sEtchFilter ef;
-	return Filter(img, ef);
+	sEtchFilter ef;	
+	return Premultiply(Filter(Unmultiply(img), ef));
 }
 
 Image SetColorKeepAlpha(const Image& img, Color c)
