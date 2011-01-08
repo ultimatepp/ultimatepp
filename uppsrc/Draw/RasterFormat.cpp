@@ -258,12 +258,14 @@ void RasterFormat::Read(RGBA *t, const byte *s, int cx, const RGBA *palette) con
 	case RASTER_8ALPHA|RASTER_MSBFIRST:
 		{
 			RGBA *e = t + cx;
+			RGBA *b = t;
 			while(t < e) {
 				RGBA pal = palette[*s];
 				pal.a = s[1];
 				*t++ = pal;
 				s += 2;
 			}
+			Premultiply(b, b, cx);
 			break;
 		}
 	case RASTER_16:
