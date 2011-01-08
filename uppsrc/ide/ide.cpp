@@ -319,7 +319,6 @@ bool Ide::FindLineError(int l, Host& host) {
 	String file;
 	int lineno;
 	int error;
-	int q = btabs.GetCursor();
 	Console& c = GetConsole();
 	if (FindLineError(c.GetUtf8Line(l), host, file, lineno, error)) {
 		file = NormalizePath(file);

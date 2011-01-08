@@ -56,13 +56,16 @@ public:
 	int        Wait();
 
 	bool       IsOpen() const     { return handle; }
+	
 
 #ifdef PLATFORM_WIN32
-	HANDLE      GetHandle() const { return handle; }
+	typedef HANDLE Handle;
 #endif
 #ifdef PLATFORM_POSIX
-	pthread_t   GetHandle() const { return handle; }
+	typedef pthread_t Handle;
 #endif
+
+	Handle      GetHandle() const { return handle; }
 
 	void        Priority(int percent); // 0 = lowest, 100 = normal
 
@@ -76,6 +79,12 @@ public:
 	static void ShutdownThreads();
 	static bool IsShutdownThreads();
 
+#ifdef PLATFORM_WIN32
+	static Handle GetCurrentHandle()    { return GetCurrentThread(); }
+#endif
+#ifdef PLATFORM_POSIX
+	static Handle GetCurrentHandle()    { return pthread_self(); }
+#endif
 
 	Thread();
 	~Thread();

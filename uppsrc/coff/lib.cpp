@@ -34,7 +34,7 @@ static double ToLibraryTime(Time time)
 }
 
 ArchiveJob::Object::Object(ArchiveJob& archive, int index, String fn, String od, double ft, int ho, bool nf)
-: archive(archive), index(index), filename(fn), object_data(od), filetime(ft), header_offset(ho), newfile(nf)
+: archive(archive), index(index), filename(fn), object_data(od), filetime(ft), newfile(nf), header_offset(ho)
 {
 	trimmed_name = archive.TrimObjectName(filename);
 	longname_offset = -1;
@@ -107,7 +107,6 @@ void ArchiveJob::LoadLibrary(String libfile)
 	if(verbose)
 		PutStdOut(NFormat("%s: reading archive (%d B)", libfile, mapping.GetFileSize()));
 
-	int objcount = -1;
 	const byte *ptr = mapping.GetIter(8);
 	const byte *end = mapping.End();
 	const byte *longptr = NULL;

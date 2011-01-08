@@ -898,7 +898,7 @@ String PdfDraw::Finish()
 				if(hfont) {
 					HDC hdc = Win32_IC();
 					HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
-					int size = GetFontData(hdc, 0, 0, NULL, 0);
+					DWORD size = GetFontData(hdc, 0, 0, NULL, 0);
 					if(size == GDI_ERROR) {
 						LLOG("PdfDraw::Finish: GDI_ERROR on font " << pdffont.GetKey(i));
 						return Null;

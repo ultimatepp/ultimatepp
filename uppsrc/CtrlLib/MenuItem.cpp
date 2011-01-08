@@ -111,7 +111,6 @@ void DrawMnemonicText(Draw& w, int x, int y, const String& s, Font font, Color c
                       int mnemonic)
 {
 	int apos = HIWORD(mnemonic);
-	int akey = LOWORD(mnemonic);
 	int q;
 	if(apos && apos < s.GetLength())
 		q = apos - 1;

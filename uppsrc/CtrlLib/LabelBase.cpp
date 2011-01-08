@@ -79,7 +79,6 @@ int  ExtractAccessKey(const char *s, String& label)
 	byte akey = 0;
 	int  pos = 0;
 	String text;
-	const char* start = s;
 	bool qtf = *s == '\1';
 	while(*s)
 		if((*s == '&' && !qtf || *s == '\b') && s[1] && s[1] != '&') {
@@ -488,7 +487,6 @@ void DisplayPopup::Sync()
 		Ctrl *top = ctrl->GetTopCtrl();
 		if(top && top->HasFocusDeep()) {
 			Size sz = display->GetStdSize(value);
-			Ctrl *top = ctrl->GetTopWindow();
 			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
 				Rect wa = GetWorkArea();
 				slim = item + ctrl->GetScreenView().TopLeft();

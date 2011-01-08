@@ -104,12 +104,12 @@ void HexViewInfo::Paint(Draw& w)
 	i = 0;
 	for(;;) {
 		if(data[i] < 0) {
-			if(i < sizeof(float))
+			if((unsigned)i < sizeof(float))
 				ftxt = "?";
 			txt = "?";
 			break;
 		}
-		if(i >= sizeof(double)) {
+		if((unsigned)i >= sizeof(double)) {
 			double h;
 			memcpy(&h, sh, sizeof(double));
 			txt = Sprintf("%.8g", h);
@@ -310,7 +310,6 @@ bool HexView::Key(dword key, int)
 {
 	int pg = max(columns, bytes - columns);
 	int q = int(sc % columns);
-	int64 c = cursor & ~1023;
 	switch(key) {
 	case K_LEFT:
 		SetCursor(cursor - 1);

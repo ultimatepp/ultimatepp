@@ -437,7 +437,6 @@ void ColumnList::PaintRows(Draw &w, Size &sz)
 	int pos = sb % cy;
 	int y = -pos;
 	int i = GetSbPos(sz);
-	int coli = 0;
 	while(y < sz.cy-pos+cy) {
 		int x = 0;
 		while (x + cx <= sz.cx) {

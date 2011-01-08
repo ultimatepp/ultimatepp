@@ -18,7 +18,6 @@ void Heap::Init()
 		return;
 	LLOG("Init heap " << (void *)this);
 	for(int i = 0; i < NKLASS; i++) {
-		int sz = Ksz(i);
 		empty[i] = NULL;
 		full[i]->LinkSelf();
 		work[i]->LinkSelf();

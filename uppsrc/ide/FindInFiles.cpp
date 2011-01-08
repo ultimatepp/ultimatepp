@@ -219,11 +219,9 @@ void Ide::FindFileName() {
 	ffdlg.mask.NullText("Search");
 	ffdlg.mask.SetFilter(CharFilterFindFileMask);
 	ffdlg.mask <<= ffdlg.Breaker(IDYES);
-	int prev = 0;
 	for(;;) {
 		ffdlg.list.Clear();
 		String mask = ~ffdlg.mask;
-		const char *best_err = NULL;
 		for(int p = 0; p < wspc.GetCount(); p++) {
 			String packname = wspc[p];
 			const Package& pack = wspc.GetPackage(p);

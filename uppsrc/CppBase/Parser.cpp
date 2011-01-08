@@ -1207,7 +1207,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	int q;
 	if(d.castoper) {
 		q = d.name.ReverseFind(' ');
-		q = q > 0 ? d.name.ReverseFind(':', q) : q = d.name.ReverseFind(':');
+		q = q > 0 ? d.name.ReverseFind(':', q) : d.name.ReverseFind(':');
 	}
 	else
 		q = d.name.ReverseFind(':');

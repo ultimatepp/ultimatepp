@@ -338,7 +338,7 @@ Image GetImage(PasteClip& clip)
 	}
 	if(clip.Accept("dib")) {
 		String data = ~clip;
-		if(data.GetCount() < sizeof(BITMAPINFO)) return Null;
+		if((unsigned)data.GetCount() < sizeof(BITMAPINFO)) return Null;
 		BITMAPINFO *lpBI = 	(BITMAPINFO *)~data;
 		BITMAPINFOHEADER& hdr = lpBI->bmiHeader;
 		byte *bits = (byte *)lpBI + hdr.biSize;
@@ -437,7 +437,7 @@ Vector<String> GetFiles(PasteClip& clip)
 	GuiLock __;
 	Vector<String> f;
 	String data = clip;
-	if(data.GetCount() < sizeof(sDROPFILES) + 2)
+	if((unsigned)data.GetCount() < sizeof(sDROPFILES) + 2)
 		return f;
 	const sDROPFILES *df = (const sDROPFILES *)~data;
 	const char *s = ((const char *)df + df->offset);
