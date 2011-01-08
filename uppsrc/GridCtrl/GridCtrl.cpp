@@ -1689,6 +1689,10 @@ void GridCtrl::RemoveColumn(int n, int count)
 		return;
 	for(int i = 0; i < total_rows; i++)
 		items[i].Remove(n, count);
+	for(int i = 0; i < count; i++)
+		if(edits[hitems[n + i].id].factory)
+			--genr_ctrls;
+	//TODO: Add removing edits!
 	hitems.Remove(n, count);
 	rowbkp.Remove(n, count);
 	total_cols -= count;
@@ -2698,7 +2702,8 @@ void GridCtrl::SetCtrl(int r, int c, Ctrl& ctrl)
 	c += fixed_cols;
 	GetItem(r, c).SetCtrl(ctrl, false);
 	++genr_ctrls;
-	SyncCtrls(r, c);
+	if(ready)
+		SyncCtrls(r, c);
 }
 
 void GridCtrl::SetCtrl(int r, int c, Ctrl* ctrl)
@@ -2706,8 +2711,9 @@ void GridCtrl::SetCtrl(int r, int c, Ctrl* ctrl)
 	r += fixed_rows;
 	c += fixed_cols;
 	GetItem(r, c).SetCtrl(*ctrl, true);
-	++genr_ctrls;	
-	SyncCtrls(r, c);
+	++genr_ctrls;
+	if(ready)	
+		SyncCtrls(r, c);
 }
 
 void GridCtrl::SetCtrl(int c, Ctrl& ctrl)
@@ -2715,7 +2721,8 @@ void GridCtrl::SetCtrl(int c, Ctrl& ctrl)
 	c += fixed_cols;
 	GetItem(rowidx, c).SetCtrl(ctrl, false);
 	++genr_ctrls;
-	SyncCtrls(rowidx, c);
+	if(ready)
+		SyncCtrls(rowidx, c);
 }
 
 void GridCtrl::SetCtrl(int c, Ctrl* ctrl)
@@ -2723,7 +2730,8 @@ void GridCtrl::SetCtrl(int c, Ctrl* ctrl)
 	c += fixed_cols;
 	GetItem(rowidx, c).SetCtrl(*ctrl, true);
 	++genr_ctrls;
-	SyncCtrls(rowidx, c);
+	if(ready)
+		SyncCtrls(rowidx, c);
 }
 
 void GridCtrl::ClearCtrl(int r, int c)
@@ -4691,7 +4699,7 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR */)
 
 void GridCtrl::SyncCtrls(int row, int col)
 {
-	if(!genr_ctrls || !ready)
+	if(!genr_ctrls)
 		return;
 	
 	Size sz = GetSize();
@@ -5682,6 +5690,7 @@ void GridCtrl::Clear(bool columns)
 		coluid = 0;
 		hcol = -1;
 		sortCol = -1;
+		genr_ctrls = 0;
 	}
 	else
 	{
