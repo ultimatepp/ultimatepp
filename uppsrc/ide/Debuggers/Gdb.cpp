@@ -74,11 +74,12 @@ bool Gdb::SetBreakpoint(const String& filename, int line, const String& bp)
 	String bi = Bpoint(*host, filename, line);
 	if(bp.IsEmpty())
 		FastCmd("clear " + bi);
-	else
+	else if(bp[0]==0xe)
 		FastCmd("b " + bi);
+	else
+		FastCmd("b " + bi + " if " + bp);
 	return true;
 }
-
 void Gdb::SetDisas(const String& text)
 {
 	disas.Clear();
