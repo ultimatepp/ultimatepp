@@ -52,8 +52,41 @@ void ClipboardLog(const char *txt)
 {
 #ifdef flagCHECKCLIPBOARD
 	FileAppend f(GetExeDirFile("clip.log"));
-	f << txt << ": " << GetLastErrorMessage() << "\n";
+	f << txt << "\n";
 #endif
+}
+
+void ClipboardError(const char *txt)
+{
+#ifdef flagCHECKCLIPBOARD
+	String s = txt;
+	s << "\n" << GetLastErrorMessage();
+	MessageBox(::GetActiveWindow(), s, "Clipboard error", MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+	ClipboardLog(String().Cat() << s << " ERROR");
+#endif
+}
+
+String FromWin32CF(int cf);
+
+void ClipboardError(const char *txt, int format)
+{
+#ifdef flagCHECKCLIPBOARD
+	ClipboardError(String().Cat() << txt << ' ' << FromWin32CF(format));
+#endif
+}
+
+bool ClipboardOpen()
+{
+	// Win32 has serious race condition problem with clipboard; system or other apps open it
+	// right after we close it thus blocking us to send more formats
+	// So the solution is to wait and retry... (mirek, 2011-01-09)
+	int delay = 2;
+	for(int i = 0; i < 5; i++) {
+		if(OpenClipboard(utilityHWND))
+			return true;
+		Sleep(delay += delay);
+	}
+	return false;
 }
 
 void ClearClipboard()
@@ -64,15 +97,15 @@ void ClearClipboard()
 	DeleteFile(GetExeDirFile("clip.log"));
 #endif
 	ClipboardLog("* ClearClipboard");
-	if(OpenClipboard(utilityHWND)) {
+	if(ClipboardOpen()) {
 		if(!EmptyClipboard())
-			ClipboardLog("EmptyClipboard ERROR");
+			ClipboardError("EmptyClipboard ERROR");
 		if(!CloseClipboard())
-			ClipboardLog("CloseClipboard ERROR");
+			ClipboardError("CloseClipboard ERROR");
 	}
 #ifdef flagCHECKCLIPBOARD
 	else {
-		ClipboardLog("OpenClipboard ERROR");
+		ClipboardError("OpenClipboard ERROR");
 	}
 #endif
 }
@@ -100,7 +133,7 @@ void SetClipboardRaw(int format, const byte *data, int length)
 		GlobalUnlock(handle);
 	}
 	if(!SetClipboardData(format, handle)) {
-		ClipboardLog("SetClipboardData ERROR");
+		ClipboardError("SetCliboardData", format);
 		LLOG("SetClipboardData error: " << GetLastErrorMessage());
 		GlobalFree(handle);
 	}
@@ -110,13 +143,13 @@ void AppendClipboard(int format, const byte *data, int length)
 {
 	GuiLock __;
 	ClipboardLog("* AppendClipboard");
-	if(OpenClipboard(utilityHWND)) {
+	if(ClipboardOpen()) {
 		SetClipboardRaw(format, data, length);
 		if(!CloseClipboard())
-			ClipboardLog("CloseClipboard ERROR");
+			ClipboardError("CloseClipboard", format);
 	}
 	else
-		ClipboardLog("OpenClipboard ERROR");
+		ClipboardError("OpenClipboard", format);
 }
 
 void AppendClipboard(const char *format, const byte *data, int length)
