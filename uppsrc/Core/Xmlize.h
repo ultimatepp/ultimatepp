@@ -59,7 +59,8 @@ public:
 	void  SetUserData(const Value& v)                  { userdata = v; }
 	Value GetUserData() const                          { return userdata; }
 
-	XmlIO(XmlNode& xml, bool loading, const Value& userdata) : node(xml), loading(loading) {}
+	XmlIO(XmlNode& xml, bool loading, const Value& userdata) : node(xml), loading(loading), userdata(userdata) {}
+	XmlIO(XmlNode& xml, bool loading) : node(xml), loading(loading) {}
 	XmlIO(XmlIO xml, const char *tag) : node(xml.node.GetAdd(tag)), loading(xml.loading), userdata(xml.userdata) {}
 };
 
