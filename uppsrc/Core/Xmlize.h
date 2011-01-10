@@ -15,6 +15,7 @@ String XmlAttrStore(const T& var)
 class XmlIO {
 	XmlNode& node;
 	bool     loading;
+	Value    userdata;
 
 public:
 	bool IsLoading() const            { return loading; }
@@ -54,9 +55,12 @@ public:
 	XmlIO Add()                                        { XmlIO m(node.Add(), IsLoading()); return m; }
 	XmlIO Add(const char *id)                          { XmlIO m(node.Add(id), IsLoading()); return m; }
 	XmlIO GetAdd(const char *id)                       { XmlIO m(node.GetAdd(id), IsLoading()); return m; }
+	
+	void  SetUserData(const Value& v)                  { userdata = v; }
+	Value GetUserData() const                          { return userdata; }
 
 	XmlIO(XmlNode& xml, bool loading) : node(xml), loading(loading) {}
-	XmlIO(XmlIO xml, const char *tag) : node(xml.node.GetAdd(tag)), loading(xml.loading) {}
+	XmlIO(XmlIO xml, const char *tag) : node(xml.node.GetAdd(tag)), loading(xml.loading), userdata(userdata) {}
 };
 
 template <class T>
