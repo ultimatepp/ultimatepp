@@ -347,7 +347,7 @@ String StoreAsXML(Callback1<XmlIO> xmlize, const char *name)
 	if(IsNull(n))
 		n = "app";
 	XmlNode node;
-	xmlize(XmlIO(node(n), false));
+	xmlize(XmlIO(node(n), false, Value()));
 	return AsXML(node);
 }
 
@@ -357,7 +357,7 @@ bool LoadFromXML(Callback1<XmlIO> xmlize, const String& xml)
 		XmlNode node = ParseXML(xml);
 		for(int i = 0; i < node.GetCount(); i++)
 			if(node.Node(i).IsTag()) {
-				xmlize(XmlIO(node.At(i), true));
+				xmlize(XmlIO(node.At(i), true, Value()));
 				break;
 			}
 		return true;
