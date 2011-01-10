@@ -7,18 +7,7 @@ NAMESPACE_UPP;
 
 template<class T> class WithPolyXML : public WithFactory<T>
 {
-	template<class X> friend class PolyXMLArray;
-	
-	private:
-		unsigned loadingVersion;
-		
 	public:
-		// constructor
-		WithPolyXML() { loadingVersion = 0; }
-		
-		// loading version checking
-		unsigned GetLoadingVersion(void) { return loadingVersion; }
-		
 		// Xmlizer
 		virtual void Xmlize(XmlIO xml) {};
 };
@@ -51,26 +40,12 @@ template<class T> class PolyXMLUnknown : public T
 
 template<class T> class PolyXMLArray : public Array<T>
 {
-	private:
-		unsigned loadingVersion;
-		unsigned currentVersion;
-
-	protected:
-		
 	public:
-		PolyXMLArray() { loadingVersion = 0; currentVersion = 0; }
-		
 		// Xmlizer
 		void Xmlize(XmlIO xml);
 		
 		void Add(const T &data) { Array<T>::Add(data); }
 		void Add(T *data) { Array<T>::Add(data); }
-		
-		// version handling
-		unsigned GetCurrentVersion(void) { return currentVersion; }
-		unsigned SetCurrentVersion(int v) { currentVersion = v; }
-		unsigned GetLoadingVersion(void) { return loadingVersion; }
-		unsigned SetLoadingVersion(int v) { loadingVersion = v; }
 };
 
 template<class T> void PolyXMLArray<T>::Xmlize(XmlIO xml)
@@ -95,10 +70,6 @@ template<class T> void PolyXMLArray<T>::Xmlize(XmlIO xml)
 				T *data = T::CreatePtr(tag);
 				if(data)
 				{
-					// sets loading version in class
-					// so xmlizers know how to handle older versions
-					data->loadingVersion = loadingVersion;
-					
 					data->Xmlize(xml.At(i));
 					Add(data);
 				}
