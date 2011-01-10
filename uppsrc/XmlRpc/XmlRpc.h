@@ -306,6 +306,7 @@ public:
 	String GetFaultString() const                               { return faultString; }
 	int    GetFaultCode() const                                 { return faultCode; }
 	String GetError() const                                     { return error; }
+	String GetMethod() const                                    { return method; }
 	void   ClearError();
 	
 	XmlRpcCall& Proxy(const String& host, int port)             { server.Proxy(host, port); return *this; }
