@@ -668,7 +668,7 @@ void Ide::SerializeWorkspace(Stream& s) {
 	int i;
 	int version = 9;
 	s / version;
-	s.Magic(0x12345);
+	s.Magic(0x12354);
 	if(s.IsStoring()) {
 		for(i = 0; i < filedata.GetCount(); i++) {
 			String fn = filedata.GetKey(i);
