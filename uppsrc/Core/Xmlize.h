@@ -60,7 +60,7 @@ public:
 	Value GetUserData() const                          { return userdata; }
 
 	XmlIO(XmlNode& xml, bool loading) : node(xml), loading(loading) {}
-	XmlIO(XmlIO xml, const char *tag) : node(xml.node.GetAdd(tag)), loading(xml.loading), userdata(userdata) {}
+	XmlIO(XmlIO xml, const char *tag) : node(xml.node.GetAdd(tag)), loading(xml.loading), userdata(xml.userdata) {}
 };
 
 template <class T>
