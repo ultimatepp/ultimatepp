@@ -5,8 +5,6 @@
 
 #include <RichEdit/RichEdit.h>
 
-#include <Web/Web.h>
-
 #include <ide/Browser/Browser.h>
 #include <TabBar/TabBar.h>
 #include <CodeEditor/CodeEditor.h>
