@@ -173,7 +173,7 @@ void TopWindow::SyncCaption0()
 
 void TopWindow::CenterRect(Ctrl *owner)
 {
-	GuiLock __; 
+	GuiLock __;
 	SetupRect();
 	if(owner && center == 1 || center == 2) {
 		Size sz = GetRect().Size();
@@ -213,6 +213,7 @@ void TopWindow::Open(Ctrl *owner)
 	UsrLogT(3, "OPEN " + Desc(this));
 	LLOG("OPEN " << Name() << " owner: " << UPP::Name(owner));
 	IgnoreMouseUp();
+	bool weplace = owner && center == 1 || center == 2 || !GetRect().IsEmpty();
 	if(fullscreen)
 		SetRect(0, 0, Xwidth, Xheight);
 	else
@@ -221,8 +222,10 @@ void TopWindow::Open(Ctrl *owner)
 	Create(owner, false, false);
 	xminsize.cx = xmaxsize.cx = Null;
 	title2.Clear();
-	LLOG("SyncCaption");
-	SyncCaption();
+	if(!weplace) {
+		LLOG("SyncCaption");
+		SyncCaption0();
+	}
 	LLOG("SyncSizeHints");
 	size_hints->flags = 0;
 	SyncSizeHints();
@@ -261,6 +264,14 @@ void TopWindow::Open(Ctrl *owner)
 		LLOG("SetWndFocus");
 		SetWndFocus();
 		for(int i = 0; i < 50; i++) {
+			// X11 tries to move our window, so ignore the first set of ConfigureNotify
+			// and move the window into position after FocusIn - but not if we want WM to
+			// place the window
+			if(weplace)
+				while(XCheckTypedWindowEvent(Xdisplay, top->window, ConfigureNotify, &e)) {
+					if(e.xconfigure.window != top->window)
+						ProcessEvent(&e);
+				}	
 			if(XCheckTypedWindowEvent(Xdisplay, top->window, FocusIn, &e)) {
 				ProcessEvent(&e);
 				if(e.xfocus.window == top->window)
@@ -268,6 +279,11 @@ void TopWindow::Open(Ctrl *owner)
 			}
 			Sleep(10);
 		}
+	}
+	if(weplace) {
+		WndSetPos0(GetRect());
+		LLOG("SyncCaption");
+		SyncCaption0();
 	}
 	LLOG(">Open NextRequest " << NextRequest(Xdisplay));
 	LLOG(">OPENED " << Name());
