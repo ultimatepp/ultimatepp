@@ -175,8 +175,9 @@ String Socket::Data::GetPeerAddr() const
 		return Null;
 	sockaddr_in addr;
 	socklen_t l = sizeof(addr);
-	getpeername(socket, (sockaddr *)&addr, &l);
-	if(l < sizeof(addr))
+	if(getpeername(socket, (sockaddr *)&addr, &l) != 0)
+		return Null;
+	if(l > sizeof(addr))
 		return Null;
 #ifdef PLATFORM_WIN32
 	return inet_ntoa(addr.sin_addr);
