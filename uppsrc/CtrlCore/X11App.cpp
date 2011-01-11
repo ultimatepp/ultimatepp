@@ -447,7 +447,7 @@ void Ctrl::ExitX11()
 Rect Ctrl::GetDefaultWindowRect()
 {
 	GuiLock __; 
-	static int pos = 0;
+	static int pos = min(Xwidth / 10, 50);
 	pos += 10;
 	int cx = Xwidth * 2 / 3;
 	int cy = Xheight * 2 / 3;
