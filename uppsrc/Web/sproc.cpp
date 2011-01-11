@@ -571,8 +571,9 @@ void RemoteSlaveProcess::Recv(int part, int timeout)
 		return;
 	}
 //	LOG("RemoteSlaveProcess::Recv(" << part << ")");
-	unsigned end = (IsNull(timeout) ? (unsigned)-1 : GetTickCount() + timeout);
-	while(GetTickCount() <= (int)end && (socket.Peek() || current_part <= part))
+
+	int starttick = GetTickCount();
+	while( (IsNull(timeout) || int(GetTickCount())-starttick <= timeout) && (socket.Peek() || current_part <= part))
 	{
 		String data = socket.Read(0);
 		SVRLOG("-> [" << current_part << "] = " << data.GetLength() << " bytes: <" << data << ">");
