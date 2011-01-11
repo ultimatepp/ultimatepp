@@ -14,6 +14,11 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 bool SysExec(String const &command, String const &args, String &OutStr);
 bool SysExec(String const &command, String const &args);
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command, passing a command line to it without waiting for its termination
+bool SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ);
+bool SysStart(String const &command, String const &args);
+
 END_UPP_NAMESPACE
 
 #endif

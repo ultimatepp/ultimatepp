@@ -308,4 +308,61 @@ bool SysExec(String const &command, String const &args)
 
 } // END SysExec()
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command, passing a command line to it without waiting for its termination
+bool SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+	FILE *fp;
+
+	// builds the arguments and the environment
+	Buffer<char *>argv = _BuildArgs(args);
+	Buffer<char *>envv = _BuildEnv(Environ);
+	
+	// executes the command
+	int result = 0;
+#ifdef PLATFORM_POSIX
+	pid_t pID = fork();
+	if (pID == 0)
+	{
+		// Code only executed by child process
+
+		// exec svn, function shall not return if all ok
+		result = execvpe(command, argv, envv);
+
+		// terminates child process
+		_exit(result);
+	}
+	else if (pID < 0)
+	{
+		// code executed only if couldn't fork
+		Cerr() << "Couldn't fork...\n";
+		result = -1;
+	}
+	else
+	{
+		// Code only executed by parent process
+		
+		// just return OK
+		result = 0;
+	}
+
+
+#else
+	result = _spawnvpe(_P_NOWAIT, command, argv, envv);
+#endif
+
+	if (result == -1)
+		Cerr() << "Error spawning process\n";
+
+	return (!result);
+
+}
+
+bool SysStart(String const &command, String const &args)
+{
+	return SysStart(command, args, Environment());
+}
+
 END_UPP_NAMESPACE
