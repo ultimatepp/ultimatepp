@@ -2261,7 +2261,6 @@ void TabBar::Close(int n)
 	MakeGroups();
 	Repos();
 	
-	highlight = min(highlight, tabs.GetCount()-1);
 	if(n == active)
 		SetCursor(-1);
 	else {
