@@ -23,9 +23,11 @@ Thread::Thread()
 	sMutexLock();
 #ifdef PLATFORM_WIN32
 	handle = 0;
+	thread_id = 0;
 #endif
 #ifdef PLATFORM_POSIX
 	handle = 0;
+	thread_id = 0;
 #endif
 }
 
@@ -35,11 +37,13 @@ void Thread::Detach()
 	if(handle) {
 		CloseHandle(handle);
 		handle = 0;
+		thread_id = 0;
 	}
 #elif defined(PLATFORM_POSIX)
 	if(handle) {
 		CHECK(!pthread_detach(handle));
 		handle = 0;
+		thread_id = 0;
 	}
 #endif
 }
@@ -85,6 +89,42 @@ Mutex vm; //a common access synchronizer
 //otherwise no child threads could run. they are created by main.
 //now each thread, having any Thread instace can start a first Run()
 
+
+bool Thread::Run(Callback _cb)
+{
+	AtomicInc(sThreadCount);
+	if(!threadr)
+#ifndef CPU_BLACKFIN
+		threadr = sMain = true;
+#else
+	{
+		threadr = true;
+		//the sMain replacement
+#ifdef PLATFORM_POSIX
+		pthread_t thid = pthread_self();
+		vm.Enter();
+		if(threadsv.Find(thid) < 0){
+			//thread not yet present, mark present
+			threadsv.Add(thid);
+		}
+		else
+			RLOG("BUG: Multiple Add in Mt.cpp");
+		vm.Leave();
+#endif
+	}
+#endif
+	Detach();
+	Callback *cb = new Callback(_cb);
+#ifdef PLATFORM_WIN32
+	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, cb, 0, ((unsigned int *)(&thread_id)));
+#endif
+#ifdef PLATFORM_POSIX
+	if(pthread_create(&handle, 0, sThreadRoutine, cb))
+		handle = 0;
+#endif
+	return handle;
+}
+
 Thread::~Thread()
 {
 	Detach();
@@ -126,43 +166,6 @@ bool Thread::IsMain() //the calling thread is the Main Thread or the only one in
 #endif
 	return false;
 #endif
-}
-
-bool Thread::Run(Callback _cb)
-{
-	AtomicInc(sThreadCount);
-	if(!threadr)
-#ifndef CPU_BLACKFIN
-		threadr = sMain = true;
-#else
-	{
-		threadr = true;
-		//the sMain replacement
-#ifdef PLATFORM_POSIX
-		pthread_t thid = pthread_self();
-		vm.Enter();
-		if(threadsv.Find(thid) < 0)
-		{
-			//thread not yet present, mark present
-			threadsv.Add(thid);
-		}
-		else
-			RLOG("BUG: Multiple Add in Mt.cpp");
-		vm.Leave();
-#endif
-	}
-#endif
-	Detach();
-	Callback *cb = new Callback(_cb);
-#ifdef PLATFORM_WIN32
-	unsigned thread_id;
-	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, cb, 0, &thread_id);
-#endif
-#ifdef PLATFORM_POSIX
-	if(pthread_create(&handle, 0, sThreadRoutine, cb))
-		handle = 0;
-#endif
-	return handle;
 }
 
 int Thread::GetCount()
