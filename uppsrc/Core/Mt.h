@@ -44,11 +44,11 @@ class Callback;
 class Thread : NoCopy {
 #ifdef PLATFORM_WIN32
 	HANDLE     handle;
+	DWORD	   thread_id;
 #endif
 #ifdef PLATFORM_POSIX
 	pthread_t  handle;
 #endif
-
 public:
 	bool       Run(Callback cb);
 
@@ -56,17 +56,22 @@ public:
 	int        Wait();
 
 	bool       IsOpen() const     { return handle; }
-	
 
 #ifdef PLATFORM_WIN32
 	typedef HANDLE Handle;
+	typedef DWORD  Id;
+
+	Id          GetId() const                  { return thread_id; }
 #endif
 #ifdef PLATFORM_POSIX
 	typedef pthread_t Handle;
+	typedef pthread_t Id;
+
+	Id          GetId() const                  { return handle; }
 #endif
 
-	Handle      GetHandle() const { return handle; }
-
+	Handle      GetHandle() const              { return handle; }
+	
 	void        Priority(int percent); // 0 = lowest, 100 = normal
 
 	static void Start(Callback cb);
@@ -78,12 +83,13 @@ public:
 	static int  GetCount();
 	static void ShutdownThreads();
 	static bool IsShutdownThreads();
-
 #ifdef PLATFORM_WIN32
-	static Handle GetCurrentHandle()    { return GetCurrentThread(); }
+	static Handle GetCurrentHandle()          { return GetCurrentThread(); }
+	static inline Id GetCurrentId()           { return ::GetCurrentThreadId(); };
 #endif
 #ifdef PLATFORM_POSIX
-	static Handle GetCurrentHandle()    { return pthread_self(); }
+	static Handle GetCurrentHandle()          { return pthread_self(); }
+	static inline Id GetCurrentId()           { return pthread_self(); };
 #endif
 
 	Thread();
