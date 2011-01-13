@@ -534,7 +534,7 @@ Vector<String> OracleSchemaReservedWords()
 
 Sql::ERRORCLASS OciErrorClass(int errcode)
 {
-	return errcode == 3111 || errcode == 3113 || errcode == 3114 || errcode == 12571
+	return errcode >= 3100 && errcode < 3200 || errcode >= 12531 && errcode < 12630
 	? Sql::CONNECTION_BROKEN
 	: Sql::ERROR_UNSPECIFIED;
 }
