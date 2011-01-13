@@ -47,7 +47,7 @@ public:
 	virtual void LeftDown(Point p, dword keyflags);
 	virtual void Updated();
 	virtual Value GetData() const { return v; }
-	virtual void SetData(const Value& _v) { v = _v; Update(); }
+	virtual void SetData(const Value& _v) { v = _v; vp.SetData(_v); Update(); }
 
 	void Drop();
 	

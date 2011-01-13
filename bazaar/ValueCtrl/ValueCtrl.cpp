@@ -147,7 +147,7 @@ void ValueCtrl::AcceptDrop()
 {
 	push = false;
 	v = vp.GetData();
-	UpdateAction();
+	//UpdateAction(); //has live updated
 }
 
 void ValueCtrl::ActionDrop()
