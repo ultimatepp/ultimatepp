@@ -27,7 +27,6 @@ Thread::Thread()
 #endif
 #ifdef PLATFORM_POSIX
 	handle = 0;
-	thread_id = 0;
 #endif
 }
 
@@ -43,7 +42,6 @@ void Thread::Detach()
 	if(handle) {
 		CHECK(!pthread_detach(handle));
 		handle = 0;
-		thread_id = 0;
 	}
 #endif
 }
