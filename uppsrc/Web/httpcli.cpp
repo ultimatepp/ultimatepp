@@ -379,7 +379,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			for(p += CL_LENGTH; *p == ' '; p++)
 				;
 			if(IsDigit(*p)) {
-				content_length = minmax<int>(stou(p), 0, max_content_size);
+				content_length = stou(p);
 				if(content_length > max_content_size) {
 					error = NFormat(t_("%s:%d: maximum data length exceeded (%d B)"), host, port, max_content_size);
 					return String::GetVoid();
@@ -432,7 +432,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		}
 		String part = socket.Read(1000);
 		if(!part.IsEmpty()) {
-			if(body.GetLength() + part.GetLength() > DEFAULT_MAX_CONTENT_SIZE) {
+			if(body.GetLength() + part.GetLength() > max_content_size) {
 				error = NFormat(t_("Maximum content size exceeded: %d"), body.GetLength() + part.GetLength());
 				goto EXIT;
 			}
