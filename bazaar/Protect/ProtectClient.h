@@ -39,6 +39,12 @@ class ProtectClient
 		Time expireTime;
 		int numLicenses;
 		
+		// version of current app installed
+		double currentVersion;
+		
+		// maximum allowable version for this client
+		double maxAllowedVersion;
+		
 		// key and IV for encrypted communication
 		String key;
 		qword IV;
@@ -103,15 +109,18 @@ class ProtectClient
 		ProtectClient &SetUserPhone(String const &phone)		{ userPhone = phone; return *this; }
 		ProtectClient &SetUserFax(String const &fax)			{ userFax = fax; return *this; }
 		ProtectClient &SetUserCell(String const &cell)			{ userCell = cell; return *this; }
+		ProtectClient &SetCurrentVersion(double v)				{ currentVersion = v; return *this; }
 		
-		String GetUserEMail(void)		{ return userEMail; }
-		String GetUserName(void)		{ return userName; }
-		String GetUserAddress(void)		{ return userAddress; }
-		String GetUserCountry(void)		{ return userCountry; }
-		String GetUserZip(void)			{ return userZIP; }
-		String GetUserPhone(void)		{ return userPhone; }
-		String GetUserFax(void)			{ return userFax; }
-		String GetUserCell(void)		{ return userCell; }
+		String GetUserEMail(void)			{ return userEMail; }
+		String GetUserName(void)			{ return userName; }
+		String GetUserAddress(void)			{ return userAddress; }
+		String GetUserCountry(void)			{ return userCountry; }
+		String GetUserZip(void)				{ return userZIP; }
+		String GetUserPhone(void)			{ return userPhone; }
+		String GetUserFax(void)				{ return userFax; }
+		String GetUserCell(void)			{ return userCell; }
+		double GetCurrentVersion(void)		{ return currentVersion; }
+		double GetMaxAllowedVersion(void)	{ return maxAllowedVersion; }
 };
 
 END_UPP_NAMESPACE

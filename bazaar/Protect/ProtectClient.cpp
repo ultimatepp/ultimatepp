@@ -205,16 +205,17 @@ bool ProtectClient::GetLicenseInfo(void)
 		lastError = res.Get("ERROR");
 		return false;
 	}
-	if(res.Find("EMAIL") >= 0)			userEMail	= res.Get("EMAIL");
-	if(res.Find("NAME") >= 0)			userName	= res.Get("NAME");
-	if(res.Find("ADDRESS") >= 0)		userAddress	= res.Get("ADDRESS");
-	if(res.Find("COUNTRY") >= 0)		userCountry	= res.Get("COUNTRY");
-	if(res.Find("ZIP") >= 0)			userZIP		= res.Get("ZIP");
-	if(res.Find("PHONE") >= 0)			userPhone	= res.Get("PHONE");
-	if(res.Find("FAX") >= 0)			userFax		= res.Get("FAX");
-	if(res.Find("CELL") >= 0)			userCell	= res.Get("CELL");
-	if(res.Find("EXPIRETIME") >= 0)		expireTime	= res.Get("EXPIRETIME");
-	if(res.Find("NUMLICENSES") >= 0)	numLicenses	= res.Get("NUMLICENSES");
+	if(res.Find("EMAIL") >= 0)			userEMail			= res.Get("EMAIL");
+	if(res.Find("NAME") >= 0)			userName			= res.Get("NAME");
+	if(res.Find("ADDRESS") >= 0)		userAddress			= res.Get("ADDRESS");
+	if(res.Find("COUNTRY") >= 0)		userCountry			= res.Get("COUNTRY");
+	if(res.Find("ZIP") >= 0)			userZIP				= res.Get("ZIP");
+	if(res.Find("PHONE") >= 0)			userPhone			= res.Get("PHONE");
+	if(res.Find("FAX") >= 0)			userFax				= res.Get("FAX");
+	if(res.Find("CELL") >= 0)			userCell			= res.Get("CELL");
+	if(res.Find("EXPIRETIME") >= 0)		expireTime			= res.Get("EXPIRETIME");
+	if(res.Find("NUMLICENSES") >= 0)	numLicenses			= res.Get("NUMLICENSES");
+	if(res.Find("ALLOWEDVERSION") >=0)	maxAllowedVersion	= res.Get("ALLOWEDVERSION");
 
 	return true;
 }

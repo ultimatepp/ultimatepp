@@ -128,6 +128,7 @@ VectorMap<String, Value> ProtectDB::Default(VectorMap<String, Value> const &base
 	res.FindAdd("ACTIVATIONKEY", HexString((byte *)&r, sizeof(r)));
 	res.FindAdd("ACTIVATIONSENT", GetSysTime());
 	res.FindAdd("ACTIVATED", false);
+	res.FindAdd("ALLOWEDVERSION", 0);
 
 	return res;
 }
