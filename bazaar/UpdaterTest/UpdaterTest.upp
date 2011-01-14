@@ -1,0 +1,11 @@
+description "Testbed for Updater package\377";
+
+uses
+	Updater;
+
+file
+	UpdaterTest.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,4 @@
+#ifndef _UpdaterTest_icpp_init_stub
+#define _UpdaterTest_icpp_init_stub
+#include "Updater/init"
+#endif

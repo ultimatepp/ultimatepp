@@ -1,0 +1,11 @@
+description "Web Installer/Updater module\377";
+
+uses
+	CtrlLib,
+	SysExec,
+	Web;
+
+file
+	Updater.h,
+	Updater.cpp;
+
