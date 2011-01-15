@@ -2,7 +2,7 @@
 
 double GetMaxVersion(void)
 {
-	return 2.0;
+	return 1.0;
 }
 
 GUI_APP_MAIN
@@ -16,7 +16,7 @@ GUI_APP_MAIN
 	if(!updater.Run())
 		return;
 	
-//	PromptOK("After update call -- should be in normal mode&User is : '" + GetUserName() + "'");
+	PromptOK("App version is 1.00");
 
 }
 
