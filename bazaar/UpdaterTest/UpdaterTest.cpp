@@ -2,7 +2,7 @@
 
 double GetMaxVersion(void)
 {
-	return 1.0;
+	return 1.6;
 }
 
 GUI_APP_MAIN
