@@ -106,6 +106,7 @@ GUI_APP_MAIN
 	EXP(Select(COLUMN).From(TABLE).Where(NotLike(COLUMN1, Wild("A*"))));
 	EXP(Select(COLUMN).From(TABLE).Where(In(COLUMN, Select(COLUMN).From(TABLE1))));
 	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == Select(COLUMN).From(TABLE1)));
+	EXP(Select(COLUMN).From(TABLE).Where(COLUMN == Select(COLUMN).From(TABLE1).AsValue()));
 	EXP(Select(COLUMN).From(TABLE).Where(NotIn(COLUMN, Select(COLUMN).From(TABLE1))));
 	EXP(Select(COLUMN).From(TABLE).Where(COLUMN != Select(COLUMN).From(TABLE1)));
 	EXP(Select(COLUMN).From(TABLE).Where(Exists(Select(COLUMN).From(TABLE1))));
