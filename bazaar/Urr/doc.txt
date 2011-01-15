@@ -44,7 +44,7 @@ response (e.g. if some datagrams get duplicated and/or delayed).
 
 part designates the meaing of datagram. It can be positive index of block or one of
 
-URR_LAST       = -1, // this the last datagram of response
+URR_LAST       = -1, // this is the last datagram of response
 URR_FIN        = -2, // finalizing multi-datagram response
 URR_SINGLE     = -3, // this is single datagram response
 URR_PROCESSING = -4, // server is still processing the request, retry later
@@ -77,9 +77,9 @@ More about server:
 
 Server in principle stores last 10 seconds (adjustable default) requests based on Uuid and response to them.
 It is also possible that server application for some kind of requests tells the server not to store response
-(e.g. if response does not change the server) - in that case request performed again.
+(e.g. if response does not change the server) - in that case repeated request is performed again.
 
 Server also can store response responses of last second (adjustable). That is because in input queue there can
 be repeated request while it is processed. Therefore server would response more times. Server also
-stores requests know to being processed - if these requests repease, server respons with URR_PROCESSING.
+stores requests known to being processed - if these requests repeat, server responds with URR_PROCESSING.
 Client should interpret this as more waiting for result is required.
