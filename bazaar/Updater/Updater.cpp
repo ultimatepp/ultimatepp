@@ -525,7 +525,11 @@ bool Updater::FetchApp(double ver)
 		return false;
 
 	HttpClient http;
+#ifdef PLATFORM_POSIX
 	http.URL(GetPlatformRoot() + FormatDoubleFix(ver, 2, FD_ZERO) + "/" + appName);
+#else
+	http.URL(GetPlatformRoot() + FormatDoubleFix(ver, 2, FD_ZERO) + "/" + appName + ".exe");
+#endif
 	http.TimeoutMsecs(1000*60*30);
 	http.MaxContentSize(100000000);
 
