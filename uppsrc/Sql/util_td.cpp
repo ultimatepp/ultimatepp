@@ -40,4 +40,20 @@ bool EqualFields(Fields a, Fields b)
 	return fa.table == fb.table && fa.va == fb.va;
 }
 
+struct NfAsString : FieldOperator {
+	String text;
+	
+	virtual void Field(const char *name, Ref f) {
+		text << "\n\t" << name << '=' << (Value)f;
+	}
+};
+
+
+String AsString(Fields a)
+{
+	NfAsString x;
+	a(x);
+	return x.text;
+}
+
 END_UPP_NAMESPACE
