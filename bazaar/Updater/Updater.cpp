@@ -525,7 +525,7 @@ bool Updater::FetchApp(double ver)
 		return false;
 
 	HttpClient http;
-	http.URL(GetPlatformRoot() + appName + "_" + FormatDoubleFix(ver, 2, FD_ZERO));
+	http.URL(GetPlatformRoot() + FormatDoubleFix(ver, 2, FD_ZERO) + "/" + appName);
 	http.TimeoutMsecs(1000*60*30);
 	http.MaxContentSize(100000000);
 
