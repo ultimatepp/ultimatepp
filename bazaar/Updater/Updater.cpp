@@ -7,11 +7,11 @@
 // gets platform root folder
 String Updater::GetPlatformRoot(void)
 {
-#ifdef WIN64
+#if defined(WIN64)
 	return webRoot + "/WINDOWS64/";
-#elif WIN32
+#elif defined(WIN32)
 	return webRoot + "/WINDOWS32/";
-#elif PLATFORM_POSIX
+#elif defined(PLATFORM_POSIX)
 #ifdef __x86_64
 	return webRoot + "/LINUX64/";
 #else
@@ -194,11 +194,11 @@ bool Updater::START_Updater(String const &operation)
 	
 	// note the -k to gksu -- it makes it preserve the environment
 	String params = "-k -u root \"" + tempName + "\"";
-	if(!SysStart("gksu", params, environ))
+	if(SysStart("gksu", params, environ) == -1)
 		return false;
 #else
 	// for windows, simply execute the file
-	if(!SysStart(tempName, "", environ))
+	if(SysStart(tempName, "", environ) == -1)
 		return false;
 #endif
 	return true;
@@ -314,7 +314,7 @@ bool Updater::DO_InsideUpdater(void)
 		environ.RemoveKey("UPDATER_APPNAME");
 	}
 	environ.RemoveKey("UPDATER_STATE");
-	
+
 	if(environ.Find("UPDATER_CMDLINE") >= 0)
 	{
 		commandLine = environ.Get("UPDATER_CMDLINE");
