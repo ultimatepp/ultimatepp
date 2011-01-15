@@ -54,7 +54,8 @@ void td_array(SqlSet& set, const String& prefix, const char *x, int cnt);
 void td_var(SqlSet& set, const String& prefix, const char *x, SqlSet (*f)(const String&));
 void td_shrink(String *array, int cnt);
 
-bool EqualFields(Fields a, Fields b);
+bool   EqualFields(Fields a, Fields b);
+String AsString(Fields a);
 
 // ----------
 
