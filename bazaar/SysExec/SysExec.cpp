@@ -79,7 +79,7 @@ static Buffer<char *>_BuildArgs(String const &argline)
 	
 	// first arg should be command name... let's make it null
 	// it MUST be set, as argv[0] has a special meaning
-	args.Add("");
+	args.Add("dummy");
 
 	// skips leading spaces
 	while ((c = argline[pos]) != 0 && isspace(c))
@@ -180,8 +180,6 @@ static Buffer<char *>_BuildEnv(const VectorMap<String, String> &env = Environmen
 // from both stdout and stderr
 bool SysExec(String const &command, String const &args, const VectorMap<String, String> &Environ, String &OutStr, String &ErrStr)
 {
-	FILE *fp;
-
 	// flushes both stdout and stderr files
 	fflush(stdout);
 	fflush(stderr);
@@ -314,8 +312,6 @@ bool SysExec(String const &command, String const &args)
 // executes an external command, passing a command line to it without waiting for its termination
 bool SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ)
 {
-	FILE *fp;
-
 	// builds the arguments and the environment
 	Buffer<char *>argv = _BuildArgs(args);
 	Buffer<char *>envv = _BuildEnv(Environ);
