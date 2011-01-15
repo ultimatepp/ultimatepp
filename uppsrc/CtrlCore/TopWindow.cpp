@@ -314,7 +314,6 @@ int  TopWindow::Run(bool appmodal)
 #endif
 	EventLoop(this);
 #ifdef _DEBUG
-DLOG("b " << GetRect());
 	LLOG("Finished EventLoop in " << UPP::Name(this));
 	for(int e = 0; e < disabled.GetCount(); e++)
 		LLOG("EnableCtrls[" << e << "] = " << UPP::Name(disabled[e]));
