@@ -311,7 +311,7 @@ bool SysExec(String const &command, String const &args)
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes an external command, passing a command line to it without waiting for its termination
 // returns spawned process id (pid) on success, -1 on error
-bool SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ)
+intptr_t SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ)
 {
 	// builds the arguments and the environment
 	Buffer<char *>argv = _BuildArgs(args);
@@ -363,7 +363,7 @@ bool SysStart(String const &command, String const &args, const VectorMap<String,
 
 }
 
-bool SysStart(String const &command, String const &args)
+intptr_t SysStart(String const &command, String const &args)
 {
 	return SysStart(command, args, Environment());
 }
