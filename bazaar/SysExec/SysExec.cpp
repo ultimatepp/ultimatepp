@@ -310,6 +310,7 @@ bool SysExec(String const &command, String const &args)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes an external command, passing a command line to it without waiting for its termination
+// returns spawned process id (pid) on success, -1 on error
 bool SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ)
 {
 	// builds the arguments and the environment
@@ -319,12 +320,18 @@ bool SysStart(String const &command, String const &args, const VectorMap<String,
 	// executes the command
 	int result = 0;
 #ifdef PLATFORM_POSIX
+
+	// initializes result in case of successful fork but
+	// failed execvpe.... so the return value is correct
+	result = -1;
+	
+	// forks the process
 	pid_t pID = fork();
 	if (pID == 0)
 	{
 		// Code only executed by child process
 
-		// exec svn, function shall not return if all ok
+		// exec process, function shall not return if all ok
 		result = execvpe(command, argv, envv);
 
 		// terminates child process
@@ -340,8 +347,8 @@ bool SysStart(String const &command, String const &args, const VectorMap<String,
 	{
 		// Code only executed by parent process
 		
-		// just return OK
-		result = 0;
+		// just return spawned process id
+		result = getpid();
 	}
 
 
@@ -352,7 +359,7 @@ bool SysStart(String const &command, String const &args, const VectorMap<String,
 	if (result == -1)
 		Cerr() << "Error spawning process\n";
 
-	return (!result);
+	return (result);
 
 }
 
