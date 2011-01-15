@@ -63,7 +63,7 @@ Updater::Updater()
 
 	// get application name -- either from GetExeTitle() if in normal mode
 	// or from environment if in superuser mode
-	if(state != InsideUpdater)
+	if(state != InsideUpdater && state != UninstallSucceeded)
 		appName = GetExeTitle();
 	else if(environ.Find("UPDATER_APPNAME") >= 0)
 		appName = environ.Get("UPDATER_APPNAME");
@@ -122,6 +122,7 @@ void Updater::FailUpdate()
 			break;
 			
 		case Uninstall:
+			environ.Add("UPDATER_APPNAME", appName);
 			environ.Add("UPDATER_STATE", "UNINSTALLFAILED");
 			break;
 			
@@ -144,6 +145,7 @@ void Updater::SucceedUpdate()
 			break;
 			
 		case Uninstall:
+			environ.Add("UPDATER_APPNAME", appName);
 			environ.Add("UPDATER_STATE", "UNINSTALLSUCCEEDED");
 			break;
 			
@@ -159,6 +161,7 @@ void Updater::SucceedUpdate()
 // main updater proc inside normal mode
 // prepares environment, copy app in temporary folder
 // and restarts it in superuser mode
+// returns true if app must continue execution, false otherwise
 bool Updater::START_Updater(String const &operation)
 {
 	// prepare environment for updating
@@ -184,63 +187,86 @@ bool Updater::START_Updater(String const &operation)
 	// in temporary folder
 	String tempName = GetTempFileName();
 	if(!FileCopy(exePath, tempName))
-		return false;
+		return true;
 	
 #ifdef PLATFORM_POSIX
 	// for posix, change temp file permission
 	// allowing its execution and executes it as a superuser
 	if(chmod(~tempName, 0755) != 0)
-		return false;
+		return true;
 	
 	// note the -k to gksu -- it makes it preserve the environment
 	String params = "-k -u root \"" + tempName + "\"";
 	if(SysStart("gksu", params, environ) == -1)
-		return false;
+		return true;
 #else
 	// for windows, simply execute the file
 	if(SysStart(tempName, "", environ) == -1)
-		return false;
+		return true;
 #endif
-	return true;
+	// installer process is spawned correctly
+	// main app must leave
+	return false;
 }
 
 // uninstall app
-void Updater::START_Uninstall(void)
+// returns true if app must continue execution, false otherwise
+bool Updater::START_Uninstall(void)
 {
-	if(!START_Updater("UNINSTALL"))
-		Exclamation(t_("Uninstall failed&Press OK to quit"));
+	if(confirmUninstall && !PromptYesNo(t_("This will remove '") + appName + t_("' application&Continue ?")))
+	{
+		state = UninstallAborted;
+		return true;
+	}
+	if(START_Updater("UNINSTALL"))
+	{
+		state = UninstallFailed;
+		return true;
+	}
+	return false;
 }
 
 // install app
+// returns true if app must continue execution, false otherwise
 bool Updater::START_Install(void)
 {
-	if(!START_Updater("INSTALL"))
-		return !PromptYesNo(t_("Install failed&Continue running the application?"));
-	return true;
+	if(confirmInstall && !PromptYesNo(t_("Install '") + appName + t_("' application?")))
+	{
+		state = InstallAborted;
+		return true;
+	}
+	if(START_Updater("INSTALL"))
+	{
+		state = InstallFailed;
+		return true;
+	}
+	return false;
 }
 
 // update app
+// returns true if app must continue execution, false otherwise
 bool Updater::START_Update(void)
 {
-	if(!START_Updater("UPDATE"))
-		return !PromptYesNo(t_("Update failed&Continue running the application?"));
-	return true;
+	if(START_Updater("UPDATE"))
+	{
+		state = UpdateFailed;
+		return true;
+	}
+	return false;
 }
 
 // app started, must check for update/install requests
+// returns true if app must continue execution, false otherwise
 bool Updater::DO_NormalRun(void)
 {
 	// we now check if we just want to uninstall app
 	// it can be done by command line --UNINSTALL option
 	if(CommandLine().GetCount() && CommandLine()[0] == "--UNINSTALL")
-	{
-		START_Uninstall();
-		return false;
-	}
+		return START_Uninstall();
 	
 	// if app not installed, we shall install it
 	if(!appInstalled)
-		return !START_Install();
+		return START_Install();
 	
 	// not installing nor uninstalling
 	
@@ -271,7 +297,7 @@ bool Updater::DO_NormalRun(void)
 	// updater enabled, start it
 	// if update failed, resume normal run, otherwise exit
 	// as the app will be launched again by updater itself
-	return !START_Update();
+	return START_Update();
 }
 
 bool Updater::DO_InsideUpdater(void)
@@ -415,35 +441,37 @@ void Updater::DO_Update(void)
 
 bool Updater::DO_UninstallFailed(void)
 {
-	Exclamation("Uninstall failed!&Aborting....");
-	return false;
+	state = UninstallFailed;
+	return true;
 }
 
 bool Updater::DO_InstallFailed(void)
 {
-	return PromptYesNo("Install failed&Do you want to run the app anyways?");
+	state = InstallFailed;
+	return true;
 }
 
 bool Updater::DO_UpdateFailed(void)
 {
-	return PromptYesNo("Update failed&Do you want to run the app anyways?");
+	state = UpdateFailed;
+	return true;
 }
 
 bool Updater::DO_UninstallSucceeded(void)
 {
-	PromptOK("Uninstall succeeded!");
-	return false;
+	state = UninstallSucceeded;
+	return true;
 }
 
 bool Updater::DO_InstallSucceeded(void)
 {
-	PromptOK("Install succeeded!");
+	state = InstallSucceeded;
 	return true;
 }
 
 bool Updater::DO_UpdateSucceeded(void)
 {
-	PromptOK("Update succeeded!");
+	state = UpdateSucceeded;
 	return true;
 }
 
@@ -596,6 +624,7 @@ bool Updater::Run()
 			NEVER();
 			break;
 	}
+	// dummy
 	return false;
 }
 
@@ -621,3 +650,46 @@ Updater &Updater::UpdateDisable(void)
 	return *this;
 }
 		
+// default set of prompts for installer result
+// just an handy shortcut good for most cases
+bool Updater::DefaultPrompts(void)
+{
+	// fine grained behaviour depending on update state
+	switch(GetState())
+	{
+		case UninstallFailed:
+			Exclamation(t_("Uninstall of '") + appName + t_("' failed&Press OK to quit"));
+			return false;
+	
+		case UninstallSucceeded:
+			PromptOK(t_("Uninstall of '") + appName + t_("' complete&Press OK to quit"));
+			return false;
+			
+		case UninstallAborted:
+			return false ;
+
+		case InstallFailed:			
+			if(!PromptYesNo(t_("Install of '") + appName + t_("' failed&Run without installing?")))
+				return false;
+			return true;
+			
+		case InstallSucceeded:
+			return true;
+		
+		case InstallAborted:
+			return false;
+			
+		case UpdateFailed:
+			if(!PromptYesNo(t_("Update of '") + appName + t_("' failed&Run anyways?")))
+				return false;
+			return true;
+
+		case UpdateSucceeded:
+			return true;
+		
+		// here we're on normal run, no install/uninstall/update process happened
+		// we should continue normal execution
+		default:
+			return true;
+	}
+}

@@ -50,14 +50,21 @@ int __SelfUpdate(String const &remoteRoot, String const &appName, String const &
 
 class Updater
 {
-	private:
+	public:
 		// state of updater engine
 		typedef enum
 		{
+			// internal states
 			NormalRun, InsideUpdater,
+			
+			// public states
 			UninstallFailed, InstallFailed, UpdateFailed,
-			UninstallSucceeded, InstallSucceeded, UpdateSucceeded
+			UninstallSucceeded, InstallSucceeded, UpdateSucceeded,
+			UninstallAborted, InstallAborted
 		} UpdaterState;
+
+	private:
+		// state of updater engine
 		UpdaterState state;
 		
 		// requested operation
@@ -76,7 +83,7 @@ class Updater
 		bool START_Updater(String const &operation);
 
 		// operations procedures
-		void START_Uninstall(void);
+		bool START_Uninstall(void);
 		void DO_Uninstall(void);
 		bool START_Install(void);
 		void DO_Install(void);
@@ -141,6 +148,12 @@ class Updater
 		double maxVersion;
 		String webRoot;
 		
+		// install mode -- manual (true) or auto (false)
+		bool confirmInstall;
+		
+		// uninstall mode -- manual (true) or auto (false)
+		bool confirmUninstall;
+		
 	protected:
 
 	public:
@@ -160,12 +173,35 @@ class Updater
 		// re-enable it to restart updating system on next run
 		Updater &UpdateDisable(void);
 		
+		// sets installer to auto mode (don't ask user)
+		Updater &NoConfirmInstall(void) { confirmInstall = false; return *this; }
+
+		// sets installer to manual mode (ask user)
+		Updater &ConfirmInstall(void) { confirmInstall = true; return *this; }
+
+		// sets uninstaller to auto mode (don't ask user)
+		Updater &NoConfirmUninstall(void) { confirmUninstall = false; return *this; }
+
+		// sets uninstaller to manual mode (ask user)
+		Updater &ConfirmUninstall(void) { confirmUninstall = true; return *this; }
+
 		bool IsAppInstalled(void) { return appInstalled; }
 		double GetInstalledVersion(void) { return installedVersion; }
 		double GetMaxVersion(void) { return maxVersion; }
 		String const &GetWebRoot(void) { return webRoot; }
 	
+		// executes updater
+		// return true if app should continue execution
+		// return false if app should exit
+		// BEWARE -- you NEED to test this and leave application if false !
 		bool Run(void);
+
+		// get updater result status
+		UpdaterState GetState(void) { return state; }
+		
+		// default set of prompts for installer result
+		// just an handy shortcut good for most cases
+		bool DefaultPrompts(void);
 };
 
 #endif
