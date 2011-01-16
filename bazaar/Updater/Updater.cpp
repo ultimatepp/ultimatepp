@@ -107,6 +107,10 @@ Updater::Updater()
 	// creates system config path on superuser mode
 	if(state == InsideUpdater)
 		RealizePath(systemConfigPath);
+	
+	// sets default confirm for install and uninstall
+	confirmInstall = true;
+	confirmUninstall = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
