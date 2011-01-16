@@ -1,5 +1,7 @@
 #include "Updater.h"
 
+#include <SysExec/SysExec.h>
+
 #ifdef PLATFORM_POSIX
 
 // scans for theme folders on which put/delete the mimetype icons
