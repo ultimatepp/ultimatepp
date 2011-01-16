@@ -7,7 +7,6 @@
 #include "ide\Builders/init"
 #include "ide\Debuggers/init"
 #include "ide\Browser/init"
-#include "ide\QuickTabs/init"
 #include "CodeEditor/init"
 #include "CtrlLib/init"
 #include "Web/init"
@@ -17,4 +16,5 @@
 #include "plugin/astyle/init"
 #include "usvn/init"
 #include "TextDiffCtrl/init"
+#include "TabBar/init"
 #endif
