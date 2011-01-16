@@ -144,8 +144,10 @@ class Updater
 		// when app was first launched in normal mode
 		String exePath;
 
-		// user variables
+		// maximum allowable version on install/update
 		double maxVersion;
+		
+		// root ow web server repository
 		String webRoot;
 		
 		// install mode -- manual (true) or auto (false)
@@ -153,6 +155,34 @@ class Updater
 		
 		// uninstall mode -- manual (true) or auto (false)
 		bool confirmUninstall;
+		
+		// application details for installation
+		Image icon;
+		String cathegory;
+		Vector<String> extensions;
+		String comment;
+		
+		// scans for theme folders on which put/delete the mimetype icons
+		// that's needed because if themed icons aren't available, the system
+		// uses fallback ones instead of going through hicolor ones
+		// btw...that must be some ill-brained people there
+		// the routine builds a list of folders containing 32x32 icons
+		// it would be of course better with svg, but Upp don't support them
+		Vector<String>ScanTheme(void);
+		
+		// save an image as png inside multiple theme folders
+		// retrieved with ScanTheme
+		void InstallThemeIcons(Image const &img, String const &name);
+		
+		// deletes all icons with given name inside folders retrieved with ScanTheme
+		void RemoveThemeIcons(String const &name);
+
+		// links application to OS shell
+		// (i.e., add icon, menu entry, mimetype....)
+		bool ShellLink(void);
+		
+		// unlinks application
+		bool ShellUnlink(void);
 		
 	protected:
 
@@ -202,6 +232,22 @@ class Updater
 		// default set of prompts for installer result
 		// just an handy shortcut good for most cases
 		bool DefaultPrompts(void);
+		
+		// default icon
+		Image DefaultIcon(void);
+		
+		// setup application icon
+		Updater &SetIcon(Image const &i) { icon = i; return *this; }
+		
+		// setup application cathegory
+		Updater &SetCathegory(String const &cat) { cathegory = cat; return *this; }
+
+		// setup extensions associated with app
+		Updater &SetExtensions(Vector<String> const &ext) { extensions <<= ext; return *this; }
+		
+		// setup application comment
+		Updater &SetComment(String const &c) { comment = c; return *this; }
+
 };
 
 #endif

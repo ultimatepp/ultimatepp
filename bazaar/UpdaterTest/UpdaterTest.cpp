@@ -6,7 +6,11 @@ GUI_APP_MAIN
 	updater
 		.SetMaxVersion(1.60)
 		.SetWebRoot("www.timberstruct.com/webupdater/updatertest")
-		.UpdateManual();
+		.UpdateManual()
+		.SetCathegory("Office")
+		.SetComment("A sample test program")
+		.SetExtensions(Vector<String>() << "*.xxx" << "*.yyy")
+		.SetIcon(updater.DefaultIcon());
 	
 	// run updater -- DON'T change this !
 	if(!updater.Run())
