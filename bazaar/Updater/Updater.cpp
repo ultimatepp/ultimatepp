@@ -74,7 +74,7 @@ Updater::Updater()
 #ifdef PLATFORM_POSIX
 	userConfigPath = "/home/" + user + "./" + appName + "/";
 #else
-	userConfigPath = GetHomeDirectory() + "./" + appName + "/";
+	userConfigPath = GetAppDataFolder() + "/" + appName + "/";
 #endif
 
 	// gets app's system config path
