@@ -17,9 +17,12 @@ void Error(const char *e)
 String Syx(const char *s)
 {
 	Log(s);
-	String r = Sys(s);
-	if(r.IsVoid())
-		Error("Failed: " + String(s));
+	String r;
+	int q = Sys(s, r);
+	if(q)
+		Error(String().Cat() << "Failed: " << s << "\r\n" <<
+		      "Exit code: " << q << "\r\n" <<
+		      "Output: " << r);
 	return r;
 }
 
