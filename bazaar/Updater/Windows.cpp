@@ -117,12 +117,12 @@ bool Updater::ShellUnlink(void)
 	if(groupName != "")
 	{
 		groupFolder = AppendFileName(groupFolder, groupName);
-		if(PathExists(groupFolder))
+		if(DirectoryExists(groupFolder))
 			DeleteFolderDeep(groupFolder);
 	}
 	else
 	{
-		Strink linkPath = AppendFileName(groupFolder, linkName);
+		String linkPath = AppendFileName(groupFolder, linkName);
 		if(FileExists(linkPath))
 			FileDelete(linkPath);
 	}
@@ -130,7 +130,7 @@ bool Updater::ShellUnlink(void)
 	// remove desktop icon
 	String desktopLink = AppendFileName(GetShellFolder("Desktop", HKEY_USERS), linkName);
 	if(FileExists(desktopLink))
-		FileDelete(desktopLine);
+		FileDelete(desktopLink);
 
 	return success;
 }
