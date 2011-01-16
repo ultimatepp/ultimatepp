@@ -189,6 +189,8 @@ private:
 	FrameBottom<StaticRect>    scrollbox;
 	DisplayPopup               info;
 	const Order               *columnsortsecondary;
+	int                        min_visible_line, max_visible_line;
+	int                        ctrl_low, ctrl_high;
 
 	int   keypos;
 	int   cursor;
@@ -245,6 +247,7 @@ private:
 	void   RemoveCache(int i);
 
 	void   SetSb();
+	void   MinMaxLine();
 	void   HeaderLayout();
 	void   Scroll();
 	int    FindEnabled(int i, int dir);
@@ -259,6 +262,8 @@ private:
 	Rect   GetCellRectM(int i, int col) const;
 
 	Point           FindCellCtrl(Ctrl *c);
+	Ctrl           *SyncLineCtrls(int i, Ctrl *p = NULL);
+	void            SyncPageCtrls();
 	void            SyncCtrls();
 	bool            IsCtrl(int i, int j) const;
 	const CellCtrl& GetCellCtrl(int i, int j) const;

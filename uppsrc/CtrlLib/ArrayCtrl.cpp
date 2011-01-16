@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LTIMING(x)  // RTIMING(x)
+#define LTIMING(x) //  TIMING(x)
 
 ArrayCtrl::Column::Column() {
 	convert = NULL;
@@ -248,12 +248,12 @@ Ctrl& ArrayCtrl::SetCtrl(int i, int j, Ctrl *newctrl, bool owned, bool value)
 void  ArrayCtrl::SetCtrl(int i, int j, Ctrl& ctrl, bool value)
 {
 	SetCtrl(i, j, &ctrl, false, value);
-	SyncCtrls();
+	SyncLineCtrls(i);
 }
 
 Ctrl * ArrayCtrl::GetCtrl(int i, int col)
 {
-	SyncCtrls();
+	SyncLineCtrls(i);
 	if(IsCtrl(i, col))
 		return GetCellCtrl(i, col).ctrl;
 	return NULL;
@@ -266,6 +266,7 @@ bool  ArrayCtrl::IsCtrl(int i, int j) const
 
 ArrayCtrl::CellCtrl& ArrayCtrl::GetCellCtrl(int i, int j)
 {
+	LTIMING("GetCellCtrl");
 	return cellinfo[i][j].GetCtrl();
 }
 
@@ -457,7 +458,7 @@ void ArrayCtrl::AfterSet(int i)
 	SetSb();
 	Refresh();
 	SyncInfo();
-	SyncCtrls();
+	SyncLineCtrls(i);
 	InvalidateCache(cursor);
 }
 
@@ -547,6 +548,7 @@ void ArrayCtrl::SetVirtualCount(int c) {
 void ArrayCtrl::SetSb() {
 	sb.SetTotal(GetTotalCy() + IsInserting() * (GetLineCy() + horzgrid));
 	sb.SetPage(GetSize().cy);
+	MinMaxLine();
 }
 
 void ArrayCtrl::Layout() {
@@ -622,6 +624,7 @@ int  ArrayCtrl::GetLineCy(int i) const {
 }
 
 int  ArrayCtrl::GetLineAt(int y) const {
+	LTIMING("GetLineAt");
 	if(!GetCount()) return Null;
 	if(y < 0 || y >= GetTotalCy()) return Null;
 	int l = 0;
@@ -638,39 +641,86 @@ int  ArrayCtrl::GetLineAt(int y) const {
 	return l > 0 ? l - 1 : l;
 }
 
+Ctrl *ArrayCtrl::SyncLineCtrls(int i, Ctrl *p)
+{
+	Size sz = GetSize();
+	for(int ii = i - 1; ii >= 0 && !p; ii--)
+		for(int j = column.GetCount() - 1; j >= 0; j--) {
+			if(IsCtrl(ii, j)) {
+				p = &GetCellCtrl(ii, j);
+				break;
+			}
+			if(column[j].factory) {
+				for(int q = 0; q <= i; q++)
+					p = SyncLineCtrls(q, p);
+				return p;
+			}
+		}
+	    
+	for(int j = 0; j < column.GetCount(); j++) {
+		bool ct = IsCtrl(i, j);
+		if(!ct && column[j].factory) {
+			LTIMING("Create");
+			One<Ctrl> newctrl;
+			column[j].factory(i, newctrl);
+			newctrl->SetData(GetColumn(i, j));
+			newctrl->WhenAction << Proxy(WhenCtrlsAction);
+			if(newctrl->GetPos().x.GetAlign() == LEFT && newctrl->GetPos().x.GetB() == 0)
+				newctrl->HSizePos().VCenterPos(STDSIZE);
+			CellInfo& ci = cellinfo.At(i).At(j);
+			ci.Set(newctrl.Detach(), true, true);
+			ct = true;
+		}
+		if(ct) {
+			LTIMING("PlaceCtrls");
+			Ctrl& c = GetCellCtrl(i, j);
+			if(!c.HasFocusDeep() || c.GetParent() != this)
+				AddChild(&c, p);
+			p = &c;
+			Rect r;
+			if(i < min_visible_line || i > max_visible_line)
+				r.bottom = r.top = -1;
+			else
+				r = GetCellRectM(i, j);
+			if(r.bottom < 0 || r.top > sz.cy) {
+				if(c.GetRect().top != -100000)
+					c.SetRect(-1000, -100000, 1, 1);
+			}
+			else {
+				c.SetRect(r);
+				ctrl_low = min(ctrl_low, i);
+				ctrl_high = max(ctrl_high, i);
+			}
+		}
+	}
+	return p;
+}
+
+void  ArrayCtrl::SyncPageCtrls()
+{
+	LTIMING("SyncPageCtrls");
+	if(!hasctrls)
+		return;
+	Ctrl *p = NULL;
+	for(int i = max(ctrl_low, 0); i <= min(ctrl_high, GetCount() - 1); i++)
+		p = SyncLineCtrls(i, p);
+	ctrl_low = GetCount() - 1;
+	ctrl_high = 0;
+	p = NULL;
+	for(int i = min_visible_line; i <= min(max_visible_line, GetCount() - 1); i++)
+		p = SyncLineCtrls(i, p);	
+}
+
 void  ArrayCtrl::SyncCtrls()
 {
 	LTIMING("SyncCtrls");
 	if(!hasctrls)
 		return;
-	Size sz = GetSize();
+	ctrl_low = GetCount() - 1;
+	ctrl_high = 0;
 	Ctrl *p = NULL;
-	for(int i = 0; i < array.GetCount(); i++)
-		for(int j = 0; j < column.GetCount(); j++) {
-			bool ct = IsCtrl(i, j);
-			if(!ct && column[j].factory) {
-				One<Ctrl> newctrl;
-				column[j].factory(i, newctrl);
-				newctrl->SetData(GetColumn(i, j));
-				newctrl->WhenAction << Proxy(WhenCtrlsAction);
-				if(newctrl->GetPos().x.GetAlign() == LEFT && newctrl->GetPos().x.GetB() == 0)
-					newctrl->HSizePos().VCenterPos(STDSIZE);
-				CellInfo& ci = cellinfo.At(i).At(j);
-				ci.Set(newctrl.Detach(), true, true);
-				ct = true;
-			}
-			if(ct) {
-				Rect r = GetCellRectM(i, j);
-				Ctrl& c = GetCellCtrl(i, j);
-				if(!c.HasFocusDeep() || c.GetParent() != this)
-					AddChild(&c, p);
-				p = &c;
-				if(r.bottom < 0 || r.top > sz.cy)
-					c.SetRect(-1000, -1000, 1, 1);
-				else
-					c.SetRect(r);
-			}
-		}
+	for(int i = 0; i < GetCount(); i++)
+		p = SyncLineCtrls(i, p);
 }
 
 Point ArrayCtrl::FindCellCtrl(Ctrl *ctrl)
@@ -844,18 +894,26 @@ Image ArrayCtrl::GetDragSample()
 	return Crop(iw, 0, 0, sz.cx, sz.cy);
 }
 
+void ArrayCtrl::MinMaxLine()
+{
+	min_visible_line = Nvl(GetLineAt(sb), 0);
+	max_visible_line = Nvl(GetLineAt((int)sb + sb.GetPage()), GetCount());
+}
+
 void ArrayCtrl::Scroll() {
-	SyncCtrls();
+	MinMaxLine();
+	SyncPageCtrls();
 	PlaceEdits();
-	scroller.Scroll(*this, GetSize(), Point(header.GetScroll(), sb)); //TODO
+	scroller.Scroll(*this, GetSize(), Point(header.GetScroll(), sb));
 	info.Cancel();
 	WhenScroll();
 }
 
 void ArrayCtrl::HeaderLayout() {
+	MinMaxLine();
 	Refresh();
 	SyncInfo();
-	SyncCtrls();
+	SyncPageCtrls();
 	PlaceEdits();
 }
 
@@ -1001,6 +1059,7 @@ Rect ArrayCtrl::GetCellRect(int i, int col) const
 
 Rect ArrayCtrl::GetCellRectM(int i, int col) const
 {
+	LTIMING("GetCellRectM");
 	Rect r = GetCellRect(i, col);
 	int cm = column[col].margin;
 	if(cm < 0)
@@ -2410,6 +2469,9 @@ void ArrayCtrl::Reset() {
 	Clear();
 	sb.SetLine(linecy);
 	columnsortsecondary = NULL;
+	min_visible_line = 0;
+	max_visible_line = INT_MAX;
+	ctrl_low = ctrl_high = 0;
 }
 
 void ArrayCtrl::CancelMode()
