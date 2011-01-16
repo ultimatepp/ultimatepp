@@ -162,6 +162,10 @@ class Updater
 		Vector<String> extensions;
 		String comment;
 		
+		// flag for desktop icon install
+		bool desktopIcon;
+		
+#ifdef PLATFORM_POSIX
 		// scans for theme folders on which put/delete the mimetype icons
 		// that's needed because if themed icons aren't available, the system
 		// uses fallback ones instead of going through hicolor ones
@@ -176,6 +180,7 @@ class Updater
 		
 		// deletes all icons with given name inside folders retrieved with ScanTheme
 		void RemoveThemeIcons(String const &name);
+#endif
 
 		// links application to OS shell
 		// (i.e., add icon, menu entry, mimetype....)
@@ -247,6 +252,10 @@ class Updater
 		
 		// setup application comment
 		Updater &SetComment(String const &c) { comment = c; return *this; }
+		
+		// desktop icon
+		Updater &DesktopIcon(void) { desktopIcon = true; return *this; }
+		Updater &NoDesktopIcon(void) { desktopIcon = false; return *this; }
 
 };
 
