@@ -1903,7 +1903,10 @@ void TabBar::LeftDown(Point p, dword keyflags)
 			UpdateActionRefresh();
 		}
 		else
-			SetCursor(highlight);
+		if (SetCursor0(highlight)) {
+			CursorChanged();
+			UpdateAction();
+		}
 	}
 }
 
@@ -2224,10 +2227,8 @@ bool TabBar::SetCursor0(int n)
 
 void TabBar::SetCursor(int n)
 {
-	if (SetCursor0(n)) {
+	if (SetCursor0(n))
 		CursorChanged();
-		UpdateAction();
-	}
 }
 
 void TabBar::SetTabGroup(int n, const String &group)

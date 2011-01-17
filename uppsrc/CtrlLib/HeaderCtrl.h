@@ -158,7 +158,7 @@ public:
 	HeaderCtrl&   Fixed();
 	HeaderCtrl&   SetStyle(const Style& s)                { style = &s; Refresh(); return *this; }
 	HeaderCtrl&   Moving(bool b = true)                   { moving = b; return *this; }
-	HeaderCtrl&   AutoHideSb(bool b = true)               { sb.AutoHide(sb); return *this; }
+	HeaderCtrl&   AutoHideSb(bool b = true)               { autohidesb = b; SbTotal(); return *this; }
 	HeaderCtrl&   NoAutoHideSb()                          { return AutoHideSb(false); }
 	HeaderCtrl&   HideSb(bool b = true)                   { sb.Show(!b); return *this; }
 

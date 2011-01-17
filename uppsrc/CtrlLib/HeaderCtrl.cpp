@@ -157,10 +157,13 @@ void HeaderCtrl::SbTotal()
 		int cx = 0;
 		for(int i = 0; i < col.GetCount(); i++)
 			cx += (int)col[i].ratio;
+		sb.AutoHide(autohidesb);
 		sb.SetTotal(cx);
 	}
-	else
+	else {
+		sb.AutoHide();
 		sb.SetTotal(0);
+	}
 }
 
 HeaderCtrl& HeaderCtrl::Proportional() { mode = PROPORTIONAL; SbTotal(); return *this; }
@@ -834,6 +837,7 @@ HeaderCtrl::HeaderCtrl() {
 	Reset();
 	NoWantFocus();
 	sb.AutoHide();
+	autohidesb = true;
 	sb.WhenScroll = THISBACK(Scroll);
 	WhenScroll = THISBACK(WScroll);
 	sb.WhenVisibility = THISBACK(ScrollVisibility);
