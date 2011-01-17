@@ -2,6 +2,39 @@
 
 GUI_APP_MAIN
 {
+/*
+typedef struct _SHELLEXECUTEINFO {
+  DWORD     cbSize;
+  ULONG     fMask;
+  HWND      hwnd;
+  LPCTSTR   lpVerb;
+  LPCTSTR   lpFile;
+  LPCTSTR   lpParameters;
+  LPCTSTR   lpDirectory;
+  int       nShow;
+  HINSTANCE hInstApp;
+  LPVOID    lpIDList;
+  LPCTSTR   lpClass;
+  HKEY      hkeyClass;
+  DWORD     dwHotKey;
+  union {
+    HANDLE hIcon;
+    HANDLE hMonitor;
+  } DUMMYUNIONNAME;
+  HANDLE    hProcess;
+} SHELLEXECUTEINFO, *LPSHELLEXECUTEINFO;
+*/
+::ShellExecute(0,							// owner window
+               "runas",						// operation
+               "C:\\Windows\\Notepad.exe",	// file
+               0, // params					// 
+               0, // directory
+               SW_SHOWNORMAL);
+
+PromptOK("DONE");
+               return;
+
+
 	Updater updater;
 	updater
 		.SetMaxVersion(1.6)
