@@ -423,7 +423,11 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		}
 	}
 
-	editor.SetFrame(filetabs >= 0 ? tabs :ViewFrame());
+	if(filetabs >= 0)
+		editor.SetFrame(tabs);
+	else
+		editor.SetFrame(ViewFrame());
+//	editor.SetFrame(filetabs >= 0 ? tabs :ViewFrame()); // TRC 2011/01/08 - fails to compile under MSC71
 	tabs.SetAddFile(editfile);
 	editor.Enable();
 	editpane.Add(editorsplit);
