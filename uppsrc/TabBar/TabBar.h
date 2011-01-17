@@ -233,6 +233,7 @@ protected:
 
 private:
 	int highlight;
+	int drag_highlight;
 	int target;
 	int cross;
 	bool crosses;

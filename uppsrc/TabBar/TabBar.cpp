@@ -1132,7 +1132,7 @@ void TabBar::Paint(Draw &w)
 
 Image TabBar::GetDragSample()
 {
-	int h = highlight;
+	int h = drag_highlight;
 	if(stacking)
 		h = FindStackHead(tabs[h].stack);
 	return GetDragSample(h);
@@ -1448,6 +1448,7 @@ int TabBar::GetPrev(int n, bool drag) const
 void TabBar::Clear()
 {
 	highlight = -1;
+	drag_highlight = -1;
 	active = -1;
 	target = -1;
 	cross = -1;	
@@ -1870,16 +1871,19 @@ void TabBar::SetIcon(int n, Image icon)
 
 void TabBar::LeftDown(Point p, dword keyflags)
 {
+	SetCapture();
+	
 	if(keyflags & K_SHIFT)
 	{
 		highlight = -1;
 		Refresh();
-		SetCapture();
 		Fix(p);
 		oldp = p;
 		return;
 	}
 
+	drag_highlight = highlight;
+	
 	isctrl = keyflags & K_CTRL;
 	if(isctrl)
 		return;
@@ -2024,7 +2028,7 @@ void TabBar::SetHighlight(int n)
 
 void TabBar::MouseMove(Point p, dword keyflags)
 {
-	if(HasCapture())
+	if(HasCapture() && (keyflags & K_SHIFT))
 	{
 		Fix(p);
 		sc.AddPos(p.x - oldp.x, true);
@@ -2032,6 +2036,9 @@ void TabBar::MouseMove(Point p, dword keyflags)
 		Refresh();
 		return;
 	}
+	
+	if(HasCapture())
+		return;
 	
 	if(ProcessMouse(active, p))
 		return;
@@ -2066,7 +2073,7 @@ void TabBar::DragAndDrop(Point p, PasteClip& d)
 {
 	Fix(p);
 	int c = GetTargetTab(p);
-	int tab = isctrl ? highlight : active;
+	int tab = isctrl ? drag_highlight : active;
 
 	if (&GetInternal<TabBar>(d) != this || tabsort || c < 0 || !allowreorder) return;
 
@@ -2141,6 +2148,7 @@ void TabBar::LeftDrag(Point p, dword keyflags)
 	if(highlight < 0)
 		return;
 
+	Sync();
 	isdrag = true;
 	dragtab = GetDragSample();
 	DoDragAndDrop(InternalClip(*this, "tabs"));
