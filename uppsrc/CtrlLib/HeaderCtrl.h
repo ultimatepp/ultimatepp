@@ -87,6 +87,7 @@ protected:
 	int   light;
 	int   height;
 	const Style *style;
+	bool  autohidesb;
 
 	double Denominator() const;
 	void   Reduce(int q, double& delta, double rs, int szcx, bool checkmin);
@@ -157,6 +158,9 @@ public:
 	HeaderCtrl&   Fixed();
 	HeaderCtrl&   SetStyle(const Style& s)                { style = &s; Refresh(); return *this; }
 	HeaderCtrl&   Moving(bool b = true)                   { moving = b; return *this; }
+	HeaderCtrl&   AutoHideSb(bool b = true)               { sb.AutoHide(sb); return *this; }
+	HeaderCtrl&   NoAutoHideSb()                          { return AutoHideSb(false); }
+	HeaderCtrl&   HideSb(bool b = true)                   { sb.Show(!b); return *this; }
 
 	HeaderCtrl&   SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); return *this; }
 
