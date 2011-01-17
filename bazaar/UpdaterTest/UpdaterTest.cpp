@@ -24,14 +24,30 @@ typedef struct _SHELLEXECUTEINFO {
   HANDLE    hProcess;
 } SHELLEXECUTEINFO, *LPSHELLEXECUTEINFO;
 */
+/*
 ::ShellExecute(0,							// owner window
                "runas",						// operation
                "C:\\Windows\\Notepad.exe",	// file
                0, // params					// 
                0, // directory
                SW_SHOWNORMAL);
+*/
+SHELLEXECUTEINFO info =
+{
+	sizeof(SHELLEXECUTEINFO),
+	SEE_MASK_NOASYNC,// 0,//SEE_MASK_ASYNCOK,
+	0,
+	"runas",
+	"C:\\Windows\\Notepad.exe",
+	0, // parameters
+	0, // directory
+	SW_SHOW,
+	0, // hHinsApp -- result handle or error code
+	// REST AS DEFAULT -- NOT NEEDED
+};
 
-PromptOK("DONE");
+BOOL res = ShellExecuteEx(&info);
+PromptOK("DONE, result is" + String(res ? "TRUE" : "FALSE"));
                return;
 
 
