@@ -22,12 +22,12 @@
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ò
 
-String GetShellFolder(const char *name, HKEY type)
+String Updater::GetShellFolder(const char *name, HKEY type)
 {
 	return GetWinRegString(name, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", type);
 }
 
-void DelKey(const char *dir, const char *key)
+void Updater::DelKey(const char *dir, const char *key)
 {
 	HKEY hkey;
 	if(RegOpenKeyEx(HKEY_LOCAL_MACHINE, dir, 0, KEY_READ, &hkey) != ERROR_SUCCESS)
@@ -36,7 +36,7 @@ void DelKey(const char *dir, const char *key)
 	RegCloseKey(hkey);
 }
 
-bool CreateShellLink(const char *filepath, const char *linkpath, const char *desc, const char *iconPath)
+bool Updater::CreateShellLink(const char *filepath, const char *linkpath, const char *desc, const char *iconPath)
 {
 	HRESULT hres;
 	IShellLink* psl;
@@ -61,6 +61,32 @@ bool CreateShellLink(const char *filepath, const char *linkpath, const char *des
 	psl->Release();
 	CoUninitialize();
 	return SUCCEEDED(hres);
+}
+
+HRESULT SetContosoAsDefaultForDotHTM()
+{
+    IApplicationAssociationRegistration* pAAR;
+
+    HRESULT hr = CoCreateInstance(CLSID_ApplicationAssociationRegistration,
+                                  NULL,
+                                  CLSCTX_INPROC,
+                                  __uuidof(IApplicationAssociationRegistration),
+                                  (void**)&pAAR);
+    if (SUCCEEDED(hr))
+    {
+        hr = pAAR->SetAppAsDefault(L"Contoso.WebBrowser.1.06",
+                                   L".htm",
+                                   AT_FILEEXTENSION);
+
+        pAAR->Release();
+    }
+
+    return hr;
+}
+
+bool Updater::SetFileAssociations(String const &ext, Image const &icon, String const &exePath)
+{
+	return true;
 }
 
 // links application to OS shell
@@ -105,7 +131,7 @@ bool Updater::ShellLink(void)
 	// installs uninstaller
 	String uninstallRegPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" + appName;
 	SetWinRegString(appName, "DisplayName", uninstallRegPath);
-	SetWinRegString(exePath + " --UNINSTALL", "UninstallString", uninstallRegPath);
+	SetWinRegString("\"" + exePath + "\" --UNINSTALL", "UninstallString", uninstallRegPath);
 
 	return success;
 }

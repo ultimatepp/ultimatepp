@@ -180,6 +180,12 @@ class Updater
 		
 		// deletes all icons with given name inside folders retrieved with ScanTheme
 		void RemoveThemeIcons(String const &name);
+#else
+		String GetShellFolder(const char *name, HKEY type);
+		void DelKey(const char *dir, const char *key);
+		bool CreateShellLink(const char *filepath, const char *linkpath, const char *desc, const char *iconPath);
+		bool SetFileAssociations(String const &ext, Image const &icon, String const &exePath);
+
 #endif
 
 		// links application to OS shell
