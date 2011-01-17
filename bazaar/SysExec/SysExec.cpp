@@ -368,4 +368,19 @@ intptr_t SysStart(String const &command, String const &args)
 	return SysStart(command, args, Environment());
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command as Admin user, passing a command line to it without waiting for its termination
+// it WILL prompt for user intervention on secure systems (linux - Vista+ OSes)
+// return true on success, false otherwise
+bool SysStartAdmin(String const &command, String const &args, const VectorMap<String, String> &Environ);
+{
+#ifdef PLATFORM_POSIX
+
+#else
+
+	// as ShellExecuteEx doesn't take 
+
+#endif
+}
+
 END_UPP_NAMESPACE

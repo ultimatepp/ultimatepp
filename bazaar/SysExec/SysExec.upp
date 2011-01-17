@@ -1,4 +1,4 @@
-description "BAZAAR : Execution of external commands gathering output - Author : Massimo Del Fedele - EMail : max@veneto.com";
+description "BAZAAR : Execution of external commands gathering output - Author : Massimo Del Fedele - EMail : max@veneto.com\377";
 
 uses
 	Core;
