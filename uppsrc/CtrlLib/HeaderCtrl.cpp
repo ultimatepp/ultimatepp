@@ -122,6 +122,7 @@ void HeaderCtrl::SetTabRatio(int i, double ratio)
 {
 	col[i].ratio = ratio;
 	oszcx = -1;
+	SbTotal();
 	Refresh();
 	WhenLayout();
 }
