@@ -602,7 +602,10 @@ public:
 	ArrayCtrl& NoMouseMoveCursor()                     { return MouseMoveCursor(false); }
 	ArrayCtrl& AutoHideSb(bool b = true)               { sb.AutoHide(b); return *this; }
 	ArrayCtrl& NoAutoHideSb()                          { return AutoHideSb(false); }
-	ArrayCtrl& HideSb(bool b = true)                   { sb.Show(!b); return *this; }
+	ArrayCtrl& AutoHideHorzSb(bool b = true)           { header.AutoHideSb(b); return *this; }
+	ArrayCtrl& NoAutoHideHorzSb()                      { return AutoHideHorzSb(false); }
+	ArrayCtrl& HideSb(bool b = true)                   { sb.Show(!b); header.HideSb(b); return *this; }
+	
 	ArrayCtrl& MultiSelect(bool b = true)              { multiselect = b; return *this; }
 	bool       IsMultiSelect() const                   { return multiselect; }
 	ArrayCtrl& NoBackground(bool b = true)             { nobg = b; Transparent(); Refresh(); return *this; }
