@@ -2,6 +2,7 @@
 
 #ifdef PLATFORM_WIN32
 
+#include <plugin/bmp/bmp.h>
 
 #define Ptr Ptr_
 #define byte byte_
@@ -35,7 +36,7 @@ void DelKey(const char *dir, const char *key)
 	RegCloseKey(hkey);
 }
 
-bool CreateShellLink(const char *filepath, const char *linkpath, const char *desc, int icon)
+bool CreateShellLink(const char *filepath, const char *linkpath, const char *desc, const char *iconPath)
 {
 	HRESULT hres;
 	IShellLink* psl;
@@ -46,8 +47,8 @@ bool CreateShellLink(const char *filepath, const char *linkpath, const char *des
 	{
 		psl->SetPath(filepath);
 		psl->SetDescription(desc);
-		if(icon >= 0)
-			psl->SetIconLocation(filepath, icon);
+		if(iconPath)
+			psl->SetIconLocation(iconPath, 0);
 		hres = psl->QueryInterface(IID_IPersistFile, (PVOID *) &ppf);
 		if (SUCCEEDED(hres))
 		{
@@ -69,13 +70,23 @@ bool Updater::ShellLink(void)
 	bool success = true;
 	
 	String exePath = GetProgramsFolder() + "/" + appName + "/" + appName + ".exe";
+	String iconPath = GetProgramsFolder() + "/" + appName + "/" + appName + ".ico";
 	String linkName = appName + ".lnk";
+
+	// creates the needed icon in executable folder
+	if(!IsNull(icon))
+	{
+		Vector<Image>img;
+		img << icon;
+		String imgs = WriteIcon(img);
+		SaveFile(iconPath, imgs);
+	}
 
 	// installs desktop icon
 	if(desktopIcon)
 	{
-		String desktopPath = GetShellFolder("Desktop", HKEY_USERS);
-		CreateShellLink(exePath, AppendFileName(desktopPath, linkName), comment, -1);
+		String desktopPath = GetShellFolder("Desktop", HKEY_CURRENT_USER);
+		CreateShellLink(exePath, AppendFileName(desktopPath, linkName), comment, iconPath);
 	}
 
 	// installs program group
@@ -89,12 +100,12 @@ bool Updater::ShellLink(void)
 		groupFolder = AppendFileName(groupFolder, groupName);
 		CreateDirectory(groupFolder, NULL);
 	}
-	CreateShellLink(exePath, AppendFileName(groupFolder, linkName), comment, -1);
+	CreateShellLink(exePath, AppendFileName(groupFolder, linkName), comment, iconPath);
 
 	// installs uninstaller
 	String uninstallRegPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" + appName;
 	SetWinRegString(appName, "DisplayName", uninstallRegPath);
-	SetWinRegString(appName + " --UNINSTALL", "UninstallString", uninstallRegPath);
+	SetWinRegString(exePath + " --UNINSTALL", "UninstallString", uninstallRegPath);
 
 	return success;
 }
@@ -105,6 +116,7 @@ bool Updater::ShellUnlink(void)
 	bool success = true;
 	
 	String linkName = appName + ".lnk";
+	String iconPath = GetProgramsFolder() + "/" + appName + "/" + appName + ".ico";
 
 	// remove uninstaller
 	DelKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" + appName, "DisplayName");
@@ -128,9 +140,14 @@ bool Updater::ShellUnlink(void)
 	}
 	
 	// remove desktop icon
-	String desktopLink = AppendFileName(GetShellFolder("Desktop", HKEY_USERS), linkName);
+	String desktopLink = AppendFileName(GetShellFolder("Desktop", HKEY_CURRENT_USER), linkName);
+	PromptOK(DeQtf(desktopLink));
 	if(FileExists(desktopLink))
 		FileDelete(desktopLink);
+
+	// deletes the icon
+	if(FileExists(iconPath))
+		FileDelete(iconPath);
 
 	return success;
 }
