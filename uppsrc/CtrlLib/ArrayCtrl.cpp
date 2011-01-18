@@ -643,6 +643,8 @@ int  ArrayCtrl::GetLineAt(int y) const {
 
 Ctrl *ArrayCtrl::SyncLineCtrls(int i, Ctrl *p)
 {
+	if(!hasctrls)
+		return NULL;
 	Size sz = GetSize();
 	for(int ii = i - 1; ii >= 0 && !p; ii--)
 		for(int j = column.GetCount() - 1; j >= 0; j--) {
