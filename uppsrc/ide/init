@@ -17,4 +17,5 @@
 #include "usvn/init"
 #include "TextDiffCtrl/init"
 #include "TabBar/init"
+#include "Docedit/init"
 #endif
