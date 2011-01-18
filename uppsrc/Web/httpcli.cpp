@@ -73,47 +73,6 @@ HttpClient& HttpClient::Proxy(const char *p)
 	return *this;
 }
 
-String HttpClient::ExecuteRedirect(int max_redirect, int retries, Gate2<int, int> progress)
-{
-	int nredir = 0;
-	for(;;) {
-		if(progress(0, 0)) {
-			aborted = true;
-			return String::GetVoid();
-		}
-		String data = Execute(progress);
-		if(status_code == 401 && !IsNull(username) && !IsNull(authenticate)) {
-			if(++nredir > max_redirect) {
-				error = NFormat("Maximum number of digest authentication attempts exceeded: %d", max_redirect);
-				return String::GetVoid();
-			}
-			Digest(CalculateDigest(authenticate));
-			continue;
-		}
-		if(status_code >= 400 && status_code < 500) {
-			error = status_line;
-			return String::GetVoid();
-		}
-		int r = 0;
-		while(data.IsVoid()) {
-			if(progress(0, 0)) {
-				aborted = true;
-				return String::GetVoid();
-			}
-			if(++r >= retries)
-				return String::GetVoid();
-			data = Execute(progress);
-		}
-		if(!IsRedirect())
-			return data;
-		if(++nredir > max_redirect) {
-			error = NFormat("Maximum number of redirections exceeded: %d", max_redirect);
-			return String::GetVoid();
-		}
-		URL(GetRedirectURL());
-	}
-}
-
 String HttpClient::ReadUntilProgress(char until, int start_time, int end_time, Gate2<int, int> progress)
 {
 	String out;
@@ -258,10 +217,12 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		int time = msecs();
 		if(time >= end_time) {
 			error = NFormat(t_("%s:%d: connecting to host timed out"), socket_host, socket_port);
+			Close();
 			return String::GetVoid();
 		}
 		if(progress(time - start_time, end_time - start_time)) {
 			aborted = true;
+			Close();
 			return String::GetVoid();
 		}
 	}
@@ -316,26 +277,31 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		int nwrite = socket.WriteWait(request.GetIter(written), min(request.GetLength() - written, 1000), 1000);
 		if(socket.IsError()) {
 			error = Socket::GetErrorText();
+			Close();
 			return String::GetVoid();
 		}
 		if((written += nwrite) >= request.GetLength())
 			break;
 		if(progress(written, request.GetLength())) {
 			aborted = true;
+			Close();
 			return String::GetVoid();
 		}
 	}
 	if(written < request.GetLength()) {
 		error = NFormat(t_("%s:%d: timed out sending request to server"), host, port);
+		Close();
 		return String::GetVoid();
 	}
 	status_line = ReadUntilProgress('\n', start_time, end_time, progress);
 	if(socket.IsError()) {
 		error = Socket::GetErrorText();
+		Close();
 		return String::GetVoid();
 	}
 	if(status_line.GetLength() < 5 || MemICmp(status_line, "HTTP/", 5)) {
 		error = NFormat(t_("%s:%d: invalid server response: %s"), host, port, status_line);
+		Close();
 		return String::GetVoid();
 	}
 
@@ -355,6 +321,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		LLOG("< " << line);
 		if(socket.IsError()) {
 			error = Socket::GetErrorText();
+			Close();
 			return String::GetVoid();
 		}
 
@@ -382,6 +349,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 				content_length = stou(p);
 				if(content_length > max_content_size) {
 					error = NFormat(t_("%s:%d: maximum data length exceeded (%d B)"), host, port, max_content_size);
+					Close();
 					return String::GetVoid();
 				}
 			}
@@ -416,18 +384,22 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		}
 		if(server_headers.GetLength() + (e - b) + 2 > max_header_size) {
 			error = NFormat(t_("%s:%d: maximum header length exceeded (%d B)"), host, port, max_header_size);
+			Close();
 			return String::GetVoid();
 		}
 		server_headers.Cat(b, int(e - b));
 		server_headers.Cat("\r\n");
 	}
-	if(method == METHOD_HEAD)
+	if(method == METHOD_HEAD) {
+		Close();
 		return String::GetVoid();
+	}
 	String chunked;
 	String body;
 	while(body.GetLength() < content_length || content_length < 0 || tc_chunked) {
 		if(msecs(end_time) >= 0) {
 			error = NFormat(t_("%s:%d: timed out when receiving server response"), host, port);
+			Close();
 			return String::GetVoid();
 		}
 		String part = socket.Read(1000);
@@ -531,13 +503,54 @@ EXIT:
 	return body;
 }
 
+String HttpClient::ExecuteRedirect(int max_redirect, int retries, Gate2<int, int> progress)
+{
+	int nredir = 0;
+	for(;;) {
+		if(progress(0, 0)) {
+			aborted = true;
+			return String::GetVoid();
+		}
+		String data = Execute(progress);
+		if(status_code == 401 && !IsNull(username) && !IsNull(authenticate)) {
+			if(++nredir > max_redirect) {
+				error = NFormat("Maximum number of digest authentication attempts exceeded: %d", max_redirect);
+				return String::GetVoid();
+			}
+			Digest(CalculateDigest(authenticate));
+			continue;
+		}
+		if(status_code >= 400 && status_code < 500) {
+			error = status_line;
+			return String::GetVoid();
+		}
+		int r = 0;
+		while(data.IsVoid()) {
+			if(progress(0, 0)) {
+				aborted = true;
+				return String::GetVoid();
+			}
+			if(++r >= retries)
+				return String::GetVoid();
+			data = Execute(progress);
+		}
+		if(!IsRedirect())
+			return data;
+		if(++nredir > max_redirect) {
+			error = NFormat("Maximum number of redirections exceeded: %d", max_redirect);
+			return String::GetVoid();
+		}
+		URL(GetRedirectURL());
+	}
+}
+
 bool HttpClient::CreateClientSocket()
 {
 	if(!ClientSocket(socket, socket_host, socket_port, true, NULL, 0, false)) {
 		error = Socket::GetErrorText();
 		return false;
 	}
-	socket.Linger(0);
+//	socket.Linger(0); // Mirek 1/2011 - does not seem to be necessary for client
 	return true;
 }
 
