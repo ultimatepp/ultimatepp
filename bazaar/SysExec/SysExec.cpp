@@ -373,11 +373,23 @@ intptr_t SysStart(String const &command, String const &args)
 // executes an external command as Admin user, passing a command line to it without waiting for its termination
 // it WILL prompt for user intervention on secure systems (linux - Vista+ OSes)
 // return true on success, false otherwise
-bool SysStartAdmin(String const &command, String const &args, const VectorMap<String, String> &Environ)
+bool SysStartAdmin(String password, String const &command, String const &args, const VectorMap<String, String> &Environ)
 {
+	bool res;
+
 #ifdef PLATFORM_POSIX
 
 	// we use sudo to start an admin process
+	// we can't simply use gksu, because process don't return, so we can't
+	// know if user aborted or typed the wrong password. So we use sudo
+	//
+
+	// note the -k to gksu -- it makes it preserve the environment
+/*
+	String params = "-k -u root \"" + tempName + "\"";
+	if(SysStart("gksu", params, environ) == -1)
+		return true;
+*/
 
 #else
 
@@ -420,7 +432,7 @@ bool SysStartAdmin(String const &command, String const &args, const VectorMap<St
 		HANDLE    hProcess;
 	*/
 	};
-	BOOL res = ShellExecuteEx(&info);
+	res = ShellExecuteEx(&info);
 	
 	// restore the environment
 	for(int i = 0; i < prevEnv.GetCount(); i++)
@@ -433,9 +445,9 @@ bool SysStartAdmin(String const &command, String const &args, const VectorMap<St
 	return res;
 }
 
-bool SysStartAdmin(String const &command, String const &args)
+bool SysStartAdmin(String password, String const &command, String const &args)
 {
-	return SysStartAdmin(command, args, Environment());
+	return SysStartAdmin(password, command, args, Environment());
 	
 }
 

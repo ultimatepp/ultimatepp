@@ -23,8 +23,8 @@ intptr_t SysStart(String const &command, String const &args);
 // executes an external command as Admin user, passing a command line to it without waiting for its termination
 // it WILL prompt for user intervention on secure systems (linux - Vista+ OSes)
 // return true on success, false otherwise
-bool SysStartAdmin(String const &command, String const &args, const VectorMap<String, String> &Environ);
-bool SysStartAdmin(String const &command, String const &args);
+bool SysStartAdmin(String Password, String const &command, String const &args, const VectorMap<String, String> &Environ);
+bool SysStartAdmin(String Password, String const &command, String const &args);
 
 END_UPP_NAMESPACE
 
