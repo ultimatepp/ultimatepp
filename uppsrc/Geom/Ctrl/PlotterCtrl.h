@@ -31,6 +31,8 @@ public:
 //	void                    AsyncPaint();
 	bool                    IsPainting() const               { return is_painting; }
 
+	virtual void            LostFocus()                      { ResetPush(); }
+
 	ImageDraw&              BeginBufferPaint();
 	virtual void            EndBufferPaint();
 
@@ -172,6 +174,8 @@ public:
 	Pointf                  GetMousePos() const              { return mouse_pos; }
 
 	void                    DoSetFocus()                     { SetWantFocus(); }
+	
+	void                    ResetPush()                      { reset_push = true; }
 
 	TOOL(View)
 		TOOL(ViewZoomInX)
@@ -231,6 +235,7 @@ private:
 	Button                  horz_in, horz_out, horz_full;
 	Button                  vert_in, vert_out, vert_full;
 	Button                  full;
+	bool                    reset_push;
 	bool                    show_scroll;
 	bool                    lock_drag_drop;
 	bool                    lock_short_drag_drop;
