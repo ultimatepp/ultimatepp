@@ -806,7 +806,11 @@ static String& SockErrorText()
 #ifdef PLATFORM_WIN32
 	int tid = GetCurrentThreadId();
 #else
-	int tid = (int)Thread::GetCurrentId();
+	#ifdef _MULTITHREADED
+		int tid = (int)Thread::GetCurrentId();
+	#else
+		int tid = 0;
+	#endif
 #endif
 	int f = thread_index.Find(tid);
 	if(f < 0) {
