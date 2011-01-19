@@ -58,6 +58,7 @@ PlotterCtrl::PlotterCtrl()
 , is_painting(false)
 , background(White())
 , drag_mode(DRAG_NONE)
+, reset_push(false)
 {
 	hscroll  .NoAutoHide().NoAutoDisable();
 	vscroll  .NoAutoHide().NoAutoDisable();
@@ -710,11 +711,12 @@ void PlotterCtrl::SyncPush()
 bool PlotterCtrl::Push(Point pt, dword keyflags)
 {
 	bool push = false;
+	reset_push = false;
 	SyncPush();
 	drag_start = FromPushClient(pt);
 	if(drag_drop && drag_drop->Push(drag_start, keyflags))
 		drag_mode = DRAG_CUSTOM;
-	else if(keyflags & K_MOUSELEFT) {
+	else if(!reset_push && keyflags & K_MOUSELEFT) {
 		if(keyflags & K_SHIFT)
 			drag_mode = DRAG_ZOOM_IN;
 		else if(keyflags & K_CTRL)
