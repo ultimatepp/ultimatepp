@@ -433,9 +433,6 @@ topic "TheIDE screenshots";
 ãê¹‡Ÿûƒ¯£žÿü»ç¯òˆ‚ ˆ‚Úü‰ÿÿ¶…í
 &]
 [s0; &]
-[s0; [^HTMLTEXT `<object style`=`"height`: 344px`; width`: 425px`"`>`<param name`=`"movie`" value`=`"http`:`/`/www`.youtube`.com`/v`/V7CbPKn`-R4g`"`>`<param name`=`"allowFullScreen`" value`=`"true`"`>`<param name`=`"allowScriptAccess`" value`=`"always`"`>`<embed src`=`"http`:`/`/www`.youtube`.com`/v`/V7CbPKn`-R4g`" type`=`"application`/x`-shockwave`-flash`" allowfullscreen`=`"true`" allowScriptAccess`=`"always`" width`=`"425`" height`=`"344`"`>`<`/object`>^ .
-.]&]
-[s0; &]
 [s0; 
 @@image:1857&1484
 ‚ƒç‚Ò‚€€€€€€€€€ø—œì½‰˜œÕ§¡·ßÙô¾ú©ÜËß¿ÙŒ®¨ˆˆÞÙÔ„„‚²£ä‹Ö°¨û¦‹ï ˆ òñÁí¶Þ½â§¨÷“
