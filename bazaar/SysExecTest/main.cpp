@@ -6,7 +6,7 @@ void SysExecTest::btnCb(int n)
 #ifdef PLATFORM_POSIX
 	String term = "gedit";
 #else
-	String term = "cmd.exe";
+	String term = "notepad.exe";
 #endif
 	bool res;
 	
