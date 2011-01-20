@@ -1,0 +1,14 @@
+description "Testbed for SysExec package\377";
+
+uses
+	CtrlLib,
+	SysExec;
+
+file
+	SysExecTest.lay,
+	SysExecTest.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
