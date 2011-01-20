@@ -1,10 +1,14 @@
 #include "SysExec.h"
+#include "ArgEnv.h"
 
 #ifdef PLATFORM_POSIX
 #include <unistd.h>
 #include <sys/wait.h>
 
 #define DEFAULT_PATH 	"/bin:/usr/bin:."
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// this one is let here just for reference -- superseded by linux builtin call
 #if 0
 static int execvpe(const char *file, char * const *argv, char * const *envp)
 {
@@ -62,119 +66,15 @@ static int execvpe(const char *file, char * const *argv, char * const *envp)
 	return -1;
 }
 #endif
+
+#include "SudoLib.h"
+
 #else
 #include <process.h>
 #include <Shellapi.h>
 #endif
 
 NAMESPACE_UPP
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-// parses an args line to be useable by spawnxx functions
-static Buffer<char *>_BuildArgs(String const &argline)
-{
-	Array<String> args;
-	int pos = 0;
-	char c;
-	int buflen = 0;
-	
-	// first arg should be command name... let's make it null
-	// it MUST be set, as argv[0] has a special meaning
-	args.Add("dummy");
-
-	// skips leading spaces
-	while ((c = argline[pos]) != 0 && isspace(c))
-		pos++;
-
-	// loop reading args and putting to array
-	while (c)
-	{
-		String &s = args.Add();
-		buflen++;
-		while (c && !isspace(c))
-		{
-			// reads enquoted strings
-			if (c == '"')
-			{
-				c = argline[++pos];
-				while (c && c != '"')
-				{
-					s << c;
-					buflen++;
-					c = argline[++pos];
-				}
-				if (c)
-					c = argline[++pos];
-			}
-			else
-			{
-				s << c;
-				buflen++;
-				c = argline[++pos];
-			}
-		}
-
-		// skips trailing spaces
-		while (c && isspace(c))
-			c = argline[++pos];
-	}
-	buflen += (args.GetCount() + 1) * sizeof(char *);
-
-	// here we've got an array of args and the total size (in bytes) of them
-	// we allocates a  buffer for arg array
-	Buffer<char *>buf(buflen);
-
-	// we fill the buffer with arg strings
-	char **bufindex = buf;
-	char *bufpos = (char *)(buf + args.GetCount() + 1);
-	int i = 0;
-	while (i < args.GetCount())
-	{
-		String &s = args[i];
-		strcpy(bufpos, (const char *)s);
-		*bufindex++ = bufpos;
-		bufpos += s.GetCount() + 1 ;
-		i++;
-	}
-	*bufindex = 0;
-
-	// returns array of args
-	return buf;
-
-} // END _BuildArgs()
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-// parses environment map and builds env array
-static Buffer<char *>_BuildEnv(const VectorMap<String, String> &env = Environment())
-{
-	// calculates total environment size
-	int envSize = 0;
-	for (int i = 0; i < env.GetCount(); i++)
-		envSize += env.GetKey(i).GetCount() + env[i].GetCount() + 2 + sizeof(char *);
-
-	// we allocates a  buffer for env array
-	Buffer<char *>buf(envSize);
-
-	// we fill the buffer with env strings
-	char **bufindex = buf;
-	char *bufpos = (char *)(buf + env.GetCount() + 1);
-	int i = 0;
-	while (i < env.GetCount())
-	{
-		const String &s = env.GetKey(i) + "=" + env[i];
-		strcpy(bufpos, (const char *)s);
-		*bufindex++ = bufpos;
-		bufpos += s.GetCount() + 1 ;
-		i++;
-	}
-	*bufindex = 0;
-
-	// returns array of args
-	return buf;
-
-} // END _BuildEnv()
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes an external command, passing a command line to it and gathering the output
@@ -200,8 +100,8 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	dup2(ErrFile, 2);
 
 	// builds the arguments and the environment
-	Buffer<char *>argv = _BuildArgs(args);
-	Buffer<char *>envv = _BuildEnv(Environ);
+	Buffer<char *>argv = BuildArgs(GetFileName(command), args);
+	Buffer<char *>envv = BuildEnv(Environ);
 	
 	// executes the command
 	int result = 0;
@@ -254,7 +154,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	{
 		char *buf = (char *)malloc(OutSize + 1);
 		lseek(OutFile, 0L, SEEK_SET);
-		read(OutFile, buf, OutSize);
+		int dummy = read(OutFile, buf, OutSize);
 		buf[OutSize] = 0;
 		OutStr.Cat(buf);
 		free(buf);
@@ -266,7 +166,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	{
 		char *buf = (char *)malloc(ErrSize + 1);
 		lseek(ErrFile, 0L, SEEK_SET);
-		read(ErrFile, buf, ErrSize);
+		int dummy = read(ErrFile, buf, ErrSize);
 		buf[ErrSize] = 0;
 		ErrStr.Cat(buf);
 		free(buf);
@@ -311,12 +211,12 @@ bool SysExec(String const &command, String const &args)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes an external command, passing a command line to it without waiting for its termination
-// returns spawned process id (pid) on success, -1 on error
-intptr_t SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ)
+// optionally returns pid of started process
+bool SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ, intptr_t *pid)
 {
 	// builds the arguments and the environment
-	Buffer<char *>argv = _BuildArgs(args);
-	Buffer<char *>envv = _BuildEnv(Environ);
+	Buffer<char *>argv = BuildArgs(GetFileName(command), args);
+	Buffer<char *>envv = BuildEnv(Environ);
 	
 	// executes the command
 	int result = 0;
@@ -357,98 +257,105 @@ intptr_t SysStart(String const &command, String const &args, const VectorMap<Str
 	result = _spawnvpe(_P_NOWAIT, command, argv, envv);
 #endif
 
+	if(pid)
+		*pid = result;
+
 	if (result == -1)
 		Cerr() << "Error spawning process\n";
 
-	return (result);
+	return (result != -1 ? true : false);
 
 }
 
-intptr_t SysStart(String const &command, String const &args)
+bool SysStart(String const &command, String const &args, intptr_t *pid)
 {
-	return SysStart(command, args, Environment());
+	return SysStart(command, args, Environment(), pid);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes an external command as Admin user, passing a command line to it without waiting for its termination
 // it WILL prompt for user intervention on secure systems (linux - Vista+ OSes)
 // return true on success, false otherwise
-bool SysStartAdmin(String password, String const &command, String const &args, const VectorMap<String, String> &Environ)
+bool SysStartAdmin(String const &password, String const &command, String const &args, const VectorMap<String, String> &Environ)
 {
-	bool res;
-
 #ifdef PLATFORM_POSIX
-
-	// we use sudo to start an admin process
-	// we can't simply use gksu, because process don't return, so we can't
-	// know if user aborted or typed the wrong password. So we use sudo
-	//
-
-	// note the -k to gksu -- it makes it preserve the environment
-/*
-	String params = "-k -u root \"" + tempName + "\"";
-	if(SysStart("gksu", params, environ) == -1)
-		return true;
-*/
-
+	// on linux, we must provide the password
+	return SudoExec("root", password, command + " " + args, Environ, false);
 #else
-
-	// we use ShellExecuteEx to start an Admin process
-
-	// as ShellExecuteEx doesn't take an environment argument, but inherits
-	// calling process one, we have to modify directly the environment before calling
-
-	// copy original environment, for that we can use upp :-)
-	// don't know if Environment() funcitons returns a cached one, so
-	// to be sure we copy it
-	VectorMap<String, String> prevEnv(Environment(), 1);
-	
-	// wipe original environment with windows api
-	for(int i = 0; i < prevEnv.GetCount(); i++)
-		SetEnvironmentVariable(prevEnv.GetKey(i), NULL);
-	
-	// insert new environment variables
-	for(int i = 0; i < Environ.GetCount(); i++)
-		SetEnvironmentVariable(Environ.GetKey(i), Environ[i]);
-	
-	// now we can use ShellExecute to raise process level
-	SHELLEXECUTEINFO info =
-	{
-		sizeof(SHELLEXECUTEINFO),		// cbsize
-		SEE_MASK_NOASYNC,				// fMask
-		0,								// hwnd
-		"runas",						// lpVerb
-		"C:\\Windows\\Notepad.exe",		// lpFile
-		0,								// lpParameters
-		0,								// lpDirectory
-		SW_SHOW,						// nShow
-		0,								// hHinstApp -- result handle or error code
-	/* REST AS DEFAULT -- NOT NEEDED
-		LPVOID    lpIDList;
-		LPCTSTR   lpClass;
-		HKEY      hkeyClass;
-		DWORD     dwHotKey;
-		union {	HANDLE hIcon; HANDLE hMonitor; } DUMMYUNIONNAME;
-		HANDLE    hProcess;
-	*/
-	};
-	res = ShellExecuteEx(&info);
-	
-	// restore the environment
-	for(int i = 0; i < prevEnv.GetCount(); i++)
-		SetEnvironmentVariable(Environ.GetKey(i), NULL);
-	for(int i = 0; i < Environ.GetCount(); i++)
-		SetEnvironmentVariable(prevEnv.GetKey(i), prevEnv[i]);
-
+	// on windows, no pass should be needed, it'll display the dialog automatically
+	return ShellExec(command + " " + args, Environ, false);
 #endif
-
-	return res;
 }
 
-bool SysStartAdmin(String password, String const &command, String const &args)
+bool SysStartAdmin(String const &password, String const &command, String const &args)
 {
 	return SysStartAdmin(password, command, args, Environment());
 	
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command as Admin user, passing a command line to it waiting for its termination
+// it WILL prompt for user intervention on secure systems (linux - Vista+ OSes)
+// return true on success, false otherwise
+bool SysExecAdmin(String const &password, String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+#ifdef PLATFORM_POSIX
+	// on linux, we must provide the password
+	return SudoExec("root", password, command + " " + args, Environ, true);
+#else
+	// on windows, no pass should be needed, it'll display the dialog automatically
+	return ShellExec(command + " " + args, Environ, true);
+#endif
+}
+
+bool SysExecAdmin(String const &password, String const &command, String const &args)
+{
+	return SysExecAdmin(password, command, args, Environment());
+	
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command as required user, passing a command line to it without waiting for its termination
+// on linux, will return an error if password is required AND wrong
+// on windows, by now... it just spawn the process without changing security level
+// I still shall find a way to go back to user mode on windows
+// return true on success, false otherwise
+bool SysStartUser(String const &user, String const &password, String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+#ifdef PLATFORM_POSIX
+	// on linux, we must provide the password
+	return SudoExec(user, password, command + " " + args, Environ, false);
+#else
+	// on windows, don't know a way for re-lowering app level to user one, so I simply spawn a new process
+	return SysStart(command, args, Environ, NULL);
+#endif
+}
+
+bool SysStartUser(String const &user, String const &password, String const &command, String const &args)
+{
+	return SysStartUser(user, password, command, args, Environment());
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command as required user, passing a command line to it waiting for its termination
+// on linux, will return an error if password is required AND wrong
+// on windows, by now... it just spawn the process without changing security level
+// I still shall find a way to go back to user mode on windows
+// return true on success, false otherwise
+bool SysExecUser(String const &user, String const &password, String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+#ifdef PLATFORM_POSIX
+	// on linux, we must provide the password
+	return SudoExec(user, password, command + " " + args, Environ, true);
+#else
+	// on windows, don't know a way for re-lowering app level to user one, so I simply spawn a new process
+	return SysExec(command, args, Environ, NULL);
+#endif
+}
+
+bool SysExecUser(String const &user, String const &password, String const &command, String const &args)
+{
+	return SysExecUser(user, password, command, args, Environment());
 }
 
 END_UPP_NAMESPACE

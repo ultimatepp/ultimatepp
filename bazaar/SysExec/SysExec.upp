@@ -3,7 +3,15 @@ description "BAZAAR : Execution of external commands gathering output - Author :
 uses
 	Core;
 
+link(LINUX) -lutil;
+
 file
+	ArgEnv.h,
+	ArgEnv.cpp,
+	SudoLib.h,
+	SudoLib.cpp,
+	ShellLib.h,
+	ShellLib.cpp,
 	SysExec.h,
 	SysExec.cpp;
 
