@@ -43,7 +43,7 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		env.RemoveKey("DBUS_SESSION_BUS_ADDRESS");
 
 	// prepare args for sudo execution
-	String sudoArgs = "-k -H -S -E -p gimmipass ";
+	String sudoArgs = "-S -E -E -p gimmipass ";
 
 //	THAT ONE DON'T WORK -- MAYBE FOR VIRTUAL TERMINAL ?
 //	WE CHOOSE ANOTHER WAY
@@ -91,25 +91,43 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		// work, otherwise closing the pseudoconsole would close the
 		// sudo forked process -- 3 days to solve this.....
 		pid_t xpid = fork();
+		if(xpid == -1)
+			_exit(-1);
+		else if(xpid == 0)
 		{
-			if(xpid == -1)
-				_exit(-1);
-			else if(xpid == 0)
-			{
-				// executes sudo
-				result = execvpe("/usr/bin/sudo", argv, envv);
+			// executes sudo
+			result = execvpe("/usr/bin/sudo", argv, envv);
 
-				// just in case execvp failed
-		        _exit(result);
-			}
-			else
-			{
-				// give sudo some time to get the password and launch
-				// the command, then disconnect it from pseudotty
+			// just in case execvp failed
+	        _exit(result);
+		}
+		else
+		{
+			// give sudo some time to get the password and launch the command
+			// (only if we shall not wait its completion...)
+			if(!wait)
 				Sleep(1000);
-				ioctl(pid, TIOCNOTTY);
-				_exit(0);
+			
+			// if we shall wait for sudo to complete its command
+			// we must wait for xpid process to terminate before leaving
+			// otherwise we just leave now
+			int xstatus = 0;
+			if(wait)
+			{
+				while(!waitpid(xpid, &xstatus, WNOHANG))
+					Sleep(1000);
+				if(WIFEXITED(xstatus))
+					xstatus = WEXITSTATUS(xstatus);
+				else
+					xstatus = -1;
 			}
+			// then disconnect it from pseudotty only if we're NOT
+			// waiting for process completion, otherwise this will
+			// make the last waitpid() return an error status
+			if(!wait)
+				ioctl(pid, TIOCNOTTY);
+
+			_exit(xstatus);
 		}
 	}
 	else
