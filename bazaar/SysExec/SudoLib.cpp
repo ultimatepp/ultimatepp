@@ -281,54 +281,24 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		int status;
 		bool res;
 		
-		// this one of we shall wait for command completion
-//		if(wait)
-//		{
-			while(!waitpid( pid, &status, WNOHANG ))
-				Sleep(1000);
+		while(!waitpid( pid, &status, WNOHANG ))
+			Sleep(1000);
 
-			// eat last sudo ouptut, if any
-			while(_GetLine(sudoFile) != "")
-				;
-	
-			// check sudo exit status
-			if(WIFEXITED(status))
-				res = (WEXITSTATUS(status) == 0);
-			else
-				res =  false;
+		// eat last sudo ouptut, if any
+		while(_GetLine(sudoFile) != "")
+			;
 
-			// close pseudoterminal
-			fclose(sudoFile);
-			
-//		}
-		// and this one if we shall not wait
-/*
+		// check sudo exit status
+		if(WIFEXITED(status))
+			res = (WEXITSTATUS(status) == 0);
+		else if(WIFSIGNALED(status))
+			res = true;
 		else
-		{
-			res = !line.StartsWith("sudo:");
-			int wPid = vfork();
-			if(wPid == -1)
-			{
-				fclose(sudoFile);
-				return res;
-			}
-			else if(wPid == 0)
-			{
-				setsid();
-				while(!waitpid(wPid, &status, WNOHANG ))
-					Sleep(1000);
-	
-				// eat last sudo ouptut, if any
-				while(_GetLine(sudoFile) != "")
-					;
-	
-				// close pseudoterminal
-				fclose(sudoFile);
-				
-				_exit(0);
-			}
-		}
-*/
+			res =  false;
+
+		// close pseudoterminal
+		fclose(sudoFile);
+			
 		return res;
 	}
 }
