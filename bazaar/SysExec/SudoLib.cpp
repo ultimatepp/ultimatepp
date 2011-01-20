@@ -41,6 +41,22 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 	VectorMap<String, String>env(envir, 1);
 	if(env.Find("DBUS_SESSION_BUS_ADDRESS"))
 		env.RemoveKey("DBUS_SESSION_BUS_ADDRESS");
+	
+	// setup XAUTHORITY for new user, if different
+	// from current one -- this will allow using X display
+	// for spawned user
+	if(user != GetUserName())
+	{
+		String xFile = env.Get("XAUTHORITY", "/home/" + GetUserName() + "/.Xauthority");
+		if(FileExists(xFile))
+		{
+			// create a temp location for copied xFile
+			String tmpFile = GetTempFileName();
+			FileCopy(xFile, tmpFile);
+			env.RemoveKey("XAUTHORITY");
+			env.Add("XAUTHORITY", tmpFile);
+		}
+	}
 
 	// prepare args for sudo execution
 	String sudoArgs = "-S -E -E -p gimmipass ";
@@ -103,16 +119,25 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		}
 		else
 		{
-			// give sudo some time to get the password and launch the command
-			// (only if we shall not wait its completion...)
-			if(!wait)
-				Sleep(1000);
-			
-			// if we shall wait for sudo to complete its command
-			// we must wait for xpid process to terminate before leaving
-			// otherwise we just leave now
 			int xstatus = 0;
-			if(wait)
+
+			// if we shall NOT wait for sudo completion
+			// we must return asap, but AFTER disconnecting the pseudotty
+			if(!wait)
+			{
+				// give sudo some time to get the password and launch the command
+				// (only if we shall not wait its completion...)
+				Sleep(1000);
+
+				// then disconnect it from pseudotty only if we're NOT
+				// waiting for process completion, otherwise this will
+				// make the last waitpid() return an error status
+				ioctl(pid, TIOCNOTTY);
+			}
+
+			// otherwise, if we shall wait for sudo to complete its command
+			// we must wait for xpid process to terminate before leaving
+			else
 			{
 				while(!waitpid(xpid, &xstatus, WNOHANG))
 					Sleep(1000);
@@ -121,11 +146,6 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 				else
 					xstatus = -1;
 			}
-			// then disconnect it from pseudotty only if we're NOT
-			// waiting for process completion, otherwise this will
-			// make the last waitpid() return an error status
-			if(!wait)
-				ioctl(pid, TIOCNOTTY);
 
 			_exit(xstatus);
 		}
@@ -137,6 +157,7 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		// associates an stream to child process pseudoterminal
 		FILE *sudoFile = fdopen(masterPty, "w+");
 
+/*
 		// notice that echo is off (it it is....)
 		struct termios tio;
 		tcgetattr (masterPty, &tio);
@@ -145,6 +166,7 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 			usleep (1000);
 			tcgetattr (masterPty, &tio);
 		}
+*/
 		
 		// set input pipe to non-blocking, so we can read as we like
 		// without hanging the program -- we need to check for 'password' input
@@ -197,9 +219,23 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 				Sleep(100);
 				_PutLine(sudoFile, ~password);
 				
+				// hmmmm... it hangs sometimes here reading the status
+				// it seems that sudo sometimes ask for password AND don't put
+				// status back to terminal, OR something very wrong happens
+				// on forks above. As is better to not have a status than
+				// have the app hanging, we set a timeout on status read
+/*
 				// blocking stream again, to be sure to get the status back
 				// (we know that must come 2 lines of status...)
 				fcntl(masterPty, F_SETFL, fcntl(masterPty, F_GETFL) & ~O_NONBLOCK);
+*/
+				fd_set rfds;
+				struct timeval tv;
+				FD_ZERO(&rfds);
+				FD_SET(masterPty, &rfds);
+				tv.tv_sec = 1;
+				tv.tv_usec = 0;
+				select(masterPty + 1, &rfds, NULL, NULL, &tv);
 
 				// skip the empty line after password
 				_GetLine(sudoFile);
@@ -246,8 +282,8 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		bool res;
 		
 		// this one of we shall wait for command completion
-		if(wait)
-		{
+//		if(wait)
+//		{
 			while(!waitpid( pid, &status, WNOHANG ))
 				Sleep(1000);
 
@@ -264,8 +300,9 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 			// close pseudoterminal
 			fclose(sudoFile);
 			
-		}
+//		}
 		// and this one if we shall not wait
+/*
 		else
 		{
 			res = !line.StartsWith("sudo:");
@@ -291,6 +328,7 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 				_exit(0);
 			}
 		}
+*/
 		return res;
 	}
 }
