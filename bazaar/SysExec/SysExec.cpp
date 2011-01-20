@@ -89,8 +89,10 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	fflush(stderr);
 
 	// restores stdout and stderr handles
-	dup2(saveStdout, 1);
-	dup2(saveStderr, 2);
+	if(saveStdout != -1)
+		dup2(saveStdout, 1);
+	if(saveStderr != -1)
+		dup2(saveStderr, 2);
 
 	if (result == -1)
 		Cerr() << "Error spawning process\n";
