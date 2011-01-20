@@ -20,7 +20,7 @@ enum {
 #ifdef PLATFORM_WIN32
 	IS_BLOCKED = SOCKERR(EWOULDBLOCK),
 #else
-	IS_BLOCKED = SOCKERR(EINPROGRESS),
+	IS_BLOCKED = SOCKERR(EWOULDBLOCK),
 #endif
 };
 
@@ -243,7 +243,12 @@ bool Socket::Data::OpenClient(const char *host, int port, bool nodelay, dword *m
 		return true;
 
 	int err = GetLastError();
-	if(err != IS_BLOCKED) {
+#ifdef PLATFORM_WIN32
+	if(err != SOCKERR(EWOULDBLOCK))
+#else
+	if(err != SOCKERR(EINPROGRESS))
+#endif
+	{
 		SetSockError(NFormat("connect(%s:%d)", host, port));
 		SLOG("Socket::Data::OpenClient -> connect error, returning false");
 		return false;
