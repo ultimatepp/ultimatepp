@@ -2,79 +2,27 @@
 #include "ArgEnv.h"
 
 #ifdef PLATFORM_POSIX
+
 #include <unistd.h>
 #include <sys/wait.h>
-
-#define DEFAULT_PATH 	"/bin:/usr/bin:."
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-// this one is let here just for reference -- superseded by linux builtin call
-#if 0
-static int execvpe(const char *file, char * const *argv, char * const *envp)
-{
-	char path[PATH_MAX];
-	const char *searchpath, *esp;
-	size_t prefixlen, filelen, totallen;
-
-	if (strchr(file, '/'))	/* Specific path */
-		return execve(file, argv, envp);
-
-	filelen = strlen(file);
-
-	searchpath = getenv("PATH");
-	if (!searchpath)
-		searchpath = DEFAULT_PATH;
-
-	errno = ENOENT; /* Default errno, if execve() doesn't change it */
-
-	do
-	{
-		esp = strchr(searchpath, ':');
-		if (esp)
-			prefixlen = esp - searchpath;
-		else
-			prefixlen = strlen(searchpath);
-
-		if (prefixlen == 0 || searchpath[prefixlen-1] == '/')
-		{
-			totallen = prefixlen + filelen;
-			if (totallen >= PATH_MAX)
-				continue;
-			memcpy(path, searchpath, prefixlen);
-			memcpy(path + prefixlen, file, filelen);
-		}
-		else
-		{
-			totallen = prefixlen + filelen + 1;
-			if (totallen >= PATH_MAX)
-				continue;
-			memcpy(path, searchpath, prefixlen);
-			path[prefixlen] = '/';
-			memcpy(path + prefixlen + 1, file, filelen);
-		}
-		path[totallen] = '\0';
-
-		execve(path, argv, envp);
-		if (errno == E2BIG || errno == ENOEXEC ||
-			errno == ENOMEM || errno == ETXTBSY)
-			break;			/* Report this as an error, no more search */
-
-		searchpath = esp + 1;
-	}
-	while (esp);
-
-	return -1;
-}
-#endif
-
 #include "SudoLib.h"
 
 #else
+
 #include <process.h>
-#include <Shellapi.h>
+#include "ShellLib.h"
+
 #endif
 
 NAMESPACE_UPP
+
+// replacement of tmpfile() -- has problems in windows
+static FILE *TempFile(void)
+{
+	String fName = GetTempFileName();
+	FILE *f = fopen(fName, "w+");
+	return f;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes an external command, passing a command line to it and gathering the output
@@ -89,14 +37,14 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	int saveStdout = dup(fileno(stdout));
 
 	// creates and opens a temporary file and assigns stdout to it
-	int OutFile = fileno(tmpfile());
+	int OutFile = fileno(TempFile());
 	dup2(OutFile, 1);
 
 	// saves stderr stream state
 	int saveStderr = dup(fileno(stderr));
 
 	// creates and opens a temporary file and assigns stdout to it
-	int ErrFile = fileno(tmpfile());
+	int ErrFile = fileno(TempFile());
 	dup2(ErrFile, 2);
 
 	// builds the arguments and the environment
@@ -200,14 +148,18 @@ bool SysExec(String const &command, String const &args, String &OutStr)
 
 } // END SysExec()
 
+bool SysExec(String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+	String OutStr, ErrStr;
+	return SysExec(command, args, Environ, OutStr, ErrStr);
+}
+
 bool SysExec(String const &command, String const &args)
 {
 	String OutStr, ErrStr;
 	return SysExec(command, args, Environment(), OutStr, ErrStr);
 
 } // END SysExec()
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes an external command, passing a command line to it without waiting for its termination
@@ -349,7 +301,7 @@ bool SysExecUser(String const &user, String const &password, String const &comma
 	return SudoExec(user, password, command + " " + args, Environ, true);
 #else
 	// on windows, don't know a way for re-lowering app level to user one, so I simply spawn a new process
-	return SysExec(command, args, Environ, NULL);
+	return SysExec(command, args, Environ);
 #endif
 }
 

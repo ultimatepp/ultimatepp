@@ -5,7 +5,7 @@
 
 NAMESPACE_UPP
 
-#ifdef PLATFORM_WINDOWS
+#ifdef PLATFORM_WIN32
 
 // executes a command via shell "runas" as admin user;
 // if wait is true, will wait for command end, otherwise executes it in background

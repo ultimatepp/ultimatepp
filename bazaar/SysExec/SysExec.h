@@ -12,6 +12,7 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 bool SysExec(String const &command, String const &args, String &OutStr, String &ErrStr);
 bool SysExec(String const &command, String const &args, const VectorMap<String, String> &Environ, String &OutStr);
 bool SysExec(String const &command, String const &args, String &OutStr);
+bool SysExec(String const &command, String const &args, const VectorMap<String, String> &Environ);
 bool SysExec(String const &command, String const &args);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

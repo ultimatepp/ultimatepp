@@ -1,7 +1,11 @@
 #include "ShellLib.h"
 #include "ArgEnv.h"
 
-#ifdef PLATFORM_WINDOWS
+#ifdef PLATFORM_WIN32
+
+#include <Shellapi.h>
+
+NAMESPACE_UPP
 
 // executes a command via shell "runas" as admin user;
 // if wait is true, will wait for command end, otherwise executes it in background
@@ -22,8 +26,8 @@ bool ShellExec(String const &args, VectorMap<String, String> const &env, bool wa
 		SetEnvironmentVariable(prevEnv.GetKey(i), NULL);
 	
 	// insert new environment variables
-	for(int i = 0; i < Environ.GetCount(); i++)
-		SetEnvironmentVariable(Environ.GetKey(i), Environ[i]);
+	for(int i = 0; i < env.GetCount(); i++)
+		SetEnvironmentVariable(env.GetKey(i), env[i]);
 	
 	// now we can use ShellExecute to raise process level
 	SHELLEXECUTEINFO info =
@@ -32,7 +36,7 @@ bool ShellExec(String const &args, VectorMap<String, String> const &env, bool wa
 		SEE_MASK_NOASYNC,				// fMask
 		0,								// hwnd
 		"runas",						// lpVerb
-		"C:\\Windows\\Notepad.exe",		// lpFile
+		args,							// lpFile
 		0,								// lpParameters
 		0,								// lpDirectory
 		SW_SHOW,						// nShow
@@ -50,15 +54,19 @@ bool ShellExec(String const &args, VectorMap<String, String> const &env, bool wa
 	// if we shall wait for process termination, we shall get spawned process
 	// hanlde too...
 	if(wait)
-		info.mask |= SEE_MASK_NOCLOSEPROCESS;
+		info.fMask |= SEE_MASK_NOCLOSEPROCESS;
 	
-	res = ShellExecuteEx(&info);
+	bool res = ShellExecuteEx(&info);
 	
 	// restore the environment
 	for(int i = 0; i < prevEnv.GetCount(); i++)
-		SetEnvironmentVariable(Environ.GetKey(i), NULL);
-	for(int i = 0; i < Environ.GetCount(); i++)
+		SetEnvironmentVariable(env.GetKey(i), NULL);
+	for(int i = 0; i < env.GetCount(); i++)
 		SetEnvironmentVariable(prevEnv.GetKey(i), prevEnv[i]);
+	
+	return res;
 }
+
+END_UPP_NAMESPACE
 
 #endif
