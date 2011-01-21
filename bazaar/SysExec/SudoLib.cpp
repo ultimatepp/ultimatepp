@@ -30,7 +30,7 @@ static String _GetLine(FILE *f)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes a command via sudo; if wait is true, will wait for command end, otherwise executes it in background
-bool SudoExec(String user, String const &password, String const &args, VectorMap<String, String> const &envir, bool wait)
+bool SudoExec(String user, String const &password, String const &args, VectorMap<String, String> const &envir, bool w)
 {
 	// root user as default
 	if(user == "")
@@ -59,20 +59,15 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 	}
 
 	// prepare args for sudo execution
-	String sudoArgs = "-S -E -E -p gimmipass ";
-
-//	THAT ONE DON'T WORK -- MAYBE FOR VIRTUAL TERMINAL ?
-//	WE CHOOSE ANOTHER WAY
-/*
-	if(!wait)
-		sudoArgs += "-b ";
-*/
-
+	String sudoArgs = "-H -E -p gimmipass ";
 	sudoArgs += "-u " + user;
 	sudoArgs += " -- " + args;
+	
+	String clearArgs = "-K";
 
-	// prepare args buffer
+	// prepare args buffers
 	Buffer<char *>argv = BuildArgs("sudo", sudoArgs);
+	Buffer<char *>clearArgv = BuildArgs("sudo", clearArgs);
 
 	// prepare environment buffer
 	Buffer<char *>envv = BuildEnv(env);
@@ -94,61 +89,38 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 	{
 		// child process
 		
-		// becomes the group leader
+		// becomes the session leader
 		if(setsid() == -1)
 			_exit(-1);
 
 		// login into pseudoconsole
 		if(login_tty(slavePty) == -1)
 			_exit(-1);
-
-		// this other fork is needed because we HAVE
-		// to leave the pseudoconsole after sudo has done its
-		// work, otherwise closing the pseudoconsole would close the
-		// sudo forked process -- 3 days to solve this.....
-		pid_t xpid = fork();
-		if(xpid == -1)
+		
+		// ignore tty hangups so we can close
+		// the pseudotty later
+		signal(SIGHUP, SIG_IGN);
+		
+		// we shall first clear the password stored, if any
+		int cPid = fork();
+		if(cPid == -1)
 			_exit(-1);
-		else if(xpid == 0)
+		else if(cPid == 0)
 		{
-			// executes sudo
-			result = execvpe("/usr/bin/sudo", argv, envv);
-
-			// just in case execvp failed
-	        _exit(result);
+			result = execvp("/usr/bin/sudo", clearArgv);
+			_exit(0);
 		}
 		else
 		{
-			int xstatus = 0;
-
-			// if we shall NOT wait for sudo completion
-			// we must return asap, but AFTER disconnecting the pseudotty
-			if(!wait)
-			{
-				// give sudo some time to get the password and launch the command
-				// (only if we shall not wait its completion...)
-				Sleep(1000);
-
-				// then disconnect it from pseudotty only if we're NOT
-				// waiting for process completion, otherwise this will
-				// make the last waitpid() return an error status
-				ioctl(pid, TIOCNOTTY);
-			}
-
-			// otherwise, if we shall wait for sudo to complete its command
-			// we must wait for xpid process to terminate before leaving
-			else
-			{
-				while(!waitpid(xpid, &xstatus, WNOHANG))
-					Sleep(1000);
-				if(WIFEXITED(xstatus))
-					xstatus = WEXITSTATUS(xstatus);
-				else
-					xstatus = -1;
-			}
-
-			_exit(xstatus);
+			int status;
+			wait(&status);
 		}
+
+		// executes sudo
+		result = execvpe("/usr/bin/sudo", argv, envv);
+
+		// just in case execvp failed
+        _exit(result);
 	}
 	else
 	{
@@ -157,17 +129,6 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		// associates an stream to child process pseudoterminal
 		FILE *sudoFile = fdopen(masterPty, "w+");
 
-/*
-		// notice that echo is off (it it is....)
-		struct termios tio;
-		tcgetattr (masterPty, &tio);
-		for (int i = 0; (tio.c_lflag & ECHO) && i < 15; i++)
-		{
-			usleep (1000);
-			tcgetattr (masterPty, &tio);
-		}
-*/
-		
 		// set input pipe to non-blocking, so we can read as we like
 		// without hanging the program -- we need to check for 'password' input
 		fcntl(masterPty, F_SETFL, O_NONBLOCK);
@@ -203,7 +164,6 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 				break;
 			}
 		}
-
 		// here we have :
 		switch(answer)
 		{
@@ -217,18 +177,21 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 			case 1:
 				// send the password to sudo
 				Sleep(100);
-				_PutLine(sudoFile, ~password);
+				if(password != "")
+					_PutLine(sudoFile, ~password);
+				else
+					_PutLine(sudoFile, "<NULL>");
 				
 				// hmmmm... it hangs sometimes here reading the status
 				// it seems that sudo sometimes ask for password AND don't put
 				// status back to terminal, OR something very wrong happens
 				// on forks above. As is better to not have a status than
 				// have the app hanging, we set a timeout on status read
-/*
+
 				// blocking stream again, to be sure to get the status back
 				// (we know that must come 2 lines of status...)
 				fcntl(masterPty, F_SETFL, fcntl(masterPty, F_GETFL) & ~O_NONBLOCK);
-*/
+
 				fd_set rfds;
 				struct timeval tv;
 				FD_ZERO(&rfds);
@@ -236,7 +199,7 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 				tv.tv_sec = 1;
 				tv.tv_usec = 0;
 				select(masterPty + 1, &rfds, NULL, NULL, &tv);
-
+				
 				// skip the empty line after password
 				_GetLine(sudoFile);
 				
@@ -263,7 +226,7 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 			line.StartsWith("Sorry, user ")
 		)
 		{
-			fclose(sudoFile);
+ 			fclose(sudoFile);
 			return false;
 		}
 		else
@@ -279,26 +242,45 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		// ok, now we should have checked all and the sudo cmd
 		// should have been succesful
 		int status;
-		bool res;
+		bool res = true;
 		
-		while(!waitpid( pid, &status, WNOHANG ))
-			Sleep(1000);
+		// if requested, wait for child process to terminate
+		if(w)
+		{
+			// it shall terminate sometimes....
+			waitpid(pid, &status, 0);
 
+			// check sudo exit status
+			if(WIFEXITED(status))
+				res = (WEXITSTATUS(status) == 0);
+			else if(WIFSIGNALED(status))
+				res = true;
+			else
+				res =  false;
+		}
+		// otherwise, just check once if process exited, by error
+		// for example -- maybe it couldn't spawn command
+		else
+		{
+			Sleep(2000);
+			if(waitpid(pid, &status, WNOHANG))
+			{
+				// check sudo exit status
+				if(WIFEXITED(status))
+					res = (WEXITSTATUS(status) == 0);
+				else if(WIFSIGNALED(status))
+					res = true;
+				else
+					res =  false;
+			}
+		}
+				
 		// eat last sudo ouptut, if any
 		while(_GetLine(sudoFile) != "")
-			;
-
-		// check sudo exit status
-		if(WIFEXITED(status))
-			res = (WEXITSTATUS(status) == 0);
-		else if(WIFSIGNALED(status))
-			res = true;
-		else
-			res =  false;
-
+				;
 		// close pseudoterminal
 		fclose(sudoFile);
-			
+	
 		return res;
 	}
 }
