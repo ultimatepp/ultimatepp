@@ -1,0 +1,5 @@
+#ifndef _SysExecGui_icpp_init_stub
+#define _SysExecGui_icpp_init_stub
+#include "CtrlLib/init"
+#include "SysExec/init"
+#endif
