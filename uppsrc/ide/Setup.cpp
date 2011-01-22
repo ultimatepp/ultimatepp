@@ -111,17 +111,10 @@ Font FontSelectManager::Get() {
 	return f;
 }
 
-void Ide::UpdateFormat(CodeEditor& editor, EditorTabBar& tabs)
+void Ide::UpdateFormat(CodeEditor& editor)
 {
 	if(!IsActiveFile() || ActiveFile().tabsize <= 0)
 		editor.TabSize(editortabsize);
-	if(!designer)
-		if(filetabs >=0) {
-			tabs.SetAlign(filetabs);
-			editor.SetFrame(tabs);
-		} else {
-			editor.SetFrame(ViewFrame());
-		}
 	editor.IndentSpaces(indent_spaces);
 	editor.IndentAmount(indent_amount);
 	editor.ShowTabs(show_tabs);
@@ -136,22 +129,32 @@ void Ide::UpdateFormat(CodeEditor& editor, EditorTabBar& tabs)
 	editor.MarkLines(mark_lines);
 	editor.BorderColumn(bordercolumn, bordercolor);
 	editor.Refresh();
-	tabs.Grouping(tabs_grouping);
-	tabs.Stacking(tabs_stacking);
-	tabs.FileIcons(tabs_icons, false);
-	tabs.Crosses(tabs_crosses >= 0, tabs_crosses);
 }
 
 void Ide::UpdateFormat() {
-	SetupEditor();
-	UpdateFormat(editor, tabs);
-	UpdateFormat(editor2, tabs2);
+	SetupEditor();	
+	UpdateFormat(editor);
+	UpdateFormat(editor2);
 	console.SetFont(consolefont);
 	console.WrapText(wrap_console_text);
 	console2.SetFont(consolefont);
 	console2.WrapText(wrap_console_text);
 	statusbar.Show(show_status_bar);
 	SetupBars();
+	
+	if(!designer) {
+		if(filetabs >=0) {
+			tabs.SetAlign(filetabs);
+			editpane.SetFrame(tabs);
+		} else {
+			editpane.SetFrame(ViewFrame());
+		}
+	}
+	
+	tabs.Grouping(tabs_grouping);
+	tabs.Stacking(tabs_stacking);
+	tabs.FileIcons(tabs_icons, false);
+	tabs.Crosses(tabs_crosses >= 0, tabs_crosses);	
 }
 
 void Ide::EditorFontScroll(int d)

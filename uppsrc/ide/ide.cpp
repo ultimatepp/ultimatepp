@@ -666,7 +666,7 @@ void Ide::Display() {
 
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
-	int version = 9;
+	int version = 10;
 	s / version;
 	s.Magic(0x12354);
 	if(s.IsStoring()) {
@@ -743,10 +743,9 @@ void Ide::SerializeWorkspace(Stream& s) {
 	SerializeWorkspaceConfigs(s);
 	SerializeOutputMode(s);
 	SerializeClosed(s);
-	if(version >= 9) {
+	if(version >= 10) {
 		if(tabs_serialize) {
 			s % tabs;
-			s % tabs2;
 		}
 	}
 }

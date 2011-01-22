@@ -16,8 +16,11 @@ protected:
 	virtual void ComposeTab(Tab& tab, const Font &font, Color ink, int style);
 	virtual void ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font &font, Color ink, int style);
 	virtual Size GetStackedSize(const Tab &t);
+	
 public:
 	FileTabs();
+
+	virtual void Serialize(Stream& s);
 
 	void  	AddFile(const WString &file, bool make_active = true);
 	void  	AddFile(const WString &file, Image img, bool make_active = true);

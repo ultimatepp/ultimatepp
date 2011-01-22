@@ -7,22 +7,11 @@ void Ide::TabFile()
 		EditFile(tabs.GetFile(q));
 }
 
-void Ide::TabFile2()
-{
-	int q = tabs2.GetCursor();
-	if(q >= 0) {
-		String fn = tabs2.GetFile(q);
-		SwapEditors();
-		EditFile(fn);
-	}
-}
-
 void Ide::ClearTab()
 {
 	int c = tabs.GetCursor();
 	if(c >= 0)
 		tabs.Close(c);
-	tabs2.Set(tabs);
 }
 
 void Ide::ClearTabs()

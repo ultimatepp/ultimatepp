@@ -108,6 +108,7 @@ public:
 		
 		Style&  DefaultCrosses();
 		Style&  Variant1Crosses();
+		Style&  Variant2Crosses();
 		
 		Style&  DefaultGroupSeparators();
 		Style&  GroupSeparators(Value horz, Value vert);
@@ -149,6 +150,7 @@ public:
 		int id;
 		
 		Image  img;
+		Color  col;
 		Value  key;
 		Value  value;
 		String group;
@@ -231,7 +233,6 @@ protected:
 	int 			active;
 	int             id;
 
-private:
 	int highlight;
 	int drag_highlight;
 	int target;
@@ -286,7 +287,7 @@ private:
 	int 	GetWidth() const;
 	int 	GetHeight(bool scrollbar = true) const;
 
-	bool	SetCursor0(int n);
+	bool	SetCursor0(int n, bool action = false);
 
 	void 	DoStacking();
 	void 	DoUnstacking();
@@ -360,7 +361,7 @@ protected:
 	// Paint helpers
 	int		GetTextAngle();
 	Point	GetTextPosition(int align, const Rect& r, int cy, int space) const;
-	Point   GetImagePosition(int align, const Rect& r, int cx, int cy, int space, int side) const;
+	Point   GetImagePosition(int align, const Rect& r, int cx, int cy, int space, int side, int offset = 2) const;
 	bool	PaintIcons() 									{ return icons; }
 		
 	// Sub-class menu overrides
@@ -455,6 +456,8 @@ public:
 	void 	SetKey(int n, const Value &newkey);
 	void	SetIcon(int n, Image icon);
 	void 	SetTabGroup(int n, const String& group);
+
+	void    SetColor(int n, Color c);
 	
 	const Tab& operator[] (int n) const     { return tabs[n]; }
 	
