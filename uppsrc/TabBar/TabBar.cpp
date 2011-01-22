@@ -429,6 +429,7 @@ void TabBar::Tab::Set(const Tab& t)
 	id = t.id;
 	
 	img = t.img;
+	col = t.col;
 	key = t.key;
 	value = t.value;
 	group = t.group;
@@ -825,29 +826,29 @@ Point TabBar::GetTextPosition(int align, const Rect& r, int cy, int space) const
 	return p;
 }
 
-Point TabBar::GetImagePosition(int align, const Rect& r, int cx, int cy, int space, int side) const
+Point TabBar::GetImagePosition(int align, const Rect& r, int cx, int cy, int space, int side, int offset) const
 {
 	Point p;
 
 	if (align == LEFT)
 	{
-		p.x = r.left + (r.GetWidth() - cy) / 2;
+		p.x = r.left + (r.GetWidth() - cy) / 2 + offset;
 		p.y = side == LEFT ? r.bottom - space - cx : r.top + space;
 	}
 	else if (align == RIGHT)
 	{
-		p.x = r.right - (r.GetWidth() + cy) / 2;
+		p.x = r.right - (r.GetWidth() + cy) / 2 - offset;
 		p.y = side == LEFT ? r.top + space : r.bottom - space - cx;
 	}
 	else if (align == TOP)
 	{
 		p.x = side == LEFT ? r.left + space : r.right - cx - space;
-		p.y = r.top + (r.GetHeight() - cy) / 2;
+		p.y = r.top + (r.GetHeight() - cy) / 2 + offset;
 	}
 	else if (align == BOTTOM)
 	{
 		p.x = side == LEFT ? r.left + space : r.right - cx - space;
-		p.y = r.bottom - (r.GetHeight() + cy) / 2;
+		p.y = r.bottom - (r.GetHeight() + cy) / 2 - offset;
 	}
 	return p;
 }
@@ -959,6 +960,11 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 	const Value& sv = (cnt == 1 ? s.both : c == 0 ? s.first : c == cnt - 1 ? s.last : s.normal)[ndx];
 	
 	Image img = AlignValue(align, sv, t.tab_size);
+	
+	if(!IsNull(t.col))
+	{
+		img = Colorize(img, t.col);
+	}
 
 	if(dragsample)
 	{
@@ -1196,7 +1202,7 @@ Size TabBar::GetStackedSize(const Tab &t)
 
 Size TabBar::GetStdSize(const Tab &t)
 {
-	return (PaintIcons() && t.HasIcon()) ? (GetStdSize(t.value) + Size(TB_ICON+2, 0)) : GetStdSize(t.value);
+	return (PaintIcons() && t.HasIcon()) ? (GetStdSize(t.value) + Size(TB_ICON + 2, 0)) : GetStdSize(t.value);
 }
 
 TabBar& TabBar::Add(const Value &value, Image icon, String group, bool make_active)
@@ -1907,10 +1913,7 @@ void TabBar::LeftDown(Point p, dword keyflags)
 			UpdateActionRefresh();
 		}
 		else
-		if (SetCursor0(highlight)) {
-			CursorChanged();
-			UpdateAction();
-		}
+			SetCursor0(highlight, true);
 	}
 }
 
@@ -2024,6 +2027,12 @@ void TabBar::SetHighlight(int n)
 	highlight = n;
 	WhenHighlight();
 	Refresh();	
+}
+
+void TabBar::SetColor(int n, Color c)
+{
+	tabs[n].col = c;
+	Refresh();
 }
 
 void TabBar::MouseMove(Point p, dword keyflags)
@@ -2175,7 +2184,7 @@ void TabBar::DragRepeat(Point p)
 	}
 }
 
-bool TabBar::SetCursor0(int n)
+bool TabBar::SetCursor0(int n, bool action)
 {
 	if(tabs.GetCount() == 0)
 		return false;
@@ -2184,6 +2193,8 @@ bool TabBar::SetCursor0(int n)
 	{
 		n = max(0, FindId(GetGroupActive()));
 		active = -1;
+		highlight = -1;
+		drag_highlight = -1;
 		if (allownullcursor)
 			return true;
 	}
@@ -2222,6 +2233,12 @@ bool TabBar::SetCursor0(int n)
 		if(cx > 0)
 			sc.AddPos(cx + 10);
 	}
+	
+	if(action)
+	{
+		CursorChanged();
+		UpdateAction();
+	}
 
 	Refresh();
 
@@ -2235,8 +2252,7 @@ bool TabBar::SetCursor0(int n)
 
 void TabBar::SetCursor(int n)
 {
-	if (SetCursor0(n))
-		CursorChanged();
+	SetCursor0(n, true);
 }
 
 void TabBar::SetTabGroup(int n, const String &group)
@@ -2277,6 +2293,9 @@ void TabBar::Close(int n)
 			active--;
 		Refresh();
 		if (n == highlight && Ctrl::HasMouse()) {
+			//TODO: That must be refactored
+			highlight = -1;
+			drag_highlight = -1;
 			Sync();
 			MouseMove(GetMouseViewPos(), 0);
 		}	
@@ -2303,6 +2322,14 @@ TabBar::Style& TabBar::Style::Variant1Crosses()
 	crosses[0] = TabBarImg::VARIANT1_CR0();
 	crosses[1] = TabBarImg::VARIANT1_CR1();
 	crosses[2] = TabBarImg::VARIANT1_CR2();
+	return *this;	
+}
+
+TabBar::Style& TabBar::Style::Variant2Crosses()
+{
+	crosses[0] = TabBarImg::VARIANT2_CR0();
+	crosses[1] = TabBarImg::VARIANT2_CR1();
+	crosses[2] = TabBarImg::VARIANT2_CR2();
 	return *this;	
 }
 
@@ -2395,6 +2422,7 @@ void TabBar::Serialize(Stream& s)
 	
 	cross = -1;
 	highlight = -1;
+	drag_highlight = -1;
 	target = -1;
 	
 	int n = groups.GetCount();
@@ -2414,14 +2442,20 @@ void TabBar::Serialize(Stream& s)
 	int g = GetGroup();
 	s % g;
 	group = g;
-
-	Repos();
 }
 
 CH_STYLE(TabBar, Style, StyleDefault)
 {
 	Assign(TabCtrl::StyleDefault());
-	DefaultCrosses().DefaultGroupSeparators();
+	#ifdef PLATFORM_LINUX
+	DefaultCrosses();
+	#else
+	if(IsWinVista())
+		Variant2Crosses();
+	else
+		DefaultCrosses();
+	#endif
+	DefaultGroupSeparators();
 }
 
 END_UPP_NAMESPACE

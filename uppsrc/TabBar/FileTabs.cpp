@@ -71,6 +71,16 @@ Size FileTabs::GetStackedSize(const Tab &t)
 	return GetTextSize(s.ToWString(), GetStyle().font) + Size(TB_SPACEICON, 0);
 }
 
+void FileTabs::Serialize(Stream& s)
+{
+	TabBar::Serialize(s);
+	if(s.IsLoading() && icons)
+	{
+		for(int i = 0; i < tabs.GetCount(); i++)
+			tabs[i].img = NativePathIcon(String(tabs[i].value));
+	}
+}
+
 void FileTabs::AddFile(const WString &file, bool make_active)
 {
 	AddFile(file, NativePathIcon(file.ToString()), make_active);
@@ -167,7 +177,7 @@ greyedicons(true),
 filecolor(SColorText),
 extcolor(LtBlue)
 {
-	
+
 }
 
 END_UPP_NAMESPACE

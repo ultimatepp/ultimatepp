@@ -413,7 +413,6 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 			editpane.Add(designer->DesignerCtrl().SizePos());
 			designer->SetFocus();
 			if(filetabs) {
-				designer->DesignerCtrl().SetFrame(tabs);
 				tabs.SetAddFile(editfile);
 			}
 			
@@ -423,11 +422,6 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		}
 	}
 
-	if(filetabs >= 0)
-		editor.SetFrame(tabs);
-	else
-		editor.SetFrame(ViewFrame());
-//	editor.SetFrame(filetabs >= 0 ? tabs :ViewFrame()); // TRC 2011/01/08 - fails to compile under MSC71
 	tabs.SetAddFile(editfile);
 	editor.Enable();
 	editpane.Add(editorsplit);
@@ -696,13 +690,10 @@ void Ide::PassEditor()
 	editor2.Set(editor.Get(charset), charset);
 	editor2.SetEditPosSb(editor.GetEditPos());
 	editor2.CheckEdited();
-	EditorTabBar h;
-	h.Set(tabs);
-	tabs.Set(tabs2);
-	tabs2.Set(h);
 	editor.SetFocus();
 	editor.ScrollIntoCursor();
-}
+	tabs.SetSplitColor(editfile, Yellow);
+;}
 
 void Ide::ClearEditedFile()
 {
@@ -729,13 +720,13 @@ void Ide::SplitEditor(bool horz)
 {
 	if(editorsplit.GetZoom() < 0)
 		CloseSplit();
-	else
-		tabs2.Set(tabs);
+	
 	if(horz)
 		editorsplit.Horz(editor2, editor);
 	else
 		editorsplit.Vert(editor2, editor);
 	PassEditor();
+	
 }
 
 void Ide::SwapEditors()
@@ -761,6 +752,7 @@ void Ide::CloseSplit()
 {
 	editorsplit.Vert(editor, editor2);
 	editorsplit.Zoom(0);
+	tabs.ClearSplitColor();
 	SyncEditorSplit();
 	editor.SetFocus();
 	SetupEditor();

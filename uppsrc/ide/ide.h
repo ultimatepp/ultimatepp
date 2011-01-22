@@ -271,9 +271,11 @@ class EditorTabBar : public FileTabs
 public:
 	EditorTabBar();
 	String GetFile(int n) const;
-	bool   FindSetFile(const String& fn);
-	void   SetAddFile(const String& fn);
-	void   RenameFile(const String& fn, const String& nn);
+	bool FindSetFile(const String& fn);
+	void SetAddFile(const String& fn);
+	void RenameFile(const String& fn, const String& nn);
+	void SetSplitColor(const String& fn, const Color& c);
+	void ClearSplitColor();
 
 	typedef EditorTabBar CLASSNAME;
 };
@@ -523,7 +525,7 @@ public:
 	One<IdeDesigner> designer;
 	AssistEditor     editor;
 	CodeEditor       editor2;
-	EditorTabBar     tabs, tabs2;
+	EditorTabBar     tabs;
 	EscValue         macro_api;
 
 	RightTabs   btabs;
@@ -978,7 +980,6 @@ public:
 	void      KeySplit(bool horz);
 	void      SwapEditors();
 	void      TabFile();
-	void      TabFile2();
 	void      ClearTab();
 	void      ClearTabs();
 	void      CloseRest(EditorTabBar *tabs);
@@ -991,7 +992,7 @@ public:
 
 	void      SetBar();
 
-	void      UpdateFormat(CodeEditor& editor, EditorTabBar& tabs);
+	void      UpdateFormat(CodeEditor& editor);
 	void      UpdateFormat();
 	void      ReadHlStyles(ArrayCtrl& hlstyle);
 

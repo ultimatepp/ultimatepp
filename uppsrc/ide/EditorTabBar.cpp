@@ -37,3 +37,23 @@ void EditorTabBar::RenameFile(const String& fn, const String& nn)
 {
 	FileTabs::RenameFile(WString(fn), WString(nn));
 }
+
+void EditorTabBar::SetSplitColor(const String& fn, const Color& c)
+{
+	for(int i = 0; i < tabs.GetCount(); i++)
+	{
+		Tab& t = tabs[i];		
+		t.col = t.key == fn ? c : Null;
+	}
+	Refresh();
+}
+
+void EditorTabBar::ClearSplitColor()
+{
+	for(int i = 0; i < tabs.GetCount(); i++)
+	{
+		Tab& t = tabs[i];
+		t.col = Null;
+	}
+	Refresh();
+}
