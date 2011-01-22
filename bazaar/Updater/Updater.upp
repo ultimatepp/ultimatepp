@@ -2,8 +2,8 @@ description "Web Installer/Updater module\377";
 
 uses
 	CtrlLib,
-	SysExec,
-	Web;
+	Web,
+	SysExecGui;
 
 file
 	Updater.iml,

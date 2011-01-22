@@ -27,6 +27,7 @@ String Updater::GetPlatformRoot(void)
 #endif
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
 // constructor
 Updater::Updater()
 {
@@ -207,10 +208,9 @@ bool Updater::START_Updater(String const &operation)
 	if(chmod(~tempName, 0755) != 0)
 		return true;
 	
-	// note the -k to gksu -- it makes it preserve the environment
-	String params = "-k -u root \"" + tempName + "\"";
-	if(SysStart("gksu", params, environ) == -1)
-		return true;
+	// executes the file asking for password
+	return SysStartAdmin(tempName, "", environ);
+	
 #else
 	// for windows, simply execute the file
 	if(SysStart(tempName, "", environ) == -1)
