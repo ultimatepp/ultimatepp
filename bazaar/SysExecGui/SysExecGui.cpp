@@ -156,6 +156,6 @@ bool SysExecUser(String const &user, String const &command, String const &args)
 	return SysExecUser(user, pDlg().GetPassword(), command, args);
 }
 
-END_UPP_NAMESPACE
-
 #endif
+
+END_UPP_NAMESPACE
