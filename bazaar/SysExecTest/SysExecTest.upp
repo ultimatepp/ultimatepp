@@ -2,7 +2,7 @@ description "Testbed for SysExec package\377";
 
 uses
 	CtrlLib,
-	SysExec;
+	SysExecGui;
 
 file
 	SysExecTest.lay,

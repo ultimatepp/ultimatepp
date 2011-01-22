@@ -1,5 +1,5 @@
 #include "SysExecTest.h"
-#include <SysExec/SysExec.h>
+#include <SysExecGui/SysExecGui.h>
 
 void SysExecTest::btnCb(int n)
 {
@@ -38,6 +38,22 @@ void SysExecTest::btnCb(int n)
 			res = SysStartUser(user, pass, term, "");
 			break;
 			
+		case 7:
+			res = SysExecAdmin(term, "");
+			break;
+			
+		case 8:
+			res = SysStartAdmin(term, "");
+			break;
+			
+		case 9:
+			res = SysExecUser(user, term, "");
+			break;
+			
+		case 10:
+			res = SysStartUser(user, term, "");
+			break;
+			
 		default:
 			NEVER();
 	}
@@ -59,6 +75,10 @@ SysExecTest::SysExecTest()
 	btn4 <<= THISBACK1(btnCb, 4);
 	btn5 <<= THISBACK1(btnCb, 5);
 	btn6 <<= THISBACK1(btnCb, 6);
+	btn3G <<= THISBACK1(btnCb, 7);
+	btn4G <<= THISBACK1(btnCb, 8);
+	btn5G <<= THISBACK1(btnCb, 9);
+	btn6G <<= THISBACK1(btnCb, 10);
 }
 
 GUI_APP_MAIN
