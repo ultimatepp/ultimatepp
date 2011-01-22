@@ -796,7 +796,7 @@ static String& SockErrorText()
 {
 	static StaticCriticalSection csect;
 	CriticalSection::Lock lock(csect);
-	static Index<int> thread_index;
+	static Index<uintptr_t> thread_index;
 	static Array<String> thread_errors;
 	static Vector<int> error_ticks;
 	int t = msecs();
@@ -809,12 +809,12 @@ static String& SockErrorText()
 			}
 	}
 #ifdef PLATFORM_WIN32
-	int tid = GetCurrentThreadId();
+	uintptr_t tid = GetCurrentThreadId();
 #else
 	#ifdef _MULTITHREADED
-		int tid = (int)Thread::GetCurrentId();
+		uintptr_t tid = (uintptr_t)Thread::GetCurrentId();
 	#else
-		int tid = 0;
+		uintptr_t tid = 0;
 	#endif
 #endif
 	int f = thread_index.Find(tid);
