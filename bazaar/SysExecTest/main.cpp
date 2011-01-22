@@ -38,6 +38,7 @@ void SysExecTest::btnCb(int n)
 			res = SysStartUser(user, pass, term, "");
 			break;
 			
+#ifdef PLATFORM_POSIX
 		case 7:
 			res = SysExecAdmin(term, "");
 			break;
@@ -53,7 +54,7 @@ void SysExecTest::btnCb(int n)
 		case 10:
 			res = SysStartUser(user, term, "");
 			break;
-			
+#endif			
 		default:
 			NEVER();
 	}
@@ -75,10 +76,18 @@ SysExecTest::SysExecTest()
 	btn4 <<= THISBACK1(btnCb, 4);
 	btn5 <<= THISBACK1(btnCb, 5);
 	btn6 <<= THISBACK1(btnCb, 6);
+
+#ifdef PLATFORM_POSIX
 	btn3G <<= THISBACK1(btnCb, 7);
 	btn4G <<= THISBACK1(btnCb, 8);
 	btn5G <<= THISBACK1(btnCb, 9);
 	btn6G <<= THISBACK1(btnCb, 10);
+#else
+	btn3G.Hide();
+	btn4G.Hide();
+	btn5G.Hide();
+	btn6G.Hide();
+#endif
 }
 
 GUI_APP_MAIN
