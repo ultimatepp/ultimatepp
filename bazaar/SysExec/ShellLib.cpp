@@ -64,6 +64,9 @@ bool ShellExec(String const &args, VectorMap<String, String> const &env, bool wa
 	for(int i = 0; i < env.GetCount(); i++)
 		SetEnvironmentVariable(prevEnv.GetKey(i), prevEnv[i]);
 	
+	if(wait && res)
+		WaitForSingleObject(info.hProcess, INFINITE);
+	
 	return res;
 }
 
