@@ -48,31 +48,32 @@ the AString interface.&]
 [s4;%- &]
 [s5;:String`:`:String`(const char`*`,int`):%- [* String]([@(0.0.255) const]_[@(0.0.255) cha
 r]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
-[s2; Constructs a string equal to first [%-*@3 n] characters of zero 
-terminated string [%-*@3 s].&]
+[s2; Constructs a string equal to first [%-*@3 n] characters of string 
+[%-*@3 s]. Zero characters are included.&]
 [s3; &]
 [s4;%- &]
 [s5;:String`:`:String`(const String`&`,int`):%- [* String]([@(0.0.255) const]_[* String][@(0.0.255) `&
 ]_[*@3 s], [@(0.0.255) int]_[*@3 n])&]
 [s2; Constructs a string equal to first [%-*@3 n] characters of String 
-[%-*@3 s].&]
+[%-*@3 s].  Zero characters are included.&]
 [s3; &]
 [s4;%- &]
 [s5;:String`:`:String`(const byte`*`,int`):%- [* String]([@(0.0.255) const]_[_^byte^ byte]_
 `*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
-[s2; Constructs a string equal to first [%-*@3 n] bytes of [%-*@3 s].&]
+[s2; Constructs a string equal to first [%-*@3 n] bytes of [%-*@3 s]. 
+Zero characters are included.&]
 [s3; &]
 [s4;%- &]
 [s5;:String`:`:String`(const char`*`,const char`*`):%- [* String]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 s], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 lim])&]
 [s2; Constructs a string equal to first [%-*@3 lim] `- [%-*@3 s] characters 
-of [%-*@3 s].&]
+of [%-*@3 s]. Zero characters are included.&]
 [s3; &]
 [s4;%- &]
 [s5;:String`:`:String`(int`,int`):%- [* String]([@(0.0.255) int]_[*@3 chr], 
 [@(0.0.255) int]_[*@3 count])&]
 [s2; Constructs a string consisting of [%-*@3 count] characters equal 
-to [%-*@3 chr].&]
+to [%-*@3 chr]. [%-*@3 chr] can be zero.&]
 [s3; &]
 [s4;%- &]
 [s5;:String`:`:String`(StringBuffer`&`):%- [* String]([_^StringBuffer^ StringBuffer][@(0.0.255) `&
@@ -146,7 +147,8 @@ onst]&]
 [* operator`+`=]([@(0.0.255) char]_[*@3 c])&]
 [s2; Appends single character [%-*@3 c]. This operations has constant 
 amortized time (in other words, internal space used by implementation 
-grows exponentially, like with Vector or std`::vector).&]
+grows exponentially, like with Vector or std`::vector). [%-*@3 c] 
+can be zero.&]
 [s3; &]
 [s4;%- &]
 [s5;:String0`:`:Cat`(const char`*`,int`):%- [@(0.0.255) void]_[* Cat]([@(0.0.255) const]_[@(0.0.255) c
@@ -281,38 +283,38 @@ the AString interface.&]
 [s4;%- &]
 [s5;:WString`:`:WString`(const WString`&`,int`):%- [* WString]([@(0.0.255) const]_[* WStrin
 g][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int]_[*@3 n])&]
-[s2; Constructs a string equal to first [%-*@3 n] characters of [* WString] 
-[%-*@3 s].&]
+[s2;%- [%% Constructs a string equal to first ][*@3 n][%%  characters of 
+][%%* WString][%%  ][*@3 s][%%  ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString`:`:WString`(const wchar`*`,int`):%- [* WString]([@(0.0.255) const]_[_^wchar^ w
 char]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
-[s2; Constructs a string equal to first [%-*@3 n] characters of zero 
-terminated string [%-*@3 s].&]
+[s2;%- [%% Constructs a string equal to first ][*@3 n][%%  characters of 
+][*@3 s ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString`:`:WString`(const wchar`*`,const wchar`*`):%- [* WString]([@(0.0.255) const]_
 [_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 lim])&]
-[s2; Constructs a string equal to first [%-*@3 lim] `- [%-*@3 s] characters 
-of [%-*@3 s].&]
+[s2;%- [%% Constructs a string equal to first ][*@3 lim][%%  `- ][*@3 s][%%  
+characters of ][*@3 s][%%  ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString`:`:WString`(const char`*`,int`):%- [* WString]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 s], [@(0.0.255) int]_[*@3 n])&]
-[s2; Constructs a string equal to first [%-*@3 n] characters of zero 
-terminated string [%-*@3 s].&]
+[s2;%- [%% Constructs a string equal to first ][*@3 n][%%  characters of 
+zero terminated string ][*@3 s ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString`:`:WString`(const char`*`,const char`*`):%- [* WString]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 s], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 lim])&]
-[s2; Constructs a string equal to first [%-*@3 n] characters of zero 
-terminated string [%-*@3 s].&]
+[s2;%- [%% Constructs a string equal to first ][*@3 n][%%  characters of 
+zero terminated string ][*@3 s ]([*@3 s ]can contain zero characters).&]
 [s3; &]
 [s4;%- &]
 [s5;:WString`:`:WString`(int`,int`):%- [* WString]([@(0.0.255) int]_[*@3 chr], 
 [@(0.0.255) int]_[*@3 count])&]
 [s2; Constructs a string consisting of [%-*@3 count] characters equal 
-to [%-*@3 chr].&]
+to [%-*@3 chr]. [%-*@3 chr] can be zero.&]
 [s3; &]
 [s4;%- &]
 [s5;:WString`:`:WString`(WStringBuffer`&`):%- [* WString]([_^WStringBuffer^ WStringBuffer

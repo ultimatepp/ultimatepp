@@ -12,7 +12,7 @@ NAMESPACE_UPP
 
 
 bool Ctrl::LogMessages
-// = true
+// = true _DBG_
 ;
 #endif
 
