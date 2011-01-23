@@ -185,7 +185,6 @@ void Ide::CreateMakefile()
 	SaveMakeFile(~mfout, true);
 }
 
-#if defined(PLATFORM_WIN32) || defined(PLATFORM_LINUX)
 void Ide::OpenOutputFolder()
 {
 	#if defined(PLATFORM_WIN32)
@@ -194,4 +193,3 @@ void Ide::OpenOutputFolder()
 		system("xdg-open " + GetFileFolder(target) + " &");
 	#endif
 }
-#endif

@@ -2447,14 +2447,14 @@ void TabBar::Serialize(Stream& s)
 CH_STYLE(TabBar, Style, StyleDefault)
 {
 	Assign(TabCtrl::StyleDefault());
-	#ifdef PLATFORM_LINUX
-	DefaultCrosses();
-	#else
+#ifdef PLATFORM_WIN32
 	if(IsWinVista())
 		Variant2Crosses();
 	else
 		DefaultCrosses();
-	#endif
+#else
+	DefaultCrosses();
+#endif
 	DefaultGroupSeparators();
 }
 
