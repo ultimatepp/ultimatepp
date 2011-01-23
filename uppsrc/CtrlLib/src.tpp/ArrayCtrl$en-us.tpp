@@ -1124,6 +1124,28 @@ Sb]()&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4;%- &]
+[s5;:ArrayCtrl`:`:HideSb`(bool`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* HideSb]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Hides vertical scrollbar (even if it would be needed).&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:AutoHideHorzSb`(bool`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* Auto
+HideHorzSb]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Makes horizontal scroll bar (active if HeaderCtrl is in absolute 
+mode only) to autohide. Default is on.&]
+[s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:NoAutoHideHorzSb`(`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoAuto
+HideHorzSb]()&]
+[s2; Same as AutoHideHorzSb(false).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:HideHorzSb`(bool`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* HideHorz
+Sb]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Unconditionally hides horizontal scrollbar (active if HeaderCtrl 
+is in absolute mode only).&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:MultiSelect`(bool`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* MultiSe
 lect]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Enable / disable multiple row selection. &]
@@ -1131,6 +1153,11 @@ lect]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 time, [* false] `= only one row at a time&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
+[s4;%- &]
+[s5;:ArrayCtrl`:`:IsMultiSelect`(`)const:%- [@(0.0.255) bool]_[* IsMultiSelect]()_[@(0.0.255) c
+onst]&]
+[s2; Returns true if ArrayCtrl is in multiselect mode.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:NoBackground`(bool`):%- [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoBack
 ground]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
