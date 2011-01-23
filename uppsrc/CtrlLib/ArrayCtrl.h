@@ -615,7 +615,7 @@ public:
 	ArrayCtrl& NoFocusSetCursor()                      { focussetcursor = false; return *this; }
 	ArrayCtrl& MovingHeader(bool b)                    { header.Moving(b); return *this; }
 	ArrayCtrl& NoMovingHeader()                        { return MovingHeader(false); }
-	ArrayCtrl& ColumnSortFindKey()                     { columnsortfindkey = true; return *this; }
+	ArrayCtrl& ColumnSortFindKey(bool b = true)        { columnsortfindkey = b; return *this; }
 	ArrayCtrl& AllSorting();
 	ArrayCtrl& ColumnSortSecondary(const Order& order) { columnsortsecondary = &order; return *this; }
 	ArrayCtrl& NoColumnSortSecondary()                 { columnsortsecondary = NULL; return *this; }
