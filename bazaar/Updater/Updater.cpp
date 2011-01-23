@@ -3,7 +3,7 @@
 #include <Draw/Draw.h>
 #include <Web/Web.h>
 
-#include <SysExec/SysExec.h>
+#include <SysExecGui/SysExecGui.h>
 
 #define IMAGECLASS UpdaterImg
 #define IMAGEFILE <Updater/Updater.iml>
@@ -207,18 +207,12 @@ bool Updater::START_Updater(String const &operation)
 	// allowing its execution and executes it as a superuser
 	if(chmod(~tempName, 0755) != 0)
 		return true;
+#endif
 	
 	// executes the file asking for password
-	return SysStartAdmin(tempName, "", environ);
-	
-#else
-	// for windows, simply execute the file
-	if(SysStart(tempName, "", environ) == -1)
-		return true;
-#endif
-	// installer process is spawned correctly
-	// main app must leave
-	return false;
+	bool res = !SysStartAdmin(tempName, "", environ);
+	return res;
+
 }
 
 // uninstall app
@@ -520,7 +514,8 @@ void Updater::RestartApp(RestartModes restartMode)
 #endif
 			break;
 	}
-	SysStart(path, commandLine, environ);
+	// restart app in user mode, no gui, no password should be needed
+	SysStartUser(user, "", path, commandLine, environ);
 }
 
 // fetch list of available app versions
