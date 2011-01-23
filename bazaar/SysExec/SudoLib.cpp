@@ -192,23 +192,25 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 				// (we know that must come 2 lines of status...)
 				fcntl(masterPty, F_SETFL, fcntl(masterPty, F_GETFL) & ~O_NONBLOCK);
 
+				// skip the empty line after password
+				_GetLine(sudoFile);
+				
+				// stop blocking again, we must clean sudo output by removing
+				// all chars there
+				fcntl(masterPty, F_SETFL, fcntl(masterPty, F_GETFL) | O_NONBLOCK);
+
+				// give sudo some time to setup the status line, IF ANY
 				fd_set rfds;
 				struct timeval tv;
 				FD_ZERO(&rfds);
 				FD_SET(masterPty, &rfds);
-				tv.tv_sec = 1;
-				tv.tv_usec = 0;
+				tv.tv_sec = 0;
+				tv.tv_usec = 200000;
 				select(masterPty + 1, &rfds, NULL, NULL, &tv);
-				
-				// skip the empty line after password
-				_GetLine(sudoFile);
 				
 				// get the status
 				line = _GetLine(sudoFile);
 
-				// stop blocking again, we must clean sudo output by removing
-				// all chars there
-				fcntl(masterPty, F_SETFL, fcntl(masterPty, F_GETFL) | O_NONBLOCK);
 				break;
 				
 			//	USER DOESN'T EXISTS IN SUDOERS -- ERROR
