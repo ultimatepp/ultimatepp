@@ -262,16 +262,38 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 		// for example -- maybe it couldn't spawn command
 		else
 		{
-			Sleep(2000);
-			if(waitpid(pid, &status, WNOHANG))
+			while(true)
 			{
-				// check sudo exit status
-				if(WIFEXITED(status))
-					res = (WEXITSTATUS(status) == 0);
-				else if(WIFSIGNALED(status))
-					res = true;
-				else
-					res =  false;
+				// get spawned process executable file name
+				FileIn f("/proc/" + FormatInt(pid) + "/cmdline");
+				String procName = GetFileTitle(f.GetLine());
+				f.Close();
+				
+				// check if process is still running
+				// it should, if all is ok
+				int waitRes = waitpid(pid, &status, WNOHANG);
+				
+				// if still running within sudo, continue waiting
+				if(!waitRes && procName == "sudo")
+				{
+					Sleep(100);
+					continue;
+				}
+				// otherwise, if process exited, return its status
+				else if(waitRes)
+				{
+					// check sudo exit status
+					if(WIFEXITED(status))
+						res = (WEXITSTATUS(status) == 0);
+					else if(WIFSIGNALED(status))
+						res = true;
+					else
+						res =  false;
+					return res;
+				}
+				// otherwise, process is still running as spawned app
+				// all is ok, just return true
+				return true;
 			}
 		}
 				
