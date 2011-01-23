@@ -19,6 +19,7 @@ class PasswordDlg : public WithPasswordDlgLayout<TopWindow>
 {
 	private:
 		String user;
+		StaticRect r;
 	
 	protected:
 	
@@ -38,9 +39,13 @@ class PasswordDlg : public WithPasswordDlgLayout<TopWindow>
 
 PasswordDlg::PasswordDlg()
 {
+	Add(r.SizePos());
+	r.Color(LtCyan);
 	CtrlLayout(*this, GetExeTitle());
 	pwd.Password();
-	title.SetLabel(t_("Please enter password for ") + GetUserName() + " :");
+	lock.SetImage(SysExecGuiImg::lock());
+	title1 <<= t_("Please enter password to execute administrative tasks");
+	title2 <<= Format(t_("[1 '%s' application can change important parts of your system]"), GetExeTitle());
 	okBtn.Ok() <<= Acceptor(IDOK);
 	cancelBtn.Cancel() <<= Rejector(IDCANCEL);
 	VCenterPos().HCenterPos();
