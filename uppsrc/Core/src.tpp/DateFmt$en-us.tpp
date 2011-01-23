@@ -42,6 +42,10 @@ function.&]
 [s7; [*/ Return value]-|Filtered character.&]
 [s3; &]
 [s4;%- &]
+[s5;:FirstDayOfYear`(Date`):%- [_^Date^ Date]_[* FirstDayOfYear]([_^Date^ Date]_[*@3 d])&]
+[s2; Returns the first day of the year of day [%-*@3 d].&]
+[s3; &]
+[s4;%- &]
 [s5;:SetDateFormat`(const char`*`):%- [@(0.0.255) void]_[* SetDateFormat]([@(0.0.255) const
 ]_[@(0.0.255) char]_`*[*@3 fmt])&]
 [s2; Sets formating string for dates. When used for formatting, there 
