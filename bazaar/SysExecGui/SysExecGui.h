@@ -5,10 +5,10 @@
 
 NAMESPACE_UPP
 
-#ifdef PLATFORM_POSIX
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// SysXXXAdmin and SysXXXUser function with gui password frontend
+// SysXXXAdmin and SysXXXUser function with gui password frontend (for POSIX)
+// For windows you don't have the password dialog, but do have uniform interface
+// we propose them too -- they just don't show the interface prompt but the UAC one
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // executes an external command as Admin user, passing a command line to it without waiting for its termination
@@ -43,8 +43,6 @@ bool SysExecAdmin(String const &command, String const &args);
 // return true on success, false otherwise
 bool SysExecUser(String const &user, String const &command, String const &args, const VectorMap<String, String> &Environ);
 bool SysExecUser(String const &user, String const &command, String const &args);
-
-#endif
 
 END_UPP_NAMESPACE
 

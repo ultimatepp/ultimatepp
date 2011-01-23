@@ -58,7 +58,7 @@ bool PasswordDlg::Run(String const &u)
 	while(true)
 	{
 		pwd.Clear();
-		PopUp(NULL, false, true, true, true);
+		PopUp(NULL, false, false, true, true);
 		pwd.SetFocus();
 		switch(Execute())
 		{
@@ -90,6 +90,7 @@ static PasswordDlg &pDlg()
 // return true on success, false otherwise
 bool SysStartAdmin(String const &command, String const &args, const VectorMap<String, String> &Environ)
 {
+	PasswordDlg *pp = &(pDlg());
 	if(!pDlg().Run())
 		return false;
 	return SysStartAdmin(pDlg().GetPassword(), command, args, Environ);
@@ -159,6 +160,70 @@ bool SysExecUser(String const &user, String const &command, String const &args)
 	if(!pDlg().Run(user))
 		return false;
 	return SysExecUser(user, pDlg().GetPassword(), command, args);
+}
+
+#else
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command as Admin user, passing a command line to it without waiting for its termination
+// it WILL prompt for user intervention on windows secure systems (Vista+ OSes), on which the password is useless
+// on linux, will return an error if password is wrong
+// return true on success, false otherwise
+bool SysStartAdmin(String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+	return SysStartAdmin("", command, args, Environ);
+}
+
+bool SysStartAdmin(String const &command, String const &args)
+{
+	return SysStartAdmin("", command, args);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command as required user, passing a command line to it without waiting for its termination
+// on linux, will return an error if password is required AND wrong
+// on windows, by now... it just spawn the process without changing security level
+// I still shall find a way to go back to user mode on windows
+// return true on success, false otherwise
+bool SysStartUser(String const &user, String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+	return SysStartUser(user, "", command, args, Environ);
+}
+
+bool SysStartUser(String const &user, String const &command, String const &args)
+{
+	return SysStartUser(user, "", command, args);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command as Admin user, passing a command line to it waiting for its termination
+// it WILL prompt for user intervention on windows secure systems (Vista+ OSes), on which the password is useless
+// on linux, will return an error if password is wrong
+// return true on success, false otherwise
+bool SysExecAdmin(String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+	return SysExecAdmin("", command, args, Environ);
+}
+
+bool SysExecAdmin(String const &command, String const &args)
+{
+	return SysExecAdmin("", command, args);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// executes an external command as required user, passing a command line to it waiting for its termination
+// on linux, will return an error if password is required AND wrong
+// on windows, by now... it just spawn the process without changing security level
+// I still shall find a way to go back to user mode on windows
+// return true on success, false otherwise
+bool SysExecUser(String const &user, String const &command, String const &args, const VectorMap<String, String> &Environ)
+{
+	return SysExecUser(user, "", command, args, Environ);
+}
+
+bool SysExecUser(String const &user, String const &command, String const &args)
+{
+	return SysExecUser(user, "", command, args);
 }
 
 #endif
