@@ -37,7 +37,6 @@ file
 	ide.cpp,
 	idefile.cpp charset "iso8859-1",
 	EditorTabBar.cpp,
-	QuickTabs.cpp,
 	Bottom.cpp,
 	t.cpp,
 	Cpp.cpp,

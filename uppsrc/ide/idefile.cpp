@@ -423,6 +423,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	}
 
 	tabs.SetAddFile(editfile);
+	tabs.SetSplitColor(editfile2, Yellow);
 	editor.Enable();
 	editpane.Add(editorsplit);
 	editor.HiliteScope(hilite_scope);
@@ -692,8 +693,7 @@ void Ide::PassEditor()
 	editor2.CheckEdited();
 	editor.SetFocus();
 	editor.ScrollIntoCursor();
-	tabs.SetSplitColor(editfile, Yellow);
-;}
+}
 
 void Ide::ClearEditedFile()
 {
@@ -725,8 +725,9 @@ void Ide::SplitEditor(bool horz)
 		editorsplit.Horz(editor2, editor);
 	else
 		editorsplit.Vert(editor2, editor);
-	PassEditor();
 	
+	tabs.SetSplitColor(editfile, Yellow);
+	PassEditor();
 }
 
 void Ide::SwapEditors()
@@ -752,6 +753,7 @@ void Ide::CloseSplit()
 {
 	editorsplit.Vert(editor, editor2);
 	editorsplit.Zoom(0);
+	editfile2.Clear();
 	tabs.ClearSplitColor();
 	SyncEditorSplit();
 	editor.SetFocus();
