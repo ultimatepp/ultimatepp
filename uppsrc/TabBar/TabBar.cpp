@@ -374,6 +374,7 @@ void TabBar::CloseAll(int exception)
 			tabs.Remove(i);
 
 	SetCursor(0);
+	
 	if (exception >= 0)
 		WhenCloseSome(vv);
 	else
@@ -725,14 +726,40 @@ Value TabBar::AlignValue(int align, const Value &v, const Size &sz)
 	return AlignImage(align, (Image)w);
 }
 
+void TabBar::TabItem::Clear()
+{
+	text.Clear();
+	ink = Null;
+	img = Null;
+	side = LEFT;
+	clickable = false;
+	cross = false;
+	stacked_tab = -1;
+}
+
+TabBar::TabItem& TabBar::Tab::AddItem()
+{
+	if(itn < items.GetCount())
+	{
+		TabItem& ti = items[itn++];
+		ti.Clear();
+		return ti;
+	}
+	else
+	{
+		++itn;
+		return items.Add();
+	}
+}
+
 void TabBar::Tab::Clear()
 {
-	items.Clear();
+	itn = 0;
 }
 
 TabBar::TabItem& TabBar::Tab::AddImage(const Image& img, int side)
 {
-	TabItem& ti = items.Add();
+	TabItem& ti = AddItem();
 	ti.img = img;
 	ti.size = img.GetSize();
 	ti.side = side;
@@ -741,7 +768,7 @@ TabBar::TabItem& TabBar::Tab::AddImage(const Image& img, int side)
 
 TabBar::TabItem& TabBar::Tab::AddValue(const Value& q, const Font& font, const Color& ink)
 {
-	TabItem& ti = items.Add();
+	TabItem& ti = AddItem();
 	
 	ti.font = font;
 	ti.ink = ink;
@@ -764,7 +791,7 @@ TabBar::TabItem& TabBar::Tab::AddValue(const Value& q, const Font& font, const C
 
 TabBar::TabItem& TabBar::Tab::AddText(const WString& s, const Font& font, const Color& ink)
 {
-	TabItem& ti = items.Add();
+	TabItem& ti = AddItem();
 
 	ti.font = font;
 	ti.ink = ink;
@@ -775,7 +802,7 @@ TabBar::TabItem& TabBar::Tab::AddText(const WString& s, const Font& font, const 
 
 TabBar::TabItem& TabBar::Tab::AddSpace(int space, int side)
 {
-	TabItem& ti = items.Add();
+	TabItem& ti = AddItem();
 	
 	ti.size.cx = space;
 	ti.size.cy = 0;
@@ -858,7 +885,7 @@ void TabBar::PaintTabItems(Tab& t, Draw &w, const Rect& rn, int align)
 	int pos_left = TB_MARGIN;
 	int pos_right = (IsVert() ? rn.GetHeight() : rn.GetWidth()) - TB_MARGIN;
 	
-	for(int i = 0; i < t.items.GetCount(); i++)
+	for(int i = 0; i < t.itn; i++)
 	{
 		const TabItem& ti = t.items[i];
 		
@@ -987,8 +1014,8 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 	t.Clear();
 
 	if(crosses && cnt > mintabcount && !dragsample) {
-		TabItem& ti = t.items.Add();
-		ti.img = s.crosses[(cross == n) ? 2 : ((ac || hl) ? 1 : 0)];
+		TabItem& ti = t.AddItem();
+		ti.img = s.crosses[cross == n ? 2 : ac || hl ? 1 : 0];
 		ti.side = crosses_side;
 		ti.cross = true;
 		ti.size = s.crosses[0].GetSize();
@@ -1005,10 +1032,10 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 			int ndx = !enable ? CTRL_DISABLED : 
 					   highlight == ix ? CTRL_HOT : CTRL_NORMAL;
 
-			int sn = t.items.GetCount();
+			int sn = t.itn;
 			ComposeStackedTab(t, q, s.font, s.text_color[ndx], ndx);
-			if(t.items.GetCount() > sn)
-				for(; sn < t.items.GetCount(); sn++)
+			if(t.itn > sn)
+				for(; sn < t.itn; sn++)
 					t.items[sn].stacked_tab = ix;
 			
 			ix++;					
@@ -1293,7 +1320,7 @@ int TabBar::GetWidth() const
 	ix--;
 	while (ix >= 0 && tabs[ix].stack == stack)
 		ix--;
-	return tabs[ix+1].Right() + s.margin * 2;
+	return tabs[ix + 1].Right() + s.margin * 2;
 	
 }
 
@@ -2206,12 +2233,15 @@ bool TabBar::SetCursor0(int n, bool action)
 		return false;
 
 	bool repos = false;
+
 	if (!IsStackHead(n)) 
 	{
 		n = SetStackHead(tabs[n]);
 		repos = true;		
 	}
+
 	active = n;
+
 	if(!is_all && !same_group) 
 	{
 		SetGroup(tabs[n].group);

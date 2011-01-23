@@ -139,6 +139,7 @@ public:
 		int stacked_tab;
 		
 		TabItem& Clickable(bool b = true) { clickable = b; return *this; }
+		void Clear();
 		
 		TabItem() : side(LEFT), clickable(false), cross(false), stacked_tab(-1) {}
 		String ToString() const {
@@ -177,8 +178,9 @@ public:
 		virtual void Serialize(Stream& s);
 		
 		Vector<TabItem> items;
+		int itn;
 		
-		Tab() : id(-1), stack(-1), visible(true) { }
+		Tab() : id(-1), stack(-1), visible(true), itn(0) { items.SetCount(5); }
 		Tab(const Tab& t) { Set(t); }
 		
 		void Set(const Tab& t);
@@ -188,6 +190,7 @@ public:
 		bool HasIcon() const						{ return !img.IsEmpty(); }
 		int  Right() const 							{ return pos.x + size.cx; }
 		
+		TabItem& AddItem();
 		void Clear();
 		TabItem& AddValue(const Value& q, const Font& font = StdFont(), const Color& ink = SColorText);
 		TabItem& AddText(const WString& s, const Font& font = StdFont(), const Color& ink = SColorText);
@@ -270,8 +273,7 @@ protected:
 	TabKeySort 	 keysorter_inst;
 	TabValueSort stacksorter_inst;
 
-private:
-	void PaintTab(Draw& w, const Size& sz, int i, bool enable, bool dragsample = false);
+	void    PaintTab(Draw& w, const Size& sz, int i, bool enable, bool dragsample = false);
 	
 	int  	TabPos(const String& g, bool& first, int i, int j, bool inactive);	
 	void    ShowScrollbarFrame(bool b);
@@ -306,6 +308,7 @@ private:
 	static int GetStyleHeight();
 	static Image AlignImage(int align, const Image& img);
 	static Value AlignValue(int align, const Value& v, const Size& isz);
+	
 protected:	
 	virtual void Paint(Draw& w);
 	virtual void LeftDown(Point p, dword keysflags);
