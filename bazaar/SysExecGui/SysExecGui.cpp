@@ -58,8 +58,8 @@ bool PasswordDlg::Run(String const &u)
 	while(true)
 	{
 		pwd.Clear();
-		PopUp(NULL, false, true, true);
-		CenterScreen();
+		PopUp(NULL, false, true, true, true);
+		pwd.SetFocus();
 		switch(Execute())
 		{
 			case IDOK:

@@ -1,9 +1,9 @@
 LAYOUT(PasswordDlgLayout, 356, 200)
-	ITEM(RichTextCtrl, title2, NoSb(true).LeftPosZ(56, 284).TopPosZ(56, 44))
 	ITEM(EditString, pwd, LeftPosZ(132, 208).TopPosZ(112, 20))
-	ITEM(Label, dv___2, SetLabel(t_("Password :")).LeftPosZ(56, 72).VSizePosZ(112, 65))
-	ITEM(Button, cancelBtn, SetLabel(t_("Cancel")).LeftPosZ(200, 68).TopPosZ(168, 20))
 	ITEM(Button, okBtn, SetLabel(t_("Ok")).LeftPosZ(276, 68).TopPosZ(168, 20))
+	ITEM(Button, cancelBtn, SetLabel(t_("Cancel")).LeftPosZ(200, 68).TopPosZ(168, 20))
+	ITEM(RichTextCtrl, title2, NoSb(true).LeftPosZ(56, 284).TopPosZ(56, 44))
+	ITEM(Label, dv___4, SetLabel(t_("Password :")).LeftPosZ(56, 72).VSizePosZ(112, 65))
 	ITEM(RichTextCtrl, title1, NoSb(true).LeftPosZ(56, 284).TopPosZ(4, 44))
 	ITEM(ImageCtrl, lock, LeftPosZ(4, 48).TopPosZ(4, 48))
 END_LAYOUT
