@@ -199,6 +199,9 @@ bool Updater::START_Updater(String const &operation)
 	// creates a temporary filename and copies itself
 	// in temporary folder
 	String tempName = GetTempFileName();
+#ifdef PLATFORM_WIN32
+	tempName += ".exe";
+#endif
 	if(!FileCopy(exePath, tempName))
 		return true;
 	
