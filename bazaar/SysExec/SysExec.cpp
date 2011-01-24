@@ -237,7 +237,10 @@ bool SysStartAdmin(String const &password, String const &command, String const &
 	return SudoExec("root", password, command + " " + args, Environ, false);
 #else
 	// on windows, no pass should be needed, it'll display the dialog automatically
-	return ShellExec(command + " " + args, Environ, false);
+	if(IsUserAdministrator())
+		return SysStart(command, args, Environ);
+	else
+		return ShellExec(command + " " + args, Environ, false);
 #endif
 }
 
@@ -258,7 +261,10 @@ bool SysExecAdmin(String const &password, String const &command, String const &a
 	return SudoExec("root", password, command + " " + args, Environ, true);
 #else
 	// on windows, no pass should be needed, it'll display the dialog automatically
-	return ShellExec(command + " " + args, Environ, true);
+	if(IsUserAdministrator())
+		return SysExec(command, args, Environ);
+	else
+		return ShellExec(command + " " + args, Environ, true);
 #endif
 }
 
