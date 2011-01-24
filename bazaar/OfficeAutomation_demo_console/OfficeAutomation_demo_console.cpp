@@ -1,9 +1,9 @@
 #include <Core/Core.h>
 
+using namespace Upp;
+
 #include <Functions4U/Functions4U.h>
 #include <OfficeAutomation/OfficeAutomation.h>
-
-using namespace Upp;
 
 bool end = false;
 
@@ -51,17 +51,29 @@ void TestSheetDetail(OfficeSheet &sheet)
 		Puts("Tab 'My new tab' NOT removed");
 	Puts("Press enter to continue...");	getchar();
 	
+	Puts("Changing col width and row height");  
+	sheet.SetRowHeight(4, 30);
+	sheet.SetColWidth(3, 30);
+
 	Puts("Filling header using SetValue");  
-	for (int x = 1; x <= 200; ++x)
+	for (int x = 1; x <= 20; ++x)
 		sheet.SetValue(x, 1, Format("Header %d", x));
 	
-	sheet.Select(1, 1, 200, 1);
+	sheet.Select(2, 2, 5, 4);
 	sheet.SetBold(true);	
+	sheet.SetItalic(true);	
+	sheet.SetUnderline(true);	
 	sheet.SetFont("Times New Roman", 12);	
+	sheet.SetBorder(OfficeSheet::BORDER_BOTTOM, OfficeSheet::DASHDOT, OfficeSheet::MEDIUM, LtRed());
+	sheet.SetBorder(OfficeSheet::BORDER_RIGHT, OfficeSheet::CONTINUOUS, OfficeSheet::THICK, LtGreen());
+	
+	Puts("Changing cell alignment");  
+	sheet.SetHorizAlignment(4, 3, OfficeSheet::CENTER);
+	sheet.SetVertAlignment(4, 3, OfficeSheet::CENTER);
 	
 	Puts("Filling cells using SetValue");  
 	for (int y = 2; y <= 20; ++y)
-		for (int x = 1; x <= 200; ++x)
+		for (int x = 1; x <= 20; ++x)
 			sheet.SetValue(x, y, x*y);	 
 
 /*				
@@ -73,14 +85,10 @@ void TestSheetDetail(OfficeSheet &sheet)
 			sheet.SetMatrixValue(x, y, x*y);	
 	sheet.FillSelectionMatrix();		// Fill selected range with matrix values
 */
-
-	sheet.SetValue(2, 2, "=A7*B6");
-	sheet.SetValue(3, 21, "Hello");					Puts("Cell(3, 21) = " + sheet.GetValue(3, 21).ToString());
-	sheet.SetValue("BD25", 23242.343);				Puts("Cell(BD25) = " + sheet.GetValue("BD25").ToString());
-	sheet.SetValue(1, 2, "'123456789123456789");	Puts("Cell(1, 2) = " + sheet.GetValue(1, 2).ToString());
-	sheet.SetValue(2, 4, "Он читает и пишет в разных алфавитов");
-	String alphabet = sheet.GetValue(2, 4).ToString();
-	sheet.SetValue(2, 5, alphabet);
+	sheet.SetValue(2, 2, "=A7*B5");
+	sheet.SetValue(3, 21, "Hello");				Puts("Cell(3, 21) = " + sheet.GetValue(3, 21).ToString());
+	sheet.SetValue("BD25", 23242.343);			Puts("Cell(BD25) = " + sheet.GetValue("BD25").ToString());
+	sheet.SetValue(1, 2, "'123456789123456789");
 	sheet.SetValue("BE25", OfficeSheet::ColRowToCell(30, 12));
 	sheet.SetValue("B26", GetSysTime());		Puts("Cell(B26) = " + sheet.GetValue("B26").ToString());
 	
@@ -110,7 +118,7 @@ void TestSheet()
 	
 	if (openAvailable) {
 		sheet.Init("Open");
-		TestSheetDetail(sheet);
+		TestSheetDetail(sheet); 
 	}
 	if (microsoftAvailable) {
 		sheet.Init("Microsoft");
