@@ -9,12 +9,13 @@ uses
 library(WIN32) Oleaut32;
 
 file
+	OfficeSheet.cpp,
+	OfficeDoc.cpp,
+	OfficeAutomation.cpp,
 	OfficeAutomation.h,
 	OfficeAutomationBase.h,
-	OfficeAutomation.cpp,
 	srcdoc.tpp,
 	src.tpp,
 	OfficeAutomation.t,
 	License.txt;
-
 

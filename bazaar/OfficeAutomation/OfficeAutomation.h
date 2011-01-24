@@ -31,9 +31,38 @@ public:
 	bool SetBold(int col, int row, bool bold);
 	bool SetBold(String cell, bool bold);
 	bool SetBold(bool bold);
+	bool SetItalic(int col, int row, bool italic);
+	bool SetItalic(String cell, bool italic);
+	bool SetItalic(bool italic);
+	bool SetUnderline(bool underline);
+	bool SetUnderline(String cell, bool underline);
+	bool SetUnderline(int col, int row, bool underline);	
 	bool SetFont(int col, int row, String name, int size);
 	bool SetFont(String cell, String name, int size);
 	bool SetFont(String name, int size);
+	bool SetColor(int col, int row, Color color);
+	bool SetColor(String cell, Color color);
+	bool SetColor(Color color);
+	bool SetBackColor(int col, int row, Color color);
+	bool SetBackColor(String cell, Color color);
+	bool SetBackColor(Color color);
+	
+	bool SetRowHeight(int row, double height);
+	bool SetColWidth(int col, double width);
+	
+	enum {LEFT = 0, CENTER, RIGHT, JUSTIFY, TOP, BOTTOM, MAX_JUSTIFY};
+	
+	bool SetHorizAlignment(String cell, int alignment);
+	bool SetHorizAlignment(int col, int row, int alignment);
+	bool SetVertAlignment(String cell, int alignment);
+	bool SetVertAlignment(int col, int row, int alignment); 
+	
+	enum {BORDER_DIAG_DOWN = 0, BORDER_DIAG_UP, BORDER_LEFT, BORDER_TOP, BORDER_BOTTOM, BORDER_RIGHT};
+	enum {HAIRLINE = 0, MEDIUM, THIN, THICK};
+	enum {NONE = 0, CONTINUOUS, DASH, DASHDOT, DOT};
+	
+	bool SetBorder(int borderIndx, int lineStyle, int weight, Color color);
+	bool SetBorder(int col, int row, int borderIndx, int lineStyle, int weight, Color color);
 	
 	bool Select(String range);
 	bool Select(int fromX, int fromY, int toX, int toY);

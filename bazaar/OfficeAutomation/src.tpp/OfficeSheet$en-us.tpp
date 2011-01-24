@@ -5,9 +5,10 @@ topic "OfficeSheet class reference";
 [0 $$3,0#96390100711032703541132217272105:end]
 [H6;0 $$4,0#05600065144404261032431302351956:begin]
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:codeitem]
+[l288;a4;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 OfficeSheet]]}}&]
-[s1;*4 &]
+[s1;*2 &]
 [s1;:OfficeSheet`:`:class: [@(0.0.255)4 class][4 _][*4 OfficeSheet]&]
 [s2;l0;* &]
 [s0; [2 OfficeSheet class serves to manage spreadsheets made with OpenOffice 
@@ -111,16 +112,56 @@ t]_[*@3 col], [@(0.0.255) int]_[*@3 row], [@(0.0.255) bool]_[*@3 bold])&]
 [s4; &]
 [s5;:OfficeSheet`:`:SetBold`(String`,bool`): [@(0.0.255) bool]_[* SetBold]([_^String^ Strin
 g]_[*@3 cell], [@(0.0.255) bool]_[*@3 bold])&]
-[s2;%% Sets or unsets cell bold letters in [%-*@3 cell. cell ]is a 
-string that indicates the cell location with letters to indicate 
-the column and a number to indicate the row as in `"B7`", following 
-the format used in spreadsheets.&]
+[s2;%% Sets or unsets [%-*@3 cell ]bold letters in [%-*@3 cell. cell 
+]is a string that indicates the cell location with letters to 
+indicate the column and a number to indicate the row as in `"B7`", 
+following the format used in spreadsheets.&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:SetBold`(bool`): [@(0.0.255) bool]_[* SetBold]([@(0.0.255) bool]_[*@3 bol
 d])&]
 [s2;%% Sets or unsets cell bold letters in the selected range by 
 Select() or all the document.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetItalic`(int`,int`,bool`): [@(0.0.255) bool]_[* SetItalic]([@(0.0.255) i
+nt]_[*@3 col], [@(0.0.255) int]_[*@3 row], [@(0.0.255) bool]_[*@3 italic])&]
+[s2;%% Sets or unsets cell italic letters in [%-*@3 col,] [%-*@3 row. 
+col,] [%-*@3 row ]origin is (1, 1).&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetItalic`(String`,bool`): [@(0.0.255) bool]_[* SetItalic]([_^String^ S
+tring]_[*@3 cell], [@(0.0.255) bool]_[*@3 italic])&]
+[s2;%% Sets or unsets [%-*@3 cell ]italic letters in [%-*@3 cell. cell 
+]is a string that indicates the cell location with letters to 
+indicate the column and a number to indicate the row as in `"B7`", 
+following the format used in spreadsheets.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetItalic`(bool`): [@(0.0.255) bool]_[* SetItalic]([@(0.0.255) bool]_[*@3 i
+talic])&]
+[s2;%% Sets or unsets cell italic letters in the selected range by 
+Select() or all the document.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetUnderline`(bool`): [@(0.0.255) bool]_[* SetUnderline]([@(0.0.255) bo
+ol]_[*@3 underline])&]
+[s2;%% Sets or unsets cell underline letters in the selected range 
+by Select() or all the document.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetUnderline`(String`,bool`): [@(0.0.255) bool]_[* SetUnderline]([_^String^ S
+tring]_[*@3 cell], [@(0.0.255) bool]_[*@3 underline])&]
+[s2;%% Sets or unsets [%-*@3 cell ]underline letters in [%-*@3 cell. 
+cell ]is a string that indicates the cell location with letters 
+to indicate the column and a number to indicate the row as in 
+`"B7`", following the format used in spreadsheets.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetUnderline`(int`,int`,bool`): [@(0.0.255) bool]_[* SetUnderline]([@(0.0.255) i
+nt]_[*@3 col], [@(0.0.255) int]_[*@3 row], [@(0.0.255) bool]_[*@3 underline])&]
+[s2;%% Sets or unsets cell underlined letters in [%-*@3 col,] [%-*@3 row. 
+col,] [%-*@3 row ]origin is (1, 1).&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:SetFont`(int`,int`,String`,int`): [@(0.0.255) bool]_[* SetFont]([@(0.0.255) i
@@ -142,6 +183,125 @@ tring]_[*@3 cell], [_^String^ String]_[*@3 name], [@(0.0.255) int]_[*@3 size])&]
 ]_[*@3 name], [@(0.0.255) int]_[*@3 size])&]
 [s2;%% Sets the selected range by Select() or all the document with 
 font [%-*@3 name] with [%-*@3 size ]in points. &]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetColor`(int`,int`,Color`): [@(0.0.255) bool]_[* SetColor]([@(0.0.255) i
+nt]_[*@3 col], [@(0.0.255) int]_[*@3 row], [_^Color^ Color]_[*@3 color])&]
+[s2;%% Sets or unsets cell letter [%-*@3 color] in [%-*@3 col,] [%-*@3 row. 
+col,] [%-*@3 row ]origin is (1, 1).&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetColor`(String`,Color`): [@(0.0.255) bool]_[* SetColor]([_^String^ St
+ring]_[*@3 cell], [_^Color^ Color]_[*@3 color])&]
+[s2;%% Sets or unsets [%-*@3 cell ]letter [%-*@3 color] in [%-*@3 cell. 
+cell ]is a string that indicates the cell location with letters 
+to indicate the column and a number to indicate the row as in 
+`"B7`", following the format used in spreadsheets.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetColor`(Color`): [@(0.0.255) bool]_[* SetColor]([_^Color^ Color]_[*@3 c
+olor])&]
+[s2;%% Sets or unsets cell letter [%-*@3 color] in the selected range 
+by Select() or all the document.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetBackColor`(int`,int`,Color`): [@(0.0.255) bool]_[* SetBackColor]([@(0.0.255) i
+nt]_[*@3 col], [@(0.0.255) int]_[*@3 row], [_^Color^ Color]_[*@3 color])&]
+[s2;%% Sets or unsets cell background [%-*@3 color] in [%-*@3 col,] [%-*@3 row. 
+col,] [%-*@3 row ]origin is (1, 1).&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetBackColor`(String`,Color`): [@(0.0.255) bool]_[* SetBackColor]([_^String^ S
+tring]_[*@3 cell], [_^Color^ Color]_[*@3 color])&]
+[s2;%% Sets or unsets [%-*@3 cell ]letter background [%-*@3 color] in 
+[%-*@3 cell. cell ]is a string that indicates the cell location 
+with letters to indicate the column and a number to indicate 
+the row as in `"B7`", following the format used in spreadsheets.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetBackColor`(Color`): [@(0.0.255) bool]_[* SetBackColor]([_^Color^ Col
+or]_[*@3 color])&]
+[s2;%% Sets or unsets cell letter background [%-*@3 color] in the selected 
+range by Select() or all the document.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetRowHeight`(int`,double`): [@(0.0.255) bool]_[* SetRowHeight]([@(0.0.255) i
+nt]_[*@3 row], [@(0.0.255) double]_[*@3 height])&]
+[s2;%% Sets [%-*@3 row] [%-*@3 height] in millimeters.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetColWidth`(int`,double`): [@(0.0.255) bool]_[* SetColWidth]([@(0.0.255) i
+nt]_[*@3 col], [@(0.0.255) double]_[*@3 width])&]
+[s2;%% Sets [%-*@3 col] [%-*@3 width] in millimeters.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetHorizAlignment`(String`,int`): [@(0.0.255) bool]_[* SetHorizAlignm
+ent]([_^String^ String]_[*@3 cell], [@(0.0.255) int]_[*@3 alignment])&]
+[s2;%% Sets [%-*@3 cell ]horizontal alignment[%- . ][%-*@3 cell ]is a string 
+that indicates the cell location with letters to indicate the 
+column and a number to indicate the row as in `"B7`", following 
+the format used in spreadsheets.&]
+[s2;%% [%-*@3 alignment ]is a constant that can be LEFT, CENTER, RIGHT 
+or JUSTIFY.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetHorizAlignment`(int`,int`,int`): [@(0.0.255) bool]_[* SetHorizAlig
+nment]([@(0.0.255) int]_[*@3 col], [@(0.0.255) int]_[*@3 row], [@(0.0.255) int]_[*@3 alignmen
+t])&]
+[s2;%% Sets [%-*@3 cell ]horizontal alignment in [%-*@3 col,] [%-*@3 row. 
+col,] [%-*@3 row ]origin is (1, 1).&]
+[s2;%% [%-*@3 alignment ]is a constant that can be LEFT, CENTER, RIGHT 
+or JUSTIFY.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetVertAlignment`(String`,int`): [@(0.0.255) bool]_[* SetVertAlignmen
+t]([_^String^ String]_[*@3 cell], [@(0.0.255) int]_[*@3 alignment])&]
+[s2;%% Sets [%-*@3 cell ]vertical alignment[%- . ][%-*@3 cell ]is a string 
+that indicates the cell location with letters to indicate the 
+column and a number to indicate the row as in `"B7`", following 
+the format used in spreadsheets.&]
+[s2;%% [%-*@3 alignment ]is a constant that can be TOP, CENTER or BOTTOM.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetVertAlignment`(int`,int`,int`): [@(0.0.255) bool]_[* SetVertAlignm
+ent]([@(0.0.255) int]_[*@3 col], [@(0.0.255) int]_[*@3 row], [@(0.0.255) int]_[*@3 alignment])
+&]
+[s2;%% Sets [%-*@3 cell ]vertical alignment in [%-*@3 col,] [%-*@3 row. 
+col,] [%-*@3 row ]origin is (1, 1).&]
+[s2;%% [%-*@3 alignment ]is a constant that can be TOP, CENTER or BOTTOM.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetBorder`(int`,int`,int`,Color`): [@(0.0.255) bool]_[* SetBorder]([@(0.0.255) i
+nt]_[*@3 borderIndx], [@(0.0.255) int]_[*@3 lineStyle], [@(0.0.255) int]_[*@3 weight], 
+[_^Color^ Color]_[*@3 color])&]
+[s2;%% Sets selected cells border type, where:&]
+[s2;i150;O0;%% [%-*@3 borderIndx ]is the changed border. Values are 
+BORDER`_DIAG`_DOWN, BORDER`_DIAG`_UP, BORDER`_LEFT, BORDER`_TOP, 
+BORDER`_BOTTOM and BORDER`_RIGHT.&]
+[s2;i150;O0;%% [%-*@3 lineStyle] is the line style. Values are NONE, 
+CONTINUOUS, DASH, DASHDOT and DOT.&]
+[s2;i150;O0;%% [%-*@3 weight ]is the line thickness. Values are HAIRLINE, 
+MEDIUM, THIN and THICK.&]
+[s2;i150;O0;%% [%-*@3 color] is the border color.&]
+[s2;%% [*@(28.42.255)1 SetBorder functions are not implemented in Open/LibreOffice 
+yet.]&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:SetBorder`(int`,int`,int`,int`,int`,Color`): [@(0.0.255) bool]_[* Set
+Border]([@(0.0.255) int]_[*@3 col], [@(0.0.255) int]_[*@3 row], [@(0.0.255) int]_[*@3 borderI
+ndx], [@(0.0.255) int]_[*@3 lineStyle], [@(0.0.255) int]_[*@3 weight], 
+[_^Color^ Color]_[*@3 color])&]
+[s2;%% Sets cell [%-*@3 col] and [%-*@3 row ]border type, where:&]
+[s2;i150;O0;%% [%-*@3 borderIndx ]is the changed border. Values are 
+BORDER`_DIAG`_DOWN, BORDER`_DIAG`_UP, BORDER`_LEFT, BORDER`_TOP, 
+BORDER`_BOTTOM and BORDER`_RIGHT.&]
+[s2;i150;O0;%% [%-*@3 lineStyle] is the line style. Values are NONE, 
+CONTINUOUS, DASH, DASHDOT and DOT.&]
+[s2;i150;O0;%% [%-*@3 weight ]is the line thickness. Values are HAIRLINE, 
+MEDIUM, THIN and THICK.&]
+[s2;i150;O0;%% [%-*@3 color] is the border color.&]
+[s0;l288;%% [*@(28.42.255)1 SetBorder functions are not implemented 
+in Open/LibreOffice yet.]&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:Select`(String`): [@(0.0.255) bool]_[* Select]([_^String^ String]_[*@3 ra

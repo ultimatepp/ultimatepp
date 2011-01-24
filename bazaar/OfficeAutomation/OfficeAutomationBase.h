@@ -52,10 +52,33 @@ public:
 	bool SetBold(int col, int row, bool bold);
 	bool SetBold(String cell, bool bold);
 	bool SetBold(bool bold);
+	bool SetItalic(int col, int row, bool italic);
+	bool SetItalic(String cell, bool italic);
+	bool SetItalic(bool italic);
+	bool SetUnderline(bool underline);
+	bool SetUnderline(String cell, bool underline);
+	bool SetUnderline(int col, int row, bool underline);	
 	bool SetFont(int col, int row, String name, int size);
 	bool SetFont(String cell, String name, int size);
 	bool SetFont(String name, int size);
+	bool SetColor(int col, int row, Color color);
+	bool SetColor(String cell, Color color);
+	bool SetColor(Color color);
+	bool SetBackColor(int col, int row, Color color);
+	bool SetBackColor(String cell, Color color);
+	bool SetBackColor(Color color);	
 	
+	bool SetRowHeight(int row, double height);
+	bool SetColWidth(int col, double width);
+		
+	bool SetHorizAlignment(String cell, int alignment);
+	bool SetHorizAlignment(int col, int row, int alignment);
+	bool SetVertAlignment(String cell, int alignment);
+	bool SetVertAlignment(int col, int row, int alignment); 
+	
+	bool SetBorder(int borderIndx, int lineStyle, int weight, Color color);	
+	bool SetBorder(int col, int row, int borderIndx, int lineStyle, int weight, Color color);
+			
 	bool Select(String range);
 	bool Select(int fromX, int fromY, int toX, int toY);
 	bool Select();
@@ -90,6 +113,7 @@ private:
 	bool quit;	
 	
 	bool SetVisible(bool visible);
+	bool SetBorder(ObjectOle &borders, int borderIndx, int lineStyle, int weight, Color color);
 };
 
 class MSDoc
@@ -156,9 +180,32 @@ public:
 	bool SetBold(int col, int row, bool bold);
 	bool SetBold(String cell, bool bold);
 	bool SetBold(bool bold);
+	bool SetItalic(String cell, bool italic);
+	bool SetItalic(int col, int row, bool italic);
+	bool SetItalic(bool italic);	
+	bool SetUnderline(bool underline);
+	bool SetUnderline(String cell, bool underline);
+	bool SetUnderline(int col, int row, bool underline);
 	bool SetFont(int col, int row, String name, int size);
 	bool SetFont(String cell, String name, int size);
 	bool SetFont(String name, int size);
+	bool SetColor(int col, int row, Color color);
+	bool SetColor(String cell, Color color);
+	bool SetColor(Color color);
+	bool SetBackColor(int col, int row, Color color);
+	bool SetBackColor(String cell, Color color);
+	bool SetBackColor(Color color);
+	
+	bool SetColWidth(int col, double width);
+	bool SetRowHeight(int row, double height);
+	
+	bool SetHorizAlignment(String cell, int alignment);
+	bool SetHorizAlignment(int col, int row, int alignment);
+	bool SetVertAlignment(String cell, int alignment);
+	bool SetVertAlignment(int col, int row, int alignment); 
+	
+	bool SetBorder(int borderIndx, int lineStyle, int weight, Color color);	
+	bool SetBorder(int col, int row, int borderIndx, int lineStyle, int weight, Color color);
 	
 	bool Select(String range);
 	bool Select(int fromX, int fromY, int toX, int toY);
@@ -182,23 +229,10 @@ public:
 	int GetNumTabs();
 	
 	// New functs for next versions
-	bool SetItalic(String cell, bool italic);
-	bool SetItalic(int col, int row, bool italic);
-	bool SetItalic(bool italic);
-	bool SetUnderline(bool underline);
-	bool SetUnderline(String cell, bool underline);
-	bool SetUnderline(int col, int row, bool underline);
-	bool SetHorizJustify(int justify);
-	bool SetHorizJustify(String cell, int justify);
-	bool SetHorizJustify(int col, int row, int justify);
-	bool SetVertJustify(String cell, int justify);
-	bool SetVertJustify(int col, int row, int justify);
-	bool SetCellBackColor(Color color);
-	bool SetCellBackColor(String cell, Color color);
-	bool SetCellBackColor(int col, int row, Color color);
+	//bool SetCellBackColor(Color color);
+	//bool SetCellBackColor(String cell, Color color);
+	//bool SetCellBackColor(int col, int row, Color color);
 	bool SetFormat(String format);
-	bool SetColWidth(int col, int width);
-	bool SetRowHeight(int row, int height);
 	
 private:
 	ObjectOle ServiceManager;
@@ -255,6 +289,39 @@ private:
 	bool quit;
 	
 	bool SetVisible(bool visible);
+};
+
+
+class Ole {
+public:
+	static bool Invoke(int autoType, VARIANT *pvResult, IDispatch *pDisp, String name, int cArgs...);
+	static void Init();
+	static bool Close();
+	static ObjectOle CreateObject(String application);
+	static ObjectOle GetObject(ObjectOle from, String what);
+	static ObjectOle GetObject(ObjectOle from, String which, VariantOle &value);
+	static ObjectOle GetObject(ObjectOle from, String which, VariantOle &value, VariantOle &value2);
+	static bool SetValue(ObjectOle from, String which, VariantOle &value);
+	static bool SetValue(ObjectOle from, String which, VariantOle &value, VariantOle &value2);
+	static bool SetValue(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3);
+	static Value GetValue(ObjectOle from, String which);
+	static Value GetValue(ObjectOle from, String which, VariantOle &value);
+	static Value GetValue(ObjectOle from, String which, VariantOle &value, VariantOle &value2);
+	static bool Method(ObjectOle from, String which);
+	static bool Method(ObjectOle from, String which, VariantOle &value);
+	static bool Method(ObjectOle from, String which, VariantOle &value, VariantOle &value2);
+	static bool Method(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3);
+	static bool Method(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3, VariantOle &value4);
+	static bool Method(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3, VariantOle &value4, VariantOle &value5);
+	static bool Method(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3, VariantOle &value4, VariantOle &value5, VariantOle &value6, VariantOle &value7, VariantOle &value8, VariantOle &value9, VariantOle &value10, VariantOle &value11);
+	static ObjectOle MethodGet(ObjectOle from, String which);
+	static ObjectOle MethodGet(ObjectOle from, String which, VariantOle &value);
+	static ObjectOle MethodGet(ObjectOle from, String which, VariantOle &value, VariantOle &value2);
+	static ObjectOle MethodGet(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3);
+	static ObjectOle MethodGet(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3, VariantOle &value4);
+	static bool IsOn() {return numOleInit > 0;};
+private:
+	static int numOleInit;
 };
 
 #endif
