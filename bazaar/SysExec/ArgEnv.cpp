@@ -4,17 +4,17 @@ NAMESPACE_UPP
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // parses an args line to be useable by spawnxx functions
-Buffer<char *>BuildArgs(String const &command, String const &argline)
+char **BuildArgs(String const &command, String const &argline)
 {
 	Array<String> args;
-	int pos = 0;
-	char c;
-	int buflen = 0;
 	
 	// first arg should be command name
 	args.Add(command);
+	int buflen = command.GetCount() + 1;
 
 	// skips leading spaces
+	char c;
+	int pos = 0;
 	while ((c = argline[pos]) != 0 && isspace(c))
 		pos++;
 
@@ -54,7 +54,7 @@ Buffer<char *>BuildArgs(String const &command, String const &argline)
 
 	// here we've got an array of args and the total size (in bytes) of them
 	// we allocates a  buffer for arg array
-	Buffer<char *>buf(buflen);
+	char **buf = (char **)malloc(buflen);
 
 	// we fill the buffer with arg strings
 	char **bufindex = buf;
@@ -62,8 +62,8 @@ Buffer<char *>BuildArgs(String const &command, String const &argline)
 	int i = 0;
 	while (i < args.GetCount())
 	{
-		String &s = args[i];
-		strcpy(bufpos, (const char *)s);
+		String s = args[i];
+		strcpy(bufpos, ~s);
 		*bufindex++ = bufpos;
 		bufpos += s.GetCount() + 1 ;
 		i++;
@@ -78,15 +78,16 @@ Buffer<char *>BuildArgs(String const &command, String const &argline)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // parses environment map and builds env array
-Buffer<char *>BuildEnv(const VectorMap<String, String> &env)
+char **BuildEnv(const VectorMap<String, String> &env)
 {
 	// calculates total environment size
 	int envSize = 0;
 	for (int i = 0; i < env.GetCount(); i++)
 		envSize += env.GetKey(i).GetCount() + env[i].GetCount() + 2 + sizeof(char *);
+	envSize+=2;
 
 	// we allocates a  buffer for env array
-	Buffer<char *>buf(envSize);
+	char **buf = (char **)malloc(envSize);
 
 	// we fill the buffer with env strings
 	char **bufindex = buf;
@@ -94,8 +95,8 @@ Buffer<char *>BuildEnv(const VectorMap<String, String> &env)
 	int i = 0;
 	while (i < env.GetCount())
 	{
-		const String &s = env.GetKey(i) + "=" + env[i];
-		strcpy(bufpos, (const char *)s);
+		String s = env.GetKey(i) + "=" + env[i];
+		strcpy(bufpos, ~s);
 		*bufindex++ = bufpos;
 		bufpos += s.GetCount() + 1 ;
 		i++;

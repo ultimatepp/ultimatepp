@@ -48,8 +48,8 @@ bool SysExec(String const &command, String const &args, const VectorMap<String, 
 	dup2(ErrFile, 2);
 
 	// builds the arguments and the environment
-	Buffer<char *>argv = BuildArgs(GetFileName(command), args);
-	Buffer<char *>envv = BuildEnv(Environ);
+	char **argv = BuildArgs(GetFileName(command), args);
+	char **envv = BuildEnv(Environ);
 	
 	// executes the command
 	int result = 0;
@@ -169,8 +169,8 @@ bool SysExec(String const &command, String const &args)
 bool SysStart(String const &command, String const &args, const VectorMap<String, String> &Environ, intptr_t *pid)
 {
 	// builds the arguments and the environment
-	Buffer<char *>argv = BuildArgs(GetFileName(command), args);
-	Buffer<char *>envv = BuildEnv(Environ);
+	char **argv = BuildArgs(GetFileName(command), args);
+	char **envv = BuildEnv(Environ);
 	
 	// executes the command
 	int result = 0;

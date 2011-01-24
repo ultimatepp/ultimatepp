@@ -13,7 +13,6 @@ NAMESPACE_UPP
 static bool IsVistaOrLater(void)
 {
     OSVERSIONINFO osvi;
-    BOOL bIsWindowsXPorLater;
 
     ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
