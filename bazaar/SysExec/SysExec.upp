@@ -6,6 +6,8 @@ uses
 link(LINUX) -lutil;
 
 file
+	SysInfo.h,
+	SysInfo.cpp,
 	ArgEnv.h,
 	ArgEnv.cpp,
 	SudoLib.h,
