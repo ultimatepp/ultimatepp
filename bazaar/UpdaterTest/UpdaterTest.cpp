@@ -1,5 +1,7 @@
 #include <Updater/Updater.h>
 
+using namespace Upp;
+
 GUI_APP_MAIN
 {
 	Updater updater;
