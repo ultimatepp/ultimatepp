@@ -151,7 +151,7 @@ public:
 	void          Attach(HENHMETAFILE emf);
 	HENHMETAFILE *Detach();
 	
-	void     Set(const void *data, int len);
+	void     Set(const void *data, dword len);
 	void     Set(const String& data)        { Set(~data, data.GetCount()); }
 	
 	String   Get() const;

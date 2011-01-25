@@ -93,7 +93,7 @@ struct PLACEABLE_METAFILEHEADER
 };
 #pragma pack(pop)
 
-void WinMetaFile::Set(const void *data, int len)
+void WinMetaFile::Set(const void *data, dword len)
 {
 	Clear();
 
@@ -106,7 +106,8 @@ void WinMetaFile::Set(const void *data, int len)
 	if((hemf = ::SetEnhMetaFileBits(len, (const BYTE *)data)) != NULL)
 		Attach(hemf);
 	else
-	if(first == 0x9AC6CDD7) {
+	if(first == (int)0x9AC6CDD7) {
+		if ( len <= 22 ) return;
 		const PLACEABLE_METAFILEHEADER *mfh = (const PLACEABLE_METAFILEHEADER *)data;
 		Attach(::SetWinMetaFileBits(len - 22, (const BYTE *)data + 22, NULL, NULL));
 		size = 600 * Size(mfh->right - mfh->left, mfh->bottom - mfh->top) / 2540;
