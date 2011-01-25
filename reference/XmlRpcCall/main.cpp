@@ -12,8 +12,12 @@ struct FoxResult {
 	}
 };
 
+XMLRPC_STRUCT(FoxResult)
+
 #define XRSFILE <XmlRpcCall/FoxRate.xrs>
-#include <XmlRpc/Xrs.h>
+#include <XmlRpc/xrs.h>
+
+XMLRPC_STRUCT(FoxResult2)
 
 CONSOLE_APP_MAIN
 {
