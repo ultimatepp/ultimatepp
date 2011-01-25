@@ -3,7 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-using namespace Upp;
+NAMESPACE_UPP
 
 #define SELFUPDATE_OK				0
 #define SELFUPDATE_NO_NETWORK		1
@@ -184,8 +184,10 @@ class Updater
 		String GetShellFolder(const char *name, HKEY type);
 		void DelKey(const char *dir, const char *key);
 		bool CreateShellLink(const char *filepath, const char *linkpath, const char *desc, const char *iconPath);
-		bool SetFileAssociations(String const &ext, Image const &icon, String const &exePath);
-
+		bool RegisterApplication(String const &appName, String const &appPath);
+		bool UnregisterApplication(String const &appName);
+		bool SetFileAssociation(String const &appName, String const &ext, Image const &icon);
+		bool RemoveFileAssociation(String const &ext);
 #endif
 
 		// links application to OS shell
@@ -264,5 +266,7 @@ class Updater
 		Updater &NoDesktopIcon(void) { desktopIcon = false; return *this; }
 
 };
+
+END_UPP_NAMESPACE
 
 #endif

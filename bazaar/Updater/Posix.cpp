@@ -2,6 +2,8 @@
 
 #include <SysExec/SysExec.h>
 
+NAMESPACE_UPP
+
 #ifdef PLATFORM_POSIX
 
 // scans for theme folders on which put/delete the mimetype icons
@@ -136,5 +138,6 @@ bool Updater::ShellUnlink(void)
 	return success;
 }
 		
-
 #endif
+
+END_UPP_NAMESPACE

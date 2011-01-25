@@ -19,8 +19,9 @@
 #undef byte
 #undef CY
 
+#include <SysExec/SysExec.h>
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ò
+NAMESPACE_UPP
 
 String Updater::GetShellFolder(const char *name, HKEY type)
 {
@@ -84,8 +85,86 @@ HRESULT SetContosoAsDefaultForDotHTM()
     return hr;
 }
 
-bool Updater::SetFileAssociations(String const &ext, Image const &icon, String const &exePath)
+// register the application for shell extensions handling
+bool Updater::RegisterApplication(String const &appName, String const &appPath)
 {
+	SetWinRegString(appPath, NULL, "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\" + appName + ".exe", HKEY_LOCAL_MACHINE);
+	return true;
+}
+
+// register the application for shell extensions handling
+bool Updater::UnregisterApplication(String const &appName)
+{
+	DeleteWinReg("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\" + appName + ".exe", HKEY_LOCAL_MACHINE);
+	return true;
+}
+
+// register file associations
+bool Updater::SetFileAssociation(String const &appName, String const &ext, Image const &icon)
+{
+	// strips eventually present "*." inside ext
+	int dotPos = ext.Find('.');
+	if(dotPos >= 0)
+		dotPos++;
+	else
+		dotPos = 0;
+	String ex = ext.Mid(dotPos);
+
+	// get executable path
+	String exePath = GetProgramsFolder() + "\\" + appName + "\\" + appName + ".exe";
+	
+	// get path for icon
+	String iconPath = GetProgramsFolder() + "\\" + appName + "\\" + ex + ".ico";
+	
+	// if icon present, save it on file -- format is ext.ico
+	if(!IsNull(icon))
+	{
+		Vector<Image>img;
+		img << icon;
+		String imgs = WriteIcon(img);
+		SaveFile(iconPath, imgs);
+	}
+	
+	// on Vista+, new way...
+	if(IsVistaOrLater())
+	{
+	}
+	// otherwise, old way
+	else
+	{
+		SetWinRegString(ex + "Files", NULL, "." + ex, HKEY_CLASSES_ROOT);
+		SetWinRegString(appName + " data files", NULL, ex + "Files", HKEY_CLASSES_ROOT);
+		if(!IsNull(icon))
+			SetWinRegString(iconPath, NULL, ex + "Files\\DefaultIcon", HKEY_CLASSES_ROOT);
+		SetWinRegString("\"" + exePath + "\" \"%1\"", NULL, ex + "Files\\shell\\open\\command", HKEY_CLASSES_ROOT);
+	}
+	return true;
+}
+
+// remove file associations
+bool Updater::RemoveFileAssociation(String const &ext)
+{
+	// strips eventually present "*." inside ext
+	int dotPos = ext.Find('.');
+	if(dotPos >= 0)
+		dotPos++;
+	else
+		dotPos = 0;
+	String ex = ext.Mid(dotPos);
+	
+	// no need to remove icon files, they get removed
+	// with app program folder !
+
+	// on Vista+, new way...
+	if(IsVistaOrLater())
+	{
+	}
+	// otherwise, old way
+	else
+	{
+		DeleteWinReg("." + ex, HKEY_CLASSES_ROOT);
+		DeleteWinReg(ex + "Files", HKEY_CLASSES_ROOT);
+	}
 	return true;
 }
 
@@ -95,8 +174,8 @@ bool Updater::ShellLink(void)
 {
 	bool success = true;
 	
-	String exePath = GetProgramsFolder() + "/" + appName + "/" + appName + ".exe";
-	String iconPath = GetProgramsFolder() + "/" + appName + "/" + appName + ".ico";
+	String exePath = GetProgramsFolder() + "\\" + appName + "\\" + appName + ".exe";
+	String iconPath = GetProgramsFolder() + "\\" + appName + "\\" + appName + ".ico";
 	String linkName = appName + ".lnk";
 
 	// creates the needed icon in executable folder
@@ -133,6 +212,13 @@ bool Updater::ShellLink(void)
 	SetWinRegString(appName, "DisplayName", uninstallRegPath);
 	SetWinRegString("\"" + exePath + "\" --UNINSTALL", "UninstallString", uninstallRegPath);
 
+	// registers application
+	RegisterApplication(appName, exePath);
+	
+	// register file extensions for application
+	for(int iExt = 0; iExt < extensions.GetCount(); iExt++)
+		SetFileAssociation(appName, extensions[iExt], icon);
+
 	return success;
 }
 
@@ -142,7 +228,14 @@ bool Updater::ShellUnlink(void)
 	bool success = true;
 	
 	String linkName = appName + ".lnk";
-	String iconPath = GetProgramsFolder() + "/" + appName + "/" + appName + ".ico";
+	String iconPath = GetProgramsFolder() + "\\" + appName + "\\" + appName + ".ico";
+
+	// unregister file extensions for application
+	for(int iExt = 0; iExt < extensions.GetCount(); iExt++)
+		RemoveFileAssociation(extensions[iExt]);
+
+	// unregisters application
+	UnregisterApplication(appName);
 
 	// remove uninstaller
 	DelKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\" + appName, "DisplayName");
@@ -176,5 +269,7 @@ bool Updater::ShellUnlink(void)
 
 	return success;
 }
+
+END_UPP_NAMESPACE
 
 #endif

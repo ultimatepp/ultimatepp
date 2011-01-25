@@ -9,6 +9,8 @@
 #define IMAGEFILE <Updater/Updater.iml>
 #include <Draw/iml.h>
 
+NAMESPACE_UPP
+
 // gets platform root folder
 String Updater::GetPlatformRoot(void)
 {
@@ -719,3 +721,5 @@ Image Updater::DefaultIcon(void)
 {
 	return UpdaterImg::DefaultIcon();
 }
+
+END_UPP_NAMESPACE
