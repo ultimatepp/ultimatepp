@@ -5,7 +5,7 @@
 NAMESPACE_UPP
 
 ////////////////////////////////////////////////////////////////////////////////////
-// utility functions to if running Vista or newer OSs
+// utility function to see if running Vista or newer OSs
 bool IsVistaOrLater(void)
 {
     OSVERSIONINFO osvi;
@@ -16,6 +16,20 @@ bool IsVistaOrLater(void)
     GetVersionEx(&osvi);
     
     return (osvi.dwMajorVersion >= 6);
+}
+ 
+////////////////////////////////////////////////////////////////////////////////////
+// utility function to see if running Xp or newer OSs
+bool IsXpOrLater(void)
+{
+    OSVERSIONINFO osvi;
+
+    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+
+    GetVersionEx(&osvi);
+    
+    return (osvi.dwMajorVersion > 5 || (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 1));
 }
  
 static BOOL IsGroupMember(DWORD dwRelativeID, BOOL bProcessRelative, BOOL* pIsMember)
