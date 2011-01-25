@@ -7,11 +7,11 @@ NAMESPACE_UPP
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // parses an args line to be useable by spawnxx functions
-char **BuildArgs(String const &command, String const &argline);
+Buffer<char *>BuildArgs(String const &command, String const &argline);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // parses environment map and builds env array
-char **BuildEnv(const VectorMap<String, String> &env);
+Buffer<char *>BuildEnv(const VectorMap<String, String> &env);
 
 END_UPP_NAMESPACE
 

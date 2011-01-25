@@ -4,13 +4,12 @@ NAMESPACE_UPP
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // parses an args line to be useable by spawnxx functions
-char **BuildArgs(String const &command, String const &argline)
+Buffer<char *>BuildArgs(String const &command, String const &argline)
 {
 	Array<String> args;
 	
 	// first arg should be command name
 	args.Add(command);
-	int buflen = command.GetCount() + 1;
 
 	// skips leading spaces
 	char c;
@@ -22,7 +21,6 @@ char **BuildArgs(String const &command, String const &argline)
 	while (c)
 	{
 		String &s = args.Add();
-		buflen++;
 		while (c && !isspace(c))
 		{
 			// reads enquoted strings
@@ -32,7 +30,6 @@ char **BuildArgs(String const &command, String const &argline)
 				while (c && c != '"')
 				{
 					s << c;
-					buflen++;
 					c = argline[++pos];
 				}
 				if (c)
@@ -41,7 +38,6 @@ char **BuildArgs(String const &command, String const &argline)
 			else
 			{
 				s << c;
-				buflen++;
 				c = argline[++pos];
 			}
 		}
@@ -50,11 +46,22 @@ char **BuildArgs(String const &command, String const &argline)
 		while (c && isspace(c))
 			c = argline[++pos];
 	}
+	
+	// calculates buffer size (as byte)
+	int buflen = 0;
+	for(int i = 0; i < args.GetCount(); i++)
+		buflen += args[i].GetCount() + 1;
 	buflen += (args.GetCount() + 1) * sizeof(char *);
+	
+	// gets uprounded number of elements (as char *)
+	if(buflen % sizeof(char *))
+		buflen = buflen / sizeof(char *) + 1;
+	else
+		buflen /= sizeof(char *);
 
 	// here we've got an array of args and the total size (in bytes) of them
 	// we allocates a  buffer for arg array
-	char **buf = (char **)malloc(buflen);
+	Buffer<char *>buf(buflen);
 
 	// we fill the buffer with arg strings
 	char **bufindex = buf;
@@ -78,7 +85,7 @@ char **BuildArgs(String const &command, String const &argline)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // parses environment map and builds env array
-char **BuildEnv(const VectorMap<String, String> &env)
+Buffer<char *>BuildEnv(const VectorMap<String, String> &env)
 {
 	// calculates total environment size
 	int envSize = 0;
@@ -86,8 +93,18 @@ char **BuildEnv(const VectorMap<String, String> &env)
 		envSize += env.GetKey(i).GetCount() + env[i].GetCount() + 2 + sizeof(char *);
 	envSize+=2;
 
+	// rounds buffer size at multiple of (char *)
+	if(envSize % sizeof(char *))
+		envSize += sizeof(char *) - (envSize % sizeof(char *));
+
+	// gets uprounded number of elements (as char *)
+	if(envSize % sizeof(char *))
+		envSize = envSize / sizeof(char *) + 1;
+	else
+		envSize /= sizeof(char *);
+
 	// we allocates a  buffer for env array
-	char **buf = (char **)malloc(envSize);
+	Buffer<char *> buf(envSize);
 
 	// we fill the buffer with env strings
 	char **bufindex = buf;
