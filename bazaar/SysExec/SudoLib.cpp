@@ -66,11 +66,11 @@ bool SudoExec(String user, String const &password, String const &args, VectorMap
 	String clearArgs = "-K";
 
 	// prepare args buffers
-	Buffer<char *>argv = BuildArgs("sudo", sudoArgs);
-	Buffer<char *>clearArgv = BuildArgs("sudo", clearArgs);
+	char **argv = BuildArgs("sudo", sudoArgs);
+	char **clearArgv = BuildArgs("sudo", clearArgs);
 
 	// prepare environment buffer
-	Buffer<char *>envv = BuildEnv(env);
+	char **envv = BuildEnv(env);
 	
 	// forks the process to launch sudo command inside child
 	// providing a pseudoconsole for sudo.. it refuses to run without
