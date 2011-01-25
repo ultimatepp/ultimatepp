@@ -167,7 +167,6 @@ bool Updater::ShellUnlink(void)
 	
 	// remove desktop icon
 	String desktopLink = AppendFileName(GetShellFolder("Desktop", HKEY_CURRENT_USER), linkName);
-	PromptOK(DeQtf(desktopLink));
 	if(FileExists(desktopLink))
 		FileDelete(desktopLink);
 
