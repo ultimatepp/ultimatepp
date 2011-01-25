@@ -64,27 +64,6 @@ bool Updater::CreateShellLink(const char *filepath, const char *linkpath, const 
 	return SUCCEEDED(hres);
 }
 
-HRESULT SetContosoAsDefaultForDotHTM()
-{
-    IApplicationAssociationRegistration* pAAR;
-
-    HRESULT hr = CoCreateInstance(CLSID_ApplicationAssociationRegistration,
-                                  NULL,
-                                  CLSCTX_INPROC,
-                                  __uuidof(IApplicationAssociationRegistration),
-                                  (void**)&pAAR);
-    if (SUCCEEDED(hr))
-    {
-        hr = pAAR->SetAppAsDefault(L"Contoso.WebBrowser.1.06",
-                                   L".htm",
-                                   AT_FILEEXTENSION);
-
-        pAAR->Release();
-    }
-
-    return hr;
-}
-
 // register the application for shell extensions handling
 bool Updater::RegisterApplication(String const &appName, String const &appPath)
 {
@@ -125,8 +104,10 @@ bool Updater::SetFileAssociation(String const &appName, String const &ext, Image
 		SaveFile(iconPath, imgs);
 	}
 	
-	// on Vista+, new way...
-	if(IsVistaOrLater())
+	// docs tells that association mechanics should be different between pre-Vista and post-Vista OS
+	// The "normal" way works indeed for all of them, so we use it here;
+	// I'll let this code here for reference, in case I shall change it later
+	if(IsVistaOrLater() & false)
 	{
 	}
 	// otherwise, old way
@@ -138,6 +119,11 @@ bool Updater::SetFileAssociation(String const &appName, String const &ext, Image
 			SetWinRegString(iconPath, NULL, ex + "Files\\DefaultIcon", HKEY_CLASSES_ROOT);
 		SetWinRegString("\"" + exePath + "\" \"%1\"", NULL, ex + "Files\\shell\\open\\command", HKEY_CLASSES_ROOT);
 	}
+	
+	// update association icon cache
+	if(IsXpOrLater())
+		SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, NULL, NULL);
+
 	return true;
 }
 
@@ -155,8 +141,10 @@ bool Updater::RemoveFileAssociation(String const &ext)
 	// no need to remove icon files, they get removed
 	// with app program folder !
 
-	// on Vista+, new way...
-	if(IsVistaOrLater())
+	// docs tells that association mechanics should be different between pre-Vista and post-Vista OS
+	// The "normal" way works indeed for all of them, so we use it here;
+	// I'll let this code here for reference, in case I shall change it later
+	if(IsVistaOrLater() & false)
 	{
 	}
 	// otherwise, old way
@@ -165,6 +153,11 @@ bool Updater::RemoveFileAssociation(String const &ext)
 		DeleteWinReg("." + ex, HKEY_CLASSES_ROOT);
 		DeleteWinReg(ex + "Files", HKEY_CLASSES_ROOT);
 	}
+
+	// update association icon cache
+	if(IsXpOrLater())
+		SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, NULL, NULL);
+
 	return true;
 }
 
