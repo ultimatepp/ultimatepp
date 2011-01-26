@@ -85,7 +85,7 @@ char **BuildEnv(const VectorMap<String, String> &env)
 	int envSize = 0;
 	for (int i = 0; i < env.GetCount(); i++)
 		envSize += env.GetKey(i).GetCount() + env[i].GetCount() + 2 + sizeof(char *);
-	envSize+=2;
+	envSize+=sizeof(char *);
 
 	// we allocates a  buffer for env array
 	char **buf = (char **)malloc(envSize);
