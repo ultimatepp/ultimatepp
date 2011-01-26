@@ -258,6 +258,11 @@ class Updater
 		// default icon
 		Image DefaultIcon(void);
 		
+		// sets applicaton name (defaults with current executable title if not used)
+		// allows easy separation of installer from main application code
+		// if you want to deploy a small installer
+		Updater &SetAppName(String const &appName);
+		
 		// setup application icon
 		Updater &SetIcon(Image const &i) { icon = i; return *this; }
 		

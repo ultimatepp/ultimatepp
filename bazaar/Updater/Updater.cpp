@@ -81,6 +81,24 @@ Updater::Updater()
 	else
 		appName = GetExeTitle(); // fallout -- should NEVER get here
 	
+	// setup appName depending fields
+	SetAppName(appName);
+	
+	// sets default confirm for install and uninstall
+	confirmInstall = true;
+	confirmUninstall = true;
+	
+	// no desktop icon installation by default
+	desktopIcon = false;
+}
+
+// sets applicaton name (defaults with current executable title if not used)
+// allows easy separation of installer from main application code
+// if you want to deploy a small installer
+Updater &Updater::SetAppName(String const &_appName)
+{
+	appName = _appName;
+	
 	// gets app's user config path
 #ifdef PLATFORM_POSIX
 	userConfigPath = "/home/" + user + "/." + appName + "/";
@@ -110,21 +128,9 @@ Updater::Updater()
 		if(verStr != "")
 			installedVersion = verStr;
 	}
+	
+	return *this;
 
-	// create user config path only on normal run
-	if(state == NormalRun)
-		RealizePath(userConfigPath);
-	
-	// creates system config path on superuser mode
-	if(state == InsideUpdater)
-		RealizePath(systemConfigPath);
-	
-	// sets default confirm for install and uninstall
-	confirmInstall = true;
-	confirmUninstall = true;
-	
-	// no desktop icon installation by default
-	desktopIcon = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -299,13 +305,13 @@ bool Updater::DO_NormalRun(void)
 		return true;
 	
 	// if we don't have a new version available, just do nothing
-	double maxVer;
+	ProgramVersion maxVer;
 	if( (maxVer = FetchMaxValidVersion(acceptDevelVersions)) <= installedVersion)
 		return true;
 	
 	// if we want manual updates, just ask
 	if(updateMode == "ASK")
-		if(!PromptYesNo(t_("New version ") + FormatDoubleFix(maxVer, 2, FD_ZERO) + t_(" is available&Install it ?")))
+		if(!PromptYesNo(t_("New version ") + maxVer.ToString() + t_(" is available&Install it ?")))
 			return true;
 	
 	// updater enabled, start it
@@ -600,8 +606,7 @@ bool Updater::FetchApp(ProgramVersion ver, bool devel)
 #endif
 
 	// stores current version inside system config path
-	String verStr = FormatDoubleFix(ver, 2, FD_ZERO);
-	if(!SaveFile(systemConfigPath + "version", verStr))
+	if(!SaveFile(systemConfigPath + "version", ver.ToString()))
 		return false;
 	installedVersion = ver;
 
@@ -616,6 +621,14 @@ bool Updater::FetchApp(ProgramVersion ver, bool devel)
 // te SELF_UPDATE() macro does all what is needed
 bool Updater::Run()
 {
+	// create user config path only on normal run
+	if(state == NormalRun)
+		RealizePath(userConfigPath);
+	
+	// creates system config path on superuser mode
+	if(state == InsideUpdater)
+		RealizePath(systemConfigPath);
+	
 	switch(state)
 	{
 		case NormalRun :
