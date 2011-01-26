@@ -35,6 +35,9 @@ Updater::Updater()
 {
 	// fetches and stores environment, we need to change it later
 	environ <<= Environment();
+	
+	// accepts development versions by default
+	acceptDevelVersions = true;
 
 	// gets state variable, if not present assume starting in normal mode
 	String stateStr;
@@ -93,7 +96,7 @@ Updater::Updater()
 #endif
 
 	// checks wether app is already installed and gather its version
-	installedVersion = -1;
+	installedVersion.Clear();
 #ifdef PLATFORM_POSIX
 	appInstalled = FileExists(GetProgramsFolder() + "/" + appName);
 #else
@@ -105,7 +108,7 @@ Updater::Updater()
 	{
 		verStr = LoadFile(systemConfigPath + "version");
 		if(verStr != "")
-			installedVersion = ScanDouble(verStr);
+			installedVersion = verStr;
 	}
 
 	// create user config path only on normal run
@@ -297,7 +300,7 @@ bool Updater::DO_NormalRun(void)
 	
 	// if we don't have a new version available, just do nothing
 	double maxVer;
-	if( (maxVer = FetchMaxValidVersion()) <= installedVersion)
+	if( (maxVer = FetchMaxValidVersion(acceptDevelVersions)) <= installedVersion)
 		return true;
 	
 	// if we want manual updates, just ask
@@ -426,7 +429,7 @@ void Updater::DO_Uninstall(void)
 void Updater::DO_Install(void)
 {
 	// fetch the new app version and install it
-	if(!FetchApp())
+	if(!FetchApp(ProgramVersion(), acceptDevelVersions))
 	{
 		FailUpdate();
 		RestartApp(RestartOrig);
@@ -444,7 +447,7 @@ void Updater::DO_Install(void)
 void Updater::DO_Update(void)
 {
 	// fetch the new app version and replace old one
-	if(!FetchApp())
+	if(!FetchApp(ProgramVersion(), acceptDevelVersions))
 	{
 		FailUpdate();
 		RestartApp(RestartOrig);
@@ -524,10 +527,8 @@ void Updater::RestartApp(RestartModes restartMode)
 }
 
 // fetch list of available app versions
-Vector<double>Updater::FetchVersions(void)
+ProgramVersions Updater::FetchVersions(void)
 {
-	Vector<double> res;
-	
 	HttpClient http;
 	http.TimeoutMsecs(1000);
 	http.URL(GetPlatformRoot() + "versions");
@@ -536,49 +537,40 @@ Vector<double>Updater::FetchVersions(void)
 	String verStr = http.Execute();
 	int err = http.GetStatusCode();
 	if(verStr == "" || err != 200)
-		return res;
-	StringStream ss(verStr);
-	while(!ss.IsEof())
-	{
-		String s = ss.GetLine();
-		if(s != "")
-			res.Add(ScanDouble(s));
-	}
-	return res;
+		return ProgramVersions();
+
+	return ProgramVersions(verStr);
 }
 
 // fetch MAX valid version, i.e. the greatest among all available
 // but smaller or equal than maxVersion
-double Updater::FetchMaxValidVersion(void)
+ProgramVersion Updater::FetchMaxValidVersion(bool devel)
 {
-	Vector<double>versions = FetchVersions();
+	ProgramVersions versions = FetchVersions();
 	if(!versions.GetCount())
-		return -1;
-	double maxV = -1;
-	for(int i = 0; i < versions.GetCount(); i++)
-		if(versions[i] <= maxVersion && versions[i] > maxV)
-			maxV = versions[i];
-	return maxV;
+		return ProgramVersion();
+	
+	return versions.FindMax(ProgramVersion(), maxVersion, devel);
 }
 
 // fetch the new app version from web server
 // and replaces older one
 // if ver is not specified, fetches the maximum available
 // one but which is less than or equal maxVersion
-bool Updater::FetchApp(double ver)
+bool Updater::FetchApp(ProgramVersion ver, bool devel)
 {
 	int err = 0;
 
-	if(ver < 0)
-		ver = FetchMaxValidVersion();
-	if(ver < 0)
+	if(!ver)
+		ver = FetchMaxValidVersion(acceptDevelVersions);
+	if(!ver)
 		return false;
 
 	HttpClient http;
 #ifdef PLATFORM_POSIX
-	http.URL(GetPlatformRoot() + FormatDoubleFix(ver, 2, FD_ZERO) + "/" + appName);
+	http.URL(GetPlatformRoot() + ver.ToString() + "/" + appName);
 #else
-	http.URL(GetPlatformRoot() + FormatDoubleFix(ver, 2, FD_ZERO) + "/" + appName + ".exe");
+	http.URL(GetPlatformRoot() + ver.ToString() + "/" + appName + ".exe");
 #endif
 	http.TimeoutMsecs(1000*60*30);
 	http.MaxContentSize(100000000);

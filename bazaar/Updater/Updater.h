@@ -3,8 +3,11 @@
 
 #include <CtrlLib/CtrlLib.h>
 
+#include "ProgramVersion.h"
+
 NAMESPACE_UPP
 
+/*
 #define SELFUPDATE_OK				0
 #define SELFUPDATE_NO_NETWORK		1
 #define SELFUPDATE_NO_VERSIONFILE	2
@@ -47,6 +50,7 @@ extern int SELFUPDATE_RESULT;
 //		just return 1 and skip further processing
 int __SelfUpdate(String const &remoteRoot, String const &appName, String const &currentVersion, String const &maxVersion);
 
+*/
 
 class Updater
 {
@@ -108,13 +112,13 @@ class Updater
 		void RestartApp(RestartModes restartMode);
 		
 		// fetch list of available app versions
-		Vector<double>FetchVersions(void);
-		double FetchMaxValidVersion(void);
+		ProgramVersions FetchVersions(void);
+		ProgramVersion FetchMaxValidVersion(bool devel);
 		
 		// fetch the new app version from web server
 		// and replaces older one
 		String appBuffer;
-		bool FetchApp(double ver = -1);
+		bool FetchApp(ProgramVersion ver, bool devel);
 		
 		// running copy of environment
 		VectorMap<String, String>environ;
@@ -132,7 +136,7 @@ class Updater
 		bool appInstalled;
 		
 		// current installed version, if any
-		double installedVersion;
+		ProgramVersion installedVersion;
 
 		// copy of starting command line -- needed to restart app correctly
 		String commandLine;
@@ -145,7 +149,8 @@ class Updater
 		String exePath;
 
 		// maximum allowable version on install/update
-		double maxVersion;
+		bool acceptDevelVersions;
+		ProgramVersion maxVersion;
 		
 		// root ow web server repository
 		String webRoot;
@@ -203,7 +208,7 @@ class Updater
 	
 		Updater();
 		
-		Updater &SetMaxVersion(double mv) { maxVersion = mv; return *this; }
+		Updater &SetMaxVersion(ProgramVersion const &mv) { maxVersion = mv; return *this; }
 		Updater &SetWebRoot(String const &wr) { webRoot = wr; return *this; }
 		
 		// sets updater to manual mode -- if update is available, asks user
@@ -227,10 +232,14 @@ class Updater
 
 		// sets uninstaller to manual mode (ask user)
 		Updater &ConfirmUninstall(void) { confirmUninstall = true; return *this; }
+		
+		// accept/reject development versions
+		Updater &AcceptDevelVersions(void) { acceptDevelVersions = true; return *this; }
+		Updater &NoAcceptDevelVersions(void) { acceptDevelVersions = false; return *this; }
 
 		bool IsAppInstalled(void) { return appInstalled; }
-		double GetInstalledVersion(void) { return installedVersion; }
-		double GetMaxVersion(void) { return maxVersion; }
+		ProgramVersion const &GetInstalledVersion(void) { return installedVersion; }
+		ProgramVersion const &GetMaxVersion(void) { return maxVersion; }
 		String const &GetWebRoot(void) { return webRoot; }
 	
 		// executes updater
