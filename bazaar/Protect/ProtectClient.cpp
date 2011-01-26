@@ -272,6 +272,7 @@ bool ProtectClient::Register(void)
 		lastError = res.Get("ERROR");
 		return false;
 	}
+	return true;
 }
 
 END_UPP_NAMESPACE

@@ -108,6 +108,7 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 			(ACTIVATED		, data.Get("ACTIVATED"))
 		;
 	}
+	return true;
 }
 
 // get default record
