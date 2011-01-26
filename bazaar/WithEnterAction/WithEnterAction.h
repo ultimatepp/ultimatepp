@@ -16,9 +16,9 @@ public:
 	{
 		if(key == K_ENTER)
 		{
-			if(unfocusonenter && GetParent()) B::GetParent()->SetFocus();
+			if(unfocusonenter && B::GetParent()) B::GetParent()->SetFocus();
 			bool b = B::Key(key,count);
-			if(!unfocusonenter) Action();
+			if(!unfocusonenter) B::Action();
 		}
 
 		Callback cb = B::WhenAction;
@@ -27,7 +27,7 @@ public:
 		B::WhenAction = cb;
 		return b;
 	}
-	virtual void LostFocus() { B::LostFocus(); Action(); }
+	virtual void LostFocus() { B::LostFocus(); B::Action(); }
 	bool unfocusonenter;
 };
 
