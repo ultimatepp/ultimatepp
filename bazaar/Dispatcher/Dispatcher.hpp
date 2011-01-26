@@ -257,4 +257,31 @@ DispatcherCB<T> & DispatcherCBGen::GetDispatcherCB()
 	return dests.Add().Create<DispatcherCB<T> >();
 }
 
+//DispatcherL
+
+template<class T>
+DispatcherL<T>::DispatcherL()
+{
+}
+
+template<class T>
+DispatcherL<T>::~DispatcherL()
+{
+	ASSERT(dests.IsEmpty());
+}
+
+template<class T>
+void DispatcherL<T>::DoDispatch(const T& o) const
+{
+	int c = 0;	
+	const Handler *list = dests.GetNext(), *e = list;
+	do
+	{
+		++c;
+		e->h(o);
+		e = e->GetNext();
+	}
+	while(e != list); 
+}
+
 #endif

@@ -64,6 +64,31 @@ Callback* Dispatcher0::GetDispatchable(unsigned key)
 	return &dest;
 }
 
+
+//DispatcherL0
+
+DispatcherL0::DispatcherL0()
+{
+}
+
+DispatcherL0::~DispatcherL0()
+{
+	ASSERT(dests.IsEmpty());
+}
+
+void DispatcherL0::DoDispatch() const
+{
+	int c = 0;	
+	const Handler *list = dests.GetNext(), *e = list;
+	do
+	{
+		++c;
+		e->h();
+		e = e->GetNext();
+	}
+	while(e != list); 
+}
+
 #if 0 //for compile / debug only
 template class Dispatchable<int>;
 template class Dispatcher<int>;

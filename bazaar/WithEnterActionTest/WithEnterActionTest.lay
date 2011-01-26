@@ -1,4 +1,5 @@
 LAYOUT(WithEnterActionTestLayout, 200, 100)
 	ITEM(EditString, edrd, SetEditable(false).HSizePosZ(8, 8).TopPosZ(36, 19))
+	ITEM(EditString, ed2, LeftPosZ(8, 184).TopPosZ(72, 19))
 END_LAYOUT
 

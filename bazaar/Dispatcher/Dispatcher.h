@@ -156,5 +156,53 @@ private:
 	VectorMap<unsigned, Callback> dests;	
 };
 
+template<class T>
+int GetLinkCount(const T& l)
+{
+	int c = 0;
+	const T *list = l.GetPtr(), *e = list;
+	while((e = e->GetNext()) != list); 
+		++c;
+}
+
+class DispatcherL0
+	: public EnableOption<>
+{
+public:
+	typedef DispatcherL0 CLASSNAME;
+	typedef EnableOption<> R;
+	struct Handler : public Link<Handler> { Callback h; };
+
+	DispatcherL0();
+	virtual ~DispatcherL0();
+
+	void DoDispatch() const;
+	int GetCount() const { GetLinkCount(dests); }
+
+	void Clear() { dests.Unlink(); }
+
+	Link<Handler> dests;
+};
+
+template<class T>
+class DispatcherL
+	: public EnableOption<>
+{
+public:
+	typedef DispatcherL<T> CLASSNAME;
+	typedef EnableOption<> R;
+	struct Handler : public Link<Handler> { Callback h; };
+
+	DispatcherL();
+	virtual ~DispatcherL();
+
+	void DoDispatch(const T& o) const;
+	int GetCount() const { GetLinkCount(dests); }
+
+	void Clear() { dests.Unlink(); }
+
+	Link<Handler> dests;
+};
+
 #endif
 

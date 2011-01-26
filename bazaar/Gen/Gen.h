@@ -218,6 +218,27 @@ public:
 template<class T>
 class Instancing : public TypeHook<T, Typer> {};
 
+//a visiting interface
+template<class T, class B = EmptyClass>
+class Visiting : public B
+{
+public:
+	typedef Visiting<T,B> CLASSNAME;
+	Visiting() : pt(NULL) {}
+
+	virtual void Visit(T& t) { pt = &t; Reload(); }
+	virtual void Reload() { }
+	virtual void Clear() { pt = NULL; }
+
+	bool IsVisiting() const { return pt; }
+	bool IsEmpty() const { return !IsVisiting(); }
+	
+	T& Get() const { return *pt; }
+
+protected:
+	T* pt;
+};
+
 END_UPP_NAMESPACE
 
 #endif

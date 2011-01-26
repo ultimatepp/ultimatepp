@@ -9,20 +9,26 @@ template<class B>
 class WithEnterAction : public B {
 public:
 	typedef WithEnterAction CLASSNAME;
+	WithEnterAction() : unfocusonenter(false) {}
 
 public:
 	virtual bool Key(dword key, int count)
 	{
 		if(key == K_ENTER)
-		if(GetParent()) B::GetParent()->SetFocus();
-		return B::Key(key,count);
+		{
+			if(unfocusonenter && GetParent()) B::GetParent()->SetFocus();
+			bool b = B::Key(key,count);
+			if(!unfocusonenter) Action();
+		}
+
+		Callback cb = B::WhenAction;
+		B::WhenAction.Clear();
+		bool b = B::Key(key,count);
+		B::WhenAction = cb;
+		return b;
 	}
-	virtual void LostFocus() { B::LostFocus(); WhenAction(); }
-
-	Callback     operator<<=(Callback action)  { WhenAction = action; return action; }
-	Callback&    operator<<(Callback action)   { return WhenAction << action; }
-
-	Callback       WhenAction;
+	virtual void LostFocus() { B::LostFocus(); Action(); }
+	bool unfocusonenter;
 };
 
 #endif

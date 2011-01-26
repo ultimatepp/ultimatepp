@@ -18,6 +18,7 @@ public:
 	WithEnterActionTest();
 	
 	void Change();
+	void Change2();
 	
 	WithEnterAction<EditString> ed;
 };
