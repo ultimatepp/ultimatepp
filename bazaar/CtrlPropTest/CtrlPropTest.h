@@ -8,15 +8,8 @@ using namespace Upp;
 #define LAYOUTFILE <CtrlPropTest/CtrlPropTest.lay>
 #include <CtrlCore/lay.h>
 
+#include <CtrlMover/CtrlMover.h>
 #include <CtrlProp/CtrlProp.h>
-#include <CtrlFinder/CtrlFinder.h>
-#include <RectCtrl/RectCtrl.h>
-
-bool MyMouseHook(Ctrl *ctrl, bool inframe, int event, Point p,
-	                          int zdelta, dword keyflags);
-void DoList(Ctrl& c);
-void DoEdit(Ctrl& c);
-bool CanEdit();
 
 class CtrlPropTest : public WithCtrlPropTestLayout<TopWindow> {
 public:
@@ -26,24 +19,26 @@ public:
 	//hook
 	void EditCB();
 
-	void OnCtrlLeft(Ctrl& c, Point p, dword keyflags);
-	void OnCtrlRight(Ctrl& c, Point p, dword keyflags);
-	void OnRectChange();
-	void OnMissed(Point p, dword keyflags);
-
 	//misc
 	void Test();
 	void InitDummies();
 
+	//edit
+	void DoList(Ctrl& c);
+	void DoEdit(Ctrl& c);
+	bool CanEdit();
+
+	void OnCtrlRight(Ctrl& c, Point p, dword keyflags);
+
 public:
 	ToolBar mb;
 	ToolBar::Item * mbi;
-	CtrlFinder hk;
-	RectCtrl rc;
-	RectCtrl::Style rcst;
-	Ptr<Ctrl> ctrl;
-	
 	Array<Ctrl> arc;
+
+	PropEdit pe;
+	PropList pl;
+
+	CtrlMover hk;
 };
 
 #endif

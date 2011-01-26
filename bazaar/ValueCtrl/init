@@ -3,4 +3,5 @@
 #include "CtrlLib/init"
 #include "PopUpC/init"
 #include "LogPosCtrl/init"
+#include "WithEnterAction/init"
 #endif

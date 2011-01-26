@@ -7,6 +7,8 @@ using namespace Upp;
 
 #include <PopUpC/PopUpC.h>
 #include <LogPosCtrl/LogPosCtrl.h>
+#include <WithEnterAction/WithEnterAction.h>
+#include <Gen/Gen.h>
 
 #define LAYOUTFILE <ValueCtrl/ValueCtrl.lay>
 #include <CtrlCore/lay.h>

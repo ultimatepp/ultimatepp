@@ -3,4 +3,5 @@
 #include "CtrlLib/init"
 #include "LogPosCtrl/init"
 #include "ValueCtrl/init"
+#include "Gen/init"
 #endif

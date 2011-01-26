@@ -3,7 +3,8 @@ description "Value editing and creating Ctrl\377";
 uses
 	CtrlLib,
 	PopUpC,
-	LogPosCtrl;
+	LogPosCtrl,
+	WithEnterAction;
 
 file
 	ValueCtrl.lay,

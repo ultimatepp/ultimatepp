@@ -1,39 +1,80 @@
 #include "ValueCtrl.h"
 
-Ctrl* DefaultValueEditor(int vtype)
+Ctrl* OptionInstancer()
 {
-	String t;
-	Ctrl* p = NULL;
+	Option* p = new Option(); p->ClickFocus(); return p;
+}
+
+INITBLOCK
+{
+	VectorMap<Value,  Instancer<Ctrl>::InstancerType>& map = Instancer<Ctrl>::Map();
+
+	map.Add(int(INT_V),    Instancer<Ctrl>::Typed<WithEnterAction<EditInt> >::GetInstancer());
+	map.Add(int(DOUBLE_V), Instancer<Ctrl>::Typed<WithEnterAction<EditDouble> >::GetInstancer());
+	map.Add(int(STRING_V), Instancer<Ctrl>::Typed<WithEnterAction<EditString> >::GetInstancer());
+	map.Add(int(DATE_V),   Instancer<Ctrl>::Typed<DropDate>::GetInstancer());
+	map.Add(int(TIME_V),   Instancer<Ctrl>::Typed<DropTime>::GetInstancer());
+	map.Add(int(WSTRING_V),Instancer<Ctrl>::Typed<RichTextCtrl>::GetInstancer());
+	map.Add(int(INT64_V),  Instancer<Ctrl>::Typed< WithEnterAction<EditInt64> >::GetInstancer());
+
+	//map.Add(int(BOOL_V),   Instancer<Ctrl>::Typed<Option>::GetInstancer());
+	map.Add(int(BOOL_V),   &OptionInstancer);
+
+	map.Add(int(COLOR_V),  Instancer<Ctrl>::Typed<ColorPusher>::GetInstancer());
+	//map.Add(int(FONT_V), Instancer<Ctrl>::Typed<FontPusher>::GetInstancer());
+
+	map.Add(int(LOGPOS_V), Instancer<Ctrl>::Typed<LogPosCtrl>::GetInstancer());
+	map.Add(int(VALUE_V),  Instancer<Ctrl>::Typed<ValuePacker>::GetInstancer());
+	map.Add(int(VALUEARRAY_V), Instancer<Ctrl>::Typed<ValueArrayCtrl>::GetInstancer());
+	map.Add(int(VOID_V),   Instancer<Ctrl>::Typed<ValueCtrl>::GetInstancer());
+	//map.Add(int(VALUEMAP_V),Instancer<Ctrl>::Typed<>::GetInstancer());
+	//map.Add(int(ERROR_V),   Instancer<Ctrl>::Typed<>::GetInstancer());
+	//map.Add(int(UNKNOWN_V), Instancer<Ctrl>::Typed<>::GetInstancer());
+}
+
+#define CASEENUMPRINT(x) case x: return ASSTRING(x);
+String VTypeToString(int vtype)
+{
 	switch(vtype)
 	{
-		case INT_V: p = new EditInt(); break;
-		case DOUBLE_V: p = new EditDouble(); break;
-		case STRING_V: p = new EditString(); break;
-		case DATE_V: p = new DropDate(); break;
-		case TIME_V: p = new DropTime(); break;
-		case WSTRING_V: p = new RichTextCtrl(); break;
-		case INT64_V: p = new EditInt64(); break;
-		case BOOL_V: { Option* _p = new Option(); _p->ClickFocus(); p = _p; } break;
+		CASEENUMPRINT( INT_V )
+		CASEENUMPRINT( DOUBLE_V )
+		CASEENUMPRINT( STRING_V )
+		CASEENUMPRINT( DATE_V )
+		CASEENUMPRINT( TIME_V )
+		CASEENUMPRINT( WSTRING_V )
+		CASEENUMPRINT( INT64_V )
+		CASEENUMPRINT( BOOL_V )
 		
-		case COLOR_V: p = new ColorPusher(); break;
-		//case FONT_V: p = new FontPusher(); break; //FIXME
+		CASEENUMPRINT( COLOR_V )
+		//CASEENUMPRINT( FONT_V )
 
-		case LOGPOS_V: p = new LogPosCtrl(); break;
-		case VALUE_V: p = new ValuePacker; break;
-		case VALUEARRAY_V:  p = new ValueArrayCtrl(); break;
+		CASEENUMPRINT( LOGPOS_V )
+		CASEENUMPRINT( VALUE_V )
+		CASEENUMPRINT( VALUEARRAY_V )
 		
-		case VOID_V: p = new ValueCtrl(); break;
+		CASEENUMPRINT( VOID_V )
 
-		case VALUEMAP_V: t = "VALUEMAP_V"; break;
+		CASEENUMPRINT( VALUEMAP_V )
 		
-		case ERROR_V: t = "ERROR_V"; break;
-		case UNKNOWN_V: t = "UNKNOWN_V"; break;
-		default: break;
+		CASEENUMPRINT( ERROR_V )
+		CASEENUMPRINT( UNKNOWN_V )
+		default: return String().Cat() << "[#" << vtype << "_V";
+	}
+}
+
+Ctrl* DefaultValueEditor(int vtype)
+{
+	Ctrl* p = NULL;
+	int i = Instancer<Ctrl>::Map().Find(vtype);
+	if(i>=0)
+	{
+		p = Instancer<Ctrl>::Map()[i]();
 	}
 	if(!p)
 	{
 		StaticText* _p = new StaticText();
-		_p->SetText(t);
+		_p->SetText(VTypeToString(vtype));
 		p = _p;
 	}
 	return p;

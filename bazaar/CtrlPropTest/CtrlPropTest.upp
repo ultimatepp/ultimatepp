@@ -3,17 +3,14 @@ description "Ctrl Properties editor, grabber, resizer..\377";
 uses
 	CtrlLib,
 	CtrlProp,
-	CtrlFinder,
-	RectCtrl;
+	CtrlMover;
 
 file
 	CtrlPropTest.h,
 	main.cpp,
 	edit.cpp,
-	find.cpp,
-	hook.cpp,
-	misc.cpp,
-	CtrlPropTest.lay;
+	CtrlPropTest.lay,
+	misc.cpp;
 
 mainconfig
 	"" = "GUI MT";

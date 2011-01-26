@@ -3,13 +3,16 @@ description "Ctrl properties editing in a common interface, see CtrlPropTest\377
 uses
 	CtrlLib,
 	LogPosCtrl,
-	ValueCtrl;
+	ValueCtrl,
+	Gen;
 
 file
-	CtrlProp.h,
-	CtrlProp.cpp,
+	CtrlPropCommon.h,
+	CtrlPropCommon.cpp,
+	CtrlPropEdit.h,
 	CtrlPropEdit.cpp,
 	CtrlPropEdit.lay,
+	CtrlProp.h,
 	Props readonly separator,
 	Ctrl.cpp,
 	PushCtrl.cpp,

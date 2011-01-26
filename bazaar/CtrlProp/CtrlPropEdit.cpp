@@ -1,14 +1,13 @@
-#include "CtrlProp.h"
+#include "CtrlPropEdit.h"
 
 VectorMap<String, int> BidirProps(Ctrl& c)
 {
 	VectorMap<String, int> is;
+
 	Value vs;
 	GetProperty(c, "listset", vs);
-	if(!vs.Is<ValueArray>())
-		return is;
+	if(!vs.Is<ValueArray>()) return is;
 	ValueArray vas = vs;
-
 	for(int i = 0; i < vas.GetCount(); i++)
 	{
 		int& m = is.GetAdd(vas.Get(i), 0);
@@ -17,10 +16,8 @@ VectorMap<String, int> BidirProps(Ctrl& c)
 
 	Value vg;
 	GetProperty(c, "listget", vg);
-	if(!vg.Is<ValueArray>())
-		return is;
+	if(!vg.Is<ValueArray>()) return is;
 	ValueArray vag = vg;
-
 	for(int i = 0; i < vag.GetCount(); i++)
 	{
 		int& m = is.GetAdd(vag.Get(i), 0);
@@ -30,15 +27,16 @@ VectorMap<String, int> BidirProps(Ctrl& c)
 	return is;
 }
 
-PropList::PropList()
+PropListCtrl::PropListCtrl()
 {
 	CtrlLayout(*this);
-	ok <<= THISBACK(Acceptor);
-	cancel <<= THISBACK(Rejector);
 }
 
-void PropList::Evaluate(Ctrl& e)
+void PropListCtrl::Reload()
 {
+	V::Reload();
+	Ctrl& e = Get();
+
 	Value v;
 	bool b;
 	String t;
@@ -68,22 +66,38 @@ void PropList::Evaluate(Ctrl& e)
 	sl.SetData(t);
 }
 
-PropEdit::PropEdit()
+PropList::PropList()
+{
+	SetRect(plc.GetRect());
+	Add(plc.HSizePos().VSizePos(0,20));
+	Add(exit.RightPos(0, 64).BottomPos(0, 20));
+	exit.SetLabel("Close");
+	exit <<= THISBACK(Acceptor);
+	//cancel <<= THISBACK(Rejector);
+}
+
+void PropList::Acceptor()
+{
+	plc.Clear();	
+	PopUpC::Acceptor();
+}
+
+//
+
+PropEditCtrl::PropEditCtrl()
 {
 	CtrlLayout(*this);
-	ok <<= THISBACK(Acceptor);
-	cancel <<= THISBACK(Rejector);
-
 	ac.AddColumn("Property");
 	ac.AddColumn("Value");
 	//ac.WhenUpdateRow = THISBACK(OnUpdateRow);
 }
 
-void PropEdit::Evaluate(Ctrl& e)
+void PropEditCtrl::Visit(Ctrl& e)
 {
-	pe = &e;
+	V::Visit(e);
+
 	ac.Clear();
-	vsav.Clear();
+	vsav.Clear();	
 
 	VectorMap<String, int> is = BidirProps(e);
 	
@@ -151,42 +165,71 @@ void PropEdit::Evaluate(Ctrl& e)
 				break;
 		}
 	}
+	ac.Layout();
+	//ac.UpdateRefresh();
 }
 
-void PropEdit::OnUpdateRow()
+void PropEditCtrl::Clear()
 {
-	if(!pe) return;
+	V::Clear();
+	ac.Clear();
+	vsav.Clear();	
+}
+
+void PropEditCtrl::Reload()
+{
+	V::Reload();
+	Ctrl& e = Get();
+	for(int i = 0; i < ac.GetCount(); i++)
+	{
+		Value v;
+		if(!GetProperty(e, ac.Get(i, 0), v)) continue;
+		ac.Set(i, 1, v);
+	}
+}
+
+void PropEditCtrl::OnUpdateRow()
+{
+	if(IsEmpty()) return;
 	if(!ac.IsCursor()) return; //FIXME Option Focus issue 
-	SetProperty(*pe, ac.Get(0), ac.Get(1));
+	SetProperty(Get(), ac.Get(0), ac.Get(1));
 	vsav.GetAdd(ac.Get(0)).a = true; //dirty
-	pe->UpdateRefresh();
+	Action();
+	Get().UpdateActionRefresh();
+}
+
+void PropEditCtrl::Restore()
+{
+	if(!IsEmpty())
+	{
+		for(int i = 0; i < vsav.GetCount(); i++)
+			if(vsav[i].a)
+				SetProperty(Get(), vsav.GetKey(i), vsav[i].b);
+	}
+}
+
+
+PropEdit::PropEdit()
+{
+	SetRect(pec.GetRect());
+	Add(pec.HSizePos().VSizePos(0,20));
+	Add(ok.RightPos(60,60).BottomPos(0,20));
+	Add(cancel.RightPos(0,60).BottomPos(0,20));
+	ok <<= THISBACK(Acceptor);
+	cancel <<= THISBACK(Rejector);
+	ok.SetLabel("OK");
+	cancel.SetLabel("Cancel");
 }
 
 void PropEdit::Rejector()
 {
-	if(pe)
-	{
-		for(int i = 0; i < vsav.GetCount(); i++)
-			if(vsav[i].a)
-				SetProperty(*pe, vsav.GetKey(i), vsav[i].b);
-	}
-	pe = NULL;
-	ac.Clear();
-	vsav.Clear();
-	
+	pec.Restore();
+	pec.Clear();	
 	PopUpC::Rejector();
 }
 
 void PropEdit::Acceptor()
 {
-	if(0 && pe) //FIXME when direct editing works, we can spare this out
-	{
-		for(int i = 0; i < ac.GetCount(); i++)
-			SetProperty(*pe, ac.Get(i, 0), ac.Get(i, 1));
-	}
-	pe = NULL;
-	ac.Clear();
-	vsav.Clear();
-	
+	pec.Clear();	
 	PopUpC::Acceptor();
 }

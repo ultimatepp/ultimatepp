@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	CtrlFinder,
+	RectCtrl,
+	Gen;
+
+file
+	CtrlMover.h,
+	CtrlMover.cpp;
+
+mainconfig
+	"" = "GUI MT";
+

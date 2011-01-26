@@ -1,4 +1,4 @@
-#include "CtrlProp.h"
+#include "CtrlPropCommon.h"
 
 void AddToValueArray(Value& v, const Vector<String>& k)
 {
@@ -23,6 +23,7 @@ VectorMap<String, ParamHandler>& pmap()
 bool Property(Ctrl& c, const String& p, Value& v, int f)
 {
 	int i = pmap().Find(String(typeid(c).name()));
+	if(i<0) i = pmap().Find(String(typeid(Ctrl).name()));
 	if(i<0) return false;
 	return pmap()[i](c,p,v,f);
 }

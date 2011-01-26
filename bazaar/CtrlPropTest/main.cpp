@@ -9,10 +9,9 @@ void CtrlPropTest::EditCB()
 	}
 	else
 	{
-		SetFocus(); //kill foucus from all others
 		hk.Enable();
-		rc.Remove();
 		mbi->Check(true);
+		SetFocus(); //kill foucus from all others
 	}
 }
 
@@ -24,18 +23,9 @@ CtrlPropTest::CtrlPropTest()
 	        THISBACK(EditCB));
 	AddFrame(mb);
 
-	InstallMouseHook(&MyMouseHook);
-
-	hk.WhenLeftDown = THISBACK(OnCtrlLeft);
 	hk.WhenRightDown = THISBACK(OnCtrlRight);
 	hk.Disable();
 	Add(hk.SizePos());
-
-	rcst = RectCtrl::StyleDefault();	
-	rcst.rectcol = Null;
-	rc.SetStyle(rcst);
-	rc <<= THISBACK(OnRectChange);
-	rc.WhenMissed = THISBACK(OnMissed);
 
 	InitDummies();
 }

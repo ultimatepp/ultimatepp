@@ -1,8 +1,7 @@
 #include "CtrlPropTest.h"
 
-void DoEdit(Ctrl& c)
+void CtrlPropTest::DoEdit(Ctrl& c)
 {
-	PropEdit& pe = Single<PropEdit>();
 	if(pe.IsOpen()) return;
 
 	Ctrl* owner = Ctrl::GetActiveWindow();
@@ -12,13 +11,12 @@ void DoEdit(Ctrl& c)
 		return;	
 	}
 
-	pe.Rejector(); pe.PopUp(owner, c);
+	pe.PopUp(owner, c);
 }
 
-void DoList(Ctrl& c)
+void CtrlPropTest::DoList(Ctrl& c)
 {
-	PropList& pe = Single<PropList>();
-	if(pe.IsOpen()) return;
+	if(pl.IsOpen()) return;
 
 	Ctrl* owner = Ctrl::GetActiveWindow();
 	if(!owner)
@@ -27,14 +25,23 @@ void DoList(Ctrl& c)
 		return;	
 	}
 
-	pe.Rejector(); pe.PopUp(owner, c);
+	pl.PopUp(owner, c);
 }
 
-bool CanEdit()
+bool CtrlPropTest::CanEdit()
 {
-	PropEdit& pe = Single<PropEdit>();
-	if(pe.IsOpen()) return false;
-	PropList& pl = Single<PropList>();
-	if(pl.IsOpen()) return false;
+	if(pe.IsOpen() || pl.IsOpen()) return false;
 	return true;
 }
+
+void CtrlPropTest::OnCtrlRight(Ctrl& c, Point p, dword keyflags)
+{
+//	if(&c == &rc) return;
+	if(&c == &hk) return;
+	if(!CanEdit()) return;
+	if(keyflags & K_SHIFT)
+		DoList(c);
+	else
+		DoEdit(c);
+}
+
