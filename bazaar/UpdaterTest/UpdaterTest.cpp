@@ -15,8 +15,17 @@ GUI_APP_MAIN
 {
 	Updater updater;
 	updater
+		// setup application name
+		// if you don't use this, it takes current executable file title
+		// this can be handy if you want to deploy a single small installer
+		// application that installs the true one from web
+		.SetAppName("myapp")
+		
 		// accept 1.6 as maximum downloadable version
-		.SetMaxVersion(1.6)
+		.SetMaxVersion(ProgramVersion("1.6"))
+		
+		// accept development versions too (those like MM.mm.dd)
+		.AcceptDevelVersions()
 		
 		// setup web root for program downloads
 		.SetWebRoot("www.timberstruct.com/webupdater/updatertest")
