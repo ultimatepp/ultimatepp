@@ -29,7 +29,7 @@ void ScanSchFile(const char *fn)
 				r << "};\n";
 			else
 			if(p.Id("LONGRAW") || p.Id("LONGRAW_") || p.Id("BLOB") || p.Id("BLOB_") ||
-			   p.Id("STRING_") || p.Id("STRING"))
+			   p.Id("STRING_") || p.Id("STRING") || p.Id("CLOB") || p.Id("CLOB_"))
 				r << "\tString " << ReadId(p, rr) << ";\n";
 			else
 			if(p.Id("INT") || p.Id("INT_") || p.Id("SERIAL") || p.Id("ISERIAL"))
