@@ -302,7 +302,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 						res.Add("ERROR", PROTECT_MAIL_SEND_ERROR);
 				}
 				// otherwise, we shall check if activated
-				else if(!userRec.Get("ACTIVATED"))
+				else if(!(bool)userRec.Get("ACTIVATED"))
 				{
 					// already registered but still not activated
 					// resend activation mail
@@ -376,7 +376,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			}
 			
 			// product is registered, now we check if activation mail was sent
-			if(!userRec.Get("ACTIVATED"))
+			if(!(bool)userRec.Get("ACTIVATED"))
 			{
 				res.Add("ERROR", PROTECT_LICENSE_NOT_ACTIVATED);
 				SendActivationMail(userRec);
