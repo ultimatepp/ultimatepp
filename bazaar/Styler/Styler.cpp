@@ -1,7 +1,5 @@
 #include "Styler.h"
 
-#define ADDSTYLE 1
-
 #define IMAGECLASS StylerCtrlsImg
 #define IMAGEFILE <Styler/StylerCtrls.iml>
 #include <Draw/iml_source.h>
@@ -19,64 +17,7 @@ void ColorizeIml(Iml& target, Iml& source, const Color& c, int alpha)
 
 void RefreshGlobalStyles()
 {
-	{
-		MenuBar::Style& st = MenuBar::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		ToolBar::Style& st = ToolBar::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		StatusBar::Style& st = StatusBar::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		ScrollBar::Style& st = ScrollBar::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		Splitter::Style& st = Splitter::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		Button::Style& st = Button::StyleNormal().Write();
-		st = st.Standard();
-	}
-	{
-		ButtonOption::Style& st = ButtonOption::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		SpinButtons::Style& st = SpinButtons::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		EditField::Style& st = EditField::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		HeaderCtrl::Style& st = HeaderCtrl::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		TabCtrl::Style& st = TabCtrl::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		DropList::Style& st = DropList::StyleDefault().Write();
-		st = st.Standard();
-	}
-#ifdef ADDSTYLE
-	{
-		ArrayCtrl::Style& st = ArrayCtrl::StyleDefault().Write();
-		st = st.Standard();
-	}
-	{
-		TextCtrl::Style& st = TextCtrl::StyleDefault().Write();
-		st = st.Standard();
-	}
-#endif
+	ChFinish();
 }
 
 void RefreshLayoutDeepAll()
@@ -132,7 +73,7 @@ void StylerCtrl::ColorizedSkin()
 	LabelBoxColor_Write(SColorHighlight());
 }
 
-void StylerCtrl::Updated()
+void StylerCtrl::SkinAction()
 {
 	if((int)stsw.GetData() != 2)
 	{
@@ -159,26 +100,37 @@ void StylerCtrl::Updated()
 		default:
 		case 0: ChClassicSkin(); break;
 	}
-
+	
 	RefreshGlobalStyles();
 	RefreshLayoutDeepAll();
+	UpdateAction();
 }
 
-void StylerCtrl::InvertColors()
+Color Invert(const Color& c)
+{
+	return Color(255-c.GetR(), 255-c.GetG(),255-c.GetB());
+}
+
+void StylerCtrl::InvertAction()
 {
 	Color c  = ~mcl;
 	Color fg = ~fgcl;
 	Color bg = ~bgcl;
 
-	fg = Color(255-fg.GetR(), 255-fg.GetG(),255-fg.GetB());
-	bg = Color(255-bg.GetR(), 255-bg.GetG(),255-bg.GetB());
-	c =  Color(255- c.GetR(), 255- c.GetG(),255- c.GetB());
+	fg = Invert(fg);
+	bg = Invert(bg);
+	c =  Invert(c);
 	
 	fgcl <<= fg;
 	bgcl <<= bg;
 	mcl  <<= c;
 
 	UpdateAction();
+}
+
+void StylerCtrl::Updated()
+{
+
 }
 
 StylerCtrl::StylerCtrl()
@@ -188,30 +140,30 @@ StylerCtrl::StylerCtrl()
 	dk.SetReadOnly();
 
 	stsw <<= 2;
-	stsw <<= THISBACK(UpdateAction);
+	stsw <<= THISBACK(SkinAction);
 
 	mcl <<= Gray();
-	mcl <<= THISBACK(UpdateAction);
+	mcl <<= THISBACK(SkinAction);
 
 	fgcl <<= White();
-	mcl <<= THISBACK(UpdateAction);
+	fgcl <<= THISBACK(SkinAction);
 
 	bgcl <<= Black();
-	bgcl <<= THISBACK(UpdateAction);
+	bgcl <<= THISBACK(SkinAction);
 	
 
 	bl.MinMax(0,255);
 	bl <<= 192;
-	bl <<= THISBACK(UpdateAction);
+	bl <<= THISBACK(SkinAction);
 
-	inv <<= THISBACK(InvertColors);
+	inv <<= THISBACK(InvertAction);
 
-	UpdateAction();
+	SkinAction();
 }
 
 //
 
-void ChamStyleCtrl::Reload()
+void ChamStyleCtrl::Updated()
 {
 	clface <<= SColorFace();
 	clshadow <<= SColorShadow();
@@ -234,8 +186,10 @@ void ChamStyleCtrl::Reload()
 	cllb <<= LabelBoxColor();
 }
 
-void ChamStyleCtrl::Updated()
+void ChamStyleCtrl::ColorAction()
 {
+	ChReset();
+
 	SColorFace_Write(~clface);
 	SColorShadow_Write(~clshadow);
 	SColorLtFace_Write(~clltface);
@@ -258,31 +212,32 @@ void ChamStyleCtrl::Updated()
 
 	RefreshGlobalStyles();
 	RefreshLayoutDeepAll();
+	Action();
 }
 
 ChamStyleCtrl::ChamStyleCtrl()
 {
 	CtrlLayout(*this);
 	
-	clface <<= THISBACK(UpdateAction);
-	clshadow <<= THISBACK(UpdateAction);
-	clltface <<= THISBACK(UpdateAction);
-	cldkshadow <<= THISBACK(UpdateAction);
-	clhighlight <<= THISBACK(UpdateAction);
-	cldisabled <<= THISBACK(UpdateAction);
-	clpaper <<= THISBACK(UpdateAction);
-	cltext <<= THISBACK(UpdateAction);
-	clhighlighttext <<= THISBACK(UpdateAction);
-	cllight <<= THISBACK(UpdateAction);
+	clface <<= THISBACK(ColorAction);
+	clshadow <<= THISBACK(ColorAction);
+	clltface <<= THISBACK(ColorAction);
+	cldkshadow <<= THISBACK(ColorAction);
+	clhighlight <<= THISBACK(ColorAction);
+	cldisabled <<= THISBACK(ColorAction);
+	clpaper <<= THISBACK(ColorAction);
+	cltext <<= THISBACK(ColorAction);
+	clhighlighttext <<= THISBACK(ColorAction);
+	cllight <<= THISBACK(ColorAction);
 
-	clmenu <<= THISBACK(UpdateAction);
-	clmenutext <<= THISBACK(UpdateAction);
-	clinfo <<= THISBACK(UpdateAction);
-	clinfotext <<= THISBACK(UpdateAction);
-	clmark <<= THISBACK(UpdateAction);
-	cllabel <<= THISBACK(UpdateAction);
-	cllbtext <<= THISBACK(UpdateAction);
-	cllb <<= THISBACK(UpdateAction);
+	clmenu <<= THISBACK(ColorAction);
+	clmenutext <<= THISBACK(ColorAction);
+	clinfo <<= THISBACK(ColorAction);
+	clinfotext <<= THISBACK(ColorAction);
+	clmark <<= THISBACK(ColorAction);
+	cllabel <<= THISBACK(ColorAction);
+	cllbtext <<= THISBACK(ColorAction);
+	cllb <<= THISBACK(ColorAction);
 	 
-	Reload();	
+	Update();	
 }

@@ -22,11 +22,12 @@ public:
 	StylerCtrl();
 
 	virtual void Updated();
-	void InvertColors();
+
+	void SkinAction();
+	void InvertAction();
 
 protected:
 	void ColorizedSkin();
-	void ColorAction();
 };
 
 class ChamStyleCtrl : public WithChamStyleLay<ParentCtrl> {
@@ -34,9 +35,7 @@ public:
 	typedef ChamStyleCtrl CLASSNAME;
 	ChamStyleCtrl();
 
-	void Reload();
 	virtual void Updated();
-protected:
 	void ColorAction();
 };
 

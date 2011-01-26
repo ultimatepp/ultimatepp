@@ -6,7 +6,7 @@
 
 void StylerTest::ReloadChamCB()
 {
-	chc.Reload();	
+	chc.Update();	
 }
 
 void StylerTest::ReloadCB()
