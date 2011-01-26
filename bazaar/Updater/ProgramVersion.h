@@ -63,7 +63,7 @@ class ProgramVersions : public Vector<ProgramVersion>
 	
 		// constructors
 		ProgramVersions();
-		ProgramVersions(ProgramVersions const &vs);
+		ProgramVersions(ProgramVersions pick_ &vs);
 		ProgramVersions(ProgramVersions const &vs, int);
 		ProgramVersions(String s);
 		
