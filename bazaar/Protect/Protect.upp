@@ -4,7 +4,8 @@ uses
 	Core,
 	Cypher,
 	MySql,
-	Web;
+	Web,
+	Updater;
 
 file
 	ProtectStatus.h,

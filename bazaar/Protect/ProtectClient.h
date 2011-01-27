@@ -4,6 +4,9 @@
 #include <Web/Web.h>
 #include <Cypher/Cypher.h>
 
+// for ProgramVersion class....
+#include<Updater/Updater.h>
+
 #include "ProtectStatus.h"
 
 NAMESPACE_UPP
@@ -40,10 +43,10 @@ class ProtectClient
 		int numLicenses;
 		
 		// version of current app installed
-		double currentVersion;
+		ProgramVersion currentVersion;
 		
 		// maximum allowable version for this client
-		double maxAllowedVersion;
+		ProgramVersion maxAllowedVersion;
 		
 		// key and IV for encrypted communication
 		String key;
@@ -101,26 +104,26 @@ class ProtectClient
 	
 		// set user data -- for registration
 		// filled automatically by GETLICENSEINFO request
-		ProtectClient &SetUserEMail(String const &mail)			{ userEMail = mail; return *this; }
-		ProtectClient &SetUserName(String const &name)			{ userName = name; return *this; }
-		ProtectClient &SetUserAddress(String const &address)	{ userAddress = address; return *this; }
-		ProtectClient &SetUserCountry(String const &country)	{ userCountry = country; return *this; }
-		ProtectClient &SetUserZip(String const &zip)			{ userZIP = zip; return *this; }
-		ProtectClient &SetUserPhone(String const &phone)		{ userPhone = phone; return *this; }
-		ProtectClient &SetUserFax(String const &fax)			{ userFax = fax; return *this; }
-		ProtectClient &SetUserCell(String const &cell)			{ userCell = cell; return *this; }
-		ProtectClient &SetCurrentVersion(double v)				{ currentVersion = v; return *this; }
+		ProtectClient &SetUserEMail(String const &mail)				{ userEMail = mail; return *this; }
+		ProtectClient &SetUserName(String const &name)				{ userName = name; return *this; }
+		ProtectClient &SetUserAddress(String const &address)		{ userAddress = address; return *this; }
+		ProtectClient &SetUserCountry(String const &country)		{ userCountry = country; return *this; }
+		ProtectClient &SetUserZip(String const &zip)				{ userZIP = zip; return *this; }
+		ProtectClient &SetUserPhone(String const &phone)			{ userPhone = phone; return *this; }
+		ProtectClient &SetUserFax(String const &fax)				{ userFax = fax; return *this; }
+		ProtectClient &SetUserCell(String const &cell)				{ userCell = cell; return *this; }
+		ProtectClient &SetCurrentVersion(ProgramVersion const &v)	{ currentVersion = v; return *this; }
 		
-		String GetUserEMail(void)			{ return userEMail; }
-		String GetUserName(void)			{ return userName; }
-		String GetUserAddress(void)			{ return userAddress; }
-		String GetUserCountry(void)			{ return userCountry; }
-		String GetUserZip(void)				{ return userZIP; }
-		String GetUserPhone(void)			{ return userPhone; }
-		String GetUserFax(void)				{ return userFax; }
-		String GetUserCell(void)			{ return userCell; }
-		double GetCurrentVersion(void)		{ return currentVersion; }
-		double GetMaxAllowedVersion(void)	{ return maxAllowedVersion; }
+		String GetUserEMail(void)					{ return userEMail; }
+		String GetUserName(void)					{ return userName; }
+		String GetUserAddress(void)					{ return userAddress; }
+		String GetUserCountry(void)					{ return userCountry; }
+		String GetUserZip(void)						{ return userZIP; }
+		String GetUserPhone(void)					{ return userPhone; }
+		String GetUserFax(void)						{ return userFax; }
+		String GetUserCell(void)					{ return userCell; }
+		ProgramVersion GetCurrentVersion(void)		{ return currentVersion; }
+		ProgramVersion GetMaxAllowedVersion(void)	{ return maxAllowedVersion; }
 };
 
 END_UPP_NAMESPACE
