@@ -442,7 +442,7 @@ void Ide::BuildMenu(Bar& menu) {
 	menu.Add(GetConsole().GetLineCount(), AK_FINDPREVERROR, THISBACK(FindPrevError))
 		.Help("Find previous " + String(btabs.GetCursor() == BCONSOLE2 ? "position" : "error line")
 	          + "according to console pane");
-#if defined(PLATFORM_WIN32) || defined(PLATFORM_LINUX)
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_POSIX)
 	menu.MenuSeparator();
 	menu.Add(!IsNull(target), "Open output directory", THISBACK(OpenOutputFolder));
 #endif
