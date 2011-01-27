@@ -72,8 +72,8 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 	makefile.output << (main ? String("$(OutDir)") : makefile.outdir) << makefile.outfile;
 
 	if(main) {
-		makefile.config << "CC = c++\n"
-			"LINKER = $(CC)\n";
+		makefile.config << "CXX = c++\n"
+			"LINKER = $(CXX)\n";
 		String flags;
 		if(HasFlag("DEBUG"))
 			flags << " -D_DEBUG " << debug_options;
@@ -165,7 +165,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 						makefile.rules << " \\\n\t" << GetMakePath(dfn);
 				}
 				makefile.rules << "\n"
-					"\t$(CC) -c " << (isc ? "-x c $(CFLAGS)" : "-x c++ $(CXXFLAGS)") << " $(CINC) $(" << macros << ") "
+					"\t$(CXX) -c " << (isc ? "-x c $(CFLAGS)" : "-x c++ $(CXXFLAGS)") << " $(CINC) $(" << macros << ") "
 						<< gop << " " << srcfile << " -o " << outfile << "\n\n";
 				if(!libout || isicpp) {
 					makefile.linkdep << " \\\n\t" << outfile;
