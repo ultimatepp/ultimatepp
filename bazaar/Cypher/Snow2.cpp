@@ -567,6 +567,9 @@ bool Snow2::CypherKey(byte const *keyBuf, size_t keyLen, byte const *nonce, size
 	byteIndex = 0;
 	if(keyLen != 16 && keyLen != 32)
 		return false;
+
+	// get keyLen in bits, not bytes
+	keyLen *= 8;
 	
 	// initializes the encoder box with key
 	loadkey(keyBuf, keyLen,
