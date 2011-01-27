@@ -18,15 +18,14 @@ String  VFormat(const char *fmt, va_list ptr) {
 
 // Formatting routines ---------------------------
 
-String FormatIntBase(int i, int base, int width, char lpad, int sign)
+String FormatIntBase(int i, int base, int width, char lpad, int sign, bool upper)
 {
 	enum { BUFFER = sizeof(int) * 8 + 1 };
 	ASSERT(base >= 2 && base <= 36);
 	char buffer[BUFFER];
 	char *const e = buffer + (int)BUFFER;
 	char *p = e;
-	static const char itoc[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-	ASSERT(__countof(itoc) == 37);
+	const char *itoc = upper ? "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" : "0123456789abcdefghijklmnopqrstuvwxyz";
 	if(sign < 0 || !IsNull(i))
 	{
 		unsigned x = i;
@@ -71,6 +70,11 @@ String FormatIntDec(int i, int width, char lpad, bool always_sign)
 String FormatIntHex(int i, int width, char lpad)
 {
 	return FormatIntBase(i, 16, width, lpad, -1);
+}
+
+String FormatIntHexUpper(int i, int width, char lpad)
+{
+	return FormatIntBase(i, 16, width, lpad, -1, true);
 }
 
 String FormatIntOct(int i, int width, char lpad)

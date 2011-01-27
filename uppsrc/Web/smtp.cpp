@@ -139,6 +139,48 @@ SmtpMail::SmtpMail()
 
 static const char default_mime[] = "application/octet-stream";
 
+String SmtpMail::Encode(const String& text)
+{
+	String txt = ToCharset(CHARSET_UTF8, text);
+	String r = "=?Utf-8?q?";
+	for(const char *s = txt; *s; s++) {
+		if((byte)*s < ' ' || (byte)*s > 127 || *s == '=' || *s == '?' || *s == ' ')
+			r << '=' << FormatIntHexUpper((byte)*s, 2);
+		else
+			r.Cat(*s);
+	}
+	r << "?=";
+	return r;
+}
+
+SmtpMail& SmtpMail::To(const String& t, const String& name, AS a)
+{
+	to.Add(t);
+	to_name.Add(name);
+	as.Add(a);
+	return *this;
+}
+
+SmtpMail& SmtpMail::Subject(const String& s)
+{
+	subject = s;
+	return *this;
+}
+
+SmtpMail& SmtpMail::ReplyTo(const String& r, const String& name)
+{
+	reply_to = r;
+	reply_to_name = name;
+	return *this;
+}
+
+SmtpMail& SmtpMail::From(const String& f, const String& name)
+{
+	from = f;
+	from_name = name;
+	return *this;
+}
+
 SmtpMail& SmtpMail::AttachFile(const char *filename, const char *mime)
 {
 	Attachment& attach = attachments.Add();
@@ -148,13 +190,22 @@ SmtpMail& SmtpMail::AttachFile(const char *filename, const char *mime)
 	return *this;
 }
 
-SmtpMail& SmtpMail::Attach(const char *name, String data, const char *mime)
+SmtpMail& SmtpMail::Attach(const char *name, const String& data, const char *mime)
 {
 	Attachment& attach = attachments.Add();
 	attach.name = name;
 	attach.mime = (mime ? mime : default_mime);
 	attach.data = data;
 	return *this;
+}
+
+String SmtpMail::FormatAddr(const String& addr, const String& name)
+{
+	String r;
+	if(name.GetCount())
+		r << "\"" << Encode(name) << "\" ";
+	r << '<' << addr << '>';
+	return r;
 }
 
 bool SmtpMail::Send()
@@ -237,7 +288,7 @@ bool SmtpMail::Send()
 			String msg;
 			if(!no_header)
 			{ // generate message header
-				msg << "From: " << from << "\r\n";
+				msg << "From: " << FormatAddr(from, from_name) << "\r\n";
 				static const AS as_list[] = { TO, CC, BCC };
 				static const char *as_name[] = { "To", "CC", "BCC" };
 				for(int a = 0; a < __countof(as_list); a++)
@@ -261,15 +312,15 @@ bool SmtpMail::Send()
 								msg << as_name[a] << ": ";
 								pos = (int)strlen(as_name[a]) + 2;
 							}
-							msg << to[i];
+							msg << FormatAddr(to[i], to_name[i]);
 						}
 					if(pos)
 						msg << "\r\n";
 				}
 				if(!IsNull(subject))
-					msg << "Subject: " << subject << "\r\n";
+					msg << "Subject: " << Encode(subject) << "\r\n";
 				if(!IsNull(reply_to))
-					msg << "Reply-To: " << reply_to << "\r\n";
+					msg << "Reply-To: " << FormatAddr(reply_to, reply_to_name) << "\r\n";
 				if(!IsNull(time_sent)) {
 					static const char *dayofweek[] =
 					{ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
