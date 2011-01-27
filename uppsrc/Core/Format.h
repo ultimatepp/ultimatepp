@@ -1,7 +1,8 @@
-String         FormatIntBase(int i, int base, int width = 0, char lpad = ' ', int sign = 0);
+String         FormatIntBase(int i, int base, int width = 0, char lpad = ' ', int sign = 0, bool upper = false);
 String         FormatInt(int i);
 String         FormatIntDec(int i, int width, char lpad = ' ', bool always_sign = false);
 String         FormatIntHex(int i, int width = 8, char lpad = '0');
+String         FormatIntHexUpper(int i, int width = 8, char lpad = '0');
 String         FormatIntOct(int i, int width = 12, char lpad = '0');
 String         FormatIntRoman(int i, bool upper = false);
 String         FormatIntAlpha(int i, bool upper = true);

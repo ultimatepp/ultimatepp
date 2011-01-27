@@ -5,25 +5,31 @@ public:
 
 	SmtpMail();
 
-	SmtpMail&      Host(String h)                 { host = h; return *this; }
-	SmtpMail&      Port(int p)                    { port = p; return *this; }
-	SmtpMail&      From(String f)                 { from = f; return *this; }
-	SmtpMail&      To(String t, AS a = TO)        { to.Add(t); as.Add(a); return *this; }
-	SmtpMail&      Text(String t, String m = Null) { text.Add(t); mime.Add(m); return *this; }
-	SmtpMail&      NoHeader()                     { no_header = true; return *this; }
-	SmtpMail&      NoHeaderSep()                  { no_header_sep = true; return *this; }
-	SmtpMail&      ReplyTo(String r)              { reply_to = r; return *this; }
-	SmtpMail&      TimeSent(Time t)               { time_sent = t; return *this; }
-	SmtpMail&      Subject(String s)              { subject = s; return *this; }
-	SmtpMail&      Transcript(bool t = true)      { transcript = t; return *this; }
+	SmtpMail&      Host(const String& h)                              { host = h; return *this; }
+	SmtpMail&      Port(int p)                                        { port = p; return *this; }
+	SmtpMail&      From(const String& from, const String& name = Null);
+	SmtpMail&      To(const String& t, const String& name, AS a = TO);
+	SmtpMail&      To(const String& t, AS a = TO)                     { return To(t, Null, a); }
+	SmtpMail&      Cc(const String& t, const String& name = Null)     { return To(t, name, CC); }
+	SmtpMail&      Bcc(const String& t, const String& name = Null)    { return To(t, name, BCC); }
+	SmtpMail&      ReplyTo(const String& r, const String& name);
+	SmtpMail&      Text(const String& t, const String& mime_ = Null)  { text.Add(t); mime.Add(mime_); return *this; }
+	SmtpMail&      NoHeader()                                         { no_header = true; return *this; }
+	SmtpMail&      NoHeaderSep()                                      { no_header_sep = true; return *this; }
+	SmtpMail&      TimeSent(Time t)                                   { time_sent = t; return *this; }
+	SmtpMail&      Subject(const String& s);
+	SmtpMail&      Transcript(bool t = true)                          { transcript = t; return *this; }
 	SmtpMail&      AttachFile(const char *filename, const char *mime = 0);
-	SmtpMail&      Attach(const char *name, String data, const char *mime = 0);
-	SmtpMail&      Auth(String user, String pwd)  { auth_user = user; auth_pwd = pwd; return *this; }
+	SmtpMail&      Attach(const char *name, const String& data, const char *mime = 0);
+	SmtpMail&      Auth(const String& user, const String& pwd)        { auth_user = user; auth_pwd = pwd; return *this; }
 
 	bool           Send();
 
-	String         GetError() const          { return error; }
-	String         GetTranscript() const     { return transcript_text; }
+	String         GetError() const                                   { return error; }
+	String         GetTranscript() const                              { return transcript_text; }
+
+	static String  Encode(const String& text);
+	static String  FormatAddr(const String& addr, const String& name);
 
 private:
 	struct Attachment
@@ -39,7 +45,9 @@ private:
 	String         auth_user;
 	String         auth_pwd;
 	String         from;
+	String         from_name;
 	Vector<String> to;
+	Vector<String> to_name;
 	Vector<char>   as;
 	Vector<String> text;
 	Vector<String> mime; // default: text/plain; charset=<default application charset>
@@ -51,6 +59,7 @@ private:
 	bool           no_header_sep; // default = false
 	Time           time_sent;
 	String         reply_to;
+	String         reply_to_name;
 	String         subject;
 
 	// state automaton

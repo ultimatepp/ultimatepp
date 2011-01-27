@@ -21,6 +21,17 @@ or any paddings. Supposed to be quite fast. Equivalent to FormatIntBase(i,
 10).&]
 [s3;* &]
 [s4;%- &]
+[s5;:FormatIntBase`(int`,int`,int`,char`,int`,bool`):%- String_[* FormatIntBase]([@(0.0.255) i
+nt]_[*@3 i], [@(0.0.255) int]_[*@3 base], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
+[@(0.0.255) char]_[*@3 lpad]_`=_`'_`', [@(0.0.255) int]_[*@3 sign]_`=_[@3 0], 
+[@(0.0.255) bool]_[*@3 upper]_`=_[@(0.0.255) false])&]
+[s2; Formats a signed or unsigned integer [%-*@3 i] in a given radix 
+[%-*@3 base] with left padding to given [%-*@3 width] with a given 
+[%-*@3 lpad] character. If [*@3 sign ]is `+1 `= always prepend `'`+`'/`-, 
+if 0 `= auto (`'`-`' only), if `-1, format as unsigned. If [%-*@3 upper] 
+is true, letters for base > 10 are uppercase.&]
+[s3; &]
+[s4;%- &]
 [s5;:FormatIntDec`(int`,int`,char`,bool`):%- [_^String^ String]_[* FormatIntDec]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) int]_[*@3 width], [@(0.0.255) char]_[*@3 lpad]_`=_`'_`', 
 [@(0.0.255) bool]_[*@3 always`_sign]_`=_[@(0.0.255) false])&]
@@ -195,9 +206,4 @@ notation&]
 [s5;:FormatIntBase`(int`,int`,int`,char`,int`):%- [_^String^ String]_[* FormatIntBase]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) int]_[*@3 base], [@(0.0.255) int]_[*@3 width]_`=_[@3 0], 
 [@(0.0.255) char]_[*@3 lpad]_`=_`'_`', [@(0.0.255) int]_[*@3 sign]_`=_[@3 0])&]
-[s2; Formats a signed or unsigned integer [%-*@3 i] in a given radix 
-[%-*@3 base] with left padding to given [%-*@3 width] with a given 
-[%-*@3 lpad] character. If [*@3 sign ]is `+1 `= always prepend `'`+`'/`-, 
-if 0 `= auto (`'`-`' only), if `-1, format as unsigned.&]
-[s3; &]
 [s0; ]
