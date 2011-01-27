@@ -12,7 +12,7 @@ public:
 	SmtpMail&      To(const String& t, AS a = TO)                     { return To(t, Null, a); }
 	SmtpMail&      Cc(const String& t, const String& name = Null)     { return To(t, name, CC); }
 	SmtpMail&      Bcc(const String& t, const String& name = Null)    { return To(t, name, BCC); }
-	SmtpMail&      ReplyTo(const String& r, const String& name);
+	SmtpMail&      ReplyTo(const String& r, const String& name = Null);
 	SmtpMail&      Text(const String& t, const String& mime_ = Null)  { text.Add(t); mime.Add(mime_); return *this; }
 	SmtpMail&      NoHeader()                                         { no_header = true; return *this; }
 	SmtpMail&      NoHeaderSep()                                      { no_header_sep = true; return *this; }
