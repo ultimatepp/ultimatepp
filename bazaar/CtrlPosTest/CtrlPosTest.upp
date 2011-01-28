@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	CtrlPos;
+
+file
+	CtrlPosTest.h,
+	main.cpp,
+	CtrlPosTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

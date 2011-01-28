@@ -1,0 +1,5 @@
+#ifndef _CtrlMoverTest_icpp_init_stub
+#define _CtrlMoverTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "CtrlMover/init" 
+#endif

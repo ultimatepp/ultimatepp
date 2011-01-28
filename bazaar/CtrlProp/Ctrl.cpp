@@ -29,6 +29,8 @@ bool PropRefresh(Ctrl& o, const Value& v) { o.Refresh(); return true; }
 bool PropSetLogPos(Ctrl& o, const Value& v) { if(!v.Is<Ctrl::LogPos>()) return false; o.SetPos(RawValue<Ctrl::LogPos>::Extract(v)); return true; }
 bool PropGetLogPos(const Ctrl& o, Value& v) { v = RawToValue(o.GetPos()); return true; }
 
+bool PropGetTypeInfo(const Ctrl& o, Value& v) { v = String(typeid(o).name()); return true; }
+
 CTRL_PROPERTIES(Ctrl, RecurseDone)
 PROPERTY("data", PropSetData, PropGetData)
 PROPERTY("enable", PropEnable, PropIsEnabled)
@@ -43,4 +45,5 @@ PROPERTY("initFocus", PropInitFocus, PropIsInitFocus)
 PROPERTY("backpaint", PropBackPaint, PropIsBackPaint)
 PROPERTY("transparent", PropTransparent, PropIsTransparent)
 //PROPERTY_SET("refresh", PropRefresh)
+PROPERTY_GET("type", PropGetTypeInfo)
 END_CTRL_PROPERTIES

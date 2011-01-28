@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	CtrlMover;
+
+file
+	CtrlMoverTest.h,
+	main.cpp,
+	CtrlMoverTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

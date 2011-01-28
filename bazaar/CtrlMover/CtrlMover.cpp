@@ -2,41 +2,45 @@
 
 void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 {
-	if(&c == &rc) return;
-	if(&c == this) return;
-	Visit(c);
+	if(&c == &rc) { rc.Remove(); return;}
+	rc.Remove();
+	Add(rc.SizePos());
+	rc.SetData(c.GetRect());
 	Action();
 }
 
 void CtrlMover::OnRectChange()
 {
-	if(IsEmpty()) return;
-	Get().SetRect(rc.GetData());
+	if(IsEmpty()) { rc.Remove(); return; }
+	Ctrl* c = GetCtrl();
+	if(!c) return;
+	c->SetRect(rc.GetData());
 	Action();
 }
 
 void CtrlMover::OnMissed(Point p, dword keyflags)
 {
-	Clear();
+	rc.Remove();
+	c = NULL; //from CtrlFinder
 	Action();
-	LeftDown(p, keyflags);
 }
 
 void CtrlMover::Updated()
 {
-	Reload();
+	Ctrl* c = GetCtrl();
+	if(!c) return;
+	rc.SetData(c->GetRect());
 }
 
 void CtrlMover::State(int reason)
 {
 	if(reason != ENABLE) return;
-	if(!IsEnabled()) Clear();
+	if(!IsEnabled()) rc.Remove();
 }
 
 void CtrlMover::Visit(Ctrl& c)
 {
 	rc.Remove();
-	Add(rc.SizePos());
 	V::Visit(c);
 }
 
@@ -48,14 +52,14 @@ void CtrlMover::Clear()
 
 void CtrlMover::Reload()
 {
+	if(IsEmpty()) return;
 	V::Reload();
-	rc.SetData(Get().GetRect());
 }
 
 CtrlMover::CtrlMover()
 {
 	WhenLeftDown = THISBACK(OnCtrlLeft);
-
+	WhenMissed = THISBACK(OnMissed);
 	rcst = RectCtrl::StyleDefault();	
 	rcst.rectcol = Null;
 	rc.SetStyle(rcst);

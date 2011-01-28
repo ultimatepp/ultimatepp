@@ -1,4 +1,5 @@
 #ifndef _CtrlFinder_icpp_init_stub
 #define _CtrlFinder_icpp_init_stub
 #include "CtrlLib/init"
+#include "Gen/init"
 #endif

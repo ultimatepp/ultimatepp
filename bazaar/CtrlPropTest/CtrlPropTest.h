@@ -16,9 +16,6 @@ public:
 	typedef CtrlPropTest CLASSNAME;
 	CtrlPropTest();
 
-	//hook
-	void EditCB();
-
 	//misc
 	void Test();
 	void InitDummies();
@@ -28,7 +25,8 @@ public:
 	void DoEdit(Ctrl& c);
 	bool CanEdit();
 
-	void OnCtrlRight(Ctrl& c, Point p, dword keyflags);
+	void OnEdit();
+	void OnCtrlRight(Ctrl& c, Point p, dword keyflags);	
 
 public:
 	ToolBar mb;
@@ -39,6 +37,8 @@ public:
 	PropList pl;
 
 	CtrlMover hk;
+	
+	bool edit;
 };
 
 #endif

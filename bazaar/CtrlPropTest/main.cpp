@@ -1,31 +1,34 @@
 #include "CtrlPropTest.h"
 
-void CtrlPropTest::EditCB()
+void CtrlPropTest::OnEdit()
 {
-	if(hk.IsEnabled())
+	if(edit)
 	{
+		edit = false;
+		mbi->Check(edit);
 		hk.Disable();
-		mbi->Check(false);
 	}
 	else
 	{
+		edit = true;
+		mbi->Check(edit);
 		hk.Enable();
-		mbi->Check(true);
-		SetFocus(); //kill foucus from all others
+		SetFocus();
 	}
 }
 
 CtrlPropTest::CtrlPropTest()
 {
 	CtrlLayout(*this, "Window title");
-
+	edit = false;
 	mbi = &mb.Add(!IsReadOnly(), t_("Edit"), CtrlImg::selection(),
-	        THISBACK(EditCB));
+	        THISBACK(OnEdit));
 	AddFrame(mb);
 
 	hk.WhenRightDown = THISBACK(OnCtrlRight);
-	hk.Disable();
 	Add(hk.SizePos());
+	hk.Visit(*this);
+	hk.Disable();
 
 	InitDummies();
 }

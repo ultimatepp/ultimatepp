@@ -32,25 +32,29 @@ public:
 
 	virtual void Updated();
 
-	virtual void SetData(const Value& v) { r = v; Refresh(); }
+	virtual void SetData(const Value& v) { r = v; UpdateRefresh(); }
 	virtual Value GetData() const { return r; }
 
 	static const Style& StyleDefault();
 	void SetStyle(const Style& s) { style = &s; Refresh(); }
 
 	Callback2<Point, dword> WhenMissed;
-	
-protected:
+
+	//helpers
 	inline static Rect HandleAt(const Point& p, int size);
-	int GetMode(const Point& p, dword keyflags);
-	void CalcRect(const Point& dp, dword keyflags);
-	void SetCursor(unsigned m, dword keyflags);
+	static void DrawHandle(Draw& w, const Rect& r, const Color& col, int size);
+	static void DrawHandleFrame(Draw& w, const Rect& r, const Color& col, int size);
+	static void DrawRectInfo(Draw& w, const Point& p, const Rect&r, const Color& framecol, const Color& textcol);
+	static int GetMode(const Rect& r, const Point& p, dword keyflags, int handsize);
+	static void CalcRect(Rect& r, const Point& dp, dword keyflags, int mode, const Point& g);
+	static Image SetCursor(unsigned m, dword keyflags, const Image& old);
 
 protected:
 	const Style* style;
 	Rect r;
 	Point g; //grid
 
+public:
 	enum 
 	{
 		NONE = 0x0,
@@ -91,6 +95,7 @@ protected:
 		GRID = GRIDX | GRIDY,
 	};
 
+protected:
 	//cache
 	Point xp;
 	Rect xr;

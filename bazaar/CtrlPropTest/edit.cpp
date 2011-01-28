@@ -36,7 +36,6 @@ bool CtrlPropTest::CanEdit()
 
 void CtrlPropTest::OnCtrlRight(Ctrl& c, Point p, dword keyflags)
 {
-//	if(&c == &rc) return;
 	if(&c == &hk) return;
 	if(!CanEdit()) return;
 	if(keyflags & K_SHIFT)

@@ -5,16 +5,12 @@
 
 using namespace Upp;
 
+#include <Gen/Gen.h>
+
 class MouseHookCtrl : public ParentCtrl
 {
 public:
 	typedef MouseHookCtrl CLASSNAME;
-	MouseHookCtrl() : minsize(Null) { Update(); }
-
-	void    SetMinSize(Size sz) { minsize = sz; }
-	virtual Rect GetVoidRect()const { return GetSize(); }
-	virtual Size GetStdSize() const { return GetMinSize(); }
-	virtual Size GetMinSize() const { return IsNull(minsize) ? Ctrl::GetMinSize() : minsize; }
 
 	virtual void LeftDown(Point p, dword keyflags) { WhenLeftDown(p,keyflags); }
 	virtual void RightDown(Point p, dword keyflags) { WhenRightDown(p,keyflags); }
@@ -24,8 +20,6 @@ public:
 	virtual void LeftRepeat(Point p, dword keyflags) { WhenLeftRepeat(p,keyflags); }
 	virtual void RightRepeat(Point p, dword keyflags) { WhenRightRepeat(p,keyflags); }
 
-	virtual void Updated() { IgnoreMouse(!IsEnabled()); }
-
 	Callback2<Point, dword> WhenLeftDown;
 	Callback2<Point, dword> WhenRightDown;
 	Callback2<Point, dword> WhenLeftUp;
@@ -33,27 +27,34 @@ public:
 	Callback2<Point, dword> WhenMouseMove;
 	Callback2<Point, dword> WhenLeftRepeat;
 	Callback2<Point, dword> WhenRightRepeat;
-
-protected:
-	Size minsize;
 };
 
-Ctrl* GetCtrl(Ctrl* parent, Point p, dword keyflags);
+Ctrl* GetCtrl(Ctrl& c, Point p, dword keyflags, bool ignoreframe);
 
-class CtrlFinder : public MouseHookCtrl
+class CtrlFinder : public MouseHookCtrl, public Visiting<Ctrl>
 {
 public:
 	typedef CtrlFinder CLASSNAME;
 	typedef MouseHookCtrl R;
-	CtrlFinder() { R::WhenLeftDown = THISBACK(OnCtrlLeft); R::WhenRightDown = THISBACK(OnCtrlRight);}
+	typedef Visiting<Ctrl> V;
 
-	Ctrl* GetCtrl(Point p, dword keyflags) { return ::GetCtrl(this, p, keyflags); }
-	Ctrl* GetCtrlFromParent(Point p, dword keyflags) { return ::GetCtrl(GetParent(), p, keyflags); }
-	
+	CtrlFinder() : ignoreframe(true) { R::WhenLeftDown = THISBACK(OnCtrlLeft); R::WhenRightDown = THISBACK(OnCtrlRight);}
+
+	virtual void Visit(Ctrl& c);
+	virtual void Reload();
+	virtual void Clear();
+
 	Callback3<Ctrl&, Point, dword> WhenLeftDown;
 	Callback3<Ctrl&, Point, dword> WhenRightDown;
+	Callback2<Point, dword> WhenMissed;
+
+	virtual Value GetData() const { return RawToValue(~c); }
+	Ctrl* GetCtrl() const { return c; }
+
+	bool ignoreframe;
 
 protected:
+	Ptr<Ctrl> c;
 	void OnCtrlLeft(Point p, dword keyflags);
 	void OnCtrlRight(Point p, dword keyflags);
 };

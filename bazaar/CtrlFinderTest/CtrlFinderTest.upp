@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	CtrlFinder;
+
+file
+	CtrlFinderTest.h,
+	main.cpp,
+	CtrlFinderTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

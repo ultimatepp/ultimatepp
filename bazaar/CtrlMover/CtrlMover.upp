@@ -1,13 +1,9 @@
 uses
 	CtrlLib,
 	CtrlFinder,
-	RectCtrl,
-	Gen;
+	RectCtrl;
 
 file
 	CtrlMover.h,
 	CtrlMover.cpp;
-
-mainconfig
-	"" = "GUI MT";
 

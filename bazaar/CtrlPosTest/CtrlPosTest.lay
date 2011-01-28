@@ -1,0 +1,14 @@
+LAYOUT(CtrlPosTestLayout, 412, 196)
+	ITEM(DropList, dv___0, LeftPosZ(336, 64).TopPosZ(48, 19))
+	ITEM(SliderCtrl, dv___1, LeftPosZ(336, 64).TopPosZ(84, 24))
+	ITEM(EditString, dv___2, LeftPosZ(336, 64).TopPosZ(12, 19))
+	ITEM(DocEdit, info, LeftPosZ(12, 292).TopPosZ(12, 148))
+END_LAYOUT
+
+LAYOUT(ControlLay, 264, 24)
+	ITEM(Button, visit, SetLabel(t_("Visit")).LeftPosZ(4, 56).VSizePosZ(4, 5))
+	ITEM(Button, clear, SetLabel(t_("Clear")).LeftPosZ(60, 56).VSizePosZ(4, 5))
+	ITEM(Button, enable, SetLabel(t_("Enable")).RightPosZ(60, 56).VSizePosZ(4, 5))
+	ITEM(Button, disable, SetLabel(t_("Disable")).RightPosZ(4, 56).VSizePosZ(4, 5))
+END_LAYOUT
+

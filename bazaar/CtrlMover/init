@@ -3,5 +3,4 @@
 #include "CtrlLib/init"
 #include "CtrlFinder/init"
 #include "RectCtrl/init"
-#include "Gen/init"
 #endif

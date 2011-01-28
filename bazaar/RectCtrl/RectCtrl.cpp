@@ -19,49 +19,46 @@ Rect RectCtrl::HandleAt(const Point& p, int size)
 	Rect q(p,p); q.Inflate(size); return q;
 }
 
-void RectCtrl::Paint(Draw& w)
+void RectCtrl::DrawHandle(Draw& w, const Rect& r, const Color& col, int size)
 {
-	Size sz = GetSize();
+	w.DrawRect(HandleAt(r.CenterPoint(), size), col);
 
-	if(r.IsNullInstance()) return;
-	
-	//rect
-	w.DrawRect(r, style->rectcol);
+	w.DrawRect(HandleAt(r.TopLeft(), size), col);
+	w.DrawRect(HandleAt(r.BottomRight(), size), col);
+	w.DrawRect(HandleAt(r.TopRight(), size), col);
+	w.DrawRect(HandleAt(r.BottomLeft(), size), col);
 
-	//handle frame
-	Vector<Point> vp;
-	vp << r.TopLeft() << r.TopRight() << r.BottomRight() << r.BottomLeft() << r.TopLeft();
-	w.DrawPolyline(vp, style->framesize, style->framecol);
-	
-	//handles
-	int size = style->handsize;
-	w.DrawRect(HandleAt(r.CenterPoint(), size), style->handcol);
-
-	w.DrawRect(HandleAt(r.TopLeft(), size), style->handcol);
-	w.DrawRect(HandleAt(r.BottomRight(), size), style->handcol);
-	w.DrawRect(HandleAt(r.TopRight(), size), style->handcol);
-	w.DrawRect(HandleAt(r.BottomLeft(), size), style->handcol);
-
-	w.DrawRect(HandleAt(r.CenterLeft(), size), style->handcol);
-	w.DrawRect(HandleAt(r.CenterRight(), size), style->handcol);
-	w.DrawRect(HandleAt(r.TopCenter(), size), style->handcol);
-	w.DrawRect(HandleAt(r.BottomCenter(), size), style->handcol);
-	
-	//text
-	if(pressed && moving)
-	{
-		String t = AsString(r);
-		Size tsz = GetTextSize(t, StdFont());
-		w.DrawRect(10, 10, tsz.cx, tsz.cy, style->framecol);
-		w.DrawText(10, 10, t, StdFont(), style->textcol);
-	}
+	w.DrawRect(HandleAt(r.CenterLeft(), size), col);
+	w.DrawRect(HandleAt(r.CenterRight(), size), col);
+	w.DrawRect(HandleAt(r.TopCenter(), size), col);
+	w.DrawRect(HandleAt(r.BottomCenter(), size), col);
 }
 
-int RectCtrl::GetMode(const Point& p, dword keyflags)
+void RectCtrl::DrawHandleFrame(Draw& w, const Rect& _r, const Color& col, int size)
 {
-	int size = style->handsize<<1;
+	Rect r(_r);
+	--r.right;
+	--r.bottom;
+	Vector<Point> vp;
+	vp << r.TopLeft() << r.TopRight() << r.BottomRight() << r.BottomLeft() << r.TopLeft();
+	w.DrawPolyline(vp, size, col);
+}
+
+void RectCtrl::DrawRectInfo(Draw& w, const Point& p, const Rect&r, const Color& framecol, const Color& textcol)
+{
+	String t = AsString(r);
+	Size tsz = GetTextSize(t, StdFont());
+	w.DrawRect(p.x-2, p.y-2, tsz.cx+4, tsz.cy+4, framecol);
+	w.DrawText(p.x, p.y, t, StdFont(), textcol);
+}
+
+int RectCtrl::GetMode(const Rect& r, const Point& p, dword keyflags, int handsize)
+{
+	int size = handsize+2;
 	Rect q = r; q.Inflate(size);
 	if(!q.Contains(p)) return NONE;
+
+	if(HandleAt(r.CenterPoint(), size).Contains(p)) return CENTER;
 
 	if(HandleAt(r.TopLeft(), size).Contains(p)) return LEFTTOP;
 	if(HandleAt(r.BottomRight(), size).Contains(p)) return RIGHTBOTTOM;
@@ -73,22 +70,19 @@ int RectCtrl::GetMode(const Point& p, dword keyflags)
 	if(HandleAt(r.TopCenter(), size).Contains(p)) return TOP;
 	if(HandleAt(r.BottomCenter(), size).Contains(p)) return BOTTOM;
 
-	if(HandleAt(r.CenterPoint(), size).Contains(p)) return CENTER;
-
 	return MOVE;
 }
 
-void RectCtrl::CalcRect(const Point& dp, dword keyflags)
+void RectCtrl::CalcRect(Rect& r, const Point& dp, dword keyflags, int mode, const Point& g)
 {
 	if(mode == NONE) return;
-	r = xr;
 
 	Point p = dp;
 	int m = mode;
 
 	if(!(keyflags & K_ALT)) m |= GRID;
-	if(m & GRIDX) p.x = dp.x/g.x*g.x;
-	if(m & GRIDY) p.y = dp.y/g.y*g.y;
+	if(m & GRIDX) p.x = p.x/g.x*g.x;
+	if(m & GRIDY) p.y = p.y/g.y*g.y;
 
 	if(keyflags & K_CTRL)
 	{
@@ -126,25 +120,37 @@ void RectCtrl::CalcRect(const Point& dp, dword keyflags)
 	if(m & _BOTTOM)r.bottom -= p.y;
 }
 
-void RectCtrl::SetCursor(unsigned m, dword keyflags)
+Image RectCtrl::SetCursor(unsigned m, dword keyflags, const Image& old)
 {
 	switch(m & (ALL | _ALL))
 	{
-		case LEFTTOP: c = OverrideCursor(Img::ltrb()); break;
-		case RIGHTBOTTOM: c = OverrideCursor(Img::ltrb()); break;
-		case RIGHTTOP: c = OverrideCursor(Img::rtlb()); break; 
-		case LEFTBOTTOM: c = OverrideCursor(Img::rtlb()); break;
+		case LEFTTOP: return OverrideCursor(Img::ltrb());
+		case RIGHTBOTTOM: return OverrideCursor(Img::ltrb());
+		case RIGHTTOP: return OverrideCursor(Img::rtlb());
+		case LEFTBOTTOM: return OverrideCursor(Img::rtlb());
 		
-		case LEFT: c = OverrideCursor(Img::lr()); break;
-		case BOTTOM: c = OverrideCursor(Img::tb()); break;
-		case RIGHT:  c = OverrideCursor(Img::lr()); break;
-		case TOP: c = OverrideCursor(Img::tb()); break;
+		case LEFT: return OverrideCursor(Img::lr());
+		case BOTTOM: return OverrideCursor(Img::tb());
+		case RIGHT:  return OverrideCursor(Img::lr());
+		case TOP: return OverrideCursor(Img::tb());
 
-		case ALL: c = OverrideCursor(Img::mv()); break;
-		case CENTER: c = OverrideCursor(Img::fr()); break;
+		case ALL: return OverrideCursor(Img::mv());
+		case CENTER: return OverrideCursor(Img::fr());
 		
-		default: OverrideCursor(c); break;
+		default: OverrideCursor(old); return Null;
 	}
+}
+
+void RectCtrl::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	if(r.IsNullInstance()) return;
+	
+	w.DrawRect(r, style->rectcol);
+	DrawHandleFrame(w, r, style->framecol, style->framesize);
+	DrawHandle(w, r, style->handcol, style->handsize);
+	if(pressed)// && moving)
+		DrawRectInfo(w, Point(10,10), r, style->framecol, style->textcol);
 }
 
 void RectCtrl::LeftDown(Point p, dword keyflags)
@@ -155,27 +161,26 @@ void RectCtrl::LeftDown(Point p, dword keyflags)
 
 	xr = r;
 	xp = p;
-	mode = GetMode(p, keyflags);
-
-	SetCursor(mode, keyflags);
+	mode = GetMode(r, p, keyflags, style->handsize);
+	c = SetCursor(mode, keyflags, c);
 	
 	if(mode == NONE) WhenMissed(p, keyflags);
+	Refresh();
 }
 
 void RectCtrl::MouseMove(Point p, dword keyflags)
 {
 	moving = true;
 	pressed = (keyflags & K_MOUSELEFT);
-
-	//int m = GetMode(p, keyflags);
+	//int m = GetMode(r, p, keyflags, style->handsize);
 	//SetCursor(m, keyflags);
-
 	if(pressed && mode != NONE) 
 	{
-		CalcRect(p-xp, keyflags);	
+		r = xr;
+		CalcRect(r, p-xp, keyflags, mode, g);
+		r.Normalize();	
 		UpdateActionRefresh();
 	}
-	else Refresh();
 }
 
 void RectCtrl::LeftUp(Point p, dword keyflags)
@@ -186,7 +191,7 @@ void RectCtrl::LeftUp(Point p, dword keyflags)
 	xr.SetNull();
 	xp.SetNull();
 	mode = NONE;
-	SetCursor(mode, keyflags);
+	c = SetCursor(mode, keyflags, c);
 	Refresh();
 }
 
@@ -194,11 +199,18 @@ void RectCtrl::RightDown(Point p, dword keyflags)
 {
 	//cancel
 	ReleaseCapture();
+	//pressed = false;
+	//moving = false;
+	//xr.SetNull();
+	//xp.SetNull();
+	int m = mode;
 	mode = NONE;
-	SetCursor(mode, keyflags);
-	if(xr.IsNullInstance()) return;
-	r = xr;
-	UpdateActionRefresh();
+	c = SetCursor(mode, keyflags, c);
+	if(m != NONE)
+	{
+		r = xr;
+		UpdateActionRefresh();
+	}
 }
 
 void RectCtrl::Updated()
@@ -207,12 +219,12 @@ void RectCtrl::Updated()
 }
 
 RectCtrl::RectCtrl()
-	: pressed(false), moving(false)
+	: pressed(false), moving(false), mode(NONE), g(4,4)
 {
 	Transparent();
+	//BackPaint();
 	style = &StyleDefault();
 	r.SetNull();
-	g = Point(4,4);
 	xr.SetNull();
 	xp.SetNull();
 }

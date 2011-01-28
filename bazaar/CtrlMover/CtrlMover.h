@@ -7,15 +7,12 @@ using namespace Upp;
 
 #include <CtrlFinder/CtrlFinder.h>
 #include <RectCtrl/RectCtrl.h>
-#include <Gen/Gen.h>
 
-//the control mover is a layer on top of other ctrl surfaces, and can grab their Ctrls to move them.
-
-class CtrlMover : public CtrlFinder, public Visiting<Ctrl>
+class CtrlMover : public CtrlFinder
 {
 public:
 	typedef CtrlMover CLASSNAME;
-	typedef Visiting<Ctrl> V;
+	typedef CtrlFinder V;
 	CtrlMover();
 
 	virtual void Visit(Ctrl& c);
