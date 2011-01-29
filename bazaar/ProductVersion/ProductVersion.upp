@@ -1,0 +1,6 @@
+description "Small class to handle application versions\377";
+
+file
+	ProductVersion.h,
+	ProductVersion.cpp;
+
