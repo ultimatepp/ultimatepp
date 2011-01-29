@@ -305,7 +305,7 @@ bool Updater::DO_NormalRun(void)
 		return true;
 	
 	// if we don't have a new version available, just do nothing
-	ProgramVersion maxVer;
+	ProductVersion maxVer;
 	if( (maxVer = FetchMaxValidVersion(acceptDevelVersions)) <= installedVersion)
 		return true;
 	
@@ -435,7 +435,7 @@ void Updater::DO_Uninstall(void)
 void Updater::DO_Install(void)
 {
 	// fetch the new app version and install it
-	if(!FetchApp(ProgramVersion(), acceptDevelVersions))
+	if(!FetchApp(ProductVersion(), acceptDevelVersions))
 	{
 		FailUpdate();
 		RestartApp(RestartOrig);
@@ -453,7 +453,7 @@ void Updater::DO_Install(void)
 void Updater::DO_Update(void)
 {
 	// fetch the new app version and replace old one
-	if(!FetchApp(ProgramVersion(), acceptDevelVersions))
+	if(!FetchApp(ProductVersion(), acceptDevelVersions))
 	{
 		FailUpdate();
 		RestartApp(RestartOrig);
@@ -533,7 +533,7 @@ void Updater::RestartApp(RestartModes restartMode)
 }
 
 // fetch list of available app versions
-ProgramVersions Updater::FetchVersions(void)
+ProductVersions Updater::FetchVersions(void)
 {
 	HttpClient http;
 	http.TimeoutMsecs(1000);
@@ -543,27 +543,27 @@ ProgramVersions Updater::FetchVersions(void)
 	String verStr = http.Execute();
 	int err = http.GetStatusCode();
 	if(verStr == "" || err != 200)
-		return ProgramVersions();
+		return ProductVersions();
 
-	return ProgramVersions(verStr);
+	return ProductVersions(verStr);
 }
 
 // fetch MAX valid version, i.e. the greatest among all available
 // but smaller or equal than maxVersion
-ProgramVersion Updater::FetchMaxValidVersion(bool devel)
+ProductVersion Updater::FetchMaxValidVersion(bool devel)
 {
-	ProgramVersions versions = FetchVersions();
+	ProductVersions versions = FetchVersions();
 	if(!versions.GetCount())
-		return ProgramVersion();
+		return ProductVersion();
 	
-	return versions.FindMax(ProgramVersion(), maxVersion, devel);
+	return versions.FindMax(ProductVersion(), maxVersion, devel);
 }
 
 // fetch the new app version from web server
 // and replaces older one
 // if ver is not specified, fetches the maximum available
 // one but which is less than or equal maxVersion
-bool Updater::FetchApp(ProgramVersion ver, bool devel)
+bool Updater::FetchApp(ProductVersion ver, bool devel)
 {
 	int err = 0;
 

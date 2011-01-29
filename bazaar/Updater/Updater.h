@@ -3,54 +3,9 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-#include "ProgramVersion.h"
+#include <ProductVersion/ProductVersion.h>
 
 NAMESPACE_UPP
-
-/*
-#define SELFUPDATE_OK				0
-#define SELFUPDATE_NO_NETWORK		1
-#define SELFUPDATE_NO_VERSIONFILE	2
-#define SELFUPDATE_NO_APPFILE		3
-#define SELFUPDATE_NO_PERMISSION	4
-
-extern int SELFUPDATE_RESULT;
-
-#define SELFUPDATE(remoteRoot, appName, currentVersion, maxVersion) \
-	SELFUPDATE_RESULT = __SelfUpdate(remoteRoot, appName, currentVersion, maxVersion); \
-	if(SELFUPDATE_RESULT == -1) \
-		return;
-
-// UPDATE HELPER USED BY SELFUPDATE MACRO
-
-// IF APP STARTED NORMALLY :
-//		stores current command line on a temporary file
-//		restarts current applcation copying to temporary
-//			folder and acting as a superuser
-//		parameters passed to application :
-//			--UPDATE			update command
-//			exepath				complete path of itself
-//			cmdlinepath			path of the command line file
-//		returns 0 if failed, 1 if success
-// IF APP STARTED BY UPDATER (as a superuser):
-//		fetches the update file in a temporary folder
-//		overwrite the old executable with the new one
-//		restarts as a normal user the executable with original command line
-//		returns 2 if failed, 3 if success
-//		if failed, adds --UPDATEFAILED as last cmdline parameter
-//		if success, adds --UPDATEOK as last cmdline parameter
-//
-// IF APP STARTED WITH --UPDATEFAILED AS LAST PARAMETER
-//		returns 4
-//
-// IF APP STARTED WITH --INSTALLFAILED AS LAST PARAMETER
-//		returns 5
-//
-// IF APP STARTED WITH --UPDATEOK AS LAST PARAMETER
-//		just return 1 and skip further processing
-int __SelfUpdate(String const &remoteRoot, String const &appName, String const &currentVersion, String const &maxVersion);
-
-*/
 
 class Updater
 {
@@ -112,13 +67,13 @@ class Updater
 		void RestartApp(RestartModes restartMode);
 		
 		// fetch list of available app versions
-		ProgramVersions FetchVersions(void);
-		ProgramVersion FetchMaxValidVersion(bool devel);
+		ProductVersions FetchVersions(void);
+		ProductVersion FetchMaxValidVersion(bool devel);
 		
 		// fetch the new app version from web server
 		// and replaces older one
 		String appBuffer;
-		bool FetchApp(ProgramVersion ver, bool devel);
+		bool FetchApp(ProductVersion ver, bool devel);
 		
 		// running copy of environment
 		VectorMap<String, String>environ;
@@ -136,7 +91,7 @@ class Updater
 		bool appInstalled;
 		
 		// current installed version, if any
-		ProgramVersion installedVersion;
+		ProductVersion installedVersion;
 
 		// copy of starting command line -- needed to restart app correctly
 		String commandLine;
@@ -150,7 +105,7 @@ class Updater
 
 		// maximum allowable version on install/update
 		bool acceptDevelVersions;
-		ProgramVersion maxVersion;
+		ProductVersion maxVersion;
 		
 		// root ow web server repository
 		String webRoot;
@@ -208,8 +163,14 @@ class Updater
 	
 		Updater();
 		
-		Updater &SetMaxVersion(ProgramVersion const &mv) { maxVersion = mv; return *this; }
+		Updater &SetMaxVersion(ProductVersion const &mv) { maxVersion = mv; return *this; }
 		Updater &SetWebRoot(String const &wr) { webRoot = wr; return *this; }
+		
+		// gets user config folder (/home/user/.appname in Linux, c:\Users\user\Application data\appname in windows)
+		String const &GetUserConfigPath(void) { return userConfigPath; }
+		
+		// gets system config path (/usr/share/appname in Linux, c:\Program Files\appname in windows)
+		String const &GetSystemConfigPath(void) { return systemConfigPath; }
 		
 		// sets updater to manual mode -- if update is available, asks user
 		Updater &UpdateManual(void);
@@ -238,8 +199,8 @@ class Updater
 		Updater &NoAcceptDevelVersions(void) { acceptDevelVersions = false; return *this; }
 
 		bool IsAppInstalled(void) { return appInstalled; }
-		ProgramVersion const &GetInstalledVersion(void) { return installedVersion; }
-		ProgramVersion const &GetMaxVersion(void) { return maxVersion; }
+		ProductVersion const &GetInstalledVersion(void) { return installedVersion; }
+		ProductVersion const &GetMaxVersion(void) { return maxVersion; }
 		String const &GetWebRoot(void) { return webRoot; }
 	
 		// executes updater
