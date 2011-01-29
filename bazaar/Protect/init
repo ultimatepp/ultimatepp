@@ -4,5 +4,5 @@
 #include "Cypher/init"
 #include "MySql/init"
 #include "Web/init"
-#include "Updater/init"
+#include "ProductVersion/init"
 #endif

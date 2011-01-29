@@ -4,8 +4,7 @@
 #include <Web/Web.h>
 #include <Cypher/Cypher.h>
 
-// for ProgramVersion class....
-#include<Updater/Updater.h>
+#include<ProductVersion/ProductVersion.h>
 
 #include "ProtectStatus.h"
 
@@ -42,16 +41,27 @@ class ProtectClient
 		Time expireTime;
 		int numLicenses;
 		
+		// activation key -- given once from server
+		// upon activation request on this machine
+		String activationKey;
+		
 		// version of current app installed
-		ProgramVersion currentVersion;
+		ProductVersion currentVersion;
 		
 		// maximum allowable version for this client
-		ProgramVersion maxAllowedVersion;
+		ProductVersion maxAllowedVersion;
 		
 		// key and IV for encrypted communication
 		String key;
 		qword IV;
 	
+		// user configuration path
+		String userConfigPath;
+		
+		// flag indicating that config has been loaded
+		// (we must delay loda because of settable userConfigPath)
+		bool configLoaded;
+		
 	protected:
 	
 		// sends a VectorMap to server in encrypted form
@@ -65,6 +75,14 @@ class ProtectClient
 		
 		// destructor
 		~ProtectClient();
+		
+		// stores/retrieve config data from stream
+		void Xmlize(XmlIO xml);
+		bool StoreConfig(void);
+		bool LoadConfig(void);
+		
+		// sets user configuration path
+		ProtectClient &SetUserConfigPath(String const &path) { userConfigPath = path; return *this; }
 		
 		// sets the encrypting engine
 		// default Cypher at startup is Snow2
@@ -112,7 +130,7 @@ class ProtectClient
 		ProtectClient &SetUserPhone(String const &phone)			{ userPhone = phone; return *this; }
 		ProtectClient &SetUserFax(String const &fax)				{ userFax = fax; return *this; }
 		ProtectClient &SetUserCell(String const &cell)				{ userCell = cell; return *this; }
-		ProtectClient &SetCurrentVersion(ProgramVersion const &v)	{ currentVersion = v; return *this; }
+		ProtectClient &SetCurrentVersion(ProductVersion const &v)	{ currentVersion = v; return *this; }
 		
 		String GetUserEMail(void)					{ return userEMail; }
 		String GetUserName(void)					{ return userName; }
@@ -122,8 +140,8 @@ class ProtectClient
 		String GetUserPhone(void)					{ return userPhone; }
 		String GetUserFax(void)						{ return userFax; }
 		String GetUserCell(void)					{ return userCell; }
-		ProgramVersion GetCurrentVersion(void)		{ return currentVersion; }
-		ProgramVersion GetMaxAllowedVersion(void)	{ return maxAllowedVersion; }
+		ProductVersion GetCurrentVersion(void)		{ return currentVersion; }
+		ProductVersion GetMaxAllowedVersion(void)	{ return maxAllowedVersion; }
 };
 
 END_UPP_NAMESPACE

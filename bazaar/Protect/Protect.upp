@@ -5,7 +5,7 @@ uses
 	Cypher,
 	MySql,
 	Web,
-	Updater;
+	ProductVersion;
 
 file
 	ProtectStatus.h,

@@ -9,6 +9,17 @@ ProtectClient::ProtectClient()
 	
 	// defaults to Snow2 Cypher
 	cypher = new Snow2;
+	
+	// initializes user configuration path
+	// (can be reset by SetUserConfigPath() )
+#ifdef PLATFORM_POSIX
+	userConfigPath = "/home/" + GetUserName() + "/." + GetExeTitle() + "/";
+#else
+	userConfigPath = GetAppDataFolder() + "/" + GetExeTitle() + "/";
+#endif
+
+	// must load config before connection
+	configLoaded = false;
 }
 
 ProtectClient::~ProtectClient()
@@ -17,6 +28,38 @@ ProtectClient::~ProtectClient()
 	Disconnect();
 }
 
+// stores/retrieve config data from stream
+void ProtectClient::Xmlize(XmlIO xml)
+{
+	xml
+		("EMail",			userEMail)
+		("ClientID",		clientID)
+		("ActivationKey",	activationKey)
+	;
+}
+
+bool ProtectClient::StoreConfig(void)
+{
+	RealizePath(userConfigPath);
+	String path = AppendFileName(userConfigPath, "Protect.xml");
+	return StoreAsXMLFile(*this, path);
+}
+
+bool ProtectClient::LoadConfig(void)
+{
+	// don't load if already done
+	if(configLoaded)
+		return true;
+	
+	String path = AppendFileName(userConfigPath, "Protect.xml");
+	if(FileExists(path))
+		configLoaded = LoadFromXMLFile(*this, path);
+	else
+		configLoaded = false;
+	
+	return configLoaded;
+}
+		
 // sets the encrypting engine
 // default Cypher at startup is Snow2
 // WARNING -- takes Cypher ownership
