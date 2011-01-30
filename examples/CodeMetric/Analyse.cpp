@@ -37,14 +37,6 @@ String InsertNestingToSignature(String natural, String nesting)
 	return natural;
 }
 
-int BodyPos(const Vector<CppPos> &pos)
-{
-	for(int i = 0; i < pos.GetCount(); i++)
-		if(pos[i].impl)
-			return pos[i].line;
-	return 0;
-}
-
 CodeMetric::CodeMetric(const String &fileContent) :
   orphanLines(0), blankLines(0), commentLines(0)
 {
@@ -106,12 +98,14 @@ void CodeMetric::StoreMetric(const Parser::FunctionStat & functionStat)
 	static Vector<int> cc2_symbols(
 	  Vector<int>() << t_and << t_or << '?');
 
-
+	if(!functionStat.cppItem.impl)
+		return;
+	
 	FunctionEntry &entry = functions.Add();
 
-	entry.pos                   = BodyPos(functionStat.cppItem.pos);
+	entry.pos                   = functionStat.cppItem.line;
 	entry.name                  = InsertNestingToSignature(functionStat.cppItem.natural,
-	                                                       functionStat.nesting);
+	                                                       functionStat.scope);
 	int cc1 = 1 + functionStat.symbolStat.SumStat( cc1_symbols );
 	entry.cyclomaticComplexity1 = cc1;
 	entry.cyclomaticComplexity2 = cc1 + functionStat.symbolStat.SumStat( cc2_symbols );
