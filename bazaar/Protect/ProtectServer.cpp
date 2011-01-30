@@ -221,7 +221,7 @@ void ProtectServer::OnRequest()
 				err = PROTECT_MISSING_DATA;
 			else
 			{
-				cypher->SetKey(key, IV);
+				cypher->SetKey(communicationKey, IV);
 				String decoded = (*cypher)(ScanHexString(post.GetString("DATA")));
 				LoadFromXML(data, decoded);
 			}
@@ -255,7 +255,7 @@ void ProtectServer::OnRequest()
 
 	// encodes results and send back to client
 	clientSock.Write("Content-Type: text/plain\r\n\r\n");
-	cypher->SetKey(key);
+	cypher->SetKey(communicationKey);
 	clientSock.Write("IV=" + HexString(cypher->GetNonce()) + "\r\n");
 	String encoded = HexString((*cypher)(StoreAsXML(results, "ProtectServer")));
 	clientSock.Write("DATA=" + encoded + "\r\n");

@@ -52,7 +52,7 @@ class ProtectServer : public ScgiServer
 		One<Cypher> cypher;
 	
 		// key used to en/decrypt http data
-		String key;
+		String communicationKey;
 		
 		// welcome message sent on key activation e-mail
 		// a %ACTIVATIONKEY% string inside body will be
@@ -104,7 +104,7 @@ public:
 	ProtectServer &SetCypher(Cypher *c) { cypher = c; return *this;  }
 	
 	// sets encryption key
-	ProtectServer &SetKey(String const &_key) { key = _key; return *this; }
+	ProtectServer &SetCommunicationKey(String const &_key) { communicationKey = _key; return *this; }
 	
 	// sets welcome (HTML) message
 	ProtectServer &SetWelcomeSubject(String const &w) { welcomeSubject = w; return *this; }
