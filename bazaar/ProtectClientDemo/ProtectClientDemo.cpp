@@ -25,6 +25,11 @@ ProtectClientDemo::ProtectClientDemo()
 {
 	CtrlLayout(*this, "Window title");
 	
+	// setup client url and key
+//	client.SetURL("localhost/scgi/testing");
+	client.SetURL("timberstruct.it/scgi/testing");
+	client.SetKey(ScanHexString("aabbccddeeff00112233445566778899"));
+
 	registerButton		<<= THISBACK1(onAction, PROTECT_REGISTER);
 	connectButton		<<= THISBACK1(onAction, PROTECT_CONNECT);
 	refreshButton		<<= THISBACK1(onAction, PROTECT_REFRESH);
@@ -47,11 +52,6 @@ void ProtectClientDemo::onAction(int reason)
 	// clear response text
 	responseText <<= "";
 	
-	// setup client url and key
-//	client.SetURL("localhost/scgi/testing");
-	client.SetURL("timberstruct.it/scgi/testing");
-	client.SetKey(ScanHexString("aabbccddeeff00112233445566778899"));
-
 	// sets user data
 	client.SetUserName(~nameEdit);
 	client.SetUserAddress(~addressEdit);
@@ -118,6 +118,7 @@ void ProtectClientDemo::onAction(int reason)
 
 GUI_APP_MAIN
 {
-	ProtectClientDemo().Run();
+	ProtectClientDemo demo;
+	demo.Run();
 }
 
