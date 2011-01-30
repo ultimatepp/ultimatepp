@@ -162,6 +162,7 @@ MTrand::MTrand()
 #ifdef PLATFORM_POSIX
 	int fd = open("/dev/urandom", O_RDONLY);
 	read(fd, seed, sizeof(seed));
+	close(fd);
 #else
 	for(int i = 0; i < 1024; i++) {
 		Uuid uuid;

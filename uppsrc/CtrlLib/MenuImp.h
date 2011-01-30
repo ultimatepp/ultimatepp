@@ -58,12 +58,10 @@ public:
 	MenuItemBase&  Style(const MenuBar::Style *s) { style = s; return *this; }
 	Font           GetFont() const                { return font; }
 	MenuItemBase&  MaxIconSize(Size sz)           { maxiconsize = sz; return *this; }
+	bool           InOpaqueBar() const;
 
 	MenuItemBase();
 };
-
-void DrawMenuText(Draw& w, int x, int y, const String& s, Font f, bool enabled,
-                  bool highlight, int mn, Color color, Color hltext);
 
 class MenuItem : public MenuItemBase {
 public:

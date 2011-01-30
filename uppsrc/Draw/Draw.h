@@ -325,6 +325,7 @@ Color SColorMenuText();
 Color SColorInfo();
 Color SColorInfoText();//
 Color SColorMark();
+Color SColorMenuMark();
 Color SColorDisabled();
 Color SColorLight();
 Color SColorFace();
@@ -363,6 +364,7 @@ void SColorMenuText_Write(Color c);
 void SColorInfo_Write(Color c);
 void SColorInfoText_Write(Color c);//
 void SColorMark_Write(Color c);
+void SColorMenuMark_Write(Color c);
 void SColorDisabled_Write(Color c);
 void SColorLight_Write(Color c);
 void SColorFace_Write(Color c);

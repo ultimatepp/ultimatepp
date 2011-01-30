@@ -1191,7 +1191,7 @@ void ChHostSkin()
 	Image mimg = GetGTK(popup, 0, 2, "menu", GTK_BGBOX, 32, 32);
 	Color c = mimg[16][16];
 	Value rlook;
-	if(!IsNull(c) && Diff(c, SColorPaper()) < 200)
+	if(!IsNull(c)/* && Diff(c, SColorPaper()) < 200*/)
 		SColorMenu_Write(c);
 	{
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
