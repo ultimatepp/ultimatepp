@@ -26,7 +26,7 @@ CONSOLE_APP_MAIN
 	;
 	
 	// setup key
-	server.SetKey(ScanHexString("aabbccddeeff00112233445566778899"));
+	server.SetCommunicationKey(ScanHexString("aabbccddeeff00112233445566778899"));
 	
 	// setup cypher
 	server.SetCypher(new Snow2);
