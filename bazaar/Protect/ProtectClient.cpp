@@ -13,7 +13,7 @@ ProtectClient::ProtectClient()
 	// initializes user configuration path
 	// (can be reset by SetUserConfigPath() )
 #ifdef PLATFORM_POSIX
-	userConfigPath = "/home/" + GetUserName() + "/." + GetExeTitle() + "/";
+	userConfigPath = "/home/" + Upp::GetUserName() + "/." + GetExeTitle() + "/";
 #else
 	userConfigPath = GetAppDataFolder() + "/" + GetExeTitle() + "/";
 #endif
@@ -46,7 +46,7 @@ bool ProtectClient::StoreConfig(void)
 {
 	RealizePath(userConfigPath);
 	String path = AppendFileName(userConfigPath, "Protect.xml");
-	return StoreAsXMLFile(*this, path);
+	return StoreAsXMLFile(*this, "", path);
 }
 
 bool ProtectClient::LoadConfig(void)
@@ -83,7 +83,7 @@ VectorMap<String, Value> ProtectClient::SendMap(VectorMap<String, Value> const &
 	dataMap.Add("APPID", "ProtectClient");
 	
 	// sets cypher key (and create a random IV)
-	cypher->SetKey(key);
+	cypher->SetKey(communicationKey);
 	
 	String postData;
 	postData += "IV=" + HexString(cypher->GetNonce()) + "&";
@@ -118,7 +118,7 @@ VectorMap<String, Value> ProtectClient::SendMap(VectorMap<String, Value> const &
 	}
 	
 	// decodes DATA field and read VectorMap from it
-	cypher->SetKey(key, IV);
+	cypher->SetKey(communicationKey, IV);
 	String decoded = (*cypher)(ScanHexString(line.Mid(5)));
 	try
 	{
@@ -191,6 +191,7 @@ bool ProtectClient::Disconnect(void)
 	// sends a disconnect packet to server
 	VectorMap<String, Value>v;
 	v.Add("REASON", PROTECT_DISCONNECT);
+	v.Add("EMAIL", userEMail);
 	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 
@@ -216,6 +217,7 @@ bool ProtectClient::Refresh(void)
 	// sends a refresh packet to server
 	VectorMap<String, Value>v;
 	v.Add("REASON", PROTECT_REFRESH);
+	v.Add("EMAIL", userEMail);
 	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 
@@ -236,13 +238,14 @@ bool ProtectClient::Refresh(void)
 }
 
 // get license key
-String ProtectClient::GetKey(void)
+String ProtectClient::GetLicenseKey(void)
 {
 	lastError = 0;
 
 	// sends a getkey packet to server
 	VectorMap<String, Value>v;
-	v.Add("REASON", PROTECT_GETKEY);
+	v.Add("REASON", PROTECT_GETLICENSEKEY);
+	v.Add("EMAIL", userEMail);
 	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 
@@ -268,6 +271,7 @@ bool ProtectClient::GetLicenseInfo(void)
 	// sends a getinfo packet to server
 	VectorMap<String, Value>v;
 	v.Add("REASON", PROTECT_GETLICENSEINFO);
+	v.Add("EMAIL", userEMail);
 	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 

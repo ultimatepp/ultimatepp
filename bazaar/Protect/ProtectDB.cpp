@@ -76,34 +76,46 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 	if(SQL.Fetch())
 	{
 		SQL * Update(USERS)
-			(NAME			, data.Get("NAME"))
-			(ADDRESS		, data.Get("ADDRESS"))
-			(COUNTRY		, data.Get("COUNTRY"))
-			(ZIP			, data.Get("ZIP"))
-			(PHONE			, data.Get("PHONE"))
-			(FAX			, data.Get("FAX"))
-			(CELL			, data.Get("CELL"))
-			(LICENSES		, data.Get("LICENSES"))
-			(EXPIRATION		, data.Get("EXPIRATION"))
-			(ALLOWEDVERSION	, data.Get("ALLOWEDVERSION"))
-			(ACTIVATIONKEY	, data.Get("ACTIVATIONKEY"))
+			(NAME					, data.Get("NAME"))
+			(ADDRESS				, data.Get("ADDRESS"))
+			(COUNTRY				, data.Get("COUNTRY"))
+			(ZIP					, data.Get("ZIP"))
+			(PHONE					, data.Get("PHONE"))
+			(FAX					, data.Get("FAX"))
+			(CELL					, data.Get("CELL"))
+			(LICENSES				, data.Get("LICENSES"))
+			(EXPIRATION				, data.Get("EXPIRATION"))
+			(ALLOWEDVERSION			, data.Get("ALLOWEDVERSION"))
+			(ACTIVATIONKEY			, data.Get("ACTIVATIONKEY"))
+			(REGISTRATIONDATE		, data.Get("REGISTRATIONDATE"))
+			(ACTIVATED				, data.Get("ACTIVATED"))
+			(ACTIVATIONDATE			, data.Get("ACTIVATIONDATE"))
+			(LASTCONNECTIONDATE		, data.Get("LASTCONNECTIONDATE"))
+			(TOTALCONNECTIONS		, data.Get("TOTALCONNECTIONS"))
+			(TOTALCONNECTIONTIME	, data.Get("TOTALCONNECTIONTIME"))
 			.Where(EMAIL == eMail);
 	}
 	else
 	{
 		SQL * Insert(USERS)
-			(EMAIL			, eMail)
-			(NAME			, data.Get("NAME"))
-			(ADDRESS		, data.Get("ADDRESS"))
-			(COUNTRY		, data.Get("COUNTRY"))
-			(ZIP			, data.Get("ZIP"))
-			(PHONE			, data.Get("PHONE"))
-			(FAX			, data.Get("FAX"))
-			(CELL			, data.Get("CELL"))
-			(LICENSES		, data.Get("LICENSES"))
-			(EXPIRATION		, data.Get("EXPIRATION"))
-			(ALLOWEDVERSION	, data.Get("ALLOWEDVERSION"))
-			(ACTIVATIONKEY	, data.Get("ACTIVATIONKEY"))
+			(EMAIL					, eMail)
+			(NAME					, data.Get("NAME"))
+			(ADDRESS				, data.Get("ADDRESS"))
+			(COUNTRY				, data.Get("COUNTRY"))
+			(ZIP					, data.Get("ZIP"))
+			(PHONE					, data.Get("PHONE"))
+			(FAX					, data.Get("FAX"))
+			(CELL					, data.Get("CELL"))
+			(LICENSES				, data.Get("LICENSES"))
+			(EXPIRATION				, data.Get("EXPIRATION"))
+			(ALLOWEDVERSION			, data.Get("ALLOWEDVERSION"))
+			(ACTIVATIONKEY			, data.Get("ACTIVATIONKEY"))
+			(REGISTRATIONDATE		, data.Get("REGISTRATIONDATE"))
+			(ACTIVATED				, data.Get("ACTIVATED"))
+			(ACTIVATIONDATE			, data.Get("ACTIVATIONDATE"))
+			(LASTCONNECTIONDATE		, data.Get("LASTCONNECTIONDATE"))
+			(TOTALCONNECTIONS		, data.Get("TOTALCONNECTIONS"))
+			(TOTALCONNECTIONTIME	, data.Get("TOTALCONNECTIONTIME"))
 		;
 	}
 	return true;
@@ -123,8 +135,14 @@ VectorMap<String, Value> ProtectDB::Default(VectorMap<String, Value> const &base
 	res.FindAdd("CELL", "");
 	res.FindAdd("LICENSES", 1);
 	res.FindAdd("EXPIRATION", GetSysTime() + 24*60*60*30);
-	res.FindAdd("ACTIVATIONKEY", "");
 	res.FindAdd("ALLOWEDVERSION", "9999.9999.9999");
+	res.FindAdd("ACTIVATIONKEY", "");
+	res.FindAdd("REGISTRATIONDATE", GetSysTime());
+	res.FindAdd("ACTIVATED", false);
+	res.FindAdd("ACTIVATIONDATE", GetSysTime());
+	res.FindAdd("LASTCONNECTIONDATE", GetSysTime());
+	res.FindAdd("TOTALCONNECTIONS", 0);
+	res.FindAdd("TOTALCONNECTIONTIME", Time());
 
 	return res;
 }

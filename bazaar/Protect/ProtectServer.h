@@ -28,9 +28,19 @@ class ProtectServer : public ScgiServer
 		
 		// mailer for activation mails
 		SmtpMail smtp;
+		
+		// last ID cleanup time
+		Time lastIDCleanupTime;
+		
+		// last database cleanup time
+		Time lastDBCleanupTime;
 	
-		// clients timeout value -- defaults to 5 minutes (300 seconds)
-		int clientTimeout;
+		// clients id timeout value -- defaults to 5 minutes (300 seconds)
+		int idCleanupTime;
+		
+		// database cleanup time -- default to 30 days (2592000 seconds)
+		// used to clean up registrations with no activation on database
+		int dbCleanupTime;
 	
 		// list of all connected clients with their expiration dates and emails
 		VectorMap<dword, TimeMail> clientLinks;
@@ -57,12 +67,15 @@ class ProtectServer : public ScgiServer
 		// generates an unique activation key composed by 20 random uppercase chars
 		String GenerateActivationKey(void);
 		
+		// executes database cleanup
+		void DBCleanup(void);
+		
 		// polls clients and remove those which connection has expired
 		void CheckExpiredClients(void);
 		
 		// checks client list to see if a client is connected
 		// as a side effect, refresh its connection time
-		bool IsClientConnected(dword clientID);
+		bool IsClientConnected(dword clientID, String const &eMail);
 		
 		// connects a client -- return an ID
 		dword ConnectClient(String const &eMail, dword id);
@@ -83,8 +96,8 @@ class ProtectServer : public ScgiServer
 
 public:
 
-	// constructor - defaults to port 8787 and connection timeout of 5 minutes (300 sec.)
-	ProtectServer(int port = 8787, int timeout = 300);
+	// constructor - defaults to port 8787
+	ProtectServer(int port = 8787);
 	
 	// setup encryption cypher
 	// WARNING : takes ownership of it
@@ -107,6 +120,13 @@ public:
 	ProtectServer &SetAppKey(String const &k) { appKey = k; return *this; }
 	String GetAppKey(void) { return appKey; }
 	
+	// sets client ids timeout value
+	ProtectServer &SetIDCleanupTime(int t);
+		
+	// sets database cleanup time
+	// used to clean up registrations with no activation on database
+	ProtectServer &SetDBCleanupTime(int t);
+
 	// runs the server
 	void Run(void);
 };

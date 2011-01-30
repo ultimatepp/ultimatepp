@@ -51,9 +51,8 @@ class ProtectClient
 		// maximum allowable version for this client
 		ProductVersion maxAllowedVersion;
 		
-		// key and IV for encrypted communication
-		String key;
-		qword IV;
+		// key for encrypted communication
+		String communicationKey;
 	
 		// user configuration path
 		String userConfigPath;
@@ -93,7 +92,7 @@ class ProtectClient
 		ProtectClient &SetURL(String const &url) { client.URL(url); return *this; }
 		
 		// sets communication key
-		ProtectClient &SetKey(String const &_key) { key = _key; return *this; }
+		ProtectClient &SetCommunicationKey(String const &_key) { communicationKey = _key; return *this; }
 
 		// read last error code and message
 		int GetLastError(void) { return lastError; }
@@ -109,7 +108,7 @@ class ProtectClient
 		bool Refresh(void);
 		
 		// get license key
-		String GetKey(void);
+		String GetLicenseKey(void);
 		
 		// gets license info
 		bool GetLicenseInfo(void);
@@ -131,6 +130,7 @@ class ProtectClient
 		ProtectClient &SetUserFax(String const &fax)				{ userFax = fax; return *this; }
 		ProtectClient &SetUserCell(String const &cell)				{ userCell = cell; return *this; }
 		ProtectClient &SetCurrentVersion(ProductVersion const &v)	{ currentVersion = v; return *this; }
+		ProtectClient &SetActivationKey(String const &key)			{ activationKey = key; StoreConfig(); return *this; }
 		
 		String GetUserEMail(void)					{ return userEMail; }
 		String GetUserName(void)					{ return userName; }
@@ -142,6 +142,7 @@ class ProtectClient
 		String GetUserCell(void)					{ return userCell; }
 		ProductVersion GetCurrentVersion(void)		{ return currentVersion; }
 		ProductVersion GetMaxAllowedVersion(void)	{ return maxAllowedVersion; }
+		String GetActivationKey(void)				{ LoadConfig(); return activationKey; }
 };
 
 END_UPP_NAMESPACE

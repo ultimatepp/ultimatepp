@@ -40,7 +40,7 @@ typedef enum {
 	PROTECT_CONNECT,			// establish connection to server
 	PROTECT_DISCONNECT,			// frees server connection
 	PROTECT_REFRESH,			// refreshes server connection (to restart timeout)
-	PROTECT_GETKEY,				// gets application key
+	PROTECT_GETLICENSEKEY,		// gets application key
 	PROTECT_REGISTER,			// registers app for timed demo OR re-request activation code
 	PROTECT_GETLICENSEINFO,		// gets info about license (name, expiration date, app version....)
 	PROTECT_UPDATEUSERDATA		// update user-modifiable user data (name, address....)
