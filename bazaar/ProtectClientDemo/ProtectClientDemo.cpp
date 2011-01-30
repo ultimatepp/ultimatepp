@@ -23,18 +23,23 @@ static String DumpSpecial(String s)
 
 ProtectClientDemo::ProtectClientDemo()
 {
-	CtrlLayout(*this, "Window title");
+	CtrlLayout(*this, "Protect client demo");
 	
 	// setup client url and key
-//	client.SetURL("localhost/scgi/testing");
-	client.SetURL("timberstruct.it/scgi/testing");
-	client.SetKey(ScanHexString("aabbccddeeff00112233445566778899"));
+	client
+//		.SetURL("localhost/scgi/testing")
+		.SetURL("timberstruct.it/scgi/testing")
+		.SetCommunicationKey(ScanHexString("aabbccddeeff00112233445566778899"))
+	;
+	
+	// gets eventually previously stored activation key from client
+	activationKey <<= client.GetActivationKey();
 
 	registerButton		<<= THISBACK1(onAction, PROTECT_REGISTER);
 	connectButton		<<= THISBACK1(onAction, PROTECT_CONNECT);
 	refreshButton		<<= THISBACK1(onAction, PROTECT_REFRESH);
 	disconnectButton	<<= THISBACK1(onAction, PROTECT_DISCONNECT);
-	getKeyButton		<<= THISBACK1(onAction, PROTECT_GETKEY);
+	getKeyButton		<<= THISBACK1(onAction, PROTECT_GETLICENSEKEY);
 	getInfoButton		<<= THISBACK1(onAction, PROTECT_GETLICENSEINFO);
 	setInfoButton		<<= THISBACK1(onAction, PROTECT_UPDATEUSERDATA);
 	
@@ -53,14 +58,17 @@ void ProtectClientDemo::onAction(int reason)
 	responseText <<= "";
 	
 	// sets user data
-	client.SetUserName(~nameEdit);
-	client.SetUserAddress(~addressEdit);
-	client.SetUserCountry(~countryEdit);
-	client.SetUserZip(~zipEdit);
-	client.SetUserPhone(~phoneEdit);
-	client.SetUserFax(~faxEdit);
-	client.SetUserCell(cellEdit);
-	client.SetUserEMail(~emailEdit);
+	client
+		.SetUserName(~nameEdit)
+		.SetUserAddress(~addressEdit)
+		.SetUserCountry(~countryEdit)
+		.SetUserZip(~zipEdit)
+		.SetUserPhone(~phoneEdit)
+		.SetUserFax(~faxEdit)
+		.SetUserCell(cellEdit)
+		.SetUserEMail(~emailEdit)
+		.SetActivationKey(~activationKey)
+	;
 
 	String res;
 	String key;
@@ -78,8 +86,8 @@ void ProtectClientDemo::onAction(int reason)
 			if(!client.Refresh())
 				res += "REFRESH ERROR\n";
 			break;
-		case PROTECT_GETKEY :			// gets application key
-			key = client.GetKey();
+		case PROTECT_GETLICENSEKEY :	// gets application key
+			key = client.GetLicenseKey();
 			if(key == "")
 				res += "GETKEY ERROR\n";
 			else
