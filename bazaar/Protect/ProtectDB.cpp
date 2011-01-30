@@ -85,9 +85,8 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 			(CELL			, data.Get("CELL"))
 			(LICENSES		, data.Get("LICENSES"))
 			(EXPIRATION		, data.Get("EXPIRATION"))
+			(ALLOWEDVERSION	, data.Get("ALLOWEDVERSION"))
 			(ACTIVATIONKEY	, data.Get("ACTIVATIONKEY"))
-			(ACTIVATIONSENT	, data.Get("ACTIVATIONSENT"))
-			(ACTIVATED		, data.Get("ACTIVATED"))
 			.Where(EMAIL == eMail);
 	}
 	else
@@ -103,9 +102,8 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 			(CELL			, data.Get("CELL"))
 			(LICENSES		, data.Get("LICENSES"))
 			(EXPIRATION		, data.Get("EXPIRATION"))
+			(ALLOWEDVERSION	, data.Get("ALLOWEDVERSION"))
 			(ACTIVATIONKEY	, data.Get("ACTIVATIONKEY"))
-			(ACTIVATIONSENT	, data.Get("ACTIVATIONSENT"))
-			(ACTIVATED		, data.Get("ACTIVATED"))
 		;
 	}
 	return true;
@@ -125,11 +123,8 @@ VectorMap<String, Value> ProtectDB::Default(VectorMap<String, Value> const &base
 	res.FindAdd("CELL", "");
 	res.FindAdd("LICENSES", 1);
 	res.FindAdd("EXPIRATION", GetSysTime() + 24*60*60*30);
-	dword r = Random();
-	res.FindAdd("ACTIVATIONKEY", HexString((byte *)&r, sizeof(r)));
-	res.FindAdd("ACTIVATIONSENT", GetSysTime());
-	res.FindAdd("ACTIVATED", false);
-	res.FindAdd("ALLOWEDVERSION", 0);
+	res.FindAdd("ACTIVATIONKEY", "");
+	res.FindAdd("ALLOWEDVERSION", "9999.9999.9999");
 
 	return res;
 }

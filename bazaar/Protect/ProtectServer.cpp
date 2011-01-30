@@ -71,6 +71,15 @@ ProtectServer::ProtectServer(int port, int timeout) : ScgiServer(port)
 	clientTimeout = timeout;
 }
 
+// generates an unique activation key composed by 20 random uppercase chars
+String ProtectServer::GenerateActivationKey(void)
+{
+	String key;
+	for(int i = 0; i < 20; i++)
+		key << (char)(Random('Z' - 'A') + 'A');
+	return key;
+}
+
 // polls clients and remove those which connection has expired
 void ProtectServer::CheckExpiredClients(void)
 {
@@ -91,7 +100,7 @@ void ProtectServer::CheckExpiredClients(void)
 bool ProtectServer::IsClientConnected(dword clientID)
 {
 	int iClient = clientLinks.Find(clientID);
-	if(iClient >= 0)
+	if(iClient >= 0 && clientLinks[iClient].connected)
 	{
 		clientLinks[iClient].time = GetSysTime() + clientTimeout;
 		return true;
@@ -99,20 +108,25 @@ bool ProtectServer::IsClientConnected(dword clientID)
 	return false;
 }
 
-// connects a client -- returns a new clientID
+// connects a client -- returns previous clientID or a new one if expired
 // doesn't check anything, that one must be done elsewhere
-dword ProtectServer::ConnectClient(String const &eMail)
+dword ProtectServer::ConnectClient(String const &eMail, dword id)
 {
-	// generates an unique random clientID
-	dword id;
-	do
-	{
-		id = Random();
-	}
-	while(id == 0 || id == -1 || clientLinks.Find(id) >= 0);
+	// try to fetch id from active pool
+	int iClient = clientLinks.Find(id);
 	
-	// adds to clientLinks and to registered emails count
-	clientLinks.Add(id, TimeMail(GetSysTime() + clientTimeout, eMail));
+	// if not found in pool, allocate a new one
+	if(iClient < 0)
+	{
+		do
+		{
+			id = Random();
+		}
+		while(id == 0 || id == -1 || clientLinks.Find(id) >= 0);
+	}
+	
+	// adds to clientLinks and to pool
+	clientLinks.Add(id, TimeMail(GetSysTime() + clientTimeout, eMail, true));
 	int i = registeredConnections.Find(eMail);
 	if(i >= 0)
 		registeredConnections[i]++;
@@ -122,14 +136,15 @@ dword ProtectServer::ConnectClient(String const &eMail)
 	return id;
 }
 		
-// disconnects a client or refresh its expiration time
+// disconnects a client -- leaves id on pool up to expiration
+// updates count of clients connected by email
 void ProtectServer::DisconnectClient(dword clientID)
 {
 	int i = clientLinks.Find(clientID);
 	if(i >= 0)
 	{
 		String eMail = clientLinks[i].eMail;
-		clientLinks.Remove(i);
+		clientLinks[i].connected = false;
 		i = registeredConnections.Find(eMail);
 		if(i >= 0)
 		{
@@ -153,7 +168,7 @@ void ProtectServer::OnRequest()
 	VectorMap<String, Value> results;
 	String IV;
 	
-	// POST rwquest ?
+	// we handle just POST requests, GET not allowed
 	if(HasPostData())
 	{
 		// all requests besides PROTECT_ACTIVATE go through post
@@ -172,6 +187,7 @@ void ProtectServer::OnRequest()
 			}
 		}
 	}
+/*
 	// GET rwquest ?
 	else if(query.GetCount())
 	{
@@ -191,6 +207,7 @@ void ProtectServer::OnRequest()
 			}
 		}
 	}
+*/
 	else
 		err = PROTECT_BAD_REQUEST;
 
@@ -201,7 +218,7 @@ void ProtectServer::OnRequest()
 	//		DISCONNECT		frees server connection
 	//		REFRESH			refreshes server connection (to restart timeout)
 	//		GETKEY			gets application key
-	//		REGISTER		registers app for timed demo
+	//		REGISTER		registers app for timed demo OR re-request activation code if already registered
 	//		GETLICENSEINFO	gets info about license (name, expiration date, app version....)
 	if(!err && data.Find("REASON") < 0)
 		err = PROTECT_MISSING_REASON;
@@ -217,31 +234,12 @@ void ProtectServer::OnRequest()
 	else if(results.Find("ERROR") >= 0)
 		results.Add("ERRORMSG", ProtectMessage(results.Get("ERROR")));
 
-	// if not ACTIVATION REQUEST encodes results and send back to client
-	if(data.Get("REASON") != PROTECT_ACTIVATE)
-	{
-		clientSock.Write("Content-Type: text/plain\r\n\r\n");
-		cypher->SetKey(key);
-		clientSock.Write("IV=" + HexString(cypher->GetNonce()) + "\r\n");
-		String encoded = HexString((*cypher)(StoreAsXML(results, "ProtectServer")));
-		clientSock.Write("DATA=" + encoded + "\r\n");
-	}
-	// otherwise send a fancy welcome html -- replacing %NAME% with user name
-	else
-	{
-		String w;
-		clientSock.Write("Content-Type: text/html\r\n\r\n");
-		if(results.Find("ERROR") < 0)
-			w = welcome;
-		else
-			w = activationFailed;
-		VectorMap<String, Value> userData = db.Get(data.Get("EMAIL"));
-		if(userData.GetCount())
-			w.Replace("%USER%", userData.Get("NAME"));
-		else
-			w.Replace("%USER%", data.Get("EMAIL"));
-		clientSock.Write(w);
-	}
+	// encodes results and send back to client
+	clientSock.Write("Content-Type: text/plain\r\n\r\n");
+	cypher->SetKey(key);
+	clientSock.Write("IV=" + HexString(cypher->GetNonce()) + "\r\n");
+	String encoded = HexString((*cypher)(StoreAsXML(results, "ProtectServer")));
+	clientSock.Write("DATA=" + encoded + "\r\n");
 }
 
 void ProtectServer::OnClosed()
@@ -284,8 +282,6 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 				vs.RemoveKey("LICENSES");
 				vs.RemoveKey("EXPIRATION");
 				vs.RemoveKey("ACTIVATIONKEY");
-				vs.RemoveKey("ACTIVATIONSENT");
-				vs.RemoveKey("ACTIVATED");
 		
 				// try to get user record from database, if any
 				userRec = db.Get(eMail);
@@ -293,19 +289,14 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 				// if not found, new registration
 				if(!userRec.GetCount())
 				{
-					// new registration
+					// generates activation key from email
+					vs.Add("ACTIVATIONKEY", GenerateActivationKey());
+					
+					// add to database
 					db.Set(vs);
+					
+					// send the activation mail to user
 					userRec = db.Get(eMail);
-					if(SendActivationMail(userRec))
-						res.Add("STATUS", "ACTIVATION RESENT");
-					else
-						res.Add("ERROR", PROTECT_MAIL_SEND_ERROR);
-				}
-				// otherwise, we shall check if activated
-				else if(!(bool)userRec.Get("ACTIVATED"))
-				{
-					// already registered but still not activated
-					// resend activation mail
 					if(SendActivationMail(userRec))
 						res.Add("STATUS", "ACTIVATION RESENT");
 					else
@@ -317,45 +308,18 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 					// signals expiration and leave
 					res.Add("ERROR", PROTECT_MAIL_ALREADY_USED);
 				}
-				// otherwise, just tell user that's already registered
+				// otherwise, we shall send activation mail again
+				// it may be same user on another machine
 				else
 				{
-					res.Add("STATUS", "ALREADY REGISTERED");
+					// already registered but still not activated
+					// resend activation mail
+					if(SendActivationMail(userRec))
+						res.Add("STATUS", "ACTIVATION RESENT");
+					else
+						res.Add("ERROR", PROTECT_MAIL_SEND_ERROR);
 				}
 			}
-			break;
-		case PROTECT_ACTIVATE:
-			// we need email to activate
-			if(v.Find("EMAIL") < 0)
-			{
-				res.Add("ERROR", PROTECT_MISSING_EMAIL);
-				return res;
-			}
-			eMail = v.Get("EMAIL");
-
-			// we need ACTIVATIONKEY too
-			if(v.Find("ACTIVATIONKEY") < 0)
-			{
-				res.Add("ERROR", PROTECT_MISSING_ACTIVATIONKEY);
-				return res;
-			}
-			activationKey = v.Get("ACTIVATIONKEY");
-			
-			// get user record by email
-			userRec = db.Get(eMail);
-
-			// if no mail data, product is unregistered
-			if(!userRec.GetCount())
-			{
-				res.Add("ERROR", PROTECT_UNREGISTERED);
-				return res;
-			}
-			
-			// sets registered flag and update record
-			userRec.Get("ACTIVATED") = true;
-			db.Set(userRec);
-			
-			res.Add("STATUS", "ACTIVATION SUCCESSFUL");
 			break;
 		case PROTECT_CONNECT:
 			// we need email to connect
@@ -365,6 +329,15 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 				return res;
 			}
 			eMail = v.Get("EMAIL");
+			
+			// we need previous clientID to connect, (or -1 if none)
+			if(v.Find("CLIENTID") < 0)
+			{
+				res.Add("ERROR", PROTECT_MISSING_CLIENTID);
+				return res;
+			}
+			clientID = (int)v.Get("CLIENTID");
+			
 			// get the user data from database
 			userRec = db.Get(eMail);
 
@@ -375,11 +348,17 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 				return res;
 			}
 			
-			// product is registered, now we check if activation mail was sent
-			if(!(bool)userRec.Get("ACTIVATED"))
+			// product registered, we check for activation key
+			if(v.Find("ACTIVATIONKEY") < 0)
 			{
-				res.Add("ERROR", PROTECT_LICENSE_NOT_ACTIVATED);
-				SendActivationMail(userRec);
+				res.Add("ERROR", PROTECT_MISSING_ACTIVATIONKEY);
+				return res;
+			}
+			
+			// check for activation key correctness
+			if(v.Get("ACTIVATIONKEY") != userRec.Get("ACTIVATIONKEY"))
+			{
+				res.Add("ERROR", PROTECT_BAD_ACTIVATIONKEY);
 				return res;
 			}
 			
@@ -404,7 +383,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			}
 			
 			// all OK, connect client and return connection ID
-			clientID = ConnectClient(eMail);
+			clientID = ConnectClient(eMail, clientID);
 			res.Add("CLIENTID", (int)clientID);
 			
 			break;
@@ -471,7 +450,6 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			res = db.Get(clientLinks.Get(clientID).eMail);
 			// remove unnecessary data
 			res.RemoveKey("ACTIVATIONKEY");
-			res.RemoveKey("ACTIVATIONSENT");
 			break;
 			
 		case PROTECT_UPDATEUSERDATA :
@@ -498,8 +476,6 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 				vs.RemoveKey("LICENSES");
 				vs.RemoveKey("EXPIRATION");
 				vs.RemoveKey("ACTIVATIONKEY");
-				vs.RemoveKey("ACTIVATIONSENT");
-				vs.RemoveKey("ACTIVATED");
 				vs.RemoveKey("EMAIL");
 				
 				// update user record
@@ -529,25 +505,29 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 // sends activation mail to user
 bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData)
 {
-	// build request map
-	VectorMap<String, Value>req;
-	req.Add("REASON", PROTECT_ACTIVATE);
-	req.Add("EMAIL", userData.Get("EMAIL"));
-	req.Add("ACTIVATIONKEY", userData.Get("ACTIVATIONKEY"));
+	String body = welcomeBody;
+	String subject = welcomeSubject;
+	String key = userData.Get("ACTIVATIONKEY");
 	
-	// builds activation link
-	String link = "http://" + serverVars.Get("SERVER_NAME") + serverVars.Get("REQUEST_URI") + "?";
-	
-	// encodes results and send back to client
-	cypher->SetKey(key);
-	link += "IV=" + HexString(cypher->GetNonce()) + "&";
-	String encoded = HexString((*cypher)(StoreAsXML(req, "ProtectServer")));
-	link += "DATA=" + encoded;
+	// if no activation key field inside body, add it at end
+	// trying to guess if it's HTML or simple text...
+	int i;
+	if( (i = body.Find("%ACTIVATIONKEY%")) < 0)
+	{
+		if(body.Find("HTML") >= 0)
+			body << "&&&" << t_("ACTIVATION KEY : ") << key;
+		else
+			body << "\n\n\n" << t_("ACTIVATION KEY : ") << key;
+	}
+	else
+		body.Replace(String("%ACTIVATIONKEY%"), key);
+	body.Replace("%USER%", userData.Get("NAME"));
+	subject.Replace("%USER%", userData.Get("NAME"));
 
 	smtp.To(userData.Get("EMAIL"));
-	smtp.Subject("APPLICATION ACTIVATION");
+	smtp.Subject(subject);
 	smtp.From(serverVars.Get("SERVER_NAME"));
-	smtp.Text(link);
+	smtp.Text(body);
 	return smtp.Send();
 }
 

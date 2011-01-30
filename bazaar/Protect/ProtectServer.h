@@ -18,8 +18,9 @@ class ProtectServer : public ScgiServer
 		{
 			Time time;
 			String eMail;
-			TimeMail(Time const &t, String const &m) : time(t), eMail(m) {};
-			TimeMail() {};
+			bool connected;
+			TimeMail(Time const &t, String const &m, bool conn) : time(t), eMail(m) { connected = conn; }
+			TimeMail() { connected = false; }
 		};
 	
 		// database for user auth
@@ -43,13 +44,18 @@ class ProtectServer : public ScgiServer
 		// key used to en/decrypt http data
 		String key;
 		
-		// welcome and activation failed messages sent on key activation
-		String welcome;
-		String activationFailed;
+		// welcome message sent on key activation e-mail
+		// a %ACTIVATIONKEY% string inside body will be
+		// replaced by current activation key
+		String welcomeSubject;
+		String welcomeBody;
 	
 		void OnAccepted();
 		void OnRequest();
 		void OnClosed();
+		
+		// generates an unique activation key composed by 20 random uppercase chars
+		String GenerateActivationKey(void);
 		
 		// polls clients and remove those which connection has expired
 		void CheckExpiredClients(void);
@@ -59,7 +65,7 @@ class ProtectServer : public ScgiServer
 		bool IsClientConnected(dword clientID);
 		
 		// connects a client -- return an ID
-		dword ConnectClient(String const &eMail);
+		dword ConnectClient(String const &eMail, dword id);
 		
 		// disconnects a client or refresh its expiration time
 		void DisconnectClient(dword clientID);
@@ -87,9 +93,9 @@ public:
 	// sets encryption key
 	ProtectServer &SetKey(String const &_key) { key = _key; return *this; }
 	
-	// sets welcome and activation failed (HTML) messages
-	ProtectServer &SetWelcome(String const &w) { welcome = w; return *this; }
-	ProtectServer &SetActivationFailed(String const &a) { activationFailed = a; return *this; }
+	// sets welcome (HTML) message
+	ProtectServer &SetWelcomeSubject(String const &w) { welcomeSubject = w; return *this; }
+	ProtectServer &SetWelcomeBody(String const &w) { welcomeBody = w; return *this; }
 	
 	// gets database
 	ProtectDB &GetDB(void) { return db; }

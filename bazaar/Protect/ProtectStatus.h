@@ -17,7 +17,8 @@ typedef enum {
 	PROTECT_MISSING_REASON,				// missing connection's reason
 	PROTECT_UNKNOWN_REASON,				// unknown connection's reason
 	PROTECT_MISSING_CLIENTID,			// missing client connection ID in POST DATA
-	PROTECT_MISSING_ACTIVATIONKEY,		// missing activation key on activation request
+	PROTECT_MISSING_ACTIVATIONKEY,		// missing activation key in request
+	PROTECT_BAD_ACTIVATIONKEY,			// wrong activation key in request
 	PROTECT_BAD_DATA,					// missing mandatory fields in POST DATA
 	PROTECT_NOT_CONNECTED,				// not connected to server -- must connect first
 	PROTECT_CONNECTION_EXPIRED,			// server connection timeout -- should refresh more often
@@ -40,8 +41,7 @@ typedef enum {
 	PROTECT_DISCONNECT,			// frees server connection
 	PROTECT_REFRESH,			// refreshes server connection (to restart timeout)
 	PROTECT_GETKEY,				// gets application key
-	PROTECT_REGISTER,			// registers app for timed demo
-	PROTECT_ACTIVATE,			// activate registration by click on email link
+	PROTECT_REGISTER,			// registers app for timed demo OR re-request activation code
 	PROTECT_GETLICENSEINFO,		// gets info about license (name, expiration date, app version....)
 	PROTECT_UPDATEUSERDATA		// update user-modifiable user data (name, address....)
 } ProtectReasons;

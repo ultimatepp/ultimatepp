@@ -20,6 +20,10 @@ ProtectClient::ProtectClient()
 
 	// must load config before connection
 	configLoaded = false;
+	
+	// setup timeout for http server
+	// a couple of seconds should be enough !
+	client.TimeoutMsecs(2000);
 }
 
 ProtectClient::~ProtectClient()
@@ -137,11 +141,17 @@ bool ProtectClient::Connect(void)
 	// disconnect first, im case we're already connected
 	Disconnect();
 	
+	// load config, if not already done so
+	// this loads previous clientID (reused if still active)
+	// and activationKey
+	LoadConfig();
+	
 	// send a connect packet to server
 	VectorMap<String, Value>v;
 	v.Add("REASON", PROTECT_CONNECT);
 	v.Add("EMAIL", userEMail);
 	v.Add("CLIENTID", (int)clientID);
+	v.Add("ACTIVATIONKEY", activationKey);
 	VectorMap<String, Value> res = SendMap(v);
 	
 	// check for errors
@@ -154,9 +164,22 @@ bool ProtectClient::Connect(void)
 	
 	int i = res.Find("CLIENTID");
 	if(i < 0)
+	{
 		clientID = -1;
+		return false;
+	}
 	else
-		clientID = (int)res[i];
+	{
+		// if got a new client id (previous was missing/expired)
+		// replaces old one and store on file
+		// clientid is used to maintain a persistent client/server relationship
+		// on every connection, clientID timeout is updated on server side
+		if(clientID != (int)res[i])
+		{
+			clientID = (int)res[i];
+			return StoreConfig();
+		}
+	}
 	return true;
 }
 
@@ -171,8 +194,9 @@ bool ProtectClient::Disconnect(void)
 	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 
-	// we're probably disconnected anyways....
-	clientID = -1;
+	// stores config on server; it will try to reuse clientID
+	// on next server connection
+	StoreConfig();
 
 	// check for errors
 	if(res.Find("ERROR") >= 0)
@@ -199,7 +223,12 @@ bool ProtectClient::Refresh(void)
 	if(res.Find("ERROR") >= 0)
 	{
 		lastError = res.Get("ERROR");
+		
+		// resets clientID, it'll be re-generated
+		// on next server connection request
 		clientID = -1;
+		StoreConfig();
+
 		return false;
 	}
 	
