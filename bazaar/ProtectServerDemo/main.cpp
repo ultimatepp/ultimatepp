@@ -21,8 +21,8 @@ CONSOLE_APP_MAIN
 			.Port(25)
 	;
 	server
-		.SetWelcome("<HTML><BODY>License activation succeeded<BR><BR>Welcome to TIMBERSTRUCT, %USER%<BR></BODY></HTML>")
-		.SetActivationFailed("<HTML><BODY>We're sorry but product activation failed, %USER%<BR><BR>Please contact us to solve the problem<BR></BODY></HTML>")
+		.SetWelcomeSubject("ProtectDemo user activation")
+		.SetWelcomeBody("<HTML><BODY>Welcome, %USER%,<BR><BR> Your activation code is %ACTIVATIONKEY%<BR><BR><BR></BODY></HTML>")
 	;
 	
 	// setup key
