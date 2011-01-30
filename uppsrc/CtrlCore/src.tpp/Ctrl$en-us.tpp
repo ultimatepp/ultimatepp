@@ -1884,6 +1884,11 @@ ckPaint]()&]
 [s7;i1120;a17; [*/ Return value]-|BackPaint(NOBACKPAINT).&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Ctrl`:`:BackPaintHint`(`):%- [_^Ctrl^ Ctrl][@(0.0.255) `&]_[* BackPaintHint]()&]
+[s2; Activates FULLBACKPAINT mode if computer is a `"decent machine`" 
+(simple heurestics to identify fast enough PC with enough memory).&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Ctrl`:`:GetBackPaint`(`)const:%- [@(0.0.255) int]_[* GetBackPaint]()_[@(0.0.255) const
 ]&]
 [s7;i1120;a17; [*/ Return value]-|Current back`-paint mode of Ctrl.&]

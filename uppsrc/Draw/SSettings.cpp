@@ -33,7 +33,8 @@ CH_COLOR(SColorInfoText, Black());
 CH_COLOR(SColorDisabled, Gray());
 CH_COLOR(SColorLight, White());
 CH_COLOR(SColorShadow, Gray());
-CH_COLOR(SColorMark, LtBlue());
+CH_COLOR(SColorMark, IsDark(SColorPaper()) ? LtYellow() : LtBlue());
+CH_COLOR(SColorMenuMark, IsDark(SColorMenu()) ? LtYellow() : LtBlue());
 
 CH_COLOR(SColorLtFace, Blend(SColorFace, SColorLight));
 CH_COLOR(SColorDkShadow, Blend(SColorShadow, SColorText));
