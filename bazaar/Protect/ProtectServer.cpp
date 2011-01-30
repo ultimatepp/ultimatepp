@@ -397,6 +397,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			if(v.Find("ACTIVATIONKEY") < 0)
 			{
 				res.Add("ERROR", PROTECT_MISSING_ACTIVATIONKEY);
+				SendActivationMail(userRec);
 				return res;
 			}
 			
@@ -404,6 +405,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			if(v.Get("ACTIVATIONKEY") != userRec.Get("ACTIVATIONKEY"))
 			{
 				res.Add("ERROR", PROTECT_BAD_ACTIVATIONKEY);
+				SendActivationMail(userRec);
 				return res;
 			}
 			
