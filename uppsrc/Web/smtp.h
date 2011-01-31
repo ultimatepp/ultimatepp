@@ -27,8 +27,6 @@ public:
 
 	bool           Send();
 	
-	void           Reset();
-
 	String         GetError() const                                   { return error; }
 	String         GetTranscript() const                              { return transcript_text; }
 
