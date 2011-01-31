@@ -67,4 +67,4 @@ file
 ;
 
 mainconfig
-	"" = <:?mt:>"GUI MT"<:/:>"GUI"<:.:>;
+	"" = <:?mt:>"GUI MT SSE2"<:/:>"GUI SSE2"<:.:>;

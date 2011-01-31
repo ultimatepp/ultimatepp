@@ -500,7 +500,7 @@ struct MainConfigDlg : public WithConfigLayout<TopWindow> {
 	MainConfigDlg(const Workspace& wspc);
 };
 
-bool SetSw(const String& flag, Switch& sw, const char *flg) {
+bool SetSw(const String& flag, Ctrl& sw, const char *flg) {
 	if(flag == flg) {
 		sw <<= 1;
 		return true;
@@ -508,10 +508,17 @@ bool SetSw(const String& flag, Switch& sw, const char *flg) {
 	return false;
 }
 
-String GetSw(Switch& sw, const char *flag) {
+String GetSw(Ctrl& sw, const char *flag) {
 	if((int)~sw)
 		return String(flag) + ' ';
 	return Null;
+}
+
+
+static
+void sSetOption(One<Ctrl>& ctrl)
+{
+	ctrl.Create<Option>().NoWantFocus();
 }
 
 void MainConfigDlg::FlagDlg()
@@ -523,7 +530,7 @@ void MainConfigDlg::FlagDlg()
 	Vector<String> accepts = wspc.GetAllAccepts(0);
 	Sort(accepts, GetLanguageInfo());
 	enum { CC_SET, CC_NAME, CC_PACKAGES, CC_COUNT };
-	cfg.accepts.AddColumn("Set").HeaderTab().Fixed(40);
+	cfg.accepts.AddColumn("Set").Ctrls(sSetOption).HeaderTab().Fixed(40);
 	cfg.accepts.AddColumn("Flag", 1);
 	cfg.accepts.AddColumn("Packages", 2);
 	cfg.accepts.SetCount(accepts.GetCount());
@@ -534,19 +541,19 @@ void MainConfigDlg::FlagDlg()
 			if(FindIndex(wspc.package[p].accepts, acc) >= 0)
 				pkg.Add(wspc[p]);
 		Sort(pkg, GetLanguageInfo());
-		cfg.accepts.SetCtrl(i, CC_SET, new Option);
 		cfg.accepts.Set(i, CC_NAME, accepts[i]);
 		cfg.accepts.Set(i, CC_PACKAGES, Join(pkg, ","));
 	}
 	
 	cfg.other.SetFilter(FlagFilterM);
-	cfg.dll <<= cfg.gui <<= cfg.mt <<= 0;
+	cfg.dll <<= cfg.gui <<= cfg.mt <<= cfg.sse2 <<= 0;
 	String other;
 	for(int i = 0; i < flg.GetCount(); i++) {
 		String f = flg[i];
 		if(!SetSw(f, cfg.dll, "DLL")
 		   && !SetSw(f, cfg.gui, "GUI")
-		   && !SetSw(f, cfg.mt, "MT")) {
+		   && !SetSw(f, cfg.mt, "MT")
+		   && !SetSw(f, cfg.sse2, "SSE2")) {
 			int x = (*f == '.' ? cfg.accepts.Find(f.Mid(1), CC_NAME) : -1);
 			if(x >= 0)
 				cfg.accepts.Set(x, CC_SET, true);
@@ -563,7 +570,8 @@ void MainConfigDlg::FlagDlg()
 		flags
 			<< GetSw(cfg.dll, "DLL")
 		    << GetSw(cfg.gui, "GUI")
-		    << GetSw(cfg.mt, "MT");
+		    << GetSw(cfg.mt, "MT")
+			<< GetSw(cfg.sse2, "SSE2");
 		for(int i = 0; i < cfg.accepts.GetCount(); i++)
 			if(cfg.accepts.Get(i, CC_SET))
 				flags << '.' << cfg.accepts.Get(i, CC_NAME) << ' ';

@@ -33,4 +33,4 @@ file <:?header:>"<:PACKAGE:>.h",<:.:>
 	"<:PACKAGE:>.cpp";
 
 mainconfig
-	"" = <:?mt:>"MT"<:/:>""<:.:>;
+	"" = <:?mt:>"MT SSE2"<:/:>"SSE2"<:.:>;

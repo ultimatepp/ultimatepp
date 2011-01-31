@@ -46,4 +46,4 @@ file
 	<:PACKAGE:>.cpp;
 
 mainconfig
-	"" = "DLL <:?mt:>MT<:.:>";
+	"" = "DLL SSE2 <:?mt:>MT<:.:>";
