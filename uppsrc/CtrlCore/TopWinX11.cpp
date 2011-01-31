@@ -145,6 +145,8 @@ void TopWindow::SyncCaption0()
 //		XChangeProperty(Xdisplay, GetWindow(), XAtom("_NET_WM_STATE"), XAtom("ATOM"), 32,
 //		                PropModeReplace, (const unsigned char *)wina, n);
 		wm_hints->flags = InputHint|WindowGroupHint|StateHint;
+		if(IsForeground()) urgent = false;
+		if(urgent) wm_hints->flags |= XUrgencyHint;
 		wm_hints->initial_state = NormalState;
 		wm_hints->input = XTrue;
 		Ctrl *owner = GetOwner();

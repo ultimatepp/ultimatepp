@@ -120,6 +120,7 @@ private:
 	bool        sizeable:1;
 	bool        tool:1;
 	bool        frameless:1;
+	bool        urgent:1;
 	byte        state;
 	Image       icon, largeicon;
 #ifdef PLATFORM_X11
@@ -203,6 +204,8 @@ public:
 	bool       IsFullScreen() const                   { return fullscreen; }
 	TopWindow& FrameLess(bool b = true)               { frameless = b; return *this; }
 	bool       IsFrameLess() const                    { return frameless; }
+	TopWindow& Urgent(bool b = true);
+	bool       IsUrgent() const                       { return urgent; }
 	TopWindow& NoAccessKeysDistribution()             { dokeys = false; return *this; }
 	TopWindow& NoCloseBox(bool b = true)              { noclosebox = b; return *this; }
 
