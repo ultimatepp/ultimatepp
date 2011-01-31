@@ -252,6 +252,9 @@ class Updater
 		Updater &SetInstallBehaviour(ErrorBehaviours b) { installBehaviour = b; return *this; }
 		Updater &SetNoInstallBehaviour(ErrorBehaviours b) { noInstallBehaviour = b; return *this; }
 		Updater &SetUpdateBehaviour(ErrorBehaviours b) { updateBehaviour = b; return *this; }
+		
+		// checks wether we're in ROOT mode
+		bool IsRoot(void) { return state == InsideUpdater; }
 
 };
 
