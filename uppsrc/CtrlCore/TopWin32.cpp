@@ -4,6 +4,26 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
+#if defined(COMPILER_MINGW) && !defined(FLASHW_ALL)
+	// MINGW headers don't include this in (some versions of) windows
+	extern "C"{
+		struct FLASHWINFO {
+			UINT  cbSize;
+			HWND  hwnd;
+			DWORD dwFlags;
+			UINT  uCount;
+			DWORD dwTimeout;
+		};
+		WINUSERAPI BOOL WINAPI FlashWindowEx(FLASHWINFO*);
+	}
+	#define FLASHW_STOP         0
+	#define FLASHW_CAPTION      0x00000001
+	#define FLASHW_TRAY         0x00000002
+	#define FLASHW_ALL          (FLASHW_CAPTION | FLASHW_TRAY)
+	#define FLASHW_TIMER        0x00000004
+	#define FLASHW_TIMERNOFG    0x0000000C
+#endif
+
 #ifdef PLATFORM_WIN32
 
 void    TopWindow::SyncSizeHints() {}
@@ -122,6 +142,15 @@ void TopWindow::SyncCaption0()
 		::SetWindowLong(hwnd, GWL_STYLE, style);
 		::SetWindowLong(hwnd, GWL_EXSTYLE, exstyle);
 		SyncTitle();
+		if(urgent) {
+			if(IsForeground()) urgent = false;
+			FLASHWINFO fi;
+			memset(&fi, 0, sizeof(fi));
+			fi.cbSize = sizeof(fi);
+			fi.hwnd = hwnd;
+			fi.dwFlags = urgent ? FLASHW_TIMER|FLASHW_ALL : FLASHW_STOP;
+			FlashWindowEx(&fi);
+		}
 	}
 	DeleteIco();
 #ifndef PLATFORM_WINCE //TODO!!!

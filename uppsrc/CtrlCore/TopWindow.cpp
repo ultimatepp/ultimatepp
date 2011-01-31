@@ -34,6 +34,8 @@ void TopWindow::Activate()
 	UsrLogT(3, "ACTIVATE " + Desc(this));
 	if(activefocus && (HasFocus() || !GetFocusChildDeep()) && IsEnabled())
 		activefocus->SetWantFocus();
+	if(urgent)
+		SyncCaption();
 	LLOG("Activate End");
 }
 
@@ -410,6 +412,14 @@ TopWindow& TopWindow::ToolWindow(bool b)
 	return *this;
 }
 
+TopWindow& TopWindow::Urgent(bool b)
+{
+	GuiLock __;
+	urgent = b;
+	SyncCaption();
+	return *this;
+}
+
 void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 {
 	GuiLock __;
@@ -518,7 +528,7 @@ TopWindow::TopWindow()
 	WhenClose = THISBACK(Close);
 	overlapped.Clear();
 	dokeys = true;
-	fullscreen = frameless = false;
+	fullscreen = frameless = urgent = false;
 }
 
 TopWindow::~TopWindow()
