@@ -1,6 +1,6 @@
 #include "CtrlPos.h"
 
-void CtrlPos::DrawAlignHandle(Draw& w, const Size& sz, const Rect&r, const Ctrl::LogPos& pos, const Color& col)
+void CtrlPos::DrawAlignHandle(Draw& w, const Rect& _r, const Rect& r, const Ctrl::LogPos& pos, const Color& col)
 {
 	Point p;
 	bool q;
@@ -10,25 +10,25 @@ void CtrlPos::DrawAlignHandle(Draw& w, const Size& sz, const Rect&r, const Ctrl:
 	p = r.CenterLeft();
 	p.y -= rz.cy/4;
 	q = (pos.x.GetAlign()&Ctrl::LEFT);
-	w.DrawLine(p, Point(0, p.y), (q)?(PEN_SOLID):(PEN_DOT), (q)?(col):(col2));
+	w.DrawLine(p, Point(_r.left, p.y), (q)?(PEN_SOLID):(PEN_DOT), (q)?(col):(col2));
 
 	p = r.CenterRight();
 	p.y += rz.cy/4;
 	q = (pos.x.GetAlign()&Ctrl::RIGHT);
-	w.DrawLine(p, Point(sz.cx, p.y), (q)?(PEN_SOLID):(PEN_DOT), (q)?(col):(col2));
+	w.DrawLine(p, Point(_r.right, p.y), (q)?(PEN_SOLID):(PEN_DOT), (q)?(col):(col2));
 
 	p = r.TopCenter();
 	p.x -= rz.cx/4;
 	q = (pos.y.GetAlign()&Ctrl::TOP);
-	w.DrawLine(p, Point(p.x, 0), (q)?(PEN_SOLID):(PEN_DOT), (q)?(col):(col2));
+	w.DrawLine(p, Point(p.x, _r.top), (q)?(PEN_SOLID):(PEN_DOT), (q)?(col):(col2));
 
 	p = r.BottomCenter();
 	p.x += rz.cx/4;
 	q = (pos.y.GetAlign()&Ctrl::BOTTOM);
-	w.DrawLine(p, Point(p.x, sz.cy), (q)?(PEN_SOLID):(PEN_DOT), (q)?(col):(col2));
+	w.DrawLine(p, Point(p.x, _r.bottom), (q)?(PEN_SOLID):(PEN_DOT), (q)?(col):(col2));
 }
 
-bool CtrlPos::GetAlignMode(const Size& sz, const Rect& r, const Point& pp, Ctrl::LogPos& pos, int handsize)
+bool CtrlPos::GetAlignMode(const Rect& _r, const Rect& r, const Point& pp, Ctrl::LogPos& pos, int handsize)
 {
 	int size = handsize+2;
 	Rect c;
@@ -40,24 +40,24 @@ bool CtrlPos::GetAlignMode(const Size& sz, const Rect& r, const Point& pp, Ctrl:
 	
 	p = r.CenterLeft();
 	p.y -= rz.cy/4;
-	c = Rect(p, Point(0, p.y)); c.InflateVert(size); c.Normalize();
+	c = Rect(p, Point(_r.left, p.y)); c.InflateVert(size); c.Normalize();
 	if(c.Contains(pp)) { q&= ~Ctrl::LEFT; q|= (pos.x.GetAlign()&Ctrl::LEFT)?(0):(Ctrl::LEFT); pos.x.SetAlign(q); return true; }
 
 	p = r.CenterRight();
 	p.y += rz.cy/4;
-	c = Rect(p, Point(sz.cx, p.y)); c.InflateVert(size); c.Normalize();
+	c = Rect(p, Point(_r.right, p.y)); c.InflateVert(size); c.Normalize();
 	if(c.Contains(pp)) { q&= ~Ctrl::RIGHT; q|= (pos.x.GetAlign()&Ctrl::RIGHT)?(0):(Ctrl::RIGHT); pos.x.SetAlign(q); return true; }
 
 	q = pos.y.GetAlign();
 	
 	p = r.TopCenter();
 	p.x -= rz.cx/4;
-	c = Rect(p, Point(p.x, 0)); c.InflateHorz(size); c.Normalize();
+	c = Rect(p, Point(p.x, _r.top)); c.InflateHorz(size); c.Normalize();
 	if(c.Contains(pp)) { q&= ~Ctrl::TOP; q|= (pos.y.GetAlign()&Ctrl::TOP)?(0):(Ctrl::TOP); pos.y.SetAlign(q); return true; }
 
 	p = r.BottomCenter();
 	p.x += rz.cx/4;
-	c = Rect(p, Point(p.x, sz.cy)); c.InflateHorz(size); c.Normalize();
+	c = Rect(p, Point(p.x, _r.bottom)); c.InflateHorz(size); c.Normalize();
 	if(c.Contains(pp)) { q&= ~Ctrl::BOTTOM; q|= (pos.y.GetAlign()&Ctrl::BOTTOM)?(0):(Ctrl::BOTTOM); pos.y.SetAlign(q); return true; }
 	
 	return false;
@@ -78,6 +78,7 @@ void CtrlPos::Paint(Draw& w)
 			if(!c->InFrame())
 			{
 				Rect r = c->GetRect();
+				r.Offset(CtrlMover::GetOffset(*(c->GetParent()), Get()));
 				r.Inflate(1);
 				RectCtrl::DrawHandleFrame(w, r, LtGray, 1);
 			}
@@ -89,9 +90,23 @@ void CtrlPos::Paint(Draw& w)
 	if(!c) return;
 
 	Rect r = c->GetRect();
+	Point op = CtrlMover::GetOffset(*(c->GetParent()), Get());
+	r.Offset(op);
+
 	RectCtrl::DrawHandleFrame(w, r, style->framecol, style->framesize);
-	DrawAlignHandle(w, sz, r, c->GetPos(), style->framecol);
+
+	Rect _r;
+	if(c->GetParent())
+	{
+		_r = c->GetParent()->GetView();
+		Point opr = _r.TopLeft();
+		_r.Offset(op-opr);
+	}
+	else _r = sz;
+	DrawAlignHandle(w, _r, r, c->GetPos(), style->framecol);
+
 	RectCtrl::DrawHandle(w, r, style->handcol, style->handsize);
+
 	if(pressed)// && moving)
 		RectCtrl::DrawRectInfo(w, Point(10,10), r, style->framecol, style->textcol);
 }
@@ -109,10 +124,24 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 		xp = p;
 	
 		Size sz = GetSize();
+
 		Rect r = c.GetRect();
+		Point op = CtrlMover::GetOffset(*(c.GetParent()), Get());
+		r.Offset(op);
+
 		Ctrl::LogPos pos = xpos;
-		Rect _r(r); _r.Inflate(style->handsize+2);
-		if(GetAlignMode(sz, _r, p, pos, style->handsize))
+		Rect rr(r); rr.Inflate(style->handsize+2);
+
+		Rect _r;
+		if(c.GetParent())
+		{
+			_r = c.GetParent()->GetView();
+			Point opr = _r.TopLeft();
+			_r.Offset(op-opr);
+		}
+		else _r = sz;
+
+		if(GetAlignMode(_r, rr, p, pos, style->handsize))
 		{
 			pos = LogPosPopUp::ReAlign(c, pos);		
 			c.SetPos(pos);

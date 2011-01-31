@@ -2,8 +2,9 @@ uses
 	Core,
 	Gen,
 	RectCtrl,
+	LogPosCtrl,
 	CtrlFinder,
-	LogPosCtrl;
+	CtrlMover;
 
 file
 	CtrlPos.h,

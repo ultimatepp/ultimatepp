@@ -11,7 +11,7 @@ using namespace Upp;
 #include <CtrlMover/CtrlMover.h>
 #include <CtrlProp/CtrlProp.h>
 
-class CtrlPropTest : public WithCtrlPropTestLayout<TopWindow> {
+class CtrlPropTest : public TopWindow {
 public:
 	typedef CtrlPropTest CLASSNAME;
 	CtrlPropTest();
@@ -36,6 +36,7 @@ public:
 	PropEdit pe;
 	PropList pl;
 
+	WithCtrlPropTestLayout<ParentCtrl> vis;
 	CtrlMover hk;
 	
 	bool edit;

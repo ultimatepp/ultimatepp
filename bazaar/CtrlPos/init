@@ -3,6 +3,7 @@
 #include "Core/init"
 #include "Gen/init"
 #include "RectCtrl/init"
-#include "CtrlFinder/init"
 #include "LogPosCtrl/init"
+#include "CtrlFinder/init"
+#include "CtrlMover/init"
 #endif

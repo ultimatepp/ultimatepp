@@ -1,18 +1,55 @@
 #include "CtrlFinder.h"
 
-Ctrl* GetCtrl(Ctrl& c, Point p, dword keyflags, bool ignoreframe)
+Ctrl* ChildAtPoint(Ctrl& par, Point& pt, bool ignoreframe)
 {
-	Ctrl* q = c.GetFirstChild();
-	while(q)
-	{
-		if(!q->InFrame() || !ignoreframe)
-		{
-			Rect r = q->GetRect();
-			if(r.Contains(p)) return q;
+	GuiLock __;
+	Ctrl *q;
+	Point p = pt;
+	Rect view = par.GetView();
+
+	if(view.Contains(p)) {
+		Point vp = p - view.TopLeft();
+		for(q = par.GetLastChild(); q; q = q->GetPrev()) {
+			if(q->InView()) {
+				Rect r = q->GetRect();
+				if(r.Contains(vp)) {
+					pt = vp - r.TopLeft();
+					return q;
+				}
+			}
 		}
-		q = q->GetNext();	
+		return NULL;
+	}
+	if(ignoreframe) return NULL;
+
+	for(q = par.GetLastChild(); q; q = q->GetPrev()) {
+		if(q->InFrame()) {
+			Rect r = q->GetRect();
+			if(r.Contains(p)) {
+				pt = p - r.TopLeft();
+				return q;
+			}
+		}
 	}
 	return NULL;
+}
+
+Ctrl* GetCtrl(Ctrl& c, Point& p, bool ignoreframe, bool deep)
+{
+	Ctrl* q = ChildAtPoint(c, p, ignoreframe);
+	if(!q) return q;
+	if(deep && q) 
+	{
+		Point pt(p);
+		Ctrl* qc = GetCtrl(*q, pt, ignoreframe, deep);
+		if(qc)
+		{
+			p = pt;
+			return qc;	
+		}
+		return q;
+	}
+	return q;
 }
 
 void CtrlFinder::Reload()
@@ -21,11 +58,12 @@ void CtrlFinder::Reload()
 	V::Reload();
 	
 	Remove();
-	Get().Add(SizePos());
+	Get().GetParent()->AddChild(&SetPos(Get().GetPos()), &Get());
 }
 
 void CtrlFinder::Visit(Ctrl& c)
 {
+	ASSERT(c.GetParent());
 	V::Visit(c);
 	Enable();	
 }
@@ -41,8 +79,8 @@ void CtrlFinder::OnCtrlLeft(Point p, dword keyflags)
 {
 	c = NULL;
 	if(IsEmpty()) return;
-	c = ::GetCtrl(Get(), p, keyflags, ignoreframe);
-	if(c == this) c = NULL;
+	Point pt(p);
+	c = ::GetCtrl(Get(), pt, ignoreframe, deep);
 	if(c) WhenLeftDown(*c, p, keyflags);
 	else WhenMissed(p, keyflags);
 	Action();
@@ -51,8 +89,8 @@ void CtrlFinder::OnCtrlRight(Point p, dword keyflags)
 {
 	c = NULL;
 	if(IsEmpty()) return;
-	c = ::GetCtrl(Get(), p, keyflags, ignoreframe);
-	if(c == this) c = NULL;
+	Point pt(p);
+	c = ::GetCtrl(Get(), pt, ignoreframe, deep);
 	if(c) WhenRightDown(*c, p, keyflags);
 	else WhenMissed(p, keyflags);
 	Action();

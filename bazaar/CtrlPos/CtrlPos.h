@@ -9,6 +9,9 @@ using namespace Upp;
 #include <CtrlFinder/CtrlFinder.h>
 #include <Gen/Gen.h>
 
+//for some helpers
+#include <CtrlMover/CtrlMover.h>
+
 class CtrlPos : public CtrlFinder
 {
 public:
@@ -29,8 +32,8 @@ public:
 
 	void SetStyle(const RectCtrl::Style& s) { style = &s; Refresh(); }
 
-	static void DrawAlignHandle(Draw& w, const Size& sz, const Rect&r, const Ctrl::LogPos& pos, const Color& col);
-	static bool GetAlignMode(const Size& sz, const Rect& r, const Point& pp, Ctrl::LogPos& pos, int handsize);
+	static void DrawAlignHandle(Draw& w, const Rect& _r, const Rect& r, const Ctrl::LogPos& pos, const Color& col);
+	static bool GetAlignMode(const Rect& _r, const Rect& r, const Point& pp, Ctrl::LogPos& pos, int handsize);
 
 protected:	
 	const RectCtrl::Style* style;

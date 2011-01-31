@@ -10,7 +10,7 @@ using namespace Upp;
 
 #include <CtrlMover/CtrlMover.h>
 
-class CtrlMoverTest : public WithCtrlMoverTestLayout<TopWindow> {
+class CtrlMoverTest : public TopWindow {
 public:
 	typedef CtrlMoverTest CLASSNAME;
 	CtrlMoverTest();
@@ -19,13 +19,19 @@ public:
 	void ClearCB();
 	void EnableCB();
 	void DisableCB();
+	void DeepCB();
+	void IgnoreFrameCB();
 
 	void ToInfo(const String& s);
 	void OnSelect(Ctrl& c, Point p, dword keyflags);
 	void OnMissed(Point p, dword keyflags);
-	
+
+	WithCtrlMoverTestLayout<ParentCtrl> vis;
+	FrameLeft<WithLeftBarLay<ParentCtrl> > sb;
 	CtrlMover hk;
+
 	FrameTop<WithControlLay<ParentCtrl> > ft;
+	EditString es;
 };
 
 #endif

@@ -19,15 +19,17 @@ void CtrlPropTest::OnEdit()
 
 CtrlPropTest::CtrlPropTest()
 {
-	CtrlLayout(*this, "Window title");
+	CtrlLayout(vis);
+	SetRect(vis.GetRect());
+	Add(vis.SizePos());
+	
 	edit = false;
 	mbi = &mb.Add(!IsReadOnly(), t_("Edit"), CtrlImg::selection(),
 	        THISBACK(OnEdit));
 	AddFrame(mb);
 
 	hk.WhenRightDown = THISBACK(OnCtrlRight);
-	Add(hk.SizePos());
-	hk.Visit(*this);
+	hk.Visit(vis);
 	hk.Disable();
 
 	InitDummies();

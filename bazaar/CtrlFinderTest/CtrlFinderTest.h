@@ -10,7 +10,7 @@ using namespace Upp;
 
 #include <CtrlFinder/CtrlFinder.h>
 
-class CtrlFinderTest : public WithCtrlFinderTestLayout<TopWindow> {
+class CtrlFinderTest : public TopWindow {
 public:
 	typedef CtrlFinderTest CLASSNAME;
 	CtrlFinderTest();
@@ -19,13 +19,19 @@ public:
 	void ClearCB();
 	void EnableCB();
 	void DisableCB();
+	void DeepCB();
+	void IgnoreFrameCB();
 
 	void ToInfo(const String& s);
 	void OnSelect(Ctrl& c, Point p, dword keyflags);
 	void OnMissed(Point p, dword keyflags);
-	
+
+	WithCtrlFinderTestLayout<ParentCtrl> vis;
+	FrameLeft<WithLeftBarLay<ParentCtrl> > sb;
 	CtrlFinder hk;
+
 	FrameTop<WithControlLay<ParentCtrl> > ft;
+	EditString es;
 };
 
 #endif

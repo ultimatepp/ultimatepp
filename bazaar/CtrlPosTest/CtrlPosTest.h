@@ -10,7 +10,7 @@ using namespace Upp;
 
 #include <CtrlPos/CtrlPos.h>
 
-class CtrlPosTest : public WithCtrlPosTestLayout<TopWindow> {
+class CtrlPosTest : public TopWindow {
 public:
 	typedef CtrlPosTest CLASSNAME;
 	CtrlPosTest();
@@ -19,13 +19,19 @@ public:
 	void ClearCB();
 	void EnableCB();
 	void DisableCB();
+	void DeepCB();
+	void IgnoreFrameCB();
 
 	void ToInfo(const String& s);
 	void OnSelect(Ctrl& c, Point p, dword keyflags);
 	void OnMissed(Point p, dword keyflags);
-	
+
+	WithCtrlPosTestLayout<ParentCtrl> vis;
+	FrameLeft<WithLeftBarLay<ParentCtrl> > sb;
 	CtrlPos hk;
+
 	FrameTop<WithControlLay<ParentCtrl> > ft;
+	EditString es;
 };
 
 #endif

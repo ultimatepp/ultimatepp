@@ -24,6 +24,9 @@ public:
 
 	void OnCtrlLeft(Ctrl& c, Point p, dword keyflags);
 	void OnMissed(Point p, dword keyflags);
+
+	static void CalcOffset(Ctrl& c, Ctrl& par, Point& p);
+	static Point GetOffset(Ctrl& c, Ctrl& par);
 	
 protected:
 	void OnRectChange();

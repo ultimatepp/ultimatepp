@@ -29,7 +29,8 @@ public:
 	Callback2<Point, dword> WhenRightRepeat;
 };
 
-Ctrl* GetCtrl(Ctrl& c, Point p, dword keyflags, bool ignoreframe);
+Ctrl* ChildAtPoint(Ctrl& par, Point& pt, bool ignoreframe);
+Ctrl* GetCtrl(Ctrl& c, Point& p, bool ignoreframe, bool deep);
 
 class CtrlFinder : public MouseHookCtrl, public Visiting<Ctrl>
 {
@@ -38,7 +39,7 @@ public:
 	typedef MouseHookCtrl R;
 	typedef Visiting<Ctrl> V;
 
-	CtrlFinder() : ignoreframe(true) { R::WhenLeftDown = THISBACK(OnCtrlLeft); R::WhenRightDown = THISBACK(OnCtrlRight);}
+	CtrlFinder() : ignoreframe(false), deep(true) { R::WhenLeftDown = THISBACK(OnCtrlLeft); R::WhenRightDown = THISBACK(OnCtrlRight);}
 
 	virtual void Visit(Ctrl& c);
 	virtual void Reload();
@@ -52,6 +53,7 @@ public:
 	Ctrl* GetCtrl() const { return c; }
 
 	bool ignoreframe;
+	bool deep;
 
 protected:
 	Ptr<Ctrl> c;

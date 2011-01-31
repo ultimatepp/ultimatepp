@@ -2,66 +2,66 @@
 
 void CtrlPropTest::InitDummies()
 {
-	bo.SetLabel("MyCtrlsImg");
+	vis.bo.SetLabel("MyCtrlsImg");
 	
-	de.SetData("This is a\nDocEdit example text");
-	le.SetData("LineEdit");
-	ef.SetData("EditField");
-	es.SetData("EditString");
+	vis.de.SetData("This is a\nDocEdit example text");
+	vis.le.SetData("LineEdit");
+	vis.ef.SetData("EditField");
+	vis.es.SetData("EditString");
 	
-	ei = 100;
-	ei64 = 22342599399929;
-	ed = 10.3;
+	vis.ei = 100;
+	vis.ei64 = 22342599399929;
+	vis.ed = 10.3;
 	
-	einn <<= 100;
-	ei64nn <<= 22342599399929;
-	ednn <<= 10.3;
+	vis.einn <<= 100;
+	vis.ei64nn <<= 22342599399929;
+	vis.ednn <<= 10.3;
 
-	eis <<= 100;
-	ei64s <<= 22342599399929;
-	eds <<= 10.3;
+	vis.eis <<= 100;
+	vis.ei64s <<= 22342599399929;
+	vis.eds <<= 10.3;
 
-	einns <<= 100;
-	ei64nns <<= 22342599399929;
-	ednns <<= 10.3;
+	vis.einns <<= 100;
+	vis.ei64nns <<= 22342599399929;
+	vis.ednns <<= 10.3;
 	
-	edt <<= GetSysDate();
-	etm <<= GetSysTime();
+	vis.edt <<= GetSysDate();
+	vis.etm <<= GetSysTime();
 
-	edtnn <<= GetSysDate();
-	etmnn <<= GetSysTime();
+	vis.edtnn <<= GetSysDate();
+	vis.etmnn <<= GetSysTime();
 
-	ddt <<= GetSysDate();
-	dtm <<= GetSysTime();
+	vis.ddt <<= GetSysDate();
+	vis.dtm <<= GetSysTime();
 	
-	ac.AddColumn("One");
-	ac.AddColumn("Two");
-	ac.Add("Hello", 1234);
-	ac.Add(23.8, "servus");
-	ac.Add("foo", true);
-	ac.Add("bar", "lee");
+	vis.ac.AddColumn("One");
+	vis.ac.AddColumn("Two");
+	vis.ac.Add("Hello", 1234);
+	vis.ac.Add(23.8, "servus");
+	vis.ac.Add("foo", true);
+	vis.ac.Add("bar", "lee");
 
-	sl <<= 0;
+	vis.sl <<= 0;
 	
-	dl.Add(0,"First");
-	dl.Add(1,"Second");
-	dl.Add(2,"Third");
-	dl.Add(3,"Fourth");
+	vis.dl.Add(0,"First");
+	vis.dl.Add(1,"Second");
+	vis.dl.Add(2,"Third");
+	vis.dl.Add(3,"Fourth");
 	
 	
 	Vector<int> parent, parent2;
 	parent.Add(0);
-	tr.SetRoot(Image(), "The Tree");
+	vis.tr.SetRoot(Image(), "The Tree");
 	for(int i = 1; i < 10000; i++) {
-		parent.Add(tr.Add(parent[rand() % parent.GetCount()], Image(),
+		parent.Add(vis.tr.Add(parent[rand() % parent.GetCount()], Image(),
 		            FormatIntRoman(i, true)));
 		if((rand() & 3) == 0)
-			tr.Open(parent.Top());
+			vis.tr.Open(parent.Top());
 	}
-	tr.Open(0);
+	vis.tr.Open(0);
 
 	{
-	TreeCtrl& tree = dtr->MultiSelect();
+	TreeCtrl& tree = vis.dtr->MultiSelect();
 	Vector<int> parent, parent2;
 	parent.Add(0);
 	tree.SetRoot(Image(), "The Tree");
@@ -74,9 +74,9 @@ void CtrlPropTest::InitDummies()
 	tree.Open(0);
 	}
 	
-	tb.Add(arc.Add(new EditInt()).SizePos(),"First");
-	tb.Add(arc.Add(new EditInt()).SizePos(),"Second");
-	tb.Add(arc.Add(new EditInt()).SizePos(),"Third");
+	vis.tb.Add(arc.Add(new EditInt()).SizePos(),"First");
+	vis.tb.Add(arc.Add(new EditInt()).SizePos(),"Second");
+	vis.tb.Add(arc.Add(new EditInt()).SizePos(),"Third");
 }
 
 void CtrlPropTest::Test()

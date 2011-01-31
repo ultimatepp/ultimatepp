@@ -2,8 +2,8 @@
 
 void CtrlFinderTest::ToInfo(const String& s)
 {
-	info.Insert(info.GetLength(), s + "\n");
-	info.SetCursor(info.GetLength());
+	vis.info.Insert(vis.info.GetLength(), s + "\n");
+	vis.info.SetCursor(vis.info.GetLength());
 }
 
 void CtrlFinderTest::OnSelect(Ctrl& c, Point p, dword keyflags)
@@ -21,7 +21,7 @@ void CtrlFinderTest::OnMissed(Point p, dword keyflags)
 
 void CtrlFinderTest::VisitCB()
 {
-	hk.Visit(*this);
+	hk.Visit(vis);
 }
 void CtrlFinderTest::ClearCB()
 {
@@ -36,22 +36,49 @@ void CtrlFinderTest::DisableCB()
 	hk.Disable();
 }
 
+void CtrlFinderTest::DeepCB()
+{
+	hk.deep = ~ft.deep;
+}
+
+void CtrlFinderTest::IgnoreFrameCB()
+{
+	hk.ignoreframe = ~ft.ignoreframe;
+}
+
 CtrlFinderTest::CtrlFinderTest()
 {
-	CtrlLayout(*this, "Window title");
+	CtrlLayout(vis);
+	SetRect(vis.GetRect());
+	Add(vis.SizePos());
+	
+	Sizeable().Zoomable();
+
+	CtrlLayout(sb);
+	sb.Width(sb.GetSize().cx);
+	vis.AddFrame(sb);
+	vis.pc.Add(es.HCenterPos(50).VCenterPos(20));
 
 	CtrlLayout(ft);
-	ft.Height(40);
+	ft.Height(ft.GetSize().cy);
 	AddFrame(ft);
 	
 	ft.visit <<= THISBACK(VisitCB);
 	ft.clear <<= THISBACK(ClearCB);
 	ft.enable <<= THISBACK(EnableCB);
 	ft.disable <<= THISBACK(DisableCB);
+	ft.deep <<= THISBACK(DeepCB);
+	ft.ignoreframe <<= THISBACK(IgnoreFrameCB);
+
+	ft.deep <<= true;
+	DeepCB();
+
+	ft.ignoreframe <<= false;
+	IgnoreFrameCB();
 
 	hk.WhenLeftDown = THISBACK(OnSelect);
 	hk.WhenMissed = THISBACK(OnMissed);
-	hk.Visit(*this);
+	hk.Visit(vis);
 }
 
 GUI_APP_MAIN

@@ -2,8 +2,8 @@
 
 void CtrlMoverTest::ToInfo(const String& s)
 {
-	info.Insert(info.GetLength(), s + "\n");
-	info.SetCursor(info.GetLength());
+	vis.info.Insert(vis.info.GetLength(), s + "\n");
+	vis.info.SetCursor(vis.info.GetLength());
 }
 
 void CtrlMoverTest::OnSelect(Ctrl& c, Point p, dword keyflags)
@@ -11,17 +11,19 @@ void CtrlMoverTest::OnSelect(Ctrl& c, Point p, dword keyflags)
 	String inf = "Selected: ";
 	inf << String(typeid(c).name());
 	ToInfo(inf);
+	hk.OnCtrlLeft(c, p, keyflags);
 }
 
 void CtrlMoverTest::OnMissed(Point p, dword keyflags)
 {
 	String inf = ("Missed!");
 	ToInfo(inf);
+	hk.OnMissed(p, keyflags);
 }
 
 void CtrlMoverTest::VisitCB()
 {
-	hk.Visit(*this);
+	hk.Visit(vis);
 }
 void CtrlMoverTest::ClearCB()
 {
@@ -36,22 +38,49 @@ void CtrlMoverTest::DisableCB()
 	hk.Disable();
 }
 
+void CtrlMoverTest::DeepCB()
+{
+	hk.deep = ~ft.deep;
+}
+
+void CtrlMoverTest::IgnoreFrameCB()
+{
+	hk.ignoreframe = ~ft.ignoreframe;
+}
+
 CtrlMoverTest::CtrlMoverTest()
 {
-	CtrlLayout(*this, "Window title");
+	CtrlLayout(vis);
+	SetRect(vis.GetRect());
+	Add(vis.SizePos());
+	
+	Sizeable().Zoomable();
+
+	CtrlLayout(sb);
+	sb.Width(sb.GetSize().cx);
+	vis.AddFrame(sb);
+	vis.pc.Add(es.HCenterPos(50).VCenterPos(20));
 
 	CtrlLayout(ft);
-	ft.Height(40);
+	ft.Height(ft.GetSize().cy);
 	AddFrame(ft);
 	
 	ft.visit <<= THISBACK(VisitCB);
 	ft.clear <<= THISBACK(ClearCB);
 	ft.enable <<= THISBACK(EnableCB);
 	ft.disable <<= THISBACK(DisableCB);
+	ft.deep <<= THISBACK(DeepCB);
+	ft.ignoreframe <<= THISBACK(IgnoreFrameCB);
 
-	//hk.WhenLeftDown = THISBACK(OnSelect);
-	//hk.WhenMissed = THISBACK(OnMissed);
-	hk.Visit(*this);
+	ft.deep <<= true;
+	DeepCB();
+
+	ft.ignoreframe <<= true;
+	IgnoreFrameCB();
+
+	hk.WhenLeftDown = THISBACK(OnSelect);
+	hk.WhenMissed = THISBACK(OnMissed);
+	hk.Visit(vis);
 }
 
 GUI_APP_MAIN
