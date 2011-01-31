@@ -407,6 +407,45 @@ rue])&]
 [s2; Value of TopMost flag.&]
 [s3; &]
 [s4;%- &]
+[s5;:TopWindow`:`:FullScreen`(bool`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_[* FullScre
+en]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Sets window to fullscreen if [%-*@3 b] is true, otherwise sets 
+window to regular state. Returns `*this.&]
+[s3; &]
+[s4;%- &]
+[s5;:TopWindow`:`:IsFullScreen`(`)const:%- [@(0.0.255) bool]_[* IsFullScreen]()_[@(0.0.255) c
+onst]&]
+[s2; [*/ Return value]-|True if window is in fullscreen mode.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:TopWindow`:`:FrameLess`(bool`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_[* FrameLess
+]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;  [%-*@3 b].&]
+[s3; &]
+[s4;%- &]
+[s5;:TopWindow`:`:IsFrameLess`(`)const:%- [@(0.0.255) bool]_[* IsFrameLess]()_[@(0.0.255) c
+onst]&]
+[s2; &]
+[s3;%- &]
+[s4;%- &]
+[s5;:TopWindow`:`:Urgent`(bool`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_[* Urgent]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Calling Urgent(true) causes title of inactive window and its 
+item in taskbar to flash to catch users attention. The effect 
+lasts until either Urgent(false) is called or the window is taken 
+to foreground. If Urgent(true) is called on currently active 
+window then it has no effect.&]
+[s2; &]
+[s2; Note: Most of the window managers on X11 do support this feature, 
+but there still might be some obscure ones that simply ignore 
+this setting.&]
+[s3; &]
+[s4;%- &]
+[s5;:TopWindow`:`:IsUrgent`(`)const:%- [@(0.0.255) bool]_[* IsUrgent]()_[@(0.0.255) const]&]
+[s2; [*/ Return value]-|True if window tries to catch users attention 
+by flashing.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:TopWindow`:`:NoAccessKeysDistribution`(`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_
 [* NoAccessKeysDistribution]()&]
 [s2; Disables distribution of access keys. Normally, TopWindow tries 
