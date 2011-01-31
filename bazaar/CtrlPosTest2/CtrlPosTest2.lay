@@ -1,0 +1,7 @@
+LAYOUT(CtrlPosTest2Layout, 640, 480)
+	ITEM(StaticText, mc, SetText(t_("REPOSITON ME")).HCenterPosZ(220, -186).VCenterPosZ(124, -158))
+	ITEM(StaticText, st, SetText(t_("REPOSITION ME")).SetFrame(BlackFrame()).LeftPosZ(260, 212).TopPosZ(164, 108))
+	ITEM(Button, dv___2, SetLabel(t_("REPOSITION ME")).LeftPosZ(96, 136).TopPosZ(328, 76))
+	ITEM(DocEdit, dv___3, LeftPosZ(380, 132).TopPosZ(336, 76))
+END_LAYOUT
+
