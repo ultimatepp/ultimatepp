@@ -88,4 +88,4 @@ library(MSC) "SDL SDLmain";
 library(GCC WIN32) "SDL.dll SDLmain";
 
 mainconfig
-	"" = "";
+	"" = "SSE2";

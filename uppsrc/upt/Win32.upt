@@ -187,4 +187,4 @@ file resource.h,
      <:PACKAGE:>.cpp;
 
 mainconfig
-    "" = "GUI";
+    "" = "GUI SSE2";
