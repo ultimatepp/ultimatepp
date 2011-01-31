@@ -8,6 +8,7 @@ uses
 	ProductVersion;
 
 file
+	Updater.t,
 	Updater.iml,
 	Windows.cpp,
 	Posix.cpp,

@@ -9,7 +9,10 @@
 #define IMAGEFILE <Updater/Updater.iml>
 #include <Draw/iml.h>
 
-NAMESPACE_UPP
+#define TFILE <Updater/Updater.t>
+#include <Core/t.h>
+
+ NAMESPACE_UPP
 
 // gets platform root folder
 String Updater::GetPlatformRoot(void)
@@ -90,6 +93,11 @@ Updater::Updater()
 	
 	// no desktop icon installation by default
 	desktopIcon = false;
+	
+	// setup default user choices on errors
+	installBehaviour = AbortExecution;
+	noInstallBehaviour = AbortExecution;
+	updateBehaviour = AskUser;
 }
 
 // sets applicaton name (defaults with current executable title if not used)
@@ -233,7 +241,7 @@ bool Updater::START_Updater(String const &operation)
 // returns true if app must continue execution, false otherwise
 bool Updater::START_Uninstall(void)
 {
-	if(confirmUninstall && !PromptYesNo(t_("This will remove '") + appName + t_("' application&Continue ?")))
+	if(confirmUninstall && !PromptYesNo(Format(t_("This will remove '%s' application&Continue ?"), appName)))
 	{
 		state = UninstallAborted;
 		return true;
@@ -250,7 +258,7 @@ bool Updater::START_Uninstall(void)
 // returns true if app must continue execution, false otherwise
 bool Updater::START_Install(void)
 {
-	if(confirmInstall && !PromptYesNo(t_("Install '") + appName + t_("' application?")))
+	if(confirmInstall && !PromptYesNo(Format(t_("Install '%s' application?"), appName)))
 	{
 		state = InstallAborted;
 		return true;
@@ -311,7 +319,7 @@ bool Updater::DO_NormalRun(void)
 	
 	// if we want manual updates, just ask
 	if(updateMode == "ASK")
-		if(!PromptYesNo(t_("New version ") + maxVer.ToString() + t_(" is available&Install it ?")))
+		if(!PromptYesNo(Format(t_("New version '%s' is available&Install it ?"), maxVer.ToString())))
 			return true;
 	
 	// updater enabled, start it
@@ -685,30 +693,72 @@ bool Updater::DefaultPrompts(void)
 	switch(GetState())
 	{
 		case UninstallFailed:
-			Exclamation(t_("Uninstall of '") + appName + t_("' failed&Press OK to quit"));
+			Exclamation(Format(t_("Uninstall of '%s' failed&Press OK to quit"), appName));
 			return false;
 	
 		case UninstallSucceeded:
-			PromptOK(t_("Uninstall of '") + appName + t_("' complete&Press OK to quit"));
+			PromptOK(Format(t_("Uninstall of '%s' complete&Press OK to quit"), appName));
 			return false;
 			
 		case UninstallAborted:
 			return false ;
 
-		case InstallFailed:			
-			if(!PromptYesNo(t_("Install of '") + appName + t_("' failed&Run without installing?")))
-				return false;
+		case InstallFailed:
+			switch(installBehaviour)
+			{
+				case AskUser :
+					if(!PromptYesNo(Format(t_("Install of '%s' failed&Run without installing?"), appName)))
+						return false;
+					break;
+				case AbortExecution:
+					Exclamation(Format(t_("Install of '%s' failed"), appName));
+					return false;
+				case ContinueExecution:
+					Exclamation(Format(t_("Install of '%s' failed&press OK to run uninstalled"), appName));
+					return true;
+				default:
+					return false;
+			}
 			return true;
 			
 		case InstallSucceeded:
 			return true;
 		
 		case InstallAborted:
-			return false;
+			switch(installBehaviour)
+			{
+				case AskUser :
+					if(!PromptYesNo(Format(t_("Install of '%s' aborted&Run without installing?"), appName)))
+						return false;
+					break;
+				case AbortExecution:
+					Exclamation(Format(t_("Install of '%s' aborted"), appName));
+					return false;
+				case ContinueExecution:
+					Exclamation(Format(t_("Install of '%s' aborted&press OK to run uninstalled"), appName));
+					return true;
+				default:
+					return false;
+			}
+			return true;
+			
 			
 		case UpdateFailed:
-			if(!PromptYesNo(t_("Update of '") + appName + t_("' failed&Run anyways?")))
-				return false;
+			switch(updateBehaviour)
+			{
+				case AskUser:
+					if(!PromptYesNo(Format(t_("Update of '%s' failed&Run current version?"), appName)))
+						return false;
+					break;
+				case AbortExecution:
+					Exclamation(Format(t_("Update of '%s' failed"), appName));
+					return false;
+				case ContinueExecution:
+					Exclamation(Format(t_("Update of '%s' failed&press OK to run current version"), appName));
+					return true;
+				default:
+					return true;
+			}
 			return true;
 
 		case UpdateSucceeded:

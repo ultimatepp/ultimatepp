@@ -21,6 +21,9 @@ class Updater
 			UninstallSucceeded, InstallSucceeded, UpdateSucceeded,
 			UninstallAborted, InstallAborted
 		} UpdaterState;
+		
+		// choices on error conditions
+		typedef enum { AbortExecution, AskUser, ContinueExecution } ErrorBehaviours;
 
 	private:
 		// state of updater engine
@@ -124,6 +127,11 @@ class Updater
 		
 		// flag for desktop icon install
 		bool desktopIcon;
+		
+		// user's choices on how to handle error contidions
+		ErrorBehaviours installBehaviour;
+		ErrorBehaviours noInstallBehaviour;
+		ErrorBehaviours updateBehaviour;
 		
 #ifdef PLATFORM_POSIX
 		// scans for theme folders on which put/delete the mimetype icons
@@ -239,6 +247,11 @@ class Updater
 		// desktop icon
 		Updater &DesktopIcon(void) { desktopIcon = true; return *this; }
 		Updater &NoDesktopIcon(void) { desktopIcon = false; return *this; }
+		
+		// sets behaviours on failures
+		Updater &SetInstallBehaviour(ErrorBehaviours b) { installBehaviour = b; return *this; }
+		Updater &SetNoInstallBehaviour(ErrorBehaviours b) { noInstallBehaviour = b; return *this; }
+		Updater &SetUpdateBehaviour(ErrorBehaviours b) { updateBehaviour = b; return *this; }
 
 };
 
