@@ -5,6 +5,7 @@ uses
 	SysExec;
 
 file
+	SysExecGui.t,
 	SysExecGui.iml,
 	SysExecGui.lay,
 	SysExecGui.h,
