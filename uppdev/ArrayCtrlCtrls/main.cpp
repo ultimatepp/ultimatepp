@@ -16,7 +16,7 @@ GUI_APP_MAIN
 	a.Appending().Removing();
 	a.AddColumn("Text").Ctrls(WidgetFactory);
 	a.AddColumn("Text");
-	for(int i = 0; i < 30; i++)
+	for(int i = 0; i < 10000; i++)
 		a.Add(AsString(i));
 //	for(int i = 0; i < 300; i += 3)
 //		a.GetCtrl(i, 0)->Disable();

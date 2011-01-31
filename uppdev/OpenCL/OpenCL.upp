@@ -1,0 +1,11 @@
+uses
+	Core;
+
+library(MSC9) C:\CL\NVIDIA_GPU_Computing_SDK\OpenCL\common\lib\Win32\OpenCL.lib;
+
+options(MSC9) "/I C:\\CL\\NVIDIA_GPU_Computing_SDK\\OpenCL\\common\\inc\\";
+
+file
+	main.cpp,
+	example1_kernels.cl;
+
