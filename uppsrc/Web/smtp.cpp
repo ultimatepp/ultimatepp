@@ -424,4 +424,16 @@ bool SmtpMail::Send()
 	}
 }
 
+SmtpMail& SmtpMail::New()
+{
+	to.Clear();
+	to_name.Clear();
+	as.Clear();
+	text.Clear();
+	mime.Clear();
+	error.Clear();
+	transcript_text.Clear();
+	return *this;
+}
+
 END_UPP_NAMESPACE

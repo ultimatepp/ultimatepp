@@ -23,7 +23,11 @@ public:
 	SmtpMail&      Attach(const char *name, const String& data, const char *mime = 0);
 	SmtpMail&      Auth(const String& user, const String& pwd)        { auth_user = user; auth_pwd = pwd; return *this; }
 
+	SmtpMail&      New();
+
 	bool           Send();
+	
+	void           Reset();
 
 	String         GetError() const                                   { return error; }
 	String         GetTranscript() const                              { return transcript_text; }
