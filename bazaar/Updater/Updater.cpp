@@ -293,8 +293,19 @@ bool Updater::DO_NormalRun(void)
 		return START_Uninstall();
 	
 	// if app not installed, we shall install it
+	// (if any available version is present on server....)
 	if(!appInstalled)
-		return START_Install();
+	{
+		// fetch available application versions
+		ProductVersions versions = FetchVersions();
+	
+		// if versions present on server, install latest
+		if(versions.GetCount())
+			return START_Install();
+		// otherwise resume execution -- it's an uninstalled run
+		else
+			return true;
+	}
 	
 	// not installing nor uninstalling
 	
