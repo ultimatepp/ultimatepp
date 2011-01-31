@@ -648,6 +648,7 @@ bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData)
 	body.Replace("%USER%", userData.Get("NAME"));
 	subject.Replace("%USER%", userData.Get("NAME"));
 
+	smtp.New();
 	smtp.To(userData.Get("EMAIL"));
 	smtp.Subject(subject);
 	smtp.From(serverVars.Get("SERVER_NAME"));
