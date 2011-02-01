@@ -174,9 +174,9 @@ bool ProtectClient::Connect(void)
 		// replaces old one and store on file
 		// clientid is used to maintain a persistent client/server relationship
 		// on every connection, clientID timeout is updated on server side
-		if(clientID != (int)res[i])
+		if(clientID != (dword)(int)res[i])
 		{
-			clientID = (int)res[i];
+			clientID = (dword)(int)res[i];
 			return StoreConfig();
 		}
 	}

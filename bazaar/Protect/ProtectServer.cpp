@@ -145,7 +145,7 @@ dword ProtectServer::ConnectClient(String const &eMail, dword id)
 		{
 			id = Random();
 		}
-		while(id == 0 || id == -1 || clientLinks.Find(id) >= 0);
+		while(id == 0 || id == (unsigned)-1 || clientLinks.Find(id) >= 0);
 	}
 	
 	// adds to clientLinks and to pool if needed, otherwise update record

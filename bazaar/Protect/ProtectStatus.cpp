@@ -31,7 +31,7 @@ const char *__ProtectMessages[] =
 
 String ProtectMessage(int m)
 {
-	if(m >= 0 && m < sizeof(__ProtectMessages) / sizeof(const char *))
+	if(m >= 0 && m < (int)(sizeof(__ProtectMessages) / sizeof(const char *)))
 		return GetLngString(__ProtectMessages[m]);
 	else
 		return t_("UNKNOWN ERROR");
@@ -53,7 +53,7 @@ const char *__ProtectReasons[] =
 // get reason in string format
 String ProtectReasonStr(int r)
 {
-	if(r >= 0 && r < sizeof(__ProtectReasons) / sizeof(const char *))
+	if(r >= 0 && r < (int)(sizeof(__ProtectReasons) / sizeof(const char *)))
 		return __ProtectReasons[r];
 	else
 		return __ProtectReasons[0];
@@ -62,7 +62,7 @@ String ProtectReasonStr(int r)
 // get reason in enum format
 int ProtectReason(String const &s)
 {
-	for(int i = 0; i < sizeof(__ProtectReasons) / sizeof(const char *); i++)
+	for(unsigned i = 0; i < sizeof(__ProtectReasons) / sizeof(const char *); i++)
 		if(s == __ProtectReasons[i])
 			return i;
 	return 0;
