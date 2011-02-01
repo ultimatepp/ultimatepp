@@ -12,8 +12,7 @@ mainconfig
 	"" = "GUI PROTECT";
 
 custom(POSIX PROTECT) "post-link",
-	"/home/massimo/sources/upp-svn/out/GCC.Debug.Debug_full.Shared/ProtectE"
-	"ncrypt $(OUTPATH) AABBCCDDEEFF00112233445566778899",
+	"ProtectEncrypt $(OUTPATH) AABBCCDDEEFF00112233445566778899",
 	"";
 
 custom(WIN32 PROTECT) "post-link",
