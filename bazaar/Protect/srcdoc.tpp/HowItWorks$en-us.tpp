@@ -915,10 +915,11 @@ function that does the decryption, named [* PROTECT`_DECRYPT()]
 ; following dumb example simply hard`-codes the decryption key 
 :&]
 [s0; &]
-[s0;l128; [/ bool Decrypt(byte `*start, size`_t len)]&]
+[s0;l128; [/ void Decrypt(byte `*start, size`_t len, byte const `*nonce, 
+size`_t nonceLen)]&]
 [s0;l128; [/ `{]&]
 [s0;l128; [/ -|return ][*/ PROTECT`_DECRYPT ][/ ( start, len, `"`\xAA`\xBB`\xCC`\xDD`\xEE`\x
-FF`" );]&]
+FF`", nonce, nonceLen);]&]
 [s0;l128; [/ `}]&]
 [s0;l128; &]
 [s0; In a real app, the key can be read from a dongle, from a license 
