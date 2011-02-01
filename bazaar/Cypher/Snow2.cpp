@@ -279,7 +279,7 @@ void Snow2::loadkey(byte const *key,dword keysize,dword IV3,dword IV2,dword IV1,
 		s1  =~s13;
 		s0  =~s12;
 	}
-	else
+	else if(keysize == 256)
 	{
 		/* assume keysize=256 */
 		s15=(((dword)*(key+0))<<24) | (((dword)*(key+1))<<16) |
@@ -307,6 +307,8 @@ void Snow2::loadkey(byte const *key,dword keysize,dword IV3,dword IV2,dword IV1,
 		s1 =~s9;
 		s0 =~s8;
 	}
+	else
+		NEVER();
 
 	/* XOR IV values */
 	s15^=IV0;
