@@ -148,6 +148,7 @@ CONSOLE_APP_MAIN
 		}
 		key.Cat(b);
 	}
+	Cerr() << "ENCRYPTION KEY : " << HexString(key) << "\n";
 	
 	// loads file into buffer
 	String fName = CommandLine()[0];
