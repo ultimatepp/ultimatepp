@@ -16,6 +16,9 @@ using namespace Upp;
 
 #ifdef PLATFORM_POSIX
 
+// no optimize with -O2 or more an encrypted function
+#define PROTECT_NO_OPTIMIZE __attribute__((optimize(0)))
+
 #define PROTECT_START_FUNC(decrFunc) \
 	static bool __decrypted = false; \
 	if(!__decrypted) \
@@ -80,6 +83,10 @@ using namespace Upp;
 	PROTECT_OBFUSCATE((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, (byte *)&&__init + 2, 16 /* sizeof(OBFUSCATE_START_MARKER) + sizeof("0123456789") */)
 
 #else
+
+// no optimize strongly an encrypted function
+// @@ TO DO -- check if needed on MSC...
+#define PROTECT_NO_OPTIMIZE
 
 #define _PROTECT_START_MARKER	__asm _emit 0xba __asm _emit 0xad __asm _emit 0xde __asm _emit 0xad __asm _emit 0xfa __asm _emit 0xce
 #define _PROTECT_END_MARKER		__asm _emit 0xc0 __asm _emit 0xde __asm _emit 0xde __asm _emit 0xad __asm _emit 0xfe __asm _emit 0xed
@@ -202,8 +209,9 @@ using namespace Upp;
 		const int len = strlen("abracadabra"); \
 		Buffer<byte>buf(len); \
 		Buffer<byte>nonce(6); \
-		memcpy(buf, crypted + 6 /* sizeof(PROTECT_START_MARKER)*/, len); \
-		memcpy(nonce, crypted, 6); \
+		/* can't use memcpy, it gets optimized out */ \
+	    for(int i = 0; i < len; i++) buf[i] = crypted[i + 6 /* sizeof(PROTECT_START_MARKER)*/]; \
+	    for(int i = 0; i < 6 /* sizeof(PROTECT_START_MARKER)*/; i++) nonce[i] = crypted[i]; \
 		decrFunc(buf, len, nonce, 6); \
 		__keyOk = !memcmp(buf, "abracadabra", len); \
 	} \

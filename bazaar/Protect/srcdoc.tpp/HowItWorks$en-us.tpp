@@ -896,9 +896,11 @@ string, every 2 chars represent 1 hex byte.&]
 [s0; &]
 [s0;i150;O0; In your application, enclose parts of code you want 
 to be encrypted by mean of PROTECT`_START`_FUNC(decrFunc) and 
-PROTECT`_END`_FUNC macros :&]
+PROTECT`_END`_FUNC macros, and mark function as [* non`-optimizable], 
+otherwise the optimizing compiler will rearrange the code and 
+make the system crash : :&]
 [s0; &]
-[s0;l160; [/ void MyEncryptedFunction(void)]&]
+[s0;l160; [*/ PROTECT`_NO`_OPTIMIZE][/  void MyEncryptedFunction(void)]&]
 [s0;l160; [/ `{]&]
 [s0;l160; [/ -|][*/ PROTECT`_START`_FUNC(Decrypt);]&]
 [s0;l160;/ &]
