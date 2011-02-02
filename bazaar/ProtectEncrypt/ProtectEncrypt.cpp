@@ -35,11 +35,13 @@ int CryptBuf(byte *buf, byte *bufEnd, String const &key)
 		byte *nonce = bStart;
 		for(unsigned i = 0; i < strlen(PROTECT_START_MARKER); i++)
 			*bStart++ = (byte)(Random() & 0xff);
-		
 		// locate end pattern
 		byte *bEnd = ProtectSearchBuf(bStart, bufEnd, (const byte *)PROTECT_END_MARKER, strlen(PROTECT_END_MARKER));
 		if(!bEnd)
+		{
+			Cerr() << "Missing PROTECT_END_MARKER block\n";
 			return 0;
+		}
 		
 		// get size of chunk to patch
 		size_t size = bEnd - bStart;
@@ -161,28 +163,27 @@ CONSOLE_APP_MAIN
 	dword size = (dword)f.GetSize();
 	Buffer<byte>buf(size);
 	f.GetAll(buf, size);
+	f.Close();
 	
 	// crypt part
-	int patches = CryptBuf(buf, buf + size, key);
-	if(patches)
-	{
-		Cerr() << "Successfully encrypted " << patches << " functions\n";
-		FileOut f(fName);
-		f.Put(buf, size);
-	}
+	int cryptPoints = CryptBuf(buf, buf + size, key);
+	if(cryptPoints)
+		Cerr() << "Successfully encrypted " << cryptPoints << " functions\n";
 	else
 		Cerr() << "No encrypt points found\n";
 
 	// obfuscation part
-	patches = ObfuscateBuf(buf, buf + size);
-	if(patches)
+	int obfuscatePoints = ObfuscateBuf(buf, buf + size);
+	if(obfuscatePoints)
+		Cerr() << "Successfully obfuscated " << obfuscatePoints << " functions\n";
+	else
+		Cerr() << "No obfuscate points found\n";
+
+	if(cryptPoints || obfuscatePoints)
 	{
-		Cerr() << "Successfully obfuscated " << patches << " functions\n";
 		FileOut f(fName);
 		f.Put(buf, size);
 	}
-	else
-		Cerr() << "No obfuscate points found\n";
 
 	// sets up exit code
 	SetExitCode(0);
