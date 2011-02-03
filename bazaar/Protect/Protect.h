@@ -219,6 +219,7 @@ using namespace Upp;
 
 #else
 
+#define PROTECT_NO_OPTIMIZE
 #define PROTECT_START_FUNC(decrFunc)
 #define PROTECT_END_FUNC
 #define OBFUSCATE_START_FUNC
