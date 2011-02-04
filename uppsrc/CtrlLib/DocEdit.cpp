@@ -322,7 +322,7 @@ void DocEdit::VertMove(int delta, bool select, bool scs) {
 		if(p.y > hy) p.y = hy - 1;
 		if(p.y < 0) p.y = 0;
 		int q = GetCursorPos(p);
-		if(q >= 0 && q != cursor && delta < 0 == q < cursor && GetCaret(q).y != yy) {
+		if(q >= 0 && q != cursor && (delta < 0) == (q < cursor) && GetCaret(q).y != yy) {
 			PlaceCaret(q, select);
 			break;
 		}
