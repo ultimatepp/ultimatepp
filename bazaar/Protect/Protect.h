@@ -65,7 +65,8 @@ using namespace Upp;
 	}
 	
 #define OBFUSCATE_START_FUNC \
-	PROTECT_OBFUSCATE((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, (byte *)&&__init + 2, 16 /* sizeof(OBFUSCATE_START_MARKER) + sizeof("0123456789") */); \
+	static volatile bool __xxx = false; \
+	PROTECT_OBFUSCATE((byte *)&&__start, (byte *)&&__end - (byte *)&&__start + 2, (byte *)&&__init + 2, 16 /* sizeof(OBFUSCATE_START_MARKER) + sizeof("0123456789") */); \
 	asm volatile ( \
 		"\txor %%eax, %%eax\n" \
 		"\tcpuid\n" \
@@ -73,23 +74,32 @@ using namespace Upp;
 		: \
 		: "eax", "ebx", "ecx", "edx" \
     ); \
-	__init: \
-	asm volatile( \
-		"\tjmp 1f\n" \
-		"\t.ascii \""OBFUSCATE_START_MARKER"\"\n" \
-		"\t.ascii \"0123456789\"\n" \
-		"1:\n" \
-	); \
-	__start:
+    __xxx = true; \
+		Cerr() << "AFTER     : " << HexString(&&__start, 50) << "\n"; \
+		if(__xxx) \
+		{ \
+			__init: \
+			asm __volatile__( \
+				"\tjmp 1f\n" \
+				"\t.ascii \""OBFUSCATE_START_MARKER"\"\n" \
+				"\t.ascii \"0123456789\"\n" \
+				"1:\n" \
+			); \
+		} \
+		__start: \
+		if(__xxx) \
+			__xxx++;
 
 #define OBFUSCATE_END_FUNC \
-	asm volatile( \
-		"\tjmp 1f\n" \
-		"\t.ascii \""OBFUSCATE_END_MARKER"\"\n" \
-		"1:\n" \
-	); \
-	__end: \
-	PROTECT_OBFUSCATE((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, (byte *)&&__init + 2, 16 /* sizeof(OBFUSCATE_START_MARKER) + sizeof("0123456789") */)
+		if(__xxx) \
+			__xxx++; \
+		__end: \
+			asm __volatile__( \
+				"\tjmp 1f\n" \
+				"\t.ascii \""OBFUSCATE_END_MARKER"\"\n" \
+				"1:\n" \
+			); \
+			PROTECT_OBFUSCATE((byte *)&&__start, (byte *)&&__end - (byte *)&&__start + 2, (byte *)&&__init + 2, 16 /* sizeof(OBFUSCATE_START_MARKER) + sizeof("0123456789") */);
 
 #else
 
