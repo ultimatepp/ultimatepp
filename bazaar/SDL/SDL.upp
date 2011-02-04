@@ -1,7 +1,8 @@
 description "SDL in an U++ control\377";
 
 uses
-	Core;
+	Core,
+	CtrlLib;
 
 library(MSC) SDL;
 
