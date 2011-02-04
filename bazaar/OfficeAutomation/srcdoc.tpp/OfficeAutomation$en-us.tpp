@@ -13,6 +13,10 @@ Office.]&]
 [s0;2 &]
 [s0; [2 OfficeAutomation is implemented only in U`+`+ Windows version.]&]
 [s0;2 &]
+[s0; [2 Some Microsoft Excel functions have been kindly provided by 
+][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=922`&^2 Ratah
+][2 .]&]
+[s0;2 &]
 [s0;2 &]
 [s0; [*2 Help requested]&]
 [s0;2 &]
