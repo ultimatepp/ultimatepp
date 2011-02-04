@@ -168,6 +168,7 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 		if(opaque2)
 			ChPaint(w, 0, 0, sz.cx, sz.cy, style->topitem[state]);
 		else
+		if(opaque)
 			w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace());
 		String text = GetText();
 		Size isz = GetTextSize(text, StdFont());
