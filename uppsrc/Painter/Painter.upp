@@ -1,7 +1,7 @@
 description "2D software rendering with PDF/SVG strength\377";
 
 uses
-	Core;
+	Draw;
 
 file
 	Painter.h,
