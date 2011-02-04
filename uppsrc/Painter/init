@@ -1,8 +1,7 @@
 #ifndef _Painter_icpp_init_stub
 #define _Painter_icpp_init_stub
-#include "Core/init"
-#include "CtrlLib/init"
-#define BLITZ_INDEX__ FBF07B7CD14210990A670603EF0FC04FB
+#include "Draw/init"
+#define BLITZ_INDEX__ F4E3041CF2F18F9B00C50122512DE4C6E
 #include "PaintPainting.icpp"
 #undef BLITZ_INDEX__
 #endif
