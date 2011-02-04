@@ -28,7 +28,7 @@ we can make cracker`'s live a bit more difficult if we encrypt
 somehow also sensitive parts of code with a random key.&]
 [s0; This is done by another couple of macros :&]
 [s0; &]
-[s0;l160; [*/ PROTECT`_NO`_OPTIMIZE][/  void MyObfuscatedFunction(void)]&]
+[s0;l160; [/ void MyObfuscatedFunction(void)]&]
 [s0;l160; [/ `{]&]
 [s0;l160; [/ -|][*/ OBFUSCATE`_START`_FUNC;]&]
 [s0;l160;/ &]
