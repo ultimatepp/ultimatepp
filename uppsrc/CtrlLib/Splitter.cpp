@@ -255,14 +255,15 @@ Splitter& Splitter::SetStyle(const Style& s)
 }
 
 Splitter::Splitter() {
+	chstyle = NULL;
 	style = -1;
-	pos.Add(5000);
 	width = 4;
-	SetFrame(NullFrame());
 	vert = false;
+	mouseindex = -1;
+	pos.Add(5000);
+	SetFrame(NullFrame());
 	NoWantFocus();
 	VSizePos(0, 0).HSizePos(0, 0);
-	mouseindex = -1;
 	SetStyle(StyleDefault());
 }
 

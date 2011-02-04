@@ -1,5 +1,7 @@
 description "Visual style for ToolBar and MenuBar";
 
+uses
+	CtrlLib;
 file
 	BlueBar.h,
 	BlueSkin.iml,
