@@ -14,7 +14,7 @@ void Decrypt(byte *start, size_t len, byte const *nonce, size_t nonceLen)
 	PROTECT_DECRYPT ( start, len, GetKey(), nonce, nonceLen );
 }
 
-PROTECT_NO_OPTIMIZE double CryptedTest(double d, double e)
+double CryptedTest(double d, double e)
 {
 	PROTECT_START_FUNC(Decrypt);
 
@@ -27,7 +27,7 @@ PROTECT_NO_OPTIMIZE double CryptedTest(double d, double e)
 	PROTECT_END_FUNC;
 }
 
-PROTECT_NO_OPTIMIZE double ObfuscatedTest(double d, double e)
+double ObfuscatedTest(double d, double e)
 {
 
 	// WARNING -- DON'T PUT ANY return STATEMENT BETWEEN
@@ -57,7 +57,6 @@ GUI_APP_MAIN
 
 	d = ObfuscatedTest(3, 4);
 	d = ObfuscatedTest(3, 4);
-
 	
 	PromptOK("FINISHED OK !!");
 	
