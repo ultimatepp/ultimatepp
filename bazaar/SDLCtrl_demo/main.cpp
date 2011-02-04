@@ -18,7 +18,7 @@ typedef SDLCtrl_Demo CLASSNAME;
 			Run_Basic();
 	}
 	SDLCtrl_Demo() {
-		CtrlLayout(*this, "SDLCtrl Example");
+		CtrlLayout(*this, "SDLCtrl Examples");
 		
 		butRun.WhenAction = THISBACK(OnRun);
 		
