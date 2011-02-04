@@ -16,11 +16,8 @@ using namespace Upp;
 
 #ifdef PLATFORM_POSIX
 
-// no optimize with -O2 or more an encrypted function
-#define PROTECT_NO_OPTIMIZE __attribute__((optimize(0)))
-
-#define PROTECT_START_FUNC(decrFunc) \
-	static bool __decrypted = false; \
+#define PROTECT_START_FUNC1(decrFunc) \
+	static volatile bool __decrypted = false; \
 	if(!__decrypted) \
 	{ \
 		PROTECT_WRITE_ACCESS((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, true); \
@@ -34,26 +31,38 @@ using namespace Upp;
 			: \
 			: "eax", "ebx", "ecx", "edx" \
 	    ); \
-	} \
-	if(!__decrypted) \
-		goto __end; \
-	__init: \
-	asm volatile( \
-		"\tjmp 1f\n" \
-		"\t.ascii \""PROTECT_START_MARKER"\"\n" \
-		"1:\n" \
-	); \
-	__start: \
+	}
+	
+/* THIS BECAUSE THEIDE HANGS... */
+#define PROTECT_START_FUNC2 \
+	if(__decrypted) \
 	{ \
+		if(!__decrypted) \
+		{ \
+			__init: \
+				asm volatile( \
+					"\tjmp 1f\n" \
+					"\t.ascii \""PROTECT_START_MARKER"\"\n" \
+					"1:\n" \
+				); \
+		} \
+		__start:
+
+#define PROTECT_START_FUNC(DecrFunc) PROTECT_START_FUNC1(DecrFunc) PROTECT_START_FUNC2
 
 #define PROTECT_END_FUNC \
 	}  \
-	__end: \
-	asm volatile ( \
-		"\tjmp 2f\n" \
-		"\t.ascii \""PROTECT_END_MARKER"\"\n" \
-		"2:\n" \
-	);
+	else \
+	{ \
+		__end: \
+		asm volatile ( \
+			"\tjmp 2f\n" \
+			"\t.ascii \""PROTECT_END_MARKER"\"\n" \
+			"2:\n" \
+			::: \
+		); \
+		goto __start; \
+	}
 	
 #define OBFUSCATE_START_FUNC \
 	PROTECT_OBFUSCATE((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, (byte *)&&__init + 2, 16 /* sizeof(OBFUSCATE_START_MARKER) + sizeof("0123456789") */); \
@@ -83,10 +92,6 @@ using namespace Upp;
 	PROTECT_OBFUSCATE((byte *)&&__start, (byte *)&&__end - (byte *)&&__start, (byte *)&&__init + 2, 16 /* sizeof(OBFUSCATE_START_MARKER) + sizeof("0123456789") */)
 
 #else
-
-// no optimize strongly an encrypted function
-// @@ TO DO -- check if needed on MSC...
-#define PROTECT_NO_OPTIMIZE
 
 #define _PROTECT_START_MARKER	__asm _emit 0xba __asm _emit 0xad __asm _emit 0xde __asm _emit 0xad __asm _emit 0xfa __asm _emit 0xce
 #define _PROTECT_END_MARKER		__asm _emit 0xc0 __asm _emit 0xde __asm _emit 0xde __asm _emit 0xad __asm _emit 0xfe __asm _emit 0xed
@@ -219,7 +224,6 @@ using namespace Upp;
 
 #else
 
-#define PROTECT_NO_OPTIMIZE
 #define PROTECT_START_FUNC(decrFunc)
 #define PROTECT_END_FUNC
 #define OBFUSCATE_START_FUNC
