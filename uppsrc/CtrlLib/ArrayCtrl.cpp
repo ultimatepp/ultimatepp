@@ -2804,26 +2804,21 @@ ArrayCtrl::Column& ArrayOption::AddColumn(ArrayCtrl& ac, Id id, const char *text
 void ArrayOption::Paint(Draw& w, const Rect& r, const Value& q,
 		                Color ink, Color paper, dword style) const
 {
-	w.DrawRect(r, paper);
-	Size crsz = min(CtrlImg::smallcheck().GetSize() + 4, r.Size());
-	Rect cr = r.CenterRect(crsz);
 	bool focusCursor = (style & (CURSOR | SELECT)) && (style & FOCUS);
-	bool gray = false;
-	if(!array || array->IsEnabled()) {
-		gray = threestate && IsNull(q) || !threestate && !IsNull(q) && q != f && q != t;
-		w.DrawRect(cr, gray ? SColorFace() : paper);
-	}
-	if(frame)
-		DrawFrame(w, cr, focusCursor ? White : Blend(SColorLight, SColorHighlight));
-	Image icon;
-	if(q != f) {
-		Image icon = CtrlImg::smallcheck();
-		Point p = cr.CenterPos(icon.GetSize());
-		if(focusCursor && !gray)
-			w.DrawImage(p.x, p.y, icon, White());
-		else
-			w.DrawImage(p.x, p.y, icon);
-	}
+	bool gray = (array && !array->IsEnabled());
+	w.DrawRect(r, paper);
+
+	int st = (gray ? CTRL_DISABLED : CTRL_NORMAL);
+	int g = threestate && (q != t && q != f) ? CtrlsImg::I_O2 : q == t ? CtrlsImg::I_O1
+		: CtrlsImg::I_O0;
+		
+	Image img = CtrlsImg::Get(g + st);
+
+	Size crsz = min(img.GetSize(), r.Size());
+	Rect cr = r.CenterRect(crsz);
+
+	Point p = cr.CenterPos(img.GetSize());
+	w.DrawImage(p.x, p.y, img);
 }
 
 END_UPP_NAMESPACE
