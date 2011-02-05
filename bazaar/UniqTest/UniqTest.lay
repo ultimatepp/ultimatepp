@@ -1,0 +1,4 @@
+LAYOUT(UniqTestLayout, 404, 240)
+	ITEM(LineEdit, edit, SetEditable(false).WantFocus(false).LeftPosZ(8, 388).TopPosZ(8, 220))
+END_LAYOUT
+

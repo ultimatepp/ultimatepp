@@ -1,0 +1,15 @@
+description "Test for Uniq single app instance package\377";
+
+uses
+	CtrlLib,
+	Uniq;
+
+file
+	UniqTest.lay,
+	UniqTest.h,
+	UniqTest.cpp;
+
+mainconfig
+	"" = "GUI MT",
+	"" = "GUI";
+

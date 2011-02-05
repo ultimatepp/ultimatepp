@@ -1,0 +1,5 @@
+#ifndef _UniqTest_icpp_init_stub
+#define _UniqTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Uniq/init"
+#endif

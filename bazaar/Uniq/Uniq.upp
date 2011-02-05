@@ -1,0 +1,6 @@
+description "A class for single-instance applications\377";
+
+file
+	Uniq.h,
+	Uniq.cpp;
+
