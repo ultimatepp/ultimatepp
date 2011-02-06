@@ -36,6 +36,18 @@ struct SvnLogRev : Moveable <SvnLogRev> {
         bool major;
 };
 
+struct SvnBazaarItems : Moveable <SvnBazaarItems> {
+	String name;
+	int64 size;
+	Time lastChange;
+	String description;
+	String authors;
+	String status;
+	String externalDependencies;
+	String supportedOS;
+	String imagePath;
+};
+
 extern String uppsrc;
 extern String uppbox;
 extern String bazaar;
@@ -54,7 +66,9 @@ String CppAsQtf(const String& s);
 void GatherRefLinks(const char *upp);
 
 void GetSvnList(VectorMap<String, SvnListRev> &data, const String &);
-void GetSvnLog(Vector<SvnLogRev> &log);
+void GetSvnLog(Vector<SvnLogRev> &log, int limit = -1);
 String SvnChanges(Vector<SvnLogRev> &log, int limit, String filter, bool major = false);
+Vector <SvnBazaarItems> SvnBazaarList(String bazaarPath, Vector<SvnLogRev> &log);
+String BytesToString(uint64 _bytes, bool units = true);
 
 #endif
