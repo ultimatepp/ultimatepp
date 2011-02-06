@@ -145,7 +145,7 @@ void ParseSvnLog(Vector<SvnLogRev> &log, String& out){
 		pos = newpos + strlen("<msg>");
 		if((newpos = out.Find("<", pos)) == -1)
 			return;
-		rev.msg = out.Mid(pos,newpos-pos);
+		rev.msg = out.Mid(pos, newpos-pos);
 		if (rev.msg[0] == '.') 
 			rev.major = false;
 		else 
@@ -154,13 +154,14 @@ void ParseSvnLog(Vector<SvnLogRev> &log, String& out){
 	}
 }
 
-void GetSvnLog(Vector<SvnLogRev> &log) {
+void GetSvnLog(Vector<SvnLogRev> &log, int limit) {
 	RLOG("Querying svn for revisions log ...");
-	String out = Sys("svn log \"" + rootdir + "\" --xml --verbose --non-interactive --limit 500");  
+	String out = Sys("svn log \"" + rootdir + "\" --xml --verbose --non-interactive" + 
+					 ((limit > -1) ? " --limit " + FormatInt(limit) : ""));  
 	ParseSvnLog(log,out);
 }
 
-String SvnChanges(Vector<SvnLogRev> &log, int limit, String filter, bool major){
+String SvnChanges(Vector<SvnLogRev> &log, int limit, String filter, bool major) {
 	String table = "{{700:800:800:2850:4232f0;g0;^t/25b4/25@(240) [s0;# [*2 Revision]]"
 		":: [s0;# [*2 Date]]"
 		":: [s0;# [*2 Author]]"
@@ -185,3 +186,131 @@ String SvnChanges(Vector<SvnLogRev> &log, int limit, String filter, bool major){
 	table += " }}";
 	return table;
 }
+
+int64 GetFolderSize(String dir) {
+	int64 size = 0;
+	FindFile ff(AppendFileName(dir, "*.*"));
+	while(ff) {
+		String name = ff.GetName();
+		String p = AppendFileName(dir, name);
+		if(ff.IsFile())
+			size += ff.GetLength();
+		else if(ff.IsFolder())
+			size += GetFolderSize(p);
+		ff.Next();
+	}
+	return size;
+}
+
+String BytesToString(uint64 _bytes, bool units)
+{
+	String ret;
+	uint64 bytes = _bytes;
+	
+	if (bytes >= 1024) {
+		bytes /= 1024;
+		if (bytes >= 1024) {
+			bytes /= 1024;
+			if (bytes >= 1024) {
+				bytes /= 1024;
+				if (bytes >= 1024) {
+					bytes /= 1024;
+					ret = Format("%.1f %s", _bytes/(1024*1024*1024*1024.), units ? "Tb" : "");
+				} else
+					ret = Format("%.1f %s", _bytes/(1024*1024*1024.), units ? "Gb" : "");
+			} else
+				ret = Format("%.1f %s", _bytes/(1024*1024.), units ? "Mb" : "");
+		} else
+			ret = Format("%.1f %s", _bytes/1024., units ? "Kb" : "");
+	} else
+		ret << _bytes << (units ? "b" : "");
+	return ret;
+}
+
+Vector <SvnBazaarItems> SvnBazaarList(String bazaarPath, Vector<SvnLogRev> &log) {
+	Vector <SvnBazaarItems> items;
+	
+	FindFile ff(AppendFileName(bazaarPath, "*.*"));
+	while(ff) {
+		String name = ff.GetName();
+		if(ff.IsFolder() && name != "$.tpp" && name != ".svn") {
+			SvnBazaarItems &item = items.Add();
+			item.name = name;
+			String p = AppendFileName(bazaarPath, item.name);
+			item.size = GetFolderSize(p);
+			item.authors = "";
+			item.description = "";
+			item.externalDependencies = "";
+			item.imagePath = "";
+			item.status = "";
+			item.supportedOS = "";
+		}
+		ff.Next();
+	}
+	Vector<String> logPackages;	// Packages in log vector
+	logPackages.SetCount(log.GetCount());
+	for (int i = 0; i < log.GetCount(); ++i) {
+		for (int j = 0; j < log[i].changes.GetCount(); ++j) {
+			String path = log[i].changes[j].path;
+			int ppos = path.Find("/bazaar/");
+			if (ppos >= 0) {
+				String package;
+				ppos += strlen("/bazaar/");
+				int endppos = path.Find("/", ppos+1);
+				package = path.Mid(ppos, endppos-ppos);
+				logPackages[i] += package + ", ";		
+			}
+		}
+	}
+	/*	
+	String s;
+	for(int i = 0; i < logPackages.GetCount(); i++) {
+		s += "\n"
+				+ logPackages[i]; 
+	}
+	SaveFile("C:\\LogPackages.txt", s);		/////////
+	*/
+	for (int i = 0; i < log.GetCount(); ++i) {
+		String packages = logPackages[i];
+		for (int j = 0; j < items.GetCount(); ++j) {
+			if (packages.Find(items[j].name) >= 0) {
+				if (IsNull(items[j].lastChange)) 
+					items[j].lastChange = log[i].time;
+				else if (log[i].time > items[j].lastChange)
+					items[j].lastChange = log[i].time;
+				if (items[j].authors.Find(log[i].author) < 0) {
+					if (!items[j].authors.IsEmpty())
+						items[j].authors = ", " + items[j].authors;
+					items[j].authors = log[i].author + items[j].authors;
+				}
+			}
+		}
+	}
+	return items;
+	/*
+	String table = "{{700:800:800:2850:4232:800:800:800:800f0;g0;^t/25b4/25@(240)"
+		"   [s0;# [*2 Name]]"
+		":: [s0;# [*2 Basic Description]]"
+		":: [s0;# [*2 Authors]]"
+		":: [s0;# [*2 Size]]"
+		":: [s0;# [*2 Status]]"
+		":: [s0;# [*2 Last Release]]"
+		":: [s0;# [*2 External Dependencies]]"
+		":: [s0;# [*2 Suported OS]]"
+		":: [s0;# [*2 Image]]";
+	for(int i = 0; i < items.GetCount(); i++) {
+		table += "::t8/8b0/8@2"
+				"   [s0; [2 " + DeQtf(items[i].name) + " ]]"
+				":: [s0; [2 " + DeQtf(items[i].description) + " ]]"
+				":: [s0; [2 " + DeQtf(items[i].authors) + " ]]"
+				":: [s0; [2 " + BytesToString(items[i].size) + " ]]"				                      
+				":: [s0; [2 " + DeQtf(items[i].status) + " ]]"	
+				":: [s0; [2 " + Format("%`", Date(items[i].lastChange)) + " ]]"
+				":: [s0; [2 " + DeQtf(items[i].externalDependencies) + " ]]"					
+				":: [s0; [2 " + DeQtf(items[i].supportedOS) + " ]]"					                      
+				":: [s0; ";
+	}
+	table += " }}";
+	return table;*/
+}
+

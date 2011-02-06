@@ -734,6 +734,7 @@ GUI_APP_MAIN
 	String release = "2791"; 
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
+	escape.Add("UPDATETIME", Format("%`", GetSysTime()));
 	
 	if (doSvn) {
 		GetSvnList(svndata, rootdir);
@@ -899,6 +900,73 @@ GUI_APP_MAIN
 
 //	Vector<String> amazon = Split(LoadFile(GetRcFile("amazon.txt")), '\n');//440
 
+	/*{	
+		String s;
+		for(int i = 0; i < svnlog.GetCount(); i++) {
+			s += "\n"
+					+ svnlog[i].author + "; "
+					+ svnlog[i].msg + "; "
+					+ svnlog[i].revision + "; "
+					+ Format("%`", Date(svnlog[i].time));
+			for(int j = 0; j < svnlog[i].changes.GetCount(); j++) 
+				s += "\n\t\t\t--> " + svnlog[i].changes[j].path;
+		}
+		SaveFile("C:\\SvnLog.txt", s);			////////////
+	}*/
+
+	Vector <SvnBazaarItems> bazaarItems = SvnBazaarList(bazaar, svnlog);
+	/*{	
+		String s;
+		for(int i = 0; i < bazaarItems.GetCount(); i++) {
+			s += "\n"
+					+ bazaarItems[i].name + "; "
+					+ bazaarItems[i].authors + "; "
+					+ BytesToString(bazaarItems[i].size) + "; "				                      
+					+ Format("%`", Date(bazaarItems[i].lastChange));
+		}
+		SaveFile("C:\\BazaarItems.txt", s);		/////////
+	}*/
+	
+	for(int i = 0; i < tt.GetCount(); i++) {	// To fill Bazaar page real release dates
+		if (tt[i].title == "Bazaar") {
+			String page = tt[i];
+			for (int j = 0; j < bazaarItems.GetCount(); ++j) {
+				int pos = page.Find("2 " + DeQtf(bazaarItems[j].name) + "]]");
+				if (pos < 0)
+					pos = page.Find("2 " + DeQtf(bazaarItems[j].name) + "\r\n]]");
+				if (pos >= 0) {
+					int pos0 = pos;
+					pos = page.Find(DeQtf("[Last Release]"), pos);
+					String strDate;
+					if (pos >= 0) {
+						Time t = bazaarItems[j].lastChange;
+						if (IsNull(t))
+							strDate = "Not in Svn log";
+						else 
+							strDate = Format("%Mon", t.month) + " " + FormatInt(t.year);
+						page = page.Left(pos) + strDate + 
+							   page.Mid(pos + strlen(DeQtf("[Last Release]")));
+					}
+					pos = pos0;
+					pos = page.Find(DeQtf("[Size]"), pos);
+					String strSz;
+					if (pos >= 0) {
+						if (bazaarItems[j].size == 0)
+							strSz = "Not in Svn log";
+						else 
+							strSz = BytesToString(bazaarItems[j].size);
+		
+						page = page.Left(pos) + strSz + 
+							   page.Mid(pos + strlen(DeQtf("[Size]")));	
+					}
+				}
+			}
+			page.Replace(DeQtf("[Last Release]"), String("Unknown"));
+			page.Replace(DeQtf("[Size]"), String("Unknown"));
+			tt[i].text = page;
+		}
+	}
+	
 	if (outPdf) {
 		PdfDraw pdf;
 		for(int i = 0; i < tt.GetCount(); i++)
