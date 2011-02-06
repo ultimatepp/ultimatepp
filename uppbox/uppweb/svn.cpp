@@ -262,14 +262,6 @@ Vector <SvnBazaarItems> SvnBazaarList(String bazaarPath, Vector<SvnLogRev> &log)
 			}
 		}
 	}
-	/*	
-	String s;
-	for(int i = 0; i < logPackages.GetCount(); i++) {
-		s += "\n"
-				+ logPackages[i]; 
-	}
-	SaveFile("C:\\LogPackages.txt", s);		/////////
-	*/
 	for (int i = 0; i < log.GetCount(); ++i) {
 		String packages = logPackages[i];
 		for (int j = 0; j < items.GetCount(); ++j) {

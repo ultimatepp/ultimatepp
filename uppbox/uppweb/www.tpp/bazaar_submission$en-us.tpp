@@ -101,10 +101,10 @@ you are going to edit the web page.]&]
 document.]&]
 [s0;2 &]
 [s0;i150;O0; [2 There simply edit `"Maintained Packages List`" adding 
-or editing your project data.]&]
-[s0;2 &]
-[s0;i150;O0; [2 Include `[Last Release`] and `[Size`] keywords. This 
-way web infrastructure will update this data for yourself.]&]
+or editing your project data. Use exactly the same package name 
+including type case. Maintain empty `"Last Release`" and `"Size`" 
+columns. This way web infrastructure will update this data for 
+yourself.]&]
 [s0;2 &]
 [s0;i150;O0;%- [%%2 Finally upload changes to Upp by choosing ][2 Project/SVN/Synchronize
  ...upp/uppbox/uppweb]&]
