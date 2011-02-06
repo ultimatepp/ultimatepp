@@ -19,12 +19,25 @@ class Uniq
 		Thread pollThread;
 #endif
 
+#ifdef PLATFORM_POSIX
 		// send command line to callback handler
 		bool SendCmdLine(int pipe);
 
 		// polling callback -- either threaded or
 		// run by timed callback
 		void pollCb(void);
+
+#else
+
+		// send command line to callback handler
+		bool SendCmdLine(HANDLE pipe);
+
+		// polling callback -- either threaded or
+		// run by timed callback
+		void pollCb(HANDLE pipe);
+
+#endif
+
 	
 	protected:
 	
