@@ -42,13 +42,15 @@ Cerr() << "PIPE CONNECTED\n";
 	// pipe should be connected here... we shall go in blocking
 	// mode and read data from client
 	pipeState = PIPE_READMODE_BYTE | PIPE_WAIT;
-	SetNamedPipeHandleState(
+	if(SetNamedPipeHandleState(
 		pipe, 								// hNamedPipe,
 		&pipeState,							// LPDWORD lpMode,
 		NULL,								// lpMaxCollectionCount,
 		NULL								// lpCollectDataTimeout
-	);
-LOG("PIPE BLOCKING");
+	))
+		LOG("PIPE BLOCKING");
+	else
+		LOG("ERROR BLOCKING PIPE");
 	int p = _open_osfhandle((LONG)pipe, _O_RDONLY);
 	FILE *f = fdopen(p, "r");
 
@@ -132,7 +134,7 @@ Uniq::Uniq()
 	// try to create the pipe, one instance allowed
 	pipe = CreateNamedPipe(
 	  pipePath,													// lpName
-	  PIPE_ACCESS_INBOUND ,										// dwOpenMode,
+	  PIPE_ACCESS_INBOUND,										// dwOpenMode,
 	  PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_NOWAIT,		// dwPipeMode,
 	  1,														// nMaxInstances,
 	  4096,														// nOutBufferSize,
@@ -142,30 +144,25 @@ Uniq::Uniq()
 	);
 	if(pipe == NULL || pipe == INVALID_HANDLE_VALUE)
 	{
-		// error creating the pipe... it should be there already
-		LOG("ERROR CREATING PIPE : " << ErrorMsg(GetLastError()));
-		LOG("THERE SHOULD BE A SERVER WAITING CONNECTIONS...");
-		
-/*
-		LOG("WAITING FOR PIPE, 5 SECONDS");
-		if(!WaitNamedPipe(pipePath, 5000))
+		// try to establish a connection to server
+		// it's not enough to wait for pipe once, another process
+		// could grab it between the wait and the opening
+		for(int i = 0; i < 10; i++)
 		{
-			LOG("TIMEOUT WAITING FOR CLIENT... BAILING OUT");
-			return;
+			if(WaitNamedPipe(pipePath, 500))
+			{
+				pipe = CreateFile(
+					pipePath,
+					GENERIC_WRITE,
+					0, //i.e. No Share
+					NULL,
+					OPEN_EXISTING,
+					FILE_ATTRIBUTE_NORMAL,
+					NULL);
+				if(pipe != NULL && pipe != INVALID_HANDLE_VALUE)
+					break;
+			}
 		}
-*/
-
-		// pipe should be ready for connection, try it
-		LOG("OK, PIPE SHOULD BE THERE.... TRYING TO CONNECT");
-		pipe = CreateFile(
-			pipePath,
-			GENERIC_WRITE,
-			0, //i.e. No Share
-			NULL,
-			OPEN_EXISTING,
-			FILE_ATTRIBUTE_NORMAL,
-			NULL);
-			
 		if(pipe == NULL || pipe == INVALID_HANDLE_VALUE)
 		{
 			LOG("ERROR CONNECTING TO PIPE : " << ErrorMsg(GetLastError()));
@@ -173,15 +170,6 @@ Uniq::Uniq()
 			return;
 		}
 		
-		// we go blocking here
-		DWORD pipeState = PIPE_READMODE_BYTE | PIPE_WAIT;
-		SetNamedPipeHandleState(
-			pipe, 								// hNamedPipe,
-			&pipeState,							// LPDWORD lpMode,
-			NULL,								// lpMaxCollectionCount,
-			NULL								// lpCollectDataTimeout
-		);
-
 		// succesfully connected to server, send command line to him
 		LOG("CONNECTED! SENDING COMMAND LINE....");
 		
@@ -191,8 +179,8 @@ Uniq::Uniq()
 		for(int i = 0; i < CommandLine().GetCount(); i++)
 			fprintf(f, "%s\n", ~CommandLine()[i]);
 		fclose(f);
-		FlushFileBuffers(pipe);
 		_close(p);
+		FlushFileBuffers(pipe);
 		CloseHandle(pipe);
 		LOG("COMMAND LINE SENT AND PIPE FREED");
 	}

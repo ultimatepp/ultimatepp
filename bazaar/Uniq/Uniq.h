@@ -30,6 +30,8 @@ class Uniq
 #else
 
 		HANDLE pipe;
+		OVERLAPPED overlapped;
+		HANDLE event;
 		
 		// send command line to callback handler
 		bool SendCmdLine(void);
