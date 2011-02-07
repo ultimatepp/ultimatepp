@@ -29,12 +29,14 @@ class Uniq
 
 #else
 
+		HANDLE pipe;
+		
 		// send command line to callback handler
-		bool SendCmdLine(HANDLE pipe);
+		bool SendCmdLine(void);
 
 		// polling callback -- either threaded or
 		// run by timed callback
-		void pollCb(HANDLE pipe);
+		void pollCb(void);
 
 #endif
 
