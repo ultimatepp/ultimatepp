@@ -142,8 +142,7 @@ Uniq::Uniq()
 	// so we default for NOT
 	isFirstInstance = false;
 
-//	pipePath = Format("\\\\.\\PIPE\\%s", GetExeTitle());
-	pipePath = "\\\\.\\PIPE\\UNIQTEST";
+	pipePath = Format("\\\\.\\PIPE\\%s", GetExeTitle());
 	
 	// initialize OVERLAP for asynchronous pipe waiting
 	event = CreateEvent( 
