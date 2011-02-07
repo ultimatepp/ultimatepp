@@ -21,79 +21,91 @@ String ErrorMsg(int err)
 	return msg;
 }
 
+// writes a string to a message-mode pipe
+// sending pipe -- blocking mode
+static bool WriteFileString(HANDLE h, String const &s)
+{
+	DWORD written;
+	if(!WriteFile(h, ~s, s.GetCount(), &written, NULL))
+		return false;
+	if(written != s.GetCount())
+		return false;
+	return true;
+}
+
+// reads a string from a message-mode pipe
+static String ReadFileString(HANDLE h)
+{
+	String s;
+	char buf[512];
+	DWORD nread;
+
+	while(true)
+	{
+		bool res = ReadFile(h, buf, 511, &nread, NULL);
+		buf[nread] = 0;
+		if(!res && GetLastError() == ERROR_MORE_DATA)
+			s += buf;
+		else if(res)
+		{
+			s += buf;
+			break;
+		}
+		else
+			break;
+	}
+	return s;
+}
+
 bool Uniq::SendCmdLine(void)
 {
-	char buf[256];
-	Vector<String> v;
-	DWORD pipeState;
-	String resMsg;
-	
-	// we're in non-blocking mode; try to connect pipe
+	// we're in overlapped mode -- wait for a connection to happen
 	// if no client ready, we just wait and repeat
-	int res = ConnectNamedPipe(pipe, NULL);
-	if(res == 0 && GetLastError() != ERROR_PIPE_CONNECTED)
-	{
-		resMsg = ErrorMsg(GetLastError());
-		LOG(resMsg);
+	int res = ConnectNamedPipe(pipe, &overlapped);
+	
+	// res should be 0 in overlapped mode otherwise an error occurred
+	if(res)
 		return false;
-	}
 
-	LOG("PIPE CONNECTED");
-
-	// pipe should be connected here... we shall go in blocking
-	// mode and read data from client
-	pipeState = PIPE_READMODE_BYTE | PIPE_WAIT;
-	if(SetNamedPipeHandleState(
-		pipe, 								// hNamedPipe,
-		&pipeState,							// LPDWORD lpMode,
-		NULL,								// lpMaxCollectionCount,
-		NULL								// lpCollectDataTimeout
-	))
-		LOG("PIPE BLOCKING");
-	else
-		LOG("ERROR BLOCKING PIPE");
-	int p = _open_osfhandle((LONG)pipe, _O_RDONLY);
-	FILE *f = fdopen(p, "r");
-
-	// gets number of elements in vector
-	if(fgets(buf, 256, f))
+	// check what happened to pipe connection
+	bool pending = false;
+	switch(GetLastError())
 	{
-		int count = ScanInt(buf);
-		
-		// get the strings
-		for(int i = 0; i < count; i++)
-		{
-			if(!fgets(buf, 256, f))
-				break;
-			String s = buf;
-			if(s.GetCount() && s[s.GetCount() - 1] == '\n')
-				s = s.Left(s.GetCount() - 1);
-			v.Add(s);
-		}
+		// pipe still not connected, waiting for client
+		case ERROR_IO_PENDING:
+			pending = true;
+			break;	
+	
+		// pipe already connected, sets the event
+		case ERROR_PIPE_CONNECTED: 
+			if (SetEvent(overlapped.hEvent)) 
+				break; 
+			
+		// if none of the above (or SetEvent failed...) an error occurred
+		default:
+			return false;
 	}
-LOG("DATA READ FROM PIPE");
-LOG("Count : " << v.GetCount());
-for(int i = 0; i < v.GetCount(); i++)
-	LOG("Item #" << i << " = " << v[i]);
-	fclose(f);
-//	_close(p);
-LOG("FILE CLOSED");
 	
-	// go in non-blocking mode again
-	pipeState = PIPE_READMODE_BYTE | PIPE_NOWAIT;
-	SetNamedPipeHandleState(
-		pipe, 								// hNamedPipe,
-		&pipeState,							// LPDWORD lpMode,
-		NULL,								// lpMaxCollectionCount,
-		NULL								// lpCollectDataTimeout
-	);
-LOG("PIPE UNBLOCKED");
-	// disconnects from client and wait for new connections
+	// now wait for the connection to succeed, with a timeout of 50 ms
+	// if not connected then, simply return false
+	if(WaitForSingleObject(overlapped.hEvent, 50) != WAIT_OBJECT_0)
+		return false;
+	
+	// gets overlapped result... don't know if needed here, but....
+	DWORD dummy;
+	if(!GetOverlappedResult(pipe, &overlapped, &dummy, true))
+		return false;
+	
+	// ok, we're (finally...) connected to client
+	// just get command line from him
+	Vector<String> v;
+	int count = ScanInt(ReadFileString(pipe));
+	for(int i = 0; i < count; i++)
+		v.Add(ReadFileString(pipe));
+	
+	// disconnects from client
 	DisconnectNamedPipe(pipe);
-	ConnectNamedPipe(pipe, NULL);
 	
-LOG("PIPE DISCONNECTED");
-	// posts the callback to handle new instance's command line
 	PostCallback(callback1(WhenInstance, v));
 	return true;
 }
@@ -134,19 +146,19 @@ Uniq::Uniq()
 	pipePath = "\\\\.\\PIPE\\UNIQTEST";
 	
 	// initialize OVERLAP for asynchronous pipe waiting
-	hEvents[i] = CreateEvent( 
+	event = CreateEvent( 
 		NULL,	// default security attribute 
 		TRUE,	// manual-reset event 
 		TRUE,	// initial state = signaled 
 		NULL	// unnamed event object 
-
-
+	);
+	overlapped.hEvent = event;
 
 	// try to create the pipe, one instance allowed
 	pipe = CreateNamedPipe(
 	  pipePath,													// lpName
-	  PIPE_ACCESS_INBOUND,										// dwOpenMode,
-	  PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_NOWAIT,		// dwPipeMode,
+	  PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,				// dwOpenMode,
+	  PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,	// dwPipeMode,
 	  1,														// nMaxInstances,
 	  4096,														// nOutBufferSize,
 	  4096,														// nInBufferSize,
@@ -155,6 +167,8 @@ Uniq::Uniq()
 	);
 	if(pipe == NULL || pipe == INVALID_HANDLE_VALUE)
 	{
+		// couldn't create pipe -- it already exists on server side
+			
 		// try to establish a connection to server
 		// it's not enough to wait for pipe once, another process
 		// could grab it between the wait and the opening
@@ -162,7 +176,7 @@ Uniq::Uniq()
 		{
 			if(WaitNamedPipe(pipePath, 500))
 			{
-				LOG("WAITNAMEDPIPE SUCCEEDED");
+				// try to open the pipe
 				pipe = CreateFile(
 					pipePath,
 					GENERIC_WRITE ,
@@ -171,12 +185,13 @@ Uniq::Uniq()
 					OPEN_EXISTING,
 					FILE_ATTRIBUTE_NORMAL,
 					NULL);
+					
+				// if opened ok, continue to next step
 				if(pipe != NULL && pipe != INVALID_HANDLE_VALUE)
 					break;
-				else
-					LOG("CREATEFILE FAILED");
 			}
 		}
+		// if still not connected after 50 retries, bail out...
 		if(pipe == NULL || pipe == INVALID_HANDLE_VALUE)
 		{
 			LOG("ERROR CONNECTING TO PIPE : " << ErrorMsg(GetLastError()));
@@ -184,41 +199,27 @@ Uniq::Uniq()
 			return;
 		}
 		
-		// client side should go in blocking mode
-		DWORD ps = PIPE_READMODE_BYTE | PIPE_WAIT;
-		if(SetNamedPipeHandleState(
+		// here we're connected to server
+		// we work in message mode, tell client to do so
+		DWORD ps = PIPE_READMODE_MESSAGE;
+		SetNamedPipeHandleState(
 			pipe, 								// hNamedPipe,
 			&ps,								// LPDWORD lpMode,
 			NULL,								// lpMaxCollectionCount,
 			NULL								// lpCollectDataTimeout
-		))
-			LOG("PIPE BLOCKING");
-		else
-			LOG("ERROR BLOCKING PIPE");
+		);
 		
-		
-		// succesfully connected to server, send command line to him
-		LOG("CONNECTED! SENDING COMMAND LINE....");
-		
-		int p = _open_osfhandle((LONG)pipe, _O_WRONLY);
-		FILE *f = fdopen(p, "w");
-		fprintf(f, "%d\n", CommandLine().GetCount());
+		// now we send command line to main instance
+		WriteFileString(pipe, FormatInt(CommandLine().GetCount()));
 		for(int i = 0; i < CommandLine().GetCount(); i++)
-			fprintf(f, "%s\n", ~CommandLine()[i]);
-		fflush(f);
-		fclose(f);
-//		_close(p);
+			WriteFileString(pipe, CommandLine()[i]);
 		FlushFileBuffers(pipe);
 		CloseHandle(pipe);
-		LOG("COMMAND LINE SENT AND PIPE FREED");
 	}
 	else
 	{
-		// pipe successfully created, connect to it and wait for clients
-		LOG("PIPE CREATED");
-		int res = ConnectNamedPipe(pipe, NULL);
-		LOG("CONNECTNAMEDPIPE RETURNED " << res << " ERROR IS " << ErrorMsg(GetLastError()));
-
+		// pipe created succesfully, we're inside first app instance
+		
 		// remember we're inside first app instance
 		isFirstInstance = true;
 		
@@ -227,7 +228,7 @@ Uniq::Uniq()
 #else
 		// use a 200 ms delayed callback to check if another instance
 		// gave its command line
-		SetTimeCallback(200, THISBACK1(pollCb));
+		SetTimeCallback(200, THISBACK(pollCb));
 #endif
 	}
 
