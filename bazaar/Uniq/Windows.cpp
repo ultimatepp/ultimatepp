@@ -34,10 +34,11 @@ bool Uniq::SendCmdLine(void)
 	if(res == 0 && GetLastError() != ERROR_PIPE_CONNECTED)
 	{
 		resMsg = ErrorMsg(GetLastError());
+		LOG(resMsg);
 		return false;
 	}
 
-Cerr() << "PIPE CONNECTED\n";
+	LOG("PIPE CONNECTED");
 
 	// pipe should be connected here... we shall go in blocking
 	// mode and read data from client
@@ -129,7 +130,17 @@ Uniq::Uniq()
 	// so we default for NOT
 	isFirstInstance = false;
 
-	pipePath = Format("\\\\.\\PIPE\\%s", GetExeTitle());
+//	pipePath = Format("\\\\.\\PIPE\\%s", GetExeTitle());
+	pipePath = "\\\\.\\PIPE\\UNIQTEST";
+	
+	// initialize OVERLAP for asynchronous pipe waiting
+	hEvents[i] = CreateEvent( 
+		NULL,	// default security attribute 
+		TRUE,	// manual-reset event 
+		TRUE,	// initial state = signaled 
+		NULL	// unnamed event object 
+
+
 
 	// try to create the pipe, one instance allowed
 	pipe = CreateNamedPipe(
@@ -151,9 +162,10 @@ Uniq::Uniq()
 		{
 			if(WaitNamedPipe(pipePath, 500))
 			{
+				LOG("WAITNAMEDPIPE SUCCEEDED");
 				pipe = CreateFile(
 					pipePath,
-					GENERIC_WRITE,
+					GENERIC_WRITE ,
 					0, //i.e. No Share
 					NULL,
 					OPEN_EXISTING,
@@ -161,6 +173,8 @@ Uniq::Uniq()
 					NULL);
 				if(pipe != NULL && pipe != INVALID_HANDLE_VALUE)
 					break;
+				else
+					LOG("CREATEFILE FAILED");
 			}
 		}
 		if(pipe == NULL || pipe == INVALID_HANDLE_VALUE)
@@ -170,6 +184,19 @@ Uniq::Uniq()
 			return;
 		}
 		
+		// client side should go in blocking mode
+		DWORD ps = PIPE_READMODE_BYTE | PIPE_WAIT;
+		if(SetNamedPipeHandleState(
+			pipe, 								// hNamedPipe,
+			&ps,								// LPDWORD lpMode,
+			NULL,								// lpMaxCollectionCount,
+			NULL								// lpCollectDataTimeout
+		))
+			LOG("PIPE BLOCKING");
+		else
+			LOG("ERROR BLOCKING PIPE");
+		
+		
 		// succesfully connected to server, send command line to him
 		LOG("CONNECTED! SENDING COMMAND LINE....");
 		
@@ -178,8 +205,9 @@ Uniq::Uniq()
 		fprintf(f, "%d\n", CommandLine().GetCount());
 		for(int i = 0; i < CommandLine().GetCount(); i++)
 			fprintf(f, "%s\n", ~CommandLine()[i]);
+		fflush(f);
 		fclose(f);
-		_close(p);
+//		_close(p);
 		FlushFileBuffers(pipe);
 		CloseHandle(pipe);
 		LOG("COMMAND LINE SENT AND PIPE FREED");
