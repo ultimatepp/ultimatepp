@@ -78,4 +78,6 @@ invocation; the right approach is :&]
 [s0;l160; [*/ -|][/ <some code here>]&]
 [s0;l160; [/ -|][*/ OBFUSCATE`_END`_FUNC;]&]
 [s0;l160; [/ -|return;]&]
-[s0; ]
+[s0; &]
+[s0; A note : [* OBFUSCATE`_START`_FUNC ]is, by now, [* NOT ]thread safe, 
+so [* DON`'T] obfuscate multithreaded routines.]

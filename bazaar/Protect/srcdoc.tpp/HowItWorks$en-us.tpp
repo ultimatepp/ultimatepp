@@ -975,5 +975,8 @@ or the return statement [/ inside ]the macro couple :&]
 [s0;l160; [*/ -|][/ return i;]&]
 [s0;l160; [/ -|][*/ PROTECT`_END`_FUNC;]&]
 [s0; &]
+[s0; A note : [* PROTECT`_START`_FUNC ]encryption [* IS ]thread safe, 
+so you can encrypt multithreaded routines.&]
+[s0; &]
 [s0; On next chapter we`'ll introduce another kind of copy protection 
 tool named [^topic`:`/`/Protect`/srcdoc`/Obfuscation`$en`-us^ obfuscation].]
