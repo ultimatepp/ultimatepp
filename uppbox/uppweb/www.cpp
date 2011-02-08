@@ -734,7 +734,7 @@ GUI_APP_MAIN
 	String release = "2791"; 
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
-	escape.Add("UPDATETIME", Format("%`", GetSysTime()));
+	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
 	
 	if (doSvn) {
 		GetSvnList(svndata, rootdir);
