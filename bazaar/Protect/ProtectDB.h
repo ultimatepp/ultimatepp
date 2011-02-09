@@ -47,6 +47,9 @@ class ProtectDB
 		bool Disconnect(void);
 		bool IsConnected(void) { return connected; }
 		
+		// refresh connection
+		bool RefreshConnection(void);
+		
 		// get data -- email is the key -- non repeatable
 		VectorMap<String, Value>Get(String const &mail);
 		

@@ -48,10 +48,33 @@ bool ProtectDB::Disconnect(void)
 	return true;
 }
 
+// refresh connection
+bool ProtectDB::RefreshConnection(void)
+{
+	if(!connected)
+		return false;
+	if(!session.IsOpen())
+	{
+		if(!session.Connect(userName, password, dbName, host))
+		{
+			connected = false;
+			return false;
+		}
+	}
+	return true;
+}
+		
 // get data -- email is the key -- non repeatable
 VectorMap<String, Value> ProtectDB::Get(String const &mail)
 {
 	VectorMap<String, Value> res = Default();
+	
+	if(!RefreshConnection())
+	{
+		Cerr() << "SQL Error -- Session expired\n";
+		res.Clear();
+		return res;
+	}
 	
 	SQL * Select(SqlAll()).From(USERS).Where(EMAIL == mail);
 	if(SQL.WasError())
@@ -77,6 +100,12 @@ VectorMap<String, Value> ProtectDB::Get(String const &mail)
 // set/append data
 bool ProtectDB::Set(VectorMap<String, Value> const &d)
 {
+	if(!RefreshConnection())
+	{
+		Cerr() << "SQL Error -- Session expired\n";
+		return false;
+	}
+	
 	String eMail = d.Get("EMAIL");
 	
 	// fill missing fields with default values
