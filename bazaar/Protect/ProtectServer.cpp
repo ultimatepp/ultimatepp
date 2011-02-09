@@ -652,14 +652,24 @@ bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData,
 	}
 	else
 		body.Replace(String("%ACTIVATIONKEY%"), key);
-	body.Replace("%USER%", userData.Get("NAME"));
-	subject.Replace("%USER%", userData.Get("NAME"));
+
+	String user = userData.Get("NAME");
+	if(user == "")
+		user = userData.Get("EMAIL");
+	body.Replace(String("%USER%"), user);
+	subject.Replace(String("%USER%"), user);
+	
+	String mime;
+	if(body.Find("<HTML>") >= 0 || body.Find("<html>") >= 0)
+		mime = "text/html";
+	else
+		mime = "text/plain";
 
 	smtp.New();
 	smtp.To(userData.Get("EMAIL"));
 	smtp.Subject(subject);
 	smtp.From(serverVars.Get("SERVER_NAME"));
-	smtp.Text(body);
+	smtp.Text(body, mime);
 	return smtp.Send();
 }
 
