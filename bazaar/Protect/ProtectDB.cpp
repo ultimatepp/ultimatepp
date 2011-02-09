@@ -54,12 +54,22 @@ VectorMap<String, Value> ProtectDB::Get(String const &mail)
 	VectorMap<String, Value> res = Default();
 	
 	SQL * Select(SqlAll()).From(USERS).Where(EMAIL == mail);
+	if(SQL.WasError())
+	{
+		Cerr() << "SQL Error : " << session.GetErrorCodeString() << "\n";
+		res.Clear();
+		return res;
+	}
 	// we've unique key, so...
 	if(SQL.Fetch())
 		for(int i = 0; i < res.GetCount(); i++)
 			res[i] = SQL[res.GetKey(i)];
 	else
+	{
+		Cerr() << "ProtectDB::Get(\"" << mail << "\") failed\n"; 
 		res.Clear();
+		return res;
+	}
 		
 	return res;
 }
@@ -75,6 +85,7 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 	SQL * Select(SqlAll()).From(USERS).Where(EMAIL == eMail);
 	if(SQL.Fetch())
 	{
+		Cerr() << "Updating record for e-mail " << eMail << "\n";
 		SQL * Update(USERS)
 			(NAME					, data.Get("NAME"))
 			(ADDRESS				, data.Get("ADDRESS"))
@@ -97,6 +108,7 @@ bool ProtectDB::Set(VectorMap<String, Value> const &d)
 	}
 	else
 	{
+		Cerr() << "Inserting record for e-mail " << eMail << "\n";
 		SQL * Insert(USERS)
 			(EMAIL					, eMail)
 			(NAME					, data.Get("NAME"))
