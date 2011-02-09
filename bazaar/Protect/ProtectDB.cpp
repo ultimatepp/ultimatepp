@@ -51,19 +51,10 @@ bool ProtectDB::Disconnect(void)
 // refresh connection
 bool ProtectDB::RefreshConnection(void)
 {
-	if(!connected)
-		return false;
-	if(!session.IsOpen())
-	{
-		if(!session.Connect(userName, password, dbName, host))
-		{
-			connected = false;
-			return false;
-		}
-	}
-	return true;
+	Disconnect();
+	return Connect();
 }
-		
+
 // get data -- email is the key -- non repeatable
 VectorMap<String, Value> ProtectDB::Get(String const &mail)
 {
@@ -76,12 +67,26 @@ VectorMap<String, Value> ProtectDB::Get(String const &mail)
 		return res;
 	}
 	
-	SQL * Select(SqlAll()).From(USERS).Where(EMAIL == mail);
-	if(SQL.WasError())
+	for(int i = 0; i < 2; i++)
 	{
-		Cerr() << "SQL Error : " << session.GetErrorCodeString() << "\n";
-		res.Clear();
-		return res;
+		SQL * Select(SqlAll()).From(USERS).Where(EMAIL == mail);
+		if(SQL.WasError())
+		{
+			Cerr() << "Trying to refresh connection...\n";
+			if(!RefreshConnection())
+			{
+				Cerr() << "SQL Error : " << session.GetErrorCodeString() << "\n";
+				res.Clear();
+				return res;
+			}
+			else
+			{
+				Cerr() << "Refresh ok, retrying\n";
+				continue;
+			}
+		}
+		else
+			break;
 	}
 	// we've unique key, so...
 	if(SQL.Fetch())
@@ -100,18 +105,32 @@ VectorMap<String, Value> ProtectDB::Get(String const &mail)
 // set/append data
 bool ProtectDB::Set(VectorMap<String, Value> const &d)
 {
-	if(!RefreshConnection())
-	{
-		Cerr() << "SQL Error -- Session expired\n";
-		return false;
-	}
-	
 	String eMail = d.Get("EMAIL");
 	
 	// fill missing fields with default values
 	VectorMap<String, Value>data = Default(d);
 	
-	SQL * Select(SqlAll()).From(USERS).Where(EMAIL == eMail);
+
+	for(int i = 0; i < 2; i++)
+	{
+		SQL * Select(SqlAll()).From(USERS).Where(EMAIL == eMail);
+		if(SQL.WasError())
+		{
+			Cerr() << "Trying to refresh connection...\n";
+			if(!RefreshConnection())
+			{
+				Cerr() << "SQL Error : " << session.GetErrorCodeString() << "\n";
+				return false;
+			}
+			else
+			{
+				Cerr() << "Refresh ok, retrying\n";
+				continue;
+			}
+		}
+		else
+			break;
+	}
 	if(SQL.Fetch())
 	{
 		Cerr() << "Updating record for e-mail " << eMail << "\n";
