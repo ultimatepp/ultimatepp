@@ -1,8 +1,8 @@
-topic "GSoC 2010 experience";
+topic "GSoC 2010 Experience";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
-[s1;#b0; [R6 GSoC 2010 experience]&]
+[s1;#b0; [R6 GSoC 2010. The Experience]&]
 [s1;#b0;2 &]
 [s0;# [2 2010 has been the first time we have tried to apply to GSoC. 
 It was a nice effort finally not successful, but there are things 

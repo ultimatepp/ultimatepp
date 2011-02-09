@@ -1,9 +1,9 @@
-topic "Google Summer of Code 2010";
+topic "Google Summer of Code 2010 Ideas";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,2#27457433418004101424360058862402:Caption]
 [b50;2 $$2,2#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s1;#b0; [R6 Google Summer of Code Ideas]&]
+[s1;#b0; [R6 Google Summer of Code 2010. Ideas]&]
 [s1;#b0; &]
 [s1;#b0; Introduction&]
 [s0;2 &]
