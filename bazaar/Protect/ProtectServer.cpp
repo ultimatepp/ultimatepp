@@ -286,6 +286,12 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 	String eMail;
 	String activationKey;
 	int numConnections;
+
+	String locale;
+	if(v.Find("LOCALE") >= 0)
+		locale = v.Get("LOCALE");
+	else
+		locale = "EN-US";
 	
 	switch(reason)
 	{
@@ -303,7 +309,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 					res.Add("ERROR", PROTECT_INVALID_EMAIL);
 					return res;
 				}
-				
+
 				// avoid hacking of source packet stripping eventually
 				// added licenseinfo, expiration, etc
 				VectorMap<String, Value>vs(v, 1);
@@ -337,7 +343,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 					
 					// send the activation mail to user
 					userRec = db.Get(eMail);
-					if(SendActivationMail(userRec))
+					if(SendActivationMail(userRec, locale))
 						res.Add("STATUS", "ACTIVATION RESENT");
 					else
 						res.Add("ERROR", PROTECT_MAIL_SEND_ERROR);
@@ -354,7 +360,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 				{
 					// already registered but still not activated
 					// resend activation mail
-					if(SendActivationMail(userRec))
+					if(SendActivationMail(userRec, locale))
 						res.Add("STATUS", "ACTIVATION RESENT");
 					else
 						res.Add("ERROR", PROTECT_MAIL_SEND_ERROR);
@@ -397,15 +403,15 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			if(v.Find("ACTIVATIONKEY") < 0)
 			{
 				res.Add("ERROR", PROTECT_MISSING_ACTIVATIONKEY);
-				SendActivationMail(userRec);
+				SendActivationMail(userRec, locale);
 				return res;
 			}
-			
+
 			// check for activation key correctness
 			if(v.Get("ACTIVATIONKEY") != userRec.Get("ACTIVATIONKEY"))
 			{
 				res.Add("ERROR", PROTECT_BAD_ACTIVATIONKEY);
-				SendActivationMail(userRec);
+				SendActivationMail(userRec, locale);
 				return res;
 			}
 			
@@ -627,10 +633,11 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 }
 
 // sends activation mail to user
-bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData)
+bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData, String const &locale)
 {
-	String body = welcomeBody;
-	String subject = welcomeSubject;
+	int lang = LNGFromText(locale);
+	String body = GetLngString(lang, welcomeBody);
+	String subject = GetLngString(lang, welcomeSubject);
 	String key = userData.Get("ACTIVATIONKEY");
 	
 	// if no activation key field inside body, add it at end

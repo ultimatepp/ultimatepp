@@ -92,7 +92,7 @@ class ProtectServer : public ScgiServer
 		String appKey;
 		
 		// sends activation mail to user
-		bool SendActivationMail(VectorMap<String, Value> const &userData);
+		bool SendActivationMail(VectorMap<String, Value> const &userData, String const &locale);
 
 public:
 
