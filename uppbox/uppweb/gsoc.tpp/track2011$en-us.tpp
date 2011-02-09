@@ -11,7 +11,7 @@ and status.]&]
 [s0;%- &]
 [ {{10000<192;>224;f0;g0;^l4/67r4/50t4/25b4/25@(240)R(140) [s0;= [*2 Contents]]
 ::t/50b/50@2 [s0;#b17;a17;ph [*2 1. ][*^topic`:`/`/uppweb`/gsoc`/experience2010`$en`-us^2 2010 
-application experience][2 . We applied to 2010 without success. 
+Application Experience][2 . We applied to 2010 without success. 
 Here there are the lessons learned.]&]
 [s0;#b17;a17;ph [*2 2. Purpose][2 . Purpose and guide of next year application 
 and participation.]&]
@@ -45,12 +45,18 @@ spending their valuable time.]&]
 [s0;%- &]
 [ {{1441:8559f0;g0;^t/25b4/25@7 [s0;# [*2 Date]]
 :: [s0;# [*2 Landmark]]
-::b0/25@2 [s0;# [2 TBD]]
-:: [s0;#2 ]}}&]
+::b0/25@2 [s0;# [2 Summer 2010]]
+:: [s0;# [2 To develop a Tutoring Plan to get more satisfied users and 
+to train tutors to be in a future GSoC mentors]]}}&]
 [s0;%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
 [s0;*2 &]
 [ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/03/30]]
 :: [s0;# [2 The effort has begun. GSoC pages have been defined ready to 
-be plenty of useful information.]]}}&]
+be plenty of useful information.]]
+:: [s0;# [2 2010/07/12]]
+:: [s0;# [2 Tutoring Plan has begun today. It is a new and exciting experience. 
+It will help to broad U`+`+ user and developer base and let more 
+people know why we like U`+`+ smart C`+`+ and why you all U`+`+ 
+supporters are great!.]]}}&]
 [s0; ]

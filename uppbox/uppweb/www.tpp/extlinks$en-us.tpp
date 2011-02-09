@@ -49,7 +49,11 @@ to Ultimate`+`+`")]&]
 and other GUI Libraries]&]
 [s0;i150;a17;O0; [2 WxWidgets: ][^http`:`/`/wiki`.wxwidgets`.org`/WxWidgets`_Compared`_To`_Other`_Toolkits^2 W
 xWidgets Compared To Other Toolkits]&]
-[s0; &]
+[s0;i150;O0; [^http`:`/`/dsource`.org^2 D Language][2 : ][^http`:`/`/dsource`.org`/projects`/aa`/wiki`/ArrayIndex^2 K
+eyIndex and KeyValueIndex templates][2 . They propose a new associative 
+array implementation for D language based on the ideas of U`+`+ 
+Index container.]&]
+[s0;2 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Just a joke :`-)]]}}&]
 [s0;2 &]
 [s0;i150;O0; [^http`:`/`/www`.thesuperfantastics`.com^2 The Superfantastics][2  

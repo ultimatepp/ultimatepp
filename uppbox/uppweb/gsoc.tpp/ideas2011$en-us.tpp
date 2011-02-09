@@ -1,13 +1,13 @@
-topic "Google Summer of Code";
+topic "Google Summer of Code 2011 Ideas";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,2#27457433418004101424360058862402:Caption]
 [b50;2 $$2,2#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s1;#b0; [R6 Google Summer of Code Ideas]&]
+[s1;#b0; [R6 GSoC 2011. Ideas]&]
 [s1;#b0; &]
 [s1;#b0; Introduction&]
 [s0;2 &]
-[s0; [2 Google Summer of Code 2010 has been announced and this year 
+[s0; [2 Google Summer of Code 2011 has been announced and this year 
 Ultimate`+`+ project really wants to participate as a mentoring 
 organization. ]&]
 [s0;2 &]
@@ -22,90 +22,16 @@ also like to hear your ideas.]&]
 rum][2 , discuss with the community these ideas and your proposals 
 adding your personal touches.]&]
 [s0;2 &]
-[s0; [2 To prepare your proposal it is worth referencing a nice link 
-in ][^http`:`/`/gcc`.gnu`.org`/wiki`/SummerOfCode^2 Gcc][2  from 
-a how`-to in ][^http`:`/`/drupal`.org`/node`/59037^2 Drupal][2  project.]&]
-[s0;2 &]
 [s0; [2 This list is a work`-in`-progress. You can follow discussions 
 in ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
 [s0;2 &]
 [s1; Project Ideas&]
-[s0;# &]
-[s0;# [* U`+`+ port to KDE]&]
-[s0;# &]
-[s0;# [*2 Difficulty]&]
-[s0;# [2 High.]&]
-[s0;#2 &]
-[s0;# [*2 Experience required]&]
-[s0;# [2 U`+`+, Qt.]&]
-[s0;#2 &]
-[s0;# [*2 Description]&]
-[s0;# [2 The goal is to provide a library which wraps Qt theming API 
-and draw U`+`+ widgets using it.]&]
-[s0;# [2 Right now U`+`+ is using gtk`+ theming API which make applications 
-look ugly under KDE and gtk`+ libs have to be available in order 
-for application to run.]&]
-[s0;# [2 This library will make U`+`+ non`-dependent on a theming API 
-but rather selecting proper theming engine at runtime so application 
-look will be changed based on running context `- KDE(Qt based) 
-or Gnome(gtk`+ based). If Qt or gtk`+ do not exist and user have 
-only X11 server U`+`+ will use its own theming API for drawing 
-widgets.]&]
-[s0;#2 &]
-[s0;# [*2 We propose you this roadmap]&]
-[s0;#i150;O0; [2 Learning to work in GNU/Linux U`+`+]&]
-[s0;#i150;O0; [2 Analyzing Gtk`+ theming in U`+`+]&]
-[s0;#i150;O0; [2 Applying the right patches to use Qt properly in KDE 
-environments]&]
-[s0;#2 &]
-[s0;#2 &]
-[s0;# [* SVG parser]&]
-[s0;# &]
-[s0;# [*2 Difficulty]&]
-[s0;# [2 Medium.]&]
-[s0;#2 &]
-[s0;# [*2 Experience required]&]
-[s0;# [2 U`+`+, SVG.]&]
-[s0;#2 &]
-[s0;# [*2 Description]&]
-[s0;# [2 Scalable vector graphics (SVG) is a format that describes 
-2D vectorial graphics. U`+`+ `"Painter`" package includes an 
-antialiased renderer class enough versatile to implement main 
-SVG requirements. However there is only a small SVG parser implementation 
-included in Bazaar/PainterSvg package. The goal would be to implement 
-a state of the art SVG parser.]&]
-[s0;#2 &]
-[s0;# [*2 We propose you this roadmap]&]
-[s0;#i150;O0; [2 Reviewing PainterSvg package including U`+`+ antialiased 
-rendering and Xml parser and generator]&]
-[s0;#i150;O0; [2 SVG is a standard but not all the implementations 
-are the same, We should have to look which are going to be our 
-standards, including a set of test cases. We will define different 
-project landmarks related to them.]&]
-[s0;#2 &]
-[s0;#2 &]
-[s0;# [* Video Player Control]&]
-[s0;# &]
-[s0;# [*2 Difficulty]&]
-[s0;# [2 Medium.]&]
-[s0;#2 &]
-[s0;# [*2 Skills]&]
-[s0;# [2 U`+`+, ffmpeg, sdl, gcc/mingw compiling infrastructure.]&]
-[s0;#2 &]
-[s0;# [*2 Description]&]
-[s0;# [2 This control would integrate ffmpeg video decoding and sdl 
-to visualize video files.]&]
-[s0;#2 &]
-[s0;# [*2 We propose you this roadmap]&]
-[s0;i150;O0; [2 Learning to work in U`+`+ and SDL]&]
-[s0;i150;O0; [2 Learning to work with DHCtrl]&]
-[s0;i150;O0; [2 Ffmpeg and ffplay are easy to compile alone. You should 
-have to integrate them into a U`+`+ project. There is an excellent 
-reference ][^http`:`/`/ffmpeg`.arrozcru`.org`/wiki`/index`.php`?title`=Main`_Page^2 h
-ere]&]
-[s0;# &]
-[s0;# &]
+[s0;#* &]
 [s0;# [* Web Browser Control]&]
+[s0;# &]
+[s0;# [*2 Proposed by]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 High.]&]
@@ -117,6 +43,10 @@ ere]&]
 [s0;# [2 This control would integrate a web browser into a control. 
 Possibly the best option would be to use webkit.]&]
 [s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár]&]
+[s0;#2 &]
 [s0;# [*2 We propose you this roadmap]&]
 [s0;#i150;O0; [2 Learning to work in U`+`+ with DHCtrl]&]
 [s0;#i150;O0; [2 Integrate Webkit in a U`+`+ project inside a DHCtrl 
@@ -125,6 +55,10 @@ derived class]&]
 [s0;#2 &]
 [s0;# [* U`+`+ as a library]&]
 [s0;# &]
+[s0;# [*2 Proposed by]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
+ei Natanael]&]
+[s0;#*2 &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 High]&]
 [s0;#2 &]
@@ -132,8 +66,8 @@ derived class]&]
 [s0;# [2 U`+`+, MSC, gcc/mingw compiling infrastructure.]&]
 [s0;#2 &]
 [s0;# [*2 Description]&]
-[s0;# [2 U`+`+ is actually more than a C`+`+ library as it cannot be 
-integrated easily in projects not developed in the U`+`+ ide 
+[s0;# [2 U`+`+ is actually more than a C`+`+ library. However it cannot 
+be integrated easily in projects not developed in the U`+`+ ide 
 TheIde.]&]
 [s0;# [2 The goal would be to develop U`+`+ as a library using TheIde 
 as a resource editor only.]&]
@@ -143,12 +77,42 @@ as pure library (or set of libraries).]&]
 [s0;# [2 Create a special mode of TheIDE so that it can be used as 
 resource editor only.]&]
 [s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
+ei Natanael]&]
+[s0;#2 &]
 [s0;# [*2 We propose you this roadmap]&]
 [s0;#i150;O0; [2 Study U`+`+ TheIde compiling strategy]&]
 [s0;#i150;O0; [2 Defining and developing the changes in U`+`+ to make 
 projects using make or Visual Studio]&]
 [s0;#i150;O0; [2 Changing TheIde to work with external projects as 
 a resource editor]&]
+[s0;#2 &]
+[s0;#2 &]
+[s0;# [* Selecting theme engine at runtime]&]
+[s0;# &]
+[s0;# [*2 Proposed by]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
+ei Natanael]&]
+[s0;#2 &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 TBD]&]
+[s0;#2 &]
+[s0;# [*2 Experience required]&]
+[s0;# [2 TBD]&]
+[s0;#2 &]
+[s0;# [*2 Description]&]
+[s0;# [2 A .so file which provide theming for KDE and another for Gnome 
+`- part of that will be solved by my GSoC application `- if user 
+doesn`'t have any DM based on gtk/qt then U`+`+ style will be 
+used.]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
+ei Natanael]&]
+[s0;#2 &]
+[s0;# [*2 We propose you this roadmap]&]
+[s0;# [2 TBD]&]
 [s0;#2 &]
 [s1; Project requirements&]
 [s0;# &]

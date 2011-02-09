@@ -1,8 +1,8 @@
-topic "Google Summer of Code manual";
+topic "Google Summer of Code 2010 Manual";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
-[s1;#b0; [R6 Google Summer of Code manual]&]
+[s1;#b0; [R6 Google Summer of Code 2010. Manual]&]
 [s1;#b0;2 &]
 [s0; [2 You like to know something about GSoC. There is a lot of resources 
 in web but you need a place to begin with. Here we have included 

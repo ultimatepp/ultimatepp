@@ -812,7 +812,7 @@ page]&]
 [s0;i150;a17;O0;%% [2 New development ideas]&]
 [s0;l160;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Current 
 topics]&]
-[s0;l160;i150;a17;O0;%% [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 GSoC 
+[s0;l160;i150;a17;O0;%% [^topic`:`/`/uppweb`/gsoc`/ideas2011`$en`-us^2 GSoC 
 ideas]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0; ]
 :: [s0; ]
@@ -852,7 +852,7 @@ untu packages]&]
 ::l/25r0/25t0/15b0/15@2R0 [s0; ]
 ::l8/25t8/25b8/25@(240)R(165) [s0;%% [*2 Supporting U`+`+]]
 ::l0/25r8/25 [s0;>%% [@(114)2 Sometimes more than code is needed...]]
-::l8/25@2-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/gsoc`/gsoc`$en`-us^2 Google 
+::l8/25@2-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^2 Google 
 Summer of Code resources]]
 ::l0/25r0/25t0/15b0/15R0 [s0; ]
 :: [s0; ]
