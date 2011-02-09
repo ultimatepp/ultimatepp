@@ -661,9 +661,9 @@ bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData,
 	
 	String mime;
 	if(body.Find("<HTML>") >= 0 || body.Find("<html>") >= 0)
-		mime = "text/html";
+		mime = "text/html; charset=utf-8";
 	else
-		mime = "text/plain";
+		mime = "text/plain; charset=utf-8";
 
 	smtp.New();
 	smtp.To(userData.Get("EMAIL"));

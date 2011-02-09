@@ -82,6 +82,9 @@ VectorMap<String, Value> ProtectClient::SendMap(VectorMap<String, Value> const &
 	VectorMap<String, Value>dataMap(v, 1);
 	dataMap.Add("APPID", "ProtectClient");
 	
+	// add current locale
+	dataMap.Add("LOCALE", LNGAsText(GetCurrentLanguage()).Left(5));
+	
 	// sets cypher key (and create a random IV)
 	cypher->SetKey(communicationKey);
 	
