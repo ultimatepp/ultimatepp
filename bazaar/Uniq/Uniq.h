@@ -20,6 +20,10 @@ class Uniq
 #endif
 
 #ifdef PLATFORM_POSIX
+		// lock file to test for pipe existence
+		String lockPath;
+		int lockFile;
+
 		// send command line to callback handler
 		bool SendCmdLine(int pipe);
 

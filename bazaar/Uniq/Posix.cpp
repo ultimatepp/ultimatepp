@@ -93,15 +93,36 @@ Uniq::Uniq()
 	isFirstInstance = false;
 
 	pipePath = Format("/tmp/%s_%d_UNIQ", GetExeTitle(), (int64)getuid());
+	lockPath = Format("/tmp/%s_%d_UNIQ_LCK", GetExeTitle(), (int64)getuid());
+	
+	// we check first if the lock file is there AND locked by main instance
+	// if it is, we're on a secondary instance; if not, we're main
+	if(FileExists(lockPath))
+	{
+		// lock file does exist, try to open and lock it
+		lockFile = open(lockPath, O_RDWR);
+		struct flock fl;
+		fl.l_type = F_WRLCK;
+		fl.l_whence = SEEK_SET;
+		fl.l_start = 0;
+		fl.l_len = 0;
+		int lock = fcntl(lockFile, F_SETLK, &fl);
+		close(lockFile);
+		if(lock != -1)
+		{
+			// we could lock the file, it was a stray pipe
+			// so we remove both
+			unlink(lockPath);
+			unlink(pipePath);
+		}
+	}
 	
 	// try to open pipe for write; if succeed, pipe is there
 	// so we're on a new app instance
 	int p = open(pipePath, O_WRONLY /* | O_NDELAY */);
 	if(p != -1)
 	{
-		// pipe already there, should write command line to it and leave
-		// the O_NDELAY is to be sure tha we don't block if active instance
-		// exits on the way
+		// pipe already there, we should write command line to it and leave
 		FILE *f = fdopen(p, "w");
 		fprintf(f, "%d\n", CommandLine().GetCount());
 		for(int i = 0; i < CommandLine().GetCount(); i++)
@@ -112,9 +133,24 @@ Uniq::Uniq()
 	else
 	{
 		// pipe doesn't exist, create it and allow writing for other processes
+		// we also create the lock file
 		if(mkfifo(pipePath, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH))
 		{
 			Cerr() << "Error creating interprocess pipe\n";
+			exit(1);
+		}
+		lockFile = open(lockPath, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+		struct flock fl;
+		fl.l_type = F_WRLCK;
+		fl.l_whence = SEEK_SET;
+		fl.l_start = 0;
+		fl.l_len = 0;
+		int lock = fcntl(lockFile, F_SETLK, &fl);
+		if(lock == -1)
+		{
+			Cerr() << "Error locking lock file\n";
+			unlink(pipePath);
+			unlink(lockPath);
 			exit(1);
 		}
 
@@ -142,6 +178,8 @@ Uniq::~Uniq()
 		Thread::ShutdownThreads();
 		pollThread.Wait();
 #endif
+		close(lockFile);
+		unlink(lockPath);
 		unlink(pipePath);
 	}
 }
