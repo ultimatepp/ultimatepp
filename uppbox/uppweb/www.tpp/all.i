@@ -162,14 +162,6 @@ TOPIC("Funding$ru-ru")
 #include "Funding$ru-ru.tppi"
 END_TOPIC
 
-TOPIC("gsoc$en-us")
-#include "gsoc$en-us.tppi"
-END_TOPIC
-
-TOPIC("gsoc2010$en-us")
-#include "gsoc2010$en-us.tppi"
-END_TOPIC
-
 TOPIC("helpus$en-us")
 #include "helpus$en-us.tppi"
 END_TOPIC
