@@ -143,6 +143,7 @@ class ProtectClient
 		ProductVersion GetCurrentVersion(void)		{ return currentVersion; }
 		ProductVersion GetMaxAllowedVersion(void)	{ return maxAllowedVersion; }
 		String GetActivationKey(void)				{ LoadConfig(); return activationKey; }
+		Time GetExpireTime(void)					{ return expireTime; }
 };
 
 END_UPP_NAMESPACE

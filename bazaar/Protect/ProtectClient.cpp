@@ -292,7 +292,7 @@ bool ProtectClient::GetLicenseInfo(void)
 	if(res.Find("PHONE") >= 0)			userPhone			= res.Get("PHONE");
 	if(res.Find("FAX") >= 0)			userFax				= res.Get("FAX");
 	if(res.Find("CELL") >= 0)			userCell			= res.Get("CELL");
-	if(res.Find("EXPIRETIME") >= 0)		expireTime			= res.Get("EXPIRETIME");
+	if(res.Find("EXPIRATION") >= 0)		expireTime			= res.Get("EXPIRATION");
 	if(res.Find("NUMLICENSES") >= 0)	numLicenses			= res.Get("NUMLICENSES");
 	if(res.Find("ALLOWEDVERSION") >=0)	maxAllowedVersion	= res.Get("ALLOWEDVERSION");
 
