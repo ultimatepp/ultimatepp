@@ -150,6 +150,7 @@ using namespace Upp;
 #define _OBFUSCATE_KEYPLACER	__asm _emit 0x00 __asm _emit 0x01 __asm _emit 0x02 __asm _emit 0x03 __asm _emit 0x04 __asm _emit 0x05 __asm _emit 0x06 __asm _emit 0x07 __asm _emit 0x08 __asm _emit 0x09
 
 #ifdef flagMT
+#define PROTECT_START_FUNC(decrFunc) \
 	static volatile bool __decrypted = false; \
 	INTERLOCKED \
 	{ \
