@@ -22,6 +22,10 @@ TOPIC("manual2010$en-us")
 #include "manual2010$en-us.tppi"
 END_TOPIC
 
+TOPIC("student2011$en-us")
+#include "student2011$en-us.tppi"
+END_TOPIC
+
 TOPIC("track2011$en-us")
 #include "track2011$en-us.tppi"
 END_TOPIC
