@@ -1,5 +1,7 @@
-LAYOUT(WithEnterActionTestLayout, 200, 100)
+LAYOUT(WithEnterActionTestLayout, 200, 124)
 	ITEM(EditString, edrd, SetEditable(false).HSizePosZ(8, 8).TopPosZ(36, 19))
-	ITEM(EditString, ed2, LeftPosZ(8, 184).TopPosZ(72, 19))
+	ITEM(EditString, ed2, HSizePosZ(8, 8).TopPosZ(72, 19))
+	ITEM(EditInt, ei, LeftPosZ(128, 64).BottomPosZ(5, 19))
+	ITEM(StaticText, dv___3, SetText(t_("WhenAction calls #:")).LeftPosZ(8, 116).TopPosZ(100, 19))
 END_LAYOUT
 

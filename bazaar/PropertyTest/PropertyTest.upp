@@ -1,0 +1,14 @@
+description "simple example how to use Property\377";
+
+uses
+	CtrlLib,
+	Property;
+
+file
+	PropertyTest.h,
+	main.cpp,
+	PropertyTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

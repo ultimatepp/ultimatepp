@@ -27,24 +27,11 @@ void RefreshLayoutDeepAll()
 		vc[i]->RefreshLayoutDeep();
 }
 
-void StylerCtrl::ColorizedSkin()
+void ChStylerSkin(const Color& c, int blnd, const Color& fg, const Color& bg)
 {
-	Color c  = ~mcl;
-	int blnd = ~bl;
-	Color fg = ~fgcl;
-	Color bg = ~bgcl;
-	
 	ChStdSkin();
 	ColorizeIml(CtrlsImg::Iml(), StylerCtrlsImg::Iml(), c, 255);
 
-	if(Grayscale(fg)<Grayscale(bg))
-	{
-		dk <<= true;
-	}
-	else
-	{
-		dk <<= false;
-	}
 
 		SColorFace_Write(Blend(c, fg, blnd)); //controls face color
 		SColorShadow_Write(Blend(c, bg, blnd));
@@ -59,7 +46,6 @@ void StylerCtrl::ColorizedSkin()
 
 		SColorHighlightText_Write(Blend(c, fg, blnd+60));
 
-
 	SColorLight_Write(SColorHighlight());
 
 	SColorMenu_Write(SColorPaper());
@@ -71,6 +57,25 @@ void StylerCtrl::ColorizedSkin()
 	SColorLabel_Write(SColorText());
 	LabelBoxTextColor_Write(SColorText());
 	LabelBoxColor_Write(SColorHighlight());
+}
+
+void StylerCtrl::ColorizedSkin()
+{
+	Color c  = ~mcl;
+	int blnd = ~bl;
+	Color fg = ~fgcl;
+	Color bg = ~bgcl;
+
+	if(Grayscale(fg)<Grayscale(bg))
+	{
+		dk <<= true;
+	}
+	else
+	{
+		dk <<= false;
+	}
+
+	ChStylerSkin(c, blnd, fg, bg);
 }
 
 void StylerCtrl::SkinAction()
@@ -125,7 +130,7 @@ void StylerCtrl::InvertAction()
 	bgcl <<= bg;
 	mcl  <<= c;
 
-	UpdateAction();
+	SkinAction();
 }
 
 void StylerCtrl::Updated()
@@ -178,6 +183,7 @@ void ChamStyleCtrl::Updated()
 
 	clmenu <<= SColorMenu();
 	clmenutext <<= SColorMenuText();
+	clmenumark <<= SColorMenuMark();
 	clinfo <<= SColorInfo();
 	clinfotext <<= SColorInfoText();
 	clmark <<= SColorMark();
@@ -203,6 +209,7 @@ void ChamStyleCtrl::ColorAction()
 
 	SColorMenu_Write(~clmenu);
 	SColorMenuText_Write(~clmenutext);
+	SColorMenuMark_Write(~clmenumark);
 	SColorInfo_Write(~clinfo);
 	SColorInfoText_Write(~clinfotext);
 	SColorMark_Write(~clmark);
@@ -218,6 +225,8 @@ void ChamStyleCtrl::ColorAction()
 ChamStyleCtrl::ChamStyleCtrl()
 {
 	CtrlLayout(*this);
+	load <<= THISBACK(LoadCB);
+	save <<= THISBACK(SaveCB);
 	
 	clface <<= THISBACK(ColorAction);
 	clshadow <<= THISBACK(ColorAction);
@@ -232,6 +241,7 @@ ChamStyleCtrl::ChamStyleCtrl()
 
 	clmenu <<= THISBACK(ColorAction);
 	clmenutext <<= THISBACK(ColorAction);
+	clmenumark <<= THISBACK(ColorAction);
 	clinfo <<= THISBACK(ColorAction);
 	clinfotext <<= THISBACK(ColorAction);
 	clmark <<= THISBACK(ColorAction);
@@ -241,3 +251,141 @@ ChamStyleCtrl::ChamStyleCtrl()
 	 
 	Update();	
 }
+
+void ChamStyleCtrl::SaveCB()
+{
+	FileSel fs;
+	if(!fs.ExecuteSaveAs("Save global colors")) return;
+	
+	PerChStyle d;
+	StoreAsXMLFile(d, "style", fs.Get());	
+	
+	//StoreToFile(d, fs.Get());
+}
+
+void ChamStyleCtrl::LoadCB()
+{
+	FileSel fs;
+	if(!fs.ExecuteOpen("Save global colors")) return;
+
+	ChReset();
+
+	PerChStyle d;
+	LoadFromXMLFile(d, fs.Get());
+	//LoadFromFile(d, fs.Get());
+
+	Update();
+	RefreshGlobalStyles();
+	RefreshLayoutDeepAll();
+	Action();
+}
+
+//
+void XmlizeCol(XmlIO xml, const String& tag, Color& c)
+{
+	if(xml.IsStoring())
+	{
+		if(!c.IsNullInstance()) xml(tag, c);
+	}
+	if(xml.IsLoading())
+	{
+		int i = xml->FindTag(tag);
+		if(i>=0) { ::Xmlize(xml.At(i), c); }
+	}
+}
+
+#define XMLIZECOL(TAG, SCOL) \
+	if(xml.IsStoring()) \
+		XmlizeCol(xml, TAG, c = SCOL()); \
+	if(xml.IsLoading()) \
+	{ \
+		c = Null; \
+		XmlizeCol(xml, TAG, c); if(!c.IsNullInstance()) COMBINE(SCOL, _Write)(c); \
+	} \
+ \
+
+
+NAMESPACE_UPP
+template<> Stream& operator%(Stream& s, PerChStyle& o)
+{
+	Vector<Color> vc;
+	
+	if(s.IsStoring())
+	{
+		vc 
+		<< SColorFace()
+		<< SColorShadow()
+		<< SColorLtFace()
+		<< SColorDkShadow()
+		<< SColorHighlight()
+		<< SColorDisabled()
+		<< SColorPaper()
+		<< SColorText()
+		<< SColorHighlightText()
+		<< SColorLight()
+	
+		<< SColorMenu()
+		<< SColorMenuText()
+		<< SColorMenuMark()
+		<< SColorInfo()
+		<< SColorInfoText()
+		<< SColorMark()
+		<< SColorLabel()
+		<< LabelBoxTextColor()
+		<< LabelBoxColor()
+		;
+	}
+	s % vc;
+	if(s.IsLoading())
+	{
+		int i = 0;
+		SColorFace_Write(vc[i++]);
+		SColorShadow_Write(vc[i++]);
+		SColorLtFace_Write(vc[i++]);
+		SColorDkShadow_Write(vc[i++]);
+		SColorHighlight_Write(vc[i++]);
+		SColorDisabled_Write(vc[i++]);
+		SColorPaper_Write(vc[i++]);
+		SColorText_Write(vc[i++]);
+		SColorHighlightText_Write(vc[i++]);
+		SColorLight_Write(vc[i++]);
+	
+		SColorMenu_Write(vc[i++]);
+		SColorMenuText_Write(vc[i++]);
+		SColorMenuMark_Write(vc[i++]);
+		SColorInfo_Write(vc[i++]);
+		SColorInfoText_Write(vc[i++]);
+		SColorMark_Write(vc[i++]);
+		SColorLabel_Write(vc[i++]);
+		LabelBoxTextColor_Write(vc[i++]);
+		LabelBoxColor_Write(vc[i++]);				
+	}
+	return s;
+}
+
+template<> void Xmlize(XmlIO xml, PerChStyle& o)
+{
+	Color c;
+
+	XMLIZECOL("face", SColorFace)
+	XMLIZECOL("shadow", SColorShadow)
+	XMLIZECOL("ltface", SColorLtFace)
+	XMLIZECOL("dkshadow", SColorDkShadow)
+	XMLIZECOL("highlight", SColorHighlight)
+	XMLIZECOL("disabled", SColorDisabled)
+	XMLIZECOL("paper", SColorPaper)
+	XMLIZECOL("text", SColorText)
+	XMLIZECOL("highlighttext", SColorHighlightText)
+	XMLIZECOL("light", SColorLight)
+	
+	XMLIZECOL("menu", SColorMenu)
+	XMLIZECOL("menutext", SColorMenuText)
+	XMLIZECOL("menumark", SColorMenuMark)
+	XMLIZECOL("info", SColorInfo)
+	XMLIZECOL("infotext", SColorInfoText)
+	XMLIZECOL("mark", SColorMark)
+	XMLIZECOL("label", SColorLabel)
+	XMLIZECOL("labelboxtext", LabelBoxTextColor)
+	XMLIZECOL("labelbox", LabelBoxColor)
+}
+END_UPP_NAMESPACE

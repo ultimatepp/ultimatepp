@@ -11,8 +11,6 @@ using namespace Upp;
 
 #include <Gen/Gen.h>
 
-VectorMap<String, int> BidirProps(Ctrl& c);
-
 #define LAYOUTFILE <CtrlProp/CtrlPropEdit.lay>
 #include <CtrlCore/lay.h>
 
@@ -52,9 +50,11 @@ public:
 	virtual void Clear();
 	virtual void Restore();
 
-public:
 	void OnUpdateRow();
+
+protected:
 	ArrayMap<String, Tuple2<bool, Value> > vsav;
+	AccessorMap am;
 };
 
 class PropEdit : public PopUpC

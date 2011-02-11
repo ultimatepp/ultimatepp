@@ -1,3 +1,5 @@
+description "example how to move Ctrl in live environment using CtrlMover\377";
+
 uses
 	CtrlLib,
 	CtrlMover;

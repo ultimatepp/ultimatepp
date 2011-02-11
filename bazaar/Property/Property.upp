@@ -1,0 +1,7 @@
+uses
+	CtrlLib;
+
+file
+	"Property.h",
+	"Property.cpp";
+

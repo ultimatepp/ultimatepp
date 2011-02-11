@@ -1,18 +1,19 @@
-#include "CtrlProp.h"
+#include "CtrlPropCommon.h"
 #include <CtrlLib/CtrlLib.h>
 
 //SliderCtrl
 
-bool PropSetMin(SliderCtrl& o, const Value& v) { if(!IsNumber(v)) return false; o.MinMax(v, o.GetMax()); return true; }
-bool PropGetMin(const SliderCtrl& o, Value& v) { v = o.GetMin(); return true; }
-bool PropSetMax(SliderCtrl& o, const Value& v) { if(!IsNumber(v)) return false; o.MinMax(o.GetMin(), v); return true; }
-bool PropGetMax(const SliderCtrl& o, Value& v) { v = o.GetMax(); return true; }
-bool PropSetStep(SliderCtrl& o, const Value& v) { if(!IsNumber(v)) return false; o.Step(v); return true; }
-bool PropGetStep(const SliderCtrl& o, Value& v) { v = o.GetStep(); return true; }
+bool PropSetMin(const Value& v, SliderCtrl& o) { if(!IsNumber(v)) return false; o.MinMax(v, o.GetMax()); return true; }
+bool PropGetMin(Value& v, const SliderCtrl& o) { v = o.GetMin(); return true; }
+bool PropSetMax(const Value& v, SliderCtrl& o) { if(!IsNumber(v)) return false; o.MinMax(o.GetMin(), v); return true; }
+bool PropGetMax(Value& v, const SliderCtrl& o) { v = o.GetMax(); return true; }
+bool PropSetStep(const Value& v, SliderCtrl& o) { if(!IsNumber(v)) return false; o.Step(v); return true; }
+bool PropGetStep(Value& v, const SliderCtrl& o) { v = o.GetStep(); return true; }
 
-CTRL_PROPERTIES(SliderCtrl, Ctrl)
+PROPERTIES(SliderCtrl, Ctrl)
 PROPERTY("min", PropSetMin, PropGetMin)
 PROPERTY("max", PropSetMax, PropGetMax)
 PROPERTY("step", PropSetStep, PropGetStep)
-END_CTRL_PROPERTIES
+END_PROPERTIES
 
+PROPS(Ctrl, SliderCtrl, Ctrl)

@@ -1,30 +1,28 @@
 #include "CtrlPropCommon.h"
 
-void AddToValueArray(Value& v, const Vector<String>& k)
+VectorMap<String, int> BidirProps(Ctrl& c)
 {
-	if(!v.Is<ValueArray>()) 
+	VectorMap<String, int> is;
+
+	Value vs;
+	Props<Ctrl>::Get(c, "listset", vs);
+	if(!vs.Is<ValueArray>()) return is;
+	ValueArray vas = vs;
+	for(int i = 0; i < vas.GetCount(); i++)
 	{
-		v = ValueArray(Vector<Value>());
+		int& m = is.GetAdd(vas.Get(i), 0);
+		m |= 1;
 	}
-	ValueArray va = v;
-	Vector<Value>& vv = const_cast<Vector<Value>&>(va.Get());
-	for(int i = 0; i < k.GetCount(); i++)
-		vv << k[i];
+
+	Value vg;
+	Props<Ctrl>::Get(c, "listget", vg);
+	if(!vg.Is<ValueArray>()) return is;
+	ValueArray vag = vg;
+	for(int i = 0; i < vag.GetCount(); i++)
+	{
+		int& m = is.GetAdd(vag.Get(i), 0);
+		m |= 2;
+	}
+
+	return is;
 }
-
-bool GetSetPropRecurseDone(Ctrl& c, const String& p, Value& v, int f) { return false; }
-
-VectorMap<String, ParamHandler>& pmap()
-{
-	static VectorMap<String, ParamHandler> _;
-	return _;
-}
-
-bool Property(Ctrl& c, const String& p, Value& v, int f)
-{
-	int i = pmap().Find(String(typeid(c).name()));
-	if(i<0) i = pmap().Find(String(typeid(Ctrl).name()));
-	if(i<0) return false;
-	return pmap()[i](c,p,v,f);
-}
-

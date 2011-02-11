@@ -1,8 +1,11 @@
 #include "WithEnterActionTest.h"
 
+static int ii = 0;
+
 void WithEnterActionTest::Change()
 {
 	edrd <<= ~ed;
+	ei <<= ++ii;
 }
 
 void WithEnterActionTest::Change2()
@@ -13,7 +16,7 @@ void WithEnterActionTest::Change2()
 WithEnterActionTest::WithEnterActionTest()
 {
 	CtrlLayout(*this, "Window title");
-	Add(ed.HSizePos(10,10).TopPos(10,20));
+	Add(ed.HSizePos(8,8).TopPos(10,20));
 	ed <<= THISBACK(Change);
 	ed2 <<= THISBACK(Change2);
 	

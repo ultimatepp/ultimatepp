@@ -1,3 +1,5 @@
+description "change Ctrl LogPos in a live environment\377";
+
 uses
 	Core,
 	Gen,

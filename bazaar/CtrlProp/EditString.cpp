@@ -1,0 +1,20 @@
+#include "CtrlPropCommon.h"
+#include <CtrlLib/CtrlLib.h>
+
+bool PropSetMaxLen(const Value& v, EditString& o) { if(!IsNumber(v)) return false; o.MaxLen(v); return true; }
+bool PropGetMaxLen(Value& v, const EditString& o) { v = o.GetMaxLength(); return true; }
+bool PropSetTrimLeft(const Value& v, EditString& o) { if(!IsNumber(v)) return false; o.TrimLeft(v); return true; }
+bool PropGetTrimLeft(Value& v, const EditString& o) { v = o.IsTrimLeft(); return true; }
+bool PropSetTrimRight(const Value& v, EditString& o) { if(!IsNumber(v)) return false; o.TrimRight(v); return true; }
+bool PropGetTrimRight(Value& v, const EditString& o) { v = o.IsTrimRight(); return true; }
+bool PropSetNotNull(const Value& v, EditString& o) { if(!IsNumber(v)) return false; o.NotNull(v); return true; }
+bool PropGetNotNull(Value& v, const EditString& o) { v = o.IsNotNull(); return true; }
+
+PROPERTIES(EditString, EditField)
+PROPERTY("maxlen", PropSetMaxLen, PropGetMaxLen)
+PROPERTY("trimleft", PropSetTrimLeft, PropGetTrimLeft)
+PROPERTY("trimrigth", PropSetTrimRight, PropGetTrimRight)
+PROPERTY("notnull", PropSetNotNull, PropGetNotNull)
+END_PROPERTIES
+
+PROPS(Ctrl, EditString, EditField)

@@ -1,0 +1,23 @@
+#include "CtrlPropCommon.h"
+#include <CtrlLib/CtrlLib.h>
+
+bool PropSetBlackEdge(const Value& v, Option& o) { if(!IsNumber(v)) return false; o.BlackEdge(v); return true; }
+bool PropGetBlackEdge(Value& v, const Option& o) { v = o.IsBlackEdge(); return true; }
+bool PropSetSwitchImage(const Value& v, Option& o) { if(!IsNumber(v)) return false; o.SwitchImage(v); return true; }
+bool PropGetSwitchImage(Value& v, const Option& o) { v = o.IsSwitchImage(); return true; }
+bool PropSetThreeState(const Value& v, Option& o) { if(!IsNumber(v)) return false; o.ThreeState(v); return true; }
+bool PropGetThreeState(Value& v, const Option& o) { v = o.IsThreeState(); return true; }
+bool PropSetShowLabel(const Value& v, Option& o) { if(!IsNumber(v)) return false; o.ShowLabel(v); return true; }
+bool PropGetShowLabel(Value& v, const Option& o) { v = o.IsShowLabel(); return true; }
+bool PropSetNotNull(const Value& v, Option& o) { if(!IsNumber(v)) return false; o.NotNull(v); return true; }
+bool PropGetNotNull(Value& v, const Option& o) { v = o.IsNotNull(); return true; }
+
+PROPERTIES(Option, Pusher)
+PROPERTY("blackedge", PropSetBlackEdge, PropGetBlackEdge)
+PROPERTY("switchimage", PropSetSwitchImage, PropGetSwitchImage)
+PROPERTY("threestate", PropSetThreeState, PropGetThreeState)
+PROPERTY("showlabel", PropSetShowLabel, PropGetShowLabel)
+PROPERTY("notnull", PropSetNotNull, PropGetNotNull)
+END_PROPERTIES
+
+PROPS(Ctrl, Option, Pusher)

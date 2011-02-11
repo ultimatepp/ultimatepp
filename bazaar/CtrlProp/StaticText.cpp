@@ -1,0 +1,17 @@
+#include "CtrlPropCommon.h"
+#include <CtrlLib/CtrlLib.h>
+
+bool PropSetInk(const Value& v, StaticText& o) { if(!v.Is<Color>()) return false; o.SetInk(v); return true; }
+bool PropGetInk(Value& v, const StaticText& o) { v = o.GetInk(); return true; }
+bool PropSetText(const Value& v, StaticText& o) { o.SetText(AsString(v)); return true; }
+bool PropGetText(Value& v, const StaticText& o) { v = o.GetText(); return true; }
+bool PropSetAlign(const Value& v, StaticText& o) { if(!IsNumber(v)) return false; o.SetAlign(v); return true; }
+bool PropGetAlign(Value& v, const StaticText& o) { v = o.GetAlign(); return true; }
+
+PROPERTIES(StaticText, Ctrl)
+PROPERTY("ink", PropSetInk, PropGetInk)
+PROPERTY("text", PropSetText, PropGetText)
+PROPERTY("align", PropSetAlign, PropGetAlign)
+END_PROPERTIES
+
+PROPS(Ctrl, StaticText, Ctrl)

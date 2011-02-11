@@ -1,0 +1,29 @@
+#include "CtrlPropCommon.h"
+#include <CtrlLib/CtrlLib.h>
+
+bool PropSetPassword(const Value& v, EditField& o) { if(!IsNumber(v)) return false; o.Password(v); return true; }
+bool PropGetPassword(Value& v, const EditField& o) { v = o.IsPassword(); return true; }
+bool PropSetAutoFormat(const Value& v, EditField& o) { if(!IsNumber(v)) return false; o.AutoFormat(v); return true; }
+bool PropGetAutoFormat(Value& v, const EditField& o) { v = o.IsAutoFormat(); return true; }
+bool PropSetClickSelect(const Value& v, EditField& o) { if(!IsNumber(v)) return false; o.ClickSelect(v); return true; }
+bool PropGetClickSelect(Value& v, const EditField& o) { v = o.IsClickSelect(); return true; }
+bool PropSetInitCaps(const Value& v, EditField& o) { if(!IsNumber(v)) return false; o.InitCaps(v); return true; }
+bool PropGetInitCaps(Value& v, const EditField& o) { v = o.IsInitCaps(); return true; }
+bool PropSetMaxChars(const Value& v, EditField& o) { if(!IsNumber(v)) return false; o.MaxChars(v); return true; }
+bool PropGetMaxChars(Value& v, const EditField& o) { v = o.GetMaxChars(); return true; }
+bool PropSetNoBackground(const Value& v, EditField& o) { if(!IsNumber(v)) return false; o.NoBackground(v); return true; }
+bool PropGetNoBackground(Value& v, const EditField& o) { v = o.IsNoBackground(); return true; }
+bool PropSetAlignRight(const Value& v, EditField& o) { if(!IsNumber(v)) return false; o.AlignRight(v); return true; }
+bool PropGetAlignRight(Value& v, const EditField& o) { v = o.IsAlignRight(); return true; }
+
+PROPERTIES(EditField, Ctrl)
+PROPERTY("password", PropSetPassword, PropGetPassword)
+PROPERTY("autoformat", PropSetAutoFormat, PropGetAutoFormat)
+PROPERTY("clickselect", PropSetClickSelect, PropGetClickSelect)
+PROPERTY("initcaps", PropSetInitCaps, PropGetInitCaps)
+PROPERTY("maxchars", PropSetMaxChars, PropGetMaxChars)
+PROPERTY("nobackground", PropSetNoBackground, PropGetNoBackground)
+PROPERTY("alignright", PropSetAlignRight, PropGetAlignRight)
+END_PROPERTIES
+
+PROPS(Ctrl, EditField, Ctrl)

@@ -86,29 +86,29 @@ void CtrlPropTest::Test()
 
 	ei.Tip("Tooltip for this one");
 
-	b = SetProperty(ei, "data", 10);
+	b = Props<Ctrl>::Set(ei, "data", 10);
 	RLOG(b);
 
 	Value v;
-	b = GetProperty(ei, "data", v);
+	b = Props<Ctrl>::Get(ei, "data", v);
 	RLOG(b << v);
 	
-	b = SetProperty(ei, "min", -100);
+	b = Props<Ctrl>::Set(ei, "min", -100);
 	RLOG(b);
-	b = SetProperty(ei, "max", 100);
+	b = Props<Ctrl>::Set(ei, "max", 100);
 	RLOG(b);
 	
-	b = GetProperty(ei, "min", v);
+	b = Props<Ctrl>::Get(ei, "min", v);
 	RLOG(b << v);
-	b = GetProperty(ei, "max", v);
+	b = Props<Ctrl>::Get(ei, "max", v);
 	RLOG(b << v);
 	
 	v = Value();
-	b = GetProperty(ei, "listset", v);
+	b = Props<Ctrl>::Get(ei, "listset", v);
 	RLOG(b << v);
 	
 	v = Value();
-	b = GetProperty(ei, "listget", v);
+	b = Props<Ctrl>::Get(ei, "listget", v);
 	RLOG(b << v);
 	
 	ValueArray va = v;
@@ -117,7 +117,16 @@ void CtrlPropTest::Test()
 		String s = va.Get(i);
 		RLOG(s);
 		v = Value();
-		b = GetProperty(ei, s, v);
+		b = Props<Ctrl>::Get(ei, s, v);
 		RLOG(v << "\n");
 	}
+	
+	//other method
+	
+	AccessorMap am;
+	b = Props<Ctrl>::SetupAccessorMap(ei, am);
+	
+	b = am.Get("password").set(true);
+	v = Value();
+	b = am.Get("enable").get(v);	
 }

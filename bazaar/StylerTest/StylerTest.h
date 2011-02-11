@@ -26,6 +26,9 @@ public:
 	void ReloadChamCB();
 	void ReloadCB();
 	void Menu(Bar& bar);
+	
+	void InitDummys();
+	void ApplyOwnStyle();
 
 	Array<Ctrl> arc;
 	StylerCtrl sc;

@@ -4,9 +4,71 @@
 #define IMAGEFILE <StylerTest/StylerTest.iml>
 #include <Draw/iml_source.h>
 
+static Color SColorEditPaper = LtRed;
+static Color SColorEditText = Yellow;
+static Color SColorEditHighlight = Yellow;
+static Color SColorEditHighlightText = Blue;
+
+static Color SColorButtonFace = LtRed;
+static Color SColorButtonText = Blue;
+
+static Color SColorSpinButtonMonoColor = LtRed;
+static Color SColorSpinButtonMonoColorh = White;
+static Color SColorSpinButtonMonoColorp = LtBlue;
+static Color SColorSpinButtonMonoColord = LtYellow;
+
+CH_LOCSTYLE(EditField, Style, EditFieldStyleDFM)
+{
+	paper = SColorEditPaper;
+	disabled = SColorFace();
+	focus = paper;
+	invalid = Blend(paper, Color(255, 0, 0), 32);
+	text = SColorEditText;
+	textdisabled = SColorDisabled;
+	selected = SColorEditHighlight;
+	selectedtext = SColorEditHighlightText;
+	for(int i = 0; i < 4; i++)
+		edge[i] = CtrlsImg::EFE();
+	activeedge = false;
+	vfm = 2;
+}
+
+CH_LOCSTYLE(Button, Style, ButtonStyleDFM)
+{
+	look[0] = SColorButtonFace;
+	look[1] = SColorFace();
+	look[2] = LtBlue();
+	look[3] = LtYellow();
+//	CtrlsImageLook(look, StylerTestImg::I_B);
+	
+//	monocolor[0] = monocolor[1] = monocolor[2] = monocolor[3] =
+//		Blend(Blend(SColorHighlight, SColorShadow), SColorLabel, 80);
+	monocolor[0] = SColorSpinButtonMonoColor;
+	monocolor[1] = SColorSpinButtonMonoColorh;
+	monocolor[2] = SColorSpinButtonMonoColorp;
+	monocolor[3] = SColorSpinButtonMonoColord;
+
+	textcolor[0] = textcolor[1] = textcolor[2] = SColorButtonText;
+	textcolor[3] = SColorDisabled();
+	font = StdFont();
+	pressoffset = Point(0, 0);
+	focusmargin = 3;
+	overpaint = 0;
+	transparent = true;
+}
+
+CH_LOCSTYLE(SpinButtons, Style, SpinButtonStyleDFM)
+{
+	inc = dec = ButtonStyleDFM();
+	CtrlsImageLook(inc.look, CtrlsImg::I_EB, CtrlsImg::SpU(), inc.monocolor);
+	CtrlsImageLook(dec.look, CtrlsImg::I_EB, CtrlsImg::SpD(), dec.monocolor);
+	width = 12;
+}
+
 void StylerTest::ReloadChamCB()
 {
-	chc.Update();	
+	chc.Update();
+	ApplyOwnStyle();	
 }
 
 void StylerTest::ReloadCB()
@@ -20,14 +82,47 @@ void StylerTest::Menu(Bar& bar)
 	bar.Add(false, "Refresh(dis)", CtrlImg::help(), THISBACK(ReloadCB));
 }
 
+void StylerTest::ApplyOwnStyle()
+{
+	return;
+	//recalculate own colors
+	ChFinish();
+	
+	EditField::Style& stef = EditField::StyleDefault().Write();
+	stef = EditFieldStyleDFM();
+
+	{
+	Button::Style& stbt = Button::StyleNormal().Write();
+	stbt = ButtonStyleDFM();
+	}
+
+	SpinButtons::Style& stspbt = SpinButtons::StyleDefault().Write();
+	stspbt = SpinButtonStyleDFM();
+
+	RefreshGlobalStyles();
+	RefreshLayoutDeepAll();
+}
+
 StylerTest::StylerTest()
 {
 	CtrlLayout(*this, "Window title");
+	Sizeable().Zoomable();
 
-	Add(sc.LeftPos(0,200).BottomPos(0,200));
 	sc <<= THISBACK(ReloadChamCB);
+	Add(sc.LeftPos(0,200).BottomPos(0,200));
 
+	chc <<= THISBACK(ApplyOwnStyle);
 	Add(chc.RightPos(0,400).BottomPos(0,200));
+
+	InitDummys();
+	b.SetStyle(ButtonStyleDFM());
+
+	ApplyOwnStyle();
+}
+
+void StylerTest::InitDummys()
+{
+	//dummys
 
 	mbar.Set( THISBACK( Menu ) );
 	tool.Set( THISBACK( Menu ) );
@@ -35,8 +130,6 @@ StylerTest::StylerTest()
 	AddFrame(mbar);
 	AddFrame(tool);
 	AddFrame(stbar);
-
-	//dummys
 
 	bo.SetLabel("But.Opt.");
 	
@@ -76,6 +169,19 @@ StylerTest::StylerTest()
 	ac.Add(23.8, "servus");
 	ac.Add("foo", true);
 	ac.Add("bar", "lee");
+	ac.Add(23.8, "servus");
+	ac.Add("foo", true);
+	ac.Add("bar", "lee");
+	ac.Add(23.8, "servus");
+	ac.Add("foo", true);
+	ac.Add("bar", "lee");
+	ac.Add(23.8, "servus");
+	ac.Add("foo", true);
+	ac.Add("bar", "lee");
+
+	StringStream s;
+	Color cl;
+	s % cl;
 
 	sl <<= 0;
 	
@@ -113,6 +219,7 @@ StylerTest::StylerTest()
 	tb.Add(arc.Add(new EditString()).SizePos(),"First");
 	tb.Add(arc.Add(new EditString()).SizePos(),"Second");
 	tb.Add(arc.Add(new EditString()).SizePos(),"Third");
+	
 }
 
 GUI_APP_MAIN

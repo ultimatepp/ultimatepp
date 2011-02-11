@@ -1,32 +1,5 @@
 #include "CtrlPropEdit.h"
 
-VectorMap<String, int> BidirProps(Ctrl& c)
-{
-	VectorMap<String, int> is;
-
-	Value vs;
-	GetProperty(c, "listset", vs);
-	if(!vs.Is<ValueArray>()) return is;
-	ValueArray vas = vs;
-	for(int i = 0; i < vas.GetCount(); i++)
-	{
-		int& m = is.GetAdd(vas.Get(i), 0);
-		m |= 1;
-	}
-
-	Value vg;
-	GetProperty(c, "listget", vg);
-	if(!vg.Is<ValueArray>()) return is;
-	ValueArray vag = vg;
-	for(int i = 0; i < vag.GetCount(); i++)
-	{
-		int& m = is.GetAdd(vag.Get(i), 0);
-		m |= 2;
-	}
-
-	return is;
-}
-
 PropListCtrl::PropListCtrl()
 {
 	CtrlLayout(*this);
@@ -41,13 +14,13 @@ void PropListCtrl::Reload()
 	bool b;
 	String t;
 
-	b = GetProperty(e, "listset", v);
+	b = Props<Ctrl>::Get(e, "listset", v);
 	ValueArray vs = v;
 	t << "Set Properties: (" << vs.GetCount() << ")\n" << v;
 	gl.SetData(t);
 
 	v = Value();
-	b = GetProperty(e, "listget", v);
+	b = Props<Ctrl>::Get(e, "listget", v);
 	t.Clear();
 	ValueArray vg = v;
 	t << "Get Properties: (" << vg.GetCount() << ")\n";
@@ -56,8 +29,8 @@ void PropListCtrl::Reload()
 		{
 			String s = vg.Get(i);
 			Value v;
-			t << "{" << s << "} = ";
-			b = GetProperty(e, s, v);
+			t << s << " = ";
+			b = Props<Ctrl>::Get(e, s, v);
 			if(b) t << v;
 			else t << "##ERR##";
 			t << "\n";
@@ -97,28 +70,28 @@ void PropEditCtrl::Visit(Ctrl& e)
 	V::Visit(e);
 
 	ac.Clear();
-	vsav.Clear();	
+	vsav.Clear();
+	am.Clear();	
 
-	VectorMap<String, int> is = BidirProps(e);
-	
+	bool b = Props<Ctrl>::SetupAccessorMap(e, am);
+	if(!b) return;
+
 	int k = 0;
-	for(int i = 0; i < is.GetCount(); i++)
+	for(int i = 0; i < am.GetCount(); i++)
 	{
-		String tag = is.GetKey(i);
-		int& m = is[i];
+		String tag = am.GetKey(i);
+		ValueAccessor& a = am[i];
 
 		Value v;
-		if(m&2)
+		if(a.get)
 		{
-			if(!GetProperty(e, tag, v))
+			if(!a.get(v))
 				continue;
 		}
 		ac.Set(k, 0, tag);
-		ac.Set(k, 1, v); //forwarded to controls
-	
-		switch(m)
-		{
-			case 3: //bidir
+		ac.Set(k, 1, v); //forwarded to controls when specified
+
+		if(a.get && a.set)	
 			{
 				Tuple2<bool, Value>& tv = vsav.Add(tag);
 				tv.a = false;
@@ -135,13 +108,13 @@ void PropEditCtrl::Visit(Ctrl& e)
 					}
 				}
 				else pc = new ValueCtrl();
-				pc->WhenAction = THISBACK(OnUpdateRow);
+				(*pc) <<= THISBACK(OnUpdateRow);
 
 				ac.SetCtrl(k, 1, pc); //owned
 				++k;
 			}
-				break;
-			case 2: //getter only
+		else
+		if(a.get)
 			{
 				StaticText* pc = new StaticText();
 				pc->SetText(AsString(v));
@@ -149,21 +122,17 @@ void PropEditCtrl::Visit(Ctrl& e)
 				ac.SetCtrl(k, 1, pc); //owned
 				++k;
 			}
-				break;
-			case 1: //setter only
+		else
+		if(a.set)
 			{
 				//FIXME needs to know which type
 				//meanwhile, we let user choose
 				ValueCtrl* pc = new ValueCtrl();
-				pc->WhenAction = THISBACK(OnUpdateRow);
+				(*pc) <<= THISBACK(OnUpdateRow);
 
 				ac.SetCtrl(k, 1, pc); //owned
 				++k;
 			}
-				break;
-			default:
-				break;
-		}
 	}
 	ac.Layout();
 	//ac.UpdateRefresh();
@@ -183,7 +152,9 @@ void PropEditCtrl::Reload()
 	for(int i = 0; i < ac.GetCount(); i++)
 	{
 		Value v;
-		if(!GetProperty(e, ac.Get(i, 0), v)) continue;
+		int ii = am.Find(ac.Get(i, 0));
+		if(ii<0) continue;
+		if(!am[ii].get(v)) continue;
 		ac.Set(i, 1, v);
 	}
 }
@@ -192,7 +163,9 @@ void PropEditCtrl::OnUpdateRow()
 {
 	if(IsEmpty()) return;
 	if(!ac.IsCursor()) return; //FIXME Option Focus issue 
-	SetProperty(Get(), ac.Get(0), ac.Get(1));
+	int ii = am.Find(ac.Get(0));
+	if(ii<0) return;
+	am[ii].set(ac.Get(1));
 	vsav.GetAdd(ac.Get(0)).a = true; //dirty
 	Action();
 	Get().UpdateActionRefresh();
@@ -204,10 +177,13 @@ void PropEditCtrl::Restore()
 	{
 		for(int i = 0; i < vsav.GetCount(); i++)
 			if(vsav[i].a)
-				SetProperty(Get(), vsav.GetKey(i), vsav[i].b);
+			{
+				int ii = am.Find(vsav.GetKey(i));
+				if(ii<0) continue;
+				am[ii].set(vsav[i].b);				                 
+			}
 	}
 }
-
 
 PropEdit::PropEdit()
 {
