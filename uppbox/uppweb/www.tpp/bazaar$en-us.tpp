@@ -19,8 +19,8 @@ like to get any additional feature or improvement, please go
 to ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar 
 Support][2 .]&]
 [s0;2 &]
-[s0; [2 All packages and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 B
-SD license][2 .]&]
+[s0; [2 All packages and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 N
+ew BSD license][2 .]&]
 [s0;2 &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 1. Bazaar Pages]]}}&]

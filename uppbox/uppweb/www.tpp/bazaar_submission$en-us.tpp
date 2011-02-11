@@ -210,8 +210,8 @@ in one year it will be considered as `"Not Maintained`".]&]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 6. Package License]]}}&]
 [s0;2%- &]
-[s0; [2 All packages, documents and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 B
-SD license][2 .]&]
+[s0; [2 All packages, documents and code in Bazaar are under ][^topic`:`/`/ide`/app`/About`$en`-us^2 N
+ew BSD license][2 .]&]
 [s0;2 &]
 [s0;# [2 All software, documents or other media attached to the package 
 like plugins should have to follow the same or a similar license. 
