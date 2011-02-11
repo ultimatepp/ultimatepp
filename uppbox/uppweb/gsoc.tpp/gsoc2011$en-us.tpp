@@ -11,13 +11,14 @@ Summer of Code (GSoC).]&]
 [ {{10000<192;>192;f0;g0;^l4/67r4/50t4/25b4/25@(240)R(165) [s0;= [*2 Contents]]
 ::t/50b/50@2 [s0;#b17;a17;ph [*2 1. Manual][2 . All you need if you want to know about 
 GSoC. ][/@(153)2 To come ...]&]
-[s0;#b17;a17;ph [*2 2. Student page.][2  If you are a student and want 
-to stay with us this will interest you. ][/@(153)2 To come ...]&]
+[s0;#b17;a17;ph [*2 2. ][*^topic`:`/`/uppweb`/gsoc`/student2011`$en`-us^2 Student 
+page][*2 .][2  If you are a student and want to stay with us this 
+will interest you.]&]
 [s0;#b17;a17;ph [*2 3. ][*^topic`:`/`/uppweb`/gsoc`/ideas2011`$en`-us^2 Ideas][2 . 
 Proposals for GSoC projects]&]
 [s0;#b17;a17;ph [*2 4. Application][2 . ][/@(128)2 To come ...]&]
 [s0;#b17;a17;ph [*2 5. Previous Participations][2 . U`+`+ participation 
 in previous years]&]
-[s0;#i150;b17;a17;phO0; [^topic`:`/`/uppweb`/gsoc`/gsoc2010`$en`-us^2 GSoC 
+[s0;#l96;i150;b17;a17;phO0; [^topic`:`/`/uppweb`/gsoc`/gsoc2010`$en`-us^2 GSoC 
 2010]]}}&]
 [s0; ]
