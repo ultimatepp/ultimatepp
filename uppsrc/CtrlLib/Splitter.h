@@ -59,7 +59,6 @@ public:
 	Splitter& Horz(Ctrl& left, Ctrl& right);
 	Splitter& Vert()                               { vert = true; Layout(); return *this; }
 	Splitter& Horz()                               { vert = false; Layout(); return *this; }
-	Splitter& BarWidth(int w);
 	bool      IsHorz() const                       { return !vert; }
 	bool      IsVert() const                       { return vert; }
 	Splitter& SetStyle(const Style& s);
