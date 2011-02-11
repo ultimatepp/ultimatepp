@@ -7,7 +7,7 @@ T_("point")
 csCZ("bod")
 
 T_("rectangle")
-csCZ("obdélník")
+csCZ("obd\303\251ln\303\255k")
 
 T_("color")
 csCZ("barva")
@@ -16,19 +16,19 @@ csCZ("barva")
 // DlgCalc.cpp
 
 T_("Calculator")
-csCZ("Kalkulátor")
+csCZ("Kalkul\303\241tor")
 
 
 // DlgCalc.lay
 
 T_("&Expression:")
-csCZ("&Výraz:")
+csCZ("&V\303\275raz:")
 
 T_("&Value:")
 csCZ("&Hodnota:")
 
 T_("&Store")
-csCZ("&Uložit")
+csCZ("&Ulo\305\276it")
 
 T_("OK")
 csCZ("OK")
@@ -37,7 +37,7 @@ T_("Cancel")
 csCZ("Storno")
 
 T_("&Variable name:")
-csCZ("&Do proměnné:")
+csCZ("&Do prom\304\233nn\303\251:")
 
 
 // CalcHelp.cpp
@@ -49,10 +49,10 @@ T_("[*3 Group")
 csCZ("[*3 Skupina")
 
 T_("Miscellaneous")
-csCZ("Ostatní")
+csCZ("Ostatn\303\255")
 
 T_(", function")
 csCZ(", funkce")
 
 T_(", operator")
-csCZ(", operátor")
+csCZ(", oper\303\241tor")

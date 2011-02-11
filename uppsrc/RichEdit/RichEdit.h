@@ -657,6 +657,7 @@ public:
 	void   Cut();
 	void   Paste();
 	void   InsertObject(int type);
+	void   LoadImage();
 
 	void   Styles();
 
@@ -699,6 +700,7 @@ public:
 	void   CopyTool(Bar& bar, dword key = K_CTRL_C);
 	void   PasteTool(Bar& bar, dword key = K_CTRL_V);
 	void   ObjectTool(Bar& bar, dword key = 0);
+	void   LoadImageTool(Bar& bar, dword key = 0);
 	void   FindReplaceTool(Bar& bar, dword key = K_CTRL_F);
 
 	void   InsertTableTool(Bar& bar, dword key = K_CTRL_F12);

@@ -311,6 +311,36 @@ RichObject RichEdit::GetObject() const
 	return text.GetRichPos(objectpos).object;
 }
 
+void RichEdit::LoadImage()
+{
+	FileSel fsel;
+	fsel.AllFilesType();
+	if(fsel.ExecuteOpen(t_("Open image from file"))) {
+		FileIn fi;
+		if(!fi.Open(~fsel)) {
+			Exclamation(NFormat(t_("Error opening file [* \1%s\1]."), ~fsel));
+			return;
+		}
+		Image img = StreamRaster::LoadAny(fi);
+		if(IsNull(img)) {
+			Exclamation(NFormat(t_("Unsupported image format in file [* \1%s\1]."), ~fsel));
+			return;
+		}
+		Size dots = img.GetDots();
+		if(dots.cx <= 0 || dots.cy <= 0)
+			dots = img.GetSize() * 6;
+		RichObject object = CreatePNGObject(img, dots, Size(Null));
+		RichText::FormatInfo finfo = GetFormatInfo();
+		RemoveSelection();
+		RichPara p;
+		p.Cat(object, finfo);
+		RichText clip;
+		clip.Cat(p);
+		Insert(GetCursor(), clip, false);
+		Finish();
+	}
+}
+
 void RichEdit::Select(int pos, int count)
 {
 	found = false;

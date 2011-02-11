@@ -256,6 +256,7 @@ void RichEdit::RightDown(Point p, dword flags)
 				ObjectTool(menu);
 			}
 		}
+		LoadImageTool(menu);
 	}
 	Rect r = GetCaretRect();
 	Refresh(r);

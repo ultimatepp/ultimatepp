@@ -4,13 +4,13 @@
 // pathCtrl.cpp
 
 T_("Close")
-csCZ("Zavřít")
+csCZ("Zav\305\231\303\255t")
 
 
 // pathedit.lay
 
 T_("&Initial segment:")
-csCZ("&Začátek:")
+csCZ("&Za\304\215\303\241tek:")
 
 T_("&Line segment:")
 csCZ("&Segment:")
@@ -19,10 +19,10 @@ T_("&End segment:")
 csCZ("&Konec:")
 
 T_("&Relative width:")
-csCZ("&Vztažná šířka:")
+csCZ("&Vzta\305\276n\303\241 \305\241\303\255\305\231ka:")
 
 T_("&Cap style:")
-csCZ("St&yl zlomu čáry:")
+csCZ("St&yl zlomu \304\215\303\241ry:")
 
 T_("&Chamfer length:")
 csCZ("V&elikost zkosu:")
@@ -34,83 +34,87 @@ T_("Cancel")
 csCZ("Storno")
 
 T_("&Grid:")
-csCZ("&Mřížka:")
+csCZ("&M\305\231\303\255\305\276ka:")
 
 T_("&Snap:")
-csCZ("&Přichytit do mřížky:")
+csCZ("&P\305\231ichytit do m\305\231\303\255\305\276ky:")
 
 T_("&Ruler")
-csCZ("&Pravítko")
+csCZ("&Prav\303\255tko")
 
 T_("&Axis")
-csCZ("&Osa čáry")
+csCZ("&Osa \304\215\303\241ry")
 
 
 // PlotterCtrl.cpp
 
 T_("Zoom in horz.")
-csCZ("Zvětšit horiz.")
+csCZ("Zv\304\233t\305\241it horiz.")
 
 T_("Zoom in horizontally")
-csCZ("Zvětšit vodorovné měřítko")
+csCZ("Zv\304\233t\305\241it vodorovn\303\251 m\304\233\305\231\303\255tko")
 
 T_("Zoom out horz.")
-csCZ("Zmenšit horiz.")
+csCZ("Zmen\305\241it horiz.")
 
 T_("Zoom out horizontally")
-csCZ("Zmenšit vodorovné měřítko")
+csCZ("Zmen\305\241it vodorovn\303\251 m\304\233\305\231\303\255tko")
 
 T_("Zoom full horz.")
-csCZ("Celý rozsah horiz.")
+csCZ("Cel\303\275 rozsah horiz.")
 
 T_("Display full x axis range in view")
-csCZ("Zobrazit celý rozsah vodorovné osy")
+csCZ("Zobrazit cel\303\275 rozsah vodorovn\303\251 osy")
 
 T_("Zoom in vert.")
-csCZ("Zvětšit vert.")
+csCZ("Zv\304\233t\305\241it vert.")
 
 T_("Zoom in vertically")
-csCZ("Zvětšit svislé měřítko")
+csCZ("Zv\304\233t\305\241it svisl\303\251 m\304\233\305\231\303\255tko")
 
 T_("Zoom out vert.")
-csCZ("Zmenšit vert.")
+csCZ("Zmen\305\241it vert.")
 
 T_("Zoom out vertically")
-csCZ("Zmenšit svislé měřítko")
+csCZ("Zmen\305\241it svisl\303\251 m\304\233\305\231\303\255tko")
 
 T_("Zoom full vert.")
-csCZ("Celý rozsah vert.")
+csCZ("Cel\303\275 rozsah vert.")
 
 T_("Display full y axis range in view")
-csCZ("Zobrazit celý rozsah svislé osy")
+csCZ("Zobrazit cel\303\275 rozsah svisl\303\251 osy")
 
 T_("Zoom out")
-csCZ("Zmenšit")
+csCZ("Zmen\305\241it")
 
 T_("Zoom out current view")
-csCZ("Zmenšit měřítko zobrazení")
+csCZ("Zmen\305\241it m\304\233\305\231\303\255tko zobrazen\303\255")
 
 T_("Zoom full")
-csCZ("Zobrazit vše")
+csCZ("Zobrazit v\305\241e")
 
 T_("Zoom everything into view")
-csCZ("Nastavit měřítko zobrazení podle velikosti okna")
+csCZ("Nastavit m\304\233\305\231\303\255tko zobrazen\303\255 podle velikosti"
+     " okna")
 
 T_("Zoom in")
-csCZ("Zvětšit\tNum[+]")
+csCZ("Zv\304\233t\305\241it\tNum[+]")
 
-T_("Zoom in current view (click to zoom in 2x, drag & drop to zoom in area)")
-csCZ("Zvětšovat oblasti plochy (kliknutím zvětšíte 2x, tažením myši "
-     "zvětšíte zadanou oblast)")
+T_("Zoom in current view (click to zoom in 2x, drag & drop to zoom in area"
+     ")")
+csCZ("Zv\304\233t\305\241ovat oblasti plochy (kliknut\303\255m zv\304\233t\305"
+     "\241\303\255te 2x, ta\305\276en\303\255m my\305\241i zv\304\233t\305\241"
+     "\303\255te zadanou oblast)")
 
 T_("Lock aspect ratio")
-csCZ("Stejné měřítko os")
+csCZ("Stejn\303\251 m\304\233\305\231\303\255tko os")
 
 T_("Keep temporarily x and y scale factors in sync")
-csCZ("Dočasně udržovat stálé měřítko os x a y")
+csCZ("Do\304\215asn\304\233 udr\305\276ovat st\303\241l\303\251 m\304\233\305"
+     "\231\303\255tko os x a y")
 
 T_("Pan")
 csCZ("Posouvat")
 
 T_("Drag & drop view position")
-csCZ("Posouvat zobrazenou oblast tažením myši")
+csCZ("Posouvat zobrazenou oblast ta\305\276en\303\255m my\305\241i")
