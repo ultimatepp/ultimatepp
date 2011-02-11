@@ -181,23 +181,25 @@ static String sQTF(const Value& data)
 
 void RichEdit::Copy()
 {
-	if(IsSelection()) {
-		ClearClipboard();
-		RichText txt = GetSelection();
-		AppendClipboardUnicodeText(txt.GetPlainText());
-		Value clip = RawPickToValue(txt);
-		AppendClipboard("text/QTF", clip, sQTF);
-		AppendClipboard(RTFS, clip, sRTF);
+	RichText txt;
+	if(IsSelection())
+		txt = GetSelection();
+	else if(objectpos >= 0)
+		txt = text.Copy(cursor, 1);
+	else {
+		BeepExclamation();
+		return;
 	}
-	else
+	ClearClipboard();
+	AppendClipboardUnicodeText(txt.GetPlainText());
+	Value clip = RawPickToValue(txt);
+	AppendClipboard("text/QTF", clip, sQTF);
+	AppendClipboard(RTFS, clip, sRTF);
 	if(objectpos >= 0) {
 		RichObject o = GetObject();
 		Vector<String> v = Split(o.GetType().GetClipFmts(), ';');
-		for(int i = 0; i < v.GetCount(); i++) {
-			if(i == 0)
-				ClearClipboard();
+		for(int i = 0; i < v.GetCount(); i++)
 			AppendClipboard(v[i], o.GetType().GetClip(o.GetData(), v[i]));
-		}
 	}
 }
 
