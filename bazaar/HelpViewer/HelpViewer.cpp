@@ -14,6 +14,7 @@ HelpViewer::HelpViewer()
 	splitter.Horz(tocPane, contentsPane).SetPos(2500);
 	contentsPane.AutoHideSb();
 	contentsPane.SetZoom(Zoom(1,1));
+	contentsPane.HMargins(20);
 	
 	tocPane.Add(mainTocTree.NoRoot().SizePos());
 	
@@ -36,6 +37,12 @@ void HelpViewer::AppendTOC(TreeCtrl const &t, int curId, int destId)
 	// recursively add all children
 	for(int i = 0; i < t.GetChildCount(curId); i++)
 		AppendTOC(t, t.GetChild(curId, i), destChild);
+	
+	// opens all content tree and display first item
+	mainTocTree.OpenDeep(0);
+	mainTocTree.SelectOne(2);
+	mainTocTree.SetCursor(2);
+	mainTocTree.WhenSel();
 }
 
 // Parses TOC and fills tocTree control
@@ -115,6 +122,7 @@ bool HelpViewer::LoadTOC(String const &tocLink)
 	// if the tree control is non empty, appends it to the main TOC TreeCtrl
 	if(tocTree.GetChildCount(0))
 		AppendTOC(tocTree);
+
 	return true;
 }
 		
