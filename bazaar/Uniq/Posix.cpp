@@ -15,7 +15,7 @@ bool Uniq::SendCmdLine(int pipe)
 	FD_ZERO(&rfds);
 	FD_SET(pipe, &rfds);
 	tv.tv_sec = 0;
-	tv.tv_usec = 200000;
+	tv.tv_usec = 2000;
 	if(!select(pipe+1, &rfds, NULL, NULL, &tv))
 		return false;
 
