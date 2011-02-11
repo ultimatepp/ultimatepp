@@ -121,7 +121,8 @@ RTFEncoder::RTFEncoder(Stream& stream, const RichText& richtext, byte charset)
 void RTFEncoder::Run()
 {
 	GetFaces();
-	Group docgrp(this, "rtf");
+	Group docgrp(this, "rtf", 1);
+	Command("ansi");
 	PutHeader();
 	PutDocument();
 }
@@ -255,12 +256,14 @@ void RTFEncoder::PutObject(const RichObject& object)
 {
 #ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE
-	Size log_size = object.GetPixelSize(), out_size = object.GetSize();
-	if(log_size.cx <= 0 || log_size.cy <= 0) log_size = out_size;
+	Size log_size = object.GetPhysicalSize(); // / 6;
+	Size out_size = object.GetSize();
+	Size out_size_01mm = iscale(out_size, 254, 60);
+	if(log_size.cx <= 0 || log_size.cy <= 0) log_size = out_size / 6;
 //	Size scale = out_size * 100 / log_size;
 	Group pict_grp(this, "pict");
-	Command("picw", log_size.cx);
-	Command("pich", log_size.cy);
+	Command("picw", out_size_01mm.cx);
+	Command("pich", out_size_01mm.cy);
 	Command("picwgoal", DotTwips(out_size.cx));
 	Command("pichgoal", DotTwips(out_size.cy));
 //	Command("picscalex", scale.cx);
@@ -373,21 +376,28 @@ void RTFEncoder::PutParts(const Array<RichPara::Part>& parts,
 
 void RTFEncoder::PutHeader()
 {
-	static const short ansicpg[][2] = {
-		{ CHARSET_WIN1250, 1250 },
-		{ CHARSET_WIN1251, 1251 },
-		{ CHARSET_WIN1252, 1252 },
-		{ CHARSET_WIN1253, 1253 },
-		{ CHARSET_WIN1254, 1254 },
-		{ CHARSET_WIN1255, 1255 },
-		{ CHARSET_WIN1256, 1256 },
-		{ CHARSET_WIN1257, 1257 },
-		{ CHARSET_WIN1258, 1258 },
+	struct CodePage {
+		byte  charset;
+		short ansicpg;
+		short fontcpg;
 	};
-	int i;
-	for(i = __countof(ansicpg); --i >= 0;)
-		if(charset == ansicpg[i][0]) {
-			Command("ansicpg", ansicpg[i][1]);
+	
+	static const CodePage ansicpg[] = {
+		{ CHARSET_WIN1250, 1250, 238 },
+		{ CHARSET_WIN1251, 1251, 204 },
+		{ CHARSET_WIN1252, 1252,   0 },
+		{ CHARSET_WIN1253, 1253, 161 },
+		{ CHARSET_WIN1254, 1254, 162 },
+		{ CHARSET_WIN1255, 1255, 177 },
+		{ CHARSET_WIN1256, 1256, 178 },
+		{ CHARSET_WIN1257, 1257, 186 },
+		{ CHARSET_WIN1258, 1258, 163 },
+	};
+	int fontcpg = Null;
+	for(int i = __countof(ansicpg); --i >= 0;)
+		if(charset == ansicpg[i].charset) {
+			Command("ansicpg", ansicpg[i].ansicpg);
+			fontcpg = ansicpg[i].fontcpg;
 			break;
 		}
 
@@ -397,10 +407,13 @@ void RTFEncoder::PutHeader()
 		for(int i = 0; i < used_faces.GetCount(); i++) {
 			Group fnt(this, "f", i);
 			int fn = used_faces[i];
+			int cs = fontcpg;
 			dword info = Font::GetFaceInfo(fn);
 #ifdef PLATFORM_WIN32
-			if(fn == Font::SYMBOL)
+			if(fn == Font::SYMBOL) {
 				Command("ftech");
+				cs = 2;
+			}
 			else
 #endif
 			if(info & Font::FIXEDPITCH)
@@ -413,6 +426,8 @@ void RTFEncoder::PutHeader()
 #endif
 			)
 				Command("fswiss");
+			if(!IsNull(fontcpg))
+				Command("fcharset", cs);
 			Space();
 			stream.Put(Font::GetFaceName(fn));
 			stream.Put(';');
