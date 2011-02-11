@@ -4,6 +4,7 @@ NAMESPACE_UPP
 
 CH_STYLE(Splitter, Style, StyleDefault)
 {
+	width = 4;
 	vert[0] = horz[0] = SColorFace();
 	vert[1] = horz[1] = GUI_GlobalStyle() >= GUISTYLE_XP ? Blend(SColorHighlight, SColorFace)
 	                                                     : SColorShadow();
@@ -52,8 +53,8 @@ void Splitter::Layout() {
 		return;
 	}
 
-	int lw = width >> 1;
-	int rw = width - lw;
+	int lw = chstyle->width >> 1;
+	int rw = chstyle->width - lw;
 	
 	int i = 0;
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
@@ -75,8 +76,8 @@ void   Splitter::Paint(Draw& w) {
 	const Value *ch = vert ? chstyle->vert : chstyle->horz;
 	if(style < 0)
 		for(int i = 0; i < pos.GetCount(); i++) {
-			int p = PosToClient(pos[i]) - (width >> 1);
-			Rect r = vert ? RectC(0, p, sz.cx, width) : RectC(p, 0, width, sz.cy);
+			int p = PosToClient(pos[i]) - (chstyle->width >> 1);
+			Rect r = vert ? RectC(0, p, sz.cx, chstyle->width) : RectC(p, 0, chstyle->width, sz.cy);
 			if(HasCapture() && i == mouseindex)
 				ChPaint(w, r, ch[1]);
 			else
@@ -100,7 +101,7 @@ void   Splitter::LeftDown(Point p, dword) {
 
 int Splitter::FindIndex(Point client) const {
 	int best = -1;
-	int maxdist = width;
+	int maxdist = chstyle->width;
 	for(int i = 0; i < pos.GetCount(); i++) {
 		int dist = abs((vert ? client.y : client.x) - PosToClient(pos[i]));
 		if(dist <= maxdist) {
@@ -143,13 +144,6 @@ void   Splitter::Zoom(int i)
 {
 	style = i;
 	Layout();
-}
-
-Splitter& Splitter::BarWidth(int w)
-{
-	width = w;
-	Layout();
-	return *this;
 }
 
 Splitter& Splitter::Vert(Ctrl& top, Ctrl& bottom)
@@ -240,7 +234,6 @@ void Splitter::Clear() {
 void Splitter::Reset() {
 	Clear();
 	style = -1;
-	width = 4;
 	vert = false;
 }
 
@@ -257,7 +250,6 @@ Splitter& Splitter::SetStyle(const Style& s)
 Splitter::Splitter() {
 	chstyle = NULL;
 	style = -1;
-	width = 4;
 	vert = false;
 	mouseindex = -1;
 	pos.Add(5000);
