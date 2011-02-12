@@ -34,23 +34,29 @@ in ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
 Dolinár]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
-[s0;# [2 High.]&]
+[s0;# [2 High]&]
 [s0;#2 &]
 [s0;# [*2 Experience required]&]
-[s0;# [2 U`+`+, webkit, gcc/mingw compiling infrastructure.]&]
+[s0;# [2 U`+`+, webkit (or any other engine), gcc compiling infrastructure.]&]
 [s0;#2 &]
 [s0;# [*2 Description]&]
-[s0;# [2 This control would integrate a web browser into a control. 
-Possibly the best option would be to use webkit.]&]
+[s0;# [2 This tasks main goal is to create a GUI widget allowing to 
+integrate a web browser engine into U`+`+ applications. Webkit 
+engine is a good candidate for this task as it is fast and reliable, 
+written in C`+`+ and actively developed by large community, but 
+other engines might be used as well.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
 [s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
 Dolinár]&]
 [s0;#2 &]
 [s0;# [*2 We propose you this roadmap]&]
-[s0;#i150;O0; [2 Learning to work in U`+`+ with DHCtrl]&]
-[s0;#i150;O0; [2 Integrate Webkit in a U`+`+ project inside a DHCtrl 
-derived class]&]
+[s0;#i150;O0; [2 Explore possibility to use libwebkit]&]
+[s0;#i150;O0; [2 Decide how to integrate Webkit in a U`+`+ project 
+(most straightforward possibilities are direct rendering in DHCtrl 
+or rendering into buffer first)]&]
+[s0;#i150;O0; [2 Write a widget binding U`+`+ events to the rendering 
+engine]&]
 [s0;#2 &]
 [s0;#2 &]
 [s0;# [* U`+`+ as a library]&]
@@ -113,6 +119,39 @@ ei Natanael]&]
 [s0;#2 &]
 [s0;# [*2 We propose you this roadmap]&]
 [s0;# [2 TBD]&]
+[s0;#2 &]
+[s0;#2 &]
+[s0;# [* Simple GUI frontend for Git]&]
+[s0;# &]
+[s0;# [*2 Proposed by]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár]&]
+[s0;#2 &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 Low]&]
+[s0;#2 &]
+[s0;# [*2 Experience required]&]
+[s0;# [2 Git]&]
+[s0;#2 &]
+[s0;# [*2 Description]&]
+[s0;# [2 Create a package wrapping standard git command line into U`+`+ 
+GUI. The package should allow standalone usage as well as integration 
+into other applications.]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár]&]
+[s0;#2 &]
+[s0;# [*2 We propose you this roadmap]&]
+[s0;#i150;O0; [2 Get to know usvn, as it provides the very same functionality 
+for SVN version control system]&]
+[s0;#i150;O0; [2 Create a GUI widget providing the basic git functionality 
+(create repository, pull, push, display changes, ...)]&]
+[s0;#i150;O0; [2 Integrate the widget into TheIDE (to allow using it 
+directly with U`+`+ git mirror)]&]
+[s0;#i150;O0; [2 If there is any time left, the functionality can be 
+extended to support more advanced features of distributed versioning 
+systems]&]
 [s0;#2 &]
 [s1; Project requirements&]
 [s0;# &]
