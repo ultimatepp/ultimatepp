@@ -7,6 +7,10 @@ topic "Google Summer of Code Resources 2011";
 [s1;#b0;2 &]
 [s0;# [2 Welcome to U`+`+ Google Summer of Code (GSoC) home page. ]&]
 [s0;#2 &]
+[s0;# [/^http`:`/`/www`.google`-melange`.com`/document`/show`/gsoc`_program`/google`/gsoc2011`/faqs`#what`_is^2 G
+oogle Summer of Code is a program that offers student developers 
+stipends to write code for various open source projects]&]
+[s0;#2 &]
 [s0;# [2 If you are a student interested in our project or an experienced 
 U`+`+ user wanting to be a mentor, we expect this page will help 
 you.]&]
@@ -22,7 +26,8 @@ page][*2 .][2  If you are a student and want to stay with us this
 will interest you.]&]
 [s0;#b17;a17;ph [*2 3. ][*^topic`:`/`/uppweb`/gsoc`/ideas2011`$en`-us^2 Ideas][2 . 
 Proposals for GSoC projects]&]
-[s0;#b17;a17;ph [*2 4. Application][2 . ][/@(128)2 To come ...]&]
+[s0;#b17;a17;ph [*2 4. Mentor page][2 . ][/@(128)2 To come on Sunday 13rd 
+...]&]
 [s0;#b17;a17;ph [*2 5. Previous Participations][2 . U`+`+ participation 
 in previous years]&]
 [s0;#l96;i150;b17;a17;phO0; [^topic`:`/`/uppweb`/gsoc`/gsoc2010`$en`-us^2 GSoC 

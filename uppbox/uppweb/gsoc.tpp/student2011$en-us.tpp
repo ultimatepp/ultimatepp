@@ -5,13 +5,16 @@ topic "GSoC 2011. Student page";
 [{_}%EN-US 
 [s1;#b0; [R6 GSoC 2011. Student page]&]
 [s1;#b0; &]
-[s1;#b0; Introduction&]
-[s1;#b0;*2 &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Introduction]]}}&]
+[s1;#b0;2 &]
 [s1;#b0; [*2 If you are an student, knows C`+`+ and you have some weeks 
 to get a good job (and get money for it (`^`_`^)), you can propose 
-us a project!]&]
-[s2;#2 &]
-[s0;# [2 Please check these points. Some of them are easy for you, 
+us a project! ]&]
+[s1;#b0;*2 &]
+[s1;#b0; [*2 Before beginning read ][*^http`:`/`/code`.google`.com`/p`/google`-summer`-of`-code`/wiki`/AdviceforStudents^2 A
+dvice for GSoC Students Page][*2 .]&]
+[s0;2 &]
+[s0;# [2 Please check the next points. Some of them are easy for you, 
 and others will be less easy.]&]
 [s0;#2 &]
 [s0;# [2 To apply, try to answer all these subjects and post them in 
@@ -19,21 +22,21 @@ your proposal to our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .
 following the ][^topic`:`/`/uppweb`/gsoc`/application`_template2011`$en`-us^2 Appli
 cation Template][2 .]&]
 [s2;2 &]
-[s0; &]
-[s0; [*+117 Skills]&]
+[s0;%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Skills]]}}&]
 [s0;2 &]
 [s0; [2 We love C`+`+. Good use of its features will be interesting.]&]
 [s0; &]
-[s0;2 &]
-[s0; [*+117 Free Time]&]
+[s0;%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Free Time]]}}&]
 [s0; &]
 [s0; [2 Oh, free time... It is summer and you will have to work about 
 40 hours per week during three months. That is the truth, we 
 want to be sincere with you. Be sure you will have that free 
 time to work with us.]&]
 [s0;2 &]
-[s0;2 &]
-[s0; [*+117 Who are you?]&]
+[s0;%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Who are you?]]}}&]
 [s0; &]
 [s0; [2 We want to know you, so introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 F
 orum][2 .]&]
@@ -42,7 +45,7 @@ orum][2 .]&]
 project you will have more opportunities.]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*+117 The proposal is important]&]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 The proposal is important]]}}&]
 [s0;2 &]
 [s0; [2 Do it with care as there you show us how are you interested 
 and how you plan to focus the job.]&]
@@ -51,8 +54,8 @@ and how you plan to focus the job.]&]
 te][2  and take your time.]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*+117 Ideas]&]
-[s0; &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Ideas]]}}&]
+[s0;*+117 &]
 [s2;# [2 Go to our ][^topic`:`/`/uppweb`/gsoc`/ideas2011`$en`-us^2 ideas 
 page][2  and read the shown ideas. You have two possibilities:]&]
 [s0; &]
@@ -78,7 +81,7 @@ you will have three months, so do not try to be too generic and
 too optimistic.]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*+117 And what about the mentor?]&]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 And what about the mentor?]]}}&]
 [s0; &]
 [s0; [2 Do not worry about the Mentor. We will provide you one. We 
 are new in GSoC, but with our ][^topic`:`/`/uppweb`/www`/tutoring`$en`-us^2 Tutorin

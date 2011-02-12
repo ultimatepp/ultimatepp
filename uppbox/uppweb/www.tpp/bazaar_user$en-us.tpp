@@ -40,4 +40,4 @@ my`-upp]&]
 [s0;2 &]
 [s0; [2 Follow the instructions in the ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 S
 upport Page][2 .]&]
-[s0;2 ]
+[s0; ]
