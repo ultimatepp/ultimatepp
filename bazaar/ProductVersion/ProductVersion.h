@@ -51,6 +51,17 @@ class ProductVersion : public Moveable<ProductVersion>
 		// check for 'empty' version
 		bool operator!(void);
 		operator bool(void);
+		
+		// gets/sets partial numbers
+		ProductVersion &SetMajor(int maj) { major = maj; return *this; }
+		ProductVersion &SetMinor(int min) { minor = min; return *this; }
+		ProductVersion &SetDevel(int dev) { devel = dev; return *this; }
+		int GetMajor(void) { return major; }
+		int GetMinor(void) { return minor; }
+		int GetDevel(void) { return devel; }
+		ProductVersion &IncMajor(int delta = 1) { major += delta; return *this; }
+		ProductVersion &IncMinor(int delta = 1) { minor += delta; return *this; }
+		ProductVersion &IncDevel(int delta = 1) { devel += delta; return *this; }
 };
 
 class ProductVersions : public Vector<ProductVersion>
