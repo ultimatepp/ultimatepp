@@ -5,12 +5,18 @@ topic "Google Summer of Code Resources 2011";
 [{_}%EN-US 
 [s1;#b0; [R6 Google Summer of Code 2011. U`+`+ Resources]&]
 [s1;#b0;2 &]
-[s0; [2 Here we center U`+`+ project resources related with Google 
-Summer of Code (GSoC).]&]
+[s0;# [2 Welcome to U`+`+ Google Summer of Code (GSoC) home page. ]&]
+[s0;#2 &]
+[s0;# [2 If you are a student interested in our project or an experienced 
+U`+`+ user wanting to be a mentor, we expect this page will help 
+you.]&]
+[s0;#2 &]
+[s0;# [2 And if this information is not enough, just post something 
+in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
 [s0;%- &]
 [ {{10000<192;>192;f0;g0;^l4/67r4/50t4/25b4/25@(240)R(165) [s0;= [*2 Contents]]
-::t/50b/50@2 [s0;#b17;a17;ph [*2 1. Manual][2 . All you need if you want to know about 
-GSoC. ][/@(153)2 To come ...]&]
+::t/50b/50@2 [s0;#b17;a17;ph [*2 1. ][*^topic`:`/`/uppweb`/gsoc`/manual2011`$en`-us^2 Manual][2 . 
+All you need if you want to know about GSoC.]&]
 [s0;#b17;a17;ph [*2 2. ][*^topic`:`/`/uppweb`/gsoc`/student2011`$en`-us^2 Student 
 page][*2 .][2  If you are a student and want to stay with us this 
 will interest you.]&]
