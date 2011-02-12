@@ -4,7 +4,9 @@ topic "News and changes Log";
 [{_}%EN-US 
 [s0; [*R+184 Functions4U. News and changes log]&]
 [s0;%- &]
-[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2010/12/24]]
+[ {{1441:8559f0;g0;^t/25b/25 [s0;# [2 2011/02/12]]
+:: [s0;# [2 Added StaticPlugin]]
+:: [s0;# [2 2010/12/24]]
 :: [s0;# [2 Removed StrToTime(), Rotate180() and GetRect(). Now in main 
 U`+`+]]
 :: [s0;# [2 2010/09/07]]

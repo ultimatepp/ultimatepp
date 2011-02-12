@@ -158,6 +158,7 @@ bool FileStrAppend(const char *file, const char *str) {
 		return false;
 	return true;
 }
+
 bool AppendFile(const char *file, const char *str) {return FileStrAppend(file, str);};
 
 String AppendFileName(const String& path1, const char *path2, const char *path3) {
@@ -204,11 +205,11 @@ bool FileMoveX(const char *oldpath, const char *newpath, int flags) {
 	bool usr, grp, oth;
 	if (flags & DELETE_READ_ONLY) {
 		if (IsReadOnly(oldpath, usr, grp, oth))
-			ReadOnly(oldpath, false, false, false);
+			SetReadOnly(oldpath, false, false, false);
 	}
 	bool ret = FileMove(oldpath, newpath);
 	if (flags & DELETE_READ_ONLY) 
-		ReadOnly(newpath, usr, grp, oth);
+		SetReadOnly(newpath, usr, grp, oth);
 	return ret;
 }
 
@@ -217,7 +218,7 @@ bool FileDeleteX(const char *path, int flags) {
 		return FileToTrashBin(path);
 	else {
 		if (flags & DELETE_READ_ONLY) 
-			ReadOnly(path, false, false, false);
+			SetReadOnly(path, false, false, false);
 		return FileDelete(path);
 	}
 }
@@ -236,11 +237,19 @@ bool DirectoryExistsX(const char *path, int flags) {
 	return DirectoryExists(filePath); 
 }
 
-bool ReadOnly(String path, bool readOnly) {
-	return ReadOnly(path, readOnly, readOnly, readOnly);
+bool ReadOnly(const char *path, bool readOnly) {
+	return SetReadOnly(path, readOnly);
 }
 
 bool ReadOnly(const char *path, bool usr, bool grp, bool oth) {
+	return SetReadOnly(path, usr, grp, oth);
+}
+
+bool SetReadOnly(const char *path, bool readOnly) {
+	return SetReadOnly(path, readOnly, readOnly, readOnly);
+}
+
+bool SetReadOnly(const char *path, bool usr, bool grp, bool oth) {
 #if defined(PLATFORM_WIN32) 
 	DWORD attr = GetFileAttributesW(ToSystemCharsetW(path)); 
 	
@@ -887,7 +896,7 @@ String SecondsToString(double seconds, bool units) {
 	return HMSToString(hour, min, seconds, units);
 }
 
-String BytesToString(uint64 _bytes)
+String BytesToString(uint64 _bytes, bool units)
 {
 	String ret;
 	uint64 bytes = _bytes;
@@ -900,15 +909,15 @@ String BytesToString(uint64 _bytes)
 				bytes /= 1024;
 				if (bytes >= 1024) {
 					bytes /= 1024;
-					ret = Format("%.1f %s", _bytes/(1024*1024*1024*1024.), "Tb");
+					ret = Format("%.1f %s", _bytes/(1024*1024*1024*1024.), units ? "Tb" : "");
 				} else
-					ret = Format("%.1f %s", _bytes/(1024*1024*1024.), "Gb");
+					ret = Format("%.1f %s", _bytes/(1024*1024*1024.), units ? "Gb" : "");
 			} else
-				ret = Format("%.1f %s", _bytes/(1024*1024.), "Mb");
+				ret = Format("%.1f %s", _bytes/(1024*1024.), units ? "Mb" : "");
 		} else
-			ret = Format("%.1f %s", _bytes/1024., "Kb");
+			ret = Format("%.1f %s", _bytes/1024., units ? "Kb" : "");
 	} else
-		ret << _bytes << " b";
+		ret << _bytes << (units ? "b" : "");
 	return ret;
 }
 
@@ -978,9 +987,9 @@ String RemoveAccents(String str) {
 	return ret;
 }
 
-int DayOfYear(Date d) {
-	return 1 + d - FirstDayOfYear(d);
-}
+//int DayOfYear(Date d) {
+//	return 1 + d - FirstDayOfYear(d);
+//}
 
 #ifdef PLATFORM_POSIX
 String GetRealName(String fileName) {
@@ -1704,8 +1713,8 @@ void FileDiffArray::Clear()
 }
 
 // True if equal
-bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom, Array<String> &excepFolders, Array<String> &excepFiles)
-{
+bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom,
+						 Array<String> &excepFolders, Array<String> &excepFiles, int sensSecs) {
 	if (master.GetCount() == 0) {
 		if (secondary.GetCount() == 0)
 			return true;
@@ -1724,14 +1733,14 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, Str
 		if (master[i].isFolder) {
 			String fullfolder = AppendFileName(AppendFileName(folderFrom, master[i].relFilename), master[i].fileName);
 			for (int iex = 0; iex < excepFolders.GetCount(); ++iex)
-				if (PatternMatch(excepFolders[iex], fullfolder)) {
+				if (PatternMatch(excepFolders[iex] + "*", fullfolder)) {// Subfolders included
 					cont = false;
 					break;
 				}
 		} else {
 			String fullfolder = AppendFileName(folderFrom, master[i].relFilename);
 			for (int iex = 0; iex < excepFolders.GetCount(); ++iex)
-				if (PatternMatch(excepFolders[iex], fullfolder)) {
+				if (PatternMatch(excepFolders[iex] + "*", fullfolder)) {
 					cont = false;
 					break;
 				}
@@ -1749,7 +1758,8 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, Str
 				if (master[i].isFolder) 
 					;
 				else if ((useId && (master[i].id == secondary[idSec].id)) ||
-						 (!useId && (master[i].length == secondary[idSec].length) && (master[i].t == secondary[idSec].t)))
+						 (!useId && (master[i].length == secondary[idSec].length) && 
+						 			 (abs(master[i].t - secondary[idSec].t) <= sensSecs)))
 					;
 				else {
 					equal = false;
@@ -1790,14 +1800,14 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, Str
 			if (secondary[i].isFolder) {
 				String fullfolder = AppendFileName(AppendFileName(folderFrom, secondary[i].relFilename), secondary[i].fileName);
 				for (int iex = 0; iex < excepFolders.GetCount(); ++iex)
-					if (PatternMatch(excepFolders[iex], fullfolder)) {
+					if (PatternMatch(excepFolders[iex] + "*", fullfolder)) {
 						cont = false;
 						break;
 					}
 			} else {
 				String fullfolder = AppendFileName(folderFrom, secondary[i].relFilename);
 				for (int iex = 0; iex < excepFolders.GetCount(); ++iex)
-					if (PatternMatch(excepFolders[iex], fullfolder)) {
+					if (PatternMatch(excepFolders[iex] + "*", fullfolder)) {
 						cont = false;
 						break;
 					}
@@ -1850,12 +1860,12 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 		if (diffList[i].action == 'u' || diffList[i].action == 'd') {
 			if (diffList[i].isFolder) {
 				if (DirectoryExists(dest)) {
-					if (!ReadOnly(dest, false))
+					if (!SetReadOnly(dest, false))
 						ok = false;
 				}
 			} else {
 				if (FileExists(dest)) {
-					if (!ReadOnly(dest, false))
+					if (!SetReadOnly(dest, false))
 						ok = false;
 				}
 			}
@@ -1869,10 +1879,22 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 		switch (diffList[i].action) {
 		case 'n': case 'u': 	
 			if (diffList[i].isFolder) {
-				if (!DirectoryExists(dest)) 
-					ok = DirectoryCreate(dest);
-			} else 
-				ok = FileCopy(AppendFileName(fromFolder, FormatInt(i)), dest);
+				if (!DirectoryExists(dest)) {
+					ok = DirectoryCreate(dest);	////////////////////////////////////////////////////////////////////////////////////////
+				}
+			} else {
+				if (FileExists(dest)) {
+					if (!SetReadOnly(dest, false))
+						ok = false;
+				}
+				if (ok) {
+					ok = FileCopy(AppendFileName(fromFolder, FormatInt(i)), dest);
+					if (GetFileTime(dest) != diffList[i].tMaster)
+						throw ("Mira!");
+						//Exclamation(Format("Fichero copiado %s tiene fecha diferente (%s) "
+						//	"que el original (%s)", dest, Format(GetFileTime(dest)), Format(diffList[i].tMaster)));
+				}
+			}
 			
 			if (!ok) {
 				String strError = t_("Not possible to create ") + dest;

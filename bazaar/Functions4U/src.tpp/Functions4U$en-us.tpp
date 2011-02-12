@@ -166,20 +166,6 @@ Trash Bin.ç&]
 [s0; &]
 [ {{10000@1 [s0; [* String functions]]}}&]
 [s4; &]
-[s5;:Replace`(String`,String`,String`):%- [_^String^ String]_[* Replace]([_^String^ String]_
-[*@3 str], [_^String^ String]_[*@3 find], [_^String^ String]_[*@3 replace])&]
-[s2; Returns the resulting String obtained by replacing in [%-*@3 str] 
-String [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find 
-]appears in [%-*@3 str].&]
-[s0; &]
-[s4;%- &]
-[s5;:Replace`(String`,char`,char`):%- [_^String^ String]_[* Replace]([_^String^ String]_[*@3 s
-tr], [@(0.0.255) char]_[*@3 find], [@(0.0.255) char]_[*@3 replace])&]
-[s2; Returns the resulting String obtained by replacing in [%-*@3 str] 
-char [%-*@3 find] with [%-*@3 replace ]all the times that [%-*@3 find 
-]appears in [%-*@3 str].&]
-[s3; &]
-[s4; &]
 [s5;:Trim`(const String`&`):%- [_^String^ String]_[* Trim]([@(0.0.255) const]_[_^String^ Stri
 ng][@(0.0.255) `&]_[*@3 s])&]
 [s2; Like TrimBoth(), it removes left and right spaces in [%-*@3 s]. 
@@ -231,24 +217,25 @@ tring]_[*@3 durat], [@(0.0.255) int]_`&[*@3 hour], [@(0.0.255) int]_`&[*@3 min],
 [s0; -|It is opposite to HMSToString()&]
 [s3; &]
 [s4; &]
-[s5;:BytesToString`(uint64`):%- [_^String^ String]_[* BytesToString]([_^uint64^ uint64]_[*@3 b
-ytes])&]
-[s2; Converts an amount of [%-*@3 bytes ]to a short String.&]
+[s5;:BytesToString`(uint64`,bool`):%- [_^String^ String]_[* BytesToString]([_^uint64^ uint6
+4]_[*@3 bytes, ][_^uint64^ bool]_[*@3 units])&]
+[s2; Converts an amount of [%-*@3 bytes ]to a short String. If [%-*@3 units] 
+is true, they will appear like in 123.4 Kb&]
 [s3; &]
 [s4;%- &]
-[s5;:StrToTime`(struct Time`&`,const char`*`):%- [@(0.0.255) const]_[@(0.0.255) char]_`*[* S
-trToTime]([@(0.0.255) struct]_[_^Time^ Upp`::Time][@(0.0.255) `&]_[*@3 d], 
-[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
-[s2;%- Scans a string for a Time. Order of day, month and year is 
-specified using SetDateScan. In place of month both number and 
-text is accepted `- text must match abbreviated or full name 
-of month.&]
-[s2;%- -|Similar to StrToDate() but including both date and time.&]
-[s7;~~~.928;%- [*@3 s]-|String to scan.&]
-[s7;~~~.928;%- [*@3 d][%% -|]Found time.&]
-[s7;~~~.928;%- Return value-|NULL if no time is found in [*@3 s] or 
-pointer to character right after the date.&]
-[s3;%- &]
+[s5;:StrToTime`(const char`*`):%- [_^Time^ `::Time]_[* StrToTime]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s])&]
+[s2;%- [%% Like ][@(0.0.255) const]_[@(0.0.255) char]_`*[* StrToTime]([@(0.0.255) struct]_[_^Time^ U
+pp`::Time][@(0.0.255) `&]_[*@3 d], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s]), 
+but returning directly a Time.&]
+[s3; &]
+[s4;%- &]
+[s5;:StrToDate`(const char`*`):%- [_^Date^ `::Date]_[* StrToDate]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s])&]
+[s2;%- [%% Like ][@(0.0.255) const]_[@(0.0.255) char]_`*[* StrToDate]([@(0.0.255) struct]_[_^Time^ U
+pp`::Date][@(0.0.255) `&]_[*@3 d], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s]), 
+but returning directly a Date.&]
+[s3; &]
 [s4;%- &]
 [s5;:FormatDoubleAdjust`(double`,double`):%- [_^String^ String]_[* FormatDoubleAdjust]([@(0.0.255) d
 ouble]_[*@3 d], [@(0.0.255) double]_[*@3 range])&]
@@ -1494,8 +1481,13 @@ lass]_[*@4 T]>_[_^Rect`_^ Rect`_]<[*@4 T]>_[* FitInFrame]([@(0.0.255) const]_[_^
 &]
 [s3; &]
 [s4;%- &]
-[s2;l0;%- [_^Color^ Color]_[* RandomColor]()&]
+[s2;l0;:RandomColor`(`):%- [_^Color^ Color]_[* RandomColor]()&]
 [s2; Returns a random color.&]
+[s3; &]
+[s4;%- &]
+[s5;:GetRect`(const Image`&`,const Rect`&`):%- [_^Image^ Image]_[* GetRect]([@(0.0.255) con
+st]_[_^Image^ Image][@(0.0.255) `&]_[*@3 orig], [@(0.0.255) const]_[_^Rect^ Rect]_`&[*@3 r])&]
+[s2; Returns a subimage delimited by Rect [%-*@3 r] taken from [%-*@3 orig].&]
 [s3; &]
 [s4;%- &]
 [s5;:GetPixel`(const Image`&`,int`,int`):%- [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* GetPixel
@@ -1513,10 +1505,6 @@ mg], [@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y])&]
 [s3;%- &]
 [s3; &]
 [ {{10000@1 [s0; [* Other functions]]}}&]
-[s4; &]
-[s5;:DayOfYear`(Date`):%- [@(0.0.255) int]_[* DayOfYear]([_^Date^ Date]_[*@3 d])&]
-[s2; Returns the number of days from 1st of January to [%-*@3 d].&]
-[s3; &]
 [s4; &]
 [s5;:GetExtExecutable`(String`):%- [_^String^ String]_[* GetExtExecutable]([_^String^ Strin
 g]_[*@3 ext])&]

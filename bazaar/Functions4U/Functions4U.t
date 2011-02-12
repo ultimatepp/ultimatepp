@@ -27,19 +27,16 @@ esES("Imposible abrir fichero")
 T_("Problem found")
 esES("Problema encontrado")
 
-T_("Not possible to create")
-esES("No es posible crear")
+T_("Not possible to modify ")
+esES("")
+
+T_("Not possible to create ")
+esES("")
 
 T_("Not possible to delete")
 esES("No es posible borrar")
 
-T_("Dll cannot be released")
-esES("")
-
-
-// Functions4U_Gui.cpp
-
-T_("Wrong param. in ReadCol")
+T_("Dl cannot be released")
 esES("")
 
 
@@ -49,7 +46,7 @@ T_("File %s does not exist")
 esES("Fichero %s no existe")
 
 T_("Patch file is empty")
-esES("Fichero de parche está vacio")
+esES("Fichero de parche est\303\241 vacio")
 
 T_("Error opening %s")
 esES("Error abriendo %s")
@@ -82,7 +79,7 @@ esES("")
 // bspatch.cpp
 
 T_("New file is empty")
-esES("Nuevo fichero está vacio")
+esES("Nuevo fichero est\303\241 vacio")
 
 T_("fopen(%s)")
 esES("")
@@ -107,6 +104,15 @@ esES("Imposible abrir %s")
 
 
 // Obsolete
+
+T_("Not possible to create")
+esES("No es posible crear")
+
+T_("Dll cannot be released")
+esES("")
+
+T_("Wrong param. in ReadCol")
+esES("")
 
 T_("There was a problem in the copy")
 esES("Hubo un problema al copiar")

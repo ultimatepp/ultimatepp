@@ -7,7 +7,8 @@
 #include <Web/Web.h>
 #include "GatherTpp.h"
 #endif
-#include "SvgColors.h"
+#include <Functions4U/SvgColors.h>
+#include "StaticPlugin.h"
 
 enum EXT_FILE_FLAGS {USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,
@@ -56,8 +57,21 @@ bool FileDeleteX(const char *path, int flags = 0);
 /////////
 
 
-//bool ReadOnly(const char *path, bool readOnly);
-bool ReadOnly(const char *path, bool usr, bool grp = false, bool oth = false);
+bool SetReadOnly(const char *path, bool readOnly);
+bool ReadOnly(const char *path, bool readOnly)
+#if defined(__MINGW32__)
+	__attribute__ ((deprecated));
+#else
+	;
+#endif
+
+bool SetReadOnly(const char *path, bool usr, bool grp, bool oth);
+bool ReadOnly(const char *path, bool usr, bool grp, bool oth)
+#if defined(__MINGW32__)
+	__attribute__ ((deprecated));
+#else
+	;
+#endif
 bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth);
 
 String LoadFile_Safe(String fileName);
@@ -173,7 +187,7 @@ public:
 	FileDiffArray();
 	void Clear();
 	FileDiff& operator[](long i)	{return diffList[i];}
-	bool Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom, Array<String> &excepFolders, Array<String> &excepFiles);
+	bool Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom, Array<String> &excepFolders, Array<String> &excepFiles, int sensSecs = 0);
 	bool Apply(String toFolder, String fromFolder, int flags = 0);
 	long GetCount()				{return diffList.GetCount();};
 	bool SaveFile(const char *fileName);
@@ -184,9 +198,19 @@ private:
 	Array<FileDiff> diffList;
 };
 
+String Replace(String str, String find, String replace) 
+#if defined(__MINGW32__)
+	__attribute__ ((deprecated));
+#else
+	;
+#endif
 
-String Replace(String str, String find, String replace);
-String Replace(String str, char find, char replace);
+String Replace(String str, char find, char replace)
+#if defined(__MINGW32__)
+	__attribute__ ((deprecated));
+#else
+	;
+#endif
 
 int ReverseFind(const String& s, const String& toFind, int from = 0);
 
@@ -196,7 +220,7 @@ String FormatLong(long a);
 ::Time StrToTime(const char *s);
 ::Date StrToDate(const char *s);
 
-String BytesToString(uint64 bytes);
+String BytesToString(uint64 bytes, bool units = true);
 
 String SecondsToString(double seconds, bool units = false);
 String HMSToString(int hour, int min, double seconds, bool units = false); 
@@ -245,7 +269,7 @@ template <class T>
 inline const T Abs(const T& a)  { 
 	return a > 0 ? a : -a;}
 
-int DayOfYear(Date d);
+//int DayOfYear(Date d);
 
 // A String based class to parse into
 class StringParse :  public String {
@@ -439,15 +463,6 @@ String WideToString(LPCWSTR wcs, int len = -1);
 	#include "Functions4U/Functions4U_Gui.h"
 #endif
 
-/*
-// A ProcessEvents than can be used in non gui programs
-inline void DoEvents() { 
-#ifdef CTRLLIB_H
-		Ctrl::ProcessEvents();
-#endif
-}
-*/
-
 String GetExtExecutable(String ext);
 
 Array<String> GetDriveList();
@@ -481,21 +496,6 @@ String BsGetLastError();
 bool BSPatch(String oldfile, String newfile, String patchfile);
 bool BSDiff(String oldfile, String newfile, String patchfile);
 
-bool LoadFromXMLFileAES(Callback1<XmlIO> xmlize, const char *file, const char *key);
-template <class T>
-bool LoadFromXMLFileAES(T& data, const char *file, const char *key)
-{
-	ParamHelper__<T> p(data);
-	return LoadFromXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), file, key);
-}
-
-bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *file, const char *key);
-template <class T>
-bool StoreAsXMLFileAES(T& data, const char *name, const char *file, const char *key)
-{
-	ParamHelper__<T> p(data);
-	return StoreAsXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), name, file, key);
-}
 
 // Fits object centered into frame maintaining the aspect
 template <class T>
@@ -524,7 +524,20 @@ Image GetRect(const Image& orig, const Rect &r);
 #include <AESStream/AESStream.h>
 
 bool LoadFromXMLFileAES(Callback1<XmlIO> xmlize, const char *file, const char *key);
+template <class T>
+bool LoadFromXMLFileAES(T& data, const char *file, const char *key)
+{
+	ParamHelper__<T> p(data);
+	return LoadFromXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), file, key);
+}
+
 bool StoreAsXMLFileAES(Callback1<XmlIO> xmlize, const char *name, const char *file, const char *key);
+template <class T>
+bool StoreAsXMLFileAES(T& data, const char *name, const char *file, const char *key)
+{
+	ParamHelper__<T> p(data);
+	return StoreAsXMLFileAES(callback(&p, &ParamHelper__<T>::Invoke), name, file, key);
+}
 
 #endif
 
