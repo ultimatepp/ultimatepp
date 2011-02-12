@@ -450,7 +450,7 @@ void RTFEncoder::PutHeader()
 		RichPara::CharFormat empcfmt;
 		RichPara::Format emppfmt;
 
-		for(i = 0; i < richtext.GetStyleCount(); i++) {
+		for(int i = 0; i < richtext.GetStyleCount(); i++) {
 			const RichStyle& style = richtext.GetStyle(i);
 			Begin("s", i);
 				PutParaFormat(style.format, emppfmt);
