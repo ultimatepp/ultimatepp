@@ -22,10 +22,7 @@ election criteria]&]
 [s0;2 &]
 [s0;i150;O0; [^http`:`/`/code`.google`.com`/p`/google`-summer`-of`-code`/wiki`/AdviceforMentors^2 A
 dvices for mentor organization]&]
-[s0;^http`:`/`/code`.google`.com`/p`/google`-summer`-of`-code`/wiki`/AdviceforMentors^2 &]
-[s0;i150;O0; [^http`:`/`/people`.gnome`.org`/`~federico`/docs`/summer`-of`-code`-mentoring`-howto`/index`.html^2 M
-entoring How To]&]
-[s0;2 &]
+[s0;^http`:`/`/people`.gnome`.org`/`~federico`/docs`/summer`-of`-code`-mentoring`-howto`/index`.html^2 &]
 [s0;i150;O0; [2 Mentoring experiences]&]
 [s0;l192;i150;O0; [^http`:`/`/arstechnica`.com`/open`-source`/news`/2008`/01`/netbsd4`-interview`.ars`/8^2 A
 rstechnica]&]

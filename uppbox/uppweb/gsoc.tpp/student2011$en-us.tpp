@@ -3,7 +3,8 @@ topic "GSoC 2011. Student page";
 [b117;*+117 $$1,2#27457433418004101424360058862402:Caption]
 [ $$2,0#03324558446220344731010354752573:]
 [{_}%EN-US 
-[s1;#b0; [R6 GSoC 2011. Student page]&]
+[s1;#b0; [R^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^6 GSoC 2011][R6 . 
+Student page]&]
 [s1;#b0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Introduction]]}}&]
 [s1;#b0;2 &]
