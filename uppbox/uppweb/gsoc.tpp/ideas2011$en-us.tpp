@@ -3,7 +3,8 @@ topic "Google Summer of Code 2011 Ideas";
 [b117;*+117 $$1,2#27457433418004101424360058862402:Caption]
 [b50;2 $$2,2#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s1;#b0; [R6 GSoC 2011. Ideas]&]
+[s1;#b0; [R^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^6 GSoC 2011][R6 . 
+Ideas]&]
 [s1;#b0; &]
 [s1;#b0; Introduction&]
 [s0;2 &]
