@@ -240,6 +240,14 @@ struct ToParaIterator : RichText::Iterator {
 					}
 				}
 			}
+			else if(!part.field.IsNull()) {
+				para.Cat(part.field, part.fieldparam, part.format);
+				space = false;
+			}
+			else if(part.object) {
+				para.Cat(part.object, part.format);
+				space = false;
+			}
 		}
 		space = true;
 		return false;

@@ -26,7 +26,7 @@ static int GetParaHeight(const Array<RichPara::Part>& parts)
 
 class RTFEncoder {
 public:
-	RTFEncoder(Stream& stream, const RichText& richtext, byte charset);
+	RTFEncoder(Stream& stream, const RichText& richtext, byte charset, Size dot_page_size, const Rect& dot_margins);
 
 	void            Run();
 
@@ -50,11 +50,12 @@ private:
 	void            Command(const char *cmd);
 	void            Command(const char *cmd, int param);
 	void            Space()                           { stream.Put(' '); }
-	void            PutText(const char *text);
+	void            PutText(const wchar *text);
 	void            PutObject(const RichObject& object);
 	void            PutTabs(const Vector<RichPara::Tab>& tabs);
 	void            PutBinHex(const byte *data, int count);
 	void            PutBinHex(const String& s)        { PutBinHex(s, s.GetLength()); }
+	void            PutBorder(StringBuffer& rowfmt, int wd, Color c, const char *clpar);
 
 	bool            PutParaFormat(const RichPara::Format& pf, const RichPara::Format& difpf);
 	bool            PutCharFormat(const RichPara::CharFormat& cf, const RichPara::CharFormat& difcf, bool pn);
@@ -75,6 +76,9 @@ private:
 	Stream&               stream;
 	const RichText&       richtext;
 	byte                  charset;
+	Size                  dot_page_size;
+	Rect                  dot_margins;
+	
 
 	RichPara::CharFormat  charfmt;
 	RichPara::Format      parafmt;
@@ -89,18 +93,27 @@ private:
 	Index<Uuid>           styleid;
 };
 
-void EncodeRTF(Stream& stream, const RichText& richtext, byte charset)
+void EncodeRTF(Stream& stream, const RichText& richtext, byte charset,
+	Size dot_page_size, const Rect& dot_margins)
 {
-	RTFEncoder(stream, richtext, charset).Run();
+	RTFEncoder(stream, richtext, charset, dot_page_size, dot_margins).Run();
 }
 
-String EncodeRTF(const RichText& richtext, byte charset)
+String EncodeRTF(const RichText& richtext, byte charset, Size dot_page_size, const Rect& dot_margins)
 {
 	StringStream out;
-	EncodeRTF(out, richtext, charset);
+	EncodeRTF(out, richtext, charset, dot_page_size, dot_margins);
 	String s = out.GetResult();
 	LLOG("EncodeRTF <<<<<\n" << s << "\n>>>>> EncodeRTF");
 	return s;
+}
+
+String EncodeRTF(const RichText& richtext, byte charset, int dot_page_width)
+{
+	int dot_page_height = iscale(dot_page_width, 1414, 1000);
+	Rect margins(472, 472, 472, 472);
+	return EncodeRTF(richtext, charset, Size(dot_page_width + margins.left + margins.right,
+		dot_page_height + margins.top + margins.bottom), margins);
 }
 
 String EncodeRTF(const RichText& richtext)
@@ -109,10 +122,13 @@ String EncodeRTF(const RichText& richtext)
 	                                                               : GetDefaultCharset());
 }
 
-RTFEncoder::RTFEncoder(Stream& stream, const RichText& richtext, byte charset)
-: stream(stream)
-, richtext(richtext)
-, charset(charset)
+RTFEncoder::RTFEncoder(Stream& stream_, const RichText& richtext_, byte charset_,
+	Size dot_page_size_, const Rect& dot_margins_)
+: stream(stream_)
+, richtext(richtext_)
+, charset(charset_)
+, dot_page_size(dot_page_size_)
+, dot_margins(dot_margins_)
 {
 	for(int i = 0; i < richtext.GetStyleCount(); i++)
 		styleid.Add(richtext.GetStyleId(i));
@@ -204,12 +220,17 @@ void RTFEncoder::Command(const char *cmd, int param)
 	stream.Put(IntStr(param));
 }
 
-void RTFEncoder::PutText(const char *text)
+void RTFEncoder::PutText(const wchar *text)
 {
-	while(*text) {
-		if(*text == '{' || *text == '}' || *text == '\\')
-			stream.Put('\\');
-		stream.Put(*text++);
+	for(; *text; text++) {
+		if((uint16)*text >= 128) {
+			stream.Put(NFormat("\\u%d\\'%02x", (int16)*text, FromUnicode(*text, CHARSET_DEFAULT)));
+		}
+		else {
+			if(*text == '{' || *text == '}' || *text == '\\')
+				stream.Put('\\');
+			stream.Put((byte)*text);
+		}
 	}
 }
 
@@ -365,7 +386,7 @@ void RTFEncoder::PutParts(const Array<RichPara::Part>& parts,
 				if(PutCharFormat(part.format, base, false) || p == 0)
 					Space();
 				base = part.format;
-				PutText(FromUnicode(px, charset));
+				PutText(px);
 			}
 		}
 		else if(part.object)
@@ -465,6 +486,13 @@ void RTFEncoder::PutHeader()
 			End();
 		}
 	End();
+	
+	Command("paperw", DotTwips(dot_page_size.cx));
+	Command("paperh", DotTwips(dot_page_size.cy));
+	Command("margl", DotTwips(dot_margins.left));
+	Command("margr", DotTwips(dot_margins.right));
+	Command("margt", DotTwips(dot_margins.top));
+	Command("margb", DotTwips(dot_margins.bottom));
 }
 
 void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
@@ -485,7 +513,7 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 		column_pos[c + 1] = column_pos[c] + part;
 	}
 	for(int r = 0; r < table.GetRows(); r++) {
-		String rowfmt;
+		StringBuffer rowfmt;
 		if(nesting)
 			rowfmt << "\\*\\nesttableprops";
 		rowfmt << "\\trowd"
@@ -509,6 +537,8 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 			"\\trpaddr" << DotTwips(dflt_margin.right) << "\\trpaddfr3"
 			"\\trpaddb" << DotTwips(dflt_margin.bottom) << "\\trpaddfb3";
 */
+		bool istop = (r == 0);
+		bool isbottom = (r == table.GetRows() - 1);
 		for(int c = 0; c < table.GetColumns(); c++) {
 			const RichCell& cell = table.cell[r][c];
 /*
@@ -527,9 +557,11 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 				case ALIGN_CENTER: rowfmt << "\\clvertalc"; break;
 				case ALIGN_BOTTOM: rowfmt << "\\clvertalb"; break;
 			}
+			bool isleft = (c == 0);
 			cellindex.Add(c);
 			if(cell.hspan)
 				c += cell.hspan;
+			bool isright = (c + 1 == table.GetColumns());
 			int cell_end = column_pos[c + 1];
 			if(cell.vspan) {
 				vspan_counts.At(c, 0) = cell.vspan;
@@ -539,6 +571,36 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 				rowfmt << "\\clvmrg";
 			if(!IsNull(cell.format.color))
 				rowfmt << "\\clcbpat" << phys_colors.Find(cell.format.color);
+			int lb, tb, rb, bb;
+			Color lc, tc, rc, bc;
+			lc = tc = rc = bc = table.format.gridcolor;
+			lb = tb = rb = bb = table.format.grid;
+			if(isleft) {
+				lb = table.format.frame;
+				lc = table.format.framecolor;
+			}
+			if(isright) {
+				rb = table.format.frame;
+				rc = table.format.framecolor;
+			}
+			if(istop) {
+				tb = table.format.frame;
+				tc = table.format.framecolor;
+			}
+			if(isbottom) {
+				bb = table.format.frame;
+				bc = table.format.framecolor;
+			}
+			if(!IsNull(cell.format.bordercolor))
+				lc = tc = rc = bc = cell.format.bordercolor;
+			lb = max(lb, cell.format.border.left);
+			tb = max(tb, cell.format.border.top);
+			rb = max(rb, cell.format.border.right);
+			bb = max(bb, cell.format.border.bottom);
+			PutBorder(rowfmt, lb, lc, "clbrdrl");
+			PutBorder(rowfmt, tb, tc, "clbrdrt");
+			PutBorder(rowfmt, rb, rc, "clbrdrr");
+			PutBorder(rowfmt, bb, bc, "clbrdrb");
 			rowfmt << "\\cellx" << DotTwips(cell_end);
 		}
 		Begin();
@@ -548,8 +610,9 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 		charfmt = RichPara::CharFormat();
 		if(nesting)
 			Command("itap", nesting + 1);
+		String fmtstr = rowfmt;
 		if(!nesting)
-			stream.Put(rowfmt);
+			stream.Put(fmtstr);
 		for(int c = 0; c < cellindex.GetCount(); c++) {
 			int cx = cellindex[c];
 			const RichCell& cell = table.cell[r][cx];
@@ -557,9 +620,18 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 			PutTxt(cell.text, nesting + 1, cell_wd);
 			Command(nesting ? "nestcell" : "cell");
 		}
-		stream.Put(rowfmt);
+		if(nesting)
+			stream.Put(fmtstr);
 		Command(nesting ? "nestrow" : "row");
 		End();
+	}
+}
+
+void RTFEncoder::PutBorder(StringBuffer& rowfmt, int wd, Color c, const char *clpar)
+{
+	if(wd > 0) { 
+		rowfmt << "\\" << clpar << "\\brdrs\\brdrw" << wd << "\\brdrcf"
+		<< phys_colors.Find(Nvl(c, Black())) << " ";
 	}
 }
 
@@ -672,7 +744,7 @@ void RTFEncoder::PutDocument()
 	old_ht = DotPoints(2 * tabs(charfmt.GetHeight()));
 	para_ht = 0;
 	oldstyle = Uuid::Create();
-	PutTxt(richtext, 0, 3600);
+	PutTxt(richtext, 0, dot_page_size.cx - dot_margins.left - dot_margins.right);
 }
 
 END_UPP_NAMESPACE
