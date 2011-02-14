@@ -4310,7 +4310,15 @@ of the product delivered.]]
 [s0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
 [s0;*2 &]
-[ {{1184:8816f0;g0;^t/25b/25 [s0;# [2 2010/03/23]]
+[ {{1184:8816f0;g0;^t/25b/25 [s0;# [2 2011/02/14]]
+:: [s0;# [2 Cookie Prize 2011 is announced. This year all U`+`+ Forum 
+users can vote.]&]
+[s0;# [2 Send your vote (the person you want deserves to win) through 
+a ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 PM][2 .
+]&]
+[s0;# [2 Prize not yet decided but this year it will be open to a wider 
+audience.]]
+:: [s0;# [2 2010/03/23]]
 :: [s0;# [2 First Cookie prize has been won by ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 d
 olik.rce][2 .because of his efforts launching ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/^2 L
 aunchPad for U`+`+][2 . This year gift has been a Prince Hubert 
