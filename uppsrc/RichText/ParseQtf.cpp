@@ -109,7 +109,6 @@ RichQtfParser::RichQtfParser(void *context_)
 	format.Height(100);
 	format.charset = GetDefaultCharset();
 	format.language = 0;
-	context = NULL;
 	breakpage = false;
 	istable = false;
 	oldtab = false;
@@ -947,8 +946,8 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 				term++;
 		}
 	}
-	if(paragraph.GetCount() == 0)
-		SetFormat();
+//	if(paragraph.GetCount() == 0) // TRC 11/02/15: kills formatting of last paragraph in text
+//		SetFormat();
 	if(oldtab)
 		FinishOldTable();
 	else

@@ -1746,8 +1746,11 @@ inline void WriteClipboardImage(const Image& img)
 bool (*&DisplayErrorFn())(const Value& v);
 inline bool DisplayError(const Value& v) { return DisplayErrorFn()(v); }
 
-void       EncodeRTF(Stream& stream, const RichText& richtext, byte charset);
-String     EncodeRTF(const RichText& richtext, byte charset);
+void       EncodeRTF(Stream& stream, const RichText& richtext, byte charset,
+	Size dot_page_size = Size(4960, 7015), const Rect& dot_margin = Rect(472, 472, 472, 472));
+String     EncodeRTF(const RichText& richtext, byte charset,
+	Size dot_page_size = Size(4960, 7015), const Rect& dot_margin = Rect(472, 472, 472, 472));
+String     EncodeRTF(const RichText& richtext, byte charset, int dot_page_width);
 String     EncodeRTF(const RichText& richtext);
 RichText   ParseRTF(const char *rtf);
 
