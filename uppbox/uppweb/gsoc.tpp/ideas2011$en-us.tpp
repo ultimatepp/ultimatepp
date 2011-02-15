@@ -63,8 +63,7 @@ engine]&]
 [s0;# [* U`+`+ as a library]&]
 [s0;# &]
 [s0;# [*2 Proposed by]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
-ei Natanael]&]
+[s0;# [2 U`+`+ users and developers]&]
 [s0;#*2 &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 High]&]
@@ -85,8 +84,7 @@ as pure library (or set of libraries).]&]
 resource editor only.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
-ei Natanael]&]
+[s0;#2 &]
 [s0;#2 &]
 [s0;# [*2 We propose you this roadmap]&]
 [s0;#i150;O0; [2 Study U`+`+ TheIde compiling strategy]&]
@@ -103,24 +101,29 @@ a resource editor]&]
 ei Natanael]&]
 [s0;#2 &]
 [s0;# [*2 Difficulty]&]
-[s0;# [2 TBD]&]
+[s0;# [2 Low to medium]&]
 [s0;#2 &]
 [s0;# [*2 Experience required]&]
-[s0;# [2 TBD]&]
+[s0;# [2 C`+`+]&]
+[s0;# [2 May help knowing to work with TheIDE]&]
 [s0;#2 &]
 [s0;# [*2 Description]&]
-[s0;# [2 A .so file which provide theming for KDE and another for Gnome 
-`- part of that will be solved by my GSoC application `- if user 
-doesn`'t have any DM based on gtk/qt then U`+`+ style will be 
-used.]&]
+[s0;# [2 You`'ll have to take U`+`+ code which provide theme for Gnome 
+(gtk`+), make it buildable as a `*.so file so it may be linked 
+at runtime but also keep the current functionality of being linked 
+statically at compile time (embed in application). Create a portable 
+interface so further theme engines (i.e. for KDE) may be added 
+later.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
 [s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
 ei Natanael]&]
 [s0;#2 &]
 [s0;# [*2 We propose you this roadmap]&]
-[s0;# [2 TBD]&]
-[s0;#2 &]
+[s0;#i150;O0; [2 Get to know U`+`+ basic  theming internals]&]
+[s0;#i150;O0; [2 Learn about U`+`+ runtime dynamic linking]&]
+[s0;#i150;O0; [2 Refactor the code]&]
+[s0;#i150;O0; [2 Create new API (glue)]&]
 [s0;#2 &]
 [s0;# [* Simple GUI frontend for Git]&]
 [s0;# &]
@@ -154,6 +157,41 @@ directly with U`+`+ git mirror)]&]
 extended to support more advanced features of distributed versioning 
 systems]&]
 [s0;#2 &]
+[s0;# [* U`+`+ port to KDE]&]
+[s0;#*2 &]
+[s0;# [*2 Proposed by]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
+ei Natanael]&]
+[s0;# &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 High.]&]
+[s0;#2 &]
+[s0;# [*2 Experience required]&]
+[s0;# [2 U`+`+, Qt.]&]
+[s0;#2 &]
+[s0;# [*2 Description]&]
+[s0;# [2 The goal is to provide a library which wraps Qt theming API 
+and draw U`+`+ widgets using it.]&]
+[s0;# [2 Right now U`+`+ is using gtk`+ theming API which make applications 
+look ugly under KDE and gtk`+ libs have to be available in order 
+for application to run.]&]
+[s0;# [2 This library will make U`+`+ non`-dependent on a theming API 
+but rather selecting proper theming engine at runtime so application 
+look will be changed based on running context `- KDE(Qt based) 
+or Gnome(gtk`+ based). If Qt or gtk`+ do not exist and user have 
+only X11 server U`+`+ will use its own theming API for drawing 
+widgets.]&]
+[s0;#2 &]
+[s0;# [*2 We propose you this roadmap]&]
+[s0;#i150;O0; [2 Learning to work in GNU/Linux U`+`+]&]
+[s0;#i150;O0; [2 Analyzing Gtk`+ theming in U`+`+]&]
+[s0;#i150;O0; [2 Applying the right patches to use Qt properly in KDE 
+environments]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
+ei Natanael]&]
+[s0;#^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 &]
 [s1; Project requirements&]
 [s0;# &]
 [s0;# [2 All U`+`+ community projects have to comply with certain basic 
