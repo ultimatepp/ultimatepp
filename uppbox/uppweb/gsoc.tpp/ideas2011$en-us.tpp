@@ -125,6 +125,7 @@ ei Natanael]&]
 [s0;#i150;O0; [2 Refactor the code]&]
 [s0;#i150;O0; [2 Create new API (glue)]&]
 [s0;#2 &]
+[s0;#2 &]
 [s0;# [* Simple GUI frontend for Git]&]
 [s0;# &]
 [s0;# [*2 Proposed by]&]
@@ -156,6 +157,7 @@ directly with U`+`+ git mirror)]&]
 [s0;#i150;O0; [2 If there is any time left, the functionality can be 
 extended to support more advanced features of distributed versioning 
 systems]&]
+[s0;#2 &]
 [s0;#2 &]
 [s0;# [* U`+`+ port to KDE]&]
 [s0;#*2 &]
@@ -192,6 +194,37 @@ environments]&]
 [s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
 ei Natanael]&]
 [s0;#^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 &]
+[s0;#^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 &]
+[s0;# [* Distributed build server]&]
+[s0;#*2 &]
+[s0;# [*2 Proposed by]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=836`&^2 Razv
+an Oprea]&]
+[s0;# &]
+[s0;# [*2 Difficulty]&]
+[s0;# [2 High.]&]
+[s0;#2 &]
+[s0;# [*2 Experience required]&]
+[s0;# [2 U`+`+,Servers programming, TheIDE build methodology.]&]
+[s0;#2 &]
+[s0;# [*2 Description]&]
+[s0;# [2 A standalone server that can build source files and return 
+the result to the client. The system would allow N clients to 
+be connected to N servers. The client should be integrated in 
+TheIde and Visual Studio 2008/2010, with a nice interface displaying 
+some overall statistics regarding the status of the servers.]&]
+[s0;# [2 The hard part is to keep the workload balanced and have the 
+system work with a minimum human interference.]&]
+[s0;# [2 In this project the server can take advantage of the current 
+TheIde infrastructure creating the possibility for Visual Studio 
+to build with GCC.]&]
+[s0;#2 &]
+[s0;# [*2 We propose you this roadmap]&]
+[s0;#i150;O0; [2 TBD]&]
+[s0;#2 &]
+[s0;# [*2 Mentors]&]
+[s0;# [2 TBD]&]
+[s0;#2 &]
 [s1; Project requirements&]
 [s0;# &]
 [s0;# [2 All U`+`+ community projects have to comply with certain basic 
