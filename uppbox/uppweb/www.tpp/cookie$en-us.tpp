@@ -20,7 +20,9 @@ a gift as a reward and all community appreciation.]&]
 [s0;2 &]
 [s0;# [2 This gift is a gesture contributed anonymously and chosen 
 arbitrarily, not having any relationship with the manufacturer 
-of the product delivered.]]
+of the product delivered.]&]
+[s0;#2 &]
+[s0;# [2 U`+`+ authors and Cookie Prize organization are excluded.]]
 :: [s0;= [* 
 @@image:1075&981
 Šƒ¨€€€€€€€€€€ø§œì‡Ü“ç¿¿şÓÚ¾­¦öØ·Ãí­õ´ªÎ”‘…ˆÅ„Ù›ÄÖ‘Øû¦„æ¨ˆ«áï½Â®ûï½÷Æ¶ 

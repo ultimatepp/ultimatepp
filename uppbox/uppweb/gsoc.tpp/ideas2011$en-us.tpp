@@ -211,14 +211,38 @@ an Oprea]&]
 [s0;# [2 A standalone server that can build source files and return 
 the result to the client. The system would allow N clients to 
 be connected to N servers. The client should be integrated in 
-TheIde and Visual Studio 2008/2010, with a nice interface displaying 
+TheIDE and Visual Studio 2008/2010, with a nice interface displaying 
 some overall statistics regarding the status of the servers.]&]
 [s0;# [2 The hard part is to keep the workload balanced and have the 
 system work with a minimum human interference.]&]
 [s0;# [2 In this project the server can take advantage of the current 
-TheIde infrastructure creating the possibility for Visual Studio 
+TheIDE infrastructure creating the possibility for Visual Studio 
 to build with GCC.]&]
-[s0;#2 &]
+[s0;# [2 The main purpose of the app is to use the computing power 
+of idle workstations in order to speed up the compiling speed 
+for a project. Usually most of the time, the CPU of a machine 
+is not used 100% therefore when other people need to compile 
+a big project the extra power can speed up this process significantly.]&]
+[s0;# [2 Also another advantage of having such a system is the ability 
+to compile and run on other remote platforms making the development 
+for multiple operating systems much easier. The programmer can 
+use the development environment of his choice and compile for 
+any OS that has a build server running. This will increases productivity 
+many times over just because the developer will use TheIDE he 
+is used with (constantly switching between Window and Mac is 
+really a pain).]&]
+[s0;# [2 Having a server with the ability to compile code remotely 
+allows users to create a really powerful build machine keeping 
+the costs of other computers down just because the user has to 
+only run a simple editor. Also, if we take for example the package 
+system of TheIDE, the server can dynamically choose already built 
+sources increasing the build speed even further.]&]
+[s0;# [2 The main purpose of the Distributed Build System is to allow 
+programmers to build projects on multiple machines, but this 
+can be extended even further. For example the server can keep 
+track of the source repository, automated nightly builds, or 
+last stable binary files.]&]
+[s0;#+92 &]
 [s0;# [*2 We propose you this roadmap]&]
 [s0;#i150;O0; [2 TBD]&]
 [s0;#2 &]
