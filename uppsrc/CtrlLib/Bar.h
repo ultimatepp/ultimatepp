@@ -416,7 +416,6 @@ private:
 	void       SendHelpLine();
 	void       ClearHelpLine();
 	void       UpdateTip();
-	UPP::Image GetImage() const;
 
 public:
 	enum Kind { NOLABEL, RIGHTLABEL, BOTTOMLABEL };
@@ -427,6 +426,7 @@ public:
 	static const Style& StyleSolid();
 
 	bool		IsChecked()				 { return checked; }
+	UPP::Image  GetImage() const;
 
 	ToolButton& SetStyle(const Style& s) { style = &s; Refresh(); return *this; }
 	ToolButton& MinSize(Size sz)         { minsize = sz; return *this; }

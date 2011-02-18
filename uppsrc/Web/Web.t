@@ -851,7 +851,7 @@ zhTW("\350\256\200\345\217\226\350\263\207\346\226\231\351\214\257\350\252\244"
 
 T_("Error reading socket, error code: %s")
 caES("Error llegint del socket, codi d'error: %s")
-csCZ("")
+csCZ("Chyba p\305\231i \304\215ten\303\255 socketu %s")
 deDE("")
 esES("Error leyendo socket, c\303\263digo de error: %s")
 fiFI("")

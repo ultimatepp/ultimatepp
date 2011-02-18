@@ -1,8 +1,8 @@
 #ifdef _MSC_VER
 #pragma setlocale("C")
 #endif
-
 // TabBar.cpp
+
 T_("Close")
 caES("Tancar")
 esES("Cerrar")
@@ -14,6 +14,12 @@ caES("Tancar altres")
 esES("Cerrar otros")
 itIT("Chiudi gli altri")
 roRO("\303\216nchide celelalte")
+
+T_("Close all")
+caES("")
+esES("")
+itIT("")
+roRO("")
 
 T_("Set active")
 caES("Mantenir actiu")
