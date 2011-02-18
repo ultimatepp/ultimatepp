@@ -206,17 +206,9 @@ void ColorPopUp::MouseLeave()
 	Refresh();
 }
 
-void ColorPopUp::Deactivate() {
-	if(IsOpen()) {
-		Close();
-		IgnoreMouseClick();
-		WhenCancel();
-	}
-}
-
 void ColorPopUp::Finish()
 {
-	Close();
+	popup.Clear();
 	if(colori >= 0)
 		WhenSelect();
 	else
@@ -267,6 +259,14 @@ Color ColorPopUp::Get() const
 		return Null;
 }
 
+void ColorPopUp::PopupDeactivate() {
+	if(popup && popup->IsOpen()) {
+		popup.Clear();
+		IgnoreMouseClick();
+		WhenCancel();
+	}
+}
+
 void ColorPopUp::PopUp(Ctrl *owner, Color c)
 {
 	int cy = norampwheel ? 0 : 110;
@@ -275,39 +275,46 @@ void ColorPopUp::PopUp(Ctrl *owner, Color c)
 	Rect r = owner->GetScreenRect();
 	int x = r.left;
 	int y = r.bottom;
-	if(x + sz.cx >= wr.right)
+	BottomPos(0, sz.cy).RightPos(0, sz.cx);
+	Point start(x, y);
+	if(x + sz.cx >= wr.right) {
 		x = r.right - sz.cx;
-	if(y + sz.cy >= wr.bottom)
+		start.x = r.right;
+		LeftPos(0, sz.cx);
+	}
+	if(y + sz.cy >= wr.bottom) {
 		y = r.top - sz.cy;
+		start.y = r.top;
+		TopPos(0, sz.cy);
+	}
 
 	Rect rt = RectC(x, y, sz.cx, sz.cy);
-	if(GUI_PopUpEffect()) {
-		sPaintRedirectCtrl pb;
-		pb.ctrl = this;
-		Add(pb.BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
-		SetRect(RectC(rt.left, rt.top, 1, 1));
-		Ctrl::PopUp(owner, true, true, GUI_GlobalStyle() >= GUISTYLE_XP);
-		SetFocus();
-		Ctrl::ProcessEvents();
-		Animate(*this, rt, GUIEFFECT_SLIDE);
-		pb.Remove();
-	}
-	else {
-		SetRect(rt);
-		Ctrl::PopUp(owner, true, true, true);
-	}
 
-	SetFocus();
+	popup.Create();
+	popup->color = this;
+	popup->Add(*this);
+	popup->SetRect(RectC(start.x, start.y, 3, 3));
 
 	if(!norampwheel) {
 		ramp.LeftPos(0, 18*7).VSizePos(GetCy(), 0);
 		wheel.LeftPos(18*9 - 1, 18*7).VSizePos(GetCy(), 0);
 	}
-
 	ramp <<= c;
 	wheel <<= c;
 	color = c;
 	colori = -1;
+
+	if(GUI_PopUpEffect()) {
+		popup->PopUp(owner, true, true, GUI_GlobalStyle() >= GUISTYLE_XP);
+		SetFocus();
+		Ctrl::ProcessEvents();
+		Animate(*popup, rt, GUIEFFECT_SLIDE);
+	}
+
+	popup->SetRect(rt);
+	if(!popup->IsOpen())
+		popup->PopUp(owner, true, true, true);
+	SetFocus();
 }
 
 void ColorPopUp::Select()

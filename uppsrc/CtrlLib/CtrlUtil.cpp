@@ -5,6 +5,8 @@ NAMESPACE_UPP
 
 #define LLOG(x) // RLOG(x)
 
+#define SLOWANIMATION _DBG_
+
 #define IMAGECLASS CtrlImg
 #define IMAGEFILE  <CtrlLib/Ctrl.iml>
 #include <Draw/iml_source.h>
@@ -16,6 +18,9 @@ void Animate(Ctrl& c, const Rect& target, int type)
 	Rect r0 = c.GetRect();
 	dword time0 = GetTickCount();
 	int anitime = 150;
+#ifdef SLOWANIMATION
+	anitime = 1500;
+#endif
 	if(type)
 		for(;;) {
 			int t = int(GetTickCount() - time0);
@@ -44,6 +49,9 @@ void Animate(Ctrl& c, const Rect& target, int type)
 				break;
 			c.Sync();
 			Sleep(0);
+#ifdef SLOWANIMATION
+			Sleep(100);
+#endif
 		}
 	c.SetRect(target);
 	c.SetAlpha(255);
