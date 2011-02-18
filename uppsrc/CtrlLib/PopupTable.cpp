@@ -10,7 +10,7 @@ CtrlFrame& DropFrame()
 	return m;
 }
 
-void PopUpTable::CancelMode() {
+void PopUpTable::PopupCancelMode() {
 	if(open) {
 		DoClose();
 		WhenCancel();
@@ -20,10 +20,13 @@ void PopUpTable::CancelMode() {
 
 void PopUpTable::DoClose() {
 	open = false;
-	Close();
+	if(popup && popup->IsOpen()) {
+		popup->Close();
+		popup.Clear();
+	}
 }
 
-void PopUpTable::Deactivate() {
+void PopUpTable::PopupDeactivate() {
 	if(open) {
 		DoClose();
 		IgnoreMouseClick();
@@ -79,33 +82,29 @@ void PopUpTable::PopUp(Ctrl *owner, int x, int top, int bottom, int width) {
 		rt.bottom = rt.top + h;
 	}
 	open = false;
+	popup.Create();
+	popup->table = this;
+	if(up) {
+		popup->SetRect(Rect(rt.left, rt.bottom - 1, rt.right, rt.bottom));
+		popup->Add(TopPos(0, rt.Height()).LeftPos(0, rt.Width()));
+	}
+	else {
+		popup->SetRect(Rect(rt.left, rt.top, rt.right, rt.top + 1));
+		popup->Add(BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
+	}
 	if(GUI_PopUpEffect()) {
-		AutoHideSb(false);
-		HideSb(true);
-		sPaintRedirectCtrl pb;
-		pb.ctrl = this;
-		if(up) {
-			SetRect(Rect(rt.left, rt.bottom - 1, rt.right, rt.bottom));
-			Ctrl::Add(pb.TopPos(0, rt.Height()).LeftPos(0, rt.Width()));
-		}
-		else {
-			SetRect(Rect(rt.left, rt.top, rt.right, rt.top + 1));
-			Ctrl::Add(pb.BottomPos(0, rt.Height()).LeftPos(0, rt.Width()));
-		}
-		Ctrl::PopUp(owner, true, true, GUI_DropShadows());
+		CenterCursor();
+		popup->PopUp(owner, true, true, GUI_DropShadows());
 		SetFocus();
 		Ctrl::ProcessEvents();
-		Animate(*this, rt, GUIEFFECT_SLIDE);
-		pb.Remove();
-		HideSb(false);
-		AutoHideSb(true);
-		CenterCursor();
-		open = true;
+		Animate(*popup, rt, GUIEFFECT_SLIDE);
+//		Ctrl::Remove();
 	}
 	if(!open) {
+		popup->SetRect(rt);
+		if(!popup->IsOpen())
+			popup->PopUp(owner, true, true, GUI_DropShadows());
 		CenterCursor();
-		SetRect(rt);
-		Ctrl::PopUp(owner, true, true, GUI_DropShadows());
 		SetFocus();
 		open = true;
 	}

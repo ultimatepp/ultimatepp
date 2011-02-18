@@ -2,15 +2,25 @@ void DropEdge_Write(Value);
 
 class PopUpTable : public ArrayCtrl {
 public:
-	virtual void Deactivate();
 	virtual void LeftUp(Point p, dword keyflags);
 	virtual bool Key(dword key, int);
-	virtual void CancelMode();
 
 protected:
+	void PopupDeactivate();
+	void PopupCancelMode();
+
+	struct Popup : Ctrl {
+		PopUpTable *table;
+		
+		virtual void Deactivate() { table->PopupDeactivate(); }
+		virtual void CancelMode() { table->PopupCancelMode(); }
+		
+	};
+
 	int          droplines;
 	int          inpopup;
 	bool         open;
+	One<Popup>   popup;
 
 	void         DoClose();
 
