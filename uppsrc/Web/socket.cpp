@@ -792,51 +792,19 @@ String Socket::PeekUntil(char term, int timeout_msec, int maxlen)
 	return s;
 }
 
-static String& SockErrorText()
-{
-	static StaticCriticalSection csect;
-	CriticalSection::Lock lock(csect);
-	static Index<uintptr_t> thread_index;
-	static Array<String> thread_errors;
-	static Vector<int> error_ticks;
-	int t = msecs();
-	if(thread_index.GetCount() >= 1000) {
-		for(int i = thread_index.GetCount(); --i >= 0;)
-			if(t - error_ticks[i] >= 60000) {
-				thread_index.Remove(i);
-				thread_errors.Remove(i);
-				error_ticks.Remove(i);
-			}
-	}
-#ifdef PLATFORM_WIN32
-	uintptr_t tid = GetCurrentThreadId();
-#else
-	#ifdef _MULTITHREADED
-		uintptr_t tid = (uintptr_t)Thread::GetCurrentId();
-	#else
-		uintptr_t tid = 0;
-	#endif
-#endif
-	int f = thread_index.Find(tid);
-	if(f < 0) {
-		f = thread_index.GetCount();
-		thread_index.Add(tid);
-		thread_errors.Add();
-		error_ticks.Add();
-	}
-	error_ticks[f] = t;
-	return thread_errors[f];
-}
+static thread__ char s_errortext[512];
+static thread__ int  s_errortextlen;
 
 String Socket::GetErrorText()
 {
-	return SockErrorText();
+	return String(s_errortext, s_errortextlen);
 }
 
 void Socket::SetErrorText(String text)
 {
 	SLOG("Socket::SetLastErrorText = " << text);
-	SockErrorText() = text;
+	s_errortextlen = min(text.GetLength(), 511);
+	memcpy(s_errortext, ~text, s_errortextlen + 1);
 }
 
 void Socket::SetSockError(SOCKET socket, const char *context)

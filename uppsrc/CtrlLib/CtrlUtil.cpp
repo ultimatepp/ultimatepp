@@ -1,11 +1,10 @@
 #include "CtrlLib.h"
 
-
 NAMESPACE_UPP
 
 #define LLOG(x) // RLOG(x)
 
-#define SLOWANIMATION _DBG_
+// #define SLOWANIMATION
 
 #define IMAGECLASS CtrlImg
 #define IMAGEFILE  <CtrlLib/Ctrl.iml>
