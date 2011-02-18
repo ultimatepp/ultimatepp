@@ -139,10 +139,17 @@ public:
 	virtual  void LeftDown(Point p, dword);
 	virtual  void MouseMove(Point p, dword);
 	virtual  void MouseLeave();
-	virtual  void Deactivate();
 	virtual  bool Key(dword key, int count);
 
 private:
+	void PopupDeactivate();
+
+	struct Popup : Ctrl {
+		ColorPopUp *color;
+		
+		virtual void Deactivate() { color->PopupDeactivate(); }		
+	};
+
 	int      Get(Point p);
 	int      GetCy();
 	void     Setup(Color c);
@@ -156,7 +163,6 @@ private:
 	void 	 DrawFilledFrame(Draw &w, int x, int y, int cx, int cy, Color fcol, Color bcol);
 	void 	 DrawFilledFrame(Draw &w, Rect &r, Color fcol, Color bcol);
 
-
 	int      colori;
 	bool     notnull;
 	bool     scolors;
@@ -166,6 +172,7 @@ private:
 
 	ColorRampCtrl  ramp;
 	ColorWheelCtrl wheel;
+	One<Popup>     popup;
 
 public:
 	Callback WhenCancel;
