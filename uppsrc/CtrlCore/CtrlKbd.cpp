@@ -137,13 +137,15 @@ void Ctrl::DoDeactivate(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 {
 	GuiLock __;
 	if(pfocusCtrl) {
-		Ctrl *ptop = pfocusCtrl->GetTopCtrl();
+		Ptr<Ctrl> ptop = pfocusCtrl->GetTopCtrl();
 		Ctrl *ntop = nfocusCtrl ? nfocusCtrl->GetTopCtrl() : NULL;
 		LLOG("DoDeactivate " << UPP::Name(ptop) << " in favor of " << UPP::Name(ntop));
 		if(ntop != ptop && !ptop->destroying) {
 			ptop->Deactivate();
-			ptop->StateH(DEACTIVATE);
-			ptop->RefreshAccessKeysDo(false);
+			if(ptop)
+				ptop->StateH(DEACTIVATE);
+			if(ptop)
+				ptop->RefreshAccessKeysDo(false);
 		}
 	}
 }
