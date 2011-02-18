@@ -26,6 +26,88 @@ topic "Changelog";
 [s0;4 &]
 [s0; [*_3 Current release]&]
 [s0; &]
+[s0; [*_4 3211][*3  (16 Feb 2011)]&]
+[s0;*3 &]
+[s0; [* TheIDE]&]
+[s0;i150;O0; SSE2 as Option in main config, templates now include 
+SSE2 as default (RM #9).&]
+[s0;i150;O0; new function `- convert selection to ASCII.&]
+[s0;i150;O0; Main package configuration editor shows structured flags 
+accepted by packages.&]
+[s0;i150;O0; Replaced QuickTabs with TabBar, reorganized Environment 
+dialog.&]
+[s0;i150;O0; Allow conditional breakpoints.&]
+[s0;i150;O0; Support for CLOB columns in .sch file (#14).&]
+[s0;* &]
+[s0; [* Library]&]
+[s0;* &]
+[s0; Core&]
+[s0;i150;O0;  Added missing Gate4`::Execute.&]
+[s0;i150;O0; Tuples now Moveable if all elements moveable.&]
+[s0;i150;O0; Added Xmlize ValueArray and ValueMap.&]
+[s0;i150;O0; Added DayOfYear, StrToTime; Draw: Rotate180.&]
+[s0;i150;O0; Thread threadid support.&]
+[s0;i150;O0; FormatIntBase added `'upper`' option. Added FormatIntHexUpper 
+function.&]
+[s0; &]
+[s0; Draw&]
+[s0;i150;O0; Added ImageOps hotspots.&]
+[s0;i150;O0; RASTER`_8ALPHA now considered non`-premultiplied (fixes 
+issue in some .png files).&]
+[s0; &]
+[s0; Painter&]
+[s0;i150;O0; Painter now depends on Draw.&]
+[s0; &]
+[s0; plugin/gif:&]
+[s0;i150;O0; Support for LCT.&]
+[s0; &]
+[s0; CtrlCore&]
+[s0;i150;O0; EncodeRTF improved to support page size, margins and 
+table cell borders.&]
+[s0;i150;O0; GetOpaqueRect, GetVoidRect now const&]
+[s0;i150;O0; TopWindow FullScreen for open window in Win32&]
+[s0; &]
+[s0; CtrlLib&]
+[s0;i150;O0; FileSel: Support for Terminal Services client shares 
+(Win32).&]
+[s0;i150;O0; FileSel lazy and optimized file icon loading.&]
+[s0;i150;O0; Automatic landscape mode for RichText print.&]
+[s0;i150;O0; LabelBox visually supports Disabled state, LabelBase 
+has got disabledink.&]
+[s0;i150;O0; Splitter can now have any width.&]
+[s0;i150;O0; ArrayCtrl with embedded Ctrls optimized to work well 
+up to 10000 widgets.&]
+[s0; &]
+[s0; RichEdit&]
+[s0;i150;O0; Added SingleLine, Filter.&]
+[s0;i150;O0; Improved process of searching for speller dictionaries.&]
+[s0;i150;O0; Added some missing czech translations.&]
+[s0; &]
+[s0; GridCtrl&]
+[s0;i150;O0; Added ClearChanged(), added missing row`_order setting 
+in Remove0&]
+[s0; &]
+[s0; Sql&]
+[s0;i150;O0; operator`[`](SqlId) now invokes NEVER (in debug) when 
+column is not found&]
+[s0;i150;O0; Oracle: SQLT`_TIMESTAMP support (thanks alendar)&]
+[s0; &]
+[s0; Web&]
+[s0;i150;O0; SmtpMail: Refactored, added support for character encoding 
+in headers, added recipient/sender names, &]
+[s0; &]
+[s0; [* Bazaar]&]
+[s0;# &]
+[s0;# Many packages added and improved: Scatter, DeEncrypter, CMeter, 
+Protect, Tree, Dispatcher, Gen, SDLCtrl, PolyXML, PlotLib,PlotCtrl, 
+SysInfo, Media, MediaPlayer, Functions4U, plugin/portaudio, Sound, 
+SoundExample, AutoScroller, CtrlFinder, CtrlProp, LogPosCtrl, 
+PointCtrl, PopUpC, RectCtrl, Styler, ValueCtrl, Docking , TabBar, 
+SysExec, Protect, Updater, SysExecGui, OfficeAutomation, Dispatcher, 
+Styler, Cypher, ProductVersion, Uniq, SplashSV and HelpViewer.&]
+[s0; &]
+[s0; [*_3 Previous releases]&]
+[s0; &]
 [s0; [*_4 2791][*3  (18 Oct 2010)]&]
 [s0;*3 &]
 [s0; [* TheIDE]&]
@@ -139,8 +221,6 @@ recipients.&]
 [s0; UltimateBook&]
 [s0;i150;O0; Updated doc &]
 [s0;4 &]
-[s0; [*_3 Previous releases]&]
-[s0; &]
 [s0; [*_4 2467][*3  (10 Jun 2010)]&]
 [s0; &]
 [s0; [* TheIDE]&]
