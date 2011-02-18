@@ -565,7 +565,8 @@ zhTW("\351\226\213\345\225\237\346\252\224\346\241\210\351\214\257\350\252\244"
 
 T_("Unsupported image format in file [* \001%s\001].")
 caES("")
-csCZ("Soubor [* \001%s\001] obsahuje nezn\303\241m\303\275 form\303\241t obr\303\241zku.")
+csCZ("Soubor [* \001%s\001] obsahuje nezn\303\241m\303\275 form\303\241t obr"
+     "\303\241zku.")
 deDE("")
 esES("")
 fiFI("")
@@ -1124,7 +1125,9 @@ zhTW("\350\241\250\346\240\274\345\261\254\346\200\247")
 T_("Invalid header row count %d, cell at rw %d, co %d has vspan = %d.")
 caES("Cap\303\247alera no v\303\240lid fila %d, cel at fila %d, col. %d ha v"
      "span = %d.")
-csCZ("Chybn\303\275 po\304\215et \305\231\303\241dk\305\257 z\303\241hlav\303\255 %d, bu\305\210ka na \305\231\303\241dku %d, sloupec %d m\303\241 vertik\303\241ln\303\255 span = %d.")
+csCZ("Chybn\303\275 po\304\215et \305\231\303\241dk\305\257 z\303\241hlav\303"
+     "\255 %d, bu\305\210ka na \305\231\303\241dku %d, sloupec %d m\303\241 v"
+     "ertik\303\241ln\303\255 span = %d.")
 deDE("")
 esES("Suma de filas en cabecera invalida, celda en la fila %d, col %d tiene "
      "vspan = %d")
