@@ -51,7 +51,7 @@ other engines might be used as well.]&]
 [s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
 Dolinár]&]
 [s0;#2 &]
-[s0;# [*2 We propose you this roadmap]&]
+[s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Explore possibility to use libwebkit]&]
 [s0;#i150;O0; [2 Decide how to integrate Webkit in a U`+`+ project 
 (most straightforward possibilities are direct rendering in DHCtrl 
@@ -84,7 +84,7 @@ as pure library (or set of libraries).]&]
 resource editor only.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
-[s0;#2 &]
+[s0;# [2 TBD]&]
 [s0;#2 &]
 [s0;# [*2 We propose you this roadmap]&]
 [s0;#i150;O0; [2 Study U`+`+ TheIde compiling strategy]&]
@@ -118,7 +118,7 @@ later.]&]
 [s0;# [*2 Mentors]&]
 [s0;# [2 TBD]&]
 [s0;#2 &]
-[s0;# [*2 We propose you this roadmap]&]
+[s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Get to know U`+`+ basic  theming internals]&]
 [s0;#i150;O0; [2 Learn about U`+`+ runtime dynamic linking]&]
 [s0;#i150;O0; [2 Refactor the code]&]
@@ -146,7 +146,7 @@ into other applications.]&]
 [s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
 Dolinár]&]
 [s0;#2 &]
-[s0;# [*2 We propose you this roadmap]&]
+[s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Get to know usvn, as it provides the very same functionality 
 for SVN version control system]&]
 [s0;#i150;O0; [2 Create a GUI widget providing the basic git functionality 
@@ -183,7 +183,7 @@ or Gnome(gtk`+ based). If Qt or gtk`+ do not exist and user have
 only X11 server U`+`+ will use its own theming API for drawing 
 widgets.]&]
 [s0;#2 &]
-[s0;# [*2 We propose you this roadmap]&]
+[s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Learning to work in GNU/Linux U`+`+]&]
 [s0;#i150;O0; [2 Analyzing Gtk`+ theming in U`+`+]&]
 [s0;#i150;O0; [2 Applying the right patches to use Qt properly in KDE 
@@ -241,7 +241,7 @@ can be extended even further. For example the server can keep
 track of the source repository, automated nightly builds, or 
 last stable binary files.]&]
 [s0;#+92 &]
-[s0;# [*2 We propose you this roadmap]&]
+[s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 TBD]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
@@ -266,12 +266,41 @@ and runs on Windows XP and Vista, Mac OS X 10.5 (Leopard), and
 Linux systems that use IA`-32 or ARM processors. In U`+`+ V8 
 will be a good choise to create possibility for extensions.]&]
 [s0;2 &]
-[s0; [*2 We propose you this roadmap]&]
+[s0; [*2 Roadmap]&]
 [s0; [2 TBD]&]
 [s0;2 &]
 [s0; [*2 Mentors]&]
 [s0;# [2 TBD]&]
+[s0;#2 &]
+[s0;#2 &]
+[s0;# [* T`+`+ preview inside TheIDE]&]
+[s0;#*2 &]
+[s0; [*2 Proposed by]&]
+[s0; [2 Peter Helcmanovsky]&]
+[s0;2 &]
+[s0; [*2 Difficulty]&]
+[s0; [2 Easy to Medium]&]
+[s0;2 &]
+[s0; [*2 Experience required]&]
+[s0; [2 C`+`+]&]
+[s0;2 &]
+[s0; [*2 Description]&]
+[s0; [2 Add into TheIDE a way to view edited T`+`+ file without whitespace 
+marks/etc, ie. `"preview`" mode (Eventually add different preview 
+modes like Qtf/Pdf/Web).]&]
+[s0;2 &]
+[s0; [*2 Roadmap]&]
+[s0;i150;O0; [2 Find and learn about how T`+`+ files are edited and 
+processed for view (there are some examples including Qtf Designer 
+in TheIDE, UWord and uppweb generator).]&]
+[s0;i150;O0; [2 Check if Qtf Designer can be connected to T`+`+ file 
+editing and what benefits would bring such solution.]&]
+[s0;i150;O0; [2 Add preview mode to TheIDE.]&]
+[s0;#i150;O0; [2 Eventually add different modes of preview.]&]
 [s0;# &]
+[s0; [*2 Mentors]&]
+[s0;# [2 TBD]&]
+[s0;#2 &]
 [s1; Project requirements&]
 [s0;# &]
 [s0;# [2 All U`+`+ community projects have to comply with certain basic 
