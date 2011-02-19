@@ -807,10 +807,10 @@ indows Vista SDK][2 中的免费的Visual C`+`+ 9.0协同工作，而且有一�
 ::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/download`$en`-us^2 下载]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 当前发布版本：][IRELEASE;2 发
 布版本]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2791`.exe^+75 W
-in32安装程序][+75  (18.1 MB)]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2791`.tar`.gz^+75 X
-11源码][+75  (20.2 MB)]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-RELEASE`.exe^+75 W
+in322安装程序]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-RELEASE`.tar`.gz^+75 X
+11源码]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
 tu包]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 最新svn：][ILATESTSVN;2 最新

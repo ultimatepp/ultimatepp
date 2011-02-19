@@ -856,10 +856,10 @@ Ultimate`+`+ вы получите:]&]
 загрузки]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Roadmap`$en`-us^2 Текущий 
 релиз][2 : ][IRELEASE;2 release]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-2791`.exe^+75 W
-in32 installer][+75  (18.1 MB)]&]
-[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-2791`.tar`.gz^+75 X
-11`-src][+75  (20.2 MB)]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-win32`-RELEASE`.exe^+75 W
+in32 installer]&]
+[s0;l160;i150;a17;O0; [^http`:`/`/sourceforge`.net`/project`/downloading`.php`?group`_id`=93970`&filename`=upp`-x11`-src`-RELEASE`.tar`.gz^+75 X
+11`-src]&]
 [s0;l160;i150;a17;O0; [^http`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^+75 Ubun
 tu packages]&]
 [s0;i150;a17;O0;%% [%RU-RU^topic`:`/`/uppweb`/svn`/svn`$en`-us^2 SVN][%RU-RU2 : 
