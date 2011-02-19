@@ -72,4 +72,4 @@ avec ces méthodes, vous pouvez toujours publier un message sur
 le ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2  pour demander 
 de l`'aide, ou simplement ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 m
 `'envoyer][2  un message. Je le ferai pour vous.]&]
-[s0;%% ]
+[s0; ]

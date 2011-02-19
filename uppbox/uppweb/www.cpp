@@ -33,14 +33,6 @@ bool ftpupload;
 bool outPdf;
 bool doSvn;
 
-String Replace(const String &str, const String find, const String &replace) {
-	int pos = str.Find(find);
-	if (pos >= 0) 
-		return str.Left(pos) + replace + str.Mid(pos + find.GetCount());
-	else
-		return str;
-}
-
 String GetRcFile(const char *s)
 {
 	String f = GetDataFile(s);
@@ -511,20 +503,14 @@ void ExportPage(int i)
 		int posE = page.Find("<`/object`>", posBB);
 		int posEE = page.Find("]", posE);
 		String html0 = page.Mid(posBB, posE + strlen("<`/object`>") - posBB);
-		String html1;
-		while (true) { 
-			html1 = Replace(html0, "`", "")	;
-			if (html1 == html0)
-				break;
-			html0 = html1; 
-		}
-		htmlrep.Add(html1);
+		html0.Replace("`", "");
+		htmlrep.Add(html0);
 		page = page.Left(pos0) + "QTFHTMLTEXT" + page.Mid(posEE+1);
 	}
 	
 	page = QtfAsHtml(page, css, links, labels, targetdir, links[i]);
 	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml) 
-		page = Replace(page, "QTFHTMLTEXT", htmlrep[iHtml]);
+		page.Replace(String("QTFHTMLTEXT"), htmlrep[iHtml]);
 	
 	Color paper = SWhite;
 	if(path == "topic://uppweb/www/download$en-us")
@@ -857,24 +843,34 @@ GUI_APP_MAIN
 		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
 	}
 	
+	String svntableStr = DeQtf("[svntable]");
 	for(int i = 0; i < tt.GetCount(); i++) {
 		if (tt[i].title == "Svn releases") 
-			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 300, ""));
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, ""));
 		else if (tt[i].title == "Svn Web releases") 
-			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "uppweb"));
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb"));
 		else if (tt[i].title == "Svn Bazaar releases") 
-			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "bazaar"));
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar"));
 		else if (tt[i].title == "Svn Upp releases") 
-			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "uppsrc"));		
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc"));		
 		else if (tt[i].title == "Svn major releases") 
-			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 300, "", true));
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, "", true));
 		else if (tt[i].title == "Svn Web major releases") 
-			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "uppweb", true));
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb", true));
 		else if (tt[i].title == "Svn Bazaar major releases") 
-			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "bazaar", true));
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar", true));
 		else if (tt[i].title == "Svn Upp major releases") 
-			tt[i].text = Replace(tt[i].text, "`[svntable`]", SvnChanges(svnlog, 100, "uppsrc", true));		
-		
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppsrc", true));		
+		else if (links[i].Find("index") >= 0) {
+			String win32 = "upp-win32-RELEASE.exe";
+			String win32release = win32;
+			win32release.Replace(String("RELEASE"), release);
+			String x11 = "upp-x11-src-RELEASE.tar.gz";
+			String x11release = x11;
+			x11release.Replace(String("RELEASE"), release);
+			tt[i].text.Replace(DeQtf(x11), DeQtf(x11release));
+			tt[i].text.Replace(DeQtf(win32), DeQtf(win32release));
+		}
 	}
 
 	DUMPC(reflink.GetKeys());
