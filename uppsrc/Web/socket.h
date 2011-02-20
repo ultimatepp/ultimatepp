@@ -22,8 +22,10 @@ public:
 		bool                    IsEof() const          { return is_eof && leftover.IsEmpty(); }
 		bool                    IsError() const        { return is_error; }
 		void                    SetError()             { is_error = true; }
-		void                    ClearError()           { is_error = false; }
+		void                    ClearError()           { is_error = false; errorcode = 0; errordesc.Clear(); }
 		void                    SetSockError(String context);
+		int                     GetError() const       { return errorcode; }
+		String                  GetErrorDesc() const   { return errordesc; }
 
 		void                    NoDelay();
 		void                    Linger(int msecs);
@@ -49,6 +51,8 @@ public:
 		bool                    is_blocking;
 		bool                    is_error;
 		bool                    is_eof;
+		int                     errorcode;
+		String                  errordesc;
 #ifndef NOFAKEERROR
 		int                     fake_error;
 #endif
@@ -73,8 +77,10 @@ public:
 	bool            IsOpen() const                           { return data && data->IsOpen(); }
 
 	bool            IsEof() const                            { return !data || data->IsEof(); }
-	bool            IsError() const                          { return data->IsError(); }
-	void            ClearError()                             { data->ClearError(); }
+	bool            IsError() const                          { return !data || data->IsError(); }
+	void            ClearError()                             { if(data) data->ClearError(); }
+	int             GetError() const                         { return data ? data->GetError() : 0; }
+	String          GetErrorDesc() const                     { return data ? data->GetErrorDesc() : String(); }
 
 	SOCKET          GetSocket() const                        { return IsOpen() ? data->socket : INVALID_SOCKET; }
 	int             GetNumber() const                        { return (int)GetSocket(); }
