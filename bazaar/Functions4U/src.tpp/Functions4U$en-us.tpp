@@ -1533,4 +1533,19 @@ ring]_`&[*@3 folder])&]
 [s4;%- &]
 [s5;:GetDesktopManagerNew`(`):%- [_^String^ String]_[* GetDesktopManagerNew]()&]
 [s2; A more complete version of GetDesktopManager() based on GetOsInfo().&]
+[s3; &]
+[s4;%- &]
+[s5;:NON`_REENTRANT:%- [* NON`_REENTRANT]&]
+[s5;:NON`_REENTRANT`(v`):%- [* NON`_REENTRANT]([*@3 v])&]
+[s2; It returns [%-*@3 v] if the function has been called in the same 
+thread and it has not returned yet.&]
+[s0;l288; It is useful to avoid a function to be called twice in 
+different situations, for example:&]
+[s0;#l288;i150;O0; The function calls Ctrl`::ProcessEvents(); If the 
+function has been called when a button has been pressed, this 
+button can be pressed again so the function can be called twice.&]
+[s0;#l288;i150;O0; The function is called by ChildLostFocus() and 
+it opens a new window using, lets say, PromptOK(). This way ChildLostFocus 
+will be called twice: the second one because PromptOK() makes 
+the field to loose the focus.&]
 [s0; ]

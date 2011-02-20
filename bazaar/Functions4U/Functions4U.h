@@ -518,6 +518,18 @@ Color RandomColor();
 // Image Rotate180(const Image& img); 		Included in ImageOp
 Image GetRect(const Image& orig, const Rect &r);
 
+class _NRFuse {
+public:
+	_NRFuse(bool *_inside) {inside = _inside;}
+	~_NRFuse() 			   {*inside = false;}
+private:
+	bool *inside;
+};
+
+#define NON_REENTRANT 	 static bool _insideNR; _NRFuse _fuseNR(&_insideNR); if(!_insideNR) _insideNR = true; else return
+#define NON_REENTRANT(v) static bool _insideNR; _NRFuse _fuseNR(&_insideNR); if(!_insideNR) _insideNR = true; else return v
+	
+
 #ifdef flagAES
 
 #include <openssl/aes.h>
