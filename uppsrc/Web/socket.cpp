@@ -408,7 +408,9 @@ bool Socket::Data::Peek(int timeout_msec, bool write)
 void Socket::Data::SetSockError(String context)
 {
 	SetError();
-	Socket::SetSockError(socket, context);
+	errorcode = Socket::GetErrorCode();
+	errordesc = SocketErrorDesc(Socket::GetErrorCode());
+	Socket::SetSockError(socket, context, errordesc);
 }
 
 void Socket::Data::NoDelay()
