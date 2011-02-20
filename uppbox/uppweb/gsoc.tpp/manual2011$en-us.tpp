@@ -25,11 +25,17 @@ rganization Selection criteria]&]
 [s0;i150;O0; [^http`:`/`/code`.google`.com`/p`/google`-summer`-of`-code`/wiki`/AdviceforMentors^2 A
 dvices for a mentor organization]&]
 [s0;^http`:`/`/people`.gnome`.org`/`~federico`/docs`/summer`-of`-code`-mentoring`-howto`/index`.html^2 &]
+[s0;i150;O0; [2 Other organizations pages]&]
+[s0;l160;i150;O0; [^http`:`/`/dev`.globus`.org`/wiki`/Google`_Summer`_of`_Code`_2010`_Ideas`#Mentors^2 T
+he Globus Alliance]&]
+[s0;l160;i150;O0; [^http`:`/`/dev`.opennebula`.org`/projects`/1`/wiki`/StudentProjectIdeas^2 O
+penNebula]&]
+[s0;^http`:`/`/people`.gnome`.org`/`~federico`/docs`/summer`-of`-code`-mentoring`-howto`/index`.html^2 &]
 [s0;i150;O0; [2 Mentoring experiences]&]
-[s0;l192;i150;O0; [^http`:`/`/arstechnica`.com`/open`-source`/news`/2008`/01`/netbsd4`-interview`.ars`/8^2 A
+[s0;l160;i150;O0; [^http`:`/`/arstechnica`.com`/open`-source`/news`/2008`/01`/netbsd4`-interview`.ars`/8^2 A
 rstechnica]&]
-[s0;l192;i150;O0; [^http`:`/`/blog`.musicbrainz`.org`/`?p`=310^2 Musicbrainz]&]
-[s0;l192;i150;O0; [^http`:`/`/my`.bzflag`.org`/gsoc`/bzflag`_gsoc2007`_post`_mortem`.pdf^2 B
+[s0;l160;i150;O0; [^http`:`/`/blog`.musicbrainz`.org`/`?p`=310^2 Musicbrainz]&]
+[s0;l160;i150;O0; [^http`:`/`/my`.bzflag`.org`/gsoc`/bzflag`_gsoc2007`_post`_mortem`.pdf^2 B
 zflag][2  ][/2 (big file)]&]
 [s0; &]
 [s0;> [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^+75 Return to GSoC 

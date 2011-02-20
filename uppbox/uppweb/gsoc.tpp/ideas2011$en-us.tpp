@@ -5,8 +5,8 @@ topic "Google Summer of Code 2011 Ideas";
 [{_}%EN-US 
 [s1;#b0; [R^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^6 GSoC 2011][R6 . 
 Ideas]&]
-[s1;#b0; &]
-[s1;#b0; Introduction&]
+[s0;%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Introduction]]}}&]
 [s0;2 &]
 [s0; [2 Google Summer of Code 2011 has been announced and this year 
 Ultimate`+`+ project really wants to participate as a mentoring 
@@ -21,12 +21,16 @@ also like to hear your ideas.]&]
 [s0;2 &]
 [s0; [2 You can introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Fo
 rum][2 , discuss with the community these ideas and your proposals 
-adding your personal touches.]&]
+adding your personal touches. You can also contact the ][^topic`:`/`/uppweb`/gsoc`/mentor2011`$en`-us^2 m
+entors][2  whose skills can match with your project ideas. This 
+way you can do your own proposals with more possibilities to 
+be approved.]&]
 [s0;2 &]
 [s0; [2 This list is a work`-in`-progress. You can follow discussions 
 in ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
 [s0;2 &]
-[s1; Project Ideas&]
+[s0;%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Project Ideas]]}}&]
 [s0;#* &]
 [s0;# [* Web Browser Control]&]
 [s0;# &]
@@ -63,7 +67,8 @@ engine]&]
 [s0;# [* U`+`+ as a library]&]
 [s0;# &]
 [s0;# [*2 Proposed by]&]
-[s0;# [2 U`+`+ users and developers]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=3`&^2 Mirek 
+Fidler][2  and others.]&]
 [s0;#*2 &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 High]&]
@@ -98,7 +103,7 @@ a resource editor]&]
 [s0;# &]
 [s0;# [*2 Proposed by]&]
 [s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
-ei Natanael]&]
+ei Natanael Cosma (Student)]&]
 [s0;#2 &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 Low to medium]&]
@@ -162,7 +167,7 @@ systems]&]
 [s0;#*2 &]
 [s0;# [*2 Proposed by]&]
 [s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
-ei Natanael]&]
+ei Natanael Cosma (Student)]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 High.]&]
@@ -276,7 +281,8 @@ will be a good choise to create possibility for extensions.]&]
 [s0;# [* T`+`+ preview inside TheIDE]&]
 [s0;#*2 &]
 [s0; [*2 Proposed by]&]
-[s0; [2 Peter Helcmanovsky]&]
+[s0; [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=21`&^2 Peter 
+Helcmanovsky]&]
 [s0;2 &]
 [s0; [*2 Difficulty]&]
 [s0; [2 Easy to Medium]&]
@@ -301,7 +307,16 @@ editing and what benefits would bring such solution.]&]
 [s0; [*2 Mentors]&]
 [s0;# [2 TBD]&]
 [s0;#2 &]
-[s1; Project requirements&]
+[s0;#2 &]
+[s0;# [* Your project HERE]&]
+[s0;#2 &]
+[s0;# [2 Remember you as student can propose your own projects. We 
+advice you to read our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2  
+and contact the ][^topic`:`/`/uppweb`/gsoc`/mentor2011`$en`-us^2 mentors][2  
+that can match with your project.]&]
+[s0;#* &]
+[s0;%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Project requirements]]}}&]
 [s0;# &]
 [s0;# [2 All U`+`+ community projects have to comply with certain basic 
 requirements. These are included in Bazaar pages.]&]
