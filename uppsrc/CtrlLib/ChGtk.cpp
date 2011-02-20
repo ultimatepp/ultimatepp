@@ -670,6 +670,8 @@ void ChHostSkin()
 	String font_name = GtkStyleString("gtk-font-name");
 	int xdpi = Nvl(GtkStyleInt("gtk-xft-dpi"), 72 * 1024);
 	gtk_antialias = Nvl(GtkStyleInt("gtk-xft-antialias"), -1);
+	if(GetDesktopManager() != "gnome")
+		gtk_antialias = -1;
 	gtk_hinting = Nvl(GtkStyleInt("gtk-xft-hinting"), -1);
 //	gtk_hintstyle = GtkStyleString("gtk-xft-hintstyle");
 	gtk_hintstyle = gtk_hinting? "hintfull" : "hintnone"; // Gtk does not seem to follow its own rules...
