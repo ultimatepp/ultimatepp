@@ -106,11 +106,17 @@ void SSLInit()
 }
 */
 
-String SSLGetLastError()
+String SSLGetLastError(int& code)
 {
 	char errbuf[150];
-	ERR_error_string(ERR_get_error(), errbuf);
+	ERR_error_string(code = ERR_get_error(), errbuf);
 	return errbuf;
+}
+
+String SSLGetLastError()
+{
+	int dummy;
+	return SSLGetLastError(dummy);
 }
 
 String SSLToString(X509_NAME *name)
@@ -364,33 +370,38 @@ SSLSocketData::~SSLSocketData()
 
 void SSLSocketData::SetSSLError(const char *context)
 {
-	SetError();
-	Socket::SetSockError(socket, context, SSLGetLastError());
+	if(sock) {
+		int code;
+		String text = SSLGetLastError(code);
+		sock->SetSockError(socket, context, code, text);
+	}
 }
 
 void SSLSocketData::SetSSLResError(const char *context, int res)
 {
-	SetError();
-	int code = SSL_get_error(ssl, res);
-	String out;
-	switch(code)
-	{
-#define SSLERR(c) case c: out = #c; break;
-	SSLERR(SSL_ERROR_NONE)
-	SSLERR(SSL_ERROR_SSL)
-	SSLERR(SSL_ERROR_WANT_READ)
-	SSLERR(SSL_ERROR_WANT_WRITE)
-	SSLERR(SSL_ERROR_WANT_X509_LOOKUP)
-	SSLERR(SSL_ERROR_SYSCALL)
-	SSLERR(SSL_ERROR_ZERO_RETURN)
-	SSLERR(SSL_ERROR_WANT_CONNECT)
-#ifdef PLATFORM_WIN32
-	SSLERR(SSL_ERROR_WANT_ACCEPT)
-#endif
-	default: out = "unknown code"; break;
+	if(sock) {
+		int code = SSL_get_error(ssl, res);
+		String out;
+		switch(code)
+		{
+	#define SSLERR(c) case c: out = #c; break;
+		SSLERR(SSL_ERROR_NONE)
+		SSLERR(SSL_ERROR_SSL)
+		SSLERR(SSL_ERROR_WANT_READ)
+		SSLERR(SSL_ERROR_WANT_WRITE)
+		SSLERR(SSL_ERROR_WANT_X509_LOOKUP)
+		SSLERR(SSL_ERROR_SYSCALL)
+		SSLERR(SSL_ERROR_ZERO_RETURN)
+		SSLERR(SSL_ERROR_WANT_CONNECT)
+	#ifdef PLATFORM_WIN32
+		SSLERR(SSL_ERROR_WANT_ACCEPT)
+	#endif
+		default: out = "unknown code"; break;
+		}
+		out << " (" << code << ")";
+		if(sock)
+		Socket::SetSockError(socket, context, code, out);
 	}
-	out << " (" << code << ")";
-	Socket::SetSockError(socket, context, out);
 }
 
 bool SSLSocketData::Peek(int timeout_msec, bool write)
@@ -412,8 +423,8 @@ int SSLSocketData::Read(void *buf, int amount)
 		if((fake_error -= res) <= 0)
 		{
 			fake_error = 0;
-			SetError();
-			Socket::SetSockError(socket, "SSL_read", "fake error");
+			if(sock)
+				sock->SetSockError(socket, "SSL_read", 1, "fake error");
 			return -1;
 		}
 		else

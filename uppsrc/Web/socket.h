@@ -20,12 +20,8 @@ public:
 		bool                    CloseRaw(int timeout_msec);
 
 		bool                    IsEof() const          { return is_eof && leftover.IsEmpty(); }
-		bool                    IsError() const        { return is_error; }
-		void                    SetError()             { is_error = true; }
-		void                    ClearError()           { is_error = false; errorcode = 0; errordesc.Clear(); }
-		void                    SetSockError(String context);
-		int                     GetError() const       { return errorcode; }
-		String                  GetErrorDesc() const   { return errordesc; }
+		bool                    IsError() const        { return sock && sock->IsError(); }
+		void                    ClearError()           { if(sock) sock->ClearError(); }
 
 		void                    NoDelay();
 		void                    Linger(int msecs);
@@ -46,13 +42,12 @@ public:
 		virtual Value           GetInfo(String info) const;
 
 	public:
+		Socket                 *sock;
 		SOCKET                  socket;
 		String                  leftover;
 		bool                    is_blocking;
 		bool                    is_error;
 		bool                    is_eof;
-		int                     errorcode;
-		String                  errordesc;
 #ifndef NOFAKEERROR
 		int                     fake_error;
 #endif
@@ -62,25 +57,26 @@ public:
 		void                    Attach(SOCKET socket, bool nodelay, bool is_blocking);
 		void                    SetSockResError(String context);
 		void                    AttachRaw(SOCKET s, bool blocking);
+		void                    SetSockError(String context);
 
 		friend void AttachSocket(Socket& socket, SOCKET hsocket, bool blocking);
 	};
 
-	Socket() {}
+	Socket() { is_error = false; errorcode = 0; }
 	Socket(One<Data> data) : data(data) {}
 
 	static void     Init();
 
-	void            Attach(One<Data> d)                      { data = d; }
-	void            Clear()                                  { data.Clear(); }
+	void            Attach(One<Data> d)                      { data = d; data->sock = this; }
+	void            Clear()                                  { data->sock = NULL; data.Clear(); }
 
 	bool            IsOpen() const                           { return data && data->IsOpen(); }
 
 	bool            IsEof() const                            { return !data || data->IsEof(); }
-	bool            IsError() const                          { return !data || data->IsError(); }
-	void            ClearError()                             { if(data) data->ClearError(); }
-	int             GetError() const                         { return data ? data->GetError() : 0; }
-	String          GetErrorDesc() const                     { return data ? data->GetErrorDesc() : String(); }
+	bool            IsError() const                          { return is_error; }
+	void            ClearError()                             { is_error = false; errorcode = 0; errordesc.Clear(); }
+	int             GetError() const                         { return errorcode; }
+	String          GetErrorDesc() const                     { return errordesc; }
 
 	SOCKET          GetSocket() const                        { return IsOpen() ? data->socket : INVALID_SOCKET; }
 	int             GetNumber() const                        { return (int)GetSocket(); }
@@ -129,9 +125,6 @@ public:
 	static String   GetErrorText();
 	static void     SetErrorText(String text);
 	static void     ClearErrorText()                         { SetErrorText(Null); }
-	static void     SetSockError(const char *context)        { SetSockError(INVALID_SOCKET, context); }
-	static void     SetSockError(SOCKET socket, const char *context);
-	static void     SetSockError(SOCKET socket, const char *context, const char *errordesc);
 
 #if defined(PLATFORM_WIN32)
 	static int      GetErrorCode()                           { return WSAGetLastError(); }
@@ -143,8 +136,16 @@ public:
 #error Unsupported platform
 #endif
 
+protected:
+	void     SetSockError(const char *context)        { SetSockError(INVALID_SOCKET, context); }
+	void     SetSockError(SOCKET socket, const char *context);
+	void     SetSockError(SOCKET socket, const char *context, int code, const char *errordesc);
+
 private:
 	One<Data>       data;
+	bool            is_error;
+	int             errorcode;
+	String          errordesc;	
 };
 
 #ifdef PLATFORM_WIN32
