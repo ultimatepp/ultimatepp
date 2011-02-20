@@ -116,6 +116,7 @@ Socket::Data::Data()
 , is_eof(false)
 , fake_error(0)
 {
+	sock = NULL;
 }
 
 Value Socket::Data::GetInfo(String info) const
@@ -310,8 +311,8 @@ int Socket::Data::Read(void *buf, int amount)
 	if(fake_error && res > 0) {
 		if((fake_error -= res) <= 0) {
 			fake_error = 0;
-			SetError();
-			Socket::SetSockError(socket, "recv", "fake error");
+			if(sock)
+				sock->SetSockError(socket, "recv", 1, "fake error");
 			return -1;
 		}
 		else
@@ -407,10 +408,10 @@ bool Socket::Data::Peek(int timeout_msec, bool write)
 
 void Socket::Data::SetSockError(String context)
 {
-	SetError();
-	errorcode = Socket::GetErrorCode();
-	errordesc = SocketErrorDesc(Socket::GetErrorCode());
-	Socket::SetSockError(socket, context, errordesc);
+	int    errorcode = Socket::GetErrorCode();
+	String errordesc = SocketErrorDesc(Socket::GetErrorCode());
+	if(sock)
+		sock->SetSockError(socket, context, errorcode, errordesc);
 }
 
 void Socket::Data::NoDelay()
@@ -794,7 +795,7 @@ String Socket::PeekUntil(char term, int timeout_msec, int maxlen)
 	return s;
 }
 
-static thread__ char s_errortext[512];
+static thread__ char s_errortext[201];
 static thread__ int  s_errortextlen;
 
 String Socket::GetErrorText()
@@ -805,40 +806,45 @@ String Socket::GetErrorText()
 void Socket::SetErrorText(String text)
 {
 	SLOG("Socket::SetLastErrorText = " << text);
-	s_errortextlen = min(text.GetLength(), 511);
+	s_errortextlen = min(text.GetLength(), 200);
 	memcpy(s_errortext, ~text, s_errortextlen + 1);
+}
+
+void Socket::SetSockError(SOCKET socket, const char *context, int code, const char *errordesc)
+{
+	String err;
+	errorcode = code;
+	if(socket != INVALID_SOCKET)
+		err << "socket(" << (int)socket << ") / ";
+	err << context << ": " << errordesc;
+	errordesc = err;
+	SetErrorText(err);
 }
 
 void Socket::SetSockError(SOCKET socket, const char *context)
 {
-	SetSockError(socket, context, SocketErrorDesc(GetErrorCode()));
-}
-
-void Socket::SetSockError(SOCKET socket, const char *context, const char *errordesc)
-{
-	String err;
-	if(socket != INVALID_SOCKET)
-		err << "socket(" << (int)socket << ") / ";
-	err << context << ": " << errordesc;
-	SetErrorText(err);
+	errorcode = GetErrorCode();
+	SetSockError(socket, context, errorcode, SocketErrorDesc(GetErrorCode()));
 }
 
 bool ServerSocket(Socket& socket, int port, bool nodelay, int listen_count, bool blocking, bool reuse)
 {
-	One<Socket::Data> data = new Socket::Data;
-	if(!data->OpenServer(port, nodelay, listen_count, blocking, reuse))
-		return false;
+	Socket::Data *data = new Socket::Data;
 	socket.Attach(data);
-	return true;
+	if(data->OpenServer(port, nodelay, listen_count, blocking, reuse))
+		return true;
+	socket.Clear();
+	return false;
 }
 
 bool ClientSocket(Socket& socket, const char *host, int port, bool nodelay, dword *my_addr, int timeout, bool blocking)
 {
-	One<Socket::Data> data = new Socket::Data;
-	if(!data->OpenClient(host, port, nodelay, my_addr, timeout, blocking))
-		return false;
+	Socket::Data *data = new Socket::Data;
 	socket.Attach(data);
-	return true;
+	if(data->OpenClient(host, port, nodelay, my_addr, timeout, blocking))
+		return true;
+	socket.Clear();
+	return false;
 }
 
 void AttachSocket(Socket& socket, SOCKET s, bool blocking)
