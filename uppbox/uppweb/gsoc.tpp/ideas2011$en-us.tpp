@@ -321,8 +321,8 @@ Prentice]&]
 [s0; [2 C`+`+]&]
 [s0;2 &]
 [s0; [*2 Description]&]
-[s0; [2 To create a standalone help package possibly based on ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=787`&^2 K
-ohait][2 `'s help viewer. Features:]&]
+[s0; [2 To create a standalone help package possibly based on ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=472`&^2 m
+delfede][2 `'s help viewer. Features:]&]
 [s0;2 &]
 [s0;#i150;O0; [2 Structured table of contents in parallel with existing 
 `"package reference`" help. Anyone can add things or add their 
@@ -352,8 +352,8 @@ changes/improvements to the help.]&]
 [s0;i150;O0; [2 Find and learn about how T`+`+ files are edited and 
 processed for view (there are some examples including Qtf Designer 
 in TheIDE, UWord and uppweb generator).]&]
-[s0;i150;O0; [2 Study ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=787`&^2 K
-ohait][2 `'s help viewer.]&]
+[s0;i150;O0; [2 Study ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=472`&^2 m
+delfede][2 `'s help viewer.]&]
 [s0;i150;O0; [2 TBD]&]
 [s0;# &]
 [s0; [*2 Mentors]&]
