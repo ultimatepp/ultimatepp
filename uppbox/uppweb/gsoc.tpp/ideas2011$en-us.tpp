@@ -308,6 +308,58 @@ editing and what benefits would bring such solution.]&]
 [s0;# [2 TBD]&]
 [s0;#2 &]
 [s0;#2 &]
+[s0;# [* Advanced T`+`+ help system]&]
+[s0;#*2 &]
+[s0; [*2 Proposed by]&]
+[s0; [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=6`&^2 Graeme 
+Prentice]&]
+[s0;2 &]
+[s0; [*2 Difficulty]&]
+[s0; [2 Medium to High.]&]
+[s0;2 &]
+[s0; [*2 Experience required]&]
+[s0; [2 C`+`+]&]
+[s0;2 &]
+[s0; [*2 Description]&]
+[s0; [2 To create a standalone help package possibly based on ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=787`&^2 K
+ohait][2 `'s help viewer. Features:]&]
+[s0;2 &]
+[s0;#i150;O0; [2 Structured table of contents in parallel with existing 
+`"package reference`" help. Anyone can add things or add their 
+own pages locally.]&]
+[s0;#i150;O0; [2 Existing topic`+`+ pages can be linked to and links 
+within those pages work whether they`'re viewed from the `"new`" 
+help or existing.]&]
+[s0;#i150;O0; [2 Provide history, favorites, bookmarks and retrace.]&]
+[s0;#i150;O0; [2 Press F1 in source code and the help window shows 
+help for word under cursor i.e. add a mechanism that supports 
+this.]&]
+[s0;#i150;O0; [2 Click on a blue square and you see the topic page 
+in non`-edit mode i.e. go straight to Mr Ped `"preview mode`".]&]
+[s0;#i150;O0; [2 Improve the help search so it takes you to the exact 
+line.]&]
+[s0;#i150;O0; [2 Add `"tag word`" mechanism so that tag words can be 
+assigned to a topic`+`+ page and searched for.]&]
+[s0;#2 &]
+[s0;# [2 For extra credit:]&]
+[s0;#i150;O0; [2 Generate pdf with table of contents of it all.]&]
+[s0;#i150;O0; [2 Convert from topic`+`+ format to Google Docs format 
+and vice versa.]&]
+[s0;#i150;O0; [2 Improve/automate the mechanism for users to submit 
+changes/improvements to the help.]&]
+[s0;2 &]
+[s0; [*2 Roadmap]&]
+[s0;i150;O0; [2 Find and learn about how T`+`+ files are edited and 
+processed for view (there are some examples including Qtf Designer 
+in TheIDE, UWord and uppweb generator).]&]
+[s0;i150;O0; [2 Study ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=787`&^2 K
+ohait][2 `'s help viewer.]&]
+[s0;i150;O0; [2 TBD]&]
+[s0;# &]
+[s0; [*2 Mentors]&]
+[s0;# [2 TBD]&]
+[s0;#2 &]
+[s0;#2 &]
 [s0;# [* Your project HERE]&]
 [s0;#2 &]
 [s0;# [2 Remember you as student can propose your own projects. We 

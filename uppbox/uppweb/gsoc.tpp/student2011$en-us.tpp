@@ -95,7 +95,7 @@ entor][2 .]&]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Students List]]}}&]
 [s0;2 &]
-[s1;#b0; [*2 Here is the students list..]&]
+[s1;#b0; [*2 Here is the students list:]&]
 [s0; &]
 [s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
 ei Natanael Cosma][2 .]&]
