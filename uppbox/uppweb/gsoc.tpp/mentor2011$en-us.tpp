@@ -7,7 +7,14 @@ Mentor page]&]
 [s1;#b0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Introduction]]}}&]
 [s1;#b0;2 &]
-[s1;#b0; [*2 To be done.]&]
+[s1;#b0; [*2 If you want to be a mentor, read these links and ask in 
+][*^http`:`/`/www`.ultimatepp`.org`/forum^2 Forum][*2  to be included 
+in the list, indicating also in which ][*^topic`:`/`/uppweb`/gsoc`/ideas2011`$en`-us^2 i
+deas][*2  you would like to be a mentor.]&]
+[s0;#2 &]
+[s0;# [2 If you are a ][^topic`:`/`/uppweb`/gsoc`/student2011`$en`-us^2 student][2 , 
+you can read the mentor list and contact the mentors with skills 
+that match with your ideas.]&]
 [s0;2 &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Advices for mentors]]}}&]
@@ -21,7 +28,11 @@ entoring How To]&]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Mentor List]]}}&]
 [s1;#b0;2 &]
-[s1;#b0; [*2 To be done.]&]
+[s1;#b0; [*2 Here is the mentors list and their skills related with 
+U`+`+ project and applications.]&]
+[s0; &]
+[s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 Kold
+o Ramirez][2 : Engineering, Image processing.]&]
 [s0; &]
 [s0;2 &]
 [s0;> [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^+75 Return to GSoC 

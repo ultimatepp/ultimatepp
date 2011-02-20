@@ -79,7 +79,9 @@ you.]&]
 is good]&]
 [s1;#l160;b0; [*2 No problem. We are open to new proposals. Remember 
 you will have three months, so do not try to be too generic and 
-too optimistic.]&]
+too optimistic. See our ][*^topic`:`/`/uppweb`/gsoc`/mentor2011`$en`-us^2 mentor 
+list][*2  and contact the person with skills that match better 
+with your ideas.]&]
 [s0;2 &]
 [s0;2 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 And what about the mentor?]]}}&]
@@ -87,7 +89,16 @@ too optimistic.]&]
 [s0; [2 Do not worry about the Mentor. We will provide you one. We 
 are new in GSoC, but with our ][^topic`:`/`/uppweb`/www`/tutoring`$en`-us^2 Tutorin
 g Plan][2  we have tried to help new people to enter in U`+`+ world 
-and we have trained Tutors to be in a future your Mentor.]&]
+and we have trained Tutors to be in a future your ][^topic`:`/`/uppweb`/gsoc`/mentor2011`$en`-us^2 M
+entor][2 .]&]
+[s0;2 &]
+[s0;2%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Students List]]}}&]
+[s0;2 &]
+[s1;#b0; [*2 Here is the students list..]&]
+[s0; &]
+[s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=906`&^2 Andr
+ei Natanael Cosma][2 .]&]
 [s0;2 &]
 [s0;> [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^+75 Return to GSoC 
 2011 Home page]&]
