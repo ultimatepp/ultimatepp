@@ -29,7 +29,7 @@ entoring How To]&]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Mentor List]]}}&]
 [s1;#b0;2 &]
 [s1;#b0; [*2 Here is the mentors list and their skills related with 
-U`+`+ project and applications.]&]
+U`+`+ project and applications:]&]
 [s0; &]
 [s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 Kold
 o Ramirez][2 : Engineering, Image processing.]&]
