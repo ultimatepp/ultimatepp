@@ -2,17 +2,17 @@ topic "GSoC 2011. Application Template";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
-[s1;#b0; [R6 GSoC 2011. Application Template]&]
+[s1;#b0; [R6 GSoC 2011. Student Application Template]&]
 [s1;#b0; &]
-[s1;#b0; Introduction&]
-[s1;#b0;*2 &]
-[s0; [2 Fill this template following the fields and post it to our 
-][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=thread`&frm`_id`=89`&^2 Fo
-rum in Newbie Corner][2 .]&]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Introduction]]}}&]
+[s1;#b0; &]
+[s0; [2 If you are an student, fill this template following the fields 
+and post it to our ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=thread`&frm`_id`=89`&^2 F
+orum in Newbie Corner][2 .]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*+117 Template]&]
-[s0; &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Template]]}}&]
+[s0;*2 &]
 [s0;i150;O0; [2 Name]&]
 [s0;2 &]
 [s0;i150;O0; [2 Location and time zone]&]

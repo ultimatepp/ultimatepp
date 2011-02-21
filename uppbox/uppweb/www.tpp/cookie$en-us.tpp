@@ -4319,7 +4319,7 @@ users can vote.]&]
 a ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 PM][2 .
 ]&]
 [s0;# [2 Prize not yet decided but this year it will be open to a wider 
-audience.]]
+audience (`^`_`^).]]
 :: [s0;# [2 2010/03/23]]
 :: [s0;# [2 First Cookie prize has been won by ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 d
 olik.rce][2 .because of his efforts launching ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/^2 L
