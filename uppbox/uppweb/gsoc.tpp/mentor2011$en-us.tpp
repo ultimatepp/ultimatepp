@@ -31,6 +31,9 @@ entoring How To]&]
 [s1;#b0; [*2 Here is the mentors list and their skills related with 
 U`+`+ project and applications:]&]
 [s0; &]
+[s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár][2 : Project building and packaging (TheIDE or external), 
+Physics.]&]
 [s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 Kold
 o Ramirez][2 : Engineering, Image processing.]&]
 [s0; &]

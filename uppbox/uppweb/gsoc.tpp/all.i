@@ -1,3 +1,7 @@
+TOPIC("application$en-us")
+#include "application$en-us.tppi"
+END_TOPIC
+
 TOPIC("application_template2011$en-us")
 #include "application_template2011$en-us.tppi"
 END_TOPIC
