@@ -373,7 +373,7 @@ void SSLSocketData::SetSSLError(const char *context)
 	if(sock) {
 		int code;
 		String text = SSLGetLastError(code);
-		sock->SetSockError(socket, context, code, text);
+		SetSockError(context, code, text);
 	}
 }
 
@@ -382,25 +382,22 @@ void SSLSocketData::SetSSLResError(const char *context, int res)
 	if(sock) {
 		int code = SSL_get_error(ssl, res);
 		String out;
-		switch(code)
-		{
+		switch(code) {
 	#define SSLERR(c) case c: out = #c; break;
-		SSLERR(SSL_ERROR_NONE)
-		SSLERR(SSL_ERROR_SSL)
-		SSLERR(SSL_ERROR_WANT_READ)
-		SSLERR(SSL_ERROR_WANT_WRITE)
-		SSLERR(SSL_ERROR_WANT_X509_LOOKUP)
-		SSLERR(SSL_ERROR_SYSCALL)
-		SSLERR(SSL_ERROR_ZERO_RETURN)
-		SSLERR(SSL_ERROR_WANT_CONNECT)
+			SSLERR(SSL_ERROR_NONE)
+			SSLERR(SSL_ERROR_SSL)
+			SSLERR(SSL_ERROR_WANT_READ)
+			SSLERR(SSL_ERROR_WANT_WRITE)
+			SSLERR(SSL_ERROR_WANT_X509_LOOKUP)
+			SSLERR(SSL_ERROR_SYSCALL)
+			SSLERR(SSL_ERROR_ZERO_RETURN)
+			SSLERR(SSL_ERROR_WANT_CONNECT)
 	#ifdef PLATFORM_WIN32
-		SSLERR(SSL_ERROR_WANT_ACCEPT)
+			SSLERR(SSL_ERROR_WANT_ACCEPT)
 	#endif
-		default: out = "unknown code"; break;
+			default: out = "unknown code"; break;
 		}
-		out << " (" << code << ")";
-		if(sock)
-		Socket::SetSockError(socket, context, code, out);
+		SetSockError(context, code, out);
 	}
 }
 
@@ -415,16 +412,18 @@ int SSLSocketData::Read(void *buf, int amount)
 {
 	ASSERT(ssl);
 	int res = SSL_read(ssl, (char *)buf, amount);
+	if(res == 0) {
+		is_eof = true;
+		if(SSL_get_shutdown(ssl) & SSL_RECEIVED_SHUTDOWN)
+			return 0;
+	}
 	if(res <= 0)
 		SetSSLResError("SSL_read", res);
 #ifndef NOFAKEERROR
-	if(fake_error && res > 0)
-	{
-		if((fake_error -= res) <= 0)
-		{
+	if(fake_error && res > 0) {
+		if((fake_error -= res) <= 0) {
 			fake_error = 0;
-			if(sock)
-				sock->SetSockError(socket, "SSL_read", 1, "fake error");
+			SetSockError("SSL_read", 0, "fake error");
 			return -1;
 		}
 		else

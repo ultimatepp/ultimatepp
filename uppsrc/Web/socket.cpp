@@ -406,10 +406,14 @@ bool Socket::Data::Peek(int timeout_msec, bool write)
 	return avail > 0;
 }
 
-void Socket::Data::SetSockError(String context)
+void Socket::Data::SetSockError(const String& context)
 {
-	int    errorcode = Socket::GetErrorCode();
-	String errordesc = SocketErrorDesc(Socket::GetErrorCode());
+	int errorcode = Socket::GetErrorCode();
+	SetSockError(context, errorcode, SocketErrorDesc(errorcode));
+}
+
+void Socket::Data::SetSockError(const String& context, int errorcode, const String& errordesc)
+{
 	if(sock)
 		sock->SetSockError(socket, context, errorcode, errordesc);
 }
