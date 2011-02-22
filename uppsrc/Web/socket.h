@@ -55,9 +55,10 @@ public:
 	protected:
 		SOCKET                  AcceptRaw(dword *ipaddr, int timeout_msec);
 		void                    Attach(SOCKET socket, bool nodelay, bool is_blocking);
-		void                    SetSockResError(String context);
+		void                    SetSockResError(const String& context);
 		void                    AttachRaw(SOCKET s, bool blocking);
-		void                    SetSockError(String context);
+		void                    SetSockError(const String& context);
+		void                    SetSockError(const String& context, int code, const String& errortext);
 
 		friend void AttachSocket(Socket& socket, SOCKET hsocket, bool blocking);
 	};
