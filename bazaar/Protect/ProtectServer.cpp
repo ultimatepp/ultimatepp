@@ -666,6 +666,7 @@ bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData,
 		mime = "text/plain; charset=utf-8";
 
 	smtp.New();
+	smtp.TimeSent(GetSysTime());
 	smtp.To(userData.Get("EMAIL"));
 	smtp.Subject(subject);
 	smtp.From(serverVars.Get("SERVER_NAME"));
