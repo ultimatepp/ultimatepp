@@ -1,0 +1,12 @@
+description "Resizable frame Ctrls\377";
+
+uses
+	CtrlLib;
+
+file
+	StandardLayout.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

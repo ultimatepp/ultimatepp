@@ -1,0 +1,8 @@
+LAYOUT(StandardLayout, 396, 192)
+	ITEM(Button, ok, SetLabel(t_("OK")).SetFont(StdFont().Bold()).LeftPosZ(12, 96).BottomPosZ(13, 27))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(12, 68).BottomPosZ(13, 19))
+	ITEM(Label, dv___2, SetLabel(t_("label:")).SetAlign(ALIGN_RIGHT).LeftPosZ(12, 48).TopPosZ(20, 20))
+	ITEM(EditString, estr, HSizePosZ(64, 12).TopPosZ(20, 19))
+	ITEM(LabelBox, dv___4, SetLabel(t_("Standard Layout")).SetInk(LtBlue).HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
