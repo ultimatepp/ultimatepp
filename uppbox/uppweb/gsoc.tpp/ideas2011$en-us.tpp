@@ -342,11 +342,18 @@ line.]&]
 assigned to a topic`+`+ page and searched for.]&]
 [s0;#2 &]
 [s0;# [2 For extra credit:]&]
-[s0;#i150;O0; [2 Generate pdf with table of contents of it all.]&]
+[s0;#i150;O0; [2 Generate pdf with a clickable table of contents and 
+index.]&]
 [s0;#i150;O0; [2 Convert from topic`+`+ format to Google Docs format 
-and vice versa.]&]
+and vice versa. Google Docs allows simultaneous online changes 
+by multiple users so possibly people could write and maintain 
+an individual help page as a Google doc and import as a topic 
+page when convenient. With a proper help infrastructure, people 
+might become more interested in updating the help and the easier 
+it is, the more likely people are to contribute.]&]
 [s0;#i150;O0; [2 Improve/automate the mechanism for users to submit 
-changes/improvements to the help.]&]
+changes/improvements to the help. Related to the last point, 
+automating the process so that people are more likely to contribute.]&]
 [s0;2 &]
 [s0; [*2 Roadmap]&]
 [s0;i150;O0; [2 Find and learn about how T`+`+ files are edited and 
