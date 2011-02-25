@@ -1,0 +1,15 @@
+uses
+	Core,
+	Functions4U;
+
+file
+	main.cpp,
+	StaticPlugin readonly separator,
+	Spreadsheet.cpp,
+	Spreadsheet.h,
+	Open.cpp,
+	Excel.cpp;
+
+mainconfig
+	"" = "";
+
