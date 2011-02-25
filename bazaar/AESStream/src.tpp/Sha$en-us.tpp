@@ -22,24 +22,48 @@ ere].&]
 [s4; &]
 [s5;:SHA224String`(const String`&`): [_^String^ String]_[* SHA224String]([@(0.0.255) const]_
 [_^String^ String][@(0.0.255) `&]_[*@3 data])&]
+[s2; [%% Returns a String representing the 28 bytes (224 bits) SHA`-2 
+hash of ][*@3 data.]&]
+[s3;%% &]
+[s4; &]
+[s5;:SHA224Hex`(const String`&`): [_^String^ String]_[* SHA224Hex]([@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 data])&]
 [s2; [%% Returns an hexadecimal String representing the 28 bytes (224 
 bits) SHA`-2 hash of ][*@3 data.]&]
 [s3;%% &]
 [s4; &]
 [s5;:SHA256String`(const String`&`): [_^String^ String]_[* SHA256String]([@(0.0.255) const]_
 [_^String^ String][@(0.0.255) `&]_[*@3 data])&]
+[s2; [%% Returns a String representing the 32 bytes (256 bits) SHA`-2 
+hash of ][*@3 data.]&]
+[s3;%% &]
+[s4; &]
+[s5;:SHA256Hex`(const String`&`): [_^String^ String]_[* SHA256Hex]([@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 data])&]
 [s2; [%% Returns an hexadecimal String representing the 32 bytes (256 
 bits) SHA`-2 hash of ][*@3 data.]&]
 [s3;%% &]
 [s4;^String^ &]
 [s5;:SHA384String`(const String`&`): [_^String^ String]_[* SHA384String]([@(0.0.255) const]_
 [_^String^ String][@(0.0.255) `&]_[*@3 data])&]
+[s2; [%% Returns a String representing the 48 bytes (384 bits) SHA`-2 
+hash of ][*@3 data.]&]
+[s3;%% &]
+[s4; &]
+[s5;:SHA384Hex`(const String`&`): [_^String^ String]_[* SHA384Hex]([@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 data])&]
 [s2; [%% Returns an hexadecimal String representing the 48 bytes (384 
 bits) SHA`-2 hash of ][*@3 data.]&]
 [s3;%% &]
 [s4; &]
 [s5;:SHA512String`(const String`&`): [_^String^ String]_[* SHA512String]([@(0.0.255) const]_
 [_^String^ String][@(0.0.255) `&]_[*@3 data])&]
+[s2; [%% Returns a String representing the 64 bytes (512 bits) SHA`-2 
+hash of ][*@3 data.]&]
+[s3;%% &]
+[s4; &]
+[s5;:SHA512Hex`(const String`&`): [_^String^ String]_[* SHA512Hex]([@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 data])&]
 [s2; [%% Returns an hexadecimal String representing the 64 bytes (512 
 bits) SHA`-2 hash of ][*@3 data.]&]
 [s3;%% &]

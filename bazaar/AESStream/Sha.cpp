@@ -13,7 +13,11 @@ String SHA224String(const String& data) {
   	SHA224_Update(&sha, data, data.GetCount());
   	SHA224_Final(digest, &sha);
   	
-  	return HexString(digest, 28);
+  	return String(digest, 28);
+}
+
+String SHA224Hex(const String& data) {
+  	return HexString(SHA224String(data));
 }
 
 String SHA256String(const String& data) {
@@ -24,7 +28,11 @@ String SHA256String(const String& data) {
   	SHA256_Update(&sha, data, data.GetCount());
   	SHA256_Final(digest, &sha);
   	
-  	return HexString(digest, 32);
+  	return String(digest, 32);
+}
+
+String SHA256Hex(const String& data) {
+  	return HexString(SHA256String(data));
 }
 
 String SHA384String(const String& data) {
@@ -35,7 +43,11 @@ String SHA384String(const String& data) {
   	SHA384_Update(&sha, data, data.GetCount());
   	SHA384_Final(digest, &sha);
   	
-  	return HexString(digest, 48);
+  	return String(digest, 48);
+}
+
+String SHA384Hex(const String& data) {
+  	return HexString(SHA384String(data));
 }
 
 String SHA512String(const String& data)
@@ -47,5 +59,9 @@ String SHA512String(const String& data)
   	SHA512_Update(&sha, data, data.GetCount());
   	SHA512_Final(digest, &sha);
   	
-  	return HexString(digest, 64);
+  	return String(digest, 64);
+}
+
+String SHA512Hex(const String& data) {
+  	return HexString(SHA512String(data));
 }
