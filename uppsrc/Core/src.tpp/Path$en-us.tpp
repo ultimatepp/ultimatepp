@@ -247,14 +247,17 @@ onst]_[_^String^ String][@(0.0.255) `&]_[*@3 path], [@(0.0.255) int]_[*@3 mode]_
 &]
 [s6; `[POSIX`]&]
 [s2;%% Creates all missing directories on [%-*@3 path] with access 
-[%-*@3 mode].&]
+[%-*@3 mode].Remember that [%-*@3 path] is a file path. To realize 
+a folder path, it has be ended with a `'`\`\`'.&]
 [s3;%% &]
 [s4; &]
 [s5;:RealizePath`(const String`&`,int`): [@(0.0.255) bool]_[* RealizePath]([@(0.0.255) cons
 t]_[_^String^ String][@(0.0.255) `&]_[*@3 path], [@(0.0.255) int]_[*@3 mode]_`=_[@3 0755])&]
 [s6; `[POSIX`]&]
-[s2; [%% Same as RealizeDirectory(GetFileFolder(][*@3 path][%% ), ][*@3 mode][%% ) 
-`- creates all directories required before writing file at ][*@3 path.]&]
+[s2;%% Same as RealizeDirectory(GetFileFolder([%-*@3 path]), [%-*@3 mode]) 
+`- creates all directories required before writing file at [%-*@3 path.]Remember 
+that [%-*@3 path] is a file path. To realize a folder path, it 
+has be ended with a `'`\`\`'.&]
 [s3;%% &]
 [s4; &]
 [s5;:DirectoryCreate`(const char`*`): [@(0.0.255) bool]_[* DirectoryCreate]([@(0.0.255) con
@@ -266,14 +269,18 @@ st]_[@(0.0.255) char]_`*[*@3 path])&]
 [s5;:RealizeDirectory`(const String`&`): [@(0.0.255) bool]_[* RealizeDirectory]([@(0.0.255) c
 onst]_[_^String^ String][@(0.0.255) `&]_[*@3 path])&]
 [s6; `[Win32`]&]
-[s2;%% Creates all missing directories on [%-*@3 path].&]
+[s2;%% Creates all missing directories on [%-*@3 path].Remember that 
+[%-*@3 path] is a file path. To realize a folder path, it has be 
+ended with a `'`\`\`'.&]
 [s3;%% &]
 [s4; &]
 [s5;:RealizePath`(const String`&`): [@(0.0.255) bool]_[* RealizePath]([@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 path])&]
 [s6; `[Win32`]&]
-[s2; [%% Same as RealizeDirectory(GetFileFolder(][*@3 path][%% )) `- creates 
-all directories required before writing file at ][*@3 path.]&]
+[s2;%% Same as RealizeDirectory(GetFileFolder([%-*@3 path])) `- creates 
+all directories required before writing file at [%-*@3 path.] Remember 
+that [%-*@3 path] is a file path. To realize a folder path, it 
+has be ended with a `'`\`\`'.&]
 [s3;%% &]
 [s4; &]
 [s5;:DirectoryDelete`(const char`*`): [@(0.0.255) bool]_[* DirectoryDelete]([@(0.0.255) con
