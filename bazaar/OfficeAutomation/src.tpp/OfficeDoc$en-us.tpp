@@ -8,7 +8,8 @@ topic "OfficeDoc class reference";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 OfficeDoc]]}}&]
 [s0;2 &]
-[s0; [@(0.0.255)4 class][4 _][*4 OfficeDoc]&]
+[s0; [@(0.0.255)4 class][4 _][*4 OfficeDoc ][4 : ][@(0.0.255)4 public][4  ][*4 DocPlugin][4 , 
+][@(0.0.255)4 public][4  ][*4 StaticPlugin]&]
 [s0;*2 &]
 [s0; [2 OfficeDoc class serves to manage documents made with OpenOffice 
 Doc or Microsoft Office Word.]&]
@@ -32,14 +33,15 @@ Init() it is defined which Office suite is going to be used.&]
 [s2;%% OfficeDoc destructor. It closes document editor application.&]
 [s3; &]
 [s4;* &]
-[s5;:OfficeDoc`:`:IsAvailable`(String`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsAvailab
-le]([_^String^ String]_[*@3 type])&]
+[s5;:OfficeDoc`:`:IsAvailable`(const char`*`): [@(0.0.255) bool]_[* IsAvailable]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 type])&]
 [s2;%% It checks if office suit of name [%-*@3 type ]is available to 
 be init. &]
 [s2;%% Valid values are `"Open`" and `"Microsoft`".&]
 [s3;%% &]
 [s4; &]
-[s5;:OfficeDoc`:`:Init`(String`): [@(0.0.255) bool]_[* Init]([_^String^ String]_[*@3 type])&]
+[s5;:OfficeDoc`:`:Init`(const char`*`): [@(0.0.255) bool]_[* Init]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 type])&]
 [s2;%% Initializes OfficeSheet to use [%-*@3 type].suite.&]
 [s2;%% Valid values are `"Open`" and `"Microsoft`".&]
 [s3;%% &]

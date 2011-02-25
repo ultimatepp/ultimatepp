@@ -11,8 +11,9 @@ library(WIN32) Oleaut32;
 file
 	OfficeSheet.cpp,
 	OfficeDoc.cpp,
-	OfficeAutomation.cpp,
 	OfficeAutomation.h,
+	OfficeAutomation.cpp,
+	OfficeAutomationMethods.h,
 	OfficeAutomationBase.h,
 	srcdoc.tpp,
 	src.tpp,

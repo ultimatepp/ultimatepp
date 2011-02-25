@@ -1,179 +1,76 @@
 #include <Core/Core.h>
 
+using namespace Upp;
+
+#include <Functions4U/Functions4U.h>
+
 #ifndef PLATFORM_WIN32
 #error Sorry: This platform is not supported!. Look for OfficeAutomation in Bazaar Upp Forum to search for info and new news
 #endif
 
-#include "OfficeAutomationBase.h"
 #include "OfficeAutomation.h"
+#include "OfficeAutomationBase.h"
 
 
 OfficeDoc::OfficeDoc() {
-	data = NULL;
 	Ole::Init();
 }
 
 OfficeDoc::~OfficeDoc()	 {
-	if (!data)
-		return;
-	if (type == DocOPEN)
-		delete (OPENDoc*)data;
-	else if (type == DocMS)
-		delete (MSDoc*)data;		
-	
 	Ole::Close();
 }
 
-bool OfficeDoc::IsAvailable(String strtype) {
-	if (strcmp(strtype, "Open") >= 0)
-		return OPENDoc::IsAvailable();
-	else if (strcmp(strtype, "Microsoft") >= 0)
-		return MSDoc::IsAvailable();
-	else
-		return false;
+bool OfficeDoc::Init(const char *name) {
+	return PluginInit(*this, name);
 }
 
-bool OfficeDoc::Init(String strtype) {
-	if (data) {
-		if (type == DocOPEN)
-			delete (OPENDoc*)data;
-		else if (type == DocMS)
-			delete (MSDoc*)data;	
+bool DocPlugin::IsAvailable() {return false;}
+bool OfficeDoc::IsAvailable(const char *_name) {
+	for (int i = 0; i < Plugins().GetCount(); ++i) {
+		if (Plugins()[i].name == _name && Plugins()[i].type == typeid(OfficeDoc).name()) {
+ 			void *dat = Plugins()[i].New();
+			if (!dat)
+				return false;
+			bool ret = (static_cast<DocPlugin *>(dat))->IsAvailable();
+			Plugins()[i].Delete(dat);
+			return ret;
+		}
 	}
-	if (strcmp(strtype, "Open") >= 0) {
-		type = DocOPEN;
-		data = new OPENDoc();
-	} else if (strcmp(strtype, "Microsoft") >= 0) {
-		type = DocMS;
-		data = new MSDoc();
-	} else
-		return false;
-	return true;
+	return false;
 }
 
-bool OfficeDoc::AddDoc(bool visible) {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->AddDoc(visible);  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->AddDoc(visible);
-	else
-		return false;
-}
+bool DocPlugin::AddDoc(bool visible) {return false;}
+bool OfficeDoc::AddDoc(bool visible) {return (static_cast<DocPlugin *>(GetData()))->AddDoc(visible);}
 
-bool OfficeDoc::OpenDoc(String fileName, bool visible) {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->OpenDoc(fileName, visible);  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->OpenDoc(fileName, visible);
-	else
-		return false;
-}
+bool DocPlugin::OpenDoc(String fileName, bool visible) {return false;}
+bool OfficeDoc::OpenDoc(String fileName, bool visible) {return (static_cast<DocPlugin *>(GetData()))->OpenDoc(fileName, visible);}
 
-bool OfficeDoc::SetFont(String font, int size) {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->SetFont(font, size);  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->SetFont(font, size);
-	else
-		return false;
-}
+bool DocPlugin::SetFont(String font, int size) {return false;}
+bool OfficeDoc::SetFont(String font, int size) {return (static_cast<DocPlugin *>(GetData()))->SetFont(font, size);}
 
-bool OfficeDoc::SetBold(bool bold) {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->SetBold(bold);  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->SetBold(bold);
-	else
-		return false;
-}
+bool DocPlugin::SetBold(bool bold) {return false;}
+bool OfficeDoc::SetBold(bool bold) {return (static_cast<DocPlugin *>(GetData()))->SetBold(bold);}
 
-bool OfficeDoc::SetItalic(bool italic) {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->SetItalic(italic);  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->SetItalic(italic);
-	else
-		return false;
-}
+bool DocPlugin::SetItalic(bool italic) {return false;}
+bool OfficeDoc::SetItalic(bool italic) {return (static_cast<DocPlugin *>(GetData()))->SetItalic(italic);}
 
-bool OfficeDoc::WriteText(String value) {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->WriteText(value);  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->WriteText(value);
-	else
-		return false;
-}
+bool DocPlugin::WriteText(String value) {return false;}
+bool OfficeDoc::WriteText(String value) {return (static_cast<DocPlugin *>(GetData()))->WriteText(value);}
 
-bool OfficeDoc::Select() {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->Select();  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->Select();
-	else
-		return false;
-}
+bool DocPlugin::Select() {return false;}
+bool OfficeDoc::Select() {return (static_cast<DocPlugin *>(GetData()))->Select();}
 
-bool OfficeDoc::Replace(String search, String replace) {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->Replace(search, replace);  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->Replace(search, replace);
-	else
-		return false;
-}
+bool DocPlugin::Replace(String search, String replace) {return false;}
+bool OfficeDoc::Replace(String search, String replace) {return (static_cast<DocPlugin *>(GetData()))->Replace(search, replace);}
 
-bool OfficeDoc::Print() {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->Print();  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->Print();
-	else
-		return false;
-}
+bool DocPlugin::Print() {return false;}
+bool OfficeDoc::Print() {return (static_cast<DocPlugin *>(GetData()))->Print();}
 
-bool OfficeDoc::SaveAs(String fileName, String _type) {
-	if (!data)
-		return false;
-	if (type == DocOPEN) {
-		int ret;
-		ret = ((OPENDoc*)data)->SaveAs(fileName, _type);  
-		((OPENDoc*)data)->SetSaved(true);
-		return ret;
-	} else if (type == DocMS) {
-		((MSDoc*)data)->SetSaved(true);
-		return ((MSDoc*)data)->SaveAs(fileName, _type);
-	} else
-		return false;
-}
+bool DocPlugin::SaveAs(String fileName, String _type) {return false;}
+bool OfficeDoc::SaveAs(String fileName, String _type) {return (static_cast<DocPlugin *>(GetData()))->SaveAs(fileName, _type);}
 
-bool OfficeDoc::Quit() {
-	if (!data)
-		return false;
-	if (type == DocOPEN) 
-		return ((OPENDoc*)data)->Quit();  
-	else if (type == DocMS) 
-		return ((MSDoc*)data)->Quit();
-	else
-		return false;
-}
+bool DocPlugin::Quit() {return false;}
+bool OfficeDoc::Quit() {return (static_cast<DocPlugin *>(GetData()))->Quit();}
 
-
+bool DocPlugin::SetSaved(bool saved) {return false;}
+bool OfficeDoc::SetSaved(bool saved) {return (static_cast<DocPlugin *>(GetData()))->SetSaved(saved);}

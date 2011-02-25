@@ -8,9 +8,9 @@ using namespace Upp;
 
 #include <winnls.h>
 
-#include "Functions4U/Functions4U.h"
-#include "OfficeAutomationBase.h"
+#include <Functions4U/Functions4U.h>
 #include "OfficeAutomation.h"
+#include "OfficeAutomationBase.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 VariantOle::VariantOle() {
@@ -379,6 +379,11 @@ ObjectOle Ole::MethodGet(ObjectOle from, String which, VariantOle &value, Varian
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+INITBLOCK {
+	PluginRegister(OfficeSheet, MSSheet, "Microsoft");
+}
+
 MSSheet::MSSheet() {
 	App = Books = Book = Sheet = Range = NULL;
 	quit = false;
@@ -585,6 +590,8 @@ bool MSSheet::SaveAs(String fileName, String type) {
 	if (!Book)
 		return false;
 
+	if (type[0] == '.')
+		type = type.Mid(1);
 	fileName = ForceExt(fileName, "." + type);
 	
 	VariantOle vFileName, vType;
@@ -1029,6 +1036,11 @@ int MSSheet::GetNumTabs() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+INITBLOCK {
+	PluginRegister(OfficeDoc, MSDoc, "Microsoft");
+}
+
 MSDoc::MSDoc() {
 	App = Docs = Doc = Selection = NULL;
 	quit = false;
@@ -1125,6 +1137,8 @@ bool MSDoc::SaveAs(String fileName, String type) {
 	if (!Doc)
 		return false;
 
+	if (type[0] == '.')
+		type = type.Mid(1);
 	fileName = ForceExt(fileName, "." + type);
 	
 	VariantOle vFileName, vType;
@@ -1208,8 +1222,8 @@ bool MSDoc::Select() {
 // about 250 chars and for some special chars
 bool MSDoc::Replace(String search, String _replace) {
 	String replace = CleanString(_replace);
-    replace = ::Replace(replace, "^", " ");
-    replace = ::Replace(replace, "\r", "");  // To remove squares
+    replace.Replace("^", " ");
+    replace.Replace("\r", "");  // To remove squares
     
     String replaceSubset;
     while (replace.GetCount() > 200) {
@@ -1217,11 +1231,11 @@ bool MSDoc::Replace(String search, String _replace) {
         replaceSubset.Cat(search);
         replace = replace.Right(replace.GetCount() - 200);
         
-        replaceSubset = ::Replace(replaceSubset, "\n", "^l");  
+        replaceSubset.Replace("\n", "^l");  
         if (!ReplaceSubset(search, replaceSubset))
         	return false;
     }
-    replace = ::Replace(replace, "\n", "^l");  
+    replace.Replace("\n", "^l");  
     return ReplaceSubset(search, replace);
 }
 
@@ -1360,6 +1374,11 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+INITBLOCK {
+	PluginRegister(OfficeSheet, OPENSheet, "Open");
+}
+
 OPENSheet::OPENSheet() {
 	ServiceManager = CoreReflection = Desktop = Document = Sheets = Sheet = Cell = Range = NULL;
 	selectedAll = false;
@@ -1620,17 +1639,19 @@ bool OPENSheet::Select() {
 	selectedAll = true;
 	return true;
 }
-/*
+
 void OPENSheet::DefMatrix(int width, int height) {
 	return;
 }
+
 void OPENSheet::SetMatrixValue(int x, int y, ::Value value) {
 	return;
 }
+
 bool OPENSheet::FillSelectionMatrix() {
 	return false;
 }
-*/
+
 bool OPENSheet::Replace(Value search, Value replace) {
 	if (!Sheet)
 		return false;
@@ -1677,6 +1698,8 @@ bool OPENSheet::SaveAs(String fileName, String type) {
 	if (!Document)
 		return false;
 
+	if (type[0] == '.')
+		type = type.Mid(1);
 	fileName = ForceExt(fileName, "." + type);
 	VariantOle vFileName;
 	vFileName.BString(OOo::ConvertToUrl(fileName));
@@ -1698,16 +1721,20 @@ bool OPENSheet::SaveAs(String fileName, String type) {
 		return false;
 	
 	VariantOle vArraySave;
+	bool ret;
 	if (filter.IsEmpty()) {
 		vArraySave.ArrayDim(0);
-		return Ole::Method(Document, "storeToURL", vArraySave, vFileName);
+		ret = Ole::Method(Document, "storeToURL", vArraySave, vFileName);
 	} else {	
 		VariantOle vArg;
 		vArg.ObjectOle(OOo::MakePropertyValue("FilterName", filter));
 		vArraySave.ArrayDim(1);
 		vArraySave.ArraySetVariant(1, vArg);
-		return Ole::Method(Document, "storeToURL", vArraySave, vFileName);	
+		ret = Ole::Method(Document, "storeToURL", vArraySave, vFileName);	
 	}
+	if (ret)
+		SetSaved(true);
+	return ret;
 }
 
 bool OPENSheet::SelCell(int x, int y)
@@ -2043,6 +2070,11 @@ bool OPENSheet::Print() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+INITBLOCK {
+	PluginRegister(OfficeDoc, OPENDoc, "Open");
+}
+
 OPENDoc::OPENDoc() {
 	ServiceManager = CoreReflection = Desktop = Document = Text = Cursor = NULL;
 	quit = false;
@@ -2176,13 +2208,13 @@ bool OPENDoc::SetVisible(bool visible) {
 	return Ole::Method(DocWindow, "setVisible", vvisible); 
 }
 
-bool OPENDoc::SetColor(Color col) {
+/*bool OPENDoc::SetColor(Color col) {
 	VariantOle vColor;
 	vColor.BString("CharColor");
 	VariantOle vValue;
 	vValue.Int4(RGB(col.GetR(), col.GetG(), col.GetB()));
 	return Ole::Method(Cursor, "setPropertyValue", vValue, vColor);
-}
+}*/
 
 bool OPENDoc::SetFont(String font, int size) {
 	VariantOle vFont;
@@ -2282,6 +2314,8 @@ bool OPENDoc::SaveAs(String fileName, String type) {
 	if (!Document)
 		return false;
 
+	if (type[0] == '.')
+		type = type.Mid(1);
 	fileName = ForceExt(fileName, "." + type);
 	VariantOle vFileName;
 	vFileName.BString(OOo::ConvertToUrl(fileName));
@@ -2319,7 +2353,8 @@ bool OPENDoc::SaveAs(String fileName, String type) {
 bool OPENDoc::Quit() {
 	if (!quit) {
 		quit = true;
-		return Ole::Method(Document, "Dispose");
+		if (Document)
+			return Ole::Method(Document, "Dispose");
 	}
 	return true;
 }

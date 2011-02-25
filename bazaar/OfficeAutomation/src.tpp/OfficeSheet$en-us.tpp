@@ -9,7 +9,8 @@ topic "OfficeSheet class reference";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 OfficeSheet]]}}&]
 [s1;*2 &]
-[s1;:OfficeSheet`:`:class: [@(0.0.255)4 class][4 _][*4 OfficeSheet]&]
+[s1;:OfficeSheet`:`:class: [@(0.0.255)4 class][4 _][*4 OfficeSheet][4  : ][@(0.0.255)4 public][4  
+][*4 SheetPlugin][4 , ][@(0.0.255)4 public][4  ][*4 StaticPlugin]&]
 [s2;l0;* &]
 [s0; [2 OfficeSheet class serves to manage spreadsheets made with OpenOffice 
 Calc or Microsoft Office Excel.]&]
@@ -33,15 +34,22 @@ Init() it is defined which Office suite is going to be used.&]
 [s2;%% OfficeSheet destructor. It closes spreadsheet application.&]
 [s3; &]
 [s4; &]
-[s5;:OfficeSheet`:`:IsAvailable`(String`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsAvail
-able]([_^String^ String]_[*@3 type])&]
+[s5;:OfficeSheet`:`:IsAvailable`(const char`*`): [@(0.0.255) bool]_[* IsAvailable]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 type])&]
 [s2;%% It checks if office suit of name [%-*@3 type].is available to 
 be init. &]
 [s2;%% Valid values are `"Open`" and `"Microsoft`".&]
 [s3;%% &]
 [s4; &]
-[s5;:OfficeSheet`:`:Init`(String`): [@(0.0.255) bool]_[* Init]([_^String^ String]_[*@3 type])
-&]
+[s5;:OfficeSheet`:`:SetSaved`(bool`): [@(0.0.255) bool]_[* SetSaved]([@(0.0.255) bool]_[*@3 s
+aved])&]
+[s2;%% Sets or unsets the flag [%-*@3 saved], so that the application 
+did not ask for saving the document if the application receives 
+the Quit() order.&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:Init`(const char`*`): [@(0.0.255) bool]_[* Init]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 type])&]
 [s2;%% Initializes OfficeSheet to use [%-*@3 type].suite.&]
 [s2;%% Valid values are `"Open`" and `"Microsoft`".&]
 [s3;%% &]

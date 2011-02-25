@@ -26,4 +26,7 @@ Office.]&]
 OfficeAutomation in Posix systems will be acknowledged.]&]
 [s0;2 &]
 [s0; [2 In this case please contact koldo.]&]
+[s0;2 &]
+[s0; [2 An important documentation source is ][^http`:`/`/wiki`.services`.openoffice`.org`/wiki`/Using`_Cpp`_with`_the`_OOo`_SDK^2 h
+ere][2 .]&]
 [s0; ]

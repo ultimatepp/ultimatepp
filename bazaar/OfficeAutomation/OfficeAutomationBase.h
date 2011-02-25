@@ -3,6 +3,8 @@
 
 using namespace Upp;
 
+#include "OfficeAutomationMethods.h"
+
 typedef IDispatch* ObjectOle;
 
 class VariantOle
@@ -30,76 +32,17 @@ public:
 public:    
     VARIANT var;
 };
-
-class MSSheet
+	
+	
+class MSSheet : public OfficeSheet
 {
 public:
 	MSSheet();
 	~MSSheet();
 	
-	static bool IsAvailable();
+	virtual bool IsAvailable();					
 	
-	bool AddSheet(bool visible);
-	bool OpenSheet(String fileName, bool visible);
-	
-	bool SetValue(int col, int row, Value value);
-	bool SetValue(String cell, Value value);
-	bool SetValue(Value value);
-	Value GetValue(int col, int row);
-	Value GetValue(String cell);
-	bool Replace(Value search, Value replace);
-		
-	bool SetBold(int col, int row, bool bold);
-	bool SetBold(String cell, bool bold);
-	bool SetBold(bool bold);
-	bool SetItalic(int col, int row, bool italic);
-	bool SetItalic(String cell, bool italic);
-	bool SetItalic(bool italic);
-	bool SetUnderline(bool underline);
-	bool SetUnderline(String cell, bool underline);
-	bool SetUnderline(int col, int row, bool underline);	
-	bool SetFont(int col, int row, String name, int size);
-	bool SetFont(String cell, String name, int size);
-	bool SetFont(String name, int size);
-	bool SetColor(int col, int row, Color color);
-	bool SetColor(String cell, Color color);
-	bool SetColor(Color color);
-	bool SetBackColor(int col, int row, Color color);
-	bool SetBackColor(String cell, Color color);
-	bool SetBackColor(Color color);	
-	
-	bool SetRowHeight(int row, double height);
-	bool SetColWidth(int col, double width);
-		
-	bool SetHorizAlignment(String cell, int alignment);
-	bool SetHorizAlignment(int col, int row, int alignment);
-	bool SetVertAlignment(String cell, int alignment);
-	bool SetVertAlignment(int col, int row, int alignment); 
-	
-	bool SetBorder(int borderIndx, int lineStyle, int weight, Color color);	
-	bool SetBorder(int col, int row, int borderIndx, int lineStyle, int weight, Color color);
-			
-	bool Select(String range);
-	bool Select(int fromX, int fromY, int toX, int toY);
-	bool Select();
-	
-	bool Print();
-	
-	bool SetSaved(bool);
-	bool SaveAs(String fileName, String type = "xls");
-	bool Quit();
-	
-	bool InsertTab(String name);
-	bool ChooseTab(String name);
-	bool ChooseTab(int index);
-	bool RemoveTab(String name);
-	bool RemoveTab(int index);	
-	int GetNumTabs();
-	
-	// New functs for next versions
-	void DefMatrix(int width, int height);
-	bool FillSelectionMatrix();
-	void SetMatrixValue(int i, int j, ::Value value);
+	Sheet_METHOD_LIST
 	
 private:
 	ObjectOle App;
@@ -116,31 +59,15 @@ private:
 	bool SetBorder(ObjectOle &borders, int borderIndx, int lineStyle, int weight, Color color);
 };
 
-class MSDoc
+class MSDoc : public OfficeDoc
 {
 public:
 	MSDoc();
 	~MSDoc();
 	
-	static bool IsAvailable();
+	virtual bool IsAvailable();
 	
-	bool AddDoc(bool visible);
-	bool OpenDoc(String fileName, bool visible);
-
-	bool SetFont(String font, int size);
-	bool SetBold(bool bold);
-	bool SetItalic(bool italic);
-	bool WriteText(String value);
-	
-	bool Select();
-	
-	bool Replace(String search, String replace);
-	
-	bool Print();
-	
-	bool SetSaved(bool);
-	bool SaveAs(String fileName, String type = "doc");
-	bool Quit();
+	Doc_METHOD_LIST
 	
 private:
 	ObjectOle App;	
@@ -159,79 +86,16 @@ private:
 #define wdReplaceAll	2
 
 
-class OPENSheet
+class OPENSheet : public OfficeSheet
 {
 public:
 	OPENSheet();
 	~OPENSheet();
 	
-	static bool IsAvailable();
+	virtual bool IsAvailable();			
 	
-	bool AddSheet(bool visible);
-	bool OpenSheet(String fileName, bool visible);
+	Sheet_METHOD_LIST
 	
-	bool SetValue(int col, int row, Value value);
-	bool SetValue(String cell, Value value);
-	bool SetValue(Value value);
-	Value GetValue(int col, int row);
-	Value GetValue(String cell);
-	bool Replace(Value search, Value replace);
-		
-	bool SetBold(int col, int row, bool bold);
-	bool SetBold(String cell, bool bold);
-	bool SetBold(bool bold);
-	bool SetItalic(String cell, bool italic);
-	bool SetItalic(int col, int row, bool italic);
-	bool SetItalic(bool italic);	
-	bool SetUnderline(bool underline);
-	bool SetUnderline(String cell, bool underline);
-	bool SetUnderline(int col, int row, bool underline);
-	bool SetFont(int col, int row, String name, int size);
-	bool SetFont(String cell, String name, int size);
-	bool SetFont(String name, int size);
-	bool SetColor(int col, int row, Color color);
-	bool SetColor(String cell, Color color);
-	bool SetColor(Color color);
-	bool SetBackColor(int col, int row, Color color);
-	bool SetBackColor(String cell, Color color);
-	bool SetBackColor(Color color);
-	
-	bool SetColWidth(int col, double width);
-	bool SetRowHeight(int row, double height);
-	
-	bool SetHorizAlignment(String cell, int alignment);
-	bool SetHorizAlignment(int col, int row, int alignment);
-	bool SetVertAlignment(String cell, int alignment);
-	bool SetVertAlignment(int col, int row, int alignment); 
-	
-	bool SetBorder(int borderIndx, int lineStyle, int weight, Color color);	
-	bool SetBorder(int col, int row, int borderIndx, int lineStyle, int weight, Color color);
-	
-	bool Select(String range);
-	bool Select(int fromX, int fromY, int toX, int toY);
-	bool Select();
-	/* // New functs for next versions
-	void DefMatrix(int width, int height);
-	bool FillSelectionMatrix();
-	void SetMatrixValue(int i, int j, ::Value value);
-	*/
-	bool Print();
-	
-	bool SetSaved(bool);
-	bool SaveAs(String fileName, String type = "xls");
-	bool Quit();
-	
-	bool InsertTab(String name);
-	bool ChooseTab(String name);
-	bool ChooseTab(int index);
-	bool RemoveTab(String name);
-	bool RemoveTab(int index);	
-	int GetNumTabs();
-	
-	// New functs for next versions
-	//bool SetCellBackColor(Color color);
-	//bool SetCellBackColor(String cell, Color color);
-	//bool SetCellBackColor(int col, int row, Color color);
 	bool SetFormat(String format);
 	
 private:
@@ -250,34 +114,18 @@ private:
 	bool quit;
 };
 
-class OPENDoc
+class OPENDoc : public OfficeDoc
 {
 public:
 	OPENDoc();
 	~OPENDoc();
 	
-	static bool IsAvailable();
+	virtual bool IsAvailable();
 	
-	bool AddDoc(bool visible);
-	bool OpenDoc(String fileName, bool visible);
-
-	bool SetFont(String font, int size);
-	bool SetBold(bool bold);
-	bool SetItalic(bool italic);
-	bool WriteText(String value);
-	
-	bool Select();
-	
-	bool Replace(String search, String replace);
-	
-	bool Print();
-	
-	bool SetSaved(bool);
-	bool SaveAs(String fileName, String type = "doc");
-	bool Quit();
+	Doc_METHOD_LIST
 
 	// New functs for next versions	
-	bool SetColor(Color col);
+	//bool SetColor(Color col);
 	
 private:
 	ObjectOle ServiceManager;
