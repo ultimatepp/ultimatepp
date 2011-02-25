@@ -10,7 +10,7 @@ uses
 
 library(WIN32 !MSC8ARM) "user32 gdi32";
 
-library(LINUX) dl;
+library(LINUX) "dl freetype";
 
 library(BSD !XLFD) "fontconfig freetype expat";
 
