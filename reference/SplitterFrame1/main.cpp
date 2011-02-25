@@ -1,6 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
 using namespace Upp;
+
 #define LAYOUTFILE <SplitterFrame1/StandardLayout.lay>
 #include <CtrlCore/lay.h>
 
@@ -18,8 +19,7 @@ struct MyApp : WithStandardLayout<TopWindow> {
 			list.Add(FormatIntRoman(i, true));
 		AddFrame(InsetFrame());
 		sf.SizeMin(200).MinSize(100);
-		Sizeable();
-		
+		Sizeable();		
 	}
 };
 
@@ -27,6 +27,3 @@ GUI_APP_MAIN
 {
 	MyApp().Run();
 }
-
-
-
