@@ -992,7 +992,7 @@ String RemoveAccents(String str) {
 //}
 
 #ifdef PLATFORM_POSIX
-String GetRealName(String fileName) {
+String FileRealName(const char *fileName) {
 	fileName = GetFullPath(fileName);
 	FindFile ff(fileName);
 	if (!ff)
@@ -1020,10 +1020,11 @@ bool GetRealName_Next(String &real, String file) {
 	return ret;
 }
 
-String GetRealName(String fileName) {
-	fileName = GetFullPath(fileName);
+String FileRealName(const char *_fileName) {
+	String fileName = GetFullPath(_fileName);
+	int len = fileName.GetCount();
 	
-	if (fileName.GetCount() == 3) {
+	if (len == 3) {
 		FindFile ff(fileName + "*");
 		if (!ff)
 			return String(""); 	
@@ -1035,7 +1036,7 @@ String GetRealName(String fileName) {
 		return String(""); 
 	String ret;
 	
-	ret.Reserve(fileName.GetCount());
+	ret.Reserve(len);
 	
 	ret = ToUpper(fileName.Left(1)) + ":";
 	
@@ -1113,7 +1114,7 @@ bool IsSymLink(const char *path) {
 #endif
 }	
 
-String GetNextFolder(String folder, String lastFolder) {
+String GetNextFolder(const String &folder, const String &lastFolder) {
 	int pos = lastFolder.Find(DIR_SEP, folder.GetCount()+1);
 	if (pos >= 0)
 		return lastFolder.Left(pos);
@@ -1121,19 +1122,21 @@ String GetNextFolder(String folder, String lastFolder) {
 		return lastFolder;
 }
 
-bool UpperFolder(String folderName) {
-	if (folderName.IsEmpty())
+bool UpperFolder(const char *folderName) {
+	if (!folderName)
+		return false;
+	if (folderName[0] == '\0')
 		return false;
 #ifdef PLATFORM_WIN32
-	if (folderName.GetCount() == 3)
+	if (strlen(folderName) == 3)
 #else
-	if (folderName.GetCount() == 1)
+	if (strlen(folderName) == 1)
 #endif
 		return false;
 	return true;
 }
 
-String GetUpperFolder(String folderName) {
+String GetUpperFolder(const String &folderName) {
 	if (!UpperFolder(folderName))
 		return folderName;
 	int len = folderName.GetCount();
@@ -1215,7 +1218,7 @@ int FileCompare(const char *path1, const char *path2) {
 	fp1 = _wsopen(ToSystemCharsetW(path1), O_RDONLY|O_BINARY, _SH_DENYNO, _S_IREAD|_S_IWRITE);
 #endif
 	if (fp1 == -1)
-		return -1;
+		return -2;
 	int fp2;
 #ifdef PLATFORM_POSIX
 	fp2 = open(ToSystemCharset(path2), O_RDONLY, S_IWRITE|S_IREAD);
@@ -1224,15 +1227,15 @@ int FileCompare(const char *path1, const char *path2) {
 #endif
 	if (fp2 == -1) {
 		close(fp1);
-		return -1;	
+		return -2;	
 	}
 	Buffer <byte> c1(8192), c2(8192);
-	int ret = 0;
+	int ret = -1;
 	while (true) {
 		int n1 = read(fp1, c1, 8192);
 		int n2 = read(fp2, c2, 8192);
 		if (n1 == -1 || n2 == -1) {
-			ret = -1;
+			ret = -2;
 			break;
 		}
 		if (n1 != n2)
@@ -1246,41 +1249,48 @@ int FileCompare(const char *path1, const char *path2) {
 	}
 #ifdef PLATFORM_POSIX	
 	if (-1 == close(fp1))
-		ret = -1;
+		ret = -2;
 	if (-1 == close(fp2))
-		ret = -1;
+		ret = -2;
 #else
 	if (-1 == _close(fp1))
-		ret = -1;
+		ret = -2;
 	if (-1 == _close(fp2))
-		ret = -1;
+		ret = -2;
 #endif
 	return ret;
 }
 
-int FindStringInFile(const char *file, const String text) {
+int64 FindStringInFile(const char *file, const String text, int64 pos0) {
 #ifdef PLATFORM_POSIX
 	FILE *fp = fopen(file, "rb");
 #else
 	FILE *fp = _wfopen(String(file).ToWString(), L"rb");
 #endif
 	if (fp != NULL) {
+		int64 pos = 0;
+		if (pos0 > 0) {
+			pos = pos0;
+			if (0 == fseek(fp, long(pos0), SEEK_SET))
+				return -2;
+		}
 		int i = 0, c;
-		while ((c = fgetc(fp)) != EOF) {
+		for (; (c = fgetc(fp)) != EOF; pos++) {
 			if (c == text[i]) {
 				++i;
 				if (i == text.GetCount()) 
-					return 1;
+					return pos - i;
 			} else {
 				if (i != 0) 
-					fseek(fp, -(i-1), SEEK_CUR);
+					if (0 == fseek(fp, -(i-1), SEEK_CUR))
+						return -2;
 				i = 0;
 			}
 		}
 		fclose(fp);
 	} else
-		return -1;
-	return 0;	
+		return -2;
+	return -1;	
 }
 
 bool MatchPathName(const char *name, const Array<String> &cond, const Array<String> &ext) {

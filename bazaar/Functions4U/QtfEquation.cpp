@@ -254,10 +254,10 @@ String EquationDraw::ReplaceSymbols(String var)
 	for (int i = 0; i < symbols.GetCount(); ++i) {
 		String letter = ToLower(symbols.GetKey(i));
 		if (var.Find(letter) >= 0)
-			var = Replace(var, letter, symbols[i].Mid(2));
+			var.Replace(letter, symbols[i].Mid(2));
 		letter = ToUpper(symbols.GetKey(i));
 		if (var.Find(letter) >= 0)
-			var = Replace(var, letter, symbols[i].Mid(0, 2));		
+			var.Replace(letter, symbols[i].Mid(0, 2));		
 	}
 	return var;	    
 }

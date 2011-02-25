@@ -22,14 +22,14 @@ bool FileCat(const char *file, const char *appendFile);
 
 int FileCompare(const char *path1, const char *path2);
 
-int FindStringInFile(const char *file, const String text);
+int64 FindStringInFile(const char *file, const String text, int64 pos0 = 0);
 
 bool FileStrAppend(const char *file, const char *str);
 bool AppendFile(const char *filename, const char *str);
 
 String AppendFileName(const String& path1, const char *path2, const char *path3);
 	
-inline String Trim(const String& s) {return TrimLeft(TrimRight(s));};
+inline String Trim(const String& s) {return TrimBoth(s);};
 	
 /////////
 bool DirectoryExistsX(const char *path, int flags = 0); 
@@ -41,10 +41,10 @@ bool DirectoryCopyX(const char *dir, const char *newPlace);
 bool DeleteFolderDeepWildcards(const char *dir, int flags = 0);
 ///////////////////////////////
 
-bool UpperFolder(String folderName);
-String GetUpperFolder(String folderName);
-String GetNextFolder(String folder, String lastFolder);
-String GetRealName(String fileName);
+bool UpperFolder(const char *folderName);
+String GetUpperFolder(const String &folderName);
+String GetNextFolder(const String &folder, const String &lastFolder);
+String FileRealName(const char *fileName);
 
 //bool GetSymLinkPath(const char *linkPath, String &filePath);
 bool IsSymLink(const char *path);
@@ -241,11 +241,11 @@ inline int RoundEven(int val) 	{return Even(val) ? val : val+1;}
 template<class T>
 inline int Sign(T a) 			{return (a > 0) - (a < 0);}
 template<class T>
-inline T Average(T a, T b) 			{return T((a+b)/2);}
+inline T Average(T a, T b) 			{return T(a+b)/2;}
 template<class T>
-inline T Average(T a, T b, T c)		{return T((a+b+c)/3);}
+inline T Average(T a, T b, T c)		{return T(a+b+c)/3;}
 template<class T>
-inline T Average(T a, T b, T c, T d){return T((a+b+c+d)/4);}
+inline T Average(T a, T b, T c, T d){return T(a+b+c+d)/4;}
 template <class T> 
 inline const T& min(const T& a, const T& b, const T& c) { 
 	return a < b ? (a < c ? a : c) : ((b < c) ? b : c); }
@@ -526,9 +526,8 @@ private:
 	bool *inside;
 };
 
-#define NON_REENTRANT 	 static bool _insideNR; _NRFuse _fuseNR(&_insideNR); if(!_insideNR) _insideNR = true; else return
-#define NON_REENTRANT(v) static bool _insideNR; _NRFuse _fuseNR(&_insideNR); if(!_insideNR) _insideNR = true; else return v
-	
+#define NON_REENTRANT_V	 static bool _insideNR; static _NRFuse _fuseNR(&_insideNR); if(!_insideNR) _insideNR = true; else return
+#define NON_REENTRANT(v) static bool _insideNR; static _NRFuse _fuseNR(&_insideNR); if(!_insideNR) _insideNR = true; else return v
 
 #ifdef flagAES
 

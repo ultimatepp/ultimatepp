@@ -16,8 +16,8 @@ topic "Functions4U. Reference";
 [s0; &]
 [ {{10000@1 [s0; [* Running files and commands]]}}&]
 [s4;%- &]
-[s5;:LaunchFile`(const String`):%- [@(0.0.255) bool]_[* LaunchFile]([@(0.0.255) const]_[_^String^ S
-tring]_[*@3 file])&]
+[s5;:LaunchFile`(const char`*`):%- [@(0.0.255) bool]_[* LaunchFile]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 file])&]
 [s2; Opens the file [%-*@3 file ]with the adecuated program defined 
 in the OS by default.&]
 [s0; &]
@@ -49,24 +49,26 @@ onst]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@
 [s2; Like AppendFileName() but joining three paths. &]
 [s3; &]
 [s4;%- &]
-[s5;:GetUpperFolder`(String`):%- [_^String^ String]_[* GetUpperFolder]([_^String^ String]_[*@3 f
-olderName])&]
+[s5;:GetUpperFolder`(const char`*`):%- [_^String^ String]_[* GetUpperFolder]([@(0.0.255) co
+nst]_[@(0.0.255) char]_`*[*@3 folderName])&]
 [s2; Returns the name of the folder over [%-*@3 folderName].&]
 [s3; &]
 [s4;%- &]
-[s5;:UpperFolder`(String`):%- [@(0.0.255) bool]_[* UpperFolder]([_^String^ String]_[*@3 folde
-rName])&]
-[s0;l288; Returns true if there is a folder over [%-*@3 folderName].&]
+[s5;:UpperFolder`(const char`*`):%- [@(0.0.255) bool]_[* UpperFolder]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 folderName])&]
+[s0;l288; Returns true if there is a folder over [%-*@3 folderName]. 
+It does not check if [%-*@3 folderName] exists.&]
 [s3; &]
 [s4;%- &]
-[s5;:GetRealName`(String`):%- [_^String^ String]_[* GetRealName]([_^String^ String]_[*@3 path
-])&]
+[s5;:FileRealName`(const char`*`):%- [_^String^ String]_[* FileRealName]([@(0.0.255) const]_
+[@(0.0.255) char]_`*[*@3 path])&]
 [s2; Returns the real name of [%-*@3 path].(directory or file) with 
 the right letter cases or `"`" if [%-*@3 path].does not exist.&]
 [s3; &]
 [s4;%- &]
-[s5;:GetNextFolder`(String`,String`):%- [_^String^ String]_[* GetNextFolder]([_^String^ Str
-ing]_[*@3 folder], [_^String^ String]_[*@3 lastFolder])&]
+[s5;:GetNextFolder`(const char`*`,const char`*`):%- [_^String^ String]_[* GetNextFolder](
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 folder], [@(0.0.255) const]_[@(0.0.255) char]_`*
+[*@3 lastFolder])&]
 [s2; Considering [%-*@3 folder ]as a parent folder of [%-*@3 lastFolder], 
 it returns the folder under [%-*@3 folder ]that is also parent 
 of [%-*@3 lastFolder].&]
@@ -78,6 +80,29 @@ returns `"/home/user`".&]
 onst]_[@(0.0.255) char]_`*[*@3 dir]) [*@6 DEPRECATED]&]
 [s2; Creates folder [%-*@3 dir], creating intermediate folders if necessary.&]
 [s0;l288; Superseded by Core RealizePath()&]
+[s3; &]
+[s4;%- &]
+[s5;:FileCompare`(const char`*`,const char`*`):%- [@(0.0.255) int]_[* FileCompare]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path1], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path2])&]
+[s2; Compares files [%-*@3 path1] and [%-*@3 path2]. &]
+[s2; It returns:&]
+[s2;i150;O0; `-2 if there are problems opening or reading from the 
+files.&]
+[s2;i150;O0; `-1 if files are different.&]
+[s2;i150;O0; 1 if files are equal.&]
+[s3; &]
+[s4;%- &]
+[s5;:FindStringInFile`(const char`*`,const String`,int64`):%- [_^int64^ int64]_[* FindStr
+ingInFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) const]_[_^String^ S
+tring]_[*@3 text], [_^int64^ int64]_[*@3 pos0]_`=_[@3 0])&]
+[s2; Search in [%-*@3 file] for string [%-*@3 text] from byte position 
+[%-*@3 pos0]. &]
+[s2; It returns &]
+[s2;i150;O0; `-2 if there are problems opening or reading from the 
+[%-*@3 file].&]
+[s2;i150;O0; `-1 if [%-*@3 text] is not found in [%-*@3 file].&]
+[s2;i150;O0; An int64 value indicating the byte where [%-*@3 text] 
+is found.&]
 [s3; &]
 [s4;%- &]
 [s5;:GetDirectoryLength`(String`):%- [_^int64^ int64]_[* GetDirectoryLength]([_^String^ Str
@@ -101,12 +126,20 @@ onst]_[@(0.0.255) char]_`*[*@3 dir], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3
 [s0;l288; Returns true in case of success.&]
 [s3; &]
 [s4;%- &]
-[s5;:ReadOnly`(String`,bool`):%- [@(0.0.255) bool]_[* ReadOnly]([_^String^ String]_[*@3 path],
- [@(0.0.255) bool]_[*@3 readOnly])&]
+[s5;:SetReadOnly`(const char`*`,bool`):%- [@(0.0.255) bool]_[* SetReadOnly]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) bool]_[*@3 readOnly])&]
 [s2; Sets [%-*@3 path ](file or folder) as read only or write permitted 
 depending on the value of[%-*@3  readOnly].&]
 [s0;l288; In Linux the permissions are set for user, group and others.&]
 [s2; -|Returns true in case of success.&]
+[s3; &]
+[s4;%- &]
+[s5;:SetReadOnly`(const char`*`,bool`,bool`,bool`):%- [@(0.0.255) bool]_[* SetReadOnly]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) bool]_[*@3 user], [@(0.0.255) bool]_[*@3 gr
+oup], [@(0.0.255) bool]_[*@3 others])&]
+[s2; Sets [%-*@3 path] [%-*@3  ](file or folder) as read only or write 
+permitted for[%-*@3  user], [%-*@3 group ]and [%-*@3 others].&]
+[s0; -|Returns true in case of success.&]
 [s3; &]
 [s4; &]
 [s5;:DeleteFolderDeepWildcards`(const char`*`):%- [@(0.0.255) bool]_[* DeleteFolderDeepWi
@@ -1535,7 +1568,7 @@ ring]_`&[*@3 folder])&]
 [s2; A more complete version of GetDesktopManager() based on GetOsInfo().&]
 [s3; &]
 [s4;%- &]
-[s5;:NON`_REENTRANT:%- [* NON`_REENTRANT]&]
+[s5;:NON`_REENTRANT`_V:%- [* NON`_REENTRANT`_V]&]
 [s5;:NON`_REENTRANT`(v`):%- [* NON`_REENTRANT]([*@3 v])&]
 [s2; It returns [%-*@3 v] if the function has been called in the same 
 thread and it has not returned yet.&]
