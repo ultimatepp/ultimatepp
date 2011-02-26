@@ -2,9 +2,7 @@
 
 using namespace Upp;
 
-#include "Controls4U/Controls4U.h"
-#include "Functions4U/Functions4U.h"
-
+#include <Controls4U/Controls4U.h>
 
 #if defined(PLATFORM_WIN32) 	
 #include "Controls4U_Demo_win.h"
@@ -32,7 +30,7 @@ Controls4U_Demo::Controls4U_Demo() {
 	tab.Add(staticCtrlsTest_Demo.SizePos(), "Static Controls Test");
 	tab.Add(miscellaneous_Demo.SizePos(), "Miscellaneous functions");
 
-	tab.Set(tab.Find(meter_Demo));	// The last
+	tab.Set(tab.Find(meter_Demo));	// Select the last
 	
 	timerOn = false;
 	SetTimeCallback(-100, THISBACK(Timer));
@@ -86,6 +84,7 @@ StaticCtrls_Demo::StaticCtrls_Demo() {
 	
 	back.Set(Images::paper());
 }
+
 StaticCtrlsTest_Demo::StaticCtrlsTest_Demo() {
 	CtrlLayout(*this);
 }

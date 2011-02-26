@@ -2,8 +2,7 @@
 
 using namespace Upp;
 
-#include "Controls4U/Controls4U.h"
-#include "Functions4U/Functions4U.h"
+#include <Controls4U/Controls4U.h>
 
 #if defined(PLATFORM_WIN32) 
 
