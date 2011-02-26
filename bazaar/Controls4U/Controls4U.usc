@@ -530,8 +530,8 @@ ctrl StaticFrame {
 	GetMinSize() { return Size(0, 0); }
 	GetStdSize() { return Size(64, 24); }
 	
-	Frame SetFrame = InsetFrame();
 	Color SetBackground = Null;
+	Frame SetFrame = InsetFrame();
 	
 	Paint(w) {
 		r = GetRect();

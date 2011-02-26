@@ -110,7 +110,7 @@ void EditFileFolder::SetData(const Value& data) {
 
 void EditFileFolder::DoGo(bool add) {
 	Set(GetData());			// Write Edit to FileSel
-	if (UpperFolder(GetData()))
+	if (UpperFolder(GetData().ToString()))
 		butUp.Enable(true);
 	else
 		butUp.Enable(false);
@@ -329,6 +329,13 @@ StaticFrame::StaticFrame() {
 	NoWantFocus();
 	
 	SetFrame(InsetFrame());
+}
+
+void StaticFrame::Paint(Draw& w) {
+	Size sz = GetSize();
+
+	if (background)
+		w.DrawRect(0, 0, sz.cx, sz.cy, background);
 }
 
 void StaticLine::FramePaint(Draw& w, const Rect& rr) {
@@ -1731,7 +1738,7 @@ void FileBrowser::FolderWhenChange() {
 		files.Clear();
 		return;
 	}
-	String folderName = GetRealName(~folder);
+	String folderName = FileRealName(~folder);
 	fileNameSelected = folderName;
 	if (folderName.IsEmpty()) {
 		Exclamation(Format(t_("Folder %s does not exist or is not available"), ~folder));

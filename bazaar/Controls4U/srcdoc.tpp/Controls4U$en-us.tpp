@@ -23,7 +23,7 @@ topic "General description";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2; [+184 Controls4U]&]
-[s0; Controls4U includes additional controls to be used in Upp.&]
+[s0; Controls4U includes additional controls to be used in U`+`+.&]
 [s0; &]
 [ {{2499:2499:2499:2503R2 [s0;= 
 @@image:915&858

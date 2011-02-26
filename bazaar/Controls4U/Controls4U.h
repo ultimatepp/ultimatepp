@@ -195,6 +195,14 @@ public:
 class StaticFrame : public Ctrl {
 typedef StaticFrame CLASSNAME;	
 public:
+	virtual void Paint(Draw& draw);
+
+protected:
+	Color background;
+
+public:
+	StaticFrame& SetBackground(Color c) {background = c; Refresh(); return *this;}
+	
 	StaticFrame();
 };
 
