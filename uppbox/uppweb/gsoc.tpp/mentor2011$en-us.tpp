@@ -34,9 +34,10 @@ U`+`+ project and applications:]&]
 [s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
 Dolinár][2 : Project building and packaging (TheIDE or external), 
 Physics.]&]
+[s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=595`&^2 Ion 
+Lupascu][2 : Git, Google V8 JavaScript.]&]
 [s0; [*^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 Kold
 o Ramirez][2 : Engineering, Image processing.]&]
-[s0; &]
 [s0;2 &]
 [s0;> [^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^+75 Return to GSoC 
 2011 Home page]&]
