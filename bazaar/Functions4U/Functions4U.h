@@ -520,14 +520,25 @@ Image GetRect(const Image& orig, const Rect &r);
 
 class _NRFuse {
 public:
-	_NRFuse(bool *_inside) {inside = _inside;}
-	~_NRFuse() 			   {*inside = false;}
+	_NRFuse(bool *_inside) {inside = _inside; failed = true;}
+	~_NRFuse() 			   {if (!failed) *inside = false;}
+	bool failed;
 private:
 	bool *inside;
 };
 
-#define NON_REENTRANT_V	 static bool _insideNR; static _NRFuse _fuseNR(&_insideNR); if(!_insideNR) _insideNR = true; else return
-#define NON_REENTRANT(v) static bool _insideNR; static _NRFuse _fuseNR(&_insideNR); if(!_insideNR) _insideNR = true; else return v
+#define NON_REENTRANT_V	 	static bool _insideNR; _NRFuse _fuseNR(&_insideNR); \
+							if(!_insideNR) {									\
+								_insideNR = true; 								\
+								_fuseNR.failed = false;							\
+							} else 												\
+								return
+#define NON_REENTRANT(v) 	static bool _insideNR; _NRFuse _fuseNR(&_insideNR); \
+							if(!_insideNR) {									\
+								_insideNR = true; 								\
+								_fuseNR.failed = false;							\
+							} else 												\
+								return v
 
 #ifdef flagAES
 
