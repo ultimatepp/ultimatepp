@@ -4,12 +4,12 @@ using namespace Upp;
 
 #include "Spreadsheet.h"
 
-class OpenSpreadsheet : public SpreadsheetPlugin {
+class OpenSpreadsheet : public SpreadsheetAPI {
 private:
 	String filename;
 	
 public:
-	Spreadsheet_METHOD_LIST
+	Spreadsheet_API
 	OpenSpreadsheet() {
 		puts("OpenSpreadsheet new");
 	}

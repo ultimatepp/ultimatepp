@@ -6,14 +6,14 @@ using namespace Upp;
 #include "Spreadsheet.h"
 
 
-bool SpreadsheetPlugin::Open(const char *filename) 				{return false;};
-void SpreadsheetPlugin::SetData(int row, int col, Value val) 	{};
+bool SpreadsheetAPI::Open(const char *filename) 				{return false;};
+void SpreadsheetAPI::SetData(int row, int col, Value val) 	{};
 
 
-bool Spreadsheet::Open(const char *filename) 			{return (static_cast<SpreadsheetPlugin *>(GetData()))->Open(filename);}
-void Spreadsheet::SetData(int row, int col, Value val)	{return (static_cast<SpreadsheetPlugin *>(GetData()))->SetData(row, col, val);}
+bool Spreadsheet::Open(const char *filename) 			{return (static_cast<SpreadsheetAPI *>(GetData()))->Open(filename);}
+void Spreadsheet::SetData(int row, int col, Value val)	{return (static_cast<SpreadsheetAPI *>(GetData()))->SetData(row, col, val);}
 
 
 INITBLOCK {
-	PluginRegister(Spreadsheet, SpreadsheetPlugin, "");
+	PluginRegister(Spreadsheet, SpreadsheetAPI, "");
 }

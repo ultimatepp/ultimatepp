@@ -3,20 +3,20 @@
 
 #include <Functions4U/Functions4U.h>
 
-#define Spreadsheet_METHOD_LIST					\
+#define Spreadsheet_API							\
 	virtual bool Open(const char *filename);	\
 	virtual void SetData(int row, int col, Value val);	
 	
 	
-class SpreadsheetPlugin {
+class SpreadsheetAPI {
 public:
-	Spreadsheet_METHOD_LIST
+	Spreadsheet_API
 };
 
 
-class Spreadsheet : public SpreadsheetPlugin, public StaticPlugin {
+class Spreadsheet : public SpreadsheetAPI, public StaticPlugin {
 public:
-	Spreadsheet_METHOD_LIST
+	Spreadsheet_API
 };
 
 
