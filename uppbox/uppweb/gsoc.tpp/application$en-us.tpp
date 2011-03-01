@@ -16,7 +16,7 @@ all fixes and proposals to ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2
 [s0;%- &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Organization Name:]]}}&]
 [s0; [2 Ultimate`+`+ (U`+`+).]&]
-[s0;2%- &]
+[s0;%- &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Description:]]}}&]
 [s0;# [2 U`+`+ supports and develop a C`+`+ library and Ide to program 
 projects running in GNU/Linux and Windows.]&]
@@ -25,44 +25,41 @@ projects running in GNU/Linux and Windows.]&]
 while preserving C/C`+`+ runtime characteristics. This means 
 that code programmed using U`+`+ is smaller and cleaner, while 
 being fast and rich.]&]
-[s0;2%- &]
+[s0;%- &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Home page:]]}}&]
 [s0; [2 http://www.ultimatepp.org/]&]
-[s0;2 &]
+[s0; &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 License:]]}}&]
 [s0; [2 New and Simplified BSD licenses.]&]
-[s0;2 &]
+[s0; &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Why is your organization applying to participate in GSoC 
 2010? What do you hope to gain by participating?]]}}&]
 [s0;# [2 U`+`+ project has developed a good C`+`+ framework with expanding 
 user base, active community and a core group of developers taking 
 care of the code quality.]&]
 [s0;#2 &]
-[s0;# [2 However this the time when we have to open to the developers 
-not just accepting community contributions but developing a strategy 
-to ease the acceptance of new and skilled students and contributors.]&]
-[s0;#2 &]
 [s0;# [2 Actually U`+`+ community projects are called `"Bazaar`" and 
 have full support in main page and they are included inside the 
 main SVN version control system.]&]
-[s0;%- &]
+[s0;#2 &]
+[s0;# [2 However this is the time when we have to open to the developers 
+not just accepting community contributions but developing a strategy 
+to ease the acceptance of new and skilled students and contributors.]&]
+[s0;# &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Did your organization participate in past GSoCs? If so, please 
 summarize your involvement and the successes and challenges of 
 your participation.]]}}&]
-[s0; [2 No, it has not.]&]
+[s0; [2 No, it did not.]&]
 [s0;%- &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 If your organization participated in past GSoCs, please let 
 us know the ratio of students passing to students allocated, 
 e.g. 2006: 3/6 for 3 out of 6 students passed in 2006.]]}}&]
 [s0; [2 Not applicable.]&]
-[s0;2 &]
-[s0; [*2 Comment:]&]
-[s0;2 &]
-[s0;2 &]
+[s0; &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 If your organization has not previously participated in GSoC, 
 have you applied in the past? If so, for what year(s)?]]}}&]
 [s0; [2 Yes, we applied in 2010.]&]
-[s0;2 &]
+[s0; &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 What is the URL for your ideas page?]]}}&]
 [s0; [^http`:`/`/www`.ultimatepp`.org`/gsoc`$uppweb`$ideas2011`$en`-us`.html^2 http://ww
 w.ultimatepp.org/gsoc`$uppweb`$ideas2011`$en`-us.html]&]
@@ -77,19 +74,21 @@ to use.]]}}&]
 [s0;l192; [^http`:`/`/www`.ultimatepp`.org`/forum`/^2 http://www.ultimatepp.org/forum/]&]
 [s0;2 &]
 [s0; [2 It is very open to new and unskilled users.]&]
+[s0;2 &]
+[s0; [2 In page ][^http`:`/`/www`.ultimatepp`.org`/gsoc`$uppweb`$student2011`$en`-us`.html^2 h
+ttp://www.ultimatepp.org/gsoc`$uppweb`$student2011`$en`-us.html][2  
+there are more details addressed to students that would like 
+to apply GSoC 2011 with U`+`+.]&]
 [s0;%- &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 What is the main IRC channel for your organization?]]}}&]
 [s0; [^irc`:`/`/slashnet`/u`+`+^2 irc://slashnet/u`+`+]&]
-[s0;2 &]
-[s0; [*2 Comment:]&]
-[s0;2 &]
-[s0;2 &]
+[s0; &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Does your organization have an application template you would 
 like to see students use? If so, please provide it now. Please 
 note that it is a very good idea to ask students to provide you 
 with their contact information as part of your template. Their 
 contact details will not be shared with you automatically via 
-the GSoC 2010 site.]]}}&]
+the GSoC 2011 site.]]}}&]
 [s0;# [2 Yes, it is located in ][^http`:`/`/www`.ultimatepp`.org`/gsoc`$uppweb`$application`_template2011`$en`-us`.html^2 h
 ttp://www.ultimatepp.org/gsoc`$uppweb`$application`_template2011`$en`-us.html][2 .]&]
 [s0;#2 &]
@@ -110,7 +109,7 @@ ttp://www.ultimatepp.org/gsoc`$uppweb`$application`_template2011`$en`-us.html][2
 [s0;i150;O0; [2 Experience: Projects you have participated and technologies 
 that could be interesting.]&]
 [s0;i150;O0; [2 Additional comments (up to you).]&]
-[s0;#2 &]
+[s0;# &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 What criteria did you use to select the individuals who will 
 act as mentors for your organization? Please be as specific as 
 possible]]}}&]
@@ -136,7 +135,7 @@ be accepted. ]&]
 [s0;# [2 All of them have to be registered in ][^http`:`/`/www`.ultimatepp`.org`/gsoc`$uppweb`$mentor2011`$en`-us`.html^2 M
 entor Page][2  (http://www.ultimatepp.org/gsoc`$uppweb`$mentor2011`$en`-us.html) 
 and choose the ideas they would like to mentor.]&]
-[s0;@(28.42.255)2%- &]
+[s0;@(28.42.255)%- &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 What is your plan for dealing with disappearing students?]]}}&]
 [s0;# [2 We think the key areas to prevent disappearing students are 
 good student selection and mentorship.]&]
@@ -149,7 +148,7 @@ a reasonably more flexible schedule or goals.]&]
 [s0;# [2 Of course if we would not find a solution and the student 
 does not answer properly or simply disappears, we would contact 
 Google to avoid any waste of funds.]&]
-[s0;2 &]
+[s0; &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 What is your plan for dealing with disappearing mentors?]]}}&]
 [s0;# [2 As with students selection, mentorship selection is the preventive 
 solution to avoid this problem.]&]
@@ -167,7 +166,7 @@ community can do his/her job.]&]
 [s0;#2 &]
 [s0;# [2 Anyway a backup mentor will be defined per project and the 
 U`+`+ GSoC Administrator will do the coordination tasks.]&]
-[s0;@(28.42.255)2 &]
+[s0;@(28.42.255) &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 What steps will you take to encourage students to interact 
 with your project`'s community before, during and after the program?]]}}&]
 [s0;# [2 Fortunately U`+`+ community gives a good support to all new 
@@ -179,25 +178,19 @@ will begin weeks before GSoC as s/he will be in selection process,
 will approve student application, will introduce him/her to the 
 community and will support him during GSoC and after a reasonable 
 time before it.]&]
-[s0;2 &]
-[ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 What will you do to ensure that your accepted students stick 
-with the project after GSoC concludes?]]}}&]
-[s0;# [2 The student has to love his/her project and we have to be 
-sure from the selection process that U`+`+ is his/her preferred 
-tool.]&]
-[s0;#2 &]
-[s0;# [2 If s/he prefer other framework but apply for U`+`+ just because 
-s/he has more possibilities here, it will not be good to choose 
-him/her.]&]
-[s0;#2 &]
-[s0;# [2 Students may be attracted to come with us just for the GSoC 
-advantages. For sure this is fine. But they have to feel attracted 
-with U`+`+ as a tool and U`+`+ as a community. If some of them 
-fail the student will leave us as soon as the project has finished 
-and the money is in his/her pocket.]&]
-[s0;#2 &]
-[ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Is there anything else you would like to tell the Google 
-Summer of Code program administration team?]]}}&]
+[s0; &]
+[ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 If you are a small or new organization applying to GSoC, 
+please list a larger, established GSoC organization or a Googler 
+that can vouch for you here.]]}}&]
+[s0;# [2 TBD.]&]
+[s0;# &]
+[ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 If you are a large organization who is vouching for a small 
+organization applying to GSoC for their first time this year, 
+please list their name and why you think they`'d be good candidates 
+for GSoC here:]]}}&]
+[s0;# [2 Not applicable]&]
+[s0;# &]
+[ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Anything else you`'d like to tell us?]]}}&]
 [s0;# [2 GSoC last year application encouraged us to try to be a better 
 project.]&]
 [s0;#2 &]
@@ -212,10 +205,7 @@ to be good Tutors.]&]
 [s0;#2 &]
 [s0;# [2 Now we would like to be the organization GSoC deserves. We 
 are not big but have a big heart (`^`_`^).]&]
-[s0;2%- &]
-[s0;%- [*2 Comment:]&]
-[s0;2%- &]
 [s0;%- &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 Backup Admin (Link ID)]]}}&]
-[s0; [2 TBD.]&]
+[s0; [2 mirek.]&]
 [s0; ]
