@@ -11,12 +11,14 @@ void TestGetchar()
 	if (end)
 		getchar();
 }
+
 void Puts(String s)
 {
 	puts(s);
 	String file = AppendFileName(GetDesktopFolder(), "log");
 	SaveFile(file, LoadFile(file) + "\n" + s);
 }
+
 void Test()
 {
 	Puts("SysInfo functions demo");
@@ -232,9 +234,6 @@ void Test()
 	}
 	Puts("\nPress enter to end...");	TestGetchar();
 } 
-
-//#include <windows.h>
-//#include <mmsystem.h>
 
 CONSOLE_APP_MAIN
 {
