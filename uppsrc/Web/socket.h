@@ -69,7 +69,7 @@ public:
 	static void     Init();
 
 	void            Attach(One<Data> d)                      { data = d; data->sock = this; }
-	void            Clear()                                  { data->sock = NULL; data.Clear(); }
+	void            Clear()                                  { if(!data.IsPicked() && data) data->sock = NULL; data.Clear(); }
 
 	bool            IsOpen() const                           { return data && data->IsOpen(); }
 
