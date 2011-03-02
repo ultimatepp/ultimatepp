@@ -105,6 +105,28 @@ void TopicEditor::ExportPdf()
 	SaveFile(~fs, pdf.Finish());
 }
 
+void TopicEditor::ExportGroupPdf()
+{
+	String dir = SelectDirectory();
+	if(IsNull(dir))
+		return;
+	SaveTopic();
+	FindFile ff(AppendFileName(grouppath, "*.tpp"));
+	while(ff) {
+		Topic t = ReadTopic(LoadFile(AppendFileName(grouppath, ff.GetName())));
+		if(!t.text.IsVoid()) {
+			Size page = Size(3968, 6074);
+			PdfDraw pdf(page + 400);
+			::Print(pdf, ParseQTF(t.text), page);
+			String pdfdata = pdf.Finish();
+			String path = AppendFileName(dir, GetFileTitle(ff.GetName()) + ".pdf");
+			if(LoadFile(path) != pdfdata)
+				SaveFile(path, pdfdata);
+		}
+		ff.Next();
+	}	
+}
+
 void TopicEditor::Print()
 {
 	UPP::Print(editor.Get(), Size(3968, 6074), 0);
@@ -151,6 +173,7 @@ void TopicEditor::FileBar(Bar& bar)
 	bar.Add("Print", CtrlImg::print(), THISBACK(Print))
 	   .Key(K_CTRL_P);
 	bar.Add("Export to PDF..", THISBACK(ExportPdf));
+	bar.Add("Export group  to PDF..", THISBACK(ExportGroupPdf));
 }
 
 void TopicEditor::EditMenu(Bar& bar)
