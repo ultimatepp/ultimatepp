@@ -332,6 +332,7 @@ public:
 	static Size TopicPage()                          { return Size(3968, INT_MAX); }
 
 	void   ExportPdf();
+	void   ExportGroupPdf();
 	void   Print();
 
 	typedef TopicEditor CLASSNAME;
