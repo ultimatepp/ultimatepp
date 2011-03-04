@@ -425,14 +425,21 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 					lib.Add(linkfile[i]);
 			if(!HasFlag("SOLARIS")&&!HasFlag("OSX11"))
 				lnk << " -Wl,--start-group ";
-			for(i = 0; i < lib.GetCount(); i++) {
-				String ln = lib[i];
-				String ext = ToLower(GetFileExt(ln));
-				if(ext == ".a" || ext == ".so" || ext == ".dll" || ext == ".lib")
-					lnk << ' ' << GetHostPathQ(FindInDirs(libpath, lib[i]));
-				else
-					lnk << " -l" << ln;
-			}
+			for(int pass = 0; pass < 2; pass++)
+				for(i = 0; i < lib.GetCount(); i++) {
+					String ln = lib[i];
+					String ext = ToLower(GetFileExt(ln));
+					if(pass == 0) {
+						if(ext == ".a")
+							lnk << ' ' << GetHostPathQ(FindInDirs(libpath, lib[i]));
+					}
+					else
+						if(ext != ".a")
+							if(ext == ".so" || ext == ".dll" || ext == ".lib")
+								lnk << ' ' << GetHostPathQ(FindInDirs(libpath, lib[i]));
+							else
+								lnk << " -l" << ln;
+				}
 			if(!HasFlag("SOLARIS")&&!HasFlag("OSX11"))
 				lnk << " -Wl,--end-group";
 			PutConsole("Linking...");
