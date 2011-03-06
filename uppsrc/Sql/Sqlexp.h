@@ -273,6 +273,10 @@ inline SqlVal Nvl(const SqlId& a, const SqlVal& b)  { return SqlNvl(SqlVal(a), S
 inline SqlVal Nvl(const SqlId& a, const SqlCol& b)  { return SqlNvl(SqlVal(a), SqlVal(b)); }
 inline SqlVal Nvl(const SqlId& a, const SqlId& b)   { return SqlNvl(SqlVal(a), SqlVal(b)); }
 
+SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2);
+SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2, const SqlVal& exp3);
+SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2, const SqlVal& exp3, const SqlVal& exp4);
+
 SqlVal Prior(SqlId a);
 
 SqlVal NextVal(SqlId a);

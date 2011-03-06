@@ -186,7 +186,7 @@ SqlVal operator%(const SqlVal& a, const SqlVal& b) {
 }
 
 SqlVal operator|(const SqlVal& a, const SqlVal& b) {
-	return SqlVal(a, SqlCase(ORACLE, " || ")(PGSQL, " || ")(" + "), b, SqlS::MUL);
+	return SqlVal(a, SqlCase(ORACLE|PGSQL|SQLITE3, " || ")(" + "), b, SqlS::MUL);		// Added (SQLITE3, " || ")
 }
 
 SqlVal& operator+=(SqlVal& a, const SqlVal& b)     { return a = a + b; }
@@ -387,6 +387,18 @@ SqlVal SqlNvl(const SqlVal& a, const SqlVal& b) {
 
 SqlVal SqlNvl(const SqlVal& a) {
 	return Nvl(a, SqlVal(0));
+}
+
+SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2) {
+	return SqlFunc("coalesce", exp1, exp2);
+}
+
+SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2, const SqlVal& exp3) {
+	return SqlFunc("coalesce", exp1, exp2, exp3);
+}
+
+SqlVal Coalesce(const SqlVal& exp1, const SqlVal& exp2, const SqlVal& exp3, const SqlVal& exp4) {
+	return SqlFunc("coalesce", exp1, exp2, exp3, exp4);
 }
 
 SqlVal Prior(SqlId a) {
