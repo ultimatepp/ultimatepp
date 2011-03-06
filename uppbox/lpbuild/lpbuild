@@ -9,21 +9,22 @@ VER="`svnversion $SVN_PATH`"	# this is obvious, isn't it?
 BUILD="1"						# increment this when building version which is already in launchpad (BUGGY! do not touch, please)
 GPG_PROG="/home/upp/bin/gpg-extpass"	# what program to use for signing (in this case a wrapper that supplies passphrase)
 GPG_KEY="0CE4194D"				# gpg key fingerprint to use
+PYTHON=python
 TMPDIR="/home/upp/lpbuild.tmp"	# directory for temporary files (defaults to /tmp/lpbuild.tmp)
 PPA="upp"
-SERIES=( hardy jaunty karmic lucid maverick )
+SERIES=( hardy jaunty karmic lucid maverick natty )
 
 # my local setup (for debuging)
-#SRC_PATH="/media/data/temp/uppsvn"
+#SRC_PATH="/home/h/uppsvn"
 #SVN_PATH="$SRC_PATH"
 #VER="`svnversion $SVN_PATH`"
-#VER="2285"
 #BUILD="1"
 #GPG_PROG="/usr/bin/gpg-extpass"
-#GPG_KEY="E0962C7A"
+#GPG_KEY="13A907FC"
+#PYTHON=python2
 #TMPDIR=""	# use default
 #PPA="upp-testing"
-#SERIES=( hardy )
+#SERIES=( natty )
 #SIMULATE="-s"
 
 echo "Debian source package builder"
@@ -80,9 +81,10 @@ cp $scriptdir/Makefile $tmp
 # get changelog from svn
 echo "Creating changelog ..."
 cd $SRC_PATH
-svn --limit 100 --xml -v log $SVN_PATH|python $scriptdir/svn2log.py \
+svn --limit 100 --xml -v log $SVN_PATH|$PYTHON $scriptdir/svn2log.py \
  -u $scriptdir/users.lst -P upp -L -d ultimatepp.org -S all -p /trunk/ \
  -i "`echo ${nests[@]} |tr \" \" ,`" -o $tmp/changelog
+echo > $tmp/changelog
 
 # Patch the version.h for curent version
 echo "#define IDE_VERSION \"$VER\"" > $tmp/uppsrc/ide/version.h

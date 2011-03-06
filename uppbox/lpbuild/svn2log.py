@@ -126,7 +126,7 @@ def convert_path(n):
   if inc:
     return n
   else:
-	return None
+    return None
 
 def convert_user(u):
   if no_author == False:

@@ -83,7 +83,7 @@ CFLAGS:=
 # Options for C++ compiler                                             #
 CXXFLAGS:=
 # Options for linker                                                   #
-LDFLAGS:=-Wl,--gc-sections -Wl,-s
+LDFLAGS:=-Wl,--gc-sections -Wl,-s -Wl,-O,2
 # Additional options for speed optimization                            #
 SPEEDFLAGS:=-O3 -ffunction-sections -fdata-sections
 # Additional options for size optimization                             #
@@ -191,7 +191,7 @@ $1:
 endef
 needs-dir=$(if $(filter $(needed-dirs),$1),,$(eval $(call create-dir,$1))) $1
 # get dependencies recursively
-get-deps=$(sort $1 $(foreach p,$($1_USES),$(call get-deps,$p)))
+get-deps=$(strip $(foreach p,$($1_USES),$(call get-deps,$p)) $1)
 
 # Compiler commands
 compiler-cpp=$(CXX) -c -x c++ $(CXXFLAGS)
@@ -208,7 +208,7 @@ counter-end:=; do [ -e $$f ] && c=$$(($$c+1)); done; echo $$c;
 
 # general target scheme (args:{deps,target,pkg,lang,flags}
 define compile
-$2: $(if $F,$($3_NEST)/$1,$(dir $2)$(shell $(includes-fetcher-$4) $5 $(CINC) $($3_MACRO) $($3_NEST)/$1 |tr -d '\\\\' | sed 's/^[^:]*://')) $(call needs-dir,$(dir $2))
+$2: $(if $F,$($3_NEST)/$1,$(dir $2)$(shell $(includes-fetcher-$4) $5 $(CINC) $($3_MACRO) $($3_NEST)/$1 |tr -d '\\\\' | sed 's/^[^:]*://')) | $(call needs-dir,$(dir $2))
 	$(call echo,"    Compiling $1 $Lflags $(strip $($3_FLAGS))$R ["`$(incrementor)`"/$(file-num)] ...") 
 	$M$(compiler-$4) $5 $(CINC) $($3_MACRO) $($3_NEST)/$1 -o $2
 $(EMPTYLINE)
@@ -273,8 +273,8 @@ endef
 
 # create target to link libraries into executable
 define link
-$(eval ARCHIVES:=$(strip $(foreach u,$(ALLDEPS),$($u_IOBJFILES)) $(foreach u,$(ALLDEPS),$($u_OBJDIR)/$(notdir $u.a))))
-$(eval ALLLIBS:=$(sort $(foreach u,$(ALLDEPS),$(foreach l,$($u_LIBS), -l$l))))
+$(eval ARCHIVES:=$(strip $(foreach u,$(ALLDEPS),$($u_IOBJFILES)) $(foreach u,$(ALLDEPS_),$($u_OBJDIR)/$(notdir $u.a))))
+$(eval ALLLIBS:=$(sort $(foreach u,$(ALLDEPS_),$(foreach l,$($u_LIBS), -l$l))))
 $(shell mkdir -p $(OBJDIR);rm -f $C_lock; echo -n `$(counter-beg) $(sort $(IOBJFILES) $(foreach u,$(ALLDEPS),$($u_OBJFILES))) $(counter-end)` > '$C')
 
 $(BINPREFIX)$1$(BINEXT): $(ARCHIVES) $(call needs-dir,$(dir $(BINPREFIX)))
@@ -386,7 +386,8 @@ else
 $(eval $(shell sh $(PARSER) '$(PKG)' '$(NESTS)' '$(flags)'))
 endif
 $(eval $(PKG)_FLAGS+=MAIN)
-$(eval ALLDEPS:=$(call get-deps,$(PKG)))
+$(eval ALLDEPS_:=$(call get-deps,$(PKG)))
+$(eval ALLDEPS:=$(sort $(ALLDEPS_)))
 $(eval file-num:=$(words $(foreach p,$(ALLDEPS),$($p_FILES_CPP) $($p_FILES_ICPP) $($p_FILES_C) $($p_FILES_CPP_SPEED) $($p_FILES_ICPP_SPEED) $($p_FILES_C_SPEED) $($p_FILES_CPP_SIZE) $($p_FILES_ICPP_SIZE) $($p_FILES_C_SIZE))))
 $(foreach p,$(ALLDEPS),$(eval $(call prep,$p)))
 
