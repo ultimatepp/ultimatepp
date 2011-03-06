@@ -85,3 +85,5 @@ struct MakeBuild {
 	
 	MakeBuild();
 };
+
+extern bool output_per_assembly;
