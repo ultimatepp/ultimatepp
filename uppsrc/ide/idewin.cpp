@@ -80,7 +80,7 @@ void Ide::ConsolePaste()
 }
 
 void Ide::Serialize(Stream& s) {
-	int version = 18;
+	int version = 19;
 	s.Magic(0x1234);
 	s / version;
 	s % main;
@@ -214,6 +214,8 @@ void Ide::Serialize(Stream& s) {
 		s % DiffFs();
 	if(version >= 13)
 		s % sort;
+	if(version >= 19)
+		s % output_per_assembly;
 	s.Magic();
 }
 
@@ -652,6 +654,8 @@ Ide::Ide()
 	
 	find_pick_sel = true;
 	find_pick_text = false;
+	
+	output_per_assembly = true;
 }
 
 Ide::~Ide()

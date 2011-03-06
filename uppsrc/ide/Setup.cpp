@@ -401,6 +401,7 @@ void Ide::SetupFormat() {
 		(ide.hydra1_threads, hydra1_threads)
 		(ide.chstyle, chstyle)
 		(ide.console, LinuxHostConsole)
+		(ide.output_per_assembly, output_per_assembly)
 
 		(ast.BracketIndent,					astyle_BracketIndent)
 		(ast.NamespaceIndent,               astyle_NamespaceIndent)
