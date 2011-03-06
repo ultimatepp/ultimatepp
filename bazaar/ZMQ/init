@@ -1,0 +1,4 @@
+#ifndef _ZMQ_icpp_init_stub
+#define _ZMQ_icpp_init_stub
+#include "Core/init"
+#endif

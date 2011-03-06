@@ -1,0 +1,12 @@
+description "The Server \"Hello World\" example using ZMQ library for TCP communication\377";
+
+uses
+	Core,
+	ZMQ;
+
+file
+	ZMQ_HelloeWorld_Srv.cpp;
+
+mainconfig
+	"" = "SSE2";
+

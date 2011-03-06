@@ -1,0 +1,5 @@
+#ifndef _ZMQ_HelloWorld_Clnt_icpp_init_stub
+#define _ZMQ_HelloWorld_Clnt_icpp_init_stub
+#include "Core/init"
+#include "ZMQ/init"
+#endif

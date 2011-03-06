@@ -1,0 +1,5 @@
+#ifndef _ZMQ_HelloeWorld_Srv_icpp_init_stub
+#define _ZMQ_HelloeWorld_Srv_icpp_init_stub
+#include "Core/init"
+#include "ZMQ/init"
+#endif
