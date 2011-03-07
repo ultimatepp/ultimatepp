@@ -11,7 +11,7 @@ développeurs. Il est composé d`'un ensemble de bibliothèques
 ( GUI, SQL, ... ) et un environnement de développement intégré 
 ( IDE ).]&]
 [s0;2 &]
-[s0; [2 Le développement rapide est assuré par ][^topic`:`/`/uppweb`/www`/overview`$en`-us^2 u
+[s0; [2 Le développement rapide est assuré par ][^topic`:`/`/uppweb`/www`/overview`$fr`-fr^2 u
 ne utilisation intelligente et agressive du C`+`+][2  plutôt que 
 par des générateurs de code sophistiqués. À cet égard, U`+`+ 
 est en concurrence avec les langages de script, tout en conservant 
@@ -774,10 +774,10 @@ la mise en oeuvre de gros projets en C`+`+.]&]
 ::l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^2 Tutoriel 
 GUI]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/comparison`$fr`-fr^2 Comparaisons]&]
-[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Vue d`'ensemble]]
+[s0;i150;O0; [^topic`:`/`/uppweb`/www`/overview`$fr`-fr^2 Vue d`'ensemble]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::r8/25t/25b/25R(165) [s0;>@(114)2 ]
-::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/overview`$en`-us^2 Vue d`'ensemble]&]
+::t8/25b8/25-2 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/overview`$fr`-fr^2 Vue d`'ensemble]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentation]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/examples`$fr`-fr^2 Exemples]&]
 [s0;i150;O0; [^topic`:`/`/uppweb`/www`/comparison`$fr`-fr^2 Comparaisons]]
@@ -809,12 +809,12 @@ web, bienvenue ici]]
 via SVN et autorisations]&]
 [s0;i150;a17;O0; [2 Informations sur erreurs. Envoi d`'un patch. ][/@(153)2 A 
 faire ...]&]
-[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^2 Site 
+[s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/contribweb`$fr`-fr^2 Site 
 Web]&]
 [s0;i150;a17;O0; [2 Nouvelles idées de développement]&]
 [s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^2 Sujets 
 actuels]&]
-[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2010`$en`-us^2 Idées 
+[s0;l160;i150;a17;O0; [^topic`:`/`/uppweb`/gsoc`/ideas2011`$en`-us^2 Idées 
 GSoC]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
@@ -860,7 +860,7 @@ externes]&]
 [s0;i150;O0; [2 Index Web. ][/@(153)2 A faire ...]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 :: [s0;%- ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$en`-us^2 Financement 
+::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/Funding`$fr`-fr^2 Financement 
 U`+`+]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/cookie`$en`-us^2 Prix `"Cookie`"]]
 ::=l0/25r0/25t0/15b0/15R0 [s0;%- ]}}&]
