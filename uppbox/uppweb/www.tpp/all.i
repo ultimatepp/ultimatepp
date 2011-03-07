@@ -262,6 +262,10 @@ TOPIC("vsswing$zh-tw")
 #include "vsswing$zh-tw.tppi"
 END_TOPIC
 
+TOPIC("overview$fr-fr")
+#include "overview$fr-fr.tppi"
+END_TOPIC
+
 TOPIC("Funding$en-us")
 #include "Funding$en-us.tppi"
 END_TOPIC
