@@ -1230,6 +1230,19 @@ void GridCtrl::Paint(Draw &w)
 								style, stdfont, false, false,
 								0, -1, 0,
 								true);
+			if(summary_row)
+			{
+				Color fg = Black;
+				Color bg = Blend(Blue, White, 240);
+				w.DrawRect(rx, y, cx, 1, Gray);
+				
+				if(style & GD::READONLY)
+				{
+					bg = Blend(bg, SGray(), 40);
+					fg = Blend(fg, SGray(), 200);
+				}
+				display->Paint(w, rx, y + 1, cx, GD_HDR_HEIGHT - 1, Value(""), style, fg, bg, stdfont, false, 0, 0);
+			}
 		}
 
 		w.End();
