@@ -2,7 +2,7 @@ topic "Ultimate++ download";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
-[s0;= [*R6 Ultimate`+`+ download]&]
+[s0;= [*R6 U`+`+ download]&]
 [s1;#b0; Quick overview&]
 [s1;#b0; &]
 [ {{2222:1111:3333:3334<50;>50;f0;g0;h1;l8/25r8/25t8/15b8/15@(229)R(128) [s0; [*+92 Operating system]]
