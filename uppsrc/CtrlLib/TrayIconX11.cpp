@@ -7,6 +7,9 @@
 #if !defined(flagNOGTK)
 	#include <glib.h>
 	#include <libnotify/notify.h>
+	#ifdef NOTIFY_CHECK_VERSION
+		#define NOTIFY_VERSION_GT_0_7_0
+	#endif
 #endif
 
 NAMESPACE_UPP
@@ -106,7 +109,11 @@ void TrayIcon::Message(int type, const char *title, const char *text, int timeou
 	NotifyNotification *notification = notify_notification_new (title, text
 					, type == 1 ? "gtk-dialog-info"
 					: type == 2 ? "gtk-dialog-warning"
-					: "gtk-dialog-error", NULL);
+					: "gtk-dialog-error"
+#ifndef NOTIFY_VERSION_GT_0_7_0
+					, NULL
+#endif
+					);
 	notify_notification_set_timeout(notification, timeout * 1000);
 	notify_notification_show (notification, &error);
 #endif
