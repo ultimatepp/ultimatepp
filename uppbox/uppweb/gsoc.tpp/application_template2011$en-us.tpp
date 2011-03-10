@@ -2,7 +2,8 @@ topic "GSoC 2011. Application Template";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b117;*+117 $$1,0#27457433418004101424360058862402:Caption]
 [{_}%EN-US 
-[s1;#b0; [R6 GSoC 2011. Student Application Template]&]
+[s1;#b0; [R^topic`:`/`/uppweb`/gsoc`/gsoc2011`$en`-us^6 GSoC 2011][R6 . 
+Student Application Template]&]
 [s1;#b0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Introduction]]}}&]
 [s1;#b0; &]
