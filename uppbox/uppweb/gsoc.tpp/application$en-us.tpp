@@ -182,7 +182,7 @@ time before it.]&]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 If you are a small or new organization applying to GSoC, 
 please list a larger, established GSoC organization or a Googler 
 that can vouch for you here.]]}}&]
-[s0;# [2 TBD.]&]
+[s0;# [2 Not found.]&]
 [s0;# &]
 [ {{10000f0;g0;^l/0t/25b4/25 [s0;# [*2 If you are a large organization who is vouching for a small 
 organization applying to GSoC for their first time this year, 
