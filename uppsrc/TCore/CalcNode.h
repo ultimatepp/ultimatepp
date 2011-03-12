@@ -342,6 +342,8 @@ public:
 	CalcContext(const CalcContext& context, int);
 	virtual ~CalcContext();
 
+	Value               TryEvaluate(String expr);
+
 	Value               Evaluate(String expr);
 	double              EvaluateDouble(String expr);
 	String              EvaluateString(String expr);
