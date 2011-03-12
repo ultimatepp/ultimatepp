@@ -135,17 +135,17 @@ protected:
 	bool    FrameIsEdge();
 	void    SetEdge(int i);
 	void    SyncEdge();
-	int     GetTextCx(const wchar *text, int n, bool password, Font fnt);
+	int     GetTextCx(const wchar *text, int n, bool password, Font fnt) const;
 	void    Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 		           Color ink, Color paper, int n, bool pwd, Font fnt);
 	int     GetStringCx(const wchar *text, int n);
-	int     GetCaret(int cursor);
+	int     GetCaret(int cursor) const;
 	int     GetCursor(int posx);
 	void    SyncCaret();
 	void    Finish(bool refresh = true);
 	void    SaveUndo();
 	void    DoAutoFormat();
-	int     GetTy();
+	int     GetTy() const;
 
 public:
 	Callback1<Bar&>   WhenBar;
@@ -194,11 +194,14 @@ public:
 	int     GetLength() const                { return text.GetLength(); }
 	int     GetChar(int i) const             { return text[i]; }
 
+	Rect    GetCaretRect(int pos) const;
+	Rect    GetCaretRect() const             { return GetCaretRect(cursor); }
+
 	void    Clear();
 	void    Reset();
 	
 	void    Error(bool error = true)         { errorbg = error; }
-
+	
 	EditField& Password(bool pwd = true)     { password = pwd; Finish(); return *this; }
 	EditField& SetFilter(int (*f)(int))      { filter = f; return *this; }
 	EditField& SetConvert(const Convert& c)  { convert = &c; Refresh(); return *this; }
