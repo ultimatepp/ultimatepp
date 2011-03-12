@@ -176,11 +176,11 @@ bool PNGRaster::Create()
 		}
 	}
 
-	png_bytep trans_colors = 0;
+	png_bytep trans_alpha = 0;
 	png_color_16p trans_values = 0;
 	int num_trans = 0;
 
-	png_get_tRNS(data->png_ptr, data->info_ptr, &trans_colors, &num_trans, &trans_values);
+	png_get_tRNS(data->png_ptr, data->info_ptr, &trans_alpha, &num_trans, &trans_values);
 //	bool has_mask = (num_trans > 0);
 
 //	AlphaArray im(width, height, out_bpp, 4, NULL, Vector<Color>(), has_mask ? 8 : 0, 4);
@@ -201,13 +201,13 @@ bool PNGRaster::Create()
 			rgba.g = c.green;
 			rgba.b = c.blue;
 			rgba.a = 255;
+			if(trans_alpha && i < num_trans)
+				rgba.a = trans_alpha[i];
 			data->palette[i] = rgba;
 		}
-		if(trans_colors) {
+		Premultiply(data->palette, data->palette, pal_count);
+		if(trans_alpha)
 			data->info.kind = IMAGE_MASK;
-			for(int i = 0; i < num_trans; i++)
-				data->palette[(int)trans_colors[i]] = RGBAZero();
-		}
 
 	}
 	else if(!(color_type & PNG_COLOR_MASK_COLOR)) { // grayscale
@@ -217,13 +217,11 @@ bool PNGRaster::Create()
 			RGBA rgba;
 			rgba.r = rgba.g = rgba.b = (byte)level;
 			rgba.a = 255;
+			if(trans_alpha && i < num_trans)
+				rgba.a = trans_alpha[i];
 			data->palette[i] = rgba;
 		}
-		if(trans_colors) {
-			data->info.kind = IMAGE_MASK;
-			for(int i = 0; i < num_trans; i++)
-				data->palette[(int)trans_colors[i]] = RGBAZero();
-		}
+		Premultiply(data->palette, data->palette, colors);
 	}
 
 /*

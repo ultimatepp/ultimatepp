@@ -552,7 +552,7 @@ void CalcSymbols::Remove(String name)
 
 CalcContext::Global::Global(const String& name, CalcProc proc)
 {
-	GetGlobals().Add(name, proc); 
+	GetGlobals().Add(name, proc);
 }
 
 CalcContext::CalcContext()
@@ -579,20 +579,20 @@ Value CalcContext::Get(String name) const
 	return Value();
 }
 
-Value CalcContext::TryEvaluate(String expr)
-{
-	try {
-		return Evaluate(expr);
-	}
-	catch(Exc e) {
-		return ErrorValue(e);
-	}
-}
-
 Value CalcContext::Evaluate(String expr)
 {
-	CalcNodePtr node = CalcParser().ScanVoid(expr);
-	return !!node ? node->Calc(*this) : Value();
+	CalcParser parser;
+	try
+	{
+		CalcNodePtr cn = parser.ScanVoid(expr);
+		if(!cn)
+			return Value();
+		return cn->Calc(*this);
+	}
+	catch(Exc e)
+	{
+		return ErrorValue(e);
+	}
 }
 
 double CalcContext::EvaluateDouble(String expr)
@@ -1289,7 +1289,7 @@ String CalcParser::GetSqlString()
 		else if(*pos)
 			out.Cat(*pos++);
 		else
-			throw Exc(t_("Unterminated string constant")); 
+			throw Exc(t_("Unterminated string constant"));
 	}
 	return out;
 }
@@ -1424,7 +1424,7 @@ CalcNodePtr CalcParser::ScanCompare()
 					out_node = new CalcConstNode(Value());
 			}
 			else if(islike) {
-				CalcNodePtr lexpr = ScanBitOr();
+				CalcNodePtr lexpr = ScanSelect();
 				out_node = new CalcFunctionNode("like", node, lexpr);
 			}
 			else if(isis) {
@@ -1435,7 +1435,7 @@ CalcNodePtr CalcParser::ScanCompare()
 				throw Exc(t_("expected 'between', 'in' or 'like'"));
 			else
 				return node;
-			
+
 			if(!isnot)
 				return out_node;
 			return new CalcFunctionNode("!", out_node);
