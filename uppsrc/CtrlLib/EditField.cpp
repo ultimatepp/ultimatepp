@@ -186,7 +186,7 @@ void EditField::CancelMode()
 	dropcaret.Clear();
 }
 
-int EditField::GetTextCx(const wchar *txt, int n, bool password, Font fnt)
+int EditField::GetTextCx(const wchar *txt, int n, bool password, Font fnt) const
 {
 	FontInfo fi = fnt.Info();
 	if(password)
@@ -198,7 +198,7 @@ int EditField::GetTextCx(const wchar *txt, int n, bool password, Font fnt)
 	return x;
 }
 
-int  EditField::GetCaret(int cursor)
+int  EditField::GetCaret(int cursor) const
 {
 	return GetTextCx(text, cursor, password, font);
 }
@@ -250,7 +250,7 @@ Image EditField::CursorImage(Point, dword)
 	return Image::IBeam();
 }
 
-int  EditField::GetTy()
+int  EditField::GetTy() const
 {
 	return (GetSize().cy + 1 - font.Info().GetHeight()) / 2;
 }
@@ -345,11 +345,18 @@ bool EditField::IsSelection() const
 	return anchor >= 0 && anchor != cursor;
 }
 
+Rect EditField::GetCaretRect(int pos) const
+{
+	FontInfo fi = font.Info();
+	return RectC(GetCaret(pos) - sc + 2 - fi.GetRightSpace('o') + fi.GetLeftSpace('o'), GetTy(),
+	             1, min(GetSize().cy - 2 * GetTy(), fi.GetHeight()));
+}
+
 void EditField::SyncCaret()
 {
 	FontInfo fi = font.Info();
-	SetCaret(GetCaret(cursor) - sc + 2 - fi.GetRightSpace('o') + fi.GetLeftSpace('o'), GetTy(),
-	         1, min(GetSize().cy - 2 * GetTy(), fi.GetHeight()));
+	Rect r = GetCaretRect(cursor);
+	SetCaret(r.left, r.top, r.GetWidth(), r.GetHeight());
 }
 
 void EditField::Finish(bool refresh)
@@ -604,6 +611,10 @@ void EditField::Remove(int pos, int n)
 {
 	if(IsReadOnly()) return;
 	text.Remove(pos, n);
+	if(cursor >= text.GetLength()) {
+		cursor = text.GetLength();
+		SyncCaret();
+	}
 	Update();
 }
 
