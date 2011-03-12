@@ -111,7 +111,7 @@ class CalcSequenceNode : public CalcNode {
 public:
 	CalcSequenceNode(pick_ Vector<CalcNodePtr> nodes);
 	CalcSequenceNode(CalcNodePtr node1, CalcNodePtr node2);
-	
+
 	virtual CalcNodePtr Clone() const { return new CalcSequenceNode(*this); }
 	virtual Value       Calc(CalcContext& context) const;
 	virtual String      Format() const;
@@ -343,8 +343,6 @@ public:
 	virtual ~CalcContext();
 
 	Value               Evaluate(String expr);
-	Value               TryEvaluate(String expr);
-
 	double              EvaluateDouble(String expr);
 	String              EvaluateString(String expr);
 	int                 EvaluateInt(String expr);
@@ -641,6 +639,8 @@ CalcCastMemberTemplate(CalcCastMemberPacket, 6)
 #define FGENID1(tag, lnum) FGENID2(tag, lnum)
 #define FGENID(a, b) COMBINE(COMBINE(a, b), __LINE__)
 
+#define SUBEXPAND(M) M
+
 #ifndef NOHELP
 #define FDECLTH(tag, topic, id, group, proc) \
 static GLOBAL_VARP(HelpCalc, FGENID(chlp, tag), (callback(proc), id, "Calc$" topic, group, ASSTRING(proc))); \
@@ -682,32 +682,32 @@ FDECLTH(dflt, topic, id, group, gate)
 #define FDECLAP0(id, x, group)        FDECLTA(BTA1, id,  "C" ASSTRING(id) ASSTRING(x), ASSTRING(id), group, COMBINE3(C, id, x))
 
 #define MDECLT(null, topic, id, group, call) \
-struct FGENID(clcp, dflt) : public BASECLASS \
-{ FGENID(clcp, dflt)(); bool CalcIt(CalcPacket& packet) { return CalcCastMember<null>(packet, this, &BASECLASS::call); } }; \
-static GLOBAL_VARP(HelpCalc, FGENID(chlp, dflt), (callback(static_cast<BASECLASS *>(0), \
-		brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, dflt)::CalcIt)), \
+struct FGENID(clcp, SUBEXPAND(MFILEID)) : public BASECLASS \
+{ FGENID(clcp, SUBEXPAND(MFILEID))(); bool CalcIt(CalcPacket& packet) { return CalcCastMember<null>(packet, this, &BASECLASS::call); } }; \
+static GLOBAL_VARP(HelpCalc, FGENID(chlp, SUBEXPAND(MFILEID)), (callback(static_cast<BASECLASS *>(0), \
+		brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, SUBEXPAND(MFILEID))::CalcIt)), \
 		id, "Calc$" topic, group, ASSTRING(call))); \
 INITBLOCK_(FGENID(mblk, tag)) { \
-	FGENID(chlp, dflt)(); \
-	static CalcLocalItem<BASECLASS> FGENID(clci, dflt)(BASECLASS::GetLocalMap(), id, \
-			brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, dflt)::CalcIt)); \
+	FGENID(chlp, SUBEXPAND(MFILEID))(); \
+	static CalcLocalItem<BASECLASS> FGENID(clci, SUBEXPAND(MFILEID))(BASECLASS::GetLocalMap(), id, \
+			brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, SUBEXPAND(MFILEID))::CalcIt)); \
 } \
-static void FGENID(chlt, dflt)(String& out) { out.Cat(FGENID(chlp, dflt)().GetTitle()); } \
-RegisterHelpTopicInfo("Calc$" topic, __FILE__, callback(&FGENID(chlt, dflt)), CNULL)
+static void FGENID(chlt, SUBEXPAND(MFILEID))(String& out) { out.Cat(FGENID(chlp, SUBEXPAND(MFILEID))().GetTitle()); } \
+RegisterHelpTopicInfo("Calc$" topic, __FILE__, callback(&FGENID(chlt, SUBEXPAND(MFILEID))), CNULL)
 
 #define MDECLTA(null, topic, id, group, call) \
-struct FGENID(clcp, dflt) : public BASECLASS \
-{ FGENID(clcp, dflt)(); bool CalcIt(CalcPacket& packet) { return CalcCastMemberPacket<null>(packet, this, &BASECLASS::call); } }; \
-static GLOBAL_VARP(HelpCalc, FGENID(chlp, dflt), (callback(static_cast<BASECLASS *>(0), \
-		brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, dflt)::CalcIt)), \
+struct FGENID(clcp, SUBEXPAND(MFILEID)) : public BASECLASS \
+{ FGENID(clcp, SUBEXPAND(MFILEID))(); bool CalcIt(CalcPacket& packet) { return CalcCastMemberPacket<null>(packet, this, &BASECLASS::call); } }; \
+static GLOBAL_VARP(HelpCalc, FGENID(chlp, SUBEXPAND(MFILEID)), (callback(static_cast<BASECLASS *>(0), \
+		brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, SUBEXPAND(MFILEID))::CalcIt)), \
 		id, "Calc$" topic, group, ASSTRING(call))); \
 INITBLOCK_(FGENID(mblk, tag)) { \
-	FGENID(chlp, dflt)(); \
-	static CalcLocalItem<BASECLASS> FGENID(clci, dflt)(BASECLASS::GetLocalMap(), id, \
-			brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, dflt)::CalcIt)); \
+	FGENID(chlp, SUBEXPAND(MFILEID))(); \
+	static CalcLocalItem<BASECLASS> FGENID(clci, SUBEXPAND(MFILEID))(BASECLASS::GetLocalMap(), id, \
+			brutal_cast<bool (BASECLASS::*)(CalcPacket&)>(&FGENID(clcp, SUBEXPAND(MFILEID))::CalcIt)); \
 } \
-static void FGENID(chlt, dflt)(String& out) { out.Cat(FGENID(chlp, dflt)().GetTitle()); } \
-RegisterHelpTopicInfo("Calc$" topic, __FILE__, callback(&FGENID(chlt, dflt)), CNULL)
+static void FGENID(chlt, SUBEXPAND(MFILEID))(String& out) { out.Cat(FGENID(chlp, SUBEXPAND(MFILEID))().GetTitle()); } \
+RegisterHelpTopicInfo("Calc$" topic, __FILE__, callback(&FGENID(chlt, SUBEXPAND(MFILEID))), CNULL)
 
 #define MDECL(id, x, group)   MDECLT(BTA0, ASSTRING(call),               id,           group, call)
 #define MDECL0(id, x, group)  MDECLT(BTA1, ASSTRING(id),                 id,           group, COMBINE3(C, id, x))
