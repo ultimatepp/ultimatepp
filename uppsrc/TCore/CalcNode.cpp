@@ -579,20 +579,20 @@ Value CalcContext::Get(String name) const
 	return Value();
 }
 
-Value CalcContext::Evaluate(String expr)
+Value CalcContext::TryEvaluate(String expr)
 {
-	CalcParser parser;
-	try
-	{
-		CalcNodePtr cn = parser.ScanVoid(expr);
-		if(!cn)
-			return Value();
-		return cn->Calc(*this);
+	try {
+		return Evaluate(expr);
 	}
-	catch(Exc e)
-	{
+	catch(Exc e) {
 		return ErrorValue(e);
 	}
+}
+
+Value CalcContext::Evaluate(String expr)
+{
+	CalcNodePtr node = CalcParser().ScanVoid(expr);
+	return !!node ? node->Calc(*this) : Value();
 }
 
 double CalcContext::EvaluateDouble(String expr)
