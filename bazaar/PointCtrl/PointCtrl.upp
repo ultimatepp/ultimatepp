@@ -2,7 +2,7 @@ description "Point placement Ctrl\377";
 
 uses
 	CtrlLib,
-	Scaler;
+	Gen;
 
 file
 	PointCtrl.h,

@@ -50,13 +50,13 @@ TreeTest::TreeTest()
 	StoreToFile(roota__, "check1.cfg");
 #endif
 
-	//Leaf<Element>
+	//NodeB<Element>
 
 	rootb.SetAsRoot();
 	rootb.name = "/";
 	rootb.value = "Hallo";
 	rootb.SetCount(3);
-	Leaf<Element> & childb = rootb[2];
+	NodeB<Element> & childb = rootb[2];
 	childb.name = "Servus";
 	childb.value = 123;
 	ASSERT(childb.GetParent() == &rootb);
@@ -68,7 +68,7 @@ TreeTest::TreeTest()
 
 #if 0
 	StoreAsXMLFile(rootb, "CHECK");
-	Leaf<Element> rootb_;
+	NodeB<Element> rootb_;
 	LoadFromXMLFile(rootb_);
 	StoreAsXMLFile(rootb_, "CHECK1");
 #endif
@@ -80,13 +80,13 @@ TreeTest::TreeTest()
 	StoreToFile(rootb__);
 #endif
 
-	//Leaf<One<Element> >
+	//NodeB<One<Element> >
 
 	rootc.SetAsRoot();
 	rootc.One<Element>::Create();
 	rootc->name = "/";
 	rootc.SetCount(3);
-	Leaf<One<Element> > & childc = rootc[2];
+	NodeB<One<Element> > & childc = rootc[2];
 	ASSERT(childc.GetParent() == &rootc);
 	ASSERT(childc.GetRoot() == &rootc);
 	childc.One<Element>::Create();
@@ -95,6 +95,24 @@ TreeTest::TreeTest()
 	sc = "root";
 	String & ssc = rootc->name;
 	ASSERT(ssc.IsEqual(sc));
+
+	//MapNode<String, Element>
+
+	mroota.SetAsRoot();
+	mroota.leaf.name = "/";
+	mroota.leaf.value = "Hallo";
+	mroota.Add("a");
+	mroota.Add("b");
+	mroota.Add("c");
+	MapNode<String, Element> & childd = mroota[2];
+	childd.leaf.name = "Servus";
+	childd.leaf.value = 123;
+	ASSERT(childd.GetParent() == &mroota);
+	ASSERT(childd.GetRoot() == &mroota);
+	String & sd = childd.GetParent()->leaf.name;
+	sd = "root";
+	String & ssd = roota.leaf.name;
+	ASSERT(ssd.IsEqual(sd));
 
 	int x = 123;
 }

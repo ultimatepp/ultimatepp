@@ -5,7 +5,7 @@
 
 using namespace Upp;
 
-#include <Scaler/Scaler.h>
+#include <Gen/Gen.h>
 
 typedef Pointf XY;
 

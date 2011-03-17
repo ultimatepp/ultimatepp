@@ -31,8 +31,11 @@ public:
 	Node<One<Element> > root;
 	Node<Element> roota;
 	
-	Leaf<Element> rootb;
-	Leaf<One<Element> > rootc;
+	NodeB<Element> rootb;
+	NodeB<One<Element> > rootc;
+	
+	
+	MapNode<String, Element> mroota;
 };
 
 #endif

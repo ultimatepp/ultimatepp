@@ -239,6 +239,31 @@ protected:
 	T* pt;
 };
 
+template<class T = double>
+class Scaler
+{
+public:
+	Scaler() : mn(0), mx(0) {}
+	Scaler(const T& mn, const T& mx) : mn(mn), mx(mx) {}
+
+	inline void Min(const T& t) { mn = t; }
+	inline T Min() const { return mn; }
+	inline void Max(const T& t) { mx = t; }
+	inline T Max() const { return mx; }
+	inline void MinMax(const T& _mn, const T& _mx) { mn = _mn; mx = _mx; }
+
+	//scales local dimension value t to foreign dimensions d
+	//returned in foreign dimension
+	inline T To(const Scaler& d, const T& t) { return (t-mn)*(d.mx-d.mn)/(mx-mn)+d.mn; }
+	//scales foreign dimension value t from foreign s to local dimension
+	//return in local dimension
+	inline T From(const Scaler& s, const T& t) { return (t-s.mn)*(mx-mn)/(s.mx-s.mn)+mn; }
+
+	inline T operator() (const Scaler& s, const T& t) { return From(s, t); }
+protected:
+	T mn, mx;	
+};
+
 END_UPP_NAMESPACE
 
 #endif
