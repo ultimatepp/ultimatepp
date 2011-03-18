@@ -292,8 +292,6 @@ private:
 
 	bool   TestKey(int i, int key);
 
-	void   Move(int d);
-
 	bool   SetCursor0(int i, bool dosel = true);
 
 	void   SyncSelection() const;
@@ -475,6 +473,7 @@ public:
 	void       ScrollTo(int sc);
 	void       ShowAppendLine();
 
+	void       Move(int d);
 	void       SwapUp();
 	void       SwapDown();
 
