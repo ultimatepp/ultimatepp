@@ -202,7 +202,9 @@ bool Socket::Data::OpenClient(const char *host, int port, bool nodelay, dword *m
 		Socket::Init();
 		hostent *he = gethostbyname(host);
 		if(!he) {
-			SetSockError(NFormat("gethostbyname(%s)", host));
+			SetSockError(NFormat("gethostbyname(%s) failed", host));
+			DDUMP(sock->errordesc);
+			DDUMP(Socket::GetErrorText());
 			return false;
 		}
 
@@ -814,13 +816,13 @@ void Socket::SetErrorText(String text)
 	memcpy(s_errortext, ~text, s_errortextlen + 1);
 }
 
-void Socket::SetSockError(SOCKET socket, const char *context, int code, const char *errordesc)
+void Socket::SetSockError(SOCKET socket, const char *context, int code, const char *errdesc)
 {
 	String err;
 	errorcode = code;
 	if(socket != INVALID_SOCKET)
 		err << "socket(" << (int)socket << ") / ";
-	err << context << ": " << errordesc;
+	err << context << ": " << errdesc;
 	errordesc = err;
 	SetErrorText(err);
 }
