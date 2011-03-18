@@ -39,7 +39,7 @@ public:
 	typedef MouseHookCtrl R;
 	typedef Visiting<Ctrl> V;
 
-	CtrlFinder() : ignoreframe(false), deep(true) { R::WhenLeftDown = THISBACK(OnCtrlLeft); R::WhenRightDown = THISBACK(OnCtrlRight);}
+	CtrlFinder() : ignoreframe(true), deep(true) { R::WhenLeftDown = THISBACK(OnCtrlLeft); R::WhenRightDown = THISBACK(OnCtrlRight);}
 
 	virtual void Visit(Ctrl& c);
 	virtual void Reload();
@@ -49,14 +49,15 @@ public:
 	Callback3<Ctrl&, Point, dword> WhenRightDown;
 	Callback2<Point, dword> WhenMissed;
 
-	virtual Value GetData() const { return RawToValue(~c); }
-	Ctrl* GetCtrl() const { return c; }
-
+	virtual Value GetData() const { return RawToValue(~ctrl); }
+	Ctrl* GetCtrl() const { return ctrl; }
+	void ClearCtrl() { ctrl = NULL; }
+	
 	bool ignoreframe;
 	bool deep;
 
 protected:
-	Ptr<Ctrl> c;
+	Ptr<Ctrl> ctrl;
 	void OnCtrlLeft(Point p, dword keyflags);
 	void OnCtrlRight(Point p, dword keyflags);
 };

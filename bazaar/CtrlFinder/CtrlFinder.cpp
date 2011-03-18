@@ -37,8 +37,7 @@ Ctrl* ChildAtPoint(Ctrl& par, Point& pt, bool ignoreframe)
 Ctrl* GetCtrl(Ctrl& c, Point& p, bool ignoreframe, bool deep)
 {
 	Ctrl* q = ChildAtPoint(c, p, ignoreframe);
-	if(!q) return q;
-	if(deep && q) 
+	if(q && deep) 
 	{
 		Point pt(p);
 		Ctrl* qc = GetCtrl(*q, pt, ignoreframe, deep);
@@ -47,7 +46,6 @@ Ctrl* GetCtrl(Ctrl& c, Point& p, bool ignoreframe, bool deep)
 			p = pt;
 			return qc;	
 		}
-		return q;
 	}
 	return q;
 }
@@ -70,28 +68,28 @@ void CtrlFinder::Visit(Ctrl& c)
 
 void CtrlFinder::Clear()
 {
-	c = NULL;	
+	ctrl = NULL;	
 	Remove();
 	V::Clear();
 }
 
 void CtrlFinder::OnCtrlLeft(Point p, dword keyflags)
 {
-	c = NULL;
+	ctrl = NULL;
 	if(IsEmpty()) return;
 	Point pt(p);
-	c = ::GetCtrl(Get(), pt, ignoreframe, deep);
-	if(c) WhenLeftDown(*c, p, keyflags);
+	ctrl = ::GetCtrl(Get(), pt, ignoreframe, deep);
+	if(ctrl) WhenLeftDown(*ctrl, p, keyflags);
 	else WhenMissed(p, keyflags);
 	Action();
 }
 void CtrlFinder::OnCtrlRight(Point p, dword keyflags)
 {
-	c = NULL;
+	ctrl = NULL;
 	if(IsEmpty()) return;
 	Point pt(p);
-	c = ::GetCtrl(Get(), pt, ignoreframe, deep);
-	if(c) WhenRightDown(*c, p, keyflags);
+	ctrl = ::GetCtrl(Get(), pt, ignoreframe, deep);
+	if(ctrl) WhenRightDown(*ctrl, p, keyflags);
 	else WhenMissed(p, keyflags);
 	Action();
 }

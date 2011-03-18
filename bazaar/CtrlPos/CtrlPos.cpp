@@ -119,7 +119,9 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 
 	if(GetCtrl())
 	{
+		//if already found prepare moving
 		Ctrl& c = *GetCtrl();
+		ASSERT(!c.InFrame());
 		xpos = c.GetPos();
 		xp = p;
 	
@@ -127,6 +129,7 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 
 		Rect r = c.GetRect();
 		Point op = CtrlMover::GetOffset(*(c.GetParent()), Get());
+		if(c.InView())
 		r.Offset(op);
 
 		Ctrl::LogPos pos = xpos;
@@ -157,6 +160,10 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 		}
 	}
 	CtrlFinder::LeftDown(p, keyflags);
+	if(GetCtrl() && GetCtrl()->InFrame())
+	{
+		ClearCtrl(); //may not move frames
+	}
 	Refresh();
 }
 
@@ -222,7 +229,7 @@ void CtrlPos::Updated()
 void CtrlPos::State(int reason)
 {
 	if(reason != ENABLE) return;
-	if(!IsEnabled()) { c = NULL; Refresh(); }
+	if(!IsEnabled()) { ClearCtrl(); Refresh(); }
 }
 
 void CtrlPos::Clear()

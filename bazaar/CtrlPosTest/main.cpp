@@ -73,7 +73,7 @@ CtrlPosTest::CtrlPosTest()
 	ft.deep <<= true;
 	DeepCB();
 
-	ft.ignoreframe <<= true;
+	ft.ignoreframe <<= false;
 	IgnoreFrameCB();
 
 	hk.WhenLeftDown = THISBACK(OnSelect);

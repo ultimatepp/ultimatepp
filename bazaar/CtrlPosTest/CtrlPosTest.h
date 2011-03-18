@@ -30,7 +30,7 @@ public:
 	FrameLeft<WithLeftBarLay<ParentCtrl> > sb;
 	CtrlPos hk;
 
-	FrameTop<WithControlLay<ParentCtrl> > ft;
+	FrameTop<WithControlLay<StaticRect> > ft;
 	EditString es;
 };
 

@@ -2,6 +2,7 @@
 
 void CtrlMover::CalcOffset(Ctrl& c, Ctrl& par, Point& p)
 {
+	if(c.InFrame()) return;
 	Rect r = c.GetView();
 	p += r.TopLeft();
 	if(&c == &par) return;
@@ -26,10 +27,12 @@ Point CtrlMover::GetOffset(Ctrl& c, Ctrl& par)
 void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 {
 	if(&c == &rc) { rc.Remove(); return;}
+	if(c.InFrame()) return; //may not move frames
 	rc.Remove();
 	Add(rc.SizePos());
 
 	Rect r = c.GetRect();
+	if(c.InView())
 	r.Offset(GetOffset(*(c.GetParent()), Get()));
 
 	rc.SetData(r);
@@ -52,7 +55,7 @@ void CtrlMover::OnRectChange()
 void CtrlMover::OnMissed(Point p, dword keyflags)
 {
 	rc.Remove();
-	c = NULL; //from CtrlFinder
+	ClearCtrl();
 	Action();
 }
 
