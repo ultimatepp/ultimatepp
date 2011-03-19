@@ -203,8 +203,6 @@ bool Socket::Data::OpenClient(const char *host, int port, bool nodelay, dword *m
 		hostent *he = gethostbyname(host);
 		if(!he) {
 			SetSockError(NFormat("gethostbyname(%s) failed", host));
-			DDUMP(sock->errordesc);
-			DDUMP(Socket::GetErrorText());
 			return false;
 		}
 
