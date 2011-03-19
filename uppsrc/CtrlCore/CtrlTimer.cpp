@@ -88,12 +88,12 @@ void Ctrl::TimerProc(dword time)
 	while(list->GetNext() != list && ((int)(time - list->GetNext()->time)) > 0) {
 		TimeEvent *e = list->GetNext();
 		e->Unlink();
-		if(e->delay < 0)
-			sTimeCallback(time - e->delay, e->delay, e->cb, e->id);
 		eventid++;
 		sTimerLock.Leave();
 		e->cb();
 		sTimerLock.Enter();
+		if(e->delay < 0)
+			sTimeCallback(time - e->delay, e->delay, e->cb, e->id);
 		delete e;
 	}
 	sTimerLock.Leave();
