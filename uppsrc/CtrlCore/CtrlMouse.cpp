@@ -464,15 +464,15 @@ bool sDblTime(int time)
 Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 	GuiLock __;
 	if(e == MOUSEMOVE) {
-		if(sDistMin(leftmousepos, p) > GUI_DragDistance() && repeatTopCtrl == this) {
+		if(sDistMin(leftmousepos, p) > GUI_DragDistance() && repeatTopCtrl == this && GetMouseLeft()) {
 			DispatchMouseEvent(LEFTDRAG, leftmousepos, 0);
 			leftmousepos = Null;
 		}
-		if(sDistMin(rightmousepos, p) > GUI_DragDistance() && repeatTopCtrl == this) {
+		if(sDistMin(rightmousepos, p) > GUI_DragDistance() && repeatTopCtrl == this && GetMouseRight()) {
 			DispatchMouseEvent(RIGHTDRAG, rightmousepos, 0);
 			rightmousepos = Null;
 		}
-		if(sDistMin(middlemousepos, p) > GUI_DragDistance() && repeatTopCtrl == this) {
+		if(sDistMin(middlemousepos, p) > GUI_DragDistance() && repeatTopCtrl == this && GetMouseMiddle()) {
 			DispatchMouseEvent(MIDDLEDRAG, middlemousepos, 0);
 			middlemousepos = Null;
 		}
