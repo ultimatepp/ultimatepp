@@ -1,4 +1,4 @@
-description "Resizable frame Ctrls\377";
+description "Resizable frame Ctrls - with dialog\377";
 
 uses
 	CtrlLib;
