@@ -731,7 +731,7 @@ bool PlotterCtrl::Push(Point pt, dword keyflags)
 
 void PlotterCtrl::Drag(Point start, Point prev, Point curr, dword keyflags)
 {
-	LOG("PlotterCtrl::Drag(" << start << "; prev = " << prev << ", curr = " << curr << ", flags = " << FormatIntHex(keyflags));
+	LLOG("PlotterCtrl::Drag(" << start << "; prev = " << prev << ", curr = " << curr << ", flags = " << FormatIntHex(keyflags));
 //	LLOG("PlotterCtrl::Drag, short = " << ~short_drag_drop << ", " << (~short_drag_drop
 //		? typeid(*short_drag_drop).name() : "NULL") << ", long = " << ~drag_drop << ", "
 //		<< (~drag_drop ? typeid(*drag_drop).name() : "NULL"));
