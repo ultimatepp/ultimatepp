@@ -193,7 +193,6 @@ bool Socket::Data::OpenClient(const char *host, int port, bool nodelay, dword *m
 	SLOG("Socket::Data::OpenClient(" << host << ':' << port << ", timeout " << timeout << ", block " << block << ')');
 
 	int ticks = msecs();
-	static StaticCriticalSection host_lock;
 	sockaddr_in sin;
 	sockaddr_in addr;
 
@@ -224,7 +223,7 @@ bool Socket::Data::OpenClient(const char *host, int port, bool nodelay, dword *m
 		NoDelay();
 
 	while(bind(socket, (const sockaddr *)&sin, sizeof(sin))) {
-		if(GetLastError() != SOCKERR(EINPROGRESS) || !IsNull(timeout) && msecs(ticks) >= timeout) {
+		if(Socket::GetErrorCode() != SOCKERR(EINPROGRESS) || !IsNull(timeout) && msecs(ticks) >= timeout) {
 			SetSockError(NFormat("bind(host=%s, port=%d)", FormatIP(Peek32be(&addr.sin_addr)), port));
 			return false;
 		}
@@ -243,7 +242,7 @@ bool Socket::Data::OpenClient(const char *host, int port, bool nodelay, dword *m
 	if(!connect(socket, (sockaddr *)&addr, sizeof(addr)))
 		return true;
 
-	int err = GetLastError();
+	int err = Socket::GetErrorCode();
 #ifdef PLATFORM_WIN32
 	if(err != SOCKERR(EWOULDBLOCK))
 #else
@@ -321,7 +320,7 @@ int Socket::Data::Read(void *buf, int amount)
 #endif
 	if(res == 0)
 		is_eof = true;
-	else if(res < 0 && GetLastError() != IS_BLOCKED)
+	else if(res < 0 && Socket::GetErrorCode() != IS_BLOCKED)
 		SetSockError("recv");
 	return res;
 }
@@ -329,7 +328,7 @@ int Socket::Data::Read(void *buf, int amount)
 int Socket::Data::Write(const void *buf, int amount)
 {
 	int res = send(socket, (const char *)buf, amount, 0);
-	if(res == 0 || res < 0 && GetLastError() != IS_BLOCKED)
+	if(res == 0 || res < 0 && Socket::GetErrorCode() != IS_BLOCKED)
 		SetSockError("send");
 	return res;
 }
@@ -529,7 +528,7 @@ int Socket::WriteWait(const char *s, int length, int timeout_msec)
 			SetSockError("WriteWait(blocking)->broken line");
 			return 0;
 		}
-		if(count < 0 / * && GetLastError() != SOCKERR(ETIMEDOUT)* /)
+		if(count < 0 / * && Socket::GetErrorCode() != SOCKERR(ETIMEDOUT)* /)
 			SetSockError("WriteWait(blocking)");
 		SLOG("//WriteWait(blocking) -> " << count);
 		return max(count, 0);
@@ -822,6 +821,7 @@ void Socket::SetSockError(SOCKET socket, const char *context, int code, const ch
 		err << "socket(" << (int)socket << ") / ";
 	err << context << ": " << errdesc;
 	errordesc = err;
+	is_error = true;
 	SetErrorText(err);
 }
 
