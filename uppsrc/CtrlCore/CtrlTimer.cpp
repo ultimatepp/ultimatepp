@@ -92,8 +92,10 @@ void Ctrl::TimerProc(dword time)
 		sTimerLock.Leave();
 		e->cb();
 		sTimerLock.Enter();
-		if(e->delay < 0)
-			sTimeCallback(time - e->delay, e->delay, e->cb, e->id);
+		if(e->delay < 0) {
+			dword t = GetTickCount();
+			sTimeCallback(t + (t == time) - e->delay, e->delay, e->cb, e->id);
+		}
 		delete e;
 	}
 	sTimerLock.Leave();
