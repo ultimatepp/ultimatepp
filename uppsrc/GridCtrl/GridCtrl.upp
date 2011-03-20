@@ -1,19 +1,11 @@
-description "Grid control";
+description "Grid control\377";
 
 charset "windows-1250";
 
 uses
 	CtrlLib;
 
-library
-	,
-	,
-	,
-	,
-	;
-
-options
-	-DLOG_CALLBACKS;
+uses(GRIDSQL) Sql;
 
 file
 	GridCtrl.h,
