@@ -163,9 +163,6 @@ LRESULT CALLBACK Ctrl::UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 {
 	sClipMap();
 	switch(message) {
-	case WM_TIMER:
-		TimerProc(GetTickCount());
-		return 0;
 	case WM_RENDERFORMAT:
 		RenderFormat((dword)wParam);
 		return 0;
@@ -831,10 +828,12 @@ bool Ctrl::ProcessEvents(bool *quit)
 {
 	if(ProcessEvent(quit)) {
 		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
+		TimerProc(GetTickCount());
 		SweepMkImageCache();
 		return true;
 	}
 	SweepMkImageCache();
+	TimerProc(GetTickCount());
 	return false;
 }
 

@@ -9,6 +9,7 @@ struct TimeEvent : public Link<TimeEvent> {
 	int        delay;
 	Callback   cb;
 	void      *id;
+	bool       rep;
 };
 
 static dword sTClick;
@@ -34,6 +35,7 @@ static void sTimeCallback(dword time, int delay, Callback cb, void *id) {
 	ne->cb = cb;
 	ne->delay = delay;
 	ne->id = id;
+	ne->rep = false;
 }
 
 void SetTimeCallback(int delay_ms, Callback cb, void *id) {
@@ -85,18 +87,31 @@ void Ctrl::TimerProc(dword time)
 	Ctrl::CheckMouseCtrl();
 	Ctrl::SyncCaret();
 	sTimerLock.Enter();
-	while(list->GetNext() != list && ((int)(time - list->GetNext()->time)) > 0) {
-		TimeEvent *e = list->GetNext();
-		e->Unlink();
+	TimeEvent *e = list->GetNext();
+	while(e != list && ((int)(time - e->time)) > 0 && !e->rep) {
+		TimeEvent *w = e;
+		e = e->GetNext();
+		w->Unlink();
 		eventid++;
-		sTimerLock.Leave();
-		e->cb();
-		sTimerLock.Enter();
-		if(e->delay < 0) {
-			dword t = GetTickCount();
-			sTimeCallback(t + (t == time) - e->delay, e->delay, e->cb, e->id);
+		Callback cb = w->cb;
+		if(w->delay < 0) {
+			w->rep = true;
+			w->LinkBefore(tevents());
 		}
-		delete e;
+		else
+			delete w;
+		sTimerLock.Leave();
+		cb();
+		sTimerLock.Enter();
+	}
+	time = GetTickCount();
+	e = list->GetPrev();
+	while(e != list && e->rep) {
+		TimeEvent *w = e;
+		e = e->GetPrev();
+		w->Unlink();
+		sTimeCallback(time - w->delay, w->delay, w->cb, w->id);
+		delete w;
 	}
 	sTimerLock.Leave();
 }
