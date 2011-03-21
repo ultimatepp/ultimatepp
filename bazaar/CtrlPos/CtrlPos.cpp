@@ -160,9 +160,15 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 		}
 	}
 	CtrlFinder::LeftDown(p, keyflags);
+	if(GetCtrl() == &Get()) //may  not move base
+	{
+		ClearCtrl();
+		Action();
+	}
 	if(GetCtrl() && GetCtrl()->InFrame())
 	{
 		ClearCtrl(); //may not move frames
+		Action();
 	}
 	Refresh();
 }
@@ -171,14 +177,57 @@ void CtrlPos::MouseMove(Point p, dword keyflags)
 {
 	moving = true;
 	pressed = (keyflags & K_MOUSELEFT);
-	//int m = RectCtrl::GetMode(r, p, keyflags, HANDSIZE);
-	//SetCursor(m, keyflags);
+	//int m = RectCtrl::GetMode(r, p, keyflags, style->handsize);
+	//ci = RectCtrl::SetCursor(m, keyflags);
 	if(!GetCtrl()) return;
+	Ctrl& c = *GetCtrl();
 
 	if(pressed && mode != RectCtrl::NONE) 
 	{
 		Size sz = GetSize();
-		Rect r = LogPosPopUp::CtrlRect(xpos, sz);;
+
+		if(keyflags & K_ALT)
+		{
+			Ctrl* par = c.GetParent();
+			Ctrl* prevc = c.GetPrev();
+
+			//info not available after Remove();
+			//Rect of source parent
+			Rect rs;
+			rs.Clear();
+			if(par)
+			{
+				rs = par->GetRect();
+				Point ops = CtrlMover::GetOffset(*(par->GetParent()), Get());
+				if(par->InView()) rs.Offset(ops);
+			}
+			else
+				rs.Clear();
+
+			c.Remove(); //prevent moving control from finding when searching new parent
+			Point pt(p);
+			Ctrl* pc = GetCtrl(Get(), pt, flags | DEEP);
+			if(!pc) pc = &Get();
+			if(pc != par)
+			{
+				//convert xpos
+				//Rect of destination parent
+				Rect rd = pc->GetRect();
+				Point opd = CtrlMover::GetOffset(*(pc->GetParent()), Get());
+				if(pc->InView()) rd.Offset(opd);
+
+				//the source xpos' Rect
+				Rect r = LogPosPopUp::CtrlRect(xpos, sz);
+				r.Offset(rs.TopLeft()-rd.TopLeft());
+				xpos = LogPosPopUp::MakeLogPos(xpos, r, pc->GetSize());
+				
+				pc->Add(c);
+			}
+			else
+				par->AddChild(&c, prevc);
+		}
+
+		Rect r = LogPosPopUp::CtrlRect(xpos, sz);
 		RectCtrl::CalcRect(r, p-xp, keyflags, mode, g);
 		r.Normalize();
 		Ctrl::LogPos pos = LogPosPopUp::MakeLogPos(xpos, r, sz);
@@ -219,6 +268,30 @@ void CtrlPos::RightDown(Point p, dword keyflags)
 		Action();
 		Refresh();
 	}
+}
+
+void CtrlPos::MouseWheel(Point p, int zdelta, dword keyflags)
+{
+	//if(!IsEditable()) return;
+	//if(!HasFocus()) SetFocus();
+	if(!GetCtrl()) return;
+	Ctrl& c = *GetCtrl();
+	
+	int i = zdelta/120;
+
+	for(; i<0; ++i)
+	{
+		Ctrl* p = c.GetNext();
+		c.GetParent()->AddChild(&c, p);
+		c.Refresh();
+	}
+	for(; i>0; --i)
+	{
+		Ctrl* p = c.GetPrev();
+		c.GetParent()->AddChildBefore(&c, p);
+		c.Refresh();
+	}
+	
 }
 
 void CtrlPos::Updated()

@@ -29,37 +29,49 @@ public:
 	Callback2<Point, dword> WhenRightRepeat;
 };
 
-Ctrl* ChildAtPoint(Ctrl& par, Point& pt, bool ignoreframe);
-Ctrl* GetCtrl(Ctrl& c, Point& p, bool ignoreframe, bool deep);
 
-class CtrlFinder : public MouseHookCtrl, public Visiting<Ctrl>
+class CtrlFinder : public ParentCtrl, public Visiting<Ctrl>
 {
 public:
 	typedef CtrlFinder CLASSNAME;
 	typedef MouseHookCtrl R;
 	typedef Visiting<Ctrl> V;
 
-	CtrlFinder() : ignoreframe(true), deep(true) { R::WhenLeftDown = THISBACK(OnCtrlLeft); R::WhenRightDown = THISBACK(OnCtrlRight);}
+	enum
+	{
+		VISIBLE = 0x1,
+		ENABLED = 0x2,
+		VIEW = 0x4,
+		FRAME = 0x8,
+		
+		DEEP = 0x10,
+		
+		DEF = VISIBLE | ENABLED | VIEW | FRAME | DEEP,
+	};
+	
+	Ctrl* ChildAtPoint(Ctrl& par, Point& pt, int f);
+	Ctrl* GetCtrl(Ctrl& c, Point& p, int f = DEF);
+
+	CtrlFinder() : flags(DEF) {}
 
 	virtual void Visit(Ctrl& c);
 	virtual void Reload();
 	virtual void Clear();
 
+	virtual void LeftDown(Point p, dword keyflags);
+	virtual void RightDown(Point p, dword keyflags);
+
 	Callback3<Ctrl&, Point, dword> WhenLeftDown;
 	Callback3<Ctrl&, Point, dword> WhenRightDown;
-	Callback2<Point, dword> WhenMissed;
 
 	virtual Value GetData() const { return RawToValue(~ctrl); }
 	Ctrl* GetCtrl() const { return ctrl; }
 	void ClearCtrl() { ctrl = NULL; }
 	
-	bool ignoreframe;
-	bool deep;
+	int flags;
 
 protected:
 	Ptr<Ctrl> ctrl;
-	void OnCtrlLeft(Point p, dword keyflags);
-	void OnCtrlRight(Point p, dword keyflags);
 };
 
 #endif

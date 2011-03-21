@@ -1,16 +1,20 @@
 #include "CtrlFinder.h"
 
-Ctrl* ChildAtPoint(Ctrl& par, Point& pt, bool ignoreframe)
+Ctrl* CtrlFinder::ChildAtPoint(Ctrl& par, Point& pt, int f)
 {
 	GuiLock __;
 	Ctrl *q;
 	Point p = pt;
 	Rect view = par.GetView();
 
+	if(f & VIEW)
 	if(view.Contains(p)) {
 		Point vp = p - view.TopLeft();
 		for(q = par.GetLastChild(); q; q = q->GetPrev()) {
-			if(q->InView()) {
+			if((f & VIEW) && q->InView())
+			if((f & VISIBLE) && q->IsVisible())
+			if((f & ENABLED) && q->IsEnabled())
+			{
 				Rect r = q->GetRect();
 				if(r.Contains(vp)) {
 					pt = vp - r.TopLeft();
@@ -20,10 +24,13 @@ Ctrl* ChildAtPoint(Ctrl& par, Point& pt, bool ignoreframe)
 		}
 		return NULL;
 	}
-	if(ignoreframe) return NULL;
 
+	if(f & FRAME)
 	for(q = par.GetLastChild(); q; q = q->GetPrev()) {
-		if(q->InFrame()) {
+		if((f & FRAME) && q->InFrame()) 
+		if((f & VISIBLE) && q->IsVisible())
+		if((f & ENABLED) && q->IsEnabled())
+		{
 			Rect r = q->GetRect();
 			if(r.Contains(p)) {
 				pt = p - r.TopLeft();
@@ -34,13 +41,13 @@ Ctrl* ChildAtPoint(Ctrl& par, Point& pt, bool ignoreframe)
 	return NULL;
 }
 
-Ctrl* GetCtrl(Ctrl& c, Point& p, bool ignoreframe, bool deep)
+Ctrl* CtrlFinder::GetCtrl(Ctrl& c, Point& p, int f)
 {
-	Ctrl* q = ChildAtPoint(c, p, ignoreframe);
-	if(q && deep) 
+	Ctrl* q = ChildAtPoint(c, p, f);
+	if(q && (f & DEEP)) 
 	{
 		Point pt(p);
-		Ctrl* qc = GetCtrl(*q, pt, ignoreframe, deep);
+		Ctrl* qc = GetCtrl(*q, pt, f);
 		if(qc)
 		{
 			p = pt;
@@ -73,23 +80,23 @@ void CtrlFinder::Clear()
 	V::Clear();
 }
 
-void CtrlFinder::OnCtrlLeft(Point p, dword keyflags)
+void CtrlFinder::LeftDown(Point p, dword keyflags)
 {
 	ctrl = NULL;
 	if(IsEmpty()) return;
 	Point pt(p);
-	ctrl = ::GetCtrl(Get(), pt, ignoreframe, deep);
-	if(ctrl) WhenLeftDown(*ctrl, p, keyflags);
-	else WhenMissed(p, keyflags);
+	ctrl = GetCtrl(Get(), pt, flags);
+	if(!ctrl) ctrl = &Get();
+	WhenLeftDown(*ctrl, p, keyflags);
 	Action();
 }
-void CtrlFinder::OnCtrlRight(Point p, dword keyflags)
+void CtrlFinder::RightDown(Point p, dword keyflags)
 {
 	ctrl = NULL;
 	if(IsEmpty()) return;
 	Point pt(p);
-	ctrl = ::GetCtrl(Get(), pt, ignoreframe, deep);
-	if(ctrl) WhenRightDown(*ctrl, p, keyflags);
-	else WhenMissed(p, keyflags);
+	ctrl = GetCtrl(Get(), pt, flags);
+	if(!ctrl) ctrl = &Get();
+	WhenRightDown(*ctrl, p, keyflags);
 	Action();
 }

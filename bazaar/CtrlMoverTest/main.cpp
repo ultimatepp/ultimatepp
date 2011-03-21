@@ -14,13 +14,6 @@ void CtrlMoverTest::OnSelect(Ctrl& c, Point p, dword keyflags)
 	hk.OnCtrlLeft(c, p, keyflags);
 }
 
-void CtrlMoverTest::OnMissed(Point p, dword keyflags)
-{
-	String inf = ("Missed!");
-	ToInfo(inf);
-	hk.OnMissed(p, keyflags);
-}
-
 void CtrlMoverTest::VisitCB()
 {
 	hk.Visit(vis);
@@ -40,14 +33,21 @@ void CtrlMoverTest::DisableCB()
 
 void CtrlMoverTest::DeepCB()
 {
-	hk.deep = ~ft.deep;
+	hk.flags &= ~CtrlFinder::DEEP;
+	hk.flags |= (~ft.deep)?(CtrlFinder::DEEP):(0);
 }
 
-void CtrlMoverTest::IgnoreFrameCB()
+void CtrlMoverTest::FrameCB()
 {
-	hk.ignoreframe = ~ft.ignoreframe;
+	hk.flags &= ~CtrlFinder::FRAME;
+	hk.flags |= (~ft.frame)?(CtrlFinder::FRAME):(0);
 }
 
+void CtrlMoverTest::ViewCB()
+{
+	hk.flags &= ~CtrlFinder::VIEW;
+	hk.flags |= (~ft.view)?(CtrlFinder::VIEW):(0);
+}
 CtrlMoverTest::CtrlMoverTest()
 {
 	CtrlLayout(vis);
@@ -70,16 +70,19 @@ CtrlMoverTest::CtrlMoverTest()
 	ft.enable <<= THISBACK(EnableCB);
 	ft.disable <<= THISBACK(DisableCB);
 	ft.deep <<= THISBACK(DeepCB);
-	ft.ignoreframe <<= THISBACK(IgnoreFrameCB);
+	ft.frame <<= THISBACK(FrameCB);
+	ft.view <<= THISBACK(ViewCB);
 
 	ft.deep <<= true;
 	DeepCB();
 
-	ft.ignoreframe <<= false;
-	IgnoreFrameCB();
+	ft.frame <<= true;
+	FrameCB();
+
+	ft.view <<= true;
+	ViewCB();
 
 	hk.WhenLeftDown = THISBACK(OnSelect);
-	hk.WhenMissed = THISBACK(OnMissed);
 	hk.Visit(vis);
 }
 

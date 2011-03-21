@@ -12,7 +12,8 @@ LAYOUT(ControlLay, 296, 44)
 	ITEM(Button, enable, SetLabel(t_("Enable")).RightPosZ(60, 56).VSizePosZ(4, 20))
 	ITEM(Button, disable, SetLabel(t_("Disable")).RightPosZ(4, 56).VSizePosZ(4, 20))
 	ITEM(Option, deep, SetLabel(t_("Deep")).RightPosZ(116, 48).TopPosZ(4, 16))
-	ITEM(Option, ignoreframe, SetLabel(t_("Ignore Frame")).RightPosZ(76, 88).TopPosZ(20, 16))
+	ITEM(Option, frame, SetLabel(t_("Frame")).RightPosZ(76, 88).TopPosZ(20, 16))
+	ITEM(Option, view, SetLabel(t_("View")).RightPosZ(-12, 88).TopPosZ(20, 16))
 END_LAYOUT
 
 LAYOUT(LeftBarLay, 50, 200)

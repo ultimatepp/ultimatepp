@@ -20,11 +20,11 @@ public:
 	void EnableCB();
 	void DisableCB();
 	void DeepCB();
-	void IgnoreFrameCB();
+	void FrameCB();
+	void ViewCB();
 
 	void ToInfo(const String& s);
 	void OnSelect(Ctrl& c, Point p, dword keyflags);
-	void OnMissed(Point p, dword keyflags);
 
 	WithCtrlPosTestLayout<ParentCtrl> vis;
 	FrameLeft<WithLeftBarLay<ParentCtrl> > sb;

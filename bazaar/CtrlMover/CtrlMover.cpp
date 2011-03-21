@@ -26,7 +26,8 @@ Point CtrlMover::GetOffset(Ctrl& c, Ctrl& par)
 
 void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 {
-	if(&c == &rc) { rc.Remove(); return;}
+	if(&c == &rc) { rc.Remove(); return; }
+	if(&c == &Get()) { rc.Remove(); return; } //mat not move base
 	if(c.InFrame()) return; //may not move frames
 	rc.Remove();
 	Add(rc.SizePos());
@@ -54,9 +55,7 @@ void CtrlMover::OnRectChange()
 
 void CtrlMover::OnMissed(Point p, dword keyflags)
 {
-	rc.Remove();
-	ClearCtrl();
-	Action();
+	CtrlFinder::LeftDown(p, keyflags);
 }
 
 void CtrlMover::Updated()
@@ -93,8 +92,7 @@ void CtrlMover::Reload()
 CtrlMover::CtrlMover()
 {
 	WhenLeftDown = THISBACK(OnCtrlLeft);
-	WhenMissed = THISBACK(OnMissed);
-	rcst = RectCtrl::StyleDefault();	
+	rcst = RectCtrl::StyleDefault();
 	rcst.rectcol = Null;
 	rc.SetStyle(rcst);
 	rc <<= THISBACK(OnRectChange);

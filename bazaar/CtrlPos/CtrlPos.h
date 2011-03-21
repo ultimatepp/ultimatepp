@@ -26,6 +26,7 @@ public:
 	virtual void MouseMove(Point p, dword keyflags);
 	virtual void LeftUp(Point p, dword keyflags);
 	virtual void RightDown(Point p, dword keyflags);
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void State(int reason);	
 	virtual void Updated();
 	virtual Rect GetVoidRect() const { return Ctrl::GetVoidRect(); }
