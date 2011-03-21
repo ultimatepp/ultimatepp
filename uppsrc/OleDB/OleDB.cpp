@@ -1381,7 +1381,7 @@ Vector<String> OleDBSession::EnumSequences(String database)
 	return out;
 }
 
-Vector<String> OleDBSession::EnumPrimaryKeys(String database, String table)
+Vector<String> OleDBSession::EnumPrimaryKey(String database, String table)
 {
 	Vector<String> out;
 	IRef<IDBSchemaRowset> srowset;
@@ -1389,10 +1389,15 @@ Vector<String> OleDBSession::EnumPrimaryKeys(String database, String table)
 		OleVariant restrictions[3];
 		restrictions[0].vt = VT_BSTR;
 		restrictions[0].bstrVal = StringToBSTR(database);
-		restrictions[1].vt = VT_BSTR;
-		restrictions[1].bstrVal = StringToBSTR(database);
-		restrictions[2].vt = VT_BSTR;
-		restrictions[2].bstrVal = StringToBSTR(table);
+		Vector<String> parts = Split(table, '.');
+		if(parts.GetCount() > 1) {
+			restrictions[1].vt = VT_BSTR;
+			restrictions[1].bstrVal = StringToBSTR(parts[0]);
+		}
+		if(!parts.IsEmpty()) {
+			restrictions[2].vt = VT_BSTR;
+			restrictions[2].bstrVal = StringToBSTR(parts.Top());
+		}
 		IRef<IRowset> trowset;
 		OleVerify(srowset->GetRowset(NULL, DBSCHEMA_PRIMARY_KEYS, __countof(restrictions), restrictions,
 			trowset.GetIID(), 0, NULL, trowset.SetUnk()));

@@ -51,7 +51,7 @@ public:
 	virtual Vector<String> EnumTables(String database);
 	virtual Vector<String> EnumViews(String database);
 	virtual Vector<String> EnumSequences(String database);
-	virtual Vector<String> EnumPrimaryKeys(String database, String table);
+	virtual Vector<String> EnumPrimaryKey(String database, String table);
 	virtual String         EnumRowID(String database, String table);
 
 	struct Provider
