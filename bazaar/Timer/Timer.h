@@ -30,6 +30,7 @@ private:
 		int        delay;
 		Callback   cb;
 		void      *id;
+		bool       rep;
 		
 		unsigned GetHashValue() const { return GetPtrHashValue(id); }
 	};

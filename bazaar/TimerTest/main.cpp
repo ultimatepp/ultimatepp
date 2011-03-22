@@ -1,6 +1,7 @@
 #include "TimerTest.h"
 
 #define REPEAT_TEST
+#define TIMEOUT 1000
 
 TimerTest::TimerTest()
 	: demo(0)
@@ -11,7 +12,7 @@ TimerTest::TimerTest()
 	ASSERT(a==1); //preload, 1 means running demo mode, 2 means a cb is executing
 
 #ifdef REPEAT_TEST
-	t.SetTimeCallback(-100, THISBACK(Test), (int)this);
+	t.SetTimeCallback(-TIMEOUT, THISBACK(Test), (int)this);
 #else
 	t.SetTimeCallback(0, THISBACK(Test), (int)this);
 #endif
@@ -38,7 +39,7 @@ void TimerTest::Test()
 	
 #ifdef REPEAT_TEST
 #else
-	t.SetTimeCallback(100, THISBACK(Test), (int)this);
+	t.SetTimeCallback(TIMEOUT, THISBACK(Test), (int)this);
 #endif
 }
 
