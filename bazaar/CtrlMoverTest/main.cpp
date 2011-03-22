@@ -64,6 +64,10 @@ CtrlMoverTest::CtrlMoverTest()
 	CtrlLayout(ft);
 	ft.Height(ft.GetSize().cy);
 	AddFrame(ft);
+
+	CtrlLayout(bot);
+	bot.Height(50);
+	vis.pc.AddFrame(bot);
 	
 	ft.visit <<= THISBACK(VisitCB);
 	ft.clear <<= THISBACK(ClearCB);

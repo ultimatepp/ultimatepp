@@ -60,11 +60,17 @@ CtrlPosTest::CtrlPosTest()
 	sb.Width(sb.GetSize().cx);
 	vis.AddFrame(sb);
 	vis.pc.Add(es.HCenterPos(50).VCenterPos(20));
+	st.SetText("STATIC");
+	vis.pc.Add(st.LeftPos(10,50).TopPos(20,20));
 
 	CtrlLayout(ft);
 	ft.Height(ft.GetSize().cy);
 	AddFrame(ft);
 	
+	CtrlLayout(bot);
+	bot.Height(50);
+	vis.pc.AddFrame(bot);
+
 	ft.visit <<= THISBACK(VisitCB);
 	ft.clear <<= THISBACK(ClearCB);
 	ft.enable <<= THISBACK(EnableCB);

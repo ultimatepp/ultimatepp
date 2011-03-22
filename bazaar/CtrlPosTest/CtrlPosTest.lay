@@ -1,12 +1,13 @@
-LAYOUT(CtrlPosTestLayout, 412, 256)
+LAYOUT(CtrlPosTestLayout, 548, 416)
 	ITEM(DropList, dv___0, LeftPosZ(336, 64).TopPosZ(48, 19))
 	ITEM(SliderCtrl, dv___1, LeftPosZ(336, 64).TopPosZ(84, 24))
 	ITEM(EditString, dv___2, LeftPosZ(336, 64).TopPosZ(12, 19))
 	ITEM(DocEdit, info, LeftPosZ(12, 292).TopPosZ(12, 172))
-	ITEM(ParentCtrl, pc, SetFrame(BlackFrame()).LeftPosZ(308, 96).TopPosZ(124, 96))
+	ITEM(ParentCtrl, pc, SetFrame(BlackFrame()).LeftPosZ(308, 168).TopPosZ(124, 184))
+	ITEM(StaticText, dv___5, SetText(t_("STATIC")).LeftPosZ(128, 112).TopPosZ(248, 60))
 END_LAYOUT
 
-LAYOUT(ControlLay, 296, 44)
+LAYOUT(ControlLay, 292, 40)
 	ITEM(Button, visit, SetLabel(t_("Visit")).LeftPosZ(4, 56).VSizePosZ(4, 20))
 	ITEM(Button, clear, SetLabel(t_("Clear")).LeftPosZ(60, 56).VSizePosZ(4, 20))
 	ITEM(Button, enable, SetLabel(t_("Enable")).RightPosZ(60, 56).VSizePosZ(4, 20))
@@ -19,5 +20,10 @@ END_LAYOUT
 LAYOUT(LeftBarLay, 50, 200)
 	ITEM(Button, dv___0, HSizePosZ(4, 6).TopPosZ(8, 48))
 	ITEM(ProgressIndicator, dv___1, HSizePosZ(4, 6).VSizePosZ(84, 44))
+END_LAYOUT
+
+LAYOUT(BotLay, 196, 40)
+	ITEM(DataPusher, dv___0, HSizePosZ(16, 116).VSizePosZ(8, 8))
+	ITEM(StaticText, dv___1, SetText(t_("STATIC")).LeftPosZ(112, 56).TopPosZ(12, 15))
 END_LAYOUT
 

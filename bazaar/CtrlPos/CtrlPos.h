@@ -35,6 +35,7 @@ public:
 
 	static void DrawAlignHandle(Draw& w, const Rect& _r, const Rect& r, const Ctrl::LogPos& pos, const Color& col);
 	static bool GetAlignMode(const Rect& _r, const Rect& r, const Point& pp, Ctrl::LogPos& pos, int handsize);
+	static void DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& hintcol);
 
 protected:	
 	const RectCtrl::Style* style;

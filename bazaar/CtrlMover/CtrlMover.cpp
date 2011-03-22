@@ -1,26 +1,28 @@
 #include "CtrlMover.h"
 
-void CtrlMover::CalcOffset(Ctrl& c, Ctrl& par, Point& p)
+void CtrlMover::CalcOffset(const Ctrl& c, const Ctrl& q, Point& p)
 {
-	if(c.InFrame()) return;
-	Rect r = c.GetView();
+	if(&c == &q) return;
+
+	Rect r = c.GetRect();
 	p += r.TopLeft();
-	if(&c == &par) return;
 
-	Ctrl* cp = c.GetParent();
-	if(!cp) { return; }
+	Ctrl* pc = c.GetParent();
+	if(!pc) { return; }
 
-	Rect rr = c.GetRect();
-	p += rr.TopLeft();
-	CalcOffset(*cp, par, p);
+	if(c.InView())
+	{
+		Rect rv = pc->GetView();
+		p += rv.TopLeft();
+	}
+	CalcOffset(*pc, q, p);
 }
 
 //calculate topleft offset of c w.r. up to par recursively
-Point CtrlMover::GetOffset(Ctrl& c, Ctrl& par)
+Point CtrlMover::GetOffset(const Ctrl& c, const Ctrl& q)
 {
-	Point p;
-	p.Clear();
-	CalcOffset(c, par, p);
+	Point p; p.Clear();
+	CalcOffset(c, q, p);
 	return p;
 }
 
@@ -32,9 +34,12 @@ void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 	rc.Remove();
 	Add(rc.SizePos());
 
+	//if c is frame: rect in parents window, 
+	//if is in view, then rect in view area, which itself is subarea of parent
 	Rect r = c.GetRect();
 	if(c.InView())
-	r.Offset(GetOffset(*(c.GetParent()), Get()));
+		r.Offset(c.GetParent()->GetView().TopLeft());
+	r.Offset(GetOffset(*c.GetParent(), Get()));
 
 	rc.SetData(r);
 	Action();
@@ -43,13 +48,15 @@ void CtrlMover::OnCtrlLeft(Ctrl& c, Point p, dword keyflags)
 void CtrlMover::OnRectChange()
 {
 	if(IsEmpty()) { rc.Remove(); return; }
-	Ctrl* c = GetCtrl();
-	if(!c) return;
+	if(!GetCtrl()) return;
+	Ctrl& c = *GetCtrl();
 
-	Rect r = rc.GetData(); //FIXME recurse the parents of GetCtrl, whole tree until meeting Get()
-	r.Offset(-GetOffset(*(c->GetParent()), Get()));
+	Rect r = rc.GetData();
+	r.Offset(-GetOffset(*c.GetParent(), Get()));
+	if(c.InView())
+		r.Offset(-c.GetParent()->GetView().TopLeft());
 	
-	c->SetRect(r);
+	c.SetRect(r);
 	Action();
 }
 

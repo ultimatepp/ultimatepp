@@ -63,6 +63,26 @@ bool CtrlPos::GetAlignMode(const Rect& _r, const Rect& r, const Point& pp, Ctrl:
 	return false;
 }
 
+void CtrlPos::DrawHintFrame(Draw& w, const Ctrl& g, const Ctrl& q, const Color& hintcol)
+{
+	Ctrl* c = q.GetFirstChild();
+	while(c)
+	{
+		if(c->InView())
+		{
+			Rect r = c->GetRect();
+			if(c->InView())
+				r.Offset(c->GetParent()->GetView().TopLeft());
+			r.Offset(CtrlMover::GetOffset(*(c->GetParent()), g));
+			
+			r.Inflate(1);
+			RectCtrl::DrawHandleFrame(w, r, hintcol, 1);
+		}
+		DrawHintFrame(w, g, *c, hintcol);
+		c = c->GetNext();	
+	}
+}
+
 void CtrlPos::Paint(Draw& w)
 {
 	Size sz = GetSize();
@@ -71,44 +91,30 @@ void CtrlPos::Paint(Draw& w)
 		w.DrawRect(0,0,sz.cx,sz.cy, SColorFace());
 
 	if(IsEnabled() && !IsEmpty())
-	{
-		Ctrl* c = Get().GetFirstChild();
-		while(c)
-		{
-			if(!c->InFrame())
-			{
-				Rect r = c->GetRect();
-				r.Offset(CtrlMover::GetOffset(*(c->GetParent()), Get()));
-				r.Inflate(1);
-				RectCtrl::DrawHandleFrame(w, r, LtGray, 1);
-			}
-			c = c->GetNext();	
-		}
-	}
+		DrawHintFrame(w, Get(), Get(), LtGray());
 	
-	Ctrl* c = GetCtrl();
-	if(!c) return;
+	if(!GetCtrl()) return;
+	Ctrl& c = *GetCtrl();
+	if(&c == &Get()) return;
 
-	Rect r = c->GetRect();
-	Point op = CtrlMover::GetOffset(*(c->GetParent()), Get());
+	Rect r = c.GetRect();
+	Rect _r = c.GetParent()->GetView();
+	Rect tr(r);
+
+	if(c.InView())
+		r.Offset(_r.TopLeft());
+	Point op = CtrlMover::GetOffset(*(c.GetParent()), Get());
 	r.Offset(op);
+	_r.Offset(op);
 
 	RectCtrl::DrawHandleFrame(w, r, style->framecol, style->framesize);
 
-	Rect _r;
-	if(c->GetParent())
-	{
-		_r = c->GetParent()->GetView();
-		Point opr = _r.TopLeft();
-		_r.Offset(op-opr);
-	}
-	else _r = sz;
-	DrawAlignHandle(w, _r, r, c->GetPos(), style->framecol);
+	DrawAlignHandle(w, _r, r, c.GetPos(), style->framecol);
 
 	RectCtrl::DrawHandle(w, r, style->handcol, style->handsize);
 
 	if(pressed)// && moving)
-		RectCtrl::DrawRectInfo(w, Point(10,10), r, style->framecol, style->textcol);
+		RectCtrl::DrawRectInfo(w, Point(10,10), tr, style->framecol, style->textcol);
 }
 
 void CtrlPos::LeftDown(Point p, dword keyflags)
@@ -125,24 +131,17 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 		xpos = c.GetPos();
 		xp = p;
 	
-		Size sz = GetSize();
-
 		Rect r = c.GetRect();
-		Point op = CtrlMover::GetOffset(*(c.GetParent()), Get());
+		Rect _r = c.GetParent()->GetView();
+
 		if(c.InView())
+			r.Offset(_r.TopLeft());
+		Point op = CtrlMover::GetOffset(*(c.GetParent()), Get());
 		r.Offset(op);
+		_r.Offset(op);
 
 		Ctrl::LogPos pos = xpos;
 		Rect rr(r); rr.Inflate(style->handsize+2);
-
-		Rect _r;
-		if(c.GetParent())
-		{
-			_r = c.GetParent()->GetView();
-			Point opr = _r.TopLeft();
-			_r.Offset(op-opr);
-		}
-		else _r = sz;
 
 		if(GetAlignMode(_r, rr, p, pos, style->handsize))
 		{
@@ -184,53 +183,42 @@ void CtrlPos::MouseMove(Point p, dword keyflags)
 
 	if(pressed && mode != RectCtrl::NONE) 
 	{
-		Size sz = GetSize();
-
 		if(keyflags & K_ALT)
 		{
-			Ctrl* par = c.GetParent();
+			Ctrl* q = c.GetParent();
 			Ctrl* prevc = c.GetPrev();
 
-			//info not available after Remove();
-			//Rect of source parent
-			Rect rs;
-			rs.Clear();
-			if(par)
-			{
-				rs = par->GetRect();
-				Point ops = CtrlMover::GetOffset(*(par->GetParent()), Get());
-				if(par->InView()) rs.Offset(ops);
-			}
-			else
-				rs.Clear();
+			//calculate some things not accessible when Removed()
+
+			Rect r = LogPosPopUp::CtrlRect(xpos, q->GetSize());
+			if(c.InView())
+				r.Offset(c.GetParent()->GetView().TopLeft());
+			Point ops = CtrlMover::GetOffset(*(c.GetParent()), Get());
+			r.Offset(ops);
 
 			c.Remove(); //prevent moving control from finding when searching new parent
 			Point pt(p);
 			Ctrl* pc = GetCtrl(Get(), pt, flags | DEEP);
 			if(!pc) pc = &Get();
-			if(pc != par)
+			if(pc != q)
 			{
-				//convert xpos
-				//Rect of destination parent
-				Rect rd = pc->GetRect();
-				Point opd = CtrlMover::GetOffset(*(pc->GetParent()), Get());
-				if(pc->InView()) rd.Offset(opd);
+				r.Offset(-pc->GetView().TopLeft());
+				Point opd = CtrlMover::GetOffset(*pc, Get());
+				r.Offset(-opd);
 
-				//the source xpos' Rect
-				Rect r = LogPosPopUp::CtrlRect(xpos, sz);
-				r.Offset(rs.TopLeft()-rd.TopLeft());
 				xpos = LogPosPopUp::MakeLogPos(xpos, r, pc->GetSize());
 				
 				pc->Add(c);
 			}
 			else
-				par->AddChild(&c, prevc);
+				q->AddChild(&c, prevc); //undo Remove();
 		}
 
-		Rect r = LogPosPopUp::CtrlRect(xpos, sz);
+		Size psz = c.GetParent()->GetSize();
+		Rect r = LogPosPopUp::CtrlRect(xpos, psz);
 		RectCtrl::CalcRect(r, p-xp, keyflags, mode, g);
 		r.Normalize();
-		Ctrl::LogPos pos = LogPosPopUp::MakeLogPos(xpos, r, sz);
+		Ctrl::LogPos pos = LogPosPopUp::MakeLogPos(xpos, r, psz);
 		GetCtrl()->SetPos(pos);
 		Action();
 		Refresh();

@@ -32,6 +32,8 @@ public:
 
 	FrameTop<WithControlLay<StaticRect> > ft;
 	EditString es;
+
+	FrameBottom<WithBotLay<ParentCtrl> > bot;
 };
 
 #endif

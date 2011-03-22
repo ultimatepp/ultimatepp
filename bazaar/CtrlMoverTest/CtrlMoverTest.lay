@@ -1,9 +1,9 @@
-LAYOUT(CtrlMoverTestLayout, 412, 252)
+LAYOUT(CtrlMoverTestLayout, 548, 416)
 	ITEM(DropList, dv___0, LeftPosZ(336, 64).TopPosZ(48, 19))
 	ITEM(SliderCtrl, dv___1, LeftPosZ(336, 64).TopPosZ(84, 24))
 	ITEM(EditString, dv___2, LeftPosZ(336, 64).TopPosZ(12, 19))
 	ITEM(DocEdit, info, LeftPosZ(12, 292).TopPosZ(12, 172))
-	ITEM(ParentCtrl, pc, SetFrame(BlackFrame()).LeftPosZ(308, 96).TopPosZ(124, 96))
+	ITEM(ParentCtrl, pc, SetFrame(BlackFrame()).LeftPosZ(308, 168).TopPosZ(124, 184))
 END_LAYOUT
 
 LAYOUT(ControlLay, 292, 40)
@@ -19,5 +19,9 @@ END_LAYOUT
 LAYOUT(LeftBarLay, 50, 200)
 	ITEM(Button, dv___0, HSizePosZ(4, 6).TopPosZ(8, 48))
 	ITEM(ProgressIndicator, dv___1, HSizePosZ(4, 6).VSizePosZ(84, 44))
+END_LAYOUT
+
+LAYOUT(BotLay, 140, 40)
+	ITEM(DataPusher, dv___0, HSizePosZ(40, 36).VSizePosZ(8, 8))
 END_LAYOUT
 
