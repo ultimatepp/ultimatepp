@@ -432,7 +432,7 @@ void SubMenuItem::MouseEnter(Point, dword)
 	SetFocus();
 	Refresh();
 	if(!menu.IsOpen() && isenabled)
-		SetTimeCallback(4000, THISBACK(Pull), TIMEID_PULL);
+		SetTimeCallback(400, THISBACK(Pull), TIMEID_PULL);
 }
 
 void SubMenuItem::MouseLeave()
