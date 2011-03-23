@@ -206,6 +206,7 @@ void MenuBar::SetupRestoreFocus()
 
 void MenuBar::PostDeactivate()
 {
+	LLOG("PostDeactivate");
 	MenuBar *q = GetLastSubmenu();
 	MenuBar *u = q;
 	while(q && q->IsPopUp()) {
@@ -227,6 +228,7 @@ void MenuBar::PostDeactivate()
 
 void MenuBar::Deactivate()
 {
+	LLOG("Deactivate");
 	if(IsOpen())
 		SetTimeCallback(0, THISBACK(PostDeactivate), TIMEID_STOP);
 }

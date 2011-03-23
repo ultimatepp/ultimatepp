@@ -1240,6 +1240,7 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 
 void Ctrl::PopUpHWND(HWND owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
+	LLOG("POPUP");
 	popup = false;
 	Create(owner, WS_POPUP, topmost ? WS_EX_TOPMOST : 0, savebits,
 	       owner || !activate ? SW_SHOWNOACTIVATE : SW_SHOW,

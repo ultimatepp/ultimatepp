@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#define LLOG(x) // LOG(x)
+
 int MemoryProbeInt;
 
 struct TimeEvent : public Link<TimeEvent> {
@@ -27,20 +29,19 @@ static TimeEvent *tevents() {
 }
 
 static void sTimeCallback(dword time, int delay, Callback cb, void *id) {
-	TimeEvent *list = tevents();
-	TimeEvent *e;
-	for(e = list->GetNext(); e != list && ((int)(time - e->time) >= 0); e = e->GetNext());
-	TimeEvent *ne = e->InsertPrev();
+	TimeEvent *ne = tevents()->InsertNext();
 	ne->time = time;
 	ne->cb = cb;
 	ne->delay = delay;
 	ne->id = id;
 	ne->rep = false;
+	LLOG("sTimeCalllback " << ne->time << " " << ne->delay << " " << ne->id);
 }
 
 void SetTimeCallback(int delay_ms, Callback cb, void *id) {
 	Mutex::Lock __(sTimerLock);
 	ASSERT(abs(delay_ms) < 0x40000000);
+	LLOG("SetTimeCallback " << delay_ms << " " << id);
 	sTimeCallback(GetTickCount() + abs(delay_ms), delay_ms, cb, id);
 }
 
@@ -88,30 +89,50 @@ void Ctrl::TimerProc(dword time)
 	Ctrl::SyncCaret();
 	sTimerLock.Enter();
 	TimeEvent *e = list->GetNext();
-	while(e != list && ((int)(time - e->time)) > 0 && !e->rep) {
+
+/*
+	_DBG_
+	DLOG("--- TimerProc at " << time);
+	while(e != list) {
+		DLOG("TP " << e->time << " " << e->delay << " " << e->id << " " << e->rep);
+		e = e->GetNext();
+	}
+	DLOG("----");
+	e = list->GetNext();
+	_DBG_;
+*/
+
+	while(e != list) {
+		LLOG("Event " << e->time << " " << e->delay << " " << e->id);
 		TimeEvent *w = e;
 		e = e->GetNext();
-		w->Unlink();
-		eventid++;
-		Callback cb = w->cb;
-		if(w->delay < 0) {
-			w->rep = true;
-			w->LinkBefore(tevents());
+		if((int)(time - w->time) > 0 && !w->rep) {
+			LLOG("Performing!");
+			w->Unlink();
+			eventid++;
+			Callback cb = w->cb;
+			if(w->delay < 0) {
+				w->rep = true;
+				w->LinkBefore(tevents());
+			}
+			else
+				delete w;
+			sTimerLock.Leave();
+			cb();
+			sTimerLock.Enter();
 		}
-		else
-			delete w;
-		sTimerLock.Leave();
-		cb();
-		sTimerLock.Enter();
 	}
 	time = GetTickCount();
-	e = list->GetPrev();
-	while(e != list && e->rep) {
+	LLOG("Rescheduling at " << time);
+	e = list->GetNext();
+	while(e != list) {
 		TimeEvent *w = e;
-		e = e->GetPrev();
-		w->Unlink();
-		sTimeCallback(time - w->delay, w->delay, w->cb, w->id);
-		delete w;
+		e = e->GetNext();
+		if(w->rep) {
+			w->Unlink();
+			sTimeCallback(time - w->delay, w->delay, w->cb, w->id);
+			delete w;
+		}
 	}
 	sTimerLock.Leave();
 }
