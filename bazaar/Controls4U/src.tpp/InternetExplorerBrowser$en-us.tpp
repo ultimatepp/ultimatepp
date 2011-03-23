@@ -1,4 +1,4 @@
-topic "IExplorerBrowser";
+topic "InternetExplorerBrowser";
 [ $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -7,10 +7,10 @@ topic "IExplorerBrowser";
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
 [H6;0 $$6,0#05600065144404261032431302351956:begin]
 [{_}%EN-US 
-[ {{10000@3 [s0; [*@7;4 IExplorerBrowser]]}}&]
+[ {{10000@3 [s0; [*@7;4 InternetExplorerBrowser]]}}&]
 [s4;%- &]
-[s1;:IExplorerBrowser`:`:class:%- [@(0.0.255)3 class][3 _][*3 IExplorerBrowser][3 _:_][@(0.0.255)3 p
-ublic][3 _][*@3;3 DHCtrlActiveX]&]
+[s1;:InternetExplorerBrowser`:`:class:%- [@(0.0.255)3 class][3 _][*3 InternetExplorerBrowse
+r][3 _:_][@(0.0.255)3 public][3 _][*@3;3 DHCtrlActiveX]&]
 [s0;2 &]
 [s0; [2 As seen in layout designer:]&]
 [s0;2 &]
@@ -745,58 +745,60 @@ ublic][3 _][*@3;3 DHCtrlActiveX]&]
 
 ]&]
 [s0;2 &]
-[s3; IExplorerBrowser is a control to render internet web pages and 
-html code.&]
-[s3; To run properly IExplorerBrowser requires to install previously 
-[^http`:`/`/www`.microsoft`.com^ Microsoft Internet Explorer].in 
-the system.&]
+[s3; InternetExplorerBrowser is a control to render internet web 
+pages and html code.&]
+[s3; To run properly InternetExplorerBrowser requires to install 
+previously [^http`:`/`/www`.microsoft`.com^ Microsoft Internet 
+Explorer].in the system.&]
 [s3; As this control is based in DHCtrlActiveX it can only work in 
 Windows.&]
 [s3; &]
 [s4; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Constructor Detail]]}}&]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:IExplorerBrowser`(`):%- [* IExplorerBrowser]()&]
-[s2; Initializes IExplorerBrowser.&]
+[s5;:InternetExplorerBrowser`:`:InternetExplorerBrowser`(bool`):%- [* InternetExplorerB
+rowser]([@(0.0.255) bool]_[*@3 status]_`=_[@(0.0.255) true])&]
+[s2; Initializes InternetExplorerBrowser.&]
 [s4;2 &]
-[s4;%- &]
+[s4; &]
 [ {{10000F(128)G(128)@1 [s0; [*2 Public Member List]]}}&]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:Browse`(const String`&`):%- [@(0.0.255) bool]_[* Browse]([@(0.0.255) c
-onst]_[_^String^ String]_`&[*@3 url])&]
+[s5;:InternetExplorerBrowser`:`:Browse`(const String`&`):%- [@(0.0.255) bool]_[* Browse](
+[@(0.0.255) const]_[_^String^ String]_`&[*@3 url])&]
 [s2; Renders [%-*@3 url ]web page in control.&]
 [s4; &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:ShowHTML`(const String`&`):%- [@(0.0.255) bool]_[* ShowHTML]([@(0.0.255) c
-onst]_[_^String^ String]_`&[*@3 html])&]
+[s5;:InternetExplorerBrowser`:`:ShowHTML`(const String`&`):%- [@(0.0.255) bool]_[* ShowHT
+ML]([@(0.0.255) const]_[_^String^ String]_`&[*@3 html])&]
 [s2; Renders [%-*@3 html ]code in control.&]
 [s4; &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:GoForward`(`):%- [@(0.0.255) bool]_[* GoForward]()&]
+[s5;:InternetExplorerBrowser`:`:GoForward`(`):%- [@(0.0.255) bool]_[* GoForward]()&]
 [s2; Browses to the next item in the history list.&]
 [s4;%- &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:GoBack`(`):%- [@(0.0.255) bool]_[* GoBack]()&]
+[s5;:InternetExplorerBrowser`:`:GoBack`(`):%- [@(0.0.255) bool]_[* GoBack]()&]
 [s2; Browses to the previous item in the history list.&]
 [s4;%- &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:GetLocation`(`):%- [_^String^ String]_[* GetLocation]()&]
+[s5;:InternetExplorerBrowser`:`:GetLocation`(`):%- [_^String^ String]_[* GetLocation]()&]
 [s2; Retrieves the full URL of the document currently being viewed.&]
 [s4;%- &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:GetTitle`(`):%- [_^String^ String]_[* GetTitle]()&]
+[s5;:InternetExplorerBrowser`:`:GetTitle`(`):%- [_^String^ String]_[* GetTitle]()&]
 [s2; Retrieves the short, user`-friendly name of the document currently 
 being viewed.&]
 [s4;%- &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:GetOffline`(bool`&`):%- [@(0.0.255) bool]_[* GetOffline]([@(0.0.255) b
-ool]_`&[*@3 offline])&]
+[s5;:InternetExplorerBrowser`:`:GetOffline`(bool`&`):%- [@(0.0.255) bool]_[* GetOffline](
+[@(0.0.255) bool]_`&[*@3 offline])&]
 [s2; Puts in [%-*@3 offline] if object is currently operating in offline 
 mode.&]
 [s2; Returns true if ok.&]
 [s4; &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:GetReadyState`(`):%- [_^String^ String]_[* GetReadyState]()&]
+[s5;:InternetExplorerBrowser`:`:GetReadyState`(`):%- [_^String^ String]_[* GetReadyState](
+)&]
 [s2;~~~1088; Gets the ready state of an object. Possible values are:&]
 [ {{2915:7085f0;g0;^t/25b/25 [s2;l256;i150;O0; `"Uninitialized`":&]
 [s2;l256;i150;O0;~~~1088; `"Loading`": &]
@@ -813,17 +815,17 @@ mode.&]
 [s2; Returns true if ok.&]
 [s4;%- &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:GoHome`(`):%- [@(0.0.255) bool]_[* GoHome]()&]
+[s5;:InternetExplorerBrowser`:`:GoHome`(`):%- [@(0.0.255) bool]_[* GoHome]()&]
 [s2; Navigates to the current home or start page.&]
 [s2; Returns true if ok.&]
 [s4;%- &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:RefreshPage`(`):%- [@(0.0.255) bool]_[* RefreshPage]()&]
+[s5;:InternetExplorerBrowser`:`:RefreshPage`(`):%- [@(0.0.255) bool]_[* RefreshPage]()&]
 [s2; Refreshes the currently viewed page.&]
 [s2; Returns true if ok.&]
 [s4;%- &]
 [s6;%- &]
-[s5;:IExplorerBrowser`:`:Stop`(`):%- [@(0.0.255) bool]_[* Stop]()&]
+[s5;:InternetExplorerBrowser`:`:Stop`(`):%- [@(0.0.255) bool]_[* Stop]()&]
 [s2; Cancels any pending navigation or download operation and stops 
 any dynamic page elements.&]
 [s2; Returns true if ok.&]

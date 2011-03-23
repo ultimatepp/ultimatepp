@@ -6,7 +6,7 @@ using namespace Upp;
 
 #include "ActiveX.h" 
 
-bool IExplorerBrowser::Browse(const String &strurl) {
+bool InternetExplorerBrowser::Browse(const String &strurl) {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return false;
@@ -20,7 +20,7 @@ bool IExplorerBrowser::Browse(const String &strurl) {
 	return true;
 }
 
-bool IExplorerBrowser::ShowHTML(const String &html) {
+bool InternetExplorerBrowser::ShowHTML(const String &html) {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return false;
@@ -59,7 +59,7 @@ bool IExplorerBrowser::ShowHTML(const String &html) {
 	return ret;
 }
 
-bool IExplorerBrowser::GoForward() {
+bool InternetExplorerBrowser::GoForward() {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return false;
@@ -69,7 +69,7 @@ bool IExplorerBrowser::GoForward() {
 	return false;
 }
 
-bool IExplorerBrowser::GoBack() {
+bool InternetExplorerBrowser::GoBack() {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return false;
@@ -79,7 +79,7 @@ bool IExplorerBrowser::GoBack() {
 	return false;
 }
 
-String IExplorerBrowser::GetLocation() {
+String InternetExplorerBrowser::GetLocation() {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return "";
@@ -91,7 +91,7 @@ String IExplorerBrowser::GetLocation() {
 	return pbstrLocationURL.ToString();
 }
 
-String IExplorerBrowser::GetTitle() {
+String InternetExplorerBrowser::GetTitle() {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return "";
@@ -103,7 +103,7 @@ String IExplorerBrowser::GetTitle() {
 	return pbstrLocationURL.ToString();
 }
 
-bool IExplorerBrowser::GetOffline(bool &offline) {
+bool InternetExplorerBrowser::GetOffline(bool &offline) {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return false;
@@ -116,7 +116,7 @@ bool IExplorerBrowser::GetOffline(bool &offline) {
 	return true;
 }
 
-String IExplorerBrowser::GetReadyState() {
+String InternetExplorerBrowser::GetReadyState() {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return "";
@@ -135,7 +135,7 @@ String IExplorerBrowser::GetReadyState() {
 	}
 }
 
-bool IExplorerBrowser::GoHome() {
+bool InternetExplorerBrowser::GoHome() {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return false;
@@ -147,7 +147,7 @@ bool IExplorerBrowser::GoHome() {
 	return false;
 }
 
-bool IExplorerBrowser::RefreshPage() {
+bool InternetExplorerBrowser::RefreshPage() {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return false;
@@ -159,7 +159,7 @@ bool IExplorerBrowser::RefreshPage() {
 	return false;
 }
 
-bool IExplorerBrowser::Stop() {
+bool InternetExplorerBrowser::Stop() {
 	IIWebBrowser webBrowser(this);
 	if (!webBrowser) 
 		return false;

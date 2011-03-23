@@ -54,9 +54,9 @@ private:
 	};
 };
 
-class IExplorerBrowser : public DHCtrlActiveX {
+class InternetExplorerBrowser : public DHCtrlActiveX {
 public:
-	IExplorerBrowser(bool status = true) : DHCtrlActiveX(CLSID_WebBrowser, "IExplorer", status) {};
+	InternetExplorerBrowser(bool status = true) : DHCtrlActiveX(CLSID_WebBrowser, "IExplorer", status) {};
 
 	bool Browse(const String &url);
 	bool ShowHTML(const String &html);
@@ -73,7 +73,7 @@ public:
 private:
 	class IIWebBrowser {
 	public:
-		IIWebBrowser(IExplorerBrowser *obj) {
+		IIWebBrowser(InternetExplorerBrowser *obj) {
 			if (obj->GetStatus())
 				web = (IWebBrowser2 *)obj->QueryInterface(IID_IWebBrowser2);
 			else
@@ -83,7 +83,7 @@ private:
 			if (web)
 				web->Release();
 		}
-		operator IWebBrowser2 *() {return web;}
+		operator IWebBrowser2 *() 	 {return web;}
 		IWebBrowser2 * operator ->() {return web;}
 	private:
 		IWebBrowser2 *web;

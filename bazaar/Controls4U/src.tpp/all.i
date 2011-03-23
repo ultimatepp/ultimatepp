@@ -26,8 +26,8 @@ TOPIC("FirefoxBrowser$en-us")
 #include "FirefoxBrowser$en-us.tppi"
 END_TOPIC
 
-TOPIC("IExplorerBrowser$en-us")
-#include "IExplorerBrowser$en-us.tppi"
+TOPIC("InternetExplorerBrowser$en-us")
+#include "InternetExplorerBrowser$en-us.tppi"
 END_TOPIC
 
 TOPIC("Knob$en-us")
