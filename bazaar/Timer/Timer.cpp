@@ -1,5 +1,6 @@
 #include "Timer.h"
 
+// #define LOG_QUEUE
 #define LLOG(x) // LOG(x)
 
 Timer::Timer()
@@ -20,7 +21,7 @@ Timer::~Timer()
 }
 
 void Timer::sTimeCallback(dword time, int delay, Callback cb, void *id) {
-	TimeEvent *ne = elist.InsertNext();
+	TimeEvent *ne = elist.InsertPrev();
 	ne->time = time;
 	ne->cb = cb;
 	ne->delay = delay;
@@ -110,58 +111,60 @@ void Timer::TimerProc(dword time, int& leftsleep)
 		return;
 	sTimerLock.Enter();
 	TimeEvent *list = elist.GetPtr();
+	if(time == sTClick) {
+		sTimerLock.Leave();
+		return;
+	}
 	sTClick = time;
 
 //	sTimerLock.Leave();
 //	//***
 //	sTimerLock.Enter();
 
-	TimeEvent *e = list->GetNext();
+	#ifdef LOG_QUEUE
+		LLOG("--- Timer queue at " << time);
+		for(TimeEvent *e = list->GetNext(); e != list; e = e->GetNext())
+			LLOG("TP " << e->time << " " << e->delay << " " << e->id << " " << e->rep);
+		LLOG("----");
+	#endif
 
-/*
-	_DBG_
-	DLOG("--- TimerProc at " << time);
-	while(e != list) {
-		DLOG("TP " << e->time << " " << e->delay << " " << e->id << " " << e->rep);
-		e = e->GetNext();
-	}
-	DLOG("----");
-	e = list->GetNext();
-	_DBG_;
-*/
-
-	while(e != list) {
-		LLOG("Event " << e->time << " " << e->delay << " " << e->id);
-		TimeEvent *w = e;
-		e = e->GetNext();
-		if((leftsleep = int(w->time - time)) <= 0 && !w->rep) {
-			LLOG("Performing!");
-			w->Unlink();
-			Callback cb = w->cb;
-			if(w->delay < 0) {
-				w->rep = true;
-				w->LinkBefore(elist.GetPtr());
+	for(;;) {
+		TimeEvent *todo = NULL;
+		int maxtm = -1;
+		for(TimeEvent *e = list->GetNext(); e != list; e = e->GetNext()) {
+			int tm = (int)(time - e->time);
+			leftsleep = -tm;
+			if(!e->rep && tm >= 0 && tm > maxtm) {
+				maxtm = tm;
+				todo = e;
 			}
-			else
-				delete w;
-			sTimerLock.Leave();
-			cb();
-			sTimerLock.Enter();
 		}
+		if(!todo)
+			break;
+		LLOG("Performing " << todo->time << " " << todo->delay << " " << todo->id);
+		Callback cb = todo->cb;
+		if(todo->delay < 0)
+			todo->rep = true;
+		else
+			delete todo;
+		sTimerLock.Leave();
+		cb();
+		sTimerLock.Enter();
 	}
 	time = GetTickCount();
-	LLOG("Rescheduling at " << time);
-	e = list->GetNext();
+	LLOG("--- Rescheduling at " << time);
+	TimeEvent *e = list->GetNext();
 	while(e != list) {
 		TimeEvent *w = e;
 		e = e->GetNext();
 		if(w->rep) {
-			w->Unlink();
+			LLOG("Rescheduling " << e->id);
 			sTimeCallback(time - w->delay, w->delay, w->cb, w->id);
 			if((-w->delay) < leftsleep) leftsleep = -w->delay;
 			delete w;
 		}
 	}
+	LLOG("----");
 	sTimerLock.Leave();
 	if(leftsleep < 0) leftsleep = granularity; //if last done has been processed and no more in queue, ensure good sleep
 }
