@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-//Timer
+#define LLOG(x) // LOG(x)
 
 Timer::Timer()
 {
@@ -20,20 +20,19 @@ Timer::~Timer()
 }
 
 void Timer::sTimeCallback(dword time, int delay, Callback cb, void *id) {
-	TimeEvent *list = elist.GetPtr();
-	TimeEvent *e;
-	for(e = list->GetNext(); e != list && ((int)(time - e->time) >= 0); e = e->GetNext());
-	TimeEvent *ne = e->InsertPrev();
+	TimeEvent *ne = elist.InsertNext();
 	ne->time = time;
 	ne->cb = cb;
 	ne->delay = delay;
 	ne->id = id;
 	ne->rep = false;
+	LLOG("sTimeCalllback " << ne->time << " " << ne->delay << " " << ne->id);
 }
 
 void Timer::SetTimeCallback(int delay_ms, Callback cb, void *id) {
 	Mutex::Lock __(sTimerLock);
 	ASSERT(abs(delay_ms) < 0x40000000);
+	LLOG("SetTimeCallback " << delay_ms << " " << id);
 	sTimeCallback(GetTickCount() + abs(delay_ms), delay_ms, cb, id);
 }
 
@@ -110,7 +109,7 @@ void Timer::TimerProc(dword time, int& leftsleep)
 	if(IsPanicMode())
 		return;
 	sTimerLock.Enter();
-	TimeEvent *list = elist.GetPtr();;
+	TimeEvent *list = elist.GetPtr();
 	sTClick = time;
 
 //	sTimerLock.Leave();
@@ -118,32 +117,50 @@ void Timer::TimerProc(dword time, int& leftsleep)
 //	sTimerLock.Enter();
 
 	TimeEvent *e = list->GetNext();
-	while(e != list && ((leftsleep = (e->time - (int)time)) <= 0) && !e->rep) {
-//	while(e != list && ((int)(time - e->time)) >= 0 && !e->rep) {
+
+/*
+	_DBG_
+	DLOG("--- TimerProc at " << time);
+	while(e != list) {
+		DLOG("TP " << e->time << " " << e->delay << " " << e->id << " " << e->rep);
+		e = e->GetNext();
+	}
+	DLOG("----");
+	e = list->GetNext();
+	_DBG_;
+*/
+
+	while(e != list) {
+		LLOG("Event " << e->time << " " << e->delay << " " << e->id);
 		TimeEvent *w = e;
 		e = e->GetNext();
-		w->Unlink();
-		//eventid++;
-		Callback cb = w->cb;
-		if(w->delay < 0) {
-			w->rep = true;
-			w->LinkBefore(elist.GetPtr());
+		if((leftsleep = int(w->time - time)) <= 0 && !w->rep) {
+			LLOG("Performing!");
+			w->Unlink();
+			Callback cb = w->cb;
+			if(w->delay < 0) {
+				w->rep = true;
+				w->LinkBefore(elist.GetPtr());
+			}
+			else
+				delete w;
+			sTimerLock.Leave();
+			cb();
+			sTimerLock.Enter();
 		}
-		else
-			delete w;
-		sTimerLock.Leave();
-		cb();
-		sTimerLock.Enter();
 	}
 	time = GetTickCount();
-	e = list->GetPrev();
-	while(e != list && e->rep) {
+	LLOG("Rescheduling at " << time);
+	e = list->GetNext();
+	while(e != list) {
 		TimeEvent *w = e;
-		e = e->GetPrev();
-		w->Unlink();
-		sTimeCallback(time - w->delay, w->delay, w->cb, w->id);
-		if((-w->delay) < leftsleep) leftsleep = -w->delay;
-		delete w;
+		e = e->GetNext();
+		if(w->rep) {
+			w->Unlink();
+			sTimeCallback(time - w->delay, w->delay, w->cb, w->id);
+			if((-w->delay) < leftsleep) leftsleep = -w->delay;
+			delete w;
+		}
 	}
 	sTimerLock.Leave();
 	if(leftsleep < 0) leftsleep = granularity; //if last done has been processed and no more in queue, ensure good sleep
