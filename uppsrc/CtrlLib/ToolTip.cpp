@@ -112,6 +112,7 @@ bool ToolTipHook(Ctrl *ctrl, bool inframe, int event, Point p, int zdelta, dword
 	if(event == Ctrl::MOUSELEAVE) {
 		LLOG("ToolTipHook MOUSELEAVE " << UPP::Name(ctrl));
 		CloseToolTip();
+		KillTimeCallback((void *)EndShowMode);
 		SetTimeCallback(1000, callback(EndShowMode), (void *)EndShowMode);
 	}
 	if((event & Ctrl::ACTION) == Ctrl::DOWN) {
