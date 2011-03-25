@@ -62,6 +62,8 @@ struct SvnWork {
 	String working;
 	String user;
 	String password;
+	int revision;
+	bool readonly;
 };
 
 class SvnWorks : public WithSvnWorksLayout<TopWindow> {
@@ -76,19 +78,20 @@ class SvnWorks : public WithSvnWorksLayout<TopWindow> {
 
 public:
 	void    Clear();
-	void    Add(const String& working, const String& user, const String& data);
+	void    Add(const String& working, const String& user, const String& data, bool readonly=false);
 	void    Load(const String& text);
 	String  Save() const;
 	
 	int     GetCount() const;
 	SvnWork operator[](int i) const;
+	void SetRevision(int i, int revision);
 
 	typedef SvnWorks CLASSNAME;
 	
 	SvnWorks();
 };
 
-String SvnCmd(const char *cmd, const String& user, const String& pwd);
+String SvnCmd(const char *cmd, const String& user, const String& pwd, int rev=0);
 String SvnCmd(const char *cmd, const SvnWork& w);
 
 bool   IsSvnDir(const String& p);
@@ -127,7 +130,8 @@ public:
 	void   SetMsgs(const String& s);
 	String GetMsgs();
 
-	void Dir(const char *dir);
+	void Dir(const char *dir, bool readonly=false);
+	void FixRevision(const char *dir, int revision);
 	void Perform();
 	void DoSync();
 	

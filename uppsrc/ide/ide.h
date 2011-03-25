@@ -32,6 +32,7 @@
 #include <plugin/astyle/astyle.h>
 
 #include <ide/Builders/Builders.h>
+#include <ide/SrcUpdater/SrcUpdater.h>
 
 const char *FindTag(const char *txt, const char *tag);
 const char *FindAfter(const char *txt, const char *tag);
@@ -527,6 +528,7 @@ public:
 	CodeEditor       editor2;
 	EditorTabBar     tabs;
 	EscValue         macro_api;
+	SourceUpdater    su;
 
 	RightTabs   btabs;
 	StaticRect  bottom;
@@ -896,6 +898,8 @@ public:
 		void  SetupFormat();
 		void  ToggleVerboseBuild();
 		void  AutoSetup();
+		void  CheckUpdates(bool verbose);
+		void  CheckUpdatesManual();
 		void  Abbreviations();
 
 	void      BrowseMenu(Bar& menu);

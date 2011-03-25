@@ -332,74 +332,9 @@ XInstallDlg::XInstallDlg() {
 
 bool Install()
 {
-	XInstallDlg dlg;
-	String supp;
-	String Folder = DefaultInstallFolder();
-	ChkSupp("/usr/local/share/" + Folder, supp);
-	ChkSupp("/usr/local/lib/" + Folder, supp);
-	ChkSupp("/usr/share/" + Folder, supp);
-	ChkSupp("/usr/lib/" + Folder, supp);
-	if(IsNull(supp))
-		return true;
+	if(!(InstallWizard().Run()&(IDOK|IDCANCEL))) return false;
 
-	Progress pi;
-	if(dlg.Run() != IDOK) return true;
-	String upp(dlg.path);
-	
-	SaveFile(ConfigFile("installpath"), upp);
-	
-	String uppsrc;
-	String pp;
-	String out = AppendFileName(upp, "out");
-	String Common = AppendFileName(upp, "Common");
-	pp << "\nOUTPUT = " << AsCString(out)
-	   << "\nCOMMON = " << AsCString(AppendFileName(upp, "Common"));
-	DirectoryCreate(out);
-	if(!CopyFolder(pi, Common, AppendFileName(supp, "Common")))
-		return false;
-	if(dlg.uppsrc) {
-		if(!CopyFolder(pi, AppendFileName(upp, "uppsrc"), AppendFileName(supp, "uppsrc")))
-			return false;
-		uppsrc = AppendFileName(upp, "uppsrc");
-	}
-	else
-		uppsrc = AppendFileName(supp, "uppsrc");
-	SaveFile(ConfigFile("uppsrc.var"), "UPP = " + AsCString(uppsrc) + pp);
-	String u;
-	if(dlg.reference) {
-		if(!CopyFolder(pi, AppendFileName(upp, "reference"), AppendFileName(supp, "reference")))
-			return false;
-		u = AppendFileName(upp, "reference");
-	}
-	else
-		u = AppendFileName(supp, "reference");
-	SaveFile(ConfigFile("reference.var"), "UPP = " + AsCString(u + ';' + uppsrc) + pp);
-	if(dlg.examples) {
-		if(!CopyFolder(pi, AppendFileName(upp, "examples"), AppendFileName(supp, "examples")))
-			return false;
-		u = AppendFileName(upp, "examples");
-	}
-	else
-		u = AppendFileName(supp, "examples");
-	SaveFile(ConfigFile("examples.var"), "UPP = " + AsCString(u + ';' + uppsrc) + pp);
-	if(dlg.tutorial) {
-		if(!CopyFolder(pi, AppendFileName(upp, "tutorial"), AppendFileName(supp, "tutorial")))
-			return false;
-		u = AppendFileName(upp, "tutorial");
-	}
-	else
-		u = AppendFileName(supp, "tutorial");
-	SaveFile(ConfigFile("tutorial.var"), "UPP = " + AsCString(u + ';' + uppsrc) + pp);
-	if(dlg.bazaar) {
-		if(!CopyFolder(pi, AppendFileName(upp, "bazaar"), AppendFileName(supp, "bazaar")))
-			return false;
-		u = AppendFileName(upp, "bazaar");
-	}
-	else
-		u = AppendFileName(supp, "bazaar");
-	SaveFile(ConfigFile("bazaar.var"), "UPP = " + AsCString(u + ';' + uppsrc) + pp);
-	SaveFile(ConfigFile("MyApps.var"), "UPP = " + AsCString(AppendFileName(upp, "MyApps;" + uppsrc)) + pp);
-	SaveFile(ConfigFile("MyApps-Bazaar.var"), "UPP = " + AsCString(AppendFileName(upp, "MyApps;") + AppendFileName(upp, "bazaar;") + uppsrc) + pp);
+	String supp=UpdaterCfg().globalsrc;
 	String bm = ConfigFile("GCC.bm");
 	if(IsNull(LoadFile(bm)))
 		SaveFile(bm, LoadFile(AppendFileName(supp, "GCC.bm")));
@@ -408,10 +343,10 @@ bool Install()
 	if(IsNull(LoadFile(ValgSupp)))
 		SaveFile(ValgSupp, LoadFile(AppendFileName(supp, "uppsrc/ide/valgrind.supp")));
 	// 2008/06/01 -- END
-	PromptOK("Ultimate`+`+ user setup was finished.&Press OK to launch TheIDE.");
+	//PromptOK("Ultimate`+`+ user setup was finished.&Press OK to launch TheIDE.");
 	return true;
 }
 
-void Uninstall() {}
+//void Uninstall() {}
 
 #endif

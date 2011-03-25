@@ -304,6 +304,17 @@ void Ide::Setup(Bar& menu) {
 	menu.Add("Automatic setup..", THISBACK(AutoSetup))
 	    .Help("Automatic setup of build methods..");
 #endif
+#ifdef PLATFORM_POSIX
+	menu.Add("Source managment..", THISBACK(AutoSetup))
+	    .Help("Source code updater settings..");
+	if(UpdaterCfg().method%2==0) //local copy or svn
+		if(UpdaterCfg().available)
+			menu.Add("Install updates..", IdeImg::install_updates(), THISBACK(CheckUpdatesManual))
+			    .Help("Install newer version of source codes..");
+		else
+			menu.Add("Check for updates..", IdeImg::check_updates(), THISBACK(CheckUpdatesManual))
+			    .Help("Check for availability of newer source codes..");
+#endif
 }
 
 void Ide::ProjectSvn(Bar& menu)
@@ -427,7 +438,7 @@ void Ide::BuildMenu(Bar& menu) {
 	}
 
 	BuildFileMenu(menu);
-
+	
 	menu.MenuSeparator();
 
 	menu.Add("Stop on errors", THISBACK(ToggleStopOnErrors))
@@ -546,6 +557,8 @@ void Ide::MainTool(Bar& bar)
 		bar.Separator();
 	Project(bar);
 	BuildMenu(bar);
+	bar.Separator();
+	Setup(bar);
 	BrowseMenu(bar);
 }
 
