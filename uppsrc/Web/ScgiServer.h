@@ -8,7 +8,7 @@ public:
 	
 	ScgiServer(int port = 7800);
 	
-	void Run();	
+	void Run(int listenCount = 10);
 	
 	dword  ClientIP()    { return clientIP; }
 	Socket ClientSock()  { return clientSock; }

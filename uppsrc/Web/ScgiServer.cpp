@@ -20,9 +20,9 @@ ScgiServer::ScgiServer(int port)
 	signal(SIGTERM, sighandler);
 }
 
-void ScgiServer::Run()
+void ScgiServer::Run(int listenCount)
 {
-	ServerSocket(serverSock, port);
+	ServerSocket(serverSock, port, false, listenCount);
 	while (run) {
 		if (serverSock.Accept(clientSock, &clientIP)) {
 			OnAccepted();
