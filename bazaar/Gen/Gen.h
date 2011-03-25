@@ -142,6 +142,13 @@ public:
 	virtual void Serialize(Stream& s)          = 0;
 };
 
+template<class T>
+void SerializeStore(Stream& s, const T& x)
+{
+	ASSERT(s.IsStoring());
+	s % const_cast<T&>(x);
+}
+
 //declares a class Xmlizeable
 //maybe redundant because of global template Xmlize(XmlIO xml, T&t)
 //which calls t.Xmlize()
@@ -263,6 +270,40 @@ public:
 protected:
 	T mn, mx;	
 };
+
+//some Link helpers
+
+//returns count of linked elements
+//not counting the reported l element, which most times is LinkOwner anyway.
+template<class T>
+int GetLinkCount(const T& l, bool f = true)
+{
+	int c = 0;
+	const T *list = l.GetPtr(), *e = list;
+	if(f) while((e = e->GetNext()) != list) ++c;
+	else  while((e = e->GetPrev()) != list) ++c;
+	return c;
+}
+
+template<class T>
+inline void ChkLinkCount(const T& l) { ASSERT(GetLinkCount(l, true) == GetLinkCount(l, false)); }
+
+template<class T>
+inline void ChkLink(const T& l, bool f = true)
+{
+	if(f) ASSERT(l.GetNext()->GetPrev() == l.GetPtr());
+	else  ASSERT(l.GetPrev()->GetNext() == l.GetPtr());
+}
+
+template<class T>
+int ChkLinkDeep(const T& l, bool f = true)
+{
+	int c = 0;
+	const T *list = l.GetPtr(), *e = list;
+	do { ChkLink(*e); ++c; }
+	while((e = e->GetNext()) != list);
+	return --c;
+}
 
 END_UPP_NAMESPACE
 

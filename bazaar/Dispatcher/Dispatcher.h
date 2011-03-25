@@ -156,15 +156,6 @@ private:
 	VectorMap<unsigned, Callback> dests;	
 };
 
-template<class T>
-int GetLinkCount(const T& l)
-{
-	int c = 0;
-	const T *list = l.GetPtr(), *e = list;
-	while((e = e->GetNext()) != list); 
-		++c;
-}
-
 class DispatcherL0
 	: public EnableOption<>
 {

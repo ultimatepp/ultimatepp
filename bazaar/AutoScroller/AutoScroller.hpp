@@ -15,10 +15,8 @@ AutoScroller<C>::AutoScroller()
 template<class C>
 void AutoScroller<C>::OnScroll()
 {
-	Point tl(-scroll.GetX(), -scroll.GetY());
-	Rect r = pane.GetRect();
-	Rect _r(tl, r.GetSize());
-	pane.SetRect(_r);
+	Rect r(-scroll.Get(), pane.GetRect().GetSize());
+	pane.SetRect(r);
 }
 
 template<class C>
@@ -42,10 +40,8 @@ void AutoScroller<C>::SetPaneSize(const Size & sz)
 template<class C>
 void AutoScroller<C>::EnableScroll(bool b)
 {
-	if(b)
-		AddFrame(scroll.AutoHide());
-	else
-		RemoveFrame(scroll);
+	if(b) AddFrame(scroll.AutoHide());
+	else RemoveFrame(scroll);
 	scroll.x.Enable(b);
 	scroll.y.Enable(b);
 	return;
