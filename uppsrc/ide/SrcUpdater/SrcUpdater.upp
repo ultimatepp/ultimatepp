@@ -1,0 +1,17 @@
+description "TheIDE - Source codes management\377B";
+
+uses
+	CtrlLib,
+	Web,
+	usvn;
+
+file
+	SrcUpdater.h,
+	Wizard.h,
+	Install.cpp,
+	Updater.cpp,
+	LocalSync.cpp,
+	SrcUpdater.lay,
+	app.tpp,
+	src.tpp;
+

@@ -23,9 +23,9 @@ void SvnWorks::DirSel(EditField& f)
 }
 
 
-void SvnWorks::Add(const String& working, const String& user, const String& data)
+void SvnWorks::Add(const String& working, const String& user, const String& data, bool readonly)
 {
-	list.Add(working, user, data);
+	list.Add(working, user, data, readonly?"yes":"no",0);
 	Sync();
 }
 
@@ -36,7 +36,7 @@ void SvnWorks::New()
 	DirSel(dlg.working);
 	if(dlg.Execute() != IDOK)
 		return;
-	Add(~dlg.working, ~dlg.user, ~dlg.password);
+	Add(~dlg.working, ~dlg.user, ~dlg.password, ~dlg.readonly);
 }
 
 void SvnWorks::Edit()
@@ -49,15 +49,17 @@ void SvnWorks::Edit()
 	dlg.working <<= list.Get(0);
 	dlg.user <<= list.Get(1);
 	dlg.password <<= list.Get(2);
+	dlg.readonly <<= (AsString(list.Get(3))=="yes");
 	if(dlg.Execute() != IDOK)
 		return;
 	list.Set(0, ~dlg.working);
 	list.Set(1, ~dlg.user);
 	list.Set(2, ~dlg.password);
+	list.Set(3, ~dlg.readonly?"yes":"no");
 	Sync();
 }
 
-String SvnCmd(const char *cmd, const String& user, const String& pwd)
+String SvnCmd(const char *cmd, const String& user, const String& pwd,int rev)
 {
 	String r = "svn ";
 	r << cmd;
@@ -66,13 +68,15 @@ String SvnCmd(const char *cmd, const String& user, const String& pwd)
 		r << " --username \"" << user << "\"";
 	if(!IsNull(pwd))
 		r << " --password \"" << pwd << "\"";
+	if(rev!=0)
+		r << " --revision " << rev;
 	r << ' ';
 	return r;
 }
 
 String SvnCmd(const char *cmd, const SvnWork& w)
 {
-	return SvnCmd(cmd, w.user, w.password);
+	return SvnCmd(cmd, w.user, w.password, w.revision);
 }
 
 void SvnWorks::Checkout()
@@ -119,7 +123,14 @@ SvnWork SvnWorks::operator[](int i) const
 	w.working = list.Get(i, 0);
 	w.user = list.Get(i, 1);
 	w.password = list.Get(i, 2);
+	w.readonly = AsString(list.Get(i, 3))=="yes";
+	w.revision = (int)list.Get(i,4);
 	return w;
+}
+
+void SvnWorks::SetRevision(int i, int revision)
+{
+	list.Set(i,4,revision);
 }
 
 void SvnWorks::Clear()
@@ -135,7 +146,7 @@ void SvnWorks::Load(const String& text)
 	for(int i = 0; i < ln.GetCount(); i++) {
 		Vector<String> q = Split(ln[i], ';');
 		if(q.GetCount() >= 1)
-			Add(q[0], q.At(1), q.At(2));
+			Add(q[0], q.At(1), q.At(2), q.At(3)!="no");
 	}
 	Sync();
 }
@@ -144,7 +155,7 @@ String SvnWorks::Save() const
 {
 	String h;
 	for(int i = 0; i < list.GetCount(); i++)
-		h << list.Get(i, 0) << ';' << list.Get(i, 1) << ';' << list.Get(i, 2) << '\n';
+		h << list.Get(i, 0) << ';' << list.Get(i, 1) << ';' << list.Get(i, 2) << ';' << list.Get(i, 3) << '\n';
 	return h;
 }
 
@@ -154,8 +165,10 @@ SvnWorks::SvnWorks()
 	list.AddColumn("Working directory");
 	list.AddColumn("User");
 	list.AddColumn("Password");
+	list.AddColumn("Read-only");
+	list.AddIndex("revision");
 	list.Moving();
-	list.ColumnWidths("364 100 100");
+	list.ColumnWidths("364 100 100 100");
 	list.WhenCursor = THISBACK(Sync);
 	add <<= THISBACK(New);
 	remove <<= THISBACK(Remove);

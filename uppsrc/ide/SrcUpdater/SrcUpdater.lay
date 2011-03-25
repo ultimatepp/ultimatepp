@@ -1,0 +1,66 @@
+LAYOUT(TextOnlyLayout, 224, 88)
+	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(AssembliesLayout, 492, 280)
+	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).TopPosZ(4, 104))
+	ITEM(ArrayCtrl, asmbls, HorzGrid(false).VertGrid(false).AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(112, 52))
+	ITEM(Label, dv___2, SetLabel(t_("Sources Folder:")).LeftPosZ(16, 80).BottomPosZ(27, 17))
+	ITEM(Label, dv___3, SetLabel(t_("$(SRC) = ")).SetAlign(ALIGN_RIGHT).LeftPosZ(96, 48).BottomPosZ(27, 17))
+	ITEM(EditField, srcpath, HSizePosZ(144, 140).BottomPosZ(27, 17))
+	ITEM(Label, dv___5, SetLabel(t_("Output Folder:")).LeftPosZ(16, 80).BottomPosZ(7, 17))
+	ITEM(Label, dv___6, SetLabel(t_("$(OUT) = ")).SetAlign(ALIGN_RIGHT).LeftPosZ(96, 48).BottomPosZ(7, 17))
+	ITEM(EditField, outpath, HSizePosZ(144, 140).BottomPosZ(7, 17))
+	ITEM(Button, restore, SetLabel(t_("Restore defaults")).RightPosZ(4, 116).BottomPosZ(24, 20))
+END_LAYOUT
+
+LAYOUT(SourceLayout, 400, 236)
+	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).TopPosZ(4, 76))
+	ITEM(Label, dv___1, SetLabel(t_("How to access U++ sources?")).HSizePosZ(4, 4).TopPosZ(84, 16))
+	ITEM(Switch, src, SetLabel(t_("Local copy of sources from /usr/share/upp [recomended]\nRead only access to /usr/share/upp\nSVN repository [developers and advanced users]\nManual setup [experts only]")).HSizePosZ(16, 12).TopPosZ(104, 68))
+	ITEM(Label, dv___3, SetLabel(t_("How often should TheIDE check for updates?")).LeftPosZ(4, 392).TopPosZ(172, 16))
+	ITEM(Label, dv___4, SetLabel(t_("Every")).LeftPosZ(28, 38).TopPosZ(192, 20))
+	ITEM(EditInt, period, Min(1).LeftPosZ(64, 52).TopPosZ(192, 19))
+	ITEM(DropList, unit, LeftPosZ(120, 84).TopPosZ(192, 19))
+	ITEM(Label, dv___7, SetLabel(t_("(Leave the first field empty, if you\ndon't want any periodic checks)")).LeftPosZ(208, 188).TopPosZ(192, 32))
+	ITEM(Option, startup, SetLabel(t_("Check when TheIDE starts")).LeftPosZ(16, 188).TopPosZ(216, 16))
+END_LAYOUT
+
+LAYOUT(SvnLayout, 476, 236)
+	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).VSizePosZ(4, 136))
+	ITEM(Label, dv___1, SetLabel(t_("SVN repository server:")).HSizePosZ(4, 4).BottomPosZ(114, 18))
+	ITEM(Switch, server, SetLabel(t_("Public read only mirror on google code [recomended]\nCustom repository")).HSizePosZ(12, 8).BottomPosZ(76, 36))
+	ITEM(Button, svnsetup, SetLabel(t_("Setup custom repository ...")).LeftPosZ(136, 144).BottomPosZ(76, 20))
+	ITEM(Switch, syncmethod, SetLabel(t_("Always get the newest version available\nKeep the working copy synchronized with the version of TheIDE\nNo checks, I will synchronize manualy ")).HSizePosZ(16, 4).BottomPosZ(4, 48))
+	ITEM(Label, dv___5, SetLabel(t_("Synchronization scheme:")).HSizePosZ(4, 4).BottomPosZ(54, 18))
+END_LAYOUT
+
+LAYOUT(UpdateLayout, 416, 220)
+	ITEM(Button, ignore, SetLabel(t_("Ignore this version")).Tip(t_("Suspends this dialog until next version is available")).LeftPosZ(12, 128).BottomPosZ(5, 19))
+	ITEM(Button, skip, SetLabel(t_("Ask me later")).Tip(t_("Postpones the update, this dialog will appear again when you start TheIDE next time")).LeftPosZ(152, 120).BottomPosZ(5, 19))
+	ITEM(Button, update, SetLabel(t_("Update")).Tip(t_("Starts the update process")).LeftPosZ(284, 120).BottomPosZ(4, 20))
+	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).VSizePosZ(4, 32))
+END_LAYOUT
+
+LAYOUT(CustomSvnLayout, 400, 88)
+	ITEM(Label, dv___0, SetLabel(t_("URL")).LeftPosZ(8, 60).TopPosZ(8, 20))
+	ITEM(EditString, url, LeftPosZ(68, 328).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel(t_("User name")).LeftPosZ(8, 60).TopPosZ(32, 20))
+	ITEM(EditString, usr, LeftPosZ(68, 120).TopPosZ(32, 19))
+	ITEM(Label, dv___4, SetLabel(t_("Password")).LeftPosZ(212, 60).TopPosZ(32, 20))
+	ITEM(EditString, pwd, LeftPosZ(276, 120).TopPosZ(32, 19))
+	ITEM(Option, readonly, SetLabel(t_("Read-only repository")).LeftPosZ(12, 184).TopPosZ(64, 16))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(332, 64).TopPosZ(60, 24))
+END_LAYOUT
+
+LAYOUT(AsmSetupLayout, 416, 80)
+	ITEM(Label, dv___0, SetLabel(t_("&Package nests:")).LeftPosZ(4, 88).TopPosZ(4, 19))
+	ITEM(EditString, upp, LeftPosZ(96, 316).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("&Output directory:")).LeftPosZ(4, 88).TopPosZ(28, 19))
+	ITEM(EditString, output, LeftPosZ(96, 316).TopPosZ(28, 19))
+	ITEM(Label, dv___4, SetLabel(t_("&Assembly name:")).LeftPosZ(4, 84).TopPosZ(52, 19))
+	ITEM(EditString, base, NotNull(true).LeftPosZ(96, 136).TopPosZ(52, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(276, 64).TopPosZ(52, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(348, 64).TopPosZ(52, 24))
+END_LAYOUT
+

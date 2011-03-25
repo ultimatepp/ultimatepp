@@ -19,6 +19,8 @@ uses
 	TextDiffCtrl,
 	TabBar;
 
+uses(POSIX) ide\SrcUpdater;
+
 link(WIN32 MSC) /MAP;
 
 file
@@ -63,6 +65,7 @@ file
 	FormatCode.cpp,
 	Abbr.cpp,
 	Qtf.cpp,
+	Update.cpp,
 	Compile readonly separator,
 	Methods.cpp,
 	AutoSetup.cpp,

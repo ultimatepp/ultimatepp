@@ -519,9 +519,15 @@ void AutoSetup()
 }
 #endif
 
-#ifdef PLATFORM_X11
+#ifdef PLATFORM_POSIX
 
-void AutoSetup() {}
+void AutoSetup() {
+	InstallWizard iw;
+	iw.Block(0);
+	iw.Block(4);
+	iw.SetStep(1);
+	iw.Run();
+}
 
 #endif
 

@@ -22,7 +22,7 @@ SvnSync::SvnSync()
 	list.AddColumn("Action");
 	list.AddColumn("Path");
 	list.AddColumn("Changes");
-	list.ColumnWidths("170 500 100");
+	list.ColumnWidths("220 500 100");
 	list.NoCursor().EvenRowColor();
 	list.SetLineCy(max(Draw::GetStdFontCy(), 20));
 	list.WhenLeftClick = THISBACK(Diff);
@@ -105,7 +105,7 @@ void SvnSync::SyncList()
 							         action < 0 ? Value(AttrText(an).Ink(color)) : Value(true),
 							         AttrText("  " + file.Mid(path.GetCount() + 1)).Ink(color));
 							if(action >= 0) {
-								list.SetCtrl(ii, 0, revert.Add().SetLabel("Revert\n" + an).NoWantFocus());
+								list.SetCtrl(ii, 0, revert.Add().SetLabel("Revert\n" + an + "\nSkip").NoWantFocus());
 								Ctrl& b = diff.Add().SetLabel("Changes..").SizePos().NoWantFocus();
 								b <<= THISBACK1(DoDiff, ii);
 								list.SetCtrl(ii, 2, b);
@@ -185,10 +185,18 @@ void SvnDel(const char *path)
 	}
 }
 
-void SvnSync::Dir(const char *dir)
+void SvnSync::Dir(const char *dir, bool readonly)
 {
 	setup.Hide();
-	works.Add(dir, Null, Null);
+	works.Add(dir, Null, Null, readonly);
+}
+
+void SvnSync::FixRevision(const char *dir, int revision){
+	for(int i=0;i<works.GetCount();i++)
+		if(works[i].working==dir){
+			works.SetRevision(i,revision);
+			return;
+		}
 }
 
 void SvnSync::Perform()
@@ -256,7 +264,7 @@ again:
 				goto again;
 			changes = false;
 		}
-		else if(action != REPOSITORY && IsNumber(v) && (int)v)
+		else if(action != REPOSITORY && IsNumber(v) && v==1)
 			changes = true;
 	}
 	SysConsole sys;
@@ -267,12 +275,14 @@ again:
 		SvnWork w = works[repoi++];
 		l++;
 		String message;
+		String filelist;   // <-- list of files to update
 		while(l < list.GetCount()) {
 			int action = list.Get(l, 0);
 			String path = list.Get(l, 1);
 			if(action == MESSAGE && commit) {
 				String msg = list.Get(l, 3);
-				if(sys.CheckSystem(SvnCmd("commit", w).Cat() << w.working << " -m \"" << msg << "\""))
+				// now we commit only files in filelist
+				if(sys.CheckSystem(SvnCmd("commit", w).Cat() << filelist << " -m \"" << msg << "\""))
 					msgmap.GetAdd(w.working) = msg;
 				l++;
 				break;
@@ -285,8 +295,12 @@ again:
 					DeleteFolderDeep(path);
 				if(action != ADD)
 					sys.CheckSystem("svn revert " + path);
+			}else if(IsNumber(v)&&(int)v==2||action==-1){
+				l++;
+				continue;
 			}
 			else {
+				filelist+=" "+path;   // <-- add the file to the list
 				commit = true;
 				switch(action) {
 				case ADD:

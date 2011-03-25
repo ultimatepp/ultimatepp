@@ -1,4 +1,4 @@
-description "Simple svn GUI frontend, also a module that can be used in other applications";
+description "Simple svn GUI frontend, also a module that can be used in other applications\377";
 
 uses
 	TextDiffCtrl;
