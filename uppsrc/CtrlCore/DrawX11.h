@@ -174,6 +174,9 @@ public:
 	SystemDraw(Drawable dw, GC gc, XftDraw *xftdraw, const Vector<Rect>& clip);
 };
 
+Image X11Cursor(int c);
+void *CursorX11(const Image& img);
+
 END_UPP_NAMESPACE
 
 #endif
