@@ -243,23 +243,6 @@ Font StdFont();
 
 inline Font StdFont(int h)                          { return StdFont().Height(h); }
 
-
-/*
-struct ScreenSans : public Font  { ScreenSans(int n = 0) : Font(SCREEN_SANS, n) {} };
-struct ScreenSerif : public Font { ScreenSerif(int n = 0) : Font(SCREEN_SERIF, n) {} };
-struct ScreenFixed : public Font { ScreenFixed(int n = 0) : Font(SCREEN_FIXED, n) {} };
-
-struct Roman     : public Font { Roman(int n) : Font(ROMAN, n) {} };
-struct Arial     : public Font { Arial(int n) : Font(ARIAL, n) {} };
-struct Courier   : public Font { Courier(int n) : Font(COURIER, n) {} };
-
-#ifdef PLATFORM_WIN32
-struct Symbol    : public Font { Symbol(int n) : Font(SYMBOL, n) {} };
-struct WingDings : public Font { WingDings(int n) : Font(WINGDINGS, n) {} };
-struct Tahoma    : public Font { Tahoma(int n) : Font(TAHOMA, n) {} };
-#endif
-*/
-
 inline Font Serif(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
 inline Font SansSerif(int n = 0) { return Font(Font::SCREEN_SANS, n); }
 inline Font Monospace(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
@@ -608,13 +591,6 @@ public:
 	static Size GetStdFontSize()                        { return UPP::GetStdFontSize(); }
 	static int  GetStdFontCy()                          { return GetStdFontSize().cy; }
 	Size   GetPagePixels() const                        { return GetPageSize(); }
-	
-
-#ifdef PLATFORM_WIN32_
-	static void Flush();
-	HDC   BeginGdi();
-	void  EndGdi();
-#endif
 };
 
 void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);

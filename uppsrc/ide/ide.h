@@ -32,7 +32,10 @@
 #include <plugin/astyle/astyle.h>
 
 #include <ide/Builders/Builders.h>
+
+#ifdef PLATFORM_POSIX
 #include <ide/SrcUpdater/SrcUpdater.h>
+#endif
 
 const char *FindTag(const char *txt, const char *tag);
 const char *FindAfter(const char *txt, const char *tag);
@@ -528,7 +531,9 @@ public:
 	CodeEditor       editor2;
 	EditorTabBar     tabs;
 	EscValue         macro_api;
+#ifdef PLATFORM_POSIX
 	SourceUpdater    su;
+#endif
 
 	RightTabs   btabs;
 	StaticRect  bottom;

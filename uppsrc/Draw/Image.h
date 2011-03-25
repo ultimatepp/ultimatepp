@@ -340,21 +340,3 @@ Size   GetImageStringDots(const String& src);
 
 #include "Raster.h"
 #include "ImageOp.h"
-
-#ifdef PLATFORM_WIN32
-#ifndef PLATFORM_WINCE
-
-Image Win32Icon(LPCSTR id, int iconsize = 0);
-Image Win32Icon(int id, int iconsize = 0);
-Image Win32Cursor(LPCSTR id);
-Image Win32Cursor(int id);
-HICON IconWin32(const Image& img, bool cursor = false);
-Image Win32DllIcon(const char *dll, int ii, bool large);
-
-#endif
-#endif
-
-#ifdef PLATFORM_X11
-Image X11Cursor(int c);
-void *CursorX11(const Image& img);
-#endif

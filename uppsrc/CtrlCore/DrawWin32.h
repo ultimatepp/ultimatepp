@@ -262,6 +262,13 @@ inline void     DrawRect(HDC hdc, const Rect& rc)                 { Rectangle(hd
 HDC      ScreenHDC();
 HPALETTE GetQlibPalette();
 
+Image Win32Icon(LPCSTR id, int iconsize = 0);
+Image Win32Icon(int id, int iconsize = 0);
+Image Win32Cursor(LPCSTR id);
+Image Win32Cursor(int id);
+HICON IconWin32(const Image& img, bool cursor = false);
+Image Win32DllIcon(const char *dll, int ii, bool large);
+
 END_UPP_NAMESPACE
 
 #endif
