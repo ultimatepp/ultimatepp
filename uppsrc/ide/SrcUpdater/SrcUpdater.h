@@ -16,11 +16,13 @@ struct UpdaterConfig{
 	int method,sync,ignored,period;
 	String localsrc,globalsrc;
 	String svnserver,svnuser,svnpass;
+	Time last;
 	bool svnreadonly,available;
 	void Xmlize(XmlIO xml){
 		xml("Method",method)
 		   ("Synchronization",sync)
 		   ("CheckPeriod",period)
+		   ("LastCheck",last)
 		   ("Ignored",ignored)
 		   ("LocalSource",localsrc)
 		   ("GlobalSource",globalsrc)

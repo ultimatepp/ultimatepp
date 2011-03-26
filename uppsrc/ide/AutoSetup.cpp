@@ -523,6 +523,7 @@ void AutoSetup()
 
 void AutoSetup() {
 	InstallWizard iw;
+	iw.Title("TheIDE - Source management settings");
 	iw.Block(0);
 	iw.Block(4);
 	iw.SetStep(1);

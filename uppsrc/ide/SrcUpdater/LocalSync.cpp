@@ -2,7 +2,6 @@
 using namespace Upp;
 
 LocalSync::LocalSync(const VectorMap<String,int>& changed,const String& localsrc):localsrc(localsrc){
-	LOG("constructor0");
 	CtrlLayoutOKCancel(*this, "Synchronize local sources");
 	list.AddIndex();
 	list.AddColumn("Action");
@@ -89,7 +88,6 @@ void LocalSync::Populate(VectorMap<String,int> changed){
 		return;
 	}
 	for(int i = 0; i < changed.GetCount(); i++){
-		LOG("populate "<<i);
 		static Color color[] = {LtBlue, LtRed, Green};
 		static const char* label[] = {"Show changes", "Show file", "Show file"};
 		static const char* actions[] = {"Skip\nUpdate", "Skip\nAdd", "Skip\nDelete"};
