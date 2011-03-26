@@ -905,6 +905,7 @@ public:
 		void  AutoSetup();
 		void  CheckUpdates(bool verbose);
 		void  CheckUpdatesManual();
+		void  SetUpdateTimer(int period);
 		void  Abbreviations();
 
 	void      BrowseMenu(Bar& menu);

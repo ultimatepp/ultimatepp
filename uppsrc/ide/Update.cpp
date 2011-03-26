@@ -1,16 +1,18 @@
 #include "ide.h"
 
+#define LLOG(x)  //RLOG(x)
+#define LDUMP(x) //RDUMP(x)
+
 #ifdef PLATFORM_POSIX
 
 GLOBAL_VAR(UpdaterConfig,UpdaterCfg);
 
 void Ide::CheckUpdates(bool verbose){
-	RLOG("CheckUpdates verbose: "<<verbose);
+	LLOG("CheckUpdates, verbose="<<verbose);
 	if(verbose){
-		RDUMP(su.NeedsUpdate(true));
+		su.NeedsUpdate(true);
 		SetBar();
 	}else{
-		RLOG("checkupdates");
 		su.WhenUpdateAvailable=THISBACK(SetBar);
 		su.CheckUpdates();
 	}
@@ -33,4 +35,9 @@ void Ide::CheckUpdatesManual(){
 	SetBar();
 }
 
+void Ide::SetUpdateTimer(int period){
+	LLOG("SetUpdateTimer, period="<<period);
+	PostCallback(THISBACK1(CheckUpdates,false));
+	SetTimeCallback(-60000*period,THISBACK1(CheckUpdates,false));
+}
 #endif

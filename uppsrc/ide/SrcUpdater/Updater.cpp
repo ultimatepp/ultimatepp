@@ -1,16 +1,11 @@
 #include "SrcUpdater.h"
 
-#define IMAGECLASS IdeImg
-#define IMAGEFILE <ide/ide.iml>
-#include <Draw/iml_header.h>
+#define LLOG(x)  //RLOG(x)
+#define LDUMP(x) //RDUMP(x)
 
-//bool IsUbuntu(){
-//	return Sys("lsb_release -si").StartsWith("Ubuntu");
-//}
-
-//String GetDebVersion(){
-//	return Sys("dpkg-query --showformat ${Version} --show theide");
-//}
+//#define IMAGECLASS IdeImg
+//#define IMAGEFILE <ide/ide.iml>
+//#include <Draw/iml_header.h>
 
 void LoadUpdaterCfg(){
 	String cfg=ConfigFile("updates.xml");
@@ -20,6 +15,7 @@ void LoadUpdaterCfg(){
 		UpdaterCfg().method=0;
 		UpdaterCfg().sync=0;
 		UpdaterCfg().period=0;
+		UpdaterCfg().last=Null;
 		UpdaterCfg().ignored=0;
 		UpdaterCfg().localsrc=GetHomeDirFile("upp");
 		UpdaterCfg().svnserver="http://upp-mirror.googlecode.com/svn/trunk/";
@@ -40,6 +36,7 @@ String GetSrcVersion(const char* dir,String& error){
 		ver=ver.Mid(ver.Find('"')+1);
 		ver=ver.Left(ver.Find('"'));
 	}
+	LLOG("GetSrcVersion("<<dir<<") = "<<ver);
 	return ver;
 }
 
@@ -60,10 +57,12 @@ String GetSvnVersion(const String& server,bool verbose,String& error){
 	int exitcode=p.GetExitCode();
 	if(exitcode){
 		error="SVN command 'svn info "+server+"' failed with exit code "+AsString(exitcode)+"&Output:&[l150 "+DeQtf(p.Get());
+		LDUMP(error);
 		return "-1";
 	}
 	ver=p.Get();
 	ver=ver.Mid(ver.Find("Revision: ")+10);
+	LLOG("GetSvnVersion("<<server<<") = "<<IntStr(ScanInt(ver)));
 	return IntStr(ScanInt(ver));
 }
 
@@ -87,11 +86,12 @@ SourceUpdater::SourceUpdater(){
 	skip<<=THISBACK(Close);
 	update<<=THISBACK(DoUpdate);
 	update.SetFocus();
-	Icon(IdeImg::Package(), IdeImg::PackageLarge());
+	//Icon(IdeImg::Package(), IdeImg::PackageLarge());
 }
 
 bool SourceUpdater::NeedsUpdate(bool verbose){
 	String where;
+	LLOG("checking for updates");
 	switch(UpdaterCfg().method){
 		case 0:{
 			//copy in /home
@@ -123,6 +123,7 @@ bool SourceUpdater::NeedsUpdate(bool verbose){
 		}
 		default: return false;
 	}
+	LLOG("NeedsUpdate: local="<<local<<", global="<<global);
 	if(ScanInt(global)<=UpdaterCfg().ignored) return false;
 	text<<="[ [ [/ Newer version of U`+`+ sources is available.]&][ &]"
 	       "[ {{5000:5000FNGN@N; [ [1 Curent local version:]]:: [ [1 "+local+"]]:: [ [1 Will update to:]]:: [ [1 "+global+"]]}}][ &&]"
@@ -132,7 +133,6 @@ bool SourceUpdater::NeedsUpdate(bool verbose){
 
 void SourceUpdater::CheckUpdates(){
 	if(UpdaterCfg().method==2) {
-		RDUMP(UpdaterCfg().sync);
 		if(UpdaterCfg().sync==1){
 			global=IDE_VERSION;
 			CheckLocalSvn();
@@ -142,26 +142,28 @@ void SourceUpdater::CheckUpdates(){
 		return;
 	}
 	//else it is fast enough to run without the callback chain
-	RLOG("running needsupdate");
+	UpdaterCfg().last=GetUtcTime();
+	StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
+	LLOG("running needsupdate");
 	if(NeedsUpdate(false))
 		WhenUpdateAvailable();
 }
 
 void SourceUpdater::CheckLocalSvn(){
 	if(pl.IsRunning()) return;
-	RLOG("check local svn");
+	LLOG("checking local svn");
 	pl.Start("svn info "+UpdaterCfg().localsrc);
 	SetTimeCallback(-50,THISBACK(CheckLocalSvnFinished),1);
 }
 
 void SourceUpdater::CheckLocalSvnFinished(){
 	if(pl.IsRunning()) return;
-	RLOG("check local svn finished");
+	LLOG("checking local svn finished");
 	KillTimeCallback(1);
 	int exitcode=pl.GetExitCode();
 	if(exitcode){
 		error="SVN command 'svn info "+UpdaterCfg().localsrc+"' failed with exit code "+AsString(exitcode)+"&Output:&[l150 "+DeQtf(pl.Get());
-		RLOG(error);
+		LDUMP(error);
 		return;
 	}
 	local=pl.Get();
@@ -171,25 +173,28 @@ void SourceUpdater::CheckLocalSvnFinished(){
 	       "[ {{5000:5000FNGN@N; [ [1 Curent local version:]]:: [ [1 "+local+"]]:: [ [1 Will update to:]]:: [ [1 "+global+"]]}}][ &&]"
 	       "[1# If you choose to update now, your local sources (directory "+DeQtf(UpdaterCfg().localsrc)+") will be compared to the files in SVN repository ("+DeQtf(UpdaterCfg().svnserver)+"). If you modified the files in your local copy, you will be able to choose appropriate actions for each changed file before writing anything on your hard drive.]";
 	UpdaterCfg().available=(ScanInt(local)<ScanInt(global));
+	LLOG("Callback chain finished: local="<<local<<", global="<<global);
+	UpdaterCfg().last=GetUtcTime();
+	StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
 	if(UpdaterCfg().available)
 		WhenUpdateAvailable();
 }
 
 void SourceUpdater::CheckGlobalSvn(){
 	if(pg.IsRunning()) return;
-	RLOG("check global svn");
+	LLOG("checking global svn");
 	pg.Start("svn info "+UpdaterCfg().svnserver);
 	SetTimeCallback(-500,THISBACK(CheckGlobalSvnFinished),2);
 }
 
 void SourceUpdater::CheckGlobalSvnFinished(){
 	if(pg.IsRunning()) return;
-	RLOG("check global svn finished");
+	LLOG("checking global svn finished");
 	KillTimeCallback(2);
 	int exitcode=pg.GetExitCode();
 	if(exitcode){
 		error="SVN command 'svn info "+UpdaterCfg().svnserver+"' failed with exit code "+AsString(exitcode)+"&Output:&[l150 "+DeQtf(pg.Get());
-		RLOG(error);
+		LLOG(error);
 		return;
 	}
 	global=pg.Get();
@@ -201,6 +206,7 @@ void SourceUpdater::CheckGlobalSvnFinished(){
 
 void SourceUpdater::DoUpdate(){
 	Close();Hide();
+	LLOG("DoUpdate");
 	switch(UpdaterCfg().method){
 		case 0: {
 			//copy in /home

@@ -1,8 +1,8 @@
 #include "SrcUpdater.h"
 
-//#define IMAGECLASS IdeImg
-//#define IMAGEFILE <ide/ide.iml>
-//#include <Draw/iml_header.h>
+#define IMAGECLASS IdeImg
+#define IMAGEFILE <ide/ide.iml>
+#include <Draw/iml_header.h>
 
 bool CopyFolder(const char *dst, const char *src, Progress *pi);
 bool LoadVarFile(const char *name, VectorMap<String, String>& _var);
@@ -15,7 +15,7 @@ bool HasSvn(){
 InstallWizard::InstallWizard(){
 	Title("TheIDE - Initial setting wizard");
 	Sizeable();
-	//Icon(IdeImg::Package(), IdeImg::PackageLarge());
+	Icon(IdeImg::Package(), IdeImg::PackageLarge());
 
 	s0.text<<="[ [ [/ Welcome to TheIDE !]&][ &][ [1 This short wizard dialogue will help you to set up everything you need to get a full working Integrated Development Environment. Clicking ][/1 Finish][1  at any time will save the values to your hard disk (using default values for unfilled fields), while ][/1 Cancel][1  leaves this wizard without doing anything.]]";
 	s1.text<<="[ [ [/ Source code handling methods]&][ &][ [1 There is several ways how to access the U`+`+ source codes. Choose the method that best suits your needs. You can always change the settings later if necessary.]]";
@@ -347,6 +347,7 @@ void InstallWizard::Perform(){
 			DeleteFile(deleted[i]);
 		}
 	}
+	StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
 }
 
 void Uninstall(){

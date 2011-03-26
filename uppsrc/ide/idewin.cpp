@@ -1021,10 +1021,11 @@ void AppMain___()
 	#ifdef PLATFORM_POSIX
 		int p=UpdaterCfg().period;
 		if(!IsNull(p)) {
-			if(p<=0)
+			int next=GetUtcTime()-UpdaterCfg().last+abs(p)*60;
+			if(p <= 0 || next <= 0)
 				ide.PostCallback(callback1(&ide,&Ide::CheckUpdates,false),0);
-			if(p!=0)
-				ide.SetTimeCallback(-60000*abs(p),callback1(&ide,&Ide::CheckUpdates,false));
+			if(p != 0)
+				ide.SetTimeCallback(max(0, next),callback1(&ide,&Ide::SetUpdateTimer,abs(p)));
 		}
 	#endif
 
