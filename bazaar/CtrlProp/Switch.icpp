@@ -9,4 +9,3 @@ PROPERTY("label", PropSetLabel, PropGetLabel)
 END_PROPERTIES
 
 PROPS(Ctrl, Switch, Ctrl)
-

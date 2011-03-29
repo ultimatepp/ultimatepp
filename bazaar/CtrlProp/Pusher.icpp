@@ -14,5 +14,3 @@ PROPERTY("clickfocus", PropSetClickFocus, PropGetClickFocus)
 END_PROPERTIES
 
 PROPS(Ctrl, Pusher, Ctrl)
-
-
