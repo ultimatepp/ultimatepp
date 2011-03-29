@@ -253,56 +253,107 @@ static Value DBOutGuid(const DBBINDING& binding, const byte *data)
 }
 */
 
-static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
-                                            Buffer<OutBindProc>& bindproc, int& rowbytes, Array<DBOBJECT>& object)
+NTL_MOVEABLE(DBBINDING)
+
+struct BindingPart {
+	BindingPart() : rowbytes(0), haccessor(0) {}
+	
+	void                GetRowData(Vector<Value>& out) const;
+
+	Vector<int>         colindex;
+	Vector<DBBINDING>   bindings;
+	int                 rowbytes;
+	Vector<OutBindProc> bindproc;
+	Array<DBOBJECT>     objects;
+	HACCESSOR           haccessor;
+	Buffer<byte>        rowbuffer;
+};
+
+void BindingPart::GetRowData(Vector<Value>& out) const
 {
-	rowbytes = 0;
-	Buffer<DBBINDING> dbbind(count);
-	object.Clear();
-	bindproc.Alloc(count);
-	OutBindProc *ob = bindproc;
-	DBBINDING *db = dbbind;
-	memset(db, 0, count * sizeof(DBBINDING));
-	for(; --count >= 0; col++, db++, ob++) {
-		db->iOrdinal = col->iOrdinal;
-		db->dwPart = DBPART_STATUS | DBPART_VALUE;
-		db->dwMemOwner = DBMEMOWNER_CLIENTOWNED;
-		db->eParamIO = DBPARAMIO_NOTPARAM;
-		db->obStatus = rowbytes;
-		rowbytes += sizeof(DBSTATUS);
-		switch(col->wType) {
+	for(int i = 0; i < bindings.GetCount(); i++) {
+		const DBBINDING& dbbind = bindings[i];
+		Value& op = out[colindex[i]];
+		int status = *(const dword *)(~rowbuffer + dbbind.obStatus);
+		switch(status) {
+			case DBSTATUS_S_ISNULL: {
+				op = Value();
+				break;
+			}
+			case DBSTATUS_S_OK: {
+				op = bindproc[i](dbbind, ~rowbuffer);
+				break;
+			}
+			default: {
+				op = ErrorValue(NFormat("column[%d]: %d", (int)dbbind.iOrdinal, status));
+				break;
+			}
+		}
+	}
+}
+
+static Array<BindingPart> GetRowDataBindings(const DBCOLUMNINFO *columns, int count)
+{
+	Array<BindingPart> out_parts;
+	out_parts.Add();
+	bool first_blob = true;
+	for(int i = 0; i < count; i++) {
+		const DBCOLUMNINFO& col = columns[i];
+		int part_index = 0;
+		if(col.wType == DBTYPE_BYTES && (col.dwFlags & DBCOLUMNFLAGS_ISLONG)) {
+			if(first_blob) {
+				part_index = 0;
+				first_blob = false;
+			}
+			else {
+				part_index = out_parts.GetCount();
+				out_parts.Add();
+			}
+		}
+		BindingPart& part = out_parts[part_index];
+		part.colindex.Add(i);
+		DBBINDING& db = part.bindings.Add();
+		OutBindProc& ob = part.bindproc.Add();
+		memset(&db, 0, sizeof(db));
+		db.iOrdinal = col.iOrdinal;
+		db.dwPart = DBPART_STATUS | DBPART_VALUE;
+		db.dwMemOwner = DBMEMOWNER_CLIENTOWNED;
+		db.eParamIO = DBPARAMIO_NOTPARAM;
+		db.obStatus = part.rowbytes;
+		part.rowbytes += sizeof(DBSTATUS);
+		switch(col.wType) {
 		case DBTYPE_I1:
 		case DBTYPE_I2:
 		case DBTYPE_I4:
 		case DBTYPE_UI1:
 		case DBTYPE_UI2:
-			db->wType = DBTYPE_I4;
-			db->obValue = rowbytes;
-			*ob = &DBOutInt;
-			rowbytes += 4;
+			db.wType = DBTYPE_I4;
+			db.obValue = part.rowbytes;
+			ob = &DBOutInt;
+			part.rowbytes += 4;
 			break;
 
 		case DBTYPE_BOOL:
-			db->wType = DBTYPE_I1;
-			db->obValue = rowbytes;
-			*ob = &DBOutBool;
-			rowbytes += 4;
+			db.wType = DBTYPE_I1;
+			db.obValue = part.rowbytes;
+			ob = &DBOutBool;
+			part.rowbytes += 4;
 			break;
 
 		case DBTYPE_UI4:
-			db->wType = DBTYPE_UI4;
-			db->obValue = rowbytes;
-			*ob = &DBOutInt;
-			rowbytes += 4;
+			db.wType = DBTYPE_UI4;
+			db.obValue = part.rowbytes;
+			ob = &DBOutInt;
+			part.rowbytes += 4;
 			break;
 
 		case DBTYPE_UI8:
 		case DBTYPE_I8:
-			rowbytes = (rowbytes + 7) & -8;
-			db->wType = col->wType;
-			db->obValue = rowbytes;
-			*ob = &DBOutI8;
-			rowbytes += 8;
+			part.rowbytes = (part.rowbytes + 7) & -8;
+			db.wType = col.wType;
+			db.obValue = part.rowbytes;
+			ob = &DBOutI8;
+			part.rowbytes += 8;
 			break;
 
 		case DBTYPE_R4:
@@ -311,11 +362,11 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
 		case DBTYPE_DECIMAL:
 		case DBTYPE_NUMERIC:
 		case DBTYPE_VARNUMERIC:
-			rowbytes = (rowbytes + 7) & -8;
-			db->wType = DBTYPE_R8;
-			db->obValue = rowbytes;
-			*ob = &DBOutDouble;
-			rowbytes += 8;
+			part.rowbytes = (part.rowbytes + 7) & -8;
+			db.wType = DBTYPE_R8;
+			db.obValue = part.rowbytes;
+			ob = &DBOutDouble;
+			part.rowbytes += 8;
 			break;
 
 		case DBTYPE_DATE:
@@ -323,140 +374,125 @@ static Buffer<DBBINDING> GetRowDataBindings(const DBCOLUMNINFO *col, int count,
 		case DBTYPE_DBDATE:
 		case DBTYPE_DBTIME:
 		case DBTYPE_DBTIMESTAMP:
-			rowbytes = (rowbytes + sizeof(DATE) - 1) & -(int)sizeof(DATE);
-			db->wType = DBTYPE_DATE;
-			db->obValue = rowbytes;
-			*ob = &DBOutTime;
-			rowbytes += sizeof(DATE);
+			part.rowbytes = (part.rowbytes + sizeof(DATE) - 1) & -(int)sizeof(DATE);
+			db.wType = DBTYPE_DATE;
+			db.obValue = part.rowbytes;
+			ob = &DBOutTime;
+			part.rowbytes += sizeof(DATE);
 			break;
 
 #ifdef BYREF
 		case DBTYPE_GUID:
 		case DBTYPE_STR:
-			db->wType = DBTYPE_BYREF|DBTYPE_STR;
+			db.wType = DBTYPE_BYREF|DBTYPE_STR;
 			*ob = &DBOutString;
-			db->cbMaxLen = col->ulColumnSize + 1;
+			db.cbMaxLen = col.ulColumnSize + 1;
 		byref:
-			db->obValue = rowbytes;
-			db->dwMemOwner = DBMEMOWNER_PROVIDEROWNED;
+			db.obValue = rowbytes;
+			db.dwMemOwner = DBMEMOWNER_PROVIDEROWNED;
 			rowbytes += sizeof(void *);
-			db->obLength = rowbytes;
-			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
+			db.obLength = rowbytes;
+			db.dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
 			rowbytes += sizeof(DBLENGTH);
-			db->cbMaxLen = sizeof(void *);
+			db.cbMaxLen = sizeof(void *);
 			break;
 
 		case DBTYPE_BYTES:
-			if(col->dwFlags & DBCOLUMNFLAGS_ISLONG) {
-				db->wType = DBTYPE_IUNKNOWN;
-				db->cbMaxLen = sizeof(ISequentialStream*);
-				db->pObject = &object.Add();
-				db->pObject->iid = IID_ISequentialStream;
-				db->pObject->dwFlags = STGM_READ;
-				db->obValue = rowbytes;
+			if(col.dwFlags & DBCOLUMNFLAGS_ISLONG) {
+				db.wType = DBTYPE_IUNKNOWN;
+				db.dwPart = DBPART_VALUE | DBPART_STATUS;
+				db.cbMaxLen = sizeof(ISequentialStream*);
+				db.pObject = &object.Add();
+				db.pObject->iid = IID_ISequentialStream;
+				db.pObject->dwFlags = STGM_READ;
+				db.obValue = rowbytes;
 				rowbytes += sizeof(ISequentialStream*);
 				*ob = &DBOutBytes;
 		    }
 		    else {
-				db->wType = DBTYPE_BYREF|DBTYPE_BYTES;
+				db.wType = DBTYPE_BYREF|DBTYPE_BYTES;
 				*ob = &DBOutString;
-				db->cbMaxLen = sizeof(void *);
+				db.cbMaxLen = sizeof(void *);
 				goto byref;
 		    }
 		    break;
 
 		case DBTYPE_BSTR:
 		case DBTYPE_WSTR:
-			db->wType = DBTYPE_BYREF|DBTYPE_WSTR;
+			db.wType = DBTYPE_BYREF|DBTYPE_WSTR;
 			*ob = &DBOutWString;
-			db->cbMaxLen = sizeof(OLECHAR) * (col->ulColumnSize + 1);
+			db.cbMaxLen = sizeof(OLECHAR) * (col.ulColumnSize + 1);
 			goto byref;
 
 #else
 		case DBTYPE_BYTES:
-			if(col->dwFlags & DBCOLUMNFLAGS_ISLONG) {
-				db->wType = DBTYPE_IUNKNOWN;
-				db->cbMaxLen = sizeof(ISequentialStream*);
-				db->pObject = &object.Add();
-				db->pObject->iid = IID_ISequentialStream;
-				db->pObject->dwFlags = STGM_READ;
-				db->obValue = rowbytes;
-				rowbytes += sizeof(ISequentialStream*);
-				*ob = &DBOutBytes;
+			if(col.dwFlags & DBCOLUMNFLAGS_ISLONG) {
+				db.wType = DBTYPE_IUNKNOWN;
+				db.cbMaxLen = sizeof(ISequentialStream*);
+				db.pObject = &part.objects.Add();
+				db.pObject->iid = IID_ISequentialStream;
+				db.pObject->dwFlags = STGM_READ;
+				db.obValue = part.rowbytes;
+				part.rowbytes += sizeof(ISequentialStream*);
+				ob = &DBOutBytes;
 		    }
 		    else {
-				db->wType = DBTYPE_BYTES;
-				db->obValue = rowbytes;
-				*ob = &DBOutString;
-				db->cbMaxLen = min<DBLENGTH>(col->ulColumnSize, 10000000);
-				rowbytes += int((db->cbMaxLen + 1 + 3) & -4);
-				db->obLength = rowbytes;
-				db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
-				rowbytes += sizeof(DBLENGTH);
+				db.wType = DBTYPE_BYTES;
+				db.obValue = part.rowbytes;
+				ob = &DBOutString;
+				db.cbMaxLen = min<DBLENGTH>(col.ulColumnSize, 10000000);
+				part.rowbytes += int((db.cbMaxLen + 1 + 3) & -4);
+				db.obLength = part.rowbytes;
+				db.dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
+				part.rowbytes += sizeof(DBLENGTH);
 		    }
 			break;
 
 		case DBTYPE_STR:
 		case DBTYPE_GUID:
-			db->wType = DBTYPE_STR;
-			db->obValue = rowbytes;
-			*ob = &DBOutString;
-			db->cbMaxLen = min<DBLENGTH>(col->ulColumnSize, 1000000) + 1;
-			rowbytes += int((db->cbMaxLen + 1 + 3) & -4);
-			db->obLength = rowbytes;
-			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
-			rowbytes += sizeof(DBLENGTH);
+			db.wType = DBTYPE_STR;
+			db.obValue = part.rowbytes;
+			ob = &DBOutString;
+			db.cbMaxLen = min<DBLENGTH>(col.ulColumnSize, 1000000) + 1;
+			part.rowbytes += int((db.cbMaxLen + 1 + 3) & -4);
+			db.obLength = part.rowbytes;
+			db.dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
+			part.rowbytes += sizeof(DBLENGTH);
 			break;
 
 		case DBTYPE_BSTR:
 		case DBTYPE_WSTR:
-			db->wType = DBTYPE_WSTR;
-			db->obValue = rowbytes;
-			db->cbMaxLen = sizeof(OLECHAR) * (min<DBLENGTH>(col->ulColumnSize, 1000000) + 1);
-			*ob = &DBOutWString;
-			rowbytes += int((db->cbMaxLen + 3) & -4);
-			db->obLength = rowbytes;
-			db->dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
-			rowbytes += sizeof(DBLENGTH);
+			db.wType = DBTYPE_WSTR;
+			db.obValue = part.rowbytes;
+			db.cbMaxLen = sizeof(OLECHAR) * (min<DBLENGTH>(col.ulColumnSize, 1000000) + 1);
+			ob = &DBOutWString;
+			part.rowbytes += int((db.cbMaxLen + 3) & -4);
+			db.obLength = part.rowbytes;
+			db.dwPart = DBPART_VALUE | DBPART_LENGTH | DBPART_STATUS;
+			part.rowbytes += sizeof(DBLENGTH);
 			break;
 #endif
 /*
 		case DBTYPE_GUID:
 			rowbytes = (rowbytes + 7) & -8;
-			db->wType = DBTYPE_GUID;
-			db->obValue = rowbytes;
+			db.wType = DBTYPE_GUID;
+			db.obValue = rowbytes;
 			*ob = &DBOutGuid;
 			rowbytes += sizeof(GUID);
 			break;
 */
 		default:
-			throw Exc(NFormat("column[%d] has invalid type %d", (int)col->iOrdinal, (int)col->wType));
+			throw Exc(NFormat("column[%d] has invalid type %d", (int)col.iOrdinal, (int)col.wType));
 		}
 	}
 
-	rowbytes = (rowbytes + 7) & -8;
-	return dbbind;
-}
-
-Vector<Value> GetRowData(const byte *buffer, const DBBINDING *dbbind, const OutBindProc *bindprocs, int count)
-{
-	Vector<Value> out;
-	out.SetCount(count);
-	for(Value *op = out.Begin(); --count >= 0; op++, dbbind++, bindprocs++)
-		switch(*(const dword *)(buffer + dbbind->obStatus)) {
-		case DBSTATUS_S_ISNULL:
-			break;
-		case DBSTATUS_S_OK: {
-//				LTIMING("GetRowData/bindproc");
-				*op = (*bindprocs)(*dbbind, buffer);
-			}
-			break;
-		default:
-			*op = ErrorValue(NFormat("column[%d]: %d", (int)dbbind->iOrdinal,
-				(int)*(const dword *)(buffer + dbbind->obStatus)));
-			break;
-		}
-	return out;
+	for(int p = 0; p < out_parts.GetCount(); p++) {
+		BindingPart& part = out_parts[p];
+		part.rowbytes = (part.rowbytes + 7) & -8;
+		part.rowbuffer.Alloc(part.rowbytes);
+	}
+	
+	return out_parts;
 }
 
 class OleDBConnection : public Link<OleDBConnection>, public SqlConnection
@@ -510,9 +546,10 @@ private:
 	IRef<IRowset>           fetch_rowset;
 	IRef<IAccessor>         fetch_accessor;
 	HACCESSOR               fetch_haccessor;
-	Buffer<OutBindProc>     fetch_bindprocs;
-	Buffer<DBBINDING>       fetch_bindings;
-	Buffer<byte>            fetch_rowbuffer;
+	Array<BindingPart>      fetch_bindings;
+//	Buffer<OutBindProc>     fetch_bindprocs;
+//	Buffer<DBBINDING>       fetch_bindings;
+//	Buffer<byte>            fetch_rowbuffer;
 	Buffer<HROW>            fetch_hrows;
 	int                     fetch_rowbytes;
 	int                     fetch_chunk;
@@ -792,13 +829,20 @@ void OleDBConnection::Execute(IRef<IRowset> rowset)
 			break;
 		}
 	}
-	fetch_bindings = GetRowDataBindings(columns, fetchcols, fetch_bindprocs, fetch_rowbytes, object);
-	fetch_chunk = minmax<int>(MAX_FETCH_BYTES / (fetch_rowbytes + 1), 1, MAX_FETCH_ROWS);
-	fetch_rowbuffer.Alloc(fetch_rowbytes);
+	fetch_bindings = GetRowDataBindings(columns, fetchcols);
+	int total = 0;
+	for(int p = 0; p < fetch_bindings.GetCount(); p++)
+		total += fetch_bindings[p].rowbytes;
+	fetch_chunk = minmax<int>(MAX_FETCH_BYTES / (total + 1), 1, MAX_FETCH_ROWS);
+//	fetch_rowbuffer.Alloc(fetch_rowbytes);
 	fetch_hrows.Alloc(fetch_chunk);
 	OleDBVerify(QueryInterface(fetch_rowset, fetch_accessor));
-	OleDBVerify(fetch_accessor->CreateAccessor(DBACCESSOR_ROWDATA, fetchcols,
-		fetch_bindings, fetch_rowbytes, &fetch_haccessor, NULL));
+	for(int p = 0; p < fetch_bindings.GetCount(); p++) {
+		BindingPart& part = fetch_bindings[p];
+		OleDBVerify(fetch_accessor->CreateAccessor(DBACCESSOR_ROWDATA,
+			part.bindings.GetCount(), part.bindings.Begin(),
+			part.rowbytes, &part.haccessor, NULL));
+	}
 }
 
 int OleDBConnection::GetRowsProcessed() const
@@ -855,12 +899,16 @@ void OleDBConnection::TryPrefetch()
 	if(countrows <= 0)
 		return;
 	for(unsigned i = 0; i < countrows; i++) {
-		{
+		for(int p = 0; p < fetch_bindings.GetCount(); p++) {
+			BindingPart& part = fetch_bindings[p];
 			LTIMING("OleDBConnection::TryPrefetch->GetData");
-			OleDBVerify(fetch_rowset->GetData(fetch_hrows[i], fetch_haccessor, fetch_rowbuffer));
+			OleDBVerify(fetch_rowset->GetData(fetch_hrows[i], part.haccessor, part.rowbuffer));
 		}
 		LTIMING("OleDBConnection::TryPrefetch->GetRowData");
-		prefetch.Add() = GetRowData(fetch_rowbuffer, fetch_bindings, fetch_bindprocs, info.GetCount());
+		Vector<Value>& val = prefetch.Add();
+		val.SetCount(info.GetCount());
+		for(int p = 0; p < fetch_bindings.GetCount(); p++)
+			fetch_bindings[p].GetRowData(val);
 	}
 	LTIMING("OleDBConnection::TryPrefetch->ReleaseRows");
 	OleDBVerify(fetch_rowset->ReleaseRows(countrows, prows, NULL, NULL, NULL));
@@ -979,13 +1027,13 @@ void OleDBConnection::Cancel()
 	if(!!cmd)
 		cmd->Cancel();
 
-	fetch_rowbuffer.Clear();
-	fetch_bindings.Clear();
-	fetch_bindprocs.Clear();
 	fetch_hrows.Clear();
-	if(!!fetch_accessor && !!fetch_haccessor)
-		fetch_accessor->ReleaseAccessor(fetch_haccessor, NULL);
-	fetch_haccessor = NULL;
+	if(!!fetch_accessor) {
+		for(int p = 0; p < fetch_bindings.GetCount(); p++)
+			if(!!fetch_bindings[p].haccessor)
+				fetch_accessor->ReleaseAccessor(fetch_bindings[p].haccessor, NULL);
+	}
+	fetch_bindings.Clear();
 	fetch_accessor.Clear();
 	fetch_rowset.Clear();
 	info.Clear();
