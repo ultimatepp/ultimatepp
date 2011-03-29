@@ -100,13 +100,9 @@ DEC_PROPKEEPER(KLASS, BASE) \
 
 #define PROPERTIES(KLASS, BASE) \
  \
-INITBLOCK \
-{ \
-	PropKeeper<KLASS>::Init(); \
-} \
- \
 void PropKeeper<KLASS>::SetupAccessorMap(C& o, AccessorMap& am) \
 { \
+	PropKeeper<KLASS>::Init(); \
 	const PropTyper<C>::HMap& m = PropTyper<C>::map2(); \
 	for(int i = 0; i < m.GetCount(); i++) \
 	{ \
@@ -154,8 +150,6 @@ void PropKeeper<KLASS>::Init() \
 #define END_PROPERTIES \
 	B::Init(); \
 	\
-	C c; AccessorMap am; \
-	SetupAccessorMap(c, am); \
 	} \
 } \
  \
@@ -276,6 +270,7 @@ DEC_GETSETPROP(T, BASE); \
 DEC_GETSETPROP(T, KLASS); \
 INITBLOCK \
 { \
+	RLOG("initblock: " << String(typeid(KLASS).name())); \
 	REGISTERSETAM(T, KLASS); \
 	REGISTERPROPS(T, KLASS); \
 } \
