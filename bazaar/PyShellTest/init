@@ -1,0 +1,5 @@
+#ifndef _PyShellTest_icpp_init_stub
+#define _PyShellTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "PyShell/init"
+#endif

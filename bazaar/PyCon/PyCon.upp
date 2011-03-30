@@ -1,0 +1,9 @@
+uses
+	Core,
+	Python,
+	LogCtrl;
+
+file
+	PyCon.h,
+	PyCon.cpp;
+

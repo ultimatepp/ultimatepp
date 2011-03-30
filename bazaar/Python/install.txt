@@ -1,0 +1,60 @@
+to make python work in upp there are few steps to do..
+
+go to the python page 
+http://www.python.org/getit/
+
+and choose the installer for windows, version 2.7.1 is good and current.
+linux should have python 2.7.1 already shipped.
+
+the windows installer will put it in 'C:\Python27' folder
+
+setup your build method for windows to add to PATH:
+C:\Python27
+to INCLUDE
+C:\Python27\include
+to LIB
+C:\Python27\
+C:\Python27\libs
+C:\Python27\DLLs
+
+again, linux should already have python available from start.
+
+make sure NOT to choose DEBUG compile, since it will fail. the reason:
+python27 headers need some more functions in debug mode, which are not provided in release lib.
+but the Upp Python package is ready to be used as DEBUG as well. if needed, read on.
+
+
+DEBUG:
+debug is needed, when you need to debug at least *your* application. so you will need
+the target library for DEBUG, named python27_d.dll / python27_d.so respectively.
+
+for linux, download the python debug package which should be available for your distro
+or recompile it from source with the needed flags for configure.
+
+for windows you will need to compile it from source, because, it is not provided in installation.
+download the sources at same location or directly
+http://www.python.org/ftp/python/2.7.1/Python-2.7.1.tgz
+extract and move the Python-2.7.1 folder with the sources to C:\
+
+go to C:\Python-2.7.1\PCbuild
+and open the pcbuild.sln with VisualStudio 2008, or express, should do as well.
+do a 'build solution', which will fail in some packages, ssl and the like. no matter..
+
+PCbuild folder will contain the files
+	python27_d.dll
+	python27_d.lib
+	python27_d.pdb
+	python27_d.exp
+
+copy the dll to C:\Python27
+and the remaining 3 files to C:\Python27\libs
+
+this should enable you to compile your app as DEBUG..
+
+to further information visit:
+http://wiki.python.org/moin/Building%20Python%20with%20the%20free%20MS%20C%20Toolkit
+http://timgolden.me.uk/python/win32_how_do_i.html
+http://docs.python.org/using/windows.html
+
+NOTE:
+for shorthand, use the provided precompiled python27_d

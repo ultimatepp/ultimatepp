@@ -1,0 +1,4 @@
+LAYOUT(PyShellTestLayout, 308, 164)
+	ITEM(Button, b, SetLabel(t_("Start Shell")).LeftPosZ(20, 56).TopPosZ(16, 15))
+END_LAYOUT
+

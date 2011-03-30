@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	PyConsoleCtrl;
+
+file
+	PyConsoleCtrlTest.h,
+	main.cpp,
+	PyConsoleCtrlTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

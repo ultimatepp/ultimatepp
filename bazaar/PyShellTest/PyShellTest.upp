@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	PyShell;
+
+file
+	PyShellTest.h,
+	main.cpp,
+	PyShellTest.lay;
+
+mainconfig
+	"" = "GUI MT SSE2";
+
