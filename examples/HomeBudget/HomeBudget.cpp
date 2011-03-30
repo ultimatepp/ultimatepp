@@ -755,7 +755,7 @@ void HomeBudget::UpdateValue()
 	{
 		SQL & Select(DEFVALUE, PM).From(CATEGORIES).Where(ID == money.Get(CAT_ID));
 		Value v = SQL.Fetch() ? SQL[0] : Value(0);
-		Value s = SQL.Fetch() ? SQL[1] : -1;
+		Value s = SQL.Fetch() ? SQL[1] : Value(-1);
 		
 		if(IsNull(money.Get(VALUE)))
 			money.Set(VALUE, v);
