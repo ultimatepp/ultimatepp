@@ -129,41 +129,45 @@ inline void UnlockLog() {}
 
 #else
 
+inline  void LOGNOP__() {}
+
+#define LOG_NOP          Upp::LOGNOP__()
+
 #define DLOG(x)          @ // To clean logs after debugging, this produces error in release mode
 #define DDUMP(x)         @
 #define DDUMPC(x)        @
 #define DDUMPM(x)        @
 #define DTIMING(x)       @
 
-#define ASSERT(x)
+#define ASSERT(x)        LOG_NOP
 
-#define DEBUGCODE(x)
+#define DEBUGCODE(x)     LOG_NOP
 
 inline void LOGF(const char *format, ...) {}
 
-#define LOG(a)
-#define LOGBEGIN()
-#define LOGEND()
-#define LOGBLOCK(n)
-#define LOGHEXDUMP(s, a)
+#define LOG(a)           LOG_NOP
+#define LOGBEGIN()       LOG_NOP
+#define LOGEND()         LOG_NOP
+#define LOGBLOCK(n)      LOG_NOP
+#define LOGHEXDUMP(s, a) LOG_NOP
 #define QUOTE(a)         a
-#define LOGSRCPOS()
-#define DUMP(a)
-#define DUMPC(a)
-#define DUMPCC(a)
-#define DUMPCCC(a)
-#define DUMPM(a)
-#define XASSERT(c, d)
-#define NEVER()
-#define NEVER_(msg)
-#define XNEVER(d)
+#define LOGSRCPOS()      LOG_NOP
+#define DUMP(a)          LOG_NOP
+#define DUMPC(a)         LOG_NOP
+#define DUMPCC(a)        LOG_NOP
+#define DUMPCCC(a)       LOG_NOP
+#define DUMPM(a)         LOG_NOP
+#define XASSERT(c, d)    LOG_NOP
+#define NEVER()          LOG_NOP
+#define NEVER_(msg)      LOG_NOP
+#define XNEVER(d)        LOG_NOP
 #define CHECK(c)         (c)
 #define XCHECK(c, d)     (c)
 
-#define TIMING(x)
-#define HITCOUNT(x)
-#define ACTIVATE_TIMING()
-#define DEACTIVATE_TIMING()
+#define TIMING(x)           LOG_NOP
+#define HITCOUNT(x)         LOG_NOP
+#define ACTIVATE_TIMING()   LOG_NOP
+#define DEACTIVATE_TIMING() LOG_NOP
 
 #endif
 
