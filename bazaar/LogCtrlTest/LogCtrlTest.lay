@@ -1,0 +1,5 @@
+LAYOUT(LogCtrlTestLayout, 400, 200)
+	ITEM(Button, clear, SetLabel(t_("Clear")).LeftPosZ(0, 56).BottomPosZ(0, 20))
+	ITEM(Button, save, SetLabel(t_("Save")).LeftPosZ(56, 56).BottomPosZ(0, 20))
+END_LAYOUT
+

@@ -1,0 +1,5 @@
+#ifndef _LogCtrl_icpp_init_stub
+#define _LogCtrl_icpp_init_stub
+#include "CtrlLib/init"
+#include "EscapeCh/init"
+#endif

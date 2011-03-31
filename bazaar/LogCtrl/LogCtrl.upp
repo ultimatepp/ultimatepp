@@ -1,0 +1,7 @@
+uses
+	CtrlLib;
+
+file
+	LogCtrl.h,
+	LogCtrl.cpp;
+

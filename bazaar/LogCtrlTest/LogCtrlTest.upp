@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	LogCtrl;
+
+file
+	LogCtrlTest.h,
+	main.cpp,
+	LogCtrlTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+
