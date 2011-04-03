@@ -678,6 +678,7 @@ bool OCI8Connection::GetColumnInfo() {
 			ci.width = p.dyna_width;
 			ci.precision = Null;
 			ci.scale = Null;
+			ci.binary = (p.type == SQLT_LBI || p.type == SQLT_BLOB);
 		}
 		parse = false;
 		return true;
@@ -703,6 +704,7 @@ bool OCI8Connection::GetColumnInfo() {
 		ii.precision = prec;
 		ii.scale = scale;
 		ii.name = ToUpper(TrimRight(String(name, name_len)));
+		ii.binary = false;
 		bool blob = false;
 		switch(type) {
 		case SQLT_NUM:
@@ -717,6 +719,7 @@ bool OCI8Connection::GetColumnInfo() {
 			ii.type = ORA_BLOB_V;
 			AddColumn(SQLT_BLOB, sizeof(OCILobLocator *));
 			blob = true;
+			ii.binary = true;
 			break;
 		case SQLT_CLOB:
 			ii.type = ORA_CLOB_V;

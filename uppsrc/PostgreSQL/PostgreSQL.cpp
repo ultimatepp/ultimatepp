@@ -264,6 +264,7 @@ Vector<SqlColumnInfo> PostgreSQLSession::EnumColumns(String database, String tab
 		ci.precision = (type_mod >> 16) & 0xffff;
 		ci.scale = type_mod & 0xffff;
 		ci.nullable = AsString(sql[4]) == "0";
+		ci.binary = false;
 	}
 	return vec;
 }
