@@ -370,6 +370,7 @@ bool ODBCConnection::Execute()
 		binary.Add(false);
 		SqlColumnInfo& f = info.Add();
 		f.nullable = Nullable != SQL_NO_NULLS;
+		f.binary = false;
 		f.precision = DecimalDigits;
 		f.scale = 0;
 		f.width = ColumnSize;
@@ -397,6 +398,7 @@ bool ODBCConnection::Execute()
 		case SQL_VARBINARY:
 		case SQL_LONGVARBINARY:
 			f.type = STRING_V;
+			f.binary = true;
 			binary.Top() = true;
 			break;
 		default:

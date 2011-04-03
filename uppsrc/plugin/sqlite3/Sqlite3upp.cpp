@@ -186,6 +186,7 @@ bool Sqlite3Connection::Execute() {
 		for (int i = 0; i < numfields; ++i) {
 			SqlColumnInfo& field = info[i];
 			field.name = sqlite3_column_name(current_stmt,i);
+			field.binary = false;
 			String coltype = sqlite3_column_decltype(current_stmt,i);
 			switch (sqlite3_column_type(current_stmt,i)) {
 				case SQLITE_INTEGER:
@@ -223,6 +224,7 @@ bool Sqlite3Connection::Execute() {
 					break;
 				case SQLITE_BLOB:
 					field.type = STRING_V;
+					field.binary = true;
 					break;
 				default:
 					NEVER();

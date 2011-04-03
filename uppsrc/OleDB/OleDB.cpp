@@ -66,7 +66,7 @@ void OleDBVerify(HRESULT hr)
 {
 	if(SUCCEEDED(hr))
 		return;
-	throw Exc(OleDBErrorInfo(hr).ToString());
+	throw OleExc(hr, OleDBErrorInfo(hr).ToString());
 }
 
 const char *OleDBParseString(const char *s)
@@ -158,7 +158,11 @@ static void DBInDouble(const DBBINDING& binding, byte *data, const Value& v)
 
 static void DBInString(const DBBINDING& binding, byte *data, const Value& v)
 {
-	String s(v);
+	String s;
+	if(IsString(v))
+		s = v;
+	else if(IsTypeRaw<SqlRaw>(v))
+		s = ValueTo<SqlRaw>(v);
 	int l = s.GetLength();
 	ASSERT(binding.cbMaxLen >= l + 1u);
 	memcpy(data + binding.obValue, s, l + 1);
@@ -228,22 +232,23 @@ static Value DBOutTime(const DBBINDING& binding, const byte *data)
 
 static Value DBOutBytes(const DBBINDING& binding, const byte *data)
 {
-	String r;
+	StringBuffer r;
 	HRESULT hr;
-	BYTE pbBuff[3000];
-	ULONG cbRead;
-	ISequentialStream* pISequentialStream;
-	IUnknown* pIUnknown = *((IUnknown**)(data + binding.obValue));
-	pIUnknown->QueryInterface(IID_ISequentialStream, (void**)&pISequentialStream);
-	ULONG cbNeeded = 3000;
-	do {
-	   hr = pISequentialStream->Read(pbBuff, cbNeeded, &cbRead);
-	   r.Cat(pbBuff, 3000);
+	static const int CHUNK = 65536;
+	Buffer<BYTE> pbBuff(CHUNK);
+	ISequentialStream *pISequentialStream = *((ISequentialStream **)(data + binding.obValue));
+	for(;;) {
+		ULONG cbNeeded = CHUNK;
+		ULONG cbRead = 0;
+		hr = pISequentialStream->Read(pbBuff, cbNeeded, &cbRead);
+		if(FAILED(hr))
+			return ErrorValue(OleExc(hr));
+		if(hr == S_FALSE || cbRead == 0)
+			break;
+		r.Cat((const char*)~pbBuff, (int)cbRead);
 	}
-	while (SUCCEEDED(hr) && hr != S_FALSE && cbRead == cbNeeded);
 	pISequentialStream->Release();
-	pIUnknown->Release();
-	return r;
+	return (String)r;
 }
 
 /*
@@ -262,6 +267,7 @@ struct BindingPart {
 
 	Vector<int>         colindex;
 	Vector<DBBINDING>   bindings;
+	Vector<String>      colnames;
 	int                 rowbytes;
 	Vector<OutBindProc> bindproc;
 	Array<DBOBJECT>     objects;
@@ -274,7 +280,7 @@ void BindingPart::GetRowData(Vector<Value>& out) const
 	for(int i = 0; i < bindings.GetCount(); i++) {
 		const DBBINDING& dbbind = bindings[i];
 		Value& op = out[colindex[i]];
-		int status = *(const dword *)(~rowbuffer + dbbind.obStatus);
+		int status = *(const DBSTATUS *)(~rowbuffer + dbbind.obStatus);
 		switch(status) {
 			case DBSTATUS_S_ISNULL: {
 				op = Value();
@@ -312,6 +318,7 @@ static Array<BindingPart> GetRowDataBindings(const DBCOLUMNINFO *columns, int co
 		}
 		BindingPart& part = out_parts[part_index];
 		part.colindex.Add(i);
+		part.colnames.Add(WString(col.pwszName).ToString());
 		DBBINDING& db = part.bindings.Add();
 		OutBindProc& ob = part.bindproc.Add();
 		memset(&db, 0, sizeof(db));
@@ -794,6 +801,7 @@ void OleDBConnection::Execute(IRef<IRowset> rowset)
 		colinfo.precision = (dbci.bPrecision == (byte)~0 ? int(Null) : dbci.bPrecision);
 		colinfo.scale = (dbci.bScale == (byte)~0 ? int(Null) : dbci.bScale);
 		colinfo.width = (int)dbci.ulColumnSize;
+		colinfo.binary = false;
 		switch(dbci.wType) {
 		case DBTYPE_I1: case DBTYPE_I2: case DBTYPE_I4:
 		case DBTYPE_UI1: case DBTYPE_UI2: case DBTYPE_UI4:
@@ -817,6 +825,10 @@ void OleDBConnection::Execute(IRef<IRowset> rowset)
 			break;
 
 		case DBTYPE_BYTES:
+			colinfo.binary = true;
+			colinfo.type = STRING_V;
+			break;
+		
 		case DBTYPE_STR:
 		case DBTYPE_BSTR:
 		case DBTYPE_WSTR:
@@ -899,16 +911,29 @@ void OleDBConnection::TryPrefetch()
 	if(countrows <= 0)
 		return;
 	for(unsigned i = 0; i < countrows; i++) {
+		Vector<Value>& val = prefetch.Add();
+		val.SetCount(info.GetCount());
 		for(int p = 0; p < fetch_bindings.GetCount(); p++) {
 			BindingPart& part = fetch_bindings[p];
 			LTIMING("OleDBConnection::TryPrefetch->GetData");
-			OleDBVerify(fetch_rowset->GetData(fetch_hrows[i], part.haccessor, part.rowbuffer));
+			try {
+				OleDBVerify(fetch_rowset->GetData(fetch_hrows[i], part.haccessor, part.rowbuffer));
+				fetch_bindings[p].GetRowData(val);
+			}
+			catch(OleExc e) {
+				String col_errs;
+				for(int b = 0; b < part.bindings.GetCount(); b++) {
+					const DBBINDING& dbbind = part.bindings[b];
+					int status = *(const DBSTATUS *)(~part.rowbuffer + dbbind.obStatus);
+					if(status != S_OK && status != DBSTATUS_S_ISNULL) {
+						if(!IsNull(col_errs))
+							col_errs.Cat("; ");
+						col_errs << part.colnames[b] << ": " << OleExc(status);
+					}
+				}
+				throw OleExc(e.hresult, col_errs);
+			}
 		}
-		LTIMING("OleDBConnection::TryPrefetch->GetRowData");
-		Vector<Value>& val = prefetch.Add();
-		val.SetCount(info.GetCount());
-		for(int p = 0; p < fetch_bindings.GetCount(); p++)
-			fetch_bindings[p].GetRowData(val);
 	}
 	LTIMING("OleDBConnection::TryPrefetch->ReleaseRows");
 	OleDBVerify(fetch_rowset->ReleaseRows(countrows, prows, NULL, NULL, NULL));

@@ -37,6 +37,7 @@ struct SqlColumnInfo : Moveable<SqlColumnInfo> {
 	int         precision; //number of total digits in numeric types
 	int         scale;     //number of digits after comma in numeric types
 	bool        nullable;  //true - column can hold null values
+	bool        binary;    //column holds binary data
 };
 
 class SqlConnection {

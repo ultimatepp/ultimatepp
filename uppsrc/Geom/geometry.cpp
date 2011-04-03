@@ -218,29 +218,9 @@ Matrixf& Matrixf::operator *= (const Matrixf& m)
 
 Pointf operator * (Pointf point, const Matrixf& matrix)
 {
-#if defined(CPU_IA32) && defined(COMPILER_MSC)
-	Pointf result;
-	__asm mov    ebx, [matrix]
-	__asm fld    qword ptr [ebx]Matrixf.a.y
-	__asm fld    qword ptr [ebx]Matrixf.a.x
-	__asm fld    qword ptr [point.x]
-	__asm fld    st(0)
-	__asm fmul   qword ptr [ebx]Matrixf.x.x
-	__asm faddp  st(2), st
-	__asm fmul   qword ptr [ebx]Matrixf.x.y
-	__asm faddp  st(2), st
-	__asm fld    qword ptr [point.y]
-	__asm fld    st(0)
-	__asm fmul   qword ptr [ebx]Matrixf.y.x
-	__asm faddp  st(2), st
-	__asm fmul   qword ptr [ebx]Matrixf.y.y
-	__asm faddp  st(2), st
-	__asm fstp   [result]Pointf.x
-	__asm fstp   [result]Pointf.y
-	return result;
-#else
-	return point.x * matrix.x + point.y * matrix.y + matrix.a;
-#endif
+	return Pointf(
+		point.x * matrix.x.x + point.y * matrix.y.x + matrix.a.x,
+		point.x * matrix.x.y + point.y * matrix.y.y + matrix.a.y);
 }
 
 Pointf operator / (Pointf point, const Matrixf& matrix)

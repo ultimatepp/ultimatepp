@@ -7,6 +7,139 @@ NAMESPACE_UPP
 #define IMAGECLASS SqlConsoleImg
 #include <Draw/iml.h>
 
+static bool scmpw(const byte *s, const char *w) {
+	for(;;) {
+		if(*w == '\0')
+			return *s == ' ' || *s == '\t';
+		if(ToUpper(*s++) != ToUpper(*w++))
+			return false;
+	}
+}
+
+static const int MAX_NESTING_LEVEL = 10;
+static const int PROGRESS_RANGE = 1000000000;
+
+bool SqlRunScript(int dialect, Stream& script_stream, 
+	Gate1<String> executor, Gate2<int, int> progress,
+	Index<String>& script_file_names, int progress_min, int progress_max)
+{
+	int line_number = 1;
+	for(int c; (c = script_stream.Term()) >= 0;) {
+		if(c <= ' ') {
+			if(c == '\n')
+				line_number++;
+			script_stream.Get();
+		}
+		else if(c == '@') {
+			script_stream.Get();
+			int64 start = script_stream.GetPos() - 1;
+			bool rel = false;
+			if(script_stream.Term() == '@') {
+				script_stream.Get();
+				rel = true;
+			}
+			StringBuffer subscript_fn;
+			while((c = script_stream.Get()) >= 0 && c != '\n')
+				subscript_fn.Cat((char)c);
+			int e = subscript_fn.GetLength();
+			while(e > 0 && subscript_fn[e - 1] <= ' ')
+				e--;
+			String fn(~subscript_fn, e);
+			fn = NormalizePath(fn, GetFileDirectory(script_file_names[rel ? script_file_names.GetCount() - 1 : 0]));
+			String norm = fn;
+#if !PLATFORM_PATH_HAS_CASE
+			norm = ToLower(norm);
+#endif
+			if(script_file_names.Find(norm) >= 0)
+				throw Exc(NFormat(t_("circular script inclusion of %s at %s:%d"),
+					fn, script_file_names.Top(), line_number));
+			if(script_file_names.GetCount() >= MAX_NESTING_LEVEL)
+				throw Exc(NFormat(t_("script nesting too deep (%d levels)"), script_file_names.GetCount()));
+			int64 end = script_stream.GetPos();
+			
+			int new_min = progress_min + (int)((progress_max - progress_min) * start / script_stream.GetSize());
+			int new_max = progress_min + (int)((progress_max - progress_min) * end / script_stream.GetSize());
+			
+			FileIn fi;
+			if(!fi.Open(fn))
+				throw Exc(NFormat(t_("error opening script file '%s'"), fn));
+			
+			script_file_names.Add(norm);
+			if(!SqlRunScript(dialect, fi, executor, progress, script_file_names, new_min, new_max))
+				return false;
+			script_file_names.Drop();
+		}
+		else {
+			StringBuffer statement;
+			bool exec = false;
+			bool body = false;
+			bool chr = false;
+
+			while(!script_stream.IsEof() && !exec) {
+				String line = script_stream.GetLine();
+				line_number++;
+				
+				int l = line.GetLength();
+				if(l && line[0] == '/' && !body && !chr)
+					exec = true;
+				else
+				if(l && line[0] == '.' && body && !chr)
+					body = false;
+				else {
+					if(statement.GetLength() && !chr)
+						statement.Cat(' ');
+					bool spc = true;
+					bool create = false;
+					for(const byte *s = (const byte *)(const char *)line; *s; s++) {
+						if(s[0] == '-' && s[1] == '-' && !chr) break;
+						if(*s == '\'') chr = !chr;
+						if(!chr && spc && scmpw(s, "create"))
+							create = true;
+						if(!chr && spc && (scmpw(s, "begin") || scmpw(s, "declare") ||
+						   create && (scmpw(s, "procedure") || scmpw(s, "function") || scmpw(s, "trigger"))
+						))
+							body = true;
+						if(*s == ';' && !chr && !body) {
+							exec = true;
+							break;
+						}
+						if(*s > ' ' || chr) {
+							statement.Cat(*s);
+							spc = false;
+						}
+						else
+						if(*s == '\t' || *s == ' ') {
+							if(!spc) statement.Cat(' ');
+							spc = true;
+						}
+						else
+							spc = false;
+					}
+					if(chr) statement.Cat("\r\n");
+				}
+			}
+			if(progress((int)(progress_min + script_stream.GetPos()
+				* (progress_max - progress_min) / script_stream.GetSize()), PROGRESS_RANGE))
+				throw AbortExc();
+			if(!executor(statement))
+				return false;
+		}
+	}
+	return true;
+}
+
+bool SqlRunScript(int dialect, Stream& script_stream, const String& file_name,
+	Gate1<String> executor, Gate2<int, int> progress)
+{
+	Index<String> script_file_names;
+	String fn = NormalizePath(file_name);
+#if !PLATFORM_PASH_HAS_CASE
+	fn = ToLower(fn);
+#endif
+	script_file_names.Add(fn);
+	return SqlRunScript(dialect, script_stream, executor, progress, script_file_names, 0, PROGRESS_RANGE);
+}
+
 void RunDlgSqlExport(Sql& cursor, String command, String tablename);
 
 class MacroSet {
@@ -245,12 +378,16 @@ protected:
 	friend class Exec;
 	class Exec : public StatementExecutor {
 	public:
+		typedef Exec CLASSNAME;
 		Exec(bool quiet) : quiet(quiet) {}
 		SqlConsole *me;
 		bool quiet;
 		virtual bool Execute(const String& stmt) {
 			me->command <<= stmt; me->Sync(); me->Execute(quiet ? QUIET : SCRIPT); return true;
 		}
+		bool GateExec(String stmt) { return Execute(stmt); }
+		operator Gate1<String> () { return THISBACK(GateExec); }
+		
 	};
 
 public:
@@ -495,11 +632,11 @@ void SqlConsole::SaveTrace() {
 }
 
 void SqlConsole::RunScript(bool quiet) {
-	UPP::RunScript runscript = cursor.GetSession().GetRunScript();
-	if(!runscript) {
-		Exclamation(t_("Database connection doesn't support running scripts."));
-		return;
-	}
+//	UPP::RunScript runscript = cursor.GetSession().GetRunScript();
+//	if(!runscript) {
+//		Exclamation(t_("Database connection doesn't support running scripts."));
+//		return;
+//	}
 	FileSelector fsel;
 	fsel.ActiveDir(LastDir);
 	fsel.DefaultExt("sql");
@@ -510,7 +647,17 @@ void SqlConsole::RunScript(bool quiet) {
 	exec.me = this;
 	LastDir = GetFileDirectory(~fsel);
 	Progress progress(t_("Executing script"));
-	(*runscript)(LoadFile(~fsel), exec, progress);
+	FileIn fi;
+	if(!fi.Open(~fsel)) {
+		Exclamation(NFormat(t_("Cannot open file [* \1%s\1]."), ~fsel));
+		return;
+	}
+	try {
+		SqlRunScript(cursor.GetDialect(), fi, ~fsel, exec, progress);
+	}
+	catch(Exc e) {
+		ShowExc(e);
+	}
 }
 
 void SqlConsole::TraceMenu(Bar& menu) {

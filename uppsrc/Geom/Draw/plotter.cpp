@@ -10,10 +10,6 @@ NAMESPACE_UPP
 
 #define STAT_LINES 0 // 0 = off, 1 = on, 2 = log individual vertices
 
-#if defined(CPU_IA32) && defined(COMPILER_MSC)
-	#define MSC_ASSEMBLY
-#endif
-
 static void DrawFatPolyPolygonOutline(Draw& draw,
 	const Point *vertices, int vertex_counts,
 	const int *polygon_counts, int polygon_count_counts,
@@ -713,52 +709,12 @@ Rectf Plotter::PtoL(const Rectf& rc) const
 
 Point Plotter::LtoPointFull(Pointf pt) const
 {
-#ifdef MSC_ASSEMBLY
-	Point result;
-	const Matrixf& mx = physical;
-	__asm mov    ebx, [mx]
-	__asm fld    qword ptr [ebx]Matrixf.a.y
-	__asm fld    qword ptr [ebx]Matrixf.a.x
-	__asm fld    qword ptr [pt]Pointf.x
-	__asm fld    st(0)
-	__asm fmul   qword ptr [ebx]Matrixf.x.x
-	__asm faddp  st(2), st
-	__asm fmul   qword ptr [ebx]Matrixf.x.y
-	__asm faddp  st(2), st
-	__asm fld    qword ptr [pt]Pointf.y
-	__asm fld    st(0)
-	__asm fmul   qword ptr [ebx]Matrixf.y.x
-	__asm faddp  st(2), st
-	__asm fmul   qword ptr [ebx]Matrixf.y.y
-	__asm faddp  st(2), st
-	__asm fistp  dword ptr [result + 0]
-	__asm fistp  dword ptr [result + 4]
-	return result;
-#else
 	return PointfToPoint(pt * physical);
-#endif
 }
 
 Point Plotter::LtoPointOrtho(Pointf pt) const
 {
-#ifdef MSC_ASSEMBLY
-	Point result;
-	const Matrixf& mx = physical;
-	__asm mov    ebx, [mx]
-	__asm fld    qword ptr [ebx]Matrixf.a.y
-	__asm fld    qword ptr [ebx]Matrixf.a.x
-	__asm fld    qword ptr [pt]Pointf.y
-	__asm fmul   qword ptr [ebx]Matrixf.y.y
-	__asm fld    qword ptr [pt]Pointf.x
-	__asm fmul   qword ptr [ebx]Matrixf.x.x
-	__asm faddp  st(2), st
-	__asm faddp  st(2), st
-	__asm fistp  dword ptr [result + 0]
-	__asm fistp  dword ptr [result + 4]
-	return result;
-#else
 	return Point((int)(pt.x * physical.x.x + physical.a.x), (int)(pt.y * physical.y.y + physical.a.y));
-#endif
 }
 
 static void PaintRectPart(Draw& draw, int x, int y, int w, int h)

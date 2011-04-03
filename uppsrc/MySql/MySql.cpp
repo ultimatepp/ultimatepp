@@ -309,6 +309,7 @@ bool MySqlConnection::Execute() {
 		if(lastid) {
 			SqlColumnInfo& f = info.Add();
 			f.width = f.scale = f.precision = 0;
+			f.binary = false;
 			f.type = DOUBLE_V;
 			f.name = "LAST_INSERT_ID";
 			rows = 1;

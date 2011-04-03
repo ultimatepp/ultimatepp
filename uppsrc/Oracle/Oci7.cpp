@@ -430,6 +430,7 @@ bool OCI7Connection::GetColumnInfo()
 		h[hlen] = '\0';
 		ii.name = h;
 		ii.name = ToUpper(TrimRight(ii.name));
+		ii.binary = (type == SQLT_LBI || type == SQLT_BLOB);
 		tp.Add(type);
 		if(type == SQLT_LBI || type == SQLT_BLOB || type == SQLT_CLOB)
 			frows = 1;
