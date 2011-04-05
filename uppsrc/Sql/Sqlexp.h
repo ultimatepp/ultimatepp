@@ -465,6 +465,7 @@ class SqlSelect {
 	SqlSelect& LeftJoin0(const String& table);
 	SqlSelect& RightJoin0(const String& table);
 	SqlSelect& FullJoin0(const String& table);
+	SqlSelect& SetOp(const SqlSelect& s2, const char *op);
 
 public:
 	SqlSelect& operator()(const SqlVal& val);

@@ -8,20 +8,31 @@ String SqlStatement::Get(int dialect) const {
 	return SqlCompile(dialect, text);
 }
 
-SqlSelect& SqlSelect::operator|=(const SqlSelect& s2) {
-	text << " union " << SqlCase(SQLITE3, "")("(") << s2.text << SqlCase(SQLITE3, "")(")");
+SqlSelect& SqlSelect::SetOp(const SqlSelect& s2, const char *op)
+{
+	String q;
+	q << SqlCase(SQLITE3, "")("((")
+	  << text
+	  << SqlCase(SQLITE3, "")(")")
+	  << op
+	  << SqlCase(SQLITE3, "")("(")
+	  << s2.text
+	  << SqlCase(SQLITE3, "")("))")
+	;
+	text = q;
 	return *this;
+}
+
+SqlSelect& SqlSelect::operator|=(const SqlSelect& s2) {
+	return SetOp(s2, " union ");
 }
 
 SqlSelect& SqlSelect::operator&=(const SqlSelect& s2) {
-	text << " intersect " << SqlCase(SQLITE3, "")("(") << s2.text << SqlCase(SQLITE3, "")(")");
-	return *this;
+	return SetOp(s2, " intersect ");
 }
 
 SqlSelect& SqlSelect::operator-=(const SqlSelect& s2) {
-	text << SqlCase(MSSQL|PGSQL|SQLITE3," except ")(" minus ") << SqlCase(SQLITE3, "")("(")
-	<< s2.text << SqlCase(SQLITE3, "")(")");
-	return *this;
+	return SetOp(s2, SqlCase(MSSQL|PGSQL|SQLITE3," except ")(" minus "));
 }
 
 SqlSelect operator|(const SqlSelect& s1, const SqlSelect& s2) {
