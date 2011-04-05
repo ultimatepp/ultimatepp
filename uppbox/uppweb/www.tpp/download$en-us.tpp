@@ -10,8 +10,7 @@ topic "Ultimate++ download";
 :: [s0;= [+92 Nightly builds]]
 :: [s0;= [+92 Stable releases]]
 ::@2 [s0; [*2 Any]]
-:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 SVN]&]
-[s0;= [^http`:`/`/gitorious`.org`/upp`-mirror^2 git]]
+:: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 SVN]]
 :: [s0;= [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/downloads`/list^2 tarball]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 tarball]]
 :: [s0; [*2 MS Windows]]
@@ -50,12 +49,6 @@ ttp://code.google.com/p/upp`-mirror/source/checkout][2 . The mirror
 is at most 1 hour behind the developers SVN repository. If you 
 want to accelerate U`+`+ development, use this and report bugs 
 in our ][^http`:`/`/www`.ultimatepp`.org`/forum^2 forum][2 !]&]
-[s0;2 &]
-[s0; [2 There is also a ][^http`:`/`/gitorious`.org`/upp`-mirror^2 Git 
-mirror][2 , for those who don`'t like SVN. Please note that this 
-repository is not directly connected to U`+`+ infrastructure 
-and therefore it can be up to few days behind the developers 
-repository.]&]
 [s0;2 &]
 [s0; [2 For Gentoo users, an ebuild using subversion checkout is under 
 construction. Have a look at the corresponding ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 f
