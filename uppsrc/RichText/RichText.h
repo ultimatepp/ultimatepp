@@ -18,6 +18,7 @@ struct Zoom {
 	int operator&(int x) const   { int q = d ? iscale(x, m, d) : 0; return x > 0 ? max(q, 1) : q; }
 
 	double AsDouble() const      { return (double)m / d; }
+	Zoom   Reciprocal() const    { return Zoom(d, m); }
 
 	Zoom()                       { m = d = 1; }
 	Zoom(const Nuller&)          { m = d = 0; }

@@ -705,6 +705,8 @@ RichEdit::RichEdit()
 	imagefs.Type("Images (*.png *.gif *.jpg *.bmp)", "*.png *.gif *.jpg *.bmp");
 	
 	singleline = false;
+	
+	clipzoom = Zoom(1, 1);
 }
 
 RichEdit::~RichEdit() {}

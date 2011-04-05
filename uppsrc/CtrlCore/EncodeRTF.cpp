@@ -222,16 +222,14 @@ void RTFEncoder::Command(const char *cmd, int param)
 
 void RTFEncoder::PutText(const wchar *text)
 {
-	for(; *text; text++) {
-		if((uint16)*text >= 128) {
-			stream.Put(NFormat("\\u%d\\'%02x", (int16)*text, FromUnicode(*text, CHARSET_DEFAULT)));
-		}
+	for(; *text; text++)
+		if((uint16)*text >= 128)
+			stream.Put(NFormat("\\u%d?", (int16)*text));
 		else {
 			if(*text == '{' || *text == '}' || *text == '\\')
 				stream.Put('\\');
 			stream.Put((byte)*text);
 		}
-	}
 }
 
 void RTFEncoder::PutBinHex(const byte *b, int count)

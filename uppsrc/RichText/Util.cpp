@@ -9,6 +9,8 @@ Draw& SimplePageDraw::Page(int)
 
 void RichText::ApplyZoom(Zoom z)
 {
+	if(z.m == z.d)
+		return;
 	RichStyles ostyle(style, 1);
 	for(int i = 0; i < style.GetCount(); i++)
 		style[i].format *= z;

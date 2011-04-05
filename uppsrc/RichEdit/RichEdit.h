@@ -278,6 +278,8 @@ private:
 	bool                     incundoserial;
 	
 	Vector<int>              ffs;
+	
+	
 
 	static int fh[];
 
@@ -421,6 +423,8 @@ private:
 	};
 	
 	StyleKey   stylekey[20];
+	
+	Zoom       clipzoom;
 
 	Rect       GetTextRect() const;
 	Size       GetZoomedPage() const;
@@ -579,6 +583,7 @@ private:
 	void     ClipPaste(RichText& clip);
 	bool     InSelection(int& c) const;
 	void     RefreshDropCaret();
+	void     ZoomClip(RichText& text) const;
 	
 	void     InsertImage();
 	
@@ -750,6 +755,9 @@ public:
 	RichEdit&       SetZoom(int z)                        { zoom = z; Refresh(); return *this; }
 	RichEdit&       SetContext(void *ctx)                 { context = ctx; Refresh(); return *this; }
 	void           *GetContext() const                    { return context; }
+	RichEdit&       ClipZoom(Zoom z)                      { clipzoom = z; return *this; }
+	RichEdit&       ClipZoom(int m, int d)                { clipzoom = Zoom(m, d); return *this; }
+	Zoom            GetClipZoom() const                   { return clipzoom; }
 
 	struct UndoInfo {
 		int              undoserial;

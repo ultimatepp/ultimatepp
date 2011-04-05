@@ -76,6 +76,7 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 
 void RichEdit::ClipPaste(RichText& clip)
 {
+	clip.ApplyZoom(clipzoom.Reciprocal());
 	Filter(clip);
 	NextUndo();
 	if(clip.GetPartCount() == 1 && clip.IsTable(0)) {
@@ -179,6 +180,11 @@ static String sQTF(const Value& data)
 	return AsQTF(txt);
 }
 
+void RichEdit::ZoomClip(RichText& text) const
+{
+	text.ApplyZoom(clipzoom);
+}
+
 void RichEdit::Copy()
 {
 	RichText txt;
@@ -190,6 +196,7 @@ void RichEdit::Copy()
 		BeepExclamation();
 		return;
 	}
+	ZoomClip(txt);
 	ClearClipboard();
 	AppendClipboardUnicodeText(txt.GetPlainText());
 	Value clip = RawPickToValue(txt);
@@ -208,6 +215,7 @@ String RichEdit::GetSelectionData(const String& fmt) const
 	String f = fmt;
 	if(IsSelection()) {
 		RichText clip = GetSelection();
+		ZoomClip(clip);
 		if(f == "text/QTF")
 			return AsQTF(clip);
 		if(InScList(f, RTFS))
