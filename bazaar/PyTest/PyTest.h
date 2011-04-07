@@ -1,11 +1,9 @@
 #ifndef _PyTest_PyTest_h
 #define _PyTest_PyTest_h
 
-//must go first cause has some preprocessor things, says docu
-#include <Python/Python.h>
+#include <Py/Py.h>
 
 #include <Core/Core.h>
-
 using namespace Upp;
 
 void SimpleCall();

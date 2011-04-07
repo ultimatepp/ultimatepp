@@ -55,6 +55,24 @@ to further information visit:
 http://wiki.python.org/moin/Building%20Python%20with%20the%20free%20MS%20C%20Toolkit
 http://timgolden.me.uk/python/win32_how_do_i.html
 http://docs.python.org/using/windows.html
+http://www.boost.org/doc/libs/1_46_1/libs/python/doc/building.html
 
 NOTE:
 for shorthand, use the provided precompiled python27_d
+
+NOTE:
+normally, it should be enough to set all the paths and no need to specify the libs to link
+in the package organizer. but in conjungtion with python boost lib it crashes in quite arbitrary
+parts. also, the boost python headers need to go first, before any upp stuff, since it defines
+and uses the t_ macro. which should be considered changing in upp in the future.
+
+NOTE:
+#include <Py/Py.h> and all deriving/dependant packages
+should always go first in every dependency include
+since it has some defines that should be processed before Core
+
+SIDENOTE:
+_Py_NoneStruct reference errors when linking result due to Py_ENABLE_SHARED beeing undefined in pyport.h
+
+BOOST:
+Py package is prepared to be used with Boost Python, just add BOOSTPY to your compile configuration

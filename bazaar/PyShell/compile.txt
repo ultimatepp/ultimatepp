@@ -1,0 +1,4 @@
+works only in release mode.. in debug somehow the python script returns -1;
+//ONLY WORKS IN OPTIMAL, DEBUG needs TkTcl as DEBUG????
+
+

@@ -1,10 +1,10 @@
 #ifndef _PyConsoleCtrl_PyConsoleCtrl_h
 #define _PyConsoleCtrl_PyConsoleCtrl_h
 
+#include <PyCon/PyCon.h>
+
 #include <CtrlLib/CtrlLib.h>
 using namespace Upp;
-
-#include <PyCon/PyCon.h>
 
 #define LAYOUTFILE <PyConsoleCtrl/PyConsoleCtrl.lay>
 #include <CtrlCore/lay.h>

@@ -1,7 +1,7 @@
 uses
 	Core,
-	Python,
-	LogCtrl;
+	LogCtrl,
+	Py;
 
 file
 	PyCon.h,

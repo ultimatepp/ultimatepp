@@ -1,13 +1,12 @@
 #ifndef _PyCon_PyCon_h_
 #define _PyCon_PyCon_h_
 
+#include <Py/Py.h>
+
 #include <Core/Core.h>
 using namespace Upp;
 
-#include <Python/Python.h>
 #include <LogCtrl/LogCtrl.h>
-
-void InitLogger();
 
 class PyCon
 {
@@ -23,8 +22,9 @@ public:
 	static void SetStream(Stream& _ps) { ps = &_ps; }
 	static Stream& GetStream() { return (ps)?(*ps):(StdLog()); }
 
-protected:
 	static PyMethodDef m[];
+
+protected:
 	static bool enabled;
 	static Stream* ps;
 };

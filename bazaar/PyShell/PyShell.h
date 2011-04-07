@@ -1,12 +1,10 @@
 #ifndef _PyShell_PyShell_h
 #define _PyShell_PyShell_h
 
-#include <Python/Python.h>
+#include <Py/Py.h>
 
 #include <CtrlLib/CtrlLib.h>
 using namespace Upp;
-
-//ONLY WORKS IN OPTIMAL, DEBUG needs TkTcl as DEBUG????
 
 class PyShell
 {

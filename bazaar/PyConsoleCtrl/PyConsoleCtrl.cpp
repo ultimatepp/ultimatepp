@@ -23,12 +23,32 @@ void PyConsoleCtrl::Clear()
 	cmd.Clear();
 }
 
+//for having an echo print of return PyObject, is simply a copy of PyRun_SimpleStringFlags, with Py_single_input
+int
+MyPyRun_SimpleStringFlags(const char *command, PyCompilerFlags *flags)
+{
+	PyObject *m, *d, *v;
+	m = PyImport_AddModule("__main__");
+	if (m == NULL)
+		return -1;
+	d = PyModule_GetDict(m);
+	v = PyRun_StringFlags(command, Py_single_input, d, d, flags); //changed from Py_file_input
+	if (v == NULL) {
+		PyErr_Print();
+		return -1;
+	}
+	Py_DECREF(v);
+	if (Py_FlushLine())
+		PyErr_Clear();
+	return 0;
+}
+
 void PyConsoleCtrl::Exec()
 {
 	String c = cmd.GetData();
 	if(c.IsEmpty()) return;
 
-	int ret = PyRun_SimpleString(c);
+	int ret = MyPyRun_SimpleStringFlags(c, NULL);
 	if(ret == 0 && clonex.Get())
 		cmd.Clear();
 
@@ -55,7 +75,7 @@ PyConsoleCtrl::PyConsoleCtrl()
 
 	clonex.Set(1);
 
-	PyCon::Init();
 	PyCon::SetStream(log);
+	PyCon::Init();
 }
 

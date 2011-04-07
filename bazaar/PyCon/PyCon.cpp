@@ -38,7 +38,10 @@ Stream* PyCon::ps = NULL;
 
 void PyCon::Init()
 {
-	Py_InitModule3("log", m, "Logs stdout and stdin");
+	Py_Initialize(); //make sure, since we are static
+ONCELOCK
+{
+	Py_InitModule3("log", PyCon::m, "Logs stdout and stdin");
 	PyRun_SimpleString (
 		"import sys\n"
 		"import log\n"
@@ -49,6 +52,7 @@ void PyCon::Init()
 		"\tdef write(self, str):\n"
 		"\t\tlog.ToStderr(str)\n"
 		);
+}
 	Enable();
 }
 

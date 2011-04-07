@@ -1,0 +1,7 @@
+#ifndef _Py_icpp_init_stub
+#define _Py_icpp_init_stub
+#include "Core/init"
+#define BLITZ_INDEX__ FA71CB78C04D3C9C02335167654AAE422
+#include "init.icpp"
+#undef BLITZ_INDEX__
+#endif

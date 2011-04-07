@@ -1,9 +1,6 @@
 uses
 	Core,
-	Python;
-
-library
-	python27;
+	Py;
 
 file
 	PyTest.h,

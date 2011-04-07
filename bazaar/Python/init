@@ -1,7 +1,0 @@
-#ifndef _Python_icpp_init_stub
-#define _Python_icpp_init_stub
-#include "Core/init"
-#define BLITZ_INDEX__ FD8ACAF7616D7D6DCA7F843B2FA317F1F
-#include "init.icpp"
-#undef BLITZ_INDEX__
-#endif

@@ -1,8 +1,9 @@
 uses
 	CtrlLib,
-	Python;
+	Py;
 
 file
 	PyShell.h,
+	compile.txt,
 	PyShell.cpp;
 

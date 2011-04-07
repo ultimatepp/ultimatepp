@@ -8,5 +8,5 @@ file
 	PyConsoleCtrlTest.lay;
 
 mainconfig
-	"" = "GUI MT";
+	"" = "GUI MT SSE2";
 
