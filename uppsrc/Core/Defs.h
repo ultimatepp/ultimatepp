@@ -34,8 +34,12 @@ void    PanicMessageBox(const char *title, const char *text);
 
 #else
 
-#define ASSERT_(x, msg)
-#define ASSERT(x)
+inline  void LOGNOP__() {}
+
+#define LOG_NOP          Upp::LOGNOP__()
+
+#define ASSERT_(x, msg)  LOG_NOP
+#define ASSERT(x)        LOG_NOP
 
 #endif
 
