@@ -129,17 +129,11 @@ inline void UnlockLog() {}
 
 #else
 
-inline  void LOGNOP__() {}
-
-#define LOG_NOP          Upp::LOGNOP__()
-
 #define DLOG(x)          @ // To clean logs after debugging, this produces error in release mode
 #define DDUMP(x)         @
 #define DDUMPC(x)        @
 #define DDUMPM(x)        @
 #define DTIMING(x)       @
-
-#define ASSERT(x)        LOG_NOP
 
 #define DEBUGCODE(x)     LOG_NOP
 
