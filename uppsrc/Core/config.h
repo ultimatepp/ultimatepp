@@ -1,6 +1,10 @@
 #if __GNUC__
 
 	#define COMPILER_GCC 1
+
+	#define GCC_VERSION (__GNUC__ * 10000 \
+		               + __GNUC_MINOR__ * 100 \
+		               + __GNUC_PATCHLEVEL__)	
 	
 	#if __WIN32
 		#define COMPILER_MINGW

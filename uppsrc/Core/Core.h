@@ -37,6 +37,7 @@
 #include "config.h"
 
 #include <typeinfo>
+#include <stddef.h>
 #include <math.h>
 #include <limits.h>
 #include <stdlib.h>
