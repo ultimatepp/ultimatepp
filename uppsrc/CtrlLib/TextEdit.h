@@ -176,12 +176,15 @@ public:
 	Color     GetColor(int i) const            { return color[i]; }
 
 	TextCtrl& UndoSteps(int n)                 { undosteps = n; Undodo(); return *this; }
+	int       GetUndoSteps() const             { return undosteps; }
 	TextCtrl& ProcessTab(bool b = true)        { processtab = b; return *this; }
 	TextCtrl& NoProcessTab()                   { return ProcessTab(false); }
 	TextCtrl& ProcessEnter(bool b = true)      { processenter = b; return *this; }
 	TextCtrl& NoProcessEnter()                 { return ProcessEnter(false); }
 	TextCtrl& NoBackground(bool b = true)      { nobg = b; Transparent(); Refresh(); return *this; }
-	bool      IsProcessTab()                   { return processtab; }
+	bool      IsNoBackground() const           { return nobg; }
+	bool      IsProcessTab() const             { return processtab; }
+	bool      IsProcessEnter() const           { return processenter; }
 
 	typedef TextCtrl CLASSNAME;
 
@@ -331,10 +334,12 @@ public:
 	LineEdit& SetFont(Font f);
 	Font      GetFont() const                 { return font; }
 	LineEdit& NoHorzScrollbar(bool b = true)  { nohbar = b; ScrollIntoCursor(); return *this; }
+	bool      IsNoHorzScrollbar() const       { return nohbar; }
 	LineEdit& ShowTabs(bool st = true)        { showtabs = st; Refresh(); return *this; }
 	bool      IsShowTabs() const              { return showtabs; }
 	LineEdit& WithCutLine(bool b)             { cutline = b; return *this; }
 	LineEdit& NoCutLine()                     { return WithCutLine(false); }
+	bool      IsWithCutLine() const           { return cutline; }
 	LineEdit& SetFilter(int (*f)(int c))      { filter = f; return *this; }
 	
 	LineEdit& SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); return *this; }
@@ -420,12 +425,14 @@ public:
 	DocEdit&  SetFont(Font f)                                { font = f; RefreshStyle(); return *this; }
 	DocEdit&  SetFilter(int (*f)(int c))                     { filter = f; return *this; }
 	DocEdit&  AutoHideSb(bool b = true)                      { sb.AutoHide(b); return *this; }
+	bool      IsAutoHideSb() const                           { return sb.IsAutoHide(); }
 	DocEdit&  UpDownLeave(bool u = true)                     { updownleave = u; return *this; }
 	DocEdit&  NoUpDownLeave()                                { return UpDownLeave(false); }
 	bool      IsUpDownLeave() const                          { return updownleave; }
 	DocEdit&  SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); return *this; }
 	DocEdit&  EofLine(bool b = true)                         { eofline = b; return *this; }
 	DocEdit&  NoEofLine()                                    { return EofLine(false); }
+	bool      IsEofLine() const                              { return eofline; }
 
 	typedef DocEdit CLASSNAME;
 

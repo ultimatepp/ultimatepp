@@ -9,7 +9,7 @@ struct Size_ : Moveable< Size_<T> > {
 	void          Clear()                      { cx = cy = 0; }
 	bool          IsEmpty() const              { return cx == 0 || cy == 0; }
 
-	void          SetNull()                    { cx = Null; }
+	void          SetNull()                    { cx = cy = Null; }
 	bool          IsNullInstance() const       { return UPP::IsNull(cx); }
 
 	Size_&        operator+=(Size_ p)          { cx  += p.cx; cy  += p.cy; return *this; }
@@ -213,6 +213,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 	void   Clear()                          { left = top = right = bottom = 0; }
 
 	bool   IsEmpty() const                  { return right <= left || bottom <= top; }
+	void   SetNull()                        { left = top = right = bottom = Null; }
 	bool   IsNullInstance() const;
 
 	Pt     TopLeft() const                  { return Pt(left, top); }
@@ -369,7 +370,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 
 template <class T>
 inline Rect_<T>::Rect_(const Nuller&) {
-	left = top = right = bottom = Null;
+	SetNull();
 }
 
 template <>

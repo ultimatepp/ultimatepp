@@ -203,20 +203,25 @@ public:
 	void    Error(bool error = true)         { errorbg = error; }
 	
 	EditField& Password(bool pwd = true)     { password = pwd; Finish(); return *this; }
+	bool       IsPassword() const            { return password; }
 	EditField& SetFilter(int (*f)(int))      { filter = f; return *this; }
 	EditField& SetConvert(const Convert& c)  { convert = &c; Refresh(); return *this; }
 	EditField& SetInactiveConvert(const Convert& c) { inactive_convert = &c; Refresh(); return *this; }
 	EditField& AutoFormat(bool b = true)     { autoformat = b; return *this; }
 	EditField& NoAutoFormat()                { return AutoFormat(false); }
+	bool       IsAutoFormat() const          { return autoformat; }
 	EditField& SetCharset(byte cs)           { charset = cs; return *this; }
 	EditField& SetFont(Font _font);
 	EditField& ClickSelect(bool b = true)    { clickselect = b; return *this; }
+	bool       IsClickSelect() const         { return clickselect; }
 	EditField& InitCaps(bool b = true)       { initcaps = b; return *this; }
+	bool       IsInitCaps() const            { return initcaps; }
 	EditField& NullText(const Image& icon, const char *text = t_("(default)"), Color ink = SColorDisabled);
 	EditField& NullText(const Image& icon, const char *text, Font fnt, Color ink);
 	EditField& NullText(const char *text = t_("(default)"), Color ink = SColorDisabled);
 	EditField& NullText(const char *text, Font fnt, Color ink);
 	EditField& MaxChars(int mc)              { maxlen = mc; return *this; }
+	int        GetMaxChars() const           { return maxlen; }
 	EditField& AutoSize(int maxcx = INT_MAX) { autosize = maxcx; Finish(); return *this; }
 	EditField& NoBackground(bool b = true)   { nobg = b; Transparent(); Refresh(); return *this; }
 	EditField& AlignRight(bool b = true)     { alignright = b; Refresh(); return *this; }
@@ -250,20 +255,22 @@ public:
 
 	EditMinMax& Min(DataType min)                     { Cv::Min(min); Ctrl::Refresh(); return *this; }
 	EditMinMax& Max(DataType max)                     { Cv::Max(max); Ctrl::Refresh(); return *this; }
+	EditMinMax& MinMax(DataType min, DataType max)    { Min(min); return Max(max); }
 	EditMinMax& NotNull(bool nn = true)               { Cv::NotNull(nn); Ctrl::Refresh(); return *this; }
 };
 
-template <class DataType, class Cv>
-class EditMinMaxNotNull : public EditValue<DataType, Cv> {
+template <class DataType, class Base>
+class EditMinMaxNotNull : public Base {
 public:
 	EditMinMaxNotNull& operator=(const DataType& t)   { EditField::SetData(t); return *this; }
 
-	EditMinMaxNotNull()                               { Cv::NotNull(); }
-	EditMinMaxNotNull(DataType min, DataType max)     { Cv::NotNull(); Cv::MinMax(min, max); }
+	EditMinMaxNotNull()                               { Base::NotNull(); }
+	EditMinMaxNotNull(DataType min, DataType max)     { Base::NotNull(); Base::MinMax(min, max); }
 
-	EditMinMaxNotNull& Min(DataType min)              { Cv::Min(min); Ctrl::Refresh(); return *this; }
-	EditMinMaxNotNull& Max(DataType max)              { Cv::Max(max); Ctrl::Refresh(); return *this; }
-	EditMinMaxNotNull& NotNull(bool nn = true)        { Cv::NotNull(nn); Ctrl::Refresh(); return *this; }
+	EditMinMaxNotNull& Min(DataType min)              { Base::Min(min); return *this; }
+	EditMinMaxNotNull& Max(DataType max)              { Base::Max(max); return *this; }
+	EditMinMaxNotNull& MinMax(DataType max)           { Base::MinMax(min, max); return *this; }
+	EditMinMaxNotNull& NotNull(bool nn = true)        { Base::NotNull(nn); return *this; }
 };
 
 typedef EditMinMax<int, ConvertInt>              EditInt;
@@ -271,10 +278,10 @@ typedef EditMinMax<int64, ConvertInt64>          EditInt64;
 typedef EditMinMax<double, ConvertDouble>        EditDouble;
 typedef EditMinMax<Date, ConvertDate>            EditDate;
 typedef EditMinMax<Time, ConvertTime>            EditTime;
-typedef EditMinMaxNotNull<int, ConvertInt>       EditIntNotNull;
-typedef EditMinMaxNotNull<double, ConvertDouble> EditDoubleNotNull;
-typedef EditMinMaxNotNull<Date, ConvertDate>     EditDateNotNull;
-typedef EditMinMaxNotNull<Time, ConvertTime>     EditTimeNotNull;
+typedef EditMinMaxNotNull<int, EditInt>          EditIntNotNull;
+typedef EditMinMaxNotNull<double, EditDouble>    EditDoubleNotNull;
+typedef EditMinMaxNotNull<Date, EditDate>        EditDateNotNull;
+typedef EditMinMaxNotNull<Time, EditTime>        EditTimeNotNull;
 
 class EditString : public EditValue<WString, ConvertString> {
 public:
@@ -317,9 +324,15 @@ protected:
 	void   Init();
 
 public:
-	EditIntSpin&    ShowSpin(bool s = true)   { sb.Show(s); return *this; }
-	EditIntSpin&    SetInc(int _inc)           { inc = _inc; return *this; }
-	int             GetInc() const            { return inc; }
+	EditIntSpin&    SetInc(int _inc)             { inc = _inc; return *this; }
+	int             GetInc() const               { return inc; }
+	EditIntSpin&    OnSides(bool b = true)       { sb.OnSides(b); return *this; }
+	bool            IsOnSides() const            { return sb.IsOnSides(); } 
+
+	EditIntSpin&    ShowSpin(bool s = true)      { sb.Show(s); return *this; }
+
+	SpinButtons&    SpinButtonsObject()          { return sb; }
+	const SpinButtons& SpinButtonsObject() const { return sb; }
 
 	EditIntSpin();
 	EditIntSpin(int min, int max);
@@ -338,19 +351,26 @@ protected:
 	void            Init();
 
 private:
-	SpinButtons     spin;
+	SpinButtons     sb;
 	double          inc;
 
-public:
 	typedef EditDoubleSpin CLASSNAME;
+public:
+
+	EditDoubleSpin& SetInc(double _inc = 0.1)    { inc = _inc; return *this; }
+	double          GetInc() const               { return inc; }
+
+	EditDoubleSpin& OnSides(bool b = true)       { sb.OnSides(b); return *this; }
+	bool            IsOnSides() const            { return sb.IsOnSides(); }
+	
+	EditDoubleSpin& ShowSpin(bool s = true)      { sb.Show(s); return *this; }
+
+	SpinButtons&       SpinButtonsObject()       { return sb; }
+	const SpinButtons& SpinButtonsObject() const { return sb; }
+
 	EditDoubleSpin(double inc = 0.1);
 	EditDoubleSpin(double min, double max, double inc = 0.1);
 	virtual ~EditDoubleSpin();
-
-	EditDoubleSpin& SetInc(double _inc = 0.1) { inc = _inc; return *this; }
-	double          GetInc() const            { return inc; }
-
-	EditDoubleSpin& ShowSpin(bool s = true)   { spin.Show(s); return *this; }
 };
 
 class EditDoubleNotNullSpin : public EditDoubleSpin

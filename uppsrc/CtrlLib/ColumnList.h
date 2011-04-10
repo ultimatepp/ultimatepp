@@ -145,8 +145,8 @@ public:
 	void         Set(int ii, const Value& val, bool canselect = true);
 	void         Set(int ii, const Value& val, const Display& display, bool canselect = true);
 
-	void         Set(const Value& key, const Value& val, const Display& display, bool canselect);
-	void         Set(const Value& key, const Value& val, bool canselect);
+	void         Set(const Value& key, const Value& val, const Display& display, bool canselect = true);
+	void         Set(const Value& key, const Value& val, bool canselect = true);
 
 	void         Insert(int ii, const Value& val, bool canselect = true);
 	void         Insert(int ii, const Value& val, const Display& display, bool canselect = true);
