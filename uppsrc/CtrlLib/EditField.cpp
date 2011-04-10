@@ -1103,9 +1103,9 @@ EditDoubleSpin::~EditDoubleSpin() {}
 
 void EditDoubleSpin::Init()
 {
-	AddFrame(spin);
-	spin.inc.WhenRepeat = spin.inc.WhenAction = THISBACK(Inc);
-	spin.dec.WhenRepeat = spin.dec.WhenAction = THISBACK(Dec);
+	AddFrame(sb);
+	sb.inc.WhenRepeat = sb.inc.WhenAction = THISBACK(Inc);
+	sb.dec.WhenRepeat = sb.dec.WhenAction = THISBACK(Dec);
 }
 
 void EditDoubleSpin::Inc()

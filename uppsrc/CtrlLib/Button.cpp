@@ -458,16 +458,25 @@ void SpinButtons::FrameLayout(Rect& r)
 	dec.Show();
 	Size sz = r.Size();
 	int h = r.Height();
-	int h2 = h / 2;
 	int h7 = min(sz.cx / 2, style->width);
-	inc.SetFrameRect(r.right - h7, r.top, h7, h2);
-	dec.SetFrameRect(r.right - h7, r.top + h2, h7, r.Height() - h2);
-	r.right -= h7;
+
+	if(onsides) {
+		dec.SetFrameRect(r.left, r.top, h7, h);
+		inc.SetFrameRect(r.right - h7, r.top, h7, h);
+		r.left += h7;
+		r.right -= h7;
+	}
+	else {
+		int h2 = h / 2;
+		inc.SetFrameRect(r.right - h7, r.top, h7, h2);
+		dec.SetFrameRect(r.right - h7, r.top + h2, h7, h - h2);
+		r.right -= h7;
+	}
 }
 
 void SpinButtons::FrameAddSize(Size& sz)
 {
-	sz.cx += min(sz.cx / 2, 12);
+	sz.cx += (1 + onsides) * min(sz.cx / 2, style->width);
 }
 
 void SpinButtons::FrameAdd(Ctrl& ctrl)
@@ -500,6 +509,7 @@ SpinButtons& SpinButtons::SetStyle(const Style& s)
 
 SpinButtons::SpinButtons() {
 	visible = true;
+	onsides = false;
 	inc.NoWantFocus();
 	dec.NoWantFocus();
 	style = NULL;

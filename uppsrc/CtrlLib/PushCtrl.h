@@ -138,7 +138,7 @@ public:
 	};
 
 private:
-	bool         visible;
+	bool         visible, onsides;
 	const Style *style;
 
 public:
@@ -150,6 +150,9 @@ public:
 	static const Style& StyleDefault();
 
 	SpinButtons& SetStyle(const Style& s);
+	
+	SpinButtons& OnSides(bool b = true)           { onsides = b; inc.RefreshParentLayout(); return *this; }
+	bool         IsOnSides() const                { return onsides; }
 
 	SpinButtons();
 	virtual ~SpinButtons();
@@ -186,11 +189,16 @@ public:
 	void operator=(int b)                         { Set(b); }
 
 	Option& BlackEdge(bool b = true)              { blackedge = b; Refresh(); return *this; }
+	bool    IsBlackEdge() const                   { return blackedge; }
 	Option& SwitchImage(bool b = true)            { switchimage = b; Refresh(); return *this; }
+	bool    IsSwitchImage() const                 { return switchimage; }
 	Option& ThreeState(bool b = true)             { threestate = b; notnull = false; return *this; }
+	bool    IsThreeState() const                  { return threestate; }
 	Option& ShowLabel(bool b = true)              { showlabel = b; Refresh(); return *this; }
+	bool    IsShowLabel() const                   { return showlabel; }
 	Option& NotNull(bool nn = true)               { notnull = nn; Refresh(); return *this; }
 	Option& NoNotNull()                           { return NotNull(false); }
+	bool    IsNotNull() const                     { return notnull; }
 
 	Option();
 	virtual ~Option();
