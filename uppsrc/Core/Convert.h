@@ -28,7 +28,7 @@ public:
 	Convert();
 	virtual ~Convert();
 #else
-	#ifdef __clang__
+	#if defined(__clang__) || GCC_VERSION >= 40600
 	Convert(){};
 	#endif
 	virtual ~Convert() {}
