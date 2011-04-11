@@ -76,3 +76,28 @@ _Py_NoneStruct reference errors when linking result due to Py_ENABLE_SHARED beei
 
 BOOST:
 Py package is prepared to be used with Boost Python, just add BOOSTPY to your compile configuration
+
+Boost Installation:
+esiest way is to download the boostpro installer
+http://www.boostpro.com/download/
+selct during installation MSC9 derivates (or respective your compiler) and, best, all the variants, shared, multi threaded, etc.
+enhance your build method paths
+PATH: C:\Prpgram Files\boost\boost_1_46_1\bin and C:\Prpgram Files\boost\boost_1_46_1\lib
+INCLUDE C:\Prpgram Files\boost\boost_1_46_1
+LIB: C:\Prpgram Files\boost\boost_1_46_1\lib
+
+BOOST CAVEAT
+see point 8 at
+http://www.boost.org/doc/libs/1_46_1/libs/python/doc/building.html
+the boost libraries from boostpro come with release and debug variants linked to python27.dll both
+(the debug should theoretically be linked to python27_d)
+when compiling release, all is fine, but compiling debug can render the executable unusable,
+since it loads both python27.dll through the boost.python lib, and the python27_d.dll through
+the pragma comment(lib,) which results in mixed inits and crashes/access violations.
+not even the BOOST_DEBUG_PYTHON define seems to help here, since it seems to be provided
+during build of the boost python libs to instruct them proper linkage.
+
+thats why it is the esiest way to control manually, which lib is going to be included manually.
+#define MS_NO_COREDLL 1
+#define Py_ENABLE_SHARED 1
+are to disable the pragma comment(lib,) stuff so we manually can specify the libs while preserving all shared stuff.

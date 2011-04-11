@@ -1,6 +1,12 @@
 uses
 	Core;
 
+library(MSC BOOSTPY) python27;
+
+library(MSC !BOOSTPY !DEBUG) python27;
+
+library(MSC !BOOSTPY DEBUG) python27_d;
+
 file
 	Py.h,
 	init.icpp,

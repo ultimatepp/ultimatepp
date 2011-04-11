@@ -73,6 +73,7 @@ PyConsoleCtrl::PyConsoleCtrl()
 	savelog <<= THISBACK(SaveLog);
 	clearlog <<= THISBACK(ClearLog);
 
+	clonex.SetLabel("AutoCl");
 	clonex.Set(1);
 
 	PyCon::SetStream(log);
