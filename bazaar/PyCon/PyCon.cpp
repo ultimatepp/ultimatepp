@@ -50,7 +50,7 @@ ONCELOCK
 		"\t\tlog.ToStdOut(str)\n"
 		"class StdErrIncept:\n"
 		"\tdef write(self, str):\n"
-		"\t\tlog.ToStderr(str)\n"
+		"\t\tlog.ToStdErr(str)\n"
 		);
 }
 	Enable();
@@ -61,11 +61,13 @@ void PyCon::Enable(bool b)
 	if(enabled = b)
 	PyRun_SimpleString (
 		"sys.stdout = StdOutIncept()\n"
-		"sys.stderr = StdErrIncept()\n" );
+		"sys.stderr = StdErrIncept()\n"
+	);
 	else
 	PyRun_SimpleString (
 		"sys.stdout = sys.__stdout__\n"
-		"sys.stderr = sys.__stderr__\n" );
+		"sys.stderr = sys.__stderr__\n"
+	);
 }
 
 //for having an echo print of return PyObject, is simply a copy of PyRun_SimpleStringFlags, with Py_single_input

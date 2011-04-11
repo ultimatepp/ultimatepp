@@ -11,9 +11,38 @@ using namespace Upp;
 struct World
 {
 	void set(std::string msg) { this->msg = msg; }
-	std::string greet() { return msg; }
+	std::string greet() const { return msg; }
 	std::string msg;
 };
+
+BOOST_PYTHON_MODULE(hello)
+{
+	scope().attr("__doc__") = "Hello module's docstring";
+	class_<World>("World", "A simple world")
+		.def("greet", &World::greet)
+		.def("set", &World::set)
+	;
+}
+
+struct SliderCtrlPy
+{
+	SliderCtrlPy(SliderCtrl& o) : o(o) {}
+
+	//void Set(const int& d) { o.SetData(d); }
+	void Set(int d) { o.SetData(d); }
+	int Get() const { return o.GetData(); }
+	
+	SliderCtrl& o;
+};
+
+BOOST_PYTHON_MODULE(UppCtrl)
+{
+	scope().attr("__doc__") = "ctrl module's docstring";
+	class_<SliderCtrlPy, boost::noncopyable>("SliderCtrlPy", "A SliderCtrl wrapper", no_init)
+		.def("get", &SliderCtrlPy::Get)
+		.def("set", &SliderCtrlPy::Set)
+	;
+}
 
 #define LAYOUTFILE <BoostPyTest/BoostPyTest.lay>
 #include <CtrlCore/lay.h>
@@ -23,6 +52,9 @@ public:
 	typedef BoostPyTest CLASSNAME;
 	BoostPyTest();
 	~BoostPyTest();
+
+	World w;	
+	SliderCtrlPy slpy;
 };
 
 #endif

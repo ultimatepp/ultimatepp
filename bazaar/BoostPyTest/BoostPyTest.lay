@@ -1,4 +1,5 @@
 LAYOUT(BoostPyTestLayout, 672, 380)
-	ITEM(PyConsoleCtrl, con, HSizePosZ(0, 0).VSizePosZ(0, 0))
+	ITEM(PyConsoleCtrl, con, HSizePosZ(0, 248).VSizePosZ(0, 0))
+	ITEM(SliderCtrl, sl, RightPosZ(8, 232).TopPosZ(12, 48))
 END_LAYOUT
 
