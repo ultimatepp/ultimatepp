@@ -42,6 +42,7 @@ public:
 	Pusher&  SetLabel(const char *text);
 	Pusher&  ClickFocus(bool cf = true);
 	Pusher&  NoClickFocus()                                 { return ClickFocus(false); }
+	bool     IsClickFocus() const { return clickfocus; }
 	
 	Font     GetFont() const                                { return font; }
 	String   GetLabel() const                               { return label; }
@@ -146,6 +147,7 @@ public:
 	Button dec;
 
 	void         Show(bool s = true);
+	bool         IsVisible() const                { return visible; }
 
 	static const Style& StyleDefault();
 

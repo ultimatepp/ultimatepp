@@ -24,15 +24,8 @@ Value NotNullError();
 
 class Convert {
 public:
-#ifdef flagSO
 	Convert();
 	virtual ~Convert();
-#else
-	#if defined(__clang__) || GCC_VERSION >= 40600
-	Convert(){};
-	#endif
-	virtual ~Convert() {}
-#endif
 
 	virtual Value  Format(const Value& q) const;
 	virtual Value  Scan(const Value& text) const;
@@ -220,9 +213,8 @@ const ConvertString& StdConvertStringNotNull();
 
 class NoConvertClass : public Convert {
 public:
-#ifdef __clang__
-	NoConvertClass(){};
-#endif
+	NoConvertClass();
+
 	virtual Value  Format(const Value& q) const;
 };
 

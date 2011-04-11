@@ -281,10 +281,8 @@ Value Scan(dword qtype, const String& text, const Value& def) {
 	return Null;
 }
 
-#ifdef flagSO
 Convert::Convert() {}
 Convert::~Convert() {}
-#endif
 
 Value  Convert::Format(const Value& q) const {
 	if(IsVoid(q) || q.IsNull()) return String();
@@ -484,6 +482,8 @@ GLOBAL_VARP_INIT(const ConvertString, StdConvertStringNotNull, (INT_MAX, true))
 Value  MapConvert::Format(const Value& q) const {
 	return map.Get(q, Null);
 }
+
+NoConvertClass::NoConvertClass() {}
 
 Value NoConvertClass::Format(const Value& q) const {
 	return q;
