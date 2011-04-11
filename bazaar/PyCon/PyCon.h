@@ -8,6 +8,8 @@ using namespace Upp;
 
 #include <LogCtrl/LogCtrl.h>
 
+int MyPyRun_SimpleStringFlags(const char *command, PyCompilerFlags *flags);
+
 class PyCon
 {
 public:

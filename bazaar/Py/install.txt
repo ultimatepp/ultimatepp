@@ -23,6 +23,11 @@ make sure NOT to choose DEBUG compile, since it will fail. the reason:
 python27 headers need some more functions in debug mode, which are not provided in release lib.
 but the Upp Python package is ready to be used as DEBUG as well. if needed, read on.
 
+COMPILING IN THE IDE
+python only applications (without BOOSTPY flag) can compile with MSC and GCC
+in debug with all shared and with BLITZ. release should work with MSC without BLITZ.
+(both debug and release with all configs, static, shared libs and allshared)
+BOOTSPY: boost demands the use of shared libs. boostpro precompiled libs are MSC only.
 
 DEBUG:
 debug is needed, when you need to debug at least *your* application. so you will need
@@ -85,6 +90,8 @@ enhance your build method paths
 PATH: C:\Prpgram Files\boost\boost_1_46_1\bin and C:\Prpgram Files\boost\boost_1_46_1\lib
 INCLUDE C:\Prpgram Files\boost\boost_1_46_1
 LIB: C:\Prpgram Files\boost\boost_1_46_1\lib
+Boostpro provides only MSC compiled libs. gcc/mingw compiled libs have to be generated manually.
+see the build procedure at boost.org
 
 BOOST CAVEAT
 see point 8 at

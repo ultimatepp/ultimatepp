@@ -1,0 +1,4 @@
+LAYOUT(BoostPyTestLayout, 672, 380)
+	ITEM(PyConsoleCtrl, con, HSizePosZ(0, 0).VSizePosZ(0, 0))
+END_LAYOUT
+

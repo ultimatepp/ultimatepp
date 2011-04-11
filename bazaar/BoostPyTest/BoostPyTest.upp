@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	PyConsoleCtrl;
+
+file
+	BoostPyTest.h,
+	compile.txt,
+	main.cpp,
+	BoostPyTest.lay;
+
+mainconfig
+	"" = "GUI MT SSE2 BOOSTPY";
+
