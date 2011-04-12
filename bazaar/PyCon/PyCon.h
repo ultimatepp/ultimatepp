@@ -8,8 +8,6 @@ using namespace Upp;
 
 #include <LogCtrl/LogCtrl.h>
 
-int MyPyRun_SimpleStringFlags(const char *command, PyCompilerFlags *flags);
-
 class PyCon
 {
 public:
@@ -24,14 +22,15 @@ public:
 	static void SetStream(Stream& _ps) { ps = &_ps; }
 	static Stream& GetStream() { return (ps)?(*ps):(StdLog()); }
 
+	static int MyPyRun_SimpleStringFlags(const char *command, PyCompilerFlags *flags, int start);
+	static inline int Exec(const String& c, bool single = true) { return MyPyRun_SimpleStringFlags(c, NULL, (single)?(Py_single_input):(Py_file_input)); }
+
 	static PyMethodDef m[];
+	static Callback AtExit;
 
 protected:
 	static bool enabled;
 	static Stream* ps;
 };
-
-
-
 
 #endif

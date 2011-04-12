@@ -31,11 +31,7 @@ void PyConsoleCtrl::Exec()
 	int ret = -1;
 
 	int n = cmd.GetLineCount();
-
-	if(n<=1)
-		ret = MyPyRun_SimpleStringFlags(c, NULL); //executes with Py_single_input echoing to stdout
-	else
-		ret = PyRun_SimpleStringFlags(c, NULL); //executes with Py_file_input, no interactive echo
+	ret = PyCon::Exec(c, n<=1);
 
 	if(ret == 0 && clonex.Get())
 		cmd.Clear();

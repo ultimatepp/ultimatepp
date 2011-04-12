@@ -14,6 +14,8 @@ BoostPyTest::BoostPyTest()
 	//Py_Initialize(); //should be done *after* PyImport_AppendInittab, but it still works :), leaving INITBLOCK from Py
 	//PyCon::Init();
 
+	PyCon::AtExit = THISBACK(ExitHandler);
+
 	try {
 		object main_module(handle<>(borrowed(PyImport_AddModule("__main__"))));
 		object main_namespace = main_module.attr("__dict__");
@@ -57,6 +59,11 @@ BoostPyTest::BoostPyTest()
 BoostPyTest::~BoostPyTest()
 {
 //	Py_Finalize();	
+}
+
+void BoostPyTest::ExitHandler()
+{
+	SetTimeCallback(1000, Breaker());
 }
 
 GUI_APP_MAIN

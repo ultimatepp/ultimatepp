@@ -28,8 +28,7 @@ struct SliderCtrlPy
 {
 	SliderCtrlPy(SliderCtrl& o) : o(o) {}
 
-	//void Set(const int& d) { o.SetData(d); }
-	void Set(int d) { o.SetData(d); }
+	void Set(const int& d) { o.SetData(d); }
 	int Get() const { return o.GetData(); }
 	
 	SliderCtrl& o;
@@ -52,6 +51,8 @@ public:
 	typedef BoostPyTest CLASSNAME;
 	BoostPyTest();
 	~BoostPyTest();
+
+	void ExitHandler();
 
 	World w;	
 	SliderCtrlPy slpy;
