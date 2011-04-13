@@ -3,8 +3,17 @@ uses
 	PyConsoleCtrl;
 
 file
+	world.h,
+	world.cpp,
+	SliderCtrlPy.h,
+	SliderCtrlPy.cpp,
+	UppString.h,
+	UppString.cpp,
+	UppValue.h,
+	UppValue.cpp,
 	BoostPyTest.h,
 	compile.txt,
+	modules.cppi,
 	main.cpp,
 	BoostPyTest.lay;
 

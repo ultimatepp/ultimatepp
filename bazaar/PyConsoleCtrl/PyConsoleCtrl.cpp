@@ -33,16 +33,75 @@ void PyConsoleCtrl::Exec()
 	int n = cmd.GetLineCount();
 	ret = PyCon::Exec(c, n<=1);
 
-	if(ret == 0 && clonex.Get())
-		cmd.Clear();
-
+	if(ret == 0)
+	{
+		if( clonex.Get())
+			cmd.Clear();
+		
+		//history
+		if(idx < ac.GetCount())
+		{
+			//executed sth from the history, move it to the end of history
+			ac.Move(idx, ac.GetCount());
+		}
+		else
+		{
+			//executed new, add to the end, if not yet at the end.
+			if(ac.IsEmpty() || ac[ac.GetCount()-1] != c)
+				ac.Add(c);
+		}
+		idx = ac.GetCount(); //'commit' the history
+	}
 	ex.Clear();
 	ex <<= ret;
 }
 
+void PyConsoleCtrl::ShowHistory(int i)
+{
+	i = minmax(i, 0, ac.GetCount()-1);
+	cmd.SetData(ac[i]);
+}
+
+void PyConsoleCtrl::Inc()
+{
+	//got to next in hostory and display it
+	++idx;
+	if(idx >= ac.GetCount())
+	{
+		idx = ac.GetCount();
+		Clear();
+	}
+	else
+		ShowHistory(idx);
+}
+
+void PyConsoleCtrl::Dec()
+{
+	//go to previous in history
+	--idx;
+	if(idx < 0)
+	{
+		idx = 0;
+//		Clear(); //no clear at beginning of history
+	}
+//	else
+		ShowHistory(idx);
+}
+
+void PyConsoleCtrl::Dirtify()
+{
+	idx = ac.GetCount();	
+}
+
 PyConsoleCtrl::PyConsoleCtrl()
+	: idx(0)
 {
 	CtrlLayout(*this);
+
+	exec.AddFrame(sb);
+	sb.inc.WhenRepeat = sb.inc.WhenAction = THISBACK(Dec); //reverse because of history
+	sb.dec.WhenRepeat = sb.dec.WhenAction = THISBACK(Inc);
+	cmd <<= THISBACK(Dirtify);
 
 	spl.Vert(log, cmd);
 	spl.SetPos(6600);

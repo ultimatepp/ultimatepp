@@ -1,1 +1,6 @@
 for further infos see Py package
+
+modules.cppi
+it's a special cpp file that is included in the main.cpp, where the python environment is set up.
+it serves greater separation und enables great speedup of compilation since all template helpers
+for export are handled in separate cpp files. this file shouldnt be included anywhere else.

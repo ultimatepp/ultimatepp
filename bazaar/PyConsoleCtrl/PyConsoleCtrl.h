@@ -40,17 +40,25 @@ public:
 	
 	void LoadDlg();
 	void SaveDlg();
-	void Exec();
 	void Clear();
+	void Exec();
+	void Inc();
+	void Dec();
 
 	void ClearLog() { log.Clear(); }
 	void SaveLog() { log.Save(); }
 	
 	LoggerCtrl log;
 	CmdDocEdit cmd;
+	SpinButtons sb;
 
 protected:
+	void ShowHistory(int i);
+	void Dirtify();
+
 	FileSel fs;
+	Array<String> ac;
+	int idx;
 };
 
 #endif

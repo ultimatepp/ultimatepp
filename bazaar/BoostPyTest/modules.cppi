@@ -1,0 +1,14 @@
+//CAUTION this one is included in the main cpp file, where the modules are registered into python environment
+
+BOOST_PYTHON_MODULE(hello)
+{
+	export_world();
+}
+
+BOOST_PYTHON_MODULE(upp)
+{
+	export_UppCtrl();	
+	export_UppString();
+	export_UppValue();
+	export_SliderCtrl();
+}
