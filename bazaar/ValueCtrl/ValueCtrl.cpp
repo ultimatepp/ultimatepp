@@ -93,7 +93,7 @@ void ValuePopUp::SetType(int _vt)
 	v = Value(); //reset
 	if(_vt==VOID_V) //prevent loop
 	{
-		if(pc) return;
+		if(pc) return; //keep last Editor
 		_vt = STRING_V; //default, if no editor yet
 	}
 	pc = DefaultValueEditor(_vt);
@@ -107,7 +107,7 @@ void ValuePopUp::SetType(int _vt)
 void ValuePopUp::Updated()
 {
 	int _vt = v.GetType();
-	if(_vt != vtype && !v.IsNull())
+	if(_vt != vtype && !v.IsNull()) //change only if needed, keep editor for !null
 		SetType(_vt);
 	if(type.GetData() != vtype)
 	   type.SetData(vtype);
@@ -140,6 +140,7 @@ ValuePopUp::ValuePopUp()
 	type.Add(int(LOGPOS_V), "LOGPOS_V");
 	//type.Add(int(VALUE_V), "VALUE_V");
 	type.Add(int(VALUEARRAY_V), "VALUEARRAY_V");
+	//type.Add(int(VALUEMAP_V), "VALUEMAP_V");
 	type <<= THISBACK(TypeAction);
 
 	ok <<= THISBACK(Acceptor);

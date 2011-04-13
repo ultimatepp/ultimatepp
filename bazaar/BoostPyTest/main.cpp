@@ -47,6 +47,9 @@ BoostPyTest::BoostPyTest()
 		scope(upp_module).attr("slpy") = ptr(&slpy);
 		scope(upp_module).attr("sl") = ptr(&sl);
 
+		vc.SetData(123);
+		scope(upp_module).attr("vc") = ptr(&vc);
+
 		//the additional import is needless
 		String sc = 
 		"p = hello.World()\n"
@@ -64,6 +67,9 @@ BoostPyTest::BoostPyTest()
 
 		"print upp.sl.get()\n"
 		"upp.sl.set(75)\n"
+
+		"upp.vc.set(range(10))\n"
+		"upp.vc.get()\n"
 
 		;
 		con.cmd.SetData(sc);

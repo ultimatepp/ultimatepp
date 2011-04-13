@@ -1,6 +1,7 @@
 uses
 	CtrlLib,
-	PyConsoleCtrl;
+	PyConsoleCtrl,
+	ValueCtrl;
 
 file
 	world.h,

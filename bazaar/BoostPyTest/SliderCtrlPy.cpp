@@ -18,3 +18,12 @@ void export_SliderCtrl()
 	;
 }
 
+void export_ValueCtrl()
+{
+	scope().attr("__doc__") = "ValueCtrl module's docstring";
+	class_<ValueCtrl, boost::noncopyable>("ValueCtrl", "An Upp ValueCtrl", no_init)
+		.def("get", &ValueCtrl::GetData)
+		.def("set", &ValueCtrl::SetData)
+	;
+}
+

@@ -11,3 +11,8 @@ void export_UppValue()
 	def("doubleit", Valuedoubleit);
 }
 
+void export_UppValueArray()
+{
+	to_python_converter<ValueArray, ValueArray_to_python>();
+	ValueArray_from_python();
+}

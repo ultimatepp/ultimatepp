@@ -7,6 +7,8 @@ using namespace boost::python;
 #include <CtrlLib/CtrlLib.h>
 using namespace Upp;
 
+#include <ValueCtrl/ValueCtrl.h>
+
 //A wrapped instance
 
 struct SliderCtrlPy
@@ -22,5 +24,6 @@ struct SliderCtrlPy
 //fw
 void export_UppCtrl();
 void export_SliderCtrl(); //relys on Value export
+void export_ValueCtrl(); //relys on Value export
 
 #endif

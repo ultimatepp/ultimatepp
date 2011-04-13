@@ -2,4 +2,5 @@
 #define _BoostPyTest_icpp_init_stub
 #include "CtrlLib/init"
 #include "PyConsoleCtrl/init"
+#include "ValueCtrl/init"
 #endif
