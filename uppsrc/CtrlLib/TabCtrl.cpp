@@ -75,6 +75,7 @@ void TabCtrl::Item::Layout(int xp, int y, int cy)
 	Size chsz = GetTextSize("M", fnt);
 	x = xp;
 	Size sz = pict.GetStdSize();
+	pictpos = Point(0, 0);
 	if(sz.cx) {
 		xp += chsz.cx / 2;
 		pictpos.x = xp;
@@ -83,7 +84,7 @@ void TabCtrl::Item::Layout(int xp, int y, int cy)
 	}
 	else
 		xp += chsz.cx;
-	sz = GetTextSize(text, fnt);
+	sz = GetSmartTextSize(text, fnt);
 	if(sz.cx) {
 		textpos.x = xp;
 		textpos.y = y + (cy - sz.cy) / 2;
@@ -104,7 +105,7 @@ void TabCtrl::Item::Paint(Draw& w, int state)
 {
 	Size sz = pict.GetStdSize();
 	pict.Paint(w, pictpos.x, pictpos.y, sz.cx, sz.cy, owner->style->text_color[state], Null);
-	w.DrawText(textpos.x, textpos.y, text, owner->style->font, owner->style->text_color[state]);
+	DrawSmartText(w, textpos.x, textpos.y, 99999, text, owner->style->font, owner->style->text_color[state]);
 }
 
 void TabCtrl::SyncTabs()
