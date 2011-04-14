@@ -109,11 +109,19 @@ void ValuePut(Value& v, const ValueArray& va);
 void ValuePut(Value& v, const ValueMap& vm);
 
 template <class T>
+Value AsXmlRpcValue(const T& x)
+{
+	Value vs;
+	ValuePut(vs, x);
+	return vs;
+}
+
+template <class T>
 void ValuePut(Value& v, const Array<T>& x)
 {
 	ValueArray va;
 	for(int i = 0; i < x.GetCount(); i++)
-		va.Add(x[i]);
+		va.Add(AsXmlRpcValue(x[i]));
 	v = va;
 }
 
@@ -122,7 +130,7 @@ void ValuePut(Value& v, const Vector<T>& x)
 {
 	ValueArray va;
 	for(int i = 0; i < x.GetCount(); i++)
-		va.Add(x[i]);
+		va.Add(AsXmlRpcValue(x[i]));
 	v = va;
 }
 
@@ -132,7 +140,7 @@ void ValuePut(Value& v, const ArrayMap<String, T>& x)
 	ValueMap vm;
 	for(int i = 0; i < x.GetCount(); i++)
 		if(!x.IsUnlinked(i))
-			vm.Add(x.GetKey(i), x[i]);
+			vm.Add(x.GetKey(i), AsXmlRpcValue(x[i]));
 	v = vm;
 }
 
@@ -142,7 +150,7 @@ void ValuePut(Value& v, const VectorMap<String, T>& x)
 	ValueMap vm;
 	for(int i = 0; i < x.GetCount(); i++)
 		if(!x.IsUnlinked(i))
-			vm.Add(x.GetKey(i), x[i]);
+			vm.Add(x.GetKey(i), AsXmlRpcValue(x[i]));
 	v = vm;
 }
 
@@ -152,7 +160,7 @@ void ValuePut(Value& v, const ArrayMap<int, T>& x)
 	ValueMap vm;
 	for(int i = 0; i < x.GetCount(); i++)
 		if(!x.IsUnlinked(i))
-			vm.Add(AsString(x.GetKey(i)), x[i]);
+			vm.Add(AsString(x.GetKey(i)), AsXmlRpcValue(x[i]));
 	v = vm;
 }
 
@@ -162,7 +170,7 @@ void ValuePut(Value& v, const VectorMap<int, T>& x)
 	ValueMap vm;
 	for(int i = 0; i < x.GetCount(); i++)
 		if(!x.IsUnlinked(i))
-			vm.Add(AsString(x.GetKey(i)), x[i]);
+			vm.Add(AsString(x.GetKey(i)), AsXmlRpcValue(x[i]));
 	v = vm;
 }
 
