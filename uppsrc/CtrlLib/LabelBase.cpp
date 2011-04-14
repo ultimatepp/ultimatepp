@@ -60,7 +60,6 @@ int GetSmartTextHeight(const char *s, int cx, Font font) {
 
 void DrawSmartText(Draw& draw, int x, int y, int cx, const char *text, Font font, Color ink, int accesskey) {
 	if(*text == '\1') {
-		Size sz;
 		RichText txt = ParseQTF(text + 1, accesskey);
 		txt.ApplyZoom(GetRichTextStdScreenZoom());
 		txt.Paint(Zoom(1, 1), draw, x, y, cx);
