@@ -63,14 +63,16 @@ public:
 	void     Reserve(int n);
 	int      GetAlloc() const           { return alloc; }
 
-	void     Set(int i, const T& x, int count = 1);
+	void     Set(int i, const T& x, int count);
+	T&       Set(int i, const T& x)     { Set(i, x, 1); return Get(i); }
 	void     Remove(int i, int count = 1);
 	void     Remove(const int *sorted_list, int n);
 	void     Remove(const Vector<int>& sorted_list);
 	void     InsertN(int i, int count = 1);
-	T&       Insert(int i)           { InsertN(i); return Get(i); }
-	void     Insert(int i, const T& x, int count = 1);
-	void     InsertPick(int i, pick_ T& x);
+	T&       Insert(int i)              { InsertN(i); return Get(i); }
+	void     Insert(int i, const T& x, int count);
+	T&       Insert(int i, const T& x)  { Insert(i, x, 1); return Get(i); }
+	T&       InsertPick(int i, pick_ T& x);
 	void     Insert(int i, const Vector& x);
 	void     Insert(int i, const Vector& x, int offset, int count);
 	void     InsertPick(int i, pick_ Vector& x);
@@ -185,14 +187,16 @@ public:
 	void     Reserve(int xtra)          { vector.Reserve(xtra); }
 	int      GetAlloc() const           { return vector.GetAlloc(); }
 
-	void     Set(int i, const T& x, int count = 1);
+	void     Set(int i, const T& x, int count);
+	T&       Set(int i, const T& x)     { Set(i, x, 1); return Get(i); }
 	void     Remove(int i, int count = 1);
 	void     Remove(const int *sorted_list, int n);
 	void     Remove(const Vector<int>& sorted_list);
 	void     InsertN(int i, int count = 1);
 	T&       Insert(int i)              { InsertN(i); return Get(i); }
-	void     Insert(int i, const T& x, int count = 1);
-	void     InsertPick(int i, pick_ T& x);
+	void     Insert(int i, const T& x, int count);
+	T&       Insert(int i, const T& x)  { Insert(i, x, 1); return Get(i); }
+	T&       InsertPick(int i, pick_ T& x);
 	void     Insert(int i, const Array& x);
 	void     Insert(int i, const Array& x, int offset, int count);
 	void     Append(const Array& x)               { Insert(GetCount(), x); }

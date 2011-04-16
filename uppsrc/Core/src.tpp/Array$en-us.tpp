@@ -267,7 +267,7 @@ current capacity, capacity is increased to the required value.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Set`(int`,const T`&`,int`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i
-], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 count]_`=_[@3 1])&]
+], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 count])&]
 [s2; Sets the requested number of elements starting at the position 
 [* i] to the specified value. If the required number of elements 
 exceeds existing elements of the Array then elements are added 
@@ -278,6 +278,12 @@ to the Array.&]
 [s7; [*C@3 x]-|Value.&]
 [s7; [*C@3 count]-|Number of elements.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Array`:`:Set`(int`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i],
+ [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s2; Sets the element at [%-*@3 i] to [%-*@3 x] and returns a reference 
+to this element.&]
+[s3; &]
 [s4;%- &]
 [s5;:Array`:`:Remove`(int`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i], 
 [@(0.0.255) int]_[*@3 count]_`=_[@3 1])&]
@@ -323,8 +329,7 @@ the specified position.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Insert`(int`,const T`&`,int`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int
-]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 count]_`=_[@3 1
-])&]
+]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 count])&]
 [s2; Inserts a specified number of elements, setting them to a specified 
 value.&]
 [s6;~~~.992; Requires T to have deep copy constructor.&]
@@ -334,9 +339,16 @@ value.&]
 [s7; [*C@3 count]-|Number of elements to insert.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:InsertPick`(int`,pick`_ T`&`):%- [@(0.0.255) void]_[* InsertPick]([@(0.0.255) i
+[s5;:Array`:`:Insert`(int`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) int]_
+[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s2; Inserts an element at [%-*@3 i] setting it to [%-*@3 x] and returns 
+a reference to it.&]
+[s3; &]
+[s4;%- &]
+[s5;:Array`:`:InsertPick`(int`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* InsertPick]([@(0.0.255) i
 nt]_[*@3 i], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s2; Inserts an element at [%-*@3 i] picking the content of [%-*@3 x].&]
+[s2; Inserts an element at [%-*@3 i] picking the content of [%-*@3 x] 
+and returns a reference to it.&]
 [s6;~~~.992; Requires T to have pick constructor.&]
 [s6;~~~.992; Invalidates iterators to the Array.&]
 [s3; &]
