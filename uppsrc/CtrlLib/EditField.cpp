@@ -1062,22 +1062,13 @@ void EditIntSpin::Dec()
 
 void EditIntSpin::Init()
 {
-	sb.inc.WhenAction = sb.inc.WhenRepeat = callback(this, &EditIntSpin::Inc);
-	sb.dec.WhenAction = sb.dec.WhenRepeat = callback(this, &EditIntSpin::Dec);
+	sb.inc.WhenAction = sb.inc.WhenRepeat = THISBACK(Inc);
+	sb.dec.WhenAction = sb.dec.WhenRepeat = THISBACK(Dec);
 	AddFrame(sb);
-	inc = 1;
 }
 
-EditIntSpin::EditIntSpin()
-{
-	Init();
-}
-
-EditIntSpin::EditIntSpin(int min, int max)
-{
-	MinMax(min, max);
-	Init();
-}
+EditIntSpin::EditIntSpin(int inc) : inc(inc) { Init(); }
+EditIntSpin::EditIntSpin(int min, int max, int inc) : EditInt(min, max), inc(inc) { Init(); }
 
 EditIntSpin::~EditIntSpin() {}
 
@@ -1089,6 +1080,69 @@ bool EditIntSpin::Key(dword key, int repcnt)
 }
 
 void EditIntSpin::MouseWheel(Point, int zdelta, dword)
+{
+	if(zdelta < 0)
+		Dec();
+	else
+		Inc();
+}
+
+void EditInt64Spin::Inc()
+{
+	if(IsReadOnly()) return;
+	int i = GetData();
+	if(IsNull(i)) {
+		if(IsNull(GetMin()) || GetMin() == INT64_MIN) return;
+		SetData(GetMin());
+	}
+	else
+	if(!IsNull(GetMax()) && i < GetMax())
+		SetData(min(i + inc, GetMax()));
+	else
+		return;
+	SetFocus();
+	SetSelection();
+	UpdateAction();
+}
+
+void EditInt64Spin::Dec()
+{
+	if(IsReadOnly()) return;
+	int i = GetData();
+	if(IsNull(i)) {
+		if(IsNull(GetMax()) || GetMax() == INT_MAX) return;
+		SetData(GetMax());
+	}
+	else
+	if(!IsNull(GetMin()) && i > GetMin())
+		SetData(max(i - inc, GetMin()));
+	else
+		return;
+	SetFocus();
+	SetSelection();
+	UpdateAction();
+}
+
+void EditInt64Spin::Init()
+{
+	sb.inc.WhenAction = sb.inc.WhenRepeat = THISBACK(Inc);
+	sb.dec.WhenAction = sb.dec.WhenRepeat = THISBACK(Dec);
+	AddFrame(sb);
+}
+
+EditInt64Spin::EditInt64Spin(int64 inc) : inc(inc) { Init(); }
+EditInt64Spin::EditInt64Spin(int64 min, int64 max, int64 inc) : EditInt64(min, max), inc(inc) { Init(); }
+
+EditInt64Spin::~EditInt64Spin() {}
+
+bool EditInt64Spin::Key(dword key, int repcnt)
+{
+	if(key == K_UP)   { Inc(); return true; }
+	if(key == K_DOWN) { Dec(); return true; }
+	return EditInt64::Key(key, repcnt);
+}
+
+void EditInt64Spin::MouseWheel(Point, int zdelta, dword)
 {
 	if(zdelta < 0)
 		Dec();

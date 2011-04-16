@@ -325,6 +325,8 @@ protected:
 	void   Inc();
 	void   Dec();
 	void   Init();
+	
+	typedef EditIntSpin CLASSNAME;
 
 public:
 	EditIntSpin&    SetInc(int _inc)             { inc = _inc; return *this; }
@@ -333,13 +335,21 @@ public:
 	bool            IsOnSides() const            { return sb.IsOnSides(); } 
 
 	EditIntSpin&    ShowSpin(bool s = true)      { sb.Show(s); return *this; }
+	bool            IsSpinVisible() const        { return sb.IsVisible(); }
 
 	SpinButtons&    SpinButtonsObject()          { return sb; }
 	const SpinButtons& SpinButtonsObject() const { return sb; }
 
-	EditIntSpin();
-	EditIntSpin(int min, int max);
+	EditIntSpin(int inc = 1);
+	EditIntSpin(int min, int max, int inc = 1);
 	virtual ~EditIntSpin();
+};
+
+class EditIntNotNullSpin : public EditIntSpin
+{
+public:
+	EditIntNotNullSpin(int inc = 1) : EditIntSpin(inc)                             { NotNull(); }
+	EditIntNotNullSpin(int min, int max, int inc = 1) : EditIntSpin(min, max, inc) { NotNull(); }
 };
 
 class EditDoubleSpin : public EditDouble
@@ -367,6 +377,7 @@ public:
 	bool            IsOnSides() const            { return sb.IsOnSides(); }
 	
 	EditDoubleSpin& ShowSpin(bool s = true)      { sb.Show(s); return *this; }
+	bool            IsSpinVisible() const        { return sb.IsVisible(); }
 
 	SpinButtons&       SpinButtonsObject()       { return sb; }
 	const SpinButtons& SpinButtonsObject() const { return sb; }
@@ -381,4 +392,43 @@ class EditDoubleNotNullSpin : public EditDoubleSpin
 public:
 	EditDoubleNotNullSpin(double inc = 0.1) : EditDoubleSpin(inc) { NotNull(); }
 	EditDoubleNotNullSpin(double min, double max, double inc = 0.1) : EditDoubleSpin(min, max, inc) { NotNull(); }
+};
+
+class EditInt64Spin : public EditInt64 {
+public:
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+	virtual bool Key(dword key, int repcnt);
+
+protected:
+	SpinButtons sb;
+	int64       inc;
+
+	void   Inc();
+	void   Dec();
+	void   Init();
+
+	typedef EditInt64Spin CLASSNAME;
+
+public:
+	EditInt64Spin&  SetInc(int64 _inc)           { inc = _inc; return *this; }
+	int64           GetInc() const               { return inc; }
+	EditInt64Spin&  OnSides(bool b = true)       { sb.OnSides(b); return *this; }
+	bool            IsOnSides() const            { return sb.IsOnSides(); } 
+
+	EditInt64Spin&  ShowSpin(bool s = true)      { sb.Show(s); return *this; }
+	bool            IsSpinVisible() const        { return sb.IsVisible(); }
+
+	SpinButtons&    SpinButtonsObject()          { return sb; }
+	const SpinButtons& SpinButtonsObject() const { return sb; }
+
+	EditInt64Spin(int64 inc = 1);
+	EditInt64Spin(int64 min, int64 max, int64 inc = 1);
+	virtual ~EditInt64Spin();
+};
+
+class EditInt64NotNullSpin : public EditInt64Spin
+{
+public:
+	EditInt64NotNullSpin(int inc = 1) : EditInt64Spin(inc) { NotNull(); }
+	EditInt64NotNullSpin(int min, int max, int inc = 1) : EditInt64Spin(min, max, inc) { NotNull(); }
 };

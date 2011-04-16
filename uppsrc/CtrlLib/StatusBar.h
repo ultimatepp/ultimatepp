@@ -112,6 +112,7 @@ public:
 
 	void          Set(int _pos)                 { Set(_pos, total); }
 	int           Get() const                   { return pos; }
+	int           GetTotal() const              { return total; }
 
 	void operator=(int p)                       { Set(p); }
 	void operator++()                           { pos++; Refresh(); }
