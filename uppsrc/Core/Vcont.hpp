@@ -273,11 +273,12 @@ void Vector<T>::Insert(int q, const T& x, int count) {
 }
 
 template <class T>
-void Vector<T>::InsertPick(int q, pick_ T& x)
+T& Vector<T>::InsertPick(int q, pick_ T& x)
 {
 	ASSERT(&x < vector || &x > vector + items);
 	RawInsert(q, 1);
 	::new(vector[q]) T(x);
+	return Get(q);
 }
 
 template <class T>
@@ -448,10 +449,11 @@ void Array<T>::Insert(int i, const T& x, int count) {
 }
 
 template <class T>
-void Array<T>::InsertPick(int i, pick_ T& x)
+T& Array<T>::InsertPick(int i, pick_ T& x)
 {
 	vector.InsertN(i, 1);
 	vector[i] = new T(x);
+	return Get(i);
 }
 
 template <class T>
