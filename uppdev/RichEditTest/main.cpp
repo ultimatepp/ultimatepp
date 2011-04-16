@@ -28,6 +28,7 @@ GUI_APP_MAIN
 	DUMP(ScrollBarSize());
 
 	e.Pick(ParseQTF(LoadFile(FileName())));
+//	e.ClipZoom(4, 1);
 	RichEdit::PosInfo f;
 	LoadFromFile(f, ConfigFile("pos"));
 	e.SetPosInfo(f);
