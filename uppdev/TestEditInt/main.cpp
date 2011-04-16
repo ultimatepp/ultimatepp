@@ -16,6 +16,7 @@ class TestEditInt : public WithTestEditIntLayout<TopWindow>
 TestEditInt::TestEditInt()
 {
 	CtrlLayout(*this, "Window title");
+//	edt.OnSides();
 }
 
 GUI_APP_MAIN

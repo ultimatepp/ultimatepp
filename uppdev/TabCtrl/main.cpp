@@ -14,7 +14,9 @@ TabCtrlTest::TabCtrlTest()
 	CtrlLayout(tab2);
 	CtrlLayout(tab3);
 	b.SetRect(0, 0, 16, 16);
-	tab.Add(tab1, "First")/*.Control(&b)*/;
+	tab.Add(tab1, "\1[G0@K$K First")/*.Control(&b)*/;
+//	tab.Add(tab1, "First")/*.Control(&b)*/;
+#if 0
 	tab.Add(tab2, "Second")/*.Image(CtrlImg::cut())*/;
 	tab.Add(tab3, "Third");
 	tab.Add(arr.SizePos(), "Array");
@@ -28,6 +30,7 @@ TabCtrlTest::TabCtrlTest()
 	tab.Add(arr.SizePos(), "Array");
 	tab.Add(arr.SizePos(), "Array");
 	tab.Set(2);
+#endif
 //	tab.SetStyle(tab.StyleDefault().Standard());
 
 	arr.AddColumn("1")
