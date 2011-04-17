@@ -5,8 +5,8 @@ protected:
 	V                value;
 
 public:
-	void     Add(const K& k, const T& x)            { key.Add(k); value.Add(x); }
-	void     AddPick(const K& k, pick_ T& x)        { key.Add(k); value.AddPick(x); }
+	T&       Add(const K& k, const T& x)            { key.Add(k); return value.Add(x); }
+	T&       AddPick(const K& k, pick_ T& x)        { key.Add(k); return value.AddPick(x); }
 	T&       Add(const K& k)                        { key.Add(k); return value.Add(); }
 
 	int      Find(const K& k, unsigned h) const     { return key.Find(k, h); }
@@ -59,7 +59,7 @@ public:
 	void     Sweep();
 
 	T&       Insert(int i, const K& k)             { key.Insert(i, k); return value.Insert(i); }
-	void     Insert(int i, const K& k, const T& x) { key.Insert(i, k); value.Insert(i, x); }
+	T&       Insert(int i, const K& k, const T& x) { key.Insert(i, k); return value.Insert(i, x); }
 	void     Remove(int i)                         { key.Remove(i); value.Remove(i); }
 	void     Remove(int i, int count)              { key.Remove(i, count); value.Remove(i, count); }
 	void     Remove(const int *sl, int n)          { key.Remove(sl, n); value.Remove(sl, n); }
@@ -155,12 +155,12 @@ class ArrayMap : public MoveableAndDeepCopyOption< ArrayMap<K, T, HashFn> >,
                  public AMap< K, T, Array<T>, HashFn > {
 	typedef AMap< K, T, Array<T>, HashFn > B;
 public:
-	void      Add(const K& k, const T& x)          { B::Add(k, x); }
+	T&        Add(const K& k, const T& x)          { return B::Add(k, x); }
 	T&        Add(const K& k)                      { return B::Add(k); }
 	T&        Add(const K& k, T *newt)             { B::key.Add(k); B::value.Add(newt); return *newt; }
 	template <class TT> TT& Create(const K& k)     { TT *q = new TT; B::key.Add(k); B::value.Add(q); return *q; }
 
-	void      Set(int i, T *ptr)                   { B::value.Set(i, ptr); }
+	T&        Set(int i, T *ptr)                   { return B::value.Set(i, ptr); }
 	T        *PopDetach()                          { B::key.Drop(); return B::value.PopDetach(); }
 	T        *Detach(int i)                        { B::key.Remove(i); return B::value.Detach(i); }
 
