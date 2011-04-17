@@ -266,24 +266,52 @@ rollbar]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 is off.&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:ShowTabs`(bool`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* ShowTabs]([@(0.0.255) b
-ool]_[*@3 st]_`=_[@(0.0.255) true])&]
+[s5;:LineEdit`:`:IsNoHorzScrollbar`(`)const: [@(0.0.255) bool]_[* IsNoHorzScrollbar]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns status of NoHrozScrollbar.&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:IsShowTabs`(`)const: [@(0.0.255) bool]_[* IsShowTabs]()_[@(0.0.255) const]&]
+[s5;:LineEdit`:`:ShowTabs`(bool`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* ShowTabs]([@(0.0.255) b
+ool]_[*@3 st]_`=_[@(0.0.255) true])&]
 [s2;%% In this mode widget displays tabulators with faint graphics. 
 Default is off.&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:WithCutLine`(bool`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* WithCutLine](
-[@(0.0.255) bool]_[*@3 b])&]
+[s5;:LineEdit`:`:IsShowTabs`(`)const: [@(0.0.255) bool]_[* IsShowTabs]()_[@(0.0.255) const]&]
+[s2;%% Returns status of ShowTabs..&]
 [s3; &]
 [s4; &]
-[s5;:LineEdit`:`:NoCutLine`(`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* NoCutLine]()&]
+[s5;:LineEdit`:`:ShowSpaces`(bool`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* ShowSpaces]([@(0.0.255) b
+ool]_[*@3 ss]_`=_[@(0.0.255) true])&]
+[s2;%% In this mode widget displays spaces with faint dots. Default 
+is off..&]
+[s3;%% &]
+[s4; &]
+[s5;:LineEdit`:`:IsShowSpacess`(`)const: [@(0.0.255) bool]_[* IsShowSpacess]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns status of ShowSpaces.&]
+[s3; &]
+[s4; &]
+[s5;:LineEdit`:`:WithCutLine`(bool`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* WithCutLine](
+[@(0.0.255) bool]_[*@3 b])&]
 [s2;%% In this mode widget calls CutLine when user presses Ctrl`+Y 
 or Ctrl`+L. Default is on.&]
-[s3; &]
 [s0; &]
+[s4; &]
+[s5;:LineEdit`:`:NoCutLine`(`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* NoCutLine]()&]
+[s2;%% Switches WithCutLine off.&]
+[s3;%% &]
+[s4; &]
+[s5;:LineEdit`:`:IsWithCutLine`(`)const: [@(0.0.255) bool]_[* IsWithCutLine]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns status of WithCutLine.&]
+[s3; &]
+[s4; &]
+[s5;:LineEdit`:`:SetFilter`(int`(`*`)`(int c`)`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* S
+etFilter]([@(0.0.255) int]_(`*[*@3 f])([@(0.0.255) int]_c))&]
+[s2;%% Sets the filter of characters processed. Filter function can 
+alter characters before they are inserted into the text. If filter 
+function returns zero, character is rejected.&]
 [s0; &]
 [s0; &]
 [ {{10000@3 [s0;%% [*@(229)4 LineEdit`::Highlight]]}}&]
