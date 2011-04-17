@@ -88,12 +88,13 @@ constructor.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3;%- &]
-[s5;:AIndex`:`:Add`(const T`&`,unsigned`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 T
-][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+[s5;:AIndex`:`:Add`(const T`&`,unsigned`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const
+]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Adds a new element [%-*@3 x] with a precomputed hash value [%-*@3 `_hash]. 
 The performance benefit of this variant is that sometimes you 
 can compute hash`-value as the part of an other process, like 
-fetching strings from an input stream.&]
+fetching strings from an input stream. Returns a reference to 
+the element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
@@ -101,9 +102,10 @@ fetching strings from an input stream.&]
 by HashFn.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:Add`(const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+[s5;:AIndex`:`:Add`(const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x])&]
-[s2; Adds a new element [%-*@3 x ]to AIndex.&]
+[s2; Adds a new element [%-*@3 x ]to AIndex. Returns a reference to 
+the element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
@@ -271,13 +273,13 @@ or placed element is returned.&]
 [s6; Invalidates references to Index.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:Set`(int`,const T`&`,unsigned`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int
-]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash
-])&]
+[s5;:AIndex`:`:Set`(int`,const T`&`,unsigned`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) i
+nt]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_ha
+sh])&]
 [s2; Replaces the element at the specified position with a new element 
 with value [%-*@3 x], using a precomputed [%-*@3 `_hash]. Speed of 
 this operation depends on the total number of elements with the 
-same value as the specified one.&]
+same value as the specified one. Returns a reference to the element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
@@ -285,11 +287,12 @@ same value as the specified one.&]
 by HashFn.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:Set`(int`,const T`&`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i], 
-[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:AIndex`:`:Set`(int`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i],
+ [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Replaces the element at the specified position with a new element 
 with value [%-*@3 x]. Speed of this operation depends on the total 
-number of elements with the same value as the specified one.&]
+number of elements with the same value as the specified one. 
+Returns a reference to the element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
@@ -349,10 +352,11 @@ operation depends on the number of elements in AIndex, not on
 the number of unlinked elements. Also restores multi`-key ordering.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:Insert`(int`,const T`&`,unsigned`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
+[s5;:AIndex`:`:Insert`(int`,const T`&`,unsigned`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]
 [s2; Inserts an element with value [%-*@3 k] at the specified position 
-[%-*@3 i], using a precomputed hash [%-*@3 h]. This is a slow operation.&]
+[%-*@3 i], using a precomputed hash [%-*@3 h]. This is a slow operation. 
+Returns a reference to the element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
@@ -360,10 +364,11 @@ nt]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsi
 by HashFn.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:Insert`(int`,const T`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int]_[*@3 i
-], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 k])&]
+[s5;:AIndex`:`:Insert`(int`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) int]_
+[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 k])&]
 [s2; Inserts an element with value [%-*@3 k] at the specified position 
-[%-*@3 i]. This is a slow operation.&]
+[%-*@3 i]. This is a slow operation. Returns a reference to the 
+element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]

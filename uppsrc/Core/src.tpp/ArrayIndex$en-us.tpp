@@ -72,32 +72,33 @@ copy constructor.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s4;H0; &]
-[s5;:ArrayIndex`:`:Add`(const T`&`,unsigned`): [@(0.0.255) void]_[* Add]([@(0.0.255) const]_
-[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+[s5;:ArrayIndex`:`:Add`(const T`&`,unsigned`): [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) con
+st]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2;%% Adds a new element with a precomputed hash value. The precomputed 
 hash value must be the same as the hash value that would be the 
 result of HashFn. The benefit of using a precomputed hash value 
 is that sometimes you can compute hash`-value as the part of 
 an other process, like fetching a string from an input stream. 
 This method has to be reimplemented in ArrayIndex (using simple 
-forwarding) due to overloading of [* Add] in other forms.&]
+forwarding) due to overloading of [* Add] in other forms.  Returns 
+a reference to the element.&]
 [s6;%% Requires T to have deep copy constructor.&]
 [s6;%% Invalidates iterators to the ArrayIndex.&]
 [s7;%% [*C@3 x]-|Element to add.&]
 [s7;%% [*C@3 `_hash]-|Precomputed hash value.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:Add`(const T`&`): [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+[s5;:ArrayIndex`:`:Add`(const T`&`): [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x])&]
 [s2;%% Adds a new element to Index. This method has to be reimplemented 
 in ArrayIndex (using simple forwarding) due to overloading of 
-[* Add] in other forms.&]
+[* Add] in other forms. Returns a reference to the element.&]
 [s6;%% Requires T to have deep copy constructor.&]
 [s6;%% Invalidates iterators to the ArrayIndex.&]
 [s7;%% [*C@3 x]-|Element to add.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:Set`(int`,const T`&`,unsigned`): [@(0.0.255) void]_[* Set]([@(0.0.255) i
+[s5;:ArrayIndex`:`:Set`(int`,const T`&`,unsigned`): [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_ha
 sh])&]
 [s2;%% Replaces the element at the specified position with a new 
@@ -105,7 +106,8 @@ element with the specified value, using a precomputed hash`-value.
 Speed of this operation depends on the total number of elements 
 with the same value as the specified one in ArrayIndex. This 
 method has to be reimplemented in ArrayIndex (using simple redirection) 
-due to overloading of [* Set] in other forms.&]
+due to overloading of [* Set] in other forms. Returns a reference 
+to the element.&]
 [s6;%% Requires T to have deep copy constructor.&]
 [s6;%% Invalidates iterators to the ArrayIndex.&]
 [s7;%% [*C@3 i]-|Position of element.&]
@@ -113,53 +115,57 @@ due to overloading of [* Set] in other forms.&]
 [s7;%% [*C@3 `_hash]-|Precomputed hash value.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:Set`(int`,const T`&`): [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i],
- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:ArrayIndex`:`:Set`(int`,const T`&`): [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i
+], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2;%% Replaces element at specified position with new element with 
 specified value. Speed of this operation depends on the total 
 number of elements with the same value as the specified one in 
 ArrayIndex. This method has to be reimplemented in ArrayIndex 
 (using simple redirection) due to overloading of [* Set] in other 
-forms.&]
+forms. Returns a reference to the element.&]
 [s6;%% Requires T to have deep copy constructor.&]
 [s6;%% Invalidates iterators to the ArrayIndex.&]
 [s7;%% [*C@3 i]-|Position of element.&]
 [s7;%% [*C@3 x]-|Value to set.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:Add`(T`*`,unsigned`): [@(0.0.255) void]_[* Add]([*@4 T]_`*[*@3 newt], 
+[s5;:ArrayIndex`:`:Add`(T`*`,unsigned`): [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T]_`*[*@3 newt], 
 [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2;%% Adds a new element created on the heap to the ArrayIndex using 
 a precomputed hash value. The element is specified by a pointer 
 to the object. ArrayIndex takes over ownership of the pointed 
 element. This variant allows the use of an ArrayIndex as a polymorphic 
 container, because the type of the added element can be either 
-T or a type derived from T. No constructor is applied. &]
+T or a type derived from T. No constructor is applied. Returns 
+a reference to the element.&]
 [s7;%% [*C@3 newt]-|Element created on the heap.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:Add`(T`*`): [@(0.0.255) void]_[* Add]([*@4 T]_`*[*@3 newt])&]
+[s5;:ArrayIndex`:`:Add`(T`*`): [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T]_`*[*@3 newt])&]
 [s2;%% Adds a new element to the ArrayIndex. The element is specified 
 by a pointer to the object. ArrayIndex takes over ownership of 
 the pointed element. This variant allows the use of an ArrayIndex 
 as a polymorphic container, because the type of the added element 
 can be either T or a type derived from T. No constructor is applied. 
-&]
+Returns a reference to the element.&]
 [s7;%% [*C@3 newt]-|Object to be added.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:Set`(int`,T`*`,unsigned`): [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i
-], [*@4 T]_`*[*@3 newt], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+[s5;:ArrayIndex`:`:Set`(int`,T`*`,unsigned`): [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_
+[*@3 i], [*@4 T]_`*[*@3 newt], [@(0.0.255) unsigned]_[*@3 `_hash])&]
+[s2;%% Replaces the element at the specified position by an element 
+previously created on the heap. ArrayIndex takes over ownership 
+of the element. Returns a reference to the element.&]
 [s7;%% [*C@3 i]-|Position.&]
 [s7;%% [*C@3 newt]-|New element created on heap.&]
 [s7;%% [*C@3 `_hash]-|Hash value&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:Set`(int`,T`*`): [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i], 
+[s5;:ArrayIndex`:`:Set`(int`,T`*`): [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i], 
 [*@4 T]_`*[*@3 newt])&]
 [s2;%% Replaces the element at the specified position by an element 
 previously created on the heap. ArrayIndex takes over ownership 
-of the element.&]
+of the element. Returns a reference to the element.&]
 [s7;%% [*C@3 i]-|Position.&]
 [s7;%% [*C@3 newt]-|New element created on heap.&]
 [s7;%% [*/ Return value]-|&]

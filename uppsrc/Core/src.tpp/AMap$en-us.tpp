@@ -67,9 +67,10 @@ must have same number of elements.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
-[s5;:AMap`:`:Add`(const K`&`,const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const]_[*@4 K
-][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s2; Adds a key and value pair to the AMap.&]
+[s5;:AMap`:`:Add`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_
+[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s2; Adds a key and value pair to the AMap. Returns a reference to 
+the element.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; T must have deep copy constructor.&]
 [s6; Invalidates iterators to AMap.&]
@@ -79,11 +80,11 @@ must have same number of elements.&]
 [s7; [*C@3 x]-|Value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:AddPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) void]_[* AddPick]([@(0.0.255) c
+[s5;:AMap`:`:AddPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Adds a key and value pair to the AMap. Value is transfered by 
 pick constructor in low constant time, but the source value is 
-destroyed.&]
+destroyed. Returns a reference to the element.&]
 [s6; T must have pick constructor.&]
 [s6; Invalidates iterators to AMap.&]
 [s6; Invalidates references to keys.&]
@@ -527,11 +528,16 @@ stay in AIndex but are ignored by any Find operations.&]
 [s7; [*/ Return value]-|true if element is unlinked.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AMap`:`:Sweep`(`):%- [@(0.0.255) void]_[* Sweep]()&]
+[s2; Removes all unlinked elements from the container.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:AMap`:`:Insert`(int`,const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) int]_[*@3 i
 ], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
 [s2; Inserts an element with the specified key and default constructed 
 value at the specified position. This is a slow operation, especially 
-when combined with any search operations.&]
+when combined with any search operations. Returns a reference 
+to the element.&]
 [s6; Requires T to have default constructor.&]
 [s6; Invalidates iterators to AMap.&]
 [s6; Invalidates references to keys.&]
@@ -540,12 +546,13 @@ when combined with any search operations.&]
 [s7; [*C@3 k]-|Key to insert.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:Insert`(int`,const K`&`,const T`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
+[s5;:AMap`:`:Insert`(int`,const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x])&]
 [s2; Inserts an element with the specified key and value copy constructed 
 from [*/ x] at the specified position. This is a slow operation, 
-especially when combined with any search operations.&]
+especially when combined with any search operations. Returns 
+a reference to the element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AMap.&]
 [s6; Invalidates references to keys.&]
@@ -563,6 +570,14 @@ operation, especially when combined with any search operations.&]
 [s6; Invalidates references to VectorMap values.&]
 [s7; [*C@3 i]-|Position of element to remove.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:AMap`:`:Remove`(int`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i], 
+[@(0.0.255) int]_[*@3 count])&]
+[s2; Removes [%-*@3 count] elements at [%-*@3 i].&]
+[s6; Invalidates iterators to AMap.&]
+[s6; Invalidates references to keys.&]
+[s6; Invalidates references to VectorMap values.&]
+[s3; &]
 [s4;%- &]
 [s5;:AMap`:`:Remove`(const int`*`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) const]_
 [@(0.0.255) int]_`*[*@3 sl], [@(0.0.255) int]_[*@3 n])&]

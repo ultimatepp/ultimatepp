@@ -209,7 +209,7 @@ public:
 
 	T       *Detach(int i)              { T *t = &Get(i); vector.Remove(i); return t; }
 	T&       Set(int i, T *newt)        { delete (T *)vector[i]; vector[i] = newt; return *newt; }
-	void     Insert(int i, T *newt);
+	T&       Insert(int i, T *newt);
 
 	void     Drop(int n = 1)            { Trim(GetCount() - n); }
 	T&       Top()                      { return Get(GetCount() - 1); }

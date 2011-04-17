@@ -84,11 +84,12 @@ The source containers should have equal number of elements.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3;%- &]
-[s5;:ArrayMap`:`:Add`(const K`&`,const T`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) const
-]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:ArrayMap`:`:Add`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) co
+nst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Adds a key and value pair to the ArrayMap. This method has to 
 be reimplemented in ArrayMap (using simple forwarding) due to 
-overloading of [* Add] in other forms.&]
+overloading of Add in other forms.Returns a reference to the 
+element.&]
 [s6; T must have deep copy constructor.&]
 [s6; Invalidates iterators to the ArrayMap.&]
 [s6; Invalidates references to keys.&]
@@ -120,10 +121,11 @@ from T as well. No constructor is applied.&]
 [s7; [%-*@3 newt]-|Value.&]
 [s3; &]
 [s4;%- &]
-[s5;:ArrayMap`:`:Set`(int`,T`*`):%- [@(0.0.255) void]_[* Set]([@(0.0.255) int]_[*@3 i], 
+[s5;:ArrayMap`:`:Set`(int`,T`*`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i], 
 [*@4 T]_`*[*@3 ptr])&]
 [s2; Sets value at specified index. Value is specified by a pointer 
-to the object. ArrayMap takes over ownership of this object.&]
+to the object. ArrayMap takes over ownership of this object. 
+Returns a reference to the element.&]
 [s7; [*C@3 i]-|Index.&]
 [s7; [*C@3 ptr]-|Value.&]
 [s3; &]

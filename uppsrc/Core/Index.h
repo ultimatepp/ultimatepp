@@ -103,8 +103,8 @@ protected:
 public:
 	HashFn   hashfn;
 
-	void     Add(const T& x, unsigned _hash);
-	void     Add(const T& x);
+	T&       Add(const T& x, unsigned _hash);
+	T&       Add(const T& x);
 	int      FindAdd(const T& key, unsigned _hash);
 	int      FindAdd(const T& key);
 	AIndex&  operator<<(const T& x)          { Add(x); return *this; }
@@ -121,8 +121,8 @@ public:
 	int      FindLast(const T& x) const;
 	int      FindPrev(int i) const;
 
-	void     Set(int i, const T& x, unsigned _hash);
-	void     Set(int i, const T& x);
+	T&       Set(int i, const T& x, unsigned _hash);
+	T&       Set(int i, const T& x);
 
 	const T& operator[](int i) const         { return key[i]; }
 	int      GetCount() const                { return key.GetCount(); }
@@ -143,8 +143,8 @@ public:
 	Vector<int> GetUnlinked() const          { return hash.GetUnlinked(); }
 	void     Sweep();
 
-	void     Insert(int i, const T& k, unsigned h);
-	void     Insert(int i, const T& k);
+	T&       Insert(int i, const T& k, unsigned h);
+	T&       Insert(int i, const T& k);
 	void     Remove(int i);
 	void     Remove(int i, int count);
 	void     Remove(const int *sorted_list, int count);
@@ -218,15 +218,15 @@ class ArrayIndex : MoveableAndDeepCopyOption< ArrayIndex<T, HashFn > >,
                    public AIndex<T, Array<T>, HashFn> {
 	typedef AIndex< T, Array<T>, HashFn > B;
 public:
-	void     Add(const T& x, unsigned _hash)        { B::Add(x, _hash); }
-	void     Add(const T& x)                        { B::Add(x); }
-	void     Set(int i, const T& x, unsigned _hash) { B::Set(i, x, _hash); }
-	void     Set(int i, const T& x)                 { B::Set(i, x); }
+	T&       Add(const T& x, unsigned _hash)        { return B::Add(x, _hash); }
+	T&       Add(const T& x)                        { return B::Add(x); }
+	T&       Set(int i, const T& x, unsigned _hash) { return B::Set(i, x, _hash); }
+	T&       Set(int i, const T& x)                 { return B::Set(i, x); }
 
-	void     Add(T *newt, unsigned _hash);
-	void     Add(T *newt);
-	void     Set(int i, T *newt, unsigned _hash);
-	void     Set(int i, T *newt);
+	T&       Add(T *newt, unsigned _hash);
+	T&       Add(T *newt);
+	T&       Set(int i, T *newt, unsigned _hash);
+	T&       Set(int i, T *newt);
 
 	T       *PopDetach()                            { B::hash.Drop(1); return B::key.PopDetach(); }
 	T       *Detach(int i)                          { B::hash.Remove(i); return B::key.Detach(i); }

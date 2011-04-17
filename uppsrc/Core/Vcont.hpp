@@ -457,9 +457,10 @@ T& Array<T>::InsertPick(int i, pick_ T& x)
 }
 
 template <class T>
-void Array<T>::Insert(int i, T *newt) {
+T& Array<T>::Insert(int i, T *newt) {
 	vector.InsertN(i, 1);
 	vector[i] = newt;
+	return *newt;
 }
 
 template <class T>
