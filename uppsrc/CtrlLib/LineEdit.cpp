@@ -19,6 +19,7 @@ LineEdit::LineEdit() {
 	bordercolor = Null;
 	overwrite = false;
 	filter = NULL;
+	showspaces = false;
 }
 
 LineEdit::~LineEdit() {}
@@ -142,10 +143,25 @@ void   LineEdit::Paint0(Draw& w) {
 							q++;
 							gp = ngp;
 						}
+						else if(txt[q] == ' ') {
+						    LLOG("Highlight -> space[" << q << "] paper = " << h.paper);
+						    if(pass == 0) {
+						        w.DrawRect(gp * fsz.cx - scx, y, fsz.cx * l, fsz.cy, h.paper);
+						        if(showspaces && h.paper != SColorHighlight && q < tx.GetLength()) {
+						            Color c = Blend(SColorLight, SColorHighlight);
+						            w.DrawRect(gp * fsz.cx - scx + fsz.cx / 2, y + fsz.cy / 2,
+						                       1, 1, c);
+						        }
+						        if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1)
+						            w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+						    }
+						    q++;
+						    gp++;
+						}
 						else {
 							bool cjk = IsCJKIdeograph(txt[q]);
 							int p = q + 1;
-							while(p < len && h == hl[p] && txt[p] != '\t' && IsCJKIdeograph(txt[p]) == cjk && p - q < 128)
+							while(p < len && h == hl[p] && txt[p] != '\t' && txt[p] != ' ' && IsCJKIdeograph(txt[p]) == cjk && p - q < 128)
 								p++;
 							int l = p - q;
 							int ll = cjk ? 2 * l : l;
