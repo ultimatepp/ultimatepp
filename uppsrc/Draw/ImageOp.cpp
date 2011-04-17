@@ -138,7 +138,7 @@ Image ColorMask(const Image& src, Color key)
 			*t++ = *s;
 		s++;
 	}
-	ib.SetHotSpots(src;
+	ib.SetHotSpots(src);
 	return ib;
 }
 

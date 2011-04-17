@@ -446,7 +446,7 @@ void MultiButton::Paint(Draw& w)
 	if(cr.left < cr.right && display) {
 		w.Clip(clr);
 		display->Paint(w, cr, v,
-		               IsShowEnabled() ? text : SColorDisabled,
+		               IsShowEnabled() && IsEditable() ? text : SColorDisabled,
 		               paper, f ? Display::CURSOR : Display::FOCUS|Display::CURSOR);
 		w.End();
 	}
