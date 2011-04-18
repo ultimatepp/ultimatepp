@@ -615,7 +615,7 @@ void FileSel::SearchLoad()
 		if(!IsEmpty(basedir) && String(~dir).IsEmpty())
 			dirup.Disable();
 	olddir = ~dir;
-	if(olddir.GetCount())
+	if(olddir.GetCount() || basedir.GetCount())
 		if(sortext && mode != SELECTDIR)
 			SortByExt(list);
 		else
