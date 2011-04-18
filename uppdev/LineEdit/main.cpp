@@ -5,6 +5,7 @@ using namespace Upp;
 GUI_APP_MAIN
 {
 	LineEdit edit;
+	edit.ShowSpaces();
 	edit <<= LoadFile(ConfigFile("data.txt"));
 	TopWindow win;
 //	win.SetRect(100, 100, 100, 100);
