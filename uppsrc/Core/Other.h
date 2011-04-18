@@ -184,9 +184,9 @@ void Mitor<T>::Copy(const Mitor& m)
 {
 	m.Chk();
 	if(m.count > 0)
-		DeepCopyConstruct((T*)elem0, m.elem0);
+		DeepCopyConstruct(elem0, (const T*)m.elem0);
 	if(m.count > 1)
-		vector = new Vector<T>(m.vector, 1);
+		vector = new Vector<T>(*m.vector, 1);
 }
 
 template <class T>
