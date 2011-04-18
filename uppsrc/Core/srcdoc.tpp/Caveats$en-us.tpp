@@ -58,6 +58,56 @@ rather host platform dependent technical issue rather than deliberate
 decision.&]
 [s0; &]
 [s0; The code might run OK on some platforms, but crash on others. 
-Means, just do not do it...]}}&]
+Means, just do not do it...&]
+[s0; &]
+[s0; This applies for application static Ctrl`'s as well. Problem 
+is that Ctrl`'s may initialize/instantiate only `*after`* the 
+GUI framework has finished loading and initializing. static or 
+global Ctrl`'s are usually instantiated before, permanently breaking 
+the GUI init sequence.&]
+[s0; &]
+[s0; Solution: use a static method to return an internal static Ctrl.&]
+[s0; &]
+[s0; [C EditString`& MyApp`::GetEditString()]&]
+[s0; [C `{]&]
+[s0; [C -|static EditString `_;]&]
+[s0; [C -|return `_;]&]
+[s0; [C `}]&]
+[s0; &]
+[s0; Or even better: the Upp [C Single<>] template&]
+[s0;C &]
+[s0; [C EditString`& es `= Single<EditString>();]&]
+[s0;C ]
+::=l/33r/33t/33b/33 [s0; [C@5 INITBLOCK]&]
+[s0; [C@5 `{]&]
+[s0; [C@5 ...]&]
+[s0; [C@5 `}]&]
+[s0;C@5 &]
+[s0; [C@5 EXITBLOCK]&]
+[s0; [C@5 `{]&]
+[s0; [C@5 ...]&]
+[s0; [C@5 `}]&]
+[s0;C@5 &]
+[s0; [C@5 `*.icpp]]
+::^l/25r/25t/15b/15 [s0; Upp provides a nice solution to do init / deinit work of your 
+package`'s static or global stuff (i.e. if it`'s not Plain Ol`' 
+Data and needs some function calls).&]
+[s0; &]
+[s0; If your INITBLOCK / EXITBLOCK resides in a .cpp file and the 
+file contains code that is actually referenced (used) somewhere 
+else, everything works as expected, no precautions need to be 
+taken. If not, the linker will drop the file, your init code 
+won`'t be invoked.&]
+[s0; &]
+[s0; This is because the INITBLOCK / EXITBLOCK actually registers 
+itself in an init facility from upper Upp code. So no code ref 
+downwards is added.&]
+[s0; &]
+[s0; Solution:&]
+[s0; If nothing else references some code in the file, make it a 
+.icpp file.&]
+[s0; &]
+[s0; .icpp files are forced to be linked no matter what. See [^topic`:`/`/ide`/app`/Files`$en`-us^ f
+iles ]description section in manual]}}&]
 [s0; &]
 [s0; ]
