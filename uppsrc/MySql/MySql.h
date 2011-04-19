@@ -44,6 +44,7 @@ private:
 	MYSQL *mysql;
 	String username;
 	double lastid;
+	int level;
 
 public:
 	bool Connect(const char *user = NULL, const char *password = NULL, const char *database = NULL,
@@ -58,6 +59,7 @@ public:
 	virtual void   Begin();
 	virtual void   Commit();
 	virtual void   Rollback();
+	virtual int    GetTransactionLevel() const;
 
 	MySqlSession()       { mysql = NULL; Dialect(MY_SQL); }
 	~MySqlSession()      { Close(); }
