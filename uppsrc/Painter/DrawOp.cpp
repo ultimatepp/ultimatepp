@@ -181,7 +181,8 @@ void Painter::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 	Sizef sz = r.GetSize();
 	Ellipse(r.left + sz.cx / 2, r.top + sz.cy / 2, sz.cx / 2, sz.cy / 2);
 	Fill(color);
-	DrawLineStroke(pen, pencolor);
+	if(!IsNull(pen))
+		DrawLineStroke(pen, pencolor);
 }
 
 void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
