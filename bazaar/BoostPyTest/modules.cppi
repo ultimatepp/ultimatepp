@@ -7,10 +7,5 @@ BOOST_PYTHON_MODULE(hello)
 
 BOOST_PYTHON_MODULE(upp)
 {
-	export_UppCtrl();	
-	export_UppString();
-	export_UppValue();
-	export_UppValueArray();
-	export_SliderCtrl();
-	export_ValueCtrl();
+	export_CtrlLib();
 }

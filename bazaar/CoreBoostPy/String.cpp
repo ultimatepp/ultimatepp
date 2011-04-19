@@ -1,13 +1,7 @@
-#ifndef _BoostPyTest_UppString_h_
-#define _BoostPyTest_UppString_h_
-
-#include <Py/Py.h>
+#include "String.h"
 using namespace boost::python;
 
-#include <Core/Core.h>
-using namespace Upp;
-
-//a convertable instance
+NAMESPACE_UPP
 
 struct String_to_python_str
 {
@@ -39,10 +33,13 @@ struct String_from_python_str
 	}
 };
 
-String Stringhello(); //tests to-python
-std::size_t Stringsize(const String& s); //tests from-python
+void export_String()
+{
+ONCELOCK
+{
+	to_python_converter<String, String_to_python_str>();
+	String_from_python_str();
+}
+}
 
-//fw
-void export_UppString();
-
-#endif
+END_UPP_NAMESPACE

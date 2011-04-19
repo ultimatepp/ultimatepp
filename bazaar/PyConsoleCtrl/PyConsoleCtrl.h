@@ -3,9 +3,6 @@
 
 #include <PyCon/PyCon.h>
 
-#include <CtrlLib/CtrlLib.h>
-using namespace Upp;
-
 #define LAYOUTFILE <PyConsoleCtrl/PyConsoleCtrl.lay>
 #include <CtrlCore/lay.h>
 

@@ -18,6 +18,5 @@
 #endif
 
 #include <Core/Core.h>
-using namespace Upp;
 
 #endif

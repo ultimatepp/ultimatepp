@@ -2,10 +2,6 @@
 #define _PyCon_PyCon_h_
 
 #include <Py/Py.h>
-
-#include <Core/Core.h>
-using namespace Upp;
-
 #include <LogCtrl/LogCtrl.h>
 
 class PyCon

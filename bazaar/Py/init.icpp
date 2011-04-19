@@ -1,5 +1,7 @@
 #include "Py.h"
 
+NAMESPACE_UPP
+
 INITBLOCK
 {
 	Py_Initialize();
@@ -9,3 +11,5 @@ EXITBLOCK
 {
 	Py_Finalize();
 }
+
+END_UPP_NAMESPACE

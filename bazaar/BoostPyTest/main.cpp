@@ -4,9 +4,9 @@
 #include "modules.cppi"
 
 BoostPyTest::BoostPyTest()
-	: slpy(sl)
 {
 	CtrlLayout(*this, "Boost Test");
+	Sizeable().Zoomable();
 
 	//bool b = Py_IsInitialized();
 
@@ -44,7 +44,6 @@ BoostPyTest::BoostPyTest()
 		main_namespace["upp"] = upp_module;
 
 		sl.SetData(50);
-		scope(upp_module).attr("slpy") = ptr(&slpy);
 		scope(upp_module).attr("sl") = ptr(&sl);
 
 		vc.SetData(123);
@@ -56,20 +55,11 @@ BoostPyTest::BoostPyTest()
 		"p.set('Some Greet Text')\n"
 		"print p.greet()\n"
 		
-		"print upp.slpy.get()\n"
-		"upp.slpy.set(23)\n"
-		
-		"print upp.hello()\n"
-		"print upp.size('TestString')\n"
+		"upp.sl.setdata(75)\n"
+		"print upp.sl.getdata()\n"
 
-		"print upp.helloval()\n"
-		"print upp.doubleit(256)\n"
-
-		"print upp.sl.get()\n"
-		"upp.sl.set(75)\n"
-
-		"upp.vc.set(range(10))\n"
-		"upp.vc.get()\n"
+		"upp.vc.setdata(range(10))\n"
+		"print upp.vc.getdata()\n"
 
 		;
 		con.cmd.SetData(sc);

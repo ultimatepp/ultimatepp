@@ -5,9 +5,8 @@
 using namespace boost::python;
 
 #include "world.h"
-#include "SliderCtrlPy.h"
-#include "UppString.h"
-#include "UppValue.h"
+#include <CtrlLibBoostPy/CtrlLibBoostPy.h>
+using namespace Upp;
 
 #define LAYOUTFILE <BoostPyTest/BoostPyTest.lay>
 #include <CtrlCore/lay.h>
@@ -21,7 +20,6 @@ public:
 	void ExitHandler();
 
 	World w;	
-	SliderCtrlPy slpy;
 };
 
 #endif

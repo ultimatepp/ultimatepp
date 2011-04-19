@@ -1,17 +1,12 @@
 uses
 	CtrlLib,
 	PyConsoleCtrl,
-	ValueCtrl;
+	ValueCtrl,
+	CtrlLibBoostPy;
 
 file
 	world.h,
 	world.cpp,
-	SliderCtrlPy.h,
-	SliderCtrlPy.cpp,
-	UppString.h,
-	UppString.cpp,
-	UppValue.h,
-	UppValue.cpp,
 	BoostPyTest.h,
 	compile.txt,
 	modules.cppi,

@@ -2,9 +2,6 @@
 #define _BoostPyTest_world_h_
 
 #include <Py/Py.h>
-using namespace boost::python;
-
-//A Simple class
 
 struct World
 {
@@ -13,6 +10,10 @@ struct World
 	std::string msg;
 };
 
+NAMESPACE_UPP
+
 void export_world();
+
+END_UPP_NAMESPACE
 
 #endif

@@ -1,13 +1,7 @@
-#ifndef _BoostPyTest_UppValue_h_
-#define _BoostPyTest_UppValue_h_
-
-#include <Py/Py.h>
+#include "Value.h"
 using namespace boost::python;
 
-#include <Core/Core.h>
-using namespace Upp;
-
-//a convertable instance
+NAMESPACE_UPP
 
 struct Value_to_python
 {
@@ -104,8 +98,14 @@ struct Value_from_python
 	}
 };
 
-Value Valuehelloval(); //tests to-python
-int Valuedoubleit(const Value& v); //tests from-python
+void export_Value()
+{
+ONCELOCK
+{
+	to_python_converter<Value, Value_to_python>();
+	Value_from_python();
+}
+}
 
 //ValueArray
 
@@ -148,8 +148,13 @@ struct ValueArray_from_python
 	}
 };
 
-//fw
-void export_UppValue();
-void export_UppValueArray();
+void export_ValueArray()
+{
+ONCELOCK
+{
+	to_python_converter<ValueArray, ValueArray_to_python>();
+	ValueArray_from_python();
+}
+}
 
-#endif
+END_UPP_NAMESPACE

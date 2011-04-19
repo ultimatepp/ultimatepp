@@ -1,0 +1,15 @@
+uses
+	Core,
+	Py;
+
+file
+	Common.h,
+	GTypes.h,
+	GTypes.cpp,
+	String.h,
+	String.cpp,
+	Value.h,
+	Value.cpp,
+	CoreBoostPy.h,
+	CoreBoostPy.cpp;
+
