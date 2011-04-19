@@ -320,18 +320,14 @@ Vector<Value>& ValueArray::Clone() {
 	return data->data;
 }
 
-ValueArray::ValueArray() {
+void ValueArray::Init0()
+{
 	data = &Single<NullData>();
 	data->Retain();
 }
 
 ValueArray::ValueArray(const ValueArray& v) {
 	data = v.data;
-	data->Retain();
-}
-
-ValueArray::ValueArray(const Nuller&) {
-	data = &Single<NullData>();
 	data->Retain();
 }
 
@@ -408,7 +404,7 @@ void ValueArray::Add(const Value& v) {
 
 void ValueArray::Set(int i, const Value& v) {
 	ASSERT(i >= 0);
-	Clone().DoIndex(i) = v;
+	Clone().At(i) = v;
 }
 
 void ValueArray::Remove(int i)
@@ -500,6 +496,21 @@ ValueMap::ValueMap(const ValueMap& v)
 	data->Retain();
 }
 
+ValueMap::ValueMap(pick_ Index<Value>& k, pick_ Vector<Value>& v)
+{
+	Data& d = Create();
+	d.key = k;
+	d.value = ValueArray(v);
+}
+
+ValueMap::ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep)
+{
+	Data& d = Create();
+	d.key <<= k;
+	Vector<Value> _v(v, 0);
+	d.value = ValueArray(_v);
+}
+
 ValueMap::operator Value() const {
 	data->Retain();
 	return Value(data);
@@ -554,6 +565,21 @@ void ValueMap::Add(const Value& key, const Value& value) {
 	Data& d = Clone();
 	d.key.Add(key);
 	d.value.Add(value);
+}
+
+void ValueMap::Set(int i, const Value& v) {
+	Clone().value.Set(i, v);
+}
+
+void ValueMap::SetKey(int i, const Value& k) {
+	Clone().key.Set(i, k);
+}
+
+void ValueMap::Remove(int i)
+{
+	Data& d = Clone();
+	d.key.Remove(i);
+	d.value.Remove(i);
 }
 
 Value ValueMap::operator[](const Value& key) const

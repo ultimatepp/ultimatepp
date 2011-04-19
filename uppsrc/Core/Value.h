@@ -626,11 +626,12 @@ class ValueArray : AssignValueTypeNo<ValueArray, VALUEARRAY_V, Moveable<ValueArr
 
 	Vector<Value>& Create();
 	Vector<Value>& Clone();
+	void  Init0();
 	
 	friend Value::Void *ValueArrayDataCreate(Stream& s);
 
 public:
-	ValueArray();
+	ValueArray()                              { Init0(); }
 	ValueArray(const ValueArray& v);
 	explicit ValueArray(pick_ Vector<Value>& values);
 	explicit ValueArray(const Vector<Value>& values, int deep);
@@ -641,7 +642,7 @@ public:
 	operator Value() const;
 	ValueArray(const Value& src);
 
-	ValueArray(const Nuller&);
+	ValueArray(const Nuller&)                 { Init0(); }
 	bool IsNull() const                       { return data->IsNull(); }
 
 	void Clear();
@@ -698,6 +699,8 @@ class ValueMap : AssignValueTypeNo<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 public:
 	ValueMap()                               { Init0(); }
 	ValueMap(const ValueMap& v);
+	ValueMap(pick_ Index<Value>& k, pick_ Vector<Value>& v);
+	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
 	~ValueMap();
 
 	ValueMap& operator=(const ValueMap& v);
@@ -709,11 +712,19 @@ public:
 	bool IsNullInstance() const              { return data->IsNull(); }
 
 	void Clear();
+	int  GetCount() const                     { return data->value.GetCount(); }
+	bool IsEmpty() const                      { return data->value.IsEmpty(); }
 
 	void Add(const Value& key, const Value& value);
 	void Add(const String& s, const Value& value) { Add(Value(s), value); }
 	void Add(const char *s, const Value& value)   { Add(Value(s), value); }
 	void Add(Id id, const Value& value)           { Add(Value(id.ToString()), value); }
+	void Set(int i, const Value& v);
+	void SetKey(int i, const Value& k);
+	void SetKey(int i, const String& s)           { SetKey(i, Value(s)); }
+	void SetKey(int i, const char* s)             { SetKey(i, Value(s)); }
+	void SetKey(int i, Id id)                     { SetKey(i, Value(id.ToString())); }
+	void Remove(int i);
 
 	const Index<Value>& GetKeys() const       { return data->key; }
 	ValueArray GetValues() const              { return data->value; }
