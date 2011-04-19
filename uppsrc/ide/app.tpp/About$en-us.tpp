@@ -18,7 +18,7 @@ Sergey Nikitin, Massimo Del Fedele, Irenkov Alexander, Gabriel
 Schmotzer, Domingo Alvarez Duarte, Andrei Cosma, Tom Olá, George 
 Brink, Zbigniew Czapiga, Konstantin Hartwich, Didier Quenouillere, 
 Anthony Paul, Kovalev Sergey, Martin Schut, Ion Lupascu, Frank 
-De prins, Jeff Humphreys, Lucas Harsze]&]
+De prins, Jeff Humphreys, Lucas Harsze, Martin Schut]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Koldo Ramirez, Gabriel Schmotzer, Andrei Catalin, Massimo Del 

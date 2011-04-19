@@ -193,6 +193,7 @@ struct ValueMapper {
 
 template <class T>
 void ValueGetStruct_(T& x, const Value& v) {
+	ValueCheck(IsNull(v) || IsValueMap(v));
 	ValueMapper m;
 	m.map = v;
 	m.get = true;
