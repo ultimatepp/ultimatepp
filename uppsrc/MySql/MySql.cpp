@@ -70,6 +70,7 @@ bool MySqlSession::Open(const char *connect) {
 	String database = Null;
 	String host = Null;
 	int port = MYSQL_PORT;
+	level = 0;
 	const char *p = connect, *b;
 	for(b = p; *p && *p != '/' && *p != '@'; p++)
 		;
@@ -111,6 +112,7 @@ void MySqlSession::Close() {
 	if(mysql) {
 		mysql_close(mysql);
 		mysql = NULL;
+		level = 0;
 	}
 }
 
@@ -121,6 +123,7 @@ void MySqlSession::Begin()
 		*trace << btrans << ";\n";
 	if(mysql_query(mysql, btrans))
 		SetError(mysql_error(mysql), btrans);
+	level++;
 }
 
 void MySqlSession::Commit()
@@ -130,6 +133,7 @@ void MySqlSession::Commit()
 		*trace << ctrans << ";\n";
 	if(mysql_query(mysql, ctrans))
 		SetError(mysql_error(mysql), ctrans);
+	level--;
 }
 
 void MySqlSession::Rollback()
@@ -139,6 +143,12 @@ void MySqlSession::Rollback()
 		*trace << rtrans << ";\n";
 	if(mysql_query(mysql, rtrans))
 		SetError(mysql_error(mysql), rtrans);
+	if(level > 0) level--;
+}
+
+int MySqlSession::GetTransactionLevel() const
+{
+	return level;
 }
 
 static Vector<String> FetchList(Sql& cursor, bool upper = false)
