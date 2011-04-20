@@ -271,7 +271,7 @@ public:
 
 	EditMinMaxNotNull& Min(DataType min)              { Base::Min(min); return *this; }
 	EditMinMaxNotNull& Max(DataType max)              { Base::Max(max); return *this; }
-	EditMinMaxNotNull& MinMax(DataType max)           { Base::MinMax(min, max); return *this; }
+	EditMinMaxNotNull& MinMax(DataType min, DataType max) { Base::MinMax(min, max); return *this; }
 	EditMinMaxNotNull& NotNull(bool nn = true)        { Base::NotNull(nn); return *this; }
 };
 
