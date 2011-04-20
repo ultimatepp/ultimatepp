@@ -15,6 +15,14 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 	activeedge = false;
 	trivialborder = 1;
 	border = 1;
+	paper = SColorPaper();
+	focus_paper = SColorHighlight();
+	readonly_paper = SColorFace();
+	hot_paper = Blend(SColorHighlight, SColorPaper, 235);
+	pressed_paper = Blend(SColorHighlight, SColorFace, 235);
+	text = readonly_text = SColorLabel();
+	focus_text = SColorHighlightText();
+	disabled_text = SColorDisabled();
 	pressoffset = Button::StyleEdge().pressoffset;
 	sep1 = SColorHighlight();
 	sep2 = SColorLight();
@@ -383,35 +391,39 @@ void MultiButton::Paint(Draw& w)
 		(b.left ? left : right) = true;
 	}
 	Rect r, cr;
-	Color text = SColorLabel();
-	Color paper = Null;
+	Color text, paper;
+	if(!IsShowEnabled()) {
+		paper = style->disabled_paper;
+		text = style->disabled_text;
+	}
+	else if(HasFocus()) {
+		paper = style->focus_paper;
+		text = style->focus_text;
+	}
+	else if(!IsEditable()) {
+		paper = style->readonly_paper;
+		text = style->readonly_text;
+	}
+	else {
+		paper = style->paper;
+		text = style->text;
+	}
 	if(ComplexFrame()) {
 		cr = GetSize();
 		cr.left = lx;
 		cr.right = rx;
 		r = cr;
-		paper = HasFocus() ? SColorHighlight() : SColorPaper();
-		if(HasFocus())
-			text = SColorHighlightText();
 		w.DrawRect(r, paper);
 	}
 	else
 	if(frm) {
 		Rect m = GetMargin();
 		r = Rect(max(lx, m.left), m.top, min(rx, sz.cx - m.right), sz.cy - m.bottom);
-		Color paper;
 		if(mst == CTRL_HOT && !IsTrivial())
-			paper = Blend(SColorHighlight, SColorPaper, 235);
+			paper = style->hot_paper;
 		else
 		if(mst == CTRL_PRESSED && !IsTrivial())
-			paper = Blend(SColorHighlight, SColorFace, 235);
-		else
-		if(HasFocus()) {
-			paper = SColorHighlight();
-			text = SColorHighlightText();
-		}
-		else
-			paper = SColorPaper();
+			paper = style->pressed_paper;
 		w.DrawRect(r, paper);
 		cr = r;
 	}
@@ -445,9 +457,7 @@ void MultiButton::Paint(Draw& w)
 	bool f = HasFocus() && !push && frm;
 	if(cr.left < cr.right && display) {
 		w.Clip(clr);
-		display->Paint(w, cr, v,
-		               IsShowEnabled() && IsEditable() ? text : SColorDisabled,
-		               paper, f ? Display::CURSOR : Display::FOCUS|Display::CURSOR);
+		display->Paint(w, cr, v, text, paper, f ? Display::CURSOR : Display::FOCUS|Display::CURSOR);
 		w.End();
 	}
 	if(!frm && HasFocus())

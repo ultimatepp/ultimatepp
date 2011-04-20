@@ -31,6 +31,16 @@ public:
 		int   trivialborder;
 		Color monocolor[4];
 		Color fmonocolor[4];
+		Color paper;
+		Color hot_paper;
+		Color pressed_paper;
+		Color focus_paper;
+		Color readonly_paper;
+		Color disabled_paper;
+		Color text;
+		Color focus_text;
+		Color disabled_text;
+		Color readonly_text;
 		Point pressoffset;
 		Value sep1, sep2;
 		int   sepm;
