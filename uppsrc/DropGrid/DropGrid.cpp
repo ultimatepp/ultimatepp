@@ -194,14 +194,15 @@ void DropGrid::Paint(Draw& w)
 	else
 		clear.Hide();
 	
-	//w.DrawRect(sz, SColorPaper());
 	GridDisplay &disp = display ? *display : list.GetDisplay();
 	bool hf = HasFocus();
 	bool isnull = rowid < 0;
 	Color fg = hf ? SColorHighlightText() : IsEnabled() ? SColorText() : SColorDisabled();
-	Color bg = !IsEnabled() ? EditField::StyleDefault().disabled //SColorFace
-	                        : notnull && isnull ? Blend(SColorPaper, Color(255, 0, 0), /*hf ? 55 :*/ 32)
-	                                            : hf ? SColorHighlight() : SColorPaper();
+	Color bg = !IsEnabled() || !IsEditable() 
+		? EditField::StyleDefault().disabled
+	    : notnull && isnull 
+	    	? Blend(SColorPaper, Color(255, 0, 0), 32)
+	        : hf ? SColorHighlight() : SColorPaper();
 
 	const int d = 0;
 	
@@ -676,7 +677,6 @@ void DropGrid::ClearValue()
 		UpdateActionRefresh();
 	else
 		UpdateRefresh();
-	SetFocus();
 }
 
 void DropGrid::Reset()
