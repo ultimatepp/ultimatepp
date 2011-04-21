@@ -2,10 +2,14 @@
 
 BOOST_PYTHON_MODULE(hello)
 {
+	scope().attr("__doc__") = "hello module";
 	export_world();
 }
 
 BOOST_PYTHON_MODULE(upp)
 {
+	scope().attr("__doc__") = "upp module";
+	export_Core();
+	export_CtrlCore();
 	export_CtrlLib();
 }

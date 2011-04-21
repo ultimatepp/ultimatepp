@@ -2,5 +2,6 @@ LAYOUT(BoostPyTestLayout, 672, 380)
 	ITEM(PyConsoleCtrl, con, HSizePosZ(0, 248).VSizePosZ(0, 0))
 	ITEM(SliderCtrl, sl, RightPosZ(8, 232).TopPosZ(12, 48))
 	ITEM(ValueCtrl, vc, RightPosZ(8, 232).TopPosZ(76, 56))
+	ITEM(EditString, es, RightPosZ(8, 232).TopPosZ(148, 19))
 END_LAYOUT
 

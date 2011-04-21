@@ -1,0 +1,7 @@
+#include "CtrlPropCommon.h"
+#include <CtrlLib/CtrlLib.h>
+
+PROPERTIES(EditStringNotNull, EditString)
+END_PROPERTIES
+
+PROPS(Ctrl, EditStringNotNull, EditString)

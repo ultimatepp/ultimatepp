@@ -7,12 +7,14 @@ bool PropEnable(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; o.Enab
 bool PropIsEnabled(Value& v, const Ctrl& o) { v = o.IsEnabled(); return true; }
 bool PropShow(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; o.Show(v); return true; }
 bool PropIsVisible(Value& v, const Ctrl& o) { v = o.IsVisible(); return true; }
+bool PropIsShown(Value& v, const Ctrl& o) { v = o.IsShown(); return true; }
 bool PropEditable(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; o.SetEditable(v); return true; }
 bool PropIsEditable(Value& v, const Ctrl& o) { v = o.IsEditable(); return true; }
 bool PropFocus(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; bool b = v; if(b) o.SetFocus(); else if(o.GetParent()) o.GetParent()->SetFocus(); return true; }
 bool PropHasFocus(Value& v, const Ctrl& o) { v = o.HasFocus(); return true; }
-bool PropModify(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; bool b = v; if(b) o.SetModify(); else o.ResetModify(); return true; }
+bool PropModify(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; bool b = v; if(b) o.SetModify(); else o.ClearModify(); return true; }
 bool PropIsModified(Value& v, const Ctrl& o) { v = o.IsModified(); return true; }
+bool PropResetModify(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; if(bool(v)) o.ResetModify(); return true; }
 bool PropSetTip(const Value& v, Ctrl& o) { o.Tip(AsString(v)); return true; }
 bool PropGetTip(Value& v, const Ctrl& o) { v = o.GetTip(); return true; }
 bool PropWantFocus(const Value& v, Ctrl& o) { if(!IsNumber(v)) return false; o.WantFocus(v); return true; }
@@ -35,10 +37,12 @@ PROPERTIES(Ctrl, EmptyClass)
 PROPERTY("data", PropSetData, PropGetData)
 PROPERTY("enable", PropEnable, PropIsEnabled)
 PROPERTY("show", PropShow, PropIsVisible)
+PROPERTY_GET("shown", PropIsShown)
 PROPERTY("editable", PropEditable, PropIsEditable)
 PROPERTY("logpos", PropSetLogPos, PropGetLogPos)
 PROPERTY("focus", PropFocus, PropHasFocus)
 PROPERTY("modify", PropModify, PropIsModified)
+PROPERTY_SET("refresh", PropResetModify)
 PROPERTY("tip", PropSetTip, PropGetTip)
 PROPERTY("wantfocus", PropWantFocus, PropIsWantFocus)
 PROPERTY("initFocus", PropInitFocus, PropIsInitFocus)

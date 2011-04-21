@@ -5,6 +5,8 @@
 
 NAMESPACE_UPP
 
+void export_Logc();
+void export_LogPos();
 void export_CtrlCore();
 
 END_UPP_NAMESPACE

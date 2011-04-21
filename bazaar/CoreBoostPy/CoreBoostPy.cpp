@@ -10,6 +10,7 @@ ONCELOCK
 	export_String();
 	export_Value();
 	export_ValueArray();
+	export_ValueMap();
 }
 }
 

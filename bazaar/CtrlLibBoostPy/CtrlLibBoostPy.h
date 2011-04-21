@@ -2,6 +2,7 @@
 #define _CtrlLibBoostPy_CtrlLibBoostPy_h_
 
 #include "CtrlCore.h"
+#include "EditCtrl.h"
 #include "SliderCtrl.h"
 #include "ValueCtrl.h"
 

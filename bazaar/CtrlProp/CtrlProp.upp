@@ -26,6 +26,7 @@ file
 	EditInt.icpp,
 	EditInt64.icpp,
 	EditDouble.icpp,
+	EditStringNotNull.icpp,
 	EditIntNotNull.icpp,
 	EditInt64NotNull.icpp,
 	EditDoubleNotNull.icpp,

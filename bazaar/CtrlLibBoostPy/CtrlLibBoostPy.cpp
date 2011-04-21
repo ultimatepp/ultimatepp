@@ -6,9 +6,9 @@ void export_CtrlLib()
 {
 ONCELOCK
 {
-	export_Core();
-
 	export_CtrlCore();
+	export_EditCtrl();
+
 	export_SliderCtrl();
 	export_ValueCtrl();
 }

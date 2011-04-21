@@ -11,6 +11,8 @@ file
 	SliderCtrl.cpp,
 	ValueCtrl.h,
 	ValueCtrl.cpp,
+	EditCtrl.h,
+	EditCtrl.cpp,
 	CtrlLibBoostPy.h,
 	CtrlLibBoostPy.cpp;
 

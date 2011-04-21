@@ -26,7 +26,7 @@ void PyConsoleCtrl::Clear()
 void PyConsoleCtrl::Exec()
 {
 	String c = cmd.GetData();
-	if(c.IsEmpty()) return;
+	if(c.IsEmpty()) { cmd.SetFocus(); return; }
 
 	int ret = -1;
 
@@ -54,6 +54,7 @@ void PyConsoleCtrl::Exec()
 	}
 	ex.Clear();
 	ex <<= ret;
+	cmd.SetFocus();
 }
 
 void PyConsoleCtrl::ShowHistory(int i)

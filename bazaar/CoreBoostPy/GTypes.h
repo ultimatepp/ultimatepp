@@ -6,6 +6,9 @@
 NAMESPACE_UPP
 
 void export_Color();
+void export_Size();
+void export_Point();
+void export_Rect();
 
 void export_GTypes();
 

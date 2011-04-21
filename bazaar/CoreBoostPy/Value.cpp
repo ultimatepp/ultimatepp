@@ -15,6 +15,10 @@ struct Value_to_python
 			case DOUBLE_V: return incref(object(double(v)).ptr());
 			case STRING_V: return incref(object(String(v)).ptr());
 			case VALUEARRAY_V: return incref(object(ValueArray(v)).ptr());
+			case COLOR_V: return incref(object(Color(v)).ptr());
+			case POINT_V: return incref(object(Point(v)).ptr());
+			case SIZE_V: return incref(object(Size(v)).ptr());
+			case RECT_V: return incref(object(Rect(v)).ptr());
 			case VOID_V:
 			default: return incref(object().ptr()); //none
 		}
@@ -37,6 +41,11 @@ struct Value_from_python
 		if(PyFloat_Check(po)) return po;
 		if(PyString_Check(po)) return po;
 		if(PyList_Check(po)) return po;
+		if(PyDict_Check(po)) return po;
+		if(extract<Color&>(po).check()) return po;
+		if(extract<Point&>(po).check()) return po;
+		if(extract<Size&>(po).check()) return po;
+		if(extract<Rect&>(po).check()) return po;
 		return 0;
 	}
 
@@ -80,13 +89,43 @@ struct Value_from_python
 		else
 		if(PyString_Check(po))
 		{
-		String c = extract<String>(object(handle<>(borrowed(po)))); //use upper converter, really borrowed?
+		String c = extract<String>(po); //use upper converter
 		new(d) Value(c);
 		}
 		else
 		if(PyList_Check(po))
 		{
-		ValueArray c = extract<ValueArray>(object(handle<>(borrowed(po)))); //use upper converter, really borrowed?
+		ValueArray c = extract<ValueArray>(po); //use upper converter
+		new(d) Value(c);
+		}
+		else
+		if(PyDict_Check(po))
+		{
+		ValueMap c = extract<ValueMap>(po); //use upper converter
+		new(d) Value(c);
+		}
+		else
+		if(extract<Color&>(po).check())
+		{
+		Color& c = extract<Color&>(po); //use upper converter
+		new(d) Value(c);
+		}
+		else
+		if(extract<Point&>(po).check())
+		{
+		Point& c = extract<Point&>(po); //use upper converter
+		new(d) Value(c);
+		}
+		else
+		if(extract<Size&>(po).check())
+		{
+		Size& c = extract<Size&>(po); //use upper converter
+		new(d) Value(c);
+		}
+		else
+		if(extract<Rect&>(po).check())
+		{
+		Rect& c = extract<Rect&>(po); //use upper converter
 		new(d) Value(c);
 		}
 		else
@@ -154,6 +193,62 @@ ONCELOCK
 {
 	to_python_converter<ValueArray, ValueArray_to_python>();
 	ValueArray_from_python();
+}
+}
+
+//ValueMap
+
+struct ValueMap_to_python
+{
+	static PyObject* convert(const ValueMap& v)
+	{
+		dict dt;
+		const Index<Value>& k = v.GetKeys();
+		const Vector<Value>& vv = v.GetValues().Get();
+		ASSERT(k.GetCount() == vv.GetCount());
+		for(int i = 0; i < k.GetCount(); i++)
+			dt[object(k[i])] = object(vv[i]);
+		return incref(dt.ptr()); //need to create a list
+	}
+};
+
+struct ValueMap_from_python
+{
+	ValueMap_from_python()
+	{
+		converter::registry::push_back(&convertible, &construct, type_id<ValueMap>());
+	}
+
+	static void* convertible(PyObject* po)
+	{
+		if(PyDict_Check(po)) return po;
+		return 0;
+	}
+
+	static void construct(PyObject* po, converter::rvalue_from_python_stage1_data* data)
+	{
+		void* d = ((converter::rvalue_from_python_storage<ValueMap>*)data)->storage.bytes;
+		
+		Index<Value> k;
+		Vector<Value> vv;
+		dict dt(handle<>(borrowed(po)));
+		for(int i = 0; i < len(dt); i++)
+		{
+			k.Add(Null); //FIXME
+			vv.Add(Null); //extract<Value>(dt[i]));
+		}
+		new(d) ValueMap(k, vv);
+
+		data->convertible = d;
+	}
+};
+
+void export_ValueMap()
+{
+ONCELOCK
+{
+	to_python_converter<ValueMap, ValueMap_to_python>();
+	ValueMap_from_python();
 }
 }
 

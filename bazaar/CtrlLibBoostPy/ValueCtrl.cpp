@@ -7,8 +7,7 @@ void export_ValueCtrl()
 {
 ONCELOCK
 {
-	scope().attr("__doc__") = "ValueCtrl module's docstring";
-	class_<ValueCtrl, bases<Ctrl>, ValueCtrl, boost::noncopyable>("ValueCtrl", "An Upp ValueCtrl", no_init)
+	class_<ValueCtrl, bases<Ctrl>, ValueCtrl, boost::noncopyable>("ValueCtrl", "Upp ValueCtrl", no_init)
 	;
 }
 }

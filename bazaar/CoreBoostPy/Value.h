@@ -7,6 +7,7 @@ NAMESPACE_UPP
 
 void export_Value();
 void export_ValueArray();
+void export_ValueMap();
 
 END_UPP_NAMESPACE
 

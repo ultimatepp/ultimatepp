@@ -49,18 +49,29 @@ BoostPyTest::BoostPyTest()
 		vc.SetData(123);
 		scope(upp_module).attr("vc") = ptr(&vc);
 
+		es.SetData("Hello from Upp");
+		scope(upp_module).attr("es") = ptr(&es);
+
 		//the additional import is needless
 		String sc = 
+
 		"p = hello.World()\n"
 		"p.set('Some Greet Text')\n"
 		"print p.greet()\n"
 		
-		"upp.sl.setdata(75)\n"
-		"print upp.sl.getdata()\n"
+		"upp.sl.data = 75\n"
+		"print upp.sl.data\n"
 
-		"upp.vc.setdata(range(10))\n"
-		"print upp.vc.getdata()\n"
+		"upp.vc.data = range(10)\n"
+		"print upp.vc.data\n"
 
+		"print upp.es.data\n"
+		"upp.es.data = 'Another Text from Upp'\n"
+		"print upp.es.data\n"
+
+		"c = upp.Color(123,124,125)\n"
+		"print c"
+		//"upp.vc.data = c\n"
 		;
 		con.cmd.SetData(sc);
 
