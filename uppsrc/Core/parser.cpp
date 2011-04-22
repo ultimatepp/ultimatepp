@@ -149,6 +149,14 @@ int  CParser::ReadInt() throw(Error) {
 	return sign * n;
 }
 
+int CParser::ReadInt(int min, int max) throw(Error)
+{
+	int n = ReadInt();
+	if(n < min || n > max)
+		ThrowError("number is out of range");
+	return n;
+}
+
 bool CParser::IsNumber(int base)
 {
 	if(IsDigit(*term))

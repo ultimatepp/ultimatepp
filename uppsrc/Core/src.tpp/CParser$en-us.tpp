@@ -199,10 +199,16 @@ spaces and digit.&]
 [s5;:CParser`:`:ReadInt`(`)throw`(CParser`:`:Error`): [@(0.0.255) int]_[* ReadInt]()_[@(0.0.255) t
 hrow](Error)&]
 [s2;%% Reads the integer from the current position. If [* IsInt ]is 
-false, throws an [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
-Parser`::Error].&]
+false, throws an &]
 [s7;%% [*/ Return value]-|Integer.&]
 [s3; &]
+[s4; &]
+[s5;:CParser`:`:ReadInt`(int`,int`)throw`(CParser`:`:Error`): [@(0.0.255) int]_[* ReadInt
+]([@(0.0.255) int]_[*@3 min], [@(0.0.255) int]_[*@3 max])_[@(0.0.255) throw](Error)&]
+[s2;%% Performs ReadInt and then checks the result to be in [%-*@3 min] 
+<`= result <`= [%-*@3 max]. If not, throws a [^topic`:`/`/Core`/src`/CParser`$en`-us`#CParser`:`:Error`:`:struct^ C
+Parser`::Error], otherwise returns it.&]
+[s3;%% &]
 [s4; &]
 [s5;:CParser`:`:IsNumber`(`): [@(0.0.255) bool]_[* IsNumber]()&]
 [s2;%% Tests for sign`-less number at current position `- there must 

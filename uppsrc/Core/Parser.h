@@ -47,6 +47,7 @@ public:
 	String ReadIdt() throw(Error);
 	bool   IsInt();
 	int    ReadInt() throw(Error);
+	int    ReadInt(int min, int max) throw(Error);
 	bool   IsNumber()                         { return IsDigit(*term); }
 	bool   IsNumber(int base);
 	uint32 ReadNumber(int base = 10) throw(Error);

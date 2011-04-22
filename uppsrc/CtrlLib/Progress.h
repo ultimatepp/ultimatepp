@@ -28,6 +28,9 @@ public:
 	int   operator++(int)                       { int i = actual; Set(actual + 1); return i; }
 	int   operator+=(int i)                     { Set(actual + i); return actual; }
 
+	int   Get() const                           { return actual; }
+	int   GetTotal() const                      { return total; }
+
 	operator int()                              { return actual; }
 
 	static const Style& StyleDefault();
