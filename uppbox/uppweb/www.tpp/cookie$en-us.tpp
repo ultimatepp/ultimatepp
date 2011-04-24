@@ -22,7 +22,10 @@ a gift as a reward and all community appreciation.]&]
 arbitrarily, not having any relationship with the manufacturer 
 of the product delivered.]&]
 [s0;#2 &]
-[s0;# [2 U`+`+ authors and Cookie Prize organization are excluded.]]
+[s0;# [2 During prize voting period all U`+`+ Forum users can vote 
+to two different candidates through a ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 P
+M][2 . U`+`+ main authors, Cookie Prize organization and last year 
+winner can vote but are excluded as candidates.]]
 :: [s0;= [* 
 @@image:1075&981
 Šƒ¨€€€€€€€€€€ø§œì‡Ü“ç¿¿şÓÚ¾­¦öØ·Ãí­õ´ªÎ”‘…ˆÅ„Ù›ÄÖ‘Øû¦„æ¨ˆ«áï½Â®ûï½÷Æ¶ 
@@ -4312,7 +4315,14 @@ of the product delivered.]&]
 [s0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 News]]}}&]
 [s0;*2 &]
-[ {{1184:8816f0;g0;^t/25b/25 [s0;# [2 2011/02/14]]
+[ {{1184:8816f0;g0;^t/25b/25 [s0;# [2 2011/04/23]]
+:: [s0;# [2 This year gift has been delivered. A 20 years old Malaga Virgen 
+1885 Brandy.]&]
+[s0;# [2 For new year prize gift ideas are acknowledged ;`-).]]
+:: [s0;# [2 2011/03/26]]
+:: [s0;# [2 After a close vote ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 d
+olik.rce][2  has been this year winner. Congratulations Honza!]]
+:: [s0;# [2 2011/02/14]]
 :: [s0;# [2 Cookie Prize 2011 is announced. This year all U`+`+ Forum 
 users can vote.]&]
 [s0;# [2 Send your vote (the person you want deserves to win) through 
