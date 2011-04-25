@@ -344,7 +344,11 @@ bool AssistEditor::IncludeAssist()
 		p.Char('<');
 		theide->SetupDefaultMethod();
 		VectorMap<String, String> bm = GetMethodVars(theide->method);
-		include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", ""));
+		include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", "")
+#ifdef PLATFORM_POSIX
+			+ ";/usr/include;/usr/local/include"
+#endif
+		);
 		include_local = false;
 	}
 	include_path.Clear();
