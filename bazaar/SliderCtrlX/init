@@ -1,0 +1,4 @@
+#ifndef _zLibs_SliderCtrlX_icpp_init_stub
+#define _zLibs_SliderCtrlX_icpp_init_stub
+#include "CtrlLib/init"
+#endif

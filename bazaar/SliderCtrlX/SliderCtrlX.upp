@@ -1,8 +1,8 @@
 uses
 	CtrlLib;
 
-
 file
 	SliderCtrlX.cpp,
-	SliderCtrlX.h;
+	SliderCtrlX.h,
+	SliderCtrlX.usc;
 
