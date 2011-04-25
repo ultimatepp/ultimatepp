@@ -38,6 +38,7 @@ public:
 	int      GetG() const              { return GetGValue(Get()); }
 	int      GetB() const              { return GetBValue(Get()); }
 
+	void     SetNull()                 { color = 0xffffffff; }
 	bool     IsNullInstance() const    { return color == 0xffffffff; }
 	unsigned GetHashValue() const      { return color; }
 	bool     operator==(Color c) const { return color == c.color; }
@@ -45,11 +46,11 @@ public:
 
 	void     Serialize(Stream& s)      { s % color; }
 
-	Color()                            { color = 0xffffffff; }
+	Color()                            { SetNull(); }
 	Color(int r, int g, int b)         { color = RGB(r, g, b); }
 	Color(int n, int)                  { color = 0x80000000 | n; }
 
-	Color(const Nuller&)               { color = 0xffffffff; }
+	Color(const Nuller&)               { SetNull(); }
 
 	operator Value() const             { return RichValue<Color>(*this); }
 	Color(const Value& q)              { color = RichValue<Color>::Extract(q).color; }

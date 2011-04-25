@@ -82,6 +82,8 @@ AssistEditor::AssistEditor()
 	param_info.SetFrame(BlackFrame());
 	param_info.BackPaint();
 	param_info.NoSb();
+	
+	include_assist = false;
 }
 
 int CppItemInfoOrder(const Value& va, const Value& vb) {
@@ -100,12 +102,19 @@ void AssistEditor::CloseAssist()
 	CloseTip();
 }
 
-String AssistEditor::ReadIdBack(int q)
+bool isincludefnchar(int c)
+{
+	return c && c != '<' && c != '>' && c != '?' &&
+	       c != ' ' && c != '\"' && c != '/' && c != '\\' && c != '\n';
+}
+
+String AssistEditor::ReadIdBack(int q, bool include)
 {
 	String id;
-	while(q > 0 && iscid(GetChar(q - 1)))
+	bool (*test)(int c) = include ? isincludefnchar : iscid;
+	while(q > 0 && (*test)(GetChar(q - 1)))
 		q--;
-	while(q < GetLength() && iscid(GetChar(q)))
+	while(q < GetLength() && (*test)(GetChar(q)))
 		id << (char)GetChar(q++);
 	return id;
 }
@@ -296,7 +305,7 @@ int memcmp_i(const char *s, const char *t, int n)
 void AssistEditor::SyncAssist()
 {
 	String name;
-	name = ReadIdBack(GetCursor());
+	name = ReadIdBack(GetCursor(), include_assist);
 	assist.Clear();
 	int typei = type.GetCursor() - 1;
 	for(int p = 0; p < 2; p++) {
@@ -316,7 +325,84 @@ void AssistEditor::SyncAssist()
 			}
 		}
 	}
-	assist.Sort(0, CppItemInfoOrder);
+	if(!include_assist)
+		assist.Sort(0, CppItemInfoOrder);
+}
+
+bool AssistEditor::IncludeAssist()
+{
+	Vector<String> include;
+	String ln = GetUtf8Line(GetCursorLine());
+	CParser p(ln);
+	if(!p.Char('#') || !p.Id("include"))
+		return false;
+	if(p.Char('\"')) {
+		include.Add(GetFileFolder(theide->editfile));
+		include_local = true;
+	}
+	else {
+		p.Char('<');
+		theide->SetupDefaultMethod();
+		VectorMap<String, String> bm = GetMethodVars(theide->method);
+		include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", ""));
+		include_local = false;
+	}
+	include_path.Clear();
+	for(;;) {
+		String dir;
+		while(isincludefnchar(p.PeekChar()))
+			dir.Cat(p.GetChar());
+		if(dir.GetCount() && (p.Char('/') || p.Char('\\'))) {
+			if(include_path.GetCount())
+				include_path << '/'; 
+			include_path << dir;
+		}
+		else
+			break;
+	}
+	Vector<String> folder, upper_folder, file, upper_file;
+	for(int i = 0; i < include.GetCount(); i++) {
+		FindFile ff(AppendFileName(AppendFileName(include[i], include_path), "*.*"));
+		while(ff) {
+			String fn = ff.GetName();
+			if(!ff.IsHidden())
+				if(ff.IsFolder()) {
+					folder.Add(fn);
+					upper_folder.Add(ToUpper(fn));
+				}
+				else {
+					static Index<String> ext(Split(".h;.hpp;.hh;.hxx;.i;.lay;.iml;.t;.dli", ';'));
+					if(ext.Find(ToLower(GetFileExt(fn))) >= 0) {
+						file.Add(fn);
+						upper_file.Add(ToUpper(fn));
+					}
+				}
+			ff.Next();
+		}
+	}
+	IndexSort(upper_folder, folder);
+	for(int i = 0; i < folder.GetCount(); i++) {
+		String fn = folder[i];
+		CppItemInfo& f = assist_item.GetAdd(fn);
+		f.name = f.natural = fn;
+		f.access = 0;
+		f.kind = KIND_INCLUDEFOLDER;
+	}
+	IndexSort(upper_file, file);
+	for(int i = 0; i < file.GetCount(); i++) {
+		String fn = file[i];
+		CppItemInfo& f = assist_item.GetAdd(fn);
+		f.name = f.natural = fn;
+		f.access = 0;
+		static Index<String> hdr(Split(".h;.hpp;.hh;.hxx", ';'));
+		f.kind = hdr.Find(ToLower(GetFileExt(fn))) >= 0 ? KIND_INCLUDEFILE
+		                                                : KIND_INCLUDEFILE_ANY;
+	}
+	include_assist = true;
+	if(include_path.GetCount())
+		include_path << "/";
+	PopUpAssist();
+	return true;
 }
 
 void AssistEditor::Assist()
@@ -324,12 +410,15 @@ void AssistEditor::Assist()
 	if(!assist_active)
 		return;
 	CloseAssist();
-	Parser parser;
-	Context(parser, GetCursor());
 	int q = GetCursor();
 	assist_cursor = q;
 	assist_type.Clear();
 	assist_item.Clear();
+	include_assist = false;
+	if(IncludeAssist())
+		return;
+	Parser parser;
+	Context(parser, GetCursor());
 	Index<String> in_types;
 	while(iscid(Ch(q - 1)))
 		q--;
@@ -385,15 +474,20 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 	int lcy = max(16, BrowserFont().Info().GetHeight());
 	type.Clear();
 	type.Add(AttrText("<all>").Ink(SColorHighlight()));
-	for(int i = 0; i < assist_type.GetCount(); i++) {
-		String s = assist_type[i];
-		if(s[0] == ':' && s[1] == ':')
-			s = s.Mid(2);
-		s = Nvl(s, "<globals>");
-		if(s[0] == '<')
-			type.Add(AttrText(s).Ink(SColorMark()));
-		else
-			type.Add(Nvl(s, "<globals>"));
+	if(assist_type.GetCount() == 0)
+		popup.Zoom(1);
+	else {
+		for(int i = 0; i < assist_type.GetCount(); i++) {
+			String s = assist_type[i];
+			if(s[0] == ':' && s[1] == ':')
+				s = s.Mid(2);
+			s = Nvl(s, "<globals>");
+			if(s[0] == '<')
+				type.Add(AttrText(s).Ink(SColorMark()));
+			else
+				type.Add(Nvl(s, "<globals>"));
+		}
+		popup.NoZoom();
 	}
 	type.SetCursor(0);
 	if(!assist.GetCount())
@@ -491,52 +585,72 @@ void AssistEditor::AssistInsert()
 {
 	if(assist.IsCursor()) {
 		const CppItemInfo& f = ValueTo<CppItemInfo>(assist.Get(0));
-		String txt = f.name;
-		int l = txt.GetCount();
-		int pl = txt.GetCount();
-		if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND)
-			txt << "()";
-		int cl = GetCursor();
-		int ch = cl;
-		while(iscid(Ch(cl - 1)))
-			cl--;
-		while(iscid(Ch(ch)))
-			ch++;
-		Remove(cl, ch - cl);
-		SetCursor(cl);
-		if(thisback)
-			for(;;) {
-				int c = Ch(cl++);
-				if(!c || Ch(cl) == ',' || Ch(cl) == ')')
-					break;
-				if(c != ' ') {
-					if(thisbackn)
-						txt << ", ";
-					txt << ')';
-					break;
-				}
+		if(include_assist) {
+			int ln = GetLine(GetCursor());
+			int pos = GetPos(ln);
+			Remove(pos, GetLineLength(ln));
+			SetCursor(pos);
+			Paste(ToUnicode(String().Cat() << "#include " 
+			                << (include_local ? "\"" : "<")
+			                << include_path
+			                << f.name
+			                << (f.kind == KIND_INCLUDEFOLDER ? "/" : 
+			                       include_local ? "\"" : ">")
+			                , CHARSET_WIN1250));
+			if(f.kind == KIND_INCLUDEFOLDER) {
+				Assist();
+				IgnoreMouseUp();
+				return;
 			}
-		int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
-		if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
-			SetCursor(GetCursor() - 1);
-			StartParamInfo(f, cl);
-			int x = f.natural.ReverseFind('(');
-			if(x >= 0 && f.natural[x + 1] == ')')
-				SetCursor(GetCursor() + 1);
 		}
-		else
-		if(thisback) {
-			if(thisbackn)
+		else {
+			String txt = f.name;
+			int l = txt.GetCount();
+			int pl = txt.GetCount();
+			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND)
+				txt << "()";
+			int cl = GetCursor();
+			int ch = cl;
+			while(iscid(Ch(cl - 1)))
+				cl--;
+			while(iscid(Ch(ch)))
+				ch++;
+			Remove(cl, ch - cl);
+			SetCursor(cl);
+			if(thisback)
+				for(;;) {
+					int c = Ch(cl++);
+					if(!c || Ch(cl) == ',' || Ch(cl) == ')')
+						break;
+					if(c != ' ') {
+						if(thisbackn)
+							txt << ", ";
+						txt << ')';
+						break;
+					}
+				}
+			int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
+			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
 				SetCursor(GetCursor() - 1);
+				StartParamInfo(f, cl);
+				int x = f.natural.ReverseFind('(');
+				if(x >= 0 && f.natural[x + 1] == ')')
+					SetCursor(GetCursor() + 1);
+			}
+			else
+			if(thisback) {
+				if(thisbackn)
+					SetCursor(GetCursor() - 1);
+			}
+			else
+			if(!inbody)
+				SetCursor(cl + n - thisbackn);
+			else
+			if(pl > l)
+				SetSelection(cl + l, cl + pl);
+			else
+				SetCursor(cl + l);
 		}
-		else
-		if(!inbody)
-			SetCursor(cl + n - thisbackn);
-		else
-		if(pl > l)
-			SetSelection(cl + l, cl + pl);
-		else
-			SetCursor(cl + l);
 	}
 	CloseAssist();
 	IgnoreMouseUp();
@@ -615,16 +729,26 @@ bool AssistEditor::Key(dword key, int count)
 			SyncAssist();
 	}
 	else
-	if(auto_assist && InCode()) {
-		if(key == '.' || key == '>' && Ch(GetCursor() - 2) == '-' ||
-		   key == ':' && Ch(GetCursor() - 2) == ':')
-			Assist();
-		else
-		if(key == '(') {
-			int q = GetCursor() - 1;
-			String id = IdBack(q);
-			if(id == "THISBACK" || id == "THISBACK1" || id == "THISBACK2" || id == "THISBACK3" || id == "THISBACK4")
+	if(auto_assist) {
+		if(InCode()) {
+			if(key == '.' || key == '>' && Ch(GetCursor() - 2) == '-' ||
+			   key == ':' && Ch(GetCursor() - 2) == ':')
 				Assist();
+			else
+			if(key == '(') {
+				int q = GetCursor() - 1;
+				String id = IdBack(q);
+				if(id == "THISBACK" || id == "THISBACK1" || id == "THISBACK2" || id == "THISBACK3" || id == "THISBACK4")
+					Assist();
+			}
+		}
+		if(key == '\"' || key == '<') {
+			int q = GetCursor() - 2;
+			if(q > 0) {
+				String id = IdBack(q);
+				if(id == "include" && Ch(q - 1) == '#')
+					Assist();
+			}
 		}
 	}
 	return b;

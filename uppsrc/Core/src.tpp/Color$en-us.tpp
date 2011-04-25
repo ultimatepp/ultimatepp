@@ -88,6 +88,10 @@ RGB code.&]
 [s7; [*/ Return value]-|The blue component.&]
 [s3; &]
 [s4;%- &]
+[s5;:Color`:`:SetNull`(`):%- [@(0.0.255) void]_[* SetNull]()&]
+[s2; Sets the Color to Null.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Color`:`:IsNullInstance`(`)const:%- [@(0.0.255) bool]_[* IsNullInstance]()_[@(0.0.255) c
 onst]&]
 [s7; [*/ Return value]-|True if Color is Null. Used to implement IsNull 

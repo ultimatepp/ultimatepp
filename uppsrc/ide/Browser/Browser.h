@@ -71,6 +71,7 @@ enum {
 	ITEM_SIGN,
 	ITEM_UPP,
 	ITEM_TYPE,
+	
 	ITEM_PTYPE = ITEM_TYPE + 10000,
 };
 
@@ -97,6 +98,12 @@ struct BrowserFileInfo {
 ArrayMap<String, BrowserFileInfo>& FileSet();
 
 int GetItemHeight(const CppItem& m, int cx);
+
+enum AdditionalKinds {
+	KIND_INCLUDEFILE = 100,
+	KIND_INCLUDEFILE_ANY,
+	KIND_INCLUDEFOLDER,
+};
 
 struct CppItemInfoDisplay : public Display
 {
