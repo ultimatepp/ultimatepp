@@ -292,6 +292,8 @@ String Qualify(const String& scope, const String& type);
 int    CharFilterMacro(int c);
 int    CharFilterFileName(int c);
 
+bool isincludefnchar(int c);
+
 struct AssistEditor : CodeEditor {
 	virtual bool Key(dword key, int count);
 	virtual void LostFocus();
@@ -328,10 +330,13 @@ struct AssistEditor : CodeEditor {
 	bool           commentdp;
 	bool           inbody;
 	bool           thisback, thisbackn;
+	bool           include_assist;
 	Ide           *theide;
 	WString        cachedline;
 	int            cachedpos;
 	int            cachedln;
+	bool           include_local;
+	String         include_path;
 	
 	RichTextCtrl   param_info;
 	String         param_qtf;
@@ -351,7 +356,8 @@ struct AssistEditor : CodeEditor {
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
 	void           Assist();
-	String         ReadIdBack(int q);
+	bool           IncludeAssist();
+	String         ReadIdBack(int q, bool include = false);
 	void           SyncAssist();
 	void           AssistInsert();
 	bool           InCode();

@@ -111,6 +111,15 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	case FRIENDCLASS:
 		img = BrowserImg::friend_class();
 		break;
+	case KIND_INCLUDEFILE:
+		img = IdeCommonImg::Header();
+		break;
+	case KIND_INCLUDEFILE_ANY:
+		img = CtrlImg::File();
+		break;
+	case KIND_INCLUDEFOLDER:
+		img = CtrlImg::Dir();
+		break;
 	}
 
 	int by = ry - bk.GetSize().cy / 2;
