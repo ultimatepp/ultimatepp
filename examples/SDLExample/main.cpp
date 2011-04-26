@@ -2,9 +2,10 @@
 
 using namespace Upp;
 
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 #include <SDL.h>
-#else
+#endif
+#ifdef COMPILER_GCC
 #include <SDL/SDL.h>
 #endif
 
