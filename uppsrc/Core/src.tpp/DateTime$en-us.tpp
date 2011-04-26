@@ -47,6 +47,11 @@ topic "Date and Time";
 [s2;%% Year.&]
 [s3; &]
 [s4; &]
+[s5;:Date`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
+]_[*@3 s])&]
+[s2;%% Serializes Date to/from [%-*@3 s].&]
+[s3;%% &]
+[s4; &]
 [s5;:Date`:`:IsValid`(`)const: [@(0.0.255) bool]_[* IsValid]()_[@(0.0.255) const]&]
 [s2;%% Returns true if the date is valid.&]
 [s3; &]
@@ -58,6 +63,12 @@ topic "Date and Time";
 [s5;:Date`:`:Get`(`)const: [@(0.0.255) int]_[* Get]()_[@(0.0.255) const]&]
 [s2;%% Converts the time into a numeric value.&]
 [s3; &]
+[s4; &]
+[s5;:Date`:`:Compare`(Date`)const: [@(0.0.255) int]_[* Compare]([_^Date^ Date]_[*@3 b])_[@(0.0.255) c
+onst]&]
+[s2;%% Compares Date with [%-*@3 b], returns `-1 if <b, 0 if `=`= b, 
+1 if > b.&]
+[s3;%% &]
 [s4; &]
 [s5;:Date`:`:Low`(`): [@(0.0.255) static] [_^Date^ Date]_[* Low]()&]
 [s2;%% Returns the lowest possible date (year 4000).&]
