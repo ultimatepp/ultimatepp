@@ -1,0 +1,45 @@
+SETUP SDL for Linux.
+install the SDL 1.2.x package of your distro, dont forget to install the SDL-devel package for headers.
+
+SETUP SDL for windows.
+download binaries / prebuilt packages for msc and mingw
+http://www.libsdl.org/download-1.2.php
+
+http://www.libsdl.org/release/SDL-devel-1.2.14-VC8.zip
+http://www.libsdl.org/release/SDL-devel-1.2.14-mingw32.tar.gz
+
+unzip the stuff into 2 separate locations, e.g
+
+C:\SDL-devel-1.2.14-VC8\SDL-1.2.14
+C:\SDL-devel-1.2.14-mingw32\SDL-1.2.14
+
+the buildmethods need to access those repspective folders
+
+MSC buildmethod, add to
+
+PATH: C:\SDL-devel-1.2.14-VC8\SDL-1.2.14\lib
+INCLUDE: C:\SDL-devel-1.2.14-VC8\SDL-1.2.14\include
+LIB: C:\SDL-devel-1.2.14-VC8\SDL-1.2.14\lib
+
+MINGW/TDMGCC buildmethod, add to
+
+PATH: C:\SDL-devel-1.2.14-mingw32\SDL-1.2.14\lib
+		C:\SDL-devel-1.2.14-mingw32\SDL-1.2.14\bin
+INCLUDE: C:\SDL-devel-1.2.14-mingw32\SDL-1.2.14\include
+LIB: C:\SDL-devel-1.2.14-mingw32\SDL-1.2.14\lib
+		C:\SDL-devel-1.2.14-mingw32\SDL-1.2.14\bin
+
+
+the MSC libraries only come in shared linkage flavor, while the mingw flavor can be linked both shared and staticly.
+the SDL.dll.a is needed for static lib and has got that weired name. who knows why. the SDL.dll comes in bin folder,
+thats why double folder specification is needed fir MINGW build method
+
+the WinMain@16 compile problem for mingw (google for it) makes the change of lib link order
+obligatory, thats why mingw32 is specified explicitly last. this makes the WINAPI WinMain() { return main(); }
+hack obsolete and enables the native usage of SDL means to handle entry point.
+SDL redefines your own main to be SDL_main (see SDL.h), and provides own main. the signature is critical.
+it must be
+int main(int argc, char* argv[]);
+
+
+
