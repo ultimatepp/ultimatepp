@@ -80,6 +80,10 @@ class UrrRequest : Moveable<UrrRequest> {
 public:
 	operator const String&() const                    { return request; }
 	const String& operator~() const                   { return request; }
+
+	//WARNING: infos are unreliable due to NAT in many cases
+	int SourcePort() const { sockaddr_in& srcadr = *(sockaddr_in*)&adr; return ntohs(srcadr.sin_port); }
+	String SourceIp() const { sockaddr_in& srcadr = *(sockaddr_in*)&adr; return String(inet_ntoa(srcadr.sin_addr)); }
 	
 	void Return(const String& s, bool linger = true);
 };
