@@ -105,11 +105,11 @@ package whoose usage they have observed in the Test package.&]
 [s0; &]
 [s0;i150;O0; [* Avoid usage of new / delete] as hell. [* Use U`+`+ NTL 
 containers] for your data or capsulate the allocation or deallocation 
-of objects. Memory leaks can cause serious brain damage :). ofcorse, 
-don`'t mix new/delete with malloc/free. Pointers should only 
-be used to really point to things and NOT to maintain the last 
-reference to a dynamicly allocated object (this should be done 
-in containers, Array<>, Vector<>, One<>, Any<>, etc. [* everything 
+of objects. Memory leaks can cause serious brain damage :). of 
+course, don`'t mix new/delete with malloc/free. Pointers should 
+only be used to really point to things and NOT to maintain the 
+last reference to a dynamicly allocated object (this should be 
+done in containers, Array<>, Vector<>, One<>, Any<>, etc. [* everything 
 belongs somewhere]...).&]
 [s0;* &]
 [s0;i150;O0; [* Avoid usage of  ][*C #define constants], use compile 
@@ -123,16 +123,16 @@ empty.&]
 [s0; &]
 [s0;i150;O0; Pay attention to implicit conversion. Some bugs come 
 from defaultly parametrised constructors, which are used then 
-as implicit conversion constructors. (you may protect with explicit 
-keyword)&]
+as implicit conversion constructors. (you may protect with the 
+`'explicit`' keyword)&]
 [s0; &]
 [s0;i150;O0; Maintain the [* const correctness. ]Failing to do so opens 
 doors to many bugs and makes the usage of your class difficult 
 in classes that maintain it.&]
 [s0; &]
 [s0;i150;O0; [* Use integer counter access.] Dont use iterators on 
-the Containers. Example: [C for(int i `= 0; i < vec.GetCount; i`+`+) 
-vec`[i`] `= 0;]&]
+the Containers. Example: [C for(int i `= 0; i < vec.GetCount(); 
+i`+`+) vec`[i`] `= 0;]&]
 [s0; &]
 [s0;i150;O0; Use positive action semantic. Think of general usage 
 patterns, known to the user, like Add(), Remove(), Detach(). 
@@ -174,99 +174,81 @@ directly be used as a Key in Upp containers like Index.&]
 important info first. So keep the class cpmponents`' order as 
 following: (unneeded or unused parts can be left out)&]
 [s0; &]
-[s0; [C class tempc ]&]
-[s0; [C -|: public EmptyClass]&]
-[s0; [C //-|, public Any]&]
-[s0; [C `{]&]
-[s0; [C -|//FRIENDS]&]
-[s0; [C -|friend class Ctrl;]&]
-[s0; [C -|friend void Vector<int>`::Clear();]&]
-[s0;C &]
-[s0; [C public:]&]
-[s0;C &]
-[s0; [C -|/`*]&]
-[s0; [C -|`* all handling data structures and typedefs nesseccary for 
-the usage of public classes API go here]&]
-[s0; [C -|`*/]&]
-[s0;C &]
-[s0; [C -|typedef unsigned HANDLE;]&]
-[s0; [C -|typedef tempc CLASSNAME;]&]
-[s0;C &]
-[s0; [C -|struct SubStruct]&]
-[s0; [C -|`{`}]&]
-[s0; [C -|]&]
-[s0; [C -|static const int AnIntConstant `= 123;]&]
-[s0; [C -|//static const float constf `= 1.2f; //NOT POSSIBLE, arch 
-dependant.]&]
-[s0;C &]
-[s0; [C protected:]&]
-[s0;C &]
-[s0; [C -|/`*]&]
-[s0; [C -|`* all handling data structures and typedefs interesting for 
-the deriving classes go here]&]
-[s0; [C -|`*/]&]
-[s0; [C -|]&]
-[s0; [C private:]&]
-[s0;C &]
-[s0; [C -|/`*]&]
-[s0; [C -|`* all handling data structures and typedefs which we use 
-only internally, go here]&]
-[s0; [C -|`*/]&]
-[s0;C &]
-[s0; [C -|//CTORS, DTORS, all concerning this class generation]&]
-[s0; [C -|//INTERFACE, defines how to operate it]&]
-[s0; [C public:]&]
-[s0;C &]
-[s0;C &]
-[s0; [C -|//explicit]&]
-[s0; [C -|tempc(int a `= 0);]&]
-[s0; [C -|virtual `~tempc() `{`}]&]
-[s0; [C -|]&]
-[s0;C &]
-[s0; [C -|void AReadOnlyMethod() const `{ /`*do something, bot dont 
-change things in class`*/ `}]&]
-[s0; [C -|void AWritableMethod() `{ /`*here you can change your class 
-state`*/ `}]&]
-[s0; [C -|]&]
-[s0; [C protected:]&]
-[s0;C &]
-[s0; [C -|/`*]&]
-[s0; [C -|`* Here follows the interface, deriving classes might be interested 
-in, accessing it directly.]&]
-[s0; [C -|`*/]&]
-[s0; [C -|]&]
-[s0; [C private:]&]
-[s0;C &]
-[s0; [C -|/`*]&]
-[s0; [C -|`* Here follows the private interface, which mostly are own 
-helper classes and functions]&]
-[s0; [C -|`*/]&]
-[s0;C &]
-[s0; [C -|//DATA, defines on what the interface works, the class `*state`*]&]
-[s0; [C public: ]&]
-[s0;C &]
-[s0; [C -|/`*]&]
-[s0; [C -|`* Here follows the public available data, typically its place 
-for a not close related members]&]
-[s0; [C -|`*/]&]
-[s0; [C -|]&]
-[s0; [C protected:]&]
-[s0;C &]
-[s0; [C -|/`*]&]
-[s0; [C -|`* Here follows the data, which mostly for performance reasons 
-should be made available to derived classes]&]
-[s0; [C -|`*/]&]
-[s0; [C -|]&]
-[s0; [C private:]&]
-[s0;C &]
-[s0; [C -|/`*]&]
-[s0; [C -|`* Here follows the private data, which only the class itself 
-takes care of and noone should ever know about.]&]
-[s0; [C -|`* in case of wrapper class this is mostly the objects that 
-are wrapped]&]
-[s0; [C -|`*/]&]
-[s0;C &]
-[s0; [C `};]&]
+[s0; [C@(28.42.150) class tempc ]&]
+[s0; [C@(28.42.150) -|: public EmptyClass]&]
+[s0; [C@(28.42.150) -|, public Any]&]
+[s0; [C@(28.42.150) `{]&]
+[s0; [C@(28.42.150) -|//FRIENDS]&]
+[s0; [C@(28.42.150) -|friend class Ctrl;]&]
+[s0; [C@(28.42.150) -|friend void Vector<int>`::Clear();]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) public:]&]
+[s0; [C@(28.42.150) -|/`*]&]
+[s0; [C@(28.42.150) -|`* all handling data structures and typedefs nesseccary 
+for the usage of public classes API go here]&]
+[s0; [C@(28.42.150) -|`*/]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|typedef unsigned HANDLE;]&]
+[s0; [C@(28.42.150) -|typedef tempc CLASSNAME;]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|struct SubStruct]&]
+[s0; [C@(28.42.150) -|`{`}]&]
+[s0; [C@(28.42.150) -|]&]
+[s0; [C@(28.42.150) -|static const int AnIntConstant `= 123;]&]
+[s0; [C@(28.42.150) -|//static const float constf `= 1.2f; //NOT POSSIBLE, 
+arch dependant.]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|//CTORS, DTORS, all concerning this class generation]&]
+[s0; [C@(28.42.150) -|//INTERFACE, defines how to operate it]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|//explicit]&]
+[s0; [C@(28.42.150) -|tempc(int a `= 0);]&]
+[s0; [C@(28.42.150) -|virtual `~tempc() `{`}]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|void AReadOnlyMethod() const `{ /`*do something, 
+bot dont change things in class`*/ `}]&]
+[s0; [C@(28.42.150) -|void AWritableMethod() `{ /`*here you can change 
+your class state`*/ `}]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|/`*]&]
+[s0; [C@(28.42.150) -|`* Here follows the public available data, typically 
+its place for a not close related members]&]
+[s0; [C@(28.42.150) -|`*/]&]
+[s0; [C@(28.42.150) -|]&]
+[s0; [C@(28.42.150) protected:]&]
+[s0; [C@(28.42.150) -|/`*]&]
+[s0; [C@(28.42.150) -|`* all handling data structures and typedefs interesting 
+for the deriving classes go here]&]
+[s0; [C@(28.42.150) -|`*/]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|/`*]&]
+[s0; [C@(28.42.150) -|`* Here follows the interface, deriving classes 
+might be interested in, accessing it directly.]&]
+[s0; [C@(28.42.150) -|`*/]&]
+[s0; [C@(28.42.150) -|]&]
+[s0; [C@(28.42.150) -|/`*]&]
+[s0; [C@(28.42.150) -|`* Here follows the data, which mostly for performance 
+reasons should be made available to derived classes]&]
+[s0; [C@(28.42.150) -|`*/]&]
+[s0; [C@(28.42.150) -|]&]
+[s0; [C@(28.42.150) private:]&]
+[s0; [C@(28.42.150) -|/`*]&]
+[s0; [C@(28.42.150) -|`* all handling data structures and typedefs which 
+we use only internally, go here]&]
+[s0; [C@(28.42.150) -|`*/]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|/`*]&]
+[s0; [C@(28.42.150) -|`* Here follows the private interface, which mostly 
+are own helper classes and functions]&]
+[s0; [C@(28.42.150) -|`*/]&]
+[s0;C@(28.42.150) &]
+[s0; [C@(28.42.150) -|/`*]&]
+[s0; [C@(28.42.150) -|`* Here follows the private data, which only the 
+class itself takes care of and noone should ever know about.]&]
+[s0; [C@(28.42.150) -|`* in case of wrapper class this is mostly the 
+objects that are wrapped]&]
+[s0; [C@(28.42.150) -|`*/]&]
+[s0; [C@(28.42.150) `};]&]
 [s0; &]
 [s0; [*+117 Readability]&]
 [s0; &]
@@ -287,9 +269,9 @@ bodies if possible and usefull. i,j,k,m,n,q, u mostly are integer
 counters or indices in arrays, p is probably a pointer, a,b,c 
 are typically bool, d is double, f is a float. v is a Vector 
 or a Value, s is a String etc.. this makes code less typographic 
-and focuses more on the algorithm used. But dont only use such 
-variables, please. a1 a2 and a3 are quite the same at first look 
-:)&]
+and focuses more on the algorithm used. But don`'t use such variables 
+exclusively, please. a1 a2 and a3 are quite the same at first 
+look :)&]
 [s0; &]
 [s0;i150;O0; Tend to [* avoid comments] in general, except for nesseccary 
 hints on important sections, critical for understanding. instead, 
