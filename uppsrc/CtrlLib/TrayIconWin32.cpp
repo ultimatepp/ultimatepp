@@ -68,7 +68,7 @@ void TrayIcon::Notify(dword msg)
 			// Same, case with delete, we can try modify and if KO then we can consider that is icon
 			// was deleted correctly. In other cases, we will retry after 50ms
 			DWORD ErrorCode = GetLastError();
-			if(ErrorCode == ERROR_SUCCESS || ErrorCode == ERROR_TIMEOU) {
+			if(ErrorCode == ERROR_SUCCESS || ErrorCode == ERROR_TIMEOUT) {
 				for(int retry = 0; retry < 60; retry++) {
 					Sleep(50);
 					if(Shell_NotifyIcon(NIM_MODIFY, (NOTIFYICONDATA *)&nid) == (msg != NIM_DELETE))
