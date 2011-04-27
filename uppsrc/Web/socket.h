@@ -46,7 +46,7 @@ public:
 		SOCKET                  socket;
 		String                  leftover;
 		bool                    is_blocking;
-		bool                    is_error;
+//		bool                    is_error;
 		bool                    is_eof;
 #ifndef NOFAKEERROR
 		int                     fake_error;
@@ -63,12 +63,15 @@ public:
 		friend void AttachSocket(Socket& socket, SOCKET hsocket, bool blocking);
 	};
 
-	Socket() { is_error = false; errorcode = 0; }
-	Socket(One<Data> data) : data(data) {}
+	Socket()                                                 { ClearError(); }
+	Socket(One<Data> data) : data(data)                      { ClearError(); if(data) data->sock = this; }
+	Socket(pick_ Socket& s) : data(s.data)                   { ClearError(); if(data) data->sock = this; }
+
+	Socket&         operator = (pick_ Socket& s)             { ClearError(); data = s.data; if(data) data->sock = this; return *this; }
 
 	static void     Init();
 
-	void            Attach(One<Data> d)                      { data = d; data->sock = this; }
+	void            Attach(One<Data> d)                      { data = d; data->sock = this; ClearError(); }
 	void            Clear()                                  { if(!data.IsPicked() && data) data->sock = NULL; data.Clear(); }
 
 	bool            IsOpen() const                           { return data && data->IsOpen(); }

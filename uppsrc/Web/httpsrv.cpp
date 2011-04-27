@@ -294,7 +294,7 @@ bool HttpServer::DelayedWrite()
 		if((sw.done += count) >= sw.data.GetLength()) {
 			LogTime(NFormat("HttpServer::DelayedWrite(): finished %d (%d left)",
 				sw.socket.GetNumber(), delayed_writes.GetCount() - 1), 2);
-			sw.socket.Block(); // set to blocking mode before close
+//			sw.socket.Block(); // set to blocking mode before close
 			sw.socket.PeekWrite(1000);
 			sw.socket.StopWrite();
 			sw.socket.Close();
@@ -304,7 +304,7 @@ bool HttpServer::DelayedWrite()
 		else if(msecs(sw.ticks) >= max_request_time) {
 			LogTime(NFormat("HttpServer::DelayedWrite(): timeout after sending %d out of %d bytes",
 				sw.done, sw.data.GetLength()), 0);
-			sw.socket.Block(); // set to blocking mode before close
+//			sw.socket.Block(); // set to blocking mode before close
 			sw.socket.StopWrite();
 			sw.socket.Close();
 			delayed_writes.Remove(i);
