@@ -112,7 +112,7 @@ ERRINFO(WSASYSCALLFAILURE,        "System call failure.")
 Socket::Data::Data()
 : socket(INVALID_SOCKET)
 , is_blocking(true)
-, is_error(false)
+//, is_error(false)
 , is_eof(false)
 , fake_error(0)
 {
@@ -274,7 +274,7 @@ bool Socket::Data::CloseRaw(int msecs_timeout)
 {
 	if(socket == INVALID_SOCKET)
 		return false;
-	bool ok = !is_error && Peek(msecs_timeout, true);
+	bool ok = !IsError() && Peek(msecs_timeout, true);
 	SOCKET old_socket = socket;
 	socket = INVALID_SOCKET;
 	if(old_socket != INVALID_SOCKET) {
