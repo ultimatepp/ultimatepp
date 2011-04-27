@@ -802,14 +802,14 @@ void PlotterCtrl::Drop(Point start, Point end, dword keyflags)
 
 void PlotterCtrl::Click(Point pt, dword keyflags)
 {
-	if(drag_drop)
+	if(drag_drop && drag_mode == DRAG_CUSTOM)
 		drag_drop->Click(FromPushClient(pt), keyflags);
 }
 
 void PlotterCtrl::Cancel()
 {
 	PanOffset(Size(0, 0));
-	if(drag_drop) {
+	if(drag_drop && drag_mode == DRAG_CUSTOM) {
 		drag_drop->Cancel();
 	}
 }

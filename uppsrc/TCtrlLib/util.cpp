@@ -352,7 +352,7 @@ void DragDropCtrl::LeftDown(Point pt, dword keyflags)
 void DragDropCtrl::LeftDouble(Point pt, dword keyflags)
 {
 	SetWantFocus();
-	Click(pt, keyflags | K_MOUSEDOUBLE);
+	Push(pt, keyflags | K_MOUSEDOUBLE);
 }
 
 void DragDropCtrl::DragStop(bool accept, dword keyflags)
