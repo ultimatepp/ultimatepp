@@ -58,7 +58,24 @@ void TrayIcon::Notify(dword msg)
 		int len = min(stip.GetLength(), 125);
 		memcpy(nid.tip, stip, len);
 		nid.tip[len] = 0;
-		VERIFY(Shell_NotifyIcon(msg, (NOTIFYICONDATA *)&nid));
+		BOOL Status = Shell_NotifyIcon(msg, (NOTIFYICONDATA *)&nid);		
+		// To prevent from Shell_NotifyIcon bugs...
+		// discussed here : http://msdn.microsoft.com/en-us/library/bb762159(v=vs.85).aspx
+		// and here : http://issuetracker.delphi-jedi.org/bug_view_advanced_page.php?bug_id=3747
+		if (Status == FALSE) {
+			// The status of Shell_NotifyIcon is FALSE, in the case of NIM_ADD/NIM_MODIFY, we will try to Modify
+			// If the modify is OK then we cas consider that the add was worked.
+			// Same, case with delete, we can try modify and if KO then we can consider that is icon
+			// was deleted correctly. In other cases, we will retry after 50ms
+			DWORD ErrorCode = GetLastError();
+			if(ErrorCode == ERROR_SUCCESS || ErrorCode == ERROR_TIMEOU) {
+				for(int retry = 0; retry < 60; retry++) {
+					Sleep(50);
+					if(Shell_NotifyIcon(NIM_MODIFY, (NOTIFYICONDATA *)&nid) == (msg != NIM_DELETE))
+						break;
+				}
+			}
+		}
     }
 }
 
