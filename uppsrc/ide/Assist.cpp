@@ -105,7 +105,7 @@ void AssistEditor::CloseAssist()
 bool isincludefnchar(int c)
 {
 	return c && c != '<' && c != '>' && c != '?' &&
-	       c != ' ' && c != '\"' && c != '/' && c != '\\' && c != '\n';
+	       c != ' ' && c != '\"' && c != '/' && c != '\\' && c != '\n' && c < 65536;
 }
 
 String AssistEditor::ReadIdBack(int q, bool include)
@@ -720,12 +720,13 @@ bool AssistEditor::Key(dword key, int count)
 	int bcc = c > 0 ? GetChar(c - 1) : 0;
 	bool b = CodeEditor::Key(key, count);
 	if(assist.IsOpen()) {
-		if(!iscid(key) &&
-		   !(iscid(cc) && (key == K_DELETE || key == K_RIGHT)) &&
-		   !(iscid(bcc) && (key == K_LEFT || key == K_BACKSPACE))) {
+		bool (*test)(int c) = include_assist ? isincludefnchar : iscid;
+		if(!(*test)(key) &&
+		   !((*test)(cc) && (key == K_DELETE || key == K_RIGHT)) &&
+		   !((*test)(bcc) && (key == K_LEFT || key == K_BACKSPACE))) {
 			if(b) {
 				CloseAssist();
-				if(key == '.')
+				if(include_assist ? (key == '/' || key == '\\') : key == '.')
 					Assist();
 			}
 		}
