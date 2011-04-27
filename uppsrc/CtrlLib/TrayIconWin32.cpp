@@ -184,6 +184,12 @@ LRESULT TrayIcon::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			BalloonLeftDown();
 			return TRUE;
 		}
+	static UINT WM_TASKBARCREATED = RegisterWindowMessageA("TaskbarCreated");
+	if(message == WM_TASKBARCREATED) {
+		LLOG("TrayIcon::WM_TASKBARCREATED");
+		visible = false;
+		Show();
+	}
 	return Ctrl::WindowProc(message, wParam, lParam);
 }
 
