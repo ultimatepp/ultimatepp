@@ -4,9 +4,7 @@ uses
 	Core,
 	CtrlLib;
 
-library(MSC) SDL;
-
-library(GCC WIN32) SDL;
+library(WIN32) SDL;
 
 library(LINUX) SDL;
 

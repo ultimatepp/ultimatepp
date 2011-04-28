@@ -93,26 +93,10 @@ bool SDLSurface::Blit(SDLSurface &surf, Rect source, Rect dest) {
     return true;
 }
 
-inline byte *SDLSurface::GetPixelPos(int x, int y) {
-	if (x < 0 || y < 0|| x >= surface->w || y >= surface->h)
-		return 0;
-	return (byte *)surface->pixels + surface->pitch*y + surface->format->BytesPerPixel*x;
-}
-
 void SDLSurface::DrawPixel(int x, int y, Color color) {
 	Uint32 scolor = GetColor(color);
 	byte *pixelpos = GetPixelPos(x, y);
 	if (pixelpos)
-		memcpy(pixelpos, &scolor, surface->format->BytesPerPixel);
-}
-
-inline void SDLSurface::DrawPixel(int x, int y, Uint32 scolor) {
-	byte *pixelpos = GetPixelPos(x, y);
-	if (!pixelpos)
-		return;
-	if (surface->format->BytesPerPixel == 1)
-		*pixelpos = (byte)scolor;
-	else
 		memcpy(pixelpos, &scolor, surface->format->BytesPerPixel);
 }
 

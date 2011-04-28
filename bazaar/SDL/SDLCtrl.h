@@ -26,10 +26,22 @@ public:
 	void DrawCircle(int x, int y, int radius, int thick, Color color);
 	void FillCircle(int x, int y, int radius, Color color);
 	void DrawPixel(int x, int y, Color color);
-	void DrawPixel(int x, int y, Uint32 scolor);
+	inline void DrawPixel(int x, int y, Uint32 scolor) {
+		byte *pixelpos = GetPixelPos(x, y);
+		if (!pixelpos)
+			return;
+		if (surface->format->BytesPerPixel == 1)
+			*pixelpos = (byte)scolor;
+		else
+			memcpy(pixelpos, &scolor, surface->format->BytesPerPixel);
+	}
 	Color GetPixel(int x, int y);
 	byte GetPixelByte(int x, int y);
-	byte *GetPixelPos(int x, int y);
+	inline byte *GetPixelPos(int x, int y) {
+		if (x < 0 || y < 0|| x >= surface->w || y >= surface->h)
+			return 0;
+		return (byte *)surface->pixels + surface->pitch*y + surface->format->BytesPerPixel*x;
+	}
 	Uint32 GetColor(Color color);
 	int GetBpp()				{return surface->format->BitsPerPixel;};	
 	int GetWidth()				{return surface->w;};
