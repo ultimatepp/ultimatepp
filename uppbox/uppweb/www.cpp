@@ -696,6 +696,7 @@ GUI_APP_MAIN
 	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
 	languages.Add(LNG_('C','A','E','S'));
 	languages.Add(LNG_('C','S','C','Z'));
+	languages.Add(LNG_('D','E','D','E'));
 	languages.Add(LNG_('E','S','E','S'));
 	languages.Add(LNG_('F','R','F','R'));
 	languages.Add(LNG_('R','O','R','O'));
@@ -706,11 +707,11 @@ GUI_APP_MAIN
 	RLOG("--- uppweb started at " << GetSysTime());
 
 	DeleteFolderDeep(targetdir);
-	DirectoryCreate(targetdir);
+	RealizeDirectory(targetdir);
 	
 	if (outPdf) {
 		DeleteFolderDeep(pdfdir);
-		DirectoryCreate(pdfdir);
+		RealizeDirectory(pdfdir);
 	}
 	GatherRefLinks(uppsrc);
 	GatherRefLinks(AppendFileName(rootdir, "bazaar"));
@@ -992,7 +993,7 @@ GUI_APP_MAIN
 			ff.Next();
 		}
 	}
-	DirectoryCreate(diffdir);
+	RealizeDirectory(diffdir);
 	
 	if(upload.GetCount()) {
 		FtpClient ftp;
