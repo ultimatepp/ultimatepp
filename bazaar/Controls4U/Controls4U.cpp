@@ -990,7 +990,7 @@ void Meter::Paint(Draw& ww) {
 	double txty = cy - R*sin(angtxt)/2;
 	w.DrawCenterText(txtx, txty, text, fnt, letterColor);
 	
-	double vala = value*maxgrad/(max-min);
+	double vala = (value-min)*maxgrad/(max-min);
 	PaintHand(w, cx, cy, R, a + vala*direction, bigF, colorType);	
 
 	int wm = width;

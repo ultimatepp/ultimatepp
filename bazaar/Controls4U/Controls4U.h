@@ -88,7 +88,7 @@ public:
 	String Get() const                           	{return GetData();};	
 	String operator~() const                     	{return Get();};
 	operator String() const                      	{return Get();};
-	void Set(const String& s)						{fs.Set(s); /*SetData(s);*/};
+	void Set(const String& s)						{fs.Set(s); EditString::SetData(s);};
 	void operator<<=(const String& s)            	{Set(s);};
 	void operator=(const String& s)              	{Set(s);};
 	bool IsEmpty()									{return GetData().IsNull();};
@@ -135,7 +135,8 @@ protected:
 public:
 	bool  Set(String fileName);
 	bool  Set(Image image);
-
+	Image &Get()							{return origImage;}
+	
 	void  operator=(String fileName)      	{Set(fileName);}
 	void  operator=(Image image)       		{Set(image);}	
 
@@ -403,8 +404,8 @@ public:
 
 	Knob& ClockWise(bool v)			{clockWise = v; Refresh(); return *this;}	
 
-	Knob& SetMin(double v)			{minv = v; value = max(value, minv); Refresh(); return *this;}
-	Knob& SetMax(double v)			{maxv = v; value = min(value, maxv); Refresh(); return *this;}
+	Knob& SetMin(double v)			{minv = v; value = Upp::max<double>(value, minv); Refresh(); return *this;}
+	Knob& SetMax(double v)			{maxv = v; value = Upp::min<double>(value, maxv); Refresh(); return *this;}
 	Knob& SetMinorStep(double n) 	{minorstep = n; Refresh(); return *this;}	
 	Knob& SetMajorStep(double n) 	{majorstep = n; Refresh(); return *this;}	
 	Knob& SetKeyStep(double fs = 1) {keyStep = fs; Refresh(); return *this;}	
