@@ -336,6 +336,7 @@ struct AssistEditor : CodeEditor {
 	int            cachedpos;
 	int            cachedln;
 	bool           include_local;
+	int            include_back;
 	String         include_path;
 	
 	RichTextCtrl   param_info;

@@ -352,6 +352,12 @@ bool AssistEditor::IncludeAssist()
 		include_local = false;
 	}
 	include_path.Clear();
+	include_back = 0;
+	if(include_local)
+		while(p.Char3('.', '.', '/') || p.Char3('.', '.', '\\')) {
+			include.Top() = GetFileFolder(include.Top());
+			include_back++;
+		}
 	for(;;) {
 		String dir;
 		while(isincludefnchar(p.PeekChar()))
@@ -594,9 +600,12 @@ void AssistEditor::AssistInsert()
 			int pos = GetPos(ln);
 			Remove(pos, GetLineLength(ln));
 			SetCursor(pos);
+			String h;
+			for(int i = 0; i < include_back; i++)
+				h << "../";
 			Paste(ToUnicode(String().Cat() << "#include " 
 			                << (include_local ? "\"" : "<")
-			                << include_path
+			                << h << include_path
 			                << f.name
 			                << (f.kind == KIND_INCLUDEFOLDER ? "/" : 
 			                       include_local ? "\"" : ">")
@@ -747,14 +756,8 @@ bool AssistEditor::Key(dword key, int count)
 					Assist();
 			}
 		}
-		if(key == '\"' || key == '<') {
-			int q = GetCursor() - 2;
-			if(q > 0) {
-				String id = IdBack(q);
-				if(id == "include" && Ch(q - 1) == '#')
-					Assist();
-			}
-		}
+		if((key == '\"' || key == '<' || key == '/' || key == '\\') && GetUtf8Line(GetCursorLine()).StartsWith("#include"))
+			Assist();
 	}
 	return b;
 }
