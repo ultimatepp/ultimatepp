@@ -105,7 +105,7 @@ void AssistEditor::CloseAssist()
 bool isincludefnchar(int c)
 {
 	return c && c != '<' && c != '>' && c != '?' &&
-	       c != ' ' && c != '\"' && c != '/' && c != '\\' && c != '\n' && c < 65536;
+	       c != ' ' && c != '\"' && c != '/' && c != '\\' && c >= 32 && c < 65536;
 }
 
 String AssistEditor::ReadIdBack(int q, bool include)
