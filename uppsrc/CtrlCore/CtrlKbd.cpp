@@ -203,7 +203,8 @@ bool Ctrl::SetFocus0(bool activate)
 	if(!topwindow) topwindow = topctrl;
 	LLOG("SetFocus -> SetWndFocus: topwindow = " << UPP::Name(topwindow) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
 	if(!topwindow->HasWndFocus() && !topwindow->SetWndFocus()) return false;// cxl 31.1.2004
-	topwindow->SetWndForeground(); // cxl 2007-4-27
+	if(activate) // Dolik/fudadmin 2011-5-1
+		topctrl->SetWndForeground();  // cxl 2007-4-27
 	LLOG("SetFocus -> focusCtrl = this: " << FormatIntHex(this) << ", _this = " << FormatIntHex(~_this) << ", " << UPP::Name(_this));
 	focusCtrl = _this;
 	focusCtrlWnd = topwindow;
