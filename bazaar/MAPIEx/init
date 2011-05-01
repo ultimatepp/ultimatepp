@@ -1,0 +1,5 @@
+#ifndef _MAPIEx_icpp_init_stub
+#define _MAPIEx_icpp_init_stub
+#include "Core/init"
+#include "Functions4U/init"
+#endif
