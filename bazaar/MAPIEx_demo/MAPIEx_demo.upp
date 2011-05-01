@@ -1,0 +1,13 @@
+description "Outlook interface MapiEx example\377";
+
+uses
+	Core,
+	MAPIEx;
+
+file
+	MAPIEx_demo.cpp,
+	License.txt;
+
+mainconfig
+	"" = "";
+
