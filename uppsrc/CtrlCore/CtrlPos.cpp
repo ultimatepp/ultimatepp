@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    // LOG(x)
+#define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
 
 bool Ctrl::Logc::IsEmpty() const {
@@ -233,6 +233,7 @@ void Ctrl::UpdateRect0()
 		Rect r = GetWorkArea();
 		rect = CalcRect(r, r);
 	}
+	LLOG("UpdateRect0 " << Name() << " to " << rect);
 	LTIMING("UpdateRect0 SyncLayout");
 	SyncLayout();
 }
