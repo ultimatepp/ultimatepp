@@ -40,9 +40,9 @@ LAYOUT(SvnFolderLayout, 404, 116)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(332, 64).TopPosZ(84, 24))
 END_LAYOUT
 
-LAYOUT(ConsoleLayout, 680, 4500)
-	ITEM(ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 32))
-	ITEM(Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(4, 24))
+LAYOUT(ConsoleLayout, 680, 660)
+	ITEM(ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 40))
+	ITEM(Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
 LAYOUT(SvnSelLayout, 680, 400)
