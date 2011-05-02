@@ -300,7 +300,7 @@ again:
 				continue;
 			}
 			else {
-				filelist+=" "+path;   // <-- add the file to the list
+				filelist << " \"" << path << "\"";   // <-- add the file to the list
 				commit = true;
 				switch(action) {
 				case ADD:
