@@ -87,7 +87,7 @@ void SendCIDTest(MAPIEx& mapi) {
 }
 
 // Read and save messages and their attachments
-void ReadMessageTest(MAPIEx& mapi, const String &folderName) {
+void ReadMessageTest(MAPIEx& mapi, const String &folderName = "") {
 	printf("\n\nRead and save message test");
 	MAPIFolder folder;
 	if (folderName.IsEmpty()) {
@@ -202,20 +202,17 @@ void ContactsTest(MAPIEx& mapi) {
 	// sort by name (stored in PR_SUBJECT)
 	contacts.SortContents(TABLE_SORT_ASCEND, PR_SUBJECT);
 
-	String strText;
 	MAPIContact contact;
 	ContactAddress address;
 	if(contacts.GetNextContact(contact)) {
-		if(contact.GetName(strText)) printf("\nName: '%s'", strText.Begin());
-		Time birthday = contact.GetBirthday();
-		if(!IsNull(birthday)) printf("\nBirthday: %s", Format(birthday).Begin());
-		Time anniversary = contact.GetAnniversary();
-		if(!IsNull(anniversary)) printf("\nAnniversary: %s", Format(anniversary).Begin());
-		if(contact.GetCategories(strText)) printf("\nCategories: '%s'", strText.Begin());
-		if(contact.GetCompany(strText)) printf("\nCompany: '%s'", strText.Begin());
-		if(contact.GetEmail(strText)) printf("\nEmail: '%s'", strText.Begin());
-		if(contact.GetHomePage(strText)) printf("\nHomePage: '%s'", strText.Begin());
-		if(contact.GetIMAddress(strText)) printf("\nIM Address: '%s'", strText.Begin());
+		printf("\nName: '%s'", contact.GetName().Begin());
+		printf("\nBirthday: %s", Format(contact.GetBirthday()).Begin());
+		printf("\nAnniversary: %s", Format(contact.GetAnniversary()).Begin());
+		printf("\nCategories: '%s'", contact.GetCategories().Begin());
+		printf("\nCompany: '%s'", contact.GetCompany().Begin());
+		printf("\nEmail: '%s'", contact.GetEmail().Begin());
+		printf("\nHomePage: '%s'", contact.GetHomePage().Begin());
+		printf("\nIM Address: '%s'", contact.GetIMAddress().Begin());
 		if(contact.GetAddress(address, ContactAddress::BUSINESS)) 
 			printf("\n%s\n%s\n%s\n%s\n%s",address.m_strStreet.Begin(),
 				address.m_strCity.Begin(), address.m_strStateOrProvince.Begin(),
@@ -224,11 +221,8 @@ void ContactsTest(MAPIEx& mapi) {
 			printf("\n%s\n%s\n%s\n%s\n%s",address.m_strStreet.Begin(), 
 				address.m_strCity.Begin(), address.m_strStateOrProvince.Begin(),
 				address.m_strCountry.Begin(), address.m_strPostalCode.Begin());
-		if(contact.GetPhoneNumber(strText, PR_BUSINESS_TELEPHONE_NUMBER)) 
-			printf("\nPhone: %s", strText.Begin());
-		strText = contact.GetBody();
-		if(!strText.IsEmpty()) 
-			printf("\nNotes: %s", strText.Begin());
+		printf("\nPhone: %s", contact.GetPhoneNumber(PR_BUSINESS_TELEPHONE_NUMBER).Begin());
+		printf("\nNotes: %s", contact.GetBody().Begin());
 
 		if(contact.HasPicture()) {
 			#define DEFAULT_BUFFER_SIZE	4096
@@ -240,8 +234,9 @@ void ContactsTest(MAPIEx& mapi) {
 					int nRead, nSize = 0;
 
 					do {
-						nRead=attachment.Read(buf, DEFAULT_BUFFER_SIZE);
-						if(nRead>0) nSize += nRead;
+						nRead = attachment.Read(buf, DEFAULT_BUFFER_SIZE);
+						if(nRead > 0) 
+							nSize += nRead;
 					} while (nRead>0);
 					attachment.CloseStream();
 					printf("Contact has picture (%d bytes)\n", nSize);
@@ -322,10 +317,8 @@ void ContactSubFolderTest(MAPIEx& mapi) {
 		String strText;
 		MAPIContact contact;
 		ContactAddress address;
-		if(folder.GetNextContact(contact)) {
-			if(contact.GetName(strText)) 
-				printf("\nContact Name '%s'", strText.Begin());
-		}
+		if(folder.GetNextContact(contact)) 
+			printf("\nContact Name '%s'", contact.GetName().Begin());
 	}
 }
 
@@ -338,16 +331,10 @@ void AppointmentTest(MAPIEx& mapi) {
 	String strText;
 	MAPIAppointment appointment;
 	if (appointments.GetNextAppointment(appointment)) {
-		if(appointment.GetSubject(strText))	
-			printf("\nSubject: %s", strText.Begin());
-		if(appointment.GetLocation(strText)) 
-			printf("\nLocation: %s", strText.Begin());
-		Time start = appointment.GetStartTime();
-		if(!IsNull(start))	
-			printf("\nStart: %s", Format(start).Begin());
-		Time end = appointment.GetEndTime();
-		if(!IsNull(end))	
-			printf("\nEnd: %s", Format(end).Begin());
+		printf("\nSubject: %s", appointment.GetSubject().Begin());
+		printf("\nLocation: %s", appointment.GetLocation().Begin());
+		printf("\nStart: %s", Format(appointment.GetStartTime()).Begin());
+		printf("\nEnd: %s", Format(appointment.GetEndTime()).Begin());
 	}
 }
 
