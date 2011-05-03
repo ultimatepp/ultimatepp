@@ -22,28 +22,26 @@ ublic][3 _][*@3;3 MAPIObject]&]
 [s5;:MAPIFolder`:`:MAPIFolder`(`): [* MAPIFolder]()&]
 [s2;%% Default constructor&]
 [s3; &]
-[s3;2 &]
-[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4; &]
 [s5;:MAPIFolder`:`:GetName`(`): [_^String^ String]_[* GetName]()&]
 [s2;%% Gets folder name.&]
 [s3; &]
 [s4; &]
-[s5;:MAPIFolder`:`:OpenSubFolder`(const String`,MAPIFolder`&`): [@(0.0.255) bool]_[* Open
-SubFolder]([@(0.0.255) const]_[_^String^ String]_[*@3 subFolderName], 
+[s5;:MAPIFolder`:`:OpenSubFolder`(const String`&`,MAPIFolder`&`): [@(0.0.255) bool]_[* Op
+enSubFolder]([@(0.0.255) const]_[_^String^ String `&][*@3 subFolderName], 
 [_^MAPIFolder^ MAPIFolder]_`&[*@3 subFolder])&]
 [s2;%% Opens [%-*@3 subFolderName] under [%-*@3 subFolder].&]
 [s3;%% &]
 [s4; &]
-[s5;:MAPIFolder`:`:CreateSubFolder`(const String`,MAPIFolder`&`): [@(0.0.255) bool]_[* Cr
-eateSubFolder]([@(0.0.255) const]_[_^String^ String]_[*@3 subFolderName], 
+[s5;:MAPIFolder`:`:CreateSubFolder`(const String`&`,MAPIFolder`&`): [@(0.0.255) bool]_[* C
+reateSubFolder]([@(0.0.255) const]_[_^String^ String]_`&[*@3 subFolderName], 
 [_^MAPIFolder^ MAPIFolder]_`&[*@3 subFolder])&]
 [s2;%% Creates a folder named [%-*@3 subFolderName] under [%-*@3 subFolder].&]
 [s3;%% &]
 [s4; &]
-[s5;:MAPIFolder`:`:DeleteSubFolder`(const String`): [@(0.0.255) bool]_[* DeleteSubFolder](
-[@(0.0.255) const]_[_^String^ String]_[*@3 subFolder])&]
+[s5;:MAPIFolder`:`:DeleteSubFolder`(const String`&`): [@(0.0.255) bool]_[* DeleteSubFolde
+r]([@(0.0.255) const]_[_^String^ String]_`&[*@3 subFolder])&]
 [s2;%% Deletes a subfolder named [%-*@3 subFolder].&]
 [s3;%% &]
 [s4; &]

@@ -77,50 +77,52 @@ public:
 	inline LPMAILUSER Contact() { return (LPMAILUSER)m_pItem; }
 
 #ifdef _WIN32_WCE
+protected:
 	bool Open(MAPIEx* pMAPI, CPOOM* pPOOM, IContact* pContact);
 	virtual void Close();
 	virtual bool Save(bool bClose=true);
-
-	virtual bool GetPropertyString(ULONG ulProperty, String& strProperty, bool bStream=false);
-	virtual bool SetPropertyString(ULONG ulProperty, LPCTSTR szProperty, bool bStream=false);
+	
+	virtual String GetPropertyString(ULONG ulProperty, bool bStream = false);
+	virtual bool SetPropertyString(ULONG ulProperty, const String &szProperty, bool bStream=false);
+	
 #endif
-
+public:
 	bool Create(MAPIEx &mapi, MAPIFolder &folder);
 
-	bool GetName(String& strName, ULONG ulNameID=PR_DISPLAY_NAME);
-	bool GetEmail(String& strEmail, int nIndex=1); // 1, 2 or 3 for outlook email addresses
-	bool GetEmailDisplayAs(String& strDisplayAs, int nIndex=1);
-	bool GetHomePage(String& strHomePage, bool bBuiness=true);
-	bool GetPhoneNumber(String& strPhoneNumber, ULONG ulPhoneNumberID);
+	String GetName(ULONG ulNameID = PR_DISPLAY_NAME);
+	String GetEmail(int nIndex = 1); // 1, 2 or 3 for outlook email addresses
+	String GetEmailDisplayAs(int nIndex = 1);
+	String GetHomePage(bool bBusiness = true);
+	String GetPhoneNumber(ULONG ulPhoneNumberID);
 	bool GetAddress(ContactAddress& address, ContactAddress::AddressType nType);
-	bool GetPostalAddress(String& strAddress);
-	bool GetIMAddress(String& strIMAddress);
-	bool GetFileAs(String& strFileAs);
-	bool GetTitle(String& strTitle);
-	bool GetCompany(String& strCompany);
-	bool GetProfession(String& strProfession);
-	bool GetDisplayNamePrefix(String& strPrefix);
-	bool GetGeneration(String& strGeneration);
-	bool GetDepartment(String& strDepartment);
-	bool GetOffice(String& strOffice);
-	bool GetManagerName(String& strManagerName);
-	bool GetAssistantName(String& strAssistantName);
-	bool GetNickName(String& strNickName);
-	bool GetSpouseName(String& strSpouseName);
+	String GetPostalAddress();
+	String GetIMAddress();
+	String GetFileAs();
+	String GetTitle();
+	String GetCompany();
+	String GetProfession();
+	String GetDisplayNamePrefix();
+	String GetGeneration();
+	String GetDepartment();
+	String GetOffice();
+	String GetManagerName();
+	String GetAssistantName();
+	String GetNickName();
+	String GetSpouseName();
 	Time GetTime(ULONG property);
 	Time GetBirthday()		{return GetTime(PR_BIRTHDAY);}
 	Time GetAnniversary()	{return GetTime(PR_WEDDING_ANNIVERSARY);}
-	bool GetCategories(String& strCategories);
+	String GetCategories();
 
-	bool SetName(const String &szName, ULONG ulNameID=PR_DISPLAY_NAME);
-	bool SetEmail(const String &szEmail, int nIndex=1);
+	bool SetName(const String &szName, ULONG ulNameID = PR_DISPLAY_NAME);
+	bool SetEmail(const String &szEmail, int nIndex = 1);
 	bool SetEmailDisplayAs(const String &szDisplayAs, int nIndex = 1);
 	bool SetHomePage(const String &szHomePage, bool bBusiness = true);
 	bool SetPhoneNumber(const String &szPhoneNumber, ULONG ulPhoneNumberID);
 	bool SetAddress(ContactAddress& address, ContactAddress::AddressType nType);
 	bool SetPostalAddress(ContactAddress::AddressType nType);
 	bool UpdateDisplayAddress(ContactAddress::AddressType nType);
-	bool SetNotes(String szNotes, bool bRTF=false);
+	bool SetNotes(const String &szNotes, bool bRTF=false);
 	bool SetIMAddress(const String &szIMAddress);
 	bool SetFileAs(const String &szFileAs);
 	bool SetTitle(const String &szTitle);
@@ -135,8 +137,8 @@ public:
 	bool SetAssistantName(const String &szAssistantName);
 	bool SetNickName(const String &szNickName);
 	bool SetSpouseName(const String &szSpouseName);
-	bool SetBirthday(Time tm);
-	bool SetAnniversary(Time tm);
+	bool SetBirthday(const Time &tm);
+	bool SetAnniversary(const Time &tm);
 	bool SetCategories(const String &szCategories);
 	bool HasPicture();
 	bool SetPicture(const String &szPath);

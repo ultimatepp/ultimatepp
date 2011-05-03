@@ -48,21 +48,21 @@ public:
 	bool Open(MAPIEx* pMAPI, IAppointment* pAppointment);
 	virtual void Close();
 
-	virtual bool GetPropertyString(ULONG ulProperty, String& strProperty, bool bStream=false);
-	virtual bool SetPropertyString(ULONG ulProperty, LPCTSTR szProperty, bool bStream=false);
+	virtual bool GetPropertyString(ULONG ulProperty, String& strProperty, bool bStream = false);
+	virtual bool SetPropertyString(ULONG ulProperty, const String &szProperty, bool bStream = false);
 #else
-	bool GetSubject(String& strSubject);
-	bool GetLocation(String& strLocation);
+	String GetSubject();
+	String GetLocation();
 	Time GetTime(ULONG property);
 	Time GetStartTime()		{return GetTime(OUTLOOK_APPOINTMENT_START);}
 	Time GetEndTime()		{return GetTime(OUTLOOK_APPOINTMENT_END);}
 
-	bool SetSubject(LPCTSTR szSubject);
-	bool SetLocation(LPCTSTR szLocation);
-	bool SetStartTime(Time tm);
-	bool SetEndTime(Time tm);
+	bool SetSubject(const String &szSubject);
+	bool SetLocation(const String &szLocation);
+	bool SetStartTime(const Time &tm);
+	bool SetEndTime(const Time &tm);
 	
-	bool GetMeetingUID(String& strUID);
+	String GetMeetingUID();
 #endif
 };
 

@@ -38,17 +38,17 @@ protected:
 // Operations
 public:
 	inline LPMESSAGE Message() { return (LPMESSAGE)m_pItem; }
-	bool GetHexString(String& strHex, SBinary bin);
+	String GetHexString(SBinary bin);
 	SBinary* GetEntryID() { return &m_entryID; }
-	bool GetEntryIDString(String& strEntryID);
-	void SetEntryID(SBinary* pEntryID=NULL);
+	String GetEntryIDString();
+	void SetEntryID(SBinary* pEntryID = NULL);
 	int GetMessageFlags();
 	bool SetMessageFlags(int nFlags);
 	int GetSensitivity();
 	bool SetSensitivity(int nSensitivity);
 	int GetImportance();
 	bool SetImportance(int nImportance);
-	bool GetMessageClass(String strMessageClass);
+	String GetMessageClass();
 	bool SetMessageClass(String szMessageClass);
 	int GetMessageEditorFormat();
 	bool SetMessageEditorFormat(int nFormat);
@@ -58,7 +58,7 @@ public:
 	virtual bool Save(bool bClose=true);
 
 	// Properties
-	virtual bool GetPropertyString(ULONG ulProperty, String& strProperty, bool bStream=false);
+	virtual String GetPropertyString(ULONG ulProperty, bool bStream = false);
 	int GetPropertyValue(ULONG ulProperty, int nDefaultValue);
 	bool GetNamedProperty(LPCTSTR szFieldName, LPSPropValue& pProp);
 	bool GetNamedProperty(LPCTSTR szFieldName, String& strField);
@@ -93,7 +93,7 @@ public:
 
 	// Misc
 	Time GetLastModified(SYSTEMTIME& tmLastModified);
-	bool SetLastModified(Time& tmLastModified);
+	bool SetLastModified(const Time& tmLastModified);
 	
 protected:
 	bool Create(MAPIEx &mapi, MAPIFolder &folder);

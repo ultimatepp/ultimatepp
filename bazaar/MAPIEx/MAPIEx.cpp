@@ -349,7 +349,7 @@ bool MAPIEx::OpenFolder(unsigned long ulFolderID, MAPIFolder& folder) {
 	return false;
 }
 
-bool MAPIEx::OpenFolder(const String folderName, MAPIFolder &folder) {
+bool MAPIEx::OpenFolder(const String &folderName, MAPIFolder &folder) {
 	MAPIFolder root;
 	if(OpenRootFolder(root))
 		root.OpenSubFolder(folderName, folder);
@@ -660,7 +660,7 @@ bool MAPIEx::GetExEmail(SBinary entryID, String& strEmail) {
 	return bResult;
 }
 
-void MAPIEx::GetSystemTime(SYSTEMTIME& tm, int wYear, int wMonth, int wDay, int wHour, 
+void MAPIEx::SetSystemTime(SYSTEMTIME& tm, int wYear, int wMonth, int wDay, int wHour, 
 												int wMinute, int wSecond, int wMilliSeconds) {
 	tm.wYear 	= (WORD)wYear;
 	tm.wMonth	= (WORD)wMonth;
@@ -671,3 +671,19 @@ void MAPIEx::GetSystemTime(SYSTEMTIME& tm, int wYear, int wMonth, int wDay, int 
 	tm.wMilliseconds= (WORD)wMilliSeconds;
 	tm.wDayOfWeek	= 0;
 }
+
+void MAPIEx::SetSystemTime(SYSTEMTIME& tm, const Time &t) {
+	tm.wYear 	= t.year;
+	tm.wMonth	= t.month;
+	tm.wDay		= t.day;
+	tm.wHour	= t.hour;
+	tm.wMinute	= t.minute;
+	tm.wSecond	= t.second;
+	tm.wMilliseconds = 0;
+	tm.wDayOfWeek	 = 0;
+}
+
+Time MAPIEx::GetSystemTime(SYSTEMTIME& tm) {
+	return Time(tm.wYear, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond);
+}
+	

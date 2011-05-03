@@ -104,7 +104,7 @@ LPMAPITABLE MAPIFolder::GetHierarchy() {
 
 // High Level function to open a sub folder by iterating recursively (DFS) over all folders 
 // (use instead of manually calling GetHierarchy and GetNextSubFolder)
-bool MAPIFolder::OpenSubFolder(const String subFolderName, MAPIFolder &subFolder) {
+bool MAPIFolder::OpenSubFolder(const String &subFolderName, MAPIFolder &subFolder) {
 	if(!GetHierarchy()) 
 		return NULL;
 
@@ -124,7 +124,7 @@ bool MAPIFolder::OpenSubFolder(const String subFolderName, MAPIFolder &subFolder
 } 
 
 // Creates a sub-folder under pFolder, opens the folder if it already exists
-bool MAPIFolder::CreateSubFolder(const String subFolderName, MAPIFolder &subFolder) {
+bool MAPIFolder::CreateSubFolder(const String &subFolderName, MAPIFolder &subFolder) {
 	LPMAPIFOLDER pSubFolder = NULL;
 	ULONG ulFolderType=FOLDER_GENERIC;
 	ULONG ulFlags=OPEN_IF_EXISTS | MAPIEx::cm_nMAPICode;
@@ -136,7 +136,7 @@ bool MAPIFolder::CreateSubFolder(const String subFolderName, MAPIFolder &subFold
 }
 
 // Deletes a sub-folder and ALL sub folders/messages
-bool MAPIFolder::DeleteSubFolder(const String subFolderName) {
+bool MAPIFolder::DeleteSubFolder(const String &subFolderName) {
 	if(GetHierarchy()) {
 		String strFolder;
 		MAPIFolder folder;

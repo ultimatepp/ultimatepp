@@ -40,11 +40,11 @@ bool ContactAddress::FillAddress(MAPIContact& contact,AddressType nType) {
 		return false;
 	m_nType = nType;
 
-	if(!contact.GetPropertyString(ContactAddressTag[nType][0], m_strCity)) return false;
-	if(!contact.GetPropertyString(ContactAddressTag[nType][1], m_strCountry)) return false;
-	if(!contact.GetPropertyString(ContactAddressTag[nType][2], m_strStateOrProvince)) return false;
-	if(!contact.GetPropertyString(ContactAddressTag[nType][3], m_strStreet)) return false;
-	if(!contact.GetPropertyString(ContactAddressTag[nType][4], m_strPostalCode)) return false;
+	m_strCity = contact.GetPropertyString(ContactAddressTag[nType][0]);
+	m_strCountry = contact.GetPropertyString(ContactAddressTag[nType][1]);
+	m_strStateOrProvince = contact.GetPropertyString(ContactAddressTag[nType][2]);
+	m_strStreet = contact.GetPropertyString(ContactAddressTag[nType][3]);
+	m_strPostalCode = contact.GetPropertyString(ContactAddressTag[nType][4]);
 	return true;
 }
 
@@ -133,15 +133,14 @@ bool MAPIContact::Create(MAPIEx &mapi, MAPIFolder &folder) {
 #endif
 }
 
-bool MAPIContact::GetName(String& strName, ULONG ulNameID) {
+String MAPIContact::GetName(ULONG ulNameID) {
 	ULONG i = 0;
 	while(NameIDs[i] != ulNameID && NameIDs[i] > 0) 
 		i++;
-	if(!NameIDs[i]) {
-		strName = "";
-		return false;
-	} else 
-		return GetPropertyString(ulNameID, strName);
+	if(!NameIDs[i]) 
+		return String();
+	else 
+		return GetPropertyString(ulNameID);
 }
 
 int MAPIContact::GetOutlookEmailID(int nIndex) {
@@ -152,10 +151,11 @@ int MAPIContact::GetOutlookEmailID(int nIndex) {
 }
 
 // uses the built in outlook email fields, OUTLOOK_EMAIL1 etc, minus 1 for ADDRt_YPE and +1 for EmailOriginalDisplayName
-bool MAPIContact::GetEmail(String& strEmail, int nIndex) {
+String MAPIContact::GetEmail(int nIndex) {
+	String strEmail;
 	ULONG nID = GetOutlookEmailID(nIndex);
 	if(!nID) 
-		return false;
+		return String();
 
 #ifdef _WIN32_WCE
 	return GetPropertyString(nID, strEmail);
@@ -174,126 +174,128 @@ bool MAPIContact::GetEmail(String& strEmail, int nIndex) {
 					MAPIFreeBuffer(pProp);
 				}
 			}
-			return true;
+			return strEmail;
 		}
 	}
-	return false;
+	return String();
 #endif
 }
 
-bool MAPIContact::GetEmailDisplayAs(String& strDisplayAs, int nIndex) {
+String MAPIContact::GetEmailDisplayAs(int nIndex) {
+	String strDisplayAs;
 #ifdef _WIN32_WCE
 	return GetEmail(strDisplayAs, nIndex);
 #else
 	ULONG nID = GetOutlookEmailID(nIndex);
 	if(!nID) 
-		return false;
+		return String();
 
 	LPSPropValue pProp;
 	if(GetOutlookProperty(OUTLOOK_DATA1, nID-3, pProp)) {
-		strDisplayAs=MAPIEx::GetValidString(*pProp);
+		strDisplayAs = MAPIEx::GetValidString(*pProp);
 		MAPIFreeBuffer(pProp);
-		return true;
+		return strDisplayAs;
 	}
-	return false;
+	return String();
 #endif
 }
 
-bool MAPIContact::GetHomePage(String& strHomePage, bool bBusiness) {
-	return GetPropertyString(bBusiness ? PR_BUSINESS_HOME_PAGE  : PR_PERSONAL_HOME_PAGE, strHomePage);
+String MAPIContact::GetHomePage(bool bBusiness) {
+	return GetPropertyString(bBusiness ? PR_BUSINESS_HOME_PAGE  : PR_PERSONAL_HOME_PAGE);
 }
 
-bool MAPIContact::GetPhoneNumber(String& strPhoneNumber, ULONG ulPhoneNumberID) {
+String MAPIContact::GetPhoneNumber(ULONG ulPhoneNumberID) {
 	ULONG i = 0;
 	while(PhoneNumberIDs[i] != ulPhoneNumberID && PhoneNumberIDs[i] > 0) 
 		i++;
-	if(!PhoneNumberIDs[i]) {
-		strPhoneNumber = "";
-		return false;
-	} else 
-		return GetPropertyString(ulPhoneNumberID, strPhoneNumber);
+	if(!PhoneNumberIDs[i]) 
+		return String();
+	else 
+		return GetPropertyString(ulPhoneNumberID);
 }
 
 bool MAPIContact::GetAddress(ContactAddress& address, ContactAddress::AddressType nType) {
 	return address.FillAddress(*this, nType);
 }
 
-bool MAPIContact::GetPostalAddress(String& strAddress) {
+String MAPIContact::GetPostalAddress() {
 #ifdef _WIN32_WCE
-	return false;
+	return String();
 #else
-	return GetPropertyString(PR_POSTAL_ADDRESS, strAddress);
+	return GetPropertyString(PR_POSTAL_ADDRESS);
 #endif
 }
 
-bool MAPIContact::GetIMAddress(String& strIMAddress) {
+String MAPIContact::GetIMAddress() {
+	String strIMAddress;
 #ifndef _WIN32_WCE
 	LPSPropValue pProp;
 	if(GetOutlookProperty(OUTLOOK_DATA1, OUTLOOK_IM_ADDRESS, pProp)) {
-		strIMAddress=MAPIEx::GetValidString(*pProp);
+		strIMAddress = MAPIEx::GetValidString(*pProp);
 		MAPIFreeBuffer(pProp);
-		return true;
+		return strIMAddress;
 	}
 #endif
-	return false;
+	return String();
 }
 
-bool MAPIContact::GetFileAs(String& strFileAs) {
+String MAPIContact::GetFileAs() {
+	String strFileAs;
 #ifdef _WIN32_WCE
 	return GetPropertyString(PR_DISPLAY_NAME, strFileAs);
 #else
 	LPSPropValue pProp;
 	if(GetOutlookProperty(OUTLOOK_DATA1, OUTLOOK_FILE_AS, pProp)) {
-		strFileAs=MAPIEx::GetValidString(*pProp);
+		strFileAs = MAPIEx::GetValidString(*pProp);
 		MAPIFreeBuffer(pProp);
-		return true;
+		return strFileAs;
 	}
-	return false;
+	return String();
 #endif
 }
 
-bool MAPIContact::GetTitle(String& strTitle) {
-	return GetPropertyString(PR_TITLE, strTitle);
+String MAPIContact::GetTitle() {
+	return GetPropertyString(PR_TITLE);
 }
 
-bool MAPIContact::GetCompany(String& strCompany) {
-	return GetPropertyString(PR_COMPANY_NAME, strCompany);
+String MAPIContact::GetCompany() {
+	return GetPropertyString(PR_COMPANY_NAME);
 }
 
-bool MAPIContact::GetProfession(String& strProfession) {
-	return GetPropertyString(PR_PROFESSION, strProfession);
+String MAPIContact::GetProfession() {
+	return GetPropertyString(PR_PROFESSION);
 }
 
-bool MAPIContact::GetDisplayNamePrefix(String& strPrefix) {
-	return GetPropertyString(PR_DISPLAY_NAME_PREFIX, strPrefix);
+String MAPIContact::GetDisplayNamePrefix() {
+	return GetPropertyString(PR_DISPLAY_NAME_PREFIX);
 }
 
-bool MAPIContact::GetGeneration(String& strGeneration) {
-	return GetPropertyString(PR_GENERATION, strGeneration);
+String MAPIContact::GetGeneration() {
+	return GetPropertyString(PR_GENERATION);
 }
 
-bool MAPIContact::GetDepartment(String& strDepartment) {
-	return GetPropertyString(PR_DEPARTMENT_NAME, strDepartment);
+String MAPIContact::GetDepartment() {
+	return GetPropertyString(PR_DEPARTMENT_NAME);
 }
 
-bool MAPIContact::GetOffice(String& strOffice) {
-	return GetPropertyString(PR_OFFICE_LOCATION, strOffice);
+String MAPIContact::GetOffice() {
+	return GetPropertyString(PR_OFFICE_LOCATION);
 }
 
-bool MAPIContact::GetManagerName(String& strManagerName) {
-	return GetPropertyString(PR_MANAGER_NAME, strManagerName);
+String MAPIContact::GetManagerName() {
+	return GetPropertyString(PR_MANAGER_NAME);
 }
 
-bool MAPIContact::GetAssistantName(String& strAssistantName) {
-	return GetPropertyString(PR_ASSISTANT, strAssistantName);
+String MAPIContact::GetAssistantName() {
+	return GetPropertyString(PR_ASSISTANT);
 }
 
-bool MAPIContact::GetNickName(String& strNickName) {
-	return GetPropertyString(PR_NICKNAME, strNickName);
+String MAPIContact::GetNickName() {
+	return GetPropertyString(PR_NICKNAME);
 }
 
-bool MAPIContact::GetSpouseName(String& strSpouseName) {
-	return GetPropertyString(PR_SPOUSE_NAME, strSpouseName);
+String MAPIContact::GetSpouseName() {
+	return GetPropertyString(PR_SPOUSE_NAME);
 }
 
 Time MAPIContact::GetTime(ULONG property) {
@@ -312,14 +314,15 @@ Time MAPIContact::GetTime(ULONG property) {
 		SystemTimeToTzSpecificLocalTime(NULL, &tm, &st);
 
 		MAPIFreeBuffer(pProp);
-		return Time(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+		return MAPIEx::GetSystemTime(st);
 	}
 	return Null;
 #endif
 }
 
 // Categories are stored under the multi-value named property CATEGORIES_PROPERTY
-bool MAPIContact::GetCategories(String& strCategories) {
+String MAPIContact::GetCategories() {
+	String strCategories;
 #ifdef _WIN32_WCE
 	return GetPropertyString(OUTLOOK_CATEGORIES, strCategories);
 #else
@@ -338,9 +341,9 @@ bool MAPIContact::GetCategories(String& strCategories) {
 			}
 		}
 		MAPIFreeBuffer(pProp);
-		return true;
+		return strCategories;
 	}
-	return false;
+	return String();
 #endif
 }
 
@@ -449,7 +452,7 @@ bool MAPIContact::UpdateDisplayAddress(ContactAddress::AddressType nType) {
 #endif
 }
 
-bool MAPIContact::SetNotes(String szNotes, bool bRTF) {
+bool MAPIContact::SetNotes(const String &szNotes, bool bRTF) {
 #ifdef _WIN32_WCE
 	return SetPropertyString(PR_BODY, szNotes);
 #else
@@ -519,16 +522,19 @@ bool MAPIContact::SetGeneration(const String &szGeneration) {
 // After changing any name field you should call this to update PR_INITIALS and PR_DISPLAY_NAME
 bool MAPIContact::UpdateDisplayName() {
 	String strPrefix, strFirst, strMiddle, strLast, strGeneration, strFullName, strFileAs, strInitials;
-	if(GetDisplayNamePrefix(strPrefix) && strPrefix.GetLength()) {
+	strPrefix = GetDisplayNamePrefix();
+	if(strPrefix.GetLength()) {
 		strFullName = strPrefix;
 		strFullName += ' ';
 	}
-	if(GetName(strFirst, PR_GIVEN_NAME) && strFirst.GetLength()) {
+	strFirst = GetName(PR_GIVEN_NAME);
+	if(strFirst.GetLength()) {
 		strFileAs += strFirst;
 		strInitials += strFirst[0];
 		strInitials += '.';
 	}
-	if(GetName(strMiddle, PR_MIDDLE_NAME) && strMiddle.GetLength()) {
+	strMiddle = GetName(PR_MIDDLE_NAME);
+	if(strMiddle.GetLength()) {
 		if(strFileAs.GetLength()) 
 			strFileAs += ' ';
 		strFileAs += strMiddle;
@@ -544,7 +550,8 @@ bool MAPIContact::UpdateDisplayName() {
 			i++;
 		}
 	}
-	if(GetName(strLast, PR_SURNAME) && strLast.GetLength())  {
+	strLast = GetName(PR_SURNAME);
+	if(strLast.GetLength())  {
 		if(strFileAs.GetLength()) 
 			strFileAs += ' ';
 		strFileAs += strLast;
@@ -553,10 +560,11 @@ bool MAPIContact::UpdateDisplayName() {
 	}
 	if(strFileAs.GetLength()) 
 		strFullName += strFileAs;
-	if(GetGeneration(strGeneration) && strGeneration.GetLength()) {
+	strGeneration = GetGeneration();
+	if(strGeneration.GetLength()) {
 		if(strFullName.GetLength()) 
 			strFullName += ' ';
-		strFullName+=strGeneration;
+		strFullName += strGeneration;
 	}
 
 #ifdef _WIN32_WCE
@@ -597,15 +605,9 @@ bool MAPIContact::SetSpouseName(const String &szSpouseName) {
 	return SetPropertyString(PR_SPOUSE_NAME, szSpouseName);
 }
 
-bool MAPIContact::SetBirthday(Time tm) {
+bool MAPIContact::SetBirthday(const Time &tm) {
 	SYSTEMTIME st;
-	st.wYear   = tm.year;
-	st.wMonth  = tm.month;
-	st.wDay	   = tm.day;
-	st.wHour   = tm.hour;
-	st.wMinute = tm.minute;
-	st.wSecond = tm.second;
-	st.wMilliseconds = st.wDayOfWeek = 0;
+	MAPIEx::SetSystemTime(st, tm);
 	
 #ifdef _WIN32_WCE
 	return m_pPOOM ? m_pPOOM->SetDate(m_pContact, PR_BIRTHDAY, st) : false;
@@ -617,15 +619,9 @@ bool MAPIContact::SetBirthday(Time tm) {
 #endif
 }
 
-bool MAPIContact::SetAnniversary(Time tm) {
+bool MAPIContact::SetAnniversary(const Time &tm) {
 	SYSTEMTIME st;
-	st.wYear   = tm.year;
-	st.wMonth  = tm.month;
-	st.wDay	   = tm.day;
-	st.wHour   = tm.hour;
-	st.wMinute = tm.minute;
-	st.wSecond = tm.second;
-	st.wMilliseconds = st.wDayOfWeek = 0;
+	MAPIEx::SetSystemTime(st, tm);
 	
 #ifdef _WIN32_WCE
 	return m_pPOOM ? m_pPOOM->SetDate(m_pContact, PR_WEDDING_ANNIVERSARY,tmAnniversary) : false;

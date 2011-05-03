@@ -41,23 +41,23 @@ public:
 	bool Open(LPMESSAGE pMessage, int nIndex);
 	void Close();
 
-	bool GetDisplayName(String& strDisplayName);
-	bool GetFileName(String& strFileName);
-	bool GetLongFileName(String& strLongFileName);
-	bool GetCID(String& strCID);
+	String GetDisplayName();
+	String GetFileName();
+	String GetLongFileName();
+	String GetCID();
 
-	bool SetDisplayName(LPCTSTR szDisplayName);
-	bool SetFileName(LPCTSTR szFileName);
-	bool SetLongFileName(LPCTSTR szLongFileName);
-	bool SetCID(LPCTSTR szCID);
+	bool SetDisplayName(const String &szDisplayName);
+	bool SetFileName(const String &szFileName);
+	bool SetLongFileName(const String &szLongFileName);
+	bool SetCID(const String &szCID);
 
-	bool OpenStream(bool bCreate=FALSE);
+	bool LoadAttachment(const String &szPath);
+	bool SaveAttachment(const String &szPath);
+	
+	bool OpenStream(bool bCreate = false);
 	int Read(BYTE* pData, int nCount);
 	int Write(BYTE* pData, int nCount);
 	void CloseStream();
-
-	bool LoadAttachment(LPCTSTR szPath);
-	bool SaveAttachment(LPCTSTR szPath);
 };
 
 #endif

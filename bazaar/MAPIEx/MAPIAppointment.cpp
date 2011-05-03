@@ -47,22 +47,21 @@ bool MAPIAppointment::GetPropertyString(ULONG ulProperty, String& strProperty, b
 	return m_pMAPI->GetPOOM()->GetProperty(m_pAppointment,ulProperty, strProperty);
 }
 
-bool MAPIAppointment::SetPropertyString(ULONG ulProperty, LPCTSTR szProperty, bool bStream) {
+bool MAPIAppointment::SetPropertyString(ULONG ulProperty, const String &szProperty, bool bStream) {
 	return m_pMAPI->GetPOOM()->SetProperty(m_pAppointment,ulProperty, szProperty);
 }
 
 #else
 
-bool MAPIAppointment::GetSubject(String& strSubject) {
-	if(GetPropertyString(PR_SUBJECT, strSubject)) 
-		return true;
-	return false;
+String MAPIAppointment::GetSubject() {
+	return GetPropertyString(PR_SUBJECT); 
 }
 
-bool MAPIAppointment::GetLocation(String& strLocation) {
+String MAPIAppointment::GetLocation() {
+	String strLocation;
 	if(GetOutlookPropertyString(OUTLOOK_DATA2, OUTLOOK_APPOINTMENT_LOCATION, strLocation)) 
-		return true;
-	return false;
+		return strLocation;
+	return String();
 }
 
 Time MAPIAppointment::GetTime(ULONG property) {
@@ -73,40 +72,30 @@ Time MAPIAppointment::GetTime(ULONG property) {
 		FileTimeToLocalFileTime(&pProp->Value.ft, &tmLocal);
 		FileTimeToSystemTime(&tmLocal, &st);
 		MAPIFreeBuffer(pProp);
-		return Time(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+		return MAPIEx::GetSystemTime(st);
 	}
 	return Null;
 }
 
-bool MAPIAppointment::SetSubject(LPCTSTR szSubject) {
+bool MAPIAppointment::SetSubject(const String &szSubject) {
 	return SetPropertyString(PR_SUBJECT, szSubject);
 }
 
-bool MAPIAppointment::SetLocation(LPCTSTR szLocation) {
+bool MAPIAppointment::SetLocation(const String &szLocation) {
 	return SetOutlookProperty(OUTLOOK_DATA2, OUTLOOK_APPOINTMENT_START, szLocation);
 }
 
-bool MAPIAppointment::SetStartTime(Time tm) {
+bool MAPIAppointment::SetStartTime(const Time &tm) {
 	SYSTEMTIME st;
-	st.wYear   = tm.year;
-	st.wMonth  = tm.month;
-	st.wDay	   = tm.day;
-	st.wHour   = tm.hour;
-	st.wMinute = tm.minute;
-	st.wSecond = tm.second;
+	MAPIEx::SetSystemTime(st, tm);
 	FILETIME ftStart;
 	SystemTimeToFileTime(&st, &ftStart);
 	return SetOutlookProperty(OUTLOOK_DATA2, OUTLOOK_APPOINTMENT_START, ftStart);
 }
 
-bool MAPIAppointment::SetEndTime(Time tm) {
+bool MAPIAppointment::SetEndTime(const Time &tm) {
 	SYSTEMTIME st;
-	st.wYear   = tm.year;
-	st.wMonth  = tm.month;
-	st.wDay	   = tm.day;
-	st.wHour   = tm.hour;
-	st.wMinute = tm.minute;
-	st.wSecond = tm.second;
+	MAPIEx::SetSystemTime(st, tm);
 	FILETIME ftEnd;
 	SystemTimeToFileTime(&st, &ftEnd);
 	return SetOutlookProperty(OUTLOOK_DATA2, OUTLOOK_APPOINTMENT_START, ftEnd);
@@ -116,8 +105,8 @@ const GUID PSETID_Meeting = {0x6ED8DA90, 0x450B, 0x101B, {0x98, 0xDA, 0x00, 0xAA
 
 #define LID_GLOBAL_OBJID 0x23
 
-bool MAPIAppointment::GetMeetingUID(String& strUID) {
-	bool bResult = false;
+String MAPIAppointment::GetMeetingUID() {
+	String strUID;
 
 	MAPINAMEID NamedID = {0};
 	NamedID.lpguid = (LPGUID) &PSETID_Meeting;
@@ -134,12 +123,12 @@ bool MAPIAppointment::GetMeetingUID(String& strUID) {
 		LPSPropValue pProp;
 		ULONG ulVal = 0;
 		if(m_pItem->GetProps(lpNamedPropTags, 0, &ulVal, &pProp) == S_OK) {
-			bResult=GetHexString(strUID, pProp->Value.bin);
+			strUID = GetHexString(pProp->Value.bin);
 			MAPIFreeBuffer(pProp);
 		}
 		MAPIFreeBuffer(lpNamedPropTags);
 	}
-	return bResult;
+	return strUID;
 }
 
 #endif

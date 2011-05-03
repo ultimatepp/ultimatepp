@@ -30,18 +30,18 @@ MAPIObject::MAPIObject() {
 MAPIObject::~MAPIObject() {
 }
 
-bool MAPIObject::GetHexString(String &strHex, SBinary bin) {
-	strHex = "";
+String MAPIObject::GetHexString(SBinary bin) {
+	String strHex;
 	if(bin.cb) {
 		for(ULONG i = 0; i < bin.cb; i++) 
 			strHex += Format("%02X", bin.lpb[i]);
-		return true;
+		return strHex;
 	}
-	return false;
+	return String();
 }
 
-bool MAPIObject::GetEntryIDString(String& strEntryID) {
-	return GetHexString(strEntryID, m_entryID);
+String MAPIObject::GetEntryIDString() {
+	return GetHexString(m_entryID);
 }
 
 void MAPIObject::SetEntryID(SBinary* pEntryID) {
@@ -119,8 +119,8 @@ bool MAPIObject::SetImportance(int nImportance) {
 	return (Message()->SetProps(1, &prop, NULL) == S_OK);
 }
 
-bool MAPIObject::GetMessageClass(String strMessageClass) {
-	return GetPropertyString(PR_MESSAGE_CLASS, strMessageClass);
+String MAPIObject::GetMessageClass() {
+	return GetPropertyString(PR_MESSAGE_CLASS);
 }
 
 bool MAPIObject::SetMessageClass(String szMessageClass) {
@@ -165,8 +165,8 @@ HRESULT MAPIObject::GetProperty(ULONG ulProperty, LPSPropValue& pProp) {
 	return m_pItem->GetProps((LPSPropTagArray)p, MAPIEx::cm_nMAPICode, &ulPropCount, &pProp);
 }
 
-bool MAPIObject::GetPropertyString(ULONG ulProperty, String& strProperty, bool bStream) {
-	strProperty = "";
+String MAPIObject::GetPropertyString(ULONG ulProperty, bool bStream) {
+	String strProperty; 
 	if(bStream) {
 		IStream* pStream;
 		if(Message()->OpenProperty(ulProperty, &IID_IStream,STGM_READ, 0, (LPUNKNOWN*)&pStream) 
@@ -183,19 +183,19 @@ bool MAPIObject::GetPropertyString(ULONG ulProperty, String& strProperty, bool b
 			} while(ulNumChars >= BUF_SIZE);
 
 			RELEASE(pStream);
-			return true;
+			return strProperty;
 		}
 	} else {
 		if (ulProperty == PR_ENTRYID)
-			return GetEntryIDString(strProperty);
+			return GetEntryIDString();
 		LPSPropValue pProp;
 		if(GetProperty(ulProperty, pProp) == S_OK) {
-			strProperty=MAPIEx::GetValidString(*pProp);
+			strProperty = MAPIEx::GetValidString(*pProp);
 			MAPIFreeBuffer(pProp);
-			return true;
+			return strProperty;
 		} 
 	}
-	return false;
+	return String();
 }
 
 int MAPIObject::GetPropertyValue(ULONG ulProperty, int nDefaultValue) {
@@ -601,8 +601,7 @@ String MAPIObject::GetBody(bool bAutoDetect) {
 		else if(nFormat == EDITOR_FORMAT_HTML) 
 			return GetHTML();
 	}
-	GetPropertyString(PR_BODY, strBody, true);
-	return strBody;
+	return GetPropertyString(PR_BODY, true);
 }
 
 bool MAPIObject::SetBody(const String& strBody) {
@@ -614,9 +613,7 @@ bool MAPIObject::SetBody(const String& strBody) {
 }
 
 String MAPIObject::GetHTML() {
-	String strHTML;
-	GetPropertyString(PR_BODY_HTML, strHTML, true);
-	return strHTML;
+	return GetPropertyString(PR_BODY_HTML, true);
 }
 
 bool MAPIObject::SetHTML(const String &strHTML) {
@@ -731,21 +728,16 @@ Time MAPIObject::GetLastModified(SYSTEMTIME &tmLastModified) {
 		SystemTimeToTzSpecificLocalTime(NULL, &tm, &tmLastModified);
 
 		MAPIFreeBuffer(pProp);
-		return Time(tm.wYear, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond);
+		return MAPIEx::GetSystemTime(tm);
 	}
 	return Null;
 }
 
-bool MAPIObject::SetLastModified(Time &tm) {
+bool MAPIObject::SetLastModified(const Time &tm) {
 	SPropValue prop;
 	prop.ulPropTag = PR_LAST_MODIFICATION_TIME;
 	SYSTEMTIME st;
-	st.wYear   = tm.year;
-	st.wMonth  = tm.month;
-	st.wDay	   = tm.day;
-	st.wHour   = tm.hour;
-	st.wMinute = tm.minute;
-	st.wSecond = tm.second;
+	MAPIEx::SetSystemTime(st, tm);
 	SystemTimeToFileTime(&st, &prop.Value.ft);
 	return (m_pItem && m_pItem->SetProps(1, &prop, NULL) == S_OK);
 }

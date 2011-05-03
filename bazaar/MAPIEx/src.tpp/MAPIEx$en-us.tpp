@@ -15,7 +15,12 @@ topic "MAPIEx";
 [s1;:MAPIEx`:`:class: [@(0.0.255)3 class][3 _][*3 MAPIEx]&]
 [s9;%% MAPIEx base class.&]
 [s3;2 &]
-[s3;2 &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
+[s4; &]
+[s5;:MAPIEx`:`:MAPIEx`(`): [* MAPIEx]()&]
+[s2;%% Default constructor.&]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4; &]
 [s5;:MAPIEx`:`:Login`(const String`,DWORD`,bool`): [@(0.0.255) bool]_[* Login]([@(0.0.255) c
@@ -44,7 +49,7 @@ nt]_[*@3 nIndex], ULONG_[*@3 ulFlags][@(0.0.255) `=]MAPI`_MODIFY_`|_MAPI`_NO`_CA
 `_MODIFY_`|_MAPI`_NO`_CACHE)&]
 [s2;%% Opens message store with name [%-*@3 szStore] with flags [%-*@3 ulFlags].&]
 [s3;%% &]
-[s4;%% &]
+[s4; &]
 [s5;:MAPIEx`:`:GetMessageStoreCount`(`): [@(0.0.255) int]_[* GetMessageStoreCount]()&]
 [s2;%% Gets the messages number of opened message store.&]
 [s3; &]
@@ -56,9 +61,9 @@ etMessageStoreProperties]([@(0.0.255) int]_[*@3 nIndex], [_^String^ String][@(0.
 name in [%-*@3 strName] and if it is the default store in [%-*@3 bDefaultStore].&]
 [s3;%% &]
 [s4;%% &]
-[s5;:MAPIEx`:`:OpenFolder`(const String`,MAPIFolder`&`): [@(0.0.255) bool]_[* OpenFolder](
-[@(0.0.255) const]_[_^String^ String]_[*@3 folderName], [_^MAPIFolder^ MAPIFolder]_`&[*@3 f
-older])&]
+[s5;:MAPIEx`:`:OpenFolder`(const String`&`,MAPIFolder`&`): [@(0.0.255) bool]_[* OpenFolde
+r]([@(0.0.255) const]_[_^String^ String `&][*@3 folderName], [_^MAPIFolder^ MAPIFolder]_`&
+[*@3 folder])&]
 [s2;%% Sets in [%-*@3 folder] the folder with name [%-*@3 folderName].&]
 [s3;%% &]
 [s4; &]

@@ -99,35 +99,35 @@ void MAPIAttachment::Close() {
 	MAPIObject::Close();
 }
 
-bool MAPIAttachment::GetDisplayName(String& strDisplayName) {
-	return GetPropertyString(PR_DISPLAY_NAME, strDisplayName);
+String MAPIAttachment::GetDisplayName() {
+	return GetPropertyString(PR_DISPLAY_NAME);
 }
 
-bool MAPIAttachment::GetFileName(String& strFileName) {
-	return GetPropertyString(PR_ATTACH_FILENAME, strFileName);
+String MAPIAttachment::GetFileName() {
+	return GetPropertyString(PR_ATTACH_FILENAME);
 }
 
-bool MAPIAttachment::GetLongFileName(String& strLongFileName) {
-	return GetPropertyString(PR_ATTACH_LONG_FILENAME, strLongFileName);
+String MAPIAttachment::GetLongFileName() {
+	return GetPropertyString(PR_ATTACH_LONG_FILENAME);
 }
 
-bool MAPIAttachment::GetCID(String& strCID) {
-	return GetPropertyString(PR_ATTACH_CONTENT_ID, strCID);
+String MAPIAttachment::GetCID() {
+	return GetPropertyString(PR_ATTACH_CONTENT_ID);
 }
 
-bool MAPIAttachment::SetDisplayName(LPCTSTR szDisplayName) {
+bool MAPIAttachment::SetDisplayName(const String &szDisplayName) {
 	return SetPropertyString(PR_DISPLAY_NAME, szDisplayName);
 }
 
-bool MAPIAttachment::SetFileName(LPCTSTR szFileName) {
+bool MAPIAttachment::SetFileName(const String &szFileName) {
 	return SetPropertyString(PR_ATTACH_FILENAME, szFileName);
 }
 
-bool MAPIAttachment::SetLongFileName(LPCTSTR szLongFileName) {
+bool MAPIAttachment::SetLongFileName(const String &szLongFileName) {
 	return SetPropertyString(PR_ATTACH_LONG_FILENAME, szLongFileName);
 }
 
-bool MAPIAttachment::SetCID(LPCTSTR szCID) {
+bool MAPIAttachment::SetCID(const String &szCID) {
 	return SetPropertyString(PR_ATTACH_CONTENT_ID, szCID);
 }
 
@@ -172,7 +172,7 @@ void MAPIAttachment::CloseStream() {
 	}
 }
 
-bool MAPIAttachment::LoadAttachment(LPCTSTR szPath) {
+bool MAPIAttachment::LoadAttachment(const String &szPath) {
 	String file = LoadFile(szPath);
 	
 	if(file.IsEmpty() || !OpenStream(true))
@@ -182,7 +182,7 @@ bool MAPIAttachment::LoadAttachment(LPCTSTR szPath) {
 	return true;
 }
 
-bool MAPIAttachment::SaveAttachment(LPCTSTR szPath) {
+bool MAPIAttachment::SaveAttachment(const String &szPath) {
 	if (!OpenStream(false))
 		return false;
 	String file;

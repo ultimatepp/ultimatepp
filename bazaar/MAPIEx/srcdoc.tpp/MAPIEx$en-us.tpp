@@ -21,7 +21,7 @@ ucian Wischik MAPI Utils][2 .]&]
 No heap errors are expected as now all user variables are in 
 the stack. In addition internal use of heap has been reduced.]&]
 [s0;i150;O0; [2 The library interface from user point of view has been 
-simplified. GetContents() use is now internal.]&]
+simplified. GetContents() and GetHierarchy() use is now private.]&]
 [s0;i150;O0; [2 To improve compatibility CString and TCHAR have been 
 removed. They have been substituted by String.]&]
 [s0;i150;O0; [2 Added documentation.]&]
@@ -32,8 +32,8 @@ removed. They have been substituted by String.]&]
 [s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIEx`$en`-us^2 MAPIEx]&]
 [s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIFolder`$en`-us^2 MAPIFolder]&]
 [s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIMessage`$en`-us^2 MAPIMessage]&]
-[s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIAppointment`$en`-us^2 MAPIAppoin][^topic`:`/`/Functions4U`/src`/SvgColors`$en`-us^2 t
-ment]&]
+[s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIAppointment`$en`-us^2 MAPIAppointment]&]
+[s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIAttachment`$en`-us^2 MAPIAttachment]&]
 [s0;i150;O0; [^topic`:`/`/MAPIEx`/src`/MAPIContact`$en`-us^2 MAPIContact]&]
 [s0;2 &]
 [s0;2 &]

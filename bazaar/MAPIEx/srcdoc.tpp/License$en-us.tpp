@@ -18,7 +18,8 @@ community to benefit.]&]
 iEx.asp]&]
 [s0;2 &]
 [s0; [2 Following this license all changes have been reported to copyright 
-holder. See this post.]&]
+holder. ][^http`:`/`/www`.codeproject`.com`/KB`/IP`/CMapiEx`.aspx`?msg`=3876041`#xx3876041xx^2 S
+ee this post][2 .]&]
 [s0;2 &]
 [s0; [2 CMAPIEx contains code from ][^http`:`/`/www`.wischik`.com`/lu`/programmer`/mapi`_utils`.html^2 L
 ucian Wischik MAPI Utils][2 . Its license is:]&]

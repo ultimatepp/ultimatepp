@@ -35,9 +35,9 @@ bool MAPIMessage::Open(MAPIEx* pMAPI, SBinary entryID) {
 	if(!MAPIObject::Open(pMAPI,entryID)) 
 		return false;
 
-	GetPropertyString(PR_SENDER_NAME, m_strSenderName);
+	m_strSenderName = GetPropertyString(PR_SENDER_NAME);
 	FillSenderEmail();
-	GetPropertyString(PR_SUBJECT, m_strSubject);
+	m_strSubject = GetPropertyString(PR_SUBJECT);
 	
 	return true;
 }
@@ -47,14 +47,13 @@ void MAPIMessage::Close() {
 	MAPIObject::Close();
 }
 
-bool MAPIMessage::GetHeader(String& strHeader) {
-	return GetPropertyString(PR_TRANSPORT_MESSAGE_HEADERS, strHeader);
+String MAPIMessage::GetHeader() {
+	return GetPropertyString(PR_TRANSPORT_MESSAGE_HEADERS);
 }
 
 void MAPIMessage::FillSenderEmail() {
-	String strAddrType;
-	GetPropertyString(PR_SENDER_ADDRTYPE, strAddrType);
-	GetPropertyString(PR_SENDER_EMAIL_ADDRESS, m_strSenderEmail);
+	String strAddrType = GetPropertyString(PR_SENDER_ADDRTYPE);
+	m_strSenderEmail = GetPropertyString(PR_SENDER_EMAIL_ADDRESS);
 
 	// for Microsoft Exchange server internal mails we want to try to resolve the SMTP email address
 	if(strAddrType == "EX") {
@@ -75,21 +74,21 @@ Time MAPIMessage::GetTime(ULONG property) {
 		FileTimeToLocalFileTime(&pProp->Value.ft, &tmLocal);
 		FileTimeToSystemTime(&tmLocal, &st);
 		MAPIFreeBuffer(pProp);
-		return Time(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+		return MAPIEx::GetSystemTime(st);
 	}
 	return Null;
 }
 
-bool MAPIMessage::GetTo(String& strTo) {
-	return GetPropertyString(PR_DISPLAY_TO, strTo);
+String MAPIMessage::GetTo() {
+	return GetPropertyString(PR_DISPLAY_TO);
 }
 
-bool MAPIMessage::GetCC(String& strCC) {
-	return GetPropertyString(PR_DISPLAY_CC, strCC);
+String MAPIMessage::GetCC() {
+	return GetPropertyString(PR_DISPLAY_CC);
 }
 
-bool MAPIMessage::GetBCC(String& strBCC) {
-	return GetPropertyString(PR_DISPLAY_BCC, strBCC);
+String MAPIMessage::GetBCC() {
+	return GetPropertyString(PR_DISPLAY_BCC);
 }
 
 int MAPIMessage::GetMessageStatus() {
@@ -117,7 +116,7 @@ bool MAPIMessage::GetRecipients() {
 	return (m_pRecipients->SetColumns((LPSPropTagArray)&Columns, 0) == S_OK);
 }
 
-bool MAPIMessage::GetNextRecipient(String& strName, String& strEmail, int& nType) {
+bool MAPIMessage::GetNextRecipient(String& strName, String& strEmail, int &nType) {
 	if(!m_pRecipients) 
 		return false;
 
@@ -134,7 +133,7 @@ bool MAPIMessage::GetNextRecipient(String& strName, String& strEmail, int& nType
 				if(m_pMAPI) 
 					m_pMAPI->GetExEmail(pRows->aRow[0].lpProps[PROP_ENTRYID].Value.bin, strEmail);
 			} else 
-				strEmail=MAPIEx::GetValidString(pRows->aRow[0].lpProps[PROP_RECIPIENT_EMAIL]);
+				strEmail = MAPIEx::GetValidString(pRows->aRow[0].lpProps[PROP_RECIPIENT_EMAIL]);
 			bResult = true;
 		}
 		FreeProws(pRows);
@@ -142,8 +141,9 @@ bool MAPIMessage::GetNextRecipient(String& strName, String& strEmail, int& nType
 	return bResult;
 }
 
-bool MAPIMessage::GetReplyTo(String& strEmail) {
-	bool bResult=false;
+String MAPIMessage::GetReplyTo() {
+	String strEmail;
+	bool bResult = false;
 	LPSPropValue prop;
 	if(GetProperty(PR_REPLY_RECIPIENT_ENTRIES, prop) == S_OK) {
 		LPFLATENTRYLIST pReplyEntryList = (LPFLATENTRYLIST)prop->Value.bin.lpb;
@@ -157,7 +157,10 @@ bool MAPIMessage::GetReplyTo(String& strEmail) {
 		}
 		MAPIFreeBuffer(prop);
 	}
-	return bResult;
+	if (bResult)
+		return strEmail;
+	else
+		return String();
 }
 
 // nPriority defaults to IMPORTANCE_NORMAL, IMPORTANCE_HIGH or IMPORTANCE_LOW also valid
@@ -231,7 +234,7 @@ bool MAPIMessage::AddRecipients(LPADRLIST pAddressList) {
 }
 
 // AddrType only needed by Windows CE, use SMTP, or SMS etc, default NULL will not set PR_ADDRTYPE
-bool MAPIMessage::AddRecipient(const String email, int nType, const char* szAddrType) {
+bool MAPIMessage::AddRecipient(const String &email, int nType, const char* szAddrType) {
 	if(!Message() || !m_pMAPI) 
 		return false;
 
@@ -272,12 +275,12 @@ bool MAPIMessage::AddRecipient(const String email, int nType, const char* szAddr
 	return bResult;
 }
 
-void MAPIMessage::SetSubject(const String subject) {
+void MAPIMessage::SetSubject(const String &subject) {
 	m_strSubject = subject;
 	SetPropertyString(PR_SUBJECT, subject);
 }
 
-void MAPIMessage::SetSender(const String senderName, const String senderEmail) {
+void MAPIMessage::SetSender(const String &senderName, const String &senderEmail) {
 	m_strSenderName = senderName;
 	m_strSenderEmail = senderEmail;
 	LPTSTR szAddrType = (TCHAR*)"SMTP";
@@ -305,7 +308,10 @@ void MAPIMessage::SetSender(const String senderName, const String senderEmail) {
 	}
 }
 
-bool MAPIMessage::SetReceivedTime(SYSTEMTIME tmReceived, bool bLocalTime) {
+bool MAPIMessage::SetReceivedTime(const Time &tm) {
+	SYSTEMTIME tmReceived;
+	MAPIEx::SetSystemTime(tmReceived, tm);
+	
 	SPropValue prop;
 	prop.ulPropTag = PR_MESSAGE_DELIVERY_TIME;
 #ifndef _WIN32_WCE
@@ -315,7 +321,10 @@ bool MAPIMessage::SetReceivedTime(SYSTEMTIME tmReceived, bool bLocalTime) {
 	return (Message() && Message()->SetProps(1, &prop, NULL) == S_OK);
 }
 
-bool MAPIMessage::SetSubmitTime(SYSTEMTIME tmSubmit, bool bLocalTime) {
+bool MAPIMessage::SetSubmitTime(const Time &tm) {
+	SYSTEMTIME tmSubmit;
+	MAPIEx::SetSystemTime(tmSubmit, tm);
+	
 	SPropValue prop;
 	prop.ulPropTag = PR_CLIENT_SUBMIT_TIME;
 #ifndef _WIN32_WCE
@@ -424,7 +433,7 @@ bool MAPIMessage::Send() {
 	return false;
 }
 
-bool MAPIMessage::SaveToFile(const String fileName) {
+bool MAPIMessage::SaveToFile(const String &fileName) {
 	if (!RealizePath(fileName))
 		return false;
 	

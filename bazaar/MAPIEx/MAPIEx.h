@@ -89,7 +89,7 @@ public:
 	CPOOM* GetPOOM();
 #endif
 
-	bool OpenFolder(const String folderName, MAPIFolder &folder);
+	bool OpenFolder(const String &folderName, MAPIFolder &folder);
 	bool OpenSpecialFolder(unsigned long ulFolderID, MAPIFolder &folder);
 	bool OpenRootFolder(MAPIFolder &folder);
 	bool OpenInbox(MAPIFolder &folder);
@@ -101,16 +101,19 @@ public:
 	bool OpenCalendar(MAPIFolder &folder);
 
 	bool Notify(LPNOTIFCALLBACK OnNewEvent, LPVOID lpvContext, ULONG ulEventMask);
-	static void PumpMessages();
 
 	bool SelectContacts(Vector<String> &emails, const String caption);
 	
 protected:
+	static void PumpMessages();
 	bool GetExEmail(SBinary entryID, String& strEmail);
 	static String GetValidString(SPropValue& prop);
 	static String GetValidMVString(SPropValue& prop, int nIndex);
 	static void GetNarrowString(SPropValue& prop, String& strNarrow);
-	static void GetSystemTime(SYSTEMTIME& tm, int wYear, int wMonth, int wDay, int wHour=0, int wMinute=0, int wSecond=0, int wMilliSeconds=0);
+	static void SetSystemTime(SYSTEMTIME& tm, int wYear, int wMonth, int wDay, int wHour=0, 
+											int wMinute=0, int wSecond=0, int wMilliSeconds=0);
+	static void SetSystemTime(SYSTEMTIME& tm, const Time &t);
+	static Time GetSystemTime(SYSTEMTIME& tm);
 	bool CompareEntryIDs(ULONG cb1, LPENTRYID lpb1, ULONG cb2, LPENTRYID lpb2);
 	int ShowAddressBook(LPADRLIST& pAddressList, const String caption);
 	bool GetEmail(ADRENTRY& adrEntry, String& strEmail);
@@ -129,6 +132,7 @@ protected:
 	friend class MAPIFolder;
 	friend class MAPIContact;
 	friend class MAPIAttachment;
+	friend class MAPIAppointment;
 };
 
 #ifndef MSGSTATUS_HAS_PR_BODY_HTML

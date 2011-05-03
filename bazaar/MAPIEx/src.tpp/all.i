@@ -6,6 +6,10 @@ TOPIC("MAPIAppointment$en-us")
 #include "MAPIAppointment$en-us.tppi"
 END_TOPIC
 
+TOPIC("MAPIAttachment$en-us")
+#include "MAPIAttachment$en-us.tppi"
+END_TOPIC
+
 TOPIC("MAPIContact$en-us")
 #include "MAPIContact$en-us.tppi"
 END_TOPIC
