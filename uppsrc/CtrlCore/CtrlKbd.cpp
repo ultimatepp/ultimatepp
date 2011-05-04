@@ -185,6 +185,7 @@ void Ctrl::DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate)
 	SyncCaret();
 }
 
+/*
 bool Ctrl::SetFocus0(bool activate)
 {
 	GuiLock __;
@@ -216,6 +217,44 @@ bool Ctrl::SetFocus0(bool activate)
 		lastActiveWnd = topwindow;
 	return true;
 }
+*/
+
+bool Ctrl::SetFocus0(bool activate)
+{
+	GuiLock __;
+	if(IsUsrLog())
+		UsrLogT(6, String().Cat() << "SETFOCUS " << Desc(this));
+	LLOG("Ctrl::SetFocus " << Desc(this));
+	LLOG("focusCtrlWnd " << UPP::Name(focusCtrlWnd));
+	LLOG("Ctrl::SetFocus0 -> deferredSetFocus = NULL; was: " << UPP::Name(defferedSetFocus));
+	defferedSetFocus = NULL;
+	if(focusCtrl == this) return true;
+	if(!IsOpen() || !IsEnabled() || !IsVisible()) return false;
+	Ptr<Ctrl> pfocusCtrl = focusCtrl;
+	Ptr<Ctrl> topwindow = GetTopWindow();
+	Ptr<Ctrl> topctrl = GetTopCtrl();
+	Ptr<Ctrl> _this = this;
+	if(!topwindow) topwindow = topctrl;
+	LLOG("SetFocus -> SetWndFocus: topwindow = " << UPP::Name(topwindow) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
+	if(!topwindow->HasWndFocus() && !topwindow->SetWndFocus()) return false;// cxl 31.1.2004
+#ifdef PLATFORM_POSIX
+	if(activate) // Dolik/fudadmin 2011-5-1
+		topctrl->SetWndForeground();
+#else
+	topwindow->SetWndForeground();  // cxl 2007-4-27
+#endif
+	LLOG("SetFocus -> focusCtrl = this: " << FormatIntHex(this) << ", _this = " << FormatIntHex(~_this) << ", " << UPP::Name(_this));
+	focusCtrl = _this;
+	focusCtrlWnd = topwindow;
+	DoKillFocus(pfocusCtrl, _this);
+	LLOG("SetFocus 2");
+	DoDeactivate(pfocusCtrl, _this);
+	DoSetFocus(pfocusCtrl, _this, activate);
+	if(topwindow)
+		lastActiveWnd = topwindow;
+	return true;
+}
+
 
 bool Ctrl::SetFocus()
 {
