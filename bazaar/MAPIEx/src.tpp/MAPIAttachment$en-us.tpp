@@ -25,58 +25,67 @@ ublic][3 _][*@3;3 MAPIObject]&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4; &]
 [s5;:MAPIAttachment`:`:GetDisplayName`(`): [_^String^ String]_[* GetDisplayName]()&]
-[s2;%% &]
+[s2;%% Gets the display name of the message store.&]
 [s3; &]
 [s4; &]
 [s5;:MAPIAttachment`:`:GetFileName`(`): [_^String^ String]_[* GetFileName]()&]
-[s2;%% &]
+[s2;%% Gets the suggested file name for saving the attachment. File 
+name length is restricted to eight characters plus a three`-character 
+extension.&]
 [s3; &]
 [s4; &]
 [s5;:MAPIAttachment`:`:GetLongFileName`(`): [_^String^ String]_[* GetLongFileName]()&]
-[s2;%% &]
+[s2;%% Gets the suggested file name for saving the attachment.&]
 [s3; &]
 [s4; &]
 [s5;:MAPIAttachment`:`:SetDisplayName`(const String`&`): [@(0.0.255) bool]_[* SetDisplayN
 ame]([@(0.0.255) const]_[_^String^ String]_`&[*@3 szDisplayName])&]
-[s2;%%  [%-*@3 szDisplayName].&]
+[s2;%% Sets with [%-*@3 szDisplayName] the display name of the message 
+store.&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIAttachment`:`:SetFileName`(const String`&`): [@(0.0.255) bool]_[* SetFileName]([@(0.0.255) c
 onst]_[_^String^ String]_`&[*@3 szFileName])&]
-[s2;%%  [%-*@3 szFileName].&]
+[s2;%% Sets with [%-*@3 szFileName ]the suggested file name for saving 
+the attachment. File name length is restricted to eight characters 
+plus a three`-character extension.&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIAttachment`:`:SetLongFileName`(const String`&`): [@(0.0.255) bool]_[* SetLongFil
 eName]([@(0.0.255) const]_[_^String^ String]_`&[*@3 szLongFileName])&]
-[s2;%%  [%-*@3 szLongFileName].&]
+[s2;%% Sets with [%-*@3 szLongFileName] the suggested file name for 
+saving the attachment.&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIAttachment`:`:LoadAttachment`(const String`&`): [@(0.0.255) bool]_[* LoadAttachm
 ent]([@(0.0.255) const]_[_^String^ String]_`&[*@3 szPath])&]
-[s2;%%  [%-*@3 szPath].&]
+[s2;%% Loads an attachment from file [%-*@3 szPath].&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIAttachment`:`:SaveAttachment`(const String`&`): [@(0.0.255) bool]_[* SaveAttachm
 ent]([@(0.0.255) const]_[_^String^ String]_`&[*@3 szPath])&]
-[s2;%%  [%-*@3 szPath].&]
+[s2;%% Saves an attachment to file [%-*@3 szPath].&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIAttachment`:`:OpenStream`(bool`): [@(0.0.255) bool]_[* OpenStream]([@(0.0.255) boo
 l]_[*@3 bCreate]_`=_[@(0.0.255) false])&]
-[s2;%%  [%-*@3 bCreate].&]
+[s2;%% Opens an attachment. If [%-*@3 bCreate]. is true, a new attachment 
+is created.&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIAttachment`:`:Read`(BYTE`*`,int`): [@(0.0.255) int]_[* Read](BYTE[@(0.0.255) `*]_[*@3 p
 Data], [@(0.0.255) int]_[*@3 nCount])&]
-[s2;%%  [%-*@3 pData] [%-*@3 nCount].&]
+[s2;%% Reads [%-*@3 nCount ]bytes from last attachment stream opened 
+with OpenStream(false) and sets it in [%-*@3 pData].&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIAttachment`:`:Write`(BYTE`*`,int`): [@(0.0.255) int]_[* Write](BYTE[@(0.0.255) `*]_
 [*@3 pData], [@(0.0.255) int]_[*@3 nCount])&]
-[s2;%%  [%-*@3 pData] [%-*@3 nCount].&]
+[s2;%% Writes [%-*@3 nCount] bytes from [%-*@3 pData] to last attachment 
+stream opened with OpenStream(true).&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIAttachment`:`:CloseStream`(`): [@(0.0.255) void]_[* CloseStream]()&]
-[s2;%% &]
+[s2;%% Closes last opened stream.&]
 [s3; &]
 [s0;%% ]

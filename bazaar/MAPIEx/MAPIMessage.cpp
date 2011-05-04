@@ -220,17 +220,19 @@ bool MAPIMessage::MarkAsRead(bool bRead) {
 }
 
 bool MAPIMessage::AddRecipients(LPADRLIST pAddressList) {
-	HRESULT hr=E_INVALIDARG;
+	HRESULT hr = E_INVALIDARG;
 #ifdef _WIN32_WCE
-	hr=Message()->ModifyRecipients(MODRECIP_ADD, pAddressList);
+	hr = Message()->ModifyRecipients(MODRECIP_ADD, pAddressList);
 #else
 	LPADRBOOK pAddressBook;
-	if(m_pMAPI->GetSession()->OpenAddressBook(0, NULL, AB_NO_DIALOG, &pAddressBook)!=S_OK) return false;
+	if(m_pMAPI->GetSession()->OpenAddressBook(0, NULL, AB_NO_DIALOG, &pAddressBook) != S_OK) 
+		return false;
 
-	if(pAddressBook->ResolveName(0, MAPIEx::cm_nMAPICode, NULL, pAddressList)==S_OK) hr=Message()->ModifyRecipients(MODRECIP_ADD, pAddressList);
+	if(pAddressBook->ResolveName(0, MAPIEx::cm_nMAPICode, NULL, pAddressList) == S_OK) 
+		hr = Message()->ModifyRecipients(MODRECIP_ADD, pAddressList);
 	RELEASE(pAddressBook);
 #endif
-	return (hr==S_OK);
+	return (hr == S_OK);
 }
 
 // AddrType only needed by Windows CE, use SMTP, or SMS etc, default NULL will not set PR_ADDRTYPE

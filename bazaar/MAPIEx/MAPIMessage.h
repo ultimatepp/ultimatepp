@@ -74,7 +74,7 @@ public:
 	String GetReplyTo();
 
 	bool AddRecipients(LPADRLIST pAddressList);
-	bool AddRecipient(const String &email, int nType=MAPI_TO, const char* szAddrType=NULL);  // MAPI_CC and MAPI_BCC also valid
+	bool AddRecipient(const String &email, int nType = MAPI_TO, const char* szAddrType = NULL);  
 	void SetSubject(const String &subject);
 	void SetSender(const String &senderName, const String &senderEmail);
 	bool SetReceivedTime(const Time &tm);

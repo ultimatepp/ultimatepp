@@ -126,22 +126,25 @@ etNextRecipient]([_^String^ String][@(0.0.255) `&]_[*@3 strName], [_^String^ Str
 ]_[*@3 strEmail], [@(0.0.255) int`&]_[*@3 nType])&]
 [s2;%% Gets next recipient data like name in [%-*@3 strName], email 
 in [%-*@3 strEmail] and type in [%-*@3 nType].&]
+[s2;%% Valid types are:&]
+[s2;i150;O0;%% MAPI`_TO: Recipient is a primary (To) recipient.&]
+[s2;i150;O0;%% MAPI`_CC: Recipient is a carbon copy (CC) recipient.&]
+[s2;i150;O0;%% MAPI`_BCC: Recipient is a blind carbon copy (BCC) recipient.&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIMessage`:`:GetReplyTo`(`): [_^String^ String]_[* GetReplyTo]()&]
-[s2;%% &]
+[s2;%% Gets the recipients that are to get a reply&]
 [s3; &]
-[s4; &]
-[s5;:MAPIMessage`:`:AddRecipients`(LPADRLIST`): [@(0.0.255) bool]_[* AddRecipients](LPADR
-LIST_[*@3 pAddressList])&]
-[s2;%%  [%-*@3 pAddressList].&]
-[s3;%% &]
-[s4; &]
+[s4;%% &]
 [s5;:MAPIMessage`:`:AddRecipient`(const String`&`,int`,const char`*`): [@(0.0.255) bool
 ]_[* AddRecipient]([@(0.0.255) const]_[_^String^ String]_`&[*@3 email], 
 [@(0.0.255) int]_[*@3 nType][@(0.0.255) `=]MAPI`_TO, [@(0.0.255) const]_[@(0.0.255) char`*]_
 [*@3 szAddrType][@(0.0.255) `=]NULL)&]
-[s2;%%  [%-*@3 email] [%-*@3 nType] [%-*@3 szAddrType].&]
+[s2;%% Add a new recipient with [%-*@3 email] and type [%-*@3 nType].&]
+[s2;%% Valid types are:&]
+[s2;i150;O0;%% MAPI`_TO: Recipient is a primary (To) recipient.&]
+[s2;i150;O0;%% MAPI`_CC: Recipient is a carbon copy (CC) recipient.&]
+[s2;i150;O0;%% MAPI`_BCC: Recipient is a blind carbon copy (BCC) recipient.&]
 [s3;%% &]
 [s4; &]
 [s5;:MAPIMessage`:`:SetSubject`(const String`&`): [@(0.0.255) void]_[* SetSubject]([@(0.0.255) c
