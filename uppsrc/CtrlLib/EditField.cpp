@@ -255,6 +255,10 @@ int  EditField::GetTy() const
 	return (GetSize().cy + 1 - font.Info().GetHeight()) / 2;
 }
 
+void EditField::HighlightText(Vector<Highlight>& hl)
+{
+}
+
 void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 					   Color ink, Color paper, int n, bool password, Font fnt)
 {
@@ -307,8 +311,30 @@ void EditField::Paint(Draw& w)
 			x = sz.cx - 4 - GetTextCx(text, text.GetLength(), password, font);
 			w.DrawRect(0, 0, x, fcy, paper);
 		}
+		int len = GetLength();
+		Vector<Highlight> hl;
+		hl.SetCount(len);
+		for(int i = 0; i < len; i++) {
+			hl[i].ink = ink;
+			hl[i].paper = paper;
+		}
+		HighlightText(hl);
+		len = hl.GetCount();
 		int l, h;
 		if(GetSelection(l, h)) {
+			h = min(h, len);
+			for(int i = l; i < h; i++) {
+				hl[i].ink = enabled ? style->selectedtext : paper;
+				hl[i].paper = enabled ? style->selected : ink;
+			}
+		}
+		int b = 0;
+		for(int i = 0; i <= len; i++)
+			if((i == len || hl[i] != hl[b]) && b < len) {
+				Paints(w, x, fcy, txt, hl[b].ink, hl[b].paper, i - b, password, font);
+				b = i;
+			}
+/*		if(GetSelection(l, h)) {
 			Paints(w, x, fcy, txt, ink, paper, l, password, font);
 			Paints(w, x, fcy, txt, enabled ? style->selectedtext : paper,
 			                       enabled ? style->selected : ink, h - l, password, font);
@@ -316,6 +342,7 @@ void EditField::Paint(Draw& w)
 		}
 		else
 			Paints(w, x, fcy, txt, ink, paper, text.GetLength(), password, font);
+*/
 	}
 	if(!ar)
 		w.DrawRect(x, 0, 9999, fcy, paper);
