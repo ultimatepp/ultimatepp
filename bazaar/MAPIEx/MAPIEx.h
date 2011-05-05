@@ -28,11 +28,6 @@ using namespace Upp;
 #include <cemapi.h>
 #include <objidl.h>
 #else
-#define INITGUID
-#define USES_IID_IMessage
-#include <InitGuid.h>
-#include <MAPIGuid.h>
-
 #include <mapix.h>
 #include <objbase.h>
 #endif

@@ -82,7 +82,7 @@ bool MAPIAppointment::SetSubject(const String &szSubject) {
 }
 
 bool MAPIAppointment::SetLocation(const String &szLocation) {
-	return SetOutlookProperty(OUTLOOK_DATA2, OUTLOOK_APPOINTMENT_START, szLocation);
+	return SetOutlookProperty(OUTLOOK_DATA2, OUTLOOK_APPOINTMENT_LOCATION, szLocation);
 }
 
 bool MAPIAppointment::SetStartTime(const Time &tm) {
@@ -98,7 +98,7 @@ bool MAPIAppointment::SetEndTime(const Time &tm) {
 	MAPIEx::SetSystemTime(st, tm);
 	FILETIME ftEnd;
 	SystemTimeToFileTime(&st, &ftEnd);
-	return SetOutlookProperty(OUTLOOK_DATA2, OUTLOOK_APPOINTMENT_START, ftEnd);
+	return SetOutlookProperty(OUTLOOK_DATA2, OUTLOOK_APPOINTMENT_END, ftEnd);
 }
 
 const GUID PSETID_Meeting = {0x6ED8DA90, 0x450B, 0x101B, {0x98, 0xDA, 0x00, 0xAA, 0x00, 0x3F, 0x13, 0x05}};

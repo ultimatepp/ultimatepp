@@ -4,7 +4,7 @@ topic "MAPIEx License";
 [{_}%EN-US 
 [s0; [*R+184 MAPIEx License]&]
 [s0;2 &]
-[s0; [2 MAPIEx U`+`+ Bazaar page is fully based in ][^http`:`/`/www`.mud`.ca`/MAPIEx`.zip^2 N
+[s0; [2 MAPIEx U`+`+ Bazaar package is fully based in ][^http`:`/`/www`.mud`.ca`/MAPIEx`.zip^2 N
 oel Dillabough CMAPIEx][2 . Its license is:]&]
 [s0;2 &]
 [s0; [C+75 Copyright (C) 2005`-2010, Noel Dillabough]&]

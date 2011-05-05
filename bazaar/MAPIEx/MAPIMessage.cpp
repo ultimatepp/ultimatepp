@@ -18,6 +18,14 @@
 
 const GUID CLSID_MailMessage={ 0x00020D0B, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46 };
 
+#ifndef _WIN32_WCE
+#define INITGUID
+#define USES_IID_IMessage
+#include <InitGuid.h>
+#include <MAPIGuid.h>
+#endif
+
+
 // Ported to U++ Framework by Koldo. See License.txt file
   					
 /////////////////////////////////////////////////////////////
