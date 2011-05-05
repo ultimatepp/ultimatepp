@@ -148,8 +148,8 @@ class WinMetaFile/* : NoCopy */{
 //	void     Copy(const WinMetaFile& src);
 
 public:
-	void          Attach(HENHMETAFILE emf);
-	HENHMETAFILE *Detach();
+	void         Attach(HENHMETAFILE emf);
+	HENHMETAFILE Detach();
 	
 	void     Set(const void *data, dword len);
 	void     Set(const String& data)        { Set(~data, data.GetCount()); }
