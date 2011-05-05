@@ -93,6 +93,13 @@ public:
 		bool  activeedge;
 		int   vfm;
 	};
+	
+	struct Highlight : Moveable<Highlight> {
+		Color ink;
+		Color paper;
+
+		bool operator!=(const Highlight& b) const { return ink != b.ink || paper != b.paper; }
+	};
 
 protected:
 	const Style *style;
@@ -146,6 +153,9 @@ protected:
 	void    SaveUndo();
 	void    DoAutoFormat();
 	int     GetTy() const;
+
+protected:
+	virtual void  HighlightText(Vector<Highlight>& hl);
 
 public:
 	Callback1<Bar&>   WhenBar;
