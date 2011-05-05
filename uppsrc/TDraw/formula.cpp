@@ -62,15 +62,15 @@ static void BezierEllipse(Vector<Point>& out, Point C, Size radius, int n)
 int SymbolWidth(FORMSYMBOL symbol, int height, int textheight)
 {
 	int wd = max(Percent(20, textheight), 4);
-	int lw = Formula::GetLineWidth(textheight);
+	int lw = Formula::GetLineWidth(textheight) >> 2;
 	switch(symbol)
 	{
 	default:        NEVER();
 	case FS_EMPTY:        return 0;
-	case FS_LBRACE:
-	case FS_RBRACE:
 	case FS_LSHARP:
 	case FS_RSHARP:       wd = textheight / 4; break;
+	case FS_LBRACE:
+	case FS_RBRACE:
 	case FS_LPAREN:
 	case FS_RPAREN:
 	case FS_LBRACKET:
@@ -79,7 +79,7 @@ int SymbolWidth(FORMSYMBOL symbol, int height, int textheight)
 	case FS_RTBRACKET:
 	case FS_LBBRACKET:
 	case FS_RBBRACKET:    break;
-	case FS_VBAR:         wd = textheight / 6; break;
+	case FS_VBAR:         wd = textheight / 8; break;
 	case FS_SUM:
 	case FS_PRODUCT:
 	case FS_UNION:
@@ -94,7 +94,7 @@ int SymbolWidth(FORMSYMBOL symbol, int height, int textheight)
 	case FS_MEMBER: case FS_NOT_MEMBER:
 	case FS_SUBSET: case FS_NOT_SUBSET:
 	case FS_PROPER_SUBSET: case FS_NOT_PROPER_SUBSET:
-		wd = Percent(60, textheight);
+		wd = Percent(30, textheight);
 		break;
 	}
 	return wd;
@@ -104,7 +104,7 @@ void PaintSymbol(Draw& draw, FORMSYMBOL symbol, const Rect& rc, int textheight, 
 {
 //	draw.DrawRect(rc, LtMagenta);
 	int wd = rc.Width(), ht = rc.Height();
-	int thick = Formula::GetLineWidth(textheight);
+	int thick = Formula::GetLineWidth(textheight) >> 1;
 	int half = thick >> 1;
 	Vector<Point> polygon;
 	Vector<int> counts;
@@ -144,12 +144,13 @@ void PaintSymbol(Draw& draw, FORMSYMBOL symbol, const Rect& rc, int textheight, 
 		xs = xv = thick;
 		yo = 0;
 		yi = yj = ys = ht >> 1;
+		yw = min(textheight / 3, yi);
 		if(bra) {
 			xv = (xv + xo) >> 1;
-			yi = max(ht >> 2, ys - textheight / 5);
+			yi = max(Percent(42, ht), ys - textheight / 5);
 			yj = (yi + ys) >> 1;
+			yw /= 3;
 		}
-		yw = min(textheight / 3, yi);
 		yv = yw >> 1;
 		enum { PREC = 6 };
 		Bezier(polygon, Point(xo, yo), Point(xv, yv), Point(xv, yw), PREC);
@@ -235,7 +236,7 @@ void PaintSymbol(Draw& draw, FORMSYMBOL symbol, const Rect& rc, int textheight, 
 		<< Point(wd - thick, top) << Point(wd2, bot - thick - iscale(thick, bot - top, wd2)) << Point(thick, top);
 	}
 	else if(symbol > FS_SETOP_BEGIN && symbol < FS_SETOP_END) {
-		int ht2 = ht >> 1, ht4 = Percent(30, ht), wd2 = wd >> 1;
+		int ht2 = Percent(60, ht), ht4 = Percent(20, ht), wd2 = wd >> 1;
 		polygon << Point(wd, ht2 - ht4);
 		Bezier(polygon, Point(wd2, ht2 - ht4), Point(0, ht2 - ht4), Point(0, ht2), 8);
 		Bezier(polygon, Point(0, ht2), Point(0, ht2 + ht4), Point(wd2, ht2 + ht4), 8);
@@ -776,7 +777,7 @@ RefCon<Formula> FormulaParser::RunTextBin()
 		RefCon<Formula> body = new FormulaSymbol(sym, ht, ht, state.color);
 		Vector< RefCon<Formula> > list;
 		list << form << body << right;
-		return new FormulaMatrix(list, new FormulaSpace(Percent(50, ht)));
+		return new FormulaMatrix(list, new FormulaSpace(Percent(20, ht)));
 	}
 	return form;
 }
@@ -807,6 +808,16 @@ RefCon<Formula> FormulaParser::RunComp()
 			item = MakeBinary(item, "\xDE", RunComp(), Null, -13);
 		else if(Check('=', '<'))
 			item = MakeBinary(item, "\xDC", RunComp(), Null, -13);
+		else if(Skip() == '.' && ptr[1] == '.' && ptr[2] != '.') {
+			ptr += 2;
+			RefCon<Formula> right = RunComp();
+			Vector< RefCon<Formula> > list;
+			list << item;
+			list << new FormulaText("..", state.font, state.color);
+			list << right;
+			int ht = Formula::GetTextHeight0(item, right);
+			item = new FormulaMatrix(list, new FormulaSpace(Percent(20, ht)));
+		}
 		else if(Check('<'))
 			item = MakeBinary(item, "<", RunComp(), gap);
 		else if(Check('>'))
@@ -837,8 +848,10 @@ RefCon<Formula> FormulaParser::RunMul()
 	for(;;)
 		if(Check('*'))
 			item = MakeBinary(item, "*", RunDiv());
-		else if(Check('.'))
+		else if(Skip() == '.' && ptr[1] != '.') {
+			ptr++;
 			item = MakeBinary(item, ".", RunDiv(), Null, -20);
+		}
 		else if(Check('~'))
 			item = MakeBinary(item, Null, RunDiv());
 		else
@@ -976,8 +989,6 @@ RefCon<Formula> FormulaParser::RunTerm()
 		return MakeUnary("+", RunTerm(), 0, true);
 	if(Check('.', '.', '.'))
 		return new FormulaText("...", state.font, state.color);
-	if(Check('.', '.'))
-		return new FormulaText("..", state.font, state.color);
 	if(Check('~', '~'))
 	{
 		int blanks = 1;

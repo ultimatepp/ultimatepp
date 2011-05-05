@@ -81,6 +81,14 @@ void WinMetaFile::Attach(HENHMETAFILE _hemf) {
 	}
 }
 
+HENHMETAFILE WinMetaFile::Detach()
+{
+	size = Size(0, 0);
+	HENHMETAFILE out = hemf;
+	hemf = NULL;
+	return out;
+}
+
 #pragma pack(push, 1)
 struct PLACEABLE_METAFILEHEADER
 {
