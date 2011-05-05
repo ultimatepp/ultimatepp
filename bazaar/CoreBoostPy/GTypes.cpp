@@ -3,8 +3,6 @@ using namespace boost::python;
 
 NAMESPACE_UPP
 
-void ColorSetNull(Color& c) { c = Null; } //FIXME upstream access to Color::SetNull
-
 void export_Color()
 {
 ONCELOCK
@@ -16,8 +14,7 @@ ONCELOCK
 		.add_property("r", &Color::GetR)
 		.add_property("g", &Color::GetG)
 		.add_property("b", &Color::GetB)
-//		.def("setnull", &Color::SetNull)
-		.def("setnull", &ColorSetNull)
+		.def("setnull", &Color::SetNull)
 		.def("isnull", &IsNull<Color>)
 		.def("__str__", &AsString<Color>)
 	;

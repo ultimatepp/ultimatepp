@@ -4,6 +4,7 @@ uses
 	Core;
 
 file
+	Misc.h,
 	Gen.h,
 	Gen.cpp;
 

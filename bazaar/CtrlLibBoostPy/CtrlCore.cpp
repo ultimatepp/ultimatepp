@@ -63,6 +63,16 @@ void CtrlSetPos(Ctrl& c, const Ctrl::LogPos& p) { c.SetPos(p); }
 void CtrlSetTip(Ctrl& c, const String& s) { c.Tip(s); }
 void CtrlTransparent(Ctrl& c, bool b) { c.Transparent(b); }
 
+void CtrlLeftPos(Ctrl& c, int a, int size) { c.LeftPos(a, size); }
+void CtrlRightPos(Ctrl& c, int a, int size) { c.RightPos(a, size); }
+void CtrlTopPos(Ctrl& c, int a, int size) { c.TopPos(a, size); }
+void CtrlBottomPos(Ctrl& c, int a, int size) { c.BottomPos(a, size); }
+void CtrlHSizePos(Ctrl& c, int a, int b) { c.HSizePos(a, b); }
+void CtrlVSizePos(Ctrl& c, int a, int b) { c.VSizePos(a, b); }
+void CtrlHCenterPos(Ctrl& c, int size, int delta) { c.HCenterPos(size, delta); }
+void CtrlVCenterPos(Ctrl& c, int size, int delta) { c.HCenterPos(size, delta); }
+void CtrlSizePos(Ctrl& c) { c.SizePos(); }
+
 //other
 void CtrlSetFocus(Ctrl& c, bool b) { if(b) c.SetFocus(); else if(c.GetParent()) c.GetParent()->SetFocus(); }
 void CtrlSetBackPaint(Ctrl& c, bool b) { c.BackPaint(b?(Ctrl::FULLBACKPAINT):(Ctrl::NOBACKPAINT)); }
@@ -108,7 +118,15 @@ ONCELOCK
 		.add_property("rect", &Ctrl::GetRect, (void (Ctrl::*)(const Rect&))&Ctrl::SetRect)
 		.add_property("size", &Ctrl::GetSize)
 
-//FIXME pos stuff
+		.def("leftpos", &CtrlLeftPos)
+		.def("rightpos", &CtrlRightPos)
+		.def("toppos", &CtrlTopPos)
+		.def("bottompos", &CtrlBottomPos)
+		.def("hsizepos", &CtrlHSizePos)
+		.def("vsizepos", &CtrlVSizePos)
+		.def("hcenterpos", &CtrlHCenterPos)
+		.def("vcenterpos", &CtrlVCenterPos)
+		.def("sizepos", &CtrlSizePos)
 
 		.add_property("focus", &Ctrl::HasFocus, &CtrlSetFocus)
 		.add_property("wantfocus", &CtrlWantFocus, &Ctrl::IsWantFocus)
