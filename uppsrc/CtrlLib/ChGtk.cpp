@@ -656,8 +656,12 @@ void ChHostSkin()
 	ColoredOverride(CtrlsImg::Iml(), ClassicCtrlsImg::Iml());
 
 	ChLookFn(GtkLookFn);
+	
+	bool KDE = Environment().Get("KDE_FULL_SESSION", String()) == "true";
 
 	String engine = GtkStyleString("gtk-theme-name");
+	
+	bool Qt = engine == "Qt" || KDE;
 	
 	if(chgtkspy__)
 		engine.Clear();
@@ -744,7 +748,7 @@ void ChHostSkin()
 	GtkIml(CtrlsImg::I_O2, w, 3, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is);
 	gtk_widget_destroy(w);
 
-	if(engine == "Qt") {
+	if(Qt) {
 		for(int i = 0; i < 4; i++) {
 			Image m = CtrlsImg::Get(CtrlsImg::I_O2 + i);
 			ImageBuffer ib(m);
@@ -837,7 +841,7 @@ void ChHostSkin()
 		for(int i = 0; i < 6; i++)
 			CtrlsImg::Set(CtrlsImg::I_DA + i, CtrlsImg::Get(CtrlsImg::I_kDA + i));
 
-		if(engine == "Qt") {
+		if(Qt) {
 			int r = Null;
 			for(int i = 0; i < 4; i++) {
 				ImageDraw iw(64, 64);
@@ -918,7 +922,7 @@ void ChHostSkin()
 			}
 			bool atp = IsEmptyImage(GetGTK(ChGtkLast(), 2, 2, "vscrollbar", GTK_BOX|GTK_TOP|GTK_RANGEA, 16, 16));
 			Size asz(s.barsize / 2, s.arrowsize / 2);
-			if(engine == "Qt" || engine == "Human")
+			if(Qt || engine == "Human")
 				atp = false;
 			if(atp) {
 				ChGtkNew("vscrollbar", GTK_ARROW);
@@ -1038,7 +1042,7 @@ void ChHostSkin()
 			adj = gtk_adjustment_new(0, 0, 1000, 1, 1, 500);
 			w = gtk_vscrollbar_new(NULL);
 			Setup(w);
-			s.overthumb = m != GetGTK(w, 0, 0, "slider", GTK_SLIDER|GTK_VAL1, 16, 32) && engine != "Qt";
+			s.overthumb = m != GetGTK(w, 0, 0, "slider", GTK_SLIDER|GTK_VAL1, 16, 32) && !Qt;
 			gtk_widget_destroy(w);
 			gtk_object_sink(adj);
 			
@@ -1062,7 +1066,7 @@ void ChHostSkin()
 		}
 	}
 
-	if(engine != "Qt")
+	if(!Qt)
 	{
 		TabCtrl::Style& s = TabCtrl::StyleDefault().Write();
 		static GtkWidget *tabctrl = gtk_notebook_new();
