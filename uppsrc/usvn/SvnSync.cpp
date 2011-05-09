@@ -294,7 +294,7 @@ again:
 				if(action == REPLACE || action == ADD)
 					DeleteFolderDeep(path);
 				if(action != ADD)
-					sys.CheckSystem("svn revert " + path);
+					sys.CheckSystem("svn revert \"" + path + "\"");
 			}else if(IsNumber(v)&&(int)v==2||action==-1){
 				l++;
 				continue;
@@ -305,23 +305,23 @@ again:
 				switch(action) {
 				case ADD:
 					SvnDel(path);
-					sys.CheckSystem("svn add --force " + path);
+					sys.CheckSystem("svn add --force \"" + path + "\"");
 					break;
 				case REMOVE:
-					sys.CheckSystem("svn delete " + path);
+					sys.CheckSystem("svn delete \"" + path + "\"");
 					break;
 				case CONFLICT:
-					sys.CheckSystem("svn resolved " + path);
+					sys.CheckSystem("svn resolved \"" + path + "\"");
 					break;
 				case REPLACE: {
 						SvnDel(path);
 						String tp = AppendFileName(GetFileFolder(path), Format(Uuid::Create()));
 						FileMove(path, tp);
-						sys.CheckSystem(SvnCmd("update", w).Cat() << ' ' << path);
+						sys.CheckSystem(SvnCmd("update", w).Cat() << " \"" << path << "\"");
 						MoveSvn(path, tp);
 						sDeleteFolderDeep(path);
 						FileMove(tp, path);
-						Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
+						Vector<String> ln = Split(Sys("svn status \"" + path + "\""), CharFilterCrLf);
 						for(int l = 0; l < ln.GetCount(); l++) {
 							String h = ln[l];
 							if(h.GetCount() > 7) {
@@ -329,9 +329,9 @@ again:
 								if(IsFullPath(file)) {
 									h.Trim(7);
 									if(h == "?      ")
-										sys.CheckSystem("svn add --force " + file);
+										sys.CheckSystem("svn add --force \"" + file + "\"");
 									if(h == "!      ")
-										sys.CheckSystem("svn delete " + file);
+										sys.CheckSystem("svn delete \"" + file + "\"");
 								}
 							}
 						}
