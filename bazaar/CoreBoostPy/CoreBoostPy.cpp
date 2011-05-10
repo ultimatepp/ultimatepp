@@ -11,6 +11,8 @@ ONCELOCK
 	export_Value();
 	export_ValueArray();
 	export_ValueMap();
+
+	export_Log();
 }
 }
 

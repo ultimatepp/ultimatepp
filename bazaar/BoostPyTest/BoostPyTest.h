@@ -19,7 +19,8 @@ public:
 
 	void ExitHandler();
 
-	World w;	
+	World w;
+	Progress pr;
 };
 
 #endif

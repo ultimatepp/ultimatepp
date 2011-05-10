@@ -52,8 +52,14 @@ void CtrlReject(Ctrl& c) { c.Reject(); }
 void CtrlSetModify(Ctrl& c, bool b) { if (b) c.SetModify(); else c.ClearModify(); }
 bool CtrlIsModified(const Ctrl& c) { return c.IsModified(); }
 
+Size CtrlGetMinSize(Ctrl& c) { return c.GetMinSize(); }
+Size CtrlGetStdSize(Ctrl& c) { return c.GetStdSize(); }
+Rect CtrlGetVoidRect(Ctrl& c) { return c.GetVoidRect(); }
+
 Value CtrlGetData(const Ctrl& c) { return c.GetData(); }
 void CtrlSetData(Ctrl& c, const Value& data) { c.SetData(data); }
+
+void CtrlClose(Ctrl& c) { c.Close(); }
 
 //return ignorers
 void CtrlWantFocus(Ctrl& c, bool b) { c.WantFocus(b); }
@@ -118,6 +124,13 @@ ONCELOCK
 		.add_property("rect", &Ctrl::GetRect, (void (Ctrl::*)(const Rect&))&Ctrl::SetRect)
 		.add_property("size", &Ctrl::GetSize)
 
+		.add_property("minsize", &CtrlGetMinSize)
+		.add_property("stdsize", &CtrlGetStdSize)
+		.add_property("voidrect", &CtrlGetVoidRect)
+
+		.add_property("inview", &Ctrl::InView)
+		.add_property("inframe", &Ctrl::InFrame)
+
 		.def("leftpos", &CtrlLeftPos)
 		.def("rightpos", &CtrlRightPos)
 		.def("toppos", &CtrlTopPos)
@@ -141,11 +154,95 @@ ONCELOCK
 		.def("action", &Ctrl::Action)
 		.def("refresh", (void (Ctrl::*)(void))&Ctrl::Refresh)
 
+		.def("close", &CtrlClose)
+		.add_property("isopen", &Ctrl::IsOpen)
+
+
 		.add_property("backpaint", &CtrlIsBackPaint, &CtrlSetBackPaint)
 		.add_property("transparent", &Ctrl::IsTransparent, &CtrlTransparent)
 		.add_property("tip", &Ctrl::GetTip, &CtrlSetTip)
 
 		.def("__str__", &CtrlToString)
+	;
+
+	def("showrepaint", &Ctrl::ShowRepaint, "Show Repaint process in Upp");
+}
+}
+
+//virtuals
+void TopWindowClose(TopWindow& c) { c.Close(); }
+
+//return ignore
+void TopWindowSetTitle(TopWindow& c, const String& s) { c.Title(s); }
+String TopWindowGetTitle(const TopWindow& c) { return c.GetTitle().ToString(); }
+
+void TopWindowFullScreen(TopWindow& c, bool b) { c.FullScreen(b); }
+void TopWindowSizeable(TopWindow& c, bool b) { c.Sizeable(b); }
+void TopWindowZoomable(TopWindow& c, bool b) { c.Zoomable(b); }
+void TopWindowTopMost(TopWindow& c, bool b, bool d) { c.TopMost(b, d); }
+void TopWindowToolWindow(TopWindow& c, bool b) { c.ToolWindow(b); }
+
+//enum helper, boost needs namespace
+enum TopWindowEnum
+{
+	_IDOK = IDOK,
+	_IDCANCEL = IDCANCEL,
+	_IDABORT = IDABORT,
+	_IDRETRY = IDRETRY,
+	_IDIGNORE = IDIGNORE,
+	_IDYES = IDYES,
+	_IDNO = IDNO,
+	_IDCLOSE = IDCLOSE,
+	_IDHELP = IDHELP,
+	_IDEXIT = IDEXIT,
+};
+
+void export_TopWindow()
+{
+ONCELOCK
+{
+	enum_<TopWindowEnum>("choice")
+		.value("idok", _IDOK)
+		.value("idcancel", _IDCANCEL)
+		.value("idabort", _IDABORT)
+		.value("idretry", _IDRETRY)
+		.value("idignore", _IDIGNORE)
+		.value("idyes", _IDYES)
+		.value("idno", _IDNO)
+		.value("idclose", _IDCLOSE)
+		.value("idhelp", _IDHELP)
+		.value("idexit", _IDEXIT)
+	;
+
+	class_<TopWindow, bases<Ctrl>, TopWindow, boost::noncopyable>("TopWindow", "Upp TopWindow", no_init)
+		.def("backup", &TopWindow::Backup)
+		.def("restore", &TopWindow::Restore)
+		.def("break", &TopWindow::Break)
+		.def("acceptbreak", &TopWindow::AcceptBreak)
+		.def("rejectbreak", &TopWindow::RejectBreak)
+
+		.def("workareatrim", &TopWindow::WorkAreaTrim)
+
+		.def("setminsize", &TopWindow::SetMinSize)
+
+		.def("open", (void (TopWindow::*)())&TopWindow::Open)
+		.def("openmain", &TopWindow::OpenMain)
+		.def("run", &TopWindow::Run)
+		.def("runappmodal", &TopWindow::RunAppModal)
+		.def("execute", &TopWindow::Execute)
+		.def("executeok", &TopWindow::ExecuteOK)
+		.def("executecancel", &TopWindow::ExecuteCancel)
+
+		.add_property("minimize", &TopWindow::IsMinimized, &TopWindow::Minimize)
+		.add_property("maximize", &TopWindow::IsMaximized, &TopWindow::Maximize)
+		.add_property("overlap", &TopWindow::IsOverlapped, &TopWindow::Overlap)
+
+		.add_property("sizeable", &TopWindow::IsSizeable, &TopWindowSizeable)
+		.add_property("zoomable", &TopWindow::IsZoomable, &TopWindowZoomable)
+		.add_property("topmost", &TopWindow::IsTopMost, &TopWindowTopMost)
+		.add_property("toolwindow", &TopWindow::IsToolWindow, &TopWindowToolWindow)
+
+		.add_property("fullscreen", &TopWindow::IsFullScreen, &TopWindowFullScreen)
 	;
 }
 }

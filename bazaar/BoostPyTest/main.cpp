@@ -52,6 +52,9 @@ BoostPyTest::BoostPyTest()
 		es.SetData("Hello from Upp");
 		scope(upp_module).attr("es") = ptr(&es);
 
+		scope(upp_module).attr("pr") = ptr(&pr);
+
+
 		//the additional import is needless
 		String sc = 
 
@@ -70,8 +73,21 @@ BoostPyTest::BoostPyTest()
 		"print upp.es.data\n"
 
 		"c = upp.Color(123,124,125)\n"
-		"print c"
+		"print c\n"
 		//"upp.vc.data = c\n"
+
+
+		"import time\n"
+		"upp.pr.create()\n"
+		"i = 0\n"
+		"while i < 10:\n"
+		"    print i\n"
+		"    upp.pr.text = str(i)\n"
+		"    i = i+1\n"
+		"    upp.pr.step(1)\n"
+		"    time.sleep(1)\n"
+		"upp.pr.close()\n"
+
 		;
 		con.cmd.SetData(sc);
 

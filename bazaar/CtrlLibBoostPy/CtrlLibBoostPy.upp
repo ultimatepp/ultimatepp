@@ -7,12 +7,16 @@ file
 	Common.h,
 	CtrlCore.h,
 	CtrlCore.cpp,
+	Misc.h,
+	Misc.cpp,
 	SliderCtrl.h,
 	SliderCtrl.cpp,
 	ValueCtrl.h,
 	ValueCtrl.cpp,
 	EditCtrl.h,
 	EditCtrl.cpp,
+	Progress.h,
+	Progress.cpp,
 	CtrlLibBoostPy.h,
 	CtrlLibBoostPy.cpp;
 
