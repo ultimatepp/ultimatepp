@@ -201,12 +201,16 @@ public:
 				return;
 	}
 	
+	virtual void OnBeforeTask() {}
+	virtual void OnAfterTask()  {}
 	void WaitDoTasksInf()
 	{
 		while (!IsShutdown())
 		{
 			qSemaphore.Wait();
+			OnBeforeTask();
 			Execute();
+			OnAfterTask();	
 		}
 	}
 
