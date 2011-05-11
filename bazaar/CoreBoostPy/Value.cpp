@@ -71,7 +71,7 @@ struct Value_from_python
 		if(PyInt_Check(po))
 		{
 		long c = PyInt_AsLong(po);
-		new(d) Value(c);
+		new(d) Value(int(c));
 		}
 		else
 		//notmally here bool
@@ -108,25 +108,25 @@ struct Value_from_python
 		if(extract<Color&>(po).check())
 		{
 		Color& c = extract<Color&>(po); //use upper converter
-		new(d) Value(c);
+		new(d) Value(c.operator Value());
 		}
 		else
 		if(extract<Point&>(po).check())
 		{
 		Point& c = extract<Point&>(po); //use upper converter
-		new(d) Value(c);
+		new(d) Value(c.operator Value());
 		}
 		else
 		if(extract<Size&>(po).check())
 		{
 		Size& c = extract<Size&>(po); //use upper converter
-		new(d) Value(c);
+		new(d) Value(c.operator Value());
 		}
 		else
 		if(extract<Rect&>(po).check())
 		{
 		Rect& c = extract<Rect&>(po); //use upper converter
-		new(d) Value(c);
+		new(d) Value(c.operator Value());
 		}
 		else
 		{
