@@ -61,7 +61,7 @@ BoostPyTest::BoostPyTest()
 		"p = hello.World()\n"
 		"p.set('Some Greet Text')\n"
 		"print p.greet()\n"
-		
+
 		"upp.sl.data = 75\n"
 		"print upp.sl.data\n"
 
@@ -78,7 +78,9 @@ BoostPyTest::BoostPyTest()
 
 
 		"import time\n"
+		"upp.pr.reset()\n"
 		"upp.pr.create()\n"
+		"upp.pr.canceled()\n"
 		"i = 0\n"
 		"while i < 10:\n"
 		"    print i\n"
@@ -86,7 +88,13 @@ BoostPyTest::BoostPyTest()
 		"    i = i+1\n"
 		"    upp.pr.step(1)\n"
 		"    time.sleep(1)\n"
+		"    if upp.pr.canceled():\n"
+		"        break\n"
 		"upp.pr.close()\n"
+
+		"def ff():\n"
+		"    print 'MyCallback, would could work with p.greet or lambda: as well'\n"
+		"upp.sl.whenaction = ff\n"
 
 		;
 		con.cmd.SetData(sc);

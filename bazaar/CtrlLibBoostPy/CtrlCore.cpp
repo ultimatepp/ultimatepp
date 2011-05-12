@@ -116,6 +116,7 @@ ONCELOCK
 		.def("reject", &CtrlReject)
 
 		.add_property("data", &CtrlGetData, &CtrlSetData)
+		.def_readwrite("whenaction", &Ctrl::WhenAction)
 
 		.add_property("modify", &CtrlIsModified, &CtrlSetModify)
 		.def("resetmodify", &Ctrl::ResetModify)
