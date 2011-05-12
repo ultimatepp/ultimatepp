@@ -7,7 +7,7 @@ void export_ValueCtrl()
 {
 ONCELOCK
 {
-	class_<ValueCtrl, bases<Ctrl>, ValueCtrl, boost::noncopyable>("ValueCtrl", "Upp ValueCtrl", no_init)
+	class_<ValueCtrl, bases<Ctrl>, boost::noncopyable>("ValueCtrl", "Upp ValueCtrl")
 	;
 }
 }

@@ -97,7 +97,7 @@ ONCELOCK
 {
 	export_Core();
 	export_LogPos();
-	class_<Ctrl, boost::noncopyable>("Ctrl", "Upp Ctrl", no_init)
+	class_<Ctrl, boost::noncopyable>("Ctrl", "Upp Ctrl")
 
 		.def("posleft", &Ctrl::PosLeft)
 		.staticmethod("posleft")
@@ -163,6 +163,11 @@ ONCELOCK
 		.add_property("transparent", &Ctrl::IsTransparent, &CtrlTransparent)
 		.add_property("tip", &Ctrl::GetTip, &CtrlSetTip)
 
+		.def("add", &Ctrl::Add)
+		.def("addchild", (void (Ctrl::*)(Ctrl*))&Ctrl::AddChild)
+		.def("addchildafter", (void (Ctrl::*)(Ctrl*, Ctrl*))&Ctrl::AddChild)
+		.def("addchildbefore", &Ctrl::AddChildBefore)
+
 		.def("__str__", &CtrlToString)
 	;
 
@@ -215,7 +220,7 @@ ONCELOCK
 		.value("idexit", _IDEXIT)
 	;
 
-	class_<TopWindow, bases<Ctrl>, TopWindow, boost::noncopyable>("TopWindow", "Upp TopWindow", no_init)
+	class_<TopWindow, bases<Ctrl>, boost::noncopyable>("TopWindow", "Upp TopWindow", no_init)
 		.def("backup", &TopWindow::Backup)
 		.def("restore", &TopWindow::Restore)
 		.def("break", &TopWindow::Break)

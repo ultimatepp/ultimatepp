@@ -7,7 +7,7 @@ void export_SliderCtrl()
 {
 ONCELOCK
 {
-	class_<SliderCtrl, bases<Ctrl>, SliderCtrl, boost::noncopyable>("SliderCtrl", "Upp SliderCtrl", no_init)
+	class_<SliderCtrl, bases<Ctrl>, boost::noncopyable>("SliderCtrl", "Upp SliderCtrl")
 		.def("inc", &SliderCtrl::Inc)
 		.def("dec", &SliderCtrl::Dec)
 		.def("step", &SliderCtrl::GetStep)

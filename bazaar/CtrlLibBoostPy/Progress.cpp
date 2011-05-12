@@ -7,7 +7,7 @@ void export_Progress()
 {
 ONCELOCK
 {
-	class_<Progress, bases<TopWindow>, Progress, boost::noncopyable>("Progress", "Upp Progress", no_init)
+	class_<Progress, bases<TopWindow>, boost::noncopyable>("Progress", "Upp Progress")
 		.add_property("pos", &Progress::GetPos, &Progress::SetPos)
 		.add_property("total", &Progress::GetTotal, &Progress::SetTotal)
 		.add_property("text", &Progress::GetText, (void (Progress::*)(const String&))&Progress::SetText)

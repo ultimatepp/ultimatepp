@@ -43,6 +43,8 @@ BoostPyTest::BoostPyTest()
 		object upp_module = import("upp");
 		main_namespace["upp"] = upp_module;
 
+		scope(upp_module).attr("app") = ptr((TopWindow*)this);
+
 		sl.SetData(50);
 		scope(upp_module).attr("sl") = ptr(&sl);
 
@@ -60,7 +62,7 @@ BoostPyTest::BoostPyTest()
 
 		"p = hello.World()\n"
 		"p.set('Some Greet Text')\n"
-		"print p.greet()\n"
+		"print p.get()\n"
 
 		"upp.sl.data = 75\n"
 		"print upp.sl.data\n"
@@ -74,15 +76,20 @@ BoostPyTest::BoostPyTest()
 
 		"c = upp.Color(123,124,125)\n"
 		"print c\n"
-		//"upp.vc.data = c\n"
 
+		"pp = p\n"
+		"p.set('Hi')\n"
+		"print p\n"
+		"print pp\n"
+
+		//"upp.vc.data = c\n"
 
 		"import time\n"
 		"upp.pr.reset()\n"
 		"upp.pr.create()\n"
 		"upp.pr.canceled()\n"
 		"i = 0\n"
-		"while i < 10:\n"
+		"while i < 3:\n"
 		"    print i\n"
 		"    upp.pr.text = str(i)\n"
 		"    i = i+1\n"
@@ -96,6 +103,12 @@ BoostPyTest::BoostPyTest()
 		"    print 'MyCallback, would could work with p.greet or lambda: as well'\n"
 		"upp.sl.whenaction = ff\n"
 
+		"sl2 = upp.SliderCtrl()\n"
+		"sl2.rightpos(0,200)\n"
+		"sl2.bottompos(0,40)\n"
+		"sl2.whenaction = ff\n"
+		"sl2.data = 12\n"
+		"upp.app.add(sl2)\n"
 		;
 		con.cmd.SetData(sc);
 

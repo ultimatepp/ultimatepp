@@ -11,12 +11,10 @@ struct CallbackActionPy : public CallbackAction {
 
 bool CallbackIsValid(const Callback& c) { return c; }
 
-#if 0
 struct Callback_to_python //FIXME translation of Callback internals to python
 {
-	static PyObject* convert(const Callback& s) { return incref(object(s.Begin()).ptr()); }
+	static PyObject* convert(const Callback& s) { return incref(object(s).ptr()); }
 };
-#endif
 
 struct Callback_from_python
 {
@@ -30,6 +28,7 @@ struct Callback_from_python
 		if(po == Py_None) return po;
 		if(PyFunction_Check(po)) return po;
 		if(PyCallable_Check(po) && PyMethod_Self(po)) return po;
+		if(extract<Callback&>(po).check()) return po;
 		return 0;
 	}
 
@@ -51,6 +50,14 @@ struct Callback_from_python
 		{
 		new(d) Callback(new CallbackActionPy(po));
 		}
+#if 1 //actually isnt used anywhere so far
+		else
+		if(extract<Callback&>(po).check())
+		{
+		Callback& c = extract<Callback&>(po);
+		new(d) Callback(c);
+		}
+#endif
 		else
 		{
 			throw_error_already_set(); //FIXME dont know type, which to throw?
@@ -64,10 +71,11 @@ void export_Callback()
 {
 ONCELOCK
 {
-	//to_python_converter<String, String_to_python_str>();
+	//to_python_converter<Callback, Callback_to_python>();
 	Callback_from_python();
 	
-	class_<Callback>("Point", "Upp Callback")
+	class_<Callback>("Callback", "Upp Callback")
+		.def(init<const Callback&>())
 		.def("clear", &Callback::Clear)
 		.def("valid", &CallbackIsValid)
 		.def("__call__", &Callback::Execute)
