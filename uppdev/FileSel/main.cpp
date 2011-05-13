@@ -7,6 +7,7 @@ GUI_APP_MAIN
 	SetDefaultCharset(CHARSET_UTF8);
 	FileSel fs;
 	String fn;
+	fs.BaseDir("U:\\");
 	fs.AllFilesType()
 	  .Type( t_("archive FIDE (txt)"), "*.txt") //type 1
 	  .Type( t_("archive VEG (csv)"), "*.csv;*.veg") //type 2
@@ -18,7 +19,7 @@ GUI_APP_MAIN
 //	fs.Multi();
 //	fs.ActiveDir("/usr/include");
 //	fs.NoEditFileName();
-	fs.ActiveDir("u:\\");
+//	fs.ActiveDir("u:\\");
 //	fs.PreSelect("U:/log.txt");
 //	fs.ActiveType(3);
 	for(;;) {
