@@ -278,13 +278,36 @@ void HttpServer::Close()
 
 bool HttpServer::DelayedWrite()
 {
+	static const int MAX_SEND_CHUNK = 65536;
 //	if(!delayed_writes.IsEmpty())
 //		LogTime("HttpServer::DelayedWrite, #writes = " + FormatInt(delayed_writes.GetCount()), 2);
 	for(int i = delayed_writes.GetCount(); --i >= 0;) {
 		SocketWrite& sw = delayed_writes[i];
+		if(IsNull(sw.data)) {
+			sw.socket.ReadCount(1, 0);
+			bool rm = sw.socket.IsEof();
+			if(!rm && sw.socket.IsError()) {
+				LogTime("HttpServer::DelayedWrite: shutdown error: " + sw.socket.GetErrorText(), 0);
+				rm = true;
+			}
+			if(!rm && msecs(sw.ticks) >= max_request_time) {
+				LogTime("HttpServer::DelayedWrite: timed out waiting for socket shutdown", 0);
+				rm = true;
+			}
+			if(rm) {
+				sw.socket.Close();
+				delayed_writes.Remove(i);
+			}
+			continue;
+		}
 //		int part = sw.data.GetLength() - sw.done; Mirek:unused
-		int count = max(sw.socket.WriteWait(sw.data.Begin() + sw.done, sw.data.GetLength() - sw.done, 0), 0);
+		int count = max(sw.socket.WriteWait(sw.data.Begin() + sw.done,
+			min(sw.data.GetLength() - sw.done, MAX_SEND_CHUNK), 0), 0);
 		if(sw.socket.IsError()) {
+			if(sw.socket.GetErrorCode() == SOCKERR(ENOBUFS)) {
+				sw.socket.ClearError();
+				continue;
+			}
 			LogTime(NFormat("HttpServer::DelayedWrite(): %s", Socket::GetErrorText()), 0);
 			delayed_writes.Remove(i);
 			continue;
@@ -294,18 +317,14 @@ bool HttpServer::DelayedWrite()
 		if((sw.done += count) >= sw.data.GetLength()) {
 			LogTime(NFormat("HttpServer::DelayedWrite(): finished %d (%d left)",
 				sw.socket.GetNumber(), delayed_writes.GetCount() - 1), 2);
-//			sw.socket.Block(); // set to blocking mode before close
-			sw.socket.PeekWrite(1000);
+			sw.ticks = msecs();
+			sw.data = Null;
 			sw.socket.StopWrite();
-			sw.socket.Close();
-//			sw.socket.StopWrite();
-			delayed_writes.Remove(i);
 		}
 		else if(msecs(sw.ticks) >= max_request_time) {
-			LogTime(NFormat("HttpServer::DelayedWrite(): timeout after sending %d out of %d bytes",
+			LogTime(NFormat("HttpServer::DelayedWrite(): timed out after sending %d out of %d bytes",
 				sw.done, sw.data.GetLength()), 0);
-//			sw.socket.Block(); // set to blocking mode before close
-			sw.socket.StopWrite();
+//			sw.socket.StopWrite();
 			sw.socket.Close();
 			delayed_writes.Remove(i);
 		}
@@ -851,7 +870,7 @@ String GetHttpURI(HttpQuery query)
 void GetHttpPostData(HttpQuery& query, String buffer)
 {
 	query.Set("$$POSTDATA", buffer);
-	
+
 	const char *p = buffer;
 	while(p[0] != '-' || p[1] != '-') {
 		while(*p != '\n')
