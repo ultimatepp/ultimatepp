@@ -85,6 +85,19 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 			}
 			GlyphMetrics(gi, font, chr);
 		}
+		else {
+			Font fnt = Arial(font.GetHeight());
+			wchar chr = 0x25a1;
+			gi = GetGlyphInfo(fnt, chr);
+			if(!gi.IsNormal()) {
+				chr = ' ';
+				gi = GetGlyphInfo(fnt, chr);
+			}
+			if(angle)
+				DrawTextOp(int(x + cosa * d), int(y - sina * d), angle, &chr, fnt, ink, 1, NULL);
+			else
+				DrawTextOp(x + d, y, 0, &chr, fnt, ink, 1, NULL);
+		}
 		d += dx ? *dx++ : gi.width;
 	}
 }
