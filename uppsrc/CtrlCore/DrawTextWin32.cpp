@@ -13,10 +13,9 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	Std(font);
 	while(n > 30000) {
 		DrawTextOp(x, y, angle, text, font, ink, 30000, dx);
-		if(dx) {
+		if(dx)
 			for(int i = 0; i < 30000; i++)
 				x += *dx++;
-		}
 		else
 			x += GetTextSize(text, font, 30000).cx;
 		n -= 30000;

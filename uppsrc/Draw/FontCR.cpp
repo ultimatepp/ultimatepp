@@ -229,29 +229,36 @@ struct sRFace {
 	dword l, h;
 } sFontReplacements[] = {
 	{ "sans-serif", 0xffee0008, 0xdc000801 },
-	{ "Arial", 0xfffe0000, 0x09c00080 },
-	{ "Arial Unicode MS", 0xfffc3fef, 0xfa7ff7e7 },
-	{ "SimSun", 0xfd800000, 0x09ffff00 },
-	{ "MS UI Gothic", 0xffc01008, 0x0fffff00 },
-	{ "MS Mincho", 0xffc01008, 0x0fffff00 },
-	{ "WenQuanYi Zen Hei Mono", 0xfd800000, 0x0ae7ff7e },
-	{ "WenQuanYi Zen Hei", 0xfd800000, 0x0ae7ff7e },
-	{ "VL Gothic", 0xfd800000, 0x09a7ff80 },
-	{ "VL PGothic", 0xffe00008, 0x0de7ff80 },
-	{ "UnDotum", 0xe5800000, 0x0aa7ff7e },
-	{ "UnBatang", 0xe5800000, 0x0aa7ff7e },
-	{ "DejaVu Sans Mono", 0xffec0004, 0x0fc00080 },
-	{ "DejaVu Sans", 0xfffd000c, 0x0fc40080 },
-	{ "AlArabiyaFreeSerif", 0xffdc0008, 0xd8000007 },
-	{ "Kochi Mincho", 0xffdc0008, 0xd8000007 },
-	{ "Kochi Gothic", 0xffdc0008, 0xd8000007 },
-	{ "Sazanami Mincho", 0xffdc0008, 0xd8000007 },
-	{ "Sazanami Gothic", 0xffdc0008, 0xd8000007 },
-	{ "Gulim", 0xf7c00000, 0x0ba7ff7e },
-	{ "PMingLiU", 0xff800000, 0x09ffff00 },
-	{ "FreeSans", 0xfff23d00, 0x0fc00000 },
-	{ "FreeSerif", 0xfffd3938, 0x0fc00080 },
-	{ "Symbol", 0xe4000000, 0x88000002 },
+	{ "Arial", 0xfffe0000, 0x9c000801 },
+	{"\346\226\260\345\256\213\344\275\223", 0xfd800000, 0x9ffff00d },//SimSun (or New Song Ti)
+	{"SimSun", 0xfd800000, 0x9ffff00d },//SimSun (or New Song Ti)
+	{"\345\256\213\344\275\223", 0xfd800000, 0x9ffff00d }, // Song Ti
+	{"\345\276\256\350\275\257\351\233\205\351\273\221", 0xfd800000, 0x9ffff00f }, //MS Ya Hei
+	{"Microsoft YaHei", 0xfd800000, 0x9ffff00f }, //MS Ya Hei
+//	{"\351\273\221\344\275\223", 0xfd800000, 0x09ffff00 },  // Hei Ti
+//	{"\346\226\207\346\263\211\351\251\277\346\255\243\351\273\221", 0xfd800000, 0x09ffff00 }, //WenQuanYi Zheng Hi
+//	{"\346\226\207\346\263\211\351\251\277\347\255\211\345\256\275\345\276\256\347\261\263\351\273\221", 0xfd800000, 0x09ffff00 },//WenQuanYi Wei Hei
+//	{"\344\273\277\345\256\213", 0xfd800000, 0x09ffff00 }, //Fang Song
+//	{"\346\245\267\344\275\223", 0xfd800000, 0x09ffff00 }, // Kai Ti
+	{ "Arial Unicode MS", 0xfffc3fef, 0xfa7ff7ef },
+	{ "MS UI Gothic", 0xffc01008, 0xfffff001 },
+	{ "MS Mincho", 0xffc01008, 0xfffff001 },
+	{ "VL Gothic", 0xfd800000, 0x9a7ff80f },
+	{ "VL PGothic", 0xffe00008, 0xde7ff80f },
+	{ "UnDotum", 0xe5800000, 0xaa7ff7ef },
+	{ "UnBatang", 0xe5800000, 0xaa7ff7ef },
+	{ "DejaVu Sans Mono", 0xffec0004, 0xfc00080f },
+	{ "DejaVu Sans", 0xfffd000c, 0xfc40080f },
+	{ "AlArabiyaFreeSerif", 0xffdc0008, 0xd800000f },
+	{ "Kochi Mincho", 0xffdc0008, 0xd800000f },
+	{ "Kochi Gothic", 0xffdc0008, 0xd800000f },
+	{ "Sazanami Mincho", 0xffdc0008, 0xd800000f },
+	{ "Sazanami Gothic", 0xffdc0008, 0xd800000f },
+	{ "Gulim", 0xf7c00000, 0xba7ff7e1 },
+	{ "PMingLiU", 0xff800000, 0x9ffff001 }, // <--- SHOULD MOVE UP
+	{ "FreeSans", 0xfff23d00, 0xfc00000f },
+	{ "FreeSerif", 0xfffd3938, 0xfc00080f },
+	{ "Symbol", 0xe4000000, 0x8800000f },
 };
 
 struct sFontMetricsReplacement {
@@ -277,14 +284,9 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 
 	Font f = fnt;
 	dword tl = chr < 4096 ? 0x80000000 >> (chr >> 7) : 0;
-	dword th = 0x8000000 >> ((dword)chr >> 11);
-//	DDUMP(FormatIntHex(chr));
-//	DDUMP(FormatIntHex(th));
+	dword th = 0x80000000 >> ((dword)chr >> 11);
 	for(int i = 0; i < rface.GetCount(); i++) {
-//		DDUMP(Font(rface[i], 10));
-//		DDUMP(FormatIntHex(h[i]));
-//		DDUMP(FormatIntHex(h[i] & th));
-		if(((l[i] & tl) || (h[i] & th)) && IsNormal(f.Face(rface[i]), chr)) {
+		if(/*((l[i] & tl) || (h[i] & th)) && */IsNormal(f.Face(rface[i]), chr)) {
 			int a = fnt.GetAscent();
 			int d = fnt.GetDescent();
 			if(f.GetAscent() > a || f.GetDescent() > d) {
