@@ -40,7 +40,7 @@ GUI_APP_MAIN
 			dword h = 0;
 			for(int ch = 32; ch < 65536; ch++) {
 				if(GetGlyphInfo(fnt, ch).IsNormal()) {
-					h |= (0x8000000 >> ((dword)ch >> 11));
+					h |= (0x80000000 >> ((dword)ch >> 11));
 					ch |= 2047;
 				}
 			}
