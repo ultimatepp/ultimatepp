@@ -672,10 +672,10 @@ private:
 	void                Push(bool makeindex);
 	bool                Pop();
 
-	RefCon<Formula>  MakeBinary(RefCon<Formula> left, WString text,
+	RefCon<Formula>  MakeBinary(RefCon<Formula> left, const WString& text, bool is_symbol,
 		RefCon<Formula> right, int gap = Null, int perc_shift = 0) const;
-	RefCon<Formula>  MakeUnary(String text, RefCon<Formula> form,
-		int gap = Null, bool symbol = false, int perc_shift = 0) const;
+	RefCon<Formula>  MakeUnary(String text, bool is_symbol,
+		RefCon<Formula> form, int gap = Null, int perc_shift = 0) const;
 
 private:
 	struct State
@@ -724,7 +724,7 @@ RefCon<Formula> FormulaParser::RunSemicolon()
 	while(Check(';'))
 	{
 		RefCon<Formula> right = RunComma();
-		item = MakeBinary(item, ";", right, Formula::GetTextHeight0(item, right) >> 1);
+		item = MakeBinary(item, ";", false, right, Formula::GetTextHeight0(item, right) >> 1);
 	}
 	return item;
 }
@@ -736,7 +736,7 @@ RefCon<Formula> FormulaParser::RunComma()
 	{ // must run before '&', aargh!
 		RefCon<Formula> right = RunComma();
 		int ht = Formula::GetTextHeight0(item, right);
-		return MakeBinary(item, "&", right, Percent(50, ht), ht);
+		return MakeBinary(item, "&", false, right, Percent(50, ht), ht);
 	}
 	bool row = false;
 	if(Check('&'))
@@ -789,43 +789,41 @@ RefCon<Formula> FormulaParser::RunComp()
 	RefCon<Formula> item = RunMul();
 	for(;;)
 		if(Check('=', '~'))
-			item = MakeBinary(item, WString(0x2248, 1), RunComp(), gap);
-		else if(Check('='))
-			item = MakeBinary(item, "=", RunComp(), gap);
-		else if(Check('<', '>'))
-			item = MakeBinary(item, WString(0x2260, 1), RunComp(), gap, -11);
-		else if(Check('<', '='))
-			item = MakeBinary(item, WString(0x2264, 1), RunComp(), gap, -9);
-		else if(Check('>', '='))
-			item = MakeBinary(item, WString(0x2265, 1), RunComp(), gap, -9);
+			item = MakeBinary(item, WString(0x2248, 1), false, RunComp(), gap);
 		else if(Check('<', '-', '>'))
-			item = MakeBinary(item, WString(0x2194, 1), RunComp(), Null, -13);
+			item = MakeBinary(item, WString(0x2194, 1), false, RunComp(), gap, -5);
+		else if(Check('<', '=', '>'))
+			item = MakeBinary(item, "\xDB", true, RunComp(), 2 * gap, -5);
+		else if(Check('<', '>'))
+			item = MakeBinary(item, WString(0x2260, 1), false, RunComp(), gap, -5);
+		else if(Check('<', '='))
+			item = MakeBinary(item, WString(0x2264, 1), false, RunComp(), gap, -5);
+		else if(Check('>', '='))
+			item = MakeBinary(item, WString(0x2265, 1), false, RunComp(), gap, -5);
 		else if(Check('<', '-'))
-			item = MakeBinary(item, WString(0x2190, 1), RunComp(), Null, -13);
+			item = MakeBinary(item, WString(0x2190, 1), false, RunComp(), gap, -5);
 		else if(Check('-', '>'))
-			item = MakeBinary(item, WString(0x2192, 1), RunComp(), Null, -13);
+			item = MakeBinary(item, WString(0x2192, 1), false, RunComp(), gap, -5);
 		else if(Check('=', '>'))
-			item = MakeBinary(item, "\xDE", RunComp(), Null, -13);
+			item = MakeBinary(item, "\xDE", true, RunComp(), 2 * gap, -10);
 		else if(Check('=', '<'))
-			item = MakeBinary(item, "\xDC", RunComp(), Null, -13);
+			item = MakeBinary(item, "\xDC", true, RunComp(), 2 * gap, -10);
 		else if(Skip() == '.' && ptr[1] == '.' && ptr[2] != '.') {
 			ptr += 2;
-			RefCon<Formula> right = RunComp();
-			Vector< RefCon<Formula> > list;
-			list << item;
-			list << new FormulaText("..", state.font, state.color);
-			list << right;
-			int ht = Formula::GetTextHeight0(item, right);
-			item = new FormulaMatrix(list, new FormulaSpace(Percent(20, ht)));
+			item = MakeBinary(item, "..", false, RunComp(), gap, 0);
 		}
+		else if(Check('+', '-'))
+			item = MakeBinary(item, WString(0x00B1, 1), false, RunComp(), gap);
 		else if(Check('<'))
-			item = MakeBinary(item, "<", RunComp(), gap);
+			item = MakeBinary(item, "<", false, RunComp(), gap);
 		else if(Check('>'))
-			item = MakeBinary(item, ">", RunComp(), gap);
+			item = MakeBinary(item, ">", false, RunComp(), gap);
+		else if(Check('='))
+			item = MakeBinary(item, "=", false, RunComp(), gap);
 		else if(Check('+'))
-			item = MakeBinary(item, "+", RunComp());
+			item = MakeBinary(item, "+", false, RunComp());
 		else if(Check('-'))
-			item = MakeBinary(item, "-", RunComp(), Null, -11);
+			item = MakeBinary(item, "-", false, RunComp(), Null, -11);
 		else if(Check('|', '|'))
 		{
 			RefCon<Formula> right = RunComp();
@@ -837,7 +835,7 @@ RefCon<Formula> FormulaParser::RunComp()
 			return new FormulaMatrix(list, new FormulaSpace(Percent(50, ht)));
 		}
 		else if(Check('|'))
-			item = MakeBinary(item, Null, RunComp(), 0, false);
+			item = MakeBinary(item, Null, false, RunComp(), 0);
 		else
 			return item;
 }
@@ -847,13 +845,13 @@ RefCon<Formula> FormulaParser::RunMul()
 	RefCon<Formula> item = RunDiv();
 	for(;;)
 		if(Check('*'))
-			item = MakeBinary(item, "*", RunDiv());
+			item = MakeBinary(item, "*", false, RunDiv());
 		else if(Skip() == '.' && ptr[1] != '.') {
 			ptr++;
-			item = MakeBinary(item, ".", RunDiv(), Null, -20);
+			item = MakeBinary(item, ".", false, RunDiv(), Null, -20);
 		}
 		else if(Check('~'))
-			item = MakeBinary(item, Null, RunDiv());
+			item = MakeBinary(item, Null, false, RunDiv());
 		else
 			return item;
 }
@@ -863,7 +861,7 @@ RefCon<Formula> FormulaParser::RunDiv()
 	RefCon<Formula> item = RunPostfix();
 	for(;;)
 		if(Check('/', '_'))
-			item = MakeBinary(item, "/", RunPostfix());
+			item = MakeBinary(item, "/", false, RunPostfix());
 		else if(Check('/'))
 			item = new FormulaRatio(item, RunPostfix());
 		else
@@ -884,12 +882,12 @@ RefCon<Formula> FormulaParser::RunPostfix()
 		else if(!!(in = RunParen()))
 		{
 			int tht = Formula::GetTextHeight0(item, in);
-			item = MakeBinary(item, Null, in, Formula::GetFuncSpace(tht));
+			item = MakeBinary(item, Null, false, in, Formula::GetFuncSpace(tht));
 		}
 		else if(Check('!'))
-			item = MakeBinary(item, Null, new FormulaText("!", state.font), state.color);
+			item = MakeBinary(item, Null, false, new FormulaText("!", state.font), state.color);
 		else if(Check(':'))
-			item = MakeBinary(item, Null, RunTerm(), 0);
+			item = MakeBinary(item, Null, false, RunTerm(), 0);
 		else
 			return item;
 	}
@@ -915,7 +913,7 @@ bool FormulaParser::RunIndex(RefCon<Formula>& topright, RefCon<Formula>& bottomr
 			if(!topright)
 				topright = form;
 			else
-				topright = MakeBinary(topright, Null, form, 0);
+				topright = MakeBinary(topright, Null, false, form, 0);
 			done = true;
 			continue;
 		}
@@ -982,11 +980,11 @@ RefCon<Formula> FormulaParser::RunTerm()
 	if(!!paren)
 		return paren;
 	if(Check('@'))
-		return MakeUnary("\xB6", RunTerm(), 0, true);
+		return MakeUnary("\xB6", true, RunTerm(), 0, true);
 	if(Check('-'))
-		return MakeUnary("-", RunTerm(), 0, true);
+		return MakeUnary("-", false, RunTerm(), 0, true);
 	if(Check('+'))
-		return MakeUnary("+", RunTerm(), 0, true);
+		return MakeUnary("+", false, RunTerm(), 0, true);
 	if(Check('.', '.', '.'))
 		return new FormulaText("...", state.font, state.color);
 	if(Check('~', '~'))
@@ -995,7 +993,7 @@ RefCon<Formula> FormulaParser::RunTerm()
 		for(; *ptr == '~'; ptr++)
 			blanks++;
 		RefCon<Formula> item = RunTerm();
-		return MakeUnary(Null, item, (blanks * Formula::GetTextHeight0(item)) >> 1);
+		return MakeUnary(Null, false, item, (blanks * Formula::GetTextHeight0(item)) >> 1);
 	}
 
 	Font font = state.font;
@@ -1117,7 +1115,7 @@ RefCon<Formula> FormulaParser::RunTerm()
 			RefCon<Formula> body = new FormulaSymbol(group_sym, ht, arg->GetTextHeight(), state.color);
 			if(!!topright || !!bottomright || !!top || !!bottom || !!topleft || !!bottomleft)
 				body = new FormulaIndex(body, topright, bottomright, top, bottom, topleft, bottomleft);
-			return MakeBinary(body, Null, arg);
+			return MakeBinary(body, Null, false, arg);
 		}
 		else if(ident == "oo")
 			return new FormulaText(WString(0x221E, 1), font, state.color, -11);
@@ -1263,8 +1261,8 @@ bool FormulaParser::Check(char c1, char c2, char c3)
 	return true;
 }
 
-RefCon<Formula> FormulaParser::MakeBinary(RefCon<Formula> left,
-	WString text, RefCon<Formula> right, int gap, int perc_shift) const
+RefCon<Formula> FormulaParser::MakeBinary(RefCon<Formula> left, const WString& text, bool is_symbol,
+	RefCon<Formula> right, int gap, int perc_shift) const
 {
 	int ht = Formula::GetTextHeight0(left, right);
 	if(IsNull(gap))
@@ -1273,6 +1271,8 @@ RefCon<Formula> FormulaParser::MakeBinary(RefCon<Formula> left,
 	formula.Add() = left;
 	if(!IsNull(text)) {
 		Font f = state.font;
+		if(is_symbol)
+			f.Face(Font::SYMBOL);
 		f.Height(ht);
 		formula.Add() = new FormulaText(text, f, state.color, perc_shift);
 	}
@@ -1282,15 +1282,14 @@ RefCon<Formula> FormulaParser::MakeBinary(RefCon<Formula> left,
 	return form;
 }
 
-RefCon<Formula> FormulaParser::MakeUnary(String text, RefCon<Formula> form,
-	int gap, bool symbol, int perc_shift) const
+RefCon<Formula> FormulaParser::MakeUnary(String text, bool is_symbol,
+	RefCon<Formula> form, int gap, int perc_shift) const
 {
 	int ht = form->GetTextHeight();
 	Vector< RefCon<Formula> > formula;
-	if(!IsNull(text))
-	{
+	if(!IsNull(text)) {
 		Font f = state.font;
-		if(symbol)
+		if(is_symbol)
 			f.Face(Font::SYMBOL);
 		f.Height(ht);
 		formula.Add() = new FormulaText(text.ToWString(), f, state.color, perc_shift);
@@ -1307,7 +1306,7 @@ RefCon<Formula> FormulaParser::GetError(String text, Font font) const
 void FormulaParser::AddError(RefCon<Formula>& item, String text) const
 {
 	int ht = item->GetTextHeight();
-	item = MakeBinary(item, Null, GetError(text, Font(state.font).Height(ht)));
+	item = MakeBinary(item, Null, false, GetError(text, Font(state.font).Height(ht)));
 }
 
 void FormulaParser::Force(char c, RefCon<Formula>& errout)
