@@ -105,6 +105,8 @@ file
 	XPTheme.dli,
 	Ctrls.iml,
 	ChWin32.cpp,
+	ChGtk.h,
+	ChGtk0.cpp,
 	ChGtk.cpp,
 	ClassicCtrls.iml,
 	Meta readonly separator,
