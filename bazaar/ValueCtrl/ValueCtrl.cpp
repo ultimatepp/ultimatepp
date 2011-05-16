@@ -17,7 +17,6 @@ INITBLOCK
 	map.Add(int(WSTRING_V),Instancer<Ctrl>::Typed<RichTextCtrl>::GetInstancer());
 	map.Add(int(INT64_V),  Instancer<Ctrl>::Typed< WithEnterAction<EditInt64> >::GetInstancer());
 
-	//map.Add(int(BOOL_V),   Instancer<Ctrl>::Typed<Option>::GetInstancer());
 	map.Add(int(BOOL_V),   &OptionInstancer);
 
 	map.Add(int(COLOR_V),  Instancer<Ctrl>::Typed<ColorPusher>::GetInstancer());
@@ -26,9 +25,9 @@ INITBLOCK
 	map.Add(int(LOGPOS_V), Instancer<Ctrl>::Typed<LogPosCtrl>::GetInstancer());
 	map.Add(int(VALUE_V),  Instancer<Ctrl>::Typed<ValuePacker>::GetInstancer());
 	map.Add(int(VALUEARRAY_V), Instancer<Ctrl>::Typed<ValueArrayCtrl>::GetInstancer());
+	map.Add(int(VALUEMAP_V),Instancer<Ctrl>::Typed<ValueMapCtrl>::GetInstancer());
 	map.Add(int(VOID_V),   Instancer<Ctrl>::Typed<ValueCtrl>::GetInstancer());
-	//map.Add(int(VALUEMAP_V),Instancer<Ctrl>::Typed<>::GetInstancer());
-	//map.Add(int(ERROR_V),   Instancer<Ctrl>::Typed<>::GetInstancer());
+	map.Add(int(ERROR_V),  Instancer<Ctrl>::Typed<ErrorValueCtrl>::GetInstancer());
 	//map.Add(int(UNKNOWN_V), Instancer<Ctrl>::Typed<>::GetInstancer());
 }
 
@@ -47,7 +46,7 @@ String VTypeToString(int vtype)
 		CASEENUMPRINT( BOOL_V )
 		
 		CASEENUMPRINT( COLOR_V )
-		//CASEENUMPRINT( FONT_V )
+		CASEENUMPRINT( FONT_V )
 
 		CASEENUMPRINT( LOGPOS_V )
 		CASEENUMPRINT( VALUE_V )
@@ -140,7 +139,9 @@ ValuePopUp::ValuePopUp()
 	type.Add(int(LOGPOS_V), "LOGPOS_V");
 	//type.Add(int(VALUE_V), "VALUE_V");
 	type.Add(int(VALUEARRAY_V), "VALUEARRAY_V");
-	//type.Add(int(VALUEMAP_V), "VALUEMAP_V");
+	type.Add(int(VALUEMAP_V), "VALUEMAP_V");
+	type.Add(int(ERROR_V), "ERROR_V");
+
 	type <<= THISBACK(TypeAction);
 
 	ok <<= THISBACK(Acceptor);

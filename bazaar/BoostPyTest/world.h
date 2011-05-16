@@ -3,8 +3,11 @@
 
 #include <Py/Py.h>
 
-struct World
+#define PUREVIRTEST 0
+
+class World
 {
+public:
 	void set(std::string msg) { this->msg = msg; }
 	std::string get() const { return msg; }
 	std::string msg;
@@ -14,6 +17,12 @@ struct World
 		PySys_WriteStdout("%.100s", msg.data());
 	}
 	
+	virtual std::string vir(int a = 2) const 
+#if PUREVIRTEST
+	= 0;
+#else
+	{ return "virtual World"; }
+#endif
 	World() {}
 protected:
 	World(const World& w) {
@@ -21,11 +30,14 @@ protected:
 	}
 };
 
-struct Universe : public World
+class Universe : public World
 {
+public:
 	double g;	
 	void setg(double _g) { g = _g; }
 	double getg() const { return g; }
+
+	virtual std::string vir(int a = 3) const { return "virtual Universe"; }
 
 	Universe() { g = 9.81; }
 

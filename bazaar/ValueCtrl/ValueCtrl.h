@@ -63,23 +63,7 @@ protected:
 	Value v,vs;
 };
 
-class DataRedir : public ParentCtrl
-{
-public:
-	typedef DataRedir CLASSNAME;
-	virtual void SetData(const Value& v) { if(!ctrl) return; ctrl->SetData(v); }
-	virtual Value GetData() const { if(!ctrl) return Value(); return ctrl->GetData(); }
-	void ChildAdded(Ctrl* child) { ctrl = child; }
-	void ChildRemoved(Ctrl* child) { if(ctrl == child) ctrl = NULL; }
-	
-protected:
-	Ptr<Ctrl> ctrl;
-};
-
-NAMESPACE_UPP
-template<> inline bool  IsNull(const Value& v)     { return v.IsNull(); }
-END_UPP_NAMESPACE
-
+//for nested Value in Value
 class ValuePacker : public ValueCtrl
 {
 public:
@@ -96,10 +80,10 @@ public:
 		//String ss = AsString(v);
 		return v;
 	}
-	virtual void SetData(const Value& _v)
+	virtual void SetData(const Value& v)
 	{
-		if(_v.Is<Value>()) ValueCtrl::SetData(RawValue<Value>::Extract(_v));
-		else ValueCtrl::SetData(_v);
+		if(v.Is<Value>()) ValueCtrl::SetData(RawValue<Value>::Extract(v));
+		else ValueCtrl::SetData(v);
 	}
 };
 
@@ -120,20 +104,72 @@ public:
 			vv << Get(i, 0);
 		return ValueArray(vv);
 	}
-	virtual void SetData(const Value& _v)
+	virtual void SetData(const Value& v)
 	{
 		Clear();
-		if(_v.Is<ValueArray>())
+		if(v.Is<ValueArray>())
 		{
-			ValueArray va = _v;
-			for(int i = 0; i < va.GetCount(); i++)
-				Set(i, 0, va.Get(i));	
+			ValueArray va = v;
+			const Vector<Value>& vv = va.Get();
+			for(int i = 0; i < vv.GetCount(); i++)
+				Set(i, 0, vv[i]);	
 		}
 		else
-			Set(0, 0, _v);
+			Set(0, 0, v);
 	}
 protected:
 	static void CreateValueCtrl(One<Ctrl>& ctrl) { ctrl.Create<ValueCtrl>(); }
+};
+
+class ValueMapCtrl : public ArrayCtrl
+{
+public:
+	typedef ValueMapCtrl CLASSNAME;
+	ValueMapCtrl()
+	{
+		AddColumn("Key").Ctrls(&CreateValueCtrl).HeaderTab();
+		AddColumn("Value").Ctrls(&CreateValueCtrl).HeaderTab();
+		Appending().Inserting().Removing();
+		WhenCtrlsAction = Proxy(WhenAction);
+	}
+	virtual Value GetData() const 
+	{
+		Index<Value> k;
+		Vector<Value> vv;
+		for(int i = 0; i < GetCount(); i++)
+		{
+			k << Get(i, 0); vv << Get(i, 1);
+		}
+		return ValueMap(k, vv);
+	}
+
+	virtual void SetData(const Value& v)
+	{
+		Clear();
+		if(v.Is<ValueMap>())
+		{
+			ValueMap vm = v;
+			const Index<Value>& k = vm.GetKeys();
+			ValueArray va = vm.GetValues();
+			const Vector<Value>& vv = va.Get();
+			for(int i = 0; i < k.GetCount(); i++)
+			{
+				Set(i, 0, k[i]); Set(i, 1, vv[i]);
+			}
+		}
+		else
+			Set(0, 0, v);
+	}
+
+protected:
+	static void CreateValueCtrl(One<Ctrl>& ctrl) { ctrl.Create<ValueCtrl>(); }
+};
+
+class ErrorValueCtrl : public WithEnterAction<EditString>
+{
+public:
+	typedef ErrorValueCtrl CLASSNAME;
+	virtual Value GetData() const { return ErrorValue(EditString::GetData()); }	
 };
 
 #endif

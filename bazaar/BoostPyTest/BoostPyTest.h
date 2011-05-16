@@ -18,9 +18,15 @@ public:
 	~BoostPyTest();
 
 	void ExitHandler();
+	void CBi(int i);
 
+#if PUREVIRTEST
+#else
 	World w;
+#endif
 	Progress pr;
+	
+	Callback1<int> cbi;
 };
 
 #endif

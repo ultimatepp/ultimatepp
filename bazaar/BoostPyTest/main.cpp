@@ -3,6 +3,11 @@
 //CAUTION special module definitions to reduce compile time
 #include "modules.cppi"
 
+void BoostPyTest::CBi(int i)
+{
+	RLOG(i);	
+}
+
 BoostPyTest::BoostPyTest()
 {
 	CtrlLayout(*this, "Boost Test");
@@ -36,9 +41,11 @@ BoostPyTest::BoostPyTest()
 					//is only caused on boost python module declarations
 		main_namespace["hello"] = hello_module;
 
+#if PUREVIRTEST
+#else
 		w.set("Welcom on earth");
 		scope(hello_module).attr("earth") = ptr(&w);
-
+#endif
 
 		object upp_module = import("upp");
 		main_namespace["upp"] = upp_module;
@@ -56,13 +63,20 @@ BoostPyTest::BoostPyTest()
 
 		scope(upp_module).attr("pr") = ptr(&pr);
 
+		cbi = THISBACK(CBi);
+		scope(upp_module).attr("cbi") = ptr(&cbi);
 
-		//the additional import is needless
+		object o = eval("100 + upp.sl.data", main_namespace, main_namespace);
+		int data = extract<int>(o);
+
 		String sc = 
 
+#if PUREVIRTEST
+#else
 		"p = hello.World()\n"
 		"p.set('Some Greet Text')\n"
 		"print p.get()\n"
+#endif
 
 		"upp.sl.data = 75\n"
 		"print upp.sl.data\n"
@@ -77,10 +91,13 @@ BoostPyTest::BoostPyTest()
 		"c = upp.Color(123,124,125)\n"
 		"print c\n"
 
+#if PUREVIRTEST
+#else
 		"pp = p\n"
 		"p.set('Hi')\n"
 		"print p\n"
 		"print pp\n"
+#endif
 
 		//"upp.vc.data = c\n"
 
@@ -109,6 +126,35 @@ BoostPyTest::BoostPyTest()
 		"sl2.whenaction = ff\n"
 		"sl2.data = 12\n"
 		"upp.app.add(sl2)\n"
+
+		"print 'USE DEBUG TO SEE THE INVOKATIONS in WrapWorld'\n"
+#if PUREVIRTEST
+		"class MyPureWorld(hello.World):\n"
+		"    def vir(self, a):\n"
+		"        return 'MyPurePyWorld'\n"
+		"mw = MyPureWorld()\n"
+		"print mw.vir(8)\n"
+		"print hello.invworld(mw,7)\n"
+#else
+		"w = hello.World()\n"
+		"print hello.invworld(w,7)\n"
+		"print w.vir(7)\n"
+
+		"class MyWorld(hello.World):\n"
+		"    def vir(self, a):\n"
+		"        return 'MyPyWorld'\n"
+		"mw = MyWorld()\n"
+		"print mw.vir(8)\n"
+		"print hello.invworld(mw,7)\n"
+#endif
+
+		"class MyUWorld(hello.Universe):\n"
+		"    def vir(self, a):\n"
+		"        return 'MyPyUWorld'\n"
+		"mu = MyUWorld()\n"
+		"print mu.vir(8)\n"
+		"print hello.invworld(mu,7)\n"
+
 		;
 		con.cmd.SetData(sc);
 

@@ -15,6 +15,7 @@ struct Value_to_python
 			case DOUBLE_V: return incref(object(double(v)).ptr());
 			case STRING_V: return incref(object(String(v)).ptr());
 			case VALUEARRAY_V: return incref(object(ValueArray(v)).ptr());
+			case VALUEMAP_V: return incref(object(ValueMap(v)).ptr());
 			case COLOR_V: return incref(object(Color(v)).ptr());
 			case POINT_V: return incref(object(Point(v)).ptr());
 			case SIZE_V: return incref(object(Size(v)).ptr());
@@ -35,8 +36,8 @@ struct Value_from_python
 	static void* convertible(PyObject* po)
 	{
 		if(po == Py_None) return po;
-		if(PyInt_Check(po)) return po;
 		if(PyBool_Check(po)) return po;
+		if(PyInt_Check(po)) return po;
 		if(PyLong_Check(po)) return po;
 		if(PyFloat_Check(po)) return po;
 		if(PyString_Check(po)) return po;
@@ -232,10 +233,12 @@ struct ValueMap_from_python
 		Index<Value> k;
 		Vector<Value> vv;
 		dict dt(handle<>(borrowed(po)));
+		list lk = dt.keys();
+		list lv = dt.values();
 		for(int i = 0; i < len(dt); i++)
 		{
-			k.Add(Null); //FIXME
-			vv.Add(Null); //extract<Value>(dt[i]));
+			k.Add(extract<Value>(lk[i]));
+			vv.Add(extract<Value>(lv[i]));
 		}
 		new(d) ValueMap(k, vv);
 
