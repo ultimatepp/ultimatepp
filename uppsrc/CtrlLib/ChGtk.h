@@ -1,3 +1,5 @@
+#ifdef PLATFORM_X11
+
 #define Time    XTime
 #define Font    XFont
 #define Display XDisplay
@@ -124,3 +126,5 @@ int    GtkStyleInt(const char *name);
 String GtkStyleString(const char *name);
 
 };
+
+#endif

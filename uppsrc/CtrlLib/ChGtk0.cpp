@@ -528,6 +528,4 @@ String GtkStyleString(const char *name)
 END_UPP_NAMESPACE
 
 #endif
-
 #endif
-
