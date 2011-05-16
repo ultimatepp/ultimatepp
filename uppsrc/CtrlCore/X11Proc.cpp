@@ -174,27 +174,26 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			KeySym keysym;
 			int    chr = 0;
 			WString wtext;
-			if(pressed)
-				if(w.xic) {
-					Status status;
-					int len = Xutf8LookupString(w.xic, &event->xkey, buff, sizeof(buff), &keysym, &status);
-					buff[len] = 0;
-					if(status == XLookupChars || status == XLookupBoth) {
-						chr = FromUtf8(buff, len)[0];
-						if(status == XLookupChars)
-							wtext = FromUtf8(buff, len);
-					}
-					else
-					if(status != XLookupKeySym && status != XLookupBoth)
-					    keysym = 0;
-				}
-				else {
-					int len = XLookupString(&event->xkey, buff, sizeof(buff), &keysym, NULL);
-					buff[len] = 0;
+			if(pressed && w.xic) {
+				Status status;
+				int len = Xutf8LookupString(w.xic, &event->xkey, buff, sizeof(buff), &keysym, &status);
+				buff[len] = 0;
+				if(status == XLookupChars || status == XLookupBoth) {
 					chr = FromUtf8(buff, len)[0];
-					if(len > 1)
+					if(status == XLookupChars)
 						wtext = FromUtf8(buff, len);
 				}
+				else
+				if(status != XLookupKeySym && status != XLookupBoth)
+				    keysym = 0;
+			}
+			else {
+				int len = XLookupString(&event->xkey, buff, sizeof(buff), &keysym, NULL);
+				buff[len] = 0;
+				chr = FromUtf8(buff, len)[0];
+				if(len > 1)
+					wtext = FromUtf8(buff, len);
+			}
 			if(keysym == XK_Control_L || keysym == XK_Control_R) {
 				keysym = XK_Control_L;
 				if(pressed)
@@ -286,7 +285,7 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 			if(chr && pressed) {
 				DispatchKey(chr, count);
 				for(int ii = 1; ii < wtext.GetLength(); ii++)
-					DispatchKey(wtext[ii], 1);
+					DispatchKey(wtext[ii], count);
 			}
 		}
 		break;
