@@ -562,6 +562,8 @@ ONCELOCK
 		.add_property("maximize", &TopWindow::IsMaximized, &TopWindow::Maximize)
 		.add_property("overlap", &TopWindow::IsOverlapped, &TopWindow::Overlap)
 
+		.add_property("title", &TopWindowGetTitle, &TopWindowSetTitle)
+
 		.add_property("sizeable", &TopWindow::IsSizeable, &TopWindowSizeable)
 		.add_property("zoomable", &TopWindow::IsZoomable, &TopWindowZoomable)
 		.add_property("topmost", &TopWindow::IsTopMost, &TopWindowTopMost)

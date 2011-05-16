@@ -1,10 +1,12 @@
 LAYOUT(BoostPyTestLayout, 672, 380)
 	ITEM(PyConsoleCtrl, con, HSizePosZ(0, 248).VSizePosZ(0, 0))
-	ITEM(SliderCtrl, sl, RightPosZ(8, 232).TopPosZ(12, 48))
-	ITEM(ValueCtrl, vc, RightPosZ(8, 232).TopPosZ(76, 56))
-	ITEM(ValueCtrl, vc2, RightPosZ(8, 232).BottomPosZ(112, 56))
-	ITEM(EditString, es, RightPosZ(8, 232).TopPosZ(148, 19))
-	ITEM(Label, dv___5, SetLabel(t_("eval:")).RightPosZ(210, 30).BottomPosZ(173, 19))
-	ITEM(EditString, ev, RightPosZ(8, 200).BottomPosZ(173, 19))
+	ITEM(SliderCtrl, sl, RightPosZ(8, 232).TopPosZ(8, 28))
+	ITEM(ValueCtrl, vc, RightPosZ(8, 232).TopPosZ(44, 56))
+	ITEM(ValueCtrl, evr, RightPosZ(8, 192).TopPosZ(172, 20))
+	ITEM(EditString, es, RightPosZ(8, 232).TopPosZ(108, 19))
+	ITEM(Label, dv___5, SetLabel(t_("eval:")).RightPosZ(200, 40).TopPosZ(148, 19))
+	ITEM(Label, dv___6, SetLabel(t_("return:")).RightPosZ(200, 40).TopPosZ(172, 19))
+	ITEM(EditString, ev, RightPosZ(28, 172).TopPosZ(148, 19))
+	ITEM(Button, ex, SetLabel(t_("Ex")).RightPosZ(8, 16).TopPosZ(148, 20))
 END_LAYOUT
 

@@ -43,10 +43,10 @@ struct Value_from_python
 		if(PyString_Check(po)) return po;
 		if(PyList_Check(po)) return po;
 		if(PyDict_Check(po)) return po;
-		if(extract<Color&>(po).check()) return po;
-		if(extract<Point&>(po).check()) return po;
-		if(extract<Size&>(po).check()) return po;
-		if(extract<Rect&>(po).check()) return po;
+		if(extract<Color>(po).check()) return po;
+		if(extract<Point>(po).check()) return po;
+		if(extract<Size>(po).check()) return po;
+		if(extract<Rect>(po).check()) return po;
 		return 0;
 	}
 
@@ -106,27 +106,27 @@ struct Value_from_python
 		new(d) Value(c);
 		}
 		else
-		if(extract<Color&>(po).check())
+		if(extract<Color>(po).check())
 		{
-		Color& c = extract<Color&>(po); //use upper converter
+		Color c = extract<Color>(po); //use upper converter
 		new(d) Value(c.operator Value());
 		}
 		else
-		if(extract<Point&>(po).check())
+		if(extract<Point>(po).check())
 		{
-		Point& c = extract<Point&>(po); //use upper converter
+		Point c = extract<Point>(po); //use upper converter
 		new(d) Value(c.operator Value());
 		}
 		else
-		if(extract<Size&>(po).check())
+		if(extract<Size>(po).check())
 		{
-		Size& c = extract<Size&>(po); //use upper converter
+		Size c = extract<Size>(po); //use upper converter
 		new(d) Value(c.operator Value());
 		}
 		else
-		if(extract<Rect&>(po).check())
+		if(extract<Rect>(po).check())
 		{
-		Rect& c = extract<Rect&>(po); //use upper converter
+		Rect c = extract<Rect>(po); //use upper converter
 		new(d) Value(c.operator Value());
 		}
 		else

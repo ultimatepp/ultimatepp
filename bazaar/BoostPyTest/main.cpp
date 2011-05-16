@@ -8,6 +8,16 @@ void BoostPyTest::CBi(int i)
 	RLOG(i);	
 }
 
+void BoostPyTest::EvalCB()
+{
+	String s = ev.GetData();
+
+	object o = eval(s.Begin(), main_namespace, main_namespace);
+	Value v = extract<Value>(o);
+	
+	evr.SetData(v);	
+}
+
 BoostPyTest::BoostPyTest()
 {
 	CtrlLayout(*this, "Boost Test");
@@ -26,7 +36,7 @@ BoostPyTest::BoostPyTest()
 
 	try {
 		object main_module(handle<>(borrowed(PyImport_AddModule("__main__"))));
-		object main_namespace = main_module.attr("__dict__");
+		main_namespace = main_module.attr("__dict__");
 
 		handle<> ign(PyRun_String( "print \"Hello, World\"",
 		                              Py_file_input,
@@ -69,7 +79,15 @@ BoostPyTest::BoostPyTest()
 		object o = eval("100 + upp.sl.data", main_namespace, main_namespace);
 		int data = extract<int>(o);
 
+		ev.WhenEnter = THISBACK(EvalCB);
+		ex <<= THISBACK(EvalCB);
+		evr.SetReadOnly();
+		ev.SetData("100 + upp.sl.getdata()");
+		EvalCB();
+
 		String sc = 
+
+		"upp.app.title = 'My Big BoostPy Test Environment'\n"
 
 #if PUREVIRTEST
 #else

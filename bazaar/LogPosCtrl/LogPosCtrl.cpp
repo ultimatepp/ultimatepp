@@ -264,6 +264,7 @@ LogPosCtrl::LogPosCtrl() : push(false)
 
 void LogPosCtrl::LeftDown(Point p, dword keyflags)
 {
+	if(IsReadOnly() || !IsEnabled()) return;
 	if(!HasFocus()) SetFocus();
 	Drop();	
 }

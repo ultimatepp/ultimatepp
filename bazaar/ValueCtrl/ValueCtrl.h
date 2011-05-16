@@ -13,8 +13,14 @@ using namespace Upp;
 #define LAYOUTFILE <ValueCtrl/ValueCtrl.lay>
 #include <CtrlCore/lay.h>
 
+//For ValuePacker / RichValue<Value> and GCC
+NAMESPACE_UPP
+template<> inline bool IsNull(const Value& v)       { return v.IsNull(); }
+END_UPP_NAMESPACE
+
 Ctrl* DefaultValueEditor(int vtype);
 Ctrl* DefaultValueEditor(const Value& v);
+String VTypeToString(int vtype);
 
 class ValuePopUp : public WithValuePopUpLayout<PopUpC> {
 public:
@@ -30,6 +36,60 @@ public:
 	void PopUp(Ctrl* owner, const Value& _v) { SetData(_v); PopUpC::PopUp(owner); }
 
 	Callback WhenTypeChange;
+
+	void AddType(int vtype, const String& s) { if(type.Find(vtype) < 0) type.Add(vtype, s); }
+	void AddType(int vtype) { AddType(vtype, VTypeToString(vtype)); }
+
+	void ClearTypes() { type.Clear(); SetType(VOID_V); }
+
+	void AddTypesInteger()
+	{
+		AddType(int(INT_V), "int");
+		AddType(int(INT64_V), "int64");
+		AddType(int(BOOL_V), "bool");
+	}
+	
+	void AddTypesFloat()
+	{
+		AddType(int(DOUBLE_V), "double");
+	}
+	
+	void AddTypesHighLevel()
+	{
+		AddType(int(STRING_V), "String");
+		AddType(int(DATE_V), "Date");
+		AddType(int(TIME_V), "Time");
+		AddType(int(WSTRING_V), "WString");
+		AddType(int(COLOR_V), "Color");
+	}
+	
+	void AddTypesContainer()
+	{
+		//AddType(int(VALUE_V), "Value");
+		AddType(int(VALUEARRAY_V), "ValueArray");
+		AddType(int(VALUEMAP_V), "ValueMap");
+	}
+	
+	void AddTypesExt()
+	{
+		AddType(int(LOGPOS_V), "Ctrl::LogPos");
+	}
+	
+	void AddTypesDebug()
+	{
+		AddType(int(VOID_V), "Null (Reset data only)");
+		AddType(int(ERROR_V), "ErrorValue");
+	}
+
+	void AddTypesAll()
+	{
+		AddTypesInteger();
+		AddTypesFloat();
+		AddTypesHighLevel();
+		AddTypesContainer();
+		AddTypesExt();
+		AddTypesDebug();
+	}
 	
 protected:
 	void TypeAction();

@@ -145,9 +145,14 @@ void RectCtrl::Paint(Draw& w)
 {
 	Size sz = GetSize();
 	if(r.IsNullInstance()) return;
-	
-	w.DrawRect(r, style->rectcol);
+
+	if(IsEnabled())
+		w.DrawRect(r, style->rectcol);
+
 	DrawHandleFrame(w, r, style->framecol, style->framesize);
+	
+	if(!IsEnabled() || IsReadOnly()) return;
+
 	DrawHandle(w, r, style->handcol, style->handsize);
 	if(pressed)// && moving)
 		DrawRectInfo(w, Point(10,10), r, style->framecol, style->textcol);
@@ -155,6 +160,8 @@ void RectCtrl::Paint(Draw& w)
 
 void RectCtrl::LeftDown(Point p, dword keyflags)
 {
+	if(IsReadOnly() || !IsEnabled()) return;
+	
 	SetCapture();
 	moving = false;
 	pressed = (keyflags & K_MOUSELEFT);
@@ -170,6 +177,8 @@ void RectCtrl::LeftDown(Point p, dword keyflags)
 
 void RectCtrl::MouseMove(Point p, dword keyflags)
 {
+	if(IsReadOnly() || !IsEnabled()) return;
+
 	moving = true;
 	pressed = (keyflags & K_MOUSELEFT);
 	//int m = GetMode(r, p, keyflags, style->handsize);
@@ -191,6 +200,8 @@ void RectCtrl::LeftUp(Point p, dword keyflags)
 	xr.SetNull();
 	xp.SetNull();
 	mode = NONE;
+	if(IsReadOnly() || !IsEnabled()) return;
+
 	c = SetCursor(mode, keyflags, c);
 	Refresh();
 }
@@ -205,6 +216,8 @@ void RectCtrl::RightDown(Point p, dword keyflags)
 	//xp.SetNull();
 	int m = mode;
 	mode = NONE;
+	if(IsReadOnly() || !IsEnabled()) return;
+
 	c = SetCursor(mode, keyflags, c);
 	if(m != NONE)
 	{

@@ -19,6 +19,9 @@ public:
 
 	void ExitHandler();
 	void CBi(int i);
+	void EvalCB();
+
+	object main_namespace;
 
 #if PUREVIRTEST
 #else

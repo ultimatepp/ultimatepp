@@ -23,7 +23,6 @@ struct Callback_from_python
 	static void* convertible(PyObject* po)
 	{
 		if(po == Py_None) return po;
-		if(extract<Callback&>(po).check()) return po;
 		if(PyFunction_Check(po)) return po;
 		if(PyCallable_Check(po) && PyMethod_Self(po)) return po;
 		return 0;
@@ -34,13 +33,9 @@ struct Callback_from_python
 		void* d = ((converter::rvalue_from_python_storage<Callback>*)data)->storage.bytes;
 
 		if(po == Py_None) { new(d) Callback(); }
-#if 1 //actually isnt used anywhere so far
-		else if(extract<Callback&>(po).check()) { 
-			Callback& c = extract<Callback&>(po); new(d) Callback(c); }
-#endif
 		else if(PyFunction_Check(po)) { new(d) Callback(new CallbackActionPy(po)); }
 		else if(PyCallable_Check(po) && PyMethod_Self(po)) { new(d) Callback(new CallbackActionPy(po)); }
-		else { throw_error_already_set(); } //FIXME dont know type, which to throw? 
+		else { throw_error_already_set(); }
 	
 		data->convertible = d;
 	}
@@ -63,7 +58,6 @@ struct Gate_from_python
 		if(po == Py_None) return po;
 		if(PyFunction_Check(po)) return po;
 		if(PyCallable_Check(po) && PyMethod_Self(po)) return po;
-		if(extract<Gate&>(po).check()) return po;
 		return 0;
 	}
 
@@ -74,10 +68,7 @@ struct Gate_from_python
 		if(po == Py_None) { new(d) Gate(); }
 		else if(PyFunction_Check(po)) { new(d) Gate(new GateActionPy(po)); }
 		else if(PyCallable_Check(po) && PyMethod_Self(po)) { new(d) Gate(new GateActionPy(po)); }
-#if 1 //actually isnt used anywhere so far
-		else if(extract<Gate&>(po).check()) { Gate& c = extract<Gate&>(po); new(d) Gate(c); }
-#endif
-		else { throw_error_already_set(); } //FIXME dont know type, which to throw? 
+		else { throw_error_already_set(); }
 	
 		data->convertible = d;
 	}
@@ -100,7 +91,6 @@ struct Callback1_int_from_python
 		if(po == Py_None) return po;
 		if(PyFunction_Check(po)) return po;
 		if(PyCallable_Check(po) && PyMethod_Self(po)) return po;
-		if(extract<Callback1<int>&>(po).check()) return po;
 		return 0;
 	}
 
@@ -111,10 +101,7 @@ struct Callback1_int_from_python
 		if(po == Py_None) { new(d) Callback1<int>(); }
 		else if(PyFunction_Check(po)) { new(d) Callback1<int>(new Callback1Action_int_Py(po)); }
 		else if(PyCallable_Check(po) && PyMethod_Self(po)) { new(d) Callback1<int>(new Callback1Action_int_Py(po)); }
-#if 1 //actually isnt used anywhere so far
-		else if(extract<Callback1<int>&>(po).check()) { Callback1<int>& c = extract<Callback1<int>&>(po); new(d) Callback1<int>(c); }
-#endif
-		else { throw_error_already_set(); } //FIXME dont know type, which to throw?
+		else { throw_error_already_set(); }
 		
 		data->convertible = d;
 	}
@@ -137,7 +124,6 @@ struct Gate1_int_from_python
 		if(po == Py_None) return po;
 		if(PyFunction_Check(po)) return po;
 		if(PyCallable_Check(po) && PyMethod_Self(po)) return po;
-		if(extract<Gate1<int>&>(po).check()) return po;
 		return 0;
 	}
 
@@ -148,10 +134,7 @@ struct Gate1_int_from_python
 		if(po == Py_None) { new(d) Gate1<int>(); }
 		else if(PyFunction_Check(po)) { new(d) Gate1<int>(new Gate1Action_int_Py(po)); }
 		else if(PyCallable_Check(po) && PyMethod_Self(po)) { new(d) Gate1<int>(new Gate1Action_int_Py(po)); }
-#if 1 //actually isnt used anywhere so far
-		else if(extract<Gate1<int>&>(po).check()) { Gate1<int>& c = extract<Gate1<int>&>(po); new(d) Gate1<int>(c); }
-#endif
-		else { throw_error_already_set(); } //FIXME dont know type, which to throw?
+		else { throw_error_already_set(); }
 		
 		data->convertible = d;
 	}

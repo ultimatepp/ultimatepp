@@ -15,7 +15,7 @@ INITBLOCK
 	map.Add(int(DATE_V),   Instancer<Ctrl>::Typed<DropDate>::GetInstancer());
 	map.Add(int(TIME_V),   Instancer<Ctrl>::Typed<DropTime>::GetInstancer());
 	map.Add(int(WSTRING_V),Instancer<Ctrl>::Typed<RichTextCtrl>::GetInstancer());
-	map.Add(int(INT64_V),  Instancer<Ctrl>::Typed< WithEnterAction<EditInt64> >::GetInstancer());
+	map.Add(int(INT64_V),  Instancer<Ctrl>::Typed<WithEnterAction<EditInt64> >::GetInstancer());
 
 	map.Add(int(BOOL_V),   &OptionInstancer);
 
@@ -86,17 +86,17 @@ Ctrl* DefaultValueEditor(const Value& v)
 	return p;
 }
 
-void ValuePopUp::SetType(int _vt)
+void ValuePopUp::SetType(int vt)
 {
-	if(_vt == vtype) return;
+	if(vt == vtype) return;
 	v = Value(); //reset
-	if(_vt==VOID_V) //prevent loop
+	if(vt == VOID_V) //prevent loop
 	{
 		if(pc) return; //keep last Editor
-		_vt = STRING_V; //default, if no editor yet
+		vt = STRING_V; //default, if no editor yet
 	}
-	pc = DefaultValueEditor(_vt);
-	vtype = _vt;
+	pc = DefaultValueEditor(vt);
+	vtype = vt;
 	ASSERT(pc);	
 	Add(pc->HSizePos().VSizePos(0,20));
 	pc->WhenAction = THISBACK(DataAction);
@@ -105,9 +105,9 @@ void ValuePopUp::SetType(int _vt)
 
 void ValuePopUp::Updated()
 {
-	int _vt = v.GetType();
-	if(_vt != vtype && !v.IsNull()) //change only if needed, keep editor for !null
-		SetType(_vt);
+	int vt = v.GetType();
+	if(vt != vtype && !v.IsNull()) //change only if needed, keep editor for !null
+		SetType(vt);
 	if(type.GetData() != vtype)
 	   type.SetData(vtype);
 	pc->SetData(v);
@@ -126,23 +126,9 @@ ValuePopUp::ValuePopUp()
 	CtrlLayout(*this);
 	SetFrame(BlackFrame());
 
-	type.Add(int(VOID_V), "VOID_V (reset data only)");
-	type.Add(int(INT_V), "INT_V");
-	type.Add(int(DOUBLE_V), "DOUBLE_V");
-	type.Add(int(STRING_V), "STRING_V");
-	type.Add(int(DATE_V), "DATE_V");
-	type.Add(int(TIME_V), "TIME_V");
-	type.Add(int(WSTRING_V), "WSTRING_V");
-	type.Add(int(INT64_V), "INT64_V");
-	type.Add(int(BOOL_V), "BOOL_V");
-	type.Add(int(COLOR_V), "COLOR_V");
-	type.Add(int(LOGPOS_V), "LOGPOS_V");
-	//type.Add(int(VALUE_V), "VALUE_V");
-	type.Add(int(VALUEARRAY_V), "VALUEARRAY_V");
-	type.Add(int(VALUEMAP_V), "VALUEMAP_V");
-	type.Add(int(ERROR_V), "ERROR_V");
-
 	type <<= THISBACK(TypeAction);
+	type.Clear();
+	AddTypesAll();
 
 	ok <<= THISBACK(Acceptor);
 	cancel <<= THISBACK(Rejector);
@@ -165,6 +151,7 @@ ValueCtrl::ValueCtrl()
 
 void ValueCtrl::LeftDown(Point p, dword keyflags)
 {
+	if(IsReadOnly() || !IsEnabled()) return;
 	if(!HasFocus()) SetFocus();
 	Drop();	
 }
