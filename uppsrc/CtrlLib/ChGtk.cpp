@@ -1,3 +1,6 @@
+#ifdef PLATFORM_X11
+#ifndef flagNOGTK
+
 #include "CtrlLib.h"
 #include "ChGtk.h"
 
@@ -719,3 +722,6 @@ void ChHostSkin()
 }
 
 END_UPP_NAMESPACE
+
+#endif
+#endif
