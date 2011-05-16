@@ -1,8 +1,8 @@
-#ifdef PLATFORM_X11
-#ifndef flagNOGTK
-
 #include "CtrlLib.h"
 #include "ChGtk.h"
+
+#ifdef PLATFORM_X11
+#ifndef flagNOGTK
 
 NAMESPACE_UPP
 

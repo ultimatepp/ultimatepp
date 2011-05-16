@@ -328,7 +328,6 @@ void Ctrl::TimerAndPaint() {
 		if(Xwindow().GetKey(i) && xw.exposed && xw.invalid.GetCount()) {
 			if(xw.ctrl) {
 				LLOG("..and paint " << UPP::Name(xw.ctrl));
-				FocusSync();
 				xw.ctrl->SyncScroll();
 				Vector<Rect> x = xw.invalid;
 				xw.invalid.Clear();
@@ -908,6 +907,7 @@ void Ctrl::FocusSync()
 			int q = Xwindow().Find(fw);
 			if(q >= 0) {
 				LLOG("Focus to app window");
+				Window fwo = focusWindow;
 				focusWindow = fw;
 				XWindow& w = Xwindow()[q];
 				if(w.ctrl) {
@@ -915,7 +915,7 @@ void Ctrl::FocusSync()
 						AnimateCaret();
 						return;
 					}
-					KillFocus(focusWindow);
+					KillFocus(fwo);
 //					focusWindow = None; // 1010-10-13 cxl (SetWndFocus does not set this)
 					w.ctrl->SetFocusWnd();
 					AnimateCaret();

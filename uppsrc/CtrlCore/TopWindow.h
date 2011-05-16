@@ -107,6 +107,11 @@ private:
 	void        SyncCaption0();
 	void        SyncCaption();
 
+#ifdef PLATFORM_X11
+	void        SyncState();
+	void        SyncState0();
+#endif
+
 	void        SetupRect();
 	
 	void        FixIcons();

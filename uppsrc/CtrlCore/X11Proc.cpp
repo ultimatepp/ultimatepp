@@ -4,7 +4,7 @@ NAMESPACE_UPP
 
 #ifdef PLATFORM_X11
 
-#define LLOG(x)        // DLOG(x)
+#define LLOG(x)        //DLOG(x)
 
 #define LTIMING(x)     //TIMING(x)
 
