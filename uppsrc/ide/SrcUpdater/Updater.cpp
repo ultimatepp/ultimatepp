@@ -47,6 +47,11 @@ String GetSvnVersion(const String& server,bool verbose,String& error){
 		Progress pi;
 		pi.SetText("Checking revision at "+server);
 		while(p.IsRunning()){
+			if(pi.Canceled()){
+				p.Detach(); // p.Kill() would be better, but it hangs...
+				error="CANCEL";
+				return String::GetVoid();
+			}
 			pi.Step();
 			Sleep(50);
 		}
@@ -58,7 +63,7 @@ String GetSvnVersion(const String& server,bool verbose,String& error){
 	if(exitcode){
 		error="SVN command 'svn info "+server+"' failed with exit code "+AsString(exitcode)+"&Output:&[l150 "+DeQtf(p.Get());
 		LDUMP(error);
-		return "-1";
+		return String::GetVoid();
 	}
 	ver=p.Get();
 	ver=ver.Mid(ver.Find("Revision: ")+10);
@@ -106,7 +111,6 @@ bool SourceUpdater::NeedsUpdate(bool verbose){
 				case 0:{
 					//always newest
 					global=GetSvnVersion(UpdaterCfg().svnserver,verbose,error);
-					if(global.IsVoid()) return false;
 					break;
 				}
 				case 1:{
@@ -118,13 +122,15 @@ bool SourceUpdater::NeedsUpdate(bool verbose){
 			}
 			where="in SVN repository ("+DeQtf(UpdaterCfg().svnserver)+")";
 			local=GetSvnVersion(UpdaterCfg().localsrc,false,error);
-			if(local.IsVoid()) return false;
 			break;
 		}
 		default: return false;
 	}
 	LLOG("NeedsUpdate: local="<<local<<", global="<<global);
-	if(ScanInt(global)<=UpdaterCfg().ignored) return false;
+	
+	
+	if(ScanInt(global)<=UpdaterCfg().ignored || global.IsVoid() || local.IsVoid())
+		return false;
 	text<<="[ [ [/ Newer version of U`+`+ sources is available.]&][ &]"
 	       "[ {{5000:5000FNGN@N; [ [1 Curent local version:]]:: [ [1 "+local+"]]:: [ [1 Will update to:]]:: [ [1 "+global+"]]}}][ &&]"
 	       "[1# If you choose to update now, your local sources (directory "+DeQtf(UpdaterCfg().localsrc)+") will be compared to the files "+where+". If you modified the files in your local copy, you will be able to choose appropriate actions for each changed file before writing anything on your hard drive.]";
@@ -210,21 +216,10 @@ void SourceUpdater::DoUpdate(){
 	switch(UpdaterCfg().method){
 		case 0: {
 			//copy in /home
-			VectorMap<String,String> md5local,md5global;
-			Progress p;
-			p.Title("Preparing update ...");
-			p.AlignText(ALIGN_LEFT);
-			GetFiles(UpdaterCfg().localsrc,AppendFileName(UpdaterCfg().localsrc,"").GetLength(),md5local,p);
-			GetMd5Sums(UpdaterCfg().localsrc,md5local,p);
-			LoadMd5Sums(ConfigFile("md5sums"),md5global,p);
-			VectorMap<String,int> changed=CompareFiles(md5local,md5global,p);
-			p.Close();
-			int i=changed.Find("uppsrc/ide/version.h");
-			if(i>=0) changed.Remove(i);
-			LocalSync ls(changed,UpdaterCfg().localsrc);
+			LocalSync ls;
 			if(ls.Execute()==IDOK){
 				ls.Perform();
-				DeleteFile(ConfigFile("md5sums"));
+				//DeleteFile(ConfigFile("md5sums"));
 				FileCopy(AppendFileName(UpdaterCfg().globalsrc,"uppsrc/ide/version.h"),AppendFileName(UpdaterCfg().localsrc,"uppsrc/ide/version.h"));
 			}
 			break;
@@ -250,75 +245,4 @@ void SourceUpdater::Ignore(){
 	UpdaterCfg().ignored=ScanInt(global);
 	UpdaterCfg().available=false;
 	Close();
-}
-
-void SourceUpdater::GetFiles(const String& dir,int prefix,VectorMap<String,String>& result,Progress& p){
-	p.SetText("Gathering files ("+dir+")...");
-	FindFile ff(AppendFileName(dir,"*"));
-	while(ff) {
-		String path=AppendFileName(dir,ff.GetName());
-		if(ff.IsFile()) {
-			result.Add(path.Mid(prefix))="";
-		} else if(ff.IsFolder()){
-			GetFiles(path,prefix,result,p);
-		}
-		p.Step();
-		ff.Next();
-	}
-	result.RemoveKey("GCC.bm");
-}
-
-void SourceUpdater::GetMd5Sums(const String& dir,VectorMap<String,String>& list,Progress& p){
-	p.Reset();
-	p.SetText("Calculating md5 sums ("+dir+")...");
-	p.SetTotal(list.GetCount());
-	for(int i = 0; i < list.GetCount(); i++){
-		list[i]=MD5String(LoadFile(AppendFileName(dir,list.GetKey(i))));
-		p.Step();
-	}
-}
-
-void SourceUpdater::LoadMd5Sums(const String& fn,VectorMap<String,String>& list,Progress& p){
-	p.Reset();
-	if(!FileExists(fn)){
-		GetFiles(UpdaterCfg().globalsrc,strlen(UpdaterCfg().globalsrc)+1,list,p);
-		GetMd5Sums(UpdaterCfg().globalsrc,list,p);
-		String out;
-		for(int i = 0; i < list.GetCount(); i++)
-			out+=list[i]+" "+AppendFileName(UpdaterCfg().globalsrc,list.GetKey(i))+"\n";
-		SaveFile(fn,out);
-		return;
-	}
-	p.SetText("Loading md5sums file ...");
-	FileIn f(fn);
-	while(!f.IsEof()){
-		String ln=f.GetLine();
-		list.Add(ln.Mid(34+strlen(UpdaterCfg().globalsrc)),ln.Left(32));
-		p.Step();
-	}
-}
-
-VectorMap<String,int> SourceUpdater::CompareFiles(VectorMap<String,String>& local,VectorMap<String,String>& global,Progress& p){
-	p.Reset();
-	p.SetText("Comparing ...");
-	p.SetTotal(global.GetCount()+local.GetCount());
-	VectorMap<String,int> result;
-	for(int i = 0; i < global.GetCount(); i++){
-		String k=global.GetKey(i);
-		int pos=local.Find(k);
-		if(pos<0){
-			result.Add(k,LocalSync::FS_DELETED);
-		}else{
-			if(local[pos]!=global[i])
-				result.Add(k,LocalSync::FS_CHANGED);
-			local.Unlink(pos);
-		}
-		p.Step();
-	}
-	for(int i = 0; i < local.GetCount(); i++){
-		if(!local.IsUnlinked(i))
-			result.Add(local.GetKey(i),LocalSync::FS_ADDED);
-		p.Step();
-	}
-	return result;
 }

@@ -10,7 +10,7 @@ file
 	Wizard.h,
 	Install.cpp,
 	Updater.cpp,
-	LocalSync.cpp,
+	LocalSync.cpp optimize_speed,
 	SrcUpdater.lay,
 	app.tpp,
 	src.tpp;

@@ -17,6 +17,7 @@ struct UpdaterConfig{
 	String localsrc,globalsrc;
 	String svnserver,svnuser,svnpass;
 	Time last;
+	Vector<String> ignores;
 	bool svnreadonly,available;
 	void Xmlize(XmlIO xml){
 		xml("Method",method)
@@ -26,6 +27,7 @@ struct UpdaterConfig{
 		   ("Ignored",ignored)
 		   ("LocalSource",localsrc)
 		   ("GlobalSource",globalsrc)
+		   ("IgnoredFiles",ignores)
 		   ("SVN",svnserver)
 		   ("SVNUser",svnuser)
 		   ("SVNPassword",svnpass)
@@ -66,28 +68,57 @@ public:
 	InstallWizard();
 };
 
+//storage and access to triplets of crc hashes (in moveable struct)
+struct synchashes{
+	dword a[3];
+	synchashes(){a[0]=a[1]=a[2]=0;}
+};
+inline void AssertMoveable0(synchashes*){};
+
 struct LocalSync : WithSvnSyncLayout<TopWindow> {
 	String localsrc,globalsrc;
 	Array<Switch> switches;
 	Array<Button> btns;
-	void DoShowFile(int ii,int state);
+	VectorMap<String,synchashes> files;
+	
+	typedef LocalSync CLASSNAME;
+	void DoShowFile(const String& l,const String& g);
 	void ShowFile();
 public:
-	enum FileState{FS_CHANGED=0,FS_DELETED=1,FS_ADDED=2};
-	typedef LocalSync CLASSNAME;
-	LocalSync(const VectorMap<String,int>& changed,const String& localsrc);
-	void Populate(VectorMap<String,int> changed);
+	enum{
+		FA_NOOP=0,
+		FA_SKIP=1,
+		FA_KEEP=2,
+		FA_REVERT=4,
+		FA_INSTALL=8,
+		FA_ADD=16,
+		FA_DELETE=32
+	};
+	struct FileState{
+		int n;
+		String desc;
+		Color c;
+		Font f;
+		void operator()(int fa,const String& description,const struct Color& color,bool italic){
+			n=fa;
+			desc=description;
+			c=color;
+			f=StdFont().Italic(italic);
+		};
+	};
+	LocalSync();
+	void Populate(const VectorMap<String,synchashes>& changed);
 	void Perform();
+	void Menu(Bar& bar);
+	void Ignore(const String& str);
+	void SetAction(const String& str, int action);
+	void Manage();
 };
 
 class SourceUpdater : public WithUpdateLayout<TopWindow>{
 	String local, global, error;
 	void DoUpdate();
 	void Ignore();
-	void GetFiles(const String& dir,int prefix,VectorMap<String,String>& result,Progress& p);
-	void GetMd5Sums(const String& dir,VectorMap<String,String>& list,Progress& p);
-	void LoadMd5Sums(const String& fn,VectorMap<String,String>& list,Progress& p);
-	VectorMap<String,int> CompareFiles(VectorMap<String,String>& local,VectorMap<String,String>& global,Progress& p);
 	
 	LocalProcess pl,pg;
 	void CheckLocalSvn();
@@ -101,6 +132,7 @@ public:
 	void CheckUpdates();
 	String GetLocal()const {return local;}
 	String GetError()const {return error;}
+	void ClearError()      {error="";}
 	Callback WhenUpdateAvailable;
 };
 
