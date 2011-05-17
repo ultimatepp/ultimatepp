@@ -3,6 +3,12 @@
 //CAUTION special module definitions to reduce compile time
 #include "modules.cppi"
 
+String GetDataDir()
+{
+	String s = GetEnv("UPP_MAIN__");
+	return s.GetCount() ? s : GetFileFolder(GetExeFilePath());
+}
+
 void BoostPyTest::CBi(int i)
 {
 	RLOG(i);	
@@ -37,6 +43,12 @@ BoostPyTest::BoostPyTest()
 	try {
 		object main_module(handle<>(borrowed(PyImport_AddModule("__main__"))));
 		main_namespace = main_module.attr("__dict__");
+
+		//add path
+		String s = GetDataDir();
+		object sys = import("sys");
+		object path = sys.attr("path");
+		path.attr("append")(s.Begin());
 
 		handle<> ign(PyRun_String( "print \"Hello, World\"",
 		                              Py_file_input,
@@ -172,6 +184,12 @@ BoostPyTest::BoostPyTest()
 		"mu = MyUWorld()\n"
 		"print mu.vir(8)\n"
 		"print hello.invworld(mu,7)\n"
+
+		"import fibo\n"
+		"fibo.fib(200)\n"
+
+		"import myupp\n"
+		"myupp.chtitle()\n"
 
 		;
 		con.cmd.SetData(sc);
