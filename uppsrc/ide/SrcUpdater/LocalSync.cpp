@@ -74,7 +74,9 @@ LocalSync::LocalSync(){
 }
 
 void LocalSync::Menu(Bar& bar){
-	int i = list.Get(list.GetClickRow(),4);
+	int i = list.GetClickRow();
+	if(i>=list.GetCount() || i<0) return;
+	i = list.Get(i,4);
 	if(i<0) return;
 	String file = files.GetKey(i);
 	
@@ -90,8 +92,6 @@ void LocalSync::Menu(Bar& bar){
 	bar.Add("Skip/Keep " + file, THISBACK2(SetAction, file, 0));
 	bar.Add("Process " + file, THISBACK2(SetAction, file, 1));
 	bar.Add("Ignore " + file, THISBACK1(Ignore,file));
-	bar.Separator();
-	bar.Add("Skip/Keep all", THISBACK2(SetAction, "*", 0));
 	bar.Add("Process all", THISBACK2(SetAction, "*", 1));
 	bar.Separator();
 	bar.Add("Manage ignores ...", THISBACK(Manage));
