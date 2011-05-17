@@ -285,11 +285,12 @@ void RichTxt::RestoreFormat(int pi, const Formating& info, int& ii, const RichSt
 	}
 }
 
-WString RichTxt::GetPlainText() const {
+WString RichTxt::GetPlainText(bool withcr) const {
 	WString clip;
 	for(int pi = 0; pi < GetPartCount(); pi++) {
 		if(pi) {
-			clip.Cat('\r');
+			if(withcr)
+				clip.Cat('\r');
 			clip.Cat('\n');
 		}
 		if(IsTable(pi)) {
@@ -298,7 +299,8 @@ WString RichTxt::GetPlainText() const {
 				for(int j = 0; j < tab.GetColumns(); j++)
 					if(tab(i, j)) {
 						if(i || j) {
-							clip.Cat('\r');
+							if(withcr)
+								clip.Cat('\r');
 							clip.Cat('\n');
 						}
 						clip << tab[i][j].text.GetPlainText();
