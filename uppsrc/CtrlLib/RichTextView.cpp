@@ -96,14 +96,20 @@ Image RichTextView::CursorImage(Point p, dword keyflags)
 	return Image::Arrow();
 }
 
-
 void RichTextView::Copy()
 {
 	if(anchor == cursor)
 		WriteClipboardUnicodeText(text.GetPlainText());
 	else {
 		RefreshSel();
-		WriteClipboardUnicodeText(text.Copy(sell, selh - sell).GetPlainText());
+		WString h = text.GetPlainText(false).Mid(sell, selh - sell);
+		WString r;
+		for(const wchar *s = ~h; s < h.End(); s++) {
+			if(*s == '\n')
+				r.Cat('\r');
+			r.Cat(*s);
+		}
+		WriteClipboardUnicodeText(r);
 	}
 }
 
@@ -156,30 +162,8 @@ void RichTextView::RefreshRange(int a, int b)
 
 void  RichTextView::RefreshSel()
 {
-	int l = min(cursor, anchor);
-	int h = max(cursor, anchor);
-	if(l != h) {
-		for(;;) {
-			RichPos pl = text.GetRichPos(l);
-			if(!pl.table)
-				break;
-			l -= pl.posintab + 1;
-			if(l < 0)
-				break;
-		}
-		for(;;) {
-			RichPos ph = text.GetRichPos(h);
-			if(!ph.table)
-				break;
-			h += ph.tablen - ph.posintab + 1;
-			if(h >= text.GetLength())
-				break;
-		}
-		if(l < 0)
-			l = 0;
-		if(h >= text.GetLength())
-			h = text.GetLength();
-	}
+	int l = minmax(min(cursor, anchor), 0, text.GetLength());
+	int h = minmax(max(cursor, anchor), 0, text.GetLength());
 	if(sell == l && selh == h || sell == selh && l == h)
 		return;
 	RichPos pl = text.GetRichPos(l);

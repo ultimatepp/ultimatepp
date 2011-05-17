@@ -227,7 +227,7 @@ public:
 	void                  Normalize();
 
 	Vector<int>           GetAllLanguages() const;
-	WString               GetPlainText() const;
+	WString               GetPlainText(bool withcr = true) const;
 
 	struct UpdateIterator {
 		enum { CONTINUE = 0, STOP = 1, UPDATE = 2 };
