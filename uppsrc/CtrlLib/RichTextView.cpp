@@ -133,7 +133,6 @@ int  RichTextView::GetPointPos(Point p) const
 
 String RichTextView::GetLink(int pos, Point p) const
 {
-
 	String link;
 	RichObject object = text.GetRichPos(pos).object;
 	if(object) {
@@ -143,7 +142,8 @@ String RichTextView::GetLink(int pos, Point p) const
 
 	if(IsNull(link)) {
 		RichPos richpos = text.GetRichPos(pos);
-		link = Nvl(richpos.fieldformat.link, richpos.format.link);
+		if(richpos.chr != '\n')
+			link = Nvl(richpos.fieldformat.link, richpos.format.link);
 	}
 	return link;
 }
