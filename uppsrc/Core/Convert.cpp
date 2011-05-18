@@ -339,7 +339,11 @@ Value ConvertInt::Scan(const Value& text) const {
 	if(IsError(v)) return v;
 	if(IsNull(v)) return notnull ? NotNullError() : v;
 	int64 m = v;
-	if(m >= minval && m <= maxval) return v;
+	if(m >= minval && m <= maxval)
+		if(m >= -INT_MIN && m <= INT_MAX)
+			return (int)m;
+		else
+			return v;
 	return ErrorValue(UPP::Format(t_("Number must be between %d and %d."), minval, maxval));
 }
 
