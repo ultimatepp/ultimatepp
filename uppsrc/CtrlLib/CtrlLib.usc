@@ -428,9 +428,9 @@ ctrl EditField {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
-	bool  AlignRight @1;
-	int   MaxChars @2;
 	Font  SetFont = StdFont() @3;
+	int   MaxChars @2;
+	bool  AlignRight @1;
 	bool  SetEditable = true @4 ? "Editable";
 	Frame SetFrame = InsetFrame() @5;
 	Text  Tip @6;
@@ -459,8 +459,8 @@ ctrl DocEdit {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
-	Frame SetFrame = InsetFrame();
 	Font  SetFont = StdFont();
+	Frame SetFrame = InsetFrame();
 	bool  SetEditable = true @1 ? "Editable";
 	bool  WantFocus = true;
 	Text  Tip;
@@ -486,8 +486,29 @@ ctrl DocEdit {
 ctrl LineEdit {
 	group "Editors";
 
-	>EditField;
+	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; return sz; }
 
+	Font  SetFont = StdFont() @3;
+//	int   MaxChars @2;
+//	bool  AlignRight @1;
+	bool  SetEditable = true @4 ? "Editable";
+	Frame SetFrame = InsetFrame() @5;
+	Text  Tip @6;
+	bool  WantFocus = true @7;
+
+	Paint(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		w.DrawRect(r, :SWhite);
+		PaintData(w);
+	}
+	
+	PaintText(w, text) {
+		w.DrawText(3, (GetSize().cy - GetTextSize(text, Arial(10)).cy) / 2,
+			(.SetEditable ? "" : "R/O ") + text, Arial(10), :SMagenta);
+	}
+	
 	PaintData(w) {
 		PaintText(w, "LineEdit");
 	}
@@ -741,7 +762,7 @@ ctrl TabCtrl {
 
 	GetStdSize() { return Size(150, 100); }
 
-	Font SetFont = StdFont();
+//	Font SetFont = StdFont();
 	bool AcceptCurrent = false;
 //	Qtf  SetInfo @1 ? "Info of control" ;
 
@@ -749,9 +770,9 @@ ctrl TabCtrl {
 		text1 = "Tab1";
 		text2 = "Tab2";
 		text3 = "Tab3";
-		size1 = TabItemSize(text1, .SetFont);
-		size2 = TabItemSize(text2, .SetFont);
-		size3 = TabItemSize(text3, .SetFont);
+		size1 = TabItemSize(text1, StdFont());
+		size2 = TabItemSize(text2, StdFont());
+		size3 = TabItemSize(text3, StdFont());
 		r = GetRect();
 		r1 = r;
 		INITGAP = -1;
@@ -762,9 +783,9 @@ ctrl TabCtrl {
 		r2.right = (r2.left = r2.right + CELLSEP) + size2.cx;
 		r3 = r2;
 		r3.right = (r3.left = r3.right + CELLSEP) + size3.cx;
-		PaintTabItem(w, r3, text3, .SetFont, 0);
-		PaintTabItem(w, r2, text2, .SetFont, 0);
-		PaintTabItem(w, r1, text1, .SetFont, 1);
+		PaintTabItem(w, r3, text3, StdFont(), 0);
+		PaintTabItem(w, r2, text2, StdFont(), 0);
+		PaintTabItem(w, r1, text1, StdFont(), 1);
 		w.DrawRect(r.left, r1.bottom, 1, r.bottom - r1.bottom, :SWhite);
 		w.DrawRect(r3.right, r1.bottom - 1, r.right - r3.right, 1, :SWhite);
 		w.DrawRect(r.right - 1, r1.bottom, 1, r.bottom - r1.bottom, :SGray);
@@ -940,13 +961,13 @@ ctrl DropDate {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 13; return sz; }
 
-	Frame SetFrame = InsetFrame();
-	bool  SetEditable = true @2 ? "Editable";
-	bool  WantFocus = true;
 	bool  SelectAll = true;
 	bool  SwapMonthYear = false;
 	bool  OneButton = false;
 	bool  NotNull = false;
+	Frame SetFrame = InsetFrame();
+	bool  SetEditable = true @2 ? "Editable";
+	bool  WantFocus = true;
 	Text  Tip;
 
 	Paint(w) {
@@ -967,13 +988,13 @@ ctrl DropTime {
 	GetMinSize() { sz = XMinSize(); sz.cy += 6; return sz; }
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 15; return sz; }
 
-	Frame SetFrame = InsetFrame();
-	bool  SetEditable = true @2 ? "Editable";
-	bool  WantFocus = true;
 	bool  SelectAll = true;
 	bool  SwapMonthYear = false;
 	bool  Seconds = true;
 	bool  NotNull = false;
+	Frame SetFrame = InsetFrame();
+	bool  SetEditable = true @2 ? "Editable";
+	bool  WantFocus = true;
 	Text  Tip;
 
 	Paint(w) {
