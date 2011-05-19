@@ -42,6 +42,9 @@ public:
 	void Inc();
 	void Dec();
 
+	void Load(const String& filename) { FileIn in(filename); cmd.Load(in); }
+	void Save(const String& filename) const { FileOut out(filename); cmd.Save(out); }
+
 	void ClearLog() { log.Clear(); }
 	void SaveLog() { log.Save(); }
 	

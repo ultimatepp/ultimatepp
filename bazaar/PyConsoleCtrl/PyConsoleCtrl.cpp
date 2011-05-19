@@ -4,18 +4,14 @@ void PyConsoleCtrl::LoadDlg()
 {
 	fs.Types("Python Files\t*.py\nAll Files\t*.*\n");
 	if(!fs.ExecuteOpen("Load a Python script")) return;
-	
-	FileIn in(fs.Get());
-	cmd.Load(in);
+	Load(fs.Get());
 }
 
 void PyConsoleCtrl::SaveDlg()
 {
 	fs.Types("Python Files\t*.py\nAll Files\t*.*\n");
 	if(!fs.ExecuteSaveAs("Save a Python script")) return;
-	
-	FileOut out(fs.Get());
-	cmd.Save(out);
+	Save(fs.Get());
 }
 
 void PyConsoleCtrl::Clear()

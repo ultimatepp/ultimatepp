@@ -40,7 +40,7 @@ void PointCtrl::Paint(Draw& w)
 	}
 
 	//cross
-	if(!xp.IsNullInstance()) 
+	if(!xp.IsNullInstance() && IsEnabled() && IsEditable()) 
 	{
 		w.DrawLine(xp.x-3,xp.y, xp.x+3+1,xp.y, style->linesize, style->linecol);
 		w.DrawLine(xp.x,xp.y-3, xp.x,xp.y+3+1, style->linesize, style->linecol);
@@ -65,8 +65,9 @@ void PointCtrl::Paint(Draw& w)
 
 void PointCtrl::LeftDown(Point p, dword keyflags)
 {
-	SetCapture();
 	moving = false;
+	if(IsReadOnly() || !IsEnabled()) return;
+	SetCapture();
 	pressed = (keyflags & K_MOUSELEFT);
 
 	xp = p;
@@ -87,6 +88,7 @@ void PointCtrl::LeftDown(Point p, dword keyflags)
 void PointCtrl::LeftRepeat(Point p, dword keyflags)
 {
 	if(moving) return;
+	if(IsReadOnly() || !IsEnabled()) return;
 	
 	if(di<0 && !(keyflags & K_CTRL))
 	{
@@ -108,6 +110,7 @@ void PointCtrl::LeftRepeat(Point p, dword keyflags)
 
 void PointCtrl::MouseMove(Point p, dword keyflags)
 {
+	if(IsReadOnly() || !IsEnabled()) return;
 	moving = true;
 	pressed = (keyflags & K_MOUSELEFT);
 
@@ -131,9 +134,10 @@ void PointCtrl::MouseMove(Point p, dword keyflags)
 
 void PointCtrl::LeftUp(Point p, dword keyflags)
 {
-	ReleaseCapture();
 	pressed = false;
 	moving = false;
+	if(IsReadOnly() || !IsEnabled()) return;
+	ReleaseCapture();
 	di = -1;
 	xp.SetNull();
 	Refresh();

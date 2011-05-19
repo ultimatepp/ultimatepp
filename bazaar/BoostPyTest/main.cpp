@@ -1,5 +1,26 @@
 #include "BoostPyTest.h"
 
+// CallbackX / GateX definitions need to go before the module include
+// it's kinda template instantiation
+
+NAMESPACE_UPP
+
+def_export_Callback1(int)
+def_export_Gate1(int)
+def_export_Callback1(Value)
+def_export_Gate1(Value)
+
+def_export_Callback2(int, double)
+def_export_Gate2(int, double)
+
+def_export_Callback3(int, double, bool)
+def_export_Gate3(int, double, bool)
+
+def_export_Callback4(int, double, bool, int64)
+def_export_Gate4(int, double, bool, int64)
+
+END_UPP_NAMESPACE
+
 //CAUTION special module definitions to reduce compile time
 #include "modules.cppi"
 
@@ -73,6 +94,8 @@ BoostPyTest::BoostPyTest()
 		main_namespace["upp"] = upp_module;
 
 		scope(upp_module).attr("app") = ptr((TopWindow*)this);
+
+		scope(upp_module).attr("con") = ptr(&con);
 
 		sl.SetData(50);
 		scope(upp_module).attr("sl") = ptr(&sl);
@@ -186,7 +209,7 @@ BoostPyTest::BoostPyTest()
 		"print hello.invworld(mu,7)\n"
 
 		"import fibo\n"
-		"fibo.fib(200)\n"
+		"print fibo.fib(200)\n"
 
 		"import myupp\n"
 		"myupp.chtitle()\n"

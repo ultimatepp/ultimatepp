@@ -7,6 +7,8 @@ void export_Core()
 ONCELOCK
 {
 	export_Callback();
+	export_Gate();
+
 	export_GTypes();
 	export_String();
 	export_Value();

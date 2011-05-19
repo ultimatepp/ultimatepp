@@ -5,11 +5,14 @@ uses
 	CtrlLibBoostPy;
 
 file
+	PyConsoleCtrl.h,
+	PyConsoleCtrl.cpp,
 	world.h,
 	world.cpp,
-	BoostPyTest.h,
+	app readonly separator,
 	compile.txt,
 	modules.cppi,
+	BoostPyTest.h,
 	main.cpp,
 	BoostPyTest.lay;
 
