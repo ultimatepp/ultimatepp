@@ -39,6 +39,7 @@ public:
 	void ExitHandler();
 	void CBi(int i);
 	void EvalCB();
+	void EvalPyCv();
 
 	object main_namespace;
 
@@ -49,6 +50,8 @@ public:
 	Progress pr;
 	
 	Callback1<int> cbi;
+	
+	PyEvalConvert pycv;
 };
 
 #endif

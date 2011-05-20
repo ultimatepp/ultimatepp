@@ -119,6 +119,8 @@ void CtrlPos::Paint(Draw& w)
 
 void CtrlPos::LeftDown(Point p, dword keyflags)
 {
+	if(IsReadOnly() || !IsEnabled()) return;
+
 	SetCapture();
 	moving = false;
 	pressed = (keyflags & K_MOUSELEFT);
@@ -174,6 +176,8 @@ void CtrlPos::LeftDown(Point p, dword keyflags)
 
 void CtrlPos::MouseMove(Point p, dword keyflags)
 {
+	if(IsReadOnly() || !IsEnabled()) return;
+
 	moving = true;
 	pressed = (keyflags & K_MOUSELEFT);
 	//int m = RectCtrl::GetMode(r, p, keyflags, style->handsize);
@@ -233,6 +237,8 @@ void CtrlPos::LeftUp(Point p, dword keyflags)
 	//xpos.SetNull();
 	xp.SetNull();
 	mode = RectCtrl::NONE;
+	if(IsReadOnly() || !IsEnabled()) return;
+
 	ci = RectCtrl::SetCursor(mode, keyflags, ci);
 	Refresh();
 }
@@ -241,18 +247,40 @@ void CtrlPos::RightDown(Point p, dword keyflags)
 {
 	//cancel
 	ReleaseCapture();
-	//pressed = false;
-	//moving = false;
-	////xpos.SetNull();
-	//xp.SetNull();
 	int m = mode;
 	mode = RectCtrl::NONE;
+	if(IsReadOnly() || !IsEnabled()) return;
+
 	ci = RectCtrl::SetCursor(mode, keyflags, ci);
 	if(!GetCtrl()) return;
 
-	if(m != RectCtrl::NONE)
+	if(pressed)
 	{
-		GetCtrl()->SetPos(xpos);
+		if(m != RectCtrl::NONE)
+		{
+			GetCtrl()->SetPos(xpos);
+			Action();
+			Refresh();
+		}
+	}
+	else
+	{
+		pressed = false;
+		moving = false;
+		//xpos.SetNull();
+		xp.SetNull();
+		//mode = RectCtrl::NONE;
+		RectTracker tr(*this);
+		Size psz = GetCtrl()->GetParent()->GetSize();
+		Rect r = tr.Track(Rect(p,p));
+
+		Ctrl* pc = GetCtrl()->GetParent();
+		r.Offset(-pc->GetView().TopLeft());
+		Point opd = CtrlMover::GetOffset(*pc, Get());
+		r.Offset(-opd);
+
+		Ctrl::LogPos pos = LogPosPopUp::MakeLogPos(xpos, r, psz);
+		GetCtrl()->SetPos(pos);
 		Action();
 		Refresh();
 	}

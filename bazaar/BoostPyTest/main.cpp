@@ -35,6 +35,13 @@ void BoostPyTest::CBi(int i)
 	RLOG(i);	
 }
 
+dict swap_object_dict(object target, dict d)
+{
+	dict result = extract<dict>(target.attr("__dict__"));
+	target.attr("__dict__") = d;
+	return result;
+}
+
 void BoostPyTest::EvalCB()
 {
 	String s = ev.GetData();
@@ -43,6 +50,14 @@ void BoostPyTest::EvalCB()
 	Value v = extract<Value>(o);
 	
 	evr.SetData(v);	
+}
+
+void BoostPyTest::EvalPyCv()
+{
+	Value v = invc.GetData();
+	pycv.expr = evcv.GetData();
+	Value w = pycv.Format(v);
+	outvc.SetData(w);
 }
 
 BoostPyTest::BoostPyTest()
@@ -93,6 +108,16 @@ BoostPyTest::BoostPyTest()
 		object upp_module = import("upp");
 		main_namespace["upp"] = upp_module;
 
+		Value v = "Teststring";
+		//object tstr(v);
+		main_namespace["teststr"] = object(v);
+
+if(0) {
+		object locals;
+		locals = dict()
+		locals["arg"] = object(v);
+		main_namespace["loc"] = locals;
+}
 		scope(upp_module).attr("app") = ptr((TopWindow*)this);
 
 		scope(upp_module).attr("con") = ptr(&con);
@@ -119,6 +144,13 @@ BoostPyTest::BoostPyTest()
 		evr.SetReadOnly();
 		ev.SetData("100 + upp.sl.getdata()");
 		EvalCB();
+
+		pycv.globals = main_namespace;
+		pycv.locals = dict();
+		excv <<= THISBACK(EvalPyCv);
+		evcv.SetData("arg + ' ' + upp.app.title");
+		invc.SetData("Please try");
+		outvc.SetReadOnly();
 
 		String sc = 
 

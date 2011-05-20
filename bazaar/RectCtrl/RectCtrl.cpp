@@ -210,18 +210,28 @@ void RectCtrl::RightDown(Point p, dword keyflags)
 {
 	//cancel
 	ReleaseCapture();
-	//pressed = false;
-	//moving = false;
-	//xr.SetNull();
-	//xp.SetNull();
 	int m = mode;
 	mode = NONE;
 	if(IsReadOnly() || !IsEnabled()) return;
 
 	c = SetCursor(mode, keyflags, c);
-	if(m != NONE)
+	if(pressed)
 	{
-		r = xr;
+		if(m != NONE)
+		{
+			r = xr;
+			UpdateActionRefresh();
+		}
+	}
+	else
+	{
+		pressed = false;
+		moving = false;
+		xr.SetNull();
+		xp.SetNull();
+		//mode = NONE;
+		RectTracker tr(*this);
+		r = tr.Track(Rect(p,p));
 		UpdateActionRefresh();
 	}
 }
