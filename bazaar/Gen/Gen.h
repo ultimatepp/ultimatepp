@@ -155,6 +155,80 @@ protected:
 template<class T>
 class Instancing : public TypeHook<T, Typer> {};
 
+//shared pointer
+//idea borrowed from boost shared_ptr, an additional chunk of memory is managed
+//which centrally holds the refcount of that object pointed to
+//if Shared is created freshly, it AtomicInc's the ref count to 1;
+//if a Shared is destroyed it AtomicDec's the refcount, and if its 0,
+//	it will delete both, the object and the refcount chunk
+//if another instance is created as copy, the refcount is taken and incremented.
+//if it is assigned, it decrements own existing counter, possibly releasing mem, and retains new
+//pick semantic is not needed here anymore, it not even is possible
+//since an 'operator=(const Shared<>&) is needed to aquire the source. pick is const in some cases as well)
+//thus Shared is only Moveable, without deepcopyoption, which in fact would speak agains the idea of Shared anyway
+//Attach / Detach remains
+
+template <class T>
+class Shared : Moveable< Shared<T> > {
+	mutable T  *ptr;
+	Atomic     *rfc;
+
+	void Retain() const { ASSERT(rfc); AtomicInc(*rfc); }
+	void Release()      { ASSERT(rfc); if(AtomicDec(*rfc) == 0) { Free(); delete rfc; rfc = NULL; } }
+
+	void        Free()                     { if(ptr && ptr != (T*)1) delete ptr; }
+	void        Chk() const                { ASSERT(ptr != (T*)1); }
+	void        ChkP() const               { Chk(); ASSERT(ptr); }
+
+public:
+	void        Attach(T *data)            { Free(); ptr = data; }
+	T          *Detach() pick_             { ChkP(); T *t = ptr; ptr = NULL; return t; }
+	T          *operator-() pick_          { return Detach(); }
+	void        Clear()                    { Free(); ptr = NULL; }
+
+	void        operator=(T *data)         { Attach(data); }
+	void        operator=(const Shared<T>& d){ Release(); ptr = d.ptr; rfc = d.rfc; Retain(); }
+	void        operator=(pick_ One<T>& d) { Attach(d.Detach()); }
+
+	const T    *operator->() const         { ChkP(); return ptr; }
+	T          *operator->()               { ChkP(); return ptr; }
+	const T    *operator~() const          { Chk(); return ptr; }
+	T          *operator~()                { Chk(); return ptr; }
+	const T&    operator*() const          { ChkP(); return *ptr; }
+	T&          operator*()                { ChkP(); return *ptr; }
+
+	template <class TT>
+	TT&         Create()                   { TT *q = new TT; Attach(q); return *q; }
+	T&          Create()                   { T *q = new T; Attach(q); return *q; }
+
+	bool        IsEmpty() const            { Chk(); return !ptr; }
+
+	operator bool() const                  { return ptr; }
+
+	Shared()                               { ptr = NULL; rfc = new Atomic(1); }
+	Shared(T *newt)                        { ptr = newt; rfc = new Atomic(1); }
+	Shared(const Shared<T>& p)             { ptr = p.ptr; rfc = p.rfc; Retain(); }
+	~Shared()                              { Release(); }
+
+	Shared(pick_ One<T>& p)                { ptr = p.Detach(); rfc = new Atomic(1); }
+	Shared(const One<T>& p, int)           { ptr = DeepCopyNew(*p); rfc = new Atomic(1); }
+
+	template<class TT> friend class GenerateShared;
+private:
+	Shared(T* p, Atomic* r)                { ptr = p; rfc = r; Retain(); }
+};
+
+template<class T> 
+class GenerateShared //can access the internals of any Shared<T>
+{
+public:
+	template<class TT>
+	static Shared<T> FromShared(const Shared<TT>& p)
+	{
+		return Shared<T>((T*)p.ptr, p.rfc);
+	}
+};
+
 //a visiting interface
 template<class T, class B = EmptyClass>
 class Visiting : public B
