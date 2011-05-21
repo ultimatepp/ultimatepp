@@ -84,7 +84,7 @@ public:
 	CPOOM* GetPOOM();
 #endif
 
-	bool OpenFolder(const String &folderName, MAPIFolder &folder);
+	bool OpenFolder(const String &folderName, MAPIFolder &folder, bool fullPath = true);
 	bool OpenSpecialFolder(unsigned long ulFolderID, MAPIFolder &folder);
 	bool OpenRootFolder(MAPIFolder &folder);
 	bool OpenInbox(MAPIFolder &folder);

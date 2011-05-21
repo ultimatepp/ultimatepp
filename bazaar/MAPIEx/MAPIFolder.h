@@ -68,7 +68,8 @@ protected:
 	bool IsOpened()	{return m_pHierarchy;};
 public:
 	String GetName();
-	bool OpenSubFolder(const String &subFolderName, MAPIFolder &subFolder);
+	bool OpenSubFolder(const String &subFolderName, MAPIFolder &subFolder, 
+													bool fullPath = false, String path = Null);
 	bool CreateSubFolder(const String &subFolderName, MAPIFolder &subFolder);
 	bool DeleteSubFolder(const String &subFolder);
 	bool DeleteSubFolder(MAPIFolder &folder);

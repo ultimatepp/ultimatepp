@@ -103,20 +103,22 @@ LPMAPITABLE MAPIFolder::GetHierarchy() {
 }
 
 // High Level function to open a sub folder by iterating recursively (DFS) over all folders 
-// (use instead of manually calling GetHierarchy and GetNextSubFolder)
-bool MAPIFolder::OpenSubFolder(const String &subFolderName, MAPIFolder &subFolder) {
+bool MAPIFolder::OpenSubFolder(const String &subFolderName, MAPIFolder &subFolder, 
+																bool fullPath, String path) {
 	if(!GetHierarchy()) 
 		return NULL;
 
 	String strFolder;
 	MAPIFolder folder;
-	MAPIFolder* pSubFolder=NULL;
+	MAPIFolder* pSubFolder = NULL;
 	while(GetNextSubFolder(folder, strFolder)) {
 		bool retSubFolder;
+		if (fullPath)
+			strFolder = path + "/" + strFolder;
 		if(!CompareNoCase(strFolder, subFolderName)) 
 			retSubFolder = subFolder.Attach(m_pMAPI, folder.Detach());
 		else 
-			retSubFolder = folder.OpenSubFolder(subFolderName, subFolder);
+			retSubFolder = folder.OpenSubFolder(subFolderName, subFolder, fullPath, strFolder);
 		if(retSubFolder) 
 			return true;
 	}

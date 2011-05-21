@@ -349,10 +349,12 @@ bool MAPIEx::OpenFolder(unsigned long ulFolderID, MAPIFolder& folder) {
 	return false;
 }
 
-bool MAPIEx::OpenFolder(const String &folderName, MAPIFolder &folder) {
+bool MAPIEx::OpenFolder(const String &folderName, MAPIFolder &folder, bool fullPath) {
 	MAPIFolder root;
-	if(OpenRootFolder(root))
-		root.OpenSubFolder(folderName, folder);
+	if(!OpenRootFolder(root))
+		return false;
+	if (!root.OpenSubFolder(folderName, folder, fullPath, ""))
+		return false;
 	folder.GetHierarchy();
 	folder.GetContents();
 	return true;
