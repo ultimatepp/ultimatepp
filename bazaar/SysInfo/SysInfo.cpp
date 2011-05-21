@@ -14,6 +14,8 @@
 	#include <Wbemidl.h>
 	#include <winnls.h> 
 	#include <vfw.h>
+	typedef ACCESS_MASK REGSAM;
+	#include <PowrProf.h>
 #endif
 #ifdef PLATFORM_POSIX
 	#include <sys/time.h>
@@ -1650,46 +1652,58 @@ int GetCpuSpeed()
 
 #define SHTDN_REASON_MINOR_OTHER 0
 
-bool Shutdown(String action)
-{
+bool Shutdown(String action) {
+	action = ToLower(action);
+	
+	bool hibernate, suspend;
+	hibernate = suspend = false;
+	
 	unsigned int flag;
 	if (action == "logoff")
 		flag = EWX_LOGOFF;
-//	else if (action == "poweroff")
-//		flag = EWX_POWEROFF;
+	else if (action == "poweroff")
+		flag = EWX_POWEROFF;
 	else if (action == "reboot")
 		flag = EWX_REBOOT;
 	else if (action == "shutdown")
 		flag = EWX_SHUTDOWN;
+	else if (action == "hibernate") 
+		hibernate = true;
+	else if (action == "suspend")	
+		suspend = true;
 	else
 		return false;
 	
    	HANDLE hToken; 
    	TOKEN_PRIVILEGES tkp; 
  
-   // Get a token for this process. 
+   	// Get a token for this process. 
    	if (!OpenProcessToken(GetCurrentProcess(), 
      	TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) 
  		return false; 
  
-   // Get the LUID for the shutdown privilege. 
-   LookupPrivilegeValue(NULL, SE_SHUTDOWN_NAME, &tkp.Privileges[0].Luid); 
+   	// Get the LUID for the shutdown privilege. 
+   	LookupPrivilegeValue(NULL, SE_SHUTDOWN_NAME, &tkp.Privileges[0].Luid); 
  
-   tkp.PrivilegeCount = 1;  // one privilege to set    
-   tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED; 
+   	tkp.PrivilegeCount = 1;  // one privilege to set    
+   	tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED; 
  
-   // Get the shutdown privilege for this process. 
-   AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, 
+   	// Get the shutdown privilege for this process. 
+   	AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, 
         (PTOKEN_PRIVILEGES)NULL, 0); 
  
-   if (GetLastError() != ERROR_SUCCESS) 
-      return false; 
+   	if (GetLastError() != ERROR_SUCCESS) 
+      	return false; 
  
-   // Shut down the system and force all applications to close. 
-   if (!ExitWindowsEx(flag | EWX_FORCE, SHTDN_REASON_MINOR_OTHER)) 
-      return false; 
-
-   return true;
+	if (hibernate || suspend) {
+		if (!SetSuspendState(hibernate, TRUE, FALSE))
+			return false;
+	} else {
+	   	// Shut down the system and force all applications to close. 
+	   	if (!ExitWindowsEx(flag | EWX_FORCE, SHTDN_REASON_MINOR_OTHER)) 
+	      	return false; 
+	}
+   	return true;
 }
 #endif
 

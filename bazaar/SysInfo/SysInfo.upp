@@ -4,7 +4,7 @@ uses
 	Core,
 	Functions4U;
 
-library(WIN32) "psapi gdi32 vfw32 oleaut32 wbemuuid iphlpapi";
+library(WIN32) "psapi gdi32 vfw32 oleaut32 wbemuuid iphlpapi PowrProf";
 
 library(!WIN32) "Xtst X11 ";
 
