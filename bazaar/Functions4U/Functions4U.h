@@ -30,6 +30,8 @@ bool AppendFile(const char *filename, const char *str);
 String AppendFileName(const String& path1, const char *path2, const char *path3);
 	
 inline String Trim(const String& s) {return TrimBoth(s);};
+
+String Tokenize(const String &str, const String &token, int &pos);
 	
 /////////
 bool DirectoryExistsX(const char *path, int flags = 0); 
@@ -171,7 +173,7 @@ public:
 private:
 	void Search_Each(String dir, String condFile, bool recurse, String text);
 	Upp::int64 GetFileId(String fileName);
-	String GetRelativePath(String fullPath);
+	String GetRelativePath(const String &fullPath);
 	String GetFileText();
 	
 	Array<FileData> fileList;
@@ -221,6 +223,7 @@ void StringToHMS(String durat, int &hour, int &min, double &seconds);
 String FormatDoubleAdjust(double d, double range);
 
 String RemoveAccents(String str);
+String RemoveAccent(wchar c);
 bool IsPunctuation(wchar c);
 	
 inline double ToRad(double angle)	{return angle*M_PI/180;}

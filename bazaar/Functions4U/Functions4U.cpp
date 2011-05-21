@@ -350,11 +350,13 @@ String GetTrashBinDirectory()
 		ret = AppendFileName(ret, "Trash");
 	return ret;
 }
+
 bool FileToTrashBin(const char *path)
 {	
 	String newPath = AppendFileName(GetTrashBinDirectory(), GetFileName(path));
 	return FileMove(path, newPath);
 }
+
 int64 TrashBinGetCount()
 {
 	int64 ret = 0;
@@ -368,6 +370,7 @@ int64 TrashBinGetCount()
 	}
 	return ret;
 }
+
 bool TrashBinClear()
 {
 	FindFile ff;
@@ -411,6 +414,7 @@ bool FileToTrashBin(const char *path)
         return false;
     return true;
 }
+
 int64 TrashBinGetCount()
 {
 	SHQUERYRBINFO shqbi; 
@@ -420,6 +424,7 @@ int64 TrashBinGetCount()
 		return -1;
 	return shqbi.i64NumItems;
 }
+
 bool TrashBinClear()
 {
 	if (S_OK != SHEmptyRecycleBin(0, 0, SHERB_NOCONFIRMATION | SHERB_NOPROGRESSUI | SHERB_NOSOUND))
@@ -987,6 +992,22 @@ String RemoveAccents(String str) {
 	return ret;
 }
 
+String Tokenize(const String &str, const String &token, int &pos) {
+	int npos;
+	for (int i = 0; i < token.GetCount(); ++i) {
+		if ((npos = str.Find(token[i], pos)) >= 0) 
+			break;
+	}
+	int oldpos = pos;
+	if (npos < 0) {
+		pos = str.GetCount();
+		return str.Mid(oldpos);
+	} else {
+		pos = npos + 1;
+		return str.Mid(oldpos, npos-oldpos);
+	}
+}
+
 //int DayOfYear(Date d) {
 //	return 1 + d - FirstDayOfYear(d);
 //}
@@ -1424,8 +1445,8 @@ bool FileDataArray::Init(String folder, FileDataArray &orig, FileDiffArray &diff
 			break;
 			break;
 		case 'p':
-			SetLastError(t_("Problem found"));
-			return false;
+			SetLastError(t_("Problem found"));		// To Fix				
+			//return false;
 		}
 	}
 	return true;
@@ -1690,30 +1711,26 @@ bool FileDataArray::LoadFile(const char *fileName)
 	return true;
 }
 
-String FileDataArray::GetRelativePath(String fullPath)
-{
+String FileDataArray::GetRelativePath(const String &fullPath) {
 	if (basePath != fullPath.Left(basePath.GetCount()))
 		return "";
 	return fullPath.Mid(basePath.GetCount());
 }
 
-int64 GetDirectoryLength(String directoryName)
-{
+int64 GetDirectoryLength(const char *directoryName) {
 	FileDataArray files;
 	files.Search(directoryName, "*.*", true);
 	return files.GetSize();
 }
 
-int64 GetLength(String fileName)
-{
+int64 GetLength(const char *fileName) {
 	if (FileExists(fileName))
 		return GetFileLength(fileName);
 	else	
 		return GetDirectoryLength(fileName);
 }
 
-FileDiffArray::FileDiffArray()
-{
+FileDiffArray::FileDiffArray() {
 	Clear();
 }
 
@@ -1883,7 +1900,7 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 		if (!ok) {
 			String strError = t_("Not possible to modify ") + dest;	
 			SetLastError(strError);
-			return false;
+			//return false;
 		}
 
 		switch (diffList[i].action) {
@@ -1899,8 +1916,9 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 				}
 				if (ok) {
 					ok = FileCopy(AppendFileName(fromFolder, FormatInt(i)), dest);
-					if (GetFileTime(dest) != diffList[i].tMaster)
-						throw ("Mira!");
+					diffList[i].tSecondary = diffList[i].tMaster;
+					//if (GetFileTime(dest) != diffList[i].tMaster)
+					//	throw ("Mira!");
 						//Exclamation(Format("Fichero copiado %s tiene fecha diferente (%s) "
 						//	"que el original (%s)", dest, Format(GetFileTime(dest)), Format(diffList[i].tMaster)));
 				}
@@ -1912,7 +1930,7 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 			  	strError += ". " + WinLastError();
 #endif
 				SetLastError(strError);
-				return false;
+				//return false;
 			}
 			break;
 		case 'd': 
@@ -1929,11 +1947,11 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 			  	strError += ". " + WinLastError();
 #endif
 				SetLastError(strError);				
-				return false;
+				//return false;
 			}
 			break;		
 		case 'p': 
-			//SetLastError(t_("There was a problem in the copy"));
+			SetLastError(t_("There was a problem in the copy"));
 			//return false;
 			break;
 		}

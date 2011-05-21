@@ -205,6 +205,17 @@ ng][@(0.0.255) `&]_[*@3 s])&]
 Spaces are chars like, `' `', `'`\t`', `'`\n`', ...&]
 [s3; &]
 [s4;%- &]
+[s5;:Tokenize`(const String`&`,const String`&`,int`&`):%- [_^String^ String]_[* Tokenize](
+[@(0.0.255) const]_[_^String^ String]_`&[*@3 str], [@(0.0.255) const]_[_^String^ String]_`&
+[*@3 token], [@(0.0.255) int]_`&[*@3 pos])&]
+[s2; Finds the next token in [%-*@3 str] beginning from [%-*@3 pos]. 
+[%-*@3 token] is a String that contains token identifier chars.&]
+[s0;l288; Returns the String from original [%-*@3 pos] to the char 
+after found token or until the end of the String if no token 
+in [%-*@3 token] is found. [%-*@3 pos] is updated to the next char 
+after returned String.&]
+[s3; &]
+[s4;%- &]
 [s5;:ReverseFind`(const String`&`,const String`&`,int`):%- [@(0.0.255) int]_[* ReverseFin
 d]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s], [@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 toFind], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
