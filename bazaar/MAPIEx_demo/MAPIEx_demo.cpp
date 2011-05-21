@@ -28,7 +28,7 @@
 
 // Send a message:
 void SendTest(MAPIEx& mapi) {
-	printf("\n\nSend Message Test");
+	puts("\nSend Message Test");
 	MAPIFolder outbox;
 	if (!mapi.OpenOutbox(outbox))
 		return;
@@ -45,7 +45,7 @@ void SendTest(MAPIEx& mapi) {
 	message.SetBody("Body");
 
 	// here's an HTML body (uncomment to test)
-	//message.SetHTML(_T("<html><body><font size=2 color=red face=Arial><span style='font-size:10.0pt;font-family:Arial;color:red'>Body</font></body></html>"));
+	//message.SetHTML("<html><body><font size=2 color=red face=Arial><span style='font-size:10.0pt;font-family:Arial;color:red'>Body</font></body></html>");
 
 	// here's an RTF body (uncomment to test)
 	//message.SetRTF(_T("{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 Times New Roman;}}{\\colortbl ;\\red255\\green0\\blue0;}{\\*\\generator Msftedit 5.41.15.1507;}\\viewkind4\\uc1\\pard\\cf1\\lang3082\\b\\f0\\fs20 Body\\cf0\\lang1033\\b0\\par}"));
@@ -55,7 +55,7 @@ void SendTest(MAPIEx& mapi) {
 	message.AddAttachment(MSG_ATTACHMENT);
 
 	if(message.Send()) 
-		printf("\nSent successfully");
+		puts("Sent successfully");
 }
 
 // To embed images inside of HTML text:
@@ -63,7 +63,7 @@ void SendTest(MAPIEx& mapi) {
 //		-add an <IMG tag with src="cid:<contentID>"
 //		-add an attachment using the same CID
 void SendCIDTest(MAPIEx& mapi) {
-	printf("\n\nSend CID Message Test");
+	puts("\nSend CID Message Test");
 	MAPIFolder outbox;
 	if (!mapi.OpenOutbox(outbox))
 		return;
@@ -83,12 +83,12 @@ void SendCIDTest(MAPIEx& mapi) {
 	message.AddAttachment(MSG_ATTACHMENT, NULL, strCID);
 
 	if(message.Send()) 
-		printf("\nSent successfully");
+		puts("Sent successfully");
 }
 
 // Read and save messages and their attachments
 void ReadMessageTest(MAPIEx& mapi, const String &folderName = "") {
-	printf("\n\nRead and save message test");
+	puts("\nRead and save message test");
 	MAPIFolder folder;
 	if (folderName.IsEmpty()) {
 		if(!mapi.OpenInbox(folder))
@@ -114,26 +114,35 @@ void ReadMessageTest(MAPIEx& mapi, const String &folderName = "") {
 			while (message.GetNextRecipient(name, email, type)) {
 				if (!recipients.IsEmpty())
 					recipients += "; ";
-				recipients += Format("'%s' (%s)", name, email);
+				String stype; 
+				if (type == MAPI_TO)
+					stype = "TO";
+				else if (type == MAPI_CC)
+					stype = "CC";
+				else if (type == MAPI_BCC)
+					stype = "BCC";
+				else
+					stype = "Unknown!";
+				recipients += Format("'%s' (%s)(%s)", name, email, stype.Begin());
 			}
 		}
-		printf("\nMessage from '%s' (%s) to %s subject '%s', received time: %s, sent time: %s, modif time: %s", 
-				message.GetSenderName().Begin(), message.GetSenderEmail().Begin(), 
-				recipients.Begin(), message.GetSubject().Begin(), 
-				Format(receivedTime).Begin(), Format(submitTime).Begin(), Format(modifTime).Begin());
-		printf("\nBody: %s", message.GetBody(false).Begin());
-		//printf("\nHTML: %s", message.GetHTML().Begin());
+		puts(Format("Message from '%s' (%s) to %s subject '%s', received time: %s, "
+				"sent time: %s, modif time: %s", message.GetSenderName(), 
+				message.GetSenderEmail(), recipients, message.GetSubject(), 
+				Format(receivedTime), Format(submitTime), Format(modifTime)));
+		puts(Format("Body: %s", message.GetBody(false)));
+		//puts(Format("HTML: %s", message.GetHTML()));
 		if(message.GetAttachmentCount()) {
-			printf("\nSaving attachments to %s...", MSG_ATTACHMENT_FOLDER);
+			printf(Format("Saving attachments to %s...", MSG_ATTACHMENT_FOLDER));
 			message.SaveAttachment(MSG_ATTACHMENT_FOLDER);
-			printf("done");
+			puts("done");
 		}
 		static int num;
 		String fileName = "c:\\temp\\" + FormatInt(num) + ".msg";
-		printf("\nSaving message to %s ...", fileName.Begin());
+		printf(Format("Saving message to %s ...", fileName.Begin()));
 		message.SaveToFile(fileName);
 		num++;
-		printf("done");
+		puts("done");
 	}
 }
 
@@ -142,7 +151,7 @@ void ReadMessageTest(MAPIEx& mapi, const String &folderName = "") {
 // You can also move and delete the message, but I wanted the sample to be non destructive just 
 // in case
 void CopyMessageTest(MAPIEx& mapi) {
-	printf("\n\nCopy message test");
+	puts("\nCopy message test");
 	MAPIFolder folder;
 	if(!mapi.OpenInbox(folder))
 		return; 
@@ -150,9 +159,9 @@ void CopyMessageTest(MAPIEx& mapi) {
 
 	MAPIMessage message;
 	if(folder.GetNextMessage(message)) {
-		printf("\nCopying message from '%s' subject '%s'", message.GetSenderName().Begin(), 
-															message.GetSubject().Begin());
-		printf(", from Inbox to Inbox/%s'", COPY_MSG_FOLDER);
+		puts(Format("Copying message from '%s' subject '%s'", message.GetSenderName(), 
+															message.GetSubject()));
+		printf(Format(", from Inbox to Inbox/%s'", COPY_MSG_FOLDER));
 		MAPIFolder subFolder; 
 		if(folder.CreateSubFolder(COPY_MSG_FOLDER, subFolder)) 
 			folder.CopyMessage(message, subFolder);
@@ -161,8 +170,8 @@ void CopyMessageTest(MAPIEx& mapi) {
 
 long CALLBACK OnNewEvent(LPVOID lpvContext, ULONG cNotification, LPNOTIFICATION lpNotifications) {
 	String *data = (String *)lpvContext;
-	printf("\nReceived new event. Referenced data is %s.", data->Begin());
-	printf("\nActivated event was ");
+	puts(Format("Received new event. Referenced data is %s.", data));
+	puts("Activated event was ");
 	for (int i = 0; i < int(cNotification); ++i) {
 		switch(lpNotifications[i].ulEventType) {
 		case fnevNewMail: 		printf("New email");
@@ -180,21 +189,14 @@ long CALLBACK OnNewEvent(LPVOID lpvContext, ULONG cNotification, LPNOTIFICATION 
 void NotificationTest(MAPIEx& mapi) {
 	String data = "Data context";
 	if(mapi.Notify(OnNewEvent, (void *)&data, fnevNewMail | fnevObjectMoved | fnevObjectDeleted)) { 
-		printf(t_("\nWaiting for a new incoming message... (hit a key to cancel)"));
+		puts("Waiting for a new incoming message... (hit a key to cancel)");
 		while(!_kbhit()) 
 			Sleep(100);
 	}
 }
 
-// This function displays your first contact in your Contacts folder
-//
-// Use GetName to get the name (default DISPLAY NAME, but can be Initials, First Name etc) 
-// Use GetEmail to get the email address (named property) 
-// Use GetAddress to get the mailing address of CContactAddress::AddressType
-// Use GetPhoneNumber supplying a phone number property (ie PR_BUSINESS_TELEPHONE_NUMBER)
-// Use GetNotes to get the notes in either plain text (default) or RTF
 void ContactsTest(MAPIEx& mapi) {
-	printf("\n\nContacts test");
+	puts("\nContacts test");
 	MAPIFolder contacts;
 	if (!mapi.OpenContacts(contacts))
 		return;
@@ -205,24 +207,24 @@ void ContactsTest(MAPIEx& mapi) {
 	MAPIContact contact;
 	ContactAddress address;
 	if(contacts.GetNextContact(contact)) {
-		printf("\nName: '%s'", contact.GetName().Begin());
-		printf("\nBirthday: %s", Format(contact.GetBirthday()).Begin());
-		printf("\nAnniversary: %s", Format(contact.GetAnniversary()).Begin());
-		printf("\nCategories: '%s'", contact.GetCategories().Begin());
-		printf("\nCompany: '%s'", contact.GetCompany().Begin());
-		printf("\nEmail: '%s'", contact.GetEmail().Begin());
-		printf("\nHomePage: '%s'", contact.GetHomePage().Begin());
-		printf("\nIM Address: '%s'", contact.GetIMAddress().Begin());
+		puts(Format("Name: '%s'", contact.GetName()));
+		puts(Format("Birthday: %s", Format(contact.GetBirthday())));
+		puts(Format("Anniversary: %s", Format(contact.GetAnniversary())));
+		puts(Format("Categories: '%s'", contact.GetCategories()));
+		puts(Format("Company: '%s'", contact.GetCompany()));
+		puts(Format("Email: '%s'", contact.GetEmail()));
+		puts(Format("HomePage: '%s'", contact.GetHomePage()));
+		puts(Format("IM Address: '%s'", contact.GetIMAddress()));
 		if(contact.GetAddress(address, ContactAddress::BUSINESS)) 
-			printf("\n%s\n%s\n%s\n%s\n%s",address.m_strStreet.Begin(),
-				address.m_strCity.Begin(), address.m_strStateOrProvince.Begin(),
-				address.m_strCountry.Begin(), address.m_strPostalCode.Begin());
+			puts(Format("%s\n%s\n%s\n%s\n%s",address.m_strStreet,
+				address.m_strCity, address.m_strStateOrProvince,
+				address.m_strCountry, address.m_strPostalCode));
 		if(contact.GetAddress(address, ContactAddress::HOME)) 
-			printf("\n%s\n%s\n%s\n%s\n%s",address.m_strStreet.Begin(), 
-				address.m_strCity.Begin(), address.m_strStateOrProvince.Begin(),
-				address.m_strCountry.Begin(), address.m_strPostalCode.Begin());
-		printf("\nPhone: %s", contact.GetPhoneNumber(PR_BUSINESS_TELEPHONE_NUMBER).Begin());
-		printf("\nNotes: %s", contact.GetBody().Begin());
+			puts(Format("%s\n%s\n%s\n%s\n%s",address.m_strStreet, 
+				address.m_strCity, address.m_strStateOrProvince,
+				address.m_strCountry, address.m_strPostalCode));
+		puts(Format("Phone: %s", contact.GetPhoneNumber(PR_BUSINESS_TELEPHONE_NUMBER)));
+		puts(Format("Notes: %s", contact.GetBody()));
 
 		if(contact.HasPicture()) {
 			#define DEFAULT_BUFFER_SIZE	4096
@@ -239,7 +241,7 @@ void ContactsTest(MAPIEx& mapi) {
 							nSize += nRead;
 					} while (nRead>0);
 					attachment.CloseStream();
-					printf("Contact has picture (%d bytes)\n", nSize);
+					puts(Format("Contact has picture (%d bytes)\n", nSize));
 				}
 			}
 		}
@@ -253,7 +255,7 @@ void ContactsTest(MAPIEx& mapi) {
 //       if it returns IDCANCEL, the user closed the dialog and you must save the message or 
 //			it will be lost
 void CreateDraftTest(MAPIEx& mapi) {
-	printf("\n\nCreate Draft Test");
+	puts("\nCreate Draft Test");
 	MAPIFolder drafts;
 	if(!mapi.OpenDrafts(drafts))
 		return; 
@@ -267,25 +269,25 @@ void CreateDraftTest(MAPIEx& mapi) {
 
 	int nResult = message.ShowForm(&mapi, drafts);
 	if(nResult == IDOK) 
-		printf("\nDraft sent successfully");
+		puts("Draft sent successfully");
 	else if(nResult == IDCANCEL) {
 		message.Save();
-		printf("\nDraft created successfully");
+		puts("Draft created successfully");
 	}
 }
 
 void SelectContactsTest(MAPIEx& mapi) {
-	printf("\n\nSelect Contacts Test");
+	puts("\nSelect Contacts Test");
 	Vector <String> emails;
 	if(mapi.SelectContacts(emails, "ShowAddressBook Test")) {
 		for(int i = 0; i < emails.GetCount(); i++) 
-			printf("\nAddressBook recipient %d: %s", i+1, emails[i].Begin());
+			puts(Format("AddressBook recipient %d: %s", i+1, emails[i]));
 	}
 }
 
 // This function creates a contact and sets its name and email
 void CreateContactTest(MAPIEx& mapi) {
-	printf("\n\nCreate Contact Test");
+	puts("\nCreate Contact Test");
 	MAPIFolder contacts;
 	if(!mapi.OpenContacts(contacts)) 
 		return;
@@ -298,14 +300,14 @@ void CreateContactTest(MAPIEx& mapi) {
 		//contact.SetEmailDisplayAs(String(FROM_NAME) + " (" + FROM_EMAIL + ")", 1);
 		contact.UpdateDisplayName();
 		if(contact.Save()) 
-			printf("\nContact created successfully");
+			puts("Contact created successfully");
 	}	
 }
 
 // This function opens the first subfolder under contacts and if successful displays the 
 // first contact if any
 void ContactSubFolderTest(MAPIEx& mapi) {
-	printf("\n\nContact SubFolder Test");
+	puts("\nContact SubFolder Test");
 	MAPIFolder contacts;
 	if(!mapi.OpenContacts(contacts)) 
 		return;
@@ -313,17 +315,17 @@ void ContactSubFolderTest(MAPIEx& mapi) {
 	String strFolder;
 	MAPIFolder folder;
 	if(contacts.GetNextSubFolder(folder, strFolder)) {
-		printf("\nContact Sub Folder: %s", strFolder.Begin());
+		puts(Format("Contact Sub Folder: %s", strFolder));
 		String strText;
 		MAPIContact contact;
 		ContactAddress address;
 		if(folder.GetNextContact(contact)) 
-			printf("\nContact Name '%s'", contact.GetName().Begin());
+			puts(Format("Contact Name '%s'", contact.GetName()));
 	}
 }
 
 void AppointmentTest(MAPIEx& mapi) {
-	printf("\n\nAppointment Test");
+	puts("\nAppointment Test");
 	MAPIFolder appointments;
 	if(!mapi.OpenCalendar(appointments)) 
 		return;
@@ -331,10 +333,10 @@ void AppointmentTest(MAPIEx& mapi) {
 	String strText;
 	MAPIAppointment appointment;
 	if (appointments.GetNextAppointment(appointment)) {
-		printf("\nSubject: %s", appointment.GetSubject().Begin());
-		printf("\nLocation: %s", appointment.GetLocation().Begin());
-		printf("\nStart: %s", Format(appointment.GetStartTime()).Begin());
-		printf("\nEnd: %s", Format(appointment.GetEndTime()).Begin());
+		puts(Format("Subject: %s", appointment.GetSubject()));
+		puts(Format("Location: %s", appointment.GetLocation()));
+		puts(Format("Start: %s", Format(appointment.GetStartTime())));
+		puts(Format("End: %s", Format(appointment.GetEndTime())));
 	}
 }
 
@@ -343,13 +345,13 @@ void EnumerateSubFolders(MAPIEx& mapi, MAPIFolder& folder, String parentName) {
 	MAPIFolder subFolder;
 	while(folder.GetNextSubFolder(subFolder, subFolderName)) {
 		String folderName = parentName + "/" + subFolderName;
-		printf("\nFolder: %s (%d elems)", folderName.Begin(), subFolder.GetCount());
+		puts(Format("Folder: %s (%d elems)", folderName, subFolder.GetCount()));
 		EnumerateSubFolders(mapi, subFolder, folderName);
 	}
 } 
 
 void FolderList(MAPIEx& mapi) {
-	printf("\n\nFolder list");
+	puts("\nFolder list");
 	MAPIFolder folder;
 	if(mapi.OpenRootFolder(folder)) 
 		EnumerateSubFolders(mapi, folder, "");
@@ -359,34 +361,34 @@ CONSOLE_APP_MAIN
 {
 	MAPIEx mapi;
 	if(!mapi.Login()) {
-		printf("\nFailed to initialize MAPI");
+		puts("Failed to initialize MAPI");
 		return;
 	}
-	printf("\nProfile Name: %s", mapi.GetProfileName().Begin());
-	printf("\nProfile Email: %s", mapi.GetProfileEmail().Begin());
+	puts(Format("Profile Name: %s", mapi.GetProfileName()));
+	puts(Format("Profile Email: %s", mapi.GetProfileEmail()));
 
-	printf("\n\nStore list:");
+	puts("\nStore list:");
 	int msc = mapi.GetMessageStoreCount();
 	for (int i = 0; i < msc; ++i) {
 		String name;
 		bool isdefault;
 		if(mapi.GetMessageStoreProperties(i, name, isdefault))
-			printf("\n%d: %s %s", i, name.Begin(), isdefault ? "(default)" : "");	
+			puts(Format("%d: %s %s", i, name, isdefault ? "(default)" : ""));	
 		else
-			printf("\n%d: Problem in store", i);	
+			puts(Format("%d: Problem in store", i));	
 	}
 	
 	// Opening default store
 	if(!mapi.OpenMessageStore()) {
-		printf("\nFailed to open store");
+		puts("Failed to open store");
 		return;
 	}
 	FolderList(mapi);
 	
-	printf("\nPress a key to continue...");	getchar();
+	puts("\nPress a key to continue...");	getchar();
 	
 	// uncomment the functions you're interested in and/or step through these to see how each thing works.
-	//ReadMessageTest(mapi);
+	ReadMessageTest(mapi);
 	//CopyMessageTest(mapi);
 	//CreateContactTest(mapi);
 		//ContactsTest(mapi);
@@ -398,5 +400,5 @@ CONSOLE_APP_MAIN
 	//ContactSubFolderTest(mapi);
 	//AppointmentTest(mapi);
 
-	printf("\nPress a key to end...");		getchar();
+	puts("\nPress a key to end...");		getchar();
 }
