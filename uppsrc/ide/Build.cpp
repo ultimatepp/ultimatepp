@@ -66,6 +66,7 @@ void Ide::EndBuilding(bool ok)
 			BeepMuteInformation();
 		else
 			BeepMuteExclamation();
+	ShowConsole();
 }
 
 void Ide::DoBuild()
