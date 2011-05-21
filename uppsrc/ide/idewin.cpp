@@ -221,7 +221,6 @@ void Ide::Serialize(Stream& s) {
 
 void Ide::PutConsole(const char *s)
 {
-	ShowConsole();
 	console << s << "\n";
 }
 
