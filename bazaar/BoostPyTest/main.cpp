@@ -114,7 +114,7 @@ BoostPyTest::BoostPyTest()
 
 if(0) {
 		object locals;
-		locals = dict()
+		locals = dict();
 		locals["arg"] = object(v);
 		main_namespace["loc"] = locals;
 }

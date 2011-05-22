@@ -118,7 +118,7 @@ private:
 public:
 	typedef ExpanderCtrl CLASSNAME;
 	
-	ExpandFrame& 	AddExpander(Ctrl& c, int size = -1)		{ return AddExpander(c, true); }
+	ExpandFrame& 	AddExpander(Ctrl& c, int size = -1)		{ return AddExpander(c, true, size); }
 	ExpandFrame& 	AddExpander(Ctrl& c, bool expand, int size = -1);
 	
 	ExpandFrame&  	Get(int i)								{ return exp[i]; }
