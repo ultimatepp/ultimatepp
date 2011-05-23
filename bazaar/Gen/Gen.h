@@ -155,19 +155,6 @@ protected:
 template<class T>
 class Instancing : public TypeHook<T, Typer> {};
 
-//shared pointer
-//idea borrowed from boost shared_ptr, an additional chunk of memory is managed
-//which centrally holds the refcount of that object pointed to
-//if Shared is created freshly, it AtomicInc's the ref count to 1;
-//if a Shared is destroyed it AtomicDec's the refcount, and if its 0,
-//	it will delete both, the object and the refcount chunk
-//if another instance is created as copy, the refcount is taken and incremented.
-//if it is assigned, it decrements own existing counter, possibly releasing mem, and retains new
-//pick semantic is not needed here anymore, it not even is possible
-//since an 'operator=(const Shared<>&) is needed to aquire the source. pick is const in some cases as well)
-//thus Shared is only Moveable, without deepcopyoption, which in fact would speak agains the idea of Shared anyway
-//Attach / Detach remains
-
 template <class T>
 class Shared : Moveable< Shared<T> > {
 	mutable T  *ptr;

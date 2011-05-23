@@ -6,5 +6,6 @@ uses
 file
 	Misc.h,
 	Gen.h,
-	Gen.cpp;
+	Gen.cpp,
+	src.tpp;
 
