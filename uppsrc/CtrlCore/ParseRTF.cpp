@@ -275,8 +275,9 @@ void RTFParser::Flush(bool force, int itap)
 	if(!para.part.IsEmpty() || force) {
 		int fi = state.first_indent, li = state.left_margin, ri = state.right_margin;
 		if(state.format.bullet != RichPara::BULLET_NONE) {
-			li += fi;
-			fi = -fi;
+			Swap(li, fi);
+//			li += fi;
+//			fi = -fi;
 		}
 		state.format.indent = minmax<int>(fi, 0, MAX_DOTS);
 		state.format.lm = minmax<int>(li, 0, MAX_DOTS);
@@ -846,7 +847,7 @@ void RTFParser::ReadCharStyle()
 	else if(PassQ("ul") || PassQ("uld") || PassQ("uldb")
 	|| PassQ("uldash") || PassQ("uldashd") || PassQ("uldashdd")
 	|| PassQ("ulth") || PassQ("ulw") || PassQ("ulwave"))
-		state.charformat.Underline();
+		state.charformat.Underline(command_arg != 0);
 	else if(PassQ("ulnone"))
 		state.charformat.Underline(false);
 	else if(PassQ("strike") || PassQ("strikedl"))
