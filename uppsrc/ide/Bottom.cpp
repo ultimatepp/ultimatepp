@@ -184,6 +184,13 @@ void Ide::SetBottom(int i)
 	SyncBottom();
 }
 
+void Ide::ShowBottom(int i)
+{
+	if(i == btabs.GetCursor() && IsBottomShown())
+		return;
+	SetBottom(i);
+}
+
 void Ide::ToggleBottom(int i)
 {
 	if(i == btabs.GetCursor() && IsBottomShown())
