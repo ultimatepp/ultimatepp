@@ -572,6 +572,7 @@ bool MakeBuild::Build()
 	VectorMap<String, String> bm = GetMethodVars(method);
 	if(bm.GetCount() == 0) {
 		PutConsole("Invalid build method");
+		ShowConsole();
 		return false;
 	}
 	One<Host> host = CreateHost(false);
