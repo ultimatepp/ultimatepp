@@ -623,6 +623,7 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 		Command(nesting ? "nestrow" : "row");
 		End();
 	}
+	oldstyle = Null;
 }
 
 void RTFEncoder::PutBorder(StringBuffer& rowfmt, int wd, Color c, const char *clpar)
@@ -657,6 +658,7 @@ void RTFEncoder::PutTxt(const RichTxt& txt, int nesting, int dot_width)
 				if(nesting > 1)
 					Command("itap", nesting);
 				parafmt = RichPara::Format();
+				charfmt = RichPara::CharFormat();
 				para_ht = 0;
 			}
 			if(para.format.bullet == RichPara::BULLET_TEXT) {
