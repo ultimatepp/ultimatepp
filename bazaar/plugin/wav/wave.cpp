@@ -5,14 +5,8 @@
 	See WAVE.txt for documentation.
 */
 
-#ifndef _MSC_VER
-#include <stdlib.h>
-#else
-// Microsoft doesn't include min, though it's part of the standard library!
-template<class T>
-T min(T a, T b) { return a < b? a: b; }
-#endif
 
+#include <stdlib.h>
 #include "wave.h"
 
 using namespace std;

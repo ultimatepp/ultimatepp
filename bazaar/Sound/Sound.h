@@ -48,9 +48,6 @@ enum StreamCallbackFlags{
 	SND_PRIMING_OUTPUT = paPrimingOutput
 };
 
-class SoundSystem;
-SoundSystem& SoundSys();
-
 struct StreamTimeInfo{
 	double InputAdc, Current, OutputDac;
 	StreamTimeInfo(const PaStreamCallbackTimeInfo* timeinfo):
@@ -103,6 +100,7 @@ struct StreamParameters{
 		return reinterpret_cast<const PaStreamParameters*>(this);
 	}
 };
+
 class ASound{
 protected:
 	mutable int err;
@@ -113,8 +111,7 @@ protected:
 	StreamFlags flags;
 	
 public:
-	ASound():err(paNoError),samplerate(44100),
-	             fpb(1024),flags(SND_NOFLAG){SoundSys();}
+	ASound();
 	ASound(const ASound& s):err(s.err),samplerate(s.samplerate),
 	                        fpb(s.fpb),flags(s.flags){stream=s.stream;}
 	
@@ -256,6 +253,8 @@ public:
 
 	String ToString()const;
 };
+
+SoundSystem& SoundSys();
 
 END_UPP_NAMESPACE;
 

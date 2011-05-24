@@ -16,10 +16,9 @@ file
 	notes.txt;
 
 mainconfig
-	"" = ".ALSA",
-	"" = ".JACK GUI .NOGTK",
-	"" = ".ALSA .JACK .OSS",
 	"" = "GUI",
-	"" = "GUI .NOGTK MT",
-	"" = ".WMME .WASAPI";
+	"" = "GUI .ALSA .OSS",
+	"" = "GUI .JACK",
+	"" = "GUI .WMME",
+	"" = "GUI .WASAPI";
 

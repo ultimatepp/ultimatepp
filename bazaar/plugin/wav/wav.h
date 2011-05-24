@@ -47,16 +47,16 @@ bool PlayWav(const char* fn){
 	int i=f.GetNumSamples();                  // total length in frames
 	const int len=1024;                       // length of our buffer (in frames)
 	int n=min(s.WriteAvailable(),len);        // how many frames can be written
-	const int bps=f.GetBytesPerSample();      // how many bytes makes up one frame
-	const int t=1000.0/f.GetSampleRate()/2.0*1024;  //the sleep time depends on buffer size and sample rate
-	byte buf[len*bps];
-	while(f.ReadRaw((char*)buf,n*bps)){
-		s.Write(buf,n);                       // write n frames
+	int bps=f.GetBytesPerSample();            // how many bytes makes up one frame
+	int t=1000.0/f.GetSampleRate()/2.0*1024;  // the sleep time depends on buffer size and sample rate
+	Buffer<char> buf(len*bps);
+	while(f.ReadRaw(~buf,n*bps)){
+		s.Write(~buf,n);                       // write n frames
 		i-=n;
-		Sleep(t);                             // we can wait a while, before filing the buffer again
+		Sleep(t);                              // we can wait a while, before filing the buffer again
 		n=min(s.WriteAvailable(),len);
 	}
-	s.Write(buf,i);                           // write the leftovers
+	s.Write(~buf,i);                           // write the leftovers
 	
 	s.Close();
 	f.Close();

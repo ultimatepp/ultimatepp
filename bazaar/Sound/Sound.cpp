@@ -23,6 +23,10 @@ extern "C"{
 
 /* ASound */
 
+ASound::ASound():err(paNoError),samplerate(44100), fpb(1024),flags(SND_NOFLAG){
+	SoundSys();
+}
+
 void ASound::OpenStream(PaStreamCallback* cb, void* data,
                         const StreamParameters& inparam, const StreamParameters& outparam){
 	ASSERT(SoundSystem::Exists());

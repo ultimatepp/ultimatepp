@@ -67,7 +67,7 @@ private:
 		f1=~freq1;f2=~freq2;
 		a1=~amp1; a2=~amp2;
 		sr=~samplerate;
-		snd.SetSampleRate(sr).SetFramesPerBuffer((fpb>0)?fpb:1);
+		snd.SetSampleRate(sr).SetFramesPerBuffer((fpb>0)?(int)fpb:1);
 		snd.Open(Null,StreamParameters(~device,2,SND_FLOAT32,SoundDevice(~device).LowOutputLatency));
 		if(CheckError()) return;
 		snd.Start();
