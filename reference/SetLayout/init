@@ -1,0 +1,4 @@
+#ifndef _SetLayout_icpp_init_stub
+#define _SetLayout_icpp_init_stub
+#include "CtrlLib/init"
+#endif

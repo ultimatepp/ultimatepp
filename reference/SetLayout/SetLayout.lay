@@ -1,0 +1,14 @@
+LAYOUT(Layout1, 228, 64)
+	ITEM(Label, lbl1, SetLabel(t_("Label")).LeftPosZ(8, 40).TopPosZ(4, 21))
+	ITEM(EditString, edit, LeftPosZ(48, 172).TopPosZ(4, 19))
+	ITEM(Button, layout1, SetLabel(t_("Layout1")).LeftPosZ(8, 96).TopPosZ(32, 24))
+	ITEM(Button, layout2, SetLabel(t_("Layout2")).LeftPosZ(124, 96).TopPosZ(32, 24))
+END_LAYOUT
+
+LAYOUT(Layout2, 228, 64)
+	ITEM(Label, lbl1, SetLabel(t_("Label")).LeftPosZ(8, 36).TopPosZ(12, 21))
+	ITEM(EditString, edit, LeftPosZ(8, 112).TopPosZ(37, 19))
+	ITEM(Button, layout1, SetLabel(t_("Layout1")).LeftPosZ(124, 96).TopPosZ(8, 24))
+	ITEM(Button, layout2, SetLabel(t_("Layout2")).LeftPosZ(124, 96).TopPosZ(36, 24))
+END_LAYOUT
+

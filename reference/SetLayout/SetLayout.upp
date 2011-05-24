@@ -1,0 +1,12 @@
+description "Demonstrates usage of SetLayout function to change the layout of dialog\377";
+
+uses
+	CtrlLib;
+
+file
+	SetLayout.cpp,
+	SetLayout.lay;
+
+mainconfig
+	"" = "GUI SSE2";
+
