@@ -30,6 +30,7 @@ public:
 	void   SetAttr(const char *id, const String& val) { node.SetAttr(id, val); }
 
 	template <class T> XmlIO operator()(const char *tag, T& var);
+	template <class T> XmlIO operator()(const char *tag, const char *itemtag, T& var);
 
 	template <class T> XmlIO Attr(const char *id, T& var) {
 		if(IsLoading())
@@ -70,9 +71,21 @@ void Xmlize(XmlIO xml, T& var)
 	var.Xmlize(xml);
 }
 
+template <class T>
+void Xmlize(XmlIO xml, const char* itemtag, T& var)
+{
+	var.Xmlize(xml);
+}
+
 template <class T> XmlIO XmlIO::operator()(const char *tag, T& var) {
 	XmlIO n(*this, tag);
 	Xmlize(n, var);
+	return *this;
+}
+
+template <class T> XmlIO XmlIO::operator()(const char *tag, const char *itemtag, T& var) {
+	XmlIO n(*this, tag);
+	Xmlize(n, itemtag, var);
 	return *this;
 }
 
@@ -158,9 +171,21 @@ void Xmlize(XmlIO xml, Vector<T>& data)
 }
 
 template<class T>
+void Xmlize(XmlIO xml, const char* itemtag, Vector<T>& data)
+{
+	XmlizeContainer(xml, itemtag, data);
+}
+
+template<class T>
 void Xmlize(XmlIO xml, Array<T>& data)
 {
 	XmlizeContainer(xml, "item", data);
+}
+
+template<class T>
+void Xmlize(XmlIO xml, const char* itemtag, Array<T>& data)
+{
+	XmlizeContainer(xml, itemtag, data);
 }
 
 template<class T>
