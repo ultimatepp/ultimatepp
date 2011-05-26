@@ -487,18 +487,20 @@ void DisplayPopup::Sync()
 		if(top && top->HasFocusDeep()) {
 			Size sz = display->GetStdSize(value);
 			if(sz.cx + 2 * margin > item.GetWidth() || sz.cy > item.GetHeight()) {
-				Rect wa = GetWorkArea();
 				slim = item + ctrl->GetScreenView().TopLeft();
-				Rect r = item;
-				r.right = max(r.right, r.left + sz.cx + 2 * margin);
-				r.bottom = max(r.bottom, r.top + sz.cy);
-				r.Inflate(1, 1);
-				r.Offset(ctrl->GetScreenView().TopLeft());
-				SetRect(r);
-				if(!IsOpen())
-					Ctrl::PopUp(ctrl, true, false, false);
-				Refresh();
-				return;
+				if(slim.Contains(GetMousePos())) {
+					Rect wa = GetWorkArea();
+					Rect r = item;
+					r.right = max(r.right, r.left + sz.cx + 2 * margin);
+					r.bottom = max(r.bottom, r.top + sz.cy);
+					r.Inflate(1, 1);
+					r.Offset(ctrl->GetScreenView().TopLeft());
+					SetRect(r);
+					if(!IsOpen())
+						Ctrl::PopUp(ctrl, true, false, false);
+					Refresh();
+					return;
+				}
 			}
 		}
 	}
