@@ -46,6 +46,7 @@ private:
 
 	const Style *style;
 
+	Rect    Slider(int& cc) const;
 	Rect    Slider() const;
 	int&    HV(int& h, int& v) const;
 	int     GetHV(int h, int v) const;

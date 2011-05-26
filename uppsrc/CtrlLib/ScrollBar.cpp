@@ -70,12 +70,12 @@ ScrollBar::ScrollBar() {
 
 ScrollBar::~ScrollBar() {}
 
-Rect ScrollBar::Slider() const
+Rect ScrollBar::Slider(int& cc) const
 {
 	Size sz = GetSize();
 	Rect r;
 	if(IsHorz()) {
-		int cc = sz.cx > (3 + style->isleft2 + style->isright2) * style->arrowsize ? style->arrowsize : 0;
+		cc = sz.cx > (3 + style->isleft2 + style->isright2) * style->arrowsize ? style->arrowsize : 0;
 		r = RectC(cc, 0, sz.cx - 2 * cc, sz.cy);
 		if(style->isleft2)
 			r.right -= cc;
@@ -83,7 +83,7 @@ Rect ScrollBar::Slider() const
 			r.left += cc;
 	}
 	else {
-		int cc = sz.cy > (3 + style->isup2 + style->isdown2) * style->arrowsize ? style->arrowsize : 0;
+		cc = sz.cy > (3 + style->isup2 + style->isdown2) * style->arrowsize ? style->arrowsize : 0;
 		r = RectC(0, cc, sz.cx, sz.cy - 2 * cc);
 		if(style->isup2)
 			r.bottom -= cc;
@@ -91,6 +91,12 @@ Rect ScrollBar::Slider() const
 			r.top += cc;
 	}
 	return r;
+}
+
+Rect ScrollBar::Slider() const
+{
+	int dummy;
+	return Slider(dummy);
 }
 
 int& ScrollBar::HV(int& h, int& v) const
@@ -126,7 +132,8 @@ Rect ScrollBar::GetPartRect(int p) const {
 
 void ScrollBar::Paint(Draw& w) {
 	w.DrawRect(GetSize(), SColorPaper());
-	Size sz = style->through ? GetSize() : Slider().GetSize();
+	int cc;
+	Size sz = style->through ? GetSize() : Slider(cc).GetSize();
 	light = GetMousePart();
 	int p = push;
 	if(!HasCapture())
@@ -150,17 +157,18 @@ void ScrollBar::Paint(Draw& w) {
 		}
 	}
 	else
-		if(style->through) {
+		if(style->through)
 			ChPaint(w, sz, l[0][CTRL_DISABLED]);
-		}
 		else
 		if(IsHorz()) {
-			ChPaint(w, style->arrowsize, 0, sz.cx / 2, sz.cy, l[0][CTRL_DISABLED]);
-			ChPaint(w, style->arrowsize + sz.cx / 2, 0, sz.cx - sz.cx / 2, sz.cy, l[1][CTRL_DISABLED]);
+			ChPaint(w, cc, 0, sz.cx / 2, sz.cy, l[0][CTRL_DISABLED]);
+			ChPaint(w, cc + sz.cx / 2, 0, sz.cx - sz.cx / 2, sz.cy, l[1][CTRL_DISABLED]);
 		}
 		else {
-			ChPaint(w, 0, style->arrowsize, sz.cx, sz.cy / 2, l[0][CTRL_DISABLED]);
-			ChPaint(w, 0, style->arrowsize + sz.cy / 2, sz.cx, sz.cy - sz.cy / 2, l[1][CTRL_DISABLED]);
+			ChPaint(w, 0, cc, sz.cx, sz.cy / 2, l[0][CTRL_DISABLED]);
+			ChPaint(w, 0, cc + sz.cy / 2, sz.cx, sz.cy - sz.cy / 2, l[1][CTRL_DISABLED]);
+//			w.DrawRect(0, cc, sz.cx, sz.cy / 2, Red()); _DBG_
+//			w.DrawRect(0, cc + sz.cy / 2, sz.cx, sz.cy - sz.cy / 2, Green()); _DBG_
 		}
 }
 
