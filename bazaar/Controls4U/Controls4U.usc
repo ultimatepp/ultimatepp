@@ -510,17 +510,23 @@ ctrl StaticRectangle {
 	GetMinSize() { return Size(0, 0); }
 	GetStdSize() { return Size(64, 24); }
 	
+	bool IsSquare = false;
 	int SetWidth = 1;
 	Color SetColor = :SBlack;	
 	Color SetBackground = Null;
 	
 	Paint(w) {
 		r = GetRect();
-		w.DrawRect(r.left, r.top, r.right, r.bottom, .SetBackground);
-		w.DrawRect(r.left, r.top, r.right, r.top + .SetWidth, .SetColor);
-		w.DrawRect(r.right - .SetWidth, r.top , r.right, r.bottom , .SetColor);
-		w.DrawRect(r.left, r.bottom - .SetWidth, r.right, r.bottom, .SetColor);
-		w.DrawRect(r.left, r.top, r.left + .SetWidth, r.bottom, .SetColor);
+		width = r.right - r.left;
+		if (.IsSquare) 
+			height = r.right - r.left;
+		else
+			height = r.bottom - r.top;
+		w.DrawRect(r.left, r.top, width, height,.SetBackground);
+		w.DrawRect(r.left, r.top, width, .SetWidth, .SetColor);
+		w.DrawRect(r.right - .SetWidth, r.top, .SetWidth, height, .SetColor);
+		w.DrawRect(r.left, r.top + height - .SetWidth, width, .SetWidth, .SetColor);
+		w.DrawRect(r.left, r.top, .SetWidth, height, .SetColor);
 	}
 }
 

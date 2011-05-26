@@ -157,16 +157,19 @@ public:
 	virtual void MouseLeave() {	WhenMouseLeave();};
 	virtual void LeftDown(Point p, dword keyflags) {WhenLeftDown(p, keyflags);};
 	virtual void LeftUp(Point p, dword keyflags) {WhenLeftUp(p, keyflags);};
+	virtual void Layout();
 	
 protected:
 	Color background;
 	Color color;
 	int width;
+	bool isSquare;
 
 public:
-	StaticRectangle& SetWidth(int w) 		{width = w; Refresh(); return *this;}
-	StaticRectangle& SetColor(Color c) 		{color = c; Refresh(); return *this;}
-	StaticRectangle& SetBackground(Color c) {background = c; Refresh(); return *this;}
+	StaticRectangle& SetWidth(int w) 			{width = w; Refresh(); return *this;}
+	StaticRectangle& SetColor(Color c) 			{color = c; Refresh(); return *this;}
+	StaticRectangle& SetBackground(Color c) 	{background = c; Refresh(); return *this;}
+	StaticRectangle& IsSquare(bool is = false) 	{isSquare = is; Refresh(); return *this;}
 	Callback2<Point, dword> WhenMouseEnter; 
 	Callback WhenMouseLeave;
 	Callback2<Point, dword> WhenLeftDown; 

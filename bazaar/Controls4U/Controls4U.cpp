@@ -285,9 +285,22 @@ void StaticRectangle::Paint(Draw& w) {
 		wid = width*2;	
 	else
 		wid = width;
-	sw.Rectangle(wid/2, wid/2, sz.cx-wid, sz.cy-wid).Stroke(wid, color).Fill(background);
+	double sheight;
+	if (isSquare) 
+		sheight = sz.cx-wid;
+	else
+		sheight = sz.cy-wid;
+		
+	sw.Rectangle(wid/2, wid/2, sz.cx-wid, sheight).Stroke(wid, color).Fill(background);
 	
 	w.DrawImage(0, 0, ib);
+}
+
+void StaticRectangle::Layout() {
+	if (isSquare) {
+		Rect r = GetRect();
+		SetRect(r.left, r.top, r.GetWidth(), r.GetWidth());
+	}
 }
 
 StaticRectangle::StaticRectangle() {
@@ -297,6 +310,7 @@ StaticRectangle::StaticRectangle() {
 	color = Black();
 	background = Null;
 	width = 1;
+	isSquare = false;
 }
 
 void StaticEllipse::Paint(Draw& w) {

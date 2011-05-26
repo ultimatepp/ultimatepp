@@ -58,4 +58,11 @@ border width, is inside Ctrl limits.&]
 [s5;:StaticRectangle`:`:SetBackground`(Color`):%- [_^StaticRectangle^ StaticRectangle][@(0.0.255) `&
 ]_[* SetBackground]([_^Color^ Color]_[*@3 c])&]
 [s3; Sets the rectangle background color [%-*@3 c].&]
+[s1; &]
+[s6;%- &]
+[s5;:StaticRectangle`:`:IsSquare`(bool`):%- [_^StaticRectangle^ StaticRectangle][@(0.0.255) `&
+]_[* IsSquare]([@(0.0.255) bool]_[*@3 is]_`=_[@(0.0.255) false])&]
+[s3; If [%-*@3 is].is true it maintains the shape as an square by fixing 
+the height to the width.&]
+[s1; &]
 [s0; ]
