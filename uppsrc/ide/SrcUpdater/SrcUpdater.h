@@ -80,6 +80,7 @@ struct LocalSync : WithSvnSyncLayout<TopWindow> {
 	Array<Switch> switches;
 	Array<Button> btns;
 	VectorMap<String,synchashes> files;
+	int row;
 	
 	typedef LocalSync CLASSNAME;
 	void DoShowFile(const String& l,const String& g);
