@@ -170,7 +170,9 @@ void  RichTextView::RefreshSel()
 	RichPos ph = text.GetRichPos(h);
 	RichPos psell = text.GetRichPos(sell);
 	RichPos pselh = text.GetRichPos(selh);
-	if(psell.parai != pl.parai || pselh.parai != ph.parai)
+	if(psell.parai != pl.parai || pselh.parai != ph.parai ||
+	   psell.table != pl.table || pselh.table != ph.table ||
+	   psell.cell != pl.cell || pselh.cell != ph.cell)
 		Refresh();
 	else {
 		RefreshRange(l, sell);
