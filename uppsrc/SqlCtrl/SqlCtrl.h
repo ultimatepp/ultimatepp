@@ -52,6 +52,10 @@ public:
 	virtual Value  GetData() const;
 };
 
+class SqlNOption : public SqlOption {
+	virtual Value  GetData() const;
+};
+
 class SqlArray : public ArrayCtrl {
 public:
 	virtual void  SetData(const Value& v);

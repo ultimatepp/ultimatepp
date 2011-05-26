@@ -54,6 +54,12 @@ Value SqlOption::GetData() const {
 	return Get() ? "1" : "0";
 }
 
+Value SqlNOption::GetData() const
+{
+	if(Get()) return "1";
+	return Null;
+}
+
 void SqlCtrls::Add(SqlId id, Ctrl& ctrl) {
 	Item& m = item.Add();
 	m.id = id;

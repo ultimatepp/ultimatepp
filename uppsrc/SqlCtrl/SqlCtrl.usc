@@ -8,3 +8,9 @@ ctrl SqlOption {
 	>Option;
 	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; sz.cy = max(16, sz.cy); return sz; }
 }
+
+ctrl SqlNOption {
+	group "Push";
+	>Option;
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 8; sz.cy = max(16, sz.cy); return sz; }
+}
