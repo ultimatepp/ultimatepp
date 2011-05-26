@@ -43,7 +43,7 @@ void SaveHashes(const String& fn,VectorMap<String,synchashes>& src, int c){
 	f.Close();
 }
 
-LocalSync::LocalSync(){
+LocalSync::LocalSync() : row(0){
 	CtrlLayoutOKCancel(*this, "Synchronize local sources");
 	list.AddColumn("State");
 	list.AddColumn("Actions");
@@ -74,11 +74,11 @@ LocalSync::LocalSync(){
 }
 
 void LocalSync::Menu(Bar& bar){
-	int i = list.GetClickRow();
-	if(i>=list.GetCount() || i<0) return;
-	i = list.Get(i,4);
-	if(i<0) return;
-	String file = files.GetKey(i);
+	row = list.GetClickRow();
+	if(row>=list.GetCount() || row<0) return;
+	row = list.Get(row,4);
+	if(row<0) return;
+	String file = files.GetKey(row);
 	
 	for(int j=0; j<file.GetCount(); j++)
 		if(file[j]=='/'){
@@ -111,6 +111,7 @@ void LocalSync::SetAction(const String& str, int action){
 			s<<=cs[action].value;
 		}
 	}
+	list.ScrollInto(row);
 }
 
 void LocalSync::Manage(){
@@ -275,4 +276,5 @@ void LocalSync::Populate(const VectorMap<String,synchashes>& files){
 	if(r==0){
 		list.Add("", Null, AttrText("No changes in the installed nests").SetFont(StdFont().Italic()),Null,Null);
 	}
+	list.ScrollInto(row);
 }
