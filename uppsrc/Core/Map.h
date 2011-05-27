@@ -157,8 +157,9 @@ class ArrayMap : public MoveableAndDeepCopyOption< ArrayMap<K, T, HashFn> >,
 public:
 	T&        Add(const K& k, const T& x)          { return B::Add(k, x); }
 	T&        Add(const K& k)                      { return B::Add(k); }
-	T&        Add(const K& k, T *newt)             { B::key.Add(k); B::value.Add(newt); return *newt; }
-	template <class TT> TT& Create(const K& k)     { TT *q = new TT; B::key.Add(k); B::value.Add(q); return *q; }
+	T&        Add(const K& k, T *newt)             { B::key.Add(k); return B::value.Add(newt); }
+	T&        Insert(int i, const K& k, T *newt)   { B::key.Insert(i, k); return B::value.Insert(i, newt); }
+	template <class TT> TT& Create(const K& k)     { TT *q = new TT; B::key.Add(k); return B::value.Add(q); }
 
 	T&        Set(int i, T *ptr)                   { return B::value.Set(i, ptr); }
 	T        *PopDetach()                          { B::key.Drop(); return B::value.PopDetach(); }

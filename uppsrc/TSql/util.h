@@ -14,10 +14,10 @@ class SqlBlock
 public:
 #ifndef NOAPPSQL
 	SqlBlock(SqlSession& session = SQL.GetSession())
-		: session(session), done(false) { session.Begin(); }
+		: session(session), done(false)      { session.ClearError(); session.Begin(); }
 #else
 	SqlBlock(SqlSession& session)
-		: session(session), done(false) { session.Begin(); }
+		: session(session), done(false)      { session.ClearError(); session.Begin(); }
 #endif
 	~SqlBlock()                              { if(!done) session.Rollback(); }
 
