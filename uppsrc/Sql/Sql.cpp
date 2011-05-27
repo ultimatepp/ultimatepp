@@ -682,7 +682,7 @@ Vector<SqlColumnInfo> SqlSession::EnumColumns(String database, String table)
 void   SqlSession::SetError(String error, String stmt, int code, const char *scode, Sql::ERRORCLASS clss) {
 	if(error_handler && (*error_handler)(error, stmt, code, scode, clss))
 		return;
-	if(errorstatement.GetCount())
+	if(GetTransactionLevel() && errorstatement.GetCount())
 		return;
 	lasterror = error;
 	errorstatement = stmt;
