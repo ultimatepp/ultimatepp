@@ -22,13 +22,15 @@ topic "Tutorial";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2; Initial setup wizard (specification)&]
+[s2; Initial setup wizard (overview)&]
 [s0; [@6 (POSIX specific)]&]
 [s0; &]
 [s0; On the first start of TheIDE, user is presented with a wizard`-style 
 dialog, which goal is to help user easily set up everything necessary 
 to run TheIDE. This dialog can be also invoked later using command 
-line option [/ `-install] or from the [/ Setup] menu.&]
+line option [/ `-install] or from the [/ Setup] menu. For more detailed 
+and illustrated description see a [^topic`:`/`/ide`/SrcUpdater`/app`/LinuxInstallGuide`$en`-us^ s
+tep by step description of the wizard].&]
 [s0; &]
 [s0; The wizard lets user select how the source codes should be managed 
 and updated, currently supporting four methods:&]
@@ -76,9 +78,12 @@ saving all the choices (and safe defaults for any skipped steps).
 The [/ Cancel] button results into leaving the wizard immediately 
 without saving anything.&]
 [s0; &]
-[s2; [5 Additional notes:]&]
+[s2; [+150 Additional notes:]&]
 [s0;i150;O0; It is safe to run installation wizard multiple times.&]
 [s0;i150;O0; Only the latest setting is used for automatic updates.&]
 [s0;i150;O0; If there already are some assemblies, they are not deleted, 
 only if the name matches, then it is overwritten.&]
+[s0;i150;O0; The effects of installation can be reverted using [/^topic`:`/`/ide`/SrcUpdater`/app`/Uninstall`$en`-us^ `-
+uninstall][^topic`:`/`/ide`/SrcUpdater`/app`/Uninstall`$en`-us^  
+command line option].&]
 [s0; ]

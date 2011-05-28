@@ -28,6 +28,8 @@ in the [^http`:`/`/www`.ultimatepp`.org`/forum`/^ forum].&]
 [s0; &]
 [s0;*3 &]
 [s0; [*^topic`:`/`/ide`/app`/install`$en`-us^3 Win32 Installation guide]&]
+[s0; [*^topic`:`/`/ide`/SrcUpdater`/app`/LinuxInstallGuide`$en`-us^3 POSIX 
+(Linux, BSD, ...) Installation]&]
 [s0;*^topic`:`/`/uppweb`/www`/linuxinstall`$en`-us^3 &]
 [s3; [4 TheIDE Documentation]&]
 [s0;*R^topic`:`/`/ide`/app`/HelpPage`$en`-us^4 &]

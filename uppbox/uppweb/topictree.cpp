@@ -112,6 +112,8 @@ String TopicFileName(const char *topic)
 String TopicFileNameHtml(const char *topic)
 {
 	TopicLink tl = ParseTopicLink(topic);
+	tl.package.Replace("/","$");
+	tl.package.Replace("\\","$");
 	return tl.group + "$" + tl.package+ "$" + tl.topic + ".html";
 }
 

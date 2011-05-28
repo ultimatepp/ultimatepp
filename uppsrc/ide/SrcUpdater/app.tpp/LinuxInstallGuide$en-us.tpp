@@ -22,13 +22,26 @@ topic "Installation process on Linux";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2; Installation process on Linux&]
+[s2; Setting up TheIDE&]
+[s2; [+150 on Linux and other POSIX systems]&]
+[s5; &]
+[s0; This document assumes that you have installed U`+`+ and TheIDE 
+using your favorite package manager (packages are usually called 
+`"upp`" and `"theide`"). See a [^topic`:`/`/uppweb`/www`/download`$en`-us^ Download
+] page for detailed description of available packages. Alternatively, 
+you can get TheIDE by downloading the source tarball and compiling 
+it using the enclosed makefile. Once you have TheIDE executable 
+available in your system, you are ready to configure it, which 
+is exactly what the following text is about.&]
+[s0; &]
 [s0; [* General notes:]&]
 [s0; Nothing is written to the hard drive until `"Finish`" button 
 is pressed. This can happen at any time, even the first screen. 
-All the settings have safe initial (recommended setting), so 
-that finishing without setting everything will always result 
-into working installation.&]
+All the settings have safe initial value (recommended setting), 
+so that finishing without setting everything will always result 
+into working installation. For overview of the wizard functionality 
+and the motivations behind it see its [^topic`:`/`/ide`/SrcUpdater`/app`/InstallWizard`$en`-us^ o
+verview page].&]
 [s0; &]
 [s0; This process takes place upon the first run of TheIDE, but can 
 be invoked on request using command line parameter [/ `-install] 
@@ -3123,4 +3136,8 @@ will be deleted (with only exception of deleting assembly, which
 asks for confirmation) in the installation process, but if there 
 are files with matching names (e.g. from older U`+`+ installation), 
 they will be overwritten.]}}&]
+[s0; &]
+[s0; Now, when you now how to set up everything, you can also have 
+a look at article describing how does the [^topic`:`/`/ide`/SrcUpdater`/app`/Updating`$en`-us^ a
+utomatic updates of U`+`+ sources] work.&]
 [s0; ]

@@ -24,12 +24,16 @@ topic "Uninstalling TheIDE";
 [{_}%EN-US 
 [s2; Uninstalling TheIDE&]
 [s0; &]
-[s0; To uninstall TheIDE run it from command line with argument [/ `-uninstall].&]
+[s0; [*R+150 POSIX systems:]&]
 [s0; &]
-[s0; Note that there is a difference between Windows and POSIX behavior. 
-On Windows, TheIDE is completely removed from the computer. On 
-POSIX systems, the removal is usually handled by package manager, 
-so the [/ `-uninstall] parameter only reverts effects of [/ `-install]. 
-That means it removes the standard assemblies and deletes the 
-local copy of sources (if such copy exists).&]
+[s0; To uninstall TheIDE you can run it from command line with argument 
+[/ `-uninstall]. This will revert anything done by the [^topic`:`/`/ide`/SrcUpdater`/app`/InstallWizard`$en`-us^ s
+etup wizard], that is only the user data. To remove the system`-wide 
+files, just remove the package using your package manager.&]
+[s0;*R+150 &]
+[s0; [*R+150 Windows systems:]&]
+[s0; &]
+[s0; The [/ `-uninstall] option on command line works here as well, 
+but the preferred way to uninstall TheIDE is using the standard 
+`"Add or remove programs`" dialog.&]
 [s0; ]
