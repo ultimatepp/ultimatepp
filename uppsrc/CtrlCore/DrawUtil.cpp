@@ -147,18 +147,4 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 #endif
 
-static Image sRenderGlyph(int cx, int x, Font font, int chr, int py, int pcy)
-{
-	ImageDraw iw(cx, pcy);
-	iw.DrawRect(0, 0, cx, pcy, White);
-	iw.DrawText(x, -py, WString(chr, 1), font, Black);
-	return iw;
-}
-
-void SetRenderGlyph(Image (*f)(int cx, int x, Font font, int chr, int py, int pcy));
-
-INITBLOCK {
-	SetRenderGlyph(sRenderGlyph);
-}
-
 END_UPP_NAMESPACE

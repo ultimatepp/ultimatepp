@@ -5,6 +5,14 @@
 
 #include "SystemDraw.h"
 
+#ifdef PLATFORM_WIN32
+#include "Win32Gui.h"
+#endif
+
+#ifdef PLATFORM_X11
+#include "X11Gui.h"
+#endif
+
 NAMESPACE_UPP
 
 enum {
@@ -26,6 +34,14 @@ enum {
 };
 
 #include "MKeys.h"
+
+bool GetShift();
+bool GetCtrl();
+bool GetAlt();
+bool GetCapsLock();
+bool GetMouseLeft();
+bool GetMouseRight();
+bool GetMouseMiddle();
 
 enum {
 	DELAY_MINIMAL = 0
@@ -131,45 +147,6 @@ dword GetMouseFlags();
 Point GetMousePos();
 dword GetMouseFlags();
 
-#ifdef PLATFORM_WIN32
-#ifdef PLATFORM_WINCE
-bool GetShift();
-bool GetCtrl();
-bool GetAlt();
-bool GetCapsLock();
-bool GetMouseLeft();
-bool GetMouseRight();
-bool GetMouseMiddle();
-#else
-inline bool GetShift()       { return !!(GetKeyState(VK_SHIFT) & 0x8000); }
-inline bool GetCtrl()        { return !!(GetKeyState(VK_CONTROL) & 0x8000); }
-inline bool GetAlt()         { return !!(GetKeyState(VK_MENU) & 0x8000); }
-inline bool GetCapsLock()    { return !!(GetKeyState(VK_CAPITAL) & 1); }
-inline bool GetMouseLeft()   { return !!(GetKeyState(VK_LBUTTON) & 0x8000); }
-inline bool GetMouseRight()  { return !!(GetKeyState(VK_RBUTTON) & 0x8000); }
-inline bool GetMouseMiddle() { return !!(GetKeyState(VK_MBUTTON) & 0x8000); }
-#endif
-#endif
-
-#ifdef PLATFORM_X11
-bool GetShift();
-bool GetCtrl();
-bool GetAlt();
-bool GetCapsLock();
-bool GetMouseLeft();
-bool GetMouseRight();
-bool GetMouseMiddle();
-
-String XAtomName(Atom atom);
-Atom   XAtom(const char *name);
-
-String      GetProperty(Window w, Atom property, Atom rtype = AnyPropertyType);
-Vector<int> GetPropertyInts(Window w, Atom property, Atom rtype = AnyPropertyType);
-String      ReadPropertyData(Window w, Atom property, Atom rtype = AnyPropertyType);
-
-Index<Atom>& _NET_Supported();
-#endif
-
 #define IMAGECLASS CtrlCoreImg
 #define IMAGEFILE <CtrlCore/Ctrl.iml>
 #include <Draw/iml_header.h>
@@ -206,13 +183,8 @@ class PasteClip {
 	friend class  Ctrl;
 	friend PasteClip sMakeDropClip(bool paste);
 
+	GUIPLATFORM_PASTECLIP_DECLS
 
-#ifdef PLATFORM_WIN32
-	UDropTarget *dt;
-#endif
-#ifdef PLATFORM_X11
-	int          type;
-#endif
 	byte         action;
 	byte         allowed;
 	bool         paste;
@@ -399,13 +371,7 @@ private:
 	friend struct UDropTarget;
 
 	struct Top {
-#ifdef PLATFORM_WIN32
-		HWND           hwnd;
-		UDropTarget   *dndtgt;
-#endif
-#ifdef PLATFORM_X11
-		Window         window;
-#endif
+		GUIPLATFORM_CTRL_TOP_DECLS
 		Vector<Scroll> scroll;
 		VectorMap<Ctrl *, MoveCtrl> move;
 		VectorMap<Ctrl *, MoveCtrl> scroll_move;
@@ -427,9 +393,6 @@ private:
 
 	bool         unicode:1;
 
-#ifdef PLATFORM_WIN32
-	bool         activex:1;
-#endif
 	bool         fullrefresh:1;
 
 	bool         transparent:1;
@@ -448,15 +411,9 @@ private:
 	bool         popupgrab:1;
 	byte         backpaint:2;//2
 	bool         hasdhctrl:1;
-#ifdef PLATFORM_WIN32
-	bool         isdhctrl:1;
-#endif
 
 	bool         akv:1;
 	bool         destroying:1;
-#ifdef PLATFORM_X11
-	bool         ignoretakefocus:1;
-#endif
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
@@ -564,7 +521,7 @@ private:
 	bool    AddScroll(const Rect& sr, int dx, int dy);
 	Rect    GetClippedView();
 	void    ScrollRefresh(const Rect& r, int dx, int dy);
-	void ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy);
+	void    ScrollCtrl(Top *top, Ctrl *q, const Rect& r, Rect cr, int dx, int dy);
 	void    SyncScroll();
 	void    PaintCaret(SystemDraw& w);
 	void    CtrlPaint(SystemDraw& w, const Rect& clip);
@@ -584,10 +541,6 @@ private:
 	static  Callback    CtrlCall;
 	
 	static  bool DoCall();
-
-#ifdef PLATFORM_WIN32
-	static  bool PeekMsg(MSG& msg);
-#endif
 
 // System window interface...
 	void WndShow0(bool b);
@@ -667,163 +620,9 @@ private:
 	friend class DnDAction;
 	friend class PasteClip;
 
-#ifdef PLATFORM_WIN32
-	static LRESULT CALLBACK UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	static void RenderFormat(int format);
-	static void RenderAllFormats();
-	static void DestroyClipboard();
-
-public:
-	static Event     ExitLoopEvent;
-	static bool&     EndSession();
-	static bool      IsEndSession()            { return EndSession(); }
-	static HINSTANCE hInstance;
-
-protected:
-	static HCURSOR   hCursor;
-
-	static VectorMap< HWND, Ptr<Ctrl> >& Windows();
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-	static Event  OverwatchEndSession;
-	static HWND   OverwatchHWND;
-	static HANDLE OverwatchThread;
-
-	static LRESULT CALLBACK OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	static DWORD WINAPI Win32OverwatchThread(LPVOID);
-
-	static Rect GetScreenClient(HWND hwnd);
-	struct CreateBox;
-	void  Create0(CreateBox *cr);
-	void  Create(HWND parent, DWORD style, DWORD exstyle, bool savebits, int show, bool dropshadow);
-	Image DoMouse(int e, Point p, int zd = 0);
-	static void sProcessMSG(MSG& msg);
-
-	static  Vector<Callback> hotkey;
-
-	friend void sSetCursor(Ctrl *ctrl, const Image& m);
-	
-public:
-	virtual void    NcCreate(HWND hwnd);
-	virtual void    NcDestroy();
-	virtual void    PreDestroy();
-	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
-
-	HWND  GetHWND() const              { return parent ? NULL : top ? top->hwnd : NULL; }
-	HWND  GetOwnerHWND() const;
-
-	static Ctrl  *CtrlFromHWND(HWND hwnd);
-#endif
-
 	typedef Ctrl CLASSNAME;
 
-#ifdef PLATFORM_X11
-protected:
-	struct XWindow {
-		Ptr<Ctrl>    ctrl;
-		bool         exposed;
-		Vector<Rect> invalid;
-		Ptr<Ctrl>    owner;
-		Ptr<Ctrl>    last_active;
-		XIC          xic;
-	};
-
-private:
-	static ArrayMap<Window, XWindow>& Xwindow();
-	static int       WndCaretTime;
-	static bool      WndCaretVisible;
-	static int       Xbuttons;
-	static int       Xbuttontime;
-	static Point     Xbuttonpos;
-	static Window    grabWindow, focusWindow;
-	static Point     mousePos;
-	static int       PopupGrab;
-	static Ptr<Ctrl> popupWnd;
-	static Index<String> sel_formats;
-	static Ptr<Ctrl>     sel_ctrl;
-	static void     ProcessEvent(XEvent *event);
-	static void     TimerAndPaint();
-	static void     ProcessEvent(XEvent& event);
-	       void     Invalidate(XWindow& xw, const Rect& r);
-	static void     AnimateCaret();
-	       void     DoPaint(const Vector<Rect>& invalid);
-	       void     SetLastActive(XWindow *w, Ctrl *la);
-	       XWindow *GetXWindow();
-	static void     SyncMousePos();
-	static void     ReleaseGrab();
-	static Vector<Callback> hotkey;
-	static Vector<dword> modhot;
-	static Vector<dword> keyhot;
-
-	       void  StartPopupGrab();
-	static void  EndPopupGrab();
-	static void  SyncIMPosition();
-
-	friend bool  GetMouseRight();
-	friend bool  GetMouseLeft();
-	friend bool  GetMouseMiddle();
-	friend Point GetMousePos();
-
-protected:
-	       void   Create(Ctrl *owner, bool redirect, bool savebits);
-	       void   Create0(Ctrl *owner, bool redirect, bool savebits);
-	       void   SyncExpose();
-	       void   TakeFocus();
-	static Window GetXServerFocusWindow();
-	       void   AddGlobalRepaint();
-	static void   KillFocus(Window w);
-	static void   FocusSync();
-
-	       void DropEvent(XWindow& w, XEvent *event);
-	static void DropStatusEvent(XEvent *event);
-	static Index<String> drop_formats;
-	static String  Unicode(const WString& w);
-	static WString Unicode(const String& s);
-	static bool   ClipHas(int type, const char *fmt);
-	static String ClipGet(int type, const char *fmt);
-
-	       XWindow *AddXWindow(Window &w);
-	       void RemoveXWindow(Window &w);
-	       XWindow *XWindowFromWindow(Window &w);
-
-public:
-	struct Xclipboard {
-		Window win;
-
-		VectorMap<int, ClipData> data;
-
-		String Read(int fmt, int selection, int property);
-		void   Write(int fmt, const ClipData& data);
-		bool   IsAvailable(int fmt, const char *type);
-
-		void   Clear()                     { data.Clear(); }
-		void   Request(XSelectionRequestEvent *se);
-
-		Xclipboard();
-		~Xclipboard();
-	};
-
-	static Xclipboard& xclipboard();
-
-	static int  Xeventtime;
-
-	static XIM  xim;
-
-	void DnD(Window src, bool paste);
-
-	virtual void    EventProc(XWindow& w, XEvent *event);
-	virtual bool    HookProc(XEvent *event);
-	Window  GetWindow() const         { return top ? top->window : None; }
-	static  Ctrl   *CtrlFromWindow(Window w);
-	static bool    TrapX11Errors();
-	static void    UntrapX11Errors(bool b);
-
-	Window GetParentWindow(void) const;
-	Ctrl *GetParentWindowCtrl(void) const;
-	Rect GetRectInParentWindow(void) const;
-
-	static void SyncNativeWindows(void);
-#endif
+	GUIPLATFORM_CTRL_DECLS
 
 private:
 			void    DoRemove();
@@ -1234,11 +1033,6 @@ public:
 	Ctrl&   Transparent(bool bp = true)        { transparent = bp; return *this; }
 	Ctrl&   NoTransparent()                    { return Transparent(false); }
 	bool    IsTransparent() const              { return transparent; }
-#ifdef PLATFORM_WIN32
-	Ctrl&   ActiveX(bool ax = true)            { activex = ax; return *this; }
-	Ctrl&   NoActiveX()                        { return ActiveX(false); }
-	bool    IsActiveX() const                  { return activex; }
-#endif
 
 	Ctrl&   Info(const char *txt)              { info = txt; return *this; }
 	String  GetInfo() const                    { return info; }
@@ -1285,10 +1079,6 @@ public:
 
 	static Ctrl *GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe);
 
-#ifdef PLATFORM_WIN32
-	void   PopUpHWND(HWND hwnd, bool savebits = true, bool activate = true, bool dropshadow = false,
-	                 bool topmost = false);
-#endif
 	void   PopUp(Ctrl *owner = NULL, bool savebits = true, bool activate = true, bool dropshadow = false,
 	             bool topmost = false);
 
@@ -1375,22 +1165,6 @@ public:
 	static void ShowRepaint(int ms);
 
 	static bool MemoryCheck;
-
-#ifdef PLATFORM_WIN32
-	static void InitWin32(HINSTANCE hinst);
-	static void ExitWin32();
-#ifdef PLATFORM_WINCE
-	static void GuiFlush()                              {}
-#else
-	static void GuiFlush()                              { ::GdiFlush(); }
-#endif
-#endif
-
-#ifdef PLATFORM_X11
-	static void InitX11(const char *display);
-	static void ExitX11();
-	static void GuiFlush()                              { XFlush(Xdisplay); }
-#endif
 
 	static void GuiSleep(int ms);
 	
@@ -1563,22 +1337,8 @@ public:
 	~ViewDraw();
 
 protected:
-#ifdef PLATFORM_WIN32
-	HWND   hwnd;
-#endif
-#ifdef PLATFORM_X11
-	bool   caret;
-#endif
+	GUIPLATFORM_VIEWDRAW_DECLS
 };
-
-#ifdef PLATFORM_WIN32
-#ifdef COMPILER_MSC
-inline unsigned GetHashValue(const HWND& hwnd)
-{
-	return (unsigned)(intptr_t)hwnd;
-}
-#endif
-#endif
 
 class LocalLoop : public Ctrl {
 	Ctrl *master;
@@ -1922,13 +1682,5 @@ public:
 #endif
 
 END_UPP_NAMESPACE
-
-#ifdef PLATFORM_WIN32
-#ifndef PLATFORM_WINCE
-
-#include <ShellAPI.h>
-
-#endif
-#endif
 
 #endif

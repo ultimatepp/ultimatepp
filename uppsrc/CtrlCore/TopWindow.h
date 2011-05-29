@@ -1,19 +1,3 @@
-#ifdef PLATFORM_X11
-
-enum {
-	IDOK = 1,
-	IDCANCEL = 2,
-	IDABORT = 3,
-	IDRETRY = 4,
-	IDIGNORE = 5,
-	IDYES = 6,
-	IDNO = 7,
-	IDCLOSE = 8,
-	IDHELP = 9,
-};
-
-#endif
-
 enum {
 	IDEXIT = 9999
 };
@@ -33,34 +17,11 @@ public:
 	virtual String   GetDesc() const;
 	virtual void     ChildGotFocus();
 
-#ifdef PLATFORM_WIN32
-public:
-	virtual LRESULT  WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
-
-private:
-	dword       style;
-	dword       exstyle;
-	HICON       ico, lico;
-
-	void        DeleteIco0();
-	void        DeleteIco();
-#endif
-
 protected:
 	enum {
 		TIMEID_DEFSYNCTITLE = Ctrl::TIMEID_COUNT,
 		TIMEID_COUNT,
 	};
-
-#ifdef PLATFORM_X11
-	virtual void    EventProc(XWindow& w, XEvent *event);
-private:
-	XSizeHints *size_hints;
-	XWMHints   *wm_hints;
-	XClassHint *class_hint;
-	Size        xminsize, xmaxsize;
-	bool        topmost;
-#endif
 
 	static  Rect      windowFrameMargin;
 
@@ -89,16 +50,6 @@ private:
 	Abreak       *FindAddAction(int ID);
 	Abreak       *FindAction(int ID);
 
-#ifdef PLATFORM_WIN32
-	void          CenterRect(HWND owner, int center);
-#endif
-
-#ifdef PLATFORM_X11
-	void          CenterRect(Ctrl *owner);
-	void          DefSyncTitle();
-	void          EndIgnoreTakeFocus();
-#endif
-
 	Rect        overlapped;
 
 	void        SyncTitle0();
@@ -106,11 +57,6 @@ private:
 	void        SyncTitle();
 	void        SyncCaption0();
 	void        SyncCaption();
-
-#ifdef PLATFORM_X11
-	void        SyncState();
-	void        SyncState0();
-#endif
 
 	void        SetupRect();
 	
@@ -128,10 +74,8 @@ private:
 	bool        urgent:1;
 	byte        state;
 	Image       icon, largeicon;
-#ifdef PLATFORM_X11
-	Image       invert;
-	WString     title2;
-#endif
+
+	GUIPLATFORM_TOPWINDOW_DECLS
 
 public:
 	Callback    WhenClose;
@@ -158,14 +102,6 @@ public:
 	TopWindow&  CenterScreen()                      { center = 2; return *this; }
 
 	void        SetMinSize(Size sz)                 { minsize = sz; }
-
-#ifdef PLATFORM_WIN32
-	void       Open(HWND ownerhwnd);
-	TopWindow& Style(dword _style);
-	dword      GetStyle() const                       { return style; }
-	TopWindow& ExStyle(dword _exstyle);
-	dword      GetExStyle() const                     { return exstyle; }
-#endif
 
 	void       Open(Ctrl *owner);
 	void       Open();
