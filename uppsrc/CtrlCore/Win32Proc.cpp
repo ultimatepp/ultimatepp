@@ -65,6 +65,14 @@ void  SetWinceMouse(HWND hwnd, LPARAM lparam)
 }
 #else
 void  SetWinceMouse(HWND hwnd, LPARAM lparam) {}
+
+bool GetShift()       { return !!(GetKeyState(VK_SHIFT) & 0x8000); }
+bool GetCtrl()        { return !!(GetKeyState(VK_CONTROL) & 0x8000); }
+bool GetAlt()         { return !!(GetKeyState(VK_MENU) & 0x8000); }
+bool GetCapsLock()    { return !!(GetKeyState(VK_CAPITAL) & 1); }
+bool GetMouseLeft()   { return !!(GetKeyState(VK_LBUTTON) & 0x8000); }
+bool GetMouseRight()  { return !!(GetKeyState(VK_RBUTTON) & 0x8000); }
+bool GetMouseMiddle() { return !!(GetKeyState(VK_MBUTTON) & 0x8000); }
 #endif
 
 void AvoidPaintingCheck__()

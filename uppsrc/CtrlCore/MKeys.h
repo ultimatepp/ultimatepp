@@ -1,15 +1,5 @@
-#ifdef PLATFORM_X11
-#include "X11/keysym.h"
-#endif
-
 enum {
-#ifdef PLATFORM_X11
-	#include "X11Keys.i"
-#endif
-
-#ifdef PLATFORM_WIN32
-	#include "Win32Keys.i"
-#endif
+	GUIPLATFORM_KEYCODES
 
 	K_CTRL_BACK      = K_CTRL|K_BACKSPACE,
 	K_CTRL_BACKSPACE = K_CTRL|K_BACKSPACE,
