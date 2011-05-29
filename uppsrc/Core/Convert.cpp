@@ -340,7 +340,7 @@ Value ConvertInt::Scan(const Value& text) const {
 	if(IsNull(v)) return notnull ? NotNullError() : v;
 	int64 m = v;
 	if(m >= minval && m <= maxval)
-		if(m >= -INT_MIN && m <= INT_MAX)
+		if(m >= INT_MIN && m <= INT_MAX)
 			return (int)m;
 		else
 			return v;
