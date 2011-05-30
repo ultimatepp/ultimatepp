@@ -8,6 +8,8 @@ library(WIN32) "psapi gdi32 vfw32 oleaut32 wbemuuid iphlpapi PowrProf";
 
 library(!WIN32) "Xtst X11 ";
 
+options(MSC) "/D PSAPI_VERSION=1";
+
 file
 	SysInfo.cpp,
 	SysInfo.h,
