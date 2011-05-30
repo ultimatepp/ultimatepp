@@ -706,42 +706,42 @@ String CalcContext::Convert(String s, bool throw_errors, const UPP::Convert& con
 
 void CalcContext::ParseConvert(String s, Vector<String>& sparts, Vector<CalcNodePtr>& cparts, bool throw_errors)
 {
+	Vector<String> ctexts;
+	ParseConvert(s, sparts, ctexts);
+	cparts.SetCount(ctexts.GetCount());
+	for(int i = 0; i < ctexts.GetCount(); i++)
+		try {
+			cparts[i] = CalcParser().ScanVoid(ctexts[i]);
+		}
+		catch(Exc e) {
+			if(throw_errors)
+				throw;
+			cparts[i] = new CalcConstNode(e);
+		}
+}
+
+void CalcContext::ParseConvert(String s, Vector<String>& sparts, Vector<String>& cparts)
+{
 	const char *p = s;
 	sparts.Add();
-	while(*p)
-	{
+	while(*p) {
 		const char *b = p;
 		while(*p && (*p != '<' || p[1] != ':'))
 			p++;
 		sparts.Top().Cat(b, p - b);
-		if(*p)
-		{
+		if(*p) {
 			p += 2;
 			b = p;
 			while(*p && (*p != ':' || p[1] != '>'))
-				if(*p++ == '\"')
-				{
+				if(*p++ == '\"') {
 					while(*p && *p != '\"')
 						if(*p++ == '\\' && *p)
 							p++;
 					if(*p)
 						p++;
 				}
-			try
-			{
-				CalcNodePtr cn = CalcParser().ScanVoid(String(b, p));
-				if(!!cn)
-				{
-					cparts.Add() = cn;
-					sparts.Add();
-				}
-			}
-			catch(Exc e)
-			{
-				if(throw_errors)
-					throw;
-				sparts.Top().Cat(e);
-			}
+			cparts.Add(String(b, p));
+			sparts.Add();
 			if(*p)
 				p += 2;
 		}

@@ -356,6 +356,7 @@ public:
 	CalcNodePtr         OptimizeConstant(CalcNodePtr src);
 
 	String              Convert(String s, bool throw_errors, const class Convert& convert = NoConvert());
+	static void         ParseConvert(String s, Vector<String>& sparts, Vector<String>& cparts);
 	static void         ParseConvert(String s, Vector<String>& sparts, Vector<CalcNodePtr>& cparts, bool throw_errors);
 	String              CalcConvert(const Vector<String>& sparts, const Vector<CalcNodePtr>& cparts, bool throw_errors, const UPP::Convert& convert = NoConvert());
 
