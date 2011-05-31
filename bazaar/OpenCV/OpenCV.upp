@@ -1,0 +1,15 @@
+uses
+	CtrlLib,
+	plugin\jpg,
+	Controls4U;
+
+library
+	"opencv_core220d opencv_highgui220d opencv_calib3d220d opencv_features2d220d opencv_imgproc220d ";
+
+file
+	OpenCV.cpp,
+	OpenCV.h;
+
+mainconfig
+	"" = "GUI";
+
