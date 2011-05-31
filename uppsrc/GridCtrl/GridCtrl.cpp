@@ -3271,7 +3271,10 @@ GridCtrl::CurState GridCtrl::SetCursor0(Point p, int opt, int dirx, int diry)
 {
 	CurState cs;
 	if(!row_changing)
+	{
+		cs.valid = false;
 		return cs;
+	}
 		
 	bool mouse = opt & CU_MOUSE;
 	bool highlight = opt & CU_HIGHLIGHT;
