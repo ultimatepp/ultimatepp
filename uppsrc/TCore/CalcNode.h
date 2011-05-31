@@ -350,7 +350,7 @@ public:
 	int                 EvaluateInt(String expr);
 	Date                EvaluateDate(String expr);
 	Time                EvaluateTime(String expr);
-	bool                EvaluateBool(String expr);
+	bool                EvaluateBool(String expr, bool null_value = false);
 
 	String              OptimizeConstant(String expr);
 	CalcNodePtr         OptimizeConstant(CalcNodePtr src);
