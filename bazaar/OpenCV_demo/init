@@ -1,0 +1,7 @@
+#ifndef _OpenCV_demo_icpp_init_stub
+#define _OpenCV_demo_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\jpg/init"
+#include "Controls4U/init"
+#include "OpenCV/init"
+#endif

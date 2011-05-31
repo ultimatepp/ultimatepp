@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	plugin\jpg,
+	Controls4U,
+	OpenCV;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
