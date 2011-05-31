@@ -625,10 +625,10 @@ Time CalcContext::EvaluateTime(String expr)
 	return !!node ? node->CalcTime(*this) : Time(Null);
 }
 
-bool CalcContext::EvaluateBool(String expr)
+bool CalcContext::EvaluateBool(String expr, bool null_value)
 {
 	CalcNodePtr node = CalcParser().ScanVoid(expr);
-	return !!node && node->CalcBool(*this);
+	return !!node ? node->CalcBool(*this) : null_value;
 }
 
 String CalcContext::OptimizeConstant(String expr)
