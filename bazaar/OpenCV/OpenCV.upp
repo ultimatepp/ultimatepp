@@ -8,7 +8,8 @@ library
 
 file
 	OpenCV.cpp,
-	OpenCV.h;
+	OpenCV.h,
+	srcdoc.tpp;
 
 mainconfig
 	"" = "GUI";
