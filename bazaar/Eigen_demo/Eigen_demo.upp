@@ -1,0 +1,13 @@
+description "Eigen package demo\377";
+
+uses
+	Core,
+	Eigen;
+
+file
+	eigen_demo.cpp,
+	non-linear.cpp;
+
+mainconfig
+	"" = "";
+
