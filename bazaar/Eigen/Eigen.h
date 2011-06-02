@@ -5,6 +5,6 @@
 
 #define EIGEN_MATRIX_PLUGIN <Eigen/UppMatrixPlugin.h>
 
-#include "Eigen/plugin/Eigen/Eigen"
+#include "Eigen/Eigen/Eigen"
 
 #endif

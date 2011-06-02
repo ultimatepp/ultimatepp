@@ -95,8 +95,8 @@ hurber][2  (see the graphs).]&]
 ]&]
 [s0;#2 &]
 [s0;#2 &]
-[s0;# [2 To install it please remember to set `"Build methods/INCLUDE 
-Directories`". As it is a template library no libraries are required.]&]
+[s0;# [2 It is not necessary to install anything or set `"Build methods`". 
+As it is a template library no libraries or binaries are required.]&]
 [s0;#2 &]
 [s0;# [2 Eigen packages have been prepared by ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 d
 olik.rce][2  and ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 k
