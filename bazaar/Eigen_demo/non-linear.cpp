@@ -3,7 +3,7 @@
 using namespace Upp;
 
 #include <Eigen/Eigen.h>
-#include <Eigen/plugin/unsupported/Eigen/NonLinearOptimization>
+#include <Eigen/Eigen/Eigen/NonLinearOptimization>
 
 using namespace Eigen;
 
