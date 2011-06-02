@@ -40,7 +40,7 @@ GUI_APP_MAIN
 	
 	String fileName = AppendFileName(GetDesktopFolder(), "building.jpg");
 	if (!FileExists(fileName)) {
-		Exclamation("Please set " + DeQtf(fileName));
+		Exclamation("File building.jpg not found. Please check source");
 		return;
 	}
 	img.image.Set(fileName);
