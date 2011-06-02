@@ -579,6 +579,17 @@ Value MSSheet::GetValue(int col, int row) {
 	return Ole::GetValue(Ole::GetObject(Sheet, "Cells", x, y), "value");
 }
 
+Value MSSheet::GetText(int col, int row) {
+	if (!Sheet)
+		return false;
+
+	VariantOle x, y;
+	x.Int4(col);
+	y.Int4(row);
+	
+	return Ole::GetValue(Ole::GetObject(Sheet, "Cells", x, y), "text");
+}
+
 Value MSSheet::GetValue(String cell) {
 	int row, col;
 	
@@ -1685,6 +1696,12 @@ Value OPENSheet::GetValue(int col, int row) {
 	if (!SelCell(col, row))
 		return false;
 	return Ole::GetValue(Cell, "getFormula");	// Also valid getValue and getString
+}
+
+Value OPENSheet::GetText(int col, int row) {
+	if (!SelCell(col, row))
+		return false;
+	return Ole::GetValue(Cell, "getString");	// Also valid getValue and getString
 }
 
 Value OPENSheet::GetValue(String cell) {

@@ -111,6 +111,9 @@ Value OfficeSheet::GetValue(String cell) {return (static_cast<SheetPlugin *>(Get
 Value SheetPlugin::GetValue(int col, int row) {return Null;}
 Value OfficeSheet::GetValue(int col, int row) {return (static_cast<SheetPlugin *>(GetData()))->GetValue(col, row);}
 
+Value SheetPlugin::GetText(int col, int row) {return Null;}
+Value OfficeSheet::GetText(int col, int row) {return (static_cast<SheetPlugin *>(GetData()))->GetText(col, row);}
+
 bool SheetPlugin::Replace(Value search, Value replace) {return false;}
 bool OfficeSheet::Replace(Value search, Value replace) {return (static_cast<SheetPlugin *>(GetData()))->Replace(search, replace);}
 

@@ -11,6 +11,7 @@
 	virtual bool SetValue(Value value);						\
 	virtual Value GetValue(int col, int row);				\
 	virtual Value GetValue(String cell);					\
+	virtual Value GetText(int col, int row);				\
 	virtual bool Replace(Value search, Value replace);		\
 															\
 	virtual bool SetBold(int col, int row, bool bold);		\

@@ -98,6 +98,12 @@ ol], [@(0.0.255) int]_[*@3 row])&]
 [%-*@3 row ]origin is (1, 1).&]
 [s3;%% &]
 [s4; &]
+[s5;:SheetPlugin`:`:GetText`(int`,int`): [_^Value^ Value]_[* GetText]([@(0.0.255) int]_[*@3 c
+ol], [@(0.0.255) int]_[*@3 row])&]
+[s2;%% Returns the result of the the formula form cell [%-*@3 col,] 
+[%-*@3 row]. [%-*@3 col,] [%-*@3 row ]origin is (1, 1).&]
+[s3;%% &]
+[s4; &]
 [s5;:OfficeSheet`:`:GetValue`(String`): [_^Value^ Value]_[* GetValue]([_^String^ String]_[*@3 c
 ell])&]
 [s2;%% Returns the value got in cell [%-*@3 cell]. [%-*@3 cell ]is a 
