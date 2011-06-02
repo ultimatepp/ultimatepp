@@ -325,6 +325,7 @@ protected:
 
 	void   FindBrokenRef();
 	void   JumpToDefinition();
+	String GetLang() const;
 
 	void   FixTopic();
 
