@@ -224,7 +224,7 @@ String DecoratedItem(const String& name, const CppItem& m, const char *natural, 
 	return qtf + "]";
 }
 
-String CreateQtf(const String& item, const String& name, const CppItem& m, bool onlyhdr = false)
+String CreateQtf(const String& item, const String& name, const CppItem& m, const String& lang, bool onlyhdr = false)
 {
 	String qtf;
 	bool str = m.kind == STRUCT || m.kind == STRUCTTEMPLATE;
@@ -260,7 +260,7 @@ String CreateQtf(const String& item, const String& name, const CppItem& m, bool 
 	qtf << "&]";
 	if(onlyhdr)
 		return qtf;
-	qtf << "[s3%% ";
+	qtf << "[s3%" << lang << " ";
 	String d;
 	Vector<String> t = Split(m.tname, ';');
 	for(int i = 0; i < t.GetCount(); i++) {
@@ -269,7 +269,7 @@ String CreateQtf(const String& item, const String& name, const CppItem& m, bool 
 		d << "[%-*@g " << DeQtf(t[i]) << "]";
 	}
 	d.Clear();
-	d = "[%% ";
+	d << "[%" << lang << " ";
 	Vector<String> p = Split(m.pname, ';');
 	if(!str)
 		for(int i = 0; i < p.GetCount(); i++)
@@ -279,6 +279,17 @@ String CreateQtf(const String& item, const String& name, const CppItem& m, bool 
 	qtf << "&]";
 	qtf << "[s7 &]";
 	return qtf;
+}
+
+String TopicEditor::GetLang() const
+{
+	int q = topicpath.ReverseFind('$');
+	if(q >= 0) {
+		int lang = LNGFromText(~topicpath + q + 1);
+		if(lang)
+			return LNGAsText(lang);
+	}
+	return "%";
 }
 
 void TopicEditor::InsertItem()
@@ -315,13 +326,13 @@ void TopicEditor::InsertItem()
 		for(int i = 0; i < ref.item.GetCount(); i++)
 			if(ref.item.IsSelected(i)) {
 				const CppItemInfo& m = ref.GetItemInfo(i);
-				qtf << CreateQtf(ref.GetCodeRef(i), m.name, m);
+				qtf << CreateQtf(ref.GetCodeRef(i), m.name, m, GetLang());
 			}
 	}
 	else
 	if(ref.item.IsCursor()) {
 		const CppItemInfo& m = ref.GetItemInfo();
-		qtf << CreateQtf(ref.GetCodeRef(), m.name, m);
+		qtf << CreateQtf(ref.GetCodeRef(), m.name, m, GetLang());
 	}
 	else
 		return;
@@ -337,7 +348,7 @@ void TopicEditor::InsertNew(const String& coderef)
 	if(!m)
 		return;
 	editor.BeginOp();
-	editor.PasteText(ParseQTF(styles + CreateQtf(coderef, m->name, *m)));
+	editor.PasteText(ParseQTF(styles + CreateQtf(coderef, m->name, *m, GetLang())));
 	editor.PrevPara();
 	editor.PrevPara();
 }
@@ -421,7 +432,7 @@ void   TopicEditor::FixTopic()
 				if(q >= 0) {
 					started = true;
 					const CppItem& m = n[q];
-					RichText h = ParseQTF(styles + ("[s7; &]" + CreateQtf(link[q], n[q].name, m, true)));
+					RichText h = ParseQTF(styles + ("[s7; &]" + CreateQtf(link[q], n[q].name, m, GetLang(), true)));
 					if(h.GetPartCount())
 						h.RemovePart(h.GetPartCount() - 1);
 					result.CatPick(h);
