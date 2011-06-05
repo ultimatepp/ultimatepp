@@ -4,7 +4,7 @@ uses
 	Core;
 
 include
-	./;
+	..\Eigen;
 
 file
 	U++ readonly separator,
