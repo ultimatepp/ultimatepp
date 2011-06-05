@@ -19,7 +19,11 @@ vectors, numerical solvers and related algorithms.]&]
 [s0;#2 &]
 [s0;# [2 Eigen package is a wrapper of Eigen 3.0.1 library. It includes 
 the library and helper functions to integrate better Eigen with 
-U`+`+.]&]
+U`+`+. The Eigen sources are licensed under GPL and LGPL licenses. 
+Since the entire code consist of headers only, those licenses 
+means no restrictions for any use, as long as you don`'t modify 
+it. See the ][^http`:`/`/eigen`.tuxfamily`.org`/index`.php`?title`=Licensing`_FAQ^2 L
+icensing FAQ][2  on Eigen website for further details.]&]
 [s0;#2 &]
 [s0;# [2 In addition it includes a sample package (Eigen`_demo) to 
 ease even more its use for U`+`+ users. It has many samples of 
