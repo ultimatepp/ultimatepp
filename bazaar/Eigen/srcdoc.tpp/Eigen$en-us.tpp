@@ -10,18 +10,18 @@ vectors, numerical solvers and related algorithms.]&]
 [s0;# [2 Eigen is very easy to use. For example, to multiply two matrices:]&]
 [s0;#2 &]
 [s0;# [C2 -|Matrix2d a, b;]&]
-[s0; [C2 -|a << 1, 2,]&]
+[s0; [C2 -|a << 1, 2,-|-|-|// Fill the data]&]
 [s0; [C2 -|-|3, 4;]&]
 [s0; [C2 -|b << 5, 6,]&]
 [s0; [C2 -|-|7, 8;]&]
-[s0; [C2 -|Matrix2d res `= a`*b;]&]
+[s0; [C2 -|Matrix2d res `= a`*b;-|// Just multiply them using `*]&]
 [s0;#2 &]
 [s0;#2 &]
 [s0;# [2 Eigen package is a wrapper of Eigen 3.0.1 library. It includes 
 the library and helper functions to integrate better Eigen with 
 U`+`+. The Eigen sources are licensed under GPL and LGPL licenses. 
 Since the entire code consist of headers only, those licenses 
-means no restrictions for any use, as long as you don`'t modify 
+means no restrictions for any use, as long as you do not modify 
 it. See the ][^http`:`/`/eigen`.tuxfamily`.org`/index`.php`?title`=Licensing`_FAQ^2 L
 icensing FAQ][2  on Eigen website for further details.]&]
 [s0;#2 &]
