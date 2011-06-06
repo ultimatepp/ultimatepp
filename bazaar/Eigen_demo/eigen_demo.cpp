@@ -98,6 +98,16 @@ CONSOLE_APP_MAIN
 		mat *= mat;
 		Cout() << "\nNow mat is mat:\n" << mat;
 	}
+	Cout() << "\n\nDot product and cross product";
+	{
+		Vector3d v(1,2,3);
+	  	Vector3d w(0,1,2);
+	
+	  	Cout() << "\nDot product: " << v.dot(w);
+	  	double dp = v.adjoint()*w; // automatic conversion of the inner product to a scalar
+	  	Cout() << "\nDot product via a matrix product: " << dp;
+	  	Cout() << "\nCross product:\n" << v.cross(w);
+	}
 	Cout() << "\n\nBasic arithmetic reduction operations";
 	{
 		Eigen::Matrix2d mat;
@@ -123,10 +133,105 @@ CONSOLE_APP_MAIN
 		Cout() << "\nIts maximum coefficient (" << maxOfV 
 			   << ") is at position " << i;
 	}
+	Cout() << "\n\nAccessing values inside an Array";
+	{
+		ArrayXXf  m(2,2);
+		
+		// assign some values coefficient by coefficient
+		m(0,0) = 1.0; m(0,1) = 2.0;
+		m(1,0) = 3.0; m(1,1) = m(0,1) + m(1,0);
+		
+		// print values to standard output
+		Cout() << "\n" << m;
+		
+		// using the comma-initializer is also allowed
+		m << 1.0,2.0,
+		   	 3.0,4.0;
+		 
+		// print values to standard output
+		Cout() << "\n" << m;
+	}
+	Cout() << "\n\nAddition and subtraction";
+	{
+		ArrayXXf a(3,3);
+		ArrayXXf b(3,3);
+		a << 1,2,3,
+		   	 4,5,6,
+		   	 7,8,9;
+		b << 1,2,3,
+		   	 1,2,3,
+		   	 1,2,3;
+		   
+		// Adding two arrays
+		Cout() << "\na + b = " << "\n" << a + b;
+		
+		// Subtracting a scalar from an array
+		Cout() << "\na - 2 = " << "\n" << a - 2;
+	}
+	Cout() << "\n\nArray multiplication";
+	{
+		ArrayXXf a(2,2);
+		ArrayXXf b(2,2);
+		a << 1,2,
+		   	 3,4;
+		b << 5,6,
+		   	 7,8;
+		Cout() << "\na * b = " << "\n" << a * b;
+	}
+	Cout() << "\n\nOther coefficient-wise operations";
+	{
+		ArrayXf a = ArrayXf::Random(5);
+		a *= 2;
+		Cout() << "\na =" << "\n" << a;
+		Cout() << "\na.abs() =" << "\n" << a.abs();
+		Cout() << "\na.abs().sqrt() =" << "\n" << a.abs().sqrt();
+		Cout() << "\na.min(a.abs().sqrt()) =" << "\n" << a.min(a.abs().sqrt());
+	}
+	Cout() << "\n\nConverting between array and matrix expressions";
+	{
+		MatrixXf m(2,2);
+		MatrixXf n(2,2);
+		MatrixXf result(2,2);
+		
+		m << 1,2,
+		   	 3,4;
+		n << 5,6,
+		   	 7,8;
+		
+		result = m * n;
+		Cout() << "\n-- Matrix m*n: --" << "\n" << result;
+		result = m.array() * n.array();
+		Cout() << "\n-- Array m*n: --" << "\n" << result;
+		result = m.cwiseProduct(n);
+		Cout() << "\n-- With cwiseProduct: --" << "\n" << result;
+		result = m.array() + 4;
+		Cout() << "\n-- Array m + 4: --" << "\n" << result;
+	}
+	{
+		MatrixXf m(2,2);
+		MatrixXf n(2,2);
+		MatrixXf result(2,2);
+		
+		m << 1,2,
+		     3,4;
+		n << 5,6,
+		     7,8;
+		
+		result = (m.array() + 4).matrix() * m;
+		Cout() << "\n-- Combination 1: --" << "\n" << result;
+		result = (m.array() * n.array()).matrix() * m;
+		Cout() << "\n-- Combination 2: --" << "\n" << result;
+	}
+
+	// Next to add: http://eigen.tuxfamily.org/dox/TutorialBlockOperations.html
+		
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
 	
 	NonLinearTests();
+	
+	Cout() << "\nPress enter to end";
+	ReadStdIn();
 }
 
 
