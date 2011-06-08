@@ -3,15 +3,17 @@
 #include <winreg.h>
 
 #ifdef PLATFORM_WINCE
-inline bool IsWinNT() { return false; }
-inline bool IsWinXP() { return false; }
-inline bool IsWin2K() { return false; }
+inline bool IsWinNT()    { return false; }
+inline bool IsWinXP()    { return false; }
+inline bool IsWin2K()    { return false; }
 inline bool IsWinVista() { return false; }
+inline bool IsWin7()     { return false; }
 #else
 inline bool IsWinNT() { return GetVersion() < 0x80000000; }
 bool IsWin2K();
 bool IsWinXP();
 bool IsWinVista();
+bool IsWin7();
 #endif
 
 HINSTANCE AppGetHandle();
