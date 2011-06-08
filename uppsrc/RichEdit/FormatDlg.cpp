@@ -446,6 +446,7 @@ void StyleManager::Setup(const Vector<int>& faces, int aunit)
 	height.Clear();
 	for(int i = 0; RichEdit::fh[i]; i++)
 		height.AddList(RichEdit::fh[i]);
+	face.ClearList();
 	RichEdit::SetupFaceList(face);
 	for(int i = 0; i < faces.GetCount(); i++)
 		face.Add(faces[i]);
