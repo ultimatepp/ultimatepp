@@ -39,6 +39,14 @@ bool IsWinVista()
 	GetVersionEx(&of);
 	return of.dwMajorVersion >= 6;
 }
+
+bool IsWin7()
+{
+	OSVERSIONINFO of;
+	of.dwOSVersionInfoSize = sizeof(of);
+	GetVersionEx(&of);
+	return of.dwMajorVersion >= 6 && of.dwMinorVersion >= 1;
+}
 #endif
 
 String AsString(const wchar_t *buffer) {

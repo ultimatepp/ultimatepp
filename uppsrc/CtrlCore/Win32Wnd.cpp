@@ -285,6 +285,9 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 
 	Csizeinit();
 #undef ILOG
+
+	if(IsWin7())
+		GlobalBackPaint();
 }
 
 typedef DWORD (WINAPI *PSLWA)(HWND, DWORD, BYTE, DWORD);
