@@ -791,10 +791,14 @@ void OCI8Connection::GetColumn(int i, String& s) const {
 		int handle;
 		GetColumn(i, handle);
 		if(!IsNull(handle)) {
-			OracleBlob blob(*session, handle);
-			s = LoadStream(blob);
-			if(session->utf8_session && c.type == SQLT_CLOB)
-				s = ToCharset(CHARSET_DEFAULT, s, CHARSET_UTF8);
+			if(c.type == SQLT_CLOB && session->utf8_session) {
+				OracleClob clob(*session, handle);
+				s = FromUnicode(clob.Read());
+			}
+			else {
+				OracleBlob blob(*session, handle);
+				s = LoadStream(blob);
+			}
 		}
 		else
 			s = Null;
@@ -820,12 +824,15 @@ void OCI8Connection::GetColumn(int i, WString& ws) const {
 		int handle;
 		GetColumn(i, handle);
 		if(!IsNull(handle)) {
-			OracleBlob blob(*session, handle);
-			String s = LoadStream(blob);
-			if(session->utf8_session && c.type == SQLT_CLOB)
-				ws = FromUtf8(s);
-			else
+			if(session->utf8_session && c.type == SQLT_CLOB) {
+				OracleClob clob(*session, handle);
+				ws = clob.Read();
+			}
+			else {
+				OracleBlob blob(*session, handle);
+				String s = LoadStream(blob);
 				ws = s.ToWString();
+			}
 		}
 		else
 			ws = Null;
@@ -1432,6 +1439,181 @@ OracleBlob::OracleBlob() {
 }
 
 OracleBlob::~OracleBlob() {
+	Close();
+}
+
+void OracleClob::SetLength(int sz)
+{
+	SetStreamSize(sz << 1);
+}
+
+void OracleClob::SetStreamSize(int64 pos) {
+	ASSERT(pos <= GetStreamSize());
+	if(pos < (int)GetStreamSize())
+		session->oci8.OCILobTrim(session->svchp, session->errhp, locp, (int)(pos >> 1));
+}
+
+dword OracleClob::Read(int64 at, void *ptr, dword size) {
+	ASSERT(IsOpen() && (style & STRM_READ) && session);
+	ASSERT(at == (dword)at);
+	int full_bytes = 0;
+	bool utf8 = session->IsUtf8Session();
+	ub4 readpos = (ub4)(at >> 1);
+	ub4 readsize = (ub4)(((at + size + 1) & ~1) - (readpos << 1));
+	ub4 read16 = (readsize + 1) >> 1;
+	ub4 bufsize = min(utf8 ? 4 * (int)read16 : (int)read16, 16384);
+	Buffer<char> charbuf(bufsize);
+	while(read16 > 0) {
+		ub4 nchars = read16;
+		sword res = session->oci8.OCILobRead(session->svchp, session->errhp, locp,
+			&nchars, readpos + 1, charbuf, bufsize,
+			NULL, NULL, 0, SQLCS_IMPLICIT);
+		if(res != OCI_SUCCESS && res != OCI_NEED_DATA)
+			return full_bytes;
+		WString unibuf;
+		if(utf8)
+			unibuf = FromUtf8(charbuf, nchars);
+		else {
+			WStringBuffer tmp;
+			tmp.SetLength(nchars);
+			ToUnicode(tmp, charbuf, nchars, CHARSET_DEFAULT);
+			unibuf = tmp;
+		}
+		int ulen = unibuf.GetLength();
+		int uoff = (int)(at & 1);
+		int upart = min((int)size, 2 * ulen - uoff);
+		memcpy(ptr, (const byte *)~unibuf + uoff, upart);
+		ptr = (byte *)ptr + upart;
+		at += upart;
+		size -= upart;
+		read16 -= ulen;
+		full_bytes += upart;
+		if(res != OCI_NEED_DATA)
+			break;
+	}
+	return full_bytes;
+}
+
+void OracleClob::Write(int64 at, const void *ptr, dword size) {
+	ASSERT(IsOpen() && (style & STRM_WRITE) && session);
+	ASSERT(at == (dword)at);
+	bool utf8 = session->IsUtf8Session();
+	if(at & 1) {
+		char auxbuf[2];
+		Read(at - 1, auxbuf, 1);
+		auxbuf[1] = *(byte *)ptr;
+		word wch = Peek16le(auxbuf);
+		String chrbuf = (utf8 ? ToUtf8(wch) : String(FromUnicode(wch, CHARSET_DEFAULT), 1));
+		ub4 n = chrbuf.GetLength();
+		sword res = session->oci8.OCILobWrite(session->svchp, session->errhp, locp,
+			&n, (dword)(at >> 1) + 1, (dvoid *)chrbuf.Begin(), chrbuf.GetLength(),
+			OCI_ONE_PIECE, NULL, NULL, 0, SQLCS_IMPLICIT);
+		if(res != OCI_SUCCESS || n != 1) {
+			SetError();
+			return;
+		}
+		
+		ptr = (byte *)ptr + 1;
+		size--;
+		at++;
+	}
+	
+	if(size >> 1) {
+		ub4 nchars = size >> 1;
+		String chrbuf;
+		if(utf8)
+			chrbuf = ToUtf8((const wchar *)ptr, nchars);
+		else {
+			StringBuffer tmp;
+			tmp.SetLength(nchars);
+			FromUnicode(tmp, (const wchar *)ptr, nchars, CHARSET_DEFAULT);
+			chrbuf = tmp;
+		}
+		ub4 n = chrbuf.GetLength();
+		sword res = session->oci8.OCILobWrite(session->svchp, session->errhp, locp,
+			&n, (dword)(at >> 1) + 1, (dvoid *)chrbuf.Begin(), chrbuf.GetLength(),
+			OCI_ONE_PIECE, NULL, NULL, 0, SQLCS_IMPLICIT);
+		if(res != OCI_SUCCESS || n != nchars) {
+			SetError();
+			return;
+		}
+		ptr = (byte *)ptr + (nchars << 1);
+		at += (nchars << 1);
+		size -= (nchars << 1);
+	}
+	
+	if(size & 1) {
+		char auxbuf[2];
+		ub4 pos16 = (ub4)(at >> 1);
+		Read(at, auxbuf + 1, 1);
+		auxbuf[0] = *((byte *)ptr + size - 1);
+		word wch = Peek16le(auxbuf);
+		String chrbuf = (utf8 ? ToUtf8(wch) : String(FromUnicode(wch, CHARSET_DEFAULT), 1));
+		ub4 n = chrbuf.GetLength();
+		sword res = session->oci8.OCILobWrite(session->svchp, session->errhp, locp,
+			&n, pos16 + 1, (dvoid *)chrbuf.Begin(), chrbuf.GetLength(),
+			OCI_ONE_PIECE, NULL, NULL, 0, SQLCS_IMPLICIT);
+		if(res != OCI_SUCCESS || n != 1) {
+			SetError();
+			return;
+		}
+	}
+}
+
+WString OracleClob::Read()
+{
+	WStringBuffer out;
+	int nchars = (int)(GetLeft() >> 1);
+	out.SetCount(nchars);
+	Seek(0);
+	Stream::Get(out, 2 * nchars);
+	return out;
+}
+
+void OracleClob::Write(const WString& w)
+{
+	Put(w, 2 * w.GetLength());
+}
+
+void OracleClob::Assign(Oracle8& s, int blob) {
+	session = &s;
+	locp = (OCILobLocator *)blob;
+	ub4 n;
+	OpenInit(READWRITE,
+		session->oci8.OCILobGetLength(session->svchp, session->errhp, locp, &n) == OCI_SUCCESS
+		? 2 * n : 0);
+}
+
+
+void OracleClob::Assign(const Sql& sql, int blob) {
+	Oracle8 *session = dynamic_cast<Oracle8 *>(&sql.GetSession());
+	ASSERT(session);
+	Assign(*session, blob);
+}
+
+bool OracleClob::IsOpen() const {
+	return locp;
+}
+
+void OracleClob::Close() {
+	if(locp) Flush();
+	locp = NULL;
+}
+
+OracleClob::OracleClob(const Sql& sql, int blob) {
+	Assign(sql, blob);
+}
+
+OracleClob::OracleClob(Oracle8& session, int blob) {
+	Assign(session, blob);
+}
+
+OracleClob::OracleClob() {
+	locp = NULL;
+	session = NULL;
+}
+
+OracleClob::~OracleClob() {
 	Close();
 }
 

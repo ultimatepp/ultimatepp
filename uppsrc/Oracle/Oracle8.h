@@ -71,6 +71,7 @@ private:
 private:
 	friend class OCI8Connection;
 	friend class OracleBlob;
+	friend class OracleClob;
 
 	OCIEnv              *envhp;
 	OCIError            *errhp;
@@ -135,6 +136,38 @@ public:
 	OracleBlob(const Sql& sql, int blob);
 	OracleBlob(Oracle8& session, int blob);
 	~OracleBlob();
+};
+
+class OracleClob : public BlockStream {
+protected:
+	virtual  void  SetStreamSize(int64 size);
+	virtual  dword Read(int64 at, void *ptr, dword size);
+	virtual  void  Write(int64 at, const void *data, dword size);
+
+public:
+	virtual  bool  IsOpen() const;
+	virtual  void  Close();
+
+protected:
+	OCILobLocator   *locp;
+	Oracle8         *session;
+
+	void      Init(dword size);
+
+public:
+	operator  bool() const                 { return IsOpen(); }
+
+	void      Assign(const Sql& sql, int blob);
+	void      Assign(Oracle8& session, int blob);
+
+	WString   Read();
+	void      Write(const WString& w);
+	void      SetLength(int sz);
+
+	OracleClob();
+	OracleClob(const Sql& sql, int blob);
+	OracleClob(Oracle8& session, int blob);
+	~OracleClob();
 };
 
 #ifdef text
