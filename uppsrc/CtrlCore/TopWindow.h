@@ -74,8 +74,15 @@ private:
 	bool        urgent:1;
 	byte        state;
 	Image       icon, largeicon;
+	
+	void        GuiPlatformConstruct();
+	void        GuiPlatformDestruct();
 
+#ifdef GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE
+	#include GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE
+#else
 	GUIPLATFORM_TOPWINDOW_DECLS
+#endif
 
 public:
 	Callback    WhenClose;

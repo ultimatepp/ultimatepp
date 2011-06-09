@@ -391,6 +391,65 @@ bool TopWindow::IsTopMost() const
 	return topmost;
 }
 
+void TopWindow::GuiPlatformConstruct()
+{
+	size_hints = XAllocSizeHints();
+	wm_hints = XAllocWMHints();
+	class_hint = XAllocClassHint();
+	topmost = false;
+}
+
+void TopWindow::GuiPlatformDestruct()
+{
+	XFree(size_hints);
+	XFree(wm_hints);
+	XFree(class_hint);
+}
+
+void TopWindow::SerializePlacement(Stream& s, bool reminimize)
+{
+	GuiLock __;
+	int version = 0;
+	s / version;
+	Rect rect = GetRect();
+	s % overlapped % rect;
+	bool mn = state == MINIMIZED;
+	bool mx = state == MAXIMIZED;
+	s.Pack(mn, mx);
+	LLOG("TopWindow::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
+	LLOG("minimized = " << mn << ", maximized = " << mx);
+	LLOG("rect = " << rect << ", overlapped = " << overlapped);
+	if(s.IsLoading()) {
+		if(mn) rect = overlapped;
+		Rect limit = GetWorkArea();
+		Rect fm = windowFrameMargin;
+		if((fm.left|fm.right|fm.top|fm.bottom) == 0)
+			fm = Rect(8, 32, 8, 8);
+		limit.left += fm.left;
+		limit.right -= fm.right;
+		limit.top += fm.top;
+		limit.bottom -= fm.bottom;
+		Size sz = min(rect.Size(), limit.Size());
+		rect = RectC(
+			minmax(rect.left, limit.left, limit.right - sz.cx),
+			minmax(rect.top,  limit.top,  limit.bottom - sz.cy),
+			sz.cx, sz.cy);
+		state = OVERLAPPED;
+		if(mn && reminimize)
+			state = MINIMIZED;
+		if(mx)
+			state = MAXIMIZED;
+		if(state == OVERLAPPED)
+			SetRect(rect);
+		if(IsOpen()) {
+			if(state == MINIMIZED)
+				Minimize(false);
+			if(state == MAXIMIZED)
+				Maximize(false);
+		}
+	}
+}
+
 #endif
 
 END_UPP_NAMESPACE

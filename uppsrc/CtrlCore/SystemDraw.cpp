@@ -1,4 +1,4 @@
-#include "SystemDraw.h"
+#include "CtrlCore.h"
 
 NAMESPACE_UPP
 
@@ -86,11 +86,7 @@ void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size psz, P
 void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff)
 {
 	SystemDraw *sw = dynamic_cast<SystemDraw *>(&w);
-#ifdef PLATFORM_WIN32
-	if(sw && sw->IsGui() && IsWinNT())
-#else
-	if(sw)
-#endif
+	if(sw && sw->CanSetSurface())
 		SetSurface(*sw, dest, pixels, srcsz, poff);
 	else {
 		ImageBuffer ib(dest.GetWidth(), dest.GetHeight());
@@ -107,6 +103,28 @@ void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point
 void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels)
 {
 	SetSurface(w, RectC(x, y, cx, cy), pixels, Size(cx, cy), Point(0, 0));
+}
+
+
+SystemDraw& ScreenInfo();
+
+bool BackDraw::IsPaintingOp(const Rect& r) const
+{
+	Rect rr = r + GetOffset();
+	if(!rr.Intersects(size))
+		return false;
+	return painting ? painting->IsPainting(rr + painting_offset) : true;
+}
+
+BackDraw::BackDraw()
+{
+	painting = NULL;
+	painting_offset = Point(0, 0);
+}
+
+BackDraw::~BackDraw()
+{
+	Destroy();
 }
 
 END_UPP_NAMESPACE
