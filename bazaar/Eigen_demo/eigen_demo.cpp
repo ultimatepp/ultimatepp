@@ -206,36 +206,26 @@ CONSOLE_APP_MAIN
 	{
 		MatrixXf m(2,2);
 		MatrixXf n(2,2);
-		MatrixXf result(2,2);
-		
 		m << 1,2,
 		   	 3,4;
 		n << 5,6,
 		   	 7,8;
 		
-		result = m * n;
-		Cout() << "\n-- Matrix m*n: --" << "\n" << result;
-		result = m.array() * n.array();
-		Cout() << "\n-- Array m*n: --" << "\n" << result;
-		result = m.cwiseProduct(n);
-		Cout() << "\n-- With cwiseProduct: --" << "\n" << result;
-		result = m.array() + 4;
-		Cout() << "\n-- Array m + 4: --" << "\n" << result;
+		Cout() << "\n-- Matrix m*n: --" << "\n" << m * n;
+		Cout() << "\n-- Array m*n: --" << "\n" << m.array() * n.array();
+		Cout() << "\n-- With cwiseProduct: --" << "\n" << m.cwiseProduct(n);
+		Cout() << "\n-- Array m + 4: --" << "\n" << m.array() + 4;
 	}
 	{
 		MatrixXf m(2,2);
 		MatrixXf n(2,2);
-		MatrixXf result(2,2);
-		
 		m << 1,2,
 		     3,4;
 		n << 5,6,
 		     7,8;
 		
-		result = (m.array() + 4).matrix() * m;
-		Cout() << "\n-- Combination 1: --" << "\n" << result;
-		result = (m.array() * n.array()).matrix() * m;
-		Cout() << "\n-- Combination 2: --" << "\n" << result;
+		Cout() << "\n-- Combination 1: --" << "\n" << (m.array() + 4).matrix() * m;
+		Cout() << "\n-- Combination 2: --" << "\n" << (m.array() * n.array()).matrix() * m;
 	}
 	Cout() << "\nPress enter to continue\n";
 	ReadStdIn();
@@ -246,10 +236,10 @@ CONSOLE_APP_MAIN
 	Cout() << "\n\nUsing block operations";
 	{
 		Eigen::MatrixXf m(4,4);
-		m <<  1, 2, 3, 4,
-		    5, 6, 7, 8,
-		    9,10,11,12,
-		   13,14,15,16;
+		m << 1, 2, 3, 4,
+		     5, 6, 7, 8,
+		     9,10,11,12,
+		   	 13,14,15,16;
 		Cout() << "\nBlock in the middle";
 		Cout() << m.block<2,2>(1,1);
 		for (int i = 1; i <= 3; ++i) {
@@ -260,7 +250,7 @@ CONSOLE_APP_MAIN
 	{
 		Array22d m;
 		m << 1,2,
-		   3,4;
+		   	 3,4;
 		Array44d a = Array44d::Constant(0.6);
 		Cout() << "\nHere is the array a:\n" << a;
 		a.block<2,2>(1,1) = m;
@@ -272,8 +262,8 @@ CONSOLE_APP_MAIN
 	{
 		Eigen::MatrixXf m(3,3);
 		m << 1,2,3,
-		   4,5,6,
-		   7,8,9;
+			 4,5,6,
+		   	 7,8,9;
 		Cout() << "\nHere is the matrix m:\n" << m;
 		Cout() << "\n2nd Row: " << m.row(1);
 		m.col(2) += 3 * m.col(0);
@@ -284,9 +274,9 @@ CONSOLE_APP_MAIN
 	{
 		Eigen::Matrix4f m;
 		m << 1, 2, 3, 4,
-		   5, 6, 7, 8,
-		   9, 10,11,12,
-		   13,14,15,16;
+		   	 5, 6, 7, 8,
+		   	 9, 10,11,12,
+		   	 13,14,15,16;
 		Cout() << "\nm.leftCols(2) =\n" << m.leftCols(2);
 		Cout() << "\nm.bottomRows<2>() =\n" << m.bottomRows<2>();
 		m.topLeftCorner(1,3) = m.bottomRightCorner(3,1).transpose();
@@ -314,7 +304,7 @@ CONSOLE_APP_MAIN
 		Cout() << "\nvec1 = " << vec1;
 		
 		RowVectorXd vec2(4);
-		vec2 << 1, 4, 9, 16;;
+		vec2 << 1, 4, 9, 16;
 		Cout() << "\nvec2 = " << vec2;
 		
 		RowVectorXd joined(7);
@@ -402,7 +392,9 @@ CONSOLE_APP_MAIN
 	{
 		Matrix3f A;
 		Vector3f b;
-		A << 1,2,3,  4,5,6,  7,8,10;
+		A << 1, 2, 3,  
+			 4, 5, 6,  
+			 7, 8,10;
 		b << 3, 3, 4;
 		Cout() << "\nHere is the matrix A:\n" << A;
 		Cout() << "\nHere is the vector b:\n" << b;
@@ -441,7 +433,7 @@ CONSOLE_APP_MAIN
 	{
 		Matrix3f A;
 		A << 1, 2, 1,
-		    2, 1, 0,
+		     2, 1, 0,
 		    -1, 1, 2;
 		Cout() << "\nHere is the matrix A:\n" << A;
 		Cout() << "\nThe determinant of A is " << A.determinant();
@@ -449,12 +441,12 @@ CONSOLE_APP_MAIN
 	}
 	Cout() << "\n\nLeast squares solving";
 	{
-		MatrixXf A = MatrixXf::Random(3, 2);
+		MatrixXf A = MatrixXf::Random(5, 2);
 		Cout() << "\nHere is the matrix A:\n" << A;
-		VectorXf b = VectorXf::Random(3);
+		VectorXf b = VectorXf::Random(5);
 		Cout() << "\nHere is the right hand side b:\n" << b;
 		Cout() << "\nThe least-squares solution is:\n"
-		    << A.jacobiSvd(ComputeThinU | ComputeThinV).solve(b);
+		       << A.jacobiSvd(ComputeThinU | ComputeThinV).solve(b);
 	}
 	Cout() << "\n\nSeparating the computation from the construction";
 	{
@@ -477,8 +469,8 @@ CONSOLE_APP_MAIN
 	{
 		Matrix3f A;
 		A << 1, 2, 5,
-		    2, 1, 4,
-		    3, 0, 3;
+		     2, 1, 4,
+		     3, 0, 3;
 		Cout() << "\nHere is the matrix A:\n" << A;
 		FullPivLU<Matrix3f> lu_decomp(A);
 		Cout() << "\nThe rank of A is " << lu_decomp.rank();
@@ -490,7 +482,7 @@ CONSOLE_APP_MAIN
 	{
 		Matrix2d A;
 		A << 2, 1,
-		    2, 0.9999999999;
+		     2, 0.9999999999;
 		FullPivLU<Matrix2d> lu(A);
 		Cout() << "\nBy default, the rank of A is found to be " << lu.rank();
 		lu.setThreshold(1e-5);
@@ -506,7 +498,7 @@ CONSOLE_APP_MAIN
 	{
 		Eigen::Matrix2d mat;
 		mat << 1, 2,
-		     3, 4;
+			   3, 4;
 		Cout() << "\nHere is mat.sum():       " << mat.sum();
 		Cout() << "\nHere is mat.prod():      " << mat.prod();
 		Cout() << "\nHere is mat.mean():      " << mat.mean();
@@ -520,10 +512,10 @@ CONSOLE_APP_MAIN
 		MatrixXf m(2,2), n(2,2);
 		
 		v << -1,
-		   2;
+		   	  2;
 		
 		m << 1,-2,
-		   -3,4;
+			-3, 4;
 		
 		Cout() << "\nv.squaredNorm() = " << v.squaredNorm();
 		Cout() << "\nv.norm() = " << v.norm();
@@ -541,7 +533,7 @@ CONSOLE_APP_MAIN
 		ArrayXXf a(2,2);
 		
 		a << 1,2,
-		   3,4;
+		   	 3,4;
 		
 		Cout() << "\n(a > 0).all()   = " << (a > 0).all();
 		Cout() << "\n(a > 0).any()   = " << (a > 0).any();
@@ -556,7 +548,7 @@ CONSOLE_APP_MAIN
 		Eigen::MatrixXf m(2,2);
 		
 		m << 1, 2,
-		   3, 4;
+		   	 3, 4;
 		
 		//get location of maximum
 		MatrixXf::Index maxRow, maxCol;
@@ -573,14 +565,14 @@ CONSOLE_APP_MAIN
 	{
 		Eigen::MatrixXf mat(2,4);
 		mat << 1, 2, 6, 9,
-		     3, 1, 7, 2;
+		       3, 1, 7, 2;
 		
 		Cout() << "\nColumn's maximum: \n" << mat.colwise().maxCoeff();
 	}
 	{
 		Eigen::MatrixXf mat(2,4);
 		mat << 1, 2, 6, 9,
-		     3, 1, 7, 2;
+		       3, 1, 7, 2;
 		
 		Cout() << "\nRow's maximum: \n" << mat.rowwise().maxCoeff();
 	}
@@ -588,7 +580,7 @@ CONSOLE_APP_MAIN
 	{
 		MatrixXf mat(2,4);
 		mat << 1, 2, 6, 9,
-		     3, 1, 7, 2;
+		       3, 1, 7, 2;
 		
 		MatrixXf::Index   maxIndex;
 		float maxNorm = mat.colwise().sum().maxCoeff(&maxIndex);
@@ -605,10 +597,10 @@ CONSOLE_APP_MAIN
 		Eigen::VectorXf v(2);
 		
 		mat << 1, 2, 6, 9,
-		     3, 1, 7, 2;
+		       3, 1, 7, 2;
 		     
 		v << 0,
-		   1;
+		     1;
 		   
 		//add v to each column of m
 		mat.colwise() += v;
@@ -621,7 +613,7 @@ CONSOLE_APP_MAIN
 		Eigen::VectorXf v(4);
 		
 		mat << 1, 2, 6, 9,
-		     3, 1, 7, 2;
+		       3, 1, 7, 2;
 		     
 		v << 0,1,2,3;
 		   
@@ -637,10 +629,10 @@ CONSOLE_APP_MAIN
 		Eigen::VectorXf v(2);
 		
 		m << 1, 23, 6, 9,
-		   3, 11, 7, 2;
+		   	 3, 11, 7, 2;
 		   
 		v << 2,
-		   3;
+		     3;
 		
 		MatrixXf::Index index;
 		// find nearest neighbour
