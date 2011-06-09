@@ -420,83 +420,6 @@ TopWindow& TopWindow::Urgent(bool b)
 	return *this;
 }
 
-void TopWindow::SerializePlacement(Stream& s, bool reminimize)
-{
-	GuiLock __;
-#ifndef PLATFORM_WINCE
-	int version = 0;
-	s / version;
-	Rect rect = GetRect();
-	s % overlapped % rect;
-	bool mn = state == MINIMIZED;
-	bool mx = state == MAXIMIZED;
-	s.Pack(mn, mx);
-	LLOG("TopWindow::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
-	LLOG("minimized = " << mn << ", maximized = " << mx);
-	LLOG("rect = " << rect << ", overlapped = " << overlapped);
-	if(s.IsLoading()) {
-		if(mn) rect = overlapped;
-		Rect limit = GetWorkArea();
-#ifdef PLATFORM_WIN32
-		Rect outer = rect;
-		::AdjustWindowRect(outer, WS_OVERLAPPEDWINDOW, FALSE);
-		limit.left   += rect.left   - outer.left;
-		limit.top    += rect.top    - outer.top;
-		limit.right  += rect.right  - outer.right;
-		limit.bottom += rect.bottom - outer.bottom;
-#endif
-#ifdef PLATFORM_X11
-		Rect fm = windowFrameMargin;
-		if((fm.left|fm.right|fm.top|fm.bottom) == 0)
-			fm = Rect(8, 32, 8, 8);
-		limit.left += fm.left;
-		limit.right -= fm.right;
-		limit.top += fm.top;
-		limit.bottom -= fm.bottom;
-#endif
-		Size sz = min(rect.Size(), limit.Size());
-		rect = RectC(
-			minmax(rect.left, limit.left, limit.right - sz.cx),
-			minmax(rect.top,  limit.top,  limit.bottom - sz.cy),
-			sz.cx, sz.cy);
-		state = OVERLAPPED;
-		if(mn && reminimize)
-			state = MINIMIZED;
-		if(mx)
-			state = MAXIMIZED;
-#ifdef PLATFORM_WIN32
-		if(state == OVERLAPPED)
-#endif
-			SetRect(rect);
-		if(IsOpen()) {
-	#ifdef PLATFORM_WIN32
-			HWND hwnd = GetHWND();
-			switch(state) {
-			case MINIMIZED:
-				if(!IsIconic(hwnd))
-					::ShowWindow(hwnd, SW_MINIMIZE);
-				break;
-			case MAXIMIZED:
-				if(!IsZoomed(hwnd))
-					::ShowWindow(hwnd, SW_MAXIMIZE);
-				break;
-			default:
-				if(IsIconic(hwnd) || IsZoomed(hwnd))
-					::ShowWindow(hwnd, SW_RESTORE);
-				break;
-			}
-	#endif
-	#ifdef PLATFORM_X11
-			if(state == MINIMIZED)
-				Minimize(false);
-			if(state == MAXIMIZED)
-				Maximize(false);
-	#endif
-		}
-	}
-#endif
-}
-
 struct DialogBackground : public Display {
 	void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
 	{
@@ -511,7 +434,7 @@ TopWindow::TopWindow()
 	background = PaintRect(Single<DialogBackground>(), Null);
 	center = 1;
 	minsize = Size(80, 20);
-	GuiPlatfomInit();
+	GuiPlatformConstruct();
 	maximizebox = minimizebox = sizeable = tool = noclosebox = false;
 	state = OVERLAPPED;
 	WhenClose = THISBACK(Close);
@@ -527,6 +450,7 @@ TopWindow::~TopWindow()
 		EndLoop(IDOK);
 	if(!IsChild())
 		Close();
+	GuiPlatformDestruct();
 }
 
 void Maxisize(TopWindow& win, int screencxmax)
