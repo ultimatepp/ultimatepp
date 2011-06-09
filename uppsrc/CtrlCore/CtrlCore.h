@@ -5,10 +5,12 @@
 
 #ifdef PLATFORM_WIN32
 #include "Win32Gui.h"
+#define GUI_WIN
 #endif
 
 #ifdef PLATFORM_X11
 #include "X11Gui.h"
+#define GUI_X11
 #endif
 
 NAMESPACE_UPP
