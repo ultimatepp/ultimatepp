@@ -105,14 +105,14 @@ tring]_[*@3 text], [_^int64^ int64]_[*@3 pos0]_`=_[@3 0])&]
 is found.&]
 [s3; &]
 [s4;%- &]
-[s5;:GetDirectoryLength`(String`):%- [_^int64^ int64]_[* GetDirectoryLength]([_^String^ Str
-ing]_[*@3 directoryName])&]
+[s5;:GetDirectoryLength`(const char`*`):%- [_^int64^ Upp`::int64]_[* GetDirectoryLength]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 directoryName])&]
 [s2; Returns the size in bytes of the sum of all file sizes under 
 [%-*@3 directoryName].&]
 [s3; &]
 [s4;%- &]
-[s5;:GetLength`(String`):%- [_^int64^ int64]_[* GetLength]([_^String^ String]_[*@3 fileDirNam
-e])&]
+[s5;:GetLength`(const char`*`):%- [_^int64^ Upp`::int64]_[* GetLength]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 fileDirName])&]
 [s2; Returns the size of [%-*@3 fileDirName].&]
 [s0;l288;i150;O0; If it is a file, it returns its size.&]
 [s0;l288;i150;O0; If it is a folder, it returns the size in bytes 

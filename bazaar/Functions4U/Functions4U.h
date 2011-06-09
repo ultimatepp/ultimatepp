@@ -78,8 +78,8 @@ bool IsReadOnly(const char *path, bool &usr, bool &grp, bool &oth);
 
 String LoadFile_Safe(String fileName);
 
-Upp::int64 GetLength(String fileDirName);
-Upp::int64 GetDirectoryLength(String directoryName);
+Upp::int64 GetLength(const char *fileDirName);
+Upp::int64 GetDirectoryLength(const char *directoryName);
 
 ///////////////////////////////
 Array<String> SearchFile(String dir, const Array<String> &condFiles, const Array<String> &condFolders, 

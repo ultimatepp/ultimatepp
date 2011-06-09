@@ -1917,10 +1917,6 @@ bool FileDiffArray::Apply(String toFolder, String fromFolder, int flags)
 				if (ok) {
 					ok = FileCopy(AppendFileName(fromFolder, FormatInt(i)), dest);
 					diffList[i].tSecondary = diffList[i].tMaster;
-					//if (GetFileTime(dest) != diffList[i].tMaster)
-					//	throw ("Mira!");
-						//Exclamation(Format("Fichero copiado %s tiene fecha diferente (%s) "
-						//	"que el original (%s)", dest, Format(GetFileTime(dest)), Format(diffList[i].tMaster)));
 				}
 			}
 			
