@@ -3,8 +3,6 @@
 
 #include <RichText/RichText.h>
 
-#include "SystemDraw.h"
-
 #ifdef PLATFORM_WIN32
 #include "Win32Gui.h"
 #endif
@@ -14,6 +12,76 @@
 #endif
 
 NAMESPACE_UPP
+
+#ifdef _MULTITHREADED
+void EnterGuiMutex();
+void LeaveGuiMutex();
+#else
+inline void EnterGuiMutex() {}
+inline void LeaveGuiMutex() {}
+#endif
+
+struct GuiLock {
+	GuiLock()  { EnterGuiMutex(); }
+	~GuiLock() { LeaveGuiMutex(); }
+};
+
+bool ScreenInPaletteMode();
+Size GetScreenSize();
+
+class BackDraw : public SystemDraw {
+public:
+	virtual bool  IsPaintingOp(const Rect& r) const;
+
+protected:
+	GUIPLATFORM_BACKDRAW_DECLS
+	Size    size;
+	Draw   *painting;
+	Point   painting_offset;
+
+public:
+	void  Put(SystemDraw& w, int x, int y);
+	void  Put(SystemDraw& w, Point p)                  { Put(w, p.x, p.y); }
+
+	void Create(SystemDraw& w, int cx, int cy);
+	void Create(SystemDraw& w, Size sz)                { Create(w, sz.cx, sz.cy); }
+	void Destroy();
+
+	void SetPaintingDraw(Draw& w, Point off)           { painting = &w; painting_offset = off; }
+
+	BackDraw();
+	~BackDraw();
+};
+
+class ImageDraw : public SystemDraw {
+	Size    size;
+
+	GUIPLATFORM_IMAGEDRAW_DECLS
+
+	bool    has_alpha;
+
+	void Init();
+	Image Get(bool pm) const;
+
+public:
+	Draw& Alpha();                       
+
+	operator Image() const;
+	
+	Image GetStraight() const;
+	
+	ImageDraw(Size sz);
+	ImageDraw(int cx, int cy);
+	~ImageDraw();
+};
+
+typedef ImageDraw SystemImageDraw;
+
+void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
+                  Color color, uint64 pattern);
+
+void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff);
+void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 
 enum {
 	K_DELTA        = 0x010000,
@@ -622,7 +690,12 @@ private:
 
 	typedef Ctrl CLASSNAME;
 
+
+#ifdef GUIPLATFORM_CTRL_DECLS_INCLUDE
+	#include GUIPLATFORM_CTRL_DECLS_INCLUDE
+#else
 	GUIPLATFORM_CTRL_DECLS
+#endif
 
 private:
 			void    DoRemove();

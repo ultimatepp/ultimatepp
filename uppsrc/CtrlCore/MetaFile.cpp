@@ -1,4 +1,4 @@
-#include "SystemDraw.h"
+#include "CtrlCore.h"
 
 NAMESPACE_UPP
 
@@ -10,7 +10,6 @@ void WinMetaFile::Init() {
 }
 
 void WinMetaFile::Paint(Draw& w, const Rect& r) const {
-	ChkP();
 	w.DrawRect(r, White());
 	if(!hemf)
 		return;

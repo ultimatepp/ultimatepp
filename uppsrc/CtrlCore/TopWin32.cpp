@@ -325,6 +325,74 @@ bool TopWindow::IsTopMost() const
 	return GetExStyle() & WS_EX_TOPMOST;
 }
 
+void TopWindow::GuiPlatformConstruct()
+{
+	style = 0;
+	exstyle = 0;
+	ico = lico = NULL;
+}
+
+void TopWindow::GuiPlatformDestruct()
+{
+	DeleteIco();
+}
+
+void TopWindow::SerializePlacement(Stream& s, bool reminimize)
+{
+	GuiLock __;
+#ifndef PLATFORM_WINCE
+	int version = 0;
+	s / version;
+	Rect rect = GetRect();
+	s % overlapped % rect;
+	bool mn = state == MINIMIZED;
+	bool mx = state == MAXIMIZED;
+	s.Pack(mn, mx);
+	LLOG("TopWindow::SerializePlacement / " << (s.IsStoring() ? "write" : "read"));
+	LLOG("minimized = " << mn << ", maximized = " << mx);
+	LLOG("rect = " << rect << ", overlapped = " << overlapped);
+	if(s.IsLoading()) {
+		if(mn) rect = overlapped;
+		Rect limit = GetWorkArea();
+		Rect outer = rect;
+		::AdjustWindowRect(outer, WS_OVERLAPPEDWINDOW, FALSE);
+		limit.left   += rect.left   - outer.left;
+		limit.top    += rect.top    - outer.top;
+		limit.right  += rect.right  - outer.right;
+		limit.bottom += rect.bottom - outer.bottom;
+		Size sz = min(rect.Size(), limit.Size());
+		rect = RectC(
+			minmax(rect.left, limit.left, limit.right - sz.cx),
+			minmax(rect.top,  limit.top,  limit.bottom - sz.cy),
+			sz.cx, sz.cy);
+		state = OVERLAPPED;
+		if(mn && reminimize)
+			state = MINIMIZED;
+		if(mx)
+			state = MAXIMIZED;
+		if(state == OVERLAPPED)
+			SetRect(rect);
+		if(IsOpen()) {
+			HWND hwnd = GetHWND();
+			switch(state) {
+			case MINIMIZED:
+				if(!IsIconic(hwnd))
+					::ShowWindow(hwnd, SW_MINIMIZE);
+				break;
+			case MAXIMIZED:
+				if(!IsZoomed(hwnd))
+					::ShowWindow(hwnd, SW_MAXIMIZE);
+				break;
+			default:
+				if(IsIconic(hwnd) || IsZoomed(hwnd))
+					::ShowWindow(hwnd, SW_RESTORE);
+				break;
+			}
+		}
+	}
+#endif
+}
+
 #endif
 
 END_UPP_NAMESPACE
