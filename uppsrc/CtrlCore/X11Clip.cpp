@@ -1,10 +1,10 @@
 #include "CtrlCore.h"
 
+#ifdef GUI_X11
+
 NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
-
-#ifdef PLATFORM_X11
 
 Index<String> Ctrl::sel_formats;
 Ptr<Ctrl>     Ctrl::sel_ctrl;
@@ -366,6 +366,6 @@ Vector<String> GetFiles(PasteClip& clip) {
 	return r;
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

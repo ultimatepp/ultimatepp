@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+#ifdef GUI_WIN
 
-#ifdef PLATFORM_WIN32
+NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x)
 
@@ -537,6 +537,6 @@ UDropTarget *NewUDropTarget(Ctrl *ctrl)
 
 void Ctrl::SetSelectionSource(const char *fmts) {}
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

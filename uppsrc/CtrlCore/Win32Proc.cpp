@@ -1,16 +1,14 @@
 #include "CtrlCore.h"
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
+
 #include <winnls.h>
-#endif
 
 //#include "imm.h"
 
 NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
-
-#ifdef PLATFORM_WIN32
 
 dword Ctrl::KEYtoK(dword chr) {
 	if(chr == VK_TAB)
@@ -499,6 +497,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 
 void Ctrl::PreDestroy() {}
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+#ifdef GUI_X11
 
-#ifdef PLATFORM_X11
+NAMESPACE_UPP
 
 #define LLOG(x)     // LOG(x)
 #define LTIMING(x)  // TIMING(x)
@@ -305,6 +305,6 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 	XChangeGC(Xdisplay, GetGC(), GCForeground, &gcv_old);
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

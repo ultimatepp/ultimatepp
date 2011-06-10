@@ -1,12 +1,10 @@
 #include "CtrlCore.h"
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
+
 #include <locale.h>
-#endif
 
 NAMESPACE_UPP
-
-#ifdef PLATFORM_X11
 
 #define LLOG(x)  // LOG(x)
 
@@ -515,6 +513,6 @@ int Ctrl::GetKbdSpeed()
 	return 25;
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

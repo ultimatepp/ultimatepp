@@ -2,38 +2,22 @@
 
 #ifdef GUI_WIN
 
+#define LLOG(x) // DLOG(x)
+
 NAMESPACE_UPP
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;
-#ifdef PLATFORM_X11
-	if(this == caretCtrl)
-		RefreshCaret();
-#endif
 	caretx = x;
 	carety = y;
 	caretcx = cx;
 	caretcy = cy;
-#ifdef PLATFORM_WIN32
 	SyncCaret();
-#endif
-#ifdef PLATFORM_X11
-	WndCaretTime = GetTickCount();
-	if(this == caretCtrl)
-		RefreshCaret();
-#endif
 }
 
 void Ctrl::SyncCaret() {
 	GuiLock __;
-#ifdef PLATFORM_X11
-	if(focusCtrl != caretCtrl) {
-		RefreshCaret();
-		caretCtrl = focusCtrl;
-		RefreshCaret();
-	}
-#else
 	Rect cr;
 	cr.Clear();
 	if(focusCtrl && focusCtrl->IsVisible()) {
@@ -56,7 +40,6 @@ void Ctrl::SyncCaret() {
 		caretCtrl = focusCtrl;
 		caretRect = cr;
 	}
-#endif
 }
 
 END_UPP_NAMESPACE

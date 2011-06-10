@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+#ifdef GUI_WIN
 
-#ifdef PLATFORM_WIN32
+NAMESPACE_UPP
 
 #define LLOG(x)   //   LOG(x)
 #define LOGTIMING 0
@@ -1333,6 +1333,6 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 	return out;
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

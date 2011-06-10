@@ -1,12 +1,10 @@
 #include "CtrlCore.h"
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
+
 #include <shellapi.h>
-#endif
 
 NAMESPACE_UPP
-
-#ifdef PLATFORM_WIN32
 
 #define LTIMING(x) // RTIMING(x)
 
@@ -654,6 +652,6 @@ Image Image::Hand() WCURSOR_(IDC_HAND)
 
 #endif
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

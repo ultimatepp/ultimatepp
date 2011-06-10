@@ -1,12 +1,10 @@
 #include "CtrlCore.h"
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
+
 #include <X11/Xlocale.h>
-#endif
 
 NAMESPACE_UPP
-
-#ifdef PLATFORM_X11
 
 #ifdef _DEBUG
 
@@ -1137,6 +1135,6 @@ ViewDraw::~ViewDraw()
 	LeaveGuiMutex();
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
-
 #ifdef PLATFORM_X11
+
+NAMESPACE_UPP
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Constructor
@@ -418,6 +418,6 @@ XVisualInfo DHCtrl::GetVisualInfo(void)
 	return visualInfo;
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

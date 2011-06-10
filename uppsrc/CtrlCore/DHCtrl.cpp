@@ -1,8 +1,9 @@
 #include "CtrlCore.h"
 
+#ifdef GUI_WIN
+
 NAMESPACE_UPP
 
-#ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE
 
 void DHCtrl::NcCreate(HWND _hwnd)
@@ -82,6 +83,7 @@ DHCtrl::~DHCtrl()
 }
 
 #endif
-#endif
 
 END_UPP_NAMESPACE
+
+#endif

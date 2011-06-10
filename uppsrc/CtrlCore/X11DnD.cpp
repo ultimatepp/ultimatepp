@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-#define LLOG(x)   // LOG(x)
+#ifdef GUI_X11
 
-#ifdef PLATFORM_X11
+#define LLOG(x)   // LOG(x)
 
 NAMESPACE_UPP
 

@@ -1,5 +1,7 @@
 #include "CtrlCore.h"
 
+#ifdef GUI_WIN
+
 NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
@@ -23,8 +25,6 @@ NAMESPACE_UPP
 	#define FLASHW_TIMER        0x00000004
 	#define FLASHW_TIMERNOFG    0x0000000C
 #endif
-
-#ifdef PLATFORM_WIN32
 
 void    TopWindow::SyncSizeHints() {}
 
@@ -393,6 +393,6 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 #endif
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

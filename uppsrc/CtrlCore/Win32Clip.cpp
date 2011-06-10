@@ -1,9 +1,9 @@
 #include "CtrlCore.h"
 #include <plugin/bmp/bmp.h>
 
-NAMESPACE_UPP
+#ifdef GUI_WIN
 
-#ifdef PLATFORM_WIN32
+NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
@@ -14,7 +14,6 @@ VectorMap<int, ClipData>& sClipMap()
 }
 
 extern HWND utilityHWND;
-
 
 int  GetClipboardFormatCode(const char *format_id)
 {
@@ -495,6 +494,6 @@ Vector<String> GetFiles(PasteClip& clip)
 	return f;
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

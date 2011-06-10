@@ -1,11 +1,11 @@
 #include "CtrlCore.h"
 
+#ifdef GUI_WIN
+
 NAMESPACE_UPP
 
 #define LLOG(x) // LOG(x)
 #define LTIMING(x) // RTIMING(x)
-
-#ifdef PLATFORM_WIN32
 
 static COLORREF sLightGray;
 
@@ -462,7 +462,6 @@ PrintDraw::~PrintDraw() {
 }
 #endif
 
+END_UPP_NAMESPACE
 
 #endif
-
-END_UPP_NAMESPACE

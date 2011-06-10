@@ -1,10 +1,10 @@
 #include "CtrlCore.h"
 
+#ifdef GUI_X11
+
 NAMESPACE_UPP
 
 #define LLOG(x)  //  DLOG(x)
-
-#ifdef PLATFORM_X11
 
 void TopWindow::SyncSizeHints()
 {
@@ -450,6 +450,6 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	}
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif
