@@ -337,24 +337,6 @@ bool Ctrl::IsModified() const
 	return false;
 }
 
-void Ctrl::SetCaret(int x, int y, int cx, int cy)
-{
-	GuiLock __;
-#ifdef PLATFORM_X11
-	if(this == caretCtrl)
-		RefreshCaret();
-#endif
-	caretx = x;
-	carety = y;
-	caretcx = cx;
-	caretcy = cy;
-#ifdef PLATFORM_X11
-	WndCaretTime = GetTickCount();
-	if(this == caretCtrl)
-		RefreshCaret();
-#endif
-}
-
 void Ctrl::SetCaret(const Rect& r)
 {
 	SetCaret(r.left, r.top, r.GetWidth(), r.GetHeight());

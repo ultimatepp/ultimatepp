@@ -309,7 +309,7 @@ class ImageDraw : public SystemDraw {
 	Image Get(bool pm) const;
 
 public:
-	Draw& Alpha();                       
+	Draw& Alpha();
 
 	operator Image() const;
 	
