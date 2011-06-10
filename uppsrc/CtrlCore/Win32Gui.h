@@ -260,28 +260,69 @@ Image Win32Cursor(int id);
 HICON IconWin32(const Image& img, bool cursor = false);
 Image Win32DllIcon(const char *dll, int ii, bool large);
 
+class BackDraw : public SystemDraw {
+public:
+	virtual bool  IsPaintingOp(const Rect& r) const;
+
+protected:
+	HBITMAP hbmpold;
+	HBITMAP hbmp;
+
+	Size    size;
+	Draw   *painting;
+	Point   painting_offset;
+
+public:
+	void  Put(SystemDraw& w, int x, int y);
+	void  Put(SystemDraw& w, Point p)                  { Put(w, p.x, p.y); }
+
+	void Create(SystemDraw& w, int cx, int cy);
+	void Create(SystemDraw& w, Size sz)                { Create(w, sz.cx, sz.cy); }
+	void Destroy();
+
+	void SetPaintingDraw(Draw& w, Point off)           { painting = &w; painting_offset = off; }
+
+	BackDraw();
+	~BackDraw();
+};
+
+class ImageDraw : public SystemDraw {
+	Size    size;
+
+	struct  Section {
+		HDC     dc;
+		HBITMAP hbmp, hbmpOld;
+		RGBA   *pixels;
+
+		void Init(int cx, int cy);
+		~Section();
+	};
+
+	Section     rgb;
+	Section     a;
+	SystemDraw  alpha;
+
+
+	bool    has_alpha;
+
+	void Init();
+	Image Get(bool pm) const;
+
+public:
+	Draw& Alpha();                       
+
+	operator Image() const;
+	
+	Image GetStraight() const;
+	
+	ImageDraw(Size sz);
+	ImageDraw(int cx, int cy);
+	~ImageDraw();
+};
+
 END_UPP_NAMESPACE
 
 #define GUIPLATFORM_KEYCODES_INCLUDE "Win32Keys.h"
-
-#define GUIPLATFORM_BACKDRAW_DECLS \
-	HBITMAP hbmpold; \
-	HBITMAP hbmp; \
-
-#define GUIPLATFORM_IMAGEDRAW_DECLS \
-	struct  Section { \
-		HDC     dc; \
-		HBITMAP hbmp, hbmpOld; \
-		RGBA   *pixels; \
-\
-		void Init(int cx, int cy); \
-		~Section(); \
-	}; \
-\
-	Section     rgb; \
-	Section     a; \
-	SystemDraw  alpha; \
-
 
 
 #define GUIPLATFORM_CTRL_TOP_DECLS \
