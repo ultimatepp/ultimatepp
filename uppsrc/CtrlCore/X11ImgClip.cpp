@@ -1,11 +1,10 @@
 #include "CtrlCore.h"
 
+#ifdef GUI_X11
+
 #include <plugin/bmp/bmp.h>
 
 NAMESPACE_UPP
-
-#ifdef PLATFORM_X11
-
 
 const char *ClipFmtsImage()
 {
@@ -70,6 +69,6 @@ void AppendClipboardImage(const Image& img)
 	AppendClipboard("image/bmp", img, sBmp);
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

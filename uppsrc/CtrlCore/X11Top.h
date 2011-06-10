@@ -1,3 +1,4 @@
+//$ class TopWindow {
 protected:
 	virtual void    EventProc(XWindow& w, XEvent *event);
 private:
@@ -16,3 +17,4 @@ private:
 
 	Image         invert;
 	WString       title2;
+//$ };

@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+#ifdef GUI_X11
 
-#ifdef PLATFORM_X11
+NAMESPACE_UPP
 
 struct Image::Data::SystemData {
 	int         cursor_cheat;
@@ -457,6 +457,6 @@ void *CursorX11(const Image& img)
 	return (void *)c;
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

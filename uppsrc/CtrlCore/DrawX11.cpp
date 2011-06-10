@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 
 #define Time    XTime
 #define Font    XFont

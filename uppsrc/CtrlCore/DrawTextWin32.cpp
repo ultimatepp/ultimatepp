@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+#ifdef GUI_WIN
 
-#ifdef PLATFORM_WIN32
+NAMESPACE_UPP
 
 #define LLOG(x)
 
@@ -41,6 +41,6 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	::SelectObject(handle, orgfont);
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

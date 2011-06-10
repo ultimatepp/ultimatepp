@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+#ifdef GUI_X11
 
-#ifdef PLATFORM_X11
+NAMESPACE_UPP
 
 #define LTIMING(x)
 #define LLOG(x)
@@ -246,6 +246,6 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	}
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif

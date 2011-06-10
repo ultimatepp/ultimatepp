@@ -1,8 +1,9 @@
 #include "CtrlCore.h"
 
+#ifdef GUI_WIN
+
 NAMESPACE_UPP
 
-#ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE
 
 void WinMetaFile::Init() {
@@ -329,6 +330,7 @@ String AsWMF(const Drawing& iw)
 }
 
 #endif
-#endif
 
 END_UPP_NAMESPACE
+
+#endif

@@ -1,8 +1,8 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+#ifdef GUI_X11
 
-#ifdef PLATFORM_X11
+NAMESPACE_UPP
 
 #define LLOG(x)        //DLOG(x)
 
@@ -388,6 +388,6 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 	DropEvent(w, event);
 }
 
-#endif
-
 END_UPP_NAMESPACE
+
+#endif
