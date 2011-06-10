@@ -15,10 +15,6 @@ int main(int argc, const char **argv, const char **envptr) { \
  \
 void GuiMainFn_()
 
-#endif
-
-#ifdef PLATFORM_X11
-
 class DHCtrl : public Ctrl {
 	int isError;
 	bool isMapped;
