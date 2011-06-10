@@ -3,7 +3,7 @@
 #include "Draw/init"
 #include "plugin\bmp/init"
 #include "RichText/init"
-#define BLITZ_INDEX__ FAD522E48059537735D9D4570440139B2
+#define BLITZ_INDEX__ F478533DBF25E483F736FEAFEB9D9AEC8
 #include "CtrlCore.icpp"
 #undef BLITZ_INDEX__
 #endif

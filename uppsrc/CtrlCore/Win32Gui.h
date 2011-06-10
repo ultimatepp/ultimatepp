@@ -357,3 +357,5 @@ END_UPP_NAMESPACE
 
 #endif
 #endif
+
+#define GUIPLATFORM_INCLUDE_AFTER "Win32GuiA.h"
