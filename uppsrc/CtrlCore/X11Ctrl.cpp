@@ -13,6 +13,7 @@ void Ctrl::GuiPlatformDestruct()
 }
 
 void Ctrl::GuiPlatformRemove()
+{
 	if(popupgrab) {
 		EndPopupGrab();
 		popupgrab = false;
