@@ -338,10 +338,6 @@ END_UPP_NAMESPACE
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE "Win32Top.h"
 
-#define GUIPLATFORM_VIEWDRAW_DECLS \
-	HWND   hwnd; \
-
-
 NAMESPACE_UPP
 
 inline unsigned GetHashValue(const HWND& hwnd)

@@ -459,25 +459,6 @@ void  Ctrl::CancelModeDeep() {
 		q->CancelModeDeep();
 }
 
-String Ctrl::Name() const {
-	GuiLock __;
-#ifdef CPU_64
-	String s = String(typeid(*this).name()) + " : 0x" + FormatIntHex(this);
-#else
-	String s = String(typeid(*this).name()) + " : " + Format("0x%x", (int) this);
-#endif
-	if(IsChild())
-		s << "(parent " << String(typeid(*parent).name()) << ")";
-	else
-#ifdef PLATFORM_WIN32
-		s << Format("(hwnd 0x%x)", (int)(intptr_t) GetHWND());
-#endif
-#ifdef PLATFORM_X11
-		s << Format("(window 0x%x)", (int)(intptr_t) GetWindow());
-#endif
-	return s;
-}
-
 String Ctrl::GetDesc() const
 {
 	return "";
@@ -566,6 +547,7 @@ bool Ctrl::IsOcxChild()
 Ctrl::Ctrl() {
 	GuiLock __;
 	LLOG("Ctrl::Ctrl");
+	GuiPlatformConstruct();
 	destroying = false;
 	parent = prev = next = firstchild = lastchild = NULL;
 	top = NULL;
@@ -573,11 +555,6 @@ Ctrl::Ctrl() {
 	frame.Add().frame = &NullFrame();
 	enabled = visible = wantfocus = initfocus = true;
 	editable = true;
-//	GLX = false;
-#ifdef PLATFORM_WIN32
-	activex = false;
-	isdhctrl = false;
-#endif
 	backpaint = IsCompositedGui() ? FULLBACKPAINT : TRANSPARENTBACKPAINT;
 	inframe = false;
 	ignoremouse = transparent = false;
@@ -602,12 +579,7 @@ void Ctrl::DoRemove() {
 	if(HasChildDeep(mouseCtrl) || mouseCtrl == this)
 		mouseCtrl = NULL;
 	LLOG("DoRemove " << Name() << " focusCtrl: " << UPP::Name(focusCtrl));
-#ifdef PLATFORM_X11
-	if(popupgrab) {
-		EndPopupGrab();
-		popupgrab = false;
-	}
-#endif
+	GuiPlatformRemove();
 	if(HasFocusDeep()) {
 		LLOG("DoRemove - HasFocusDeep");
 		if(destroying) {

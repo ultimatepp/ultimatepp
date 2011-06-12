@@ -76,10 +76,8 @@ Rect  Ctrl::GetScreenRect() const
 		Rect pr = inframe ? parent->GetScreenRect() : parent->GetScreenView();
 		r = r + pr.TopLeft();
 	}
-#ifdef PLATFORM_WIN32
-	else if(activex)
-		r = GetWndScreenRect();
-#endif
+	else
+		GuiPlatformGetTopRect(r);
 	return r;
 }
 
@@ -98,10 +96,8 @@ Rect  Ctrl::GetVisibleScreenRect() const
 		Rect pr1 = inframe ? parent->GetScreenRect() : parent->GetScreenView();
 		r = (r + pr1.TopLeft()) & pr;
 	}
-#ifdef PLATFORM_WIN32
-	else if(activex)
-		r = GetWndScreenRect();
-#endif
+	else
+		GuiPlatformGetTopRect(r);
 	return r & GetVirtualScreenArea();
 }
 

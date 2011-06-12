@@ -3,6 +3,10 @@ private:
 	bool         activex:1;
 	bool         isdhctrl:1;
 
+	static void WndDestroyCaret();
+	void WndCreateCaret0(const Rect& cr);
+	void WndCreateCaret(const Rect& cr);
+
 	static  bool PeekMsg(MSG& msg);
 
 	static LRESULT CALLBACK UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -61,5 +65,4 @@ public:
 	static void InitWin32(HINSTANCE hinst);
 	static void ExitWin32();
 	static void GuiFlush()                              { ::GdiFlush(); }
-
 //$ };
