@@ -26,6 +26,42 @@ void Ctrl::GuiPlatformGetTopRect(Rect& r) const
 		r = GetWndScreenRect();
 }
 
+bool Ctrl::GuiPlatformRefreshFrameSpecial(const Rect& r)
+{
+	if(isdhctrl) {
+		InvalidateRect(((DHCtrl *)this)->GetHWND(), r, false);
+		return true;
+	}
+	return false;
+}
+
+bool Ctrl::GuiPlatformSetFullRefreshSpecial()
+{
+	return isdhctrl;
+}
+
+void Ctrl::PaintCaret(SystemDraw& w)
+{
+}
+
+String GuiPlatformGetKeyDesc(dword key)
+{
+	static struct {
+		dword key;
+		const char *name;
+	} nkey[] = {
+		{ 0x100c0, "[`]" }, { 0x100bd, "[-]" }, { 0x100bb, "[=]" }, { 0x100dc, "[\\]" },
+		{ 0x100db, "[[]" }, { 0x100dd, "[]]" },
+		{ 0x100ba, "[;]" }, { 0x100de, "[']" },
+		{ 0x100bc, "[,]" }, { 0x100be, "[.]" }, { 0x100bf, "[/]" },
+		{ 0, NULL }
+	};
+	for(int i = 0; nkey[i].key; i++)
+		if(nkey[i].key == key)
+			return nkey[i].name;
+	return Null;
+}
+
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;

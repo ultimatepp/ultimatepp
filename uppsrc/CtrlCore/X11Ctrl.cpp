@@ -38,6 +38,41 @@ String Ctrl::Name() const {
 	return s;
 }
 
+bool Ctrl::GuiPlatformRefreshFrameSpecial(const Rect&)
+{
+	return false;
+}
+
+
+bool Ctrl::GuiPlatformSetFullRefreshSpecial()
+{
+	return false;
+}
+
+String Ctrl::GuiPlatformGetKeyDesc(dword key)
+{
+	static struct {
+		dword key;
+		const char *name;
+	} nkey[] = {
+		{ 0x10060, "[`]" }, { 0x1002d, "[-]" }, { 0x1003d, "[=]" }, { 0x1005c, "[\\]" },
+		{ 0x1005b, "[[]" }, { 0x1005d, "[]]" },
+		{ 0x1003b, "[;]" }, { 0x10027, "[']" },
+		{ 0x1002c, "[,]" }, { 0x1002e, "[.]" }, { 0x1005f, "[/]" },
+		{ 0, NULL }
+	};
+	for(int i = 0; nkey[i].key; i++)
+		if(nkey[i].key == key)
+			return nkey[i].name;
+	return Null;
+}
+
+void Ctrl::PaintCaret(SystemDraw& w)
+{
+	GuiLock __;
+	if(this == caretCtrl && WndCaretVisible)
+		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
+}
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {

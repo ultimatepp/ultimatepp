@@ -46,7 +46,6 @@ file
 	CtrlTimer.cpp,
 	CtrlClip.cpp,
 	LocalLoop.cpp,
-	Xmlize.cpp,
 	CtrlCore.icpp,
 	TopWindow.h,
 	TopWindow.cpp,

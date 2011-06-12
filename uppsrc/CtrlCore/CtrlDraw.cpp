@@ -12,12 +12,8 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	if(!IsOpen() || !IsVisible() || r.IsEmpty()) return;
 	LTIMING("RefreshFrame");
 	LLOG("RefreshRect " << Name() << ' ' << r);
-#ifdef PLATFORM_WIN32
-	if(isdhctrl) {
-		InvalidateRect(((DHCtrl *)this)->GetHWND(), r, false);
+	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
-	}
-#endif
 	if(!top) {
 		if(InFrame())
 			parent->RefreshFrame(r + GetRect().TopLeft());
@@ -28,7 +24,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 		LLOG("WndInvalidateRect: " << r << ' ' << Name());
 		LTIMING("RefreshFrame InvalidateRect");
 		WndInvalidateRect(r);
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 		LLOG("UpdateRect: " << GetWndUpdateRect() << ' ' << Name());
 #endif
 	}
@@ -46,9 +42,7 @@ void Ctrl::Refresh() {
 	if(fullrefresh || !IsVisible() || !IsOpen()) return;
 	LLOG("Refresh " << Name() << " full:" << fullrefresh);
 	Refresh(Rect(GetSize()).Inflated(OverPaint()));
-#ifdef PLATFORM_WIN32
-	if(!isdhctrl)
-#endif
+	if(!GuiPlatformSetFullRefreshSpecial())
 		fullrefresh = true;
 }
 
@@ -248,15 +242,6 @@ struct sDrawLevelCheck {
 #define LEVELCHECK(w, q)
 #define DOLEVELCHECK
 #endif
-
-void Ctrl::PaintCaret(SystemDraw& w)
-{
-	GuiLock __;
-#ifdef PLATFORM_X11
-	if(this == caretCtrl && WndCaretVisible)
-		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
-#endif
-}
 
 void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	GuiLock __;
