@@ -804,10 +804,10 @@ void OCI8Connection::GetColumn(int i, String& s) const {
 			s = Null;
 		return;
 	}
-	ASSERT(c.type == SQLT_STR);
 	if(c.ind[0] < 0)
 		s = Null;
 	else {
+		ASSERT(c.type == SQLT_STR);
 		s = (char *) c.Data();
 		if(session->utf8_session)
 			s = ToCharset(CHARSET_DEFAULT, s, CHARSET_UTF8);
@@ -838,12 +838,13 @@ void OCI8Connection::GetColumn(int i, WString& ws) const {
 			ws = Null;
 		return;
 	}
-	ASSERT(c.type == SQLT_STR);
 	String s;
 	if(c.ind[0] < 0)
 		s = Null;
-	else
+	else {
+		ASSERT(c.type == SQLT_STR);
 		s = (char *) c.Data();
+	}
 	if(session->utf8_session)
 		ws = FromUtf8(s);
 	else
@@ -856,11 +857,12 @@ void OCI8Connection::GetColumn(int i, double& n) const {
 		return;
 	}
 	const Item& c = column[i];
-	ASSERT(c.type == SQLT_FLT || c.type == SQLT_BLOB || c.type == SQLT_CLOB);
 	if(c.ind[0] < 0)
 		n = DOUBLE_NULL;
-	else
+	else {
+		ASSERT(c.type == SQLT_FLT || c.type == SQLT_BLOB || c.type == SQLT_CLOB);
 		n = c.type == SQLT_BLOB || c.type == SQLT_CLOB ? (int)(uintptr_t)c.lob : *(double *) c.Data();
+	}
 }
 
 void OCI8Connection::GetColumn(int i, int& n) const {
@@ -875,12 +877,13 @@ void OCI8Connection::GetColumn(int i, Date& d) const {
 		return;
 	}
 	const Item& c = column[i];
-	const byte *data = c.Data();
-	ASSERT(c.type == SQLT_DAT);
 	if(c.ind[0] < 0)
 		d = Null; // d.year = d.month = d.day = 0;
-	else
+	else {
+		ASSERT(c.type == SQLT_DAT);
+		const byte *data = c.Data();
 		d = OciDecodeDate(data);
+	}
 }
 
 void OCI8Connection::GetColumn(int i, Time& t) const {
@@ -889,12 +892,13 @@ void OCI8Connection::GetColumn(int i, Time& t) const {
 		return;
 	}
 	const Item& c = column[i];
-	const byte *data = c.Data();
-	ASSERT(c.type == SQLT_DAT);
 	if(c.ind[0] < 0)
 		t = Null; // t.year = t.month = t.day = 0;
-	else
+	else {
+		ASSERT(c.type == SQLT_DAT);
+		const byte *data = c.Data();
 		t = OciDecodeTime(data);
+	}
 }
 
 void  OCI8Connection::GetColumn(int i, Ref f) const {
