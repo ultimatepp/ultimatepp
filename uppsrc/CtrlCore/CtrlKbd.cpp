@@ -237,7 +237,7 @@ bool Ctrl::SetFocus0(bool activate)
 	if(!topwindow) topwindow = topctrl;
 	LLOG("SetFocus -> SetWndFocus: topwindow = " << UPP::Name(topwindow) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
 	if(!topwindow->HasWndFocus() && !topwindow->SetWndFocus()) return false;// cxl 31.1.2004
-#ifdef PLATFORM_POSIX
+#ifdef GUI_X11 // ugly temporary hack - popups not behaving right in MacOS
 	if(activate) // Dolik/fudadmin 2011-5-1
 		topctrl->SetWndForeground();
 #else
@@ -398,18 +398,6 @@ String GetKeyDesc(dword key)
 			{ K_INSERT, tt_("key\vInsert") }, { K_DELETE, tt_("key\vDelete") },{ K_BREAK, tt_("key\vBreak") },
 			{ K_MULTIPLY, tt_("key\vNum[*]") }, { K_ADD, tt_("key\vNum[+]") }, { K_SUBTRACT, tt_("key\vNum[-]") }, { K_DIVIDE, tt_("key\vNum[/]") },
 			{ K_ALT_KEY, tt_("key\vAlt") }, { K_SHIFT_KEY, tt_("key\vShift") }, { K_CTRL_KEY, tt_("key\vCtrl") },
-		#ifdef PLATFORM_X11
-			{ 0x10060, "[`]" }, { 0x1002d, "[-]" }, { 0x1003d, "[=]" }, { 0x1005c, "[\\]" },
-			{ 0x1005b, "[[]" }, { 0x1005d, "[]]" },
-			{ 0x1003b, "[;]" }, { 0x10027, "[']" },
-			{ 0x1002c, "[,]" }, { 0x1002e, "[.]" }, { 0x1005f, "[/]" },
-		#endif
-		#ifdef PLATFORM_WIN32
-			{ 0x100c0, "[`]" }, { 0x100bd, "[-]" }, { 0x100bb, "[=]" }, { 0x100dc, "[\\]" },
-			{ 0x100db, "[[]" }, { 0x100dd, "[]]" },
-			{ 0x100ba, "[;]" }, { 0x100de, "[']" },
-			{ 0x100bc, "[,]" }, { 0x100be, "[.]" }, { 0x100bf, "[/]" },
-		#endif
 			{ 0, NULL }
 		};
 		for(int i = 0; nkey[i].key; i++)
@@ -417,6 +405,11 @@ String GetKeyDesc(dword key)
 				desc << GetLngString(nkey[i].name);
 				return desc;
 			}
+		String g = GuiPlatformGetKeyDesc(key);
+		if(g.GetCount()) {
+			desc << g;
+			return desc;
+		}
 		desc << Format("%04x", (int)key);
 	}
 	return desc;

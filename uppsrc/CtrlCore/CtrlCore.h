@@ -646,6 +646,9 @@ private:
 	void        GuiPlatformDestruct();
 	void        GuiPlatformRemove();
 	void        GuiPlatformGetTopRect(Rect& r) const;
+	bool        GuiPlatformRefreshFrameSpecial(const Rect& r);
+	bool        GuiPlatformSetFullRefreshSpecial();
+	
 #ifdef GUIPLATFORM_CTRL_DECLS_INCLUDE
 	#include GUIPLATFORM_CTRL_DECLS_INCLUDE
 #else
@@ -1203,6 +1206,8 @@ public:
 	Ctrl();
 	virtual ~Ctrl();
 };
+
+String GuiPlatformGetKeyDesc(dword key);
 
 Font FontZ(int face, int height = 0);
 

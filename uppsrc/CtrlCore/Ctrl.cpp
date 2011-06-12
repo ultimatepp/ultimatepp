@@ -908,6 +908,13 @@ void Ctrl::ChSync()
 	ChFinish();
 }
 
+void Ctrl::Xmlize(XmlIO xml)
+{
+	Value v = GetData();
+	UPP::Xmlize(xml, v);
+	SetData(v);
+}
+
 CH_INT(GUI_GlobalStyle, GUISTYLE_CLASSIC);
 CH_INT(GUI_DragFullWindow, 1);
 CH_INT(GUI_PopUpEffect, GUIEFFECT_SLIDE);
