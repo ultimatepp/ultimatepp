@@ -820,7 +820,7 @@ void AppMain___()
 		}
 	#endif
 	}
-	
+
 #ifndef _DEBUG
 	SetVppLogSizeLimit(0);
 #endif
@@ -831,6 +831,7 @@ void AppMain___()
 	//	void RegisterIdeVectorDes(); RegisterIdeVectorDes();
 		void RegisterGccBuilder(); RegisterGccBuilder();
 		void RegisterMscBuilder(); RegisterMscBuilder();
+		void RegisterOwcBuilder(); RegisterOwcBuilder();
 		void RegisterJavaBuilder(); RegisterJavaBuilder();
 		void RegisterScriptBuilder(); RegisterScriptBuilder();
 
