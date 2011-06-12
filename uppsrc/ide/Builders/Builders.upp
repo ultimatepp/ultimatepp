@@ -12,6 +12,7 @@ file
 	MakeFile.cpp,
 	GccBuilder.cpp,
 	MscBuilder.cpp,
+	OwcBuilder.cpp,
 	JavaBuilder.cpp,
 	ScriptBuilder.cpp,
 	Info readonly separator,
