@@ -1,3 +1,13 @@
+class ViewDraw : public SystemDraw {
+public:
+	ViewDraw(Ctrl *ctrl);
+	~ViewDraw();
+
+protected:
+	HWND   hwnd;
+};
+
+
 Vector<WString>& coreCmdLine__();
 Vector<WString> SplitCmdLine__(const char *cmd);
 

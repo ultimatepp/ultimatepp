@@ -592,10 +592,6 @@ private:
 	bool SetWndFocus();
 	bool HasWndFocus() const;
 
-	static void WndDestroyCaret();
-	void WndCreateCaret0(const Rect& cr);
-	void WndCreateCaret(const Rect& cr);
-
 	void WndInvalidateRect0(const Rect& r);
 	void WndInvalidateRect(const Rect& r);
 
@@ -646,7 +642,10 @@ private:
 
 	typedef Ctrl CLASSNAME;
 
-
+	void        GuiPlatformConstruct();
+	void        GuiPlatformDestruct();
+	void        GuiPlatformRemove();
+	void        GuiPlatformGetTopRect(Rect& r) const;
 #ifdef GUIPLATFORM_CTRL_DECLS_INCLUDE
 	#include GUIPLATFORM_CTRL_DECLS_INCLUDE
 #else
@@ -1358,15 +1357,6 @@ public:
 	void End();
 
 	~Modality()      { End(); }
-};
-
-class ViewDraw : public SystemDraw {
-public:
-	ViewDraw(Ctrl *ctrl);
-	~ViewDraw();
-
-protected:
-	GUIPLATFORM_VIEWDRAW_DECLS
 };
 
 class LocalLoop : public Ctrl {

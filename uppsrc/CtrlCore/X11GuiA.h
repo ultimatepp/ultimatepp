@@ -1,3 +1,13 @@
+class ViewDraw : public SystemDraw {
+public:
+	ViewDraw(Ctrl *ctrl);
+	~ViewDraw();
+
+protected:
+	bool   caret;
+};
+
+
 #define GUI_APP_MAIN \
 void GuiMainFn_(); \
 \
