@@ -67,6 +67,20 @@ String Ctrl::GuiPlatformGetKeyDesc(dword key)
 	return Null;
 }
 
+void Ctrl::GuiPlatformSelection()
+{
+	d.fmt.Clear();
+	d.type = 2;
+}
+
+void GuiPlatformAdjustDragImage(ImageBuffer& b)
+{
+	if(Ctrl::IsCompositedGui()) {
+		Image h = Rescale(b, 64, 64);
+		b = h;
+	}
+}
+
 void Ctrl::PaintCaret(SystemDraw& w)
 {
 	GuiLock __;

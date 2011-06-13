@@ -821,12 +821,7 @@ void EditField::StdBar(Bar& menu) {
 	menu.Add(IsSelection(), t_("Copy"), CtrlImg::copy(), THISBACK(Copy))
 		.Key(K_CTRL_INSERT)
 		.Key(K_CTRL_C);
-	menu.Add(IsEditable()
-		#ifdef PLATFORM_WIN32
-			&& ::IsClipboardFormatAvailable(CF_TEXT)
-		#endif
-			,
-			t_("Paste"), CtrlImg::paste(), THISBACK(Paste))
+	menu.Add(IsEditable() && IsClipboardAvailableText(), t_("Paste"), CtrlImg::paste(), THISBACK(Paste))
 		.Key(K_SHIFT_INSERT)
 		.Key(K_CTRL_V);
 	menu.Add(IsEditable(), t_("Erase"), CtrlImg::remove(), THISBACK(Erase))
