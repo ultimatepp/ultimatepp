@@ -1,4 +1,4 @@
-#ifdef PLATFORM_X11
+#define GUI_X11
 
 #define Time    XTime
 #define Font    XFont
@@ -225,12 +225,7 @@ public:
 
 END_UPP_NAMESPACE
 
-#endif
-
-
-#ifdef PLATFORM_X11
 #include "X11/keysym.h"
-#endif
 
 
 #define GUIPLATFORM_KEYCODES_INCLUDE "X11Keys.h"
@@ -247,8 +242,6 @@ END_UPP_NAMESPACE
 #define GUIPLATFORM_PASTECLIP_DECLS \
 	int          type;
 
-#define GUIPLATFORM_INCLUDE_AFTER "X11GuiA.h"
-
 NAMESPACE_UPP
 
 String XAtomName(Atom atom);
@@ -261,5 +254,7 @@ String      ReadPropertyData(Window w, Atom property, Atom rtype = AnyPropertyTy
 Index<Atom>& _NET_Supported();
 
 #include "stdids.h"
+
+#define GUIPLATFORM_INCLUDE_AFTER "X11GuiA.h"
 
 END_UPP_NAMESPACE

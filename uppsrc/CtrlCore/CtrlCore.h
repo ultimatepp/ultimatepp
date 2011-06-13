@@ -5,12 +5,10 @@
 
 #ifdef PLATFORM_WIN32
 #include "Win32Gui.h"
-#define GUI_WIN
 #endif
 
 #ifdef PLATFORM_X11
 #include "X11Gui.h"
-#define GUI_X11
 #endif
 
 NAMESPACE_UPP
@@ -1532,8 +1530,6 @@ void   AppendClipboardImage(const Image& img);
 inline void WriteClipboardImage(const Image& img)
 	{ ClearClipboard(); AppendClipboardImage(img); }
 
-#include <CtrlCore/TopWindow.h>
-
 bool (*&DisplayErrorFn())(const Value& v);
 inline bool DisplayError(const Value& v) { return DisplayErrorFn()(v); }
 
@@ -1544,6 +1540,8 @@ String     EncodeRTF(const RichText& richtext, byte charset,
 String     EncodeRTF(const RichText& richtext, byte charset, int dot_page_width);
 String     EncodeRTF(const RichText& richtext);
 RichText   ParseRTF(const char *rtf);
+
+#include <CtrlCore/TopWindow.h>
 
 #include GUIPLATFORM_INCLUDE_AFTER
 
