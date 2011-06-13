@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 void AvoidPaintingCheck__();
 
 struct FileIconMaker : ImageMaker {
@@ -72,28 +72,12 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large, bool quick
 	return MakeImage(m);
 }
 
+#define GETFILEICON_DEFINED
+
 #endif
 
-#ifdef PLATFORM_X11
+#if defined(PLATFORM_X11) && !defined(flagNOGTK)
 
-#ifdef flagNOGTK
-Image PosixGetDriveImage(String dir, bool)
-{
-	if(dir.GetCount() == 0 || dir == "/")
-		return CtrlImg::Computer();
-	if(dir.Find("cdrom") == 0 || dir.Find("cdrecorder") == 0)
-		return CtrlImg::CdRom();
-	if(dir.Find("floppy") == 0 || dir.Find("zip") == 0)
-		return CtrlImg::Diskette();
-	return CtrlImg::Hd();
-}
-
-Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe, bool)
-{
-	return Null;
-}
-
-#else
 Image GtkThemeIcon(const char *name, bool large);
 
 Image GnomeImage(const char *s, bool large = false)
@@ -237,7 +221,26 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 	return IsNull(img) ? isexe ? (large ? lexe : exe) : (large ? lfile : file) : img;
 }
 
+#define GETFILEICON_DEFINED
+
 #endif
+
+#ifndef GETFILEICON_DEFINED
+Image PosixGetDriveImage(String dir, bool)
+{
+	if(dir.GetCount() == 0 || dir == "/")
+		return CtrlImg::Computer();
+	if(dir.Find("cdrom") == 0 || dir.Find("cdrecorder") == 0)
+		return CtrlImg::CdRom();
+	if(dir.Find("floppy") == 0 || dir.Find("zip") == 0)
+		return CtrlImg::Diskette();
+	return CtrlImg::Hd();
+}
+
+Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe, bool)
+{
+	return Null;
+}
 #endif
 
 Image NativePathIcon0(const char *path, bool folder, bool large)

@@ -2,7 +2,7 @@
 
 #define LLOG(x) // LOG(x)
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 
 #if !defined(flagNOGTK)
     #include <glib.h>

@@ -544,10 +544,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 #endif
 	doeffect = true;
 	Ctrl::PopUp(owner, true, true, GUI_DropShadows(), !owner);
-#ifdef PLATFORM_X11
-	XSync(Xdisplay, false);
-	ProcessEvents();
-#endif
+	GuiPlatformAfterMenuPopUp();
 	if(eff)
 		Animate(*this, p.x, p.y, sz.cx, sz.cy);
 }

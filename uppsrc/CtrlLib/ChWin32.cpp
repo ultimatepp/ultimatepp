@@ -7,7 +7,7 @@ NAMESPACE_UPP
 
 void ChSysInit();
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 
 #ifdef PLATFORM_WINCE
 

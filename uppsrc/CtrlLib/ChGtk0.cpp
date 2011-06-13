@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 #ifdef flagNOGTK
 
 NAMESPACE_UPP

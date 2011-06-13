@@ -85,6 +85,18 @@ void GuiPlatformGripResize(TopWindow *q)
 	}
 }
 
+Color GuiPlatformGetScreenPixel(int x, int y)
+{
+	HDC sdc = GetWindowDC(0);
+	Color c = Color::FromCR(GetPixel(sdc, x, y));
+	ReleaseDC(0, sdc);
+	return c;
+}
+
+void GuiPlatformAfterMenuPopUp()
+{
+}
+
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;

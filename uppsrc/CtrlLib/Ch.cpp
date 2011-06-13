@@ -1,6 +1,5 @@
 #include "CtrlLib.h"
 
-
 NAMESPACE_UPP
 
 #define LLOG(x)  // RLOG(x)
@@ -77,7 +76,7 @@ void ChClassicSkin()
 	LabelBoxTextColor_Write(SColorText());
 }
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 
 void ChSysInit()
 {

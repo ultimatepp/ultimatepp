@@ -37,17 +37,17 @@ public:
 	~DelayCallback()                  { KillTimeCallback(this); }
 };
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 struct Win32PrintDlg_;
 #endif
 
 #ifndef PLATFORM_WINCE
 
 class PrinterJob {
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 	One<Win32PrintDlg_> pdlg;
 #endif
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 	Size                pgsz;
 #endif
 	One<Draw>           draw;
@@ -79,7 +79,7 @@ public:
 
 #endif
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 
 class TrayIcon : Ctrl {
 	virtual bool HookProc(XEvent *event);
@@ -138,7 +138,7 @@ public:
 
 #endif
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
 
 class TrayIcon : private Ctrl {
@@ -276,7 +276,7 @@ public:
 #endif
 #endif
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 typedef FileSel FileSelector;
 #endif
 
