@@ -3,13 +3,21 @@
 
 #include <RichText/RichText.h>
 
+#include <guiplatform.h>
+
+#ifndef GUIPLATFORM_INCLUDE
+
 #ifdef PLATFORM_WIN32
-#include "Win32Gui.h"
+#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 #endif
 
 #ifdef PLATFORM_X11
-#include "X11Gui.h"
+#define GUIPLATFORM_INCLUDE "X11Gui.h"
 #endif
+
+#endif
+
+#include GUIPLATFORM_INCLUDE
 
 NAMESPACE_UPP
 
@@ -1215,6 +1223,8 @@ public:
 String GuiPlatformGetKeyDesc(dword key);
 bool   GuiPlatformHasSizeGrip();
 void   GuiPlatformGripResize(TopWindow *q);
+Color  GuiPlatformGetScreenPixel(int x, int y);
+void   GuiPlatformAfterMenuPopUp();
 
 Font FontZ(int face, int height = 0);
 

@@ -55,15 +55,7 @@ void FetchColorCtrl::MouseMove(Point pt, dword keyflags)
 		else
 		{
 			pt += GetScreenView().TopLeft();
-#ifdef PLATFORM_WIN32
-			HDC sdc = GetWindowDC(0);
-			user_color = Color::FromCR(GetPixel(sdc, pt.x, pt.y));
-			ReleaseDC(0, sdc);
-#endif
-#ifdef PLATFORM_X11
-			// todo: is it possible to screenshot a single screen pixel?
-			user_color = Black;
-#endif
+			user_color = GuiPlatformGetScreenPixel(pt.x, pt.y);
 			Action();
 		}
 	}

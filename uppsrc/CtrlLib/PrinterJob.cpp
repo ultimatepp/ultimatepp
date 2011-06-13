@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
 
 #include <commdlg.h>
@@ -15,7 +15,7 @@
 
 NAMESPACE_UPP
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 
 #ifndef PLATFORM_WINCE
 
@@ -140,7 +140,7 @@ PrinterJob& PrinterJob::CurrentPage(int i)
 
 #endif
 
-#ifdef PLATFORM_POSIX
+#ifdef GUI_X11
 
 String System(const char *cmd, const String& in)
 {

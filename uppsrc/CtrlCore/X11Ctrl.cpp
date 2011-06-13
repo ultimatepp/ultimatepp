@@ -97,7 +97,7 @@ void GuiPlatformGripResize(TopWindow *q)
 		m.window = q->GetWindow();
 		m.message_type = XAtom("_NET_WM_MOVERESIZE");
 		m.format = 32;
-		Point p = GetMousePos();
+		p = GetMousePos();
 		m.data.l[0] = p.x;
 		m.data.l[1] = p.y;
 		m.data.l[2] = 4;
@@ -106,6 +106,18 @@ void GuiPlatformGripResize(TopWindow *q)
 		XSendEvent(Xdisplay, Xroot, 0, SubstructureNotifyMask|SubstructureRedirectMask,
 		           (XEvent*)&m);
 	}
+}
+
+Color GuiPlatformGetScreenPixel(int x, int y)
+{
+	// TODO
+	return Black;
+}
+
+void GuiPlatformAfterMenuPopUp()
+{
+	XSync(Xdisplay, false);
+	ProcessEvents();
 }
 
 void Ctrl::PaintCaret(SystemDraw& w)
