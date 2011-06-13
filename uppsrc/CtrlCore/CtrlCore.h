@@ -7,6 +7,8 @@
 
 #ifndef GUIPLATFORM_INCLUDE
 
+#error
+
 #ifdef PLATFORM_WIN32
 #define GUIPLATFORM_INCLUDE "Win32Gui.h"
 #endif

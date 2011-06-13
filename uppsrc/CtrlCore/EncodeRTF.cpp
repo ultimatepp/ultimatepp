@@ -273,7 +273,7 @@ bool RTFEncoder::PutCharFormat(const RichPara::CharFormat& cf, const RichPara::C
 
 void RTFEncoder::PutObject(const RichObject& object)
 {
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
 	Size log_size = object.GetPhysicalSize(); // / 6;
 	Size out_size = object.GetSize();

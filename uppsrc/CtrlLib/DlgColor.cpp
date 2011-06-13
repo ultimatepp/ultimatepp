@@ -1164,32 +1164,21 @@ void PalCtrl::OnStandard()
 
 void PalCtrl::OnSave()
 {
-#ifndef PLATFORM_WINCE //TODO?
-	FileSelector fsel;
-	fsel.Type(t_("Palette (*.pal)"), t_("*.pal"));
-	fsel.DefaultExt(t_("pal"));
-	fsel <<= recent_file;
-	if(fsel.ExecuteSaveAs(t_("Save palette as..")))
+	recent_file = SelectFileSaveAs("Palette (*.pal)\n*.pal");
+	if(recent_file.GetCount())
 	{
-		recent_file = ~fsel;
 		StringStream stream;
 		SerializePalette(stream);
 		if(!SaveFile(recent_file, stream))
 			Exclamation(NFormat(t_("Error writing file [* \1%s\1]."), recent_file));
 	}
-#endif
 }
 
 void PalCtrl::OnLoad()
 {
-#ifndef PLATFORM_WINCE //TODO?
-	FileSelector fsel;
-	fsel.Type(t_("Palette (*.pal)"), t_("*.pal"))
-		.DefaultExt(t_("pal"));
-	fsel <<= recent_file;
-	if(fsel.ExecuteOpen(t_("Load palette..")))
+	recent_file = SelectFileOpen("Palette (*.pal)\n*.pal");
+	if(recent_file.GetCount())
 	{
-		recent_file = ~fsel;
 		FileIn fi(recent_file);
 		if(!fi.IsOpen())
 		{
@@ -1205,7 +1194,6 @@ void PalCtrl::OnLoad()
 		}
 		Refresh();
 	}
-#endif
 }
 
 void PalCtrl::OnSizeSmall()

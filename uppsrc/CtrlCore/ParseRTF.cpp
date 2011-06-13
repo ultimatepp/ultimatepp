@@ -918,7 +918,7 @@ void RTFParser::ReadPict()
 			else if(PassQ("emfblip"))    blip_type    = EMF_BLIP;
 			else if(PassQ("pngblip"))    blip_type    = PNG_BLIP;
 			else if(PassQ("jpegblip"))   blip_type    = JPEG_BLIP;
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
 			else if(PassQ("wmetafile"))  { blip_type = WMF_BLIP; wmf_mode = command_arg; }
 #endif
@@ -932,7 +932,7 @@ void RTFParser::ReadPict()
 	Size drawing_size;
 	DrawingDraw dd;
 	RichObject object;
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
 	if(blip_type == EMF_BLIP || blip_type == WMF_BLIP) {
 		log_size = min(log_size, GetFitSize(log_size, final_size));
