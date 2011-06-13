@@ -1213,6 +1213,8 @@ public:
 };
 
 String GuiPlatformGetKeyDesc(dword key);
+bool   GuiPlatformHasSizeGrip();
+void   GuiPlatformGripResize(TopWindow *q);
 
 Font FontZ(int face, int height = 0);
 

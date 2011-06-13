@@ -70,6 +70,21 @@ void GuiPlatformAdjustDragImage(ImageBuffer&)
 {
 }
 
+bool GuiPlatformHasSizeGrip()
+{
+	return true;
+}
+
+void GuiPlatformGripResize(TopWindow *q)
+{
+	HWND hwnd = q->GetHWND();
+	Point p = GetMousePos() - q->GetRect().TopLeft();
+	if(hwnd) {
+		::SendMessage(hwnd, WM_SYSCOMMAND, 0xf008, MAKELONG(p.x, p.y));
+		::SendMessage(hwnd, WM_LBUTTONUP, 0, MAKELONG(p.x, p.y));
+	}
+}
+
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;

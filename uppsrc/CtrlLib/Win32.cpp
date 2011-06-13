@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
 
 #include <commdlg.h>
@@ -12,7 +12,7 @@
 
 NAMESPACE_UPP
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 
 #ifndef PLATFORM_WINCE
 

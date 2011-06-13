@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
 
 #define LLOG(x)
