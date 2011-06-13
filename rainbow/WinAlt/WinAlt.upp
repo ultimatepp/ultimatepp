@@ -1,0 +1,19 @@
+file
+	WinAlt.h,
+	WinAltGuiA.h,
+	WinAltKeys.h,
+	DrawOpWinAlt.cpp,
+	DrawTextWinAlt.cpp,
+	DrawWinAlt.cpp,
+	ImageWinAlt.cpp,
+	UtilWinAlt.cpp,
+	WinAltCtrl.h,
+	WinAltCtrl.cpp,
+	TopWinAlt.cpp,
+	WinAltTop.h,
+	WinAltClip.cpp,
+	WinAltDnD.cpp,
+	WinAltProc.cpp,
+	WinAltWnd.cpp,
+	ChSysInit.cpp;
+
