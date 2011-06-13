@@ -382,4 +382,4 @@ public:
 
 END_UPP_NAMESPACE
 
-#define GUIPLATFORM_INCLUDE_AFTER <WinAlt/WinAltGuiA.h>
+#define GUIPLATFORM_INCLUDE_AFTER <WinAlt/WinAltA.h>
