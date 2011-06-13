@@ -237,10 +237,18 @@ Image PosixGetDriveImage(String dir, bool)
 	return CtrlImg::Hd();
 }
 
-Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe, bool)
+#ifdef PLATFORM_WIN32
+Image GetFileIcon(const String& folder, bool, bool, bool, bool = false)
 {
 	return Null;
 }
+#else
+Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool isexe, bool = false)
+{
+	return Null;
+}
+
+#endif
 #endif
 
 Image NativePathIcon0(const char *path, bool folder, bool large)

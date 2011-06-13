@@ -43,6 +43,8 @@ struct Win32PrintDlg_;
 
 #ifndef PLATFORM_WINCE
 
+#if defined(GUI_WIN) || defined(GUI_X11)
+
 class PrinterJob {
 #ifdef GUI_WIN
 	One<Win32PrintDlg_> pdlg;
@@ -76,6 +78,8 @@ public:
 	PrinterJob(const char *name = NULL);
 	~PrinterJob();
 };
+
+#endif
 
 #endif
 
