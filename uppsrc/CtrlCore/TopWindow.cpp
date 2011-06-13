@@ -325,7 +325,7 @@ int  TopWindow::Run(bool appmodal)
 	inloop = pinloop;
 	exitcode = pexitcode;
 	LLOG("TopWindow::Run() = " << q << " -> " << typeid(*this).name());
-#ifdef PLATFORM_WIN32
+#ifdef GUI_WIN
 	LLOG("Focus = " << UPP::Name(GetFocusCtrl()) << ", raw " << (void *)::GetFocus());
 #endif
 	return q;

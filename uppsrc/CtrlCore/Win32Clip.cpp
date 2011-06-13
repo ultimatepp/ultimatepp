@@ -494,6 +494,28 @@ Vector<String> GetFiles(PasteClip& clip)
 	return f;
 }
 
+bool   Has(UDropTarget *dt, const char *fmt);
+String Get(UDropTarget *dt, const char *fmt);
+
+bool PasteClip::IsAvailable(const char *fmt) const
+{
+	if(this == &Ctrl::Selection())
+		return false;
+	return dt ? UPP::Has(dt, fmt) : IsClipboardAvailable(fmt);
+}
+
+String PasteClip::Get(const char *fmt) const
+{
+	if(this == &Ctrl::Selection())
+		return Null;
+	return dt ? UPP::Get(dt, fmt) : ReadClipboard(fmt);
+}
+
+void PasteClip::GuiPlatformConstruct()
+{
+	dt = NULL;
+}
+
 END_UPP_NAMESPACE
 
 #endif

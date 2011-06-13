@@ -308,6 +308,8 @@ void DnDRequest(XSelectionRequestEvent *se)
 
 void DnDClear() {}
 
+void GuiPlatformAdjustDragImage(ImageBuffer& b);
+
 Image MakeDragImage(const Image& arrow, Image sample);
 
 Ptr<Ctrl> sDnDSource;

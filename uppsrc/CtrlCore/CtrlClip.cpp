@@ -37,10 +37,7 @@ PasteClip& Ctrl::Selection()
 {
 	GuiLock __;
 	static PasteClip d;
-#ifdef PLATFORM_X11
-	d.fmt.Clear();
-	d.type = 2;
-#endif
+	GuiPlatformSelection();
 	return d;
 }
 
@@ -53,37 +50,6 @@ String Ctrl::GetSelectionData(const String& fmt) const
 {
 	return Null;
 }
-
-#ifdef PLATFORM_WIN32
-bool   Has(UDropTarget *dt, const char *fmt);
-String Get(UDropTarget *dt, const char *fmt);
-
-bool PasteClip::IsAvailable(const char *fmt) const
-{
-	if(this == &Ctrl::Selection())
-		return false;
-	return dt ? UPP::Has(dt, fmt) : IsClipboardAvailable(fmt);
-}
-
-String PasteClip::Get(const char *fmt) const
-{
-	if(this == &Ctrl::Selection())
-		return Null;
-	return dt ? UPP::Get(dt, fmt) : ReadClipboard(fmt);
-}
-#endif
-
-#ifdef PLATFORM_X11
-bool PasteClip::IsAvailable(const char *fmt) const
-{
-	return Ctrl::ClipHas(type, fmt);
-}
-
-String PasteClip::Get(const char *fmt) const
-{
-	return Ctrl::ClipGet(type, fmt);
-}
-#endif
 
 bool PasteClip::Accept()
 {
@@ -114,11 +80,7 @@ PasteClip::PasteClip()
 {
 	paste = true;
 	accepted = false;
-#ifdef PLATFORM_WIN32
-	dt = NULL;
-#else
-	type = 0;
-#endif
+	GuiPlatformConstruct();
 }
 
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions)
@@ -160,6 +122,8 @@ WString Unicode__(const String& s)
 {
 	return WString((const wchar *)~s, s.GetLength() / 2);
 }
+
+void GuiPlatformAdjustDragImage(ImageBuffer& b);
 
 Image MakeDragImage(const Image& arrow, Image sample)
 {
@@ -221,12 +185,7 @@ Image MakeDragImage(const Image& arrow, Image sample)
 			s += b.GetWidth();
 			Swap(c1, c2);
 		}
-#ifdef PLATFORM_X11
-		if(Ctrl::IsCompositedGui()) {
-			Image h = Rescale(b, 64, 64);
-			b = h;
-		}
-#endif
+		GuiPlatformAdjustDragImage(b);
 		Over(b, Point(0, 0), arrow, arrow.GetSize());
 	}
 

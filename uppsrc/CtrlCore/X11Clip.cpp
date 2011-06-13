@@ -366,6 +366,21 @@ Vector<String> GetFiles(PasteClip& clip) {
 	return r;
 }
 
+bool PasteClip::IsAvailable(const char *fmt) const
+{
+	return Ctrl::ClipHas(type, fmt);
+}
+
+String PasteClip::Get(const char *fmt) const
+{
+	return Ctrl::ClipGet(type, fmt);
+}
+
+void PasteClip::GuiPlatformConstruct()
+{
+	type = 0;
+}
+
 END_UPP_NAMESPACE
 
 #endif

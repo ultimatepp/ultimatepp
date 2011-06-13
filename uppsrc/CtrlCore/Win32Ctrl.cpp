@@ -62,6 +62,14 @@ String GuiPlatformGetKeyDesc(dword key)
 	return Null;
 }
 
+void Ctrl::GuiPlatformSelection()
+{
+}
+
+void GuiPlatformAdjustDragImage(ImageBuffer& b)
+{
+}
+
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;

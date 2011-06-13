@@ -216,6 +216,8 @@ class PasteClip {
 	String       fmt;
 	String       data;
 
+	void GuiPlatformConstruct();
+
 public:
 	bool   IsAvailable(const char *fmt) const;
 	String Get(const char *fmt) const;
@@ -242,6 +244,10 @@ public:
 
 String  Unicode__(const WString& w);
 WString Unicode__(const String& s);
+
+void GuiPlatformAdjustDragImage(ImageBuffer& b);
+
+Image MakeDragImage(const Image& arrow, Image sample);
 
 const char *ClipFmtsText();
 bool        AcceptText(PasteClip& clip);
@@ -648,7 +654,8 @@ private:
 	void        GuiPlatformGetTopRect(Rect& r) const;
 	bool        GuiPlatformRefreshFrameSpecial(const Rect& r);
 	bool        GuiPlatformSetFullRefreshSpecial();
-	
+	static void GuiPlatformSelection();
+
 #ifdef GUIPLATFORM_CTRL_DECLS_INCLUDE
 	#include GUIPLATFORM_CTRL_DECLS_INCLUDE
 #else
