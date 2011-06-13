@@ -506,7 +506,10 @@ void ChInflateMargins(Size& sz, const Value& look)
 	InflateMargins(sz, ChMargins(look));
 }
 
-Image AdjustColors(const Image& img) {
+Image AdjustColors(const Image& simg) {
+	Image h = simg;
+	ImageBuffer img(h);
+	Unmultiply(img);
 	const RGBA *s = ~img;
 	const RGBA *e = s + img.GetLength();
 	ImageBuffer w(img.GetSize());
@@ -543,6 +546,7 @@ Image AdjustColors(const Image& img) {
 	}
 	w.SetHotSpot(img.GetHotSpot());
 	w.Set2ndSpot(img.Get2ndSpot());
+	Premultiply(w);
 	return w;
 }
 
