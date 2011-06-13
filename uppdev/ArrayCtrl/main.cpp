@@ -6,6 +6,8 @@ struct App : TopWindow {
 	ArrayCtrl a, b;
 	Splitter  s;
 
+	StatusBar status;
+
 	void DnD(PasteClip& d)
 	{
 		if(AcceptText(d))
@@ -58,6 +60,7 @@ struct App : TopWindow {
 				a.AddSeparator();
 		}
 		Sizeable();
+		AddFrame(status);
 	}
 };
 

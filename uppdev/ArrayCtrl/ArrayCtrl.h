@@ -8,6 +8,7 @@ using namespace Upp;
 
 
 class ArrayCtrl : public TopWindow {
+
 public:
 	typedef ArrayCtrl CLASSNAME;
 	ArrayCtrl();
