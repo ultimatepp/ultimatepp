@@ -575,15 +575,11 @@ ScrollBar& ScrollBar::SetStyle(const Style& s)
 
 Image SizeGrip::CursorImage(Point p, dword)
 {
-#ifdef PLATFORM_X11
-	if(_NET_Supported().Find(XAtom("_NET_WM_MOVERESIZE")) >= 0) {
-#endif
+	if(GuiPlatformHasSizeGrip()) {
 		TopWindow *q = dynamic_cast<TopWindow *>(GetTopCtrl());
 		if(q && !q->IsMaximized() && q->IsSizeable())
 			return Image::SizeBottomRight();
-#ifdef PLATFORM_X11
 	}
-#endif
 	return Image::Arrow();
 }
 
@@ -591,21 +587,16 @@ CH_IMAGE(SizeGripImg, CtrlsImg::SizeGrip());
 
 void SizeGrip::Paint(Draw& w)
 {
-    Size sz = GetSize();
-    if(!IsTransparent())
-        w.DrawRect(sz, SColorFace);
-#ifdef PLATFORM_X11
-    if(_NET_Supported().Find(XAtom("_NET_WM_MOVERESIZE")) >= 0)
-    {
-#endif
+	Size sz = GetSize();
+	if(!IsTransparent())
+	    w.DrawRect(sz, SColorFace);
+	if(GuiPlatformHasSizeGrip()) {
 		TopWindow *q = dynamic_cast<TopWindow *>(GetTopCtrl());
 		if(q && !q->IsMaximized() && q->IsSizeable()) {
 			Size isz = CtrlsImg::SizeGrip().GetSize();
 			w.DrawImage(sz.cx - isz.cx, sz.cy - isz.cy, CtrlsImg::SizeGrip());
 		}
-#ifdef PLATFORM_X11
     }
-#endif
 }
 
 SizeGrip::SizeGrip()
@@ -621,35 +612,8 @@ SizeGrip::~SizeGrip() {}
 void SizeGrip::LeftDown(Point p, dword flags)
 {
 	TopWindow *q = dynamic_cast<TopWindow *>(GetTopCtrl());
-	if(!q || q->IsMaximized() || !q->IsSizeable()) return;
-#ifdef PLATFORM_WIN32
-	HWND hwnd = q->GetHWND();
-	p = GetMousePos() - q->GetRect().TopLeft();
-	if(hwnd) {
-		::SendMessage(hwnd, WM_SYSCOMMAND, 0xf008, MAKELONG(p.x, p.y));
-		::SendMessage(hwnd, WM_LBUTTONUP, 0, MAKELONG(p.x, p.y));
-	}
-#endif
-#ifdef PLATFORM_X11
-	if(_NET_Supported().Find(XAtom("_NET_WM_MOVERESIZE")) >= 0) {
-		XUngrabPointer(Xdisplay, CurrentTime); // 2008-02-25 cxl/mdelfe... compiz fix... who has grabbed it anyway?...
-		XClientMessageEvent m;
-		m.type = ClientMessage;
-		m.serial = 0;
-		m.send_event = XTrue;
-		m.window = q->GetWindow();
-		m.message_type = XAtom("_NET_WM_MOVERESIZE");
-		m.format = 32;
-		p = GetMousePos();
-		m.data.l[0] = p.x;
-		m.data.l[1] = p.y;
-		m.data.l[2] = 4;
-		m.data.l[3] = 0;
-		m.data.l[4] = 0;
-		XSendEvent(Xdisplay, Xroot, 0, SubstructureNotifyMask|SubstructureRedirectMask,
-		           (XEvent*)&m);
-	}
-#endif
+	if(q && !q->IsMaximized() && q->IsSizeable())
+		GuiPlatformGripResize(q);
 }
 
 void ScrollBars::Scroll() {

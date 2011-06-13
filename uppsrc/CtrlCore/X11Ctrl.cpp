@@ -81,6 +81,33 @@ void GuiPlatformAdjustDragImage(ImageBuffer& b)
 	}
 }
 
+bool GuiPlatformHasSizeGrip()
+{
+	return _NET_Supported().Find(XAtom("_NET_WM_MOVERESIZE")) >= 0;
+}
+
+void GuiPlatformGripResize(TopWindow *q)
+{
+	if(_NET_Supported().Find(XAtom("_NET_WM_MOVERESIZE")) >= 0) {
+		XUngrabPointer(Xdisplay, CurrentTime); // 2008-02-25 cxl/mdelfe... compiz fix... who has grabbed it anyway?...
+		XClientMessageEvent m;
+		m.type = ClientMessage;
+		m.serial = 0;
+		m.send_event = XTrue;
+		m.window = q->GetWindow();
+		m.message_type = XAtom("_NET_WM_MOVERESIZE");
+		m.format = 32;
+		p = GetMousePos();
+		m.data.l[0] = p.x;
+		m.data.l[1] = p.y;
+		m.data.l[2] = 4;
+		m.data.l[3] = 0;
+		m.data.l[4] = 0;
+		XSendEvent(Xdisplay, Xroot, 0, SubstructureNotifyMask|SubstructureRedirectMask,
+		           (XEvent*)&m);
+	}
+}
+
 void Ctrl::PaintCaret(SystemDraw& w)
 {
 	GuiLock __;
