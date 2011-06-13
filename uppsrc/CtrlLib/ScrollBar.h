@@ -150,9 +150,6 @@ public:
 	virtual ~SizeGrip();
 };
 
-Image SizeGripImg();
-void  SizeGripImg_Write(Image m);
-
 class ScrollBars : public CtrlFrame {
 public:
 	virtual void FrameLayout(Rect& r);

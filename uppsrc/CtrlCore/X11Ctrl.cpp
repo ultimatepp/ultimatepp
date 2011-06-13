@@ -97,7 +97,7 @@ void GuiPlatformGripResize(TopWindow *q)
 		m.window = q->GetWindow();
 		m.message_type = XAtom("_NET_WM_MOVERESIZE");
 		m.format = 32;
-		p = GetMousePos();
+		Point p = GetMousePos();
 		m.data.l[0] = p.x;
 		m.data.l[1] = p.y;
 		m.data.l[2] = 4;
