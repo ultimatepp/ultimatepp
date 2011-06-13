@@ -1,3 +1,4 @@
+#define GUI_WIN
 
 NAMESPACE_UPP
 
