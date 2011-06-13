@@ -62,11 +62,11 @@ String GuiPlatformGetKeyDesc(dword key)
 	return Null;
 }
 
-void Ctrl::GuiPlatformSelection()
+void Ctrl::GuiPlatformSelection(PasteClip&)
 {
 }
 
-void GuiPlatformAdjustDragImage(ImageBuffer& b)
+void GuiPlatformAdjustDragImage(ImageBuffer&)
 {
 }
 

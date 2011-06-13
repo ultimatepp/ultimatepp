@@ -654,7 +654,7 @@ private:
 	void        GuiPlatformGetTopRect(Rect& r) const;
 	bool        GuiPlatformRefreshFrameSpecial(const Rect& r);
 	bool        GuiPlatformSetFullRefreshSpecial();
-	static void GuiPlatformSelection();
+	static void GuiPlatformSelection(PasteClip& d);
 
 #ifdef GUIPLATFORM_CTRL_DECLS_INCLUDE
 	#include GUIPLATFORM_CTRL_DECLS_INCLUDE

@@ -37,7 +37,7 @@ PasteClip& Ctrl::Selection()
 {
 	GuiLock __;
 	static PasteClip d;
-	GuiPlatformSelection();
+	GuiPlatformSelection(d);
 	return d;
 }
 

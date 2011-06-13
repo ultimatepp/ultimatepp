@@ -49,7 +49,7 @@ bool Ctrl::GuiPlatformSetFullRefreshSpecial()
 	return false;
 }
 
-String Ctrl::GuiPlatformGetKeyDesc(dword key)
+String GuiPlatformGetKeyDesc(dword key)
 {
 	static struct {
 		dword key;
@@ -67,7 +67,7 @@ String Ctrl::GuiPlatformGetKeyDesc(dword key)
 	return Null;
 }
 
-void Ctrl::GuiPlatformSelection()
+void Ctrl::GuiPlatformSelection(PasteClip& d)
 {
 	d.fmt.Clear();
 	d.type = 2;
