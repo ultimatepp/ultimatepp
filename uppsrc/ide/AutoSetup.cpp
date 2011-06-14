@@ -51,6 +51,17 @@ void AutoSetup()
 	dlg.domingw <<= !IsNull(dlg.mingw);
 
 
+	String owcdir = GetEnv("WATCOM");
+	if(owcdir.IsEmpty())
+		owcdir = "C:\\WATCOM";
+
+	if(DirectoryExists(owcdir))
+		dlg.owc <<= owcdir;
+
+	dlg.owcmethod <<= "OWC";
+	dlg.doowc <<= !IsNull(dlg.owc);	
+
+
 	String vs = GetWinRegString("ProductDir", "SOFTWARE\\Microsoft\\VisualStudio\\7.1\\Setup\\VC");
 	dlg.visualcpp71 <<=
 		NormalizePathNN(
@@ -146,6 +157,7 @@ void AutoSetup()
 
 	Array< FrameRight<Button> > bd;
 	DirSel(dlg.mingw, bd.Add());
+	DirSel(dlg.owc, bd.Add());
 	DirSel(dlg.visualcpp71, bd.Add());
 	DirSel(dlg.visualcpp8, bd.Add());
 	DirSel(dlg.visualcpp9, bd.Add());
@@ -202,6 +214,39 @@ void AutoSetup()
 			"PATH = " + AsCString(AppendFileName(~dlg.mingw, "bin") + exe) + ";\n"
 			"INCLUDE = " + AsCString(AppendFileName(~dlg.mingw, "include") + include) + ";\n"
 			"LIB = " + AsCString(AppendFileName(~dlg.mingw, "lib") + lib + mlib) + ";\n"
+		);
+		SaveFile(AppendFileName(dir, "default_method"), m);
+	}
+
+	String owc = ~dlg.owc;
+	if(!IsNull(owc) && dlg.doowc) {
+		String m = ~dlg.owcmethod;
+		SaveFile(
+			AppendFileName(dir, m + ".bm"),
+			"BUILDER = \"OWC\";\n"
+			"DEBUG_INFO = \"2\";\n"
+			"DEBUG_BLITZ = \"1\";\n"
+			"DEBUG_LINKMODE = \"0\";\n"
+			"DEBUG_OPTIONS = \"-d2\";\n"
+			"RELEASE_BLITZ = \"0\";\n"
+			"RELEASE_LINKMODE = \"0\";\n"
+			"RELEASE_OPTIONS = \"-ot\";\n"
+			"RELEASE_SIZE_OPTIONS = \"-os\";\n"
+			"DEBUGGER = \"gdb\";\n"
+			"REMOTE_HOST = \"\";\n"
+			"REMOTE_OS = \"\";\n"
+			"REMOTE_TRANSFER = \"\";\n"
+			"REMOTE_MAP = \"\";\n"
+			"PATH = " + AsCString(
+				AppendFileName(owc, "binnt") + ';' +
+				AppendFileName(owc, "binw") +
+				exe) + ";\n"
+			"INCLUDE = " + AsCString(AppendFileName(owc, "h") + ';' +
+				AppendFileName(owc, "h\\nt") +
+				include) + ";\n"
+			"LIB = " + AsCString(AppendFileName(owc, "lib386") + ';' +
+				AppendFileName(owc, "lib386\\nt") +
+				lib + mlib) + ";\n"
 		);
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
