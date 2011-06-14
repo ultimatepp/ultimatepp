@@ -18,75 +18,73 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 	IdeConsoleBeginGroup(package);
 	Vector<String> obj;
 
-	/*bool is_shared = HasFlag("SO");
-	String shared_ext = (HasFlag("WIN32") ? ".dll" : ".so");*/
+	bool is_shared = HasFlag("SO");
 
 	String cc = CmdLine(package, pkg),
 		clc = CompilerName(false), clcpp = CompilerName(true);
 
-	// <..> Flags configuration
 	if (HasFlag("MT"))
 	    cc << " -bm";
-#ifdef PLATFORM_WIN32
-	cc << " -bt=nt";
-#endif
+
+	if (HasFlag("WIN32"))
+		cc << " -bt=nt";
+
 	String cc_speed = cc;
 	bool   release = false;
 
-	if(HasFlag("DEBUG"))
+	if (HasFlag("DEBUG"))
 		cc << " -d_DEBUG " << debug_options;
 	else {
 		release = true;
 		cc << ' ' << release_size_options;
 		cc_speed << ' ' << release_options;
-		if(opt == R_SPEED || pkg.optimize_speed)
+		if (opt == R_SPEED || pkg.optimize_speed)
 			cc = cc_speed;
 	}
-	// <..>
 
 	Vector<String> sfile, isfile;
 	Vector<String> soptions, isoptions;
 	Vector<bool>   optimize, ioptimize;
 	bool           error = false;
 
-	for(int i = 0; i < pkg.GetCount(); i++) {
-		if(!IdeIsBuilding())
+	for (int i = 0; i < pkg.GetCount(); i++) {
+		if (!IdeIsBuilding())
 			return false;
-		if(!pkg[i].separator) {
+		if (!pkg[i].separator) {
 			String gop = Gather(pkg[i].option, config.GetKeys());
 			Vector<String> srcfile = CustomStep(SourcePath(package, pkg[i]));
-			if(srcfile.GetCount() == 0)
+			if (srcfile.GetCount() == 0)
 				error = true;
-			for(int j = 0; j < srcfile.GetCount(); j++) {
+			for (int j = 0; j < srcfile.GetCount(); j++) {
 				String fn = srcfile[j];
 				String ext = ToLower(GetFileExt(fn));
-				if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".rc" || ext == ".brc") {
+				if (ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".rc" || ext == ".brc") {
 					sfile.Add(fn);
 					soptions.Add(gop);
 					optimize.Add(release && pkg[i].optimize_speed && opt == R_OPTIMAL);
 				}
 				else
-				if(ext == ".icpp") {
+				if (ext == ".icpp") {
 					isfile.Add(fn);
 					isoptions.Add(gop);
 					ioptimize.Add(release && pkg[i].optimize_speed && opt == R_OPTIMAL);
 				}
 				else
-				if(ext == ".obj")
+				if (ext == ".obj")
 					obj.Add(fn);
 				else
-				if(ext == ".lib")
+				if (ext == ".lib")
 					linkfile.Add(fn);
 			}
 		}
 	}
 
-	if(HasFlag("BLITZ")) {
+	if (HasFlag("BLITZ")) {
 		Blitz b = BlitzStep(sfile, soptions, obj, ".obj", optimize);
-		if(b.build) {
+		if (b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int slot = AllocSlot();
-			if(slot < 0 || !Run(String().Cat() << clcpp << cc << ' '
+			if (slot < 0 || !Run(String().Cat() << clcpp << cc << ' '
 			<< GetHostPathQ(b.path) << " -fo=" << GetHostPathQ(b.object), slot, GetHostPath(b.object), b.count))
 				error = true;
 		}
@@ -99,8 +97,8 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 
 	int ccount = 0;
 
-	for(int i = 0; i < sfile.GetCount(); i++) {
-		if(!IdeIsBuilding())
+	for (int i = 0; i < sfile.GetCount(); ++i) {
+		if (!IdeIsBuilding())
 			return false;
 		String fn = sfile[i];
 		String ext = ToLower(GetFileExt(fn));
@@ -108,18 +106,18 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 		bool brc = (ext == ".brc");
 		bool init = (i >= first_ifile);
 		String objfile = CatAnyPath(outdir, GetFileName(fn) + ".obj");
-		if(HdependFileTime(fn) > GetFileTime(objfile)) {
+		if (HdependFileTime(fn) > GetFileTime(objfile)) {
 			int time = GetTickCount();
 			bool execerr = false;
-			if(rc) {
+			if (rc) {
 				PutConsole(GetFileNamePos(fn));
 				int slot = AllocSlot();
-				if(slot < 0 || !Run("wrc -q -fo=" + GetHostPathQ(objfile) + Includes(" -i=", package, pkg)
+				if (slot < 0 || !Run("wrc -q -fo=" + GetHostPathQ(objfile) + Includes(" -i=", package, pkg)
 					+ ' ' + GetHostPathQ(fn), slot, GetHostPath(objfile), 1))
 					execerr = true;
 			}
 			else
-			if(brc) {
+			if (brc) {
 				PutConsole(GetFileNamePos(fn));
 				try {
 					String hfn = GetHostPath(fn);
@@ -129,37 +127,169 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 					CParser parser(brcdata, hfn);
 					BinaryToObject(GetHostPath(objfile), parser, GetFileDirectory(hfn), THISBACK(BinObjConsole));
 				}
-				catch(Exc e) {
+				catch (Exc e) {
 					PutConsole(e);
 					execerr = true;
 				}
 			}
 			else {
 				String c = cc;
-				if(optimize[i])
+				if (optimize[i])
 					c = cc_speed;
 				int slot = AllocSlot();
 
-				if(slot < 0 || !Run((ext == ".c" ? clc : clcpp + " -xr -xs") + c + soptions[i] + ' '
+				if (slot < 0 || !Run((ext == ".c" ? clc : clcpp + " -xr -xs") + c + soptions[i] + ' '
 					+ GetHostPathQ(fn) + " -fo=" + GetHostPathQ(objfile), slot, GetHostPath(objfile), 1))
 					execerr = true;
 			}
 
-			if(execerr)
+			if (execerr)
 				DeleteFile(objfile);
 			error |= execerr;
 			PutVerbose("compiled in " + GetPrintTime(time));
 			ccount++;
 		}
-		if(init)
+		if (init)
 			linkfile.Add(objfile);
 		else
 			obj.Add(objfile);
 	}
 
-	if(error) {
+	if (error) {
 		IdeConsoleEndGroup();
 		return false;
+	}
+
+	Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
+	for (int i = 0, n = libs.GetCount(); i < n; ++i)
+		linkfile.Add(AppendExt(libs[i], ".lib"));
+
+	linkoptions << Gather(pkg.link, config.GetKeys());
+	if (linkoptions.GetCount() > 0)
+		linkoptions << ' ';
+
+	int linktime = GetTickCount();
+	if (!HasFlag("MAIN")) {
+		if (HasFlag("BLITZ") || HasFlag("NOLIB")) {
+			obj.Append(linkfile);
+			linkfile = obj;
+			IdeConsoleEndGroup();
+			return true;
+		}
+
+		String product;
+		if (is_shared)
+			product = GetSharedLibPath(package);
+		else
+			product = CatAnyPath(outdir, GetAnyFileName(package) + ".lib");
+
+		Time producttime = GetFileTime(product);
+		linkfile.Add(ForceExt(product, ".lib"));
+
+		if (!Wait()) {
+			IdeConsoleEndGroup();
+			return false;
+		}
+
+		for (int i = 0, n = obj.GetCount(); i < n; ++i)
+			if (GetFileTime(obj[i]) > producttime) {
+				String lib;
+
+				if (is_shared) {
+					lib << LinkerName() << " option quiet";
+		
+					if (HasFlag("DEBUG"))
+					    lib << " debug all option incremental";
+
+					if (HasFlag("WIN32"))
+						lib << " system nt_dll";
+
+					const int libpathCount = libpath.GetCount();
+					if (libpathCount > 0) {
+						lib << " libpath ";
+						for (int j = 0, k = libpathCount - 1; j < libpathCount; ++j) {
+							lib << '\"' << libpath[j] << '\"';
+							if (j < k)
+								lib << ';';
+						}
+					}
+
+					if (!linkoptions.IsEmpty())
+						lib << ' ' << linkoptions;
+
+					lib << " file ";
+
+					for (int j = 0, k = n - 1; j < n; ++j) {
+						lib << '\'' << obj[j] << '\'';
+						if (j < k)
+							lib << ", ";
+					}
+
+					const int all_usesCount = all_uses.GetCount(),
+						all_librariesCount = all_libraries.GetCount();
+
+					if (all_usesCount > 0 || all_librariesCount > 0) {
+						lib << " library ";
+
+						for (int j = 0, k = all_usesCount - 1; j < all_usesCount; ++j) {
+							lib << '\'' << GetHostPath(ForceExt(GetSharedLibPath(all_uses[j]), ".lib")) << '\'';
+							if (j < k)
+								lib << ", ";
+						}
+
+						if (all_usesCount > 0 && all_librariesCount > 0)
+							lib << ", ";
+
+						for (int j = 0, k = all_librariesCount - 1; j < all_librariesCount; ++j) {
+							String libfile(AppendExt(all_libraries[j], ".lib"));
+							if (!IsFullPath(libfile)) {
+								for (int p = 0; p < libpath.GetCount(); ++p) {
+									String nf(NormalizePath(libfile, libpath[p]));
+
+									if (FileExists(nf)) {
+										libfile = nf;
+										break;
+									}
+								}
+							}
+
+							lib << '\'' << GetHostPath(libfile) << '\'';
+
+							if (j < k)
+								lib << ", ";
+						}
+					}
+
+					lib << " name '" << product << '\'';
+				}
+				else {
+					lib << "wlib -q -b -n -pa ";
+
+					if (!linkoptions.IsEmpty())
+						lib << linkoptions;
+
+					lib << '\'' << product << '\'';
+
+					for (int j = 0; j < n; ++j)
+						lib << " '" << GetHostPath(obj[j]) << '\'';
+				}
+
+				PutConsole("Creating library...");
+				IdeConsoleEndGroup();
+				DeleteFile(product);
+
+				if (Execute(lib)) {
+					DeleteFile(product);
+					return false;
+				}
+
+				PutConsole(String().Cat() << product << " (" << GetFileInfo(product).length
+				           << " B) created in " << GetPrintTime(linktime));
+
+				break;
+			}
+
+		return true;
 	}
 
 	obj.Append(linkfile);
@@ -170,34 +300,33 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, S
 bool OwcBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
 {
 	int time = GetTickCount();
-	if(!Wait())
+	if (!Wait())
 		return false;
 
 	const int linkfileCount = linkfile.GetCount();
 
-	for(int i = 0; i < linkfileCount; i++)
-		if(GetFileTime(linkfile[i]) >= targettime) {
+	for (int i = 0; i < linkfileCount; i++)
+		if (GetFileTime(linkfile[i]) >= targettime) {
 			String link;
 			link << LinkerName() << " option quiet";
 
 			if (HasFlag("DEBUG"))
 			    link << " debug all option incremental";
-#ifdef PLATFORM_WIN32
-			if (HasFlag("GUI"))
-				link << " system nt_win";
-			else if (HasFlag("DLL"))
-				link << " system nt_dll";
-			else link << " system nt";
-#endif
-			if(createmap)
+
+			if (HasFlag("WIN32"))
+				if (HasFlag("GUI"))
+					link << " system nt_win";
+				else if (HasFlag("DLL"))
+					link << " system nt_dll";
+				else link << " system nt";
+
+			if (createmap)
 				link << " option map";
 
 			const int libpathCount = libpath.GetCount();
-			if (libpathCount > 0)
-			{
+			if (libpathCount > 0) {
 				link << " libpath ";
-				for (int j = 0, k = libpathCount - 1; j < libpathCount; ++j)
-				{
+				for (int j = 0, k = libpathCount - 1; j < libpathCount; ++j) {
 					link << '\"' << libpath[j] << '\"';
 					if (j < k)
 						link << ';';
@@ -207,39 +336,25 @@ bool OwcBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if (!linkoptions.IsEmpty())
 				link << ' ' << linkoptions;
 
-			Vector<String> files, libs;
+			int b = -1;
+			for (int j = linkfileCount - 1; j >= 0; --j)
+				if (GetFileExt(linkfile[j]) != ".lib") { b = j; break; }
 
-			for (int j = 0; j < linkfileCount; ++j)
-			{
-				const String ext = GetFileExt(linkfile[j]);
-				if (ext == ".obj")
-					files.Add(linkfile[j]);
-				else if (ext == ".lib")
-					libs.Add(linkfile[j]);
-			}
-
-			const int filesCount = files.GetCount(),
-				libsCount = libs.GetCount();
-
-			if (filesCount > 0)
-			{
+			if (b >= 0) {
 				link << " file ";
 
-				for (int j = 0, k = filesCount - 1; j < filesCount; ++j)
-				{
-					link << '\'' << files[j] << '\'';
-					if (j < k)
+				for (int j = 0, k = b - 1; j <= b; ++j) {
+					link << '\'' << linkfile[j] << '\'';
+					if (j <= k)
 						link << ", ";
 				}
 			}
 
-			if (libsCount > 0)
-			{
+			if (b < linkfileCount - 1) {
 				link << " library ";
 
-				for (int j = 0, k = libsCount - 1; j < libsCount; ++j)
-				{
-					link << '\'' << GetHostPath(libs[i]) << '\'';
+				for (int j = b + 1, k = linkfileCount - 1; j < linkfileCount; ++j) {
+					link << '\'' << GetHostPath(linkfile[j]) << '\'';
 					if (j < k)
 						link << ", ";
 				}
@@ -249,7 +364,7 @@ bool OwcBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 
 			PutConsole("Linking...");
 			CustomStep(".pre-link");
-			if(Execute(link) == 0) {
+			if (Execute(link) == 0) {
 				CustomStep(".post-link");
 
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
@@ -277,9 +392,28 @@ bool OwcBuilder::Preprocess(const String& package, const String& file, const Str
 	return Execute((GetFileExt(file) == ".c" ? CompilerName(false) : CompilerName(true)) + CmdLine(package, pkg) + " -pl " + file, out);
 }
 
+String OwcBuilder::IncludesDefinesTargetTime(const String& package, const Package& pkg)
+{
+	String cc = Includes(" -i=", package, pkg);
+
+	for (int i = 0; i < config.GetCount(); i++)
+		cc << " -Dflag" << config[i];
+
+	Time t = GetSysTime();
+	cc << " -DbmYEAR=" << (int)t.year;
+	cc << " -DbmMONTH=" << (int)t.month;
+	cc << " -DbmDAY=" << (int)t.day;
+	cc << " -DbmHOUR=" << (int)t.hour;
+	cc << " -DbmMINUTE=" << (int)t.minute;
+	cc << " -DbmSECOND=" << (int)t.second;
+	targettime = GetFileTime(target);
+
+	return cc;
+}
+
 String OwcBuilder::CompilerName(bool isCpp) const
 {
-	if(!IsNull(compiler)) return compiler;
+	if (!IsNull(compiler)) return compiler;
 	return isCpp ? "wpp386" : "wcc386"; // C++ or C compiler
 }
 
@@ -290,7 +424,7 @@ String OwcBuilder::LinkerName() const
 
 String OwcBuilder::CmdLine(const String& package, const Package& pkg)
 {
-	return String().Cat() << " -zq -fr=" << Includes(" -i=", package, pkg);
+	return String().Cat() << " -zq -fr=" << IncludesDefinesTargetTime(package, pkg);
 	// "-fr=" - do not create error files
 }
 
@@ -302,5 +436,4 @@ Builder *CreateOwcBuilder()
 void RegisterOwcBuilder()
 {
 	RegisterBuilder("OWC", CreateOwcBuilder);
-	//RegisterBuilder("OWC32", CreateOwcBuilder);
 }
