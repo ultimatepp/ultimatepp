@@ -1,4 +1,4 @@
-#define GUI_WINALT
+#define GUI_EMPTY
 
 NAMESPACE_UPP
 
@@ -323,7 +323,7 @@ public:
 
 END_UPP_NAMESPACE
 
-#define GUIPLATFORM_KEYCODES_INCLUDE <WinAlt/WinAltKeys.h>
+#define GUIPLATFORM_KEYCODES_INCLUDE "Win32Keys.h"
 
 
 #define GUIPLATFORM_CTRL_TOP_DECLS \
@@ -331,13 +331,13 @@ END_UPP_NAMESPACE
 	UDropTarget   *dndtgt; \
 
 
-#define GUIPLATFORM_CTRL_DECLS_INCLUDE  <WinAlt/WinAltCtrl.h>
+#define GUIPLATFORM_CTRL_DECLS_INCLUDE "Win32Ctrl.h"
 
 
 #define GUIPLATFORM_PASTECLIP_DECLS \
 	UDropTarget *dt; \
 
-#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <WinAlt/WinAltTop.h>
+#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE "Win32Top.h"
 
 NAMESPACE_UPP
 
@@ -355,31 +355,4 @@ END_UPP_NAMESPACE
 #endif
 #endif
 
-NAMESPACE_UPP
-
-class PrinterJob {
-	NilDraw             nil;
-	Vector<int>         pages;
-
-public:
-	Draw&               GetDraw()                       { return nil; }
-	operator            Draw&()                         { return GetDraw(); }
-	const Vector<int>&  GetPages() const                { return pages; }
-	int                 operator[](int i) const         { return 0; }
-	int                 GetPageCount() const            { return 0; }
-
-	bool                Execute()                       { return false; }
-
-	PrinterJob& Landscape(bool b = true)                { return *this; }
-	PrinterJob& MinMaxPage(int minpage, int maxpage)    { return *this; }
-	PrinterJob& PageCount(int n)                        { return *this; }
-	PrinterJob& CurrentPage(int currentpage)            { return *this; }
-	PrinterJob& Name(const char *_name)                 { return *this; }
-
-	PrinterJob(const char *name = NULL)                 {}
-	~PrinterJob()                                       {}
-};
-
-END_UPP_NAMESPACE
-
-#define GUIPLATFORM_INCLUDE_AFTER <WinAlt/WinAltA.h>
+#define GUIPLATFORM_INCLUDE_AFTER "Win32GuiA.h"

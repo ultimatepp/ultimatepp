@@ -5,13 +5,14 @@ uses
 	RichEdit,
 	PdfDraw,
 	plugin\jpg,
-	WinAlt;
+	WinAlt,
+	Skeleton;
 
 file
 	UWord.cpp,
 	UWord.iml;
 
 mainconfig
-	"" = "GUI",
-	"" = "GUI .NOGTK";
+	"" = "GUI WINALT",
+	"" = "GUI SKELETON";
 

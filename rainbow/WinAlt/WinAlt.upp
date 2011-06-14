@@ -15,5 +15,6 @@ file
 	TopWinAlt.cpp,
 	WinAltClip.cpp,
 	WinAltDnD.cpp,
-	ChSysInit.cpp;
+	ChSysInit.cpp,
+	WinAltMsg.i;
 
