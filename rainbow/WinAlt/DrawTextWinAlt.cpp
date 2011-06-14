@@ -11,6 +11,7 @@ HFONT GetWin32Font(Font fnt, int angle);
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,
                       int n, const int *dx) {
 	Std(font);
+	font.Bold();
 	while(n > 30000) {
 		DrawTextOp(x, y, angle, text, font, ink, 30000, dx);
 		if(dx)
