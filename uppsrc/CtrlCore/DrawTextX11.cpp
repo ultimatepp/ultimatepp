@@ -228,7 +228,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 			XftDrawString16(xftdraw, &c, xftfont, ox, oy + ascent,
 			                (FcChar16 *)text, n);
 		LLOG("XftColor: r=" << c.color.red << ", g=" << c.color.green << ", b=" << c.color.blue
-			<< ", alpha=" << c.color.alpha << ", pixel=" << FormatIntHex(c.pixel));
+			 << ", alpha=" << c.color.alpha << ", pixel=" << FormatIntHex(c.pixel));
 		if(font.IsUnderline() || font.IsStrikeout()) {
 			int cx;
 			if(dx && n > 0) {
