@@ -34,7 +34,7 @@ struct Functor {
 };
 
 struct eckerle4_functor : Functor<double> {
-	eckerle4_functor(void) : Functor<double>(3,35) {}
+	eckerle4_functor() : Functor<double>(3,35) {}
 	static const double x[35];
 	static const double y[35];
 	int operator()(const VectorXd &b, VectorXd &fvec) const {
@@ -50,7 +50,7 @@ const double eckerle4_functor::y[35] = {0.0001575, 0.0001699, 0.0002350, 0.00031
 
 struct thurber_functor : Functor<double>
 {
-	thurber_functor(void) : Functor<double>(7, 37) {}
+	thurber_functor(int unk, int equat) : Functor<double>(unk, equat) {}
 	static const double _x[37];
 	static const double _y[37];
 	int operator()(const VectorXd &b, VectorXd &fvec) const {
@@ -68,12 +68,12 @@ const double thurber_functor::_y[37] = {80.574E0, 84.248E0, 87.264E0, 87.195E0, 
 
 
 void NonLinearOptimization() {
-	Cout() << "Non linear equations optimization using Levenberg Marquardt based on Minpack\n"
+	Cout() << "\n\nNon linear equations optimization using Levenberg Marquardt based on Minpack\n"
 	     "(Given a set of non linear equations and a set of data longer than the equations, "
 	     "the program finds the equation coefficients that better fit with the equations)";
 	
 	{
-		Cout() << "Eckerle4 equation\nSee: http://www.itl.nist.gov/div898/strd/nls/data/eckerle4.shtml\n";
+		Cout() << "\n\nEckerle4 equation\nSee: http://www.itl.nist.gov/div898/strd/nls/data/eckerle4.shtml";
 		
 		VectorXd x(3);
 		
@@ -83,33 +83,36 @@ void NonLinearOptimization() {
 		NumericalDiff<eckerle4_functor> numDiff(functor);
 		LevenbergMarquardt<NumericalDiff<eckerle4_functor> > lm(numDiff);
 		if (lm.minimize(x) != 1)
-			Cout() << "No convergence!\n";
+			Cout() << "\nNo convergence!";
 		else {
 			if (VerifyIsApprox(lm.fvec.squaredNorm(), 1.4635887487E-03))
-				Cout() << "Norm^2 is right\n";
+				Cout() << "\nNorm^2 is right";
 			if (VerifyIsApprox(x[0], 1.5543827178) &&
 				VerifyIsApprox(x[1], 4.0888321754) &&
 				VerifyIsApprox(x[2], 4.5154121844E+02))
-				Cout() << "Non-linear function optimization is right!\n";
+				Cout() << "\nNon-linear function optimization is right!";
 		}
 	}
 	{
-		Cout() << "Thurber equation\nSee: http://www.itl.nist.gov/div898/strd/nls/data/thurber.shtml\n";
+		Cout() << "\n\nThurber equation\nSee: http://www.itl.nist.gov/div898/strd/nls/data/thurber.shtml\n";
+		
+		int numVars = 7;
 		
 		VectorXd x(7);
 		
 		x << 1000, 1000, 400, 40, 0.7, 0.3, 0.0;
-		  
-		thurber_functor functor;
+		
+		int numEquations = 37;
+		thurber_functor functor(numVars, numEquations);	// Vars and equations known at run time
 		NumericalDiff<thurber_functor> numDiff(functor);
 		LevenbergMarquardt<NumericalDiff<thurber_functor> > lm(numDiff);
 		lm.parameters.ftol = 1.E4*NumTraits<double>::epsilon();
 		lm.parameters.xtol = 1.E4*NumTraits<double>::epsilon();
 		if (lm.minimize(x) != 1)
-			Cout() << "No convergence!\n";
+			Cout() << "\nNo convergence!";
 		else {
 			if (VerifyIsApprox(lm.fvec.squaredNorm(), 5.6427082397E+03))
-				Cout() << "Norm^2 is right\n";
+				Cout() << "\nNorm^2 is right";
 			if (VerifyIsApprox(x[0], 1.2881396800E+03) &&
 			    VerifyIsApprox(x[1], 1.4910792535E+03) &&
 			    VerifyIsApprox(x[2], 5.8323836877E+02) &&
@@ -117,7 +120,7 @@ void NonLinearOptimization() {
 			    VerifyIsApprox(x[4], 9.6629502864E-01) &&
 			    VerifyIsApprox(x[5], 3.9797285797E-01) &&
 			    VerifyIsApprox(x[6], 4.9727297349E-02))
-				Cout() << "Non-linear function optimization is right!\n";
+				Cout() << "\nNon-linear function optimization is right!";
 		}
 	}
 }
@@ -145,7 +148,7 @@ struct hybrd_functor : Functor<double>
 };
 
 void NonLinearSolving() {
-	Cout() << "Non linear equation solving using the Powell hybrid method (\"dogleg\") based on Minpack. "
+	Cout() << "\n\nNon linear equation solving using the Powell hybrid method (\"dogleg\") based on Minpack. "
 	       << "(Finds a zero of a system of n nonlinear equations in n variables)";
 	
 	const int n = 9;
@@ -155,17 +158,13 @@ void NonLinearSolving() {
 	
 	hybrd_functor functor;
 	HybridNonLinearSolver<hybrd_functor> solver(functor);
-	solver.parameters.nb_of_subdiagonals = 1;
-	solver.parameters.nb_of_superdiagonals = 1;
-	solver.diag.setConstant(n, 1.);
-	solver.useExternalScaling = true;
 	if (solver.solveNumericalDiff(x) != 1)
-		Cout() << "No convergence!\n";
+		Cout() << "\nNo convergence!";
 	else {
 		if (solver.nfev != 14)
-			Cout() << "Error with nfev!\n";
+			Cout() << "\nError with nfev!";
 		if (VerifyIsApprox(solver.fvec.blueNorm(), 1.192636e-08))
-			Cout() << "Norm is right\n";
+			Cout() << "\nNorm is right";
 		if (VerifyIsApprox(x[0], -0.5706545) && 
 		    VerifyIsApprox(x[1], -0.6816283) &&     
 		    VerifyIsApprox(x[2], -0.7017325) && 
@@ -175,14 +174,12 @@ void NonLinearSolving() {
 		    VerifyIsApprox(x[6], -0.665792) && 
 		    VerifyIsApprox(x[7], -0.5960342) &&  
 		    VerifyIsApprox(x[8], -0.4164121))
-			Cout() << "Equation solving is right!\n";
+			Cout() << "\nEquation solving is right!";
 	}
 }
 
 void NonLinearTests() {
 	NonLinearSolving();
-	Cout() << "Press enter to continue\n";
-	ReadStdIn();
 	NonLinearOptimization();
 }
 
