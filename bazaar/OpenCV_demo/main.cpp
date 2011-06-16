@@ -38,7 +38,7 @@ GUI_APP_MAIN
 {
 	ImageWindow img("Image");
 	
-	String fileName = AppendFileName(GetDesktopFolder(), "building.jpg");
+	String fileName = GetDataFile("building.jpg");
 	if (!FileExists(fileName)) {
 		Exclamation("File building.jpg not found. Please check source");
 		return;
