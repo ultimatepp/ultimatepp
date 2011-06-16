@@ -80,7 +80,7 @@ bool ClipboardOpen()
 	// right after we close it thus blocking us to send more formats
 	// So the solution is to wait and retry... (mirek, 2011-01-09)
 	int delay = 5;
-	for(int i = 0; i < 5; i++) {
+	for(int i = 0; i < 10; i++) {
 		if(OpenClipboard(utilityHWND))
 			return true;
 		Sleep(delay += delay);
