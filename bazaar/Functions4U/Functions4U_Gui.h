@@ -11,6 +11,24 @@ inline RGBA *GetPixel(ImageBuffer &img, int x, int y) {
 	return &img[y][x];
 }
 
+inline bool IsValid(const Image &img, int x, int y) {
+	return x >= 0 && y >= 0 && x < img.GetWidth() && y < img.GetHeight();
+}
+
+inline bool IsValid(ImageBuffer &img, int x, int y) {
+	return x >= 0 && y >= 0 && x < img.GetWidth() && y < img.GetHeight();
+}
+
+template <class T> 
+inline bool IsValid(const Image &img, T &t) {
+	return t.x >= 0 && t.y >= 0 && t.x < img.GetWidth() && t.y < img.GetHeight();
+}
+
+template <class T> 
+inline bool IsValid(ImageBuffer &img, T &t) {
+	return t.x >= 0 && t.y >= 0 && t.x < img.GetWidth() && t.y < img.GetHeight();
+}
+
 Drawing DrawEquation(String str);
 QtfRichObject QtfEquation(String str);
 

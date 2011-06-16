@@ -82,11 +82,11 @@ Upp::int64 GetLength(const char *fileDirName);
 Upp::int64 GetDirectoryLength(const char *directoryName);
 
 ///////////////////////////////
-Array<String> SearchFile(String dir, const Array<String> &condFiles, const Array<String> &condFolders, 
-								 const Array<String> &extFiles,  const Array<String> &extFolders, 
-								 const String &text, Array<String> &errorList);
-Array<String> SearchFile(String dir, String condFile, String text, Array<String> &errorList);//, int flags = 0);
-Array<String> SearchFile(String dir, String condFile, String text = "");//, int flags = 0);
+Upp::Array<String> SearchFile(String dir, const Upp::Array<String> &condFiles, const Upp::Array<String> &condFolders, 
+								 const Upp::Array<String> &extFiles,  const Upp::Array<String> &extFolders, 
+								 const String &text, Upp::Array<String> &errorList);
+Upp::Array<String> SearchFile(String dir, String condFile, String text, Upp::Array<String> &errorList);//, int flags = 0);
+Upp::Array<String> SearchFile(String dir, String condFile, String text = "");//, int flags = 0);
 ///////////////////////////////
 
 bool FileToTrashBin(const char *path);
@@ -162,7 +162,7 @@ public:
 	void SortByName(bool ascending = true);
 	void SortByDate(bool ascending = true);
 	void SortBySize(bool ascending = true);
-	Array<String> &GetLastError()	{return errorList;};
+	Upp::Array<String> &GetLastError()	{return errorList;};
 	int Find(String &relFileName, String &fileName, bool isFolder);
 	int Find(FileDataArray &data, int id);
 	String FullFileName(int i)		{return AppendFileName(basePath, fileList[i].fileName);};
@@ -176,8 +176,8 @@ private:
 	String GetRelativePath(const String &fullPath);
 	String GetFileText();
 	
-	Array<FileData> fileList;
-	Array<String> errorList;
+	Upp::Array<FileData> fileList;
+	Upp::Array<String> errorList;
 	String basePath;
 	long fileCount, folderCount;
 	Upp::int64 fileSize;
@@ -191,7 +191,8 @@ public:
 	FileDiffArray();
 	void Clear();
 	FileDiff& operator[](long i)	{return diffList[i];}
-	bool Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom, Array<String> &excepFolders, Array<String> &excepFiles, int sensSecs = 0);
+	bool Compare(FileDataArray &master, FileDataArray &secondary, String &folderFrom, 
+		Upp::Array<String> &excepFolders, Upp::Array<String> &excepFiles, int sensSecs = 0);
 	bool Apply(String toFolder, String fromFolder, int flags = 0);
 	long GetCount()				{return diffList.GetCount();};
 	bool SaveFile(const char *fileName);
@@ -199,7 +200,7 @@ public:
 	String ToString();
 	
 private:
-	Array<FileDiff> diffList;
+	Upp::Array<FileDiff> diffList;
 };
 
 String Replace(String str, String find, String replace); 
@@ -240,6 +241,12 @@ template<class T>
 inline T Average(T a, T b, T c)		{return T(a+b+c)/3;}
 template<class T>
 inline T Average(T a, T b, T c, T d){return T(a+b+c+d)/4;}
+template<class T>
+inline T pow2(T a) {return (a*a);}
+template<class T>
+inline T pow3(T a) {return (a*a*a);}
+template<class T>
+inline T pow4(T a) {return pow2(pow2(a));}
 template <class T> 
 inline const T& min(const T& a, const T& b, const T& c) { 
 	return a < b ? (a < c ? a : c) : ((b < c) ? b : c); }
@@ -459,7 +466,7 @@ String WideToString(LPCWSTR wcs, int len = -1);
 
 String GetExtExecutable(String ext);
 
-Array<String> GetDriveList();
+Upp::Array<String> GetDriveList();
 
 String Getcwd();
 bool Chdir (const String &folder);

@@ -25,7 +25,7 @@ protected:
 		void (*Delete)(void *);
 	};
 	
-	static Array<PluginData>& Plugins();
+	static Upp::Array<PluginData>& Plugins();
 	
 public:
 	StaticPlugin();
