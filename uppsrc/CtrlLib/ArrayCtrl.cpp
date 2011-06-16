@@ -1699,7 +1699,7 @@ void ArrayCtrl::KeyMultiSelect(int aanchor, dword key)
 	ClearSelection();
 	if(key & K_SHIFT) {
 		anchor = aanchor;
-		if(anchor >= 0)
+		if(anchor >= 0 && cursor >= 0)
 			Select(min(anchor, cursor), abs(anchor - cursor) + 1);
 	}
 	else
