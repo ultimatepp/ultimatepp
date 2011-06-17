@@ -1,7 +1,7 @@
 #include <CtrlCore/CtrlCore.h>
 #include <plugin/bmp/bmp.h>
 
-#ifdef GUI_EMPTY
+#ifdef GUI_FB
 
 NAMESPACE_UPP
 

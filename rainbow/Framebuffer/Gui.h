@@ -1,4 +1,4 @@
-#define GUI_EMPTY
+#define GUI_FB
 
 NAMESPACE_UPP
 

@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 
-#ifdef GUI_EMPTY
+#ifdef GUI_SKELETON
 
 NAMESPACE_UPP
 

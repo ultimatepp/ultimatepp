@@ -2,4 +2,5 @@
 #define _Paint_icpp_init_stub
 #include "CtrlLib/init"
 #include "Framebuffer/init"
+#include "WinFb/init"
 #endif

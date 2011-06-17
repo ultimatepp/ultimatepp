@@ -1,7 +1,7 @@
 description "Generic framebuffer GUI rainbow\377";
 
 file
-	Skeleton.h,
+	Framebuffer.h,
 	After.h,
 	Keys.h,
 	DrawOp.cpp,
@@ -12,7 +12,7 @@ file
 	Ctrl.h,
 	Ctrl.cpp,
 	Wnd.cpp,
-	Proc.cpp,
+	Event.cpp,
 	Top.h,
 	Top.cpp,
 	Clip.cpp,
