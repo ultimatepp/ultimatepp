@@ -7,7 +7,7 @@ private:
 	void WndCreateCaret0(const Rect& cr);
 	void WndCreateCaret(const Rect& cr);
 
-	static  bool PeekMsg(MSG& msg);
+	static  bool GetMsg(MSG& msg);
 
 	static LRESULT CALLBACK UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	static void RenderFormat(int format);

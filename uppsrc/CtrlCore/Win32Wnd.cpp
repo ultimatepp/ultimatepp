@@ -20,7 +20,7 @@ unsigned GetHashValue(const HWND& h)
 	return (unsigned)(intptr_t)h;
 }
 
-bool Ctrl::PeekMsg(MSG& msg)
+bool Ctrl::GetMsg(MSG& msg)
 {
 	if(!PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) return false;
 	return IsWindowUnicode(msg.hwnd) ? PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)
@@ -334,7 +334,7 @@ void Ctrl::ExitWin32()
 			::DestroyWindow(hwnd);
 	}
 	MSG msg;
-	while(PeekMsg(msg))
+	while(GetMsg(msg))
 		if(msg.message != WM_QUIT)
 			::PostQuitMessage(0);
 #ifndef flagDLL
@@ -799,7 +799,7 @@ void Ctrl::sProcessMSG(MSG& msg)
 bool Ctrl::IsWaitingEvent()
 {
 	MSG msg;
-	return PeekMsg(msg);
+	return PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE);
 }
 
 bool Ctrl::ProcessEvent(bool *quit)
@@ -812,7 +812,7 @@ bool Ctrl::ProcessEvent(bool *quit)
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	MSG msg;
-	if(PeekMsg(msg)) {
+	if(GetMsg(msg)) {
 		if(msg.message == WM_QUIT && quit)
 			*quit = true;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": sProcessMSG " << FormatIntHex(msg.message));
@@ -824,8 +824,6 @@ bool Ctrl::ProcessEvent(bool *quit)
 	}
 	return false;
 }
-
-void SweepMkImageCache();
 
 bool Ctrl::ProcessEvents(bool *quit)
 {

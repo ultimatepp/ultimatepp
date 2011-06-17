@@ -144,6 +144,8 @@ struct ImageMaker {
 Image MakeImage(const ImageMaker& m);
 Image MakeImage(const Image& image, Image (*make)(const Image& image));
 
+void  SweepMkImageCache();
+
 void  ClearMakeImageCache();
 void  SetMakeImageCacheSize(int m);
 void  SetMakeImageCacheMax(int m);

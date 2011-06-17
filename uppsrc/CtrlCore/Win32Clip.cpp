@@ -79,11 +79,10 @@ bool ClipboardOpen()
 	// Win32 has serious race condition problem with clipboard; system or other apps open it
 	// right after we close it thus blocking us to send more formats
 	// So the solution is to wait and retry... (mirek, 2011-01-09)
-	int delay = 5;
-	for(int i = 0; i < 10; i++) {
+	for(int i = 0; i < 100; i++) {
 		if(OpenClipboard(utilityHWND))
 			return true;
-		Sleep(delay += delay);
+		Sleep(10);
 	}
 	return false;
 }
