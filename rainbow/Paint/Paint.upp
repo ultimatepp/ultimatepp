@@ -2,7 +2,8 @@ description "Paint method and Draw example\377";
 
 uses
 	CtrlLib,
-	Framebuffer;
+	Framebuffer,
+	WinFb;
 
 file
 	Draw.cpp;

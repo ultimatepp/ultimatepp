@@ -1,6 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_EMPTY
+#ifdef GUI_SKELETON
 
 #include <shellapi.h>
 

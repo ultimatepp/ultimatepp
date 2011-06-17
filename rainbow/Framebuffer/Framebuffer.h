@@ -1,4 +1,4 @@
-#define GUI_FRAMEBUFFER
+#define GUI_FB
 
 NAMESPACE_UPP
 
@@ -91,15 +91,24 @@ public:
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
-#define GUIPLATFORM_KEYCODES_INCLUDE <Skeleton/Keys.h>
+#define GUIPLATFORM_KEYCODES_INCLUDE <Framebuffer/Keys.h>
 
 #define GUIPLATFORM_CTRL_TOP_DECLS
 
-#define GUIPLATFORM_CTRL_DECLS_INCLUDE <Skeleton/Ctrl.h>
+#define GUIPLATFORM_CTRL_DECLS_INCLUDE <Framebuffer/Ctrl.h>
 
 #define GUIPLATFORM_PASTECLIP_DECLS
 
-#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Skeleton/Top.h>
+#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Framebuffer/Top.h>
+
+// to be implemented by final FB {
+
+bool FBIsWaitingEvent();
+bool FBProcessEvent(bool *quit);
+void FBSleep(int ms);
+bool FBEndSession();
+
+// }
 
 class PrinterJob {
 	NilDraw             nil;

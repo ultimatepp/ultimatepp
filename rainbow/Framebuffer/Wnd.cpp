@@ -1,6 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_EMPTY
+#ifdef GUI_FB
 
 NAMESPACE_UPP
 
@@ -13,6 +13,11 @@ NAMESPACE_UPP
 
 #define ELOGW(x)  // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
 #define ELOG(x)   // RLOG(GetSysTime() << ": " << x)
+
+void Ctrl::InitFB()
+{
+	Ctrl::InitTimer();
+}
 
 bool Ctrl::IsAlphaSupported()
 {
@@ -81,35 +86,43 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 bool Ctrl::IsWaitingEvent()
 {
-	return false;
+	return FBIsWaitingEvent();
 }
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
 	ASSERT(IsMainThread());
+	if(DoCall())
+		return false;
+	if(FBEndSession())
+		return false;
+	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
+		ReleaseCtrlCapture();
+	if(FBProcessEvent(quit)) {
+		DefferedFocusSync();
+		SyncCaret();
+		return true;
+	}
 	return false;
 }
 
-void SweepMkImageCache();
-
 bool Ctrl::ProcessEvents(bool *quit)
 {
-/*	if(ProcessEvent(quit)) {
+	if(ProcessEvent(quit)) {
 		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
 		TimerProc(GetTickCount());
 		SweepMkImageCache();
 		return true;
 	}
 	SweepMkImageCache();
-	TimerProc(GetTickCount());*/
+	TimerProc(GetTickCount());
 	return false;
 }
-
 
 void Ctrl::EventLoop0(Ctrl *ctrl)
 {
 	GuiLock __;
-/*	ASSERT(IsMainThread());
+	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
@@ -122,12 +135,12 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	bool quit = false;
 	ProcessEvents(&quit);
-	while(!EndSession() && !quit && ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount())
+	while(!FBEndSession() && !quit && ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount())
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
 		GuiSleep(1000);
-		if(EndSession()) break;
+		if(FBEndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / after ProcessEvents");
@@ -136,33 +149,20 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	if(ctrl)
 		LoopCtrl = ploop;
 	LoopLevel--;
-	LLOG(EndIndent << "Leaving event loop ");*/
+	LLOG(EndIndent << "Leaving event loop ");
 }
 
 void Ctrl::GuiSleep0(int ms)
 {
 	GuiLock __;
-/*	ASSERT(IsMainThread());
+	ASSERT(IsMainThread());
 	ELOG("GuiSleep");
-	if(EndSession())
+	if(FBEndSession())
 		return;
 	ELOG("GuiSleep 2");
 	int level = LeaveGMutexAll();
-#if !defined(flagDLL) && !defined(PLATFORM_WINCE)
-	if(!OverwatchThread) {
-		DWORD dummy;
-		OverwatchThread = CreateThread(NULL, 0x100000, Win32OverwatchThread, NULL, 0, &dummy);
-		ELOG("ExitLoopEventWait 1");
-		ExitLoopEvent.Wait();
-	}
-	HANDLE h[1];
-	*h = ExitLoopEvent.GetHandle();
-	ELOG("ExitLoopEventWait 2 " << (void *)*h);
-	MsgWaitForMultipleObjects(1, h, FALSE, ms, QS_ALLINPUT);
-#else
-	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
-#endif
-	EnterGMutex(level);*/
+	FBSleep(ms);
+	EnterGMutex(level);
 }
 
 Rect Ctrl::GetWndUpdateRect() const
