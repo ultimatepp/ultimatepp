@@ -1,0 +1,12 @@
+description "Paint method and Draw example\377";
+
+uses
+	CtrlLib,
+	Framebuffer;
+
+file
+	Draw.cpp;
+
+mainconfig
+	"" = "GUI FB";
+
