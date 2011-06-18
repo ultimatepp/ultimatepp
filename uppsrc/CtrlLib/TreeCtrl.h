@@ -221,6 +221,8 @@ public:
 	Node   GetNode(int id) const                               { return item[id]; }
 	void   SetNode(int id, const Node& n);
 
+	bool   IsValid(int id) const;
+
 	bool   IsOpen(int id) const;
 	void   Open(int id, bool open = true);
 	void   Close(int id)                                       { Open(id, false); }

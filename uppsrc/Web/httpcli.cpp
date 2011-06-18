@@ -293,26 +293,11 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		Close();
 		return String::GetVoid();
 	}
-	status_line = ReadUntilProgress('\n', start_time, end_time, progress);
-	if(socket.IsError()) {
-		error = Socket::GetErrorText();
-		Close();
-		return String::GetVoid();
-	}
-	if(status_line.GetLength() < 5 || MemICmp(status_line, "HTTP/", 5)) {
-		error = NFormat(t_("%s:%d: invalid server response: %s"), host, port, status_line);
-		Close();
-		return String::GetVoid();
-	}
+	if(!keepalive)
+		socket.StopWrite();
 
-	status_code = 0;
-	const char *p = status_line.Begin() + 5;
-	while(*p && *p != ' ')
-		p++;
-	if(*p == ' ' && IsDigit(*++p))
-		status_code = stou(p);
-	is_redirect = (status_code >= 300 && status_code < 400);
-
+	bool expect_status = true;
+	
 	int content_length = -1;
 	bool tc_chunked = false;
 	bool ce_gzip = false;
@@ -324,14 +309,40 @@ String HttpClient::Execute(Gate2<int, int> progress)
 			Close();
 			return String::GetVoid();
 		}
+		
+		if(expect_status) {
+			status_line = line;
+			if(status_line.GetLength() < 5 || MemICmp(status_line, "HTTP/", 5)) {
+				error = NFormat(t_("%s:%d: invalid server response: %s"), host, port, status_line);
+				Close();
+				return String::GetVoid();
+			}
+	
+			status_code = 0;
+			const char *p = status_line.Begin() + 5;
+			while(*p && *p != ' ')
+				p++;
+			if(*p == ' ' && IsDigit(*++p))
+				status_code = stou(p);
+			
+			is_redirect = (status_code >= 300 && status_code < 400);
+			expect_status = false;
+			continue;
+		}
 
+		const char *p = line;
 		for(p = line; *p && (byte)*p <= ' '; p++)
 			;
 		const char *b = p, *e = line.End();
 		while(e > b && (byte)e[-1] < ' ')
 			e--;
-		if(b >= e)
+		if(b >= e) {
+			if(status_code == 100) {
+				expect_status = true;
+				continue;
+			}
 			break;
+		}
 		static const char cl[] = "content-length:";
 		static const char ce[] = "content-encoding:";
 		static const char te[] = "transfer-encoding:";
