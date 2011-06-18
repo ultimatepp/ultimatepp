@@ -286,6 +286,11 @@ const Display& TreeCtrl::GetDisplay(int id) const
 	return *display;
 }
 
+bool TreeCtrl::IsValid(int id) const
+{
+	return id >= 0 && id < item.GetCount() && !item[id].free;
+}
+
 void   TreeCtrl::SetNode(int id, const TreeCtrl::Node& n)
 {
 	(TreeCtrl::Node&)item[id] = n;
@@ -1210,7 +1215,7 @@ void TreeCtrl::LostFocus()
 
 void TreeCtrl::ChildRemoved(Ctrl *)
 {
-	if(!chldlck)
+	if(!IsShutdown() && !chldlck)
 		Dirty();
 }
 
