@@ -555,14 +555,16 @@ protected:
 
 public:
 	dword    GetType() const           { return m ? m->GetType() : VOID_V; }
-	operator Value() const             { return m ? m->GetValue(ptr) : Value(); }
 	bool     IsNull() const            { return m ? m->IsNull(ptr) : true; }
 
 	void    *GetVoidPtr() const        { return ptr; }
 
 	void     SetNull()                 { if(m) m->SetNull(ptr); }
+	Value    GetValue() const          { return m ? m->GetValue(ptr) : Value(); }
 	void     SetValue(const Value& v)  { ASSERT(m); m->SetValue(ptr, v); }
 
+	operator Value() const             { return GetValue(); }
+	Value    operator~() const         { return GetValue(); }
 	Ref&     operator=(const Value& v) { SetValue(v); return *this; }
 
 	Ref(String& s);
@@ -570,6 +572,7 @@ public:
 	Ref(int& i);
 	Ref(int64& i);
 	Ref(double& d);
+	Ref(bool& b);
 	Ref(Date& d);
 	Ref(Time& t);
 	Ref(Value& v);
@@ -588,6 +591,7 @@ inline WString& RefWString(Ref f) { return GetRef<WString>(f); }
 inline int&     RefInt(Ref f)     { return GetRef<int>(f); }
 inline int64&   RefInt64(Ref f)   { return GetRef<int64>(f); }
 inline double&  RefDouble(Ref f)  { return GetRef<double>(f); }
+inline bool&    RefBool(Ref f)    { return GetRef<bool>(f); }
 inline Date&    RefDate(Ref f)    { return GetRef<Date>(f); }
 inline Time&    RefTime(Ref f)    { return GetRef<Time>(f); }
 inline Value&   RefValue(Ref f)   { ASSERT(f.GetType() == VALUE_V);
