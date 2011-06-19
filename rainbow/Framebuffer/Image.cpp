@@ -49,22 +49,36 @@ void Image::Data::PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c
 	SystemData& sd = Sys();
 }
 
+Draw& ImageDraw::Alpha()
+{
+	has_alpha = true;
+	return alpha;
+}
+
 ImageDraw::operator Image() const
 {
-	return Image();
+	Image image;
+	
+	return GetResult();
 }
 
 Image ImageDraw::GetStraight() const
 {
-	return Image();
+	return GetResult();
 }
 
 ImageDraw::ImageDraw(Size sz)
+:	BufferPainter(sz.cx, sz.cy),
+	alpha(sz.cx, sz.cy)
 {
+	has_alpha = false;
 }
 
 ImageDraw::ImageDraw(int cx, int cy)
+:	BufferPainter(image, cx, cy),
+	alpha(alpha, cx, cy)
 {
+	has_alpha = false;
 }
 
 ImageDraw::~ImageDraw()
