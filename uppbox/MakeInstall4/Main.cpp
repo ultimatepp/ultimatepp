@@ -94,6 +94,7 @@ CONSOLE_APP_MAIN
 	CopyFolders(uppsrc, upptmp + "/uppsrc", uppsrc + "/packages");
 	CopyFolders(uppsrc, upptmp + "/uppsrc", uppsrc + "/packages1", false);
 	CopyFolders(upp, upptmp, uppsrc + "/assemblies");
+	SaveFile(upptmp + "/uppsrc/guiplatform.h", "");
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
 	Syx(win32 + "/umk upptmp ide MSC9 -ar " + upptmp + "/theide.exe");
 	Syx(win32 + "/umk upptmp umk MSC9 -ar " + upptmp + "/umk.exe");
