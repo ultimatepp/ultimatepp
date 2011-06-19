@@ -1,11 +1,12 @@
 description "Generic framebuffer GUI rainbow\377";
 
+uses
+	Painter;
+
 file
 	Framebuffer.h,
 	After.h,
 	Keys.h,
-	DrawOp.cpp,
-	DrawText.cpp,
 	Draw.cpp,
 	Image.cpp,
 	Util.cpp,

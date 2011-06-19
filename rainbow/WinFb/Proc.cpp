@@ -10,6 +10,13 @@ bool GetMouseLeft()   { return !!(GetKeyState(VK_LBUTTON) & 0x8000); }
 bool GetMouseRight()  { return !!(GetKeyState(VK_RBUTTON) & 0x8000); }
 bool GetMouseMiddle() { return !!(GetKeyState(VK_MBUTTON) & 0x8000); }
 
+Point GetMousePos() {
+	Point p;
+	return ::GetCursorPos(p) ? p : Null;
+	::GetCursorPos(p);
+	return p;
+}
+
 LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	GuiLock __;
@@ -20,24 +27,22 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		if(hwnd) {
 			PAINTSTRUCT ps;
 			HDC dc = BeginPaint(hwnd, &ps);
-/*
-				SystemDraw draw(dc);
-	#ifndef PLATFORM_WINCE
-				HPALETTE hOldPal;
-				if(draw.PaletteMode() && SystemDraw::AutoPalette()) {
-					hOldPal = SelectPalette(dc, GetQlibPalette(), TRUE);
-					int n = RealizePalette(dc);
-					LLOG("In paint realized " << n << " colors");
-				}
-	#endif
-				painting = true;
-				UpdateArea(draw, Rect(ps.rcPaint));
-				painting = false;
-	#ifndef PLATFORM_WINCE
-				if(draw.PaletteMode() && SystemDraw::AutoPalette())
-					SelectPalette(dc, hOldPal, TRUE);
-	#endif
-*/
+			Size sz = framebuffer.GetSize();
+			Buffer<byte> data;
+			data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
+			BITMAPINFOHEADER *hi = (BITMAPINFOHEADER *) ~data;;
+			memset(hi, 0, sizeof(BITMAPINFOHEADER));
+			hi->biSize = sizeof(BITMAPINFOHEADER);
+			hi->biPlanes = 1;
+			hi->biBitCount = 32;
+			hi->biCompression = BI_RGB;
+			hi->biSizeImage = 0;
+			hi->biClrUsed = 0;
+			hi->biClrImportant = 0;
+			hi->biWidth = sz.cx;
+			hi->biHeight = -sz.cy;
+			::SetDIBitsToDevice(dc, 0, 0, sz.cx, sz.cy, 0, 0,
+			                    0, sz.cy, ~framebuffer, (BITMAPINFO *)~data, DIB_RGB_COLORS);
 			EndPaint(hwnd, &ps);
 		}
 		return 0L;

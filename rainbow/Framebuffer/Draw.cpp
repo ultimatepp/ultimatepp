@@ -12,38 +12,6 @@ NAMESPACE_UPP
 	GuiLock __;
 }*/
 
-dword SystemDraw::GetInfo() const
-{
-	return NATIVE;
-}
-
-Size SystemDraw::GetPageSize() const
-{
-	return Size(0, 0);
-}
-
-Size SystemDraw::GetNativeDpi() const
-{
-	return Size(96, 96);
-}
-
-void SystemDraw::BeginNative()
-{
-}
-
-void SystemDraw::EndNative()
-{
-}
-
-int SystemDraw::GetCloffLevel() const
-{
-	return 0;
-}
-
-SystemDraw::~SystemDraw() {
-	GuiLock __;
-}
-
 void BackDraw::Destroy()
 {
 	GuiLock __;
