@@ -726,7 +726,7 @@ void ExeRunServer()
 				break;
 			ms = msecs();
 		}
-		if(!Ctrl::ProcessEvent(&quit))
+		if(!Ctrl::ProcessEvents(&quit))
 			Sleep(10);
 	}
 	LOGSYSOCX("end of message loop");
