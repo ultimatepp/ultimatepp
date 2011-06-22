@@ -5,18 +5,18 @@ uses
 
 file
 	Common.h,
-	CtrlCore.h,
 	CtrlCore.cpp,
-	Misc.h,
-	Misc.cpp,
-	SliderCtrl.h,
+	Pusher.cpp,
+	Button.cpp,
+	ButtonOption.cpp,
+	Option.cpp,
+	Switch.cpp,
 	SliderCtrl.cpp,
 	ValueCtrl.h,
 	ValueCtrl.cpp,
-	EditCtrl.h,
 	EditCtrl.cpp,
-	Progress.h,
 	Progress.cpp,
+	Misc.cpp,
 	CtrlLibBoostPy.h,
 	CtrlLibBoostPy.cpp;
 

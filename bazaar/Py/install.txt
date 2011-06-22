@@ -1,5 +1,7 @@
 to make python work in upp there are few steps to do..
 
+WINDOWS
+
 go to the python page 
 http://www.python.org/getit/
 
@@ -18,6 +20,7 @@ C:\Python27\libs
 C:\Python27\DLLs
 
 again, linux should already have python available from start.
+for more linux info see below.
 
 make sure NOT to choose DEBUG compile, since it will fail. the reason:
 python27 headers need some more functions in debug mode, which are not provided in release lib.
@@ -108,3 +111,15 @@ thats why it is the esiest way to control manually, which lib is going to be inc
 #define MS_NO_COREDLL 1
 #define Py_ENABLE_SHARED 1
 are to disable the pragma comment(lib,) stuff so we manually can specify the libs while preserving all shared stuff.
+
+LINUX
+
+there is so far no easy way to make linkage easy in linux. but you should be familiar 
+with the compile/link process in linux anyway. in pakcage configuration 
+add the respective lib, i.e. 'python2.7'. static linking stuff is found in /usr/lib/python/config, typically.
+do not compile all static, this does'nt work well, it will need a lot other satic dependencies, like gtk.
+boost will also require you to build shared or all shared.
+you definitely will need to add '/usr/include/python' to your include paths in the build method.
+boost will complain, if not.
+
+boost will need to add the 'boost_python' lib or 'boost_python-mt' lib for MT compile,

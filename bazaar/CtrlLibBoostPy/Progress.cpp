@@ -23,7 +23,6 @@ ONCELOCK
 		.def("setposcanceled", &Progress::SetPosCanceled)
 		.def("stepcanceled", &Progress::StepCanceled)
 	;
-
 }
 }
 

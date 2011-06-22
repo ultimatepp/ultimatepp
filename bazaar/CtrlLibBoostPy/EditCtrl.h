@@ -5,7 +5,6 @@
 
 NAMESPACE_UPP
 
-void export_EditCtrl();
 
 END_UPP_NAMESPACE
 

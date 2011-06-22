@@ -1,4 +1,4 @@
-#include "CtrlCore.h"
+#include "Common.h"
 using namespace boost::python;
 
 NAMESPACE_UPP
@@ -132,11 +132,81 @@ public:
 	virtual void Deactivate() { if(override f = this->get_override("deactivate")) f(); C::Deactivate(); }
 	void default_Deactivate() { C::Deactivate(); }
 
+	virtual void MouseEnter(Point p, dword keyflags) { if(override f = this->get_override("mouseenter")) f(p, keyflags); C::MouseEnter(p, keyflags); }
+	void default_MouseEnter(Point p, dword keyflags) { C::MouseEnter(p, keyflags); }
+
+	virtual void MouseMove(Point p, dword keyflags) { if(override f = this->get_override("mousemove")) f(p, keyflags); C::MouseMove(p, keyflags); }
+	void default_MouseMove(Point p, dword keyflags) { C::MouseMove(p, keyflags); }
+
 	virtual void LeftDown(Point p, dword keyflags) { if(override f = this->get_override("leftdown")) f(p, keyflags); C::LeftDown(p, keyflags); }
 	void default_LeftDown(Point p, dword keyflags) { C::LeftDown(p, keyflags); }
 
-	//more of interface to come
-	
+	virtual void LeftDouble(Point p, dword keyflags) { if(override f = this->get_override("leftdouble")) f(p, keyflags); C::LeftDouble(p, keyflags); }
+	void default_LeftDouble(Point p, dword keyflags) { C::LeftDouble(p, keyflags); }
+
+	virtual void LeftTriple(Point p, dword keyflags) { if(override f = this->get_override("lefttriple")) f(p, keyflags); C::LeftTriple(p, keyflags); }
+	void default_LeftTriple(Point p, dword keyflags) { C::LeftTriple(p, keyflags); }
+
+	virtual void LeftRepeat(Point p, dword keyflags) { if(override f = this->get_override("leftrepeat")) f(p, keyflags); C::LeftRepeat(p, keyflags); }
+	void default_LeftRepeat(Point p, dword keyflags) { C::LeftRepeat(p, keyflags); }
+
+	virtual void LeftDrag(Point p, dword keyflags) { if(override f = this->get_override("leftdrag")) f(p, keyflags); C::LeftDrag(p, keyflags); }
+	void default_LeftDrag(Point p, dword keyflags) { C::LeftDrag(p, keyflags); }
+
+	virtual void LeftHold(Point p, dword keyflags) { if(override f = this->get_override("lefthold")) f(p, keyflags); C::LeftHold(p, keyflags); }
+	void default_LeftHold(Point p, dword keyflags) { C::LeftHold(p, keyflags); }
+
+	virtual void LeftUp(Point p, dword keyflags) { if(override f = this->get_override("leftup")) f(p, keyflags); C::LeftUp(p, keyflags); }
+	void default_LeftUp(Point p, dword keyflags) { C::LeftUp(p, keyflags); }
+
+	virtual void RightDown(Point p, dword keyflags) { if(override f = this->get_override("rightdown")) f(p, keyflags); C::RightDown(p, keyflags); }
+	void default_RightDown(Point p, dword keyflags) { C::RightDown(p, keyflags); }
+
+	virtual void RightDouble(Point p, dword keyflags) { if(override f = this->get_override("rightdouble")) f(p, keyflags); C::RightDouble(p, keyflags); }
+	void default_RightDouble(Point p, dword keyflags) { C::RightDouble(p, keyflags); }
+
+	virtual void RightTriple(Point p, dword keyflags) { if(override f = this->get_override("righttriple")) f(p, keyflags); C::RightTriple(p, keyflags); }
+	void default_RightTriple(Point p, dword keyflags) { C::RightTriple(p, keyflags); }
+
+	virtual void RightRepeat(Point p, dword keyflags) { if(override f = this->get_override("rightrepeat")) f(p, keyflags); C::RightRepeat(p, keyflags); }
+	void default_RightRepeat(Point p, dword keyflags) { C::RightRepeat(p, keyflags); }
+
+	virtual void RightDrag(Point p, dword keyflags) { if(override f = this->get_override("rightdrag")) f(p, keyflags); C::RightDrag(p, keyflags); }
+	void default_RightDrag(Point p, dword keyflags) { C::RightDrag(p, keyflags); }
+
+	virtual void RightHold(Point p, dword keyflags) { if(override f = this->get_override("righthold")) f(p, keyflags); C::RightHold(p, keyflags); }
+	void default_RightHold(Point p, dword keyflags) { C::RightHold(p, keyflags); }
+
+	virtual void RightUp(Point p, dword keyflags) { if(override f = this->get_override("rightup")) f(p, keyflags); C::RightUp(p, keyflags); }
+	void default_RightUp(Point p, dword keyflags) { C::RightUp(p, keyflags); }
+
+	virtual void MiddleDown(Point p, dword keyflags) { if(override f = this->get_override("middledown")) f(p, keyflags); C::MiddleDown(p, keyflags); }
+	void default_MiddleDown(Point p, dword keyflags) { C::MiddleDown(p, keyflags); }
+
+	virtual void MiddleDouble(Point p, dword keyflags) { if(override f = this->get_override("middledouble")) f(p, keyflags); C::MiddleDouble(p, keyflags); }
+	void default_MiddleDouble(Point p, dword keyflags) { C::MiddleDouble(p, keyflags); }
+
+	virtual void MiddleTriple(Point p, dword keyflags) { if(override f = this->get_override("middletriple")) f(p, keyflags); C::MiddleTriple(p, keyflags); }
+	void default_MiddleTriple(Point p, dword keyflags) { C::MiddleTriple(p, keyflags); }
+
+	virtual void MiddleRepeat(Point p, dword keyflags) { if(override f = this->get_override("middlerepeat")) f(p, keyflags); C::MiddleRepeat(p, keyflags); }
+	void default_MiddleRepeat(Point p, dword keyflags) { C::MiddleRepeat(p, keyflags); }
+
+	virtual void MiddleDrag(Point p, dword keyflags) { if(override f = this->get_override("middledrag")) f(p, keyflags); C::MiddleDrag(p, keyflags); }
+	void default_MiddleDrag(Point p, dword keyflags) { C::MiddleDrag(p, keyflags); }
+
+	virtual void MiddleHold(Point p, dword keyflags) { if(override f = this->get_override("middlehold")) f(p, keyflags); C::MiddleHold(p, keyflags); }
+	void default_MiddleHold(Point p, dword keyflags) { C::MiddleHold(p, keyflags); }
+
+	virtual void MiddleUp(Point p, dword keyflags) { if(override f = this->get_override("middleup")) f(p, keyflags); C::MiddleUp(p, keyflags); }
+	void default_MiddleUp(Point p, dword keyflags) { C::MiddleUp(p, keyflags); }
+
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags) { if(override f = this->get_override("mousewheel")) f(p, zdelta, keyflags); C::MouseWheel(p, zdelta, keyflags); }
+	void default_MouseWheel(Point p, int zdelta, dword keyflags) { C::MouseWheel(p, zdelta, keyflags); }
+
+	virtual void MouseLeave() { if(override f = this->get_override("mouseleave")) f(); C::MouseLeave(); }
+	void default_MouseLeave() { C::MouseLeave(); }
+
 	virtual bool Key(dword key, int count) { if(override f = this->get_override("key")) return f(key, count); return C::Key(key, count); }
 	bool default_Key(dword key, int count) { return C::Key(key, count); }
 
@@ -145,6 +215,18 @@ public:
 
 	virtual void LostFocus() { if(override f = this->get_override("lostfocus")) f(); C::LostFocus(); }
 	void default_LostFocus() { C::LostFocus(); }
+
+	virtual bool HotKey(dword key) { if(override f = this->get_override("hotkey")) return f(key); return C::HotKey(key); }
+	bool default_HotKey(dword key) { return C::HotKey(key); }
+
+	virtual dword GetAccessKeys() const { if(override f = this->get_override("getaccesskeys")) return f(); return C::GetAccessKeys(); }
+	dword default_GetAccessKeys() const { return C::GetAccessKeys(); }
+
+	virtual void AssignAccessKeys(dword key) { if(override f = this->get_override("assignaccesskeys")) f(key); C::AssignAccessKeys(key); }
+	void default_AssignAccessKeys(dword key) { C::AssignAccessKeys(key); }
+
+	virtual void PostInput() { if(override f = this->get_override("postinput")) f(); C::PostInput(); }
+	void default_PostInput() { C::PostInput(); }
 
 	virtual void ChildGotFocus() { if(override f = this->get_override("childgotfocus")) f(); C::ChildGotFocus(); }
 	void default_ChildGotFocus() { C::ChildGotFocus(); }
@@ -300,12 +382,45 @@ ONCELOCK
 		.def("activate", &Ctrl::Activate, &CtrlWrap::default_Activate)
 		.def("deactivate", &Ctrl::Deactivate, &CtrlWrap::default_Deactivate)
 
+		.def("mouseenter", &Ctrl::MouseEnter, &CtrlWrap::default_MouseEnter)
+		.def("mousemove", &Ctrl::MouseMove, &CtrlWrap::default_MouseMove)
+
 		.def("leftdown", &Ctrl::LeftDown, &CtrlWrap::default_LeftDown)
-		//...
+		.def("leftdouble", &Ctrl::LeftDouble, &CtrlWrap::default_LeftDouble)
+		.def("lefttriple", &Ctrl::LeftTriple, &CtrlWrap::default_LeftTriple)
+		.def("leftrepeat", &Ctrl::LeftRepeat, &CtrlWrap::default_LeftRepeat)
+		.def("leftdrag", &Ctrl::LeftDrag, &CtrlWrap::default_LeftDrag)
+		.def("lefthold", &Ctrl::LeftHold, &CtrlWrap::default_LeftHold)
+		.def("leftup", &Ctrl::LeftUp, &CtrlWrap::default_LeftUp)
+
+		.def("rightdown", &Ctrl::RightDown, &CtrlWrap::default_RightDown)
+		.def("rightdouble", &Ctrl::RightDouble, &CtrlWrap::default_RightDouble)
+		.def("righttriple", &Ctrl::RightTriple, &CtrlWrap::default_RightTriple)
+		.def("rightrepeat", &Ctrl::RightRepeat, &CtrlWrap::default_RightRepeat)
+		.def("rightdrag", &Ctrl::RightDrag, &CtrlWrap::default_RightDrag)
+		.def("righthold", &Ctrl::RightHold, &CtrlWrap::default_RightHold)
+		.def("rightup", &Ctrl::RightUp, &CtrlWrap::default_RightUp)
+
+		.def("middledown", &Ctrl::MiddleDown, &CtrlWrap::default_MiddleDown)
+		.def("middledouble", &Ctrl::MiddleDouble, &CtrlWrap::default_MiddleDouble)
+		.def("middletriple", &Ctrl::MiddleTriple, &CtrlWrap::default_MiddleTriple)
+		.def("middlerepeat", &Ctrl::MiddleRepeat, &CtrlWrap::default_MiddleRepeat)
+		.def("middledrag", &Ctrl::MiddleDrag, &CtrlWrap::default_MiddleDrag)
+		.def("middlehold", &Ctrl::MiddleHold, &CtrlWrap::default_MiddleHold)
+		.def("middleup", &Ctrl::MiddleUp, &CtrlWrap::default_MiddleUp)
+
+		.def("mousewheel", &Ctrl::MouseWheel, &CtrlWrap::default_MouseWheel)
+		.def("mouseleave", &Ctrl::MouseLeave, &CtrlWrap::default_MouseLeave)
+
 		.def("key", &Ctrl::Key, &CtrlWrap::default_Key)
 
 		.def("gotfocus", &Ctrl::GotFocus, &CtrlWrap::default_GotFocus)
 		.def("lostfocus", &Ctrl::LostFocus, &CtrlWrap::default_LostFocus)
+
+		.def("hotkey", &Ctrl::HotKey, &CtrlWrap::default_HotKey)
+		.def("getaccesskeys", &Ctrl::GetAccessKeys, &CtrlWrap::default_GetAccessKeys)
+		.def("assignaccesskeys", &Ctrl::AssignAccessKeys, &CtrlWrap::default_AssignAccessKeys)
+		.def("postinput", &Ctrl::PostInput, &CtrlWrap::default_PostInput)
 
 		.def("childgotfocus", &Ctrl::ChildGotFocus, &CtrlWrap::default_ChildGotFocus)
 		.def("childlostfocus", &Ctrl::ChildLostFocus, &CtrlWrap::default_ChildLostFocus)
@@ -399,7 +514,7 @@ ONCELOCK
 
 		.def("sync", (void (Ctrl::*)())&Ctrl::Sync)
 
-		//.add_property("ignoremouse", &Ctrl::IgnoreMouse, &CtrlIgnoreMouse)
+		.add_property("ignoremouse", &Ctrl::IsIgnoreMouse, &CtrlIgnoreMouse)
 		.add_property("capture", &Ctrl::HasCapture, &CtrlSetCapture)
 		.add_property("focus", &Ctrl::HasFocus, &CtrlSetFocus)
 		.def("hasfocusdeep", &Ctrl::HasFocusDeep)

@@ -5,7 +5,6 @@
 
 NAMESPACE_UPP
 
-void export_Prompts();
 
 END_UPP_NAMESPACE
 
