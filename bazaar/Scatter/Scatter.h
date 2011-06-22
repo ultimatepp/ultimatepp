@@ -194,8 +194,18 @@ public:
 	
 	void PlotFunction(PlotFunc, const String& legend="", const class::Color& fcolor=Green,const int& weight=6);
 	void PlotParaFunction(PlotParamFunc, const String& legend="", const class::Color& fcolor=Green,const int& weight=6,const int& Np=100);
-	void PlotFunction(double (*f)(double),const String& legend="", const class::Color& fcolor=Green,const int& weight=6);
-	void PlotParaFunction(XY (*pf)(double),const String& legend="", const class::Color& fcolor=Green,const int& weight=6,const int& Np=100);
+
+	inline static void PlotFuncCB(double& y, double x, double (*f)(double)) { y = f(x); }
+	void PlotFunction(double (*f)(double),const String& legend="", const class::Color& fcolor=Green,const int& weight=6)
+	{
+		PlotFunction(callback1(&PlotFuncCB, f), legend, fcolor, weight);
+	}
+
+	inline static void PlotParamFuncCB(XY& xy, double t, XY (*pf)(double)) { xy = pf(t); }
+	void PlotParaFunction(XY (*pf)(double),const String& legend="", const class::Color& fcolor=Green,const int& weight=6,const int& Np=100)
+	{
+		PlotParaFunction(callback1(&PlotParamFuncCB, pf), legend, fcolor, weight, Np);
+	}
 	
 	Scatter &SetFunctPattern(const String pattern); 
 	
@@ -276,9 +286,8 @@ private:
 	Vector<bool> vFPrimaryY, vPPrimaryY;
 	Vector<bool> /*vFSequential, */vPSequential;
 	Vector<String> vFPattern, vPPattern;
-	typedef double (*fAdress)(double);
-	Vector<fAdress> vAdress;
-	Vector<PlotFunc> vAdressPF;
+
+	Vector<PlotFunc> vAdress;
 	Vector<class::Color> vPColors,vFColors;
 	Vector<int> vFThickness,vPThickness;
 	Vector<int> vPWidth;
