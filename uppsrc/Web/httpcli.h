@@ -115,7 +115,7 @@ public:
 	int          socket_port;
 
 	enum {
-		DEFAULT_PORT             = 80,
+		DEFAULT_HTTP_PORT        = 80,
 		DEFAULT_TIMEOUT_MSECS    = 120000,
 		DEFAULT_MAX_HEADER_SIZE  = 1000000,
 		DEFAULT_MAX_CONTENT_SIZE = 10000000,

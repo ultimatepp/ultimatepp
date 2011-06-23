@@ -20,7 +20,8 @@ bool HttpsClient::CreateClientSocket()
 			return false;
 		}
 	}
-	if(!SSLClientSocket(socket, *ssl_context, socket_host, socket_port, true, NULL, 0, false)) {
+	if(!SSLClientSocket(socket, *ssl_context, socket_host,
+	socket_port ? socket_port : DEFAULT_HTTPS_PORT, true, NULL, 0, false)) {
 		error = Socket::GetErrorText();
 		return false;
 	}

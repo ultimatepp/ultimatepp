@@ -125,7 +125,7 @@ private:
 class SSLContext
 {
 public:
-	SSLContext(SSL_CTX *c = NULL) : ssl_ctx(c) { /*SSLInit();*/ }
+	SSLContext(SSL_CTX *c = NULL);
 	~SSLContext()                              { Clear(); }
 
 	bool     IsEmpty() const                   { return !ssl_ctx; }
@@ -172,6 +172,8 @@ public:
 	One<SSLContext> ssl_context;
 	
 	bool            secure;
+	
+	enum { DEFAULT_HTTPS_PORT = 443 };
 };
 
 END_UPP_NAMESPACE
