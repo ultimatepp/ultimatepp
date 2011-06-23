@@ -3,6 +3,8 @@
 
 #ifndef flagNOSSL
 
+#include <openssl/engine.h>
+
 NAMESPACE_UPP
 
 #define LOG_UPP_SSL_MALLOC 0
@@ -10,6 +12,48 @@ NAMESPACE_UPP
 #if LOG_UPP_SSL_MALLOC
 static int UPP_SSL_alloc = 0;
 #endif
+
+struct SSLInitCls {
+	SSLInitCls();
+	~SSLInitCls();
+	
+	void AddThread();
+	
+	Index<dword> threadlist;
+};
+
+GLOBAL_VAR(SSLInitCls, SSLInit);
+
+SSLInitCls::SSLInitCls()
+{
+	RLOG("SSLInitCls");
+	Socket::Init();
+	CRYPTO_set_mem_functions(SSLAlloc, SSLRealloc, SSLFree);
+	SSL_load_error_strings();
+	SSL_library_init();
+	AddThread();
+}
+
+SSLInitCls::~SSLInitCls()
+{
+	RLOG("~SSLInitCls");
+
+	CONF_modules_unload(1);
+//		destroy_ui_method();
+	EVP_cleanup();
+	ENGINE_cleanup();
+	CRYPTO_cleanup_all_ex_data();
+	for(int i = threadlist.GetCount(); --i >= 0;)
+		ERR_remove_state(threadlist[i]);
+	ERR_free_strings();
+}
+
+void SSLInitCls::AddThread()
+{
+	INTERLOCKED {
+		threadlist.FindAdd(CRYPTO_thread_id());
+	}
+}
 
 void *SSLAlloc(size_t size)
 {
@@ -72,23 +116,6 @@ void *SSLRealloc(void *ptr, size_t size)
 #endif
 	MemoryFree(aptr);
 	return newaptr;
-}
-
-INITBLOCK {
-	Socket::Init();
-	CRYPTO_set_mem_functions(SSLAlloc, SSLRealloc, SSLFree);
-	SSL_load_error_strings();
-	SSL_library_init();
-}
-
-EXITBLOCK {
-	CONF_modules_unload(1);
-//	destroy_ui_method();
-	EVP_cleanup();
-//	ENGINE_cleanup();
-	CRYPTO_cleanup_all_ex_data();
-	ERR_remove_state(0);
-	ERR_free_strings();
 }
 
 /*
@@ -302,6 +329,12 @@ String SSLCertificate::GetHash() const
 }
 */
 
+SSLContext::SSLContext(SSL_CTX *c)
+: ssl_ctx(c)
+{
+	SSLInit();
+}
+
 bool SSLContext::CipherList(const char *list)
 {
 	ASSERT(ssl_ctx);
@@ -360,6 +393,7 @@ public:
 SSLSocketData::SSLSocketData(SSLContext& ssl_context)
 : ssl_context(ssl_context)
 {
+	SSLInit().AddThread();
 	ssl = NULL;
 }
 

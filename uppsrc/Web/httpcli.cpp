@@ -17,7 +17,7 @@ void HttpClient::Trace(bool b)
 
 void HttpClient::Init()
 {
-	port = DEFAULT_PORT;
+	port = 0;
 	timeout_msecs = DEFAULT_TIMEOUT_MSECS;
 	max_header_size = DEFAULT_MAX_HEADER_SIZE;
 	max_content_size = DEFAULT_MAX_CONTENT_SIZE;
@@ -54,7 +54,7 @@ HttpClient& HttpClient::URL(const char *u)
 	if(*u == '?' && u[1])
 		hasurlvar = true;
 	host = String(t, u);
-	port = DEFAULT_PORT;
+	port = 0;
 	if(*u == ':')
 		port = ScanInt(u + 1, &u);
 	path = u;
@@ -239,7 +239,7 @@ String HttpClient::Execute(Gate2<int, int> progress)
 		default: NEVER(); // invalid method
 	}
 	String host_port = host;
-	if(port != DEFAULT_PORT)
+	if(port)
 		host_port << ':' << port;
 	String url;
 	url << "http://" << host_port << Nvl(path, "/");
@@ -557,7 +557,8 @@ String HttpClient::ExecuteRedirect(int max_redirect, int retries, Gate2<int, int
 
 bool HttpClient::CreateClientSocket()
 {
-	if(!ClientSocket(socket, socket_host, socket_port, true, NULL, 0, false)) {
+	if(!ClientSocket(socket, socket_host, socket_port ? socket_port : DEFAULT_HTTP_PORT,
+	true, NULL, 0, false)) {
 		error = Socket::GetErrorText();
 		return false;
 	}
