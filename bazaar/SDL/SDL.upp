@@ -4,11 +4,18 @@ uses
 	Core,
 	CtrlLib;
 
-library(WIN32) SDL;
+library(MSC) "SDL SDLmain";
 
-library(LINUX) SDL;
+
+library(GCC WIN32 !SHARED) "SDL.dll SDLmain mingw32";
+
+library(GCC WIN32 SHARED) "SDL SDLmain mingw32";
+
+library(LINUX) "SDL SDLmain";
 
 library(FREEBSD) "SDL SDLmain X11 Xext Xrandr Xrender vga vgl aa usbhid ncurses";
+
+link(MSC DEBUG) /NODEFAULTLIB:msvcrt.lib;
 
 file
 	SDLCtrl.cpp,
