@@ -964,27 +964,7 @@ void Ctrl::Invalidate(XWindow& xw, const Rect& _r)
 	GuiLock __;
 	LTIMING("Invalidate");
 	LLOG("Invalidate " << UPP::Name(xw.ctrl) << " " << _r);
-	Vector<Rect> inv;
-	Rect r = _r;
-	int ra = r.Width() * r.Height();
-	for(int i = 0; i < xw.invalid.GetCount(); i++) {
-		const Rect& ir = xw.invalid[i];
-		Rect ur = r | ir;
-		if(ur.Width() * ur.Height() < 2 * (ir.Width() * ir.Height() + ra))
-			r = ur;
-		else
-		if(!r.Contains(xw.invalid[i]))
-			inv.Add(xw.invalid[i]);
-	}
-	Vector<Rect> rs;
-	rs.Add(r);
-	for(int i = 0; i < inv.GetCount(); i++) {
-		bool ch = false;
-		Vector<Rect> rs1 = Subtract(rs, inv[i], ch);
-		if(ch) rs = rs1;
-	}
-	inv.AppendPick(rs);
-	xw.invalid = inv;
+	AddRefreshRect(xw.invalid, _r);
 }
 
 void Ctrl::AddGlobalRepaint()

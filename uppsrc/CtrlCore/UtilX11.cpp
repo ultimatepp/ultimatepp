@@ -33,7 +33,6 @@ Vector<Rect> Subtract(const Vector<Rect>& r1, const Vector<Rect>& r2)
 	return q;
 }
 
-
 Vector<Rect> Xor(const Vector<Rect>& r1, const Vector<Rect>& r2)
 {
 	Vector<Rect> is = Intersect(r1, r2);

@@ -792,6 +792,9 @@ Vector<Rect> Intersect(const Vector<Rect>& b, const Rect& a, bool& changed);
 void Subtract(Vector<Rect>& rr, const Rect& sub);
 void Union(Vector<Rect>& rr, const Rect& add);
 
+void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r);
+
+
 void DrawRect(Draw& w, const Rect& rect, const Image& img, bool ralgn = false); //??? TODO
 void DrawRect(Draw& w, int x, int y, int cx, int cy, const Image& img, bool ra = false);
 
