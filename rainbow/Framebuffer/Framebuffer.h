@@ -90,6 +90,7 @@ bool FBIsWaitingEvent();
 bool FBProcessEvent(bool *quit);
 void FBSleep(int ms);
 bool FBEndSession();
+void FBUpdate(const Vector<Rect>& area);
 
 // }
 
