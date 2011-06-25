@@ -88,6 +88,31 @@ Vector<Rect> Intersect(const Vector<Rect>& b, const Rect& a, bool& changed)
 	return result;
 }
 
+void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r)
+{
+	Vector<Rect> inv;
+	Rect r = _r;
+	int ra = r.Width() * r.Height();
+	for(int i = 0; i < invalid.GetCount(); i++) {
+		const Rect& ir = invalid[i];
+		Rect ur = r | ir;
+		if(ur.Width() * ur.Height() < 2 * (ir.Width() * ir.Height() + ra))
+			r = ur;
+		else
+		if(!r.Contains(ir))
+			inv.Add(ir);
+	}
+	Vector<Rect> rs;
+	rs.Add(r);
+	for(int i = 0; i < inv.GetCount(); i++) {
+		bool ch = false;
+		Vector<Rect> rs1 = Subtract(rs, inv[i], ch);
+		if(ch) rs = rs1;
+	}
+	inv.AppendPick(rs);
+	invalid = inv;
+}
+
 void DrawFatFrame(Draw& w, int x, int y, int cx, int cy, Color color, int n) {
 	if(n < 0) {
 		x += n;
