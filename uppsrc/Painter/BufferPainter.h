@@ -357,5 +357,8 @@ private:
 	enum { FILL = -1, CLIP = -2, ONPATH = -3 };
 
 public:
+	ImageBuffer&       GetBuffer()                             { return ib; }
+	const ImageBuffer& GetBuffer() const                       { return ib; }
+
 	BufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
 };

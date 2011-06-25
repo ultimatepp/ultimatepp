@@ -39,6 +39,8 @@ Size GetScreenSize();
 
 typedef ImageDraw SystemImageDraw;
 
+void StdDrawImage(SystemDraw& w, int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
+
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
@@ -466,6 +468,7 @@ private:
 	static  bool      mouseinview;
 	static  bool      mouseinframe;
 	static  bool      globalbackpaint;
+	static  bool      globalbackbuffer;
 	static  bool      painting;
 	static  int       LoopLevel;
 	static  Ctrl     *LoopCtrl;
@@ -1196,6 +1199,7 @@ public:
 
 	static void   GlobalBackPaint(bool b = true);
 	static void   GlobalBackPaintHint();
+	static void   GlobalBackBuffer(bool b = true);
 
 	String      Name() const;
 

@@ -388,6 +388,15 @@ ImageDraw::~ImageDraw()
 	XFreeGC(Xdisplay, alpha.gc);
 }
 
+Draw& ImageDraw::Alpha()
+{
+	if(!has_alpha) {
+		alpha.DrawRect(size, GrayColor(0));
+		has_alpha = true;
+	}
+	return alpha;
+}
+
 Image X11Cursor(int c)
 {
 	ImageBuffer b(32, 32);

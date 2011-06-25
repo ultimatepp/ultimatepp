@@ -584,7 +584,7 @@ public:
 		          Color ink = DefaultInk, const int *dx = NULL);
 
 	static void SinCos(int angle, double& sina, double& cosa);
-	
+
 	// deprecated:
 	static void SetStdFont(Font font)                   { UPP::SetStdFont(font); }
 	static Font GetStdFont()                            { return UPP::GetStdFont(); }

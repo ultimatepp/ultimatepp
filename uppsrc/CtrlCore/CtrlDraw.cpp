@@ -6,6 +6,7 @@ NAMESPACE_UPP
 #define LTIMING(x)  // TIMING(x)
 
 bool Ctrl::globalbackpaint;
+bool Ctrl::globalbackbuffer;
 
 void Ctrl::RefreshFrame(const Rect& r) {
 	GuiLock __;
@@ -468,6 +469,11 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 	GuiLock __;
 	LTIMING("UpdateArea");
 	LLOG("========== UPDATE AREA " << UPP::Name(this) << " ==========");
+	if(globalbackbuffer) {
+		CtrlPaint(draw, clip);
+		LLOG("========== END (TARGET IS BACKBUFFER)");
+		return;
+	}
 	if(backpaint == FULLBACKPAINT || globalbackpaint && !hasdhctrl && !dynamic_cast<DHCtrl *>(this)) {
 		ShowRepaintRect(draw, clip, LtRed());
 		BackDraw bw;
@@ -655,6 +661,12 @@ void  Ctrl::GlobalBackPaintHint()
 {
 	if(IsDecentMachine())
 		GlobalBackPaint();
+}
+
+void Ctrl::GlobalBackBuffer(bool b)
+{
+	GuiLock __;
+	globalbackbuffer = b;
 }
 
 END_UPP_NAMESPACE

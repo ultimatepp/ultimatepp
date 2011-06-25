@@ -4,18 +4,17 @@ NAMESPACE_UPP
 
 #define LTIMING(x)
 
-void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
+void StdDrawImage(SystemDraw& w, int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
-	GuiLock __;
 	LTIMING("DrawImageOp");
-	bool tonative = !IsNative();
+	bool tonative = !w.IsNative();
 	if(tonative) {
-		BeginNative();
-		Native(x, y);
-		Native(cx, cy);
+		w.BeginNative();
+		w.Native(x, y);
+		w.Native(cx, cy);
 	}
 	Size sz = Size(cx, cy);
-	if((cx > 2000 || cy > 1500) && IsNull(color) && IsPrinter()) {
+	if((cx > 2000 || cy > 1500) && IsNull(color) && w.IsPrinter()) {
 		int yy = 0;
 		ImageRaster ir(img);
 		RescaleImage rm;
@@ -25,29 +24,19 @@ void SystemDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& img, con
 			ImageBuffer ib(cx, ccy);
 			for(int q = 0; q < ccy; q++)
 				rm.Get(ib[q]);
-			DrawImageBandRLE(*this, x, y + yy, ib, 16);
+			DrawImageBandRLE(w, x, y + yy, ib, 16);
 			yy += ccy;
 		}
 	}
 	else
 	if(src.GetSize() == sz)
-		img.PaintImage(*this, x, y, src, color);
+		img.PaintImage(w, x, y, src, color);
 	else {
 		Image h = Rescale(img, Size(cx, cy), src);
-		h.PaintImage(*this, x, y, h.GetSize(), color);
+		h.PaintImage(w, x, y, h.GetSize(), color);
 	}
 	if(tonative)
-		EndNative();
-}
-
-
-Draw& ImageDraw::Alpha()
-{
-	if(!has_alpha) {
-		alpha.DrawRect(size, GrayColor(0));
-		has_alpha = true;
-	}
-	return alpha;
+		w.EndNative();
 }
 
 ImageBuffer::ImageBuffer(ImageDraw& iw)

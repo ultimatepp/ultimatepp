@@ -101,6 +101,10 @@ public:
 	operator RGBA*()                    { return pixels; }
 	const RGBA *operator~() const       { return pixels; }
 	operator const RGBA*() const        { return pixels; }
+	RGBA *Begin()                       { return pixels; }
+	const RGBA *Begin() const           { return pixels; }
+	RGBA *End()                         { return pixels + GetLength(); }
+	const RGBA *End() const             { return pixels + GetLength(); }
 
 	void  Create(int cx, int cy);
 	void  Create(Size sz)               { Create(sz.cx, sz.cy); }
@@ -187,10 +191,6 @@ private:
 	friend class ImageBuffer;
 	friend struct Data;
 
-	friend class SystemDraw;
-
-	void PaintImage(SystemDraw& w, int x, int y, const Rect& src, Color c) const;
-
 	friend void SetPaintOnly___(Image& m);
 	friend void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);
 	friend void InstallSystemImage();
@@ -254,6 +254,7 @@ public:
 	Image(ImageBuffer& b);
 	~Image();
 
+	void PaintImage(SystemDraw& w, int x, int y, const Rect& src, Color c) const;
 
 	static Image Arrow();
 	static Image Wait();
