@@ -30,6 +30,7 @@ void Ctrl::RefreshFBAll()
 
 void Ctrl::InitFB()
 {
+	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
 	framebuffer.Create(1000, 1000);
 }
@@ -364,16 +365,6 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 
 Rect Ctrl::GetDefaultWindowRect() {
 	return Rect(0, 0, 100, 100);
-}
-
-ViewDraw::ViewDraw(Ctrl *ctrl)
-{
-	EnterGuiMutex();
-}
-
-ViewDraw::~ViewDraw()
-{
-	LeaveGuiMutex();
 }
 
 Vector<WString> SplitCmdLine__(const char *cmd)

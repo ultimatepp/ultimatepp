@@ -49,40 +49,52 @@ void Image::Data::PaintImp(SystemDraw& w, int x, int y, const Rect& src, Color c
 	SystemData& sd = Sys();
 }
 
+Image ImageDraw::Get(bool pm) const
+{
+	ImageBuffer result(image.GetSize());
+	const RGBA *e = image.End();
+	const RGBA *p = ~image;
+	RGBA *t = ~result;
+	if(has_alpha) {
+		const RGBA *a = ~alpha;
+		while(p < e) {
+			*t = *p++;
+			(t++)->a = (a++)->r;
+		}
+		if(pm)
+			Premultiply(result);
+		result.SetKind(IMAGE_ALPHA);
+	}
+	else {
+		while(p < e) {
+			*t = *p++;
+			(t++)->a = 255;
+		}
+	}
+	return result;
+}
+
 Draw& ImageDraw::Alpha()
 {
 	has_alpha = true;
-	return alpha;
+	return alpha_painter;
 }
 
-ImageDraw::operator Image() const
-{
-	Image image;
-	
-	return GetResult();
-}
-
-Image ImageDraw::GetStraight() const
-{
-	return GetResult();
-}
 
 ImageDraw::ImageDraw(Size sz)
-:	BufferPainter(sz.cx, sz.cy),
-	alpha(sz.cx, sz.cy)
+:	ImageDraw__(sz.cx, sz.cy),
+	BufferPainter(image),
+	alpha_painter(alpha)
 {
 	has_alpha = false;
 }
 
 ImageDraw::ImageDraw(int cx, int cy)
-:	BufferPainter(image, cx, cy),
-	alpha(alpha, cx, cy)
+:	ImageDraw__(cx, cy),
+	BufferPainter(image),
+	alpha_painter(alpha)
 {
 	has_alpha = false;
-}
-
-ImageDraw::~ImageDraw()
-{
 }
 
 Image Image::Arrow() { return Null; }

@@ -6,28 +6,37 @@ NAMESPACE_UPP
 
 class SystemDraw : public BufferPainter {
 public:
-	Point    GetOffset() const                             { return Point(0, 0); }
-	bool     CanSetSurface()                               { return false; }
-	static void Flush()                                    {}
+	Point              GetOffset() const                       { return Point(0, 0); }
+	bool               CanSetSurface()                         { return false; }
+	bool               Clip(const Rect& r)                     { return Draw::Clip(r); }
+	bool               Clip(int x, int y, int cx, int cy)      { return Draw::Clip(x, y, cx, cy); }
+	static void Flush()                                        {}
 
 	SystemDraw(ImageBuffer& ib, int mode = MODE_ANTIALIASED) : BufferPainter(ib, mode) {}
 };
 
-class BackDraw : public SystemDraw {
+struct BackDraw__ : public SystemDraw {
+	ImageBuffer h;
+	
+	BackDraw__() : SystemDraw(h) {}
+};
+
+class BackDraw : public BackDraw__ { // Dummy only, as we are running in GlobalBackBuffer mode
 	Size        size;
 	Draw       *painting;
 	Point       painting_offset;
+	ImageBuffer ib;
 	
 public:
 	virtual bool  IsPaintingOp(const Rect& r) const;
 
 public:
-	void  Put(SystemDraw& w, int x, int y);
+	void  Put(SystemDraw& w, int x, int y)             {}
 	void  Put(SystemDraw& w, Point p)                  { Put(w, p.x, p.y); }
 
-	void Create(SystemDraw& w, int cx, int cy);
+	void Create(SystemDraw& w, int cx, int cy)         {}
 	void Create(SystemDraw& w, Size sz)                { Create(w, sz.cx, sz.cy); }
-	void Destroy();
+	void Destroy()                                     {}
 
 	void SetPaintingDraw(Draw& w, Point off)           { painting = &w; painting_offset = off; }
 
@@ -35,29 +44,29 @@ public:
 	~BackDraw();
 };
 
-class ImageDraw__ {
+struct ImageDraw__ {
 	ImageBuffer    image;
 	ImageBuffer    alpha;
 	
 	ImageDraw__(int cx, int cy) : image(cx, cy), alpha(cx, cy) {}
 };
 
-class ImageDraw : public BufferPainter, private ImageDraw__ {
-	Size           size;
+class ImageDraw : private ImageDraw__, public BufferPainter {
 	BufferPainter  alpha_painter;
 	bool           has_alpha;
+
+	Image Get(bool pm) const;
 
 public:
 	Draw& Alpha();
 
-	operator Image() const;
+	operator Image() const               { return Get(true); }
 	
-	Image GetStraight() const;
+	Image GetStraight() const            { return Get(false); }
 	
 	ImageDraw(Size sz);
 	ImageDraw(int cx, int cy);
-	~ImageDraw();
-}
+};
 
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
@@ -84,7 +93,7 @@ bool FBEndSession();
 
 // }
 
-class PrinterJob {
+class PrinterJob { // Dummy only...
 	NilDraw             nil;
 	Vector<int>         pages;
 

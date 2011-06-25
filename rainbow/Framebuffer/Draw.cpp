@@ -12,6 +12,7 @@ NAMESPACE_UPP
 	GuiLock __;
 }*/
 
+/*
 void BackDraw::Destroy()
 {
 	GuiLock __;
@@ -24,6 +25,7 @@ void BackDraw::Create(SystemDraw& w, int cx, int cy) {
 void BackDraw::Put(SystemDraw& w, int x, int y) {
 	GuiLock __;
 }
+*/
 
 END_UPP_NAMESPACE
 
