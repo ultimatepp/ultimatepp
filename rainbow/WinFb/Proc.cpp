@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#define LLOG(x)       LOG(x)
+
 bool GetShift()       { return !!(GetKeyState(VK_SHIFT) & 0x8000); }
 bool GetCtrl()        { return !!(GetKeyState(VK_CONTROL) & 0x8000); }
 bool GetAlt()         { return !!(GetKeyState(VK_MENU) & 0x8000); }
@@ -17,10 +19,26 @@ Point GetMousePos() {
 	return p;
 }
 
+#ifdef _DEBUG
+
+#define x_MSG(x)       { x, #x },
+
+Tuple2<int, const char *> sWinMsg[] = {
+#include <CtrlCore/Win32Msg.i>
+	{0, NULL}
+};
+
+#endif
+
 LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	GuiLock __;
-//	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
+#ifdef _DEBUG
+	Tuple2<int, const char *> *x = FindTuple(sWinMsg, __countof(sWinMsg), message);
+	if(x)
+		LLOG(x->b << ", wParam: " << wParam << ", lParam: " << lParam);
+#endif
+	//	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	switch(message) {
 	case WM_PAINT:
 		ASSERT(hwnd);
@@ -162,6 +180,8 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		return 0L;
 	case WM_HELP:
 		return TRUE;
+	case WM_CLOSE:
+		fbEndSession = true;
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }

@@ -2,7 +2,10 @@
 
 using namespace Upp;
 
-struct App : public TopWindow {
+struct App : public Ctrl {
+	EditString x;
+	ArrayCtrl a;
+	
 	void Paint(Draw& w)
 	{
 		Size sz = GetSize();
@@ -22,11 +25,21 @@ struct App : public TopWindow {
 
 	App()
 	{
-		Sizeable();
+		x <<= "Hello world!";
+		Add(x.LeftPos(100, 100).TopPos(500, 20));
+		a.AddColumn("first");
+		a.AddColumn("second");
+		for(int i = 0; i < 100; i++)
+			a.Add(i, FormatIntRoman(i));
+		Add(a.LeftPos(300, 150).TopPos(10, 300));
+//		Sizeable();
 	}
 };
 
 GUI_APP_MAIN
 {
-	App().Run();
+	App app;
+	ChStdSkin();
+	SetDesktop(app);
+	Ctrl::EventLoop();
 }

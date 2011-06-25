@@ -12,7 +12,8 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 	else
 	if(a != Ctrl::DOWN || !ignoreclick)
 		LOG("Mouse " << p << ' ' << zdelta);
-//	if(_this) PostInput();
+	desktop->DispatchMouse(event, p, zdelta);
+	desktop->PostInput();
 //	if(a == Ctrl::MOUSEMOVE)
 //		DoCursorShape();
 }

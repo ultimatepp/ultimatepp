@@ -6,26 +6,17 @@ NAMESPACE_UPP
 
 #define LLOG(x)
 
-Vector<Ctrl *> fb_window;
+Ctrl          *desktop;
 ImageBuffer    framebuffer;
+Vector<Rect>   invalid;
 
-int FindFBWindowIndex(const Ctrl *x)
+void SetDesktop(Ctrl& q)
 {
-	return FindIndex(fb_window, x);
-}
-
-void Ctrl::RefreshFB(const Rect& r)
-{
-	SystemDraw painter(framebuffer);
-	painter.Draw::Clip(r);
-	for(int i = 0; i < fb_window.GetCount(); i++)
-		fb_window[i]->UpdateArea(painter, fb_window[i]->GetRect().GetSize());
-	painter.End();
-}
-
-void Ctrl::RefreshFBAll()
-{
-	RefreshFB(framebuffer.GetSize());
+	desktop = &q;
+	desktop->SetRect(framebuffer.GetSize());
+	desktop->SetOpen(true);
+	desktop->SetTop();
+	invalid.Add(framebuffer.GetSize());
 }
 
 void Ctrl::InitFB()
@@ -34,6 +25,7 @@ void Ctrl::InitFB()
 	Ctrl::InitTimer();
 	framebuffer.Create(1000, 1000);
 }
+
 
 bool Ctrl::IsAlphaSupported()
 {
@@ -47,7 +39,9 @@ bool Ctrl::IsCompositedGui()
 
 Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
-	return Vector<Ctrl *>(fb_window, 1);
+	Vector<Ctrl *> ctrl;
+	ctrl.Add(desktop);
+	return ctrl;
 }
 
 void  Ctrl::SetMouseCursor(const Image& image)
@@ -64,7 +58,7 @@ Ctrl *Ctrl::GetOwner()
 Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
-	return fb_window.GetCount() ? fb_window.Top() : NULL;
+	return desktop;
 }
 
 // Vector<Callback> Ctrl::hotkey;
@@ -109,8 +103,10 @@ bool Ctrl::ProcessEvent(bool *quit)
 	ASSERT(IsMainThread());
 	if(DoCall())
 		return false;
-	if(FBEndSession())
+	if(FBEndSession()) {
+		if(quit) *quit = true;
 		return false;
+	}
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	if(FBProcessEvent(quit)) {
@@ -123,14 +119,20 @@ bool Ctrl::ProcessEvent(bool *quit)
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
-	if(ProcessEvent(quit)) {
-		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
-		TimerProc(GetTickCount());
-		SweepMkImageCache();
-		return true;
-	}
-	SweepMkImageCache();
+	if(!ProcessEvent(quit))
+		return false;
+	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !FBEndSession()); // LoopCtrl-MF 071008
 	TimerProc(GetTickCount());
+	SweepMkImageCache();
+	for(int i = 0; i < invalid.GetCount(); i++) { _DBG_
+		SystemDraw painter(framebuffer);
+		painter.Draw::Clip(invalid[i]);
+		if(desktop)
+			desktop->UpdateArea(painter, invalid[i]);
+		painter.End();
+	}
+	FBUpdate(invalid);
+	invalid.Clear();
 	return false;
 }
 
@@ -196,18 +198,16 @@ Rect Ctrl::GetWndScreenRect() const
 void Ctrl::WndShow0(bool b)
 {
 	GuiLock __;
-	RefreshFB(GetRect());
 }
 
 void Ctrl::WndUpdate0()
 {
 	GuiLock __;
-	RefreshFB(GetRect());
 }
 
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
-	return FindFBWindowIndex(this) >= 0;
+	return this == desktop;
 }
 
 void Ctrl::SetAlpha(byte alpha)
@@ -269,50 +269,35 @@ int Ctrl::GetKbdSpeed()
 
 void Ctrl::WndDestroy0()
 {
-	int q = FindFBWindowIndex(this);
-	if(q < 0) return;
-	Rect r = GetRect();
-	fb_window.Remove(q);
-	RefreshFB(r);
+	if(top)
+		delete top;
 }
 
 void Ctrl::SetWndForeground0()
 {
 	GuiLock __;
-	int q = FindFBWindowIndex(this);
-	if(q < 0) return;
-	fb_window.Remove(q);
-	fb_window.Add(this);
-	RefreshFB(GetRect());
 }
 
 bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
-	return fb_window.Top() == this;
+	return false;
 }
 
 void Ctrl::WndEnable0(bool *b)
 {
 	GuiLock __;
-	RefreshFB(GetRect());	
 }
 
 void Ctrl::SetWndFocus0(bool *b)
 {
 	GuiLock __;
-	if(IsWndOpen()) {
-		SetWndForeground0();
-		*b = true;
-	}
-	else
-		*b = false;
 }
 
 bool Ctrl::HasWndFocus() const
 {
 	GuiLock __;
-	return IsWndForeground();
+	return false;
 }
 
 bool Ctrl::SetWndCapture()
@@ -338,25 +323,22 @@ bool Ctrl::HasWndCapture() const
 void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
-	RefreshFB(r.Offseted(GetRect().TopLeft()));
+	AddRefreshRect(invalid, r);
 }
 
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
-	RefreshFBAll();
 }
 
 void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
-	RefreshFBAll();
 }
 
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-	RefreshFBAll();
 }
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)

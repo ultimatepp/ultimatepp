@@ -48,12 +48,19 @@ void FBInit(HINSTANCE hInstance)
 	wc.hbrBackground = (HBRUSH)NULL;
 	wc.lpszClassName = L"UPP-FB-CLASS";
 	RegisterClassW(&wc);
-	fbHWND = CreateWindowW(L"UPP-FB-CLASS", L"", WS_OVERLAPPED,
+	fbHWND = CreateWindowW(L"UPP-FB-CLASS", L"", WS_OVERLAPPED|WS_VISIBLE|WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SYSMENU,
 	                       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 	                       NULL, NULL, hInstance, NULL);
 	SetTimer(fbHWND, 1, 10, NULL);
 
 //	Csizeinit();
+}
+
+void FBUpdate(const Vector<Rect>& inv)
+{
+	if(fbHWND)
+		for(int i = 0; i < inv.GetCount(); i++)
+			::InvalidateRect(fbHWND, inv[i], false);
 }
 
 END_UPP_NAMESPACE
