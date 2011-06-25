@@ -1,7 +1,9 @@
-class ViewDraw : public NilDraw {
+class ViewDraw : public SystemDraw {
+	ImageBuffer ib;
+
 public:
-	ViewDraw(Ctrl *ctrl);
-	~ViewDraw();
+	ViewDraw(Ctrl *ctrl) : SystemDraw(ib) { _DBG_ }
+	~ViewDraw() {}
 };
 
 class DHCtrl : Ctrl {};
