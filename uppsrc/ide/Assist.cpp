@@ -316,7 +316,7 @@ void AssistEditor::SyncAssist()
 			   (p ? memcmp_i(name, m.name, name.GetCount()) == 0
 			        && memcmp(name, m.name, name.GetCount())
 			      : memcmp(name, m.name, name.GetCount()) == 0)) {
-				int q = over.Find(m.name);
+				int q = include_assist ? -1 : over.Find(m.name);
 				if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
 					assist.Add(RawToValue(m));
 					if(q < 0)
@@ -382,7 +382,8 @@ bool AssistEditor::IncludeAssist()
 				}
 				else {
 					static Index<String> ext(Split(".h;.hpp;.hh;.hxx;.i;.lay;.iml;.t;.dli", ';'));
-					if(ext.Find(ToLower(GetFileExt(fn))) >= 0) {
+					String fext = GetFileExt(fn);
+					if(fext.GetCount() == 0 || ext.Find(ToLower(fext)) >= 0) {
 						file.Add(fn);
 						upper_file.Add(ToUpper(fn));
 					}
@@ -401,12 +402,13 @@ bool AssistEditor::IncludeAssist()
 	IndexSort(upper_file, file);
 	for(int i = 0; i < file.GetCount(); i++) {
 		String fn = file[i];
-		CppItemInfo& f = assist_item.GetAdd(fn);
+		CppItemInfo& f = assist_item.Add(fn);
 		f.name = f.natural = fn;
 		f.access = 0;
 		static Index<String> hdr(Split(".h;.hpp;.hh;.hxx", ';'));
-		f.kind = hdr.Find(ToLower(GetFileExt(fn))) >= 0 ? KIND_INCLUDEFILE
-		                                                : KIND_INCLUDEFILE_ANY;
+		String fext = GetFileExt(fn);
+		f.kind = hdr.Find(ToLower(GetFileExt(fn))) >= 0 || fext.GetCount() == 0 ? KIND_INCLUDEFILE
+		                                                                        : KIND_INCLUDEFILE_ANY;
 	}
 	include_assist = true;
 	if(include_path.GetCount())
