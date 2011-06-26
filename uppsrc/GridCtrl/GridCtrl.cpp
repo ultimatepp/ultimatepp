@@ -2131,13 +2131,22 @@ void GridCtrl::LeftDown(Point p, dword keyflags)
 				if(IsValidCursor(oldcur) && selected_items == 0 && cs.IsNew())
 				{
 					shiftpos = oldcur;
-					SelectRange(oldcur, select_row ? oldcur : curpos, true, select_row);
-					SelectRange(curpos, curpos, !vitems[curpos.y].IsSelect(), select_row);
+	
+					if(select_row)
+					{
+						SelectRange(oldcur, oldcur, true, true);
+						SelectRange(curpos, curpos, true, true);
+					}
+					else
+					{
+						SelectRange(oldcur, curpos, true, false);
+					}
 				}
 				else
 				{
 					shiftpos = curpos;
-					SelectRange(curpos, curpos, !vitems[curpos.y].IsSelect(), select_row);
+					bool rowsel = vitems[curpos.y].IsSelect();
+					SelectRange(curpos, curpos, !rowsel, select_row);
 				}
 				selecting = true;
 			}
