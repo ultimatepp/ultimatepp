@@ -6,7 +6,7 @@ NAMESPACE_UPP
 
 #define LLOG(x)
 
-Ctrl          *desktop;
+Ptr<Ctrl>      desktop;
 ImageBuffer    framebuffer;
 Vector<Rect>   invalid;
 
@@ -19,13 +19,17 @@ void SetDesktop(Ctrl& q)
 	invalid.Add(framebuffer.GetSize());
 }
 
+Ctrl *GetDesktop()
+{
+	return desktop;
+}
+
 void Ctrl::InitFB()
 {
 	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
 	framebuffer.Create(1000, 1000);
 }
-
 
 bool Ctrl::IsAlphaSupported()
 {
@@ -40,7 +44,8 @@ bool Ctrl::IsCompositedGui()
 Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
 	Vector<Ctrl *> ctrl;
-	ctrl.Add(desktop);
+	if(desktop)
+		ctrl.Add(desktop);
 	return ctrl;
 }
 
@@ -292,32 +297,33 @@ void Ctrl::WndEnable0(bool *b)
 void Ctrl::SetWndFocus0(bool *b)
 {
 	GuiLock __;
+	*b = true;
 }
 
 bool Ctrl::HasWndFocus() const
 {
 	GuiLock __;
-	return false;
+	return focusCtrl && focusCtrl->GetTopCtrl() == this;
 }
 
 bool Ctrl::SetWndCapture()
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	return false;
+	return true;
 }
 
 bool Ctrl::ReleaseWndCapture()
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-	return false;
+	return true;
 }
 
 bool Ctrl::HasWndCapture() const
 {
 	GuiLock __;
-	return false;
+	return captureCtrl && captureCtrl->GetTopCtrl() == this;
 }
 
 void Ctrl::WndInvalidateRect0(const Rect& r)

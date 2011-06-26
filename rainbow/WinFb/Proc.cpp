@@ -12,11 +12,23 @@ bool GetMouseLeft()   { return !!(GetKeyState(VK_LBUTTON) & 0x8000); }
 bool GetMouseRight()  { return !!(GetKeyState(VK_RBUTTON) & 0x8000); }
 bool GetMouseMiddle() { return !!(GetKeyState(VK_MBUTTON) & 0x8000); }
 
-Point GetMousePos() {
-	Point p;
-	return ::GetCursorPos(p) ? p : Null;
-	::GetCursorPos(p);
-	return p;
+dword fbKEYtoK(dword chr) {
+	if(chr == VK_TAB)
+		chr = K_TAB;
+	else
+	if(chr == VK_SPACE)
+		chr = K_SPACE;
+	else
+	if(chr == VK_RETURN)
+		chr = K_RETURN;
+	else
+		chr = chr + K_DELTA;
+	if(chr == K_ALT_KEY || chr == K_CTRL_KEY || chr == K_SHIFT_KEY)
+		return chr;
+	if(GetCtrl()) chr |= K_CTRL;
+	if(GetAlt()) chr |= K_ALT;
+	if(GetShift()) chr |= K_SHIFT;
+	return chr;
 }
 
 #ifdef _DEBUG
@@ -95,7 +107,12 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		Ctrl::DoMouseFB(Ctrl::MOUSEMOVE, Point((dword)lParam));
 		return 0L;
 	case 0x20a: // WM_MOUSEWHEEL:
-		Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, Point((dword)lParam), (short)HIWORD(wParam));
+		DDUMP(Point((dword)lParam));
+		{
+			Point p(0, 0);
+			::ClientToScreen(hwnd, p);
+			Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
+		}
 		return 0L;
 	case WM_SETCURSOR:
 		SetCursor(NULL);
@@ -109,7 +126,6 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 		{
-#if 0
 			String msgdump;
 			switch(message)
 			{
@@ -120,55 +136,34 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 			case WM_CHAR:       msgdump << "WM_CHAR"; break;
 			}
 			msgdump << " wParam = 0x" << FormatIntHex(wParam, 8)
-				<< ", lParam = 0x" << FormatIntHex(lParam, 8)
-				<< ", ignorekeyup = " << (ignorekeyup ? "true" : "false");
+				<< ", lParam = 0x" << FormatIntHex(lParam, 8);
 			LLOG(msgdump);
 			dword keycode = 0;
 			if(message == WM_KEYDOWN) {
-				keycode = KEYtoK((dword)wParam);
+				keycode = fbKEYtoK((dword)wParam);
 				if(keycode == K_SPACE)
 					keycode = 0;
 			}
 			else
 			if(message == WM_KEYUP)
-				keycode = KEYtoK((dword)wParam) | K_KEYUP;
+				keycode = fbKEYtoK((dword)wParam) | K_KEYUP;
 			else
 			if(message == WM_SYSKEYDOWN /*&& ((lParam & 0x20000000) || wParam == VK_F10)*/)
-				keycode = KEYtoK((dword)wParam);
+				keycode = fbKEYtoK((dword)wParam);
 			else
 			if(message == WM_SYSKEYUP /*&& ((lParam & 0x20000000) || wParam == VK_F10)*/)
-				keycode = KEYtoK((dword)wParam) | K_KEYUP;
+				keycode = fbKEYtoK((dword)wParam) | K_KEYUP;
 			else
-			if(message == WM_CHAR && wParam != 127 && wParam > 32 || wParam == 32 && KEYtoK(VK_SPACE) == K_SPACE) {
-#ifdef PLATFORM_WINCE
-				keycode = wParam;
-#else
-				if(IsWindowUnicode(hwnd)) // TRC 04/10/17: ActiveX Unicode patch
-					keycode = (dword)wParam;
-				else {
-					char b[20];
-					::GetLocaleInfo(MAKELCID(LOWORD(GetKeyboardLayout(0)), SORT_DEFAULT),
-					                LOCALE_IDEFAULTANSICODEPAGE, b, 20);
-					int codepage = atoi(b);
-					if(codepage >= 1250 && codepage <= 1258)
-						keycode = ToUnicode((dword)wParam, codepage - 1250 + CHARSET_WIN1250);
-					else
-						keycode = (dword)wParam;
-				}
-#endif
-			}
+			if(message == WM_CHAR && wParam != 127 && wParam > 32 || wParam == 32 && fbKEYtoK(VK_SPACE) == K_SPACE)
+				keycode = (dword)wParam;
 			bool b = false;
-			if(keycode) {
-				b = DispatchKey(keycode, LOWORD(lParam));
-				SyncCaret();
-				if(_this) PostInput();
-			}
+			if(keycode)
+				b = Ctrl::DoKeyFB(keycode, LOWORD(lParam));
 //			LOG("key processed = " << b);
-			if(b || (message == WM_SYSKEYDOWN || message == WM_SYSKEYUP)
-			&& wParam != VK_F4 && !PassWindowsKey((dword)wParam)) // 17.11.2003 Mirek -> invoke system menu
-				return 0L;
+//			if(b || (message == WM_SYSKEYDOWN || message == WM_SYSKEYUP)
+//			&& wParam != VK_F4 && !PassWindowsKey((dword)wParam)) // 17.11.2003 Mirek -> invoke system menu
+//				return 0L;
 			break;
-#endif
 		}
 		break;
 //	case WM_GETDLGCODE:

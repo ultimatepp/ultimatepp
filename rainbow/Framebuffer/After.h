@@ -35,5 +35,5 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 void GuiMainFn_()
 #endif
 
-void SetDesktop(Ctrl& desktop);
-extern Ctrl *desktop;
+void  SetDesktop(Ctrl& desktop);
+Ctrl *GetDesktop();
