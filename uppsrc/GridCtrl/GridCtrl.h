@@ -291,16 +291,17 @@ class GridCtrl : public Ctrl
 			UC_SHOW      = BIT(0),
 			UC_HIDE      = BIT(1),
 			UC_FOCUS     = BIT(2),
-			UC_GOFIRST   = BIT(3),
-			UC_SCROLL    = BIT(4),
-			UC_NEXT      = BIT(5),
-			UC_CTRLS     = BIT(6),
-			UC_CURSOR    = BIT(7),
-			UC_CHECK_VIS = BIT(8),
-			UC_MOUSE     = BIT(9),
-			UC_CTRLS_OFF = BIT(10),
-			UC_UPDATES   = BIT(11),
-			UC_OLDCUR    = BIT(12)
+			UC_NOFOCUS   = BIT(3),
+			UC_GOFIRST   = BIT(4),
+			UC_SCROLL    = BIT(5),
+			UC_NEXT      = BIT(6),
+			UC_CTRLS     = BIT(7),
+			UC_CURSOR    = BIT(8),
+			UC_CHECK_VIS = BIT(9),
+			UC_MOUSE     = BIT(10),
+			UC_CTRLS_OFF = BIT(11),
+			UC_UPDATES   = BIT(12),
+			UC_OLDCUR    = BIT(13)
 		};
 		
 		enum GridRepaintOpts
