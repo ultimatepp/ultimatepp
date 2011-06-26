@@ -5101,9 +5101,9 @@ bool GridCtrl::Key(dword key, int)
 	{
 		case K_ENTER:
 			ClearSelection();
+			WhenEnter();
 			#ifdef LOG_CALLBACKS
 			LGR(2, "WhenEnter()");
-			WhenEnter();
 			#endif
 
 			if(enter_like_tab)
