@@ -4631,6 +4631,8 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR */)
 
 	edit_ctrls = false;
 
+	bool nofocus = opt & UC_NOFOCUS;
+	
 	focused_ctrl = NULL;
 	focused_ctrl_id = -1;
 	focused_col = -1;
@@ -4671,7 +4673,7 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR */)
 			gofirst = false;
 		}
 		
-		bool dofocus = !(opt & UC_HIDE) && dorf;
+		bool dofocus = !nofocus && !(opt & UC_HIDE) && dorf;
 
 		if(show)
 		{
@@ -4712,7 +4714,7 @@ void GridCtrl::UpdateCtrls(int opt /*= UC_CHECK_VIS | UC_SHOW | UC_CURSOR */)
 		}
 	}
 
-	if(!focused_ctrl)
+	if(!nofocus && !focused_ctrl)
 		SetFocus();
 
 	if(opt & UC_CTRLS)
@@ -7611,6 +7613,8 @@ void GridCtrl::ClearFound(bool showrows, bool clear_string)
 
 	if(clear_string)
 		search_string.Clear();
+	
+	WhenSearchCursor();
 }
 
 bool GridCtrl::Match(const WString &f, const WString &s, int &fs, int &fe)
@@ -7648,7 +7652,7 @@ bool GridCtrl::Match(const WString &f, const WString &s, int &fs, int &fe)
 
 void GridCtrl::DoFind()
 {
-	UpdateCtrls(UC_CHECK_VIS | UC_HIDE | UC_CTRLS | UC_SCROLL);
+	UpdateCtrls(UC_CHECK_VIS | UC_HIDE | UC_CTRLS | UC_SCROLL | UC_NOFOCUS);
 	ShowMatchedRows((WString) ~find);
 }
 
