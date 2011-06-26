@@ -1171,7 +1171,7 @@ void GridCtrl::Paint(Draw &w)
 					gd->SetLeftImage(hi.img);
 					gd->PaintFixed(w, jj == firstcol, i == 0, x, y, cx, cy,
 								i == 0 ? it.val : GetConvertedColumn(hi.id, it.val),
-								style | en, stdfont, false, false,
+								style | en, hi.hfnt, false, false,
 								i == 0 ? hi.sortmode : 0,
 								hi.sortcol,
 								sortOrder.GetCount(),
@@ -1275,7 +1275,9 @@ void GridCtrl::Paint(Draw &w)
 
 			for(j = firstRow; j < total_rows; j++)
 			{
-				if(vitems[j].hidden)
+				ItemRect& vi = vitems[j];
+				
+				if(vi.hidden)
 					continue;
 
 				Item &it = GetItemSize(j, i, x, y, cx, cy, skip, false, true);
@@ -1290,14 +1292,14 @@ void GridCtrl::Paint(Draw &w)
 				{
 					GridDisplay * gd = it.display ? it.display : display;
 
-					dword style = vitems[j].style;
+					dword style = vi.style;
 					if(i > 0) style &= ~GD::HIGHLIGHT;
 					if(chameleon)
 						style |= GD::CHAMELEON;
 
 					gd->PaintFixed(w, firstx, j == 0, x, y, cx, cy,
 									GetConvertedColumn(id, it.val),
-									style | en, stdfont,
+									style | en, vi.hfnt,
 									indicator, false, 0, -1, 0, false);
 					
 					it.rcx = gd->real_size.cx;
