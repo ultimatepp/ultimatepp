@@ -587,7 +587,7 @@ class GridCtrl : public Ctrl
 
 				int balign, halign, calign;
 				bool wrap;
-				Font fnt;
+				Font fnt, hfnt;
 				Color fg, bg;
 				Image img;
 
@@ -723,11 +723,12 @@ class GridCtrl : public Ctrl
 
 				ItemRect& WrapText()                             { wrap = true; return *this; }
 
-				ItemRect& SetFont(Font &f)                       { fnt = f; return *this; }
-				ItemRect& Bg(Color c)                            { bg = c;  return *this; }
-				ItemRect& Fg(Color c)                            { fg = c;  return *this; }
-				ItemRect& SetImage(const Image& i)               { img = i; return *this; }
-				ItemRect& ClearImage()                           { img = Null; return *this;}
+				ItemRect& SetFont(Font& f)                       { fnt = f;    return *this; }
+				ItemRect& SetHeaderFont(Font& f)                 { hfnt = f;   return *this; }
+				ItemRect& Bg(Color c)                            { bg = c;     return *this; }
+				ItemRect& Fg(Color c)                            { fg = c;     return *this; }
+				ItemRect& SetImage(const Image& i)               { img = i;    return *this; }
+				ItemRect& ClearImage()                           { img = Null; return *this; }
 				ItemRect& Ctrls(Callback1<One<Ctrl>&> _factory);
 				ItemRect& Ctrls(void (*factory)(One<Ctrl>&))     { return Ctrls(callback(factory)); }
 				template<class T> ItemRect&  Ctrls()             { return Ctrls(DefaultCtrlFactory<T>()); }
