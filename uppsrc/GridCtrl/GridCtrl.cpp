@@ -985,7 +985,7 @@ Value GridCtrl::GetItemValue(const Item& it, int id, const ItemRect& hi, const I
 	return val;	
 }
 
-void GridCtrl::GetItemAttrs(const Item& it, int id, const ItemRect& hi, const ItemRect& vi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt)
+void GridCtrl::GetItemAttrs(const Item& it, int r, int c, const ItemRect& vi, const ItemRect& hi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt)
 {
 	if(!IsNull(vi.fg))
 		fg = vi.fg;
@@ -998,8 +998,12 @@ void GridCtrl::GetItemAttrs(const Item& it, int id, const ItemRect& hi, const It
 		bg = hi.bg;
 
 	fnt = StdFont();
-
-	if(!IsNull(vi.fnt))
+	
+	if(r < fixed_rows && !IsNull(hi.hfnt))
+		fnt = hi.hfnt;
+	else if(c < fixed_cols && !IsNull(vi.hfnt))
+		fnt = vi.hfnt;
+	else if(!IsNull(vi.fnt))
 		fnt = vi.fnt;
 	else if(!IsNull(hi.fnt))
 		fnt = hi.fnt;	
@@ -1421,7 +1425,7 @@ void GridCtrl::Paint(Draw &w)
 					Font fnt = StdFont();
 					GridDisplay* gd;
 					Value val = GetItemValue(it, id, hi, vi);
-					GetItemAttrs(it, id, hi, vi, style, gd, cfg, cbg, fnt);
+					GetItemAttrs(it, i, j, vi, hi, style, gd, cfg, cbg, fnt);
 
 					Color fg = SColorText;
 					Color bg = SColorPaper;
@@ -2031,13 +2035,13 @@ void GridCtrl::SyncPopup()
 					int x = hi.npos + p0.x - p.x - 1 - sbx.Get() * int(!fc);
 					int y = vi.npos + p0.y - p.y - 1 - sby.Get() * int(!fr);
 					
-					GetItemAttrs(it, hi.id, hi, vi, popup.style, popup.gd, popup.fg, popup.bg, popup.fnt);
+					GetItemAttrs(it, r, c, vi, hi, popup.style, popup.gd, popup.fg, popup.bg, popup.fnt);
 					popup.gd->row = r < fixed_rows ? -1 : r - fixed_rows;
 					popup.gd->col = c < fixed_cols ? -1 : c - fixed_cols;
 					Size scrsz = GetScreenSize();
 					int margin = popup.gd->lm + popup.gd->rm;
 					int cx = min(600, min((int) (scrsz.cx * 0.4), max(it.rcx + margin + 2, hi.nsize + 1)));
-					int lines = popup.gd->GetLinesCount(cx - margin - 2, WString(val), StdFont(), true);
+					int lines = popup.gd->GetLinesCount(cx - margin - 2, WString(val), popup.fnt, true);
 					int cy = max(lines * Draw::GetStdFontCy() + popup.gd->tm + popup.gd->bm + 2, vi.nsize + 1);
 					if(fr && r == 0)
 					{
