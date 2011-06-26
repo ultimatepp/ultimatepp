@@ -513,6 +513,7 @@ class GridCtrl : public Ctrl
 					ismax = false;
 
 					fnt = Null;
+					hfnt = Null;
 					balign = halign = GD::LEFT | GD::VCENTER;
 					wrap = false;
 					fg = Null;
@@ -1717,7 +1718,7 @@ class GridCtrl : public Ctrl
 		int  GetIdCol(int id, bool checkall = false) const;
 		int  GetIdRow(int id, bool checkall = false) const;
 		Value GetItemValue(const Item& it, int id, const ItemRect& hi, const ItemRect& vi);
-		void  GetItemAttrs(const Item& it, int id, const ItemRect& hi, const ItemRect& vi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt);
+		void  GetItemAttrs(const Item& it, int r, int c, const ItemRect& vi, const ItemRect& hi, dword& style, GridDisplay*& gd, Color& fg, Color& bg, Font& fnt);
 		Item& GetItemSize(int &r, int &c, int &x, int &y, int &cx, int &cy, bool &skip, bool relx = true, bool rely = true);
 
 	private:
