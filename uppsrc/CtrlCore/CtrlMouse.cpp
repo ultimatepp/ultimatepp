@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  //  DLOG(x)
+#define LLOG(x)   // DLOG(x)
 
 Ptr<Ctrl> Ctrl::eventCtrl;
 Ptr<Ctrl> Ctrl::mouseCtrl;

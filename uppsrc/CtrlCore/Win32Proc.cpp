@@ -234,8 +234,11 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 			EndIgnore();
 			return 0L;
 		}
-		if(_this)
-			DoMouse(MOUSEWHEEL, Point((dword)lParam), (short)HIWORD(wParam));
+		if(_this) {
+			Point p(0, 0);
+			::ClientToScreen(hwnd, p);
+			DoMouse(MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
+		}
 		if(_this) PostInput();
 		return 0L;
 	case WM_SETCURSOR:
