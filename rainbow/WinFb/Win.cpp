@@ -22,6 +22,7 @@ bool FBProcessEvent(bool *quit)
 	if(PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
 		if(msg.message == WM_QUIT && quit)
 			*quit = true;
+		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
 		return true;
 	}

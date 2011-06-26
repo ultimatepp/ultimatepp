@@ -10,10 +10,6 @@ void Ctrl::GuiPlatformConstruct()
 {
 }
 
-void Ctrl::GuiPlatformDestruct()
-{
-}
-
 void Ctrl::GuiPlatformRemove()
 {
 }

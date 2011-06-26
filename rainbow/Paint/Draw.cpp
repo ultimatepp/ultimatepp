@@ -41,5 +41,6 @@ GUI_APP_MAIN
 	App app;
 	ChStdSkin();
 	SetDesktop(app);
+	app.SetFocus();
 	Ctrl::EventLoop();
 }
