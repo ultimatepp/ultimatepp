@@ -929,6 +929,12 @@ void GridCtrl::DoPasteAppendedRows()
 	Paste(2);
 }
 
+void GridCtrl::SetOrder()
+{
+	row_order = true;
+	WhenChangeOrder();
+}
+
 void GridCtrl::Nothing()
 {
 }
@@ -5434,7 +5440,7 @@ bool GridCtrl::MoveRow(int n, int m, bool repaint)
 		Repaint(false, true);
 	}
 
-	row_order = true;
+	SetOrder();
 	SetModify();
 
 	return true;
@@ -5470,7 +5476,7 @@ void GridCtrl::MoveRows(int n, bool onerow)
 
 		vitems.Insert(n - cnt, vi);
 
-		row_order = true;
+		SetOrder();
 		SetModify();
 
 		UpdateCursor();
@@ -5503,7 +5509,7 @@ bool GridCtrl::SwapRows(int n, int m, bool repaint)
 		UpdateCursor();
 		Repaint(false, true);
 	}
-	row_order = true;
+	SetOrder();
 	SetModify();
 	return true;
 }
@@ -6564,7 +6570,7 @@ void GridCtrl::Insert0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 		}
 	}
 
-	row_order = true;
+	SetOrder();
 	SetModify();
 }
 
@@ -6705,7 +6711,7 @@ bool GridCtrl::Remove0(int row, int cnt /* = 1*/, bool recalc /* = true*/, bool 
 		WhenCursor();
 	}
 
-	row_order = true;
+	SetOrder();
 	SetModify();
 	return cancel;
 }
@@ -6765,7 +6771,7 @@ int GridCtrl::Append0(int cnt, int size, bool refresh)
 		RefreshFrom(k);
 	}
 
-	row_order = true;
+	SetOrder();
 	SetModify();
 	return total_rows - fixed_rows;
 }
@@ -6840,7 +6846,7 @@ bool GridCtrl::Duplicate0(int row, int cnt, bool recalc, bool refresh)
 
 	if(duplicated > 0)
 	{
-		row_order = true;
+		SetOrder();
 		SetModify();
 	}
 	

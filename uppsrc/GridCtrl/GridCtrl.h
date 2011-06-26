@@ -1690,6 +1690,8 @@ class GridCtrl : public Ctrl
 		void DrawHorzDragLine(Draw &w, int pos, int cx, int size, Color c);
 		void DrawVertDragLine(Draw &w, int pos, int size, int dx, Color c);
 
+		void SetOrder();
+		
 		void Nothing();
 		void Init();
 
@@ -1764,6 +1766,7 @@ class GridCtrl : public Ctrl
 
 		Callback WhenSearchCursor;
 		Callback WhenClose;
+		Callback WhenChangeOrder;
 
 		Callback StdInsert;
 		Callback StdAppend;
