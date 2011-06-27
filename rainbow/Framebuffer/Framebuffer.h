@@ -71,8 +71,6 @@ public:
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
-#define GUIPLATFORM_KEYCODES_INCLUDE <Framebuffer/Keys.h>
-
 #define GUIPLATFORM_CTRL_TOP_DECLS
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Framebuffer/Ctrl.h>
@@ -90,7 +88,7 @@ bool FBIsWaitingEvent();
 bool FBProcessEvent(bool *quit);
 void FBSleep(int ms);
 bool FBEndSession();
-void FBUpdate(const Vector<Rect>& area);
+void FBUpdate(const Rect& area);
 
 // }
 

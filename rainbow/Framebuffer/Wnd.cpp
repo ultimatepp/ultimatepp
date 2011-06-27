@@ -28,7 +28,7 @@ void Ctrl::InitFB()
 {
 	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
-	framebuffer.Create(1000, 1000);
+	framebuffer.Create(1000, 600);
 }
 
 bool Ctrl::IsAlphaSupported()
@@ -47,11 +47,6 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 	if(desktop)
 		ctrl.Add(desktop);
 	return ctrl;
-}
-
-void  Ctrl::SetMouseCursor(const Image& image)
-{
-	GuiLock __;
 }
 
 Ctrl *Ctrl::GetOwner()
@@ -129,15 +124,20 @@ bool Ctrl::ProcessEvents(bool *quit)
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !FBEndSession()); // LoopCtrl-MF 071008
 	TimerProc(GetTickCount());
 	SweepMkImageCache();
-	for(int i = 0; i < invalid.GetCount(); i++) { _DBG_
+	if(invalid.GetCount()) {
+		RemoveCursor();
+		RemoveCaret();
+	}
+	for(int i = 0; i < invalid.GetCount(); i++) { _DBG_ // Optimize for single UpdateArea!
 		SystemDraw painter(framebuffer);
 		painter.Draw::Clip(invalid[i]);
 		if(desktop)
 			desktop->UpdateArea(painter, invalid[i]);
 		painter.End();
+		FBUpdate(invalid[i]);
 	}
-	FBUpdate(invalid);
 	invalid.Clear();
+	CursorSync();
 	return false;
 }
 
@@ -161,7 +161,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
-		GuiSleep(1000);
+		GuiSleep(20);
 		if(FBEndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
@@ -191,7 +191,7 @@ Rect Ctrl::GetWndUpdateRect() const
 {
 	GuiLock __;
 	Rect r;
-	return Rect(0, 0, 1000, 1000);
+	return Rect(0, 0, 1000, 600);
 }
 
 Rect Ctrl::GetWndScreenRect() const

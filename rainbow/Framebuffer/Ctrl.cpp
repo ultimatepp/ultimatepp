@@ -63,21 +63,6 @@ void GuiPlatformAfterMenuPopUp()
 {
 }
 
-void Ctrl::SetCaret(int x, int y, int cx, int cy)
-{
-	GuiLock __;
-	caretx = x;
-	carety = y;
-	caretcx = cx;
-	caretcy = cy;
-	SyncCaret();
-}
-
-void Ctrl::SyncCaret() {
-	GuiLock __;
-
-}
-
 String Ctrl::Name() const {
 	GuiLock __;
 #ifdef CPU_64

@@ -6,7 +6,6 @@ uses
 file
 	Framebuffer.h,
 	After.h,
-	Keys.h,
 	Draw.cpp,
 	Image.cpp,
 	Util.cpp,

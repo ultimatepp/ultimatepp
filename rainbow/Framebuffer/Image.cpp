@@ -1,4 +1,4 @@
-#include <CtrlCore/CtrlCore.h>
+#include <CtrlLib/CtrlLib.h>
 
 #ifdef GUI_FB
 
@@ -97,21 +97,21 @@ ImageDraw::ImageDraw(int cx, int cy)
 	has_alpha = false;
 }
 
-Image Image::Arrow() { return Null; }
-Image Image::Wait() { return Null; }
-Image Image::IBeam() { return Null; }
-Image Image::No() { return Null; }
-Image Image::SizeAll() { return Null; }
-Image Image::SizeHorz() { return Null; }
-Image Image::SizeVert() { return Null; }
-Image Image::SizeTopLeft() { return Null; }
-Image Image::SizeTop() { return Null; }
-Image Image::SizeTopRight() { return Null; }
-Image Image::SizeLeft() { return Null; }
-Image Image::SizeRight() { return Null; }
-Image Image::SizeBottomLeft() { return Null; }
-Image Image::SizeBottom() { return Null; }
-Image Image::SizeBottomRight() { return Null; }
+Image Image::Arrow() { return CtrlImg::arrow(); }
+Image Image::Wait() { return CtrlImg::arrow(); }
+Image Image::IBeam() { return CtrlImg::arrow(); }
+Image Image::No() { return CtrlImg::arrow(); }
+Image Image::SizeAll() { return CtrlImg::arrow(); }
+Image Image::SizeHorz() { return CtrlImg::arrow(); }
+Image Image::SizeVert() { return CtrlImg::arrow(); }
+Image Image::SizeTopLeft() { return CtrlImg::arrow(); }
+Image Image::SizeTop() { return CtrlImg::arrow(); }
+Image Image::SizeTopRight() { return CtrlImg::arrow(); }
+Image Image::SizeLeft() { return CtrlImg::arrow(); }
+Image Image::SizeRight() { return CtrlImg::arrow(); }
+Image Image::SizeBottomLeft() { return CtrlImg::arrow(); }
+Image Image::SizeBottom() { return CtrlImg::arrow(); }
+Image Image::SizeBottomRight() { return CtrlImg::arrow(); }
 
 END_UPP_NAMESPACE
 

@@ -6,6 +6,7 @@
 #define GUIPLATFORM_INCLUDE <WinAlt/WinAlt.h>
 #endif
 
-#ifdef flagFB
+#ifdef flagWINFB
+#define GUIPLATFORM_KEYCODES_INCLUDE <WinFb/Keys.h>
 #define GUIPLATFORM_INCLUDE <Framebuffer/Framebuffer.h>
 #endif
