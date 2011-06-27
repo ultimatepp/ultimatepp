@@ -107,7 +107,6 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		Ctrl::DoMouseFB(Ctrl::MOUSEMOVE, Point((dword)lParam));
 		return 0L;
 	case 0x20a: // WM_MOUSEWHEEL:
-		DDUMP(Point((dword)lParam));
 		{
 			Point p(0, 0);
 			::ClientToScreen(hwnd, p);
@@ -115,7 +114,10 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		}
 		return 0L;
 	case WM_SETCURSOR:
-		SetCursor(NULL);
+		if(LOWORD((dword)lParam) == HTCLIENT) {
+			SetCursor(NULL);
+			return TRUE;
+		}
 		break;
 //	case WM_MENUCHAR:
 //		return MAKELONG(0, MNC_SELECT);

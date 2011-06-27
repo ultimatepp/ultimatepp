@@ -57,11 +57,10 @@ void FBInit(HINSTANCE hInstance)
 //	Csizeinit();
 }
 
-void FBUpdate(const Vector<Rect>& inv)
+void FBUpdate(const Rect& inv)
 {
 	if(fbHWND)
-		for(int i = 0; i < inv.GetCount(); i++)
-			::InvalidateRect(fbHWND, inv[i], false);
+		::InvalidateRect(fbHWND, inv, false);
 }
 
 END_UPP_NAMESPACE

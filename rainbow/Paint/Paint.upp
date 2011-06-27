@@ -9,5 +9,5 @@ file
 	Draw.cpp;
 
 mainconfig
-	"" = "GUI FB";
+	"" = "GUI WINFB";
 
