@@ -63,4 +63,10 @@ void FBUpdate(const Rect& inv)
 		::InvalidateRect(fbHWND, inv, false);
 }
 
+void FBSync()
+{
+	if(fbHWND)
+		::UpdateWindow(fbHWND);
+}
+
 END_UPP_NAMESPACE

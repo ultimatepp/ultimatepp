@@ -136,6 +136,7 @@ void Ctrl::CursorSync()
 
 		Over(framebuffer, p, fbCursorImage, sz);
 		FBUpdate(tr);
+		FBSync();
 	}
 }
 

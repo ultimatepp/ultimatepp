@@ -127,16 +127,20 @@ bool Ctrl::ProcessEvents(bool *quit)
 	if(invalid.GetCount()) {
 		RemoveCursor();
 		RemoveCaret();
-	}
-	for(int i = 0; i < invalid.GetCount(); i++) { _DBG_ // Optimize for single UpdateArea!
-		SystemDraw painter(framebuffer);
-		painter.Draw::Clip(invalid[i]);
+		SystemDraw painter(framebuffer, invalid);
+		painter.Begin();
+		Rect r = invalid[0];
+		for(int i = 0; i < invalid.GetCount(); i++) {
+			painter.RectPath(invalid[i]);
+			r |= invalid[i];
+		}
+		painter.Painter::Clip();
 		if(desktop)
-			desktop->UpdateArea(painter, invalid[i]);
-		painter.End();
-		FBUpdate(invalid[i]);
+			desktop->UpdateArea(painter, r);
+		for(int i = 0; i < invalid.GetCount(); i++)
+			FBUpdate(invalid[i]);
+		invalid.Clear();
 	}
-	invalid.Clear();
 	CursorSync();
 	return false;
 }
