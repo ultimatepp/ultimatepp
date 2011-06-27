@@ -6,19 +6,37 @@ NAMESPACE_UPP
 
 class SystemDraw : public BufferPainter {
 public:
-	Point              GetOffset() const                       { return Point(0, 0); }
-	bool               CanSetSurface()                         { return false; }
-	bool               Clip(const Rect& r)                     { return Draw::Clip(r); }
-	bool               Clip(int x, int y, int cx, int cy)      { return Draw::Clip(x, y, cx, cy); }
+	virtual void BeginOp();
+	virtual void EndOp();
+	virtual void OffsetOp(Point p);
+	virtual bool ClipOp(const Rect& r);
+	virtual bool ClipoffOp(const Rect& r);
+	virtual bool IsPaintingOp(const Rect& r) const;
+
+private:
+	Vector<Point> offset;
+	const Vector<Rect>& invalid;
+	
+	void Push();
+	void Pop();
+
+public:
+	Point   GetOffset() const;
+	bool    CanSetSurface()                         { return false; }
+	bool    Clip(const Rect& r)                     { return Draw::Clip(r); }
+	bool    Clip(int x, int y, int cx, int cy)      { return Draw::Clip(x, y, cx, cy); }
+
 	static void Flush()                                        {}
 
-	SystemDraw(ImageBuffer& ib, int mode = MODE_ANTIALIASED) : BufferPainter(ib, mode) {}
+	SystemDraw(ImageBuffer& ib, const Vector<Rect>& invalid, int mode = MODE_ANTIALIASED)
+	: BufferPainter(ib, mode), invalid(invalid) {}
 };
 
 struct BackDraw__ : public SystemDraw {
 	ImageBuffer h;
+	Vector<Rect> dummy_invalid;
 	
-	BackDraw__() : SystemDraw(h) {}
+	BackDraw__() : SystemDraw(h, dummy_invalid) {}
 };
 
 class BackDraw : public BackDraw__ { // Dummy only, as we are running in GlobalBackBuffer mode
@@ -89,6 +107,7 @@ bool FBProcessEvent(bool *quit);
 void FBSleep(int ms);
 bool FBEndSession();
 void FBUpdate(const Rect& area);
+void FBSync();
 
 // }
 

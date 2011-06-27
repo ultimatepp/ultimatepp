@@ -1,8 +1,10 @@
 class ViewDraw : public SystemDraw {
 	ImageBuffer ib;
+	
+	Vector<Rect> dummy_invalid;
 
 public:
-	ViewDraw(Ctrl *ctrl) : SystemDraw(ib) { _DBG_ }
+	ViewDraw(Ctrl *ctrl) : SystemDraw(ib, dummy_invalid) { _DBG_ }
 	~ViewDraw() {}
 };
 
