@@ -69,6 +69,7 @@ public:
 	virtual bool ExcludeClipOp(const Rect& r);
 	virtual bool IntersectClipOp(const Rect& r);
 	virtual bool IsPaintingOp(const Rect& r) const;
+
 	virtual void DrawRectOp(int x, int y, int cx, int cy, Color color);
 	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
 	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
@@ -150,8 +151,6 @@ protected:
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
 	                 const Pointf& p, const Pointf& p0);
 	void   DrawLineStroke(int width, Color color);
-	void   RectPath(int x, int y, int cx, int cy);
-	void   RectPath(const Rect& r);
 
 public:
 	void     Clear(const RGBA& color);
@@ -307,6 +306,9 @@ public:
 	Painter& RoundedRectangle(double x, double y, double cx, double cy, double r);
 	Painter& Ellipse(double x, double y, double rx, double ry);
 	Painter& Circle(double x, double y, double r);
+	
+	void     RectPath(int x, int y, int cx, int cy);
+	void     RectPath(const Rect& r);
 };
 
 void PaintCharacterSys(Painter& sw, double x, double y, int ch, Font fnt);
