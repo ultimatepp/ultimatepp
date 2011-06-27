@@ -333,6 +333,7 @@ void TopWindow::Open(Ctrl *owner)
 	int version = 5;
 	XChangeProperty(Xdisplay, GetWindow(), XAtom("XdndAware"), XA_ATOM, 32,
 					0, (byte *)&version, 1);
+	SyncState0(); 
 	FixIcons();
 }
 

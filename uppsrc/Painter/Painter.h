@@ -64,8 +64,6 @@ public:
 	virtual dword GetInfo() const;
 
 	virtual void OffsetOp(Point p);
-	virtual void RectPath(int x, int y, int cx, int cy);
-	virtual void RectPath(const Rect& r);
 	virtual bool ClipOp(const Rect& r);
 	virtual bool ClipoffOp(const Rect& r);
 	virtual bool ExcludeClipOp(const Rect& r);
@@ -152,6 +150,8 @@ protected:
 	void   DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
 	                 const Pointf& p, const Pointf& p0);
 	void   DrawLineStroke(int width, Color color);
+	void   RectPath(int x, int y, int cx, int cy);
+	void   RectPath(const Rect& r);
 
 public:
 	void     Clear(const RGBA& color);
