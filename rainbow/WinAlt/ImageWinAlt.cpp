@@ -400,6 +400,15 @@ void ImageDraw::Init()
 	has_alpha = false;
 }
 
+Draw& ImageDraw::Alpha()
+{
+	if(!has_alpha) {
+		alpha.DrawRect(size, GrayColor(0));
+		has_alpha = true;
+	}
+	return alpha;
+}
+
 Image ImageDraw::Get(bool pm) const
 {
 	ImageBuffer b(size);
