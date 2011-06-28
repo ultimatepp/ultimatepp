@@ -97,21 +97,28 @@ ImageDraw::ImageDraw(int cx, int cy)
 	has_alpha = false;
 }
 
-Image Image::Arrow() { return CtrlImg::arrow(); }
-Image Image::Wait() { return CtrlImg::arrow(); }
-Image Image::IBeam() { return CtrlImg::arrow(); }
-Image Image::No() { return CtrlImg::arrow(); }
-Image Image::SizeAll() { return CtrlImg::arrow(); }
-Image Image::SizeHorz() { return CtrlImg::arrow(); }
-Image Image::SizeVert() { return CtrlImg::arrow(); }
-Image Image::SizeTopLeft() { return CtrlImg::arrow(); }
-Image Image::SizeTop() { return CtrlImg::arrow(); }
-Image Image::SizeTopRight() { return CtrlImg::arrow(); }
-Image Image::SizeLeft() { return CtrlImg::arrow(); }
-Image Image::SizeRight() { return CtrlImg::arrow(); }
-Image Image::SizeBottomLeft() { return CtrlImg::arrow(); }
-Image Image::SizeBottom() { return CtrlImg::arrow(); }
-Image Image::SizeBottomRight() { return CtrlImg::arrow(); }
+#define IMAGECLASS FBImg
+#define IMAGEFILE <Framebuffer/FB.iml>
+#include <Draw/iml_header.h>
+#define IMAGECLASS FBImg
+#define IMAGEFILE <Framebuffer/FB.iml>
+#include <Draw/iml_source.h>
+
+Image Image::Arrow() { return FBImg::arrow(); }
+Image Image::Wait() { return FBImg::wait(); }
+Image Image::IBeam() { return FBImg::ibeam(); }
+Image Image::No() { return FBImg::no(); }
+Image Image::SizeAll() { return FBImg::sizeall(); }
+Image Image::SizeHorz() { return FBImg::sizehorz(); }
+Image Image::SizeVert() { return FBImg::sizevert(); }
+Image Image::SizeTopLeft() { return FBImg::sizetopleft(); }
+Image Image::SizeTop() { return FBImg::sizetop(); }
+Image Image::SizeTopRight() { return FBImg::sizetopright(); }
+Image Image::SizeLeft() { return FBImg::sizeleft(); }
+Image Image::SizeRight() { return FBImg::sizeright(); }
+Image Image::SizeBottomLeft() { return FBImg::sizebottomleft(); }
+Image Image::SizeBottom() { return FBImg::sizebottom(); }
+Image Image::SizeBottomRight() { return FBImg::sizebottomright(); }
 
 END_UPP_NAMESPACE
 
