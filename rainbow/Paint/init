@@ -3,4 +3,5 @@
 #include "CtrlLib/init"
 #include "Framebuffer/init"
 #include "WinFb/init"
+#include "LinuxFb/init"
 #endif

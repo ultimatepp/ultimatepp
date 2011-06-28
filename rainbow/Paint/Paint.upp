@@ -2,12 +2,16 @@ description "Paint method and Draw example\377";
 
 uses
 	CtrlLib,
-	Framebuffer,
-	WinFb;
+	Framebuffer;
+
+uses(WINFB) WinFb;
+
+uses(LINUXFB) LinuxFb;
 
 file
 	Draw.cpp;
 
 mainconfig
-	"" = "GUI WINFB";
+	"" = "GUI WINFB",
+	"" = "GUI LINUXFB";
 

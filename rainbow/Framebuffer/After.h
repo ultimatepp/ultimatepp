@@ -37,5 +37,24 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 void GuiMainFn_()
 #endif
 
+#ifdef PLATFORM_POSIX
+void FBInit(const String& fbdevice);
+
+#define GUI_APP_MAIN \
+void GuiMainFn_();\
+\
+int main(int argc, const char **argv, const char **envptr) { \
+	UPP::AppInit__(argc, argv, envptr); \
+	FBInit("/dev/fb0"); \
+	GuiMainFn_(); \
+	UPP::Ctrl::CloseTopCtrls(); \
+	UPP::UsrLog("---------- About to delete this log of WinFB..."); \
+	UPP::DeleteUsrLog(); \
+	return UPP::GetExitCode(); \
+} \
+\
+void GuiMainFn_()
+#endif
+
 void  SetDesktop(Ctrl& desktop);
 Ctrl *GetDesktop();
