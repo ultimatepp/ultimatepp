@@ -591,19 +591,19 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 				bc = table.format.framecolor;
 			}
 			if(!IsNull(cell.format.bordercolor)) {
-				if(cell.format.border.left >= lb) {
+				if(cell.format.border.left >= max(lb, 1)) {
 					lb = cell.format.border.left;
 					lc = cell.format.bordercolor;
 				}
-				if(cell.format.border.top >= tb) {
+				if(cell.format.border.top >= max(tb, 1)) {
 					tb = cell.format.border.top;
 					tc = cell.format.bordercolor;
 				}
-				if(cell.format.border.right >= rb) {
+				if(cell.format.border.right >= max(rb, 1)) {
 					rb = cell.format.border.right;
 					rc = cell.format.bordercolor;
 				}
-				if(cell.format.border.bottom >= bb) {
+				if(cell.format.border.bottom >= max(bb, 1)) {
 					bb = cell.format.border.bottom;
 					bc = cell.format.bordercolor;
 				}

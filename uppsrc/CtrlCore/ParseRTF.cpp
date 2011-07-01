@@ -81,6 +81,7 @@ private:
 	void          DefaultParaStyle();
 
 	void          ReadCharStyle();
+	void          ReadCellBorder(int& width);
 
 	String        ReadBinHex(char& odd) const;
 
@@ -97,9 +98,11 @@ private:
 	int           command_arg;
 
 	struct Cell {
-		Cell() : end_dots(0), merge_first(false), merge(false) {}
+		Cell() : end_dots(0), merge_first(false), merge(false), nbegin(0), span(0, 0) {}
 		RichTxt text;
 		RichCell::Format format;
+		int nbegin;
+		Size span;
 		int end_dots;
 		bool merge_first;
 		bool merge;
@@ -227,14 +230,15 @@ void RTFParser::FlushTable(int level)
 		for(int c = 1; c < dot_order.GetCount(); c++)
 			table.AddColumn(dot_order[c] - dot_order[c - 1]);
 		dot_index = dot_order;
+		int tbl_border = Null, tbl_grid = Null;
+		Color clr_border = Null, clr_grid = Null;
 		for(int r = 0; r < child.cells.GetCount(); r++) {
 			Array<Cell>& rw = child.cells[r];
-			int pos = child.tableformat.lm;
 			for(int c = 0; c < rw.GetCount(); c++) {
 				Cell& cell = rw[c];
 				if(cell.merge)
 					continue;
-				int vspan = 0;
+				cell.span.cy = 0;
 				if(cell.merge_first) {
 					for(int m = r + 1; m < child.cells.GetCount(); m++) {
 						const Array<Cell>& mrw = child.cells[m];
@@ -242,21 +246,73 @@ void RTFParser::FlushTable(int level)
 						while(--mc >= 0 && mrw[mc].end_dots > cell.end_dots)
 							;
 						if(mc >= 0 && mrw[mc].end_dots == cell.end_dots && mrw[mc].merge)
-							vspan++;
+							cell.span.cy++;
 						else
 							break;
 					}
 				}
-				int nbegin = dot_index.Find(pos);
-				int hspan = dot_index.Find(pos = cell.end_dots) - nbegin - 1;
-				hspan = max(hspan, 0);
-				vspan = max(vspan, 0);
-//				ASSERT(hspan >= 0 && vspan >= 0);
-				if(hspan || vspan)
-					table.SetSpan(r, nbegin, vspan, hspan);
-				table.SetFormat(r, nbegin, cell.format);
+				cell.nbegin = dot_index.Find(pos);
+				cell.span.cx = max(0, dot_index.Find(pos = cell.end_dots) - cell.nbegin - 1);
+				int hspan = dot_index.Find(pos = cell.end_dots) - cell.nbegin - 1;
+				bool outer_border[] = {
+					cell.nbegin == 0,
+					r == 0,
+					cell.nbegin + cell.span.cx + 2 >= dot_index.GetCount(),
+					r + cell.span.cy + 1 >= child.cells.GetCount(),
+				};
+				int border_width[] = {
+					cell.format.border.left,
+					cell.format.border.top,
+					cell.format.border.right,
+					cell.format.border.bottom,
+				};
+				for(int b = 0; b < __countof(border_width); b++) {
+					int& out_wd = (outer_border[b] ? tbl_border : tbl_grid);
+					Color& out_co = (outer_border[b] ? clr_border : clr_grid);
+					if(IsNull(cell.format.bordercolor) || border_width[b] <= 0
+					|| !IsNull(out_co) && out_co != cell.format.bordercolor)
+						out_wd = 0;
+					else if(IsNull(out_wd) || border_width[b] < out_wd) {
+						out_wd = border_width[b];
+						out_co = cell.format.bordercolor;
+					}
+				}
+			}
+		}
+		table.format.frame = Nvl(tbl_border, 0);
+		table.format.framecolor = (table.format.frame > 0 ? clr_border : Color(Null));
+		table.format.grid = Nvl(tbl_grid, 0);
+		table.format.gridcolor = (table.format.grid > 0 ? clr_grid : Color(Null));
+		for(int r = 0; r < child.cells.GetCount(); r++) {
+			Array<Cell>& rw = child.cells[r];
+			int pos = child.tableformat.lm;
+			for(int c = 0; c < rw.GetCount(); c++) {
+				Cell& cell = rw[c];
+				if(cell.merge)
+					continue;
+				if(cell.span.cx || cell.span.cy)
+					table.SetSpan(r, cell.nbegin, cell.span.cy, cell.span.cx);
+				bool outer_border[] = {
+					cell.nbegin == 0,
+					r == 0,
+					cell.nbegin + cell.span.cx + 2 >= dot_index.GetCount(),
+					r + cell.span.cy + 1 >= child.cells.GetCount(),
+				};
+				int *border_width[] = {
+					&cell.format.border.left,
+					&cell.format.border.top,
+					&cell.format.border.right,
+					&cell.format.border.bottom,
+				};
+				for(int b = 0; b < __countof(border_width); b++) {
+					int tbl_wd = (outer_border[b] ? tbl_border : tbl_grid);
+					Color tbl_co = (outer_border[b] ? clr_border : clr_grid);
+					if(*border_width[b] <= tbl_wd)
+						*border_width[b] = 0;
+				}
+				table.SetFormat(r, cell.nbegin, cell.format);
 				cell.text.Normalize();
-				table.SetPick(r, nbegin, cell.text);
+				table.SetPick(r, cell.nbegin, cell.text);
 			}
 		}
 		table.Normalize();
@@ -1001,6 +1057,14 @@ void RTFParser::OpenTable(int level)
 	}
 }
 
+void RTFParser::ReadCellBorder(int& width)
+{
+	if(Token() == T_COMMAND && !memcmp(command, "brdr", 4))
+		is_full = false;
+	if(PassCmd("brdrw"))
+		width = command_arg;
+}
+
 void RTFParser::ReadTableStyle()
 {
 	if(PassQ("nesttableprops")) {
@@ -1079,10 +1143,14 @@ void RTFParser::ReadTableStyle()
 	else if(PassQ("clpadfb"))
 		state.cellmarginunits.bottom = command_arg;
 	else if(PassQ("clvertalt")) {}
-	else if(PassQ("clbrdrl")) {}
-	else if(PassQ("clbrdrt")) {}
-	else if(PassQ("clbrdrr")) {}
-	else if(PassQ("clbrdrb")) {}
+	else if(PassQ("clbrdrl"))
+		ReadCellBorder(state.cellformat.border.left);
+	else if(PassQ("clbrdrt"))
+		ReadCellBorder(state.cellformat.border.top);
+	else if(PassQ("clbrdrr"))
+		ReadCellBorder(state.cellformat.border.right);
+	else if(PassQ("clbrdrb"))
+		ReadCellBorder(state.cellformat.border.bottom);
 	else if(PassQ("cltxlrtb")) {}
 	else if(PassQ("clcbpat")) {
 		if(command_arg >= 0 && command_arg < color_table.GetCount())
