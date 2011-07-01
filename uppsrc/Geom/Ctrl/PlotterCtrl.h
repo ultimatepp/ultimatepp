@@ -50,9 +50,6 @@ public:
 	void                    ClearPanOffset()                 { PanOffset(Point(0, 0)); }
 	Point                   GetPanOffset() const             { return pan_offset; }
 
-	void                    PostRefresh();
-	void                    Refresh0()                       { Refresh(); }
-
 	void                    ShowScroll(bool ssc)             { show_scroll = ssc; Layout(); }
 	bool                    IsScrollShown() const            { return show_scroll; }
 
@@ -224,6 +221,8 @@ protected:
 private:
 	void                    OnHScroll();
 	void                    OnVScroll();
+	void                    PostRefresh();
+	void                    Refresh0()                       { Refresh(); }
 
 private:
 	TimeCallback            tcb_refresh;
