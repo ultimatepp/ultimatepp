@@ -204,7 +204,7 @@ private:
 #endif
 #endif
 
-#ifdef PLATFORM_X11
+#ifdef PLATFORM_POSIX // These are only implemented for X11...
 	void         SetCursorCheat(int id);
 	int          GetCursorCheat() const;
 	friend       void *CursorX11(const Image&);
