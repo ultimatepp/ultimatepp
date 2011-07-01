@@ -1,0 +1,10 @@
+file
+	WinGl.h,
+	Keys.h,
+	Draw.cpp,
+	Win.cpp,
+	Proc.cpp,
+	After.h,
+	Event.cpp,
+	Top.h;
+
