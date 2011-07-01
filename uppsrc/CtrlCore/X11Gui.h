@@ -1,4 +1,5 @@
 #define GUI_X11
+#define PLATFORM_X11 // To keep legacy code happy
 
 #define Time    XTime
 #define Font    XFont
