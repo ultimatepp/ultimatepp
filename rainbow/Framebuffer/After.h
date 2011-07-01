@@ -48,7 +48,7 @@ int main(int argc, const char **argv, const char **envptr) { \
 	FBInit("/dev/fb0"); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
-	UPP::UsrLog("---------- About to delete this log of WinFB..."); \
+	UPP::UsrLog("---------- About to delete this log of LinuxFB..."); \
 	UPP::DeleteUsrLog(); \
 	return UPP::GetExitCode(); \
 } \
