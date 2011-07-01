@@ -336,13 +336,15 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			if(fi.filename != "." && fi.filename != ".." != 0 &&
 			   (fi.is_directory || PatternMatchMulti(patterns, fi.filename)) &&
 			   MatchSearch(fi.filename, search) && show) {
+				Image img;
 			#ifdef GUI_X11
-				Image img = isdrive ? PosixGetDriveImage(fi.filename, false)
-				                    : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
-			#else
+				img = isdrive ? PosixGetDriveImage(fi.filename, false)
+				              : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
+			#endif
+			#ifdef GUI_WIN32
 //				Image img = lazyicons ? fi.is_directory ? CtrlImg::Dir() : CtrlImg::File()
 //				                      : GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, fi.unix_mode & 0111, false);
-				Image img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false, lazyicons);
+				img = GetFileIcon(AppendFileName(dir, fi.filename), fi.is_directory, false, false, lazyicons);
 			#endif
 				if(IsNull(img))
 					img = fi.is_directory ? CtrlImg::Dir() : CtrlImg::File();
@@ -911,7 +913,7 @@ String DirectoryUp(String& dir, bool basedir)
 					name = s;
 				}
 #endif
-#ifdef GUI_X11
+#ifdef PLATFORM_POSIX
 			if(i == 0 && s.GetLength() > 1) {
 				dir = "/";
 				name = s.Mid(1);
@@ -1151,8 +1153,7 @@ void FileSel::FileUpdate() {
 void FileSel::Rename(const String& on, const String& nn) {
 #ifdef PLATFORM_WIN32
 	if(FileMove(FilePath(on), FilePath(nn)))
-#endif
-#ifdef GUI_X11
+#else
 	if(rename(FilePath(on), FilePath(nn)) == 0)
 #endif
 	{
@@ -1213,10 +1214,11 @@ struct FolderDisplay : public Display {
 
 Image GetDirIcon(const String& s)
 {
-#ifdef GUI_X11
-	Image img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
-#else
 	Image img;
+#ifdef GUI_X11
+	img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
+#endif
+#ifdef GUI_WIN32
 	if((byte)*s.Last() == 255)
 		img = CtrlImg::Network();
 	else
