@@ -11,7 +11,7 @@
 #define GUIPLATFORM_INCLUDE "Win32Gui.h"
 #endif
 
-#ifdef PLATFORM_X11
+#ifdef PLATFORM_POSIX
 #define GUIPLATFORM_INCLUDE "X11Gui.h"
 #endif
 

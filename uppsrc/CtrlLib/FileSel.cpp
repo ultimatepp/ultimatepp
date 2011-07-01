@@ -76,7 +76,7 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large, bool quick
 
 #endif
 
-#if defined(PLATFORM_X11) && !defined(flagNOGTK)
+#if defined(GUI_X11) && !defined(flagNOGTK)
 
 Image GtkThemeIcon(const char *name, bool large);
 
@@ -336,7 +336,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			if(fi.filename != "." && fi.filename != ".." != 0 &&
 			   (fi.is_directory || PatternMatchMulti(patterns, fi.filename)) &&
 			   MatchSearch(fi.filename, search) && show) {
-			#ifdef PLATFORM_X11
+			#ifdef GUI_X11
 				Image img = isdrive ? PosixGetDriveImage(fi.filename, false)
 				                    : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#else
@@ -911,7 +911,7 @@ String DirectoryUp(String& dir, bool basedir)
 					name = s;
 				}
 #endif
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 			if(i == 0 && s.GetLength() > 1) {
 				dir = "/";
 				name = s.Mid(1);
@@ -1152,7 +1152,7 @@ void FileSel::Rename(const String& on, const String& nn) {
 #ifdef PLATFORM_WIN32
 	if(FileMove(FilePath(on), FilePath(nn)))
 #endif
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 	if(rename(FilePath(on), FilePath(nn)) == 0)
 #endif
 	{
@@ -1213,7 +1213,7 @@ struct FolderDisplay : public Display {
 
 Image GetDirIcon(const String& s)
 {
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 	Image img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
 #else
 	Image img;

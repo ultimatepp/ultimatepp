@@ -665,7 +665,7 @@ void Plotter::SetXorMode(bool xm)
 #ifdef PLATFORM_WIN32
 		SetROP2(*sdraw, xm ? R2_NOTXORPEN : R2_COPYPEN);
 #endif
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 		XSetFunction(Xdisplay, sdraw->GetGC(), xm ? X11_ROP2_NOT_XOR : X11_ROP2_COPY);
 #endif
 	}
@@ -722,7 +722,7 @@ static void PaintRectPart(Draw& draw, int x, int y, int w, int h)
 	if(SystemDraw *sdraw = dynamic_cast<SystemDraw *>(&draw)) {
 #if defined(PLATFORM_WIN32)
 		::PatBlt(*sdraw, x, y, w, h, PATINVERT);
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 		Point offset = sdraw->GetOffset();
 		XFillRectangle(Xdisplay, sdraw->GetDrawable(), sdraw->GetGC(), x + offset.x, y + offset.y, w, h);
 #endif
@@ -746,7 +746,7 @@ void PaintDragHorzLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgn
 		COLORREF cc1 = (COLORREF)c1 ^ (COLORREF)bgnd, cc2 = (COLORREF)c2 ^ (COLORREF)bgnd;
 		COLORREF old_bk = SetTextColor(*sdraw, cc1);
 		HGDIOBJ old_brush = SelectObject(*sdraw, brush);
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 		XGCValues gcv_old, gcv_new;
 		XGetGCValues(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_old);
 		gcv_new.function = X11_ROP2_XOR;
@@ -761,7 +761,7 @@ void PaintDragHorzLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgn
 			PaintRectPart(*sdraw, rc.right - mingap, rc.top, mingap, sz.cy);
 #if defined(PLATFORM_WIN32)
 			SetTextColor(*sdraw, cc2);
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 			gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
 			XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground, &gcv_new);
 #endif
@@ -779,7 +779,7 @@ void PaintDragHorzLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgn
 				PaintRectPart(*sdraw, start + 2 * DRAG_STEP * i, rc.top, DRAG_STEP, sz.cy);
 #if defined(PLATFORM_WIN32)
 			SetTextColor(*sdraw, cc2);
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 			gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
 			XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground, &gcv_new);
 #endif
@@ -792,7 +792,7 @@ void PaintDragHorzLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgn
 		DeleteObject(brush);
 		SetTextColor(*sdraw, old_bk);
 		sdraw->EndGdi();
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 		XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_old);
 #endif
 	}
@@ -811,7 +811,7 @@ void PaintDragVertLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgn
 		COLORREF cc1 = (COLORREF)c1 ^ (COLORREF)bgnd, cc2 = (COLORREF)c2 ^ (COLORREF)bgnd;
 		COLORREF old_bk = SetTextColor(*sdraw, cc1);
 		HGDIOBJ old_brush = SelectObject(*sdraw, brush);
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 		XGCValues gcv_old, gcv_new;
 		XGetGCValues(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_old);
 		gcv_new.function = X11_ROP2_XOR;
@@ -827,7 +827,7 @@ void PaintDragVertLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgn
 			PaintRectPart(*sdraw, rc.left, rc.bottom - mingap, sz.cx, mingap);
 #if defined(PLATFORM_WIN32)
 			SetTextColor(*sdraw, cc2);
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 			gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
 			XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground, &gcv_new);
 #endif
@@ -845,7 +845,7 @@ void PaintDragVertLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgn
 				PaintRectPart(*sdraw, rc.left, start + 2 * DRAG_STEP * i, sz.cx, DRAG_STEP);
 #if defined(PLATFORM_WIN32)
 			SetTextColor(*sdraw, cc2);
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 			gcv_new.foreground = GetXPixel(c2) ^ GetXPixel(bgnd);
 			XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground, &gcv_new);
 #endif
@@ -858,7 +858,7 @@ void PaintDragVertLine(Draw& draw, const Rect& rc, Color c1, Color c2, Color bgn
 		DeleteObject(brush);
 		SetTextColor(*sdraw, old_bk);
 		sdraw->EndGdi();
-#elif defined(PLATFORM_X11)
+#elif defined(GUI_X11)
 		XChangeGC(Xdisplay, sdraw->GetGC(), GCForeground | GCFunction, &gcv_old);
 #endif
 	}

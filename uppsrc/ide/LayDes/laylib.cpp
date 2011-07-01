@@ -379,7 +379,7 @@ void EscDraw::DrawSmartText(EscEscape& e)
 	if(ii < e.GetCount())
 		font = FontEsc(e[ii++]);
 	if(font.GetHeight() == 0)
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 		font.Height(12);
 #else
 		font.Height(11);
@@ -412,7 +412,7 @@ void EscDraw::GetTextSize(EscEscape& e)
 	WString text = e[0];
 	Font font = StdFont();
 	if(font.GetHeight() == 0)
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 		font.Height(12);
 #else
 		font.Height(11);

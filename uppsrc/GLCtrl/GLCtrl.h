@@ -3,7 +3,7 @@
 
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 #define Time    XTime
 #define Font    XFont
 #define Display XDisplay
@@ -14,7 +14,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 
 #include <GL/glx.h>
 
@@ -47,7 +47,7 @@ private:
 		GLPicking() : _isPicking(false) {}
 	};
 	
-#ifdef PLATFORM_X11
+#ifdef GUI_X11
 	class GLPane : public DHCtrl {
 		friend class GLCtrl;
 		
