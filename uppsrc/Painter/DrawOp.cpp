@@ -42,12 +42,16 @@ bool Painter::ClipoffOp(const Rect& r)
 
 bool Painter::ExcludeClipOp(const Rect& r)
 {
+	RectPath(Rect(-99999, -99999, 99999, r.top));
+	RectPath(Rect(-99999, r.top, r.left, 99999));
+	RectPath(Rect(r.right, r.top, 99999, 99999));
+	RectPath(Rect(r.left, r.bottom, r.right, 99999));
+	Clip();
 	return true;
 }
 
 bool Painter::IntersectClipOp(const Rect& r)
 {
-	return true;
 	RectPath(r);
 	Clip();
 	return true;
