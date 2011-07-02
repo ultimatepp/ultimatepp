@@ -51,6 +51,7 @@ class PrinterJob {
 #endif
 #ifdef GUI_X11
 	Size                pgsz;
+	Size                GetDefaultPageSize();
 #endif
 	One<Draw>           draw;
 	Vector<int>         page;

@@ -242,12 +242,87 @@ PrinterDlg::PrinterDlg()
 	}
 }
 
+
+struct {
+	const char *name;
+	int   cx, cy;
+}
+static const PageName2Size[] = {
+	{ "A0", 841, 1189 },
+	{ "A1", 594, 841 },
+	{ "A2", 420, 594 },
+	{ "A3", 297, 420 },
+	{ "A4", 210, 297 },
+	{ "A5", 148, 210 },
+	{ "A6", 105, 148 },
+	{ "A7", 74, 105 },
+	{ "A8", 52, 74 },
+	{ "A9", 37, 52 },
+	{ "B0", 1030, 1456 },
+	{ "B1", 728, 1030 },
+	{ "B10", 32, 45 },
+	{ "B2", 515, 728 },
+	{ "B3", 364, 515 },
+	{ "B4", 257, 364 },
+	{ "B5", 182, 257 },
+	{ "B6", 128, 182 },
+	{ "B7", 91, 128 },
+	{ "B8", 64, 91 },
+	{ "B9", 45, 64 },
+	{ "C5E", 163, 229 },
+	{ "Comm10E", 105, 241 },
+	{ "DLE", 110, 220 },
+	{ "Executive", 191, 254 },
+	{ "Folio", 210, 330 },
+	{ "Ledger", 432, 279 },
+	{ "Legal", 216, 356 },
+	{ "Letter", 216, 279 },
+	{ "Tabloid", 279, 432 }
+};
+
+
+Size PrinterJob::GetDefaultPageSize()
+{
+	static const char PageSize[] = "Page Size:";
+	Size sz(6000 * 210 / 254, 6000 * 297 / 254);
+
+	//default printer properties
+	Vector<String> dpp = Split(System("lpoptions -l"), '\n');
+
+	for (int i = 0; i < dpp.GetCount(); i++){
+		int pos = dpp[i].Find(PageSize);
+		if (pos >= 0){
+			pos += sizeof(PageSize);
+			pos = dpp[i].Find('*', pos);
+			//return A4 if there is not default page size
+			if (pos < 0) return sz;
+			//skip '*'
+			pos++;
+			int len = dpp[i].Find(' ', pos);
+			if (len < 0) len = dpp[i].GetLength();
+			len -= pos;
+			//page name
+			String pn = dpp[i].Mid(pos, len);
+			for (int p = 0; p < __countof(PageName2Size); p++){
+				if (pn == PageName2Size[p].name){
+					sz.cx = 6000 * PageName2Size[p].cx / 254;
+					sz.cy = 6000 * PageName2Size[p].cy / 254;
+					return sz;
+				}
+			}
+		}
+	}
+	//return A4 if there is not default page size
+	return sz;
+}
+
 PrinterJob::PrinterJob(const char *_name)
 {
 	name = _name;
+	landscape = false;
 	from = to = 1;
 	current = 1;
-	pgsz = Size(6000 * 210 / 254, 6000 * 297 / 254);
+	pgsz = GetDefaultPageSize();
 }
 
 PrinterJob::~PrinterJob()
@@ -256,43 +331,6 @@ PrinterJob::~PrinterJob()
 
 bool PrinterJob::Execute0(bool dodlg)
 {
-	struct {
-		const char *name;
-		int   cx, cy;
-	}
-	pg[] = {
-		{ "A0", 841, 1189 },
-		{ "A1", 594, 841 },
-		{ "A2", 420, 594 },
-		{ "A3", 297, 420 },
-		{ "A4", 210, 297 },
-		{ "A5", 148, 210 },
-		{ "A6", 105, 148 },
-		{ "A7", 74, 105 },
-		{ "A8", 52, 74 },
-		{ "A9", 37, 52 },
-		{ "B0", 1030, 1456 },
-		{ "B1", 728, 1030 },
-		{ "B10", 32, 45 },
-		{ "B2", 515, 728 },
-		{ "B3", 364, 515 },
-		{ "B4", 257, 364 },
-		{ "B5", 182, 257 },
-		{ "B6", 128, 182 },
-		{ "B7", 91, 128 },
-		{ "B8", 64, 91 },
-		{ "B9", 45, 64 },
-		{ "C5E", 163, 229 },
-		{ "Comm10E", 105, 241 },
-		{ "DLE", 110, 220 },
-		{ "Executive", 191, 254 },
-		{ "Folio", 210, 330 },
-		{ "Ledger", 432, 279 },
-		{ "Legal", 216, 356 },
-		{ "Letter", 216, 279 },
-		{ "Tabloid", 279, 432 }
-	};
-
 	PrinterDlg dlg;
 	dlg.from <<= from + 1;
 	dlg.to <<= to + 1;
@@ -325,10 +363,10 @@ bool PrinterJob::Execute0(bool dodlg)
 		break;
 	}
 	pgsz = Size(5100, 6600);
-	for(int i = 0; i < __countof(pg); i++)
-		if((String)~dlg.paper == pg[i].name) {
-			pgsz.cx = 6000 * pg[i].cx / 254;
-			pgsz.cy = 6000 * pg[i].cy / 254;
+	for(int i = 0; i < __countof(PageName2Size); i++)
+		if((String)~dlg.paper == PageName2Size[i].name) {
+			pgsz.cx = 6000 * PageName2Size[i].cx / 254;
+			pgsz.cy = 6000 * PageName2Size[i].cy / 254;
 		}
 	return true;
 }
