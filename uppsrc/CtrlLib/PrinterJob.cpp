@@ -247,6 +247,7 @@ PrinterJob::PrinterJob(const char *_name)
 	name = _name;
 	from = to = 1;
 	current = 1;
+	pgsz = Size(6000 * 210 / 254, 6000 * 297 / 254);
 }
 
 PrinterJob::~PrinterJob()
