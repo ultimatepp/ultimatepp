@@ -99,6 +99,7 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 
 extern ImageBuffer framebuffer;
+void   SetFramebufferSize(Size sz);
 
 // to be implemented by final FB {
 
@@ -107,7 +108,6 @@ bool FBProcessEvent(bool *quit);
 void FBSleep(int ms);
 bool FBEndSession();
 void FBUpdate(const Rect& area);
-void FBSync();
 
 // }
 

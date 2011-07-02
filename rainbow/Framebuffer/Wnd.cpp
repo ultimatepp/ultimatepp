@@ -28,7 +28,15 @@ void Ctrl::InitFB()
 {
 	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
-	framebuffer.Create(1000, 600);
+	framebuffer.Create(1, 1);
+}
+
+void SetFramebufferSize(Size sz)
+{
+	framebuffer.Create(sz);
+	if(desktop)
+		desktop->SetRect(sz);
+	invalid.Add(sz);
 }
 
 bool Ctrl::IsAlphaSupported()
@@ -98,6 +106,11 @@ bool Ctrl::IsWaitingEvent()
 	return FBIsWaitingEvent();
 }
 
+void Ctrl::AddInvalid(const Rect& rect)
+{
+	AddRefreshRect(invalid, rect);
+}
+
 bool Ctrl::ProcessEvent(bool *quit)
 {
 	ASSERT(IsMainThread());
@@ -137,11 +150,11 @@ bool Ctrl::ProcessEvents(bool *quit)
 		painter.Painter::Clip();
 		if(desktop)
 			desktop->UpdateArea(painter, r);
-		for(int i = 0; i < invalid.GetCount(); i++)
-			FBUpdate(invalid[i]);
-		invalid.Clear();
 	}
 	CursorSync();
+	for(int i = 0; i < invalid.GetCount(); i++)
+		FBUpdate(invalid[i]);
+	invalid.Clear();
 	return false;
 }
 
@@ -333,12 +346,14 @@ bool Ctrl::HasWndCapture() const
 void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
-	AddRefreshRect(invalid, r);
+	AddInvalid(r);
 }
 
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
+	SetWndRect(rect);
+	invalid.Add(rect);
 }
 
 void Ctrl::WndUpdate0r(const Rect& r)

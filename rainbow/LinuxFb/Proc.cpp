@@ -105,12 +105,6 @@ void FBUpdate(const Rect& inv)
 	memcpy(fbp, (const char*)~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
 }
 
-void FBSync()
-{
-//	if(fbHWND)
-//		::UpdateWindow(fbHWND);
-}
-
 void FBInit(const String& fbdevice)
 {
 	Ctrl::InitFB();

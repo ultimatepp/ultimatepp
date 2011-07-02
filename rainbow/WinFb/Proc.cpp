@@ -57,27 +57,7 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		if(hwnd) {
 			PAINTSTRUCT ps;
 			HDC dc = BeginPaint(hwnd, &ps);
-			DDUMP(Rect(ps.rcPaint));
-			Size sz = framebuffer.GetSize();
-			Buffer<byte> data;
-			data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
-			BITMAPINFOHEADER *hi = (BITMAPINFOHEADER *) ~data;;
-			memset(hi, 0, sizeof(BITMAPINFOHEADER));
-			hi->biSize = sizeof(BITMAPINFOHEADER);
-			hi->biPlanes = 1;
-			hi->biBitCount = 32;
-			hi->biCompression = BI_RGB;
-			hi->biSizeImage = 0;
-			hi->biClrUsed = 0;
-			hi->biClrImportant = 0;
-			hi->biWidth = sz.cx;
-			hi->biHeight = -sz.cy;
-			Rect r = ps.rcPaint;
-			::SetDIBitsToDevice(dc, r.left, r.top, r.GetWidth(), r.GetHeight(),
-			                    r.left, -r.top - r.GetHeight() + sz.cy, 0, sz.cy,
-			                    ~framebuffer, (BITMAPINFO *)~data, DIB_RGB_COLORS);
-//			::SetDIBitsToDevice(dc, r.left, r.top, r.GetWidth(), r.GetHeight(), r.left, 	,
-//			                    0, sz.cy, ~framebuffer, (BITMAPINFO *)~data, DIB_RGB_COLORS);
+			fbUpdate(dc, ps.rcPaint);
 			EndPaint(hwnd, &ps);
 		}
 		return 0L;
@@ -178,7 +158,7 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_ERASEBKGND:
 		return 1L;
 	case WM_SIZE:
-	case WM_MOVE:
+		SetFramebufferSize(Size(LOWORD(lParam), HIWORD(lParam)));
 		return 0L;
 	case WM_HELP:
 		return TRUE;
