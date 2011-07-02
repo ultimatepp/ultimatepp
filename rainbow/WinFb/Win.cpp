@@ -59,7 +59,9 @@ void FBInit(HINSTANCE hInstance)
 
 void FBUpdate(const Rect& inv)
 {
+	DLOG("FBUpdate " << inv);
 	if(fbHWND)
+//		::InvalidateRect(fbHWND, Rect(0, 0, 10000, 10000), false);
 		::InvalidateRect(fbHWND, inv, false);
 }
 

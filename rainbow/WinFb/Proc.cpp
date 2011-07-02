@@ -57,6 +57,7 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		if(hwnd) {
 			PAINTSTRUCT ps;
 			HDC dc = BeginPaint(hwnd, &ps);
+			DDUMP(Rect(ps.rcPaint));
 			Size sz = framebuffer.GetSize();
 			Buffer<byte> data;
 			data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
@@ -71,8 +72,12 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 			hi->biClrImportant = 0;
 			hi->biWidth = sz.cx;
 			hi->biHeight = -sz.cy;
-			::SetDIBitsToDevice(dc, 0, 0, sz.cx, sz.cy, 0, 0,
-			                    0, sz.cy, ~framebuffer, (BITMAPINFO *)~data, DIB_RGB_COLORS);
+			Rect r = ps.rcPaint;
+			::SetDIBitsToDevice(dc, r.left, r.top, r.GetWidth(), r.GetHeight(),
+			                    r.left, -r.top - r.GetHeight() + sz.cy, 0, sz.cy,
+			                    ~framebuffer, (BITMAPINFO *)~data, DIB_RGB_COLORS);
+//			::SetDIBitsToDevice(dc, r.left, r.top, r.GetWidth(), r.GetHeight(), r.left, 	,
+//			                    0, sz.cy, ~framebuffer, (BITMAPINFO *)~data, DIB_RGB_COLORS);
 			EndPaint(hwnd, &ps);
 		}
 		return 0L;
