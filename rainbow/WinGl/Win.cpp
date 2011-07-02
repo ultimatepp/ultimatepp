@@ -1,14 +1,18 @@
-#include "WinFb.h"
+#include <CtrlCore/CtrlCore.h>
+
+#ifdef GUI_WINGL
 
 NAMESPACE_UPP
 
-HWND glHWND;
+HWND   glHWND;
+HDC    hDC;
+HGLRC  hRC;
 
 bool glEndSession;
 
 bool GlEndSession()
 {
-	return fbEndSession;
+	return glEndSession;
 }
 
 bool GlIsWaitingEvent()
@@ -35,6 +39,26 @@ void GlSleep(int ms)
 	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
 }
 
+void ActivateGLContext()
+{
+	if (hRC != NULL && wglGetCurrentContext() != hRC)
+		wglMakeCurrent(hDC, hRC);
+}
+
+void DestroyGL()
+{
+	if (hDC != NULL && hRC != NULL)
+	{
+		ActivateGLContext();
+		wglMakeCurrent(NULL, NULL);
+	}
+	
+	if(hRC)
+	    wglDeleteContext(hRC);
+	if(hDC)
+	    ReleaseDC(glHWND, hDC);
+}
+
 void GlInit(HINSTANCE hInstance)
 {
 	GuiLock __;
@@ -44,18 +68,18 @@ void GlInit(HINSTANCE hInstance)
 	WNDCLASSW  wc;
 	Zero(wc);
 	wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_OWNDC;
-	wc.lpfnWndProc   = (WNDPROC)fbWindowProc;
+	wc.lpfnWndProc   = (WNDPROC)glWindowProc;
 	wc.hInstance     = hInstance;
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)NULL;
 	wc.lpszClassName = L"UPP-FB-CLASS";
 	RegisterClassW(&wc);
-	fbHWND = CreateWindowW(L"UPP-FB-CLASS", L"", WS_OVERLAPPED|WS_VISIBLE|WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SYSMENU,
+	glHWND = CreateWindowW(L"UPP-FB-CLASS", L"", WS_OVERLAPPED|WS_VISIBLE|WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SYSMENU,
 	                       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 	                       NULL, NULL, hInstance, NULL);
 	                       
 	                       
-	hDC = ::GetDC(GetHWND());
+	HDC hDC = ::GetDC(glHWND);
 	if(!hDC)
 		return;
 	PIXELFORMATDESCRIPTOR pfd;
@@ -112,3 +136,5 @@ void GlInit(HINSTANCE hInstance)
 }
 
 END_UPP_NAMESPACE
+
+#endif

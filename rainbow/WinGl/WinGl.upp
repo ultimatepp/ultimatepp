@@ -6,5 +6,12 @@ file
 	Proc.cpp,
 	After.h,
 	Event.cpp,
-	Top.h;
+	Top.h,
+	Ctrl.h,
+	Ctrl.cpp,
+	Glew readonly separator,
+	glew.h,
+	glxew.h,
+	wglew.h,
+	glew.c;
 

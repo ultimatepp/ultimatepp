@@ -1,4 +1,6 @@
-#include "WinGl.h"
+#include <CtrlCore/CtrlCore.h>
+
+#ifdef GUI_WINGL
 
 NAMESPACE_UPP
 
@@ -168,3 +170,5 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 }
 
 END_UPP_NAMESPACE
+
+#endif

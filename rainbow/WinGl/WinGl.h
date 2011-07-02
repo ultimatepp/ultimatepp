@@ -1,7 +1,14 @@
 #ifndef _WinGl_WinGl_h_
 #define _WinGl_WinGl_h_
 
-#include <CtrlCore/CtrlCore.h>
+#define GLEW_STATIC
+#include <WinGl/glew.h>
+#include <WinGl/wglew.h>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#define GUI_WINGL
 
 NAMESPACE_UPP
 
@@ -237,12 +244,6 @@ public:
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
-#define GUIPLATFORM_CTRL_TOP_DECLS
-#define GUIPLATFORM_CTRL_DECLS_INCLUDE <WinGl/Ctrl.h>
-#define GUIPLATFORM_PASTECLIP_DECLS
-#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <WinGl/Top.h>
-
-
 bool GlIsWaitingEvent();
 bool GlProcessEvent(bool *quit);
 void GlSleep(int ms);
@@ -273,11 +274,16 @@ public:
 
 END_UPP_NAMESPACE
 
-#include <CtrlCore/stdids.h>
+#define GUIPLATFORM_KEYCODES_INCLUDE <WinGl/Keys.h>
+#define GUIPLATFORM_CTRL_TOP_DECLS
+#define GUIPLATFORM_CTRL_DECLS_INCLUDE <WinGl/Ctrl.h>
+#define GUIPLATFORM_PASTECLIP_DECLS
+#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <WinGl/Top.h>
+
+//#include <CtrlCore/stdids.h>
 #include "vkcodes.h" //FIXME
 
 #define GUIPLATFORM_INCLUDE_AFTER <WinGl/After.h>
 
-END_UPP_NAMESPACE
 
 #endif

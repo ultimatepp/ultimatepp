@@ -7,7 +7,7 @@ class ViewDraw : public SystemDraw {
 	Vector<Rect> dummy_invalid;
 
 public:
-	ViewDraw(Ctrl *ctrl) : SystemDraw(ib, dummy_invalid) { _DBG_ }
+	ViewDraw(Ctrl *ctrl) {}
 	~ViewDraw() {}
 };
 
