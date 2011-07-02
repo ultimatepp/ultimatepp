@@ -103,7 +103,7 @@ void Painter::DrawLineStroke(int width, Color color)
 			Dash("9 3 3 3 3 3");
 			break;
 	default:
-		Stroke(width, color);
+		Stroke(width == 0 ? 1 : width, color);
 		End();
 		return;
 	}
@@ -115,7 +115,7 @@ void Painter::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	Move(x1, y1);
 	Line(x2, y2);
-	DrawLineStroke(width == 0 ? 1 : width, color);
+	DrawLineStroke(width, color);
 }
 
 void Painter::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
@@ -185,7 +185,7 @@ void Painter::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 	Sizef sz = r.GetSize();
 	Ellipse(r.left + sz.cx / 2, r.top + sz.cy / 2, sz.cx / 2, sz.cy / 2);
 	Fill(color);
-	if(!IsNull(pen))
+	if(!IsNull(pencolor))
 		DrawLineStroke(pen, pencolor);
 }
 
@@ -218,6 +218,14 @@ void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, 
 		int a = font.GetAscent();
 		int cy = max(a / 16, 1);
 		Rectangle(0, a + cy, cx, cy);
+		Fill(ink);
+	}
+	if(font.IsStrikeout()) {
+		if(IsNull(cx))
+			cx = GetTextSize(text, font).cx;
+		int a = font.GetAscent();
+		int cy = max(a / 16, 1);
+		Rectangle(0, 2 * a / 3, cx, cy);
 		Fill(ink);
 	}
 	End();
