@@ -1,3 +1,3 @@
 //$ class TopWindow {
-
+bool painting;
 //$ };

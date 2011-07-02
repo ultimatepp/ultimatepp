@@ -63,40 +63,40 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 		}
 		return 0L;
 	case WM_LBUTTONDOWN:
-		Ctrl::DoMouseFB(Ctrl::LEFTDOWN, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::LEFTDOWN, Point((dword)lParam));
 		return 0L;
 	case WM_LBUTTONUP:
-		Ctrl::DoMouseFB(Ctrl::LEFTUP, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::LEFTUP, Point((dword)lParam));
 		return 0L;
 	case WM_LBUTTONDBLCLK:
-		Ctrl::DoMouseFB(Ctrl::LEFTDOUBLE, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::LEFTDOUBLE, Point((dword)lParam));
 		return 0L;
 	case WM_RBUTTONDOWN:
-		Ctrl::DoMouseFB(Ctrl::RIGHTDOWN, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::RIGHTDOWN, Point((dword)lParam));
 		return 0L;
 	case WM_RBUTTONUP:
-		Ctrl::DoMouseFB(Ctrl::RIGHTUP, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::RIGHTUP, Point((dword)lParam));
 		return 0L;
 	case WM_RBUTTONDBLCLK:
-		Ctrl::DoMouseFB(Ctrl::RIGHTDOUBLE, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::RIGHTDOUBLE, Point((dword)lParam));
 		return 0L;
 	case WM_MBUTTONDOWN:
-		Ctrl::DoMouseFB(Ctrl::MIDDLEDOWN, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::MIDDLEDOWN, Point((dword)lParam));
 		return 0L;
 	case WM_MBUTTONUP:
-		Ctrl::DoMouseFB(Ctrl::MIDDLEUP, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::MIDDLEUP, Point((dword)lParam));
 		return 0L;
 	case WM_MBUTTONDBLCLK:
-		Ctrl::DoMouseFB(Ctrl::MIDDLEDOUBLE, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::MIDDLEDOUBLE, Point((dword)lParam));
 		return 0L;
 	case WM_MOUSEMOVE:
-		Ctrl::DoMouseFB(Ctrl::MOUSEMOVE, Point((dword)lParam));
+		Ctrl::DoMouseGl(Ctrl::MOUSEMOVE, Point((dword)lParam));
 		return 0L;
 	case 0x20a: // WM_MOUSEWHEEL:
 		{
 			Point p(0, 0);
 			::ClientToScreen(hwnd, p);
-			Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
+			Ctrl::DoMouseGl(Ctrl::MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
 		}
 		return 0L;
 	case WM_SETCURSOR:
@@ -146,7 +146,7 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 				keycode = (dword)wParam;
 			bool b = false;
 			if(keycode)
-				b = Ctrl::DoKeyFB(keycode, LOWORD(lParam));
+				b = Ctrl::DoKeyGl(keycode, LOWORD(lParam));
 //			LOG("key processed = " << b);
 //			if(b || (message == WM_SYSKEYDOWN || message == WM_SYSKEYUP)
 //			&& wParam != VK_F4 && !PassWindowsKey((dword)wParam)) // 17.11.2003 Mirek -> invoke system menu
@@ -164,7 +164,7 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_HELP:
 		return TRUE;
 	case WM_CLOSE:
-		fbEndSession = true;
+		glEndSession = true;
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }

@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	Painter,
+	WinGl;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI WINGL";
+

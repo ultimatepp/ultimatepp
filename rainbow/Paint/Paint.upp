@@ -5,8 +5,6 @@ uses
 	Framebuffer,
 	RichEdit;
 
-uses(WINGL) WinGl;
-
 uses(WINFB) WinFb;
 
 uses(LINUXFB) LinuxFb;

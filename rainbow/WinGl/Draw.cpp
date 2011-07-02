@@ -7,6 +7,7 @@ NAMESPACE_UPP
 #define LLOG(x) // LOG(x)
 #define LTIMING(x) // RTIMING(x)
 
+int64 Resources::currentSerialId = -1;
 ArrayMap<int64, Texture> Resources::textures;
 VectorMap<String, OpenGLFont> Resources::fonts;
 
@@ -99,9 +100,7 @@ OpenGLFont& Resources::GetFont(const char* fontName)
 
 OpenGLFont& Resources::StdFont(bool bold)
 {
-//	return GetFont(bold ? "tahoma14b.fnt" : "tahoma14.fnt");
-//	return GetFont(bold ? "tahoma.fnt" : "tahoma.fnt");
-	return GetFont(bold ? "arial.fnt" : "arial.fnt");
+	return GetFont(bold ? "tahoma14b.fnt" : "tahoma14.fnt");
 }
 
 dword SystemDraw::GetInfo() const
@@ -208,8 +207,6 @@ void SystemDraw::FlatView()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, drawing_size.cx, drawing_size.cy, 0, -100, 100);
-	//glFrustum(0, drawing_size.cx, drawing_size.cy, 0, -100, 100);
-	//gluPerspective(45, 1, -100, 100);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	float dx = (float) drawing_size.cx / 2;
@@ -227,7 +224,6 @@ void SystemDraw::PopContext()
 {
 	FlatView();
 }
-
 
 SystemDraw::~SystemDraw() {
 }
