@@ -147,11 +147,11 @@ void SystemDraw::Reset() {
 	angle = 0.f;
 }
 
-SystemDraw::OpenGLDraw() {
+SystemDraw::SystemDraw() {
 	Reset();
 }
 
-SystemDraw::OpenGLDraw(HDC hdc, Size sz) {
+SystemDraw::SystemDraw(HDC hdc, Size sz) {
 	Reset();
 	drawing_clip = sz;
 	drawing_size = sz;
@@ -229,7 +229,9 @@ void SystemDraw::PopContext()
 }
 
 
-SystemDraw::~OpenGLDraw() {
+SystemDraw::~SystemDraw() {
 }
 
 END_UPP_NAMESPACE
+
+#endif

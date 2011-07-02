@@ -1,6 +1,3 @@
-#ifndef _WinGl_Keys_h_
-#define _WinGl_Keys_h_
-
 K_BACK       = VK_BACK + K_DELTA,
 K_BACKSPACE  = VK_BACK + K_DELTA,
 
@@ -110,5 +107,3 @@ K_CTRL_EQUAL     = K_CTRL|0xbb|K_DELTA,
 K_CTRL_APOSTROPHE= K_CTRL|0xde|K_DELTA,
 
 K_BREAK      = VK_CANCEL + K_DELTA,
-
-#endif

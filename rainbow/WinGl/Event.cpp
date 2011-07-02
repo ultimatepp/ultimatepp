@@ -1,5 +1,7 @@
 #include <CtrlCore/CtrlCore.h>
 
+#ifdef GUI_WINGL
+
 NAMESPACE_UPP
 
 #define LLOG(x) LOG(x)
@@ -10,12 +12,10 @@ Point GetMousePos() {
 	return fbmousepos;
 }
 
-void Ctrl::DoMouseFB(int event, Point p, int zdelta)
+void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 {
 	fbmousepos = p;
 	int a = event & Ctrl::ACTION;
-//	if(a == DOWN)
-//		ClickActivateWnd();
 	if(a == Ctrl::UP && Ctrl::ignoreclick) {
 		EndIgnore();
 		return;
@@ -29,11 +29,9 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 		desktop->DispatchMouse(event, p, zdelta);
 		desktop->PostInput();
 	}
-//	if(a == Ctrl::MOUSEMOVE)
-//		DoCursorShape();
 }
 
-bool Ctrl::DoKeyFB(dword key, int cnt)
+bool Ctrl::DoKeyGl(dword key, int cnt)
 {
 	bool b = DispatchKey(key, cnt);
 	SyncCaret();
@@ -68,22 +66,10 @@ Image Ctrl::GetBak(Rect& tr)
 
 void Ctrl::RemoveCursor()
 {
-	if(!IsNull(fbCursorBakPos)) {
-		Copy(framebuffer, fbCursorBakPos, fbCursorBak, fbCursorBak.GetSize());
-		FBUpdate(Rect(fbCursorBakPos, fbCursorBak.GetSize()));
-	}
-	fbCursorPos = fbCursorBakPos = Null;
-	fbCursorBak = Null;
 }
 
 void Ctrl::RemoveCaret()
 {
-	if(!IsNull(fbCaretRect)) {
-		Copy(framebuffer, fbCaretRect.TopLeft(), fbCaretBak, fbCaretBak.GetSize());
-		FBUpdate(fbCaretRect);
-	}
-	fbCaretRect = Null;
-	fbCaretBak = Null;
 }
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
@@ -103,41 +89,6 @@ void Ctrl::SyncCaret() {
 
 void Ctrl::CursorSync()
 {
-	Point p = GetMousePos() - fbCursorImage.GetHotSpot();
-	Rect cr = Null;
-	if(focusCtrl && (((GetTickCount() - fbCaretTm) / 500) & 1) == 0)
-		cr = RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
-		     + focusCtrl->GetScreenView().TopLeft();
-	if(fbCursorPos != p || cr != fbCaretRect) {
-		RemoveCursor();
-		RemoveCaret();
-
-		fbCursorPos = p;
-		Size sz = fbCursorImage.GetSize();
-		Rect tr(p, sz);
-		fbCursorBak = GetBak(tr);
-		fbCursorBakPos = tr.TopLeft();
-
-		if(!cr.IsEmpty()) {
-			fbCaretBak = GetBak(cr);
-			fbCaretRect = cr;
-			for(int y = cr.top; y < cr.bottom; y++) {
-				RGBA *s = framebuffer[y] + cr.left;
-				const RGBA *e = framebuffer[y] + cr.right;
-				while(s < e) {
-					s->r = ~s->r;
-					s->g = ~s->g;
-					s->b = ~s->b;
-					s++;
-				}
-			}
-			FBUpdate(fbCaretRect);
-		}
-
-		Over(framebuffer, p, fbCursorImage, sz);
-		FBUpdate(tr);
-		FBSync();
-	}
 }
 
 void  Ctrl::SetMouseCursor(const Image& image)
@@ -150,3 +101,5 @@ void  Ctrl::SetMouseCursor(const Image& image)
 }
 
 END_UPP_NAMESPACE
+
+#endif
