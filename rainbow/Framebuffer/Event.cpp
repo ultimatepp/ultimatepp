@@ -24,13 +24,21 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 	if(a == Ctrl::DOWN && ignoreclick)
 		return;
 	LLOG("Mouse event: " << event << " position " << p << " zdelta " << zdelta);
+	for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+		Ptr<Ctrl> t = topctrl[i];
+		Rect rr = t->GetRect();
+		if(rr.Contains(p)) {
+			t->DispatchMouse(event, p - rr.TopLeft(), zdelta);
+			if(t)
+				t->PostInput();
+			return;
+		}
+	}
 	Ctrl *desktop = GetDesktop();
 	if(desktop) {
 		desktop->DispatchMouse(event, p, zdelta);
 		desktop->PostInput();
 	}
-//	if(a == Ctrl::MOUSEMOVE)
-//		DoCursorShape();
 }
 
 bool Ctrl::DoKeyFB(dword key, int cnt)
@@ -42,16 +50,6 @@ bool Ctrl::DoKeyFB(dword key, int cnt)
 		desktop->PostInput();
 	return b;
 }
-
-Point fbCursorPos = Null;
-Image fbCursorImage;
-
-Point fbCursorBakPos = Null;
-Image fbCursorBak;
-
-Rect  fbCaretRect;
-Image fbCaretBak;
-int   fbCaretTm;
 
 Image Ctrl::GetBak(Rect& tr)
 {

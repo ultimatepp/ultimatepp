@@ -3,6 +3,7 @@ description "Paint method and Draw example\377";
 uses
 	CtrlLib,
 	Framebuffer,
+	RichEdit,
 	WinGl;
 
 uses(WINFB) WinFb;

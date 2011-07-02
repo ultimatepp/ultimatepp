@@ -6,22 +6,27 @@ NAMESPACE_UPP
 
 #define LLOG(x)
 
-Ptr<Ctrl>      desktop;
-ImageBuffer    framebuffer;
-Vector<Rect>   invalid;
+ImageBuffer    Ctrl::framebuffer;
+Vector<Rect>   Ctrl::invalid;
 
-void SetDesktop(Ctrl& q)
+Ptr<Ctrl>      Ctrl::desktop;
+Vector<Ctrl *> Ctrl::topctrl;
+
+Point          Ctrl::fbCursorPos = Null;
+Image          Ctrl::fbCursorImage;
+Point          Ctrl::fbCursorBakPos = Null;
+Image          Ctrl::fbCursorBak;
+Rect           Ctrl::fbCaretRect;
+Image          Ctrl::fbCaretBak;
+int            Ctrl::fbCaretTm;
+
+void Ctrl::SetDesktop(Ctrl& q)
 {
 	desktop = &q;
 	desktop->SetRect(framebuffer.GetSize());
 	desktop->SetOpen(true);
 	desktop->SetTop();
 	invalid.Add(framebuffer.GetSize());
-}
-
-Ctrl *GetDesktop()
-{
-	return desktop;
 }
 
 void Ctrl::InitFB()
@@ -31,12 +36,20 @@ void Ctrl::InitFB()
 	framebuffer.Create(1, 1);
 }
 
-void SetFramebufferSize(Size sz)
+void Ctrl::SetFramebufferSize(Size sz)
 {
 	framebuffer.Create(sz);
 	if(desktop)
 		desktop->SetRect(sz);
 	invalid.Add(sz);
+}
+
+int Ctrl::FindTopCtrl() const
+{
+	for(int i = 0; i < topctrl.GetCount(); i++)
+		if(this == topctrl[i])
+			return i;
+	return -1;
 }
 
 bool Ctrl::IsAlphaSupported()
@@ -54,6 +67,8 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 	Vector<Ctrl *> ctrl;
 	if(desktop)
 		ctrl.Add(desktop);
+	for(int i = 0; i < topctrl.GetCount(); i++)
+		ctrl.Add(topctrl[i]);
 	return ctrl;
 }
 
@@ -130,6 +145,17 @@ bool Ctrl::ProcessEvent(bool *quit)
 	return false;
 }
 
+Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
+{
+	Rect ri = Null;
+	for(int j = 0; j < inv.GetCount(); j++) {
+		Rect rr = inv[j] & r;
+		if(!rr.IsEmpty())
+			ri = IsNull(ri) ? rr : rr | ri;
+	}
+	return ri;
+}
+
 bool Ctrl::ProcessEvents(bool *quit)
 {
 	if(!ProcessEvent(quit))
@@ -137,19 +163,30 @@ bool Ctrl::ProcessEvents(bool *quit)
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !FBEndSession()); // LoopCtrl-MF 071008
 	TimerProc(GetTickCount());
 	SweepMkImageCache();
-	if(invalid.GetCount()) {
+	if(invalid.GetCount() && desktop) {
 		RemoveCursor();
 		RemoveCaret();
 		SystemDraw painter(framebuffer, invalid);
 		painter.Begin();
-		Rect r = invalid[0];
-		for(int i = 0; i < invalid.GetCount(); i++) {
+		for(int i = 0; i < invalid.GetCount(); i++)
 			painter.RectPath(invalid[i]);
-			r |= invalid[i];
-		}
 		painter.Painter::Clip();
-		if(desktop)
-			desktop->UpdateArea(painter, r);
+		Vector<Rect> inv;
+		inv <<= invalid;
+		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+			Rect r = topctrl[i]->GetRect();
+			Rect ri = GetClipBound(inv, r);
+			if(!IsNull(ri)) {
+				painter.Offset(r.TopLeft());
+				topctrl[i]->UpdateArea(painter, ri - r.TopLeft());
+				painter.End();
+				Subtract(inv, r);
+				painter.ExcludeClip(r);
+			}
+		}
+		Rect ri = GetClipBound(inv, framebuffer.GetSize());
+		if(!IsNull(ri))
+			desktop->UpdateArea(painter, ri);
 	}
 	CursorSync();
 	for(int i = 0; i < invalid.GetCount(); i++)
@@ -229,7 +266,7 @@ void Ctrl::WndUpdate0()
 
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
-	return this == desktop;
+	return FindTopCtrl() >= 0 || this == desktop;
 }
 
 void Ctrl::SetAlpha(byte alpha)
@@ -291,13 +328,27 @@ int Ctrl::GetKbdSpeed()
 
 void Ctrl::WndDestroy0()
 {
-	if(top)
+	int q = FindTopCtrl();
+	if(q >= 0) {
+		AddInvalid(GetRect());
+		topctrl.Remove(q);
+	}
+	if(top) {
 		delete top;
+		top = NULL;
+	}
+	isopen = false;
 }
 
 void Ctrl::SetWndForeground0()
 {
 	GuiLock __;
+	int q = FindTopCtrl();
+	if(q >= 0) {
+		AddInvalid(GetRect());
+		topctrl.Remove(q);
+		topctrl.Add(this);
+	}
 }
 
 bool Ctrl::IsWndForeground() const
@@ -346,12 +397,17 @@ bool Ctrl::HasWndCapture() const
 void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
-	AddInvalid(r);
+	int q = FindTopCtrl();
+	if(q >= 0)
+		AddInvalid(r + topctrl[q]->GetRect().TopLeft());
+	else
+		AddInvalid(r);
 }
 
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
+	invalid.Add(GetRect());
 	SetWndRect(rect);
 	invalid.Add(rect);
 }
@@ -364,10 +420,18 @@ void Ctrl::WndUpdate0r(const Rect& r)
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
+	Refresh(r);
 }
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
+	_DBG_ // Add owner management!!!!
+	ASSERT(!IsChild() && !IsOpen() && FindTopCtrl() < 0);
+	topctrl.Add(this);
+	popup = isopen = true;
+	SetTop();
+	if(activate) SetFocus();
+	AddInvalid(GetRect());
 }
 
 Rect Ctrl::GetDefaultWindowRect() {

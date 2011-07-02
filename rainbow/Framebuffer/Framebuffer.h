@@ -97,10 +97,6 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <Framebuffer/Top.h>
 
-
-extern ImageBuffer framebuffer;
-void   SetFramebufferSize(Size sz);
-
 // to be implemented by final FB {
 
 bool FBIsWaitingEvent();

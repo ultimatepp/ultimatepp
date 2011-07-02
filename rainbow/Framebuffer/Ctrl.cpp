@@ -56,7 +56,7 @@ void GuiPlatformGripResize(TopWindow *q)
 
 Color GuiPlatformGetScreenPixel(int x, int y)
 {
-	return Black;
+	return Ctrl::GetFrameBuffer()[y][x];
 }
 
 void GuiPlatformAfterMenuPopUp()

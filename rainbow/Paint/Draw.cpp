@@ -1,10 +1,14 @@
 #include <CtrlLib/CtrlLib.h>
+#include <RichEdit/RichEdit.h>
 
 using namespace Upp;
 
 struct App : public Ctrl {
 	EditString x;
-	ArrayCtrl a;
+	ArrayCtrl a, b;
+	DropList dl;
+	
+	StaticRect popup;
 	
 	void Paint(Draw& w)
 	{
@@ -23,25 +27,52 @@ struct App : public Ctrl {
 		w.DrawText(0, 80, "CLIPPED", Roman(25));
 		w.End();
 	}
+	
+	void LeftDown(Point p, dword)
+	{
+		popup.SetRect(p.x, p.y, 100, 400);
+	}
+	
+	void InitArray(ArrayCtrl& a)
+	{
+		a.AddColumn("first");
+		a.AddColumn("second");
+		for(int i = 0; i < 100; i++)
+			a.Add(i, FormatIntRoman(i));
+	}
 
 	App()
 	{
 		x <<= "Hello world!";
 		Add(x.LeftPos(100, 100).TopPos(500, 20));
-		a.AddColumn("first");
-		a.AddColumn("second");
-		for(int i = 0; i < 100; i++)
-			a.Add(i, FormatIntRoman(i));
 		Add(a.LeftPos(300, 150).TopPos(10, 300));
+		InitArray(a);
+		InitArray(b);
+		popup.SetFrame(BlackFrame());
+		popup.Add(b.HSizePos(10, 10).VSizePos(10, 10));
+		popup.SetRect(800, 100, 100, 400);
+		
+		Add(dl.LeftPos(10, 300).TopPos(10, 30));
+		for(int i = 0; i < 100; i++)
+			dl.Add(i);
 //		Sizeable();
 	}
 };
 
+#define EDITOR 1
+
 GUI_APP_MAIN
 {
+#if EDITOR
+	RichEditWithToolBar app;
+#else	
 	App app;
+#endif
 	ChStdSkin();
-	SetDesktop(app);
+	Ctrl::SetDesktop(app);
 	app.SetFocus();
+#if !EDITOR
+	app.popup.PopUp();
+#endif
 	Ctrl::EventLoop();
 }

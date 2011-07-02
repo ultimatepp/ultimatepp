@@ -5,4 +5,5 @@
 #include "WinGl/init"
 #include "WinFb/init"
 #include "LinuxFb/init"
+#include "RichEdit/init"
 #endif
