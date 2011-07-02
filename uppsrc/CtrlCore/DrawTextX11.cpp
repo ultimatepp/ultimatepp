@@ -8,7 +8,7 @@ NAMESPACE_UPP
 #define LLOG(x)
 
 int    gtk_antialias = -1;
-int    gtk_hinting;
+int    gtk_hinting = -1;
 String gtk_hintstyle;
 String gtk_rgba;
 
