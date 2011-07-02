@@ -1,5 +1,6 @@
 file
 	LinuxFb.h,
+	Local.h,
 	Keys.h,
 	Proc.cpp;
 

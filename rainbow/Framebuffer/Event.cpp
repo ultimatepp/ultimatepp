@@ -66,24 +66,42 @@ Image Ctrl::GetBak(Rect& tr)
 	return bak;
 }
 
-void Ctrl::RemoveCursor()
+void Ctrl::RemoveCursor(Rect& update)
 {
+	update = Null;
 	if(!IsNull(fbCursorBakPos)) {
 		Copy(framebuffer, fbCursorBakPos, fbCursorBak, fbCursorBak.GetSize());
-		FBUpdate(Rect(fbCursorBakPos, fbCursorBak.GetSize()));
+		update = Rect(fbCursorBakPos, fbCursorBak.GetSize());
 	}
 	fbCursorPos = fbCursorBakPos = Null;
 	fbCursorBak = Null;
 }
 
-void Ctrl::RemoveCaret()
+void Ctrl::RemoveCursor()
 {
+	Rect update;
+	RemoveCursor(update);
+	if(!IsNull(update))
+		FBUpdate(update);
+}
+
+void Ctrl::RemoveCaret(Rect& update)
+{
+	update = Null;
 	if(!IsNull(fbCaretRect)) {
 		Copy(framebuffer, fbCaretRect.TopLeft(), fbCaretBak, fbCaretBak.GetSize());
-		FBUpdate(fbCaretRect);
+		update = fbCaretRect;
 	}
 	fbCaretRect = Null;
 	fbCaretBak = Null;
+}
+
+void Ctrl::RemoveCaret()
+{
+	Rect update;
+	RemoveCaret(update);
+	if(!IsNull(update))
+		FBUpdate(update);
 }
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
@@ -109,7 +127,8 @@ void Ctrl::CursorSync()
 		cr = RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
 		     + focusCtrl->GetScreenView().TopLeft();
 	if(fbCursorPos != p || cr != fbCaretRect) {
-		RemoveCursor();
+		Rect oc;
+		RemoveCursor(oc);
 		RemoveCaret();
 
 		fbCursorPos = p;
@@ -135,6 +154,16 @@ void Ctrl::CursorSync()
 		}
 
 		Over(framebuffer, p, fbCursorImage, sz);
+		DLOG("Cursor " << p << " " << sz);
+		DDUMP(oc);
+	//	DDUMP(tr);
+		
+		_DBG_ // Only do this if they overlap!
+		if(!IsNull(oc))
+			tr = tr | oc;
+	//	tr.left -= 50;
+	//	tr.right += 50;
+		DDUMP(tr);
 		FBUpdate(tr);
 		FBSync();
 	}
