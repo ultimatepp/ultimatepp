@@ -1,14 +1,26 @@
+options
+	"-D_WIN32 -DGLEW_STATIC";
+
 file
 	WinGl.h,
 	Keys.h,
 	Draw.cpp,
+	DrawOp.cpp,
+	DrawText.cpp,
 	Win.cpp,
+	Wnd.cpp,
 	Proc.cpp,
 	After.h,
 	Event.cpp,
 	Top.h,
+	Top.cpp,
 	Ctrl.h,
 	Ctrl.cpp,
+	Clip.cpp,
+	Dnd.cpp,
+	Image.cpp,
+	ChSysInit.cpp,
+	Util.cpp,
 	Glew readonly separator,
 	glew.h,
 	glxew.h,

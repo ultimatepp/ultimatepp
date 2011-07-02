@@ -8,7 +8,7 @@ HWND   glHWND;
 HDC    hDC;
 HGLRC  hRC;
 
-bool glEndSession;
+bool glEndSession = false;
 
 bool GlEndSession()
 {
@@ -59,7 +59,7 @@ void DestroyGL()
 	    ReleaseDC(glHWND, hDC);
 }
 
-void GlInit(HINSTANCE hInstance)
+int GlInit(HINSTANCE hInstance)
 {
 	GuiLock __;
 	
@@ -67,21 +67,25 @@ void GlInit(HINSTANCE hInstance)
 	
 	WNDCLASSW  wc;
 	Zero(wc);
-	wc.style         = CS_DBLCLKS|CS_HREDRAW|CS_VREDRAW|CS_OWNDC;
+	wc.style         = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc   = (WNDPROC)glWindowProc;
 	wc.hInstance     = hInstance;
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)NULL;
 	wc.lpszClassName = L"UPP-FB-CLASS";
 	RegisterClassW(&wc);
-	glHWND = CreateWindowW(L"UPP-FB-CLASS", L"", WS_OVERLAPPED|WS_VISIBLE|WS_THICKFRAME|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SYSMENU,
-	                       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-	                       NULL, NULL, hInstance, NULL);
+	glHWND = CreateWindowW(
+		L"UPP-FB-CLASS", L"",
+		WS_OVERLAPPED | WS_VISIBLE | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU,
+	   	CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+	    NULL, NULL, hInstance, NULL);
+	    
+	if(!glHWND)
+		return -1;
 	                       
-	                       
-	HDC hDC = ::GetDC(glHWND);
+	hDC = ::GetDC(glHWND);
 	if(!hDC)
-		return;
+		return -2;
 	PIXELFORMATDESCRIPTOR pfd;
 	memset(&pfd, 0, sizeof(pfd));
 	pfd.nSize = sizeof(pfd);
@@ -94,15 +98,14 @@ void GlInit(HINSTANCE hInstance)
 	pfd.iLayerType = PFD_MAIN_PLANE;
 	int pf = ChoosePixelFormat(hDC, &pfd);
 	if(!pf) {
-		
 		RLOG("OpenGL: ChoosePixelFormat error");
 		DestroyGL();
-		return;
+		return -3;
 	}
 	if(!SetPixelFormat(hDC, pf, &pfd)) {
 		RLOG("OpenGL: SetPixelFormat error");
 		DestroyGL();
-		return;
+		return -4;
 	}
 	DescribePixelFormat(hDC, pf, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
 	hRC = wglCreateContext(hDC);
@@ -110,13 +113,13 @@ void GlInit(HINSTANCE hInstance)
 	{
 		RLOG("OpenGL: wglCreateContext error");
 		DestroyGL();
-		return;
+		return -5;
 	}
 	if(!wglMakeCurrent(hDC, hRC))
 	{
 		RLOG("OpenGL: wglMakeCurrent error");
 		DestroyGL();
-		return;
+		return -6;
 	}
 	//ActivateGLContext();
 	GLenum err = glewInit();
@@ -124,15 +127,15 @@ void GlInit(HINSTANCE hInstance)
 	{
 		RLOG("OpenGL: Glew library initialization error: " + String((const char*) glewGetErrorString(err)));
 		DestroyGL();
-		return;
+		return -7;
 	}
 	
 	//InitializeShaders();
 	//wglSwapIntervalEXT(0);
 	//SetTimeCallback(-10, THISBACK(Repaint), 1);
 	                       
-	//SetTimer(fbHWND, 1, 10, NULL);
-
+	SetTimer(glHWND, 1, 10, NULL);
+	return 1;
 }
 
 END_UPP_NAMESPACE

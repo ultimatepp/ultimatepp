@@ -6,15 +6,15 @@ NAMESPACE_UPP
 
 #define LLOG(x) LOG(x)
 
-static Point fbmousepos;
+static Point glmousepos;
 
 Point GetMousePos() {
-	return fbmousepos;
+	return glmousepos;
 }
 
 void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 {
-	fbmousepos = p;
+	glmousepos = p;
 	int a = event & Ctrl::ACTION;
 	if(a == Ctrl::UP && Ctrl::ignoreclick) {
 		EndIgnore();
@@ -50,19 +50,6 @@ Image fbCursorBak;
 Rect  fbCaretRect;
 Image fbCaretBak;
 int   fbCaretTm;
-
-Image Ctrl::GetBak(Rect& tr)
-{
-	Image bak;
-	tr.Intersect(framebuffer.GetSize());
-	if(!tr.IsEmpty()) {
-		Image h = framebuffer;
-		bak = CreateImage(tr.GetSize(), Black);
-		Copy(bak, Point(0, 0), h, tr);
-		framebuffer = h;
-	}
-	return bak;
-}
 
 void Ctrl::RemoveCursor()
 {

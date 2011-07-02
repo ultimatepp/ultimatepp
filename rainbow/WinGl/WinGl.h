@@ -8,12 +8,18 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <Painter/Painter.h>
+
 #define GUI_WINGL
 
 NAMESPACE_UPP
 
 extern bool glEndSession;
+extern HWND glHWND;
+extern HDC    hDC;
+extern HGLRC  hRC;
 
+void ActivateGLContext();
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 #define GUI_FB
@@ -93,6 +99,7 @@ class SystemDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
 	virtual Size  GetPageSize() const;
+	bool    CanSetSurface()                         { return false; }
 
 	void PlaneEquation(double eq[4], float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3);
 	void SetClipRect(const Rect& r);
@@ -225,7 +232,8 @@ struct ImageDraw__ {
 	ImageDraw__(int cx, int cy) : image(cx, cy), alpha(cx, cy) {}
 };
 
-class ImageDraw : private ImageDraw__ {
+class ImageDraw : private ImageDraw__, public BufferPainter {
+	BufferPainter  alpha_painter;
 	bool           has_alpha;
 
 	Image Get(bool pm) const;

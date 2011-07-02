@@ -11,12 +11,14 @@ public:
 	~ViewDraw() {}
 };
 
+class DHCtrl : Ctrl {};
+
 void InitGl();
 
 Vector<WString>& coreCmdLine__();
 Vector<WString> SplitCmdLine__(const char *cmd);
 
-void FBInit(HINSTANCE hInstance);
+int GlInit(HINSTANCE hInstance);
 
 #define GUI_APP_MAIN \
 void GuiMainFn_();\
@@ -25,12 +27,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 { \
 	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine)); \
 	UPP::AppInitEnvironment__(); \
-	UPP::GlInit(hInstance); \
-	GuiMainFn_(); \
-	UPP::Ctrl::CloseTopCtrls(); \
-	UPP::UsrLog("---------- About to delete this log of WinGL..."); \
-	UPP::DeleteUsrLog(); \
-	return UPP::GetExitCode(); \
+	int r = UPP::GlInit(hInstance); \
+	if(r > 0) { \
+		GuiMainFn_(); \
+		UPP::Ctrl::CloseTopCtrls(); \
+		UPP::UsrLog("---------- About to delete this log of WinGL..."); \
+		UPP::DeleteUsrLog(); \
+		return UPP::GetExitCode(); \
+	} else { \
+		Exclamation(Format("OpenGL window could not be initialized: %d", r)); \
+		return r; \
+	}\
 } \
 \
 void GuiMainFn_()
