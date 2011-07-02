@@ -158,7 +158,7 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_ERASEBKGND:
 		return 1L;
 	case WM_SIZE:
-		SetFramebufferSize(Size(LOWORD(lParam), HIWORD(lParam)));
+		Ctrl::SetFramebufferSize(Size(LOWORD(lParam), HIWORD(lParam)));
 		return 0L;
 	case WM_HELP:
 		return TRUE;

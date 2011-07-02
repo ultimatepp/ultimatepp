@@ -10,9 +10,4 @@ public:
 
 class DHCtrl : Ctrl {};
 
-void InitFB();
-
 #include FRAMEBUFFER_INCLUDE
-
-void  SetDesktop(Ctrl& desktop);
-Ctrl *GetDesktop();

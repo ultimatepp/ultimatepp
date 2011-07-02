@@ -60,6 +60,7 @@ void FBInit(HINSTANCE hInstance)
 
 void fbUpdate(HDC hdc, const Rect& r)
 {
+	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
 	Size sz = framebuffer.GetSize();
 	Buffer<byte> data;
 	data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
