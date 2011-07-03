@@ -81,6 +81,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 	MaskFillerFilter    mf;
 	bool doclip = width == CLIP;
 	subpixel_filler.sbuffer = subpixel;
+	subpixel_filler.invert = pathattr.invert;
 	if(doclip) {
 		rg = &clip_filler;
 		newclip.Alloc(ib.GetHeight());

@@ -67,7 +67,7 @@ void SolidFiller::Render(int val, int len)
 		RGBA *e = t + len;
 		if(val == 256)
 			while(t < e) {
-				AlphaBlend(*t, InvertRGBA(*t));
+				*t = InvertRGBA(*t);
 				t++;
 			}
 		else
@@ -223,23 +223,37 @@ void SubpixelFiller::Render(int val, int len)
 		l = len / 3;
 		len -= 3 * l;
 		RGBA *e = min(t + l, end);
-		if(val == 256)
-			if(!ss && color.a == 255) {
-				FillRGBA(t, color, e - t);
-				t = e;
-			}
+		if(invert && !ss) {
+			if(val == 256)
+				while(t < e) {
+					*t = InvertRGBA(*t);
+					t++;
+				}
 			else
-				while(t < e)
-					AlphaBlend(*t++, ss ? Mul8(*s++, alpha) : color);
-		else
-			if(ss)
-				while(t < e)
-					AlphaBlendCover8(*t++, Mul8(*s++, alpha), val);
-			else {
-				RGBA c = Mul8(color, val);
-				while(t < e)
-					AlphaBlend(*t++, c);
-			}
+				while(t < e) {
+					AlphaBlend(*t, Mul8(InvertRGBA(*t), val));
+					t++;
+				}
+		}
+		else {
+			if(val == 256)
+				if(!ss && color.a == 255) {
+					FillRGBA(t, color, e - t);
+					t = e;
+				}
+				else
+					while(t < e)
+						AlphaBlend(*t++, ss ? Mul8(*s++, alpha) : color);
+			else
+				if(ss)
+					while(t < e)
+						AlphaBlendCover8(*t++, Mul8(*s++, alpha), val);
+				else {
+					RGBA c = Mul8(color, val);
+					while(t < e)
+						AlphaBlend(*t++, c);
+				}
+		}
 		v = begin = sbuffer + 3;
 		v[0] = h + h + h;
 		v[1] = h;
@@ -253,7 +267,7 @@ void SubpixelFiller::Write(int len)
 	RGBA *e = min(t + len, end);
 	int16 *q = begin;
 	while(t < e) {
-		RGBA c = ss ? Mul8(*s++, alpha) : color;
+		RGBA c = ss ? Mul8(*s++, alpha) : invert ? InvertRGBA(*t) : color;
 		int a;
 		if(t->a != 255)
 			AlphaBlendCover8(*t, c, (q[0] + q[1] + q[2]) / 3);
