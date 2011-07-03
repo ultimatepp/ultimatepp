@@ -6,7 +6,8 @@ extern void GuiMainFn_();
 
 NAMESPACE_UPP
 
-HWND   glHWND;
+HWND   hWnd;
+HWND   glHwnd;
 HDC    hDC;
 HGLRC  hRC;
 
@@ -41,24 +42,23 @@ void GlSleep(int ms)
 	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
 }
 
-void ActivateGLContext()
+void ActivateGlContext()
 {
-	if (hRC != NULL && wglGetCurrentContext() != hRC)
+	if(hRC != NULL && wglGetCurrentContext() != hRC)
 		wglMakeCurrent(hDC, hRC);
 }
 
-void DestroyGL()
+void DestroyGl(bool destroyWindow)
 {
-	if (hDC != NULL && hRC != NULL)
-	{
-		ActivateGLContext();
-		wglMakeCurrent(NULL, NULL);
-	}
+	wglMakeCurrent(NULL, NULL);
 	
 	if(hRC)
 	    wglDeleteContext(hRC);
 	if(hDC)
-	    ReleaseDC(glHWND, hDC);
+	    ::ReleaseDC(glHwnd, hDC);
+	
+	if(destroyWindow)
+		::DestroyWindow(glHwnd);
 }
 
 int GlInit(HINSTANCE hInstance)
@@ -74,25 +74,26 @@ int GlInit(HINSTANCE hInstance)
 	wc.hInstance     = hInstance;
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)NULL;
-	wc.lpszClassName = L"UPP-FB-CLASS";
+	wc.lpszClassName = L"UPP-GL-CLASS";
 	RegisterClassW(&wc);
-	glHWND = CreateWindowW(
-		L"UPP-FB-CLASS", L"",
-		WS_OVERLAPPED | WS_VISIBLE | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU,
+	
+	glHwnd = CreateWindowW(
+		L"UPP-GL-CLASS", L"",
+		WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU,
 	   	CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 	    NULL, NULL, hInstance, NULL);
 	    
-	if(!glHWND)
+	if(!glHwnd)
 		return -1;
 	                       
-	hDC = ::GetDC(glHWND);
+	hDC = ::GetDC(glHwnd);
 	if(!hDC)
 		return -2;
 	PIXELFORMATDESCRIPTOR pfd;
 	memset(&pfd, 0, sizeof(pfd));
 	pfd.nSize = sizeof(pfd);
 	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL | PFD_SUPPORT_COMPOSITION;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL | PFD_SUPPORT_COMPOSITION | PFD_GENERIC_ACCELERATED;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;
 	pfd.cDepthBits = 24;
@@ -101,12 +102,12 @@ int GlInit(HINSTANCE hInstance)
 	int pf = ChoosePixelFormat(hDC, &pfd);
 	if(!pf) {
 		RLOG("OpenGL: ChoosePixelFormat error");
-		DestroyGL();
+		DestroyGl();
 		return -3;
 	}
 	if(!SetPixelFormat(hDC, pf, &pfd)) {
 		RLOG("OpenGL: SetPixelFormat error");
-		DestroyGL();
+		DestroyGl();
 		return -4;
 	}
 	DescribePixelFormat(hDC, pf, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
@@ -114,13 +115,13 @@ int GlInit(HINSTANCE hInstance)
 	if(!hRC)
 	{
 		RLOG("OpenGL: wglCreateContext error");
-		DestroyGL();
+		DestroyGl();
 		return -5;
 	}
 	if(!wglMakeCurrent(hDC, hRC))
 	{
 		RLOG("OpenGL: wglMakeCurrent error");
-		DestroyGL();
+		DestroyGl();
 		return -6;
 	}
 	//ActivateGLContext();
@@ -128,7 +129,7 @@ int GlInit(HINSTANCE hInstance)
 	if(err != GLEW_OK)
 	{
 		RLOG("OpenGL: Glew library initialization error: " + String((const char*) glewGetErrorString(err)));
-		DestroyGL();
+		DestroyGl();
 		return -7;
 	}
 	
@@ -136,7 +137,7 @@ int GlInit(HINSTANCE hInstance)
 	wglSwapIntervalEXT(0);
 	//SetTimeCallback(-10, THISBACK(Repaint), 1);
 	                       
-	SetTimer(glHWND, 1, 10, NULL);
+	SetTimer(glHwnd, 1, 10, NULL);
 	return 1;
 }
 
@@ -154,7 +155,7 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 		UPP::Ctrl::CloseTopCtrls();
 		UPP::UsrLog("---------- About to delete this log of WinGL...");
 		UPP::DeleteUsrLog();
-		UPP::DestroyGL();
+		UPP::DestroyGl(false);
 		return UPP::GetExitCode();
 	} else {
 		::MessageBox(NULL, Format("OpenGL window could not be initialized: %d", r), NULL, MB_ICONEXCLAMATION | MB_OK);

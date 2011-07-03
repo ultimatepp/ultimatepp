@@ -14,13 +14,14 @@
 
 NAMESPACE_UPP
 
-extern bool glEndSession;
-extern HWND glHWND;
-extern HDC    hDC;
-extern HGLRC  hRC;
+extern bool  glEndSession;
+extern HWND  hWnd;
+extern HWND  glHwnd;
+extern HDC   hDC;
+extern HGLRC hRC;
 
-void ActivateGLContext();
-void DestroyGL();
+void ActivateGlContext();
+void DestroyGl(bool destroyWindow = true);
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 #define GUI_FB

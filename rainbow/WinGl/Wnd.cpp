@@ -134,19 +134,14 @@ bool Ctrl::ProcessEvent(bool *quit)
 	return false;
 }
 
-bool Ctrl::ProcessEvents(bool *quit)
+void Ctrl::DrawScreen()
 {
-	if(!ProcessEvent(quit))
-		return false;
-	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !GlEndSession()); // LoopCtrl-MF 071008
-	TimerProc(GetTickCount());
-	SweepMkImageCache();
 	if(desktop && !painting) {
 		painting = true;
 		RemoveCursor();		
 		RemoveCaret();
 		
-		ActivateGLContext();
+		ActivateGlContext();
 		//SyncLayout(1);
 		//InitInfoPanel();
 		Rect rect;
@@ -165,6 +160,16 @@ bool Ctrl::ProcessEvents(bool *quit)
 		painting = false;
 		LOGF("Fps %.2f\n", GetFps());
 	}
+}
+
+bool Ctrl::ProcessEvents(bool *quit)
+{
+	if(!ProcessEvent(quit))
+		return false;
+	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !GlEndSession()); // LoopCtrl-MF 071008
+	TimerProc(GetTickCount());
+	SweepMkImageCache();
+	DrawScreen();
 	CursorSync();
 	return false;
 }
@@ -358,7 +363,7 @@ bool Ctrl::HasWndCapture() const
 void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
-	::InvalidateRect(glHWND, NULL, false);
+	::InvalidateRect(glHwnd, NULL, false);
 }
 
 void Ctrl::WndSetPos0(const Rect& rect)

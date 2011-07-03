@@ -27,5 +27,6 @@ file
 	wglew.h,
 	glew.c,
 	Resources readonly separator,
+	WinGl.iml,
 	Fonts.brc;
 
