@@ -37,6 +37,7 @@ struct SubpixelFiller : Rasterizer::Filler {
 	int           alpha;
 	RGBA         *buffer;
 	int           y;
+	bool          invert;
 
 	void Write(int len);
 	void RenderN(int val, int h, int n);
