@@ -97,6 +97,6 @@ GUI_APP_MAIN
 	app.popup3.PopUp();
 #endif
 //	Ctrl::SetRenderingMode(MODE_NOAA);
-	Ctrl::SetRenderingMode(MODE_SUBPIXEL);
+//	Ctrl::SetRenderingMode(MODE_SUBPIXEL);
 	Ctrl::EventLoop();
 }
