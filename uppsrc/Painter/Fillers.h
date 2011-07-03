@@ -6,6 +6,7 @@ NAMESPACE_UPP
 struct SolidFiller : Rasterizer::Filler {
 	RGBA *t;
 	RGBA  c;
+	bool  invert;
 	
 	void Start(int minx, int maxx);
 	void Render(int val);

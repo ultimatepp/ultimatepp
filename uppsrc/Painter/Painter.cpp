@@ -549,6 +549,7 @@ void NilPainter::LineCapOp(int linecap) {}
 void NilPainter::LineJoinOp(int linejoin) {}
 void NilPainter::MiterLimitOp(double l) {}
 void NilPainter::EvenOddOp(bool evenodd) {}
+void NilPainter::InvertOp(bool invert) {}
 void NilPainter::DashOp(const Vector<double>& dash, double start) {}
 void NilPainter::TransformOp(const Xform2D& m) {}
 void NilPainter::BeginOp() {}

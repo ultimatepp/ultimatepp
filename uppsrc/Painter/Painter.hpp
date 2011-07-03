@@ -179,6 +179,12 @@ inline Painter& Painter::EvenOdd(bool evenodd)
 	return *this;
 }
 
+inline Painter& Painter::Invert(bool b)
+{
+	InvertOp(b);
+	return *this;
+}
+
 inline Painter& Painter::Dash(const Vector<double>& dash, double start)
 {
 	if(dash.GetCount() & 1) {

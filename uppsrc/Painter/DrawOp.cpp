@@ -65,6 +65,8 @@ bool Painter::IsPaintingOp(const Rect& r) const
 void Painter::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
 	RectPath(x, y, cx, cy);
+	if(color == InvertColor)
+		Invert();
 	Fill(color);
 }
 
