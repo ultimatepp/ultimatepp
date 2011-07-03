@@ -379,7 +379,7 @@ bool Ctrl::IsWndForeground() const
 	for(int i = 0; i < topctrl.GetCount(); i++)
 		if(topctrl[i]->top && topctrl[i]->top->owner_window == this && topctrl[i]->IsWndForeground())
 			return true;
-	return topctrl.Top() == this;
+	return topctrl.GetCount() ? topctrl.Top() == this : this == desktop;
 }
 
 void Ctrl::WndEnable0(bool *b)
