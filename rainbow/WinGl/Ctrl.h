@@ -30,4 +30,5 @@ public:
 	static Ctrl *GetDesktop()                  { return desktop; }
 	static void  SetWindowSize(Size sz);
 	
+	static void  DrawScreen();
 //$ };

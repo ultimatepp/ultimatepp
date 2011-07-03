@@ -54,14 +54,6 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 #endif
 	//	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	switch(message) {
-	case WM_PAINT:
-		ASSERT(hwnd);
-		if(hwnd) {
-			PAINTSTRUCT ps;
-			HDC dc = BeginPaint(hwnd, &ps);
-			EndPaint(hwnd, &ps);
-		}
-		return 0L;
 	case WM_LBUTTONDOWN:
 		Ctrl::DoMouseGl(Ctrl::LEFTDOWN, Point((dword)lParam));
 		return 0L;
@@ -99,12 +91,12 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 			Ctrl::DoMouseGl(Ctrl::MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
 		}
 		return 0L;
-	case WM_SETCURSOR:
-		if(LOWORD((dword)lParam) == HTCLIENT) {
+	/*case WM_SETCURSOR:
+	  if(LOWORD((dword)lParam) == HTCLIENT) {
 			SetCursor(NULL);
 			return TRUE;
 		}
-		break;
+		break;*/
 //	case WM_MENUCHAR:
 //		return MAKELONG(0, MNC_SELECT);
 	case WM_KEYDOWN:
@@ -159,6 +151,7 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_ERASEBKGND:
 		return 1L;
 	case WM_SIZE:
+		//ActivateGlContext();
 		Ctrl::SetWindowSize(Size(LOWORD(lParam), HIWORD(lParam)));
 		return 0L;
 	case WM_MOVE:
