@@ -89,7 +89,7 @@ public:
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
-#define GUIPLATFORM_CTRL_TOP_DECLS
+#define GUIPLATFORM_CTRL_TOP_DECLS   Ctrl *owner_window;
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <Framebuffer/Ctrl.h>
 

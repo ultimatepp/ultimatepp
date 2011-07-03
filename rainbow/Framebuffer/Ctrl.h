@@ -16,6 +16,8 @@ private:
 	static Rect  fbCaretRect;
 	static Image fbCaretBak;
 	static int   fbCaretTm;
+	
+	static int   renderingMode;
 
 	static Image GetBak(Rect& tr);
 	static void RemoveCursor();
@@ -24,6 +26,10 @@ private:
 	
 	int FindTopCtrl() const;
 	static Rect GetClipBound(const Vector<Rect>& inv, const Rect& r);
+	static void DoPaint(const Vector<Rect>& invalid);
+	
+	void NewTop()                       { top = new Top; top->owner_window = NULL; }
+	void PutForeground();
 
 	friend struct PaintProxy__;
 
@@ -32,7 +38,6 @@ public:
 	static bool DoKeyFB(dword key, int cnt);
 	
 	void  SetOpen(bool b)               { isopen = b; }
-	void  SetTop()                      { top = new Top; }
 
 	static void InitFB();
 
@@ -41,5 +46,7 @@ public:
 	static void  SetFramebufferSize(Size sz);
 	
 	static const ImageBuffer& GetFrameBuffer() { return framebuffer; }
+	
+	static void SetRenderingMode(int mode);
 
 //$ };

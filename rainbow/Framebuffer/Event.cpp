@@ -14,8 +14,6 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 {
 	fbmousepos = p;
 	int a = event & Ctrl::ACTION;
-//	if(a == DOWN)
-//		ClickActivateWnd();
 	if(a == Ctrl::UP && Ctrl::ignoreclick) {
 		EndIgnore();
 		return;
@@ -28,6 +26,10 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 		Ptr<Ctrl> t = topctrl[i];
 		Rect rr = t->GetRect();
 		if(rr.Contains(p)) {
+			if(a == DOWN) {
+				t->SetFocusWnd();
+				t->SetForeground();
+			}
 			t->DispatchMouse(event, p - rr.TopLeft(), zdelta);
 			if(t)
 				t->PostInput();
