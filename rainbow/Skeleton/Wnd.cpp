@@ -165,13 +165,6 @@ void Ctrl::GuiSleep0(int ms)
 	EnterGMutex(level);*/
 }
 
-Rect Ctrl::GetWndUpdateRect() const
-{
-	GuiLock __;
-	Rect r;
-	return r;
-}
-
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;

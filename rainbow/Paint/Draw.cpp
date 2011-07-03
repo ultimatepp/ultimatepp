@@ -4,11 +4,12 @@
 using namespace Upp;
 
 struct App : public Ctrl {
-	EditString x;
+	EditString x, y;
 	ArrayCtrl a, b;
 	DropList dl;
 	
 	StaticRect popup;
+	StaticRect popup2, popup3;
 	
 	void Paint(Draw& w)
 	{
@@ -23,6 +24,7 @@ struct App : public Ctrl {
 		const char *text = "This text is centered";
 		Size tsz = GetTextSize(text, Arial(25).Bold());
 		w.DrawText((sz.cx - tsz.cx) / 2, (sz.cy - tsz.cy) / 2, text, Arial(27).Bold(), SBlue);
+		w.DrawRect(80, 480, 100, 100, Blue());
 		w.Clipoff(200, 50, 95, 100);
 		w.DrawText(0, 80, "CLIPPED", Roman(25));
 		w.End();
@@ -30,7 +32,14 @@ struct App : public Ctrl {
 	
 	void LeftDown(Point p, dword)
 	{
-		popup.SetRect(p.x, p.y, 100, 400);
+		popup.SetRect(p.x, p.y, 300, 400);
+		popup.SetForeground();
+	}
+
+	void RightDown(Point p, dword)
+	{
+		popup3.SetRect(p.x, p.y, 100, 100);
+		popup3.SetForeground();
 	}
 	
 	void InitArray(ArrayCtrl& a)
@@ -46,13 +55,24 @@ struct App : public Ctrl {
 		x <<= "Hello world!";
 		Add(x.LeftPos(100, 100).TopPos(500, 20));
 		Add(a.LeftPos(300, 150).TopPos(10, 300));
+		Add(dl.LeftPos(10, 300).TopPos(10, 30));
 		InitArray(a);
 		InitArray(b);
 		popup.SetFrame(BlackFrame());
-		popup.Add(b.HSizePos(10, 10).VSizePos(10, 10));
-		popup.SetRect(800, 100, 100, 400);
+		popup.Add(b.HSizePos(10, 200).VSizePos(10, 10));
+		b.SetFrame(ViewFrame());
+		popup.Add(y.HSizePos(210, 10).TopPos(10, 30));
+		popup.SetRect(800, 100, 300, 400);
 		
-		Add(dl.LeftPos(10, 300).TopPos(10, 30));
+		popup2.SetRect(500, 50, 300, 400);
+		popup2.SetFrame(BlackFrame());
+		popup2.Color(Magenta());
+		
+		popup3.SetFrame(OutsetFrame());
+		popup3.Color(Cyan());
+		
+	//	Add(popup);
+		
 		for(int i = 0; i < 100; i++)
 			dl.Add(i);
 //		Sizeable();
@@ -73,6 +93,10 @@ GUI_APP_MAIN
 	app.SetFocus();
 #if !EDITOR
 	app.popup.PopUp();
+	app.popup2.PopUp(&app.popup);
+	app.popup3.PopUp();
 #endif
+//	Ctrl::SetRenderingMode(MODE_NOAA);
+	Ctrl::SetRenderingMode(MODE_SUBPIXEL);
 	Ctrl::EventLoop();
 }

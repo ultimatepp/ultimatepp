@@ -19,13 +19,20 @@ Image          Ctrl::fbCursorBak;
 Rect           Ctrl::fbCaretRect;
 Image          Ctrl::fbCaretBak;
 int            Ctrl::fbCaretTm;
+int            Ctrl::renderingMode = MODE_ANTIALIASED;
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
 	desktop = &q;
 	desktop->SetRect(framebuffer.GetSize());
 	desktop->SetOpen(true);
-	desktop->SetTop();
+	desktop->NewTop();
+	invalid.Add(framebuffer.GetSize());
+}
+
+void Ctrl::SetRenderingMode(int mode)
+{
+	renderingMode = mode;
 	invalid.Add(framebuffer.GetSize());
 }
 
@@ -75,6 +82,9 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
+	int q = FindTopCtrl();
+	if(q > 0 && topctrl[q]->top)
+		return topctrl[q]->top->owner_window;
 	return NULL;
 }
 
@@ -156,17 +166,12 @@ Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
 	return ri;
 }
 
-bool Ctrl::ProcessEvents(bool *quit)
+void Ctrl::DoPaint(const Vector<Rect>& invalid)
 {
-	if(!ProcessEvent(quit))
-		return false;
-	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !FBEndSession()); // LoopCtrl-MF 071008
-	TimerProc(GetTickCount());
-	SweepMkImageCache();
 	if(invalid.GetCount() && desktop) {
 		RemoveCursor();
 		RemoveCaret();
-		SystemDraw painter(framebuffer, invalid);
+		SystemDraw painter(framebuffer, invalid, renderingMode);
 		painter.Begin();
 		for(int i = 0; i < invalid.GetCount(); i++)
 			painter.RectPath(invalid[i]);
@@ -191,6 +196,16 @@ bool Ctrl::ProcessEvents(bool *quit)
 	CursorSync();
 	for(int i = 0; i < invalid.GetCount(); i++)
 		FBUpdate(invalid[i]);
+}
+
+bool Ctrl::ProcessEvents(bool *quit)
+{
+	if(!ProcessEvent(quit))
+		return false;
+	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !FBEndSession());
+	TimerProc(GetTickCount());
+	SweepMkImageCache();
+	DoPaint(invalid);
 	invalid.Clear();
 	return false;
 }
@@ -239,13 +254,6 @@ void Ctrl::GuiSleep0(int ms)
 	int level = LeaveGMutexAll();
 	FBSleep(ms);
 	EnterGMutex(level);
-}
-
-Rect Ctrl::GetWndUpdateRect() const
-{
-	GuiLock __;
-	Rect r;
-	return Rect(0, 0, 1000, 600);
 }
 
 Rect Ctrl::GetWndScreenRect() const
@@ -328,6 +336,9 @@ int Ctrl::GetKbdSpeed()
 
 void Ctrl::WndDestroy0()
 {
+	for(int i = 0; i < topctrl.GetCount(); i++)
+		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
+			topctrl[i]->WndDestroy0();
 	int q = FindTopCtrl();
 	if(q >= 0) {
 		AddInvalid(GetRect());
@@ -340,26 +351,41 @@ void Ctrl::WndDestroy0()
 	isopen = false;
 }
 
-void Ctrl::SetWndForeground0()
+void Ctrl::PutForeground()
 {
-	GuiLock __;
 	int q = FindTopCtrl();
 	if(q >= 0) {
 		AddInvalid(GetRect());
 		topctrl.Remove(q);
 		topctrl.Add(this);
 	}
+	for(int i = 0; i < topctrl.GetCount(); i++)
+		if(topctrl[i]->top && topctrl[i]->top->owner_window == this)
+			topctrl[i]->PutForeground();
+}
+
+void Ctrl::SetWndForeground0()
+{
+	GuiLock __;
+	ASSERT(IsOpen());
+	if(top && top->owner_window && !IsWndForeground())
+		top->owner_window->PutForeground();
+	PutForeground();
 }
 
 bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
-	return false;
+	for(int i = 0; i < topctrl.GetCount(); i++)
+		if(topctrl[i]->top && topctrl[i]->top->owner_window == this && topctrl[i]->IsWndForeground())
+			return true;
+	return topctrl.Top() == this;
 }
 
 void Ctrl::WndEnable0(bool *b)
 {
 	GuiLock __;
+	*b = true;
 }
 
 void Ctrl::SetWndFocus0(bool *b)
@@ -415,6 +441,10 @@ void Ctrl::WndSetPos0(const Rect& rect)
 void Ctrl::WndUpdate0r(const Rect& r)
 {
 	GuiLock __;
+	Rect rr = r + GetRect().TopLeft();
+	bool dummy;
+	DoPaint(Intersect(invalid, rr, dummy));
+	invalid = Subtract(invalid, rr, dummy);
 }
 
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
@@ -425,11 +455,19 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	_DBG_ // Add owner management!!!!
 	ASSERT(!IsChild() && !IsOpen() && FindTopCtrl() < 0);
+	NewTop();
+	if(owner) {
+		Ctrl *owner_window = owner->GetTopCtrl(); _DBG_ // should perhaps be topwindow;
+		ASSERT(owner_window->IsOpen());
+		if(owner_window != desktop) {
+			owner_window->SetForeground();
+			top->owner_window = owner_window;
+		}
+	}
 	topctrl.Add(this);
 	popup = isopen = true;
-	SetTop();
+	RefreshLayoutDeep();
 	if(activate) SetFocus();
 	AddInvalid(GetRect());
 }
