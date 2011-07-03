@@ -617,7 +617,6 @@ private:
 	void WndEnable0(bool *b);
 	bool WndEnable(bool b);
 
-	Rect GetWndUpdateRect() const;
 	Rect GetWndScreenRect() const;
 	void WndScrollView0(const Rect& r, int dx, int dy);
 	void WndScrollView(const Rect& r, int dx, int dy);
