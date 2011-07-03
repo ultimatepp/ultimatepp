@@ -80,6 +80,8 @@ void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& image, cons
 
 void Painter::DrawLineStroke(int width, Color color)
 {
+	if(IsNull(width) || IsNull(color))
+		return;
 	Begin();
 	LineCap(LINECAP_ROUND);
 	switch(width) {
@@ -185,8 +187,7 @@ void Painter::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 	Sizef sz = r.GetSize();
 	Ellipse(r.left + sz.cx / 2, r.top + sz.cy / 2, sz.cx / 2, sz.cy / 2);
 	Fill(color);
-	if(!IsNull(pencolor))
-		DrawLineStroke(pen, pencolor);
+	DrawLineStroke(pen, pencolor);
 }
 
 void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)

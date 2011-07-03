@@ -918,16 +918,6 @@ void Ctrl::WndCreateCaret0(const Rect& cr)
 	::ShowCaret(hwnd);
 }
 
-Rect Ctrl::GetWndUpdateRect() const
-{
-	GuiLock __;
-	HWND hwnd = GetHWND();
-	if(!hwnd) return Null;
-	Rect r;
-	::GetUpdateRect(hwnd, r, FALSE);
-	return r;
-}
-
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;

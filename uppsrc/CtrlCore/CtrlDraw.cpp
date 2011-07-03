@@ -25,9 +25,6 @@ void Ctrl::RefreshFrame(const Rect& r) {
 		LLOG("WndInvalidateRect: " << r << ' ' << Name());
 		LTIMING("RefreshFrame InvalidateRect");
 		WndInvalidateRect(r);
-#ifdef GUI_WIN
-		LLOG("UpdateRect: " << GetWndUpdateRect() << ' ' << Name());
-#endif
 	}
 }
 
