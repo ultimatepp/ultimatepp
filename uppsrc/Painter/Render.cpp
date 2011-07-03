@@ -110,6 +110,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 		}
 		else {
 			solid_filler.c = Mul8(color, opacity);
+			solid_filler.invert = pathattr.invert;
 			rg = &solid_filler;
 		}
 	}

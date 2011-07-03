@@ -69,6 +69,13 @@ void BufferPainter::EvenOddOp(bool evenodd)
 		attr.evenodd = evenodd;
 }
 
+void BufferPainter::InvertOp(bool invert)
+{
+	pathattr.invert = invert;
+	if(IsNull(current))
+		attr.invert = invert;
+}
+
 void BufferPainter::DashOp(const Vector<double>& dash, double start)
 {
 	pathattr.dash <<= dash;
@@ -125,6 +132,7 @@ BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 	attr.dash_start = 0.0;
 	attr.opacity = 1.0;
 	attr.mask = false;
+	attr.invert = false;
 	pathattr = attr;
 	
 	gradientn = Null;

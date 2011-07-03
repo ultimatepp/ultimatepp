@@ -133,6 +133,7 @@ protected:
 	virtual void   MiterLimitOp(double l) = 0;
 	virtual void   EvenOddOp(bool evenodd) = 0;
 	virtual void   DashOp(const Vector<double>& dash, double start = 0) = 0;
+	virtual void   InvertOp(bool invert) = 0;
 
 	virtual void   TransformOp(const Xform2D& m) = 0;
 
@@ -292,6 +293,7 @@ public:
 	Painter& EvenOdd(bool evenodd = true);
 	Painter& Dash(const Vector<double>& dash, double start);
 	Painter& Dash(const char *dash, double start = 0);
+	Painter& Invert(bool b = true);
 
 	Painter& Transform(const Xform2D& m);
 	Painter& Translate(double x, double y);
@@ -393,6 +395,7 @@ protected:
 	virtual void   MiterLimitOp(double l);
 	virtual void   EvenOddOp(bool evenodd);
 	virtual void   DashOp(const Vector<double>& dash, double start);
+	virtual void   InvertOp(bool invert);
 
 	virtual void   TransformOp(const Xform2D& m);
 

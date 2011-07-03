@@ -37,9 +37,24 @@ void SolidFiller::Start(int minx, int maxx)
 	t += minx;
 }
 
+inline RGBA InvertRGBA(const RGBA& c)
+{
+	RGBA a;
+	a.r = ~c.r;
+	a.g = ~c.g;
+	a.b = ~c.b;
+	a.a = c.a;
+	return a;
+}
+
 void SolidFiller::Render(int val)
 {
-	AlphaBlendCover8(*t++, c, val);
+	if(invert) {
+		AlphaBlendCover8(*t, InvertRGBA(*t), val);
+		t++;
+	}
+	else
+		AlphaBlendCover8(*t++, c, val);
 }
 
 void SolidFiller::Render(int val, int len)
@@ -48,19 +63,34 @@ void SolidFiller::Render(int val, int len)
 		t += len;
 		return;
 	}
-	if(((val - 256) | (c.a - 255)) == 0) {
-		FillRGBA(t, c, len);
-		t += len;
+	if(invert) {
+		RGBA *e = t + len;
+		if(val == 256)
+			while(t < e) {
+				AlphaBlend(*t, InvertRGBA(*t));
+				t++;
+			}
+		else
+			while(t < e) {
+				AlphaBlend(*t, Mul8(InvertRGBA(*t), val));
+				t++;
+			}
 	}
 	else {
-		RGBA c1;
-		if(val != 256)
-			c1 = Mul8(c, val);
-		else
-			c1 = c;
-		RGBA *e = t + len;
-		while(t < e)
-			AlphaBlend(*t++, c1);
+		if(((val - 256) | (c.a - 255)) == 0) {
+			FillRGBA(t, c, len);
+			t += len;
+		}
+		else {
+			RGBA c1;
+			if(val != 256)
+				c1 = Mul8(c, val);
+			else
+				c1 = c;
+			RGBA *e = t + len;
+			while(t < e)
+				AlphaBlend(*t++, c1);
+		}
 	}
 }
 

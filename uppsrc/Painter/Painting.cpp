@@ -226,6 +226,12 @@ void PaintingPainter::EvenOddOp(bool evenodd)
 	Put(evenodd);
 }
 
+void PaintingPainter::InvertOp(bool invert)
+{
+	Put(PAINTING_INVERT);
+	Put(invert);
+}
+
 void PaintingPainter::DashOp(const Vector<double>& dash, double start)
 {
 	Put(PAINTING_DASH);

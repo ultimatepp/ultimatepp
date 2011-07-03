@@ -23,7 +23,7 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x) // DLOG(x)
 
 NAMESPACE_UPP
 
@@ -50,7 +50,7 @@ void Rasterizer::SetClip(const Rectf& rect)
 Rasterizer::Rasterizer(int cx, int cy, bool subpixel)
 {
 	mx = subpixel ? 3 * 256 : 256;
-	sz.cx = subpixel ? 3 * cx : cx;
+	sz.cx = /*subpixel ? 3 * cx : */cx;
 	sz.cy = cy;
 	cell.Alloc(sz.cy + 1);
 	cliprect = Sizef(sz);

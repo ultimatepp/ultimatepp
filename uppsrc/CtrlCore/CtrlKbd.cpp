@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)   // LOG(x)
+#define LLOG(x)   // DLOG(x)
 
 Ptr<Ctrl> Ctrl::focusCtrl;
 Ptr<Ctrl> Ctrl::focusCtrlWnd;
@@ -282,7 +282,7 @@ void Ctrl::ActivateWnd()
 void Ctrl::SetFocusWnd()
 {
 	GuiLock __;
-	// notification, don't set physical focus here
+	// notification, don't set host platform focus here
 	LLOG("Ctrl::SetFocusWnd");
 	if(focusCtrlWnd != this) {
 		LLOG("Ctrl::SetFocusWnd->ActivateWnd");
@@ -293,7 +293,7 @@ void Ctrl::SetFocusWnd()
 void Ctrl::KillFocusWnd()
 {
 	GuiLock __;
-	// notification, don't set physical focus here
+	// notification, don't set host platform focus here
 	LLOG("KillFocusWnd " << Name());
 	if(this == ~focusCtrlWnd) {
 		Ptr<Ctrl> pfocusCtrl = focusCtrl;

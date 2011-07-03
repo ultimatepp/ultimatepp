@@ -208,6 +208,9 @@ void Painter::Paint(const Painting& pic)
 		case PAINTING_EVENODD:
 			EvenOddOp(ss.Get());
 			break;
+		case PAINTING_INVERT:
+			InvertOp(ss.Get());
+			break;
 		case PAINTING_DASH:
 			{
 				n = ss.Get32();
