@@ -1,5 +1,6 @@
 //$ class Ctrl {
 	static Ptr<Ctrl>      desktop;
+	static Rect screenRect;
 	static Vector<Ctrl *> topctrl;
 
 	static Point fbCursorPos;
@@ -27,5 +28,6 @@ public:
 	
 	static void  SetDesktop(Ctrl& q);
 	static Ctrl *GetDesktop()                  { return desktop; }
+	static void  SetWindowSize(Size sz);
 	
 //$ };

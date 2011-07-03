@@ -1,4 +1,5 @@
 #include <CtrlCore/CtrlCore.h>
+#include <WinGl/Fonts.brc>
 
 #ifdef GUI_WINGL
 
@@ -98,9 +99,26 @@ OpenGLFont& Resources::GetFont(const char* fontName)
 	}
 }
 
+OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef, const byte* fontImage)
+{
+	int n = fonts.Find(fontName);
+	if(n >= 0)
+		return fonts[n];
+	else
+	{
+		OpenGLFont& font = fonts.Add(fontName);
+		font.LoadBrc(fontDef, fontImage);
+		return font;
+	}
+}
+
 OpenGLFont& Resources::StdFont(bool bold)
 {
 	return GetFont(bold ? "tahoma14b.fnt" : "tahoma14.fnt");
+	return GetFontBrc(
+	    bold ? "tahoma14b.fnt" : "tahoma14.fnt",
+		bold ? resTahoma14Fnt : resTahoma14BoldFnt,
+		bold ? resTahoma14Img : resTahoma14BoldImg);
 }
 
 dword SystemDraw::GetInfo() const

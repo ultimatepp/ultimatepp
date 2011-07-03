@@ -8,6 +8,7 @@ NAMESPACE_UPP
 
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
+Rect           Ctrl::screenRect;
 
 Point          Ctrl::fbCursorPos = Null;
 Image          Ctrl::fbCursorImage;
@@ -20,9 +21,16 @@ int            Ctrl::fbCaretTm;
 void Ctrl::SetDesktop(Ctrl& q)
 {
 	desktop = &q;
-//	desktop->SetRect(framebuffer.GetSize());
+	desktop->SetRect(screenRect);
 	desktop->SetOpen(true);
 	desktop->SetTop();
+}
+
+void Ctrl::SetWindowSize(Size sz)
+{
+	//if(desktop)
+	//	desktop->SetRect(sz);
+	screenRect = sz;
 }
 
 void Ctrl::InitGl()
@@ -142,7 +150,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 		//SyncLayout(1);
 		//InitInfoPanel();
 		Rect rect;
-		Size csz = rect.GetSize();
+		Size csz = desktop->GetSize();
 		Rect clip(csz);
 		SystemDraw draw(hDC, csz);
 		//draw.alpha = alpha;
@@ -209,14 +217,13 @@ void Ctrl::GuiSleep0(int ms)
 Rect Ctrl::GetWndUpdateRect() const
 {
 	GuiLock __;
-	Rect r;
-	return Rect(0, 0, 1000, 600);
+	return screenRect;
 }
 
 Rect Ctrl::GetWndScreenRect() const
 {
 	GuiLock __;
-	return GetRect();
+	return screenRect;
 }
 
 void Ctrl::WndShow0(bool b)
@@ -242,7 +249,7 @@ void Ctrl::SetAlpha(byte alpha)
 Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
-	return Rect();
+	return screenRect;
 }
 
 void Ctrl::GetWorkArea(Array<Rect>& rc)
@@ -252,29 +259,27 @@ void Ctrl::GetWorkArea(Array<Rect>& rc)
 
 Rect Ctrl::GetVirtualWorkArea()
 {
-	return Rect();
+	return screenRect;
 }
 
 Rect Ctrl::GetWorkArea(Point pt)
 {
-	return Rect();
+	return screenRect;
 }
 
 Rect Ctrl::GetVirtualScreenArea()
 {
-	GuiLock __;
-	return Rect();
+	return screenRect;
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
-	Rect r;
-	return Rect();
+	return screenRect;
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
 {
-	return Rect();
+	return screenRect;
 }
 
 int Ctrl::GetKbdDelay()

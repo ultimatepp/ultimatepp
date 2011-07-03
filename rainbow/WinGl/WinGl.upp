@@ -25,5 +25,7 @@ file
 	glew.h,
 	glxew.h,
 	wglew.h,
-	glew.c;
+	glew.c,
+	Resources readonly separator,
+	Fonts.brc;
 

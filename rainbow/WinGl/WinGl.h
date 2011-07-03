@@ -62,6 +62,7 @@ struct OpenGLFont : Moveable<OpenGLFont>
 	Vector<CharInfo> chars;
 	VectorMap<int, VectorMap<int, float>> kerns;
 	Vector<String> files;
+	Array<const byte> compiledFiles;
 	Vector<int64> pages;
 
 	OpenGLFont() : texturesUpdated(false)
@@ -70,7 +71,9 @@ struct OpenGLFont : Moveable<OpenGLFont>
 	~OpenGLFont()
 	{}
 
+	void LoadBrc(const byte* xml, const byte* image);
 	void Load(const String& fileName);
+	void Parse(const char* xml, bool parsePages);
 	void UpdateTextures();
 	void BuildVertices();
 
@@ -92,6 +95,7 @@ struct Resources
 	static int64 Bind(const Image& img, bool linear = false);
 	static bool Bind(int64 serialId, bool force = false);
 	static OpenGLFont& GetFont(const char* fontName);
+	static OpenGLFont& GetFontBrc(const char* fontName, const byte* fontDef, const byte* fontImage);
 	static OpenGLFont& StdFont(bool bold = false);
 };
 

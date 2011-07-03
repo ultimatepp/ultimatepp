@@ -159,6 +159,8 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_ERASEBKGND:
 		return 1L;
 	case WM_SIZE:
+		Ctrl::SetWindowSize(Size(LOWORD(lParam), HIWORD(lParam)));
+		return 0L;
 	case WM_MOVE:
 		return 0L;
 	case WM_HELP:
