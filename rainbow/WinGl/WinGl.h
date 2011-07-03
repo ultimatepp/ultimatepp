@@ -20,6 +20,7 @@ extern HDC    hDC;
 extern HGLRC  hRC;
 
 void ActivateGLContext();
+void DestroyGL();
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 #define GUI_FB

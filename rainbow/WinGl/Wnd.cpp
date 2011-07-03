@@ -28,9 +28,9 @@ void Ctrl::SetDesktop(Ctrl& q)
 
 void Ctrl::SetWindowSize(Size sz)
 {
-	//if(desktop)
-	//	desktop->SetRect(sz);
 	screenRect = sz;
+	if(desktop)
+		desktop->SetRect(screenRect);
 }
 
 void Ctrl::InitGl()
@@ -163,6 +163,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 		//ApplyTransform(TS_AFTER_PAINT);
 		SwapBuffers(hDC);
 		painting = false;
+		LOGF("Fps %.2f\n", GetFps());
 	}
 	CursorSync();
 	return false;
@@ -212,12 +213,6 @@ void Ctrl::GuiSleep0(int ms)
 	int level = LeaveGMutexAll();
 	GlSleep(ms);
 	EnterGMutex(level);
-}
-
-Rect Ctrl::GetWndUpdateRect() const
-{
-	GuiLock __;
-	return screenRect;
 }
 
 Rect Ctrl::GetWndScreenRect() const

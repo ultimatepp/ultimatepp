@@ -1,6 +1,8 @@
 #include <CtrlCore/CtrlCore.h>
 
 #ifdef GUI_WINGL
+extern void GuiMainFn_();
+
 
 NAMESPACE_UPP
 
@@ -131,11 +133,33 @@ int GlInit(HINSTANCE hInstance)
 	}
 	
 	//InitializeShaders();
-	//wglSwapIntervalEXT(0);
+	wglSwapIntervalEXT(0);
 	//SetTimeCallback(-10, THISBACK(Repaint), 1);
 	                       
 	SetTimer(glHWND, 1, 10, NULL);
 	return 1;
+}
+
+Vector<WString>& coreCmdLine__();
+Vector<WString> SplitCmdLine__(const char *cmd);
+
+int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
+{
+	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine));
+	UPP::AppInitEnvironment__();
+	int r = UPP::GlInit(hInstance);
+	if(r > 0) 
+	{
+		GuiMainFn_();
+		UPP::Ctrl::CloseTopCtrls();
+		UPP::UsrLog("---------- About to delete this log of WinGL...");
+		UPP::DeleteUsrLog();
+		UPP::DestroyGL();
+		return UPP::GetExitCode();
+	} else {
+		::MessageBox(NULL, Format("OpenGL window could not be initialized: %d", r), NULL, MB_ICONEXCLAMATION | MB_OK);
+		return r;
+	}
 }
 
 END_UPP_NAMESPACE
