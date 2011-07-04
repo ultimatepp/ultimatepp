@@ -254,6 +254,7 @@ void UWord::SerializeApp(Stream& s)
 
 GUI_APP_MAIN
 {
+	
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
 

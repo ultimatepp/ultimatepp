@@ -6,7 +6,7 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
-void TopWindow::TopWindowFrame::Paint(Draw& w)
+void TopWindow::Frame::Paint(Draw& w)
 {
 	Size sz = GetSize();
 	Rect m = ChMargins(FBImg::border());
@@ -15,12 +15,10 @@ void TopWindow::TopWindowFrame::Paint(Draw& w)
 	w.DrawText(m.left + 2, m.top + 2, title, StdFont(), White());
 }
 
-Rect TopWindow::TopWindowFrame::GetClient() const
+Rect TopWindow::Frame::GetClient() const
 {
 	Rect r = GetRect();
 	Rect m = ChMargins(FBImg::border());
-	DDUMP(r);
-	DDUMP(m);
 	r.left += m.left;
 	r.right -= m.right;
 	r.top += m.top;
@@ -29,7 +27,7 @@ Rect TopWindow::TopWindowFrame::GetClient() const
 	return r;
 }
 
-void TopWindow::TopWindowFrame::SetClient(Rect r)
+void TopWindow::Frame::SetClient(Rect r)
 {
 	Rect m = ChMargins(FBImg::border());
 	r.left -= m.left;
@@ -40,7 +38,7 @@ void TopWindow::TopWindowFrame::SetClient(Rect r)
 	SetRect(r);
 }
 
-Point TopWindow::TopWindowFrame::GetDragMode(Point p)
+Point TopWindow::Frame::GetDragMode(Point p)
 {
 	Size sz = GetSize();
 	Rect m = ChMargins(FBImg::border());
@@ -50,7 +48,15 @@ Point TopWindow::TopWindowFrame::GetDragMode(Point p)
 	return dir;
 }
 
-void TopWindow::TopWindowFrame::LeftDown(Point p, dword keyflags)
+void TopWindow::Frame::GripResize()
+{
+	SetCapture();
+	dir = Point(1, 1);
+	startrect = GetRect();
+	startpos = GetMousePos();
+}
+
+void TopWindow::Frame::LeftDown(Point p, dword keyflags)
 {
 	SetCapture();
 	dir = GetDragMode(p);
@@ -58,7 +64,7 @@ void TopWindow::TopWindowFrame::LeftDown(Point p, dword keyflags)
 	startpos = GetMousePos();
 }
 
-void TopWindow::TopWindowFrame::MouseMove(Point, dword)
+void TopWindow::Frame::MouseMove(Point, dword)
 {
 	if(!HasCapture())
 		return;
@@ -78,14 +84,14 @@ void TopWindow::TopWindowFrame::MouseMove(Point, dword)
 	WhenLayout();
 }
 
-void TopWindow::TopWindowFrame::Layout()
+void TopWindow::Frame::Layout()
 {
 	WhenLayout();
 }
 
-Image TopWindow::TopWindowFrame::CursorImage(Point p, dword)
+Image TopWindow::Frame::CursorImage(Point p, dword)
 {
-	p = GetDragMode(p);
+	p = HasCapture() ? dir : GetDragMode(p);
 	static Image (*im[9])() = {
 		Image::SizeTopLeft, Image::SizeLeft, Image::SizeBottomLeft,
 		Image::SizeTop, Image::Arrow, Image::SizeBottom,
@@ -118,8 +124,20 @@ void TopWindow::SyncRect()
 void TopWindow::Open(Ctrl *owner)
 {
 	GuiLock __;
+	Rect r = GetRect();
+	if(r.IsEmpty())
+		SetRect(GetDefaultWindowRect());
+	else
+	if(r.left == 0 && r.top == 0)
+		if(owner && center == 1)
+			SetRect(owner->GetRect().CenterRect(r.GetSize()));
+		else
+		if(center)
+			SetRect(GetWorkArea().CenterRect(r.GetSize()));
+	frame.SetClient(GetRect());
 	frame.PopUp(owner, false, true);
 	PopUp(&frame, false, true);
+	popup = false;
 	SetRect(frame.GetClient());
 }
 

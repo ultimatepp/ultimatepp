@@ -1,4 +1,4 @@
-#include <CtrlCore/CtrlCore.h>
+#include <CtrlLib/CtrlLib.h>
 
 #ifdef GUI_FB
 
@@ -41,6 +41,12 @@ void Ctrl::InitFB()
 	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
 	framebuffer.Create(1, 1);
+
+	ChStdSkin();
+
+	static StaticRect x;
+	x.Color(Cyan());
+	SetDesktop(x);
 }
 
 void Ctrl::SetFramebufferSize(Size sz)
@@ -83,8 +89,10 @@ Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
 	int q = FindTopCtrl();
-	if(q > 0 && topctrl[q]->top)
-		return topctrl[q]->top->owner_window;
+	if(q > 0 && topctrl[q]->top) {
+		Ctrl *x = topctrl[q]->top->owner_window;
+		return dynamic_cast<TopWindow::Frame *>(x) ? x->GetOwner() : x;
+	}
 	return NULL;
 }
 
@@ -491,7 +499,13 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 }
 
 Rect Ctrl::GetDefaultWindowRect() {
-	return Rect(0, 0, 100, 100);
+	GuiLock __;
+	int ii = 0;
+	Size sz = framebuffer.GetSize();
+	Rect rect = framebuffer.GetSize();
+	rect.Deflate(sz / 8);
+	rect.Offset(Point(sz) / 16 * (ii % 8));
+	return rect;
 }
 
 Vector<WString> SplitCmdLine__(const char *cmd)

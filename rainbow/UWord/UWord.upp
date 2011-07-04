@@ -5,14 +5,14 @@ uses
 	RichEdit,
 	PdfDraw,
 	plugin\jpg,
-	WinAlt,
-	Skeleton;
+	Skeleton,
+	WinFb;
 
 file
 	UWord.cpp,
 	UWord.iml;
 
 mainconfig
-	"" = "GUI WINALT",
+	"" = "GUI WINFB",
 	"" = "GUI SKELETON";
 
