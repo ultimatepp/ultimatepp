@@ -99,9 +99,6 @@ ImageDraw::ImageDraw(int cx, int cy)
 
 #define IMAGECLASS FBImg
 #define IMAGEFILE <Framebuffer/FB.iml>
-#include <Draw/iml_header.h>
-#define IMAGECLASS FBImg
-#define IMAGEFILE <Framebuffer/FB.iml>
 #include <Draw/iml_source.h>
 
 Image Image::Arrow() { return FBImg::arrow(); }

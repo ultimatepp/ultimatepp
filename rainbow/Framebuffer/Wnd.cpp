@@ -136,11 +136,22 @@ void Ctrl::AddInvalid(const Rect& rect)
 	AddRefreshRect(invalid, rect);
 }
 
+void Ctrl::SyncTopWindows()
+{
+	for(int i = 0; i < topctrl.GetCount(); i++) {
+		TopWindow *w = dynamic_cast<TopWindow *>(topctrl[i]);
+		if(w)
+			w->SyncRect();
+	}
+}
+
 bool Ctrl::ProcessEvent(bool *quit)
 {
 	ASSERT(IsMainThread());
-	if(DoCall())
+	if(DoCall()) {
+		SyncTopWindows();
 		return false;
+	}
 	if(FBEndSession()) {
 		if(quit) *quit = true;
 		return false;
@@ -148,6 +159,7 @@ bool Ctrl::ProcessEvent(bool *quit)
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	if(FBProcessEvent(quit)) {
+		SyncTopWindows();
 		DefferedFocusSync();
 		SyncCaret();
 		return true;
@@ -349,6 +361,9 @@ void Ctrl::WndDestroy0()
 		top = NULL;
 	}
 	isopen = false;
+	TopWindow *win = dynamic_cast<TopWindow *>(this);
+	if(win)
+		win->DestroyFrame();
 }
 
 void Ctrl::PutForeground()
@@ -433,6 +448,9 @@ void Ctrl::WndInvalidateRect0(const Rect& r)
 void Ctrl::WndSetPos0(const Rect& rect)
 {
 	GuiLock __;
+	TopWindow *w = dynamic_cast<TopWindow *>(this);
+	if(w)
+		w->SyncFrameRect(rect);
 	invalid.Add(GetRect());
 	SetWndRect(rect);
 	invalid.Add(rect);
@@ -468,7 +486,7 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 	topctrl.Add(this);
 	popup = isopen = true;
 	RefreshLayoutDeep();
-	if(activate) SetFocus();
+	if(activate) SetFocusWnd();
 	AddInvalid(GetRect());
 }
 

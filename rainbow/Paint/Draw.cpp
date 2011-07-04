@@ -9,7 +9,8 @@ struct App : public Ctrl {
 	DropList dl;
 	
 	StaticRect popup;
-	StaticRect popup2, popup3;
+	StaticRect popup2;
+	TopWindow  win;
 	
 	void Paint(Draw& w)
 	{
@@ -38,8 +39,8 @@ struct App : public Ctrl {
 
 	void RightDown(Point p, dword)
 	{
-		popup3.SetRect(p.x, p.y, 100, 100);
-		popup3.SetForeground();
+		win.SetRect(p.x, p.y, 300, 100);
+		win.SetForeground();
 	}
 	
 	void InitArray(ArrayCtrl& a)
@@ -68,8 +69,7 @@ struct App : public Ctrl {
 		popup2.SetFrame(BlackFrame());
 		popup2.Color(Magenta());
 		
-		popup3.SetFrame(OutsetFrame());
-		popup3.Color(Cyan());
+		win.Title("Title of the window !");
 		
 	//	Add(popup);
 		
@@ -94,7 +94,7 @@ GUI_APP_MAIN
 #if !EDITOR
 	app.popup.PopUp();
 	app.popup2.PopUp(&app.popup);
-	app.popup3.PopUp();
+	app.win.Open();
 #endif
 //	Ctrl::SetRenderingMode(MODE_NOAA);
 //	Ctrl::SetRenderingMode(MODE_SUBPIXEL);
