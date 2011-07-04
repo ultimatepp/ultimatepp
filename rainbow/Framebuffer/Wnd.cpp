@@ -227,7 +227,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	SweepMkImageCache();
 	DoPaint(invalid);
 	invalid.Clear();
-	return false;
+	return true;
 }
 
 void Ctrl::EventLoop0(Ctrl *ctrl)
@@ -246,7 +246,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	bool quit = false;
 	ProcessEvents(&quit);
-	while(!FBEndSession() && !quit && ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount())
+	while(!FBEndSession() && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();

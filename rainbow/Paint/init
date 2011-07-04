@@ -6,4 +6,5 @@
 #include "WinGl/init"
 #include "WinFb/init"
 #include "LinuxFb/init"
+#include "SDLFb/init"
 #endif

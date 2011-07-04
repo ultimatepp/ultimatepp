@@ -1,12 +1,10 @@
-#ifndef _LinuxFb_LinuxFb_h
-#define _LinuxFb_LinuxFb_h
+#ifndef _LinuxFb_LinuxFb_h_
+#define _LinuxFb_LinuxFb_h_
 
-#include <CtrlCore/CtrlCore.h>
+#include <Framebuffer/Framebuffer.h>
 
-NAMESPACE_UPP
-
-
-END_UPP_NAMESPACE
+#include <CtrlCore/stdids.h>
+#include "vkcodes.h" //FIXME
 
 #endif
 

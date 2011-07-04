@@ -9,11 +9,14 @@ uses(WINFB) WinFb;
 
 uses(LINUXFB) LinuxFb;
 
+uses(SDLFB) SDLFb;
+
 file
 	Draw.cpp;
 
 mainconfig
 	"" = "GUI WINFB",
 	"" = "GUI LINUXFB",
-	"" = "GUI WINGL";
+	"" = "GUI WINGL",
+	"" = "GUI SDLFB";
 

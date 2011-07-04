@@ -136,9 +136,4 @@ public:
 
 END_UPP_NAMESPACE
 
-#ifndef PLATFORM_WIN32
-#include <CtrlCore/stdids.h>
-#include "vkcodes.h" //FIXME
-#endif
-
 #define GUIPLATFORM_INCLUDE_AFTER <Framebuffer/After.h>
