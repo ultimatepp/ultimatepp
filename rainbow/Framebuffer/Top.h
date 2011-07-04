@@ -1,6 +1,6 @@
 //$ class TopWindow {
 private:
-	class TopWindowFrame : public Ctrl {
+	class Frame : public Ctrl {
 	public:
 		virtual void  Layout();
 		virtual void  Paint(Draw& w);
@@ -21,15 +21,19 @@ private:
 		void SetTitle(const String& s)           { title = s; Refresh(); }
 		Rect GetClient() const;
 		void SetClient(Rect r);
+		void GripResize();
 		
 		Callback WhenLayout;
 	};
 
-	TopWindowFrame frame;
+	Frame frame;
 	
 	void SyncRect();
 	void SyncFrameRect(const Rect& r)            { frame.SetClient(r); }
 	void DestroyFrame()                          { if(frame.IsOpen()) frame.Close(); }
 	
 	friend class Ctrl;
+
+public:
+	void GripResize()                            { frame.GripResize(); }
 //$ };

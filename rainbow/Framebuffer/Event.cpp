@@ -26,7 +26,7 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 		Ptr<Ctrl> t = topctrl[i];
 		Rect rr = t->GetRect();
 		if(rr.Contains(p)) {
-			if(a == DOWN) {
+			if(t && a == DOWN && !dynamic_cast<TopWindow::Frame *>(~t)) {
 				t->SetFocusWnd();
 				t->SetForeground();
 			}

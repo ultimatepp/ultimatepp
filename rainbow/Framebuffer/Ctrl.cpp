@@ -52,6 +52,7 @@ bool GuiPlatformHasSizeGrip()
 
 void GuiPlatformGripResize(TopWindow *q)
 {
+	q->GripResize();
 }
 
 Color GuiPlatformGetScreenPixel(int x, int y)

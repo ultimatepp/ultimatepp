@@ -1,3 +1,6 @@
+uses
+	Framebuffer;
+
 file
 	WinFb.h,
 	Local.h,
