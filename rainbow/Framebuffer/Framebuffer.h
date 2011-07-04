@@ -4,6 +4,10 @@
 
 NAMESPACE_UPP
 
+#define IMAGECLASS FBImg
+#define IMAGEFILE <Framebuffer/FB.iml>
+#include <Draw/iml_header.h>
+
 class SystemDraw : public BufferPainter {
 public:
 	virtual void BeginOp();

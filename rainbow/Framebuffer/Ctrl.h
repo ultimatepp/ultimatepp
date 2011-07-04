@@ -27,6 +27,7 @@ private:
 	int FindTopCtrl() const;
 	static Rect GetClipBound(const Vector<Rect>& inv, const Rect& r);
 	static void DoPaint(const Vector<Rect>& invalid);
+	static void SyncTopWindows();
 	
 	void NewTop()                       { top = new Top; top->owner_window = NULL; }
 	void PutForeground();
