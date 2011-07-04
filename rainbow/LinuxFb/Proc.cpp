@@ -1,4 +1,4 @@
-#include "LinuxFb.h"
+#include "LinuxFbLocal.h"
 
 #include <unistd.h>
 #include <stdio.h>
@@ -16,6 +16,7 @@ NAMESPACE_UPP
 	struct fb_fix_screeninfo finfo;
 	long int screensize = 0;
 	char *fbp = 0;
+	bool fbEndSession = false;
 
 //FIXME get input events
 bool GetShift()       { return false; }//!!(GetKeyState(VK_SHIFT) & 0x8000); }
@@ -29,7 +30,7 @@ bool GetMouseMiddle() { return false; }//!!(GetKeyState(VK_MBUTTON) & 0x8000); }
 
 bool FBEndSession()
 {
-	return false;//fbEndSession;
+	return fbEndSession;
 }
 
 bool FBIsWaitingEvent()
@@ -60,48 +61,11 @@ void FBSleep(int ms)
 //	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
 }
 
-void FBUpdate(const Vector<Rect>& inv)
-{
-//	if(fbHWND)
-//		for(int i = 0; i < inv.GetCount(); i++)
-//			::InvalidateRect(fbHWND, inv[i], false);
-
-	//FIXME direct paint
-	//here currently just copy over
-/*
-	int x = 0, y = 0;
-	long int location = 0;
-	x = 100; y = 100;       // Where we are going to put the pixel
-
-	// Figure out where in memory to put the pixel
-	for (y = 100; y < 300; y++)
-		for (x = 100; x < 300; x++) {
-
-			location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-					(y+vinfo.yoffset) * finfo.line_length;
-
-			if (vinfo.bits_per_pixel == 32) {
-				*(fbp + location) = 100;        // Some blue
-				*(fbp + location + 1) = 15+(x-100)/2;     // A little green
-				*(fbp + location + 2) = 200-(y-100)/5;    // A lot of red
-				*(fbp + location + 3) = 0;      // No transparency
-			} else  { //assume 16bpp
-				int b = 10;
-				int g = (x-100)/6;     // A little green
-				int r = 31-(y-100)/16;    // A lot of red
-				unsigned short int t = r<<11 | g << 5 | b;
-				*((unsigned short int*)(fbp + location)) = t;
-			}
-
-		}
-*/
-	memcpy(fbp, (const char*)~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
-}
-
 void FBUpdate(const Rect& inv)
 {
 //	if(fbHWND)
 //		::InvalidateRect(fbHWND, inv, false);
+	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
 	memcpy(fbp, (const char*)~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
 }
 
@@ -143,13 +107,13 @@ void FBInit(const String& fbdevice)
 	}
 	RLOG("The framebuffer device was mapped to memory successfully.\n");
 	
-	//FIXME
-	/*
+	Ctrl::SetFramebufferSize(Size(vinfo.xres, vinfo.yres));
+}
+
+void FBDeInit();
+{
 	munmap(fbp, screensize);
 	close(fbfd);
-	*/
-	
-	framebuffer.Create(vinfo.xres, vinfo.yres);
 }
 
 END_UPP_NAMESPACE

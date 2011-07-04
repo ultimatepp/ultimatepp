@@ -19,7 +19,7 @@ Image MakeDragImage(const Image& arrow, Image sample);
 
 Image MakeDragImage(const Image& arrow, const Image& arrow98, Image sample)
 {
-#if PLATFORM_WIN32
+#ifdef PLATFORM_WIN32
 	if(IsWin2K())
 		return MakeDragImage(arrow, sample);
 	else

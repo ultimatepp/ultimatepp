@@ -4,9 +4,15 @@ uses
 	CtrlLib,
 	RichEdit,
 	PdfDraw,
-	plugin\jpg,
-	Skeleton,
-	WinFb;
+	plugin\jpg;
+
+uses(WINFB) Framebuffer;
+
+uses(SKELETON) Skeleton;
+
+uses(WINFB) WinFb;
+
+uses(WINALT) WinAlt;
 
 file
 	UWord.cpp,
@@ -14,5 +20,6 @@ file
 
 mainconfig
 	"" = "GUI WINFB",
+	"" = "GUI WINALT",
 	"" = "GUI SKELETON";
 

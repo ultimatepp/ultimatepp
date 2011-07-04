@@ -3,7 +3,7 @@
 NAMESPACE_UPP
 
 HWND fbHWND;
-bool fbEndSession;
+bool fbEndSession = false;
 
 bool FBEndSession()
 {

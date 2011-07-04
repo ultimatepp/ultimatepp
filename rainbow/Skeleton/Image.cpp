@@ -59,6 +59,15 @@ Image ImageDraw::GetStraight() const
 	return Image();
 }
 
+Draw& ImageDraw::Alpha()
+{
+	if(!has_alpha) {
+		alpha.DrawRect(size, GrayColor(0));
+		has_alpha = true;
+	}
+	return alpha;
+}
+
 ImageDraw::ImageDraw(Size sz)
 {
 }
