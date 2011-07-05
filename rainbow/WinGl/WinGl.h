@@ -62,7 +62,7 @@ struct OpenGLFont : Moveable<OpenGLFont>
 	};
 
 	Vector<CharInfo> chars;
-	VectorMap<int, VectorMap<int, float>> kerns;
+	VectorMap<int, VectorMap<int, float> > kerns;
 	Vector<String> files;
 	Array<const byte> compiledFiles;
 	Vector<int64> pages;
@@ -295,7 +295,9 @@ END_UPP_NAMESPACE
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <WinGl/Top.h>
 
 //#include <CtrlCore/stdids.h>
+#ifndef PLATFORM_WIN32
 #include "vkcodes.h" //FIXME
+#endif
 
 #define GUIPLATFORM_INCLUDE_AFTER <WinGl/After.h>
 

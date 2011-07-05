@@ -1,7 +1,7 @@
 uses
-	CtrlLib,
-	Painter,
-	WinGl;
+	CtrlLib;
+
+uses(WINGL) WinGl;
 
 file
 	main.cpp;

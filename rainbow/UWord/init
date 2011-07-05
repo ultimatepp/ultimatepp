@@ -4,9 +4,9 @@
 #include "RichEdit/init"
 #include "PdfDraw/init"
 #include "plugin\jpg/init"
-#include "Framebuffer/init"
 #include "Skeleton/init"
 #include "WinFb/init"
 #include "WinAlt/init"
 #include "SDLFb/init"
+#include "WinGl/init"
 #endif

@@ -1,3 +1,6 @@
+uses
+	Framebuffer;
+
 library(MSC) "SDL SDLmain";
 
 library(GCC WIN32 !SHARED) "SDL.dll SDLmain mingw32";

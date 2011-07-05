@@ -1,3 +1,6 @@
+uses
+	Framebuffer;
+
 file
 	LinuxFb.h,
 	LinuxFbLocal.h,

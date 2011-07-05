@@ -1,7 +1,8 @@
 description "Generic framebuffer GUI rainbow\377";
 
 uses
-	Painter;
+	Painter,
+	CtrlLib;
 
 file
 	Framebuffer.h,
