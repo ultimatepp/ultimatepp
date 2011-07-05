@@ -1001,7 +1001,7 @@ public:
 
 	Ctrl&   IgnoreMouse(bool b = true)                   { ignoremouse = b; return *this; }
 	Ctrl&   NoIgnoreMouse()                              { return IgnoreMouse(false); }
-	bool    HasMouse() const;
+	bool    IsIgnoreMouse() const                        { return ignoremouse; }
 	bool    HasMouseDeep() const;
 	bool    HasMouseInFrame(const Rect& r) const;
 	bool    HasMouseIn(const Rect& r) const;
