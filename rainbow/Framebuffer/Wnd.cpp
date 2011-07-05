@@ -1,4 +1,4 @@
-#include <CtrlLib/CtrlLib.h>
+#include "Fb.h"
 
 #ifdef GUI_FB
 
@@ -20,6 +20,7 @@ Rect           Ctrl::fbCaretRect;
 Image          Ctrl::fbCaretBak;
 int            Ctrl::fbCaretTm;
 int            Ctrl::renderingMode = MODE_ANTIALIASED;
+bool           Ctrl::fbEndSession;
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
@@ -49,12 +50,22 @@ void Ctrl::InitFB()
 	SetDesktop(x);
 }
 
+void Ctrl::EndSession()
+{
+	fbEndSession = true;
+}
+
+void Ctrl::ExitFB()
+{
+}
+
 void Ctrl::SetFramebufferSize(Size sz)
 {
 	framebuffer.Create(sz);
 	if(desktop)
 		desktop->SetRect(sz);
 	invalid.Add(sz);
+	SyncTopWindows();
 }
 
 int Ctrl::FindTopCtrl() const
@@ -81,7 +92,8 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 	if(desktop)
 		ctrl.Add(desktop);
 	for(int i = 0; i < topctrl.GetCount(); i++)
-		ctrl.Add(topctrl[i]);
+		if(!dynamic_cast<TopWindowFrame *>(topctrl[i]))
+			ctrl.Add(topctrl[i]);
 	return ctrl;
 }
 
@@ -91,7 +103,7 @@ Ctrl *Ctrl::GetOwner()
 	int q = FindTopCtrl();
 	if(q > 0 && topctrl[q]->top) {
 		Ctrl *x = topctrl[q]->top->owner_window;
-		return dynamic_cast<TopWindow::Frame *>(x) ? x->GetOwner() : x;
+		return dynamic_cast<TopWindowFrame *>(x) ? x->GetOwner() : x;
 	}
 	return NULL;
 }

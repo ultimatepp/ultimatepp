@@ -18,6 +18,8 @@ private:
 	static int   fbCaretTm;
 	
 	static int   renderingMode;
+	
+	static bool  fbEndSession;
 
 	static Image GetBak(Rect& tr);
 	static void RemoveCursor();
@@ -31,8 +33,10 @@ private:
 	
 	void NewTop()                       { top = new Top; top->owner_window = NULL; }
 	void PutForeground();
+	static void MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta);
 
 	friend struct PaintProxy__;
+	friend class TopWindowFrame;
 
 public:
 	static void DoMouseFB(int event, Point p, int zdelta = 0);
@@ -41,6 +45,8 @@ public:
 	void  SetOpen(bool b)               { isopen = b; }
 
 	static void InitFB();
+	static void ExitFB();
+	static void EndSession();
 
 	static void  SetDesktop(Ctrl& q);
 	static Ctrl *GetDesktop()                  { return desktop; }
