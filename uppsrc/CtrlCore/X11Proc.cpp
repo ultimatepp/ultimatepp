@@ -48,7 +48,7 @@ Point Ctrl::Xbuttonpos;
 
 dword Ctrl::KEYtoK(dword key)
 {
-	if(key != K_CTRL_KEY && key != K_SHIFT_KEY) {
+	if(key != K_CTRL_KEY && key != K_SHIFT_KEY && key != K_ALT_KEY) {
 		if(GetCtrl()) key |= K_CTRL;
 		if(GetAlt()) key |= K_ALT;
 		if(GetShift()) key |= K_SHIFT;
