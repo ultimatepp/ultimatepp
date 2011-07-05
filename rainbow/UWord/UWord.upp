@@ -6,13 +6,15 @@ uses
 	PdfDraw,
 	plugin\jpg;
 
-uses(WINFB) Framebuffer;
+uses(WINFB | SDLFB) Framebuffer;
 
 uses(SKELETON) Skeleton;
 
 uses(WINFB) WinFb;
 
 uses(WINALT) WinAlt;
+
+uses(SDLFB) SDLFb;
 
 file
 	UWord.cpp,
@@ -21,5 +23,6 @@ file
 mainconfig
 	"" = "GUI WINFB",
 	"" = "GUI WINALT",
-	"" = "GUI SKELETON";
+	"" = "GUI SKELETON",
+	"" = "GUI SDLFB";
 

@@ -110,7 +110,7 @@ void FBInit(const String& fbdevice)
 	Ctrl::SetFramebufferSize(Size(vinfo.xres, vinfo.yres));
 }
 
-void FBDeInit();
+void FBDeInit()
 {
 	munmap(fbp, screensize);
 	close(fbfd);
