@@ -1,5 +1,4 @@
-#include <CtrlCore/CtrlCore.h>
-#include <plugin/bmp/bmp.h>
+#include "Fb.h"
 
 #ifdef GUI_FB
 

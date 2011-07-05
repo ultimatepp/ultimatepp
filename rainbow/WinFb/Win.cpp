@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#define LLOG(x)
+
 HWND fbHWND;
 bool fbEndSession = false;
 
@@ -82,7 +84,7 @@ void fbUpdate(HDC hdc, const Rect& r)
 
 void FBUpdate(const Rect& r)
 {
-	DLOG("FBUpdate " << r);
+	LLOG("FBUpdate " << r);
 	if(fbHWND) {
 		HDC hdc = GetDC(fbHWND);
 		fbUpdate(hdc, r);
@@ -93,16 +95,6 @@ void FBUpdate(const Rect& r)
 	#endif
 		ReleaseDC(fbHWND, hdc);
 	}
-//		::InvalidateRect(fbHWND, Rect(0, 0, 10000, 10000), false);
-//		::InvalidateRect(fbHWND, inv, false);
 }
-
-/*
-void FBSync()
-{
-	if(fbHWND)
-		::UpdateWindow(fbHWND);
-}
-*/
 
 END_UPP_NAMESPACE

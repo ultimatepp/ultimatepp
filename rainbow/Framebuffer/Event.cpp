@@ -1,4 +1,4 @@
-#include <CtrlCore/CtrlCore.h>
+#include "Fb.h"
 
 NAMESPACE_UPP
 
@@ -8,6 +8,19 @@ static Point fbmousepos;
 
 Point GetMousePos() {
 	return fbmousepos;
+}
+
+void Ctrl::MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta)
+{
+	Rect rr = t->GetRect();
+	if((event & Ctrl::ACTION) == DOWN && !dynamic_cast<TopWindowFrame *>(~t)) {
+		t->SetFocusWnd();
+		if(t) t->SetForeground();
+	}
+	if(t)
+		t->DispatchMouse(event, p - rr.TopLeft(), zdelta);
+	if(t)
+		t->PostInput();
 }
 
 void Ctrl::DoMouseFB(int event, Point p, int zdelta)
@@ -21,21 +34,18 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 	else
 	if(a == Ctrl::DOWN && ignoreclick)
 		return;
-	LLOG("Mouse event: " << event << " position " << p << " zdelta " << zdelta);
-	for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
-		Ptr<Ctrl> t = topctrl[i];
-		Rect rr = t->GetRect();
-		if(rr.Contains(p)) {
-			if(t && a == DOWN && !dynamic_cast<TopWindow::Frame *>(~t)) {
-				t->SetFocusWnd();
-				t->SetForeground();
+	LLOG("Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
+	if(captureCtrl)
+		MouseEventFB(captureCtrl->GetTopCtrl(), event, p, zdelta);
+	else
+		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+			Ptr<Ctrl> t = topctrl[i];
+			Rect rr = t->GetRect();
+			if(rr.Contains(p)) {
+				MouseEventFB(t, event, p, zdelta);
+				return;
 			}
-			t->DispatchMouse(event, p - rr.TopLeft(), zdelta);
-			if(t)
-				t->PostInput();
-			return;
 		}
-	}
 	Ctrl *desktop = GetDesktop();
 	if(desktop) {
 		desktop->DispatchMouse(event, p, zdelta);

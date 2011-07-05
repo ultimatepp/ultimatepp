@@ -6,6 +6,7 @@ uses
 file
 	Framebuffer.h,
 	After.h,
+	Fb.h,
 	Draw.cpp,
 	Image.cpp,
 	Util.cpp,
@@ -15,6 +16,7 @@ file
 	Wnd.cpp,
 	Event.cpp,
 	Top.h,
+	TopFrame.cpp,
 	Top.cpp,
 	Clip.cpp,
 	DnD.cpp,
