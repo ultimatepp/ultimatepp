@@ -108,7 +108,7 @@ public:
 	TopWindow&  CenterOwner()                       { center = 1; return *this; }
 	TopWindow&  CenterScreen()                      { center = 2; return *this; }
 
-	void        SetMinSize(Size sz)                 { minsize = sz; }
+	void        SetMinSize(Size sz);
 
 	void       Open(Ctrl *owner);
 	void       Open();
