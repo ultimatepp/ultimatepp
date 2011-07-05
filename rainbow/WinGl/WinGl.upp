@@ -1,3 +1,6 @@
+uses
+	Painter;
+
 options
 	"-D_WIN32 -DGLEW_STATIC";
 

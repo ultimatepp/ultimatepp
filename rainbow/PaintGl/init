@@ -1,6 +1,5 @@
 #ifndef _PaintGl_icpp_init_stub
 #define _PaintGl_icpp_init_stub
 #include "CtrlLib/init"
-#include "Painter/init"
 #include "WinGl/init"
 #endif

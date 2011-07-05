@@ -2,7 +2,6 @@ description "Paint method and Draw example\377";
 
 uses
 	CtrlLib,
-	Framebuffer,
 	RichEdit;
 
 uses(WINFB) WinFb;
@@ -10,6 +9,8 @@ uses(WINFB) WinFb;
 uses(LINUXFB) LinuxFb;
 
 uses(SDLFB) SDLFb;
+
+uses(WINGL) WinGl;
 
 file
 	Draw.cpp;
