@@ -352,6 +352,12 @@ TopWindow& TopWindow::Title(const char *s)
 	return Title(WString(s));
 }
 
+void TopWindow::SetMinSize(Size sz)
+{
+	minsize = sz;
+	SyncSizeHints();
+}
+
 TopWindow& TopWindow::Sizeable(bool b)
 {
 	sizeable = b;

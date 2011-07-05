@@ -854,7 +854,7 @@ void Ctrl::EventLoop0(Ctrl *ctrl)
 
 	bool quit = false;
 	ProcessEvents(&quit);
-	while(!EndSession() && !quit && ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount())
+	while(!EndSession() && !quit && (ctrl ? ctrl->IsOpen() && ctrl->InLoop() : GetTopCtrls().GetCount()))
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
