@@ -168,6 +168,7 @@
 
 #include <algorithm>
 #include <string>
+#include <complex>
 
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC
@@ -240,6 +241,7 @@ NAMESPACE_UPP
 #include "Value.h"
 #include "Gtypes.h"
 #include "Color.h"
+#include "Complex.h"
 
 #include "Uuid.h"
 #include "Ptr.h"

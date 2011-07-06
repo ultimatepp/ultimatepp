@@ -152,6 +152,7 @@ static void sRegisterStd()
 		RichValue<WString>::Register();
 		RichValue<Date>::Register();
 		RichValue<Time>::Register();
+		RichValue<Complex>::Register();
 		Value::Register(VALUEARRAY_V, ValueArrayDataCreate);
 		Value::Register(VALUEMAP_V, ValueMapDataCreate);
 	};

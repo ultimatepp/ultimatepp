@@ -99,6 +99,7 @@ file
 	TimeDate.cpp optimize_speed,
 	Value.h,
 	Value.cpp optimize_speed,
+	Complex.h,
 	Format.h,
 	Format.cpp optimize_speed,
 	Convert.h,
