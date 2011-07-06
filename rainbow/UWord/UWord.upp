@@ -25,5 +25,6 @@ mainconfig
 	"" = "GUI WINALT",
 	"" = "GUI SKELETON",
 	"" = "GUI SDLFB",
-	"" = "GUI WINGL";
+	"" = "GUI WINGL",
+	"" = "GUI";
 

@@ -19,5 +19,6 @@ mainconfig
 	"" = "GUI WINFB",
 	"" = "GUI LINUXFB",
 	"" = "GUI WINGL",
-	"" = "GUI SDLFB";
+	"" = "GUI SDLFB",
+	"" = "GUI";
 

@@ -87,16 +87,24 @@ GUI_APP_MAIN
 	RichEditWithToolBar app;
 #else	
 	App app;
-#endif
-	ChStdSkin();
-	Ctrl::SetDesktop(app);
-	app.SetFocus();
-#if !EDITOR
 	app.popup.PopUp();
 	app.popup2.PopUp(&app.popup);
 	app.win.Open();
 #endif
+
+	ChStdSkin();
+
+#if defined(GUI_FB) || defined(GUI_WINGL)
+	Ctrl::SetDesktop(app);
+	app.SetFocus();
 //	Ctrl::SetRenderingMode(MODE_NOAA);
 //	Ctrl::SetRenderingMode(MODE_SUBPIXEL);
+#else
+	//make app a TopWindow, that EventLoop can handle
+	//not needed it app is a TopWindow itself
+	TopWindow top;
+	top.Add(app.SizePos());
+	top.Open();
+#endif
 	Ctrl::EventLoop();
 }
