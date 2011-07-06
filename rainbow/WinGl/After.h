@@ -19,7 +19,4 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 \
 void GuiMainFn_()
 
-void  SetDesktop(Ctrl& desktop);
-Ctrl *GetDesktop();
-
 #endif
