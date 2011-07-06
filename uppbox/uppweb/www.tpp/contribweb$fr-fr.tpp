@@ -11,8 +11,9 @@ plus complet et mieux traduit.]&]
 [s0; &]
 [s0; [*+117 Aide basique]&]
 [s0;2 &]
-[s0; [2 Si vous êtes nouveaux à U`+`+ et que vous ne savez pas utiliser 
-T`+`+, vous puovez quand`-même nous aider !]&]
+[s0; [2 Si vous êtes nouveau ici et que vous ne savez pas utiliser 
+][^topic`:`/`/ide`/app`/Topic`$en`-us^2 T`+`+][2 , vous pouvez quand`-même 
+nous aider !]&]
 [s0;2 &]
 [s0; [2 Postez vos traductions, corrections et patches ou proposez 
 de nouvelles pages dans le ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .U`+

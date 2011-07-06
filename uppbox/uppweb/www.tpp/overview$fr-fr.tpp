@@ -686,24 +686,28 @@ avec [C Value] et la liste d`'une [C DropList] est constituée de
 comme propriété de beaucoup d`'autres classes de composants.&]
 [s2; [/1 `[ end of current traduction `]]&]
 [s1; Callbacks&]
-[s2; While virtual methods provide a great way to organize the [/ input] 
-interface of GUI widgets (like mouse or keyboard input), each 
-GUI toolkit has to provide effective means for [/ output] interfaces 
-as well (if you do not know what output interface is: when a button 
-widget is pressed, the output interface is responsible for delivering 
-this information to the client code).&]
-[s2; Our solution to these needs is called a Callback. You can think 
-about Callbacks as a very generalized form of function pointers. 
-Each Callback represents some kind of action `- usually this 
-comprises calling a certain function or a certain object method 
-`- that can be invoked at any time.&]
-[s2; Callbacks are generic and can take some very interesting forms. 
-For example, a type of Callback does the simple task of calling 
-two other given Callbacks, providing a very simple tool for grouping. 
-There are Callbacks that take no argument, but call a function 
-or method with an argument when invoked `- this additional argument 
-is stored within Callback during its construction. To illustrate 
-this important feature, see the following code snippet:&]
+[s2; Tandis que les méthodes virtuelles sont un excellent moyen 
+d`'organiser les interfaces d`'[/ entrée] des composants graphiques 
+(comme la souris ou le clavier), chaque toolkit graphique doit 
+aussi fournir un moyen efficace pour gérer les interfaces de 
+[/ sortie] (si vous ne voyez pas ce qu`'est une interface de sortie 
+: lorsqu`'un bouton est pressé, l`'interface de sortie est responsable 
+de fournir cette information au code client).&]
+[s2; Une solution à ces besoins est appelée une Callback. Vous 
+pouvez vous représenter une Callback comme une forme très généralisée 
+de pointeur de fonction. Chaque Callback représente une sorte 
+d`'action `- souvent, cela comprend l`'appel d`'une function 
+ou d`'un méthode d`'objet spécifique `- qui peut être exécutée 
+à tout moment.&]
+[s2; Les Callbacks sont génériques et peuvent prendre des formes 
+très intéressantes. Par exemple, un type de Callback effectue 
+la simple tâche d`'appeler deux autre Callbacks données, en 
+fournissant un outil de regroupement très simple. Il existe 
+des Callbacks qui ne prennent pas d`'argument, mais appellent 
+une fonction ou méthode avec un argument lorsqu`'elles sont 
+appelées `- cet argument additionnel est stocké dans la Callback 
+lors de sa construction. Pour illustrer cette fonctionnalité 
+importante, regardez le code suivant :&]
 [s2; &]
 [s3;%- void MyDlg`::SetEditorValue(int x)&]
 [s3;%- `{&]
@@ -715,39 +719,45 @@ this important feature, see the following code snippet:&]
 [s3;%- -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
 [s3;%- -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
 [s2; &]
-[s2; In this snippet, we have two buttons and one integer input field. 
-Pressing the first or second button sets the input field to the 
-value 1 or 2 respectively.&]
-[s2; It is also very important that Callbacks are completely decoupled 
-from classes. While they can invoke specific methods of certain 
-object instances, there are no further requirements for the method 
-(beyond signature) or the class of the object.&]
-[s2; Just to make things clear for those familiar with boost libraries 
-`- yes, Callback classes are in fact very similar to boost`::function, 
-with interface polished a little bit more toward the needs of 
-Ultimate`+`+ framework (they are Moveable `- can be stored in 
-Vector flavor of containers).&]
-[s1; Ultimate`+`+ set of widgets&]
-[s2; While the standard set of U`+`+ widgets is less important to 
-us than the general principles, partly due to the fact that creating 
-new widget classes is often a trivial task in U`+`+, any description 
-of toolkit would be incomplete without it.&]
-[s2; So here follows an incomplete but representative list:&]
-[s2; [* Label], [* Button] and [* Option] are basic well known widgets.&]
-[s2; [* Switch] is something usually called `"a group of radio`-buttons`", 
-anyway in the U`+`+ this is a single widget (this way, reading 
-the Value of a switch is much more consistent).&]
+[s2; Dans cet extrait, nous avons deux boutons et un champ d`'entrée 
+d`'entiers. En pressant le premier ou le second bouton, on met 
+à jour le champ d`'entrée avec la valeur 1 ou 2 respectivement.&]
+[s2; Il est aussi très important que les Callbacks soient totalement 
+découplées des classes. Bien qu`'elles appellent des méthodes 
+spécifiques de certaines instances d`'objet, il n`'y a aucun 
+autre pré`-requis pour la méthode (en dehors de sa signature) 
+ou la classe de l`'objet.&]
+[s2; Pour rendre les choses claires à ceux qui sont familiers avec 
+les bibliothèques Boost `- oui, les classes Callback sont très 
+similaires à [C boost`::function], avec une interface légèrement 
+adaptée pour les besoins du framework U`+`+ ( elles sont [C Moveable] 
+`- peuvent être stockées dans des conteneurs de type [C Vector]).&]
+[s1; Le jeu de composants graphiques U`+`+&]
+[s2; Bien que le jeu de composants U`+`+ est à nos yeux moins important 
+que les principes généraux (partiellement dû au fait que créer 
+de nouvelles classes de composant est une tâche triviale avec 
+U`+`+), toute description du toolkit serait incomplète sans 
+lui.&]
+[s2; Voici donc une liste incomplète mais représentative :&]
+[s2; [* Label], [* Button] et [* Option] sont des composants basiques bien 
+connus.&]
+[s2; [* Switch] est souvent appelé `"un groupe de boutons`-radio`", 
+mais ici c`'est un composant unique (ainsi, lire la valeur (sous 
+forme de Value évidemment) d`'un Switch est beaucoup plus logique).&]
 [s2; [* EditField], [* EditInt], [* EditDouble], [* EditIntSpin], [* EditDate], 
-[* EditString] are basic input fields. Note that U`+`+ provides 
-distinct types of input fields for specific value types.&]
-[s2; [* LineEdit] and [* DocEdit] are two kinds of plain text editors. 
-[* LineEdit] works with lines while [* DocEdit] works with paragraphs.&]
-[s2; [* ScrollBar] and [* ScrollBars. ]While their names are self`-explaining 
-(ScrollBars is just pair a consisting of a vertical and horizontal 
-ScrollBar), it is worth noting that the U`+`+ ScrollBar also 
-provides all calculations for position of view area.&]
-[s2; [* Slider] is an `"analog`" input widget whose value is determined 
-by position of `"thumb`".&]
+[* EditString] sont des champs d`'entrée basiques. Notez que U`+`+ 
+fournit des types distincts de champs d`'entrée pour des types 
+de valeur spécifiques.&]
+[s2; [* LineEdit] et [* DocEdit] sont deux types d`'éditeur de texte 
+simple. [* LineEdit] fonctionne par ligne tandis que [* DocEdit] 
+fonctionne par paragraphe.&]
+[s2; [* ScrollBar] et [* ScrollBars.] Bien que leurs noms soient explicites 
+(ScrollBars est juste une paire consituée d`'une Scrollbar horizontale 
+et d`'une verticale), il est important de noter que la ScrollBar 
+U`+`+ fournit aussi tous les calculs pour la position de la zone 
+de vue associée.&]
+[s2; [* Slider] est un composant d`'entrée `"analogique`" dont la 
+valeur est déterminée par la position du curseur.&]
 [s2; [* HeaderCtrl] represents headers of various tables, namely ArrayCtrl&]
 [s2; [* ArrayCtrl] is perhaps the most complex and complicated widget 
 in Ultimate`+`+. It is basically a table widget used to operate 
