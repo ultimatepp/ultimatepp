@@ -116,8 +116,8 @@ void Ctrl::CursorSync()
 	Point p = GetMousePos() - fbCursorImage.GetHotSpot();
 	Rect cr = Null;
 	if(focusCtrl && (((GetTickCount() - fbCaretTm) / 500) & 1) == 0)
-		cr = RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
-		     + focusCtrl->GetScreenView().TopLeft();
+		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
+		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
 	if(fbCursorPos != p || cr != fbCaretRect) {
 		RemoveCursor();
 		RemoveCaret();
