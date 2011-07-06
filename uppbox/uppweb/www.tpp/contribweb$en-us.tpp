@@ -11,8 +11,8 @@ complete and translated.]&]
 [s0;%ES-ES &]
 [s0; [*+117 Basic help]&]
 [s0;2 &]
-[s0; [2 If you are new in U`+`+ and do not know how to use T`+`+ you 
-still can help.]&]
+[s0; [2 If you are new in U`+`+ and do not know how to use ][^topic`:`/`/ide`/app`/Topic`$en`-us^2 T
+`+`+][2  you still can help.]&]
 [s0;2 &]
 [s0; [2 Post your translations, fixes and patches or propose new pages 
 in U`+`+ ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 . 
