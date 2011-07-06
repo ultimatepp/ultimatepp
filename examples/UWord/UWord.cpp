@@ -103,10 +103,18 @@ void UWord::New()
 	new UWord;
 }
 
+bool IsRTF(const char *fn)
+{
+	return ToLower(GetFileExt(fn)) == ".rtf";
+}
+
 void UWord::Load(const String& name)
 {
 	lrufile().NewEntry(name);
-	editor.SetQTF(LoadFile(name));
+	if(IsRTF(name))
+		editor.Pick(ParseRTF(LoadFile(name)));
+	else
+		editor.SetQTF(LoadFile(name));
 	filename = name;
 	editor.ClearModify();
 	Title(filename);
@@ -149,13 +157,14 @@ void UWord::Save0()
 	lrufile().NewEntry(filename);
 	if(filename.IsEmpty())
 		SaveAs();
-	else
-		if(SaveFile(filename, editor.GetQTF())) {
+	else {
+		if(SaveFile(filename, IsRTF(filename) ? EncodeRTF(editor.Get()) : editor.GetQTF())) {
 			statusbar.Temporary("File " + filename + " was saved.");
 			ClearModify();
 		}
 		else
 			Exclamation("Error saving the file [* " + DeQtf(filename) + "]!");
+	}
 }
 
 void UWord::Save()
@@ -258,6 +267,7 @@ GUI_APP_MAIN
 	SetDefaultCharset(CHARSET_UTF8);
 
 	UWordFs().Type("QTF files", "*.qtf")
+	         .Type("RTF files", "*.rtf")
 	         .AllFilesType()
 	         .DefaultExt("qtf");
 	PdfFs().Type("PDF files", "*.pdf")
