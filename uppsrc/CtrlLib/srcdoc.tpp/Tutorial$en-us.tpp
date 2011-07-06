@@ -23,7 +23,7 @@ topic "GUI Tutorial";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2; GUI Tutorial&]
-[s3; 1.GUI application main function&]
+[s3;:Gui01: 1.GUI application main function&]
 [s5; To hide platform specific differences, U`+`+ GUI application 
 main function is defined using [* GUI`_APP`_MAIN] macro:&]
 [s5; &]
@@ -103,7 +103,7 @@ main function is defined using [* GUI`_APP`_MAIN] macro:&]
 ñĞ§‹ı”³Šò¡˜óº÷ØíÉ­¿ü¦®åî‹”èò·äÃáÓÿÅû†ÃÄÿ›˜ÿ
 &]
 [s5;= &]
-[s3; 2. Application window&]
+[s3;:Gui02: 2. Application window&]
 [s5; Application top`-level windows are of [* TopWindow] class. You 
 can run modal event loop for [* TopWindow] using the [* Run] or [* Execute] 
 methods. Both methods open the window if it is not yet open (you 
@@ -205,7 +205,7 @@ is also closed by destructor.&]
 ·¢Çô½İô–ºÕçíÿ–¿¯ÕĞïËÕÔËãÇÑ”×Û­¾—ü¶«Î¾Ö¥­İ¦ª»éë²•Óÿ¥ëŸ‹÷ÿó¶„€ˆÓãÿ€‘Õ«š
 &]
 [s5; &]
-[s3; 3. Modifying TopWindow properties&]
+[s3;:Gui03: 3. Modifying TopWindow properties&]
 [s5; You can modify properties and behaviour of [* TopWindow] using 
 `"modifier`" methods. Note that modifiers usually return `*this 
 as return value, which results in simplified syntax. You can 
@@ -337,7 +337,7 @@ window).&]
 »ûòÓ±¾ŸÑòûüâÜÿñÍŞÆş†ß‚…øÿá°Åõ
 &]
 [s5; &]
-[s3; 4. Painting the view area&]
+[s3;:Gui04: 4. Painting the view area&]
 [s5; In order to display something inside [* TopWindow] view area, 
 you have to create derived class and override [* Paint] method:&]
 [s5; &]
@@ -463,7 +463,7 @@ you have to create derived class and override [* Paint] method:&]
 ÛñÿƒóÍ¬¶
 &]
 [s5;= &]
-[s3; 5. Reacting to input events&]
+[s3;:Gui05: 5. Reacting to input events&]
 [s5; In order to react to user actions like mouse clicks or keyboard 
 events, you have to override appropriate virtual methods. To 
 issue the repainting of view area, use the [* Refresh] method.&]
@@ -629,7 +629,7 @@ issue the repainting of view area, use the [* Refresh] method.&]
 ËË˜ÿÔÿÃ®íÀŸÚ‹úá†çõß¸îÙıÈÉˆ¡„¢–…ÿãâ˜´
 &]
 [s5; &]
-[s3; 6. Multiple main windows&]
+[s3;:Gui06: 6. Multiple main windows&]
 [s5; If you application uses multiple top`-level peer windows, you 
 cannot use the [* Run] method as it runs the modal loop for the 
 window. Instead, you have to allocate top`-level windows on the 
@@ -1006,7 +1006,7 @@ Arial(20));&]
 ÎÈâÏ›Ğ”«ø¿›ˆÿÈš¤Ò¹ÙåÁ˜‰‰Ä¢‘È¤’‰‰Ä¢‘È¤’‰‰Ä¢‘È¤’‰‰Ä¢‘È¤’¹‰Ä¢µÚÿŸ‡È™¨‰
 &]
 [s5; &]
-[s3; 7. Menu&]
+[s3;:Gui07: 7. Menu&]
 [s5; Content of menu in U`+`+ is represented by the function or method 
 adding required menu items to the [* Bar]. Items can contain [^topic`:`/`/Core`/src`/Callbacks`$en`-us^ C
 allbacks] to actions invoked by choosing the menu item or [^topic`:`/`/Core`/src`/Callbacks`$en`-us^ C
@@ -1256,7 +1256,7 @@ view area.&]
 ’ĞœŒıÏ¡Â¡¡¸Ÿíô ƒâèÀ‡ºĞ¨µü¿¹û€Ôú
 &]
 [s0;3 &]
-[s3; 8. Context menu&]
+[s3;:Gui08: 8. Context menu&]
 [s5; Context local menu (usually invoked by right mouse click) is 
 similar to the standard menu bar handling, just instead of adding 
 MenuBar to your application, you [/ execute] the callback to the 
@@ -1373,7 +1373,7 @@ menu:&]
 ƒ†ôı­ë¢±¡™ø‘ûÅú „¬ë¢™©µı‘ÈËŸÇÇÚˆ×â×‘ø®¤“Ÿ¦œ½ı¤½Ğõ·É”çö Â˜Áë€¦¡ÿ™ª–
 &]
 [s5;= &]
-[s3; 9. Context menu alternative and using CallbackArgTarget&]
+[s3;:Gui09: 9. Context menu alternative and using CallbackArgTarget&]
 [s5; It is also possible to create context menu by adding menu items 
 directly to MenuBar. Also, quite often the result of context 
 menu is some value `- in such case, [* CallbackArgTaget] can be 
@@ -1656,7 +1656,7 @@ the value of CallbackArgTarget remains Null:&]
 Š€°Öƒê€€ƒÚª‰“¦¢Ì˜°¹³ı¿…¸˜õ£
 &]
 [s0;3 &]
-[s3; 10. Adding images&]
+[s3;:Gui10: 10. Adding images&]
 [s5; To add some eye`-candy to the menu, you can add small raster 
 images. In U`+`+, images are represented by Image values. You 
 can use image designer, part of TheIDE, to design Image constants&]
@@ -2295,7 +2295,7 @@ sequence with [* #include <Draw/iml`_header.h>] to you header and
 ¹€‹®¸à‚‹®¸à‚‹®öã—ÿ‡àÖûÁ
 &]
 [s5;= &]
-[s3; 11. Toolbar&]
+[s3;:Gui11: 11. Toolbar&]
 [s5; Toolbars are in fact quite similar to menus `- they provide 
 set of operations with names and Images that can be invoked by 
 user. In U`+`+ you can take advantage of this similarity as toolbars 
@@ -2433,7 +2433,7 @@ text are added to toolbars only.&]
 ‹Ôí·ëãíãîŠı¤±è¿§ˆ«ÏşÆ¦”ÿŠÓóÿé–¨€“
 &]
 [s5;= &]
-[s3; 12. StatusBar and decorative Frames&]
+[s3;:Gui12: 12. StatusBar and decorative Frames&]
 [s5; To improve the visual aspect of the application, we will add 
 some decorative Frames `- those are frames that do not represent 
 any action, just draw some kind of border at given frame level. 
@@ -2593,7 +2593,8 @@ widgets concurrently.&]
 
 &]
 [s5; &]
-[s3; 13. Adding child Ctrls `- widgets, reacting to widget events&]
+[s3;:Gui13: 13. Adding child Ctrls `- widgets, reacting to widget 
+events&]
 [s5; If you need to use some predefined child Ctrl (widget), place 
 as variable somewhere, usually as member variable of your window 
 or dialog class and use [* Add] (or [* operator <<]) to put it to 
@@ -2802,7 +2803,7 @@ to `*this `- that should explain the line&]
 ‰âç«€À£ó‘Ø¼åÆñÂ×õÎ¬†€€ŠæÈÙ½é€ª€š¹ûúÓˆÀ€€´ÿõ¸à±€ƒ¸à€ƒœ¸à€Ã­¼½ü¿×à¼İ
 &]
 [s5; &]
-[s3; 14. More about logical coordinates&]
+[s3;:Gui14: 14. More about logical coordinates&]
 [s5; Logical coordinates can align one or both sides of widget to 
 the side of parent view at specified distance(s) in both vertical 
 and horizontal direction. If only one side is aligned, logical 
@@ -3109,7 +3110,7 @@ logical coordinate the specifies the center position.&]
 ëñÿ„’½İ
 &]
 [s5;= &]
-[s3; 15. Font`-zoomed logical coordinates&]
+[s3;:Gui15: 15. Font`-zoomed logical coordinates&]
 [s5; All distances in U`+`+ widgets are always in pixels. However, 
 to respond to platform setting of GUI font, there are `"font`-zoomed`" 
 logical coordinates. Such coordinates scale distances by the 
@@ -3311,7 +3312,7 @@ is fixed to the default Windows font):&]
 Ø ˆÂÄÿƒÏ„ÂÆÓ
 &]
 [s5; &]
-[s3; 16. Layouts&]
+[s3;:Gui16: 16. Layouts&]
 [s5; Placing widgets by specifying their numeric logical coordinates 
 is time consuming, therefore TheIDE provides visual designer 
 to simplify this task.&]
@@ -3652,7 +3653,7 @@ internationalization of texts. ][*/ dv`_`_`_0][/  is synthetic member
 variable name used for unnamed layout members (0 is index of 
 member).]&]
 [s0; &]
-[s3; 17. Value of widget&]
+[s3;:Gui17: 17. Value of widget&]
 [s5; Many widgets have some sort of natural value. E.g. the value 
 of [^`:`:EditString^ EditString] is String entered by user, whereas 
 the value of [^`:`:Option^ Option] is bool specifying the status 
@@ -3697,7 +3698,7 @@ and [* operator`~] for GetData.&]
 [s7; -|PromptOK((String)[* `~]text);&]
 [s7; `}&]
 [s7; &]
-[s3; 18. Accepting and rejecting widgets&]
+[s3;:Gui18: 18. Accepting and rejecting widgets&]
 [s5; Ctrl interface provides&]
 [s7; -|virtual bool   [* Accept]();&]
 [s7; -|virtual void   [* Reject]();&]
@@ -4014,7 +4015,7 @@ calls Reject for all children.&]
 Ö¼ÄÊ™áÑœÌÑß‡´üç«Ôüü–¯Ùÿ£½Ô¸¬Ä‡›šßßÛÎíãÂ×“Ø†¿ÒŸÇÛššû­ÿŸ­Öâ
 &]
 [s5;= &]
-[s3; 19. Widget edit status flags&]
+[s3;:Gui19: 19. Widget edit status flags&]
 [s5; Ctrl interface provides several edit status flags&]
 [s5;i150;O0; [*/ Enabled]/[*/ Disabled]. Disabled widgets do not receive 
 any input. Disabled status is usually expressed by altered visual 
@@ -4206,7 +4207,7 @@ with respect to listed flags.&]
 îŠğÚ“¸Ñşî°–êï‡ñ–¬Ààÿ‡ò€¨í
 &]
 [s5;= &]
-[s3; 20. Breaking the modal loop&]
+[s3;:Gui20: 20. Breaking the modal loop&]
 [s5; When you invoke [* Run] for your TopWindow,  the new event loop 
 is entered. In order to exit it, e.g. by pressing the button, 
 you have to call TopWindow`'s [* Break] method. Argument passed 
@@ -4336,7 +4337,7 @@ that both setup layout and assign Acceptors and Rejectors.&]
 [s0; &]
 [s0; [/ Note: IDOK, IDCANCEL are predefined constants.]&]
 [s0;/ &]
-[s3; 21. Creating and using custom widgets&]
+[s3;:Gui21: 21. Creating and using custom widgets&]
 [s5; There is really nothing special about creating your own widgets. 
 All that is to be done is to derive your own class from Ctrl 
 (or some other existing widget, if that fits better) and override 
@@ -4523,7 +4524,7 @@ scripting language, interpreted by layout designer.]&]
 ÷ó¿ş¿ÿÅ©×ï¿óËîüŒ«»íğçãÜíÉ‡»Ÿãî»Üùù˜÷ÛáÎÇÁ¸›€€€€À‰Ë§ĞºÙ›
 &]
 [s5; &]
-[s3; 22. Non`-modal dialogs&]
+[s3;:Gui22: 22. Non`-modal dialogs&]
 [s5; To have non`-modal dialog, just open [* Open] it passing its owner 
 window as parameter. Usually the best arrangement is to have 
 non`-modal dialog as member variable of its owner window. Non`-modal 
