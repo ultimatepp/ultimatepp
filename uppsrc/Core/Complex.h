@@ -11,7 +11,7 @@ struct Complex : std::complex<double>
 
 	Complex(const Nuller&) : C(DOUBLE_NULL) {}
 	operator Value() const                  { return RichValue<Complex>(*this); } 
-	Complex(const Value& v) : C(RichValue<Complex>::Extract(v)) {}
+	Complex(const Value& v) : C(IsNumber(v) ? C((double)v) : RichValue<Complex>::Extract(v)) {}
 
 	bool operator==(const Complex& c) const { return (const C&)(*this) == (const C&)c; }
 	bool operator!=(const Complex& c) const { return (const C&)(*this) != (const C&)c; }
@@ -33,6 +33,10 @@ template<> inline Stream& operator%(Stream& s, Complex& c)
 template<> inline dword ValueTypeNo(const Complex*) { return COMPLEX_V; }
 
 inline const Complex& Nvl(const Complex& a, const Complex& b)  { return IsNull(a) ? b : a; }
+
+inline bool IsPolyEqual(const Complex& x, const Value& v) {
+	return IsNumber(v) && x.imag() == 0 && x.real() == (double)v;
+}
 
 VALUE_COMPARE(Complex)
 NTL_MOVEABLE(Complex)
