@@ -572,29 +572,42 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 			int lb, tb, rb, bb;
 			Color lc, tc, rc, bc;
 			lc = tc = rc = bc = table.format.gridcolor;
-			lb = tb = rb = bb = table.format.grid;
+			lb = tb = rb = bb = (!IsNull(table.format.gridcolor) ? table.format.grid : 0);
+			int fw = (!IsNull(table.format.framecolor) ? table.format.frame : 0);
 			if(isleft) {
-				lb = table.format.frame;
+				lb = fw;
 				lc = table.format.framecolor;
 			}
 			if(isright) {
-				rb = table.format.frame;
+				rb = fw;
 				rc = table.format.framecolor;
 			}
 			if(istop) {
-				tb = table.format.frame;
+				tb = fw;
 				tc = table.format.framecolor;
 			}
 			if(isbottom) {
-				bb = table.format.frame;
+				bb = fw;
 				bc = table.format.framecolor;
 			}
-			if(!IsNull(cell.format.bordercolor))
-				lc = tc = rc = bc = cell.format.bordercolor;
-			lb = max(lb, cell.format.border.left);
-			tb = max(tb, cell.format.border.top);
-			rb = max(rb, cell.format.border.right);
-			bb = max(bb, cell.format.border.bottom);
+			if(!IsNull(cell.format.bordercolor)) {
+				if(cell.format.border.left >= max(lb, 1)) {
+					lb = cell.format.border.left;
+					lc = cell.format.bordercolor;
+				}
+				if(cell.format.border.top >= max(tb, 1)) {
+					tb = cell.format.border.top;
+					tc = cell.format.bordercolor;
+				}
+				if(cell.format.border.right >= max(rb, 1)) {
+					rb = cell.format.border.right;
+					rc = cell.format.bordercolor;
+				}
+				if(cell.format.border.bottom >= max(bb, 1)) {
+					bb = cell.format.border.bottom;
+					bc = cell.format.bordercolor;
+				}
+			}
 			PutBorder(rowfmt, lb, lc, "clbrdrl");
 			PutBorder(rowfmt, tb, tc, "clbrdrt");
 			PutBorder(rowfmt, rb, rc, "clbrdrr");
