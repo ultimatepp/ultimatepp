@@ -81,6 +81,8 @@ private:
 	void          DefaultParaStyle();
 
 	void          ReadCharStyle();
+	void          ReadCellBorder(int& width);
+	void          SetCellMargin(Rect& out, int Rect::*mbr);
 
 	String        ReadBinHex(char& odd) const;
 
@@ -97,9 +99,11 @@ private:
 	int           command_arg;
 
 	struct Cell {
-		Cell() : end_dots(0), merge_first(false), merge(false) {}
+		Cell() : end_dots(0), merge_first(false), merge(false), nbegin(0), span(0, 0) {}
 		RichTxt text;
 		RichCell::Format format;
+		int nbegin;
+		Size span;
 		int end_dots;
 		bool merge_first;
 		bool merge;
@@ -124,8 +128,11 @@ private:
 		RichPara::Format     format;
 		RichPara::CharFormat charformat;
 		RichCell::Format     cellformat;
+		int                  trgaph;
 		Rect                 rowmargin;
 		Rect                 rowmarginunits;
+		Rect                 rowspacing;
+		Rect                 rowspacingunits;
 		Rect                 cellmarginunits;
 		int                  uc_value;
 		int                  left_margin;
@@ -208,11 +215,11 @@ void RTFParser::FlushTable(int level)
 			continue;
 		}
 		Index<int> dot_index;
-		int pos = child.tableformat.lm;
-		dot_index.Add(pos);
+//		int pos = child.tableformat.lm;
+		dot_index.Add(child.tableformat.lm);
 		for(int r = 0; r < child.cells.GetCount(); r++) {
 			Array<Cell>& rw = child.cells[r];
-			int pos = 0;
+			int pos = child.tableformat.lm;
 			for(int c = 0; c < rw.GetCount(); c++)
 				dot_index.FindAdd(rw[c].end_dots = pos = max(pos + 100, rw[c].end_dots));
 		}
@@ -227,6 +234,8 @@ void RTFParser::FlushTable(int level)
 		for(int c = 1; c < dot_order.GetCount(); c++)
 			table.AddColumn(dot_order[c] - dot_order[c - 1]);
 		dot_index = dot_order;
+		int tbl_border = Null, tbl_grid = Null;
+		Color clr_border = Null, clr_grid = Null;
 		for(int r = 0; r < child.cells.GetCount(); r++) {
 			Array<Cell>& rw = child.cells[r];
 			int pos = child.tableformat.lm;
@@ -234,7 +243,7 @@ void RTFParser::FlushTable(int level)
 				Cell& cell = rw[c];
 				if(cell.merge)
 					continue;
-				int vspan = 0;
+				cell.span.cy = 0;
 				if(cell.merge_first) {
 					for(int m = r + 1; m < child.cells.GetCount(); m++) {
 						const Array<Cell>& mrw = child.cells[m];
@@ -242,21 +251,72 @@ void RTFParser::FlushTable(int level)
 						while(--mc >= 0 && mrw[mc].end_dots > cell.end_dots)
 							;
 						if(mc >= 0 && mrw[mc].end_dots == cell.end_dots && mrw[mc].merge)
-							vspan++;
+							cell.span.cy++;
 						else
 							break;
 					}
 				}
-				int nbegin = dot_index.Find(pos);
-				int hspan = dot_index.Find(pos = cell.end_dots) - nbegin - 1;
-				hspan = max(hspan, 0);
-				vspan = max(vspan, 0);
-//				ASSERT(hspan >= 0 && vspan >= 0);
-				if(hspan || vspan)
-					table.SetSpan(r, nbegin, vspan, hspan);
-				table.SetFormat(r, nbegin, cell.format);
+				cell.nbegin = dot_index.Find(pos);
+				cell.span.cx = max(0, dot_index.Find(pos = cell.end_dots) - cell.nbegin - 1);
+				bool outer_border[] = {
+					cell.nbegin == 0,
+					r == 0,
+					cell.nbegin + cell.span.cx + 2 >= dot_index.GetCount(),
+					r + cell.span.cy + 1 >= child.cells.GetCount(),
+				};
+				int border_width[] = {
+					cell.format.border.left,
+					cell.format.border.top,
+					cell.format.border.right,
+					cell.format.border.bottom,
+				};
+				for(int b = 0; b < __countof(border_width); b++) {
+					int& out_wd = (outer_border[b] ? tbl_border : tbl_grid);
+					Color& out_co = (outer_border[b] ? clr_border : clr_grid);
+					if(IsNull(cell.format.bordercolor) || border_width[b] <= 0
+					|| !IsNull(out_co) && out_co != cell.format.bordercolor)
+						out_wd = 0;
+					else if(IsNull(out_wd) || border_width[b] < out_wd) {
+						out_wd = border_width[b];
+						out_co = cell.format.bordercolor;
+					}
+				}
+			}
+		}
+		table.format.frame = Nvl(tbl_border, 0);
+		table.format.framecolor = (table.format.frame > 0 ? clr_border : Color(Null));
+		table.format.grid = Nvl(tbl_grid, 0);
+		table.format.gridcolor = (table.format.grid > 0 ? clr_grid : Color(Null));
+		for(int r = 0; r < child.cells.GetCount(); r++) {
+			Array<Cell>& rw = child.cells[r];
+			int pos = child.tableformat.lm;
+			for(int c = 0; c < rw.GetCount(); c++) {
+				Cell& cell = rw[c];
+				if(cell.merge)
+					continue;
+				if(cell.span.cx || cell.span.cy)
+					table.SetSpan(r, cell.nbegin, cell.span.cy, cell.span.cx);
+				bool outer_border[] = {
+					cell.nbegin == 0,
+					r == 0,
+					cell.nbegin + cell.span.cx + 2 >= dot_index.GetCount(),
+					r + cell.span.cy + 1 >= child.cells.GetCount(),
+				};
+				int *border_width[] = {
+					&cell.format.border.left,
+					&cell.format.border.top,
+					&cell.format.border.right,
+					&cell.format.border.bottom,
+				};
+				for(int b = 0; b < __countof(border_width); b++) {
+					int tbl_wd = (outer_border[b] ? tbl_border : tbl_grid);
+					Color tbl_co = (outer_border[b] ? clr_border : clr_grid);
+					if(*border_width[b] <= tbl_wd)
+						*border_width[b] = 0;
+				}
+				table.SetFormat(r, cell.nbegin, cell.format);
 				cell.text.Normalize();
-				table.SetPick(r, nbegin, cell.text);
+				table.SetPick(r, cell.nbegin, cell.text);
 			}
 		}
 		table.Normalize();
@@ -748,8 +808,11 @@ void RTFParser::DefaultParaStyle()
 	state.in_table = false;
 	state.itap = 1;
 	state.nestprop = false;
+	state.trgaph = 2;
 	state.rowmargin = Rect(25, 25, 25, 25);
 	state.cellmarginunits = state.rowmarginunits = Rect(0, 0, 0, 0);
+	state.rowspacing = Rect(0, 0, 0, 0);
+	state.rowspacingunits = Rect(0, 0, 0, 0);
 	state.charset = plain_charset;
 }
 
@@ -1001,6 +1064,25 @@ void RTFParser::OpenTable(int level)
 	}
 }
 
+void RTFParser::ReadCellBorder(int& width)
+{
+	if(Token() == T_COMMAND && !memcmp(command, "brdr", 4))
+		is_full = false;
+	if(PassCmd("brdrw"))
+		width = TwipDots(command_arg);
+}
+
+void RTFParser::SetCellMargin(Rect& out, int Rect::*mbr)
+{
+	if(state.cellmarginunits.*mbr == 0) {
+		out.*mbr = state.trgaph;
+		if(state.rowmarginunits.*mbr == 3)
+			out.*mbr = state.rowmargin.*mbr;
+		if(state.rowspacingunits.*mbr == 3)
+			out.*mbr += state.rowspacing.*mbr;
+	}
+}
+
 void RTFParser::ReadTableStyle()
 {
 	if(PassQ("nesttableprops")) {
@@ -1032,7 +1114,8 @@ void RTFParser::ReadTableStyle()
 	if(itap > table_stack.GetCount())
 		return;
 	TableState& ts = table_stack[itap - 1];
-	if(PassQ("trgaph")) {}
+	if(PassQ("trgaph"))
+		state.trgaph = TwipDotsLim(command_arg);
 	else if(PassQ("trql")) {}
 	else if(PassQ("trqr")) {}
 	else if(PassQ("trqc")) {}
@@ -1062,6 +1145,22 @@ void RTFParser::ReadTableStyle()
 		state.rowmarginunits.right = command_arg;
 	else if(PassQ("trpaddfb"))
 		state.rowmarginunits.bottom = command_arg;
+	else if(PassQ("trspdl"))
+		state.rowspacing.left = TwipDotsLim(command_arg);
+	else if(PassQ("trspdt"))
+		state.rowspacing.top = TwipDotsLim(command_arg);
+	else if(PassQ("trspdr"))
+		state.rowspacing.right = TwipDotsLim(command_arg);
+	else if(PassQ("trspdb"))
+		state.rowspacing.bottom = TwipDotsLim(command_arg);
+	else if(PassQ("trspdfl"))
+		state.rowspacingunits.left = command_arg;
+	else if(PassQ("trspdft"))
+		state.rowspacingunits.top = command_arg;
+	else if(PassQ("trspdfr"))
+		state.rowspacingunits.right = command_arg;
+	else if(PassQ("trspdfb"))
+		state.rowspacingunits.bottom = command_arg;
 	else if(PassQ("clpadl"))
 		state.cellformat.margin.left = TwipDotsLim(command_arg);
 	else if(PassQ("clpadt"))
@@ -1078,11 +1177,14 @@ void RTFParser::ReadTableStyle()
 		state.cellmarginunits.right = command_arg;
 	else if(PassQ("clpadfb"))
 		state.cellmarginunits.bottom = command_arg;
-	else if(PassQ("clvertalt")) {}
-	else if(PassQ("clbrdrl")) {}
-	else if(PassQ("clbrdrt")) {}
-	else if(PassQ("clbrdrr")) {}
-	else if(PassQ("clbrdrb")) {}
+	else if(PassQ("clbrdrl"))
+		ReadCellBorder(state.cellformat.border.left);
+	else if(PassQ("clbrdrt"))
+		ReadCellBorder(state.cellformat.border.top);
+	else if(PassQ("clbrdrr"))
+		ReadCellBorder(state.cellformat.border.right);
+	else if(PassQ("clbrdrb"))
+		ReadCellBorder(state.cellformat.border.bottom);
 	else if(PassQ("cltxlrtb")) {}
 	else if(PassQ("clcbpat")) {
 		if(command_arg >= 0 && command_arg < color_table.GetCount())
@@ -1098,10 +1200,10 @@ void RTFParser::ReadTableStyle()
 		Cell& newcell = ts.cells.Top().At(ts.stylecol++);
 		newcell.end_dots = TwipDotsLim(command_arg);
 		newcell.format = state.cellformat;
-		if(state.cellmarginunits.left == 0) newcell.format.margin.left = state.rowmargin.left;
-		if(state.cellmarginunits.top == 0) newcell.format.margin.top = state.rowmargin.top;
-		if(state.cellmarginunits.right == 0) newcell.format.margin.right = state.rowmargin.right;
-		if(state.cellmarginunits.bottom == 0) newcell.format.margin.bottom = state.rowmargin.bottom;
+		SetCellMargin(newcell.format.margin, &Rect::left);
+		SetCellMargin(newcell.format.margin, &Rect::top);
+		SetCellMargin(newcell.format.margin, &Rect::right);
+		SetCellMargin(newcell.format.margin, &Rect::bottom);
 		state.cellformat = std_cell_format;
 	}
 	else if(PassQ("clvertalt"))
