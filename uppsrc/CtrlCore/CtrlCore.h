@@ -1397,7 +1397,7 @@ public:
 };
 
 void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, const word *pattern);
+                  Color color, uint64 pattern);
 
 bool PointLoop(Ctrl& ctrl, const Vector<Image>& ani, int ani_ms);
 bool PointLoop(Ctrl& ctrl, const Image& img);

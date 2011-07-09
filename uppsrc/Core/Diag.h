@@ -246,4 +246,4 @@ void DumpMap(Stream& s, const T& t) {
 	s << LOG_END;
 }
 
-String AsString(MemoryProfile& mem);
+String AsString(const MemoryProfile& mem);

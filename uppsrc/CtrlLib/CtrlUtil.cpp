@@ -207,7 +207,7 @@ void Get(ArrayCtrl& array, int ii, IdCtrls& m)
 		m[i] <<= array.Get(ii, m(i));
 }
 
-String sProfile(MemoryProfile& mem)
+String sProfile(const MemoryProfile& mem)
 {
 	return AsString(mem);
 }
@@ -217,7 +217,7 @@ void MemoryProfileInfo() {
 	String text = sProfile(mem);
 	const MemoryProfile *peak = PeakMemoryProfile();
 	if(peak)
-		text << "\r\n=== Peak memory profile\r\n" << sProfile(mem);
+		text << "\r\n=== Peak memory profile\r\n" << sProfile(*peak);
 	PromptOK("[C " + DeQtfLf(text));
 };
 

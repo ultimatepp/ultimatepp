@@ -9,7 +9,7 @@ public:
 	virtual void   GotFocus();
 	virtual void   LostFocus();
 	virtual void   State(int);
-	virtual String GetDesc();
+	virtual String GetDesc() const;
 	virtual bool   Key(dword key, int);
 	virtual bool   HotKey(dword key);
 	virtual dword  GetAccessKeys() const;

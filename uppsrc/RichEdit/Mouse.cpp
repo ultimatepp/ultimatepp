@@ -79,7 +79,7 @@ void RichEdit::LeftDown(Point p, dword flags)
 		int tx, ty;
 		switch(c) {
 		case 1:
-			tracker.SetCursorImage(Image::SizeHorz());
+			tracker.SetCursorImage(Image::SizeVert());
 			tx = ALIGN_CENTER; ty = ALIGN_BOTTOM;
 			break;
 		case 2:

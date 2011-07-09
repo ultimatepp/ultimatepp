@@ -269,7 +269,7 @@ static void sLarge(String& text, size_t *large, int count, const char *txt)
 	}
 }
 
-String AsString(MemoryProfile& mem)
+String AsString(const MemoryProfile& mem)
 {
 	String text;
 	int acount = 0;
