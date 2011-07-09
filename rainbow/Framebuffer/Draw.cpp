@@ -7,6 +7,16 @@ NAMESPACE_UPP
 #define LLOG(x) // LOG(x)
 #define LTIMING(x) // RTIMING(x)
 
+SystemDraw::SystemDraw()
+:	BufferPainter(Ctrl::framebuffer, Ctrl::renderingMode)
+{
+}
+
+SystemDraw::~SystemDraw()
+{
+}
+
+
 void SystemDraw::Push()
 {
 	Point p = GetOffset();
@@ -64,8 +74,8 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 bool SystemDraw::IsPaintingOp(const Rect& r) const
 {
 	Rect rr = r + GetOffset();
-	for(int i = 0; i < invalid.GetCount(); i++)
-		if(invalid[i].Intersects(rr))
+	for(int i = 0; i < Ctrl::invalid.GetCount(); i++)
+		if(Ctrl::invalid[i].Intersects(rr))
 			return true;
 	return true;
 }

@@ -1,11 +1,9 @@
 //$ class Ctrl {
 private:
-	static void AddInvalid(const Rect& rect);
-
 	static Ptr<Ctrl>      desktop;
 	static Vector<Ctrl *> topctrl;
 	static ImageBuffer    framebuffer;
-	static Vector<Rect>   invalid;
+	static Vector<Rect>   invalid, update;
 
 	static Point fbCursorPos;
 	static Image fbCursorImage;
@@ -28,15 +26,19 @@ private:
 	
 	int FindTopCtrl() const;
 	static Rect GetClipBound(const Vector<Rect>& inv, const Rect& r);
-	static void DoPaint(const Vector<Rect>& invalid);
+	static void DoPaint();
+	static void DoUpdate();
 	static void SyncTopWindows();
-	
+
+	static void AddInvalid(const Rect& rect);
+
 	void NewTop()                       { top = new Top; top->owner_window = NULL; }
 	void PutForeground();
 	static void MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta);
 
 	friend struct PaintProxy__;
 	friend class TopWindowFrame;
+	friend class SystemDraw;
 
 public:
 	static void DoMouseFB(int event, Point p, int zdelta = 0);
@@ -55,5 +57,7 @@ public:
 	static const ImageBuffer& GetFrameBuffer() { return framebuffer; }
 	
 	static void SetRenderingMode(int mode);
+
+	static void AddUpdate(const Rect& rect);
 
 //$ };
