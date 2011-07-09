@@ -144,7 +144,7 @@ Pusher& Pusher::ClickFocus(bool cf)
 	return *this;
 }
 
-String Pusher::GetDesc()
+String Pusher::GetDesc() const
 {
 	return label;
 }

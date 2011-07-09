@@ -43,7 +43,7 @@ inline RGBA InvertRGBA(const RGBA& c)
 	a.r = ~c.r;
 	a.g = ~c.g;
 	a.b = ~c.b;
-	a.a = c.a;
+	a.a = 255;
 	return a;
 }
 
@@ -72,7 +72,7 @@ void SolidFiller::Render(int val, int len)
 			}
 		else
 			while(t < e) {
-				AlphaBlend(*t, Mul8(InvertRGBA(*t), val));
+				AlphaBlendCover8(*t, InvertRGBA(*t), val);
 				t++;
 			}
 	}
@@ -411,6 +411,7 @@ void ClipFiller::Finish(ClippingLine& cl)
 		x += n;
 		full = false;
 	}
+	ASSERT(t - ~buffer <= 2 * cx);
 	if(full)
 		cl.SetFull();
 	else
