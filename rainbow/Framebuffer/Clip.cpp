@@ -6,36 +6,44 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
+static VectorMap<String, ClipData> fbClipboard;
+
 void ClearClipboard()
 {
 	GuiLock __;
-}
-
-void AppendClipboard(int format, const byte *data, int length)
-{
-	GuiLock __;
-}
-
-void AppendClipboard(const char *format, const byte *data, int length)
-{
-	GuiLock __;
-}
-
-void AppendClipboard(const char *format, const String& data)
-{
-	GuiLock __;
-	AppendClipboard(format, data, data.GetLength());
+	fbClipboard.Clear();
 }
 
 void AppendClipboard(const char *format, const Value& data, String (*render)(const Value&))
 {
 	GuiLock __;
+	ClipData& cd = fbClipboard.GetAdd(format);
+	cd.data = data;
+	cd.render = render;
+}
+
+static String sRawRender(const Value& v)
+{
+	return v;
+}
+
+void AppendClipboard(const char *format, const String& data)
+{
+	GuiLock __;
+	AppendClipboard(format, data, sRawRender);
+}
+
+void AppendClipboard(const char *format, const byte *data, int length)
+{
+	GuiLock __;
+	AppendClipboard(format, String(data, length));
 }
 
 String ReadClipboard(const char *format)
 {
 	GuiLock __;
-	return Null;
+	int q = fbClipboard.Find(format);
+	return q >= 0 ? (*fbClipboard[q].render)(fbClipboard[q].data) : String();
 }
 
 void AppendClipboardText(const String& s)
@@ -125,22 +133,26 @@ String GetTextClip(const String& text, const String& fmt)
 
 String ReadClipboardText()
 {
-	return ReadClipboardUnicodeText().ToString();
+	String w = ReadClipboard("text");
+	return w.GetCount() ? w : ReadClipboardUnicodeText().ToString();
 }
 
 WString ReadClipboardUnicodeText()
 {
-	return Null;
+	String w = ReadClipboard("wtext");
+	if(w.GetCount())
+		return WString(~w, w.GetLength() / 2);
+	return ReadClipboard("text").ToWString();
 }
 
 bool IsClipboardAvailable(const char *id)
 {
-	return false;
+	return fbClipboard.Find(id) >= 0;
 }
 
 bool IsClipboardAvailableText()
 {
-	return false;
+	return IsClipboardAvailable("text") || IsClipboardAvailable("wtext");
 }
 
 const char *ClipFmtsImage()
@@ -223,12 +235,12 @@ Vector<String> GetFiles(PasteClip& clip)
 
 bool PasteClip::IsAvailable(const char *fmt) const
 {
-	return false;
+	return IsClipboardAvailable(fmt);
 }
 
 String PasteClip::Get(const char *fmt) const
 {
-	return Null;
+	return ReadClipboard(fmt);
 }
 
 void PasteClip::GuiPlatformConstruct()

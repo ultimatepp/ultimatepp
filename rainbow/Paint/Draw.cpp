@@ -29,6 +29,14 @@ struct App : public Ctrl {
 		w.Clipoff(200, 50, 95, 100);
 		w.DrawText(0, 80, "CLIPPED", Roman(25));
 		w.End();
+		
+		DrawDragRect((SystemDraw&)w,
+					 Rect(0, 0, 0, 0),
+					 Rect(23, 165, 672, 301),
+					 Size(1163, 513),
+					 1,
+					 Black(),
+					 MAKEQWORD(Random(), Random()));
 	}
 	
 	void LeftDown(Point p, dword)
@@ -85,6 +93,7 @@ GUI_APP_MAIN
 {
 #if EDITOR
 	RichEditWithToolBar app;
+	app.SetQTF(LoadFile(ConfigFile("test.qtf")));
 #else	
 	App app;
 	app.popup.PopUp();
@@ -107,4 +116,7 @@ GUI_APP_MAIN
 	top.Open();
 #endif
 	Ctrl::EventLoop();
+#if EDITOR
+	SaveFile(ConfigFile("test.qtf"), app.GetQTF());
+#endif
 }

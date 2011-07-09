@@ -2,8 +2,6 @@
 #define _WinGl_After_h_
 
 class ViewDraw : public SystemDraw {
-	ImageBuffer ib;
-
 public:
 	ViewDraw(Ctrl *ctrl) {}
 	~ViewDraw() {}

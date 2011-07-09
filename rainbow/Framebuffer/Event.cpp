@@ -34,7 +34,7 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 	else
 	if(a == Ctrl::DOWN && ignoreclick)
 		return;
-	LLOG("Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
+	LLOG("### Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
 	if(captureCtrl)
 		MouseEventFB(captureCtrl->GetTopCtrl(), event, p, zdelta);
 	else
@@ -80,7 +80,7 @@ void Ctrl::RemoveCursor()
 {
 	if(!IsNull(fbCursorBakPos)) {
 		Copy(framebuffer, fbCursorBakPos, fbCursorBak, fbCursorBak.GetSize());
-		AddInvalid(Rect(fbCursorBakPos, fbCursorBak.GetSize()));
+		AddUpdate(Rect(fbCursorBakPos, fbCursorBak.GetSize()));
 	}
 	fbCursorPos = fbCursorBakPos = Null;
 	fbCursorBak = Null;
@@ -90,7 +90,7 @@ void Ctrl::RemoveCaret()
 {
 	if(!IsNull(fbCaretRect)) {
 		Copy(framebuffer, fbCaretRect.TopLeft(), fbCaretBak, fbCaretBak.GetSize());
-		AddInvalid(fbCaretRect);
+		AddUpdate(fbCaretRect);
 	}
 	fbCaretRect = Null;
 	fbCaretBak = Null;
@@ -113,12 +113,15 @@ void Ctrl::SyncCaret() {
 
 void Ctrl::CursorSync()
 {
+	DLOG("@ CursorSync");
 	Point p = GetMousePos() - fbCursorImage.GetHotSpot();
 	Rect cr = Null;
 	if(focusCtrl && (((GetTickCount() - fbCaretTm) / 500) & 1) == 0)
 		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
 		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
+	DDUMP(GetTickCount());
 	if(fbCursorPos != p || cr != fbCaretRect) {
+		DDUMP(fbCaretRect);
 		RemoveCursor();
 		RemoveCaret();
 
@@ -128,9 +131,9 @@ void Ctrl::CursorSync()
 		fbCursorBak = GetBak(tr);
 		fbCursorBakPos = tr.TopLeft();
 
+		fbCaretRect = cr;
 		if(!cr.IsEmpty()) {
 			fbCaretBak = GetBak(cr);
-			fbCaretRect = cr;
 			for(int y = cr.top; y < cr.bottom; y++) {
 				RGBA *s = framebuffer[y] + cr.left;
 				const RGBA *e = framebuffer[y] + cr.right;
@@ -141,11 +144,12 @@ void Ctrl::CursorSync()
 					s++;
 				}
 			}
-			AddInvalid(fbCaretRect);
+			AddUpdate(fbCaretRect);
 		}
 
 		Over(framebuffer, p, fbCursorImage, sz);
-		AddInvalid(tr);
+		DLOG("Cursor: " << p << ", rect " << tr);
+		AddUpdate(tr);
 	}
 }
 

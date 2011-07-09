@@ -8,6 +8,7 @@ NAMESPACE_UPP
 
 ImageBuffer    Ctrl::framebuffer;
 Vector<Rect>   Ctrl::invalid;
+Vector<Rect>   Ctrl::update;
 
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
@@ -151,8 +152,15 @@ bool Ctrl::IsWaitingEvent()
 	return FBIsWaitingEvent();
 }
 
+void Ctrl::AddUpdate(const Rect& rect)
+{
+	DLOG("@AddUpdate " << rect);
+	AddRefreshRect(update, rect);
+}
+
 void Ctrl::AddInvalid(const Rect& rect)
 {
+	DLOG("@AddInvalid " << rect);
 	AddRefreshRect(invalid, rect);
 }
 
@@ -167,6 +175,7 @@ void Ctrl::SyncTopWindows()
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
+	DLOG("@ ProcessEvent");
 	ASSERT(IsMainThread());
 	if(DoCall()) {
 		SyncTopWindows();
@@ -174,11 +183,12 @@ bool Ctrl::ProcessEvent(bool *quit)
 	}
 	if(FBEndSession()) {
 		if(quit) *quit = true;
-		return false;
+		return false;	
 	}
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	if(FBProcessEvent(quit)) {
+		DLOG("FBProcesEvent returned true");
 		SyncTopWindows();
 		DefferedFocusSync();
 		SyncCaret();
@@ -198,47 +208,107 @@ Rect Ctrl::GetClipBound(const Vector<Rect>& inv, const Rect& r)
 	return ri;
 }
 
-void Ctrl::DoPaint(const Vector<Rect>& invalid)
+
+ViewDraw::ViewDraw(Ctrl *ctrl)
 {
+	if(Ctrl::invalid.GetCount())
+		Ctrl::DoPaint();
+	Ctrl::invalid.Clear();
+	Ctrl::RemoveCursor();
+	Ctrl::RemoveCaret();
+	Rect r = ctrl->GetScreenView();
+	Ctrl::invalid.Add(r);
+	Ctrl::AddUpdate(r);
+	for(int i = max(ctrl->GetTopCtrl()->FindTopCtrl() + 1, 0); i < Ctrl::topctrl.GetCount(); i++) {
+		Rect rr = Ctrl::topctrl[i]->GetScreenRect();
+		ExcludeClip(rr);
+		Subtract(Ctrl::invalid, rr);
+	}
+	Offset(r.TopLeft());
+}
+
+ViewDraw::~ViewDraw()
+{
+	Ctrl::invalid.Clear();
+}
+
+void Ctrl::DoUpdate()
+{
+	DLOG("DoUpdate");
+	invalid.Clear();
+	CursorSync();
+	DDUMPC(update);
+#if 0
+	FBUpdate(framebuffer.GetSize());
+#else
+	for(int i = 0; i < update.GetCount(); i++) {
+		DDUMP(update[i]);
+		FBUpdate(update[i]);
+	}
+#endif
+	update.Clear();
+	FBFlush();
+//	Sleep(1000);
+}
+
+void Ctrl::DoPaint()
+{
+	DLOG("@ DoPaint");
 	if(invalid.GetCount() && desktop) {
+		DLOG("DoPaint invalid");
+		DDUMPC(invalid);
 		RemoveCursor();
 		RemoveCaret();
-		SystemDraw painter(framebuffer, invalid, renderingMode);
+		SystemDraw painter;
 		painter.Begin();
-		for(int i = 0; i < invalid.GetCount(); i++)
+		for(int i = 0; i < invalid.GetCount(); i++) {
 			painter.RectPath(invalid[i]);
+			AddUpdate(invalid[i]);
+		}
 		painter.Painter::Clip();
-		Vector<Rect> inv;
-		inv <<= invalid;
 		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
 			Rect r = topctrl[i]->GetRect();
-			Rect ri = GetClipBound(inv, r);
+			Rect ri = GetClipBound(invalid, r);
 			if(!IsNull(ri)) {
-				painter.Offset(r.TopLeft());
+				painter.Clipoff(r);
 				topctrl[i]->UpdateArea(painter, ri - r.TopLeft());
 				painter.End();
-				Subtract(inv, r);
+				Subtract(invalid, r);
 				painter.ExcludeClip(r);
 			}
 		}
-		Rect ri = GetClipBound(inv, framebuffer.GetSize());
+		Rect ri = GetClipBound(invalid, framebuffer.GetSize());
 		if(!IsNull(ri))
 			desktop->UpdateArea(painter, ri);
 	}
-	CursorSync();
-	for(int i = 0; i < invalid.GetCount(); i++)
-		FBUpdate(invalid[i]);
+	DoUpdate();
+}
+
+void Ctrl::WndUpdate0r(const Rect& r)
+{
+	GuiLock __;
+	Rect rr = r + GetRect().TopLeft();
+	bool dummy;
+	Vector<Rect> h;
+	h <<= invalid;
+	invalid = Intersect(invalid, rr, dummy);
+	DoPaint();
+	invalid <<= h;
+	Subtract(invalid, rr);
+	FBFlush();
 }
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
+	DLOG("ProcessEvents " << LOG_BEGIN);
 	if(!ProcessEvent(quit))
 		return false;
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !FBEndSession());
 	TimerProc(GetTickCount());
 	SweepMkImageCache();
-	DoPaint(invalid);
-	invalid.Clear();
+	DoPaint();
+	FBFlush();
+	DLOG(LOG_END);
 	return true;
 }
 
@@ -474,15 +544,6 @@ void Ctrl::WndSetPos0(const Rect& rect)
 	invalid.Add(GetRect());
 	SetWndRect(rect);
 	invalid.Add(rect);
-}
-
-void Ctrl::WndUpdate0r(const Rect& r)
-{
-	GuiLock __;
-	Rect rr = r + GetRect().TopLeft();
-	bool dummy;
-	DoPaint(Intersect(invalid, rr, dummy));
-	invalid = Subtract(invalid, rr, dummy);
 }
 
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)

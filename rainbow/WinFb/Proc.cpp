@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)       // LOG(x)
+#define LLOG(x)       LOG(x)
 
 bool GetShift()       { return !!(GetKeyState(VK_SHIFT) & 0x8000); }
 bool GetCtrl()        { return !!(GetKeyState(VK_CONTROL) & 0x8000); }
@@ -58,6 +58,12 @@ LRESULT CALLBACK fbWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 			PAINTSTRUCT ps;
 			HDC dc = BeginPaint(hwnd, &ps);
 			fbUpdate(dc, ps.rcPaint);
+		#if 0
+			Rect r = ps.rcPaint;
+			::PatBlt(dc, r.left, r.top, r.GetWidth(), r.GetHeight(), DSTINVERT);
+			Sleep(40);
+			::PatBlt(dc, r.left, r.top, r.GetWidth(), r.GetHeight(), DSTINVERT);
+		#endif
 			EndPaint(hwnd, &ps);
 		}
 		return 0L;

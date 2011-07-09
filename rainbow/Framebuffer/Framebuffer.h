@@ -19,7 +19,6 @@ public:
 
 private:
 	Vector<Point> offset;
-	const Vector<Rect>& invalid;
 	
 	void Push();
 	void Pop();
@@ -29,18 +28,15 @@ public:
 	bool    CanSetSurface()                         { return false; }
 	bool    Clip(const Rect& r)                     { return Draw::Clip(r); }
 	bool    Clip(int x, int y, int cx, int cy)      { return Draw::Clip(x, y, cx, cy); }
-
+	
 	static void Flush()                                        {}
 
-	SystemDraw(ImageBuffer& ib, const Vector<Rect>& invalid, int mode = MODE_ANTIALIASED)
-	: BufferPainter(ib, mode), invalid(invalid) {}
+	SystemDraw();
+	~SystemDraw();
 };
 
 struct BackDraw__ : public SystemDraw {
-	ImageBuffer h;
-	Vector<Rect> dummy_invalid;
-	
-	BackDraw__() : SystemDraw(h, dummy_invalid) {}
+	BackDraw__() : SystemDraw() {}
 };
 
 class BackDraw : public BackDraw__ { // Dummy only, as we are running in GlobalBackBuffer mode
@@ -110,6 +106,7 @@ bool FBProcessEvent(bool *quit);
 void FBSleep(int ms);
 bool FBEndSession();
 void FBUpdate(const Rect& area);
+void FBFlush();
 
 // }
 

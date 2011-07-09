@@ -33,7 +33,9 @@ bool FBProcessEvent(bool *quit)
 
 void FBSleep(int ms)
 {
+	TimeStop tm;
 	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
+	DLOG("@ FBSleep " << tm.Elapsed());
 }
 
 void FBInit(HINSTANCE hInstance)
@@ -60,10 +62,13 @@ void FBInit(HINSTANCE hInstance)
 //	Csizeinit();
 }
 
-void fbUpdate(HDC hdc, const Rect& r)
+void fbUpdate(HDC hdc, const Rect& r_)
 {
 	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
 	Size sz = framebuffer.GetSize();
+	Rect r = sz;
+//	Rect r = r_;
+	DLOG("fbUpdate " << r);
 	Buffer<byte> data;
 	data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
 	BITMAPINFOHEADER *hi = (BITMAPINFOHEADER *) ~data;;
@@ -84,7 +89,7 @@ void fbUpdate(HDC hdc, const Rect& r)
 
 void FBUpdate(const Rect& r)
 {
-	LLOG("FBUpdate " << r);
+	DLOG("FBUpdate " << r);
 	if(fbHWND) {
 		HDC hdc = GetDC(fbHWND);
 		fbUpdate(hdc, r);
@@ -95,6 +100,13 @@ void FBUpdate(const Rect& r)
 	#endif
 		ReleaseDC(fbHWND, hdc);
 	}
+//	::InvalidateRect(fbHWND, NULL, false);
+}
+
+void FBFlush()
+{
+	::UpdateWindow(fbHWND);
+	GdiFlush();
 }
 
 END_UPP_NAMESPACE
