@@ -53,6 +53,49 @@ predicate where [* val] can be inserted without breaking the ordering.&]
 [s7; [*/ Return value]-|Position in container.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:sgn`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) int]_[* sgn]([*@4 T
+]_[*@3 a])&]
+[s2; Returns 1 if  [%-*@3 a]. is greater than zero, `-1 if [%-*@3 a] 
+is smaller than zero and zero if [%-*@3 a] is zero.&]
+[s3; &]
+[s4;%- &]
+[s5;:tabs`(T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* tabs]([*@4 T]_[*@3 a
+])&]
+[s2; Returns the absolute value of [%-*@3 a].&]
+[s3; &]
+[s4;%- &]
+[s5;:cmp`(const T`&`,const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) i
+nt]_[* cmp]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 a], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[*@3 b])&]
+[s2;%- [%% Returns 1 if ][*@3 a][%%  is greater than ][*@3 b][%% , `-1 if ][*@3 a][%%  
+is smaller than ][*@3 b][%%  and zero if ][*@3 a][%%  is equal than ][*@3 b.]&]
+[s3; &]
+[s4;%- &]
+[s5;:Reverse`(I`,I`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 I]>_[@(0.0.255) void]_
+[* Reverse]([*@4 I]_[*@3 start], [*@4 I]_[*@3 end])&]
+[s2; Reverses the values of a C array that begins in [%-*@3 start] 
+and ends in [%-*@3 end].&]
+[s3; &]
+[s4;%- &]
+[s5;:Sum`(V`&`,T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
+[@(0.0.255) class]_[*@4 V]>_[@(0.0.255) void]_[* Sum]([*@4 V][@(0.0.255) `&]_[*@3 sum], 
+[*@4 T]_[*@3 ptr], [*@4 T]_[*@3 end])&]
+[s2; Returns in [%-*@3 sum] the sum of the values of a C array that 
+begins in [%-*@3 ptr] and ends in [%-*@3 end].&]
+[s3; &]
+[s4;%- &]
+[s5;:MinElement`(T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* MinEle
+ment]([*@4 T]_[*@3 ptr], [*@4 T]_[*@3 end])&]
+[s2; Returns the value of the min element of a C array that begins 
+in [%-*@3 ptr] and ends in [%-*@3 end].&]
+[s3; &]
+[s4;%- &]
+[s5;:MaxElement`(T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* MaxEle
+ment]([*@4 T]_[*@3 ptr], [*@4 T]_[*@3 end])&]
+[s2; Returns the value of the max element of a C array that begins 
+in [%-*@3 ptr] and ends in [%-*@3 end].&]
+[s3; &]
+[s4;%- &]
 [s5;:FindLowerBound`(const C`&`,const T`&`,const L`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >]_[@(0.0.255) i
 nt]_[* FindLowerBound]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
