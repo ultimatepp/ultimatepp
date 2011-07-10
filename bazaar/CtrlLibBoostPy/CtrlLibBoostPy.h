@@ -32,14 +32,29 @@ void export_Option();
 //Switch.cpp
 void export_Switch();
 
-//EditCtrl.cpp
-void export_EditCtrl();
+//EditField.cpp
+void export_EditField();
+
+//EditString.cpp
+void export_EditString();
+
+//EditInt.cpp
+void export_EditInt();
+
+//EditInt64.cpp
+void export_EditInt64();
+
+//EditDouble.cpp
+void export_EditDouble();
 
 //Progress.cpp
 void export_Progress();
 
 //SliderCtrl.cpp
 void export_SliderCtrl();
+
+//template.cpp
+void export_Foo();
 
 ///
 void export_CtrlLib();

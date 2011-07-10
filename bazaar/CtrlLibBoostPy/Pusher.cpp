@@ -3,6 +3,29 @@ using namespace boost::python;
 
 NAMESPACE_UPP
 
+//a dirty hack to expose protected virtuals
+//more see bellow
+class PusherExpose : public Pusher
+{
+public:
+	typedef Pusher P;
+
+#if 0 // only worked for gcc, without the cast hack bellow
+	using P::RefreshPush;
+	using P::RefreshFocus;
+	using P::PerformAction;
+#endif
+
+	inline virtual void RefreshPush() { return P::RefreshPush(); }
+	inline virtual void RefreshFocus() { return P::RefreshFocus(); }
+	inline virtual void PerformAction() { return P::PerformAction(); }
+
+	inline void KeyPush() { P::KeyPush(); }
+	inline bool IsPush() const { return P::IsPush(); }
+	inline bool IsKeyPush() { return P::IsKeyPush(); }
+	inline bool FinishPush() { return P::FinishPush(); }
+};
+
 class PusherWrap : public Pusher, public wrapper<Pusher> {
 public:
 	typedef Pusher C;
@@ -82,9 +105,23 @@ ONCELOCK
 		.def("assignaccesskeys", &Pusher::AssignAccessKeys, &PusherWrap::default_AssignAccessKeys)
 		.def("hotkey", &Pusher::HotKey, &PusherWrap::default_HotKey)
 
-//		.def("refreshpush", &Pusher::RefreshPush, &PusherWrap::default_RefreshPush)
-//		.def("refreshfocus", &Pusher::RefreshFocus, &PusherWrap::default_RefreshFocus)
-//		.def("performaction", &Pusher::PerformAction, &PusherWrap::default_PerformAction)
+		.def("refreshpush", (void (Pusher::*)())&PusherExpose::RefreshPush, &PusherWrap::default_RefreshPush)
+		.def("refreshfocus", (void (Pusher::*)())&PusherExpose::RefreshFocus, &PusherWrap::default_RefreshFocus)
+		.def("performaction", (void (Pusher::*)())&PusherExpose::PerformAction, &PusherWrap::default_PerformAction)
+
+		.def("keypush", (void (Pusher::*)())&PusherExpose::KeyPush)
+		.def("ispush", (bool (Pusher::* const)())&PusherExpose::IsPush)
+		.def("iskeypush", (bool (Pusher::*)())&PusherExpose::IsKeyPush)
+		.def("finishpush", (bool (Pusher::*)())&PusherExpose::FinishPush)
+
+		.add_property("clickfocus", &Pusher::IsClickFocus, &PusherClickFocus)
+		.add_property("label", &Pusher::GetLabel, &PusherSetLabel)
+
+		.def("pseudopush", &Pusher::PseudoPush)
+		.def("getvisualstate", &Pusher::GetVisualState)
+		
+		.def_readwrite("whenpush", &Pusher::WhenPush)
+		.def_readwrite("whenrepeat", &Pusher::WhenRepeat)
 	;
 }
 }

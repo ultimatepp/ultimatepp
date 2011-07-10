@@ -31,7 +31,7 @@ public:
 	PropList();
 
 	void PopUp(Ctrl* owner, Ctrl& e) { plc.Visit(e); PopUpC::PopUp(owner); }
-	virtual void Acceptor();
+	virtual void Acceptor() { plc.Clear(); PopUpC::Acceptor(); }
 
 protected:
 	PropListCtrl plc;
@@ -67,8 +67,8 @@ public:
 
 	void PopUp(Ctrl* owner, Ctrl& e) { pec.Visit(e); PopUpC::PopUp(owner); }
 
-	virtual void Rejector();
-	virtual void Acceptor();
+	virtual void Rejector() { pec.Restore(); pec.Clear(); PopUpC::Rejector(); }
+	virtual void Acceptor() { pec.Clear(); PopUpC::Acceptor(); }
 
 protected:
 	PropEditCtrl pec;

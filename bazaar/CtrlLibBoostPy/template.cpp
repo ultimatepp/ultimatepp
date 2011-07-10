@@ -1,12 +1,13 @@
-#include "EditCtrl.h"
+#include "Common.h"
 using namespace boost::python;
 
 NAMESPACE_UPP
 
-void export_EditCtrl()
+void export_Foo()
 {
 ONCELOCK
 {
+
 }
 }
 

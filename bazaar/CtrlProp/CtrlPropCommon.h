@@ -6,8 +6,6 @@ using namespace Upp;
 
 #include <Property/Property.h>
 
-VectorMap<String, int> BidirProps(Ctrl& c);
-
 //////////////////////
 
 DEC_PROPERTIES(Ctrl, EmptyClass)

@@ -123,6 +123,9 @@ public:
 	virtual bool IsModified() const { if(override f = this->get_override("ismodified")) return f(); return C::IsModified(); }
 	bool default_IsModified() const { return C::IsModified(); }
 
+	virtual int OverPaint() const { if(override f = this->get_override("overpaint")) return f(); return C::OverPaint(); }
+	int default_OverPaint() const { return C::OverPaint(); }
+
 	virtual void CancelMode() { if(override f = this->get_override("cancelmode")) f(); C::CancelMode(); }
 	void default_CancelMode() { C::CancelMode(); }
 
@@ -377,6 +380,8 @@ ONCELOCK
 		.def("ismodified", &Ctrl::IsModified, &CtrlWrap::default_IsModified)
 		.def("resetmodify", &Ctrl::ResetModify)
 		.def("ismodifiedset", &Ctrl::IsModifySet)
+
+		.def("overpaint", &Ctrl::OverPaint, &CtrlWrap::default_OverPaint)
 
 		.def("cancelmode", &Ctrl::CancelMode, &CtrlWrap::default_CancelMode)
 		.def("activate", &Ctrl::Activate, &CtrlWrap::default_Activate)

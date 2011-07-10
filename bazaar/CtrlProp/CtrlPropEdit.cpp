@@ -49,12 +49,6 @@ PropList::PropList()
 	//cancel <<= THISBACK(Rejector);
 }
 
-void PropList::Acceptor()
-{
-	plc.Clear();	
-	PopUpC::Acceptor();
-}
-
 //
 
 PropEditCtrl::PropEditCtrl()
@@ -92,47 +86,52 @@ void PropEditCtrl::Visit(Ctrl& e)
 		ac.Set(k, 1, v); //forwarded to controls when specified
 
 		if(a.get && a.set)	
+		{
+			Tuple2<bool, Value>& tv = vsav.Add(tag);
+			tv.a = false;
+			tv.b = v;
+		
+			Ctrl* pc;
+			if(!v.IsNull())
 			{
-				Tuple2<bool, Value>& tv = vsav.Add(tag);
-				tv.a = false;
-				tv.b = v;
-			
-				Ctrl* pc;
-				if(!v.IsNull())
+				pc = DefaultValueEditor(v);
 				{
-					pc = DefaultValueEditor(v);
-					{
-						LogPosCtrl* ple = dynamic_cast<LogPosCtrl*>(pc);
-						if(ple)
-							ple->Set(e);
-					}
+					LogPosCtrl* ple = dynamic_cast<LogPosCtrl*>(pc);
+					if(ple)
+						ple->Set(e);
 				}
-				else pc = new ValueCtrl();
-				(*pc) <<= THISBACK(OnUpdateRow);
-
-				ac.SetCtrl(k, 1, pc); //owned
-				++k;
 			}
+			else pc = new ValueCtrl();
+			(*pc) <<= THISBACK(OnUpdateRow);
+
+			ac.SetCtrl(k, 1, pc); //owned
+			++k;
+		}
 		else
 		if(a.get)
-			{
-				StaticText* pc = new StaticText();
-				pc->SetText(AsString(v));
+		{
+			StaticText* pc = new StaticText();
+			pc->SetText(AsString(v));
 
-				ac.SetCtrl(k, 1, pc); //owned
-				++k;
-			}
+			ac.SetCtrl(k, 1, pc); //owned
+			++k;
+		}
 		else
 		if(a.set)
-			{
-				//FIXME needs to know which type
-				//meanwhile, we let user choose
-				ValueCtrl* pc = new ValueCtrl();
-				(*pc) <<= THISBACK(OnUpdateRow);
+		{
+			//FIXME needs to know which type
+			//meanwhile, we let user choose
+			ValueCtrl* pc = new ValueCtrl();
+			(*pc) <<= THISBACK(OnUpdateRow);
 
-				ac.SetCtrl(k, 1, pc); //owned
-				++k;
-			}
+			ac.SetCtrl(k, 1, pc); //owned
+			++k;
+		}
+		else
+		{
+			ASSERT(0); //Property without accessors
+			++k;	
+		}
 	}
 	ac.Layout();
 	//ac.UpdateRefresh();
@@ -195,17 +194,4 @@ PropEdit::PropEdit()
 	cancel <<= THISBACK(Rejector);
 	ok.SetLabel("OK");
 	cancel.SetLabel("Cancel");
-}
-
-void PropEdit::Rejector()
-{
-	pec.Restore();
-	pec.Clear();	
-	PopUpC::Rejector();
-}
-
-void PropEdit::Acceptor()
-{
-	pec.Clear();	
-	PopUpC::Acceptor();
 }

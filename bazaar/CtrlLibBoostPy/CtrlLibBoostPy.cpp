@@ -15,11 +15,18 @@ ONCELOCK
 	export_Option();
 	export_Switch();
 
-	export_EditCtrl();
+	export_EditField();
+	export_EditString();
+	export_EditInt();
+	export_EditInt64();
+	export_EditDouble();
+
 	export_SliderCtrl();
 	export_Progress();
 
 	export_Prompts();
+
+	export_Foo();
 
 	//FIXME move outside, it's in bazaar
 	export_ValueCtrl();

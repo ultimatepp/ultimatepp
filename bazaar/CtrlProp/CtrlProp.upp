@@ -9,7 +9,6 @@ uses
 
 file
 	CtrlPropCommon.h,
-	CtrlPropCommon.cpp,
 	CtrlPropEdit.h,
 	CtrlPropEdit.cpp,
 	CtrlPropEdit.lay,
