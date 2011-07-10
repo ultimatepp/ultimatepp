@@ -27,7 +27,8 @@ GUI_APP_MAIN
 
 	DUMP(ScrollBarSize());
 
-	e.Pick(ParseQTF(LoadFile(FileName())));
+//	e.Pick(ParseQTF(LoadFile(FileName())));
+	e.SetQTF(LoadFile("U:\\xxx\\PainterBug.qtf"));
 //	e.ClipZoom(4, 1);
 	RichEdit::PosInfo f;
 	LoadFromFile(f, ConfigFile("pos"));
@@ -44,7 +45,7 @@ GUI_APP_MAIN
 	w.Run();
 */
 	String x = e.GetQTF();
-	SaveFile(FileName(), x);
+//	SaveFile(FileName(), x);
 	f = e.GetPosInfo();
 	StoreToFile(f, ConfigFile("pos"));
 	LOG("Exit");

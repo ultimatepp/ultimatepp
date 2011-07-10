@@ -1,6 +1,7 @@
 uses
 	RichEdit,
-	plugin\jpg;
+	plugin\jpg,
+	Painter;
 
 file
 	main.cpp,
