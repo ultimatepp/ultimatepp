@@ -213,7 +213,7 @@ public:
 
 	void      Pack(dword& i);
 	Stream&   operator/(int& i)            { dword w = i + 1; Pack(w); i = w - 1; return *this; }
-	Stream&   operator/(unsigned int& i)   { Pack(*(dword *)&i); return *this; }
+	Stream&   operator/(unsigned int& i)   { dword w = i + 1; Pack(w); i = w - 1; return *this; }
 	Stream&   operator/(long& i)           { dword w = i + 1; Pack(w); i = w - 1; return *this; }
 	Stream&   operator/(unsigned long& i)  { dword w = i + 1; Pack(w); i = w - 1; return *this; }
 

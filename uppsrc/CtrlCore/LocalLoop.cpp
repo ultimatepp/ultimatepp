@@ -19,13 +19,6 @@ void LocalLoop::Run()
 		focus->SetFocus();
 }
 
-void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, uint64 pattern)
-{
-	ViewDraw w(&q);
-	DrawDragRect(w, rect1, rect2, clip, n, color, pattern);
-}
-
 void RectTracker::LeftUp(Point, dword)
 {
 	EndLoop();
@@ -43,10 +36,6 @@ Image RectTracker::CursorImage(Point, dword)
 	return cursorimage;
 }
 
-static uint64 RectTracker_normal = I64(0x55aa55aa55aa55aa);
-static uint64 RectTracker_dashed = I64(0xf0783c1e0f87c3e1);
-static uint64 RectTracker_solid  = I64(0);
-
 RectTracker::RectTracker(Ctrl& master)
 {
 	SetMaster(master);
@@ -58,26 +47,15 @@ RectTracker::RectTracker(Ctrl& master)
 	keepratio = false;
 	cursorimage = Image::Arrow();
 	color = SColorPaper;
-	pattern = RectTracker_normal;
+	pattern = DRAWDRAGRECT_NORMAL;
 	animation = 0;
 	rounder = NULL;
 }
 
 RectTracker::~RectTracker() {}
 
-RectTracker& RectTracker::Dashed() { pattern = RectTracker_dashed; return *this; }
-RectTracker& RectTracker::Solid()  { pattern = RectTracker_solid; return *this; }
-
-static uint64 sGetAniPat(uint64 src, int pos)
-{
-	uint64 out = 0;
-	pos &= 7;
-	for(int i = 8; --i >= 0;) {
-		byte sr = (byte)(src >> (8 * ((7 - i - pos) & 7)));
-		out = (out << 8) | (byte)((sr | (sr << 8)) >> pos);
-	}
-	return out;
-}
+RectTracker& RectTracker::Dashed() { pattern = DRAWDRAGRECT_DASHED; return *this; }
+RectTracker& RectTracker::Solid()  { pattern = DRAWDRAGRECT_SOLID; return *this; }
 
 void RectTracker::DrawRect(Rect r1, Rect r2)
 {
@@ -92,12 +70,12 @@ void RectTracker::DrawRect(Rect r1, Rect r2)
 	Rect c = clip & GetMaster().GetSize();
 	if(animation) {
 		int nanim = (GetTickCount() / animation) % 8;
-		DrawDragRect(GetMaster(), Rect(0, 0, 0, 0), r2, c, width, color, sGetAniPat(pattern, nanim));
-		DrawDragRect(GetMaster(), r1, Rect(0, 0, 0, 0), c, width, color, sGetAniPat(pattern, panim));
+		DrawDragRect(GetMaster(), Rect(0, 0, 0, 0), r2, c, width, color, pattern, nanim);
+		DrawDragRect(GetMaster(), r1, Rect(0, 0, 0, 0), c, width, color, pattern, panim);
 		panim = nanim;
 	}
 	else
-		DrawDragRect(GetMaster(), r1, r2, c, width, color, pattern);
+		DrawDragRect(GetMaster(), r1, r2, c, width, color, pattern, 0);
 }
 
 Rect RectTracker::Track(const Rect& r, int _tx, int _ty)

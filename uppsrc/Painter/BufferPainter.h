@@ -126,7 +126,7 @@ private:
 	int                     min_y;
 	int                     max_y;
 	Size                    sz;
-	double                  mx;
+	int                     mx;
 
 	void  Init();
 	Cell *AddCells(int y, int n);

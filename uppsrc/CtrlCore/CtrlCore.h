@@ -41,9 +41,6 @@ typedef ImageDraw SystemImageDraw;
 
 void StdDrawImage(SystemDraw& w, int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color);
 
-void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, uint64 pattern);
-
 void SetSurface(Draw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff);
 void SetSurface(Draw& w, int x, int y, int cx, int cy, const RGBA *pixels);
 
@@ -1396,8 +1393,12 @@ public:
 	LocalLoop()                   { master = NULL; }
 };
 
+enum {
+	DRAWDRAGRECT_SOLID, DRAWDRAGRECT_NORMAL, DRAWDRAGRECT_DASHED
+};
+
 void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
-                  Color color, uint64 pattern);
+                  Color color, int type, int animation);
 
 bool PointLoop(Ctrl& ctrl, const Vector<Image>& ani, int ani_ms);
 bool PointLoop(Ctrl& ctrl, const Image& img);
@@ -1425,7 +1426,7 @@ protected:
 	Color           color;
 	Image           cursorimage;
 	int             width;
-	uint64          pattern;
+	int             pattern;
 	int             animation;
 	int             panim;
 	Rounder        *rounder;
@@ -1448,7 +1449,7 @@ public:
 	RectTracker&    Clip(const Rect& c)            { clip = c; return *this; }
 	RectTracker&    Width(int n)                   { width = n; return *this; }
 	RectTracker&    SetColor(Color c)              { color = c; return *this; }
-	RectTracker&    Pattern(uint64 p)              { pattern = p; return *this; }
+//	RectTracker&    Pattern(uint64 p)              { pattern = p; return *this; }
 	RectTracker&    Dashed();
 	RectTracker&    Solid();
 	RectTracker&    Animation(int step_ms = 40)    { animation = step_ms; return *this; }
