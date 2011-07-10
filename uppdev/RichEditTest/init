@@ -2,4 +2,5 @@
 #define _RichEditTest_icpp_init_stub
 #include "RichEdit/init"
 #include "plugin\jpg/init"
+#include "Painter/init"
 #endif

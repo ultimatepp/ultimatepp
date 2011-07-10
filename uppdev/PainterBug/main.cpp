@@ -7,40 +7,91 @@ using namespace Upp;
 #define IMAGEFILE <PainterBug/Pictures.iml>
 #include <Draw/iml.h>
 
-struct App : TopWindow
+void InvRectPath(Painter& pw, const Rect& r)
 {
-	App()
-	{
-		Sizeable();
-		Zoomable();		
-	}
+	pw.Move(r.left, r.top).Line(r.left, r.bottom).Line(r.right, r.bottom).Line(r.right, r.top).Close();
+}
+
+static void sRenderLine(Painter& w, int x, int y, int dx, int dy, int cx, int cy, int len, byte pattern)
+{
+	for(int i = 0; i < len; i++)
+		if((256 >> (i & 3)) & pattern)
+			w.DrawRect(x + dx * i, y + dy * i, cx, cy, Black);
+}
+
+static void sRenderRect(Painter& w, const Rect& r, int n, byte pattern)
+{
+	sRenderLine(w, r.left, r.top, 1, 0, 1, n, r.GetWidth(), pattern);
+	sRenderLine(w, r.left, r.bottom - 1, 1, 0, 1, n, r.GetWidth(), pattern);
+	sRenderLine(w, r.left, r.top, 0, 1, n, 1, r.GetHeight(), pattern);
+	sRenderLine(w, r.right - 1, r.top, 0, 1, n, 1, r.GetHeight(), pattern);
+}
+
+// This is Upp conversion of Qt example, see
+// http://doc.trolltech.com/3.0/hello-example.html
+
+#include <CtrlLib/CtrlLib.h>
+
+using namespace Upp;
+
+class HelloWorld : public TopWindow {
+public:
+	virtual void LeftDown(Point, dword);
+	virtual void Paint(Draw& w);
+
+private:
+	int pos;
+	int dir;
+	String text;
 	
-	virtual void Paint(Draw& w)
-	{
-		Size sz = GetSize();
-		w.DrawRect(sz, White);
-		
-		
-		w.DrawText(10, 2, "GDI");
-		w.DrawText(250, 2, "Painter");
-		
-		int cx = 200;
-		int cy = 150;
-		
-		ChPaint(w, Rect(10, 20, 10 + cx, 20 + cy), Images::WindowBg());
-		
-		ImageBuffer ib(cx, cy);
-		BufferPainter bp(ib);
-		
-		bp.Clear(RGBAZero());
-		
-		ChPaint(bp, Rect(0, 0, cx, cy), Images::WindowBg());
-		
-		w.DrawImage(250, 20, ib);
-	}
+	void Animate();
+
+public:
+	typedef HelloWorld CLASSNAME;
+
+	HelloWorld& Text(const String& t)     { text = t; Refresh(); return *this; }
+
+	HelloWorld();
 };
+
+HelloWorld::HelloWorld()
+{
+	SetTimeCallback(-1, THISBACK(Animate));
+	BackPaint();
+	Zoomable().Sizeable();
+	pos = 0;
+	dir = 1;
+}
+
+void HelloWorld::LeftDown(Point, dword)
+{
+	Close();
+}
+
+void HelloWorld::Animate()
+{
+	pos += dir;
+	if(pos <= 0) {
+		dir = 1;
+		pos = 0;
+	}
+	if(pos >= 2000) {
+		dir = -1;
+		pos = 2000;
+	}
+	Refresh();
+}
+
+void HelloWorld::Paint(Draw& w)
+{
+	w.DrawRect(GetSize(), White());
+	DrawFrame(w, Size(pos, pos), InvertColor);
+}
 
 GUI_APP_MAIN
 {
-	App().Run();
+	HelloWorld hw;
+	hw.Title("Hello world example");
+	hw.Text(Nvl(Join(CommandLine(), " "), "Hello world !"));
+	hw.Run();
 }
