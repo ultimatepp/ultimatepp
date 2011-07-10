@@ -6,10 +6,10 @@ extern void GuiMainFn_();
 
 NAMESPACE_UPP
 
-HWND   hWnd;
-HWND   glHwnd;
-HDC    hDC;
-HGLRC  hRC;
+HWND   hWnd = NULL;
+HWND   glHwnd = NULL;
+HDC    hDC = NULL;
+HGLRC  hRC = NULL;
 
 bool glEndSession = false;
 
@@ -50,23 +50,23 @@ void ActivateGlContext()
 
 void DestroyGl(bool destroyWindow)
 {
-	wglMakeCurrent(NULL, NULL);
+	if(hDC != NULL && hRC != NULL)
+		wglMakeCurrent(NULL, NULL);
 	
-	if(hRC)
-	    wglDeleteContext(hRC);
+	if(hRC) 
+	{
+		wglDeleteContext(hRC);
+		hRC = NULL;
+	}
 	if(hDC)
-	    ::ReleaseDC(glHwnd, hDC);
-	
-	if(destroyWindow)
-		::DestroyWindow(glHwnd);
+	{
+		::ReleaseDC(glHwnd, hDC);
+		hDC = NULL;
+	}
 }
 
-int GlInit(HINSTANCE hInstance)
+int CreateGlWindow(HINSTANCE hInstance)
 {
-	GuiLock __;
-	
-	Ctrl::InitGl();
-	
 	WNDCLASSW  wc;
 	Zero(wc);
 	wc.style         = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -85,15 +85,27 @@ int GlInit(HINSTANCE hInstance)
 	    
 	if(!glHwnd)
 		return -1;
-	                       
+	
+	return 1;
+}
+
+int CreateGlContext()
+{
 	hDC = ::GetDC(glHwnd);
 	if(!hDC)
-		return -2;
+		return -1;
+	
 	PIXELFORMATDESCRIPTOR pfd;
 	memset(&pfd, 0, sizeof(pfd));
 	pfd.nSize = sizeof(pfd);
 	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL | PFD_SUPPORT_COMPOSITION | PFD_GENERIC_ACCELERATED;
+	pfd.dwFlags = 
+		PFD_DRAW_TO_WINDOW | 
+		PFD_DOUBLEBUFFER | 
+		PFD_SUPPORT_OPENGL |
+		PFD_SUPPORT_COMPOSITION |
+		//0x00008000 | 
+		PFD_GENERIC_ACCELERATED;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;
 	pfd.cDepthBits = 24;
@@ -102,42 +114,40 @@ int GlInit(HINSTANCE hInstance)
 	int pf = ChoosePixelFormat(hDC, &pfd);
 	if(!pf) {
 		RLOG("OpenGL: ChoosePixelFormat error");
-		DestroyGl();
-		return -3;
+		return -2;
 	}
+	RLOG("OpenGL: ChoosePixelFormat ok..");
 	if(!SetPixelFormat(hDC, pf, &pfd)) {
 		RLOG("OpenGL: SetPixelFormat error");
-		DestroyGl();
-		return -4;
+		return -3;
 	}
 	DescribePixelFormat(hDC, pf, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
 	hRC = wglCreateContext(hDC);
 	if(!hRC)
 	{
 		RLOG("OpenGL: wglCreateContext error");
-		DestroyGl();
-		return -5;
+		return -4;
 	}
+	RLOG("OpenGL: wglCreateContext ok..");
 	if(!wglMakeCurrent(hDC, hRC))
 	{
 		RLOG("OpenGL: wglMakeCurrent error");
-		DestroyGl();
-		return -6;
+		return -5;
 	}
-	//ActivateGLContext();
+	RLOG("OpenGL: wglMakeCurrent ok..");
 	GLenum err = glewInit();
 	if(err != GLEW_OK)
 	{
 		RLOG("OpenGL: Glew library initialization error: " + String((const char*) glewGetErrorString(err)));
-		DestroyGl();
-		return -7;
+		return -6;
 	}
-	
+	RLOG("OpenGL: glewInit ok..");
 	//InitializeShaders();
 	wglSwapIntervalEXT(0);
 	//SetTimeCallback(-10, THISBACK(Repaint), 1);
 	                       
 	SetTimer(glHwnd, 1, 10, NULL);
+	RLOG("OpenGL: SetTimer ok..");
 	return 1;
 }
 
@@ -148,7 +158,17 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 {
 	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine));
 	UPP::AppInitEnvironment__();
-	int r = UPP::GlInit(hInstance);
+//	Ctrl::InitTimer();
+	Ctrl::InitGl();
+	//int r = UPP::GlInit(hInstance);
+	int r = UPP::CreateGlWindow(hInstance);
+	if(r < 0)
+		::MessageBox(NULL, Format("OpenGL window could not be created: %r (%s)", r, GetLastErrorMessage()), NULL, MB_ICONEXCLAMATION | MB_OK);
+	else
+		r = UPP::CreateGlContext();
+	if(r < 0)
+		::MessageBox(NULL, Format("OpenGL context could not be created: %r (%s)", r, GetLastErrorMessage()), NULL, MB_ICONEXCLAMATION | MB_OK);
+
 	if(r > 0) 
 	{
 		GuiMainFn_();
@@ -158,7 +178,6 @@ int AppMain(HINSTANCE hInstance, LPSTR lpCmdLine)
 		UPP::DestroyGl(false);
 		return UPP::GetExitCode();
 	} else {
-		::MessageBox(NULL, Format("OpenGL window could not be initialized: %d", r), NULL, MB_ICONEXCLAMATION | MB_OK);
 		return r;
 	}
 }

@@ -1,4 +1,4 @@
-#include <CtrlCore/CtrlCore.h>
+#include "TopFrame.h"
 
 #ifdef GUI_WINGL
 

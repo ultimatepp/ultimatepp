@@ -26,5 +26,6 @@
 #endif
 
 #ifdef flagWINGL
-#define GUIPLATFORM_INCLUDE <WinGl/WinGl.h>
+#define GUIPLATFORM_KEYCODES_INCLUDE <WinGl/Keys.h>
+#define GUIPLATFORM_INCLUDE          <WinGl/WinGl.h>
 #endif

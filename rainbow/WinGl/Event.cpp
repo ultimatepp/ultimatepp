@@ -1,4 +1,5 @@
-#include <CtrlCore/CtrlCore.h>
+//#include <CtrlCore/CtrlCore.h>
+#include "TopFrame.h"
 
 #ifdef GUI_WINGL
 
@@ -12,6 +13,19 @@ Point GetMousePos() {
 	return glmousepos;
 }
 
+void Ctrl::MouseEventGl(Ptr<Ctrl> t, int event, Point p, int zdelta)
+{
+	Rect rr = t->GetRect();
+	if((event & Ctrl::ACTION) == DOWN && !dynamic_cast<TopWindowFrame *>(~t)) {
+		t->SetFocusWnd();
+		if(t) t->SetForeground();
+	}
+	if(t)
+		t->DispatchMouse(event, p - rr.TopLeft(), zdelta);
+	if(t)
+		t->PostInput();
+}
+
 void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 {
 	glmousepos = p;
@@ -23,7 +37,18 @@ void Ctrl::DoMouseGl(int event, Point p, int zdelta)
 	else
 	if(a == Ctrl::DOWN && ignoreclick)
 		return;
-	LLOG("Mouse event: " << event << " position " << p << " zdelta " << zdelta);
+	LLOG("Mouse event: " << event << " position " << p << " zdelta " << zdelta << ", capture " << Upp::Name(captureCtrl));
+	if(captureCtrl)
+		MouseEventGl(captureCtrl->GetTopCtrl(), event, p, zdelta);
+	else
+		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+			Ptr<Ctrl> t = topctrl[i];
+			Rect rr = t->GetRect();
+			if(rr.Contains(p)) {
+				MouseEventGl(t, event, p, zdelta);
+				return;
+			}
+		}
 	Ctrl *desktop = GetDesktop();
 	if(desktop) {
 		desktop->DispatchMouse(event, p, zdelta);

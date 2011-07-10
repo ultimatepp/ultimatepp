@@ -105,8 +105,6 @@ void OpenGLFont::Parse(const char* xml, bool parsePages)
 			p.Skip();
 	}
 }
-extern "C" byte* resTahoma14Img;
-extern "C" int resTahoma14Img_length;
 void OpenGLFont::UpdateTextures()
 {
 	if(texturesUpdated)
@@ -121,14 +119,11 @@ void OpenGLFont::UpdateTextures()
 	
 	for(int i = 0; i < compiledFiles.GetCount(); i++)
 	{
-		DUMP(compiledFiles[i]);
-		//String imgData((const char*) compiledFiles[i]);
+/*		DUMP(compiledFiles[i]);
 		MemStream ms((void*) resTahoma14Img, resTahoma14Img_length);
-		//String imgData((const char*) resTahoma14Img);
-		//Image img = StreamRaster::LoadStringAny(imgData);
 		Image img = StreamRaster::LoadAny(ms);
 		int64 serialId = Resources::Bind(img, true);
-		pages[i] = serialId;
+		pages[i] = serialId;*/
 	}
 
 	texturesUpdated = true;
