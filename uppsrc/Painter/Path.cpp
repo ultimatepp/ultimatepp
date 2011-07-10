@@ -1,5 +1,7 @@
 #include "Painter.h"
 
+#define LLOG(x) // DLOG(x)
+
 NAMESPACE_UPP
 
 void BufferPainter::ClearPath()
@@ -46,6 +48,7 @@ void *BufferPainter::PathAddRaw(int type, int size)
 
 void BufferPainter::MoveOp(const Pointf& p, bool rel)
 {
+	LLOG("@ MoveOp " << p << ", " << rel);
 	move = ccontrol = qcontrol = EndPoint(p, rel);
 	PathAdd<LinearData>(MOVE).p = move;
 }
@@ -58,12 +61,14 @@ void BufferPainter::DoMove0()
 
 void BufferPainter::LineOp(const Pointf& p, bool rel)
 {
+	LLOG("@ LineOp " << p << ", " << rel);
 	DoMove0();
 	PathAdd<LinearData>(LINE).p = ccontrol = qcontrol = EndPoint(p, rel);
 }
 
 void BufferPainter::QuadraticOp(const Pointf& p1, const Pointf& p, bool rel)
 {
+	LLOG("@ QuadraticOp " << p1 << ", " << p << ", " << rel);
 	DoMove0();
 	QuadraticData& m = PathAdd<QuadraticData>(QUADRATIC);
 	qcontrol = m.p1 = PathPoint(p1, rel);
@@ -77,6 +82,7 @@ void BufferPainter::QuadraticOp(const Pointf& p, bool rel)
 
 void BufferPainter::CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p, bool rel)
 {
+	LLOG("@ CubicOp " << p1 << ", " << p1 << ", " << p << ", " << rel);
 	DoMove0();
 	CubicData& m = PathAdd<CubicData>(CUBIC);
 	m.p1 = PathPoint(p1, rel);
@@ -91,6 +97,7 @@ void BufferPainter::CubicOp(const Pointf& p2, const Pointf& p, bool rel)
 
 void BufferPainter::ArcOp(const Pointf& c, const Pointf& r, double angle, double sweep, bool rel)
 {
+	LLOG("@ ArcOp " << c << ", " << r << ", " << angle << ", " << sweep << ", " << rel);
 	DoMove0();
 	DoArc(PathPoint(c, rel), r, angle, sweep, 0);
 }
@@ -98,6 +105,7 @@ void BufferPainter::ArcOp(const Pointf& c, const Pointf& r, double angle, double
 void BufferPainter::SvgArcOp(const Pointf& r, double xangle, bool large, bool sweep,
                              const Pointf& p, bool rel)
 {
+	LLOG("@ SvgArcOp " << r << ", " << xangle << ", " << large << ", " << sweep << ", " << p << ", " << rel);
 	DoMove0();
 	Pointf c = current;
 	DoSvgArc(r, xangle, large, sweep, EndPoint(p, rel), c);
@@ -105,6 +113,7 @@ void BufferPainter::SvgArcOp(const Pointf& r, double xangle, bool large, bool sw
 
 void BufferPainter::CloseOp()
 {
+	LLOG("@ CloseOp");
 	if(!IsNull(move) && !IsNull(current) && current != move) {
 		Line(move);
 		move = Null;
@@ -113,12 +122,14 @@ void BufferPainter::CloseOp()
 
 void BufferPainter::DivOp()
 {
+	LLOG("@ DivOp");
 	CloseOp();
 	path.type.Add(DIV);
 }
 
 void BufferPainter::CharacterOp(const Pointf& p, int ch, Font fnt)
 {
+	LLOG("@ CharacterOp " << p << ", " << ch << ", " << fnt);
 #if 0
 	DoMove0();
 	PaintCharacter(*this, p, ch, fnt);
