@@ -17,6 +17,8 @@ file
 	Event.cpp,
 	Top.h,
 	Top.cpp,
+	TopFrame.h,
+	TopFrame.cpp,
 	Ctrl.h,
 	Ctrl.cpp,
 	Clip.cpp,
@@ -30,6 +32,5 @@ file
 	wglew.h,
 	glew.c,
 	Resources readonly separator,
-	WinGl.iml,
-	Fonts.brc;
+	WinGl.iml;
 

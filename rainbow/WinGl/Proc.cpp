@@ -54,6 +54,10 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 #endif
 	//	LLOG("Ctrl::WindowProc(" << message << ") in " << ::Name(this) << ", focus " << (void *)::GetFocus());
 	switch(message) {
+	case WM_DESTROY:
+		DestroyGl();
+		::PostQuitMessage(0);
+		break;
 	case WM_LBUTTONDOWN:
 		Ctrl::DoMouseGl(Ctrl::LEFTDOWN, Point((dword)lParam));
 		return 0L;
@@ -153,8 +157,6 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 	case WM_SIZE:
 		//ActivateGlContext();
 		Ctrl::SetWindowSize(Size(LOWORD(lParam), HIWORD(lParam)));
-		return 0L;
-	case WM_MOVE:
 		return 0L;
 	case WM_HELP:
 		return TRUE;

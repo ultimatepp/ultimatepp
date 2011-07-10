@@ -1,5 +1,5 @@
 #include <CtrlCore/CtrlCore.h>
-#include <WinGl/Fonts.brc>
+//#include <WinGl/Fonts.brc>
 
 #ifdef GUI_WINGL
 
@@ -115,10 +115,10 @@ OpenGLFont& Resources::GetFontBrc(const char* fontName, const byte* fontDef, con
 OpenGLFont& Resources::StdFont(bool bold)
 {
 	return GetFont(bold ? "tahoma14b.fnt" : "tahoma14.fnt");
-	return GetFontBrc(
+/*	return GetFontBrc(
 	    bold ? "tahoma14b.fnt" : "tahoma14.fnt",
 		bold ? resTahoma14Fnt : resTahoma14BoldFnt,
-		bold ? resTahoma14Img : resTahoma14BoldImg);
+		bold ? resTahoma14Img : resTahoma14BoldImg);*/
 }
 
 dword SystemDraw::GetInfo() const

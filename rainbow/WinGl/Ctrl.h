@@ -1,6 +1,5 @@
 //$ class Ctrl {
 	static Ptr<Ctrl>      desktop;
-	static Rect screenRect;
 	static Vector<Ctrl *> topctrl;
 
 	static Point fbCursorPos;
@@ -14,7 +13,16 @@
 	static int   fbCaretTm;
 
 	int FindTopCtrl() const;
+	static void SyncTopWindows();
+	void NewTop()                       { top = new Top; top->owner_window = NULL; }
+	void PutForeground();
+	static void MouseEventGl(Ptr<Ctrl> t, int event, Point p, int zdelta);
+
+	friend class TopWindowFrame;
+	friend class SystemDraw;
+
 public:
+	static Rect screenRect;
 
 	static void InitGl();
 	static void DoMouseGl(int event, Point p, int zdelta = 0);

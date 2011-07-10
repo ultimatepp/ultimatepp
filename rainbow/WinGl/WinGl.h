@@ -1,18 +1,25 @@
 #ifndef _WinGl_WinGl_h_
 #define _WinGl_WinGl_h_
 
+#ifndef GLEW_STATIC
 #define GLEW_STATIC
+#endif
 #include <WinGl/glew.h>
 #include <WinGl/wglew.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include <Painter/Painter.h>
-
 #define GUI_WINGL
 
+#include <Painter/Painter.h>
+
+
 NAMESPACE_UPP
+
+#define IMAGECLASS WinGlImg
+#define IMAGEFILE <WinGl/WinGl.iml>
+#include <Draw/iml_header.h>
 
 extern bool  glEndSession;
 extern HWND  hWnd;
@@ -20,6 +27,8 @@ extern HWND  glHwnd;
 extern HDC   hDC;
 extern HGLRC hRC;
 
+int CreateGlWindow(HINSTANCE hInstance);
+int CreateGlContext();
 void ActivateGlContext();
 void DestroyGl(bool destroyWindow = true);
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -286,20 +295,21 @@ public:
 	~PrinterJob()                                       {}
 };
 
-END_UPP_NAMESPACE
+class TopWindowFrame;
 
-#define GUIPLATFORM_KEYCODES_INCLUDE <WinGl/Keys.h>
-#define GUIPLATFORM_CTRL_TOP_DECLS
+#define GUIPLATFORM_CTRL_TOP_DECLS   Ctrl *owner_window;
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <WinGl/Ctrl.h>
 #define GUIPLATFORM_PASTECLIP_DECLS
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <WinGl/Top.h>
 
 //#include <CtrlCore/stdids.h>
-#ifndef PLATFORM_WIN32
+/*#ifndef PLATFORM_WIN32
 #include "vkcodes.h" //FIXME
-#endif
+#endif*/
+
+END_UPP_NAMESPACE
+
 
 #define GUIPLATFORM_INCLUDE_AFTER <WinGl/After.h>
-
 
 #endif

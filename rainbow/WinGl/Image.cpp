@@ -348,9 +348,6 @@ Image Image::Hand() WCURSOR_(IDC_HAND)*/
 
 #define IMAGECLASS WinGlImg
 #define IMAGEFILE <WinGl/WinGl.iml>
-#include <Draw/iml_header.h>
-#define IMAGECLASS WinGlImg
-#define IMAGEFILE <WinGl/WinGl.iml>
 #include <Draw/iml_source.h>
 
 Image Image::Arrow() { return WinGlImg::arrow(); }
