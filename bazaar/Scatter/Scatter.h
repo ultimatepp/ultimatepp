@@ -108,7 +108,7 @@ public:
 	void Zoom(double scale, bool hor = true, bool ver = true); 
 	void Scroll(double factorX, double factorY);
 
-	Scatter& SetRange(double rx, double ry, double ry2 = -1);
+	Scatter& SetRange(double rx, double ry, double ry2 = 100);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
 	double GetY2Range()const {return yRange2;}

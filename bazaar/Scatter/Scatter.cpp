@@ -220,17 +220,21 @@ void Scatter::DrawLegend(Draw& w,const int& scale) const
 
 void Scatter::AdjustMinUnitX()
 {
-	while (xMinUnit < 0)
-		xMinUnit += xMajorUnit;	
-	while (xMinUnit > xMajorUnit)
-		xMinUnit -= xMajorUnit;
+	if (xMajorUnit > 0) {
+		while (xMinUnit < 0)
+			xMinUnit += xMajorUnit;	
+		while (xMinUnit > xMajorUnit)
+			xMinUnit -= xMajorUnit;
+	}
 }
 void Scatter::AdjustMinUnitY()
 {
-	while (yMinUnit < 0)
-		yMinUnit += yMajorUnit;	
-	while (yMinUnit > yMajorUnit)
-		yMinUnit -= yMajorUnit;
+	if (yMajorUnit > 0) {
+		while (yMinUnit < 0)
+			yMinUnit += yMajorUnit;	
+		while (yMinUnit > yMajorUnit)
+			yMinUnit -= yMajorUnit;
+	}
 }
 void Scatter::AdjustMinUnitY2()
 {
@@ -243,6 +247,8 @@ void Scatter::AdjustMinUnitY2()
 }
 Scatter &Scatter::SetRange(double rx, double ry, double ry2)
 {
+	if (rx <= 0 || ry <= 0 || ry2 <= 0)
+		throw (Exc(t_("Invalid graph range")));	
 	xRange=rx;
 	yRange=ry;
 	yRange2=ry2;
