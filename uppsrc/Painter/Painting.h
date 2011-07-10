@@ -61,8 +61,8 @@ class PaintingPainter : public Painter {
 	void Put(int c)                { cmd.Put(c); }
 	void Put32(int c)              { cmd.Put32(c); }
 	void Put(const RGBA& c)        { cmd.Put(&c, sizeof(RGBA)); }
-	void Putf(const double& d)     { cmd.Put(&d, sizeof(double)); }
-	void Putf(const Pointf& p)     { cmd.Put(&p, sizeof(p)); }
+	void Putf(const double& d)     { ASSERT(!IsNaN(d)); cmd.Put(&d, sizeof(double)); }
+	void Putf(const Pointf& p)     { ASSERT(!IsNaN(p.x) && !IsNaN(p.y)); cmd.Put(&p, sizeof(p)); }
 	void Putf(const Xform2D& m)    { cmd.Put(&m, sizeof(m)); }
 	void Put(const Font& f)        { cmd.Put(&f, sizeof(Font)); }
 
