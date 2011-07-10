@@ -170,7 +170,7 @@ String Format64Hex(uint64 a)
 
 String FormatInteger(int a)            { return IsNull(a) ? String() : FormatInt(a); }
 String FormatUnsigned(unsigned long a) { return Sprintf("%u", a); }
-String FormatDouble(double a)          { return IsNull(a) ? String() : FormatDouble(a, 10, FD_REL); }
+String FormatDouble(double a)          { return IsNull(a) ? String() : IsNaN(a) ? "?" : FormatDouble(a, 10, FD_REL); }
 String FormatBool(bool a)              { return a ? "true" : "false"; }
 String FormatPtr(const void *p)        { return "0x" + FormatHex(p); }
 

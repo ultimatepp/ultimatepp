@@ -248,6 +248,12 @@ typedef long long unsigned uint64;
 typedef uint64             qword;
 
 #ifdef COMPILER_MSC
+inline bool IsNaN(double d)        { return _isnan(d); }
+#else
+inline bool IsNaN(double d)        { return isnan(d); }
+#endif
+
+#ifdef COMPILER_MSC
 	#define I64(c) ((int64)COMBINE(c, i64))
 #else
 	#define I64(c) ((int64)COMBINE(c, LL))
