@@ -283,4 +283,11 @@ bool Perform(Report& r, const char *caption)
 	return ReportWindow().Perform(r, 100, caption);
 }
 
+bool QtfReport(const String& qtf, const char *name)
+{
+	Report r;
+	r << qtf;
+	return Perform(r, name);
+}
+
 END_UPP_NAMESPACE
