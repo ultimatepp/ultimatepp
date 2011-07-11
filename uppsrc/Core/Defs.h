@@ -247,7 +247,7 @@ typedef long long unsigned uint64;
 
 typedef uint64             qword;
 
-#ifdef COMPILER_MSC
+#ifdef PLATFORM_WIN32
 inline bool IsNaN(double d)        { return _isnan(d); }
 #else
 inline bool IsNaN(double d)        { return isnan(d); }
