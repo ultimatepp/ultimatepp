@@ -146,6 +146,7 @@ void   Print(Report& r, PrinterJob& pd, bool center = true);
 bool   DefaultPrint(Report& r, int i, const char *_name = t_("Report"));
 bool   Print(Report& r, int i, const char *name = t_("Report"));
 bool   Perform(Report& r, const char *name = t_("Report"));
+bool   QtfReport(const String& qtf, const char *name = t_("Report"));
 
 END_UPP_NAMESPACE
 
