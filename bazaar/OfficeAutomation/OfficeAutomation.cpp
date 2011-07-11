@@ -378,6 +378,15 @@ ObjectOle Ole::MethodGet(ObjectOle from, String which, VariantOle &value, Varian
 		return result.pdispVal;
 }
 
+ObjectOle Ole::MethodGet(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3, VariantOle &value4, VariantOle &value5) {
+	VARIANT result;
+	VariantInit(&result);
+	if(!Ole::Invoke(DISPATCH_METHOD, &result, from, which, 4, value.var, value2.var, value3.var, value4.var, value5.var))
+	   	return NULL;
+	else
+		return result.pdispVal;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 INITBLOCK {
@@ -595,6 +604,50 @@ Value MSSheet::GetValue(String cell) {
 	
 	OfficeSheet::CellToColRow(cell, col, row);
 	return GetValue(col, row);
+}
+
+Value MSSheet::GetText(String cell) {
+	int row, col;
+	
+	OfficeSheet::CellToColRow(cell, col, row);
+	return GetText(col, row);
+}
+
+// cell in textual format like "B14" 
+bool MSSheet::SetHyperlink(String cell, String address, String value) {
+	int col, row;
+	
+	OfficeSheet::CellToColRow(cell, col, row);
+	return MSSheet::SetValue(col, row, value);
+}
+
+bool MSSheet::SetHyperlink(int col, int row, String address, String value) {
+	if (!Sheet)
+		return false;
+
+	if (!Select(col, row, col, row))
+	    return false;
+	
+	return SetHyperlink(address, value);
+}
+
+bool MSSheet::SetHyperlink(String address, String value) {
+	if (!Sheet)
+		return false;
+
+	if (!Range)
+		return false;
+
+	ObjectOle hyperlinks = Ole::GetObject(Sheet, "Hyperlinks");
+	
+	VariantOle textToDisplay, screenTip, subAddress, saddress, range;
+	textToDisplay.BString(value);
+	screenTip.BString("");
+	subAddress.BString("");
+	saddress.BString(address);
+	range.ObjectOle(Range);
+	
+	return Ole::MethodGet(hyperlinks, "Add", textToDisplay, screenTip, subAddress, saddress, range);
 }
 
 bool MSSheet::SaveAs(String fileName, String type) {
@@ -1711,6 +1764,13 @@ Value OPENSheet::GetValue(String cell) {
 	return GetValue(col, row);
 }
 
+Value OPENSheet::GetText(String cell) {
+	int row, col;
+	
+	OfficeSheet::CellToColRow(cell, col, row);
+	return GetText(col, row);
+}
+
 bool OPENSheet::SaveAs(String fileName, String type) {
 	if (!Document)
 		return false;
@@ -1792,6 +1852,38 @@ bool OPENSheet::SetValue(Value value) {
 		return Ole::Method(Range, "setFormula", vText);		
 	else
 		return Ole::Method(Range, "setValue", vText);		
+}
+
+bool OPENSheet::SetHyperlink(String cell, String address, String text) {	// cell in textual format like "B14" 
+	int col, row;
+	OfficeSheet::CellToColRow(cell, col, row);
+	return SetHyperlink(col, row, address, text);
+}
+
+bool OPENSheet::SetHyperlink(int col, int row, String address, String text) {
+/*	if (!SelCell(col, row))
+		return false;
+	VariantOle vText;
+	vText.Value(value); 
+	if (value.Is<String>() || value.Is<Date>() || value.Is<Time>())
+		return Ole::Method(Cell, "setFormula", vText);		
+	else
+		return Ole::Method(Cell, "setValue", vText);		
+*/
+	return false;
+}
+
+bool OPENSheet::SetHyperlink(String address, String text) {
+/*	if(!Range)
+		return false;
+	VariantOle vText;
+	vText.Value(value); 
+	if (value.Is<String>() || value.Is<Date>() || value.Is<Time>())
+		return Ole::Method(Range, "setFormula", vText);		
+	else
+		return Ole::Method(Range, "setValue", vText);		
+*/
+	return false;
 }
 
 bool OPENSheet::SetItalic(String cell, bool italic) {

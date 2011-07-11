@@ -12,6 +12,10 @@
 	virtual Value GetValue(int col, int row);				\
 	virtual Value GetValue(String cell);					\
 	virtual Value GetText(int col, int row);				\
+	virtual Value GetText(String cell);						\
+	virtual bool SetHyperlink(int col, int row, String address, String text);	\
+	virtual bool SetHyperlink(String cell, String address, String text);	\
+	virtual bool SetHyperlink(String address, String text);					\
 	virtual bool Replace(Value search, Value replace);		\
 															\
 	virtual bool SetBold(int col, int row, bool bold);		\

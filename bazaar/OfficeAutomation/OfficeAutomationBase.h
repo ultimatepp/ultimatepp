@@ -167,6 +167,7 @@ public:
 	static ObjectOle MethodGet(ObjectOle from, String which, VariantOle &value, VariantOle &value2);
 	static ObjectOle MethodGet(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3);
 	static ObjectOle MethodGet(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3, VariantOle &value4);
+	static ObjectOle MethodGet(ObjectOle from, String which, VariantOle &value, VariantOle &value2, VariantOle &value3, VariantOle &value4, VariantOle &value5);
 	static bool IsOn() {return numOleInit > 0;};
 private:
 	static int numOleInit;

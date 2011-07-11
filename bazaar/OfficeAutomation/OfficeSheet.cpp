@@ -111,8 +111,20 @@ Value OfficeSheet::GetValue(String cell) {return (static_cast<SheetPlugin *>(Get
 Value SheetPlugin::GetValue(int col, int row) {return Null;}
 Value OfficeSheet::GetValue(int col, int row) {return (static_cast<SheetPlugin *>(GetData()))->GetValue(col, row);}
 
+Value SheetPlugin::GetText(String cell) {return Null;}
+Value OfficeSheet::GetText(String cell) {return (static_cast<SheetPlugin *>(GetData()))->GetText(cell);}
+
 Value SheetPlugin::GetText(int col, int row) {return Null;}
 Value OfficeSheet::GetText(int col, int row) {return (static_cast<SheetPlugin *>(GetData()))->GetText(col, row);}
+
+bool SheetPlugin::SetHyperlink(int col, int row, String address, String text) {return false;}
+bool OfficeSheet::SetHyperlink(int col, int row, String address, String text) {return (static_cast<SheetPlugin *>(GetData()))->SetHyperlink(col, row, address, text);}
+
+bool SheetPlugin::SetHyperlink(String cell, String address, String text) {return false;}
+bool OfficeSheet::SetHyperlink(String cell, String address, String text) {return (static_cast<SheetPlugin *>(GetData()))->SetHyperlink(cell, address, text);}
+
+bool SheetPlugin::SetHyperlink(String address, String text) {return false;}
+bool OfficeSheet::SetHyperlink(String address, String text) {return (static_cast<SheetPlugin *>(GetData()))->SetHyperlink(address, text);}
 
 bool SheetPlugin::Replace(Value search, Value replace) {return false;}
 bool OfficeSheet::Replace(Value search, Value replace) {return (static_cast<SheetPlugin *>(GetData()))->Replace(search, replace);}
