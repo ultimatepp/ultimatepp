@@ -22,6 +22,12 @@ struct App : public Ctrl {
 					 Black(),
 					 pattern);
 	}
+	
+	virtual Image CursorImage(Point p, dword keyflags) {
+		Animate();
+		return Image::Arrow();
+	}
+
 
 	void Animate() {
 		pattern = I64(0xf0f0) >> (pos++ & 7);
@@ -56,7 +62,7 @@ struct App : public Ctrl {
 		pos = 0;
 		a = 200;
 		dir = 1;
-		PostCallback(THISBACK(Animate));
+//		PostCallback(THISBACK(Animate));
 		SetCaret(0, 0, 20, 20);
 	}
 };
