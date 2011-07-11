@@ -156,12 +156,35 @@ void FBUpdate(const Rect& inv)
 {
 	//The invalidated areas accumulate in the update region until the region is processed when the next WM_PAINT message occurs
 	SDL_LockSurface(screen);
-
 	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
 
-	memcpy(screen->pixels, (const char*)~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
+#if 1
+	memcpy(screen->pixels, ~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
+#endif
+
+#if 1
+	ASSERT(Size(screen->w,screen->h) == framebuffer.GetSize());
+
+	Size ssz = inv.GetSize();
+	Size dsz = framebuffer.GetSize();
+
+	ASSERT(Rect(dsz).Contains(inv));
+
+	for(int i = inv.top; i < inv.bottom; i++)
+	{
+		uint32 o = i * dsz.cx + inv.left;
+		memcpy(((RGBA*)screen->pixels) + o, (~framebuffer) + o, ssz.cx * sizeof(RGBA));
+	}
+#endif
+
 	SDL_UnlockSurface(screen);
 	SDL_Flip(screen);
+}
+
+void FBFlush()
+{
+//	::UpdateWindow(fbHWND);
+//	GdiFlush();
 }
 
 void FBInit()

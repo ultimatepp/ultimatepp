@@ -66,10 +66,15 @@ GUI_APP_MAIN
 {
 	App app;
 	ChStdSkin();
+#if defined(GUI_FB) || defined(GUI_WINGL)
 	Ctrl::SetDesktop(app);
 	app.SetFocus();
-	/*TopWindow top;
+#else
+	//make app a TopWindow, that EventLoop can handle
+	//not needed it app is a TopWindow itself
+	TopWindow top;
 	top.Add(app.SizePos());
-	top.Open();*/
+	top.Open();
+#endif
 	Ctrl::EventLoop();
 }
