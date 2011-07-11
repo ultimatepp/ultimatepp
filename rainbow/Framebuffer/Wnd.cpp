@@ -229,7 +229,8 @@ ViewDraw::ViewDraw(Ctrl *ctrl)
 
 ViewDraw::~ViewDraw()
 {
-	Ctrl::invalid.Clear();
+	Ctrl::DoUpdate();
+//	Ctrl::invalid.Clear();
 }
 
 void Ctrl::DoUpdate()
@@ -300,15 +301,17 @@ void Ctrl::WndUpdate0r(const Rect& r)
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
-	DLOG("ProcessEvents " << LOG_BEGIN);
+	LOGBLOCK("@ ProcessEvents");
+	MemoryCheckDebug();
 	if(!ProcessEvent(quit))
 		return false;
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !FBEndSession());
+	TimeStop tm;
 	TimerProc(GetTickCount());
+	DLOG("TimerProc elapsed: " << tm);
 	SweepMkImageCache();
 	DoPaint();
 	FBFlush();
-	DLOG(LOG_END);
 	return true;
 }
 

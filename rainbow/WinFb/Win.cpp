@@ -35,7 +35,7 @@ void FBSleep(int ms)
 {
 	TimeStop tm;
 	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
-	DLOG("@ FBSleep " << tm.Elapsed());
+	LLOG("@ FBSleep " << tm.Elapsed());
 }
 
 void FBInit(HINSTANCE hInstance)
@@ -68,7 +68,7 @@ void fbUpdate(HDC hdc, const Rect& r_)
 	Size sz = framebuffer.GetSize();
 	Rect r = sz;
 //	Rect r = r_;
-	DLOG("fbUpdate " << r);
+	LLOG("fbUpdate " << r);
 	Buffer<byte> data;
 	data.Alloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD)*256);
 	BITMAPINFOHEADER *hi = (BITMAPINFOHEADER *) ~data;;
@@ -89,7 +89,7 @@ void fbUpdate(HDC hdc, const Rect& r_)
 
 void FBUpdate(const Rect& r)
 {
-	DLOG("FBUpdate " << r);
+	LLOG("FBUpdate " << r);
 	if(fbHWND) {
 		HDC hdc = GetDC(fbHWND);
 		fbUpdate(hdc, r);

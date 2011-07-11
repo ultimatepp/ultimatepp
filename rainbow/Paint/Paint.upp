@@ -13,8 +13,7 @@ uses(SDLFB) SDLFb;
 uses(WINGL) WinGl;
 
 file
-	Draw.cpp,
-	U:\h.txt;
+	Draw.cpp;
 
 mainconfig
 	"" = "GUI WINFB",

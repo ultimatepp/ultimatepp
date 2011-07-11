@@ -36,6 +36,9 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2,
 	w.End();
 }
 
+
+
+
 /*
 Size GetScreenSize()
 {
