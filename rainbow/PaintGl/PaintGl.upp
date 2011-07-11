@@ -3,9 +3,19 @@ uses
 
 uses(WINGL) WinGl;
 
+uses(WINFB) WinFb;
+
+uses(SDLFB) SDLFb;
+
+uses(LINUXFB) LinuxFb;
+
 file
 	main.cpp;
 
 mainconfig
-	"" = "GUI WINGL";
+	"" = "GUI WINGL",
+	"" = "GUI WINFB",
+	"" = "GUI SDLFB",
+	"" = "GUI LINUXFB",
+	"" = "GUI";
 

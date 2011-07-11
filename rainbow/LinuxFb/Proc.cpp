@@ -69,6 +69,12 @@ void FBUpdate(const Rect& inv)
 	memcpy(fbp, (const char*)~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
 }
 
+void FBFlush()
+{
+//	::UpdateWindow(fbHWND);
+//	GdiFlush();
+}
+
 void FBInit(const String& fbdevice)
 {
 	Ctrl::InitFB();

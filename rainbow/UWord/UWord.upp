@@ -14,6 +14,8 @@ uses(WINALT) WinAlt;
 
 uses(SDLFB) SDLFb;
 
+uses(LINUXFB) LinuxFb;
+
 uses(WINGL) WinGl;
 
 file
@@ -21,10 +23,11 @@ file
 	UWord.iml;
 
 mainconfig
+	"" = "GUI SKELETON",
 	"" = "GUI WINFB",
 	"" = "GUI WINALT",
-	"" = "GUI SKELETON",
 	"" = "GUI SDLFB",
+	"" = "GUI LINUXFB",
 	"" = "GUI WINGL",
 	"" = "GUI";
 

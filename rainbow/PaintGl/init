@@ -2,4 +2,7 @@
 #define _PaintGl_icpp_init_stub
 #include "CtrlLib/init"
 #include "WinGl/init"
+#include "WinFb/init"
+#include "SDLFb/init"
+#include "LinuxFb/init"
 #endif
