@@ -7,6 +7,8 @@ public:
 Vector<WString>& coreCmdLine__();
 Vector<WString> SplitCmdLine__(const char *cmd);
 
+#ifdef PLATFORM_WIN32
+
 #define GUI_APP_MAIN \
 void GuiMainFn_();\
 \
@@ -23,5 +25,24 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSh
 \
 void GuiMainFn_()
 
+#endif
+
+#ifdef PLATFORM_POSIX
+#define GUI_APP_MAIN \
+void GuiMainFn_(); \
+\
+int main(int argc, const char **argv, const char **envptr) { \
+	UPP::AppInit__(argc, argv, envptr); \
+	GuiMainFn_(); \
+	UPP::Ctrl::CloseTopCtrls(); \
+	UPP::UsrLog("---------- About to delete this log..."); \
+	UPP::DeleteUsrLog(); \
+	UPP::AppExit__(); \
+	return UPP::GetExitCode(); \
+} \
+ \
+void GuiMainFn_()
+
+#endif
 
 class DHCtrl : Ctrl {};

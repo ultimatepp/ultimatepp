@@ -2,7 +2,7 @@
 
 #ifdef GUI_SKELETON
 
-#include <winnls.h>
+//#include <winnls.h>
 
 //#include "imm.h"
 

@@ -2,7 +2,7 @@
 
 #ifdef GUI_SKELETON
 
-#include <shellapi.h>
+//#include <shellapi.h>
 
 NAMESPACE_UPP
 
