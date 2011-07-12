@@ -3,6 +3,11 @@
 #define INT_(x)                    COLUMN_("number", int, x, 0, 0)
 #define INT_ARRAY_(x, items)       COLUMN_ARRAY("number", int, x, 0, 0, items)
 
+#define INT64(x)                   COLUMN("number", int64, x, 0, 0)
+#define INT64_ARRAY(x, items)      COLUMN_ARRAY("number", int64, x, 0, 0, items)
+#define INT64_(x)                  COLUMN_("number", int64, x, 0, 0)
+#define INT64_ARRAY_(x, items)     COLUMN_ARRAY("number", int64, x, 0, 0, items)
+
 #define DOUBLE(x)                  COLUMN("number", double, x, 0, 0)
 #define DOUBLE_ARRAY(x, items)     COLUMN_ARRAY(number, double, x, 0, 0, items)
 #define DOUBLE_(x)                 COLUMN_("number", double, x, 0, 0)
