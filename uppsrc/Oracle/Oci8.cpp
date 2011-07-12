@@ -146,6 +146,7 @@ protected:
 	void      SetParam(int i, const String& s);
 	void      SetParam(int i, const WString& s);
 	void      SetParam(int i, int integer);
+	void      SetParam(int i, int64 integer);
 	void      SetParam(int i, double d);
 	void      SetParam(int i, Date d);
 	void      SetParam(int i, Time d);
@@ -156,6 +157,7 @@ protected:
 	void      GetColumn(int i, String& s) const;
 	void      GetColumn(int i, WString& s) const;
 	void      GetColumn(int i, int& n) const;
+	void      GetColumn(int i, int64& n) const;
 	void      GetColumn(int i, double& d) const;
 	void      GetColumn(int i, Date& d) const;
 	void      GetColumn(int i, Time& t) const;
@@ -229,7 +231,10 @@ void OCI8Connection::Item::DynaFlush() {
 			const byte *p = Data();
 			switch(type) {
 			case SQLT_INT:
-				v = *(const int *)p;
+				if(dyna_len == sizeof(int))
+					v = *(const int *)p;
+				else if(dyna_len == sizeof(int64))
+					v = *(const int64 *)p;
 				break;
 
 			case SQLT_FLT:
@@ -300,6 +305,12 @@ void OCI8Connection::SetParam(int i, const WString& s) {
 void OCI8Connection::SetParam(int i, int integer) {
 	Item& p = PrepareParam(i, SQLT_INT, sizeof(int), 0, VOID_V);
 	*(int *) p.Data() = integer;
+	p.ind[0] = IsNull(integer) ? -1 : 0;
+}
+
+void OCI8Connection::SetParam(int i, int64 integer) {
+	Item& p = PrepareParam(i, SQLT_INT, sizeof(int64), 0, VOID_V);
+	*(int64 *) p.Data() = integer;
 	p.ind[0] = IsNull(integer) ? -1 : 0;
 }
 
@@ -445,12 +456,13 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 		for(int r = 0; r < nrows; r++) {
 			Value v = (a < param_rows[r].GetCount() ? param_rows[r][a] : Value());
 			int len = 0;
+			int vt = v.GetType();
 			if(!IsNull(v)) {
-				if(IsNumber(v)) {
-					if((v.GetType() == INT_V || v.GetType() == BOOL_V)
+				if(IsNumberValueTypeNo(vt)) {
+					if((vt == INT_V || vt == INT64_V || vt == BOOL_V)
 					&& (!sql_type || sql_type == SQLT_INT)) {
 						sql_type = SQLT_INT;
-						len = sizeof(int);
+						len = (vt == INT64_V ? sizeof(int64) : sizeof(int));
 					}
 					else if(!sql_type || sql_type == SQLT_INT || sql_type == SQLT_FLT) {
 						sql_type = SQLT_FLT;
@@ -503,13 +515,24 @@ bool OCI8Connection::BulkExecute(const char *stmt, const Vector< Vector<Value> >
 
 		switch(sql_type) {
 			case SQLT_INT: {
-				ASSERT(sum_len >= nrows * sizeof(int));
-				int *datp = (int *)p.Data();
-				for(int r = 0; r < nrows; r++) {
-					int i = (param_rows[r].GetCount() > a ? (int)param_rows[r][a] : (int)Null);
-					*datp++ = i;
-					*indp++ = IsNull(i) ? -1 : 0;
-					*lenp++ = sizeof(int);
+				ASSERT(sum_len >= nrows * sizeof(max_row_len));
+				if(max_row_len == sizeof(int)) {
+					int *datp = (int *)p.Data();
+					for(int r = 0; r < nrows; r++) {
+						int i = (param_rows[r].GetCount() > a ? (int)param_rows[r][a] : (int)Null);
+						*datp++ = i;
+						*indp++ = IsNull(i) ? -1 : 0;
+						*lenp++ = sizeof(int);
+					}
+				}
+				else if(max_row_len == sizeof(int64)) {
+					int64 *datp = (int64 *)p.Data();
+					for(int r = 0; r < nrows; r++) {
+						int64 i = (param_rows[r].GetCount() > a ? (int64)param_rows[r][a] : (int64)Null);
+						*datp++ = i;
+						*indp++ = IsNull(i) ? -1 : 0;
+						*lenp++ = sizeof(int64);
+					}
 				}
 				break;
 			}
@@ -866,9 +889,63 @@ void OCI8Connection::GetColumn(int i, double& n) const {
 }
 
 void OCI8Connection::GetColumn(int i, int& n) const {
-	double d;
-	GetColumn(i, d);
-	n = IsNull(d) ? (int) Null : (int) d;
+	if(!dynamic_param.IsEmpty()) {
+		n = param[dynamic_param[i]].dynamic[dynamic_pos];
+		return;
+	}
+	const Item& c = column[i];
+	if(c.ind[0] < 0)
+		n = Null;
+	else if(c.type == SQLT_BLOB || c.type == SQLT_CLOB) {
+		ASSERT(sizeof(int) >= sizeof(uintptr_t)); // won't work in 64-bit mode
+		n = (int)(uintptr_t)c.lob;
+	}
+	else if(c.type == SQLT_INT) {
+		if(c.len[0] == sizeof(int))
+			n = *(int *)c.Data();
+		else if(c.len[0] == sizeof(int64))
+			n = (int)*(int64 *)c.Data();
+		else {
+			NEVER();
+			n = Null;
+		}
+	}
+	else if(c.type == SQLT_FLT) {
+		n = (int)*(double *)c.Data();
+	}
+	else {
+		NEVER();
+		n = Null;
+	}
+}
+
+void OCI8Connection::GetColumn(int i, int64& n) const {
+	if(!dynamic_param.IsEmpty()) {
+		n = param[dynamic_param[i]].dynamic[dynamic_pos];
+		return;
+	}
+	const Item& c = column[i];
+	if(c.ind[0] < 0)
+		n = Null;
+	else if(c.type == SQLT_BLOB || c.type == SQLT_CLOB)
+		n = (int64)(uintptr_t)c.lob;
+	else if(c.type == SQLT_INT) {
+		if(c.len[0] == sizeof(int))
+			n = *(int *)c.Data();
+		else if(c.len[0] == sizeof(int64))
+			n = *(int64 *)c.Data();
+		else {
+			NEVER();
+			n = Null;
+		}
+	}
+	else if(c.type == SQLT_FLT) {
+		n = (int64)*(double *)c.Data();
+	}
+	else {
+		NEVER();
+		n = Null;
+	}
 }
 
 void OCI8Connection::GetColumn(int i, Date& d) const {
@@ -926,7 +1003,12 @@ void  OCI8Connection::GetColumn(int i, Ref f) const {
 			f.SetValue(d);
 			break;
 		}
-		case INT64_V:
+		case INT64_V: {
+			int64 d;
+			GetColumn(i, d);
+			f.SetValue(d);
+			break;
+		}
 		case DOUBLE_V: {
 			double d;
 			GetColumn(i, d);
@@ -956,6 +1038,12 @@ void  OCI8Connection::GetColumn(int i, Ref f) const {
 				}
 				case SQLT_BLOB:
 				case SQLT_CLOB:
+				case SQLT_INT: {
+					int64 d;
+					GetColumn(i, d);
+					f.SetValue(d);
+					break;
+				}
 				case SQLT_FLT: {
 					double d;
 					GetColumn(i, d);
