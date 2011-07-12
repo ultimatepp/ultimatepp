@@ -148,7 +148,9 @@ String CreateTFile(const VectorMap<String, LngEntry>& map, const Vector<int>& ln
 		}
 		if(!IsNull(cfile) || rep || obsolete) {
 			String id = map.GetKey(i);
-			out << "T_(" << AsCString(id, 70, java ? "   + " : "     ", ASCSTRING_OCTALHI)
+			out << "T_(" << AsCString(id, 70,
+				java ? "   + " : "     ",
+				ASCSTRING_OCTALHI | ASCSTRING_SMART)
 			    << ")\r\n";
 			for(int j = 0; j < lngset.GetCount(); j++) {
 				int lang = lngset[j];
@@ -169,8 +171,9 @@ String CreateTFile(const VectorMap<String, LngEntry>& map, const Vector<int>& ln
 								}
 							}
 						}
-						out << '(' << AsCString(q >= 0 ? e.text[q] : String(), 70, java ? "   + "
-						                               : "     ", ASCSTRING_OCTALHI) << ")\r\n";
+						out << '(' << AsCString(q >= 0 ? e.text[q] : String(), 70,
+							java ? "   + " : "     ",
+							ASCSTRING_OCTALHI | ASCSTRING_SMART) << ")\r\n";
 					}
 				}
 			}
