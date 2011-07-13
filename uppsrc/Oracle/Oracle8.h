@@ -129,12 +129,12 @@ protected:
 public:
 	operator  bool() const                 { return IsOpen(); }
 
-	void      Assign(const Sql& sql, int blob);
-	void      Assign(Oracle8& session, int blob);
+	void      Assign(const Sql& sql, int64 blob);
+	void      Assign(Oracle8& session, int64 blob);
 
 	OracleBlob();
-	OracleBlob(const Sql& sql, int blob);
-	OracleBlob(Oracle8& session, int blob);
+	OracleBlob(const Sql& sql, int64 blob);
+	OracleBlob(Oracle8& session, int64 blob);
 	~OracleBlob();
 };
 
@@ -157,16 +157,16 @@ protected:
 public:
 	operator  bool() const                 { return IsOpen(); }
 
-	void      Assign(const Sql& sql, int blob);
-	void      Assign(Oracle8& session, int blob);
+	void      Assign(const Sql& sql, int64 blob);
+	void      Assign(Oracle8& session, int64 blob);
 
 	WString   Read();
 	void      Write(const WString& w);
 	void      SetLength(int sz);
 
 	OracleClob();
-	OracleClob(const Sql& sql, int blob);
-	OracleClob(Oracle8& session, int blob);
+	OracleClob(const Sql& sql, int64 blob);
+	OracleClob(Oracle8& session, int64 blob);
 	~OracleClob();
 };
 

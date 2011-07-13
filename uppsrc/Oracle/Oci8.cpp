@@ -1493,7 +1493,7 @@ void OracleBlob::Write(int64 at, const void *ptr, dword size) {
 	}
 }
 
-void OracleBlob::Assign(Oracle8& s, int blob) {
+void OracleBlob::Assign(Oracle8& s, int64 blob) {
 	session = &s;
 	locp = (OCILobLocator *)blob;
 	ub4 n;
@@ -1502,7 +1502,7 @@ void OracleBlob::Assign(Oracle8& s, int blob) {
 }
 
 
-void OracleBlob::Assign(const Sql& sql, int blob) {
+void OracleBlob::Assign(const Sql& sql, int64 blob) {
 	Oracle8 *session = dynamic_cast<Oracle8 *>(&sql.GetSession());
 	ASSERT(session);
 	Assign(*session, blob);
@@ -1517,11 +1517,11 @@ void OracleBlob::Close() {
 	locp = NULL;
 }
 
-OracleBlob::OracleBlob(const Sql& sql, int blob) {
+OracleBlob::OracleBlob(const Sql& sql, int64 blob) {
 	Assign(sql, blob);
 }
 
-OracleBlob::OracleBlob(Oracle8& session, int blob) {
+OracleBlob::OracleBlob(Oracle8& session, int64 blob) {
 	Assign(session, blob);
 }
 
@@ -1667,7 +1667,7 @@ void OracleClob::Write(const WString& w)
 	Put(w, 2 * w.GetLength());
 }
 
-void OracleClob::Assign(Oracle8& s, int blob) {
+void OracleClob::Assign(Oracle8& s, int64 blob) {
 	session = &s;
 	locp = (OCILobLocator *)blob;
 	ub4 n;
@@ -1677,7 +1677,7 @@ void OracleClob::Assign(Oracle8& s, int blob) {
 }
 
 
-void OracleClob::Assign(const Sql& sql, int blob) {
+void OracleClob::Assign(const Sql& sql, int64 blob) {
 	Oracle8 *session = dynamic_cast<Oracle8 *>(&sql.GetSession());
 	ASSERT(session);
 	Assign(*session, blob);
@@ -1692,11 +1692,11 @@ void OracleClob::Close() {
 	locp = NULL;
 }
 
-OracleClob::OracleClob(const Sql& sql, int blob) {
+OracleClob::OracleClob(const Sql& sql, int64 blob) {
 	Assign(sql, blob);
 }
 
-OracleClob::OracleClob(Oracle8& session, int blob) {
+OracleClob::OracleClob(Oracle8& session, int64 blob) {
 	Assign(session, blob);
 }
 

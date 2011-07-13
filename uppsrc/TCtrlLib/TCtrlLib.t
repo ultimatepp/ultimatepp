@@ -25,8 +25,8 @@ T_("Close all")
 csCZ("Zav\305\231\303\255t v\305\241echno")
 
 T_("Close the whole subtree")
-csCZ("Zav\305\231\303\255t a schovat v\305\241echny pod\305\231\303\255zen\303"
-     "\251 polo\305\276ky")
+csCZ("Zav\305\231\303\255t a schovat v\305\241echny pod\305\231\303\255zen\303\251 "
+     "polo\305\276ky")
 
 
 // DocMgr.cpp
@@ -89,15 +89,14 @@ T_("Search")
 csCZ("Rejst\305\231\303\255k")
 
 T_("Display help index for keyword searching")
-csCZ("Zobrazit rejst\305\231\303\255k pro vyhled\303\241v\303\241n\303\255 k"
-     "l\303\255\304\215ov\303\275ch slov v n\303\241pov\304\233d\304\233")
+csCZ("Zobrazit rejst\305\231\303\255k pro vyhled\303\241v\303\241n\303\255 kl\303\255\304\215ov\303\275ch "
+     "slov v n\303\241pov\304\233d\304\233")
 
 T_("User manual")
 csCZ("P\305\231\303\255ru\304\215ka")
 
 T_("Typeset complete user documentation")
-csCZ("Vys\303\241zet u\305\276ivatelskou p\305\231\303\255ru\304\215ku pro t"
-     "isk")
+csCZ("Vys\303\241zet u\305\276ivatelskou p\305\231\303\255ru\304\215ku pro tisk")
 
 T_("This is the only open window.")
 csCZ("Toto je jedin\303\251 otev\305\231en\303\251 okno.")
@@ -124,8 +123,8 @@ T_("Document type")
 csCZ("Typ dokumentu")
 
 T_("Error saving document. Check free disk space.")
-csCZ("Dokument nelze ulo\305\276it. Zkontrolujte, zda je na disku dost voln\303"
-     "\251ho m\303\255sta.")
+csCZ("Dokument nelze ulo\305\276it. Zkontrolujte, zda je na disku dost voln\303\251ho "
+     "m\303\255sta.")
 
 T_("Save as")
 csCZ("Ulo\305\276it jako")
@@ -134,25 +133,24 @@ T_("Error closing document [* \001%s\001].")
 csCZ("Dokument [* \001%s\001] nen\303\255 mo\305\276no zav\305\231\303\255t.")
 
 T_("%s [* \001%s\001] has been edited. Save changes to the disk?")
-csCZ("%s [* \001%s\001] byl zm\304\233n\304\233n. Chcete ulo\305\276it zm\304"
-     "\233ny na disk?")
+csCZ("%s [* \001%s\001] byl zm\304\233n\304\233n. Chcete ulo\305\276it zm\304\233ny "
+     "na disk?")
 
 T_("Save document to the disk\f; you should close all dialog windows first")
-csCZ("Ulo\305\276it soubor na disk\f; nejprve je t\305\231eba zav\305\231\303"
-     "\255t v\305\241echna dialogov\303\241 okna")
+csCZ("Ulo\305\276it soubor na disk\f; nejprve je t\305\231eba zav\305\231\303\255t "
+     "v\305\241echna dialogov\303\241 okna")
 
 T_("Save &as")
 csCZ("Ulo\305\276it j&ako")
 
-T_("Save document to another disc file\f; you should close all dialog wind"
-     "ows first")
-csCZ("Ulo\305\276it soubor na disk pod jin\303\275m jm\303\251nem\f; nejprve"
-     " je t\305\231eba zav\305\231\303\255t v\305\241echna dialogov\303\241 o"
-     "kna")
+T_("Save document to another disc file\f; you should close all dialog windows "
+     "first")
+csCZ("Ulo\305\276it soubor na disk pod jin\303\275m jm\303\251nem\f; nejprve "
+     "je t\305\231eba zav\305\231\303\255t v\305\241echna dialogov\303\241 okna")
 
 T_("Close active document\f; you should close all dialog windows first")
-csCZ("Ukon\304\215it pr\303\241ci s dokumentem\f; nejprve je t\305\231eba za"
-     "v\305\231\303\255t v\305\241echna dialogov\303\241 okna")
+csCZ("Ukon\304\215it pr\303\241ci s dokumentem\f; nejprve je t\305\231eba zav\305\231\303\255t "
+     "v\305\241echna dialogov\303\241 okna")
 
 T_("Toolbar")
 csCZ("N\303\241strojov\303\241 li\305\241ta")
@@ -187,11 +185,11 @@ csCZ("&Zav\305\231\303\255t okno")
 T_("Close &list")
 csCZ("Zav\305\231\303\255t &seznam")
 
-T_("Some files have been changed since last save.\nSelect files you want t"
-     "o save to the disk.")
-csCZ("N\304\233kter\303\251 soubory byly zm\304\233n\304\233ny od posledn\303"
-     "\255ho ulo\305\276en\303\255.\nVyberte soubory, kter\303\251 chcete ulo"
-     "\305\276it na disk.")
+T_("Some files have been changed since last save.\nSelect files you want to "
+     "save to the disk.")
+csCZ("N\304\233kter\303\251 soubory byly zm\304\233n\304\233ny od posledn\303\255ho "
+     "ulo\305\276en\303\255.\nVyberte soubory, kter\303\251 chcete ulo\305\276it "
+     "na disk.")
 
 T_("OK")
 csCZ("OK")
@@ -365,22 +363,21 @@ T_("Previous")
 csCZ("P\305\231edchoz\303\255")
 
 T_("Return to previous help topic")
-csCZ("N\303\241vrat na p\305\231edchoz\303\255 t\303\251ma n\303\241pov\304\233"
-     "dy")
+csCZ("N\303\241vrat na p\305\231edchoz\303\255 t\303\251ma n\303\241pov\304\233dy")
 
 T_("Next")
 csCZ("Dal\305\241\303\255")
 
 T_("Move forward in order of viewing help topics")
-csCZ("Posuv na dal\305\241\303\255 t\303\251ma n\303\241pov\304\233dy v po\305"
-     "\231ad\303\255 prohl\303\255\305\276en\303\255")
+csCZ("Posuv na dal\305\241\303\255 t\303\251ma n\303\241pov\304\233dy v po\305\231ad\303\255 "
+     "prohl\303\255\305\276en\303\255")
 
 T_("Search index")
 csCZ("Rejst\305\231\303\255k")
 
 T_("Show / select theme from the alphabetic index")
-csCZ("Zobrazit / vyhledat t\303\251ma podle rejst\305\231\303\255kov\303\251"
-     "ho odkazu")
+csCZ("Zobrazit / vyhledat t\303\251ma podle rejst\305\231\303\255kov\303\251ho "
+     "odkazu")
 
 T_("Print")
 csCZ("Tisk")

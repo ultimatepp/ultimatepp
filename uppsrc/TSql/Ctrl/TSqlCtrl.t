@@ -1,36 +1,45 @@
-
+#ifdef _MSC_VER
+#pragma setlocale("C")
+#endif
 // DlgLogin.cpp
 
 T_("Change password")
-csCZ("Změna hesla")
+csCZ("Zm\304\233na hesla")
 
 T_("The entered passwords differ. Please check typing errors.")
-csCZ("Zadaná hesla se liší. Zřejmě došlo k překlepu.")
+csCZ("Zadan\303\241 hesla se li\305\241\303\255. Z\305\231ejm\304\233 do\305\241lo "
+     "k p\305\231eklepu.")
 
-T_("Error changing user password.\n[* \1%s\1]")
-csCZ("Změnu hesla nelze provést.\n[* \1%s\1]")
+T_("Error changing user password.\n[* \001%s\001]")
+csCZ("Zm\304\233nu hesla nelze prov\303\251st.\n[* \001%s\001]")
 
 T_("System login")
-csCZ("Přihlášení do systému")
+csCZ("P\305\231ihl\303\241\305\241en\303\255 do syst\303\251mu")
 
-T_("Error creating database connection.&[* \1%s\1]&User name: [* \1%s\1]&Database: [* \1%s\1]&Server: [* \1%[(default)]~s\1]&Connection type: [* \1%[(default)]~s\1]")
-csCZ("Nelze vytvořit databázové spojení.&[* \1%s\1]&Uživatel: [* \1%s\1]&Databáze: "
-     "[* \1%s\1]&Server: [* \1%[(výchozí)]~s\1]&Typ spojení: [* \1%[(výchozí)]~s\1]")
+T_("Error creating database connection.&[* \001%s\001]&User name: [* \001%s\001]&Database: "
+     "[* \001%s\001]&Server: [* \001%[(default)]~s\001]&Connection type: [* \001%[(default)]~s\001]")
+csCZ("Nelze vytvo\305\231it datab\303\241zov\303\251 spojen\303\255.&[* \001%s\001]&U\305\276ivatel: "
+     "[* \001%s\001]&Datab\303\241ze: [* \001%s\001]&Server: [* \001%[(v\303\275choz\303\255)]~s\001]&Typ "
+     "spojen\303\255: [* \001%[(v\303\275choz\303\255)]~s\001]")
+
+T_("(unknown error)")
+csCZ("")
 
 T_("Password setting not supported by active database connection.")
-csCZ("Zvolený typ databázového spojení nepodporuje změnu hesla.")
+csCZ("Zvolen\303\275 typ datab\303\241zov\303\251ho spojen\303\255 nepodporuje "
+     "zm\304\233nu hesla.")
 
 
 // DlgLogin.lay
 
 T_("&Username:")
-csCZ("&Uživatel:")
+csCZ("&U\305\276ivatel:")
 
 T_("&Password:")
 csCZ("&Heslo:")
 
 T_("&Database:")
-csCZ("&Databáze:")
+csCZ("&Datab\303\241ze:")
 
 T_("&Server:")
 csCZ("&Server:")
@@ -39,7 +48,7 @@ T_("&Type:")
 csCZ("&Typ:")
 
 T_("St&ore password")
-csCZ("Uložit hesl&o")
+csCZ("Ulo\305\276it hesl&o")
 
 T_("OK")
 csCZ("OK")
@@ -48,13 +57,13 @@ T_("Cancel")
 csCZ("Storno")
 
 T_("S&et password")
-csCZ("Změnit heslo")
+csCZ("Zm\304\233nit heslo")
 
 T_("&Abort")
-csCZ("&Přerušit")
+csCZ("&P\305\231eru\305\241it")
 
 T_("&New password:")
-csCZ("&Nové heslo:")
+csCZ("&Nov\303\251 heslo:")
 
 T_("&Confirm pasword:")
 csCZ("&Potvrdit heslo:")
