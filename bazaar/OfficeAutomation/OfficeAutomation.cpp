@@ -405,17 +405,26 @@ MSSheet::MSSheet() {
 }
 
 MSSheet::~MSSheet() {
-	if (Range)
+	if (Range) {
 		Range->Release();
-	if (Sheet)
+		Range = 0;
+	}
+	if (Sheet) {
 		Sheet->Release();
-	if (Book)
+		Sheet = 0;
+	}
+	if (Book) {
 		Book->Release();
-	if (Books)
+		Book = 0;
+	}
+	if (Books) {
 		Books->Release();
+		Books = 0;
+	}
 	if (App) {
 		Quit();
 		App->Release();
+		App = 0;
 	}
 }
 
@@ -574,7 +583,9 @@ bool MSSheet::Replace(Value search, Value replace) {
 	vSearch.Value(search);
 	vReplace.Value(replace);
 		
-	return Ole::Method(selection, "Replace", vReplace, vSearch);
+	bool ret = Ole::Method(selection, "Replace", vReplace, vSearch);
+	selection->Release();
+	return ret;
 }
 
 Value MSSheet::GetValue(int col, int row) {
@@ -618,7 +629,7 @@ bool MSSheet::SetHyperlink(String cell, String address, String value) {
 	int col, row;
 	
 	OfficeSheet::CellToColRow(cell, col, row);
-	return MSSheet::SetValue(col, row, value);
+	return SetHyperlink(col, row, address, value);
 }
 
 bool MSSheet::SetHyperlink(int col, int row, String address, String value) {
@@ -647,7 +658,9 @@ bool MSSheet::SetHyperlink(String address, String value) {
 	saddress.BString(address);
 	range.ObjectOle(Range);
 	
-	return Ole::MethodGet(hyperlinks, "Add", textToDisplay, screenTip, subAddress, saddress, range);
+	bool ret = Ole::MethodGet(hyperlinks, "Add", textToDisplay, screenTip, subAddress, saddress, range);
+	hyperlinks->Release();
+	return ret;
 }
 
 bool MSSheet::SaveAs(String fileName, String type) {
@@ -824,7 +837,9 @@ bool MSSheet::SetBorder(int borderIndx, int lineStyle, int weight, Color color) 
 	if (!borders)
 		return false;	
 	
-	return SetBorder(borders, borderIndx, lineStyle, weight, color);
+	bool ret = SetBorder(borders, borderIndx, lineStyle, weight, color);
+	borders->Release();
+	return ret;
 }
 
 bool MSSheet::SetBorder(int col, int row, int borderIndx, int lineStyle, int weight, Color color) {
@@ -839,7 +854,9 @@ bool MSSheet::SetBorder(int col, int row, int borderIndx, int lineStyle, int wei
 	if (!borders)
 		return false;
 
-	return SetBorder(borders, borderIndx, lineStyle, weight, color);
+	bool ret = SetBorder(borders, borderIndx, lineStyle, weight, color);
+	borders->Release();
+	return ret;
 }
 
 bool MSSheet::SetBorder(ObjectOle &borders, int borderIndx, int lineStyle, int weight, Color color) {
@@ -891,9 +908,9 @@ bool MSSheet::SetFont(int col, int row, String name, int size) {
 		return false;
 	VariantOle vSize;
 	vSize.Int(size);	
-	if(!Ole::SetValue(font, "Size", vSize))
-		return false;
-	return true;
+	bool ret = Ole::SetValue(font, "Size", vSize);
+	font->Release();
+	return ret;
 }
 
 bool MSSheet::SetFont(String name, int size) {
@@ -910,9 +927,9 @@ bool MSSheet::SetFont(String name, int size) {
 		return false;
 	VariantOle vSize;
 	vSize.Int(size);	
-	if(!Ole::SetValue(font, "Size", vSize))
-		return false;
-	return true;
+	bool ret = Ole::SetValue(font, "Size", vSize);
+	font->Release();
+	return ret;
 }
 
 bool MSSheet::Print() {
@@ -949,7 +966,9 @@ bool MSSheet::InsertTab(String name) {	// Insert tab after the last
 	VariantOle vAfter;
 	vAfter.ObjectOle(lastSheet);
 	
-	return Ole::Method(Sheet, "Move", vAfter, vOptional);	// Apending tab after last tab
+	bool ret =  Ole::Method(Sheet, "Move", vAfter, vOptional);	// Apending tab after last tab
+	lastSheet->Release();
+	return ret;
 }
 
 bool MSSheet::SetColor(String cell, Color color) {
@@ -1076,7 +1095,9 @@ bool MSSheet::RemoveTab(String name) {
 	if (!(DelSheet = Ole::GetObject(App, "Sheets", vName)))
 		return false;
 	
-	return Ole::Method(DelSheet, "delete");	
+	bool ret = Ole::Method(DelSheet, "delete");	
+	DelSheet->Release();
+	return ret;
 }
 
 bool MSSheet::RemoveTab(int index) {
@@ -1089,7 +1110,9 @@ bool MSSheet::RemoveTab(int index) {
 	if (!(DelSheet = Ole::GetObject(App, "Sheets", vId)))
 		return false;
 	
-	return Ole::Method(DelSheet, "delete");
+	bool ret = Ole::Method(DelSheet, "delete");
+	DelSheet->Release();
+	return ret;
 }
 
 int MSSheet::GetNumTabs() {

@@ -66,7 +66,31 @@ String OfficeSheet::ColRowToCell(const int col, const int row) {
 
 String OfficeSheet::ColRowToCell(const Cell &cellPos) {
 	return ColRowToCell(cellPos.col, cellPos.row);
-}	
+}
+
+String OfficeSheet::Function(String name, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) {
+	String sep;
+	if (GetName() != "Microsoft")
+		sep = ";";
+	else
+		sep = ",";
+
+	String ret = "=" + name + "(";
+	if (!arg1.IsEmpty())
+		ret += arg1;
+	if (!arg2.IsEmpty())
+		ret += sep + arg2;
+	if (!arg3.IsEmpty())
+		ret += sep + arg3;
+	if (!arg4.IsEmpty())
+		ret += sep + arg4;
+	if (!arg5.IsEmpty())
+		ret += sep + arg5;
+	if (!arg6.IsEmpty())
+		ret += sep + arg6;
+	ret += ")";
+	return ret;
+}
 
 bool OfficeSheet::Init(const char *name) {
 	return PluginInit(*this, name);
@@ -75,8 +99,6 @@ bool OfficeSheet::Init(const char *name) {
 bool SheetPlugin::IsAvailable() {return false;}
 bool OfficeSheet::IsAvailable(const char *_name) {
 	for (int i = 0; i < Plugins().GetCount(); ++i) {
-		String a = Plugins()[i].type;
-		String b = typeid(OfficeSheet).name();
 		if (Plugins()[i].name == _name && Plugins()[i].type == typeid(OfficeSheet).name()) {
 			void *dat = Plugins()[i].New();
 			if (!dat)

@@ -74,6 +74,7 @@ nt]_[*@3 col], [@(0.0.255) int]_[*@3 row], [_^Value^ Value]_[*@3 value])&]
 [s2;%% Fills cell [%-*@3 col,] [%-*@3 row ][%- with the value] [%-*@3 value]. 
 [%-*@3 col,] [%-*@3 row ]origin is (1, 1). [%-*@3 value ]is inserted 
 using the most adequate format depending on the [%-*@3 value] type.&]
+[s2;%% [%-*@3 value] can be a function.&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:SetValue`(String`,Value`): [@(0.0.255) bool]_[* SetValue]([_^String^ St
@@ -81,8 +82,10 @@ ring]_[*@3 cell], [_^Value^ Value]_[*@3 value])&]
 [s2;%% Fills cell [%-*@3 cell] [%- with the value ][%-*@3 value]. [%-*@3 cell 
 ]is a string that indicates the cell location with letters to 
 indicate the column and a number to indicate the row as in `"B7`", 
-following the format used in spreadsheets. [%-*@3 value ]is inserted 
-using the most adequate format depending on the [%-*@3 value] type.&]
+following the format used in spreadsheets. [%-*@3 value][%-  ]is 
+inserted using the most adequate format depending on the [%- value] 
+type.&]
+[s2;%% [%-*@3 value] can be a function.&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:SetValue`(Value`): [@(0.0.255) bool]_[* SetValue]([_^Value^ Value]_[*@3 v
@@ -90,6 +93,7 @@ alue])&]
 [s2;%% Fills the range previously selected by Select() with [%-*@3 value]. 
 [%-*@3 value ]is inserted using the most adequate format depending 
 on the [%-*@3 value] type.&]
+[s2;%% [%-*@3 value] can be a function.&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:GetValue`(int`,int`): [_^Value^ Value]_[* GetValue]([@(0.0.255) int]_[*@3 c

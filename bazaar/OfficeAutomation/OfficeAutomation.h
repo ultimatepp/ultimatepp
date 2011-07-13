@@ -25,6 +25,7 @@ public:
 	
 	bool Init(const char *name);
 	virtual bool IsAvailable(const char *_name);	
+	String Function(String name, String arg1 = "", String arg2 = "", String arg3 = "", String arg4 = "", String arg5 = "", String arg6 = "");
 	
 	Sheet_METHOD_LIST
 
