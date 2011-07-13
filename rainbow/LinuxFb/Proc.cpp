@@ -1,125 +1,176 @@
 #include "LinuxFbLocal.h"
 
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <linux/fb.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
-
 NAMESPACE_UPP
 
-#define LLOG(x)       LOG(x)
-
-	int fbfd = 0;
-	struct fb_var_screeninfo vinfo;
-	struct fb_fix_screeninfo finfo;
-	long int screensize = 0;
-	char *fbp = 0;
-	bool fbEndSession = false;
+#define LLOG(x)       //LOG(x)
 
 //FIXME get input events
 bool GetShift()       { return false; }//!!(GetKeyState(VK_SHIFT) & 0x8000); }
 bool GetCtrl()        { return false; }//!!(GetKeyState(VK_CONTROL) & 0x8000); }
 bool GetAlt()         { return false; }//!!(GetKeyState(VK_MENU) & 0x8000); }
 bool GetCapsLock()    { return false; }//!!(GetKeyState(VK_CAPITAL) & 1); }
-bool GetMouseLeft()   { return false; }//!!(GetKeyState(VK_LBUTTON) & 0x8000); }
-bool GetMouseRight()  { return false; }//!!(GetKeyState(VK_RBUTTON) & 0x8000); }
-bool GetMouseMiddle() { return false; }//!!(GetKeyState(VK_MBUTTON) & 0x8000); }
+bool GetMouseLeft()   { return mouseb & 0x4; }
+bool GetMouseRight()  { return mouseb & 0x1; }
+bool GetMouseMiddle() { return mouseb & 0x2; }
 
-
-bool FBEndSession()
+void purgefd(int fd)
 {
-	return fbEndSession;
+	fd_set fdset;
+	struct timeval tv;
+	char temp[64];
+
+	FD_ZERO(&fdset);
+	FD_SET(fd, &fdset);
+	tv.tv_sec = 0;
+	tv.tv_usec = 0;
+	while(select(fd+1, &fdset, 0, 0, &tv) > 0)
+		read(fd, temp, sizeof(temp));
 }
 
-bool FBIsWaitingEvent()
+int set_imps2(int fd, int b)
 {
-	//MSG msg;
-	return false; //PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE);
+	uint8 set[] = {0xf3, 200, 0xf3, 100, 0xf3, 80};
+	uint8 reset[] = {0xff};
+	int retval = 0;
+
+	if(b && write(fd, &set, sizeof(set)) != sizeof(set))
+		return 0;
+	//SDL says not to reset, some mice wont work with it
+	if(!b && write(fd, &reset, sizeof (reset)) != sizeof(reset))
+		return 0;
+
+	purgefd(fd);
+	return 1;
 }
 
-bool FBProcessEvent(bool *quit)
+int has_imps2(int fd)
 {
-/*
-	MSG msg;
-	if(PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
-		if(msg.message == WM_QUIT && quit)
-			*quit = true;
-		TranslateMessage(&msg);
-		DispatchMessageW(&msg);
-		return true;
+	uint8 query = 0xF2;
+	purgefd(fd);
+	if(write(fd, &query, sizeof (query)) != sizeof(query))
+		return 0;
+
+	uint8 ch = 0;
+	fd_set fdset;
+	struct timeval tv;
+	while(1) {
+		FD_ZERO(&fdset);
+		FD_SET(fd, &fdset);
+		tv.tv_sec = 1;
+		tv.tv_usec = 0;
+		if(select(fd+1, &fdset, 0, 0, &tv) < 1) break;
+		if(read(fd, &ch, sizeof(ch)) != sizeof(ch)) break;
+		switch(ch) {
+			case 0xFA:
+			case 0xAA: continue;
+			case 3:
+			case 4: return 1;
+			default: return 0;			
+		}
 	}
-*/
-	static int i = 10;
-	if(--i > 0) return true; //fake message processing
-	return false;
+	return 0;
 }
 
-void FBSleep(int ms)
+void handle_mouse()
 {
-//	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
-}
+	static int offs = 0;
+	static unsigned char buf[BUFSIZ];
+	static int rel = 1;
 
-void FBUpdate(const Rect& inv)
-{
-//	if(fbHWND)
-//		::InvalidateRect(fbHWND, inv, false);
-	const ImageBuffer& framebuffer = Ctrl::GetFrameBuffer();
-	memcpy(fbp, (const char*)~framebuffer, framebuffer.GetLength() * sizeof(RGBA));
-}
-
-void FBFlush()
-{
-//	::UpdateWindow(fbHWND);
-//	GdiFlush();
-}
-
-void FBInit(const String& fbdevice)
-{
-	Ctrl::InitFB();
-
-	// Open the file for reading and writing
-	fbfd = open(fbdevice, O_RDWR);
-	if (!fbfd) {
-		printf("Error: cannot open framebuffer device.\n");
-		exit(1);
-	}
-	RLOG("The framebuffer device was opened successfully.\n");
-
-	// Get fixed screen information
-	if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo)) {
-		printf("Error reading fixed information.\n");
-		exit(2);
-	}
-
-	// Get variable screen information
-	if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo)) {
-		printf("Error reading variable information.\n");
-		exit(3);
-	}
-
-	RLOG(vinfo.xres << "x" << vinfo.yres << " @ " << vinfo.bits_per_pixel);
-
-	// Figure out the size of the screen in bytes
-	screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
-
-	// Map the device to memory
-	fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED,
-					fbfd, 0);
-	if ((intptr_t)fbp == -1) {
-		printf("Error: failed to map framebuffer device to memory.\n");
-		exit(4);
-	}
-	RLOG("The framebuffer device was mapped to memory successfully.\n");
+	int i, n;
+	int b = 0;
+	int dx = 0, dy = 0, dz = 0;
+	int rdsize = (!mouse_imps2)?(3):(4);
 	
-	Ctrl::SetFramebufferSize(Size(vinfo.xres, vinfo.yres));
+	n = read(mouse_fd, &buf[offs], BUFSIZ-offs);
+	if(n < 0) return;
+	n += offs;
+
+	for(i=0; i<(n-(rdsize-1)); i += rdsize ) {
+		if((buf[i] & 0xC0) != 0) {
+			i -= (rdsize-1);
+			continue;
+		}
+		if(!mouse_imps2)
+		{
+			b = (buf[i] & 0x07); /*MRL*/
+			dx = (buf[i] & 0x10) ? buf[i+1] - 256 : buf[i+1];
+			dy = (buf[i] & 0x20) ? -(buf[i+2] - 256) : -buf[i+2];
+		}
+		else
+		{
+			b = (buf[i] & 0xC7); /*54...MRL*/
+			dx = (buf[i] & 0x10) ? buf[i+1] - 256 : buf[i+1];
+			dy = (buf[i] & 0x20) ? -(buf[i+2] - 256) : -buf[i+2]; 
+			dz = (char)buf[i+3];
+		}
+
+		if(dx || dy)
+		{
+			mousep.x += dx;
+			mousep.y += dy;
+			mousep.x = minmax(mousep.x, 0, int(vinfo.xres));
+			mousep.y = minmax(mousep.y, 0, int(vinfo.yres));
+			Ctrl::DoMouseFB(Ctrl::MOUSEMOVE, mousep);
+		}
+
+		int bm = b ^ mouseb;
+		mouseb = b; //for GetMouse*
+		if(bm & 0x1) Ctrl::DoMouseFB((mouseb & 0x1)?Ctrl::LEFTDOWN:Ctrl::LEFTUP, mousep);
+		if(bm & 0x2) Ctrl::DoMouseFB((mouseb & 0x2)?Ctrl::RIGHTDOWN:Ctrl::RIGHTUP, mousep);
+		if(bm & 0x4) Ctrl::DoMouseFB((mouseb & 0x4)?Ctrl::MIDDLEDOWN:Ctrl::MIDDLEUP, mousep);
+		if(dz) Ctrl::DoMouseFB(Ctrl::MOUSEWHEEL, mousep, dz*120);
+	}
+	if(i < n) {
+		memcpy(buf, &buf[i], (n-i));
+		offs = (n-i);
+	} else {
+		offs = 0;
+	}
 }
 
-void FBDeInit()
+void handle_keyboard()
 {
-	munmap(fbp, screensize);
-	close(fbfd);
+	
+}
+
+//returns 0 if timeout, 1 for mouse, 2 for keyboard
+//common for waitforevents and sleep 
+int readevents(int ms)
+{
+	fd_set fdset;
+	int max_fd;
+	static struct timeval to;
+	to.tv_sec = ms / 1000;
+	to.tv_usec = ms % 1000 * 1000;
+
+	FD_ZERO(&fdset);
+	max_fd = 0;
+	if(keyboard_fd >= 0) {
+		FD_SET(keyboard_fd, &fdset);
+		if(max_fd < keyboard_fd) {
+			max_fd = keyboard_fd;
+		}
+	}
+	if(mouse_fd >= 0) {
+		FD_SET(mouse_fd, &fdset);
+		if(max_fd < mouse_fd) {
+			max_fd = mouse_fd;
+		}
+	}
+	if(select(max_fd+1, &fdset, NULL, NULL, &to) > 0 ) {
+		if(keyboard_fd >= 0 ) {
+			if(FD_ISSET(keyboard_fd, &fdset)) {
+				return 2;
+			}
+		}
+		if(mouse_fd >= 0) {
+			if (FD_ISSET(mouse_fd, &fdset)) {
+				return 1;
+			}
+		}
+	}
+	return 0;
 }
 
 END_UPP_NAMESPACE

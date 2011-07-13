@@ -9,7 +9,16 @@
 NAMESPACE_UPP
 
 extern bool fbEndSession;
-void HandleUserEvents(SDL_Event* event);
+extern SDL_Surface * screen;
+extern int videoflags;
+extern int height;
+extern int width;
+extern int bpp;
+
+SDL_Surface *CreateScreen(int w, int h, int bpp, int flags);
+dword fbKEYtoK(dword chr);
+void HandleSDLEvent(SDL_Event* event);
+void HandleUserEvent(SDL_Event* event);
 
 END_UPP_NAMESPACE
 
