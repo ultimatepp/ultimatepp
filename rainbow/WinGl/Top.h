@@ -7,7 +7,6 @@ private:
 	void DestroyFrame();
 	
 	friend class Ctrl;
-	bool painting;
 
 public:
 	void GripResize();

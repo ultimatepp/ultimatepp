@@ -81,7 +81,6 @@ void TopWindow::Open(Ctrl *owner)
 void TopWindow::Open()
 {
 	Open(GetActiveCtrl());
-	painting = false;
 }
 
 void TopWindow::OpenMain()

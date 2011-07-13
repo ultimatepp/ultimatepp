@@ -67,15 +67,18 @@ void DestroyGl(bool destroyWindow)
 
 int CreateGlWindow(HINSTANCE hInstance)
 {
-	WNDCLASSW  wc;
+	WNDCLASSEXW  wc;
 	Zero(wc);
+	wc.cbSize        = sizeof(wc);
 	wc.style         = CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc   = (WNDPROC)glWindowProc;
+	wc.cbClsExtra    = 0;
+	wc.cbWndExtra    = 0;
 	wc.hInstance     = hInstance;
 	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)NULL;
 	wc.lpszClassName = L"UPP-GL-CLASS";
-	RegisterClassW(&wc);
+	RegisterClassExW(&wc);
 	
 	glHwnd = CreateWindowW(
 		L"UPP-GL-CLASS", L"",
@@ -86,6 +89,7 @@ int CreateGlWindow(HINSTANCE hInstance)
 	if(!glHwnd)
 		return -1;
 	
+	//ShowWindow(glHwnd, 1);
 	return 1;
 }
 
@@ -103,8 +107,8 @@ int CreateGlContext()
 		PFD_DRAW_TO_WINDOW | 
 		PFD_DOUBLEBUFFER | 
 		PFD_SUPPORT_OPENGL |
-		PFD_SUPPORT_COMPOSITION |
-		//0x00008000 | 
+		//PFD_SUPPORT_COMPOSITION |
+		0x00008000 | 
 		PFD_GENERIC_ACCELERATED;
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.cColorBits = 32;

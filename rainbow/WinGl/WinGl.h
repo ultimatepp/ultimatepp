@@ -205,7 +205,7 @@ public:
 
 	static void Flush()        { /*glFlush();*/ }	
 	Point    GetOffset() const { return drawing_offset; }
-	SystemDraw(HDC hdc, Size sz = Size(0, 0));
+	SystemDraw(Size sz);
 	virtual ~SystemDraw();
 	void FlatView();
 	void Clear();

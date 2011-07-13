@@ -20,7 +20,7 @@ void Ctrl::GuiPlatformGetTopRect(Rect& r) const
 
 bool Ctrl::GuiPlatformRefreshFrameSpecial(const Rect& r)
 {
-	return false;
+	return true;
 }
 
 bool Ctrl::GuiPlatformSetFullRefreshSpecial()
