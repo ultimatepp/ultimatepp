@@ -51,6 +51,8 @@ class GridDisplay
 		Image	rightImg;
 		Image   centerImg;
 		Image	bgImg;
+		Image   hdrhigh;
+		
 		int 	align;
 		int		lm, rm, tm, bm;
 		int     theme;
@@ -77,7 +79,7 @@ class GridDisplay
 		void SetTextAlign(int al = GD::TOP | GD::LEFT)  { align = al;                  }
 		void SetHorzMargin(int left = 4, int right = 4) { lm = left; rm = right;  	   }
 		void SetVertMargin(int top = 0, int bottom = 0) { tm = top;  bm = bottom;      }
-		void SetTheme(int th = 6)                       { theme = th;                  }
+		void SetTheme(int th = 6);
 		int  GetThemeCount()                            { return 7;                    }
 		bool IsFixedRow()                               { return row < 0;              }
 		bool IsFixedCol()                               { return col < 0;              }
