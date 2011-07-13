@@ -6,5 +6,6 @@ file
 	LinuxFbLocal.h,
 	Local.h,
 	Keys.h,
+	Win.cpp,
 	Proc.cpp;
 
