@@ -9,7 +9,6 @@ NAMESPACE_UPP
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
 Rect           Ctrl::screenRect;
-
 Point          Ctrl::fbCursorPos = Null;
 Image          Ctrl::fbCursorImage;
 Point          Ctrl::fbCursorBakPos = Null;
@@ -21,7 +20,7 @@ int            Ctrl::fbCaretTm;
 void Ctrl::SetDesktop(Ctrl& q)
 {
 	desktop = &q;
-	desktop->SetRect(screenRect);
+	desktop->SetRect(screenRect.GetSize());
 	desktop->SetOpen(true);
 	desktop->NewTop();
 }
@@ -31,10 +30,8 @@ void Ctrl::SetWindowSize(Size sz)
 	screenRect = sz;
 	DUMP(screenRect);
 	if(desktop)
-	{
-		LOG("SetWindowSize");
 		desktop->SetRect(screenRect);
-	}
+	SyncTopWindows();
 }
 
 void Ctrl::InitGl()
@@ -164,20 +161,18 @@ void Ctrl::DrawScreen()
 		//RemoveCaret();
 		
 		//ActivateGlContext();
-		//SyncLayout(1);
+		//desktop->SyncLayout(2);
 		//InitInfoPanel();
-		Rect rect;
-		Size csz = desktop->GetSize();
-		DUMP(csz);
-		Rect clip(csz);
-		SystemDraw draw(hDC, csz);
+		Rect clip = desktop->GetRect();
+		SystemDraw draw(clip.GetSize());
 		//draw.alpha = alpha;
 		//draw.angle = angle;
 		draw.FlatView();
 		draw.Clear();
 		//ApplyTransform(TS_BEFORE_PAINT);
 		desktop->CtrlPaint(draw, clip);//, &infoPanel);
-		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+		//desktop->UpdateArea(draw, clip);
+		for(int i = 0; i < topctrl.GetCount(); i++) {
 			Rect r = topctrl[i]->GetRect();
 			draw.Clipoff(r);
 			topctrl[i]->CtrlPaint(draw, clip);
@@ -198,9 +193,11 @@ void Ctrl::WndUpdate0r(const Rect& r)
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
+	LOGBLOCK("@ ProcessEvents");
+	MemoryCheckDebug();
 	if(!ProcessEvent(quit))
 		return false;
-	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !GlEndSession()); // LoopCtrl-MF 071008
+	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()) && !GlEndSession());
 	TimerProc(GetTickCount());
 	SweepMkImageCache();
 	if(hRC)
@@ -292,8 +289,8 @@ Rect Ctrl::GetWorkArea() const
 void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
-	Array<Rect> r;
-	r.Add(screenRect.GetSize());
+	//Array<Rect> r;
+	rc.Add(screenRect.GetSize());
 }
 
 Rect Ctrl::GetVirtualWorkArea()
@@ -423,7 +420,7 @@ bool Ctrl::HasWndCapture() const
 void Ctrl::WndInvalidateRect0(const Rect& r)
 {
 	GuiLock __;
-	::InvalidateRect(glHwnd, NULL, false);
+	//::InvalidateRect(glHwnd, NULL, false);
 }
 
 void Ctrl::WndSetPos0(const Rect& rect)
@@ -438,7 +435,7 @@ void Ctrl::WndSetPos0(const Rect& rect)
 void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-	Refresh(r);
+	//Refresh(r);
 }
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
@@ -461,12 +458,13 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, boo
 
 Rect Ctrl::GetDefaultWindowRect() {
 	GuiLock __;
-	int ii = 0;
+/*	int ii = 0;
 	Size sz = screenRect.GetSize();
 	Rect rect = sz;
 	rect.Deflate(sz / 8);
 	rect.Offset(Point(sz) / 16 * (ii % 8));
-	return rect;
+	return rect;*/
+	return screenRect;
 }
 
 Vector<WString> SplitCmdLine__(const char *cmd)

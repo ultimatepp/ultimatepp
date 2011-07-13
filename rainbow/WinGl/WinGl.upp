@@ -1,6 +1,10 @@
 uses
 	Painter;
 
+library(WIN32 GCC) "glaux glu32 opengl32";
+
+library(LINUX) "GL GLU";
+
 options
 	"-D_WIN32 -DGLEW_STATIC";
 

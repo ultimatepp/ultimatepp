@@ -168,7 +168,7 @@ SystemDraw::SystemDraw() {
 	Reset();
 }
 
-SystemDraw::SystemDraw(HDC hdc, Size sz) {
+SystemDraw::SystemDraw(Size sz) {
 	Reset();
 	drawing_clip = sz;
 	drawing_size = sz;
