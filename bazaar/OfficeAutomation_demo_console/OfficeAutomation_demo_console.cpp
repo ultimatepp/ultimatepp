@@ -93,7 +93,7 @@ void TestSheetDetail(OfficeSheet &sheet)
 	sheet.SetValue("B26", GetSysTime());		Puts("Cell(B26) = " + sheet.GetValue("B26").ToString());
 	sheet.SetValue("D22", "Sum");
 	sheet.SetValue("E22", "=sum(E14:E20)");		Puts("Cell(E22) = " + sheet.GetValue("E22").ToString());
-	sheet.SetValue("E23", "=hyperlink(\"http://www.ultimatepp.org\"; \"Ultimate link\")");	Puts("Cell(E23) = " + sheet.GetValue("E23").ToString());
+	sheet.SetValue("E23", sheet.Function("hyperlink", "\"http://www.ultimatepp.org\"", "\"Ultimate link\""));	Puts("Cell(E23) = " + sheet.GetValue("E23").ToString());
 	
 	Puts("\nPress enter to check Replace()");	TestGetchar();
 	sheet.Select();		// Select all active sheet
@@ -204,5 +204,5 @@ CONSOLE_APP_MAIN
 	}
 	end = true;
 	TestSheet();
-	//TestDoc();
+	TestDoc();
 }
