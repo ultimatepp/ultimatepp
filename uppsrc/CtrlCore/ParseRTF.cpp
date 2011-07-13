@@ -102,6 +102,9 @@ private:
 		
 		RichCell::Format format;
 		Rect cellmarginunits;
+		int shading;
+		Color shading_fore;
+		Color shading_back;
 		int end_dots;
 		bool merge_first;
 		bool merge;
@@ -184,6 +187,9 @@ RTFParser::CellInfo::CellInfo()
 , merge_first(false)
 , merge(false)
 , cellmarginunits(0, 0, 0, 0)
+, shading(0)
+, shading_fore(Black())
+, shading_back(White())
 {
 }
 
@@ -309,6 +315,14 @@ void RTFParser::FlushTable(int level)
 						out_wd = border_width[b];
 						out_co = cell.info.format.bordercolor;
 					}
+				}
+				if(cell.info.shading > 0) {
+					Color zero = White();
+					Color one = Nvl(cell.info.shading_fore, Black());
+					int r = zero.GetR() + iscale(one.GetR() - zero.GetR(), cell.info.shading, 10000);
+					int g = zero.GetG() + iscale(one.GetG() - zero.GetG(), cell.info.shading, 10000);
+					int b = zero.GetB() + iscale(one.GetB() - zero.GetB(), cell.info.shading, 10000);
+					cell.info.format.color = Color(r, g, b);
 				}
 			}
 		}
@@ -1231,6 +1245,8 @@ void RTFParser::ReadTableStyle()
 	else if(PassQ("clbrdrb"))
 		ReadCellBorder(CellInfoAt(ts.stylecol).format.border.bottom);
 	else if(PassQ("cltxlrtb")) {}
+	else if(PassQ("clshdng"))
+		CellInfoAt(ts.stylecol).shading = command_arg;
 	else if(PassQ("clcbpat")) {
 		if(command_arg >= 0 && command_arg < color_table.GetCount())
 			CellInfoAt(ts.stylecol).format.color = color_table[command_arg];

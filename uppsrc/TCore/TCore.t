@@ -7,23 +7,21 @@ T_("Null value not allowed.")
 csCZ("Hodnota nesm\303\255 b\303\275t pr\303\241zdn\303\241.")
 
 T_("Real number expected.")
-csCZ("O\304\215ek\303\241v\303\241no re\303\241ln\303\251 \304\215\303\255sl"
-     "o.")
+csCZ("O\304\215ek\303\241v\303\241no re\303\241ln\303\251 \304\215\303\255slo.")
 
 T_("Fraction denominator is too small.")
 csCZ("Jmenovatel zlomku je p\305\231\303\255li\305\241 mal\303\275.")
 
 T_("Illegal trailing character '%c' (0x%1:02x)")
-csCZ("Za \304\215\303\255slem byl nalezen neplatn\303\275 znak '%c' (0x%1:02"
-     "x)")
+csCZ("Za \304\215\303\255slem byl nalezen neplatn\303\275 znak '%c' (0x%1:02x)")
 
 T_("Lower bound exceeded.")
-csCZ("Zadan\303\251 \304\215\303\255slo je men\305\241\303\255 ne\305\276 po"
-     "volen\303\241 doln\303\255 mez.")
+csCZ("Zadan\303\251 \304\215\303\255slo je men\305\241\303\255 ne\305\276 povolen\303\241 "
+     "doln\303\255 mez.")
 
 T_("Upper bound exceeded.")
-csCZ("Zadan\303\251 \304\215\303\255slo je v\304\233t\305\241\303\255 ne\305"
-     "\276 povolen\303\241 horn\303\255 mez.")
+csCZ("Zadan\303\251 \304\215\303\255slo je v\304\233t\305\241\303\255 ne\305\276 "
+     "povolen\303\241 horn\303\255 mez.")
 
 T_("'instsrv.exe' not found.")
 csCZ("Nebyl nalezen program 'instsrv.exe'.")
@@ -65,12 +63,11 @@ T_("null value")
 csCZ("pr\303\241zdn\303\241 hodnota")
 
 T_("real number operation error")
-csCZ("chyba p\305\231i v\303\275po\304\215tu v re\303\241ln\303\275ch \304\215"
-     "\303\255slech")
+csCZ("chyba p\305\231i v\303\275po\304\215tu v re\303\241ln\303\275ch \304\215\303\255slech")
 
 T_("real number overflow")
-csCZ("p\305\231ete\304\215en\303\255 p\305\231i v\303\275po\304\215tu v re\303"
-     "\241ln\303\275ch \304\215\303\255slech")
+csCZ("p\305\231ete\304\215en\303\255 p\305\231i v\303\275po\304\215tu v re\303\241ln\303\275ch "
+     "\304\215\303\255slech")
 
 
 // CalcNode.cpp
@@ -85,8 +82,8 @@ T_("boolean value")
 csCZ("logick\303\241 hodnota")
 
 T_("function nesting too deep (%d levels)")
-csCZ("p\305\231\303\255li\305\241 hlubok\303\251 vno\305\231en\303\255 funkc"
-     "\303\255 (%d \303\272rovn\303\255)")
+csCZ("p\305\231\303\255li\305\241 hlubok\303\251 vno\305\231en\303\255 funkc\303\255 "
+     "(%d \303\272rovn\303\255)")
 
 T_("%s is not a constant")
 csCZ("%s nen\303\255 konstanta")
@@ -113,15 +110,14 @@ T_("illegal type combination ")
 csCZ("chybn\303\241 kombinace typ\305\257 ")
 
 T_("Maximum nesting depth (")
-csCZ("Byla p\305\231ekro\304\215ena povolen\303\241 hloubka vno\305\231en\303"
-     "\255 (")
+csCZ("Byla p\305\231ekro\304\215ena povolen\303\241 hloubka vno\305\231en\303\255 "
+     "(")
 
 T_(") exceeded (infinite recursion?)")
 csCZ(")")
 
 T_("Expression stack underflow")
-csCZ("Podte\304\215en\303\255 v\303\275razov\303\251ho z\303\241sobn\303\255"
-     "ku")
+csCZ("Podte\304\215en\303\255 v\303\275razov\303\251ho z\303\241sobn\303\255ku")
 
 T_("Number expected, found: ")
 csCZ("O\304\215ek\303\241v\303\241no \304\215\303\255slo, nalezeno: ")
@@ -169,15 +165,15 @@ T_("Unterminated string constant")
 csCZ("")
 
 T_("illegal characters after expression: %s (expression: %s)")
-csCZ("neplatn\303\251 znaky za v\303\275razem: %s (za\304\215\303\241tek v\303"
-     "\275razu: %s)")
+csCZ("neplatn\303\251 znaky za v\303\275razem: %s (za\304\215\303\241tek v\303\275razu: "
+     "%s)")
 
 T_("expected 'between', 'in' or 'like'")
 csCZ("")
 
 T_("left parenthesis not matched; subexpression starts at %s")
-csCZ("nep\303\241rov\303\241 lev\303\241 z\303\241vorka; za\304\215\303\241t"
-     "ek podv\303\275razu: %s")
+csCZ("nep\303\241rov\303\241 lev\303\241 z\303\241vorka; za\304\215\303\241tek "
+     "podv\303\275razu: %s")
 
 T_("constant or function expected, found: ")
 csCZ("o\304\215ek\303\241v\303\241na konstanta nebo funkce, nalezeno: ")
@@ -255,30 +251,27 @@ T_("invalid index %d, array has just %d elements")
 csCZ("neplatn\303\275 index %d, pole m\303\241 jen %d prvk\305\257")
 
 T_("invalid index %d, string has just %d characters")
-csCZ("neplatn\303\275 index %d, \305\231et\304\233zec m\303\241 jen %d znak\305"
-     "\257")
+csCZ("neplatn\303\275 index %d, \305\231et\304\233zec m\303\241 jen %d znak\305\257")
 
 T_("array element has invalid data type (index %d), number expected: %s")
-csCZ("prvek pole m\303\241 neplatn\303\275 datov\303\275 typ (index %d), o\304"
-     "\215ek\303\241v\303\241no \304\215\303\255slo: %s")
+csCZ("prvek pole m\303\241 neplatn\303\275 datov\303\275 typ (index %d), o\304\215ek\303\241v\303\241no "
+     "\304\215\303\255slo: %s")
 
 T_("array element has invalid data type (index %d), string expected: %s")
-csCZ("prvek pole m\303\241 neplatn\303\275 datov\303\275 typ (index %d), o\304"
-     "\215ek\303\241v\303\241n \305\231et\304\233zec: %s")
+csCZ("prvek pole m\303\241 neplatn\303\275 datov\303\275 typ (index %d), o\304\215ek\303\241v\303\241n "
+     "\305\231et\304\233zec: %s")
 
 T_("array element has invalid data type (index %d), array expected: %s")
-csCZ("prvek pole m\303\241 neplatn\303\275 datov\303\275 typ (index %d), o\304"
-     "\215ek\303\241v\303\241no pole: %s")
+csCZ("prvek pole m\303\241 neplatn\303\275 datov\303\275 typ (index %d), o\304\215ek\303\241v\303\241no "
+     "pole: %s")
 
-T_("array element has invalid data type (index %d), number or string expec"
-     "ted: %s")
-csCZ("prvek pole m\303\241 neplatn\303\275 datov\303\275 typ (index %d), o\304"
-     "\215ek\303\241v\303\241no \304\215\303\255slo nebo \305\231et\304\233ze"
-     "c: %s")
+T_("array element has invalid data type (index %d), number or string expected: "
+     "%s")
+csCZ("prvek pole m\303\241 neplatn\303\275 datov\303\275 typ (index %d), o\304\215ek\303\241v\303\241no "
+     "\304\215\303\255slo nebo \305\231et\304\233zec: %s")
 
 T_("control variable has empty name")
-csCZ("pr\303\241zdn\303\275 n\303\241zev \305\231\303\255dic\303\255 prom\304"
-     "\233nn\303\251")
+csCZ("pr\303\241zdn\303\275 n\303\241zev \305\231\303\255dic\303\255 prom\304\233nn\303\251")
 
 T_("invalid number of array elements")
 csCZ("chybn\303\275 po\304\215et prvk\305\257 pole")
