@@ -239,6 +239,17 @@ Vector<FaceInfo> GetAllFacesSys()
 
 #define GLYPHINFOCACHE 31
 
+#ifdef flagWINGL
+#include <WinGl/FontGl.h>
+#include <WinGl/ResGl.h>
+GlyphInfo  GetGlyphInfoSys(Font font, int chr)
+{
+	static GlyphInfo gi;
+	const OpenGLFont& fi = Resources::StdFont();
+	gi.width = (int) fi.chars[chr - 32].xadvance;
+	return gi;
+}
+#else
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	static Font      fnt[GLYPHINFOCACHE];
@@ -333,6 +344,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 	}
 	return li[q][chr & 255];
 }
+#endif
 
 #endif
 

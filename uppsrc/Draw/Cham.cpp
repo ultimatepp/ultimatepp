@@ -53,11 +53,15 @@ void  ChDraw(Draw& w, int x, int y, int cx, int cy, const Image& img, const Rect
 {
 	LTIMING("ChDraw");
 	if(cx > 0 && cy > 0) {
+		#ifdef flagWINGL
+		w.DrawImage(x, y, cx, cy, img, src);
+		#else
 		ChImageMaker m;
 		m.sz = Size(cx, cy);
 		m.sr = src;
 		m.img = img;
 		w.DrawImage(x, y, MakeImage(m));
+		#endif
 	}
 }
 
@@ -272,9 +276,15 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 					if(tile) {
 						LTIMING("Ch-Tiles");
 						LTIMING("Ch-Tiles");
-						img = Rescale(img, Size((tile & 1 ? sr : r).GetWidth(),
-						                    (tile & 2 ? sr : r).GetHeight()), sr);
+						Size sz;
+						sz.cx = (tile & 1 ? sr : r).GetWidth();
+						sz.cy = (tile & 2 ? sr : r).GetHeight();
+						#ifdef flagWINGL
+						DrawTiles(w, r, img, sz, sr);
+						#else
+						img = Rescale(img, sz, sr);
 						DrawTiles(w, r, img);
+						#endif
 					}
 					else {
 						static VectorMap<int64, int> btc;
