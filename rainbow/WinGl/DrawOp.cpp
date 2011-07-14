@@ -147,7 +147,7 @@ void SystemDraw::SetClip(const Rect& r, int mode)
 void SystemDraw::BeginOp()
 {
 	Cloff& w = cloff[ci++];
-	w.clipping = true;
+	w.clipping = false;
 	w.org = drawing_offset;
 	w.drawing_clip = drawing_clip;	
 }
@@ -171,13 +171,13 @@ void SystemDraw::EndOp()
 void SystemDraw::OffsetOp(Point p)
 {
 	BeginOp();
-	cloff[ci - 1].clipping = false;
 	drawing_offset += p;
 }
 
 bool SystemDraw::ClipOp(const Rect& r)
 {
 	BeginOp();
+	cloff[ci - 1].clipping = true;
 	drawing_clip = r + drawing_offset;
 	SetClip(drawing_clip);
 	return true;
@@ -186,6 +186,7 @@ bool SystemDraw::ClipOp(const Rect& r)
 bool SystemDraw::ClipoffOp(const Rect& r)
 {
 	BeginOp();
+	cloff[ci - 1].clipping = true;
 	drawing_clip = r + drawing_offset;
 	drawing_offset += r.TopLeft();
 	SetClip(drawing_clip);

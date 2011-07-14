@@ -10,6 +10,8 @@ options
 
 file
 	WinGl.h,
+	ResGl.h,
+	FontGl.h,
 	Keys.h,
 	Draw.cpp,
 	DrawOp.cpp,
