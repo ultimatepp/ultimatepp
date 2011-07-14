@@ -514,6 +514,7 @@ bool TabCtrl::Accept()
 	int ii = Get();
 	if(accept_current)
 		return !tab[ii].slave || tab[ii].slave -> Accept();
+	Ptr<Ctrl> refocus = GetFocusChildDeep();
 	for(int i = 0; i < tab.GetCount(); i++)
 		if(tab[i].slave) {
 			Set(i);
@@ -521,6 +522,8 @@ bool TabCtrl::Accept()
 				return false;
 		}
 	Set(ii);
+	if(refocus)
+		refocus->SetFocus();
 	return true;
 }
 
