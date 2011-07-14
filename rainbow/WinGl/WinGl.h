@@ -32,8 +32,6 @@ void ActivateGlContext();
 void DestroyGl(bool destroyWindow = true);
 LRESULT CALLBACK glWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-#define GUI_FB
-
 float GetFps();
 
 #define CLIP_MODE 2
