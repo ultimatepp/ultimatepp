@@ -155,6 +155,7 @@ CtrlFrame& ButtonFrame();
 CtrlFrame& ThinInsetFrame();
 CtrlFrame& ThinOutsetFrame();
 CtrlFrame& BlackFrame();
+CtrlFrame& WhiteFrame();
 
 CtrlFrame& XPFieldFrame();
 

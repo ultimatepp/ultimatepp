@@ -48,6 +48,7 @@ CtrlFrame& GLOBAL_VP(BorderFrame, InsetFrame, (InsetBorder()));
 CtrlFrame& GLOBAL_VP(BorderFrame, ThinInsetFrame, (ThinInsetBorder()));
 CtrlFrame& GLOBAL_VP(BorderFrame, ButtonFrame, (ButtonBorder()));
 CtrlFrame& GLOBAL_VP(BorderFrame, BlackFrame, (BlackBorder()));
+CtrlFrame& GLOBAL_VP(BorderFrame, WhiteFrame, (WhiteBorder()));
 CtrlFrame& GLOBAL_VP(BorderFrame, OutsetFrame, (OutsetBorder()));
 CtrlFrame& GLOBAL_VP(BorderFrame, ThinOutsetFrame, (ThinOutsetBorder()));
 

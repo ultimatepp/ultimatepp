@@ -798,6 +798,10 @@ void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r);
 void DrawRect(Draw& w, const Rect& rect, const Image& img, bool ralgn = false); //??? TODO
 void DrawRect(Draw& w, int x, int y, int cx, int cy, const Image& img, bool ra = false);
 
+#ifdef flagWINGL
+void DrawTiles(Draw& w, int x, int y, int cx, int cy, const Image& img, const Size& isz, const Rect& src);
+void DrawTiles(Draw& w, const Rect& rect, const Image& img, const Size& isz, const Rect& src);
+#endif
 void DrawTiles(Draw& w, int x, int y, int cx, int cy, const Image& img);
 void DrawTiles(Draw& w, const Rect& rect, const Image& img);
 
@@ -819,6 +823,7 @@ void DrawBorder(Draw& w, int x, int y, int cx, int cy, const ColorF *colors_ltrd
 void DrawBorder(Draw& w, const Rect& r, const ColorF *colors_ltrd);
 
 const ColorF *BlackBorder();
+const ColorF *WhiteBorder();
 const ColorF *ButtonPushBorder();
 const ColorF *EdgeButtonBorder();
 const ColorF *DefButtonBorder();
