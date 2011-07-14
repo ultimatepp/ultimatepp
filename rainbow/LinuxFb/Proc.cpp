@@ -5,13 +5,36 @@ NAMESPACE_UPP
 #define LLOG(x)       //LOG(x)
 
 //FIXME get input events
-bool GetShift()       { return false; }//!!(GetKeyState(VK_SHIFT) & 0x8000); }
-bool GetCtrl()        { return false; }//!!(GetKeyState(VK_CONTROL) & 0x8000); }
-bool GetAlt()         { return false; }//!!(GetKeyState(VK_MENU) & 0x8000); }
-bool GetCapsLock()    { return false; }//!!(GetKeyState(VK_CAPITAL) & 1); }
+bool GetShift()       { return false; }
+bool GetCtrl()        { return false; }
+bool GetAlt()         { return false; }
+bool GetCapsLock()    { return false; }
 bool GetMouseLeft()   { return mouseb & 0x4; }
 bool GetMouseRight()  { return mouseb & 0x1; }
 bool GetMouseMiddle() { return mouseb & 0x2; }
+
+dword fbKEYtoK(dword chr) {
+/*
+	if(chr == SDLK_TAB)
+		chr = K_TAB;
+	else
+	if(chr == SDLK_SPACE)
+		chr = K_SPACE;
+	else
+	if(chr == SDLK_RETURN)
+		chr = K_RETURN;
+	else
+*/
+		chr = chr + K_DELTA;
+/*
+	if(chr == K_ALT_KEY || chr == K_CTRL_KEY || chr == K_SHIFT_KEY)
+		return chr;
+	if(GetCtrl()) chr |= K_CTRL;
+	if(GetAlt()) chr |= K_ALT;
+	if(GetShift()) chr |= K_SHIFT;
+*/
+	return chr;
+}
 
 void purgefd(int fd)
 {
@@ -131,7 +154,30 @@ void handle_mouse()
 
 void handle_keyboard()
 {
-	
+	unsigned char buf[BUFSIZ];
+	int n;
+	int pressed;
+	int scancode;
+
+	static int ii = 0;
+
+	n = read(keyb_fd, buf, BUFSIZ);
+	for(int i=0; i<n; ++i) {
+		scancode = buf[i] & 0x7F;
+		pressed = (buf[i] & 0x80)?(1):(0);
+
+		RLOG("KEY: <" << (char)scancode << "> (" << scancode << ") [" << buf[i] << "]");
+		fprintf(stderr, "KEY: <%c> (%X) [%X]\n", scancode, scancode, buf[i]);
+		
+		//Ctrl+Alt+FN for vt switch ??
+
+		//scancode = fbKEYtoK(scancode) | (pressed)?(K_KEYUP):(0);
+		bool b = Ctrl::DoKeyFB(scancode, 1);
+
+		//helper quit
+		if(++ii > 20)
+			fbEndSession = true;
+	}
 }
 
 //returns 0 if timeout, 1 for mouse, 2 for keyboard
@@ -146,10 +192,10 @@ int readevents(int ms)
 
 	FD_ZERO(&fdset);
 	max_fd = 0;
-	if(keyboard_fd >= 0) {
-		FD_SET(keyboard_fd, &fdset);
-		if(max_fd < keyboard_fd) {
-			max_fd = keyboard_fd;
+	if(keyb_fd >= 0) {
+		FD_SET(keyb_fd, &fdset);
+		if(max_fd < keyb_fd) {
+			max_fd = keyb_fd;
 		}
 	}
 	if(mouse_fd >= 0) {
@@ -159,8 +205,8 @@ int readevents(int ms)
 		}
 	}
 	if(select(max_fd+1, &fdset, NULL, NULL, &to) > 0 ) {
-		if(keyboard_fd >= 0 ) {
-			if(FD_ISSET(keyboard_fd, &fdset)) {
+		if(keyb_fd >= 0 ) {
+			if(FD_ISSET(keyb_fd, &fdset)) {
 				return 2;
 			}
 		}
