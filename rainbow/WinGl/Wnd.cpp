@@ -1,6 +1,6 @@
 #include "TopFrame.h"
 
-#ifdef GUI_FB
+#ifdef GUI_WINGL
 
 NAMESPACE_UPP
 
