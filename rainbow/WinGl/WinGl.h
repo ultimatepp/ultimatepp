@@ -14,7 +14,6 @@
 
 #include <Painter/Painter.h>
 
-
 NAMESPACE_UPP
 
 #define IMAGECLASS WinGlImg
@@ -45,70 +44,8 @@ float GetFps();
 3 - Manual clip
 */
 
-struct OpenGLFont : Moveable<OpenGLFont>
-{
-	float scaleW;
-	float scaleH;
-	float lineHeight;
-	float base;
-	
-	bool texturesUpdated;
-
-	float vtx[1024 * 4 * 2];
-	float crd[1024 * 4 * 2];
-
-	struct CharInfo : Moveable<CharInfo>
-	{
-		int id;
-		float x;
-		float y;
-		float width;
-		float height;
-		float xoffset;
-		float yoffset;
-		float xadvance;
-		int page;
-	};
-
-	Vector<CharInfo> chars;
-	VectorMap<int, VectorMap<int, float> > kerns;
-	Vector<String> files;
-	Array<const byte> compiledFiles;
-	Vector<int64> pages;
-
-	OpenGLFont() : texturesUpdated(false)
-	{}
-
-	~OpenGLFont()
-	{}
-
-	void LoadBrc(const byte* xml, const byte* image);
-	void Load(const String& fileName);
-	void Parse(const char* xml, bool parsePages);
-	void UpdateTextures();
-	void BuildVertices();
-
-};
-
-struct Texture : Moveable<Texture>
-{
-	Size sz;
-	Point curpos;	
-	VectorMap<int64, Rect> parts;
-	void AddPart(int64 serialId, const Image& img);
-};
-
-struct Resources
-{
-	static int64 currentSerialId;
-	static ArrayMap<int64, Texture> textures;
-	static VectorMap<String, OpenGLFont> fonts;
-	static int64 Bind(const Image& img, bool linear = false);
-	static bool Bind(int64 serialId, bool force = false);
-	static OpenGLFont& GetFont(const char* fontName);
-	static OpenGLFont& GetFontBrc(const char* fontName, const byte* fontDef, const byte* fontImage);
-	static OpenGLFont& StdFont(bool bold = false);
-};
+#include <WinGl/FontGl.h>
+#include <WinGl/ResGl.h>
 
 class SystemDraw : public Draw {
 public:
