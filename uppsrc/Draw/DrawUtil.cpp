@@ -88,6 +88,12 @@ Vector<Rect> Intersect(const Vector<Rect>& b, const Rect& a, bool& changed)
 	return result;
 }
 
+Vector<Rect> Intersection(const Vector<Rect>& b, const Rect& a)
+{
+	bool dummy;
+	return Intersect(b, a, dummy);
+}
+
 void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r)
 {
 	Vector<Rect> inv;
