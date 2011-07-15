@@ -66,23 +66,10 @@ bool Ctrl::DoKeyGl(dword key, int cnt)
 	return b;
 }
 
-Point fbCursorPos = Null;
-Image fbCursorImage;
-
-Point fbCursorBakPos = Null;
-Image fbCursorBak;
-
-Rect  fbCaretRect;
-Image fbCaretBak;
-int   fbCaretTm;
-
-void Ctrl::RemoveCursor()
-{
-}
-
-void Ctrl::RemoveCaret()
-{
-}
+Point glCursorPos = Null;
+Image glCursorImage;
+Rect  glCaretRect;
+int   glCaretTm;
 
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
@@ -91,7 +78,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	carety = y;
 	caretcx = cx;
 	caretcy = cy;
-	fbCaretTm = GetTickCount();
+	glCaretTm = GetTickCount();
 	SyncCaret();
 }
 
@@ -99,16 +86,27 @@ void Ctrl::SyncCaret() {
 	GuiLock __;
 }
 
-void Ctrl::CursorSync()
+void Ctrl::CursorSync(Draw& w)
 {
+	Rect cr = Null;
+	if(focusCtrl && (((GetTickCount() - glCaretTm) / 500) & 1) == 0)
+		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
+		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
+
+	glCaretRect = cr;
+	if(!cr.IsEmpty())
+		w.DrawRect(cr, Black);
+	glCursorPos = GetMousePos() - glCursorImage.GetHotSpot();
+	Size sz = glCursorImage.GetSize();
+	w.DrawImage(glCursorPos.x, glCursorPos.y, sz.cx, sz.cy, glCursorImage);
 }
 
 void  Ctrl::SetMouseCursor(const Image& image)
 {
 	GuiLock __;
-	if(image.GetSerialId() != fbCursorImage.GetSerialId()) {
-		fbCursorImage = image;
-		fbCursorPos = Null;
+	if(image.GetSerialId() != glCursorImage.GetSerialId()) {
+		glCursorImage = image;
+		glCursorPos = Null;
 	}
 }
 
