@@ -29,14 +29,14 @@ struct App : public Ctrl {
 		w.Clipoff(200, 50, 95, 100);
 		w.DrawText(0, 80, "CLIPPED", Roman(25));
 		w.End();
-		
+	/*	
 		DrawDragRect((SystemDraw&)w,
 					 Rect(0, 0, 0, 0),
 					 Rect(23, 165, 672, 301),
 					 Size(1163, 513),
 					 1,
 					 Black(),
-					 MAKEQWORD(Random(), Random()));
+					 MAKEQWORD(Random(), Random()));*/
 	}
 	
 	void LeftDown(Point p, dword)

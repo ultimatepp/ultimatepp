@@ -252,35 +252,107 @@ void Ctrl::DoUpdate()
 //	Sleep(1000);
 }
 
+Vector<Rect> Ctrl::GetPaintRects()
+{
+	Vector<Rect> r;
+	int q = FindTopCtrl();
+	r.Add(GetScreenRect());
+	for(int i = max(FindTopCtrl() + 1, 0); i < topctrl.GetCount(); i++)
+		Subtract(r, topctrl[i]->GetScreenRect());
+	return r;
+}
+
+
+void DDRect(RGBA *t, int dir, const byte *pattern, int pos, int count)
+{
+	while(count-- > 0) {
+		byte p = pattern[7 & pos++];
+		t->r ^= p;
+		t->g ^= p;
+		t->b ^= p;
+		t += dir;
+	}
+}
+
+void Ctrl::DrawLine(const Vector<Rect>& clip, int x, int y, int cx, int cy, bool horz, const byte *pattern, int animation)
+{
+	if(cx <= 0 || cy <= 0)
+		return;
+	Vector<Rect> rr = Intersection(clip, RectC(x, y, cx, cy));
+	for(int i = 0; i < rr.GetCount(); i++) {
+		Rect r = rr[i];
+		AddUpdate(r);
+		if(horz)
+			for(int y = r.top; y < r.bottom; y++)
+				DDRect(framebuffer[y] + r.left, 1, pattern, r.left + animation, r.GetWidth());
+		else
+			for(int x = r.left; x < r.right; x++)
+				DDRect(framebuffer[r.top] + x, framebuffer.GetWidth(), pattern, r.top + animation, r.GetHeight());
+	}
+}
+
+void Ctrl::DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n, const byte *pattern, int animation)
+{
+	int hn = min(rect.GetHeight(), n);
+	int vn = min(rect.GetWidth(), n);
+	DrawLine(clip, rect.left, rect.top, rect.GetWidth(), hn, true, pattern, animation);
+	DrawLine(clip, rect.left, rect.top + hn, vn, rect.GetHeight() - hn, false, pattern, animation);
+	DrawLine(clip, rect.right - vn, rect.top + hn, vn, rect.GetHeight() - hn, false, pattern, animation);
+	DrawLine(clip, rect.left + vn, rect.bottom - hn, rect.GetWidth() - 2 * vn, hn, true, pattern, animation);
+}
+
+void Ctrl::DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
+                        Color color, int type, int animation)
+{
+	static byte solid[] =  { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+	static byte normal[] = { 0xff, 0x00, 0xff, 0x00, 0xff, 0x00, 0xff, 0x00 };
+	static byte dashed[] = { 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 };
+	Point p = GetScreenView().TopLeft();
+	Vector<Rect> pr = Intersection(GetPaintRects(), clip.Offseted(p));
+	const byte *pattern = type == DRAWDRAGRECT_DASHED ? dashed :
+	                      type == DRAWDRAGRECT_NORMAL ? normal : solid;
+	RemoveCursor();
+	RemoveCaret();
+	DragRectDraw0(pr, rect1.Offseted(p), n, pattern, animation);
+	DragRectDraw0(pr, rect2.Offseted(p), n, pattern, animation);
+}
+
 void Ctrl::DoPaint()
 {
 	DLOG("@ DoPaint");
-	if(invalid.GetCount() && desktop) {
-		DLOG("DoPaint invalid");
-		DDUMPC(invalid);
+	bool scroll = false;
+	if(desktop)
+		desktop->SyncScroll();
+	for(int i = 0; i < topctrl.GetCount(); i++)
+		topctrl[i]->SyncScroll();
+	if((invalid.GetCount() || scroll) && desktop) {
 		RemoveCursor();
 		RemoveCaret();
-		SystemDraw painter;
-		painter.Begin();
-		for(int i = 0; i < invalid.GetCount(); i++) {
-			painter.RectPath(invalid[i]);
-			AddUpdate(invalid[i]);
-		}
-		painter.Painter::Clip();
-		for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
-			Rect r = topctrl[i]->GetRect();
-			Rect ri = GetClipBound(invalid, r);
-			if(!IsNull(ri)) {
-				painter.Clipoff(r);
-				topctrl[i]->UpdateArea(painter, ri - r.TopLeft());
-				painter.End();
-				Subtract(invalid, r);
-				painter.ExcludeClip(r);
+		for(int phase = 0; phase < 2; phase++) {
+			DLOG("DoPaint invalid phase " << phase);
+			DDUMPC(invalid);
+			SystemDraw painter;
+			painter.Begin();
+			for(int i = 0; i < invalid.GetCount(); i++) {
+				painter.RectPath(invalid[i]);
+				AddUpdate(invalid[i]);
 			}
+			painter.Painter::Clip();
+			for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
+				Rect r = topctrl[i]->GetRect();
+				Rect ri = GetClipBound(invalid, r);
+				if(!IsNull(ri)) {
+					painter.Clipoff(r);
+					topctrl[i]->UpdateArea(painter, ri - r.TopLeft());
+					painter.End();
+					Subtract(invalid, r);
+					painter.ExcludeClip(r);
+				}
+			}
+			Rect ri = GetClipBound(invalid, framebuffer.GetSize());
+			if(!IsNull(ri))
+				desktop->UpdateArea(painter, ri);
 		}
-		Rect ri = GetClipBound(invalid, framebuffer.GetSize());
-		if(!IsNull(ri))
-			desktop->UpdateArea(painter, ri);
 	}
 	DoUpdate();
 }
@@ -553,6 +625,7 @@ void  Ctrl::WndScrollView0(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	Refresh(r);
+	_DBG_ // add real scroll
 }
 
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
