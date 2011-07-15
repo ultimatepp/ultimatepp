@@ -792,6 +792,8 @@ Vector<Rect> Intersect(const Vector<Rect>& b, const Rect& a, bool& changed);
 void Subtract(Vector<Rect>& rr, const Rect& sub);
 void Union(Vector<Rect>& rr, const Rect& add);
 
+Vector<Rect> Intersection(const Vector<Rect>& b, const Rect& a);
+
 void AddRefreshRect(Vector<Rect>& invalid, const Rect& _r);
 
 
