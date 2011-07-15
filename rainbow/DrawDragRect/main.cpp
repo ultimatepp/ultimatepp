@@ -3,6 +3,17 @@
 
 using namespace Upp;
 
+void DDRect(RGBA *t, int dir, const byte *pattern, int pos, int count)
+{
+	while(count-- > 0) {
+		byte p = pattern[7 & pos++];
+		*t->r ^= p;
+		*t->g ^= p;
+		*t->b ^= p;
+		t += dir;
+	}
+}
+
 struct App : public Ctrl {
 	uint64 pattern;
 	int    pos;

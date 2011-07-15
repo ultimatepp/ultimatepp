@@ -35,16 +35,22 @@ private:
 	void NewTop()                       { top = new Top; top->owner_window = NULL; }
 	void PutForeground();
 	static void MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta);
+	Vector<Rect> GetPaintRects();
+
+	static void DrawLine(const Vector<Rect>& clip, int x, int y, int cx, int cy, bool horz,
+	                     const byte *pattern, int animation);
+	static void DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n,
+	                          const byte *pattern, int animation);
 
 	friend struct PaintProxy__;
 	friend class TopWindowFrame;
 	friend class SystemDraw;
 
+	void  SetOpen(bool b)               { isopen = b; }
+
 public:
 	static void DoMouseFB(int event, Point p, int zdelta = 0);
 	static bool DoKeyFB(dword key, int cnt);
-	
-	void  SetOpen(bool b)               { isopen = b; }
 
 	static void InitFB();
 	static void ExitFB();
@@ -59,5 +65,8 @@ public:
 	static void SetRenderingMode(int mode);
 
 	static void AddUpdate(const Rect& rect);
+
+	void DragRectDraw(const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
+	                  Color color, int type, int animation);
 
 //$ };
