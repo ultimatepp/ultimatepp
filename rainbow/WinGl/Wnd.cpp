@@ -9,13 +9,10 @@ NAMESPACE_UPP
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
 Rect           Ctrl::screenRect;
-Point          Ctrl::fbCursorPos = Null;
-Image          Ctrl::fbCursorImage;
-Point          Ctrl::fbCursorBakPos = Null;
-Image          Ctrl::fbCursorBak;
-Rect           Ctrl::fbCaretRect;
-Image          Ctrl::fbCaretBak;
-int            Ctrl::fbCaretTm;
+Point          Ctrl::glCursorPos = Null;
+Image          Ctrl::glCursorImage;
+Rect           Ctrl::glCaretRect;
+int            Ctrl::glCaretTm;
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
@@ -178,6 +175,7 @@ void Ctrl::DrawScreen()
 			topctrl[i]->CtrlPaint(draw, clip);
 			draw.End();
 		}
+		CursorSync(draw);
 		//AnimateCaret();
 		//ApplyTransform(TS_AFTER_PAINT);
 		SwapBuffers(hDC);
@@ -201,10 +199,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	TimerProc(GetTickCount());
 	SweepMkImageCache();
 	if(hRC)
-	{
 		DrawScreen();
-		CursorSync();
-	}
 	return true;
 }
 

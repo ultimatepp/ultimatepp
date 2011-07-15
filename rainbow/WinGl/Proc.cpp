@@ -95,12 +95,12 @@ LRESULT CALLBACK glWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPa
 			Ctrl::DoMouseGl(Ctrl::MOUSEWHEEL, Point((dword)lParam) - p, (short)HIWORD(wParam));
 		}
 		return 0L;
-	/*case WM_SETCURSOR:
+	case WM_SETCURSOR:
 	  if(LOWORD((dword)lParam) == HTCLIENT) {
 			SetCursor(NULL);
 			return TRUE;
 		}
-		break;*/
+		break;
 //	case WM_MENUCHAR:
 //		return MAKELONG(0, MNC_SELECT);
 	case WM_KEYDOWN:

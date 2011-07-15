@@ -2,15 +2,10 @@
 	static Ptr<Ctrl>      desktop;
 	static Vector<Ctrl *> topctrl;
 
-	static Point fbCursorPos;
-	static Image fbCursorImage;
-	
-	static Point fbCursorBakPos;
-	static Image fbCursorBak;
-	
-	static Rect  fbCaretRect;
-	static Image fbCaretBak;
-	static int   fbCaretTm;
+	static Point glCursorPos;
+	static Image glCursorImage;
+	static Rect  glCaretRect;
+	static int   glCaretTm;
 
 	int FindTopCtrl() const;
 	static void SyncTopWindows();
@@ -27,9 +22,7 @@ public:
 	static void InitGl();
 	static void DoMouseGl(int event, Point p, int zdelta = 0);
 	static bool DoKeyGl(dword key, int cnt);
-	static void RemoveCursor();
-	static void RemoveCaret();
-	static void CursorSync();
+	static void CursorSync(Draw& w);
 	
 	void  SetOpen(bool b)               { isopen = b; }
 	void  SetTop()                      { top = new Top; }
